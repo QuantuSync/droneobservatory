@@ -6,6 +6,7 @@ import pytest
 from almacen.base import Almacen
 from proceso.ataques import incorporar
 from recogida.ejecucion import configuracion_fuente
+from recogida.fuerza_aerea import FUENTE
 from recogida.parte import leer
 from recogida.telegram import Publicacion
 
@@ -31,7 +32,13 @@ def publicar(
     texto = PARTE.format(n=n, d=d, hora=hora)
     publicacion = Publicacion("kpszsu", id_, fecha, texto)
     resultado = incorporar(
-        almacen, publicacion, leer(texto, fecha), configuracion_fuente(), texto, AHORA
+        almacen,
+        publicacion,
+        leer(texto, fecha),
+        configuracion_fuente(FUENTE.id),
+        texto,
+        AHORA,
+        FUENTE.perfil,
     )
     return resultado.id
 

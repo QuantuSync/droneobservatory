@@ -73,18 +73,26 @@ class Descargador:
         dormir: Callable[[float], None] = time.sleep,
         reloj: Callable[[], float] = time.monotonic,
         pausa_minima_s: float = PAUSA_MINIMA_S,
+        pausas_por_sitio: dict[str, float] | None = None,
+        reintentos: int = REINTENTOS,
+        espera_inicial_s: float = ESPERA_INICIAL_S,
     ) -> None:
+        self._reintentos = reintentos
+        self._espera_inicial_s = espera_inicial_s
         self._transporte = transporte
         self._dormir = dormir
         self._reloj = reloj
         self._pausa_minima_s = pausa_minima_s
+        # Sitios que piden otra pausa (la API de GDELT, una petición cada 5 s).
+        self._pausas = pausas_por_sitio or {}
         self._ultima: dict[str, float] = {}
         self.recuentos: Counter[str] = Counter()
 
     def _esperar_turno(self, sitio: str) -> None:
         ultima = self._ultima.get(sitio)
         if ultima is not None:
-            falta = self._pausa_minima_s - (self._reloj() - ultima)
+            pausa = self._pausas.get(sitio, self._pausa_minima_s)
+            falta = pausa - (self._reloj() - ultima)
             if falta > 0:
                 self._dormir(falta)
         self._ultima[sitio] = self._reloj()
@@ -93,12 +101,12 @@ class Descargador:
         """Descarga una página y comprueba con `valido` que es el contenido esperado."""
         sitio = urlsplit(url).netloc
         motivo = ""
-        for intento in range(REINTENTOS + 1):
+        for intento in range(self._reintentos + 1):
             if intento:
                 self.recuentos["reintentos"] += 1
             self._esperar_turno(sitio)
             self.recuentos["peticiones"] += 1
-            espera = ESPERA_INICIAL_S * 2**intento
+            espera = self._espera_inicial_s * 2**intento
             try:
                 codigo, cabeceras, cuerpo = self._transporte(url, CABECERAS, TIEMPO_LIMITE_S)
             except (OSError, TimeoutError) as error:
@@ -115,8 +123,8 @@ class Descargador:
                     espera = max(espera, _retry_after(cabeceras) or 0)
                 else:
                     raise DescargaFallida(f"{url}: código {codigo}")
-            if intento < REINTENTOS:
+            if intento < self._reintentos:
                 self._dormir(espera)
         self.recuentos["fallos"] += 1
         tipo = PaginaBloqueada if motivo.startswith("contenido") else DescargaFallida
-        raise tipo(f"{url}: {motivo} tras {REINTENTOS} reintentos")
+        raise tipo(f"{url}: {motivo} tras {self._reintentos} reintentos")

@@ -77,6 +77,29 @@ CREATE TABLE IF NOT EXISTS partes_fallidos (
     fecha TEXT NOT NULL,
     resuelto INTEGER NOT NULL DEFAULT 0
 );
+-- Noticias: solo datos del artículo, nunca su texto. Tablas internas.
+CREATE TABLE IF NOT EXISTS articulos (
+    url TEXT PRIMARY KEY,
+    medio TEXT NOT NULL,
+    fecha TEXT NOT NULL,
+    idioma TEXT,
+    pais TEXT,
+    titular TEXT NOT NULL,
+    titular_normalizado TEXT NOT NULL,
+    temas TEXT NOT NULL CHECK (json_valid(temas)),
+    lugares TEXT NOT NULL CHECK (json_valid(lugares)),
+    replicas INTEGER NOT NULL DEFAULT 0,
+    candidato TEXT
+);
+CREATE INDEX IF NOT EXISTS articulos_fecha ON articulos (fecha);
+CREATE TABLE IF NOT EXISTS candidatos (
+    id TEXT PRIMARY KEY,
+    documento TEXT NOT NULL CHECK (json_valid(documento))
+);
+CREATE TRIGGER IF NOT EXISTS articulos_sin_delete BEFORE DELETE ON articulos
+BEGIN SELECT RAISE(ABORT, 'articulos: nada se borra'); END;
+CREATE TRIGGER IF NOT EXISTS candidatos_sin_delete BEFORE DELETE ON candidatos
+BEGIN SELECT RAISE(ABORT, 'candidatos: nada se borra'); END;
 CREATE TRIGGER IF NOT EXISTS cursores_sin_delete BEFORE DELETE ON cursores
 BEGIN SELECT RAISE(ABORT, 'cursores: nada se borra'); END;
 CREATE TRIGGER IF NOT EXISTS partes_fallidos_sin_delete BEFORE DELETE ON partes_fallidos
@@ -239,7 +262,8 @@ class Almacen:
         with self._conexion:
             self._conexion.execute(
                 "INSERT INTO cursores (fuente_id, documento) VALUES (?, ?) "
-                "ON CONFLICT (fuente_id) DO UPDATE SET documento = excluded.documento",
+                "ON CONFLICT (fuente_id) DO UPDATE SET documento = excluded.documento "
+                "WHERE cursores.documento IS NOT excluded.documento",
                 (fuente_id, _json(documento)),
             )
 
@@ -249,14 +273,17 @@ class Almacen:
             self._conexion.execute(
                 "INSERT INTO partes_fallidos (enlace, fuente_id, motivo, fecha) "
                 "VALUES (?, ?, ?, ?) ON CONFLICT (enlace) DO UPDATE SET "
-                "motivo = excluded.motivo, fecha = excluded.fecha, resuelto = 0",
+                "motivo = excluded.motivo, fecha = excluded.fecha, resuelto = 0 "
+                "WHERE partes_fallidos.motivo IS NOT excluded.motivo "
+                "OR partes_fallidos.fecha IS NOT excluded.fecha OR partes_fallidos.resuelto = 1",
                 (enlace, fuente_id, motivo, fecha),
             )
 
     def resolver_fallido(self, enlace: str) -> None:
         with self._conexion:
             self._conexion.execute(
-                "UPDATE partes_fallidos SET resuelto = 1 WHERE enlace = ?", (enlace,)
+                "UPDATE partes_fallidos SET resuelto = 1 WHERE enlace = ? AND resuelto = 0",
+                (enlace,),
             )
 
     def fallidos(self, fuente_id: str) -> list[Documento]:
@@ -292,6 +319,87 @@ class Almacen:
         ).fetchone()
         ultimo = int(fila[0][len(prefijo) :]) if fila and fila[0] else 0
         return f"{prefijo}{ultimo + 1:04d}"
+
+    # --- Noticias ------------------------------------------------------------
+
+    def guardar_articulo(self, articulo: Documento) -> bool:
+        """Guarda el artículo si su URL canónica es nueva. True si lo ha guardado."""
+        with self._conexion:
+            cursor = self._conexion.execute(
+                "INSERT INTO articulos (url, medio, fecha, idioma, pais, titular, "
+                "titular_normalizado, temas, lugares) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) "
+                "ON CONFLICT (url) DO NOTHING",
+                (
+                    articulo["url"],
+                    articulo["medio"],
+                    articulo["fecha"],
+                    articulo.get("idioma"),
+                    articulo.get("pais"),
+                    articulo["titular"],
+                    articulo["titular_normalizado"],
+                    _json(articulo.get("temas", [])),
+                    _json(articulo.get("lugares", [])),
+                ),
+            )
+        return cursor.rowcount > 0
+
+    def existe_articulo(self, url: str) -> bool:
+        fila = self._conexion.execute("SELECT 1 FROM articulos WHERE url = ?", (url,)).fetchone()
+        return fila is not None
+
+    def sumar_replica(self, url: str) -> None:
+        with self._conexion:
+            self._conexion.execute(
+                "UPDATE articulos SET replicas = replicas + 1 WHERE url = ?", (url,)
+            )
+
+    def titulares_desde(self, fecha: str) -> list[tuple[str, str, str]]:
+        """(URL, titular normalizado, fecha) de los artículos publicados desde `fecha`."""
+        filas = self._conexion.execute(
+            "SELECT url, titular_normalizado, fecha FROM articulos WHERE fecha >= ? "
+            "ORDER BY fecha, url",
+            (fecha,),
+        ).fetchall()
+        return [(u, t, f) for u, t, f in filas]
+
+    def asignar_candidato(self, url: str, candidato: str) -> None:
+        with self._conexion:
+            self._conexion.execute(
+                "UPDATE articulos SET candidato = ? WHERE url = ? AND candidato IS NOT ?",
+                (candidato, url, candidato),
+            )
+
+    def guardar_candidato(self, documento: Documento) -> None:
+        with self._conexion:
+            self._upsert("candidatos", {"id": documento["id"], "documento": _json(documento)})
+
+    def candidatos_desde(self, fecha: str) -> list[Documento]:
+        """Candidatos con actividad desde `fecha`: los que aún pueden crecer."""
+        return self._documentos(
+            "SELECT documento FROM candidatos "
+            "WHERE json_extract(documento, '$.ultimo') >= ? ORDER BY id",
+            (fecha,),
+        )
+
+    def candidatos(self) -> list[Documento]:
+        return self._documentos("SELECT documento FROM candidatos ORDER BY id")
+
+    def articulos(self) -> list[Documento]:
+        filas = self._conexion.execute(
+            "SELECT url, medio, fecha, idioma, pais, titular, temas, lugares, replicas, candidato "
+            "FROM articulos ORDER BY fecha, url"
+        ).fetchall()
+        claves = ("url", "medio", "fecha", "idioma", "pais", "titular", "temas", "lugares")
+        return [
+            {
+                **dict(zip(claves, fila[:6], strict=False)),
+                "temas": json.loads(fila[6]),
+                "lugares": json.loads(fila[7]),
+                "replicas": fila[8],
+                "candidato": fila[9],
+            }
+            for fila in filas
+        ]
 
     # --- Lectura ------------------------------------------------------------
 

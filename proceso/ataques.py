@@ -4,17 +4,32 @@ import copy
 import hashlib
 from dataclasses import dataclass
 from datetime import UTC, datetime
+from zoneinfo import ZoneInfo
 
 from almacen.base import Almacen
 from esquema import Documento
 from proceso.credibilidad import Declaracion, Fiabilidad, Postura, credibilidad
 from proceso.estados import Estado, nuevo_estado
-from recogida.parte import KYIV, VERSION_PARSER, Instante, ParteLeido
+from recogida.parte import Instante, ParteLeido
 from recogida.telegram import Publicacion
 
 SENTIDO_RU_UA = "RU_UA"
-IDIOMA_PARTES = "uk"
+SENTIDO_UA_RU = "UA_RU"
 TIPO_ATAQUE = "ataque_guerra"
+
+
+@dataclass(frozen=True)
+class Perfil:
+    """Lo que distingue a los partes de una fuente al convertirlos en ataques."""
+
+    sentido: str
+    idioma: str
+    # Zona del canal: da el año del identificador del ataque.
+    zona: ZoneInfo
+    version_parser: str
+    # El parte es la reivindicación de una de las partes en guerra sobre lo que
+    # dice haber derribado; se publica marcado así.
+    reivindicacion: bool = False
 
 
 @dataclass(frozen=True)
@@ -33,7 +48,8 @@ def id_fuente(publicacion: Publicacion) -> str:
 
 
 def campos_respaldados(leido: ParteLeido) -> list[str]:
-    campos = ["periodo", "lanzados", "derribados", "perdidos_guerra_electronica"]
+    campos = ["periodo", "lanzados", "derribados", "derribados_categoria"]
+    campos += ["perdidos_guerra_electronica"]
     campos += ["localizaciones_impacto", "localizaciones_restos"]
     opcionales = {
         "zonas_lanzamiento": leido.zonas_lanzamiento,
@@ -45,7 +61,9 @@ def campos_respaldados(leido: ParteLeido) -> list[str]:
     return campos + [campo for campo, valor in opcionales.items() if valor]
 
 
-def fuente_parte(publicacion: Publicacion, leido: ParteLeido, config: Documento) -> Documento:
+def fuente_parte(
+    publicacion: Publicacion, leido: ParteLeido, config: Documento, perfil: Perfil
+) -> Documento:
     # Los partes de un mismo canal no son fuentes independientes entre sí:
     # comparten nota a efectos de la regla de credibilidad.
     declaracion = Declaracion(
@@ -59,7 +77,7 @@ def fuente_parte(publicacion: Publicacion, leido: ParteLeido, config: Documento)
         "enlace": publicacion.enlace,
         "medio": config["medio"],
         "fecha": instante(publicacion.fecha),
-        "idioma": IDIOMA_PARTES,
+        "idioma": perfil.idioma,
         "fiabilidad": config["fiabilidad"],
         "credibilidad": int(credibilidad([declaracion])),
         "frase_origen": leido.frase,
@@ -84,6 +102,7 @@ def datos_parte(leido: ParteLeido) -> Documento:
         "lanzados": copy.deepcopy(leido.lanzados),
         "zonas_lanzamiento": list(leido.zonas_lanzamiento),
         "derribados": leido.derribados,
+        "derribados_categoria": leido.derribados_categoria.value,
         "perdidos_guerra_electronica": leido.perdidos_guerra_electronica,
         "localizaciones_impacto": leido.localizaciones_impacto,
         "localizaciones_restos": leido.localizaciones_restos,
@@ -92,14 +111,16 @@ def datos_parte(leido: ParteLeido) -> Documento:
         "cruces": [{"pais": pais, "numero": numero} for pais, numero in leido.cruces],
         "regiones": [{"region": codigo} for codigo in sorted(leido.regiones)],
     }
+    if leido.tipos_dron:
+        datos["tipos_dron"] = list(leido.tipos_dron)
     return datos
 
 
 def nuevo_ataque(
     id_: str, publicacion: Publicacion, leido: ParteLeido, config: Documento, texto: str,
-    ahora: datetime,
+    ahora: datetime, perfil: Perfil,
 ) -> Documento:  # fmt: skip
-    fuente = fuente_parte(publicacion, leido, config)
+    fuente = fuente_parte(publicacion, leido, config, perfil)
     publicado = instante(publicacion.fecha)
     estado = nuevo_estado(publicado, fuente["id"])
     # El parte oficial cuenta como confirmación del ataque.
@@ -107,39 +128,43 @@ def nuevo_ataque(
     estado["historial"].append(
         {"estado": Estado.CONFIRMADO.value, "fecha": publicado, "fuente_id": fuente["id"]}
     )
-    return {
+    documento: Documento = {
         "id": id_,
         "tipo": TIPO_ATAQUE,
-        "sentido": SENTIDO_RU_UA,
+        "sentido": perfil.sentido,
         "estado": estado,
         **datos_parte(leido),
         "fuentes": [fuente],
         "control": {
             "alta": instante(ahora),
             "ultima_actualizacion": instante(ahora),
-            "version_extractor": VERSION_PARSER,
+            "version_extractor": perfil.version_parser,
             "huella_fuentes": huella(None, texto),
         },
     }
+    if perfil.reivindicacion:
+        documento["reivindicacion_de_parte"] = True
+    return documento
 
 
 def actualizar(
     ataque: Documento, publicacion: Publicacion, leido: ParteLeido, config: Documento, texto: str,
-    ahora: datetime,
+    perfil: Perfil,
 ) -> Documento:  # fmt: skip
     """Añade el parte al ataque. Las cifras del parte más reciente sustituyen a las anteriores."""
     resultado = copy.deepcopy(ataque)
-    fuente = fuente_parte(publicacion, leido, config)
+    fuente = fuente_parte(publicacion, leido, config, perfil)
     otras = [f for f in resultado["fuentes"] if f["id"] != fuente["id"]]
     repetida = len(otras) < len(resultado["fuentes"])
     mas_reciente = all(f["fecha"]["valor"] <= fuente["fecha"]["valor"] for f in otras)
     resultado["fuentes"] = sorted([*otras, fuente], key=lambda f: f["fecha"]["valor"])
     if mas_reciente:
+        resultado.pop("tipos_dron", None)
         resultado.update(datos_parte(leido))
     control = resultado["control"]
     if not repetida:
         control["huella_fuentes"] = huella(control.get("huella_fuentes"), texto)
-    control["version_extractor"] = VERSION_PARSER
+    control["version_extractor"] = perfil.version_parser
     return resultado
 
 
@@ -149,20 +174,20 @@ def _sin_control(documento: Documento) -> Documento:
 
 def incorporar(
     almacen: Almacen, publicacion: Publicacion, leido: ParteLeido, config: Documento, texto: str,
-    ahora: datetime,
+    ahora: datetime, perfil: Perfil,
 ) -> Resultado:  # fmt: skip
     """Da de alta el ataque o lo actualiza si ya existe (mismo parte o mismo periodo declarado)."""
     existente = almacen.ataque_con_fuente(id_fuente(publicacion)) or almacen.ataque_con_periodo(
-        SENTIDO_RU_UA, leido.inicio.documento()["valor"]
+        perfil.sentido, leido.inicio.documento()["valor"]
     )
     if existente is None:
-        anio = leido.fin.valor.astimezone(KYIV).year
+        anio = leido.fin.valor.astimezone(perfil.zona).year
         documento = nuevo_ataque(
-            almacen.siguiente_id_ataque(anio), publicacion, leido, config, texto, ahora
+            almacen.siguiente_id_ataque(anio), publicacion, leido, config, texto, ahora, perfil
         )
         almacen.guardar_ataque_ucrania(documento, ahora)
         return Resultado(documento["id"], nuevo=True, cambiado=True)
-    documento = actualizar(existente, publicacion, leido, config, texto, ahora)
+    documento = actualizar(existente, publicacion, leido, config, texto, perfil)
     # Reprocesar el mismo parte sin cambios no toca la base.
     cambiado = _sin_control(documento) != _sin_control(existente)
     if cambiado:

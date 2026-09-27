@@ -21,6 +21,11 @@
       }
     },
     "sentido": {"x-visibilidad": "publico", "enum": ["RU_UA", "UA_RU"]},
+    "reivindicacion_de_parte": {
+      "x-visibilidad": "publico",
+      "description": "Las cifras son lo que una de las partes en guerra dice haber derribado (Ministerio de Defensa ruso), sin otra fuente que lo confirme.",
+      "const": true
+    },
     "estado": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.0.0:comun#/$defs/estado_historial"},
     "lanzados": {
       "x-visibilidad": "publico",
@@ -42,7 +47,19 @@
       "type": "array",
       "items": {"type": "string", "minLength": 1}
     },
+    "tipos_dron": {
+      "x-visibilidad": "publico",
+      "description": "Tipo de dron cuando el parte lo dice sin modelo: ala_fija («самолетного типа») o multirrotor.",
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"enum": ["ala_fija", "multirrotor"]}
+    },
     "derribados": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.0.0:comun#/$defs/rango_entero_o_desconocido"},
+    "derribados_categoria": {
+      "x-visibilidad": "publico",
+      "description": "Qué cuenta la cifra de derribados. 'derribados_o_neutralizados' cuando el parte da una sola cifra para derribados y neutralizados por guerra electrónica ('збито/подавлено'): la web lo muestra así.",
+      "enum": ["derribados", "derribados_o_neutralizados"]
+    },
     "perdidos_guerra_electronica": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.0.0:comun#/$defs/rango_entero_o_desconocido"},
     "localizaciones_impacto": {
       "x-visibilidad": "publico",
