@@ -11,6 +11,7 @@ desde el final de la caché como en una ejecución horaria. Al terminar escribe
 la auditoría de cobertura por año con una muestra de partes para comprobarlos.
 
 Uso: python -m recogida.historico --fuente <id> --correo <correo> [--solo-cache] [--sin-subir]
+     [--base <db.age local>]
 """
 
 import argparse
@@ -30,6 +31,8 @@ from almacen.base import Almacen
 from almacen.cifrado import abrir_cifrada, cargar_clave_local, guardar_cifrada
 from esquema import Documento
 from exportacion.publicar import publicar
+from proceso import solapes
+from proceso.ataques import SENTIDO_UA_RU
 from recogida import auditoria
 from recogida.cache import CachePaginas
 from recogida.descarga import Descargador
@@ -148,6 +151,9 @@ def principal(argumentos: list[str] | None = None) -> int:
     opciones.add_argument("--repositorio", default=remoto.REPOSITORIO)
     opciones.add_argument("--solo-cache", action="store_true", help="no recorre el canal")
     opciones.add_argument("--sin-subir", action="store_true", help="no sube la base a la rama")
+    opciones.add_argument(
+        "--base", type=Path, help="base cifrada local de la que partir en vez de la rama estado"
+    )
     args = opciones.parse_args(argumentos)
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s: %(message)s")
     cargar_clave_local()
@@ -169,7 +175,11 @@ def principal(argumentos: list[str] | None = None) -> int:
     lista = publicaciones(cache, fuente.canal, progreso.inicio)
     config = configuracion_fuente(fuente.id)
     with TemporaryDirectory() as temporal:
-        almacen = base_de_estado(args.repositorio, Path(temporal))
+        almacen = (
+            Almacen(abrir_cifrada(args.base))
+            if args.base
+            else base_de_estado(args.repositorio, Path(temporal))
+        )
         por_anio = cobertura(almacen, lista, fuente, config, ahora)
         if almacen.cursor(fuente.id) is None:
             ultima = lista[-1]
@@ -180,6 +190,8 @@ def principal(argumentos: list[str] | None = None) -> int:
             registro.info("%d: %s", anio, r.resumen())
         # Lo publicado después de la caché y la relectura de las últimas 48 horas.
         ejecutar(almacen, descargador, cache, fuente, ahora)
+        enlazados = solapes.enlazar(almacen, SENTIDO_UA_RU, ahora)
+        registro.info("tramos con enlace cambiado: %d", enlazados)
 
         hasta: date = lista[-1].fecha.astimezone(fuente.perfil.zona).date()
         dias = auditoria.auditar(

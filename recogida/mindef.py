@@ -39,7 +39,7 @@ MOSCU = ZoneInfo("Europe/Moscow")
 CANAL = "mod_russia"
 FUENTE_ID = "mindef_ru"
 TITULO_OFICIAL = "Минобороны России"
-VERSION_PARSER = "parte-mindef/1"
+VERSION_PARSER = "parte-mindef/2"
 VOCABULARIO = Path(__file__).resolve().parent.parent / "configuracion" / "regiones_rusia.json"
 # Inicio de la noche en los partes que lo declaran («с 20.00 мск 13 июня до 7.00 мск 14
 # июня»). Los que dicen solo «в течение ночи» reciben esta hora con precisión aproximada.
@@ -64,7 +64,7 @@ _PALABRAS_NUMERO = {
     "четырнадцать": 14, "пятнадцать": 15, "шестнадцать": 16, "семнадцать": 17,
     "восемнадцать": 18, "девятнадцать": 19,
     # Instrumental del preámbulo: «атаку двумя БПЛА».
-    "оба": 2, "обе": 2, "одним": 1, "двумя": 2, "тремя": 3, "четырьмя": 4, "пятью": 5,
+    "оба": 2, "обе": 2, "одним": 1, "одному": 1, "двумя": 2, "тремя": 3, "четырьмя": 4, "пятью": 5,
     "шестью": 6, "семью": 7, "восемью": 8, "девятью": 9, "десятью": 10,
 }  # fmt: skip
 _DECENAS = {
@@ -161,8 +161,9 @@ _RANGO = re.compile(
     + r")\s+)?(?<!\w)[сc]\s+"
     + _H.format(n=1)
     + _F.format(n=1)
-    # «В период с 20.00 мск 28 мая» no dice el fin.
-    + r"(?:\s+до\s+"
+    # «В период с 20.00 мск 28 мая» no dice el fin. Los resúmenes lo dan con «по»: «За
+    # период с 20.00 мск 8 апреля по 06.00 мск 9 апреля».
+    + r"(?:\s+(?:до|по)\s+"
     + _H.format(n=2)
     + _F.format(n=2)
     + ")?",
@@ -249,6 +250,114 @@ def _regiones_linea(linea: str, voc: Vocabulario) -> list[str]:
             if codigo not in codigos:
                 codigos.append(codigo)
     return codigos
+
+
+# --- Derribos por región -------------------------------------------------------
+
+# «67 БпЛА – над ...», «двадцать шесть – над ...», «два – уничтожены над ...», «и 4 над
+# ...»: la cifra va justo antes del «над», con guion o verbo en medio.
+_CIFRA_GUION = re.compile(
+    _NUM + r"(?:\s+" + _DRON + r")?\s*(?:[–—-]\s*)?(?:(?:перехвач|уничтож|сбит|подавл)\w*\s+)?$",
+    re.IGNORECASE,
+)
+# «по девять БПЛА – над территориями Белгородской и Саратовской областей»: cada una.
+_POR_CADA = re.compile(r"(?<!\w)по\s+$", re.IGNORECASE)
+# Cabecera con el total antes de la lista: «уничтожены 158 ... самолетного типа:», «уничтожены
+# 19 ... аппаратов, из которых девять ...».
+_ANTES_DE_LISTA = re.compile(r"[^.\n]*?(?::|из\s+(?:которых|них))")
+
+
+def _cifras_tramo(tramo: str) -> tuple[list[int], bool]:
+    """Cifras de drones de un trozo de frase y si son «по N» (una por región)."""
+    cifras: list[int] = []
+    por_cada = False
+    for m in _CIFRA.finditer(tramo):
+        if _ANTES_DE_LISTA.match(tramo, m.end()):
+            continue
+        cifras.append(numero(m[1]))
+        por_cada |= _POR_CADA.search(tramo[: m.start()]) is not None
+    cifras += [numero(m[1]) for m in _Y_OTROS.finditer(tramo)]
+    cifras += [numero(m[1]) for m in _Y_ANTES.finditer(tramo)]
+    if not cifras and (guion := _CIFRA_GUION.search(tramo)):
+        cifras.append(numero(guion[1]))
+        por_cada = _POR_CADA.search(tramo[: guion.start()]) is not None
+    if not cifras and (_UNO.search(tramo) or _UNO_NOMINATIVO.search(tramo)):
+        cifras.append(1)
+    return cifras, por_cada
+
+
+def _zonas_tramo(tramo: str, voc: Vocabulario) -> list[str | None]:
+    """Regiones del tramo que empieza en un «над»; un mar es una zona sin código."""
+    if re.match(r"над\s+акватори", tramo, re.IGNORECASE):
+        return [None]
+    zonas: list[str | None] = []
+    # «..., в том числе 3 БПЛА, летевших на Москву»: la aclaración no es otra región.
+    tramo = re.split(r",\s*(?:в\s+том\s+числе|в\s+т\.\s?ч\.|из\s+них)", tramo, maxsplit=1)[0]
+    for encontrada in _PALABRA.finditer(tramo):
+        if _DISTRITO.match(tramo, encontrada.end()):
+            continue
+        codigo = next((c for r, c in voc.regiones if encontrada[0].startswith(r)), None)
+        if codigo is not None and codigo not in zonas:
+            zonas.append(codigo)
+    # «над территориями Белгородской, Воронежской областей и акваторией Черного моря».
+    if zonas and re.search(r"(?<!\w)акватори", tramo, re.IGNORECASE):
+        zonas.append(None)
+    return zonas
+
+
+def derribados_por_region(texto: str, total: int, voc: Vocabulario) -> dict[str, int]:
+    """Derribos de cada región cuando el parte los da y suman el total; si no, vacío."""
+    completo = desglose(texto, voc)
+    return completo[0] if completo is not None and completo[1] == total else {}
+
+
+def desglose(texto: str, voc: Vocabulario) -> tuple[dict[str, int], int] | None:
+    """Derribos de cada región y su suma, si cada «над» del parte tiene su cifra; si no, None.
+
+    Cada «над» toma las cifras que lo preceden desde el «над» anterior. Una cifra
+    sin «над» en su frase pasa a la siguiente («два ... подавлены» y «Потеряв
+    управление, БПЛА потерпели крушение над акваторией»). Los mares cuentan para
+    la suma pero no tienen código.
+    """
+    por_region: dict[str, int] = {}
+    suma = 0
+    pendientes: list[int] = []
+    for linea in re.split(r"\.\s|\n|;", _tramo_de_derribos(texto)):
+        if _MISIL.search(linea) and not re.search(_DRON, linea, re.IGNORECASE):
+            continue
+        marcas = list(_SOBRE.finditer(linea))
+        anterior: tuple[int, bool] | None = None
+        for i, marca in enumerate(marcas):
+            previo = linea[marcas[i - 1].end() if i else 0 : marca.start()]
+            fin = marcas[i + 1].start() if i + 1 < len(marcas) else len(linea)
+            cifras, por_cada = _cifras_tramo(previo)
+            if not cifras and _MISIL.search(previo) and not re.search(_DRON, previo, re.I):
+                # «восемь ... ракет уничтожены над акваторией Азовского моря и восемь БПЛА ...».
+                anterior = None
+                continue
+            cifras, pendientes = (cifras or pendientes), []
+            zonas = _zonas_tramo(linea[marca.start() : fin], voc)
+            if not zonas:
+                return None
+            if cifras:
+                valor = sum(cifras)
+            elif anterior is not None and anterior[1]:
+                # «по одному ... областей и над акваторией Черного моря»: también uno.
+                valor, por_cada = anterior
+            else:
+                return None
+            if len(zonas) > 1 and not por_cada:
+                return None
+            for zona in zonas:
+                suma += valor
+                if zona is not None:
+                    por_region[zona] = por_region.get(zona, 0) + valor
+            anterior = (valor, por_cada)
+        if not marcas:
+            pendientes += _cifras_tramo(linea)[0]
+    # Una cifra que no llega a ningún «над» («Еще два беспилотника ... потерпели крушение на
+    # территории ...») deja el desglose incompleto.
+    return (por_region, suma) if suma and not pendientes else None
 
 
 # --- Texto --------------------------------------------------------------------
@@ -440,6 +549,24 @@ def derribados(parrafo: str) -> int:
     raise ParteIlegible("sin cifra de drones")
 
 
+def cabecera(parrafo: str) -> int | None:
+    """Cifra total del parte si la da aparte del desglose por regiones.
+
+    Es la primera cifra de drones cuando abre una lista («уничтожены 47 ...:») o va en
+    una frase sin «над» («уничтожено пятнадцать ... аппаратов. Шесть БПЛА сбиты над ...»).
+    """
+    tramo = _tramo_de_derribos(parrafo)
+    primera = _CIFRA.search(tramo)
+    if primera is None:
+        return None
+    if _ANTES_DE_LISTA.match(tramo, primera.end()):
+        return numero(primera[1])
+    inicio = max(tramo.rfind("\n", 0, primera.start()), tramo.rfind(". ", 0, primera.start()))
+    fin = min((i for i in (tramo.find("\n", primera.end()), tramo.find(". ", primera.end()))
+               if i >= 0), default=len(tramo))  # fmt: skip
+    return None if _SOBRE.search(tramo[inicio + 1 : fin]) else numero(primera[1])
+
+
 def leer(texto: str, publicado: datetime) -> ParteLeido:
     """Extrae los drones derribados de un parte. Lanza ParteIlegible si no lo entiende."""
     parrafo = parte_principal(texto)
@@ -448,6 +575,14 @@ def leer(texto: str, publicado: datetime) -> ParteLeido:
     regiones = regiones_en(cuerpo(texto), vocabulario())
     if not regiones and not re.search(r"акватори", texto, re.IGNORECASE):
         raise ParteIlegible("sin regiones")
+    completo = desglose(cuerpo(texto), vocabulario())
+    total = cabecera(parrafo)
+    if completo is not None and total in {None, completo[1]}:
+        # Con el desglose completo, su suma es la cifra si no hay cabecera que diga otra
+        # cosa. Antes se sumaban cabecera y desglose («четыре ... Два БПЛА ... и по одному
+        # БПЛА над ...») y «по одному ... над Курской, Калужской» contaba solo uno.
+        n = completo[1]
+    por_region = completo[0] if completo is not None and completo[1] == n else {}
     primera = re.split(r"(?<=[.:!])\s", re.sub(r"^\W+", "", parrafo), maxsplit=1)[0]
     return ParteLeido(
         inicio=inicio,
@@ -469,6 +604,7 @@ def leer(texto: str, publicado: datetime) -> ParteLeido:
         cruces=(),
         frase=" ".join(primera.split()[:MAX_PALABRAS_FRASE]),
         tipos_dron=tuple(tipo for patron, tipo in _TIPOS if patron.search(parrafo)),
+        derribados_por_region=tuple(sorted(por_region.items())),
     )
 
 

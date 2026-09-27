@@ -251,3 +251,80 @@ def test_derribados_separados_de_la_guerra_electronica() -> None:
     )
     leido = leer(texto, datetime(2024, 12, 9, 7, tzinfo=UTC))
     assert leido.derribados_categoria is Derribo.DERRIBADOS
+
+
+# --- Regiones de misiles y de drones (partes reales) ----------------------------------
+
+
+def test_regiones_de_misiles_aparte_y_sin_origenes() -> None:
+    # 16878: Járkov solo por los misiles; Crimea es origen de los drones.
+    texto = (
+        "У ніч на 24 липня 2024 року російські окупанти завдали удару по Харківщині "
+        "балістичною ракетою «Іскандер-М» та ракетою, тип якої встановлюється (із "
+        "Бєлгородської обл. – рф.). Також ворог атакував південь країни ударними БпЛА типу "
+        "«Shahed» із Приморсько-Ахтарська – рф. та окупованого Криму.\n"
+        "💥 Усього радіотехнічними військами виявлено та здійснено супровід 23 ударних БпЛА "
+        "противника. В результаті протиповітряного бою збито 17 ворожих БпЛА. Більшість – на "
+        "Одещині."
+    )
+    leido = leer(texto, datetime(2024, 7, 24, 5, tzinfo=UTC))
+    assert leido.regiones == ("UA-51",)
+    assert leido.regiones_misiles == ("UA-63",)
+
+
+def test_misiles_citados_aparte_y_unidades_de_defensa_no_son_misiles() -> None:
+    # 7575: los misiles van en otra frase; 17400: «зенітними ракетними підрозділами» derriban.
+    texto = (
+        "Уночі 17 листопада 2023 року противник атакував десятьма ударними БпЛА типу "
+        "«Shahed» з напрямку Приморсько-Ахтарськ -рф.\n"
+        "💥 В результаті бойової роботи дев’ять ворожих ударних БпЛА знищено зенітними "
+        "ракетними підрозділами в межах Миколаївської та Одеської областей.\n"
+        "Крім того, ворог застосував кілька зенітних керованих ракет С-300 на Донецькому "
+        "напрямку."
+    )
+    leido = leer(texto, datetime(2023, 11, 17, 5, tzinfo=UTC))
+    assert leido.regiones == ("UA-48", "UA-51")
+    assert leido.regiones_misiles == ("UA-14",)
+
+
+# --- Zonas de lanzamiento en otra frase ---------------------------------------------
+
+
+@pytest.mark.parametrize(
+    ("texto", "zonas"),
+    [
+        # 11993: entre paréntesis tras los misiles, «райони пусків безпілотників».
+        (
+            "У ніч на 18 березня 2024 року противник атакував 5-ма зенітними керованими "
+            "ракетами С-300/С-400 по Харківщині та 22-ма ударними БпЛА типу «Shahed» (райони "
+            "пусків безпілотників – Приморсько-Ахтарськ-рф).\nЗбито 22 ударні БпЛА.",
+            ("Приморсько-Ахтарськ",),
+        ),
+        # 6760: la dirección antes de la cifra.
+        (
+            "У ніч на 25 жовтня 2023 року російські окупанти атакували з південно-східного "
+            "напрямку (Приморсько-Ахтарськ - рф), застосувавши 11 ударних БпЛА типу "
+            "“Shahed”.\nЗнищено 11 ударних БпЛА.",
+            ("Приморсько-Ахтарськ",),
+        ),
+        # 1985 (octubre de 2022): «Пуски ... здійснювались з напрямку ...» en otra frase.
+        (
+            "5 жовтня уночі ворог атакував Одещину 7 дронами-камікадзе «Shahed-136».\n"
+            "Знищено 5 дронів.\n"
+            "Пуски «Shahed-136» здійснювались з напрямку акваторії Чорного моря.",
+            ("акваторії Чорного моря",),
+        ),
+    ],
+)
+def test_zonas_de_lanzamiento_en_otra_frase(texto: str, zonas: tuple[str, ...]) -> None:
+    assert leer(texto, datetime(2024, 3, 18, 6, tzinfo=UTC)).zonas_lanzamiento == zonas
+
+
+def test_el_area_de_lanzamiento_de_los_misiles_no_es_de_los_drones() -> None:
+    # 14861: «район пусків» de los misiles; los drones no dicen de dónde salen.
+    texto = (
+        "У ніч на 30 травня 2024 року окупанти атакували 11 крилатими ракетами Х-101 (район "
+        "пусків – Саратовська обл.) та 20-ма ударними БпЛА типу «Shahed».\n"
+        "Збито 20 ударних БпЛА."
+    )
+    assert leer(texto, datetime(2024, 5, 30, 5, tzinfo=UTC)).zonas_lanzamiento == ()

@@ -14,6 +14,8 @@ from almacen import remoto
 from almacen.base import Almacen
 from almacen.cifrado import abrir_cifrada, guardar_cifrada
 from exportacion.publicar import publicar
+from proceso import solapes
+from proceso.ataques import SENTIDO_UA_RU
 from recogida import gdelt
 from recogida.cache import CachePaginas
 from recogida.descarga import Descargador
@@ -51,6 +53,10 @@ def principal(argumentos: list[str] | None = None) -> int:
             except (CanalNoVerificado, SinCursor, HuecoDemasiadoGrande) as error:
                 registro.warning("%s no se lee: %s", fuente.id, error)
                 salida = SALIDA_FUENTE_NO_VERIFICADA
+        # Los tramos del ministerio que ya cubre un total, o que se solapan, no se suman.
+        registro.info(
+            "tramos con enlace cambiado: %d", solapes.enlazar(almacen, SENTIDO_UA_RU, ahora)
+        )
         try:
             gdelt.ejecutar(almacen, gdelt.descargador(), ahora)
         except gdelt.GdeltNoDisponible as error:

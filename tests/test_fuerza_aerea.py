@@ -120,6 +120,8 @@ def test_ejecucion_completa(almacen: Almacen, tmp_path: Path) -> None:
     ]
     (fallido,) = almacen.fallidos("fuerza_aerea_ua")
     assert fallido["enlace"] == "https://t.me/kpszsu/5"
+    # La Fuerza Aérea también es parte en la guerra.
+    assert all(a["reivindicacion_de_parte"] is True for a in almacen.ataques_ucrania())
 
 
 def test_sin_cambios_nuevos_no_toca_nada(almacen: Almacen, tmp_path: Path) -> None:

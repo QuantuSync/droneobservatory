@@ -1,56 +1,78 @@
-"""Recogida de GDELT sin red: consultas, partición de ventanas, réplicas y candidatos."""
+"""Recogida de GDELT sin red: ficheros GKG de ejemplo, franjas pendientes, réplicas y candidatos."""
 
-import json
+import io
+import zipfile
 from collections.abc import Iterator
 from datetime import UTC, datetime, timedelta
-from typing import Any
-from urllib.parse import parse_qs, urlsplit
 
 import pytest
 
 from almacen.base import Almacen
+from proceso.noticias import Articulo, configuracion, filtro, nomenclator
 from recogida import gdelt
 from recogida.descarga import Descargador, Respuesta
+from recogida.informe_gdelt import informe
 
-AHORA = datetime(2025, 9, 23, 12, tzinfo=UTC)
-
-
-def bruto(n: int, titular: str, horas: float, pais: str = "Denmark") -> dict[str, Any]:
-    return {
-        "url": f"https://www.medio{n}.dk/nyhed/{n}?utm_source=x",
-        "url_mobile": "",
-        "title": titular,
-        "seendate": (AHORA - timedelta(hours=horas)).strftime("%Y%m%dT%H%M%SZ"),
-        "socialimage": "",
-        "domain": f"medio{n}.dk",
-        "language": "Danish",
-        "sourcecountry": pais,
-    }
+AHORA = datetime(2025, 9, 23, 12, 5, tzinfo=UTC)
+TITULAR = "Droner over Københavns Lufthavn: lufthavnen lukket"
 
 
-class ApiFalsa:
-    """Devuelve los artículos de la ventana pedida; con `tope` simula el límite de 250."""
+def fila(
+    n: int,
+    titular: str,
+    franja: str = "20250923114500",
+    medio: str | None = None,
+    traduccion: str = "srclc:dan;eng:GT-DAN 1.0",
+    lugares: str = "",
+    temas: str = "DRONES;TAX_FNCACT;SECURITY_SERVICES",
+) -> str:
+    campos = [""] * gdelt.NUM_COLUMNAS
+    campos[gdelt.COL_FECHA] = franja
+    campos[gdelt.COL_MEDIO] = medio or f"medio{n}.dk"
+    campos[gdelt.COL_URL] = f"https://www.medio{n}.dk/nyhed/{n}?utm_source=x"
+    campos[gdelt.COL_TEMAS] = temas
+    campos[gdelt.COL_LUGARES] = lugares
+    campos[gdelt.COL_TRADUCCION] = traduccion
+    # El titular llega con entidades HTML, como en los ficheros reales.
+    campos[gdelt.COL_EXTRAS] = f"<PAGE_TITLE>{titular.replace('ø', '&#xF8;')}</PAGE_TITLE>"
+    return "\t".join(campos)
 
-    def __init__(self, articulos: list[dict[str, Any]], tope: int = gdelt.MAX_RESULTADOS) -> None:
-        self.articulos = articulos
-        self.tope = tope
-        self.pedidas: list[dict[str, list[str]]] = []
-        self.fallar = False
+
+def comprimido(lineas: list[str]) -> bytes:
+    salida = io.BytesIO()
+    with zipfile.ZipFile(salida, "w") as z:
+        z.writestr("x.gkg.csv", "\n".join(lineas) + "\n")
+    return salida.getvalue()
+
+
+class GdeltFalso:
+    """Índices y ficheros GKG en memoria. Una franja sin fichero da 404."""
+
+    def __init__(self, ultima: str) -> None:
+        self.ultima = ultima
+        self.ficheros: dict[str, bytes] = {}
+        self.pedidas: list[str] = []
+        self.caido = False
+
+    def poner(self, franja: str, lineas: list[str], flujo: str = "traducido") -> None:
+        self.ficheros[franja + gdelt.FLUJOS[flujo][1]] = comprimido(lineas)
 
     def __call__(self, url: str, cabeceras: dict[str, str], limite_s: float) -> Respuesta:
-        if self.fallar:
-            return 429, {}, b"Please limit requests to one every 5 seconds"
-        parametros = parse_qs(urlsplit(url).query)
-        self.pedidas.append(parametros)
-        inicio, fin = parametros["startdatetime"][0], parametros["enddatetime"][0]
-        dentro = [a for a in self.articulos if inicio <= a["seendate"].replace("T", "")[:14] < fin][
-            : self.tope
-        ]
-        return 200, {}, json.dumps({"articles": dentro}).encode()
+        if self.caido:
+            return 503, {}, b""
+        self.pedidas.append(url)
+        if url.endswith(".txt"):
+            sufijo = ".translation.gkg.csv.zip" if "translation" in url else ".gkg.csv.zip"
+            linea = f"1 x {gdelt.BASE}{self.ultima}{sufijo}\n"
+            return 200, {}, linea.encode()
+        nombre = url.removeprefix(gdelt.BASE)
+        if nombre in self.ficheros:
+            return 200, {}, self.ficheros[nombre]
+        return 404, {}, b""
 
 
-def descargador(api: ApiFalsa) -> Descargador:
-    return Descargador(api, dormir=lambda _: None, pausa_minima_s=0)
+def descargador(falso: GdeltFalso) -> Descargador:
+    return Descargador(falso, dormir=lambda _: None, pausa_minima_s=0, reintentos=0)
 
 
 @pytest.fixture
@@ -60,50 +82,91 @@ def almacen() -> Iterator[Almacen]:
     a.cerrar()
 
 
-def test_consultas_con_palabras_y_grupos_de_paises() -> None:
-    consultas = gdelt.consultas()
-    assert len(consultas) == -(-42 // gdelt.PAISES_POR_CONSULTA)
-    assert all(c.startswith("(drone OR drones OR UAV OR UAVs) (") for c in consultas)
-    assert "sourcecountry:germany" in " ".join(consultas)
-    assert "sourcecountry:russia" not in " ".join(consultas)
+def articulo(n: int, titular: str, horas: float, pais: str | None = "DK") -> Articulo:
+    return Articulo(
+        url=f"https://medio{n}.dk/nyhed/{n}",
+        medio=f"medio{n}.dk",
+        fecha=AHORA - timedelta(hours=horas),
+        titular=titular,
+        idioma="da",
+        pais=pais,
+        lugares=("EKCH",) if "Lufthavn" in titular else (),
+    )
 
 
-def test_una_ventana_llena_se_parte_en_dos(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(gdelt, "MAX_RESULTADOS", 4)
-    # A las 11:57, 11:51 ... 11:27: la hora no cabe y la media hora final tampoco.
-    api = ApiFalsa([bruto(i, f"Drone {i}", 0.05 + i / 10) for i in range(6)], tope=4)
-    articulos = gdelt.pedir(descargador(api), "q", AHORA - timedelta(hours=1), AHORA)
-    assert len(articulos) == 6
-    assert len(api.pedidas) == 5
+# --- Filas ------------------------------------------------------------------------
 
 
-def test_respuesta_de_error_en_texto_no_es_valida() -> None:
-    assert not gdelt.es_json("Your search contained a phrase that was too short")
-    assert gdelt.es_json(' {"articles": []}')
+def test_fila_con_titular_idioma_pais_temas_y_lugar() -> None:
+    config, med = configuracion(), gdelt.medios()
+    campos = fila(1, TITULAR).split("\t")
+    a = gdelt.articulo(campos, filtro(), nomenclator(), med, config)
+    assert a is not None
+    assert (a.url, a.titular, a.idioma, a.pais) == (
+        "https://medio1.dk/nyhed/1",
+        TITULAR,
+        "da",
+        "DK",
+    )
+    assert a.fecha == datetime(2025, 9, 23, 11, 45, tzinfo=UTC)
+    # Las taxonomías largas no se guardan.
+    assert a.temas == ("DRONES", "SECURITY_SERVICES")
+    assert a.lugares == ("EKCH",)
+
+
+def test_sin_dron_en_el_titular_o_fuera_de_europa_no_pasa() -> None:
+    config, med = configuracion(), gdelt.medios()
+    args = (filtro(), nomenclator(), med, config)
+    sin_dron = fila(1, "Københavns Lufthavn lukket").split("\t")
+    assert gdelt.articulo(sin_dron, *args) is None
+    lejos = fila(2, "Drone strike in Texas", medio="ejemplo.com", traduccion="").split("\t")
+    assert gdelt.articulo(lejos, *args) is None
+    # Un medio de fuera que sitúa la noticia en un país europeo sí pasa, sin país del medio.
+    cerca = fila(
+        3, "Drone sightings close Munich airport", medio="ejemplo.com", traduccion="",
+        lugares="4#Munich, Bayern, Germany#GM#GM02#48.15#11.58#-1829149",
+    ).split("\t")  # fmt: skip
+    a = gdelt.articulo(cerca, *args)
+    assert a is not None
+    assert (a.pais, a.idioma) == (None, "en")
+
+
+def test_pais_del_medio_por_dominio_o_sufijo() -> None:
+    med = gdelt.medios()
+    assert med.pais("www.dr.dk") == "DK"
+    assert med.pais("bbc.co.uk") == "GB"
+    assert med.pais("ejemplo.com") is None
+    assert med.paises_lugares("1#Spain#SP#SP#40#-4#SP;1#Russia#RS#RS#60#100#RS") == {"ES"}
+
+
+def test_franjas() -> None:
+    assert gdelt.franja_de(datetime(2025, 9, 23, 11, 59, 30, tzinfo=UTC)) == datetime(
+        2025, 9, 23, 11, 45, tzinfo=UTC
+    )
+    assert gdelt.url_fichero(datetime(2025, 9, 23, 11, 45, tzinfo=UTC), "ingles").endswith(
+        "/20250923114500.gkg.csv.zip"
+    )
+
+
+# --- Incorporación ----------------------------------------------------------------
 
 
 def test_incorpora_filtra_deduplica_y_agrupa(almacen: Almacen) -> None:
-    brutos = [
-        bruto(1, "Droner over Københavns Lufthavn: lufthavnen lukket", 10),
+    recibidos = [
+        articulo(1, TITULAR, 10),
         # Réplica: el mismo titular en otro medio.
-        bruto(2, "Droner over Københavns Lufthavn: lufthavnen lukket - TV2", 9),
-        bruto(3, "Politiet: droner ved Københavns Lufthavn i nat, flyvninger aflyst", 8),
+        articulo(2, TITULAR + " - TV2", 9),
+        articulo(3, "Politiet: droner ved Københavns Lufthavn i nat, flyvninger aflyst", 8),
         # Ocio: fuera.
-        bruto(4, "Stort droneshow i Aarhus", 7),
+        articulo(4, "Stort droneshow i Aarhus", 7),
         # La misma URL otra vez.
-        bruto(1, "Droner over Københavns Lufthavn: lufthavnen lukket", 10),
+        articulo(1, TITULAR, 10),
     ]
-    recuentos = gdelt.incorporar(almacen, brutos)
+    recuentos = gdelt.incorporar(almacen, recibidos)
     assert (recuentos.recibidos, recuentos.ya_vistos, recuentos.descartados) == (5, 1, 1)
     assert (recuentos.replicas, recuentos.nuevos, recuentos.candidatos_nuevos) == (1, 2, 1)
     articulos = almacen.articulos()
     assert [a["replicas"] for a in articulos] == [1, 0]
-    assert articulos[0]["url"] == "https://medio1.dk/nyhed/1"
-    assert (articulos[0]["idioma"], articulos[0]["pais"], articulos[0]["lugares"]) == (
-        "da",
-        "DK",
-        ["EKCH"],
-    )
     (candidato,) = almacen.candidatos()
     assert candidato["lugar"] == "EKCH"
     assert len(candidato["articulos"]) == 2
@@ -111,44 +174,83 @@ def test_incorpora_filtra_deduplica_y_agrupa(almacen: Almacen) -> None:
 
 
 def test_el_candidato_crece_entre_ejecuciones(almacen: Almacen) -> None:
-    gdelt.incorporar(almacen, [bruto(1, "Droner over Københavns Lufthavn: lufthavnen lukket", 10)])
-    gdelt.incorporar(almacen, [bruto(3, "Politiet: nye droner ved Københavns Lufthavn i nat", 2)])
+    gdelt.incorporar(almacen, [articulo(1, TITULAR, 10)])
+    gdelt.incorporar(almacen, [articulo(3, "Politiet: nye droner ved Københavns Lufthavn", 2)])
     (candidato,) = almacen.candidatos()
     assert len(candidato["articulos"]) == 2
 
 
-def test_ejecucion_avanza_el_cursor_con_una_hora_de_solape(almacen: Almacen) -> None:
-    api = ApiFalsa([bruto(1, "Droner over Københavns Lufthavn: lufthavnen lukket", 3)])
-    gdelt.ejecutar(almacen, descargador(api), AHORA)
-    assert almacen.cursor("gdelt") == {
-        "hasta": "2025-09-23T12:00:00Z",
-        "inicio": "2025-09-22T12:00:00Z",
-    }
-    api.pedidas.clear()
-    gdelt.ejecutar(almacen, descargador(api), AHORA + timedelta(hours=1))
-    assert {p["startdatetime"][0] for p in api.pedidas} == {"20250923110000"}
+# --- Ejecución --------------------------------------------------------------------
 
 
-def test_si_la_api_no_responde_el_cursor_no_avanza(almacen: Almacen) -> None:
-    api = ApiFalsa([])
-    gdelt.ejecutar(almacen, descargador(api), AHORA)
-    api.fallar = True
-    assert gdelt.ejecutar(almacen, descargador(api), AHORA + timedelta(hours=5)).recibidos == 0
-    cursor = almacen.cursor("gdelt")
-    assert cursor is not None
-    assert cursor["hasta"] == "2025-09-23T12:00:00Z"
-    # Más de un día sin respuesta: la ejecución queda en rojo.
+def test_procesa_las_franjas_pendientes_y_avanza_el_cursor(almacen: Almacen) -> None:
+    falso = GdeltFalso("20250923114500")
+    almacen.guardar_cursor("gdelt", {"franja": "2025-09-23T11:15:00Z", "inicio": "x"})
+    falso.poner("20250923113000", [fila(1, TITULAR, "20250923113000")])
+    falso.poner("20250923113000", [], "ingles")
+    falso.poner("20250923114500", [fila(2, "Ny drone ved Københavns Lufthavn i aften")])
+    falso.poner("20250923114500", [], "ingles")
+    recuentos = gdelt.ejecutar(almacen, descargador(falso), AHORA)
+    assert (recuentos.franjas, recuentos.filas, recuentos.nuevos) == (2, 2, 2)
+    assert almacen.cursor("gdelt") == {"franja": "2025-09-23T11:45:00Z", "inicio": "x"}
+    # Nada nuevo: no se pide ningún fichero.
+    falso.pedidas.clear()
+    gdelt.ejecutar(almacen, descargador(falso), AHORA)
+    assert all(url.endswith(".txt") for url in falso.pedidas)
+
+
+def test_un_fichero_reciente_que_falta_se_espera(almacen: Almacen) -> None:
+    falso = GdeltFalso("20250923114500")
+    almacen.guardar_cursor("gdelt", {"franja": "2025-09-23T11:30:00Z", "inicio": "x"})
+    falso.poner("20250923114500", [], "ingles")
+    assert gdelt.ejecutar(almacen, descargador(falso), AHORA).franjas == 0
+    assert almacen.cursor("gdelt") == {"franja": "2025-09-23T11:30:00Z", "inicio": "x"}
+
+
+def test_un_fichero_antiguo_que_falta_se_da_por_perdido(almacen: Almacen) -> None:
+    falso = GdeltFalso("20250923114500")
+    almacen.guardar_cursor("gdelt", {"franja": "2025-09-23T05:30:00Z", "inicio": "x"})
+    franjas = [datetime(2025, 9, 23, 5, 45, tzinfo=UTC) + gdelt.FRANJA * i for i in range(25)]
+    for i, franja in enumerate(franjas):
+        falso.poner(f"{franja:%Y%m%d%H%M%S}", [], "ingles")
+        if i:
+            falso.poner(f"{franja:%Y%m%d%H%M%S}", [])
+    recuentos = gdelt.ejecutar(almacen, descargador(falso), AHORA)
+    assert (recuentos.franjas, recuentos.ausentes) == (25, 1)
+
+
+def test_el_cursor_de_la_api_antigua_se_convierte(almacen: Almacen) -> None:
+    falso = GdeltFalso("20250923114500")
+    almacen.guardar_cursor("gdelt", {"hasta": "2025-09-23T11:40:12Z", "inicio": "y"})
+    falso.poner("20250923113000", [], "ingles")
+    falso.poner("20250923113000", [])
+    falso.poner("20250923114500", [], "ingles")
+    falso.poner("20250923114500", [])
+    assert gdelt.ejecutar(almacen, descargador(falso), AHORA).franjas == 2
+    assert almacen.cursor("gdelt") == {"franja": "2025-09-23T11:45:00Z", "inicio": "y"}
+
+
+def test_tope_de_franjas_por_ejecucion(almacen: Almacen) -> None:
+    falso = GdeltFalso("20250923114500")
+    almacen.guardar_cursor("gdelt", {"franja": "2025-09-23T11:00:00Z", "inicio": "x"})
+    for franja in ("1115", "1130", "1145"):
+        falso.poner(f"20250923{franja}00", [], "ingles")
+        falso.poner(f"20250923{franja}00", [])
+    assert gdelt.ejecutar(almacen, descargador(falso), AHORA, max_franjas=2).franjas == 2
+    assert almacen.cursor("gdelt") == {"franja": "2025-09-23T11:30:00Z", "inicio": "x"}
+
+
+def test_mas_de_un_dia_pendiente_queda_en_rojo(almacen: Almacen) -> None:
+    falso = GdeltFalso("20250923114500")
+    falso.caido = True
+    almacen.guardar_cursor("gdelt", {"franja": "2025-09-23T09:00:00Z", "inicio": "x"})
+    assert gdelt.ejecutar(almacen, descargador(falso), AHORA).franjas == 0
     with pytest.raises(gdelt.GdeltNoDisponible):
-        gdelt.ejecutar(almacen, descargador(api), AHORA + timedelta(days=2))
+        gdelt.ejecutar(almacen, descargador(falso), AHORA + timedelta(days=1))
 
 
-def test_sin_respuesta_desde_la_primera_ejecucion_acaba_en_rojo(almacen: Almacen) -> None:
-    api = ApiFalsa([])
-    api.fallar = True
-    gdelt.ejecutar(almacen, descargador(api), AHORA)
-    assert almacen.cursor("gdelt") == {
-        "hasta": "2025-09-22T12:00:00Z",
-        "inicio": "2025-09-22T12:00:00Z",
-    }
-    with pytest.raises(gdelt.GdeltNoDisponible):
-        gdelt.ejecutar(almacen, descargador(api), AHORA + timedelta(hours=1))
+def test_informe_por_mes_y_muestra(almacen: Almacen) -> None:
+    gdelt.incorporar(almacen, [articulo(1, TITULAR, 30), articulo(2, TITULAR + " - TV2", 29)])
+    texto = informe(almacen)
+    assert "| 2025-09 | 1 | 1 | 1 |" in texto
+    assert TITULAR in texto

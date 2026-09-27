@@ -85,3 +85,13 @@ def test_reprocesar_el_mismo_parte_no_cambia_nada(almacen: Almacen) -> None:
     publicar(almacen, 10, MANANA, 100, 90)
     assert almacen.ataques_ucrania() == antes
     assert len(almacen.historial(id_)) == 1
+
+
+def test_la_marca_de_reivindicacion_llega_a_los_ataques_anteriores(almacen: Almacen) -> None:
+    id_ = publicar(almacen, 1, MANANA, 50, 40)
+    (ataque,) = almacen.ataques_ucrania()
+    ataque.pop("reivindicacion_de_parte")
+    almacen.guardar_ataque_ucrania(ataque, AHORA)
+    assert publicar(almacen, 1, MANANA, 50, 40) == id_
+    (ataque,) = almacen.ataques_ucrania()
+    assert ataque["reivindicacion_de_parte"] is True

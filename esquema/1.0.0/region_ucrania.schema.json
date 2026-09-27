@@ -8,6 +8,11 @@
   "required": ["region"],
   "properties": {
     "region": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.0.0:comun#/$defs/region_iso"},
+    "derribados": {
+      "x-visibilidad": "publico",
+      "description": "Drones que el parte dice derribados sobre esta región, cuando da la cifra de cada una.",
+      "$ref": "urn:eodi:esquema:1.0.0:comun#/$defs/rango_entero_o_desconocido"
+    },
     "impactos": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.0.0:comun#/$defs/rango_entero_o_desconocido"},
     "caida_restos": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.0.0:comun#/$defs/rango_entero_o_desconocido"},
     "categorias_objetivo": {

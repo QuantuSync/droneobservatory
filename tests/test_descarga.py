@@ -6,6 +6,7 @@ from recogida.descarga import (
     REINTENTOS,
     Descargador,
     DescargaFallida,
+    NoEncontrado,
     PaginaBloqueada,
     Respuesta,
 )
@@ -111,3 +112,13 @@ def test_agota_los_reintentos() -> None:
     with pytest.raises(DescargaFallida, match="error de red"):
         d.texto("https://t.me/a", es_valida)
     assert d.recuentos["fallos"] == 1
+
+
+def test_contenido_en_bruto_y_404_sin_reintentos() -> None:
+    reloj = Reloj()
+    transporte = Transporte([(200, {}, b"PK"), (404, {}, b"")])
+    d = Descargador(transporte, dormir=reloj.dormir, reloj=reloj)
+    assert d.contenido("https://ejemplo.org/a.zip", lambda c: c[:2] == b"PK") == b"PK"
+    with pytest.raises(NoEncontrado):
+        d.contenido("https://ejemplo.org/b.zip", lambda c: True)
+    assert len(transporte.pedidas) == 2

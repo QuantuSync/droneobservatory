@@ -19,8 +19,8 @@ jobs:
   recogida:
     if: github.repository == 'QuantuSync/droneobservatory' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    # Una ejecución normal tarda unos minutos; GDELT puede sumar hasta 20 con sus
-    # reintentos (dos consultas de hasta 10,5 minutos cada una).
+    # Una ejecución normal tarda unos minutos; tras un corte, GDELT recupera hasta 48
+    # horas de franjas (unos 12 minutos).
     timeout-minutes: 45
     permissions:
       # Solo para el commit de los ficheros publicados en main.

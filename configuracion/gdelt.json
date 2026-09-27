@@ -1,7 +1,6 @@
 {
   "version_esquema": "1.0.0",
-  "descripcion": "Recogida de noticias europeas sobre drones en la API DOC 2.0 de GDELT. consulta: palabras que van en la consulta; la API busca sobre la traducción inglesa de cada artículo (en la prueba del 26 de septiembre de 2025, «Drohne» y «lennokki» solos dieron 0 artículos y «drone» dio artículos en alemán y polaco), así que bastan las inglesas y la consulta es corta. palabras_dron: la palabra para dron en cada idioma europeo, en singular y plural (la API busca palabras enteras; el filtro local casa también con sus declinaciones). Se incluyen el ruso y el ucraniano porque los medios de Moldavia, los países bálticos y Bulgaria publican también en ellos. excluir: ocio, comercio y usos civiles que no son incidentes. senales: palabras que indican un incidente, agrupadas por el tipo aparente que sugieren. tipo_de_lugar: palabras que, junto al nombre de una ciudad, dicen que se habla de su aeropuerto, su base o su central. paises: países europeos de origen de los medios, con el nombre que usa la API y su ISO 3166-1; quedan fuera Rusia, Bielorrusia y Ucrania, cuyos medios cubren la guerra y ahogarían las noticias de incidentes en el resto de Europa. idiomas: nombre de la API a ISO 639-1.",
-  "consulta": ["drone", "drones", "UAV", "UAVs"],
+  "descripcion": "Recogida de noticias europeas sobre drones en los ficheros GKG 2.0 de GDELT (flujo inglés y traducido). palabras_dron: la palabra para dron en cada idioma europeo, en singular y plural; el filtro local casa también con sus declinaciones sobre el titular original de la página. Se incluyen el ruso y el ucraniano porque los medios de Moldavia, los países bálticos y Bulgaria publican también en ellos. excluir: ocio, comercio y usos civiles que no son incidentes. senales: palabras que indican un incidente, agrupadas por el tipo aparente que sugieren. tipo_de_lugar: palabras que, junto al nombre de una ciudad, dicen que se habla de su aeropuerto, su base o su central. paises: países europeos, con el nombre que usa la lista de medios de GDELT y su ISO 3166-1; quedan fuera Rusia, Bielorrusia y Ucrania, cuyos medios cubren la guerra y ahogarían las noticias de incidentes en el resto de Europa. idiomas: código de idioma de origen del flujo traducido (ISO 639-3) a ISO 639-1; el flujo inglés es inglés.",
   "palabras_dron": {
     "en": ["drone", "drones", "UAV", "UAVs"],
     "es": ["dron", "drones"],
@@ -102,23 +101,21 @@
   },
   "paises": {
     "albania": "AL", "andorra": "AD", "austria": "AT", "belgium": "BE",
-    "bosniaandherzegovina": "BA", "bulgaria": "BG", "croatia": "HR", "cyprus": "CY",
+    "bosniaandherzegovina": "BA", "bosnia-herzegovina": "BA", "bulgaria": "BG", "croatia": "HR", "cyprus": "CY",
     "czechrepublic": "CZ", "denmark": "DK", "estonia": "EE", "finland": "FI", "france": "FR",
     "germany": "DE", "greece": "GR", "hungary": "HU", "iceland": "IS", "ireland": "IE",
     "italy": "IT", "kosovo": "XK", "latvia": "LV", "liechtenstein": "LI", "lithuania": "LT",
     "luxembourg": "LU", "macedonia": "MK", "malta": "MT", "moldova": "MD", "monaco": "MC",
     "montenegro": "ME", "netherlands": "NL", "norway": "NO", "poland": "PL", "portugal": "PT",
-    "romania": "RO", "sanmarino": "SM", "serbia": "RS", "slovakia": "SK", "slovenia": "SI",
+    "romania": "RO", "sanmarino": "SM", "serbia": "RS", "slovakia": "SK", "slovakrepublic": "SK", "slovenia": "SI",
     "spain": "ES", "sweden": "SE", "switzerland": "CH", "unitedkingdom": "GB"
   },
   "idiomas": {
-    "Albanian": "sq", "Bosnian": "bs", "Bulgarian": "bg", "Catalan": "ca", "Croatian": "hr",
-    "Czech": "cs", "Danish": "da", "Dutch": "nl", "English": "en", "Estonian": "et",
-    "Finnish": "fi", "French": "fr", "Galician": "gl", "German": "de", "Greek": "el",
-    "Hungarian": "hu", "Icelandic": "is", "Irish": "ga", "Italian": "it", "Latvian": "lv",
-    "Lithuanian": "lt", "Macedonian": "mk", "Maltese": "mt", "Norwegian": "no", "Polish": "pl",
-    "Portuguese": "pt", "Romanian": "ro", "Russian": "ru", "Serbian": "sr", "Slovak": "sk",
-    "Slovenian": "sl", "Spanish": "es", "Swedish": "sv", "Turkish": "tr", "Ukrainian": "uk",
-    "Basque": "eu", "Welsh": "cy", "Luxembourgish": "lb"
+    "sqi": "sq", "bos": "bs", "bul": "bg", "cat": "ca", "hrv": "hr", "ces": "cs", "dan": "da",
+    "nld": "nl", "eng": "en", "est": "et", "fin": "fi", "fra": "fr", "glg": "gl", "deu": "de",
+    "ell": "el", "hun": "hu", "isl": "is", "gle": "ga", "ita": "it", "lav": "lv", "lit": "lt",
+    "mkd": "mk", "mlt": "mt", "nor": "no", "nob": "no", "nno": "no", "pol": "pl", "por": "pt",
+    "ron": "ro", "rus": "ru", "srp": "sr", "slk": "sk", "slv": "sl", "spa": "es", "swe": "sv",
+    "tur": "tr", "ukr": "uk", "eus": "eu", "cym": "cy", "ltz": "lb"
   }
 }

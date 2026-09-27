@@ -23,7 +23,7 @@
     "sentido": {"x-visibilidad": "publico", "enum": ["RU_UA", "UA_RU"]},
     "reivindicacion_de_parte": {
       "x-visibilidad": "publico",
-      "description": "Las cifras son lo que una de las partes en guerra dice haber derribado (Ministerio de Defensa ruso), sin otra fuente que lo confirme.",
+      "description": "Las cifras son lo que dice una de las partes en guerra (Fuerza Aérea de Ucrania o Ministerio de Defensa ruso), sin otra fuente que lo confirme.",
       "const": true
     },
     "estado": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.0.0:comun#/$defs/estado_historial"},
@@ -110,8 +110,28 @@
     },
     "regiones": {
       "x-visibilidad": "publico",
+      "description": "Regiones afectadas por los drones del ataque.",
       "type": "array",
       "items": {"$ref": "urn:eodi:esquema:1.0.0:region_ucrania"}
+    },
+    "regiones_misiles": {
+      "x-visibilidad": "publico",
+      "description": "Regiones que el parte solo cita por los misiles del mismo ataque: no cuentan como afectadas por drones.",
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "urn:eodi:esquema:1.0.0:comun#/$defs/region_iso"}
+    },
+    "incluido_en": {
+      "x-visibilidad": "publico",
+      "description": "Parte con el total de un periodo que cubre este tramo: las cifras del tramo ya están en ese total y no se suman.",
+      "type": "string",
+      "pattern": "^EODI-UA-\\d{4}-\\d{4}$"
+    },
+    "solapado_con": {
+      "x-visibilidad": "publico",
+      "description": "Tramo con el que este se solapa sin que ninguno cubra al otro: solo se suma aquel.",
+      "type": "string",
+      "pattern": "^EODI-UA-\\d{4}-\\d{4}$"
     },
     "fuentes": {
       "x-visibilidad": "publico",
