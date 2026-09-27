@@ -1,0 +1,28 @@
+[project]
+name = "droneobservatory"
+version = "0.1.0"
+description = "Observatorio Europeo de Incidentes con Drones (EODI)"
+readme = "README.md"
+requires-python = ">=3.13"
+license = "Apache-2.0"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-p no:cacheprovider"
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+extend-exclude = ["stubs"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "N", "SIM", "RUF"]
+# Nombres de excepciones en español: el sufijo Error no aplica.
+ignore = ["N818"]
+
+[tool.mypy]
+strict = true
+python_version = "3.13"
+mypy_path = "stubs"
+files = ["esquema", "proceso", "modelo", "almacen", "exportacion", "tests"]
