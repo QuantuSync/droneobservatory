@@ -1,0 +1,15 @@
+Licencia de los datos publicados
+
+Los datos que publica el Observatorio Europeo de Incidentes con Drones
+(EODI) -en particular incidentes.geojson y ucrania.json- se distribuyen
+bajo la licencia Creative Commons Atribución 4.0 Internacional
+(CC BY 4.0).
+
+Resumen:  https://creativecommons.org/licenses/by/4.0/
+Texto legal: https://creativecommons.org/licenses/by/4.0/legalcode
+
+Las frases de origen citadas en los datos pertenecen a sus autores y se
+reproducen como cita breve junto al enlace a la fuente; no quedan
+sujetas a esta licencia.
+
+El código del repositorio se distribuye bajo Apache-2.0 (fichero LICENSE).

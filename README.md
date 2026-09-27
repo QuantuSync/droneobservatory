@@ -45,3 +45,11 @@ mypy
 generan una clave efímera; para cifrar datos reales, la identidad age se pasa
 en la variable de entorno `EODI_CLAVE_AGE` y nunca se guarda en el
 repositorio.
+
+## Licencia
+
+- Código: [Apache-2.0](LICENSE).
+- Datos publicados (`incidentes.geojson`, `ucrania.json`):
+  [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Detalle en
+  [LICENSE-DATOS](LICENSE-DATOS). Las frases de origen citadas pertenecen a sus
+  autores y se reproducen como cita breve junto al enlace.

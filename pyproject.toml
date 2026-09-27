@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "Observatorio Europeo de Incidentes con Drones (EODI)"
 readme = "README.md"
 requires-python = ">=3.13"
+license = "Apache-2.0"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
