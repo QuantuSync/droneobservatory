@@ -107,10 +107,10 @@ def test_transicion_no_permitida_desde_desmentido() -> None:
     fecha = instante("2025-11-05T10:00Z")
     documento["estado"]["historial"] += [
         {"estado": "desmentido", "fecha": fecha, "fuente_id": "F1"},
-        {"estado": "confirmado", "fecha": fecha, "fuente_id": "F1"},
+        {"estado": "atribuido", "fecha": fecha, "fuente_id": "F1"},
     ]
-    documento["estado"]["actual"] = "confirmado"
-    assert "desmentido → confirmado" in mensajes(validar(documento))
+    documento["estado"]["actual"] = "atribuido"
+    assert "desmentido → atribuido" in mensajes(validar(documento))
 
 
 def test_desmentido_exige_motivo_y_sigue_siendo_valido_con_el() -> None:
@@ -122,6 +122,34 @@ def test_desmentido_exige_motivo_y_sigue_siendo_valido_con_el() -> None:
     assert "desmentido sin motivo" in mensajes(validar(documento))
     documento["control"]["motivo_desmentido"] = "La autoridad aclara que eran aves"
     assert validar(documento) == []
+
+
+def _desmentir_y_revertir(revierte: Documento) -> Documento:
+    documento = ejemplos.incidente_minimo()
+    documento["fuentes"] += [ejemplos.fuente("F2", "B", es_autoridad=True), revierte]
+    documento["estado"]["historial"] += [
+        {"estado": "desmentido", "fecha": instante("2025-11-05T10:00Z"), "fuente_id": "F2"},
+        {"estado": "confirmado", "fecha": instante("2025-11-06T10:00Z"), "fuente_id": "F3"},
+    ]
+    documento["estado"]["actual"] = "confirmado"
+    documento["control"]["motivo_desmentido"] = "La autoridad aclara que eran aves"
+    return documento
+
+
+def test_reversion_de_desmentido_por_autoridad_igual_de_fiable() -> None:
+    documento = _desmentir_y_revertir(ejemplos.fuente("F3", "B", es_autoridad=True))
+    assert validar(documento) == []
+
+
+@pytest.mark.parametrize(
+    ("revierte", "esperado"),
+    [
+        (ejemplos.fuente("F3", "A"), "exige una autoridad"),
+        (ejemplos.fuente("F3", "C", es_autoridad=True), "fiabilidad igual o mayor"),
+    ],
+)
+def test_reversion_de_desmentido_rechazada(revierte: Documento, esperado: str) -> None:
+    assert esperado in mensajes(validar(_desmentir_y_revertir(revierte)))
 
 
 def test_incursion_exige_origen_demostrado() -> None:

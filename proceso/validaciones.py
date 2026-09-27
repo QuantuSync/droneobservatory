@@ -139,8 +139,9 @@ def errores_coordenadas(documento: Any) -> list[Error]:
 def errores_estado(documento: Documento, capa: Capa) -> list[Error]:
     estado = _dict(documento.get("estado"))
     historial = _lista(estado.get("historial"))
+    fuentes = {str(_dict(f).get("id")): _dict(f) for f in _lista(documento.get("fuentes"))}
     try:
-        errores = [Error("estado", e) for e in errores_historial(estado, capa)]
+        errores = [Error("estado", e) for e in errores_historial(estado, fuentes, capa)]
         pasos = [Estado(str(_dict(p).get("estado"))) for p in historial]
     except (KeyError, ValueError):
         return [Error("estado", "estado o historial mal formado")]
@@ -151,16 +152,17 @@ def errores_estado(documento: Documento, capa: Capa) -> list[Error]:
     ):
         errores.append(Error("estado", "atribuido sin confirmado"))
 
-    ids = {_dict(f).get("id") for f in _lista(documento.get("fuentes"))}
     for i, paso in enumerate(historial):
-        if _dict(paso).get("fuente_id") not in ids:
+        if _dict(paso).get("fuente_id") not in fuentes:
             errores.append(Error(f"estado.historial[{i}]", "el cambio cita una fuente inexistente"))
 
+    # Tras revertir un desmentido su motivo se conserva, igual que el paso en el historial.
     desmentido = estado.get("actual") == Estado.DESMENTIDO
+    hubo_desmentido = Estado.DESMENTIDO in pasos
     motivo = _dict(documento.get("control")).get("motivo_desmentido")
     if desmentido and not motivo:
         errores.append(Error("control.motivo_desmentido", "desmentido sin motivo"))
-    if motivo and not desmentido:
+    if motivo and not hubo_desmentido:
         errores.append(Error("control.motivo_desmentido", "motivo de desmentido sin desmentido"))
     return errores
 
