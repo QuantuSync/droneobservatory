@@ -72,10 +72,18 @@ _NEUTRALIZADOS = re.compile(r"подавл\w*|радиоэлектронн\w*|Р
 _SOBRE = re.compile(r"(?<!\w)над\s+(?:(?:территори|акватори)\w*|(?=(?-i:[А-ЯЁ])))", re.IGNORECASE)
 # «N украинских беспилотных летательных аппаратов», «два украинских БПЛА».
 _CIFRA = re.compile(_NUM + r"\s+(?:украинск\w+\s+)?(?:ударн\w+\s+)?" + _DRON, re.IGNORECASE)
-# Sin cifra y en singular: «уничтожен украинский беспилотный летательный аппарат».
+# Sin cifra y en singular: «уничтожен украинский беспилотный летательный аппарат»,
+# «украинский БПЛА уничтожен», «беспилотный летательный аппарат уничтожен».
+_SINGULAR = r"(?:беспилотный\s+летательный\s+аппарат|БПЛА|беспилотник)(?!\w)"
+_VERBO_SINGULAR = r"(?:перехвачен|уничтожен|сбит|подавлен)(?!\w)"
 _UNO = re.compile(
-    r"(?:перехвачен|уничтожен|сбит|подавлен)\s+(?:и\s+\w+\s+)?украинск\w+\s+" + _DRON, re.I
-)
+    _VERBO_SINGULAR + r"(?:\s+и\s+\w+)?\s+(?:украинский\s+)?" + _SINGULAR
+    + r"|(?:украинский\s+)?" + _SINGULAR + r"(?:\s+самол[её]тного\s+типа)?\s+" + _VERBO_SINGULAR,
+    re.IGNORECASE,
+)  # fmt: skip
+# La defensa aérea: la cifra de derribados va detrás; delante puede ir la del intento
+# («при попытке ... с применением трех беспилотников»).
+_PVO = re.compile(r"ПВО|противовоздушной\s+обороны", re.IGNORECASE)
 # Resúmenes que repiten partes ya publicados.
 _RESUMEN = re.compile(r"^\W*(?:Главное\s+за\s+день|Итоги\s+недели|Сводка)", re.IGNORECASE)
 # El pie del canal («🔹 Минобороны России», «Канал Минобороны России в MAКС») acaba el parte.
@@ -108,7 +116,11 @@ _RANGO = re.compile(
     re.IGNORECASE,
 )
 # «Около 15.05 мск» (aproximada) y «В 13.40 мск» (minuto).
-_PUNTO = re.compile(r"(?<!\w)(около|в)\s+(\d{1,2})[.:](\d{2})\s+мск", re.IGNORECASE)
+# «мск» puede faltar tras «около» («Около 07.15 при попытке ...»).
+_PUNTO = re.compile(
+    r"(?<!\w)(?:(около)\s+(\d{1,2})[.:](\d{2})(?:\s+мск)?|(в)\s+(\d{1,2})[.:](\d{2})\s+мск)",
+    re.IGNORECASE,
+)
 _NOCHE = re.compile(
     r"в\s+течени[еи]\s+(?:прошедшей\s+)?ночи|(?:этой|минувшей|прошедшей)\s+ночью", re.IGNORECASE
 )
@@ -187,6 +199,7 @@ def es_parte(texto: str) -> bool:
     parrafo = primer_parrafo(texto)
     return bool(
         _VERBO.search(parrafo)
+        and _PVO.search(parrafo)
         and re.search(_DRON, parrafo, re.IGNORECASE)
         and re.search(r"украинск|ВСУ|киевского\s+режима", parrafo, re.IGNORECASE)
         and _SOBRE.search(cuerpo(texto))
@@ -262,11 +275,12 @@ def periodo(texto: str, publicado: datetime) -> tuple[Instante, Instante]:
         if m := _RANGO.search(texto):
             inicio, fin = _rango(m, publicado)
         elif m := _PUNTO.search(texto):
-            momento = _utc(local.date(), time(int(m[2]), int(m[3])))
+            aproximada = m[1] is not None
+            hora, minuto = (m[2], m[3]) if aproximada else (m[5], m[6])
+            momento = _utc(local.date(), time(int(hora), int(minuto)))
             if momento > publicado:
                 momento -= timedelta(days=1)
-            precision = "aproximada" if m[1].lower() == "около" else "minuto"
-            inicio = fin = Instante(momento, precision)
+            inicio = fin = Instante(momento, "aproximada" if aproximada else "minuto")
         elif _NOCHE.search(texto):
             dia = local.date() - timedelta(days=1)
             inicio, fin = Instante(_utc(dia, HORA_INICIO_NOCHE), "aproximada"), redondeado
@@ -294,9 +308,11 @@ def periodo(texto: str, publicado: datetime) -> tuple[Instante, Instante]:
 
 
 def derribados(parrafo: str) -> int:
-    if m := _CIFRA.search(parrafo):
+    pvo = _PVO.search(parrafo)
+    tramo = parrafo[pvo.start() :] if pvo else parrafo
+    if m := _CIFRA.search(tramo):
         return numero(m[1])
-    if _UNO.search(parrafo):
+    if _UNO.search(tramo):
         return 1
     raise ParteIlegible("sin cifra de drones")
 

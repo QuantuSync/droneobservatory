@@ -236,3 +236,40 @@ def test_ejecucion_da_ataques_ua_ru_reivindicados_con_credibilidad_3(
     assert publico["regiones"] == [{"region": "RU-BRY"}]
     # La fuente es pública en la capa de Ucrania aunque sea interna fuera de ella.
     assert publico["fuentes"][0]["id"] == "mod_russia-2"
+
+
+@pytest.mark.parametrize(
+    "frase",
+    [
+        "дежурными средствами ПВО беспилотный летательный аппарат уничтожен над территорией "
+        "Белгородской области",
+        "дежурными средствами ПВО украинский БПЛА уничтожен над территорией Белгородской области",
+        "дежурными средствами ПВО уничтожен БпЛА самолетного типа над Белгородской областью",
+    ],
+)
+def test_formato_2024_en_singular_tras_el_intento(frase: str) -> None:
+    texto = (
+        "⚡️ В течение прошедшей ночи при попытке киевского режима совершить террористическую "
+        "атаку с применением трех беспилотных летательных аппаратов по объектам на территории "
+        f"Российской Федерации {frase}." + PIE
+    )
+    assert es_parte(texto)
+    leido = leer(texto, MANANA)
+    # La cifra del intento (tres) no cuenta: solo lo que dice haber derribado.
+    assert leido.derribados == rango(1)
+    assert leido.regiones == ("RU-BEL",)
+
+
+def test_hora_aproximada_sin_zona() -> None:
+    texto = (
+        "⚡️ Около 07.15 дежурными средствами ПВО уничтожены четыре украинских беспилотных "
+        "летательных аппарата над территорией Курской области." + PIE
+    )
+    leido = leer(texto, datetime(2024, 10, 19, 5, 58, tzinfo=UTC))
+    assert leido.inicio.documento() == instante("2024-10-19T04:15Z", "aproximada")
+    assert leido.derribados == rango(4)
+
+
+def test_sin_defensa_aerea_no_es_parte() -> None:
+    texto = "Расчет ЗРК уничтожил разведывательный БпЛА ВСУ в небе над Харьковской областью." + PIE
+    assert not es_parte(texto)
