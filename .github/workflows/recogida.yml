@@ -26,7 +26,8 @@ jobs:
       contents: write
     env:
       AUTOR: QuantuSync
-      CORREO: lucasalanizpintos@gmail.com
+      # Dirección anónima de la cuenta: el correo personal no queda en el workflow público.
+      CORREO: 192205734+QuantuSync@users.noreply.github.com
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
