@@ -380,10 +380,10 @@ def periodo(texto: str, publicado: datetime) -> tuple[Instante, Instante]:
             inicio = fin = Instante(momento, "aproximada" if aproximada else "minuto")
         elif m := _NOCHE.search(texto):
             # La noche que acaba el día declarado o el de la publicación.
-            dia_mes = next(((m[i], m[i + 1]) for i in (1, 3, 5) if m[i]), (None, None))
+            fechada = next((i for i in (1, 3, 5) if m[i]), None)
             fin_noche = (
-                _fecha(int(dia_mes[0]), MESES[dia_mes[1].lower()], local.date())
-                if dia_mes[0]
+                _fecha(int(m[fechada]), MESES[m[fechada + 1].lower()], local.date())
+                if fechada is not None
                 else None
             )
             dia = (fin_noche or local.date()) - timedelta(days=1)
