@@ -381,3 +381,29 @@ def test_formato_2024_con_medios_detectados_y_fechas_numericas() -> None:
     assert leido.lanzados["shahed_geran"] == rango(81)
     assert leido.zonas_lanzamiento == ("Курськ", "Приморсько-Ахтарськ")
     assert leido.derribados == rango(66)
+
+
+def test_reconocimiento_fuera_y_titular_solo_si_el_cuerpo_calla() -> None:
+    texto = (
+        "⚡️ ЗБИТО РАКЕТУ Х-59/69 ТА 11 БПЛА РІЗНИХ ТИПІВ\n"
+        "У ніч на 27 липня 2024 року ворог атакував керованою авіаційною ракетою Х-59 та "
+        "чотирма ударними БпЛА «Shahed» із Приморсько-Ахтарська – рф.\n"
+        "💥 Усі цілі було збито силами та засобами Сил оборони України.\n"
+        "Крім того, знищено ще вісім повітряних цілей: 4 розвідувальні БпЛА «Supercam»."
+    )
+    leido = leer(texto, datetime(2024, 7, 27, 5, tzinfo=UTC))
+    assert leido.lanzados["total"] == rango(4)
+    assert leido.derribados == rango(4)
+
+
+def test_total_con_vinetas_y_numeros_en_letras() -> None:
+    texto = (
+        "У ніч на 12 червня 2024 року окупанти завдали ракетно-авіаційного удару по Україні.\n"
+        "Усього – 30 засобів повітряного нападу:\n"
+        "- 4 крилаті ракети Х-101;\n"
+        "- одинадцять ударних БпЛА «Shahed-131/136» із Курської обл. – рф.\n"
+        "💥 Збили 11 ударних БпЛА."
+    )
+    leido = leer(texto, datetime(2024, 6, 12, 5, tzinfo=UTC))
+    assert leido.lanzados["total"] == rango(11)
+    assert leido.derribados == rango(11)
