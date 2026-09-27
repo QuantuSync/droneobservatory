@@ -186,3 +186,85 @@ def test_fecha_imposible_es_ilegible() -> None:
 
 def test_zonas_sin_lista() -> None:
     assert zonas("противник атакував 5 ударними БпЛА.") == ()
+
+
+# --- Variantes encontradas en el histórico --------------------------------------
+
+
+def test_drones_en_la_frase_siguiente_con_a_takozh() -> None:
+    texto = (
+        "У ніч на 20 серпня (з 18:00 19 серпня) противник атакував Київщину ракетами Іскандер-М, "
+        "двома баражуючими боєприпасами “Бандероль”. А також 168 ударними БпЛА типу Shahed та "
+        "дронами-імітаторами із напрямків: Курськ – рф.\n"
+        "Станом на 09:30 збито/подавлено 8 крилатих ракет, два баражуючі боєприпаси “Бандероль”, "
+        "а також 145 ворожих БпЛА."
+    )
+    leido = leer(texto, datetime(2026, 8, 20, 7, tzinfo=UTC))
+    assert leido.lanzados["total"] == rango(170)
+    assert leido.lanzados["otros"] == rango(2)
+    assert leido.derribados == rango(147)
+
+
+def test_recuento_de_medios_detectados_con_vinetas() -> None:
+    texto = (
+        "У ніч на 27 грудня (з 18:00 26 грудня) противник завдав комбінованого удару із "
+        "застосуванням ударних БпЛА та ракет.\n\n"
+        "Загалом виявлено та здійснено супровід 559-ти засобів повітряного нападу – 40 ракет та "
+        "519 БпЛА різних типів:\n\n"
+        "- 40 крилатих ракет Х-101;\n"
+        "- 519 ударних БпЛА типу Shahed, Гербера (понад 300 із них – «шахеди») із напрямків "
+        "Курськ, Орел – рф.\n\n"
+        "Станом на 11:00 збито/подавлено 474 цілі:\n- 30 ракет;\n- 444 ворожі БпЛА."
+    )
+    leido = leer(texto, datetime(2025, 12, 27, 9, tzinfo=UTC))
+    # Las 519 de la cabecera no se suman a las 519 de la viñeta.
+    assert leido.lanzados["total"] == rango(519)
+    assert leido.lanzados["shahed_geran"] == rango(300, 519)
+    assert leido.zonas_lanzamiento == ("Курськ", "Орел")
+    assert leido.derribados == rango(444)
+
+
+def test_salto_de_linea_en_mitad_de_la_frase_y_sufijo_de_caso() -> None:
+    texto = (
+        "У ніч на 12 жовтня (із 20.00 11 жовтня) противник атакував \n"
+        "118-та ударними БпЛА типу Shahed із напрямків: Курськ – рф, близько 50 із них- шахеди.\n"
+        "Станом на 09.00 збито/подавлено 103 ворожі БпЛА."
+    )
+    leido = leer(texto, datetime(2025, 10, 12, 6, tzinfo=UTC))
+    assert leido.inicio.documento()["valor"] == "2025-10-11T17:00Z"
+    assert leido.lanzados["total"] == rango(118)
+    assert leido.zonas_lanzamiento == ("Курськ",)
+
+
+def test_referencia_al_total_no_se_suma_a_los_derribados() -> None:
+    texto = (
+        "Протягом дня 27 серпня (із 7.00 по 19.00) противник атакував Україну 140 ударними БпЛА "
+        "(понад 100 із них – реактивні).\n"
+        "За попередніми даними із 140 БпЛА протиповітряною обороною збито/подавлено 120 дронів."
+    )
+    leido = leer(texto, datetime(2026, 8, 27, 16, tzinfo=UTC))
+    assert leido.derribados == rango(120)
+    # Sin otros modelos nombrados, la subcuenta solo fija el mínimo de su modelo.
+    assert leido.lanzados["shahed_geran"] == rango(100, 140)
+    assert leido.lanzados["gerbera_senuelos"] == rango(0, 140)
+
+
+def test_cifra_sin_maximo_es_ilegible() -> None:
+    texto = "У ніч на 12 травня ворог випустив по Україні понад 200 ударних безпілотників."
+    with pytest.raises(ParteIlegible, match="sin máximo"):
+        leer(texto, datetime(2026, 5, 12, 12, tzinfo=UTC))
+
+
+@pytest.mark.parametrize(
+    "texto",
+    [
+        # Balance parcial de un mando regional.
+        'Бойова робота Повітряне командування "Захід". В ніч на 7 лютого противник атакував '
+        "Захід. Знищено 65 ударних БпЛА.",
+        # Pie de vídeo: el periodo y el verbo no van con ninguna cifra de drones.
+        "Бойова робота у ніч на 2 червня. Цієї ночі ворог застосував понад 700 засобів, "
+        "десятки БпЛА збито.",
+    ],
+)
+def test_no_son_partes_nacionales(texto: str) -> None:
+    assert not es_parte(texto)

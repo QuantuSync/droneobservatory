@@ -5,6 +5,7 @@ Un parte que no se entiende lanza ParteIlegible con el motivo; nunca se
 publica a medias.
 """
 
+import itertools
 import json
 import re
 from dataclasses import dataclass
@@ -47,7 +48,7 @@ _APOSTROFOS = str.maketrans({"’": "'", "ʼ": "'", "`": "'", "\xa0": " "})
 _NUM = (
     r"(?<![\w:.])(\d+|" + "|".join(sorted(_PALABRAS_NUMERO, key=len, reverse=True)) + r")(?![\w:])"
 )
-_SUFIJO = r"(?:-?(?:ма|ми|ю|ти|х|м|ох|ьох|ьма|ома|ий|і|ів))?"
+_SUFIJO = r"(?:-[^\W\d_]{1,4}|ма|ми|ю|ти|х|м|ох|ьох|ьма|ома|ий|і|ів)?"
 _DRON = (
     r"(?:БпЛА|БПЛА|безпілотник\w*|безпілотн\w+\s+літальн\w+\s+апарат\w*|дрон\w*"
     r"|шахед\w*|Shahed\w*|Шахед\w*|Герань\w*|Гербер\w*|Gerbera|Бандерол\w*)"
@@ -181,22 +182,32 @@ def exacto(n: int) -> Documento:
 _VINETA = re.compile(r"^\s*[-–—•]\s*")
 
 
+_SIGUE = re.compile(r"\s*[\da-zа-яіїєґ]")
+
+
 def frases(texto: str) -> list[str]:
     """Frases del parte. Una cabecera terminada en ":" se une con sus viñetas,
     aunque haya líneas en blanco entre ellas.
 
-    Solo se corta tras un punto si sigue una mayúscula: "обл. рф" no corta.
+    Una línea que sigue sin cerrar la anterior ("атакував\\n118-ма ...") continúa su
+    frase. Solo se corta tras un punto si sigue una mayúscula: "обл. рф" no corta.
     """
     bloques: list[str] = []
     abierto = False
+    anterior = ""
     for linea in texto.translate(_APOSTROFOS).splitlines():
         if not linea.strip():
+            anterior = ""
             continue
         if abierto and _VINETA.match(linea):
             bloques[-1] += "; " + _VINETA.sub("", linea).strip()
-            continue
-        bloques.append(linea.strip())
-        abierto = linea.rstrip().endswith(":")
+        elif anterior and not re.search(r"[.!?:;]\s*$", anterior) and _SIGUE.match(linea):
+            bloques[-1] += " " + linea.strip()
+            abierto = linea.rstrip().endswith(":")
+        else:
+            bloques.append(linea.strip())
+            abierto = linea.rstrip().endswith(":")
+        anterior = linea
     resultado: list[str] = []
     for bloque in bloques:
         resultado += re.split(r"(?<=[.!?])\s+(?=[^\W\d_a-zа-яіїєґ])", bloque)
@@ -310,17 +321,31 @@ def _cifras(frase: str) -> list[re.Match[str]]:
     ]
 
 
+# "понад 200 ударних безпілотників": un mínimo sin máximo no cabe en un rango.
+_SIN_MAXIMO = re.compile(r"(?:понад|більше|щонайменше|більш\s+ніж)\s*$", re.IGNORECASE)
+
+
 def lanzados(frase: str) -> dict[str, Rango]:
     """Lanzados por familia y total a partir de la frase del ataque."""
     total = 0
     exactos: dict[Familia, int] = {}
     combinados: list[tuple[int, set[Familia]]] = []
+    # Con viñetas la cabecera repite el total ("559 засобів – 40 ракет та 519 БпЛА:").
+    cabecera, _, vinetas = frase.partition(";")
+    if _cifras(vinetas) and _cifras(cabecera):
+        frase = vinetas
     cifras = _cifras(frase)
     for i, m in enumerate(cifras):
+        if _SIN_MAXIMO.search(frase[: m.start()]):
+            raise ParteIlegible("cifra de lanzados sin máximo")
         n = numero(m[1])
         limite = cifras[i + 1].start() if i + 1 < len(cifras) else len(frase)
         tipos = _FIN_TIPOS.split(frase[m.end() : limite], maxsplit=1)[0]
-        familias = familias_en(m[0] + " " + tipos) or set(Familia)
+        # Una subcuenta ("понад 100 із них – реактивні") dice que ese modelo está, no que
+        # sea el único: sin otros tipos nombrados, la cifra puede ser de cualquiera.
+        nombrados = familias_en(m[0] + " " + _DE_ELLOS.sub(" ", tipos))
+        de_subcuentas = {f for s in _DE_ELLOS.finditer(tipos) for f in familias_en(s[3])}
+        familias = nombrados | de_subcuentas if nombrados else set(Familia)
         total += n
         if len(familias) == 1:
             (familia,) = familias
@@ -358,7 +383,8 @@ def zonas(frase: str) -> tuple[str, ...]:
     m = re.search(r"(?:із|з)\s+(?:напрямк\w*|район\w*)\s*:?\s*(.+)", cola, re.IGNORECASE)
     if m is None:
         return ()
-    lista = re.split(r"[,.]\s*(?:близько|понад|з них|із них)\b|\.\s*$|;\s*(?=\d)", m[1])[0]
+    fin = r"[,.]?\s+(?:близько|понад|майже|з них|із них)\b|\.\s*$|;\s*(?=\d)"
+    lista = re.split(fin, m[1])[0]
     resultado: list[str] = []
     for elemento in re.split(r"\s*(?:,|;|\s+та\s+|\s+і\s+|\s+й\s+)\s*", lista):
         for patron, sustituto in _LIMPIAR_ZONA:
@@ -377,11 +403,21 @@ def _suma_drones(frase: str, total_lanzados: int | None) -> int | None:
             total_lanzados is not None and numero(m[2]) == total_lanzados
         ):
             return numero(m[1])
-    cifras = [numero(m[1]) for m in _cifras(frase)]
+    # Con viñetas la cabecera repite el total ("541 ціль – ... 515 безпілотників"):
+    # si las viñetas traen cifras de drones, manda su suma.
+    cabecera, _, vinetas = frase.partition(";")
+    cifras = _cuentas(vinetas) or _cuentas(cabecera)
     if cifras:
         return sum(cifras)
     todos = re.search(r"(?:всі|усі)\s+" + _NUM, frase, re.I)
     return numero(todos[1]) if todos else None
+
+
+def _cuentas(frase: str) -> list[int]:
+    """Cifras de drones que cuentan algo: "із 140 БпЛА ... збито 120" solo cuenta 120."""
+    return [
+        numero(m[1]) for m in _cifras(frase) if not re.search(r"(?:з|із)\s+$", frase[: m.start()])
+    ]
 
 
 def _cifra_suelta(frase: str) -> int | None:
@@ -396,15 +432,43 @@ _ES_CRUCE = re.compile(
     r"перетну\w*|залет\w*|(?:у|в)\s+повітряний\s+простір|на\s+територію|(?:в|у)\s+бік", re.I
 )
 _LOCALIZACIONES = r"[^.;]*?\s+на\s+" + _NUM + r"\s+локаці"
+_CONTINUACION = re.compile(r"(?:а\s+)?також\s|крім\s+того", re.IGNORECASE)
+_RECUENTO = re.compile(r"зафіксовано|виявлено|супровід", re.IGNORECASE)
+_EFECTOS = re.compile(r"влучан|падін|уламк", re.IGNORECASE)
+
+
+def _es_lanzamiento(frase: str, siguientes: list[str]) -> bool:
+    """Frase de lo lanzado: verbo de ataque, o "зафіксовано N засобів" que no son impactos.
+
+    Las cifras pueden estar en las frases que la continúan ("А також ...").
+    """
+    lanzamiento = _ES_ATAQUE.search(frase) or (
+        _RECUENTO.search(frase) and not _EFECTOS.search(frase)
+    )
+    completa = [frase, *itertools.takewhile(_CONTINUACION.match, siguientes)]
+    return bool(lanzamiento and _cifras(" ".join(completa)))
+
+
+# Los mandos aéreos regionales publican balances parciales de su zona: no son el
+# parte nacional y, fundidos con él por periodo, pisarían sus cifras.
+_REGIONAL = re.compile(r"повітрян\w+\s+командуванн", re.IGNORECASE)
 
 
 def es_parte(texto: str) -> bool:
-    """Resumen de un ataque (no una alerta en tiempo real) que menciona drones."""
-    return bool(
-        (_NOCHE.search(texto) or _DIA.search(texto))
-        and _ES_ATAQUE.search(texto)
-        and re.search(_DRON, texto, re.IGNORECASE)
+    """Resumen de un ataque (no una alerta ni un pie de vídeo) que menciona drones.
+
+    El verbo de ataque tiene que ir en la frase que declara el periodo o en una
+    frase con una cifra de drones. Los balances de un mando regional no cuentan.
+    """
+    if not re.search(_DRON, texto, re.IGNORECASE) or _REGIONAL.search(texto):
+        return False
+    lista = frases(texto)
+    periodo_con_verbo = any(
+        (_NOCHE.search(f) or _DIA.search(f)) and _ES_ATAQUE.search(f) for f in lista
     )
+    verbo_con_cifra = any(_ES_ATAQUE.search(f) and _cifras(f) for f in lista)
+    hay_periodo = bool(_NOCHE.search(texto) or _DIA.search(texto))
+    return periodo_con_verbo or (hay_periodo and verbo_con_cifra)
 
 
 def _tramo(frase: str, desde: str, hasta: str | None) -> str:
@@ -430,8 +494,13 @@ def leer(texto: str, publicado: datetime) -> ParteLeido:
     lugares_r: list[str] = []
     cruces: dict[str, Rango] = {}
     para_regiones: list[str] = []
-    for frase in frases(texto):
-        if not lanz and _ES_ATAQUE.search(frase) and _cifras(frase):
+    lista = frases(texto)
+    while lista:
+        frase = lista.pop(0)
+        if not lanz and _es_lanzamiento(frase, lista):
+            # "... ракетами. А також 168 ударними БпЛА ...": sigue en la frase siguiente.
+            while lista and _CONTINUACION.match(lista[0]):
+                frase += " " + lista.pop(0)
             lanz = lanzados(frase)
             zonas_l = zonas(frase)
             # Las zonas de lanzamiento no son regiones afectadas.
