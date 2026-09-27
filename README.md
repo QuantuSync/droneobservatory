@@ -22,7 +22,7 @@ Esta fase contiene solo los cimientos: sin fuentes, sin recogida y sin web.
 | `proceso/` | Validaciones, máquina de estados y regla de credibilidad |
 | `modelo/` | Extractor: interfaz, implementación nula y caché en disco |
 | `almacen/` | Base de datos SQLite con historial y cifrado con age |
-| `exportacion/` | `incidentes.geojson` para la web, con lista cerrada de campos |
+| `exportacion/` | `incidentes.geojson` y `ucrania.json` para la web, cada uno con su lista cerrada de campos |
 | `recogida/`, `web/` | Reservados para fases siguientes |
 | `tests/` | Tests |
 
