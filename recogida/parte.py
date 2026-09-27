@@ -170,6 +170,8 @@ class ParteLeido:
     regiones: tuple[str, ...]
     cruces: tuple[tuple[str, Rango], ...]
     frase: str
+    # Tipo de dron declarado ("самолетного типа"); los partes ucranianos lo dan por modelo.
+    tipos_dron: tuple[str, ...] = ()
 
 
 # --- Vocabulario --------------------------------------------------------------
@@ -1088,3 +1090,33 @@ def leer(texto: str, publicado: datetime) -> ParteLeido:
         cruces=tuple(sorted(cruces.items())),
         frase=frase_origen(texto),
     )
+
+
+# --- Auditoría de cobertura -----------------------------------------------------
+
+# Publicaciones que la auditoría revisa: mencionan drones.
+PALABRAS_DRON = re.compile(r"БпЛА|БПЛА|Шахед|Shahed|ударн|дрон", re.IGNORECASE)
+_NOCHE_O_FECHA = re.compile(r"ніч|вночі|уночі|\d{1,2}\s+" + _MES, re.IGNORECASE)
+_MANDO = re.compile(r"командуванн\w*\s+[«\"“']*(?:Схід|Захід|Південь|Центр)", re.IGNORECASE)
+
+
+def motivo_no_parte(texto: str) -> str | None:
+    """Por qué una publicación con drones y cifras no es un parte, o None si no se sabe."""
+    if _PIE_DE_VIDEO.match(texto):
+        return "pie de vídeo"
+    if _REGIONAL.search(texto) or _MANDO.search(texto):
+        return "nota de un mando regional"
+    lista = frases(texto)
+    if any(CIFRA_DRONES.search(f) for f in lista) and not any(_cifras(f) for f in lista):
+        return "solo drones de reconocimiento"
+    con_cifra = [f for f in lista if _cifras(f)]
+    if not con_cifra:
+        return "sin cifras de drones"
+    if not any(_ES_ATAQUE.search(f) or _RECUENTO.search(f) for f in con_cifra):
+        if any(_ES_DERRIBO.search(f) for f in con_cifra):
+            return "solo derribos, sin ataque declarado"
+        # Sin verbo conocido pero hablando de una noche o una fecha: puede ser un parte
+        # con un verbo nuevo, así que queda sin explicar.
+        if not _NOCHE_O_FECHA.search(texto):
+            return "otro tema (reportaje, balance, alerta)"
+    return None
