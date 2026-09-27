@@ -97,7 +97,7 @@ def test_ejemplos_validos(esquema: Esquema, documento: Any) -> None:
 @pytest.mark.parametrize(
     ("ruta", "valor"),
     [
-        (("id",), "ATL-25-1"),
+        (("id",), "EODI-25-1"),
         (("tipo",), "ataque_guerra"),
         (("lugar", "radio_km"), 0.05),
         (("lugar", "radio_km"), 51),

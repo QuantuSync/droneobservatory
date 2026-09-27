@@ -16,7 +16,7 @@ para poder implementar. Todo lo aquí anotado es revisable.
 - **Exportación de la capa de Ucrania.** Solo se genera `incidentes.geojson`.
   La capa de Ucrania no tiene geometría puntual (se agrega por región) y su
   formato público está por definir.
-- **Flujo hacia `atalaya-datos`.** El repositorio privado existe con un README
+- **Flujo hacia `droneobservatory-datos`.** El repositorio privado existe con un README
   mínimo; qué se guarda allí y cómo (por ejemplo, la base cifrada) está por
   decidir.
 - **Versiones de las acciones de GitHub.** El workflow usa `actions/checkout@v4`
@@ -98,7 +98,7 @@ cubre de forma literal:
 - **Fecha del historial.** Es la hora del sistema en el momento de escribir.
 - **Regiones de un ataque.** Si una versión posterior del ataque deja de incluir
   una región, su fila no se borra; el documento del ataque es el que manda.
-- **Una sola variable de clave.** `ATALAYA_CLAVE_AGE` contiene la identidad y el
+- **Una sola variable de clave.** `EODI_CLAVE_AGE` contiene la identidad y el
   destinatario se deriva de ella. Si la recogida se ejecuta en otra máquina
   convendría una segunda variable solo con el destinatario, para que esa
   máquina pueda cifrar sin poder descifrar.

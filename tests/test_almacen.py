@@ -25,7 +25,7 @@ def test_guarda_y_lee_el_incidente(almacen: Almacen) -> None:
     documento = ejemplos.incidente_completo()
     guardar(almacen, documento)
     assert almacen.incidente(documento["id"]) == documento
-    assert almacen.incidente("ATL-2025-99999") is None
+    assert almacen.incidente("EODI-2025-99999") is None
 
 
 def test_documento_invalido_no_se_guarda(almacen: Almacen) -> None:
@@ -117,15 +117,15 @@ def test_insert_or_replace_no_esquiva_el_bloqueo(almacen: Almacen) -> None:
     with pytest.raises(sqlite3.IntegrityError, match="nada se borra"):
         almacen.conexion.execute(
             "INSERT OR REPLACE INTO incidentes (id, tipo, estado, documento) "
-            "VALUES ('ATL-2025-00001', 'sobrevuelo', 'notificado', '{}')"
+            "VALUES ('EODI-2025-00001', 'sobrevuelo', 'notificado', '{}')"
         )
 
 
 def test_persiste_en_disco(tmp_path: Path) -> None:
-    ruta = tmp_path / "atalaya.sqlite"
+    ruta = tmp_path / "eodi.sqlite"
     a = Almacen.abrir(ruta)
     guardar(a, ejemplos.incidente_minimo())
     a.cerrar()
     b = Almacen.abrir(ruta)
-    assert [i["id"] for i in b.incidentes()] == ["ATL-2025-00002"]
+    assert [i["id"] for i in b.incidentes()] == ["EODI-2025-00002"]
     b.cerrar()

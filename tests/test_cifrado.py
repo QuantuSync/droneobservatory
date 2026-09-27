@@ -32,11 +32,11 @@ def _almacen_poblado() -> Almacen:
 
 @pytest.mark.usefixtures("clave_efimera")
 def test_ida_y_vuelta_conserva_datos_y_triggers(tmp_path: Path) -> None:
-    ruta = tmp_path / "atalaya.sqlite.age"
+    ruta = tmp_path / "eodi.sqlite.age"
     guardar_cifrada(_almacen_poblado().conexion, ruta)
 
     recuperado = Almacen(abrir_cifrada(ruta))
-    assert recuperado.incidente("ATL-2025-00001") == ejemplos.incidente_completo()
+    assert recuperado.incidente("EODI-2025-00001") == ejemplos.incidente_completo()
     with pytest.raises(sqlite3.IntegrityError):
         recuperado.conexion.execute("DELETE FROM incidentes")
 
@@ -45,7 +45,7 @@ def test_ida_y_vuelta_conserva_datos_y_triggers(tmp_path: Path) -> None:
 def test_el_cifrado_no_contiene_texto_en_claro() -> None:
     cifrado = cifrar(_almacen_poblado().conexion)
     assert cifrado.startswith(b"age-encryption.org/")
-    for claro in (b"SQLite format", b"ATL-2025-00001", b"Kastrup"):
+    for claro in (b"SQLite format", b"EODI-2025-00001", b"Kastrup"):
         assert claro not in cifrado
 
 
@@ -64,7 +64,7 @@ def test_sin_clave_falla(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 def test_la_clave_no_se_escribe_en_disco(clave_efimera: str, tmp_path: Path) -> None:
-    ruta = tmp_path / "atalaya.sqlite.age"
+    ruta = tmp_path / "eodi.sqlite.age"
     guardar_cifrada(_almacen_poblado().conexion, ruta)
     assert [p.name for p in tmp_path.iterdir()] == [ruta.name]
     assert clave_efimera.encode() not in ruta.read_bytes()

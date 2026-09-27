@@ -10,7 +10,7 @@ from pathlib import Path
 
 import pyrage
 
-VARIABLE_CLAVE = "ATALAYA_CLAVE_AGE"
+VARIABLE_CLAVE = "EODI_CLAVE_AGE"
 
 
 class ClaveAusente(RuntimeError):

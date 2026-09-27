@@ -13,7 +13,7 @@ from referencing.jsonschema import DRAFT202012
 
 VERSION = "1.0.0"
 DIRECTORIO = Path(__file__).parent / VERSION
-PREFIJO_ID = f"urn:atalaya:esquema:{VERSION}:"
+PREFIJO_ID = f"urn:eodi:esquema:{VERSION}:"
 MARCA = "x-visibilidad"
 
 Documento = dict[str, Any]

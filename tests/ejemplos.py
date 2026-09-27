@@ -40,7 +40,7 @@ def fuente(
 def incidente_completo() -> Documento:
     """Incidente con todos los campos, públicos e internos, rellenos."""
     return {
-        "id": "ATL-2025-00001",
+        "id": "EODI-2025-00001",
         "tipo": "interrupcion_aeroportuaria",
         "estado": {
             "actual": "atribuido",
@@ -134,7 +134,7 @@ def incidente_completo() -> Documento:
 def incidente_minimo() -> Documento:
     """Incidente recién notificado con lo imprescindible."""
     return {
-        "id": "ATL-2025-00002",
+        "id": "EODI-2025-00002",
         "tipo": "sobrevuelo",
         "estado": {
             "actual": "notificado",
@@ -166,7 +166,7 @@ def region() -> Documento:
 
 def ataque_completo() -> Documento:
     return {
-        "id": "ATL-UA-2025-0001",
+        "id": "EODI-UA-2025-0001",
         "tipo": "ataque_guerra",
         "periodo": {"inicio": instante("2025-10-05T15:00Z"), "fin": instante("2025-10-06T06:00Z")},
         "sentido": "RU_UA",
@@ -211,5 +211,5 @@ def episodio() -> Documento:
         "id": "EP-2025-10-01",
         "titulo": {"es": "Noche de drones", "en": "Night of drones"},
         "noche": "2025-10-01",
-        "incidentes": ["ATL-2025-00001"],
+        "incidentes": ["EODI-2025-00001"],
     }

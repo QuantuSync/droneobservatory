@@ -1,3 +1,10 @@
+[project]
+name = "droneobservatory"
+version = "0.1.0"
+description = "Observatorio Europeo de Incidentes con Drones (EODI)"
+readme = "README.md"
+requires-python = ">=3.13"
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]

@@ -1,8 +1,9 @@
-# Atalaya
+# Observatorio Europeo de Incidentes con Drones (EODI)
 
-Observatorio europeo de incidentes con drones. Registra cada incidente en
-Europa, incluida la guerra entre Ucrania y Rusia en los dos sentidos, para una
-web pública de una sola pantalla con el mapa de Europa y para un conjunto de
+*European Observatory of Drone Incidents* · [droneobservatory.eu](https://droneobservatory.eu)
+
+Registra cada incidente con drones en Europa, incluida la guerra entre Ucrania
+y Rusia en los dos sentidos, para una web pública de una sola pantalla con el mapa de Europa y para un conjunto de
 datos interno más detallado destinado al sistema de detección AEGIS.
 
 Principios: cada dato guarda quién lo dice; la ubicación es un área (punto más
@@ -42,5 +43,5 @@ mypy
 
 `mypy` usa la configuración estricta de `pyproject.toml`. Los tests de cifrado
 generan una clave efímera; para cifrar datos reales, la identidad age se pasa
-en la variable de entorno `ATALAYA_CLAVE_AGE` y nunca se guarda en el
+en la variable de entorno `EODI_CLAVE_AGE` y nunca se guarda en el
 repositorio.
