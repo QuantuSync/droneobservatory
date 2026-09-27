@@ -1,0 +1,123 @@
+{
+  "version_esquema": "1.0.0",
+  "descripcion": "Recogida de noticias europeas sobre drones en la API DOC 2.0 de GDELT. palabras_dron: la palabra para dron en cada idioma europeo, en singular y plural (la API busca palabras enteras; el filtro local casa también con sus declinaciones). Se incluyen el ruso y el ucraniano porque los medios de Moldavia, los países bálticos y Bulgaria publican también en ellos. excluir: ocio, comercio y usos civiles que no son incidentes. senales: palabras que indican un incidente, agrupadas por el tipo aparente que sugieren. tipo_de_lugar: palabras que, junto al nombre de una ciudad, dicen que se habla de su aeropuerto, su base o su central. paises: países europeos de origen de los medios, con el nombre que usa la API y su ISO 3166-1; quedan fuera Rusia, Bielorrusia y Ucrania, cuyos medios cubren la guerra y ahogarían las noticias de incidentes en el resto de Europa. idiomas: nombre de la API a ISO 639-1.",
+  "palabras_dron": {
+    "en": ["drone", "drones", "UAV", "UAVs"],
+    "es": ["dron", "drones"],
+    "ca": ["dron", "drons"],
+    "de": ["Drohne", "Drohnen"],
+    "fr": ["drone", "drones"],
+    "it": ["drone", "droni"],
+    "pt": ["drone", "drones"],
+    "nl": ["drone", "drones"],
+    "sv": ["drönare", "drönaren", "drönarna"],
+    "da": ["drone", "droner", "dronen"],
+    "no": ["drone", "droner", "dronen", "dronene"],
+    "fi": ["drooni", "droonit", "lennokki", "lennokit"],
+    "is": ["dróni", "drónar"],
+    "pl": ["dron", "drony", "drona", "dronów", "bezzałogowiec", "bezzałogowy"],
+    "cs": ["dron", "drony", "dronu"],
+    "sk": ["dron", "drony", "dronu"],
+    "hu": ["drón", "drónok", "drónt"],
+    "ro": ["dronă", "drone", "dronei"],
+    "bg": ["дрон", "дронове", "дрона"],
+    "el": ["drone", "μη επανδρωμένο", "μη επανδρωμένα"],
+    "hr": ["dron", "dronovi", "drona"],
+    "sr": ["dron", "dronovi", "дрон", "дронови"],
+    "sl": ["dron", "droni", "brezpilotni"],
+    "lt": ["dronas", "dronai", "dronų"],
+    "lv": ["drons", "droni", "dronu"],
+    "et": ["droon", "droonid", "drooni"],
+    "sq": ["dron", "dronë"],
+    "mk": ["дрон", "дронови"],
+    "ru": ["дрон", "дроны", "беспилотник", "беспилотники", "БПЛА"],
+    "uk": ["дрон", "дрони", "безпілотник", "БпЛА"]
+  },
+  "excluir": [
+    "show", "Lichtshow", "Drohnenshow", "espectáculo", "espectacle", "spectacle", "spettacolo",
+    "pokaz", "racing", "carrera", "Rennen", "review", "reseña", "Testbericht", "wedding",
+    "boda", "Hochzeit", "mariage", "matrimonio", "ślub", "agricultur", "agrícola",
+    "Landwirtschaft", "rolnict", "delivery", "entrega", "Lieferung", "livraison", "consegna",
+    "dostaw", "leverans", "Paket", "photograph", "fotógraf", "Fotograf", "película", "Kinofilm",
+    "Black Friday", "oferta", "Angebot", "rebajas", "Rabatt"
+  ],
+  "senales": {
+    "aeropuerto": [
+      "airport", "aeropuerto", "aeroport", "Flughafen", "aéroport", "aeroporto", "lotnisk",
+      "luchthaven", "lufthavn", "flygplats", "lentoasem", "letiště", "letisk", "repülőt",
+      "летищ", "αεροδρόμι", "аэропорт", "аеропорт", "lennujaam", "oro uost", "lidost",
+      "zračn", "aerodrom", "flights", "vuelos", "Flüge", "Flugbetrieb", "vols", "voli", "lotów"
+    ],
+    "militar": [
+      "military", "militar", "Militär", "militaire", "militare", "wojsk", "militær", "militär",
+      "sotilas", "air base", "base aérea", "Stützpunkt", "Fliegerhorst", "Kaserne", "NATO",
+      "OTAN", "army",
+      "ejército", "Bundeswehr", "armée", "esercito", "forsvar", "försvar"
+    ],
+    "infraestructura": [
+      "nuclear", "nuklear", "Kernkraftwerk", "AKW", "nucléaire", "nucleare", "jądrow",
+      "kärnkraft", "atomkraft", "ydinvoima", "power plant", "Kraftwerk", "centrale nucleare",
+      "elektrowni", "refinery", "refinería", "Raffinerie", "Hafen", "harbour", "Infrastruktur", "infraestructura", "infrastructure", "infrastruttur", "infrastruktur",
+      "pipeline", "gasoducto", "Pipeline"
+    ],
+    "espacio_aereo": [
+      "airspace", "espacio aéreo", "Luftraum", "espace aérien", "spazio aereo",
+      "przestrzeń powietrzn", "luftrum", "ilmatila", "vzdušn", "légtér", "spațiul aerian",
+      "въздушното пространство", "εναέριο χώρο", "incursion", "incursión", "violat",
+      "violación", "Verletzung", "violazione", "naruszen", "shot down", "derribad", "abgeschossen",
+      "abattu", "abbattut", "zestrzel", "crash", "estrell", "abgestürzt", "Absturz", "écrasé",
+      "precipitat", "rozbił", "debris", "restos", "Trümmer", "débris"
+    ],
+    "avistamiento": [
+      "sighting", "sighted", "spotted", "avistamiento", "avistad", "Sichtung", "gesichtet",
+      "repéré", "aperçu", "survol", "avvistament", "avvistat", "zauważon", "observ",
+      "waargenomen", "gezien", "havaittu", "observerad", "iagttaget", "unidentified",
+      "unknown", "desconocid", "unbekannt", "inconnu", "sconosciut", "niezidentyfikowan",
+      "okänd", "tuntemat", "suspicious", "sospechos", "verdächtig", "suspect", "sospett",
+      "podejrzan", "police", "policía", "Polizei", "polizia", "policj", "politi", "poliisi",
+      "politie", "closed", "cerrad", "gesperrt", "fermé", "chius", "zamknię", "stängd", "lukket",
+      "stengt", "suljet", "gesloten", "suspend", "suspendid", "eingestellt", "interromp",
+      "sospes", "wstrzyman"
+    ]
+  },
+  "tipo_de_lugar": {
+    "aeropuerto": [
+      "airport", "aeropuerto", "aeroport", "Flughafen", "aéroport", "aeroporto", "lotnisk",
+      "luchthaven", "lufthavn", "flygplats", "lentoasem", "letiště", "letisk", "repülőt",
+      "летищ", "αεροδρόμι", "аэропорт", "аеропорт", "lennujaam", "oro uost", "lidost",
+      "zračn", "aerodrom"
+    ],
+    "base": [
+      "base", "air base", "Stützpunkt", "Fliegerhorst", "Luftwaffenbasis", "Militärflugplatz",
+      "base aérea", "base aérienne", "base aerea", "baza", "flybase", "flygbas", "lentotukikohta",
+      "vliegbasis", "militar", "military", "Militär", "militaire", "militare", "wojsk",
+      "авиабаз", "авіабаз", "στρατιωτικ"
+    ],
+    "nuclear": [
+      "nuclear", "nuklear", "Kernkraftwerk", "AKW", "Atomkraftwerk", "nucléaire", "nucleare",
+      "jądrow", "kärnkraft", "atomkraft", "ydinvoima", "kerncentrale", "jadern", "atomerőm",
+      "АЭС", "АЕЦ", "πυρηνικ", "power plant", "centrale", "central"
+    ]
+  },
+  "paises": {
+    "albania": "AL", "andorra": "AD", "austria": "AT", "belgium": "BE",
+    "bosniaandherzegovina": "BA", "bulgaria": "BG", "croatia": "HR", "cyprus": "CY",
+    "czechrepublic": "CZ", "denmark": "DK", "estonia": "EE", "finland": "FI", "france": "FR",
+    "germany": "DE", "greece": "GR", "hungary": "HU", "iceland": "IS", "ireland": "IE",
+    "italy": "IT", "kosovo": "XK", "latvia": "LV", "liechtenstein": "LI", "lithuania": "LT",
+    "luxembourg": "LU", "macedonia": "MK", "malta": "MT", "moldova": "MD", "monaco": "MC",
+    "montenegro": "ME", "netherlands": "NL", "norway": "NO", "poland": "PL", "portugal": "PT",
+    "romania": "RO", "sanmarino": "SM", "serbia": "RS", "slovakia": "SK", "slovenia": "SI",
+    "spain": "ES", "sweden": "SE", "switzerland": "CH", "unitedkingdom": "GB"
+  },
+  "idiomas": {
+    "Albanian": "sq", "Bosnian": "bs", "Bulgarian": "bg", "Catalan": "ca", "Croatian": "hr",
+    "Czech": "cs", "Danish": "da", "Dutch": "nl", "English": "en", "Estonian": "et",
+    "Finnish": "fi", "French": "fr", "Galician": "gl", "German": "de", "Greek": "el",
+    "Hungarian": "hu", "Icelandic": "is", "Irish": "ga", "Italian": "it", "Latvian": "lv",
+    "Lithuanian": "lt", "Macedonian": "mk", "Maltese": "mt", "Norwegian": "no", "Polish": "pl",
+    "Portuguese": "pt", "Romanian": "ro", "Russian": "ru", "Serbian": "sr", "Slovak": "sk",
+    "Slovenian": "sl", "Spanish": "es", "Swedish": "sv", "Turkish": "tr", "Ukrainian": "uk",
+    "Basque": "eu", "Welsh": "cy", "Luxembourgish": "lb"
+  }
+}

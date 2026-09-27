@@ -14,6 +14,7 @@ from almacen import remoto
 from almacen.base import Almacen
 from almacen.cifrado import abrir_cifrada, guardar_cifrada
 from exportacion.publicar import publicar
+from recogida import gdelt
 from recogida.cache import CachePaginas
 from recogida.descarga import Descargador
 from recogida.ejecucion import SinCursor, ejecutar
@@ -50,6 +51,11 @@ def principal(argumentos: list[str] | None = None) -> int:
             except (CanalNoVerificado, SinCursor, HuecoDemasiadoGrande) as error:
                 registro.warning("%s no se lee: %s", fuente.id, error)
                 salida = SALIDA_FUENTE_NO_VERIFICADA
+        try:
+            gdelt.ejecutar(almacen, Descargador(pausas_por_sitio=gdelt.PAUSAS), ahora)
+        except gdelt.GdeltNoDisponible as error:
+            registro.warning("gdelt no se lee: %s", error)
+            salida = SALIDA_FUENTE_NO_VERIFICADA
         cambiados = publicar(almacen, ahora)
         registro.info("ficheros publicados con cambios: %d", len(cambiados))
         if almacen.conexion.serialize() != antes:

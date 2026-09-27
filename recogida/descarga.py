@@ -73,18 +73,22 @@ class Descargador:
         dormir: Callable[[float], None] = time.sleep,
         reloj: Callable[[], float] = time.monotonic,
         pausa_minima_s: float = PAUSA_MINIMA_S,
+        pausas_por_sitio: dict[str, float] | None = None,
     ) -> None:
         self._transporte = transporte
         self._dormir = dormir
         self._reloj = reloj
         self._pausa_minima_s = pausa_minima_s
+        # Sitios que piden otra pausa (la API de GDELT, una petición cada 5 s).
+        self._pausas = pausas_por_sitio or {}
         self._ultima: dict[str, float] = {}
         self.recuentos: Counter[str] = Counter()
 
     def _esperar_turno(self, sitio: str) -> None:
         ultima = self._ultima.get(sitio)
         if ultima is not None:
-            falta = self._pausa_minima_s - (self._reloj() - ultima)
+            pausa = self._pausas.get(sitio, self._pausa_minima_s)
+            falta = pausa - (self._reloj() - ultima)
             if falta > 0:
                 self._dormir(falta)
         self._ultima[sitio] = self._reloj()
