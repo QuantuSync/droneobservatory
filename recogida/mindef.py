@@ -130,6 +130,10 @@ _Y_OTROS = re.compile(r"и\s+ещ[её]\s+" + _NUM + r"\s+(?:перехвач|у
 # («при попытке ... с применением трех беспилотников»).
 _PVO = re.compile(r"ПВО|противовоздушной\s+обороны", re.IGNORECASE)
 _INTENTO = re.compile(r"попытк\w*\s+киевского\s+режима", re.IGNORECASE)
+# De quién son los drones: «украинских», «ВСУ», «киевским режимом». Desde septiembre de
+# 2026 algunos partes no lo dicen, pero la fórmula «дежурными силами ПВО» es la del parte.
+_ENEMIGO = re.compile(r"украинск|ВСУ|киевск\w*\s+режим", re.IGNORECASE)
+_DEFENSA_DE_GUARDIA = re.compile(r"дежурн\w+\s+(?:средствами|силами)\s+ПВО", re.IGNORECASE)
 # Resúmenes que repiten partes ya publicados.
 _RESUMEN = re.compile(r"^\W*(?:Главное\s+за\s+день|Итоги\s+недели|Сводка)", re.IGNORECASE)
 # El pie del canal («🔹 Минобороны России», «Канал Минобороны России в MAКС») acaba el parte.
@@ -179,8 +183,9 @@ _NOCHE = re.compile(
     r"|(?:этой|минувшей|прошедшей|сегодня)\s+ночью|ночью\s+(\d{1,2})\s+(" + _MES + ")"
     # «В ночь с 20 на 21 сентября», «В ночь на 29 сентября т.г.».
     r"|в\s+ночь\s+(?:с\s+\d{1,2}\s+(?:" + _MES + r"\s+)?)?на\s+(\d{1,2})\s+(" + _MES + ")"
-    # «23 августа с.г. в ночное время».
-    r"|(\d{1,2})\s+(" + _MES + r")(?:\s+с\.\s?г\.)?\s+в\s+ночное\s+время|в\s+ночное\s+время",
+    # «23 августа с.г. в ночное время», «27 августа в ночные и утренние часы».
+    r"|(\d{1,2})\s+(" + _MES + r")(?:\s+с\.\s?г\.)?\s+в\s+ночн\w+\s+(?:и\s+утренние\s+)?"
+    r"(?:время|часы)|в\s+ночное\s+время",
     re.IGNORECASE,
 )
 # «В течение дня», «в течение прошедшего дня», «Утром», «В утренние часы 10 апреля».
@@ -297,7 +302,7 @@ def es_parte(texto: str) -> bool:
         _VERBO.search(parrafo)
         and (_PVO.search(parrafo) or _INTENTO.search(parrafo))
         and re.search(_DRON, parrafo, re.IGNORECASE)
-        and re.search(r"украинск|ВСУ|киевского\s+режима", parrafo, re.IGNORECASE)
+        and (_ENEMIGO.search(parrafo) or _DEFENSA_DE_GUARDIA.search(parrafo))
         and _SOBRE.search(cuerpo(texto))
     )
 
@@ -481,6 +486,8 @@ def motivo_no_parte(texto: str) -> str | None:
         return "sin derribos (frente, vídeo u otro tema)"
     if not _SOBRE.search(cuerpo(texto)):
         return "derribos en la zona de combate, no sobre territorio"
+    if not _CIFRA.search(texto) and not _UNO.search(texto):
+        return "sin cifras de drones"
     return None
 
 

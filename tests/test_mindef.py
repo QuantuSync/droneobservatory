@@ -350,3 +350,26 @@ def test_formato_2023_con_viñetas(texto: str, n: int, regiones: tuple[str, ...]
     assert leido.derribados == rango(n)
     # La viñeta del misil no aporta región.
     assert leido.regiones == regiones
+
+
+def test_parte_de_2026_sin_decir_de_quien_son_los_drones() -> None:
+    texto = (
+        "⚡️ В течение прошедшей ночи дежурными силами ПВО перехвачены и уничтожены 244 "
+        "беспилотных летательных аппарата самолетного типа над территориями Белгородской и "
+        "Брянской областей." + PIE
+    )
+    assert es_parte(texto)
+    assert leer(texto, MANANA).derribados == rango(244)
+
+
+def test_noche_y_manana_con_fecha_y_regimen_en_instrumental() -> None:
+    texto = (
+        "⚡️ 27 августа в ночные и утренние часы киевским режимом были предприняты попытки "
+        "террористических атак с применением БПЛА самолетного типа.\n\n▫️ Дежурными средствами "
+        "ПВО были обнаружены и уничтожены в полете два беспилотных летательных аппарата над "
+        "территорией Брянской и Курской областей." + PIE
+    )
+    assert es_parte(texto)
+    leido = leer(texto, datetime(2023, 8, 27, 4, 14, tzinfo=UTC))
+    assert leido.inicio.documento() == instante("2023-08-26T17:00Z", "aproximada")
+    assert (leido.derribados, leido.regiones) == (rango(2), ("RU-BRY", "RU-KRS"))
