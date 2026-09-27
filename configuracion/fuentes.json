@@ -1,4 +1,13 @@
 {
   "version_esquema": "1.0.0",
-  "fuentes": []
+  "fuentes": [
+    {
+      "id": "fuerza_aerea_ua",
+      "medio": "Повітряні Сили ЗС України",
+      "dominios": ["t.me/kpszsu"],
+      "fiabilidad": "B",
+      "es_autoridad": false,
+      "interna_fuera_de_ucrania": false
+    }
+  ]
 }
