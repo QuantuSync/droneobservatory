@@ -18,11 +18,12 @@ extend-exclude = ["stubs"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "B", "UP", "N", "SIM", "RUF"]
-# Nombres de excepciones en español: el sufijo Error no aplica.
-ignore = ["N818"]
+# Nombres de excepciones en español: el sufijo Error no aplica. Los partes están
+# en ucraniano: sus letras cirílicas no son confusiones con letras latinas.
+ignore = ["N818", "RUF001", "RUF002", "RUF003"]
 
 [tool.mypy]
 strict = true
 python_version = "3.13"
 mypy_path = "stubs"
-files = ["esquema", "proceso", "modelo", "almacen", "exportacion", "tests"]
+files = ["esquema", "proceso", "modelo", "almacen", "exportacion", "recogida", "tests"]
