@@ -246,27 +246,37 @@ def _anio(texto: str | None) -> int | None:
 _HORA = r"(\d{1,2})[:.](\d{2})"
 _ANIO = r"(?:\s+(\d{4})\s*(?:року|р\.?)?)?"
 _NOCHE = re.compile(
-    r"ніч\w*\s+(?:з\s+\d{1,2}\s+(?:" + _MES[1:-1] + r"\s+)?)?на\s+(\d{1,2})\s+" + _MES + _ANIO,
+    r"ніч\w*\s+(?:з\s+\d{1,2}\s+(?:" + _MES[1:-1] + r"\s+)?)?на\s+(\d{1,2}),?\s+" + _MES + _ANIO,
     re.IGNORECASE,
 )
-_DIA = re.compile(r"(?:протягом|впродовж|за)\s+(?:доби|дня)\s+(\d{1,2})\s+" + _MES + _ANIO, re.I)
+# "протягом дня 25 вересня", "протягом поточної доби 13 липня".
+_DIA = re.compile(
+    r"(?:протягом|впродовж|за)\s+(?:\w+ої\s+)?(?:доби|дня)\s+(\d{1,2}),?\s+" + _MES + _ANIO, re.I
+)
+# "У період із 14.30 по 20.30 7 травня".
+_INTERVALO = re.compile(
+    r"період\w*\s+(?:з|із)\s+" + _HORA + r"\s+(?:по|до)\s+" + _HORA + r"\s+(\d{1,2})\s+" + _MES,
+    re.IGNORECASE,
+)
 _DESDE = re.compile(r"(?:з|із|від)\s+" + _HORA + r"(?:\s+(\d{1,2})\s+" + _MES + ")?", re.I)
 _HASTA = re.compile(r"до\s+" + _HORA + r"(?:\s+(\d{1,2})\s+" + _MES + ")?", re.I)
 _STANOM = re.compile(r"станом\s+на\s+" + _HORA + r"(?:\s+(\d{1,2})\s+" + _MES + ")?", re.I)
 
 
 def _sin_errata(m: re.Match[str], base: date) -> re.Match[str]:
-    """Una fecha de inicio que no es la víspera ni el día del parte es una errata.
+    """El inicio se admite en la fecha esperada o la víspera; otra fecha es una errata.
 
-    Si el día coincide con el esperado se corrige el mes ("з 19.00 2 червня" en la
-    noche del 3 de agosto); si no, el periodo no es fiable.
+    Se corrige a la fecha esperada si el día es ese ("з 19.00 2 червня" en la noche
+    del 3 de agosto) o el siguiente ("із 21.00 15 листопада" en la noche del 15, que
+    acabaría antes de empezar); si no, el periodo no es fiable.
     """
     if not m[3]:
         return m
     declarado = (int(m[3]), MESES[m[4].lower()])
-    if declarado in {(d.day, d.month) for d in (base, base + timedelta(days=1))}:
+    if declarado in {(d.day, d.month) for d in (base - timedelta(days=1), base)}:
         return m
-    if int(m[3]) == base.day:
+    siguiente = base + timedelta(days=1)
+    if int(m[3]) == base.day or declarado == (siguiente.day, siguiente.month):
         sin_fecha = _DESDE.match(f"з {m[1]}:{m[2]}")
         assert sin_fecha is not None
         return sin_fecha
@@ -281,6 +291,17 @@ def _hora(m: re.Match[str], dia: date, publicado: datetime) -> datetime:
 
 def periodo(texto: str, publicado: datetime) -> tuple[Instante, Instante]:
     """Periodo tal como lo declara el parte, en UTC."""
+    intervalo = _INTERVALO.search(texto)
+    if intervalo is not None:
+        try:
+            dia = _fecha(int(intervalo[5]), MESES[intervalo[6].lower()], None, publicado)
+            abre = _utc(dia, time(int(intervalo[1]), int(intervalo[2])))
+            cierra = _utc(dia, time(int(intervalo[3]), int(intervalo[4])))
+        except ValueError as error:
+            raise ParteIlegible(f"fecha imposible: {error}") from error
+        if cierra < abre:
+            raise ParteIlegible("el periodo acaba antes de empezar")
+        return Instante(abre, "minuto"), Instante(cierra, "minuto")
     noche = _NOCHE.search(texto)
     declarado = noche or _DIA.search(texto)
     if declarado is None:
@@ -307,6 +328,8 @@ def periodo(texto: str, publicado: datetime) -> tuple[Instante, Instante]:
         else:
             redondeado = publicado.astimezone(UTC).replace(second=0, microsecond=0)
             fin = Instante(redondeado, "aproximada")
+    except ParteIlegible:
+        raise
     except ValueError as error:
         raise ParteIlegible(f"fecha imposible: {error}") from error
     if fin.valor < inicio.valor:
@@ -446,7 +469,7 @@ def _cifra_suelta(frase: str) -> int | None:
     return numero(m[1]) if m else None
 
 
-_ES_ATAQUE = re.compile(r"(?:атакува|застосува|випусти|запусти)\w*", re.I)
+_ES_ATAQUE = re.compile(r"(?:атакува|застосува|випусти|запусти)\w*|завда\w*\s+удар", re.I)
 _ES_DERRIBO = re.compile(r"збит|знищ|подавл|збиття|знешкодж", re.I)
 _ES_PERDIDO = re.compile(r"локаційно|втрачен\w*[^;]*РЕБ|РЕБ[^;]*втрачен", re.I)
 _ES_MISIL = re.compile(r"ракет", re.IGNORECASE)
@@ -459,6 +482,11 @@ _RECUENTO = re.compile(r"зафіксовано|виявлено|супрові�
 _EFECTOS = re.compile(r"влучан|падін|уламк", re.IGNORECASE)
 
 
+def _continua(frase: str) -> bool:
+    """La frase "А також ..." sigue la de lanzamiento, salvo que ya hable de derribos."""
+    return bool(_CONTINUACION.match(frase)) and not _ES_DERRIBO.search(frase)
+
+
 def _es_lanzamiento(frase: str, siguientes: list[str]) -> bool:
     """Frase de lo lanzado: verbo de ataque, o "зафіксовано N засобів" que no son impactos.
 
@@ -467,7 +495,7 @@ def _es_lanzamiento(frase: str, siguientes: list[str]) -> bool:
     lanzamiento = _ES_ATAQUE.search(frase) or (
         _RECUENTO.search(frase) and not _EFECTOS.search(frase)
     )
-    completa = [frase, *itertools.takewhile(_CONTINUACION.match, siguientes)]
+    completa = [frase, *itertools.takewhile(_continua, siguientes)]
     return bool(lanzamiento and _cifras(" ".join(completa)))
 
 
@@ -525,6 +553,8 @@ def _perdidos(frase: str) -> tuple[int | None, str]:
         if _ES_MISIL.search(trozo) and not re.search(_DRON, trozo, re.IGNORECASE):
             continue
         for clausula in propias:
+            if re.search(r"(?:понад|більше|щонайменше)\s+\d", clausula, re.IGNORECASE):
+                continue
             n = _suma_drones(clausula, None) or _cifra_suelta(clausula)
             if n is not None:
                 total = (total or 0) + n
@@ -550,7 +580,7 @@ def leer(texto: str, publicado: datetime) -> ParteLeido:
         frase = lista.pop(0)
         if not lanz and _es_lanzamiento(frase, lista):
             # "... ракетами. А також 168 ударними БпЛА ...": sigue en la frase siguiente.
-            while lista and _CONTINUACION.match(lista[0]):
+            while lista and _continua(lista[0]):
                 frase += " " + lista.pop(0)
             lanz = lanzados(frase)
             zonas_l = zonas(frase)
@@ -561,8 +591,9 @@ def leer(texto: str, publicado: datetime) -> ParteLeido:
         total = lanz.get("total")
         total_n = total["max"] if isinstance(total, dict) else None
         perdidos_frase, resto = _perdidos(frase)
-        if perdidos_frase is not None:
-            perdidos = (perdidos or 0) + perdidos_frase
+        # El titular y el cuerpo repiten la cifra: vale la primera frase que la da.
+        if perdidos is None:
+            perdidos = perdidos_frase
         if derribados is None and _ES_DERRIBO.search(resto):
             derribados = _suma_drones(resto, total_n)
         if m := re.search(r"влучан" + _LOCALIZACIONES, frase, re.I):

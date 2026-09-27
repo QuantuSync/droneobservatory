@@ -313,3 +313,54 @@ def test_las_zonas_acaban_en_la_siguiente_arma() -> None:
         "Чауда - ТОТ Криму, протикорабельною ракетою Онікс, а також 8-ма БпЛА."
     )
     assert zonas(frase) == ("Міллерово", "Брянськ", "Чауда")
+
+
+def test_titular_y_cuerpo_no_duplican_los_perdidos() -> None:
+    texto = (
+        "⚡️ ЗБИТО 52 ВОРОЖІ БПЛА, 44 БЕЗПІЛОТНИКІВ – НЕ ДОСЯГЛИ ЦІЛЕЙ (ЛОКАЦІЙНО ВТРАЧЕНІ)\n"
+        "У ніч на 22 грудня 2024 року (із 09.00 21 грудня) противник, атакував 103-ма ударними "
+        "БпЛА типу «Shahed».\n"
+        "Станом на 10.00 підтверджено збиття 52 ударних БпЛА.\n"
+        "44 ворожі безпілотники – локаційно втрачені."
+    )
+    leido = leer(texto, datetime(2024, 12, 22, 8, tzinfo=UTC))
+    assert leido.inicio.documento()["valor"] == "2024-12-21T07:00Z"
+    assert leido.derribados == rango(52)
+    assert leido.perdidos_guerra_electronica == rango(44)
+
+
+def test_intervalo_de_una_oleada_y_verbo_zavdav_udaru() -> None:
+    texto = (
+        "У період із 14.30 по 20.30 7 травня противник завдав удару 31-м ударним БпЛА та "
+        "безпілотниками-імітаторами із району Міллерово – рф.\n"
+        "Підтверджено збиття 20 ударних БпЛА.\n"
+        "6 ворожих безпілотників-імітаторів — локаційно втрачені.\n"
+        "Протягом поточної доби 8 травня, станом на 8.00, ударних БпЛА не зафіксовано."
+    )
+    leido = leer(texto, datetime(2025, 5, 8, 5, tzinfo=UTC))
+    assert leido.inicio.documento() == {"valor": "2025-05-07T11:30Z", "precision": "minuto"}
+    assert leido.fin.documento() == {"valor": "2025-05-07T17:30Z", "precision": "minuto"}
+    assert leido.lanzados["total"] == rango(31)
+    assert leido.zonas_lanzamiento == ("Міллерово",)
+
+
+def test_perdidos_sin_maximo_son_desconocidos() -> None:
+    texto = (
+        "У ніч на 28 листопада 2024 року ворог атакував критичну інфраструктуру. Крім того, "
+        "збито три керовані авіаційні ракети та 35 ворожих БпЛА, понад 60 локаційно втрачено."
+    )
+    leido = leer(texto, datetime(2024, 11, 28, 12, tzinfo=UTC))
+    assert leido.derribados == rango(35)
+    assert leido.perdidos_guerra_electronica == DESCONOCIDO
+
+
+def test_errata_en_el_dia_del_inicio() -> None:
+    texto = "У ніч на 15 листопада 2024 року (із 21.00 15 листопада) противник атакував 29 БпЛА."
+    leido = leer(texto, datetime(2024, 11, 15, 6, tzinfo=UTC))
+    assert leido.inicio.documento()["valor"] == "2024-11-14T19:00Z"
+
+
+def test_coma_tras_el_dia_de_la_noche() -> None:
+    texto = "У ніч на 01, березня (з 18:00 28 лютого) противник атакував 123 ударними БпЛА."
+    assert es_parte(texto)
+    assert leer(texto, datetime(2026, 3, 1, 6, tzinfo=UTC)).lanzados["total"] == rango(123)
