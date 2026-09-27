@@ -497,3 +497,16 @@ def test_los_puntos_de_lanzamiento_no_son_regiones_afectadas() -> None:
     assert leido.regiones == ("UA-51",)
     assert leido.lanzados["total"] == rango(42)
     assert leido.derribados == rango(41)
+
+
+def test_cruces_con_la_cifra_de_su_clausula() -> None:
+    texto = (
+        "У ніч на 9 грудня 2024 року противник атакував 100 ударними БпЛА.\n"
+        "Збито 50 ударних БпЛА.\n"
+        "45 БпЛА — локаційно втрачено, 5 безпілотників полетіли у бік Білорусі.\n"
+        "Один безпілотник увійшов в повітряний простір Румунії, ще два – перетнули державний "
+        "кордон з республікою Молдова."
+    )
+    leido = leer(texto, datetime(2024, 12, 9, 6, tzinfo=UTC))
+    assert dict(leido.cruces) == {"BY": rango(5), "MD": rango(2), "RO": rango(1)}
+    assert leido.perdidos_guerra_electronica == rango(45)

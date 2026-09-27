@@ -755,6 +755,22 @@ def _perdidos(frase: str) -> tuple[int | None, str]:
     return total, ";".join(limpios)
 
 
+def _cruces(frase: str, voc: Vocabulario) -> dict[str, Rango]:
+    """Drones que cruzan a otro país, con la cifra de su propia cláusula.
+
+    "95 БпЛА — локаційно втрачено, 5 безпілотників полетіли у бік Білорусі" son 5.
+    """
+    cruces: dict[str, Rango] = {}
+    for clausula in re.split(r"[,;]", frase):
+        pais = pais_en(clausula, voc) if _ES_CRUCE.search(clausula) else None
+        if pais is None:
+            continue
+        cuentas = _cuentas(clausula)
+        n = sum(cuentas) if cuentas else _cifra_suelta(clausula)
+        cruces[pais] = exacto(n) if n is not None else DESCONOCIDO
+    return cruces
+
+
 def _lanzados_de_referencia(texto: str) -> dict[str, Rango]:
     """Sin frase de lanzamiento, "збито 18 із 20 ударних дронів" da los 20 lanzados."""
     for frase in frases(texto):
@@ -816,10 +832,8 @@ def leer(texto: str, publicado: datetime) -> ParteLeido:
             loc_restos = numero(m[1])
         lugares_i += regiones_en(_tramo(frase, "влучан", "падін"), voc)
         lugares_r += regiones_en(_tramo(frase, "падін|уламк", None), voc)
-        pais = pais_en(frase, voc) if _ES_CRUCE.search(frase) else None
-        if pais is not None and re.search(_DRON, frase, re.IGNORECASE):
-            n = _suma_drones(frase, None)
-            cruces[pais] = exacto(n) if n is not None else DESCONOCIDO
+        if re.search(_DRON, frase, re.IGNORECASE):
+            cruces |= _cruces(frase, voc)
     if not lanz:
         lanz = _lanzados_de_referencia(texto)
     if not zonas_l:
