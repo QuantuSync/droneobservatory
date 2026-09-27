@@ -2,6 +2,7 @@
 
 import json
 import logging
+import time
 from collections.abc import Iterator
 from dataclasses import dataclass
 from datetime import datetime
@@ -13,8 +14,11 @@ from recogida.telegram import Pagina, Publicacion, es_pagina_de_canal, leer_pagi
 
 registro = logging.getLogger(__name__)
 
-# Una línea de avance cada 100 páginas: unas 20 en todo el histórico.
+# Una línea de avance cada 100 páginas: unas 40 en todo el histórico.
 AVISO_CADA_PAGINAS = 100
+# Hasta 10 intentos separados 0,5 s: 5 s bastan para que acabe una lectura ajena.
+REINTENTOS_GUARDAR = 10
+PAUSA_GUARDAR_S = 0.5
 
 
 def clave_pagina(canal: str, antes: int) -> str:
@@ -66,7 +70,16 @@ class Progreso:
         datos = {"inicio": self.inicio, "siguiente": self.siguiente, "paginas": self.paginas}
         temporal = ruta.with_suffix(".tmp")
         temporal.write_text(json.dumps(datos), encoding="utf-8")
-        temporal.replace(ruta)
+        for intento in range(REINTENTOS_GUARDAR):
+            try:
+                temporal.replace(ruta)
+                return
+            except PermissionError:
+                # En Windows otro proceso que está leyendo el fichero bloquea el
+                # reemplazo un instante.
+                if intento == REINTENTOS_GUARDAR - 1:
+                    raise
+                time.sleep(PAUSA_GUARDAR_S)
 
 
 def recorrer_historico(
