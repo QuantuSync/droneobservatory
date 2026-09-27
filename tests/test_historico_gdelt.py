@@ -7,6 +7,7 @@ import pytest
 
 from almacen.base import Almacen
 from recogida import gdelt, historico_gdelt
+from recogida.informe_gdelt import informe
 from tests.test_gdelt import ApiFalsa, bruto, descargador
 
 TITULAR = "Droner over Københavns Lufthavn: lufthavnen lukket"
@@ -19,13 +20,15 @@ def almacen() -> Iterator[Almacen]:
     a.cerrar()
 
 
-def test_recorre_por_dias_y_se_reanuda(almacen: Almacen, monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(historico_gdelt, "DESDE", datetime(2025, 9, 20, tzinfo=UTC))
+def test_recorre_por_dias_y_se_reanuda(almacen: Almacen) -> None:
     api = ApiFalsa([bruto(1, TITULAR, 30)])
     hasta = datetime(2025, 9, 23, tzinfo=UTC)
     # El reloj se agota tras el primer día.
     tiempos = iter([0.0, 2.0])
-    dias = historico_gdelt.recorrer(almacen, descargador(api), hasta, 1.0, lambda: next(tiempos))
+    desde = datetime(2025, 9, 20, tzinfo=UTC)
+    dias = historico_gdelt.recorrer(
+        almacen, descargador(api), hasta, 1.0, lambda: next(tiempos), desde=desde
+    )
     assert dias == 1
     assert almacen.cursor("gdelt_historico") == {"hasta": "2025-09-21T00:00:00Z"}
     dias = historico_gdelt.recorrer(almacen, descargador(api), hasta, float("inf"))
@@ -65,3 +68,10 @@ def test_fusion_con_la_base_fresca(almacen: Almacen) -> None:
     historico_gdelt.fusionar(almacen, fresca)
     assert fresca.articulos()[0]["replicas"] == 1
     fresca.cerrar()
+
+
+def test_informe_por_mes_y_muestra(almacen: Almacen) -> None:
+    gdelt.incorporar(almacen, [bruto(1, TITULAR, 30), bruto(2, TITULAR + " - TV2", 29)])
+    texto = informe(almacen)
+    assert "| 2025-09 | 1 | 1 | 1 |" in texto
+    assert TITULAR in texto

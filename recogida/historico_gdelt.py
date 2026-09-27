@@ -67,10 +67,11 @@ def recorrer(
     limite: float,
     reloj: Callable[[], float] = time.monotonic,
     dormir: Callable[[float], None] = time.sleep,
+    desde: datetime = DESDE,
 ) -> int:
     """Días recorridos hasta `hasta` o hasta el `limite` del reloj."""
     cursor = almacen.cursor(CURSOR)
-    dia = datetime.fromisoformat(cursor["hasta"]) if cursor else DESDE
+    dia = datetime.fromisoformat(cursor["hasta"]) if cursor else desde
     dias = fallos = 0
     while dia < hasta and reloj() < limite:
         fin = min(dia + PASO, hasta)
