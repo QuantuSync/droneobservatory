@@ -323,3 +323,30 @@ def test_formato_2023_en_dos_parrafos(
     # La cifra del intento (tres) no se toma salvo que el parte diga «todos».
     assert leido.derribados == rango(n)
     assert leido.inicio.documento() == inicio
+
+
+@pytest.mark.parametrize(
+    ("texto", "n", "regiones"),
+    [
+        ("⚡️ Сегодня утром пресечена попытка киевского режима осуществить террористическую атаку "
+         "семью беспилотными летательными аппаратами.\n\n▫️ Два украинских БПЛА уничтожены "
+         "средствами ПВО над акваторией Черного моря.\n\n▫️ Еще пять БПЛА подавлено средствами "
+         "радиоэлектронной борьбы.\n\n▫️ Над территорией Республики Крым уничтожена ракета.",
+         7, ()),
+        ("⚡️ Сегодня около 9.00 мск пресечена попытка киевского режима осуществить "
+         "террористическую атаку.\n\n▫️ Средствами ПВО украинский ударный БПЛА был обнаружен и "
+         "уничтожен над территорией Ступинского района Московской области.",
+         1, ("RU-MOS",)),
+        ("⚡️ В ночь с 20 на 21 сентября пресечена попытка киевского режима совершить "
+         "террористическую атаку с применением двух БпЛА.\n\nДежурными средствами ПВО оба "
+         "украинских беспилотных летательных аппарата перехвачены над территорией Брянской "
+         "области.",
+         2, ("RU-BRY",)),
+    ],
+)  # fmt: skip
+def test_formato_2023_con_viñetas(texto: str, n: int, regiones: tuple[str, ...]) -> None:
+    assert es_parte(texto + PIE)
+    leido = leer(texto + PIE, datetime(2023, 9, 21, 4, tzinfo=UTC))
+    assert leido.derribados == rango(n)
+    # La viñeta del misil no aporta región.
+    assert leido.regiones == regiones

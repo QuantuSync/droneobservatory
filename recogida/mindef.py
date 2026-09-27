@@ -11,6 +11,7 @@ Parser por código. Un parte que no se entiende lanza ParteIlegible con el
 motivo; nunca se publica a medias.
 """
 
+import itertools
 import json
 import re
 from dataclasses import dataclass
@@ -62,6 +63,9 @@ _PALABRAS_NUMERO = {
     "десять": 10, "десяти": 10, "одиннадцать": 11, "двенадцать": 12, "тринадцать": 13,
     "четырнадцать": 14, "пятнадцать": 15, "шестнадцать": 16, "семнадцать": 17,
     "восемнадцать": 18, "девятнадцать": 19,
+    # Instrumental del preámbulo: «атаку двумя БПЛА».
+    "оба": 2, "обе": 2, "одним": 1, "двумя": 2, "тремя": 3, "четырьмя": 4, "пятью": 5,
+    "шестью": 6, "семью": 7, "восемью": 8, "девятью": 9, "десятью": 10,
 }  # fmt: skip
 _DECENAS = {
     "двадцать": 20, "тридцать": 30, "сорок": 40, "пятьдесят": 50, "шестьдесят": 60,
@@ -97,7 +101,9 @@ _SINGULAR = r"(?:беспилотный\s+летательный\s+аппара�
 _VERBO_SINGULAR = r"(?:перехвачен|уничтожен|сбит|подавлен)(?!\w)"
 _UNO = re.compile(
     _VERBO_SINGULAR + r"(?:\s+и\s+\w+)?\s+(?:украинский\s+)?" + _SINGULAR
-    + r"|(?:украинский\s+)?" + _SINGULAR + r"(?:\s+самол[её]тного\s+типа)?\s+" + _VERBO_SINGULAR,
+    + r"|(?:украинский\s+)?(?:ударный\s+)?" + _SINGULAR + r"(?:\s+самол[её]тного\s+типа)?"
+    # «беспилотный летательный аппарат (был) обнаружен и уничтожен».
+    + r"(?:\s+был)?(?:\s+\w+\s+и)?\s+" + _VERBO_SINGULAR,
     re.IGNORECASE,
 )  # fmt: skip
 # «украинский беспилотный летательный аппарат» en nominativo, con otro verbo: uno.
@@ -106,14 +112,17 @@ _UNO_NOMINATIVO = re.compile(
 )
 # «украинские беспилотные летательные аппараты уничтожены»: sin cifra, todos los del intento.
 _TODOS = re.compile(
-    r"(?:украинские|все)\s+(?:беспилотные\s+летательные\s+аппараты|БПЛА|беспилотники)(?!\w)",
+    r"(?:(?:украинские|все)\s+)?(?:беспилотные\s+летательные\s+аппараты|БПЛА|беспилотники)"
+    r"(?:\s+были)?(?:\s+обнаружены\s+и)?\s+(?:уничтожены|перехвачены|сбиты|подавлены)",
     re.I,
 )
 # «уничтожены пять и перехвачены три украинских БПЛА»: la primera cifra va sin el dron.
 _Y_ANTES = re.compile(_NUM + r"\s+и\s+(?:перехвач|уничтож|подавл|сбит)\w*\s+(?=" + _NUM + ")", re.I)
-# El preámbulo del intento, hasta la mención del territorio o de la defensa aérea.
+# El preámbulo del intento, hasta la mención del territorio, de la defensa aérea o el
+# fin de la frase.
 _PREAMBULO = re.compile(
-    r"попытк\w*.*?(?:Российской\s+Федерации|(?=ПВО)|(?=противовоздушной))", re.I | re.S
+    r"попытк\w*[^\n]*?(?:Российской\s+Федерации|(?=ПВО)|(?=противовоздушной)|(?=\.(?:\s|$)))",
+    re.I,
 )
 # «двадцать два ... уничтожено и еще тринадцать перехвачено».
 _Y_OTROS = re.compile(r"и\s+ещ[её]\s+" + _NUM + r"\s+(?:перехвач|уничтож|подавл|сбит)\w*", re.I)
@@ -126,6 +135,9 @@ _RESUMEN = re.compile(r"^\W*(?:Главное\s+за\s+день|Итоги\s+н�
 # El pie del canal («🔹 Минобороны России», «Канал Минобороны России в MAКС») acaba el parte.
 _PIE = re.compile(r"^\s*(?:🔹|💬|🎮|💥\s*Канал|Канал\s+Минобороны)", re.MULTILINE)
 _PALABRA = re.compile(r"[А-ЯЁ][\w-]*")
+_MISIL = re.compile(r"ракет", re.IGNORECASE)
+_DISTRITO = re.compile(r"\s+(?:и\s+[А-ЯЁ][\w-]*\s+)?(?:район|округ|городск)", re.IGNORECASE)
+_VINETA = re.compile(r"^\s*(?:▫|▪|•|-|–)")
 _TIPOS = (
     (re.compile(r"самол[её]тного\s+типа", re.IGNORECASE), "ala_fija"),
     (re.compile(r"вертол[её]тного\s+типа|квадрокоптер|мультикоптер", re.IGNORECASE), "multirrotor"),
@@ -164,13 +176,17 @@ _PUNTO = re.compile(
 # «В течение (прошедшей, сегодняшней) ночи», «Сегодня ночью», «Ночью 16 ноября».
 _NOCHE = re.compile(
     r"в\s+течени[еи]\s+(?:(?:прошедшей|сегодняшней)\s+)?ночи"
-    r"|(?:этой|минувшей|прошедшей|сегодня)\s+ночью|ночью\s+(\d{1,2})\s+(" + _MES + ")",
+    r"|(?:этой|минувшей|прошедшей|сегодня)\s+ночью|ночью\s+(\d{1,2})\s+(" + _MES + ")"
+    # «В ночь с 20 на 21 сентября», «В ночь на 29 сентября т.г.».
+    r"|в\s+ночь\s+(?:с\s+\d{1,2}\s+(?:" + _MES + r"\s+)?)?на\s+(\d{1,2})\s+(" + _MES + ")"
+    # «23 августа с.г. в ночное время».
+    r"|(\d{1,2})\s+(" + _MES + r")(?:\s+с\.\s?г\.)?\s+в\s+ночное\s+время|в\s+ночное\s+время",
     re.IGNORECASE,
 )
 # «В течение дня», «в течение прошедшего дня», «Утром», «В утренние часы 10 апреля».
 _DIA = re.compile(
     r"(?:в\s+течени[еи]\s+(?:прошедшего\s+)?(?:дня|утра|суток)|утром|в\s+утренние\s+часы"
-    r"|сегодня\s+(?:днем|днём|утром|вечером))"
+    r"|сегодня\s+(?:днем|днём|утром|вечером)|вечером|днем|днём)"
     r"(?:\s+(\d{1,2})\s+(" + _MES + r"))?",
     re.IGNORECASE,
 )
@@ -204,10 +220,22 @@ def regiones_en(texto: str, voc: Vocabulario) -> list[str]:
     palabras que no son regiones deja el parte como fallido: el vocabulario crece.
     """
     codigos: list[str] = []
-    for tramo in _SOBRE.split(texto)[1:]:
-        # La lista de regiones acaba con la frase o con la línea (viñetas).
-        tramo = re.split(r"\.\s|\n", tramo, maxsplit=1)[0]
-        for palabra in _PALABRA.findall(tramo):
+    for linea in re.split(r"\.\s|\n", texto):
+        # Una viñeta o frase de misiles («уничтожена украинская ракета») no da regiones.
+        if _MISIL.search(linea) and not re.search(_DRON, linea, re.IGNORECASE):
+            continue
+        codigos += [c for c in _regiones_linea(linea, voc) if c not in codigos]
+    return codigos
+
+
+def _regiones_linea(linea: str, voc: Vocabulario) -> list[str]:
+    codigos: list[str] = []
+    for tramo in _SOBRE.split(linea)[1:]:
+        for encontrada in _PALABRA.finditer(tramo):
+            palabra = encontrada[0]
+            # «Ступинского района Московской области»: el distrito lleva detrás su región.
+            if _DISTRITO.match(tramo, encontrada.end()):
+                continue
             codigo = next((c for r, c in voc.regiones if palabra.startswith(r)), None)
             if codigo is None:
                 if not palabra.startswith(voc.no_regiones):
@@ -232,15 +260,19 @@ def primer_parrafo(texto: str) -> str:
 
 
 def parte_principal(texto: str) -> str:
-    """El primer párrafo, y el segundo si el primero es solo el preámbulo del intento.
+    """El primer párrafo y, si es solo el preámbulo del intento, lo que sigue.
 
     Hasta 2024 el parte iba en dos párrafos: «пресечена попытка киевского режима
-    ...» y «Дежурными средствами ПВО ... уничтожен над ...».
+    ...» y «Дежурными средствами ПВО ... уничтожен над ...»; en 2023, a veces en
+    viñetas separadas por líneas en blanco («▫️ Два украинских БПЛА уничтожены ...»,
+    «▫️ Еще пять БПЛА подавлено ...»).
     """
     parrafos = re.split(r"\n\s*\n", cuerpo(texto))
-    if len(parrafos) > 1 and not _VERBO.search(parrafos[0]):
-        return parrafos[0] + "\n\n" + parrafos[1]
-    return parrafos[0]
+    if len(parrafos) == 1 or _VERBO.search(parrafos[0]):
+        return parrafos[0]
+    siguientes = [parrafos[1]]
+    siguientes += itertools.takewhile(lambda p: _VINETA.match(p) is not None, parrafos[2:])
+    return "\n\n".join([parrafos[0], *siguientes])
 
 
 def _tramo_de_derribos(parte: str) -> str:
@@ -348,7 +380,12 @@ def periodo(texto: str, publicado: datetime) -> tuple[Instante, Instante]:
             inicio = fin = Instante(momento, "aproximada" if aproximada else "minuto")
         elif m := _NOCHE.search(texto):
             # La noche que acaba el día declarado o el de la publicación.
-            fin_noche = _fecha(int(m[1]), MESES[m[2].lower()], local.date()) if m[1] else None
+            dia_mes = next(((m[i], m[i + 1]) for i in (1, 3, 5) if m[i]), (None, None))
+            fin_noche = (
+                _fecha(int(dia_mes[0]), MESES[dia_mes[1].lower()], local.date())
+                if dia_mes[0]
+                else None
+            )
             dia = (fin_noche or local.date()) - timedelta(days=1)
             inicio, fin = Instante(_utc(dia, HORA_INICIO_NOCHE), "aproximada"), redondeado
         elif m := _HASTA.search(texto):
@@ -383,8 +420,10 @@ def derribados(parrafo: str) -> int:
         # БПЛА над акваторией»).
         if re.match(r"[^.\n]*?:", tramo[cifras[0].end() :]):
             return numero(cifras[0][1])
-        frase = re.split(r"\.\s", tramo[cifras[0].start() :], maxsplit=1)[0]
-        total = sum(numero(m[1]) for m in _CIFRA.finditer(frase))
+        # Las frases o viñetas con derribos: «Два украинских БПЛА уничтожены ...», «Еще
+        # пять БПЛА подавлено ...».
+        frases = [f for f in re.split(r"\.\s|\n", tramo) if _VERBO.search(f)]
+        total = sum(numero(m[1]) for f in frases for m in _CIFRA.finditer(f))
         total += sum(numero(m[1]) for m in _Y_OTROS.finditer(tramo))
         total += sum(numero(m[1]) for m in _Y_ANTES.finditer(tramo))
         return total
