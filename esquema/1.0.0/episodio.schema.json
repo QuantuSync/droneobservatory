@@ -8,7 +8,7 @@
   "additionalProperties": false,
   "required": ["id", "noche", "incidentes"],
   "properties": {
-    "id": {"x-visibilidad": "publico", "type": "string", "minLength": 1},
+    "id": {"x-visibilidad": "publico", "type": "string", "pattern": "^EODI-EP-\\d{4}-\\d{4}$"},
     "titulo": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.0.0:comun#/$defs/titulo"},
     "noche": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.0.0:comun#/$defs/fecha"},
     "incidentes": {

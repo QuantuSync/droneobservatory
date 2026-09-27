@@ -98,6 +98,9 @@ def test_ejemplos_validos(esquema: Esquema, documento: Any) -> None:
     ("ruta", "valor"),
     [
         (("id",), "EODI-25-1"),
+        (("id",), "EODI-UA-2025-0001"),
+        (("episodio",), "EP-2025-10-01"),
+        (("episodio",), "EODI-EP-2025-00001"),
         (("tipo",), "ataque_guerra"),
         (("lugar", "radio_km"), 0.05),
         (("lugar", "radio_km"), 51),
@@ -127,6 +130,14 @@ def test_frase_de_origen_de_mas_de_25_palabras_rechazada() -> None:
         validador(Esquema.FUENTE).validate(documento)
     documento["frase_origen"] = " ".join(["palabra"] * 25)
     validador(Esquema.FUENTE).validate(documento)
+
+
+@pytest.mark.parametrize("id_", ["EODI-EP-25-0001", "EODI-EP-2025-001", "EODI-2025-00001"])
+def test_episodio_rechaza_identificador_mal_formado(id_: str) -> None:
+    documento = ejemplos.episodio()
+    documento["id"] = id_
+    with pytest.raises(ValidationError):
+        validador(Esquema.EPISODIO).validate(documento)
 
 
 def test_campo_desconocido_rechazado() -> None:

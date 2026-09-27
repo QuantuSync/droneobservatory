@@ -16,7 +16,7 @@
     },
     "estado": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.0.0:comun#/$defs/estado_historial"},
     "titulo": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.0.0:comun#/$defs/titulo"},
-    "episodio": {"x-visibilidad": "publico", "type": "string", "minLength": 1},
+    "episodio": {"x-visibilidad": "publico", "type": "string", "pattern": "^EODI-EP-\\d{4}-\\d{4}$"},
     "origen_demostrado_por": {
       "x-visibilidad": "interno",
       "description": "Prueba de que el dron entró desde fuera. Obligatorio para el tipo incursión.",

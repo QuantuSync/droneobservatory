@@ -51,7 +51,7 @@ def incidente_completo() -> Documento:
             ],
         },
         "titulo": {"es": "Cierre de aeropuerto por drones", "en": "Airport closed by drones"},
-        "episodio": "EP-2025-10-01",
+        "episodio": "EODI-EP-2025-0001",
         "origen_demostrado_por": ["rastreo"],
         "tiempo": {
             "inicio": instante("2025-10-01T20:30Z"),
@@ -208,7 +208,7 @@ def ataque_completo() -> Documento:
 
 def episodio() -> Documento:
     return {
-        "id": "EP-2025-10-01",
+        "id": "EODI-EP-2025-0001",
         "titulo": {"es": "Noche de drones", "en": "Night of drones"},
         "noche": "2025-10-01",
         "incidentes": ["EODI-2025-00001"],
