@@ -794,7 +794,10 @@ def leer(texto: str, publicado: datetime) -> ParteLeido:
             # Las zonas de lanzamiento no son regiones afectadas.
             para_regiones.append(re.split(r"(?:із|з)\s+(?:напрямк|район)", frase, flags=re.I)[0])
             continue
-        para_regiones.append(frase)
+        # Las frases de los puntos de lanzamiento ("Пуски ... з трьох напрямків: Чауда –
+        # Крим") no hablan de regiones afectadas.
+        if not re.search(r"пуск", frase, re.IGNORECASE):
+            para_regiones.append(frase)
         total = lanz.get("total")
         total_n = total["max"] if isinstance(total, dict) else None
         perdidos_frase, resto = _perdidos(frase)

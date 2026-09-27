@@ -483,3 +483,17 @@ def test_2023_zonas_antes_de_la_cifra_y_entre_parentesis() -> None:
     )
     leido = leer(parentesis, datetime(2024, 1, 28, 6, tzinfo=UTC))
     assert leido.zonas_lanzamiento == ("Приморсько-Ахтарськ",)
+
+
+def test_los_puntos_de_lanzamiento_no_son_regiones_afectadas() -> None:
+    texto = (
+        "У ніч на 14 грудня 2023 року російські окупанти атакували ударними БпЛА.\n"
+        "Пуски здійснювались хвилями з трьох напрямків: Балаклава, Чауда – Крим. Загалом "
+        "зафіксовано пуски 42 ворожих ударних БпЛА.\n"
+        "Основний напрямок удару – Одещина!\n"
+        "Цієї ночі вдалось збити 41 із 42 ударних БпЛА."
+    )
+    leido = leer(texto, datetime(2023, 12, 14, 5, tzinfo=UTC))
+    assert leido.regiones == ("UA-51",)
+    assert leido.lanzados["total"] == rango(42)
+    assert leido.derribados == rango(41)
