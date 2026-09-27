@@ -1,3 +1,4 @@
+import os
 import sqlite3
 from pathlib import Path
 
@@ -9,6 +10,7 @@ from almacen.cifrado import (
     VARIABLE_CLAVE,
     ClaveAusente,
     abrir_cifrada,
+    cargar_clave_local,
     cifrar,
     descifrar,
     guardar_cifrada,
@@ -68,3 +70,24 @@ def test_la_clave_no_se_escribe_en_disco(clave_efimera: str, tmp_path: Path) -> 
     guardar_cifrada(_almacen_poblado().conexion, ruta)
     assert [p.name for p in tmp_path.iterdir()] == [ruta.name]
     assert clave_efimera.encode() not in ruta.read_bytes()
+
+
+def test_admite_el_fichero_de_identidad_completo(monkeypatch: pytest.MonkeyPatch) -> None:
+    identidad = pyrage.x25519.Identity.generate()
+    fichero = f"# destinatario: {identidad.to_public()}\n\n{identidad}\n"
+    monkeypatch.setenv(VARIABLE_CLAVE, fichero)
+    conexion = descifrar(cifrar(_almacen_poblado().conexion))
+    assert Almacen(conexion).incidente("EODI-2025-00001") is not None
+
+
+def test_clave_local_solo_si_falta_la_variable(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    ruta = tmp_path / "clave_age.txt"
+    ruta.write_text("desde-fichero", encoding="utf-8")
+    monkeypatch.setenv(VARIABLE_CLAVE, "desde-variable")
+    cargar_clave_local(ruta)
+    assert os.environ[VARIABLE_CLAVE] == "desde-variable"
+    monkeypatch.delenv(VARIABLE_CLAVE)
+    cargar_clave_local(ruta)
+    assert os.environ[VARIABLE_CLAVE] == "desde-fichero"

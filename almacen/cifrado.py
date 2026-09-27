@@ -1,7 +1,8 @@
 """Cifrado con age de la base de datos completa.
 
 La identidad age (clave secreta) se lee de una variable de entorno y nunca se
-escribe en disco ni en el repositorio. El destinatario se deriva de ella.
+escribe en el repositorio. En local puede cargarse desde un fichero fuera de
+cualquier repositorio. El destinatario se deriva de ella.
 """
 
 import os
@@ -11,6 +12,8 @@ from pathlib import Path
 import pyrage
 
 VARIABLE_CLAVE = "EODI_CLAVE_AGE"
+# Solo en local y fuera de cualquier repositorio.
+RUTA_CLAVE_LOCAL = Path.home() / ".eodi" / "clave_age.txt"
 
 
 class ClaveAusente(RuntimeError):
@@ -18,10 +21,18 @@ class ClaveAusente(RuntimeError):
 
 
 def _identidad() -> pyrage.x25519.Identity:
-    clave = os.environ.get(VARIABLE_CLAVE)
-    if not clave:
+    contenido = os.environ.get(VARIABLE_CLAVE, "")
+    # Admite el fichero de identidad completo: se ignoran comentarios y líneas vacías.
+    lineas = [x.strip() for x in contenido.splitlines() if x.strip() and not x.startswith("#")]
+    if not lineas:
         raise ClaveAusente(f"falta la variable de entorno {VARIABLE_CLAVE}")
-    return pyrage.x25519.Identity.from_str(clave.strip())
+    return pyrage.x25519.Identity.from_str(lineas[0])
+
+
+def cargar_clave_local(ruta: Path = RUTA_CLAVE_LOCAL) -> None:
+    """Para ejecuciones en local: lleva la identidad del fichero a la variable si falta."""
+    if not os.environ.get(VARIABLE_CLAVE):
+        os.environ[VARIABLE_CLAVE] = ruta.read_text(encoding="utf-8")
 
 
 def cifrar(conexion: sqlite3.Connection) -> bytes:
