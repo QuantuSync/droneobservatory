@@ -293,8 +293,12 @@ def ejecutar(almacen: Almacen, descargador: Descargador, ahora: datetime) -> Rec
     except DescargaFallida as error:
         hueco = ahora - hasta
         registro.warning("gdelt sin respuesta, hueco pendiente de %s: %s", hueco, error)
+        if cursor is None:
+            # Sin respuesta desde la primera ejecución: el cursor apunta al inicio para que
+            # el hueco crezca y, pasado un día, la ejecución quede en rojo.
+            almacen.guardar_cursor(FUENTE_ID, {"hasta": _fecha(hasta), "inicio": _fecha(hasta)})
         if hueco > HUECO_TOLERADO:
-            raise GdeltNoDisponible(f"sin respuesta desde {cursor}") from error
+            raise GdeltNoDisponible(f"sin respuesta desde {_fecha(hasta)}") from error
         return Recuentos()
     # «inicio» es donde empezó la recogida horaria: el histórico llega hasta ahí.
     primera = cursor["inicio"] if cursor else _fecha(inicio)

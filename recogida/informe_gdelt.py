@@ -10,6 +10,7 @@ Uso en una prueba sin base (recoge los últimos días en memoria):
 """
 
 import argparse
+import logging
 import random
 import sys
 import time
@@ -59,6 +60,7 @@ def principal(argumentos: list[str] | None = None) -> int:
     opciones.add_argument("--dias", type=int, help="recoge en memoria los últimos N días")
     opciones.add_argument("--horas", type=float, default=float("inf"))
     args = opciones.parse_args(argumentos)
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s: %(message)s")
     if args.dias:
         almacen = Almacen.abrir()
         ahora = datetime.now(UTC).replace(minute=0, second=0, microsecond=0)

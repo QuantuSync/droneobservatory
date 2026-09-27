@@ -140,3 +140,15 @@ def test_si_la_api_no_responde_el_cursor_no_avanza(almacen: Almacen) -> None:
     # Más de un día sin respuesta: la ejecución queda en rojo.
     with pytest.raises(gdelt.GdeltNoDisponible):
         gdelt.ejecutar(almacen, descargador(api), AHORA + timedelta(days=2))
+
+
+def test_sin_respuesta_desde_la_primera_ejecucion_acaba_en_rojo(almacen: Almacen) -> None:
+    api = ApiFalsa([])
+    api.fallar = True
+    gdelt.ejecutar(almacen, descargador(api), AHORA)
+    assert almacen.cursor("gdelt") == {
+        "hasta": "2025-09-22T12:00:00Z",
+        "inicio": "2025-09-22T12:00:00Z",
+    }
+    with pytest.raises(gdelt.GdeltNoDisponible):
+        gdelt.ejecutar(almacen, descargador(api), AHORA + timedelta(hours=1))
