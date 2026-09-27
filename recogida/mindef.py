@@ -262,8 +262,9 @@ _CIFRA_GUION = re.compile(
 )
 # «по девять БПЛА – над территориями Белгородской и Саратовской областей»: cada una.
 _POR_CADA = re.compile(r"(?<!\w)по\s+$", re.IGNORECASE)
-# Cabecera con el total antes de la lista: «уничтожены 158 ... самолетного типа:».
-_ANTES_DE_LISTA = re.compile(r"[^.\n]*?:")
+# Cabecera con el total antes de la lista: «уничтожены 158 ... самолетного типа:», «уничтожены
+# 19 ... аппаратов, из которых девять ...».
+_ANTES_DE_LISTA = re.compile(r"[^.\n]*?(?::|из\s+(?:которых|них))")
 
 
 def _cifras_tramo(tramo: str) -> tuple[list[int], bool]:
@@ -298,11 +299,20 @@ def _zonas_tramo(tramo: str, voc: Vocabulario) -> list[str | None]:
         codigo = next((c for r, c in voc.regiones if encontrada[0].startswith(r)), None)
         if codigo is not None and codigo not in zonas:
             zonas.append(codigo)
+    # «над территориями Белгородской, Воронежской областей и акваторией Черного моря».
+    if zonas and re.search(r"(?<!\w)акватори", tramo, re.IGNORECASE):
+        zonas.append(None)
     return zonas
 
 
 def derribados_por_region(texto: str, total: int, voc: Vocabulario) -> dict[str, int]:
-    """Derribos de cada región cuando el parte los da y suman el total; si no, vacío.
+    """Derribos de cada región cuando el parte los da y suman el total; si no, vacío."""
+    completo = desglose(texto, voc)
+    return completo[0] if completo is not None and completo[1] == total else {}
+
+
+def desglose(texto: str, voc: Vocabulario) -> tuple[dict[str, int], int] | None:
+    """Derribos de cada región y su suma, si cada «над» del parte tiene su cifra; si no, None.
 
     Cada «над» toma las cifras que lo preceden desde el «над» anterior. Una cifra
     sin «над» en su frase pasa a la siguiente («два ... подавлены» y «Потеряв
@@ -328,16 +338,16 @@ def derribados_por_region(texto: str, total: int, voc: Vocabulario) -> dict[str,
             cifras, pendientes = (cifras or pendientes), []
             zonas = _zonas_tramo(linea[marca.start() : fin], voc)
             if not zonas:
-                return {}
+                return None
             if cifras:
                 valor = sum(cifras)
             elif anterior is not None and anterior[1]:
                 # «по одному ... областей и над акваторией Черного моря»: también uno.
                 valor, por_cada = anterior
             else:
-                return {}
+                return None
             if len(zonas) > 1 and not por_cada:
-                return {}
+                return None
             for zona in zonas:
                 suma += valor
                 if zona is not None:
@@ -345,7 +355,9 @@ def derribados_por_region(texto: str, total: int, voc: Vocabulario) -> dict[str,
             anterior = (valor, por_cada)
         if not marcas:
             pendientes += _cifras_tramo(linea)[0]
-    return por_region if suma == total else {}
+    # Una cifra que no llega a ningún «над» («Еще два беспилотника ... потерпели крушение на
+    # территории ...») deja el desglose incompleto.
+    return (por_region, suma) if suma and not pendientes else None
 
 
 # --- Texto --------------------------------------------------------------------
@@ -537,6 +549,24 @@ def derribados(parrafo: str) -> int:
     raise ParteIlegible("sin cifra de drones")
 
 
+def cabecera(parrafo: str) -> int | None:
+    """Cifra total del parte si la da aparte del desglose por regiones.
+
+    Es la primera cifra de drones cuando abre una lista («уничтожены 47 ...:») o va en
+    una frase sin «над» («уничтожено пятнадцать ... аппаратов. Шесть БПЛА сбиты над ...»).
+    """
+    tramo = _tramo_de_derribos(parrafo)
+    primera = _CIFRA.search(tramo)
+    if primera is None:
+        return None
+    if _ANTES_DE_LISTA.match(tramo, primera.end()):
+        return numero(primera[1])
+    inicio = max(tramo.rfind("\n", 0, primera.start()), tramo.rfind(". ", 0, primera.start()))
+    fin = min((i for i in (tramo.find("\n", primera.end()), tramo.find(". ", primera.end()))
+               if i >= 0), default=len(tramo))  # fmt: skip
+    return None if _SOBRE.search(tramo[inicio + 1 : fin]) else numero(primera[1])
+
+
 def leer(texto: str, publicado: datetime) -> ParteLeido:
     """Extrae los drones derribados de un parte. Lanza ParteIlegible si no lo entiende."""
     parrafo = parte_principal(texto)
@@ -545,7 +575,14 @@ def leer(texto: str, publicado: datetime) -> ParteLeido:
     regiones = regiones_en(cuerpo(texto), vocabulario())
     if not regiones and not re.search(r"акватори", texto, re.IGNORECASE):
         raise ParteIlegible("sin regiones")
-    por_region = derribados_por_region(cuerpo(texto), n, vocabulario())
+    completo = desglose(cuerpo(texto), vocabulario())
+    total = cabecera(parrafo)
+    if completo is not None and total in {None, completo[1]}:
+        # Con el desglose completo, su suma es la cifra si no hay cabecera que diga otra
+        # cosa. Antes se sumaban cabecera y desglose («четыре ... Два БПЛА ... и по одному
+        # БПЛА над ...») y «по одному ... над Курской, Калужской» contaba solo uno.
+        n = completo[1]
+    por_region = completo[0] if completo is not None and completo[1] == n else {}
     primera = re.split(r"(?<=[.:!])\s", re.sub(r"^\W+", "", parrafo), maxsplit=1)[0]
     return ParteLeido(
         inicio=inicio,

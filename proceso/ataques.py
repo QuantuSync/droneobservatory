@@ -175,6 +175,9 @@ def actualizar(
     if not repetida:
         control["huella_fuentes"] = huella(control.get("huella_fuentes"), texto)
     control["version_extractor"] = perfil.version_parser
+    # Un ataque dado de alta antes de marcar la fuente como parte en guerra la recibe ahora.
+    if perfil.reivindicacion:
+        resultado["reivindicacion_de_parte"] = True
     return resultado
 
 
