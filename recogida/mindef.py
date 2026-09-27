@@ -45,6 +45,7 @@ VOCABULARIO = Path(__file__).resolve().parent.parent / "configuracion" / "region
 HORA_INICIO_NOCHE = time(20, 0)
 # «24.00» es la medianoche.
 MEDIANOCHE = 24
+DECENA = 10
 # Un parte habla de las horas que acaban de pasar: una fecha declarada más de un día
 # después de la publicación solo puede ser del año anterior.
 MARGEN_FECHA = timedelta(days=1)
@@ -60,10 +61,28 @@ _PALABRAS_NUMERO = {
     "шести": 6, "семь": 7, "семи": 7, "восемь": 8, "восьми": 8, "девять": 9, "девяти": 9,
     "десять": 10, "десяти": 10, "одиннадцать": 11, "двенадцать": 12, "тринадцать": 13,
     "четырнадцать": 14, "пятнадцать": 15, "шестнадцать": 16, "семнадцать": 17,
-    "восемнадцать": 18, "девятнадцать": 19, "двадцать": 20, "тридцать": 30,
+    "восемнадцать": 18, "девятнадцать": 19,
 }  # fmt: skip
+_DECENAS = {
+    "двадцать": 20, "тридцать": 30, "сорок": 40, "пятьдесят": 50, "шестьдесят": 60,
+    "семьдесят": 70, "восемьдесят": 80, "девяносто": 90,
+}  # fmt: skip
+_UNIDADES = [p for p, n in _PALABRAS_NUMERO.items() if n < DECENA]
+_PALABRAS_NUMERO |= _DECENAS
+# «двадцать два»: decena y unidad separadas por un espacio.
+_COMPUESTO = (
+    "(?:"
+    + "|".join(_DECENAS)
+    + r")\s+(?:"
+    + "|".join(sorted(_UNIDADES, key=len, reverse=True))
+    + ")"
+)
 _NUM = (
-    r"(?<![\w.:])(\d+|" + "|".join(sorted(_PALABRAS_NUMERO, key=len, reverse=True)) + r")(?![\w.:])"
+    r"(?<![\w.:])(\d+|"
+    + _COMPUESTO
+    + "|"
+    + "|".join(sorted(_PALABRAS_NUMERO, key=len, reverse=True))
+    + r")(?![\w.:])"
 )
 _DRON = r"(?:беспилотн\w*\s+летательн\w*\s+аппарат\w*|БПЛА|беспилотник\w*|дрон\w*)"
 _VERBO = re.compile(r"перехвач\w*|уничтож\w*|сбит\w*|подавл\w*", re.IGNORECASE)
@@ -81,9 +100,27 @@ _UNO = re.compile(
     + r"|(?:украинский\s+)?" + _SINGULAR + r"(?:\s+самол[её]тного\s+типа)?\s+" + _VERBO_SINGULAR,
     re.IGNORECASE,
 )  # fmt: skip
+# «украинский беспилотный летательный аппарат» en nominativo, con otro verbo: uno.
+_UNO_NOMINATIVO = re.compile(
+    r"украинский\s+(?:беспилотный\s+летательный\s+аппарат|БПЛА|беспилотник)(?!\w)", re.I
+)
+# «украинские беспилотные летательные аппараты уничтожены»: sin cifra, todos los del intento.
+_TODOS = re.compile(
+    r"(?:украинские|все)\s+(?:беспилотные\s+летательные\s+аппараты|БПЛА|беспилотники)(?!\w)",
+    re.I,
+)
+# «уничтожены пять и перехвачены три украинских БПЛА»: la primera cifra va sin el dron.
+_Y_ANTES = re.compile(_NUM + r"\s+и\s+(?:перехвач|уничтож|подавл|сбит)\w*\s+(?=" + _NUM + ")", re.I)
+# El preámbulo del intento, hasta la mención del territorio o de la defensa aérea.
+_PREAMBULO = re.compile(
+    r"попытк\w*.*?(?:Российской\s+Федерации|(?=ПВО)|(?=противовоздушной))", re.I | re.S
+)
+# «двадцать два ... уничтожено и еще тринадцать перехвачено».
+_Y_OTROS = re.compile(r"и\s+ещ[её]\s+" + _NUM + r"\s+(?:перехвач|уничтож|подавл|сбит)\w*", re.I)
 # La defensa aérea: la cifra de derribados va detrás; delante puede ir la del intento
 # («при попытке ... с применением трех беспилотников»).
 _PVO = re.compile(r"ПВО|противовоздушной\s+обороны", re.IGNORECASE)
+_INTENTO = re.compile(r"попытк\w*\s+киевского\s+режима", re.IGNORECASE)
 # Resúmenes que repiten partes ya publicados.
 _RESUMEN = re.compile(r"^\W*(?:Главное\s+за\s+день|Итоги\s+недели|Сводка)", re.IGNORECASE)
 # El pie del canal («🔹 Минобороны России», «Канал Минобороны России в MAКС») acaba el parte.
@@ -115,18 +152,25 @@ _RANGO = re.compile(
     + ")?",
     re.IGNORECASE,
 )
-# «Около 15.05 мск» (aproximada) y «В 13.40 мск» (minuto).
-# «мск» puede faltar tras «около» («Около 07.15 при попытке ...»).
+# «Около 15.05 мск» y «20 декабря в районе 21.00 мск» (aproximada), «В 13.40 мск» (minuto).
+# «мск» puede faltar tras «около» («Около 07.15 при попытке ...»), y la hora puede ir sin
+# minutos si sigue «часов» («Около 10 часов»).
 _PUNTO = re.compile(
-    r"(?<!\w)(?:(около)\s+(\d{1,2})[.:](\d{2})(?:\s+мск)?|(в)\s+(\d{1,2})[.:](\d{2})\s+мск)",
+    r"(?:(?P<dia>\d{1,2})\s+(?P<mes>" + _MES + r")\s+)?(?<!\w)(?:"
+    r"(?P<aprox>около|в\s+районе)\s+(?P<h>\d{1,2})(?:[.:](?P<n>\d{2})(?:\s+час\w*)?|\s+час\w*)"
+    r"(?:\s+мск)?|в\s+(?P<h2>\d{1,2})[.:](?P<n2>\d{2})\s+мск)",
     re.IGNORECASE,
 )
+# «В течение (прошедшей, сегодняшней) ночи», «Сегодня ночью», «Ночью 16 ноября».
 _NOCHE = re.compile(
-    r"в\s+течени[еи]\s+(?:прошедшей\s+)?ночи|(?:этой|минувшей|прошедшей)\s+ночью", re.IGNORECASE
+    r"в\s+течени[еи]\s+(?:(?:прошедшей|сегодняшней)\s+)?ночи"
+    r"|(?:этой|минувшей|прошедшей|сегодня)\s+ночью|ночью\s+(\d{1,2})\s+(" + _MES + ")",
+    re.IGNORECASE,
 )
 # «В течение дня», «в течение прошедшего дня», «Утром», «В утренние часы 10 апреля».
 _DIA = re.compile(
-    r"(?:в\s+течени[еи]\s+(?:прошедшего\s+)?(?:дня|утра|суток)|утром|в\s+утренние\s+часы)"
+    r"(?:в\s+течени[еи]\s+(?:прошедшего\s+)?(?:дня|утра|суток)|утром|в\s+утренние\s+часы"
+    r"|сегодня\s+(?:днем|днём|утром|вечером))"
     r"(?:\s+(\d{1,2})\s+(" + _MES + r"))?",
     re.IGNORECASE,
 )
@@ -187,8 +231,28 @@ def primer_parrafo(texto: str) -> str:
     return re.split(r"\n\s*\n", cuerpo(texto), maxsplit=1)[0]
 
 
+def parte_principal(texto: str) -> str:
+    """El primer párrafo, y el segundo si el primero es solo el preámbulo del intento.
+
+    Hasta 2024 el parte iba en dos párrafos: «пресечена попытка киевского режима
+    ...» y «Дежурными средствами ПВО ... уничтожен над ...».
+    """
+    parrafos = re.split(r"\n\s*\n", cuerpo(texto))
+    if len(parrafos) > 1 and not _VERBO.search(parrafos[0]):
+        return parrafos[0] + "\n\n" + parrafos[1]
+    return parrafos[0]
+
+
+def _tramo_de_derribos(parte: str) -> str:
+    """El parte sin el preámbulo del intento, que puede traer otra cifra («при попытке ... с
+    применением трех беспилотников»)."""
+    return _PREAMBULO.sub(" ", parte, count=1)
+
+
 def numero(texto: str) -> int:
-    limpio = texto.lower()
+    limpio = " ".join(texto.lower().split())
+    if " " in limpio:
+        return sum(numero(parte) for parte in limpio.split())
     return _PALABRAS_NUMERO[limpio] if limpio in _PALABRAS_NUMERO else int(limpio)
 
 
@@ -196,10 +260,10 @@ def es_parte(texto: str) -> bool:
     """Parte de drones derribados sobre Rusia o zonas ocupadas, no un resumen del día."""
     if _RESUMEN.match(texto):
         return False
-    parrafo = primer_parrafo(texto)
+    parrafo = parte_principal(texto)
     return bool(
         _VERBO.search(parrafo)
-        and _PVO.search(parrafo)
+        and (_PVO.search(parrafo) or _INTENTO.search(parrafo))
         and re.search(_DRON, parrafo, re.IGNORECASE)
         and re.search(r"украинск|ВСУ|киевского\s+режима", parrafo, re.IGNORECASE)
         and _SOBRE.search(cuerpo(texto))
@@ -275,14 +339,17 @@ def periodo(texto: str, publicado: datetime) -> tuple[Instante, Instante]:
         if m := _RANGO.search(texto):
             inicio, fin = _rango(m, publicado)
         elif m := _PUNTO.search(texto):
-            aproximada = m[1] is not None
-            hora, minuto = (m[2], m[3]) if aproximada else (m[5], m[6])
-            momento = _utc(local.date(), time(int(hora), int(minuto)))
-            if momento > publicado:
+            aproximada = m["aprox"] is not None
+            hora, minuto = int(m["h"] or m["h2"]), int(m["n"] or m["n2"] or 0)
+            dia = _fecha(int(m["dia"]), MESES[m["mes"].lower()], local.date()) if m["dia"] else None
+            momento = _utc(dia or local.date(), time(hora, minuto))
+            if dia is None and momento > publicado:
                 momento -= timedelta(days=1)
             inicio = fin = Instante(momento, "aproximada" if aproximada else "minuto")
-        elif _NOCHE.search(texto):
-            dia = local.date() - timedelta(days=1)
+        elif m := _NOCHE.search(texto):
+            # La noche que acaba el día declarado o el de la publicación.
+            fin_noche = _fecha(int(m[1]), MESES[m[2].lower()], local.date()) if m[1] else None
+            dia = (fin_noche or local.date()) - timedelta(days=1)
             inicio, fin = Instante(_utc(dia, HORA_INICIO_NOCHE), "aproximada"), redondeado
         elif m := _HASTA.search(texto):
             momento = _utc(local.date(), time(int(m[1]), int(m[2])))
@@ -308,18 +375,30 @@ def periodo(texto: str, publicado: datetime) -> tuple[Instante, Instante]:
 
 
 def derribados(parrafo: str) -> int:
-    pvo = _PVO.search(parrafo)
-    tramo = parrafo[pvo.start() :] if pvo else parrafo
-    if m := _CIFRA.search(tramo):
-        return numero(m[1])
-    if _UNO.search(tramo):
+    tramo = _tramo_de_derribos(parrafo)
+    cifras = list(_CIFRA.finditer(tramo))
+    if cifras:
+        # «уничтожены 155 ... самолетного типа:» abre la lista por regiones: la cifra es el
+        # total. Si no, las cifras de la frase se suman («два ... над Брянской и еще три
+        # БПЛА над акваторией»).
+        if re.match(r"[^.\n]*?:", tramo[cifras[0].end() :]):
+            return numero(cifras[0][1])
+        frase = re.split(r"\.\s", tramo[cifras[0].start() :], maxsplit=1)[0]
+        total = sum(numero(m[1]) for m in _CIFRA.finditer(frase))
+        total += sum(numero(m[1]) for m in _Y_OTROS.finditer(tramo))
+        total += sum(numero(m[1]) for m in _Y_ANTES.finditer(tramo))
+        return total
+    if _UNO.search(tramo) or _UNO_NOMINATIVO.search(tramo):
         return 1
+    if _TODOS.search(tramo) and (m := _CIFRA.search(parrafo)):
+        # «все беспилотники уничтожены»: todos los del intento.
+        return numero(m[1])
     raise ParteIlegible("sin cifra de drones")
 
 
 def leer(texto: str, publicado: datetime) -> ParteLeido:
     """Extrae los drones derribados de un parte. Lanza ParteIlegible si no lo entiende."""
-    parrafo = primer_parrafo(texto)
+    parrafo = parte_principal(texto)
     inicio, fin = periodo(parrafo, publicado)
     n = derribados(parrafo)
     regiones = regiones_en(cuerpo(texto), vocabulario())
@@ -358,7 +437,7 @@ def motivo_no_parte(texto: str) -> str | None:
     """Por qué una publicación con drones y cifras no es un parte, o None si no se sabe."""
     if _RESUMEN.match(texto):
         return "resumen del día o de la semana"
-    parrafo = primer_parrafo(texto)
+    parrafo = parte_principal(texto)
     if not _VERBO.search(parrafo):
         return "sin derribos (frente, vídeo u otro tema)"
     if not _SOBRE.search(cuerpo(texto)):
