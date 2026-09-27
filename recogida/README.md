@@ -14,7 +14,9 @@ Recogida automática de fuentes.
 | `parte.py` | Parser por código de los partes de la Fuerza Aérea (solo drones) |
 | `mindef.py` | Fuente y parser: Ministerio de Defensa ruso (UA_RU), reivindicación de parte |
 | `ejecucion.py` | Procesado de publicaciones y recuentos |
-| `gdelt.py` | Noticias europeas sobre drones en la API DOC de GDELT |
+| `gdelt.py` | Noticias europeas sobre drones en los ficheros GKG 2.0 de GDELT, por franjas de 15 minutos |
+| `medios_gdelt.py` | Generador de la tabla de medios europeos desde la lista de dominios de GDELT |
+| `informe_gdelt.py` | Informe interno de artículos y candidatos por mes con una muestra |
 | `lugares_osm.py` | Generador del nomenclátor de lugares desde OpenStreetMap |
 | `auditoria.py` | Cobertura por días: días sin parte y su explicación |
 | `horaria.py` | Ejecución horaria del workflow |

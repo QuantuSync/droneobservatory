@@ -36,6 +36,7 @@ ESPERA_INICIAL_S = 5.0
 ESPERA_MAXIMA_S = 300.0
 TIEMPO_LIMITE_S = 30.0
 CODIGOS_REINTENTABLES = frozenset({429, 500, 502, 503, 504})
+HTTP_NO_ENCONTRADO = 404
 
 Respuesta = tuple[int, dict[str, str], bytes]
 Transporte = Callable[[str, dict[str, str], float], Respuesta]
@@ -48,6 +49,10 @@ class DescargaFallida(RuntimeError):
 
 class PaginaBloqueada(DescargaFallida):
     """El servidor respondió, pero no con el contenido esperado."""
+
+
+class NoEncontrado(DescargaFallida):
+    """Código 404: el recurso no existe (aún)."""
 
 
 def transporte_urllib(url: str, cabeceras: dict[str, str], limite_s: float) -> Respuesta:
@@ -99,6 +104,11 @@ class Descargador:
 
     def texto(self, url: str, valido: Validador) -> str:
         """Descarga una página y comprueba con `valido` que es el contenido esperado."""
+        cuerpo = self.contenido(url, lambda c: valido(c.decode("utf-8", errors="replace")))
+        return cuerpo.decode("utf-8", errors="replace")
+
+    def contenido(self, url: str, valido: Callable[[bytes], bool]) -> bytes:
+        """Descarga en bruto y comprueba con `valido` que es el contenido esperado."""
         sitio = urlsplit(url).netloc
         motivo = ""
         for intento in range(self._reintentos + 1):
@@ -113,14 +123,15 @@ class Descargador:
                 motivo = f"error de red: {type(error).__name__}"
             else:
                 if codigo == 200:
-                    texto = cuerpo.decode("utf-8", errors="replace")
-                    if valido(texto):
-                        return texto
+                    if valido(cuerpo):
+                        return cuerpo
                     self.recuentos["bloqueos"] += 1
                     motivo = "contenido inesperado con código 200"
                 elif codigo in CODIGOS_REINTENTABLES:
                     motivo = f"código {codigo}"
                     espera = max(espera, _retry_after(cabeceras) or 0)
+                elif codigo == HTTP_NO_ENCONTRADO:
+                    raise NoEncontrado(f"{url}: código {codigo}")
                 else:
                     raise DescargaFallida(f"{url}: código {codigo}")
             if intento < self._reintentos:

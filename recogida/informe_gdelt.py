@@ -6,23 +6,22 @@ enlaces de sus artículos, para comprobar a mano que la agrupación tiene sentid
 Uso en local, con la base de la rama estado:
     python -m recogida.informe_gdelt
 Uso en una prueba sin base (recoge los últimos días en memoria):
-    python -m recogida.informe_gdelt --dias 7 --horas 5
+    python -m recogida.informe_gdelt --dias 1
 """
 
 import argparse
 import logging
 import random
 import sys
-import time
 from collections import Counter
-from datetime import UTC, datetime, timedelta
+from datetime import timedelta
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
 from almacen import remoto
 from almacen.base import Almacen
 from almacen.cifrado import abrir_cifrada, cargar_clave_local
-from recogida import gdelt, historico_gdelt
+from recogida import gdelt
 
 # Semilla fija para que la muestra sea reproducible; su valor no importa.
 SEMILLA_MUESTRA = 1
@@ -58,16 +57,14 @@ def informe(almacen: Almacen) -> str:
 def principal(argumentos: list[str] | None = None) -> int:
     opciones = argparse.ArgumentParser(description=__doc__)
     opciones.add_argument("--dias", type=int, help="recoge en memoria los últimos N días")
-    opciones.add_argument("--horas", type=float, default=float("inf"))
     args = opciones.parse_args(argumentos)
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s: %(message)s")
     if args.dias:
         almacen = Almacen.abrir()
-        ahora = datetime.now(UTC).replace(minute=0, second=0, microsecond=0)
-        limite = time.monotonic() + args.horas * 3600
-        historico_gdelt.recorrer(
-            almacen, gdelt.descargador(), ahora, limite, desde=ahora - timedelta(days=args.dias)
-        )
+        descargador = gdelt.descargador()
+        ultima = gdelt.ultima_anunciada(descargador)
+        desde = ultima - timedelta(days=args.dias) + gdelt.FRANJA
+        gdelt.recorrer(almacen, descargador, desde, ultima, ultima, lambda _: None)
         sys.stdout.write(informe(almacen))
         return 0
     cargar_clave_local()
