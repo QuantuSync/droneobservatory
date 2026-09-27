@@ -63,8 +63,7 @@ def almacen() -> Iterator[Almacen]:
 def test_consultas_con_palabras_y_grupos_de_paises() -> None:
     consultas = gdelt.consultas()
     assert len(consultas) == -(-42 // gdelt.PAISES_POR_CONSULTA)
-    assert all(c.startswith("(") and "Drohne OR" in c for c in consultas)
-    assert '"μη επανδρωμένο"' in consultas[0]
+    assert all(c.startswith("(drone OR drones OR UAV OR UAVs) (") for c in consultas)
     assert "sourcecountry:germany" in " ".join(consultas)
     assert "sourcecountry:russia" not in " ".join(consultas)
 

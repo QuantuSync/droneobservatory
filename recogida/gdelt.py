@@ -53,9 +53,10 @@ VENTANA_MINIMA = timedelta(minutes=15)
 SOLAPE = timedelta(hours=1)
 # Sin cursor, la primera ejecución empieza un día atrás.
 PRIMERA_VENTANA = timedelta(days=1)
-# Países por consulta: con todos a la vez la consulta es tan larga que la API la
-# rechaza; en grupos de 14 caben con todas las palabras de dron.
-PAISES_POR_CONSULTA = 14
+# Países por consulta: 21, dos consultas por ventana. Menos consultas es menos
+# peticiones bajo el límite de la API, y una consulta de 21 países (unos 600
+# caracteres) queda lejos de los 2000 de una URL segura.
+PAISES_POR_CONSULTA = 21
 # Si la API no responde, el cursor no avanza y la siguiente ejecución recupera el
 # hueco. Solo cuando el hueco pasa de un día la ejecución queda en rojo.
 HUECO_TOLERADO = timedelta(days=1)
@@ -93,10 +94,9 @@ def _termino(palabra: str) -> str:
 
 
 def consultas(config: dict[str, Any] | None = None) -> list[str]:
-    """Una consulta por grupo de países, con todas las palabras de dron."""
+    """Una consulta por grupo de países con las palabras de la consulta (en inglés)."""
     config = config or configuracion()
-    palabras = sorted({p for lista in config["palabras_dron"].values() for p in lista})
-    drones = "(" + " OR ".join(_termino(p) for p in palabras) + ")"
+    drones = "(" + " OR ".join(_termino(p) for p in config["consulta"]) + ")"
     paises = sorted(config["paises"])
     grupos = [
         paises[i : i + PAISES_POR_CONSULTA] for i in range(0, len(paises), PAISES_POR_CONSULTA)
