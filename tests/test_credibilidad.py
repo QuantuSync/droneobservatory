@@ -46,7 +46,11 @@ CASOS = [
         5,
     ),
     ("sin declaraciones", [], 6),
-    ("solo una D", [respalda("n1", D)], 6),
+    ("una D sola", [respalda("n1", D)], 3),
+    ("una D con una E que coincide", [respalda("n1", D), respalda("n2", E)], 3),
+    ("C contradicha por una D", [respalda("n1", C), contradice("n2", D)], 3),
+    ("D contradicha por una E", [respalda("n1", D), contradice("n2", E)], 6),
+    ("solo una E", [respalda("n1", E)], 6),
     ("solo E y F", [respalda("n1", E), respalda("n2", F)], 6),
     ("solo contradicciones", [contradice("n1", A)], 6),
 ]

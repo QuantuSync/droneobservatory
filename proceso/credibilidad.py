@@ -84,9 +84,12 @@ def credibilidad(declaraciones: Iterable[Declaracion]) -> Credibilidad:
     if notas_altas and not contras:
         return Credibilidad.PROBABLE
 
-    # 3: una fuente C, o una A o B contradicha por otra de menor fiabilidad.
-    if notas_altas or Fiabilidad.C.rango == mejor:
+    # 3: una fuente C, una D sin contradicción, o una A o B contradicha por otra
+    # de menor fiabilidad.
+    if notas_altas or mejor == Fiabilidad.C.rango:
+        return Credibilidad.POSIBLE
+    if mejor == Fiabilidad.D.rango and not contras:
         return Credibilidad.POSIBLE
 
-    # 6: solo fuentes D, E o F.
+    # 6: solo fuentes E o F, o una D contradicha.
     return Credibilidad.SIN_BASE
