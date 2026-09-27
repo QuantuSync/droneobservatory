@@ -197,11 +197,19 @@ def ataque_completo() -> Documento:
             fuente("P2", "C", interna_fuera_de_ucrania=True),
         ],
         "afirmaciones": [
-            {"campo": "derribados", "valor": 70, "fuente_id": "P1", "confianza_extraccion": 1}
+            {
+                "campo": "derribados",
+                "valor": 70,
+                "fuente_id": "P1",
+                "confianza_extraccion": 1,
+                "credibilidad": 1,
+            }
         ],
         "control": {
             "alta": instante("2025-10-06T06:35Z"),
             "ultima_actualizacion": instante("2025-10-06T07:05Z"),
+            "version_extractor": "nulo",
+            "huella_fuentes": "1" * 64,
         },
     }
 

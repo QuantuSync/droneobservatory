@@ -5,13 +5,8 @@ import pytest
 
 from esquema import Documento, Esquema, Visibilidad, rutas_por_visibilidad
 from exportacion.campos import CAMPOS_PUBLICOS_INCIDENTE
-from exportacion.geojson import (
-    ExportacionInvalida,
-    campos_fuera_de_lista,
-    escribir,
-    exportar,
-    rutas,
-)
+from exportacion.geojson import campos_fuera_de_lista, exportar
+from exportacion.proyeccion import ExportacionInvalida, escribir, rutas
 from tests import ejemplos
 from tests.ejemplos import AHORA, VOCABULARIO_MODELOS, instante
 
