@@ -7,6 +7,7 @@ la fuente no lee nada y el motivo queda en el registro.
 import logging
 import re
 from dataclasses import dataclass
+from datetime import datetime, timedelta
 
 from recogida.cache import CachePaginas
 from recogida.descarga import Descargador, DescargaFallida
@@ -24,6 +25,10 @@ ENLACE_CANAL = re.compile(r"t\.me(?:/|%2F)kpszsu(?![A-Za-z0-9_])", re.IGNORECASE
 # publicaciones, más de medio año al ritmo del canal (unas 50 al día). Si no
 # basta para alcanzar el cursor, algo va mal y es mejor no leer que dejar un hueco.
 MAX_PAGINAS_POR_EJECUCION = 500
+# Cada ejecución vuelve a leer las publicaciones de las últimas 48 horas: el canal
+# corrige partes a lo largo de la mañana y a veces al día siguiente. A unas 50
+# publicaciones al día son unas cinco páginas más por ejecución.
+RELECTURA = timedelta(hours=48)
 
 
 class CanalNoVerificado(RuntimeError):
@@ -75,16 +80,30 @@ def leer_desde(
     cache: CachePaginas,
     portada: Pagina,
     ultimo_id: int,
+    releer_desde: datetime | None = None,
     max_paginas: int = MAX_PAGINAS_POR_EJECUCION,
+    canal: str = CANAL,
 ) -> Lectura:
-    """Publicaciones posteriores a `ultimo_id`, de la más antigua a la más reciente."""
+    """Publicaciones posteriores a `ultimo_id` o a `releer_desde`, de la más antigua a la
+    más reciente. Las ya leídas desde `releer_desde` se vuelven a leer por si se editaron."""
+
+    def falta(leida: Pagina) -> bool:
+        antigua = min(leida.publicaciones, key=lambda p: p.id)
+        return antigua.id > ultimo_id or (
+            releer_desde is not None and antigua.fecha >= releer_desde
+        )
+
     vistas = {p.id: p for p in portada.publicaciones}
     leida, paginas = portada, 1
-    while leida.publicaciones and min(p.id for p in leida.publicaciones) > ultimo_id:
+    while leida.publicaciones and falta(leida):
         if paginas >= max_paginas:
             raise HuecoDemasiadoGrande(f"el cursor queda a más de {max_paginas} páginas")
-        leida = pagina(descargador, cache, CANAL, siguiente(leida), usar_cache=False)
+        leida = pagina(descargador, cache, canal, siguiente(leida), usar_cache=False)
         paginas += 1
         vistas.update((p.id, p) for p in leida.publicaciones)
-    nuevas = sorted((p for p in vistas.values() if p.id > ultimo_id), key=lambda p: p.id)
-    return Lectura(tuple(nuevas), paginas)
+    elegidas = (
+        p
+        for p in vistas.values()
+        if p.id > ultimo_id or (releer_desde is not None and p.fecha >= releer_desde)
+    )
+    return Lectura(tuple(sorted(elegidas, key=lambda p: p.id)), paginas)

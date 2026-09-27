@@ -99,9 +99,11 @@ def ejecutar(
         raise SinCursor("la fuente no tiene cursor: hay que ejecutar antes el histórico")
     portada = pagina(descargador, cache, fuerza_aerea.CANAL, None, usar_cache=False)
     fuerza_aerea.verificar(descargador, portada)
-    lectura = fuerza_aerea.leer_desde(descargador, cache, portada, cursor["ultimo_id"])
+    lectura = fuerza_aerea.leer_desde(
+        descargador, cache, portada, cursor["ultimo_id"], ahora - fuerza_aerea.RELECTURA
+    )
     recuentos = procesar(almacen, lectura.publicaciones, config, ahora)
-    if lectura.publicaciones:
+    if lectura.publicaciones and lectura.publicaciones[-1].id > cursor["ultimo_id"]:
         ultimo = lectura.publicaciones[-1]
         almacen.guardar_cursor(
             config["id"], {"ultimo_id": ultimo.id, "fecha": ultimo.fecha.isoformat()}

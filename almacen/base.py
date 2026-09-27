@@ -239,7 +239,8 @@ class Almacen:
         with self._conexion:
             self._conexion.execute(
                 "INSERT INTO cursores (fuente_id, documento) VALUES (?, ?) "
-                "ON CONFLICT (fuente_id) DO UPDATE SET documento = excluded.documento",
+                "ON CONFLICT (fuente_id) DO UPDATE SET documento = excluded.documento "
+                "WHERE cursores.documento IS NOT excluded.documento",
                 (fuente_id, _json(documento)),
             )
 
@@ -249,14 +250,17 @@ class Almacen:
             self._conexion.execute(
                 "INSERT INTO partes_fallidos (enlace, fuente_id, motivo, fecha) "
                 "VALUES (?, ?, ?, ?) ON CONFLICT (enlace) DO UPDATE SET "
-                "motivo = excluded.motivo, fecha = excluded.fecha, resuelto = 0",
+                "motivo = excluded.motivo, fecha = excluded.fecha, resuelto = 0 "
+                "WHERE partes_fallidos.motivo IS NOT excluded.motivo "
+                "OR partes_fallidos.fecha IS NOT excluded.fecha OR partes_fallidos.resuelto = 1",
                 (enlace, fuente_id, motivo, fecha),
             )
 
     def resolver_fallido(self, enlace: str) -> None:
         with self._conexion:
             self._conexion.execute(
-                "UPDATE partes_fallidos SET resuelto = 1 WHERE enlace = ?", (enlace,)
+                "UPDATE partes_fallidos SET resuelto = 1 WHERE enlace = ? AND resuelto = 0",
+                (enlace,),
             )
 
     def fallidos(self, fuente_id: str) -> list[Documento]:

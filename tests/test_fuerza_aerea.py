@@ -139,3 +139,36 @@ def test_canal_no_verificado_no_lee_nada(almacen: Almacen, tmp_path: Path) -> No
         ejecutar(almacen, descargador(falso), CachePaginas(tmp_path), AHORA)
     assert almacen.ataques_ucrania() == []
     assert almacen.cursor("fuerza_aerea_ua") == {"ultimo_id": 1}
+
+
+def test_relee_las_ultimas_48_horas_y_recoge_un_parte_editado(
+    almacen: Almacen, tmp_path: Path
+) -> None:
+    falso = canal()
+    almacen.guardar_cursor("fuerza_aerea_ua", {"ultimo_id": 1})
+    # Un día después del último parte: el 6 queda dentro de las 48 horas y el 2, fuera.
+    ahora = falso.publicaciones[7][0] + timedelta(days=1)
+    ejecutar(almacen, descargador(falso), CachePaginas(tmp_path), ahora)
+    fecha, _ = falso.publicaciones[6]
+    falso.publicaciones[6] = (fecha, parte(22, 70, 68))
+    antes = almacen.conexion.serialize()
+    recuentos = ejecutar(almacen, descargador(falso), CachePaginas(tmp_path), ahora)
+    assert recuentos.actualizados == 1
+    assert almacen.conexion.serialize() != antes
+    editado = next(a for a in almacen.ataques_ucrania() if a["derribados"]["min"] == 68)
+    cambios = [h for h in almacen.historial(editado["id"]) if h["operacion"] == "cambio"]
+    assert [h["anterior"]["derribados"] for h in cambios if h["tabla"] == "ataques_ucrania"] == [
+        {"min": 65, "max": 65}
+    ]
+
+
+def test_releer_sin_cambios_no_toca_la_base(almacen: Almacen, tmp_path: Path) -> None:
+    falso = canal()
+    almacen.guardar_cursor("fuerza_aerea_ua", {"ultimo_id": 1})
+    ahora = falso.publicaciones[7][0] + timedelta(hours=1)
+    ejecutar(almacen, descargador(falso), CachePaginas(tmp_path), ahora)
+    antes = almacen.conexion.serialize()
+    recuentos = ejecutar(almacen, descargador(falso), CachePaginas(tmp_path), ahora)
+    assert recuentos.publicaciones > 0
+    assert (recuentos.nuevos, recuentos.actualizados) == (0, 0)
+    assert almacen.conexion.serialize() == antes
