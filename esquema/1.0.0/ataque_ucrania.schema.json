@@ -43,6 +43,11 @@
       "items": {"type": "string", "minLength": 1}
     },
     "derribados": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.0.0:comun#/$defs/rango_entero_o_desconocido"},
+    "derribados_categoria": {
+      "x-visibilidad": "publico",
+      "description": "Qué cuenta la cifra de derribados. 'derribados_o_neutralizados' cuando el parte da una sola cifra para derribados y neutralizados por guerra electrónica ('збито/подавлено'): la web lo muestra así.",
+      "enum": ["derribados", "derribados_o_neutralizados"]
+    },
     "perdidos_guerra_electronica": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.0.0:comun#/$defs/rango_entero_o_desconocido"},
     "localizaciones_impacto": {
       "x-visibilidad": "publico",

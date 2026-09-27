@@ -185,6 +185,7 @@ def ataque_completo() -> Documento:
         },
         "zonas_lanzamiento": ["Kursk", "Oriol"],
         "derribados": {"min": 70, "max": 70},
+        "derribados_categoria": "derribados_o_neutralizados",
         "perdidos_guerra_electronica": {"min": 15, "max": 15},
         "localizaciones_impacto": {"min": 3, "max": 3},
         "localizaciones_restos": "desconocido",

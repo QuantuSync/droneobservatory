@@ -33,7 +33,8 @@ def id_fuente(publicacion: Publicacion) -> str:
 
 
 def campos_respaldados(leido: ParteLeido) -> list[str]:
-    campos = ["periodo", "lanzados", "derribados", "perdidos_guerra_electronica"]
+    campos = ["periodo", "lanzados", "derribados", "derribados_categoria"]
+    campos += ["perdidos_guerra_electronica"]
     campos += ["localizaciones_impacto", "localizaciones_restos"]
     opcionales = {
         "zonas_lanzamiento": leido.zonas_lanzamiento,
@@ -84,6 +85,7 @@ def datos_parte(leido: ParteLeido) -> Documento:
         "lanzados": copy.deepcopy(leido.lanzados),
         "zonas_lanzamiento": list(leido.zonas_lanzamiento),
         "derribados": leido.derribados,
+        "derribados_categoria": leido.derribados_categoria.value,
         "perdidos_guerra_electronica": leido.perdidos_guerra_electronica,
         "localizaciones_impacto": leido.localizaciones_impacto,
         "localizaciones_restos": leido.localizaciones_restos,

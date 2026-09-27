@@ -110,6 +110,7 @@ CAMPOS_PUBLICOS_ATAQUE: frozenset[str] = frozenset(
         *_rango("lanzados.total"),
         "zonas_lanzamiento",
         *_rango("derribados"),
+        "derribados_categoria",
         *_rango("perdidos_guerra_electronica"),
         *_rango("localizaciones_impacto"),
         *_rango("localizaciones_restos"),

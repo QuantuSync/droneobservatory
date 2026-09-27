@@ -100,3 +100,8 @@ def test_escribe_un_fichero_determinista(tmp_path: Path) -> None:
     escribir(exportar_ejemplo(), ruta)
     assert ruta.read_bytes() == primero
     assert list(json.loads(primero)) == ["ataques"]
+
+
+def test_la_web_recibe_que_cuenta_la_cifra_de_derribados() -> None:
+    (ataque,) = exportar_ejemplo()["ataques"]
+    assert ataque["derribados_categoria"] == "derribados_o_neutralizados"
