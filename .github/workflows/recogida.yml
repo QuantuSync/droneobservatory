@@ -1,0 +1,64 @@
+name: recogida
+
+# Cada hora en el minuto 17, para no coincidir con el pico de las horas en
+# punto, y a mano. Solo eventos del propio repositorio: nunca pull_request_target.
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Una sola ejecución a la vez: dos a la par se pisarían la rama estado.
+concurrency:
+  group: recogida
+  cancel-in-progress: false
+
+jobs:
+  recogida:
+    if: github.repository == 'QuantuSync/droneobservatory' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    # El histórico ya está en la base: una ejecución normal pide pocas páginas.
+    timeout-minutes: 30
+    permissions:
+      # Solo para el commit de los ficheros publicados en main.
+      contents: write
+    env:
+      AUTOR: QuantuSync
+      CORREO: lucasalanizpintos@gmail.com
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.13"
+      - run: pip install -r requirements.txt
+      - name: Clave de despliegue del repositorio de datos
+        env:
+          CLAVE: ${{ secrets.EODI_DATOS_CLAVE_DESPLIEGUE }}
+        run: |
+          install -m 700 -d "$RUNNER_TEMP/ssh"
+          printf '%s\n' "$CLAVE" > "$RUNNER_TEMP/ssh/despliegue"
+          chmod 600 "$RUNNER_TEMP/ssh/despliegue"
+          # Clave de host publicada por GitHub: sin confiar en la primera conexión.
+          echo "github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl" > "$RUNNER_TEMP/ssh/known_hosts"
+      - name: Recoger, actualizar y subir la base
+        env:
+          EODI_CLAVE_AGE: ${{ secrets.EODI_CLAVE_AGE }}
+        run: |
+          export GIT_SSH_COMMAND="ssh -i $RUNNER_TEMP/ssh/despliegue -o IdentitiesOnly=yes -o UserKnownHostsFile=$RUNNER_TEMP/ssh/known_hosts"
+          python -m recogida.horaria --correo "$CORREO" --repositorio git@github.com:QuantuSync/droneobservatory-datos.git
+      - name: Publicar los ficheros si han cambiado
+        run: |
+          git add publicacion/ucrania.json publicacion/incidentes.geojson
+          if git diff --cached --quiet; then
+            echo "ficheros publicados sin cambios"
+            exit 0
+          fi
+          git -c user.name="$AUTOR" -c user.email="$CORREO" commit -q -m "Actualiza los datos publicados"
+          git push -q origin HEAD:main
+      - name: Borrar la clave de despliegue
+        if: always()
+        run: rm -rf "$RUNNER_TEMP/ssh"

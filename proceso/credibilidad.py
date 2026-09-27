@@ -40,6 +40,7 @@ class Postura(StrEnum):
 
 FIABILIDAD_ALTA = frozenset({Fiabilidad.A, Fiabilidad.B})
 FIABILIDAD_INTERNA = frozenset({Fiabilidad.E, Fiabilidad.F})
+FIABILIDAD_MEDIA_RANGOS = frozenset({Fiabilidad.C.rango, Fiabilidad.D.rango})
 FUENTES_INDEPENDIENTES_PARA_CONFIRMAR = 2
 
 
@@ -84,12 +85,10 @@ def credibilidad(declaraciones: Iterable[Declaracion]) -> Credibilidad:
     if notas_altas and not contras:
         return Credibilidad.PROBABLE
 
-    # 3: una fuente C, una D sin contradicción, o una A o B contradicha por otra
-    # de menor fiabilidad.
-    if notas_altas or mejor == Fiabilidad.C.rango:
-        return Credibilidad.POSIBLE
-    if mejor == Fiabilidad.D.rango and not contras:
+    # 3: una fuente C o D, o una A o B contradicha por otra de menor fiabilidad.
+    # Llegados aquí, cualquier contradicción viene de una fuente menos fiable.
+    if notas_altas or mejor in FIABILIDAD_MEDIA_RANGOS:
         return Credibilidad.POSIBLE
 
-    # 6: solo fuentes E o F, o una D contradicha.
+    # 6: solo fuentes E o F.
     return Credibilidad.SIN_BASE

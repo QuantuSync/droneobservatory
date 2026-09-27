@@ -70,4 +70,4 @@ def solo_fuentes_publicas(documento: Documento, capa: Capa) -> Documento | None:
 
 def escribir(documento: Documento, ruta: Path) -> None:
     texto = json.dumps(documento, ensure_ascii=False, sort_keys=True, indent=1)
-    ruta.write_text(texto + "\n", encoding="utf-8")
+    ruta.write_text(texto + "\n", encoding="utf-8", newline="\n")

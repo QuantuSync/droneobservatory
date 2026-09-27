@@ -1,2 +1,4 @@
 jsonschema==4.26.0
 pyrage==1.4.0
+# Zonas horarias (Europe/Kyiv) también en Windows, que no trae la base de zonas.
+tzdata==2026.4

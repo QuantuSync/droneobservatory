@@ -29,7 +29,12 @@
       "properties": {
         "shahed_geran": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.0.0:comun#/$defs/rango_entero_o_desconocido"},
         "gerbera_senuelos": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.0.0:comun#/$defs/rango_entero_o_desconocido"},
-        "otros": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.0.0:comun#/$defs/rango_entero_o_desconocido"}
+        "otros": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.0.0:comun#/$defs/rango_entero_o_desconocido"},
+        "total": {
+          "x-visibilidad": "publico",
+          "description": "Total declarado. Los partes suelen dar una sola cifra para varios modelos: entonces cada modelo es un rango y el total es la cifra exacta.",
+          "$ref": "urn:eodi:esquema:1.0.0:comun#/$defs/rango_entero_o_desconocido"
+        }
       }
     },
     "zonas_lanzamiento": {
@@ -39,6 +44,16 @@
     },
     "derribados": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.0.0:comun#/$defs/rango_entero_o_desconocido"},
     "perdidos_guerra_electronica": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.0.0:comun#/$defs/rango_entero_o_desconocido"},
+    "localizaciones_impacto": {
+      "x-visibilidad": "publico",
+      "description": "Número de localizaciones con impacto que declara el parte, aunque no las nombre.",
+      "$ref": "urn:eodi:esquema:1.0.0:comun#/$defs/rango_entero_o_desconocido"
+    },
+    "localizaciones_restos": {
+      "x-visibilidad": "publico",
+      "description": "Número de localizaciones con caída de restos que declara el parte.",
+      "$ref": "urn:eodi:esquema:1.0.0:comun#/$defs/rango_entero_o_desconocido"
+    },
     "lugares_impacto": {
       "x-visibilidad": "publico",
       "type": "array",

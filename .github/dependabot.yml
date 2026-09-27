@@ -1,0 +1,11 @@
+# Revisión mensual de las acciones fijadas por hash y de las dependencias de pip.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+  - package-ecosystem: pip
+    directory: /
+    schedule:
+      interval: monthly

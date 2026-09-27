@@ -20,6 +20,7 @@ DECIMALES_COORDENADAS = 5
 MAX_PALABRAS_FRASE = 25
 SEGUNDOS_POR_MINUTO = 60
 FORMATOS_INSTANTE = ("%Y-%m-%dT%H:%MZ", "%Y-%m-%dT%H:%M:%SZ")
+MODELOS_LANZADOS = ("shahed_geran", "gerbera_senuelos", "otros")
 
 
 @dataclass(frozen=True)
@@ -81,14 +82,25 @@ def _valor_exacto(rango: Any) -> int | None:
 
 def derivar_proporcion_senuelos(lanzados: Documento) -> float | None:
     """Señuelos entre lanzados; solo derivable si los tres números son exactos."""
-    valores = [
-        _valor_exacto(lanzados.get(m)) for m in ("shahed_geran", "gerbera_senuelos", "otros")
-    ]
+    valores = [_valor_exacto(lanzados.get(m)) for m in MODELOS_LANZADOS]
     if any(v is None for v in valores):
         return None
     shahed, senuelos, otros = (v or 0 for v in valores)
     total = shahed + senuelos + otros
     return senuelos / total if total else None
+
+
+def error_total_lanzados(lanzados: Documento) -> str | None:
+    """El total tiene que caber entre la suma de mínimos y la de máximos de los modelos."""
+    total = _dict(lanzados.get("total"))
+    rangos = [_dict(lanzados.get(m)) for m in MODELOS_LANZADOS]
+    if not total or not all(_es_numero(r.get("min")) for r in rangos):
+        return None
+    if sum(r["min"] for r in rangos) > total["max"]:
+        return "la suma de mínimos por modelo supera el total"
+    if sum(r["max"] for r in rangos) < total["min"]:
+        return "la suma de máximos por modelo no alcanza el total"
+    return None
 
 
 # --- Reglas comunes ---------------------------------------------------------
@@ -284,6 +296,9 @@ def errores_ataque(documento: Documento) -> list[Error]:
     inicio, fin = leer_instante(periodo.get("inicio")), leer_instante(periodo.get("fin"))
     if inicio and fin and fin < inicio:
         errores.append(Error("periodo.fin", "fin anterior al inicio"))
+    error_total = error_total_lanzados(_dict(documento.get("lanzados")))
+    if error_total:
+        errores.append(Error("lanzados.total", error_total))
     if "proporcion_senuelos" in documento:
         derivada = derivar_proporcion_senuelos(_dict(documento.get("lanzados")))
         if derivada is not None and derivada != documento["proporcion_senuelos"]:

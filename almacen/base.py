@@ -66,6 +66,21 @@ CREATE TABLE IF NOT EXISTS historial (
     nuevo TEXT NOT NULL,
     fecha TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
 );
+CREATE TABLE IF NOT EXISTS cursores (
+    fuente_id TEXT PRIMARY KEY,
+    documento TEXT NOT NULL CHECK (json_valid(documento))
+);
+CREATE TABLE IF NOT EXISTS partes_fallidos (
+    enlace TEXT PRIMARY KEY,
+    fuente_id TEXT NOT NULL,
+    motivo TEXT NOT NULL,
+    fecha TEXT NOT NULL,
+    resuelto INTEGER NOT NULL DEFAULT 0
+);
+CREATE TRIGGER IF NOT EXISTS cursores_sin_delete BEFORE DELETE ON cursores
+BEGIN SELECT RAISE(ABORT, 'cursores: nada se borra'); END;
+CREATE TRIGGER IF NOT EXISTS partes_fallidos_sin_delete BEFORE DELETE ON partes_fallidos
+BEGIN SELECT RAISE(ABORT, 'partes_fallidos: nada se borra'); END;
 CREATE TRIGGER IF NOT EXISTS historial_sin_update BEFORE UPDATE ON historial
 BEGIN SELECT RAISE(ABORT, 'historial: solo admite inserciones'); END;
 CREATE TRIGGER IF NOT EXISTS historial_sin_delete BEFORE DELETE ON historial
@@ -210,6 +225,73 @@ class Almacen:
             raise DocumentoInvalido(errores)
         with self._conexion:
             self._upsert("episodios", {"id": documento["id"], "documento": _json(documento)})
+
+    # --- Recogida ----------------------------------------------------------
+
+    def cursor(self, fuente_id: str) -> Documento | None:
+        """Hasta dónde leyó la fuente en la última ejecución."""
+        encontrados = self._documentos(
+            "SELECT documento FROM cursores WHERE fuente_id = ?", (fuente_id,)
+        )
+        return encontrados[0] if encontrados else None
+
+    def guardar_cursor(self, fuente_id: str, documento: Documento) -> None:
+        with self._conexion:
+            self._conexion.execute(
+                "INSERT INTO cursores (fuente_id, documento) VALUES (?, ?) "
+                "ON CONFLICT (fuente_id) DO UPDATE SET documento = excluded.documento",
+                (fuente_id, _json(documento)),
+            )
+
+    def registrar_fallido(self, enlace: str, fuente_id: str, motivo: str, fecha: str) -> None:
+        """Parte que el parser no entiende: no se publica, queda aquí con su enlace."""
+        with self._conexion:
+            self._conexion.execute(
+                "INSERT INTO partes_fallidos (enlace, fuente_id, motivo, fecha) "
+                "VALUES (?, ?, ?, ?) ON CONFLICT (enlace) DO UPDATE SET "
+                "motivo = excluded.motivo, fecha = excluded.fecha, resuelto = 0",
+                (enlace, fuente_id, motivo, fecha),
+            )
+
+    def resolver_fallido(self, enlace: str) -> None:
+        with self._conexion:
+            self._conexion.execute(
+                "UPDATE partes_fallidos SET resuelto = 1 WHERE enlace = ?", (enlace,)
+            )
+
+    def fallidos(self, fuente_id: str) -> list[Documento]:
+        filas = self._conexion.execute(
+            "SELECT enlace, motivo, fecha FROM partes_fallidos "
+            "WHERE fuente_id = ? AND resuelto = 0 ORDER BY fecha, enlace",
+            (fuente_id,),
+        ).fetchall()
+        return [{"enlace": e, "motivo": m, "fecha": f} for e, m, f in filas]
+
+    def ataque_con_fuente(self, fuente_id: str) -> Documento | None:
+        encontrados = self._documentos(
+            "SELECT documento FROM ataques_ucrania WHERE EXISTS ("
+            "SELECT 1 FROM json_each(documento, '$.fuentes') "
+            "WHERE json_extract(value, '$.id') = ?) ORDER BY id",
+            (fuente_id,),
+        )
+        return encontrados[0] if encontrados else None
+
+    def ataque_con_periodo(self, sentido: str, inicio: str) -> Documento | None:
+        """Ataque del mismo sentido cuyo periodo declarado empieza en el mismo instante."""
+        encontrados = self._documentos(
+            "SELECT documento FROM ataques_ucrania WHERE sentido = ? "
+            "AND json_extract(documento, '$.periodo.inicio.valor') = ? ORDER BY id",
+            (sentido, inicio),
+        )
+        return encontrados[0] if encontrados else None
+
+    def siguiente_id_ataque(self, anio: int) -> str:
+        prefijo = f"EODI-UA-{anio:04d}-"
+        fila = self._conexion.execute(
+            "SELECT max(id) FROM ataques_ucrania WHERE id LIKE ?", (prefijo + "%",)
+        ).fetchone()
+        ultimo = int(fila[0][len(prefijo) :]) if fila and fila[0] else 0
+        return f"{prefijo}{ultimo + 1:04d}"
 
     # --- Lectura ------------------------------------------------------------
 

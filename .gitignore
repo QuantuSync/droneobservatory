@@ -13,3 +13,6 @@ __pycache__/
 *.age
 .env
 cache_extractor/
+
+# Caché de páginas y bases locales de la recogida
+data/

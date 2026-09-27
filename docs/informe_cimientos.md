@@ -46,6 +46,16 @@ este PR y las interpretaciones tomadas para poder implementar.
 - **Frase de daños:** máximo 25 palabras, en el esquema y por código.
 - **Credibilidad:** una sola fuente C o D sin contradicción da 3; solo fuentes
   E o F da 6. El resto de la regla no cambia.
+- **Una fuente D contradicha por otra menos fiable** da 3, igual que una A o B
+  contradicha por una fuente menos fiable (cerrado en el PR de recogida).
+- **Actualización de las acciones fijadas:** Dependabot revisa cada mes las
+  acciones de GitHub y las dependencias de pip y abre un PR con el hash nuevo
+  (cerrado en el PR de recogida).
+- **Repositorio de datos:** la base cifrada `db.age` vive en la rama `estado`
+  de `droneobservatory-datos` como un único commit que se sustituye en cada
+  actualización. El detalle está en `docs/informe_recogida.md`.
+- **Carpeta local del repositorio de datos:** renombrada de `atalaya-datos` a
+  `C:\dev\droneobservatory-datos` sin bloqueos.
 - **Segunda clave solo para cifrar: descartada.** La recogida necesita leer la
   base para actualizarla, así que necesita la identidad completa; una clave que
   solo cifre no le sirve.
@@ -58,17 +68,11 @@ este PR y las interpretaciones tomadas para poder implementar.
 - **Frases de origen y CC BY 4.0.** `LICENSE-DATOS` aclara que las frases de
   origen son citas breves de terceros y no quedan cubiertas por CC BY 4.0.
   Conviene que alguien con criterio jurídico confirme esa redacción.
-- **Una fuente D contradicha por otra menos fiable** no cumple «sin
-  contradicción» y queda en 6. La regla no lo dice de forma explícita.
 - **Reversión en la capa de Ucrania.** Se aplica la misma regla que en la capa
   general; el parte oficial cuenta como autoridad si está marcado así.
-- **Actualización de las acciones fijadas.** Con hash fijo no se actualizan
-  solas; falta decidir cómo y cada cuánto se revisan.
 
 ## Fuera de este PR
 
-- **Contenido del repositorio de datos** (`droneobservatory-datos`): qué se
-  guarda allí y cómo. Tendrá su propio PR.
 - **Vocabulario de AEGIS:** `control.vocabulario_aegis` sigue siendo un objeto
   libre de texto a texto hasta ese PR.
 
@@ -126,7 +130,7 @@ La regla se evalúa en este orden: 5, 4, 1, 2, 3, 6.
 - **«Contradice una fuente de igual o mayor fiabilidad»** se compara con la
   mejor fiabilidad entre las fuentes que respaldan el dato.
 - **Dos fuentes C (o D) independientes:** 3, igual que una sola.
-- **Una A o B contradicha por una fuente de menor fiabilidad:** 3.
+- **Una A, B, C o D contradicha por una fuente de menor fiabilidad:** 3.
 - **Independencia.** Cada declaración lleva el identificador de su nota
   original; las réplicas comparten nota y cuentan una sola vez.
 
@@ -154,7 +158,8 @@ La regla se evalúa en este orden: 5, 4, 1, 2, 3, 6.
 ### Workflow
 
 - La indicación de usar un minuto distinto de 0 solo aplica a programaciones
-  horarias; como el workflow no tiene ninguna, no hay minuto que fijar.
+  horarias; como el workflow de tests no tiene ninguna, no hay minuto que
+  fijar. El workflow horario de recogida usa el minuto 17.
 
 ## Atascos
 
