@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:atalaya:esquema:1.0.0:episodio",
+  "title": "Episodio",
+  "description": "Agrupa los incidentes de varios objetivos en la misma noche.",
+  "x-version": "1.0.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "noche", "incidentes"],
+  "properties": {
+    "id": {"x-visibilidad": "publico", "type": "string", "minLength": 1},
+    "titulo": {"x-visibilidad": "publico", "$ref": "urn:atalaya:esquema:1.0.0:comun#/$defs/titulo"},
+    "noche": {"x-visibilidad": "publico", "$ref": "urn:atalaya:esquema:1.0.0:comun#/$defs/fecha"},
+    "incidentes": {
+      "x-visibilidad": "publico",
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^ATL-\\d{4}-\\d{5}$"}
+    }
+  }
+}
