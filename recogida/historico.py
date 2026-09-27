@@ -30,6 +30,8 @@ from almacen.base import Almacen
 from almacen.cifrado import abrir_cifrada, cargar_clave_local, guardar_cifrada
 from esquema import Documento
 from exportacion.publicar import publicar
+from proceso import solapes
+from proceso.ataques import SENTIDO_UA_RU
 from recogida import auditoria
 from recogida.cache import CachePaginas
 from recogida.descarga import Descargador
@@ -180,6 +182,8 @@ def principal(argumentos: list[str] | None = None) -> int:
             registro.info("%d: %s", anio, r.resumen())
         # Lo publicado después de la caché y la relectura de las últimas 48 horas.
         ejecutar(almacen, descargador, cache, fuente, ahora)
+        enlazados = solapes.enlazar(almacen, SENTIDO_UA_RU, ahora)
+        registro.info("tramos con enlace cambiado: %d", enlazados)
 
         hasta: date = lista[-1].fecha.astimezone(fuente.perfil.zona).date()
         dias = auditoria.auditar(

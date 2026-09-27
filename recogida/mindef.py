@@ -161,8 +161,9 @@ _RANGO = re.compile(
     + r")\s+)?(?<!\w)[сc]\s+"
     + _H.format(n=1)
     + _F.format(n=1)
-    # «В период с 20.00 мск 28 мая» no dice el fin.
-    + r"(?:\s+до\s+"
+    # «В период с 20.00 мск 28 мая» no dice el fin. Los resúmenes lo dan con «по»: «За
+    # период с 20.00 мск 8 апреля по 06.00 мск 9 апреля».
+    + r"(?:\s+(?:до|по)\s+"
     + _H.format(n=2)
     + _F.format(n=2)
     + ")?",

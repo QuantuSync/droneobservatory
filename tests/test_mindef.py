@@ -9,7 +9,7 @@ import pytest
 from almacen.base import Almacen
 from exportacion.ucrania import exportar_ucrania
 from recogida.cache import CachePaginas
-from recogida.ejecucion import ejecutar
+from recogida.ejecucion import configuracion_fuente, ejecutar, procesar
 from recogida.fuente import CanalNoVerificado
 from recogida.mindef import (
     FUENTE,
@@ -24,6 +24,7 @@ from recogida.mindef import (
 )
 from recogida.parte import DESCONOCIDO, Derribo, ParteIlegible
 from recogida.recorrido import pagina
+from recogida.telegram import Publicacion
 from tests.telegram_falso import CanalFalso, descargador
 
 PIE = "\n\n🔹 Минобороны России"
@@ -462,3 +463,38 @@ def test_derribos_por_region(texto: str, esperado: dict[str, int]) -> None:
 def test_derribos_por_region_que_no_suman_el_total_no_se_guardan() -> None:
     texto = "уничтожены 3 БПЛА – над территорией Курской области."
     assert derribados_por_region(texto, 5, vocabulario()) == {}
+
+
+# --- Resumen que cubre un tramo (51073 y 51077) ------------------------------------------
+
+TRAMO_51073 = (
+    "🎖🎖🎖🎖 В период с 22.00 до 22.15 мск дежурными средствами ПВО уничтожены пять украинских "
+    "беспилотных летательных аппаратов самолетного типа: четыре БпЛА – над территорией "
+    "Ростовской области и один БпЛА – над акваторией Азовского моря." + PIE
+)
+RESUMEN_51077 = (
+    "🎖🎖 За период с 20.00 мск 8 апреля по 06.00 мск 9 апреля дежурными средствами ПВО "
+    "перехвачены и уничтожены 158 украинских беспилотных летательных аппаратов самолетного "
+    "типа:\n\n▪️67 БпЛА – над территорией Краснодарского края,\n▪️91 БпЛА – над территорией "
+    "Ростовской области." + PIE
+)
+
+
+def test_el_resumen_con_por_da_el_fin_declarado() -> None:
+    leido = leer(RESUMEN_51077, datetime(2025, 4, 9, 4, 4, tzinfo=UTC))
+    assert leido.inicio.documento() == instante("2025-04-08T17:00Z")
+    assert leido.fin.documento() == instante("2025-04-09T03:00Z")
+    assert dict(leido.derribados_por_region) == {"RU-KDA": 67, "RU-ROS": 91}
+
+
+def almacen_con_partes() -> Almacen:
+    """Base con el tramo de las 22.00 y el resumen de la noche que lo cubre."""
+    almacen = Almacen.abrir()
+    config = configuracion_fuente("mindef_ru")
+    publicaciones = [
+        Publicacion("mod_russia", 51073, datetime(2025, 4, 8, 19, 37, tzinfo=UTC), TRAMO_51073),
+        Publicacion("mod_russia", 51077, datetime(2025, 4, 9, 4, 4, tzinfo=UTC), RESUMEN_51077),
+    ]
+    recuentos = procesar(almacen, publicaciones, FUENTE, config, datetime(2025, 4, 10, tzinfo=UTC))
+    assert recuentos.nuevos == len(publicaciones)
+    return almacen
