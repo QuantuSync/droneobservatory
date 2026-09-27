@@ -37,12 +37,20 @@ def cargar_clave_local(ruta: Path = RUTA_CLAVE_LOCAL) -> None:
 
 def cifrar(conexion: sqlite3.Connection) -> bytes:
     """Serializa la base completa y la cifra."""
-    return pyrage.encrypt(conexion.serialize(), [_identidad().to_public()])
+    return cifrar_datos(conexion.serialize())
+
+
+def cifrar_datos(datos: bytes) -> bytes:
+    return pyrage.encrypt(datos, [_identidad().to_public()])
+
+
+def descifrar_datos(cifrado: bytes) -> bytes:
+    return pyrage.decrypt(cifrado, [_identidad()])
 
 
 def descifrar(cifrado: bytes) -> sqlite3.Connection:
     """Descifra y carga la base en memoria; nunca toca el disco en claro."""
-    datos = pyrage.decrypt(cifrado, [_identidad()])
+    datos = descifrar_datos(cifrado)
     conexion = sqlite3.connect(":memory:")
     conexion.deserialize(datos)
     return conexion

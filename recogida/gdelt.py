@@ -260,7 +260,7 @@ def _fecha(momento: datetime) -> str:
     return momento.astimezone(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
-def _documento_articulo(a: Articulo) -> Documento:
+def documento_articulo(a: Articulo) -> Documento:
     return {
         "url": a.url,
         "medio": a.medio,
@@ -272,6 +272,19 @@ def _documento_articulo(a: Articulo) -> Documento:
         "temas": list(a.temas),
         "lugares": list(a.lugares),
     }
+
+
+def articulo_de_documento(documento: Documento) -> Articulo:
+    return Articulo(
+        url=documento["url"],
+        medio=documento["medio"],
+        fecha=datetime.fromisoformat(documento["fecha"]),
+        titular=documento["titular"],
+        idioma=documento.get("idioma"),
+        pais=documento.get("pais"),
+        temas=tuple(documento.get("temas", [])),
+        lugares=tuple(documento.get("lugares", [])),
+    )
 
 
 def _documento_candidato(c: Candidato) -> Documento:
@@ -335,7 +348,7 @@ def incorporar(
             almacen.sumar_replica(original)
             recuentos.replicas += 1
             continue
-        almacen.guardar_articulo(_documento_articulo(a))
+        almacen.guardar_articulo(documento_articulo(a))
         titulares.append((a.fecha, a.url, normal))
         nuevos.append(a)
     recuentos.nuevos = len(nuevos)
@@ -363,10 +376,11 @@ class FranjaPendiente(RuntimeError):
     """El fichero aún no se puede descargar: se reintenta en la siguiente ejecución."""
 
 
-def recoger_franja(
-    almacen: Almacen, descargador: Descargador, franja: datetime, ultima: datetime
-) -> Recuentos:
-    """Los dos flujos de una franja. Un fichero que falta pasadas seis horas se da por perdido."""
+def leer_franja(
+    descargador: Descargador, franja: datetime, ultima: datetime
+) -> tuple[list[Articulo], Recuentos]:
+    """Artículos de los dos flujos de una franja. Un fichero que falta pasadas seis horas
+    de la última franja anunciada se da por perdido; antes, la franja queda pendiente."""
     config, filtro_, nom, med = configuracion(), filtro(), nomenclator(), medios()
     lectura = Recuentos(franjas=1)
     encontrados: list[Articulo] = []
@@ -379,7 +393,15 @@ def recoger_franja(
             lectura.ausentes += 1
             continue
         encontrados += articulos(contenido, lectura, filtro_, nom, med, config)
-    recuentos = incorporar(almacen, encontrados, filtro_, nom)
+    return encontrados, lectura
+
+
+def recoger_franja(
+    almacen: Almacen, descargador: Descargador, franja: datetime, ultima: datetime
+) -> Recuentos:
+    """Lee una franja e incorpora sus artículos a la base."""
+    encontrados, lectura = leer_franja(descargador, franja, ultima)
+    recuentos = incorporar(almacen, encontrados)
     recuentos.franjas, recuentos.ausentes, recuentos.filas = 1, lectura.ausentes, lectura.filas
     return recuentos
 
