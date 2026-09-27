@@ -258,9 +258,11 @@ _INTERVALO = re.compile(
     r"період\w*\s+(?:з|із)\s+" + _HORA + r"\s+(?:по|до)\s+" + _HORA + r"\s+(\d{1,2})\s+" + _MES,
     re.IGNORECASE,
 )
-_DESDE = re.compile(r"(?:з|із|від)\s+" + _HORA + r"(?:\s+(\d{1,2})\s+" + _MES + ")?", re.I)
-_HASTA = re.compile(r"до\s+" + _HORA + r"(?:\s+(\d{1,2})\s+" + _MES + ")?", re.I)
-_STANOM = re.compile(r"станом\s+на\s+" + _HORA + r"(?:\s+(\d{1,2})\s+" + _MES + ")?", re.I)
+# Fecha opcional tras la hora: "25 вересня" o "23.09".
+_FECHA_OPCIONAL = r"(?:\s+(\d{1,2})(?:\s+" + _MES + r"|\.(\d{2})(?!\d)))?"
+_DESDE = re.compile(r"(?:з|із|від)\s+" + _HORA + _FECHA_OPCIONAL, re.I)
+_HASTA = re.compile(r"(?:до|по)\s+" + _HORA + _FECHA_OPCIONAL, re.I)
+_STANOM = re.compile(r"станом\s+на\s+" + _HORA + _FECHA_OPCIONAL, re.I)
 
 
 def _sin_errata(m: re.Match[str], base: date) -> re.Match[str]:
@@ -272,7 +274,7 @@ def _sin_errata(m: re.Match[str], base: date) -> re.Match[str]:
     """
     if not m[3]:
         return m
-    declarado = (int(m[3]), MESES[m[4].lower()])
+    declarado = (int(m[3]), _mes(m))
     if declarado in {(d.day, d.month) for d in (base - timedelta(days=1), base)}:
         return m
     siguiente = base + timedelta(days=1)
@@ -283,9 +285,13 @@ def _sin_errata(m: re.Match[str], base: date) -> re.Match[str]:
     raise ParteIlegible("periodo incoherente")
 
 
+def _mes(m: re.Match[str]) -> int:
+    return MESES[m[4].lower()] if m[4] else int(m[5])
+
+
 def _hora(m: re.Match[str], dia: date, publicado: datetime) -> datetime:
     if m[3]:
-        dia = _fecha(int(m[3]), MESES[m[4].lower()], dia.year, publicado)
+        dia = _fecha(int(m[3]), _mes(m), dia.year, publicado)
     return _utc(dia, time(int(m[1]), int(m[2])))
 
 
@@ -413,6 +419,7 @@ _LIMPIAR_ZONA = (
     (re.compile(r"[()«»\"“”]"), " "),
     (re.compile(r"\s*[-–—]\s*(?:рф|РФ|Крим\w*)\.?\s*$|^\s*(?:рф|РФ|Крим\w*)\s*[-–—]\s*"), ""),
     (re.compile(r"\s+(?:рф|РФ)\.?$"), ""),
+    (re.compile(r"(?<=\w)-\s+(?=\w)"), "-"),
     (re.compile(r"\s+"), " "),
 )
 
@@ -513,8 +520,11 @@ def es_parte(texto: str) -> bool:
     if not re.search(_DRON, texto, re.IGNORECASE) or _REGIONAL.search(texto):
         return False
     lista = frases(texto)
+    # 2024: "У ніч на 17 вересня ... виявлено та здійснено супровід 51 ударного БпЛА".
     periodo_con_verbo = any(
-        (_NOCHE.search(f) or _DIA.search(f)) and _ES_ATAQUE.search(f) for f in lista
+        (_NOCHE.search(f) or _DIA.search(f))
+        and (_ES_ATAQUE.search(f) or (_RECUENTO.search(f) and not _EFECTOS.search(f)))
+        for f in lista
     )
     verbo_con_cifra = any(_ES_ATAQUE.search(f) and _cifras(f) for f in lista)
     hay_periodo = bool(_NOCHE.search(texto) or _DIA.search(texto))

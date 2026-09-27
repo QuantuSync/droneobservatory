@@ -364,3 +364,20 @@ def test_coma_tras_el_dia_de_la_noche() -> None:
     texto = "У ніч на 01, березня (з 18:00 28 лютого) противник атакував 123 ударними БпЛА."
     assert es_parte(texto)
     assert leer(texto, datetime(2026, 3, 1, 6, tzinfo=UTC)).lanzados["total"] == rango(123)
+
+
+def test_formato_2024_con_medios_detectados_y_fechas_numericas() -> None:
+    texto = (
+        "⚡️ ЗБИТО 66 УДАРНИХ БПЛА\n"
+        "У ніч на 24 вересня 2024 року (із 20.00 23.09 по 07.00 24.09) радіотехнічними військами "
+        "Повітряних Сил виявлено та здійснено супровід 81 ударного БплА типу «Shahed» із "
+        "напрямків: Курськ, Приморсько- Ахтарськ – рф.\n"
+        "Станом на 09.00 збито 66 ударних БпЛА."
+    )
+    assert es_parte(texto)
+    leido = leer(texto, datetime(2024, 9, 24, 5, tzinfo=UTC))
+    assert leido.inicio.documento() == {"valor": "2024-09-23T17:00Z", "precision": "minuto"}
+    assert leido.fin.documento() == {"valor": "2024-09-24T04:00Z", "precision": "minuto"}
+    assert leido.lanzados["shahed_geran"] == rango(81)
+    assert leido.zonas_lanzamiento == ("Курськ", "Приморсько-Ахтарськ")
+    assert leido.derribados == rango(66)
