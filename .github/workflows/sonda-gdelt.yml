@@ -32,7 +32,9 @@ jobs:
                           cuerpo, codigo = r.read().decode("utf-8", "replace"), r.status
                   except urllib.error.HTTPError as e:
                       codigo, cuerpo = e.code, e.read().decode("utf-8", "replace")
-                  if codigo != 429:
+                  except OSError as e:
+                      codigo, cuerpo = 0, repr(e)
+                  if codigo not in (0, 429):
                       break
                   intentos_429 += 1
               try:
