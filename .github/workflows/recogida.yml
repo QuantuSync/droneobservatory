@@ -19,8 +19,9 @@ jobs:
   recogida:
     if: github.repository == 'QuantuSync/droneobservatory' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    # El histórico ya está en la base: una ejecución normal pide pocas páginas.
-    timeout-minutes: 30
+    # Una ejecución normal tarda unos minutos; GDELT puede sumar hasta 20 con sus
+    # reintentos (dos consultas de hasta 10,5 minutos cada una).
+    timeout-minutes: 45
     permissions:
       # Solo para el commit de los ficheros publicados en main.
       contents: write

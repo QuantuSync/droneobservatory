@@ -52,7 +52,7 @@ def principal(argumentos: list[str] | None = None) -> int:
                 registro.warning("%s no se lee: %s", fuente.id, error)
                 salida = SALIDA_FUENTE_NO_VERIFICADA
         try:
-            gdelt.ejecutar(almacen, Descargador(pausas_por_sitio=gdelt.PAUSAS), ahora)
+            gdelt.ejecutar(almacen, gdelt.descargador(), ahora)
         except gdelt.GdeltNoDisponible as error:
             registro.warning("gdelt no se lee: %s", error)
             salida = SALIDA_FUENTE_NO_VERIFICADA

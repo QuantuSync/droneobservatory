@@ -117,7 +117,7 @@ def principal(argumentos: list[str] | None = None) -> int:
             hasta = datetime.fromisoformat(horario["inicio"])
         else:
             hasta = datetime.now(UTC)
-        dias = recorrer(trabajo, Descargador(pausas_por_sitio=gdelt.PAUSAS), hasta, limite)
+        dias = recorrer(trabajo, gdelt.descargador(), hasta, limite)
         registro.info("días recorridos: %d", dias)
         if args.sin_subir:
             guardar_cifrada(trabajo.conexion, Path.cwd() / "data" / "historico" / remoto.FICHERO)

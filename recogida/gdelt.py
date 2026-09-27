@@ -46,6 +46,20 @@ MAX_RESULTADOS = 250
 # 429): 6 s dejan un margen para el reloj y la latencia.
 PAUSA_S = 6.0
 PAUSAS = {"api.gdeltproject.org": PAUSA_S}
+# Desde un runner de GitHub, 38 de 45 peticiones espaciadas dieron 429 (84 %). Con 6
+# reintentos y esperas de 10 s dobladas (de 10 s a 320 s, 10,5 minutos como mucho),
+# una consulta sale adelante en el 79 % de las ejecuciones (1 - 0,84^7); si no, el
+# cursor espera a la siguiente hora.
+REINTENTOS = 6
+ESPERA_INICIAL_S = 10.0
+
+
+def descargador() -> Descargador:
+    return Descargador(
+        pausas_por_sitio=PAUSAS, reintentos=REINTENTOS, espera_inicial_s=ESPERA_INICIAL_S
+    )
+
+
 # La API indexa cada 15 minutos: una ventana más corta no se puede partir.
 VENTANA_MINIMA = timedelta(minutes=15)
 # Cada ejecución vuelve a pedir la última hora ya leída: la API tarda en indexar
