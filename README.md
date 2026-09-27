@@ -13,9 +13,10 @@ breve de origen y el enlace, nunca el texto completo.
 
 Fases hechas: cimientos; recogida automática de la capa de guerra con el canal
 oficial de la Fuerza Aérea de Ucrania (RU_UA) y el del Ministerio de Defensa
-ruso (UA_RU, marcado como reivindicación de parte), con sus históricos desde
-octubre de 2022; y recogida de noticias europeas sobre drones en GDELT,
-filtradas, deduplicadas y agrupadas en candidatos internos. El extractor que
+ruso (UA_RU), las dos marcadas como reivindicación de parte, con sus
+históricos desde octubre de 2022; y recogida de noticias europeas sobre drones
+en los ficheros GKG de GDELT, filtradas, deduplicadas y agrupadas en
+candidatos internos. El extractor que
 convierte candidatos en incidentes y la web están pendientes.
 
 ## Estructura
@@ -23,7 +24,7 @@ convierte candidatos en incidentes y la web están pendientes.
 | Carpeta | Contenido |
 | --- | --- |
 | `esquema/` | JSON Schema versionados (1.0.0), con marca de visibilidad por campo |
-| `configuracion/` | Fuentes con su fiabilidad, vocabularios de modelos de dron y de regiones, nomenclátor de lugares europeos y consulta de GDELT |
+| `configuracion/` | Fuentes con su fiabilidad, vocabularios de modelos de dron y de regiones, nomenclátor de lugares europeos, vocabulario de noticias y medios europeos de GDELT |
 | `proceso/` | Validaciones, máquina de estados, regla de credibilidad, ataques y noticias (filtro, réplicas y agrupación) |
 | `modelo/` | Extractor: interfaz, implementación nula y caché en disco |
 | `almacen/` | Base de datos SQLite con historial, cifrado con age y rama `estado` del repositorio de datos |
@@ -66,8 +67,9 @@ guarda en el repositorio.
 - `python -m recogida.lugares_osm`: regenera el nomenclátor de lugares desde
   OpenStreetMap; se ejecuta a mano y el resultado se revisa.
 
-Decisiones, valores y cobertura en [`docs/informe_recogida.md`](docs/informe_recogida.md)
-y [`docs/informe_gdelt_mindef.md`](docs/informe_gdelt_mindef.md).
+Decisiones, valores y cobertura en [`docs/informe_recogida.md`](docs/informe_recogida.md),
+[`docs/informe_gdelt_mindef.md`](docs/informe_gdelt_mindef.md) y
+[`docs/informe_gkg_partes.md`](docs/informe_gkg_partes.md).
 
 ## Licencia
 
@@ -78,3 +80,5 @@ y [`docs/informe_gdelt_mindef.md`](docs/informe_gdelt_mindef.md).
   autores y se reproducen como cita breve junto al enlace.
 - `configuracion/lugares_europa.json` contiene datos © colaboradores de
   OpenStreetMap, bajo licencia [ODbL](https://www.openstreetmap.org/copyright).
+- `configuracion/medios_europa.json` sale de la lista de dominios por país que
+  publica GDELT.
