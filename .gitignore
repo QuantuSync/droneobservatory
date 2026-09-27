@@ -1,0 +1,15 @@
+# Entorno y cachés
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Datos y secretos: nunca en este repositorio
+*.sqlite
+*.sqlite3
+*.db
+*.age
+.env
+cache_extractor/
