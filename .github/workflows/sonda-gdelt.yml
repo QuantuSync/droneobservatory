@@ -1,0 +1,54 @@
+name: sonda-gdelt
+
+# Temporal: comprueba desde un runner si la API DOC de GDELT responde y hasta qué
+# fecha devuelve resultados. Se borra antes de mergear.
+on:
+  push:
+    paths:
+      - .github/workflows/sonda-gdelt.yml
+
+permissions:
+  contents: read
+
+jobs:
+  sonda:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Consultas espaciadas
+        run: |
+          python3 - <<'PY'
+          import json, time, urllib.request, urllib.parse
+          base = "https://api.gdeltproject.org/api/v2/doc/doc"
+          def pedir(q, extra):
+              params = {"query": q, "mode": "artlist", "format": "json", "maxrecords": "250", **extra}
+              url = base + "?" + urllib.parse.urlencode(params)
+              try:
+                  with urllib.request.urlopen(url, timeout=60) as r:
+                      cuerpo = r.read().decode("utf-8", "replace")
+                      codigo = r.status
+              except urllib.error.HTTPError as e:
+                  codigo, cuerpo = e.code, e.read().decode("utf-8", "replace")
+              try:
+                  arts = json.loads(cuerpo).get("articles", [])
+              except Exception:
+                  arts = None
+              print(codigo, extra, "articulos:", None if arts is None else len(arts))
+              if arts:
+                  fechas = sorted(a["seendate"] for a in arts)
+                  print("   ", fechas[0], fechas[-1], arts[0].get("language"), arts[0].get("sourcecountry"), arts[0].get("domain"))
+                  print("   ", sorted(arts[0].keys()))
+              elif arts is None:
+                  print("   ", cuerpo[:300])
+              time.sleep(6)
+          q = "(drone OR drones OR Drohne OR dron) (sourcecountry:germany OR sourcecountry:poland OR sourcecountry:denmark)"
+          pedir(q, {"timespan": "1d"})
+          for ini, fin in [("20260901000000", "20260902000000"), ("20260601000000", "20260602000000"),
+                           ("20260301000000", "20260302000000"), ("20251001000000", "20251002000000"),
+                           ("20250601000000", "20250602000000"), ("20250115000000", "20250116000000"),
+                           ("20240115000000", "20240116000000")]:
+              pedir(q, {"STARTDATETIME": ini, "ENDDATETIME": fin})
+          pedir("(дрон OR БПЛА OR drönare OR lennokki OR bezzałogowy) sourcelang:polish", {"timespan": "3d"})
+          pedir("(Drohne OR Drohnen) sourcelang:german", {"timespan": "1d"})
+          pedir("(dron OR drony) sourcecountry:poland", {"timespan": "1d"})
+          PY
