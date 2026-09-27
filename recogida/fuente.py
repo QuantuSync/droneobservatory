@@ -18,12 +18,12 @@ from recogida.recorrido import pagina, siguiente
 from recogida.telegram import Pagina, Publicacion
 
 # Tope de páginas hacia atrás en una ejecución: 500 páginas son unas 10 000
-# publicaciones, más de medio año al ritmo de la Fuerza Aérea (unas 50 al día). Si
+# publicaciones, unos tres meses al ritmo medio de la Fuerza Aérea en 2026 (unas 110 al día). Si
 # no basta para alcanzar el cursor, algo va mal y es mejor no leer que dejar un hueco.
 MAX_PAGINAS_POR_EJECUCION = 500
 # Cada ejecución vuelve a leer las publicaciones de las últimas 48 horas: los canales
-# corrigen partes a lo largo de la mañana y a veces al día siguiente. A unas 50
-# publicaciones al día son unas cinco páginas más por ejecución.
+# corrigen partes a lo largo de la mañana y a veces al día siguiente. Medido: en 48 horas
+# la Fuerza Aérea llega a publicar unas 570 (29 páginas, 90 s a 3 s por página).
 RELECTURA = timedelta(hours=48)
 
 
