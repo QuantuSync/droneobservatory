@@ -808,7 +808,9 @@ def leer(texto: str, publicado: datetime) -> ParteLeido:
             lanz = lanzados(frase)
             zonas_l = zonas(frase)
             # Las zonas de lanzamiento no son regiones afectadas.
-            para_regiones.append(re.split(r"(?:із|з)\s+(?:напрямк|район)", frase, flags=re.I)[0])
+            sin_zonas = re.split(r"(?:із|з)\s+(?:напрямк|район)", frase, flags=re.I)[0]
+            if not re.search(r"пуск", sin_zonas, re.IGNORECASE):
+                para_regiones.append(sin_zonas)
             continue
         # Las frases de los puntos de lanzamiento ("Пуски ... з трьох напрямків: Чауда –
         # Крим") no hablan de regiones afectadas.
