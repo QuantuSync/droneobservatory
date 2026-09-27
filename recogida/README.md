@@ -8,8 +8,14 @@ Recogida automática de fuentes.
 | `cache.py` | Páginas en bruto comprimidas en `data/cache/`, fuera de git |
 | `telegram.py` | Lectura de la vista pública web de un canal (`t.me/s/<canal>`) |
 | `recorrido.py` | Recorrido hacia atrás con `?before=` y avance reanudable |
-| `fuerza_aerea.py` | Fuente: verificación del canal oficial y lectura desde el cursor |
-| `parte.py` | Parser por código de los partes de ataque (solo drones) |
+| `fuente.py` | Descripción común de una fuente de partes, lectura desde el cursor y relectura de 48 horas |
+| `fuentes.py` | Fuentes de partes que se recogen |
+| `fuerza_aerea.py` | Fuente: Fuerza Aérea de Ucrania (RU_UA), verificación del canal oficial |
+| `parte.py` | Parser por código de los partes de la Fuerza Aérea (solo drones) |
+| `mindef.py` | Fuente y parser: Ministerio de Defensa ruso (UA_RU), reivindicación de parte |
 | `ejecucion.py` | Procesado de publicaciones y recuentos |
+| `gdelt.py` | Noticias europeas sobre drones en la API DOC de GDELT |
+| `lugares_osm.py` | Generador del nomenclátor de lugares desde OpenStreetMap |
+| `auditoria.py` | Cobertura por días: días sin parte y su explicación |
 | `horaria.py` | Ejecución horaria del workflow |
-| `historico.py` | Recuperación única del histórico desde octubre de 2022 |
+| `historico.py` | Histórico de una fuente de partes desde octubre de 2022 |
