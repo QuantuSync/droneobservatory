@@ -94,6 +94,10 @@
     },
     "frase_origen": {
       "description": "Frase breve de origen en su idioma original, 25 palabras como máximo.",
+      "$ref": "#/$defs/frase_breve"
+    },
+    "frase_breve": {
+      "description": "Frase de 25 palabras como máximo.",
       "type": "string",
       "pattern": "^\\s*(\\S+\\s+){0,24}\\S+\\s*$"
     },

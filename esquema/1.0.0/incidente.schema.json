@@ -129,7 +129,7 @@
           "required": ["nivel"],
           "properties": {
             "nivel": {"x-visibilidad": "publico", "enum": ["ninguno", "menores", "graves", "desconocido"]},
-            "frase": {"x-visibilidad": "publico", "type": "string", "minLength": 1}
+            "frase": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.0.0:comun#/$defs/frase_breve"}
           }
         },
         "heridos": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.0.0:comun#/$defs/rango_entero_o_desconocido"},

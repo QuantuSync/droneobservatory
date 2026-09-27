@@ -140,6 +140,13 @@ def test_episodio_rechaza_identificador_mal_formado(id_: str) -> None:
         validador(Esquema.EPISODIO).validate(documento)
 
 
+def test_frase_de_danos_de_mas_de_25_palabras_rechazada() -> None:
+    documento = ejemplos.incidente_completo()
+    documento["consecuencias"]["danos"] = {"nivel": "graves", "frase": " ".join(["x"] * 26)}
+    with pytest.raises(ValidationError):
+        validador(Esquema.INCIDENTE).validate(documento)
+
+
 def test_campo_desconocido_rechazado() -> None:
     documento = ejemplos.incidente_minimo()
     documento["texto_completo"] = "no se guarda nunca"

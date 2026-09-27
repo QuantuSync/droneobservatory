@@ -60,6 +60,12 @@ CASOS_INCIDENTE = [
     ("radio alto", "lugar.radio_km", 50.5, "fuera de"),
     ("seis decimales", "lugar.punto.lat", 55.618061, "decimales"),
     ("frase larga", "fuentes.0.frase_origen", " ".join(["x"] * 26), "25 palabras"),
+    (
+        "frase de daños larga",
+        "consecuencias.danos",
+        {"nivel": "menores", "frase": " ".join(["x"] * 26)},
+        "25 palabras",
+    ),
     ("fuente E pública", "fuentes.2.publica", True, "marcada como pública"),
     ("fuente interna fuera de Ucrania pública", "fuentes.3.publica", True, "fuera de la capa"),
     ("modelo fuera de vocabulario", "drones.modelo", "inventado", "vocabulario"),
@@ -79,6 +85,12 @@ CASOS_INCIDENTE = [
 def test_regla_incidente(ruta: str, valor: Any, esperado: str) -> None:
     errores = validar(_cambiar(ejemplos.incidente_completo(), ruta, valor))
     assert esperado in mensajes(errores)
+
+
+def test_frase_de_danos_de_25_palabras_valida() -> None:
+    documento = ejemplos.incidente_completo()
+    documento["consecuencias"]["danos"] = {"nivel": "menores", "frase": " ".join(["x"] * 25)}
+    assert validar(documento) == []
 
 
 def test_atribuido_sin_confirmado() -> None:

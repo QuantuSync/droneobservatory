@@ -243,6 +243,10 @@ def errores_incidente(documento: Documento, vocabulario_modelos: frozenset[str])
     if modelo is not None and modelo not in vocabulario_modelos:
         errores.append(Error("drones.modelo", f"modelo fuera del vocabulario: {modelo}"))
 
+    frase = _dict(_dict(documento.get("consecuencias")).get("danos")).get("frase")
+    if isinstance(frase, str) and len(frase.split()) > MAX_PALABRAS_FRASE:
+        errores.append(Error("consecuencias.danos.frase", f"más de {MAX_PALABRAS_FRASE} palabras"))
+
     cierre = _dict(_dict(documento.get("consecuencias")).get("cierre"))
     if "minutos" in cierre and cierre.get("valor") != "si":
         errores.append(Error("consecuencias.cierre.minutos", "minutos de cierre sin cierre"))
