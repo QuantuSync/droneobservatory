@@ -282,6 +282,8 @@ def ejecutar(almacen: Almacen, descargador: Descargador, ahora: datetime) -> Rec
         if hueco > HUECO_TOLERADO:
             raise GdeltNoDisponible(f"sin respuesta desde {cursor}") from error
         return Recuentos()
-    almacen.guardar_cursor(FUENTE_ID, {"hasta": _fecha(ahora)})
+    # «inicio» es donde empezó la recogida horaria: el histórico llega hasta ahí.
+    primera = cursor["inicio"] if cursor else _fecha(inicio)
+    almacen.guardar_cursor(FUENTE_ID, {"hasta": _fecha(ahora), "inicio": primera})
     registro.info("gdelt %s", recuentos.resumen())
     return recuentos

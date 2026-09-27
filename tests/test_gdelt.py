@@ -121,7 +121,10 @@ def test_el_candidato_crece_entre_ejecuciones(almacen: Almacen) -> None:
 def test_ejecucion_avanza_el_cursor_con_una_hora_de_solape(almacen: Almacen) -> None:
     api = ApiFalsa([bruto(1, "Droner over Københavns Lufthavn: lufthavnen lukket", 3)])
     gdelt.ejecutar(almacen, descargador(api), AHORA)
-    assert almacen.cursor("gdelt") == {"hasta": "2025-09-23T12:00:00Z"}
+    assert almacen.cursor("gdelt") == {
+        "hasta": "2025-09-23T12:00:00Z",
+        "inicio": "2025-09-22T12:00:00Z",
+    }
     api.pedidas.clear()
     gdelt.ejecutar(almacen, descargador(api), AHORA + timedelta(hours=1))
     assert {p["startdatetime"][0] for p in api.pedidas} == {"20250923110000"}
@@ -132,7 +135,9 @@ def test_si_la_api_no_responde_el_cursor_no_avanza(almacen: Almacen) -> None:
     gdelt.ejecutar(almacen, descargador(api), AHORA)
     api.fallar = True
     assert gdelt.ejecutar(almacen, descargador(api), AHORA + timedelta(hours=5)).recibidos == 0
-    assert almacen.cursor("gdelt") == {"hasta": "2025-09-23T12:00:00Z"}
+    cursor = almacen.cursor("gdelt")
+    assert cursor is not None
+    assert cursor["hasta"] == "2025-09-23T12:00:00Z"
     # Más de un día sin respuesta: la ejecución queda en rojo.
     with pytest.raises(gdelt.GdeltNoDisponible):
         gdelt.ejecutar(almacen, descargador(api), AHORA + timedelta(days=2))
