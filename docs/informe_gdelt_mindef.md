@@ -360,7 +360,7 @@ informe con artículos de ejemplo.
 - **«Московского региона»** va a RU-MOS (la región incluye la ciudad, RU-MOW,
   que tiene su propio código cuando se nombra «Москва»).
 - **Nomenclátor en forma Unicode descompuesta (NFD).** El hook de pre-push
-  confundía «Iași» con una palabra prohibida porque `grep -w` no toma «ș»
+  confundía un nombre rumano con una palabra prohibida porque `grep -w` no toma «ș»
   como letra. Es el mismo texto y la búsqueda normaliza igual.
 
 ## Sigue abierto
