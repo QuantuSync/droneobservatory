@@ -13,11 +13,11 @@ permissions:
 jobs:
   sonda:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 60
     steps:
       - name: Consultas espaciadas con reintentos
         run: |
-          python3 - <<'PY'
+          python3 -u - <<'PY'
           import json, time, urllib.request, urllib.parse
           base = "https://api.gdeltproject.org/api/v2/doc/doc"
           intentos_429 = 0
@@ -34,6 +34,7 @@ jobs:
                       codigo, cuerpo = e.code, e.read().decode("utf-8", "replace")
                   except OSError as e:
                       codigo, cuerpo = 0, repr(e)
+                  print("    intento", intento, codigo, flush=True)
                   if codigo not in (0, 429):
                       break
                   intentos_429 += 1
