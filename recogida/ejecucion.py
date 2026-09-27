@@ -1,4 +1,4 @@
-"""Procesado de publicaciones de la Fuerza Aérea y ejecución de la fuente.
+"""Procesado de publicaciones de una fuente de partes y ejecución de la fuente.
 
 El registro de ejecución solo lleva recuentos, nunca contenido.
 """
@@ -13,9 +13,10 @@ from almacen.base import Almacen, DocumentoInvalido
 from esquema import Documento
 from proceso.ataques import incorporar
 from proceso.configuracion import cargar_fuentes
-from recogida import fuerza_aerea, parte
 from recogida.cache import CachePaginas
 from recogida.descarga import Descargador
+from recogida.fuente import RELECTURA, Fuente, leer_desde
+from recogida.parte import ParteIlegible
 from recogida.recorrido import pagina
 from recogida.telegram import Publicacion
 
@@ -48,7 +49,7 @@ class SinCursor(RuntimeError):
     pass
 
 
-def configuracion_fuente(fuente_id: str = fuerza_aerea.FUENTE_ID) -> Documento:
+def configuracion_fuente(fuente_id: str) -> Documento:
     (config,) = [f for f in cargar_fuentes() if f["id"] == fuente_id]
     return config
 
@@ -59,19 +60,25 @@ def motivo_general(motivo: str) -> str:
 
 
 def procesar(
-    almacen: Almacen, publicaciones: Iterable[Publicacion], config: Documento, ahora: datetime
+    almacen: Almacen,
+    publicaciones: Iterable[Publicacion],
+    fuente: Fuente,
+    config: Documento,
+    ahora: datetime,
 ) -> Recuentos:
     recuentos = Recuentos()
     for publicacion in publicaciones:
         recuentos.publicaciones += 1
-        if not parte.es_parte(publicacion.texto):
+        if not fuente.es_parte(publicacion.texto):
             continue
         recuentos.partes += 1
         try:
-            leido = parte.leer(publicacion.texto, publicacion.fecha)
-            resultado = incorporar(almacen, publicacion, leido, config, publicacion.texto, ahora)
-        except (parte.ParteIlegible, DocumentoInvalido) as error:
-            motivo = str(error) if isinstance(error, parte.ParteIlegible) else f"no valida: {error}"
+            leido = fuente.leer(publicacion.texto, publicacion.fecha)
+            resultado = incorporar(
+                almacen, publicacion, leido, config, publicacion.texto, ahora, fuente.perfil
+            )
+        except (ParteIlegible, DocumentoInvalido) as error:
+            motivo = str(error) if isinstance(error, ParteIlegible) else f"no valida: {error}"
             almacen.registrar_fallido(
                 publicacion.enlace, config["id"], motivo, publicacion.fecha.isoformat()
             )
@@ -89,24 +96,25 @@ def ejecutar(
     almacen: Almacen,
     descargador: Descargador,
     cache: CachePaginas,
+    fuente: Fuente,
     ahora: datetime | None = None,
 ) -> Recuentos:
     """Una ejecución de la fuente: verificar el canal, leer desde el cursor y procesar."""
     ahora = ahora or datetime.now(UTC)
-    config = configuracion_fuente()
-    cursor = almacen.cursor(config["id"])
+    config = configuracion_fuente(fuente.id)
+    cursor = almacen.cursor(fuente.id)
     if cursor is None:
-        raise SinCursor("la fuente no tiene cursor: hay que ejecutar antes el histórico")
-    portada = pagina(descargador, cache, fuerza_aerea.CANAL, None, usar_cache=False)
-    fuerza_aerea.verificar(descargador, portada)
-    lectura = fuerza_aerea.leer_desde(
-        descargador, cache, portada, cursor["ultimo_id"], ahora - fuerza_aerea.RELECTURA
+        raise SinCursor(f"{fuente.id} no tiene cursor: hay que ejecutar antes el histórico")
+    portada = pagina(descargador, cache, fuente.canal, None, usar_cache=False)
+    fuente.verificar(descargador, portada)
+    lectura = leer_desde(
+        descargador, cache, portada, fuente.canal, cursor["ultimo_id"], ahora - RELECTURA
     )
-    recuentos = procesar(almacen, lectura.publicaciones, config, ahora)
+    recuentos = procesar(almacen, lectura.publicaciones, fuente, config, ahora)
     if lectura.publicaciones and lectura.publicaciones[-1].id > cursor["ultimo_id"]:
         ultimo = lectura.publicaciones[-1]
         almacen.guardar_cursor(
-            config["id"], {"ultimo_id": ultimo.id, "fecha": ultimo.fecha.isoformat()}
+            fuente.id, {"ultimo_id": ultimo.id, "fecha": ultimo.fecha.isoformat()}
         )
-    registro.info("paginas=%d %s", lectura.paginas, recuentos.resumen())
+    registro.info("%s paginas=%d %s", fuente.id, lectura.paginas, recuentos.resumen())
     return recuentos

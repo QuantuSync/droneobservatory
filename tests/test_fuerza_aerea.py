@@ -7,7 +7,8 @@ import pytest
 from almacen.base import Almacen
 from recogida.cache import CachePaginas
 from recogida.ejecucion import SinCursor, ejecutar
-from recogida.fuerza_aerea import CanalNoVerificado, HuecoDemasiadoGrande, leer_desde, verificar
+from recogida.fuente import CanalNoVerificado, HuecoDemasiadoGrande, leer_desde
+from recogida.fuerza_aerea import FUENTE, verificar
 from recogida.recorrido import pagina
 from recogida.telegram import Pagina
 from tests.telegram_falso import CanalFalso, descargador
@@ -83,7 +84,7 @@ def test_la_web_oficial_admite_el_enlace_codificado(tmp_path: Path) -> None:
 def test_lee_hacia_atras_hasta_el_cursor(tmp_path: Path) -> None:
     falso = canal()
     d = descargador(falso)
-    lectura = leer_desde(d, CachePaginas(tmp_path), portada(falso, tmp_path), 2)
+    lectura = leer_desde(d, CachePaginas(tmp_path), portada(falso, tmp_path), "kpszsu", 2)
     assert [p.id for p in lectura.publicaciones] == [3, 4, 5, 6, 7]
     assert lectura.paginas == 2
 
@@ -92,14 +93,19 @@ def test_hueco_demasiado_grande(tmp_path: Path) -> None:
     falso = canal()
     with pytest.raises(HuecoDemasiadoGrande):
         leer_desde(
-            descargador(falso), CachePaginas(tmp_path), portada(falso, tmp_path), 0, max_paginas=2
+            descargador(falso),
+            CachePaginas(tmp_path),
+            portada(falso, tmp_path),
+            "kpszsu",
+            0,
+            max_paginas=2,
         )
 
 
 def test_ejecucion_completa(almacen: Almacen, tmp_path: Path) -> None:
     falso = canal()
     almacen.guardar_cursor("fuerza_aerea_ua", {"ultimo_id": 1})
-    recuentos = ejecutar(almacen, descargador(falso), CachePaginas(tmp_path), AHORA)
+    recuentos = ejecutar(almacen, descargador(falso), CachePaginas(tmp_path), FUENTE, AHORA)
     assert (recuentos.publicaciones, recuentos.partes, recuentos.leidos) == (6, 4, 3)
     assert (recuentos.fallidos, recuentos.nuevos) == (1, 3)
     assert recuentos.motivos == {"sin cifras de drones": 1}
@@ -119,7 +125,7 @@ def test_ejecucion_completa(almacen: Almacen, tmp_path: Path) -> None:
 def test_sin_cambios_nuevos_no_toca_nada(almacen: Almacen, tmp_path: Path) -> None:
     falso = canal()
     almacen.guardar_cursor("fuerza_aerea_ua", {"ultimo_id": 7})
-    recuentos = ejecutar(almacen, descargador(falso), CachePaginas(tmp_path), AHORA)
+    recuentos = ejecutar(almacen, descargador(falso), CachePaginas(tmp_path), FUENTE, AHORA)
     assert recuentos.publicaciones == 0
     assert almacen.cursor("fuerza_aerea_ua") == {"ultimo_id": 7}
 
@@ -127,7 +133,7 @@ def test_sin_cambios_nuevos_no_toca_nada(almacen: Almacen, tmp_path: Path) -> No
 def test_sin_cursor_no_lee(almacen: Almacen, tmp_path: Path) -> None:
     falso = canal()
     with pytest.raises(SinCursor):
-        ejecutar(almacen, descargador(falso), CachePaginas(tmp_path), AHORA)
+        ejecutar(almacen, descargador(falso), CachePaginas(tmp_path), FUENTE, AHORA)
     assert falso.pedidas == []
 
 
@@ -136,7 +142,7 @@ def test_canal_no_verificado_no_lee_nada(almacen: Almacen, tmp_path: Path) -> No
     falso.verificado = False
     almacen.guardar_cursor("fuerza_aerea_ua", {"ultimo_id": 1})
     with pytest.raises(CanalNoVerificado):
-        ejecutar(almacen, descargador(falso), CachePaginas(tmp_path), AHORA)
+        ejecutar(almacen, descargador(falso), CachePaginas(tmp_path), FUENTE, AHORA)
     assert almacen.ataques_ucrania() == []
     assert almacen.cursor("fuerza_aerea_ua") == {"ultimo_id": 1}
 
@@ -148,11 +154,11 @@ def test_relee_las_ultimas_48_horas_y_recoge_un_parte_editado(
     almacen.guardar_cursor("fuerza_aerea_ua", {"ultimo_id": 1})
     # Un día después del último parte: el 6 queda dentro de las 48 horas y el 2, fuera.
     ahora = falso.publicaciones[7][0] + timedelta(days=1)
-    ejecutar(almacen, descargador(falso), CachePaginas(tmp_path), ahora)
+    ejecutar(almacen, descargador(falso), CachePaginas(tmp_path), FUENTE, ahora)
     fecha, _ = falso.publicaciones[6]
     falso.publicaciones[6] = (fecha, parte(22, 70, 68))
     antes = almacen.conexion.serialize()
-    recuentos = ejecutar(almacen, descargador(falso), CachePaginas(tmp_path), ahora)
+    recuentos = ejecutar(almacen, descargador(falso), CachePaginas(tmp_path), FUENTE, ahora)
     assert recuentos.actualizados == 1
     assert almacen.conexion.serialize() != antes
     editado = next(a for a in almacen.ataques_ucrania() if a["derribados"]["min"] == 68)
@@ -166,9 +172,9 @@ def test_releer_sin_cambios_no_toca_la_base(almacen: Almacen, tmp_path: Path) ->
     falso = canal()
     almacen.guardar_cursor("fuerza_aerea_ua", {"ultimo_id": 1})
     ahora = falso.publicaciones[7][0] + timedelta(hours=1)
-    ejecutar(almacen, descargador(falso), CachePaginas(tmp_path), ahora)
+    ejecutar(almacen, descargador(falso), CachePaginas(tmp_path), FUENTE, ahora)
     antes = almacen.conexion.serialize()
-    recuentos = ejecutar(almacen, descargador(falso), CachePaginas(tmp_path), ahora)
+    recuentos = ejecutar(almacen, descargador(falso), CachePaginas(tmp_path), FUENTE, ahora)
     assert recuentos.publicaciones > 0
     assert (recuentos.nuevos, recuentos.actualizados) == (0, 0)
     assert almacen.conexion.serialize() == antes

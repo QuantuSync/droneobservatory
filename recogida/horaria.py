@@ -16,13 +16,15 @@ from almacen.cifrado import abrir_cifrada, guardar_cifrada
 from exportacion.publicar import publicar
 from recogida.cache import CachePaginas
 from recogida.descarga import Descargador
-from recogida.ejecucion import ejecutar
-from recogida.fuerza_aerea import CanalNoVerificado
+from recogida.ejecucion import SinCursor, ejecutar
+from recogida.fuente import CanalNoVerificado, HuecoDemasiadoGrande
+from recogida.fuentes import FUENTES
 
 registro = logging.getLogger("recogida")
 
-# Código de salida cuando la fuente no pudo verificarse: la ejecución termina y
-# publica, pero queda en rojo para que se vea.
+# Código de salida cuando una fuente no pudo leerse (canal no verificado, sin cursor o
+# con un hueco demasiado grande): las demás se leen y se publica, pero la ejecución
+# queda en rojo para que se vea.
 SALIDA_FUENTE_NO_VERIFICADA = 2
 
 
@@ -41,11 +43,13 @@ def principal(argumentos: list[str] | None = None) -> int:
             return 1
         almacen = Almacen(abrir_cifrada(ruta))
         antes = almacen.conexion.serialize()
-        try:
-            ejecutar(almacen, Descargador(), CachePaginas(), ahora)
-        except CanalNoVerificado as error:
-            registro.warning("fuente no verificada, no se lee nada: %s", error)
-            salida = SALIDA_FUENTE_NO_VERIFICADA
+        descargador, cache = Descargador(), CachePaginas()
+        for fuente in FUENTES:
+            try:
+                ejecutar(almacen, descargador, cache, fuente, ahora)
+            except (CanalNoVerificado, SinCursor, HuecoDemasiadoGrande) as error:
+                registro.warning("%s no se lee: %s", fuente.id, error)
+                salida = SALIDA_FUENTE_NO_VERIFICADA
         cambiados = publicar(almacen, ahora)
         registro.info("ficheros publicados con cambios: %d", len(cambiados))
         if almacen.conexion.serialize() != antes:
