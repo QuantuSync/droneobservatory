@@ -268,3 +268,48 @@ def test_cifra_sin_maximo_es_ilegible() -> None:
 )
 def test_no_son_partes_nacionales(texto: str) -> None:
     assert not es_parte(texto)
+
+
+def test_perdidos_por_guerra_electronica_en_la_misma_frase() -> None:
+    texto = (
+        "У ніч на 1 червня (із 19.30 31 травня) противник атакував 479-ма засобами:\n"
+        "- 472 ударними БпЛА типу Shahed із напрямків: Курськ – рф.;\n"
+        "- 3 балістичними ракетами Іскандер-М.\n\n"
+        "Станом на 13.30 знешкоджено 385 засобів: 210 ворожих БпЛА та 3 крилаті ракети. "
+        "213 — збито вогневими засобами, 172 — локаційно втрачені/подавлені РЕБ."
+    )
+    leido = leer(texto, datetime(2025, 6, 1, 11, tzinfo=UTC))
+    assert leido.lanzados["total"] == rango(472)
+    assert leido.derribados == rango(210)
+    assert leido.perdidos_guerra_electronica == rango(172)
+
+
+def test_perdidos_en_vinetas_sin_la_cabecera_ni_los_misiles() -> None:
+    texto = (
+        "У ніч на 23 червня (із 20.00 22 червня) противник атакував 352 ударними БпЛА типу "
+        "Shahed із напрямків: Курськ, Орел – рф  (до 160 із них – шахеди).\n\n"
+        "Станом на 09.00 знешкоджено 354 засоби, 158 збито, 196 – локаційно втрачені:\n"
+        "- 146 ворожих БпЛА збито вогневими засобами, 193 — локаційно втрачені;\n"
+        "- 7 балістичних ракет – збито, ще 3 – локаційно втрачені."
+    )
+    leido = leer(texto, datetime(2025, 6, 23, 6, tzinfo=UTC))
+    assert leido.derribados == rango(146)
+    assert leido.perdidos_guerra_electronica == rango(193)
+    assert leido.zonas_lanzamiento == ("Курськ", "Орел")
+
+
+def test_errata_en_el_mes_del_inicio() -> None:
+    texto = "У ніч на 3 серпня (із 19.00 2 червня) противник атакував 76 ударними БпЛА."
+    leido = leer(texto, datetime(2025, 8, 3, 6, tzinfo=UTC))
+    assert leido.inicio.documento()["valor"] == "2025-08-02T16:00Z"
+    incoherente = "У ніч на 3 серпня (із 19.00 12 червня) противник атакував 76 ударними БпЛА."
+    with pytest.raises(ParteIlegible, match="incoherente"):
+        leer(incoherente, datetime(2025, 8, 3, 6, tzinfo=UTC))
+
+
+def test_las_zonas_acaban_en_la_siguiente_arma() -> None:
+    frase = (
+        "противник атакував 49-ма ударними БпЛА із напрямків: Міллерово, Брянськ – рф, "
+        "Чауда - ТОТ Криму, протикорабельною ракетою Онікс, а також 8-ма БпЛА."
+    )
+    assert zonas(frase) == ("Міллерово", "Брянськ", "Чауда")

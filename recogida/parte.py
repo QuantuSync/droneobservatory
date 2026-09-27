@@ -255,6 +255,24 @@ _HASTA = re.compile(r"до\s+" + _HORA + r"(?:\s+(\d{1,2})\s+" + _MES + ")?", re
 _STANOM = re.compile(r"станом\s+на\s+" + _HORA + r"(?:\s+(\d{1,2})\s+" + _MES + ")?", re.I)
 
 
+def _sin_errata(m: re.Match[str], base: date) -> re.Match[str]:
+    """Una fecha de inicio que no es la víspera ni el día del parte es una errata.
+
+    Si el día coincide con el esperado se corrige el mes ("з 19.00 2 червня" en la
+    noche del 3 de agosto); si no, el periodo no es fiable.
+    """
+    if not m[3]:
+        return m
+    declarado = (int(m[3]), MESES[m[4].lower()])
+    if declarado in {(d.day, d.month) for d in (base, base + timedelta(days=1))}:
+        return m
+    if int(m[3]) == base.day:
+        sin_fecha = _DESDE.match(f"з {m[1]}:{m[2]}")
+        assert sin_fecha is not None
+        return sin_fecha
+    raise ParteIlegible("periodo incoherente")
+
+
 def _hora(m: re.Match[str], dia: date, publicado: datetime) -> datetime:
     if m[3]:
         dia = _fecha(int(m[3]), MESES[m[4].lower()], dia.year, publicado)
@@ -276,7 +294,7 @@ def periodo(texto: str, publicado: datetime) -> tuple[Instante, Instante]:
         hasta = _HASTA.search(cola[: cola.find(")")]) if desde and ")" in cola else None
         if desde is not None:
             base = dia - timedelta(days=1) if noche and int(desde[1]) >= 12 else dia
-            inicio = Instante(_hora(desde, base, publicado), "minuto")
+            inicio = Instante(_hora(_sin_errata(desde, base), base, publicado), "minuto")
         elif noche is not None:
             inicio = Instante(_utc(dia - timedelta(days=1), HORA_INICIO_NOCHE), "aproximada")
         else:
@@ -370,7 +388,7 @@ def lanzados(frase: str) -> dict[str, Rango]:
 _LIMPIAR_ZONA = (
     (re.compile(r"\b(?:ТОТ|АР|н\.п\.|тимчасово\s+окупован\w+)(?=\s|$)\.?", re.I), " "),
     (re.compile(r"[()«»\"“”]"), " "),
-    (re.compile(r"\s*[-–—]\s*(?:рф|РФ|Крим)\.?\s*$|^\s*(?:рф|РФ|Крим)\s*[-–—]\s*"), ""),
+    (re.compile(r"\s*[-–—]\s*(?:рф|РФ|Крим\w*)\.?\s*$|^\s*(?:рф|РФ|Крим\w*)\s*[-–—]\s*"), ""),
     (re.compile(r"\s+(?:рф|РФ)\.?$"), ""),
     (re.compile(r"\s+"), " "),
 )
@@ -383,14 +401,17 @@ def zonas(frase: str) -> tuple[str, ...]:
     m = re.search(r"(?:із|з)\s+(?:напрямк\w*|район\w*)\s*:?\s*(.+)", cola, re.IGNORECASE)
     if m is None:
         return ()
-    fin = r"[,.]?\s+(?:близько|понад|майже|з них|із них)\b|\.\s*$|;\s*(?=\d)"
+    fin = r"[,.(\s]\s*\(?\s*(?:близько|понад|майже|до|з них|із них|а\s+також)\b|\.\s*$|;\s*(?=\d)"
     lista = re.split(fin, m[1])[0]
     resultado: list[str] = []
     for elemento in re.split(r"\s*(?:,|;|\s+та\s+|\s+і\s+|\s+й\s+)\s*", lista):
+        # La lista acaba donde el parte pasa a otra arma: "..., протикорабельною ракетою".
+        if re.search(r"ракет|боєприпас|пуск", elemento, re.IGNORECASE):
+            break
         for patron, sustituto in _LIMPIAR_ZONA:
             elemento = patron.sub(sustituto, elemento)
         elemento = elemento.strip(" .-–—")
-        if elemento and elemento not in resultado:
+        if elemento and elemento.lower() != "рф" and elemento not in resultado:
             resultado.append(elemento)
     return tuple(resultado)
 
@@ -428,6 +449,7 @@ def _cifra_suelta(frase: str) -> int | None:
 _ES_ATAQUE = re.compile(r"(?:атакува|застосува|випусти|запусти)\w*", re.I)
 _ES_DERRIBO = re.compile(r"збит|знищ|подавл|збиття|знешкодж", re.I)
 _ES_PERDIDO = re.compile(r"локаційно|втрачен\w*[^;]*РЕБ|РЕБ[^;]*втрачен", re.I)
+_ES_MISIL = re.compile(r"ракет", re.IGNORECASE)
 _ES_CRUCE = re.compile(
     r"перетну\w*|залет\w*|(?:у|в)\s+повітряний\s+простір|на\s+територію|(?:в|у)\s+бік", re.I
 )
@@ -480,6 +502,35 @@ def _tramo(frase: str, desde: str, hasta: str | None) -> str:
     return cola[: fin.start()] if fin else cola
 
 
+def _perdidos(frase: str) -> tuple[int | None, str]:
+    """Drones perdidos por guerra electrónica y la frase sin esas cláusulas.
+
+    Pueden ir en la misma frase que los derribos ("213 — збито ..., 172 — локаційно
+    втрачені"), así que se separan por cláusula. Con viñetas mandan las viñetas y se
+    saltan las de misiles; la cabecera repite el total de todas las armas.
+    """
+    trozos = frase.split(";")
+    limpios: list[str] = []
+    por_trozo: list[list[str]] = []
+    for trozo in trozos:
+        clausulas = trozo.split(",")
+        propias = [c for c in clausulas if _ES_PERDIDO.search(c)]
+        por_trozo.append(propias)
+        limpios.append(",".join(c for c in clausulas if c not in propias))
+    candidatos = list(zip(trozos, por_trozo, strict=True))
+    if any(propias for _, propias in candidatos[1:]):
+        candidatos = candidatos[1:]
+    total: int | None = None
+    for trozo, propias in candidatos:
+        if _ES_MISIL.search(trozo) and not re.search(_DRON, trozo, re.IGNORECASE):
+            continue
+        for clausula in propias:
+            n = _suma_drones(clausula, None) or _cifra_suelta(clausula)
+            if n is not None:
+                total = (total or 0) + n
+    return total, ";".join(limpios)
+
+
 def leer(texto: str, publicado: datetime) -> ParteLeido:
     """Extrae los datos de drones de un parte. Lanza ParteIlegible si no lo entiende."""
     voc = vocabulario()
@@ -509,13 +560,9 @@ def leer(texto: str, publicado: datetime) -> ParteLeido:
         para_regiones.append(frase)
         total = lanz.get("total")
         total_n = total["max"] if isinstance(total, dict) else None
-        trozos = frase.split(";")
-        perdidas = [t for t in trozos if _ES_PERDIDO.search(t)]
-        for trozo in perdidas:
-            n = _suma_drones(trozo, None) or _cifra_suelta(trozo)
-            if n is not None:
-                perdidos = (perdidos or 0) + n
-        resto = ";".join(t for t in trozos if t not in perdidas)
+        perdidos_frase, resto = _perdidos(frase)
+        if perdidos_frase is not None:
+            perdidos = (perdidos or 0) + perdidos_frase
         if derribados is None and _ES_DERRIBO.search(resto):
             derribados = _suma_drones(resto, total_n)
         if m := re.search(r"влучан" + _LOCALIZACIONES, frase, re.I):
