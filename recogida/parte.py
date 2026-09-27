@@ -19,7 +19,7 @@ from esquema import Documento
 
 KYIV = ZoneInfo("Europe/Kyiv")
 VOCABULARIO = Path(__file__).resolve().parent.parent / "configuracion" / "regiones_ucrania.json"
-VERSION_PARSER = "parte-fuerza-aerea/2"
+VERSION_PARSER = "parte-fuerza-aerea/3"
 MAX_PALABRAS_FRASE = 25
 # Inicio habitual de la noche en los partes que lo declaran ("з 18:00"). Los
 # que no lo declaran reciben esta hora con precisión aproximada.
@@ -927,6 +927,104 @@ def es_parte(texto: str) -> bool:
     return periodo_con_verbo or verbo_con_cifra
 
 
+# --- Regiones por arma ----------------------------------------------------------
+
+# Misiles por su nombre o su tipo: "ракетами", "Іскандер-М", "Х-59", "Кинджал". No los
+# adjetivos: "зенітними ракетними підрозділами" son las unidades que derriban.
+_MISIL_O_DRON = re.compile(
+    r"(?P<misil>ракет(?!н)\w*|Іскандер\w*|Калібр\w*|Кинджал\w*|(?<!\w)Х-\d+)|(?P<dron>"
+    + _DRON
+    + ")",
+    re.IGNORECASE,
+)
+# Dos armas nombradas a menos de 40 letras ("ракет та ударних БпЛА") comparten las regiones.
+DISTANCIA_ARMAS = 40
+# Una región con "із", "з" o "від" delante es el origen del lanzamiento ("із Курської обл.",
+# "із повітряного простору Курської та Запорізької областей"), no una región afectada; en la
+# frase del ataque, también con "над" ("над акваторією"). Sin ellos es el objetivo
+# ("атакували Миколаївщину", "по Харківщині") o el lugar del derribo ("над Київщиною").
+# Hasta cinco palabras o signos entre la preposición y la región ("із Ростовської обл. –
+# рф, ТОТ Криму").
+_ORIGEN = re.compile(r"(?:^|\s)(?:із|з|від)\s+(?:\S+\s+){0,5}$", re.IGNORECASE)
+_ORIGEN_ATAQUE = re.compile(r"(?:^|\s)(?:із|з|над|від)\s+(?:\S+\s+){0,5}$", re.IGNORECASE)
+
+
+def _arma_en(clausula: str, posicion: int, tipos_frase: set[str]) -> set[str]:
+    """Arma de la región en `posicion`: la nombrada antes en la cláusula (o las dos si van
+    juntas), si no la siguiente, y si no la única de la frase. Sin saberlo, drones."""
+    armas = [
+        (m.start(), "misil" if m["misil"] else "dron") for m in _MISIL_O_DRON.finditer(clausula)
+    ]
+    antes = [(p, t) for p, t in armas if p < posicion]
+    if antes:
+        ultima = antes[-1][0]
+        return {t for p, t in antes if p >= ultima - DISTANCIA_ARMAS}
+    despues = [t for p, t in armas if p > posicion]
+    if despues:
+        return {despues[0]}
+    return tipos_frase if len(tipos_frase) == 1 else {"dron"}
+
+
+def regiones_por_arma(
+    frase: str, voc: Vocabulario, lanzamiento: bool = False
+) -> tuple[list[str], list[str]]:
+    """Regiones de la frase afectadas por drones y por misiles, en orden y sin repetir."""
+    drones: list[str] = []
+    misiles: list[str] = []
+    tipos_frase = {"misil" if m["misil"] else "dron" for m in _MISIL_O_DRON.finditer(frase)}
+    for clausula in frase.split(";"):
+        for palabra in _PALABRA.finditer(clausula):
+            codigo = regiones_en(palabra[0], voc)
+            if not codigo:
+                continue
+            origen = _ORIGEN_ATAQUE if lanzamiento else _ORIGEN
+            if origen.search(clausula[: palabra.start()]):
+                continue
+            for arma in _arma_en(clausula, palabra.start(), tipos_frase):
+                lista = drones if arma == "dron" else misiles
+                if codigo[0] not in lista:
+                    lista.append(codigo[0])
+    return drones, misiles
+
+
+# "(райони пусків безпілотників – Приморсько-Ахтарськ-рф)", "район пусків – Єйськ".
+_RAYON_PUSKU = re.compile(
+    r"район\w*\s+пуск\w*(?:\s+(?:безпілотник\w*|БпЛА|дронів|ударних\s+БпЛА))?\s*[–—:-]+\s*"
+    r"([^()]+)",
+    re.IGNORECASE,
+)
+
+
+def zonas_en_otra_frase(lista: list[str]) -> tuple[str, ...]:
+    """Zonas de lanzamiento de los drones fuera de la frase de las cifras.
+
+    "район пусків – Єйськ" cuando el arma nombrada antes es un dron, y las frases de
+    lanzamiento de drones sin misiles ("Пуски "Shahed-136" здійснювались з напрямку
+    ...", "атакували з південно-східного напрямку (Приморсько-Ахтарськ - рф)").
+    """
+    for frase in lista:
+        for rayon in _RAYON_PUSKU.finditer(frase):
+            armas = list(_MISIL_O_DRON.finditer(frase, 0, rayon.start()))
+            if armas and armas[-1]["dron"] and (encontradas := _lista_de_zonas(rayon[1])):
+                return encontradas
+    for frase in lista:
+        if not re.search(_DRON, frase, re.IGNORECASE) or _ES_MISIL.search(frase):
+            continue
+        if not re.search(r"пуск|атакува|застосува", frase, re.IGNORECASE):
+            continue
+        m = re.search(
+            r"(?:із|з)\s+(?:[\w-]+\s+){0,2}?(?:напрямк\w*|район\w*)\s*:?\s*(.+)", frase, re.I
+        )
+        if m is None:
+            continue
+        cola = m[1]
+        if entre := re.match(r"\s*\(([^)]*)\)", cola):
+            cola = entre[1]
+        if encontradas := _lista_de_zonas(cola):
+            return encontradas
+    return ()
+
+
 def _tramo(frase: str, desde: str, hasta: str | None) -> str:
     inicio = re.search(desde, frase, re.I)
     if inicio is None:
@@ -1010,7 +1108,8 @@ def leer(texto: str, publicado: datetime) -> ParteLeido:
     lugares_i: list[str] = []
     lugares_r: list[str] = []
     cruces: dict[str, Rango] = {}
-    para_regiones: list[str] = []
+    # (frase, es la del ataque): de la frase del ataque solo cuentan los objetivos.
+    para_regiones: list[tuple[str, bool]] = []
     lista = frases(texto)
     while lista:
         frase = lista.pop(0)
@@ -1021,14 +1120,15 @@ def leer(texto: str, publicado: datetime) -> ParteLeido:
             lanz = lanzados(frase)
             zonas_l = zonas(frase)
             # Las zonas de lanzamiento no son regiones afectadas.
-            sin_zonas = re.split(r"(?:із|з)\s+(?:напрямк|район)", frase, flags=re.I)[0]
-            if not re.search(r"пуск", sin_zonas, re.IGNORECASE):
-                para_regiones.append(sin_zonas)
+            sin_zonas = re.split(
+                r"(?:із|з)\s+(?:напрямк|район)|район\w*\s+пуск", frase, flags=re.I
+            )[0]
+            para_regiones.append((sin_zonas, True))
             continue
         # Las frases de los puntos de lanzamiento ("Пуски ... з трьох напрямків: Чауда –
         # Крим") no hablan de regiones afectadas.
         if not re.search(r"пуск", frase, re.IGNORECASE):
-            para_regiones.append(frase)
+            para_regiones.append((frase, False))
         total = lanz.get("total")
         total_n = total["max"] if isinstance(total, dict) else None
         perdidos_frase, resto = _perdidos(frase)
@@ -1056,6 +1156,14 @@ def leer(texto: str, publicado: datetime) -> ParteLeido:
         # Con las cifras en viñetas, las zonas van en la frase del ataque.
         candidatas = [f for f in frases(texto) if _ES_ATAQUE.search(f) and not _ES_MISIL.search(f)]
         zonas_l = next((z for f in candidatas if (z := zonas(f))), ())
+    if not zonas_l:
+        zonas_l = zonas_en_otra_frase(frases(texto))
+    drones: list[str] = []
+    misiles: list[str] = []
+    for frase, lanzamiento in para_regiones:
+        de_drones, de_misiles = regiones_por_arma(frase, voc, lanzamiento)
+        drones += [c for c in de_drones if c not in drones]
+        misiles += [c for c in de_misiles if c not in misiles]
     if derribados is None and titular is not None:
         derribados = _del_titular(titular, lanz)
         frase_derribos = titular
@@ -1090,7 +1198,8 @@ def leer(texto: str, publicado: datetime) -> ParteLeido:
         localizaciones_restos=rango(loc_restos),
         lugares_impacto=tuple(dict.fromkeys(voc.nombres[c] for c in lugares_i)),
         lugares_restos=tuple(dict.fromkeys(voc.nombres[c] for c in lugares_r)),
-        regiones=tuple(regiones_en("\n".join(para_regiones), voc)),
+        regiones=tuple(drones),
+        regiones_misiles=tuple(c for c in misiles if c not in drones),
         cruces=tuple(sorted(cruces.items())),
         frase=frase_origen(texto),
     )

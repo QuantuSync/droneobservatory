@@ -27,8 +27,8 @@ class Perfil:
     # Zona del canal: da el año del identificador del ataque.
     zona: ZoneInfo
     version_parser: str
-    # El parte es la reivindicación de una de las partes en guerra sobre lo que
-    # dice haber derribado; se publica marcado así.
+    # El parte es la reivindicación de una de las partes en guerra (la Fuerza Aérea de
+    # Ucrania o el Ministerio de Defensa ruso); se publica marcado así.
     reivindicacion: bool = False
 
 

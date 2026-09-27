@@ -51,6 +51,8 @@ FUENTE = Fuente(
         idioma="uk",
         zona=parte.KYIV,
         version_parser=parte.VERSION_PARSER,
+        # La Fuerza Aérea también es parte en la guerra: sus cifras se publican marcadas.
+        reivindicacion=True,
     ),
     verificar=verificar,
     es_parte=parte.es_parte,
