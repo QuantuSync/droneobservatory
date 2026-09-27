@@ -170,6 +170,7 @@ def ataque_completo() -> Documento:
         "tipo": "ataque_guerra",
         "periodo": {"inicio": instante("2025-10-05T15:00Z"), "fin": instante("2025-10-06T06:00Z")},
         "sentido": "RU_UA",
+        "reivindicacion_de_parte": True,
         "estado": {
             "actual": "confirmado",
             "historial": [
@@ -184,6 +185,7 @@ def ataque_completo() -> Documento:
             "total": {"min": 100, "max": 100},
         },
         "zonas_lanzamiento": ["Kursk", "Oriol"],
+        "tipos_dron": ["ala_fija"],
         "derribados": {"min": 70, "max": 70},
         "derribados_categoria": "derribados_o_neutralizados",
         "perdidos_guerra_electronica": {"min": 15, "max": 15},

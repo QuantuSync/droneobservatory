@@ -12,7 +12,7 @@ from almacen import remoto
 from almacen.base import Almacen
 from almacen.cifrado import VARIABLE_CLAVE, abrir_cifrada, guardar_cifrada
 from exportacion import publicar
-from recogida import horaria
+from recogida import fuerza_aerea, horaria, mindef
 from recogida.cache import CachePaginas
 from tests.telegram_falso import CanalFalso, descargador
 from tests.test_fuerza_aerea import canal
@@ -27,6 +27,7 @@ def entorno(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> tuple[str, Canal
     falso = canal()
     monkeypatch.setattr(horaria, "Descargador", lambda: descargador(falso))
     monkeypatch.setattr(horaria, "CachePaginas", lambda: CachePaginas(tmp_path / "cache"))
+    monkeypatch.setattr(horaria, "FUENTES", (fuerza_aerea.FUENTE,))
     salida = tmp_path / "publicacion"
     monkeypatch.setattr(horaria, "publicar", lambda a, ahora: publicar.publicar(a, ahora, salida))
     return desnudo.as_uri(), falso, salida
@@ -90,3 +91,14 @@ def test_publicar_solo_informa_de_lo_que_cambia(tmp_path: Path) -> None:
     assert sorted(p.name for p in primera) == [publicar.INCIDENTES, publicar.UCRANIA]
     assert publicar.publicar(almacen, ahora, tmp_path) == []
     assert b"\r\n" not in (tmp_path / publicar.UCRANIA).read_bytes()
+
+
+def test_una_fuente_sin_cursor_no_impide_leer_las_demas(
+    entorno: tuple[str, CanalFalso, Path], tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repositorio, _, _ = entorno
+    monkeypatch.setattr(horaria, "FUENTES", (fuerza_aerea.FUENTE, mindef.FUENTE))
+    subir_base(repositorio, tmp_path, ultimo_id=1)
+    salida = horaria.principal(["--correo", "a@b.org", "--repositorio", repositorio])
+    assert salida == horaria.SALIDA_FUENTE_NO_VERIFICADA
+    assert len(base_remota(repositorio, tmp_path).ataques_ucrania()) == 3
