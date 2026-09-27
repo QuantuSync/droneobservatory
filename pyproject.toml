@@ -10,6 +10,8 @@ extend-exclude = ["stubs"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "B", "UP", "N", "SIM", "RUF"]
+# Nombres de excepciones en español: el sufijo Error no aplica.
+ignore = ["N818"]
 
 [tool.mypy]
 strict = true
