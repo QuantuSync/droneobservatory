@@ -145,6 +145,19 @@ def lugar(elemento: dict[str, Any], tipo: str) -> dict[str, Any] | None:
     return entrada
 
 
+def _descompuesto(valor: Any) -> Any:
+    """Textos en forma descompuesta (NFD). Algunas herramientas de texto no reconocen letras
+    como «ș» dentro de una palabra y parten el nombre («Timișoara»); descompuesto, «s» sigue
+    siendo letra. Es el mismo texto Unicode y la búsqueda normaliza igual."""
+    if isinstance(valor, str):
+        return unicodedata.normalize("NFD", valor)
+    if isinstance(valor, list):
+        return [_descompuesto(v) for v in valor]
+    if isinstance(valor, dict):
+        return {k: _descompuesto(v) for k, v in valor.items()}
+    return valor
+
+
 def generar(datos: dict[str, dict[str, Any]]) -> dict[str, Any]:
     """Vocabulario a partir de las respuestas de Overpass por tipo."""
     lugares: dict[str, dict[str, Any]] = {}
@@ -185,7 +198,7 @@ def generar(datos: dict[str, dict[str, Any]]) -> dict[str, Any]:
         ),
         "licencia": "Datos © colaboradores de OpenStreetMap, ODbL 1.0: "
         "https://www.openstreetmap.org/copyright",
-        "lugares": dict(sorted(lugares.items())),
+        "lugares": {clave: _descompuesto(v) for clave, v in sorted(lugares.items())},
     }
 
 
