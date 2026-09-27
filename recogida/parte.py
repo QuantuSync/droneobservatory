@@ -30,6 +30,10 @@ MARGEN_FECHA = timedelta(days=1)
 # Una línea con al menos un 80 % de letras mayúsculas es el titular del parte; el
 # cuerpo, con nombres propios y siglas, no pasa de un 20 %.
 PROPORCION_TITULAR = 0.8
+# "проводив повітряну розвідку трьома безпілотниками": basta mirar las 30 letras previas.
+VENTANA_RECONOCIMIENTO = 30
+DECENA = 10
+MEDIANOCHE = 24
 
 DESCONOCIDO = "desconocido"
 Rango = Documento | str
@@ -44,6 +48,8 @@ _PALABRAS_NUMERO = {
     "трьома": 3, "трьох": 3, "чотири": 4, "чотирма": 4, "чотирьох": 4, "п'ять": 5,
     "п'ятьма": 5, "п'яти": 5, "шість": 6, "шістьма": 6, "сім": 7, "сімома": 7,
     "вісім": 8, "вісьмома": 8, "дев'ять": 9, "дев'ятьма": 9, "десять": 10, "десятьма": 10,
+    "шести": 6, "семи": 7, "восьми": 8, "дев'яти": 9, "десяти": 10, "п'ятьох": 5,
+    "шістьох": 6, "сімох": 7, "вісьмох": 8, "дев'ятьох": 9, "десятьох": 10,
 }  # fmt: skip
 # De 11 a 30 en nominativo, genitivo e instrumental: "одинадцять", "двадцятьма".
 _DECENAS = {
@@ -61,12 +67,20 @@ _NUM = (
 _SUFIJO = r"(?:-[^\W\d_]{1,4}|ма|ми|ю|ти|х|м|ох|ьох|ьма|ома|ий|і|ів)?"
 _DRON = (
     r"(?:БпЛА|БПЛА|безпілотник\w*|безпілотн\w+\s+літальн\w+\s+апарат\w*|дрон\w*"
-    r"|шахед\w*|Shahed\w*|Шахед\w*|Герань\w*|Гербер\w*|Gerbera|Бандерол\w*)"
+    r"|шахед\w*|Shahed\w*|Шахед\w*|Герань\w*|Гербер\w*|Gerbera|Бандерол\w*"
+    r"|баражуюч\w+\s+боєприпас\w*)"
 )
 # Hasta cuatro palabras entre la cifra y el dron ("ударними", "ворожих", "S8000"),
-# nunca una conjunción, una preposición ni un misil: "3 ракетами та 50 БпЛА" no es 3.
+# nunca una conjunción, una preposición, un misil, un mes, un verbo ni otro número:
+# "3 ракетами та 50 БпЛА" no es 3 y "1 листопада уночі збито шість дронів" no es 1.
+_NO_INTERMEDIA = (
+    r"ракет|року|атакув|застосув|випуст|запуст|уночі|вночі|збит|знищ|"
+    + _MES[1:-1]
+    + "|"
+    + "|".join(sorted(_PALABRAS_NUMERO, key=len, reverse=True))
+)
 _ENTRE = (
-    r"(?:\s+(?!ракет|(?:та|і|й|а|також|з|із|до|по|на|в|у)\b)"
+    r"(?:\s+(?!(?:" + _NO_INTERMEDIA + r")|(?:та|і|й|а|також|з|із|до|по|на|в|у)\b)"
     r"[«\"“]?[^\W\d][\w'’/-]*[»\"”]?|\s+S\d+){0,4}?"
 )
 CIFRA_DRONES = re.compile(_NUM + _SUFIJO + _ENTRE + r"\s+[«\"“]?" + _DRON, re.IGNORECASE)
@@ -185,11 +199,19 @@ def numero(texto: str) -> int:
     return int(limpio)
 
 
+def valor(cifra: re.Match[str]) -> int:
+    """Valor de una cifra de drones: "чотирма десятками" son 40."""
+    return numero(cifra[1]) * (
+        DECENA if re.search(r"десят", cifra[0][len(cifra[1]) :], re.I) else 1
+    )
+
+
 def exacto(n: int) -> Documento:
     return {"min": n, "max": n}
 
 
-_VINETA = re.compile(r"^\s*[-–—•]\s*")
+# Guion, punto o un emoji delante de una cifra ("🛬 21 ударний БпЛА").
+_VINETA = re.compile(r"^\s*(?:[-–—•]|[^\w\s«\"“(]+(?=\s*\d))\s*")
 
 
 _SIGUE = re.compile(r"\s*[\da-zа-яіїєґ]")
@@ -211,7 +233,12 @@ def frases(texto: str) -> list[str]:
             continue
         if abierto and _VINETA.match(linea):
             bloques[-1] += "; " + _VINETA.sub("", linea).strip()
-        elif anterior and not re.search(r"[.!?:;]\s*$", anterior) and _SIGUE.match(linea):
+        elif (
+            anterior
+            and not re.search(r"[.!?:;]\s*$", anterior)
+            and not _es_titular(anterior)
+            and _SIGUE.match(linea)
+        ):
             bloques[-1] += " " + linea.strip()
             abierto = linea.rstrip().endswith(":")
         else:
@@ -256,16 +283,46 @@ def _anio(texto: str | None) -> int | None:
 _HORA = r"(\d{1,2})[:.](\d{2})"
 _ANIO = r"(?:\s+(\d{4})\s*(?:року|р\.?)?)?"
 _NOCHE = re.compile(
-    r"ніч\w*\s+(?:з\s+\d{1,2}\s+(?:" + _MES[1:-1] + r"\s+)?)?на\s+"
+    r"(?:ніч\w*|уночі|вночі),?\s+(?:з\s+\d{1,2}\s+(?:" + _MES[1:-1] + r"\s+)?)?на\s+"
     r"(?:(?:понеділок|вівторок|середу|четвер|п'ятницю|суботу|неділю)\s+)?"
-    r"(\d{1,2}),?\s+" + _MES + _ANIO,
+    r"(\d{1,2})(?:-?го)?,?\s+" + _MES + _ANIO,
     re.IGNORECASE,
 )
 # "протягом дня 25 вересня", "протягом поточної доби 13 липня".
 _DIA = re.compile(
-    r"(?:протягом|впродовж|за)\s+(?:\w+ої\s+)?(?:доби|дня)\s+(\d{1,2}),?\s+" + _MES + _ANIO, re.I
+    r"(?:(?:протягом|впродовж|за)\s+(?:\w+ої\s+)?(?:доби|дня)|увечері|ввечері|вранці),?\s+"
+    r"(\d{1,2}),?\s+" + _MES + _ANIO,
+    re.I,
+)
+# 2023: "Із 18.30 25 грудня по 03.00 26 грудня", "з 21.10 год 30 березня по 01.30 год 31 березня".
+_RANGO = re.compile(
+    r"(?:з|із)\s+"
+    + _HORA
+    + r"\s+(?:год\s+)?(\d{1,2})\s+"
+    + _MES
+    + r"\s+(?:по|до)\s+"
+    + _HORA
+    + r"\s+(?:год\s+)?(\d{1,2})\s+"
+    + _MES
+    + _ANIO,
+    re.IGNORECASE,
 )
 # "У період із 14.30 по 20.30 7 травня".
+# 2022: "Уночі 5 жовтня", "2 жовтня уночі".
+_NOCHE_2022 = (
+    re.compile(r"(?:уночі|вночі),?\s+(\d{1,2})\s+" + _MES + _ANIO, re.IGNORECASE),
+    re.compile(r"(\d{1,2})\s+" + _MES + _ANIO + r",?\s+(?:уночі|вночі)", re.IGNORECASE),
+)
+# 2022: "6 жовтня з 15:00 по 20:00", "06 жовтня, в проміжок часу з 09.00 до 11.30".
+_INTERVALO_2022 = re.compile(
+    r"(\d{1,2})\s+"
+    + _MES
+    + r",?\s+(?:в\s+проміжок\s+часу\s+|у\s+період\s+)?(?:з|із)\s+"
+    + _HORA
+    + r"\s+(?:по|до)\s+"
+    + _HORA,
+    re.IGNORECASE,
+)
 _INTERVALO = re.compile(
     r"період\w*\s+(?:з|із)\s+" + _HORA + r"\s+(?:по|до)\s+" + _HORA + r"\s+(\d{1,2})\s+" + _MES,
     re.IGNORECASE,
@@ -307,20 +364,60 @@ def _hora(m: re.Match[str], dia: date, publicado: datetime) -> datetime:
     return _utc(dia, time(int(m[1]), int(m[2])))
 
 
+def _a_la_hora(dia: date, hora: int, minuto: int) -> datetime:
+    """Hora de Kyiv en UTC; "24.00" es la medianoche del día siguiente."""
+    if hora == MEDIANOCHE:
+        return _utc(dia + timedelta(days=1), time(0, minuto))
+    return _utc(dia, time(hora, minuto))
+
+
+def _intervalo(texto: str) -> tuple[int, str, int, int, int, int] | None:
+    """(día, mes, hora, minuto, hora, minuto) de un intervalo explícito de un solo día."""
+    if m := _INTERVALO.search(texto):
+        return int(m[5]), m[6], int(m[1]), int(m[2]), int(m[3]), int(m[4])
+    if m := _INTERVALO_2022.search(texto):
+        return int(m[1]), m[2], int(m[3]), int(m[4]), int(m[5]), int(m[6])
+    return None
+
+
+def declara_periodo(texto: str) -> bool:
+    patrones = (_NOCHE, *_NOCHE_2022, _DIA, _INTERVALO, _INTERVALO_2022, _RANGO)
+    return any(p.search(texto) for p in patrones)
+
+
 def periodo(texto: str, publicado: datetime) -> tuple[Instante, Instante]:
     """Periodo tal como lo declara el parte, en UTC."""
-    intervalo = _INTERVALO.search(texto)
-    if intervalo is not None:
+    if rango := _RANGO.search(texto):
         try:
-            dia = _fecha(int(intervalo[5]), MESES[intervalo[6].lower()], None, publicado)
-            abre = _utc(dia, time(int(intervalo[1]), int(intervalo[2])))
-            cierra = _utc(dia, time(int(intervalo[3]), int(intervalo[4])))
+            anio = _anio(rango[9])
+            abre = _a_la_hora(
+                _fecha(int(rango[3]), MESES[rango[4].lower()], anio, publicado),
+                int(rango[1]),
+                int(rango[2]),
+            )
+            cierra = _a_la_hora(
+                _fecha(int(rango[7]), MESES[rango[8].lower()], anio, publicado),
+                int(rango[5]),
+                int(rango[6]),
+            )
         except ValueError as error:
             raise ParteIlegible(f"fecha imposible: {error}") from error
         if cierra < abre:
             raise ParteIlegible("el periodo acaba antes de empezar")
         return Instante(abre, "minuto"), Instante(cierra, "minuto")
-    noche = _NOCHE.search(texto)
+    intervalo = None if _NOCHE.search(texto) else _intervalo(texto)
+    if intervalo is not None:
+        d, mes, h1, m1, h2, m2 = intervalo
+        try:
+            dia = _fecha(d, MESES[mes.lower()], None, publicado)
+            abre = _a_la_hora(dia, h1, m1)
+            cierra = _a_la_hora(dia, h2, m2)
+        except ValueError as error:
+            raise ParteIlegible(f"fecha imposible: {error}") from error
+        if cierra < abre:
+            raise ParteIlegible("el periodo acaba antes de empezar")
+        return Instante(abre, "minuto"), Instante(cierra, "minuto")
+    noche = _NOCHE.search(texto) or _NOCHE_2022[0].search(texto) or _NOCHE_2022[1].search(texto)
     declarado = noche or _DIA.search(texto)
     if declarado is None:
         raise ParteIlegible("sin periodo declarado")
@@ -379,6 +476,9 @@ def _cifras(frase: str) -> list[re.Match[str]]:
         if not any(a < m.end() and m.start() < b for a, b in subcuentas)
         # Los drones de reconocimiento (Orlan, Zala, Supercam) no son de ataque.
         and not re.search(r"розвідувальн", m[0], re.IGNORECASE)
+        and not re.search(
+            r"розвідк\w*\s*$", frase[max(0, m.start() - VENTANA_RECONOCIMIENTO) : m.start()], re.I
+        )
     ]
 
 
@@ -389,6 +489,7 @@ _SIN_MAXIMO = re.compile(r"(?:понад|більше|щонайменше|бі�
 def lanzados(frase: str) -> dict[str, Rango]:
     """Lanzados por familia y total a partir de la frase del ataque."""
     total = 0
+    hasta = 0
     exactos: dict[Familia, int] = {}
     combinados: list[tuple[int, set[Familia]]] = []
     # Con viñetas la cabecera repite el total ("559 засобів – 40 ракет та 519 БпЛА:").
@@ -399,7 +500,9 @@ def lanzados(frase: str) -> dict[str, Rango]:
     for i, m in enumerate(cifras):
         if _SIN_MAXIMO.search(frase[: m.start()]):
             raise ParteIlegible("cifra de lanzados sin máximo")
-        n = numero(m[1])
+        n = valor(m)
+        # "до 20 ударних дронів": como mucho 20.
+        solo_maximo = re.search(r"\bдо\s*$", frase[: m.start()], re.IGNORECASE) is not None
         limite = cifras[i + 1].start() if i + 1 < len(cifras) else len(frase)
         tipos = _FIN_TIPOS.split(frase[m.end() : limite], maxsplit=1)[0]
         # Una subcuenta ("понад 100 із них – реактивні") dice que ese modelo está, no que
@@ -407,19 +510,23 @@ def lanzados(frase: str) -> dict[str, Rango]:
         nombrados = familias_en(m[0] + " " + _DE_ELLOS.sub(" ", tipos))
         de_subcuentas = {f for s in _DE_ELLOS.finditer(tipos) for f in familias_en(s[3])}
         familias = nombrados | de_subcuentas if nombrados else set(Familia)
+        if solo_maximo:
+            hasta += n
+            combinados.append((n, familias))
+            continue
         total += n
         if len(familias) == 1:
             (familia,) = familias
             exactos[familia] = exactos.get(familia, 0) + n
         else:
             combinados.append((n, familias))
-    if not total:
+    if not total and not hasta:
         return {}
     minimos: dict[Familia, int] = {}
     for m in _DE_ELLOS.finditer(frase):
         for familia in familias_en(m[3]):
             minimos[familia] = minimos.get(familia, 0) + numero(m[2])
-    resultado: dict[str, Rango] = {"total": exacto(total)}
+    resultado: dict[str, Rango] = {"total": {"min": total, "max": total + hasta}}
     for familia in Familia:
         minimo = exactos.get(familia, 0)
         maximo = minimo + sum(n for n, fs in combinados if familia in fs)
@@ -442,23 +549,46 @@ def zonas(frase: str) -> tuple[str, ...]:
     """Zonas de lanzamiento declaradas tras "з напрямків" / "з району"."""
     primera = CIFRA_DRONES.search(frase)
     cola = frase[primera.start() :] if primera else frase
-    m = re.search(r"(?:із|з)\s+(?:напрямк\w*|район\w*)\s*:?\s*(.+)", cola, re.IGNORECASE)
+    m = re.search(
+        r"(?:із|з)\s+(?:[\w-]+\s+){0,2}?(?:напрямк\w*|район\w*)\s*:?\s*(.+)", cola, re.IGNORECASE
+    )
+    if m is None and primera is not None:
+        # "Із району Приморсько-Ахтарськ ... зафіксовано пуски 9 ударних БпЛА".
+        m = re.search(
+            r"(?:із|з)\s+(?:напрямк\w*|район\w*)\s*:?\s*(.+?)\s+(?:зафіксовано|здійснено|випущено)",
+            frase[: primera.start()],
+            re.IGNORECASE,
+        )
     if m is None:
         return ()
+    # "з південно-східного напрямку (Приморсько-Ахтарськ – рф.)": las zonas van entre paréntesis.
+    if entre := re.match(r"\s*\(([^)]*)\)", m[1]):
+        return _lista_de_zonas(entre[1])
+    return _lista_de_zonas(m[1])
+
+
+def _lista_de_zonas(texto: str) -> tuple[str, ...]:
     fin = (
         r"[,.(\s]\s*\(?\s*(?:близько|понад|майже|до|з них|із них|а\s+також)\b"
         r"|\.\s*$|\.\s+(?=[^\W\d_a-zа-яіїєґ])|;\s*(?=\d)"
     )
-    lista = re.split(fin, m[1])[0]
+    lista = re.split(fin, texto)[0]
     resultado: list[str] = []
     for elemento in re.split(r"\s*(?:,|;|\s+та\s+|\s+і\s+|\s+й\s+)\s*", lista):
         # La lista acaba donde el parte pasa a otra arma: "..., протикорабельною ракетою".
         if re.search(r"ракет|боєприпас|пуск", elemento, re.IGNORECASE):
             break
+        # "Приморсько-Ахтарськ (Краснодарський край)": la aclaración sobra.
+        elemento = re.sub(r"\([^)]*\)", " ", elemento)
         for patron, sustituto in _LIMPIAR_ZONA:
             elemento = patron.sub(sustituto, elemento)
-        elemento = elemento.strip(" .-–—")
-        if elemento and elemento.lower() != "рф" and elemento not in resultado:
+        elemento = re.sub(r"^(?:та|і|й)\s+", "", elemento.strip(" .-–—"))
+        # Una zona es un lugar con nombre propio, no el dron ni la zona de un mando.
+        if not re.search(r"(?:^|\s)[^\W\d_a-zа-яіїєґ]", elemento) or re.search(
+            _DRON + r"|командуванн|відповідальн", elemento, re.IGNORECASE
+        ):
+            continue
+        if elemento.lower() != "рф" and elemento not in resultado:
             resultado.append(elemento)
     return tuple(resultado)
 
@@ -477,20 +607,25 @@ def _suma_drones(frase: str, total_lanzados: int | None) -> int | None:
     cifras = _cuentas(vinetas) or _cuentas(cabecera)
     if cifras:
         return sum(cifras)
-    todos = re.search(r"(?:всі|усі)\s+" + _NUM, frase, re.I)
-    if todos:
+    todos = re.search(
+        r"(?:всі|усі)\s+" + _NUM + r"(" + _ENTRE + r"\s+[«\"“]?" + _DRON + ")?", frase, re.I
+    )
+    if todos and todos[2]:
         return numero(todos[1])
-    # "Усі цілі було збито": todos los lanzados.
-    if total_lanzados is not None and re.search(r"(?:всі|усі)\s+цілі", frase, re.I):
+    # "Усі 14 повітряних цілей" puede incluir misiles, y "100% дронів" no da cifra:
+    # en los dos casos son todos los drones lanzados.
+    if (todos or re.search(r"100\s*%", frase)) and total_lanzados is not None:
+        return total_lanzados
+    # "Усі цілі було збито", "усі ворожі БпЛА знищено": todos los lanzados.
+    todas = r"(?:всі|усі)\s+(?:[\w'-]+\s+){0,2}?(?:цілі|" + _DRON + ")"
+    if total_lanzados is not None and re.search(todas, frase, re.I):
         return total_lanzados
     return None
 
 
 def _cuentas(frase: str) -> list[int]:
     """Cifras de drones que cuentan algo: "із 140 БпЛА ... збито 120" solo cuenta 120."""
-    return [
-        numero(m[1]) for m in _cifras(frase) if not re.search(r"(?:з|із)\s+$", frase[: m.start()])
-    ]
+    return [valor(m) for m in _cifras(frase) if not re.search(r"(?:з|із)\s+$", frase[: m.start()])]
 
 
 def _cifra_suelta(frase: str) -> int | None:
@@ -500,7 +635,7 @@ def _cifra_suelta(frase: str) -> int | None:
 
 # "атакував", "застосував", "завдав удару" (también con la errata "задав"), "(в)дарив".
 _ES_ATAQUE = re.compile(
-    r"(?:атакува|застосува|застосован|випусти|запусти)\w*|за(?:в)?да\w*\s+удар|\b(?:в|у)?дари(?:в|ла|ли)\b",
+    r"(?:атакува|застосува|застосован|випусти|випущен|запусти)\w*|здійсн\w*\s+пуск|за(?:в)?да\w*\s+удар|\b(?:в|у)?дари(?:в|ла|ли)\b",
     re.IGNORECASE,
 )
 _ES_DERRIBO = re.compile(r"збит|збил|знищ|подавл|збиття|знешкодж", re.I)
@@ -513,6 +648,16 @@ _LOCALIZACIONES = r"[^.;]*?\s+на\s+" + _NUM + r"\s+локаці"
 _CONTINUACION = re.compile(r"(?:а\s+)?також\s|крім\s+того", re.IGNORECASE)
 _RECUENTO = re.compile(r"зафіксовано|виявлено|супровід|усього|загалом", re.IGNORECASE)
 _EFECTOS = re.compile(r"влучан|падін|уламк", re.IGNORECASE)
+
+
+def _del_titular(titular: str | None, lanz: dict[str, Rango]) -> int | None:
+    """Derribos del titular, leído al final: "100% ДРОНІВ" necesita el total lanzado."""
+    total = lanz.get("total")
+    return (
+        _suma_drones(titular, total["max"] if isinstance(total, dict) else None)
+        if titular
+        else None
+    )
 
 
 def _es_titular(frase: str) -> bool:
@@ -534,13 +679,20 @@ def _es_lanzamiento(frase: str, siguientes: list[str]) -> bool:
     lanzamiento = _ES_ATAQUE.search(frase) or (
         _RECUENTO.search(frase) and not _EFECTOS.search(frase) and not _ES_DERRIBO.search(frase)
     )
-    completa = [frase, *itertools.takewhile(_continua, siguientes)]
-    return bool(lanzamiento and _cifras(" ".join(completa)))
+    completa = " ".join([frase, *itertools.takewhile(_continua, siguientes)])
+    cifras = _cifras(completa)
+    # "знищено шість «Shahed», якими ... атакували": la cifra es de derribos.
+    derribo = _ES_DERRIBO.search(completa)
+    if cifras and derribo and derribo.start() < cifras[0].start():
+        return False
+    return bool(lanzamiento and cifras)
 
 
 # Los mandos aéreos regionales publican balances parciales de su zona: no son el
 # parte nacional y, fundidos con él por periodo, pisarían sus cifras.
-_REGIONAL = re.compile(r"повітрян\w+\s+командуванн", re.IGNORECASE)
+# Solo la firma en nominativo ("Повітряне командування "Захід""): los partes nacionales
+# de 2022 citan al mando que derribó ("повітряного командування") y sí cuentan.
+_REGIONAL = re.compile(r"Повітряне\s+командування")
 
 
 def es_parte(texto: str) -> bool:
@@ -554,12 +706,12 @@ def es_parte(texto: str) -> bool:
     lista = frases(texto)
     # 2024: "У ніч на 17 вересня ... виявлено та здійснено супровід 51 ударного БпЛА".
     periodo_con_verbo = any(
-        (_NOCHE.search(f) or _DIA.search(f))
+        declara_periodo(f)
         and (_ES_ATAQUE.search(f) or (_RECUENTO.search(f) and not _EFECTOS.search(f)))
         for f in lista
     )
     verbo_con_cifra = any(_ES_ATAQUE.search(f) and _cifras(f) for f in lista)
-    hay_periodo = bool(_NOCHE.search(texto) or _DIA.search(texto))
+    hay_periodo = declara_periodo(texto)
     return periodo_con_verbo or (hay_periodo and verbo_con_cifra)
 
 
@@ -603,6 +755,18 @@ def _perdidos(frase: str) -> tuple[int | None, str]:
     return total, ";".join(limpios)
 
 
+def _lanzados_de_referencia(texto: str) -> dict[str, Rango]:
+    """Sin frase de lanzamiento, "збито 18 із 20 ударних дронів" da los 20 lanzados."""
+    for frase in frases(texto):
+        if not _ES_DERRIBO.search(frase):
+            continue
+        for m in _DE_TOTAL.finditer(frase):
+            cola = frase[m.start(2) :]
+            if CIFRA_DRONES.match(cola):
+                return lanzados(cola)
+    return {}
+
+
 def leer(texto: str, publicado: datetime) -> ParteLeido:
     """Extrae los datos de drones de un parte. Lanza ParteIlegible si no lo entiende."""
     voc = vocabulario()
@@ -610,7 +774,7 @@ def leer(texto: str, publicado: datetime) -> ParteLeido:
     lanz: dict[str, Rango] = {}
     zonas_l: tuple[str, ...] = ()
     derribados: int | None = None
-    titular: int | None = None
+    titular: str | None = None
     perdidos: int | None = None
     loc_impacto: int | None = None
     loc_restos: int | None = None
@@ -640,7 +804,7 @@ def leer(texto: str, publicado: datetime) -> ParteLeido:
         # El titular a veces suma drones de reconocimiento: solo vale si el cuerpo calla.
         if _ES_DERRIBO.search(resto):
             if _es_titular(frase):
-                titular = titular if titular is not None else _suma_drones(resto, total_n)
+                titular = titular if titular is not None else resto
             elif derribados is None:
                 derribados = _suma_drones(resto, total_n)
         if m := re.search(r"влучан" + _LOCALIZACIONES, frase, re.I):
@@ -653,6 +817,12 @@ def leer(texto: str, publicado: datetime) -> ParteLeido:
         if pais is not None and re.search(_DRON, frase, re.IGNORECASE):
             n = _suma_drones(frase, None)
             cruces[pais] = exacto(n) if n is not None else DESCONOCIDO
+    if not lanz:
+        lanz = _lanzados_de_referencia(texto)
+    if not zonas_l:
+        # Con las cifras en viñetas, las zonas van en la frase del ataque.
+        candidatas = [f for f in frases(texto) if _ES_ATAQUE.search(f) and not _ES_MISIL.search(f)]
+        zonas_l = next((z for f in candidatas if (z := zonas(f))), ())
     if not lanz and derribados is None:
         raise ParteIlegible("sin cifras de drones")
 
@@ -664,7 +834,7 @@ def leer(texto: str, publicado: datetime) -> ParteLeido:
         fin=fin,
         lanzados=lanz or dict.fromkeys(["total", *Familia], DESCONOCIDO),
         zonas_lanzamiento=zonas_l,
-        derribados=rango(derribados if derribados is not None else titular),
+        derribados=rango(derribados if derribados is not None else _del_titular(titular, lanz)),
         perdidos_guerra_electronica=rango(perdidos),
         localizaciones_impacto=rango(loc_impacto),
         localizaciones_restos=rango(loc_restos),

@@ -407,3 +407,79 @@ def test_total_con_vinetas_y_numeros_en_letras() -> None:
     leido = leer(texto, datetime(2024, 6, 12, 5, tzinfo=UTC))
     assert leido.lanzados["total"] == rango(11)
     assert leido.derribados == rango(11)
+
+
+# --- 2022 y 2023 ------------------------------------------------------------------
+
+
+def test_2022_uno_chi_con_numeros_en_letras() -> None:
+    texto = (
+        "ЗБИТО П’ЯТЬ ІЗ СЕМИ ДРОНІВ-КАМІКАДЗЕ\n"
+        "2 жовтня уночі російські окупаційні війська атакували Миколаївщину сімома "
+        'дронами-камікадзе "Shahed-136".\n'
+        'П’ять із семи "Shahed-136" знищено.'
+    )
+    leido = leer(texto, datetime(2022, 10, 2, 5, tzinfo=UTC))
+    assert leido.inicio.precision == "aproximada"
+    assert leido.lanzados["shahed_geran"] == rango(7)
+    assert leido.derribados == rango(5)
+    assert leido.regiones == ("UA-48",)
+
+
+def test_2022_intervalo_hasta_medianoche() -> None:
+    texto = "29 вересня з 23.00 по 24.00 окупанти атакували сімома дронами-камікадзе Shahed-136."
+    leido = leer(texto, datetime(2022, 9, 29, 22, tzinfo=UTC))
+    assert leido.inicio.documento()["valor"] == "2022-09-29T20:00Z"
+    assert leido.fin.documento()["valor"] == "2022-09-29T21:00Z"
+
+
+def test_firma_de_un_mando_regional_no_es_parte_nacional() -> None:
+    texto = (
+        "Уночі 5 жовтня окупанти атакували Україну сімома Shahed-136. П’ять знищено.\n"
+        'Повітряне командування "Південь"'
+    )
+    assert not es_parte(texto)
+
+
+def test_2023_intervalo_entre_dias_y_como_mucho() -> None:
+    texto = (
+        "ЗНИЩЕНО 14 «ШАХЕДІВ»\n"
+        "Із 18.30 25 грудня по 03.00 26 грудня 2023 року противник атакував ударними БпЛА.\n"
+        "Загалом зафіксовано до 17 пусків ударних БпЛА з району Приморсько-Ахтарськ.\n"
+        "Усі ворожі БпЛА знищено."
+    )
+    leido = leer(texto, datetime(2023, 12, 26, 5, tzinfo=UTC))
+    assert leido.inicio.documento() == {"valor": "2023-12-25T16:30Z", "precision": "minuto"}
+    assert leido.fin.documento() == {"valor": "2023-12-26T01:00Z", "precision": "minuto"}
+    assert leido.lanzados["total"] == rango(0, 17)
+    # "Усі ворожі БпЛА" son como mucho los 17 lanzados.
+    assert leido.derribados == rango(17)
+
+
+def test_2023_fecha_y_reconocimiento_no_son_cifras() -> None:
+    texto = (
+        "1 листопада уночі збито шість дронів-камікадзе Shahed-136, які атакували Україну.\n"
+        "Крім того, у ніч на 16 травня противник атакував ударними дронами, а також проводив "
+        "повітряну розвідку трьома безпілотниками."
+    )
+    leido = leer(texto, datetime(2022, 11, 1, 6, tzinfo=UTC))
+    assert leido.lanzados["total"] == DESCONOCIDO
+    assert leido.derribados == rango(6)
+
+
+def test_2023_zonas_antes_de_la_cifra_y_entre_parentesis() -> None:
+    antes = (
+        "У ніч на 14 листопада 2023 року окупанти атакували Україну.\n"
+        "Із району Приморсько-Ахтарськ (Краснодарський край -рф) зафіксовано пуски 9 ударних "
+        "БпЛА «Shahed-136/131»."
+    )
+    assert leer(antes, datetime(2023, 11, 14, 6, tzinfo=UTC)).zonas_lanzamiento == (
+        "Приморсько-Ахтарськ",
+    )
+    parentesis = (
+        "У ніч на 28 січня 2024 року ворог атакував 8-ма ударними БпЛА типу «Shahed-136/131» з "
+        "південно-східного напрямку (Приморсько-Ахтарськ – рф.), двома ракетами «Іскандер-М» з "
+        "району Воронезької області."
+    )
+    leido = leer(parentesis, datetime(2024, 1, 28, 6, tzinfo=UTC))
+    assert leido.zonas_lanzamiento == ("Приморсько-Ахтарськ",)
