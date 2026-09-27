@@ -10,7 +10,7 @@ from almacen.base import Almacen
 from esquema import Documento
 from proceso.credibilidad import Declaracion, Fiabilidad, Postura, credibilidad
 from proceso.estados import Estado, nuevo_estado
-from recogida.parte import Instante, ParteLeido
+from recogida.parte import Instante, ParteLeido, exacto
 from recogida.telegram import Publicacion
 
 SENTIDO_RU_UA = "RU_UA"
@@ -56,6 +56,7 @@ def campos_respaldados(leido: ParteLeido) -> list[str]:
         "lugares_impacto": leido.lugares_impacto,
         "lugares_restos": leido.lugares_restos,
         "regiones": leido.regiones,
+        "regiones_misiles": leido.regiones_misiles,
         "cruces": leido.cruces,
     }
     return campos + [campo for campo, valor in opcionales.items() if valor]
@@ -95,6 +96,14 @@ def huella(anterior: str | None, texto: str) -> str:
     return hashlib.sha256(f"{anterior or ''}{propia}".encode()).hexdigest()
 
 
+def _region(codigo: str, leido: ParteLeido) -> Documento:
+    region: Documento = {"region": codigo}
+    por_region = dict(leido.derribados_por_region)
+    if codigo in por_region:
+        region["derribados"] = exacto(por_region[codigo])
+    return region
+
+
 def datos_parte(leido: ParteLeido) -> Documento:
     """Campos del ataque que salen del parte."""
     datos: Documento = {
@@ -109,7 +118,8 @@ def datos_parte(leido: ParteLeido) -> Documento:
         "lugares_impacto": list(leido.lugares_impacto),
         "lugares_restos": list(leido.lugares_restos),
         "cruces": [{"pais": pais, "numero": numero} for pais, numero in leido.cruces],
-        "regiones": [{"region": codigo} for codigo in sorted(leido.regiones)],
+        "regiones": [_region(codigo, leido) for codigo in sorted(leido.regiones)],
+        "regiones_misiles": sorted(leido.regiones_misiles),
     }
     if leido.tipos_dron:
         datos["tipos_dron"] = list(leido.tipos_dron)

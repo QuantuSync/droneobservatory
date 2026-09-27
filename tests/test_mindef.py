@@ -11,7 +11,17 @@ from exportacion.ucrania import exportar_ucrania
 from recogida.cache import CachePaginas
 from recogida.ejecucion import ejecutar
 from recogida.fuente import CanalNoVerificado
-from recogida.mindef import FUENTE, es_parte, leer, motivo_no_parte, verificar
+from recogida.mindef import (
+    FUENTE,
+    derribados,
+    derribados_por_region,
+    es_parte,
+    leer,
+    motivo_no_parte,
+    parte_principal,
+    verificar,
+    vocabulario,
+)
 from recogida.parte import DESCONOCIDO, Derribo, ParteIlegible
 from recogida.recorrido import pagina
 from tests.telegram_falso import CanalFalso, descargador
@@ -233,7 +243,7 @@ def test_ejecucion_da_ataques_ua_ru_reivindicados_con_credibilidad_3(
     publico = exportar_ucrania(almacen.ataques_ucrania(), ahora)["ataques"][0]
     assert publico["reivindicacion_de_parte"] is True
     assert publico["tipos_dron"] == ["ala_fija"]
-    assert publico["regiones"] == [{"region": "RU-BRY"}]
+    assert publico["regiones"] == [{"region": "RU-BRY", "derribados": rango(40)}]
     # La fuente es pública en la capa de Ucrania aunque sea interna fuera de ella.
     assert publico["fuentes"][0]["id"] == "mod_russia-2"
 
@@ -373,3 +383,82 @@ def test_noche_y_manana_con_fecha_y_regimen_en_instrumental() -> None:
     leido = leer(texto, datetime(2023, 8, 27, 4, 14, tzinfo=UTC))
     assert leido.inicio.documento() == instante("2023-08-26T17:00Z", "aproximada")
     assert (leido.derribados, leido.regiones) == (rango(2), ("RU-BRY", "RU-KRS"))
+
+
+# --- Derribos por región (casos reales de la caché) -------------------------------------
+
+
+@pytest.mark.parametrize(
+    ("texto", "esperado"),
+    [
+        # 51077: lista con la cabecera del total, que no se suma.
+        (
+            "За период с 20.00 мск 8 апреля по 06.00 мск 9 апреля дежурными средствами ПВО "
+            "перехвачены и уничтожены 12 украинских беспилотных летательных аппаратов "
+            "самолетного типа:\n\n▪️7 БпЛА – над территорией Краснодарского края,\n"
+            "▪️пять БпЛА – над территорией Ростовской области.",
+            {"RU-KDA": 7, "RU-ROS": 5},
+        ),
+        # 37778: «из которых:» y viñetas sin la palabra dron; «по одному» para cada región.
+        (
+            "Дежурными средствами ПВО были уничтожены и перехвачены пятьдесят украинских БпЛА "
+            "из которых: двадцать шесть – над территорией Белгородской области; десять – над "
+            "территорией Брянской области; восемь – над территорией Курской области; два – "
+            "над Тульской областью и по одному – над "
+            "территориями Смоленской, Рязанской, Калужской и Московской областей.",
+            {
+                "RU-BEL": 26,
+                "RU-BRY": 10,
+                "RU-KRS": 8,
+                "RU-TUL": 2,
+                "RU-SMO": 1,
+                "RU-RYA": 1,
+                "RU-KLU": 1,
+                "RU-MOS": 1,
+            },
+        ),
+        # 34717: «пять и перехвачены три» sobre la misma región.
+        (
+            "Дежурными средствами ПВО были уничтожены пять и перехвачены три украинских "
+            "беспилотных летательных аппарата над территорией Воронежской области, четыре БПЛА "
+            "перехвачены над территорией Белгородской области.",
+            {"RU-VOR": 8, "RU-BEL": 4},
+        ),
+        # 52931: «по одному» sigue en el mar, que suma pero no tiene código.
+        (
+            "уничтожены 4 украинских беспилотных летательных аппаратов самолетного типа:\n"
+            "▪️ 1 БпЛА – над территорией Брянской области,\n▪️ по одному БпЛА – над "
+            "территориями Тульской, Калужской областей и над акваторией Черного моря.",
+            {"RU-BRY": 1, "RU-TUL": 1, "RU-KLU": 1},
+        ),
+        # 29663: la cifra va en una frase y el «над» en la siguiente.
+        (
+            "▫️ Дежурными силами ПВО два украинских беспилотных летательных аппарата были "
+            "обнаружены и подавлены средствами радиоэлектронной борьбы.\n\n▫️ Потеряв "
+            "управление, БПЛА потерпели крушение над акваторией Чёрного моря.",
+            {},
+        ),
+        # 54825: la aclaración «в том числе ... на Москву» no es otra región.
+        (
+            "уничтожены 6 украинских беспилотных летательных аппаратов самолетного типа:\n"
+            "▫️ 4 БПЛА – над территорией Московского региона, в том числе 3 БПЛА, летевших на "
+            "Москву,\n▫️ 2 БПЛА – над территорией Тульской области.",
+            {"RU-MOS": 4, "RU-TUL": 2},
+        ),
+        # 65571: la cifra es del conjunto de regiones: no hay reparto.
+        (
+            "дежурными средствами ПВО перехвачены и уничтожены 25 украинских беспилотных "
+            "летательных аппарата самолетного типа над территориями Белгородской, Брянской "
+            "областей и над акваторией Черного моря.",
+            {},
+        ),
+    ],
+)
+def test_derribos_por_region(texto: str, esperado: dict[str, int]) -> None:
+    total = derribados(parte_principal(texto))
+    assert derribados_por_region(texto, total, vocabulario()) == esperado
+
+
+def test_derribos_por_region_que_no_suman_el_total_no_se_guardan() -> None:
+    texto = "уничтожены 3 БПЛА – над территорией Курской области."
+    assert derribados_por_region(texto, 5, vocabulario()) == {}

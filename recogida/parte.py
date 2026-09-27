@@ -172,6 +172,10 @@ class ParteLeido:
     frase: str
     # Tipo de dron declarado ("самолетного типа"); los partes ucranianos lo dan por modelo.
     tipos_dron: tuple[str, ...] = ()
+    # Derribos de cada región cuando el parte los da (Ministerio de Defensa ruso).
+    derribados_por_region: tuple[tuple[str, int], ...] = ()
+    # Regiones que el parte solo cita por los misiles del mismo ataque.
+    regiones_misiles: tuple[str, ...] = ()
 
 
 # --- Vocabulario --------------------------------------------------------------
