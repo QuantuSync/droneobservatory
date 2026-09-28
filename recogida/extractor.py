@@ -95,6 +95,9 @@ def preparar_todas(
 # Fichas antiguas que se rehacen como mucho en cada ejecución horaria: pocas, para no
 # descargar páginas que el límite diario no dejará procesar.
 MAX_REPROCESO_POR_HORA = 10
+# Parte del límite diario que puede gastar el reproceso: el resto queda para los
+# candidatos nuevos que lleguen más tarde ese día.
+FRACCION_REPROCESO = 0.5
 
 
 def modelos_base() -> frozenset[str]:
@@ -130,6 +133,10 @@ def horaria(
          if c["id"] not in vistos and extraccion.desactualizado(almacen, c)),
         key=lambda c: c["ultimo"], reverse=True,
     )[:MAX_REPROCESO_POR_HORA]  # fmt: skip
+    if almacen.gastado(coste.Modo.HORARIO.value, coste.dia(ahora)) >= (
+        coste.LIMITE_DIARIO_USD * FRACCION_REPROCESO
+    ):
+        historicos = []
     candidatos = [*nuevos, *historicos]
     peticiones = preparar_todas(almacen, candidatos, Descargador)
     resultados = extraccion.extraer(
