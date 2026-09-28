@@ -3,6 +3,82 @@
   {
    "geometry": {
     "coordinates": [
+     28.4,
+     45.3
+    ],
+    "type": "Point"
+   },
+   "id": "EODI-2024-00001",
+   "properties": {
+    "control": {
+     "ultima_actualizacion": {
+      "precision": "minuto",
+      "valor": "2026-09-28T12:38Z"
+     }
+    },
+    "drones": {
+     "numero": {
+      "max": 1,
+      "min": 1
+     }
+    },
+    "estado": {
+     "actual": "notificado",
+     "historial": [
+      {
+       "estado": "notificado",
+       "fecha": {
+        "precision": "minuto",
+        "valor": "2024-09-27T06:16Z"
+       },
+       "fuente_id": "kpszsu-20107"
+      }
+     ]
+    },
+    "fuentes": [
+     {
+      "credibilidad": 2,
+      "enlace": "https://t.me/kpszsu/20107",
+      "fecha": {
+       "precision": "minuto",
+       "valor": "2024-09-27T06:16Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "У ніч на 27 вересня 2024 року противник атакував балістичною ракетою Іскандер-М/KN-23 із окупованого Криму, двома крилатими ракетами Х-22 із бомбардувальників Ту-22М3 з акваторії Чорного",
+      "id": "kpszsu-20107",
+      "idioma": "uk",
+      "medio": "Повітряні Сили ЗС України",
+      "replicas": 0
+     }
+    ],
+    "id": "EODI-2024-00001",
+    "lugar": {
+     "localidad": "Danubio entre Galați y Tulcea",
+     "pais": "RO",
+     "radio_km": 50
+    },
+    "presencia_dron": "confirmada",
+    "tiempo": {
+     "fin": {
+      "precision": "aproximada",
+      "valor": "2024-09-27T06:16Z"
+     },
+     "inicio": {
+      "precision": "aproximada",
+      "valor": "2024-09-26T15:00Z"
+     }
+    },
+    "tipo": "incursion",
+    "titulo": {
+     "en": "Drones from the Russian attack on Ukraine cross into Romania",
+     "es": "Drones del ataque ruso contra Ucrania cruzan a Rumanía"
+    }
+   },
+   "type": "Feature"
+  },
+  {
+   "geometry": {
+    "coordinates": [
      9.68012,
      52.46146
     ],
@@ -84112,7 +84188,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-28T09:48Z"
+      "valor": "2026-09-28T12:38Z"
      }
     },
     "drones": {
@@ -84143,7 +84219,7 @@
        "valor": "2026-09-28T06:15Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "Drone enters Romanian airspace; MApN team heads to Tulcea to investigate.",
+      "frase_origen": "Defence Ministry: Drone enters Romanian airspace; MApN team heads to Tulcea to investigate",
       "id": "gdelt-43d3e0168fce159e",
       "idioma": "en",
       "medio": "stiripesurse.ro",
@@ -84157,7 +84233,7 @@
        "valor": "2026-09-28T08:00Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "duminică seara, o dronă care a intrat în spațiul aerian al României",
+      "frase_origen": "semnalul acesteia a dispărut de pe radare după aproximativ 10 minute, în proximitatea localității Somova",
       "id": "gdelt-eee115da384e4f27",
       "idioma": "ro",
       "medio": "realitatea.net",
@@ -84204,6 +84280,20 @@
       "idioma": "ro",
       "medio": "kanald.ro",
       "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://dailybusiness.ro/actualitate/drona-detectata-in-spatiul-aerian-al-romaniei-in-judetul-tulcea-mapn-trimite-o-echipa-specializata-pentru-cercetari-551883",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-28T11:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Dronă detectată în spațiul aerian al României, în județul Tulcea. MApN trimite o echipă specializată pentru cercetări",
+      "id": "gdelt-59ceef186640aea3",
+      "idioma": "ro",
+      "medio": "dailybusiness.ro",
+      "replicas": 0
      }
     ],
     "id": "EODI-2026-00151",
@@ -84223,10 +84313,10 @@
       "valor": "2026-09-27T00:00Z"
      }
     },
-    "tipo": "sobrevuelo",
+    "tipo": "incursion",
     "titulo": {
-     "en": "Drone enters Romanian airspace near Ukrainian border",
-     "es": "Dron entra en el espacio aéreo rumano cerca de la frontera ucraniana"
+     "en": "Drone enters Romanian airspace near Ukraine border",
+     "es": "Dron entra en el espacio aéreo de Rumania cerca de la frontera con Ucrania"
     }
    },
    "type": "Feature"
@@ -84249,7 +84339,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-28T09:48Z"
+      "valor": "2026-09-28T12:38Z"
      }
     },
     "drones": {
@@ -84285,6 +84375,62 @@
       "idioma": "ro",
       "medio": "news.yam.md",
       "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://adevarul.ro/stiri-interne/evenimente/administratia-prezidentiala-rusia-ar-fi-preluat-2560242.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-28T10:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Verificările efectuate până în acest moment indică posibilitatea ca Rusia să fi preluat controlul dronei maritime.",
+      "id": "gdelt-accda9e72aa0bc49",
+      "idioma": "ro",
+      "medio": "adevarul.ro",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://stiripesurse.ro/administratia-prezidentiala-prima-ipoteza-despre-drona-care-a-explodat-in-portul-constanta-a-fost-controlata-de-rusi_3923804",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-28T11:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Administrația Prezidențială, prima ipoteză despre drona care a explodat în Portul Constanța: \"A fost controlată de ruși\"",
+      "id": "gdelt-9a5f381eeb0002c6",
+      "idioma": "ro",
+      "medio": "stiripesurse.ro",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://antena3.ro/politica/administratia-prezidentiala-despre-drona-care-a-explodat-in-portul-constanta-evaluarile-arata-ipoteza-ca-a-fost-controlata-de-rusi-804886.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-28T11:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Administrația Prezidențială, despre drona care a explodat în Portul Constanța: \"Evaluările arată ipoteza că a fost controlată de ruși\"",
+      "id": "gdelt-0fa284f64f7abe3c",
+      "idioma": "ro",
+      "medio": "antena3.ro",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://atitudinea.ro/drona-maritima-care-a-explodat-in-portul-constanta-in-iunie-ar-fi-fost-deturnata-de-rusia-explicatiile-administratiei-prezidentiale-audio",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-28T11:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Drona maritimă care a explodat în portul Constanța în iunie ar fi fost deturnată de Rusia. Explicațiile Administrației Prezidențiale",
+      "id": "gdelt-52ceadf7d77de1fb",
+      "idioma": "ro",
+      "medio": "atitudinea.ro",
+      "replicas": 0
      }
     ],
     "id": "EODI-2026-00152",
@@ -84296,7 +84442,7 @@
      "categoria": "puerto",
      "nombre": "Portul Constanța"
     },
-    "presencia_dron": "confirmada",
+    "presencia_dron": "no_confirmada",
     "tiempo": {
      "inicio": {
       "precision": "dia",
@@ -84305,8 +84451,85 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Drone explodes at Constanza port after being diverted from Russia",
-     "es": "Dron explota en el puerto de Constanza tras ser desviado desde Rusia"
+     "en": "Maritime drone explodes at Constanța port",
+     "es": "Dron marítimo explota en el puerto de Constanța"
+    }
+   },
+   "type": "Feature"
+  },
+  {
+   "geometry": {
+    "coordinates": [
+     25.4,
+     47.53333
+    ],
+    "type": "Point"
+   },
+   "id": "EODI-2026-00153",
+   "properties": {
+    "consecuencias": {
+     "cierre": {
+      "valor": "desconocido"
+     }
+    },
+    "control": {
+     "ultima_actualizacion": {
+      "precision": "minuto",
+      "valor": "2026-09-28T12:38Z"
+     }
+    },
+    "drones": {
+     "numero": "desconocido"
+    },
+    "estado": {
+     "actual": "notificado",
+     "historial": [
+      {
+       "estado": "notificado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2026-09-28T10:30Z"
+       },
+       "fuente_id": "gdelt-77efde7b2355dcf0"
+      }
+     ]
+    },
+    "fuentes": [
+     {
+      "credibilidad": 3,
+      "enlace": "https://news.yam.md/ro/story/68313632",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-28T10:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Lilian Carp, despre dronele care au survolat R. Moldova: „Nu le-am doborât, dar a existat această posibilitate",
+      "id": "gdelt-77efde7b2355dcf0",
+      "idioma": "ro",
+      "medio": "news.yam.md",
+      "replicas": 0
+     }
+    ],
+    "id": "EODI-2026-00153",
+    "lugar": {
+     "pais": "RO",
+     "radio_km": 3.0
+    },
+    "objetivo": {
+     "categoria": "otra",
+     "nombre": "Fundu Moldovei"
+    },
+    "presencia_dron": "no_confirmada",
+    "tiempo": {
+     "inicio": {
+      "precision": "dia",
+      "valor": "2026-09-28T10:30Z"
+     }
+    },
+    "tipo": "sobrevuelo",
+    "titulo": {
+     "en": "Drones fly over Moldova without being shot down",
+     "es": "Drones sobrevuelan Moldavia sin ser derribados"
     }
    },
    "type": "Feature"
