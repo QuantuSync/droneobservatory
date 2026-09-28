@@ -474119,6 +474119,110 @@
     "ala_fija"
    ],
    "zonas_lanzamiento": []
+  },
+  {
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-09-28T05:30Z"
+    }
+   },
+   "cruces": [],
+   "derribados": {
+    "max": 112,
+    "min": 112
+   },
+   "derribados_categoria": "derribados_o_neutralizados",
+   "estado": {
+    "actual": "confirmado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "minuto",
+       "valor": "2026-09-28T03:53Z"
+      },
+      "fuente_id": "kpszsu-80852"
+     },
+     {
+      "estado": "confirmado",
+      "fecha": {
+       "precision": "minuto",
+       "valor": "2026-09-28T03:53Z"
+      },
+      "fuente_id": "kpszsu-80852"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/kpszsu/80852",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-09-28T03:53Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "У ніч на 28 вересня (з 18:00 27 вересня) противник атакував 165 ударними БпЛА типу Shahed (79 із них - реактивні), Гербера, дронами-імітаторами типу “Пародія”",
+     "id": "kpszsu-80852",
+     "idioma": "uk",
+     "medio": "Повітряні Сили ЗС України",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-UA-2026-1005",
+   "lanzados": {
+    "gerbera_senuelos": {
+     "max": 165,
+     "min": 0
+    },
+    "otros": {
+     "max": 0,
+     "min": 0
+    },
+    "shahed_geran": {
+     "max": 165,
+     "min": 79
+    },
+    "total": {
+     "max": 165,
+     "min": 165
+    }
+   },
+   "localizaciones_impacto": {
+    "max": 14,
+    "min": 14
+   },
+   "localizaciones_restos": {
+    "max": 7,
+    "min": 7
+   },
+   "lugares_impacto": [],
+   "lugares_restos": [],
+   "perdidos_guerra_electronica": "desconocido",
+   "periodo": {
+    "fin": {
+     "precision": "minuto",
+     "valor": "2026-09-28T04:00Z"
+    },
+    "inicio": {
+     "precision": "minuto",
+     "valor": "2026-09-27T15:00Z"
+    }
+   },
+   "regiones": [],
+   "regiones_misiles": [],
+   "reivindicacion_de_parte": true,
+   "sentido": "RU_UA",
+   "tipo": "ataque_guerra",
+   "zonas_lanzamiento": [
+    "Орел",
+    "Міллерово",
+    "Приморсько-Ахтарськ",
+    "Шаталово",
+    "Донецької",
+    "Гвардійське"
+   ]
   }
  ]
 }
