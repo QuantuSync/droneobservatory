@@ -304,7 +304,9 @@ def _grupos(normal: str) -> list[str]:
 
 
 def _buscar(indice: dict[str, tuple[str, ...]], grupos: list[str]) -> list[str]:
-    return [id_ for grupo in grupos for id_ in indice.get(grupo, ())]
+    """Lugares de los grupos que nombran uno solo: un nombre de varios lugares («Leipzig»,
+    de Leipzig/Halle y de Leipzig-Altenburg) es ambiguo y no sitúa nada."""
+    return [indice[g][0] for g in grupos if len(indice.get(g, ())) == 1]
 
 
 def lugares_en(titular: str, nom: Nomenclator) -> tuple[str, ...]:

@@ -209,3 +209,12 @@ def test_varias_instalaciones_de_un_pais_van_a_cada_una() -> None:
     )  # fmt: skip
     grupo = agrupar([varios], filtro(), NOM)
     assert sorted(c.lugar.id for c in grupo.candidatos) == ["EKCH", "base:1"]
+
+
+def test_un_nombre_de_varias_instalaciones_es_ambiguo() -> None:
+    from proceso.noticias import filtro, lugar, lugares_articulo
+
+    nom = nomenclator()
+    # «Leipzig» es ciudad de Leipzig/Halle y de Leipzig-Altenburg: queda la localidad.
+    (id_,) = lugares_articulo("Drohnensichtung: Flughafen Leipzig gesperrt", nom, filtro())
+    assert lugar(id_, nom).tipo == "localidad"
