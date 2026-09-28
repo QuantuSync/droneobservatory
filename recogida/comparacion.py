@@ -2,7 +2,7 @@
 
 Un suceso está cubierto si hay un incidente publicado (o, en su defecto, un
 candidato) en su aeropuerto o base, o a menos de 20 km de su sitio, con inicio
-del día anterior a dos días después: la fecha de la lista es la del suceso y la
+del día anterior a tres días después: la fecha de la lista es la del suceso y la
 de un candidato, la de su primer artículo.
 
 Uso: python -m recogida.comparacion [--candidatos]
@@ -29,7 +29,9 @@ REFERENCIA = (
 # Una base o un aeropuerto grande y su entorno: dos radios del nomenclátor.
 DISTANCIA_KM = 20.0
 DIAS_ANTES = timedelta(days=1)
-DIAS_DESPUES = timedelta(days=2)
+# Las noticias de investigación salen días después: la de los drones de Dublín del 1 de
+# diciembre de 2025 se publicó el 4.
+DIAS_DESPUES = timedelta(days=3)
 RADIO_TIERRA_KM = 6371.0
 
 

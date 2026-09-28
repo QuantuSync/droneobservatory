@@ -162,7 +162,9 @@ def orden_estimar(args: argparse.Namespace, almacen: Almacen, ahora: datetime) -
 
 def orden_lote(args: argparse.Namespace, almacen: Almacen, ahora: datetime) -> int:
     cliente = servicio.Cliente(servicio.configuracion())
-    candidatos = pendientes(almacen)
+    # Si no caben todos en el límite, primero los de más artículos: son los más probables
+    # de ser un incidente real.
+    candidatos = sorted(pendientes(almacen), key=lambda c: (-len(c["articulos"]), c["id"]))
     peticiones = preparar_todas(almacen, candidatos, Descargador)
     recuentos = extraccion.extraer_lote(
         almacen, cliente, peticiones, lambda: datetime.now(UTC), modelos_base()

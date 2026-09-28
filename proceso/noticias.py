@@ -192,6 +192,8 @@ GKG = "gkg"
 # del GKG) con 10 km de radio; una región (tipos 2 y 5), con 50 km, el máximo del esquema.
 # Un país entero no sitúa nada.
 RADIO_GKG_KM = {"3": 10.0, "4": 10.0, "2": 50.0, "5": 50.0}
+# Un titular que nombra más de cinco instalaciones es un resumen, no un suceso.
+MAX_OBJETIVOS_ARTICULO = 5
 
 
 @dataclass(frozen=True)
@@ -409,41 +411,56 @@ def agrupar(
     suceso: por eso la precisión es de día."""
     resultado = agrupacion or Agrupacion()
     for articulo in sorted(articulos, key=lambda a: (a.fecha, a.url)):
-        if len(articulo.lugares) != 1:
-            # Sin lugar o con varios: agruparlo sería dudoso.
-            if articulo.lugares:
-                resultado.dudosos += 1
-            else:
-                resultado.sin_lugar += 1
+        sitios = [lugar(id_, nom) for id_ in articulo.lugares]
+        # Varias instalaciones de un mismo país en un titular («drones over Esbjerg, Sønderborg
+        # and Skrydstrup») son varios objetivos de una misma noche: el artículo va a cada uno.
+        # Varios lugares de otra clase, o de varios países, serían una agrupación dudosa.
+        varios_objetivos = (
+            1 < len(sitios) <= MAX_OBJETIVOS_ARTICULO
+            and all(s.tipo in TIPO_APARENTE for s in sitios)
+            and len({s.pais for s in sitios}) == 1
+        )
+        if not sitios:
+            resultado.sin_lugar += 1
             continue
-        sitio = lugar(articulo.lugares[0], nom)
-        tipo = filtro_.tipo(articulo.titular, sitio)
-        encajan = [
-            c
-            for c in resultado.abiertos(articulo.fecha)
-            if c.tipo == tipo
-            and mismo_sitio(c.lugar, sitio)
-            and misma_ventana(c, articulo.fecha, precision)
-        ]
-        if len(encajan) > 1:
+        if len(sitios) > 1 and not varios_objetivos:
             resultado.dudosos += 1
             continue
-        if encajan:
-            candidato = encajan[0]
-            candidato.articulos.append(articulo.url)
-            candidato.ultimo = max(candidato.ultimo, articulo.fecha)
-            continue
-        resultado.candidatos.append(
-            Candidato(
-                # Inicio y lugar: dos candidatos no empiezan en el mismo minuto en el mismo sitio
-                # sin fundirse, salvo que sean de tipo distinto.
-                id=f"CAND-{articulo.fecha:%Y%m%dT%H%M}-{sitio.id}-{tipo}",
-                tipo=tipo,
-                lugar=sitio,
-                inicio=articulo.fecha,
-                ultimo=articulo.fecha,
-                precision=precision,
-                articulos=[articulo.url],
-            )
-        )
+        for sitio in sitios:
+            _agrupar_en(resultado, articulo, sitio, filtro_, precision)
     return resultado
+
+
+def _agrupar_en(
+    resultado: Agrupacion, articulo: Articulo, sitio: Lugar, filtro_: Filtro, precision: str
+) -> None:
+    tipo = filtro_.tipo(articulo.titular, sitio)
+    encajan = [
+        c
+        for c in resultado.abiertos(articulo.fecha)
+        if c.tipo == tipo
+        and mismo_sitio(c.lugar, sitio)
+        and misma_ventana(c, articulo.fecha, precision)
+    ]
+    if len(encajan) > 1:
+        resultado.dudosos += 1
+        return
+    if encajan:
+        candidato = encajan[0]
+        if articulo.url not in candidato.articulos:
+            candidato.articulos.append(articulo.url)
+        candidato.ultimo = max(candidato.ultimo, articulo.fecha)
+        return
+    resultado.candidatos.append(
+        Candidato(
+            # Inicio y lugar: dos candidatos no empiezan en el mismo minuto en el mismo sitio
+            # sin fundirse, salvo que sean de tipo distinto.
+            id=f"CAND-{articulo.fecha:%Y%m%dT%H%M}-{sitio.id}-{tipo}",
+            tipo=tipo,
+            lugar=sitio,
+            inicio=articulo.fecha,
+            ultimo=articulo.fecha,
+            precision=precision,
+            articulos=[articulo.url],
+        )
+    )

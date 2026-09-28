@@ -27,7 +27,7 @@ def lugar(id_: str, lat: float, lon: float, tipo: str = "aeropuerto") -> Lugar:
 
 # Copenhague y Oslo; una base a 15 km de Copenhague (5 + 5 + 10 = 20 km de margen).
 CPH = lugar("EKCH", 55.61806, 12.65611)
-OSL = lugar("ENGM", 60.19392, 11.10036)
+OSL = Lugar("ENGM", "aeropuerto", "ENGM", 60.19392, 11.10036, 5.0, "NO", ("ENGM",), ())
 CERCA = lugar("base:1", 55.7, 12.85, "base")
 # Otro aeropuerto a 15 km de Copenhague: se funde con él (menos de 20 km).
 CPH2 = lugar("EKCH2", 55.7, 12.85)
@@ -153,6 +153,7 @@ def test_la_agrupacion_dudosa_no_se_hace() -> None:
     )
     sin_lugar = Articulo("https://m.eu/y", "m.eu", T0, "Drones over Europe")
     grupo = agrupar([varios, sin_lugar], filtro(), NOM)
+    # Dos aeropuertos de países distintos en un titular: dudoso.
     assert (grupo.candidatos, grupo.dudosos, grupo.sin_lugar) == ([], 1, 1)
     # Encaja en dos candidatos abiertos a la vez: tampoco se agrupa.
     abierto = agrupar([articulo(1, 0, "EKCH")], filtro(), NOM)
@@ -199,3 +200,12 @@ def test_lugar_del_gkg_cuando_nada_casa() -> None:
     (id_,) = lugares_articulo("Drones reported, police investigate", nomenclator(), filtro(), gkg)
     sitio = lugar(id_, nomenclator())
     assert (sitio.tipo, sitio.pais, sitio.radio_km, sitio.lat) == ("gkg", "NO", 10.0, 59.2672)
+
+
+def test_varias_instalaciones_de_un_pais_van_a_cada_una() -> None:
+    varios = Articulo(
+        "https://m.eu/z", "m.eu", T0, "Drones over the airport and the base",
+        lugares=("EKCH", "base:1"),
+    )  # fmt: skip
+    grupo = agrupar([varios], filtro(), NOM)
+    assert sorted(c.lugar.id for c in grupo.candidatos) == ["EKCH", "base:1"]
