@@ -30,7 +30,7 @@ from almacen.cifrado import abrir_cifrada, cargar_clave_local, guardar_cifrada
 from esquema import Documento
 from exportacion.publicar import publicar
 from modelo import cliente as servicio
-from modelo import coste, paginas
+from modelo import coste, ficha, paginas
 from proceso import extraccion, incidentes
 from proceso.configuracion import cargar_vocabulario_modelos
 from recogida.descarga import Descargador
@@ -161,12 +161,27 @@ def orden_estimar(args: argparse.Namespace, almacen: Almacen, ahora: datetime) -
     return 0
 
 
+# Titular más largo que se envía: los de GDELT pasan pocas veces de 300 letras.
+LETRAS_TITULAR = 300
+
+
+def peor_caso_peticion() -> float:
+    """Coste máximo de una petición del lote: tres fuentes con titular y texto completos."""
+    fuente = LETRAS_TITULAR + paginas.MAX_LETRAS
+    letras = len(ficha.INSTRUCCIONES) + len(str(ficha.ESQUEMA)) + extraccion.MAX_FUENTES * fuente
+    return coste.peor_caso(letras, ficha.MAX_TOKENS_SALIDA, lote=True)
+
+
 def orden_lote(args: argparse.Namespace, almacen: Almacen, ahora: datetime) -> int:
     cliente = servicio.Cliente(servicio.configuracion())
     # Si no caben todos en el límite, primero los de más artículos: son los más probables
     # de ser un incidente real.
     candidatos = sorted(pendientes(almacen), key=lambda c: (-len(c["articulos"]), c["id"]))
-    peticiones = preparar_todas(almacen, candidatos, Descargador)
+    # Solo se descargan las páginas de los que caben en el peor caso, dejando la reserva.
+    queda = coste.LIMITE_HISTORICO_USD - almacen.gastado(coste.Modo.HISTORICO.value) - args.reserva
+    caben = max(0, int(queda / peor_caso_peticion()))
+    registro.info("pendientes=%d caben=%d", len(candidatos), min(caben, len(candidatos)))
+    peticiones = preparar_todas(almacen, candidatos[:caben], Descargador)
     recuentos = extraccion.extraer_lote(
         almacen, cliente, peticiones, lambda: datetime.now(UTC), modelos_base()
     )
@@ -211,7 +226,10 @@ def principal(argumentos: list[str] | None = None) -> int:
     ordenes = opciones.add_subparsers(dest="orden", required=True)
     o_estimar = ordenes.add_parser("estimar")
     o_estimar.add_argument("--muestra", type=int, default=MUESTRA)
-    ordenes.add_parser("lote")
+    o_lote = ordenes.add_parser("lote")
+    o_lote.add_argument(
+        "--reserva", type=float, default=0.0, help="dólares del límite que se dejan sin usar"
+    )
     o_recuperar = ordenes.add_parser("recuperar")
     o_recuperar.add_argument("--lote", required=True, help="identificador del lote")
     ordenes.add_parser("reconstruir")
