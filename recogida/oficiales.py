@@ -34,7 +34,7 @@ from esquema import Documento
 from proceso import incidentes
 from proceso.credibilidad import Credibilidad
 from proceso.estados import Estado, TransicionNoPermitida, transitar
-from proceso.noticias import filtro, lugar, lugares_articulo, nomenclator
+from proceso.noticias import filtro, lugar, lugar_del_suceso, nomenclator
 from recogida import paginas_oficiales
 from recogida.descarga import AGENTE_EODI, Descargador, DescargaFallida
 
@@ -140,10 +140,10 @@ def fuente_oficial(nota: Nota) -> Documento:
 
 def _punto(nota: Nota) -> Documento | None:
     """El sitio de la nota como documento mínimo para la regla de fusión."""
-    ids = lugares_articulo(f"{nota.titulo}. {nota.texto}", nomenclator(), filtro())
-    if len(ids) != 1:
+    id_ = lugar_del_suceso(nota.titulo, nota.texto, nomenclator())
+    if id_ is None:
         return None
-    sitio = lugar(ids[0], nomenclator())
+    sitio = lugar(id_, nomenclator())
     return {
         "id": nota.id,
         "lugar": {"punto": {"lat": sitio.lat, "lon": sitio.lon}, "radio_km": sitio.radio_km,

@@ -344,6 +344,39 @@ def localidades_en(titular: str, nom: Nomenclator) -> tuple[str, ...]:
     return tuple(dict.fromkeys(_buscar(nom.localidades, grupos)))
 
 
+# Nombre más largo que una terminación de caso: las que quedan tras quitarla («Krāslavas» da
+# «kraslava»; «Rīgas», «riga»). Genitivos letón y lituano en -s y -as.
+MIN_LETRAS_DECLINADA = 5
+
+
+def localidades_declinadas(titular: str, nom: Nomenclator) -> tuple[str, ...]:
+    """Localidades del titular, también las declinadas («Krāslavas novadā» es Krāslava)."""
+    mayusculas = _mayusculas(titular)
+    sueltas = [g for g in _grupos(normalizar(titular)) if " " not in g and g in mayusculas]
+    raices = [
+        g[:-corte] for g in sueltas if g.endswith("s") and len(g) > MIN_LETRAS_DECLINADA
+        for corte in (1, 2)
+    ]  # fmt: skip
+    return tuple(dict.fromkeys([*localidades_en(titular, nom), *_buscar(nom.localidades, raices)]))
+
+
+def lugar_del_suceso(titulo: str, texto: str, nom: Nomenclator) -> str | None:
+    """El lugar donde ocurre lo que cuenta una nota, o None si no se sabe.
+
+    El titular nombra el lugar del suceso: lo que nombra manda sobre lo que el texto nombra
+    de pasada (la capital donde se da una rueda de prensa). Dentro de cada parte, una
+    instalación, que es más concreta, antes que una localidad; si hay varias del mismo
+    tipo, no se elige ninguna.
+    """
+    for parte in (titulo, f"{titulo}. {texto}"):
+        for hallados in (lugares_en(parte, nom), localidades_declinadas(parte, nom)):
+            if len(hallados) == 1:
+                return hallados[0]
+            if hallados:
+                return None
+    return None
+
+
 def id_gkg(tipo: str, nombre: str, pais: str, lat: float, lon: float) -> str:
     """Identificador de un lugar geolocalizado por el GKG: lleva todo lo necesario."""
     limpio = re.sub(r"[:|]", " ", nombre).strip()
