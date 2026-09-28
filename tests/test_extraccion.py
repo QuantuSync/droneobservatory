@@ -482,3 +482,44 @@ def test_frase_larga_recortada_y_sin_fecha_se_publica_con_la_del_candidato() -> 
 def test_otro_sitio_sin_lugar_nuevo_no_se_publica() -> None:
     validada = validar(ficha_ejemplo(objetivo_conocido=campo(False, TITULAR)), contexto())
     assert not validada.publicable
+
+
+class LotesFalsos:
+    """Servicio de lotes falso: el lote termina en la segunda consulta."""
+
+    def __init__(self, datos: dict[str, Any]) -> None:
+        self.datos = datos
+        self.enviadas: list[dict[str, Any]] = []
+        self.consultas = 0
+
+    def crear_lote(self, peticiones: list[dict[str, Any]]) -> dict[str, Any]:
+        self.enviadas = peticiones
+        return {"id": "l1", "processing_status": "in_progress"}
+
+    def lote(self, id_: str) -> dict[str, Any]:
+        self.consultas += 1
+        return {"id": id_, "processing_status": "ended", "results_url": "r"}
+
+    def resultados_lote(self, lote: dict[str, Any]) -> list[dict[str, Any]]:
+        return [
+            {"custom_id": p["custom_id"], "result": {"type": "succeeded",
+                                                      "message": respuesta(self.datos)}}
+            for p in self.enviadas
+        ]  # fmt: skip
+
+
+def test_lote_envia_espera_y_procesa(almacen: Almacen) -> None:
+    candidato = candidato_con_articulos(almacen)
+    peticion = extraccion.preparar(almacen, candidato, None)
+    fuentes = [
+        ficha.FuenteTexto(f.medio, f.fecha, f.idioma, f.titular, TEXTO) for f in peticion.fuentes
+    ]
+    peticion = extraccion.Peticion(**{**peticion.__dict__, "fuentes": fuentes})
+    falso = LotesFalsos(ficha_ejemplo())
+    recuentos = extraccion.extraer_lote(
+        almacen, falso, [peticion], lambda: AHORA, MODELOS, lambda _: None
+    )
+    assert recuentos == {"enviadas": 1, "publicadas": 1, "fallidas": 0, "fuera_de_limite": 0}
+    assert falso.consultas == 1
+    (llamada,) = almacen.llamadas()
+    assert llamada["lote"] == 1

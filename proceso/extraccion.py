@@ -25,7 +25,7 @@ from typing import Any, Protocol
 from almacen.base import Almacen, DocumentoInvalido
 from esquema import Documento
 from modelo import coste, ficha, paginas
-from modelo.cliente import Cliente, LlamadaFallida
+from modelo.cliente import LlamadaFallida
 from proceso.incidentes import Objetivo, construir, huella
 from proceso.noticias import GKG, Nomenclator, lugar, nomenclator, normalizar
 from proceso.validacion_ficha import Contexto, Validada, validar
@@ -52,6 +52,14 @@ TIPO_LUGAR = {"aeropuerto": "aeropuerto", "base_militar": "base", "energia": "nu
 
 class Servicio(Protocol):
     def mensaje(self, cuerpo: dict[str, Any]) -> dict[str, Any]: ...
+
+
+class ServicioLotes(Protocol):
+    def crear_lote(self, peticiones: list[dict[str, Any]]) -> dict[str, Any]: ...
+
+    def lote(self, id_: str) -> dict[str, Any]: ...
+
+    def resultados_lote(self, lote: dict[str, Any]) -> list[dict[str, Any]]: ...
 
 
 @dataclass(frozen=True)
@@ -327,7 +335,7 @@ def recortar_para_lote(
 
 def extraer_lote(
     almacen: Almacen,
-    cliente: Cliente,
+    cliente: ServicioLotes,
     peticiones: list[Peticion],
     ahora: Callable[[], datetime],
     modelos_base: frozenset[str],
@@ -339,14 +347,31 @@ def extraer_lote(
         return {"enviadas": 0, "publicadas": 0, "fallidas": 0, "fuera_de_limite": len(peticiones)}
     registro.info("lote: %d peticiones, peor caso %.4f USD", len(elegidas), previsto)
     lote = cliente.crear_lote([{"custom_id": p.id_lote, "params": p.cuerpo()} for p in elegidas])
+    # El identificador va al registro: si algo falla después, el lote se recupera sin pagarlo
+    # otra vez (el servicio guarda los resultados 29 días).
+    registro.info("lote %s enviado", lote["id"])
     inicio = ahora()
     while lote.get("processing_status") != "ended":
         if ahora() - inicio > MAX_ESPERA_LOTE:
             raise LlamadaFallida("el lote no terminó en 24 horas")
         dormir(ESPERA_LOTE_S)
         lote = cliente.lote(lote["id"])
-    por_id = {p.id_lote: p for p in elegidas}
-    publicadas = fallidas = 0
+    recuentos = procesar_lote(almacen, cliente, lote, elegidas, ahora, modelos_base)
+    recuentos["fuera_de_limite"] = len(peticiones) - len(elegidas)
+    return recuentos
+
+
+def procesar_lote(
+    almacen: Almacen,
+    cliente: ServicioLotes,
+    lote: dict[str, Any],
+    peticiones: list[Peticion],
+    ahora: Callable[[], datetime],
+    modelos_base: frozenset[str],
+) -> dict[str, int]:
+    """Procesa los resultados de un lote terminado con las peticiones que lo formaron."""
+    por_id = {p.id_lote: p for p in peticiones}
+    publicadas = fallidas = procesadas = 0
     for resultado in cliente.resultados_lote(lote):
         peticion = por_id.get(resultado.get("custom_id", ""))
         if peticion is None or resultado.get("result", {}).get("type") != "succeeded":
@@ -356,10 +381,6 @@ def extraer_lote(
         incidente = procesar_respuesta(
             almacen, peticion, mensaje, ahora(), coste.Modo.HISTORICO, True, modelos_base
         )
+        procesadas += 1
         publicadas += incidente is not None
-    return {
-        "enviadas": len(elegidas),
-        "publicadas": publicadas,
-        "fallidas": fallidas,
-        "fuera_de_limite": len(peticiones) - len(elegidas),
-    }
+    return {"enviadas": procesadas + fallidas, "publicadas": publicadas, "fallidas": fallidas}

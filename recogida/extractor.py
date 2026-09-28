@@ -10,6 +10,7 @@
 Uso:
     python -m recogida.extractor [--base <db.age local>] estimar [--muestra 10]
     python -m recogida.extractor [--base <db.age local>] --correo <correo> lote [--sin-subir]
+    python -m recogida.extractor [--base <db.age local>] recuperar --lote <id>
 """
 
 import argparse
@@ -174,6 +175,23 @@ def orden_lote(args: argparse.Namespace, almacen: Almacen, ahora: datetime) -> i
     return 0
 
 
+def orden_recuperar(args: argparse.Namespace, almacen: Almacen, ahora: datetime) -> int:
+    """Procesa un lote ya terminado y pagado cuyos resultados no llegaron a la base."""
+    cliente = servicio.Cliente(servicio.configuracion())
+    lote = cliente.lote(args.lote)
+    if lote.get("processing_status") != "ended":
+        registro.error("el lote %s no ha terminado", args.lote)
+        return 1
+    candidatos = pendientes(almacen)
+    peticiones = preparar_todas(almacen, candidatos, Descargador)
+    recuentos = extraccion.procesar_lote(
+        almacen, cliente, lote, peticiones, lambda: datetime.now(UTC), modelos_base()
+    )
+    fusiones, episodios = ordenar(almacen, datetime.now(UTC))
+    registro.info("recuperado %s fusiones=%d episodios=%d", recuentos, fusiones, episodios)
+    return 0
+
+
 def principal(argumentos: list[str] | None = None) -> int:
     opciones = argparse.ArgumentParser(description=__doc__)
     opciones.add_argument("--repositorio", default=remoto.REPOSITORIO)
@@ -186,6 +204,8 @@ def principal(argumentos: list[str] | None = None) -> int:
     o_estimar = ordenes.add_parser("estimar")
     o_estimar.add_argument("--muestra", type=int, default=MUESTRA)
     ordenes.add_parser("lote")
+    o_recuperar = ordenes.add_parser("recuperar")
+    o_recuperar.add_argument("--lote", required=True, help="identificador del lote")
     args = opciones.parse_args(argumentos)
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s: %(message)s")
     cargar_clave_local()
@@ -197,9 +217,14 @@ def principal(argumentos: list[str] | None = None) -> int:
             registro.error("no hay base en la rama %s", remoto.RAMA)
             return 1
         almacen = Almacen(abrir_cifrada(args.base or ruta))
-        salida = {"estimar": orden_estimar, "lote": orden_lote}[args.orden](args, almacen, ahora)
-        publicar(almacen, ahora)
+        ordenes_ = {"estimar": orden_estimar, "lote": orden_lote, "recuperar": orden_recuperar}
+        salida = ordenes_[args.orden](args, almacen, ahora)
+        # Primero se guarda la base, con lo que ya está pagado; después se publica, con la
+        # hora de este momento (la orden puede haber durado horas).
         guardar_cifrada(almacen.conexion, ruta)
+        if args.base is not None:
+            guardar_cifrada(almacen.conexion, args.base)
+        publicar(almacen, datetime.now(UTC))
         if args.base is not None:
             guardar_cifrada(almacen.conexion, args.base)
         elif args.sin_subir or not args.correo:
