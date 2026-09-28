@@ -37,7 +37,8 @@ def test_ataque_y_episodio_sin_errores() -> None:
 
 def test_vocabulario_de_configuracion() -> None:
     assert cargar_vocabulario_modelos() == VOCABULARIO_MODELOS
-    fuerza_aerea, mindef = cargar_fuentes()
+    fuerza_aerea, gdelt, mindef = cargar_fuentes()
+    assert (gdelt["id"], gdelt["fiabilidad"], gdelt["es_autoridad"]) == ("gdelt", "C", False)
     assert (fuerza_aerea["id"], fuerza_aerea["fiabilidad"]) == ("fuerza_aerea_ua", "B")
     # Reivindicación de una de las partes: D, pública solo en la capa de Ucrania.
     assert (mindef["id"], mindef["fiabilidad"]) == ("mindef_ru", "D")

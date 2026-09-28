@@ -10,6 +10,14 @@
       "interna_fuera_de_ucrania": false
     },
     {
+      "id": "gdelt",
+      "medio": "GDELT",
+      "dominios": ["data.gdeltproject.org"],
+      "fiabilidad": "C",
+      "es_autoridad": false,
+      "interna_fuera_de_ucrania": false
+    },
+    {
       "id": "mindef_ru",
       "medio": "Минобороны России",
       "dominios": ["t.me/mod_russia"],

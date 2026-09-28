@@ -52,6 +52,7 @@ def incidente_completo() -> Documento:
         },
         "titulo": {"es": "Cierre de aeropuerto por drones", "en": "Airport closed by drones"},
         "episodio": "EODI-EP-2025-0001",
+        "presencia_dron": "no_confirmada",
         "origen_demostrado_por": ["rastreo"],
         "tiempo": {
             "inicio": instante("2025-10-01T20:30Z"),

@@ -18,6 +18,8 @@ NAVEGADOR = (
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
     "(KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"
 )
+# Identificación del observatorio para los servicios y sitios que la piden.
+AGENTE_EODI = "EODI-bot/1.0 (+https://droneobservatory.eu)"
 CABECERAS = {
     "User-Agent": NAVEGADOR,
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
@@ -81,7 +83,11 @@ class Descargador:
         pausas_por_sitio: dict[str, float] | None = None,
         reintentos: int = REINTENTOS,
         espera_inicial_s: float = ESPERA_INICIAL_S,
+        agente: str | None = None,
     ) -> None:
+        # Por defecto, un navegador; los servicios que piden identificarse reciben el
+        # nombre del observatorio («EODI-bot/1.0 (+https://droneobservatory.eu)»).
+        self._cabeceras = {**CABECERAS, "User-Agent": agente} if agente else CABECERAS
         self._reintentos = reintentos
         self._espera_inicial_s = espera_inicial_s
         self._transporte = transporte
@@ -118,7 +124,7 @@ class Descargador:
             self.recuentos["peticiones"] += 1
             espera = self._espera_inicial_s * 2**intento
             try:
-                codigo, cabeceras, cuerpo = self._transporte(url, CABECERAS, TIEMPO_LIMITE_S)
+                codigo, cabeceras, cuerpo = self._transporte(url, self._cabeceras, TIEMPO_LIMITE_S)
             except (OSError, TimeoutError) as error:
                 motivo = f"error de red: {type(error).__name__}"
             else:

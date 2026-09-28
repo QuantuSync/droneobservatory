@@ -91,3 +91,16 @@ def test_clave_local_solo_si_falta_la_variable(
     monkeypatch.delenv(VARIABLE_CLAVE)
     cargar_clave_local(ruta)
     assert os.environ[VARIABLE_CLAVE] == "desde-fichero"
+
+
+def test_se_comprime_antes_de_cifrar_y_se_leen_las_bases_sin_comprimir(
+    clave_efimera: str,
+) -> None:
+    almacen = _almacen_poblado()
+    crudo = almacen.conexion.serialize()
+    comprimido = cifrar(almacen.conexion)
+    assert len(comprimido) < len(crudo)
+    identidad = pyrage.x25519.Identity.from_str(clave_efimera)
+    antiguo = pyrage.encrypt(crudo, [identidad.to_public()])
+    for cifrado in (comprimido, antiguo):
+        assert descifrar(cifrado).serialize() == crudo
