@@ -27,7 +27,7 @@ from esquema import Documento
 from modelo import coste, ficha, paginas
 from modelo.cliente import Cliente, LlamadaFallida
 from proceso.incidentes import Objetivo, construir, huella
-from proceso.noticias import Nomenclator, nomenclator, normalizar
+from proceso.noticias import GKG, Nomenclator, lugar, nomenclator, normalizar
 from proceso.validacion_ficha import Contexto, Validada, validar
 from recogida.descarga import Descargador
 from recogida.lugares_osm import RADIO_KM
@@ -119,8 +119,8 @@ def elegir_fuentes(articulos: list[Documento]) -> list[Documento]:
 
 
 def objetivo_de(almacen: Almacen, candidato: Documento, nom: Nomenclator) -> Objetivo:
-    if candidato["lugar"] in nom.lugares:
-        return Objetivo.de_lugar(nom.lugares[candidato["lugar"]])
+    if candidato["lugar"] in nom.lugares or candidato["lugar"].startswith(GKG + ":"):
+        return Objetivo.de_lugar(lugar(candidato["lugar"], nom))
     vocabulario = almacen.vocabulario(VOCABULARIO_LUGARES)
     return Objetivo(**vocabulario[candidato["lugar"]])
 

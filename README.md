@@ -92,3 +92,8 @@ Decisiones, valores y cobertura en [`docs/informe_recogida.md`](docs/informe_rec
   publica GDELT.
 - `configuracion/paises_europa.json` contiene datos © colaboradores de
   OpenStreetMap (Nominatim), bajo licencia ODbL.
+- `configuracion/instalaciones_europa.json` contiene datos © colaboradores de
+  OpenStreetMap, bajo licencia ODbL.
+- `configuracion/localidades_europa.json` contiene datos de
+  [GeoNames](https://www.geonames.org), bajo licencia
+  [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).

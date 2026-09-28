@@ -254,3 +254,15 @@ def test_informe_por_mes_y_muestra(almacen: Almacen) -> None:
     texto = informe(almacen)
     assert "| 2025-09 | 1 | 1 | 1 |" in texto
     assert TITULAR in texto
+
+
+def test_ubicacion_del_gkg_la_mas_precisa_en_europa() -> None:
+    med = gdelt.medios()
+    lugares = (
+        "1#Norway#NO#NO#62#10#NO;5#Vestfold, Norway#NO#NO09#59.3#10.2#-1;"
+        "4#Tonsberg, Vestfold, Norway#NO#NO09#59.2672#10.4076#-2;"
+        "4#Moscow, Moskva, Russia#RS#RS48#55.75#37.61#-3"
+    )
+    (id_,) = med.ubicacion(lugares)
+    assert id_.startswith("gkg:4:59.2672:10.4076:NO:Tonsberg")
+    assert med.ubicacion("1#Norway#NO#NO#62#10#NO") == ()

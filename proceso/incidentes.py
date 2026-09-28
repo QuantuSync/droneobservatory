@@ -39,7 +39,11 @@ HORA_INICIO_NOCHE = 16
 HORA_FIN_NOCHE = 6
 MEDIODIA = 12
 PRECISIONES_HORA = frozenset({"minuto", "hora"})
-CATEGORIA_LUGAR = {"aeropuerto": "aeropuerto", "base": "base_militar", "nuclear": "energia"}
+CATEGORIA_LUGAR = {
+    "aeropuerto": "aeropuerto", "base": "base_militar", "nuclear": "energia",
+    "energia": "energia", "subestacion": "energia", "presa": "presa", "puerto": "puerto",
+    "estadio": "estadio",
+}  # fmt: skip
 FIABILIDAD_NOTICIAS = "C"
 LONGITUD_OACI = 4
 # «Varios objetivos»: dos o más.
@@ -84,7 +88,8 @@ class Objetivo:
         oaci = lugar.id if lugar.tipo == "aeropuerto" and len(lugar.id) == LONGITUD_OACI else None
         return cls(
             id=lugar.id,
-            categoria=CATEGORIA_LUGAR[lugar.tipo],
+            # Helipuertos, localidades y lugares del GKG: «otra».
+            categoria=CATEGORIA_LUGAR.get(lugar.tipo, "otra"),
             nombre=lugar.nombre,
             pais=lugar.pais,
             lat=lugar.lat,

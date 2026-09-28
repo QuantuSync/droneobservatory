@@ -134,11 +134,9 @@ class Filtro:
         )
 
     def tipo(self, titular: str, lugar: Lugar | None) -> str:
-        """Tipo aparente: el del lugar reconocido o el de la primera señal que casa."""
-        if lugar is not None:
-            return {"aeropuerto": "aeropuerto", "base": "militar", "nuclear": "infraestructura"}[
-                lugar.tipo
-            ]
+        """Tipo aparente: el de la instalación reconocida o el de la primera señal que casa."""
+        if lugar is not None and lugar.tipo in TIPO_APARENTE:
+            return TIPO_APARENTE[lugar.tipo]
         return next((tipo for tipo, patron in self.tipos if patron.search(titular)), "otro")
 
 
@@ -178,22 +176,49 @@ def filtro(config: dict[str, Any] | None = None) -> Filtro:
 # Longitud mínima de un alias para buscarlo en un titular: con menos, siglas como «CPH»
 # casan con cualquier cosa.
 MIN_LETRAS_ALIAS = 4
+# Los alias se buscan por grupos de palabras seguidas del titular: hasta 8 palabras cubre
+# los nombres largos («Aeropuerto Adolfo Suárez Madrid-Barajas»).
+MAX_PALABRAS_ALIAS = 8
+# Tipo de lugar a tipo aparente del incidente.
+TIPO_APARENTE = {
+    "aeropuerto": "aeropuerto", "helipuerto": "aeropuerto", "base": "militar",
+    "nuclear": "infraestructura", "energia": "infraestructura",
+    "subestacion": "infraestructura", "presa": "infraestructura", "puerto": "infraestructura",
+    "estadio": "infraestructura",
+}  # fmt: skip
+LOCALIDAD = "localidad"
+GKG = "gkg"
+# Coordenadas del propio GKG cuando nada casa: una ciudad o un lugar con nombre (tipos 3 y 4
+# del GKG) con 10 km de radio; una región (tipos 2 y 5), con 50 km, el máximo del esquema.
+# Un país entero no sitúa nada.
+RADIO_GKG_KM = {"3": 10.0, "4": 10.0, "2": 50.0, "5": 50.0}
 
 
 @dataclass(frozen=True)
 class Nomenclator:
     lugares: dict[str, Lugar]
-    # (alias normalizado, id): los nombres completos casan solos.
-    alias: tuple[tuple[str, str], ...]
-    # (ciudad normalizada, id): solo casan si el titular nombra además el tipo de lugar.
-    ciudades: tuple[tuple[str, str], ...]
+    # Alias normalizado de una instalación: casa solo.
+    alias: dict[str, tuple[str, ...]]
+    # Ciudad normalizada de una instalación: solo casa si el titular nombra además el tipo.
+    ciudades: dict[str, tuple[str, ...]]
+    # Localidad normalizada: solo si no casa ninguna instalación y hay señal de incidente.
+    localidades: dict[str, tuple[str, ...]]
     cue: dict[str, re.Pattern[str]]
 
 
-@cache
-def nomenclator(ruta: Path = DIRECTORIO / "lugares_europa.json") -> Nomenclator:
+def _indice(pares: list[tuple[str, str]]) -> dict[str, tuple[str, ...]]:
+    indice: dict[str, list[str]] = {}
+    for clave, id_ in pares:
+        if id_ not in indice.setdefault(clave, []):
+            indice[clave].append(id_)
+    return {k: tuple(v) for k, v in indice.items()}
+
+
+def _leer_lugares(ruta: Path) -> dict[str, Lugar]:
+    if not ruta.exists():
+        return {}
     datos = json.loads(ruta.read_text(encoding="utf-8"))
-    lugares = {
+    return {
         id_: Lugar(
             id=id_,
             tipo=v["tipo"],
@@ -207,6 +232,27 @@ def nomenclator(ruta: Path = DIRECTORIO / "lugares_europa.json") -> Nomenclator:
         )
         for id_, v in datos["lugares"].items()
     }
+
+
+def _leer_localidades(ruta: Path) -> dict[str, Lugar]:
+    if not ruta.exists():
+        return {}
+    datos = json.loads(ruta.read_text(encoding="utf-8"))
+    return {
+        id_: Lugar(id_, LOCALIDAD, nombre, lat, lon, radio, pais, tuple(alias), ())
+        for id_, (nombre, pais, lat, lon, radio, alias) in datos["localidades"].items()
+    }
+
+
+@cache
+def nomenclator(
+    ruta: Path = DIRECTORIO / "lugares_europa.json",
+    instalaciones: Path = DIRECTORIO / "instalaciones_europa.json",
+    localidades: Path = DIRECTORIO / "localidades_europa.json",
+) -> Nomenclator:
+    """Instalaciones del nomenclátor inicial y del ampliado, y localidades."""
+    lugares = {**_leer_lugares(instalaciones), **_leer_lugares(ruta)}
+    pueblos = _leer_localidades(localidades)
     cue = {
         tipo: re.compile(r"(?<!\w)(?:" + _alternativas(palabras, True) + ")", re.IGNORECASE)
         for tipo, palabras in configuracion()["tipo_de_lugar"].items()
@@ -222,7 +268,7 @@ def nomenclator(ruta: Path = DIRECTORIO / "lugares_europa.json") -> Nomenclator:
         (normalizar(a), sitio.id)
         for sitio in lugares.values()
         for a in sitio.alias
-        if propio(normalizar(a))
+        if propio(normalizar(a)) and len(normalizar(a).split()) <= MAX_PALABRAS_ALIAS
     ]
     # Una «ciudad» que es una palabra de tipo de lugar («militar», «wojskowa») no nombra nada:
     # casaría con cualquier titular que hable de militares.
@@ -233,31 +279,90 @@ def nomenclator(ruta: Path = DIRECTORIO / "lugares_europa.json") -> Nomenclator:
         # El nomenclátor está en forma descompuesta: se compara también sin acentos.
         if not any(p.search(c) or p.search(normalizar(c)) for p in cue.values())
     ]
-    return Nomenclator(lugares, tuple(alias), tuple(ciudades), cue)
+    nombres_pueblos = [
+        (normalizar(a), sitio.id)
+        for sitio in pueblos.values()
+        for a in sitio.alias
+        if len(normalizar(a)) >= MIN_LETRAS_ALIAS
+        and len(normalizar(a).split()) <= MAX_PALABRAS_ALIAS
+    ]
+    return Nomenclator(
+        {**pueblos, **lugares}, _indice(alias), _indice(ciudades), _indice(nombres_pueblos), cue
+    )
 
 
-def _contiene(texto: str, frase: str) -> bool:
-    """La frase aparece como palabras enteras. Los dos textos están normalizados (letras y
-    espacios simples), así que basta buscarla entre espacios: una expresión regular por
-    alias, con miles de alias, desbordaba la caché de expresiones y tardaba 0,1 s por titular."""
-    return f" {frase} " in f" {texto} "
+def _grupos(normal: str) -> list[str]:
+    """Grupos de palabras seguidas del texto normalizado, en orden de aparición."""
+    palabras = normal.split()
+    return [
+        " ".join(palabras[i : i + n])
+        for i in range(len(palabras))
+        for n in range(1, min(MAX_PALABRAS_ALIAS, len(palabras) - i) + 1)
+    ]
+
+
+def _buscar(indice: dict[str, tuple[str, ...]], grupos: list[str]) -> list[str]:
+    return [id_ for grupo in grupos for id_ in indice.get(grupo, ())]
 
 
 def lugares_en(titular: str, nom: Nomenclator) -> tuple[str, ...]:
-    """Lugares del nomenclátor que nombra el titular, sin repetir.
+    """Instalaciones del nomenclátor que nombra el titular, sin repetir.
 
     Un alias completo casa solo; una ciudad, solo si el titular nombra además el
     tipo de lugar («Flughafen», «air base», «centrale nucléaire»).
     """
-    normal = normalizar(titular)
-    hallados = [id_ for alias, id_ in nom.alias if _contiene(normal, alias)]
+    grupos = _grupos(normalizar(titular))
+    # Un alias de una sola palabra tiene que ir con mayúscula: «camp» en «military camp» no
+    # es el campo irlandés que se llama «Camp».
+    mayusculas = _mayusculas(titular)
+    hallados = _buscar(nom.alias, [g for g in grupos if " " in g or g in mayusculas])
     if not hallados:
         hallados = [
             id_
-            for ciudad, id_ in nom.ciudades
-            if _contiene(normal, ciudad) and nom.cue[nom.lugares[id_].tipo].search(titular)
+            for id_ in _buscar(nom.ciudades, [g for g in grupos if " " in g or g in mayusculas])
+            if (cue := nom.cue.get(nom.lugares[id_].tipo)) is not None and cue.search(titular)
         ]
     return tuple(dict.fromkeys(hallados))
+
+
+def _mayusculas(titular: str) -> set[str]:
+    """Palabras del titular escritas con mayúscula, normalizadas («Helsinki-Vantaan» da
+    «helsinki» y «vantaan»)."""
+    palabras = [p for p in re.findall(r"[^\W\d_][\w'’-]*", titular) if p[0].isupper()]
+    return {parte for p in palabras for parte in normalizar(p).split()}
+
+
+def localidades_en(titular: str, nom: Nomenclator) -> tuple[str, ...]:
+    """Localidades que nombra el titular con mayúscula («Police» en un titular sobre la
+    policía no es la ciudad polaca)."""
+    mayusculas = _mayusculas(titular)
+    grupos = [g for g in _grupos(normalizar(titular)) if g.split()[0] in mayusculas]
+    return tuple(dict.fromkeys(_buscar(nom.localidades, grupos)))
+
+
+def id_gkg(tipo: str, nombre: str, pais: str, lat: float, lon: float) -> str:
+    """Identificador de un lugar geolocalizado por el GKG: lleva todo lo necesario."""
+    limpio = re.sub(r"[:|]", " ", nombre).strip()
+    return f"{GKG}:{tipo}:{lat:.4f}:{lon:.4f}:{pais}:{limpio}"
+
+
+def lugar(id_: str, nom: Nomenclator) -> Lugar:
+    """El lugar del nomenclátor o, si es un lugar del GKG, el que describe su identificador."""
+    if not id_.startswith(GKG + ":"):
+        return nom.lugares[id_]
+    _, tipo, lat, lon, pais, nombre = id_.split(":", 5)
+    return Lugar(id_, GKG, nombre, float(lat), float(lon), RADIO_GKG_KM[tipo], pais, (), ())
+
+
+def lugares_articulo(
+    titular: str, nom: Nomenclator, filtro_: "Filtro", gkg: tuple[str, ...] = ()
+) -> tuple[str, ...]:
+    """Dónde sitúa el artículo: la instalación que nombra; si no nombra ninguna y trae señal
+    de incidente, la localidad; y si tampoco, el lugar que geolocaliza el GKG."""
+    instalaciones = lugares_en(titular, nom)
+    if instalaciones or not filtro_.senales.search(titular):
+        return instalaciones
+    return localidades_en(titular, nom) or gkg
 
 
 # --- Agrupación --------------------------------------------------------------------
@@ -311,13 +416,13 @@ def agrupar(
             else:
                 resultado.sin_lugar += 1
             continue
-        lugar = nom.lugares[articulo.lugares[0]]
-        tipo = filtro_.tipo(articulo.titular, lugar)
+        sitio = lugar(articulo.lugares[0], nom)
+        tipo = filtro_.tipo(articulo.titular, sitio)
         encajan = [
             c
             for c in resultado.abiertos(articulo.fecha)
             if c.tipo == tipo
-            and mismo_sitio(c.lugar, lugar)
+            and mismo_sitio(c.lugar, sitio)
             and misma_ventana(c, articulo.fecha, precision)
         ]
         if len(encajan) > 1:
@@ -332,9 +437,9 @@ def agrupar(
             Candidato(
                 # Inicio y lugar: dos candidatos no empiezan en el mismo minuto en el mismo sitio
                 # sin fundirse, salvo que sean de tipo distinto.
-                id=f"CAND-{articulo.fecha:%Y%m%dT%H%M}-{lugar.id}-{tipo}",
+                id=f"CAND-{articulo.fecha:%Y%m%dT%H%M}-{sitio.id}-{tipo}",
                 tipo=tipo,
-                lugar=lugar,
+                lugar=sitio,
                 inicio=articulo.fecha,
                 ultimo=articulo.fecha,
                 precision=precision,

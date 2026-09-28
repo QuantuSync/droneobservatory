@@ -21,7 +21,7 @@ from almacen import remoto
 from almacen.base import Almacen
 from almacen.cifrado import abrir_cifrada, cargar_clave_local
 from esquema import Documento
-from proceso.noticias import nomenclator
+from proceso.noticias import lugar, nomenclator
 
 REFERENCIA = (
     Path(__file__).resolve().parent.parent / "configuracion" / "referencia_wikipedia_2025.json"
@@ -85,8 +85,9 @@ def de_incidente(incidente: Documento) -> Punto:
 
 
 def de_candidato(candidato: Documento) -> Punto | None:
-    sitio = nomenclator().lugares.get(candidato["lugar"])
-    if sitio is None:
+    try:
+        sitio = lugar(candidato["lugar"], nomenclator())
+    except KeyError:
         return None
     return Punto(
         candidato["id"],

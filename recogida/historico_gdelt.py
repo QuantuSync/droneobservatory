@@ -34,7 +34,7 @@ from typing import Any
 from almacen import remoto
 from almacen.base import Almacen
 from almacen.cifrado import abrir_cifrada, cifrar_datos, descifrar_datos, guardar_cifrada
-from proceso.noticias import Articulo, filtro, lugares_en, nomenclator
+from proceso.noticias import Articulo, filtro, lugares_articulo, nomenclator
 from recogida import gdelt
 from recogida.descarga import Descargador, DescargaFallida
 
@@ -165,9 +165,15 @@ def incorporar(almacen: Almacen, lotes: Iterable[list[Articulo]]) -> gdelt.Recue
     Los lugares se vuelven a buscar con el nomenclátor actual: si ha mejorado desde que
     se leyeron los tramos, cuenta la mejora.
     """
-    nom = nomenclator()
+    nom, filtro_ = nomenclator(), filtro()
+    # Los parciales no traen las coordenadas del GKG: si el titular no nombra instalación
+    # ni localidad, el artículo se queda sin lugar.
     todos = sorted(
-        (replace(a, lugares=lugares_en(a.titular, nom)) for lote in lotes for a in lote),
+        (
+            replace(a, lugares=lugares_articulo(a.titular, nom, filtro_))
+            for lote in lotes
+            for a in lote
+        ),
         key=lambda a: (a.fecha, a.url),
     )
     total = gdelt.Recuentos()

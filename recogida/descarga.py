@@ -84,7 +84,9 @@ class Descargador:
         reintentos: int = REINTENTOS,
         espera_inicial_s: float = ESPERA_INICIAL_S,
         agente: str | None = None,
+        limite_s: float = TIEMPO_LIMITE_S,
     ) -> None:
+        self._limite_s = limite_s
         # Por defecto, un navegador; los servicios que piden identificarse reciben el
         # nombre del observatorio («EODI-bot/1.0 (+https://droneobservatory.eu)»).
         self._cabeceras = {**CABECERAS, "User-Agent": agente} if agente else CABECERAS
@@ -124,7 +126,7 @@ class Descargador:
             self.recuentos["peticiones"] += 1
             espera = self._espera_inicial_s * 2**intento
             try:
-                codigo, cabeceras, cuerpo = self._transporte(url, self._cabeceras, TIEMPO_LIMITE_S)
+                codigo, cabeceras, cuerpo = self._transporte(url, self._cabeceras, self._limite_s)
             except (OSError, TimeoutError) as error:
                 motivo = f"error de red: {type(error).__name__}"
             else:

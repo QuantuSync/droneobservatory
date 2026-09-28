@@ -31,7 +31,7 @@ OSL = lugar("ENGM", 60.19392, 11.10036)
 CERCA = lugar("base:1", 55.7, 12.85, "base")
 # Otro aeropuerto a 15 km de Copenhague: se funde con él (menos de 20 km).
 CPH2 = lugar("EKCH2", 55.7, 12.85)
-NOM = Nomenclator({x.id: x for x in (CPH, OSL, CERCA, CPH2)}, (), (), {})
+NOM = Nomenclator({x.id: x for x in (CPH, OSL, CERCA, CPH2)}, {}, {}, {}, {})
 
 
 def articulo(
@@ -176,3 +176,26 @@ def test_la_agrupacion_dudosa_no_se_hace() -> None:
 )
 def test_palabras_comunes_no_son_lugares(titular: str) -> None:
     assert lugares_en(titular, nomenclator()) == ()
+
+
+def test_localidades_con_mayuscula_y_solo_con_senal() -> None:
+    from proceso.noticias import filtro, lugar, lugares_articulo
+
+    nom = nomenclator()
+    # Sin instalación y con señal (policía): la localidad.
+    (kiel,) = lugares_articulo("Drohnen über Kiel: Polizei ermittelt", nom, filtro())
+    assert (lugar(kiel, nom).tipo, lugar(kiel, nom).pais) == ("localidad", "DE")
+    # «camp» en minúscula no es el campo irlandés «Camp»; Elsenborn sí es una localidad.
+    (elsenborn,) = lugares_articulo("Drones spotted over Elsenborn military camp", nom, filtro())
+    assert lugar(elsenborn, nom).nombre == "Elsenborn"
+    # Sin señal de incidente, una ciudad no sitúa la noticia.
+    assert lugares_articulo("Kiel feiert Drohnenshow", nom, filtro()) == ()
+
+
+def test_lugar_del_gkg_cuando_nada_casa() -> None:
+    from proceso.noticias import filtro, id_gkg, lugar, lugares_articulo
+
+    gkg = (id_gkg("4", "Tønsberg", "NO", 59.2672, 10.4076),)
+    (id_,) = lugares_articulo("Drones reported, police investigate", nomenclator(), filtro(), gkg)
+    sitio = lugar(id_, nomenclator())
+    assert (sitio.tipo, sitio.pais, sitio.radio_km, sitio.lat) == ("gkg", "NO", 10.0, 59.2672)
