@@ -49,6 +49,11 @@ jobs:
       - name: Recoger, actualizar y subir la base
         env:
           EODI_CLAVE_AGE: ${{ secrets.EODI_CLAVE_AGE }}
+          EODI_EXTRACTOR_CLAVE: ${{ secrets.EODI_EXTRACTOR_CLAVE }}
+          EODI_EXTRACTOR_URL: ${{ secrets.EODI_EXTRACTOR_URL }}
+          EODI_EXTRACTOR_URL_LOTES: ${{ secrets.EODI_EXTRACTOR_URL_LOTES }}
+          EODI_EXTRACTOR_MODELO: ${{ secrets.EODI_EXTRACTOR_MODELO }}
+          EODI_EXTRACTOR_CABECERAS: ${{ secrets.EODI_EXTRACTOR_CABECERAS }}
         run: |
           export GIT_SSH_COMMAND="ssh -i $RUNNER_TEMP/ssh/despliegue -o IdentitiesOnly=yes -o UserKnownHostsFile=$RUNNER_TEMP/ssh/known_hosts"
           python -m recogida.horaria --correo "$CORREO" --repositorio git@github.com:QuantuSync/droneobservatory-datos.git

@@ -14,12 +14,17 @@ UCRANIA = "ucrania.json"
 INCIDENTES = "incidentes.geojson"
 
 
+def modelos(almacen: Almacen) -> frozenset[str]:
+    """El vocabulario de modelos de la configuración más el que ha crecido con el uso."""
+    return cargar_vocabulario_modelos() | frozenset(almacen.vocabulario("modelo_dron"))
+
+
 def publicar(almacen: Almacen, ahora: datetime, directorio: Path = DIRECTORIO) -> list[Path]:
     """Regenera los dos ficheros y devuelve los que han cambiado."""
     directorio.mkdir(parents=True, exist_ok=True)
     documentos = {
         UCRANIA: exportar_ucrania(almacen.ataques_ucrania(), ahora),
-        INCIDENTES: exportar(almacen.incidentes(), ahora, cargar_vocabulario_modelos()),
+        INCIDENTES: exportar(almacen.incidentes(), ahora, modelos(almacen)),
     }
     cambiados = []
     for nombre, documento in documentos.items():

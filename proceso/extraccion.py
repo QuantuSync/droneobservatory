@@ -20,7 +20,7 @@ import time
 from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
-from typing import Any
+from typing import Any, Protocol
 
 from almacen.base import Almacen, DocumentoInvalido
 from esquema import Documento
@@ -48,6 +48,10 @@ VOCABULARIO_MODELOS = "modelo_dron"
 MAX_ID_LOTE = 64
 # Categoría del objetivo a tipo de lugar del nomenclátor, para el radio.
 TIPO_LUGAR = {"aeropuerto": "aeropuerto", "base_militar": "base", "energia": "nuclear"}
+
+
+class Servicio(Protocol):
+    def mensaje(self, cuerpo: dict[str, Any]) -> dict[str, Any]: ...
 
 
 @dataclass(frozen=True)
@@ -275,7 +279,7 @@ def _alta(
 
 def extraer(
     almacen: Almacen,
-    cliente: Cliente,
+    cliente: Servicio,
     peticiones: list[Peticion],
     ahora: datetime,
     modo: coste.Modo,

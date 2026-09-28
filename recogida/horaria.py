@@ -16,7 +16,7 @@ from almacen.cifrado import abrir_cifrada, guardar_cifrada
 from exportacion.publicar import publicar
 from proceso import solapes
 from proceso.ataques import SENTIDO_UA_RU
-from recogida import gdelt
+from recogida import extractor, gdelt
 from recogida.cache import CachePaginas
 from recogida.descarga import Descargador
 from recogida.ejecucion import SinCursor, ejecutar
@@ -61,6 +61,11 @@ def principal(argumentos: list[str] | None = None) -> int:
             gdelt.ejecutar(almacen, gdelt.descargador(), ahora)
         except gdelt.GdeltNoDisponible as error:
             registro.warning("gdelt no se lee: %s", error)
+            salida = SALIDA_FUENTE_NO_VERIFICADA
+        # Candidatos de noticias a incidentes; una llamada fallida deja la ejecución en rojo.
+        resultado = extractor.horaria(almacen, ahora)
+        registro.info("extractor %s", resultado.resumen())
+        if resultado.fallidas:
             salida = SALIDA_FUENTE_NO_VERIFICADA
         cambiados = publicar(almacen, ahora)
         registro.info("ficheros publicados con cambios: %d", len(cambiados))
