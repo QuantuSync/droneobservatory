@@ -1,8 +1,10 @@
 """Fuentes oficiales sin red: RSS, robots.txt y enlace al incidente."""
 
 from datetime import UTC, datetime
+from unicodedata import normalize
 
 from almacen.base import Almacen
+from proceso.noticias import lugar, lugar_del_suceso, nomenclator
 from recogida import oficiales
 from recogida.descarga import AGENTE_EODI, Descargador, Respuesta
 from tests.test_extraccion import MODELOS, extraer_ejemplo
@@ -66,3 +68,19 @@ def test_robots_que_bloquea_no_se_fuerza() -> None:
     descargador = Descargador(sitio, dormir=lambda _: None, pausa_minima_s=0)
     lector = oficiales.robots(descargador, FUENTE["url"])
     assert not lector.can_fetch(AGENTE_EODI, FUENTE["url"])
+
+
+def test_el_lugar_del_suceso_manda_sobre_la_capital() -> None:
+    # Defensa letona, 25 de marzo de 2026: la rueda de prensa es en Riga y el dron cayó en
+    # Krāslava.
+    titulo = "Aizsardzības ministrijā informēs par Krāslavas novadā nokritušo dronu"
+    texto = "Preses konference notiks Rīgā, netālu no RIX Rīgas lidosta."
+    nom = nomenclator()
+    id_ = lugar_del_suceso(titulo, texto, nom)
+    assert id_ is not None
+    # Los nombres de GeoNames vienen descompuestos (NFD).
+    assert normalize("NFC", lugar(id_, nom).nombre) == "Krāslava"
+    # Sin lugar en el titular, el del texto.
+    id_texto = lugar_del_suceso("Informācija presei", texto, nom)
+    assert id_texto is not None
+    assert "Rīg" in normalize("NFC", lugar(id_texto, nom).nombre)
