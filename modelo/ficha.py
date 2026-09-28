@@ -24,7 +24,7 @@ import re
 from dataclasses import dataclass
 from typing import Any
 
-VERSION = "ficha/3"
+VERSION = "ficha/4"
 # Una ficha con todos los datos ocupa unos 800 tokens; 1500 dejan margen sin pagar de más.
 MAX_TOKENS_SALIDA = 1500
 TIPOS = ("interrupcion_aeroportuaria", "sobrevuelo", "incursion")
@@ -37,6 +37,10 @@ PRESENCIA = ("confirmada", "no_confirmada", "descartada")
 CIERRE = ("si", "no", "desconocido")
 MEDIDAS = ("cierre_espacio_aereo", "patrulla", "cazas", "derribo", "inhibicion")
 ORIGEN = ("rastreo", "restos")
+AUTORIDADES = (
+    "policia", "aeropuerto", "navegacion_aerea", "fuerzas_armadas", "ministerio", "gobierno",
+)  # fmt: skip
+AFIRMACIONES = ("incidente", "drones", "sin_drones", "niega_incidente", "autoria")
 
 BOOLEANOS = ("es_incidente", "objetivo_conocido")
 ENUMERADOS: dict[str, tuple[str, ...]] = {
@@ -56,7 +60,7 @@ CAMPOS: tuple[str, ...] = (
 ESQUEMA: dict[str, Any] = {
     "type": "object",
     "additionalProperties": False,
-    "required": ["datos", "titulo_es", "titulo_en"],
+    "required": ["datos", "declaraciones", "titulo_es", "titulo_en"],
     "properties": {
         "datos": {
             "type": "array",
@@ -73,10 +77,28 @@ ESQUEMA: dict[str, Any] = {
                 },
             },
         },
+        "declaraciones": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "additionalProperties": False,
+                "required": ["autoridad", "categoria", "afirma", "autor", "fuente", "frase"],
+                "properties": {
+                    "autoridad": {"type": "string"},
+                    "categoria": {"enum": list(AUTORIDADES)},
+                    "afirma": {"enum": list(AFIRMACIONES)},
+                    "autor": {"type": "string"},
+                    "fuente": {"type": "integer"},
+                    "frase": {"type": "string"},
+                },
+            },
+        },
         "titulo_es": {"type": "string"},
         "titulo_en": {"type": "string"},
     },
 }
+# Fichas guardadas antes de las declaraciones: se leen igual, sin ellas.
+_OBLIGATORIAS = frozenset({"datos", "titulo_es", "titulo_en"})
 
 INSTRUCCIONES = """Eres el extractor del Observatorio Europeo de Incidentes con Drones. Recibes \
 las fuentes de un posible incidente con drones en Europa: para cada una, el medio, la fecha de \
@@ -127,6 +149,15 @@ cuánto duró, en minutos, como «N» o «mínimo-máximo».
 cazas, derribo, inhibicion.
 - origen_demostrado: rastreo si una autoridad siguió al dron por radar desde otro país; restos si \
 se encontraron restos que prueban el origen; separado por comas.
+- declaraciones: aparte de los datos, una por cada declaración de una autoridad que cite la \
+noticia (vacía si no hay). autoridad: su nombre («Københavns Politi»). categoria: policia, \
+aeropuerto, navegacion_aerea (gestor de navegación aérea), fuerzas_armadas, ministerio o \
+gobierno. afirma: incidente si dice que el incidente o el cierre ocurrió; drones si afirma \
+expresamente que había drones (los vio ella misma, por radar o por restos); sin_drones si dice \
+que no los hubo; niega_incidente si dice que no pasó nada; autoria si atribuye la autoría (a \
+quién, en autor; vacío en los demás casos). fuente: el número de la fuente. frase: la frase \
+literal de la declaración, de 25 palabras como máximo. Que la policía recibiera avisos o \
+llamadas no es una afirmación suya: no la incluyas como incidente ni como drones.
 - titulo_es y titulo_en: un título breve y neutro, en español y en inglés, con lugar y hecho \
 («Drones sobre el aeropuerto de Copenhague obligan a cerrarlo»), sin fecha. Van aparte de los \
 datos y siempre.
@@ -291,7 +322,7 @@ def leer_respuesta(respuesta: dict[str, Any]) -> dict[str, Any]:
         bruta = json.loads("".join(textos))
     except ValueError as error:
         raise RespuestaInvalida("la salida no es JSON") from error
-    if not isinstance(bruta, dict) or set(bruta) != set(ESQUEMA["required"]):
+    if not isinstance(bruta, dict) or not set(bruta) >= _OBLIGATORIAS:
         raise RespuestaInvalida("la salida no sigue el esquema")
     ficha: dict[str, Any] = {"titulo_es": bruta["titulo_es"], "titulo_en": bruta["titulo_en"]}
     ilegibles: list[str] = []
@@ -310,5 +341,10 @@ def leer_respuesta(respuesta: dict[str, Any]) -> dict[str, Any]:
             "frase": dato.get("frase"),
             "confianza": dato.get("confianza"),
         }
+    ficha["declaraciones"] = [
+        d for d in bruta.get("declaraciones", [])
+        if isinstance(d, dict) and d.get("categoria") in AUTORIDADES
+        and d.get("afirma") in AFIRMACIONES and isinstance(d.get("autoridad"), str)
+    ]  # fmt: skip
     ficha["ilegibles"] = ilegibles
     return ficha

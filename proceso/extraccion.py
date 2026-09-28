@@ -27,6 +27,7 @@ from almacen.base import Almacen, DocumentoInvalido
 from esquema import Documento
 from modelo import coste, ficha, paginas
 from modelo.cliente import LlamadaFallida
+from proceso import declaraciones
 from proceso.incidentes import Objetivo, construir, huella
 from proceso.noticias import (
     GKG,
@@ -125,6 +126,15 @@ def necesita_extraccion(almacen: Almacen, candidato: Documento) -> bool:
     campos = ultima.get("campos", {})
     sin_hora = campos.get("inicio_precision", {}).get("valor") not in {"minuto", "hora"}
     return sin_hora or any(c not in campos for c in ESENCIALES)
+
+
+def desactualizado(almacen: Almacen, candidato: Documento) -> bool:
+    """Candidato con incidente cuya última ficha es de una versión anterior del extractor."""
+    anteriores = almacen.extracciones(candidato["id"])
+    if not anteriores:
+        return False
+    ultima = anteriores[-1]
+    return ultima["version"] != ficha.VERSION and bool(ultima.get("incidente"))
 
 
 def elegir_fuentes(articulos: list[Documento]) -> list[Documento]:
@@ -283,6 +293,7 @@ def procesar_respuesta(
             "campos": validada.campos,
             "ficha": leida,
             "enviadas": peticion.enviadas,
+            "declaraciones": declaraciones.validas(leida["declaraciones"], contexto.textos),
         }
         if validada.publicable:
             incidente_id = _alta(almacen, peticion, validada, ahora, modelos_base, documento)
@@ -319,6 +330,9 @@ def _alta(
         for campo in ("fusionado_en", "episodio"):
             if campo in anterior:
                 incidente[campo] = anterior[campo]
+    incidente = declaraciones.aplicar(
+        incidente, documento.get("declaraciones", []), peticion.enviadas
+    )
     try:
         almacen.guardar_incidente(incidente, ahora, modelos)
     except DocumentoInvalido as error:
@@ -367,7 +381,8 @@ def reconstruir(almacen: Almacen, ahora: datetime, modelos_base: frozenset[str])
         if not validada.publicable:
             continue
         peticion = replace(peticion, enviadas=list(enviadas))
-        if _alta(almacen, peticion, validada, ahora, modelos_base, {"motivos": []}):
+        guardadas = {"motivos": [], "declaraciones": ultima.get("declaraciones", [])}
+        if _alta(almacen, peticion, validada, ahora, modelos_base, guardadas):
             rehechos += 1
     return rehechos
 
