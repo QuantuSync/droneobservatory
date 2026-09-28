@@ -16,17 +16,17 @@ oficial de la Fuerza Aérea de Ucrania (RU_UA) y el del Ministerio de Defensa
 ruso (UA_RU), las dos marcadas como reivindicación de parte, con sus
 históricos desde octubre de 2022; y recogida de noticias europeas sobre drones
 en los ficheros GKG de GDELT, filtradas, deduplicadas y agrupadas en
-candidatos internos. El extractor que
-convierte candidatos en incidentes y la web están pendientes.
+candidatos internos; el extractor que los convierte en incidentes europeos,
+con fusión, episodios y presencia_dron. La web está pendiente.
 
 ## Estructura
 
 | Carpeta | Contenido |
 | --- | --- |
 | `esquema/` | JSON Schema versionados (1.0.0), con marca de visibilidad por campo |
-| `configuracion/` | Fuentes con su fiabilidad, vocabularios de modelos de dron y de regiones, nomenclátor de lugares europeos, vocabulario de noticias y medios europeos de GDELT |
-| `proceso/` | Validaciones, máquina de estados, regla de credibilidad, ataques y noticias (filtro, réplicas y agrupación) |
-| `modelo/` | Extractor: interfaz, implementación nula y caché en disco |
+| `configuracion/` | Fuentes con su fiabilidad, vocabularios de modelos de dron y de regiones, nomenclátor de lugares europeos, cajas de coordenadas de los países, vocabulario de noticias, medios europeos de GDELT y la lista de referencia de 2025 |
+| `proceso/` | Validaciones, máquina de estados, regla de credibilidad, ataques, tramos solapados, noticias (filtro, réplicas y agrupación), extracción, validación de fichas, incidentes, fusión y episodios |
+| `modelo/` | Extractor: cliente HTTP del servicio (configurado por secretos), ficha con salida obligada por esquema, coste y límites, lectura de las primeras frases |
 | `almacen/` | Base de datos SQLite con historial, cifrado con age y rama `estado` del repositorio de datos |
 | `exportacion/` | `incidentes.geojson` y `ucrania.json` para la web, cada uno con su lista cerrada de campos |
 | `recogida/` | Descarga educada, caché, fuentes de partes (Fuerza Aérea y Ministerio de Defensa ruso), GDELT, ejecución horaria, histórico y auditoría de cobertura |
@@ -66,10 +66,19 @@ guarda en el repositorio.
   en bruto quedan en `data/cache/`, fuera de git.
 - `python -m recogida.lugares_osm`: regenera el nomenclátor de lugares desde
   OpenStreetMap; se ejecuta a mano y el resultado se revisa.
+- Workflow `historico-gdelt`: histórico de noticias desde los ficheros GKG,
+  repartido en hasta 20 trabajos; los parciales van cifrados a la rama
+  `historico-gdelt` del repositorio de datos y un trabajo final los incorpora.
+- `python -m recogida.extractor estimar | lote`: coste previsto del histórico
+  con una muestra de llamadas, y extracción del histórico por lotes dentro del
+  límite de gasto.
+- `python -m recogida.comparacion [--candidatos]`: cobertura frente a la lista
+  de referencia de 2025.
 
 Decisiones, valores y cobertura en [`docs/informe_recogida.md`](docs/informe_recogida.md),
-[`docs/informe_gdelt_mindef.md`](docs/informe_gdelt_mindef.md) y
-[`docs/informe_gkg_partes.md`](docs/informe_gkg_partes.md).
+[`docs/informe_gdelt_mindef.md`](docs/informe_gdelt_mindef.md),
+[`docs/informe_gkg_partes.md`](docs/informe_gkg_partes.md) y
+[`docs/informe_extractor_europa.md`](docs/informe_extractor_europa.md).
 
 ## Licencia
 
@@ -82,3 +91,10 @@ Decisiones, valores y cobertura en [`docs/informe_recogida.md`](docs/informe_rec
   OpenStreetMap, bajo licencia [ODbL](https://www.openstreetmap.org/copyright).
 - `configuracion/medios_europa.json` sale de la lista de dominios por país que
   publica GDELT.
+- `configuracion/paises_europa.json` contiene datos © colaboradores de
+  OpenStreetMap (Nominatim), bajo licencia ODbL.
+- `configuracion/instalaciones_europa.json` contiene datos © colaboradores de
+  OpenStreetMap, bajo licencia ODbL.
+- `configuracion/localidades_europa.json` contiene datos de
+  [GeoNames](https://www.geonames.org), bajo licencia
+  [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).

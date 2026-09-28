@@ -8,6 +8,8 @@ incidente vive dentro de la base.
 import os
 import shutil
 import subprocess
+import time
+from collections.abc import Callable
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
@@ -16,6 +18,16 @@ FICHERO = "db.age"
 REPOSITORIO = "https://github.com/QuantuSync/droneobservatory-datos.git"
 AUTOR = "QuantuSync"
 MENSAJE = "Estado de la base"
+
+
+# Rama de los resultados parciales del histórico de noticias: cada trabajo añade su fichero.
+RAMA_PARCIALES = "historico-gdelt"
+DIRECTORIO_PARCIALES = "parciales"
+# Hasta 20 trabajos pueden terminar a la vez: si otro ha escrito antes, se vuelve a clonar
+# y a intentar. 10 intentos con esperas de 5 s crecientes (5, 10 ... 45 s) suman casi 4
+# minutos, de sobra para que pasen los demás.
+INTENTOS_PARCIAL = 10
+ESPERA_PARCIAL_S = 5.0
 
 
 class RemotoFallido(RuntimeError):
@@ -70,3 +82,68 @@ def subir(origen: Path, correo: str, repositorio: str = REPOSITORIO) -> None:
             GIT_COMMITTER_NAME=AUTOR, GIT_COMMITTER_EMAIL=correo,
         )  # fmt: skip
         _git("push", "--quiet", "--force", repositorio, f"{RAMA}:{RAMA}", directorio=directorio)
+
+
+def _identidad_git(correo: str) -> dict[str, str]:
+    return {
+        "GIT_AUTHOR_NAME": AUTOR, "GIT_AUTHOR_EMAIL": correo,
+        "GIT_COMMITTER_NAME": AUTOR, "GIT_COMMITTER_EMAIL": correo,
+    }  # fmt: skip
+
+
+def reiniciar_parciales(correo: str, etiqueta: str, repositorio: str = REPOSITORIO) -> None:
+    """Deja la rama de parciales con un único commit vacío para un recorrido nuevo."""
+    with TemporaryDirectory() as temporal:
+        directorio = Path(temporal)
+        _git("init", "--quiet", "--initial-branch", RAMA_PARCIALES, directorio=directorio)
+        _git("commit", "--quiet", "--allow-empty", "-m", f"Recorrido {etiqueta}",
+             directorio=directorio, **_identidad_git(correo))  # fmt: skip
+        _git("push", "--quiet", "--force", repositorio, f"{RAMA_PARCIALES}:{RAMA_PARCIALES}",
+             directorio=directorio)  # fmt: skip
+
+
+def subir_parcial(
+    origen: Path,
+    nombre: str,
+    correo: str,
+    repositorio: str = REPOSITORIO,
+    dormir: Callable[[float], None] = time.sleep,
+) -> int:
+    """Añade `origen` a la rama de parciales como `parciales/<nombre>`, sin forzar.
+
+    Si otro trabajo ha escrito a la vez, el push se rechaza: se vuelve a clonar y se
+    reintenta. Devuelve el número de intentos.
+    """
+    for intento in range(1, INTENTOS_PARCIAL + 1):
+        with TemporaryDirectory() as temporal:
+            clon = Path(temporal) / "parciales"
+            _git("clone", "--quiet", "--depth", "1", "--branch", RAMA_PARCIALES,
+                 "--single-branch", repositorio, str(clon))  # fmt: skip
+            destino = clon / DIRECTORIO_PARCIALES / nombre
+            destino.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(origen, destino)
+            _git("add", str(destino.relative_to(clon)), directorio=clon)
+            _git("commit", "--quiet", "-m", f"Parcial {nombre}", directorio=clon,
+                 **_identidad_git(correo))  # fmt: skip
+            try:
+                _git("push", "--quiet", "origin", f"HEAD:{RAMA_PARCIALES}", directorio=clon)
+            except RemotoFallido:
+                if intento == INTENTOS_PARCIAL:
+                    raise
+                dormir(ESPERA_PARCIAL_S * intento)
+                continue
+            return intento
+    raise RemotoFallido("sin intentos")
+
+
+def descargar_parciales(destino: Path, repositorio: str = REPOSITORIO) -> list[Path]:
+    """Copia los ficheros de la rama de parciales a `destino`, ordenados por nombre."""
+    with TemporaryDirectory() as temporal:
+        clon = Path(temporal) / "parciales"
+        _git("clone", "--quiet", "--depth", "1", "--branch", RAMA_PARCIALES,
+             "--single-branch", repositorio, str(clon))  # fmt: skip
+        destino.mkdir(parents=True, exist_ok=True)
+        copiados = []
+        for fichero in sorted((clon / DIRECTORIO_PARCIALES).glob("*")):
+            copiados.append(Path(shutil.copyfile(fichero, destino / fichero.name)))
+        return copiados

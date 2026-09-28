@@ -1,0 +1,31 @@
+{
+  "version_esquema": "1.0.0",
+  "descripcion": "Sucesos de la lista «2025 European drone sightings» de Wikipedia en inglés (revisión del 28 de septiembre de 2026), para medir la cobertura. Uno por lugar y noche: la segunda madrugada de Billund (25 de septiembre) es la misma noche que la del 24. oaci: código del aeropuerto o la base cuando lo tiene; si no, coordenadas aproximadas del sitio.",
+  "sucesos": [
+    {"fecha": "2025-09-22", "pais": "DK", "lugar": "Aeropuerto de Copenhague", "oaci": "EKCH"},
+    {"fecha": "2025-09-22", "pais": "NO", "lugar": "Aeropuerto de Oslo-Gardermoen", "oaci": "ENGM"},
+    {"fecha": "2025-09-24", "pais": "DK", "lugar": "Aeropuerto de Aalborg", "oaci": "EKYT"},
+    {"fecha": "2025-09-24", "pais": "DK", "lugar": "Aeropuerto de Billund", "oaci": "EKBI"},
+    {"fecha": "2025-09-24", "pais": "DK", "lugar": "Aeropuerto de Sønderborg", "oaci": "EKSB"},
+    {"fecha": "2025-09-24", "pais": "DK", "lugar": "Aeropuerto de Esbjerg", "oaci": "EKEB"},
+    {"fecha": "2025-09-24", "pais": "DK", "lugar": "Base aérea de Skrydstrup", "oaci": "EKSP"},
+    {"fecha": "2025-09-25", "pais": "DE", "lugar": "Astillero de TKMS en Kiel", "lat": 54.32, "lon": 10.15},
+    {"fecha": "2025-09-26", "pais": "DK", "lugar": "Base aérea de Karup", "oaci": "EKKA"},
+    {"fecha": "2025-09-27", "pais": "NO", "lugar": "Base aérea de Ørland", "oaci": "ENOL"},
+    {"fecha": "2025-09-28", "pais": "NO", "lugar": "Aeropuerto de Brønnøysund", "oaci": "ENBN"},
+    {"fecha": "2025-10-02", "pais": "DE", "lugar": "Aeropuerto de Múnich", "oaci": "EDDM"},
+    {"fecha": "2025-10-02", "pais": "BE", "lugar": "Campo militar de Elsenborn", "lat": 50.46, "lon": 6.22},
+    {"fecha": "2025-10-03", "pais": "DE", "lugar": "Aeropuerto de Múnich", "oaci": "EDDM"},
+    {"fecha": "2025-10-31", "pais": "DE", "lugar": "Aeropuerto de Berlín-Brandeburgo", "oaci": "EDDB"},
+    {"fecha": "2025-11-02", "pais": "DE", "lugar": "Aeropuerto de Bremen", "oaci": "EDDW"},
+    {"fecha": "2025-11-02", "pais": "BE", "lugar": "Base aérea de Kleine Brogel", "oaci": "EBBL"},
+    {"fecha": "2025-11-06", "pais": "SE", "lugar": "Aeropuerto de Gotemburgo-Landvetter", "oaci": "ESGG"},
+    {"fecha": "2025-11-06", "pais": "BE", "lugar": "Aeropuerto de Bruselas", "oaci": "EBBR"},
+    {"fecha": "2025-11-06", "pais": "BE", "lugar": "Puerto de Amberes", "lat": 51.28, "lon": 4.33},
+    {"fecha": "2025-11-09", "pais": "BE", "lugar": "Aeropuerto de Lieja", "oaci": "EBLG"},
+    {"fecha": "2025-11-09", "pais": "BE", "lugar": "Central nuclear de Doel", "lat": 51.325, "lon": 4.26},
+    {"fecha": "2025-11-22", "pais": "NL", "lugar": "Base aérea de Volkel", "oaci": "EHVK"},
+    {"fecha": "2025-12-01", "pais": "IE", "lugar": "Mar de Irlanda frente a Howth (Dublín)", "lat": 53.39, "lon": -6.07},
+    {"fecha": "2025-12-04", "pais": "FR", "lugar": "Base naval de Île Longue", "lat": 48.31, "lon": -4.51}
+  ]
+}

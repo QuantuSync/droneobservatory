@@ -27,11 +27,11 @@ def lugar(id_: str, lat: float, lon: float, tipo: str = "aeropuerto") -> Lugar:
 
 # Copenhague y Oslo; una base a 15 km de Copenhague (5 + 5 + 10 = 20 km de margen).
 CPH = lugar("EKCH", 55.61806, 12.65611)
-OSL = lugar("ENGM", 60.19392, 11.10036)
+OSL = Lugar("ENGM", "aeropuerto", "ENGM", 60.19392, 11.10036, 5.0, "NO", ("ENGM",), ())
 CERCA = lugar("base:1", 55.7, 12.85, "base")
 # Otro aeropuerto a 15 km de Copenhague: se funde con él (menos de 20 km).
 CPH2 = lugar("EKCH2", 55.7, 12.85)
-NOM = Nomenclator({x.id: x for x in (CPH, OSL, CERCA, CPH2)}, (), (), {})
+NOM = Nomenclator({x.id: x for x in (CPH, OSL, CERCA, CPH2)}, {}, {}, {}, {})
 
 
 def articulo(
@@ -153,6 +153,7 @@ def test_la_agrupacion_dudosa_no_se_hace() -> None:
     )
     sin_lugar = Articulo("https://m.eu/y", "m.eu", T0, "Drones over Europe")
     grupo = agrupar([varios, sin_lugar], filtro(), NOM)
+    # Dos aeropuertos de países distintos en un titular: dudoso.
     assert (grupo.candidatos, grupo.dudosos, grupo.sin_lugar) == ([], 1, 1)
     # Encaja en dos candidatos abiertos a la vez: tampoco se agrupa.
     abierto = agrupar([articulo(1, 0, "EKCH")], filtro(), NOM)
@@ -162,3 +163,58 @@ def test_la_agrupacion_dudosa_no_se_hace() -> None:
         candidato.tipo = "aeropuerto"
     agrupar([articulo(3, 1, "EKCH")], filtro(), NOM, doble)
     assert doble.dudosos == 1
+
+
+@pytest.mark.parametrize(
+    "titular",
+    [
+        # «lentokenttä» es «aeropuerto» en finés, no el nombre de uno.
+        "Alicanten lentokenttä suljettiin – Epäily drooneista",
+        # «Militär» y «wojskowa» figuran como ciudad de dos lugares, pero son palabras comunes.
+        "VIDEO // Un militar ucrainean face o demonstrație despre drone",
+        "Ukraińskie drony uderzyły w głąb Rosji. Celowali w bazę wojskową",
+    ],
+)
+def test_palabras_comunes_no_son_lugares(titular: str) -> None:
+    assert lugares_en(titular, nomenclator()) == ()
+
+
+def test_localidades_con_mayuscula_y_solo_con_senal() -> None:
+    from proceso.noticias import filtro, lugar, lugares_articulo
+
+    nom = nomenclator()
+    # Sin instalación y con señal (policía): la localidad.
+    (kiel,) = lugares_articulo("Drohnen über Kiel: Polizei ermittelt", nom, filtro())
+    assert (lugar(kiel, nom).tipo, lugar(kiel, nom).pais) == ("localidad", "DE")
+    # «camp» en minúscula no es el campo irlandés «Camp»; Elsenborn sí es una localidad.
+    (elsenborn,) = lugares_articulo("Drones spotted over Elsenborn military camp", nom, filtro())
+    assert lugar(elsenborn, nom).nombre == "Elsenborn"
+    # Sin señal de incidente, una ciudad no sitúa la noticia.
+    assert lugares_articulo("Kiel feiert Drohnenshow", nom, filtro()) == ()
+
+
+def test_lugar_del_gkg_cuando_nada_casa() -> None:
+    from proceso.noticias import filtro, id_gkg, lugar, lugares_articulo
+
+    gkg = (id_gkg("4", "Tønsberg", "NO", 59.2672, 10.4076),)
+    (id_,) = lugares_articulo("Drones reported, police investigate", nomenclator(), filtro(), gkg)
+    sitio = lugar(id_, nomenclator())
+    assert (sitio.tipo, sitio.pais, sitio.radio_km, sitio.lat) == ("gkg", "NO", 10.0, 59.2672)
+
+
+def test_varias_instalaciones_de_un_pais_van_a_cada_una() -> None:
+    varios = Articulo(
+        "https://m.eu/z", "m.eu", T0, "Drones over the airport and the base",
+        lugares=("EKCH", "base:1"),
+    )  # fmt: skip
+    grupo = agrupar([varios], filtro(), NOM)
+    assert sorted(c.lugar.id for c in grupo.candidatos) == ["EKCH", "base:1"]
+
+
+def test_un_nombre_de_varias_instalaciones_es_ambiguo() -> None:
+    from proceso.noticias import filtro, lugar, lugares_articulo
+
+    nom = nomenclator()
+    # «Leipzig» es ciudad de Leipzig/Halle y de Leipzig-Altenburg: queda la localidad.
+    (id_,) = lugares_articulo("Drohnensichtung: Flughafen Leipzig gesperrt", nom, filtro())
+    assert lugar(id_, nom).tipo == "localidad"

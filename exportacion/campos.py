@@ -53,6 +53,7 @@ CAMPOS_PUBLICOS_INCIDENTE: frozenset[str] = frozenset(
         "titulo.es",
         "titulo.en",
         "episodio",
+        "presencia_dron",
         "tiempo",
         *_instante("tiempo.inicio"),
         *_instante("tiempo.fin"),

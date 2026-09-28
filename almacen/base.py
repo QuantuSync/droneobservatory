@@ -96,6 +96,53 @@ CREATE TABLE IF NOT EXISTS candidatos (
     id TEXT PRIMARY KEY,
     documento TEXT NOT NULL CHECK (json_valid(documento))
 );
+-- Extractor: cada llamada con sus tokens y su coste, cada ficha (válida o no) y los
+-- vocabularios que crecen con el uso. Tablas internas.
+CREATE TABLE IF NOT EXISTS llamadas_extractor (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    fecha TEXT NOT NULL,
+    modo TEXT NOT NULL,
+    candidato TEXT NOT NULL,
+    lote INTEGER NOT NULL,
+    entrada INTEGER NOT NULL,
+    salida INTEGER NOT NULL,
+    escritura_cache INTEGER NOT NULL,
+    lectura_cache INTEGER NOT NULL,
+    coste REAL NOT NULL
+);
+CREATE TABLE IF NOT EXISTS extracciones (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    candidato TEXT NOT NULL,
+    fecha TEXT NOT NULL,
+    version TEXT NOT NULL,
+    huella TEXT NOT NULL,
+    valida INTEGER NOT NULL,
+    documento TEXT NOT NULL CHECK (json_valid(documento))
+);
+CREATE INDEX IF NOT EXISTS extracciones_candidato ON extracciones (candidato);
+CREATE TABLE IF NOT EXISTS vocabulario (
+    tipo TEXT NOT NULL,
+    clave TEXT NOT NULL,
+    documento TEXT NOT NULL CHECK (json_valid(documento)),
+    PRIMARY KEY (tipo, clave)
+);
+CREATE TABLE IF NOT EXISTS fusiones (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    fecha TEXT NOT NULL,
+    absorbido TEXT NOT NULL,
+    destino TEXT NOT NULL,
+    motivo TEXT NOT NULL,
+    fuentes TEXT NOT NULL CHECK (json_valid(fuentes)),
+    revertida INTEGER NOT NULL DEFAULT 0
+);
+CREATE TRIGGER IF NOT EXISTS llamadas_extractor_sin_delete BEFORE DELETE ON llamadas_extractor
+BEGIN SELECT RAISE(ABORT, 'llamadas_extractor: nada se borra'); END;
+CREATE TRIGGER IF NOT EXISTS extracciones_sin_delete BEFORE DELETE ON extracciones
+BEGIN SELECT RAISE(ABORT, 'extracciones: nada se borra'); END;
+CREATE TRIGGER IF NOT EXISTS vocabulario_sin_delete BEFORE DELETE ON vocabulario
+BEGIN SELECT RAISE(ABORT, 'vocabulario: nada se borra'); END;
+CREATE TRIGGER IF NOT EXISTS fusiones_sin_delete BEFORE DELETE ON fusiones
+BEGIN SELECT RAISE(ABORT, 'fusiones: nada se borra'); END;
 CREATE TRIGGER IF NOT EXISTS articulos_sin_delete BEFORE DELETE ON articulos
 BEGIN SELECT RAISE(ABORT, 'articulos: nada se borra'); END;
 CREATE TRIGGER IF NOT EXISTS candidatos_sin_delete BEFORE DELETE ON candidatos
@@ -385,9 +432,19 @@ class Almacen:
         return self._documentos("SELECT documento FROM candidatos ORDER BY id")
 
     def articulos(self) -> list[Documento]:
+        return self._articulos("")
+
+    def articulos_de(self, urls: list[str]) -> list[Documento]:
+        """Los artículos con esas URL, en orden de fecha."""
+        return self._articulos(
+            "WHERE url IN (SELECT value FROM json_each(?))", (_json(sorted(set(urls))),)
+        )
+
+    def _articulos(self, donde: str, parametros: tuple[Any, ...] = ()) -> list[Documento]:
         filas = self._conexion.execute(
             "SELECT url, medio, fecha, idioma, pais, titular, temas, lugares, replicas, candidato "
-            "FROM articulos ORDER BY fecha, url"
+            f"FROM articulos {donde} ORDER BY fecha, url",
+            parametros,
         ).fetchall()
         claves = ("url", "medio", "fecha", "idioma", "pais", "titular", "temas", "lugares")
         return [
@@ -400,6 +457,120 @@ class Almacen:
             }
             for fila in filas
         ]
+
+    # --- Extractor ------------------------------------------------------------
+
+    def registrar_llamada(self, llamada: Documento) -> None:
+        with self._conexion:
+            self._conexion.execute(
+                "INSERT INTO llamadas_extractor (fecha, modo, candidato, lote, entrada, salida, "
+                "escritura_cache, lectura_cache, coste) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                (
+                    llamada["fecha"], llamada["modo"], llamada["candidato"],
+                    int(llamada["lote"]), llamada["entrada"], llamada["salida"],
+                    llamada["escritura_cache"], llamada["lectura_cache"], llamada["coste"],
+                ),
+            )  # fmt: skip
+
+    def gastado(self, modo: str, dia: str | None = None) -> float:
+        """Dólares gastados en un modo; con `dia` (AAAA-MM-DD), solo ese día UTC."""
+        sql = "SELECT coalesce(sum(coste), 0) FROM llamadas_extractor WHERE modo = ?"
+        parametros: tuple[Any, ...] = (modo,)
+        if dia is not None:
+            sql += " AND substr(fecha, 1, 10) = ?"
+            parametros += (dia,)
+        return float(self._conexion.execute(sql, parametros).fetchone()[0])
+
+    def llamadas(self) -> list[Documento]:
+        filas = self._conexion.execute(
+            "SELECT fecha, modo, candidato, lote, entrada, salida, escritura_cache, "
+            "lectura_cache, coste FROM llamadas_extractor ORDER BY id"
+        ).fetchall()
+        claves = ("fecha", "modo", "candidato", "lote", "entrada", "salida",
+                  "escritura_cache", "lectura_cache", "coste")  # fmt: skip
+        return [dict(zip(claves, fila, strict=True)) for fila in filas]
+
+    def guardar_extraccion(
+        self, candidato: str, fecha: str, version: str, huella: str, valida: bool,
+        documento: Documento,
+    ) -> None:  # fmt: skip
+        with self._conexion:
+            self._conexion.execute(
+                "INSERT INTO extracciones (candidato, fecha, version, huella, valida, documento) "
+                "VALUES (?, ?, ?, ?, ?, ?)",
+                (candidato, fecha, version, huella, int(valida), _json(documento)),
+            )
+
+    def extracciones(self, candidato: str) -> list[Documento]:
+        filas = self._conexion.execute(
+            "SELECT fecha, version, huella, valida, documento FROM extracciones "
+            "WHERE candidato = ? ORDER BY id",
+            (candidato,),
+        ).fetchall()
+        return [
+            {"fecha": f, "version": v, "huella": h, "valida": bool(ok), **json.loads(d)}
+            for f, v, h, ok, d in filas
+        ]
+
+    def vocabulario(self, tipo: str) -> dict[str, Documento]:
+        filas = self._conexion.execute(
+            "SELECT clave, documento FROM vocabulario WHERE tipo = ? ORDER BY clave", (tipo,)
+        ).fetchall()
+        return {clave: json.loads(documento) for clave, documento in filas}
+
+    def ampliar_vocabulario(self, tipo: str, clave: str, documento: Documento) -> bool:
+        """Añade la entrada si la clave es nueva. True si la ha añadido."""
+        with self._conexion:
+            cursor = self._conexion.execute(
+                "INSERT INTO vocabulario (tipo, clave, documento) VALUES (?, ?, ?) "
+                "ON CONFLICT (tipo, clave) DO NOTHING",
+                (tipo, clave, _json(documento)),
+            )
+        return cursor.rowcount > 0
+
+    def registrar_fusion(
+        self, fecha: str, absorbido: str, destino: str, motivo: str, fuentes: list[str]
+    ) -> None:
+        """Anota una fusión con las fuentes que el absorbido aportó al destino."""
+        with self._conexion:
+            self._conexion.execute(
+                "INSERT INTO fusiones (fecha, absorbido, destino, motivo, fuentes) "
+                "VALUES (?, ?, ?, ?, ?)",
+                (fecha, absorbido, destino, motivo, _json(fuentes)),
+            )
+
+    def revertir_fusion(self, absorbido: str) -> None:
+        with self._conexion:
+            self._conexion.execute(
+                "UPDATE fusiones SET revertida = 1 WHERE absorbido = ? AND revertida = 0",
+                (absorbido,),
+            )
+
+    def fusiones(self) -> list[Documento]:
+        filas = self._conexion.execute(
+            "SELECT fecha, absorbido, destino, motivo, fuentes, revertida FROM fusiones ORDER BY id"
+        ).fetchall()
+        return [
+            {"fecha": f, "absorbido": a, "destino": d, "motivo": m,
+             "fuentes": json.loads(fu), "revertida": bool(r)}
+            for f, a, d, m, fu, r in filas
+        ]  # fmt: skip
+
+    def siguiente_id_incidente(self, anio: int) -> str:
+        prefijo = f"EODI-{anio:04d}-"
+        fila = self._conexion.execute(
+            "SELECT max(id) FROM incidentes WHERE id LIKE ?", (prefijo + "%",)
+        ).fetchone()
+        ultimo = int(fila[0][len(prefijo) :]) if fila and fila[0] else 0
+        return f"{prefijo}{ultimo + 1:05d}"
+
+    def siguiente_id_episodio(self, anio: int) -> str:
+        prefijo = f"EODI-EP-{anio:04d}-"
+        fila = self._conexion.execute(
+            "SELECT max(id) FROM episodios WHERE id LIKE ?", (prefijo + "%",)
+        ).fetchone()
+        ultimo = int(fila[0][len(prefijo) :]) if fila and fila[0] else 0
+        return f"{prefijo}{ultimo + 1:04d}"
 
     # --- Lectura ------------------------------------------------------------
 

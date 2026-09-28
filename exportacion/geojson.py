@@ -40,6 +40,9 @@ def exportar(
 ) -> Documento:
     features = []
     for incidente in incidentes:
+        # Un incidente fundido en otro sale dentro de aquel.
+        if "fusionado_en" in incidente:
+            continue
         errores = validar_incidente(incidente, ahora, vocabulario_modelos)
         if errores:
             raise ExportacionInvalida(f"{incidente.get('id')}: {errores[0].mensaje}")

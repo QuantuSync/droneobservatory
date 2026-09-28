@@ -17,6 +17,17 @@
     "estado": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.0.0:comun#/$defs/estado_historial"},
     "titulo": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.0.0:comun#/$defs/titulo"},
     "episodio": {"x-visibilidad": "publico", "type": "string", "pattern": "^EODI-EP-\\d{4}-\\d{4}$"},
+    "presencia_dron": {
+      "x-visibilidad": "publico",
+      "description": "Si se sabe que había un dron: confirmada (restos, rastreo por radar o una autoridad que lo afirma expresamente), no_confirmada (solo avistamientos) o descartada. Independiente del estado: un cierre confirmado no implica dron confirmado.",
+      "enum": ["confirmada", "no_confirmada", "descartada"]
+    },
+    "fusionado_en": {
+      "x-visibilidad": "interno",
+      "description": "Incidente en el que se ha fundido este. No se publica; la fusión se revierte quitando el campo.",
+      "type": "string",
+      "pattern": "^EODI-\\d{4}-\\d{5}$"
+    },
     "origen_demostrado_por": {
       "x-visibilidad": "interno",
       "description": "Prueba de que el dron entró desde fuera. Obligatorio para el tipo incursión.",

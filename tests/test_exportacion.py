@@ -41,10 +41,25 @@ def test_la_lista_cerrada_solo_contiene_campos_publicos_del_esquema() -> None:
 def test_el_ejemplo_completo_rellena_todos_los_campos_internos() -> None:
     # Garantiza que los tests anteriores ejercitan de verdad cada campo interno.
     presentes = set(rutas(ejemplos.incidente_completo()))
+    # fusionado_en saca al incidente de la publicación: tiene su propio test.
     internos_hoja = {
-        r for r in VISIBILIDAD[Visibilidad.INTERNO] if not r.startswith("drones.velocidad_ms.")
+        r
+        for r in VISIBILIDAD[Visibilidad.INTERNO]
+        if not r.startswith("drones.velocidad_ms.") and r != "fusionado_en"
     }
     assert internos_hoja - presentes == set()
+
+
+def test_un_incidente_fundido_en_otro_no_se_publica() -> None:
+    fundido = ejemplos.incidente_minimo()
+    fundido["fusionado_en"] = ejemplos.incidente_completo()["id"]
+    coleccion = exportar([ejemplos.incidente_completo(), fundido], AHORA, VOCABULARIO_MODELOS)
+    assert [f["id"] for f in coleccion["features"]] == [ejemplos.incidente_completo()["id"]]
+
+
+def test_presencia_dron_se_publica() -> None:
+    (feature, _) = exportar_ejemplos()["features"]
+    assert feature["properties"]["presencia_dron"] == "no_confirmada"
 
 
 def test_la_comprobacion_detecta_un_campo_colado() -> None:

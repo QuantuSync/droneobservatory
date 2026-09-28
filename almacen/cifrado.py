@@ -5,6 +5,7 @@ escribe en el repositorio. En local puede cargarse desde un fichero fuera de
 cualquier repositorio. El destinatario se deriva de ella.
 """
 
+import gzip
 import os
 import sqlite3
 from pathlib import Path
@@ -14,6 +15,13 @@ import pyrage
 VARIABLE_CLAVE = "EODI_CLAVE_AGE"
 # Solo en local y fuera de cualquier repositorio.
 RUTA_CLAVE_LOCAL = Path.home() / ".eodi" / "clave_age.txt"
+
+
+# La base se comprime antes de cifrar: con el histórico de noticias pasaba de los 100 MB
+# que admite GitHub por fichero, y su texto se reduce a una fracción. Nivel 6, el
+# equilibrio habitual entre tamaño y tiempo.
+NIVEL_COMPRESION = 6
+_GZIP = b"\x1f\x8b"
 
 
 class ClaveAusente(RuntimeError):
@@ -36,13 +44,24 @@ def cargar_clave_local(ruta: Path = RUTA_CLAVE_LOCAL) -> None:
 
 
 def cifrar(conexion: sqlite3.Connection) -> bytes:
-    """Serializa la base completa y la cifra."""
-    return pyrage.encrypt(conexion.serialize(), [_identidad().to_public()])
+    """Serializa la base completa, la comprime y la cifra."""
+    return cifrar_datos(gzip.compress(conexion.serialize(), NIVEL_COMPRESION, mtime=0))
+
+
+def cifrar_datos(datos: bytes) -> bytes:
+    return pyrage.encrypt(datos, [_identidad().to_public()])
+
+
+def descifrar_datos(cifrado: bytes) -> bytes:
+    return pyrage.decrypt(cifrado, [_identidad()])
 
 
 def descifrar(cifrado: bytes) -> sqlite3.Connection:
     """Descifra y carga la base en memoria; nunca toca el disco en claro."""
-    datos = pyrage.decrypt(cifrado, [_identidad()])
+    datos = descifrar_datos(cifrado)
+    # Las bases cifradas antes de comprimir se leen igual.
+    if datos[:2] == _GZIP:
+        datos = gzip.decompress(datos)
     conexion = sqlite3.connect(":memory:")
     conexion.deserialize(datos)
     return conexion

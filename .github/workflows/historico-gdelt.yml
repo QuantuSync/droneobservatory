@@ -1,0 +1,138 @@
+name: historico-gdelt
+
+# Histórico de noticias desde los ficheros GKG de GDELT, a mano. Mientras el
+# workflow no está en main, GitHub no deja lanzarlo con workflow_dispatch desde
+# otra rama: se lanza con un push a la rama lanzar-historico-gdelt.
+on:
+  workflow_dispatch:
+    inputs:
+      trabajos:
+        description: "Trabajos en paralelo (hasta 20)"
+        default: "20"
+      desde:
+        description: "Inicio (UTC, AAAA-MM-DDTHH:MM:SSZ); por defecto, el 1 de enero de 2025"
+        default: ""
+      hasta:
+        description: "Fin (UTC); por defecto, donde empezó la recogida horaria"
+        default: ""
+  push:
+    branches: [lanzar-historico-gdelt]
+
+permissions:
+  contents: read
+
+env:
+  AUTOR: QuantuSync
+  CORREO: 192205734+QuantuSync@users.noreply.github.com
+  DATOS: git@github.com:QuantuSync/droneobservatory-datos.git
+  # Clave de host publicada por GitHub: sin confiar en la primera conexión.
+  CLAVE_HOST: "github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl"
+
+jobs:
+  preparar:
+    if: github.repository == 'QuantuSync/droneobservatory'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      tramos: ${{ steps.tramos.outputs.tramos }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.13"
+      - run: pip install -r requirements.txt
+      - name: Clave de despliegue del repositorio de datos
+        env:
+          CLAVE: ${{ secrets.EODI_DATOS_CLAVE_DESPLIEGUE }}
+        run: |
+          install -m 700 -d "$RUNNER_TEMP/ssh"
+          printf '%s\n' "$CLAVE" > "$RUNNER_TEMP/ssh/despliegue"
+          chmod 600 "$RUNNER_TEMP/ssh/despliegue"
+          echo "$CLAVE_HOST" > "$RUNNER_TEMP/ssh/known_hosts"
+      - name: Tramos y rama de parciales vacía
+        id: tramos
+        env:
+          EODI_CLAVE_AGE: ${{ secrets.EODI_CLAVE_AGE }}
+          TRABAJOS: ${{ inputs.trabajos || '20' }}
+          DESDE: ${{ inputs.desde }}
+          HASTA: ${{ inputs.hasta }}
+        run: |
+          export GIT_SSH_COMMAND="ssh -i $RUNNER_TEMP/ssh/despliegue -o IdentitiesOnly=yes -o UserKnownHostsFile=$RUNNER_TEMP/ssh/known_hosts"
+          argumentos=(--trabajos "$TRABAJOS")
+          [ -n "$DESDE" ] && argumentos+=(--desde "$DESDE")
+          [ -n "$HASTA" ] && argumentos+=(--hasta "$HASTA")
+          tramos=$(python -m recogida.historico_gdelt --repositorio "$DATOS" tramos "${argumentos[@]}")
+          echo "tramos=$tramos" >> "$GITHUB_OUTPUT"
+          python -m recogida.historico_gdelt --repositorio "$DATOS" reiniciar --correo "$CORREO" --etiqueta "$GITHUB_RUN_ID"
+      - name: Borrar la clave de despliegue
+        if: always()
+        run: rm -rf "$RUNNER_TEMP/ssh"
+
+  tramo:
+    needs: preparar
+    runs-on: ubuntu-latest
+    # Cada trabajo deja de leer a las 5,5 horas y sube lo que tiene.
+    timeout-minutes: 350
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix:
+        tramo: ${{ fromJSON(needs.preparar.outputs.tramos) }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.13"
+      - run: pip install -r requirements.txt
+      - name: Clave de despliegue del repositorio de datos
+        env:
+          CLAVE: ${{ secrets.EODI_DATOS_CLAVE_DESPLIEGUE }}
+        run: |
+          install -m 700 -d "$RUNNER_TEMP/ssh"
+          printf '%s\n' "$CLAVE" > "$RUNNER_TEMP/ssh/despliegue"
+          chmod 600 "$RUNNER_TEMP/ssh/despliegue"
+          echo "$CLAVE_HOST" > "$RUNNER_TEMP/ssh/known_hosts"
+      - name: Leer el tramo y subir el parcial cifrado
+        env:
+          EODI_CLAVE_AGE: ${{ secrets.EODI_CLAVE_AGE }}
+          DESDE: ${{ matrix.tramo.desde }}
+          HASTA: ${{ matrix.tramo.hasta }}
+        run: |
+          export GIT_SSH_COMMAND="ssh -i $RUNNER_TEMP/ssh/despliegue -o IdentitiesOnly=yes -o UserKnownHostsFile=$RUNNER_TEMP/ssh/known_hosts"
+          python -m recogida.historico_gdelt --repositorio "$DATOS" tramo --desde "$DESDE" --hasta "$HASTA" --correo "$CORREO"
+      - name: Borrar la clave de despliegue
+        if: always()
+        run: rm -rf "$RUNNER_TEMP/ssh"
+
+  incorporar:
+    needs: [preparar, tramo]
+    if: ${{ !cancelled() && needs.preparar.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    # La misma cola que la recogida horaria: las dos escriben en la rama estado.
+    concurrency:
+      group: recogida
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.13"
+      - run: pip install -r requirements.txt
+      - name: Clave de despliegue del repositorio de datos
+        env:
+          CLAVE: ${{ secrets.EODI_DATOS_CLAVE_DESPLIEGUE }}
+        run: |
+          install -m 700 -d "$RUNNER_TEMP/ssh"
+          printf '%s\n' "$CLAVE" > "$RUNNER_TEMP/ssh/despliegue"
+          chmod 600 "$RUNNER_TEMP/ssh/despliegue"
+          echo "$CLAVE_HOST" > "$RUNNER_TEMP/ssh/known_hosts"
+      - name: Incorporar los parciales a la base
+        env:
+          EODI_CLAVE_AGE: ${{ secrets.EODI_CLAVE_AGE }}
+        run: |
+          export GIT_SSH_COMMAND="ssh -i $RUNNER_TEMP/ssh/despliegue -o IdentitiesOnly=yes -o UserKnownHostsFile=$RUNNER_TEMP/ssh/known_hosts"
+          python -m recogida.historico_gdelt --repositorio "$DATOS" incorporar --correo "$CORREO"
+      - name: Borrar la clave de despliegue
+        if: always()
+        run: rm -rf "$RUNNER_TEMP/ssh"

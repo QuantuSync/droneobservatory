@@ -44,7 +44,7 @@
   "senales": {
     "aeropuerto": [
       "airport", "aeropuerto", "aeroport", "Flughafen", "aéroport", "aeroporto", "lotnisk",
-      "luchthaven", "lufthavn", "flygplats", "lentoasem", "letiště", "letisk", "repülőt",
+      "luchthaven", "lufthavn", "flygplats", "lentoasem", "lentokentt", "letiště", "letisk", "repülőt",
       "летищ", "αεροδρόμι", "аэропорт", "аеропорт", "lennujaam", "oro uost", "lidost",
       "zračn", "aerodrom", "flights", "vuelos", "Flüge", "Flugbetrieb", "vols", "voli", "lotów"
     ],
@@ -83,7 +83,7 @@
   "tipo_de_lugar": {
     "aeropuerto": [
       "airport", "aeropuerto", "aeroport", "Flughafen", "aéroport", "aeroporto", "lotnisk",
-      "luchthaven", "lufthavn", "flygplats", "lentoasem", "letiště", "letisk", "repülőt",
+      "luchthaven", "lufthavn", "flygplats", "lentoasem", "lentokentt", "letiště", "letisk", "repülőt",
       "летищ", "αεροδρόμι", "аэропорт", "аеропорт", "lennujaam", "oro uost", "lidost",
       "zračn", "aerodrom"
     ],
