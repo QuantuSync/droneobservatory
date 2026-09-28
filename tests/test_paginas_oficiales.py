@@ -108,15 +108,6 @@ CASOS = [
         '+02:00"}</script><time datetime="2025-08-29"></time>',
         (datetime(2025, 9, 16, 12, 0, tzinfo=UTC), "minuto"),
     ),
-    (
-        "aalborg_lufthavn",
-        '<a href="/nyheder/2025/september/droner-over-aalborg-lufthavn">Droner over Aalborg '
-        "Lufthavn</a>",
-        "https://aal.dk/nyheder/2025/september/droner-over-aalborg-lufthavn",
-        "Droner over Aalborg Lufthavn",
-        "<div>Vælg dato 26-09-2025</div><div>25. september 2025 Aalborg Lufthavn</div>",
-        (datetime(2025, 9, 25, tzinfo=UTC), "dia"),
-    ),
 ]
 
 
@@ -141,6 +132,16 @@ def test_direcciones_con_letras_no_ascii_se_codifican() -> None:
     pagina = '<a href="/cpresa/19397_Fragmente-de-dronă">Fragmente de dronă</a>'
     ((direccion, _),) = paginas_oficiales.enlaces(pagina, fuente("mapn"))
     assert direccion == "https://www.mapn.ro/cpresa/19397_Fragmente-de-dron%C4%83"
+
+
+def test_fecha_con_el_mes_en_danes() -> None:
+    danesa = {"zona": "Europe/Copenhagen", "fecha": r"(\d{1,2}\. (?:maj|oktober) \d{4})"}
+    articulo = f"<div>26-10-2025</div><div>3. oktober 2025</div><p>{PARRAFO}</p>"
+    assert paginas_oficiales.contenido(articulo, danesa, "x") == (
+        datetime(2025, 10, 3, tzinfo=UTC),
+        "dia",
+        PARRAFO,
+    )
 
 
 def test_sin_fecha_no_hay_nota() -> None:
