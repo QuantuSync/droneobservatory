@@ -1,0 +1,30 @@
+{
+  "version_esquema": "1.0.0",
+  "descripcion": "Fuentes oficiales que confirman incidentes (fiabilidad A, autoridad). tipo rss: canal RSS con un elemento por nota. Las notas se leen respetando robots.txt y con la identificación del observatorio.",
+  "fuentes": [
+    {
+      "id": "politi_kobenhavn",
+      "medio": "Københavns Politi",
+      "pais": "DK",
+      "idioma": "da",
+      "tipo": "rss",
+      "url": "https://via.ritzau.dk/rss/short-messages/latest?publisherId=90685"
+    },
+    {
+      "id": "politi_nordjylland",
+      "medio": "Nordjyllands Politi",
+      "pais": "DK",
+      "idioma": "da",
+      "tipo": "rss",
+      "url": "https://via.ritzau.dk/rss/short-messages/latest?publisherId=13562880"
+    },
+    {
+      "id": "rigspolitiet",
+      "medio": "Rigspolitiet",
+      "pais": "DK",
+      "idioma": "da",
+      "tipo": "rss",
+      "url": "https://via.ritzau.dk/rss/short-messages/latest?publisherId=90752"
+    }
+  ]
+}

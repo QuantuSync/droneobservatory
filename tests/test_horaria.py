@@ -12,7 +12,7 @@ from almacen import remoto
 from almacen.base import Almacen
 from almacen.cifrado import VARIABLE_CLAVE, abrir_cifrada, guardar_cifrada
 from exportacion import publicar
-from recogida import fuerza_aerea, gdelt, horaria, mindef
+from recogida import fuerza_aerea, gdelt, horaria, mindef, oficiales
 from recogida.cache import CachePaginas
 from tests.telegram_falso import CanalFalso, descargador
 from tests.test_fuerza_aerea import canal
@@ -30,6 +30,10 @@ def entorno(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> tuple[str, Canal
     monkeypatch.setattr(horaria, "FUENTES", (fuerza_aerea.FUENTE,))
     # GDELT sin red: una API que no devuelve artículos.
     monkeypatch.setattr(gdelt, "ejecutar", lambda almacen, descargador, ahora: gdelt.Recuentos())
+    # Fuentes oficiales sin red.
+    monkeypatch.setattr(
+        oficiales, "ejecutar", lambda almacen, ahora, modelos: oficiales.Recuentos()
+    )
     salida = tmp_path / "publicacion"
     monkeypatch.setattr(horaria, "publicar", lambda a, ahora: publicar.publicar(a, ahora, salida))
     return desnudo.as_uri(), falso, salida
