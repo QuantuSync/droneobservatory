@@ -24,3 +24,5 @@ jobs:
       - run: pip install -r requirements.txt
       - name: Sondear las fuentes oficiales
         run: python -m recogida.sondeo_oficiales
+      - name: Leer las fuentes activas
+        run: python -m recogida.sondeo_oficiales --activas
