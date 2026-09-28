@@ -1,22 +1,31 @@
 """Ficha que devuelve el extractor: esquema de salida, instrucciones y petición.
 
-La salida está obligada por el esquema (salida estructurada del servicio). Cada
-campo lleva la fuente de la que sale, la frase de origen (25 palabras como
-máximo, copiada del texto) y la confianza. El servicio no admite mínimos ni
-máximos en el esquema: los rangos, las fechas y las coordenadas se validan con
-código (`proceso/validacion_ficha.py`).
+La salida está obligada por el esquema (salida estructurada del servicio): una
+lista de datos, cada uno con el nombre del campo (lista cerrada), su valor como
+texto con un formato fijo, la fuente de la que sale, la frase de origen (25
+palabras como máximo, copiada del texto) y la confianza, más los títulos.
 
-Las instrucciones y el esquema van delante y marcados para la caché del
-servicio; el candidato va detrás. Los ejemplos hacen que el bloque fijo pase
-del mínimo que el servicio cachea con este modelo (4096 tokens).
+Es una lista y no un objeto con un campo por dato porque el servicio rechaza
+los esquemas grandes: admite como mucho 16 parámetros con tipos unión y limita
+el tamaño de la gramática que compila; con 21 campos de cinco partes cada uno,
+la gramática era demasiado grande. Así, además, solo salen los datos que las
+fuentes dicen. El código interpreta cada valor (`leer_respuesta`) y lo valida
+(`proceso/validacion_ficha.py`); lo que no se entiende se descarta con su motivo.
+
+Las instrucciones van delante y marcadas para la caché del servicio; el
+candidato va detrás. Con el modelo configurado, el servicio solo cachea bloques
+de 4096 tokens o más, y las instrucciones son unas 2000: la marca queda puesta y
+se aprovecha si el bloque crece o el modelo cambia. Rellenarlo hasta el mínimo
+encarecería cada llamada que no acierte en la caché.
 """
 
 import json
+import re
 from dataclasses import dataclass
 from typing import Any
 
-VERSION = "ficha/1"
-# La ficha completa ocupa unos 600 tokens; 1500 dejan margen sin pagar de más.
+VERSION = "ficha/3"
+# Una ficha con todos los datos ocupa unos 800 tokens; 1500 dejan margen sin pagar de más.
 MAX_TOKENS_SALIDA = 1500
 TIPOS = ("interrupcion_aeroportuaria", "sobrevuelo", "incursion")
 CATEGORIAS = (
@@ -29,74 +38,44 @@ CIERRE = ("si", "no", "desconocido")
 MEDIDAS = ("cierre_espacio_aereo", "patrulla", "cazas", "derribo", "inhibicion")
 ORIGEN = ("rastreo", "restos")
 
-
-def _nulo(esquema: dict[str, Any]) -> dict[str, Any]:
-    return {"anyOf": [esquema, {"type": "null"}]}
-
-
-def _campo(valor: dict[str, Any]) -> dict[str, Any]:
-    """Un campo con su valor (o null si ninguna fuente lo dice), fuente, frase y confianza."""
-    return {
-        "type": "object",
-        "additionalProperties": False,
-        "required": ["valor", "fuente", "frase", "confianza"],
-        "properties": {
-            "valor": _nulo(valor),
-            "fuente": {"type": "integer"},
-            "frase": {"type": "string"},
-            "confianza": {"type": "number"},
-        },
-    }
-
-
-_TEXTO = {"type": "string"}
-_ENTERO = {"type": "integer"}
-_RANGO = {
-    "type": "object",
-    "additionalProperties": False,
-    "required": ["min", "max"],
-    "properties": {"min": _ENTERO, "max": _ENTERO},
+BOOLEANOS = ("es_incidente", "objetivo_conocido")
+ENUMERADOS: dict[str, tuple[str, ...]] = {
+    "tipo": TIPOS,
+    "inicio_precision": PRECISIONES,
+    "objetivo_categoria": CATEGORIAS,
+    "presencia_dron": PRESENCIA,
+    "cierre": CIERRE,
 }
-_LUGAR = {
-    "type": "object",
-    "additionalProperties": False,
-    "required": ["nombre", "categoria", "pais", "lat", "lon"],
-    "properties": {
-        "nombre": _TEXTO,
-        "categoria": {"enum": list(CATEGORIAS)},
-        "pais": _TEXTO,
-        "lat": {"type": "number"},
-        "lon": {"type": "number"},
-    },
-}
-CAMPOS: dict[str, dict[str, Any]] = {
-    "es_incidente": _campo({"type": "boolean"}),
-    "tipo": _campo({"enum": list(TIPOS)}),
-    "inicio": _campo(_TEXTO),
-    "inicio_precision": _campo({"enum": list(PRECISIONES)}),
-    "fin": _campo(_TEXTO),
-    "pais": _campo(_TEXTO),
-    "localidad": _campo(_TEXTO),
-    "objetivo_conocido": _campo({"type": "boolean"}),
-    "objetivo_categoria": _campo({"enum": list(CATEGORIAS)}),
-    "objetivo_nombre": _campo(_TEXTO),
-    "lugar_nuevo": _campo(_LUGAR),
-    "drones": _campo(_RANGO),
-    "presencia_dron": _campo({"enum": list(PRESENCIA)}),
-    "cierre": _campo({"enum": list(CIERRE)}),
-    "cierre_minutos": _campo(_RANGO),
-    "vuelos_desviados": _campo(_RANGO),
-    "vuelos_cancelados": _campo(_RANGO),
-    "vuelos_retrasados": _campo(_RANGO),
-    "modelo_dron": _campo(_TEXTO),
-    "medidas": _campo({"type": "array", "items": {"enum": list(MEDIDAS)}}),
-    "origen_demostrado": _campo({"type": "array", "items": {"enum": list(ORIGEN)}}),
-}
+TEXTOS = ("inicio", "fin", "pais", "localidad", "objetivo_nombre", "modelo_dron")
+RANGOS = ("drones", "cierre_minutos", "vuelos_desviados", "vuelos_cancelados", "vuelos_retrasados")
+LISTAS: dict[str, tuple[str, ...]] = {"medidas": MEDIDAS, "origen_demostrado": ORIGEN}
+CAMPOS: tuple[str, ...] = (
+    *BOOLEANOS, *ENUMERADOS, *TEXTOS, "lugar_nuevo", *RANGOS, *LISTAS,
+)  # fmt: skip
+
 ESQUEMA: dict[str, Any] = {
     "type": "object",
     "additionalProperties": False,
-    "required": [*CAMPOS, "titulo_es", "titulo_en"],
-    "properties": {**CAMPOS, "titulo_es": _TEXTO, "titulo_en": _TEXTO},
+    "required": ["datos", "titulo_es", "titulo_en"],
+    "properties": {
+        "datos": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "additionalProperties": False,
+                "required": ["campo", "valor", "fuente", "frase", "confianza"],
+                "properties": {
+                    "campo": {"enum": list(CAMPOS)},
+                    "valor": {"type": "string"},
+                    "fuente": {"type": "integer"},
+                    "frase": {"type": "string"},
+                    "confianza": {"type": "number"},
+                },
+            },
+        },
+        "titulo_es": {"type": "string"},
+        "titulo_en": {"type": "string"},
+    },
 }
 
 INSTRUCCIONES = """Eres el extractor del Observatorio Europeo de Incidentes con Drones. Recibes \
@@ -108,46 +87,49 @@ Qué es un incidente: un dron visto, detectado, derribado o caído en Europa (fu
 de Rusia) cerca de un aeropuerto, una base militar, una central, un puerto u otra \
 infraestructura, o que entra en el espacio aéreo de un país. No son incidentes: ataques de la \
 guerra en Ucrania o en Rusia, espectáculos, reparto, agricultura, compras, ejercicios y pruebas \
-anunciados, leyes y planes contra drones, ni noticias que solo hablan de drones en general. Si \
-no es un incidente, es_incidente vale false y el resto de campos puede ir con valor null.
+anunciados, leyes y planes contra drones, ni noticias que solo hablan de drones en general.
 
-Cada campo tiene cuatro partes:
-- valor: el dato, o null si ninguna fuente lo dice.
-- fuente: el número de la fuente de la que sale (1, 2 o 3); 0 si el valor es null.
+La ficha es una lista de datos. Incluye solo los datos que alguna fuente dice; el dato \
+es_incidente va siempre. Cada dato tiene:
+- campo: su nombre.
+- valor: el dato como texto, con el formato de su campo (abajo).
+- fuente: el número de la fuente de la que sale (1, 2 o 3).
 - frase: la frase de esa fuente que lo dice, copiada literalmente en su idioma, de 25 palabras \
-como máximo; vacía si el valor es null.
+como máximo.
 - confianza: de 0 a 1, cuánto apoya la frase ese valor. Usa 0.9 o más solo si la frase lo dice \
 expresamente; 0.5 a 0.8 si se deduce con claridad; menos de 0.5 si es una suposición.
 
-Campos:
+Campos y formato del valor:
+- es_incidente: true o false. Si es false, no hace falta ningún otro dato.
 - tipo: interrupcion_aeroportuaria si un aeropuerto cierra, desvía, cancela o retrasa vuelos; \
 incursion solo si una autoridad dice que el dron entró desde otro país (rastreo por radar o \
 restos); si no, sobrevuelo.
 - inicio: cuándo empezó el incidente (no cuándo se publicó), en UTC, como AAAA-MM-DDTHH:MM o \
 AAAA-MM-DD. Convierte la hora local del país a UTC. inicio_precision: minuto si la fuente da \
 la hora exacta, hora si da una hora aproximada o una franja corta, dia si solo da el día o \
-dice anoche, ayer, el lunes. fin: cuándo acabó, con el mismo formato, si lo dice.
+dice anoche, ayer, el lunes. fin: cuándo acabó, con el mismo formato.
 - pais: código ISO 3166-1 alfa-2 del país del incidente. localidad: ciudad o municipio.
 - objetivo_conocido: true si el incidente ocurre en el objetivo conocido que se te indica; \
-false si ocurre en otro sitio. objetivo_categoria y objetivo_nombre: la instalación afectada \
-tal como la nombra la fuente.
-- lugar_nuevo: solo si objetivo_conocido es false y la fuente nombra la instalación: su nombre, \
-categoría, país y coordenadas aproximadas en grados decimales. Si no sabes dónde está, null.
-- drones: número de drones como rango mínimo y máximo («varios» es de 2 a 10; «un enjambre», de \
-5 a 50; un número exacto, mínimo igual a máximo).
+false si ocurre en otro sitio. objetivo_categoria (aeropuerto, base_militar, puerto, energia, \
+presa, estadio, industrial, gubernamental u otra) y objetivo_nombre: la instalación afectada.
+- lugar_nuevo: solo si objetivo_conocido es false y la fuente nombra la instalación, como \
+«nombre; categoría; país; latitud; longitud», con coordenadas aproximadas en grados \
+decimales. Si no sabes dónde está, no lo incluyas.
+- drones: número de drones como «N» o «mínimo-máximo» («varios» es 2-10; «un enjambre», 5-50).
 - presencia_dron: confirmada solo si hay restos, rastreo por radar o una autoridad afirma \
 expresamente que era un dron; descartada si una autoridad dice que no lo era (un globo, un \
 avión, una estrella); no_confirmada si solo hay avistamientos.
-- cierre: si se cerró el aeropuerto o el espacio aéreo; cierre_minutos: cuánto duró.
-- vuelos_desviados, vuelos_cancelados, vuelos_retrasados: rangos de vuelos afectados.
-- modelo_dron: el modelo o tipo que nombra la fuente (por ejemplo, Shahed, Gerbera, DJI Mavic); \
-null si no lo nombra.
-- medidas: lo que hicieron las autoridades: cierre_espacio_aereo, patrulla, cazas, derribo, \
-inhibicion.
+- cierre: si, no o desconocido: si se cerró el aeropuerto o el espacio aéreo. cierre_minutos: \
+cuánto duró, en minutos, como «N» o «mínimo-máximo».
+- vuelos_desviados, vuelos_cancelados, vuelos_retrasados: «N» o «mínimo-máximo».
+- modelo_dron: el modelo o tipo que nombra la fuente (Shahed, Gerbera, DJI Mavic).
+- medidas: lo que hicieron las autoridades, separado por comas: cierre_espacio_aereo, patrulla, \
+cazas, derribo, inhibicion.
 - origen_demostrado: rastreo si una autoridad siguió al dron por radar desde otro país; restos si \
-se encontraron restos que prueban el origen.
+se encontraron restos que prueban el origen; separado por comas.
 - titulo_es y titulo_en: un título breve y neutro, en español y en inglés, con lugar y hecho \
-(«Drones sobre el aeropuerto de Copenhague obligan a cerrarlo»), sin fecha.
+(«Drones sobre el aeropuerto de Copenhague obligan a cerrarlo»), sin fecha. Van aparte de los \
+datos y siempre.
 
 Reglas: nunca inventes; si las fuentes discrepan, usa la más precisa y dilo con la confianza. \
 No uses la fecha de publicación como fecha del incidente salvo que la fuente diga que ocurrió \
@@ -157,13 +139,12 @@ Ejemplo 1.
 Objetivo conocido: Aeropuerto de Copenhague (aeropuerto, DK, EKCH).
 Fuente 1 (dr.dk, 2025-09-23T05:12Z, da). Titular: Droner over Københavns Lufthavn: lufthavnen \
 lukket i fire timer. Texto: Københavns Lufthavn var lukket fra klokken 20.30 mandag aften, \
-efter at der blev observeret tre til fire store droner. Politiet siger, at der er tale om en \
-dygtig aktør. 31 fly blev omdirigeret.
-Ficha esperada (resumida): es_incidente true (fuente 1, «Københavns Lufthavn var lukket fra \
-klokken 20.30 mandag aften», 0.95); tipo interrupcion_aeroportuaria; inicio 2025-09-22T18:30 \
-con precisión minuto (20.30 en Copenhague es 18.30 UTC); pais DK; localidad Copenhague; \
-objetivo_conocido true; drones de 3 a 4; presencia_dron no_confirmada (solo observación); \
-cierre si, de 240 a 240 minutos; vuelos_desviados de 31 a 31; medidas []; origen_demostrado [].
+efter at der blev observeret tre til fire store droner. 31 fly blev omdirigeret.
+Datos esperados: es_incidente «true» (fuente 1, «Københavns Lufthavn var lukket fra klokken \
+20.30 mandag aften», 0.95); tipo «interrupcion_aeroportuaria»; inicio «2025-09-22T18:30» (20.30 \
+en Copenhague es 18.30 UTC) con inicio_precision «minuto»; pais «DK»; objetivo_conocido «true»; \
+drones «3-4»; presencia_dron «no_confirmada» (solo observación); cierre «si»; cierre_minutos \
+«240»; vuelos_desviados «31».
 
 Ejemplo 2.
 Objetivo conocido: Aeropuerto de Múnich (aeropuerto, DE, EDDM).
@@ -171,18 +152,17 @@ Fuente 1 (br.de, 2025-10-03T06:40Z, de). Titular: Drohnensichtungen: Flughafen M
 Betrieb ein. Texto: Wegen mehrerer Drohnensichtungen ist der Flugbetrieb am Münchner Flughafen \
 am Donnerstagabend gegen 22 Uhr eingestellt worden. 17 Flüge konnten nicht starten, 15 \
 landende Maschinen wurden umgeleitet. Die Bundespolizei suchte das Gelände ab.
-Ficha esperada (resumida): tipo interrupcion_aeroportuaria; inicio 2025-10-02T20:00 con \
-precisión hora («gegen 22 Uhr»); drones de 2 a 10 («mehrerer»); vuelos_cancelados de 17 a 17; \
-vuelos_desviados de 15 a 15; cierre si; medidas [patrulla]; presencia_dron no_confirmada.
+Datos esperados: tipo «interrupcion_aeroportuaria»; inicio «2025-10-02T20:00» con precisión \
+«hora» («gegen 22 Uhr»); drones «2-10» («mehrerer»); vuelos_cancelados «17»; vuelos_desviados \
+«15»; cierre «si»; medidas «patrulla»; presencia_dron «no_confirmada».
 
 Ejemplo 3.
 Objetivo conocido: Base aérea de Kleine Brogel (base_militar, BE).
 Fuente 1 (vrt.be, 2025-11-01T09:00Z, nl). Titular: Opnieuw drones gespot boven militaire \
 basis Kleine Brogel. Texto: Vrijdagavond zijn opnieuw drones gezien boven de basis. Defensie \
 bevestigt de waarnemingen maar kon de toestellen niet uitschakelen.
-Ficha esperada (resumida): tipo sobrevuelo; inicio 2025-10-31 con precisión dia; objetivo \
-base_militar; drones de 2 a 10; presencia_dron no_confirmada (Defensie confirma que hubo \
-avistamientos, no que fueran drones); cierre desconocido; medidas []; origen_demostrado [].
+Datos esperados: tipo «sobrevuelo»; inicio «2025-10-31» con precisión «dia»; drones «2-10»; \
+presencia_dron «no_confirmada» (Defensie confirma que hubo avistamientos, no que fueran drones).
 
 Ejemplo 4.
 Objetivo conocido: Aeropuerto de Rzeszów (aeropuerto, PL, EPRZ).
@@ -190,23 +170,23 @@ Fuente 1 (tvn24.pl, 2025-09-10T07:00Z, pl). Titular: Rosyjskie drony nad Polską
 Texto: W nocy z wtorku na środę przestrzeń powietrzna Polski została naruszona przez rosyjskie \
 drony. Dowództwo Operacyjne potwierdza, że część z nich zestrzelono. Lotnisko w Rzeszowie było \
 zamknięte do rana.
-Ficha esperada (resumida): tipo interrupcion_aeroportuaria (el aeropuerto cerró; manda sobre \
-incursión); inicio 2025-09-09 con precisión dia; presencia_dron confirmada (el mando militar \
-confirma que eran drones y los derribó); medidas [derribo, cazas si la fuente los nombra]; \
-origen_demostrado [rastreo] solo si la fuente dice que se siguieron desde fuera.
+Datos esperados: tipo «interrupcion_aeroportuaria» (el aeropuerto cerró; manda sobre la \
+incursión); inicio «2025-09-09» con precisión «dia»; presencia_dron «confirmada» (el mando \
+militar confirma que eran drones y los derribó); medidas «derribo»; origen_demostrado solo si \
+la fuente dice que se siguieron desde fuera.
 
 Ejemplo 5.
 Objetivo conocido: Aeropuerto de Oslo (aeropuerto, NO, ENGM).
 Fuente 1 (nrk.no, 2025-09-23T06:00Z, no). Titular: Politiet: Ingen droner ved Gardermoen likevel. \
 Texto: Det som ble meldt som droner over Oslo lufthavn i natt, var trolig et fly, sier politiet.
-Ficha esperada (resumida): es_incidente true; tipo sobrevuelo; presencia_dron descartada \
-(la policía dice que era un avión, 0.8 porque dice «trolig»).
+Datos esperados: es_incidente «true»; tipo «sobrevuelo»; presencia_dron «descartada» con \
+confianza 0.8 («trolig»).
 
 Ejemplo 6.
 Objetivo conocido: Aeropuerto de Barcelona (aeropuerto, ES, LEBL).
 Fuente 1 (lavanguardia.com, 2025-06-01T10:00Z, es). Titular: El mejor espectáculo de drones del \
 verano llega a Barcelona. Texto: Mil drones iluminarán la playa el sábado.
-Ficha esperada (resumida): es_incidente false; resto de campos con valor null.
+Datos esperados: solo es_incidente «false».
 """
 
 
@@ -246,15 +226,82 @@ class RespuestaInvalida(ValueError):
     pass
 
 
+class ValorIlegible(ValueError):
+    pass
+
+
+_RANGO = re.compile(r"^\s*(\d+)\s*(?:[-–]\s*(\d+))?\s*$")
+
+
+def interpretar(campo: str, texto: str) -> Any:
+    """El valor tipado de un dato. Lanza ValorIlegible si no sigue el formato del campo."""
+    limpio = texto.strip()
+    if campo in BOOLEANOS:
+        if limpio.lower() not in {"true", "false"}:
+            raise ValorIlegible("no es true ni false")
+        return limpio.lower() == "true"
+    if campo in ENUMERADOS:
+        if limpio not in ENUMERADOS[campo]:
+            raise ValorIlegible("fuera de la lista")
+        return limpio
+    if campo in RANGOS:
+        m = _RANGO.match(limpio)
+        if m is None:
+            raise ValorIlegible("no es un número ni un rango")
+        minimo = int(m[1])
+        return {"min": minimo, "max": int(m[2]) if m[2] else minimo}
+    if campo in LISTAS:
+        elementos = [e.strip() for e in limpio.split(",") if e.strip()]
+        if any(e not in LISTAS[campo] for e in elementos):
+            raise ValorIlegible("elemento fuera de la lista")
+        return sorted(set(elementos))
+    if campo == "lugar_nuevo":
+        partes = [p.strip() for p in limpio.split(";")]
+        if len(partes) != len(("nombre", "categoria", "pais", "lat", "lon")):
+            raise ValorIlegible("lugar sin sus cinco partes")
+        nombre, categoria, pais, lat, lon = partes
+        if categoria not in CATEGORIAS:
+            raise ValorIlegible("categoría fuera de la lista")
+        try:
+            return {"nombre": nombre, "categoria": categoria, "pais": pais,
+                    "lat": float(lat), "lon": float(lon)}  # fmt: skip
+        except ValueError as error:
+            raise ValorIlegible("coordenadas no numéricas") from error
+    return limpio
+
+
 def leer_respuesta(respuesta: dict[str, Any]) -> dict[str, Any]:
-    """La ficha de la respuesta del servicio. Lanza RespuestaInvalida si no la hay."""
+    """La ficha de la respuesta del servicio, un dato por campo con su valor tipado.
+
+    Si un campo sale dos veces, vale el de más confianza. Un valor que no sigue el
+    formato de su campo se anota en «ilegibles» y no pasa. Lanza RespuestaInvalida si
+    la respuesta no trae la ficha.
+    """
     if respuesta.get("stop_reason") not in {"end_turn", "stop_sequence"}:
         raise RespuestaInvalida(f"parada: {respuesta.get('stop_reason')}")
     textos = [b.get("text", "") for b in respuesta.get("content", []) if b.get("type") == "text"]
     try:
-        ficha = json.loads("".join(textos))
+        bruta = json.loads("".join(textos))
     except ValueError as error:
         raise RespuestaInvalida("la salida no es JSON") from error
-    if not isinstance(ficha, dict) or set(ficha) != set(ESQUEMA["required"]):
+    if not isinstance(bruta, dict) or set(bruta) != set(ESQUEMA["required"]):
         raise RespuestaInvalida("la salida no sigue el esquema")
+    ficha: dict[str, Any] = {"titulo_es": bruta["titulo_es"], "titulo_en": bruta["titulo_en"]}
+    ilegibles: list[str] = []
+    for dato in sorted(bruta["datos"], key=lambda d: d.get("confianza", 0)):
+        nombre = dato.get("campo")
+        if nombre not in CAMPOS:
+            continue
+        try:
+            valor = interpretar(nombre, str(dato.get("valor", "")))
+        except ValorIlegible as error:
+            ilegibles.append(f"{nombre}: {error}")
+            continue
+        ficha[nombre] = {
+            "valor": valor,
+            "fuente": dato.get("fuente"),
+            "frase": dato.get("frase"),
+            "confianza": dato.get("confianza"),
+        }
+    ficha["ilegibles"] = ilegibles
     return ficha

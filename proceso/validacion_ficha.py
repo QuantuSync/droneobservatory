@@ -182,6 +182,7 @@ def validar(ficha: dict[str, Any], contexto: Contexto) -> Validada:
     resultado = Validada(
         titulo_es=str(ficha.get("titulo_es", "")).strip(),
         titulo_en=str(ficha.get("titulo_en", "")).strip(),
+        motivos=list(ficha.get("ilegibles", [])),
     )
     for nombre, campo in ficha.items():
         if not isinstance(campo, dict) or campo.get("valor") is None:

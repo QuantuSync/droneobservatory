@@ -31,8 +31,33 @@ CONFIG = Configuracion(
 
 
 def campo(valor: Any, frase: str = "", confianza: float = 0.9, fuente: int = 1) -> dict[str, Any]:
-    return {"valor": valor, "fuente": fuente if valor is not None else 0, "frase": frase,
-            "confianza": confianza}  # fmt: skip
+    return {"valor": valor, "fuente": fuente, "frase": frase, "confianza": confianza}
+
+
+def _texto(valor: Any) -> str:
+    """El valor con el formato de texto que devuelve el servicio."""
+    if isinstance(valor, bool):
+        return "true" if valor else "false"
+    if isinstance(valor, dict) and set(valor) == {"min", "max"}:
+        return f"{valor['min']}-{valor['max']}"
+    if isinstance(valor, dict):
+        return "; ".join(str(valor[k]) for k in ("nombre", "categoria", "pais", "lat", "lon"))
+    if isinstance(valor, list):
+        return ", ".join(valor)
+    return str(valor)
+
+
+def a_servicio(datos: dict[str, Any]) -> dict[str, Any]:
+    """La ficha como la devuelve el servicio: lista de datos con el valor como texto."""
+    return {
+        "datos": [
+            {"campo": nombre, **c, "valor": _texto(c["valor"])}
+            for nombre, c in datos.items()
+            if isinstance(c, dict) and c.get("valor") is not None
+        ],
+        "titulo_es": datos["titulo_es"],
+        "titulo_en": datos["titulo_en"],
+    }
 
 
 def ficha_ejemplo(**cambios: Any) -> dict[str, Any]:
@@ -61,7 +86,7 @@ def ficha_ejemplo(**cambios: Any) -> dict[str, Any]:
 def respuesta(datos: dict[str, Any], entrada: int = 1000, salida: int = 500) -> dict[str, Any]:
     return {
         "stop_reason": "end_turn",
-        "content": [{"type": "text", "text": json.dumps(datos, ensure_ascii=False)}],
+        "content": [{"type": "text", "text": json.dumps(a_servicio(datos), ensure_ascii=False)}],
         "usage": {"input_tokens": entrada, "output_tokens": salida,
                   "cache_creation_input_tokens": 0, "cache_read_input_tokens": 4000},
     }  # fmt: skip

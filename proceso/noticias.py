@@ -237,7 +237,10 @@ def nomenclator(ruta: Path = DIRECTORIO / "lugares_europa.json") -> Nomenclator:
 
 
 def _contiene(texto: str, frase: str) -> bool:
-    return re.search(r"(?<!\w)" + re.escape(frase) + r"(?!\w)", texto) is not None
+    """La frase aparece como palabras enteras. Los dos textos están normalizados (letras y
+    espacios simples), así que basta buscarla entre espacios: una expresión regular por
+    alias, con miles de alias, desbordaba la caché de expresiones y tardaba 0,1 s por titular."""
+    return f" {frase} " in f" {texto} "
 
 
 def lugares_en(titular: str, nom: Nomenclator) -> tuple[str, ...]:

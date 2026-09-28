@@ -17,6 +17,10 @@ Recogida automática de fuentes.
 | `gdelt.py` | Noticias europeas sobre drones en los ficheros GKG 2.0 de GDELT, por franjas de 15 minutos |
 | `medios_gdelt.py` | Generador de la tabla de medios europeos desde la lista de dominios de GDELT |
 | `informe_gdelt.py` | Informe interno de artículos y candidatos por mes con una muestra |
+| `historico_gdelt.py` | Histórico de noticias desde GKG en trabajos paralelos, con parciales cifrados |
+| `extractor.py` | Extractor en la ejecución horaria; estimación y lote del histórico |
+| `paises_osm.py` | Generador de las cajas de coordenadas de los países desde Nominatim |
+| `comparacion.py` | Cobertura frente a la lista de referencia de 2025 |
 | `lugares_osm.py` | Generador del nomenclátor de lugares desde OpenStreetMap |
 | `auditoria.py` | Cobertura por días: días sin parte y su explicación |
 | `horaria.py` | Ejecución horaria del workflow |
