@@ -280,11 +280,11 @@ def ultima_actividad(documento: Documento) -> datetime:
 
 def misma_ventana(a: Documento, b: Documento) -> bool:
     """`a` empezó antes o a la vez que `b`."""
-    ia, ib = a["tiempo"]["inicio"], b["tiempo"]["inicio"]
-    ta, tb = _leer_instante(ia), _leer_instante(ib)
-    if ib["precision"] in PRECISIONES_HORA and tb - ultima_actividad(a) > SIN_ACTIVIDAD:
+    inicio_a, inicio_b = a["tiempo"]["inicio"], b["tiempo"]["inicio"]
+    ta, tb = _leer_instante(inicio_a), _leer_instante(inicio_b)
+    if inicio_b["precision"] in PRECISIONES_HORA and tb - ultima_actividad(a) > SIN_ACTIVIDAD:
         return False
-    if ia["precision"] in PRECISIONES_HORA and ib["precision"] in PRECISIONES_HORA:
+    if inicio_a["precision"] in PRECISIONES_HORA and inicio_b["precision"] in PRECISIONES_HORA:
         return abs(tb - ta) < INICIOS_HORA
     return tb.date() in {ta.date(), ta.date() + timedelta(days=1)}
 

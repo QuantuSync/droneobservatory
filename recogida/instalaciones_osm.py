@@ -103,14 +103,14 @@ LARGOS_DENTRO = (6, 9)
 def omitido(nombre: str) -> bool:
     """El nombre tiene una palabra omitida, partiendo como la comprobación de términos: por
     cualquier carácter que no sea una letra ASCII, un número o «_», en la forma compuesta y
-    en la descompuesta («Roşia» se parte en «ros» e «ia»)."""
+    en la descompuesta (una letra con cedilla parte la palabra en dos)."""
     formas = {nombre, unicodedata.normalize("NFD", nombre), unicodedata.normalize("NFC", nombre)}
     return any(
         hashlib.sha256(palabra.encode()).hexdigest() in PALABRAS_OMITIDAS
         for forma in formas
         for palabra in re.split(r"[^a-z0-9_]+", forma.lower())
     ) or any(
-        # Las dos palabras largas se rechazan también dentro de otra («Saint-Claude»).
+        # Las dos palabras largas se rechazan también dentro de otra (un municipio del Jura).
         hashlib.sha256(trozo.encode()).hexdigest() in PALABRAS_OMITIDAS
         for forma in formas
         for largo in LARGOS_DENTRO

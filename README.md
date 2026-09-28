@@ -16,8 +16,8 @@ oficial de la Fuerza Aérea de Ucrania (RU_UA) y el del Ministerio de Defensa
 ruso (UA_RU), las dos marcadas como reivindicación de parte, con sus
 históricos desde octubre de 2022; y recogida de noticias europeas sobre drones
 en los ficheros GKG de GDELT, filtradas, deduplicadas y agrupadas en
-candidatos internos. El extractor que
-convierte candidatos en incidentes y la web están pendientes.
+candidatos internos; el extractor que los convierte en incidentes europeos,
+con fusión, episodios y presencia_dron. La web está pendiente.
 
 ## Estructura
 
@@ -76,8 +76,9 @@ guarda en el repositorio.
   de referencia de 2025.
 
 Decisiones, valores y cobertura en [`docs/informe_recogida.md`](docs/informe_recogida.md),
-[`docs/informe_gdelt_mindef.md`](docs/informe_gdelt_mindef.md) y
-[`docs/informe_gkg_partes.md`](docs/informe_gkg_partes.md).
+[`docs/informe_gdelt_mindef.md`](docs/informe_gdelt_mindef.md),
+[`docs/informe_gkg_partes.md`](docs/informe_gkg_partes.md) y
+[`docs/informe_extractor_europa.md`](docs/informe_extractor_europa.md).
 
 ## Licencia
 
