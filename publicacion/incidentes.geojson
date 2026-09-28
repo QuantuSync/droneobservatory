@@ -84339,7 +84339,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-28T12:38Z"
+      "valor": "2026-09-28T13:31Z"
      }
     },
     "drones": {
@@ -84370,7 +84370,7 @@
        "valor": "2026-09-28T07:45Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "Administrația prezidențială afirmă că drona explodată în Portul Constanța a fost deturnată de Rusia.",
+      "frase_origen": "Drona explodată în Portul Constanța a fost deturnată de Rusia.",
       "id": "gdelt-ed214c690196cbf2",
       "idioma": "ro",
       "medio": "news.yam.md",
@@ -84384,7 +84384,7 @@
        "valor": "2026-09-28T10:15Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "Verificările efectuate până în acest moment indică posibilitatea ca Rusia să fi preluat controlul dronei maritime.",
+      "frase_origen": "Administrația Prezidențială ia în calcul ca drona maritimă care a ajuns în Portul Constanța și a explodat să fi fost preluată de Federația Rusă.",
       "id": "gdelt-accda9e72aa0bc49",
       "idioma": "ro",
       "medio": "adevarul.ro",
@@ -84431,6 +84431,20 @@
       "idioma": "ro",
       "medio": "atitudinea.ro",
       "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://ziare.com/razboi-ucraina/administratia-prezidentiala-drona-ucraineana-explozie-preluata-rusia-2038006",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-28T12:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Rușii controlau drona ucraineană care a explodat în Portul Constanța. Administrația Prezidențială transmite cele mai recente informații",
+      "id": "gdelt-490c7530ba5f098d",
+      "idioma": "ro",
+      "medio": "ziare.com",
+      "replicas": 0
      }
     ],
     "id": "EODI-2026-00152",
@@ -84442,7 +84456,7 @@
      "categoria": "puerto",
      "nombre": "Portul Constanța"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "tiempo": {
      "inicio": {
       "precision": "dia",
@@ -84451,8 +84465,8 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Maritime drone explodes at Constanța port",
-     "es": "Dron marítimo explota en el puerto de Constanța"
+     "en": "Explosive drone at Constanța port allegedly controlled by Russia",
+     "es": "Dron explosivo en el puerto de Constanza presumiblemente controlado por Rusia"
     }
    },
    "type": "Feature"
