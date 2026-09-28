@@ -25,6 +25,22 @@
       "idioma": "da",
       "tipo": "rss",
       "url": "https://via.ritzau.dk/rss/short-messages/latest?publisherId=90752"
+    },
+    {
+      "id": "nats",
+      "medio": "NATS",
+      "pais": "GB",
+      "idioma": "en",
+      "tipo": "rss",
+      "url": "https://www.nats.aero/feed/"
+    },
+    {
+      "id": "pansa",
+      "medio": "PANSA",
+      "pais": "PL",
+      "idioma": "pl",
+      "tipo": "rss",
+      "url": "https://www.pansa.pl/feed/"
     }
   ]
 }

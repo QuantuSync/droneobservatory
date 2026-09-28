@@ -30,6 +30,8 @@ el texto del parte.
 | Københavns Politi | RSS de Ritzau (publisherId 90685) | activa |
 | Nordjyllands Politi | RSS de Ritzau (publisherId 13562880) | activa |
 | Rigspolitiet | RSS de Ritzau (publisherId 90752) | activa |
+| NATS (control aéreo británico) | RSS de su web | activa |
+| PANSA (control aéreo polaco) | RSS de su web | activa |
 
 - Se respeta robots.txt (incluido el Crawl-delay) y se identifica como
   `EODI-bot/1.0 (+https://droneobservatory.eu)`.
@@ -72,16 +74,14 @@ respetan como negativa.
 
 ## Qué falta
 
-1. Incorporar como fuentes activas los canales RSS de NATS y PANSA (legibles desde
-   Actions; desde local no se pudieron verificar a tiempo).
-2. Lectores de páginas (scraping) para las 17 candidatas legibles y el sitemap de la
+1. Lectores de páginas (scraping) para las 17 candidatas legibles y el sitemap de la
    OTAN, cada uno con su prueba offline.
-3. Buscar la dirección correcta de las 10 candidatas con 404 (las direcciones se
+2. Buscar la dirección correcta de las 10 candidatas con 404 (las direcciones se
    dedujeron y no existen) y la del Presseportal de Múnich y NTB de Avinor.
-4. UK Airprox Board: páginas mensuales, PDF y Excel; no empezado.
-5. Revisar la incursión de Rumanía y ampliar la detección de cruces cuando el parte
+3. UK Airprox Board: páginas mensuales, PDF y Excel; no empezado.
+4. Revisar la incursión de Rumanía y ampliar la detección de cruces cuando el parte
    nombra el país de forma indirecta («у напрямку Молдови», etc.).
-6. Informe final con incidentes que cambian de estado cuando haya notas que encajen.
+5. Informe final con incidentes que cambian de estado cuando haya notas que encajen.
 
 ## Decisiones tomadas sin consultar
 
