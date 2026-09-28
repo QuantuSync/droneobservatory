@@ -224,7 +224,15 @@ def nomenclator(ruta: Path = DIRECTORIO / "lugares_europa.json") -> Nomenclator:
         for a in sitio.alias
         if propio(normalizar(a))
     ]
-    ciudades = [(normalizar(c), sitio.id) for sitio in lugares.values() for c in sitio.ciudades]
+    # Una «ciudad» que es una palabra de tipo de lugar («militar», «wojskowa») no nombra nada:
+    # casaría con cualquier titular que hable de militares.
+    ciudades = [
+        (normalizar(c), sitio.id)
+        for sitio in lugares.values()
+        for c in sitio.ciudades
+        # El nomenclátor está en forma descompuesta: se compara también sin acentos.
+        if not any(p.search(c) or p.search(normalizar(c)) for p in cue.values())
+    ]
     return Nomenclator(lugares, tuple(alias), tuple(ciudades), cue)
 
 

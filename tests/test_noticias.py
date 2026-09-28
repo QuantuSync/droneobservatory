@@ -162,3 +162,17 @@ def test_la_agrupacion_dudosa_no_se_hace() -> None:
         candidato.tipo = "aeropuerto"
     agrupar([articulo(3, 1, "EKCH")], filtro(), NOM, doble)
     assert doble.dudosos == 1
+
+
+@pytest.mark.parametrize(
+    "titular",
+    [
+        # «lentokenttä» es «aeropuerto» en finés, no el nombre de uno.
+        "Alicanten lentokenttä suljettiin – Epäily drooneista",
+        # «Militär» y «wojskowa» figuran como ciudad de dos lugares, pero son palabras comunes.
+        "VIDEO // Un militar ucrainean face o demonstrație despre drone",
+        "Ukraińskie drony uderzyły w głąb Rosji. Celowali w bazę wojskową",
+    ],
+)
+def test_palabras_comunes_no_son_lugares(titular: str) -> None:
+    assert lugares_en(titular, nomenclator()) == ()

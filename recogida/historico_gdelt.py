@@ -25,7 +25,7 @@ import logging
 import sys
 import time
 from collections.abc import Callable, Iterable
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from datetime import UTC, datetime
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -34,7 +34,7 @@ from typing import Any
 from almacen import remoto
 from almacen.base import Almacen
 from almacen.cifrado import abrir_cifrada, cifrar_datos, descifrar_datos, guardar_cifrada
-from proceso.noticias import Articulo, filtro
+from proceso.noticias import Articulo, filtro, lugares_en, nomenclator
 from recogida import gdelt
 from recogida.descarga import Descargador, DescargaFallida
 
@@ -160,8 +160,16 @@ def deserializar(datos: bytes) -> tuple[dict[str, Any], list[Articulo]]:
 
 
 def incorporar(almacen: Almacen, lotes: Iterable[list[Articulo]]) -> gdelt.Recuentos:
-    """Incorpora los artículos en orden de fecha, un día cada vez, como la recogida horaria."""
-    todos = sorted((a for lote in lotes for a in lote), key=lambda a: (a.fecha, a.url))
+    """Incorpora los artículos en orden de fecha, un día cada vez, como la recogida horaria.
+
+    Los lugares se vuelven a buscar con el nomenclátor actual: si ha mejorado desde que
+    se leyeron los tramos, cuenta la mejora.
+    """
+    nom = nomenclator()
+    todos = sorted(
+        (replace(a, lugares=lugares_en(a.titular, nom)) for lote in lotes for a in lote),
+        key=lambda a: (a.fecha, a.url),
+    )
     total = gdelt.Recuentos()
     dia: list[Articulo] = []
     for articulo in todos:
