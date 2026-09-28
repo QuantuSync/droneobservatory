@@ -1,7 +1,7 @@
 # Informe del PR «confirmaciones-oficiales»
 
 Estado: puerta local en verde (pytest, ruff check, ruff format --check, mypy
---strict) y workflow de pruebas en verde. Se mergea con 18 fuentes oficiales activas;
+--strict) y workflow de pruebas en verde. Se mergea con 17 fuentes oficiales activas (7 por canal RSS y 10 por su página de noticias);
 lo que queda sin hacer está en «Qué falta» y no entra en el workflow horario.
 
 ## Qué hay hecho
@@ -44,7 +44,7 @@ el texto del parte.
 | Ministerio de Defensa finlandés | página de actualidad | activa |
 | Gobierno sueco (defensa) | página de comunicados | activa |
 
-Las 18 se leyeron en vivo desde GitHub Actions (ejecución 36421785643 y siguientes,
+Las 17 se leyeron en vivo desde GitHub Actions (ejecución 36421785643 y siguientes,
 en verde): todas responden y dan notas o enlaces. Las páginas se leen con
 `recogida/paginas_oficiales.py`: los enlaces que casan con el patrón de cada fuente
 dan las notas; solo se abren las que hablan de drones en el título o tienen un título
@@ -68,7 +68,7 @@ como fecha de día. Cada fuente tiene su prueba offline en
 - El registro solo lleva recuentos.
 
 Incidentes que han cambiado de estado o de `presencia_dron` por una nota oficial:
-**ninguno**. Prueba contra una copia de la base actual (sin subirla), con las 18
+**ninguno**. Prueba contra una copia de la base actual (sin subirla), con las 17
 fuentes: 323 notas leídas, 20 hablan de drones y ninguna encaja con un incidente. Son
 notas sobre programas militares (drones de la defensa belga, DroneTower de PANSA,
 cooperación finlandesa con Ucrania); cuando la nota nombra un sitio de otro país
