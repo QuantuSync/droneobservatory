@@ -11,7 +11,7 @@ lo tiene y, si no, de los metadatos de publicación de la página.
 import re
 from datetime import UTC, datetime
 from html.parser import HTMLParser
-from urllib.parse import urljoin, urlsplit
+from urllib.parse import quote, urljoin, urlsplit
 from zoneinfo import ZoneInfo
 
 from esquema import Documento
@@ -22,6 +22,8 @@ MAX_CARACTERES_TEXTO = 2000
 MAX_CARACTERES_ID = 90
 # Los párrafos más cortos suelen ser menús, pies y avisos, no el cuerpo de la nota.
 MIN_CARACTERES_PARRAFO = 80
+# Caracteres que se dejan tal cual al codificar una dirección (los reservados y %).
+_SEGUROS_URL = ":/?#[]@!$&'()*+,;=%~"
 _AVISOS = re.compile(r"cookie", re.IGNORECASE)
 _OMITIDAS = frozenset({"script", "style", "noscript", "template"})
 _MESES = {m: i for i, m in enumerate(
@@ -115,7 +117,8 @@ def enlaces(html: str, fuente: Documento) -> list[tuple[str, str]]:
         # Las fechas del enlace sobran en el título: la nota trae la suya.
         titulo = re.sub(fuente.get("sobra_titulo", r"$^"), "", _NUMERICA.sub("", texto))
         titulo = " ".join(titulo.split()).strip(" ,-")
-        direccion = urljoin(fuente["url"], href).split("#")[0]
+        # Las direcciones con letras no ASCII (MApN) se piden codificadas.
+        direccion = quote(urljoin(fuente["url"], href).split("#")[0], safe=_SEGUROS_URL)
         if patron.search(direccion) and titulo and len(titulo) > len(vistos.get(direccion, "")):
             vistos[direccion] = titulo
     return list(vistos.items())

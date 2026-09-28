@@ -209,7 +209,7 @@ def leer_pagina(descargador: Descargador, lector: RobotFileParser, fuente: Docum
     for direccion, titulo in candidatas:
         try:
             articulo = descargador.texto(direccion, lambda t: "<" in t)
-        except DescargaFallida:
+        except (DescargaFallida, ValueError):
             continue
         leido = paginas_oficiales.contenido(articulo, fuente, titulo)
         if leido is None:
@@ -242,7 +242,7 @@ def ejecutar(
                 notas = leer_rss(
                     descargador.texto(fuente["url"], lambda t: "<rss" in t[:200]), fuente
                 )
-        except (DescargaFallida, ET.ParseError):
+        except (DescargaFallida, ET.ParseError, ValueError):
             recuentos.bloqueadas += 1
             motivos["descarga"] += 1
             continue

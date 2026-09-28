@@ -128,6 +128,12 @@ def test_lector_de_cada_fuente(
     assert paginas_oficiales.contenido(articulo, datos, titulo) == (*fecha, PARRAFO)
 
 
+def test_direcciones_con_letras_no_ascii_se_codifican() -> None:
+    pagina = '<a href="/cpresa/19397_Fragmente-de-dronă">Fragmente de dronă</a>'
+    ((direccion, _),) = paginas_oficiales.enlaces(pagina, fuente("mapn"))
+    assert direccion == "https://www.mapn.ro/cpresa/19397_Fragmente-de-dron%C4%83"
+
+
 def test_sin_fecha_no_hay_nota() -> None:
     assert paginas_oficiales.contenido(f"<p>{PARRAFO}</p>", fuente("mapn"), "x") is None
 
