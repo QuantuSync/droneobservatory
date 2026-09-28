@@ -90,8 +90,13 @@ class Validada:
 
     @property
     def publicable(self) -> bool:
-        return all(c in self.campos for c in ("es_incidente", "pais", "inicio")) and bool(
-            self.campos["es_incidente"]["valor"]
+        """Es un incidente. El país y la fecha, si la ficha no los da o no validan, salen
+        del objetivo y del candidato (con precisión de día)."""
+        otro_sitio = self.valor("objetivo_conocido") is False and "lugar_nuevo" not in self.campos
+        return (
+            "es_incidente" in self.campos
+            and bool(self.campos["es_incidente"]["valor"])
+            and not otro_sitio
         )
 
     def valor(self, campo: str) -> Any:
@@ -115,8 +120,6 @@ def _frase_valida(campo: dict[str, Any], textos: tuple[str, ...]) -> str | None:
         return "fuente inexistente"
     if not isinstance(frase, str) or not frase.strip():
         return "sin frase de origen"
-    if len(frase.split()) > MAX_PALABRAS_FRASE:
-        return f"frase de más de {MAX_PALABRAS_FRASE} palabras"
     if normalizar(frase) not in normalizar(textos[fuente - 1]):
         return "la frase no está en la fuente"
     return None
@@ -194,6 +197,9 @@ def validar(ficha: dict[str, Any], contexto: Contexto) -> Validada:
         if confianza < UMBRAL_CONFIANZA:
             resultado.motivos.append(f"{nombre}: confianza baja")
             continue
+        if isinstance(campo.get("frase"), str) and len(campo["frase"].split()) > MAX_PALABRAS_FRASE:
+            # Una frase más larga se recorta a sus primeras 25 palabras: sigue siendo cita literal.
+            campo = {**campo, "frase": " ".join(campo["frase"].split()[:MAX_PALABRAS_FRASE])}
         motivo = _frase_valida(campo, contexto.textos) or _valor_valido(
             nombre, campo["valor"], contexto
         )

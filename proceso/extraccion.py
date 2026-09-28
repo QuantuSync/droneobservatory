@@ -230,7 +230,8 @@ def procesar_respuesta(
             ahora=ahora,
         )
         validada = validar(leida, contexto)
-        documento = {"motivos": validada.motivos, "campos": validada.campos}
+        # La ficha en bruto se guarda para poder revalidarla sin volver a llamar.
+        documento = {"motivos": validada.motivos, "campos": validada.campos, "ficha": leida}
         if validada.publicable:
             incidente_id = _alta(almacen, peticion, validada, ahora, modelos_base, documento)
     documento["incidente"] = incidente_id

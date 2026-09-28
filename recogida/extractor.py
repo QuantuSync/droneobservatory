@@ -8,8 +8,8 @@
   agrupa en episodios, publica y sube la base.
 
 Uso:
-    python -m recogida.extractor estimar [--muestra 10]
-    python -m recogida.extractor lote --correo <correo> [--sin-subir]
+    python -m recogida.extractor [--base <db.age local>] estimar [--muestra 10]
+    python -m recogida.extractor [--base <db.age local>] --correo <correo> lote [--sin-subir]
 """
 
 import argparse
@@ -177,6 +177,9 @@ def principal(argumentos: list[str] | None = None) -> int:
     opciones.add_argument("--repositorio", default=remoto.REPOSITORIO)
     opciones.add_argument("--correo", default="")
     opciones.add_argument("--sin-subir", action="store_true")
+    opciones.add_argument(
+        "--base", type=Path, help="base cifrada local: se lee y se reescribe, sin subir"
+    )
     ordenes = opciones.add_subparsers(dest="orden", required=True)
     o_estimar = ordenes.add_parser("estimar")
     o_estimar.add_argument("--muestra", type=int, default=MUESTRA)
@@ -188,14 +191,16 @@ def principal(argumentos: list[str] | None = None) -> int:
     ahora = datetime.now(UTC)
     with TemporaryDirectory() as temporal:
         ruta = Path(temporal) / remoto.FICHERO
-        if not remoto.descargar(ruta, args.repositorio):
+        if args.base is None and not remoto.descargar(ruta, args.repositorio):
             registro.error("no hay base en la rama %s", remoto.RAMA)
             return 1
-        almacen = Almacen(abrir_cifrada(ruta))
+        almacen = Almacen(abrir_cifrada(args.base or ruta))
         salida = {"estimar": orden_estimar, "lote": orden_lote}[args.orden](args, almacen, ahora)
         publicar(almacen, ahora)
         guardar_cifrada(almacen.conexion, ruta)
-        if args.sin_subir or not args.correo:
+        if args.base is not None:
+            guardar_cifrada(almacen.conexion, args.base)
+        elif args.sin_subir or not args.correo:
             destino = Path.cwd() / "data" / "historico" / remoto.FICHERO
             destino.parent.mkdir(parents=True, exist_ok=True)
             guardar_cifrada(almacen.conexion, destino)

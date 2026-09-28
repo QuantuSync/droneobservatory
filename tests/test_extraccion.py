@@ -469,3 +469,16 @@ def test_paso_horario_con_servicio(almacen: Almacen, monkeypatch: pytest.MonkeyP
     resultado = extractor.horaria(almacen, AHORA, lambda _c: falso)
     assert (resultado.candidatos, resultado.llamadas, resultado.publicados) == (1, 1, 1)
     assert almacen.gastado("horario", "2025-09-24") > 0
+
+
+def test_frase_larga_recortada_y_sin_fecha_se_publica_con_la_del_candidato() -> None:
+    larga = f"{TITULAR}. {TEXTO}"
+    cambios = {"es_incidente": campo(True, larga), "inicio": campo(None)}
+    validada = validar(ficha_ejemplo(**cambios), contexto())
+    assert len(validada.campos["es_incidente"]["frase"].split()) == 25
+    assert validada.publicable
+
+
+def test_otro_sitio_sin_lugar_nuevo_no_se_publica() -> None:
+    validada = validar(ficha_ejemplo(objetivo_conocido=campo(False, TITULAR)), contexto())
+    assert not validada.publicable
