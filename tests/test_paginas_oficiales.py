@@ -90,6 +90,24 @@ CASOS = [
         '<meta property="article:published_time" content="2026-09-28T09:02+0300">',
         (datetime(2026, 9, 28, 6, 2, tzinfo=UTC), "minuto"),
     ),
+    (
+        "muc",
+        '<a href="/presse-drohne-legt-flugbetrieb-lahm-43059920">03.10.2025 Presse: Drohne '
+        "legt Flugbetrieb lahm</a>",
+        "https://www.munich-airport.de/presse-drohne-legt-flugbetrieb-lahm-43059920",
+        "Drohne legt Flugbetrieb lahm",
+        "<div>3.10.2025 Drohne legt Flugbetrieb lahm</div><div>Weitere Themen 01.10.2025</div>",
+        (datetime(2025, 10, 3, tzinfo=UTC), "dia"),
+    ),
+    (
+        "mod_se",
+        '<a href="/pressmeddelanden/2025/09/dronare-over-karlskrona/">Drönare över Karlskrona</a>',
+        "https://www.regeringen.se/pressmeddelanden/2025/09/dronare-over-karlskrona/",
+        "Drönare över Karlskrona",
+        '<script type="application/ld+json">{"datePublished":"2025-09-16T14:00:23.0000000'
+        '+02:00"}</script><time datetime="2025-08-29"></time>',
+        (datetime(2025, 9, 16, 12, 0, tzinfo=UTC), "minuto"),
+    ),
 ]
 
 
