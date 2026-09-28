@@ -1,0 +1,28 @@
+name: prueba-oficiales
+
+# Sondeo de las fuentes oficiales desde un runner de GitHub: robots.txt y respuesta de
+# cada una, identificándose como el observatorio. Mientras no está en main, se lanza con
+# un push a la rama lanzar-prueba-oficiales. El registro solo lleva el estado de cada una.
+on:
+  workflow_dispatch:
+  push:
+    branches: [lanzar-prueba-oficiales]
+
+permissions:
+  contents: read
+
+jobs:
+  sondeo:
+    if: github.repository == 'QuantuSync/droneobservatory'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.13"
+      - run: pip install -r requirements.txt
+      - name: Sondear las fuentes oficiales
+        run: python -m recogida.sondeo_oficiales
+      - name: Leer las fuentes activas
+        run: python -m recogida.sondeo_oficiales --activas

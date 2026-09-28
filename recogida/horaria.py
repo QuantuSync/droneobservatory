@@ -13,10 +13,10 @@ from tempfile import TemporaryDirectory
 from almacen import remoto
 from almacen.base import Almacen
 from almacen.cifrado import abrir_cifrada, guardar_cifrada
-from exportacion.publicar import publicar
-from proceso import solapes
+from exportacion.publicar import modelos, publicar
+from proceso import incursiones, solapes
 from proceso.ataques import SENTIDO_UA_RU
-from recogida import extractor, gdelt
+from recogida import extractor, gdelt, oficiales
 from recogida.cache import CachePaginas
 from recogida.descarga import Descargador
 from recogida.ejecucion import SinCursor, ejecutar
@@ -62,6 +62,12 @@ def principal(argumentos: list[str] | None = None) -> int:
         except gdelt.GdeltNoDisponible as error:
             registro.warning("gdelt no se lee: %s", error)
             salida = SALIDA_FUENTE_NO_VERIFICADA
+        # Cruces a otros países de los partes ucranianos: incursiones notificadas.
+        registro.info(
+            "incursiones nuevas: %d", incursiones.registrar(almacen, ahora, modelos(almacen))
+        )
+        # Confirmaciones oficiales de los incidentes que ya hay.
+        oficiales.ejecutar(almacen, ahora, modelos(almacen))
         # Candidatos de noticias a incidentes; una llamada fallida deja la ejecución en rojo.
         resultado = extractor.horaria(almacen, ahora)
         registro.info("extractor %s", resultado.resumen())

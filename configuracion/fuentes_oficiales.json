@@ -1,0 +1,172 @@
+{
+  "version_esquema": "1.0.0",
+  "descripcion": "Fuentes oficiales que confirman incidentes (fiabilidad A, autoridad). tipo rss: canal RSS con un elemento por nota. tipo pagina: página de noticias; enlace es el patrón de las direcciones de las notas, titulos_genericos los títulos que no dicen el tema y se abren igual, sobra_titulo lo que se quita del título del enlace, fecha el patrón que da la fecha en el texto de la nota (si no hay, se usan los metadatos de publicación) y zona la hora local de la fuente. Las notas se leen respetando robots.txt y con la identificación del observatorio.",
+  "fuentes": [
+    {
+      "id": "politi_kobenhavn",
+      "medio": "Københavns Politi",
+      "pais": "DK",
+      "idioma": "da",
+      "tipo": "rss",
+      "url": "https://via.ritzau.dk/rss/short-messages/latest?publisherId=90685"
+    },
+    {
+      "id": "politi_nordjylland",
+      "medio": "Nordjyllands Politi",
+      "pais": "DK",
+      "idioma": "da",
+      "tipo": "rss",
+      "url": "https://via.ritzau.dk/rss/short-messages/latest?publisherId=13562880"
+    },
+    {
+      "id": "rigspolitiet",
+      "medio": "Rigspolitiet",
+      "pais": "DK",
+      "idioma": "da",
+      "tipo": "rss",
+      "url": "https://via.ritzau.dk/rss/short-messages/latest?publisherId=90752"
+    },
+    {
+      "id": "nats",
+      "medio": "NATS",
+      "pais": "GB",
+      "idioma": "en",
+      "tipo": "rss",
+      "url": "https://www.nats.aero/feed/"
+    },
+    {
+      "id": "pansa",
+      "medio": "PANSA",
+      "pais": "PL",
+      "idioma": "pl",
+      "tipo": "rss",
+      "url": "https://www.pansa.pl/feed/"
+    },
+    {
+      "id": "mod_be",
+      "medio": "Defensie (België)",
+      "pais": "BE",
+      "idioma": "nl",
+      "tipo": "rss",
+      "url": "https://www.mil.be/nl/news/rss"
+    },
+    {
+      "id": "mapn",
+      "medio": "Ministerul Apărării Naționale",
+      "pais": "RO",
+      "idioma": "ro",
+      "tipo": "pagina",
+      "zona": "Europe/Bucharest",
+      "url": "https://www.mapn.ro/cpresa/",
+      "enlace": "mapn\\.ro/cpresa/\\d+_",
+      "titulos_genericos": "Informa[țţ]ie de pres|Actualizare",
+      "fecha": "Nr\\. \\d+ (\\d{2}\\.\\d{2}\\.\\d{4})",
+      "sobra_titulo": "\\s*,?\\s*din\\s*$"
+    },
+    {
+      "id": "dfs",
+      "medio": "DFS Deutsche Flugsicherung",
+      "pais": "DE",
+      "idioma": "de",
+      "tipo": "pagina",
+      "zona": "Europe/Berlin",
+      "url": "https://www.dfs.de/homepage/de/medien/presse/",
+      "enlace": "dfs\\.de/homepage/de/medien/presse/\\d{4}/\\d{2}-\\d{2}-\\d{4}-",
+      "sobra_titulo": "Mehr$"
+    },
+    {
+      "id": "mod_lv",
+      "medio": "Aizsardzības ministrija",
+      "pais": "LV",
+      "idioma": "lv",
+      "tipo": "pagina",
+      "zona": "Europe/Riga",
+      "url": "https://www.mod.gov.lv/lv/zinas",
+      "enlace": "mod\\.gov\\.lv/lv/zinas/[a-z0-9-]{10,}",
+      "fecha": "(\\d{2}\\.\\d{2}\\.\\d{4})"
+    },
+    {
+      "id": "mod_md",
+      "medio": "Ministerul Apărării (Moldova)",
+      "pais": "MD",
+      "idioma": "ro",
+      "tipo": "pagina",
+      "zona": "Europe/Chisinau",
+      "url": "https://www.army.md/?lng=2&action=show&cat=122",
+      "enlace": "army\\.md/ro/comunicate-de-presa/.",
+      "fecha": "(\\d{1,2} [A-Z][a-z]{2} \\d{4}) \\d+ \\d+ min"
+    },
+    {
+      "id": "riga_airport",
+      "medio": "Starptautiskā lidosta Rīga",
+      "pais": "LV",
+      "idioma": "en",
+      "tipo": "pagina",
+      "zona": "Europe/Riga",
+      "url": "https://www.riga-airport.com/en/news",
+      "enlace": "riga-airport\\.com/en/news/[a-z0-9-]{10,}",
+      "fecha": "(\\d{2}/\\d{2}/\\d{4})"
+    },
+    {
+      "id": "finavia",
+      "medio": "Finavia",
+      "pais": "FI",
+      "idioma": "fi",
+      "tipo": "pagina",
+      "zona": "Europe/Helsinki",
+      "url": "https://www.finavia.fi/fi/uutishuone",
+      "enlace": "finavia\\.fi/fi/uutishuone/\\d{4}/"
+    },
+    {
+      "id": "austrocontrol",
+      "medio": "Austro Control",
+      "pais": "AT",
+      "idioma": "de",
+      "tipo": "pagina",
+      "zona": "Europe/Vienna",
+      "url": "https://www.austrocontrol.at/unternehmen/presse",
+      "enlace": "austrocontrol\\.at/.*presse__news/detail/",
+      "fecha": "(\\d{2}\\.\\d{2}\\.\\d{4}) zurück zur Liste"
+    },
+    {
+      "id": "mod_fi",
+      "medio": "Puolustusministeriö",
+      "pais": "FI",
+      "idioma": "fi",
+      "tipo": "pagina",
+      "zona": "Europe/Helsinki",
+      "url": "https://defmin.fi/ajankohtaista",
+      "enlace": "defmin\\.fi/-/[a-z0-9-]+"
+    },
+    {
+      "id": "lgs",
+      "medio": "Latvijas Gaisa Satiksme",
+      "pais": "LV",
+      "idioma": "lv",
+      "tipo": "rss",
+      "url": "https://www.lgs.lv/category/news/feed/"
+    },
+    {
+      "id": "muc",
+      "medio": "Flughafen München",
+      "pais": "DE",
+      "idioma": "de",
+      "tipo": "pagina",
+      "zona": "Europe/Berlin",
+      "url": "https://www.munich-airport.de/newsroom-86335",
+      "enlace": "munich-airport\\.de/presse-[a-z0-9-]+-\\d+$",
+      "sobra_titulo": "^\\s*Presse:\\s*",
+      "fecha": "(\\d{1,2}\\.\\d{1,2}\\.\\d{4})"
+    },
+    {
+      "id": "mod_se",
+      "medio": "Regeringskansliet",
+      "pais": "SE",
+      "idioma": "sv",
+      "tipo": "pagina",
+      "zona": "Europe/Stockholm",
+      "url": "https://www.regeringen.se/pressmeddelanden/",
+      "enlace": "regeringen\\.se/pressmeddelanden/\\d{4}/\\d{2}/[a-z0-9-]+/$"
+    }
+  ]
+}
