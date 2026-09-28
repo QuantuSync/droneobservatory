@@ -24,7 +24,7 @@ from typing import Any
 from urllib.parse import quote
 
 from proceso.noticias import configuracion
-from recogida.descarga import AGENTE_EODI, Descargador
+from recogida.descarga import AGENTE_EODI, Descargador, DescargaFallida
 
 DESTINO = Path(__file__).resolve().parent.parent / "configuracion" / "instalaciones_europa.json"
 OVERPASS = "https://overpass-api.de/api/interpreter"
@@ -191,15 +191,24 @@ def descargar(descargador: Descargador, paises: list[str], directorio: Path) -> 
     directorio.mkdir(parents=True, exist_ok=True)
     for i, iso in enumerate(paises):
         ruta = directorio / f"{iso}.json"
-        if ruta.exists():
+        en_curso = directorio / f"{iso}.en_curso"
+        if ruta.exists() or en_curso.exists():
             continue
+        en_curso.write_text("", encoding="utf-8")
         if i:
             time.sleep(PAUSA_OVERPASS_S)
         consulta = f"[out:json][timeout:600];{CONSULTA.format(iso=iso)}out center tags;"
-        texto = descargador.texto(
-            f"{OVERPASS}?data={quote(consulta, safe='')}", lambda t: t.lstrip()[:1] == "{"
-        )
+        try:
+            texto = descargador.texto(
+                f"{OVERPASS}?data={quote(consulta, safe='')}", lambda t: t.lstrip()[:1] == "{"
+            )
+        except DescargaFallida:
+            # Un país que no sale se deja para otra pasada: los demás siguen.
+            en_curso.unlink()
+            print(iso, "sin respuesta", flush=True)
+            continue
         ruta.write_text(texto, encoding="utf-8")
+        en_curso.unlink()
         print(iso, len(json.loads(texto).get("elements", [])), flush=True)
 
 
@@ -207,6 +216,9 @@ def principal(argumentos: list[str] | None = None) -> int:
     opciones = argparse.ArgumentParser(description=__doc__)
     opciones.add_argument("--desde", type=Path, required=True, help="directorio de respuestas")
     opciones.add_argument("--sin-descargar", action="store_true")
+    # Overpass admite dos consultas a la vez por dirección: un segundo proceso puede recorrer
+    # los países al revés y cada uno salta los que ya estén guardados.
+    opciones.add_argument("--inverso", action="store_true", help="recorre los países al revés")
     args = opciones.parse_args(argumentos)
     paises = sorted(set(configuracion()["paises"].values()))
     if not args.sin_descargar:
@@ -217,7 +229,7 @@ def principal(argumentos: list[str] | None = None) -> int:
             reintentos=REINTENTOS_OVERPASS,
             espera_inicial_s=ESPERA_OVERPASS_S,
         )
-        descargar(descargador, paises, args.desde)
+        descargar(descargador, paises[::-1] if args.inverso else paises, args.desde)
     por_pais = {
         iso: json.loads((args.desde / f"{iso}.json").read_text(encoding="utf-8"))
         for iso in paises

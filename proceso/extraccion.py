@@ -20,6 +20,7 @@ import time
 from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
+from functools import cache
 from typing import Any, Protocol
 
 from almacen.base import Almacen, DocumentoInvalido
@@ -27,8 +28,16 @@ from esquema import Documento
 from modelo import coste, ficha, paginas
 from modelo.cliente import LlamadaFallida
 from proceso.incidentes import Objetivo, construir, huella
-from proceso.noticias import GKG, Nomenclator, lugar, nomenclator, normalizar
-from proceso.validacion_ficha import Contexto, Validada, validar
+from proceso.noticias import (
+    GKG,
+    TIPO_APARENTE,
+    Nomenclator,
+    configuracion,
+    lugar,
+    nomenclator,
+    normalizar,
+)
+from proceso.validacion_ficha import MIN_LETRAS_PALABRA, Contexto, Validada, validar
 from recogida.descarga import Descargador
 from recogida.lugares_osm import RADIO_KM
 
@@ -204,6 +213,28 @@ def _ampliar_vocabularios(almacen: Almacen, validada: Validada) -> Objetivo | No
     return objetivo
 
 
+@cache
+def prefijos_genericos() -> tuple[str, ...]:
+    """Palabras de tipo de lugar y de señal («airport», «flughafen», «base»), normalizadas."""
+    config = configuracion()
+    listas = [*config["tipo_de_lugar"].values(), *config["senales"].values()]
+    return tuple(sorted({normalizar(p) for lista in listas for p in lista if normalizar(p)}))
+
+
+def palabras_objetivo(id_lugar: str) -> frozenset[str]:
+    """Palabras propias de los nombres de la instalación; vacío si no es una instalación."""
+    sitio = nomenclator().lugares.get(id_lugar)
+    if sitio is None or sitio.tipo not in TIPO_APARENTE:
+        return frozenset()
+    genericos = prefijos_genericos()
+    return frozenset(
+        p
+        for nombre in (sitio.nombre, *sitio.alias, *sitio.ciudades)
+        for p in normalizar(nombre).split()
+        if len(p) >= MIN_LETRAS_PALABRA and not p.startswith(genericos)
+    )
+
+
 def procesar_respuesta(
     almacen: Almacen,
     peticion: Peticion,
@@ -236,6 +267,8 @@ def procesar_respuesta(
             pais_objetivo=peticion.objetivo.pais,
             primer_articulo=min(datetime.fromisoformat(a["fecha"]) for a in peticion.articulos),
             ahora=ahora,
+            palabras_objetivo=palabras_objetivo(peticion.candidato["lugar"]),
+            prefijos_genericos=prefijos_genericos(),
         )
         validada = validar(leida, contexto)
         # La ficha en bruto se guarda para poder revalidarla sin volver a llamar.

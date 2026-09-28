@@ -523,3 +523,11 @@ def test_lote_envia_espera_y_procesa(almacen: Almacen) -> None:
     assert falso.consultas == 1
     (llamada,) = almacen.llamadas()
     assert llamada["lote"] == 1
+
+
+def test_otra_instalacion_que_la_conocida_no_se_publica_alli(almacen: Almacen) -> None:
+    # «Alarm am Flughafen Leipzig» en un candidato de otro aeropuerto.
+    datos = ficha_ejemplo(objetivo_nombre=campo("Flughafen Leipzig", "Københavns Lufthavn"))
+    assert extraer_ejemplo(almacen, datos) is None
+    (extraida,) = almacen.extracciones(almacen.candidatos()[0]["id"])
+    assert "objetivo_nombre: no es la instalación conocida" in extraida["motivos"]

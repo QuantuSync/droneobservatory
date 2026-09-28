@@ -44,6 +44,8 @@ MAX_ANTELACION = timedelta(days=7)
 # de la publicación.
 MARGEN_ARTICULO = timedelta(hours=1)
 MAX_LETRAS_NOMBRE = 80
+# Palabras de menos de 4 letras («de», «am», «the») no identifican una instalación.
+MIN_LETRAS_PALABRA = 4
 RANGOS = ("drones", "cierre_minutos", "vuelos_desviados", "vuelos_cancelados", "vuelos_retrasados")
 TOPES = {
     "drones": MAX_DRONES,
@@ -77,6 +79,10 @@ class Contexto:
     pais_objetivo: str
     primer_articulo: datetime
     ahora: datetime
+    # Palabras propias (sin las de tipo de lugar) de los nombres de la instalación conocida;
+    # vacío si el objetivo es una localidad o un lugar del GKG.
+    palabras_objetivo: frozenset[str] = frozenset()
+    prefijos_genericos: tuple[str, ...] = ()
 
 
 @dataclass
@@ -181,6 +187,18 @@ def _valor_valido(nombre: str, valor: Any, contexto: Contexto) -> str | None:
     return None
 
 
+def _otro_objetivo(nombre: Any, contexto: Contexto) -> bool:
+    """El nombre no comparte ninguna palabra propia con los de la instalación conocida."""
+    if not isinstance(nombre, str) or not contexto.palabras_objetivo:
+        return False
+    propias = {
+        p
+        for p in normalizar(nombre).split()
+        if len(p) >= MIN_LETRAS_PALABRA and not p.startswith(contexto.prefijos_genericos)
+    }
+    return bool(propias) and not propias & contexto.palabras_objetivo
+
+
 def validar(ficha: dict[str, Any], contexto: Contexto) -> Validada:
     resultado = Validada(
         titulo_es=str(ficha.get("titulo_es", "")).strip(),
@@ -220,6 +238,17 @@ def validar(ficha: dict[str, Any], contexto: Contexto) -> Validada:
         resultado.campos.pop("cierre_minutos")
         resultado.motivos.append("cierre_minutos: minutos sin cierre")
     conocido = resultado.valor("objetivo_conocido")
+    if conocido is not False and _otro_objetivo(resultado.valor("objetivo_nombre"), contexto):
+        # «Alarm am Flughafen Leipzig» en un candidato de Núremberg: la instalación que nombra
+        # el modelo no es la conocida aunque diga que sí.
+        resultado.campos["objetivo_conocido"] = {
+            **resultado.campos.get(
+                "objetivo_conocido", {"fuente": 1, "frase": "", "confianza": 1.0}
+            ),
+            "valor": False,
+        }
+        conocido = False
+        resultado.motivos.append("objetivo_nombre: no es la instalación conocida")
     if conocido is not False and resultado.valor("pais") not in {None, contexto.pais_objetivo}:
         resultado.campos.pop("pais")
         resultado.motivos.append("pais: distinto del país del objetivo conocido")
