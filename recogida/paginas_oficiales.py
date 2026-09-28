@@ -28,11 +28,11 @@ _AVISOS = re.compile(r"cookie", re.IGNORECASE)
 _OMITIDAS = frozenset({"script", "style", "noscript", "template"})
 _MESES = {m: i for i, m in enumerate(
     ("jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"), 1
-)}  # fmt: skip
+)} | {"maj": 5, "okt": 10}  # fmt: skip
 _ISO = re.compile(r"(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2}):(\d{2})(?::\d{2}(?:\.\d+)?)?"
                   r"(Z|[+-]\d{2}:?\d{2})?)?")  # fmt: skip
 _NUMERICA = re.compile(r"(\d{1,2})[./](\d{1,2})[./](\d{4})")
-_CON_MES = re.compile(r"(\d{1,2}) ([A-Za-z]{3})[a-z]* (\d{4})")
+_CON_MES = re.compile(r"(\d{1,2})\.? ([A-Za-z]{3})[a-z]* (\d{4})")
 _LD_FECHA = re.compile(r'"datePublished"\s*:\s*"([^"]+)"')
 
 

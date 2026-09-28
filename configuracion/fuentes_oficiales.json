@@ -167,6 +167,17 @@
       "zona": "Europe/Stockholm",
       "url": "https://www.regeringen.se/pressmeddelanden/",
       "enlace": "regeringen\\.se/pressmeddelanden/\\d{4}/\\d{2}/[a-z0-9-]+/$"
+    },
+    {
+      "id": "aalborg_lufthavn",
+      "medio": "Aalborg Lufthavn",
+      "pais": "DK",
+      "idioma": "da",
+      "tipo": "pagina",
+      "zona": "Europe/Copenhagen",
+      "url": "https://aal.dk/nyheder",
+      "enlace": "aal\\.dk/nyheder/\\d{4}/[a-z]+/[a-z0-9-]+",
+      "fecha": "(\\d{1,2}\\. (?:januar|februar|marts|april|maj|juni|juli|august|september|oktober|november|december) \\d{4})"
     }
   ]
 }

@@ -108,6 +108,15 @@ CASOS = [
         '+02:00"}</script><time datetime="2025-08-29"></time>',
         (datetime(2025, 9, 16, 12, 0, tzinfo=UTC), "minuto"),
     ),
+    (
+        "aalborg_lufthavn",
+        '<a href="/nyheder/2025/september/droner-over-aalborg-lufthavn">Droner over Aalborg '
+        "Lufthavn</a>",
+        "https://aal.dk/nyheder/2025/september/droner-over-aalborg-lufthavn",
+        "Droner over Aalborg Lufthavn",
+        "<div>Vælg dato 26-09-2025</div><div>25. september 2025 Aalborg Lufthavn</div>",
+        (datetime(2025, 9, 25, tzinfo=UTC), "dia"),
+    ),
 ]
 
 
