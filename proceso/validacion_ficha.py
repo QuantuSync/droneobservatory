@@ -187,7 +187,7 @@ def _valor_valido(nombre: str, valor: Any, contexto: Contexto) -> str | None:
     return None
 
 
-def _otro_objetivo(nombre: Any, contexto: Contexto) -> bool:
+def otro_objetivo(nombre: Any, contexto: Contexto) -> bool:
     """El nombre no comparte ninguna palabra propia con los de la instalación conocida."""
     if not isinstance(nombre, str) or not contexto.palabras_objetivo:
         return False
@@ -238,7 +238,7 @@ def validar(ficha: dict[str, Any], contexto: Contexto) -> Validada:
         resultado.campos.pop("cierre_minutos")
         resultado.motivos.append("cierre_minutos: minutos sin cierre")
     conocido = resultado.valor("objetivo_conocido")
-    if conocido is not False and _otro_objetivo(resultado.valor("objetivo_nombre"), contexto):
+    if conocido is not False and otro_objetivo(resultado.valor("objetivo_nombre"), contexto):
         # «Alarm am Flughafen Leipzig» en un candidato de Núremberg: la instalación que nombra
         # el modelo no es la conocida aunque diga que sí.
         resultado.campos["objetivo_conocido"] = {

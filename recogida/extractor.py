@@ -192,6 +192,14 @@ def orden_recuperar(args: argparse.Namespace, almacen: Almacen, ahora: datetime)
     return 0
 
 
+def orden_reconstruir(args: argparse.Namespace, almacen: Almacen, ahora: datetime) -> int:
+    """Rehace los incidentes desde las fichas guardadas, sin llamar al modelo."""
+    rehechos = extraccion.reconstruir(almacen, datetime.now(UTC), modelos_base())
+    fusiones, episodios = ordenar(almacen, datetime.now(UTC))
+    registro.info("rehechos=%d fusiones=%d episodios=%d", rehechos, fusiones, episodios)
+    return 0
+
+
 def principal(argumentos: list[str] | None = None) -> int:
     opciones = argparse.ArgumentParser(description=__doc__)
     opciones.add_argument("--repositorio", default=remoto.REPOSITORIO)
@@ -206,6 +214,7 @@ def principal(argumentos: list[str] | None = None) -> int:
     ordenes.add_parser("lote")
     o_recuperar = ordenes.add_parser("recuperar")
     o_recuperar.add_argument("--lote", required=True, help="identificador del lote")
+    ordenes.add_parser("reconstruir")
     args = opciones.parse_args(argumentos)
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s: %(message)s")
     cargar_clave_local()
@@ -217,7 +226,12 @@ def principal(argumentos: list[str] | None = None) -> int:
             registro.error("no hay base en la rama %s", remoto.RAMA)
             return 1
         almacen = Almacen(abrir_cifrada(args.base or ruta))
-        ordenes_ = {"estimar": orden_estimar, "lote": orden_lote, "recuperar": orden_recuperar}
+        ordenes_ = {
+            "estimar": orden_estimar,
+            "lote": orden_lote,
+            "recuperar": orden_recuperar,
+            "reconstruir": orden_reconstruir,
+        }
         salida = ordenes_[args.orden](args, almacen, ahora)
         # Primero se guarda la base, con lo que ya está pagado; después se publica, con la
         # hora de este momento (la orden puede haber durado horas).

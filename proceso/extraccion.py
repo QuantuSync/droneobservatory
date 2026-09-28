@@ -18,7 +18,7 @@ import hashlib
 import logging
 import time
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import UTC, datetime, timedelta
 from functools import cache
 from typing import Any, Protocol
@@ -37,7 +37,13 @@ from proceso.noticias import (
     nomenclator,
     normalizar,
 )
-from proceso.validacion_ficha import MIN_LETRAS_PALABRA, Contexto, Validada, validar
+from proceso.validacion_ficha import (
+    MIN_LETRAS_PALABRA,
+    Contexto,
+    Validada,
+    otro_objetivo,
+    validar,
+)
 from recogida.descarga import Descargador
 from recogida.lugares_osm import RADIO_KM
 
@@ -272,7 +278,12 @@ def procesar_respuesta(
         )
         validada = validar(leida, contexto)
         # La ficha en bruto se guarda para poder revalidarla sin volver a llamar.
-        documento = {"motivos": validada.motivos, "campos": validada.campos, "ficha": leida}
+        documento = {
+            "motivos": validada.motivos,
+            "campos": validada.campos,
+            "ficha": leida,
+            "enviadas": peticion.enviadas,
+        }
         if validada.publicable:
             incidente_id = _alta(almacen, peticion, validada, ahora, modelos_base, documento)
     documento["incidente"] = incidente_id
@@ -314,6 +325,49 @@ def _alta(
         documento["motivos"] = [*documento["motivos"], f"incidente no válido: {error}"]
         return None
     return id_
+
+
+def reconstruir(almacen: Almacen, ahora: datetime, modelos_base: frozenset[str]) -> int:
+    """Rehace los incidentes desde las fichas ya validadas y guardadas, sin llamar al modelo.
+
+    Sirve cuando cambian los candidatos (por ejemplo, al ampliar el nomenclátor y volver
+    a incorporar las noticias): cada candidato con una ficha publicable recupera su
+    incidente, con el mismo identificador si ya lo tenía. Devuelve cuántos rehace.
+    """
+    rehechos = 0
+    for candidato in almacen.candidatos():
+        extracciones = almacen.extracciones(candidato["id"])
+        if not extracciones or "ficha" not in extracciones[-1]:
+            continue
+        ultima = extracciones[-1]
+        peticion = preparar(almacen, candidato, None)
+        enviadas = ultima.get("enviadas") or peticion.enviadas
+        campos = {
+            nombre: campo
+            for nombre, campo in ultima["campos"].items()
+            if isinstance(campo.get("fuente"), int) and 1 <= campo["fuente"] <= len(enviadas)
+        }
+        validada = Validada(
+            campos=campos,
+            motivos=[],
+            titulo_es=str(ultima["ficha"].get("titulo_es", "")),
+            titulo_en=str(ultima["ficha"].get("titulo_en", "")),
+        )
+        # La comprobación de la instalación conocida también vale para fichas anteriores a ella.
+        nombre = validada.valor("objetivo_nombre")
+        contexto = Contexto(
+            textos=(), pais_objetivo=peticion.objetivo.pais, primer_articulo=ahora, ahora=ahora,
+            palabras_objetivo=palabras_objetivo(candidato["lugar"]),
+            prefijos_genericos=prefijos_genericos(),
+        )  # fmt: skip
+        if validada.valor("objetivo_conocido") is not False and otro_objetivo(nombre, contexto):
+            continue
+        if not validada.publicable:
+            continue
+        peticion = replace(peticion, enviadas=list(enviadas))
+        if _alta(almacen, peticion, validada, ahora, modelos_base, {"motivos": []}):
+            rehechos += 1
+    return rehechos
 
 
 # --- Llamadas -----------------------------------------------------------------------

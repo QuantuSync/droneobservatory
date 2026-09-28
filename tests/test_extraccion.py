@@ -531,3 +531,14 @@ def test_otra_instalacion_que_la_conocida_no_se_publica_alli(almacen: Almacen) -
     assert extraer_ejemplo(almacen, datos) is None
     (extraida,) = almacen.extracciones(almacen.candidatos()[0]["id"])
     assert "objetivo_nombre: no es la instalación conocida" in extraida["motivos"]
+
+
+def test_reconstruir_rehace_el_incidente_sin_llamar(almacen: Almacen) -> None:
+    id_ = extraer_ejemplo(almacen)
+    assert id_ is not None
+    llamadas = len(almacen.llamadas())
+    assert extraccion.reconstruir(almacen, AHORA, MODELOS) == 1
+    assert len(almacen.llamadas()) == llamadas
+    rehecho = almacen.incidente(id_)
+    assert rehecho is not None
+    assert rehecho["tipo"] == "interrupcion_aeroportuaria"
