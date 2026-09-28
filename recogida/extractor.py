@@ -92,6 +92,11 @@ def preparar_todas(
         return list(hilos.map(con_texto, sin_texto))
 
 
+# Fichas antiguas que se rehacen como mucho en cada ejecución horaria: pocas, para no
+# descargar páginas que el límite diario no dejará procesar.
+MAX_REPROCESO_POR_HORA = 10
+
+
 def modelos_base() -> frozenset[str]:
     return cargar_vocabulario_modelos()
 
@@ -115,7 +120,17 @@ def horaria(
     except servicio.ClienteNoConfigurado as error:
         registro.warning("extractor sin configurar: %s", error)
         return Resultado()
-    candidatos = pendientes(almacen, ahora - VENTANA_HORARIA)
+    # Primero los candidatos nuevos; después, poco a poco, los incidentes ya publicados
+    # con una ficha de una versión anterior, del más reciente al más antiguo. El límite
+    # diario de gasto corta la ejecución donde toque.
+    nuevos = pendientes(almacen, ahora - VENTANA_HORARIA)
+    vistos = {c["id"] for c in nuevos}
+    historicos = sorted(
+        (c for c in almacen.candidatos()
+         if c["id"] not in vistos and extraccion.desactualizado(almacen, c)),
+        key=lambda c: c["ultimo"], reverse=True,
+    )[:MAX_REPROCESO_POR_HORA]  # fmt: skip
+    candidatos = [*nuevos, *historicos]
     peticiones = preparar_todas(almacen, candidatos, Descargador)
     resultados = extraccion.extraer(
         almacen, fabrica(configuracion), peticiones, ahora, coste.Modo.HORARIO, modelos_base()

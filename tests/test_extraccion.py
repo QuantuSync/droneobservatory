@@ -419,6 +419,20 @@ def test_el_limite_diario_detiene_las_llamadas(almacen: Almacen) -> None:
     assert falso.llamadas == 0
 
 
+def test_el_limite_diario_no_se_puede_superar(almacen: Almacen) -> None:
+    candidato = candidato_con_articulos(almacen)
+    peticion = extraccion.preparar(almacen, candidato, None)
+    casi = coste.LIMITE_DIARIO_USD - 0.02
+    almacen.registrar_llamada({
+        "fecha": "2025-09-24T01:00:00Z", "modo": "horario", "candidato": "x", "lote": False,
+        "entrada": 0, "salida": 0, "escritura_cache": 0, "lectura_cache": 0, "coste": casi,
+    })  # fmt: skip
+    falso = ClienteFalso(ficha_ejemplo())
+    extraccion.extraer(almacen, falso, [peticion] * 50, AHORA, coste.Modo.HORARIO, MODELOS)
+    assert 0 < falso.llamadas < 50
+    assert almacen.gastado("horario", "2025-09-24") <= coste.LIMITE_DIARIO_USD
+
+
 def test_candidatos_que_necesitan_extraccion(almacen: Almacen) -> None:
     candidato = candidato_con_articulos(almacen)
     assert extraccion.necesita_extraccion(almacen, candidato)
@@ -426,6 +440,11 @@ def test_candidatos_que_necesitan_extraccion(almacen: Almacen) -> None:
     (candidato,) = almacen.candidatos()
     # Misma huella de artículos: no se repite.
     assert not extraccion.necesita_extraccion(almacen, candidato)
+    assert not extraccion.desactualizado(almacen, candidato)
+    with pytest.MonkeyPatch.context() as parche:
+        # Con una versión nueva del extractor, el incidente publicado se rehace.
+        parche.setattr(ficha, "VERSION", "ficha/siguiente")
+        assert extraccion.desactualizado(almacen, candidato)
 
 
 def test_recorte_del_lote_al_limite_del_historico(almacen: Almacen) -> None:
