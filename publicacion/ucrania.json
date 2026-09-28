@@ -474354,6 +474354,205 @@
     "ala_fija"
    ],
    "zonas_lanzamiento": []
+  },
+  {
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-09-28T20:35Z"
+    }
+   },
+   "cruces": [],
+   "derribados": {
+    "max": 86,
+    "min": 86
+   },
+   "derribados_categoria": "derribados_o_neutralizados",
+   "estado": {
+    "actual": "confirmado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "minuto",
+       "valor": "2026-09-28T15:31Z"
+      },
+      "fuente_id": "kpszsu-81127"
+     },
+     {
+      "estado": "confirmado",
+      "fecha": {
+       "precision": "minuto",
+       "valor": "2026-09-28T15:31Z"
+      },
+      "fuente_id": "kpszsu-81127"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/kpszsu/81127",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-09-28T15:31Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "❗️ Протягом дня 28 вересня (із 6.30 по 18.30) противник атакував Україну 124 ударними БпЛА ( 86 із них — реактивні), Гербера, \"Бандероль\"/\"Дань-Т\" та дронами",
+     "id": "kpszsu-81127",
+     "idioma": "uk",
+     "medio": "Повітряні Сили ЗС України",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-UA-2026-1007",
+   "lanzados": {
+    "gerbera_senuelos": {
+     "max": 124,
+     "min": 0
+    },
+    "otros": {
+     "max": 124,
+     "min": 0
+    },
+    "shahed_geran": {
+     "max": 124,
+     "min": 86
+    },
+    "total": {
+     "max": 124,
+     "min": 124
+    }
+   },
+   "localizaciones_impacto": {
+    "max": 26,
+    "min": 26
+   },
+   "localizaciones_restos": "desconocido",
+   "lugares_impacto": [],
+   "lugares_restos": [],
+   "perdidos_guerra_electronica": "desconocido",
+   "periodo": {
+    "fin": {
+     "precision": "minuto",
+     "valor": "2026-09-28T15:30Z"
+    },
+    "inicio": {
+     "precision": "minuto",
+     "valor": "2026-09-28T03:30Z"
+    }
+   },
+   "regiones": [
+    {
+     "region": "UA-32"
+    }
+   ],
+   "regiones_misiles": [],
+   "reivindicacion_de_parte": true,
+   "sentido": "RU_UA",
+   "tipo": "ataque_guerra",
+   "zonas_lanzamiento": []
+  },
+  {
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-09-28T20:35Z"
+    }
+   },
+   "cruces": [],
+   "derribados": {
+    "max": 14,
+    "min": 14
+   },
+   "derribados_categoria": "derribados",
+   "estado": {
+    "actual": "confirmado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "minuto",
+       "valor": "2026-09-28T17:47Z"
+      },
+      "fuente_id": "mod_russia-67721"
+     },
+     {
+      "estado": "confirmado",
+      "fecha": {
+       "precision": "minuto",
+       "valor": "2026-09-28T17:47Z"
+      },
+      "fuente_id": "mod_russia-67721"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/mod_russia/67721",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-09-28T17:47Z"
+     },
+     "fiabilidad": "D",
+     "frase_origen": "В течение дня в период с 8.00 мск до 20.00 мск дежурными силами ПВО перехвачены и уничтожены 14 украинских беспилотных летательных аппаратов самолетного типа над",
+     "id": "mod_russia-67721",
+     "idioma": "ru",
+     "medio": "Минобороны России",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-UA-2026-1008",
+   "lanzados": {
+    "gerbera_senuelos": "desconocido",
+    "otros": "desconocido",
+    "shahed_geran": "desconocido",
+    "total": "desconocido"
+   },
+   "localizaciones_impacto": "desconocido",
+   "localizaciones_restos": "desconocido",
+   "lugares_impacto": [],
+   "lugares_restos": [],
+   "perdidos_guerra_electronica": "desconocido",
+   "periodo": {
+    "fin": {
+     "precision": "minuto",
+     "valor": "2026-09-28T17:00Z"
+    },
+    "inicio": {
+     "precision": "minuto",
+     "valor": "2026-09-28T05:00Z"
+    }
+   },
+   "regiones": [
+    {
+     "region": "RU-BEL"
+    },
+    {
+     "region": "RU-BRY"
+    },
+    {
+     "region": "RU-KRS"
+    },
+    {
+     "region": "RU-ORL"
+    },
+    {
+     "region": "RU-VOR"
+    },
+    {
+     "region": "UA-43"
+    }
+   ],
+   "regiones_misiles": [],
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "ataque_guerra",
+   "tipos_dron": [
+    "ala_fija"
+   ],
+   "zonas_lanzamiento": []
   }
  ]
 }

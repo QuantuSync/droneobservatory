@@ -84547,6 +84547,84 @@
     }
    },
    "type": "Feature"
+  },
+  {
+   "geometry": {
+    "coordinates": [
+     26.24423,
+     47.61914
+    ],
+    "type": "Point"
+   },
+   "id": "EODI-2026-00154",
+   "properties": {
+    "consecuencias": {
+     "cierre": {
+      "valor": "desconocido"
+     }
+    },
+    "control": {
+     "ultima_actualizacion": {
+      "precision": "minuto",
+      "valor": "2026-09-28T20:35Z"
+     }
+    },
+    "drones": {
+     "numero": "desconocido"
+    },
+    "estado": {
+     "actual": "notificado",
+     "historial": [
+      {
+       "estado": "notificado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2026-09-28T16:15Z"
+       },
+       "fuente_id": "gdelt-107e07ad048e2dba"
+      }
+     ]
+    },
+    "fuentes": [
+     {
+      "credibilidad": 3,
+      "enlace": "https://monitorulsv.ro/deputata-aur-veronica-grosu-ii-cere-premierului-bolojan-sa-spuna-cine-raspunde-pentru-siguranta-romanilor-dupa-incidentele-cu-drone-din-suceava_e07d13",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-28T16:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Detectarea unei drone în apropierea frontierei cu România.",
+      "id": "gdelt-107e07ad048e2dba",
+      "idioma": "ro",
+      "medio": "monitorulsv.ro",
+      "replicas": 0
+     }
+    ],
+    "id": "EODI-2026-00154",
+    "lugar": {
+     "localidad": "Suceava",
+     "pais": "RO",
+     "radio_km": 1.0
+    },
+    "objetivo": {
+     "categoria": "energia",
+     "nombre": "Suceava"
+    },
+    "presencia_dron": "no_confirmada",
+    "tiempo": {
+     "inicio": {
+      "precision": "dia",
+      "valor": "2026-09-24T00:00Z"
+     }
+    },
+    "tipo": "sobrevuelo",
+    "titulo": {
+     "en": "Drone detected in Romanian airspace near Suceava",
+     "es": "Dron detectado en el espacio aéreo de Rumania cerca de Suceava"
+    }
+   },
+   "type": "Feature"
   }
  ],
  "type": "FeatureCollection"
