@@ -233,6 +233,10 @@ class ValorIlegible(ValueError):
 _RANGO = re.compile(r"^\s*(\d+)\s*(?:[-–]\s*(\d+))?\s*$")
 
 
+def _clave(texto: str) -> str:
+    return "_".join(texto.strip().lower().split())
+
+
 def interpretar(campo: str, texto: str) -> Any:
     """El valor tipado de un dato. Lanza ValorIlegible si no sigue el formato del campo."""
     limpio = texto.strip()
@@ -241,9 +245,11 @@ def interpretar(campo: str, texto: str) -> Any:
             raise ValorIlegible("no es true ni false")
         return limpio.lower() == "true"
     if campo in ENUMERADOS:
-        if limpio not in ENUMERADOS[campo]:
+        # «No confirmada» y «no_confirmada» son el mismo valor.
+        clave = _clave(limpio)
+        if clave not in ENUMERADOS[campo]:
             raise ValorIlegible("fuera de la lista")
-        return limpio
+        return clave
     if campo in RANGOS:
         m = _RANGO.match(limpio)
         if m is None:
@@ -251,7 +257,7 @@ def interpretar(campo: str, texto: str) -> Any:
         minimo = int(m[1])
         return {"min": minimo, "max": int(m[2]) if m[2] else minimo}
     if campo in LISTAS:
-        elementos = [e.strip() for e in limpio.split(",") if e.strip()]
+        elementos = [_clave(e) for e in limpio.split(",") if e.strip()]
         if any(e not in LISTAS[campo] for e in elementos):
             raise ValorIlegible("elemento fuera de la lista")
         return sorted(set(elementos))
@@ -260,6 +266,7 @@ def interpretar(campo: str, texto: str) -> Any:
         if len(partes) != len(("nombre", "categoria", "pais", "lat", "lon")):
             raise ValorIlegible("lugar sin sus cinco partes")
         nombre, categoria, pais, lat, lon = partes
+        categoria = _clave(categoria)
         if categoria not in CATEGORIAS:
             raise ValorIlegible("categoría fuera de la lista")
         try:

@@ -353,7 +353,9 @@ def reconstruir(almacen: Almacen, ahora: datetime, modelos_base: frozenset[str])
             titulo_es=str(ultima["ficha"].get("titulo_es", "")),
             titulo_en=str(ultima["ficha"].get("titulo_en", "")),
         )
-        # La comprobación de la instalación conocida también vale para fichas anteriores a ella.
+        # Las comprobaciones del objetivo también valen para fichas anteriores a ellas.
+        if any(m.startswith("pais: distinto") for m in ultima.get("motivos", [])):
+            continue
         nombre = validada.valor("objetivo_nombre")
         contexto = Contexto(
             textos=(), pais_objetivo=peticion.objetivo.pais, primer_articulo=ahora, ahora=ahora,

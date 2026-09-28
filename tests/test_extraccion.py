@@ -542,3 +542,21 @@ def test_reconstruir_rehace_el_incidente_sin_llamar(almacen: Almacen) -> None:
     rehecho = almacen.incidente(id_)
     assert rehecho is not None
     assert rehecho["tipo"] == "interrupcion_aeroportuaria"
+
+
+def test_pais_distinto_del_objetivo_no_se_publica_alli() -> None:
+    validada = validar(ficha_ejemplo(pais=campo("RO", "Københavns Lufthavn")), contexto())
+    assert "pais: distinto del país del objetivo conocido" in validada.motivos
+    assert not validada.publicable
+
+
+def test_valores_de_lista_con_otra_escritura() -> None:
+    assert ficha.interpretar("presencia_dron", "No confirmada") == "no_confirmada"
+    assert ficha.interpretar("medidas", "Patrulla, cierre espacio aereo") == [
+        "cierre_espacio_aereo",
+        "patrulla",
+    ]
+    assert (
+        ficha.interpretar("lugar_nuevo", "Base X; Base militar; RO; 45.1; 26.8")["categoria"]
+        == "base_militar"
+    )

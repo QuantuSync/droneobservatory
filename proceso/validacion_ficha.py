@@ -250,7 +250,15 @@ def validar(ficha: dict[str, Any], contexto: Contexto) -> Validada:
         conocido = False
         resultado.motivos.append("objetivo_nombre: no es la instalación conocida")
     if conocido is not False and resultado.valor("pais") not in {None, contexto.pais_objetivo}:
+        # Un dron en Rumanía no ocurre en una base de Alemania: el objetivo conocido no es.
         resultado.campos.pop("pais")
+        resultado.campos["objetivo_conocido"] = {
+            **resultado.campos.get(
+                "objetivo_conocido", {"fuente": 1, "frase": "", "confianza": 1.0}
+            ),
+            "valor": False,
+        }
+        conocido = False
         resultado.motivos.append("pais: distinto del país del objetivo conocido")
     nuevo = resultado.valor("lugar_nuevo")
     if conocido is False and nuevo and nuevo["pais"] != resultado.valor("pais"):
