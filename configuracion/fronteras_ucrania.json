@@ -1,0 +1,12 @@
+{
+  "version_esquema": "1.0.0",
+  "descripcion": "Punto de referencia de cada país europeo vecino de Ucrania para situar las incursiones que declaran los partes ucranianos, que solo dicen a qué país cruzan los drones. Es la zona fronteriza donde se han producido casi todas las incursiones conocidas, con el radio máximo del esquema (50 km): Moldavia, el sur junto a Odesa; Rumanía, el Danubio entre Galați y Tulcea; Polonia, la frontera de Lublin; Hungría y Eslovaquia, la frontera de Transcarpatia. Bielorrusia y Rusia quedan fuera, como en la recogida de noticias.",
+  "radio_km": 50,
+  "paises": {
+    "MD": {"nombre": "sur de Moldavia", "lat": 46.3, "lon": 28.7},
+    "RO": {"nombre": "Danubio entre Galați y Tulcea", "lat": 45.3, "lon": 28.4},
+    "PL": {"nombre": "frontera de Lublin", "lat": 50.8, "lon": 23.9},
+    "HU": {"nombre": "frontera de Transcarpatia", "lat": 48.2, "lon": 22.4},
+    "SK": {"nombre": "frontera de Transcarpatia", "lat": 48.8, "lon": 22.4}
+  }
+}
