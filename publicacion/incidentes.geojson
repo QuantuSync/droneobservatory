@@ -84354,7 +84354,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-28T12:38Z"
+      "valor": "2026-09-29T19:26Z"
      }
     },
     "drones": {
@@ -84460,6 +84460,34 @@
       "idioma": "ro",
       "medio": "dailybusiness.ro",
       "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://hir.ma/kulfold/a-roman-legterbe-eszrevetlenul-behatolo-dron-roncsait-talaltak-meg-egy-szantofoldon/838913",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-29T12:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Az ukrán határtól 30 kilométernyire lezuhant drón roncsait találták meg egy szántóföldön.",
+      "id": "gdelt-05194ffb4c9cc40a",
+      "idioma": "hu",
+      "medio": "hir.ma",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://hir.ma/kulfold/a-roman-legterbe-eszrevetlenul-behatolo-dron-roncsait-talaltak-meg-egy-szantofoldon/838913",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-29T12:15Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "A román légtérbe észrevétlenül behatoló drón roncsait találták meg egy szántóföldön.",
+      "id": "gdelt-05194ffb4c9cc40a-declaracion-1",
+      "idioma": "hu",
+      "medio": "Román védelmi minisztérium (declaración oficial citada en hir.ma)",
+      "replicas": 0
      }
     ],
     "id": "EODI-2026-00151",
@@ -84472,7 +84500,7 @@
      "categoria": "otra",
      "nombre": "Tulcea"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "tiempo": {
      "inicio": {
       "precision": "dia",
@@ -84505,7 +84533,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-29T01:01Z"
+      "valor": "2026-09-29T19:26Z"
      }
     },
     "drones": {
@@ -84554,6 +84582,20 @@
       "id": "gdelt-accda9e72aa0bc49",
       "idioma": "ro",
       "medio": "adevarul.ro",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://adevarul.ro/stiri-interne/evenimente/administratia-prezidentiala-rusia-ar-fi-preluat-2560242.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-28T10:15Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Verificările efectuate până în acest moment indică posibilitatea ca Rusia să fi preluat controlul dronei maritime.",
+      "id": "gdelt-accda9e72aa0bc49-declaracion-1",
+      "idioma": "ro",
+      "medio": "Administrația Prezidențială (declaración oficial citada en adevarul.ro)",
       "replicas": 0
      },
      {
@@ -84627,18 +84669,18 @@
       "replicas": 0
      },
      {
-      "credibilidad": 1,
-      "enlace": "https://adevarul.ro/stiri-interne/evenimente/administratia-prezidentiala-rusia-ar-fi-preluat-2560242.html",
+      "credibilidad": 3,
+      "enlace": "https://romaniatv.net/drona-care-a-explodat-in-portul-constanta-ar-fi-fost-controlata-de-rusi-ancheta-preliminara_9827290.html",
       "fecha": {
        "precision": "aproximada",
-       "valor": "2026-09-28T10:15Z"
+       "valor": "2026-09-29T08:45Z"
       },
-      "fiabilidad": "B",
-      "frase_origen": "Verificările efectuate până în acest moment indică posibilitatea ca Rusia să fi preluat controlul dronei maritime.",
-      "id": "gdelt-accda9e72aa0bc49-declaracion-1",
+      "fiabilidad": "C",
+      "frase_origen": "Explozia dronei din Portul Constanța a fost rezultatul unui mecanism automat de autodistrugere",
+      "id": "gdelt-79a8dcd6a8370b26",
       "idioma": "ro",
-      "medio": "Administrația Prezidențială (declaración oficial citada en adevarul.ro)",
-      "replicas": 0
+      "medio": "romaniatv.net",
+      "replicas": 1
      }
     ],
     "id": "EODI-2026-00152",
@@ -84651,7 +84693,7 @@
      "categoria": "puerto",
      "nombre": "Portul Constanța"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "tiempo": {
      "inicio": {
       "precision": "dia",
@@ -84839,7 +84881,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-29T06:59Z"
+      "valor": "2026-09-29T19:26Z"
      }
     },
     "drones": {
@@ -84878,7 +84920,7 @@
        "valor": "2026-09-29T05:00Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "în noaptea de 28 spre 29 septembrie, sistemul de supraveghere radar al Ministerului Apărării Naţionale a detectat",
+      "frase_origen": "O dronă care înainta la nord de Isaccea",
       "id": "gdelt-8562e629af6ba2bd",
       "idioma": "ro",
       "medio": "antena3.ro",
@@ -84927,6 +84969,48 @@
       "replicas": 0
      },
      {
+      "credibilidad": 3,
+      "enlace": "https://stiripesurse.ro/ministry-of-defence-drone-flying-north-of-isaccea-near-the-border-with-ukraine-detected-by-radar_3924013",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-29T06:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Ministry of Defence: Drone flying north of Isaccea, near the border with Ukraine, detected by radar",
+      "id": "gdelt-1f3a01a8b366c62b",
+      "idioma": "en",
+      "medio": "stiripesurse.ro",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://agerpres.ro/social/2026/09/29/mapn-o-drona-ce-evolua-la-nord-de-isaccea-in-proximitatea-frontierei-cu-ucraina-detectata-de-radare---1597818",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-29T07:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "MApN: O dronă ce evolua la nord de Isaccea, în proximitatea frontierei cu Ucraina, detectată de radare; mesaj RO-ALERT în Tulcea",
+      "id": "gdelt-eb9845fd4245c8ca",
+      "idioma": "ro",
+      "medio": "agerpres.ro",
+      "replicas": 1
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://europafm.ro/tulcea-drona-detectata-azi-noapte-langa-isaccea-doua-avioane-f-18-spaniole-au-fost-ridicate-pentru-monitorizare",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-29T08:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Dronă detectată lângă Isaccea. F-18 spaniole, ridicate pentru monitorizare",
+      "id": "gdelt-45584e1d6f1f8836",
+      "idioma": "ro",
+      "medio": "europafm.ro",
+      "replicas": 0
+     },
+     {
       "credibilidad": 1,
       "enlace": "https://antena3.ro/actualitate/drona-detectata-de-radarele-armatei-la-nord-de-isaccea-langa-frontiera-cu-ucraina-mesaj-ro-alert-in-tulcea-804975.html",
       "fecha": {
@@ -84937,7 +85021,7 @@
       "frase_origen": "sistemul de supraveghere radar al Ministerului Apărării Naţionale a detectat o ţintă aeriană ce evolua la nord de Isaccea",
       "id": "gdelt-8562e629af6ba2bd-declaracion-1",
       "idioma": "ro",
-      "medio": "Ministerul Apărării Naţionale (declaración oficial citada en antena3.ro)",
+      "medio": "Ministerul Apărării Naționale (declaración oficial citada en antena3.ro)",
       "replicas": 0
      }
     ],
@@ -84965,8 +85049,107 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Drone detected by radar north of Isaccea near Ukrainian border",
-     "es": "Dron detectado por radar al norte de Isaccea, junto a la frontera de Ucrania"
+     "en": "Drone detected by defense radars north of Isaccea, Romania",
+     "es": "Dron detectado por radares de defensa al norte de Isaccea, Rumanía"
+    }
+   },
+   "type": "Feature"
+  },
+  {
+   "geometry": {
+    "coordinates": [
+     -0.1167,
+     51.5
+    ],
+    "type": "Point"
+   },
+   "id": "EODI-2026-00156",
+   "properties": {
+    "consecuencias": {
+     "cierre": {
+      "valor": "desconocido"
+     }
+    },
+    "control": {
+     "ultima_actualizacion": {
+      "precision": "minuto",
+      "valor": "2026-09-29T14:06Z"
+     }
+    },
+    "drones": {
+     "numero": "desconocido"
+    },
+    "estado": {
+     "actual": "confirmado",
+     "historial": [
+      {
+       "estado": "notificado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2026-09-29T13:15Z"
+       },
+       "fuente_id": "gdelt-a999c51add2289cd"
+      },
+      {
+       "estado": "confirmado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2026-09-29T13:15Z"
+       },
+       "fuente_id": "gdelt-a999c51add2289cd-declaracion-1"
+      }
+     ]
+    },
+    "fuentes": [
+     {
+      "credibilidad": 3,
+      "enlace": "https://tf1info.fr/international/projet-d-attaque-au-royaume-uni-l-inquietante-hausse-des-incidents-de-drones-pres-de-sites-militaires-2466994.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-29T13:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Cinq Britanniques ont été arrêtés dimanche près d'une base militaire en Angleterre utilisée par l'armée américaine.",
+      "id": "gdelt-a999c51add2289cd",
+      "idioma": "fr",
+      "medio": "tf1info.fr",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 1,
+      "enlace": "https://tf1info.fr/international/projet-d-attaque-au-royaume-uni-l-inquietante-hausse-des-incidents-de-drones-pres-de-sites-militaires-2466994.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-29T13:15Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Depuis plusieurs mois, fait face à une augmentation de la menace sur les sites sensibles du pays.",
+      "id": "gdelt-a999c51add2289cd-declaracion-1",
+      "idioma": "fr",
+      "medio": "Police antiterroriste britannique (declaración oficial citada en tf1info.fr)",
+      "replicas": 0
+     }
+    ],
+    "id": "EODI-2026-00156",
+    "lugar": {
+     "pais": "GB",
+     "radio_km": 10.0
+    },
+    "objetivo": {
+     "categoria": "otra",
+     "nombre": "London"
+    },
+    "presencia_dron": "no_confirmada",
+    "tiempo": {
+     "inicio": {
+      "precision": "dia",
+      "valor": "2026-09-29T13:15Z"
+     }
+    },
+    "tipo": "sobrevuelo",
+    "titulo": {
+     "en": "Rise in drone incidents near British military sites",
+     "es": "Aumento de incidentes con drones cerca de bases militares británicas"
     }
    },
    "type": "Feature"
