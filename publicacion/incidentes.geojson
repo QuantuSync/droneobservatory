@@ -72804,8 +72804,8 @@
   {
    "geometry": {
     "coordinates": [
-     13.41053,
-     52.52437
+     13.5033,
+     52.3667
     ],
     "type": "Point"
    },
@@ -72823,17 +72823,14 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-28T09:43Z"
+      "valor": "2026-09-29T01:01Z"
      }
     },
     "drones": {
-     "numero": {
-      "max": 1,
-      "min": 1
-     }
+     "numero": "desconocido"
     },
     "estado": {
-     "actual": "notificado",
+     "actual": "confirmado",
      "historial": [
       {
        "estado": "notificado",
@@ -72842,6 +72839,14 @@
         "valor": "2026-09-23T19:45Z"
        },
        "fuente_id": "gdelt-52c4a75d544be1d1"
+      },
+      {
+       "estado": "confirmado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2026-09-23T19:45Z"
+       },
+       "fuente_id": "gdelt-52c4a75d544be1d1-declaracion-1"
       }
      ]
     },
@@ -72854,7 +72859,7 @@
        "valor": "2026-09-23T19:45Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "wurde der Luftraum um 20:20 Uhr gesperrt",
+      "frase_origen": "die Drohne um 20 Uhr auf der Nordbahn gesichtet worden sei",
       "id": "gdelt-52c4a75d544be1d1",
       "idioma": "de",
       "medio": "unternehmen-heute.de",
@@ -72868,7 +72873,7 @@
        "valor": "2026-09-23T20:00Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "As of 9:05 p.m., airspace was reopened but flights were experiencing delays.",
+      "frase_origen": "Berlin Airport briefly suspends flights over drone sighting",
       "id": "gdelt-4c928cc1945bdcff",
       "idioma": "en",
       "medio": "dw.com",
@@ -73335,34 +73340,42 @@
       "idioma": "es",
       "medio": "calibre800.com",
       "replicas": 0
+     },
+     {
+      "credibilidad": 1,
+      "enlace": "https://unternehmen-heute.de/news.php?newsid=6712448",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-23T19:45Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "die Drohne um 20 Uhr auf der Nordbahn gesichtet worden sei",
+      "id": "gdelt-52c4a75d544be1d1-declaracion-1",
+      "idioma": "de",
+      "medio": "Sprecherin des Flughafens Berlin Brandenburg (declaración oficial citada en unternehmen-heute.de)",
+      "replicas": 0
      }
     ],
     "id": "EODI-2026-00116",
     "lugar": {
-     "localidad": "Berlin",
      "pais": "DE",
-     "radio_km": 20.0
+     "radio_km": 5.0
     },
     "objetivo": {
-     "categoria": "otra",
-     "nombre": "Berlin"
+     "categoria": "aeropuerto",
+     "nombre": "Berlin Brandenburg Airport (BER)"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "tiempo": {
-     "duracion_min": 65,
-     "fin": {
-      "precision": "minuto",
-      "valor": "2026-09-23T19:05Z"
-     },
      "inicio": {
       "precision": "minuto",
       "valor": "2026-09-23T18:00Z"
      }
     },
-    "tipo": "sobrevuelo",
+    "tipo": "interrupcion_aeroportuaria",
     "titulo": {
-     "en": "Drone sighting causes temporary closure of Berlin airport",
-     "es": "Avistamiento de dron provoca cierre temporal del aeropuerto de Berlín"
+     "en": "Drone sighting causes temporary closure of Berlin airport airspace",
+     "es": "Sichtung einer Drohne führt zur vorübergehenden Sperrung des Berliner Flughafens"
     }
    },
    "type": "Feature"
@@ -83751,7 +83764,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-28T09:48Z"
+      "valor": "2026-09-29T01:01Z"
      }
     },
     "drones": {
@@ -83787,6 +83800,20 @@
       "idioma": "de",
       "medio": "wz-net.de",
       "replicas": 0
+     },
+     {
+      "credibilidad": 1,
+      "enlace": "https://wz-net.de/weltweit/politik/drohne-fliegerhorst-wunstorf-experte-vermutet-russland-vorfa-id309646.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-25T10:30Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Drohne am Fliegerhorst Wunstorf: Experte vermutet Russland hinter dem Vorfall",
+      "id": "gdelt-2d8dd0d05eeaee3f-declaracion-1",
+      "idioma": "de",
+      "medio": "Experte (declaración oficial citada en wz-net.de)",
+      "replicas": 0
      }
     ],
     "id": "EODI-2026-00145",
@@ -83807,8 +83834,8 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Crashed drone detected near Wunstorf military base",
-     "es": "Dron estrellado detectado cerca de la base militar de Wunstorf"
+     "en": "Drone downed near Wunstorf military base",
+     "es": "Dron derribado cerca de la base militar de Wunstorf"
     }
    },
    "type": "Feature"
@@ -83935,7 +83962,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-28T09:48Z"
+      "valor": "2026-09-29T01:01Z"
      }
     },
     "drones": {
@@ -83983,7 +84010,7 @@
      "categoria": "otra",
      "nombre": "Agigea"
     },
-    "presencia_dron": "confirmada",
+    "presencia_dron": "no_confirmada",
     "tiempo": {
      "inicio": {
       "precision": "dia",
@@ -83992,8 +84019,8 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Drone remains found in Agigea, Romania",
-     "es": "Restos de dron hallados en Agigea, Rumania"
+     "en": "Drone fragments found in Agigea, Romania",
+     "es": "Fragmentos de dron encontrados en Agigea, Rumania"
     }
    },
    "type": "Feature"
@@ -84016,7 +84043,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-28T09:48Z"
+      "valor": "2026-09-29T01:01Z"
      }
     },
     "drones": {
@@ -84026,7 +84053,7 @@
      }
     },
     "estado": {
-     "actual": "notificado",
+     "actual": "confirmado",
      "historial": [
       {
        "estado": "notificado",
@@ -84035,6 +84062,14 @@
         "valor": "2026-09-26T09:30Z"
        },
        "fuente_id": "gdelt-99b638a223d693a1"
+      },
+      {
+       "estado": "confirmado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2026-09-26T09:30Z"
+       },
+       "fuente_id": "gdelt-99b638a223d693a1-declaracion-1"
       }
      ]
     },
@@ -84066,6 +84101,20 @@
       "idioma": "ro",
       "medio": "news.yam.md",
       "replicas": 0
+     },
+     {
+      "credibilidad": 1,
+      "enlace": "https://news.yam.md/ro/story/67417134",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-26T09:30Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "a fost depistat un zbor neautorizat în spațiul aerian național",
+      "id": "gdelt-99b638a223d693a1-declaracion-1",
+      "idioma": "ro",
+      "medio": "Serviciul Operații Aeriene al Armatei Naționale (declaración oficial citada en news.yam.md)",
+      "replicas": 0
      }
     ],
     "id": "EODI-2026-00148",
@@ -84086,8 +84135,8 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Unidentified drone overflies Moldavian airspace",
-     "es": "Dron no identificado sobrevuela el espacio aéreo de Moldavia"
+     "en": "Unauthorized flight detected in Moldavian airspace",
+     "es": "Sobrevuelo no autorizado en el espacio aéreo de Moldavia"
     }
    },
    "type": "Feature"
@@ -84110,14 +84159,14 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-28T09:48Z"
+      "valor": "2026-09-29T01:01Z"
      }
     },
     "drones": {
      "numero": "desconocido"
     },
     "estado": {
-     "actual": "notificado",
+     "actual": "confirmado",
      "historial": [
       {
        "estado": "notificado",
@@ -84126,6 +84175,14 @@
         "valor": "2026-09-26T18:15Z"
        },
        "fuente_id": "gdelt-0ba5b48ace62b081"
+      },
+      {
+       "estado": "confirmado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2026-09-26T18:15Z"
+       },
+       "fuente_id": "gdelt-0ba5b48ace62b081-declaracion-1"
       }
      ]
     },
@@ -84138,16 +84195,29 @@
        "valor": "2026-09-26T18:15Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "инцидентом с дроном в Лейпциге",
+      "frase_origen": "в Лейпциге нашли какой-то там упавший беспилотник",
       "id": "gdelt-0ba5b48ace62b081",
       "idioma": "ru",
       "medio": "news.mail.ru",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 1,
+      "enlace": "https://news.mail.ru/politics/72508904",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-26T18:15Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "в Лейпциге нашли какой-то там упавший беспилотник",
+      "id": "gdelt-0ba5b48ace62b081-declaracion-1",
+      "idioma": "ru",
+      "medio": "Министерство иностранных дел России (declaración oficial citada en news.mail.ru)",
       "replicas": 0
      }
     ],
     "id": "EODI-2026-00150",
     "lugar": {
-     "localidad": "Leipzig",
      "pais": "BG",
      "radio_km": 1.0
     },
@@ -84155,7 +84225,7 @@
      "categoria": "estadio",
      "nombre": "Лавров"
     },
-    "presencia_dron": "confirmada",
+    "presencia_dron": "no_confirmada",
     "tiempo": {
      "inicio": {
       "precision": "dia",
@@ -84164,8 +84234,8 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Fallen drone in Leipzig causes diplomatic incident",
-     "es": "Dron caído en Leipzig causa incidente diplomático"
+     "en": "Drone crash in Leipzig sparks diplomatic incident between Russia and Germany",
+     "es": "Dron caído en Leipzig causa incidente diplomático entre Rusia y Alemania"
     }
    },
    "type": "Feature"
@@ -84339,7 +84409,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-28T13:31Z"
+      "valor": "2026-09-29T01:01Z"
      }
     },
     "drones": {
@@ -84384,7 +84454,7 @@
        "valor": "2026-09-28T10:15Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "Administrația Prezidențială ia în calcul ca drona maritimă care a ajuns în Portul Constanța și a explodat să fi fost preluată de Federația Rusă.",
+      "frase_origen": "Administrația Prezidențială: Rusia ar fi preluat controlul dronei maritime care a ajuns în Portul Constanța",
       "id": "gdelt-accda9e72aa0bc49",
       "idioma": "ro",
       "medio": "adevarul.ro",
@@ -84402,7 +84472,7 @@
       "id": "gdelt-9a5f381eeb0002c6",
       "idioma": "ro",
       "medio": "stiripesurse.ro",
-      "replicas": 0
+      "replicas": 1
      },
      {
       "credibilidad": 3,
@@ -84445,10 +84515,39 @@
       "idioma": "ro",
       "medio": "ziare.com",
       "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://europafm.ro/drona-explodata-portul-constanta-deturnata-rusia",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-28T13:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Drona din Portul Constanța ar fi fost deturnată de Rusia",
+      "id": "gdelt-3eeacdfffa71a190",
+      "idioma": "ro",
+      "medio": "europafm.ro",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 1,
+      "enlace": "https://adevarul.ro/stiri-interne/evenimente/administratia-prezidentiala-rusia-ar-fi-preluat-2560242.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-28T10:15Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Verificările efectuate până în acest moment indică posibilitatea ca Rusia să fi preluat controlul dronei maritime.",
+      "id": "gdelt-accda9e72aa0bc49-declaracion-1",
+      "idioma": "ro",
+      "medio": "Administrația Prezidențială (declaración oficial citada en adevarul.ro)",
+      "replicas": 0
      }
     ],
     "id": "EODI-2026-00152",
     "lugar": {
+     "localidad": "Constanța",
      "pais": "RO",
      "radio_km": 3.0
     },
@@ -84456,7 +84555,7 @@
      "categoria": "puerto",
      "nombre": "Portul Constanța"
     },
-    "presencia_dron": "confirmada",
+    "presencia_dron": "no_confirmada",
     "tiempo": {
      "inicio": {
       "precision": "dia",
@@ -84465,8 +84564,8 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Explosive drone at Constanța port allegedly controlled by Russia",
-     "es": "Dron explosivo en el puerto de Constanza presumiblemente controlado por Rusia"
+     "en": "Drone explosion at Port of Constanza attributed to Russia",
+     "es": "Explosión de dron en el Puerto de Constanza atribuida a Rusia"
     }
    },
    "type": "Feature"
@@ -84489,7 +84588,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-28T12:38Z"
+      "valor": "2026-09-29T01:01Z"
      }
     },
     "drones": {
@@ -84517,7 +84616,7 @@
        "valor": "2026-09-28T10:30Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "Lilian Carp, despre dronele care au survolat R. Moldova: „Nu le-am doborât, dar a existat această posibilitate",
+      "frase_origen": "Dronele care au survolat R. Moldova",
       "id": "gdelt-77efde7b2355dcf0",
       "idioma": "ro",
       "medio": "news.yam.md",
@@ -84542,8 +84641,8 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Drones fly over Moldova without being shot down",
-     "es": "Drones sobrevuelan Moldavia sin ser derribados"
+     "en": "Drones fly over Moldova",
+     "es": "Drones sobrevuelan Moldavia"
     }
    },
    "type": "Feature"
