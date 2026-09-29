@@ -56621,7 +56621,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-28T09:43Z"
+      "valor": "2026-09-29T06:59Z"
      }
     },
     "drones": {
@@ -56631,7 +56631,7 @@
      }
     },
     "estado": {
-     "actual": "notificado",
+     "actual": "confirmado",
      "historial": [
       {
        "estado": "notificado",
@@ -56640,6 +56640,14 @@
         "valor": "2026-09-22T17:15Z"
        },
        "fuente_id": "gdelt-abb6bb830f7cf000"
+      },
+      {
+       "estado": "confirmado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2026-09-22T17:15Z"
+       },
+       "fuente_id": "gdelt-abb6bb830f7cf000-declaracion-1"
       }
      ]
     },
@@ -56652,7 +56660,7 @@
        "valor": "2026-09-22T17:15Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "Die nahe dem Fliegerhorst Wunstorf abgestürzte Drohne.",
+      "frase_origen": "die nahe dem Fliegerhorst Wunstorf abgestürzte Drohne",
       "id": "gdelt-abb6bb830f7cf000",
       "idioma": "de",
       "medio": "wz-net.de",
@@ -56685,6 +56693,34 @@
       "idioma": "de",
       "medio": "n-tv.de",
       "replicas": 0
+     },
+     {
+      "credibilidad": 1,
+      "enlace": "https://wz-net.de/weltweit/politik/fliegerhorst-wunstorf-sprengstoff-abgestuerzter-drohne-entde-id309386.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-22T17:15Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Der Fundort lag nach Bundeswehrangaben nur etwa 800 Meter vom Fliegerhorst entfernt.",
+      "id": "gdelt-abb6bb830f7cf000-declaracion-1",
+      "idioma": "de",
+      "medio": "Bundeswehr (declaración oficial citada en wz-net.de)",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 1,
+      "enlace": "https://tagesspiegel.de/politik/drohnenfund-bei-fliegerhorst-wunstorf-beamte-sollen-bei-ermittlungen-womoglich-sprengstoff-entdeckt-haben-16085546.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-22T18:00Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Die Bundesanwaltschaft prüft bereits einen möglichen Zusammenhang zum Leipziger Vorfall.",
+      "id": "gdelt-e6acebb9bc087299-declaracion-2",
+      "idioma": "de",
+      "medio": "Bundesanwaltschaft (declaración oficial citada en tagesspiegel.de)",
+      "replicas": 0
      }
     ],
     "id": "EODI-2026-00023",
@@ -56698,11 +56734,6 @@
      "nombre": "Fliegerhorst Wunstorf"
     },
     "presencia_dron": "no_confirmada",
-    "respuesta": {
-     "medidas": [
-      "patrulla"
-     ]
-    },
     "tiempo": {
      "inicio": {
       "precision": "dia",
@@ -56711,8 +56742,8 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Drone downed near Wunstorf air base with suspected explosive payload",
-     "es": "Dron abatido cerca de la base aérea de Wunstorf con posible carga explosiva"
+     "en": "Drone crash near Fliegerhorst Wunstorf with suspected explosives",
+     "es": "Dron abatido cerca del Fliegerhorst Wunstorf con posible carga explosiva"
     }
    },
    "type": "Feature"
@@ -56843,7 +56874,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-28T09:43Z"
+      "valor": "2026-09-29T06:59Z"
      }
     },
     "drones": {
@@ -56883,6 +56914,7 @@
     ],
     "id": "EODI-2026-00026",
     "lugar": {
+     "localidad": "Dublin",
      "pais": "IE",
      "radio_km": 5.0
     },
@@ -56900,8 +56932,8 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Drone near descending aircraft at Dublin Airport",
-     "es": "Dron cerca de un avión en descenso en el Aeropuerto de Dublín"
+     "en": "Suspected drone near plane descending at Dublin Airport",
+     "es": "Dron sospechoso cerca de avión descendiendo en el Aeropuerto de Dublín"
     }
    },
    "type": "Feature"
@@ -57533,7 +57565,7 @@
      "cierre": {
       "minutos": {
        "max": 30,
-       "min": 30
+       "min": 25
       },
       "valor": "si"
      }
@@ -57541,10 +57573,11 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-28T09:43Z"
+      "valor": "2026-09-29T06:59Z"
      }
     },
     "drones": {
+     "modelo": "particuliere drone",
      "numero": {
       "max": 1,
       "min": 1
@@ -57572,7 +57605,7 @@
        "valor": "2026-09-16T20:00Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "Het vliegverkeer op de luchthaven van Charleroi is vanmiddag een half uur stilgelegd.",
+      "frase_origen": "De drone, die in het verlengde van de startbaan vloog, werd rond 14 uur opgemerkt.",
       "id": "gdelt-3afe8513c064df77",
       "idioma": "nl",
       "medio": "vrt.be",
@@ -57623,6 +57656,7 @@
     ],
     "id": "EODI-2026-00035",
     "lugar": {
+     "localidad": "Charleroi",
      "pais": "BE",
      "radio_km": 5.0
     },
@@ -57638,20 +57672,20 @@
      ]
     },
     "tiempo": {
-     "duracion_min": 30,
+     "duracion_min": 25,
      "fin": {
       "precision": "minuto",
-      "valor": "2026-09-16T12:30Z"
+      "valor": "2026-09-16T14:25Z"
      },
      "inicio": {
       "precision": "hora",
-      "valor": "2026-09-16T12:00Z"
+      "valor": "2026-09-16T14:00Z"
      }
     },
     "tipo": "interrupcion_aeroportuaria",
     "titulo": {
-     "en": "Drone temporarily closes Charleroi airport after being detected over runway",
-     "es": "Dron cierra temporalmente el aeropuerto de Charleroi tras ser detectado sobre la pista"
+     "en": "Drone disrupts operations at Charleroi Airport",
+     "es": "Un dron interrumpe las operaciones del aeropuerto de Charleroi"
     }
    },
    "type": "Feature"
@@ -57957,13 +57991,13 @@
    "properties": {
     "consecuencias": {
      "cierre": {
-      "valor": "desconocido"
+      "valor": "si"
      }
     },
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-28T09:43Z"
+      "valor": "2026-09-29T06:59Z"
      }
     },
     "drones": {
@@ -58003,7 +58037,6 @@
     ],
     "id": "EODI-2026-00038",
     "lugar": {
-     "localidad": "Luxemburg",
      "pais": "LU",
      "radio_km": 5.0
     },
@@ -58019,10 +58052,10 @@
       "valor": "2026-09-23T07:00Z"
      }
     },
-    "tipo": "sobrevuelo",
+    "tipo": "interrupcion_aeroportuaria",
     "titulo": {
-     "en": "Drones shut down Luxembourg airport twice in days",
-     "es": "Drones cierran dos veces el aeropuerto de Luxemburgo en pocos días"
+     "en": "Drone incidents force closures at Luxembourg Airport",
+     "es": "Cierres en el aeropuerto de Luxemburgo por incidentes con drones"
     }
    },
    "type": "Feature"
@@ -58132,14 +58165,11 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-28T09:43Z"
+      "valor": "2026-09-29T06:59Z"
      }
     },
     "drones": {
-     "numero": {
-      "max": 1,
-      "min": 1
-     }
+     "numero": "desconocido"
     },
     "estado": {
      "actual": "notificado",
@@ -58163,7 +58193,7 @@
        "valor": "2026-09-16T11:30Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "ilmoituksen droonista, joka lensi Loviisan ydinvoimalaitoksen lentokieltoalueella",
+      "frase_origen": "noin kello 9.50 aikoihin ilmoituksen droonista, joka lensi Loviisan ydinvoimalaitoksen lentokieltoalueella.",
       "id": "gdelt-a6c504f040dab90a",
       "idioma": "fi",
       "medio": "is.fi",
@@ -58172,7 +58202,6 @@
     ],
     "id": "EODI-2026-00040",
     "lugar": {
-     "localidad": "Loviisa",
      "pais": "FI",
      "radio_km": 2.0
     },
@@ -58189,8 +58218,8 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Drone flies over Loviisa nuclear power plant in restricted airspace",
-     "es": "Dron sobrevuela la central nuclear de Lovisa en zona prohibida"
+     "en": "Drone flies over restricted airspace of Loviisa nuclear power plant",
+     "es": "Dron sobrevuela el espacio aéreo restringido de la central nuclear de Loviisa"
     }
    },
    "type": "Feature"
@@ -62580,7 +62609,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-28T09:43Z"
+      "valor": "2026-09-29T06:59Z"
      }
     },
     "drones": {
@@ -62611,7 +62640,7 @@
        "valor": "2026-09-22T05:00Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "gardai seized drones from idiotic punters in Co Clare. Two men",
+      "frase_origen": "during the President's visit earlier this month",
       "id": "gdelt-6dadfa326dc60e78",
       "idioma": "en",
       "medio": "irishmirror.ie",
@@ -62629,11 +62658,6 @@
      "oaci": "EINN"
     },
     "presencia_dron": "confirmada",
-    "respuesta": {
-     "medidas": [
-      "patrulla"
-     ]
-    },
     "tiempo": {
      "inicio": {
       "precision": "dia",
@@ -62642,8 +62666,8 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Drones over Shannon Airport during Trump visit spark security alert",
-     "es": "Drones sobre Shannon Airport durante la visita de Trump generan alerta de seguridad"
+     "en": "Drones over Shannon Airport during Trump's visit",
+     "es": "Drones sobre el aeropuerto de Shannon durante la visita de Trump"
     }
    },
    "type": "Feature"
@@ -64689,18 +64713,17 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-28T09:43Z"
+      "valor": "2026-09-29T06:59Z"
      }
     },
     "drones": {
-     "modelo": "necunoscut",
      "numero": {
       "max": 1,
       "min": 1
      }
     },
     "estado": {
-     "actual": "notificado",
+     "actual": "confirmado",
      "historial": [
       {
        "estado": "notificado",
@@ -64709,6 +64732,14 @@
         "valor": "2026-09-20T11:00Z"
        },
        "fuente_id": "gdelt-b1015c6fcf60583b"
+      },
+      {
+       "estado": "confirmado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2026-09-20T11:00Z"
+       },
+       "fuente_id": "gdelt-b1015c6fcf60583b-declaracion-1"
       }
      ]
     },
@@ -64721,7 +64752,7 @@
        "valor": "2026-09-20T11:00Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "un fragment de dronă ce nu prezenta risc pirotehnic",
+      "frase_origen": "trei obiecte plutitoare au fost semnalate în Marea Neagră, în Zona Economică Exclusivă a României",
       "id": "gdelt-b1015c6fcf60583b",
       "idioma": "ro",
       "medio": "adevarul.ro",
@@ -64763,7 +64794,7 @@
        "valor": "2026-09-20T11:45Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "Scafandrii de luptă EOD ai Forțelor Navale Române au intervenit duminică dimineață",
+      "frase_origen": "duminică dimineață",
       "id": "gdelt-1bd77b05780e500e",
       "idioma": "ro",
       "medio": "hotnews.ro",
@@ -64824,10 +64855,53 @@
       "idioma": "ro",
       "medio": "bursa.ro",
       "replicas": 0
+     },
+     {
+      "credibilidad": 1,
+      "enlace": "https://adevarul.ro/stiri-interne/evenimente/posibil-fragment-de-drona-gasit-in-marea-neagra-2558679.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-20T11:00Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "specialiştii EOD au identificat şi recuperat un fragment de dronă ce nu prezenta risc pirotehnic",
+      "id": "gdelt-b1015c6fcf60583b-declaracion-1",
+      "idioma": "ro",
+      "medio": "Ministerul Apărării Naționale (declaración oficial citada en adevarul.ro)",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 1,
+      "enlace": "https://hotnews.ro/fragment-de-drona-neutralizat-de-scafandrii-armatei-romane-in-marea-neagra-in-zona-grindului-chituc-2353507",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-20T11:45Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "resturi de dronă găsite în Marea Neagră, în zona Grindului Chituc din județul Constanța",
+      "id": "gdelt-1bd77b05780e500e-declaracion-2",
+      "idioma": "ro",
+      "medio": "Ministerul Apărării Naționale (declaración oficial citada en hotnews.ro)",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 1,
+      "enlace": "https://hotnews.ro/fragment-de-drona-neutralizat-de-scafandrii-armatei-romane-in-marea-neagra-in-zona-grindului-chituc-2353507",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-20T11:45Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "despre care existau indicii că ar putea fi un fragment provenit de la o dronă aeriană",
+      "id": "gdelt-1bd77b05780e500e-declaracion-3",
+      "idioma": "ro",
+      "medio": "Garda de Coastă (declaración oficial citada en hotnews.ro)",
+      "replicas": 0
      }
     ],
     "id": "EODI-2026-00091",
     "lugar": {
+     "localidad": "Constanța",
      "pais": "RO",
      "radio_km": 3.0
     },
@@ -64835,12 +64909,7 @@
      "categoria": "otra",
      "nombre": "Poiana Vadului"
     },
-    "presencia_dron": "no_confirmada",
-    "respuesta": {
-     "medidas": [
-      "patrulla"
-     ]
-    },
+    "presencia_dron": "confirmada",
     "tiempo": {
      "inicio": {
       "precision": "dia",
@@ -64849,8 +64918,8 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Drone fragments found in the Black Sea off Constanța",
-     "es": "Fragmentos de dron hallados en el Mar Negro frente a Constanza"
+     "en": "Drone fragment found and neutralized in the Black Sea near Constanța",
+     "es": "Fragmento de dron hallado y neutralizado en el Mar Negro cerca de Constanța"
     }
    },
    "type": "Feature"
@@ -76538,8 +76607,8 @@
   {
    "geometry": {
     "coordinates": [
-     6.2043,
-     49.6232
+     6.13268,
+     49.60982
     ],
     "type": "Point"
    },
@@ -76547,7 +76616,7 @@
    "properties": {
     "consecuencias": {
      "cierre": {
-      "valor": "si"
+      "valor": "desconocido"
      },
      "vuelos_desviados": {
       "max": 19,
@@ -76557,7 +76626,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-28T09:43Z"
+      "valor": "2026-09-29T06:59Z"
      }
     },
     "drones": {
@@ -76567,7 +76636,7 @@
      }
     },
     "estado": {
-     "actual": "notificado",
+     "actual": "confirmado",
      "historial": [
       {
        "estado": "notificado",
@@ -76576,6 +76645,14 @@
         "valor": "2026-09-19T03:15Z"
        },
        "fuente_id": "gdelt-be7ceaa15e2ecd2e"
+      },
+      {
+       "estado": "confirmado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2026-09-19T14:00Z"
+       },
+       "fuente_id": "gdelt-06978000b9ed31b3-declaracion-1"
       }
      ]
     },
@@ -76588,7 +76665,7 @@
        "valor": "2026-09-19T03:15Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "O tráfego aéreo foi brevemente interrompido no aeroporto de Luxemburgo durante a noite desta sexta-feira.",
+      "frase_origen": "drones voando sem autorização",
       "id": "gdelt-be7ceaa15e2ecd2e",
       "idioma": "pt",
       "medio": "globo.com",
@@ -77204,7 +77281,7 @@
        "valor": "2026-09-19T14:00Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "Nach Angaben der luxemburgischen Regierung wurde der Luftraum am Freitagabend vorsorglich geschlossen.",
+      "frase_origen": "wurde der Luftraum am Freitagabend vorsorglich geschlossen",
       "id": "gdelt-06978000b9ed31b3",
       "idioma": "de",
       "medio": "welt.de",
@@ -77498,7 +77575,7 @@
        "valor": "2026-09-19T17:45Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "following the visual sighting ‌of unidentified and unauthorised ‌drones",
+      "frase_origen": "the previous evening",
       "id": "gdelt-21af31b947969368",
       "idioma": "en",
       "medio": "centralwesterndaily.com.au",
@@ -77657,6 +77734,20 @@
       "idioma": "pl",
       "medio": "wiadomosci.wp.pl",
       "replicas": 0
+     },
+     {
+      "credibilidad": 1,
+      "enlace": "https://welt.de/regionales/rheinland-pfalz-saarland/article6aae8ebec8e0b1ae1ffeda41/drohnen-legen-flughafen-luxemburg-zeitweise-lahm.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-19T14:00Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "wurde der Luftraum am Freitagabend vorsorglich geschlossen",
+      "id": "gdelt-06978000b9ed31b3-declaracion-1",
+      "idioma": "de",
+      "medio": "Governo de Luxemburgo (declaración oficial citada en welt.de)",
+      "replicas": 0
      }
     ],
     "id": "EODI-2026-00127",
@@ -77666,8 +77757,8 @@
      "radio_km": 5.0
     },
     "objetivo": {
-     "categoria": "aeropuerto",
-     "nombre": "Aeropuerto de Luxemburgo Findel"
+     "categoria": "otra",
+     "nombre": "Luxembourg"
     },
     "presencia_dron": "no_confirmada",
     "respuesta": {
@@ -77676,15 +77767,20 @@
      ]
     },
     "tiempo": {
+     "duracion_min": 200,
+     "fin": {
+      "precision": "minuto",
+      "valor": "2026-09-19T01:20Z"
+     },
      "inicio": {
-      "precision": "dia",
-      "valor": "2026-09-18T00:00Z"
+      "precision": "hora",
+      "valor": "2026-09-18T22:00Z"
      }
     },
     "tipo": "interrupcion_aeroportuaria",
     "titulo": {
-     "en": "Unauthorized drones temporarily disrupt Luxembourg airport",
-     "es": "Drones no autorizados interrumpen temporalmente el aeropuerto de Luxemburgo"
+     "en": "Unauthorized drones temporarily close Luxembourg airport Findel",
+     "es": "Drones no autorizados cierran temporalmente el aeropuerto de Luxemburgo Findel"
     }
    },
    "type": "Feature"
@@ -84721,6 +84817,156 @@
     "titulo": {
      "en": "Drone detected in Romanian airspace near Suceava",
      "es": "Dron detectado en el espacio aéreo de Rumania cerca de Suceava"
+    }
+   },
+   "type": "Feature"
+  },
+  {
+   "geometry": {
+    "coordinates": [
+     28.4642,
+     45.25438
+    ],
+    "type": "Point"
+   },
+   "id": "EODI-2026-00155",
+   "properties": {
+    "consecuencias": {
+     "cierre": {
+      "valor": "desconocido"
+     }
+    },
+    "control": {
+     "ultima_actualizacion": {
+      "precision": "minuto",
+      "valor": "2026-09-29T06:59Z"
+     }
+    },
+    "drones": {
+     "numero": {
+      "max": 1,
+      "min": 1
+     }
+    },
+    "estado": {
+     "actual": "confirmado",
+     "historial": [
+      {
+       "estado": "notificado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2026-09-29T05:00Z"
+       },
+       "fuente_id": "gdelt-8562e629af6ba2bd"
+      },
+      {
+       "estado": "confirmado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2026-09-29T05:00Z"
+       },
+       "fuente_id": "gdelt-8562e629af6ba2bd-declaracion-1"
+      }
+     ]
+    },
+    "fuentes": [
+     {
+      "credibilidad": 3,
+      "enlace": "https://antena3.ro/actualitate/drona-detectata-de-radarele-armatei-la-nord-de-isaccea-langa-frontiera-cu-ucraina-mesaj-ro-alert-in-tulcea-804975.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-29T05:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "în noaptea de 28 spre 29 septembrie, sistemul de supraveghere radar al Ministerului Apărării Naţionale a detectat",
+      "id": "gdelt-8562e629af6ba2bd",
+      "idioma": "ro",
+      "medio": "antena3.ro",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://news.yam.md/ro/story/68726440",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-29T05:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Mesaj Ro-Alert în România. Dronă detectată de radarele armatei la nord de Isaccea",
+      "id": "gdelt-a968c85d7cb46311",
+      "idioma": "ro",
+      "medio": "news.yam.md",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://romania-actualitati.ro/stiri/romania/o-drona-ce-evolua-la-nord-de-isaccea-detectata-de-radare-id235061.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-29T05:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "O dronă ce evolua la nord de Isaccea, detectată de radare",
+      "id": "gdelt-e40c36edc9f47e04",
+      "idioma": "ro",
+      "medio": "romania-actualitati.ro",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://stirileprotv.ro/stiri/actualitate/o-drona-a-fost-detectata-in-apropiere-de-isaccea-langa-granita-cu-ucraina-a-fost-emis-mesaj-ro-alert-in-tulcea.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-29T05:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "O dronă a fost detectată în apropiere de Isaccea, lângă granița cu Ucraina. A fost emis mesaj RO-Alert în Tulcea",
+      "id": "gdelt-39877f6c7aec1d0c",
+      "idioma": "ro",
+      "medio": "stirileprotv.ro",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 1,
+      "enlace": "https://antena3.ro/actualitate/drona-detectata-de-radarele-armatei-la-nord-de-isaccea-langa-frontiera-cu-ucraina-mesaj-ro-alert-in-tulcea-804975.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-29T05:00Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "sistemul de supraveghere radar al Ministerului Apărării Naţionale a detectat o ţintă aeriană ce evolua la nord de Isaccea",
+      "id": "gdelt-8562e629af6ba2bd-declaracion-1",
+      "idioma": "ro",
+      "medio": "Ministerul Apărării Naţionale (declaración oficial citada en antena3.ro)",
+      "replicas": 0
+     }
+    ],
+    "id": "EODI-2026-00155",
+    "lugar": {
+     "localidad": "Isaccea",
+     "pais": "RO",
+     "radio_km": 1.0
+    },
+    "objetivo": {
+     "categoria": "energia",
+     "nombre": "Isaccea"
+    },
+    "presencia_dron": "confirmada",
+    "respuesta": {
+     "medidas": [
+      "patrulla"
+     ]
+    },
+    "tiempo": {
+     "inicio": {
+      "precision": "dia",
+      "valor": "2026-09-28T22:00Z"
+     }
+    },
+    "tipo": "sobrevuelo",
+    "titulo": {
+     "en": "Drone detected by radar north of Isaccea near Ukrainian border",
+     "es": "Dron detectado por radar al norte de Isaccea, junto a la frontera de Ucrania"
     }
    },
    "type": "Feature"
