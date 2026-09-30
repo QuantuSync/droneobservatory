@@ -15,12 +15,12 @@ usar en sus commits hechos desde la web: sus correos verificados y, si la cuenta
 activada la opción de mantener privado el correo (*Settings → Emails → Keep my email
 addresses private*), la dirección anónima. Sin esa opción la orden falla con `Invalid
 email address (mergePullRequest)` y no fusiona nada: así falló el 30 de septiembre de
-2026 con el PR 9. Con la opción activada, además, GitHub usa la dirección anónima por
+2026 con los PR 9, 10 y 11. Con la opción activada, además, GitHub usa la dirección anónima por
 defecto en todo lo que la cuenta hace desde la web.
 
 **Mientras la cuenta no tenga esa opción**, el mismo resultado se consigue sin la API de
 merge, con los commits firmados por la configuración local del clon (la dirección
-anónima, sin `--global`). Así se fusionó el PR 9:
+anónima, sin `--global`). Así se fusionaron los PR 9, 10 y 11:
 
 ```
 git switch <rama> && git reset --soft origin/main

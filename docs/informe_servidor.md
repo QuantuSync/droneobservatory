@@ -80,10 +80,19 @@ dejó igual.
    falta alguien que administre: `operador`.
 4. **Núremberg.** La lista de tipos de servidor daba el CX23 como no disponible en `nbg1`,
    pero Hetzner lo creó allí sin objeciones.
-5. **Una fuente oficial bloqueada.** En las dos recogidas de prueba, una de las páginas
-   oficiales no se pudo descargar desde el servidor (`bloqueadas=1`, motivo `descarga`);
-   desde GitHub se leían todas. No deja la recogida con avisos. Falta ver cuál es y si es
-   un veto a la dirección del servidor.
+5. **Una fuente oficial bloqueada.** En todas las recogidas del servidor, una de las
+   fuentes oficiales no se descarga (`bloqueadas=1`, motivo `descarga`); desde GitHub se
+   leían todas. Es la del Ministerio de Defensa de Finlandia (`mod_fi`,
+   `defmin.fi/ajankohtaista`): al servidor le responde 403 con una página de comprobación
+   anti-robots («Just a moment...»), tanto con la identificación del observatorio como
+   con la de un navegador, y también a `robots.txt`; desde una conexión doméstica
+   responde 200. Es un veto a la dirección del centro de datos. No deja la recogida con
+   avisos, pero esa fuente no se lee.
+6. **Tres arreglos tras la primera instalación** (PR 11), ya aplicados en el servidor:
+   `instalar.sh` pone al día un clon que ya existía (el primero era anterior a los
+   scripts y hubo que actualizarlo a mano para la recogida de las 16:17); el operador
+   lee el diario sin `sudo`; y la unidad firma sus líneas del diario como
+   `eodi-recogida` en lugar de `env`.
 
 ## 6. Comprobaciones
 
@@ -99,8 +108,17 @@ Python: publica con código 0 y con código 2, no publica con otro código, no h
 sin cambios, descarta lo que no llegó a enviarse y no se lanza con el cerrojo tomado. Solo
 corren en Linux (en Windows se saltan): pasan en el servidor y en el workflow de tests.
 
-Tras la fusión se comprueban dos recogidas seguidas lanzadas por el temporizador y un
-reinicio del servidor, y el resultado se añade a este informe.
+Tras la fusión, con el temporizador:
+
+| Hora | Resultado |
+| --- | --- |
+| 16:17:00 a 16:21:15 | Correcta (código 0, 4 min 14 s). Fuerza Aérea: 43 páginas, un parte nuevo. Base subida a la rama `estado` (commit de las 16:21:07) y `publicacion/ucrania.json` publicado en `main` (commit `19dd335`, 16:21:12, autor QuantuSync con la dirección anónima) |
+| 16:42 | Reinicio del servidor (`systemctl reboot`), con los arreglos del PR 11 ya aplicados. Al volver, el temporizador seguía activado y en marcha, con la siguiente a las 17:17 y sin ninguna ejecución de más al arrancar. fail2ban, SSH, las actualizaciones automáticas y la hora sincronizada, activos |
+| 17:17:00 a 17:21:28 | Correcta tras el reinicio (código 0, 4 min 28 s). Un parte nuevo del Ministerio de Defensa ruso, 5 franjas de GDELT con 2 candidatos nuevos. Base subida a la rama `estado` (17:21:20) y `publicacion/ucrania.json` publicado en `main` (commit `c3e69f0`, 17:21:25, autor anónimo) |
+
+En las dos, el extractor no hizo llamadas: el límite de gasto diario ya estaba alcanzado
+y los candidatos quedan pendientes hasta las 00:00, como en GitHub. La única fuente sin
+leer es la del punto 5 de la sección 5.
 
 ## 7. Lo que queda sin decidir
 
@@ -127,3 +145,10 @@ reinicio del servidor, y el resultado se añade a este informe.
 8. **Clave de host del servidor.** Se anota en la primera conexión, sin comprobarla por
    otro canal.
 9. **Tests del script en local.** La puerta local en Windows no los ejecuta.
+10. **Ministerio de Defensa de Finlandia.** Desde el servidor no se lee (sección 5,
+    punto 5). Opciones: aceptarlo, buscar otra vía de publicación de esa fuente (una
+    fuente RSS o la de otro organismo finlandés), o leerla desde otro sitio.
+11. **Fusiones sin la API de GitHub.** `gh pr merge --author-email` sigue fallando con
+    `Invalid email address` mientras la cuenta no tenga activada la opción de correo
+    privado: los PR 10 y 11 se fusionaron por avance rápido con un solo commit de autor
+    anónimo, como se describe en [`fusiones.md`](fusiones.md).
