@@ -20,3 +20,24 @@ jobs:
       - run: ruff format --check .
       - run: mypy
       - run: pytest
+
+  # GitHub retrasa o se salta ejecuciones programadas sin avisar. Este trabajo señala en
+  # su resumen si la última recogida correcta tiene más de seis horas. Solo informa: no
+  # lanza la recogida ni hace fallar los tests.
+  salud-recogida:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.13"
+      - name: Última ejecución correcta de recogida.yml
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Si la consulta falla, la salida vacía se cuenta como «no se sabe».
+          gh run list --repo "$GITHUB_REPOSITORY" --workflow recogida.yml --status success \
+            --limit 1 --json updatedAt | python -m recogida.salud
