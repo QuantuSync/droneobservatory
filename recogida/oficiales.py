@@ -37,11 +37,16 @@ from proceso.estados import Estado, TransicionNoPermitida, transitar
 from proceso.noticias import filtro, lugar, lugar_del_suceso, nomenclator
 from recogida import paginas_oficiales
 from recogida.descarga import AGENTE_EODI, Descargador, DescargaFallida
+from recogida.plazo import Plazo, TiempoAgotado
 
 registro = logging.getLogger(__name__)
 
 DIRECTORIO = Path(__file__).resolve().parent.parent / "configuracion"
 MAX_PALABRAS_FRASE = 25
+# Tope de tiempo por ejecución. Leer todas las fuentes tarda de 90 a 97 s (medido del 28
+# al 30 de septiembre de 2026); 240 s son dos veces y media. Las notas se leen enteras en
+# cada ejecución: una fuente que queda sin leer no pierde nada, la lee la siguiente.
+TOPE_S = 240.0
 _FORMATOS = {"minuto": "%Y-%m-%dT%H:%MZ", "dia": "%Y-%m-%d"}
 # Afirmación expresa de que había drones, sin reservas.
 _AFIRMA = re.compile(r"bekræft|bestätig|confirm|potwierdz|confirmă", re.IGNORECASE)
@@ -69,11 +74,14 @@ class Recuentos:
     enlazadas: int = 0
     confirmadas: int = 0
     bloqueadas: int = 0
+    # Fuentes que no dio tiempo a leer en esta ejecución.
+    sin_leer: int = 0
 
     def resumen(self) -> str:
         return (
             f"notas={self.notas} relevantes={self.relevantes} enlazadas={self.enlazadas} "
-            f"confirmadas={self.confirmadas} bloqueadas={self.bloqueadas}"
+            f"confirmadas={self.confirmadas} bloqueadas={self.bloqueadas} "
+            f"sin_leer={self.sin_leer}"
         )
 
 
@@ -220,43 +228,62 @@ def leer_pagina(descargador: Descargador, lector: RobotFileParser, fuente: Docum
     return notas
 
 
+def recoger(
+    almacen: Almacen,
+    descargador: Descargador,
+    fuente: Documento,
+    ahora: datetime,
+    modelos: frozenset[str],
+    recuentos: Recuentos,
+    motivos: Counter[str],
+) -> None:
+    """Lee una fuente y enlaza sus notas relevantes con los incidentes."""
+    lector = robots(descargador, fuente["url"])
+    if not lector.can_fetch(AGENTE_EODI, fuente["url"]):
+        recuentos.bloqueadas += 1
+        motivos["robots"] += 1
+        return
+    try:
+        if fuente["tipo"] == "pagina":
+            notas = leer_pagina(descargador, lector, fuente)
+        else:
+            notas = leer_rss(descargador.texto(fuente["url"], lambda t: "<rss" in t[:200]), fuente)
+    except (DescargaFallida, ET.ParseError, ValueError):
+        recuentos.bloqueadas += 1
+        motivos["descarga"] += 1
+        return
+    for nota in notas:
+        recuentos.notas += 1
+        if not filtro().dron.search(f"{nota.titulo} {nota.texto}"):
+            continue
+        recuentos.relevantes += 1
+        antes = almacen.incidentes()
+        id_ = enlazar(almacen, nota, ahora, modelos)
+        if id_ is not None:
+            recuentos.enlazadas += 1
+            previo = next((i for i in antes if i["id"] == id_), None)
+            if previo is not None and previo["estado"]["actual"] != Estado.CONFIRMADO:
+                recuentos.confirmadas += 1
+
+
 def ejecutar(
     almacen: Almacen,
     ahora: datetime,
     modelos: frozenset[str],
     descargador: Descargador | None = None,
+    plazo: Plazo | None = None,
 ) -> Recuentos:
+    """Lee las fuentes oficiales hasta agotar el plazo, si lo hay."""
     recuentos = Recuentos()
     descargador = descargador or Descargador(agente=AGENTE_EODI)
+    descargador.plazo = plazo
     motivos: Counter[str] = Counter()
-    for fuente in fuentes():
-        lector = robots(descargador, fuente["url"])
-        if not lector.can_fetch(AGENTE_EODI, fuente["url"]):
-            recuentos.bloqueadas += 1
-            motivos["robots"] += 1
-            continue
+    for leidas, fuente in enumerate(fuentes()):
         try:
-            if fuente["tipo"] == "pagina":
-                notas = leer_pagina(descargador, lector, fuente)
-            else:
-                notas = leer_rss(
-                    descargador.texto(fuente["url"], lambda t: "<rss" in t[:200]), fuente
-                )
-        except (DescargaFallida, ET.ParseError, ValueError):
-            recuentos.bloqueadas += 1
-            motivos["descarga"] += 1
-            continue
-        for nota in notas:
-            recuentos.notas += 1
-            if not filtro().dron.search(f"{nota.titulo} {nota.texto}"):
-                continue
-            recuentos.relevantes += 1
-            antes = almacen.incidentes()
-            id_ = enlazar(almacen, nota, ahora, modelos)
-            if id_ is not None:
-                recuentos.enlazadas += 1
-                previo = next((i for i in antes if i["id"] == id_), None)
-                if previo is not None and previo["estado"]["actual"] != Estado.CONFIRMADO:
-                    recuentos.confirmadas += 1
+            recoger(almacen, descargador, fuente, ahora, modelos, recuentos, motivos)
+        except TiempoAgotado as error:
+            recuentos.sin_leer = len(fuentes()) - leidas
+            registro.warning("oficiales: %s; fuentes sin leer: %d", error, recuentos.sin_leer)
+            break
     registro.info("oficiales %s motivos=%s", recuentos.resumen(), dict(motivos))
     return recuentos

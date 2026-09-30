@@ -47,6 +47,8 @@ class Fuente:
     # de ellas no es parte (None si no se sabe).
     palabras_dron: re.Pattern[str]
     explicar: Callable[[str], str | None]
+    # Tope de tiempo de la fuente en una ejecución horaria, en segundos.
+    tope_s: float
 
 
 @dataclass(frozen=True)

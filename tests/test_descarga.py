@@ -3,6 +3,7 @@ import pytest
 from recogida.descarga import (
     ESPERA_INICIAL_S,
     ESPERA_MAXIMA_S,
+    PAUSA_MINIMA_S,
     REINTENTOS,
     Descargador,
     DescargaFallida,
@@ -10,6 +11,7 @@ from recogida.descarga import (
     PaginaBloqueada,
     Respuesta,
 )
+from recogida.plazo import Plazo, TiempoAgotado
 
 VALIDA = "<html>contenido real</html>"
 
@@ -112,6 +114,41 @@ def test_agota_los_reintentos() -> None:
     with pytest.raises(DescargaFallida, match="error de red"):
         d.texto("https://t.me/a", es_valida)
     assert d.recuentos["fallos"] == 1
+
+
+def test_con_el_plazo_agotado_no_se_pide_nada() -> None:
+    reloj = Reloj()
+    transporte = Transporte([(200, {}, VALIDA.encode())])
+    d = Descargador(transporte, reloj.dormir, reloj, plazo=Plazo(0.0, reloj))
+    with pytest.raises(TiempoAgotado):
+        d.texto("https://t.me/a", es_valida)
+    assert transporte.pedidas == []
+
+
+def test_no_empieza_una_espera_de_reintento_que_no_cabe_en_el_plazo() -> None:
+    reloj = Reloj()
+    plazo = Plazo(ESPERA_INICIAL_S / 2, reloj)
+    d = Descargador(Transporte([(503, {}, b"")]), reloj.dormir, reloj, plazo=plazo)
+    with pytest.raises(TiempoAgotado):
+        d.texto("https://t.me/a", es_valida)
+    assert reloj.esperas == []
+    assert d.recuentos["peticiones"] == 1
+
+
+def test_la_pausa_entre_peticiones_tambien_cuenta_en_el_plazo() -> None:
+    reloj = Reloj()
+    d = descargador([(200, {}, VALIDA.encode())] * 2, reloj)
+    d.plazo = Plazo(PAUSA_MINIMA_S / 2, reloj)
+    d.texto("https://t.me/a", es_valida)
+    with pytest.raises(TiempoAgotado):
+        d.texto("https://t.me/b", es_valida)
+    assert reloj.esperas == []
+    assert d.recuentos["peticiones"] == 1
+
+
+def test_el_tiempo_agotado_no_es_un_fallo_de_descarga() -> None:
+    # Quien atrapa DescargaFallida para seguir con lo siguiente no se traga el tope.
+    assert not issubclass(TiempoAgotado, DescargaFallida)
 
 
 def test_contenido_en_bruto_y_404_sin_reintentos() -> None:

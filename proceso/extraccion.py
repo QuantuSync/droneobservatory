@@ -12,21 +12,25 @@ noticia habla de otro sitio, y ese lugar, ya validado, amplía el vocabulario.
 Igual con los modelos de dron.
 
 Cada llamada anota sus tokens y su coste; los límites de gasto son duros.
+
+Las llamadas directas se paran en el límite de gasto y en el primer error del
+servicio: lo que no se llama queda pendiente para la ejecución siguiente.
 """
 
 import hashlib
 import logging
 import time
 from collections.abc import Callable
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, field, replace
 from datetime import UTC, datetime, timedelta
+from enum import StrEnum
 from functools import cache
 from typing import Any, Protocol
 
 from almacen.base import Almacen, DocumentoInvalido
 from esquema import Documento
 from modelo import coste, ficha, paginas
-from modelo.cliente import LlamadaFallida
+from modelo.cliente import ErrorTemporal, LlamadaFallida
 from proceso import declaraciones
 from proceso.incidentes import Objetivo, construir, huella
 from proceso.noticias import (
@@ -47,6 +51,7 @@ from proceso.validacion_ficha import (
 )
 from recogida.descarga import Descargador
 from recogida.lugares_osm import RADIO_KM
+from recogida.plazo import Plazo, TiempoAgotado
 
 registro = logging.getLogger(__name__)
 
@@ -390,6 +395,31 @@ def reconstruir(almacen: Almacen, ahora: datetime, modelos_base: frozenset[str])
 # --- Llamadas -----------------------------------------------------------------------
 
 
+class Parada(StrEnum):
+    """Por qué una tanda de llamadas directas deja peticiones sin hacer."""
+
+    LIMITE_GASTO = "límite de gasto"
+    TIEMPO = "tope de tiempo"
+    # Error temporal que sigue tras el reintento del cliente.
+    SERVICIO_CAIDO = "servicio caído"
+    # Error que no se arregla solo: petición o clave inválidas, saldo agotado.
+    ERROR = "error del servicio"
+
+
+@dataclass
+class Extraidas:
+    """Una tanda de llamadas directas: lo que dio cada una y por qué se paró, si se paró."""
+
+    # Por cada llamada hecha, el incidente que dio de alta o actualizó, o None.
+    incidentes: list[str | None] = field(default_factory=list)
+    parada: Parada | None = None
+    motivo: str = ""
+
+    def parar(self, parada: Parada, error: Exception) -> "Extraidas":
+        self.parada, self.motivo = parada, str(error)
+        return self
+
+
 def extraer(
     almacen: Almacen,
     cliente: Servicio,
@@ -397,28 +427,37 @@ def extraer(
     ahora: datetime,
     modo: coste.Modo,
     modelos_base: frozenset[str],
-) -> list[str | None]:
-    """Una llamada directa por petición mientras lo permita el límite de gasto."""
-    resultados: list[str | None] = []
+    plazo: Plazo | None = None,
+) -> Extraidas:
+    """Una llamada directa por petición hasta la primera parada.
+
+    Se para en el límite de gasto, al agotar el plazo y en el primer error del servicio:
+    si está caído o rechaza las peticiones, insistir con los demás candidatos solo alarga
+    la ejecución.
+    """
+    hechas = Extraidas()
     for peticion in peticiones:
         gastado = almacen.gastado(
             modo.value, coste.dia(ahora) if modo is coste.Modo.HORARIO else None
         )
         previsto = coste.peor_caso(peticion.letras(), ficha.MAX_TOKENS_SALIDA)
         try:
+            if plazo is not None:
+                plazo.comprobar()
             coste.comprobar(gastado, previsto, modo)
-        except coste.LimiteGasto as error:
-            registro.warning("extractor detenido: %s", error)
-            break
-        try:
             respuesta = cliente.mensaje(peticion.cuerpo())
+        except TiempoAgotado as error:
+            return hechas.parar(Parada.TIEMPO, error)
+        except coste.LimiteGasto as error:
+            return hechas.parar(Parada.LIMITE_GASTO, error)
+        except ErrorTemporal as error:
+            return hechas.parar(Parada.SERVICIO_CAIDO, error)
         except LlamadaFallida as error:
-            registro.warning("llamada fallida: %s", error)
-            continue
-        resultados.append(
+            return hechas.parar(Parada.ERROR, error)
+        hechas.incidentes.append(
             procesar_respuesta(almacen, peticion, respuesta, ahora, modo, False, modelos_base)
         )
-    return resultados
+    return hechas
 
 
 def recortar_para_lote(

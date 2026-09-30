@@ -3,10 +3,13 @@
 from datetime import UTC, datetime
 from unicodedata import normalize
 
+import pytest
+
 from almacen.base import Almacen
 from proceso.noticias import lugar, lugar_del_suceso, nomenclator
 from recogida import oficiales
 from recogida.descarga import AGENTE_EODI, Descargador, Respuesta
+from recogida.plazo import Plazo
 from tests.test_extraccion import MODELOS, extraer_ejemplo
 
 AHORA = datetime(2025, 9, 24, 12, tzinfo=UTC)
@@ -68,6 +71,20 @@ def test_robots_que_bloquea_no_se_fuerza() -> None:
     descargador = Descargador(sitio, dormir=lambda _: None, pausa_minima_s=0)
     lector = oficiales.robots(descargador, FUENTE["url"])
     assert not lector.can_fetch(AGENTE_EODI, FUENTE["url"])
+
+
+def test_sin_tiempo_las_fuentes_quedan_sin_leer(monkeypatch: pytest.MonkeyPatch) -> None:
+    dos = (FUENTE, FUENTE)
+    monkeypatch.setattr(oficiales, "fuentes", lambda: dos)
+    sitio = Sitio("")
+    descargador = Descargador(sitio, dormir=lambda _: None, pausa_minima_s=0)
+    almacen = Almacen.abrir()
+    recuentos = oficiales.ejecutar(almacen, AHORA, MODELOS, descargador, Plazo(0.0))
+    assert (recuentos.notas, recuentos.sin_leer) == (0, len(dos))
+    assert sitio.pedidas == []
+    # Con tiempo se leen todas: dos notas por fuente, una de ellas sobre drones.
+    recuentos = oficiales.ejecutar(almacen, AHORA, MODELOS, descargador, Plazo(oficiales.TOPE_S))
+    assert (recuentos.notas, recuentos.relevantes, recuentos.sin_leer) == (4, 2, 0)
 
 
 def test_el_lugar_del_suceso_manda_sobre_la_capital() -> None:

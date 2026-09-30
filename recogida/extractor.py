@@ -1,7 +1,9 @@
 """Extractor sobre los candidatos de noticias: en la ejecución horaria y para el histórico.
 
 - Horaria: llamadas directas a los candidatos con actividad en los últimos tres
-  días que lo necesitan, con el límite de 0,30 dólares al día.
+  días que lo necesitan, con el límite de 0,30 dólares al día. Si el servicio
+  está caído no se insiste: los candidatos quedan pendientes para la ejecución
+  siguiente y solo una caída de más de seis horas deja la ejecución en rojo.
 - Histórico, en local: `estimar` hace unas pocas llamadas directas de muestra y
   calcula lo que costaría el lote entero; `lote` envía todos los pendientes como
   un lote (la mitad de precio) dentro del límite de 5 dólares, y después funde,
@@ -34,6 +36,7 @@ from modelo import coste, ficha, paginas
 from proceso import extraccion, incidentes
 from proceso.configuracion import cargar_vocabulario_modelos
 from recogida.descarga import Descargador
+from recogida.plazo import Plazo, TiempoAgotado
 
 registro = logging.getLogger("recogida")
 
@@ -47,19 +50,36 @@ SEMILLA_MUESTRA = 1
 MUESTRA = 10
 
 
+# Fila de la tabla de cursores con el estado del servicio: desde cuándo está caído, para
+# saber de una ejecución a otra cuánto dura la caída.
+ESTADO_SERVICIO = "extractor"
+# Una caída temporal no es un fallo de la recogida: los candidatos esperan. Si dura más
+# de seis horas seguidas ya no es un bache y la ejecución queda en rojo para que se vea.
+MAX_CAIDA = timedelta(hours=6)
+HORA = timedelta(hours=1)
+# Tope de tiempo del paso en la ejecución horaria, con la descarga de las páginas. Medido
+# del 28 al 30 de septiembre de 2026: como mucho 165 s (29 candidatos). 420 s son dos
+# veces y media; los candidatos que no quepan quedan pendientes para la siguiente.
+TOPE_S = 420.0
+
+
 @dataclass
 class Resultado:
     candidatos: int = 0
     llamadas: int = 0
     publicados: int = 0
-    fallidas: int = 0
+    # Candidatos sin llamada en esta ejecución: los recoge la siguiente.
+    pendientes: int = 0
     fusiones: int = 0
     episodios: int = 0
+    parada: extraccion.Parada | None = None
+    # Error definitivo del servicio o caída de más de MAX_CAIDA.
+    en_rojo: bool = False
 
     def resumen(self) -> str:
         return (
             f"candidatos={self.candidatos} llamadas={self.llamadas} publicados={self.publicados} "
-            f"fallidas={self.fallidas} fusiones={self.fusiones} episodios={self.episodios}"
+            f"pendientes={self.pendientes} fusiones={self.fusiones} episodios={self.episodios}"
         )
 
 
@@ -112,10 +132,55 @@ def ordenar(almacen: Almacen, ahora: datetime) -> tuple[int, int]:
     )
 
 
+def duracion_caida(
+    almacen: Almacen, ahora: datetime, extraidas: extraccion.Extraidas
+) -> timedelta | None:
+    """Anota el estado del servicio y devuelve cuánto lleva caído, o None si no lo está.
+
+    Una respuesta cierra la caída anterior y una caída nueva empieza a contar en esta
+    ejecución. Sin llamadas no se sabe nada nuevo y el estado no cambia.
+    """
+    anterior = (almacen.cursor(ESTADO_SERVICIO) or {}).get("caido_desde")
+    desde = None if extraidas.incidentes else anterior
+    caido = extraidas.parada is extraccion.Parada.SERVICIO_CAIDO
+    if caido and desde is None:
+        desde = ahora.isoformat()
+    if desde != anterior:
+        almacen.guardar_cursor(ESTADO_SERVICIO, {"caido_desde": desde})
+    return ahora - datetime.fromisoformat(desde) if caido and desde else None
+
+
+def avisar(
+    almacen: Almacen, ahora: datetime, extraidas: extraccion.Extraidas, pendientes: int
+) -> bool:
+    """Deja en el registro por qué paró el extractor. True si la ejecución queda en rojo."""
+    caida = duracion_caida(almacen, ahora, extraidas)
+    if extraidas.parada is extraccion.Parada.LIMITE_GASTO:
+        # No es un fallo: el límite está para eso y mañana se sigue.
+        registro.info("extractor: %s; pendientes=%d", extraidas.motivo, pendientes)
+    elif extraidas.parada is extraccion.Parada.TIEMPO:
+        registro.warning(
+            "extractor: %s; pendientes=%d para la ejecución siguiente",
+            extraidas.motivo, pendientes,
+        )  # fmt: skip
+    elif caida is not None:
+        registro.warning(
+            "extractor: servicio caído desde hace %.1f h: %s; pendientes=%d para la "
+            "ejecución siguiente",
+            caida / HORA, extraidas.motivo, pendientes,
+        )  # fmt: skip
+        return caida > MAX_CAIDA
+    elif extraidas.parada is extraccion.Parada.ERROR:
+        registro.error("extractor parado: %s; pendientes=%d", extraidas.motivo, pendientes)
+        return True
+    return False
+
+
 def horaria(
     almacen: Almacen,
     ahora: datetime,
     fabrica: Callable[[servicio.Configuracion], extraccion.Servicio] = servicio.Cliente,
+    plazo: Plazo | None = None,
 ) -> Resultado:
     """Paso del extractor en la ejecución horaria. Sin configuración no hace nada."""
     try:
@@ -138,18 +203,27 @@ def horaria(
     ):
         historicos = []
     candidatos = [*nuevos, *historicos]
-    peticiones = preparar_todas(almacen, candidatos, Descargador)
-    resultados = extraccion.extraer(
-        almacen, fabrica(configuracion), peticiones, ahora, coste.Modo.HORARIO, modelos_base()
-    )
+    try:
+        peticiones = preparar_todas(almacen, candidatos, lambda: Descargador(plazo=plazo))
+    except TiempoAgotado as error:
+        # Sin el texto de las páginas no se llama: solo con titulares la ficha sale peor.
+        extraidas = extraccion.Extraidas().parar(extraccion.Parada.TIEMPO, error)
+    else:
+        extraidas = extraccion.extraer(
+            almacen, fabrica(configuracion), peticiones, ahora, coste.Modo.HORARIO,
+            modelos_base(), plazo,
+        )  # fmt: skip
     fusiones, episodios = ordenar(almacen, ahora)
+    sin_llamada = len(candidatos) - len(extraidas.incidentes)
     return Resultado(
         candidatos=len(candidatos),
-        llamadas=len(resultados),
-        publicados=sum(r is not None for r in resultados),
-        fallidas=len(peticiones) - len(resultados),
+        llamadas=len(extraidas.incidentes),
+        publicados=sum(i is not None for i in extraidas.incidentes),
+        pendientes=sin_llamada,
         fusiones=fusiones,
         episodios=episodios,
+        parada=extraidas.parada,
+        en_rojo=avisar(almacen, ahora, extraidas, sin_llamada),
     )
 
 
@@ -162,7 +236,11 @@ def estimar(almacen: Almacen, cliente: extraccion.Servicio, muestra: int, ahora:
     elegidos = random.Random(SEMILLA_MUESTRA).sample(candidatos, min(muestra, len(candidatos)))
     peticiones = preparar_todas(almacen, elegidos, Descargador)
     antes = len(almacen.llamadas())
-    extraccion.extraer(almacen, cliente, peticiones, ahora, coste.Modo.HISTORICO, modelos_base())
+    extraidas = extraccion.extraer(
+        almacen, cliente, peticiones, ahora, coste.Modo.HISTORICO, modelos_base()
+    )
+    if extraidas.parada is not None:
+        registro.warning("muestra cortada por %s: %s", extraidas.parada, extraidas.motivo)
     hechas = almacen.llamadas()[antes:]
     if not hechas:
         return "sin llamadas de muestra: no se puede estimar"
@@ -178,7 +256,7 @@ def estimar(almacen: Almacen, cliente: extraccion.Servicio, muestra: int, ahora:
 
 
 def orden_estimar(args: argparse.Namespace, almacen: Almacen, ahora: datetime) -> int:
-    cliente = servicio.Cliente(servicio.configuracion())
+    cliente = servicio.Cliente(servicio.configuracion(), insistencia=servicio.HISTORICO)
     registro.info("estimación %s", estimar(almacen, cliente, args.muestra, ahora))
     return 0
 
@@ -195,7 +273,7 @@ def peor_caso_peticion() -> float:
 
 
 def orden_lote(args: argparse.Namespace, almacen: Almacen, ahora: datetime) -> int:
-    cliente = servicio.Cliente(servicio.configuracion())
+    cliente = servicio.Cliente(servicio.configuracion(), insistencia=servicio.HISTORICO)
     # Si no caben todos en el límite, primero los de más artículos: son los más probables
     # de ser un incidente real.
     candidatos = sorted(pendientes(almacen), key=lambda c: (-len(c["articulos"]), c["id"]))
@@ -214,7 +292,7 @@ def orden_lote(args: argparse.Namespace, almacen: Almacen, ahora: datetime) -> i
 
 def orden_recuperar(args: argparse.Namespace, almacen: Almacen, ahora: datetime) -> int:
     """Procesa un lote ya terminado y pagado cuyos resultados no llegaron a la base."""
-    cliente = servicio.Cliente(servicio.configuracion())
+    cliente = servicio.Cliente(servicio.configuracion(), insistencia=servicio.HISTORICO)
     lote = cliente.lote(args.lote)
     if lote.get("processing_status") != "ended":
         registro.error("el lote %s no ha terminado", args.lote)

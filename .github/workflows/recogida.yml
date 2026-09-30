@@ -19,8 +19,9 @@ jobs:
   recogida:
     if: github.repository == 'QuantuSync/droneobservatory' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    # Una ejecución normal tarda unos minutos; tras un corte, GDELT recupera hasta 48
-    # horas de franjas (unos 12 minutos).
+    # Una ejecución normal tarda de 5 a 7 minutos. Cada fuente y el extractor tienen su
+    # tope de tiempo (recogida/horaria.py): 24 minutos entre todos en el peor caso. Los 45
+    # son la última red, por si algo se cuelga fuera de esos pasos.
     timeout-minutes: 45
     permissions:
       # Solo para el commit de los ficheros publicados en main.
@@ -29,6 +30,9 @@ jobs:
       AUTOR: QuantuSync
       # Dirección anónima de la cuenta: el correo personal no queda en el workflow público.
       CORREO: 192205734+QuantuSync@users.noreply.github.com
+      # Código con el que sale la recogida cuando termina con avisos
+      # (recogida.horaria.SALIDA_AVISO): la base está subida y se publica igual.
+      SALIDA_AVISO: "2"
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -47,6 +51,7 @@ jobs:
           # Clave de host publicada por GitHub: sin confiar en la primera conexión.
           echo "github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl" > "$RUNNER_TEMP/ssh/known_hosts"
       - name: Recoger, actualizar y subir la base
+        id: recogida
         env:
           EODI_CLAVE_AGE: ${{ secrets.EODI_CLAVE_AGE }}
           EODI_EXTRACTOR_CLAVE: ${{ secrets.EODI_EXTRACTOR_CLAVE }}
@@ -56,7 +61,14 @@ jobs:
           EODI_EXTRACTOR_CABECERAS: ${{ secrets.EODI_EXTRACTOR_CABECERAS }}
         run: |
           export GIT_SSH_COMMAND="ssh -i $RUNNER_TEMP/ssh/despliegue -o IdentitiesOnly=yes -o UserKnownHostsFile=$RUNNER_TEMP/ssh/known_hosts"
-          python -m recogida.horaria --correo "$CORREO" --repositorio git@github.com:QuantuSync/droneobservatory-datos.git
+          codigo=0
+          python -m recogida.horaria --correo "$CORREO" --repositorio git@github.com:QuantuSync/droneobservatory-datos.git || codigo=$?
+          echo "codigo=$codigo" >> "$GITHUB_OUTPUT"
+          # Un aviso no frena la publicación: el último paso deja la ejecución en rojo.
+          # Con cualquier otro código de error el trabajo se para aquí y no se publica.
+          if [ "$codigo" -ne 0 ] && [ "$codigo" -ne "$SALIDA_AVISO" ]; then
+            exit "$codigo"
+          fi
       - name: Publicar los ficheros si han cambiado
         run: |
           git add publicacion/ucrania.json publicacion/incidentes.geojson
@@ -69,3 +81,8 @@ jobs:
       - name: Borrar la clave de despliegue
         if: always()
         run: rm -rf "$RUNNER_TEMP/ssh"
+      - name: Dejar en rojo una recogida con avisos
+        if: steps.recogida.outputs.codigo == env.SALIDA_AVISO
+        run: |
+          echo "::error::la recogida terminó con avisos (código $SALIDA_AVISO): están en el registro del paso de recogida"
+          exit 1

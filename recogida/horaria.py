@@ -1,5 +1,10 @@
 """Ejecución horaria: descarga la base, recoge lo nuevo, publica y vuelve a subir la base.
 
+Cada fuente y el extractor tienen un tope de tiempo propio (TOPE_S en su módulo, con
+la medida que lo justifica). Entre todos suman 24 minutos en el peor caso, frente a los
+5 a 7 de una ejecución normal y a los 45 que tiene el trabajo: ningún paso puede dejar
+sin tiempo a los demás ni impedir que la base se suba.
+
 Uso: python -m recogida.horaria --correo <correo del autor> [--repositorio <url>]
 """
 
@@ -18,17 +23,21 @@ from proceso import incursiones, solapes
 from proceso.ataques import SENTIDO_UA_RU
 from recogida import extractor, gdelt, oficiales
 from recogida.cache import CachePaginas
-from recogida.descarga import Descargador
+from recogida.descarga import Descargador, DescargaFallida
 from recogida.ejecucion import SinCursor, ejecutar
 from recogida.fuente import CanalNoVerificado, HuecoDemasiadoGrande
 from recogida.fuentes import FUENTES
+from recogida.plazo import Plazo, TiempoAgotado
 
 registro = logging.getLogger("recogida")
 
-# Código de salida cuando una fuente no pudo leerse (canal no verificado, sin cursor o
-# con un hueco demasiado grande): las demás se leen y se publica, pero la ejecución
-# queda en rojo para que se vea.
-SALIDA_FUENTE_NO_VERIFICADA = 2
+# Código de salida cuando la ejecución termina con avisos (una fuente que no pudo leerse,
+# un error del extractor): lo demás se lee, la base se sube y el workflow publica, pero
+# la ejecución queda en rojo para que se vea. El workflow lo conoce como SALIDA_AVISO.
+SALIDA_AVISO = 2
+# Motivos por los que una fuente de partes no se lee en una ejecución: se avisa y se
+# sigue con las demás. La siguiente ejecución la lee desde el mismo cursor.
+NO_LEIDA = (CanalNoVerificado, SinCursor, HuecoDemasiadoGrande, DescargaFallida, TiempoAgotado)
 
 
 def principal(argumentos: list[str] | None = None) -> int:
@@ -48,31 +57,40 @@ def principal(argumentos: list[str] | None = None) -> int:
         antes = almacen.conexion.serialize()
         descargador, cache = Descargador(), CachePaginas()
         for fuente in FUENTES:
+            # Cada paso tiene su tope de tiempo: el que lo agota no se lo quita a los demás.
+            descargador.plazo = Plazo(fuente.tope_s)
             try:
                 ejecutar(almacen, descargador, cache, fuente, ahora)
-            except (CanalNoVerificado, SinCursor, HuecoDemasiadoGrande) as error:
+            except NO_LEIDA as error:
                 registro.warning("%s no se lee: %s", fuente.id, error)
-                salida = SALIDA_FUENTE_NO_VERIFICADA
+                salida = SALIDA_AVISO
         # Los tramos del ministerio que ya cubre un total, o que se solapan, no se suman.
         registro.info(
             "tramos con enlace cambiado: %d", solapes.enlazar(almacen, SENTIDO_UA_RU, ahora)
         )
         try:
-            gdelt.ejecutar(almacen, gdelt.descargador(), ahora)
+            gdelt.ejecutar(almacen, gdelt.descargador(Plazo(gdelt.TOPE_S)), ahora)
         except gdelt.GdeltNoDisponible as error:
             registro.warning("gdelt no se lee: %s", error)
-            salida = SALIDA_FUENTE_NO_VERIFICADA
+            salida = SALIDA_AVISO
         # Cruces a otros países de los partes ucranianos: incursiones notificadas.
         registro.info(
             "incursiones nuevas: %d", incursiones.registrar(almacen, ahora, modelos(almacen))
         )
-        # Confirmaciones oficiales de los incidentes que ya hay.
-        oficiales.ejecutar(almacen, ahora, modelos(almacen))
-        # Candidatos de noticias a incidentes; una llamada fallida deja la ejecución en rojo.
-        resultado = extractor.horaria(almacen, ahora)
+        # Confirmaciones oficiales de los incidentes que ya hay. Si no da tiempo a leer
+        # todas las fuentes se avisa: lo normal es que sobre más de la mitad del tope.
+        confirmaciones = oficiales.ejecutar(
+            almacen, ahora, modelos(almacen), plazo=Plazo(oficiales.TOPE_S)
+        )
+        if confirmaciones.sin_leer:
+            salida = SALIDA_AVISO
+        # Candidatos de noticias a incidentes. El límite de gasto o una caída temporal del
+        # servicio dejan candidatos pendientes sin más; un error que no se arregla solo o
+        # una caída larga dejan la ejecución en rojo.
+        resultado = extractor.horaria(almacen, ahora, plazo=Plazo(extractor.TOPE_S))
         registro.info("extractor %s", resultado.resumen())
-        if resultado.fallidas:
-            salida = SALIDA_FUENTE_NO_VERIFICADA
+        if resultado.en_rojo:
+            salida = SALIDA_AVISO
         cambiados = publicar(almacen, ahora)
         registro.info("ficheros publicados con cambios: %d", len(cambiados))
         if almacen.conexion.serialize() != antes:

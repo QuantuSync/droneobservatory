@@ -17,6 +17,10 @@ FUENTE_ID = "fuerza_aerea_ua"
 TITULO_OFICIAL = "Повітряні Сили"
 # Enlace al canal dentro de la web oficial, también codificado en una redirección.
 ENLACE_CANAL = re.compile(r"t\.me(?:/|%2F)kpszsu(?![A-Za-z0-9_])", re.IGNORECASE)
+# Tope de tiempo por ejecución. Releer 48 horas del canal son de 31 a 43 páginas, de 95 a
+# 130 s a 3 s por página (medido del 28 al 30 de septiembre de 2026). 300 s dan para unas
+# 100 páginas: más del doble, o los casi cinco días de canal que hay que leer tras un corte.
+TOPE_S = 300.0
 
 
 def web_oficial(portada: Pagina) -> str | None:
@@ -59,4 +63,5 @@ FUENTE = Fuente(
     leer=parte.leer,
     palabras_dron=parte.PALABRAS_DRON,
     explicar=parte.motivo_no_parte,
+    tope_s=TOPE_S,
 )

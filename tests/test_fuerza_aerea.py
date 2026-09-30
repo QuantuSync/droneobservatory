@@ -12,6 +12,7 @@ from recogida.fuerza_aerea import FUENTE, verificar
 from recogida.recorrido import pagina
 from recogida.telegram import Pagina
 from tests.telegram_falso import CanalFalso, descargador
+from tests.test_parte_formatos import AVANCE
 
 AHORA = datetime(2026, 9, 28, tzinfo=UTC)
 PARTE = (
@@ -122,6 +123,18 @@ def test_ejecucion_completa(almacen: Almacen, tmp_path: Path) -> None:
     assert fallido["enlace"] == "https://t.me/kpszsu/5"
     # La Fuerza Aérea también es parte en la guerra.
     assert all(a["reivindicacion_de_parte"] is True for a in almacen.ataques_ucrania())
+
+
+def test_el_avance_de_un_ataque_en_curso_no_cuenta_como_parte_fallido(
+    almacen: Almacen, tmp_path: Path
+) -> None:
+    falso = canal()
+    fecha, _ = falso.publicaciones[7]
+    falso.publicaciones[8] = (fecha + timedelta(minutes=1), AVANCE)
+    almacen.guardar_cursor("fuerza_aerea_ua", {"ultimo_id": 7})
+    recuentos = ejecutar(almacen, descargador(falso), CachePaginas(tmp_path), FUENTE, AHORA)
+    assert (recuentos.publicaciones, recuentos.partes, recuentos.fallidos) == (1, 0, 0)
+    assert almacen.fallidos("fuerza_aerea_ua") == []
 
 
 def test_sin_cambios_nuevos_no_toca_nada(almacen: Almacen, tmp_path: Path) -> None:
