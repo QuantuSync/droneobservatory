@@ -4,7 +4,7 @@
   "installCommand": "cd web && npm ci",
   "buildCommand": "cd web && npm run build",
   "outputDirectory": "web/dist",
-  "ignoreCommand": "[ -n \"$VERCEL_GIT_PREVIOUS_SHA\" ] && git diff --quiet \"$VERCEL_GIT_PREVIOUS_SHA\" HEAD -- web publicacion vercel.json",
+  "ignoreCommand": "node web/scripts/omitir-build.ts",
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [

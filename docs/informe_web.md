@@ -131,9 +131,12 @@ inferior en móvil) y línea de tiempo a todo lo ancho.
 8. **Analizadores externos** (30 de septiembre de 2026, sobre producción):
    - Mozilla HTTP Observatory: **A+**, 115 puntos, 12 de 12 pruebas.
    - securityheaders.com: **A+**.
-   - SSL Labs, `droneobservatory.eu`: **A+** en 216.150.16.1 y **A** en 216.150.1.1
-     (en ese nodo la prueba se hizo antes de que respondiera el despliegue y no vio
-     la cabecera HSTS). `tiles.droneobservatory.eu`: **A** en sus cuatro
+   - SSL Labs, `droneobservatory.eu`: **A** en sus dos direcciones (en una primera
+     prueba, A+ en 216.150.16.1). La nota se queda en A porque la petición HTTP del
+     analizador recibe un 403 de la protección de Vercel y no llega a ver la
+     cabecera HSTS, que el sitio sí envía (la ven Mozilla Observatory,
+     securityheaders.com y cualquier navegador). La configuración TLS no tiene
+     avisos: TLS 1.2 y 1.3, secreto perfecto hacia adelante. `tiles.droneobservatory.eu`: **A** en sus cuatro
      direcciones; no llega a A+ porque R2 no envía HSTS y ponerlo pide un permiso de
      zona que el token no tiene.
 
@@ -203,6 +206,16 @@ localidades, suficiente para situar áreas de precisión de 1 a 50 km.
   salida `web/dist`, direcciones sin `.html`, reescrituras de los identificadores y
   cabeceras. El despliegue se salta si desde el último desplegado no cambió nada de
   `web/`, `publicacion/` ni `vercel.json`; si no hay despliegue anterior, construye.
+- La decisión de omitir un despliegue la toma `web/scripts/omitir-build.ts`
+  (`ignoreCommand` de `vercel.json`), con sus tests contra un repositorio real.
+  Vercel solo entiende la salida 0 (omitir) y la 1 (construir); cualquier otra hace
+  fallar el despliegue. La primera versión era una orden `git diff` en línea y el
+  despliegue de la rama `web` del commit 992a9a3 falló con código 128 (`fatal: bad
+  object aad9162…`): Vercel clona sin historial completo y, tras el push forzado del
+  squash, el commit del despliegue anterior ya no estaba en el clon. El script
+  construye siempre que no hay commit anterior, cuando no está en el clon o ante
+  cualquier error de git, y solo omite cuando git confirma que no cambió nada de
+  `web/`, `publicacion/` ni `vercel.json`.
 - Los ficheros de datos se copian de `publicacion/` en el build.
 - Antes de la fusión, producción se sirvió desde la rama `web` con despliegues de
   producción creados por la API, para comprobar todo en el dominio real.
@@ -215,6 +228,9 @@ localidades, suficiente para situar áreas de precisión de 1 a 50 km.
   a `https://droneobservatory.eu/`.
 
 ## Comprobación
+
+- **Despliegues tras el arreglo de la comprobación de omitir:** ver la sección
+  «Verificación del despliegue» al final.
 
 - **Tests:** 179 tests de la web (Vitest: datos, validación, CSV, rutas, textos,
   paleta y contraste AA, geometría, seguridad, regla de lint, componentes y
