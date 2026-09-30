@@ -25,5 +25,6 @@ Recogida automática de fuentes.
 | `auditoria.py` | Cobertura por días: días sin parte y su explicación |
 | `horaria.py` | Ejecución horaria del workflow |
 | `plazo.py` | Tope de tiempo de cada paso de la ejecución horaria |
-| `salud.py` | Aviso en el workflow de tests si la última recogida correcta tiene más de seis horas |
+| `reloj.py` | Reloj propio: lanza la recogida a demanda cada hora, por turnos que se relevan |
+| `salud.py` | Aviso en el workflow de tests si la recogida o su reloj llevan horas parados |
 | `historico.py` | Histórico de una fuente de partes desde octubre de 2022 |

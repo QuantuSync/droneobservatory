@@ -174,6 +174,8 @@ recogida ni hace fallar los tests.
    programar más franjas por hora (el grupo de concurrencia evita que se pisen y una
    ejecución sin novedades cuesta unos 3 minutos), o lanzar `workflow_dispatch` desde un
    planificador externo. No se ha hecho ninguna de las dos.
+   *Resuelto después con un reloj propio dentro del repositorio: ver
+   [`informe_reloj.md`](informe_reloj.md).*
 2. **El aviso de salud solo se ve cuando hay un push o un pull request**, que es cuando
    corre el workflow de tests. En una semana sin cambios nadie lo mira.
 3. **Un error definitivo ligado a un candidato concreto** (un 400 por su contenido)
