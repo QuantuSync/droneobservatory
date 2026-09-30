@@ -58,6 +58,10 @@ EXTRACTOR="$SECRETOS/extractor.env"
 DESPLIEGUE_DATOS="$SECRETOS/despliegue_datos"
 DESPLIEGUE_WEB="$SECRETOS/despliegue_web"
 HOSTS_CONOCIDOS="$SECRETOS/known_hosts"
+# Credenciales S3 de R2 (R2_ID, R2_SECRETO, R2_CUENTA), una por línea, para subir estado.json.
+R2_CREDENCIALES="$SECRETOS/r2.env"
+# El último estado publicado: de él sale la hora de la última recogida correcta.
+ESTADO_ANTERIOR="$SECRETOS/estado.json"
 CERROJO="$SECRETOS/recogida.lock"
 # Título de las claves de despliegue en GitHub: por él se encuentran para sustituirlas.
 TITULO_DESPLIEGUE="servidor eodi-recogida"
@@ -71,6 +75,15 @@ MINUTO_RECOGIDA=17
 # Una ejecución normal tarda de 5 a 7 minutos y los topes de cada paso suman 24 en el
 # peor caso (recogida/horaria.py). Los 45 son la última red, por si algo se cuelga.
 TOPE_MINUTOS=45
+
+# --- Estado del sistema (estado.json en el bucket de teselas) ------------------------
+R2_BUCKET="eodi-teselas"
+ESTADO_OBJETO="estado.json"
+# La web lo pide cada 5 minutos; un minuto de caché basta para no servir uno viejo.
+ESTADO_CACHE="public, max-age=60"
+# Subir un fichero de 1 kB tarda menos de un segundo; 30 s cubren una red lenta.
+ESTADO_TOPE_S=30
+LOCAL_R2="$LOCAL_SECRETOS/r2_estado.env"
 
 # --- Revisión de lo publicado (servidor/revision.sh) -----------------------------------
 # Espera por el cerrojo: una recogida dura como mucho los 45 minutos de su tope.

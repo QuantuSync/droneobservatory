@@ -1,0 +1,142 @@
+"""Estado del sistema para la web: estado.json, que el servidor sube al bucket de teselas.
+
+Al final de cada recogida horaria, `servidor/recogida.sh` compone el estado con lo que
+dejó escrito la recogida (cómo fue cada fuente y la fecha de su último dato), el código
+con que terminó y el estado anterior (de donde sale la última recogida correcta), y lo
+sube a R2 sin commit en git: así la web no se reconstruye cada hora. Solo lleva horas y
+estados, ningún contenido.
+
+Formato (versión 1), con los instantes como AAAA-MM-DDThh:mmZ:
+
+    {"version": 1, "inicio", "fin", "resultado": correcta | con_avisos | fallida,
+     "ultima_correcta": instante o null, "siguiente",
+     "fuentes": [{"id", "estado": leida | con_aviso | no_leida, "ultimo_dato": instante o null}]}
+
+Las fuentes van siempre las cinco y en este orden: fuerza_aerea_ua, mindef_ru, gdelt,
+oficiales y extractor.
+
+Uso: python -m recogida.estado --inicio <ISO> --codigo <N> --parcial <json> --anterior <json>
+    --salida <json> --minuto <minuto de la recogida>
+"""
+
+import argparse
+import json
+import sys
+from dataclasses import dataclass
+from datetime import UTC, datetime, timedelta
+from pathlib import Path
+from typing import Any
+
+VERSION = 1
+FUENTES = ("fuerza_aerea_ua", "mindef_ru", "gdelt", "oficiales", "extractor")
+LEIDA, CON_AVISO, NO_LEIDA = "leida", "con_aviso", "no_leida"
+CORRECTA, CON_AVISOS, FALLIDA = "correcta", "con_avisos", "fallida"
+# Código con avisos de la recogida (recogida.horaria.SALIDA_AVISO): se lee y se publica, pero
+# alguna fuente no.
+SALIDA_AVISO = 2
+FORMATO = "%Y-%m-%dT%H:%MZ"
+HORA = timedelta(hours=1)
+
+
+@dataclass(frozen=True)
+class EstadoFuente:
+    estado: str
+    ultimo_dato: datetime | None = None
+
+    def documento(self, id_: str) -> dict[str, Any]:
+        return {"id": id_, "estado": self.estado, "ultimo_dato": instante(self.ultimo_dato)}
+
+
+def instante(momento: datetime | None) -> str | None:
+    return momento.astimezone(UTC).strftime(FORMATO) if momento is not None else None
+
+
+def leer_instante(texto: str | None) -> datetime | None:
+    if not texto:
+        return None
+    return datetime.fromisoformat(texto.replace("Z", "+00:00")).astimezone(UTC)
+
+
+def escribir_parcial(ruta: Path, fuentes: dict[str, EstadoFuente]) -> None:
+    """Lo que deja escrito la recogida horaria: cada fuente con su estado y su último dato."""
+    ruta.write_text(
+        json.dumps({f: fuentes[f].documento(f) for f in fuentes}, ensure_ascii=False),
+        encoding="utf-8",
+    )
+
+
+def siguiente(fin: datetime, minuto: int) -> datetime:
+    """La siguiente recogida programada, en el minuto `minuto` de la hora, después de `fin`."""
+    candidata = fin.replace(minute=minuto, second=0, microsecond=0)
+    return candidata if candidata > fin else candidata + HORA
+
+
+def resultado(codigo: int) -> str:
+    if codigo == 0:
+        return CORRECTA
+    return CON_AVISOS if codigo == SALIDA_AVISO else FALLIDA
+
+
+def _fuentes(parcial: dict[str, Any] | None, anterior: dict[str, Any] | None) -> list[Any]:
+    """Las de la recogida; si no dejó nada (falló antes de terminar), las del estado anterior
+    como no leídas, con la fecha de su último dato."""
+    if parcial is not None:
+        return [parcial.get(f) or EstadoFuente(NO_LEIDA).documento(f) for f in FUENTES]
+    previas = {f["id"]: f for f in (anterior or {}).get("fuentes", [])}
+    return [
+        {"id": f, "estado": NO_LEIDA, "ultimo_dato": previas.get(f, {}).get("ultimo_dato")}
+        for f in FUENTES
+    ]
+
+
+def componer(
+    inicio: datetime,
+    fin: datetime,
+    codigo: int,
+    parcial: dict[str, Any] | None,
+    anterior: dict[str, Any] | None,
+    minuto: int,
+) -> dict[str, Any]:
+    fallo = resultado(codigo)
+    ultima = instante(fin) if fallo == CORRECTA else (anterior or {}).get("ultima_correcta")
+    return {
+        "version": VERSION,
+        "inicio": instante(inicio),
+        "fin": instante(fin),
+        "resultado": fallo,
+        "ultima_correcta": ultima,
+        "siguiente": instante(siguiente(fin, minuto)),
+        "fuentes": _fuentes(parcial, anterior),
+    }
+
+
+def _leer(ruta: Path | None) -> dict[str, Any] | None:
+    if ruta is None or not ruta.exists() or not ruta.stat().st_size:
+        return None
+    try:
+        datos: dict[str, Any] = json.loads(ruta.read_text(encoding="utf-8"))
+    except ValueError:
+        return None
+    return datos
+
+
+def principal(argumentos: list[str] | None = None) -> int:
+    opciones = argparse.ArgumentParser(description=__doc__)
+    opciones.add_argument("--inicio", required=True)
+    opciones.add_argument("--codigo", type=int, required=True)
+    opciones.add_argument("--parcial", type=Path)
+    opciones.add_argument("--anterior", type=Path)
+    opciones.add_argument("--salida", type=Path, required=True)
+    opciones.add_argument("--minuto", type=int, required=True)
+    args = opciones.parse_args(argumentos)
+    inicio = leer_instante(args.inicio) or datetime.now(UTC)
+    estado = componer(
+        inicio, datetime.now(UTC), args.codigo, _leer(args.parcial), _leer(args.anterior),
+        args.minuto,
+    )  # fmt: skip
+    args.salida.write_text(json.dumps(estado, ensure_ascii=False) + "\n", encoding="utf-8")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(principal())

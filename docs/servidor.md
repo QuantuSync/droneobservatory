@@ -76,6 +76,8 @@ En `%USERPROFILE%\.eodi\`, fuera de cualquier repositorio:
 | `servidor_known_hosts` | Clave de host del servidor, anotada en la primera conexión |
 | `clave_age.txt` | Identidad age de la base |
 | `extractor.env` | Variables del extractor (`EODI_EXTRACTOR_*`) |
+| `cloudflare_token.txt` | Token de la API de Cloudflare (R2 y DNS de las teselas) |
+| `r2_estado.env` | Credenciales S3 de R2 para subir `estado.json` (`R2_ID`, `R2_SECRETO`, `R2_CUENTA`), derivadas del token por `reconstruir.sh` si no existen |
 
 En GitHub, el repositorio guarda además el secreto `EODI_DATOS_CLAVE_LECTURA`: una clave
 de despliegue de solo lectura del repositorio de datos, con la que el workflow de tests
@@ -112,6 +114,34 @@ bash servidor/reconstruir.sh
 
 Nada de lo que hay en el servidor es irrecuperable: la base vive en la rama `estado` y la
 caché de páginas (`data/cache/`) se vuelve a llenar sola.
+
+## Estado del sistema para la web
+
+Al salir, con el código que sea, [`servidor/recogida.sh`](../servidor/recogida.sh) compone
+`estado.json` ([`recogida/estado.py`](../recogida/estado.py)) y lo sube al bucket R2
+`eodi-teselas`, que se sirve en <https://tiles.droneobservatory.eu/estado.json>. No hay
+commit en git, así que la web no se reconstruye cada hora.
+
+El fichero lleva la hora de inicio y de fin de la recogida, su resultado (`correcta`,
+`con_avisos` o `fallida`), la hora de la última correcta, la de la siguiente prevista
+(minuto 17) y, por cada fuente (`fuerza_aerea_ua`, `mindef_ru`, `gdelt`, `oficiales` y
+`extractor`), su estado (`leida`, `con_aviso` o `no_leida`) y la hora de su último dato.
+No lleva ningún contenido. La recogida deja el estado de cada fuente en un fichero
+temporal (`recogida.horaria --estado`). El último estado publicado se guarda en
+`/home/eodi/.eodi/estado.json`, de donde sale la hora de la última recogida correcta.
+
+- **Subida**: `curl --aws-sigv4` contra el punto S3 de R2, con `Cache-Control: public,
+  max-age=60` (la web lo pide cada 5 minutos). El CORS es el del bucket, el mismo que para
+  las teselas. Las credenciales llegan a curl por su entrada, no por la línea de órdenes.
+- **Si falla** (sin credenciales, sin red, R2 caído), la recogida no cambia de resultado:
+  queda un aviso en el diario («aviso: no se pudo subir estado.json al bucket»).
+- **Credenciales**: `/home/eodi/.eodi/r2.env`, con permisos 600. El token de Cloudflare no
+  puede crear otros tokens (la API responde 9109) y las credenciales temporales de R2
+  caducan, así que se derivan del propio token: identificador del token como clave de
+  acceso y SHA-256 del token como secreto. Tienen los permisos de R2 del token, que son de
+  toda la cuenta, no solo de este bucket. Para limitarlas al bucket hay que crear en el
+  panel de Cloudflare un token de R2 con escritura solo en `eodi-teselas`, guardarlo en
+  `r2_estado.env` con el mismo formato y volver a ejecutar `reconstruir.sh`.
 
 ## Órdenes útiles
 

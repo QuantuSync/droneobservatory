@@ -44,6 +44,23 @@ def _control() -> set[str]:
     return {"control", *_instante("control.ultima_actualizacion"), "control.motivo_desmentido"}
 
 
+def _afirmaciones() -> set[str]:
+    """Quién dice qué: cada valor con su fuente. El valor tiene el formato de su campo: un
+    texto, una lista de textos, un rango o un instante."""
+    ruta = "afirmaciones_publicas[]"
+    return {
+        "afirmaciones_publicas",
+        f"{ruta}.campo",
+        f"{ruta}.fuente_id",
+        f"{ruta}.medio",
+        f"{ruta}.fiabilidad",
+        f"{ruta}.credibilidad",
+        *_instante(f"{ruta}.fecha"),
+        *_rango(f"{ruta}.valor"),
+        *_instante(f"{ruta}.valor"),
+    }
+
+
 CAMPOS_PUBLICOS_INCIDENTE: frozenset[str] = frozenset(
     {
         "id",
@@ -90,6 +107,7 @@ CAMPOS_PUBLICOS_INCIDENTE: frozenset[str] = frozenset(
         "atribucion.autoridad",
         *_instante("atribucion.fecha"),
         *_fuentes(),
+        *_afirmaciones(),
         *_control(),
     }
 )

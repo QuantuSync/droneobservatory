@@ -219,6 +219,33 @@
       "minItems": 1,
       "items": {"$ref": "urn:eodi:esquema:1.0.0:fuente"}
     },
+    "afirmaciones_publicas": {
+      "x-visibilidad": "publico",
+      "description": "Quién dice qué: el valor de cada campo público según cada fuente pública, con su medio, su código del Almirantazgo y su fecha. Se genera al publicar desde las afirmaciones internas; no se guarda.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["campo", "fuente_id", "medio", "fiabilidad", "credibilidad", "fecha", "valor"],
+        "properties": {
+          "campo": {"x-visibilidad": "publico", "type": "string", "minLength": 1},
+          "fuente_id": {"x-visibilidad": "publico", "type": "string", "minLength": 1},
+          "medio": {"x-visibilidad": "publico", "type": "string", "minLength": 1},
+          "fiabilidad": {"x-visibilidad": "publico", "enum": ["A", "B", "C", "D"]},
+          "credibilidad": {"x-visibilidad": "publico", "type": "integer", "minimum": 1, "maximum": 6},
+          "fecha": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.0.0:comun#/$defs/instante"},
+          "valor": {
+            "x-visibilidad": "publico",
+            "anyOf": [
+              {"type": "string"},
+              {"type": "array", "items": {"type": "string"}},
+              {"$ref": "urn:eodi:esquema:1.0.0:comun#/$defs/rango_entero_o_desconocido"},
+              {"$ref": "urn:eodi:esquema:1.0.0:comun#/$defs/instante"}
+            ]
+          }
+        }
+      }
+    },
     "afirmaciones": {
       "x-visibilidad": "interno",
       "type": "array",

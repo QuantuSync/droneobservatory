@@ -76,6 +76,8 @@ class Recuentos:
     bloqueadas: int = 0
     # Fuentes que no dio tiempo a leer en esta ejecución.
     sin_leer: int = 0
+    # La nota más reciente leída, de cualquier fuente: el último dato de las oficiales.
+    ultima: datetime | None = None
 
     def resumen(self) -> str:
         return (
@@ -256,6 +258,8 @@ def recoger(
         return
     for nota in notas:
         recuentos.notas += 1
+        fecha = nota.fecha if nota.fecha.tzinfo else nota.fecha.replace(tzinfo=UTC)
+        recuentos.ultima = max(recuentos.ultima or fecha, fecha)
         if not filtro().dron.search(f"{nota.titulo} {nota.texto}"):
             continue
         recuentos.relevantes += 1

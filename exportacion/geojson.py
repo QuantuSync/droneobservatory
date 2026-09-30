@@ -10,6 +10,7 @@ from collections.abc import Iterable
 from datetime import datetime
 
 from esquema import Documento
+from exportacion.afirmaciones import afirmaciones_publicas
 from exportacion.campos import CAMPOS_PUBLICOS_INCIDENTE, CAMPOS_PUBLICOS_SIN_UBICACION
 from exportacion.proyeccion import (
     ExportacionInvalida,
@@ -31,7 +32,7 @@ def campos_fuera_de_lista(coleccion: Documento) -> list[str]:
 
 def feature(incidente: Documento) -> Documento | None:
     """Feature pública del incidente, o None si ninguna de sus fuentes es pública."""
-    documento = solo_fuentes_publicas(incidente, Capa.GENERAL)
+    documento = con_afirmaciones(incidente)
     if documento is None:
         return None
     punto = documento["lugar"].pop("punto")
@@ -43,8 +44,19 @@ def feature(incidente: Documento) -> Documento | None:
     }
 
 
-def sin_ubicacion(incidente: Documento) -> Documento | None:
+def con_afirmaciones(incidente: Documento) -> Documento | None:
+    """Copia con solo las fuentes públicas y, si las hay, sus afirmaciones públicas."""
     documento = solo_fuentes_publicas(incidente, Capa.GENERAL)
+    if documento is None:
+        return None
+    afirmaciones = afirmaciones_publicas(documento)
+    if afirmaciones:
+        documento["afirmaciones_publicas"] = afirmaciones
+    return documento
+
+
+def sin_ubicacion(incidente: Documento) -> Documento | None:
+    documento = con_afirmaciones(incidente)
     if documento is None:
         return None
     documento["lugar"].setdefault("nivel", "pais")

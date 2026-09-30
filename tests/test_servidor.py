@@ -35,6 +35,15 @@ if [ "$2" = pip ]; then
   echo instalado >> "$PRUEBA_INSTALACIONES"
   exit 0
 fi
+if [ "$2" = recogida.estado ]; then
+  while [ $# -gt 0 ]; do
+    [ "$1" = --codigo ] && codigo="$2"
+    [ "$1" = --salida ] && salida="$2"
+    shift
+  done
+  printf '{"codigo": %s}' "$codigo" > "$salida"
+  exit 0
+fi
 printf '%s\\n' "$*" "$EODI_CLAVE_AGE" "$EODI_EXTRACTOR_CABECERAS" "$GIT_SSH_COMMAND" \\
   > "$PRUEBA_VISTO"
 if [ -n "$PRUEBA_CAMBIO" ]; then
@@ -42,6 +51,16 @@ if [ -n "$PRUEBA_CAMBIO" ]; then
 fi
 exit "$PRUEBA_CODIGO"
 """
+
+
+# Doble de curl: anota sus argumentos y lo que recibe por la entrada (la configuración con
+# las credenciales) y sale con el código que se le pide.
+DOBLE_CURL = """#!/usr/bin/env bash
+printf '%s\\n' "$*" > "$PRUEBA_CURL_ARGS"
+cat > "$PRUEBA_CURL_ENTRADA"
+exit "${PRUEBA_CURL_CODIGO:-0}"
+"""
+R2 = "R2_ID=identificador\nR2_SECRETO=secreto\nR2_CUENTA=cuenta\n"
 
 
 def git(*argumentos: str, directorio: Path) -> str:
@@ -66,9 +85,16 @@ class Servidor:
     visto: Path
     instalaciones: Path
 
-    def recoger(self, codigo: int = 0, cambio: str = "") -> subprocess.CompletedProcess[str]:
+    def recoger(
+        self, codigo: int = 0, cambio: str = "", codigo_curl: int = 0
+    ) -> subprocess.CompletedProcess[str]:
+        bin_ = self.secretos.parent / "bin"
         entorno = {
             **os.environ,
+            "PATH": f"{bin_}:{os.environ['PATH']}",
+            "PRUEBA_CURL_ARGS": str(bin_ / "curl.args"),
+            "PRUEBA_CURL_ENTRADA": str(bin_ / "curl.entrada"),
+            "PRUEBA_CURL_CODIGO": str(codigo_curl),
             "EODI_CLON": str(self.clon),
             "EODI_SECRETOS": str(self.secretos),
             "PRUEBA_CODIGO": str(codigo),
@@ -116,6 +142,10 @@ def servidor(tmp_path: Path) -> Servidor:
     python.chmod(0o755)
     secretos = tmp_path / "secretos"
     secretos.mkdir()
+    bin_ = tmp_path / "bin"
+    bin_.mkdir()
+    (bin_ / "curl").write_text(DOBLE_CURL, encoding="utf-8")
+    (bin_ / "curl").chmod(0o755)
     (secretos / "clave_age.txt").write_text(f"{CLAVE_AGE}\n", encoding="utf-8")
     (secretos / "extractor.env").write_text(
         f"# variables del extractor\n\nEODI_EXTRACTOR_CABECERAS={CABECERAS}", encoding="utf-8"
@@ -164,7 +194,7 @@ def test_la_recogida_recibe_los_secretos_y_la_clave_del_repositorio_de_datos(
     assert servidor.recoger().returncode == 0
     orden, *resto = servidor.visto.read_text(encoding="utf-8").splitlines()
     assert orden.startswith("-m recogida.horaria --correo 192205734+QuantuSync@")
-    assert orden.endswith("--repositorio git@github.com:QuantuSync/droneobservatory-datos.git")
+    assert "--repositorio git@github.com:QuantuSync/droneobservatory-datos.git --estado " in orden
     assert resto[:2] == CLAVE_AGE.splitlines()
     assert resto[2] == CABECERAS
     assert f"-i {servidor.secretos}/despliegue_datos" in resto[3]
@@ -215,3 +245,40 @@ def test_no_se_lanza_si_hay_otra_en_marcha(servidor: Servidor) -> None:
     assert resultado.returncode == 0
     assert "hay otra recogida en marcha" in resultado.stdout
     assert not servidor.visto.exists()
+
+
+def test_sin_credenciales_de_r2_avisa_y_no_cambia_el_resultado(servidor: Servidor) -> None:
+    resultado = servidor.recoger()
+    assert resultado.returncode == 0
+    assert "sin credenciales de R2" in resultado.stdout
+    assert not (servidor.secretos.parent / "bin" / "curl.args").exists()
+
+
+@pytest.mark.parametrize(("codigo", "resultado_estado"), [(0, 0), (SALIDA_AVISO, 2), (1, 1)])
+def test_sube_el_estado_al_bucket_tambien_si_la_recogida_falla(
+    servidor: Servidor, codigo: int, resultado_estado: int
+) -> None:
+    (servidor.secretos / "r2.env").write_text(R2, encoding="utf-8")
+    resultado = servidor.recoger(codigo=codigo)
+    assert resultado.returncode == codigo
+    assert "estado.json publicado en el bucket" in resultado.stdout
+    bin_ = servidor.secretos.parent / "bin"
+    argumentos = (bin_ / "curl.args").read_text(encoding="utf-8")
+    assert "https://cuenta.r2.cloudflarestorage.com/eodi-teselas/estado.json" in argumentos
+    assert "Cache-Control: public, max-age=60" in argumentos
+    assert "--aws-sigv4 aws:amz:auto:s3" in argumentos
+    # Las credenciales van por la entrada de curl, nunca en sus argumentos.
+    assert "secreto" not in argumentos
+    assert (bin_ / "curl.entrada").read_text(encoding="utf-8") == (
+        'user = "identificador:secreto"\n'
+    )
+    anterior = (servidor.secretos / "estado.json").read_text(encoding="utf-8")
+    assert anterior == f'{{"codigo": {resultado_estado}}}'
+
+
+def test_si_la_subida_falla_la_recogida_no_falla(servidor: Servidor) -> None:
+    (servidor.secretos / "r2.env").write_text(R2, encoding="utf-8")
+    resultado = servidor.recoger(codigo_curl=22)
+    assert resultado.returncode == 0
+    assert "no se pudo subir estado.json" in resultado.stdout
+    assert not (servidor.secretos / "estado.json").exists()
