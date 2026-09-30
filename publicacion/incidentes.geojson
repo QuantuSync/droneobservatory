@@ -54444,16 +54444,17 @@
      }
     },
     "control": {
+     "motivo_desmentido": "Litauens nationale krisehåndteringscenter: «Opdateret: TV2 skriver med Reuters som kilde, at det litauiske nationale krisecenter har aflyst meldingen»",
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-28T09:43Z"
+      "valor": "2026-09-30T05:38Z"
      }
     },
     "drones": {
      "numero": "desconocido"
     },
     "estado": {
-     "actual": "notificado",
+     "actual": "desmentido",
      "historial": [
       {
        "estado": "notificado",
@@ -54462,24 +54463,26 @@
         "valor": "2026-09-13T11:30Z"
        },
        "fuente_id": "gdelt-66591d0e615f0e85"
+      },
+      {
+       "estado": "confirmado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2026-09-13T11:30Z"
+       },
+       "fuente_id": "gdelt-66591d0e615f0e85-declaracion-1"
+      },
+      {
+       "estado": "desmentido",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2026-09-13T11:30Z"
+       },
+       "fuente_id": "gdelt-66591d0e615f0e85-declaracion-2"
       }
      ]
     },
     "fuentes": [
-     {
-      "credibilidad": 3,
-      "enlace": "https://bt.dk/udland/nato-kampfly-sendt-i-luften-lufthavn-lukket-efter-mulig-observation-af-drone",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-09-13T11:15Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Vilnius Lufthavn i Litauens hovedstad er i øjeblikket lukket.",
-      "id": "gdelt-50392741a2452ebe",
-      "idioma": "da",
-      "medio": "bt.dk",
-      "replicas": 0
-     },
      {
       "credibilidad": 3,
       "enlace": "https://ekstrabladet.dk/nyheder/krigogkatastrofer/lufthavn-i-vilnius-lukket-efter-mulig-droneobservation/11288251",
@@ -54488,53 +54491,11 @@
        "valor": "2026-09-13T11:30Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "Lufthavnen i Vilnius i Litauen blev lukket efter en mulig droneobservation.",
+      "frase_origen": "Lufthavnen i Vilnius i Litauen blev lukket efter en mulig droneobservation",
       "id": "gdelt-66591d0e615f0e85",
       "idioma": "da",
       "medio": "ekstrabladet.dk",
       "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://leggo.it/esteri/news/13_settembre_2026_guerra_ucraina_oggi_ultime_notizie-9760845.html",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-09-13T11:45Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "spazio aereo chiuso a Vilnius",
-      "id": "gdelt-6f396dd243c7841f",
-      "idioma": "it",
-      "medio": "leggo.it",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://nettavisen.no/nyheter/flyplass-i-vilnius-stengt-etter-droneobservasjon-nato-sender-jagerfly-pa-vingene/s/80-95-75005",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-09-13T12:15Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Vilnius, Litauen | Vilnius-flyplass stengt etter droneobservasjon – Nato sender jagerfly",
-      "id": "gdelt-1119b47d25fc7560",
-      "idioma": "no",
-      "medio": "nettavisen.no",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://ansa.it/sito/notizie/topnews/2026/09/13/lituania-chiude-lo-scalo-di-vilnius-per-possibili-droni-nato-mobilita-i-caccia_ba065eca-7589-4e10-afe1-6d32bdd0045b.html",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-09-13T12:15Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Lituania chiude lo scalo di Vilnius per possibili droni, Nato mobilita i caccia - Ultima ora",
-      "id": "gdelt-7fb3ad3040808c68",
-      "idioma": "it",
-      "medio": "ansa.it",
-      "replicas": 2
      },
      {
       "credibilidad": 3,
@@ -54552,20 +54513,6 @@
      },
      {
       "credibilidad": 3,
-      "enlace": "https://blic.rs/vesti/svet/litvanija-na-nogama-aerodrom-zatvoren-zbog-drona-nato-podigao-borbeni-avion/92jw1s0",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-09-13T12:30Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Aerodrom je ponovo otvoren oko sat vremena kasnije.",
-      "id": "gdelt-5793bcbc851a85f5",
-      "idioma": "bs",
-      "medio": "blic.rs",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
       "enlace": "https://zazoom.it/2026-09-13/droni-sopra-vilnius-chiuso-laeroporto-mosca-attacca-un-treno-al-confine-con-la-polonia-ma-dice-si-a-colloqui-trilaterali-per-ottobre-la-diretta/19676146",
       "fecha": {
        "precision": "aproximada",
@@ -54577,48 +54524,6 @@
       "idioma": "it",
       "medio": "zazoom.it",
       "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://naslovi.net/2026-09-13/blic/nato-podigao-borbeni-avion-zatvoren-evropski-aerodrom-dron-probio-vazdusni-prostor-podignuta-uzbuna/42352694",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-09-13T12:30Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "NATO podigao borbeni avion, zatvoren evropski aerodrom! Dron probio vazdušni prostor, podignuta uzbuna",
-      "id": "gdelt-d8867ae85d7eb161",
-      "idioma": "bs",
-      "medio": "naslovi.net",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://tanjug.rs/svet/politika/280758/zatvoren-aerodrom-u-vilnjusu-podignut-avion-nato-a-nakon-sto-je-uocen-dron/vest",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-09-13T12:45Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Zatvoren aerodrom u Vilnjusu, podignut avion NATO-a nakon što je uočen dron",
-      "id": "gdelt-21d4aadeb191d831",
-      "idioma": "sr",
-      "medio": "tanjug.rs",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://ilgazzettino.it/esteri/guerra_ucraina_incontro_usa_kiev_quando_dove-9760867.html",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-09-13T12:45Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Lituania, spazio aereo chiuso a Vilnius: «Droni in volo dalla Bielorussia». Si alzano i jet della Nato. Zelensky: deliberato attacco russo al confine con Polonia",
-      "id": "gdelt-722e3bd70137ae0d",
-      "idioma": "it",
-      "medio": "ilgazzettino.it",
-      "replicas": 2
      },
      {
       "credibilidad": 3,
@@ -54664,6 +54569,20 @@
      },
      {
       "credibilidad": 3,
+      "enlace": "https://inewsgr.com/227/lithouania-ekleise-to-aerodromio-tou-vilnious-logo-ypoptou-drone--sikothike-machitiko-tou-nato.htm",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-13T13:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "το ΝΑΤΟ απογείωσε τουλάχιστον ένα μαχητικό αεροσκάφος αντιδρώντας στον πιθανό εντοπισμό",
+      "id": "gdelt-c692edf878143e96",
+      "idioma": "el",
+      "medio": "inewsgr.com",
+      "replicas": 1
+     },
+     {
+      "credibilidad": 3,
       "enlace": "https://stiripesurse.ro/alerta-cu-drona-in-lituania-aeroportul-din-vilnius-a-fost-inchis_3919654",
       "fecha": {
        "precision": "aproximada",
@@ -54675,20 +54594,6 @@
       "idioma": "ro",
       "medio": "stiripesurse.ro",
       "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://inewsgr.com/227/lithouania-ekleise-to-aerodromio-tou-vilnious-logo-ypoptou-drone--sikothike-machitiko-tou-nato.htm",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-09-13T13:15Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "το ΝΑΤΟ απογείωσε τουλάχιστον ένα μαχητικό αεροσκάφος αντιδρώντας στον πιθανό εντοπισμό ενός drone.",
-      "id": "gdelt-c692edf878143e96",
-      "idioma": "el",
-      "medio": "inewsgr.com",
-      "replicas": 1
      },
      {
       "credibilidad": 3,
@@ -54734,34 +54639,6 @@
      },
      {
       "credibilidad": 3,
-      "enlace": "https://zazoom.it/2026-09-13/lituania-sospetti-droni-nei-cieli-di-vilnius-aeroporto-chiuso-ma-era-uno-stormo-di-uccelli/19676400",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-09-13T14:00Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Lituania sospetti droni nei cieli di Vilnius | aeroporto chiuso ma era uno stormo di uccelli",
-      "id": "gdelt-533571271aa957a9",
-      "idioma": "it",
-      "medio": "zazoom.it",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://informer.rs/planeta/vesti/1150401/litvanija-nato-avion-dron-aerodrom-viljnus",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-09-13T14:00Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "NATO podigao avion iznad Litvanije: Uočen dron, zatvoren aerodrom u Vilnjusu",
-      "id": "gdelt-7fd39e4f02f08a95",
-      "idioma": "bs",
-      "medio": "informer.rs",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
       "enlace": "https://newsbomb.gr/kosmos/story/1763064/lithouania-ekleise-prosorina-to-aerodromio-tou-vilnious-afoy-entopistike-pithano-drone",
       "fecha": {
        "precision": "aproximada",
@@ -54772,6 +54649,20 @@
       "id": "gdelt-d76640c767cee38d",
       "idioma": "el",
       "medio": "newsbomb.gr",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://zazoom.it/2026-09-13/lituania-sospetti-droni-nei-cieli-di-vilnius-aeroporto-chiuso-ma-era-uno-stormo-di-uccelli/19676400",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-13T14:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Lituania sospetti droni nei cieli di Vilnius | aeroporto chiuso ma era uno stormo di uccelli",
+      "id": "gdelt-533571271aa957a9",
+      "idioma": "it",
+      "medio": "zazoom.it",
       "replicas": 0
      },
      {
@@ -54804,34 +54695,6 @@
      },
      {
       "credibilidad": 3,
-      "enlace": "https://sot.com.al/panik-ne-lituani-mbyllet-aeroporti-ne-vilnius-pas-alarmit-per-dron-i5183045",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-09-13T14:45Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Panik në Lituani, mbyllet aeroporti në Vilnius pas alarmit për \"dron\"",
-      "id": "gdelt-2800966fb4c2bff3",
-      "idioma": "sq",
-      "medio": "sot.com.al",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://kohajone.com/aktualitet/alarm-ne-qiellin-e-lituanise-nato-ngre-avion-luftarak-pas-dyshimit-per-nje-dron-mbi-vilnius",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-09-13T14:45Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Alarm në qiellin e Lituanisë: NATO ngre avion luftarak pas dyshimit për një dron mbi Vilnius",
-      "id": "gdelt-5d1784192e0191fc",
-      "idioma": "sq",
-      "medio": "kohajone.com",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
       "enlace": "https://infooggi.it/articolo/falso-allarme-drone-in-lituania-era-uno-stormo-di-uccelli-riapre-l-aeroporto-di-vilnius/155295",
       "fecha": {
        "precision": "aproximada",
@@ -54842,6 +54705,20 @@
       "id": "gdelt-cb45ee164a83871b",
       "idioma": "it",
       "medio": "infooggi.it",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://sot.com.al/panik-ne-lituani-mbyllet-aeroporti-ne-vilnius-pas-alarmit-per-dron-i5183045",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-13T14:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Panik në Lituani, mbyllet aeroporti në Vilnius pas alarmit për \"dron\"",
+      "id": "gdelt-2800966fb4c2bff3",
+      "idioma": "sq",
+      "medio": "sot.com.al",
       "replicas": 0
      },
      {
@@ -54860,20 +54737,6 @@
      },
      {
       "credibilidad": 3,
-      "enlace": "https://naslovi.net/2026-09-13/danas/nakon-zatvoranja-aerodroma-u-viljnusu-i-mobilizacije-nato-aviona-sumnjivi-dron-bio-zapravo-jato-ptica/42353415",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-09-13T17:15Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Nakon zatvoranja aerodroma u Viljnusu i mobilizacije NATO aviona: Sumnjivi dron bio zapravo jato ptica",
-      "id": "gdelt-295b10bf6d7a7cd8",
-      "idioma": "sr",
-      "medio": "naslovi.net",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
       "enlace": "https://cross.bg/letishteto-dron-trevoga-1805887.html",
       "fecha": {
        "precision": "aproximada",
@@ -54884,6 +54747,34 @@
       "id": "gdelt-08e8a8cf0bdb95f3",
       "idioma": "bg",
       "medio": "cross.bg",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 1,
+      "enlace": "https://ekstrabladet.dk/nyheder/krigogkatastrofer/lufthavn-i-vilnius-lukket-efter-mulig-droneobservation/11288251",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-13T11:30Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Lufthavnen i Vilnius i Litauen blev lukket efter en mulig droneobservation",
+      "id": "gdelt-66591d0e615f0e85-declaracion-1",
+      "idioma": "da",
+      "medio": "Litauens nationale krisehåndteringscenter (declaración oficial citada en ekstrabladet.dk)",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 1,
+      "enlace": "https://ekstrabladet.dk/nyheder/krigogkatastrofer/lufthavn-i-vilnius-lukket-efter-mulig-droneobservation/11288251",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-13T11:30Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Opdateret: TV2 skriver med Reuters som kilde, at det litauiske nationale krisecenter har aflyst meldingen",
+      "id": "gdelt-66591d0e615f0e85-declaracion-2",
+      "idioma": "da",
+      "medio": "Litauens nationale krisehåndteringscenter (declaración oficial citada en ekstrabladet.dk)",
       "replicas": 0
      }
     ],
@@ -54904,11 +54795,6 @@
      ]
     },
     "tiempo": {
-     "duracion_min": 720,
-     "fin": {
-      "precision": "minuto",
-      "valor": "2026-09-13T12:00Z"
-     },
      "inicio": {
       "precision": "dia",
       "valor": "2026-09-13T00:00Z"
@@ -54916,8 +54802,8 @@
     },
     "tipo": "interrupcion_aeroportuaria",
     "titulo": {
-     "en": "Vilnius airport closure over possible drone alert, later ruled out",
-     "es": "Cierre del aeropuerto de Vilna tras alerta de dron, descartada posteriormente"
+     "en": "Vilnius airport closed due to suspected drone",
+     "es": "Cierre del aeropuerto de Vilna por sospecha de dron"
     }
    },
    "type": "Feature"
@@ -55347,7 +55233,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-28T09:43Z"
+      "valor": "2026-09-30T05:38Z"
      }
     },
     "drones": {
@@ -55378,7 +55264,7 @@
        "valor": "2026-09-14T16:30Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "An unauthorised drone flying in restricted airspace near Luton Airport has been seized by police.",
+      "frase_origen": "Officers on duty at Luton's Party in the Park spotted the device being piloted over nearby Alton Road on Saturday.",
       "id": "gdelt-c6aa3d13d2170362",
       "idioma": "en",
       "medio": "bbc.co.uk",
@@ -55396,11 +55282,6 @@
      "oaci": "EGGW"
     },
     "presencia_dron": "confirmada",
-    "respuesta": {
-     "medidas": [
-      "derribo"
-     ]
-    },
     "tiempo": {
      "inicio": {
       "precision": "dia",
@@ -55409,8 +55290,8 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Unauthorised drone seized near London Luton Airport",
-     "es": "Dron no autorizado derribado cerca del Aeropuerto de Londres Luton"
+     "en": "Unauthorised drone seized from restricted airspace near Luton Airport",
+     "es": "Dron no autorizado incautado en el espacio restringido cerca del aeropuerto de Luton"
     }
    },
    "type": "Feature"
@@ -57379,7 +57260,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-28T09:43Z"
+      "valor": "2026-09-30T05:38Z"
      }
     },
     "drones": {
@@ -57410,7 +57291,7 @@
        "valor": "2026-09-12T21:00Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "Traficul la aeroportul din Bruxelles a fost întrerupt timp de o jumătate de oră",
+      "frase_origen": "aeroportul din Bruxelles",
       "id": "gdelt-b59ced9c8ad78cf6",
       "idioma": "ro",
       "medio": "ziare.com",
@@ -57447,6 +57328,7 @@
     ],
     "id": "EODI-2026-00033",
     "lugar": {
+     "localidad": "Charleroi",
      "pais": "BE",
      "radio_km": 5.0
     },
@@ -57456,16 +57338,21 @@
      "oaci": "EBCI"
     },
     "presencia_dron": "no_confirmada",
+    "respuesta": {
+     "medidas": [
+      "cierre_espacio_aereo"
+     ]
+    },
     "tiempo": {
      "inicio": {
-      "precision": "dia",
+      "precision": "hora",
       "valor": "2026-09-11T19:00Z"
      }
     },
     "tipo": "interrupcion_aeroportuaria",
     "titulo": {
-     "en": "Drone interrupts traffic at Charleroi-Brussels Airport for half an hour",
-     "es": "Dron interrumpe el tráfico del aeropuerto de Charleroi-Bruselas durante media hora"
+     "en": "Drone causes traffic disruption at Charleroi-Brussels-South airport",
+     "es": "Dron provoca la interrupción del tráfico en el aeropuerto de Charleroi-Bruselas-Sur"
     }
    },
    "type": "Feature"
@@ -63086,9 +62973,21 @@
    },
    "id": "EODI-2026-00074",
    "properties": {
+    "atribucion": {
+     "actor": "Rusia",
+     "autoridad": "Autoritățile moldave",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-10T08:00Z"
+     }
+    },
     "consecuencias": {
      "cierre": {
       "valor": "si"
+     },
+     "vuelos_cancelados": {
+      "max": 0,
+      "min": 0
      },
      "vuelos_retrasados": {
       "max": 4,
@@ -63098,14 +62997,14 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-28T09:43Z"
+      "valor": "2026-09-30T05:38Z"
      }
     },
     "drones": {
      "numero": "desconocido"
     },
     "estado": {
-     "actual": "notificado",
+     "actual": "atribuido",
      "historial": [
       {
        "estado": "notificado",
@@ -63114,6 +63013,22 @@
         "valor": "2026-09-09T19:15Z"
        },
        "fuente_id": "gdelt-ffb7e7fd3232fcca"
+      },
+      {
+       "estado": "confirmado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2026-09-10T08:00Z"
+       },
+       "fuente_id": "gdelt-316b6142e4fd19bf-declaracion-1"
+      },
+      {
+       "estado": "atribuido",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2026-09-10T08:00Z"
+       },
+       "fuente_id": "gdelt-316b6142e4fd19bf-declaracion-2"
       }
      ]
     },
@@ -63126,7 +63041,7 @@
        "valor": "2026-09-09T19:15Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "Avionul președintelui ucrainean Volodimir Zelenski a fost la un pas de a se ciocni cu o dronă în timp ce decola de pe aeroportul din",
+      "frase_origen": "pe aeroportul din Chișinău",
       "id": "gdelt-ffb7e7fd3232fcca",
       "idioma": "ro",
       "medio": "news.yam.md",
@@ -63196,7 +63111,7 @@
        "valor": "2026-09-10T08:00Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "Ограничения ввели после 16:30 8 сентября.",
+      "frase_origen": "беспилотник упал и взорвался возле села Михэлений-Векь в Рышканском районе — примерно в 160 километрах от аэропорта",
       "id": "gdelt-316b6142e4fd19bf",
       "idioma": "ru",
       "medio": "news.mail.ru",
@@ -63257,6 +63172,48 @@
       "idioma": "ro",
       "medio": "news.yam.md",
       "replicas": 0
+     },
+     {
+      "credibilidad": 1,
+      "enlace": "https://news.mail.ru/politics/72306967",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-10T08:00Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "военные засекли беспилотник, залетевший в страну со стороны Украины",
+      "id": "gdelt-316b6142e4fd19bf-declaracion-1",
+      "idioma": "ru",
+      "medio": "Ministerul Apărării Moldovei (declaración oficial citada en news.mail.ru)",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 1,
+      "enlace": "https://news.mail.ru/politics/72306967",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-10T08:00Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Молдавские власти сразу назвали аппарат «российским»",
+      "id": "gdelt-316b6142e4fd19bf-declaracion-2",
+      "idioma": "ru",
+      "medio": "Autoritățile moldave (declaración oficial citada en news.mail.ru)",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 1,
+      "enlace": "https://news.mail.ru/politics/72306967",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-10T08:00Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "подтверждение, что беспилотник упал и взорвался возле села Михэлений-Векь",
+      "id": "gdelt-316b6142e4fd19bf-declaracion-3",
+      "idioma": "ru",
+      "medio": "Autoritățile moldave (declaración oficial citada en news.mail.ru)",
+      "replicas": 0
      }
     ],
     "id": "EODI-2026-00074",
@@ -63269,18 +63226,8 @@
      "nombre": "Aeroportul Internațional Chișinău „Eugen Doga”",
      "oaci": "LUKK"
     },
-    "presencia_dron": "no_confirmada",
-    "respuesta": {
-     "medidas": [
-      "cierre_espacio_aereo"
-     ]
-    },
+    "presencia_dron": "confirmada",
     "tiempo": {
-     "duracion_min": 50,
-     "fin": {
-      "precision": "minuto",
-      "valor": "2026-09-08T15:20Z"
-     },
      "inicio": {
       "precision": "minuto",
       "valor": "2026-09-08T14:30Z"
@@ -63288,8 +63235,8 @@
     },
     "tipo": "interrupcion_aeroportuaria",
     "titulo": {
-     "en": "Drone near Chișinău airport forces brief closure",
-     "es": "Dron cerca del aeropuerto de Chisináu obliga a cerrarlo brevemente"
+     "en": "Confirmed drone flies over Chișinău airport as Zelenski's aircraft prepares to take off",
+     "es": "Un dron confirmado vuela sobre el aeropuerto de Chisináu mientras el avión de Zelenski se prepara para despegar"
     }
    },
    "type": "Feature"
@@ -64942,11 +64889,14 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-28T09:43Z"
+      "valor": "2026-09-30T05:38Z"
      }
     },
     "drones": {
-     "numero": "desconocido"
+     "numero": {
+      "max": 1,
+      "min": 1
+     }
     },
     "estado": {
      "actual": "notificado",
@@ -65040,7 +64990,7 @@
        "valor": "2026-09-12T22:45Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "Drone spotted near Brussels Airport for 2nd night-Xinhua",
+      "frase_origen": "disrupting operations for about half an hour",
       "id": "gdelt-8bc7803a6e5835b6",
       "idioma": "en",
       "medio": "english.news.cn",
@@ -65203,7 +65153,6 @@
     ],
     "id": "EODI-2026-00094",
     "lugar": {
-     "localidad": "Bruselas",
      "pais": "BE",
      "radio_km": 20.0
     },
@@ -65213,15 +65162,20 @@
     },
     "presencia_dron": "no_confirmada",
     "tiempo": {
+     "duracion_min": 1170,
+     "fin": {
+      "precision": "minuto",
+      "valor": "2026-09-11T19:30Z"
+     },
      "inicio": {
       "precision": "dia",
-      "valor": "2026-09-12T00:00Z"
+      "valor": "2026-09-11T00:00Z"
      }
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Drones detected near Brussels Airport",
-     "es": "Drones detectados cerca del aeropuerto de Bruselas"
+     "en": "Drones detected near Brussels Airport within two days",
+     "es": "Drones detectados cerca del aeropuerto de Bruselas en dos días"
     }
    },
    "type": "Feature"
@@ -72532,6 +72486,315 @@
   {
    "geometry": {
     "coordinates": [
+     25.4,
+     47.53333
+    ],
+    "type": "Point"
+   },
+   "id": "EODI-2026-00113",
+   "properties": {
+    "consecuencias": {
+     "cierre": {
+      "valor": "si"
+     }
+    },
+    "control": {
+     "ultima_actualizacion": {
+      "precision": "minuto",
+      "valor": "2026-09-30T05:38Z"
+     }
+    },
+    "drones": {
+     "numero": {
+      "max": 1,
+      "min": 1
+     }
+    },
+    "estado": {
+     "actual": "notificado",
+     "historial": [
+      {
+       "estado": "notificado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2026-09-12T14:15Z"
+       },
+       "fuente_id": "gdelt-2a7206b9f7877582"
+      }
+     ]
+    },
+    "fuentes": [
+     {
+      "credibilidad": 3,
+      "enlace": "https://news.yam.md/ro/story/63494146",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-12T14:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Un obiect care a pătruns neautorizat în spațiul aerian al țării noastre dinspre Ucraina.",
+      "id": "gdelt-2a7206b9f7877582",
+      "idioma": "ro",
+      "medio": "news.yam.md",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://news.yam.md/ro/story/63495045",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-12T14:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "VIDEO | O dronă a pătruns neautorizat în nordul Republicii Moldova; spațiul aerian a fost închis temporar",
+      "id": "gdelt-f32b6d019b07d6c5",
+      "idioma": "ro",
+      "medio": "news.yam.md",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://news.yam.md/ro/story/63495068",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-12T14:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "O dronă a pătruns în Republica Moldova. Spațiul aerian a fost închis temporar",
+      "id": "gdelt-81d5903a38ffa61c",
+      "idioma": "ro",
+      "medio": "news.yam.md",
+      "replicas": 1
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://news.yam.md/ro/story/63495082",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-12T14:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "O nouă dronă a fost detectată în spațiul aerian al R. Moldova: Spațiul aerian, închis temporar în centrul și nordul țării",
+      "id": "gdelt-09de4a93e0943ba8",
+      "idioma": "ro",
+      "medio": "news.yam.md",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://news.yam.md/ro/story/63495135",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-12T14:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Zborurile, suspendate în centrul și nordul R. Moldova după ce o dronă a pătruns ilegal în spațiul aerian național",
+      "id": "gdelt-eef64e8656cc35a7",
+      "idioma": "ro",
+      "medio": "news.yam.md",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://news.yam.md/ro/story/63496620",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-12T14:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "O dronă a survolat neautorizat Moldova. Spațiul aerian din nord și centru, închis temporar",
+      "id": "gdelt-f012ac151faa512f",
+      "idioma": "ro",
+      "medio": "news.yam.md",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://news.yam.md/ro/story/63497570",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-12T14:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "O dronă, detectată în spațiul aerian al R. Moldova: Spațiul aerian, închis temporar în centrul și nordul țării",
+      "id": "gdelt-5f238294e0c5884d",
+      "idioma": "ro",
+      "medio": "news.yam.md",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://news.yam.md/ro/story/63501957",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-12T14:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "O dronă a pătruns neautorizat în spațiul aerian al Republicii Moldova",
+      "id": "gdelt-69d34524b6dfd387",
+      "idioma": "ro",
+      "medio": "news.yam.md",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://news.yam.md/ro/story/63501998",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-12T14:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Dronă detectată în nordul Republicii Moldova. Spațiul aerian a fost închis temporar",
+      "id": "gdelt-b8cd00f41711965b",
+      "idioma": "ro",
+      "medio": "news.yam.md",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://news.yam.md/ro/story/63506551",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-12T15:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Spațiul aerian al R. Moldova, închis temporar după detectarea unei drone venite dinspre Ucraina",
+      "id": "gdelt-16a2a7c2bac17ef0",
+      "idioma": "ro",
+      "medio": "news.yam.md",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://news.yam.md/ro/story/63514244",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-12T15:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "O dronă care a traversat R. Moldova s-a prăbușit în România. Spațiul aerian moldovean, închis temporar",
+      "id": "gdelt-f299dae0051b60a2",
+      "idioma": "ro",
+      "medio": "news.yam.md",
+      "replicas": 2
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://zdg.md/stiri/o-noua-drona-a-fost-detectata-in-spatiul-aerian-al-r-moldova",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-12T16:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "O nouă dronă a fost detectată în spațiul aerian al R. Moldova",
+      "id": "gdelt-547d7c6d796106ce",
+      "idioma": "ro",
+      "medio": "zdg.md",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://dcnews.ro/spatiul-aerian-al-republicii-moldova-inchis-temporar-dupa-incursiunea-unei-drone-zborurile-au-fost-retinute-la-sol_1082298.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-12T17:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Spațiul aerian al Republicii Moldova a fost închis temporar după incursiunea unei drone.",
+      "id": "gdelt-301c222338b4952a",
+      "idioma": "ro",
+      "medio": "dcnews.ro",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://ziuaconstanta.ro/stiri/actualitate/alerta-in-republica-moldova-spatiul-aerian-inchis-temporar-dupa-intrarea-neautorizata-a-unei-drone-aeronava-a-disparut-de-pe-radar-952856.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-12T17:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Alertă în Republica Moldova! Spațiul aerian, închis temporar după intrarea neautorizată a unei drone. Aeronava a dispărut de pe radar",
+      "id": "gdelt-e8c6b601eb61fd5c",
+      "idioma": "ro",
+      "medio": "ziuaconstanta.ro",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://ziarulnational.md/o-drona-a-survolat-neautorizat-spatiul-aerian-al-r-moldova-opt-puncte-de-frontiera-cu-ucraina-inchise-temporar",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-12T18:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "O dronă a survolat neautorizat spațiul aerian al R. Moldova; opt puncte de frontieră cu Ucraina, închise temporar",
+      "id": "gdelt-7bbcaadaee1a04e7",
+      "idioma": "ro",
+      "medio": "ziarulnational.md",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://cotidianul.ro/alerta-in-republica-moldova-spatiul-aerian-din-nord-si-centru-inchis-temporar-dupa-aparitia-unei-drone",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-12T18:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Alertă în Republica Moldova. Spațiul aerian din nord și centru, închis temporar după apariția unei drone",
+      "id": "gdelt-5745d217b1c4677d",
+      "idioma": "ro",
+      "medio": "cotidianul.ro",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://ziarulnational.md/spatiul-aerian-al-republicii-moldova-inchis-temporar-dupa-patrunderea-unei-drone-mai-multe-curse-retinute-la-sol",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-12T23:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Spațiul aerian al Republicii Moldova, închis temporar după pătrunderea unei drone. Mai multe curse, reținute la sol",
+      "id": "gdelt-5195fe9cccebe346",
+      "idioma": "ro",
+      "medio": "ziarulnational.md",
+      "replicas": 0
+     }
+    ],
+    "id": "EODI-2026-00113",
+    "lugar": {
+     "pais": "RO",
+     "radio_km": 3.0
+    },
+    "objetivo": {
+     "categoria": "otra",
+     "nombre": "Fundu Moldovei"
+    },
+    "presencia_dron": "no_confirmada",
+    "respuesta": {
+     "medidas": [
+      "cierre_espacio_aereo"
+     ]
+    },
+    "tiempo": {
+     "inicio": {
+      "precision": "minuto",
+      "valor": "2026-09-12T13:26Z"
+     }
+    },
+    "tipo": "incursion",
+    "titulo": {
+     "en": "Unauthorized drone enters Moldovan airspace from Ukraine",
+     "es": "Dron entra sin autorización en el espacio aéreo de Moldavia desde Ucrania"
+    }
+   },
+   "type": "Feature"
+  },
+  {
+   "geometry": {
+    "coordinates": [
      28.80501,
      45.1787
     ],
@@ -77788,8 +78051,8 @@
   {
    "geometry": {
     "coordinates": [
-     12.37129,
-     51.33962
+     12.222,
+     51.424
     ],
     "type": "Point"
    },
@@ -77803,14 +78066,11 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-28T09:43Z"
+      "valor": "2026-09-30T05:38Z"
      }
     },
     "drones": {
-     "numero": {
-      "max": 1,
-      "min": 1
-     }
+     "numero": "desconocido"
     },
     "estado": {
      "actual": "notificado",
@@ -77848,7 +78108,7 @@
        "valor": "2026-09-12T11:00Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "Eine Drohne der Polizei ist über einer Flugzeugtragfläche zu sehen.",
+      "frase_origen": "Ein vereitelter Drohnen-Anschlag am Flughafen Leipzig/Halle wirft düstere Schatten.",
       "id": "gdelt-0d295125d1701560",
       "idioma": "de",
       "medio": "express.de",
@@ -77937,23 +78197,32 @@
       "idioma": "de",
       "medio": "boerse-express.com",
       "replicas": 0
+     },
+     {
+      "credibilidad": 1,
+      "enlace": "https://express.de:443/politik-und-wirtschaft/sprengstoff-drohne-am-flughafen-leipzig-brisante-spur-fuehrt-zu-russischem-geheimdienst-1372047",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-12T11:00Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Neue Ermittlungsakten belasten den russischen Geheimdienst GRU schwer.",
+      "id": "gdelt-0d295125d1701560-declaracion-1",
+      "idioma": "de",
+      "medio": "Ermittler (declaración oficial citada en express.de)",
+      "replicas": 0
      }
     ],
     "id": "EODI-2026-00128",
     "lugar": {
      "pais": "DE",
-     "radio_km": 10.0
+     "radio_km": 5.0
     },
     "objetivo": {
-     "categoria": "otra",
-     "nombre": "Leipzig"
+     "categoria": "aeropuerto",
+     "nombre": "Flughafen Leipzig/Halle"
     },
     "presencia_dron": "confirmada",
-    "respuesta": {
-     "medidas": [
-      "derribo"
-     ]
-    },
     "tiempo": {
      "inicio": {
       "precision": "dia",
@@ -77962,8 +78231,8 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Thwarted drone attack at Leipzig airport linked to Russian intelligence",
-     "es": "Ataque con dron frustrado en el aeropuerto de Leipzig vinculado a servicios rusos"
+     "en": "Alleged drone attack foiled at Leipzig/Halle airport linked to Russian intelligence",
+     "es": "Presunto ataque con dron frustrado en el aeropuerto de Leipzig/Halle vinculado a inteligencia rusa"
     }
    },
    "type": "Feature"
@@ -85150,6 +85419,92 @@
     "titulo": {
      "en": "Rise in drone incidents near British military sites",
      "es": "Aumento de incidentes con drones cerca de bases militares británicas"
+    }
+   },
+   "type": "Feature"
+  },
+  {
+   "geometry": {
+    "coordinates": [
+     29.23503,
+     46.87795
+    ],
+    "type": "Point"
+   },
+   "id": "EODI-2026-00159",
+   "properties": {
+    "consecuencias": {
+     "cierre": {
+      "valor": "desconocido"
+     }
+    },
+    "control": {
+     "ultima_actualizacion": {
+      "precision": "minuto",
+      "valor": "2026-09-30T05:38Z"
+     }
+    },
+    "drones": {
+     "numero": {
+      "max": 1,
+      "min": 1
+     }
+    },
+    "estado": {
+     "actual": "notificado",
+     "historial": [
+      {
+       "estado": "notificado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2026-09-30T05:00Z"
+       },
+       "fuente_id": "gdelt-510b5643ca99465d"
+      }
+     ]
+    },
+    "fuentes": [
+     {
+      "credibilidad": 3,
+      "enlace": "https://news.yam.md/ro/story/69055900",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-30T05:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "la fața locului s-au deplasat deja echipe mixte de investigație formate din militari și polițiști.",
+      "id": "gdelt-510b5643ca99465d",
+      "idioma": "ro",
+      "medio": "news.yam.md",
+      "replicas": 0
+     }
+    ],
+    "id": "EODI-2026-00159",
+    "lugar": {
+     "localidad": "Anenii Noi",
+     "pais": "MD",
+     "radio_km": 3.0
+    },
+    "objetivo": {
+     "categoria": "otra",
+     "nombre": "Anenii Noi"
+    },
+    "presencia_dron": "no_confirmada",
+    "respuesta": {
+     "medidas": [
+      "patrulla"
+     ]
+    },
+    "tiempo": {
+     "inicio": {
+      "precision": "dia",
+      "valor": "2026-09-30T05:00Z"
+     }
+    },
+    "tipo": "sobrevuelo",
+    "titulo": {
+     "en": "Drone enters Moldova's airspace and crashes in Anenii Noi",
+     "es": "Dron entra en el espacio aéreo de Moldavia y se estrella en Anenii Noi"
     }
    },
    "type": "Feature"

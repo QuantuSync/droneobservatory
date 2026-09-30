@@ -474939,6 +474939,249 @@
     "ala_fija"
    ],
    "zonas_lanzamiento": []
+  },
+  {
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-09-30T05:38Z"
+    }
+   },
+   "cruces": [],
+   "derribados": {
+    "max": 155,
+    "min": 155
+   },
+   "derribados_categoria": "derribados_o_neutralizados",
+   "estado": {
+    "actual": "confirmado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "minuto",
+       "valor": "2026-09-30T05:01Z"
+      },
+      "fuente_id": "kpszsu-81648"
+     },
+     {
+      "estado": "confirmado",
+      "fecha": {
+       "precision": "minuto",
+       "valor": "2026-09-30T05:01Z"
+      },
+      "fuente_id": "kpszsu-81648"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/kpszsu/81648",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-09-30T05:01Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "У ніч на 30 вересня (з 18:00 29 вересня) противник атакував протикорабельними ракетами Циркон/Онікс із Курської обл. рф, балістичними ракетами Іскандер-М/С-400 із Воронезької, Брянської обл.",
+     "id": "kpszsu-81648",
+     "idioma": "uk",
+     "medio": "Повітряні Сили ЗС України",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-UA-2026-1013",
+   "lanzados": {
+    "gerbera_senuelos": {
+     "max": 188,
+     "min": 0
+    },
+    "otros": {
+     "max": 0,
+     "min": 0
+    },
+    "shahed_geran": {
+     "max": 188,
+     "min": 86
+    },
+    "total": {
+     "max": 188,
+     "min": 188
+    }
+   },
+   "localizaciones_impacto": {
+    "max": 18,
+    "min": 18
+   },
+   "localizaciones_restos": "desconocido",
+   "lugares_impacto": [],
+   "lugares_restos": [],
+   "perdidos_guerra_electronica": "desconocido",
+   "periodo": {
+    "fin": {
+     "precision": "minuto",
+     "valor": "2026-09-30T05:00Z"
+    },
+    "inicio": {
+     "precision": "minuto",
+     "valor": "2026-09-29T15:00Z"
+    }
+   },
+   "regiones": [
+    {
+     "region": "UA-32"
+    }
+   ],
+   "regiones_misiles": [],
+   "reivindicacion_de_parte": true,
+   "sentido": "RU_UA",
+   "tipo": "ataque_guerra",
+   "zonas_lanzamiento": [
+    "Орел",
+    "Міллерово",
+    "Курськ",
+    "Приморсько-Ахтарськ",
+    "Донецьк",
+    "Гвардійське",
+    "Чауда"
+   ]
+  },
+  {
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-09-30T05:38Z"
+    }
+   },
+   "cruces": [],
+   "derribados": {
+    "max": 384,
+    "min": 384
+   },
+   "derribados_categoria": "derribados",
+   "estado": {
+    "actual": "confirmado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "minuto",
+       "valor": "2026-09-30T05:26Z"
+      },
+      "fuente_id": "mod_russia-67768"
+     },
+     {
+      "estado": "confirmado",
+      "fecha": {
+       "precision": "minuto",
+       "valor": "2026-09-30T05:26Z"
+      },
+      "fuente_id": "mod_russia-67768"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/mod_russia/67768",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-09-30T05:26Z"
+     },
+     "fiabilidad": "D",
+     "frase_origen": "В течение прошедшей ночи, с 20.00 мск 29 сентября до 8.00 мск 30 сентября, дежурными силами ПВО перехвачены и уничтожены 384 украинских беспилотных летательных аппарата",
+     "id": "mod_russia-67768",
+     "idioma": "ru",
+     "medio": "Минобороны России",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-UA-2026-1014",
+   "lanzados": {
+    "gerbera_senuelos": "desconocido",
+    "otros": "desconocido",
+    "shahed_geran": "desconocido",
+    "total": "desconocido"
+   },
+   "localizaciones_impacto": "desconocido",
+   "localizaciones_restos": "desconocido",
+   "lugares_impacto": [],
+   "lugares_restos": [],
+   "perdidos_guerra_electronica": "desconocido",
+   "periodo": {
+    "fin": {
+     "precision": "minuto",
+     "valor": "2026-09-30T05:00Z"
+    },
+    "inicio": {
+     "precision": "minuto",
+     "valor": "2026-09-29T17:00Z"
+    }
+   },
+   "regiones": [
+    {
+     "region": "RU-BA"
+    },
+    {
+     "region": "RU-BEL"
+    },
+    {
+     "region": "RU-BRY"
+    },
+    {
+     "region": "RU-KOS"
+    },
+    {
+     "region": "RU-KRS"
+    },
+    {
+     "region": "RU-MOS"
+    },
+    {
+     "region": "RU-ORL"
+    },
+    {
+     "region": "RU-PER"
+    },
+    {
+     "region": "RU-PNZ"
+    },
+    {
+     "region": "RU-ROS"
+    },
+    {
+     "region": "RU-RYA"
+    },
+    {
+     "region": "RU-SAM"
+    },
+    {
+     "region": "RU-SAR"
+    },
+    {
+     "region": "RU-TA"
+    },
+    {
+     "region": "RU-ULY"
+    },
+    {
+     "region": "RU-VGG"
+    },
+    {
+     "region": "RU-VOR"
+    },
+    {
+     "region": "UA-43"
+    }
+   ],
+   "regiones_misiles": [],
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "ataque_guerra",
+   "tipos_dron": [
+    "ala_fija"
+   ],
+   "zonas_lanzamiento": []
   }
  ]
 }
