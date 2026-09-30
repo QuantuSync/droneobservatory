@@ -46,7 +46,8 @@ AUTOR="QuantuSync"
 # Dirección anónima de la cuenta: el correo personal no aparece en ningún commit.
 CORREO="192205734+QuantuSync@users.noreply.github.com"
 MENSAJE_PUBLICACION="Actualiza los datos publicados"
-PUBLICADOS=(publicacion/ucrania.json publicacion/incidentes.geojson)
+PUBLICADOS=(publicacion/ucrania.json publicacion/incidentes.geojson
+  publicacion/incidentes_sin_ubicacion.json)
 # Código con el que sale la recogida cuando termina con avisos
 # (recogida.horaria.SALIDA_AVISO): la base está subida y se publica igual.
 SALIDA_AVISO=2
@@ -70,6 +71,15 @@ MINUTO_RECOGIDA=17
 # Una ejecución normal tarda de 5 a 7 minutos y los topes de cada paso suman 24 en el
 # peor caso (recogida/horaria.py). Los 45 son la última red, por si algo se cuelga.
 TOPE_MINUTOS=45
+
+# --- Revisión de lo publicado (servidor/revision.sh) -----------------------------------
+# Espera por el cerrojo: una recogida dura como mucho los 45 minutos de su tope.
+ESPERA_CERROJO_S=3600
+# Lo que se retiene el cerrojo, como mucho, mientras se fusiona la rama revisada: el
+# workflow de tests tarda unos 5 minutos y la fusión, otros pocos; tres horas cubren un
+# fallo que haya que arreglar antes.
+ESPERA_FUSION_S=10800
+PAUSA_AVISO_S=30
 
 # --- Endurecimiento ------------------------------------------------------------------
 # Reinicio tras una actualización de seguridad que lo pida: de madrugada y a los 28

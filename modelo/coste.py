@@ -6,7 +6,9 @@ hay que cambiarlas aquí.
 
 Límites, compartidos por todo lo que llama al extractor:
 - 5 dólares para todo el histórico (modo «historico»);
-- 0,30 dólares al día para la recogida horaria (modo «horario»).
+- 0,30 dólares al día para la recogida horaria (modo «horario»);
+- 5 dólares para la revisión de todo lo publicado con las reglas de calidad de los
+  datos (modo «revision», `python -m recogida.extractor revision`).
 
 Antes de cada llamada se suma lo gastado y el peor caso de la llamada (sus
 tokens de entrada estimados y el máximo de salida); si pasa del límite, no se
@@ -28,6 +30,7 @@ PRECIO_LECTURA_CACHE = 0.10
 DESCUENTO_LOTE = 0.5
 LIMITE_HISTORICO_USD = 5.00
 LIMITE_DIARIO_USD = 0.30
+LIMITE_REVISION_USD = 5.00
 # Una letra son unos 0,3 tokens en los idiomas europeos; se estima por lo alto con 0,5
 # para que el peor caso no se quede corto.
 TOKENS_POR_LETRA = 0.5
@@ -36,6 +39,7 @@ TOKENS_POR_LETRA = 0.5
 class Modo(StrEnum):
     HORARIO = "horario"
     HISTORICO = "historico"
+    REVISION = "revision"
 
 
 class LimiteGasto(RuntimeError):
@@ -74,7 +78,11 @@ def peor_caso(letras_entrada: int, max_salida: int, lote: bool = False) -> float
 
 
 def limite(modo: Modo) -> float:
-    return LIMITE_DIARIO_USD if modo is Modo.HORARIO else LIMITE_HISTORICO_USD
+    return {
+        Modo.HORARIO: LIMITE_DIARIO_USD,
+        Modo.HISTORICO: LIMITE_HISTORICO_USD,
+        Modo.REVISION: LIMITE_REVISION_USD,
+    }[modo]
 
 
 def comprobar(gastado: float, previsto: float, modo: Modo) -> None:

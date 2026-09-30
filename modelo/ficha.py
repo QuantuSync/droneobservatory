@@ -24,9 +24,17 @@ import re
 from dataclasses import dataclass
 from typing import Any
 
-VERSION = "ficha/4"
-# Una ficha con todos los datos ocupa unos 800 tokens; 1500 dejan margen sin pagar de más.
+from proceso.noticias import sin_acentos
+
+VERSION = "ficha/5"
+# Una ficha con todos los datos ocupa unos 900 tokens; 1500 dejan margen sin pagar de más.
 MAX_TOKENS_SALIDA = 1500
+# Extraer no es redactar: con temperatura 0, la misma noticia da la misma ficha. Con la de
+# por defecto, dos llamadas sobre la misma nota de Anenii Noi dieron fichas distintas.
+TEMPERATURA = 0.0
+# Un valor de lista escrito en otro idioma («confirmata») vale si comparte con uno solo de
+# los valores todas sus letras menos las dos últimas.
+LETRAS_TERMINACION = 2
 TIPOS = ("interrupcion_aeroportuaria", "sobrevuelo", "incursion")
 CATEGORIAS = (
     "aeropuerto", "base_militar", "puerto", "energia", "presa", "estadio", "industrial",
@@ -37,12 +45,17 @@ PRESENCIA = ("confirmada", "no_confirmada", "descartada")
 CIERRE = ("si", "no", "desconocido")
 MEDIDAS = ("cierre_espacio_aereo", "patrulla", "cazas", "derribo", "inhibicion")
 ORIGEN = ("rastreo", "restos")
+# Pruebas físicas de que hubo un dron: el propio aparato explotó, dejó restos, cayó, fue
+# derribado o se recuperó.
+EVIDENCIAS = ("explosion", "restos", "caida", "derribo", "recuperado")
+# Nivel del lugar del suceso, del más concreto al menos.
+NIVELES = ("instalacion", "localidad", "region", "pais")
 AUTORIDADES = (
     "policia", "aeropuerto", "navegacion_aerea", "fuerzas_armadas", "ministerio", "gobierno",
 )  # fmt: skip
 AFIRMACIONES = ("incidente", "drones", "sin_drones", "niega_incidente", "autoria")
 
-BOOLEANOS = ("es_incidente", "objetivo_conocido")
+BOOLEANOS = ("es_incidente", "objetivo_conocido", "dron_estatal", "entrada_exterior")
 ENUMERADOS: dict[str, tuple[str, ...]] = {
     "tipo": TIPOS,
     "inicio_precision": PRECISIONES,
@@ -52,9 +65,11 @@ ENUMERADOS: dict[str, tuple[str, ...]] = {
 }
 TEXTOS = ("inicio", "fin", "pais", "localidad", "objetivo_nombre", "modelo_dron")
 RANGOS = ("drones", "cierre_minutos", "vuelos_desviados", "vuelos_cancelados", "vuelos_retrasados")
-LISTAS: dict[str, tuple[str, ...]] = {"medidas": MEDIDAS, "origen_demostrado": ORIGEN}
+LISTAS: dict[str, tuple[str, ...]] = {
+    "medidas": MEDIDAS, "origen_demostrado": ORIGEN, "evidencia": EVIDENCIAS,
+}  # fmt: skip
 CAMPOS: tuple[str, ...] = (
-    *BOOLEANOS, *ENUMERADOS, *TEXTOS, "lugar_nuevo", *RANGOS, *LISTAS,
+    *BOOLEANOS, *ENUMERADOS, *TEXTOS, "lugar_suceso", "lugar_nuevo", *RANGOS, *LISTAS,
 )  # fmt: skip
 
 ESQUEMA: dict[str, Any] = {
@@ -82,9 +97,18 @@ ESQUEMA: dict[str, Any] = {
             "items": {
                 "type": "object",
                 "additionalProperties": False,
-                "required": ["autoridad", "categoria", "afirma", "autor", "fuente", "frase"],
+                "required": [
+                    "autoridad",
+                    "pais",
+                    "categoria",
+                    "afirma",
+                    "autor",
+                    "fuente",
+                    "frase",
+                ],
                 "properties": {
                     "autoridad": {"type": "string"},
+                    "pais": {"type": "string"},
                     "categoria": {"enum": list(AUTORIDADES)},
                     "afirma": {"enum": list(AFIRMACIONES)},
                     "autor": {"type": "string"},
@@ -114,7 +138,10 @@ anunciados, leyes y planes contra drones, ni noticias que solo hablan de drones 
 La ficha es una lista de datos. Incluye solo los datos que alguna fuente dice; el dato \
 es_incidente va siempre. Cada dato tiene:
 - campo: su nombre.
-- valor: el dato como texto, con el formato de su campo (abajo).
+- valor: el dato como texto, con el formato de su campo (abajo). Los valores de una lista \
+(tipo, precisión, categoría, presencia, cierre, nivel, medidas, evidencia) van siempre \
+escritos tal cual aparecen aquí, en español y sin acentos, aunque la fuente esté en otro \
+idioma.
 - fuente: el número de la fuente de la que sale (1, 2 o 3).
 - frase: la frase de esa fuente que lo dice, copiada literalmente en su idioma, de 25 palabras \
 como máximo.
@@ -124,13 +151,24 @@ expresamente; 0.5 a 0.8 si se deduce con claridad; menos de 0.5 si es una suposi
 Campos y formato del valor:
 - es_incidente: true o false. Si es false, no hace falta ningún otro dato.
 - tipo: interrupcion_aeroportuaria si un aeropuerto cierra, desvía, cancela o retrasa vuelos; \
-incursion solo si una autoridad dice que el dron entró desde otro país (rastreo por radar o \
-restos); si no, sobrevuelo.
+incursion si un dron militar o de un Estado entró desde fuera del país y lo demuestra una \
+autoridad o una prueba física (explosión, restos, caída, derribo o rastreo por radar); si no, \
+sobrevuelo. Un avistamiento sin esa demostración nunca es incursión.
 - inicio: cuándo empezó el incidente (no cuándo se publicó), en UTC, como AAAA-MM-DDTHH:MM o \
 AAAA-MM-DD. Convierte la hora local del país a UTC. inicio_precision: minuto si la fuente da \
 la hora exacta, hora si da una hora aproximada o una franja corta, dia si solo da el día o \
 dice anoche, ayer, el lunes. fin: cuándo acabó, con el mismo formato.
-- pais: código ISO 3166-1 alfa-2 del país del incidente. localidad: ciudad o municipio.
+- lugar_suceso: dónde ocurrió el suceso (donde se vio, cayó, explotó o fue derribado el dron), \
+no otro lugar que nombre la noticia (la capital desde la que habla un ministro, el país de \
+origen del dron, la sede del medio). Va siempre que es_incidente es true, como «nombre; nivel; \
+país; región»: nombre, copiado de la frase tal como lo escribe la fuente (no el nombre del \
+objetivo conocido si la fuente lo llama de otra forma); nivel, instalacion (aeropuerto, base, \
+central, puerto), localidad (ciudad, pueblo, municipio, distrito), region (provincia, región, \
+costa, frontera, una zona sin localidad concreta) o pais (si solo se sabe el país; el nombre es \
+entonces el del país); país, su código ISO; región, la de primer nivel del país (provincia, \
+región, condado, judeţ, raion) si se sabe sin duda, o vacío.
+- pais: código ISO 3166-1 alfa-2 del país donde ocurrió el suceso, aunque sea otro que el del \
+objetivo conocido. localidad: ciudad o municipio donde ocurrió.
 - objetivo_conocido: true si el incidente ocurre en el objetivo conocido que se te indica; \
 false si ocurre en otro sitio. objetivo_categoria (aeropuerto, base_militar, puerto, energia, \
 presa, estadio, industrial, gubernamental u otra) y objetivo_nombre: la instalación afectada.
@@ -141,8 +179,18 @@ decimales. Si no sabes dónde está, no lo incluyas.
 - presencia_dron: confirmada solo si hay restos, rastreo por radar o una autoridad afirma \
 expresamente que era un dron; descartada si una autoridad dice que no lo era (un globo, un \
 avión, una estrella); no_confirmada si solo hay avistamientos.
-- cierre: si, no o desconocido: si se cerró el aeropuerto o el espacio aéreo. cierre_minutos: \
-cuánto duró, en minutos, como «N» o «mínimo-máximo».
+- dron_estatal: true si la fuente dice que el dron es militar o de un Estado (un dron ruso o \
+ucraniano de la guerra lo es), nombra un modelo militar (Shahed, Geran, Gerbera) o dice que \
+llevaba explosivos; false si dice que era de un particular.
+- entrada_exterior: true si la fuente dice que el dron entró en el espacio aéreo del país desde \
+fuera (desde otro país o desde el mar).
+- evidencia: pruebas físicas del propio dron, separadas por comas: explosion (explotó), restos \
+(se hallaron restos), caida (cayó o se estrelló), derribo (fue derribado), recuperado (se \
+recuperó el aparato).
+- cierre: si solo si la fuente dice que se cerró o se paralizó un aeropuerto o el espacio \
+aéreo; no si dice que no se cerró o que las operaciones siguieron con normalidad. Si la fuente \
+no habla de cierre, no incluyas el dato. cierre_minutos: cuánto duró, en minutos, como «N» o \
+«mínimo-máximo».
 - vuelos_desviados, vuelos_cancelados, vuelos_retrasados: «N» o «mínimo-máximo».
 - modelo_dron: el modelo o tipo que nombra la fuente (Shahed, Gerbera, DJI Mavic).
 - medidas: lo que hicieron las autoridades, separado por comas: cierre_espacio_aereo, patrulla, \
@@ -150,7 +198,9 @@ cazas, derribo, inhibicion.
 - origen_demostrado: rastreo si una autoridad siguió al dron por radar desde otro país; restos si \
 se encontraron restos que prueban el origen; separado por comas.
 - declaraciones: aparte de los datos, una por cada declaración de una autoridad que cite la \
-noticia (vacía si no hay). autoridad: su nombre («Københavns Politi»). categoria: policia, \
+noticia (vacía si no hay). autoridad: su nombre («Københavns Politi»). pais: el código ISO \
+del país de la autoridad (una autoridad de un país habla de lo que pasa en el suyo; un gobierno \
+que dice que en su país no pasó nada no desmiente un suceso de otro país). categoria: policia, \
 aeropuerto, navegacion_aerea (gestor de navegación aérea), fuerzas_armadas, ministerio o \
 gobierno. afirma: incidente si dice que el incidente o el cierre ocurrió; drones si afirma \
 expresamente que había drones (los vio ella misma, por radar o por restos); sin_drones si dice \
@@ -173,7 +223,8 @@ lukket i fire timer. Texto: Københavns Lufthavn var lukket fra klokken 20.30 ma
 efter at der blev observeret tre til fire store droner. 31 fly blev omdirigeret.
 Datos esperados: es_incidente «true» (fuente 1, «Københavns Lufthavn var lukket fra klokken \
 20.30 mandag aften», 0.95); tipo «interrupcion_aeroportuaria»; inicio «2025-09-22T18:30» (20.30 \
-en Copenhague es 18.30 UTC) con inicio_precision «minuto»; pais «DK»; objetivo_conocido «true»; \
+en Copenhague es 18.30 UTC) con inicio_precision «minuto»; pais «DK»; lugar_suceso «Københavns \
+Lufthavn; instalacion; DK; Hovedstaden»; objetivo_conocido «true»; \
 drones «3-4»; presencia_dron «no_confirmada» (solo observación); cierre «si»; cierre_minutos \
 «240»; vuelos_desviados «31».
 
@@ -218,6 +269,27 @@ Objetivo conocido: Aeropuerto de Barcelona (aeropuerto, ES, LEBL).
 Fuente 1 (lavanguardia.com, 2025-06-01T10:00Z, es). Titular: El mejor espectáculo de drones del \
 verano llega a Barcelona. Texto: Mil drones iluminarán la playa el sábado.
 Datos esperados: solo es_incidente «false».
+
+Ejemplo 7.
+Objetivo conocido: Fundu Moldovei (otra, RO).
+Fuente 1 (news.yam.md, 2026-09-30T08:00Z, ro). Titular: O dronă a survolat spațiul aerian al \
+Moldovei și a explodat în raionul Anenii Noi. Texto: O dronă a pătruns în spațiul aerian al \
+Republicii Moldova în dimineața zilei de 30 septembrie, prăbușindu-se și explodând ulterior în \
+raionul Anenii Noi. Ministerul Apărării a confirmat incidentul.
+Datos esperados: tipo «incursion» (entró desde fuera, explotó y el ministerio lo confirma); pais \
+«MD»; lugar_suceso «Anenii Noi; localidad; MD; Anenii Noi»; objetivo_conocido «false» (el \
+suceso no ocurre en Fundu Moldovei, que solo casa por el nombre del país); dron_estatal «true» \
+(explotó: llevaba explosivos); entrada_exterior «true»; evidencia «caida, explosion»; \
+presencia_dron «no_confirmada» si nadie afirma expresamente que era un dron; sin cierre (la \
+fuente no habla de él). Declaración: Ministerul Apărării, MD, ministerio, afirma «incidente».
+
+Ejemplo 8.
+Objetivo conocido: Fuentes de Andalucía (otra, ES).
+Fuente 1 (krone.at, 2026-05-19T09:00Z, de). Titular: Offenbar aus Ukraine: NATO-Jets \
+schießen Militärdrohne über Estland ab.
+Datos esperados: pais «EE»; lugar_suceso «Estland; pais; EE;» (solo se sabe el país); \
+objetivo_conocido «false»; dron_estatal «true» (militar); entrada_exterior «true» (llegó desde \
+Ucrania); evidencia «derribo»; tipo «incursion».
 """
 
 
@@ -247,6 +319,7 @@ def cuerpo(objetivo: str, fuentes: list[FuenteTexto]) -> dict[str, Any]:
     """Cuerpo de la petición sin el modelo, que añade el cliente."""
     return {
         "max_tokens": MAX_TOKENS_SALIDA,
+        "temperature": TEMPERATURA,
         "system": [{"type": "text", "text": INSTRUCCIONES, "cache_control": {"type": "ephemeral"}}],
         "output_config": {"format": {"type": "json_schema", "schema": ESQUEMA}},
         "messages": [{"role": "user", "content": contenido(objetivo, fuentes)}],
@@ -277,10 +350,7 @@ def interpretar(campo: str, texto: str) -> Any:
         return limpio.lower() == "true"
     if campo in ENUMERADOS:
         # «No confirmada» y «no_confirmada» son el mismo valor.
-        clave = _clave(limpio)
-        if clave not in ENUMERADOS[campo]:
-            raise ValorIlegible("fuera de la lista")
-        return clave
+        return de_la_lista(_clave(sin_acentos(limpio)), ENUMERADOS[campo])
     if campo in RANGOS:
         m = _RANGO.match(limpio)
         if m is None:
@@ -292,6 +362,8 @@ def interpretar(campo: str, texto: str) -> Any:
         if any(e not in LISTAS[campo] for e in elementos):
             raise ValorIlegible("elemento fuera de la lista")
         return sorted(set(elementos))
+    if campo == "lugar_suceso":
+        return _lugar_suceso(limpio)
     if campo == "lugar_nuevo":
         partes = [p.strip() for p in limpio.split(";")]
         if len(partes) != len(("nombre", "categoria", "pais", "lat", "lon")):
@@ -306,6 +378,33 @@ def interpretar(campo: str, texto: str) -> Any:
         except ValueError as error:
             raise ValorIlegible("coordenadas no numéricas") from error
     return limpio
+
+
+def de_la_lista(clave: str, valores: tuple[str, ...]) -> str:
+    """El valor de la lista, también con otra terminación («confirmata», «localitate» no)."""
+    if clave in valores:
+        return clave
+    parecidos = [
+        v for v in valores
+        if len(clave) >= len(v) - LETRAS_TERMINACION
+        and clave[: len(v) - LETRAS_TERMINACION] == v[: len(v) - LETRAS_TERMINACION]
+    ]  # fmt: skip
+    if len(parecidos) != 1:
+        raise ValorIlegible("fuera de la lista")
+    return parecidos[0]
+
+
+def _lugar_suceso(texto: str) -> dict[str, str]:
+    """«nombre; nivel; país; región», con la región vacía o ausente."""
+    partes = [p.strip() for p in texto.split(";")]
+    sin_region = len(("nombre", "nivel", "pais"))
+    if len(partes) == sin_region:
+        partes.append("")
+    if len(partes) != sin_region + 1 or not partes[0]:
+        raise ValorIlegible("lugar del suceso sin sus partes")
+    nombre, nivel, pais, region = partes
+    nivel = de_la_lista(_clave(sin_acentos(nivel)), NIVELES)
+    return {"nombre": nombre, "nivel": nivel, "pais": pais.upper(), "region": region}
 
 
 def leer_respuesta(respuesta: dict[str, Any]) -> dict[str, Any]:

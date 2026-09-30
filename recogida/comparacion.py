@@ -21,6 +21,7 @@ from almacen import remoto
 from almacen.base import Almacen
 from almacen.cifrado import abrir_cifrada, cargar_clave_local
 from esquema import Documento
+from proceso.incidentes import activo
 from proceso.noticias import lugar, nomenclator
 
 REFERENCIA = (
@@ -75,8 +76,12 @@ class Punto:
     sitio: str | None
 
 
-def de_incidente(incidente: Documento) -> Punto:
-    punto = incidente["lugar"]["punto"]
+def de_incidente(incidente: Documento) -> Punto | None:
+    """El punto del incidente, o None si no lo tiene (su lugar solo se sabe a nivel de país
+    o de región): sin punto no se puede comparar con un suceso situado."""
+    punto = incidente["lugar"].get("punto")
+    if punto is None:
+        return None
     return Punto(
         incidente["id"],
         date.fromisoformat(incidente["tiempo"]["inicio"]["valor"][:10]),
@@ -136,8 +141,8 @@ def principal(argumentos: list[str] | None = None) -> int:
         if args.candidatos:
             puntos = [p for c in almacen.candidatos() if (p := de_candidato(c)) is not None]
         else:
-            activos = [i for i in almacen.incidentes() if "fusionado_en" not in i]
-            puntos = [de_incidente(i) for i in activos]
+            activos = [i for i in almacen.incidentes() if activo(i)]
+            puntos = [p for i in activos if (p := de_incidente(i)) is not None]
         sys.stdout.write(tabla(comparar(referencia(), puntos)))
     return 0
 

@@ -1,10 +1,16 @@
-"""Genera incidentes.geojson para la web a partir de la lista cerrada de campos."""
+"""Genera incidentes.geojson para la web y el fichero de los incidentes sin punto.
 
+Solo se dibujan en el mapa los incidentes con un punto dentro de su país. Los que
+solo se saben a nivel de país o de región van a incidentes_sin_ubicacion.json, con
+su país y su región. Los retirados y los fundidos en otro no salen en ninguno.
+"""
+
+import logging
 from collections.abc import Iterable
 from datetime import datetime
 
 from esquema import Documento
-from exportacion.campos import CAMPOS_PUBLICOS_INCIDENTE
+from exportacion.campos import CAMPOS_PUBLICOS_INCIDENTE, CAMPOS_PUBLICOS_SIN_UBICACION
 from exportacion.proyeccion import (
     ExportacionInvalida,
     fuera_de_lista,
@@ -12,7 +18,9 @@ from exportacion.proyeccion import (
     solo_fuentes_publicas,
 )
 from proceso.estados import Capa
-from proceso.validaciones import validar_incidente
+from proceso.validaciones import errores_ubicacion, validar_incidente
+
+registro = logging.getLogger(__name__)
 
 
 def campos_fuera_de_lista(coleccion: Documento) -> list[str]:
@@ -35,17 +43,43 @@ def feature(incidente: Documento) -> Documento | None:
     }
 
 
-def exportar(
+def sin_ubicacion(incidente: Documento) -> Documento | None:
+    documento = solo_fuentes_publicas(incidente, Capa.GENERAL)
+    if documento is None:
+        return None
+    documento["lugar"].setdefault("nivel", "pais")
+    proyectado: Documento = proyectar(documento, CAMPOS_PUBLICOS_SIN_UBICACION)
+    return proyectado
+
+
+def publicables(
     incidentes: Iterable[Documento], ahora: datetime, vocabulario_modelos: frozenset[str]
-) -> Documento:
-    features = []
+) -> list[Documento]:
+    """Los incidentes que se publican, validados. Un punto fuera de su país no se publica:
+    queda en el registro de la ejecución con el motivo."""
+    resultado = []
     for incidente in incidentes:
-        # Un incidente fundido en otro sale dentro de aquel.
-        if "fusionado_en" in incidente:
+        # Un incidente fundido en otro sale dentro de aquel; uno retirado no sale.
+        if "fusionado_en" in incidente or "retirado" in incidente:
+            continue
+        fuera = errores_ubicacion(incidente)
+        if fuera:
+            registro.warning("%s no se publica: %s", incidente.get("id"), fuera[0].mensaje)
             continue
         errores = validar_incidente(incidente, ahora, vocabulario_modelos)
         if errores:
             raise ExportacionInvalida(f"{incidente.get('id')}: {errores[0].mensaje}")
+        resultado.append(incidente)
+    return resultado
+
+
+def exportar(
+    incidentes: Iterable[Documento], ahora: datetime, vocabulario_modelos: frozenset[str]
+) -> Documento:
+    features = []
+    for incidente in publicables(incidentes, ahora, vocabulario_modelos):
+        if "punto" not in incidente["lugar"]:
+            continue
         publicado = feature(incidente)
         if publicado is not None:
             features.append(publicado)
@@ -58,3 +92,18 @@ def exportar(
     if sobrantes:
         raise ExportacionInvalida(f"campos fuera de la lista: {sobrantes}")
     return coleccion
+
+
+def exportar_sin_ubicacion(
+    incidentes: Iterable[Documento], ahora: datetime, vocabulario_modelos: frozenset[str]
+) -> Documento:
+    """Los incidentes sin punto, con su país y, si se sabe, su región."""
+    lista = [
+        publicado
+        for incidente in publicables(incidentes, ahora, vocabulario_modelos)
+        if "punto" not in incidente["lugar"] and (publicado := sin_ubicacion(incidente)) is not None
+    ]
+    sobrantes = fuera_de_lista(lista, CAMPOS_PUBLICOS_SIN_UBICACION)
+    if sobrantes:
+        raise ExportacionInvalida(f"campos fuera de la lista: {sobrantes}")
+    return {"incidentes": sorted(lista, key=lambda i: str(i["id"]))}

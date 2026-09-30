@@ -52,8 +52,9 @@ de 45 minutos, y el script:
    cambiado `requirements.txt`;
 3. ejecuta `python -m recogida.horaria`, que descarga la base de la rama `estado`, recoge
    lo nuevo y vuelve a subirla;
-4. publica en `main` `publicacion/ucrania.json` y `publicacion/incidentes.geojson` si han
-   cambiado, con autor QuantuSync y la dirección anónima. También cuando la recogida
+4. publica en `main` `publicacion/ucrania.json`, `publicacion/incidentes.geojson` y
+   `publicacion/incidentes_sin_ubicacion.json` si han cambiado, con autor QuantuSync y la
+   dirección anónima. También cuando la recogida
    termina con avisos (código 2); nunca cuando falla con otro código.
 
 Sale con el código de la recogida: con avisos, la unidad queda como fallida en systemd,
@@ -131,6 +132,26 @@ sudo systemctl stop eodi-recogida.timer       # parar la recogida horaria
 sudo systemctl start eodi-recogida.timer      # reanudarla
 ```
 
+## Revisión de todo lo publicado
+
+Cuando cambian las reglas con que se construyen los incidentes, lo ya publicado se revisa
+en el servidor con [`servidor/revision.sh`](../servidor/revision.sh), como `eodi` y desde
+la rama que trae las reglas:
+
+```
+sudo -u eodi bash /home/eodi/droneobservatory/servidor/revision.sh <rama> /home/eodi/revision.liberar
+```
+
+Toma el mismo cerrojo que la recogida horaria (espera a que termine la que esté en marcha),
+deja un clon aparte en `/home/eodi/revision` con la rama y con los ficheros publicados de
+`main`, y ejecuta `python -m recogida.revision`: muestra de coste, lote del extractor
+dentro de su propio límite de gasto (5 dólares), reconstrucción de todos los incidentes,
+fusiones y episodios, publicación en el clon aparte y subida de la base. El informe queda
+en `/home/eodi/revision-informe.json`. Con un fichero de aviso, retiene el cerrojo hasta
+que ese fichero existe (como mucho tres horas): se crea con `touch` cuando la rama ya está
+fusionada, y así la recogida horaria no vuelve a publicar con el código anterior mientras
+tanto.
+
 ## Emergencia: recogida desde GitHub
 
 El workflow `recogida` sigue en el repositorio, solo con lanzamiento a mano, y conserva sus
@@ -145,6 +166,29 @@ vez se pisarían la rama `estado`.
 
 ## Cómo se ve si la recogida se para
 
-El trabajo `salud-recogida` del workflow de tests mira la fecha del último commit de la
-rama `estado` del repositorio de datos y señala en su resumen si tiene más de 2 horas.
-Solo se ejecuta cuando hay un push o un pull request.
+El workflow `vigia-recogida` se lanza cada hora en el minuto 41 y mira la fecha del último
+commit de la rama `estado` del repositorio de datos. Si tiene más de 2 horas, abre una
+incidencia en este repositorio («La recogida horaria no actualiza la base»), una sola
+mientras dure el problema, y la cierra cuando la rama vuelve a actualizarse. Solo tiene
+permiso para las incidencias; el repositorio de datos, que es privado, lo lee con la clave
+de despliegue de solo lectura «droneobservatory: salud (solo lectura)» (secreto
+`EODI_DATOS_CLAVE_LECTURA`), que pide solo el commit y no descarga la base. Si no puede
+leer la rama, el trabajo queda en rojo sin tocar las incidencias. GitHub lanza las
+ejecuciones programadas con retraso y a veces se salta alguna: el aviso puede llegar tarde.
+Además, desactiva las programaciones de un repositorio público sin actividad durante 60
+días; la recogida publica en `main` casi cada hora, así que no debería pasar.
+
+El trabajo `salud-recogida` del workflow de tests hace la misma comprobación en cada push o
+pull request y la deja en su resumen.
+
+## Fuentes que no se leen desde el servidor
+
+- **Ministerio de Defensa de Finlandia** (`mod_fi`, `defmin.fi/ajankohtaista`). Retirada
+  de `configuracion/fuentes_oficiales.json` el 30 de septiembre de 2026. Al servidor, que
+  tiene una dirección de centro de datos, le responde 403 con una página de comprobación
+  anti-robots, con la identificación del observatorio y con la de un navegador, y también a
+  `robots.txt`; desde una conexión doméstica responde 200. Leerla exigiría saltarse esa
+  comprobación, y el observatorio lee las fuentes con su identificación y respetando lo que
+  piden. Sigue en `fuentes_oficiales_candidatas.json` por si el ministerio publica un canal
+  RSS o deja de vetar esas direcciones. Las confirmaciones oficiales de Finlandia quedan en
+  las declaraciones que cita la prensa.

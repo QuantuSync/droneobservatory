@@ -52,6 +52,8 @@ def _texto(valor: Any) -> str:
         return "true" if valor else "false"
     if isinstance(valor, dict) and set(valor) == {"min", "max"}:
         return f"{valor['min']}-{valor['max']}"
+    if isinstance(valor, dict) and "nivel" in valor:
+        return "; ".join(str(valor[k]) for k in ("nombre", "nivel", "pais", "region"))
     if isinstance(valor, dict):
         return "; ".join(str(valor[k]) for k in ("nombre", "categoria", "pais", "lat", "lon"))
     if isinstance(valor, list):
@@ -72,6 +74,10 @@ def a_servicio(datos: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def suceso(nombre: str, nivel: str, pais: str, region: str = "") -> dict[str, str]:
+    return {"nombre": nombre, "nivel": nivel, "pais": pais, "region": region}
+
+
 def ficha_ejemplo(**cambios: Any) -> dict[str, Any]:
     datos: dict[str, Any] = {nombre: campo(None) for nombre in ficha.CAMPOS}
     datos |= {
@@ -82,6 +88,10 @@ def ficha_ejemplo(**cambios: Any) -> dict[str, Any]:
         "inicio": campo("2025-09-22T18:30", "fra klokken 20.30 mandag aften"),
         "inicio_precision": campo("minuto", "fra klokken 20.30 mandag aften"),
         "pais": campo("DK", "Københavns Lufthavn"),
+        "lugar_suceso": campo(
+            suceso("Københavns Lufthavn", "instalacion", "DK", "Hovedstaden"),
+            "Københavns Lufthavn var lukket",
+        ),
         "localidad": campo("Copenhague", "Københavns Lufthavn"),
         "objetivo_conocido": campo(True, "Københavns Lufthavn"),
         "drones": campo({"min": 3, "max": 4}, "observeret tre til fire store droner"),
@@ -322,7 +332,6 @@ def test_la_ficha_de_ejemplo_valida_entera() -> None:
         ({"fin": campo("2026-01-01T00:00", "mandag aften")}, "fin: fecha futura"),
         ({"inicio": campo("2025-09-01T10:00", "mandag aften")}, "inicio: inicio más de una"),
         ({"cierre": campo("si", "lukket", 0.3)}, "cierre: confianza baja"),
-        ({"pais": campo("SE", "Københavns Lufthavn")}, "pais: distinto del país"),
     ],
 )
 def test_lo_que_no_valida_se_descarta_con_su_motivo(cambio: dict[str, Any], motivo: str) -> None:
@@ -340,7 +349,7 @@ def test_un_lugar_nuevo_fuera_de_su_pais_no_vale() -> None:
     }
     validada = validar(ficha_ejemplo(**cambios), contexto())
     assert "lugar_nuevo: coordenadas fuera del país citado" in validada.motivos
-    assert not validada.publicable
+    assert "lugar_nuevo" not in validada.campos
 
 
 # --- Incidentes, fusión y episodios -----------------------------------------------------
@@ -772,9 +781,11 @@ def test_frase_larga_recortada_y_sin_fecha_se_publica_con_la_del_candidato() -> 
     assert validada.publicable
 
 
-def test_otro_sitio_sin_lugar_nuevo_no_se_publica() -> None:
+def test_otro_sitio_sin_lugar_nuevo_se_publica_en_el_lugar_del_suceso() -> None:
+    # El objetivo del candidato no es donde ocurrió, pero el lugar del suceso sí se sabe.
     validada = validar(ficha_ejemplo(objetivo_conocido=campo(False, TITULAR)), contexto())
-    assert not validada.publicable
+    assert validada.publicable
+    assert validada.valor("lugar_suceso")["nombre"] == "Københavns Lufthavn"
 
 
 class LotesFalsos:
@@ -819,11 +830,17 @@ def test_lote_envia_espera_y_procesa(almacen: Almacen) -> None:
 
 
 def test_otra_instalacion_que_la_conocida_no_se_publica_alli(almacen: Almacen) -> None:
-    # «Alarm am Flughafen Leipzig» en un candidato de otro aeropuerto.
-    datos = ficha_ejemplo(objetivo_nombre=campo("Flughafen Leipzig", "Københavns Lufthavn"))
-    assert extraer_ejemplo(almacen, datos) is None
+    # «Alarm am Flughafen Leipzig» en un candidato de otro aeropuerto, sin lugar del suceso.
+    datos = ficha_ejemplo(
+        objetivo_nombre=campo("Flughafen Leipzig", "Københavns Lufthavn"),
+        lugar_suceso=campo(None), localidad=campo(None),
+    )  # fmt: skip
+    id_ = extraer_ejemplo(almacen, datos)
     (extraida,) = almacen.extracciones(almacen.candidatos()[0]["id"])
     assert "objetivo_nombre: no es la instalación conocida" in extraida["motivos"]
+    incidente = almacen.incidente(id_ or "")
+    assert incidente is not None
+    assert "punto" not in incidente["lugar"]
 
 
 def test_reconstruir_rehace_el_incidente_sin_llamar(almacen: Almacen) -> None:
@@ -837,10 +854,16 @@ def test_reconstruir_rehace_el_incidente_sin_llamar(almacen: Almacen) -> None:
     assert rehecho["tipo"] == "interrupcion_aeroportuaria"
 
 
-def test_pais_distinto_del_objetivo_no_se_publica_alli() -> None:
-    validada = validar(ficha_ejemplo(pais=campo("RO", "Københavns Lufthavn")), contexto())
-    assert "pais: distinto del país del objetivo conocido" in validada.motivos
-    assert not validada.publicable
+def test_pais_distinto_del_objetivo_es_el_del_suceso() -> None:
+    # Un dron en Rumanía no ocurre en el aeropuerto de Copenhague: el objetivo conocido no
+    # es, y el país del incidente es el que dice la ficha, nunca el del objetivo.
+    validada = validar(
+        ficha_ejemplo(pais=campo("RO", "Københavns Lufthavn"), lugar_suceso=campo(None)),
+        contexto(),
+    )
+    assert "objetivo_conocido: el suceso es de otro país" in validada.motivos
+    assert validada.valor("objetivo_conocido") is False
+    assert validada.pais == "RO"
 
 
 def test_valores_de_lista_con_otra_escritura() -> None:

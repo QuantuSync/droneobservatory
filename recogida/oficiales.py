@@ -171,7 +171,7 @@ def enlazar(almacen: Almacen, nota: Nota, ahora: datetime, modelos: frozenset[st
     encajan = [
         i
         for i in almacen.incidentes()
-        if "fusionado_en" not in i and i["lugar"]["pais"] == nota.fuente["pais"]
+        if incidentes.activo(i) and i["lugar"]["pais"] == nota.fuente["pais"]
         and incidentes.encajan(i, punto)
     ]  # fmt: skip
     if len(encajan) != 1:
@@ -193,6 +193,8 @@ def enlazar(almacen: Almacen, nota: Nota, ahora: datetime, modelos: frozenset[st
     texto = f"{nota.titulo}. {nota.texto}"
     if _AFIRMA.search(texto) and not _RESERVA.search(texto):
         incidente["presencia_dron"] = "confirmada"
+    # La confirmación puede cambiar el tipo y la presencia del dron (proceso/incidentes.py).
+    incidente = incidentes.aplicar_reglas(incidente)
     incidente["control"]["ultima_actualizacion"] = {
         "valor": ahora.strftime("%Y-%m-%dT%H:%MZ"),
         "precision": "minuto",

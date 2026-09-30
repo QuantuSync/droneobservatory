@@ -21,6 +21,8 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
+from proceso.fronteras import es_nombre_de_pais
+
 DIRECTORIO = Path(__file__).resolve().parent.parent / "configuracion"
 # Regla de fusión del diseño.
 MARGEN_FUSION_KM = 10.0
@@ -266,11 +268,15 @@ def nomenclator(
             not any(p.match(palabra) for p in cue.values()) for palabra in nombre.split()
         )
 
+    # El nombre de un país no nombra un lugar: GeoNames da «Ukraine» como nombre alternativo
+    # de Fuentes de Andalucía y «Moldova» como el de Fundu Moldovei (Rumanía).
     alias = [
         (normalizar(a), sitio.id)
         for sitio in lugares.values()
         for a in sitio.alias
-        if propio(normalizar(a)) and len(normalizar(a).split()) <= MAX_PALABRAS_ALIAS
+        if propio(normalizar(a))
+        and len(normalizar(a).split()) <= MAX_PALABRAS_ALIAS
+        and not es_nombre_de_pais(normalizar(a))
     ]
     # Una «ciudad» que es una palabra de tipo de lugar («militar», «wojskowa») no nombra nada:
     # casaría con cualquier titular que hable de militares.
@@ -287,6 +293,7 @@ def nomenclator(
         for a in sitio.alias
         if len(normalizar(a)) >= MIN_LETRAS_ALIAS
         and len(normalizar(a).split()) <= MAX_PALABRAS_ALIAS
+        and not es_nombre_de_pais(normalizar(a))
     ]
     return Nomenclator(
         {**pueblos, **lugares}, _indice(alias), _indice(ciudades), _indice(nombres_pueblos), cue

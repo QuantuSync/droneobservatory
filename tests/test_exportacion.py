@@ -41,11 +41,11 @@ def test_la_lista_cerrada_solo_contiene_campos_publicos_del_esquema() -> None:
 def test_el_ejemplo_completo_rellena_todos_los_campos_internos() -> None:
     # Garantiza que los tests anteriores ejercitan de verdad cada campo interno.
     presentes = set(rutas(ejemplos.incidente_completo()))
-    # fusionado_en saca al incidente de la publicación: tiene su propio test.
+    # fusionado_en y retirado sacan al incidente de la publicación: tienen su propio test.
     internos_hoja = {
         r
         for r in VISIBILIDAD[Visibilidad.INTERNO]
-        if not r.startswith("drones.velocidad_ms.") and r != "fusionado_en"
+        if not r.startswith(("drones.velocidad_ms.", "retirado")) and r != "fusionado_en"
     }
     assert internos_hoja - presentes == set()
 

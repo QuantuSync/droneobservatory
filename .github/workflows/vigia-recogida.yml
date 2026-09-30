@@ -1,0 +1,73 @@
+name: vigia-recogida
+
+# Aviso si el servidor deja de recoger. Cada hora mira la fecha del último commit de la
+# rama estado del repositorio de datos, que la recogida horaria sustituye en cada
+# ejecución: si tiene más de dos horas, abre una incidencia en este repositorio (una sola
+# mientras dure el problema) y la cierra cuando la rama vuelve a actualizarse.
+#
+# En el minuto 41: lejos de las horas en punto, cuando GitHub más retrasa las ejecuciones
+# programadas, y cuando la recogida del minuto 17 ya ha terminado. GitHub puede lanzarla
+# tarde o saltarse alguna: el aviso llega tarde, pero llega.
+
+on:
+  schedule:
+    - cron: "41 * * * *"
+  workflow_dispatch:
+
+# Solo lo necesario para abrir y cerrar incidencias. El repositorio de datos se lee con
+# una clave de despliegue de solo lectura, no con el token de GitHub.
+permissions:
+  issues: write
+
+concurrency:
+  group: vigia-recogida
+  cancel-in-progress: false
+
+jobs:
+  vigia:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Edad de la rama estado y aviso
+        env:
+          CLAVE: ${{ secrets.EODI_DATOS_CLAVE_LECTURA }}
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TITULO: La recogida horaria no actualiza la base
+          MAX_HORAS: "2"
+        run: |
+          set -euo pipefail
+          install -m 700 -d "$RUNNER_TEMP/ssh"
+          printf '%s\n' "$CLAVE" > "$RUNNER_TEMP/ssh/lectura"
+          chmod 600 "$RUNNER_TEMP/ssh/lectura"
+          # Clave de host publicada por GitHub: sin confiar en la primera conexión.
+          echo "github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl" > "$RUNNER_TEMP/ssh/known_hosts"
+          export GIT_SSH_COMMAND="ssh -i $RUNNER_TEMP/ssh/lectura -o IdentitiesOnly=yes -o UserKnownHostsFile=$RUNNER_TEMP/ssh/known_hosts"
+          # Solo el commit, que es lo que lleva la fecha: la base no se descarga.
+          fecha=""
+          if git clone --quiet --bare --depth 1 --filter=blob:none --single-branch \
+            --branch estado git@github.com:QuantuSync/droneobservatory-datos.git \
+            "$RUNNER_TEMP/estado"; then
+            fecha="$(git -C "$RUNNER_TEMP/estado" log -1 --format=%cI)"
+          fi
+          rm -rf "$RUNNER_TEMP/ssh"
+          if [ -z "$fecha" ]; then
+            # Sin fecha no se sabe si el servidor recoge: el trabajo queda en rojo y no se
+            # abre ni se cierra nada.
+            echo "::error::no se pudo leer la rama estado del repositorio de datos"
+            exit 1
+          fi
+          edad=$(( $(date +%s) - $(date -d "$fecha" +%s) ))
+          horas=$(( edad / 3600 ))
+          abierta="$(gh issue list --state open --limit 100 --json number,title \
+            --jq 'map(select(.title == env.TITULO)) | .[0].number // empty')"
+          echo "último commit de la rama estado: $fecha (hace $horas h)"
+          if [ "$edad" -gt $(( MAX_HORAS * 3600 )) ]; then
+            if [ -z "$abierta" ]; then
+              gh issue create --title "$TITULO" --body "El último commit de la rama \`estado\` del repositorio de datos es del $fecha, hace $horas horas: la recogida horaria del servidor no está subiendo la base. Cómo revisarlo y reconstruirlo: \`docs/servidor.md\`. Esta incidencia se cierra sola cuando la rama vuelve a actualizarse."
+            else
+              echo "la incidencia #$abierta sigue abierta"
+            fi
+          elif [ -n "$abierta" ]; then
+            gh issue close "$abierta" --comment "La rama \`estado\` vuelve a actualizarse: último commit del $fecha."
+          fi

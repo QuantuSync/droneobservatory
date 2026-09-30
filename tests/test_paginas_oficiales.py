@@ -83,14 +83,6 @@ CASOS = [
         (datetime(2026, 9, 6, tzinfo=UTC), "dia"),
     ),
     (
-        "mod_fi",
-        '<a href="https://defmin.fi/-/drooni-havainto">Droonihavainto Hangossa</a>',
-        "https://defmin.fi/-/drooni-havainto",
-        "Droonihavainto Hangossa",
-        '<meta property="article:published_time" content="2026-09-28T09:02+0300">',
-        (datetime(2026, 9, 28, 6, 2, tzinfo=UTC), "minuto"),
-    ),
-    (
         "muc",
         '<a href="/presse-drohne-legt-flugbetrieb-lahm-43059920">03.10.2025 Presse: Drohne '
         "legt Flugbetrieb lahm</a>",

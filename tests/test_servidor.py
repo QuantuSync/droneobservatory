@@ -103,6 +103,7 @@ def servidor(tmp_path: Path) -> Servidor:
     (trabajo / "publicacion").mkdir()
     (trabajo / "publicacion" / "ucrania.json").write_text("{}", encoding="utf-8")
     (trabajo / "publicacion" / "incidentes.geojson").write_text("{}", encoding="utf-8")
+    (trabajo / "publicacion" / "incidentes_sin_ubicacion.json").write_text("{}", encoding="utf-8")
     (trabajo / "requirements.txt").write_text("", encoding="utf-8")
     (trabajo / ".gitignore").write_text(".venv/\n", encoding="utf-8")
     git("add", ".", directorio=trabajo)

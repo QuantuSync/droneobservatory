@@ -7,9 +7,9 @@ sigue la ruta del dron por radar hasta la frontera, y por eso presencia_dron
 es confirmada. El estado es notificado: solo pasa a confirmado con la
 confirmación del país afectado (confirmaciones oficiales).
 
-Los partes no dicen dónde cruzan: el incidente se sitúa en la zona fronteriza
-de referencia del país (`configuracion/fronteras_ucrania.json`), con el radio
-máximo del esquema.
+Los partes no dicen dónde cruzan: el incidente solo se sabe a nivel de país y
+no lleva punto, así que se publica sin mapa. Antes se situaba en una zona
+fronteriza de referencia de cada país, que era un punto inventado.
 """
 
 import json
@@ -23,7 +23,9 @@ from esquema import Documento
 from proceso.estados import nuevo_estado
 
 DIRECTORIO = Path(__file__).resolve().parent.parent / "configuracion"
-VERSION = "incursion/1"
+VERSION = "incursion/2"
+# Versiones anteriores de estos incidentes, que se rehacen con la actual.
+VERSIONES_ANTERIORES = frozenset({"incursion/1"})
 NOMBRES_ES = {
     "MD": "Moldavia",
     "RO": "Rumanía",
@@ -35,9 +37,10 @@ NOMBRES_EN = {"MD": "Moldova", "RO": "Romania", "PL": "Poland", "HU": "Hungary",
 
 
 @cache
-def fronteras(ruta: Path = DIRECTORIO / "fronteras_ucrania.json") -> dict[str, Any]:
+def paises(ruta: Path = DIRECTORIO / "fronteras_ucrania.json") -> frozenset[str]:
+    """Los países vecinos de Ucrania a los que los partes dicen que cruzan drones."""
     datos: dict[str, Any] = json.loads(ruta.read_text(encoding="utf-8"))
-    return datos
+    return frozenset(datos["paises"])
 
 
 def _instante(valor: str, precision: str) -> Documento:
@@ -45,9 +48,7 @@ def _instante(valor: str, precision: str) -> Documento:
 
 
 def incidente(id_: str, ataque: Documento, cruce: Documento, ahora: datetime) -> Documento:
-    datos = fronteras()
     pais = cruce["pais"]
-    zona = datos["paises"][pais]
     fuente = dict(ataque["fuentes"][-1])
     fuente.update(
         {
@@ -70,13 +71,10 @@ def incidente(id_: str, ataque: Documento, cruce: Documento, ahora: datetime) ->
         },
         "presencia_dron": "confirmada",
         "tiempo": {"inicio": periodo["inicio"], "fin": periodo["fin"]},
-        "lugar": {
-            "punto": {"lat": zona["lat"], "lon": zona["lon"]},
-            "radio_km": datos["radio_km"],
-            "pais": pais,
-            "localidad": zona["nombre"],
-        },
+        "lugar": {"pais": pais, "nivel": "pais"},
         "drones": {"numero": cruce["numero"]},
+        # La Fuerza Aérea sigue por radar a drones del ataque ruso hasta la frontera.
+        "pruebas": {"dron_estatal": True, "entrada_exterior": True, "evidencia": ["rastreo"]},
         "fuentes": [fuente],
         "control": {
             "alta": marca,
@@ -87,27 +85,40 @@ def incidente(id_: str, ataque: Documento, cruce: Documento, ahora: datetime) ->
 
 
 def registrar(almacen: Almacen, ahora: datetime, modelos: frozenset[str]) -> int:
-    """Da de alta las incursiones que aún no existen. Devuelve cuántas crea."""
-    paises = fronteras()["paises"]
+    """Da de alta las incursiones que aún no existen y rehace, con el mismo identificador,
+    las de una versión anterior. Devuelve cuántas crea o rehace."""
+    vecinos = paises()
     existentes = {
-        (i["fuentes"][0]["id"], i["lugar"]["pais"])
+        (i["fuentes"][0]["id"], i["lugar"]["pais"]): i
         for i in almacen.incidentes()
-        if i["tipo"] == "incursion" and i["control"].get("version_extractor") == VERSION
+        if i["tipo"] == "incursion"
+        and i["control"].get("version_extractor") in VERSIONES_ANTERIORES | {VERSION}
     }
-    creadas = 0
+    hechas = 0
     for ataque in almacen.ataques_ucrania():
         if ataque["sentido"] != "RU_UA":
             continue
         for cruce in ataque.get("cruces", []):
             clave = (ataque["fuentes"][-1]["id"], cruce["pais"])
-            if cruce["pais"] not in paises or clave in existentes:
+            anterior = existentes.get(clave)
+            if cruce["pais"] not in vecinos or (
+                anterior is not None and anterior["control"]["version_extractor"] == VERSION
+            ):
                 continue
             anio = int(ataque["periodo"]["fin"]["valor"][:4])
-            documento = incidente(almacen.siguiente_id_incidente(anio), ataque, cruce, ahora)
+            id_ = anterior["id"] if anterior else almacen.siguiente_id_incidente(anio)
+            documento = incidente(id_, ataque, cruce, ahora)
+            if anterior is not None:
+                # Se conservan el alta, la fusión, el episodio y lo que sumaron las
+                # confirmaciones oficiales.
+                documento["control"]["alta"] = anterior["control"]["alta"]
+                for campo in ("fusionado_en", "estado", "fuentes"):
+                    if campo in anterior:
+                        documento[campo] = anterior[campo]
             try:
                 almacen.guardar_incidente(documento, ahora, modelos)
             except DocumentoInvalido:
                 continue
-            existentes.add(clave)
-            creadas += 1
-    return creadas
+            existentes[clave] = documento
+            hechas += 1
+    return hechas

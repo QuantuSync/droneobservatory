@@ -10,6 +10,11 @@ literal, que tiene que estar en el texto enviado) se registra como fuente
   («la policía recibió avisos de drones» no confirma nada).
 - sin_drones: presencia_dron descartada. niega_incidente: desmentido.
 - autoria: atribuido, solo si quien atribuye es un gobierno.
+
+Una autoridad habla de su país: una declaración de una autoridad de otro país no
+cambia el incidente (el gobierno letón que dice que en Letonia no entró ningún dron
+no desmiente el derribo en Estonia). Las fichas anteriores no traen el país de la
+autoridad: sus declaraciones valen como antes.
 """
 
 import contextlib
@@ -93,7 +98,10 @@ def aplicar(
     nuevas: list[tuple[dict[str, Any], Documento]] = []
     for numero, declaracion in enumerate(declaraciones, 1):
         noticia = por_enlace.get(enviadas[declaracion["fuente"] - 1])
+        pais = str(declaracion.get("pais") or "").strip().upper()
         if noticia is None or not cuenta(declaracion):
+            continue
+        if pais and pais != resultado["lugar"]["pais"]:
             continue
         nuevas.append((declaracion, fuente(declaracion, noticia, numero)))
     resultado["fuentes"] = [*resultado["fuentes"], *(f for _, f in nuevas)]

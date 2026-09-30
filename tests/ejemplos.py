@@ -54,6 +54,7 @@ def incidente_completo() -> Documento:
         "episodio": "EODI-EP-2025-0001",
         "presencia_dron": "no_confirmada",
         "origen_demostrado_por": ["rastreo"],
+        "pruebas": {"dron_estatal": False, "entrada_exterior": True, "evidencia": ["rastreo"]},
         "tiempo": {
             "inicio": instante("2025-10-01T20:30Z"),
             "fin": instante("2025-10-01T23:30Z"),
@@ -64,6 +65,10 @@ def incidente_completo() -> Documento:
             "radio_km": 5,
             "pais": "DK",
             "localidad": "Kastrup",
+            "region": "Hovedstaden",
+            "nivel": "instalacion",
+            "suceso": "Københavns Lufthavn",
+            "geocodificacion": "nomenclator",
             "nuts2": "DK01",
         },
         "objetivo": {

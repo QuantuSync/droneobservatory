@@ -29,9 +29,9 @@ en [droneobservatory.eu](https://droneobservatory.eu), en español e inglés.
 | `proceso/` | Validaciones, máquina de estados, regla de credibilidad, ataques, tramos solapados, noticias (filtro, réplicas y agrupación), extracción, validación de fichas, incidentes, fusión y episodios |
 | `modelo/` | Extractor: cliente HTTP del servicio (configurado por secretos), ficha con salida obligada por esquema, coste y límites, lectura de las primeras frases |
 | `almacen/` | Base de datos SQLite con historial, cifrado con age y rama `estado` del repositorio de datos |
-| `exportacion/` | `incidentes.geojson` y `ucrania.json` para la web, cada uno con su lista cerrada de campos |
+| `exportacion/` | `incidentes.geojson`, `incidentes_sin_ubicacion.json` y `ucrania.json` para la web, cada uno con su lista cerrada de campos |
 | `recogida/` | Descarga educada, caché, fuentes de partes (Fuerza Aérea y Ministerio de Defensa ruso), GDELT, ejecución horaria, histórico y auditoría de cobertura |
-| `publicacion/` | Ficheros públicos generados: `ucrania.json` e `incidentes.geojson` |
+| `publicacion/` | Ficheros públicos generados: `ucrania.json`, `incidentes.geojson` (incidentes con punto, para el mapa) e `incidentes_sin_ubicacion.json` (incidentes cuyo lugar solo se sabe a nivel de país o de región) |
 | `web/` | Web pública de una sola pantalla: mapa, fichas, línea de tiempo, metodología y datos abiertos ([`web/README.md`](web/README.md)) |
 | `tests/` | Tests |
 
@@ -93,7 +93,7 @@ Decisiones, valores y cobertura en [`docs/informe_recogida.md`](docs/informe_rec
 ## Licencia
 
 - Código: [Apache-2.0](LICENSE).
-- Datos publicados (`incidentes.geojson`, `ucrania.json`):
+- Datos publicados (`incidentes.geojson`, `incidentes_sin_ubicacion.json`, `ucrania.json`):
   [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Detalle en
   [LICENSE-DATOS](LICENSE-DATOS). Las frases de origen citadas pertenecen a sus
   autores y se reproducen como cita breve junto al enlace.
@@ -105,6 +105,11 @@ Decisiones, valores y cobertura en [`docs/informe_recogida.md`](docs/informe_rec
   OpenStreetMap (Nominatim), bajo licencia ODbL.
 - `configuracion/instalaciones_europa.json` contiene datos © colaboradores de
   OpenStreetMap, bajo licencia ODbL.
+- `configuracion/fronteras_europa.json` sale de
+  [Natural Earth](https://www.naturalearthdata.com), de dominio público.
+- `configuracion/regiones_localidades.json` contiene datos de
+  [GeoNames](https://www.geonames.org), bajo licencia
+  [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 - `configuracion/localidades_europa.json` contiene datos de
   [GeoNames](https://www.geonames.org), bajo licencia
   [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).

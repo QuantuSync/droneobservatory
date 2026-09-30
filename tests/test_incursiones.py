@@ -27,7 +27,8 @@ def test_un_cruce_a_rumania_es_una_incursion_notificada() -> None:
     assert (incidente["tipo"], incidente["estado"]["actual"]) == ("incursion", "notificado")
     assert incidente["origen_demostrado_por"] == ["rastreo"]
     assert incidente["presencia_dron"] == "confirmada"
-    assert (incidente["lugar"]["pais"], incidente["lugar"]["radio_km"]) == ("RO", 50)
+    # Los partes solo dicen a qué país cruzan: sin punto, se publica sin mapa.
+    assert incidente["lugar"] == {"pais": "RO", "nivel": "pais"}
     assert incidente["drones"]["numero"] == {"min": 2, "max": 2}
     # Volver a registrar no la duplica.
     assert incursiones.registrar(almacen, AHORA, MODELOS) == 0
@@ -37,3 +38,20 @@ def test_bielorrusia_queda_fuera() -> None:
     almacen = Almacen.abrir()
     con_cruce(almacen, "BY")
     assert incursiones.registrar(almacen, AHORA, MODELOS) == 0
+
+
+def test_una_incursion_de_la_version_anterior_se_rehace_sin_punto() -> None:
+    almacen = Almacen.abrir()
+    con_cruce(almacen, "RO")
+    incursiones.registrar(almacen, AHORA, MODELOS)
+    (incidente,) = almacen.incidentes()
+    # Como la guardaba la versión anterior: en una zona fronteriza inventada.
+    incidente["lugar"] = {"punto": {"lat": 45.3, "lon": 28.4}, "radio_km": 50, "pais": "RO"}
+    incidente["control"]["version_extractor"] = "incursion/1"
+    incidente.pop("pruebas")
+    almacen.guardar_incidente(incidente, AHORA, MODELOS)
+    assert incursiones.registrar(almacen, AHORA, MODELOS) == 1
+    (rehecho,) = almacen.incidentes()
+    assert rehecho["id"] == incidente["id"]
+    assert "punto" not in rehecho["lugar"]
+    assert rehecho["control"]["version_extractor"] == incursiones.VERSION

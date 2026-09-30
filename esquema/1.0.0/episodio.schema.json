@@ -17,6 +17,11 @@
       "minItems": 1,
       "uniqueItems": true,
       "items": {"type": "string", "pattern": "^EODI-\\d{4}-\\d{5}$"}
+    },
+    "deshecho": {
+      "x-visibilidad": "interno",
+      "description": "Episodio que las reglas ya no forman (nada se borra): sus incidentes no lo llevan.",
+      "$ref": "urn:eodi:esquema:1.0.0:comun#/$defs/instante"
     }
   }
 }

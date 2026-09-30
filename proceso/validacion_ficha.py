@@ -10,11 +10,16 @@ Comprobaciones:
   texto de la fuente que cita (así no se cuela una frase inventada);
 - la confianza está entre 0 y 1 y llega al umbral;
 - el país existe en la lista de países europeos y las coordenadas de un lugar
-  nuevo caen dentro de su caja;
+  nuevo caen dentro de su polígono (`proceso/fronteras.py`);
+- el nombre del lugar del suceso está en la frase que lo cita;
+- el cierre solo vale si su frase habla de un cierre (o, para «no», de que todo
+  siguió con normalidad): el modelo no puede poner un cierre que la fuente no dice;
 - los rangos son coherentes y caben en los topes;
 - las fechas son posibles: no futuras, no posteriores al primer artículo y no
   más de una semana anteriores;
-- el objetivo existe: el conocido del nomenclátor o un lugar nuevo válido.
+- el país del suceso se sabe: el de la ficha o el del lugar del suceso. Nunca sale
+  del objetivo del candidato, que es donde casó un nombre de la noticia y no
+  necesariamente donde ocurrió el suceso.
 """
 
 import json
@@ -25,6 +30,7 @@ from functools import cache
 from pathlib import Path
 from typing import Any
 
+from proceso.fronteras import dentro_del_pais, nombres_del_pais, paises
 from proceso.noticias import normalizar
 
 DIRECTORIO = Path(__file__).resolve().parent.parent / "configuracion"
@@ -46,6 +52,11 @@ MARGEN_ARTICULO = timedelta(hours=1)
 MAX_LETRAS_NOMBRE = 80
 # Palabras de menos de 4 letras («de», «am», «the») no identifican una instalación.
 MIN_LETRAS_PALABRA = 4
+# Un nombre de lugar se reconoce en su frase aunque esté declinado: cada palabra suya
+# comparte con alguna de la frase todas sus letras menos las dos últimas («Rzeszów» en «w
+# Rzeszowie», «Moldova» en «Moldovei») y al menos tres («Łódź» en «w Łodzi»).
+LETRAS_DECLINACION = 2
+MIN_LETRAS_RAIZ = 3
 RANGOS = ("drones", "cierre_minutos", "vuelos_desviados", "vuelos_cancelados", "vuelos_retrasados")
 TOPES = {
     "drones": MAX_DRONES,
@@ -63,12 +74,30 @@ def cajas_paises(ruta: Path = DIRECTORIO / "paises_europa.json") -> dict[str, li
     return datos
 
 
-def dentro(pais: str, lat: float, lon: float) -> bool:
-    caja = cajas_paises().get(pais)
-    if caja is None:
-        return False
-    lat_min, lat_max, lon_min, lon_max = caja
-    return lat_min <= lat <= lat_max and lon_min <= lon <= lon_max
+@cache
+def palabras_cierre(ruta: Path = DIRECTORIO / "cierres.json") -> dict[str, re.Pattern[str]]:
+    """Por clase («cierre», «normalidad»), un patrón de sus comienzos de palabra."""
+    datos = json.loads(ruta.read_text(encoding="utf-8"))
+    return {
+        clase: re.compile(
+            r"(?<!\w)(?:" + "|".join(re.escape(normalizar(p)) for p in datos[clase]) + ")"
+        )
+        for clase in ("cierre", "normalidad")
+    }
+
+
+def nombrado_en(nombre: str, frase: str) -> bool:
+    """Cada palabra del nombre está en la frase, entera o declinada."""
+    palabras_frase = normalizar(frase).split()
+
+    def esta(palabra: str) -> bool:
+        raiz = max(MIN_LETRAS_RAIZ, len(palabra) - LETRAS_DECLINACION)
+        return any(
+            p == palabra or (len(p) >= raiz and p[:raiz] == palabra[:raiz]) for p in palabras_frase
+        )
+
+    palabras = normalizar(nombre).split()
+    return bool(palabras) and all(esta(p) for p in palabras)
 
 
 @dataclass(frozen=True)
@@ -96,14 +125,20 @@ class Validada:
 
     @property
     def publicable(self) -> bool:
-        """Es un incidente. El país y la fecha, si la ficha no los da o no validan, salen
-        del objetivo y del candidato (con precisión de día)."""
-        otro_sitio = self.valor("objetivo_conocido") is False and "lugar_nuevo" not in self.campos
+        """Es un incidente y se sabe su país. La fecha, si la ficha no la da o no valida,
+        sale del candidato (con precisión de día)."""
         return (
             "es_incidente" in self.campos
             and bool(self.campos["es_incidente"]["valor"])
-            and not otro_sitio
+            and self.pais is not None
         )
+
+    @property
+    def pais(self) -> str | None:
+        """El país del suceso: el de la ficha o, si no lo da, el de su lugar."""
+        suceso = self.valor("lugar_suceso")
+        pais = self.valor("pais") or (suceso["pais"] if suceso else None)
+        return str(pais) if pais else None
 
     def valor(self, campo: str) -> Any:
         return self.campos[campo]["valor"] if campo in self.campos else None
@@ -157,19 +192,80 @@ def _lugar_valido(valor: Any) -> str | None:
         or not isinstance(lon, int | float)
     ):
         return "lugar sin país o coordenadas"
-    if not dentro(pais, float(lat), float(lon)):
+    if not dentro_del_pais(pais, float(lat), float(lon)):
         return "coordenadas fuera del país citado"
     return None
 
 
-def _valor_valido(nombre: str, valor: Any, contexto: Contexto) -> str | None:
+def _es_el_objetivo(nombre: str, frase: str, contexto: Contexto) -> bool:
+    """El nombre es el de la instalación conocida y la frase la nombra, aunque de otra forma
+    («Aeroport d'Eivissa - es Codolar» por «el aeropuerto de Ibiza»)."""
+    propias = {
+        p
+        for p in normalizar(nombre).split()
+        if len(p) >= MIN_LETRAS_PALABRA and not p.startswith(contexto.prefijos_genericos)
+    }
+    en_frase = set(normalizar(frase).split())
+    return (
+        bool(propias)
+        and propias <= contexto.palabras_objetivo
+        and bool(en_frase & contexto.palabras_objetivo)
+    )
+
+
+def propias_en_fuentes(nombre: str, textos: tuple[str, ...], genericos: tuple[str, ...]) -> bool:
+    """Cada palabra propia del nombre (sin las de tipo de lugar) está, entera o declinada,
+    en la frase o en el texto de las fuentes: «Flughafen Bremen» por «Bremer Flughafen»."""
+    propias = [
+        p
+        for p in normalizar(nombre).split()
+        if len(p) >= MIN_LETRAS_PALABRA and not p.startswith(genericos)
+    ]
+    return bool(propias) and all(any(nombrado_en(p, t) for t in textos) for p in propias)
+
+
+def _suceso_valido(
+    valor: Any, frase: str, contexto: Contexto | None = None, textos: tuple[str, ...] = ()
+) -> str | None:
+    if not isinstance(valor, dict) or valor.get("pais") not in paises():
+        return "país desconocido"
+    nombre = str(valor["nombre"]).strip()
+    if len(nombre) > MAX_LETRAS_NOMBRE:
+        return "nombre demasiado largo"
+    genericos = contexto.prefijos_genericos if contexto is not None else ()
+    fuentes = (frase, *(contexto.textos if contexto is not None else ()), *textos)
+    if (
+        nombrado_en(nombre, frase)
+        or propias_en_fuentes(nombre, fuentes, genericos)
+        or (contexto is not None and _es_el_objetivo(nombre, frase, contexto))
+    ):
+        return None
+    return "el nombre no está en la frase"
+
+
+def _cierre_valido(valor: Any, frase: str) -> str | None:
+    """Un cierre sin palabra de cierre en su frase es una suposición del modelo."""
+    patrones = palabras_cierre()
+    normal = normalizar(frase)
+    if patrones["cierre"].search(normal):
+        return None
+    if valor == "no" and patrones["normalidad"].search(normal):
+        return None
+    return "la frase no habla de cierre"
+
+
+def _valor_valido(nombre: str, valor: Any, frase: str, contexto: Contexto) -> str | None:
     """Motivo por el que el valor no vale, o None."""
     if nombre in RANGOS:
         return _rango_valido(nombre, valor)
     if nombre == "pais":
-        return None if isinstance(valor, str) and valor in cajas_paises() else "país desconocido"
+        return None if isinstance(valor, str) and valor in paises() else "país desconocido"
     if nombre == "lugar_nuevo":
         return _lugar_valido(valor)
+    if nombre == "lugar_suceso":
+        return _suceso_valido(valor, frase, contexto)
+    if nombre == "cierre" and valor in {"si", "no"}:
+        return _cierre_valido(valor, frase)
     if nombre in {"inicio", "fin"}:
         momento = leer_fecha(valor) if isinstance(valor, str) else None
         if momento is None:
@@ -219,7 +315,7 @@ def validar(ficha: dict[str, Any], contexto: Contexto) -> Validada:
             # Una frase más larga se recorta a sus primeras 25 palabras: sigue siendo cita literal.
             campo = {**campo, "frase": " ".join(campo["frase"].split()[:MAX_PALABRAS_FRASE])}
         motivo = _frase_valida(campo, contexto.textos) or _valor_valido(
-            nombre, campo["valor"], contexto
+            nombre, campo["valor"], str(campo["frase"]), contexto
         )
         if motivo:
             resultado.motivos.append(f"{nombre}: {motivo}")
@@ -249,9 +345,13 @@ def validar(ficha: dict[str, Any], contexto: Contexto) -> Validada:
         }
         conocido = False
         resultado.motivos.append("objetivo_nombre: no es la instalación conocida")
-    if conocido is not False and resultado.valor("pais") not in {None, contexto.pais_objetivo}:
-        # Un dron en Rumanía no ocurre en una base de Alemania: el objetivo conocido no es.
-        resultado.campos.pop("pais")
+    suceso = resultado.valor("lugar_suceso")
+    if suceso and resultado.valor("pais") not in {None, suceso["pais"]}:
+        resultado.campos.pop("lugar_suceso")
+        resultado.motivos.append("lugar_suceso: país distinto del del incidente")
+    if conocido is not False and resultado.pais not in {None, contexto.pais_objetivo}:
+        # Un dron en Rumanía no ocurre en una base de Alemania: el objetivo conocido no es,
+        # pero el suceso sigue siendo del país que dice la ficha.
         resultado.campos["objetivo_conocido"] = {
             **resultado.campos.get(
                 "objetivo_conocido", {"fuente": 1, "frase": "", "confianza": 1.0}
@@ -259,14 +359,74 @@ def validar(ficha: dict[str, Any], contexto: Contexto) -> Validada:
             "valor": False,
         }
         conocido = False
-        resultado.motivos.append("pais: distinto del país del objetivo conocido")
+        resultado.motivos.append("objetivo_conocido: el suceso es de otro país")
     nuevo = resultado.valor("lugar_nuevo")
-    if conocido is False and nuevo and nuevo["pais"] != resultado.valor("pais"):
+    if conocido is False and nuevo and nuevo["pais"] != resultado.pais:
         resultado.campos.pop("lugar_nuevo")
         resultado.motivos.append("lugar_nuevo: país distinto del del incidente")
-    if conocido is False and "lugar_nuevo" not in resultado.campos:
-        resultado.campos.pop("pais", None)
-        resultado.motivos.append("objetivo: ni el conocido ni un lugar nuevo válido")
+    _pais_nombrado(resultado, ficha, contexto.textos)
+    if resultado.pais is None:
+        resultado.motivos.append("pais: sin país del suceso")
     if not resultado.titulo_es or not resultado.titulo_en:
         resultado.motivos.append("sin título")
+    return resultado
+
+
+def pais_nombrado(pais: str, textos: tuple[str, ...]) -> bool:
+    """Alguna fuente nombra el país, en cualquier idioma y declinado («Republicii Moldova»,
+    «Estonian airspace»)."""
+    return any(nombrado_en(n, texto) for n in nombres_del_pais(pais) for texto in textos)
+
+
+def _pais_nombrado(resultado: Validada, ficha: dict[str, Any], textos: tuple[str, ...]) -> None:
+    """El país que da la ficha vale aunque su frase no esté literal en la fuente, si la fuente
+    nombra ese país: el modelo parafrasea a veces la frase, pero el país no lo inventa si la
+    fuente lo dice. Solo cuando la ficha no da ningún país válido."""
+    campo = ficha.get("pais")
+    if resultado.pais is not None or not isinstance(campo, dict):
+        return
+    valor = campo.get("valor")
+    if isinstance(valor, str) and valor in paises() and pais_nombrado(valor, textos):
+        resultado.campos["pais"] = campo
+        resultado.motivos.append("pais: la fuente nombra el país")
+
+
+def revalidar(
+    validada: Validada,
+    ficha: dict[str, Any] | None = None,
+    textos: tuple[str, ...] = (),
+    genericos: tuple[str, ...] = (),
+) -> Validada:
+    """Repite sobre una ficha ya guardada la comprobación del cierre, que solo necesita la
+    frase, por si se validó con reglas anteriores; y, con la ficha en bruto y los textos que
+    se guardan (los titulares), acepta el país que la fuente nombra y el lugar del suceso
+    cuyas palabras propias están en su frase o en las fuentes."""
+    resultado = Validada(
+        campos=dict(validada.campos),
+        motivos=list(validada.motivos),
+        titulo_es=validada.titulo_es,
+        titulo_en=validada.titulo_en,
+    )
+    if ficha is not None:
+        _pais_nombrado(resultado, ficha, textos)
+        suceso = ficha.get("lugar_suceso")
+        if "lugar_suceso" not in resultado.campos and isinstance(suceso, dict):
+            frase = str(suceso.get("frase", ""))
+            contexto = Contexto(
+                textos=textos, pais_objetivo="", primer_articulo=datetime.now(UTC),
+                ahora=datetime.now(UTC), prefijos_genericos=genericos,
+            )  # fmt: skip
+            if genericos and _suceso_valido(suceso.get("valor"), frase, contexto) is None:
+                resultado.campos["lugar_suceso"] = suceso
+    cierre = resultado.campos.get("cierre")
+    if cierre is not None and cierre["valor"] in {"si", "no"}:
+        motivo = _cierre_valido(cierre["valor"], str(cierre.get("frase", "")))
+        if motivo:
+            resultado.campos.pop("cierre")
+            resultado.motivos.append(f"cierre: {motivo}")
+    if "cierre_minutos" in resultado.campos and resultado.valor("cierre") != "si":
+        resultado.campos.pop("cierre_minutos")
+    suceso = resultado.valor("lugar_suceso")
+    if suceso and resultado.valor("pais") not in {None, suceso["pais"]}:
+        resultado.campos.pop("lugar_suceso")
     return resultado

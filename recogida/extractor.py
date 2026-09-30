@@ -315,42 +315,35 @@ def orden_reconstruir(args: argparse.Namespace, almacen: Almacen, ahora: datetim
     return 0
 
 
-def principal(argumentos: list[str] | None = None) -> int:
-    opciones = argparse.ArgumentParser(description=__doc__)
+def opciones_base(descripcion: str | None) -> argparse.ArgumentParser:
+    """Opciones comunes de las órdenes que trabajan sobre la base remota o una local."""
+    opciones = argparse.ArgumentParser(description=descripcion)
     opciones.add_argument("--repositorio", default=remoto.REPOSITORIO)
     opciones.add_argument("--correo", default="")
     opciones.add_argument("--sin-subir", action="store_true")
     opciones.add_argument(
         "--base", type=Path, help="base cifrada local: se lee y se reescribe, sin subir"
     )
-    ordenes = opciones.add_subparsers(dest="orden", required=True)
-    o_estimar = ordenes.add_parser("estimar")
-    o_estimar.add_argument("--muestra", type=int, default=MUESTRA)
-    o_lote = ordenes.add_parser("lote")
-    o_lote.add_argument(
-        "--reserva", type=float, default=0.0, help="dólares del límite que se dejan sin usar"
-    )
-    o_recuperar = ordenes.add_parser("recuperar")
-    o_recuperar.add_argument("--lote", required=True, help="identificador del lote")
-    ordenes.add_parser("reconstruir")
-    args = opciones.parse_args(argumentos)
+    return opciones
+
+
+def con_base(args: argparse.Namespace, orden: Callable[[Almacen], int]) -> int:
+    """Descarga la base (o abre la local), ejecuta la orden, guarda, publica y sube."""
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s: %(message)s")
     cargar_clave_local()
     servicio.cargar_local()
-    ahora = datetime.now(UTC)
     with TemporaryDirectory() as temporal:
         ruta = Path(temporal) / remoto.FICHERO
         if args.base is None and not remoto.descargar(ruta, args.repositorio):
             registro.error("no hay base en la rama %s", remoto.RAMA)
             return 1
         almacen = Almacen(abrir_cifrada(args.base or ruta))
-        ordenes_ = {
-            "estimar": orden_estimar,
-            "lote": orden_lote,
-            "recuperar": orden_recuperar,
-            "reconstruir": orden_reconstruir,
-        }
-        salida = ordenes_[args.orden](args, almacen, ahora)
+        salida = orden(almacen)
+        if salida != 0:
+            # Una orden que se para a medias (una revisión cuyo lote no cabe en el límite)
+            # no deja nada: ni publica ni sube una base a medio cambiar.
+            registro.error("la orden terminó con código %d: no se publica ni se sube", salida)
+            return salida
         # Primero se guarda la base, con lo que ya está pagado; después se publica, con la
         # hora de este momento (la orden puede haber durado horas).
         guardar_cifrada(almacen.conexion, ruta)
@@ -367,6 +360,29 @@ def principal(argumentos: list[str] | None = None) -> int:
             remoto.subir(ruta, args.correo, args.repositorio)
             registro.info("base subida a la rama %s", remoto.RAMA)
     return salida
+
+
+def principal(argumentos: list[str] | None = None) -> int:
+    opciones = opciones_base(__doc__)
+    ordenes = opciones.add_subparsers(dest="orden", required=True)
+    o_estimar = ordenes.add_parser("estimar")
+    o_estimar.add_argument("--muestra", type=int, default=MUESTRA)
+    o_lote = ordenes.add_parser("lote")
+    o_lote.add_argument(
+        "--reserva", type=float, default=0.0, help="dólares del límite que se dejan sin usar"
+    )
+    o_recuperar = ordenes.add_parser("recuperar")
+    o_recuperar.add_argument("--lote", required=True, help="identificador del lote")
+    ordenes.add_parser("reconstruir")
+    args = opciones.parse_args(argumentos)
+    ordenes_ = {
+        "estimar": orden_estimar,
+        "lote": orden_lote,
+        "recuperar": orden_recuperar,
+        "reconstruir": orden_reconstruir,
+    }
+    ahora = datetime.now(UTC)
+    return con_base(args, lambda almacen: ordenes_[args.orden](args, almacen, ahora))
 
 
 if __name__ == "__main__":

@@ -94,6 +94,13 @@ CAMPOS_PUBLICOS_INCIDENTE: frozenset[str] = frozenset(
     }
 )
 
+# Incidentes sin punto (su lugar solo se sabe a nivel de país o de región): los mismos campos
+# que en el mapa, sin radio y con el nivel del lugar y la región.
+CAMPOS_PUBLICOS_SIN_UBICACION: frozenset[str] = (CAMPOS_PUBLICOS_INCIDENTE - {"lugar.radio_km"}) | {
+    "lugar.region",
+    "lugar.nivel",
+}
+
 # Capa de Ucrania: un ataque con sus regiones identificadas por código ISO 3166-2.
 CAMPOS_PUBLICOS_ATAQUE: frozenset[str] = frozenset(
     {

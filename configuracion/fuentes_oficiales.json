@@ -129,16 +129,6 @@
       "fecha": "(\\d{2}\\.\\d{2}\\.\\d{4}) zurück zur Liste"
     },
     {
-      "id": "mod_fi",
-      "medio": "Puolustusministeriö",
-      "pais": "FI",
-      "idioma": "fi",
-      "tipo": "pagina",
-      "zona": "Europe/Helsinki",
-      "url": "https://defmin.fi/ajankohtaista",
-      "enlace": "defmin\\.fi/-/[a-z0-9-]+"
-    },
-    {
       "id": "lgs",
       "medio": "Latvijas Gaisa Satiksme",
       "pais": "LV",

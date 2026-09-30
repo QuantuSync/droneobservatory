@@ -13,6 +13,7 @@ from typing import Any, TypeIs
 from esquema import Documento, Esquema, validador
 from proceso.credibilidad import FIABILIDAD_INTERNA, Fiabilidad
 from proceso.estados import Capa, Estado, errores_historial
+from proceso.fronteras import dentro_del_pais
 
 RADIO_MIN_KM = 0.1
 RADIO_MAX_KM = 50
@@ -233,8 +234,20 @@ def errores_tipo(documento: Documento) -> list[Error]:
     return errores
 
 
+def errores_ubicacion(documento: Documento) -> list[Error]:
+    """El punto, si lo hay, cae dentro del país del incidente (fronteras de Natural Earth)."""
+    lugar = _dict(documento.get("lugar"))
+    punto = _dict(lugar.get("punto"))
+    lat, lon, pais = punto.get("lat"), punto.get("lon"), lugar.get("pais")
+    if not _es_numero(lat) or not _es_numero(lon) or not isinstance(pais, str):
+        return []
+    if dentro_del_pais(pais, float(lat), float(lon)):
+        return []
+    return [Error("lugar.punto", f"fuera de {pais}: {lat}, {lon}")]
+
+
 def errores_incidente(documento: Documento, vocabulario_modelos: frozenset[str]) -> list[Error]:
-    errores: list[Error] = []
+    errores: list[Error] = errores_ubicacion(documento)
 
     tiempo = _dict(documento.get("tiempo"))
     inicio, fin = leer_instante(tiempo.get("inicio")), leer_instante(tiempo.get("fin"))

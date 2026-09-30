@@ -1,0 +1,19 @@
+{
+ "descripcion": "Comienzos de palabra, normalizados (minúsculas, sin acentos), con los que una frase habla del cierre o la paralización de un aeropuerto o del espacio aéreo, y con los que dice que siguió abierto o funcionando con normalidad. El cierre de una ficha solo vale si su frase contiene uno de ellos: cierre «si» o «no» con una palabra de cierre; «no», también con una de normalidad.",
+ "cierre": [
+  "cerr", "clausur", "paraliz", "suspend", "interrump", "clos", "shut", "halt", "paralys",
+  "grounded", "geschlossen", "schließ", "schliess", "gesperrt", "sperr", "eingestellt",
+  "einstell", "stillgelegt", "lahm", "unterbroch", "ferm", "interromp", "chius", "chiud",
+  "sospes", "sospen", "paralizz", "bloccat", "fech", "encerr", "suspens", "paralis",
+  "gesloten", "sluit", "stilgelegd", "dicht", "lukk", "steng", "stans", "stopp", "stang",
+  "indstill", "suljet", "sulki", "sulje", "keskeyt", "zamkn", "zamkni", "wstrzym",
+  "sparaliz", "inchis", "inchid", "blocat", "uzavren", "uzavret", "uzavrel", "zastaven",
+  "zatvor", "zaprt", "lezar", "bezar", "uzdar", "slegt", "suletud", "sulges", "затвор",
+  "закрыт", "закрит", "закрив", "закрыв", "κλειστ", "κλεισ"
+ ],
+ "normalidad": [
+  "normal", "open", "abiert", "offen", "geoffnet", "ouvert", "apert", "otwart", "deschis",
+  "aben", "apen", "oppet", "avoin", "auki", "nyitva", "atvir", "atvert", "avat", "открыт",
+  "відкрит", "ανοιχτ", "sin incidencias", "unaffected", "ohne einschrank"
+ ]
+}

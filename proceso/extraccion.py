@@ -6,10 +6,15 @@ el número de drones), con un tope de llamadas por candidato. Al modelo solo
 van el titular y las primeras frases de como mucho tres fuentes; la página se
 lee en memoria y no se guarda.
 
-Vocabularios que crecen con el uso: el objetivo sale primero del nomenclátor
-y del vocabulario de lugares; el modelo solo propone un lugar nuevo si la
-noticia habla de otro sitio, y ese lugar, ya validado, amplía el vocabulario.
-Igual con los modelos de dron.
+El lugar del incidente es el del suceso que describe la ficha, situado con el
+nomenclátor, el vocabulario de lugares y, como último recurso, el GKG
+(`proceso/ubicacion.py`); el objetivo del candidato solo es donde casó un nombre
+del titular. Vocabularios que crecen con el uso: un lugar nuevo que propone la
+ficha, validado y usado como lugar del suceso, amplía el vocabulario. Igual con
+los modelos de dron.
+
+Una ficha nueva que ya no es publicable, o cuyo lugar no vale, retira el
+incidente que tuviera el candidato: deja de publicarse, sin borrarse.
 
 Cada llamada anota sus tokens y su coste; los límites de gasto son duros.
 
@@ -17,6 +22,7 @@ Las llamadas directas se paran en el límite de gasto y en el primer error del
 servicio: lo que no se llama queda pendiente para la ejecución siguiente.
 """
 
+import contextlib
 import hashlib
 import logging
 import time
@@ -32,7 +38,8 @@ from esquema import Documento
 from modelo import coste, ficha, paginas
 from modelo.cliente import ErrorTemporal, LlamadaFallida
 from proceso import declaraciones
-from proceso.incidentes import Objetivo, construir, huella
+from proceso.estados import Estado, TransicionNoPermitida, transitar
+from proceso.incidentes import aplicar_reglas, construir, huella
 from proceso.noticias import (
     GKG,
     TIPO_APARENTE,
@@ -42,15 +49,17 @@ from proceso.noticias import (
     nomenclator,
     normalizar,
 )
+from proceso.ubicacion import Objetivo, Pistas, Ubicacion, ubicar
 from proceso.validacion_ficha import (
     MIN_LETRAS_PALABRA,
     Contexto,
     Validada,
     otro_objetivo,
+    revalidar,
     validar,
 )
+from proceso.validaciones import errores_ubicacion as validar_incidente_ubicacion
 from recogida.descarga import Descargador
-from recogida.lugares_osm import RADIO_KM
 from recogida.plazo import Plazo, TiempoAgotado
 
 registro = logging.getLogger(__name__)
@@ -67,8 +76,11 @@ VOCABULARIO_LUGARES = "lugar"
 VOCABULARIO_MODELOS = "modelo_dron"
 # Las peticiones de un lote se identifican con caracteres simples y 64 como mucho.
 MAX_ID_LOTE = 64
-# Categoría del objetivo a tipo de lugar del nomenclátor, para el radio.
-TIPO_LUGAR = {"aeropuerto": "aeropuerto", "base_militar": "base", "energia": "nuclear"}
+# El motivo de una retirada es para leerlo en la base: basta con su comienzo.
+MAX_LETRAS_MOTIVO = 500
+# Fuentes oficiales que confirman un incidente (recogida/oficiales.py): se conservan al
+# rehacerlo, porque sus notas solo se leen mientras siguen en la portada del organismo.
+FIABILIDAD_OFICIAL = "A"
 
 
 class Servicio(Protocol):
@@ -207,8 +219,8 @@ def modelos_validos(almacen: Almacen, base: frozenset[str]) -> frozenset[str]:
     return base | frozenset(almacen.vocabulario(VOCABULARIO_MODELOS))
 
 
-def _ampliar_vocabularios(almacen: Almacen, validada: Validada) -> Objetivo | None:
-    """Añade el lugar nuevo y el modelo de dron; devuelve el objetivo nuevo si lo hay."""
+def _ampliar_modelos(almacen: Almacen, validada: Validada) -> None:
+    """Añade el modelo de dron al vocabulario, o usa la grafía que ya tenía."""
     modelo = validada.valor("modelo_dron")
     if modelo:
         # Primero el vocabulario: un modelo ya visto con otra grafía se reutiliza.
@@ -216,22 +228,33 @@ def _ampliar_vocabularios(almacen: Almacen, validada: Validada) -> Objetivo | No
         canonico = conocidos.get(clave(modelo), modelo.strip())
         almacen.ampliar_vocabulario(VOCABULARIO_MODELOS, canonico, {"nombre": canonico})
         validada.campos["modelo_dron"] = {**validada.campos["modelo_dron"], "valor": canonico}
-    nuevo = validada.valor("lugar_nuevo")
-    if validada.valor("objetivo_conocido") is not False or not nuevo:
-        return None
-    id_ = f"{nuevo['pais']}-{clave(nuevo['nombre'])}"[:MAX_ID_LOTE]
-    objetivo = Objetivo(
-        id=id_,
-        categoria=nuevo["categoria"],
-        nombre=nuevo["nombre"].strip(),
-        pais=nuevo["pais"],
-        lat=round(float(nuevo["lat"]), 5),
-        lon=round(float(nuevo["lon"]), 5),
-        # El radio que da el nomenclátor a su tipo de lugar; a lo demás, el de una base.
-        radio_km=RADIO_KM.get(TIPO_LUGAR.get(nuevo["categoria"], "base"), RADIO_KM["base"]),
+
+
+def _ampliar_lugares(almacen: Almacen, ubicacion: Ubicacion) -> None:
+    """Un lugar nuevo de la ficha, ya situado dentro de su país, amplía el vocabulario."""
+    if ubicacion.origen == "lugar_nuevo" and ubicacion.sitio is not None:
+        sitio = ubicacion.sitio
+        id_ = sitio.id[:MAX_ID_LOTE]
+        almacen.ampliar_vocabulario(VOCABULARIO_LUGARES, id_, {**sitio.__dict__, "id": id_})
+
+
+def nombres_objetivo(id_lugar: str, objetivo: Objetivo) -> tuple[str, ...]:
+    """Los nombres del objetivo del candidato: los del nomenclátor o el del vocabulario."""
+    sitio = nomenclator().lugares.get(id_lugar)
+    if sitio is None:
+        return (objetivo.nombre,)
+    return (sitio.nombre, *sitio.alias, *sitio.ciudades)
+
+
+def pistas(almacen: Almacen, peticion: Peticion) -> Pistas:
+    id_lugar = peticion.candidato["lugar"]
+    return Pistas(
+        lugar_candidato=id_lugar,
+        objetivo_candidato=peticion.objetivo,
+        nombres_candidato=nombres_objetivo(id_lugar, peticion.objetivo),
+        vocabulario=almacen.vocabulario(VOCABULARIO_LUGARES),
+        genericos=prefijos_genericos(),
     )
-    almacen.ampliar_vocabulario(VOCABULARIO_LUGARES, id_, objetivo.__dict__)
-    return objetivo
 
 
 @cache
@@ -302,12 +325,71 @@ def procesar_respuesta(
         }
         if validada.publicable:
             incidente_id = _alta(almacen, peticion, validada, ahora, modelos_base, documento)
+    if incidente_id is None:
+        motivo = "; ".join(documento["motivos"]) or "no es un incidente"
+        retirar_del_candidato(almacen, peticion.candidato["id"], motivo, ahora, modelos_base)
     documento["incidente"] = incidente_id
     almacen.guardar_extraccion(
         peticion.candidato["id"], _fecha(ahora), ficha.VERSION, peticion.huella,
         incidente_id is not None, documento,
     )  # fmt: skip
     return incidente_id
+
+
+def incidente_del_candidato(almacen: Almacen, candidato_id: str) -> str | None:
+    """El último incidente que dio de alta alguna ficha del candidato."""
+    anteriores = [e["incidente"] for e in almacen.extracciones(candidato_id)]
+    return next((i for i in reversed(anteriores) if i), None)
+
+
+def retirar(
+    almacen: Almacen, id_: str, motivo: str, ahora: datetime, modelos_base: frozenset[str]
+) -> bool:
+    """Deja de publicar el incidente, sin borrarlo. True si estaba publicado."""
+    incidente = almacen.incidente(id_)
+    if incidente is None or "retirado" in incidente:
+        return False
+    documento = {k: v for k, v in incidente.items() if k not in {"episodio", "fusionado_en"}}
+    documento["retirado"] = {
+        "fecha": {"valor": ahora.strftime("%Y-%m-%dT%H:%MZ"), "precision": "minuto"},
+        "motivo": motivo[:MAX_LETRAS_MOTIVO],
+    }
+    if validar_incidente_ubicacion(documento):
+        # Un punto que no vale no se guarda ni siquiera en un incidente retirado.
+        documento["lugar"] = {
+            k: v for k, v in documento["lugar"].items() if k not in {"punto", "radio_km"}
+        }
+    almacen.guardar_incidente(documento, ahora, modelos_validos(almacen, modelos_base))
+    return True
+
+
+def retirar_del_candidato(
+    almacen: Almacen, candidato_id: str, motivo: str, ahora: datetime, modelos_base: frozenset[str]
+) -> bool:
+    id_ = incidente_del_candidato(almacen, candidato_id)
+    return id_ is not None and retirar(almacen, id_, motivo, ahora, modelos_base)
+
+
+def conservar_oficiales(incidente: Documento, anterior: Documento) -> Documento:
+    """El incidente rehecho con las fuentes oficiales que confirmaban el anterior."""
+    ids = {f["id"] for f in incidente["fuentes"]}
+    oficiales = [
+        f for f in anterior["fuentes"]
+        if f["fiabilidad"] == FIABILIDAD_OFICIAL and f.get("es_autoridad") and f["id"] not in ids
+    ]  # fmt: skip
+    if not oficiales:
+        return incidente
+    resultado = {**incidente, "fuentes": [*incidente["fuentes"], *oficiales]}
+    for fuente in oficiales:
+        if resultado["estado"]["actual"] == Estado.CONFIRMADO:
+            break
+        # Un desmentido de una autoridad más fiable no se revierte con esta nota.
+        with contextlib.suppress(TransicionNoPermitida):
+            resultado["estado"] = transitar(
+                resultado["estado"], Estado.CONFIRMADO, fuente["fecha"], fuente["id"],
+                {f["id"]: f for f in resultado["fuentes"]},
+            )  # fmt: skip
+    return resultado
 
 
 def _alta(
@@ -317,48 +399,64 @@ def _alta(
     ahora: datetime,
     modelos_base: frozenset[str],
     documento: Documento,
+    rehacer: bool = False,
 ) -> str | None:
-    objetivo = _ampliar_vocabularios(almacen, validada) or peticion.objetivo
-    anteriores = [e["incidente"] for e in almacen.extracciones(peticion.candidato["id"])]
-    existente = next((i for i in reversed(anteriores) if i), None)
+    """Da de alta o rehace el incidente del candidato. Con `rehacer`, el incidente no
+    conserva su fusión ni su episodio: se vuelven a calcular después."""
+    _ampliar_modelos(almacen, validada)
+    ubicacion = ubicar(validada, pistas(almacen, peticion), nomenclator())
+    if not ubicacion.valida:
+        documento["motivos"] = [*documento["motivos"], f"ubicación: {ubicacion.motivo}"]
+        return None
+    existente = incidente_del_candidato(almacen, peticion.candidato["id"])
     inicio = validada.valor("inicio") or peticion.candidato["inicio"]
     id_ = existente or almacen.siguiente_id_incidente(int(inicio[:4]))
     modelos = modelos_validos(almacen, modelos_base)
     incidente = construir(
-        id_, objetivo, peticion.candidato, peticion.articulos, peticion.enviadas, validada,
+        id_, ubicacion, peticion.candidato, peticion.articulos, peticion.enviadas, validada,
         ahora, ficha.VERSION, modelos,
     )  # fmt: skip
     anterior = almacen.incidente(id_)
     if anterior is not None:
-        # Se conservan el alta, la fusión y el episodio que ya tuviera.
+        # Se conservan el alta y, salvo al rehacer, la fusión y el episodio.
         incidente["control"]["alta"] = anterior["control"]["alta"]
-        for campo in ("fusionado_en", "episodio"):
+        for campo in () if rehacer else ("fusionado_en", "episodio"):
             if campo in anterior:
                 incidente[campo] = anterior[campo]
     incidente = declaraciones.aplicar(
         incidente, documento.get("declaraciones", []), peticion.enviadas
     )
+    if anterior is not None:
+        incidente = conservar_oficiales(incidente, anterior)
+    incidente = aplicar_reglas(incidente)
     try:
         almacen.guardar_incidente(incidente, ahora, modelos)
     except DocumentoInvalido as error:
         documento["motivos"] = [*documento["motivos"], f"incidente no válido: {error}"]
         return None
+    _ampliar_lugares(almacen, ubicacion)
     return id_
 
 
-def reconstruir(almacen: Almacen, ahora: datetime, modelos_base: frozenset[str]) -> int:
+def reconstruir(
+    almacen: Almacen, ahora: datetime, modelos_base: frozenset[str], rehacer: bool = False
+) -> int:
     """Rehace los incidentes desde las fichas ya validadas y guardadas, sin llamar al modelo.
 
     Sirve cuando cambian los candidatos (por ejemplo, al ampliar el nomenclátor y volver
-    a incorporar las noticias): cada candidato con una ficha publicable recupera su
-    incidente, con el mismo identificador si ya lo tenía. Devuelve cuántos rehace.
+    a incorporar las noticias) o las reglas: cada candidato con una ficha publicable
+    recupera su incidente, con el mismo identificador si ya lo tenía; el de un candidato
+    cuya última ficha ya no es publicable se retira. Las comprobaciones que solo necesitan
+    la frase (el cierre, el lugar del suceso) se repiten con las reglas de ahora. Con
+    `rehacer`, fusiones y episodios se vuelven a calcular después. Devuelve cuántos rehace.
     """
     rehechos = 0
     for candidato in almacen.candidatos():
-        extracciones = almacen.extracciones(candidato["id"])
-        if not extracciones or "ficha" not in extracciones[-1]:
+        # La última ficha legible: una respuesta que no traía ficha no deshace la anterior.
+        legibles = [e for e in almacen.extracciones(candidato["id"]) if "ficha" in e]
+        if not legibles:
             continue
-        ultima = extracciones[-1]
+        ultima = legibles[-1]
         peticion = preparar(almacen, candidato, None)
         enviadas = ultima.get("enviadas") or peticion.enviadas
         campos = {
@@ -366,15 +464,22 @@ def reconstruir(almacen: Almacen, ahora: datetime, modelos_base: frozenset[str])
             for nombre, campo in ultima["campos"].items()
             if isinstance(campo.get("fuente"), int) and 1 <= campo["fuente"] <= len(enviadas)
         }
-        validada = Validada(
-            campos=campos,
-            motivos=[],
-            titulo_es=str(ultima["ficha"].get("titulo_es", "")),
-            titulo_en=str(ultima["ficha"].get("titulo_en", "")),
+        # De las fuentes solo se guardan los titulares: son el texto con que se comprueba
+        # que la fuente nombra el país.
+        titulares = tuple(
+            str(a["titular"]) for a in peticion.articulos if a["url"] in set(enviadas)
         )
-        # Las comprobaciones del objetivo también valen para fichas anteriores a ellas.
-        if any(m.startswith("pais: distinto") for m in ultima.get("motivos", [])):
-            continue
+        validada = revalidar(
+            Validada(
+                campos=campos,
+                motivos=[],
+                titulo_es=str(ultima["ficha"].get("titulo_es", "")),
+                titulo_en=str(ultima["ficha"].get("titulo_en", "")),
+            ),
+            ultima["ficha"],
+            titulares,
+            prefijos_genericos(),
+        )
         nombre = validada.valor("objetivo_nombre")
         contexto = Contexto(
             textos=(), pais_objetivo=peticion.objetivo.pais, primer_articulo=ahora, ahora=ahora,
@@ -382,13 +487,25 @@ def reconstruir(almacen: Almacen, ahora: datetime, modelos_base: frozenset[str])
             prefijos_genericos=prefijos_genericos(),
         )  # fmt: skip
         if validada.valor("objetivo_conocido") is not False and otro_objetivo(nombre, contexto):
-            continue
+            validada.campos["objetivo_conocido"] = {
+                **validada.campos.get("objetivo_conocido", {"fuente": 1, "frase": "",
+                                                            "confianza": 1.0}),
+                "valor": False,
+            }  # fmt: skip
         if not validada.publicable:
+            retirar_del_candidato(
+                almacen, candidato["id"], "ficha no publicable con las reglas actuales", ahora,
+                modelos_base,
+            )  # fmt: skip
             continue
         peticion = replace(peticion, enviadas=list(enviadas))
         guardadas = {"motivos": [], "declaraciones": ultima.get("declaraciones", [])}
-        if _alta(almacen, peticion, validada, ahora, modelos_base, guardadas):
+        if _alta(almacen, peticion, validada, ahora, modelos_base, guardadas, rehacer):
             rehechos += 1
+        else:
+            retirar_del_candidato(
+                almacen, candidato["id"], "; ".join(guardadas["motivos"]), ahora, modelos_base
+            )
     return rehechos
 
 
@@ -461,10 +578,10 @@ def extraer(
 
 
 def recortar_para_lote(
-    almacen: Almacen, peticiones: list[Peticion]
+    almacen: Almacen, peticiones: list[Peticion], modo: coste.Modo = coste.Modo.HISTORICO
 ) -> tuple[list[Peticion], float]:
-    """Las peticiones que caben en lo que queda del límite del histórico, en el peor caso."""
-    queda = coste.LIMITE_HISTORICO_USD - almacen.gastado(coste.Modo.HISTORICO.value)
+    """Las peticiones que caben en lo que queda del límite del modo, en el peor caso."""
+    queda = coste.limite(modo) - almacen.gastado(modo.value)
     elegidas: list[Peticion] = []
     previsto = 0.0
     for peticion in peticiones:
@@ -483,9 +600,10 @@ def extraer_lote(
     ahora: Callable[[], datetime],
     modelos_base: frozenset[str],
     dormir: Callable[[float], None] = time.sleep,
+    modo: coste.Modo = coste.Modo.HISTORICO,
 ) -> dict[str, int]:
     """Envía las peticiones que caben en el límite como un lote y procesa los resultados."""
-    elegidas, previsto = recortar_para_lote(almacen, peticiones)
+    elegidas, previsto = recortar_para_lote(almacen, peticiones, modo)
     if not elegidas:
         return {"enviadas": 0, "publicadas": 0, "fallidas": 0, "fuera_de_limite": len(peticiones)}
     registro.info("lote: %d peticiones, peor caso %.4f USD", len(elegidas), previsto)
@@ -499,7 +617,7 @@ def extraer_lote(
             raise LlamadaFallida("el lote no terminó en 24 horas")
         dormir(ESPERA_LOTE_S)
         lote = cliente.lote(lote["id"])
-    recuentos = procesar_lote(almacen, cliente, lote, elegidas, ahora, modelos_base)
+    recuentos = procesar_lote(almacen, cliente, lote, elegidas, ahora, modelos_base, modo)
     recuentos["fuera_de_limite"] = len(peticiones) - len(elegidas)
     return recuentos
 
@@ -511,6 +629,7 @@ def procesar_lote(
     peticiones: list[Peticion],
     ahora: Callable[[], datetime],
     modelos_base: frozenset[str],
+    modo: coste.Modo = coste.Modo.HISTORICO,
 ) -> dict[str, int]:
     """Procesa los resultados de un lote terminado con las peticiones que lo formaron."""
     por_id = {p.id_lote: p for p in peticiones}
@@ -522,7 +641,7 @@ def procesar_lote(
             continue
         mensaje = resultado["result"]["message"]
         incidente = procesar_respuesta(
-            almacen, peticion, mensaje, ahora(), coste.Modo.HISTORICO, True, modelos_base
+            almacen, peticion, mensaje, ahora(), modo, True, modelos_base
         )
         procesadas += 1
         publicadas += incidente is not None
