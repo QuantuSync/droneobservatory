@@ -25,10 +25,10 @@ from recogida.fuentes import FUENTES
 
 registro = logging.getLogger("recogida")
 
-# Código de salida cuando una fuente no pudo leerse (canal no verificado, sin cursor o
-# con un hueco demasiado grande): las demás se leen y se publica, pero la ejecución
-# queda en rojo para que se vea.
-SALIDA_FUENTE_NO_VERIFICADA = 2
+# Código de salida cuando la ejecución termina con avisos (una fuente que no pudo leerse,
+# un error del extractor): lo demás se lee, la base se sube y el workflow publica, pero
+# la ejecución queda en rojo para que se vea. El workflow lo conoce como SALIDA_AVISO.
+SALIDA_AVISO = 2
 
 
 def principal(argumentos: list[str] | None = None) -> int:
@@ -52,7 +52,7 @@ def principal(argumentos: list[str] | None = None) -> int:
                 ejecutar(almacen, descargador, cache, fuente, ahora)
             except (CanalNoVerificado, SinCursor, HuecoDemasiadoGrande) as error:
                 registro.warning("%s no se lee: %s", fuente.id, error)
-                salida = SALIDA_FUENTE_NO_VERIFICADA
+                salida = SALIDA_AVISO
         # Los tramos del ministerio que ya cubre un total, o que se solapan, no se suman.
         registro.info(
             "tramos con enlace cambiado: %d", solapes.enlazar(almacen, SENTIDO_UA_RU, ahora)
@@ -61,7 +61,7 @@ def principal(argumentos: list[str] | None = None) -> int:
             gdelt.ejecutar(almacen, gdelt.descargador(), ahora)
         except gdelt.GdeltNoDisponible as error:
             registro.warning("gdelt no se lee: %s", error)
-            salida = SALIDA_FUENTE_NO_VERIFICADA
+            salida = SALIDA_AVISO
         # Cruces a otros países de los partes ucranianos: incursiones notificadas.
         registro.info(
             "incursiones nuevas: %d", incursiones.registrar(almacen, ahora, modelos(almacen))
@@ -72,7 +72,7 @@ def principal(argumentos: list[str] | None = None) -> int:
         resultado = extractor.horaria(almacen, ahora)
         registro.info("extractor %s", resultado.resumen())
         if resultado.fallidas:
-            salida = SALIDA_FUENTE_NO_VERIFICADA
+            salida = SALIDA_AVISO
         cambiados = publicar(almacen, ahora)
         registro.info("ficheros publicados con cambios: %d", len(cambiados))
         if almacen.conexion.serialize() != antes:

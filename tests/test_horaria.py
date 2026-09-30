@@ -86,7 +86,7 @@ def test_canal_no_verificado_termina_en_rojo_sin_leer(
     falso.verificado = False
     subir_base(repositorio, tmp_path, ultimo_id=1)
     salida = horaria.principal(["--correo", "a@b.org", "--repositorio", repositorio])
-    assert salida == horaria.SALIDA_FUENTE_NO_VERIFICADA
+    assert salida == horaria.SALIDA_AVISO
     assert base_remota(repositorio, tmp_path).ataques_ucrania() == []
 
 
@@ -106,5 +106,5 @@ def test_una_fuente_sin_cursor_no_impide_leer_las_demas(
     monkeypatch.setattr(horaria, "FUENTES", (fuerza_aerea.FUENTE, mindef.FUENTE))
     subir_base(repositorio, tmp_path, ultimo_id=1)
     salida = horaria.principal(["--correo", "a@b.org", "--repositorio", repositorio])
-    assert salida == horaria.SALIDA_FUENTE_NO_VERIFICADA
+    assert salida == horaria.SALIDA_AVISO
     assert len(base_remota(repositorio, tmp_path).ataques_ucrania()) == 3
