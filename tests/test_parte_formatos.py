@@ -4,7 +4,7 @@ from datetime import UTC, datetime
 
 import pytest
 
-from recogida.parte import Derribo, es_parte, leer
+from recogida.parte import Derribo, es_avance, es_parte, leer, motivo_no_parte
 
 
 def rango(minimo: int, maximo: int | None = None) -> dict[str, int]:
@@ -229,6 +229,58 @@ def test_solo_el_titular_da_los_derribados() -> None:
         "У ніч на 4 січня 2024 року ворог атакував двома ударними БпЛА. Обидва – знищені."
     )
     assert leer(texto, datetime(2024, 1, 4, 6, tzinfo=UTC)).derribados == rango(2)
+
+
+# --- Avance de un ataque en curso -----------------------------------------------
+
+# 81106: avance publicado a media tarde, con el ataque sin terminar.
+AVANCE = (
+    "❗️ 28 вересня 2026 року (із 06.30 по 16.30) ворог продовжує атакувати Україну ударними "
+    "БпЛА типу “Shahed”, більшість із них – реактивні.\n\n"
+    "Станом на 16.30 зафіксовано понад 100 ударних безпілотників різних типів, значна "
+    "частина – у напрямку м.Київ.\n\n"
+    "Наразі, протиповітряній обороні вдалося збити понад 40 реактивних БпЛА, але десятки "
+    "дронів ще в повітрі!\n\n"
+    "Сили оборони продовжують відбивати повітряний напад противника!"
+)
+# 81127: el parte de cierre del mismo ataque, hora y media después.
+CIERRE = (
+    "❗️ Протягом дня 28 вересня (із 6.30 по 18.30) противник атакував Україну 124 ударними "
+    "БпЛА ( 86 із них — реактивні), Гербера та дронами інших типів.\n\n"
+    "За попередніми даними, протиповітряною обороною протягом вказаного періоду "
+    "збито/подавлено 86 БпЛА (49 із них - реактивні).\n\n"
+    "Станом на 18.30 у повітряному просторі спостерігаються декілька ударних безпілотників."
+)
+
+
+def test_el_avance_de_un_ataque_en_curso_no_es_parte() -> None:
+    assert es_avance(AVANCE)
+    assert not es_parte(AVANCE)
+    assert motivo_no_parte(AVANCE) == "avance de un ataque en curso"
+
+
+def test_el_parte_de_cierre_del_mismo_ataque_si_lo_es() -> None:
+    assert not es_avance(CIERRE)
+    assert es_parte(CIERRE)
+    leido = leer(CIERRE, datetime(2026, 9, 28, 15, 31, tzinfo=UTC))
+    assert leido.lanzados["total"] == rango(124)
+    assert leido.derribados == rango(86)
+
+
+@pytest.mark.parametrize(
+    "texto",
+    [
+        # 2017: dice que el ataque sigue, pero da un recuento cerrado de un periodo acabado.
+        "Ворог продовжує атакувати Україну з південного напрямку безпілотниками.\n"
+        "07 жовтня, з 20.00 до 21.30, російські окупаційні війська атакували трьома "
+        'дронами-камікадзе "Shahed-136" Одещину та Миколаївщину. Всі три збито.',
+        # 61660: cifra sin máximo de una noche ya terminada; sigue contando como ilegible.
+        "У ніч на 12 травня ворог випустив по Україні понад 200 ударних безпілотників.",
+    ],
+)
+def test_sin_las_dos_senales_no_es_un_avance(texto: str) -> None:
+    assert not es_avance(texto)
+    assert es_parte(texto)
 
 
 # --- Derribados o neutralizados -------------------------------------------------

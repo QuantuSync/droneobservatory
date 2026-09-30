@@ -884,6 +884,23 @@ _REGIONAL = re.compile(
 _PIE_DE_VIDEO = re.compile(r"^[^\w]*(?:Бойова\s+робота|На\s+відео)", re.I)
 
 
+# Avance de un ataque de día que sigue en curso: "ворог продовжує атакувати Україну ...
+# Станом на 16.30 зафіксовано понад 100 ударних безпілотників ... десятки дронів ще в
+# повітрі". El recuento es un corte provisional y abierto; el parte de cierre del mismo
+# periodo ("Протягом дня ... противник атакував Україну 124 ударними БпЛА") lo sustituye.
+_SIGUE_ATACANDO = re.compile(r"продовжу\w+\s+атак", re.IGNORECASE)
+_CORTE_ABIERTO = re.compile(
+    r"станом\s+на\s+\d{1,2}[.:]\d{2}\W+(?:зафіксовано|виявлено)\s+"
+    r"(?:понад|більше|щонайменше|більш\s+ніж)\s",
+    re.IGNORECASE,
+)
+
+
+def es_avance(texto: str) -> bool:
+    """Recuento provisional y sin máximo de un ataque que el texto da por no terminado."""
+    return bool(_SIGUE_ATACANDO.search(texto) and _CORTE_ABIERTO.search(texto))
+
+
 def _derribo_de_total(frase: str) -> bool:
     """ "Знищено 2 із 2 ударних БпЛА": derribados de un total de drones declarado."""
     return bool(_ES_DERRIBO.search(frase)) and any(
@@ -899,12 +916,13 @@ def es_parte(texto: str) -> bool:
     («зафіксовано пуски 31 ударного дрона») o un «N із M» de drones derribados.
     Con solo «цієї ночі» como periodo hace falta la cifra: sin ella son avisos
     («найближчим часом повідомимо») o reportajes. Los balances de un mando
-    regional no cuentan.
+    regional y los avances de un ataque que sigue en curso no cuentan.
     """
     if (
         not re.search(_DRON, texto, re.IGNORECASE)
         or _REGIONAL.search(texto)
         or _PIE_DE_VIDEO.match(texto)
+        or es_avance(texto)
     ):
         return False
     lista = frases(texto)
@@ -1219,6 +1237,8 @@ def motivo_no_parte(texto: str) -> str | None:
         return "pie de vídeo"
     if _REGIONAL.search(texto) or _MANDO.search(texto):
         return "nota de un mando regional"
+    if es_avance(texto):
+        return "avance de un ataque en curso"
     lista = frases(texto)
     if any(CIFRA_DRONES.search(f) for f in lista) and not any(_cifras(f) for f in lista):
         return "solo drones de reconocimiento"
