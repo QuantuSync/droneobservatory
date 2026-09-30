@@ -55314,7 +55314,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-28T09:43Z"
+      "valor": "2026-09-30T12:42Z"
      }
     },
     "drones": {
@@ -55325,7 +55325,7 @@
      }
     },
     "estado": {
-     "actual": "notificado",
+     "actual": "confirmado",
      "historial": [
       {
        "estado": "notificado",
@@ -55334,6 +55334,14 @@
         "valor": "2026-09-08T15:00Z"
        },
        "fuente_id": "gdelt-667a5ef1337b4da3"
+      },
+      {
+       "estado": "confirmado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2026-09-08T16:00Z"
+       },
+       "fuente_id": "gdelt-a5fb8882b994ef1b-declaracion-1"
       }
      ]
     },
@@ -55346,7 +55354,7 @@
        "valor": "2026-09-08T15:00Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "o dronă a intrat în spațiul aerian al României",
+      "frase_origen": "Autorităţile din Suceava şi alte patru judeţe din Moldova au fost în alertă marţi după-amiaza",
       "id": "gdelt-667a5ef1337b4da3",
       "idioma": "ro",
       "medio": "antena3.ro",
@@ -55388,7 +55396,7 @@
        "valor": "2026-09-08T16:00Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "Zborurile de pe Aeroportul Internațional Iași au fost suspendate marți",
+      "frase_origen": "Zborurile de pe Aeroportul Internațional Iași, suspendate după mesajul RO-ALERT privind detectarea unei drone",
       "id": "gdelt-a5fb8882b994ef1b",
       "idioma": "ro",
       "medio": "agerpres.ro",
@@ -55402,7 +55410,7 @@
        "valor": "2026-09-08T16:00Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "The drone entered Romanian territory from the Republic of Moldova",
+      "frase_origen": "Flights at Iasi International Airport suspended after RO-ALERT incoming drone warning",
       "id": "gdelt-56bd635521648bd4",
       "idioma": "en",
       "medio": "stiripesurse.ro",
@@ -55477,6 +55485,20 @@
       "idioma": "ro",
       "medio": "news.yam.md",
       "replicas": 1
+     },
+     {
+      "credibilidad": 1,
+      "enlace": "https://agerpres.ro/social/2026/09/08/zborurile-de-pe-aeroportul-international-iasi-suspendate-dupa-mesajul-ro-alert-privind-detectarea-un--1591762",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-08T16:00Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Zborurile de pe Aeroportul Internațional Iași au fost suspendate marți",
+      "id": "gdelt-a5fb8882b994ef1b-declaracion-1",
+      "idioma": "ro",
+      "medio": "Direcția Aeroportului Internațional Iași (declaración oficial citada en agerpres.ro)",
+      "replicas": 0
      }
     ],
     "id": "EODI-2026-00015",
@@ -55490,7 +55512,7 @@
      "nombre": "Aeroportul Internațional Iași",
      "oaci": "LRIA"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "respuesta": {
      "medidas": [
       "cierre_espacio_aereo"
@@ -55498,14 +55520,14 @@
     },
     "tiempo": {
      "inicio": {
-      "precision": "hora",
-      "valor": "2026-09-08T14:00Z"
+      "precision": "dia",
+      "valor": "2026-09-08T00:00Z"
      }
     },
     "tipo": "interrupcion_aeroportuaria",
     "titulo": {
-     "en": "Iasi Airport closure after Shahed drone entry from Moldova",
-     "es": "Cierre del aeropuerto de Iași tras la entrada de un dron Shahed desde Moldavia"
+     "en": "Shahed drone forces closure of Iasi airport after entering Romanian airspace",
+     "es": "Un dron Shahed obliga a cerrar el aeropuerto de Iași después de violar el espacio aéreo rumano"
     }
    },
    "type": "Feature"
@@ -59373,7 +59395,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-28T09:43Z"
+      "valor": "2026-09-30T12:42Z"
      }
     },
     "drones": {
@@ -59384,7 +59406,7 @@
      }
     },
     "estado": {
-     "actual": "notificado",
+     "actual": "confirmado",
      "historial": [
       {
        "estado": "notificado",
@@ -59393,6 +59415,14 @@
         "valor": "2026-08-28T09:15Z"
        },
        "fuente_id": "gdelt-8246077e7682646f"
+      },
+      {
+       "estado": "confirmado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2026-08-28T09:15Z"
+       },
+       "fuente_id": "gdelt-8246077e7682646f-declaracion-1"
       }
      ]
     },
@@ -59405,7 +59435,7 @@
        "valor": "2026-08-28T09:15Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "ένα τουρκικό drone παραβίασε τον Εθνικό Εναέριο Χώρο",
+      "frase_origen": "το διάστημα 8.00 – 9.00 το πρωί ένα τουρκικό drone παραβίασε τον Εθνικό Εναέριο Χώρο",
       "id": "gdelt-8246077e7682646f",
       "idioma": "el",
       "medio": "enikos.gr",
@@ -59433,7 +59463,7 @@
        "valor": "2026-08-28T09:30Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "να κινείται σε σχετικά κοντινή απόσταση από την Αλεξανδρούπολη και το αεροδρόμιο",
+      "frase_origen": "να κινείται σε σχετικά κοντινή απόσταση από την Αλεξανδρούπολη και το αεροδρόμιο της πόλης",
       "id": "gdelt-97771fb8fa464979",
       "idioma": "el",
       "medio": "newsit.gr",
@@ -59564,6 +59594,20 @@
       "idioma": "ro",
       "medio": "ziarulnational.md",
       "replicas": 0
+     },
+     {
+      "credibilidad": 1,
+      "enlace": "https://enikos.gr/politics/nea-tourkiki-proklisi-drone-konta-sto-aerodromio-tis-alexandroupolis-anachaitistike-apo-ellinika-f-16/2635076",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-08-28T09:15Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Άμεση ήταν η απάντηση της Πολεμικής Αεροπορίας, η οποία απογείωσε 2 οπλισμένα μαχητικά F-16",
+      "id": "gdelt-8246077e7682646f-declaracion-1",
+      "idioma": "el",
+      "medio": "Πολεμική Αεροπορία (declaración oficial citada en enikos.gr)",
+      "replicas": 0
      }
     ],
     "id": "EODI-2026-00050",
@@ -59585,13 +59629,13 @@
     "tiempo": {
      "inicio": {
       "precision": "hora",
-      "valor": "2026-08-28T05:00Z"
+      "valor": "2026-08-28T05:30Z"
      }
     },
-    "tipo": "incursion",
+    "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Turkish drone incursion into Greek airspace near Alexandroupoli airport",
-     "es": "Dron turco incursiona en el espacio aéreo griego cerca del aeropuerto de Alexandrópolis"
+     "en": "Turkish drone violates Greek airspace near Alexandroupoli airport intercepted by F-16",
+     "es": "Drone turco viola el espacio aéreo griego cerca del aeropuerto de Alejandroúpoli interceptado por F-16"
     }
    },
    "type": "Feature"
@@ -73900,14 +73944,17 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-28T09:43Z"
+      "valor": "2026-09-30T12:42Z"
      }
     },
     "drones": {
-     "numero": "desconocido"
+     "numero": {
+      "max": 1,
+      "min": 1
+     }
     },
     "estado": {
-     "actual": "notificado",
+     "actual": "confirmado",
      "historial": [
       {
        "estado": "notificado",
@@ -73916,6 +73963,14 @@
         "valor": "2026-09-01T16:45Z"
        },
        "fuente_id": "gdelt-c8e2a8c2c0636186"
+      },
+      {
+       "estado": "confirmado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2026-09-01T17:00Z"
+       },
+       "fuente_id": "gdelt-81148550591872b4-declaracion-1"
       }
      ]
     },
@@ -73928,7 +73983,7 @@
        "valor": "2026-09-01T16:45Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "инцидент 4 августа «укладывается в сложившуюся схему российских гибридных операций в Европе»",
+      "frase_origen": "правительство Германии приходит к заключению, что Россия несет ответственность",
       "id": "gdelt-c8e2a8c2c0636186",
       "idioma": "ru",
       "medio": "news.mail.ru",
@@ -73942,7 +73997,7 @@
        "valor": "2026-09-01T17:00Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "στο αεροδρόμιο της Λειψίας τον περασμένο μήνα",
+      "frase_origen": "αεροδρόμιο της Λειψίας",
       "id": "gdelt-d8790c65952aab97",
       "idioma": "el",
       "medio": "euronews.com",
@@ -74129,6 +74184,20 @@
       "idioma": "el",
       "medio": "dialogos.com.cy",
       "replicas": 0
+     },
+     {
+      "credibilidad": 1,
+      "enlace": "https://rtsh.al/tensionet-berlin-moske-gjermania-ben-pergjegjese-rusine-per-sulmin-hibrid-me-drone-ne-aeroportin-e-leipzigut-mbyll-konsullaten-ruse-ne-bon",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-01T17:00Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "ngjarje e regjistruar më 4 gusht në zonën e sigurisë të aeroportit Leipzig/Halle",
+      "id": "gdelt-81148550591872b4-declaracion-1",
+      "idioma": "sq",
+      "medio": "Alexander Dobrindt, Ministri i Brendshëm gjerman (declaración oficial citada en rtsh.al)",
+      "replicas": 0
      }
     ],
     "id": "EODI-2026-00119",
@@ -74142,11 +74211,6 @@
      "nombre": "Berlin"
     },
     "presencia_dron": "confirmada",
-    "respuesta": {
-     "medidas": [
-      "cierre_espacio_aereo"
-     ]
-    },
     "tiempo": {
      "inicio": {
       "precision": "dia",
@@ -74155,8 +74219,8 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Drone incident at Leipzig airport attributed to Russia by Germany",
-     "es": "Incidente con dron en el aeropuerto de Leipzig que Alemania atribuye a Rusia"
+     "en": "Germany accuses Russia of attempted drone attack at Leipzig airport",
+     "es": "Alemania acusa a Rusia de intento de ataque con dron en el aeropuerto de Leipzig"
     }
    },
    "type": "Feature"
@@ -82944,6 +83008,14 @@
    },
    "id": "EODI-2026-00135",
    "properties": {
+    "atribucion": {
+     "actor": "Russie",
+     "autoridad": "Gouvernement allemand",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-03T06:15Z"
+     }
+    },
     "consecuencias": {
      "cierre": {
       "valor": "desconocido"
@@ -82952,7 +83024,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-28T09:43Z"
+      "valor": "2026-09-30T12:42Z"
      }
     },
     "drones": {
@@ -82962,7 +83034,7 @@
      }
     },
     "estado": {
-     "actual": "notificado",
+     "actual": "atribuido",
      "historial": [
       {
        "estado": "notificado",
@@ -82971,6 +83043,22 @@
         "valor": "2026-09-03T06:15Z"
        },
        "fuente_id": "gdelt-f5c15f6e24089744"
+      },
+      {
+       "estado": "confirmado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2026-09-03T06:15Z"
+       },
+       "fuente_id": "gdelt-f5c15f6e24089744-declaracion-1"
+      },
+      {
+       "estado": "atribuido",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2026-09-03T06:15Z"
+       },
+       "fuente_id": "gdelt-f5c15f6e24089744-declaracion-2"
       }
      ]
     },
@@ -83011,7 +83099,7 @@
        "valor": "2026-09-03T06:45Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "Identificados dois suspeitos com passaporte russo em caso de drone no aeroporto de Leipzig",
+      "frase_origen": "A polícia criminal alemã identificou o ADN de dois homens com passaporte russo suspeitos de levarem um drone explosivo para o aeroporto de Leipzig",
       "id": "gdelt-504d1b502c43ad41",
       "idioma": "pt",
       "medio": "dnoticias.pt",
@@ -83200,31 +83288,45 @@
       "replicas": 0
      },
      {
-      "credibilidad": 3,
-      "enlace": "https://globalsecurity.org/wmd/library/news/russia/2026/09/russia-260903-estonia-mfa01.htm",
+      "credibilidad": 1,
+      "enlace": "https://ladepeche.fr/2026/09/03/entretien-attaque-au-drone-explosif-de-laeroport-de-leipzig-lobjectif-de-poutine-est-dinstaurer-un-climat-de-peur-et-dintimidation-en-europe-estime-13532332.php",
       "fecha": {
        "precision": "aproximada",
-       "valor": "2026-09-04T12:30Z"
+       "valor": "2026-09-03T06:15Z"
       },
-      "fiabilidad": "C",
-      "frase_origen": "Niemcy oskarżają Rosję o atak dronów na lotnisko Lipsk/Halle",
-      "id": "gdelt-6aa32d30f9ae6136",
-      "idioma": "en",
-      "medio": "globalsecurity.org",
+      "fiabilidad": "B",
+      "frase_origen": "L'Allemagne a officiellement accusé Moscou d'avoir tenté d'orchestrer une attaque de drones armés dans son aéroport de Leipzig",
+      "id": "gdelt-f5c15f6e24089744-declaracion-1",
+      "idioma": "fr",
+      "medio": "Gouvernement allemand (declaración oficial citada en ladepeche.fr)",
       "replicas": 0
      },
      {
-      "credibilidad": 3,
-      "enlace": "https://fakt.pl/wydarzenia/atak-dronow-na-lotnisko-lipskhalle-niemcy-rozwazaja-odpowiedz-wobec-rosji/tlmdk4c",
+      "credibilidad": 1,
+      "enlace": "https://ladepeche.fr/2026/09/03/entretien-attaque-au-drone-explosif-de-laeroport-de-leipzig-lobjectif-de-poutine-est-dinstaurer-un-climat-de-peur-et-dintimidation-en-europe-estime-13532332.php",
       "fecha": {
        "precision": "aproximada",
-       "valor": "2026-09-04T13:15Z"
+       "valor": "2026-09-03T06:15Z"
       },
-      "fiabilidad": "C",
-      "frase_origen": "Atak dronów na lotnisko Lipsk/Halle. Niemcy rozważają odpowiedź wobec Rosji",
-      "id": "gdelt-fb5772f8008cd59f",
-      "idioma": "pl",
-      "medio": "fakt.pl",
+      "fiabilidad": "B",
+      "frase_origen": "L'Allemagne a annoncé ce mardi 2 septembre des mesures de rétorsion contre Moscou, l'accusant du déploiement d'au moins un drone explosif sur l'aéroport de Leipzig",
+      "id": "gdelt-f5c15f6e24089744-declaracion-2",
+      "idioma": "fr",
+      "medio": "Gouvernement allemand (declaración oficial citada en ladepeche.fr)",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 1,
+      "enlace": "https://dnoticias.pt/2026/9/3/504108-identificados-dois-suspeitos-com-passaporte-russo-em-caso-de-drone-no-aeroporto-de-leipzig",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-03T06:45Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "A polícia criminal alemã identificou o ADN de dois homens com passaporte russo suspeitos de levarem um drone explosivo para o aeroporto de Leipzig",
+      "id": "gdelt-504d1b502c43ad41-declaracion-3",
+      "idioma": "pt",
+      "medio": "Police criminelle allemande (declaración oficial citada en dnoticias.pt)",
       "replicas": 0
      }
     ],
@@ -83238,12 +83340,7 @@
      "categoria": "otra",
      "nombre": "Leipzig"
     },
-    "presencia_dron": "no_confirmada",
-    "respuesta": {
-     "medidas": [
-      "cierre_espacio_aereo"
-     ]
-    },
+    "presencia_dron": "confirmada",
     "tiempo": {
      "inicio": {
       "precision": "dia",
@@ -83252,8 +83349,8 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Alleged explosive drone attack attempt on Leipzig Airport",
-     "es": "Intento de ataque con dron explosivo en el aeropuerto de Leipzig"
+     "en": "Attempted attack with explosive drone at Leipzig airport attributed to Russia",
+     "es": "Intento de ataque con drone explosivo en el aeropuerto de Leipzig atribuido a Rusia"
     }
    },
    "type": "Feature"
@@ -85441,7 +85538,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-30T05:38Z"
+      "valor": "2026-09-30T12:42Z"
      }
     },
     "drones": {
@@ -85451,7 +85548,7 @@
      }
     },
     "estado": {
-     "actual": "notificado",
+     "actual": "confirmado",
      "historial": [
       {
        "estado": "notificado",
@@ -85460,6 +85557,14 @@
         "valor": "2026-09-30T05:00Z"
        },
        "fuente_id": "gdelt-510b5643ca99465d"
+      },
+      {
+       "estado": "confirmado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2026-09-30T05:00Z"
+       },
+       "fuente_id": "gdelt-510b5643ca99465d-declaracion-1"
       }
      ]
     },
@@ -85472,10 +85577,38 @@
        "valor": "2026-09-30T05:00Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "la fața locului s-au deplasat deja echipe mixte de investigație formate din militari și polițiști.",
+      "frase_origen": "O dronă a pătruns în spațiul aerian al Republicii Moldova în dimineața zilei de 30 septembrie",
       "id": "gdelt-510b5643ca99465d",
       "idioma": "ro",
       "medio": "news.yam.md",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://news.yam.md/ro/story/69062646",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-30T06:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "O dronă a survolat spațiul aerian al Moldovei și a căzut în raionul Anenii Noi. A explodat VIDEO⚡⚡⚡",
+      "id": "gdelt-7bc171648e59e360",
+      "idioma": "ro",
+      "medio": "news.yam.md",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 1,
+      "enlace": "https://news.yam.md/ro/story/69055900",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-30T05:00Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Ministerul Apărării a confirmat incidentul",
+      "id": "gdelt-510b5643ca99465d-declaracion-1",
+      "idioma": "ro",
+      "medio": "Ministerul Apărării (declaración oficial citada en news.yam.md)",
       "replicas": 0
      }
     ],
@@ -85490,21 +85623,133 @@
      "nombre": "Anenii Noi"
     },
     "presencia_dron": "no_confirmada",
-    "respuesta": {
-     "medidas": [
-      "patrulla"
-     ]
-    },
     "tiempo": {
      "inicio": {
       "precision": "dia",
-      "valor": "2026-09-30T05:00Z"
+      "valor": "2026-09-30T00:00Z"
      }
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Drone enters Moldova's airspace and crashes in Anenii Noi",
-     "es": "Dron entra en el espacio aéreo de Moldavia y se estrella en Anenii Noi"
+     "en": "Drone penetrates Moldovan airspace and explodes in Anenii Noi district",
+     "es": "Un dron entra en el espacio aéreo moldavo y explota en Anenii Noi"
+    }
+   },
+   "type": "Feature"
+  },
+  {
+   "geometry": {
+    "coordinates": [
+     29.16667,
+     47.26562
+    ],
+    "type": "Point"
+   },
+   "id": "EODI-2026-00160",
+   "properties": {
+    "consecuencias": {
+     "cierre": {
+      "valor": "si"
+     }
+    },
+    "control": {
+     "ultima_actualizacion": {
+      "precision": "minuto",
+      "valor": "2026-09-30T12:42Z"
+     }
+    },
+    "drones": {
+     "numero": {
+      "max": 1,
+      "min": 1
+     }
+    },
+    "estado": {
+     "actual": "confirmado",
+     "historial": [
+      {
+       "estado": "notificado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2026-09-30T08:30Z"
+       },
+       "fuente_id": "gdelt-5e14ce24999aa414"
+      },
+      {
+       "estado": "confirmado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2026-09-30T08:30Z"
+       },
+       "fuente_id": "gdelt-5e14ce24999aa414-declaracion-1"
+      }
+     ]
+    },
+    "fuentes": [
+     {
+      "credibilidad": 3,
+      "enlace": "https://news.yam.md/ro/story/69091264",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-30T08:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Aparatul de zbor fără pilot a fost detectat în zona localității Lunga, raionul Dubăsari.",
+      "id": "gdelt-5e14ce24999aa414",
+      "idioma": "ro",
+      "medio": "news.yam.md",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://focus-news.net/novini/mejdunarodni/Izvunredna-situaciya-v-Moldova-Vtori-dron-v-nebeto-prinudi-vlastite-da-zatvoryat-chast-ot-vuzdushnoto-prostranstvo-na-stranata-3032642",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-30T11:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Извънредна ситуация в Молдова: Втори дрон в небето принуди властите да затворят част от въздушното пространство на страната",
+      "id": "gdelt-55d2615dc3fde59b",
+      "idioma": "bg",
+      "medio": "focus-news.net",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 1,
+      "enlace": "https://news.yam.md/ro/story/69091264",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-30T08:30Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "drona a fost depistată la ora 10:26 de Sistemul național integrat de monitorizare",
+      "id": "gdelt-5e14ce24999aa414-declaracion-1",
+      "idioma": "ro",
+      "medio": "Ministerul Apărării (declaración oficial citada en news.yam.md)",
+      "replicas": 0
+     }
+    ],
+    "id": "EODI-2026-00160",
+    "lugar": {
+     "localidad": "Lunga",
+     "pais": "MD",
+     "radio_km": 5.0
+    },
+    "objetivo": {
+     "categoria": "otra",
+     "nombre": "Dubăsari"
+    },
+    "presencia_dron": "confirmada",
+    "tiempo": {
+     "inicio": {
+      "precision": "dia",
+      "valor": "2026-09-30T08:30Z"
+     }
+    },
+    "tipo": "sobrevuelo",
+    "titulo": {
+     "en": "Drone detected over Dubăsari closes Moldovan airspace",
+     "es": "Dron detectado en Dubásari cierra el espacio aéreo moldavo"
     }
    },
    "type": "Feature"
