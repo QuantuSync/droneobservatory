@@ -178,7 +178,7 @@ def estimar(almacen: Almacen, cliente: extraccion.Servicio, muestra: int, ahora:
 
 
 def orden_estimar(args: argparse.Namespace, almacen: Almacen, ahora: datetime) -> int:
-    cliente = servicio.Cliente(servicio.configuracion())
+    cliente = servicio.Cliente(servicio.configuracion(), insistencia=servicio.HISTORICO)
     registro.info("estimación %s", estimar(almacen, cliente, args.muestra, ahora))
     return 0
 
@@ -195,7 +195,7 @@ def peor_caso_peticion() -> float:
 
 
 def orden_lote(args: argparse.Namespace, almacen: Almacen, ahora: datetime) -> int:
-    cliente = servicio.Cliente(servicio.configuracion())
+    cliente = servicio.Cliente(servicio.configuracion(), insistencia=servicio.HISTORICO)
     # Si no caben todos en el límite, primero los de más artículos: son los más probables
     # de ser un incidente real.
     candidatos = sorted(pendientes(almacen), key=lambda c: (-len(c["articulos"]), c["id"]))
@@ -214,7 +214,7 @@ def orden_lote(args: argparse.Namespace, almacen: Almacen, ahora: datetime) -> i
 
 def orden_recuperar(args: argparse.Namespace, almacen: Almacen, ahora: datetime) -> int:
     """Procesa un lote ya terminado y pagado cuyos resultados no llegaron a la base."""
-    cliente = servicio.Cliente(servicio.configuracion())
+    cliente = servicio.Cliente(servicio.configuracion(), insistencia=servicio.HISTORICO)
     lote = cliente.lote(args.lote)
     if lote.get("processing_status") != "ended":
         registro.error("el lote %s no ha terminado", args.lote)

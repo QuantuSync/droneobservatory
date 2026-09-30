@@ -1,5 +1,7 @@
 """Extractor sin red: cliente con transporte falso, ficha, validación, incidentes y fusión."""
 
+import dataclasses
+import http.client
 import json
 from collections.abc import Iterator
 from datetime import UTC, datetime, timedelta
@@ -9,7 +11,15 @@ import pytest
 
 from almacen.base import Almacen
 from modelo import coste, ficha, paginas
-from modelo.cliente import Cliente, Configuracion, LlamadaFallida
+from modelo.cliente import (
+    HISTORICO,
+    HORARIA,
+    MAX_LETRAS_MENSAJE,
+    Cliente,
+    Configuracion,
+    ErrorDefinitivo,
+    ErrorTemporal,
+)
 from modelo.paginas import primeras_frases
 from proceso import extraccion, incidentes
 from proceso.validacion_ficha import Contexto, validar
@@ -104,10 +114,13 @@ def contexto() -> Contexto:
 # --- Cliente --------------------------------------------------------------------------
 
 
-class Servicio:
-    """Transporte falso: responde lo preparado y anota lo pedido."""
+Preparada = tuple[int, dict[str, str], bytes] | Exception
 
-    def __init__(self, respuestas: list[tuple[int, dict[str, str], bytes]]) -> None:
+
+class Servicio:
+    """Transporte falso: responde lo preparado (o corta la conexión) y anota lo pedido."""
+
+    def __init__(self, respuestas: list[Preparada]) -> None:
         self.respuestas = respuestas
         self.pedidas: list[tuple[str, str, dict[str, str], Any]] = []
 
@@ -115,10 +128,17 @@ class Servicio:
         self, metodo: str, url: str, cabeceras: dict[str, str], cuerpo: bytes | None, limite: float
     ) -> tuple[int, dict[str, str], bytes]:
         self.pedidas.append((metodo, url, cabeceras, json.loads(cuerpo) if cuerpo else None))
-        return self.respuestas.pop(0)
+        siguiente = self.respuestas.pop(0)
+        if isinstance(siguiente, Exception):
+            raise siguiente
+        return siguiente
 
 
-def test_cliente_pone_la_clave_en_su_cabecera_y_reintenta_el_429() -> None:
+def error_servicio(tipo: str, mensaje: str) -> bytes:
+    return json.dumps({"type": "error", "error": {"type": tipo, "message": mensaje}}).encode()
+
+
+def test_cliente_pone_la_clave_en_su_cabecera_y_reintenta_una_vez_el_429() -> None:
     servicio = Servicio([(429, {"retry-after": "30"}, b"{}"), (200, {}, b'{"ok": 1}')])
     esperas: list[float] = []
     cliente = Cliente(CONFIG, servicio, esperas.append)
@@ -126,16 +146,96 @@ def test_cliente_pone_la_clave_en_su_cabecera_y_reintenta_el_429() -> None:
     _, url, cabeceras, cuerpo = servicio.pedidas[0]
     assert (url, cabeceras["clave-cabecera"], cabeceras["version"]) == (CONFIG.url, "k", "1")
     assert cuerpo == {"model": "m", "max_tokens": 5}
-    assert esperas == [30.0]
+    # Lo que pide el servicio, con el tope de la ejecución horaria.
+    assert esperas == [HORARIA.espera_maxima_s]
 
 
-def test_cliente_no_reintenta_un_400_ni_cuenta_el_texto_del_error() -> None:
-    cuerpo = b'{"error": {"type": "invalid_request_error", "message": "secreto"}}'
-    cliente = Cliente(CONFIG, Servicio([(400, {}, cuerpo)]), lambda _: None)
-    with pytest.raises(LlamadaFallida) as error:
+@pytest.mark.parametrize("codigo", [429, 500, 502, 503, 504, 529])
+def test_error_temporal_un_reintento_corto_y_servicio_dado_por_caido(codigo: int) -> None:
+    cuerpo = error_servicio("overloaded_error", "Overloaded")
+    servicio = Servicio([(codigo, {}, cuerpo), (codigo, {}, cuerpo)])
+    esperas: list[float] = []
+    cliente = Cliente(CONFIG, servicio, esperas.append)
+    with pytest.raises(ErrorTemporal) as error:
         cliente.mensaje({})
-    assert "invalid_request_error" in str(error.value)
-    assert "secreto" not in str(error.value)
+    assert f"código {codigo} (overloaded_error: Overloaded)" in str(error.value)
+    assert len(servicio.pedidas) == HORARIA.reintentos + 1 == 2
+    assert esperas == [HORARIA.espera_inicial_s]
+
+
+@pytest.mark.parametrize(
+    "corte",
+    [
+        TimeoutError("timed out"),
+        ConnectionResetError("reset"),
+        http.client.RemoteDisconnected("cerrada sin respuesta"),
+        http.client.IncompleteRead(b""),
+    ],
+)
+def test_corte_de_conexion_es_un_error_temporal(corte: Exception) -> None:
+    servicio = Servicio([corte, corte])
+    cliente = Cliente(CONFIG, servicio, lambda _: None)
+    with pytest.raises(ErrorTemporal, match="corte de conexión") as error:
+        cliente.mensaje({})
+    assert type(corte).__name__ in str(error.value)
+    assert len(servicio.pedidas) == 2
+
+
+def test_error_temporal_que_se_pasa_al_reintentar() -> None:
+    servicio = Servicio([(503, {}, b"<html>503</html>"), (200, {}, b'{"ok": 1}')])
+    assert Cliente(CONFIG, servicio, lambda _: None).mensaje({}) == {"ok": 1}
+
+
+def test_una_pagina_de_error_sale_recortada_y_sin_tipo() -> None:
+    cabecera = "<html> <h1>503 Service Unavailable</h1> "
+    pagina = cabecera.replace(" ", "\n") + "x" * MAX_LETRAS_MENSAJE
+    cliente = Cliente(CONFIG, Servicio([(503, {}, pagina.encode())] * 2), lambda _: None)
+    with pytest.raises(ErrorTemporal) as error:
+        cliente.mensaje({})
+    relleno = "x" * (MAX_LETRAS_MENSAJE - len(cabecera))
+    assert f"código 503 (desconocido: {cabecera}{relleno});" in str(error.value)
+
+
+@pytest.mark.parametrize(
+    ("codigo", "tipo", "mensaje"),
+    [
+        (400, "invalid_request_error", "max_tokens: field required"),
+        # Saldo agotado.
+        (400, "invalid_request_error", "Your credit balance is too low to access the service."),
+        # Clave inválida.
+        (401, "authentication_error", "invalid x-api-key"),
+        (403, "permission_error", "Your account does not have permission to use this resource."),
+    ],
+)
+def test_error_definitivo_no_se_reintenta_y_lleva_el_mensaje_exacto(
+    codigo: int, tipo: str, mensaje: str
+) -> None:
+    servicio = Servicio([(codigo, {}, error_servicio(tipo, mensaje))])
+    esperas: list[float] = []
+    # Otra clave: la de CONFIG es una letra que aparece en los mensajes.
+    cliente = Cliente(dataclasses.replace(CONFIG, clave="clave-secreta"), servicio, esperas.append)
+    with pytest.raises(ErrorDefinitivo) as error:
+        cliente.mensaje({})
+    assert str(error.value) == f"código {codigo} ({tipo}: {mensaje})"
+    assert (len(servicio.pedidas), esperas) == (1, [])
+
+
+def test_el_mensaje_de_error_nunca_lleva_la_clave() -> None:
+    config = dataclasses.replace(CONFIG, clave="clave-secreta")
+    cuerpo = error_servicio("authentication_error", "clave no válida: clave-secreta")
+    with pytest.raises(ErrorDefinitivo) as error:
+        Cliente(config, Servicio([(401, {}, cuerpo)]), lambda _: None).mensaje({})
+    assert "clave-secreta" not in str(error.value)
+    assert "clave no válida: ***" in str(error.value)
+
+
+def test_las_ordenes_del_historico_insisten_mas() -> None:
+    servicio = Servicio([(529, {}, b"{}")] * (HISTORICO.reintentos + 1))
+    esperas: list[float] = []
+    cliente = Cliente(CONFIG, servicio, esperas.append, HISTORICO)
+    with pytest.raises(ErrorTemporal):
+        cliente.mensaje({})
+    assert esperas == [HISTORICO.espera_inicial_s * 2**i for i in range(HISTORICO.reintentos)]
 
 
 def test_cliente_de_lotes() -> None:
