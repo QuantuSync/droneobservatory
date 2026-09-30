@@ -17,8 +17,21 @@ const MS_DE_ASENTAMIENTO = 2500;
 /** Anota los errores de consola y las violaciones de la política de contenido. */
 function vigilar(pagina: Page): string[] {
   const problemas: string[] = [];
+  // Mientras la recogida no publique estado.json, el navegador anota su 404 en la consola;
+  // la web lo sabe llevar (vuelve a medir desde el cambio de datos) y no cuenta como fallo.
+  let estadoSinPublicar = 0;
+  pagina.on("response", (respuesta) => {
+    if (respuesta.url().endsWith("/estado.json") && respuesta.status() === 404) {
+      estadoSinPublicar += 1;
+    }
+  });
   pagina.on("console", (mensaje) => {
-    if (mensaje.type() === "error") problemas.push(mensaje.text());
+    if (mensaje.type() !== "error") return;
+    if (estadoSinPublicar > 0 && mensaje.text().includes("status of 404")) {
+      estadoSinPublicar -= 1;
+      return;
+    }
+    problemas.push(mensaje.text());
   });
   pagina.on("pageerror", (error) => problemas.push(error.message));
   return problemas;

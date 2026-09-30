@@ -33,7 +33,7 @@ Para desarrollar sin tocar producción, un recorte de teselas de zoom bajo va en
 `../data/teselas/europa-z6.pmtiles` (fuera de git) y `web/.env.local` contiene
 `VITE_TESELAS=/teselas/europa-z6.pmtiles`; el servidor local lo sirve con
 peticiones Range. El recorte se saca con
-`pmtiles extract https://build.protomaps.com/<fecha>.pmtiles europa-z6.pmtiles --bbox=-25,34,45,72 --maxzoom=6`.
+`pmtiles extract https://build.protomaps.com/<fecha>.pmtiles europa-z6.pmtiles --bbox=-25,34,45,72 --maxzoom=6`. El de producción es `europa-z14.pmtiles` (zoom 14).
 
 ## Datos
 

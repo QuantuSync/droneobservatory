@@ -1,6 +1,8 @@
 // Datos de ejemplo para los tests, con la forma de los ficheros públicos.
 
 import type {
+  AfirmacionPublica,
+  EstadoSistema,
   Ataque,
   ColeccionIncidentes,
   FeatureIncidente,
@@ -117,3 +119,35 @@ export const CARGAS_MALICIOSAS = {
   entidades: "&lt;script&gt;alert(1)&lt;/script&gt; &amp; &#x3C;b&#x3E;",
   atributo: '" onmouseover="window.__ataque = true" x="',
 } as const;
+
+export function afirmacion(cambios: Partial<AfirmacionPublica> = {}): AfirmacionPublica {
+  return {
+    campo: "drones.numero",
+    fuente_id: "gdelt-0000000000000001",
+    medio: "example.org",
+    fiabilidad: "C",
+    credibilidad: 3,
+    fecha: { valor: "2025-10-03T01:00Z", precision: "aproximada" },
+    valor: { min: 2, max: 2 },
+    ...cambios,
+  };
+}
+
+export function estadoSistema(cambios: Partial<EstadoSistema> = {}): EstadoSistema {
+  return {
+    version: 1,
+    inicio: "2026-09-30T18:17Z",
+    fin: "2026-09-30T18:24Z",
+    resultado: "con_avisos",
+    ultima_correcta: "2026-09-30T18:24Z",
+    siguiente: "2026-09-30T19:17Z",
+    fuentes: [
+      { id: "fuerza_aerea_ua", estado: "leida", ultimo_dato: "2026-09-30T05:01Z" },
+      { id: "mindef_ru", estado: "leida", ultimo_dato: "2026-09-30T05:26Z" },
+      { id: "gdelt", estado: "leida", ultimo_dato: "2026-09-30T18:00Z" },
+      { id: "oficiales", estado: "con_aviso", ultimo_dato: null },
+      { id: "extractor", estado: "leida", ultimo_dato: "2026-09-30T17:00Z" },
+    ],
+    ...cambios,
+  };
+}

@@ -17,6 +17,7 @@ import type { Capas } from "./componentes/SelectorCapas.tsx";
 import { Simbolo } from "./componentes/Simbolo.tsx";
 import {
   CARGANDO,
+  cargarEstadoSistema,
   cargarAtaque,
   cargarIncidente,
   cargarResumen,
@@ -24,7 +25,13 @@ import {
 } from "./datos/carga.ts";
 import type { Carga } from "./datos/carga.ts";
 import { PREFIJO_UCRANIA, esConfirmado } from "./datos/derivar.ts";
-import type { Ataque, IncidenteDetalle, Resumen, ResumenUcrania } from "./datos/tipos.ts";
+import type {
+  Ataque,
+  EstadoSistema,
+  IncidenteDetalle,
+  Resumen,
+  ResumenUcrania,
+} from "./datos/tipos.ts";
 import {
   ataquesPorRegion,
   cifrasDeRegion,
@@ -49,6 +56,8 @@ const Mapa = lazy(() => import("./mapa/Mapa.tsx"));
 
 /** Cada cuánto se vuelve a calcular la antigüedad de los datos. */
 const MS_ENTRE_COMPROBACIONES = 60_000;
+/** Cada cuánto se vuelve a pedir estado.json, que la recogida publica cada hora. */
+const MS_ENTRE_ESTADOS = 300_000;
 /** Ritmo de la reproducción: un tramo de la línea de tiempo en cada paso. */
 const MS_POR_PASO = 450;
 /** Espera máxima antes de cargar el mapa si el navegador no queda libre antes. */
@@ -96,6 +105,7 @@ export function App() {
   const [movil, setMovil] = useState(false);
   const [resumen, setResumen] = useState<Carga<Resumen>>(CARGANDO);
   const [ucrania, setUcrania] = useState<Carga<ResumenUcrania>>(CARGANDO);
+  const [sistema, setSistema] = useState<EstadoSistema | null>(null);
   const [incidente, setIncidente] = useState<Carga<IncidenteDetalle>>(CARGANDO);
   const [ataque, setAtaque] = useState<Carga<Ataque>>(CARGANDO);
   const [capas, setCapas] = useState<Capas>(CAPAS_INICIALES);
@@ -139,6 +149,21 @@ export function App() {
       if (!control.signal.aborted) setUcrania(carga);
     });
     return () => control.abort();
+  }, []);
+
+  // Estado del sistema: si no está publicado o no valida, la barra usa el cambio de datos.
+  useEffect(() => {
+    const control = new AbortController();
+    const pedir = () =>
+      void cargarEstadoSistema(fetch, control.signal).then((carga) => {
+        if (!control.signal.aborted) setSistema(carga.estado === "listo" ? carga.datos : null);
+      });
+    pedir();
+    const temporizador = window.setInterval(pedir, MS_ENTRE_ESTADOS);
+    return () => {
+      control.abort();
+      window.clearInterval(temporizador);
+    };
   }, []);
 
   // Ficha de la ruta: se carga y se valida su fichero.
@@ -400,7 +425,7 @@ export function App() {
         rutaOtroIdioma={rutaOtroIdioma(idioma === "es" ? "en" : "es")}
         onMetodologia={() => setMetodologia(true)}
       />
-      <BarraEstado t={t} actualizado={actualizado} ahora={ahora} />
+      <BarraEstado t={t} actualizado={actualizado} sistema={sistema} ahora={ahora} />
       <main className="relative flex min-h-0 flex-1">
         <div id="mapa" tabIndex={-1} className="relative min-w-0 flex-1 bg-fondo outline-none">
           {mapaPermitido && !mapaFallido && avisoDeDatos === null && (

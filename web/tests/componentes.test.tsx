@@ -16,7 +16,16 @@ import { detalleIncidente, resumir, resumirUcrania } from "../src/datos/derivar.
 import { textos } from "../src/i18n/index.ts";
 import { DESCARGAS } from "../src/sitio.ts";
 import { diaDeInstante } from "../src/tiempo/dias.ts";
-import { CARGAS_MALICIOSAS, ataque, coleccion, fuente, incidente, publicacion } from "./ejemplos.ts";
+import {
+  CARGAS_MALICIOSAS,
+  afirmacion,
+  ataque,
+  coleccion,
+  estadoSistema,
+  fuente,
+  incidente,
+  publicacion,
+} from "./ejemplos.ts";
 
 // El mapa necesita WebGL; aquí se sustituye por una lista de lo que recibiría.
 vi.mock("../src/mapa/Mapa.tsx", () => ({
@@ -142,6 +151,50 @@ describe("ficha de un incidente", () => {
     expect(screen.getByText("El centro de crisis retiró el aviso")).toBeTruthy();
   });
 
+  it("con los valores de cada fuente, el rango sale de las A–C y se despliega quién dice qué", async () => {
+    const conAfirmaciones = detalleIncidente(
+      incidente({
+        afirmaciones_publicas: [
+          afirmacion({ valor: { min: 3, max: 3 }, medio: "bild.de" }),
+          afirmacion({
+            valor: { min: 10, max: 10 },
+            medio: "Polizei",
+            fiabilidad: "B",
+            credibilidad: 1,
+          }),
+          afirmacion({ valor: { min: 40, max: 40 }, medio: "Минобороны", fiabilidad: "D" }),
+        ],
+      }),
+    );
+    render(<FichaIncidente t={es} idioma="es" incidente={conAfirmaciones} />);
+    expect(screen.getByText("3–10")).toBeTruthy();
+    const desplegable = screen.getByText(es.ficha.queDiceCadaFuente(3));
+    await userEvent.click(desplegable);
+    const lista = desplegable.closest("details")!;
+    const filas = within(lista)
+      .getAllByRole("listitem")
+      .map((li) => li.textContent);
+    expect(filas[0]).toContain("10 según Polizei");
+    expect(filas[0]).toContain("B1");
+    expect(filas[1]).toContain("3 según bild.de");
+    expect(filas[2]).toContain("40 según Минобороны");
+  });
+
+  it("sin valores por fuente se queda con el rango publicado y sin desplegable", () => {
+    render(<FichaIncidente t={es} idioma="es" incidente={detalleIncidente(incidente())} />);
+    expect(screen.getByText("2–10")).toBeTruthy();
+    expect(screen.queryByText(/Qué dice/)).toBeNull();
+  });
+
+  it("un cierre desconocido no se rotula: la fuente no habla de cierre", () => {
+    const sinCierre = detalleIncidente(
+      incidente({ consecuencias: { cierre: { valor: "desconocido" } } }),
+    );
+    render(<FichaIncidente t={es} idioma="es" incidente={sinCierre} />);
+    expect(screen.queryByText("Cierre sin confirmar")).toBeNull();
+    expect(screen.queryByText(es.ficha.efecto)).toBeNull();
+  });
+
   it("sale en inglés con el nombre del país traducido", () => {
     render(<FichaIncidente t={en} idioma="en" incidente={detalle} />);
     expect(screen.getByText("Airport disruption")).toBeTruthy();
@@ -244,7 +297,7 @@ describe("barra de estado", () => {
   const punto = (contenedor: HTMLElement) => contenedor.querySelector("[aria-hidden=true]")!;
 
   it("sin la hora del navegador no afirma nada: ni verde ni etiqueta", () => {
-    const { container } = render(<BarraEstado t={es} actualizado={actualizado} ahora={null} />);
+    const { container } = render(<BarraEstado t={es} actualizado={actualizado} sistema={null} ahora={null} />);
     expect(container.textContent).toBe("ACTUALIZADO 30/09/2026 · 12:42 UTC");
     expect(punto(container).className).not.toContain("bg-confirmado");
   });
@@ -255,22 +308,66 @@ describe("barra de estado", () => {
     [30, "desactualizado", "bg-atribuido", "DATOS DESACTUALIZADOS (hace 30 h)"],
   ])("a las %s horas dice %s con color y con texto", (horas, estado, color, texto) => {
     const { container } = render(
-      <BarraEstado t={es} actualizado={actualizado} ahora={pasadas(horas)} />,
+      <BarraEstado t={es} actualizado={actualizado} sistema={null} ahora={pasadas(horas)} />,
     );
-    expect(container.querySelector("p")?.dataset.frescura).toBe(estado);
+    expect(container.querySelector<HTMLElement>("[data-frescura]")?.dataset.frescura).toBe(estado);
     expect(punto(container).className).toContain(color);
     expect(container.textContent).toContain(texto);
   });
 
   it("en inglés dice UPDATED y el estado en inglés", () => {
-    const { container } = render(<BarraEstado t={en} actualizado={actualizado} ahora={pasadas(7)} />);
+    const { container } = render(<BarraEstado t={en} actualizado={actualizado} sistema={null} ahora={pasadas(7)} />);
     expect(container.textContent).toContain("UPDATED 30/09/2026 · 12:42 UTC");
     expect(container.textContent).toContain("DATA OUT OF DATE (7 h ago)");
   });
 
   it("sin datos lo dice y no pinta verde", () => {
-    const { container } = render(<BarraEstado t={es} actualizado={null} ahora={pasadas(0)} />);
+    const { container } = render(
+      <BarraEstado t={es} actualizado={null} sistema={null} ahora={pasadas(0)} />,
+    );
     expect(container.textContent).toBe("SIN DATOS");
+    expect(punto(container).className).toContain("bg-atribuido");
+  });
+
+  it("con estado.json mide desde la última recogida correcta y despliega las fuentes", async () => {
+    // Los datos no cambian desde hace seis horas, pero la recogida de hace 18 minutos fue bien.
+    const { container } = render(
+      <BarraEstado
+        t={es}
+        actualizado={actualizado}
+        sistema={estadoSistema()}
+        ahora={new Date(Date.UTC(2026, 8, 30, 18, 42))}
+      />,
+    );
+    const barra = container.querySelector<HTMLElement>("[data-frescura]");
+    expect(barra?.dataset.frescura).toBe("al_dia");
+    expect(barra?.dataset.fuenteFrescura).toBe("recogida");
+    expect(container.textContent).toContain("ACTUALIZADO 30/09/2026 · 18:24 UTC");
+    const boton = screen.getByRole("button", { name: /Estado del sistema/ });
+    expect(boton.getAttribute("aria-expanded")).toBe("false");
+    await userEvent.click(boton);
+    expect(boton.getAttribute("aria-expanded")).toBe("true");
+    expect(container.textContent).toContain("Última recogida: 30/09/2026 · 18:17 UTC – 18:24 UTC");
+    expect(container.textContent).toContain("con avisos");
+    expect(container.textContent).toContain("Siguiente: 30/09/2026 · 19:17 UTC");
+    expect(container.textContent).toContain(
+      "Notas oficialescon aviso · último dato sin datos todavía",
+    );
+    expect(container.textContent).toContain(
+      "Fuerza Aérea de Ucranialeída · último dato 30/09/2026 · 05:01 UTC",
+    );
+  });
+
+  it("sin ninguna recogida correcta lo dice y no pinta verde", () => {
+    const { container } = render(
+      <BarraEstado
+        t={es}
+        actualizado={actualizado}
+        sistema={estadoSistema({ ultima_correcta: null, resultado: "fallida" })}
+        ahora={pasadas(0)}
+      />,
+    );
+    expect(container.textContent).toBe("NINGUNA RECOGIDA CORRECTA");
     expect(punto(container).className).toContain("bg-atribuido");
   });
 });

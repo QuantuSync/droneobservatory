@@ -27,8 +27,23 @@ import {
   validarResumenUcrania,
 } from "../src/datos/validar.ts";
 import * as vocabulario from "../src/datos/vocabulario.ts";
+import { CAMPOS_INCIDENTE, validarEstadoSistema } from "../src/datos/validar.ts";
+import { afirmacionesDe, rangoDeFuentes, valorLegible } from "../src/datos/afirmaciones.ts";
+import { referenciaDeFrescura } from "../src/tiempo/frescura.ts";
 import { diaDeInstante } from "../src/tiempo/dias.ts";
-import { CARGAS_MALICIOSAS, ataque, coleccion, fuente, incidente, publicacion } from "./ejemplos.ts";
+import {
+  CARGAS_MALICIOSAS,
+  afirmacion,
+  ataque,
+  coleccion,
+  estadoSistema,
+  fuente,
+  incidente,
+  publicacion,
+} from "./ejemplos.ts";
+
+/** Campos que la web ya acepta aunque el esquema todavía no los marque como públicos. */
+const CAMPOS_ANTICIPADOS = ["afirmaciones_publicas"];
 
 const RAIZ = join(import.meta.dirname, "..", "..");
 
@@ -329,8 +344,13 @@ describe("listas cerradas iguales a las del esquema", () => {
     // Un campo público nuevo en el esquema tiene que llegar también al validador de la web.
     const publicos = Object.entries(incidenteEsquema[p] as Record<string, Esquema>)
       .filter(([, campo]) => campo["x-visibilidad"] === "publico")
-      .map(([nombre]) => nombre)
-      .sort();
+      .map(([nombre]) => nombre);
+    for (const campo of publicos) expect(CAMPOS_INCIDENTE).toContain(campo);
+    // Y al revés: la web solo acepta campos públicos del esquema, salvo los que ya lee
+    // antes de que la exportación los publique.
+    for (const campo of CAMPOS_INCIDENTE) {
+      expect([...publicos, ...CAMPOS_ANTICIPADOS]).toContain(campo);
+    }
     const completo = incidente({
       episodio,
       atribucion: {
@@ -338,9 +358,17 @@ describe("listas cerradas iguales a las del esquema", () => {
         autoridad: "y",
         fecha: { valor: "2026-01-01T00:00Z", precision: "dia" },
       },
+      afirmaciones_publicas: [afirmacion()],
     });
-    expect(Object.keys(completo.properties).sort()).toEqual(publicos);
+    expect(Object.keys(completo.properties).sort()).toEqual(
+      [...new Set([...publicos, ...CAMPOS_ANTICIPADOS])].sort(),
+    );
     expect(validarColeccion(coleccion([completo])).ok).toBe(true);
+  });
+
+  it("las afirmaciones públicas nunca traen fuentes E ni F", () => {
+    const conE = incidente({ afirmaciones_publicas: [afirmacion({ fiabilidad: "E" as never })] });
+    expect(validarColeccion(coleccion([conE])).ok).toBe(false);
   });
 });
 
@@ -407,5 +435,71 @@ describe("carga de ficheros", () => {
     const html = (() => Promise.resolve(new Response("<!doctype html>"))) as typeof fetch;
     await expect(cargarResumen(html)).resolves.toEqual({ estado: "no_disponible" });
     expect(CARGANDO.estado).toBe("cargando");
+  });
+});
+
+describe("estado del sistema", () => {
+  it("acepta el formato acordado", () => {
+    expect(validarEstadoSistema(estadoSistema()).ok).toBe(true);
+    expect(validarEstadoSistema(estadoSistema({ ultima_correcta: null })).ok).toBe(true);
+  });
+
+  it.each([
+    ["otra versión", { version: 2 }],
+    ["un resultado desconocido", { resultado: "regular" }],
+    ["una hora mal escrita", { fin: "30/09/2026" }],
+    ["una fuente desconocida", { fuentes: [{ id: "otra", estado: "leida", ultimo_dato: null }] }],
+    ["un campo de más", { contenido: "x" }],
+  ])("rechaza %s", (_nombre, cambios) => {
+    expect(validarEstadoSistema({ ...estadoSistema(), ...cambios }).ok).toBe(false);
+  });
+
+  it("la antigüedad se mide desde la última recogida correcta si hay estado.json", () => {
+    expect(referenciaDeFrescura(estadoSistema(), "2026-09-30T12:42Z")).toBe("2026-09-30T18:24Z");
+    expect(referenciaDeFrescura(null, "2026-09-30T12:42Z")).toBe("2026-09-30T12:42Z");
+    expect(
+      referenciaDeFrescura(estadoSistema({ ultima_correcta: null }), "2026-09-30T12:42Z"),
+    ).toBeNull();
+  });
+});
+
+describe("quién dice qué", () => {
+  const conAfirmaciones = detalleIncidente(
+    incidente({
+      drones: { numero: { min: 2, max: 10 } },
+      afirmaciones_publicas: [
+        afirmacion({ valor: { min: 3, max: 3 }, fiabilidad: "C", fuente_id: "b" }),
+        afirmacion({ valor: { min: 10, max: 10 }, fiabilidad: "A", fuente_id: "a" }),
+        afirmacion({ valor: { min: 40, max: 40 }, fiabilidad: "D", fuente_id: "d" }),
+        afirmacion({ campo: "presencia_dron", valor: "confirmada", fiabilidad: "B" }),
+      ],
+    }),
+  );
+
+  it("filtra por campo y ordena por fiabilidad", () => {
+    expect(afirmacionesDe(conAfirmaciones, ["drones.numero"]).map((a) => a.fiabilidad)).toEqual([
+      "A",
+      "C",
+      "D",
+    ]);
+  });
+
+  it("el rango sale solo de las fuentes A a C", () => {
+    const deDrones = afirmacionesDe(conAfirmaciones, ["drones.numero"]);
+    expect(rangoDeFuentes(deDrones, { min: 2, max: 10 })).toEqual({ min: 3, max: 10 });
+    expect(rangoDeFuentes([], { min: 2, max: 10 })).toEqual({ min: 2, max: 10 });
+  });
+
+  it("muestra cada valor como texto, sea del tipo que sea", () => {
+    expect(valorLegible({ min: 1, max: 2 })).toEqual({ clase: "rango", rango: { min: 1, max: 2 } });
+    expect(valorLegible("desconocido")).toEqual({ clase: "desconocido" });
+    expect(valorLegible(["patrulla", "cazas"])).toEqual({
+      clase: "texto",
+      texto: "patrulla · cazas",
+    });
+    expect(valorLegible(CARGAS_MALICIOSAS.script)).toEqual({
+      clase: "texto",
+      texto: CARGAS_MALICIOSAS.script,
+    });
   });
 });

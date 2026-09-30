@@ -69,6 +69,27 @@ inferior en móvil) y línea de tiempo a todo lo ancho.
   teclado y lector de pantalla el mismo acceso a las fichas que el mapa, y a las
   regiones de Ucrania cuando la capa está activa.
 
+## Estado del sistema y quién dice qué
+
+Los publica la sesión de calidad de datos; la web los lee con el formato acordado con
+ella:
+
+- **`https://tiles.droneobservatory.eu/estado.json`**: inicio y fin de la última
+  recogida, resultado (`correcta`, `con_avisos`, `fallida`), última recogida correcta,
+  siguiente prevista y el estado y el último dato de cinco fuentes (`fuerza_aerea_ua`,
+  `mindef_ru`, `gdelt`, `oficiales`, `extractor`). Con él, la barra de estado mide la
+  antigüedad desde la última recogida correcta y no desde el último cambio de datos, y
+  un botón despliega la franja de estado del sistema. Se valida al cargarlo y se vuelve
+  a pedir cada 5 minutos. Mientras no exista o no valide, la barra sigue como antes.
+- **`afirmaciones_publicas`** en cada incidente: campo, fuente, medio, fiabilidad,
+  credibilidad, fecha y valor. Cuando lo trae, la ficha saca el rango de las fuentes A
+  a C y cada fila despliega qué dice cada fuente con su código del Almirantazgo. El
+  validador ya lo acepta como opcional, con fiabilidad solo de A a D; el test que
+  compara el esquema con el validador admite este campo anticipado, para que el PR que
+  lo publique no rompa la CI. Mientras no esté, la ficha se queda con el rango.
+- Un cierre con valor `desconocido` ya no se rotula («cierre sin confirmar» daba a
+  entender otra cosa): quiere decir que ninguna fuente habla de cierre.
+
 ## Funciones añadidas (bloque A)
 
 1. **Barra de estado honesta.** Con la hora del navegador: verde con menos de 2
@@ -126,8 +147,11 @@ inferior en móvil) y línea de tiempo a todo lo ancho.
    diciembre de 2026, renovación automática). El de teselas no se puede forzar con
    este token; su emisora es la única autorizada en su nombre.
 7. **HTTP a HTTPS:** `droneobservatory.eu` y `www` redirigen con 308 (Vercel).
-   **En `tiles.droneobservatory.eu` no:** responde 200 por http. Ver «Sigue
-   abierto».
+   `tiles.droneobservatory.eu` redirige con 301 desde que el token tiene el permiso
+   de ajustes de zona: «Always Use HTTPS» activado, HSTS de la zona con
+   `max-age=31536000; includeSubDomains; preload` y `nosniff` (lo mismo que envía
+   Vercel en el dominio principal, que va sin proxy y no se ve afectado) y TLS mínimo
+   1.2.
 8. **Analizadores externos** (30 de septiembre de 2026, sobre producción):
    - Mozilla HTTP Observatory: **A+**, 115 puntos, 12 de 12 pruebas.
    - securityheaders.com: **A+**.
@@ -136,9 +160,8 @@ inferior en móvil) y línea de tiempo a todo lo ancho.
      analizador recibe un 403 de la protección de Vercel y no llega a ver la
      cabecera HSTS, que el sitio sí envía (la ven Mozilla Observatory,
      securityheaders.com y cualquier navegador). La configuración TLS no tiene
-     avisos: TLS 1.2 y 1.3, secreto perfecto hacia adelante. `tiles.droneobservatory.eu`: **A** en sus cuatro
-     direcciones; no llega a A+ porque R2 no envía HSTS y ponerlo pide un permiso de
-     zona que el token no tiene.
+     avisos: TLS 1.2 y 1.3, secreto perfecto hacia adelante. `tiles.droneobservatory.eu`: **A+** en sus cuatro
+     direcciones desde que la zona envía HSTS (antes, A).
 
 ### Cabeceras y política de contenido
 
@@ -175,10 +198,20 @@ de 2026 (`20260930.pmtiles`, 138 GB), recorte de Europa `-25,34,45,72`:
 | 14 | 25 GB |
 | 15 | 48 GB |
 
-Ni el 14 ni el 15 caben en 9 GB, así que se eligió el mayor que cabe: **zoom 12
-(6 592 334 136 bytes)**. El 13 se pasa. Con zoom 12 el mapa se puede acercar hasta
-14 (MapLibre sobreamplía las teselas vectoriales): se ven calles principales y
-localidades, suficiente para situar áreas de precisión de 1 a 50 km.
+Ni el 14 ni el 15 caben en 9 GB, así que primero se eligió el mayor que cabía: zoom
+12 (6 592 334 136 bytes).
+
+**Ampliación a zoom 14.** Después se aceptó el coste de pasar de los 10 GB gratuitos de
+R2 y el mapa sube a **zoom 14: `europa-z14.pmtiles`, 24 570 229 564 bytes (24,6 GB)**,
+mismo build y mismo recorte. Se extrajo y se subió desde el servidor de Hetzner como
+`operador`, en un directorio temporal de `/var/tmp` que se borró al acabar, con
+prioridad baja de CPU y disco y entre dos recogidas (extracción de 18:47 a 18:55 UTC,
+subida de 18:55 a 19:00; la recogida es en el minuto 17). Las credenciales S3 derivadas
+del token llegaron por la entrada estándar y solo vivieron en ese directorio. El
+fichero nuevo se subió con otro nombre y la web cambió de fichero en su siguiente
+despliegue, así que el mapa no se quedó sin teselas en ningún momento; el de zoom 12
+se borra después. El mapa se puede acercar hasta 16 (MapLibre amplía las teselas
+vectoriales): en los aeropuertos se distinguen las pistas y las calles de rodaje.
 
 - El servidor de Hetzner no era accesible con la clave de `servidor_ssh` y el
   usuario `eodi` (`Permission denied (publickey)`), así que la extracción se hizo en
@@ -262,14 +295,12 @@ modal nativo; las frases de origen llevan su idioma; sin animaciones con
 
 ## Sigue abierto
 
-1. **HTTP a HTTPS en `tiles.droneobservatory.eu`.** Hace falta activar «Always Use
-   HTTPS» (o una regla de redirección) en la zona. El token no tiene permiso: `PATCH
-   /zones/…/settings/always_use_https` responde `{"code":10000,"message":"Authentication
-   error"}`, igual que la lectura de reglas. Con un token con «Zone Settings: Edit» es
-   una sola llamada. Mientras tanto, la web solo pide las teselas por https y el
-   HSTS de `droneobservatory.eu` con `includeSubDomains` fuerza https en el
-   subdominio a quien haya visitado la web. Con el mismo permiso se podría poner HSTS
-   en las teselas y subir su nota de SSL Labs de A a A+.
+1. **Mozilla Observatory en `tiles.droneobservatory.eu`.** No se puede puntuar: el
+   analizador pide la raíz `/` y R2 responde 404 porque el bucket no tiene nada ahí
+   («Site responded with an unexpected HTTP status code 404»). Redirigir la raíz a la
+   web pide una regla de redirección, y el token no tiene permiso de reglas
+   (`rulesets`: «Authentication error»). Las cabeceras que miraría sí están en las
+   respuestas de las teselas: HSTS y `nosniff`.
 2. **CAA añadidos por Cloudflare.** Con SSL universal activo, Cloudflare sirve en
    `droneobservatory.eu`, además de los dos registros creados, los de sus otras
    emisoras (comodoca.com, digicert.com, ssl.com, también en `issuewild`). No se
@@ -293,9 +324,16 @@ modal nativo; las frases de origen llevan su idioma; sin animaciones con
    `npm run bloqueo`: npm añade los datos de patrocinio de las dependencias y uno
    de ellos es el nombre de una cuenta ajena que el gancho `pre-push` toma por un
    término prohibido. Los PR de Dependabot los volverán a traer.
-8. **Nombres de objetivo.** Algunos vienen del extractor en otro idioma («Monaco di
+8. **ESLint 10 y el plugin de accesibilidad.** `eslint-plugin-jsx-a11y` 6.10.2, la
+   última, declara compatibilidad solo hasta ESLint 9. Probado que sus reglas
+   funcionan con ESLint 10, se admite con un `override` de npm en `web/package.json`;
+   cuando el plugin publique una versión compatible, hay que quitarlo.
+9. **`incidentes_sin_ubicacion.json`.** Desde el PR de calidad de datos hay incidentes
+   cuyo lugar solo se conoce a nivel de país o región; no se dibujan en el mapa ni
+   cuentan en los contadores de la web. Podrían ir en la lista.
+10. **Nombres de objetivo.** Algunos vienen del extractor en otro idioma («Monaco di
    Baviera»); es cosa de los datos, no de la web.
-9. **Nombre del proyecto en el README.** El título del README del repositorio sigue
+11. **Nombre del proyecto en el README.** El título del README del repositorio sigue
    en español («Observatorio Europeo de Incidentes con Drones»); la web y su
    documentación usan siempre el nombre en inglés.
 

@@ -12,6 +12,17 @@ export function horasDesde(actualizado: string, ahora: Date): number {
   return (ahora.getTime() - new Date(actualizado).getTime()) / MS_POR_HORA;
 }
 
+/**
+ * Desde cuándo se mide la antigüedad: la última recogida correcta si estado.json está
+ * publicado; si no, el último cambio de los datos. Sin ninguna recogida correcta, null.
+ */
+export function referenciaDeFrescura(
+  sistema: { ultima_correcta: string | null } | null,
+  actualizado: string | null,
+): string | null {
+  return sistema === null ? actualizado : sistema.ultima_correcta;
+}
+
 export function frescura(actualizado: string, ahora: Date): EstadoFrescura {
   const horas = horasDesde(actualizado, ahora);
   // Una fecha ilegible no puede darse por reciente.

@@ -6,6 +6,10 @@ export const ESTADOS = ["notificado", "confirmado", "atribuido", "desmentido"] a
 export const PRESENCIAS = ["confirmada", "no_confirmada", "descartada"] as const;
 export const PRECISIONES = ["minuto", "hora", "dia", "aproximada"] as const;
 export const FIABILIDADES = ["A", "B", "C", "D", "E", "F"] as const;
+/** E y F nunca se publican. */
+export const FIABILIDADES_PUBLICAS = ["A", "B", "C", "D"] as const;
+/** Fiabilidades cuyas cifras forman el rango que muestra la ficha. */
+export const FIABILIDADES_DEL_RANGO: readonly string[] = ["A", "B", "C"];
 export const SENTIDOS = ["RU_UA", "UA_RU"] as const;
 export const CATEGORIAS_OBJETIVO = [
   "aeropuerto",
@@ -45,6 +49,18 @@ export const CATEGORIAS_OBJETIVO_UCRANIA = [
   "industrial",
   "otra",
 ] as const;
+
+export const RESULTADOS_RECOGIDA = ["correcta", "con_avisos", "fallida"] as const;
+export const ESTADOS_FUENTE = ["leida", "con_aviso", "no_leida"] as const;
+/** Fuentes que informa estado.json, en el orden en que se muestran. */
+export const FUENTES_DEL_SISTEMA = [
+  "fuerza_aerea_ua",
+  "mindef_ru",
+  "gdelt",
+  "oficiales",
+  "extractor",
+] as const;
+export const VERSION_ESTADO_SISTEMA = 1;
 
 export const PATRON_ID_INCIDENTE = /^EODI-\d{4}-\d{5}$/;
 export const PATRON_ID_ATAQUE = /^EODI-UA-\d{4}-\d{4}$/;

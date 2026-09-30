@@ -38,7 +38,8 @@ addProtocol("pmtiles", new Protocol().tile);
 const VISTA_INICIAL: [number, number, number, number] = [-11, 35, 41, 69];
 const MARGEN_VISTA_INICIAL_PX = 12;
 const ZOOM_MINIMO = 2.2;
-const ZOOM_MAXIMO = 14;
+/** Dos niveles por encima del zoom 14 de las teselas: MapLibre amplía las vectoriales. */
+const ZOOM_MAXIMO = 16;
 /**
  * Límites del desplazamiento. Son mucho más anchos que Europa porque MapLibre no deja ver
  * nada fuera de ellos: en una pantalla ancha, unos límites ajustados obligarían a acercar

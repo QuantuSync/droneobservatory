@@ -65,6 +65,19 @@ export type Medida =
 
 export type ClaseDron = "multirrotor_pequeno" | "ala_fija" | "ataque_largo_alcance" | "desconocido";
 
+/** Lo que dice una fuente pública sobre un campo público del incidente. */
+export interface AfirmacionPublica {
+  /** Ruta pública del campo, con puntos: «drones.numero», «consecuencias.cierre.valor». */
+  campo: string;
+  fuente_id: string;
+  medio: string;
+  fiabilidad: Fiabilidad;
+  credibilidad: number;
+  fecha: Instante;
+  /** Valor según esa fuente, del mismo tipo que el campo público. */
+  valor: unknown;
+}
+
 export interface PropiedadesIncidente {
   id: string;
   tipo: Tipo;
@@ -93,6 +106,7 @@ export interface PropiedadesIncidente {
   respuesta?: { medidas?: Medida[] };
   atribucion?: { actor: string; autoridad: string; fecha: Instante };
   fuentes: Fuente[];
+  afirmaciones_publicas?: AfirmacionPublica[];
   control: { ultima_actualizacion: Instante; motivo_desmentido?: string };
 }
 
@@ -221,6 +235,23 @@ export interface ResumenUcrania {
   /** Códigos ISO 3166-2 de las regiones de Ucrania que aparecen en los ataques. */
   regiones: string[];
   ataques: FilaAtaque[];
+}
+
+// ---- Estado del sistema (estado.json, lo publica la recogida en el bucket de teselas) ----
+
+export type ResultadoRecogida = "correcta" | "con_avisos" | "fallida";
+export type EstadoFuente = "leida" | "con_aviso" | "no_leida";
+export type FuenteDelSistema = "fuerza_aerea_ua" | "mindef_ru" | "gdelt" | "oficiales" | "extractor";
+
+export interface EstadoSistema {
+  version: 1;
+  inicio: string;
+  fin: string;
+  resultado: ResultadoRecogida;
+  /** Fin de la última recogida correcta; null si no ha habido ninguna. */
+  ultima_correcta: string | null;
+  siguiente: string;
+  fuentes: { id: FuenteDelSistema; estado: EstadoFuente; ultimo_dato: string | null }[];
 }
 
 /** Cifras para prerenderizar la cabecera y la barra de estado sin esperar a los datos. */

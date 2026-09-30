@@ -16,7 +16,7 @@ import type { Idioma } from "../sitio.ts";
 
 export const URL_TESELAS: string =
   (import.meta.env.VITE_TESELAS as string | undefined) ??
-  "https://tiles.droneobservatory.eu/europa.pmtiles";
+  "https://tiles.droneobservatory.eu/europa-z14.pmtiles";
 
 export const FUENTE_BASE = "protomaps";
 /** Tierra de Natural Earth para lo que queda fuera del recorte de teselas. */
@@ -59,6 +59,12 @@ const RADIO_DE_AGRUPACION_PX = 44;
 /** Zoom desde el que el área de precisión de cada incidente se empieza a ver. */
 const ZOOM_AREAS = 4.5;
 const ZOOM_AREAS_PLENAS = 6.5;
+/**
+ * De cerca, el relleno se desvanece y queda solo el contorno: varios incidentes en el
+ * mismo aeropuerto, con el mismo radio, taparían si no las pistas que se quieren ver.
+ */
+const ZOOM_RELLENO_TENUE = 10;
+const ZOOM_SIN_RELLENO = 12.5;
 const OPACIDAD_AREA = 0.14;
 
 const FUENTE_TIPOGRAFICA_NUMEROS = ["Noto Sans Medium"];
@@ -266,7 +272,19 @@ function capasPropias(): LayerSpecification[] {
       filter: ["!", ES_DESMENTIDO],
       paint: {
         "fill-color": COLOR_POR_ESTADO,
-        "fill-opacity": opacidadSegunZoom(OPACIDAD_AREA),
+        "fill-opacity": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          ZOOM_AREAS,
+          0,
+          ZOOM_AREAS_PLENAS,
+          OPACIDAD_AREA,
+          ZOOM_RELLENO_TENUE,
+          OPACIDAD_AREA,
+          ZOOM_SIN_RELLENO,
+          0,
+        ],
       },
     },
     {

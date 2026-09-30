@@ -1,8 +1,9 @@
 // Carga de los ficheros de datos. Cada fichero se valida contra el esquema antes de usarlo:
 // si no valida, no se pinta nada de él.
 
-import type { Ataque, IncidenteDetalle, Resumen, ResumenUcrania } from "./tipos.ts";
+import type { Ataque, EstadoSistema, IncidenteDetalle, Resumen, ResumenUcrania } from "./tipos.ts";
 import {
+  validarEstadoSistema,
   validarAtaque,
   validarDetalleIncidente,
   validarResumen,
@@ -71,4 +72,20 @@ export function cargarAtaque(
   senal?: AbortSignal,
 ): Promise<Carga<Ataque>> {
   return cargar(`/datos/ataques/${id}.json`, validarAtaque, descargar, senal);
+}
+
+/**
+ * estado.json lo sube la recogida al bucket de teselas cada hora, sin pasar por git.
+ * Se pide sin caché del navegador: la cabecera del bucket ya da una caducidad corta.
+ */
+export const URL_ESTADO_SISTEMA: string =
+  (import.meta.env.VITE_ESTADO as string | undefined) ??
+  "https://tiles.droneobservatory.eu/estado.json";
+
+export function cargarEstadoSistema(
+  descargar: Descarga,
+  senal?: AbortSignal,
+): Promise<Carga<EstadoSistema>> {
+  const sinCache: Descarga = (ruta, opciones) => descargar(ruta, { ...opciones, cache: "no-cache" });
+  return cargar(URL_ESTADO_SISTEMA, validarEstadoSistema, sinCache, senal);
 }

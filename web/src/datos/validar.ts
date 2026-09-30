@@ -3,6 +3,7 @@
 // publicacion/, y en la web al cargar cada fichero: un fichero que no valida no se pinta.
 
 import type {
+  EstadoSistema,
   Ataque,
   ColeccionIncidentes,
   IncidenteDetalle,
@@ -114,6 +115,9 @@ function constante(esperado: unknown): Comprobacion {
   return enumerado([esperado]);
 }
 
+/** Cualquier valor JSON: el de una afirmación tiene el tipo de su campo, que varía. */
+const cualquiera: Comprobacion = () => undefined;
+
 const instante = objeto({
   valor: cadena(v.PATRON_INSTANTE),
   precision: enumerado(v.PRECISIONES),
@@ -165,7 +169,18 @@ const CAMPOS_INCIDENTE_OBLIGATORIOS: Record<string, Comprobacion> = {
   control,
 };
 
+const afirmacionPublica = objeto({
+  campo: cadena(),
+  fuente_id: cadena(),
+  medio: cadena(),
+  fiabilidad: enumerado(v.FIABILIDADES_PUBLICAS),
+  credibilidad: numero(v.CREDIBILIDAD_MIN, v.CREDIBILIDAD_MAX, true),
+  fecha: instante,
+  valor: cualquiera,
+});
+
 const CAMPOS_INCIDENTE_OPCIONALES: Record<string, Comprobacion> = {
+  afirmaciones_publicas: lista(afirmacionPublica),
   episodio: cadena(v.PATRON_ID_EPISODIO),
   presencia_dron: enumerado(v.PRESENCIAS),
   objetivo: objeto(
@@ -342,6 +357,32 @@ export function validarResumen(valor: unknown): Resultado<Resumen> {
 
 export function validarResumenUcrania(valor: unknown): Resultado<ResumenUcrania> {
   return validar(resumenUcrania, valor);
+}
+
+/** Nombres de los campos del incidente que acepta el validador. */
+export const CAMPOS_INCIDENTE: readonly string[] = [
+  ...Object.keys(CAMPOS_INCIDENTE_OBLIGATORIOS),
+  ...Object.keys(CAMPOS_INCIDENTE_OPCIONALES),
+];
+
+const estadoSistema = objeto({
+  version: constante(v.VERSION_ESTADO_SISTEMA),
+  inicio: cadena(v.PATRON_INSTANTE),
+  fin: cadena(v.PATRON_INSTANTE),
+  resultado: enumerado(v.RESULTADOS_RECOGIDA),
+  ultima_correcta: nulable(cadena(v.PATRON_INSTANTE)),
+  siguiente: cadena(v.PATRON_INSTANTE),
+  fuentes: lista(
+    objeto({
+      id: enumerado(v.FUENTES_DEL_SISTEMA),
+      estado: enumerado(v.ESTADOS_FUENTE),
+      ultimo_dato: nulable(cadena(v.PATRON_INSTANTE)),
+    }),
+  ),
+});
+
+export function validarEstadoSistema(valor: unknown): Resultado<EstadoSistema> {
+  return validar(estadoSistema, valor);
 }
 
 export function validarDetalleIncidente(valor: unknown): Resultado<IncidenteDetalle> {

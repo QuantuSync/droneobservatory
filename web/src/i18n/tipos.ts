@@ -1,4 +1,7 @@
 import type {
+  EstadoFuente,
+  FuenteDelSistema,
+  ResultadoRecogida,
   CategoriaObjetivo,
   CategoriaObjetivoUcrania,
   Estado,
@@ -44,6 +47,15 @@ export interface Textos {
     etiqueta: Record<EstadoFrescura, string>;
     antiguedad: (horas: number) => string;
     sinDatos: string;
+    sistema: string;
+    ultimaRecogida: string;
+    siguiente: string;
+    resultado: Record<ResultadoRecogida, string>;
+    fuente: Record<FuenteDelSistema, string>;
+    estadoFuente: Record<EstadoFuente, string>;
+    ultimoDato: string;
+    sinUltimoDato: string;
+    nuncaCorrecta: string;
   };
   avisos: {
     cargando: string;
@@ -108,6 +120,8 @@ export interface Textos {
     desconocido: string;
     minutos: (n: string) => string;
     rangoDeFuentes: string;
+    queDiceCadaFuente: (n: number) => string;
+    valorSegun: string;
     cierre: Record<"si" | "no" | "desconocido", string>;
     vuelosDesviados: string;
     vuelosCancelados: string;
