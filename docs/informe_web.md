@@ -315,3 +315,29 @@ modal nativo; las frases de origen llevan su idioma; sin animaciones con
 - La vista inicial encaja Europa de Portugal a los Urales en cualquier pantalla.
 - El nombre de cada lugar del mapa base va en una sola línea, en el idioma de la web
   (la base de Protomaps añade el nombre local debajo).
+
+## Verificación del despliegue
+
+Tras el arreglo de la comprobación de omitir (PR 18), el 30 de septiembre de 2026:
+
+| Caso | Commit | Resultado en Vercel |
+| --- | --- | --- |
+| Vista previa de la rama con el arreglo | 3ec2b6d | Ready |
+| Vista previa de un commit que solo cambia `docs/` | a267630 | Omitido (la comprobación sale con 0) |
+| Vista previa tras el push forzado del squash, con el commit anterior fuera del clon | d10b3c2 | Ready (antes de este arreglo, Error con código 128) |
+| Producción desde `main` | d10b3c2 | Ready |
+| Producción desde un commit de datos del servidor en `main` | c3e69f0 («Actualiza los datos publicados», 17:21 UTC) | Ready |
+| Producción desde este commit, que solo cambia `docs/` | este commit | Omitido |
+
+El commit de datos comprobado es anterior al script: el servidor solo sube un commit
+cuando cambian los datos, y en la hora siguiente al arreglo no cambiaron. Con el
+script, un commit que toca `publicacion/` construye (test «un commit de datos del
+servidor construye» contra un repositorio real).
+
+Los PR de Dependabot abiertos para `web/` (#14 a #17) no se han fusionado: el salto a
+ESLint 10 (#17) choca con eslint-plugin-jsx-a11y, que solo admite hasta la 9, y su
+despliegue de vista previa falla en `npm ci`; #16 sube `@eslint/js` a la 10, que debe
+ir a la par con ESLint; y los cuatro traen de vuelta los
+datos de patrocinio al fichero de bloqueo y hay que pasar `npm run bloqueo` antes de
+fusionarlos.
+
