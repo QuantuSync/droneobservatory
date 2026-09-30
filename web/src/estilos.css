@@ -1,0 +1,191 @@
+@import "tailwindcss";
+
+/* Paleta y tipografía del European Observatory of Drone Incidents. El dorado es tinta:
+   líneas de 1 px, texto y contornos, nunca rellenos con brillo ni sombras. */
+@theme {
+  --color-*: initial;
+  --color-fondo: #0a1628;
+  --color-superficie-1: #0f1f36;
+  --color-superficie-2: #162a47;
+  --color-linea: #22385a;
+  --color-dorado: #c9a54a;
+  --color-borde: rgb(201 165 74 / 0.25);
+  --color-texto: #ede8da;
+  --color-secundario: #93a3b8;
+  --color-confirmado: #7fb069;
+  --color-notificado: #e0a83c;
+  --color-atribuido: #d65a4a;
+  --color-desmentido: #93a3b8;
+  --color-transparente: transparent;
+
+  --font-titular: "Saira Condensed", "Arial Narrow", sans-serif;
+  --font-texto: "Inter Variable", system-ui, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Mono", "SF Mono", Menlo, Consolas, monospace;
+
+  /* Radio máximo de 4 px en todo, salvo las formas circulares intrínsecas. */
+  --radius-*: initial;
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-full: 9999px;
+
+  --shadow-*: initial;
+  --tracking-etiqueta: 0.25em;
+  --tracking-wordmark: 0.3em;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+    scrollbar-color: var(--color-linea) var(--color-fondo);
+    scrollbar-width: thin;
+  }
+
+  body {
+    background-color: var(--color-fondo);
+    color: var(--color-texto);
+    font-family: var(--font-texto);
+    font-weight: 400;
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-dorado);
+    outline-offset: 2px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-fondo);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-linea);
+    border-radius: 4px;
+  }
+
+  dialog {
+    color: inherit;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+      animation-duration: 0s !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0s !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  /* Etiqueta técnica: Saira Condensed en mayúsculas, tracking amplio, en dorado. */
+  .etiqueta {
+    font-family: var(--font-titular);
+    font-weight: 600;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    letter-spacing: var(--tracking-etiqueta);
+    text-transform: uppercase;
+    color: var(--color-dorado);
+  }
+
+  /* Titular con la línea dorada que se desvanece debajo. */
+  .titular {
+    font-family: var(--font-titular);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    line-height: 1.15;
+    padding-bottom: 0.5rem;
+    background-image: linear-gradient(to right, var(--color-dorado), transparent);
+    background-repeat: no-repeat;
+    background-size: 100% 1px;
+    background-position: left bottom;
+  }
+
+  .mono {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .boton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    min-height: 2rem;
+    padding: 0.25rem 0.75rem;
+    border: 1px solid var(--color-dorado);
+    border-radius: var(--radius-md);
+    font-family: var(--font-titular);
+    font-weight: 600;
+    font-size: 0.8125rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-dorado);
+    background-color: transparent;
+    cursor: pointer;
+    transition: background-color 120ms;
+  }
+  .boton:hover {
+    background-color: var(--color-superficie-2);
+  }
+  .boton[aria-pressed="true"],
+  .boton[aria-checked="true"] {
+    background-color: var(--color-superficie-2);
+    color: var(--color-texto);
+  }
+  .boton:disabled {
+    cursor: default;
+    border-color: var(--color-borde);
+    color: var(--color-secundario);
+    background-color: transparent;
+  }
+  .boton-solido {
+    background-color: var(--color-dorado);
+    color: var(--color-fondo);
+  }
+  .boton-solido:hover {
+    background-color: var(--color-texto);
+  }
+  .boton-discreto {
+    border-color: var(--color-borde);
+  }
+
+  .panel {
+    background-color: var(--color-superficie-1);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radius-md);
+  }
+
+  .enlace {
+    color: var(--color-texto);
+    text-decoration: underline;
+    text-decoration-color: var(--color-dorado);
+    text-underline-offset: 3px;
+  }
+  .enlace:hover {
+    color: var(--color-dorado);
+  }
+
+  /* La barra de estado va entre dos líneas doradas. */
+  .entre-lineas {
+    border-top: 1px solid var(--color-borde);
+    border-bottom: 1px solid var(--color-borde);
+  }
+}
+
+/* El lienzo del mapa hereda el fondo para que no parpadee al cargar. */
+.maplibregl-map {
+  font-family: var(--font-texto);
+  background-color: var(--color-fondo);
+}
+.maplibregl-canvas:focus-visible {
+  outline: 2px solid var(--color-dorado);
+  outline-offset: -2px;
+}

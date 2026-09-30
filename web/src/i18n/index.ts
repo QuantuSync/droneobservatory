@@ -1,0 +1,75 @@
+import type { Instante, RangoODesconocido } from "../datos/tipos.ts";
+import type { Idioma } from "../sitio.ts";
+import { fechaDeDia } from "../tiempo/dias.ts";
+import { en } from "./en.ts";
+import { es } from "./es.ts";
+import type { Textos } from "./tipos.ts";
+
+const TEXTOS: Record<Idioma, Textos> = { es, en };
+
+export function textos(idioma: Idioma): Textos {
+  return TEXTOS[idioma];
+}
+
+function dosCifras(n: number): string {
+  return String(n).padStart(2, "0");
+}
+
+/** Fecha UTC como dd/mm/aaaa, igual en los dos idiomas. */
+export function fecha(f: Date): string {
+  return `${dosCifras(f.getUTCDate())}/${dosCifras(f.getUTCMonth() + 1)}/${f.getUTCFullYear()}`;
+}
+
+export function fechaDia(dia: number): string {
+  return fecha(fechaDeDia(dia));
+}
+
+/** Hora UTC como hh:mm. */
+export function hora(f: Date): string {
+  return `${dosCifras(f.getUTCHours())}:${dosCifras(f.getUTCMinutes())}`;
+}
+
+export function fechaHora(valor: string): string {
+  const f = new Date(valor);
+  return `${fecha(f)} · ${hora(f)} UTC`;
+}
+
+/** Un instante con la precisión que declara: sin hora cuando solo se conoce el día. */
+export function instante(i: Instante): string {
+  const f = new Date(i.valor);
+  return i.precision === "minuto" || i.precision === "hora"
+    ? `${fecha(f)} · ${hora(f)} UTC`
+    : fecha(f);
+}
+
+export function numero(n: number, idioma: Idioma): string {
+  return new Intl.NumberFormat(idioma, { useGrouping: "always" }).format(n);
+}
+
+/** «12» si el rango es exacto y «2–10» si no; null cuando ninguna fuente da la cifra. */
+export function rango(r: RangoODesconocido | undefined, idioma: Idioma): string | null {
+  if (r === undefined || r === "desconocido") return null;
+  return r.min === r.max
+    ? numero(r.min, idioma)
+    : `${numero(r.min, idioma)}–${numero(r.max, idioma)}`;
+}
+
+export function esRangoAbierto(r: RangoODesconocido | undefined): boolean {
+  return r !== undefined && r !== "desconocido" && r.min !== r.max;
+}
+
+/** Nombre del país a partir de su código ISO 3166-1; el propio código si no se conoce. */
+export function pais(codigo: string, idioma: Idioma): string {
+  try {
+    return new Intl.DisplayNames(idioma, { type: "region" }).of(codigo) ?? codigo;
+  } catch {
+    return codigo;
+  }
+}
+
+/** Nombre de una región de la capa de Ucrania; el código ISO 3166-2 si no está en la tabla. */
+export function region(codigo: string, idioma: Idioma): string {
+  return TEXTOS[idioma].regiones[codigo] ?? codigo;
+}
+
+export type { Textos } from "./tipos.ts";

@@ -1,0 +1,64 @@
+// Listas cerradas del esquema 1.0.0 (campos públicos). Un test las compara con los
+// ficheros de esquema/ para que no se separen.
+
+export const TIPOS = ["incursion", "interrupcion_aeroportuaria", "sobrevuelo"] as const;
+export const ESTADOS = ["notificado", "confirmado", "atribuido", "desmentido"] as const;
+export const PRESENCIAS = ["confirmada", "no_confirmada", "descartada"] as const;
+export const PRECISIONES = ["minuto", "hora", "dia", "aproximada"] as const;
+export const FIABILIDADES = ["A", "B", "C", "D", "E", "F"] as const;
+export const SENTIDOS = ["RU_UA", "UA_RU"] as const;
+export const CATEGORIAS_OBJETIVO = [
+  "aeropuerto",
+  "base_militar",
+  "puerto",
+  "energia",
+  "presa",
+  "estadio",
+  "industrial",
+  "gubernamental",
+  "otra",
+] as const;
+export const USOS = ["civil", "militar", "mixto"] as const;
+export const CLASES_DRON = [
+  "multirrotor_pequeno",
+  "ala_fija",
+  "ataque_largo_alcance",
+  "desconocido",
+] as const;
+export const CIERRES = ["si", "no", "desconocido"] as const;
+export const NIVELES_DANOS = ["ninguno", "menores", "graves", "desconocido"] as const;
+export const MEDIDAS = [
+  "cierre_espacio_aereo",
+  "patrulla",
+  "cazas",
+  "derribo",
+  "inhibicion",
+  "ninguna_conocida",
+] as const;
+export const TIPOS_DRON_ATAQUE = ["ala_fija", "multirrotor"] as const;
+export const CATEGORIAS_DERRIBADOS = ["derribados", "derribados_o_neutralizados"] as const;
+export const CATEGORIAS_OBJETIVO_UCRANIA = [
+  "energia",
+  "residencial",
+  "ferrocarril",
+  "puerto",
+  "industrial",
+  "otra",
+] as const;
+
+export const PATRON_ID_INCIDENTE = /^EODI-\d{4}-\d{5}$/;
+export const PATRON_ID_ATAQUE = /^EODI-UA-\d{4}-\d{4}$/;
+export const PATRON_ID_EPISODIO = /^EODI-EP-\d{4}-\d{4}$/;
+export const PATRON_INSTANTE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?Z$/;
+export const PATRON_PAIS = /^[A-Z]{2}$/;
+export const PATRON_REGION = /^[A-Z]{2}-[A-Z0-9]{1,3}$/;
+export const PATRON_IDIOMA = /^[a-z]{2}$/;
+export const PATRON_OACI = /^[A-Z]{4}$/;
+export const PATRON_ENLACE = /^https?:\/\/\S+$/;
+
+export const CREDIBILIDAD_MIN = 1;
+export const CREDIBILIDAD_MAX = 6;
+export const RADIO_KM_MIN = 0.1;
+export const RADIO_KM_MAX = 50;
+export const LATITUD_MAX = 90;
+export const LONGITUD_MAX = 180;

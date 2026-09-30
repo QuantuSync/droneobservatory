@@ -1,0 +1,114 @@
+// Servidor local de web/dist que imita lo que hace el despliegue: aplica las cabeceras y
+// las reescrituras de ../vercel.json y las direcciones sin extensión. Sirve además el
+// recorte de teselas de desarrollo (../data/teselas, fuera de git) con peticiones Range.
+// Sirve para comprobar en un navegador real la política de seguridad antes de desplegar.
+
+import { createReadStream } from "node:fs";
+import { readFile, stat } from "node:fs/promises";
+import { createServer } from "node:http";
+import type { ServerResponse } from "node:http";
+import { dirname, extname, join, normalize, sep } from "node:path";
+import { fileURLToPath } from "node:url";
+
+import { cabecerasDe, destinoDeReescritura } from "../src/seguridad/despliegue.ts";
+import type { ConfiguracionDespliegue } from "../src/seguridad/despliegue.ts";
+
+const WEB = join(dirname(fileURLToPath(import.meta.url)), "..");
+const SALIDA = join(WEB, "dist");
+const TESELAS = join(WEB, "..", "data", "teselas");
+const RUTA_TESELAS = "/teselas/";
+const PUERTO = Number(process.env.PUERTO ?? "4173");
+
+const TIPOS: Record<string, string> = {
+  ".html": "text/html; charset=utf-8",
+  ".js": "text/javascript; charset=utf-8",
+  ".mjs": "text/javascript; charset=utf-8",
+  ".css": "text/css; charset=utf-8",
+  ".json": "application/json; charset=utf-8",
+  ".geojson": "application/geo+json; charset=utf-8",
+  ".csv": "text/csv; charset=utf-8",
+  ".txt": "text/plain; charset=utf-8",
+  ".svg": "image/svg+xml",
+  ".png": "image/png",
+  ".woff": "font/woff",
+  ".woff2": "font/woff2",
+  ".pbf": "application/x-protobuf",
+  ".pmtiles": "application/octet-stream",
+};
+
+const configuracion = JSON.parse(
+  await readFile(join(WEB, "..", "vercel.json"), "utf-8"),
+) as ConfiguracionDespliegue;
+
+async function esFichero(ruta: string): Promise<boolean> {
+  try {
+    return (await stat(ruta)).isFile();
+  } catch {
+    return false;
+  }
+}
+
+/** Fichero que responde a una ruta, como en el despliegue: sin extensión .html. */
+async function resolver(ruta: string): Promise<string | null> {
+  const candidatas = [ruta, `${ruta}.html`, join(ruta, "index.html")];
+  for (const candidata of candidatas) {
+    const fichero = normalize(join(SALIDA, candidata));
+    if (fichero.startsWith(SALIDA + sep) && (await esFichero(fichero))) return fichero;
+  }
+  return null;
+}
+
+async function servirTeselas(
+  ruta: string,
+  rango: string | undefined,
+  respuesta: ServerResponse,
+): Promise<void> {
+  const fichero = normalize(join(TESELAS, ruta.slice(RUTA_TESELAS.length)));
+  if (!fichero.startsWith(TESELAS + sep) || !(await esFichero(fichero))) {
+    respuesta.writeHead(404).end();
+    return;
+  }
+  const { size } = await stat(fichero);
+  const partes = /^bytes=(\d+)-(\d*)$/.exec(rango ?? "");
+  if (partes === null) {
+    respuesta.writeHead(200, { "Content-Length": size, "Accept-Ranges": "bytes" });
+    createReadStream(fichero).pipe(respuesta);
+    return;
+  }
+  const inicio = Number(partes[1]);
+  const fin = partes[2] === "" ? size - 1 : Math.min(Number(partes[2]), size - 1);
+  respuesta.writeHead(206, {
+    "Content-Range": `bytes ${inicio}-${fin}/${size}`,
+    "Content-Length": fin - inicio + 1,
+    "Accept-Ranges": "bytes",
+    "Content-Type": "application/octet-stream",
+  });
+  createReadStream(fichero, { start: inicio, end: fin }).pipe(respuesta);
+}
+
+const servidor = createServer((peticion, respuesta) => {
+  void (async () => {
+    const ruta = decodeURIComponent(new URL(peticion.url ?? "/", "http://local").pathname);
+    if (ruta.startsWith(RUTA_TESELAS)) {
+      await servirTeselas(ruta, peticion.headers.range, respuesta);
+      return;
+    }
+    for (const [clave, valor] of cabecerasDe(configuracion, ruta)) {
+      respuesta.setHeader(clave, valor);
+    }
+    const fichero =
+      (await resolver(ruta)) ?? (await resolver(destinoDeReescritura(configuracion, ruta) ?? ruta));
+    if (fichero === null) {
+      respuesta.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" }).end("404");
+      return;
+    }
+    respuesta.writeHead(200, {
+      "Content-Type": TIPOS[extname(fichero)] ?? "application/octet-stream",
+    });
+    createReadStream(fichero).pipe(respuesta);
+  })();
+});
+
+servidor.listen(PUERTO, () => {
+  console.log(`http://localhost:${PUERTO}`);
+});

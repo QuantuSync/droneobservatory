@@ -17,7 +17,8 @@ ruso (UA_RU), las dos marcadas como reivindicación de parte, con sus
 históricos desde octubre de 2022; y recogida de noticias europeas sobre drones
 en los ficheros GKG de GDELT, filtradas, deduplicadas y agrupadas en
 candidatos internos; el extractor que los convierte en incidentes europeos,
-con fusión, episodios y presencia_dron. La web está pendiente.
+con fusión, episodios y presencia_dron; y la web pública de una sola pantalla
+en [droneobservatory.eu](https://droneobservatory.eu), en español e inglés.
 
 ## Estructura
 
@@ -31,7 +32,7 @@ con fusión, episodios y presencia_dron. La web está pendiente.
 | `exportacion/` | `incidentes.geojson` y `ucrania.json` para la web, cada uno con su lista cerrada de campos |
 | `recogida/` | Descarga educada, caché, fuentes de partes (Fuerza Aérea y Ministerio de Defensa ruso), GDELT, ejecución horaria, histórico y auditoría de cobertura |
 | `publicacion/` | Ficheros públicos generados: `ucrania.json` e `incidentes.geojson` |
-| `web/` | Reservado para la fase siguiente |
+| `web/` | Web pública de una sola pantalla: mapa, fichas, línea de tiempo, metodología y datos abiertos ([`web/README.md`](web/README.md)) |
 | `tests/` | Tests |
 
 ## Ejecutar los tests
@@ -75,6 +76,14 @@ guarda en el repositorio.
   límite de gasto.
 - `python -m recogida.comparacion [--candidatos]`: cobertura frente a la lista
   de referencia de 2025.
+
+## Web
+
+`vercel.json` define el build (`cd web && npm run build`), las cabeceras de
+seguridad y las direcciones propias de cada incidente y ataque. Cada push a `main`
+que cambia `web/`, `publicacion/` o `vercel.json` se despliega con la integración
+de Vercel con GitHub, también los commits de datos de la recogida. Detalle en
+[`web/README.md`](web/README.md) y [`docs/informe_web.md`](docs/informe_web.md).
 
 Decisiones, valores y cobertura en [`docs/informe_recogida.md`](docs/informe_recogida.md),
 [`docs/informe_gdelt_mindef.md`](docs/informe_gdelt_mindef.md),

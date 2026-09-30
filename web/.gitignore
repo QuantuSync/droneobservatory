@@ -1,0 +1,12 @@
+node_modules/
+dist/
+# Generado en cada build a partir de ../publicacion
+public/datos/
+src/generado/
+# Resultados de Playwright
+test-results/
+playwright-report/
+.vite-react-ssg-temp/
+*.local
+.vercel/
+public/.well-known/security.txt

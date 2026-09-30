@@ -1,0 +1,71 @@
+import type { IncidenteResumen } from "../datos/tipos.ts";
+import { fechaDia, pais, region } from "../i18n/index.ts";
+import type { Textos } from "../i18n/index.ts";
+import { rutaDeFicha } from "../sitio.ts";
+import type { Idioma } from "../sitio.ts";
+import { Simbolo } from "./Simbolo.tsx";
+import { Enlace } from "../navegacion.tsx";
+
+interface Props {
+  t: Textos;
+  idioma: Idioma;
+  /** Incidentes del periodo elegido. */
+  incidentes: readonly IncidenteResumen[];
+  /** Regiones de Ucrania que se pueden abrir; vacío si la capa no está activa. */
+  regiones: readonly string[];
+  onRegion: (codigo: string) => void;
+}
+
+/**
+ * Lista de los incidentes del periodo, del más reciente al más antiguo. Da con teclado y
+ * lector de pantalla el mismo acceso a las fichas que el mapa.
+ */
+export function Lista({ t, idioma, incidentes, regiones, onRegion }: Props) {
+  const ordenados = incidentes
+    .slice()
+    .sort((a, b) => b.dia - a.dia || b.id.localeCompare(a.id));
+  return (
+    <div>
+      <h2 className="titular text-2xl">{t.lista.titulo}</h2>
+      <p className="mono mt-2 text-xs text-secundario">{t.lista.incidentes(ordenados.length)}</p>
+      {ordenados.length === 0 && <p className="mt-3 text-secundario">{t.lista.vacia}</p>}
+      <ul className="mt-2">
+        {ordenados.map((incidente) => (
+          <li key={incidente.id} className="border-b border-linea py-2">
+            <Enlace
+              a={rutaDeFicha(incidente.id, idioma)}
+              className="flex items-start gap-2 no-underline hover:text-dorado"
+            >
+              <Simbolo tipo={incidente.tipo} estado={incidente.estado} className="mt-0.5 shrink-0" />
+              <span className="min-w-0">
+                <span className="block">{incidente.titulo[idioma]}</span>
+                <span className="mono block text-xs text-secundario">
+                  {fechaDia(incidente.dia)} · {pais(incidente.pais, idioma)} ·{" "}
+                  {t.estado[incidente.estado]}
+                </span>
+              </span>
+            </Enlace>
+          </li>
+        ))}
+      </ul>
+      {regiones.length > 0 && (
+        <section className="mt-4">
+          <h3 className="etiqueta">{t.lista.regiones}</h3>
+          <ul className="mt-1 flex flex-wrap gap-1.5">
+            {regiones.map((codigo) => (
+              <li key={codigo}>
+                <button
+                  type="button"
+                  className="boton boton-discreto min-h-7 text-xs"
+                  onClick={() => onRegion(codigo)}
+                >
+                  {region(codigo, idioma)}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+    </div>
+  );
+}
