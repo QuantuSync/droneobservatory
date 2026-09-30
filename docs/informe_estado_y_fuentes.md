@@ -84,4 +84,34 @@ valor de cada campo público según cada fuente pública:
 
 ## 3. Comprobación
 
-Pendiente de la primera recogida del servidor tras la fusión.
+Antes de fusionar, la puerta local (pytest, ruff check, ruff format --check y mypy
+--strict) y el workflow de tests estaban en verde. Ese workflow incluye los tests del
+script del servidor en Linux (sube el estado con código 0, 2 y 1; sin credenciales avisa;
+si la subida falla, la recogida no falla; las credenciales no van en la línea de órdenes)
+y el build de la web, que validó `incidentes.geojson` con `afirmaciones_publicas`.
+
+Tras la fusión (commit `0a1c8ed`, 20:26), con recogidas lanzadas a mano:
+
+| Hora | Resultado |
+| --- | --- |
+| 20:27 a 20:31 | Correcta (código 0), pero sin `estado.json`. El script se lee entero antes de poner el clon al día, así que esta recogida corrió aún el `recogida.sh` anterior, con el código de Python nuevo. Pasará lo mismo cada vez que cambie el script: su efecto llega en la recogida siguiente |
+| 20:31 a 20:35 | Correcta (código 0), «estado.json publicado en el bucket» |
+
+<https://tiles.droneobservatory.eu/estado.json> respondió entonces 200 con los datos de
+esa recogida: inicio 20:31, fin 20:35, `correcta`, última correcta 20:35, siguiente 21:17.
+Las cuatro fuentes de datos salen como leídas; el extractor, con aviso, porque el límite
+de gasto diario ya estaba alcanzado. Cabeceras: `Content-Type: application/json`,
+`Cache-Control: public, max-age=60` y `Access-Control-Allow-Origin:
+https://droneobservatory.eu`. La web en producción sirve `incidentes.geojson` con los 233
+incidentes del mapa y 1989 afirmaciones públicas.
+
+## 4. Lo que queda sin decidir
+
+1. **Credenciales de R2 con alcance de cuenta.** Limitarlas al bucket exige crear el token
+   en el panel de Cloudflare (sección 1).
+2. **Base sin cambios.** Si una recogida no cambia la base, no la sube, y la rama `estado`
+   no se actualiza. Con el aviso por incidencia, dos horas así darían un aviso falso.
+   Ahora `estado.json` dice cuándo terminó la última recogida y sería una señal mejor para
+   ese aviso.
+3. **Fuentes oficiales.** Una fuente bloqueada por su servidor deja las oficiales «con
+   aviso» aunque las demás se lean.
