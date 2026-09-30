@@ -26,6 +26,8 @@ id "$OPERADOR" >/dev/null 2>&1 || adduser --disabled-password --gecos "" "$OPERA
 passwd --lock "$USUARIO" >/dev/null
 passwd --lock "$OPERADOR" >/dev/null
 passwd --lock root >/dev/null
+# El operador lee el diario de la recogida sin sudo.
+usermod --append --groups systemd-journal "$OPERADOR"
 # El operador entra con la clave con la que se creó el servidor.
 install -d -m 700 -o "$OPERADOR" -g "$OPERADOR" "/home/$OPERADOR/.ssh"
 if [ -s /root/.ssh/authorized_keys ]; then

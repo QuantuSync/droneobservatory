@@ -59,6 +59,10 @@ if [ ! -d "$CLON/.git" ]; then
 fi
 como_usuario git -C "$CLON" remote set-url origin "$URL_LECTURA"
 como_usuario git -C "$CLON" remote set-url --push origin "$URL_ESCRITURA"
+# Un clon que ya existía se pone al día: la unidad ejecuta el script de la recogida que
+# hay en él. Con el cerrojo de la recogida, para no cambiarle el clon a una en marcha.
+como_usuario flock "$CERROJO" git -C "$CLON" fetch --quiet origin "$RAMA"
+como_usuario flock "$CERROJO" git -C "$CLON" reset --quiet --hard "origin/$RAMA"
 if [ ! -x "$ENTORNO/bin/python" ]; then
   como_usuario "python$PYTHON_VERSION" -m venv "$ENTORNO"
 fi
@@ -79,6 +83,8 @@ User=$USUARIO
 Group=$USUARIO
 WorkingDirectory=$CLON
 ExecStart=/usr/bin/env bash $CLON/servidor/recogida.sh
+# Nombre con el que salen sus líneas en el diario.
+SyslogIdentifier=$UNIDAD
 # Tope de la ejecución entera: pasado ese tiempo systemd la corta.
 TimeoutStartSec=${TOPE_MINUTOS}min
 NoNewPrivileges=yes
