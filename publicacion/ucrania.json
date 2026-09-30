@@ -475182,6 +475182,97 @@
     "ala_fija"
    ],
    "zonas_lanzamiento": []
+  },
+  {
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-09-30T16:17Z"
+    }
+   },
+   "cruces": [],
+   "derribados": {
+    "max": 254,
+    "min": 254
+   },
+   "derribados_categoria": "derribados_o_neutralizados",
+   "estado": {
+    "actual": "confirmado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "minuto",
+       "valor": "2026-09-30T16:01Z"
+      },
+      "fuente_id": "kpszsu-81982"
+     },
+     {
+      "estado": "confirmado",
+      "fecha": {
+       "precision": "minuto",
+       "valor": "2026-09-30T16:01Z"
+      },
+      "fuente_id": "kpszsu-81982"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/kpszsu/81982",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-09-30T16:01Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "❗️ Протягом дня 30 вересня (із 6.30 по 18.30) противник атакував Україну 285 ударними БпЛА ( 174 із них — реактивні), Гербера та дронами інших",
+     "id": "kpszsu-81982",
+     "idioma": "uk",
+     "medio": "Повітряні Сили ЗС України",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-UA-2026-1015",
+   "lanzados": {
+    "gerbera_senuelos": {
+     "max": 285,
+     "min": 0
+    },
+    "otros": {
+     "max": 285,
+     "min": 0
+    },
+    "shahed_geran": {
+     "max": 285,
+     "min": 174
+    },
+    "total": {
+     "max": 285,
+     "min": 285
+    }
+   },
+   "localizaciones_impacto": "desconocido",
+   "localizaciones_restos": "desconocido",
+   "lugares_impacto": [],
+   "lugares_restos": [],
+   "perdidos_guerra_electronica": "desconocido",
+   "periodo": {
+    "fin": {
+     "precision": "minuto",
+     "valor": "2026-09-30T15:30Z"
+    },
+    "inicio": {
+     "precision": "minuto",
+     "valor": "2026-09-30T03:30Z"
+    }
+   },
+   "regiones": [],
+   "regiones_misiles": [],
+   "reivindicacion_de_parte": true,
+   "sentido": "RU_UA",
+   "tipo": "ataque_guerra",
+   "zonas_lanzamiento": []
   }
  ]
 }
