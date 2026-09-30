@@ -51,6 +51,7 @@ from proceso.validacion_ficha import (
 )
 from recogida.descarga import Descargador
 from recogida.lugares_osm import RADIO_KM
+from recogida.plazo import Plazo, TiempoAgotado
 
 registro = logging.getLogger(__name__)
 
@@ -398,6 +399,7 @@ class Parada(StrEnum):
     """Por qué una tanda de llamadas directas deja peticiones sin hacer."""
 
     LIMITE_GASTO = "límite de gasto"
+    TIEMPO = "tope de tiempo"
     # Error temporal que sigue tras el reintento del cliente.
     SERVICIO_CAIDO = "servicio caído"
     # Error que no se arregla solo: petición o clave inválidas, saldo agotado.
@@ -425,11 +427,13 @@ def extraer(
     ahora: datetime,
     modo: coste.Modo,
     modelos_base: frozenset[str],
+    plazo: Plazo | None = None,
 ) -> Extraidas:
     """Una llamada directa por petición hasta la primera parada.
 
-    Se para en el límite de gasto y en el primer error del servicio: si está caído o
-    rechaza las peticiones, insistir con los demás candidatos solo alarga la ejecución.
+    Se para en el límite de gasto, al agotar el plazo y en el primer error del servicio:
+    si está caído o rechaza las peticiones, insistir con los demás candidatos solo alarga
+    la ejecución.
     """
     hechas = Extraidas()
     for peticion in peticiones:
@@ -438,8 +442,12 @@ def extraer(
         )
         previsto = coste.peor_caso(peticion.letras(), ficha.MAX_TOKENS_SALIDA)
         try:
+            if plazo is not None:
+                plazo.comprobar()
             coste.comprobar(gastado, previsto, modo)
             respuesta = cliente.mensaje(peticion.cuerpo())
+        except TiempoAgotado as error:
+            return hechas.parar(Parada.TIEMPO, error)
         except coste.LimiteGasto as error:
             return hechas.parar(Parada.LIMITE_GASTO, error)
         except ErrorTemporal as error:

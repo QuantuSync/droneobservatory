@@ -26,6 +26,7 @@ from proceso import extraccion, incidentes
 from proceso.validacion_ficha import Contexto, validar
 from proceso.validaciones import validar_incidente
 from recogida import extractor, gdelt
+from recogida.plazo import Plazo, TiempoAgotado
 from tests.test_gdelt import articulo
 
 AHORA = datetime(2025, 9, 24, 12, tzinfo=UTC)
@@ -578,7 +579,7 @@ def test_paso_horario_con_servicio(almacen: Almacen, monkeypatch: pytest.MonkeyP
     }  # fmt: skip
     for nombre, valor in valores.items():
         monkeypatch.setenv(nombre, valor)
-    monkeypatch.setattr(extractor, "Descargador", lambda: None)
+    monkeypatch.setattr(extractor, "Descargador", lambda **_: None)
     monkeypatch.setattr(paginas, "leer", lambda _d, _u: TEXTO)
     candidato_con_articulos(almacen, horas=2)
     falso = ClienteFalso(ficha_ejemplo(inicio=campo("2025-09-23T08:30", "mandag aften")))
@@ -607,7 +608,7 @@ def candidato_pendiente(almacen: Almacen, monkeypatch: pytest.MonkeyPatch) -> di
     }  # fmt: skip
     for nombre, valor in valores.items():
         monkeypatch.setenv(nombre, valor)
-    monkeypatch.setattr(extractor, "Descargador", lambda: None)
+    monkeypatch.setattr(extractor, "Descargador", lambda **_: None)
     monkeypatch.setattr(paginas, "leer", lambda _d, _u: TEXTO)
     candidato = candidato_con_articulos(almacen, horas=2)
     monkeypatch.setattr(extractor, "pendientes", lambda _a, _desde=None: [candidato] * PENDIENTES)
@@ -615,10 +616,15 @@ def candidato_pendiente(almacen: Almacen, monkeypatch: pytest.MonkeyPatch) -> di
 
 
 def paso_horario(
-    almacen: Almacen, respuestas: list[Preparada], ahora: datetime = AHORA
+    almacen: Almacen,
+    respuestas: list[Preparada],
+    ahora: datetime = AHORA,
+    plazo: Plazo | None = None,
 ) -> tuple[extractor.Resultado, Servicio]:
     servicio = Servicio(respuestas)
-    resultado = extractor.horaria(almacen, ahora, lambda c: Cliente(c, servicio, lambda _: None))
+    resultado = extractor.horaria(
+        almacen, ahora, lambda c: Cliente(c, servicio, lambda _: None), plazo
+    )
     return resultado, servicio
 
 
@@ -730,6 +736,32 @@ def test_alcanzar_el_limite_diario_no_es_un_fallo(
     assert resultado.parada is extraccion.Parada.LIMITE_GASTO
     assert (resultado.pendientes, resultado.en_rojo) == (PENDIENTES, False)
     assert caplog.records == []
+
+
+def test_sin_tiempo_el_extractor_deja_los_candidatos_pendientes(
+    almacen: Almacen, candidato_pendiente: dict[str, Any], caplog: pytest.LogCaptureFixture
+) -> None:
+    caplog.set_level(logging.WARNING, logger="recogida")
+    resultado, servicio = paso_horario(almacen, [bien()], plazo=Plazo(0.0))
+    assert servicio.pedidas == []
+    assert resultado.parada is extraccion.Parada.TIEMPO
+    assert (resultado.pendientes, resultado.en_rojo) == (PENDIENTES, False)
+    (aviso,) = caplog.records
+    assert "tope de 0 s agotado" in aviso.getMessage()
+
+
+def test_sin_tiempo_para_descargar_las_paginas_no_se_llama_solo_con_titulares(
+    almacen: Almacen, candidato_pendiente: dict[str, Any], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    def sin_tiempo(_descargador: object, _url: str) -> str:
+        raise TiempoAgotado("tope de 0 s agotado")
+
+    monkeypatch.setattr(paginas, "leer", sin_tiempo)
+    resultado, servicio = paso_horario(almacen, [bien()], plazo=Plazo(extractor.TOPE_S))
+    assert servicio.pedidas == []
+    assert resultado.parada is extraccion.Parada.TIEMPO
+    assert (resultado.candidatos, resultado.pendientes) == (PENDIENTES, PENDIENTES)
+    assert not resultado.en_rojo
 
 
 def test_frase_larga_recortada_y_sin_fecha_se_publica_con_la_del_candidato() -> None:

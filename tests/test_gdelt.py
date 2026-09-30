@@ -12,6 +12,8 @@ from proceso.noticias import Articulo, configuracion, filtro, nomenclator
 from recogida import gdelt
 from recogida.descarga import Descargador, Respuesta
 from recogida.informe_gdelt import informe
+from recogida.plazo import Plazo
+from tests.test_descarga import Reloj
 
 AHORA = datetime(2025, 9, 23, 12, 5, tzinfo=UTC)
 TITULAR = "Droner over Københavns Lufthavn: lufthavnen lukket"
@@ -238,6 +240,31 @@ def test_tope_de_franjas_por_ejecucion(almacen: Almacen) -> None:
         falso.poner(f"20250923{franja}00", [])
     assert gdelt.ejecutar(almacen, descargador(falso), AHORA, max_franjas=2).franjas == 2
     assert almacen.cursor("gdelt") == {"franja": "2025-09-23T11:30:00Z", "inicio": "x"}
+
+
+def test_sin_tiempo_lee_las_franjas_que_caben_y_el_cursor_guarda_el_avance(
+    almacen: Almacen,
+) -> None:
+    falso = GdeltFalso("20250923114500")
+    almacen.guardar_cursor("gdelt", {"franja": "2025-09-23T11:00:00Z", "inicio": "x"})
+    for franja in ("1115", "1130", "1145"):
+        falso.poner(f"20250923{franja}00", [], "ingles")
+        falso.poner(f"20250923{franja}00", [])
+    reloj = Reloj()
+
+    def lento(url: str, cabeceras: dict[str, str], limite_s: float) -> Respuesta:
+        reloj.ahora += 1.0
+        return falso(url, cabeceras, limite_s)
+
+    # Un segundo por petición: caben los dos índices, la primera franja entera (dos
+    # ficheros) y un fichero de la segunda, que queda sin procesar.
+    plazo = Plazo(len(gdelt.FLUJOS) * 2 + 0.5, reloj)
+    lector = Descargador(lento, reloj.dormir, reloj, pausa_minima_s=0, reintentos=0, plazo=plazo)
+    assert gdelt.ejecutar(almacen, lector, AHORA).franjas == 1
+    assert almacen.cursor("gdelt") == {"franja": "2025-09-23T11:15:00Z", "inicio": "x"}
+    # La siguiente ejecución sigue desde ahí.
+    assert gdelt.ejecutar(almacen, descargador(falso), AHORA).franjas == 2
+    assert almacen.cursor("gdelt") == {"franja": "2025-09-23T11:45:00Z", "inicio": "x"}
 
 
 def test_mas_de_un_dia_pendiente_queda_en_rojo(almacen: Almacen) -> None:

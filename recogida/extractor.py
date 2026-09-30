@@ -36,6 +36,7 @@ from modelo import coste, ficha, paginas
 from proceso import extraccion, incidentes
 from proceso.configuracion import cargar_vocabulario_modelos
 from recogida.descarga import Descargador
+from recogida.plazo import Plazo, TiempoAgotado
 
 registro = logging.getLogger("recogida")
 
@@ -56,6 +57,10 @@ ESTADO_SERVICIO = "extractor"
 # de seis horas seguidas ya no es un bache y la ejecución queda en rojo para que se vea.
 MAX_CAIDA = timedelta(hours=6)
 HORA = timedelta(hours=1)
+# Tope de tiempo del paso en la ejecución horaria, con la descarga de las páginas. Medido
+# del 28 al 30 de septiembre de 2026: como mucho 165 s (29 candidatos). 420 s son dos
+# veces y media; los candidatos que no quepan quedan pendientes para la siguiente.
+TOPE_S = 420.0
 
 
 @dataclass
@@ -153,6 +158,11 @@ def avisar(
     if extraidas.parada is extraccion.Parada.LIMITE_GASTO:
         # No es un fallo: el límite está para eso y mañana se sigue.
         registro.info("extractor: %s; pendientes=%d", extraidas.motivo, pendientes)
+    elif extraidas.parada is extraccion.Parada.TIEMPO:
+        registro.warning(
+            "extractor: %s; pendientes=%d para la ejecución siguiente",
+            extraidas.motivo, pendientes,
+        )  # fmt: skip
     elif caida is not None:
         registro.warning(
             "extractor: servicio caído desde hace %.1f h: %s; pendientes=%d para la "
@@ -170,6 +180,7 @@ def horaria(
     almacen: Almacen,
     ahora: datetime,
     fabrica: Callable[[servicio.Configuracion], extraccion.Servicio] = servicio.Cliente,
+    plazo: Plazo | None = None,
 ) -> Resultado:
     """Paso del extractor en la ejecución horaria. Sin configuración no hace nada."""
     try:
@@ -192,12 +203,18 @@ def horaria(
     ):
         historicos = []
     candidatos = [*nuevos, *historicos]
-    peticiones = preparar_todas(almacen, candidatos, Descargador)
-    extraidas = extraccion.extraer(
-        almacen, fabrica(configuracion), peticiones, ahora, coste.Modo.HORARIO, modelos_base()
-    )
+    try:
+        peticiones = preparar_todas(almacen, candidatos, lambda: Descargador(plazo=plazo))
+    except TiempoAgotado as error:
+        # Sin el texto de las páginas no se llama: solo con titulares la ficha sale peor.
+        extraidas = extraccion.Extraidas().parar(extraccion.Parada.TIEMPO, error)
+    else:
+        extraidas = extraccion.extraer(
+            almacen, fabrica(configuracion), peticiones, ahora, coste.Modo.HORARIO,
+            modelos_base(), plazo,
+        )  # fmt: skip
     fusiones, episodios = ordenar(almacen, ahora)
-    sin_llamada = len(peticiones) - len(extraidas.incidentes)
+    sin_llamada = len(candidatos) - len(extraidas.incidentes)
     return Resultado(
         candidatos=len(candidatos),
         llamadas=len(extraidas.incidentes),

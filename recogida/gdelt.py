@@ -51,6 +51,7 @@ from proceso.noticias import (
     url_canonica,
 )
 from recogida.descarga import Descargador, DescargaFallida, NoEncontrado
+from recogida.plazo import Plazo, TiempoAgotado
 
 registro = logging.getLogger(__name__)
 
@@ -67,9 +68,14 @@ FRANJA = timedelta(minutes=15)
 PAUSAS = {"data.gdeltproject.org": 0.5}
 # Sin cursor, la primera ejecución empieza un día atrás.
 PRIMERA_VENTANA = timedelta(days=1)
-# Tope por ejecución: 192 franjas son 48 horas, unos 12 minutos a unos 2 s por fichero.
-# Si hay más pendientes, la siguiente ejecución sigue donde lo dejó esta.
+# Tope por ejecución: 192 franjas son 48 horas. Si hay más pendientes, la siguiente
+# ejecución sigue donde lo dejó esta.
 MAX_FRANJAS_POR_EJECUCION = 192
+# Tope de tiempo por ejecución. Medido del 28 al 30 de septiembre de 2026: 1,3 s por
+# franja con sus dos ficheros (29 franjas en 37 s), así que las 192 del tope son unos
+# 250 s. 360 s las cubren con margen; con GDELT lento se leen las que quepan y el cursor,
+# que avanza franja a franja, deja el resto para la ejecución siguiente.
+TOPE_S = 360.0
 # El índice anuncia ficheros que aún no se pueden descargar (404): el 27 de septiembre
 # de 2026 el traducido iba más de una hora por detrás de su índice. Si un fichero sigue
 # faltando seis horas después de la última franja anunciada, se da por perdido (GDELT
@@ -131,8 +137,8 @@ class Recuentos:
         )
 
 
-def descargador() -> Descargador:
-    return Descargador(pausas_por_sitio=PAUSAS)
+def descargador(plazo: Plazo | None = None) -> Descargador:
+    return Descargador(pausas_por_sitio=PAUSAS, plazo=plazo)
 
 
 # --- Medios europeos -----------------------------------------------------------
@@ -453,7 +459,7 @@ def recorrer(
     while franja <= hasta:
         try:
             recuentos.sumar(recoger_franja(almacen, descargador, franja, ultima))
-        except (FranjaPendiente, DescargaFallida) as error:
+        except (FranjaPendiente, DescargaFallida, TiempoAgotado) as error:
             registro.warning("franja %s sin leer: %s", _fecha(franja), type(error).__name__)
             break
         procesada = franja
@@ -488,7 +494,7 @@ def ejecutar(
         procesada, recuentos = recorrer(
             almacen, descargador, hecha + FRANJA, hasta, ultima, guardar
         )
-    except DescargaFallida as error:
+    except (DescargaFallida, TiempoAgotado) as error:
         registro.warning("gdelt sin índice: %s", type(error).__name__)
         procesada, recuentos = None, Recuentos()
     hecha = procesada or hecha

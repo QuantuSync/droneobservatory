@@ -3,6 +3,10 @@
 Pausa mínima entre peticiones al mismo sitio, identificación de un navegador
 real, reintentos con espera creciente y comprobación de que la respuesta es
 contenido real y no una página de bloqueo servida con código 200.
+
+Con un plazo, el descargador no empieza una petición ni una espera que no quepa
+en él: lanza TiempoAgotado, que no es un fallo de descarga, y quien lo usa
+decide qué deja para la siguiente ejecución.
 """
 
 import time
@@ -11,6 +15,8 @@ import urllib.request
 from collections import Counter
 from collections.abc import Callable
 from urllib.parse import urlsplit
+
+from recogida.plazo import Plazo
 
 # Navegador de escritorio real y reciente: algunos sitios sirven otra página a
 # clientes que no se identifican como navegador.
@@ -85,8 +91,11 @@ class Descargador:
         espera_inicial_s: float = ESPERA_INICIAL_S,
         agente: str | None = None,
         limite_s: float = TIEMPO_LIMITE_S,
+        plazo: Plazo | None = None,
     ) -> None:
         self._limite_s = limite_s
+        # Tope de tiempo del paso que usa el descargador; se puede cambiar entre pasos.
+        self.plazo = plazo
         # Por defecto, un navegador; los servicios que piden identificarse reciben el
         # nombre del observatorio («EODI-bot/1.0 (+https://droneobservatory.eu)»).
         self._cabeceras = {**CABECERAS, "User-Agent": agente} if agente else CABECERAS
@@ -101,12 +110,17 @@ class Descargador:
         self._ultima: dict[str, float] = {}
         self.recuentos: Counter[str] = Counter()
 
+    def _dentro_del_plazo(self, espera_s: float = 0.0) -> None:
+        if self.plazo is not None:
+            self.plazo.comprobar(espera_s)
+
     def _esperar_turno(self, sitio: str) -> None:
         ultima = self._ultima.get(sitio)
         if ultima is not None:
             pausa = self._pausas.get(sitio, self._pausa_minima_s)
             falta = pausa - (self._reloj() - ultima)
             if falta > 0:
+                self._dentro_del_plazo(falta)
                 self._dormir(falta)
         self._ultima[sitio] = self._reloj()
 
@@ -122,6 +136,7 @@ class Descargador:
         for intento in range(self._reintentos + 1):
             if intento:
                 self.recuentos["reintentos"] += 1
+            self._dentro_del_plazo()
             self._esperar_turno(sitio)
             self.recuentos["peticiones"] += 1
             espera = self._espera_inicial_s * 2**intento
@@ -143,6 +158,7 @@ class Descargador:
                 else:
                     raise DescargaFallida(f"{url}: código {codigo}")
             if intento < self._reintentos:
+                self._dentro_del_plazo(espera)
                 self._dormir(espera)
         self.recuentos["fallos"] += 1
         tipo = PaginaBloqueada if motivo.startswith("contenido") else DescargaFallida

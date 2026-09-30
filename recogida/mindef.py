@@ -40,6 +40,10 @@ CANAL = "mod_russia"
 FUENTE_ID = "mindef_ru"
 TITULO_OFICIAL = "Минобороны России"
 VERSION_PARSER = "parte-mindef/2"
+# Tope de tiempo por ejecución. Releer 48 horas del canal son 3 o 4 páginas, unos 12 s
+# (medido del 28 al 30 de septiembre de 2026). 120 s dan para 40 páginas: diez veces más,
+# o el mes de canal que habría que leer tras un corte largo.
+TOPE_S = 120.0
 VOCABULARIO = Path(__file__).resolve().parent.parent / "configuracion" / "regiones_rusia.json"
 # Inicio de la noche en los partes que lo declaran («с 20.00 мск 13 июня до 7.00 мск 14
 # июня»). Los que dicen solo «в течение ночи» reciben esta hora con precisión aproximada.
@@ -647,4 +651,5 @@ FUENTE = Fuente(
     leer=leer,
     palabras_dron=PALABRAS_DRON,
     explicar=motivo_no_parte,
+    tope_s=TOPE_S,
 )

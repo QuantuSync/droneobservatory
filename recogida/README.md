@@ -24,4 +24,5 @@ Recogida automática de fuentes.
 | `lugares_osm.py` | Generador del nomenclátor de lugares desde OpenStreetMap |
 | `auditoria.py` | Cobertura por días: días sin parte y su explicación |
 | `horaria.py` | Ejecución horaria del workflow |
+| `plazo.py` | Tope de tiempo de cada paso de la ejecución horaria |
 | `historico.py` | Histórico de una fuente de partes desde octubre de 2022 |
