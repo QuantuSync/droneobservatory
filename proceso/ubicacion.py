@@ -25,13 +25,15 @@ Un punto hallado que cae fuera del país del incidente (`proceso/fronteras.py`) 
 si ninguno vale y alguno se halló, el incidente no se publica.
 """
 
+import gzip
 import json
+from collections import defaultdict
 from dataclasses import dataclass
 from functools import cache
 from pathlib import Path
 from typing import Any
 
-from proceso.fronteras import dentro_del_pais
+from proceso.fronteras import dentro_del_pais, nombres_del_pais, paises
 from proceso.noticias import (
     GKG,
     RADIO_GKG_KM,
@@ -41,7 +43,12 @@ from proceso.noticias import (
     lugares_en,
     normalizar,
 )
-from proceso.validacion_ficha import MIN_LETRAS_PALABRA, Validada, nombrado_en
+from proceso.validacion_ficha import (
+    MIN_LETRAS_PALABRA,
+    Validada,
+    nombrado_en,
+    propias_en_fuentes,
+)
 from recogida.lugares_osm import RADIO_KM
 
 DIRECTORIO = Path(__file__).resolve().parent.parent / "configuracion"
@@ -144,7 +151,13 @@ def _unico(ids: tuple[str, ...], pais: str, nom: Nomenclator) -> Lugar | None:
 
 
 def _hallados(
-    ficha: Validada, pais: str, nombre: str, nivel: str, pistas: Pistas, nom: Nomenclator
+    ficha: Validada,
+    pais: str,
+    nombre: str,
+    nivel: str,
+    pistas: Pistas,
+    nom: Nomenclator,
+    region: str | None = None,
 ) -> list[tuple[str, Objetivo]]:
     """Sitios con el nombre del lugar del suceso, en orden de preferencia."""
     hallados: list[tuple[str, Objetivo]] = []
@@ -162,6 +175,8 @@ def _hallados(
             hallados.append(("vocabulario", Objetivo(**datos)))
     if sitio := _unico(localidades_declinadas(nombre, nom), pais, nom):
         hallados.append(("localidad", Objetivo.de_lugar(sitio)))
+    if pequena := localidad_pequena(nombre, pais, region):
+        hallados.append(("localidad_pequena", pequena))
     nuevo = ficha.valor("lugar_nuevo")
     if nuevo and mismo_nombre((nuevo["nombre"],), nombre, pistas.genericos):
         hallados.append(("lugar_nuevo", _objetivo_nuevo(nuevo)))
@@ -219,6 +234,39 @@ def regiones_con_nombre(pais: str, nombre: str) -> set[str]:
     }
 
 
+# El radio de un pueblo en el nomenclátor de localidades (recogida/localidades_geonames.RADIOS).
+RADIO_PEQUENA_KM = 3.0
+
+
+@cache
+def localidades_pequenas(
+    ruta: Path = DIRECTORIO / "localidades_pequenas.json.gz",
+) -> tuple[dict[str, tuple[str, ...]], dict[str, list[Any]]]:
+    """Índice de nombre normalizado a localidades pequeñas, y sus filas
+    ([nombre, país, lat, lon, región, nombres]). Solo se carga si hace falta."""
+    filas: dict[str, list[Any]] = json.loads(gzip.decompress(ruta.read_bytes()))["localidades"]
+    indice: dict[str, list[str]] = defaultdict(list)
+    for id_, fila in filas.items():
+        for nombre in fila[5]:
+            indice[nombre].append(id_)
+    return {k: tuple(v) for k, v in indice.items()}, filas
+
+
+def localidad_pequena(nombre: str, pais: str, region: str | None) -> Objetivo | None:
+    """La localidad pequeña del país con ese nombre, si es una sola; con varias, la región
+    que da la ficha tiene que dejar una sola."""
+    indice, filas = localidades_pequenas()
+    ids = [i for i in indice.get(normalizar(nombre), ()) if filas[i][1] == pais]
+    if region and ids:
+        casan = regiones_con_nombre(pais, region)
+        if casan:
+            ids = [i for i in ids if filas[i][4] in casan]
+    if len(ids) != 1:
+        return None
+    fila = filas[ids[0]]
+    return Objetivo(ids[0], "otra", fila[0], pais, fila[2], fila[3], RADIO_PEQUENA_KM)
+
+
 def otra_region(sitio: Objetivo, region: str | None) -> bool:
     """La ficha dice en qué región ocurrió y la localidad hallada es de otra."""
     if not region:
@@ -258,7 +306,7 @@ def ubicar(ficha: Validada, pistas: Pistas, nom: Nomenclator) -> Ubicacion:
                          motivo=f"solo se sabe a nivel de {nivel}")  # fmt: skip
     fuera: list[str] = []
     for buscado, nivel_buscado in _intentos(ficha):
-        for origen, sitio in _hallados(ficha, pais, buscado, nivel_buscado, pistas, nom):
+        for origen, sitio in _hallados(ficha, pais, buscado, nivel_buscado, pistas, nom, region):
             if sitio.pais != pais or sitio.radio_km > RADIO_MAX_KM:
                 continue
             if otra_region(sitio, region):
@@ -267,7 +315,11 @@ def ubicar(ficha: Validada, pistas: Pistas, nom: Nomenclator) -> Ubicacion:
             if not dentro_del_pais(pais, sitio.lat, sitio.lon):
                 fuera.append(f"{sitio.nombre} ({origen}) fuera de {pais}")
                 continue
-            nivel_punto = "localidad" if origen in {"localidad", "gkg"} else nivel_buscado
+            nivel_punto = (
+                "localidad"
+                if origen in {"localidad", "localidad_pequena", "gkg"}
+                else nivel_buscado
+            )
             return Ubicacion(pais, nivel_punto, sitio, origen, nombre or buscado, region)
     # Sin lugar del suceso no se toma el objetivo del candidato aunque la ficha diga que es
     # el conocido: «la Guardia Civil» en la frase casaba con el aeródromo de La Guardia.
@@ -278,3 +330,67 @@ def ubicar(ficha: Validada, pistas: Pistas, nom: Nomenclator) -> Ubicacion:
                          motivo="; ".join(fuera), valida=False)  # fmt: skip
     return Ubicacion(pais, nivel, nombre=nombre, region=region,
                      motivo="; ".join(fuera) or "lugar del suceso sin situar")  # fmt: skip
+
+
+# --- País deducido del lugar del suceso ------------------------------------------------
+
+CAMPOS_LUGAR = ("lugar_suceso", "objetivo_nombre", "localidad")
+
+
+def _paises_del_nombre(nombre: str, nivel: str, nom: Nomenclator) -> set[str]:
+    """Los países donde el nomenclátor tiene un lugar con ese nombre: las instalaciones, si
+    alguna se llama así; si no, todas las localidades, grandes y pequeñas, homónimas
+    incluidas (el nomenclátor grande solo guarda la más poblada de cada nombre: hay un
+    Neudorf en Eslovaquia y muchos en Alemania y Austria). Si el suceso es de nivel país,
+    los países que se llaman así."""
+    normal = normalizar(nombre)
+    if nivel == "pais":
+        return {p for p in paises() if normal in nombres_del_pais(p)}
+    instalaciones = {nom.lugares[i].pais for i in lugares_en(nombre, nom)}
+    if instalaciones:
+        return instalaciones
+    indice, filas = localidades_pequenas()
+    grandes = {nom.lugares[i].pais for i in localidades_declinadas(nombre, nom)}
+    return grandes | {filas[i][1] for i in indice.get(normal, ())}
+
+
+def pais_del_suceso(
+    ficha: dict[str, Any], textos: tuple[str, ...], genericos: tuple[str, ...], nom: Nomenclator
+) -> tuple[str, str, dict[str, Any]] | None:
+    """El país que se deduce sin ambigüedad del lugar del suceso que da la ficha en bruto:
+    su nombre, citado en su frase o en las fuentes, es de lugares de un solo país. Nunca el
+    país del medio. Si la ficha declara un país (aunque no valide), el deducido tiene que ser
+    ese: un suceso en El Paso (EE. UU.) no es de la aldea canaria que se llama igual.
+    Devuelve (país, campo del que sale, ese campo)."""
+    declarados = _paises_declarados(ficha)
+    for nombre_campo in CAMPOS_LUGAR:
+        campo = ficha.get(nombre_campo)
+        if not isinstance(campo, dict) or campo.get("valor") is None:
+            continue
+        valor = campo["valor"]
+        suceso = nombre_campo == "lugar_suceso"
+        if suceso and not isinstance(valor, dict):
+            continue
+        nombre = str(valor["nombre"] if suceso else valor)
+        nivel = str(valor.get("nivel", "localidad")) if suceso else "localidad"
+        frase = str(campo.get("frase", ""))
+        if not (
+            nombrado_en(nombre, frase) or propias_en_fuentes(nombre, (frase, *textos), genericos)
+        ):
+            continue
+        if nivel == "region":
+            continue
+        encontrados = _paises_del_nombre(nombre, nivel, nom)
+        if len(encontrados) == 1 and (not declarados or encontrados <= declarados):
+            return encontrados.pop(), nombre_campo, campo
+        if encontrados:
+            return None
+    return None
+
+
+def _paises_declarados(ficha: dict[str, Any]) -> set[str]:
+    """Los códigos de país que da la ficha en bruto, en el país y en el lugar del suceso."""
+    pais = (ficha.get("pais") or {}).get("valor")
+    suceso = (ficha.get("lugar_suceso") or {}).get("valor")
+    valores = [pais, suceso.get("pais") if isinstance(suceso, dict) else None]
+    return {str(v).strip().upper() for v in valores if isinstance(v, str) and v.strip()}

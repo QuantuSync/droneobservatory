@@ -22,6 +22,7 @@ from typing import Any
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 from proceso.fronteras import es_nombre_de_pais
+from proceso.variantes import variantes
 
 DIRECTORIO = Path(__file__).resolve().parent.parent / "configuracion"
 # Regla de fusión del diseño.
@@ -280,12 +281,14 @@ def nomenclator(
     ]
     # Una «ciudad» que es una palabra de tipo de lugar («militar», «wojskowa») no nombra nada:
     # casaría con cualquier titular que hable de militares.
+    # Con sus formas declinadas en el idioma del país («Düsseldorfer», «Rzeszowie»).
     ciudades = [
-        (normalizar(c), sitio.id)
+        (forma, sitio.id)
         for sitio in lugares.values()
         for c in sitio.ciudades
         # El nomenclátor está en forma descompuesta: se compara también sin acentos.
         if not any(p.search(c) or p.search(normalizar(c)) for p in cue.values())
+        for forma in (normalizar(c), *sorted(variantes(normalizar(c), sitio.pais)))
     ]
     nombres_pueblos = [
         (normalizar(a), sitio.id)
@@ -328,12 +331,30 @@ def lugares_en(titular: str, nom: Nomenclator) -> tuple[str, ...]:
     mayusculas = _mayusculas(titular)
     hallados = _buscar(nom.alias, [g for g in grupos if " " in g or g in mayusculas])
     if not hallados:
-        hallados = [
-            id_
-            for id_ in _buscar(nom.ciudades, [g for g in grupos if " " in g or g in mayusculas])
-            if (cue := nom.cue.get(nom.lugares[id_].tipo)) is not None and cue.search(titular)
-        ]
+        # Una ciudad de varias instalaciones («Düsseldorf», del aeropuerto y de un helipuerto)
+        # vale si el titular nombra el tipo de una sola de ellas («Düsseldorfer Flughafen»).
+        hallados = []
+        for grupo in grupos:
+            if " " in grupo or grupo in mayusculas:
+                con_tipo = [i for i in nom.ciudades.get(grupo, ()) if _nombra_tipo(titular, i, nom)]
+                if len(con_tipo) > 1:
+                    # Entre varias, la que solo lleva el nombre de una ciudad: «Düsseldorf» es
+                    # el aeropuerto de Düsseldorf, no el de Düsseldorf Mönchengladbach.
+                    con_tipo = [i for i in con_tipo if _ciudades_sueltas(nom.lugares[i]) == 1]
+                if len(con_tipo) == 1:
+                    hallados.append(con_tipo[0])
     return tuple(dict.fromkeys(hallados))
+
+
+def _ciudades_sueltas(sitio: Lugar) -> int:
+    """Cuántas ciudades de una sola palabra lleva la instalación."""
+    return len({normalizar(c) for c in sitio.ciudades if " " not in normalizar(c)})
+
+
+def _nombra_tipo(titular: str, id_: str, nom: Nomenclator) -> bool:
+    """El titular nombra el tipo de lugar de la instalación («Flughafen», «air base»)."""
+    cue = nom.cue.get(nom.lugares[id_].tipo)
+    return cue is not None and cue.search(titular) is not None
 
 
 def _mayusculas(titular: str) -> set[str]:

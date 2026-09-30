@@ -131,6 +131,7 @@ def incidente_completo() -> Documento:
             "ultima_actualizacion": instante("2025-10-03T10:05Z"),
             "version_extractor": "nulo",
             "huella_fuentes": "0" * 64,
+            "candidato": "CAND-20251001T2030-EKCH-aeropuerto",
             "vocabulario_aegis": {"tipo": "airport_disruption"},
             "distancia_instalaciones_km": 12.5,
         },

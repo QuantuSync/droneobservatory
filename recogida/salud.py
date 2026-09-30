@@ -1,79 +1,133 @@
-"""Salud de la recogida horaria: cuándo se actualizó por última vez la rama estado.
+"""Salud de la recogida horaria: cuándo terminó bien por última vez, según estado.json.
 
-La recogida la lanza cada hora un servidor propio (servidor/), fuera de GitHub, y una
-recogida que no se lanza no deja ningún fallo a la vista. Lo que sí deja cada recogida
-es la base subida a la rama estado del repositorio de datos: el workflow de tests pasa
-aquí la fecha del último commit de esa rama y este módulo dice en el resumen del
-trabajo si tiene más de dos horas.
+La recogida la lanza cada hora un servidor propio (servidor/), fuera de GitHub. Al salir,
+cada recogida sube estado.json al bucket de las teselas (recogida/estado.py) con la hora de
+la última recogida correcta. Esa hora avanza con cada recogida correcta, traiga o no datos
+nuevos; la fecha de la rama estado, en cambio, no avanza cuando la base no cambia, y daba
+avisos falsos.
 
-Solo señala: ni lanza nada ni hace fallar los tests.
+Hay problema si la última recogida correcta tiene más de dos horas o si el fichero no
+responde en tres intentos espaciados. Una recogida fallida o con avisos no es problema
+mientras haya una correcta reciente.
 
-Uso:
-    git -C <clon de la rama estado> log -1 --format=%cI > estado.txt
-    python -m recogida.salud --estado estado.txt
+Lo usan el workflow de tests, que lo deja en su resumen, y el workflow vigia-recogida, que
+abre o cierra la incidencia con lo que escribe en su salida (`problema` y `mensaje`).
+
+Uso: python -m recogida.salud [--url <estado.json>]
 """
 
 import argparse
+import json
 import os
 import sys
+import time
+import urllib.request
+from collections.abc import Callable
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
+from typing import Any
 
-# La recogida es horaria y sube la base en cada ejecución: dos horas sin commit nuevo
-# son ya dos recogidas seguidas que no han llegado a subirla.
-MAX_SIN_ESTADO = timedelta(hours=2)
+from recogida.descarga import AGENTE_EODI
+
+URL = "https://tiles.droneobservatory.eu/estado.json"
+# La recogida es horaria: dos horas sin una correcta son dos recogidas seguidas que no lo
+# han sido (o que no se han lanzado).
+MAX_SIN_CORRECTA = timedelta(hours=2)
 HORA = timedelta(hours=1)
-# Fichero del resumen del trabajo en GitHub Actions.
+# Tres intentos con un minuto entre ellos: un fallo de red o del bucket de unos segundos no
+# es una caída del servidor.
+INTENTOS = 3
+PAUSA_S = 60.0
+TOPE_S = 30.0
 VARIABLE_RESUMEN = "GITHUB_STEP_SUMMARY"
-# Prefijo con el que GitHub Actions convierte una línea del registro en una anotación.
+VARIABLE_SALIDA = "GITHUB_OUTPUT"
 ANOTACION_AVISO = "::warning::"
 TITULO = "### Salud de la recogida horaria"
 
 Estado = tuple[bool, str]
+Lector = Callable[[str], bytes]
 
 
-def ultimo_estado(texto: str) -> datetime | None:
-    """Fecha del último commit de la rama estado, o None si no se sabe."""
+def _descargar(url: str) -> bytes:
+    # Con la identificación del observatorio: al agente por defecto de Python, Cloudflare le
+    # responde 403.
+    cabeceras = {"Cache-Control": "no-cache", "User-Agent": AGENTE_EODI}
+    peticion = urllib.request.Request(url, headers=cabeceras)
+    with urllib.request.urlopen(peticion, timeout=TOPE_S) as respuesta:
+        datos: bytes = respuesta.read()
+        return datos
+
+
+def leer_estado(
+    url: str = URL,
+    leer: Lector = _descargar,
+    dormir: Callable[[float], None] = time.sleep,
+    intentos: int = INTENTOS,
+) -> dict[str, Any] | None:
+    """El estado publicado, o None si no responde con un JSON en ninguno de los intentos."""
+    for intento in range(intentos):
+        if intento:
+            dormir(PAUSA_S)
+        try:
+            datos = json.loads(leer(url))
+        except (OSError, ValueError):
+            continue
+        if isinstance(datos, dict):
+            return datos
+    return None
+
+
+def _instante(texto: Any) -> datetime | None:
+    if not isinstance(texto, str):
+        return None
     try:
-        fecha = datetime.fromisoformat(texto.strip())
+        return datetime.fromisoformat(texto.replace("Z", "+00:00")).astimezone(UTC)
     except ValueError:
         return None
-    # Una fecha sin zona no se puede comparar con la hora actual.
-    return fecha.astimezone(UTC) if fecha.tzinfo else None
 
 
-def estado(ultimo: datetime | None, ahora: datetime) -> Estado:
+def diagnostico(estado: dict[str, Any] | None, ahora: datetime) -> Estado:
     """Si la recogida está al día y la frase que lo cuenta."""
-    if ultimo is None:
-        return False, "No se ha podido saber cuándo se actualizó por última vez la rama estado."
-    horas = (ahora - ultimo) / HORA
-    frase = f"La rama estado se actualizó por última vez el {ultimo:%Y-%m-%d %H:%M} UTC"
-    frase = f"{frase}, hace {horas:.1f} h"
-    if ahora - ultimo > MAX_SIN_ESTADO:
-        return False, f"{frase}: más de {MAX_SIN_ESTADO / HORA:.0f} h."
+    if estado is None:
+        return False, f"estado.json no responde tras {INTENTOS} intentos espaciados."
+    ultima = _instante(estado.get("ultima_correcta"))
+    ultima_frase = f"La última recogida ({estado.get('resultado')}) terminó el {estado.get('fin')}"
+    if ultima is None:
+        return False, f"{ultima_frase} y no consta ninguna recogida correcta."
+    horas = (ahora - ultima) / HORA
+    frase = (
+        f"{ultima_frase}; la última correcta, el {ultima:%Y-%m-%d %H:%M} UTC, hace {horas:.1f} h"
+    )
+    if ahora - ultima > MAX_SIN_CORRECTA:
+        return False, f"{frase}: más de {MAX_SIN_CORRECTA / HORA:.0f} h."
     return True, f"{frase}."
 
 
 def informar(resultado: Estado) -> None:
-    """La frase en el registro y en el resumen del trabajo."""
+    """La frase en el registro, en el resumen del trabajo y en su salida."""
     al_dia, frase = resultado
     print(frase if al_dia else f"{ANOTACION_AVISO}{frase}")
     resumen = os.environ.get(VARIABLE_RESUMEN)
     if resumen:
         with Path(resumen).open("a", encoding="utf-8") as fichero:
             fichero.write(f"{TITULO}\n\n{'✅' if al_dia else '⚠️'} {frase}\n")
+    salida = os.environ.get(VARIABLE_SALIDA)
+    if salida:
+        with Path(salida).open("a", encoding="utf-8") as fichero:
+            fichero.write(f"problema={'false' if al_dia else 'true'}\nmensaje={frase}\n")
 
 
-def leer(ruta: Path) -> str:
-    """El fichero de la consulta; vacío si la consulta falló y no lo dejó."""
-    return ruta.read_text(encoding="utf-8") if ruta.exists() else ""
-
-
-def principal(argumentos: list[str] | None = None, ahora: datetime | None = None) -> int:
+def principal(
+    argumentos: list[str] | None = None,
+    ahora: datetime | None = None,
+    leer: Lector = _descargar,
+    dormir: Callable[[float], None] = time.sleep,
+) -> int:
     opciones = argparse.ArgumentParser(description=__doc__)
-    opciones.add_argument("--estado", type=Path, required=True)
+    opciones.add_argument("--url", default=URL)
     args = opciones.parse_args(argumentos)
-    informar(estado(ultimo_estado(leer(args.estado)), ahora or datetime.now(UTC)))
+    estado = leer_estado(args.url, leer, dormir)
+    informar(diagnostico(estado, ahora or datetime.now(UTC)))
     return 0
 
 

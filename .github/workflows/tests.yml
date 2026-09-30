@@ -42,9 +42,10 @@ jobs:
       - run: npm test
       - run: npm run build
 
-  # La recogida la lanza cada hora un servidor propio y sube la base a la rama estado del
-  # repositorio de datos. Este trabajo señala en su resumen si el último commit de esa
-  # rama tiene más de dos horas. Solo informa: no lanza nada ni hace fallar los tests.
+  # La recogida la lanza cada hora un servidor propio, que al final de cada una publica
+  # estado.json en el bucket de las teselas. Este trabajo señala en su resumen si la última
+  # recogida correcta tiene más de dos horas. Solo informa: no lanza nada ni hace fallar
+  # los tests.
   salud-recogida:
     runs-on: ubuntu-latest
     permissions:
@@ -54,24 +55,5 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.13"
-      - name: Fecha del último commit de la rama estado
-        env:
-          # Clave de despliegue de solo lectura del repositorio de datos, que es privado.
-          # Sin ella (un pull request desde otro repositorio) la fecha no se sabe.
-          CLAVE: ${{ secrets.EODI_DATOS_CLAVE_LECTURA }}
-        run: |
-          install -m 700 -d "$RUNNER_TEMP/ssh"
-          printf '%s\n' "$CLAVE" > "$RUNNER_TEMP/ssh/lectura"
-          chmod 600 "$RUNNER_TEMP/ssh/lectura"
-          # Clave de host publicada por GitHub: sin confiar en la primera conexión.
-          echo "github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl" > "$RUNNER_TEMP/ssh/known_hosts"
-          export GIT_SSH_COMMAND="ssh -i $RUNNER_TEMP/ssh/lectura -o IdentitiesOnly=yes -o UserKnownHostsFile=$RUNNER_TEMP/ssh/known_hosts"
-          # Solo el commit, que es lo que lleva la fecha: la base no se descarga. Una
-          # consulta que falla no deja fichero y se cuenta como «no se sabe».
-          if git clone --quiet --bare --depth 1 --filter=blob:none --single-branch \
-            --branch estado git@github.com:QuantuSync/droneobservatory-datos.git \
-            "$RUNNER_TEMP/estado"; then
-            git -C "$RUNNER_TEMP/estado" log -1 --format=%cI > "$RUNNER_TEMP/estado.txt"
-          fi
-          rm -rf "$RUNNER_TEMP/ssh"
-          python -m recogida.salud --estado "$RUNNER_TEMP/estado.txt"
+      - name: Última recogida correcta según estado.json
+        run: python -m recogida.salud

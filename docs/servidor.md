@@ -79,10 +79,6 @@ En `%USERPROFILE%\.eodi\`, fuera de cualquier repositorio:
 | `cloudflare_token.txt` | Token de la API de Cloudflare (R2 y DNS de las teselas) |
 | `r2_estado.env` | Credenciales S3 de R2 para subir `estado.json` (`R2_ID`, `R2_SECRETO`, `R2_CUENTA`), derivadas del token por `reconstruir.sh` si no existen |
 
-En GitHub, el repositorio guarda además el secreto `EODI_DATOS_CLAVE_LECTURA`: una clave
-de despliegue de solo lectura del repositorio de datos, con la que el workflow de tests
-mira la fecha de la rama `estado`. No tiene copia en local: si se pierde, se crea otra.
-
 ## Reconstruir desde cero
 
 Hace falta `hcloud`, `gh` con sesión de la cuenta QuantuSync, `ssh` y los ficheros
@@ -196,20 +192,26 @@ vez se pisarían la rama `estado`.
 
 ## Cómo se ve si la recogida se para
 
-El workflow `vigia-recogida` se lanza cada hora en el minuto 41 y mira la fecha del último
-commit de la rama `estado` del repositorio de datos. Si tiene más de 2 horas, abre una
-incidencia en este repositorio («La recogida horaria no actualiza la base»), una sola
-mientras dure el problema, y la cierra cuando la rama vuelve a actualizarse. Solo tiene
-permiso para las incidencias; el repositorio de datos, que es privado, lo lee con la clave
-de despliegue de solo lectura «droneobservatory: salud (solo lectura)» (secreto
-`EODI_DATOS_CLAVE_LECTURA`), que pide solo el commit y no descarga la base. Si no puede
-leer la rama, el trabajo queda en rojo sin tocar las incidencias. GitHub lanza las
-ejecuciones programadas con retraso y a veces se salta alguna: el aviso puede llegar tarde.
+El workflow `vigia-recogida` se lanza cada hora en el minuto 41 y lee
+<https://tiles.droneobservatory.eu/estado.json> ([`recogida/salud.py`](../recogida/salud.py)).
+Si la última recogida correcta tiene más de 2 horas, o si el fichero no responde en tres
+intentos separados un minuto, abre una incidencia en este repositorio («La recogida horaria
+no actualiza la base»), una sola mientras dure el problema, y la cierra cuando la recogida
+vuelve a terminar bien. Una recogida fallida o con avisos no abre nada mientras haya una
+correcta reciente. Tiene permiso para leer el código y para las incidencias, nada más.
+
+Antes miraba la fecha del último commit de la rama `estado` del repositorio de datos, que
+no avanza cuando una recogida no cambia la base, y a las dos horas habría dado un aviso
+falso. Con eso se retiró la clave de despliegue de solo lectura de ese repositorio que
+usaba («droneobservatory: salud (solo lectura)», secreto `EODI_DATOS_CLAVE_LECTURA`).
+
+GitHub lanza las ejecuciones programadas con retraso y a veces se salta alguna: el aviso
+puede llegar tarde.
 Además, desactiva las programaciones de un repositorio público sin actividad durante 60
 días; la recogida publica en `main` casi cada hora, así que no debería pasar.
 
 El trabajo `salud-recogida` del workflow de tests hace la misma comprobación en cada push o
-pull request y la deja en su resumen.
+pull request y la deja en su resumen, sin hacer fallar los tests.
 
 ## Fuentes que no se leen desde el servidor
 

@@ -255,8 +255,10 @@ def test_la_region_descarta_un_homonimo() -> None:
         localidad="Tulcea",
     )
     ubicacion = ubicar(ficha_, pistas(FUNDU_MOLDOVEI), nomenclator())
+    # El de Ialomița se descarta por la región; el de Tulcea está en las localidades pequeñas.
     assert ubicacion.sitio is not None
-    assert ubicacion.sitio.nombre == "Tulcea"
+    assert (ubicacion.sitio.nombre, ubicacion.origen) == ("Grindu", "localidad_pequena")
+    assert ubicacion.sitio.lat == pytest.approx(45.4)
 
 
 @pytest.mark.parametrize(("tipo", "punto"), [("1", False), ("5", False), ("2", False),

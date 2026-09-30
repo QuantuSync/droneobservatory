@@ -1,5 +1,6 @@
-"""Comprobación de salud de la recogida horaria por la fecha de la rama estado, sin red."""
+"""Salud de la recogida horaria según estado.json, sin red."""
 
+import json
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
@@ -10,69 +11,84 @@ from recogida import salud
 AHORA = datetime(2026, 9, 30, 14, 0, tzinfo=UTC)
 
 
-def fecha(hace: timedelta) -> str:
-    """La salida de `git log -1 --format=%cI` de un commit hecho hace tanto."""
-    return f"{(AHORA - hace).isoformat()}\n"
+def estado(ultima_correcta: timedelta | None, resultado: str = "correcta") -> dict[str, object]:
+    fin = (AHORA - timedelta(minutes=30)).strftime("%Y-%m-%dT%H:%MZ")
+    correcta = (AHORA - ultima_correcta).strftime("%Y-%m-%dT%H:%MZ") if ultima_correcta else None
+    return {"version": 1, "fin": fin, "resultado": resultado, "ultima_correcta": correcta}
 
 
-def consulta(tmp_path: Path, texto: str) -> list[str]:
-    (tmp_path / "estado.txt").write_text(texto, encoding="utf-8")
-    return ["--estado", str(tmp_path / "estado.txt")]
+class Bucket:
+    """Responde lo preparado, en orden; una excepción es un intento fallido."""
+
+    def __init__(self, *respuestas: bytes | Exception) -> None:
+        self.respuestas = list(respuestas)
+        self.pedidas = 0
+        self.esperas: list[float] = []
+
+    def leer(self, _url: str) -> bytes:
+        self.pedidas += 1
+        respuesta = self.respuestas.pop(0)
+        if isinstance(respuesta, Exception):
+            raise respuesta
+        return respuesta
+
+    def dormir(self, segundos: float) -> None:
+        self.esperas.append(segundos)
 
 
-def test_lee_la_fecha_del_commit() -> None:
-    assert salud.ultimo_estado(fecha(timedelta(hours=1))) == AHORA - timedelta(hours=1)
+def publicado(documento: dict[str, object]) -> bytes:
+    return json.dumps(documento).encode()
 
 
-def test_una_fecha_con_otra_zona_horaria_se_lleva_a_utc() -> None:
-    assert salud.ultimo_estado("2026-09-30T15:00:00+02:00\n") == AHORA - timedelta(hours=1)
-
-
-@pytest.mark.parametrize("texto", ["", "\n", "no es una fecha", "2026-09-30T13:00:00"])
-def test_sin_fecha_no_se_sabe(texto: str) -> None:
-    assert salud.ultimo_estado(texto) is None
-    al_dia, frase = salud.estado(None, AHORA)
-    assert not al_dia
-    assert "No se ha podido saber" in frase
-
-
-def test_dentro_del_margen_esta_al_dia() -> None:
-    al_dia, frase = salud.estado(AHORA - salud.MAX_SIN_ESTADO, AHORA)
+def test_estado_reciente_no_es_problema() -> None:
+    al_dia, frase = salud.diagnostico(estado(timedelta(minutes=30)), AHORA)
     assert al_dia
-    assert frase == (
-        "La rama estado se actualizó por última vez el 2026-09-30 12:00 UTC, hace 2.0 h."
-    )
+    assert "hace 0.5 h" in frase
 
 
-def test_pasado_el_margen_se_senala() -> None:
-    ultimo = AHORA - salud.MAX_SIN_ESTADO - timedelta(minutes=30)
-    al_dia, frase = salud.estado(ultimo, AHORA)
+def test_estado_antiguo_es_problema() -> None:
+    al_dia, frase = salud.diagnostico(estado(timedelta(hours=3)), AHORA)
     assert not al_dia
-    assert "2026-09-30 11:30 UTC, hace 2.5 h: más de 2 h." in frase
+    assert "más de 2 h" in frase
 
 
-def test_escribe_el_resumen_y_anota_el_aviso_sin_fallar(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+def test_una_recogida_fallida_con_una_correcta_reciente_no_es_problema() -> None:
+    assert salud.diagnostico(estado(timedelta(hours=1), "fallida"), AHORA)[0]
+
+
+def test_recogidas_fallidas_durante_mas_de_dos_horas_son_problema() -> None:
+    assert not salud.diagnostico(estado(timedelta(hours=2, minutes=5), "fallida"), AHORA)[0]
+    assert not salud.diagnostico(estado(None, "fallida"), AHORA)[0]
+
+
+def test_fichero_ausente_tras_tres_intentos_espaciados() -> None:
+    bucket = Bucket(OSError("404"), OSError("404"), OSError("404"))
+    assert salud.leer_estado(leer=bucket.leer, dormir=bucket.dormir) is None
+    assert bucket.pedidas == salud.INTENTOS
+    assert bucket.esperas == [salud.PAUSA_S] * (salud.INTENTOS - 1)
+    al_dia, frase = salud.diagnostico(None, AHORA)
+    assert not al_dia
+    assert "no responde" in frase
+
+
+def test_un_fallo_pasajero_no_es_problema() -> None:
+    bucket = Bucket(OSError("corte"), b"no es json", publicado(estado(timedelta(minutes=5))))
+    leido = salud.leer_estado(leer=bucket.leer, dormir=bucket.dormir)
+    assert leido is not None
+    assert salud.diagnostico(leido, AHORA)[0]
+
+
+@pytest.mark.parametrize(("hace", "problema"), [(timedelta(minutes=40), "false"),
+                                                (timedelta(hours=5), "true")])  # fmt: skip
+def test_la_salida_del_trabajo_dice_si_hay_problema(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, hace: timedelta, problema: str
 ) -> None:
-    resumen = tmp_path / "resumen.md"
+    salida, resumen = tmp_path / "salida", tmp_path / "resumen"
+    monkeypatch.setenv(salud.VARIABLE_SALIDA, str(salida))
     monkeypatch.setenv(salud.VARIABLE_RESUMEN, str(resumen))
-    assert salud.principal(consulta(tmp_path, fecha(timedelta(hours=1))), AHORA) == 0
-    assert salud.ANOTACION_AVISO not in capsys.readouterr().out
-    assert salud.principal(consulta(tmp_path, fecha(timedelta(hours=3))), AHORA) == 0
-    avisos = capsys.readouterr().out.splitlines()
-    assert len(avisos) == 1
-    assert avisos[0].startswith(salud.ANOTACION_AVISO)
-    al_dia, atrasada = resumen.read_text(encoding="utf-8").split(salud.TITULO)[1:]
-    assert "✅" in al_dia and "hace 1.0 h." in al_dia
-    assert "⚠️" in atrasada and "hace 3.0 h: más de 2 h." in atrasada
-
-
-def test_una_consulta_que_no_dejo_fichero_cuenta_como_no_se_sabe(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
-) -> None:
-    monkeypatch.delenv(salud.VARIABLE_RESUMEN, raising=False)
-    assert salud.principal(["--estado", str(tmp_path / "no.txt")], AHORA) == 0
-    avisos = capsys.readouterr().out.splitlines()
-    assert len(avisos) == 1
-    assert avisos[0].startswith(salud.ANOTACION_AVISO)
-    assert "No se ha podido saber" in avisos[0]
+    bucket = Bucket(publicado(estado(hace)))
+    assert salud.principal([], AHORA, bucket.leer, bucket.dormir) == 0
+    lineas = salida.read_text(encoding="utf-8").splitlines()
+    assert lineas[0] == f"problema={problema}"
+    assert lineas[1].startswith("mensaje=La última recogida")
+    assert salud.TITULO in resumen.read_text(encoding="utf-8")

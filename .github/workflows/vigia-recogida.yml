@@ -1,9 +1,11 @@
 name: vigia-recogida
 
-# Aviso si el servidor deja de recoger. Cada hora mira la fecha del último commit de la
-# rama estado del repositorio de datos, que la recogida horaria sustituye en cada
-# ejecución: si tiene más de dos horas, abre una incidencia en este repositorio (una sola
-# mientras dure el problema) y la cierra cuando la rama vuelve a actualizarse.
+# Aviso si el servidor deja de recoger. Cada hora lee estado.json, que el servidor publica en
+# el bucket de las teselas al final de cada recogida (recogida/salud.py): si la última
+# recogida correcta tiene más de dos horas, o si el fichero no responde en tres intentos
+# espaciados, abre una incidencia en este repositorio (una sola mientras dure el problema)
+# y la cierra cuando se recupera. Una recogida que no trae nada nuevo sigue siendo correcta:
+# la fecha de la rama estado, que antes se miraba, no avanzaba y daba avisos falsos.
 #
 # En el minuto 41: lejos de las horas en punto, cuando GitHub más retrasa las ejecuciones
 # programadas, y cuando la recogida del minuto 17 ya ha terminado. GitHub puede lanzarla
@@ -14,9 +16,9 @@ on:
     - cron: "41 * * * *"
   workflow_dispatch:
 
-# Solo lo necesario para abrir y cerrar incidencias. El repositorio de datos se lee con
-# una clave de despliegue de solo lectura, no con el token de GitHub.
+# Leer el código para comprobar el estado y abrir o cerrar incidencias; nada más.
 permissions:
+  contents: read
   issues: write
 
 concurrency:
@@ -26,48 +28,32 @@ concurrency:
 jobs:
   vigia:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
-      - name: Edad de la rama estado y aviso
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.13"
+      - name: Última recogida correcta según estado.json
+        id: salud
+        run: python -m recogida.salud
+      - name: Abrir o cerrar la incidencia
         env:
-          CLAVE: ${{ secrets.EODI_DATOS_CLAVE_LECTURA }}
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
           TITULO: La recogida horaria no actualiza la base
-          MAX_HORAS: "2"
+          PROBLEMA: ${{ steps.salud.outputs.problema }}
+          MENSAJE: ${{ steps.salud.outputs.mensaje }}
         run: |
           set -euo pipefail
-          install -m 700 -d "$RUNNER_TEMP/ssh"
-          printf '%s\n' "$CLAVE" > "$RUNNER_TEMP/ssh/lectura"
-          chmod 600 "$RUNNER_TEMP/ssh/lectura"
-          # Clave de host publicada por GitHub: sin confiar en la primera conexión.
-          echo "github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl" > "$RUNNER_TEMP/ssh/known_hosts"
-          export GIT_SSH_COMMAND="ssh -i $RUNNER_TEMP/ssh/lectura -o IdentitiesOnly=yes -o UserKnownHostsFile=$RUNNER_TEMP/ssh/known_hosts"
-          # Solo el commit, que es lo que lleva la fecha: la base no se descarga.
-          fecha=""
-          if git clone --quiet --bare --depth 1 --filter=blob:none --single-branch \
-            --branch estado git@github.com:QuantuSync/droneobservatory-datos.git \
-            "$RUNNER_TEMP/estado"; then
-            fecha="$(git -C "$RUNNER_TEMP/estado" log -1 --format=%cI)"
-          fi
-          rm -rf "$RUNNER_TEMP/ssh"
-          if [ -z "$fecha" ]; then
-            # Sin fecha no se sabe si el servidor recoge: el trabajo queda en rojo y no se
-            # abre ni se cierra nada.
-            echo "::error::no se pudo leer la rama estado del repositorio de datos"
-            exit 1
-          fi
-          edad=$(( $(date +%s) - $(date -d "$fecha" +%s) ))
-          horas=$(( edad / 3600 ))
           abierta="$(gh issue list --state open --limit 100 --json number,title \
             --jq 'map(select(.title == env.TITULO)) | .[0].number // empty')"
-          echo "último commit de la rama estado: $fecha (hace $horas h)"
-          if [ "$edad" -gt $(( MAX_HORAS * 3600 )) ]; then
+          if [ "$PROBLEMA" = "true" ]; then
             if [ -z "$abierta" ]; then
-              gh issue create --title "$TITULO" --body "El último commit de la rama \`estado\` del repositorio de datos es del $fecha, hace $horas horas: la recogida horaria del servidor no está subiendo la base. Cómo revisarlo y reconstruirlo: \`docs/servidor.md\`. Esta incidencia se cierra sola cuando la rama vuelve a actualizarse."
+              gh issue create --title "$TITULO" --body "$MENSAJE Cómo revisarlo y reconstruirlo: \`docs/servidor.md\`. Esta incidencia se cierra sola cuando la recogida vuelve a terminar bien."
             else
               echo "la incidencia #$abierta sigue abierta"
             fi
           elif [ -n "$abierta" ]; then
-            gh issue close "$abierta" --comment "La rama \`estado\` vuelve a actualizarse: último commit del $fecha."
+            gh issue close "$abierta" --comment "La recogida vuelve a terminar bien. $MENSAJE"
           fi

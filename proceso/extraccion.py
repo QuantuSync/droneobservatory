@@ -49,7 +49,7 @@ from proceso.noticias import (
     nomenclator,
     normalizar,
 )
-from proceso.ubicacion import Objetivo, Pistas, Ubicacion, ubicar
+from proceso.ubicacion import Objetivo, Pistas, Ubicacion, pais_del_suceso, ubicar
 from proceso.validacion_ficha import (
     MIN_LETRAS_PALABRA,
     Contexto,
@@ -279,6 +279,25 @@ def palabras_objetivo(id_lugar: str) -> frozenset[str]:
     )
 
 
+def completar_pais(
+    validada: Validada, ficha_bruta: dict[str, Any], textos: tuple[str, ...]
+) -> None:
+    """Si la ficha no da un país válido, el que se deduce sin ambigüedad del lugar del suceso
+    que describe (proceso/ubicacion.pais_del_suceso). Nunca el país del medio."""
+    if validada.pais is not None:
+        return
+    deducido = pais_del_suceso(ficha_bruta, textos, prefijos_genericos(), nomenclator())
+    if deducido is None:
+        return
+    pais, nombre_campo, campo = deducido
+    validada.campos["pais"] = {**campo, "valor": pais}
+    if nombre_campo == "lugar_suceso":
+        validada.campos["lugar_suceso"] = {**campo, "valor": {**campo["valor"], "pais": pais}}
+    else:
+        validada.campos.setdefault(nombre_campo, campo)
+    validada.motivos.append(f"pais: deducido de {nombre_campo}")
+
+
 def procesar_respuesta(
     almacen: Almacen,
     peticion: Peticion,
@@ -315,6 +334,7 @@ def procesar_respuesta(
             prefijos_genericos=prefijos_genericos(),
         )
         validada = validar(leida, contexto)
+        completar_pais(validada, leida, contexto.textos)
         # La ficha en bruto se guarda para poder revalidarla sin volver a llamar.
         documento = {
             "motivos": validada.motivos,
@@ -336,10 +356,64 @@ def procesar_respuesta(
     return incidente_id
 
 
-def incidente_del_candidato(almacen: Almacen, candidato_id: str) -> str | None:
-    """El último incidente que dio de alta alguna ficha del candidato."""
+def incidente_del_candidato(
+    almacen: Almacen, candidato_id: str, vinculos: dict[str, str] | None = None
+) -> str | None:
+    """El incidente del candidato: el último que dio de alta una de sus fichas o, si se hizo
+    al reconstruir, el que lleva el candidato en su control. Con `vinculos` (una
+    reconstrucción entera), se busca ahí."""
+    if vinculos is not None:
+        return vinculos.get(candidato_id)
     anteriores = [e["incidente"] for e in almacen.extracciones(candidato_id)]
-    return next((i for i in reversed(anteriores) if i), None)
+    extraido = next((i for i in reversed(anteriores) if i), None)
+    if extraido is not None:
+        return str(extraido)
+    return next(
+        (
+            str(i["id"])
+            for i in almacen.incidentes()
+            if i["control"].get("candidato") == candidato_id
+        ),
+        None,
+    )
+
+
+def de_noticias(incidente: Documento) -> bool:
+    """Incidente hecho con una ficha del extractor (no con los partes de Ucrania)."""
+    return str(incidente["control"].get("version_extractor", "")).startswith("ficha/")
+
+
+def vincular(almacen: Almacen) -> dict[str, str]:
+    """Para cada candidato, su incidente: el de sus extracciones, el que lo lleva en su
+    control o, para los hechos al reconstruir antes de que se anotara, el de número más bajo
+    que contiene todos sus artículos. Así una reconstrucción reutiliza el identificador en
+    vez de numerar otro: los enlaces por incidente siguen valiendo."""
+    vinculos: dict[str, str] = {}
+    candidatos = almacen.candidatos()
+    for candidato in candidatos:
+        anteriores = [e["incidente"] for e in almacen.extracciones(candidato["id"])]
+        extraido = next((i for i in reversed(anteriores) if i), None)
+        if extraido is not None:
+            vinculos[candidato["id"]] = extraido
+    incidentes = [i for i in almacen.incidentes() if de_noticias(i)]
+    for incidente in incidentes:
+        candidato_id = incidente["control"].get("candidato")
+        if candidato_id and candidato_id not in vinculos:
+            vinculos[candidato_id] = incidente["id"]
+    reclamados = set(vinculos.values())
+    por_enlace: dict[str, set[str]] = {}
+    for incidente in incidentes:
+        for fuente in incidente["fuentes"]:
+            por_enlace.setdefault(fuente["enlace"], set()).add(incidente["id"])
+    for candidato in candidatos:
+        if candidato["id"] in vinculos:
+            continue
+        conjuntos = [por_enlace.get(url, set()) for url in candidato["articulos"]]
+        comunes = set.intersection(*conjuntos) - reclamados if conjuntos else set()
+        if comunes:
+            vinculos[candidato["id"]] = min(comunes)
+            reclamados.add(min(comunes))
+    return vinculos
 
 
 def retirar(
@@ -364,9 +438,14 @@ def retirar(
 
 
 def retirar_del_candidato(
-    almacen: Almacen, candidato_id: str, motivo: str, ahora: datetime, modelos_base: frozenset[str]
+    almacen: Almacen,
+    candidato_id: str,
+    motivo: str,
+    ahora: datetime,
+    modelos_base: frozenset[str],
+    vinculos: dict[str, str] | None = None,
 ) -> bool:
-    id_ = incidente_del_candidato(almacen, candidato_id)
+    id_ = incidente_del_candidato(almacen, candidato_id, vinculos)
     return id_ is not None and retirar(almacen, id_, motivo, ahora, modelos_base)
 
 
@@ -400,6 +479,7 @@ def _alta(
     modelos_base: frozenset[str],
     documento: Documento,
     rehacer: bool = False,
+    vinculos: dict[str, str] | None = None,
 ) -> str | None:
     """Da de alta o rehace el incidente del candidato. Con `rehacer`, el incidente no
     conserva su fusión ni su episodio: se vuelven a calcular después."""
@@ -408,9 +488,11 @@ def _alta(
     if not ubicacion.valida:
         documento["motivos"] = [*documento["motivos"], f"ubicación: {ubicacion.motivo}"]
         return None
-    existente = incidente_del_candidato(almacen, peticion.candidato["id"])
+    existente = incidente_del_candidato(almacen, peticion.candidato["id"], vinculos)
     inicio = validada.valor("inicio") or peticion.candidato["inicio"]
     id_ = existente or almacen.siguiente_id_incidente(int(inicio[:4]))
+    if vinculos is not None:
+        vinculos[peticion.candidato["id"]] = id_
     modelos = modelos_validos(almacen, modelos_base)
     incidente = construir(
         id_, ubicacion, peticion.candidato, peticion.articulos, peticion.enviadas, validada,
@@ -451,6 +533,7 @@ def reconstruir(
     `rehacer`, fusiones y episodios se vuelven a calcular después. Devuelve cuántos rehace.
     """
     rehechos = 0
+    vinculos = vincular(almacen)
     for candidato in almacen.candidatos():
         # La última ficha legible: una respuesta que no traía ficha no deshace la anterior.
         legibles = [e for e in almacen.extracciones(candidato["id"]) if "ficha" in e]
@@ -480,6 +563,7 @@ def reconstruir(
             titulares,
             prefijos_genericos(),
         )
+        completar_pais(validada, ultima["ficha"], titulares)
         nombre = validada.valor("objetivo_nombre")
         contexto = Contexto(
             textos=(), pais_objetivo=peticion.objetivo.pais, primer_articulo=ahora, ahora=ahora,
@@ -495,17 +579,33 @@ def reconstruir(
         if not validada.publicable:
             retirar_del_candidato(
                 almacen, candidato["id"], "ficha no publicable con las reglas actuales", ahora,
-                modelos_base,
+                modelos_base, vinculos,
             )  # fmt: skip
             continue
         peticion = replace(peticion, enviadas=list(enviadas))
         guardadas = {"motivos": [], "declaraciones": ultima.get("declaraciones", [])}
-        if _alta(almacen, peticion, validada, ahora, modelos_base, guardadas, rehacer):
+        if _alta(almacen, peticion, validada, ahora, modelos_base, guardadas, rehacer, vinculos):
             rehechos += 1
         else:
             retirar_del_candidato(
-                almacen, candidato["id"], "; ".join(guardadas["motivos"]), ahora, modelos_base
-            )
+                almacen, candidato["id"], "; ".join(guardadas["motivos"]), ahora, modelos_base,
+                vinculos,
+            )  # fmt: skip
+    if rehacer:
+        # Los incidentes de noticias que ya no son de ningún candidato son copias numeradas
+        # de más por reconstrucciones anteriores: se retiran, sin borrarse.
+        propios = set(vinculos.values())
+        todos = almacen.incidentes()
+        enlaces = {i["id"]: {f["enlace"] for f in i["fuentes"]} for i in todos}
+        for incidente in todos:
+            if de_noticias(incidente) and incidente["id"] not in propios:
+                original = min(
+                    (p for p in propios if enlaces.get(p, set()) & enlaces[incidente["id"]]),
+                    default=None,
+                )
+                motivo = f"copia de {original}" if original else "sin candidato"
+                retirar(almacen, incidente["id"], f"{motivo}: numerada de más al reconstruir",
+                        ahora, modelos_base)  # fmt: skip
     return rehechos
 
 

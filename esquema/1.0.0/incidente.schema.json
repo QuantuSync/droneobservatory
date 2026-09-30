@@ -94,7 +94,7 @@
         "region": {"x-visibilidad": "publico", "description": "Región de primer nivel del país, tal como la da la fuente.", "type": "string", "minLength": 1},
         "nivel": {"x-visibilidad": "publico", "description": "Nivel al que se sabe el lugar del suceso.", "enum": ["instalacion", "localidad", "region", "pais"]},
         "suceso": {"x-visibilidad": "interno", "description": "Nombre del lugar del suceso tal como lo escribe la fuente.", "type": "string", "minLength": 1},
-        "geocodificacion": {"x-visibilidad": "interno", "description": "De dónde sale el punto.", "enum": ["nomenclator", "candidato", "vocabulario", "localidad", "lugar_nuevo", "gkg"]},
+        "geocodificacion": {"x-visibilidad": "interno", "description": "De dónde sale el punto.", "enum": ["nomenclator", "candidato", "vocabulario", "localidad", "localidad_pequena", "lugar_nuevo", "gkg"]},
         "nuts2": {"x-visibilidad": "interno", "type": "string", "pattern": "^[A-Z]{2}[A-Z0-9]{2}$"}
       }
     },
@@ -261,6 +261,7 @@
         "ultima_actualizacion": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.0.0:comun#/$defs/instante"},
         "motivo_desmentido": {"x-visibilidad": "publico", "type": "string", "minLength": 1},
         "version_extractor": {"x-visibilidad": "interno", "type": "string", "minLength": 1},
+        "candidato": {"x-visibilidad": "interno", "description": "Candidato de noticias del que sale el incidente.", "type": "string", "minLength": 1},
         "huella_fuentes": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.0.0:comun#/$defs/huella"},
         "vocabulario_aegis": {
           "x-visibilidad": "interno",

@@ -3,7 +3,9 @@
 # servidor y con el mismo cerrojo que la recogida horaria: nunca escriben a la vez en la
 # base. Se lanza a mano, como eodi, con la rama que trae las reglas:
 #
-#   bash servidor/revision.sh <rama> [<fichero de aviso para soltar el cerrojo>]
+#   bash servidor/revision.sh <rama> [<fichero de aviso para soltar el cerrojo> [opciones]]
+#
+# Las opciones siguientes van a la revisión (por ejemplo, --reextraer-sin-pais).
 #
 # 1. espera a que termine la recogida en marcha, si la hay, y toma el cerrojo;
 # 2. deja un clon aparte en la rama, con los ficheros publicados de main (lo que hay que
@@ -20,6 +22,7 @@ set -euo pipefail
 
 principal() {
   local aqui rama="$1" aviso="${2:-}" codigo=0
+  shift "$(($# < 2 ? $# : 2))"
   aqui="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
   # shellcheck source=servidor/configuracion.sh
   . "$aqui/configuracion.sh"
@@ -53,7 +56,7 @@ principal() {
 
   (cd "$clon" && GIT_SSH_COMMAND="$ssh_base -i $DESPLIEGUE_DATOS" \
     "$python" -m recogida.revision --correo "$CORREO" --repositorio "$URL_DATOS" \
-    --informe "$informe") || codigo=$?
+    --informe "$informe" "$@") || codigo=$?
   echo "revisión terminada con código $codigo"
 
   if [ "$codigo" -eq 0 ] && [ -n "$aviso" ]; then

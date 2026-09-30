@@ -161,9 +161,12 @@ CREATE TRIGGER IF NOT EXISTS afirmaciones_sin_delete BEFORE DELETE ON afirmacion
 BEGIN SELECT RAISE(ABORT, 'afirmaciones: nada se borra'); END;
 """
 
-_TRIGGERS_POR_TABLA = """
-CREATE TRIGGER IF NOT EXISTS {t}_sin_delete BEFORE DELETE ON {t}
-BEGIN SELECT RAISE(ABORT, '{t}: nada se borra'); END;
+_SIN_DELETE = """CREATE TRIGGER IF NOT EXISTS {t}_sin_delete BEFORE DELETE ON {t}
+BEGIN SELECT RAISE(ABORT, '{t}: nada se borra'); END;"""
+_TRIGGERS_POR_TABLA = (
+    "\n"
+    + _SIN_DELETE
+    + """
 CREATE TRIGGER IF NOT EXISTS {t}_alta AFTER INSERT ON {t}
 BEGIN
     INSERT INTO historial (tabla, entidad_id, operacion, anterior, nuevo)
@@ -175,6 +178,7 @@ BEGIN
     VALUES ('{t}', NEW.id, 'cambio', OLD.documento, NEW.documento);
 END;
 """
+)
 
 ESQUEMA_SQL = _TABLAS + "".join(_TRIGGERS_POR_TABLA.format(t=t) for t in TABLAS_CON_HISTORIAL)
 
@@ -565,12 +569,40 @@ class Almacen:
         return f"{prefijo}{ultimo + 1:05d}"
 
     def siguiente_id_episodio(self, anio: int) -> str:
+        """El siguiente número del año, contando también los episodios purgados, que siguen
+        en el historial: un identificador que llegó a publicarse no vuelve a usarse."""
         prefijo = f"EODI-EP-{anio:04d}-"
         fila = self._conexion.execute(
-            "SELECT max(id) FROM episodios WHERE id LIKE ?", (prefijo + "%",)
+            "SELECT max(id) FROM (SELECT id FROM episodios WHERE id LIKE ? "
+            "UNION SELECT entidad_id FROM historial "
+            "WHERE tabla = 'episodios' AND entidad_id LIKE ?)",
+            (prefijo + "%", prefijo + "%"),
         ).fetchone()
         ultimo = int(fila[0][len(prefijo) :]) if fila and fila[0] else 0
         return f"{prefijo}{ultimo + 1:04d}"
+
+    def purgar_episodios_deshechos(self, ahora: datetime) -> list[str]:
+        """Quita los episodios deshechos, que ningún incidente enlaza. Es la única baja de la
+        base: cada uno queda antes en el historial, como cambio a una marca de purgado, con su
+        documento, y su número no se reutiliza (siguiente_id_episodio). Devuelve los quitados."""
+        filas = self._conexion.execute("SELECT id, documento FROM episodios ORDER BY id").fetchall()
+        purgados = [id_ for id_, documento in filas if "deshecho" in json.loads(documento)]
+        if not purgados:
+            return []
+        marca = _json({"purgado": ahora.strftime("%Y-%m-%dT%H:%MZ")})
+        huecos = ", ".join("?" for _ in purgados)
+        with self._conexion:
+            self._conexion.execute(
+                "INSERT INTO historial (tabla, entidad_id, operacion, anterior, nuevo) "
+                "SELECT 'episodios', id, 'cambio', documento, ? FROM episodios "
+                f"WHERE id IN ({huecos})",
+                (marca, *purgados),
+            )
+            self._conexion.execute("DROP TRIGGER episodios_sin_delete")
+            self._conexion.execute(f"DELETE FROM episodios WHERE id IN ({huecos})", purgados)
+            # Todo en la misma transacción: el disparador vuelve antes de confirmarla.
+            self._conexion.execute(_SIN_DELETE.format(t="episodios"))
+        return purgados
 
     # --- Lectura ------------------------------------------------------------
 

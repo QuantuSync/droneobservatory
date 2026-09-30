@@ -107,6 +107,9 @@ Decisiones, valores y cobertura en [`docs/informe_recogida.md`](docs/informe_rec
   OpenStreetMap, bajo licencia ODbL.
 - `configuracion/fronteras_europa.json` sale de
   [Natural Earth](https://www.naturalearthdata.com), de dominio público.
+- `configuracion/localidades_pequenas.json.gz` contiene datos de
+  [GeoNames](https://www.geonames.org), bajo licencia
+  [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 - `configuracion/regiones_localidades.json` contiene datos de
   [GeoNames](https://www.geonames.org), bajo licencia
   [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).

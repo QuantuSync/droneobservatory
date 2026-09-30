@@ -130,12 +130,16 @@ def rehacer(almacen: Almacen, ahora: datetime, modelos_base: frozenset[str]) -> 
         if "fusionado_en" in incidente:
             documento = {k: v for k, v in incidente.items() if k != "fusionado_en"}
             almacen.guardar_incidente(documento, ahora, vocabulario)
-    return {
+    resultado = {
         "rehechos": rehechos,
         "incursiones_rehechas": rehechas,
         "fusiones": incidentes.fusionar(almacen, ahora, vocabulario),
         "cambios_episodio": incidentes.agrupar_episodios(almacen, ahora, vocabulario),
     }
+    # Los episodios que las reglas ya no forman no enlazan ningún incidente: se quitan, con
+    # su rastro en el historial y sin que su número vuelva a usarse.
+    resultado["episodios_purgados"] = len(almacen.purgar_episodios_deshechos(ahora))
+    return resultado
 
 
 # --- Informe -------------------------------------------------------------------------
@@ -283,7 +287,58 @@ def informe(
 # --- Orden ---------------------------------------------------------------------------
 
 
-def orden(almacen: Almacen, muestra_coste: int, ruta_informe: Path, lote_id: str | None) -> int:
+# Tope de gasto de la reextracción de los incidentes sin país: pocas llamadas directas.
+TOPE_REEXTRACCION_USD = 0.50
+MOTIVO_SIN_PAIS = "sin país del suceso"
+
+
+def sin_pais_con_incidente(almacen: Almacen) -> list[Documento]:
+    """Candidatos cuyo incidente se retiró porque su ficha no sabía el país y cuya ficha sí
+    dice que es un incidente. Los que la ficha marca como no incidente se quedan retirados:
+    volver a extraerlos daría lo mismo."""
+    retirados = {
+        i["id"] for i in almacen.incidentes()
+        if MOTIVO_SIN_PAIS in i.get("retirado", {}).get("motivo", "")
+    }  # fmt: skip
+    elegidos = []
+    for candidato in almacen.candidatos():
+        extracciones = almacen.extracciones(candidato["id"])
+        if not retirados & {e.get("incidente") for e in extracciones}:
+            continue
+        es_incidente = extracciones[-1].get("ficha", {}).get("es_incidente", {})
+        if es_incidente.get("valor") is True:
+            elegidos.append(candidato)
+    return sorted(elegidos, key=lambda c: c["id"])
+
+
+def reextraer(
+    almacen: Almacen, cliente: extraccion.Servicio, candidatos_: list[Documento]
+) -> Documento:
+    """Llamadas directas para los candidatos, dentro del tope de gasto por el peor caso."""
+    peticiones = preparar_todas(almacen, candidatos_, Descargador)
+    caso = [coste.peor_caso(p.letras(), ficha.MAX_TOKENS_SALIDA) for p in peticiones]
+    caben = next((n for n in range(len(caso), -1, -1) if sum(caso[:n]) <= TOPE_REEXTRACCION_USD), 0)
+    antes = almacen.gastado(coste.Modo.REVISION.value)
+    extraidas = extraccion.extraer(
+        almacen, cliente, peticiones[:caben], datetime.now(UTC), coste.Modo.REVISION,
+        modelos_base(),
+    )  # fmt: skip
+    return {
+        "candidatos": len(candidatos_),
+        "llamadas": len(extraidas.incidentes),
+        "publicables": sum(i is not None for i in extraidas.incidentes),
+        "fuera_de_tope": len(candidatos_) - caben,
+        "gasto_usd": round(almacen.gastado(coste.Modo.REVISION.value) - antes, 4),
+    }
+
+
+def orden(
+    almacen: Almacen,
+    muestra_coste: int,
+    ruta_informe: Path,
+    lote_id: str | None,
+    reextraer_sin_pais: bool = False,
+) -> int:
     antes = foto()
     cliente = servicio.Cliente(servicio.configuracion(), insistencia=servicio.HISTORICO)
     pendientes = sorted(candidatos(almacen), key=lambda c: c["id"])
@@ -316,6 +371,9 @@ def orden(almacen: Almacen, muestra_coste: int, ruta_informe: Path, lote_id: str
             modo=coste.Modo.REVISION,
         )  # fmt: skip
     registro.info("lote %s", extra.get("lote"))
+    if reextraer_sin_pais:
+        extra["reextraccion"] = reextraer(almacen, cliente, sin_pais_con_incidente(almacen))
+        registro.info("reextracción %s", extra["reextraccion"])
     extra["rehacer"] = rehacer(almacen, datetime.now(UTC), modelos_base())
     registro.info("rehecho %s", extra["rehacer"])
     publicar(almacen, datetime.now(UTC))
@@ -331,8 +389,17 @@ def principal(argumentos: list[str] | None = None) -> int:
     opciones.add_argument("--informe", type=Path, required=True, help="informe en JSON")
     opciones.add_argument("--muestra", type=int, default=MUESTRA_COSTE)
     opciones.add_argument("--lote", help="procesa un lote ya enviado en vez de enviar otro")
+    opciones.add_argument(
+        "--reextraer-sin-pais", action="store_true",
+        help="vuelve a extraer los incidentes retirados sin país cuya ficha dice que lo son",
+    )  # fmt: skip
     args = opciones.parse_args(argumentos)
-    return con_base(args, lambda almacen: orden(almacen, args.muestra, args.informe, args.lote))
+    return con_base(
+        args,
+        lambda almacen: orden(
+            almacen, args.muestra, args.informe, args.lote, args.reextraer_sin_pais
+        ),
+    )
 
 
 if __name__ == "__main__":

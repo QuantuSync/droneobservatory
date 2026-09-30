@@ -285,6 +285,8 @@ def construir(
             "ultima_actualizacion": _instante(ahora, "minuto"),
             "version_extractor": version,
             "huella_fuentes": huella([f["enlace"] for f in fuentes]),
+            # El candidato del que sale: al rehacerlo, conserva su identificador.
+            "candidato": candidato["id"],
         },
     }
     if datos_objetivo is not None:
