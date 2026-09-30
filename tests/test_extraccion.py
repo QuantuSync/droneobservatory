@@ -3,6 +3,7 @@
 import dataclasses
 import http.client
 import json
+import logging
 from collections.abc import Iterator
 from datetime import UTC, datetime, timedelta
 from typing import Any
@@ -24,7 +25,7 @@ from modelo.paginas import primeras_frases
 from proceso import extraccion, incidentes
 from proceso.validacion_ficha import Contexto, validar
 from proceso.validaciones import validar_incidente
-from recogida import gdelt
+from recogida import extractor, gdelt
 from tests.test_gdelt import articulo
 
 AHORA = datetime(2025, 9, 24, 12, tzinfo=UTC)
@@ -564,8 +565,6 @@ def test_recorte_del_lote_al_limite_del_historico(almacen: Almacen) -> None:
 def test_paso_horario_sin_configuracion_no_hace_nada(
     almacen: Almacen, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    from recogida import extractor
-
     for variable in ("EODI_EXTRACTOR_CLAVE", "EODI_EXTRACTOR_URL"):
         monkeypatch.delenv(variable, raising=False)
     candidato_con_articulos(almacen)
@@ -573,8 +572,6 @@ def test_paso_horario_sin_configuracion_no_hace_nada(
 
 
 def test_paso_horario_con_servicio(almacen: Almacen, monkeypatch: pytest.MonkeyPatch) -> None:
-    from recogida import extractor
-
     valores = {
         "EODI_EXTRACTOR_CLAVE": "k", "EODI_EXTRACTOR_URL": "u", "EODI_EXTRACTOR_URL_LOTES": "l",
         "EODI_EXTRACTOR_MODELO": "m", "EODI_EXTRACTOR_CABECERAS": '{"c": "{clave}"}',
@@ -588,6 +585,151 @@ def test_paso_horario_con_servicio(almacen: Almacen, monkeypatch: pytest.MonkeyP
     resultado = extractor.horaria(almacen, AHORA, lambda _c: falso)
     assert (resultado.candidatos, resultado.llamadas, resultado.publicados) == (1, 1, 1)
     assert almacen.gastado("horario", "2025-09-24") > 0
+
+
+PENDIENTES = 3
+CAIDO: Preparada = (503, {}, error_servicio("overloaded_error", "Overloaded"))
+DIA_AHORA = "2025-09-24"
+
+
+def bien() -> Preparada:
+    datos = ficha_ejemplo(inicio=campo("2025-09-23T08:30", "mandag aften"))
+    return 200, {}, json.dumps(respuesta(datos)).encode()
+
+
+@pytest.fixture
+def candidato_pendiente(almacen: Almacen, monkeypatch: pytest.MonkeyPatch) -> dict[str, Any]:
+    """Extractor configurado y un candidato que sale tres veces como pendiente, sin red."""
+    valores = {
+        "EODI_EXTRACTOR_CLAVE": "clave-secreta", "EODI_EXTRACTOR_URL": "u",
+        "EODI_EXTRACTOR_URL_LOTES": "l", "EODI_EXTRACTOR_MODELO": "m",
+        "EODI_EXTRACTOR_CABECERAS": '{"c": "{clave}"}',
+    }  # fmt: skip
+    for nombre, valor in valores.items():
+        monkeypatch.setenv(nombre, valor)
+    monkeypatch.setattr(extractor, "Descargador", lambda: None)
+    monkeypatch.setattr(paginas, "leer", lambda _d, _u: TEXTO)
+    candidato = candidato_con_articulos(almacen, horas=2)
+    monkeypatch.setattr(extractor, "pendientes", lambda _a, _desde=None: [candidato] * PENDIENTES)
+    return candidato
+
+
+def paso_horario(
+    almacen: Almacen, respuestas: list[Preparada], ahora: datetime = AHORA
+) -> tuple[extractor.Resultado, Servicio]:
+    servicio = Servicio(respuestas)
+    resultado = extractor.horaria(almacen, ahora, lambda c: Cliente(c, servicio, lambda _: None))
+    return resultado, servicio
+
+
+@pytest.mark.parametrize(
+    ("fallo", "en_el_registro"),
+    [
+        *[
+            ((codigo, {}, error_servicio("overloaded_error", "Overloaded")), f"código {codigo}")
+            for codigo in (429, 500, 502, 503, 504, 529)
+        ],
+        (TimeoutError("timed out"), "corte de conexión (TimeoutError: timed out)"),
+        (ConnectionResetError("reset"), "corte de conexión (ConnectionResetError: reset)"),
+    ],
+)
+def test_servicio_caido_deja_todo_pendiente_sin_insistir_ni_poner_en_rojo(
+    almacen: Almacen,
+    candidato_pendiente: dict[str, Any],
+    caplog: pytest.LogCaptureFixture,
+    fallo: Preparada,
+    en_el_registro: str,
+) -> None:
+    caplog.set_level(logging.WARNING, logger="recogida")
+    resultado, servicio = paso_horario(almacen, [fallo, fallo])
+    # La llamada y su único reintento: a los otros dos candidatos ni se les llama.
+    assert len(servicio.pedidas) == HORARIA.reintentos + 1
+    assert (resultado.llamadas, resultado.pendientes) == (0, PENDIENTES)
+    assert resultado.parada is extraccion.Parada.SERVICIO_CAIDO
+    assert not resultado.en_rojo
+    assert extraccion.necesita_extraccion(almacen, candidato_pendiente)
+    (aviso,) = caplog.records
+    assert aviso.levelno == logging.WARNING
+    assert "servicio caído" in aviso.getMessage()
+    assert en_el_registro in aviso.getMessage()
+    assert f"pendientes={PENDIENTES}" in aviso.getMessage()
+
+
+def test_si_el_servicio_cae_a_mitad_lo_hecho_vale_y_el_resto_queda_pendiente(
+    almacen: Almacen, candidato_pendiente: dict[str, Any]
+) -> None:
+    resultado, _ = paso_horario(almacen, [bien(), CAIDO, CAIDO])
+    assert (resultado.llamadas, resultado.publicados, resultado.pendientes) == (1, 1, 2)
+    assert not resultado.en_rojo
+    assert almacen.cursor(extractor.ESTADO_SERVICIO) == {"caido_desde": AHORA.isoformat()}
+
+
+def test_una_caida_de_mas_de_seis_horas_pone_en_rojo_y_una_respuesta_la_cierra(
+    almacen: Almacen, candidato_pendiente: dict[str, Any]
+) -> None:
+    momentos = [
+        timedelta(0),
+        extractor.MAX_CAIDA / 2,
+        extractor.MAX_CAIDA,
+        extractor.MAX_CAIDA + timedelta(minutes=1),
+    ]
+    en_rojo = [paso_horario(almacen, [CAIDO, CAIDO], AHORA + m)[0].en_rojo for m in momentos]
+    assert en_rojo == [False, False, False, True]
+    # La caída se cuenta desde la primera ejecución que la vio.
+    assert almacen.cursor(extractor.ESTADO_SERVICIO) == {"caido_desde": AHORA.isoformat()}
+    vuelta = AHORA + extractor.MAX_CAIDA + extractor.HORA
+    resultado, _ = paso_horario(almacen, [bien()] * PENDIENTES, vuelta)
+    assert (resultado.llamadas, resultado.pendientes, resultado.en_rojo) == (PENDIENTES, 0, False)
+    assert almacen.cursor(extractor.ESTADO_SERVICIO) == {"caido_desde": None}
+    # Otra caída empieza a contar de cero.
+    resultado, _ = paso_horario(almacen, [CAIDO, CAIDO], vuelta + extractor.MAX_CAIDA)
+    assert not resultado.en_rojo
+
+
+@pytest.mark.parametrize(
+    ("codigo", "tipo", "mensaje"),
+    [
+        (400, "invalid_request_error", "max_tokens: field required"),
+        (400, "invalid_request_error", "Your credit balance is too low to access the service."),
+        (401, "authentication_error", "invalid x-api-key"),
+        (403, "permission_error", "Your account does not have permission to use this resource."),
+    ],
+)
+def test_error_definitivo_para_el_extractor_y_pone_en_rojo_con_el_mensaje_exacto(
+    almacen: Almacen,
+    candidato_pendiente: dict[str, Any],
+    caplog: pytest.LogCaptureFixture,
+    codigo: int,
+    tipo: str,
+    mensaje: str,
+) -> None:
+    caplog.set_level(logging.WARNING, logger="recogida")
+    resultado, servicio = paso_horario(almacen, [(codigo, {}, error_servicio(tipo, mensaje))])
+    assert len(servicio.pedidas) == 1
+    assert (resultado.llamadas, resultado.pendientes) == (0, PENDIENTES)
+    assert resultado.parada is extraccion.Parada.ERROR
+    assert resultado.en_rojo
+    (aviso,) = caplog.records
+    assert aviso.levelno == logging.ERROR
+    assert f"código {codigo} ({tipo}: {mensaje})" in aviso.getMessage()
+    # No es una caída: el estado del servicio no cambia.
+    assert almacen.cursor(extractor.ESTADO_SERVICIO) is None
+
+
+def test_alcanzar_el_limite_diario_no_es_un_fallo(
+    almacen: Almacen, candidato_pendiente: dict[str, Any], caplog: pytest.LogCaptureFixture
+) -> None:
+    caplog.set_level(logging.WARNING, logger="recogida")
+    almacen.registrar_llamada({
+        "fecha": f"{DIA_AHORA}T01:00:00Z", "modo": "horario", "candidato": "x", "lote": False,
+        "entrada": 0, "salida": 0, "escritura_cache": 0, "lectura_cache": 0,
+        "coste": coste.LIMITE_DIARIO_USD,
+    })  # fmt: skip
+    resultado, servicio = paso_horario(almacen, [])
+    assert servicio.pedidas == []
+    assert resultado.parada is extraccion.Parada.LIMITE_GASTO
+    assert (resultado.pendientes, resultado.en_rojo) == (PENDIENTES, False)
+    assert caplog.records == []
 
 
 def test_frase_larga_recortada_y_sin_fecha_se_publica_con_la_del_candidato() -> None:

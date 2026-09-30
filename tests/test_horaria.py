@@ -12,7 +12,8 @@ from almacen import remoto
 from almacen.base import Almacen
 from almacen.cifrado import VARIABLE_CLAVE, abrir_cifrada, guardar_cifrada
 from exportacion import publicar
-from recogida import fuerza_aerea, gdelt, horaria, mindef, oficiales
+from proceso.extraccion import Parada
+from recogida import extractor, fuerza_aerea, gdelt, horaria, mindef, oficiales
 from recogida.cache import CachePaginas
 from tests.telegram_falso import CanalFalso, descargador
 from tests.test_fuerza_aerea import canal
@@ -88,6 +89,38 @@ def test_canal_no_verificado_termina_en_rojo_sin_leer(
     salida = horaria.principal(["--correo", "a@b.org", "--repositorio", repositorio])
     assert salida == horaria.SALIDA_AVISO
     assert base_remota(repositorio, tmp_path).ataques_ucrania() == []
+
+
+@pytest.mark.parametrize(
+    ("resultado", "salida"),
+    [
+        # Servicio caído o límite de gasto: los candidatos esperan y no hay aviso.
+        (extractor.Resultado(pendientes=9, parada=Parada.SERVICIO_CAIDO), 0),
+        (extractor.Resultado(pendientes=9, parada=Parada.LIMITE_GASTO), 0),
+        # Caída de más de seis horas o error que no se arregla solo.
+        (
+            extractor.Resultado(pendientes=9, parada=Parada.SERVICIO_CAIDO, en_rojo=True),
+            horaria.SALIDA_AVISO,
+        ),
+        (
+            extractor.Resultado(pendientes=9, parada=Parada.ERROR, en_rojo=True),
+            horaria.SALIDA_AVISO,
+        ),
+    ],
+)
+def test_el_extractor_solo_deja_la_ejecucion_en_rojo_cuando_lo_pide(
+    entorno: tuple[str, CanalFalso, Path],
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    resultado: extractor.Resultado,
+    salida: int,
+) -> None:
+    repositorio, _, _ = entorno
+    monkeypatch.setattr(extractor, "horaria", lambda almacen, ahora: resultado)
+    subir_base(repositorio, tmp_path, ultimo_id=1)
+    assert horaria.principal(["--correo", "a@b.org", "--repositorio", repositorio]) == salida
+    # Con aviso o sin él, lo recogido está en la base subida.
+    assert len(base_remota(repositorio, tmp_path).ataques_ucrania()) == 3
 
 
 def test_publicar_solo_informa_de_lo_que_cambia(tmp_path: Path) -> None:

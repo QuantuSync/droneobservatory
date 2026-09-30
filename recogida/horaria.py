@@ -68,10 +68,12 @@ def principal(argumentos: list[str] | None = None) -> int:
         )
         # Confirmaciones oficiales de los incidentes que ya hay.
         oficiales.ejecutar(almacen, ahora, modelos(almacen))
-        # Candidatos de noticias a incidentes; una llamada fallida deja la ejecución en rojo.
+        # Candidatos de noticias a incidentes. El límite de gasto o una caída temporal del
+        # servicio dejan candidatos pendientes sin más; un error que no se arregla solo o
+        # una caída larga dejan la ejecución en rojo.
         resultado = extractor.horaria(almacen, ahora)
         registro.info("extractor %s", resultado.resumen())
-        if resultado.fallidas:
+        if resultado.en_rojo:
             salida = SALIDA_AVISO
         cambiados = publicar(almacen, ahora)
         registro.info("ficheros publicados con cambios: %d", len(cambiados))
