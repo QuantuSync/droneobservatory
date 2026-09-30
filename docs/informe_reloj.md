@@ -2,6 +2,10 @@
 
 30 de septiembre de 2026. Las horas son UTC.
 
+*Retirado el mismo día: la recogida pasó a lanzarla un servidor propio y el reloj
+(`reloj.yml`, `recogida/reloj.py`) se eliminó. Ver
+[`informe_servidor.md`](informe_servidor.md).*
+
 ## 1. El problema
 
 `recogida.yml` está programado cada hora en el minuto 17. Del 28 al 30 de septiembre

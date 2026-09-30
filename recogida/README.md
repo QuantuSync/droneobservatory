@@ -23,8 +23,7 @@ Recogida automática de fuentes.
 | `comparacion.py` | Cobertura frente a la lista de referencia de 2025 |
 | `lugares_osm.py` | Generador del nomenclátor de lugares desde OpenStreetMap |
 | `auditoria.py` | Cobertura por días: días sin parte y su explicación |
-| `horaria.py` | Ejecución horaria del workflow |
+| `horaria.py` | Ejecución horaria, que lanza el servidor de recogida (`servidor/`) |
 | `plazo.py` | Tope de tiempo de cada paso de la ejecución horaria |
-| `reloj.py` | Reloj propio: lanza la recogida a demanda cada hora, por turnos que se relevan |
-| `salud.py` | Aviso en el workflow de tests si la recogida o su reloj llevan horas parados |
+| `salud.py` | Aviso en el workflow de tests si la rama `estado` lleva más de dos horas sin actualizarse |
 | `historico.py` | Histórico de una fuente de partes desde octubre de 2022 |

@@ -56,8 +56,9 @@ guarda en el repositorio.
 
 ## Recogida
 
-- `python -m recogida.horaria --correo <correo>`: lo que ejecuta el workflow
-  `recogida` cada hora en el minuto 17. Descarga `db.age` de la rama `estado`,
+- `python -m recogida.horaria --correo <correo>`: lo que ejecuta cada hora, en el
+  minuto 17, el servidor de recogida ([`docs/servidor.md`](docs/servidor.md)); el
+  workflow `recogida` queda para lanzarla a mano en una emergencia. Descarga `db.age` de la rama `estado`,
   recoge lo nuevo desde el cursor de cada fuente (con relectura de las últimas
   48 horas) y de GDELT, regenera `publicacion/` y sube la base si ha cambiado.
 - `python -m recogida.historico --fuente <id> --correo <correo> [--solo-cache]`:

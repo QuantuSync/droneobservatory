@@ -1,16 +1,16 @@
 name: recogida
 
-# Cada hora en el minuto 17, para no coincidir con el pico de las horas en
-# punto, y a mano. Solo eventos del propio repositorio: nunca pull_request_target.
+# Solo a mano y solo para una emergencia. La recogida de cada hora la lanza un servidor
+# propio (servidor/ y docs/servidor.md), que hace lo mismo que este workflow. Antes de
+# lanzarlo hay que parar el temporizador del servidor: dos recogidas a la vez se pisarían
+# la rama estado. Solo eventos del propio repositorio: nunca pull_request_target.
 on:
-  schedule:
-    - cron: "17 * * * *"
   workflow_dispatch:
 
 permissions:
   contents: read
 
-# Una sola ejecución a la vez: dos a la par se pisarían la rama estado.
+# Una sola ejecución a la vez de este workflow. La del servidor no entra en el grupo.
 concurrency:
   group: recogida
   cancel-in-progress: false
