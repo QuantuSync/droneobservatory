@@ -1,7 +1,12 @@
 # Informe: capa de guerra con lugar concreto en los dos sentidos
 
-Fecha: 1 de octubre de 2026. Pull request: #37 (código, fusionado como `c178acc`) y este
-informe. En AEGIS, PR #44 (documentación de los ficheros nuevos de la exportación).
+Fecha: 1 y 2 de octubre de 2026. Pull requests: #37 (código, `c178acc`), #38 (orden del
+histórico), #39 (partes diarios del frente), #40 (lote del histórico desde la recogida
+horaria), #43 (reivindicaciones sin arma), #44 (máximo de días de la línea base de FIRMS), #46
+(FIRMS en zonas que arden a diario y ataques FPV), #47 (comprobación de webs oficiales lentas)
+y el de este informe. En AEGIS, PR #44 (documentación de los ficheros nuevos de la
+exportación). El borrador de este informe entró por error en el commit de #43; el PR del
+informe lo completa.
 
 Hasta ahora la capa de guerra del European Observatory of Drone Incidents solo sabía cuántos
 drones lanzaba cada parte y sobre qué regiones decía derribarlos. No sabía **dónde** caían.
@@ -167,6 +172,28 @@ confianza; lo que devuelve se vuelve a resolver contra el nomenclátor. Límite 
 USD al día y un lote único de 5 USD para el histórico desde el 1 de enero de 2025, con
 prioridad para energía, combustible e industria.
 
+Reglas que salieron de leer los mensajes reales del servidor:
+
+- **Partes diarios.** Las administraciones (sobre todo Zaporiyia) publican cada mañana la
+  lista de localidades atacadas en 24 horas, casi siempre con FPV en la línea del frente. Se
+  guardan con `parte_diario`, sin enlazar a un ataque nocturno, se publican en `ucrania.json`
+  y se exportan, pero **no se dibujan** (eran 5.186 de los primeros 5.711 impactos RU→UA y
+  tapaban el resto) y no se cruzan con FIRMS.
+- **Estado Mayor.** Solo se registra si el mensaje dice que el medio fueron drones propios
+  («Сили безпілотних систем», «із застосуванням ударних БпЛА»…). «Ударними БпЛА» detrás de
+  «управління», «керування», «з», «із» o «проти» es el objetivo, no el arma (#43). De 2.410
+  mensajes del Estado Mayor desde enero de 2025 salen 21 impactos: la mayoría de sus mensajes
+  son partes del frente sin arma o sin lugar.
+- **Drones como objetivo** («місце запуску ударних БпЛА») no cuentan como arma; los lugares
+  de lanzamiento («із напрямків…») no son lugares alcanzados; un mensaje que vuelve sobre un
+  ataque pasado («відвідав», «проверил как…») no crea otro impacto.
+- **Ciudad frente a aldeas homónimas**: con el mismo nombre oficial, gana la ciudad; los
+  nombres de lugar se tapan antes de deducir el tipo de objetivo («Залізничне» no es un
+  ferrocarril).
+
+El histórico se recorre en este orden: Estado Mayor, gobernadores, Rosaviatsia y después las
+administraciones regionales (#38), para tener cuanto antes impactos situados en Rusia.
+
 ## 5. FIRMS en los dos sentidos y Kirishi
 
 Los focos térmicos se evalúan ahora también sobre cada impacto con lugar (los dos sentidos) y
@@ -190,13 +217,36 @@ Kuibyshev, Yaroslavl, Moscú, Tuapsé, Afipski, Ilski y Slaviansk), 104 ataques 
 | … lejos de cualquier suceso conocido | 76 | 33 |
 
 En Kirishi solo quedan los ataques reales (13-09-2025, 25-03-2026 y 04-05-2026). Se pierden
-dos ataques con solo dos focos (Volgogrado, 10-02-2026; Ilski, 31-12-2025).
+dos ataques con solo dos focos (Volgogrado, 10-02-2026; Ilski, 31-12-2025). En producción, el
+impacto del Estado Mayor «Уражено Кірішський НПЗ» del 13-09-2025 sale «detectado» con la
+regla nueva.
+
+**Fuego habitual y frente (#46).** Con los primeros impactos situados, FIRMS dio «detectado» en
+Zaporiyia con 574 y 673 focos en los 30 días anteriores dentro del radio (fuego cada día) y en
+ataques FPV de Pokrovsk y Kostiantynivka. Ahí un foco nuevo no dice nada del dron. Ahora:
+
+- un radio que ardió 15 o más de los 30 días de la base, repartido en 15 o más celdas de 0,01°,
+  queda «no evaluable» (motivo `fuego_frecuente`); las antorchas caen en uno a tres píxeles y
+  no llegan;
+- los impactos con FPV en la frase, como los partes diarios, no se cruzan con FIRMS;
+- las detecciones se rehacen en cada recogida (son pocas), para que les llegue cualquier
+  cambio de regla.
+
+Con las 12 refinerías: 25 de 104 ataques (antes 26) y 0 de 36 controles; la única pérdida es
+Volgogrado 18-08-2025, cuando la refinería aún ardía del ataque del 13 de agosto (172 focos en
+la base), un caso que FIRMS no puede separar.
+
+**Fallo corregido (#44).** La recogida de las 21:17 del 1 de octubre dejó sin cruce de FIRMS a
+todo (también a los incidentes): `linea_base.dias` llegaba a 31 porque los 30 días empiezan a
+la hora del inicio y tocan 31 fechas, y el esquema ponía 30 como máximo. El máximo pasa a 31.
 
 ## 6. Esquema, exportación y web
 
 - Esquema 1.4.0 (menor): `impacto_guerra` y `restriccion_aeropuerto` nuevos;
   `ataque_ucrania.restricciones_aeropuertos` y `fuente.autoridad_ocupacion`;
-  `foco_termico.linea_base.emplazamiento`.
+  `foco_termico.linea_base.emplazamiento`. Después otra sesión subió a 1.5.0; #44 y #46 solo
+  amplían lo válido en 1.5.0 (máximo 31 y motivo `fuego_frecuente`), así que lo ya escrito
+  sigue valiendo.
 - Exportación para AEGIS 1.1.0 (la misma versión que estrenan los ficheros de detalle de #35;
   aún no se ha publicado ninguna 1.1.0): `guerra_impactos.jsonl`, `guerra_mensajes.jsonl` y
   `restricciones_aeropuertos.jsonl`, con `procedencia` (`metodo` `codigo` o `extractor`), y los
@@ -212,5 +262,93 @@ dos ataques con solo dos focos (Volgogrado, 10-02-2026; Ilski, 31-12-2025).
 - La recogida horaria (minuto 17) procesa lo leído, con un tope de 240 s, y aplica FIRMS.
 - `estado.json` lista cuatro fuentes nuevas (`ova_ua`, `estado_mayor_ua`, `gobernadores_ru`,
   `rosaviatsia`); un fallo suyo no rompe la recogida horaria.
-- `servidor/guerra_reproceso.sh lote` reprocesa todo y lanza el lote histórico del extractor
-  cuando termina el histórico.
+- El lote del histórico del extractor lo envía la propia recogida horaria, una sola vez,
+  cuando el histórico de todos los canales está completo y todo lo leído procesado, y lo
+  incorpora una recogida posterior (#40). Antes, el script esperaba al lote hasta 24 horas con
+  el cerrojo de la recogida tomado.
+- `servidor/guerra_reproceso.sh` relee todo tras un cambio del analizador o del nomenclátor
+  (la recogida horaria solo relee las últimas 12 horas). Se lanzó a las 22:31 UTC del 1 de
+  octubre tras #43: 12.427 mensajes en 3 min 55 s y 1,6 GB.
+- Rosaviatsia no se leyó ninguna vez: favt.gov.ru deja colgada la primera conexión (25 s) y
+  responde en menos de un segundo a la siguiente, y la comprobación hacía dos intentos de
+  20 s. Ahora son intentos de 10 s con tres reintentos (#47).
+
+**Consumo.** Recogida horaria antes (1 de octubre, 10:00–18:22): 4–6 minutos y 1,1–1,6 GB de
+pico. Después: la primera con la capa (7.229 mensajes por procesar) tardó 18 minutos y 2 GB;
+las siguientes, 12–13 minutos y 1,6–2 GB, de los que la capa de guerra son unos 15 s más la
+carga del nomenclátor (unos 480 MB, que se liberan al terminar el paso). El resto del aumento
+es el cruce de FIRMS vaciando los impactos pendientes (unos 3 minutos por pasada mientras
+quedan) y la medición del tráfico aéreo de #33, fusionada esa misma tarde. El servidor tiene
+3,8 GB. El lector (`eodi-guerra.service`) usa 40 MB y unos 20 s de CPU por hora. Disco: 26 MB
+en `datos/guerra` a mitad del histórico. Como la recogida publica ahora hacia el minuto 29,
+`docs/fusiones.md` amplía la ventana sin fusiones del minuto 12–30 al 12–40.
+
+## 8. Resultados
+
+Cifras de la base a las 23:30 UTC del 1 de octubre, con el histórico en 13 de 37 canales
+(Estado Mayor, Briansk, Leningrado, Moscú, Nizhni Nóvgorod, Smolensk y seis administraciones
+regionales completos).
+
+| | Antes | Después |
+| --- | --- | --- |
+| Impactos con lugar RU→UA | 0 | 5.711 (525 sin contar los partes diarios; 430 enlazados a un ataque) |
+| Impactos con lugar UA→RU | 0 | 427 (373 enlazados a un ataque; 12 en instalaciones) |
+| Regiones rusas en la web | 0 (la web descartaba los códigos `RU-`) | 58 |
+| Evaluaciones de FIRMS «detectado» | 1 (incidente de Galați) | 13: 6 RU→UA, 6 UA→RU y Galați |
+| Impactos de guerra con credibilidad subida por un foco | — | 9 (3 RU→UA, 6 UA→RU) |
+| Gasto del extractor de guerra | — | 0,0085 USD (diario); lote del histórico aún sin enviar |
+| Restricciones de Rosaviatsia | — | 0 (ver sección 7) |
+
+UA→RU por fuente: Gobierno de la región de Briansk 248, gobernador de Briansk 92, gobernador
+de Leningrado 42, Estado Mayor ucraniano 21, alcalde de Moscú 18, gobernador de Nizhni
+Nóvgorod 5, gobernador de Smolensk 1. Por región: Briansk 340, Leningrado 43, Moscú 18, Nizhni
+Nóvgorod 5, Krasnodar 4 y otras 17 entre Sarátov, Tambov, Lípetsk, Samara, Kursk, región de
+Moscú y territorios ocupados de Ucrania (con su código ucraniano).
+
+FIRMS «detectado» en impactos de guerra: Kirishi (refinería, 13-09-2025), Briansk, Zernovo,
+Brajlov, Sevsk y Zelenogrado en el sentido UA→RU; Nikopol, Pavlohrad, Ivano-Frankivsk y
+Zaporiyia en el RU→UA. Las de Pokrovsk y Kostiantynivka (FPV) quedan guardadas pero ya no se
+publican ni suben la credibilidad, y la de Zaporiyia se rehace con la regla de fuego habitual.
+Un foco es un indicio físico, no una confirmación: Zelenogrado (28-05-2025, «sin daños
+graves») tiene un foco a menos de 7 km sin línea base, que puede ser otro fuego.
+
+## 9. Comprobación en producción
+
+Capturas de droneobservatory.eu en la vista normal, sin ningún truco: capa Ucrania y «Ver
+todo» en la línea de tiempo, tomadas el 1 de octubre poco después de la
+publicación de las 23:30.
+
+- `capturas/guerra-ver-todo-escritorio.png` y `guerra-ver-todo-390x844.png`: vista inicial.
+  Regiones rusas en grises por intensidad, con borde discontinuo; Ucrania en su color; grupos
+  de impactos con su número.
+- `capturas/guerra-rusia-escritorio.png`: zoom entre Moscú, Riazán, Tula, Oriol y Briansk.
+  Briansk y Kursk en el gris más claro (más ataques en el periodo), grupos de impactos en
+  Briansk (137, 74, 47, 22…) y en Moscú (19), y marcas de foco (punto claro) junto a los
+  impactos con foco.
+- `capturas/guerra-rusia-390x844.png`: lo mismo en móvil.
+- `capturas/guerra-ucrania-escritorio.png` y `guerra-ucrania-390x844.png`: Ucrania con sus
+  grupos (Zaporiyia, Dnipró, Donetsk, Járkov) y la frontera rusa.
+- `capturas/guerra-ficha-impacto-escritorio.png`: ficha de un impacto en Почеп (Briansk):
+  «Reivindicación de parte», lugar, tipo de objetivo «la fuente no lo dice», fecha, ataque de
+  esa noche, credibilidad 3 y sus dos fuentes con su puntuación C3 y enlace.
+- `capturas/guerra-ficha-region-rusa-escritorio.png`: ficha de Kursk: ataques en el periodo
+  según el Ministerio de Defensa ruso, «Cifras de Минобороны России D3 · reivindicación de
+  parte», derribos, impactos con lugar y partes que la citan.
+
+Las capturas se hicieron con Playwright: en escritorio, arrastrando el mapa y con la rueda;
+en móvil, con el teclado del mapa, porque el arrastre táctil emulado no lo mueve. Las de
+`firms-foco-*.png` de la sesión de FIRMS siguen siendo del incidente de Galați en la capa
+Incidentes (sección 1).
+
+## 10. Pendiente
+
+- **Histórico**: quedan 24 canales (8 gobernadores, Rosaviatsia, la administración de la
+  ciudad de Kyiv y 14 administraciones regionales). A unas 40 minutos por hora tardará
+  alrededor de un día. Cuando termine, la recogida horaria enviará sola el lote del extractor
+  (tope de 5 USD) y lo incorporará; las cifras de la sección 8 crecerán sin más intervención.
+- **Palabras corrientes** (`configuracion/palabras_comunes_guerra.json`): conviene regenerarlas
+  con el histórico completo.
+- **Precisión del Estado Mayor**: algunas frases siguen sin decir el arma del ataque concreto
+  aunque el mensaje hable de drones propios en otra parte; son reivindicación de parte (C3) y
+  así se marcan.
+- **Autoridades de ocupación**: el campo existe pero no hay ningún canal verificado.

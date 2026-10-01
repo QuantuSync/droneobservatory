@@ -65,7 +65,9 @@ Por qué existe cada paso:
 - **f. Solo avance rápido.** Si `main` avanza entre la comprobación y el push (la recogida
   publica en el minuto 17 de cada hora más unos minutos), `git push origin <rama>:main` falla:
   se vuelve al paso a. Nunca se fuerza un push sobre `main`. Para no chocar, no se fusiona
-  entre el minuto 12 y el 30 de la hora.
+  entre el minuto 12 y el 40 de la hora: desde el 1 de octubre de 2026 (capa de guerra con
+  lugar, tráfico aéreo medido) la recogida tarda unos 12 minutos y publica hacia el minuto
+  29, y más tras un cambio que la haga reprocesar.
 - **g. Comprobar producción.** Después del push, el número de incidentes que sirve
   droneobservatory.eu (la lista `incidentes` de `/datos/resumen.json`) no puede haber bajado
   respecto al de antes de fusionar; si baja, se restauran los ficheros de datos desde el
