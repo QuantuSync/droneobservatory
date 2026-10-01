@@ -101,10 +101,21 @@ def _poblar(almacen: Almacen) -> None:
     almacen.guardar_encuentro(ejemplos.encuentro(), AHORA)
     almacen.guardar_estadistica_oficial(ejemplos.estadistica_oficial(), AHORA)
     almacen.guardar_documento_oficial(ejemplos.documento_oficial(), AHORA)
+    almacen.guardar_impacto_guerra(ejemplos.impacto_guerra())
+    almacen.guardar_restriccion(ejemplos.restriccion())
+    almacen.guardar_mensaje_guerra(
+        "https://t.me/kharkivoda/31198",
+        "ova_kharkiv",
+        "2025-06-01T06:45:00Z",
+        "h",
+        "impactos",
+        {"id": 31198},
+    )
 
 
 @pytest.mark.parametrize(
-    "tabla", [*TABLAS_CON_HISTORIAL, "afirmaciones", "focos_casados", "historial"]
+    "tabla",
+    [*TABLAS_CON_HISTORIAL, "afirmaciones", "focos_casados", "historial", "mensajes_guerra"],
 )
 def test_delete_prohibido(almacen: Almacen, tabla: str) -> None:
     _poblar(almacen)

@@ -3,6 +3,7 @@ import { useEffect, useRef } from "react";
 import { ESTADOS, TIPOS } from "../datos/vocabulario.ts";
 import { ATAJOS } from "../estado/atajos.ts";
 import type { Textos } from "../i18n/index.ts";
+import { PALETA } from "../paleta.ts";
 import { MarcaFoco } from "./FocoTermico.tsx";
 import { Simbolo } from "./Simbolo.tsx";
 
@@ -10,6 +11,40 @@ interface Props {
   t: Textos;
   abierta: boolean;
   onCerrar: () => void;
+}
+
+/** Punto de un impacto con lugar, como en el mapa: relleno (fuente oficial) o solo el aro. */
+function MarcaImpacto({ parte }: { parte: boolean }) {
+  return (
+    <svg aria-hidden="true" width="10" height="10" viewBox="0 0 10 10" data-marca-impacto="">
+      <circle
+        cx="5"
+        cy="5"
+        r="3.4"
+        fill={parte ? PALETA.fondo : PALETA.secundario}
+        stroke={PALETA.secundario}
+        strokeWidth="1.2"
+      />
+    </svg>
+  );
+}
+
+/** Región rusa, como en el mapa: gris con contorno discontinuo. */
+function MarcaRusia() {
+  return (
+    <svg aria-hidden="true" width="14" height="10" viewBox="0 0 14 10" data-marca-rusia="">
+      <rect
+        x="0.6"
+        y="0.6"
+        width="12.8"
+        height="8.8"
+        fill={PALETA.secundario}
+        fillOpacity="0.4"
+        stroke={PALETA.secundario}
+        strokeDasharray="2 1.5"
+      />
+    </svg>
+  );
 }
 
 /** Nombre legible de una tecla en el panel de ayuda. */
@@ -81,6 +116,19 @@ export function Ayuda({ t, abierta, onCerrar }: Props) {
               <li key={texto}>{texto}</li>
             ),
           )}
+          <li className="flex items-start gap-2">
+            <span className="pt-1">
+              <MarcaRusia />
+            </span>
+            {a.rusia}
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="flex gap-1 pt-1">
+              <MarcaImpacto parte={false} />
+              <MarcaImpacto parte />
+            </span>
+            {a.impactos}
+          </li>
           <li className="flex items-start gap-2">
             <span className="pt-1">
               <MarcaFoco />

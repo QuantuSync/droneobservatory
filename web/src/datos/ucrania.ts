@@ -4,7 +4,14 @@
 import { enPeriodo } from "../tiempo/dias.ts";
 import type { Periodo } from "../tiempo/dias.ts";
 import { DESCONOCIDO } from "./derivar.ts";
-import type { FilaAtaque, FocoRegion, Rango, ResumenUcrania, Sentido } from "./tipos.ts";
+import type {
+  FilaAtaque,
+  FilaImpacto,
+  FocoRegion,
+  Rango,
+  ResumenUcrania,
+  Sentido,
+} from "./tipos.ts";
 
 const SENTIDOS: readonly Sentido[] = ["RU_UA", "UA_RU"];
 
@@ -76,6 +83,21 @@ export function focosDelPeriodo(
   return ucrania.focos.filter(
     (f) => enPeriodo(f.dia, periodo) && (codigo === undefined || f.region === codigo),
   );
+}
+
+/**
+ * Impactos con lugar del periodo, de los dos sentidos; de una región, si se da. Del más
+ * reciente al más antiguo cuando se pide una región (para su lista).
+ */
+export function impactosDelPeriodo(
+  ucrania: ResumenUcrania,
+  periodo: Periodo,
+  codigo?: string,
+): FilaImpacto[] {
+  const filas = ucrania.impactos.filter(
+    (f) => enPeriodo(f[1], periodo) && (codigo === undefined || f[8] === codigo),
+  );
+  return codigo === undefined ? filas : filas.slice().reverse();
 }
 
 /** Centro de cada región con foco térmico, para abrir el visor de FIRMS desde un ataque. */

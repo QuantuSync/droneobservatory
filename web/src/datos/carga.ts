@@ -1,11 +1,19 @@
 // Carga de los ficheros de datos. Cada fichero se valida contra el esquema antes de usarlo:
 // si no valida, no se pinta nada de él.
 
-import type { Ataque, EstadoSistema, IncidenteDetalle, Resumen, ResumenUcrania } from "./tipos.ts";
+import type {
+  Ataque,
+  EstadoSistema,
+  ImpactoGuerra,
+  IncidenteDetalle,
+  Resumen,
+  ResumenUcrania,
+} from "./tipos.ts";
 import {
   validarEstadoSistema,
   validarAtaque,
   validarDetalleIncidente,
+  validarImpacto,
   validarResumen,
   validarResumenUcrania,
 } from "./validar.ts";
@@ -72,6 +80,14 @@ export function cargarAtaque(
   senal?: AbortSignal,
 ): Promise<Carga<Ataque>> {
   return cargar(`/datos/ataques/${id}.json`, validarAtaque, descargar, senal);
+}
+
+export function cargarImpacto(
+  id: string,
+  descargar: Descarga,
+  senal?: AbortSignal,
+): Promise<Carga<ImpactoGuerra>> {
+  return cargar(`/datos/impactos/${id}.json`, validarImpacto, descargar, senal);
 }
 
 /**

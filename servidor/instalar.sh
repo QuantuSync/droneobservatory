@@ -55,6 +55,8 @@ chmod 600 "$HOSTS_CONOCIDOS"
 # --- Datos de FIRMS -----------------------------------------------------------------
 # Los CSV diarios de anomalías térmicas: del usuario del observatorio y solo para él.
 install -d -m 700 -o "$USUARIO" -g "$USUARIO" "$(dirname "$FIRMS_DATOS")" "$FIRMS_DATOS"
+# Lo que guarda el lector de canales de la capa de guerra: igual, solo para el observatorio.
+install -d -m 700 -o "$USUARIO" -g "$USUARIO" "$GUERRA_DATOS"
 
 # --- Datos de las fuentes oficiales de detalle ----------------------------------------
 install -d -m 700 -o "$USUARIO" -g "$USUARIO" "$(dirname "$DETALLE_DATOS")" "$DETALLE_DATOS"
@@ -184,6 +186,37 @@ Description=Fuentes oficiales de detalle del EODI, cada 3 horas
 
 [Timer]
 OnCalendar=$CALENDARIO_DETALLE
+AccuracySec=1s
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+FIN
+cat > "/etc/systemd/system/$UNIDAD_GUERRA.service" <<FIN
+[Unit]
+Description=Lector de canales de la capa de guerra del EODI
+Wants=network-online.target
+After=network-online.target time-sync.target
+
+[Service]
+Type=oneshot
+User=$USUARIO
+Group=$USUARIO
+WorkingDirectory=$CLON
+ExecStart=/usr/bin/env bash $CLON/servidor/guerra.sh
+SyslogIdentifier=$UNIDAD_GUERRA
+TimeoutStartSec=${TOPE_GUERRA_MINUTOS}min
+Nice=10
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=full
+FIN
+cat > "/etc/systemd/system/$UNIDAD_GUERRA.timer" <<FIN
+[Unit]
+Description=Lector de canales de la capa de guerra del EODI, en el minuto $MINUTO_GUERRA
+
+[Timer]
+OnCalendar=*-*-* *:$MINUTO_GUERRA:00 UTC
 AccuracySec=1s
 Persistent=true
 

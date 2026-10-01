@@ -195,8 +195,9 @@ describe("capa de Ucrania", () => {
   const ucrania = resumirUcrania(ataques);
   const todo = { desde: 0, hasta: Number.MAX_SAFE_INTEGER };
 
-  it("solo lleva a la tabla las regiones de Ucrania, ordenadas", () => {
-    expect(ucrania.regiones).toEqual(["UA-32", "UA-43", "UA-63"]);
+  it("lleva a la tabla las regiones de Ucrania y las de Rusia, ordenadas", () => {
+    // Las rusas también: antes se descartaban y el mapa no dibujaba nada sobre Rusia.
+    expect(ucrania.regiones).toEqual(["RU-BEL", "UA-32", "UA-43", "UA-63"]);
   });
 
   it("ordena los ataques por día y marca las cifras desconocidas", () => {
@@ -214,12 +215,16 @@ describe("capa de Ucrania", () => {
 
   it("cuenta los ataques que citan cada región en el periodo", () => {
     expect(Object.fromEntries(ataquesPorRegion(ucrania, todo))).toEqual({
+      "RU-BEL": 1,
       "UA-32": 2,
       "UA-43": 1,
       "UA-63": 1,
     });
     const soloElDia28 = { desde: diaDeInstante("2026-09-28"), hasta: diaDeInstante("2026-09-28") };
-    expect(Object.fromEntries(ataquesPorRegion(ucrania, soloElDia28))).toEqual({ "UA-43": 1 });
+    expect(Object.fromEntries(ataquesPorRegion(ucrania, soloElDia28))).toEqual({
+      "RU-BEL": 1,
+      "UA-43": 1,
+    });
   });
 
   it("no suma dos veces los derribos de un tramo incluido en otro parte", () => {
@@ -307,7 +312,7 @@ describe("validación contra el esquema", () => {
 
 describe("listas cerradas iguales a las del esquema", () => {
   type Esquema = Record<string, unknown>;
-  const leer = (nombre: string) => leerJson("esquema", "1.3.0", `${nombre}.schema.json`) as Esquema;
+  const leer = (nombre: string) => leerJson("esquema", "1.4.0", `${nombre}.schema.json`) as Esquema;
   const en = (objeto: unknown, ...claves: string[]): unknown =>
     claves.reduce<unknown>((actual, clave) => (actual as Esquema)[clave], objeto);
 

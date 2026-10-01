@@ -57,9 +57,22 @@ def mejor(origenes: Iterable[str]) -> str | None:
     return next((o for o in RANGO if o in presentes), None)
 
 
+def _origen_canal_guerra(fuente: Documento) -> str | None:
+    """El origen de un canal de la capa de guerra con lugar (configuracion/canales_guerra.json):
+    oficial (administraciones militares regionales de Ucrania) o parte (Estado Mayor ucraniano,
+    gobernadores rusos y autoridades instaladas por Rusia)."""
+    from proceso.impactos_guerra import canal_de_fuente
+
+    canal = canal_de_fuente(fuente)
+    return canal.origen if canal is not None else None
+
+
 def origen_de_fuente(fuente: Documento) -> str:
     if MARCA_DECLARACION in fuente["id"]:
         return OFICIAL_CITADO
+    guerra = _origen_canal_guerra(fuente)
+    if guerra is not None:
+        return guerra
     if fuente.get("interna_fuera_de_ucrania"):
         return PARTE
     if fuente.get("es_autoridad") or fuente["fiabilidad"] == "A":
@@ -599,6 +612,78 @@ def procedencia_region(region: Documento, del_ataque: Documento) -> Documento:
 
 def exportar_ataque(documento: Documento) -> Documento:
     return {**documento, "procedencia": procedencia_ataque(documento)}
+
+
+# --- Capa de guerra con lugar ----------------------------------------------------------
+
+META_IMPACTO = frozenset({
+    "id", "tipo", "fuentes", "lecturas", "control", "procedencia", "fusionado_en", "retirado",
+})  # fmt: skip
+# Valores que calcula el código: el enlace con el ataque, la región (la del lugar), la
+# credibilidad y la marca de reivindicación (de las fuentes y el foco).
+REGLAS_IMPACTO = frozenset({
+    "ataque", "enlace_ataque", "region", "credibilidad", "reivindicacion_de_parte", "sentido",
+})  # fmt: skip
+
+
+def procedencia_impacto(documento: Documento) -> Documento:
+    """Cada valor del impacto: de las fuentes que lo respaldan, leído por el código (parser) o
+    por el extractor (con su confianza); los que calcula el código, por regla; el foco térmico,
+    medido. La credibilidad con foco detectado sale también de un dato medido."""
+    fuentes = {f["id"]: f for f in documento["fuentes"]}
+    origen = {id_: origen_de_fuente(f) for id_, f in fuentes.items()}
+    lecturas = {x["fuente_id"]: x for x in documento.get("lecturas", [])}
+    procedencia: Documento = {}
+    for ruta in (r for r in documento if r not in META_IMPACTO):
+        if ruta == "foco_termico":
+            procedencia[ruta] = dict(FOCO_TERMICO)
+            continue
+        ids = {f for f, d in fuentes.items() if ruta in d.get("campos_respaldados", [])}
+        ids = ids or set(fuentes)
+        if ruta in REGLAS_IMPACTO:
+            origenes = [origen[f] for f in ids]
+            detectado = documento.get("foco_termico", {}).get("resultado") == "detectado"
+            if ruta in {"credibilidad", "reivindicacion_de_parte"} and detectado:
+                origenes.append(MEDIDO)
+            procedencia[ruta] = {"origen": mejor(origenes), "metodo": REGLA,
+                                 "fuentes": sorted(ids)}  # fmt: skip
+            continue
+        metodos = {lecturas.get(f, {}).get("metodo", PARSER) for f in ids}
+        entrada: Documento = {
+            "origen": mejor(origen[f] for f in ids),
+            "metodo": PARSER if PARSER in metodos else EXTRACTOR,
+            "fuentes": sorted(ids),
+        }
+        confianzas = [lecturas[f]["confianza"] for f in ids if "confianza" in lecturas.get(f, {})]
+        if entrada["metodo"] == EXTRACTOR and confianzas:
+            entrada["confianza"] = max(confianzas)
+        procedencia[ruta] = entrada
+    if any(p["origen"] is None for p in procedencia.values()):
+        raise SinOrigen(f"{documento['id']}: valor sin origen")
+    return dict(sorted(procedencia.items()))
+
+
+def exportar_impacto(documento: Documento) -> Documento:
+    return {**documento, "procedencia": procedencia_impacto(documento)}
+
+
+# Rosaviatsia, agencia federal: lo que anuncia es oficial; el enlace con el ataque, regla.
+def procedencia_restriccion(documento: Documento) -> Documento:
+    fuentes = sorted({documento["fuente_inicio"], documento.get("fuente_fin", "")} - {""})
+    procedencia: Documento = {}
+    for ruta in ("aeropuerto", "inicio", "fin", "horas", "emparejado", "ataque"):
+        if ruta not in documento:
+            continue
+        metodo = REGLA if ruta in {"horas", "emparejado", "ataque"} else PARSER
+        procedencia[ruta] = {"origen": OFICIAL, "metodo": metodo, "fuentes": fuentes}
+    if "lugar_id" in documento["aeropuerto"]:
+        procedencia["aeropuerto.lugar_id"] = {"origen": OFICIAL, "metodo": REGLA,
+                                              "fuentes": fuentes}  # fmt: skip
+    return procedencia
+
+
+def exportar_restriccion(documento: Documento) -> Documento:
+    return {**documento, "procedencia": procedencia_restriccion(documento)}
 
 
 # --- Afirmaciones --------------------------------------------------------------------

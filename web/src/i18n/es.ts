@@ -1,4 +1,5 @@
 import { LICENCIA_DATOS, LICENCIA_DATOS_URL, NOMBRE, ORIGEN, REPOSITORIO } from "../sitio.ts";
+import { REGIONES_RUSIA_ES } from "./regionesRusia.ts";
 import type { Textos } from "./tipos.ts";
 
 export const es: Textos = {
@@ -60,6 +61,10 @@ export const es: Textos = {
       investigaciones: "Informes de investigación y sentencias",
       estadisticas_oficiales: "Estadísticas oficiales",
       paginas_js: "Notas oficiales (webs con JavaScript)",
+      ova_ua: "Administraciones regionales de Ucrania",
+      estado_mayor_ua: "Estado Mayor ucraniano",
+      gobernadores_ru: "Gobernadores rusos",
+      rosaviatsia: "Rosaviatsia",
     },
     estadoFuente: { leida: "leída", con_aviso: "con aviso", no_leida: "no leída" },
     ultimoDato: "último dato",
@@ -140,8 +145,16 @@ export const es: Textos = {
     novedad: "Un anillo del color de la interfaz marca lo que ha cambiado desde tu última visita.",
     ucrania:
       "En la capa de Ucrania, cada región se colorea según los ataques que la citan en el periodo.",
+    rusia:
+      "Las regiones rusas van en gris y con contorno discontinuo: sus cifras son las del " +
+      "Ministerio de Defensa ruso, una reivindicación de parte.",
+    impactos:
+      "Un punto pequeño es un lugar concreto alcanzado (una localidad o una instalación) " +
+      "según las administraciones regionales, el Estado Mayor ucraniano o los gobernadores " +
+      "rusos. Relleno: fuente oficial; solo el aro: reivindicación de parte. Al alejar se " +
+      "agrupan con su número.",
     foco:
-      "Un punto claro junto a un incidente, o en el centro de una región de Ucrania, marca un " +
+      "Un punto claro junto a un incidente, un impacto o un grupo de impactos, o en el centro de una región de Ucrania, marca un " +
       "foco térmico detectado por satélite (NASA FIRMS) en su lugar y su hora. Su ausencia no " +
       "demuestra nada.",
     atajos: "Atajos de teclado",
@@ -188,6 +201,9 @@ export const es: Textos = {
       "zoom. La lista de incidentes da acceso a las mismas fichas sin usar el mapa.",
     grupo: (n) => (n === 1 ? "1 incidente: acerca para verlo" : `${n} incidentes: acerca para verlos`),
     pila: (n) => `${n} incidentes en este mismo punto: pulsa para elegir uno`,
+    grupoImpactos: (n) => `${n} impactos con lugar: acerca para verlos`,
+    impacto: (parte, foco) =>
+      `Impacto con lugar${parte ? " · reivindicación de parte" : ""}${foco ? " · foco térmico" : ""}`,
   },
   tipo: {
     interrupcion_aeroportuaria: "Interrupción aeroportuaria",
@@ -229,6 +245,26 @@ export const es: Textos = {
     puerto: "puerto",
     industrial: "industria",
     otra: "otros",
+  },
+  categoriaGuerra: {
+    energia: "energía",
+    combustible: "combustible",
+    residencial: "residencial",
+    ferrocarril: "ferrocarril",
+    puerto: "puerto",
+    industrial: "industria",
+    aerodromo: "aeródromo",
+  },
+  categoriaInstalacion: {
+    refineria: "refinería",
+    deposito_combustible: "depósito de combustible",
+    central: "central eléctrica",
+    subestacion: "subestación",
+    aerodromo: "aeródromo",
+    puerto: "puerto",
+    militar: "instalación militar",
+    ferrocarril: "estación ferroviaria",
+    industrial: "planta industrial",
   },
   medida: {
     cierre_espacio_aereo: "cierre del espacio aéreo",
@@ -336,12 +372,51 @@ export const es: Textos = {
     nota:
       "Las cifras son las que da cada parte en sus comunicados. Los derribos por región " +
       "solo se cuentan cuando el parte los desglosa.",
+    fuenteCifras: (medio) => `Cifras de ${medio}`,
+    reivindicacion: "reivindicación de parte",
+    impactos: "Impactos con lugar en el periodo",
+    listaImpactos: "Lugares alcanzados",
+  },
+  impacto: {
+    etiqueta: "Impacto con lugar · capa de guerra",
+    lugar: "Lugar",
+    instalacionEn: (localidad) => `en ${localidad}`,
+    radio: (km) => `área de ${km} km de radio`,
+    tipo: { impacto: "Alcanzado", restos: "Caída de restos de un dron derribado" },
+    objetivo: "Tipo de objetivo",
+    sinObjetivo: "la fuente no lo dice",
+    fecha: "Fecha",
+    publicado: "publicado; el impacto fue antes",
+    diaAtaque: "día del ataque según el mensaje",
+    parteDiario: "parte diario de la administración: las 24 horas anteriores a su publicación",
+    victimas: "Víctimas",
+    heridos: (n) => `${n} heridos`,
+    fallecidos: (n) => `${n} fallecidos`,
+    ataque: "Ataque de esa noche",
+    region: "Región",
+    credibilidad: "Credibilidad",
+    credibilidadTexto: {
+      1: "confirmado",
+      2: "probable",
+      3: "posible",
+      4: "dudoso",
+      5: "improbable",
+      6: "sin base",
+    },
+    reivindicacion: "Reivindicación de parte",
+    reivindicacionTexto:
+      "Solo lo dice una de las partes en guerra, sin otra fuente independiente ni dato " +
+      "medido que lo confirme.",
+    ocupacion: "autoridad instalada por Rusia",
+    fuentes: (n) => (n === 1 ? "1 fuente" : `${n} fuentes`),
+    cargando: "Cargando el impacto…",
+    noDisponible: "No se ha podido cargar este impacto.",
   },
   lista: {
     titulo: "Lista de incidentes",
     incidentes: (n) => (n === 1 ? "1 incidente en el periodo" : `${n} incidentes en el periodo`),
     vacia: "Ningún incidente en el periodo elegido.",
-    regiones: "Regiones de Ucrania",
+    regiones: "Regiones de la capa de guerra",
   },
   tiempo: {
     titulo: "Línea de tiempo",
@@ -618,6 +693,37 @@ export const es: Textos = {
                     "que lo confirme.",
                 ],
               },
+              {
+                termino: "Lugares alcanzados, de Rusia contra Ucrania",
+                texto: [
+                  "Canales oficiales de las administraciones militares regionales de Ucrania " +
+                    "y de la de Kiev, identificados desde la web oficial de cada una: " +
+                    "fiabilidad B, fuente oficial.",
+                ],
+              },
+              {
+                termino: "Lugares alcanzados, de Ucrania contra Rusia",
+                texto: [
+                  "Canal del Estado Mayor ucraniano (sus reivindicaciones de ataques a " +
+                    "refinerías, depósitos y aeródromos) y canales de los gobernadores y " +
+                    "gobiernos regionales rusos que enlaza su web oficial (los daños que " +
+                    "reconocen en su territorio). Son partes en guerra: fiabilidad C, " +
+                    "reivindicación de parte. Lo ocupado por Rusia lleva siempre su código " +
+                    "de Ucrania; las autoridades instaladas por Rusia se marcan como tales.",
+                ],
+              },
+              {
+                termino: "Puntuación de un lugar alcanzado",
+                texto: [
+                  "Los mensajes de un mismo canal no son fuentes independientes. Una sola " +
+                    "fuente oficial da «probable»; una reivindicación de parte, «posible». " +
+                    "Sube si lo confirma otra fuente independiente, si lo dicen los dos " +
+                    "lados (como mínimo «probable») o si el satélite detecta un foco " +
+                    "térmico nuevo en el lugar, que cuenta como un dato medido. El mismo " +
+                    "trato para las dos partes. Los misiles y las bombas de los mismos " +
+                    "mensajes no se registran.",
+                ],
+              },
             ],
           },
         ],
@@ -640,9 +746,12 @@ export const es: Textos = {
             parrafo: [
               "Las refinerías y las plantas tienen antorchas que el satélite ve siempre: solo " +
                 "cuenta un foco nuevo respecto a los 30 días anteriores o con una potencia más " +
-                "de cuatro veces la habitual de ese sitio. Se descartan los focos de baja " +
-                "confianza. Los impactos que solo se conocen por región, como los de los " +
-                "partes de la Fuerza Aérea de Ucrania, no se evalúan.",
+                "de cuatro veces la habitual de ese sitio. Como hay antorchas que pasan meses " +
+                "sin verse, un foco nuevo en un sitio que ya ardía el año anterior solo cuenta " +
+                "si su potencia pasa de cuatro veces la de ese sitio en el año, salvo que un " +
+                "mismo paso del satélite vea tres o más. Se descartan los focos de baja " +
+                "confianza. Los impactos que solo se conocen por región no se evalúan; los " +
+                "lugares alcanzados de los canales regionales y del Estado Mayor, sí.",
             ],
           },
           {
@@ -757,6 +866,7 @@ export const es: Textos = {
     lema: "Incidentes con drones en Europa, con sus fuentes y su grado de confirmación",
   },
   regiones: {
+    ...REGIONES_RUSIA_ES,
     "UA-05": "Vínnytsia",
     "UA-07": "Volinia",
     "UA-09": "Lugansk",

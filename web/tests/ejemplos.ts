@@ -8,6 +8,7 @@ import type {
   FeatureIncidente,
   FocoTermico,
   Fuente,
+  ImpactoGuerra,
   PropiedadesIncidente,
   PublicacionUcrania,
 } from "../src/datos/tipos.ts";
@@ -163,6 +164,46 @@ export function focoTermico(cambios: Partial<FocoTermico> = {}): FocoTermico {
     instrumento: "VIIRS",
     distancia_km: 7.4,
     numero_focos: 4,
+    ...cambios,
+  };
+}
+
+export function impacto(cambios: Partial<ImpactoGuerra> = {}): ImpactoGuerra {
+  return {
+    id: "EODI-IG-2026-00001",
+    tipo: "impacto_guerra",
+    sentido: "UA_RU",
+    ataque: "EODI-UA-2026-1014",
+    region: "RU-RYA",
+    lugar: {
+      id: "osm:way/1",
+      nombre: "Рязанская нефтеперерабатывающая компания",
+      nombre_latino: "Ryazan Refinery",
+      nivel: "instalacion",
+      categoria: "refineria",
+      localidad: "Рязань",
+      punto: { lat: 54.59, lon: 39.8 },
+      radio_km: 3,
+    },
+    impacto: "impacto",
+    categorias_objetivo: ["combustible"],
+    fecha: { valor: "2026-09-29T07:10Z", precision: "minuto" },
+    reivindicacion_de_parte: true,
+    credibilidad: 3,
+    fuentes: [
+      {
+        ...fuente({
+          id: "GeneralStaffZSU-42000",
+          enlace: "https://t.me/GeneralStaffZSU/42000",
+          medio: "Генеральний штаб ЗСУ",
+          idioma: "uk",
+          fiabilidad: "C",
+          credibilidad: 3,
+          frase_origen: "уразили Рязанський НПЗ",
+        }),
+      },
+    ],
+    control: { ultima_actualizacion: { valor: "2026-09-29T08:17Z", precision: "minuto" } },
     ...cambios,
   };
 }

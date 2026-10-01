@@ -97,6 +97,8 @@ principal() {
   export EODI_FIRMS_DATOS="$FIRMS_DATOS"
   # Lo que dejan las fuentes oficiales de detalle (recogida/detalle.py), para incorporarlo.
   export EODI_DETALLE_DATOS="$DETALLE_DATOS"
+  # Lo que dejó el lector de canales de la capa de guerra (servidor/guerra.sh).
+  export EODI_GUERRA_DATOS="$GUERRA_DATOS"
 
   GIT_SSH_COMMAND="$ssh_base -i $DESPLIEGUE_DATOS" \
     "$python" -m recogida.horaria --correo "$CORREO" --repositorio "$URL_DATOS" \

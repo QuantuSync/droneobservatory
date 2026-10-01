@@ -32,6 +32,10 @@ def parcial() -> dict[str, object]:
         "firms": estado.EstadoFuente(estado.LEIDA, dato(15, 17)),
         "airprox": estado.EstadoFuente(estado.LEIDA, dato(15, 5)),
         "parlamentos": estado.EstadoFuente(estado.CON_AVISO, dato(12, 5)),
+        "ova_ua": estado.EstadoFuente(estado.CON_AVISO, dato(17, 52)),
+        "estado_mayor_ua": estado.EstadoFuente(estado.LEIDA, dato(17, 52)),
+        "gobernadores_ru": estado.EstadoFuente(estado.NO_LEIDA),
+        "rosaviatsia": estado.EstadoFuente(estado.LEIDA, dato(17, 52)),
     }
     return {f: fuentes[f].documento(f) for f in fuentes}
 
@@ -58,6 +62,10 @@ def test_estado_de_una_recogida_correcta() -> None:
             {"id": "investigaciones", "estado": "no_leida", "ultimo_dato": None},
             {"id": "estadisticas_oficiales", "estado": "no_leida", "ultimo_dato": None},
             {"id": "paginas_js", "estado": "no_leida", "ultimo_dato": None},
+            {"id": "ova_ua", "estado": "con_aviso", "ultimo_dato": "2026-09-30T17:52Z"},
+            {"id": "estado_mayor_ua", "estado": "leida", "ultimo_dato": "2026-09-30T17:52Z"},
+            {"id": "gobernadores_ru", "estado": "no_leida", "ultimo_dato": None},
+            {"id": "rosaviatsia", "estado": "leida", "ultimo_dato": "2026-09-30T17:52Z"},
         ],
     }
 

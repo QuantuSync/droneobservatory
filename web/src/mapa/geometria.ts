@@ -4,7 +4,13 @@
 import type { Feature, FeatureCollection, LineString, Point, Polygon } from "geojson";
 
 import { esGrave } from "../datos/derivar.ts";
-import type { EpisodioResumen, Estado, FocoRegion, IncidenteResumen } from "../datos/tipos.ts";
+import type {
+  EpisodioResumen,
+  Estado,
+  FilaImpacto,
+  FocoRegion,
+  IncidenteResumen,
+} from "../datos/tipos.ts";
 import { GRAVEDAD } from "../paleta.ts";
 
 const RADIO_TERRESTRE_KM = 6371.0088;
@@ -174,6 +180,28 @@ export function focosDeRegiones(
       type: "Feature",
       geometry: { type: "Point", coordinates: centro },
       properties: { region },
+    })),
+  };
+}
+
+/** Propiedades de un impacto con lugar en el mapa: banderas 0/1 que la agrupación suma. */
+export interface PropiedadesImpacto {
+  id: string;
+  sentido: 0 | 1;
+  foco: 0 | 1;
+  parte: 0 | 1;
+}
+
+/** Los impactos con lugar del periodo como puntos para la fuente agrupada del mapa. */
+export function impactosEnMapa(
+  filas: readonly FilaImpacto[],
+): FeatureCollection<Point, PropiedadesImpacto> {
+  return {
+    type: "FeatureCollection",
+    features: filas.map(([id, , sentido, lon, lat, foco, parte]) => ({
+      type: "Feature",
+      geometry: { type: "Point", coordinates: [lon, lat] },
+      properties: { id, sentido, foco, parte },
     })),
   };
 }

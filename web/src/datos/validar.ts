@@ -1,4 +1,4 @@
-// Validación de los datos contra el esquema 1.3.0 (campos públicos), escrita a mano para
+// Validación de los datos contra el esquema 1.4.0 (campos públicos), escrita a mano para
 // que no necesite generar código en el navegador. Se usa en el build, sobre los ficheros de
 // publicacion/, y en la web al cargar cada fichero: un fichero que no valida no se pinta.
 
@@ -6,6 +6,7 @@ import type {
   EstadoSistema,
   PublicacionSinUbicacion,
   Ataque,
+  ImpactoGuerra,
   ColeccionIncidentes,
   IncidenteDetalle,
   PublicacionUcrania,
@@ -326,7 +327,61 @@ const ataque = objeto(
   },
 );
 
-const publicacionUcrania = objeto({ ataques: lista(ataque) });
+/** Fuente de un impacto con lugar: puede ser una autoridad instalada por Rusia. */
+const fuenteImpacto = objeto(
+  {
+    id: cadena(),
+    enlace: cadena(v.PATRON_ENLACE),
+    medio: cadena(),
+    fecha: instante,
+    idioma: cadena(v.PATRON_IDIOMA),
+    fiabilidad: enumerado(v.FIABILIDADES),
+    credibilidad: numero(v.CREDIBILIDAD_MIN, v.CREDIBILIDAD_MAX, true),
+    frase_origen: cadena(),
+    replicas: enteroNoNegativo,
+  },
+  { autoridad_ocupacion: constante(true) },
+);
+
+const impactoGuerra = objeto(
+  {
+    id: cadena(v.PATRON_ID_IMPACTO),
+    tipo: constante("impacto_guerra"),
+    sentido: enumerado(v.SENTIDOS),
+    region: cadena(v.PATRON_REGION),
+    lugar: objeto(
+      {
+        id: cadena(v.PATRON_ID_LUGAR),
+        nombre: cadena(),
+        nivel: enumerado(v.NIVELES_LUGAR_GUERRA),
+        punto: objeto({ lat: latitud, lon: longitud }),
+        radio_km: numero(0, v.RADIO_LUGAR_GUERRA_MAX_KM),
+      },
+      {
+        nombre_latino: cadena(),
+        categoria: enumerado(v.CATEGORIAS_INSTALACION),
+        localidad: cadena(),
+      },
+    ),
+    impacto: enumerado(v.TIPOS_IMPACTO),
+    fecha: instante,
+    credibilidad: numero(v.CREDIBILIDAD_MIN, v.CREDIBILIDAD_MAX, true),
+    fuentes: lista(fuenteImpacto, 1),
+    control: objeto({ ultima_actualizacion: instante }),
+  },
+  {
+    ataque: cadena(v.PATRON_ID_ATAQUE),
+    categorias_objetivo: lista(enumerado(v.CATEGORIAS_OBJETIVO_GUERRA)),
+    dia: cadena(/^\d{4}-\d{2}-\d{2}$/),
+    parte_diario: constante(true),
+    heridos: rangoODesconocido,
+    fallecidos: rangoODesconocido,
+    reivindicacion_de_parte: constante(true),
+    foco_termico: focoTermico,
+  },
+);
+
+const publicacionUcrania = objeto({ ataques: lista(ataque) }, { impactos: lista(impactoGuerra) });
 
 const resumen = objeto({
   actualizado: cadena(v.PATRON_INSTANTE),
@@ -368,6 +423,13 @@ const resumen = objeto({
 const cifra = numero(-1, Number.MAX_SAFE_INTEGER, true);
 const bandera = enumerado([0, 1]);
 
+const fuenteSentido = objeto({
+  medio: cadena(),
+  fiabilidad: enumerado(v.FIABILIDADES),
+  credibilidad: numero(v.CREDIBILIDAD_MIN, v.CREDIBILIDAD_MAX, true),
+  reivindicacion: enumerado([true, false]),
+});
+
 const resumenUcrania: Comprobacion = (valor, ruta, errores) => {
   objeto({
     regiones: lista(cadena(v.PATRON_REGION)),
@@ -393,6 +455,20 @@ const resumenUcrania: Comprobacion = (valor, ruta, errores) => {
         centro: tupla([longitud, latitud]),
       }),
     ),
+    impactos: lista(
+      tupla([
+        cadena(v.PATRON_ID_IMPACTO),
+        entero,
+        bandera,
+        longitud,
+        latitud,
+        bandera,
+        bandera,
+        bandera,
+        cadena(v.PATRON_REGION),
+      ]),
+    ),
+    fuentes: objeto({ RU_UA: nulable(fuenteSentido), UA_RU: nulable(fuenteSentido) }),
   })(valor, ruta, errores);
   if (errores.length > 0) return;
   // Cada región de un ataque tiene que existir en la tabla de regiones.
@@ -464,6 +540,10 @@ export function validarEstadoSistema(valor: unknown): Resultado<EstadoSistema> {
 
 export function validarDetalleIncidente(valor: unknown): Resultado<IncidenteDetalle> {
   return validar(detalleIncidente, valor);
+}
+
+export function validarImpacto(valor: unknown): Resultado<ImpactoGuerra> {
+  return validar(impactoGuerra, valor);
 }
 
 export function validarAtaque(valor: unknown): Resultado<Ataque> {

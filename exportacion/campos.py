@@ -178,3 +178,41 @@ CAMPOS_PUBLICOS_ATAQUE: frozenset[str] = frozenset(
         *_control(),
     }
 )
+
+# Capa de guerra con lugar: cada impacto con su localidad o su instalación, el ataque y la
+# región a los que se enlaza, el tipo de objetivo, la fecha, las fuentes con su puntuación y
+# la marca de reivindicación de parte. Sin el método de lectura, el enlace interno con el
+# ataque ni la confianza del extractor.
+CAMPOS_PUBLICOS_IMPACTO: frozenset[str] = frozenset(
+    {
+        "id",
+        "tipo",
+        "sentido",
+        "ataque",
+        "region",
+        "lugar",
+        "lugar.id",
+        "lugar.nombre",
+        "lugar.nombre_latino",
+        "lugar.nivel",
+        "lugar.categoria",
+        "lugar.localidad",
+        "lugar.punto",
+        "lugar.punto.lat",
+        "lugar.punto.lon",
+        "lugar.radio_km",
+        "impacto",
+        "categorias_objetivo",
+        *_instante("fecha"),
+        "dia",
+        "parte_diario",
+        *_rango("heridos"),
+        *_rango("fallecidos"),
+        "reivindicacion_de_parte",
+        "credibilidad",
+        *_foco_termico("foco_termico"),
+        *_fuentes(),
+        "fuentes[].autoridad_ocupacion",
+        *_control(),
+    }
+)

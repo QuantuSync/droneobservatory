@@ -30,6 +30,8 @@ export const FUENTE_SELECCION = "seleccion";
 export const FUENTE_REGIONES = "ucrania-regiones";
 export const FUENTE_CONTORNO = "ucrania-contorno";
 export const FUENTE_FOCOS_UCRANIA = "ucrania-focos";
+export const FUENTE_REGIONES_RUSIA = "rusia-regiones";
+export const FUENTE_IMPACTOS = "guerra-impactos";
 
 export const CAPA_GRUPOS = "grupos";
 export const CAPA_INCIDENTES_GRAVES = "incidentes-graves";
@@ -42,13 +44,22 @@ export const CAPA_SELECCION = "seleccion";
 export const CAPA_EPISODIOS = "episodios";
 export const CAPA_FOCOS = "focos-termicos";
 export const CAPA_FOCOS_UCRANIA = "ucrania-focos-termicos";
+export const CAPA_REGIONES_RUSIA = "rusia-relleno";
+export const CAPA_REGION_ELEGIDA_RUSIA = "rusia-elegida";
+export const CAPA_IMPACTOS = "guerra-impactos";
+export const CAPA_IMPACTOS_GRUPOS = "guerra-impactos-grupos";
+export const CAPA_IMPACTOS_FOCO = "guerra-impactos-foco";
+export const CAPA_IMPACTOS_FOCO_GRUPO = "guerra-impactos-foco-grupo";
 
 /** Capas que se pueden pulsar, de la de más arriba a la de más abajo. */
 export const CAPAS_PULSABLES: readonly string[] = [
   CAPA_INCIDENTES_GRAVES,
   CAPA_INCIDENTES_DISCRETOS,
   CAPA_GRUPOS,
+  CAPA_IMPACTOS,
+  CAPA_IMPACTOS_GRUPOS,
   CAPA_REGIONES,
+  CAPA_REGIONES_RUSIA,
 ];
 
 /** Capas propias de cada capa del selector. */
@@ -67,17 +78,34 @@ export const CAPAS_DE_INCIDENTES: readonly string[] = [
   CAPA_SELECCION,
 ];
 export const CAPAS_DE_UCRANIA: readonly string[] = [
+  CAPA_REGIONES_RUSIA,
+  "rusia-regiones-linea",
+  CAPA_REGION_ELEGIDA_RUSIA,
   CAPA_REGIONES,
   "ucrania-regiones-linea",
   "ucrania-contorno",
   CAPA_REGION_ELEGIDA,
   CAPA_FOCOS_UCRANIA,
+  CAPA_IMPACTOS_GRUPOS,
+  "guerra-impactos-numero",
+  CAPA_IMPACTOS,
+  CAPA_IMPACTOS_FOCO,
+  CAPA_IMPACTOS_FOCO_GRUPO,
 ];
 export const CAPAS_DE_DENSIDAD: readonly string[] = ["densidad"];
 
 /** Marca del foco térmico: pequeña, junto al símbolo, como en la ayuda (MarcaFoco). */
 const RADIO_MARCA_FOCO = 3.5;
 const DESPLAZAMIENTO_MARCA_FOCO: [number, number] = [9, -9];
+
+/** Impactos con lugar de la capa de guerra: puntos pequeños, agrupados al alejar. */
+const RADIO_IMPACTO = 3.5;
+const RADIO_GRUPO_IMPACTOS_MINIMO = 8;
+const RADIO_GRUPO_IMPACTOS_MAXIMO = 18;
+/** Cuenta a partir de la cual el círculo de un grupo de impactos ya no crece. */
+const CUENTA_GRUPO_IMPACTOS_MAXIMA = 200;
+export const ZOOM_MAXIMO_AGRUPADO_IMPACTOS = 7;
+const RADIO_DE_AGRUPACION_IMPACTOS_PX = 30;
 
 /** Hasta este zoom los incidentes cercanos se agrupan con su contador. */
 export const ZOOM_MAXIMO_AGRUPADO = 5;
@@ -295,6 +323,37 @@ function capasPropias(acento: string): LayerSpecification[] {
       filter: ["==", ["get", "iso"], ""],
       paint: { "fill-color": PALETA.texto, "fill-opacity": 0.07 },
     },
+    // Regiones rusas: grises, con el contorno discontinuo, para distinguirlas de las de
+    // Ucrania (cuyo relleno es el color de los ataques). Sus cifras son las del Ministerio de
+    // Defensa ruso, reivindicación de parte.
+    {
+      id: CAPA_REGIONES_RUSIA,
+      type: "fill",
+      source: FUENTE_REGIONES_RUSIA,
+      paint: {
+        "fill-color": PALETA.secundario,
+        "fill-opacity": 0,
+        "fill-opacity-transition": { duration: 260, delay: 0 },
+      },
+    },
+    {
+      id: "rusia-regiones-linea",
+      type: "line",
+      source: FUENTE_REGIONES_RUSIA,
+      paint: {
+        "line-color": PALETA.secundario,
+        "line-width": 0.6,
+        "line-opacity": 0.55,
+        "line-dasharray": [3, 2],
+      },
+    },
+    {
+      id: CAPA_REGION_ELEGIDA_RUSIA,
+      type: "line",
+      source: FUENTE_REGIONES_RUSIA,
+      filter: ["in", ["get", "iso"], ["literal", []]],
+      paint: { "line-color": acento, "line-width": 1.2 },
+    },
     {
       id: CAPA_REGIONES,
       type: "fill",
@@ -504,6 +563,79 @@ function capasPropias(acento: string): LayerSpecification[] {
         "circle-stroke-width": 1.5,
       },
     },
+    // Impactos con lugar de la capa de guerra. Sin color: el relleno gris es una fuente
+    // oficial; el aro sin relleno, una reivindicación de parte. Al alejar se agrupan con su
+    // contador; el foco térmico detectado se marca como en los incidentes, también en el grupo.
+    {
+      id: CAPA_IMPACTOS_GRUPOS,
+      type: "circle",
+      source: FUENTE_IMPACTOS,
+      filter: ["has", "point_count"],
+      paint: {
+        "circle-radius": [
+          "interpolate", ["linear"], ["get", "point_count"],
+          2, RADIO_GRUPO_IMPACTOS_MINIMO,
+          CUENTA_GRUPO_IMPACTOS_MAXIMA, RADIO_GRUPO_IMPACTOS_MAXIMO,
+        ],
+        "circle-color": PALETA.elevado,
+        "circle-stroke-color": PALETA.secundario,
+        "circle-stroke-width": 1.2,
+      },
+    },
+    {
+      id: "guerra-impactos-numero",
+      type: "symbol",
+      source: FUENTE_IMPACTOS,
+      filter: ["has", "point_count"],
+      layout: {
+        "text-field": ["get", "point_count_abbreviated"],
+        "text-font": FUENTE_TIPOGRAFICA_NUMEROS,
+        "text-size": 10,
+        "text-allow-overlap": true,
+        "text-ignore-placement": true,
+      },
+      paint: { "text-color": PALETA.texto },
+    },
+    {
+      id: CAPA_IMPACTOS,
+      type: "circle",
+      source: FUENTE_IMPACTOS,
+      filter: ["!", ["has", "point_count"]],
+      paint: {
+        "circle-radius": RADIO_IMPACTO,
+        "circle-color": ["case", ["==", ["get", "parte"], 1], PALETA.fondo, PALETA.secundario],
+        "circle-stroke-color": PALETA.secundario,
+        "circle-stroke-width": 1.2,
+      },
+    },
+    // La marca de foco va arriba a la derecha del punto o del grupo que lo contiene (el
+    // desplazamiento no puede depender del dato: dos capas).
+    {
+      id: CAPA_IMPACTOS_FOCO,
+      type: "circle",
+      source: FUENTE_IMPACTOS,
+      filter: ["all", ["!", ["has", "point_count"]], ["==", ["get", "foco"], 1]],
+      paint: {
+        "circle-radius": RADIO_MARCA_FOCO,
+        "circle-color": PALETA.texto,
+        "circle-stroke-color": PALETA.fondo,
+        "circle-stroke-width": 1.5,
+        "circle-translate": [6, -6],
+      },
+    },
+    {
+      id: CAPA_IMPACTOS_FOCO_GRUPO,
+      type: "circle",
+      source: FUENTE_IMPACTOS,
+      filter: ["all", ["has", "point_count"], [">", ["get", "focos"], 0]],
+      paint: {
+        "circle-radius": RADIO_MARCA_FOCO,
+        "circle-color": PALETA.texto,
+        "circle-stroke-color": PALETA.fondo,
+        "circle-stroke-width": 1.5,
+        "circle-translate": [12, -12],
+      },
+    },
     {
       id: CAPA_SELECCION,
       type: "circle",
@@ -559,6 +691,15 @@ export function estilo(idioma: Idioma, origen: string, acento: string): StyleSpe
       [FUENTE_REGIONES]: { type: "geojson", data: `${origen}/mapa/ucrania-regiones.geojson` },
       [FUENTE_CONTORNO]: { type: "geojson", data: `${origen}/mapa/ucrania-contorno.geojson` },
       [FUENTE_FOCOS_UCRANIA]: { type: "geojson", data: VACIA },
+      [FUENTE_REGIONES_RUSIA]: { type: "geojson", data: `${origen}/mapa/rusia-regiones.geojson` },
+      [FUENTE_IMPACTOS]: {
+        type: "geojson",
+        data: VACIA,
+        cluster: true,
+        clusterMaxZoom: ZOOM_MAXIMO_AGRUPADO_IMPACTOS,
+        clusterRadius: RADIO_DE_AGRUPACION_IMPACTOS_PX,
+        clusterProperties: { focos: ["+", ["get", "foco"]] },
+      },
     },
     layers: [fondo, tierraDeFondo, ...base, ...capasPropias(acento)],
   };

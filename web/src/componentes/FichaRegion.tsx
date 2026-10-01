@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { FocoRegion, Sentido } from "../datos/tipos.ts";
+import type { FilaImpacto, FocoRegion, FuenteSentido, Sentido } from "../datos/tipos.ts";
 import type { CifrasRegion } from "../datos/ucrania.ts";
 import { fechaDia, numero, rango, region } from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
@@ -23,10 +23,35 @@ interface Props {
   periodo: string;
   /** Focos térmicos detectados en la región en el periodo, del más reciente al más antiguo. */
   focos?: readonly FocoRegion[];
+  /** La fuente de las cifras de cada sentido, con su puntuación. */
+  fuentes?: Record<Sentido, FuenteSentido | null>;
+  /** Impactos con lugar de la región en el periodo, del más reciente al más antiguo. */
+  impactos?: readonly FilaImpacto[];
+  /** Abre la ficha de un impacto de la lista. */
+  onImpacto?: (id: string) => void;
+}
+
+/** Línea con la fuente de las cifras de un sentido: medio, puntuación y, si lo es, la marca. */
+function LineaFuente({ t, fuente }: { t: Textos; fuente: FuenteSentido }) {
+  const codigo = `${fuente.fiabilidad}${fuente.credibilidad}`;
+  return (
+    <span className="block text-xs text-secundario" data-fuente-cifras="">
+      {t.region.fuenteCifras(fuente.medio)}{" "}
+      <span className="mono rounded-sm border border-linea px-1 text-acento">
+        <span className="sr-only">{t.ficha.codigo(codigo)}</span>
+        <span aria-hidden="true" title={t.ficha.codigo(codigo)}>
+          {codigo}
+        </span>
+      </span>
+      {fuente.reivindicacion && <> · {t.region.reivindicacion}</>}
+    </span>
+  );
 }
 
 /** Cifras de una región de Ucrania en el periodo elegido, con los partes que la citan. */
-export function FichaRegion({ t, idioma, codigo, cifras, periodo, focos = [] }: Props) {
+export function FichaRegion(props: Props) {
+  const { t, idioma, codigo, cifras, periodo, focos = [], fuentes, impactos = [] } = props;
+  const { onImpacto } = props;
   const [todos, setTodos] = useState(false);
   const total = cifras.ataques.RU_UA + cifras.ataques.UA_RU;
   const visibles = todos ? cifras.lista : cifras.lista.slice(0, ATAQUES_VISIBLES);
@@ -50,6 +75,9 @@ export function FichaRegion({ t, idioma, codigo, cifras, periodo, focos = [] }: 
                   <li key={sentido}>
                     {t.region.ataquesPorSentido[sentido]}:{" "}
                     <span className="mono">{numero(cifras.ataques[sentido], idioma)}</span>
+                    {fuentes?.[sentido] !== undefined && fuentes[sentido] !== null && (
+                      <LineaFuente t={t} fuente={fuentes[sentido]} />
+                    )}
                   </li>
                 ))}
               </ul>
@@ -78,6 +106,33 @@ export function FichaRegion({ t, idioma, codigo, cifras, periodo, focos = [] }: 
             ))}
           </dl>
           <p className="mt-2 text-xs text-secundario">{t.region.nota}</p>
+          {impactos.length > 0 && (
+            <section className="mt-4" data-impactos-region="">
+              <h3 className="rotulo">
+                {t.region.impactos}: <span className="mono">{numero(impactos.length, idioma)}</span>
+              </h3>
+              <ul>
+                {impactos.slice(0, ATAQUES_VISIBLES).map(([id, dia, , , , foco, parte]) => (
+                  <li key={id} className="border-b border-linea py-1.5">
+                    <button
+                      type="button"
+                      className="enlace mono text-left"
+                      onClick={() => onImpacto?.(id)}
+                    >
+                      {id}
+                    </button>
+                    <span className="mono ml-2 text-xs text-secundario">{fechaDia(dia)}</span>
+                    {parte === 1 && (
+                      <span className="block text-xs text-secundario">{t.region.reivindicacion}</span>
+                    )}
+                    {foco === 1 && (
+                      <span className="block text-xs text-secundario">{t.foco.detectado}</span>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
           <section className="mt-4">
             <h3 className="rotulo">{t.region.listaAtaques}</h3>
             <ul>

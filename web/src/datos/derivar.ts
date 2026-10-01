@@ -8,7 +8,10 @@ import type {
   EpisodioResumen,
   Estado,
   EventoResumen,
+  FilaImpacto,
   FocoRegion,
+  FuenteSentido,
+  ImpactoGuerra,
   FeatureIncidente,
   PropiedadesSinUbicacion,
   PublicacionSinUbicacion,
@@ -20,6 +23,7 @@ import type {
   RangoODesconocido,
   Resumen,
   ResumenUcrania,
+  Sentido,
 } from "./tipos.ts";
 
 /** Marca de una cifra que ninguna fuente da, en las filas numéricas de los ataques. */
@@ -294,20 +298,74 @@ export function focosDeRegiones(
   return focos.sort((a, b) => b.dia - a.dia || a.ataque.localeCompare(b.ataque));
 }
 
+/** Un impacto con lugar reducido a su fila del resumen. */
+export function filaImpacto(impacto: ImpactoGuerra): FilaImpacto {
+  const dia = diaDeInstante(impacto.dia !== undefined ? `${impacto.dia}T00:00Z` : impacto.fecha.valor);
+  return [
+    impacto.id,
+    dia,
+    impacto.sentido === "RU_UA" ? 0 : 1,
+    impacto.lugar.punto.lon,
+    impacto.lugar.punto.lat,
+    impacto.foco_termico !== undefined ? 1 : 0,
+    impacto.reivindicacion_de_parte === true ? 1 : 0,
+    impacto.lugar.nivel === "instalacion" ? 1 : 0,
+    impacto.region,
+  ];
+}
+
+/**
+ * La fuente de las cifras de cada sentido (la Fuerza Aérea de Ucrania, el Ministerio de
+ * Defensa ruso), con la puntuación que más se repite en sus partes: la ficha de una región
+ * la da junto a sus cifras.
+ */
+export function fuentesPorSentido(ucrania: PublicacionUcrania): Record<Sentido, FuenteSentido | null> {
+  const resultado: Record<Sentido, FuenteSentido | null> = { RU_UA: null, UA_RU: null };
+  for (const sentido of ["RU_UA", "UA_RU"] as const) {
+    const cuenta = new Map<string, { fuente: FuenteSentido; n: number }>();
+    for (const ataque of ucrania.ataques) {
+      if (ataque.sentido !== sentido) continue;
+      for (const f of ataque.fuentes) {
+        const clave = `${f.medio}|${f.fiabilidad}|${f.credibilidad}`;
+        const previa = cuenta.get(clave);
+        const fuente = {
+          medio: f.medio,
+          fiabilidad: f.fiabilidad,
+          credibilidad: f.credibilidad,
+          reivindicacion: ataque.reivindicacion_de_parte === true,
+        };
+        cuenta.set(clave, { fuente, n: (previa?.n ?? 0) + 1 });
+      }
+    }
+    const mejor = [...cuenta.values()].sort((a, b) => b.n - a.n)[0];
+    resultado[sentido] = mejor?.fuente ?? null;
+  }
+  return resultado;
+}
+
 export function resumirUcrania(
   ucrania: PublicacionUcrania,
   centros: ReadonlyMap<string, [number, number]> = new Map(),
 ): ResumenUcrania {
+  // Todas las regiones: las de Ucrania (con lo ocupado) y las de Rusia, donde se cuentan los
+  // drones que el Ministerio de Defensa ruso dice haber derribado.
   const codigos = new Set<string>();
   for (const ataque of ucrania.ataques) {
-    for (const region of ataque.regiones ?? []) {
-      if (region.region.startsWith(PREFIJO_UCRANIA)) codigos.add(region.region);
-    }
+    for (const region of ataque.regiones ?? []) codigos.add(region.region);
   }
   const regiones = [...codigos].sort();
   const indiceRegion = new Map(regiones.map((codigo, i) => [codigo, i]));
   const ataques = ucrania.ataques
     .map((ataque) => filaAtaque(ataque, indiceRegion))
     .sort((a, b) => a[1] - b[1] || a[0].localeCompare(b[0]));
-  return { regiones, ataques, focos: focosDeRegiones(ucrania, centros) };
+  const impactos = (ucrania.impactos ?? [])
+    .map(filaImpacto)
+    .sort((a, b) => a[1] - b[1] || a[0].localeCompare(b[0]));
+  return {
+    regiones,
+    ataques,
+    focos: focosDeRegiones(ucrania, centros),
+    impactos,
+    fuentes: fuentesPorSentido(ucrania),
+  };
 }

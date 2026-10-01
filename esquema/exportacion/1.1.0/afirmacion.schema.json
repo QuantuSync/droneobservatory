@@ -20,7 +20,7 @@
   "properties": {
     "entidad_id": {
       "type": "string",
-      "pattern": "^EODI-(UA-)?\\d{4}-\\d{4,5}$"
+      "pattern": "^EODI-(UA-|IG-)?\\d{4}-\\d{4,5}$"
     },
     "capa": {
       "enum": [

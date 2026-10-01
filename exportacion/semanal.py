@@ -9,6 +9,14 @@ age con la misma clave pública que la base:
   Almirantazgo, sin filtrar ninguna (también las de fiabilidad E y F y las del Ministerio
   de Defensa ruso fuera de la capa de guerra);
 - episodios.jsonl, ucrania_ataques.jsonl y ucrania_regiones.jsonl;
+- guerra_impactos.jsonl: los impactos con lugar de la capa de guerra (localidad o instalación,
+  los dos sentidos), con su foco térmico completo y la procedencia de cada valor (también los
+  unidos a otro y los retirados, que lo dicen en su documento);
+- guerra_mensajes.jsonl: cada mensaje leído de los canales de la capa de guerra, sin su texto
+  (enlace, canal, fecha, resultado, impactos que dio, cifras de derribos y víctimas, motivo
+  si no dio ninguno y lo que hizo el extractor);
+- restricciones_aeropuertos.jsonl: las restricciones temporales de aeropuertos rusos que
+  anuncia Rosaviatsia, con su ataque UA_RU si lo hay (serie interna);
 - frecuencias.json: incidentes por categoría de objetivo, país y mes, con el sesgo de
   cobertura declarado;
 - descartes.jsonl: noticias rechazadas, partes que no se entienden, duplicados, fusiones no
@@ -51,6 +59,7 @@ from modelo import ficha
 from proceso import incidentes as reglas
 from proceso.estados import Estado
 from proceso.focos_termicos import con_focos
+from proceso.restricciones import por_ataque
 
 VERSION_FORMATO = "1.1.0"
 RAIZ = Path(__file__).resolve().parent.parent
@@ -67,6 +76,7 @@ FORMATO_VERSION = "%Y.%m.%d"
 FORMATO_INSTANTE = "%Y-%m-%dT%H:%M:%SZ"
 SIN_OBJETIVO = "sin_objetivo"
 PREFIJO_UCRANIA = "EODI-UA-"
+PREFIJO_IMPACTO = "EODI-IG-"
 ESQUEMAS_BASE = "esquema/eodi"
 ESQUEMAS_PROPIOS = "esquema/exportacion"
 
@@ -159,7 +169,7 @@ def _datos_fuente(fuente: Documento, credibilidad: int | None) -> Documento:
 
 
 def _capa(entidad: str) -> str:
-    return "ucrania" if entidad.startswith(PREFIJO_UCRANIA) else "general"
+    return "ucrania" if entidad.startswith((PREFIJO_UCRANIA, PREFIJO_IMPACTO)) else "general"
 
 
 def _valor(documento: Documento, ruta: str) -> Any:
@@ -180,7 +190,10 @@ def _respaldos(
     notas oficiales. La fuente anota los campos que respalda; el valor es el de la entidad
     (en el estado, el paso del historial que provoca). No hay confianza de extracción."""
     resultado = []
+    # Los impactos de la capa de guerra dicen cómo se leyó cada fuente (código o extractor).
+    lecturas = {x["fuente_id"]: x for x in documento.get("lecturas", [])}
     for fuente in documento["fuentes"]:
+        lectura = lecturas.get(fuente["id"], {})
         for campo in sorted(fuente.get("campos_respaldados", [])):
             if (campo, fuente["id"]) in extraidas:
                 continue
@@ -192,7 +205,7 @@ def _respaldos(
             else:
                 valor = _valor(documento, campo)
                 valores = [] if valor is None else [valor]
-            resultado += [
+            entradas = [
                 {**origenes.exportar_afirmacion(
                     {"campo": campo, "valor": v, "fuente_id": fuente["id"],
                      "confianza_extraccion": None},
@@ -200,6 +213,11 @@ def _respaldos(
                  "vigente": True, "fuente": _datos_fuente(fuente, fuente.get("credibilidad"))}
                 for v in valores
             ]  # fmt: skip
+            if lectura.get("metodo") == origenes.EXTRACTOR:
+                for entrada in entradas:
+                    entrada["metodo"] = origenes.EXTRACTOR
+                    entrada["confianza_extraccion"] = lectura.get("confianza")
+            resultado += entradas
     return resultado
 
 
@@ -513,9 +531,28 @@ def generar(almacen: Almacen) -> list[Fichero]:
         ataques = [origenes.exportar_ataque(a) for a in ataques_base]
     except origenes.SinOrigen as error:
         raise ExportacionInvalida(f"valor sin origen: {error}") from error
-    por_ataque = {a["id"]: a["procedencia"] for a in ataques}
+    guerra = [
+        origenes.exportar_impacto({**d, "foco_termico": focos[d["id"]]} if d["id"] in focos else d)
+        for d in almacen.impactos_guerra()
+    ]
+    restricciones = [origenes.exportar_restriccion(r) for r in almacen.restricciones()]
+    mensajes = [{k: v for k, v in m.items() if k != "huella"} for m in almacen.mensajes_guerra()]
+    # Restricciones de aeropuertos de cada ataque UA_RU: cuántos aeropuertos y cuántas horas.
+    restringidos = por_ataque(almacen.restricciones())
+    ataques = [
+        {**a, "restricciones_aeropuertos": restringidos[a["id"]],
+         "procedencia": {**a["procedencia"], "restricciones_aeropuertos": {
+             "origen": "oficial", "metodo": "regla", "fuentes": ["rosaviatsia"]}}}
+        if a["id"] in restringidos else a
+        for a in ataques
+    ]  # fmt: skip
+    por_ataque_procedencia = {a["id"]: a["procedencia"] for a in ataques}
     regiones = [
-        {"ataque_id": a, "region": r, "procedencia": origenes.procedencia_region(r, por_ataque[a])}
+        {
+            "ataque_id": a,
+            "region": r,
+            "procedencia": origenes.procedencia_region(r, por_ataque_procedencia[a]),
+        }
         for a, r in (
             (a, {**r, "foco_termico": focos[f"{a}/{r['region']}"]})
             if f"{a}/{r['region']}" in focos
@@ -523,7 +560,9 @@ def generar(almacen: Almacen) -> list[Fichero]:
             for a, r in almacen.todas_las_regiones_ucrania()
         )
     ]
-    lista_afirmaciones = afirmaciones(almacen, base, ataques_base, fichas)
+    lista_afirmaciones = afirmaciones(
+        almacen, base, ataques_base + almacen.impactos_guerra(), fichas
+    )
     lista_descartes = descartes(almacen, base)
     encuentros = almacen.encuentros()
     estadisticas = almacen.estadisticas_oficiales()
@@ -545,6 +584,11 @@ def generar(almacen: Almacen) -> list[Fichero]:
         "ucrania_regiones.jsonl", (r["region"] for r in regiones),
         validador(Esquema.REGION_UCRANIA),
     )  # fmt: skip
+    _comprobar("guerra_impactos.jsonl", guerra, validador(Esquema.IMPACTO_GUERRA))
+    _comprobar(
+        "restricciones_aeropuertos.jsonl", restricciones, validador(Esquema.RESTRICCION_AEROPUERTO)
+    )
+    _comprobar("guerra_mensajes.jsonl", mensajes, validador_propio("mensaje_guerra"))
     _comprobar("afirmaciones.jsonl", lista_afirmaciones, validador_propio("afirmacion"))
     _comprobar("descartes.jsonl", lista_descartes, validador_propio("descarte"))
     _comprobar("frecuencias.json", [datos_frecuencias], validador_propio("frecuencias"))
@@ -566,7 +610,12 @@ def generar(almacen: Almacen) -> list[Fichero]:
                 _base("estadistica_oficial")),
         Fichero("frecuencias.json", _json(datos_frecuencias), len(datos_frecuencias["filas"]),
                 _propio("frecuencias")),
+        Fichero("guerra_impactos.jsonl", _jsonl(guerra), len(guerra), _base("impacto_guerra")),
+        Fichero("guerra_mensajes.jsonl", _jsonl(mensajes), len(mensajes),
+                _propio("mensaje_guerra")),
         Fichero("incidentes.jsonl", _jsonl(incidentes), len(incidentes), _base("incidente")),
+        Fichero("restricciones_aeropuertos.jsonl", _jsonl(restricciones), len(restricciones),
+                _base("restriccion_aeropuerto")),
         Fichero("ucrania_ataques.jsonl", _jsonl(ataques), len(ataques),
                 _base("ataque_ucrania")),
         Fichero("ucrania_regiones.jsonl", _jsonl(regiones), len(regiones),

@@ -12,7 +12,12 @@ import { Protocol } from "pmtiles";
 import { useEffect, useRef, useState } from "react";
 
 import type { Capas } from "../componentes/Controles.tsx";
-import type { EpisodioResumen, FocoRegion, IncidenteResumen } from "../datos/tipos.ts";
+import type {
+  EpisodioResumen,
+  FilaImpacto,
+  FocoRegion,
+  IncidenteResumen,
+} from "../datos/tipos.ts";
 import type { Textos } from "../i18n/index.ts";
 import { ESCALA_UCRANIA, acento } from "../paleta.ts";
 import type { Idioma } from "../sitio.ts";
@@ -25,9 +30,14 @@ import {
   CAPA_GRUPOS,
   CAPA_INCIDENTES_GRAVES,
   CAPA_PAIS,
+  CAPA_IMPACTOS,
+  CAPA_IMPACTOS_GRUPOS,
   CAPA_REGIONES,
+  CAPA_REGIONES_RUSIA,
   CAPA_REGION_ELEGIDA,
+  CAPA_REGION_ELEGIDA_RUSIA,
   FUENTE_AREAS,
+  FUENTE_IMPACTOS,
   FUENTE_EPISODIOS,
   FUENTE_FOCOS_UCRANIA,
   FUENTE_PUNTOS,
@@ -37,7 +47,7 @@ import {
   capasBase,
   estilo,
 } from "./estilo.ts";
-import { areas, focosDeRegiones, lineasDeEpisodio, pilas } from "./geometria.ts";
+import { areas, focosDeRegiones, impactosEnMapa, lineasDeEpisodio, pilas } from "./geometria.ts";
 import { registrarIconos } from "./iconos.ts";
 import { colocarLetrero, hayRaton } from "./letrero.ts";
 import { colocarPulsos, pulsosDe } from "./pulsos.ts";
@@ -124,6 +134,8 @@ export interface PropsMapa {
   noche: ReadonlyMap<string, number> | null;
   /** Regiones de Ucrania con foco térmico detectado en el periodo; null sin la capa. */
   focosUcrania: readonly FocoRegion[] | null;
+  /** Impactos con lugar de la capa de guerra en el periodo; null sin la capa. */
+  impactos: readonly FilaImpacto[] | null;
   elegido: IncidenteResumen | null;
   paisResaltado: string | null;
   regionesElegidas: readonly string[];
@@ -136,14 +148,23 @@ export interface PropsMapa {
   onIncidente: (id: string) => void;
   onPila: (ids: string[]) => void;
   onRegion: (codigo: string) => void;
+  onImpacto: (id: string) => void;
   onListo: (api: ApiMapa) => void;
   onFallo: () => void;
 }
 
-/** Opacidad del relleno de una región según sus ataques, en los escalones de la leyenda. */
+/**
+ * Opacidad del relleno de una región según sus ataques, en los escalones de la leyenda. Las
+ * regiones de Ucrania y las de Rusia se escalan cada una con su máximo: los partes rusos citan
+ * muchas más regiones cada noche y apagarían a las ucranianas.
+ */
 function opacidadPorRegion(
-  intensidad: ReadonlyMap<string, number>,
+  todas: ReadonlyMap<string, number>,
+  rusas: boolean,
 ): ExpressionSpecification | number {
+  const intensidad = new Map(
+    [...todas].filter(([codigo]) => codigo.startsWith("RU-") === rusas),
+  );
   const tope = Math.max(0, ...intensidad.values());
   if (tope === 0) return 0;
   const pares: (string | number)[] = [];
@@ -167,7 +188,7 @@ function capasActivas(mapa: MapaGL): string[] {
 
 export default function Mapa(props: PropsMapa) {
   const { t, idioma, incidentes, episodios, capas, intensidad, noche, elegido } = props;
-  const { focosUcrania } = props;
+  const { focosUcrania, impactos } = props;
   const { paisResaltado, regionesElegidas, novedades, hoy, encuadre, reserva } = props;
   // El vuelo lee la reserva del momento, pero no se repite porque cambie (al arrastrar una hoja).
   const reservaActual = useRef(reserva);
@@ -246,8 +267,14 @@ export default function Mapa(props: PropsMapa) {
       if (rasgo.layer.id === CAPA_GRUPOS) {
         return "point_count" in p ? textos.mapa.grupo(Number(p.total)) : textos.mapa.pila(Number(p.n));
       }
-      if (rasgo.layer.id === CAPA_REGIONES) {
+      if (rasgo.layer.id === CAPA_REGIONES || rasgo.layer.id === CAPA_REGIONES_RUSIA) {
         return textos.regiones[String(p.iso)] ?? String(p.iso);
+      }
+      if (rasgo.layer.id === CAPA_IMPACTOS_GRUPOS) {
+        return textos.mapa.grupoImpactos(Number(p.point_count));
+      }
+      if (rasgo.layer.id === CAPA_IMPACTOS) {
+        return textos.mapa.impacto(Number(p.parte) === 1, Number(p.foco) === 1);
       }
       const incidente = porId.get(String(p.id));
       if (incidente === undefined) return null;
@@ -276,7 +303,19 @@ export default function Mapa(props: PropsMapa) {
           zoom: Math.max(mapa.getZoom() + 1.5, ZOOM_MAXIMO_AGRUPADO + 0.5),
           animate: !movimientoReducido(),
         });
-      } else if (primero.layer.id === CAPA_REGIONES) {
+      } else if (primero.layer.id === CAPA_IMPACTOS_GRUPOS) {
+        // Un grupo de impactos se abre al zoom en que se separa.
+        const fuenteImpactos = fuente(mapa, FUENTE_IMPACTOS);
+        void fuenteImpactos
+          ?.getClusterExpansionZoom(Number(propiedades.cluster_id))
+          .then((zoom) =>
+            mapa.easeTo({ center: evento.lngLat, zoom, animate: !movimientoReducido() }),
+          );
+      } else if (primero.layer.id === CAPA_IMPACTOS) {
+        manejadores.current.onImpacto(String(propiedades.id));
+      } else if (
+        primero.layer.id === CAPA_REGIONES || primero.layer.id === CAPA_REGIONES_RUSIA
+      ) {
         manejadores.current.onRegion(String(propiedades.iso));
       } else {
         manejadores.current.onIncidente(String(propiedades.id));
@@ -402,9 +441,24 @@ export default function Mapa(props: PropsMapa) {
     mapa.setPaintProperty(
       CAPA_REGIONES,
       "fill-opacity",
-      actual === null ? 0 : opacidadPorRegion(actual),
+      actual === null ? 0 : opacidadPorRegion(actual, false),
+    );
+    // Durante la reproducción noche a noche (solo ataques contra Ucrania), Rusia se apaga.
+    mapa.setPaintProperty(
+      CAPA_REGIONES_RUSIA,
+      "fill-opacity",
+      noche !== null || intensidad === null ? 0 : opacidadPorRegion(intensidad, true),
     );
   }, [listo, intensidad, noche]);
+
+  // Impactos con lugar de la capa de guerra.
+  useEffect(() => {
+    const mapa = mapaRef.current;
+    if (!listo || mapa === null) return undefined;
+    return trasPintar(() => {
+      fuente(mapa, FUENTE_IMPACTOS)?.setData(impactosEnMapa(impactos ?? []));
+    });
+  }, [listo, impactos]);
 
   // Focos térmicos de las regiones de Ucrania, en el centro de cada región.
   useEffect(() => {
@@ -416,7 +470,11 @@ export default function Mapa(props: PropsMapa) {
   useEffect(() => {
     const mapa = mapaRef.current;
     if (!listo || mapa === null) return;
-    mapa.setFilter(CAPA_REGION_ELEGIDA, ["in", ["get", "iso"], ["literal", [...regionesElegidas]]]);
+    const filtro: ExpressionSpecification = [
+      "in", ["get", "iso"], ["literal", [...regionesElegidas]],
+    ];
+    mapa.setFilter(CAPA_REGION_ELEGIDA, filtro);
+    mapa.setFilter(CAPA_REGION_ELEGIDA_RUSIA, filtro);
   }, [listo, regionesElegidas]);
 
   // Pulsos: confirmados y atribuidos laten, y los grupos que los contienen. Van fuera del

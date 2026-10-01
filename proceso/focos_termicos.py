@@ -71,6 +71,19 @@ DISTANCIA_HABITUAL_KM = {"VIIRS": 1.0, "MODIS": 2.0}
 # la razón entre la potencia de un foco habitual y la mayor de su base tuvo mediana 0,26 y
 # percentil 99 de 3,14; en los ataques validados pasó de 8 (docs/informe_firms.md).
 FACTOR_FRP = 4.0
+# Línea base del emplazamiento (docs/informe_capa_guerra.md, Kirishi): un sitio con calor
+# habitual que pasa meses sin verse (antorchas estacionales, nubes de invierno) no está en los
+# 30 días anteriores. Si con esa base el impacto saldría detectado, se mira además el año
+# anterior: un foco nuevo en 30 días que cae en un sitio con al menos FOCOS_EMPLAZAMIENTO focos
+# en el año solo cuenta si su potencia pasa de FACTOR_FRP veces la mediana del sitio (la base
+# del año también recoge los incendios de ataques anteriores: la mediana no se mueve con
+# ellos), salvo que algún paso del satélite tenga FOCOS_POR_PASO_INCENDIO focos que cuentan.
+DIAS_BASE_LARGA = 365
+FOCOS_EMPLAZAMIENTO = 3
+PERCENTIL_EMPLAZAMIENTO = 0.9
+# Un paso del satélite con tantos focos que cuentan es un incendio extenso, no una antorcha:
+# la antorcha de Kirishi nunca dio más de dos píxeles en un mismo paso.
+FOCOS_POR_PASO_INCENDIO = 3
 # Focos que tienen que contar para dar el impacto por detectado. Con uno solo, en esas mismas
 # noches salían 15 positivos sueltos en Riazán, Volgogrado y Sarátov; todos los ataques
 # validados tuvieron tres o más.
@@ -217,6 +230,27 @@ def cuenta(foco: Foco, base: list[Foco]) -> bool:
     return referencia is not None and foco.frp > FACTOR_FRP * referencia
 
 
+def _percentil(valores: list[float], q: float) -> float:
+    ordenados = sorted(valores)
+    return ordenados[min(len(ordenados) - 1, int(q * len(ordenados)))]
+
+
+def cuenta_con_emplazamiento(foco: Foco, base_larga: list[Foco]) -> bool:
+    """Un foco que es nuevo frente a los 30 días anteriores pero cae en un sitio que ya ardía
+    en el año anterior (una antorcha estacional, como la de Kirishi, que pasa meses sin verse)
+    cuenta solo si su potencia pasa de FACTOR_FRP veces la mediana de ese sitio en el año, con
+    el mismo instrumento si lo hay."""
+    cerca = [
+        b for b in base_larga
+        if distancia_km(foco.lat, foco.lon, b.lat, b.lon)
+        <= max(DISTANCIA_HABITUAL_KM[foco.instrumento], DISTANCIA_HABITUAL_KM[b.instrumento])
+    ]  # fmt: skip
+    if len(cerca) < FOCOS_EMPLAZAMIENTO:
+        return True
+    mismo = [b.frp for b in cerca if b.instrumento == foco.instrumento] or [b.frp for b in cerca]
+    return foco.frp > FACTOR_FRP * _percentil(mismo, PERCENTIL_EMPLAZAMIENTO)
+
+
 def no_evaluable(motivo: str, ahora: datetime) -> Documento:
     return {"resultado": NO_EVALUABLE, "motivo": motivo, "evaluado": _instante(ahora)}
 
@@ -280,6 +314,20 @@ def evaluar(impacto: Impacto, lector: Lector, ahora: datetime, caja: Caja) -> Ev
     if base:
         documento["linea_base"]["frp_max_mw"] = max(f.frp for f in base)
     if len(cuentan) >= FOCOS_MINIMOS:
+        nuevos = [(f, d) for f, d in cuentan if not _habitual(f, base)[0]]
+        por_paso: dict[tuple[datetime, str], int] = {}
+        for f, _ in cuentan:
+            por_paso[(f.instante, f.satelite)] = por_paso.get((f.instante, f.satelite), 0) + 1
+        if nuevos and max(por_paso.values()) < FOCOS_POR_PASO_INCENDIO:
+            base_larga = _base_larga(impacto, lector, radio, inicio_base)
+            descartados = {id(f) for f, _ in nuevos if not cuenta_con_emplazamiento(f, base_larga)}
+            if descartados:
+                cuentan = [(f, d) for f, d in cuentan if id(f) not in descartados]
+                documento["linea_base"]["emplazamiento"] = {
+                    "focos": len(base_larga),
+                    "descartados": len(descartados),
+                }
+    if len(cuentan) >= FOCOS_MINIMOS:
         primero, distancia = cuentan[0]
         documento = {
             "resultado": DETECTADO,
@@ -300,6 +348,20 @@ def evaluar(impacto: Impacto, lector: Lector, ahora: datetime, caja: Caja) -> Ev
         )  # fmt: skip
         documento = {"resultado": NO_DETECTADO, "motivo": motivo, **documento}
     return Evaluacion(documento, [f.documento(d) for f, d in cuentan])
+
+
+def _base_larga(impacto: Impacto, lector: Lector, radio: float, hasta: datetime) -> list[Foco]:
+    """Los focos en el radio del impacto del año anterior a la base de 30 días."""
+    assert impacto.lat is not None and impacto.lon is not None
+    desde = impacto.inicio - timedelta(days=DIAS_BASE_LARGA)
+    resultado: list[Foco] = []
+    for dia in _dias(max(desde, datetime.combine(INICIO_DATOS, datetime.min.time(), UTC)), hasta):
+        for f in lector(dia) or []:
+            if desde <= f.instante < hasta and (
+                distancia_km(impacto.lat, impacto.lon, f.lat, f.lon) <= radio
+            ):
+                resultado.append(f)
+    return resultado
 
 
 # --- Impactos de la base ----------------------------------------------------------------
@@ -328,6 +390,20 @@ def impacto_de_incidente(incidente: Documento) -> Impacto | None:
         lat=punto["lat"] if punto else None,
         lon=punto["lon"] if punto else None,
         radio_km=lugar.get("radio_km") if punto else None,
+    )
+
+
+def impacto_de_guerra(documento: Documento, inicio: datetime, fin: datetime) -> Impacto:
+    """Un impacto con lugar de la capa de guerra (proceso/impactos_guerra.py): su localidad o su
+    instalación, con la ventana del ataque al que está enlazado."""
+    lugar = documento["lugar"]
+    return Impacto(
+        id=documento["id"],
+        inicio=inicio,
+        fin=fin,
+        lat=lugar["punto"]["lat"],
+        lon=lugar["punto"]["lon"],
+        radio_km=lugar["radio_km"],
     )
 
 

@@ -33,8 +33,13 @@ def publicar(almacen: Almacen, ahora: datetime, directorio: Path = DIRECTORIO) -
         almacen.incidentes(), almacen.ataques_ucrania(), almacen.focos_termicos()
     )
     vocabulario = modelos(almacen)
+    focos = almacen.focos_termicos()
+    impactos = [
+        {**d, "foco_termico": focos[d["id"]]} if d["id"] in focos else d
+        for d in almacen.impactos_guerra()
+    ]
     documentos = {
-        UCRANIA: exportar_ucrania(ataques, ahora),
+        UCRANIA: exportar_ucrania(ataques, ahora, impactos),
         INCIDENTES: exportar(incidentes, ahora, vocabulario),
         SIN_UBICACION: exportar_sin_ubicacion(incidentes, ahora, vocabulario),
     }

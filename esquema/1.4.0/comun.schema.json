@@ -1,9 +1,9 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:eodi:esquema:1.3.0:comun",
+  "$id": "urn:eodi:esquema:1.4.0:comun",
   "title": "Definiciones comunes",
   "description": "Tipos compartidos. La visibilidad efectiva de un campo es la más restrictiva de su cadena: si algún antecesor es interno, el campo es interno.",
-  "x-version": "1.3.0",
+  "x-version": "1.4.0",
   "$defs": {
     "desconocido": {
       "description": "Ninguna fuente lo dice. Un campo ausente significa que aún no se ha procesado.",
@@ -97,7 +97,18 @@
           "properties": {
             "focos": {"x-visibilidad": "interno", "type": "integer", "minimum": 0},
             "dias": {"x-visibilidad": "interno", "description": "Días distintos con algún foco.", "type": "integer", "minimum": 0, "maximum": 30},
-            "frp_max_mw": {"x-visibilidad": "interno", "type": "number", "minimum": 0}
+            "frp_max_mw": {"x-visibilidad": "interno", "type": "number", "minimum": 0},
+            "emplazamiento": {
+              "x-visibilidad": "interno",
+              "description": "Línea base del emplazamiento: focos del sitio en el año anterior a los 30 días y focos que no cuentan por caer en un sitio con calor habitual de potencia normal (antorchas estacionales).",
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["focos", "descartados"],
+              "properties": {
+                "focos": {"x-visibilidad": "interno", "type": "integer", "minimum": 0},
+                "descartados": {"x-visibilidad": "interno", "type": "integer", "minimum": 1}
+              }
+            }
           }
         },
         "fuentes_firms": {

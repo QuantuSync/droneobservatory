@@ -11,7 +11,7 @@ from jsonschema import Draft202012Validator
 from referencing import Registry, Resource
 from referencing.jsonschema import DRAFT202012
 
-VERSION = "1.3.0"
+VERSION = "1.4.0"
 DIRECTORIO = Path(__file__).parent / VERSION
 PREFIJO_ID = f"urn:eodi:esquema:{VERSION}:"
 MARCA = "x-visibilidad"
@@ -45,6 +45,8 @@ class Esquema(StrEnum):
     EPISODIO = "episodio"
     ATAQUE_UCRANIA = "ataque_ucrania"
     REGION_UCRANIA = "region_ucrania"
+    IMPACTO_GUERRA = "impacto_guerra"
+    RESTRICCION_AEROPUERTO = "restriccion_aeropuerto"
     CONFIGURACION_FUENTES = "configuracion_fuentes"
     ENCUENTRO = "encuentro"
     ESTADISTICA_OFICIAL = "estadistica_oficial"

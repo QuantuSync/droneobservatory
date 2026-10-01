@@ -18,10 +18,15 @@ ultima_exportacion es la hora en que terminó bien la última exportación seman
 --exportacion el campo no va.
 
 Las fuentes van siempre todas y en este orden: fuerza_aerea_ua, mindef_ru, gdelt, oficiales,
-extractor, firms y las oficiales de detalle (recogida/detalle.py): airprox, parlamentos,
-investigaciones, estadisticas_oficiales y paginas_js. En firms, el último dato es la hora de la
-última descarga correcta de NASA FIRMS (se descarga cada 3 horas); en las de detalle, la de su
-última lectura correcta (las lee su propio temporizador cada 3 horas).
+extractor, firms, las oficiales de detalle (recogida/detalle.py): airprox, parlamentos,
+investigaciones, estadisticas_oficiales y paginas_js, y las de la capa de guerra con lugar
+(recogida/canales_guerra.py): ova_ua, estado_mayor_ua, gobernadores_ru y rosaviatsia. En firms,
+el último dato es la hora de la última descarga correcta de NASA FIRMS (se descarga cada 3
+horas); en las de detalle, la de su última lectura correcta (las lee su propio temporizador
+cada 3 horas); en las de la capa de guerra (administraciones militares regionales de Ucrania,
+Estado Mayor ucraniano, gobernadores rusos y Rosaviatsia), la de la última lectura correcta de
+alguno de sus canales por el lector del servidor: leída si se leyeron todos sus canales, con
+aviso si alguno no, no leída si ninguno.
 
 Uso: python -m recogida.estado --inicio <ISO> --codigo <N> --parcial <json> --anterior <json>
     --salida <json> --minuto <minuto de la recogida> [--exportacion <json>]
@@ -39,6 +44,7 @@ VERSION = 1
 FUENTES = (
     "fuerza_aerea_ua", "mindef_ru", "gdelt", "oficiales", "extractor", "firms",
     "airprox", "parlamentos", "investigaciones", "estadisticas_oficiales", "paginas_js",
+    "ova_ua", "estado_mayor_ua", "gobernadores_ru", "rosaviatsia",
 )  # fmt: skip
 LEIDA, CON_AVISO, NO_LEIDA = "leida", "con_aviso", "no_leida"
 CORRECTA, CON_AVISOS, FALLIDA = "correcta", "con_avisos", "fallida"

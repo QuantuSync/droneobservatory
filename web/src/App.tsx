@@ -15,6 +15,7 @@ import type { Capas } from "./componentes/Controles.tsx";
 import { Feed } from "./componentes/Feed.tsx";
 import type { Pestana } from "./componentes/Feed.tsx";
 import { FichaAtaque } from "./componentes/FichaAtaque.tsx";
+import { FichaImpacto } from "./componentes/FichaImpacto.tsx";
 import { FichaIncidente } from "./componentes/FichaIncidente.tsx";
 import { FichaRegion } from "./componentes/FichaRegion.tsx";
 import { Filtros } from "./componentes/Filtros.tsx";
@@ -33,15 +34,17 @@ import {
   CARGANDO,
   cargarAtaque,
   cargarEstadoSistema,
+  cargarImpacto,
   cargarIncidente,
   cargarResumen,
   cargarResumenUcrania,
 } from "./datos/carga.ts";
 import type { Carga } from "./datos/carga.ts";
-import { PREFIJO_UCRANIA, cifras, esGrave } from "./datos/derivar.ts";
+import { cifras, esGrave } from "./datos/derivar.ts";
 import type {
   Ataque,
   EstadoSistema,
+  ImpactoGuerra,
   IncidenteDetalle,
   IncidenteResumen,
   Resumen,
@@ -53,6 +56,7 @@ import {
   cifrasDeRegion,
   focosDelPeriodo,
   dominioUcrania,
+  impactosDelPeriodo,
   lanzamientosPorNoche,
   nochesDeGuerra,
 } from "./datos/ucrania.ts";
@@ -107,7 +111,14 @@ const ANCHO_FEED_PX = 352;
 const MS_DE_GESTO = 800;
 const GRANULARIDAD_INICIAL: Granularidad = "semana";
 
-type PanelLocal = { clase: "region"; codigo: string } | { clase: "pila"; ids: string[] } | null;
+type PanelLocal =
+  | { clase: "region"; codigo: string }
+  | { clase: "pila"; ids: string[] }
+  | { clase: "impacto"; id: string }
+  | null;
+
+/** Regiones que se pueden abrir: las de Ucrania (con lo ocupado) y las de Rusia. */
+const REGION_DE_LA_CAPA = /^(UA|RU)-[A-Z0-9]{1,3}$/;
 /** Hojas del teléfono que no son una ficha: una sola a la vez. */
 type HojaPropia = "tiempo" | "directo" | null;
 /** Reproducción de la línea de tiempo en marcha o en pausa, con su periodo. */
@@ -221,6 +232,17 @@ export function App() {
   const [granularidad, setGranularidad] = useState<Granularidad>(GRANULARIDAD_INICIAL);
   const [reproduccion, setReproduccion] = useState<Reproduccion | null>(null);
   const [panelLocal, setPanelLocal] = useState<PanelLocal>(null);
+  const [impacto, setImpacto] = useState<Carga<ImpactoGuerra>>(CARGANDO);
+  const idImpacto = panelLocal?.clase === "impacto" ? panelLocal.id : null;
+  useEffect(() => {
+    if (idImpacto === null) return undefined;
+    const control = new AbortController();
+    setImpacto(CARGANDO);
+    void cargarImpacto(idImpacto, fetch, control.signal).then((carga) => {
+      if (!control.signal.aborted) setImpacto(carga);
+    });
+    return () => control.abort();
+  }, [idImpacto]);
   const [feedAbierto, setFeedAbierto] = useState(false);
   const [pestana, setPestana] = useState<Pestana>("directo");
   const [metodologia, setMetodologia] = useState(false);
@@ -366,6 +388,12 @@ export function App() {
   const focosUcrania = useMemo(
     () =>
       ucraniaActiva === null || periodo === null ? null : focosDelPeriodo(ucraniaActiva, periodo),
+    [ucraniaActiva, periodo],
+  );
+  // Impactos con lugar de los dos sentidos en el periodo: «Ver todo» los muestra todos.
+  const impactos = useMemo(
+    () =>
+      ucraniaActiva === null || periodo === null ? null : impactosDelPeriodo(ucraniaActiva, periodo),
     [ucraniaActiva, periodo],
   );
   const noches = useMemo(
@@ -546,10 +574,19 @@ export function App() {
   );
   const abrirRegion = useCallback(
     (codigo: string) => {
-      if (!codigo.startsWith(PREFIJO_UCRANIA)) return;
+      if (!REGION_DE_LA_CAPA.test(codigo)) return;
       setHojaPropia(null);
       setAltura(alturaInicial());
       setPanelLocal({ clase: "region", codigo });
+      if (analizarRuta(window.location.pathname).ficha !== null) navegar(rutaDeIdioma(idioma));
+    },
+    [navegar, idioma],
+  );
+  const abrirImpacto = useCallback(
+    (id: string) => {
+      setHojaPropia(null);
+      setAltura(alturaInicial());
+      setPanelLocal({ clase: "impacto", id });
       if (analizarRuta(window.location.pathname).ficha !== null) navegar(rutaDeIdioma(idioma));
     },
     [navegar, idioma],
@@ -769,7 +806,24 @@ export function App() {
               cifras={cifrasDeRegion(datosUcrania, panelLocal.codigo, periodo)}
               periodo={textoPeriodo}
               focos={focosDelPeriodo(datosUcrania, periodo, panelLocal.codigo)}
+              fuentes={datosUcrania.fuentes}
+              impactos={impactosDelPeriodo(datosUcrania, periodo, panelLocal.codigo)}
+              onImpacto={abrirImpacto}
             />
+          </div>
+        </>
+      ),
+    };
+  } else if (panelLocal?.clase === "impacto") {
+    ficha = {
+      nombre: `${t.impacto.etiqueta} ${panelLocal.id}`,
+      contenido: (
+        <>
+          <CabeceraFicha t={t} etiqueta={t.impacto.etiqueta} onCerrar={cerrarFicha} />
+          <div className="overflow-y-auto px-4 py-3">
+            <SegunCarga t={t} carga={impacto}>
+              {(detalle) => <FichaImpacto t={t} idioma={idioma} impacto={detalle} />}
+            </SegunCarga>
           </div>
         </>
       ),
@@ -960,6 +1014,7 @@ export function App() {
               intensidad={intensidad}
               noche={nocheActual?.regiones ?? null}
               focosUcrania={focosUcrania}
+              impactos={impactos}
               elegido={elegido}
               paisResaltado={paisImpreciso}
               regionesElegidas={regionesElegidas}
@@ -970,6 +1025,7 @@ export function App() {
               onIncidente={abrirIncidente}
               onPila={abrirPila}
               onRegion={abrirRegion}
+              onImpacto={abrirImpacto}
               onListo={setApi}
               onFallo={fallarMapa}
             />

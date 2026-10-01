@@ -1,4 +1,4 @@
-// Forma de los ficheros públicos de publicacion/ (esquema 1.3.0, solo campos públicos)
+// Forma de los ficheros públicos de publicacion/ (esquema 1.4.0, solo campos públicos)
 // y de los resúmenes que la web deriva de ellos en el build.
 
 export type Estado = "notificado" | "confirmado" | "atribuido" | "desmentido";
@@ -207,8 +207,67 @@ export interface Ataque {
   control: { ultima_actualizacion: Instante; motivo_desmentido?: string };
 }
 
+export type CategoriaObjetivoGuerra =
+  | "energia"
+  | "combustible"
+  | "residencial"
+  | "ferrocarril"
+  | "puerto"
+  | "industrial"
+  | "aerodromo";
+
+export type CategoriaInstalacion =
+  | "refineria"
+  | "deposito_combustible"
+  | "central"
+  | "subestacion"
+  | "aerodromo"
+  | "puerto"
+  | "militar"
+  | "ferrocarril"
+  | "industrial";
+
+/** Fuente de un impacto con lugar: puede ser una autoridad instalada por Rusia. */
+export interface FuenteImpacto extends Fuente {
+  autoridad_ocupacion?: true;
+}
+
+/** Lugar concreto (localidad o instalación) alcanzado en un ataque de la capa de guerra. */
+export interface ImpactoGuerra {
+  id: string;
+  tipo: "impacto_guerra";
+  sentido: Sentido;
+  ataque?: string;
+  region: string;
+  lugar: {
+    id: string;
+    nombre: string;
+    nombre_latino?: string;
+    nivel: "localidad" | "instalacion";
+    categoria?: CategoriaInstalacion;
+    localidad?: string;
+    punto: { lat: number; lon: number };
+    radio_km: number;
+  };
+  impacto: "impacto" | "restos";
+  categorias_objetivo?: CategoriaObjetivoGuerra[];
+  fecha: Instante;
+  /** Día del ataque (AAAA-MM-DD) si el mensaje lo nombra y no es el de su publicación. */
+  dia?: string;
+  /** Lo da el parte diario de la administración: las 24 horas anteriores, sin ataque. */
+  parte_diario?: true;
+  heridos?: RangoODesconocido;
+  fallecidos?: RangoODesconocido;
+  reivindicacion_de_parte?: true;
+  credibilidad: number;
+  foco_termico?: FocoTermico;
+  fuentes: FuenteImpacto[];
+  control: { ultima_actualizacion: Instante };
+}
+
 export interface PublicacionUcrania {
   ataques: Ataque[];
+  impactos?: ImpactoGuerra[];
 }
 
 // ---- Resúmenes derivados ---------------------------------------------------------
@@ -296,12 +355,41 @@ export interface FocoRegion {
   centro: [number, number];
 }
 
+/**
+ * Impacto con lugar reducido a una fila: identificador, día (UTC, días desde 1970-01-01),
+ * sentido (0 RU_UA, 1 UA_RU), longitud, latitud, foco térmico detectado (0/1),
+ * reivindicación de parte (0/1), instalación (0 localidad, 1 instalación) y región ISO 3166-2.
+ */
+export type FilaImpacto = [
+  id: string,
+  dia: number,
+  sentido: 0 | 1,
+  lon: number,
+  lat: number,
+  foco: 0 | 1,
+  parte: 0 | 1,
+  instalacion: 0 | 1,
+  region: string,
+];
+
+/** La fuente de las cifras por región de cada sentido, con su puntuación. */
+export interface FuenteSentido {
+  medio: string;
+  fiabilidad: Fiabilidad;
+  credibilidad: number;
+  reivindicacion: boolean;
+}
+
 export interface ResumenUcrania {
-  /** Códigos ISO 3166-2 de las regiones de Ucrania que aparecen en los ataques. */
+  /** Códigos ISO 3166-2 de las regiones (de Ucrania y de Rusia) que aparecen en los ataques. */
   regiones: string[];
   ataques: FilaAtaque[];
   /** Regiones con foco térmico detectado, por ataque. */
   focos: FocoRegion[];
+  /** Impactos con lugar, por orden de día. */
+  impactos: FilaImpacto[];
+  /** La fuente de los partes de cada sentido; null si no hay ninguno. */
+  fuentes: Record<Sentido, FuenteSentido | null>;
 }
 
 // ---- Estado del sistema (estado.json, lo publica la recogida en el bucket de teselas) ----
@@ -319,7 +407,11 @@ export type FuenteDelSistema =
   | "parlamentos"
   | "investigaciones"
   | "estadisticas_oficiales"
-  | "paginas_js";
+  | "paginas_js"
+  | "ova_ua"
+  | "estado_mayor_ua"
+  | "gobernadores_ru"
+  | "rosaviatsia";
 
 export interface EstadoSistema {
   version: 1;

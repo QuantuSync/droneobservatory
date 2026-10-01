@@ -6,7 +6,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from esquema import Documento, validador_definicion
+from esquema import Documento, Esquema, validador, validador_definicion
 from proceso.validaciones import (
     Error,
     validar_ataque_ucrania,
@@ -21,6 +21,7 @@ from proceso.validaciones import (
 TABLAS_CON_HISTORIAL = (
     "incidentes", "fuentes", "episodios", "ataques_ucrania", "regiones_ucrania", "focos_termicos",
     "encuentros", "estadisticas_oficiales", "documentos_oficiales",
+    "impactos_guerra", "restricciones_aeropuertos",
 )  # fmt: skip
 # Campos de la fuente que dependen del incidente y no se guardan en la tabla común.
 CAMPOS_FUENTE_POR_ENTIDAD = frozenset({"credibilidad", "campos_respaldados"})
@@ -173,6 +174,32 @@ CREATE TABLE IF NOT EXISTS documentos_oficiales (
     estado TEXT NOT NULL,
     documento TEXT NOT NULL CHECK (json_valid(documento))
 );
+-- Capa de guerra con lugar (proceso/impactos_guerra.py): cada impacto con su localidad o su
+-- instalación, enlazado al ataque; las restricciones de aeropuertos rusos de Rosaviatsia; y
+-- el registro de los mensajes leídos (sin su texto: enlace, huella y resultado).
+CREATE TABLE IF NOT EXISTS impactos_guerra (
+    id TEXT PRIMARY KEY,
+    lugar_id TEXT NOT NULL,
+    ataque_id TEXT,
+    documento TEXT NOT NULL CHECK (json_valid(documento))
+);
+CREATE INDEX IF NOT EXISTS impactos_guerra_lugar ON impactos_guerra (lugar_id);
+CREATE TABLE IF NOT EXISTS restricciones_aeropuertos (
+    id TEXT PRIMARY KEY,
+    aeropuerto TEXT NOT NULL,
+    documento TEXT NOT NULL CHECK (json_valid(documento))
+);
+CREATE TABLE IF NOT EXISTS mensajes_guerra (
+    enlace TEXT PRIMARY KEY,
+    canal TEXT NOT NULL,
+    fecha TEXT NOT NULL,
+    huella TEXT NOT NULL,
+    resultado TEXT NOT NULL,
+    documento TEXT NOT NULL CHECK (json_valid(documento))
+);
+CREATE INDEX IF NOT EXISTS mensajes_guerra_resultado ON mensajes_guerra (resultado);
+CREATE TRIGGER IF NOT EXISTS mensajes_guerra_sin_delete BEFORE DELETE ON mensajes_guerra
+BEGIN SELECT RAISE(ABORT, 'mensajes_guerra: nada se borra'); END;
 CREATE TRIGGER IF NOT EXISTS focos_casados_sin_update BEFORE UPDATE ON focos_casados
 BEGIN SELECT RAISE(ABORT, 'focos_casados: un foco nuevo es una fila nueva'); END;
 CREATE TRIGGER IF NOT EXISTS focos_casados_sin_delete BEFORE DELETE ON focos_casados
@@ -469,6 +496,92 @@ class Almacen:
             "SELECT documento FROM documentos_oficiales WHERE id = ?", (id_,)
         )
         return encontrados[0] if encontrados else None
+
+    # --- Capa de guerra con lugar ----------------------------------------------
+
+    def guardar_impacto_guerra(self, documento: Documento) -> None:
+        errores = sorted(validador(Esquema.IMPACTO_GUERRA).iter_errors(documento), key=str)
+        if errores:
+            raise DocumentoInvalido([Error(".".join(map(str, e.path)), e.message) for e in errores])
+        with self._conexion:
+            self._guardar_fuentes(documento["fuentes"])
+            self._upsert(
+                "impactos_guerra",
+                {
+                    "id": documento["id"],
+                    "lugar_id": documento["lugar"]["id"],
+                    "ataque_id": documento.get("ataque"),
+                    "documento": _json(documento),
+                },
+            )
+
+    def impactos_guerra(self) -> list[Documento]:
+        return self._documentos("SELECT documento FROM impactos_guerra ORDER BY id")
+
+    def impactos_guerra_en(self, lugar_id: str) -> list[Documento]:
+        return self._documentos(
+            "SELECT documento FROM impactos_guerra WHERE lugar_id = ? ORDER BY id", (lugar_id,)
+        )
+
+    def siguiente_id_impacto_guerra(self, anio: int) -> str:
+        prefijo = f"EODI-IG-{anio:04d}-"
+        fila = self._conexion.execute(
+            "SELECT max(id) FROM impactos_guerra WHERE id LIKE ?", (prefijo + "%",)
+        ).fetchone()
+        ultimo = int(fila[0][len(prefijo) :]) if fila and fila[0] else 0
+        return f"{prefijo}{ultimo + 1:05d}"
+
+    def guardar_restriccion(self, documento: Documento) -> None:
+        errores = sorted(validador(Esquema.RESTRICCION_AEROPUERTO).iter_errors(documento), key=str)
+        if errores:
+            raise DocumentoInvalido([Error(".".join(map(str, e.path)), e.message) for e in errores])
+        with self._conexion:
+            self._upsert(
+                "restricciones_aeropuertos",
+                {
+                    "id": documento["id"],
+                    "aeropuerto": documento["aeropuerto"]["nombre"],
+                    "documento": _json(documento),
+                },
+            )
+
+    def restricciones(self) -> list[Documento]:
+        return self._documentos("SELECT documento FROM restricciones_aeropuertos ORDER BY id")
+
+    def mensaje_guerra(self, enlace: str) -> Documento | None:
+        fila = self._conexion.execute(
+            "SELECT huella, resultado, documento FROM mensajes_guerra WHERE enlace = ?", (enlace,)
+        ).fetchone()
+        if fila is None:
+            return None
+        return {"huella": fila[0], "resultado": fila[1], **json.loads(fila[2])}
+
+    def guardar_mensaje_guerra(
+        self, enlace: str, canal: str, fecha: str, huella: str, resultado: str,
+        documento: Documento,
+    ) -> None:  # fmt: skip
+        with self._conexion:
+            self._conexion.execute(
+                "INSERT INTO mensajes_guerra (enlace, canal, fecha, huella, resultado, documento) "
+                "VALUES (?, ?, ?, ?, ?, ?) ON CONFLICT (enlace) DO UPDATE SET "
+                "huella = excluded.huella, resultado = excluded.resultado, "
+                "documento = excluded.documento, fecha = excluded.fecha "
+                "WHERE mensajes_guerra.documento IS NOT excluded.documento "
+                "OR mensajes_guerra.huella IS NOT excluded.huella",
+                (enlace, canal, fecha, huella, resultado, _json(documento)),
+            )
+
+    def mensajes_guerra(self, resultado: str | None = None) -> list[Documento]:
+        sql = "SELECT enlace, canal, fecha, huella, resultado, documento FROM mensajes_guerra"
+        parametros: tuple[Any, ...] = ()
+        if resultado is not None:
+            sql += " WHERE resultado = ?"
+            parametros = (resultado,)
+        filas = self._conexion.execute(sql + " ORDER BY fecha, enlace", parametros).fetchall()
+        return [
+            {"enlace": e, "canal": c, "fecha": f, "huella": h, "resultado": r, **json.loads(d)}
+            for e, c, f, h, r, d in filas
+        ]
 
     # --- Recogida ----------------------------------------------------------
 

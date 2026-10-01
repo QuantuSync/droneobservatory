@@ -50,7 +50,12 @@ def foco_termico() -> Documento:
         "radio_km": 5,
         "ventana": {"inicio": instante("2025-10-01T20:30Z"), "fin": instante("2025-10-03T11:30Z")},
         "focos_en_ventana": 4,
-        "linea_base": {"focos": 2, "dias": 2, "frp_max_mw": 3.1},
+        "linea_base": {
+            "focos": 2,
+            "dias": 2,
+            "frp_max_mw": 3.1,
+            "emplazamiento": {"focos": 40, "descartados": 1},
+        },
         "fuentes_firms": ["VIIRS_NOAA20_SP", "MODIS_SP"],
         "evaluado": instante("2025-10-04T00:17Z"),
     }
@@ -270,6 +275,7 @@ def ataque_completo() -> Documento:
                 "metodo": "parser",
             }
         ],
+        "restricciones_aeropuertos": {"aeropuertos": 2, "horas": 10.9},
         "procedencia": {"derribados": {"origen": "oficial", "metodo": "parser", "fuentes": ["P1"]}},
         "control": {
             "alta": instante("2025-10-06T06:35Z"),
@@ -388,4 +394,50 @@ def estadistica_oficial() -> Documento:
             }
         },
         "control": {"alta": instante("2025-12-01T10:00Z")},
+    }
+
+
+def impacto_guerra() -> Documento:
+    """Impacto con lugar de la capa de guerra: el de t.me/kharkivoda/31198, enlazado al ataque."""
+    return {
+        "id": "EODI-IG-2025-00001",
+        "tipo": "impacto_guerra",
+        "sentido": "RU_UA",
+        "ataque": "EODI-UA-2025-0001",
+        "enlace_ataque": "periodo",
+        "region": "UA-63",
+        "lugar": {
+            "id": "katotth:UA63120270010096107", "nombre": "Харків", "nombre_latino": "Kharkiv",
+            "nivel": "localidad", "punto": {"lat": 49.99, "lon": 36.23}, "radio_km": 15.0,
+        },
+        "impacto": "impacto",
+        "categorias_objetivo": ["residencial"],
+        "fecha": instante("2025-06-01T06:45Z"),
+        "credibilidad": 2,
+        "fuentes": [{
+            "id": "kharkivoda-31198", "enlace": "https://t.me/kharkivoda/31198",
+            "medio": "Харківська ОВА", "fecha": instante("2025-06-01T06:45Z"), "idioma": "uk",
+            "fiabilidad": "B", "credibilidad": 2,
+            "frase_origen": "Окупанти вдарили дроном по Київському району Харкова.",
+            "replicas": 0, "campos_respaldados": ["lugar", "impacto", "categorias_objetivo"],
+            "es_autoridad": False, "interna_fuera_de_ucrania": False, "publica": True,
+        }],
+        "lecturas": [{"fuente_id": "kharkivoda-31198", "metodo": "parser",
+                      "version": "mensajes-guerra/1"}],
+        "control": {"alta": instante("2025-06-01T07:17Z"),
+                    "ultima_actualizacion": instante("2025-06-01T07:17Z")},
+    }  # fmt: skip
+
+
+def restriccion() -> Documento:
+    """Restricción de Rosaviatsia (t.me/favt_info/8287 y 8289)."""
+    return {
+        "id": "favt_info-8287",
+        "aeropuerto": {"nombre": "КАЛУГА (Грабцево)", "oaci": "UUBC"},
+        "inicio": instante("2025-09-30T16:47Z"),
+        "fin": instante("2025-10-01T03:42Z"),
+        "horas": 10.92,
+        "fuente_inicio": "https://t.me/favt_info/8287",
+        "fuente_fin": "https://t.me/favt_info/8289",
+        "emparejado": "respuesta",
     }

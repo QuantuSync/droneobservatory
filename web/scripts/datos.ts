@@ -105,6 +105,10 @@ async function principal(): Promise<void> {
   for (const ataque of ucrania.ataques) {
     await escribir(join(DATOS, "ataques", `${ataque.id}.json`), JSON.stringify(ataque));
   }
+  // Impactos con lugar de la capa de guerra: una ficha por impacto, que la web pide al pulsar.
+  for (const impacto of ucrania.impactos ?? []) {
+    await escribir(join(DATOS, "impactos", `${impacto.id}.json`), JSON.stringify(impacto));
+  }
 
   await escribir(join(GENERADO, "meta.json"), JSON.stringify(meta(resumen, sinUbicacion !== null)));
   await escribir(join(PUBLICO, RUTA_SECURITY_TXT), securityTxt(new Date()));
@@ -112,7 +116,7 @@ async function principal(): Promise<void> {
   console.log(
     `datos: ${coleccion.features.length} incidentes en el mapa, ` +
       `${sinUbicacion?.incidentes.length ?? 0} con ubicación imprecisa y ` +
-      `${ucrania.ataques.length} ataques, ` +
+      `${ucrania.ataques.length} ataques, ${ucrania.impactos?.length ?? 0} impactos con lugar, ` +
       `actualizados a ${resumen.actualizado}`,
   );
 }

@@ -135,11 +135,15 @@ describe("textos en español e inglés", () => {
     expect(en.compartir.titulo).toContain(NOMBRE);
   });
 
-  it("las regiones de los dos idiomas son las del mapa", () => {
-    const geojson = JSON.parse(
-      readFileSync(join(WEB, "public", "mapa", "ucrania-regiones.geojson"), "utf-8"),
-    ) as { features: { properties: { iso: string } }[] };
-    const delMapa = geojson.features.map((f) => f.properties.iso).sort();
+  it("las regiones de los dos idiomas son las del mapa (Ucrania y Rusia)", () => {
+    const delMapa = ["ucrania-regiones.geojson", "rusia-regiones.geojson"]
+      .flatMap((fichero) => {
+        const geojson = JSON.parse(
+          readFileSync(join(WEB, "public", "mapa", fichero), "utf-8"),
+        ) as { features: { properties: { iso: string } }[] };
+        return geojson.features.map((f) => f.properties.iso);
+      })
+      .sort();
     expect(Object.keys(es.regiones).sort()).toEqual(delMapa);
     expect(Object.keys(en.regiones).sort()).toEqual(delMapa);
   });
@@ -174,7 +178,9 @@ describe("formato", () => {
     expect(pais("DE", "en")).toBe("Germany");
     expect(region("UA-63", "es")).toBe("Járkov");
     expect(region("UA-63", "en")).toBe("Kharkiv");
-    expect(region("RU-BEL", "es")).toBe("RU-BEL");
+    expect(region("RU-BEL", "es")).toBe("Bélgorod");
+    expect(region("RU-BEL", "en")).toBe("Belgorod");
+    expect(region("XX-YY", "es")).toBe("XX-YY");
   });
 });
 

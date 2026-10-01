@@ -1,15 +1,17 @@
 import type { Accion } from "../estado/atajos.ts";
 import type {
-  NivelUbicacion,
-  EstadoFuente,
-  FuenteDelSistema,
-  ResultadoRecogida,
+  CategoriaInstalacion,
   CategoriaObjetivo,
+  CategoriaObjetivoGuerra,
   CategoriaObjetivoUcrania,
   Estado,
+  EstadoFuente,
+  FuenteDelSistema,
   Medida,
+  NivelUbicacion,
   Precision,
   PresenciaDron,
+  ResultadoRecogida,
   Sentido,
   Tipo,
 } from "../datos/tipos.ts";
@@ -131,6 +133,8 @@ export interface Textos {
     reciente: string;
     novedad: string;
     ucrania: string;
+    rusia: string;
+    impactos: string;
     foco: string;
     atajos: string;
     acciones: Record<Accion, string>;
@@ -151,6 +155,8 @@ export interface Textos {
     instrucciones: string;
     grupo: (n: number) => string;
     pila: (n: number) => string;
+    grupoImpactos: (n: number) => string;
+    impacto: (parte: boolean, foco: boolean) => string;
   };
   tipo: Record<Tipo, string>;
   estado: Record<Estado, string>;
@@ -158,6 +164,8 @@ export interface Textos {
   precision: Record<Precision, string>;
   categoria: Record<CategoriaObjetivo, string>;
   categoriaUcrania: Record<CategoriaObjetivoUcrania, string>;
+  categoriaGuerra: Record<CategoriaObjetivoGuerra, string>;
+  categoriaInstalacion: Record<CategoriaInstalacion, string>;
   medida: Record<Medida, string>;
   sentido: Record<Sentido, string>;
   ficha: {
@@ -244,6 +252,36 @@ export interface Textos {
     listaAtaques: string;
     masAtaques: (n: number) => string;
     nota: string;
+    fuenteCifras: (medio: string) => string;
+    reivindicacion: string;
+    impactos: string;
+    listaImpactos: string;
+  };
+  impacto: {
+    etiqueta: string;
+    lugar: string;
+    instalacionEn: (localidad: string) => string;
+    radio: (km: string) => string;
+    tipo: Record<"impacto" | "restos", string>;
+    objetivo: string;
+    sinObjetivo: string;
+    fecha: string;
+    publicado: string;
+    diaAtaque: string;
+    parteDiario: string;
+    victimas: string;
+    heridos: (n: string) => string;
+    fallecidos: (n: string) => string;
+    ataque: string;
+    region: string;
+    credibilidad: string;
+    credibilidadTexto: Record<number, string>;
+    reivindicacion: string;
+    reivindicacionTexto: string;
+    ocupacion: string;
+    fuentes: (n: number) => string;
+    cargando: string;
+    noDisponible: string;
   };
   lista: {
     titulo: string;

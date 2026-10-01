@@ -10,6 +10,11 @@ Al final, cada 3 horas, las anomalías térmicas de NASA FIRMS y su cruce con lo
 de la recogida ni la retrasa más que su tope: queda en el registro y en estado.json, y la
 ejecución siguiente vuelve a intentarlo.
 
+Antes de FIRMS, la capa de guerra con lugar (`recogida/guerra.py`): las publicaciones que el
+lector de canales dejó en el disco del servidor se convierten en impactos con localidad o
+instalación, y el extractor lee, con su límite diario propio, los mensajes que el código no
+resuelve. Un fallo ahí tampoco cambia el resultado de la recogida.
+
 Con --estado, deja escrito cómo fue cada fuente y la fecha de su último dato, para el
 estado del sistema que publica el servidor (`recogida/estado.py`).
 
@@ -28,10 +33,10 @@ from almacen import remoto
 from almacen.base import Almacen
 from almacen.cifrado import abrir_cifrada, guardar_cifrada
 from exportacion.publicar import modelos, publicar
-from proceso import focos_termicos, incursiones, presencia, solapes
+from proceso import focos_termicos, impactos_guerra, incursiones, presencia, solapes
 from proceso.ataques import SENTIDO_UA_RU
 from proceso.extraccion import Parada
-from recogida import detalle, extractor, firms, gdelt, oficiales
+from recogida import detalle, extractor, firms, gdelt, guerra, oficiales
 from recogida.cache import CachePaginas
 from recogida.descarga import Descargador, DescargaFallida
 from recogida.ejecucion import SinCursor, ejecutar
@@ -68,13 +73,68 @@ def ultima_llamada(almacen: Almacen) -> datetime | None:
 
 
 def impactos(almacen: Almacen) -> list[focos_termicos.Impacto]:
-    """Los impactos que se cruzan con FIRMS: incidentes con explosión o caída y regiones con
-    impacto de los ataques RU→UA."""
+    """Los impactos que se cruzan con FIRMS: incidentes con explosión o caída, regiones con
+    impacto de los ataques RU→UA e impactos con lugar de la capa de guerra (los dos
+    sentidos)."""
     codigos = {nombre: codigo for codigo, nombre in vocabulario().nombres.items()}
     hallados = [i for d in almacen.incidentes() if (i := focos_termicos.impacto_de_incidente(d))]
-    for ataque in almacen.ataques_ucrania():
+    ataques = almacen.ataques_ucrania()
+    for ataque in ataques:
         hallados += focos_termicos.impactos_de_ataque(ataque, codigos)
+    por_id = {a["id"]: a for a in ataques}
+    hallados += [
+        focos_termicos.impacto_de_guerra(d, *impactos_guerra.periodo_del_impacto(d, por_id))
+        for d in impactos_guerra.vigentes(almacen)
+    ]
     return hallados
+
+
+def paso_guerra(almacen: Almacen, ahora: datetime) -> dict[str, EstadoFuente]:
+    """Capa de guerra con lugar y su extractor. Nada de lo que falle aquí sale de esta función:
+    queda en el registro y las fuentes, como no leídas."""
+    from proceso.lugares_guerra import cargar
+
+    try:
+        return _paso_guerra(almacen, ahora)
+    finally:
+        # El nomenclátor ocupa cientos de megas: no se queda en memoria para los pasos siguientes.
+        cargar.cache_clear()
+
+
+def _paso_guerra(almacen: Almacen, ahora: datetime) -> dict[str, EstadoFuente]:
+    from modelo import cliente as servicio
+    from proceso import extraccion_guerra
+    from proceso.lugares_guerra import cargar
+    from recogida.canales_guerra import Datos, cargar_canales, directorio_datos
+    from recogida.estado import leer_instante
+
+    try:
+        estados, resumen = guerra.paso_horario(almacen, ahora)
+    except Exception as error:
+        registro.warning("guerra no se procesa: %s", error)
+        return {g: EstadoFuente(NO_LEIDA) for g in guerra.GRUPOS}
+    resultado = {
+        g: EstadoFuente(e["estado"], leer_instante(e["ultimo_dato"])) for g, e in estados.items()
+    }
+    if resumen.mensajes == 0 and not almacen.mensajes_guerra(extraccion_guerra.PENDIENTE):
+        return resultado
+    try:
+        configuracion = servicio.configuracion()
+    except servicio.ClienteNoConfigurado:
+        return resultado
+    try:
+        hecho = extraccion_guerra.horaria(
+            almacen, Datos(directorio_datos()), cargar_canales(), cargar(),
+            guerra.raices_regiones(), ahora,
+            lambda: servicio.Cliente(configuracion), Plazo(extraccion_guerra.TOPE_S),
+        )  # fmt: skip
+        registro.info(
+            "extractor de guerra: llamadas=%d impactos=%d parada=%s",
+            hecho.llamadas, hecho.impactos, hecho.parada,
+        )  # fmt: skip
+    except Exception as error:
+        registro.warning("extractor de guerra fallido: %s", error)
+    return resultado
 
 
 def paso_firms(almacen: Almacen, ahora: datetime) -> EstadoFuente:
@@ -196,8 +256,17 @@ def principal(argumentos: list[str] | None = None) -> int:
         # se cruza con los incidentes; lo nuevo se extrae con lo que deje del límite diario el
         # extractor de noticias. Como FIRMS, no cambia el código de salida.
         estados.update(paso_detalle(almacen, ahora))
+        # Capa de guerra con lugar: no cambia el código de salida.
+        estados.update(paso_guerra(almacen, ahora))
         # Anomalías térmicas: no cambian el código de salida.
         estados[firms.FUENTE_ID] = paso_firms(almacen, ahora)
+        try:
+            registro.info(
+                "credibilidad de impactos de guerra con foco: %d cambiados",
+                impactos_guerra.aplicar_focos(almacen, ahora),
+            )
+        except Exception as error:
+            registro.warning("credibilidad con focos fallida: %s", error)
         # Presencia del dron que confirman las declaraciones oficiales ya guardadas: la regla
         # se amplió y lo anterior se revisa en cada pasada; ya aplicada, no cambia nada.
         confirmadas, sin_guardar = presencia.revisar(almacen, ahora, modelos(almacen))

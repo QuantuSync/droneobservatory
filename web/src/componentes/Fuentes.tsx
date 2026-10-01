@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import type { Estado, Fuente, PasoHistorial, Tipo } from "../datos/tipos.ts";
+import type { Estado, Fuente, FuenteImpacto, PasoHistorial, Tipo } from "../datos/tipos.ts";
 import { instante } from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
 import { EnlaceExterno } from "./EnlaceExterno.tsx";
@@ -17,7 +17,7 @@ export function esDeclaracionOficial(fuente: Fuente): boolean {
 }
 
 /** Primero las fuentes más fiables; a igual fiabilidad, las más antiguas. */
-export function ordenarFuentes(fuentes: readonly Fuente[]): Fuente[] {
+export function ordenarFuentes<F extends Fuente>(fuentes: readonly F[]): F[] {
   return fuentes
     .slice()
     .sort(
@@ -28,7 +28,7 @@ export function ordenarFuentes(fuentes: readonly Fuente[]): Fuente[] {
     );
 }
 
-function FichaFuente({ t, fuente }: { t: Textos; fuente: Fuente }) {
+function FichaFuente({ t, fuente }: { t: Textos; fuente: FuenteImpacto }) {
   const codigo = `${fuente.fiabilidad}${fuente.credibilidad}`;
   return (
     <li className="border-b border-linea py-2">
@@ -52,6 +52,9 @@ function FichaFuente({ t, fuente }: { t: Textos; fuente: Fuente }) {
       {esDeclaracionOficial(fuente) && (
         <p className="rotulo mt-1 text-xs">{t.ficha.declaracionOficial}</p>
       )}
+      {fuente.autoridad_ocupacion === true && (
+        <p className="rotulo mt-1 text-xs">{t.impacto.ocupacion}</p>
+      )}
       <blockquote lang={fuente.idioma} className="mt-1 border-l border-acento pl-2 text-secundario">
         {fuente.frase_origen}
       </blockquote>
@@ -62,7 +65,7 @@ function FichaFuente({ t, fuente }: { t: Textos; fuente: Fuente }) {
   );
 }
 
-export function ListaFuentes({ t, fuentes }: { t: Textos; fuentes: readonly Fuente[] }) {
+export function ListaFuentes({ t, fuentes }: { t: Textos; fuentes: readonly FuenteImpacto[] }) {
   const [todas, setTodas] = useState(false);
   const ordenadas = ordenarFuentes(fuentes);
   const visibles = todas ? ordenadas : ordenadas.slice(0, FUENTES_VISIBLES);

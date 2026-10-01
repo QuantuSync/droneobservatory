@@ -17,6 +17,8 @@ class Publicacion:
     id: int
     fecha: datetime
     texto: str
+    # Publicación a la que responde (Rosaviatsia levanta así cada restricción).
+    responde_a: int | None = None
 
     @property
     def enlace(self) -> str:
@@ -51,6 +53,7 @@ class _Mensaje:
     post: str
     fecha: str = ""
     partes: list[str] = field(default_factory=list)
+    responde_a: int | None = None
 
 
 class _Lector(HTMLParser):
@@ -82,6 +85,10 @@ class _Lector(HTMLParser):
         elif tag == "br" and self._texto_en is not None:
             self.mensajes[-1].partes.append("\n")
         elif tag == "a":
+            if "tgme_widget_message_reply" in clases and self.mensajes:
+                numero = atributos.get("href", "").rstrip("/").rpartition("/")[2]
+                if numero.isdigit():
+                    self.mensajes[-1].responde_a = int(numero)
             if "tgme_widget_message_date" in clases:
                 self._en_fecha = True
             elif "tme_messages_more" in clases and atributos.get("data-before", "").isdigit():
@@ -130,6 +137,7 @@ def leer_pagina(html: str) -> Pagina:
                 id=int(numero),
                 fecha=datetime.fromisoformat(mensaje.fecha).astimezone(UTC),
                 texto="".join(mensaje.partes).strip(),
+                responde_a=mensaje.responde_a,
             )
         )
     return Pagina(canal, tuple(publicaciones), lector.anterior)

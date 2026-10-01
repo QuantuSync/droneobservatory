@@ -110,6 +110,16 @@ class Descargador:
         self._ultima: dict[str, float] = {}
         self.recuentos: Counter[str] = Counter()
 
+    def con_limites(self, reintentos: int, limite_s: float) -> "Descargador":
+        """Otro descargador con el mismo transporte, la misma identificación y el mismo plazo,
+        pero con otros reintentos y otro tiempo límite (para sitios que suelen no responder)."""
+        otro = Descargador(
+            self._transporte, self._dormir, self._reloj, self._pausa_minima_s, self._pausas,
+            reintentos, self._espera_inicial_s, None, limite_s, self.plazo,
+        )  # fmt: skip
+        otro._cabeceras = self._cabeceras
+        return otro
+
     def _dentro_del_plazo(self, espera_s: float = 0.0) -> None:
         if self.plazo is not None:
             self.plazo.comprobar(espera_s)

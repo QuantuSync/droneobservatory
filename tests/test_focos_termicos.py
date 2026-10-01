@@ -440,3 +440,42 @@ def test_la_ventana_de_un_impacto_reciente_puede_acabar_en_el_futuro() -> None:
     )
     with pytest.raises(ExportacionInvalida):
         exportar([incidente], AHORA, VOCABULARIO_MODELOS)
+
+
+# --- Línea base del emplazamiento (antorchas estacionales, caso de Kirishi) -------------------
+
+
+def _antorcha_del_ano(frp: float = 0.8) -> list[ft.Foco]:
+    """La antorcha, 1,5 km al norte, vista en 6 noches de hace 3 a 8 meses y no en los 30
+    días anteriores."""
+    return [
+        foco(INICIO - timedelta(days=dias), 1.5, frp=frp) for dias in (90, 100, 120, 150, 200, 240)
+    ]
+
+
+def test_antorcha_que_no_estaba_en_los_30_dias_no_es_un_impacto() -> None:
+    # Dos pasos ven la antorcha con poca potencia: con la base de 30 días saldría detectado.
+    ventana = [foco(INICIO + timedelta(hours=3), 1.5, frp=2.9),
+               foco(INICIO + timedelta(hours=5), 1.5, frp=3.0)]  # fmt: skip
+    documento = evaluar(_antorcha_del_ano() + ventana)
+    assert documento["resultado"] == ft.NO_DETECTADO
+    assert documento["motivo"] == ft.FUENTE_HABITUAL
+    assert documento["linea_base"]["emplazamiento"] == {"focos": 6, "descartados": 2}
+
+
+def test_antorcha_con_potencia_anomala_si_cuenta() -> None:
+    ventana = [foco(INICIO + timedelta(hours=3), 1.5, frp=12.0),
+               foco(INICIO + timedelta(hours=5), 1.5, frp=15.0)]  # fmt: skip
+    assert evaluar(_antorcha_del_ano() + ventana)["resultado"] == ft.DETECTADO
+
+
+def test_un_paso_con_tres_focos_es_un_incendio_aunque_el_sitio_ardiera_antes() -> None:
+    # Un ataque anterior dejó potencias altas en el sitio: el percentil del año no sirve.
+    incendio = [foco(INICIO + timedelta(hours=3), 1.5 + 0.1 * i, frp=3.0) for i in range(3)]
+    assert evaluar(_antorcha_del_ano(frp=40.0) + incendio)["resultado"] == ft.DETECTADO
+
+
+def test_lugar_sin_calor_en_el_ano_no_cambia() -> None:
+    documento = evaluar(pixeles(INICIO + timedelta(hours=3)))
+    assert documento["resultado"] == ft.DETECTADO
+    assert "emplazamiento" not in documento["linea_base"]

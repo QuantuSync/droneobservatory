@@ -1,4 +1,5 @@
 import { LICENCIA_DATOS, LICENCIA_DATOS_URL, NOMBRE, ORIGEN, REPOSITORIO } from "../sitio.ts";
+import { REGIONES_RUSIA_EN } from "./regionesRusia.ts";
 import type { Textos } from "./tipos.ts";
 
 export const en: Textos = {
@@ -60,6 +61,10 @@ export const en: Textos = {
       investigaciones: "Investigation reports and court rulings",
       estadisticas_oficiales: "Official statistics",
       paginas_js: "Official statements (JavaScript sites)",
+      ova_ua: "Ukrainian regional administrations",
+      estado_mayor_ua: "Ukrainian General Staff",
+      gobernadores_ru: "Russian governors",
+      rosaviatsia: "Rosaviatsia",
     },
     estadoFuente: { leida: "read", con_aviso: "with warning", no_leida: "not read" },
     ultimoDato: "latest data",
@@ -135,8 +140,15 @@ export const en: Textos = {
     reciente: "A soft glow marks what started in the last 24 hours.",
     novedad: "A ring in the interface colour marks what has changed since your last visit.",
     ucrania: "In the Ukraine layer, each region is shaded by the attacks that name it in the period.",
+    rusia:
+      "Russian regions are grey with a dashed outline: their figures are those of the " +
+      "Russian Ministry of Defence, a claim by a party to the war.",
+    impactos:
+      "A small dot is a specific place hit (a town or a facility) according to the regional " +
+      "administrations, the Ukrainian General Staff or Russian governors. Filled: official " +
+      "source; ring only: claim by a party. Zoomed out, they group with their count.",
     foco:
-      "A light dot next to an incident, or at the centre of a Ukrainian region, marks a " +
+      "A light dot next to an incident, a place hit or a group of places, or at the centre of a Ukrainian region, marks a " +
       "thermal hotspot detected by satellite (NASA FIRMS) at its place and time. Its absence " +
       "proves nothing.",
     atajos: "Keyboard shortcuts",
@@ -183,6 +195,9 @@ export const en: Textos = {
       "incident list opens the same records without using the map.",
     grupo: (n) => (n === 1 ? "1 incident: zoom in to see it" : `${n} incidents: zoom in to see them`),
     pila: (n) => `${n} incidents at this exact spot: tap to choose one`,
+    grupoImpactos: (n) => `${n} places hit: zoom in to see them`,
+    impacto: (parte, foco) =>
+      `Place hit${parte ? " · claim by a party" : ""}${foco ? " · thermal hotspot" : ""}`,
   },
   tipo: {
     interrupcion_aeroportuaria: "Airport disruption",
@@ -224,6 +239,26 @@ export const en: Textos = {
     puerto: "port",
     industrial: "industry",
     otra: "other",
+  },
+  categoriaGuerra: {
+    energia: "energy",
+    combustible: "fuel",
+    residencial: "residential",
+    ferrocarril: "railway",
+    puerto: "port",
+    industrial: "industry",
+    aerodromo: "airfield",
+  },
+  categoriaInstalacion: {
+    refineria: "refinery",
+    deposito_combustible: "fuel depot",
+    central: "power plant",
+    subestacion: "substation",
+    aerodromo: "airfield",
+    puerto: "port",
+    militar: "military site",
+    ferrocarril: "railway station",
+    industrial: "industrial plant",
   },
   medida: {
     cierre_espacio_aereo: "airspace closure",
@@ -330,12 +365,51 @@ export const en: Textos = {
     nota:
       "The figures are those each party gives in its statements. Shootdowns per region are " +
       "only counted when the report breaks them down.",
+    fuenteCifras: (medio) => `Figures from ${medio}`,
+    reivindicacion: "claim by a party to the war",
+    impactos: "Places hit in the period",
+    listaImpactos: "Places hit",
+  },
+  impacto: {
+    etiqueta: "Place hit · war layer",
+    lugar: "Place",
+    instalacionEn: (localidad) => `in ${localidad}`,
+    radio: (km) => `area of ${km} km radius`,
+    tipo: { impacto: "Hit", restos: "Debris of a downed drone fell" },
+    objetivo: "Type of target",
+    sinObjetivo: "not stated by the source",
+    fecha: "Date",
+    publicado: "published; the impact was earlier",
+    diaAtaque: "day of the attack according to the message",
+    parteDiario: "daily report of the administration: the 24 hours before it was published",
+    victimas: "Casualties",
+    heridos: (n) => `${n} injured`,
+    fallecidos: (n) => `${n} killed`,
+    ataque: "Attack that night",
+    region: "Region",
+    credibilidad: "Credibility",
+    credibilidadTexto: {
+      1: "confirmed",
+      2: "probable",
+      3: "possible",
+      4: "doubtful",
+      5: "improbable",
+      6: "cannot be judged",
+    },
+    reivindicacion: "Claim by a party to the war",
+    reivindicacionTexto:
+      "Only one of the parties to the war says so, with no independent source or measured " +
+      "data confirming it.",
+    ocupacion: "authority installed by Russia",
+    fuentes: (n) => (n === 1 ? "1 source" : `${n} sources`),
+    cargando: "Loading the place hit…",
+    noDisponible: "This place hit could not be loaded.",
   },
   lista: {
     titulo: "Incident list",
     incidentes: (n) => (n === 1 ? "1 incident in the period" : `${n} incidents in the period`),
     vacia: "No incidents in the selected period.",
-    regiones: "Regions of Ukraine",
+    regiones: "War layer regions",
   },
   tiempo: {
     titulo: "Timeline",
@@ -615,6 +689,37 @@ export const en: Textos = {
                     "confirming it.",
                 ],
               },
+              {
+                termino: "Places hit, from Russia against Ukraine",
+                texto: [
+                  "Official channels of the Ukrainian regional military administrations and " +
+                    "of Kyiv, identified from each one's official website: reliability B, " +
+                    "official source.",
+                ],
+              },
+              {
+                termino: "Places hit, from Ukraine against Russia",
+                texto: [
+                  "The Ukrainian General Staff channel (its claims of strikes on refineries, " +
+                    "depots and airfields) and the channels of Russian governors and regional " +
+                    "governments linked from their official websites (the damage they admit " +
+                    "on their territory). They are parties to the war: reliability C, claim by " +
+                    "a party. Areas occupied by Russia always carry their Ukrainian code; " +
+                    "authorities installed by Russia are marked as such.",
+                ],
+              },
+              {
+                termino: "Scoring of a place hit",
+                texto: [
+                  "Messages from the same channel are not independent sources. A single " +
+                    "official source gives \u201cprobable\u201d; a claim by a party, " +
+                    "\u201cpossible\u201d. It rises if another independent source confirms " +
+                    "it, if both sides say so (at least \u201cprobable\u201d) or if the " +
+                    "satellite detects a new thermal hotspot at the place, which counts as " +
+                    "measured data. The same treatment for both parties. Missiles and bombs " +
+                    "in the same messages are not recorded.",
+                ],
+              },
             ],
           },
         ],
@@ -639,9 +744,12 @@ export const en: Textos = {
             parrafo: [
               "Refineries and plants have flares the satellites always see: a hotspot only " +
                 "counts if it is new compared with the previous 30 days or more than four " +
-                "times as powerful as usual for that spot. Low-confidence hotspots are " +
-                "discarded. Impacts known only by region, such as those in the Ukrainian " +
-                "Air Force reports, are not assessed.",
+                "times as powerful as usual for that spot. As some flares go unseen for months, " +
+                "a new hotspot at a spot that already burned in the previous year only counts " +
+                "if it is more than four times as powerful as that spot in the year, unless " +
+                "one satellite pass sees three or more. Low-confidence hotspots are discarded. " +
+                "Impacts known only by region are not assessed; places hit from the regional " +
+                "channels and the General Staff are.",
             ],
           },
           {
@@ -756,6 +864,7 @@ export const en: Textos = {
     lema: "Drone incidents in Europe, with their sources and level of confirmation",
   },
   regiones: {
+    ...REGIONES_RUSIA_EN,
     "UA-05": "Vinnytsia",
     "UA-07": "Volyn",
     "UA-09": "Luhansk",

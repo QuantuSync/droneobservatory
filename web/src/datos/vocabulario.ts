@@ -1,4 +1,4 @@
-// Listas cerradas del esquema 1.3.0 (campos públicos). Un test las compara con los
+// Listas cerradas del esquema 1.4.0 (campos públicos). Un test las compara con los
 // ficheros de esquema/ para que no se separen.
 
 export const TIPOS = ["incursion", "interrupcion_aeroportuaria", "sobrevuelo"] as const;
@@ -66,6 +66,10 @@ export const FUENTES_DEL_SISTEMA = [
   "investigaciones",
   "estadisticas_oficiales",
   "paginas_js",
+  "ova_ua",
+  "estado_mayor_ua",
+  "gobernadores_ru",
+  "rosaviatsia",
 ] as const;
 /** Satélites e instrumentos de los focos térmicos de NASA FIRMS. */
 export const SATELITES_FIRMS = ["Suomi NPP", "NOAA-20", "NOAA-21", "Terra", "Aqua"] as const;
@@ -78,7 +82,9 @@ export const VERSION_ESTADO_SISTEMA = 1;
 
 export const PATRON_ID_INCIDENTE = /^EODI-\d{4}-\d{5}$/;
 export const PATRON_ID_ATAQUE = /^EODI-UA-\d{4}-\d{4}$/;
-export const PATRON_ID_EPISODIO = /^EODI-EP-\d{4}-\d{4}$/;
+export const PATRON_ID_IMPACTO = /^EODI-IG-\d{4}-\d{5}$/;
+export const PATRON_ID_LUGAR = /^(katotth|geonames|osm):\S+$/;
+export const PATRON_ID_EPISODIO =/^EODI-EP-\d{4}-\d{4}$/;
 export const PATRON_INSTANTE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?Z$/;
 export const PATRON_PAIS = /^[A-Z]{2}$/;
 export const PATRON_REGION = /^[A-Z]{2}-[A-Z0-9]{1,3}$/;
@@ -92,3 +98,30 @@ export const RADIO_KM_MIN = 0.1;
 export const RADIO_KM_MAX = 50;
 export const LATITUD_MAX = 90;
 export const LONGITUD_MAX = 180;
+
+/** Impactos con lugar de la capa de guerra (canales de las administraciones regionales,
+ * del Estado Mayor ucraniano y de los gobernadores rusos). */
+export const CATEGORIAS_OBJETIVO_GUERRA = [
+  "energia",
+  "combustible",
+  "residencial",
+  "ferrocarril",
+  "puerto",
+  "industrial",
+  "aerodromo",
+] as const;
+export const CATEGORIAS_INSTALACION = [
+  "refineria",
+  "deposito_combustible",
+  "central",
+  "subestacion",
+  "aerodromo",
+  "puerto",
+  "militar",
+  "ferrocarril",
+  "industrial",
+] as const;
+export const NIVELES_LUGAR_GUERRA = ["localidad", "instalacion"] as const;
+export const TIPOS_IMPACTO = ["impacto", "restos"] as const;
+/** El radio de un lugar de la capa de guerra no pasa de 50 km. */
+export const RADIO_LUGAR_GUERRA_MAX_KM = 50;

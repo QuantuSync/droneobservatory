@@ -415,4 +415,45 @@ def test_detalle_tiene_su_propio_cerrojo(servidor: Servidor, tmp_path: Path) -> 
     finally:
         _soltar(otra)
     assert "hay otra recogida de detalle en marcha" in resultado.stdout
+
+
+def leer_canales(servidor: Servidor) -> subprocess.CompletedProcess[str]:
+    entorno = {
+        **os.environ,
+        "EODI_CLON": str(servidor.clon),
+        "EODI_SECRETOS": str(servidor.secretos),
+        "PRUEBA_CODIGO": "0",
+        "PRUEBA_CAMBIO": "",
+        "PRUEBA_VISTO": str(servidor.visto),
+        "PRUEBA_INSTALACIONES": str(servidor.instalaciones),
+    }
+    return subprocess.run(
+        ["bash", str(servidor.clon / "servidor" / "guerra.sh")],
+        env=entorno,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+
+def test_el_lector_de_canales_lee_y_sigue_el_historico(servidor: Servidor) -> None:
+    resultado = leer_canales(servidor)
+    assert resultado.returncode == 0, resultado.stderr
+    assert "lectura de canales terminada con código 0" in resultado.stdout
+    # El doble deja anotada la última llamada: la del histórico, con su fecha y su tope.
+    visto = servidor.visto.read_text(encoding="utf-8").splitlines()[0]
+    assert visto == "-m recogida.canales_guerra historico --desde 2025-01-01 --minutos 40"
+    assert servidor.commits() == 1
+
+
+def test_el_lector_de_canales_no_se_lanza_si_hay_otro(servidor: Servidor) -> None:
+    cerrojo = servidor.secretos / "guerra.lock"
+    with subprocess.Popen(["flock", str(cerrojo), "sleep", "5"]) as otro:
+        try:
+            subprocess.run(["sleep", "0.5"], check=True)
+            resultado = leer_canales(servidor)
+        finally:
+            otro.terminate()
+    assert resultado.returncode == 0
+    assert "otro lector de canales en marcha" in resultado.stdout
     assert not servidor.visto.exists()

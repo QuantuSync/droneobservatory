@@ -11,6 +11,10 @@ Límites, compartidos por todo lo que llama al extractor:
   datos (modo «revision», `python -m recogida.extractor revision`);
 - 3 dólares para el histórico de las fuentes oficiales de detalle (modo «detalle»,
   `python -m recogida.detalle historico`), por lotes.
+- 0,20 dólares al día para los mensajes de la capa de guerra que el código no resuelve
+  (modo «guerra», en la recogida horaria), aparte del límite horario;
+- 5 dólares para el histórico de esos mensajes desde el 1 de enero de 2025 (modo
+  «guerra_historico», `python -m proceso.extraccion_guerra lote`).
 
 Antes de cada llamada se suma lo gastado y el peor caso de la llamada (sus
 tokens de entrada estimados y el máximo de salida); si pasa del límite, no se
@@ -37,6 +41,8 @@ LIMITE_REVISION_USD = 5.00
 # investigación, sentencias), procesado una sola vez por lotes: presupuesto propio, aparte del
 # límite diario. Lo nuevo de cada día entra en el límite diario de la recogida horaria.
 LIMITE_DETALLE_USD = 3.00
+LIMITE_GUERRA_DIARIO_USD = 0.20
+LIMITE_GUERRA_HISTORICO_USD = 5.00
 # Una letra son unos 0,3 tokens en los idiomas europeos; se estima por lo alto con 0,5
 # para que el peor caso no se quede corto.
 TOKENS_POR_LETRA = 0.5
@@ -47,6 +53,8 @@ class Modo(StrEnum):
     HISTORICO = "historico"
     REVISION = "revision"
     DETALLE = "detalle"
+    GUERRA = "guerra"
+    GUERRA_HISTORICO = "guerra_historico"
 
 
 class LimiteGasto(RuntimeError):
@@ -90,7 +98,14 @@ def limite(modo: Modo) -> float:
         Modo.HISTORICO: LIMITE_HISTORICO_USD,
         Modo.REVISION: LIMITE_REVISION_USD,
         Modo.DETALLE: LIMITE_DETALLE_USD,
+        Modo.GUERRA: LIMITE_GUERRA_DIARIO_USD,
+        Modo.GUERRA_HISTORICO: LIMITE_GUERRA_HISTORICO_USD,
     }[modo]
+
+
+def diario(modo: Modo) -> bool:
+    """Los modos con límite diario (lo gastado se cuenta solo en el día UTC)."""
+    return modo in {Modo.HORARIO, Modo.GUERRA}
 
 
 def comprobar(gastado: float, previsto: float, modo: Modo) -> None:

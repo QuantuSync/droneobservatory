@@ -41,6 +41,8 @@ En `/home/eodi`:
   - `exportacion.json`: la última exportación semanal correcta (versión, hora y huella).
 - `datos/detalle/`, con permisos 700 y propiedad de `eodi`: lo que descargan las fuentes
   oficiales de detalle (apartado «Fuentes oficiales de detalle»).
+- `datos/guerra/`, con permisos 700 y propiedad de `eodi`: lo que guarda el lector de canales
+  de la capa de guerra (apartado «Canales de la capa de guerra con lugar»).
 - `datos/firms/`, con permisos 700 y propiedad de `eodi`: los CSV diarios de anomalías
   térmicas de NASA FIRMS, comprimidos, uno por producto y día
   (`<producto>/<año>/<AAAA-MM-DD>.csv.gz`), y `control.json` con la última descarga
@@ -176,9 +178,11 @@ El fichero lleva la hora de inicio y de fin de la recogida, su resultado (`corre
 `con_avisos` o `fallida`), la hora de la última correcta, la de la siguiente prevista
 (minuto 17) y, por cada fuente (`fuerza_aerea_ua`, `mindef_ru`, `gdelt`, `oficiales`,
 `extractor`, `firms` y las de detalle: `airprox`, `parlamentos`, `investigaciones`,
-`estadisticas_oficiales` y `paginas_js`), su estado (`leida`, `con_aviso` o `no_leida`) y la hora de su
-último dato; en `firms`, la de la última descarga correcta; en las de detalle, la de su
-última lectura correcta.
+`estadisticas_oficiales` y `paginas_js`, y las de la capa de guerra con lugar: `ova_ua`,
+`estado_mayor_ua`, `gobernadores_ru` y `rosaviatsia`), su estado (`leida`, `con_aviso` o
+`no_leida`) y la hora de su último dato; en `firms`, la de la última descarga correcta; en las
+de detalle, la de su última lectura correcta; en las de la capa de guerra, la de la última
+lectura correcta de alguno de sus canales (leída si se leyeron todos; con aviso si alguno no).
 Lleva también `ultima_exportacion`: la hora en que terminó la última exportación semanal
 correcta (o null si no consta ninguna), del registro que deja la exportación.
 No lleva ningún contenido. La recogida deja el estado de cada fuente en un fichero
@@ -304,6 +308,52 @@ después de esa incorporación.
 sudo systemd-run --unit=eodi-detalle-historico --uid=eodi --gid=eodi \
   /usr/bin/env bash /home/eodi/droneobservatory/servidor/detalle_historico.sh
 journalctl -u eodi-detalle-historico -n 40
+```
+
+## Canales de la capa de guerra con lugar
+
+Los canales oficiales de Telegram que dan los lugares concretos alcanzados por los ataques
+con drones (administraciones militares regionales de Ucrania, Estado Mayor ucraniano,
+gobernadores y gobiernos regionales rusos) y las restricciones de aeropuertos de Rosaviatsia
+([`recogida/canales_guerra.py`](../recogida/canales_guerra.py), canales y prueba de que son
+oficiales en [`configuracion/canales_guerra.json`](../configuracion/canales_guerra.json),
+informe en [`docs/informe_capa_guerra.md`](informe_capa_guerra.md)). En dos tiempos:
+
+1. **Lectura**: `eodi-guerra.timer` lanza `eodi-guerra.service` en el minuto 50 de cada hora.
+   La unidad ejecuta [`servidor/guerra.sh`](../servidor/guerra.sh), que toma su propio cerrojo
+   (`guerra.lock`), lee lo nuevo de cada canal por su vista pública web, con la identificación
+   del observatorio y una petición cada 3 segundos, tras comprobar que sigue siendo el oficial
+   (título, insignia, enlaces de su descripción y la web de la institución), y con el tiempo
+   que queda sigue el histórico desde el 1 de enero de 2025 donde lo dejó. Guarda en
+   `datos/guerra/canales/<canal>/<AAAA-MM>.jsonl` solo las publicaciones que hablan de drones
+   (o de aeropuertos, en Rosaviatsia) y en `datos/guerra/control.json` el resultado de cada
+   canal. No toca la base. Un canal que falla no para a los demás.
+2. **Incorporación**: la recogida horaria (`recogida/guerra.py`) lee esos ficheros, convierte
+   los mensajes en impactos con localidad o instalación (`proceso/mensajes_guerra.py`,
+   nomenclátor en `configuracion/nomenclator_guerra.json.gz`), los enlaza con el ataque de la
+   noche y les da su credibilidad. Lo que el código no resuelve lo lee el extractor con su
+   límite diario propio de 0,20 dólares (modo «guerra»). Un fallo aquí no cambia el resultado
+   de la recogida. El nomenclátor ocupa unos 500 MB mientras se usa y se libera al terminar.
+
+Órdenes, como `operador`:
+
+```
+sudo systemctl start eodi-guerra.service          # una lectura ahora
+journalctl -u eodi-guerra.service -n 60
+sudo -u eodi sh -c 'cd /home/eodi/droneobservatory && .venv/bin/python -m recogida.canales_guerra resumen'
+```
+
+**Reprocesar todo** (tras cambiar el analizador, el nomenclátor o las palabras corrientes, o al
+terminar el histórico) y, con `lote`, mandar al extractor por lotes los mensajes que el código
+no resuelve (presupuesto único de 5 dólares, modo «guerra_historico», primero los objetivos de
+combustible, energía e industria). [`servidor/guerra_reproceso.sh`](../servidor/guerra_reproceso.sh)
+toma el cerrojo de la recogida, descarga la base de la rama `estado` y la vuelve a subir; la
+recogida siguiente publica el resultado:
+
+```
+sudo systemd-run --unit=eodi-guerra-reproceso --uid=eodi --gid=eodi \
+  /usr/bin/env bash /home/eodi/droneobservatory/servidor/guerra_reproceso.sh lote
+journalctl -u eodi-guerra-reproceso -n 60
 ```
 
 ## Revisión de todo lo publicado

@@ -133,6 +133,19 @@ CALENDARIO_DETALLE="*-*-* 02/3:52:00 UTC"
 # tres listas; el tope cubre una fuente lenta sin que llegue la siguiente.
 TOPE_DETALLE_MINUTOS=120
 CERROJO_DETALLE="$SECRETOS/detalle.lock"
+# --- Canales de la capa de guerra con lugar (servidor/guerra.sh) -------------------------
+# Lo que el lector guarda de cada canal, fuera del repositorio y de la base: la recogida
+# horaria solo lee estos ficheros.
+GUERRA_DATOS="${EODI_GUERRA_DATOS:-$CASA/datos/guerra}"
+UNIDAD_GUERRA="eodi-guerra"
+# Minuto 50: lejos de la recogida (17), de las tandas de FIRMS (12) y del tráfico (40).
+MINUTO_GUERRA=50
+CERROJO_GUERRA="$SECRETOS/guerra.lock"
+# La lectura de unos 40 canales tarda de 3 a 6 minutos; el resto de la hora sigue el
+# histórico (unos 50 000 páginas desde enero de 2025, a una cada 3 s: unos dos días).
+GUERRA_DESDE="2025-01-01"
+GUERRA_HISTORICO_MINUTOS=40
+TOPE_GUERRA_MINUTOS=55
 
 # --- Endurecimiento ------------------------------------------------------------------
 # Reinicio tras una actualización de seguridad que lo pida: de madrugada y a los 28
