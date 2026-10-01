@@ -3,6 +3,331 @@
   {
    "geometry": {
     "coordinates": [
+     7.55533,
+     49.44452
+    ],
+    "type": "Point"
+   },
+   "id": "EODI-2024-00002",
+   "properties": {
+    "afirmaciones_publicas": [
+     {
+      "campo": "lugar.pais",
+      "credibilidad": 1,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-10-10T00:00Z"
+      },
+      "fiabilidad": "A",
+      "fuente_id": "detalle-ece2ea26d71e08a3",
+      "medio": "Bundesregierung",
+      "valor": "DE"
+     },
+     {
+      "campo": "objetivo.categoria",
+      "credibilidad": 1,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-10-10T00:00Z"
+      },
+      "fiabilidad": "A",
+      "fuente_id": "detalle-ece2ea26d71e08a3",
+      "medio": "Bundesregierung",
+      "valor": "base_militar"
+     },
+     {
+      "campo": "objetivo.nombre",
+      "credibilidad": 1,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-10-10T00:00Z"
+      },
+      "fiabilidad": "A",
+      "fuente_id": "detalle-ece2ea26d71e08a3",
+      "medio": "Bundesregierung",
+      "valor": "Militärflughafen Ramstein"
+     },
+     {
+      "campo": "tiempo.inicio",
+      "credibilidad": 1,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-10-10T00:00Z"
+      },
+      "fiabilidad": "A",
+      "fuente_id": "detalle-ece2ea26d71e08a3",
+      "medio": "Bundesregierung",
+      "valor": {
+       "precision": "dia",
+       "valor": "2024-01-01T00:00Z"
+      }
+     },
+     {
+      "campo": "tipo",
+      "credibilidad": 1,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-10-10T00:00Z"
+      },
+      "fiabilidad": "A",
+      "fuente_id": "detalle-ece2ea26d71e08a3",
+      "medio": "Bundesregierung",
+      "valor": "sobrevuelo"
+     }
+    ],
+    "consecuencias": {
+     "cierre": {
+      "valor": "desconocido"
+     }
+    },
+    "control": {
+     "ultima_actualizacion": {
+      "precision": "minuto",
+      "valor": "2026-10-01T19:17Z"
+     }
+    },
+    "drones": {
+     "numero": "desconocido"
+    },
+    "estado": {
+     "actual": "confirmado",
+     "historial": [
+      {
+       "estado": "notificado",
+       "fecha": {
+        "precision": "dia",
+        "valor": "2025-10-10T00:00Z"
+       },
+       "fuente_id": "detalle-ece2ea26d71e08a3"
+      },
+      {
+       "estado": "confirmado",
+       "fecha": {
+        "precision": "dia",
+        "valor": "2025-10-10T00:00Z"
+       },
+       "fuente_id": "detalle-ece2ea26d71e08a3"
+      }
+     ]
+    },
+    "fuentes": [
+     {
+      "credibilidad": 1,
+      "enlace": "https://dserver.bundestag.de/btd/21/021/2102141.pdf",
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-10-10T00:00Z"
+      },
+      "fiabilidad": "A",
+      "frase_origen": "Drohnen-Sachverhalte am Militärflughafen in Ramstein aus dem Jahr 2024",
+      "id": "detalle-ece2ea26d71e08a3",
+      "idioma": "de",
+      "medio": "Bundesregierung",
+      "replicas": 0
+     }
+    ],
+    "id": "EODI-2024-00002",
+    "lugar": {
+     "pais": "DE",
+     "radio_km": 3.0
+    },
+    "objetivo": {
+     "categoria": "otra",
+     "nombre": "Ramstein-Miesenbach"
+    },
+    "presencia_dron": "no_confirmada",
+    "tiempo": {
+     "inicio": {
+      "precision": "dia",
+      "valor": "2024-01-01T00:00Z"
+     }
+    },
+    "tipo": "sobrevuelo",
+    "titulo": {
+     "en": "Drone overflights over Ramstein military airfield",
+     "es": "Sobrevuelos de drones sobre el aeropuerto militar de Ramstein"
+    }
+   },
+   "type": "Feature"
+  },
+  {
+   "geometry": {
+    "coordinates": [
+     5.2875,
+     51.65333
+    ],
+    "type": "Point"
+   },
+   "id": "EODI-2024-00003",
+   "properties": {
+    "afirmaciones_publicas": [
+     {
+      "campo": "lugar.localidad",
+      "credibilidad": 1,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-02-07T00:00Z"
+      },
+      "fiabilidad": "A",
+      "fuente_id": "detalle-5ef7ded991a8303c",
+      "medio": "Rijksoverheid (Justitie en Veiligheid)",
+      "valor": "Vught"
+     },
+     {
+      "campo": "lugar.pais",
+      "credibilidad": 1,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-02-07T00:00Z"
+      },
+      "fiabilidad": "A",
+      "fuente_id": "detalle-5ef7ded991a8303c",
+      "medio": "Rijksoverheid (Justitie en Veiligheid)",
+      "valor": "NL"
+     },
+     {
+      "campo": "objetivo.categoria",
+      "credibilidad": 1,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-02-07T00:00Z"
+      },
+      "fiabilidad": "A",
+      "fuente_id": "detalle-5ef7ded991a8303c",
+      "medio": "Rijksoverheid (Justitie en Veiligheid)",
+      "valor": "otra"
+     },
+     {
+      "campo": "objetivo.nombre",
+      "credibilidad": 1,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-02-07T00:00Z"
+      },
+      "fiabilidad": "A",
+      "fuente_id": "detalle-5ef7ded991a8303c",
+      "medio": "Rijksoverheid (Justitie en Veiligheid)",
+      "valor": "Penitentiaire Inrichting (PI) Vught"
+     },
+     {
+      "campo": "presencia_dron",
+      "credibilidad": 1,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-02-07T00:00Z"
+      },
+      "fiabilidad": "A",
+      "fuente_id": "detalle-5ef7ded991a8303c",
+      "medio": "Rijksoverheid (Justitie en Veiligheid)",
+      "valor": "confirmada"
+     },
+     {
+      "campo": "tiempo.inicio",
+      "credibilidad": 1,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-02-07T00:00Z"
+      },
+      "fiabilidad": "A",
+      "fuente_id": "detalle-5ef7ded991a8303c",
+      "medio": "Rijksoverheid (Justitie en Veiligheid)",
+      "valor": {
+       "precision": "dia",
+       "valor": "2024-12-23T00:00Z"
+      }
+     },
+     {
+      "campo": "tipo",
+      "credibilidad": 1,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-02-07T00:00Z"
+      },
+      "fiabilidad": "A",
+      "fuente_id": "detalle-5ef7ded991a8303c",
+      "medio": "Rijksoverheid (Justitie en Veiligheid)",
+      "valor": "sobrevuelo"
+     }
+    ],
+    "consecuencias": {
+     "cierre": {
+      "valor": "desconocido"
+     }
+    },
+    "control": {
+     "ultima_actualizacion": {
+      "precision": "minuto",
+      "valor": "2026-10-01T19:17Z"
+     }
+    },
+    "drones": {
+     "numero": "desconocido"
+    },
+    "estado": {
+     "actual": "confirmado",
+     "historial": [
+      {
+       "estado": "notificado",
+       "fecha": {
+        "precision": "dia",
+        "valor": "2025-02-07T00:00Z"
+       },
+       "fuente_id": "detalle-5ef7ded991a8303c"
+      },
+      {
+       "estado": "confirmado",
+       "fecha": {
+        "precision": "dia",
+        "valor": "2025-02-07T00:00Z"
+       },
+       "fuente_id": "detalle-5ef7ded991a8303c"
+      }
+     ]
+    },
+    "fuentes": [
+     {
+      "credibilidad": 1,
+      "enlace": "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Document(3666b551-75d5-454e-9486-b8fcd0c57034)/resource",
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-02-07T00:00Z"
+      },
+      "fiabilidad": "A",
+      "frase_origen": "Er zijn meerdere drones gesignaleerd boven de Penitentiaire Inrichting (PI) Vught",
+      "id": "detalle-5ef7ded991a8303c",
+      "idioma": "nl",
+      "medio": "Rijksoverheid (Justitie en Veiligheid)",
+      "replicas": 0
+     }
+    ],
+    "id": "EODI-2024-00003",
+    "lugar": {
+     "localidad": "Vught",
+     "pais": "NL",
+     "radio_km": 5.0
+    },
+    "objetivo": {
+     "categoria": "otra",
+     "nombre": "Vught"
+    },
+    "presencia_dron": "confirmada",
+    "tiempo": {
+     "inicio": {
+      "precision": "dia",
+      "valor": "2024-12-23T00:00Z"
+     }
+    },
+    "tipo": "sobrevuelo",
+    "titulo": {
+     "en": "Drone overflights over Vught Penitentiary",
+     "es": "Sobrevuelos de drones sobre la Penitenciaria de Vught"
+    }
+   },
+   "type": "Feature"
+  },
+  {
+   "geometry": {
+    "coordinates": [
      9.68012,
      52.46146
     ],
@@ -30386,7 +30711,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-01T10:43Z"
+      "valor": "2026-10-01T19:17Z"
      }
     },
     "drones": {
@@ -30396,7 +30721,7 @@
      }
     },
     "estado": {
-     "actual": "notificado",
+     "actual": "confirmado",
      "historial": [
       {
        "estado": "notificado",
@@ -30405,6 +30730,14 @@
         "valor": "2025-09-23T09:15Z"
        },
        "fuente_id": "gdelt-43a09a408be869cd"
+      },
+      {
+       "estado": "confirmado",
+       "fecha": {
+        "precision": "dia",
+        "valor": "2025-09-25T00:00Z"
+       },
+       "fuente_id": "detalle-c164c43ddf12cd41"
       }
      ]
     },
@@ -30982,6 +31315,34 @@
       "idioma": "it",
       "medio": "ilmessaggero.it",
       "replicas": 1
+     },
+     {
+      "credibilidad": 1,
+      "enlace": "https://politi.dk/rigspolitiet/nyhedsliste/nosten-er-i-operationsberedskab-grundet-de-seneste-dages-droneaktivitet/2025/09/25",
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-09-25T00:00Z"
+      },
+      "fiabilidad": "A",
+      "frase_origen": "Mandag aften var der mistænkelig droneaktivitet ved Københavns Lufthavn",
+      "id": "detalle-c164c43ddf12cd41",
+      "idioma": "da",
+      "medio": "Rigspolitiet",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 1,
+      "enlace": "https://politi.dk/koebenhavns-politi/nyhedsliste/efterforskningen-af-droneobservationer-over-koebenhavns-lufthavn-er-indstillet/2026/06/25",
+      "fecha": {
+       "precision": "dia",
+       "valor": "2026-06-25T00:00Z"
+      },
+      "fiabilidad": "A",
+      "frase_origen": "Siden den 22. september om aftenen, hvor de første anmeldelser om mulige droneobservationer indgik",
+      "id": "detalle-d5bf7ff3b226254a",
+      "idioma": "da",
+      "medio": "Københavns Politi",
+      "replicas": 0
      }
     ],
     "id": "EODI-2025-00154",
@@ -50779,7 +51140,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-30T21:56Z"
+      "valor": "2026-10-01T19:17Z"
      }
     },
     "drones": {
@@ -50789,7 +51150,7 @@
      }
     },
     "estado": {
-     "actual": "notificado",
+     "actual": "confirmado",
      "historial": [
       {
        "estado": "notificado",
@@ -50798,10 +51159,46 @@
         "valor": "2025-09-26T08:30Z"
        },
        "fuente_id": "gdelt-5c8b15a14002dca8"
+      },
+      {
+       "estado": "confirmado",
+       "fecha": {
+        "precision": "dia",
+        "valor": "2025-09-26T00:00Z"
+       },
+       "fuente_id": "detalle-169323e15cc02cc6"
       }
      ]
     },
     "fuentes": [
+     {
+      "credibilidad": 1,
+      "enlace": "https://politi.dk/nordjyllands-politi/nyhedsliste/250925-pm1/2025/09/25",
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-09-25T00:00Z"
+      },
+      "fiabilidad": "A",
+      "frase_origen": "Nordjyllands Politi modtog klokken 21:44 en anmeldelse om flere uidentificerede droner i luftrummet over Aalborg Lufthavn.",
+      "id": "detalle-b6f04add5106f823",
+      "idioma": "da",
+      "medio": "Nordjyllands Politi",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 1,
+      "enlace": "https://politi.dk/rigspolitiet/nyhedsliste/mere-end-500-droneanmeldelser-paa-nationalt-plan-i-det-seneste-doegn/2025/09/26",
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-09-26T00:00Z"
+      },
+      "fiabilidad": "A",
+      "frase_origen": "Billund og Aalborg Lufthavn var der sent torsdag aften kortvarige nedlukninger",
+      "id": "detalle-169323e15cc02cc6",
+      "idioma": "da",
+      "medio": "Rigspolitiet",
+      "replicas": 0
+     },
      {
       "credibilidad": 3,
       "enlace": "https://kyivindependent.com/denmark-shuts-aalborg-airspace-again-after-drone-incursion-police-says-havent-found-anything",
@@ -52948,7 +53345,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-01T10:43Z"
+      "valor": "2026-10-01T19:17Z"
      }
     },
     "drones": {
@@ -52980,6 +53377,20 @@
     },
     "fuentes": [
      {
+      "credibilidad": 1,
+      "enlace": "https://politi.dk/midt-og-vestsjaellands-politi/nyhedsliste/politiet-undersoeger-droner-over-koege/2025/01/04",
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-01-04T00:00Z"
+      },
+      "fiabilidad": "A",
+      "frase_origen": "Der blev sent fredag aften observeret flere droner flyve rundt i luften over Køge.",
+      "id": "detalle-540142d29333a918",
+      "idioma": "da",
+      "medio": "Midt- og Vestsjællands Politi",
+      "replicas": 0
+     },
+     {
       "credibilidad": 3,
       "enlace": "https://kristeligt-dagblad.dk/politiet-undersoeger-flere-ukendte-droner-over-havnen-i-koege",
       "fecha": {
@@ -52992,6 +53403,20 @@
       "idioma": "da",
       "medio": "kristeligt-dagblad.dk",
       "replicas": 4
+     },
+     {
+      "credibilidad": 1,
+      "enlace": "https://kristeligt-dagblad.dk/politiet-undersoeger-flere-ukendte-droner-over-havnen-i-koege",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-01-04T05:30Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "nogle store droner, som har fløjet rundt derude, og som vi har været ude at undersøge",
+      "id": "gdelt-1533b4481da4df24-declaracion-1",
+      "idioma": "da",
+      "medio": "Midt- og Vestsjællands Politi (declaración oficial citada en kristeligt-dagblad.dk)",
+      "replicas": 0
      },
      {
       "credibilidad": 3,
@@ -53022,6 +53447,20 @@
       "replicas": 0
      },
      {
+      "credibilidad": 1,
+      "enlace": "https://dr.dk/nyheder/seneste/politiet-undersoeger-droneflyvninger-ved-havnen-i-koege",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-01-04T08:30Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "flyvningerne som forhold, der ikke er lovlige, da der ikke er udstedt tilladelser",
+      "id": "gdelt-24d1f8dc610a1ace-declaracion-2",
+      "idioma": "da",
+      "medio": "Midt- og Vestsjællands Politi (declaración oficial citada en dr.dk)",
+      "replicas": 0
+     },
+     {
       "credibilidad": 3,
       "enlace": "https://wnp.pl/rynki-zagraniczne/dania-policja-wszczela-sledztwo-w-zwiazku-z-pojawieniem-sie-dronow-nad-portem-w-koge,900572.html",
       "fecha": {
@@ -53047,34 +53486,6 @@
       "id": "gdelt-29a12d5e797e742b",
       "idioma": "pl",
       "medio": "gazetaolsztynska.pl",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 1,
-      "enlace": "https://kristeligt-dagblad.dk/politiet-undersoeger-flere-ukendte-droner-over-havnen-i-koege",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-01-04T05:30Z"
-      },
-      "fiabilidad": "B",
-      "frase_origen": "nogle store droner, som har fløjet rundt derude, og som vi har været ude at undersøge",
-      "id": "gdelt-1533b4481da4df24-declaracion-1",
-      "idioma": "da",
-      "medio": "Midt- og Vestsjællands Politi (declaración oficial citada en kristeligt-dagblad.dk)",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 1,
-      "enlace": "https://dr.dk/nyheder/seneste/politiet-undersoeger-droneflyvninger-ved-havnen-i-koege",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-01-04T08:30Z"
-      },
-      "fiabilidad": "B",
-      "frase_origen": "flyvningerne som forhold, der ikke er lovlige, da der ikke er udstedt tilladelser",
-      "id": "gdelt-24d1f8dc610a1ace-declaracion-2",
-      "idioma": "da",
-      "medio": "Midt- og Vestsjællands Politi (declaración oficial citada en dr.dk)",
       "replicas": 0
      }
     ],

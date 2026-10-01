@@ -34005,6 +34005,353 @@
     "en": "Three Russian drones violate Moldavian airspace",
     "es": "Tres drones rusos violan el espacio aéreo de Moldavia"
    }
+  },
+  {
+   "afirmaciones_publicas": [
+    {
+     "campo": "drones.numero",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-01T17:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-ba590c0417f36768",
+     "medio": "madata.gr",
+     "valor": {
+      "max": 1,
+      "min": 1
+     }
+    },
+    {
+     "campo": "lugar.pais",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-01T17:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-ba590c0417f36768",
+     "medio": "madata.gr",
+     "valor": "GR"
+    },
+    {
+     "campo": "presencia_dron",
+     "credibilidad": 1,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-01T17:45Z"
+     },
+     "fiabilidad": "B",
+     "fuente_id": "gdelt-ba590c0417f36768-declaracion-1",
+     "medio": "Γενικό Επιτελείο Εθνικής Άμυνας (declaración oficial citada en madata.gr)",
+     "valor": "confirmada"
+    },
+    {
+     "campo": "tiempo.inicio",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-01T17:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-ba590c0417f36768",
+     "medio": "madata.gr",
+     "valor": {
+      "precision": "dia",
+      "valor": "2026-10-01T00:00Z"
+     }
+    }
+   ],
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-01T19:17Z"
+    }
+   },
+   "drones": {
+    "numero": {
+     "max": 1,
+     "min": 1
+    }
+   },
+   "estado": {
+    "actual": "confirmado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-01T17:45Z"
+      },
+      "fuente_id": "gdelt-ba590c0417f36768"
+     },
+     {
+      "estado": "confirmado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-01T17:45Z"
+      },
+      "fuente_id": "gdelt-ba590c0417f36768-declaracion-1"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://madata.gr/epikairotita/world/983958-toyrkiko-uav-paraviase-ton-ethniko-enaerio-choro-kai-to-fir-athinon-sto-aigaio.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-01T17:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Νέα τουρκική αεροπορική δραστηριότητα καταγράφηκε την Πέμπτη 1 Οκτωβρίου 2026.",
+     "id": "gdelt-ba590c0417f36768",
+     "idioma": "el",
+     "medio": "madata.gr",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 1,
+     "enlace": "https://madata.gr/epikairotita/world/983958-toyrkiko-uav-paraviase-ton-ethniko-enaerio-choro-kai-to-fir-athinon-sto-aigaio.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-01T17:45Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Το UAV προέβη σε δύο παραβιάσεις του εθνικού εναέριου χώρου.",
+     "id": "gdelt-ba590c0417f36768-declaracion-1",
+     "idioma": "el",
+     "medio": "Γενικό Επιτελείο Εθνικής Άμυνας (declaración oficial citada en madata.gr)",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-2026-00267",
+   "lugar": {
+    "nivel": "region",
+    "pais": "GR",
+    "region": "Αιγαίο"
+   },
+   "presencia_dron": "confirmada",
+   "tiempo": {
+    "inicio": {
+     "precision": "dia",
+     "valor": "2026-10-01T00:00Z"
+    }
+   },
+   "tipo": "incursion",
+   "titulo": {
+    "en": "Turkish drone violates Greek airspace in the Aegean",
+    "es": "Dron turco viola el espacio aéreo griego en el Egeo"
+   }
+  },
+  {
+   "afirmaciones_publicas": [
+    {
+     "campo": "lugar.pais",
+     "credibilidad": 1,
+     "fecha": {
+      "precision": "dia",
+      "valor": "2026-03-30T00:00Z"
+     },
+     "fiabilidad": "A",
+     "fuente_id": "detalle-80807759e91faffb",
+     "medio": "UK Government (Ministry of Defence)",
+     "valor": "CY"
+    },
+    {
+     "campo": "objetivo.categoria",
+     "credibilidad": 1,
+     "fecha": {
+      "precision": "dia",
+      "valor": "2026-03-30T00:00Z"
+     },
+     "fiabilidad": "A",
+     "fuente_id": "detalle-80807759e91faffb",
+     "medio": "UK Government (Ministry of Defence)",
+     "valor": "base_militar"
+    },
+    {
+     "campo": "objetivo.nombre",
+     "credibilidad": 1,
+     "fecha": {
+      "precision": "dia",
+      "valor": "2026-03-30T00:00Z"
+     },
+     "fiabilidad": "A",
+     "fuente_id": "detalle-80807759e91faffb",
+     "medio": "UK Government (Ministry of Defence)",
+     "valor": "RAF Akrotiri"
+    },
+    {
+     "campo": "presencia_dron",
+     "credibilidad": 1,
+     "fecha": {
+      "precision": "dia",
+      "valor": "2026-03-09T00:00Z"
+     },
+     "fiabilidad": "A",
+     "fuente_id": "detalle-da7f56b1bed0e513",
+     "medio": "UK Government (Ministry of Defence)",
+     "valor": "confirmada"
+    },
+    {
+     "campo": "presencia_dron",
+     "credibilidad": 1,
+     "fecha": {
+      "precision": "dia",
+      "valor": "2026-03-30T00:00Z"
+     },
+     "fiabilidad": "A",
+     "fuente_id": "detalle-80807759e91faffb",
+     "medio": "UK Government (Ministry of Defence)",
+     "valor": "confirmada"
+    },
+    {
+     "campo": "presencia_dron",
+     "credibilidad": 1,
+     "fecha": {
+      "precision": "dia",
+      "valor": "2026-03-30T00:00Z"
+     },
+     "fiabilidad": "A",
+     "fuente_id": "detalle-e97ca7f30b7561a7",
+     "medio": "UK Government (Ministry of Defence)",
+     "valor": "confirmada"
+    },
+    {
+     "campo": "tiempo.inicio",
+     "credibilidad": 1,
+     "fecha": {
+      "precision": "dia",
+      "valor": "2026-03-30T00:00Z"
+     },
+     "fiabilidad": "A",
+     "fuente_id": "detalle-80807759e91faffb",
+     "medio": "UK Government (Ministry of Defence)",
+     "valor": {
+      "precision": "dia",
+      "valor": "2026-03-02T00:00Z"
+     }
+    },
+    {
+     "campo": "tipo",
+     "credibilidad": 1,
+     "fecha": {
+      "precision": "dia",
+      "valor": "2026-03-30T00:00Z"
+     },
+     "fiabilidad": "A",
+     "fuente_id": "detalle-80807759e91faffb",
+     "medio": "UK Government (Ministry of Defence)",
+     "valor": "sobrevuelo"
+    }
+   ],
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-01T19:17Z"
+    }
+   },
+   "drones": {
+    "numero": "desconocido"
+   },
+   "estado": {
+    "actual": "confirmado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "dia",
+       "valor": "2026-03-30T00:00Z"
+      },
+      "fuente_id": "detalle-80807759e91faffb"
+     },
+     {
+      "estado": "confirmado",
+      "fecha": {
+       "precision": "dia",
+       "valor": "2026-03-30T00:00Z"
+      },
+      "fuente_id": "detalle-80807759e91faffb"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 1,
+     "enlace": "https://questions-statements.parliament.uk/written-questions/detail/2026-03-03/117499",
+     "fecha": {
+      "precision": "dia",
+      "valor": "2026-03-09T00:00Z"
+     },
+     "fiabilidad": "A",
+     "frase_origen": "the drone attack on RAF Akrotiri on 2 March 2026",
+     "id": "detalle-da7f56b1bed0e513",
+     "idioma": "en",
+     "medio": "UK Government (Ministry of Defence)",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 1,
+     "enlace": "https://questions-statements.parliament.uk/written-questions/detail/2026-03-03/117492",
+     "fecha": {
+      "precision": "dia",
+      "valor": "2026-03-30T00:00Z"
+     },
+     "fiabilidad": "A",
+     "frase_origen": "it came from Lebanon or Iraq",
+     "id": "detalle-80807759e91faffb",
+     "idioma": "en",
+     "medio": "UK Government (Ministry of Defence)",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 1,
+     "enlace": "https://questions-statements.parliament.uk/written-questions/detail/2026-03-03/117491",
+     "fecha": {
+      "precision": "dia",
+      "valor": "2026-03-30T00:00Z"
+     },
+     "fiabilidad": "A",
+     "frase_origen": "it came from Lebanon or Iraq",
+     "id": "detalle-e97ca7f30b7561a7",
+     "idioma": "en",
+     "medio": "UK Government (Ministry of Defence)",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-2026-00268",
+   "lugar": {
+    "nivel": "instalacion",
+    "pais": "CY"
+   },
+   "objetivo": {
+    "categoria": "base_militar",
+    "nombre": "RAF Akrotiri"
+   },
+   "presencia_dron": "confirmada",
+   "tiempo": {
+    "inicio": {
+     "precision": "dia",
+     "valor": "2026-03-02T00:00Z"
+    }
+   },
+   "tipo": "sobrevuelo",
+   "titulo": {
+    "en": "Drone targeting RAF Akrotiri",
+    "es": "Dron contra RAF Akrotiri"
+   }
   }
  ]
 }
