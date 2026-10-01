@@ -378,6 +378,19 @@ def recoger(
     return control
 
 
+# El histórico recorre antes los canales que sitúan impactos en Rusia, que no tienen otra
+# fuente con lugar, y después las administraciones regionales de Ucrania.
+ORDEN_HISTORICO = ("estado_mayor_ua", "gobernadores_ru", "rosaviatsia", "ova_ua")
+
+
+def orden_historico(canales: list[Canal]) -> list[Canal]:
+    """Los canales en el orden del histórico; dentro de cada grupo, el de la configuración."""
+    return sorted(
+        canales,
+        key=lambda c: ORDEN_HISTORICO.index(c.grupo) if c.grupo in ORDEN_HISTORICO else 99,
+    )
+
+
 def historico(
     canales: list[Canal],
     descargador: Descargador,
@@ -391,7 +404,7 @@ def historico(
     control = datos.control()
     limite = datetime.combine(desde, datetime.min.time(), tzinfo=UTC)
     terminado = True
-    for canal in canales:
+    for canal in orden_historico(canales):
         estado = control["canales"].setdefault(canal.id, {})
         avance = estado.setdefault("historico", {})
         if avance.get("terminado") and avance.get("desde") == desde.isoformat():

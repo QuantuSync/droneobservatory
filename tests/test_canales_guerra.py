@@ -176,3 +176,9 @@ def test_la_configuracion_real_tiene_canales_completos() -> None:
         # Lo ocupado lleva siempre el código de Ucrania; Rusia, el suyo.
         if canal.region is not None:
             assert canal.region.startswith(f"{canal.pais}-")
+
+
+def test_el_historico_empieza_por_los_canales_que_situan_impactos_en_rusia() -> None:
+    grupos = [c.grupo for c in cg.orden_historico(cg.cargar_canales())]
+    assert grupos[0] == "estado_mayor_ua"
+    assert grupos.index("ova_ua") > max(i for i, g in enumerate(grupos) if g == "gobernadores_ru")
