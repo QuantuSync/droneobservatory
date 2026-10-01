@@ -17,6 +17,10 @@ noticias) y un presupuesto único de 5 dólares para el histórico (modo «guerr
 lotes, con prioridad a los objetivos de combustible, energía e industria, que FIRMS puede
 comprobar). Cada llamada queda en `llamadas_extractor` con su coste.
 
+El lote del histórico lo envía la recogida horaria una sola vez, cuando el histórico de los
+canales está completo y todo lo leído procesado, y lo incorpora una recogida posterior cuando
+el servicio lo termina; ninguna espera con el cerrojo tomado. `lote` lo envía a mano.
+
 Uso: python -m proceso.extraccion_guerra estimar|lote (--base local.age [--guardar] | --remoto
     --correo <autor>) [--datos DIR] [--maximo N]
 """
@@ -24,7 +28,6 @@ Uso: python -m proceso.extraccion_guerra estimar|lote (--base local.age [--guard
 import logging
 import re
 import sys
-import time
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from datetime import UTC, datetime, timedelta
@@ -47,7 +50,7 @@ from proceso.mensajes_guerra import (
     frase_breve,
 )
 from proceso.validacion_ficha import UMBRAL_CONFIANZA
-from recogida.canales_guerra import Canal, Datos
+from recogida.canales_guerra import Canal, Datos, historico_terminado
 from recogida.plazo import Plazo, TiempoAgotado
 
 registro = logging.getLogger("proceso.extraccion_guerra")
@@ -57,8 +60,8 @@ PENDIENTE = "para_extractor"
 VENTANA_HORARIA = timedelta(days=3)
 # Tope del extractor de guerra en la ejecución horaria: unos 10 s por llamada.
 TOPE_S = 120.0
-ESPERA_LOTE_S = 60.0
-MAX_ESPERA_LOTE = timedelta(hours=24)
+# Marca del lote del histórico en la base (tabla de cursores): se envía una sola vez.
+CURSOR_LOTE = "guerra:lote_historico"
 
 
 class Servicio(Protocol):
@@ -351,60 +354,122 @@ def horaria(
     )
 
 
-def lote(
-    almacen: Almacen,
-    cliente: ServicioLotes,
-    peticiones: list[Peticion],
-    nomenclator: Nomenclator,
-    raices: tuple[tuple[str, str], ...],
-    ahora: Callable[[], datetime],
-    dormir: Callable[[float], None] = time.sleep,
-) -> dict[str, Any]:
-    """Histórico por lotes (mitad de precio) dentro del presupuesto de 5 dólares."""
-    modo = coste.Modo.GUERRA_HISTORICO
-    queda = coste.limite(modo) - almacen.gastado(modo.value)
-    elegidas, previsto = [], 0.0
+def elegir_para_lote(almacen: Almacen, peticiones: list[Peticion]) -> tuple[list[Peticion], float]:
+    """Las peticiones que caben, en su orden, en lo que queda del presupuesto del histórico
+    (peor caso, a mitad de precio por ir en lote)."""
+    queda = coste.limite(coste.Modo.GUERRA_HISTORICO) - almacen.gastado(
+        coste.Modo.GUERRA_HISTORICO.value
+    )
+    elegidas: list[Peticion] = []
+    previsto = 0.0
     for peticion in peticiones:
         caso = coste.peor_caso(peticion.letras(), guerra.MAX_TOKENS_SALIDA, lote=True)
         if previsto + caso > queda:
             break
         elegidas.append(peticion)
         previsto += caso
+    return elegidas, previsto
+
+
+def enviar_lote(
+    almacen: Almacen, cliente: ServicioLotes, peticiones: list[Peticion], ahora: datetime
+) -> dict[str, Any]:
+    """Envía el lote del histórico, una sola vez, y deja su marca en la base. No espera: la
+    recogida horaria lo incorpora cuando termina (`incorporar_lote`), así nunca se retiene el
+    cerrojo de la recogida mientras el servicio lo procesa."""
+    if almacen.cursor(CURSOR_LOTE) is not None:
+        return {"enviadas": 0, "motivo": "el lote del histórico ya se envió"}
+    elegidas, previsto = elegir_para_lote(almacen, peticiones)
     if not elegidas:
-        return {"enviadas": 0, "impactos": 0, "fuera_de_limite": len(peticiones)}
-    registro.info("lote: %d peticiones, peor caso %.4f USD", len(elegidas), previsto)
+        return {"enviadas": 0, "fuera_de_limite": len(peticiones)}
     creado = cliente.crear_lote([{"custom_id": p.id_lote, "params": p.cuerpo()} for p in elegidas])
-    registro.info("lote %s enviado", creado["id"])
-    inicio = ahora()
-    while creado.get("processing_status") != "ended":
-        if ahora() - inicio > MAX_ESPERA_LOTE:
-            raise LlamadaFallida("el lote no terminó en 24 horas")
-        dormir(ESPERA_LOTE_S)
-        creado = cliente.lote(creado["id"])
-    por_id = {p.id_lote: p for p in elegidas}
+    almacen.guardar_cursor(CURSOR_LOTE, {
+        "id": creado["id"], "estado": "enviado", "enviado": ahora.strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "peticiones": len(elegidas), "peor_caso_usd": round(previsto, 4),
+    })  # fmt: skip
+    registro.info("lote %s enviado: %d peticiones, peor caso %.4f USD",
+                  creado["id"], len(elegidas), previsto)  # fmt: skip
+    return {
+        "enviadas": len(elegidas), "lote": creado["id"],
+        "fuera_de_limite": len(peticiones) - len(elegidas),
+    }  # fmt: skip
+
+
+def incorporar_lote(
+    almacen: Almacen,
+    cliente: ServicioLotes,
+    datos: Datos,
+    canales: list[Canal],
+    nomenclator: Nomenclator,
+    raices: tuple[tuple[str, str], ...],
+    ahora: datetime,
+) -> dict[str, Any] | None:
+    """Si el lote enviado ya terminó, incorpora sus respuestas con las mismas reglas que una
+    llamada directa y anota el resultado en su marca. None si no hay lote pendiente."""
+    marca = almacen.cursor(CURSOR_LOTE)
+    if marca is None or marca.get("estado") != "enviado":
+        return None
+    estado = cliente.lote(marca["id"])
+    if estado.get("processing_status") != "ended":
+        return {"lote": marca["id"], "estado": "en_proceso"}
+    por_id = {
+        p.id_lote: p
+        for p in pendientes(almacen, datos, {c.id: c for c in canales if c.grupo != "rosaviatsia"})
+    }
     ataques = Ataques(almacen.ataques_ucrania())
-    impactos = fallidas = 0
-    for resultado in cliente.resultados_lote(creado):
-        de_lote = por_id.get(resultado.get("custom_id", ""))
-        if de_lote is None or resultado.get("result", {}).get("type") != "succeeded":
+    impactos = fallidas = ya_extraidas = 0
+    for resultado in cliente.resultados_lote(estado):
+        peticion = por_id.get(resultado.get("custom_id", ""))
+        if peticion is None:
+            # Lo extrajo entretanto la recogida horaria, o ya no está pendiente.
+            ya_extraidas += 1
+            continue
+        if resultado.get("result", {}).get("type") != "succeeded":
             fallidas += 1
             continue
         impactos += procesar_respuesta(
-            almacen, ataques, de_lote, resultado["result"]["message"], nomenclator, raices,
-            ahora(), modo, True,
+            almacen, ataques, peticion, resultado["result"]["message"], nomenclator, raices,
+            ahora, coste.Modo.GUERRA_HISTORICO, True,
         )  # fmt: skip
-    return {
-        "enviadas": len(elegidas), "fallidas": fallidas, "impactos": impactos,
-        "fuera_de_limite": len(peticiones) - len(elegidas),
-        "gastado_usd": round(almacen.gastado(modo.value), 4),
-    }  # fmt: skip
+    marca.update({
+        "estado": "incorporado", "incorporado": ahora.strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "impactos": impactos, "fallidas": fallidas, "ya_extraidas": ya_extraidas,
+        "gastado_usd": round(almacen.gastado(coste.Modo.GUERRA_HISTORICO.value), 4),
+    })  # fmt: skip
+    almacen.guardar_cursor(CURSOR_LOTE, marca)
+    return marca
+
+
+def paso_lote(
+    almacen: Almacen,
+    fabrica: Callable[[], ServicioLotes],
+    datos: Datos,
+    canales: list[Canal],
+    nomenclator: Nomenclator,
+    raices: tuple[tuple[str, str], ...],
+    ahora: datetime,
+    al_dia: bool,
+) -> dict[str, Any] | None:
+    """Paso horario del lote del histórico: lo incorpora si terminó y, si aún no se envió,
+    lo envía en cuanto el histórico de los canales está completo y todo lo leído procesado
+    (`al_dia`)."""
+    marca = almacen.cursor(CURSOR_LOTE)
+    if marca is not None:
+        if marca.get("estado") != "enviado":
+            return None
+        return incorporar_lote(almacen, fabrica(), datos, canales, nomenclator, raices, ahora)
+    if not al_dia or not historico_terminado(datos, canales):
+        return None
+    peticiones = pendientes(almacen, datos, {c.id: c for c in canales if c.grupo != "rosaviatsia"})
+    if not peticiones:
+        return None
+    return enviar_lote(almacen, fabrica(), peticiones, ahora)
 
 
 def principal(argumentos: list[str] | None = None) -> int:
     from modelo import cliente as servicio
-    from proceso.lugares_guerra import cargar
     from recogida.canales_guerra import cargar_canales, directorio_datos
-    from recogida.guerra import con_base, opciones_base, raices_regiones
+    from recogida.guerra import con_base, opciones_base
 
     opciones = opciones_base(__doc__)
     opciones.add_argument("orden", choices=["estimar", "lote"])
@@ -431,11 +496,7 @@ def principal(argumentos: list[str] | None = None) -> int:
         )  # fmt: skip
         if args.orden == "lote":
             cliente = servicio.Cliente(servicio.configuracion(), insistencia=servicio.HISTORICO)
-            resultado = lote(
-                almacen, cliente, peticiones, cargar(), raices_regiones(),
-                lambda: datetime.now(UTC),
-            )  # fmt: skip
-            registro.info("lote: %s", resultado)
+            registro.info("lote: %s", enviar_lote(almacen, cliente, peticiones, datetime.now(UTC)))
     return 0
 
 

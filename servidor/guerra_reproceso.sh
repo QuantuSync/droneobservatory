@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # Reproceso de la capa de guerra con lugar en el servidor: vuelve a leer todos los mensajes
 # que guardó el lector de canales (tras cambiar el analizador o el nomenclátor, o al terminar
-# el histórico) y, con «lote», manda al extractor por lotes los que el código no resuelve,
-# dentro del presupuesto único del histórico (5 dólares, modo «guerra_historico»).
+# el histórico) y, con «lote», envía ya al extractor el lote del histórico con los que el código
+# no resuelve, dentro de su presupuesto único (5 dólares, modo «guerra_historico»), si no se
+# envió antes. No espera al lote: lo incorpora la recogida horaria cuando termina.
 #
 #   sudo systemd-run --unit=eodi-guerra-reproceso --uid=eodi --gid=eodi \
 #     /usr/bin/env bash /home/eodi/droneobservatory/servidor/guerra_reproceso.sh [lote]

@@ -383,3 +383,64 @@ def test_un_levantamiento_sin_restriccion_abierta_no_hace_nada() -> None:
 
 def test_dia_de_la_restriccion_en_hora_de_moscu() -> None:
     assert restricciones.dia(momento("2026-09-30T22:30Z")) == date(2026, 10, 1)
+
+
+class ServicioLotes:
+    """Servicio de lotes falso: termina el lote en la segunda consulta."""
+
+    def __init__(self, lugares: list[dict[str, Any]]) -> None:
+        self.lugares = lugares
+        self.enviadas: list[dict[str, Any]] = []
+        self.consultas = 0
+
+    def crear_lote(self, peticiones: list[dict[str, Any]]) -> dict[str, Any]:
+        self.enviadas = peticiones
+        return {"id": "lote-1", "processing_status": "in_progress"}
+
+    def lote(self, id_: str) -> dict[str, Any]:
+        self.consultas += 1
+        estado = "ended" if self.consultas > 1 else "in_progress"
+        return {"id": id_, "processing_status": estado}
+
+    def resultados_lote(self, lote: dict[str, Any]) -> list[dict[str, Any]]:
+        return [
+            {"custom_id": p["custom_id"],
+             "result": {"type": "succeeded", "message": respuesta(self.lugares)}}
+            for p in self.enviadas
+        ]  # fmt: skip
+
+
+def test_el_lote_del_historico_se_envia_una_vez_y_se_incorpora_sin_esperar(
+    tmp_path: Path,
+) -> None:
+    almacen = Almacen.abrir()
+    dnipro = dataclasses.replace(OVA, id="ova_dnipro", canal="adm_dp", region="UA-12")
+    datos = Datos(tmp_path)
+    ruta = tmp_path / "canales" / "adm_dp" / "2025-03.jsonl"
+    ruta.parent.mkdir(parents=True)
+    ruta.write_text(json.dumps({"id": 5, "fecha": "2025-03-10T10:00:00Z", "texto": TEXTO_MIXTO},
+                               ensure_ascii=False) + "\n", encoding="utf-8")  # fmt: skip
+    datos.guardar_control({"canales": {"ova_dnipro": {"historico": {"siguiente": 3}}}})
+    paso.procesar(almacen, datos, [dnipro], N, AHORA)
+    servicio = ServicioLotes([lugar()])
+
+    def paso_lote(al_dia: bool = True) -> dict[str, Any] | None:
+        return extraccion_guerra.paso_lote(
+            almacen, lambda: servicio, datos, [dnipro], N, (), AHORA, al_dia
+        )
+
+    # Con el histórico a medias o lo leído sin procesar, no se envía.
+    assert paso_lote() is None
+    datos.guardar_control({"canales": {"ova_dnipro": {"historico": {"terminado": True}}}})
+    assert paso_lote(al_dia=False) is None
+    assert (paso_lote() or {}).get("enviadas") == 1
+    # La ejecución siguiente consulta y no espera; la otra lo incorpora.
+    assert paso_lote() == {"lote": "lote-1", "estado": "en_proceso"}
+    marca = paso_lote()
+    assert marca is not None and (marca["estado"], marca["impactos"]) == ("incorporado", 1)
+    (impacto,) = impactos_guerra.vigentes(almacen)
+    assert impacto["lecturas"][0]["metodo"] == "extractor"
+    assert almacen.gastado(coste.Modo.GUERRA_HISTORICO.value) > 0
+    # Una sola vez: después no hace nada.
+    assert paso_lote() is None
+    assert len(servicio.enviadas) == 1

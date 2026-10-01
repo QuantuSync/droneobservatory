@@ -121,11 +121,21 @@ def _paso_guerra(almacen: Almacen, ahora: datetime) -> dict[str, EstadoFuente]:
     resultado = {
         g: EstadoFuente(e["estado"], leer_instante(e["ultimo_dato"])) for g, e in estados.items()
     }
-    if resumen.mensajes == 0 and not almacen.mensajes_guerra(extraccion_guerra.PENDIENTE):
-        return resultado
     try:
         configuracion = servicio.configuracion()
     except servicio.ClienteNoConfigurado:
+        return resultado
+    try:
+        lote = extraccion_guerra.paso_lote(
+            almacen, lambda: servicio.Cliente(configuracion, insistencia=servicio.HISTORICO),
+            Datos(directorio_datos()), cargar_canales(), cargar(), guerra.raices_regiones(),
+            ahora, al_dia=not resumen.pendientes,
+        )  # fmt: skip
+        if lote is not None:
+            registro.info("lote del histórico de guerra: %s", lote)
+    except Exception as error:
+        registro.warning("lote del histórico de guerra fallido: %s", error)
+    if resumen.mensajes == 0 and not almacen.mensajes_guerra(extraccion_guerra.PENDIENTE):
         return resultado
     try:
         hecho = extraccion_guerra.horaria(

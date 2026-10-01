@@ -391,6 +391,13 @@ informe en [`docs/informe_capa_guerra.md`](informe_capa_guerra.md)). En dos tiem
    noche y les da su credibilidad. Lo que el código no resuelve lo lee el extractor con su
    límite diario propio de 0,20 dólares (modo «guerra»). Un fallo aquí no cambia el resultado
    de la recogida. El nomenclátor ocupa unos 500 MB mientras se usa y se libera al terminar.
+3. **Lote del histórico**: cuando el histórico de todos los canales está completo y la
+   recogida ha procesado todo lo leído, la recogida horaria envía una sola vez al extractor,
+   por lotes, los mensajes antiguos que el código no resuelve (presupuesto único de 5
+   dólares, modo «guerra_historico», primero los objetivos de combustible, energía e
+   industria) y deja la marca `guerra:lote_historico` en la base. No espera: cada recogida
+   pregunta si el lote terminó y la primera que lo ve terminado lo incorpora y anota en la
+   marca impactos, fallos y gasto. Nunca se retiene el cerrojo esperando al servicio.
 
 Órdenes, como `operador`:
 
@@ -400,12 +407,12 @@ journalctl -u eodi-guerra.service -n 60
 sudo -u eodi sh -c 'cd /home/eodi/droneobservatory && .venv/bin/python -m recogida.canales_guerra resumen'
 ```
 
-**Reprocesar todo** (tras cambiar el analizador, el nomenclátor o las palabras corrientes, o al
-terminar el histórico) y, con `lote`, mandar al extractor por lotes los mensajes que el código
-no resuelve (presupuesto único de 5 dólares, modo «guerra_historico», primero los objetivos de
-combustible, energía e industria). [`servidor/guerra_reproceso.sh`](../servidor/guerra_reproceso.sh)
-toma el cerrojo de la recogida, descarga la base de la rama `estado` y la vuelve a subir; la
-recogida siguiente publica el resultado:
+**Reprocesar todo** (tras cambiar el analizador, el nomenclátor o las palabras corrientes) y,
+con `lote`, enviar ya el lote del histórico sin esperar a que el histórico termine (solo lo
+envía si no se envió antes; lo incorpora la recogida horaria).
+[`servidor/guerra_reproceso.sh`](../servidor/guerra_reproceso.sh) toma el cerrojo de la
+recogida, descarga la base de la rama `estado` y la vuelve a subir; la recogida siguiente
+publica el resultado:
 
 ```
 sudo systemd-run --unit=eodi-guerra-reproceso --uid=eodi --gid=eodi \

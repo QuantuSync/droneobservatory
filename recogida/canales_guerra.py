@@ -378,6 +378,17 @@ def recoger(
     return control
 
 
+def historico_terminado(datos: Datos, canales: list[Canal]) -> bool:
+    """Si el histórico de todos los canales que se leen para impactos está completo (la serie
+    de Rosaviatsia no cuenta: no pasa por el extractor)."""
+    control = datos.control()["canales"]
+    return all(
+        control.get(c.id, {}).get("historico", {}).get("terminado")
+        for c in canales
+        if c.grupo != "rosaviatsia"
+    )
+
+
 # El histórico recorre antes los canales que sitúan impactos en Rusia, que no tienen otra
 # fuente con lugar, y después las administraciones regionales de Ucrania.
 ORDEN_HISTORICO = ("estado_mayor_ua", "gobernadores_ru", "rosaviatsia", "ova_ua")
