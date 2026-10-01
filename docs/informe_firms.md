@@ -183,7 +183,77 @@ Las cifras definitivas, calculadas en el servidor, están en el apartado 7.
 
 ## 7. Despliegue, reconstrucción histórica y fusión
 
-(Se completa al desplegar.)
+- **PR #27** fusionado el 1 de octubre a las 09:34 UTC (f4c6713), con el procedimiento nuevo
+  de `docs/fusiones.md` (apartado 9). Servidor actualizado con `bash servidor/reconstruir.sh`
+  (instala `/home/eodi/datos/firms` con permisos 700 y deja `EODI_FIRMS_MAP_KEY` en
+  `extractor.env`, 600, junto a las variables del extractor).
+- **Histórico**: lanzado a las 09:35 con `systemd-run --unit=eodi-firms-historico` y terminado
+  a las 10:38 (dos tandas, sin solaparse con la horaria). 5375 ficheros diarios, 51 MB:
+  SP de Suomi NPP, NOAA-20 y MODIS del 2022-10-01 al 2026-06-30 (1369 días cada uno), NRT de
+  los tres del 2026-07-01 al 2026-10-01 y NOAA-21 NRT del 2024-01-17 al 2026-10-01 (989 días).
+  Mucho menos de lo previsto: el rectángulo, de noche y con la confianza que da FIRMS, trae
+  de cientos a pocos miles de focos al día.
+- **Recogida de las 10:17: fallida.** La exportación rechazó la ventana de EODI-2026-00203
+  (del 30 de septiembre) como «fecha futura»: la ventana acaba 36 horas después del fin del
+  impacto y la validación comprueba que ningún instante sea futuro. No publicó ni subió la
+  base; `estado.json` la dio por fallida y la vigilancia no llegó a avisar (la última
+  correcta era de las 09:21). Arreglado en el **PR #30** (la comprobación ya no mira
+  `foco_termico.ventana`), con test que reproduce el caso y el ciclo completo comprobado sobre
+  la base real.
+- **PR #28**: mientras el histórico llegaba producto a producto, un impacto antiguo se habría
+  evaluado con solo algunos productos y no se habría vuelto a mirar; ahora se reevalúa todo
+  hasta un día después de terminar el histórico.
+- **PR #31**: la exportación semanal para AEGIS (PR #29, de la misma mañana) lee los documentos
+  guardados, que no llevan el foco; ahora añade el bloque completo desde su tabla.
+- **Recogida lanzada a mano a las 10:43** (cerrojo libre tras el histórico), con todo lo
+  anterior: correcta, publicada en `main` (a1d6c7b). Cruce: 93 evaluaciones, 2 pendientes.
+  `estado.json`: resultado `correcta` y `firms` leída con su última descarga correcta.
+- **Recogida horaria de las 11:17** (la primera del temporizador con todo desplegado):
+  correcta en 4 minutos; cruce sin cambios (93 evaluaciones iguales, 2 pendientes); `firms`
+  leída. FIRMS no se descargó porque no habían pasado 3 horas desde las 10:17.
+- **Ficheros públicos**: solo EODI-2026-00200 lleva `foco_termico`, con resultado, primer
+  foco, satélite, instrumento, distancia y número de focos. Ningún `no_detectado`,
+  `no_evaluable`, motivo, FRP ni línea base en `incidentes.geojson`, `ucrania.json` ni
+  `incidentes_sin_ubicacion.json`.
+- **Producción**: droneobservatory.eu sirve la marca y la línea de EODI-2026-00200; capturas
+  en `docs/capturas/firms-foco-escritorio.png` y `docs/capturas/firms-foco-390x844.png`. La
+  suite `e2e/telefono.spec.ts` pasa contra producción en 360×800, 390×844 y 412×915, en vertical
+  y en horizontal.
+
+Resultado en la base tras el histórico completo:
+
+| Resultado | Cuántos |
+| --- | --- |
+| Detectado | 1 (EODI-2026-00200, Galați: 4 focos VIIRS de NOAA-21 a 7,4 km, 26-04-2026 10:45 UTC) |
+| No detectado | 16 |
+| No evaluable | 76 (47 regiones de partes ucranianos y 29 incidentes sin punto o fuera de la zona) |
+| Pendiente | 2 (impactos de las últimas 36 horas) |
+
+## 9. Cambio en el procedimiento de fusión
+
+Al fusionar el PR #26 se vio que el procedimiento anterior (reset --soft y un commit con el
+árbol de la rama) revertía los commits de datos que el servidor sube a `main` cada hora
+mientras la rama vive (el 14e7a02 se habría deshecho). `docs/fusiones.md` queda así: fetch y
+rebase sobre `origin/main` justo antes (en conflicto en los datos publicados gana `main`),
+tests y CI sobre la rama rebasada, commit único con el autor anónimo, comprobación obligatoria
+de `git diff --name-only origin/main HEAD` (ningún fichero de datos que el PR no toque a
+propósito), push solo por avance rápido y, después, que el número de incidentes de producción
+no baje. Cada paso lleva su porqué en el documento.
+
+Resultado en las fusiones de esta tarea:
+
+| PR | main antes | Ficheros de datos en la diferencia | Datos publicados antes y después | Incidentes en producción |
+| --- | --- | --- | --- | --- |
+| #27 | 177042c, un commit de datos del servidor que entró mientras la rama vivía: se hizo rebase a las 09:31 y se repitió la CI | ninguno | idénticos (mismos blobs) | 374 → 374 |
+| #28 | f4c6713 | ninguno | idénticos | 374 → 374 |
+| #30 | f51fb8d (PR #29 de otra sesión, entró entre la CI y la fusión) | ninguno | idénticos | 374 → 374 |
+| #31 | 9810848 | ninguno | idénticos | 374 → 376 (recogida de las 10:43) |
+
+En el #30 hubo un fallo de procedimiento: `main` había avanzado con el PR #29 y el rebase rehízo
+el commit, pero no repetí la CI sobre la rama rebasada antes del push (paso c). Lo comprobé
+después: puerta local (867 tests, ruff, mypy) y workflow de `main` en verde sobre 9810848.
+Ningún fichero de datos publicados cambió por estas fusiones, así que no hubo que restaurar
+nada.
 
 ## 8. Límites
 
