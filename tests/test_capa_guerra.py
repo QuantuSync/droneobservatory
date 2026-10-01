@@ -343,3 +343,20 @@ def test_reivindicacion_sin_arma_no_es_un_ataque_con_drones() -> None:
     )
     leido = analizar(texto, PUBLICADO, N, None, raices_regiones(), reivindicacion=True)
     assert leido.motivo == "sin_dron"
+
+
+def test_ударними_бпла_como_objetivo_no_es_el_arma() -> None:
+    # t.me/GeneralStaffZSU/42218 (recortado): no dice con qué arma se atacó.
+    texto = (
+        "12 вересня та в ніч на 13 вересня 2026 року підрозділи Сил оборони України уразили "
+        "низку важливих військових об’єктів противника. Так, у місті Донецьк уражено місце "
+        "зберігання, підготовки та пуску ударних БпЛА окупантів. У районах Залізного Порту, "
+        "Скадовська Херсонської області уражено наземні ретранслятори, призначені для "
+        "управління ударними БпЛА типу «Герань»/«Гербера»."
+    )
+    leido = analizar(texto, PUBLICADO, N, None, raices_regiones(), reivindicacion=True)
+    assert leido.motivo == "sin_dron"
+    con_arma = texto.replace("підрозділи Сил оборони України уразили",
+                             "підрозділи Сил безпілотних систем уразили")  # fmt: skip
+    leido = analizar(con_arma, PUBLICADO, N, None, raices_regiones(), reivindicacion=True)
+    assert leido.motivo != "sin_dron"

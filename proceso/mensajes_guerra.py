@@ -27,7 +27,7 @@ from proceso.lugares_guerra import TIPOS_INSTALACION, Hallazgo, Lugar, Nomenclat
 
 MAX_PALABRAS_FRASE = 25
 KYIV = ZoneInfo("Europe/Kyiv")
-VERSION = "mensajes-guerra/1"
+VERSION = "mensajes-guerra/2"
 
 DRON = re.compile(
     r"БпЛА|БПЛА|безпілотн|беспилотн|\bдрон|дронов|дронам|шахед|shahed|герань|гербер|"
@@ -83,8 +83,11 @@ DRON_OBJETIVO = re.compile(
 # dicen que el medio fueron drones propios.
 DRON_PROPIO = re.compile(
     r"Сил\w*\s+безпілотних\s+систем|\bСБС\b|(?:із|з)\s+застосуванням\s+(?:\w+\s+){0,2}"
-    r"(?:БпЛА|безпілотник\w*|дрон\w*)|(?:ударними|далекобійними)\s+(?:БпЛА|дронами|"
-    r"безпілотниками)|дронами|безпілотниками|БпЛА\s+(?:Сил|СБС|ГУР|СБУ)",
+    r"(?:БпЛА|безпілотник\w*|дрон\w*)|БпЛА\s+(?:Сил|СБС|ГУР|СБУ)"
+    # «ударними БпЛА», «дронами» como medio, no como objetivo («ретранслятори для управління
+    # ударними БпЛА», «боротьба з дронами»).
+    r"|(?<!управління )(?<!керування )(?<!з )(?<!із )(?<!проти )"
+    r"(?:(?:ударними|далекобійними)\s+(?:БпЛА|дронами|безпілотниками)|дронами|безпілотниками)",
     re.IGNORECASE,
 )
 # Lugares de donde salen los drones: no son lugares alcanzados.
