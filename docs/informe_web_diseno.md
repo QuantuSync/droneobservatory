@@ -215,6 +215,38 @@ real, estado, ficha, filtros, periodo, ver-todo, capas, guerra, feed, ataque, in
 metodología, sin-acento), `telefono/<tamaño>-<orientación>-*` (inicio, menú, ficha, pila y
 tiempo) y `favicon-tamanos.png` (el favicon a 16, 32 y 48 px, a tamaño real y ampliado).
 
+## Arreglos tras probarlo en un móvil real
+
+- **Etiqueta flotante.** En una pantalla táctil el navegador simula un paso del ratón al
+  tocar, y la etiqueta de ayuda (tipo · estado · título) se quedaba fija encima del mapa,
+  saliéndose por la derecha. Ahora solo aparece con ratón (`(hover: hover) and (pointer:
+  fine)`); con el dedo, el toque abre la ficha directamente. En escritorio se recoloca para no
+  salirse nunca de la pantalla, corta el texto largo en dos líneas y desaparece al abrir la
+  ficha.
+- **Hoja inferior.** Se arrastra desde el asa y desde la cabecera de la ficha siguiendo el
+  dedo, y al soltar se ajusta a la altura más cercana (asomada, media o completa) proyectando
+  la velocidad del gesto 250 ms. Un toque en el asa pasa a la siguiente altura (asomada →
+  media → completa → media) y nunca la cierra; solo se cierra con la X o arrastrándola por
+  debajo de la altura asomada. El contenido se desplaza con normalidad, y arrastrar hacia
+  abajo solo mueve la hoja cuando el contenido está arriba del todo. Al abrir un incidente va
+  a media altura con el título y la descripción enteros. Los gestos que empiezan en la hoja no
+  llegan al mapa.
+- **Por qué parpadeaba.** La hoja medía el alto disponible en un envoltorio sin altura y, al
+  tocarla, se encogía a cero y volvía. Ahora lo mide en el bloque posicionado que la contiene,
+  el mismo contra el que se calculan sus porcentajes. Además, el puntero se captura solo al
+  empezar un arrastre, para que la X de la cabecera siga respondiendo a un clic.
+
+Comprobado con gestos táctiles de verdad (eventos de toque de Chromium) en
+`e2e/hoja.spec.ts`, a 360 × 800, 390 × 844 y 412 × 915 en vertical, y en `e2e/web.spec.ts` el
+letrero de escritorio con el símbolo pegado al borde derecho. Capturas en
+`data/capturas/hoja/` (la ficha de EODI-2025-00247 a sus tres alturas, sin ninguna etiqueta
+encima) y `data/capturas/escritorio-letrero-borde.png`. Vitest 261 y Playwright 36 en verde
+contra la vista previa y contra producción; métricas reales en producción: escritorio LCP
+744 ms, CLS 0,010, INP 56 ms; móvil LCP 320 ms, CLS 0,0003, INP 112 ms. Lighthouse en
+producción: móvil 78, escritorio 99, accesibilidad 100. El despliegue de producción del
+primer commit de datos del servidor en `main` (5b8bfa3, «Actualiza los datos publicados»)
+terminó en Ready.
+
 ## Abierto
 
 - **Captura de la pestaña del navegador con el favicon**: no se hizo. Requiere capturar la

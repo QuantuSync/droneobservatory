@@ -38,6 +38,7 @@ import {
 } from "./estilo.ts";
 import { areas, lineasDeEpisodio, pilas } from "./geometria.ts";
 import { registrarIconos } from "./iconos.ts";
+import { colocarLetrero, hayRaton } from "./letrero.ts";
 import { colocarPulsos, pulsosDe } from "./pulsos.ts";
 
 setWorkerUrl(urlTrabajador);
@@ -61,8 +62,6 @@ const DURACION_VUELO_MS = 1100;
 /** Caja de Ucrania para encuadrar un ataque o una región. */
 const CAJA_UCRANIA: [number, number, number, number] = [22.1, 44.3, 40.3, 52.4];
 const MARGEN_ENCUADRE_PX = 40;
-/** Separación del letrero de ayuda respecto al cursor. */
-const DESPLAZAMIENTO_LETRERO_PX = 14;
 
 /**
  * Deja que el navegador pinte primero la respuesta a un clic (el botón pulsado, el filtro
@@ -171,6 +170,7 @@ export default function Mapa(props: PropsMapa) {
   reservaActual.current = reserva;
   const contenedor = useRef<HTMLDivElement>(null);
   const letrero = useRef<HTMLDivElement>(null);
+  const textoLetrero = useRef<HTMLSpanElement>(null);
   const capaPulsos = useRef<HTMLDivElement>(null);
   const mapaRef = useRef<MapaGL | null>(null);
   const [listo, setListo] = useState(false);
@@ -252,7 +252,13 @@ export default function Mapa(props: PropsMapa) {
       }`;
     }
 
+    function esconderLetrero() {
+      if (letrero.current !== null) letrero.current.hidden = true;
+    }
+
     mapa.on("click", (evento: MapMouseEvent) => {
+      // Al abrir una ficha (o tocar el mapa), el letrero desaparece.
+      esconderLetrero();
       const primero = primeroBajo(evento);
       if (primero === undefined) return;
       const propiedades = primero.properties;
@@ -273,26 +279,35 @@ export default function Mapa(props: PropsMapa) {
       }
     });
 
-    // Letrero al pasar el ratón: qué es cada símbolo, sin leyenda fija.
+    // Letrero al pasar el ratón: qué es cada símbolo, sin leyenda fija. Solo con ratón: en
+    // una pantalla táctil el navegador simula un paso del ratón al tocar y el letrero se
+    // quedaba fijo encima del mapa.
     mapa.on("mousemove", (evento: MapMouseEvent) => {
-      const primero = primeroBajo(evento);
-      mapa.getCanvas().style.cursor = primero === undefined ? "" : "pointer";
       const caja = letrero.current;
       if (caja === null) return;
+      if (!hayRaton()) {
+        caja.hidden = true;
+        return;
+      }
+      const primero = primeroBajo(evento);
+      mapa.getCanvas().style.cursor = primero === undefined ? "" : "pointer";
       const texto = primero === undefined ? null : textoDeLetrero(primero);
       if (texto === null) {
         caja.hidden = true;
         return;
       }
-      caja.textContent = texto;
+      if (textoLetrero.current !== null) textoLetrero.current.textContent = texto;
       caja.hidden = false;
-      caja.style.transform = `translate(${evento.point.x + DESPLAZAMIENTO_LETRERO_PX}px, ${
-        evento.point.y + DESPLAZAMIENTO_LETRERO_PX
-      }px)`;
+      // Nunca se sale del mapa: se mide ya con su texto y se recoloca.
+      const { x, y } = colocarLetrero(
+        evento.point,
+        { ancho: caja.offsetWidth, alto: caja.offsetHeight },
+        { ancho: mapa.getContainer().clientWidth, alto: mapa.getContainer().clientHeight },
+      );
+      caja.style.transform = `translate(${x}px, ${y}px)`;
     });
-    mapa.on("mouseout", () => {
-      if (letrero.current !== null) letrero.current.hidden = true;
-    });
+    mapa.on("mouseout", esconderLetrero);
+    mapa.on("touchstart", esconderLetrero);
 
     return () => {
       mapaRef.current = null;
@@ -324,6 +339,11 @@ export default function Mapa(props: PropsMapa) {
       fuente(mapa, FUENTE_EPISODIOS)?.setData(lineasDeEpisodio(episodios, incidentes));
     });
   }, [listo, incidentes, episodios, hoy, novedades]);
+
+  // Con una ficha abierta, el letrero de ayuda no se queda encima.
+  useEffect(() => {
+    if (elegido !== null && letrero.current !== null) letrero.current.hidden = true;
+  }, [elegido]);
 
   // Anillo del incidente elegido.
   useEffect(() => {
@@ -440,8 +460,12 @@ export default function Mapa(props: PropsMapa) {
       <div
         ref={letrero}
         hidden
+        data-letrero=""
         className="flotante pointer-events-none absolute left-0 top-0 z-30 max-w-72 px-2 py-1 text-xs text-texto"
-      />
+      >
+        {/* El recorte a dos líneas va dentro: con el relleno de la caja asomaría la tercera. */}
+        <span ref={textoLetrero} className="line-clamp-2" />
+      </div>
     </div>
   );
 }

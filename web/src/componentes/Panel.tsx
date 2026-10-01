@@ -35,7 +35,8 @@ export function CabeceraFicha({ t, etiqueta, enlace, onCerrar }: PropsCabecera) 
   }
 
   return (
-    <div className="flex items-center gap-1 border-b border-linea px-4 py-1.5">
+    // En la hoja del teléfono, la cabecera también arrastra la hoja (data-arrastre).
+    <div data-arrastre="" className="flex touch-none items-center gap-1 border-b border-linea px-4 py-1.5">
       <div className="rotulo mr-auto flex items-center gap-2">{etiqueta}</div>
       {enlace !== undefined && (
         <button type="button" className="control min-h-7 text-xs" onClick={() => void copiar(enlace)}>

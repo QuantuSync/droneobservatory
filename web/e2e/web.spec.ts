@@ -12,6 +12,8 @@ import { CONTACTO_SEGURIDAD, DESCARGAS, NOMBRE } from "../src/sitio.ts";
 const CAPTURAS = join(import.meta.dirname, "..", "..", "data", "capturas");
 const MAPA_LISTO = "[data-mapa-listo=true]";
 const ESTADOS_DE_FRESCURA = ["al_dia", "con_retraso", "desactualizado"];
+/** Lo que tarda el mapa en volar a una ficha, con margen. */
+const MS_DE_VUELO = 2000;
 /** Tiempo para que el mapa termine de pintar teselas antes de una captura. */
 const MS_DE_ASENTAMIENTO = 2500;
 /** Por encima de esta croma un color ya no es un gris: solo pueden serlo los de estado. */
@@ -221,6 +223,60 @@ test("la dirección de un incidente abre su ficha en el panel y sobrevive a reca
   }
   await page.keyboard.press("Escape");
   await expect(page).toHaveURL(/\/$/);
+  expect(problemas).toEqual([]);
+});
+
+test("en escritorio el letrero nunca se sale de la pantalla y desaparece al abrir la ficha", async ({ page }, info) => {
+  test.skip(info.project.name !== "escritorio", "con el dedo no hay letrero: se comprueba en hoja.spec.ts");
+  const problemas = vigilar(page);
+  await page.goto("/EODI-2025-00247");
+  await page.waitForSelector(MAPA_LISTO);
+  const ficha = page.getByRole("complementary", { name: /EODI-2025-00247/ });
+  await expect(ficha).toBeVisible();
+  await page.waitForTimeout(MS_DE_VUELO);
+  // El mapa ha volado al incidente: queda en el centro del hueco libre.
+  const arriba = await page.locator("header").first().boundingBox();
+  const filtros = await page.getByRole("group", { name: "Filtros" }).boundingBox();
+  // Abajo, lo que tapa el mapa empieza en la fila del zoom y las atribuciones.
+  const abajo = await page.getByRole("group", { name: "Zoom" }).boundingBox();
+  const panel = await ficha.boundingBox();
+  if (arriba === null || filtros === null || abajo === null || panel === null) throw new Error("sin medidas");
+  const simbolo = { x: panel.x / 2, y: (filtros.y + filtros.height + abajo.y) / 2 };
+  await page.keyboard.press("Escape");
+  await expect(ficha).toBeHidden();
+  const letrero = page.locator("[data-letrero]");
+  const dentro = async () => {
+    const caja = await letrero.boundingBox();
+    const ventana = page.viewportSize();
+    if (caja === null || ventana === null) throw new Error("sin letrero");
+    expect(caja.x).toBeGreaterThanOrEqual(0);
+    expect(caja.x + caja.width).toBeLessThanOrEqual(ventana.width);
+    expect(caja.y + caja.height).toBeLessThanOrEqual(ventana.height);
+    // Dos líneas como máximo: el texto largo se recorta.
+    const lineas = await letrero.evaluate((e) => e.clientHeight / parseFloat(getComputedStyle(e).lineHeight));
+    expect(lineas).toBeLessThanOrEqual(2 + 0.75);
+  };
+  await page.mouse.move(simbolo.x, simbolo.y);
+  await expect(letrero).toBeVisible();
+  await dentro();
+  // Con el símbolo pegado al borde derecho, el letrero se recoloca a su izquierda.
+  const ventana = page.viewportSize();
+  if (ventana === null) throw new Error("sin ventana");
+  const destino = { x: ventana.width - 12, y: simbolo.y };
+  await page.mouse.move(simbolo.x + 30, simbolo.y);
+  await page.mouse.down();
+  await page.mouse.move(destino.x + 30, destino.y, { steps: 20 });
+  await page.mouse.up();
+  await page.waitForTimeout(MS_DE_ASENTAMIENTO);
+  await page.mouse.move(destino.x - 1, destino.y);
+  await page.mouse.move(destino.x, destino.y);
+  await expect(letrero).toBeVisible();
+  await dentro();
+  await capturar(page, info.project.name, "letrero-borde");
+  // Al abrir la ficha, el letrero desaparece.
+  await page.mouse.click(destino.x, destino.y);
+  await expect(page.getByRole("complementary", { name: /EODI-|incidentes en este/ })).toBeVisible();
+  await expect(letrero).toBeHidden();
   expect(problemas).toEqual([]);
 });
 

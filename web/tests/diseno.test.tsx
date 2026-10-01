@@ -53,13 +53,51 @@ afterEach(() => {
 
 // ---------------------------------------------------------------------------------------
 describe("hoja inferior del teléfono", () => {
+  it("un clic en un botón de la cabecera de la hoja llega al botón (la X cierra)", () => {
+    const onCerrar = vi.fn();
+    render(
+      <HojaInferior t={es} nombre="Ficha" altura="media" onAltura={() => undefined} onCerrar={onCerrar}>
+        <div data-arrastre="">
+          <button type="button" onClick={onCerrar}>
+            Cerrar
+          </button>
+        </div>
+      </HojaInferior>,
+    );
+    const boton = screen.getByRole("button", { name: "Cerrar" });
+    fireEvent.pointerDown(boton, { pointerId: 2, clientY: 300 });
+    fireEvent.pointerUp(boton, { pointerId: 2, clientY: 300 });
+    fireEvent.click(boton);
+    expect(onCerrar).toHaveBeenCalledOnce();
+  });
+
+  it("un toque en el asa cambia de altura y nunca cierra la hoja", () => {
+    const onAltura = vi.fn();
+    const onCerrar = vi.fn();
+    for (const altura of ["asomada", "media", "completa"] as const) {
+      render(
+        <HojaInferior t={es} nombre="Ficha" altura={altura} onAltura={onAltura} onCerrar={onCerrar}>
+          <p>contenido</p>
+        </HojaInferior>,
+      );
+      const asa = screen.getByRole("button", { name: /^Hoja / });
+      fireEvent.pointerDown(asa, { pointerId: 1, clientY: 400 });
+      fireEvent.pointerUp(asa, { pointerId: 1, clientY: 400 });
+      fireEvent.click(asa);
+      cleanup();
+    }
+    expect(onAltura.mock.calls.map(([a]) => a)).toEqual(["media", "completa", "media"]);
+    expect(onCerrar).not.toHaveBeenCalled();
+  });
+
   it("al soltar el asa se queda en la altura más cercana de las tres", () => {
     expect(alturaMasCercana(0.1)).toBe("asomada");
     expect(alturaMasCercana(0.5)).toBe("media");
     expect(alturaMasCercana(0.8)).toBe("completa");
     expect(siguienteAltura("asomada")).toBe("media");
     expect(siguienteAltura("media")).toBe("completa");
-    expect(siguienteAltura("completa")).toBe("asomada");
+    // Un toque nunca cierra: desde completa vuelve a media.
+    expect(siguienteAltura("completa")).toBe("media");
   });
 
   it("el asa es un botón: pulsada cambia de altura y con las flechas sube o baja", () => {
@@ -67,8 +105,9 @@ describe("hoja inferior del teléfono", () => {
     const onAltura = vi.fn((nueva: Altura) => {
       altura = nueva;
     });
+    const onCerrar = vi.fn();
     const { rerender } = render(
-      <HojaInferior t={es} nombre="Ficha" altura={altura} onAltura={onAltura}>
+      <HojaInferior t={es} nombre="Ficha" altura={altura} onAltura={onAltura} onCerrar={onCerrar}>
         <p>contenido</p>
       </HojaInferior>,
     );
@@ -79,7 +118,7 @@ describe("hoja inferior del teléfono", () => {
     fireEvent.click(asa);
     expect(onAltura).toHaveBeenLastCalledWith("completa");
     rerender(
-      <HojaInferior t={es} nombre="Ficha" altura={altura} onAltura={onAltura}>
+      <HojaInferior t={es} nombre="Ficha" altura={altura} onAltura={onAltura} onCerrar={onCerrar}>
         <p>contenido</p>
       </HojaInferior>,
     );

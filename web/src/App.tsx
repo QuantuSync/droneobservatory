@@ -1057,21 +1057,39 @@ export function App() {
             )}
             {movil && ficha !== null && (
               <div className="pointer-events-auto">
-                <HojaInferior t={t} nombre={ficha.nombre} altura={altura} onAltura={setAltura}>
+                <HojaInferior
+                  t={t}
+                  nombre={ficha.nombre}
+                  altura={altura}
+                  onAltura={setAltura}
+                  onCerrar={cerrarFicha}
+                >
                   {ficha.contenido}
                 </HojaInferior>
               </div>
             )}
             {movil && ficha === null && hojaPropia === "tiempo" && (
               <div className="pointer-events-auto">
-                <HojaInferior t={t} nombre={t.tiempo.titulo} altura={altura} onAltura={setAltura}>
+                <HojaInferior
+                  t={t}
+                  nombre={t.tiempo.titulo}
+                  altura={altura}
+                  onAltura={setAltura}
+                  onCerrar={() => setHojaPropia(null)}
+                >
                   <div className="min-h-0 flex-1 overflow-y-auto">{lineaDeTiempo("hoja")}</div>
                 </HojaInferior>
               </div>
             )}
             {movil && ficha === null && hojaPropia === "directo" && (
               <div className="pointer-events-auto">
-                <HojaInferior t={t} nombre={t.feed.titulo} altura={altura} onAltura={setAltura}>
+                <HojaInferior
+                  t={t}
+                  nombre={t.feed.titulo}
+                  altura={altura}
+                  onAltura={setAltura}
+                  onCerrar={() => setHojaPropia(null)}
+                >
                   {feed(true)}
                 </HojaInferior>
               </div>
