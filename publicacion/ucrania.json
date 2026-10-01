@@ -475612,6 +475612,97 @@
     "ala_fija"
    ],
    "zonas_lanzamiento": []
+  },
+  {
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-01T15:17Z"
+    }
+   },
+   "cruces": [],
+   "derribados": {
+    "max": 78,
+    "min": 78
+   },
+   "derribados_categoria": "derribados_o_neutralizados",
+   "estado": {
+    "actual": "confirmado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "minuto",
+       "valor": "2026-10-01T15:10Z"
+      },
+      "fuente_id": "kpszsu-82167"
+     },
+     {
+      "estado": "confirmado",
+      "fecha": {
+       "precision": "minuto",
+       "valor": "2026-10-01T15:10Z"
+      },
+      "fuente_id": "kpszsu-82167"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/kpszsu/82167",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-10-01T15:10Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "❗️ Протягом дня 1 жовтня (із 6.30 по 18.00) противник атакував Україну 97 ударними БпЛА (66 із них — реактивні), Гербера та дронами інших типів.",
+     "id": "kpszsu-82167",
+     "idioma": "uk",
+     "medio": "Повітряні Сили ЗС України",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-UA-2026-1019",
+   "lanzados": {
+    "gerbera_senuelos": {
+     "max": 97,
+     "min": 0
+    },
+    "otros": {
+     "max": 97,
+     "min": 0
+    },
+    "shahed_geran": {
+     "max": 97,
+     "min": 66
+    },
+    "total": {
+     "max": 97,
+     "min": 97
+    }
+   },
+   "localizaciones_impacto": "desconocido",
+   "localizaciones_restos": "desconocido",
+   "lugares_impacto": [],
+   "lugares_restos": [],
+   "perdidos_guerra_electronica": "desconocido",
+   "periodo": {
+    "fin": {
+     "precision": "minuto",
+     "valor": "2026-10-01T15:00Z"
+    },
+    "inicio": {
+     "precision": "minuto",
+     "valor": "2026-10-01T03:30Z"
+    }
+   },
+   "regiones": [],
+   "regiones_misiles": [],
+   "reivindicacion_de_parte": true,
+   "sentido": "RU_UA",
+   "tipo": "ataque_guerra",
+   "zonas_lanzamiento": []
   }
  ]
 }
