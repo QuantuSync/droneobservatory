@@ -89,7 +89,12 @@ describe("metadatos de cada página", () => {
     expect(etiquetas).toContain("<title>Munich · European Observatory of Drone Incidents</title>");
     expect(etiquetas).toContain(`<link rel="canonical" href="${ORIGEN}/en/EODI-2025-00210">`);
     expect(etiquetas).toContain(`hreflang="es" href="${ORIGEN}/EODI-2025-00210"`);
-    expect(etiquetas).toContain(`<meta property="og:image" content="${ORIGEN}/compartir.png">`);
+    // La imagen de compartir va en el idioma de la página.
+    expect(etiquetas).toContain(`<meta property="og:image" content="${ORIGEN}/compartir-en.png">`);
+    expect(etiquetas).toContain(`<meta name="twitter:image" content="${ORIGEN}/compartir-en.png">`);
+    expect(etiquetasDeCabecera(paginaDeIncidente("es", "EODI-2025-00210", "Múnich"))).toContain(
+      `<meta property="og:image" content="${ORIGEN}/compartir.png">`,
+    );
     expect(etiquetas).toContain('<meta name="twitter:card" content="summary_large_image">');
   });
 

@@ -4,6 +4,7 @@
 
 import type {
   EstadoSistema,
+  PublicacionSinUbicacion,
   Ataque,
   ColeccionIncidentes,
   IncidenteDetalle,
@@ -115,6 +116,19 @@ function constante(esperado: unknown): Comprobacion {
   return enumerado([esperado]);
 }
 
+/** Vale si cumple alguna de las alternativas; si no cumple ninguna, se dan los errores de la primera. */
+function alguna(...alternativas: Comprobacion[]): Comprobacion {
+  return (valor, ruta, errores) => {
+    const intentos = alternativas.map((comprobar) => {
+      const propios: string[] = [];
+      comprobar(valor, ruta, propios);
+      return propios;
+    });
+    if (intentos.some((propios) => propios.length === 0)) return;
+    for (const error of intentos[0] ?? []) anotar(errores, "", error);
+  };
+}
+
 /** Cualquier valor JSON: el de una afirmación tiene el tipo de su campo, que varía. */
 const cualquiera: Comprobacion = () => undefined;
 
@@ -169,6 +183,12 @@ const CAMPOS_INCIDENTE_OBLIGATORIOS: Record<string, Comprobacion> = {
   control,
 };
 
+/** Lugar de un incidente sin punto: el país y hasta dónde se conoce, sin radio. */
+const lugarSinUbicacion = objeto(
+  { pais: cadena(v.PATRON_PAIS), nivel: enumerado(v.NIVELES_UBICACION) },
+  { region: cadena(), localidad: cadena() },
+);
+
 const afirmacionPublica = objeto({
   campo: cadena(),
   fuente_id: cadena(),
@@ -209,10 +229,28 @@ const CAMPOS_INCIDENTE_OPCIONALES: Record<string, Comprobacion> = {
 
 const propiedadesIncidente = objeto(CAMPOS_INCIDENTE_OBLIGATORIOS, CAMPOS_INCIDENTE_OPCIONALES);
 
-const detalleIncidente = objeto(
-  { ...CAMPOS_INCIDENTE_OBLIGATORIOS, lon: longitud, lat: latitud },
+const incidenteSinUbicacion = objeto(
+  { ...CAMPOS_INCIDENTE_OBLIGATORIOS, lugar: lugarSinUbicacion },
   CAMPOS_INCIDENTE_OPCIONALES,
 );
+
+const detalleIncidente = alguna(
+  objeto(
+    { ...CAMPOS_INCIDENTE_OBLIGATORIOS, lon: longitud, lat: latitud },
+    CAMPOS_INCIDENTE_OPCIONALES,
+  ),
+  objeto(
+    {
+      ...CAMPOS_INCIDENTE_OBLIGATORIOS,
+      lugar: lugarSinUbicacion,
+      lon: constante(null),
+      lat: constante(null),
+    },
+    CAMPOS_INCIDENTE_OPCIONALES,
+  ),
+);
+
+const publicacionSinUbicacion = objeto({ incidentes: lista(incidenteSinUbicacion) });
 
 const featureIncidente = objeto({
   type: constante("Feature"),
@@ -283,9 +321,10 @@ const resumen = objeto({
   incidentes: lista(
     objeto({
       id: cadena(v.PATRON_ID_INCIDENTE),
-      lon: longitud,
-      lat: latitud,
-      radio_km: radio,
+      punto: nulable(objeto({ lon: longitud, lat: latitud, radio_km: radio })),
+      imprecisa: nulable(
+        objeto({ nivel: enumerado(v.NIVELES_UBICACION), region: nulable(cadena()) }),
+      ),
       tipo: enumerado(v.TIPOS),
       estado: enumerado(v.ESTADOS),
       presencia: nulable(enumerado(v.PRESENCIAS)),
@@ -300,6 +339,14 @@ const resumen = objeto({
     objeto({
       id: cadena(v.PATRON_ID_EPISODIO),
       incidentes: lista(cadena(v.PATRON_ID_INCIDENTE), 1),
+    }),
+  ),
+  eventos: lista(
+    objeto({
+      id: cadena(v.PATRON_ID_INCIDENTE),
+      fecha: cadena(v.PATRON_INSTANTE),
+      estado: enumerado(v.ESTADOS),
+      nuevo: enumerado([true, false]),
     }),
   ),
 });
@@ -345,6 +392,10 @@ function validar<T>(comprobar: Comprobacion, valor: unknown): Resultado<T> {
 
 export function validarColeccion(valor: unknown): Resultado<ColeccionIncidentes> {
   return validar(coleccion, valor);
+}
+
+export function validarSinUbicacion(valor: unknown): Resultado<PublicacionSinUbicacion> {
+  return validar(publicacionSinUbicacion, valor);
 }
 
 export function validarPublicacionUcrania(valor: unknown): Resultado<PublicacionUcrania> {

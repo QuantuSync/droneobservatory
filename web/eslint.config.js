@@ -60,8 +60,34 @@ export default tseslint.config(
     },
   },
   {
+    // El mapa se carga aparte, cuando hace falta: fuera de src/mapa/ solo se importan sus
+    // tipos, porque un valor metería MapLibre en el paquete inicial y retrasaría la primera
+    // pintura en móvil.
+    files: ["src/**"],
+    ignores: ["src/mapa/**"],
+    rules: {
+      "@typescript-eslint/no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: ["**/mapa/Mapa.tsx", "maplibre-gl", "maplibre-gl/**", "pmtiles"],
+              allowTypeImports: true,
+              message: "Solo tipos: el mapa se carga aparte con lazy().",
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
     // Los tests escriben a propósito direcciones y textos hostiles.
     files: ["tests/**"],
-    rules: { "no-script-url": "off", "@typescript-eslint/no-non-null-assertion": "off" },
+    rules: {
+      "no-script-url": "off",
+      "@typescript-eslint/no-non-null-assertion": "off",
+      // Quitar un campo con desestructuración deja una variable con guion bajo a propósito.
+      "@typescript-eslint/no-unused-vars": ["error", { varsIgnorePattern: "^_" }],
+    },
   },
 );

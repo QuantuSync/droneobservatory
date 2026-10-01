@@ -1,8 +1,5 @@
-import "@fontsource/saira-condensed/latin-600.css";
-import "@fontsource/saira-condensed/latin-700.css";
-import "@fontsource/saira-condensed/latin-ext-600.css";
-import "@fontsource/saira-condensed/latin-ext-700.css";
-import "@fontsource-variable/inter/wght.css";
+import "@fontsource-variable/jetbrains-mono/wght.css";
+import "@fontsource-variable/onest/wght.css";
 import { ViteReactSSG } from "vite-react-ssg/single-page";
 
 import { App } from "./App.tsx";
@@ -16,7 +13,8 @@ import { IDIOMAS, rutaDeIdioma } from "./sitio.ts";
 let rutaDelPrerenderizado = "/";
 
 function Raiz() {
-  const inicial = typeof window === "undefined" ? rutaDelPrerenderizado : window.location.pathname;
+  const enNavegador = typeof window !== "undefined";
+  const inicial = enNavegador ? window.location.pathname : rutaDelPrerenderizado;
   return (
     <ProveedorDeRuta inicial={inicial}>
       <App />

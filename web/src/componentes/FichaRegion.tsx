@@ -31,7 +31,7 @@ export function FichaRegion({ t, idioma, codigo, cifras, periodo }: Props) {
   const ultimo = cifras.lista[0];
   return (
     <article>
-      <h2 className="titular text-2xl">{region(codigo, idioma)}</h2>
+      <h2 className="text-xl font-semibold tracking-tight text-2xl">{region(codigo, idioma)}</h2>
       <p className="mono mt-1 text-xs text-secundario">
         {codigo} · {periodo}
       </p>
@@ -64,7 +64,7 @@ export function FichaRegion({ t, idioma, codigo, cifras, periodo }: Props) {
           </dl>
           <p className="mt-2 text-xs text-secundario">{t.region.nota}</p>
           <section className="mt-4">
-            <h3 className="etiqueta">{t.region.listaAtaques}</h3>
+            <h3 className="rotulo">{t.region.listaAtaques}</h3>
             <ul>
               {visibles.map((ataque) => (
                 <li key={ataque.id} className="border-b border-linea py-1.5">
@@ -79,7 +79,7 @@ export function FichaRegion({ t, idioma, codigo, cifras, periodo }: Props) {
             {ocultos > 0 && (
               <button
                 type="button"
-                className="boton boton-discreto mt-2 min-h-7 text-xs"
+                className="control mt-2 min-h-7 text-xs"
                 aria-expanded={todos}
                 onClick={() => setTodos(!todos)}
               >

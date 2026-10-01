@@ -6,27 +6,47 @@ export const es: Textos = {
     "Mapa y registro abierto de incidentes con drones en Europa: sobrevuelos, incursiones e " +
     "interrupciones de aeropuertos, con sus fuentes, su estado y su grado de confirmación.",
   saltarAlMapa: "Saltar al mapa",
-  cabecera: {
+  marcador: {
+    etiqueta: "Cifras del periodo elegido",
+    incidentes: "incidentes",
+    confirmados: "confirmados",
+    atribuidos: "atribuidos",
+    paises: "países",
+  },
+  firma: { metodologia: "Metodología y datos abiertos", atribuciones: "Atribuciones del mapa" },
+  cabecera: { etiqueta: "Cabecera", menu: "Menú", cerrarMenu: "Cerrar el menú" },
+  hoja: {
+    altura: (altura) => `Hoja ${altura}: pulsa o arrastra para cambiar su altura`,
+    alturas: { asomada: "asomada", media: "a media altura", completa: "a pantalla completa" },
+  },
+  controles: {
+    capas: "Capas",
     incidentes: "Incidentes",
-    confirmados: "Confirmados",
-    paises: "Países",
-    contadores: "Cifras del periodo elegido",
-    metodologia: "Metodología",
-    cambiarIdioma: "Cambiar a inglés",
-    otroIdioma: "EN",
+    ucrania: "Ucrania",
+    densidad: "Densidad",
+    feed: "En directo",
+    ayuda: "Ayuda",
+    cambiarIdioma: "English version",
+    idioma: "Idioma",
+    zoom: "Zoom",
+    paneles: "Más",
+    acercar: "Acercar",
+    alejar: "Alejar",
   },
   estadoDatos: {
-    actualizado: "ACTUALIZADO",
+    actualizado: "Actualizado",
     etiqueta: {
-      al_dia: "DATOS AL DÍA",
-      con_retraso: "DATOS CON RETRASO",
-      desactualizado: "DATOS DESACTUALIZADOS",
+      al_dia: "datos al día",
+      con_retraso: "datos con retraso",
+      desactualizado: "datos desactualizados",
     },
-    antiguedad: (horas) => (horas < 1 ? "hace menos de 1 h" : `hace ${horas} h`),
-    sinDatos: "SIN DATOS",
-    sistema: "Estado del sistema",
+    sinDatos: "Sin datos",
+    detalle: "Estado de la recogida",
+    datosPublicados: "Datos publicados",
     ultimaRecogida: "Última recogida",
-    siguiente: "Siguiente",
+    resultadoRotulo: "Resultado",
+    siguienteRecogida: "Siguiente recogida",
+    fuentes: "Fuentes",
     resultado: { correcta: "correcta", con_avisos: "con avisos", fallida: "fallida" },
     fuente: {
       fuerza_aerea_ua: "Fuerza Aérea de Ucrania",
@@ -38,7 +58,8 @@ export const es: Textos = {
     estadoFuente: { leida: "leída", con_aviso: "con aviso", no_leida: "no leída" },
     ultimoDato: "último dato",
     sinUltimoDato: "sin datos todavía",
-    nuncaCorrecta: "ninguna recogida correcta",
+    nuncaCorrecta: "Ninguna recogida correcta",
+    siguienteEn: (minutos) => (minutos <= 0 ? "en curso" : `dentro de ${minutos} min`),
   },
   avisos: {
     cargando: "Cargando los datos…",
@@ -51,33 +72,112 @@ export const es: Textos = {
     mapaNoDisponible:
       "El mapa no se puede dibujar en este navegador. La lista de incidentes sigue disponible.",
   },
-  capas: {
-    titulo: "Capas",
-    incidentes: "Incidentes",
-    ucrania: "Ucrania",
-    densidad: "Densidad",
-    lista: "Lista",
+  filtros: {
+    titulo: "Filtros",
+    graves: "Solo confirmados y atribuidos",
+    ultimas24h: "Últimas 24 horas",
+    ultimos7d: "Últimos 7 días",
+    tipo: "Tipo",
+    pais: "País",
+    todosLosPaises: "Todos los países",
+    estado: "Estado",
+    quitar: "Quitar filtros",
+    recientes: "Periodo",
+    activos: (n) => (n === 1 ? "1 activo" : `${n} activos`),
   },
-  leyenda: {
-    titulo: "Leyenda",
-    forma: "Forma: tipo",
-    color: "Color: estado",
-    precision: "Área: precisión de la ubicación",
-    episodio: "Línea: mismo episodio",
-    agrupacion: "Número: incidentes agrupados",
-    ucrania: "Ataques por región en el periodo",
-    menos: "menos",
-    mas: "más",
-    densidad: "Densidad de incidentes",
+  feed: {
+    titulo: "En directo",
+    enDirecto: "Novedades",
+    lista: "Lista",
+    abrir: "Abrir el panel en directo",
+    cerrar: "Cerrar el panel",
+    nuevo: "Nuevo incidente",
+    nuevoYa: (estado) => `Nuevo, ya ${estado.toLowerCase()}`,
+    paso: (estado) => `Pasa a ${estado.toLowerCase()}`,
+    vacio: "Nada que mostrar con estos filtros.",
+  },
+  relativo: (minutos, fecha) => {
+    if (minutos < 1) return "ahora mismo";
+    if (minutos < 60) return `hace ${minutos} min`;
+    const horas = Math.floor(minutos / 60);
+    if (horas < 24) return `hace ${horas} h`;
+    const dias = Math.floor(horas / 24);
+    return dias < 30 ? `hace ${dias} ${dias === 1 ? "día" : "días"}` : `el ${fecha}`;
+  },
+  novedades: {
+    aviso: (n) =>
+      n === 1 ? "1 novedad desde tu última visita" : `${n} novedades desde tu última visita`,
+    recorrer: "Verlas",
+    siguiente: "Siguiente",
+    anterior: "Anterior",
+    descartar: "Descartar",
+    posicion: (i, n) => `${i} de ${n}`,
+  },
+  ayuda: {
+    titulo: "Cómo leer el mapa",
+    cerrar: "Cerrar la ayuda",
+    formas: "La forma dice el tipo de incidente.",
+    colores:
+      "El color dice el estado. El desmentido va sin relleno y con contorno discontinuo.",
+    areas:
+      "Cada incidente ocupa un área: el círculo es el radio en que se sabe que ocurrió.",
+    lineas: "Una línea fina une los incidentes de un mismo episodio: varios objetivos en una noche.",
+    numeros:
+      "Un círculo con un número junta varios incidentes: crece con el número, y su anillo " +
+      "lleva el color del estado más grave que contiene. Al acercar el mapa se separan.",
+    pila:
+      "Si los incidentes están en el mismo punto exacto, al pulsar el círculo eliges cuál abrir.",
+    pulsos:
+      "Los confirmados y los atribuidos laten despacio; los atribuidos, algo más. Los " +
+      "notificados van más apagados.",
+    reciente: "Un destello suave marca lo que empezó en las últimas 24 horas.",
+    novedad: "Un anillo del color de la interfaz marca lo que ha cambiado desde tu última visita.",
+    ucrania:
+      "En la capa de Ucrania, cada región se colorea según los ataques que la citan en el periodo.",
+    atajos: "Atajos de teclado",
+    acciones: {
+      ayuda: "Abrir o cerrar esta ayuda",
+      cerrar: "Cerrar la ficha o el panel abierto, o quitar el periodo elegido",
+      capaIncidentes: "Capa de incidentes",
+      capaUcrania: "Capa de Ucrania",
+      capaDensidad: "Capa de densidad",
+      filtroGraves: "Solo confirmados y atribuidos",
+      filtro24h: "Últimas 24 horas",
+      filtro7d: "Últimos 7 días",
+      sinFiltros: "Quitar los filtros",
+      lineaTiempo: "Abrir o cerrar la línea de tiempo",
+      reproducir: "Reproducir la línea de tiempo",
+      feed: "Abrir o cerrar el panel en directo",
+      lista: "Lista de incidentes",
+      metodologia: "Metodología y datos abiertos",
+    },
+  },
+  pila: { titulo: (n) => `${n} incidentes en este punto` },
+  imprecisa: {
+    etiqueta: "ubicación imprecisa",
+    nivel: {
+      instalacion: "instalación sin situar",
+      localidad: "localidad sin situar",
+      region: "solo la región",
+      pais: "solo el país",
+    },
+  },
+  guerra: {
+    reproducir: "Noche a noche",
+    pausar: "Pausar",
+    reanudar: "Reanudar",
+    detener: "Detener",
+    noche: (fecha) => `Noche del ${fecha}`,
+    drones: "drones lanzados contra Ucrania",
+    sinCifra: "sin cifra de lanzamientos",
   },
   mapa: {
     etiqueta: "Mapa de Europa con los incidentes del periodo elegido",
     instrucciones:
       "Con el foco en el mapa, las flechas lo desplazan y las teclas más y menos cambian el " +
       "zoom. La lista de incidentes da acceso a las mismas fichas sin usar el mapa.",
-    acercar: "Acercar",
-    alejar: "Alejar",
-    atribucion: "Atribuciones del mapa",
+    grupo: (n) => (n === 1 ? "1 incidente: acerca para verlo" : `${n} incidentes: acerca para verlos`),
+    pila: (n) => `${n} incidentes en este mismo punto: pulsa para elegir uno`,
   },
   tipo: {
     interrupcion_aeroportuaria: "Interrupción aeroportuaria",
@@ -155,7 +255,10 @@ export const es: Textos = {
     rangoDeFuentes: "rango de las fuentes A–C",
     queDiceCadaFuente: (n) => (n === 1 ? "Qué dice la fuente" : `Qué dice cada fuente (${n})`),
     valorSegun: "según",
-    cierre: { si: "Cierre", no: "Sin cierre", desconocido: "Cierre sin confirmar" },
+    cierreDe: (minutos) => `Cierre de ${minutos} min`,
+    cierreSinDuracion: "Cierre, sin duración conocida",
+    sinCierre: "Sin cierre",
+    cierreDesconocido: "Cierre: desconocido",
     vuelosDesviados: "vuelos desviados",
     vuelosCancelados: "vuelos cancelados",
     vuelosRetrasados: "vuelos retrasados",
@@ -230,7 +333,10 @@ export const es: Textos = {
     porGranularidad: { dia: "Día", semana: "Semana", mes: "Mes" },
     reproducir: "Reproducir",
     pausar: "Pausar",
-    todo: "Todo",
+    reanudar: "Reanudar",
+    detener: "Detener",
+    verTodo: "Ver todo",
+    periodoBoton: "Periodo",
     desde: "Inicio del periodo",
     hasta: "Fin del periodo",
     periodo: (desde, hasta) => `${desde} – ${hasta}`,
@@ -239,6 +345,9 @@ export const es: Textos = {
     instrucciones:
       "Arrastra sobre el histograma para elegir un periodo, o mueve sus dos extremos con las " +
       "flechas del teclado.",
+    plegar: "Plegar",
+    desplegar: "Desplegar",
+    acotado: "periodo acotado",
     maximo: (n) => `máx. ${n}`,
   },
   metodologia: {
@@ -341,8 +450,9 @@ export const es: Textos = {
           },
           {
             parrafo: [
-              "En los contadores, «confirmados» suma los incidentes confirmados y los " +
-                "atribuidos. El estado se indica siempre con color y con texto.",
+              "En el marcador, los confirmados y los atribuidos se cuentan por separado: un " +
+                "incidente atribuido ya no suma entre los confirmados. El estado se indica " +
+                "siempre con color y con texto.",
             ],
           },
         ],
@@ -568,6 +678,7 @@ export const es: Textos = {
         "actualización.",
       incidentes: "Incidentes",
       ucrania: "Ataques de la capa de Ucrania",
+      sinUbicacion: "Incidentes con ubicación imprecisa",
       version: (fecha) => `Versión del ${fecha}`,
       licencia: "Licencia",
       citaTitulo: "Cita recomendada",
@@ -580,7 +691,8 @@ export const es: Textos = {
     titulo: `${NOMBRE} · Incidentes con drones en Europa`,
     tituloIncidente: (titulo) => `${titulo} · ${NOMBRE}`,
     tituloAtaque: (id) => `Ataque ${id} · ${NOMBRE}`,
-    altImagen: "Mapa de Europa con los incidentes con drones registrados",
+    altImagen: `Logo y nombre del ${NOMBRE} sobre el mapa de Europa con los incidentes registrados`,
+    lema: "Incidentes con drones en Europa, con sus fuentes y su grado de confirmación",
   },
   regiones: {
     "UA-05": "Vínnytsia",

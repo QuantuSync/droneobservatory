@@ -41,7 +41,7 @@ function FichaFuente({ t, fuente }: { t: Textos; fuente: Fuente }) {
         >
           {fuente.medio}
         </EnlaceExterno>
-        <span className="mono rounded-sm border border-borde px-1 text-xs text-dorado">
+        <span className="mono rounded-sm border border-linea px-1 text-xs text-acento">
           <span className="sr-only">{t.ficha.codigo(codigo)}</span>
           <span aria-hidden="true" title={t.ficha.codigo(codigo)}>
             {codigo}
@@ -50,9 +50,9 @@ function FichaFuente({ t, fuente }: { t: Textos; fuente: Fuente }) {
         <span className="mono text-xs text-secundario">{instante(fuente.fecha)}</span>
       </div>
       {esDeclaracionOficial(fuente) && (
-        <p className="etiqueta mt-1 text-[0.625rem]">{t.ficha.declaracionOficial}</p>
+        <p className="rotulo mt-1 text-xs">{t.ficha.declaracionOficial}</p>
       )}
-      <blockquote lang={fuente.idioma} className="mt-1 border-l border-dorado pl-2 text-secundario">
+      <blockquote lang={fuente.idioma} className="mt-1 border-l border-acento pl-2 text-secundario">
         {fuente.frase_origen}
       </blockquote>
       {fuente.replicas > 0 && (
@@ -69,7 +69,7 @@ export function ListaFuentes({ t, fuentes }: { t: Textos; fuentes: readonly Fuen
   const ocultas = ordenadas.length - FUENTES_VISIBLES;
   return (
     <section className="mt-4">
-      <h3 className="etiqueta">{t.ficha.fuentes(fuentes.length)}</h3>
+      <h3 className="rotulo">{t.ficha.fuentes(fuentes.length)}</h3>
       <ul>
         {visibles.map((fuente) => (
           <FichaFuente key={fuente.id} t={t} fuente={fuente} />
@@ -78,7 +78,7 @@ export function ListaFuentes({ t, fuentes }: { t: Textos; fuentes: readonly Fuen
       {ocultas > 0 && (
         <button
           type="button"
-          className="boton boton-discreto mt-2 min-h-7 text-xs"
+          className="control mt-2 min-h-7 text-xs"
           aria-expanded={todas}
           onClick={() => setTodas(!todas)}
         >
@@ -101,7 +101,7 @@ export function Historial({ t, historial, fuentes, tipo }: PropsHistorial) {
   const medios = new Map(fuentes.map((fuente) => [fuente.id, fuente.medio]));
   return (
     <section className="mt-4">
-      <h3 className="etiqueta">{t.ficha.historial}</h3>
+      <h3 className="rotulo">{t.ficha.historial}</h3>
       <ol className="mt-1">
         {historial.map((paso, i) => (
           <li key={i} className="flex flex-wrap items-center gap-x-2 border-b border-linea py-1.5">

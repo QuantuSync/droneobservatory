@@ -18,6 +18,28 @@ const SALIDA = join(WEB, "dist");
 const CARPETA_SCRIPTS = "assets";
 const LARGO_DE_HUELLA = 12;
 const RESTO_DE_DATOS_DE_RUTA = "static-loader-data-manifest-";
+/**
+ * Las dos fuentes con las que se pinta lo primero que se ve (texto latino, peso variable).
+ * Se piden desde la cabecera: si no, el navegador solo las descubre al leer la hoja de
+ * estilos y la primera pintura con su letra llega tarde, sobre todo en móvil.
+ */
+export const FUENTES_PRECARGADAS = [
+  "onest-latin-wght-normal-",
+  "jetbrains-mono-latin-wght-normal-",
+] as const;
+
+/** Añade a la cabecera la petición anticipada de cada fuente (sin nada en línea). */
+export function precargarFuentes(html: string, ficheros: readonly string[]): string {
+  const enlaces = FUENTES_PRECARGADAS.flatMap((prefijo) => {
+    const fichero = ficheros.find((f) => f.startsWith(prefijo) && f.endsWith(".woff2"));
+    return fichero === undefined
+      ? []
+      : [
+          `<link rel="preload" href="/${CARPETA_SCRIPTS}/${fichero}" as="font" type="font/woff2" crossorigin>`,
+        ];
+  });
+  return html.replace("</head>", `${enlaces.join("")}</head>`);
+}
 
 /** Cada script en línea pasa a un fichero con su huella en el nombre. */
 async function sacarScriptsEnLinea(html: string): Promise<string> {
@@ -42,8 +64,12 @@ export async function terminarPaginas(carpeta: string): Promise<void> {
   const resumen = JSON.parse(
     await readFile(join(WEB, "public", "datos", "resumen.json"), "utf-8"),
   ) as Resumen;
+  const recursos = await readdir(join(carpeta, CARPETA_SCRIPTS));
   for (const idioma of IDIOMAS) {
-    const plantilla = await sacarScriptsEnLinea(await readFile(portada(carpeta, idioma), "utf-8"));
+    const plantilla = precargarFuentes(
+      await sacarScriptsEnLinea(await readFile(portada(carpeta, idioma), "utf-8")),
+      recursos,
+    );
     await writeFile(portada(carpeta, idioma), plantilla, "utf-8");
     for (const incidente of resumen.incidentes) {
       const pagina = paginaDeIncidente(idioma, incidente.id, incidente.titulo[idioma]);

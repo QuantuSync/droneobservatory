@@ -4,6 +4,7 @@ import { expect, test } from "@playwright/test";
 import type { Page } from "@playwright/test";
 
 import type { Resumen, ResumenUcrania } from "../src/datos/tipos.ts";
+import { numero as formatear } from "../src/i18n/index.ts";
 import { RUTA_SECURITY_TXT } from "../src/seguridad/securityTxt.ts";
 import { CONTACTO_SEGURIDAD, DESCARGAS, NOMBRE } from "../src/sitio.ts";
 
@@ -13,6 +14,36 @@ const MAPA_LISTO = "[data-mapa-listo=true]";
 const ESTADOS_DE_FRESCURA = ["al_dia", "con_retraso", "desactualizado"];
 /** Tiempo para que el mapa termine de pintar teselas antes de una captura. */
 const MS_DE_ASENTAMIENTO = 2500;
+/** Por encima de esta croma un color ya no es un gris: solo pueden serlo los de estado. */
+const CROMA_DE_UN_GRIS = 0.2;
+
+/** El estado de la recogida que publica el servidor; en local no existe. */
+const ESTADO_PUBLICADO = "https://tiles.droneobservatory.eu/estado.json";
+
+/** Una cifra como la escribe el marcador en español. */
+function numero(n: number): string {
+  return formatear(n, "es");
+}
+
+
+/**
+ * Las vistas previas de Vercel van protegidas: el acceso para pruebas automatizadas va en
+ * una cabecera, con la clave en la variable VERCEL_BYPASS (nunca en el repositorio). Solo se
+ * añade a las peticiones al propio sitio: las teselas no la admiten en su política CORS.
+ */
+const ACCESO: Record<string, string> =
+  process.env.VERCEL_BYPASS === undefined
+    ? {}
+    : { "x-vercel-protection-bypass": process.env.VERCEL_BYPASS };
+
+test.beforeEach(async ({ page, baseURL }) => {
+  if (Object.keys(ACCESO).length === 0 || baseURL === undefined) return;
+  const propio = new URL(baseURL).origin;
+  await page.route(
+    (url) => url.origin === propio,
+    (ruta) => ruta.continue({ headers: { ...ruta.request().headers(), ...ACCESO } }),
+  );
+});
 
 /** Anota los errores de consola y las violaciones de la política de contenido. */
 function vigilar(pagina: Page): string[] {
@@ -43,55 +74,116 @@ async function capturar(pagina: Page, proyecto: string, nombre: string) {
 }
 
 async function datos<T>(pagina: Page, ruta: string): Promise<T> {
-  const respuesta = await pagina.request.get(ruta);
+  const respuesta = await pagina.request.get(ruta, { headers: ACCESO });
   expect(respuesta.ok()).toBe(true);
   return (await respuesta.json()) as T;
 }
 
-test("carga el mapa sin errores ni violaciones de la política de contenido", async ({ page }, info) => {
+/** En el teléfono casi todo está en el menú: lo abre si hace falta y devuelve cómo cerrarlo. */
+async function menu(pagina: Page, proyecto: string): Promise<() => Promise<void>> {
+  if (proyecto !== "movil") return async () => undefined;
+  await pagina.getByRole("banner").getByRole("button", { name: /^(Menú|Menu)$/ }).click();
+  const dialogo = pagina.getByRole("dialog", { name: /^(Menú|Menu)$/ });
+  await expect(dialogo).toBeVisible();
+  return async () => {
+    if (await dialogo.isVisible()) await dialogo.getByRole("button", { name: /^(Cerrar el menú|Close the menu)$/ }).click();
+  };
+}
+
+test("carga el mapa sin errores ni violaciones de la política de contenido", async ({ page, baseURL }, info) => {
   const problemas = vigilar(page);
+  const movil = info.project.name === "movil";
   await page.goto("/");
-  await expect(page.locator("h1")).toContainText("EODI");
-  await expect(page.locator("h1")).toContainText(NOMBRE);
+  await expect(page.locator("h1:visible")).toContainText(NOMBRE);
   await page.waitForSelector(MAPA_LISTO);
   const barra = page.locator("[data-frescura]");
-  await expect(barra).toContainText("ACTUALIZADO");
+  await expect(barra).toContainText(movil ? /hace|ahora mismo/ : /Actualizado|hace|ahora mismo/);
   expect(ESTADOS_DE_FRESCURA).toContain(await barra.getAttribute("data-frescura"));
-  const resumen = await datos<Resumen>(page, "/datos/resumen.json");
-  await expect(page.getByLabel("Cifras del periodo elegido")).toContainText(
-    `Incidentes${resumen.incidentes.length}`,
+  // El marcador cuadra con los ficheros publicados: los del mapa más los de ubicación
+  // imprecisa, que no se dibujan como punto pero cuentan.
+  const mapa = await datos<{ features: { properties: { estado: { actual: string } } }[] }>(
+    page,
+    "/datos/incidentes.geojson",
   );
+  const imprecisos = await datos<{ incidentes: { estado: { actual: string } }[] }>(
+    page,
+    "/datos/incidentes_sin_ubicacion.json",
+  );
+  const estados = [
+    ...mapa.features.map((f) => f.properties.estado.actual),
+    ...imprecisos.incidentes.map((i) => i.estado.actual),
+  ];
+  const cuenta = (estado: string) => estados.filter((e) => e === estado).length;
+  const marcador = page.getByLabel("Cifras del periodo elegido");
+  await expect(marcador).toContainText(`incidentes${numero(estados.length)}`);
+  await expect(marcador).toContainText(`confirmados${numero(cuenta("confirmado"))}`);
+  await expect(marcador).toContainText(`atribuidos${numero(cuenta("atribuido"))}`);
+  const resumen = await datos<Resumen>(page, "/datos/resumen.json");
+  expect(resumen.incidentes.filter((i) => i.punto !== null)).toHaveLength(mapa.features.length);
   await capturar(page, info.project.name, "inicio");
+  // La cabecera, a tamaño real (un píxel de pantalla por píxel CSS).
+  await page.locator("header:visible").screenshot({
+    path: join(CAPTURAS, `${info.project.name}-cabecera.png`),
+    scale: "css",
+  });
+  // Contra el sitio publicado, la antigüedad se mide desde estado.json y su detalle lista
+  // cada fuente.
+  if (baseURL !== undefined && !baseURL.includes("localhost")) {
+    const estado = await page.request.get(ESTADO_PUBLICADO);
+    if (estado.ok()) {
+      const sistema = (await estado.json()) as { fuentes: unknown[] };
+      await expect(barra).toHaveAttribute("data-fuente-frescura", "recogida");
+      await barra.getByRole("button").click();
+      await expect(barra.locator("li")).toHaveCount(sistema.fuentes.length);
+      await capturar(page, info.project.name, "estado");
+      await page.keyboard.press("Escape");
+    }
+  }
   expect(problemas).toEqual([]);
 });
 
-test("cambia de capas: Ucrania y densidad", async ({ page }, info) => {
+test("cambia de capas y reproduce la guerra noche a noche", async ({ page }, info) => {
   const problemas = vigilar(page);
   await page.goto("/");
   await page.waitForSelector(MAPA_LISTO);
-  await page.getByLabel("Ucrania").check();
+  let cerrar = await menu(page, info.project.name);
+  const ucrania = page.getByRole("button", { name: "Ucrania", exact: true });
+  await ucrania.click();
+  await expect(ucrania).toHaveAttribute("aria-pressed", "true");
+  await page.getByRole("button", { name: "Densidad", exact: true }).click();
+  await cerrar();
+  await page.keyboard.press("t");
   await expect(page.getByText("Drones lanzados contra Ucrania")).toBeVisible();
-  await page.getByLabel("Densidad").check();
-  await page.getByLabel("Incidentes", { exact: true }).uncheck();
+  await page.keyboard.press("Escape");
   await capturar(page, info.project.name, "capas");
-  // La lista da acceso a las regiones sin usar el mapa.
-  await page.getByRole("button", { name: "Lista" }).click();
+  cerrar = await menu(page, info.project.name);
+  await page.getByRole("button", { name: "Noche a noche" }).click();
+  await cerrar();
+  const noche = page.getByRole("status").filter({ hasText: /^Noche del / });
+  await expect(noche).toBeVisible();
+  await noche.getByRole("button", { name: "Pausar" }).click();
+  await expect(noche.getByRole("button", { name: "Reanudar" })).toBeVisible();
+  await capturar(page, info.project.name, "guerra");
+  await noche.getByRole("button", { name: "Detener" }).click();
+  await expect(noche).toBeHidden();
+  // El panel en directo da acceso a las regiones sin usar el mapa.
+  await menu(page, info.project.name);
+  await page.getByRole("button", { name: "En directo", exact: true }).click();
+  await page.getByRole("tab", { name: "Lista" }).click();
   await page.getByRole("button", { name: "Járkov" }).click();
   await expect(page.getByRole("complementary", { name: /UA-63/ })).toContainText(
     "Ataques en el periodo",
   );
-  await capturar(page, info.project.name, "region");
   expect(problemas).toEqual([]);
 });
 
-test("la dirección de un incidente abre su ficha y sobrevive a recargar", async ({ page }, info) => {
+test("la dirección de un incidente abre su ficha en el panel y sobrevive a recargar", async ({ page }, info) => {
   const problemas = vigilar(page);
   const resumen = await datos<Resumen>(page, "/datos/resumen.json");
-  const incidente = resumen.incidentes[resumen.incidentes.length - 1];
+  const incidente = [...resumen.incidentes].reverse().find((i) => i.punto !== null);
   if (incidente === undefined) throw new Error("no hay incidentes publicados");
   const respuesta = await page.goto(`/${incidente.id}`);
   expect(respuesta?.status()).toBe(200);
-  // La página propia lleva el título del incidente en los metadatos de compartir.
   await expect(page.locator('meta[property="og:title"]')).toHaveAttribute(
     "content",
     `${incidente.titulo.es} · ${NOMBRE}`,
@@ -105,12 +197,24 @@ test("la dirección de un incidente abre su ficha y sobrevive a recargar", async
   await expect(ficha.getByRole("heading", { name: "Historial de estados" })).toBeVisible();
   await expect(ficha.getByRole("button", { name: "Copiar enlace" })).toBeVisible();
   await page.waitForSelector(MAPA_LISTO);
+  // En escritorio, panel lateral pegado al borde derecho y de altura completa bajo la
+  // cabecera; en el teléfono, hoja inferior a todo lo ancho.
+  const caja = await ficha.boundingBox();
+  const ventana = page.viewportSize();
+  if (caja === null || ventana === null) throw new Error("sin medidas");
+  if (info.project.name === "movil") {
+    expect(Math.round(caja.width)).toBe(ventana.width);
+    expect(Math.round(caja.y + caja.height)).toBe(ventana.height);
+  } else {
+    expect(Math.round(caja.x + caja.width)).toBe(ventana.width);
+    expect(Math.round(caja.y + caja.height)).toBe(ventana.height);
+  }
+  await expect(page.locator("line")).toHaveCount(0);
   await capturar(page, info.project.name, "ficha");
   await page.reload();
   await expect(page.getByRole("complementary", { name: new RegExp(incidente.id) })).toContainText(
     incidente.titulo.es,
   );
-  // Todo enlace a una fuente se abre aparte y sin referencia.
   for (const enlace of await ficha.locator('a[href^="http"]').all()) {
     await expect(enlace).toHaveAttribute("target", "_blank");
     await expect(enlace).toHaveAttribute("rel", "noopener noreferrer");
@@ -126,32 +230,93 @@ test("la dirección de un ataque de Ucrania abre su ficha", async ({ page }, inf
   const ataque = ucrania.ataques[ucrania.ataques.length - 1];
   if (ataque === undefined) throw new Error("no hay ataques publicados");
   await page.goto(`/en/${ataque[0]}`);
+  await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
+    "content",
+    "https://droneobservatory.eu/compartir-en.png",
+  );
   const ficha = page.getByRole("complementary", { name: new RegExp(ataque[0]) });
   await expect(ficha.getByRole("heading", { name: ataque[0] })).toBeVisible();
   await expect(ficha).toContainText("Figures from one of the warring parties");
-  await expect(page.getByRole("checkbox", { name: "Ukraine" })).toBeChecked();
+  // En el teléfono las capas están en el menú, cerrado: el botón existe aunque no se vea.
+  await expect(page.getByRole("button", { name: "Ukraine", exact: true, includeHidden: true })).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
   await page.waitForSelector(MAPA_LISTO);
   await capturar(page, info.project.name, "ataque");
   expect(problemas).toEqual([]);
 });
 
-test("la línea de tiempo acota el periodo con el teclado y se reproduce", async ({ page }, info) => {
+test("la línea de tiempo acota el periodo, atrás lo deshace y «Ver todo» vuelve a todo", async ({ page }, info) => {
   const problemas = vigilar(page);
   await page.goto("/");
   await page.waitForSelector(MAPA_LISTO);
   const contadores = page.getByLabel("Cifras del periodo elegido");
   const todos = await contadores.textContent();
+  await page.keyboard.press("t");
   await page.getByRole("radio", { name: "Mes" }).click();
   const fin = page.getByRole("slider", { name: "Fin del periodo" });
   await fin.focus();
   for (let i = 0; i < 6; i += 1) await page.keyboard.press("ArrowLeft");
   await expect(contadores).not.toHaveText(todos ?? "");
+  await expect(page).toHaveURL(/\?desde=\d{4}-\d{2}-\d{2}&hasta=\d{4}-\d{2}-\d{2}$/);
+  const verTodo = page.getByRole("button", { name: "Ver todo" }).first();
+  await expect(verTodo).toBeVisible();
   await capturar(page, info.project.name, "periodo");
-  await page.getByRole("button", { name: "Reproducir" }).click();
-  await expect(page.getByRole("button", { name: "Pausar" })).toBeVisible();
-  // Al llegar al último día la reproducción se para sola y el periodo vuelve a ser todo.
-  await expect(page.getByRole("button", { name: "Reproducir" })).toBeVisible({ timeout: 30_000 });
+  // El botón atrás deshace el cambio de periodo; adelante lo rehace.
+  await page.goBack();
+  await expect(page).toHaveURL(/\/$/);
   await expect(contadores).toHaveText(todos ?? "");
+  await page.goForward();
+  await expect(page).toHaveURL(/\?desde=/);
+  await expect(contadores).not.toHaveText(todos ?? "");
+  await verTodo.click();
+  await expect(page).toHaveURL(/\/$/);
+  await expect(contadores).toHaveText(todos ?? "");
+  await expect(page.getByRole("button", { name: "Ver todo" })).toHaveCount(0);
+  await capturar(page, info.project.name, "ver-todo");
+  // Reproducir, pausar y detener: al detener vuelve al periodo de antes (el completo).
+  await page.getByRole("button", { name: "Reproducir" }).click();
+  await page.getByRole("button", { name: "Pausar" }).click();
+  await expect(page.getByRole("button", { name: "Reanudar" })).toBeVisible();
+  await expect(contadores).not.toHaveText(todos ?? "");
+  await page.getByRole("button", { name: "Detener" }).click();
+  await expect(contadores).toHaveText(todos ?? "");
+  expect(problemas).toEqual([]);
+});
+
+test("los filtros quedan en la dirección y el feed abre fichas", async ({ page }, info) => {
+  const problemas = vigilar(page);
+  await page.goto("/");
+  await page.waitForSelector(MAPA_LISTO);
+  let cerrar = await menu(page, info.project.name);
+  const filtros = page.getByRole("group", { name: "Filtros" });
+  await expect(filtros).toBeVisible();
+  await filtros.getByRole("button", { name: "Confirmado" }).click();
+  await filtros.getByRole("button", { name: "Atribuido" }).click();
+  await expect(page).toHaveURL(/\?solo=graves$/);
+  await expect(filtros.getByRole("button", { name: "Quitar filtros" })).toBeVisible();
+  await capturar(page, info.project.name, "filtros");
+  const resumen = await datos<Resumen>(page, "/datos/resumen.json");
+  const graves = resumen.incidentes.filter((i) => ["confirmado", "atribuido"].includes(i.estado));
+  await expect(page.getByLabel("Cifras del periodo elegido")).toContainText(
+    `incidentes${numero(graves.length)}`,
+  );
+  await page.getByRole("button", { name: "En directo", exact: true }).click();
+  await cerrar();
+  const feed = page.getByRole("complementary", { name: "En directo" });
+  await expect(feed.getByRole("listitem").first()).toBeVisible();
+  await capturar(page, info.project.name, "feed");
+  await feed.getByRole("listitem").first().getByRole("button").click();
+  await expect(page).toHaveURL(/\/EODI-\d{4}-\d{5}\?solo=graves$/);
+  // La dirección filtrada se puede compartir: al abrirla, el filtro sigue puesto.
+  await page.goto("/?solo=graves");
+  cerrar = await menu(page, info.project.name);
+  await expect(page.getByRole("group", { name: "Filtros" }).getByRole("button", { name: "Confirmado" })).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+  await cerrar();
   expect(problemas).toEqual([]);
 });
 
@@ -159,42 +324,112 @@ test("cambia de idioma sin perder la pantalla", async ({ page }, info) => {
   const problemas = vigilar(page);
   await page.goto("/");
   await page.waitForSelector(MAPA_LISTO);
-  await page.getByRole("link", { name: "Cambiar a inglés" }).click();
+  await menu(page, info.project.name);
+  await page.getByRole("link", { name: "English version" }).click();
   await expect(page).toHaveURL(/\/en$/);
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
-  await expect(page.locator("[data-frescura]")).toContainText("UPDATED");
-  await expect(page.locator("h1")).toContainText(NOMBRE);
-  await expect(page.getByRole("button", { name: "Methodology" })).toBeVisible();
+  await expect(page.locator("[data-frescura]")).toContainText(/Updated|ago|just now/);
+  await expect(page.locator("h1:visible")).toContainText(NOMBRE);
   await capturar(page, info.project.name, "ingles");
-  // La versión inglesa tiene su propia página prerenderizada.
-  const respuesta = await page.request.get("/en");
+  const respuesta = await page.request.get("/en", { headers: ACCESO });
   expect(await respuesta.text()).toContain('<html lang="en"');
   expect(problemas).toEqual([]);
 });
 
-test("la metodología se abre como panel y ofrece los datos abiertos", async ({ page }, info) => {
+test("la ayuda y la metodología se abren sin salir de la pantalla", async ({ page }, info) => {
   const problemas = vigilar(page);
   await page.goto("/");
-  await page.getByRole("button", { name: "Metodología" }).click();
+  await page.waitForSelector(MAPA_LISTO);
+  await menu(page, info.project.name);
+  await page.getByRole("button", { name: "Ayuda", exact: true }).click();
+  const ayuda = page.getByRole("dialog", { name: "Cómo leer el mapa" });
+  await expect(ayuda).toContainText("Atajos de teclado");
+  await capturar(page, info.project.name, "ayuda");
+  await page.keyboard.press("Escape");
+  await expect(ayuda).toBeHidden();
+  await menu(page, info.project.name);
+  await page.getByRole("button", { name: "Metodología y datos abiertos" }).click();
   const panel = page.getByRole("dialog", { name: "Metodología" });
-  await expect(panel).toBeVisible();
   await expect(panel).toContainText("extracción automática validada por reglas");
   await expect(panel).toContainText("Cita recomendada");
-  await expect(panel).toContainText("CC BY 4.0");
+  // El logo completo, en WebP con PNG de respaldo, nunca el original de 1,3 MB.
+  await expect(panel.locator('picture source[type="image/webp"]')).toHaveAttribute("srcset", /logo-96\.webp/);
   await capturar(page, info.project.name, "metodologia");
-  for (const ruta of Object.values(DESCARGAS)) {
+  for (const ruta of [
+    DESCARGAS.incidentesGeojson,
+    DESCARGAS.incidentesCsv,
+    DESCARGAS.ucraniaJson,
+    DESCARGAS.ucraniaCsv,
+  ]) {
     await expect(panel.locator(`a[href="${ruta}"]`)).toBeVisible();
-    const respuesta = await page.request.head(ruta);
-    expect(respuesta.status(), ruta).toBe(200);
+    expect((await page.request.head(ruta, { headers: ACCESO })).status(), ruta).toBe(200);
   }
   await page.keyboard.press("Escape");
   await expect(panel).toBeHidden();
   expect(problemas).toEqual([]);
 });
 
+test("la interfaz no lleva color propio: solo el de los estados", async ({ page }, info) => {
+  const problemas = vigilar(page);
+  await page.goto("/");
+  await page.waitForSelector(MAPA_LISTO);
+  await menu(page, info.project.name);
+  // Todo color saturado de un elemento de la interfaz (texto, fondo o borde) tiene que ser uno
+  // de los de estado. El mapa, el logo y los gráficos van aparte.
+  const saturados = await page.evaluate((CROMA_MAXIMA) => {
+    const encontrados = new Set<string>();
+    // Croma: cuánto se aparta el color del gris. Los grises azulados de la interfaz no pasan
+    // de 0,13; los de estado rondan 0,42 y el cian de antes llegaba a 0,82.
+    const croma = (texto: string) => {
+      const [r, g, b] = (texto.match(/\d+(\.\d+)?/g) ?? []).map(Number);
+      if (r === undefined || g === undefined || b === undefined) return 0;
+      return (Math.max(r, g, b) - Math.min(r, g, b)) / 255;
+    };
+    for (const elemento of document.querySelectorAll<HTMLElement>("body *")) {
+      if (elemento.closest("svg, canvas, picture, .maplibregl-map") !== null || elemento.tagName === "IMG") continue;
+      if (elemento.offsetParent === null) continue;
+      const estilo = getComputedStyle(elemento);
+      for (const color of [estilo.color, estilo.backgroundColor, estilo.borderTopColor]) {
+        if (!color.startsWith("rgba(0, 0, 0, 0)") && croma(color) > CROMA_MAXIMA) encontrados.add(color);
+      }
+    }
+    return [...encontrados];
+  }, CROMA_DE_UN_GRIS);
+  const estados = ["rgb(86, 194, 113)", "rgb(237, 169, 58)", "rgb(242, 92, 79)"];
+  expect(saturados.filter((color) => !estados.includes(color))).toEqual([]);
+  await capturar(page, info.project.name, "sin-acento");
+  expect(problemas).toEqual([]);
+});
+
+test("los iconos y las imágenes de compartir se sirven y el logo original no", async ({ page }) => {
+  const tipos: Record<string, string> = {
+    "/favicon.ico": "image/",
+    "/favicon.svg": "image/svg+xml",
+    "/apple-touch-icon.png": "image/png",
+    "/iconos/icono-192.png": "image/png",
+    "/iconos/icono-512.png": "image/png",
+    "/iconos/icono-maskable-512.png": "image/png",
+    "/manifest.webmanifest": "application/manifest+json",
+    "/marca/eodi-simplificado.svg": "image/svg+xml",
+    "/marca/logo-96.webp": "image/webp",
+    "/compartir.png": "image/png",
+    "/compartir-en.png": "image/png",
+  };
+  for (const [ruta, tipo] of Object.entries(tipos)) {
+    const respuesta = await page.request.get(ruta, { headers: ACCESO });
+    expect(respuesta.status(), ruta).toBe(200);
+    expect(respuesta.headers()["content-type"], ruta).toContain(tipo);
+  }
+  const manifiesto = (await (await page.request.get("/manifest.webmanifest", { headers: ACCESO })).json()) as {
+    icons: { purpose?: string }[];
+  };
+  expect(manifiesto.icons.some((icono) => icono.purpose === "maskable")).toBe(true);
+  expect((await page.request.get("/marca/logo_eodi_original.png", { headers: ACCESO })).status()).toBe(404);
+});
+
 test("todas las rutas llevan las cabeceras de seguridad", async ({ page }) => {
   for (const ruta of ["/", "/en", "/datos/resumen.json", RUTA_SECURITY_TXT]) {
-    const cabeceras = (await page.request.get(ruta)).headers();
+    const cabeceras = (await page.request.get(ruta, { headers: ACCESO })).headers();
     expect(cabeceras["strict-transport-security"], ruta).toBe(
       "max-age=31536000; includeSubDomains; preload",
     );
@@ -206,7 +441,7 @@ test("todas las rutas llevan las cabeceras de seguridad", async ({ page }) => {
     expect(cabeceras["content-security-policy"], ruta).not.toContain("unsafe");
     expect(cabeceras["set-cookie"], ruta).toBeUndefined();
   }
-  const texto = await (await page.request.get(RUTA_SECURITY_TXT)).text();
+  const texto = await (await page.request.get(RUTA_SECURITY_TXT, { headers: ACCESO })).text();
   expect(texto).toContain(`Contact: mailto:${CONTACTO_SEGURIDAD}`);
   expect(texto).toMatch(/Expires: \d{4}-\d{2}-\d{2}T/);
 });

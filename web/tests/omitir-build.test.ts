@@ -32,6 +32,13 @@ describe("decisión de omitir el build", () => {
     expect(decidir("aad9162", git({ "cat-file": 0, diff: 1 }))).toBe(CONSTRUIR);
   });
 
+  it("producción desde otra rama construye siempre; desde main, según los cambios", () => {
+    const sinCambios = git({ "cat-file": 0, diff: 0 });
+    expect(decidir("aad9162", sinCambios, { destino: "production", rama: "web-diseno" })).toBe(CONSTRUIR);
+    expect(decidir("aad9162", sinCambios, { destino: "production", rama: "main" })).toBe(OMITIR);
+    expect(decidir("aad9162", sinCambios, { destino: "preview", rama: "web-diseno" })).toBe(OMITIR);
+  });
+
   it("cualquier otro error construye", () => {
     expect(decidir("aad9162", git({ "cat-file": 0, diff: 128 }))).toBe(CONSTRUIR);
     expect(decidir("aad9162", git({ "cat-file": null }))).toBe(CONSTRUIR);

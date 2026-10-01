@@ -1,42 +1,128 @@
 @import "tailwindcss";
 
-/* Paleta y tipografía del European Observatory of Drone Incidents. El dorado es tinta:
-   líneas de 1 px, texto y contornos, nunca rellenos con brillo ni sombras. */
+/* La interfaz no lleva color propio: el activo va en blanco y el inactivo en gris. Los únicos
+   colores son los de estado y los de la capa de Ucrania (y el logo, que conserva los suyos).
+   El blanco activo es una sola variable, que también lee el mapa al arrancar. */
+:root {
+  --acento: #f4f7fb;
+}
+
+/* Disposición de teléfono: por debajo de 768 px de ancho, y también un teléfono en
+   horizontal (poca altura y pantalla táctil). El resto es la de escritorio. */
+/* Cada condición en su propio bloque: con las dos en una sola lista separada por comas,
+   Tailwind se quedaba solo con la primera. */
+@custom-variant tel {
+  @media (max-width: 767.98px) {
+    @slot;
+  }
+  @media (max-height: 500px) and (pointer: coarse) {
+    @slot;
+  }
+}
+/* Teléfono en horizontal: poca altura, así que la barra de abajo se queda en un hilo. */
+@custom-variant apaisado (@media (max-height: 500px) and (pointer: coarse));
+@custom-variant esc {
+  @media (min-width: 768px) and (min-height: 500.02px) {
+    @slot;
+  }
+  @media (min-width: 768px) and (pointer: fine) {
+    @slot;
+  }
+}
+
 @theme {
   --color-*: initial;
-  --color-fondo: #0a1628;
-  --color-superficie-1: #0f1f36;
-  --color-superficie-2: #162a47;
-  --color-linea: #22385a;
-  --color-dorado: #c9a54a;
-  --color-borde: rgb(201 165 74 / 0.25);
-  --color-texto: #ede8da;
-  --color-secundario: #93a3b8;
-  --color-confirmado: #7fb069;
-  --color-notificado: #e0a83c;
-  --color-atribuido: #d65a4a;
-  --color-desmentido: #93a3b8;
+  --color-fondo: #060a12;
+  --color-panel: rgb(9 14 25 / 0.9);
+  --color-panel-solido: #0b111d;
+  --color-elevado: #131c2c;
+  --color-linea: #1f2b3f;
+  --color-texto: #e8eef6;
+  --color-secundario: #93a0b4;
+  --color-acento: var(--acento);
+  --color-confirmado: #56c271;
+  --color-notificado: #eda93a;
+  --color-atribuido: #f25c4f;
+  --color-desmentido: #93a0b4;
   --color-transparente: transparent;
 
-  --font-titular: "Saira Condensed", "Arial Narrow", sans-serif;
-  --font-texto: "Inter Variable", system-ui, sans-serif;
-  --font-mono: ui-monospace, "Cascadia Mono", "SF Mono", Menlo, Consolas, monospace;
+  --font-texto: "Onest Variable", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, "Cascadia Mono", Menlo, monospace;
 
-  /* Radio máximo de 4 px en todo, salvo las formas circulares intrínsecas. */
+  /* Sin radios grandes: 3 px como máximo, salvo las formas circulares. */
   --radius-*: initial;
   --radius-sm: 2px;
-  --radius-md: 4px;
+  --radius-md: 3px;
   --radius-full: 9999px;
 
   --shadow-*: initial;
-  --tracking-etiqueta: 0.25em;
-  --tracking-wordmark: 0.3em;
+  --shadow-panel: 0 8px 28px rgb(0 0 0 / 0.45);
+
+  --animate-aparecer: aparecer 280ms ease-out both;
+}
+
+/* Pulso de confirmados y atribuidos sobre el mapa (src/mapa/pulsos.ts): solo escala y
+   opacidad, que el navegador anima fuera del hilo principal. Los atribuidos laten más. Con
+   movimiento reducido la animación termina al instante y el anillo queda quieto. */
+.pulso-sitio {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+.pulso {
+  display: block;
+  border: 1.5px solid var(--color-confirmado);
+  border-radius: 9999px;
+  animation: latido 2.4s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+.pulso-atribuido {
+  border-color: var(--color-atribuido);
+  animation-name: latido-fuerte;
+}
+
+@keyframes latido {
+  0%,
+  100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.15;
+    transform: scale(1.36);
+  }
+}
+
+@keyframes latido-fuerte {
+  0%,
+  100% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.3;
+    transform: scale(1.55);
+  }
+}
+
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 @layer base {
   html {
     color-scheme: dark;
-    scrollbar-color: var(--color-linea) var(--color-fondo);
+    scrollbar-color: var(--color-linea) transparent;
     scrollbar-width: thin;
   }
 
@@ -44,26 +130,18 @@
     background-color: var(--color-fondo);
     color: var(--color-texto);
     font-family: var(--font-texto);
-    font-weight: 400;
     font-size: 0.875rem;
     line-height: 1.5;
+    overflow: hidden;
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-dorado);
+    outline: 2px solid var(--acento);
     outline-offset: 2px;
   }
 
-  ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-  ::-webkit-scrollbar-track {
-    background: var(--color-fondo);
-  }
-  ::-webkit-scrollbar-thumb {
-    background: var(--color-linea);
-    border-radius: 4px;
+  ::selection {
+    background: color-mix(in srgb, var(--acento) 35%, transparent);
   }
 
   dialog {
@@ -83,29 +161,29 @@
 }
 
 @layer components {
-  /* Etiqueta técnica: Saira Condensed en mayúsculas, tracking amplio, en dorado. */
-  .etiqueta {
-    font-family: var(--font-titular);
-    font-weight: 600;
-    font-size: 0.75rem;
-    line-height: 1rem;
-    letter-spacing: var(--tracking-etiqueta);
-    text-transform: uppercase;
-    color: var(--color-dorado);
+  /* Panel que flota sobre el mapa: semitransparente, con desenfoque detrás para leerse. */
+  .flotante {
+    /* Semitransparente sin desenfoque: desenfocar lo que hay detrás obliga a recalcularlo
+       cada vez que el mapa se mueve y retrasaba la primera pintura. En el teléfono, opaco:
+       en una pantalla pequeña el mapa no debe leerse a través. */
+    background-color: var(--color-panel);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-panel);
+    @variant tel {
+      background-color: var(--color-panel-solido);
+    }
   }
 
-  /* Titular con la línea dorada que se desvanece debajo. */
-  .titular {
-    font-family: var(--font-titular);
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    line-height: 1.15;
-    padding-bottom: 0.5rem;
-    background-image: linear-gradient(to right, var(--color-dorado), transparent);
-    background-repeat: no-repeat;
-    background-size: 100% 1px;
-    background-position: left bottom;
+  /* Superficie acoplada (cabecera, barra de filtros, paneles laterales): opaca y con borde. */
+  .superficie {
+    background-color: var(--color-panel-solido);
+    border-color: var(--color-linea);
+  }
+
+  .cifra {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
   }
 
   .mono {
@@ -113,70 +191,82 @@
     font-variant-numeric: tabular-nums;
   }
 
-  .boton {
+  /* Rótulo de un dato: minúscula normal, en gris; nunca mayúsculas espaciadas. */
+  .rotulo {
+    color: var(--color-secundario);
+    font-size: 0.75rem;
+    line-height: 1rem;
+  }
+
+  /* Control plano: sin forma de píldora; el inactivo en gris y el activo en blanco. */
+  .control {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 0.375rem;
     min-height: 2rem;
-    padding: 0.25rem 0.75rem;
-    border: 1px solid var(--color-dorado);
-    border-radius: var(--radius-md);
-    font-family: var(--font-titular);
-    font-weight: 600;
-    font-size: 0.8125rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--color-dorado);
+    padding: 0.25rem 0.625rem;
+    border-radius: var(--radius-sm);
+    color: var(--color-secundario);
     background-color: transparent;
     cursor: pointer;
-    transition: background-color 120ms;
+    transition:
+      background-color 120ms,
+      color 120ms;
+    /* En el teléfono, todo control mide al menos 44 × 44 px, para el dedo, aunque lleve una
+       altura propia más pequeña pensada para el escritorio. */
+    @variant tel {
+      min-height: 2.75rem !important;
+      min-width: 2.75rem !important;
+    }
   }
-  .boton:hover {
-    background-color: var(--color-superficie-2);
-  }
-  .boton[aria-pressed="true"],
-  .boton[aria-checked="true"] {
-    background-color: var(--color-superficie-2);
+  .control:hover {
     color: var(--color-texto);
+    background-color: var(--color-elevado);
   }
-  .boton:disabled {
+  .control[aria-pressed="true"],
+  .control[aria-checked="true"],
+  .control[aria-expanded="true"],
+  .control[aria-selected="true"] {
+    color: var(--acento);
+    background-color: var(--color-elevado);
+    box-shadow: inset 0 0 0 1px var(--color-linea);
+  }
+  .control:disabled {
     cursor: default;
-    border-color: var(--color-borde);
     color: var(--color-secundario);
     background-color: transparent;
   }
-  .boton-solido {
-    background-color: var(--color-dorado);
+  .control-principal {
     color: var(--color-fondo);
+    background-color: var(--acento);
+    font-weight: 600;
   }
-  .boton-solido:hover {
+  .control-principal:hover {
     background-color: var(--color-texto);
-  }
-  .boton-discreto {
-    border-color: var(--color-borde);
-  }
-
-  .panel {
-    background-color: var(--color-superficie-1);
-    border: 1px solid var(--color-borde);
-    border-radius: var(--radius-md);
   }
 
   .enlace {
     color: var(--color-texto);
     text-decoration: underline;
-    text-decoration-color: var(--color-dorado);
+    text-decoration-color: var(--color-secundario);
     text-underline-offset: 3px;
   }
   .enlace:hover {
-    color: var(--color-dorado);
+    color: var(--acento);
   }
 
-  /* La barra de estado va entre dos líneas doradas. */
-  .entre-lineas {
-    border-top: 1px solid var(--color-borde);
-    border-bottom: 1px solid var(--color-borde);
+  /* Tecla de un atajo en la ayuda. */
+  .tecla {
+    display: inline-block;
+    min-width: 1.5rem;
+    padding: 0 0.375rem;
+    border-bottom: 2px solid var(--color-linea);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-elevado);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-align: center;
   }
 }
 
@@ -186,6 +276,6 @@
   background-color: var(--color-fondo);
 }
 .maplibregl-canvas:focus-visible {
-  outline: 2px solid var(--color-dorado);
+  outline: 2px solid var(--acento);
   outline-offset: -2px;
 }

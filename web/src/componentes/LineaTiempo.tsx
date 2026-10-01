@@ -3,7 +3,8 @@ import type { KeyboardEvent, PointerEvent } from "react";
 
 import { fechaDia, numero } from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
-import { PALETA } from "../paleta.ts";
+import type { Estado } from "../datos/tipos.ts";
+import { COLOR_ESTADO, PALETA } from "../paleta.ts";
 import type { Idioma } from "../sitio.ts";
 import { acotar, histograma, inicioDeTramo, inicioDeTramoSiguiente } from "../tiempo/dias.ts";
 import type { Granularidad, Periodo, Tramo } from "../tiempo/dias.ts";
@@ -15,12 +16,21 @@ const GRANULARIDADES: readonly Granularidad[] = ["dia", "semana", "mes"];
 const ALTO_BARRAS = 64;
 const ALTO_EJE = 16;
 const ALTO = ALTO_BARRAS + ALTO_EJE;
+/** Alto de la franja plegada: el histograma pequeño, siempre visible, y los destellos. */
+const ALTO_PLEGADA = 22;
+const OPACIDAD_PLEGADA_DENTRO = 0.8;
+const OPACIDAD_PLEGADA_FUERA = 0.35;
+/** Destello de un confirmado o atribuido en el eje: punto y halo. */
+const RADIO_DESTELLO = 2;
+const RADIO_HALO = 4.5;
+const OPACIDAD_HALO = 0.35;
 const HUECO_ENTRE_BARRAS = 1;
 /** Por debajo de esta anchura las barras van pegadas: el hueco se las comería. */
 const ANCHO_MINIMO_CON_HUECO = 3;
 const ALTO_MINIMO_BARRA = 1.5;
-/** Anchura de la zona que se puede agarrar en cada extremo del periodo. */
+/** Anchura de la zona que se puede agarrar en cada extremo del periodo: 44 px con el dedo. */
 const ANCHO_ASA = 14;
+const ANCHO_ASA_TACTIL = 44;
 const OPACIDAD_FUERA_DEL_PERIODO = 0.6;
 /** Rótulos del eje: cuerpo, separación del tick y largo del tick. */
 const CUERPO_ROTULO = 10;
@@ -41,9 +51,30 @@ interface Props {
   incidentesPorDia: ReadonlyMap<number, number>;
   /** Drones lanzados contra Ucrania por noche; null si la capa no está activa. */
   lanzamientosPorDia: ReadonlyMap<number, number> | null;
-  reproduciendo: boolean;
+  reproduccion: EstadoReproduccion;
+  /** Empieza o reanuda la reproducción. */
   onReproducir: () => void;
+  onPausar: () => void;
+  /** Detiene la reproducción y vuelve al periodo de antes de reproducir. */
+  onDetener: () => void;
+  /** Hay un periodo elegido o una reproducción: se ofrece «Ver todo». */
+  hayQueVerTodo: boolean;
+  onVerTodo: () => void;
+  /** Doble clic en el histograma: quita la selección. */
+  onQuitarSeleccion: () => void;
+  /** Confirmados y atribuidos del periodo, que se marcan en el eje con un destello. */
+  destellos: readonly { dia: number; estado: Estado }[];
+  /** Desplegada a propósito (clic o tecla T); si no, se despliega al pasar por encima. */
+  abierta: boolean;
+  onAbierta: (abierta: boolean) => void;
+  /**
+   * «franja», la de escritorio, plegable; «barra», la plegada del teléfono (histograma en
+   * miniatura y el botón «Periodo»); «hoja», la desplegada del teléfono, en la hoja inferior.
+   */
+  forma?: "franja" | "barra" | "hoja";
 }
+
+export type EstadoReproduccion = "parada" | "reproduciendo" | "pausada";
 
 type Arrastre = { modo: "nuevo"; ancla: number } | { modo: "desde" } | { modo: "hasta" };
 
@@ -95,9 +126,25 @@ export function LineaTiempo({
   onGranularidad,
   incidentesPorDia,
   lanzamientosPorDia,
-  reproduciendo,
+  reproduccion,
   onReproducir,
+  onPausar,
+  onDetener,
+  hayQueVerTodo,
+  onVerTodo,
+  onQuitarSeleccion,
+  destellos,
+  abierta,
+  onAbierta,
+  forma = "franja",
 }: Props) {
+  const [encima, setEncima] = useState(false);
+  const reproduciendo = reproduccion === "reproduciendo";
+  const desplegada =
+    forma === "hoja" || (forma === "franja" && (abierta || encima || reproduccion !== "parada"));
+  // En el teléfono los controles miden al menos 44 px, para el dedo.
+  const alto = forma === "franja" ? "min-h-7" : "min-h-11";
+  const anchoAsa = forma === "franja" ? ANCHO_ASA : ANCHO_ASA_TACTIL;
   const [contenedor, ancho] = useAncho();
   const arrastre = useRef<Arrastre | null>(null);
   const idInstrucciones = useId();
@@ -201,24 +248,227 @@ export function LineaTiempo({
         onPointerUp={terminar}
         className="cursor-ew-resize"
       >
-        <rect x={x - ANCHO_ASA / 2} y={0} width={ANCHO_ASA} height={ALTO_BARRAS} fill="transparent" />
-        <line x1={x} x2={x} y1={0} y2={ALTO_BARRAS} stroke={PALETA.dorado} strokeWidth={1} />
+        <rect x={x - anchoAsa / 2} y={0} width={anchoAsa} height={ALTO_BARRAS} fill="transparent" />
+        <line x1={x} x2={x} y1={0} y2={ALTO_BARRAS} className="stroke-acento" strokeWidth={1.5} />
       </g>
     );
   }
 
-  return (
-    <section aria-label={t.tiempo.titulo} className="border-t border-borde px-4 pb-2 pt-2">
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-        <button
-          type="button"
-          className="boton boton-solido min-h-7 text-xs"
-          aria-pressed={reproduciendo}
-          onClick={onReproducir}
+  const grafico = (
+    <div
+      ref={contenedor}
+      className={`w-full touch-none select-none ${
+        forma === "barra" ? "h-[22px] apaisado:h-3" : desplegada ? "mt-1 h-20" : "mt-1 h-[22px]"
+      }`}
+    >
+      {ancho > 0 && !desplegada && (
+        <svg
+          width={ancho}
+          height="100%"
+          viewBox={`0 0 ${ancho} ${ALTO_PLEGADA}`}
+          preserveAspectRatio="none"
+          aria-hidden="true"
         >
-          <span aria-hidden="true">{reproduciendo ? "❚❚" : "▶"}</span>
-          {reproduciendo ? t.tiempo.pausar : t.tiempo.reproducir}
-        </button>
+          {tope > 0 &&
+            tramos.map((tramo) => {
+              if (tramo.valor === 0) return null;
+              const alto = Math.max(ALTO_MINIMO_BARRA, (tramo.valor / tope) * ALTO_PLEGADA);
+              const x = Math.max(0, xDeDia(tramo.inicio, ancho, dominio));
+              const dentro = tramo.fin > periodo.desde && tramo.inicio <= periodo.hasta;
+              return (
+                <rect
+                  key={tramo.inicio}
+                  x={x}
+                  y={ALTO_PLEGADA - alto}
+                  width={Math.max(1, xDeDia(tramo.fin, ancho, dominio) - x - HUECO_ENTRE_BARRAS)}
+                  height={alto}
+                  fill={PALETA.secundario}
+                  fillOpacity={dentro ? OPACIDAD_PLEGADA_DENTRO : OPACIDAD_PLEGADA_FUERA}
+                />
+              );
+            })}
+          {destellos.map((destello, i) => (
+            <circle
+              key={i}
+              cx={xDeDia(destello.dia, ancho, dominio)}
+              cy={ALTO_PLEGADA - RADIO_DESTELLO}
+              r={RADIO_DESTELLO}
+              fill={COLOR_ESTADO[destello.estado]}
+            />
+          ))}
+        </svg>
+      )}
+      {ancho > 0 && desplegada && (
+        <svg width={ancho} height={ALTO} role="group" aria-label={t.tiempo.titulo}>
+          <rect
+            x={0}
+            y={0}
+            width={ancho}
+            height={ALTO_BARRAS}
+            fill="transparent"
+            className="cursor-crosshair"
+            onDoubleClick={onQuitarSeleccion}
+            onPointerDown={(evento) =>
+              empezar(evento, { modo: "nuevo", ancla: diaDeEvento(evento) })
+            }
+            onPointerMove={mover}
+            onPointerUp={terminar}
+          />
+          <g aria-hidden="true" pointerEvents="none">
+            {tope > 0 &&
+              tramos.map((tramo) => {
+                if (tramo.valor === 0) return null;
+                const x = Math.max(0, xDeDia(tramo.inicio, ancho, dominio));
+                const anchoTramo = Math.min(ancho, xDeDia(tramo.fin, ancho, dominio)) - x;
+                const hueco = anchoTramo >= ANCHO_MINIMO_CON_HUECO ? HUECO_ENTRE_BARRAS : 0;
+                const alto = Math.max(ALTO_MINIMO_BARRA, (tramo.valor / tope) * ALTO_BARRAS);
+                const dentro = tramo.fin > periodo.desde && tramo.inicio <= periodo.hasta;
+                return (
+                  <rect
+                    key={tramo.inicio}
+                    x={x}
+                    y={ALTO_BARRAS - alto}
+                    width={Math.max(anchoTramo - hueco, 1)}
+                    height={alto}
+                    fill={PALETA.elevado}
+                    stroke={dentro ? PALETA.secundario : PALETA.linea}
+                    strokeWidth={1}
+                  />
+                );
+              })}
+            {tramosUcrania !== null && (
+              <path
+                d={escalones(tramosUcrania, ancho, dominio)}
+                fill="none"
+                stroke={PALETA.atribuido}
+                strokeWidth={1}
+              />
+            )}
+            <rect
+              x={0}
+              width={Math.max(xDesde, 0)}
+              height={ALTO_BARRAS}
+              fill={PALETA.fondo}
+              fillOpacity={OPACIDAD_FUERA_DEL_PERIODO}
+            />
+            <rect
+              x={xHasta}
+              width={Math.max(ancho - xHasta, 0)}
+              height={ALTO_BARRAS}
+              fill={PALETA.fondo}
+              fillOpacity={OPACIDAD_FUERA_DEL_PERIODO}
+            />
+            <line x1={0} x2={ancho} y1={ALTO_BARRAS} y2={ALTO_BARRAS} stroke={PALETA.linea} />
+            {destellos.map((destello, i) => {
+              const x = xDeDia(destello.dia, ancho, dominio);
+              const color = COLOR_ESTADO[destello.estado];
+              return (
+                <g key={i}>
+                  <circle cx={x} cy={ALTO_BARRAS} r={RADIO_HALO} fill={color} opacity={OPACIDAD_HALO} />
+                  <circle cx={x} cy={ALTO_BARRAS} r={RADIO_DESTELLO} fill={color} />
+                </g>
+              );
+            })}
+            {marcasDeEje(dominio, ancho).map((marca) => {
+              const x = xDeDia(marca.dia, ancho, dominio);
+              return (
+                <g key={marca.dia}>
+                  <line
+                    x1={x}
+                    x2={x}
+                    y1={ALTO_BARRAS}
+                    y2={ALTO_BARRAS + LARGO_MARCA}
+                    stroke={PALETA.linea}
+                  />
+                  <text
+                    x={x + SEPARACION_ROTULO}
+                    y={ALTO - SEPARACION_ROTULO}
+                    fill={PALETA.secundario}
+                    fontSize={CUERPO_ROTULO}
+                    className="mono"
+                  >
+                    {marca.etiqueta}
+                  </text>
+                </g>
+              );
+            })}
+          </g>
+          {asa("desde", xDesde)}
+          {asa("hasta", xHasta)}
+        </svg>
+      )}
+    </div>
+  );
+
+  return (
+    // El envoltorio solo escucha el paso del ratón y el foco para desplegar la franja; con
+    // teclado se despliega con el botón de la franja o con la tecla T.
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
+    <div
+      onMouseEnter={() => setEncima(true)}
+      onMouseLeave={() => setEncima(false)}
+      onFocus={() => setEncima(true)}
+      onBlur={(evento) => {
+        if (!evento.currentTarget.contains(evento.relatedTarget as Node | null)) setEncima(false);
+      }}
+    >
+    <section
+      aria-label={t.tiempo.titulo}
+      className={
+        forma === "hoja"
+          ? "px-3 pb-2"
+          : forma === "barra"
+            ? "flotante rounded-none px-2 apaisado:bg-transparent apaisado:px-0 apaisado:shadow-none"
+            : "flotante px-3 pb-1.5 pt-1.5"
+      }
+    >
+      {!desplegada && forma !== "barra" && (
+        <div className="flex items-center gap-2 text-xs">
+          <button
+            type="button"
+            className={`flex flex-1 cursor-pointer items-center gap-2 rounded-sm px-1 hover:bg-elevado ${alto}`}
+            aria-expanded={false}
+            onClick={() => onAbierta(true)}
+          >
+            <span className="text-texto">{t.tiempo.titulo}</span>
+            {!completo && <span className="text-secundario">· {t.tiempo.acotado}</span>}
+          </button>
+          {hayQueVerTodo && (
+            <button type="button" className={`control text-xs text-texto ${alto}`} onClick={onVerTodo}>
+              {t.tiempo.verTodo}
+            </button>
+          )}
+          {forma === "franja" && (
+            <button
+              type="button"
+              className={`control text-xs ${alto}`}
+              aria-expanded={false}
+              onClick={() => onAbierta(true)}
+            >
+              {t.tiempo.desplegar}
+            </button>
+          )}
+        </div>
+      )}
+      {desplegada && (
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+        {reproduciendo ? (
+          <button type="button" className={`control control-principal text-xs ${alto}`} onClick={onPausar}>
+            <span aria-hidden="true">❚❚</span>
+            {t.tiempo.pausar}
+          </button>
+        ) : (
+          <button type="button" className={`control control-principal text-xs ${alto}`} onClick={onReproducir}>
+            <span aria-hidden="true">▶</span>
+            {reproduccion === "pausada" ? t.tiempo.reanudar : t.tiempo.reproducir}
+          </button>
+        )}
+        {reproduccion !== "parada" && (
+          <button type="button" className={`control text-xs text-texto ${alto}`} onClick={onDetener}>
+            <span aria-hidden="true">■</span>
+            {t.tiempo.detener}
+          </button>
+        )}
         <div role="radiogroup" aria-label={t.tiempo.granularidad} className="flex gap-1">
           {GRANULARIDADES.map((opcion) => (
             <button
@@ -226,25 +476,22 @@ export function LineaTiempo({
               type="button"
               role="radio"
               aria-checked={granularidad === opcion}
-              className="boton boton-discreto min-h-7 text-xs"
+              className={`control text-xs ${alto}`}
               onClick={() => onGranularidad(opcion)}
             >
               {t.tiempo.porGranularidad[opcion]}
             </button>
           ))}
         </div>
-        <button
-          type="button"
-          className="boton boton-discreto min-h-7 text-xs"
-          disabled={completo}
-          onClick={() => onPeriodo(dominio)}
-        >
-          {t.tiempo.todo}
-        </button>
+        {hayQueVerTodo && (
+          <button type="button" className={`control text-xs text-texto ${alto}`} onClick={onVerTodo}>
+            {t.tiempo.verTodo}
+          </button>
+        )}
         <p className="mono text-xs text-texto" aria-live="off">
           {t.tiempo.periodo(fechaDia(periodo.desde), fechaDia(periodo.hasta))}
         </p>
-        <p className="mono ml-auto flex flex-wrap gap-x-3 text-xs text-secundario">
+        <p className="ml-auto flex flex-wrap gap-x-3 text-xs text-secundario">
           <span>
             {t.tiempo.incidentesPorTramo} · {t.tiempo.maximo(numero(tope, idioma))}
           </span>
@@ -258,100 +505,43 @@ export function LineaTiempo({
             </span>
           )}
         </p>
+        {forma === "franja" && abierta && (
+          <button
+            type="button"
+            className={`control text-xs ${alto}`}
+            aria-expanded={true}
+            onClick={() => onAbierta(false)}
+          >
+            {t.tiempo.plegar}
+          </button>
+        )}
       </div>
+      )}
       <p id={idInstrucciones} className="sr-only">
         {t.tiempo.instrucciones}
       </p>
-      <div ref={contenedor} className="mt-1 h-20 w-full touch-none select-none">
-        {ancho > 0 && (
-          <svg width={ancho} height={ALTO} role="group" aria-label={t.tiempo.titulo}>
-            <rect
-              x={0}
-              y={0}
-              width={ancho}
-              height={ALTO_BARRAS}
-              fill="transparent"
-              className="cursor-crosshair"
-              onPointerDown={(evento) =>
-                empezar(evento, { modo: "nuevo", ancla: diaDeEvento(evento) })
-              }
-              onPointerMove={mover}
-              onPointerUp={terminar}
-            />
-            <g aria-hidden="true" pointerEvents="none">
-              {tope > 0 &&
-                tramos.map((tramo) => {
-                  if (tramo.valor === 0) return null;
-                  const x = Math.max(0, xDeDia(tramo.inicio, ancho, dominio));
-                  const anchoTramo = Math.min(ancho, xDeDia(tramo.fin, ancho, dominio)) - x;
-                  const hueco = anchoTramo >= ANCHO_MINIMO_CON_HUECO ? HUECO_ENTRE_BARRAS : 0;
-                  const alto = Math.max(ALTO_MINIMO_BARRA, (tramo.valor / tope) * ALTO_BARRAS);
-                  const dentro = tramo.fin > periodo.desde && tramo.inicio <= periodo.hasta;
-                  return (
-                    <rect
-                      key={tramo.inicio}
-                      x={x}
-                      y={ALTO_BARRAS - alto}
-                      width={Math.max(anchoTramo - hueco, 1)}
-                      height={alto}
-                      fill={PALETA.superficie2}
-                      stroke={dentro ? PALETA.secundario : PALETA.linea}
-                      strokeWidth={1}
-                    />
-                  );
-                })}
-              {tramosUcrania !== null && (
-                <path
-                  d={escalones(tramosUcrania, ancho, dominio)}
-                  fill="none"
-                  stroke={PALETA.atribuido}
-                  strokeWidth={1}
-                />
-              )}
-              <rect
-                x={0}
-                width={Math.max(xDesde, 0)}
-                height={ALTO_BARRAS}
-                fill={PALETA.fondo}
-                fillOpacity={OPACIDAD_FUERA_DEL_PERIODO}
-              />
-              <rect
-                x={xHasta}
-                width={Math.max(ancho - xHasta, 0)}
-                height={ALTO_BARRAS}
-                fill={PALETA.fondo}
-                fillOpacity={OPACIDAD_FUERA_DEL_PERIODO}
-              />
-              <line x1={0} x2={ancho} y1={ALTO_BARRAS} y2={ALTO_BARRAS} stroke={PALETA.linea} />
-              {marcasDeEje(dominio, ancho).map((marca) => {
-                const x = xDeDia(marca.dia, ancho, dominio);
-                return (
-                  <g key={marca.dia}>
-                    <line
-                      x1={x}
-                      x2={x}
-                      y1={ALTO_BARRAS}
-                      y2={ALTO_BARRAS + LARGO_MARCA}
-                      stroke={PALETA.linea}
-                    />
-                    <text
-                      x={x + SEPARACION_ROTULO}
-                      y={ALTO - SEPARACION_ROTULO}
-                      fill={PALETA.secundario}
-                      fontSize={CUERPO_ROTULO}
-                      className="mono"
-                    >
-                      {marca.etiqueta}
-                    </text>
-                  </g>
-                );
-              })}
-            </g>
-            {asa("desde", xDesde)}
-            {asa("hasta", xHasta)}
-          </svg>
-        )}
-      </div>
+      {forma === "barra" ? (
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            className="control text-xs text-texto apaisado:hidden"
+            aria-expanded={false}
+            onClick={() => onAbierta(true)}
+          >
+            {t.tiempo.periodoBoton}
+            {!completo && <span className="text-secundario">· {t.tiempo.acotado}</span>}
+          </button>
+          <div className="min-w-0 flex-1">{grafico}</div>
+          {hayQueVerTodo && (
+            <button type="button" className="control text-xs text-texto apaisado:hidden" onClick={onVerTodo}>
+              {t.tiempo.verTodo}
+            </button>
+          )}
+        </div>
+      ) : (
+        grafico
+      )}
     </section>
+    </div>
   );
 }

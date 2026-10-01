@@ -1,6 +1,6 @@
-// Estilo del mapa: la base de Protomaps con la paleta del observatorio y las capas propias
-// (incidentes, áreas de precisión, episodios, densidad y Ucrania). Glifos y sprites se
-// sirven desde este mismo sitio; las teselas, desde el subdominio de teselas.
+// Estilo del mapa: la base de Protomaps, oscura y apagada para que manden los incidentes, y
+// las capas propias. Glifos y sprites se sirven desde este mismo sitio; las teselas, desde
+// el subdominio de teselas.
 
 import { layers } from "@protomaps/basemaps";
 import type { Flavor } from "@protomaps/basemaps";
@@ -11,7 +11,7 @@ import type {
 } from "maplibre-gl";
 
 import { ESTADOS } from "../datos/vocabulario.ts";
-import { COLOR_ESTADO, GROSOR_CONTORNO, PALETA, TRAZO_DESMENTIDO } from "../paleta.ts";
+import { COLOR_ESTADO, PALETA, TRAZO_DESMENTIDO } from "../paleta.ts";
 import type { Idioma } from "../sitio.ts";
 
 export const URL_TESELAS: string =
@@ -21,6 +21,7 @@ export const URL_TESELAS: string =
 export const FUENTE_BASE = "protomaps";
 /** Tierra de Natural Earth para lo que queda fuera del recorte de teselas. */
 export const FUENTE_TIERRA = "tierra";
+export const FUENTE_PAISES = "paises";
 export const FUENTE_PUNTOS = "incidentes";
 export const FUENTE_PUNTOS_SUELTOS = "incidentes-sueltos";
 export const FUENTE_AREAS = "areas";
@@ -30,20 +31,36 @@ export const FUENTE_REGIONES = "ucrania-regiones";
 export const FUENTE_CONTORNO = "ucrania-contorno";
 
 export const CAPA_GRUPOS = "grupos";
-export const CAPA_INCIDENTES = "incidentes";
+export const CAPA_INCIDENTES_GRAVES = "incidentes-graves";
+export const CAPA_INCIDENTES_DISCRETOS = "incidentes-discretos";
 export const CAPA_REGIONES = "ucrania-relleno";
 export const CAPA_REGION_ELEGIDA = "ucrania-elegida";
+export const CAPA_PAIS = "pais-resaltado";
+export const CAPA_RECIENTES = "recientes";
+export const CAPA_SELECCION = "seleccion";
+export const CAPA_EPISODIOS = "episodios";
+
+/** Capas que se pueden pulsar, de la de más arriba a la de más abajo. */
+export const CAPAS_PULSABLES: readonly string[] = [
+  CAPA_INCIDENTES_GRAVES,
+  CAPA_INCIDENTES_DISCRETOS,
+  CAPA_GRUPOS,
+  CAPA_REGIONES,
+];
 
 /** Capas propias de cada capa del selector. */
 export const CAPAS_DE_INCIDENTES: readonly string[] = [
   "areas-relleno",
   "areas-contorno",
   "areas-contorno-desmentido",
-  "episodios",
+  CAPA_EPISODIOS,
   CAPA_GRUPOS,
   "grupos-numero",
-  CAPA_INCIDENTES,
-  "seleccion",
+  CAPA_RECIENTES,
+  "novedades",
+  CAPA_INCIDENTES_DISCRETOS,
+  CAPA_INCIDENTES_GRAVES,
+  CAPA_SELECCION,
 ];
 export const CAPAS_DE_UCRANIA: readonly string[] = [
   CAPA_REGIONES,
@@ -59,47 +76,48 @@ const RADIO_DE_AGRUPACION_PX = 44;
 /** Zoom desde el que el área de precisión de cada incidente se empieza a ver. */
 const ZOOM_AREAS = 4.5;
 const ZOOM_AREAS_PLENAS = 6.5;
-/**
- * De cerca, el relleno se desvanece y queda solo el contorno: varios incidentes en el
- * mismo aeropuerto, con el mismo radio, taparían si no las pistas que se quieren ver.
- */
+/** De cerca, el relleno se desvanece para no tapar el terreno (pistas, calles). */
 const ZOOM_RELLENO_TENUE = 10;
 const ZOOM_SIN_RELLENO = 12.5;
-const OPACIDAD_AREA = 0.14;
+const OPACIDAD_AREA = 0.12;
+/** Los notificados, más discretos, no compiten con lo confirmado. */
+const OPACIDAD_DISCRETOS = 0.72;
+/** Destello fijo de lo de las últimas 24 horas. */
+const OPACIDAD_RECIENTE = 0.22;
 
 const FUENTE_TIPOGRAFICA_NUMEROS = ["Noto Sans Medium"];
 
-/** Tonos de tierra entre la superficie 1 y la 2 para que el relieve no distraiga. */
-const TIERRA = PALETA.superficie1;
-const TIERRA_VERDE = "#10233a";
-const TIERRA_URBANA = "#12243e";
-const VIA = PALETA.linea;
-const VIA_PRINCIPAL = "#2f4a73";
-const FRONTERA = "#4a6288";
-const ROTULO = PALETA.secundario;
-const ROTULO_TENUE = "#6c7e97";
+/** Base apagada: tierra casi del color del fondo y rótulos tenues. */
+const TIERRA = "#0b111c";
+const TIERRA_MATIZ = "#0d1420";
+const AGUA = PALETA.fondo;
+const VIA = "#172131";
+const VIA_PRINCIPAL = "#223047";
+const FRONTERA = "#34445d";
+const ROTULO = "#7d8aa0";
+const ROTULO_TENUE = "#556277";
 
 const SABOR: Flavor = {
-  background: PALETA.fondo,
+  background: AGUA,
   earth: TIERRA,
-  park_a: TIERRA_VERDE,
-  park_b: TIERRA_VERDE,
-  hospital: TIERRA_URBANA,
-  industrial: TIERRA_URBANA,
-  school: TIERRA_URBANA,
-  wood_a: TIERRA_VERDE,
-  wood_b: TIERRA_VERDE,
-  pedestrian: TIERRA_URBANA,
-  scrub_a: TIERRA_VERDE,
-  scrub_b: TIERRA_VERDE,
-  glacier: TIERRA_URBANA,
+  park_a: TIERRA_MATIZ,
+  park_b: TIERRA_MATIZ,
+  hospital: TIERRA_MATIZ,
+  industrial: TIERRA_MATIZ,
+  school: TIERRA_MATIZ,
+  wood_a: TIERRA_MATIZ,
+  wood_b: TIERRA_MATIZ,
+  pedestrian: TIERRA_MATIZ,
+  scrub_a: TIERRA_MATIZ,
+  scrub_b: TIERRA_MATIZ,
+  glacier: TIERRA_MATIZ,
   sand: TIERRA,
-  beach: TIERRA_URBANA,
-  aerodrome: TIERRA_URBANA,
+  beach: TIERRA_MATIZ,
+  aerodrome: TIERRA_MATIZ,
   runway: VIA_PRINCIPAL,
-  water: PALETA.fondo,
-  zoo: TIERRA_VERDE,
-  military: TIERRA_URBANA,
+  water: AGUA,
+  zoo: TIERRA_MATIZ,
+  military: TIERRA_MATIZ,
   tunnel_other_casing: TIERRA,
   tunnel_minor_casing: TIERRA,
   tunnel_link_casing: TIERRA,
@@ -111,7 +129,7 @@ const SABOR: Flavor = {
   tunnel_major: VIA,
   tunnel_highway: VIA,
   pier: VIA,
-  buildings: TIERRA_URBANA,
+  buildings: TIERRA_MATIZ,
   minor_service_casing: TIERRA,
   minor_casing: TIERRA,
   link_casing: TIERRA,
@@ -146,7 +164,7 @@ const SABOR: Flavor = {
   subplace_label: ROTULO_TENUE,
   subplace_label_halo: TIERRA,
   city_label: ROTULO,
-  city_label_halo: PALETA.fondo,
+  city_label_halo: AGUA,
   state_label: ROTULO_TENUE,
   state_label_halo: TIERRA,
   country_label: ROTULO,
@@ -155,11 +173,11 @@ const SABOR: Flavor = {
   landcover: {
     barren: TIERRA,
     farmland: TIERRA,
-    forest: TIERRA_VERDE,
-    glacier: TIERRA_URBANA,
+    forest: TIERRA_MATIZ,
+    glacier: TIERRA_MATIZ,
     grassland: TIERRA,
-    scrub: TIERRA_VERDE,
-    urban_area: TIERRA_URBANA,
+    scrub: TIERRA_MATIZ,
+    urban_area: TIERRA_MATIZ,
   },
 };
 
@@ -199,7 +217,7 @@ export function capasBase(idioma: Idioma): LayerSpecification[] {
     );
 }
 
-/** Color según el estado del incidente. */
+/** Color según el estado de un incidente o de una pila. */
 const COLOR_POR_ESTADO: ExpressionSpecification = [
   "match",
   ["get", "estado"],
@@ -207,26 +225,82 @@ const COLOR_POR_ESTADO: ExpressionSpecification = [
   PALETA.secundario,
 ] as unknown as ExpressionSpecification;
 
-const ES_DESMENTIDO: ExpressionSpecification = ["==", ["get", "estado"], "desmentido"];
+/** Color del anillo de un grupo: el del estado más grave que contiene. */
+export const COLOR_DE_GRUPO: ExpressionSpecification = [
+  "case",
+  [">", ["get", "n_atribuidos"], 0],
+  COLOR_ESTADO.atribuido,
+  [">", ["get", "n_confirmados"], 0],
+  COLOR_ESTADO.confirmado,
+  [">", ["get", "n_notificados"], 0],
+  COLOR_ESTADO.notificado,
+  COLOR_ESTADO.desmentido,
+];
 
-/** Opacidad que crece con el zoom desde cero hasta el valor dado. */
+const ES_DESMENTIDO: ExpressionSpecification = ["==", ["get", "estado"], "desmentido"];
+/**
+ * Un solo sistema de marcas: todo lo que junta más de un incidente (un grupo de la
+ * agrupación o una pila en el mismo punto exacto) es un círculo con su número; un símbolo
+ * suelto es siempre un incidente.
+ */
+const ES_GRUPO: ExpressionSpecification = [
+  "any",
+  ["has", "point_count"],
+  [">", ["coalesce", ["get", "n"], 1], 1],
+];
+/** Incidentes que junta un círculo: el total de un grupo o el de una pila. */
+const CUENTA: ExpressionSpecification = ["coalesce", ["get", "total"], ["get", "n"]];
+/** Radio de un círculo según su cuenta: crece con la raíz, entre un mínimo y un máximo legibles. */
+export const RADIO_GRUPO_MINIMO = 11;
+export const RADIO_GRUPO_MAXIMO = 26;
+/** Cuenta (su raíz) a partir de la cual el círculo ya no crece: cien incidentes. */
+const RAIZ_CUENTA_MAXIMA = 10;
+
+/** El mismo radio que dibuja el mapa, para quien lo necesite fuera de él (el pulso). */
+export function radioDeGrupo(cuenta: number): number {
+  const raiz = Math.min(Math.max(Math.sqrt(cuenta), 1), RAIZ_CUENTA_MAXIMA);
+  const avance = (raiz - 1) / (RAIZ_CUENTA_MAXIMA - 1);
+  return RADIO_GRUPO_MINIMO + avance * (RADIO_GRUPO_MAXIMO - RADIO_GRUPO_MINIMO);
+}
+
+const RADIO_DE_GRUPO: ExpressionSpecification = [
+  "interpolate",
+  ["linear"],
+  ["sqrt", CUENTA],
+  1,
+  RADIO_GRUPO_MINIMO,
+  RAIZ_CUENTA_MAXIMA,
+  RADIO_GRUPO_MAXIMO,
+];
+
 function opacidadSegunZoom(plena: number): ExpressionSpecification {
   return ["interpolate", ["linear"], ["zoom"], ZOOM_AREAS, 0, ZOOM_AREAS_PLENAS, plena];
 }
 
-function capasPropias(): LayerSpecification[] {
+function capasPropias(acento: string): LayerSpecification[] {
   return [
+    {
+      id: CAPA_PAIS,
+      type: "fill",
+      source: FUENTE_PAISES,
+      filter: ["==", ["get", "iso"], ""],
+      paint: { "fill-color": PALETA.texto, "fill-opacity": 0.07 },
+    },
     {
       id: CAPA_REGIONES,
       type: "fill",
       source: FUENTE_REGIONES,
-      paint: { "fill-color": PALETA.atribuido, "fill-opacity": 0 },
+      paint: {
+        "fill-color": PALETA.atribuido,
+        "fill-opacity": 0,
+        "fill-opacity-transition": { duration: 260, delay: 0 },
+      },
     },
     {
       id: "ucrania-regiones-linea",
       type: "line",
       source: FUENTE_REGIONES,
-      paint: { "line-color": PALETA.atribuido, "line-width": 0.5, "line-opacity": 0.5 },
+      paint: { "line-color": PALETA.atribuido, "line-width": 0.5, "line-opacity": 0.45 },
     },
     {
       id: "ucrania-contorno",
@@ -239,13 +313,14 @@ function capasPropias(): LayerSpecification[] {
       type: "line",
       source: FUENTE_REGIONES,
       filter: ["in", ["get", "iso"], ["literal", []]],
-      paint: { "line-color": PALETA.dorado, "line-width": 1 },
+      paint: { "line-color": acento, "line-width": 1.2 },
     },
     {
       id: "densidad",
       type: "heatmap",
       source: FUENTE_PUNTOS_SUELTOS,
       paint: {
+        "heatmap-weight": ["get", "n"],
         "heatmap-radius": ["interpolate", ["linear"], ["zoom"], 2, 14, 6, 34, 10, 60],
         "heatmap-intensity": ["interpolate", ["linear"], ["zoom"], 2, 0.5, 8, 1.4],
         "heatmap-opacity": 0.7,
@@ -254,13 +329,13 @@ function capasPropias(): LayerSpecification[] {
           ["linear"],
           ["heatmap-density"],
           0,
-          "rgba(147, 163, 184, 0)",
+          "rgba(147, 160, 180, 0)",
           0.25,
-          "rgba(147, 163, 184, 0.35)",
+          "rgba(147, 160, 180, 0.3)",
           0.6,
-          "rgba(237, 232, 218, 0.6)",
+          "rgba(232, 238, 246, 0.55)",
           1,
-          "rgba(237, 232, 218, 0.9)",
+          "rgba(232, 238, 246, 0.85)",
         ],
       },
     },
@@ -295,8 +370,8 @@ function capasPropias(): LayerSpecification[] {
       filter: ["!", ES_DESMENTIDO],
       paint: {
         "line-color": COLOR_POR_ESTADO,
-        "line-width": GROSOR_CONTORNO,
-        "line-opacity": opacidadSegunZoom(1),
+        "line-width": 1,
+        "line-opacity": opacidadSegunZoom(0.7),
       },
     },
     {
@@ -307,37 +382,37 @@ function capasPropias(): LayerSpecification[] {
       filter: ES_DESMENTIDO,
       paint: {
         "line-color": PALETA.desmentido,
-        "line-width": GROSOR_CONTORNO,
+        "line-width": 1,
         "line-dasharray": [...TRAZO_DESMENTIDO],
-        "line-opacity": opacidadSegunZoom(1),
+        "line-opacity": opacidadSegunZoom(0.7),
       },
     },
     {
-      id: "episodios",
+      id: CAPA_EPISODIOS,
       type: "line",
       source: FUENTE_EPISODIOS,
-      paint: { "line-color": PALETA.dorado, "line-width": 1, "line-opacity": 0.8 },
+      paint: { "line-color": PALETA.texto, "line-width": 1, "line-opacity": 0.55 },
     },
     {
       id: CAPA_GRUPOS,
       type: "circle",
       source: FUENTE_PUNTOS,
-      filter: ["has", "point_count"],
+      filter: ES_GRUPO,
       paint: {
-        "circle-color": PALETA.superficie1,
+        "circle-color": PALETA.panelSolido,
         "circle-opacity": 0.92,
-        "circle-stroke-color": PALETA.dorado,
-        "circle-stroke-width": 1,
-        "circle-radius": ["step", ["get", "point_count"], 12, 10, 15, 50, 19],
+        "circle-stroke-color": COLOR_DE_GRUPO,
+        "circle-stroke-width": 1.5,
+        "circle-radius": RADIO_DE_GRUPO,
       },
     },
     {
       id: "grupos-numero",
       type: "symbol",
       source: FUENTE_PUNTOS,
-      filter: ["has", "point_count"],
+      filter: ES_GRUPO,
       layout: {
-        "text-field": ["get", "point_count_abbreviated"],
+        "text-field": ["to-string", CUENTA],
         "text-font": FUENTE_TIPOGRAFICA_NUMEROS,
         "text-size": 12,
         "text-allow-overlap": true,
@@ -345,10 +420,47 @@ function capasPropias(): LayerSpecification[] {
       paint: { "text-color": PALETA.texto },
     },
     {
-      id: CAPA_INCIDENTES,
+      id: CAPA_RECIENTES,
+      type: "circle",
+      source: FUENTE_PUNTOS,
+      filter: ["all", ["!", ES_GRUPO], ["==", ["get", "reciente"], 1]],
+      paint: {
+        "circle-radius": 16,
+        "circle-color": COLOR_POR_ESTADO,
+        "circle-blur": 1,
+        "circle-opacity": OPACIDAD_RECIENTE,
+      },
+    },
+    {
+      id: "novedades",
+      type: "circle",
+      source: FUENTE_PUNTOS,
+      filter: ["all", ["!", ES_GRUPO], ["==", ["get", "novedad"], 1]],
+      paint: {
+        "circle-radius": 15,
+        "circle-color": "rgba(0, 0, 0, 0)",
+        "circle-stroke-color": acento,
+        "circle-stroke-width": 1,
+        "circle-stroke-opacity": 0.85,
+      },
+    },
+    {
+      id: CAPA_INCIDENTES_DISCRETOS,
       type: "symbol",
       source: FUENTE_PUNTOS,
-      filter: ["!", ["has", "point_count"]],
+      filter: ["all", ["!", ES_GRUPO], ["==", ["get", "grave"], 0]],
+      layout: {
+        "icon-image": ["get", "icono"],
+        "icon-allow-overlap": true,
+        "icon-ignore-placement": true,
+      },
+      paint: { "icon-opacity": OPACIDAD_DISCRETOS },
+    },
+    {
+      id: CAPA_INCIDENTES_GRAVES,
+      type: "symbol",
+      source: FUENTE_PUNTOS,
+      filter: ["all", ["!", ES_GRUPO], ["==", ["get", "grave"], 1]],
       layout: {
         "icon-image": ["get", "icono"],
         "icon-allow-overlap": true,
@@ -356,14 +468,14 @@ function capasPropias(): LayerSpecification[] {
       },
     },
     {
-      id: "seleccion",
+      id: CAPA_SELECCION,
       type: "circle",
       source: FUENTE_SELECCION,
       paint: {
-        "circle-radius": 13,
+        "circle-radius": 14,
         "circle-color": "rgba(0, 0, 0, 0)",
-        "circle-stroke-color": PALETA.dorado,
-        "circle-stroke-width": 1,
+        "circle-stroke-color": acento,
+        "circle-stroke-width": 1.5,
       },
     },
   ];
@@ -371,7 +483,7 @@ function capasPropias(): LayerSpecification[] {
 
 const VACIA = { type: "FeatureCollection" as const, features: [] };
 
-export function estilo(idioma: Idioma, origen: string): StyleSpecification {
+export function estilo(idioma: Idioma, origen: string, acento: string): StyleSpecification {
   const [fondo, ...base] = capasBase(idioma);
   if (fondo === undefined) throw new Error("el estilo base no tiene capas");
   // Bajo las teselas va la tierra de Natural Earth: fuera del recorte de Europa el mapa
@@ -380,7 +492,7 @@ export function estilo(idioma: Idioma, origen: string): StyleSpecification {
     id: "tierra-de-fondo",
     type: "fill",
     source: FUENTE_TIERRA,
-    paint: { "fill-color": PALETA.superficie1 },
+    paint: { "fill-color": TIERRA },
   };
   return {
     version: 8,
@@ -389,12 +501,19 @@ export function estilo(idioma: Idioma, origen: string): StyleSpecification {
     sources: {
       [FUENTE_BASE]: { type: "vector", url: `pmtiles://${URL_TESELAS}` },
       [FUENTE_TIERRA]: { type: "geojson", data: `${origen}/mapa/tierra.geojson` },
+      [FUENTE_PAISES]: { type: "geojson", data: `${origen}/mapa/paises.geojson` },
       [FUENTE_PUNTOS]: {
         type: "geojson",
         data: VACIA,
         cluster: true,
         clusterMaxZoom: ZOOM_MAXIMO_AGRUPADO,
         clusterRadius: RADIO_DE_AGRUPACION_PX,
+        clusterProperties: {
+          total: ["+", ["get", "n"]],
+          n_atribuidos: ["+", ["get", "n_atribuidos"]],
+          n_confirmados: ["+", ["get", "n_confirmados"]],
+          n_notificados: ["+", ["get", "n_notificados"]],
+        },
       },
       [FUENTE_PUNTOS_SUELTOS]: { type: "geojson", data: VACIA },
       [FUENTE_AREAS]: { type: "geojson", data: VACIA },
@@ -403,6 +522,6 @@ export function estilo(idioma: Idioma, origen: string): StyleSpecification {
       [FUENTE_REGIONES]: { type: "geojson", data: `${origen}/mapa/ucrania-regiones.geojson` },
       [FUENTE_CONTORNO]: { type: "geojson", data: `${origen}/mapa/ucrania-contorno.geojson` },
     },
-    layers: [fondo, tierraDeFondo, ...base, ...capasPropias()],
+    layers: [fondo, tierraDeFondo, ...base, ...capasPropias(acento)],
   };
 }

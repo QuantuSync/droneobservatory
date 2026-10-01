@@ -26,15 +26,15 @@ export function Lista({ t, idioma, incidentes, regiones, onRegion }: Props) {
     .sort((a, b) => b.dia - a.dia || b.id.localeCompare(a.id));
   return (
     <div>
-      <h2 className="titular text-2xl">{t.lista.titulo}</h2>
-      <p className="mono mt-2 text-xs text-secundario">{t.lista.incidentes(ordenados.length)}</p>
+      <h2 className="sr-only">{t.lista.titulo}</h2>
+      <p className="mono px-1 pt-1 text-xs text-secundario">{t.lista.incidentes(ordenados.length)}</p>
       {ordenados.length === 0 && <p className="mt-3 text-secundario">{t.lista.vacia}</p>}
       <ul className="mt-2">
         {ordenados.map((incidente) => (
           <li key={incidente.id} className="border-b border-linea py-2">
             <Enlace
               a={rutaDeFicha(incidente.id, idioma)}
-              className="flex items-start gap-2 no-underline hover:text-dorado"
+              className="flex items-start gap-2 rounded-sm px-1 py-0.5 hover:bg-elevado"
             >
               <Simbolo tipo={incidente.tipo} estado={incidente.estado} className="mt-0.5 shrink-0" />
               <span className="min-w-0">
@@ -42,6 +42,9 @@ export function Lista({ t, idioma, incidentes, regiones, onRegion }: Props) {
                 <span className="mono block text-xs text-secundario">
                   {fechaDia(incidente.dia)} · {pais(incidente.pais, idioma)} ·{" "}
                   {t.estado[incidente.estado]}
+                  {incidente.punto === null && (
+                    <span className="text-notificado"> · {t.imprecisa.etiqueta}</span>
+                  )}
                 </span>
               </span>
             </Enlace>
@@ -50,13 +53,13 @@ export function Lista({ t, idioma, incidentes, regiones, onRegion }: Props) {
       </ul>
       {regiones.length > 0 && (
         <section className="mt-4">
-          <h3 className="etiqueta">{t.lista.regiones}</h3>
+          <h3 className="rotulo">{t.lista.regiones}</h3>
           <ul className="mt-1 flex flex-wrap gap-1.5">
             {regiones.map((codigo) => (
               <li key={codigo}>
                 <button
                   type="button"
-                  className="boton boton-discreto min-h-7 text-xs"
+                  className="control min-h-7 text-xs"
                   onClick={() => onRegion(codigo)}
                 >
                   {region(codigo, idioma)}

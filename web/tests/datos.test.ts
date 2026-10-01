@@ -8,6 +8,7 @@ import { COLUMNAS_INCIDENTES, celda, csvAtaques, csvIncidentes } from "../src/da
 import {
   DESCONOCIDO,
   detalleIncidente,
+  detalleSinUbicacion,
   meta,
   resumir,
   resumirUcrania,
@@ -17,6 +18,7 @@ import {
   cifrasDeRegion,
   dominioUcrania,
   lanzamientosPorNoche,
+  nochesDeGuerra,
 } from "../src/datos/ucrania.ts";
 import {
   validarAtaque,
@@ -27,7 +29,8 @@ import {
   validarResumenUcrania,
 } from "../src/datos/validar.ts";
 import * as vocabulario from "../src/datos/vocabulario.ts";
-import { CAMPOS_INCIDENTE, validarEstadoSistema } from "../src/datos/validar.ts";
+import { CAMPOS_INCIDENTE, validarEstadoSistema, validarSinUbicacion } from "../src/datos/validar.ts";
+import { cierre } from "../src/datos/efecto.ts";
 import { afirmacionesDe, rangoDeFuentes, valorLegible } from "../src/datos/afirmaciones.ts";
 import { referenciaDeFrescura } from "../src/tiempo/frescura.ts";
 import { diaDeInstante } from "../src/tiempo/dias.ts";
@@ -111,11 +114,10 @@ describe("resúmenes", () => {
   });
 
   it("reduce cada incidente a lo que necesita el mapa", () => {
-    expect(resumen.incidentes[0]).toEqual({
+    expect(resumen.incidentes.find((i) => i.id === "EODI-2025-00210")).toEqual({
       id: "EODI-2025-00210",
-      lon: 11.7861,
-      lat: 48.3536,
-      radio_km: 5,
+      punto: { lon: 11.7861, lat: 48.3536, radio_km: 5 },
+      imprecisa: null,
       tipo: "interrupcion_aeroportuaria",
       estado: "notificado",
       presencia: "no_confirmada",
@@ -133,13 +135,41 @@ describe("resúmenes", () => {
     ]);
   });
 
-  it("cuenta como confirmados los confirmados y los atribuidos", () => {
-    expect(meta(resumen)).toEqual({
+  it("cuenta los confirmados y los atribuidos por separado", () => {
+    expect(meta(resumen, false)).toEqual({
       actualizado: "2026-09-30T12:42Z",
       incidentes: 3,
-      confirmados: 2,
+      confirmados: 1,
+      atribuidos: 1,
       paises: 2,
+      sinUbicacion: false,
     });
+  });
+
+  it("saca un evento por cada paso del historial, del más reciente al más antiguo", () => {
+    expect(resumen.eventos.map((e) => [e.id, e.estado, e.nuevo])).toEqual([
+      ["EODI-2025-00016", "confirmado", true],
+      ["EODI-2025-00026", "atribuido", true],
+      ["EODI-2025-00210", "notificado", true],
+    ]);
+    const conCambio = resumir(
+      coleccion([
+        incidente({
+          estado: {
+            actual: "confirmado",
+            historial: [
+              { estado: "notificado", fecha: { valor: "2026-09-01T10:00Z", precision: "hora" } },
+              { estado: "confirmado", fecha: { valor: "2026-09-02T08:30Z", precision: "minuto" } },
+            ],
+          },
+        }),
+      ]),
+      ataques,
+    );
+    expect(conCambio.eventos).toEqual([
+      { id: "EODI-2025-00210", fecha: "2026-09-02T08:30Z", estado: "confirmado", nuevo: false },
+      { id: "EODI-2025-00210", fecha: "2026-09-01T10:00Z", estado: "notificado", nuevo: true },
+    ]);
   });
 
   it("la ficha lleva todas las propiedades y el punto", () => {
@@ -501,5 +531,78 @@ describe("quién dice qué", () => {
       clase: "texto",
       texto: CARGAS_MALICIOSAS.script,
     });
+  });
+});
+
+describe("incidentes con ubicación imprecisa", () => {
+  const sinPunto = (cambios: Record<string, unknown> = {}) => {
+    const { lugar: _lugar, ...resto } = incidente({ id: "EODI-2026-00300" }).properties;
+    return { ...resto, lugar: { pais: "PL", nivel: "region", region: "Lublin" }, ...cambios };
+  };
+
+  it("valida el fichero y rechaza un radio o un nivel que no tocan", () => {
+    expect(validarSinUbicacion({ incidentes: [sinPunto()] }).ok).toBe(true);
+    expect(
+      validarSinUbicacion({ incidentes: [sinPunto({ lugar: { pais: "PL", nivel: "pueblo" } })] }).ok,
+    ).toBe(false);
+    expect(
+      validarSinUbicacion({
+        incidentes: [sinPunto({ lugar: { pais: "PL", nivel: "pais", radio_km: 5 } })],
+      }).ok,
+    ).toBe(false);
+  });
+
+  it("entran en el resumen sin punto, con su nivel, y en los eventos", () => {
+    const publicacion = validarSinUbicacion({ incidentes: [sinPunto()] });
+    if (!publicacion.ok) throw new Error("no valida");
+    const conImprecisos = resumir(incidentes, ataques, publicacion.datos);
+    const impreciso = conImprecisos.incidentes.find((i) => i.id === "EODI-2026-00300");
+    expect(impreciso?.punto).toBeNull();
+    expect(impreciso?.imprecisa).toEqual({ nivel: "region", region: "Lublin" });
+    expect(conImprecisos.eventos.some((e) => e.id === "EODI-2026-00300")).toBe(true);
+    expect(validarResumen(conImprecisos).ok).toBe(true);
+    expect(meta(conImprecisos, true)).toMatchObject({ incidentes: 4, paises: 3, sinUbicacion: true });
+  });
+
+  it("su ficha valida sin punto", () => {
+    const publicacion = validarSinUbicacion({ incidentes: [sinPunto()] });
+    if (!publicacion.ok) throw new Error("no valida");
+    const detalle = detalleSinUbicacion(publicacion.datos.incidentes[0]!);
+    expect(detalle.lon).toBeNull();
+    expect(validarDetalleIncidente(detalle).ok).toBe(true);
+    expect(validarDetalleIncidente({ ...detalle, lon: 3 }).ok).toBe(false);
+  });
+});
+
+describe("cierre en la ficha", () => {
+  it("dice la duración, que no la hay, que no hubo cierre o nada", () => {
+    expect(cierre("sobrevuelo", { cierre: { valor: "si", minutos: { min: 30, max: 45 } } })).toEqual({
+      clase: "con_duracion",
+      minutos: { min: 30, max: 45 },
+    });
+    expect(cierre("sobrevuelo", { cierre: { valor: "si" } })).toEqual({ clase: "sin_duracion" });
+    expect(cierre("sobrevuelo", { cierre: { valor: "si", minutos: "desconocido" } })).toEqual({
+      clase: "sin_duracion",
+    });
+    expect(cierre("sobrevuelo", { cierre: { valor: "no" } })).toEqual({ clase: "sin_cierre" });
+    expect(cierre("sobrevuelo", { cierre: { valor: "desconocido" } })).toBeNull();
+    expect(cierre("sobrevuelo", undefined)).toBeNull();
+  });
+
+  it("en una interrupción aeroportuaria, un cierre sin datos se dice desconocido", () => {
+    expect(cierre("interrupcion_aeroportuaria", { cierre: { valor: "desconocido" } })).toEqual({
+      clase: "desconocido",
+    });
+    expect(cierre("interrupcion_aeroportuaria", undefined)).toEqual({ clase: "desconocido" });
+  });
+});
+
+describe("la guerra noche a noche", () => {
+  it("agrupa por noche los ataques contra Ucrania y pesa las regiones", () => {
+    const noches = nochesDeGuerra(resumirUcrania(ataques));
+    expect(noches).toHaveLength(1);
+    expect(noches[0]?.lanzados).toBe(188);
+    // UA-32 trae derribos desglosados (12, y 5 de un tramo que no suma: cuenta 1).
+    expect(Object.fromEntries(noches[0]?.regiones ?? [])).toEqual({ "UA-32": 13, "UA-63": 1 });
   });
 });

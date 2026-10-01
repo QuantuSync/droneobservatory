@@ -1,4 +1,5 @@
 import { afirmacionesDe, rangoDeFuentes, valorLegible } from "../datos/afirmaciones.ts";
+import { cierre as leerCierre } from "../datos/efecto.ts";
 import type {
   AfirmacionPublica,
   IncidenteDetalle,
@@ -31,9 +32,10 @@ const CAMPOS_DE_FILA = {
   fecha: ["tiempo.inicio", "tiempo.fin"],
   lugar: ["lugar.pais", "lugar.localidad"],
   drones: ["drones.numero", "drones.clase", "drones.modelo"],
-  duracion: ["tiempo.duracion_min", "consecuencias.cierre.minutos"],
+  duracion: ["tiempo.duracion_min"],
   efecto: [
     "consecuencias.cierre.valor",
+    "consecuencias.cierre.minutos",
     "consecuencias.vuelos_desviados",
     "consecuencias.vuelos_cancelados",
     "consecuencias.vuelos_retrasados",
@@ -73,7 +75,7 @@ function QueDiceCadaFuente({
   const variosCampos = new Set(afirmaciones.map((a) => a.campo)).size > 1;
   return (
     <details className="mt-1 text-xs">
-      <summary className="cursor-pointer text-dorado">
+      <summary className="cursor-pointer text-acento tel:flex tel:min-h-11 tel:items-center">
         {t.ficha.queDiceCadaFuente(afirmaciones.length)}
       </summary>
       <ul className="mt-1">
@@ -86,7 +88,7 @@ function QueDiceCadaFuente({
               )}
               <ValorDeFuente t={t} idioma={idioma} valor={afirmacion.valor} />{" "}
               <span className="text-secundario">{t.ficha.valorSegun}</span> {afirmacion.medio}{" "}
-              <span className="mono rounded-sm border border-borde px-1 text-dorado">
+              <span className="mono rounded-sm border border-linea px-1 text-acento">
                 <span className="sr-only">{t.ficha.codigo(codigo)}</span>
                 <span aria-hidden="true">{codigo}</span>
               </span>{" "}
@@ -135,7 +137,6 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
   const { tiempo, lugar, objetivo, drones, consecuencias, respuesta, atribucion } = incidente;
   const titulo = incidente.titulo[idioma];
   const nombre = objetivo?.nombre ?? titulo;
-  const minutosCierre = consecuencias?.cierre?.minutos;
   const vuelos: [RangoODesconocido | undefined, string, string][] = [
     [consecuencias?.vuelos_desviados, t.ficha.vuelosDesviados, "consecuencias.vuelos_desviados"],
     [consecuencias?.vuelos_cancelados, t.ficha.vuelosCancelados, "consecuencias.vuelos_cancelados"],
@@ -145,16 +146,31 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
   ];
   const medidas = respuesta?.medidas ?? [];
   const de = (campos: readonly string[]) => afirmacionesDe(incidente, campos);
-  const cierre = consecuencias?.cierre;
-  // «desconocido» en el cierre quiere decir que ninguna fuente habla de cierre: no se rotula.
-  const cierreConocido = cierre !== undefined && cierre.valor !== "desconocido";
+  // «desconocido» en el cierre quiere decir que ninguna fuente habla de cierre: solo se dice
+  // en las interrupciones aeroportuarias, donde el cierre es lo que se espera saber.
+  const cierre = leerCierre(incidente.tipo, consecuencias);
+  const rangoCierre =
+    cierre?.clase === "con_duracion"
+      ? rango(rangoDeFuentes(de(["consecuencias.cierre.minutos"]), cierre.minutos), idioma)
+      : null;
+  const textoCierre =
+    cierre === null
+      ? null
+      : cierre.clase === "con_duracion"
+        ? t.ficha.cierreDe(rangoCierre ?? "")
+        : cierre.clase === "sin_duracion"
+          ? t.ficha.cierreSinDuracion
+          : cierre.clase === "sin_cierre"
+            ? t.ficha.sinCierre
+            : t.ficha.cierreDesconocido;
+  const imprecisa = incidente.lon === null ? incidente.lugar : null;
   return (
     <article>
-      <p className="etiqueta flex items-center gap-2">
+      <p className="rotulo flex items-center gap-2">
         <Simbolo tipo={incidente.tipo} estado={incidente.estado.actual} />
         {t.tipo[incidente.tipo]}
       </p>
-      <h2 className="titular mt-1 text-2xl">{nombre}</h2>
+      <h2 className="text-xl font-semibold tracking-tight mt-1 text-2xl">{nombre}</h2>
       {nombre !== titulo && <p className="mt-2 text-texto">{titulo}</p>}
       <p className="mono mt-1 text-xs text-secundario">{incidente.id}</p>
 
@@ -164,7 +180,7 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
         </Fila>
         {incidente.presencia_dron !== undefined && (
           <Fila nombre={t.ficha.presenciaDron}>
-            <span aria-hidden="true" className="mono mr-1.5 text-dorado">
+            <span aria-hidden="true" className="mono mr-1.5 text-acento">
               {MARCA_PRESENCIA[incidente.presencia_dron]}
             </span>
             {t.presencia[incidente.presencia_dron]}
@@ -181,6 +197,7 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
         </Fila>
         <Fila nombre={t.ficha.lugar}>
           {lugar.localidad !== undefined && `${lugar.localidad}, `}
+          {imprecisa?.region !== undefined && imprecisa.region !== undefined && `${imprecisa.region}, `}
           {pais(lugar.pais, idioma)}
           {objetivo !== undefined && (
             <span className="block text-xs text-secundario">
@@ -188,9 +205,17 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
               {objetivo.oaci !== undefined && <span className="mono"> · {objetivo.oaci}</span>}
             </span>
           )}
-          <span className="block text-xs text-secundario">
-            {t.ficha.radio(numero(lugar.radio_km, idioma))}
-          </span>
+          {imprecisa === null && "radio_km" in lugar ? (
+            <span className="block text-xs text-secundario">
+              {t.ficha.radio(numero(lugar.radio_km, idioma))}
+            </span>
+          ) : (
+            imprecisa !== null && (
+              <span className="block text-xs text-notificado">
+                {t.imprecisa.etiqueta} · {t.imprecisa.nivel[imprecisa.nivel]}
+              </span>
+            )
+          )}
           <QueDiceCadaFuente t={t} idioma={idioma} afirmaciones={de(CAMPOS_DE_FILA.lugar)} />
         </Fila>
         <Fila nombre={t.ficha.drones}>
@@ -207,26 +232,18 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
           )}
           <QueDiceCadaFuente t={t} idioma={idioma} afirmaciones={de(CAMPOS_DE_FILA.drones)} />
         </Fila>
-        {(tiempo.duracion_min !== undefined || tieneCifra(minutosCierre)) && (
+        {tiempo.duracion_min !== undefined && (
           <Fila nombre={t.ficha.duracion}>
-            {tiempo.duracion_min !== undefined ? (
-              <span className="mono">{t.ficha.minutos(numero(tiempo.duracion_min, idioma))}</span>
-            ) : (
-              <Cifra
-                t={t}
-                idioma={idioma}
-                valor={minutosCierre}
-                unidad="min"
-                afirmaciones={de(["consecuencias.cierre.minutos"])}
-              />
-            )}
+            <span className="mono">{t.ficha.minutos(numero(tiempo.duracion_min, idioma))}</span>
             <QueDiceCadaFuente t={t} idioma={idioma} afirmaciones={de(CAMPOS_DE_FILA.duracion)} />
           </Fila>
         )}
-        {consecuencias !== undefined && (cierreConocido || vuelos.some(([v]) => tieneCifra(v)) || consecuencias.danos !== undefined) && (
+        {(textoCierre !== null ||
+          vuelos.some(([v]) => tieneCifra(v)) ||
+          consecuencias?.danos !== undefined) && (
           <Fila nombre={t.ficha.efecto}>
             <ul>
-              {cierreConocido && <li>{t.ficha.cierre[cierre.valor]}</li>}
+              {textoCierre !== null && <li>{textoCierre}</li>}
               {vuelos.map(
                 ([valor, unidad, campo]) =>
                   tieneCifra(valor) && (
@@ -241,7 +258,7 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
                     </li>
                   ),
               )}
-              {consecuencias.danos !== undefined && (
+              {consecuencias?.danos !== undefined && (
                 <li>
                   {t.ficha.danos[consecuencias.danos.nivel]}
                   {consecuencias.danos.frase !== undefined && (

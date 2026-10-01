@@ -7,7 +7,10 @@ import type {
   ColeccionIncidentes,
   EpisodioResumen,
   Estado,
+  EventoResumen,
   FeatureIncidente,
+  PropiedadesSinUbicacion,
+  PublicacionSinUbicacion,
   FilaAtaque,
   IncidenteDetalle,
   IncidenteResumen,
@@ -24,11 +27,11 @@ export const DESCONOCIDO = -1;
 /** Prefijo ISO 3166-2 de las regiones que la web dibuja en la capa de Ucrania. */
 export const PREFIJO_UCRANIA = "UA-";
 
-/** Un incidente atribuido ha pasado antes por confirmado: cuenta como confirmado. */
-const ESTADOS_CONFIRMADOS: ReadonlySet<Estado> = new Set<Estado>(["confirmado", "atribuido"]);
+/** Confirmados y atribuidos: lo que el mapa resalta y el filtro «lo confirmado» deja. */
+const ESTADOS_GRAVES: ReadonlySet<Estado> = new Set<Estado>(["confirmado", "atribuido"]);
 
-export function esConfirmado(estado: Estado): boolean {
-  return ESTADOS_CONFIRMADOS.has(estado);
+export function esGrave(estado: Estado): boolean {
+  return ESTADOS_GRAVES.has(estado);
 }
 
 export function resumirIncidente(feature: FeatureIncidente): IncidenteResumen {
@@ -36,9 +39,24 @@ export function resumirIncidente(feature: FeatureIncidente): IncidenteResumen {
   const [lon, lat] = feature.geometry.coordinates;
   return {
     id: p.id,
-    lon,
-    lat,
-    radio_km: p.lugar.radio_km,
+    punto: { lon, lat, radio_km: p.lugar.radio_km },
+    imprecisa: null,
+    tipo: p.tipo,
+    estado: p.estado.actual,
+    presencia: p.presencia_dron ?? null,
+    titulo: p.titulo,
+    dia: diaDeInstante(p.tiempo.inicio.valor),
+    pais: p.lugar.pais,
+    objetivo: p.objetivo?.nombre ?? null,
+    episodio: p.episodio ?? null,
+  };
+}
+
+export function resumirSinUbicacion(p: PropiedadesSinUbicacion): IncidenteResumen {
+  return {
+    id: p.id,
+    punto: null,
+    imprecisa: { nivel: p.lugar.nivel, region: p.lugar.region ?? null },
     tipo: p.tipo,
     estado: p.estado.actual,
     presencia: p.presencia_dron ?? null,
@@ -53,6 +71,41 @@ export function resumirIncidente(feature: FeatureIncidente): IncidenteResumen {
 export function detalleIncidente(feature: FeatureIncidente): IncidenteDetalle {
   const [lon, lat] = feature.geometry.coordinates;
   return { ...feature.properties, lon, lat };
+}
+
+export function detalleSinUbicacion(p: PropiedadesSinUbicacion): IncidenteDetalle {
+  return { ...p, lon: null, lat: null };
+}
+
+/**
+ * Eventos del feed: cada paso del historial de estados. El primero es la aparición del
+ * incidente; los siguientes, cambios de estado. Del más reciente al más antiguo.
+ */
+export function eventos(
+  historiales: readonly { id: string; estado: { historial: PropiedadesSinUbicacion["estado"]["historial"] } }[],
+): EventoResumen[] {
+  const todos: EventoResumen[] = [];
+  for (const incidente of historiales) {
+    // Pasos con la misma fecha (un alta que ya llega confirmada) son un solo evento, con el
+    // último estado de ese momento.
+    const porFecha = new Map<string, EventoResumen>();
+    incidente.estado.historial.forEach((paso, i) => {
+      const anterior = porFecha.get(paso.fecha.valor);
+      porFecha.set(paso.fecha.valor, {
+        id: incidente.id,
+        fecha: paso.fecha.valor,
+        estado: paso.estado,
+        nuevo: anterior?.nuevo ?? i === 0,
+      });
+    });
+    todos.push(...porFecha.values());
+  }
+  return todos.sort(
+    (a, b) =>
+      b.fecha.localeCompare(a.fecha) ||
+      b.id.localeCompare(a.id) ||
+      Number(a.nuevo) - Number(b.nuevo),
+  );
 }
 
 /** Episodios con sus incidentes en orden cronológico; un episodio de uno solo no une nada. */
@@ -94,22 +147,47 @@ export function ultimaActualizacion(
   ]);
 }
 
-export function resumir(coleccion: ColeccionIncidentes, ucrania: PublicacionUcrania): Resumen {
-  const incidentes = coleccion.features.map(resumirIncidente);
+export function resumir(
+  coleccion: ColeccionIncidentes,
+  ucrania: PublicacionUcrania,
+  sinUbicacion: PublicacionSinUbicacion | null = null,
+): Resumen {
+  const imprecisos = sinUbicacion?.incidentes ?? [];
+  const incidentes = [
+    ...coleccion.features.map(resumirIncidente),
+    ...imprecisos.map(resumirSinUbicacion),
+  ].sort((a, b) => a.id.localeCompare(b.id));
+  const actualizaciones = [
+    ultimaActualizacion(coleccion, ucrania),
+    ...imprecisos.map((p) => p.control.ultima_actualizacion.valor),
+  ];
   return {
-    actualizado: ultimaActualizacion(coleccion, ucrania),
+    actualizado: actualizaciones.reduce((a, b) => (b > a ? b : a)),
     incidentes,
     episodios: episodios(incidentes),
+    eventos: eventos([...coleccion.features.map((f) => f.properties), ...imprecisos]),
   };
 }
 
-export function meta(resumen: Resumen): Meta {
+export interface Cifras {
+  incidentes: number;
+  confirmados: number;
+  atribuidos: number;
+  paises: number;
+}
+
+/** Cifras del marcador: los confirmados y los atribuidos se cuentan por separado. */
+export function cifras(incidentes: readonly IncidenteResumen[]): Cifras {
   return {
-    actualizado: resumen.actualizado,
-    incidentes: resumen.incidentes.length,
-    confirmados: resumen.incidentes.filter((i) => esConfirmado(i.estado)).length,
-    paises: new Set(resumen.incidentes.map((i) => i.pais)).size,
+    incidentes: incidentes.length,
+    confirmados: incidentes.filter((i) => i.estado === "confirmado").length,
+    atribuidos: incidentes.filter((i) => i.estado === "atribuido").length,
+    paises: new Set(incidentes.map((i) => i.pais)).size,
   };
+}
+
+export function meta(resumen: Resumen, sinUbicacion: boolean): Meta {
+  return { actualizado: resumen.actualizado, ...cifras(resumen.incidentes), sinUbicacion };
 }
 
 function par(rango: RangoODesconocido | undefined): [number, number] {

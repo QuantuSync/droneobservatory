@@ -25,7 +25,8 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   ssgOptions,
   worker: { format: "es" },
-  build: { target: "es2022", sourcemap: false },
+  // Nada en línea como data: (la política de contenido solo admite fuentes de este sitio).
+  build: { target: "es2022", sourcemap: false, assetsInlineLimit: 0 },
   test: {
     environment: "node",
     include: ["tests/**/*.test.{ts,tsx}"],

@@ -78,6 +78,9 @@ export interface AfirmacionPublica {
   valor: unknown;
 }
 
+/** Precisión con la que se conoce el lugar de un incidente sin punto en el mapa. */
+export type NivelUbicacion = "instalacion" | "localidad" | "region" | "pais";
+
 export interface PropiedadesIncidente {
   id: string;
   tipo: Tipo;
@@ -120,6 +123,19 @@ export interface FeatureIncidente {
 export interface ColeccionIncidentes {
   type: "FeatureCollection";
   features: FeatureIncidente[];
+}
+
+/**
+ * Incidente cuyo lugar solo se conoce a nivel de país o región, o que la fuente nombra sin
+ * que se haya podido situar con garantías (publicacion/incidentes_sin_ubicacion.json). Las
+ * mismas propiedades que una feature, salvo el lugar: sin radio ni punto.
+ */
+export interface PropiedadesSinUbicacion extends Omit<PropiedadesIncidente, "lugar"> {
+  lugar: { pais: string; nivel: NivelUbicacion; region?: string; localidad?: string };
+}
+
+export interface PublicacionSinUbicacion {
+  incidentes: PropiedadesSinUbicacion[];
 }
 
 export type CategoriaObjetivoUcrania =
@@ -180,9 +196,10 @@ export interface PublicacionUcrania {
 /** Lo que el mapa, la línea de tiempo y los contadores necesitan de un incidente. */
 export interface IncidenteResumen {
   id: string;
-  lon: number;
-  lat: number;
-  radio_km: number;
+  /** Punto y radio de precisión; null si el lugar solo se conoce a nivel de país o región. */
+  punto: { lon: number; lat: number; radio_km: number } | null;
+  /** Para los incidentes sin punto, hasta dónde se conoce el lugar. */
+  imprecisa: { nivel: NivelUbicacion; region: string | null } | null;
   tipo: Tipo;
   estado: Estado;
   presencia: PresenciaDron | null;
@@ -199,18 +216,30 @@ export interface EpisodioResumen {
   incidentes: string[];
 }
 
+/** Un paso del historial de estados de un incidente, para el feed de eventos. */
+export interface EventoResumen {
+  id: string;
+  /** Instante del paso, como lo da el historial. */
+  fecha: string;
+  estado: Estado;
+  /** El primer paso del historial: el incidente aparece. */
+  nuevo: boolean;
+}
+
 export interface Resumen {
   /** Última actualización de los datos publicados (la más reciente de los dos ficheros). */
   actualizado: string;
   incidentes: IncidenteResumen[];
   episodios: EpisodioResumen[];
+  /** Eventos del historial de todos los incidentes, del más reciente al más antiguo. */
+  eventos: EventoResumen[];
 }
 
 /** Ficha completa de un incidente: sus propiedades públicas más el punto. */
-export interface IncidenteDetalle extends PropiedadesIncidente {
-  lon: number;
-  lat: number;
-}
+/** Ficha completa: con punto, o sin él y con el lugar hasta donde se conoce. */
+export type IncidenteDetalle =
+  | (PropiedadesIncidente & { lon: number; lat: number })
+  | (PropiedadesSinUbicacion & { lon: null; lat: null });
 
 /**
  * Ataque de la capa de Ucrania reducido a una fila:
@@ -259,5 +288,8 @@ export interface Meta {
   actualizado: string;
   incidentes: number;
   confirmados: number;
+  atribuidos: number;
   paises: number;
+  /** Si se ha publicado el fichero de incidentes sin ubicación: la metodología lo ofrece. */
+  sinUbicacion: boolean;
 }

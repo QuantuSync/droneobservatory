@@ -65,7 +65,7 @@ export function etiquetasDeCabecera(pagina: Pagina): string {
   const titulo = escaparHtml(pagina.titulo);
   const descripcion = escaparHtml(pagina.descripcion);
   const url = escaparHtml(direccion(pagina, pagina.idioma));
-  const imagen = escaparHtml(ORIGEN + IMAGEN_COMPARTIR);
+  const imagen = escaparHtml(ORIGEN + IMAGEN_COMPARTIR[pagina.idioma]);
   const alternativas = IDIOMAS.map(
     (idioma) =>
       `<link rel="alternate" hreflang="${idioma}" href="${escaparHtml(direccion(pagina, idioma))}">`,

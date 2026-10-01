@@ -10,12 +10,19 @@ import { FichaAtaque } from "../src/componentes/FichaAtaque.tsx";
 import { FichaIncidente } from "../src/componentes/FichaIncidente.tsx";
 import { FUENTES_VISIBLES, ordenarFuentes } from "../src/componentes/Fuentes.tsx";
 import { LineaTiempo } from "../src/componentes/LineaTiempo.tsx";
+import type { EstadoReproduccion } from "../src/componentes/LineaTiempo.tsx";
 import { Metodologia } from "../src/componentes/Metodologia.tsx";
 import { ProveedorDeRuta } from "../src/navegacion.tsx";
-import { detalleIncidente, resumir, resumirUcrania } from "../src/datos/derivar.ts";
+import {
+  detalleIncidente,
+  detalleSinUbicacion,
+  resumir,
+  resumirUcrania,
+} from "../src/datos/derivar.ts";
 import { textos } from "../src/i18n/index.ts";
 import { DESCARGAS } from "../src/sitio.ts";
 import { diaDeInstante } from "../src/tiempo/dias.ts";
+import type { Periodo } from "../src/tiempo/dias.ts";
 import {
   CARGAS_MALICIOSAS,
   afirmacion,
@@ -188,11 +195,39 @@ describe("ficha de un incidente", () => {
 
   it("un cierre desconocido no se rotula: la fuente no habla de cierre", () => {
     const sinCierre = detalleIncidente(
+      incidente({ tipo: "sobrevuelo", consecuencias: { cierre: { valor: "desconocido" } } }),
+    );
+    render(<FichaIncidente t={es} idioma="es" incidente={sinCierre} />);
+    expect(screen.queryByText(/sin confirmar/)).toBeNull();
+    expect(screen.queryByText(es.ficha.efecto)).toBeNull();
+  });
+
+  it("en una interrupción aeroportuaria sin datos de cierre dice desconocido", () => {
+    const sinCierre = detalleIncidente(
       incidente({ consecuencias: { cierre: { valor: "desconocido" } } }),
     );
     render(<FichaIncidente t={es} idioma="es" incidente={sinCierre} />);
-    expect(screen.queryByText("Cierre sin confirmar")).toBeNull();
-    expect(screen.queryByText(es.ficha.efecto)).toBeNull();
+    expect(screen.getByText("Cierre: desconocido")).toBeTruthy();
+  });
+
+  it("un cierre con duración la dice con su rango", () => {
+    const conCierre = detalleIncidente(
+      incidente({ consecuencias: { cierre: { valor: "si", minutos: { min: 30, max: 45 } } } }),
+    );
+    render(<FichaIncidente t={es} idioma="es" incidente={conCierre} />);
+    expect(screen.getByText("Cierre de 30–45 min")).toBeTruthy();
+  });
+
+  it("un incidente sin punto dice que su ubicación es imprecisa", () => {
+    const { lugar: _lugar, ...resto } = incidente().properties;
+    const sinPunto = detalleSinUbicacion({
+      ...resto,
+      lugar: { pais: "PL", nivel: "region", region: "Lublin" },
+    });
+    render(<FichaIncidente t={es} idioma="es" incidente={sinPunto} />);
+    expect(screen.getByText("ubicación imprecisa · solo la región", { exact: false })).toBeTruthy();
+    expect(screen.getByText("Lublin, Polonia", { exact: false })).toBeTruthy();
+    expect(screen.queryByText(/km de radio/)).toBeNull();
   });
 
   it("sale en inglés con el nombre del país traducido", () => {
@@ -298,38 +333,43 @@ describe("barra de estado", () => {
 
   it("sin la hora del navegador no afirma nada: ni verde ni etiqueta", () => {
     const { container } = render(<BarraEstado t={es} actualizado={actualizado} sistema={null} ahora={null} />);
-    expect(container.textContent).toBe("ACTUALIZADO 30/09/2026 · 12:42 UTC");
+    expect(container.textContent).toContain("Actualizado");
+    expect(container.textContent).not.toContain("hace");
+    expect(container.textContent).not.toContain("al día");
     expect(punto(container).className).not.toContain("bg-confirmado");
   });
 
   it.each([
-    [0.5, "al_dia", "bg-confirmado", "DATOS AL DÍA (hace menos de 1 h)"],
-    [3.6, "con_retraso", "bg-notificado", "DATOS CON RETRASO (hace 3 h)"],
-    [30, "desactualizado", "bg-atribuido", "DATOS DESACTUALIZADOS (hace 30 h)"],
-  ])("a las %s horas dice %s con color y con texto", (horas, estado, color, texto) => {
+    [0.5, "al_dia", "bg-confirmado", "text-confirmado", "Actualizado hace 30 min", "datos al día"],
+    [3.6, "con_retraso", "bg-notificado", "text-notificado", "Actualizado hace 3 h", "datos con retraso"],
+    [30, "desactualizado", "bg-atribuido", "text-atribuido", "Actualizado hace 1 día", "datos desactualizados"],
+  ])("a las %s horas dice %s con color y con texto", (horas, estado, color, colorTexto, linea, etiqueta) => {
     const { container } = render(
       <BarraEstado t={es} actualizado={actualizado} sistema={null} ahora={pasadas(horas)} />,
     );
     expect(container.querySelector<HTMLElement>("[data-frescura]")?.dataset.frescura).toBe(estado);
     expect(punto(container).className).toContain(color);
-    expect(container.textContent).toContain(texto);
+    const boton = screen.getByRole("button", { name: new RegExp(linea) });
+    expect(boton.querySelector(`.${colorTexto}`)?.textContent).toBe(linea);
+    // El estado va también escrito, no solo en el color.
+    expect(boton.textContent).toContain(etiqueta);
   });
 
-  it("en inglés dice UPDATED y el estado en inglés", () => {
+  it("en inglés dice Updated y el estado en inglés", () => {
     const { container } = render(<BarraEstado t={en} actualizado={actualizado} sistema={null} ahora={pasadas(7)} />);
-    expect(container.textContent).toContain("UPDATED 30/09/2026 · 12:42 UTC");
-    expect(container.textContent).toContain("DATA OUT OF DATE (7 h ago)");
+    expect(container.textContent).toContain("Updated 7 h ago");
+    expect(container.textContent).toContain("data out of date");
   });
 
   it("sin datos lo dice y no pinta verde", () => {
     const { container } = render(
       <BarraEstado t={es} actualizado={null} sistema={null} ahora={pasadas(0)} />,
     );
-    expect(container.textContent).toBe("SIN DATOS");
+    expect(container.textContent).toBe("Sin datos");
     expect(punto(container).className).toContain("bg-atribuido");
   });
 
-  it("con estado.json mide desde la última recogida correcta y despliega las fuentes", async () => {
+  it("con estado.json mide desde la última recogida correcta y despliega el detalle", async () => {
     // Los datos no cambian desde hace seis horas, pero la recogida de hace 18 minutos fue bien.
     const { container } = render(
       <BarraEstado
@@ -342,20 +382,22 @@ describe("barra de estado", () => {
     const barra = container.querySelector<HTMLElement>("[data-frescura]");
     expect(barra?.dataset.frescura).toBe("al_dia");
     expect(barra?.dataset.fuenteFrescura).toBe("recogida");
-    expect(container.textContent).toContain("ACTUALIZADO 30/09/2026 · 18:24 UTC");
-    const boton = screen.getByRole("button", { name: /Estado del sistema/ });
+    const boton = screen.getByRole("button", { name: /Actualizado hace 18 min/ });
+    // La línea es corta: ni horas exactas ni la siguiente recogida hasta desplegarla.
+    expect(container.textContent).not.toContain("UTC");
     expect(boton.getAttribute("aria-expanded")).toBe("false");
     await userEvent.click(boton);
     expect(boton.getAttribute("aria-expanded")).toBe("true");
-    expect(container.textContent).toContain("Última recogida: 30/09/2026 · 18:17 UTC – 18:24 UTC");
+    expect(container.textContent).toContain("Datos publicados30/09/2026 · 12:42 UTC");
+    expect(container.textContent).toContain("Última recogida30/09/2026 · 18:17 UTC");
     expect(container.textContent).toContain("con avisos");
-    expect(container.textContent).toContain("Siguiente: 30/09/2026 · 19:17 UTC");
-    expect(container.textContent).toContain(
-      "Notas oficialescon aviso · último dato sin datos todavía",
-    );
-    expect(container.textContent).toContain(
-      "Fuerza Aérea de Ucranialeída · último dato 30/09/2026 · 05:01 UTC",
-    );
+    expect(container.textContent).toContain("Siguiente recogidadentro de 35 min");
+    expect(container.textContent).toContain("Notas oficialescon avisosin datos todavía");
+    expect(container.textContent).toContain("Fuerza Aérea de Ucranialeída30/09/2026 · 05:01");
+    // Las horas van solas en la cifra monoespaciada, sin palabras mezcladas.
+    for (const hora of container.querySelectorAll(".mono")) {
+      expect(hora.textContent).toMatch(/^[\d/ ·:]+( UTC)?$/);
+    }
   });
 
   it("sin ninguna recogida correcta lo dice y no pinta verde", () => {
@@ -367,7 +409,7 @@ describe("barra de estado", () => {
         ahora={pasadas(0)}
       />,
     );
-    expect(container.textContent).toBe("NINGUNA RECOGIDA CORRECTA");
+    expect(container.textContent).toBe("Ninguna recogida correcta");
     expect(punto(container).className).toContain("bg-atribuido");
   });
 });
@@ -375,7 +417,13 @@ describe("barra de estado", () => {
 describe("metodología", () => {
   it("ofrece las cuatro descargas con licencia, versión y cita", () => {
     const { container } = render(
-      <Metodologia t={es} abierta actualizado="2026-09-30T12:42Z" onCerrar={() => undefined} />,
+      <Metodologia
+        t={es}
+        abierta
+        actualizado="2026-09-30T12:42Z"
+        sinUbicacion={false}
+        onCerrar={() => undefined}
+      />,
     );
     const descargas = [...container.querySelectorAll("a[download]")].map((a) => a.getAttribute("href"));
     expect(descargas).toEqual([
@@ -395,7 +443,7 @@ describe("metodología", () => {
 
   it("todos sus enlaces externos se abren aparte y sin referencia", () => {
     const { container } = render(
-      <Metodologia t={en} abierta actualizado={null} onCerrar={() => undefined} />,
+      <Metodologia t={en} abierta actualizado={null} sinUbicacion onCerrar={() => undefined} />,
     );
     const externos = [...container.querySelectorAll('a[href^="http"]')];
     expect(externos.length).toBeGreaterThan(5);
@@ -415,10 +463,22 @@ describe("línea de tiempo", () => {
     vi.spyOn(HTMLElement.prototype, "clientWidth", "get").mockReturnValue(ANCHO);
   });
 
-  function montar(periodo = dominio) {
+  function montar(
+    periodo: Periodo = dominio,
+    opciones: {
+      reproduccion?: EstadoReproduccion;
+      hayQueVerTodo?: boolean;
+      forma?: "franja" | "barra" | "hoja";
+    } = {},
+  ) {
     const onPeriodo = vi.fn();
     const onGranularidad = vi.fn();
     const onReproducir = vi.fn();
+    const onPausar = vi.fn();
+    const onDetener = vi.fn();
+    const onVerTodo = vi.fn();
+    const onQuitarSeleccion = vi.fn();
+    const onAbierta = vi.fn();
     render(
       <LineaTiempo
         t={es}
@@ -430,11 +490,29 @@ describe("línea de tiempo", () => {
         onGranularidad={onGranularidad}
         incidentesPorDia={new Map([[diaDeInstante("2025-03-10"), 4]])}
         lanzamientosPorDia={null}
-        reproduciendo={false}
+        reproduccion={opciones.reproduccion ?? "parada"}
         onReproducir={onReproducir}
+        onPausar={onPausar}
+        onDetener={onDetener}
+        hayQueVerTodo={opciones.hayQueVerTodo ?? false}
+        onVerTodo={onVerTodo}
+        onQuitarSeleccion={onQuitarSeleccion}
+        destellos={[{ dia: diaDeInstante("2025-03-10"), estado: "confirmado" }]}
+        abierta
+        onAbierta={onAbierta}
+        forma={opciones.forma ?? "franja"}
       />,
     );
-    return { onPeriodo, onGranularidad, onReproducir };
+    return {
+      onPeriodo,
+      onGranularidad,
+      onReproducir,
+      onPausar,
+      onDetener,
+      onVerTodo,
+      onQuitarSeleccion,
+      onAbierta,
+    };
   }
 
   it("sus dos extremos se mueven con el teclado, de tramo en tramo", () => {
@@ -468,17 +546,57 @@ describe("línea de tiempo", () => {
     });
   });
 
-  it("cambia de granularidad, reproduce y vuelve a todo el dominio", async () => {
+  it("cambia de granularidad y reproduce", async () => {
     const unMes = { desde: diaDeInstante("2025-03-01"), hasta: diaDeInstante("2025-03-31") };
-    const { onPeriodo, onGranularidad, onReproducir } = montar(unMes);
+    const { onGranularidad, onReproducir } = montar(unMes);
     expect(screen.getByRole("radio", { name: "Mes" }).getAttribute("aria-checked")).toBe("true");
     await userEvent.click(screen.getByRole("radio", { name: "Día" }));
     expect(onGranularidad).toHaveBeenCalledWith("dia");
     await userEvent.click(screen.getByRole("button", { name: es.tiempo.reproducir }));
     expect(onReproducir).toHaveBeenCalledOnce();
-    await userEvent.click(screen.getByRole("button", { name: es.tiempo.todo }));
-    expect(onPeriodo).toHaveBeenLastCalledWith(dominio);
     expect(screen.getByText("01/03/2025 – 31/03/2025")).toBeTruthy();
+  });
+
+  it("«Ver todo» solo aparece con un periodo elegido o una reproducción, y lo quita", async () => {
+    montar();
+    expect(screen.queryByRole("button", { name: es.tiempo.verTodo })).toBeNull();
+    cleanup();
+    const { onVerTodo } = montar(dominio, { hayQueVerTodo: true });
+    await userEvent.click(screen.getByRole("button", { name: es.tiempo.verTodo }));
+    expect(onVerTodo).toHaveBeenCalledOnce();
+  });
+
+  it("reproduciendo se puede pausar y detener; en pausa, reanudar", async () => {
+    const reproduciendo = montar(dominio, { reproduccion: "reproduciendo", hayQueVerTodo: true });
+    await userEvent.click(screen.getByRole("button", { name: es.tiempo.pausar }));
+    expect(reproduciendo.onPausar).toHaveBeenCalledOnce();
+    await userEvent.click(screen.getByRole("button", { name: es.tiempo.detener }));
+    expect(reproduciendo.onDetener).toHaveBeenCalledOnce();
+    cleanup();
+    const pausada = montar(dominio, { reproduccion: "pausada", hayQueVerTodo: true });
+    expect(screen.queryByRole("button", { name: es.tiempo.pausar })).toBeNull();
+    await userEvent.click(screen.getByRole("button", { name: es.tiempo.reanudar }));
+    expect(pausada.onReproducir).toHaveBeenCalledOnce();
+    expect(screen.getByRole("button", { name: es.tiempo.detener })).toBeTruthy();
+    cleanup();
+    montar();
+    expect(screen.queryByRole("button", { name: es.tiempo.detener })).toBeNull();
+  });
+
+  it("el doble clic en el histograma quita la selección", () => {
+    const unMes = { desde: diaDeInstante("2025-03-01"), hasta: diaDeInstante("2025-03-31") };
+    const { onQuitarSeleccion } = montar(unMes, { hayQueVerTodo: true });
+    const histograma = document.querySelector("rect.cursor-crosshair");
+    if (histograma === null) throw new Error("sin histograma");
+    fireEvent.doubleClick(histograma);
+    expect(onQuitarSeleccion).toHaveBeenCalledOnce();
+  });
+
+  it("en el teléfono, plegada, es una barra con el botón «Periodo» que abre la hoja", async () => {
+    const { onAbierta } = montar(dominio, { forma: "barra" });
+    expect(screen.queryByRole("slider")).toBeNull();
+    await userEvent.click(screen.getByRole("button", { name: es.tiempo.periodoBoton }));
+    expect(onAbierta).toHaveBeenCalledWith(true);
   });
 });
 
@@ -518,8 +636,8 @@ describe("aplicación", () => {
   }
 
   beforeEach(() => {
-    vi.stubGlobal("matchMedia", () => ({
-      matches: false,
+    vi.stubGlobal("matchMedia", (consulta: string) => ({
+      matches: consulta.includes("reduced-motion"),
       addEventListener: () => undefined,
       removeEventListener: () => undefined,
     }));
@@ -540,8 +658,8 @@ describe("aplicación", () => {
     abrir("/");
     const mapa = await screen.findByTestId("mapa");
     await waitFor(() => expect(within(mapa).getAllByRole("listitem")).toHaveLength(2));
-    const contadores = screen.getByLabelText(es.cabecera.contadores);
-    expect(contadores.textContent).toBe("Incidentes2Confirmados0Países2");
+    const contadores = screen.getByLabelText(es.marcador.etiqueta);
+    expect(contadores.textContent).toBe("incidentes2confirmados0atribuidos0países2");
     expect(document.documentElement.lang).toBe("es");
   });
 
@@ -596,8 +714,9 @@ describe("aplicación", () => {
     const usuario = userEvent.setup();
     abrir("/");
     await screen.findByTestId("mapa");
-    await usuario.click(screen.getByRole("button", { name: es.capas.lista }));
-    const lista = await screen.findByRole("complementary", { name: es.lista.titulo });
+    await usuario.click(screen.getByRole("button", { name: es.controles.feed }));
+    await usuario.click(await screen.findByRole("tab", { name: es.feed.lista }));
+    const lista = await screen.findByRole("tabpanel");
     const enlaces = within(lista).getAllByRole("link");
     expect(enlaces.map((a) => a.getAttribute("href"))).toEqual([
       "/EODI-2026-00007",

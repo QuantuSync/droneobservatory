@@ -1,10 +1,14 @@
-import { useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
+import type { ReactNode } from "react";
 
 import type { EstadoFuente, EstadoSistema, ResultadoRecogida } from "../datos/tipos.ts";
-import { fechaHora, hora } from "../i18n/index.ts";
+import { fechaHora } from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
-import { frescura, horasDesde, referenciaDeFrescura } from "../tiempo/frescura.ts";
+import { frescura, referenciaDeFrescura } from "../tiempo/frescura.ts";
 import type { EstadoFrescura } from "../tiempo/frescura.ts";
+import { haceCuanto } from "./Feed.tsx";
+
+const MS_POR_MINUTO = 60_000;
 
 interface Props {
   t: Textos;
@@ -14,12 +18,22 @@ interface Props {
   sistema: EstadoSistema | null;
   /** Hora actual; null hasta que la página está en el navegador. */
   ahora: Date | null;
+  /** Solo «hace 26 min», sin «Actualizado»: para la barra del teléfono. */
+  corta?: boolean;
+  /** Hacia dónde se abre el detalle, bajo el botón. */
+  alinear?: "izquierda" | "derecha";
 }
 
 const COLOR_PUNTO: Record<EstadoFrescura, string> = {
   al_dia: "bg-confirmado",
   con_retraso: "bg-notificado",
   desactualizado: "bg-atribuido",
+};
+
+const COLOR_TEXTO: Record<EstadoFrescura, string> = {
+  al_dia: "text-confirmado",
+  con_retraso: "text-notificado",
+  desactualizado: "text-atribuido",
 };
 
 const COLOR_RESULTADO: Record<ResultadoRecogida, string> = {
@@ -38,86 +52,187 @@ function Punto({ color }: { color: string }) {
   return <span aria-hidden="true" className={`size-2 shrink-0 rounded-full ${color}`} />;
 }
 
-/** Franja con la última recogida, su resultado, la siguiente y el estado de cada fuente. */
-function FranjaSistema({ t, sistema, id }: { t: Textos; sistema: EstadoSistema; id: string }) {
+/** Minutos que faltan para la siguiente recogida (redondeando hacia arriba). */
+export function minutosHasta(siguiente: string, ahora: Date): number {
+  return Math.ceil((new Date(siguiente).getTime() - ahora.getTime()) / MS_POR_MINUTO);
+}
+
+/** Una fila del detalle: el rótulo en texto y la hora, sola, en la cifra monoespaciada. */
+function Fila({ rotulo, children }: { rotulo: string; children: ReactNode }) {
+  return (
+    <div className="flex items-baseline justify-between gap-3">
+      <dt className="text-secundario">{rotulo}</dt>
+      <dd className="text-right text-texto">{children}</dd>
+    </div>
+  );
+}
+
+function Hora({ instante }: { instante: string }) {
+  return <span className="mono">{fechaHora(instante)}</span>;
+}
+
+interface PropsDetalle {
+  t: Textos;
+  id: string;
+  estado: EstadoFrescura | null;
+  actualizado: string | null;
+  sistema: EstadoSistema | null;
+  ahora: Date | null;
+}
+
+/** Detalle desplegable: horas exactas, la siguiente recogida y el estado de cada fuente. */
+function Detalle({ t, id, estado, actualizado, sistema, ahora }: PropsDetalle) {
   const e = t.estadoDatos;
   return (
-    <div id={id} className="mono border-b border-borde px-4 py-2 text-xs text-secundario">
-      <p className="flex flex-wrap items-center gap-x-2">
-        <Punto color={COLOR_RESULTADO[sistema.resultado]} />
-        <span>
-          {e.ultimaRecogida}: {fechaHora(sistema.inicio)} – {hora(new Date(sistema.fin))} UTC
-        </span>
-        <span className="text-texto">· {e.resultado[sistema.resultado]}</span>
-        <span>
-          · {e.siguiente}: {fechaHora(sistema.siguiente)}
-        </span>
-      </p>
-      <ul className="mt-1 flex flex-wrap gap-x-5 gap-y-1">
-        {sistema.fuentes.map((fuente) => (
-          <li key={fuente.id} className="flex items-center gap-1.5">
-            <Punto color={COLOR_FUENTE[fuente.estado]} />
-            <span className="text-texto">{e.fuente[fuente.id]}</span>
-            <span>
-              {e.estadoFuente[fuente.estado]} · {e.ultimoDato}{" "}
-              {fuente.ultimo_dato === null ? e.sinUltimoDato : fechaHora(fuente.ultimo_dato)}
-            </span>
-          </li>
-        ))}
-      </ul>
+    <div id={id} className="flex flex-col gap-2 text-xs">
+      <dl className="flex flex-col gap-1">
+        {estado !== null && <Fila rotulo={e.detalle}>{e.etiqueta[estado]}</Fila>}
+        {actualizado !== null && (
+          <Fila rotulo={e.datosPublicados}>
+            <Hora instante={actualizado} />
+          </Fila>
+        )}
+        {sistema !== null && (
+          <>
+            <Fila rotulo={e.ultimaRecogida}>
+              <Hora instante={sistema.inicio} />
+            </Fila>
+            <Fila rotulo={e.resultadoRotulo}>
+              <span className="inline-flex items-center gap-1.5">
+                <Punto color={COLOR_RESULTADO[sistema.resultado]} />
+                {e.resultado[sistema.resultado]}
+              </span>
+            </Fila>
+            <Fila rotulo={e.siguienteRecogida}>
+              {ahora === null ? (
+                <Hora instante={sistema.siguiente} />
+              ) : (
+                e.siguienteEn(minutosHasta(sistema.siguiente, ahora))
+              )}
+            </Fila>
+          </>
+        )}
+      </dl>
+      {sistema !== null && (
+        <div>
+          <p className="mb-1 text-secundario">{e.fuentes}</p>
+          {/* Cada fuente en dos líneas: nombre y estado, y debajo su último dato. */}
+          <ul className="flex flex-col gap-1.5">
+            {sistema.fuentes.map((fuente) => (
+              <li key={fuente.id} className="grid grid-cols-[auto_1fr_auto] items-center gap-x-2">
+                <Punto color={COLOR_FUENTE[fuente.estado]} />
+                <span className="text-texto">{e.fuente[fuente.id]}</span>
+                <span className="text-secundario">{e.estadoFuente[fuente.estado]}</span>
+                <span className="col-start-2 col-end-4 text-secundario">
+                  {fuente.ultimo_dato === null ? (
+                    e.sinUltimoDato
+                  ) : (
+                    <span className="mono">{fechaHora(fuente.ultimo_dato)}</span>
+                  )}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }
 
 /**
- * Barra de estado: cuándo se actualizaron los datos y, con la hora del navegador, si están
- * al día, con retraso o desactualizados. Con estado.json publicado, la antigüedad se mide
- * desde la última recogida correcta y se puede desplegar el estado de cada fuente. El
- * punto nunca es verde sin haberlo comprobado, y el estado va también escrito.
+ * Estado de los datos en una línea corta: «Actualizado hace 42 min», con el color de la
+ * antigüedad. Con estado.json publicado, la antigüedad se mide desde la última recogida
+ * correcta. Al pulsarlo se abre el detalle (horas exactas, siguiente recogida y cada fuente)
+ * bajo el botón; se cierra con Escape o pulsando fuera. El punto nunca es verde sin haberlo
+ * comprobado, y el estado va también escrito en el detalle y para los lectores de pantalla.
  */
-export function BarraEstado({ t, actualizado, sistema, ahora }: Props) {
+export function BarraEstado({
+  t,
+  actualizado,
+  sistema,
+  ahora,
+  corta = false,
+  alinear = "izquierda",
+}: Props) {
   const [abierta, setAbierta] = useState(false);
-  const idFranja = useId();
+  const idDetalle = useId();
+  const caja = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!abierta) return undefined;
+    const fuera = (evento: PointerEvent) => {
+      if (!caja.current?.contains(evento.target as Node)) setAbierta(false);
+    };
+    const tecla = (evento: KeyboardEvent) => {
+      if (evento.key === "Escape") {
+        evento.stopPropagation();
+        setAbierta(false);
+      }
+    };
+    document.addEventListener("pointerdown", fuera);
+    window.addEventListener("keydown", tecla, true);
+    return () => {
+      document.removeEventListener("pointerdown", fuera);
+      window.removeEventListener("keydown", tecla, true);
+    };
+  }, [abierta]);
   const referencia = referenciaDeFrescura(sistema, actualizado);
   if (referencia === null) {
     return (
-      <p className="entre-lineas mono flex items-center gap-2 px-4 py-1 text-xs text-secundario">
+      <p className="flex items-center gap-2 text-xs text-secundario">
         <Punto color="bg-atribuido" />
-        {sistema === null ? t.estadoDatos.sinDatos : t.estadoDatos.nuncaCorrecta.toUpperCase()}
+        {sistema === null ? t.estadoDatos.sinDatos : t.estadoDatos.nuncaCorrecta}
       </p>
     );
   }
   const estado = ahora === null ? null : frescura(referencia, ahora);
-  const horas = ahora === null ? null : Math.max(0, Math.floor(horasDesde(referencia, ahora)));
+  const hace = ahora === null ? null : haceCuanto(t, referencia, ahora);
   return (
-    <div className="entre-lineas">
-      <div
-        className="mono flex min-h-[2.625rem] flex-wrap items-center gap-x-2 px-4 py-1 text-xs text-secundario sm:min-h-0"
-        data-frescura={estado ?? "sin_comprobar"}
-        data-fuente-frescura={sistema === null ? "datos" : "recogida"}
+    <div
+      ref={caja}
+      className="relative"
+      data-frescura={estado ?? "sin_comprobar"}
+      data-fuente-frescura={sistema === null ? "datos" : "recogida"}
+    >
+      <button
+        type="button"
+        className={`flex cursor-pointer items-center gap-2 whitespace-nowrap rounded-sm px-1.5 text-left text-xs hover:bg-elevado ${
+          corta ? "min-h-11" : "min-h-7"
+        }`}
+        aria-expanded={abierta}
+        aria-controls={idDetalle}
+        onClick={() => setAbierta(!abierta)}
       >
         <Punto color={estado === null ? "bg-linea" : COLOR_PUNTO[estado]} />
-        <span>
-          {t.estadoDatos.actualizado} {fechaHora(referencia)}
+        <span className={estado === null ? "text-secundario" : COLOR_TEXTO[estado]}>
+          {hace === null ? (
+            t.estadoDatos.actualizado
+          ) : corta ? (
+            hace
+          ) : (
+            // Por debajo de 1440 px de ancho basta con «hace 42 min».
+            <>
+              <span className="max-[1439px]:hidden">{t.estadoDatos.actualizado}</span> {hace}
+            </>
+          )}
         </span>
-        {estado !== null && horas !== null && (
-          <span className="text-texto">
-            · {t.estadoDatos.etiqueta[estado]} ({t.estadoDatos.antiguedad(horas)})
-          </span>
-        )}
-        {sistema !== null && (
-          <button
-            type="button"
-            className="ml-auto cursor-pointer uppercase tracking-wider text-dorado underline-offset-2 hover:underline"
-            aria-expanded={abierta}
-            aria-controls={idFranja}
-            onClick={() => setAbierta(!abierta)}
-          >
-            {t.estadoDatos.sistema} {abierta ? "▴" : "▾"}
-          </button>
-        )}
-      </div>
-      {sistema !== null && abierta && <FranjaSistema t={t} sistema={sistema} id={idFranja} />}
+        {estado !== null && <span className="sr-only">· {t.estadoDatos.etiqueta[estado]}</span>}
+      </button>
+      {abierta && (
+        <div
+          className={`flotante absolute top-full z-40 mt-1 w-80 max-w-[calc(100vw-1.5rem)] p-3 ${
+            alinear === "derecha" ? "right-0" : "left-0"
+          }`}
+        >
+          <Detalle
+            t={t}
+            id={idDetalle}
+            estado={estado}
+            actualizado={actualizado}
+            sistema={sistema}
+            ahora={ahora}
+          />
+        </div>
+      )}
     </div>
   );
 }

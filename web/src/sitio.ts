@@ -19,13 +19,17 @@ export const DESCARGAS = {
   incidentesCsv: "/datos/incidentes.csv",
   ucraniaJson: "/datos/ucrania.json",
   ucraniaCsv: "/datos/ucrania.csv",
+  sinUbicacionJson: "/datos/incidentes_sin_ubicacion.json",
 } as const;
 
 export const LICENCIA_DATOS = "CC BY 4.0";
 export const LICENCIA_DATOS_URL = "https://creativecommons.org/licenses/by/4.0/";
 
-/** Imagen fija del mapa para la vista previa al compartir. */
-export const IMAGEN_COMPARTIR = "/compartir.png";
+/** Imagen de la vista previa al compartir (logo, nombre y mapa), una por idioma. */
+export const IMAGEN_COMPARTIR: Record<Idioma, string> = {
+  es: "/compartir.png",
+  en: "/compartir-en.png",
+};
 export const IMAGEN_COMPARTIR_ANCHO = 1200;
 export const IMAGEN_COMPARTIR_ALTO = 630;
 

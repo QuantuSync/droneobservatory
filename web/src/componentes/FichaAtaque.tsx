@@ -56,8 +56,8 @@ export function FichaAtaque({ t, idioma, ataque }: Props) {
   const soloMisiles = ataque.regiones_misiles ?? [];
   return (
     <article>
-      <p className="etiqueta">{t.sentido[ataque.sentido]}</p>
-      <h2 className="titular mono mt-1 text-xl">{ataque.id}</h2>
+      <p className="rotulo">{t.sentido[ataque.sentido]}</p>
+      <h2 className="text-xl font-semibold tracking-tight mono mt-1 text-xl">{ataque.id}</h2>
       {ataque.reivindicacion_de_parte === true && (
         <p className="mt-2 border-l border-notificado pl-2 text-secundario">
           {t.ataque.reivindicacion}

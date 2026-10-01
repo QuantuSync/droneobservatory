@@ -1,22 +1,30 @@
 import { Map as MapaGL, addProtocol, setWorkerUrl } from "maplibre-gl";
-import type { ExpressionSpecification, GeoJSONSource, MapMouseEvent } from "maplibre-gl";
+import type {
+  ExpressionSpecification,
+  GeoJSONSource,
+  MapGeoJSONFeature,
+  MapMouseEvent,
+} from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 // El trabajador de MapLibre se sirve desde este mismo sitio, empaquetado con el resto.
 import urlTrabajador from "maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url";
 import { Protocol } from "pmtiles";
 import { useEffect, useRef, useState } from "react";
 
-import type { Capas } from "../componentes/SelectorCapas.tsx";
+import type { Capas } from "../componentes/Controles.tsx";
 import type { EpisodioResumen, IncidenteResumen } from "../datos/tipos.ts";
 import type { Textos } from "../i18n/index.ts";
-import { ESCALA_UCRANIA } from "../paleta.ts";
+import { ESCALA_UCRANIA, acento } from "../paleta.ts";
 import type { Idioma } from "../sitio.ts";
+import { movimientoReducido } from "./animacion.ts";
 import {
   CAPAS_DE_DENSIDAD,
   CAPAS_DE_INCIDENTES,
   CAPAS_DE_UCRANIA,
+  CAPAS_PULSABLES,
   CAPA_GRUPOS,
-  CAPA_INCIDENTES,
+  CAPA_INCIDENTES_GRAVES,
+  CAPA_PAIS,
   CAPA_REGIONES,
   CAPA_REGION_ELEGIDA,
   FUENTE_AREAS,
@@ -28,8 +36,9 @@ import {
   capasBase,
   estilo,
 } from "./estilo.ts";
-import { areas, lineasDeEpisodio, puntos } from "./geometria.ts";
+import { areas, lineasDeEpisodio, pilas } from "./geometria.ts";
 import { registrarIconos } from "./iconos.ts";
+import { colocarPulsos, pulsosDe } from "./pulsos.ts";
 
 setWorkerUrl(urlTrabajador);
 addProtocol("pmtiles", new Protocol().tile);
@@ -46,40 +55,93 @@ const ZOOM_MAXIMO = 16;
  * el mapa hasta cortar el continente por arriba y por abajo.
  */
 const LIMITES: [number, number, number, number] = [-75, 12, 105, 83];
-/** Zoom al que se acerca el mapa al abrir la ficha de un incidente, si estaba más lejos. */
-const ZOOM_DE_FICHA = 7.5;
+/** Zoom al que vuela el mapa al abrir la ficha de un incidente, si estaba más lejos. */
+const ZOOM_DE_FICHA = 8;
+const DURACION_VUELO_MS = 1100;
 /** Caja de Ucrania para encuadrar un ataque o una región. */
 const CAJA_UCRANIA: [number, number, number, number] = [22.1, 44.3, 40.3, 52.4];
 const MARGEN_ENCUADRE_PX = 40;
-/** Parte de la altura que tapa el panel inferior en móvil al abrir una ficha. */
-const FRACCION_PANEL_MOVIL = 0.6;
+/** Separación del letrero de ayuda respecto al cursor. */
+const DESPLAZAMIENTO_LETRERO_PX = 14;
 
-export type Encuadre = { lon: number; lat: number } | "ucrania";
+/**
+ * Deja que el navegador pinte primero la respuesta a un clic (el botón pulsado, el filtro
+ * marcado) y cambia el mapa justo después: repintarlo es lo que más cuesta en un móvil, y
+ * hacerlo en el mismo fotograma retrasa la respuesta. Devuelve cómo cancelarlo.
+ */
+function trasPintar(tarea: () => void): () => void {
+  let temporizador: ReturnType<typeof setTimeout> | undefined;
+  const cuadro = window.requestAnimationFrame(() => {
+    temporizador = setTimeout(tarea, 0);
+  });
+  return () => {
+    window.cancelAnimationFrame(cuadro);
+    if (temporizador !== undefined) clearTimeout(temporizador);
+  };
+}
+
+function margenes(reserva: Reserva, margen: number) {
+  return {
+    top: reserva.arriba + margen,
+    right: reserva.derecha + margen,
+    bottom: reserva.abajo + margen,
+    left: reserva.izquierda + margen,
+  };
+}
+
+export type Encuadre = { lon: number; lat: number; zoom?: number } | "ucrania";
+
+export interface ApiMapa {
+  /** Posición en pantalla (relativa al contenedor del mapa) de una coordenada. */
+  proyectar: (lon: number, lat: number) => { x: number; y: number };
+  /** Avisa en cada fotograma en que el mapa se mueve; devuelve cómo dejar de avisar. */
+  alMover: (aviso: () => void) => () => void;
+  /** Acerca (paso positivo) o aleja el mapa. */
+  zoom: (paso: number) => void;
+  /** Vuelve a la vista inicial: Europa entera, en el hueco que deja libre la interfaz. */
+  vistaInicial: () => void;
+}
+
+/** Lo que tapa el mapa por cada lado (cabecera, filtros, paneles, hoja inferior), en px. */
+export interface Reserva {
+  arriba: number;
+  derecha: number;
+  abajo: number;
+  izquierda: number;
+}
 
 export interface PropsMapa {
   t: Textos;
   idioma: Idioma;
-  /** Incidentes del periodo elegido. */
+  /** Incidentes que pasan los filtros y el periodo. */
   incidentes: readonly IncidenteResumen[];
+  porId: ReadonlyMap<string, IncidenteResumen>;
   episodios: readonly EpisodioResumen[];
   capas: Capas;
   /** Ataques por región de Ucrania en el periodo; null si la capa no está cargada. */
   intensidad: ReadonlyMap<string, number> | null;
-  /** Incidente con la ficha abierta. */
+  /** Intensidad de una sola noche mientras se reproduce la guerra noche a noche. */
+  noche: ReadonlyMap<string, number> | null;
   elegido: IncidenteResumen | null;
-  /** Regiones de Ucrania resaltadas: la elegida o las de un ataque. */
+  paisResaltado: string | null;
   regionesElegidas: readonly string[];
-  /** Lo que el mapa debe centrar; cambia cada vez que se abre una ficha. */
+  novedades: ReadonlySet<string>;
+  /** Último día con datos, para el destello de las últimas 24 horas. */
+  hoy: number;
   encuadre: Encuadre | null;
-  /** El panel de la ficha tapa la parte inferior del mapa (móvil). */
-  panelInferior: boolean;
+  /** Lo que tapa el mapa: al volar a una ficha, lo abierto queda en el hueco libre. */
+  reserva: Reserva;
   onIncidente: (id: string) => void;
+  onPila: (ids: string[]) => void;
   onRegion: (codigo: string) => void;
+  onListo: (api: ApiMapa) => void;
   onFallo: () => void;
 }
 
 /** Opacidad del relleno de una región según sus ataques, en los escalones de la leyenda. */
-function opacidadPorRegion(intensidad: ReadonlyMap<string, number>): ExpressionSpecification | number {
+function opacidadPorRegion(
+  intensidad: ReadonlyMap<string, number>,
+): ExpressionSpecification | number {
   const tope = Math.max(0, ...intensidad.values());
   if (tope === 0) return 0;
   const pares: (string | number)[] = [];
@@ -97,14 +159,19 @@ function fuente(mapa: MapaGL, id: string): GeoJSONSource | undefined {
   return mapa.getSource<GeoJSONSource>(id);
 }
 
-function sinMovimiento(): boolean {
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+function capasActivas(mapa: MapaGL): string[] {
+  return CAPAS_PULSABLES.filter((id) => mapa.getLayer(id) !== undefined);
 }
 
 export default function Mapa(props: PropsMapa) {
-  const { t, idioma, incidentes, episodios, capas, intensidad, elegido, regionesElegidas } = props;
-  const { encuadre, panelInferior } = props;
+  const { t, idioma, incidentes, episodios, capas, intensidad, noche, elegido } = props;
+  const { paisResaltado, regionesElegidas, novedades, hoy, encuadre, reserva } = props;
+  // El vuelo lee la reserva del momento, pero no se repite porque cambie (al arrastrar una hoja).
+  const reservaActual = useRef(reserva);
+  reservaActual.current = reserva;
   const contenedor = useRef<HTMLDivElement>(null);
+  const letrero = useRef<HTMLDivElement>(null);
+  const capaPulsos = useRef<HTMLDivElement>(null);
   const mapaRef = useRef<MapaGL | null>(null);
   const [listo, setListo] = useState(false);
   // Los manejadores del mapa se registran una vez: leen siempre las funciones actuales.
@@ -121,9 +188,9 @@ export default function Mapa(props: PropsMapa) {
     try {
       mapa = new MapaGL({
         container: elemento,
-        style: estilo(idiomaInicial.current, window.location.origin),
+        style: estilo(idiomaInicial.current, window.location.origin, acento()),
         bounds: VISTA_INICIAL,
-        fitBoundsOptions: { padding: MARGEN_VISTA_INICIAL_PX },
+        fitBoundsOptions: { padding: margenes(reservaActual.current, MARGEN_VISTA_INICIAL_PX) },
         minZoom: ZOOM_MINIMO,
         maxZoom: ZOOM_MAXIMO,
         maxBounds: LIMITES,
@@ -133,7 +200,7 @@ export default function Mapa(props: PropsMapa) {
         touchPitch: false,
       });
     } catch {
-      // Sin WebGL no hay mapa; la lista de incidentes sigue funcionando.
+      // Sin WebGL no hay mapa; la lista y el feed siguen funcionando.
       manejadores.current.onFallo();
       return undefined;
     }
@@ -144,33 +211,87 @@ export default function Mapa(props: PropsMapa) {
     mapa.on("load", () => {
       registrarIconos(mapa);
       setListo(true);
+      manejadores.current.onListo({
+        proyectar: (lon, lat) => mapa.project([lon, lat]),
+        zoom: (paso) =>
+          mapa.easeTo({ zoom: mapa.getZoom() + paso, animate: !movimientoReducido() }),
+        vistaInicial: () =>
+          mapa.fitBounds(VISTA_INICIAL, {
+            padding: margenes(reservaActual.current, MARGEN_VISTA_INICIAL_PX),
+            animate: !movimientoReducido(),
+            duration: DURACION_VUELO_MS,
+          }),
+        alMover: (aviso) => {
+          mapa.on("move", aviso);
+          mapa.on("resize", aviso);
+          return () => {
+            mapa.off("move", aviso);
+            mapa.off("resize", aviso);
+          };
+        },
+      });
     });
 
+    function primeroBajo(evento: MapMouseEvent): MapGeoJSONFeature | undefined {
+      return mapa.queryRenderedFeatures(evento.point, { layers: capasActivas(mapa) })[0];
+    }
+
+    function textoDeLetrero(rasgo: MapGeoJSONFeature): string | null {
+      const { t: textos, idioma: lengua, porId } = manejadores.current;
+      const p = rasgo.properties;
+      if (rasgo.layer.id === CAPA_GRUPOS) {
+        return "point_count" in p ? textos.mapa.grupo(Number(p.total)) : textos.mapa.pila(Number(p.n));
+      }
+      if (rasgo.layer.id === CAPA_REGIONES) {
+        return textos.regiones[String(p.iso)] ?? String(p.iso);
+      }
+      const incidente = porId.get(String(p.id));
+      if (incidente === undefined) return null;
+      return `${textos.tipo[incidente.tipo]} · ${textos.estado[incidente.estado]} · ${
+        incidente.titulo[lengua]
+      }`;
+    }
+
     mapa.on("click", (evento: MapMouseEvent) => {
-      const capasActivas = [CAPA_INCIDENTES, CAPA_GRUPOS, CAPA_REGIONES].filter(
-        (id) => mapa.getLayer(id) !== undefined,
-      );
-      const [primero] = mapa.queryRenderedFeatures(evento.point, { layers: capasActivas });
+      const primero = primeroBajo(evento);
       if (primero === undefined) return;
-      if (primero.layer.id === CAPA_INCIDENTES) {
-        manejadores.current.onIncidente(String(primero.properties.id));
+      const propiedades = primero.properties;
+      if (primero.layer.id === CAPA_GRUPOS && Number(propiedades.n) > 1) {
+        // Varios incidentes en el mismo punto exacto: se elige cuál abrir.
+        manejadores.current.onPila(String(propiedades.ids).split(","));
       } else if (primero.layer.id === CAPA_GRUPOS) {
         // Un grupo se separa al acercar: se va al zoom en que deja de agruparse.
         mapa.easeTo({
           center: evento.lngLat,
           zoom: Math.max(mapa.getZoom() + 1.5, ZOOM_MAXIMO_AGRUPADO + 0.5),
+          animate: !movimientoReducido(),
         });
+      } else if (primero.layer.id === CAPA_REGIONES) {
+        manejadores.current.onRegion(String(propiedades.iso));
       } else {
-        manejadores.current.onRegion(String(primero.properties.iso));
+        manejadores.current.onIncidente(String(propiedades.id));
       }
     });
 
+    // Letrero al pasar el ratón: qué es cada símbolo, sin leyenda fija.
     mapa.on("mousemove", (evento: MapMouseEvent) => {
-      const capasActivas = [CAPA_INCIDENTES, CAPA_GRUPOS, CAPA_REGIONES].filter(
-        (id) => mapa.getLayer(id) !== undefined,
-      );
-      const hay = mapa.queryRenderedFeatures(evento.point, { layers: capasActivas }).length > 0;
-      mapa.getCanvas().style.cursor = hay ? "pointer" : "";
+      const primero = primeroBajo(evento);
+      mapa.getCanvas().style.cursor = primero === undefined ? "" : "pointer";
+      const caja = letrero.current;
+      if (caja === null) return;
+      const texto = primero === undefined ? null : textoDeLetrero(primero);
+      if (texto === null) {
+        caja.hidden = true;
+        return;
+      }
+      caja.textContent = texto;
+      caja.hidden = false;
+      caja.style.transform = `translate(${evento.point.x + DESPLAZAMIENTO_LETRERO_PX}px, ${
+        evento.point.y + DESPLAZAMIENTO_LETRERO_PX
+      }px)`;
+    });
+    mapa.on("mouseout", () => {
+      if (letrero.current !== null) letrero.current.hidden = true;
     });
 
     return () => {
@@ -191,50 +312,75 @@ export default function Mapa(props: PropsMapa) {
     mapa.getCanvas().setAttribute("aria-label", t.mapa.etiqueta);
   }, [listo, idioma, t]);
 
-  // Incidentes del periodo: puntos agrupables, áreas de precisión y líneas de episodio.
+  // Incidentes: un símbolo por punto, áreas de precisión y líneas de episodio.
   useEffect(() => {
     const mapa = mapaRef.current;
-    if (!listo || mapa === null) return;
-    const coleccion = puntos(incidentes);
-    fuente(mapa, FUENTE_PUNTOS)?.setData(coleccion);
-    fuente(mapa, FUENTE_PUNTOS_SUELTOS)?.setData(coleccion);
-    fuente(mapa, FUENTE_AREAS)?.setData(areas(incidentes));
-    fuente(mapa, FUENTE_EPISODIOS)?.setData(lineasDeEpisodio(episodios, incidentes));
-  }, [listo, incidentes, episodios]);
+    if (!listo || mapa === null) return undefined;
+    return trasPintar(() => {
+      const coleccion = pilas(incidentes, { hoy, novedades });
+      fuente(mapa, FUENTE_PUNTOS)?.setData(coleccion);
+      fuente(mapa, FUENTE_PUNTOS_SUELTOS)?.setData(coleccion);
+      fuente(mapa, FUENTE_AREAS)?.setData(areas(incidentes));
+      fuente(mapa, FUENTE_EPISODIOS)?.setData(lineasDeEpisodio(episodios, incidentes));
+    });
+  }, [listo, incidentes, episodios, hoy, novedades]);
 
-  // Anillo dorado del incidente elegido.
+  // Anillo del incidente elegido.
   useEffect(() => {
     const mapa = mapaRef.current;
     if (!listo || mapa === null) return;
-    fuente(mapa, FUENTE_SELECCION)?.setData(puntos(elegido === null ? [] : [elegido]));
+    const punto = elegido?.punto ?? null;
+    fuente(mapa, FUENTE_SELECCION)?.setData({
+      type: "FeatureCollection",
+      features:
+        punto === null
+          ? []
+          : [
+              {
+                type: "Feature",
+                geometry: { type: "Point", coordinates: [punto.lon, punto.lat] },
+                properties: {},
+              },
+            ],
+    });
   }, [listo, elegido]);
 
-  // Capas visibles según el selector.
+  // País de un incidente sin punto, resaltado de forma tenue.
   useEffect(() => {
     const mapa = mapaRef.current;
     if (!listo || mapa === null) return;
-    const grupos: [readonly string[], boolean][] = [
-      [CAPAS_DE_INCIDENTES, capas.incidentes],
-      [CAPAS_DE_UCRANIA, capas.ucrania],
-      [CAPAS_DE_DENSIDAD, capas.densidad],
-    ];
-    for (const [ids, visible] of grupos) {
-      for (const id of ids) {
-        mapa.setLayoutProperty(id, "visibility", visible ? "visible" : "none");
+    mapa.setFilter(CAPA_PAIS, ["==", ["get", "iso"], paisResaltado ?? ""]);
+  }, [listo, paisResaltado]);
+
+  // Capas visibles según los controles.
+  useEffect(() => {
+    const mapa = mapaRef.current;
+    if (!listo || mapa === null) return undefined;
+    return trasPintar(() => {
+      const grupos: [readonly string[], boolean][] = [
+        [CAPAS_DE_INCIDENTES, capas.incidentes],
+        [CAPAS_DE_UCRANIA, capas.ucrania],
+        [CAPAS_DE_DENSIDAD, capas.densidad],
+      ];
+      for (const [ids, visible] of grupos) {
+        for (const id of ids) {
+          mapa.setLayoutProperty(id, "visibility", visible ? "visible" : "none");
+        }
       }
-    }
+    });
   }, [listo, capas]);
 
-  // Regiones de Ucrania coloreadas por intensidad en el periodo, y las resaltadas.
+  // Regiones de Ucrania: intensidad del periodo, o la de una noche durante la reproducción.
   useEffect(() => {
     const mapa = mapaRef.current;
     if (!listo || mapa === null) return;
+    const actual = noche ?? intensidad;
     mapa.setPaintProperty(
       CAPA_REGIONES,
       "fill-opacity",
-      intensidad === null ? 0 : opacidadPorRegion(intensidad),
+      actual === null ? 0 : opacidadPorRegion(actual),
     );
-  }, [listo, intensidad]);
+  }, [listo, intensidad, noche]);
 
   useEffect(() => {
     const mapa = mapaRef.current;
@@ -242,55 +388,60 @@ export default function Mapa(props: PropsMapa) {
     mapa.setFilter(CAPA_REGION_ELEGIDA, ["in", ["get", "iso"], ["literal", [...regionesElegidas]]]);
   }, [listo, regionesElegidas]);
 
-  // Encuadre al abrir una ficha.
+  // Pulsos: confirmados y atribuidos laten, y los grupos que los contienen. Van fuera del
+  // mapa (ver pulsos.ts) y solo se recolocan cuando el mapa se mueve o cambia lo dibujado.
+  useEffect(() => {
+    const mapa = mapaRef.current;
+    const capa = capaPulsos.current;
+    if (!listo || mapa === null || capa === null) return undefined;
+    const recolocar = () => {
+      const capas = [CAPA_GRUPOS, CAPA_INCIDENTES_GRAVES].filter(
+        (id) => mapa.getLayoutProperty(id, "visibility") !== "none",
+      );
+      const rasgos = capas.length === 0 ? [] : mapa.queryRenderedFeatures({ layers: capas });
+      colocarPulsos(
+        capa,
+        pulsosDe(rasgos, (lon, lat) => mapa.project([lon, lat])),
+      );
+    };
+    mapa.on("move", recolocar);
+    mapa.on("idle", recolocar);
+    recolocar();
+    return () => {
+      mapa.off("move", recolocar);
+      mapa.off("idle", recolocar);
+    };
+  }, [listo]);
+
+  // Vuelo suave al abrir una ficha.
   useEffect(() => {
     const mapa = mapaRef.current;
     if (!listo || mapa === null || encuadre === null) return;
-    const inferior = panelInferior ? mapa.getContainer().clientHeight * FRACCION_PANEL_MOVIL : 0;
-    const padding = {
-      top: MARGEN_ENCUADRE_PX,
-      left: MARGEN_ENCUADRE_PX,
-      right: MARGEN_ENCUADRE_PX,
-      bottom: MARGEN_ENCUADRE_PX + inferior,
-    };
-    const animate = !sinMovimiento();
+    const padding = margenes(reservaActual.current, MARGEN_ENCUADRE_PX);
+    const animate = !movimientoReducido();
     if (encuadre === "ucrania") {
-      mapa.fitBounds(CAJA_UCRANIA, { padding, animate });
+      mapa.fitBounds(CAJA_UCRANIA, { padding, animate, duration: DURACION_VUELO_MS });
     } else {
-      mapa.easeTo({
+      mapa.flyTo({
         center: [encuadre.lon, encuadre.lat],
-        zoom: Math.max(mapa.getZoom(), ZOOM_DE_FICHA),
-        padding: { top: 0, left: 0, right: 0, bottom: inferior },
+        zoom: encuadre.zoom ?? Math.max(mapa.getZoom(), ZOOM_DE_FICHA),
+        // El símbolo queda en el hueco que dejan a la vista la cabecera y la ficha.
+        padding: margenes(reservaActual.current, 0),
+        duration: DURACION_VUELO_MS,
         animate,
       });
     }
-  }, [listo, encuadre, panelInferior]);
-
-  function zoom(paso: number) {
-    mapaRef.current?.easeTo({ zoom: mapaRef.current.getZoom() + paso, animate: !sinMovimiento() });
-  }
+  }, [listo, encuadre]);
 
   return (
     <div className="absolute inset-0">
       <div ref={contenedor} className="size-full" data-mapa-listo={listo} />
-      <div className="absolute right-3 top-3 z-10 flex flex-col gap-1">
-        <button
-          type="button"
-          className="boton boton-discreto mono size-8 bg-superficie-1 p-0 text-base"
-          aria-label={t.mapa.acercar}
-          onClick={() => zoom(1)}
-        >
-          +
-        </button>
-        <button
-          type="button"
-          className="boton boton-discreto mono size-8 bg-superficie-1 p-0 text-base"
-          aria-label={t.mapa.alejar}
-          onClick={() => zoom(-1)}
-        >
-          −
-        </button>
-      </div>
+      <div ref={capaPulsos} aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden" />
+      <div
+        ref={letrero}
+        hidden
+        className="flotante pointer-events-none absolute left-0 top-0 z-30 max-w-72 px-2 py-1 text-xs text-texto"
+      />
     </div>
   );
 }

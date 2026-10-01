@@ -35,7 +35,7 @@ export function EnlaceExterno({ enlace, aviso, avisoNoValido, className, childre
       className={`enlace ${className ?? ""}`}
     >
       {children}
-      <span aria-hidden="true" className="ml-1 text-dorado">
+      <span aria-hidden="true" className="ml-1 text-acento">
         ↗
       </span>
       <span className="sr-only"> ({aviso})</span>

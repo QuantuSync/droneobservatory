@@ -11,7 +11,11 @@ export default defineConfig({
   retries: 0,
   timeout: 90_000,
   reporter: "list",
-  use: { baseURL: BASE, screenshot: "off", trace: "off" },
+  use: {
+    baseURL: BASE,
+    screenshot: "off",
+    trace: "off",
+  },
   projects: [
     { name: "escritorio", use: { ...devices["Desktop Chrome"], viewport: { width: 1440, height: 900 } } },
     { name: "movil", use: { ...devices["Pixel 7"] } },

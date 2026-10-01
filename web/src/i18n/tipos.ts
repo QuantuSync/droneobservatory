@@ -1,4 +1,6 @@
+import type { Accion } from "../estado/atajos.ts";
 import type {
+  NivelUbicacion,
   EstadoFuente,
   FuenteDelSistema,
   ResultadoRecogida,
@@ -33,29 +35,47 @@ export interface Seccion {
 export interface Textos {
   descripcion: string;
   saltarAlMapa: string;
-  cabecera: {
+  marcador: {
+    etiqueta: string;
     incidentes: string;
     confirmados: string;
+    atribuidos: string;
     paises: string;
-    contadores: string;
-    metodologia: string;
+  };
+  firma: { metodologia: string; atribuciones: string };
+  cabecera: { etiqueta: string; menu: string; cerrarMenu: string };
+  hoja: { altura: (altura: string) => string; alturas: Record<"asomada" | "media" | "completa", string> };
+  controles: {
+    capas: string;
+    incidentes: string;
+    ucrania: string;
+    densidad: string;
+    feed: string;
+    ayuda: string;
     cambiarIdioma: string;
-    otroIdioma: string;
+    idioma: string;
+    zoom: string;
+    paneles: string;
+    acercar: string;
+    alejar: string;
   };
   estadoDatos: {
     actualizado: string;
     etiqueta: Record<EstadoFrescura, string>;
-    antiguedad: (horas: number) => string;
     sinDatos: string;
-    sistema: string;
+    detalle: string;
+    datosPublicados: string;
     ultimaRecogida: string;
-    siguiente: string;
+    resultadoRotulo: string;
+    siguienteRecogida: string;
+    fuentes: string;
     resultado: Record<ResultadoRecogida, string>;
     fuente: Record<FuenteDelSistema, string>;
     estadoFuente: Record<EstadoFuente, string>;
     ultimoDato: string;
     sinUltimoDato: string;
     nuncaCorrecta: string;
+    siguienteEn: (minutos: number) => string;
   };
   avisos: {
     cargando: string;
@@ -65,31 +85,71 @@ export interface Textos {
     fichaNoValida: string;
     mapaNoDisponible: string;
   };
-  capas: {
+  filtros: {
     titulo: string;
-    incidentes: string;
-    ucrania: string;
-    densidad: string;
-    lista: string;
+    graves: string;
+    ultimas24h: string;
+    ultimos7d: string;
+    tipo: string;
+    pais: string;
+    todosLosPaises: string;
+    estado: string;
+    quitar: string;
+    recientes: string;
+    activos: (n: number) => string;
   };
-  leyenda: {
+  feed: {
     titulo: string;
-    forma: string;
-    color: string;
-    precision: string;
-    episodio: string;
-    agrupacion: string;
+    enDirecto: string;
+    lista: string;
+    abrir: string;
+    cerrar: string;
+    nuevo: string;
+    nuevoYa: (estado: string) => string;
+    paso: (estado: string) => string;
+    vacio: string;
+  };
+  relativo: (minutos: number, fecha: string) => string;
+  novedades: {
+    aviso: (n: number) => string;
+    recorrer: string;
+    siguiente: string;
+    anterior: string;
+    descartar: string;
+    posicion: (i: number, n: number) => string;
+  };
+  ayuda: {
+    titulo: string;
+    cerrar: string;
+    formas: string;
+    colores: string;
+    areas: string;
+    lineas: string;
+    numeros: string;
+    pila: string;
+    pulsos: string;
+    reciente: string;
+    novedad: string;
     ucrania: string;
-    menos: string;
-    mas: string;
-    densidad: string;
+    atajos: string;
+    acciones: Record<Accion, string>;
+  };
+  pila: { titulo: (n: number) => string };
+  imprecisa: { etiqueta: string; nivel: Record<NivelUbicacion, string> };
+  guerra: {
+    reproducir: string;
+    pausar: string;
+    reanudar: string;
+    detener: string;
+    noche: (fecha: string) => string;
+    drones: string;
+    sinCifra: string;
   };
   mapa: {
     etiqueta: string;
     instrucciones: string;
-    acercar: string;
-    alejar: string;
-    atribucion: string;
+    grupo: (n: number) => string;
+    pila: (n: number) => string;
   };
   tipo: Record<Tipo, string>;
   estado: Record<Estado, string>;
@@ -122,7 +182,10 @@ export interface Textos {
     rangoDeFuentes: string;
     queDiceCadaFuente: (n: number) => string;
     valorSegun: string;
-    cierre: Record<"si" | "no" | "desconocido", string>;
+    cierreDe: (minutos: string) => string;
+    cierreSinDuracion: string;
+    sinCierre: string;
+    cierreDesconocido: string;
     vuelosDesviados: string;
     vuelosCancelados: string;
     vuelosRetrasados: string;
@@ -186,13 +249,19 @@ export interface Textos {
     porGranularidad: Record<Granularidad, string>;
     reproducir: string;
     pausar: string;
-    todo: string;
+    reanudar: string;
+    detener: string;
+    verTodo: string;
+    periodoBoton: string;
     desde: string;
     hasta: string;
     periodo: (desde: string, hasta: string) => string;
     incidentesPorTramo: string;
     lanzamientosPorNoche: string;
     instrucciones: string;
+    plegar: string;
+    desplegar: string;
+    acotado: string;
     maximo: (n: string) => string;
   };
   metodologia: {
@@ -204,6 +273,7 @@ export interface Textos {
       intro: string;
       incidentes: string;
       ucrania: string;
+      sinUbicacion: string;
       version: (fecha: string) => string;
       licencia: string;
       citaTitulo: string;
@@ -215,6 +285,7 @@ export interface Textos {
     tituloIncidente: (titulo: string) => string;
     tituloAtaque: (id: string) => string;
     altImagen: string;
+    lema: string;
   };
   regiones: Record<string, string>;
 }

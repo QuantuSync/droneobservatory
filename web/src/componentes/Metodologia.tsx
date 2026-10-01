@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 import { fechaHora } from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
 import type { Bloque, Marca, Trozo } from "../i18n/tipos.ts";
-import { DESCARGAS, LICENCIA_DATOS, LICENCIA_DATOS_URL } from "../sitio.ts";
+import { DESCARGAS, LICENCIA_DATOS, LICENCIA_DATOS_URL, NOMBRE } from "../sitio.ts";
 import { EnlaceExterno } from "./EnlaceExterno.tsx";
 import { Simbolo } from "./Simbolo.tsx";
 
@@ -12,6 +12,8 @@ interface Props {
   abierta: boolean;
   /** Fecha de la versión de los datos; null si no se han cargado. */
   actualizado: string | null;
+  /** Si se publica el fichero de incidentes con ubicación imprecisa. */
+  sinUbicacion: boolean;
   onCerrar: () => void;
 }
 
@@ -73,18 +75,26 @@ function BloqueDeTexto({ t, bloque }: { t: Textos; bloque: Bloque }) {
 
 function Descarga({ ruta, formato }: { ruta: string; formato: string }) {
   return (
-    <a href={ruta} download className="boton boton-discreto mono min-h-7 text-xs">
+    <a href={ruta} download className="control mono min-h-7 text-xs">
       {formato}
     </a>
   );
 }
 
-function Descargas({ t, actualizado }: { t: Textos; actualizado: string | null }) {
+function Descargas({
+  t,
+  actualizado,
+  sinUbicacion,
+}: {
+  t: Textos;
+  actualizado: string | null;
+  sinUbicacion: boolean;
+}) {
   const d = t.metodologia.descargas;
   const version = actualizado === null ? null : fechaHora(actualizado);
   return (
     <section className="mt-6" aria-labelledby="metodologia-descargas">
-      <h3 id="metodologia-descargas" className="titular text-lg">
+      <h3 id="metodologia-descargas" className="text-lg font-semibold tracking-tight">
         {d.titulo}
       </h3>
       <p className="mt-2">{d.intro}</p>
@@ -103,6 +113,14 @@ function Descargas({ t, actualizado }: { t: Textos; actualizado: string | null }
             <Descarga ruta={DESCARGAS.ucraniaCsv} formato="CSV" />
           </dd>
         </div>
+        {sinUbicacion && (
+          <div className="flex flex-wrap items-center gap-2 border-b border-linea py-2">
+            <dt className="mr-auto">{d.sinUbicacion}</dt>
+            <dd className="flex gap-2">
+              <Descarga ruta={DESCARGAS.sinUbicacionJson} formato="JSON" />
+            </dd>
+          </div>
+        )}
       </dl>
       {version !== null && <p className="mono mt-2 text-xs text-secundario">{d.version(version)}</p>}
       <p className="mt-1 text-xs text-secundario">
@@ -117,8 +135,8 @@ function Descargas({ t, actualizado }: { t: Textos; actualizado: string | null }
       </p>
       {version !== null && (
         <>
-          <p className="etiqueta mt-3 text-[0.625rem]">{d.citaTitulo}</p>
-          <p className="mt-1 border-l border-dorado pl-2 text-secundario">{d.cita(version)}</p>
+          <p className="rotulo mt-3">{d.citaTitulo}</p>
+          <p className="mt-1 border-l border-acento pl-2 text-secundario">{d.cita(version)}</p>
         </>
       )}
     </section>
@@ -129,7 +147,7 @@ function Descargas({ t, actualizado }: { t: Textos; actualizado: string | null }
  * Metodología: panel que se abre desde la cabecera en todas las resoluciones, sin salir de
  * la pantalla. Es un diálogo modal nativo: retiene el foco y se cierra con Escape.
  */
-export function Metodologia({ t, abierta, actualizado, onCerrar }: Props) {
+export function Metodologia({ t, abierta, actualizado, sinUbicacion, onCerrar }: Props) {
   const dialogo = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -149,17 +167,30 @@ export function Metodologia({ t, abierta, actualizado, onCerrar }: Props) {
       onClick={(evento) => {
         if (evento.target === dialogo.current) onCerrar();
       }}
-      className="m-0 ml-auto h-dvh max-h-none w-full max-w-2xl border-l border-borde bg-superficie-1 p-0 backdrop:bg-fondo/70"
+      className="m-0 ml-auto h-dvh max-h-none w-full max-w-2xl bg-panel-solido p-0 backdrop:bg-fondo/60"
     >
       <div className="flex h-full flex-col">
-        <div className="flex items-center gap-2 border-b border-borde px-5 py-3">
-          <h2 id="metodologia-titulo" className="etiqueta mr-auto text-sm">
-            <span aria-hidden="true">» </span>
-            {t.metodologia.titulo}
-          </h2>
+        <div className="flex items-center gap-3 border-b border-linea px-5 py-3">
+          {/* El logo completo: WebP y PNG de respaldo, a 48 px y al doble para pantallas densas. */}
+          <picture className="shrink-0">
+            <source type="image/webp" srcSet="/marca/logo-96.webp 1x, /marca/logo-192.webp 2x" />
+            <img
+              src="/marca/logo-96.png"
+              srcSet="/marca/logo-96.png 1x, /marca/logo-192.png 2x"
+              alt=""
+              width={48}
+              height={48}
+            />
+          </picture>
+          <div className="mr-auto">
+            <p className="text-xs text-secundario">{NOMBRE}</p>
+            <h2 id="metodologia-titulo" className="text-lg font-semibold tracking-tight">
+              {t.metodologia.titulo}
+            </h2>
+          </div>
           <button
             type="button"
-            className="boton boton-discreto min-h-7 px-2 text-xs"
+            className="control min-h-7 px-2 text-xs"
             aria-label={t.metodologia.cerrar}
             onClick={onCerrar}
           >
@@ -169,7 +200,7 @@ export function Metodologia({ t, abierta, actualizado, onCerrar }: Props) {
         <div className="flex-1 overflow-y-auto px-5 pb-8 pt-2">
           {t.metodologia.secciones.map((seccion) => (
             <section key={seccion.id} className="mt-6" aria-labelledby={`metodologia-${seccion.id}`}>
-              <h3 id={`metodologia-${seccion.id}`} className="titular text-lg">
+              <h3 id={`metodologia-${seccion.id}`} className="text-lg font-semibold tracking-tight">
                 {seccion.titulo}
               </h3>
               {seccion.bloques.map((bloque, i) => (
@@ -177,7 +208,7 @@ export function Metodologia({ t, abierta, actualizado, onCerrar }: Props) {
               ))}
             </section>
           ))}
-          <Descargas t={t} actualizado={actualizado} />
+          <Descargas t={t} actualizado={actualizado} sinUbicacion={sinUbicacion} />
         </div>
       </div>
     </dialog>

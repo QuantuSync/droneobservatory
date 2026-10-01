@@ -88,3 +88,34 @@ export function dominioUcrania(ucrania: ResumenUcrania): Periodo | null {
   if (primero === undefined || ultimo === undefined) return null;
   return { desde: primero[1], hasta: ultimo[1] };
 }
+
+export interface NocheDeGuerra {
+  dia: number;
+  /** Peso de cada región esa noche: derribos desglosados si los hay; si no, 1 por parte. */
+  regiones: Map<string, number>;
+  /** Drones lanzados contra Ucrania esa noche; null si ningún parte da la cifra. */
+  lanzados: number | null;
+}
+
+/**
+ * Noches de ataques contra Ucrania, en orden, para reproducir la guerra noche a noche:
+ * cada región se enciende según su intensidad esa noche. Los tramos cuyas cifras ya están
+ * en otro parte no se suman dos veces.
+ */
+export function nochesDeGuerra(ucrania: ResumenUcrania): NocheDeGuerra[] {
+  const porDia = new Map<number, NocheDeGuerra>();
+  for (const fila of ucrania.ataques) {
+    if (sentidoDeFila(fila) !== "RU_UA") continue;
+    const noche = porDia.get(fila[1]) ?? { dia: fila[1], regiones: new Map(), lanzados: null };
+    const suma = fila[7] === 1;
+    if (suma && fila[4] !== DESCONOCIDO) noche.lanzados = (noche.lanzados ?? 0) + fila[4];
+    for (const [indice, , derribadosMax] of fila[8]) {
+      const codigo = ucrania.regiones[indice];
+      if (codigo === undefined) continue;
+      const peso = suma && derribadosMax !== DESCONOCIDO && derribadosMax > 0 ? derribadosMax : 1;
+      noche.regiones.set(codigo, (noche.regiones.get(codigo) ?? 0) + peso);
+    }
+    porDia.set(fila[1], noche);
+  }
+  return [...porDia.values()].sort((a, b) => a.dia - b.dia);
+}

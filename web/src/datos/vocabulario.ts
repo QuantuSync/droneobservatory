@@ -50,6 +50,7 @@ export const CATEGORIAS_OBJETIVO_UCRANIA = [
   "otra",
 ] as const;
 
+export const NIVELES_UBICACION = ["instalacion", "localidad", "region", "pais"] as const;
 export const RESULTADOS_RECOGIDA = ["correcta", "con_avisos", "fallida"] as const;
 export const ESTADOS_FUENTE = ["leida", "con_aviso", "no_leida"] as const;
 /** Fuentes que informa estado.json, en el orden en que se muestran. */

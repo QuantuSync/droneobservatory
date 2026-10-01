@@ -13,6 +13,15 @@ import { fileURLToPath } from "node:url";
 export const OMITIR = 0;
 export const CONSTRUIR = 1;
 export const RUTAS_QUE_DESPLIEGAN: readonly string[] = ["web", "publicacion", "vercel.json"];
+/** Rama de la que salen los despliegues de producción normales. */
+export const RAMA_DE_PRODUCCION = "main";
+
+export interface Entorno {
+  /** VERCEL_ENV: production, preview o development. */
+  destino?: string | undefined;
+  /** VERCEL_GIT_COMMIT_REF: la rama del commit. */
+  rama?: string | undefined;
+}
 
 /** Salida de git diff --quiet: 0 sin cambios, 1 con cambios, otra cosa es un error. */
 const DIFF_SIN_CAMBIOS = 0;
@@ -26,7 +35,16 @@ function gitReal(directorio: string): Git {
   };
 }
 
-export function decidir(previo: string | undefined, git: Git): typeof OMITIR | typeof CONSTRUIR {
+export function decidir(
+  previo: string | undefined,
+  git: Git,
+  entorno: Entorno = {},
+): typeof OMITIR | typeof CONSTRUIR {
+  // Un despliegue de producción desde otra rama solo se hace a mano, para probar una rama en
+  // el dominio real: siempre se construye, aunque su vista previa ya esté hecha.
+  if (entorno.destino === "production" && entorno.rama !== undefined && entorno.rama !== RAMA_DE_PRODUCCION) {
+    return CONSTRUIR;
+  }
   if (previo === undefined || previo.trim().length === 0) return CONSTRUIR;
   try {
     if (git(["cat-file", "-e", `${previo.trim()}^{commit}`]) !== 0) return CONSTRUIR;
@@ -38,7 +56,10 @@ export function decidir(previo: string | undefined, git: Git): typeof OMITIR | t
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  const salida = decidir(process.env.VERCEL_GIT_PREVIOUS_SHA, gitReal(process.cwd()));
+  const salida = decidir(process.env.VERCEL_GIT_PREVIOUS_SHA, gitReal(process.cwd()), {
+    destino: process.env.VERCEL_ENV,
+    rama: process.env.VERCEL_GIT_COMMIT_REF,
+  });
   console.log(salida === OMITIR ? "sin cambios en la web ni en los datos: se omite" : "se construye");
   process.exit(salida);
 }
