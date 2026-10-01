@@ -9,7 +9,7 @@ from almacen.base import Almacen, DocumentoInvalido
 from esquema import Documento, Esquema, Visibilidad, rutas_por_visibilidad
 from exportacion.campos import CAMPOS_PUBLICOS_ATAQUE, CAMPOS_PUBLICOS_INCIDENTE
 from exportacion.geojson import exportar
-from exportacion.proyeccion import rutas
+from exportacion.proyeccion import ExportacionInvalida, rutas
 from exportacion.ucrania import exportar_ucrania
 from proceso import focos_termicos as ft
 from recogida.plazo import Plazo
@@ -415,3 +415,28 @@ def test_mientras_llega_el_historico_se_reevalua_todo() -> None:
     resumen = ft.evaluar_todos(almacen, [impacto()], focos, mas_tarde, CAJA, reevaluar_todo=True)
     assert resumen.evaluados == 1
     assert almacen.focos_termicos()["EODI-2025-00099"]["resultado"] == "detectado"
+
+
+def test_la_ventana_de_un_impacto_reciente_puede_acabar_en_el_futuro() -> None:
+    """Caso del 1 de octubre de 2026: un incidente del día anterior tenía la ventana abierta
+    y la exportación lo rechazaba por fecha futura, y la recogida no publicaba."""
+    incidente = ejemplos.incidente_completo()
+    incidente["foco_termico"] = {
+        **no_detectado(),
+        "ventana": {
+            "inicio": instante("2025-10-01T20:30Z"),
+            "fin": instante(f"{AHORA + timedelta(hours=30):%Y-%m-%dT%H:%MZ}"),
+        },
+    }
+    exportar([incidente], AHORA, VOCABULARIO_MODELOS)
+    ataque = ejemplos.ataque_completo()
+    ataque["regiones"][0]["foco_termico"]["ventana"]["fin"] = instante(
+        f"{AHORA + timedelta(hours=30):%Y-%m-%dT%H:%MZ}"
+    )
+    exportar_ucrania([ataque], AHORA)
+    # Cualquier otra fecha futura sigue siendo un error.
+    incidente["foco_termico"]["evaluado"] = instante(
+        f"{AHORA + timedelta(hours=1):%Y-%m-%dT%H:%MZ}"
+    )
+    with pytest.raises(ExportacionInvalida):
+        exportar([incidente], AHORA, VOCABULARIO_MODELOS)

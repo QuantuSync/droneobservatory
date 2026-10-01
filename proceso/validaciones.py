@@ -122,10 +122,17 @@ def errores_rangos(documento: Any) -> list[Error]:
     ]
 
 
+RUTA_VENTANA_FOCO = "foco_termico.ventana"
+
+
 def errores_fechas(documento: Any, ahora: datetime) -> list[Error]:
     errores: list[Error] = []
     for ruta, nodo in _nodos(documento):
         if set(nodo) != {"valor", "precision"}:
+            continue
+        # La ventana de un foco térmico acaba 36 horas después del ataque: en un impacto
+        # reciente aún no ha llegado, y no es un dato de la fuente sino un plazo de búsqueda.
+        if RUTA_VENTANA_FOCO in ruta:
             continue
         momento = leer_instante(nodo)
         if momento is None:
