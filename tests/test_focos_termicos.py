@@ -405,3 +405,13 @@ def test_sin_tiempo_los_impactos_quedan_pendientes_para_la_hora_siguiente() -> N
     almacen = Almacen.abrir()
     resumen = ft.evaluar_todos(almacen, [impacto()], lector([foco(FIN)]), EVALUADO, CAJA, Plazo(0))
     assert resumen.pendientes == 1 and almacen.focos_termicos() == {}
+
+
+def test_mientras_llega_el_historico_se_reevalua_todo() -> None:
+    almacen = Almacen.abrir()
+    ft.evaluar_todos(almacen, [impacto()], lector([]), EVALUADO, CAJA)
+    mas_tarde = FIN + timedelta(hours=36) + ft.REEVALUAR + timedelta(hours=1)
+    focos = lector(pixeles(FIN))
+    resumen = ft.evaluar_todos(almacen, [impacto()], focos, mas_tarde, CAJA, reevaluar_todo=True)
+    assert resumen.evaluados == 1
+    assert almacen.focos_termicos()["EODI-2025-00099"]["resultado"] == "detectado"

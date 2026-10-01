@@ -97,7 +97,7 @@ def paso_firms(almacen: Almacen, ahora: datetime) -> EstadoFuente:
         datos.zonas = [(i.lat, i.lon) for i in todos if i.lat is not None and i.lon is not None]
         resumen = focos_termicos.evaluar_todos(
             almacen, todos, datos.focos, ahora, firms.CAJA,
-            Plazo(focos_termicos.TOPE_S),
+            Plazo(focos_termicos.TOPE_S), firms.historico_reciente(datos, ahora),
         )  # fmt: skip
         registro.info("focos térmicos: %s", resumen.texto())
     except Exception as error:

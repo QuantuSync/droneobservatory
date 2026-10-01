@@ -385,6 +385,21 @@ def recoger(datos: Datos, ahora: datetime, clave: str | None, descarga: Descarga
     return Lectura(True, ahora, ultimo_dato, focos)
 
 
+# Tras terminar el histórico, un día más reevaluando todo: la última tanda puede acabar
+# después de la última ejecución horaria que lo vio sin terminar.
+MARGEN_TRAS_HISTORICO = timedelta(days=1)
+
+
+def historico_reciente(datos: Datos, ahora: datetime) -> bool:
+    """True si el histórico no ha terminado o terminó hace menos de un día: los impactos ya
+    evaluados pueden tener datos nuevos de días antiguos."""
+    historico = datos.control().get("historico")
+    if not isinstance(historico, dict) or not historico.get("terminado"):
+        return True
+    actualizado = _leer_instante(historico.get("actualizado"))
+    return actualizado is None or ahora - actualizado < MARGEN_TRAS_HISTORICO
+
+
 def lectura_sin_descarga(datos: Datos) -> Lectura:
     control = datos.control()
     return Lectura(

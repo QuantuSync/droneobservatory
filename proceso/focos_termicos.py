@@ -378,16 +378,19 @@ def evaluar_todos(
     ahora: datetime,
     caja: Caja,
     plazo: "Plazo | None" = None,
+    reevaluar_todo: bool = False,
 ) -> Resumen:
     """Evalúa cada impacto que aún puede cambiar y guarda su resultado y sus focos. Uno cuya
-    ventana cerró hace más de una semana y ya tiene resultado no se vuelve a mirar. Por
-    orden de fecha, para que impactos vecinos lean los mismos días; los que no caben en el
-    plazo quedan pendientes para la ejecución siguiente."""
+    ventana cerró hace más de una semana y ya tiene resultado no se vuelve a mirar, salvo con
+    `reevaluar_todo`: mientras se descarga el histórico, un día puede tener solo algunos
+    productos, y lo evaluado con ellos se rehace cuando llegan los demás. Por orden de fecha,
+    para que impactos vecinos lean los mismos días; los que no caben en el plazo quedan
+    pendientes para la ejecución siguiente."""
     resumen = Resumen()
     previos: dict[str, Documento] = almacen.focos_termicos()
     for impacto in sorted(impactos, key=lambda i: (i.inicio, i.id)):
         anterior = previos.get(impacto.id)
-        if anterior is not None and ahora - impacto.ventana_fin > REEVALUAR:
+        if anterior is not None and not reevaluar_todo and ahora - impacto.ventana_fin > REEVALUAR:
             resumen.sin_cambios += 1
             continue
         if plazo is not None and plazo.agotado():

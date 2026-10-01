@@ -330,3 +330,16 @@ def test_el_resumen_no_lleva_la_clave(tmp_path: Path) -> None:
 
 def test_vacio_tiene_solo_la_cabecera() -> None:
     assert VACIO_VIIRS.startswith(b"latitude")
+
+
+def test_historico_reciente(tmp_path: Path) -> None:
+    datos = firms.Datos(tmp_path)
+    assert firms.historico_reciente(datos, AHORA)
+    datos.guardar_control(
+        {"historico": {"terminado": False, "actualizado": "2026-09-01T00:00:00Z"}}
+    )
+    assert firms.historico_reciente(datos, AHORA)
+    datos.guardar_control({"historico": {"terminado": True, "actualizado": "2026-09-30T08:00:00Z"}})
+    assert firms.historico_reciente(datos, AHORA)
+    datos.guardar_control({"historico": {"terminado": True, "actualizado": "2026-09-28T08:00:00Z"}})
+    assert not firms.historico_reciente(datos, AHORA)
