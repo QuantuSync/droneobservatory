@@ -479,3 +479,12 @@ def test_lugar_sin_calor_en_el_ano_no_cambia() -> None:
     documento = evaluar(pixeles(INICIO + timedelta(hours=3)))
     assert documento["resultado"] == ft.DETECTADO
     assert "emplazamiento" not in documento["linea_base"]
+
+
+def test_la_base_de_30_dias_toca_31_fechas_y_el_documento_vale() -> None:
+    # La base empieza a la hora del inicio de hace 30 días: con fuego cada día (una antorcha)
+    # hay focos en 31 fechas distintas. Así falló el cruce del 1 de octubre de 2026.
+    madrugada = foco(INICIO - timedelta(hours=12), km_norte=0.3, frp=6.0)
+    documento = evaluar([*antorcha(), madrugada])
+    assert documento["linea_base"]["dias"] == 31
+    Almacen.abrir().guardar_foco_termico("EODI-2025-00099", documento)

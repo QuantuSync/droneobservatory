@@ -96,7 +96,7 @@
           "required": ["focos", "dias"],
           "properties": {
             "focos": {"x-visibilidad": "interno", "type": "integer", "minimum": 0},
-            "dias": {"x-visibilidad": "interno", "description": "Días distintos con algún foco.", "type": "integer", "minimum": 0, "maximum": 30},
+            "dias": {"x-visibilidad": "interno", "description": "Fechas distintas con algún foco. Los 30 días empiezan a la hora del inicio, así que tocan hasta 31 fechas.", "type": "integer", "minimum": 0, "maximum": 31},
             "frp_max_mw": {"x-visibilidad": "interno", "type": "number", "minimum": 0},
             "emplazamiento": {
               "x-visibilidad": "interno",
