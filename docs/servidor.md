@@ -146,6 +146,12 @@ así que entra en la ejecución de las 03:40 o en la siguiente. Un día que adsb
 publicado se vuelve a mirar cada hora y, tres días después de terminado, se da por perdido
 (`control.json`). El procesado no toca el clon (lo pone al día la recogida horaria) ni la base.
 
+**Puesta en marcha.** En servicio desde el 1 de octubre de 2026, con los 47 días de la
+validación ya procesados. El histórico (522 días) avanza unos 4 días y medio por hora y termina
+hacia el 6 de octubre; mientras tanto, cada recogida horaria evalúa primero los incidentes y con
+lo que quede de su tope sigue con las interrupciones de todos los aeropuertos, que se ponen al
+día cuando el histórico acaba.
+
 **Nunca retiene el cerrojo de la recogida horaria.** Lo que sale del procesado son ficheros
 en `datos/trafico/`; la recogida horaria, que ya tiene su cerrojo y la base abierta, los lee
 al final y escribe en la base los resultados agregados en segundos
@@ -206,7 +212,8 @@ El script:
 4. sustituye en GitHub las claves de despliegue «servidor eodi-recogida» de los dos
    repositorios por las del servidor;
 5. activa los temporizadores de la recogida horaria, de la exportación semanal, de las
-   fuentes oficiales de detalle y del procesado de adsb.lol.
+   fuentes oficiales de detalle, del lector de canales de la capa de guerra y del procesado de
+   adsb.lol.
 
 Puede repetirse sobre un servidor que ya existe: deja igual lo que ya está y vuelve a
 aplicar la configuración. Para empezar de verdad desde cero se borra antes el servidor:

@@ -684,7 +684,6 @@ def evaluar_trafico(
     incidentes = [i for i in almacen.incidentes() if vigente(i)]
     resumen.coberturas = coberturas_nuevas(almacen, entorno, ahora.date(), plazo)
     resumen.gnss = gnss_nuevas(almacen, entorno, plazo)
-    resumen.anomalias = anomalias_nuevas(almacen, entorno, incidentes, ahora, plazo)
     guardados = almacen.trafico_aereo()
     # Por fecha: los incidentes cercanos comparten días y línea base en la caché.
     for incidente in sorted(incidentes, key=lambda i: (i["tiempo"]["inicio"]["valor"], i["id"])):
@@ -715,6 +714,11 @@ def evaluar_trafico(
             )
             resumen.cierres += 1
         resumen.cambiados += almacen.guardar_trafico_aereo(incidente["id"], documento)
+    # Las interrupciones de todos los aeropuertos, después de los incidentes y con lo que quede
+    # del tope: mientras avanza el histórico se acumulan más días de los que caben en una
+    # ejecución (el 1 de octubre de 2026, dos ejecuciones seguidas se fueron enteras en ellas
+    # sin evaluar ningún incidente); el cursor sigue donde se quedó.
+    resumen.anomalias = anomalias_nuevas(almacen, entorno, incidentes, ahora, plazo)
     return resumen
 
 

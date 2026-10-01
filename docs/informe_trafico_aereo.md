@@ -385,3 +385,29 @@ la hora local eran 462: 401 en las cuatro semanas tras el cambio de hora del 26 
 frente a 137 ahora.
 
 Las cifras del histórico entero (522 días) las da la base cuando termine (apartado 10).
+
+## 10. Puesta en marcha
+
+Fusionado en `main` el 1 de octubre de 2026 (PR #33, esquema 1.5.0) y desplegado con
+`servidor/reconstruir.sh`: clon al día, `h3` 4.5.0 en el entorno, carpetas `datos/trafico` y
+`datos/meteo` y la unidad `eodi-trafico` con su temporizador (minuto 40, `Nice=15`, E/S en
+reposo, cerrojo propio). Los 47 días de la validación se movieron a `datos/trafico` (710 MB) y
+el histórico se lanzó a mano a las 18:57 UTC.
+
+- **Procesado.** Los tres primeros días nuevos (30, 29 y 28 de septiembre de 2026) tardaron
+  668, 669 y 683 s (622–629 s de CPU), lo mismo que en la validación: unos 4 días y medio por
+  ejecución de 50 minutos, así que los 475 días que faltan del histórico tardan unos cuatro o
+  cinco días. Mientras tanto la recogida horaria siguió a su hora y terminó bien.
+- **Primera recogida horaria con el código nuevo** (19:17 UTC): 18 060 coberturas por
+  aeropuerto y día, 92 055 celdas GNSS diarias, 92 interrupciones, condiciones de 70 incidentes
+  y 46 ataques de la capa de guerra; `estado.json` con `trafico_aereo` y `condiciones` en
+  `leida`. El número de incidentes publicados pasó de 378 a 382 (los nuevos de la recogida).
+- **Ajuste tras las dos primeras ejecuciones.** Las interrupciones de todos los aeropuertos se
+  calculaban antes que los incidentes y se comían el tope de 150 s: en las ejecuciones de las
+  19:17 y las 20:17 no se evaluó ningún incidente (92 y 102 interrupciones). Con el histórico
+  avanzando, cada hora entran más días de los que caben, así que los incidentes habrían esperado
+  al final del histórico. Ahora van primero los incidentes y las interrupciones siguen con lo que
+  quede del tope, desde donde se quedaron.
+
+Pendiente: las cifras del histórico entero (cierres medidos, anomalías candidatas, cobertura y
+GNSS de 522 días) cuando termine, hacia el 6 de octubre de 2026.

@@ -79,6 +79,22 @@ def test_una_evaluacion_sin_cambios_no_se_repite_ni_engorda_el_historial() -> No
     assert len(almacen.historial("EODI-2025-00002")) == 2  # alta del incidente y del tráfico
 
 
+def test_los_incidentes_se_evaluan_antes_que_las_interrupciones(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    almacen = Almacen.abrir()
+    guardar(almacen, incidente())
+    vistos: list[int] = []
+
+    def anomalias(almacen: Almacen, *_: Any) -> int:
+        vistos.append(len(almacen.trafico_aereo()))
+        return 0
+
+    monkeypatch.setattr(mediciones, "anomalias_nuevas", anomalias)
+    mediciones.evaluar_trafico(almacen, entorno(lector()), AHORA, SinFin())  # type: ignore[arg-type]
+    assert vistos == [1]
+
+
 def test_las_medidas_se_validan_contra_el_esquema() -> None:
     almacen = Almacen.abrir()
     malo = ejemplos.trafico_aereo()
