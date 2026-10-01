@@ -33480,21 +33480,6 @@
      "valor": "confirmada"
     },
     {
-     "campo": "tiempo.inicio",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-01T10:00Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-52b5094f832874fd",
-     "medio": "news.yam.md",
-     "valor": {
-      "precision": "dia",
-      "valor": "2026-09-30T00:00Z"
-     }
-    },
-    {
      "campo": "tipo",
      "credibilidad": 3,
      "fecha": {
@@ -33515,7 +33500,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-01T10:43Z"
+     "valor": "2026-10-01T13:17Z"
     }
    },
    "drones": {
@@ -33568,10 +33553,24 @@
       "valor": "2026-10-01T10:00Z"
      },
      "fiabilidad": "C",
-     "frase_origen": "trei drone, miercuri, 30 septembrie, în contextul",
+     "frase_origen": "trei drone, miercuri, 30 septembrie",
      "id": "gdelt-52b5094f832874fd",
      "idioma": "ro",
      "medio": "news.yam.md",
+     "replicas": 2
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://protv.md/actualitate/ambasadorul-rusiei-la-chisinau-oleg-ozerov-convocat-la-mae-dupa-ce-trei-drone-au-incalcat-spatiul-aerian-al-moldovei-iar-doua-dintre-ele-au-explodat---2768562.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-01T12:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Ambasadorul Rusiei la Chișinău, Oleg Ozerov - convocat la MAE după ce trei drone au încălcat spațiul aerian al Moldovei, iar două dintre ele au",
+     "id": "gdelt-5299fd55f7c8e994",
+     "idioma": "ro",
+     "medio": "protv.md",
      "replicas": 0
     },
     {
@@ -33582,24 +33581,24 @@
       "valor": "2026-10-01T09:45Z"
      },
      "fiabilidad": "B",
-     "frase_origen": "condamnă ferm încălcarea spațiului aerian al Republicii Moldova de către trei drone",
+     "frase_origen": "condamnă ferm încălcarea spațiului aerian al Republicii Moldova de către trei drone, miercuri",
      "id": "gdelt-1730b7a4e5e63c92-declaracion-1",
      "idioma": "ro",
-     "medio": "Ministerul de Externe al Republicii Moldova (declaración oficial citada en stiripesurse.ro)",
+     "medio": "Ministerul Afacerilor Externe al Republicii Moldova (declaración oficial citada en stiripesurse.ro)",
      "replicas": 0
     },
     {
      "credibilidad": 1,
-     "enlace": "https://news.yam.md/ro/story/69526551",
+     "enlace": "https://stiripesurse.ro/drone-rusesti-au-incalcat-spatiul-aerian-al-rapublicii-moldova-amabsadorul-rus-convocat-la-mae-de-la-chisinau_3924728",
      "fecha": {
       "precision": "aproximada",
-      "valor": "2026-10-01T10:00Z"
+      "valor": "2026-10-01T09:45Z"
      },
      "fiabilidad": "B",
-     "frase_origen": "condamnă ferm încălcarea gravă a spațiului aerian al Republicii Moldova de către trei drone",
-     "id": "gdelt-52b5094f832874fd-declaracion-2",
+     "frase_origen": "Două dintre drone au căzut și au explodat pe teritoriul Republicii Moldova",
+     "id": "gdelt-1730b7a4e5e63c92-declaracion-2",
      "idioma": "ro",
-     "medio": "Ministerul Afacerilor Externe (declaración oficial citada en news.yam.md)",
+     "medio": "Ministerul Afacerilor Externe al Republicii Moldova (declaración oficial citada en stiripesurse.ro)",
      "replicas": 0
     }
    ],
@@ -33612,13 +33611,13 @@
    "tiempo": {
     "inicio": {
      "precision": "dia",
-     "valor": "2026-09-30T00:00Z"
+     "valor": "2026-10-01T09:45Z"
     }
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "Three Russian drones violate Moldova's airspace and explode",
-    "es": "Tres drones rusos violan el espacio aéreo de Moldavia y explotan"
+    "en": "Three Russian drones violate Moldova's airspace and two explode",
+    "es": "Tres drones rusos violan el espacio aéreo de Moldavia y dos explotan"
    }
   },
   {
@@ -33737,6 +33736,127 @@
    "titulo": {
     "en": "Three drones violate Moldova's airspace",
     "es": "Tres drones violan el espacio aéreo de Moldavia"
+   }
+  },
+  {
+   "afirmaciones_publicas": [
+    {
+     "campo": "drones.numero",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-01T12:15Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-f8db9c34d44feb43",
+     "medio": "news.yam.md",
+     "valor": {
+      "max": 3,
+      "min": 3
+     }
+    },
+    {
+     "campo": "lugar.pais",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-01T12:15Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-f8db9c34d44feb43",
+     "medio": "news.yam.md",
+     "valor": "MD"
+    },
+    {
+     "campo": "presencia_dron",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-01T12:15Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-f8db9c34d44feb43",
+     "medio": "news.yam.md",
+     "valor": "confirmada"
+    },
+    {
+     "campo": "tiempo.inicio",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-01T12:15Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-f8db9c34d44feb43",
+     "medio": "news.yam.md",
+     "valor": {
+      "precision": "dia",
+      "valor": "2026-10-01T00:00Z"
+     }
+    }
+   ],
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-01T13:17Z"
+    }
+   },
+   "drones": {
+    "numero": {
+     "max": 3,
+     "min": 3
+    }
+   },
+   "estado": {
+    "actual": "notificado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-01T12:15Z"
+      },
+      "fuente_id": "gdelt-f8db9c34d44feb43"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://news.yam.md/ro/story/69575791",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-01T12:15Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "trei drone au încălcat, într-o singură zi, spațiul aerian al Republicii Moldova",
+     "id": "gdelt-f8db9c34d44feb43",
+     "idioma": "ro",
+     "medio": "news.yam.md",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-2026-00265",
+   "lugar": {
+    "nivel": "pais",
+    "pais": "MD"
+   },
+   "presencia_dron": "confirmada",
+   "tiempo": {
+    "inicio": {
+     "precision": "dia",
+     "valor": "2026-10-01T00:00Z"
+    }
+   },
+   "tipo": "sobrevuelo",
+   "titulo": {
+    "en": "Russian drones violate Moldavian airspace and explode on territory",
+    "es": "Drones rusos violan el espacio aéreo de Moldavia y explotan en el territorio"
    }
   }
  ]
