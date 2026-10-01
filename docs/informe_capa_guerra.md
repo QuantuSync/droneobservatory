@@ -352,3 +352,9 @@ Incidentes (sección 1).
   aunque el mensaje hable de drones propios en otra parte; son reivindicación de parte (C3) y
   así se marcan.
 - **Autoridades de ocupación**: el campo existe pero no hay ningún canal verificado.
+- **Rosaviatsia**: con #47 la primera pasada (23:50 UTC del 1 de octubre) ya no se cuelga, pero
+  favt.gov.ru respondió 502 a los cuatro intentos, así que el canal sigue sin verificar y sin
+  leer. El lector lo reintenta cada hora; hasta la primera comprobación correcta no hay serie
+  de restricciones. Si la web sigue fallando, la alternativa es aceptar una copia reciente del
+  archivo de Internet como prueba de que la web enlaza el canal, como ya se hace con otras webs
+  oficiales que no abren desde el servidor.
