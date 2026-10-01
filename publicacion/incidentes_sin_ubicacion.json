@@ -33255,6 +33255,128 @@
     "en": "Unauthorized drone in Moldavian airspace",
     "es": "Dron no autorizado en el espacio aéreo de Moldavia"
    }
+  },
+  {
+   "afirmaciones_publicas": [
+    {
+     "campo": "lugar.pais",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-01T02:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-d6b5673170282984",
+     "medio": "bnn-news.com",
+     "valor": "LV"
+    },
+    {
+     "campo": "presencia_dron",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-01T02:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-d6b5673170282984",
+     "medio": "bnn-news.com",
+     "valor": "confirmada"
+    },
+    {
+     "campo": "tipo",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-01T02:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-d6b5673170282984",
+     "medio": "bnn-news.com",
+     "valor": "incursion"
+    }
+   ],
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-01T03:17Z"
+    }
+   },
+   "drones": {
+    "numero": "desconocido"
+   },
+   "estado": {
+    "actual": "confirmado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-01T02:45Z"
+      },
+      "fuente_id": "gdelt-d6b5673170282984"
+     },
+     {
+      "estado": "confirmado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-01T02:45Z"
+      },
+      "fuente_id": "gdelt-d6b5673170282984-declaracion-1"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://bnn-news.com/interviews/bnn-interview-drones-will-continue-entering-latvian-airspace-former-armed-forces-commander-calls-for-stronger-air-defens-wby7z9m",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-01T02:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "military drones armed with explosives regularly approached or violated Latvian airspace",
+     "id": "gdelt-d6b5673170282984",
+     "idioma": "en",
+     "medio": "bnn-news.com",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 1,
+     "enlace": "https://bnn-news.com/interviews/bnn-interview-drones-will-continue-entering-latvian-airspace-former-armed-forces-commander-calls-for-stronger-air-defens-wby7z9m",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-01T02:45Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "military drones armed with explosives regularly approached or violated Latvian airspace",
+     "id": "gdelt-d6b5673170282984-declaracion-1",
+     "idioma": "en",
+     "medio": "Latvian National Armed Forces (declaración oficial citada en bnn-news.com)",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-2026-00260",
+   "lugar": {
+    "nivel": "pais",
+    "pais": "LV"
+   },
+   "presencia_dron": "confirmada",
+   "tiempo": {
+    "inicio": {
+     "precision": "dia",
+     "valor": "2026-10-01T02:45Z"
+    }
+   },
+   "tipo": "incursion",
+   "titulo": {
+    "en": "Military drones with explosives violate Latvian airspace",
+    "es": "Drones militares con explosivos violan el espacio aéreo de Letonia"
+   }
   }
  ]
 }
