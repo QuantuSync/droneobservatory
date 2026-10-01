@@ -50,6 +50,14 @@ describe("impactos con lugar", () => {
     expect(impactosDelPeriodo(resumen, todo, "UA-63")).toHaveLength(0);
   });
 
+  it("los partes diarios del frente no se dibujan", () => {
+    const resumen = resumirUcrania({
+      ...publicacion([ataque()]),
+      impactos: [impacto(), impacto({ id: "EODI-IG-2026-00002", dia: "2026-09-28", parte_diario: true })],
+    });
+    expect(resumen.impactos.map((f) => f[0])).toEqual(["EODI-IG-2026-00001"]);
+  });
+
   it("la fuente de cada sentido lleva su puntuación y la marca de reivindicación", () => {
     const ruso = ataque({
       id: "EODI-UA-2026-1020",

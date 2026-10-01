@@ -13,6 +13,7 @@ from almacen.base import Almacen
 from exportacion.geojson import exportar, exportar_sin_ubicacion
 from exportacion.proyeccion import escribir
 from exportacion.ucrania import exportar_ucrania
+from proceso import impactos_guerra
 from proceso.configuracion import cargar_vocabulario_modelos
 from proceso.focos_termicos import con_focos
 from proceso.mediciones import con_mediciones
@@ -38,7 +39,9 @@ def publicar(almacen: Almacen, ahora: datetime, directorio: Path = DIRECTORIO) -
     vocabulario = modelos(almacen)
     focos = almacen.focos_termicos()
     impactos = [
-        {**d, "foco_termico": focos[d["id"]]} if d["id"] in focos else d
+        {**d, "foco_termico": focos[d["id"]]}
+        if d["id"] in focos and impactos_guerra.con_firms(d)
+        else d
         for d in almacen.impactos_guerra()
     ]
     documentos = {

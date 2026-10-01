@@ -358,7 +358,10 @@ export function resumirUcrania(
   const ataques = ucrania.ataques
     .map((ataque) => filaAtaque(ataque, indiceRegion))
     .sort((a, b) => a[1] - b[1] || a[0].localeCompare(b[0]));
+  // Los partes diarios (sobre todo ataques de corto alcance en el frente) se publican pero
+  // no se dibujan: no son los ataques que cuenta la capa y taparían el resto.
   const impactos = (ucrania.impactos ?? [])
+    .filter((impacto) => impacto.parte_diario !== true)
     .map(filaImpacto)
     .sort((a, b) => a[1] - b[1] || a[0].localeCompare(b[0]));
   return {

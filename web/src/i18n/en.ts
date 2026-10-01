@@ -148,7 +148,8 @@ export const en: Textos = {
     impactos:
       "A small dot is a specific place hit (a town or a facility) according to the regional " +
       "administrations, the Ukrainian General Staff or Russian governors. Filled: official " +
-      "source; ring only: claim by a party. Zoomed out, they group with their count.",
+      "source; ring only: claim by a party. Zoomed out, they group with their count. Daily " +
+      "front-line reports are not drawn.",
     foco:
       "A light dot next to an incident, a place hit or a group of places, or at the centre of a Ukrainian region, marks a " +
       "thermal hotspot detected by satellite (NASA FIRMS) at its place and time. Its absence " +
@@ -760,7 +761,8 @@ export const en: Textos = {
                 "if it is more than four times as powerful as that spot in the year, unless " +
                 "one satellite pass sees three or more. Low-confidence hotspots are discarded. " +
                 "Impacts known only by region are not assessed; places hit from the regional " +
-                "channels and the General Staff are.",
+                "channels and the General Staff are, except those in the daily front-line " +
+                "reports, where artillery causes hotspots every day.",
             ],
           },
           {

@@ -154,7 +154,8 @@ export const es: Textos = {
       "Un punto pequeño es un lugar concreto alcanzado (una localidad o una instalación) " +
       "según las administraciones regionales, el Estado Mayor ucraniano o los gobernadores " +
       "rusos. Relleno: fuente oficial; solo el aro: reivindicación de parte. Al alejar se " +
-      "agrupan con su número.",
+      "agrupan con su número. Los partes diarios de ataques en la línea del frente no se " +
+      "dibujan.",
     foco:
       "Un punto claro junto a un incidente, un impacto o un grupo de impactos, o en el centro de una región de Ucrania, marca un " +
       "foco térmico detectado por satélite (NASA FIRMS) en su lugar y su hora. Su ausencia no " +
@@ -762,7 +763,9 @@ export const es: Textos = {
                 "si su potencia pasa de cuatro veces la de ese sitio en el año, salvo que un " +
                 "mismo paso del satélite vea tres o más. Se descartan los focos de baja " +
                 "confianza. Los impactos que solo se conocen por región no se evalúan; los " +
-                "lugares alcanzados de los canales regionales y del Estado Mayor, sí.",
+                "lugares alcanzados de los canales regionales y del Estado Mayor, sí, salvo los " +
+                "de los partes diarios de la línea del frente, donde la artillería da focos " +
+                "cada día.",
             ],
           },
           {

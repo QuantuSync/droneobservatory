@@ -420,7 +420,8 @@ def aplicar_focos(almacen: "Almacen", ahora: datetime) -> int:
     cambiados = 0
     for documento in vigentes(almacen):
         nuevo = copy.deepcopy(documento)
-        _recalcular(nuevo, focos.get(documento["id"], {}).get("resultado") == "detectado")
+        detectado = focos.get(documento["id"], {}).get("resultado") == "detectado"
+        _recalcular(nuevo, detectado and con_firms(documento))
         if nuevo != documento:
             nuevo["control"]["ultima_actualizacion"] = instante(ahora)
             almacen.guardar_impacto_guerra(nuevo)
@@ -430,6 +431,13 @@ def aplicar_focos(almacen: "Almacen", ahora: datetime) -> int:
 
 def vigentes(almacen: "Almacen") -> list[Documento]:
     return [d for d in almacen.impactos_guerra() if "fusionado_en" not in d and "retirado" not in d]
+
+
+def con_firms(documento: Documento) -> bool:
+    """Si el impacto se cruza con FIRMS. Los partes diarios no: sobre todo son ataques de
+    corto alcance en la línea del frente, donde la artillería y los incendios dan focos todos
+    los días, y el foco no diría nada del dron."""
+    return not documento.get("parte_diario")
 
 
 def periodo_del_impacto(

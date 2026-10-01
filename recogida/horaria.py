@@ -89,6 +89,7 @@ def impactos(almacen: Almacen) -> list[focos_termicos.Impacto]:
     hallados += [
         focos_termicos.impacto_de_guerra(d, *impactos_guerra.periodo_del_impacto(d, por_id))
         for d in impactos_guerra.vigentes(almacen)
+        if impactos_guerra.con_firms(d)
     ]
     return hallados
 

@@ -179,6 +179,17 @@ def test_el_foco_termico_detectado_sube_la_credibilidad() -> None:
     assert "reivindicacion_de_parte" not in despues
 
 
+def test_los_partes_diarios_no_se_cruzan_con_firms() -> None:
+    almacen = Almacen.abrir()
+    impacto = _refineria(almacen)
+    almacen.guardar_impacto_guerra({**impacto, "parte_diario": True})
+    almacen.guardar_foco_termico(impacto["id"], ejemplos.foco_termico())
+    assert impactos_guerra.aplicar_focos(almacen, AHORA) == 0
+    (despues,) = impactos_guerra.vigentes(almacen)
+    assert not impactos_guerra.con_firms(despues)
+    assert despues["credibilidad"] == impacto["credibilidad"]
+
+
 def test_sin_ataque_se_enlaza_despues_cuando_llega_el_parte() -> None:
     almacen = Almacen.abrir()
     texto = "Ворог вдарив дроном по Чугуєву, пошкоджено будинок."

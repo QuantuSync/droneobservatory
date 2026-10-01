@@ -106,7 +106,8 @@ async function principal(): Promise<void> {
     await escribir(join(DATOS, "ataques", `${ataque.id}.json`), JSON.stringify(ataque));
   }
   // Impactos con lugar de la capa de guerra: una ficha por impacto, que la web pide al pulsar.
-  for (const impacto of ucrania.impactos ?? []) {
+  // Los partes diarios no se dibujan, así que nadie los pulsa: van solo en ucrania.json.
+  for (const impacto of (ucrania.impactos ?? []).filter((i) => i.parte_diario !== true)) {
     await escribir(join(DATOS, "impactos", `${impacto.id}.json`), JSON.stringify(impacto));
   }
 
