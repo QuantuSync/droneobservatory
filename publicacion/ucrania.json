@@ -475490,6 +475490,128 @@
     "Донецької обл",
     "Гвардійське"
    ]
+  },
+  {
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-01T06:17Z"
+    }
+   },
+   "cruces": [],
+   "derribados": {
+    "max": 330,
+    "min": 330
+   },
+   "derribados_categoria": "derribados",
+   "estado": {
+    "actual": "confirmado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "minuto",
+       "valor": "2026-10-01T05:34Z"
+      },
+      "fuente_id": "mod_russia-67797"
+     },
+     {
+      "estado": "confirmado",
+      "fecha": {
+       "precision": "minuto",
+       "valor": "2026-10-01T05:34Z"
+      },
+      "fuente_id": "mod_russia-67797"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/mod_russia/67797",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-10-01T05:34Z"
+     },
+     "fiabilidad": "D",
+     "frase_origen": "В течение прошедшей ночи в период с 20.00 мск 30 сентября до 8.00 мск 1 октября дежурными силами ПВО перехвачены и уничтожены 330 украинских беспилотных",
+     "id": "mod_russia-67797",
+     "idioma": "ru",
+     "medio": "Минобороны России",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-UA-2026-1018",
+   "lanzados": {
+    "gerbera_senuelos": "desconocido",
+    "otros": "desconocido",
+    "shahed_geran": "desconocido",
+    "total": "desconocido"
+   },
+   "localizaciones_impacto": "desconocido",
+   "localizaciones_restos": "desconocido",
+   "lugares_impacto": [],
+   "lugares_restos": [],
+   "perdidos_guerra_electronica": "desconocido",
+   "periodo": {
+    "fin": {
+     "precision": "minuto",
+     "valor": "2026-10-01T05:00Z"
+    },
+    "inicio": {
+     "precision": "minuto",
+     "valor": "2026-09-30T17:00Z"
+    }
+   },
+   "regiones": [
+    {
+     "region": "RU-AST"
+    },
+    {
+     "region": "RU-BEL"
+    },
+    {
+     "region": "RU-BRY"
+    },
+    {
+     "region": "RU-KLU"
+    },
+    {
+     "region": "RU-KRS"
+    },
+    {
+     "region": "RU-LIP"
+    },
+    {
+     "region": "RU-MOS"
+    },
+    {
+     "region": "RU-ORL"
+    },
+    {
+     "region": "RU-SMO"
+    },
+    {
+     "region": "RU-TAM"
+    },
+    {
+     "region": "RU-TUL"
+    },
+    {
+     "region": "RU-TVE"
+    },
+    {
+     "region": "UA-43"
+    }
+   ],
+   "regiones_misiles": [],
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "ataque_guerra",
+   "tipos_dron": [
+    "ala_fija"
+   ],
+   "zonas_lanzamiento": []
   }
  ]
 }
