@@ -237,6 +237,7 @@ class Incorporacion:
     estadisticas: int = 0
     extraidos: int = 0
     lotes: int = 0
+    retirados: list[str] = field(default_factory=list)
     parada: str | None = None
     revision: detalle.Revision | None = None
 
@@ -245,6 +246,7 @@ class Incorporacion:
         return (
             f"encuentros={self.encuentros} documentos={self.documentos} "
             f"estadisticas={self.estadisticas} extraidos={self.extraidos} lotes={self.lotes} "
+            f"altas_retiradas={len(self.retirados)} "
             f"parada={self.parada or 'ninguna'}; {revision}"
         )
 
@@ -364,6 +366,7 @@ def incorporar(
             hecho.extraidos = len(extraidos.documentos)
             if extraidos.parada is not None:
                 hecho.parada = f"{extraidos.parada}: {extraidos.motivo[:120]}"
+    hecho.retirados = extraccion_oficial.revalidar_altas(almacen, ahora, modelos)
     hecho.revision = detalle.revisar(almacen, ahora, modelos)
     return hecho
 

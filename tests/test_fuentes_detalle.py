@@ -662,3 +662,28 @@ def test_como_programa_encuentra_los_lectores_de_otros_modulos(tmp_path: Path) -
     control = json.loads((tmp_path / "control.json").read_text(encoding="utf-8"))
     assert "sin lector" not in control["ukab_meses"].get("error", "")
     assert "Excel" in control["ukab_meses"]["error"]
+
+
+def test_una_fecha_que_solo_da_el_anio_no_es_un_dia() -> None:
+    suceso = {"titulo_es": "t", "titulo_en": "t", "datos": {
+        "inicio": {"valor": "2025-01-01", "frase": "On 20 August 2025 at 13:40", "confianza": 0.9},
+    }}  # fmt: skip
+    validado, motivos = validar_suceso(suceso, TEXTO_GB, "GB", date(2025, 11, 4), AHORA)
+    assert "inicio" not in validado.datos
+    assert "inicio: el día no está en su frase" in motivos
+
+
+def test_un_alta_cuya_fecha_ya_no_valida_se_retira_sin_borrarse() -> None:
+    almacen = base_con_heathrow()
+    documento = procesar(almacen, recogido(), [suceso_lakenheath()], [])
+    (cruce,) = documento["sucesos"]
+    id_ = cruce["incidente"]
+    # Como quedó un alta anterior a la regla: la frase de su fecha no da el día.
+    cruce["datos"]["inicio"] = {"valor": "2025-01-01", "frase": "in 2025", "confianza": 0.5}
+    almacen.guardar_documento_oficial(documento, AHORA)
+    assert extraccion_oficial.revalidar_altas(almacen, AHORA, VOCABULARIO_MODELOS) == [id_]
+    retirado = leido(almacen.incidente(id_))
+    assert retirado["retirado"]["motivo"] == extraccion_oficial.MOTIVO_SIN_DIA
+    guardado = leido(almacen.documento_oficial(documento["id"]))
+    assert guardado["sucesos"][0]["cruce"] == "no_valido"
+    assert extraccion_oficial.revalidar_altas(almacen, AHORA, VOCABULARIO_MODELOS) == []

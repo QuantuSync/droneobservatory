@@ -28,10 +28,10 @@ from almacen.base import Almacen, DocumentoInvalido
 from esquema import Documento
 from modelo import coste, ficha, ficha_oficial
 from modelo.cliente import ErrorTemporal, LlamadaFallida
-from proceso import detalle, incidentes
+from proceso import detalle, extraccion, incidentes
 from proceso.extraccion import Parada, Servicio, ServicioLotes, prefijos_genericos
 from proceso.fronteras import paises
-from proceso.validacion_oficial import Suceso, validar_cifra, validar_suceso
+from proceso.validacion_oficial import Suceso, dia_en_frase, validar_cifra, validar_suceso
 from recogida.plazo import Plazo, TiempoAgotado
 
 registro = logging.getLogger(__name__)
@@ -284,6 +284,35 @@ def procesar(
     documento["estado"] = "extraido" if sucesos or ids else "sin_datos"
     almacen.guardar_documento_oficial(documento, ahora)
     return documento
+
+
+MOTIVO_SIN_DIA = "la fecha del suceso no da el día en su frase"
+
+
+def revalidar_altas(almacen: Almacen, ahora: datetime, modelos: frozenset[str]) -> list[str]:
+    """Retira, sin borrarlos, los incidentes que dio de alta un suceso citado cuya fecha ya no
+    valida (el día tiene que estar escrito en la frase: «aus dem Jahr 2024» no da un día).
+    El suceso queda como no válido con su motivo. Devuelve los retirados; idempotente."""
+    retirados = []
+    for documento in almacen.documentos_oficiales("extraido"):
+        cambiado = False
+        sucesos = []
+        for suceso in documento.get("sucesos", []):
+            inicio = suceso["datos"].get("inicio")
+            if (
+                suceso["cruce"] == "nuevo"
+                and inicio is not None
+                and not dia_en_frase(str(inicio["valor"]), str(inicio["frase"]))
+            ):
+                id_ = suceso["incidente"]
+                if extraccion.retirar(almacen, id_, MOTIVO_SIN_DIA, ahora, modelos):
+                    retirados.append(id_)
+                suceso = {**suceso, "cruce": "no_valido", "motivos": [MOTIVO_SIN_DIA]}
+                cambiado = True
+            sucesos.append(suceso)
+        if cambiado:
+            almacen.guardar_documento_oficial({**documento, "sucesos": sucesos}, ahora)
+    return retirados
 
 
 @dataclass

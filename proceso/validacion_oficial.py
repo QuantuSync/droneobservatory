@@ -35,6 +35,8 @@ CATEGORIAS = frozenset({
     "aeropuerto", "base_militar", "puerto", "energia", "presa", "estadio", "industrial",
     "gubernamental", "otra",
 })  # fmt: skip
+# Un día del mes escrito con cifras, suelto («23», «3.»), no dentro de un año ni de una hora.
+_DIA = re.compile(r"(?<![\d:])(\d{1,2})(?![\d:])")
 _NUMERO = re.compile(r"\d[\d.,'   ]*")
 
 
@@ -58,7 +60,15 @@ def _confianza(dato: dict[str, Any]) -> str | None:
     return "confianza baja" if confianza < UMBRAL_CONFIANZA else None
 
 
-def _fecha_valida(valor: Any, documento: date) -> str | None:
+def dia_en_frase(valor: str, frase: str) -> bool:
+    """El día del mes de la fecha está escrito en su frase («op 23 december», «am 3.
+    März»): una frase que solo da el año o el mes («aus dem Jahr 2024») no da un día, y la
+    fecha no se completa con el primero del mes."""
+    dia = int(valor[8:10])
+    return any(int(n) == dia for n in _DIA.findall(frase))
+
+
+def _fecha_valida(valor: Any, documento: date, frase: str = "") -> str | None:
     momento = leer_fecha(valor) if isinstance(valor, str) else None
     if momento is None:
         return "fecha imposible"
@@ -66,6 +76,8 @@ def _fecha_valida(valor: Any, documento: date) -> str | None:
         return "posterior al documento"
     if momento < FECHA_MINIMA:
         return "anterior a 2014"
+    if not dia_en_frase(str(valor), frase):
+        return "el día no está en su frase"
     return None
 
 
@@ -84,7 +96,7 @@ def validar_suceso(
         motivo = _confianza(dato) or _frase_en(dato.get("frase"), texto)
         valor = dato.get("valor")
         if motivo is None and nombre in {"inicio", "fin"}:
-            motivo = _fecha_valida(valor, fecha_documento)
+            motivo = _fecha_valida(valor, fecha_documento, str(dato.get("frase") or ""))
         if motivo is None and nombre in {"altura_m", "velocidad_ms"}:
             tope = MAX_ALTURA_M if nombre == "altura_m" else MAX_VELOCIDAD_MS
             if not isinstance(valor, dict) or not 0 <= valor["min"] <= valor["max"] <= tope:
