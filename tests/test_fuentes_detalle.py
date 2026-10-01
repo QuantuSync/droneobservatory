@@ -640,3 +640,25 @@ def test_la_recogida_horaria_lee_las_notas_de_la_lista_renderizada(
     # La lista no se pide: viene del render. Solo se abren las notas que hablan de drones.
     assert "https://www.lvnl.nl/nieuws" not in pedidas
     assert notas and all("drone" in n.titulo.lower() for n in notas)
+
+
+def test_como_programa_encuentra_los_lectores_de_otros_modulos(tmp_path: Path) -> None:
+    """Con «python -m recogida.detalle» el fichero es __main__: los lectores registrados por
+    parlamentos, investigaciones y estadisticas tienen que estar igual."""
+    import os
+    import subprocess
+    import sys
+
+    raiz = Path(__file__).resolve().parent.parent
+    resultado = subprocess.run(
+        [sys.executable, "-m", "recogida.detalle", "recoger", "--solo", "ukab_meses"],
+        cwd=raiz,
+        env={**os.environ, "EODI_DETALLE_DATOS": str(tmp_path)},
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert resultado.returncode == 0, resultado.stderr
+    control = json.loads((tmp_path / "control.json").read_text(encoding="utf-8"))
+    assert "sin lector" not in control["ukab_meses"].get("error", "")
+    assert "Excel" in control["ukab_meses"]["error"]

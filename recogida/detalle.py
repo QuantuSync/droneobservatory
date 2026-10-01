@@ -467,4 +467,8 @@ def principal(argumentos: list[str] | None = None) -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(principal())
+    # Con «python -m», este fichero es __main__ y los lectores de otros módulos se registran
+    # en recogida.detalle, otra copia: la orden tiene que ejecutarse en esa.
+    from recogida import detalle as _modulo
+
+    sys.exit(_modulo.principal())
