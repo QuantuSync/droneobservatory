@@ -56,6 +56,9 @@ chmod 600 "$HOSTS_CONOCIDOS"
 # Los CSV diarios de anomalías térmicas: del usuario del observatorio y solo para él.
 install -d -m 700 -o "$USUARIO" -g "$USUARIO" "$(dirname "$FIRMS_DATOS")" "$FIRMS_DATOS"
 
+# --- Datos de las fuentes oficiales de detalle ----------------------------------------
+install -d -m 700 -o "$USUARIO" -g "$USUARIO" "$(dirname "$DETALLE_DATOS")" "$DETALLE_DATOS"
+
 # --- Clon y entorno virtual ----------------------------------------------------------
 # El repositorio es público: se lee sin credenciales. Solo el envío usa la clave de
 # despliegue, y solo desde el script de la recogida.
@@ -74,6 +77,21 @@ fi
 como_usuario "$ENTORNO/bin/python" -m pip install --quiet --disable-pip-version-check \
   -r "$CLON/requirements.txt"
 como_usuario sh -c "cd '$CLON' && sha256sum requirements.txt > '$ENTORNO/requisitos.sha256'"
+
+# --- Navegador sin interfaz ----------------------------------------------------------
+# Para las listas de noticias oficiales que se cargan con JavaScript (recogida/navegador.py):
+# Playwright en el entorno del observatorio, Chromium en la caché del usuario y las bibliotecas
+# del sistema que pide, como root. Si la herramienta de Playwright no reconoce esta versión de
+# Ubuntu, se instalan a mano las que necesita Chromium sin interfaz.
+como_usuario "$ENTORNO/bin/python" -m pip install --quiet --disable-pip-version-check \
+  -r "$CLON/requirements-navegador.txt"
+if ! "$ENTORNO/bin/python" -m playwright install-deps chromium; then
+  apt-get install -y -q libnss3 libnspr4 libatk1.0-0t64 libatk-bridge2.0-0t64 libcups2t64 \
+    libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxfixes3 libxrandr2 libgbm1 \
+    libpango-1.0-0 libcairo2 libasound2t64 libatspi2.0-0t64 fonts-liberation
+fi
+como_usuario "$ENTORNO/bin/python" -m playwright install chromium
+como_usuario sh -c "cd '$CLON' && sha256sum requirements-navegador.txt > '$ENTORNO/navegador.sha256'"
 
 # --- Unidad y temporizador -----------------------------------------------------------
 cat > "/etc/systemd/system/$UNIDAD.service" <<FIN
@@ -135,6 +153,38 @@ Description=Exportación semanal del EODI para AEGIS, los lunes a las 03:47 UTC
 OnCalendar=$CALENDARIO_EXPORTACION
 AccuracySec=1s
 # Si el servidor estaba apagado a su hora, la exportación pendiente se lanza al arrancar.
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+FIN
+cat > "/etc/systemd/system/$UNIDAD_DETALLE.service" <<FIN
+[Unit]
+Description=Fuentes oficiales de detalle del EODI (Airprox, parlamentos, investigaciones)
+Wants=network-online.target
+After=network-online.target time-sync.target
+
+[Service]
+Type=oneshot
+User=$USUARIO
+Group=$USUARIO
+WorkingDirectory=$CLON
+ExecStart=/usr/bin/env bash $CLON/servidor/detalle.sh
+SyslogIdentifier=$UNIDAD_DETALLE
+TimeoutStartSec=${TOPE_DETALLE_MINUTOS}min
+# Por debajo de la recogida horaria si coinciden.
+Nice=15
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=full
+FIN
+cat > "/etc/systemd/system/$UNIDAD_DETALLE.timer" <<FIN
+[Unit]
+Description=Fuentes oficiales de detalle del EODI, cada 3 horas
+
+[Timer]
+OnCalendar=$CALENDARIO_DETALLE
+AccuracySec=1s
 Persistent=true
 
 [Install]

@@ -86,6 +86,14 @@ def pendientes(almacen: Almacen) -> list[tuple[Documento, Cambio]]:
         # Desmentido por una autoridad: la frase de otra que cuenta los drones no lo cambia.
         if incidente["estado"]["actual"] == Estado.DESMENTIDO:
             continue
+        # Lo que dice de la presencia una autoridad en su propio documento (proceso/detalle.py:
+        # una investigación cerrada que no pudo demostrar que fueran drones) manda sobre la
+        # declaración que cita un medio.
+        if any(
+            f.get("documento_oficial") and "presencia_dron" in f.get("campos_respaldados", [])
+            for f in incidente["fuentes"]
+        ):
+            continue
         conocidas: dict[str, dict[str, Any]] = {}
         for candidato in sorted(_candidatos(incidente, por_id, absorbidos)):
             conocidas |= _declaraciones_del_candidato(almacen, candidato)

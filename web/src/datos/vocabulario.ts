@@ -1,4 +1,4 @@
-// Listas cerradas del esquema 1.2.0 (campos públicos). Un test las compara con los
+// Listas cerradas del esquema 1.3.0 (campos públicos). Un test las compara con los
 // ficheros de esquema/ para que no se separen.
 
 export const TIPOS = ["incursion", "interrupcion_aeroportuaria", "sobrevuelo"] as const;
@@ -61,6 +61,11 @@ export const FUENTES_DEL_SISTEMA = [
   "oficiales",
   "extractor",
   "firms",
+  "airprox",
+  "parlamentos",
+  "investigaciones",
+  "estadisticas_oficiales",
+  "paginas_js",
 ] as const;
 /** Satélites e instrumentos de los focos térmicos de NASA FIRMS. */
 export const SATELITES_FIRMS = ["Suomi NPP", "NOAA-20", "NOAA-21", "Terra", "Aqua"] as const;

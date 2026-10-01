@@ -1,6 +1,6 @@
 {
   "version_esquema": "1.0.0",
-  "descripcion": "Fuentes oficiales que confirman incidentes (fiabilidad A, autoridad). tipo rss: canal RSS con un elemento por nota. tipo pagina: página de noticias; enlace es el patrón de las direcciones de las notas, titulos_genericos los títulos que no dicen el tema y se abren igual, sobra_titulo lo que se quita del título del enlace, fecha el patrón que da la fecha en el texto de la nota (si no hay, se usan los metadatos de publicación) y zona la hora local de la fuente. Las notas se leen respetando robots.txt y con la identificación del observatorio.",
+  "descripcion": "Fuentes oficiales que confirman incidentes (fiabilidad A, autoridad). tipo rss: canal RSS con un elemento por nota. tipo pagina: página de noticias; enlace es el patrón de las direcciones de las notas, titulos_genericos los títulos que no dicen el tema y se abren igual, sobra_titulo lo que se quita del título del enlace, fecha el patrón que da la fecha en el texto de la nota (si no hay, se usan los metadatos de publicación) y zona la hora local de la fuente. Las notas se leen respetando robots.txt y con la identificación del observatorio. pagina_js: la lista de notas se monta con JavaScript; la renderiza un navegador sin interfaz en el temporizador de las fuentes de detalle (recogida/navegador.py) y las notas se abren sin navegador. titulo_nota: la lista no trae el título de la nota; se toma el de la propia nota.",
   "fuentes": [
     {
       "id": "politi_kobenhavn",
@@ -157,6 +157,84 @@
       "zona": "Europe/Stockholm",
       "url": "https://www.regeringen.se/pressmeddelanden/",
       "enlace": "regeringen\\.se/pressmeddelanden/\\d{4}/\\d{2}/[a-z0-9-]+/$"
+    },
+    {
+      "id": "lfv",
+      "medio": "LFV",
+      "pais": "SE",
+      "idioma": "sv",
+      "tipo": "pagina",
+      "zona": "Europe/Stockholm",
+      "url": "https://www.lfv.se/nyheter",
+      "enlace": "lfv\\.se/sv/nyheter/nyheter/[a-z0-9-]+$",
+      "titulos_genericos": "^L[äa]s mer$",
+      "titulo_nota": true,
+      "fecha": "Publicerad:\\s*(\\d{1,2} \\w+ \\d{4})"
+    },
+    {
+      "id": "enav",
+      "medio": "ENAV",
+      "pais": "IT",
+      "idioma": "it",
+      "tipo": "pagina",
+      "zona": "Europe/Rome",
+      "url": "https://www.enav.it/media/comunicati-stampa",
+      "enlace": "enav\\.it/node/\\d+$",
+      "fecha": "(\\d{1,2} (?:gennaio|febbraio|marzo|aprile|maggio|giugno|luglio|agosto|settembre|ottobre|novembre|dicembre) \\d{4})"
+    },
+    {
+      "id": "eans",
+      "medio": "Lennuliiklusteeninduse AS",
+      "pais": "EE",
+      "idioma": "et",
+      "tipo": "pagina",
+      "zona": "Europe/Tallinn",
+      "url": "https://www.eans.ee/uudised",
+      "enlace": "eans\\.ee/uudised/(?!\\d{4}$)[a-z0-9-]+$",
+      "fecha": "Postitatud\\s+(\\d{1,2}\\.\\s*\\w+ \\d{4})"
+    },
+    {
+      "id": "enaire",
+      "medio": "ENAIRE",
+      "pais": "ES",
+      "idioma": "es",
+      "tipo": "pagina",
+      "zona": "Europe/Madrid",
+      "url": "https://www.enaire.es/sala_de_prensa/noticias",
+      "enlace": "enaire\\.es/\\d{4}_\\d{2}_\\d{2}/[a-z0-9_-]+$"
+    },
+    {
+      "id": "forsvaret_dk",
+      "medio": "Forsvaret",
+      "pais": "DK",
+      "idioma": "da",
+      "tipo": "pagina_js",
+      "zona": "Europe/Copenhagen",
+      "url": "https://www.forsvaret.dk/da/nyheder/",
+      "enlace": "forsvaret\\.dk/da/nyheder/\\d{4}/[a-z0-9-]+/?$",
+      "sobra_titulo": "\\s*Forsvaret / Nyhed / .*$"
+    },
+    {
+      "id": "lvnl",
+      "medio": "Luchtverkeersleiding Nederland",
+      "pais": "NL",
+      "idioma": "nl",
+      "tipo": "pagina_js",
+      "zona": "Europe/Amsterdam",
+      "url": "https://www.lvnl.nl/nieuws",
+      "enlace": "lvnl\\.nl/nieuws/[a-z0-9-]+$",
+      "sobra_titulo": "\\d{1,2} \\w+ \\d{4}$"
+    },
+    {
+      "id": "skyguide",
+      "medio": "Skyguide",
+      "pais": "CH",
+      "idioma": "en",
+      "tipo": "pagina_js",
+      "zona": "Europe/Zurich",
+      "url": "https://www.skyguide.ch/media-centre/news-media-releases",
+      "enlace": "skyguide\\.ch/media-centre/post/\\d+$",
+      "fecha": "(\\d{1,2} (?:January|February|March|April|May|June|July|August|September|October|November|December) \\d{4})"
     }
   ]
 }

@@ -1,0 +1,159 @@
+Consolidated Drone/Balloon/Model/Unknown Object Summary Sheet for UKAB Meeting on 26th May 2021 
+ 
+Total Risk A Risk B Risk C Risk D Risk E 
+10 2 3 5 0 0 
+ 
+Airprox 
+Number 
+Date 
+Time 
+(UTC) 
+Aircraft 
+(Operator) Object 
+Location1 
+Description 
+Altitude 
+Airspace 
+(Class) 
+Pilot/Controller Report 
+Reported Separation 
+Reported Risk 
+Comments/Risk Statement ICAO 
+Risk 
+2021021 4 Apr 21 
+1544 
+Cessna 406 
+(Civ Comm) 
+Balloon 5126N 00243W 
+3NM N Bristol Airport 
+FL078 
+Bristol CTR 
+(D) 
+The Cessna 406 pilot reports that whilst on a survey 
+line inside the Bristol CTR, a s ilver, letter shaped, 
+helium party  balloon was seen by the Survey 
+Operator to pass down the left side of the aircraft. 
+The Survey Operator  could make out the balloon 
+ribbon and handle and hence estimated that it came 
+within 50- 100ft of the aircraft. The incident was 
+reported to Bristol ATC. 
+ 
+Reported Separation: 0ft V/50-100ft H 
+Reported Risk of Collision: NR 
+The Board agreed that the pilot’s  description of 
+the object was sufficient to indicate that it was a 
+balloon. 
+ 
+Applicable Contributory Factors: 4, 5 
+ 
+Risk: The Board considered that the pilot’s 
+overall account of the incident portrayed a 
+situation where  although safety had been 
+reduced, there had been no risk of collision. 
+C 
+2021022 3 Mar 21 
+1255 
+B787 
+(CAT) 
+Unk Obj 5129N 00021W 
+Osterley Park 
+1800ft 
+London CTR 
+(D) 
+The B787 pilot reports that whilst on departure from 
+Heathrow RW09R, passing over Osterl ey Park 
+climbing through 1800ft they saw a black drone with 
+no visible markings or lights. There were no 
+distractions at the time and both pilots spotted the 
+drone at the same time. The dron
+e passed 
+diagonally left- to-right in front of the aircraft 300ft 
+below. 
+ 
+Reported Separation: 300ftV/ 0M H 
+Reported Risk of Collision: Medium 
+ 
+The Heathrow Tower controller  reported that the 
+B787 pilot reported a drone 3NM north -east of 
+Heathrow. The police were informed.  
+In the Board’s opinion the reported altitude 
+and/or description of the object were such that 
+they were unable to determine the nature of the 
+unknown object. 
+ 
+Applicable Contributory Factors: 4, 5 
+ 
+Risk: The Board considered that the pilot’s 
+overall account of the incident portrayed a 
+situation where  although safety had been 
+reduced, there had been no risk of collision. 
+C 
+ 
+1 Latitude and Longitude are usually only estimates that are based on the reported time of occurrence mapped against any available radar data for the aircraft’s position at that time. 
+Because such reported times may be inaccurate, the associated latitudes and longitudes should therefore not be relied upon as precise locations of the event. 
+Airprox 
+Number 
+Date 
+Time 
+(UTC) 
+Aircraft 
+(Operator) Object 
+Location1 
+Description 
+Altitude 
+Airspace 
+(Class) 
+Pilot/Controller Report 
+Reported Separation 
+Reported Risk 
+Comments/Risk Statement ICAO 
+Risk 
+2021026 17 Apr 21 
+1415 
+EC135 
+(HEMS) 
+Drone 5608N 00323W 
+Kelty VRP 
+1500ft 
+Scottish FIR 
+(G) 
+The EC135 pilot reports being on the return leg to 
+base from a HEMS task after dropping the patient at 
+hospital. Approaching the Kelty VRP at 1500ft QNH 
+they were talking to Edinburgh Approach when the 
+front seat paramedic gesticulated and pointed out of 
+the pilot’s window. The pilot did not see the conflict 
+but both front and rear paramedics confirmed it as a 
+quadcopter-type drone which passed down the right-
+hand side of the aircraft at between 100m and 150m 
+distance, and only slightly below their  level (1500ft 
+altitude – approximately 1000ft agl – at that point). 
+There was no time for avoiding action, the threat had 
+passed before they would have had time to react. 
+The encounter was reported to Edinburgh Approach 
+before leaving the frequency. 
+ 
+Reported Separation: 50ft V/100-150m H 
+Reported Risk of Collision: Medium 
+The Edinburgh ATC investigation found that [the 
+EC135] left the control zone to the north via Kelty at 
+1100ft. When [the EC145] was abeam Portmoak, the 
+crew requested a frequency change to Perth. In 
+reply, the crew reported a drone in the vicinity of 
+Kelty at a height of 1000ft. The controller 
+acknowledged the drone and [the EC135 pilot] left 
+the frequency. The controller informed the next 
+aircraft that was routing via Kelty of the drone report. 
+On passing Kelty, [the pilot] reported no obvious sign 
+of any drone-type aircraft. 
+In the Board’s opinion the reported altitude 
+and/or description of the object were sufficient to 
+indicate that it could have been a drone. 
+ 
+Applicable Contributory Factors: 2, 4, 5 
+ 
+Risk: The Board considered that the pilot’s 
+overall account of the incident portrayed a 
+situation where  although safety had been 
+reduced, there had been no risk of collision. 
+C 

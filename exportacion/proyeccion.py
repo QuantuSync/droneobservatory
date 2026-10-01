@@ -44,7 +44,12 @@ def proyectar(valor: Any, permitidos: frozenset[str], ruta: str = "") -> Any:
         for clave, hijo in valor.items():
             sub = f"{ruta}.{clave}" if ruta else clave
             if sub in permitidos:
-                resultado[clave] = proyectar(hijo, permitidos, sub)
+                proyectado = proyectar(hijo, permitidos, sub)
+                # Un objeto que solo traía campos internos («respuesta» con solo la detección)
+                # no sale vacío.
+                if isinstance(hijo, dict) and hijo and proyectado == {}:
+                    continue
+                resultado[clave] = proyectado
         return resultado
     if isinstance(valor, list):
         return [proyectar(hijo, permitidos, f"{ruta}[]") for hijo in valor]

@@ -10,13 +10,17 @@ from esquema import Documento, validador_definicion
 from proceso.validaciones import (
     Error,
     validar_ataque_ucrania,
+    validar_documento_oficial,
+    validar_encuentro,
     validar_episodio,
+    validar_estadistica_oficial,
     validar_incidente,
 )
 
 # Tablas de documentos con historial automático y sin DELETE.
 TABLAS_CON_HISTORIAL = (
     "incidentes", "fuentes", "episodios", "ataques_ucrania", "regiones_ucrania", "focos_termicos",
+    "encuentros", "estadisticas_oficiales", "documentos_oficiales",
 )  # fmt: skip
 # Campos de la fuente que dependen del incidente y no se guardan en la tabla común.
 CAMPOS_FUENTE_POR_ENTIDAD = frozenset({"credibilidad", "campos_respaldados"})
@@ -151,6 +155,23 @@ CREATE TABLE IF NOT EXISTS focos_casados (
     impacto_id TEXT NOT NULL,
     documento TEXT NOT NULL CHECK (json_valid(documento)),
     UNIQUE (impacto_id, documento)
+);
+-- Fuentes oficiales de detalle (recogida/detalle.py). Registros internos para AEGIS: los
+-- encuentros de drones con aeronaves (UK Airprox Board), las estadísticas oficiales y los
+-- documentos oficiales leídos con lo que se sacó de cada uno. Con historial y sin DELETE.
+CREATE TABLE IF NOT EXISTS encuentros (
+    id TEXT PRIMARY KEY,
+    incidente TEXT,
+    documento TEXT NOT NULL CHECK (json_valid(documento))
+);
+CREATE TABLE IF NOT EXISTS estadisticas_oficiales (
+    id TEXT PRIMARY KEY,
+    documento TEXT NOT NULL CHECK (json_valid(documento))
+);
+CREATE TABLE IF NOT EXISTS documentos_oficiales (
+    id TEXT PRIMARY KEY,
+    estado TEXT NOT NULL,
+    documento TEXT NOT NULL CHECK (json_valid(documento))
 );
 CREATE TRIGGER IF NOT EXISTS focos_casados_sin_update BEFORE UPDATE ON focos_casados
 BEGIN SELECT RAISE(ABORT, 'focos_casados: un foco nuevo es una fila nueva'); END;
@@ -370,6 +391,84 @@ class Almacen:
         return self._documentos(
             "SELECT documento FROM focos_casados WHERE impacto_id = ? ORDER BY id", (impacto_id,)
         )
+
+    # --- Fuentes oficiales de detalle ------------------------------------------
+
+    def _guardar_registro(
+        self, tabla: str, documento: Documento, errores: list[Error], columnas: dict[str, Any]
+    ) -> bool:
+        """Guarda el registro si es nuevo o ha cambiado. True si lo ha guardado."""
+        if errores:
+            raise DocumentoInvalido(errores)
+        texto = _json(documento)
+        fila = self._conexion.execute(
+            f"SELECT documento FROM {tabla} WHERE id = ?", (documento["id"],)
+        ).fetchone()
+        if fila is not None and fila[0] == texto:
+            return False
+        with self._conexion:
+            self._upsert(tabla, {"id": documento["id"], **columnas, "documento": texto})
+        return True
+
+    def guardar_encuentro(self, documento: Documento, ahora: datetime) -> bool:
+        return self._guardar_registro(
+            "encuentros", documento, validar_encuentro(documento, ahora),
+            {"incidente": documento.get("incidente")},
+        )  # fmt: skip
+
+    def guardar_estadistica_oficial(self, documento: Documento, ahora: datetime) -> bool:
+        return self._guardar_registro(
+            "estadisticas_oficiales", documento, validar_estadistica_oficial(documento, ahora), {}
+        )
+
+    def guardar_documento_oficial(self, documento: Documento, ahora: datetime) -> bool:
+        return self._guardar_registro(
+            "documentos_oficiales", documento, validar_documento_oficial(documento, ahora),
+            {"estado": documento["estado"]},
+        )  # fmt: skip
+
+    def encuentros(self) -> list[Documento]:
+        return self._documentos("SELECT documento FROM encuentros ORDER BY id")
+
+    def encuentro(self, id_: str) -> Documento | None:
+        encontrados = self._documentos("SELECT documento FROM encuentros WHERE id = ?", (id_,))
+        return encontrados[0] if encontrados else None
+
+    def encuentros_de(self, incidente_id: str) -> list[Documento]:
+        return self._documentos(
+            "SELECT documento FROM encuentros WHERE incidente = ? ORDER BY id", (incidente_id,)
+        )
+
+    def documentos_oficiales_de(self, incidente_id: str) -> list[Documento]:
+        """Documentos con algún suceso enlazado al incidente."""
+        return self._documentos(
+            "SELECT documento FROM documentos_oficiales WHERE EXISTS (SELECT 1 FROM "
+            "json_each(documento, '$.sucesos') WHERE json_extract(value, '$.incidente') = ?) "
+            "ORDER BY id",
+            (incidente_id,),
+        )
+
+    def estadistica_oficial(self, id_: str) -> Documento | None:
+        encontrados = self._documentos(
+            "SELECT documento FROM estadisticas_oficiales WHERE id = ?", (id_,)
+        )
+        return encontrados[0] if encontrados else None
+
+    def estadisticas_oficiales(self) -> list[Documento]:
+        return self._documentos("SELECT documento FROM estadisticas_oficiales ORDER BY id")
+
+    def documentos_oficiales(self, estado: str | None = None) -> list[Documento]:
+        if estado is None:
+            return self._documentos("SELECT documento FROM documentos_oficiales ORDER BY id")
+        return self._documentos(
+            "SELECT documento FROM documentos_oficiales WHERE estado = ? ORDER BY id", (estado,)
+        )
+
+    def documento_oficial(self, id_: str) -> Documento | None:
+        encontrados = self._documentos(
+            "SELECT documento FROM documentos_oficiales WHERE id = ?", (id_,)
+        )
+        return encontrados[0] if encontrados else None
 
     # --- Recogida ----------------------------------------------------------
 

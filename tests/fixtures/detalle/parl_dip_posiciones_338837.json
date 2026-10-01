@@ -1,0 +1,96 @@
+{
+ "numFound": 2,
+ "documents": [
+  {
+   "id": "699096",
+   "vorgangsposition": "Kleine Anfrage",
+   "zuordnung": "BT",
+   "gang": true,
+   "fortsetzung": false,
+   "nachtrag": false,
+   "vorgangstyp": "Kleine Anfrage",
+   "titel": "Aktueller Stand der Drohnenabwehr in Deutschland im Geschäftsbereich der Bundesregierung",
+   "typ": "Vorgangsposition",
+   "aktivitaet_anzahl": 14,
+   "dokumentart": "Drucksache",
+   "aktualisiert": "2026-10-01T14:09:06+02:00",
+   "urheber": [
+    {
+     "einbringer": false,
+     "bezeichnung": "LINKE",
+     "titel": "Fraktion DIE LINKE"
+    }
+   ],
+   "fundstelle": {
+    "id": "290574",
+    "dokumentnummer": "21/7905",
+    "datum": "2026-09-08",
+    "verteildatum": "2026-09-09",
+    "dokumentart": "Drucksache",
+    "drucksachetyp": "Kleine Anfrage",
+    "herausgeber": "BT",
+    "urheber": [
+     "Fraktion DIE LINKE"
+    ],
+    "pdf_url": "https://dserver.bundestag.de/btd/21/079/2107905.pdf"
+   },
+   "aktivitaet_anzeige": [
+    {
+     "aktivitaetsart": "Kleine Anfrage",
+     "titel": "Jan Krampe, MdB, DIE LINKE",
+     "pdf_url": "https://dserver.bundestag.de/btd/21/079/2107905.pdf"
+    },
+    {
+     "aktivitaetsart": "Kleine Anfrage",
+     "titel": "Clara Bünger, MdB, DIE LINKE",
+     "pdf_url": "https://dserver.bundestag.de/btd/21/079/2107905.pdf"
+    }
+   ],
+   "datum": "2026-09-08",
+   "vorgang_id": "338837"
+  },
+  {
+   "id": "700037",
+   "vorgangsposition": "Antwort",
+   "zuordnung": "BT",
+   "gang": true,
+   "fortsetzung": false,
+   "nachtrag": false,
+   "vorgangstyp": "Kleine Anfrage",
+   "titel": "Aktueller Stand der Drohnenabwehr in Deutschland im Geschäftsbereich der Bundesregierung",
+   "typ": "Vorgangsposition",
+   "aktivitaet_anzahl": 0,
+   "dokumentart": "Drucksache",
+   "aktualisiert": "2026-09-28T07:12:25+02:00",
+   "urheber": [
+    {
+     "einbringer": false,
+     "bezeichnung": "BRg",
+     "titel": "Bundesregierung"
+    }
+   ],
+   "ressort": [
+    {
+     "federfuehrend": true,
+     "titel": "Bundesministerium des Innern"
+    }
+   ],
+   "fundstelle": {
+    "id": "290953",
+    "dokumentnummer": "21/8140",
+    "datum": "2026-09-22",
+    "verteildatum": "2026-09-28",
+    "dokumentart": "Drucksache",
+    "drucksachetyp": "Antwort",
+    "herausgeber": "BT",
+    "urheber": [
+     "Bundesregierung"
+    ],
+    "pdf_url": "https://dserver.bundestag.de/btd/21/081/2108140.pdf"
+   },
+   "datum": "2026-09-22",
+   "vorgang_id": "338837"
+  }
+ ],
+ "cursor": "x"
+}

@@ -121,6 +121,19 @@ FIRMS_TANDA_MINIMA_S=120
 FIRMS_ESPERA_FALLO_S=600
 FIRMS_FALLOS_MAXIMOS=6
 
+# --- Fuentes oficiales de detalle (recogida/detalle.py) ---------------------------------
+# Lo descargado de cada fuente (informes, documentos con sus pasajes, encuentros leídos,
+# listas renderizadas y resultados de lotes), fuera del repositorio y de la base.
+DETALLE_DATOS="${EODI_DETALLE_DATOS:-$CASA/datos/detalle}"
+UNIDAD_DETALLE="eodi-detalle"
+# Cada 3 horas en el minuto 52: lejos de la recogida horaria (17), del tráfico aéreo (40), de
+# la exportación (03:47) y del reinicio de seguridad (04:45).
+CALENDARIO_DETALLE="*-*-* 02/3:52:00 UTC"
+# Una recogida normal pide unas decenas de páginas (unos minutos con las pausas) y renderiza
+# tres listas; el tope cubre una fuente lenta sin que llegue la siguiente.
+TOPE_DETALLE_MINUTOS=120
+CERROJO_DETALLE="$SECRETOS/detalle.lock"
+
 # --- Endurecimiento ------------------------------------------------------------------
 # Reinicio tras una actualización de seguridad que lo pida: de madrugada y a los 28
 # minutos del lanzamiento de las 04:17, cuando hasta la recogida más lenta ha terminado.

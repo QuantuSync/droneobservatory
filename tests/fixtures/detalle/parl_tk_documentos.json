@@ -1,0 +1,23 @@
+{
+ "@odata.context": "Document",
+ "value": [
+  {
+   "Id": "3666b551-75d5-454e-9486-b8fcd0c57034",
+   "Soort": "Antwoord schriftelijke vragen",
+   "DocumentNummer": "2025D05422",
+   "Onderwerp": "Antwoord op vragen van het lid Ellian over drones die boven de PI Vught vliegen",
+   "Datum": "2025-02-07T00:00:00+01:00",
+   "ContentType": "application/pdf",
+   "ContentLength": 29669
+  },
+  {
+   "Id": "ea9da891-b8ec-4577-a269-148570ca5cab",
+   "Soort": "Antwoord schriftelijke vragen",
+   "DocumentNummer": "2025D32482",
+   "Onderwerp": "Antwoord op vragen van de leden Van Nispen en Dobbe over het bericht dat de tweelingbroer van de staatsecretaris van Defensie directeur wordt van een drone-bedrijf",
+   "Datum": "2025-07-04T00:00:00+02:00",
+   "ContentType": "application/pdf",
+   "ContentLength": 30344
+  }
+ ]
+}

@@ -1,0 +1,16 @@
+{
+ "id": "help-api",
+ "updated": "2026-05-05T10:11:53.763+00:00",
+ "data": {
+  "label": "API",
+  "content": [
+   "<p>Die Informationen des Dokumentations- und Informationssystems für Parlamentsmaterialien (DIP) können neben der Rechercheoberfläche auch über eine API abgefragt werden. Die API bietet ausschließlich einen lesenden Zugriff auf die DIP-Inhalte. Abgefragt werden können Vorgänge und Vorgangspositionen, Aktivitäten, Personen sowie Drucksachen und Plenarprotokolle nebst zugehöriger Metadaten.</p>",
+   "<p>Zur Nutzung ist ein API-Key notwendig. Der zunächst bis Ende Mai 2027 gültige API-Key lautet:<br />CLAVE.DePrueba123</p>",
+   "<p>Auf Anfrage können Sie auch einen eigenen API-Key mit einer Laufzeit von zunächst zehn Jahren erhalten. Ein eigener API-Key hat denselben Funktionsumfang wie der öffentliche API-Key.</p>",
+   "<p>Bitte stellen Sie eine diesbezügliche Anfrage per E-Mail an: <a href=\"mailto:parlamentsdokumentation@bundestag.de\">parlamentsdokumentation@bundestag.de</a></p>",
+   "<p>Die Dokumentation der Schnittstelle ist hier beschrieben:</p>",
+   "<p><ul class=\"buttons-list\"><li><a class=\"blue-button\" href=\"/documents/informationsblatt_zur_dip_api.pdf\" target=\"_blank\">PDF-Kurzdokumentation</a></li><li><a class=\"blue-button\" href=\"<searchserviceurl>/api/v1\" target=\"_blank\">Swagger UI</a></li><li><a class=\"blue-button\" href=\"<searchserviceurl>/api/v1/openapi.yaml\" target=\"_blank\">OpenAPI YAML</a></li></ul></p>",
+   "<p>Für die Nutzung der DIP-Datenbank und von Daten aus DIP gelten diese <a href=\"/über-dip/nutzungsbedingungen\">Nutzungsbedingungen</a>."
+  ]
+ }
+}

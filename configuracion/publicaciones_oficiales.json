@@ -1,0 +1,210 @@
+{
+  "version_esquema": "1.0.0",
+  "descripcion": "Publicaciones de gestores de navegación aérea, autoridades de aviación civil y organismos de seguridad aérea con cifras de drones (avistamientos, afectaciones del tráfico, sucesos notificados, encuentros). Se descargan una vez (recogida/estadisticas.py), se localizan sus pasajes sobre drones y el extractor saca las cifras con su frase literal. Lo que solo está en un gráfico no se lee. fecha: el día de publicación cuando lo dice la dirección; fecha_patron: dónde lo dice el texto del documento; si no, se toma de los metadatos del PDF o de la página. Una publicación sin fecha no entra (BAZL ASR 2025 y el informe anual de skeyes no dicen cuándo se publicaron). Acceso verificado el 1 de octubre de 2026, robots.txt permite todas. Las cifras de ámbito europeo sin país (EASA, EUROCONTROL) no entran: una estadística oficial es de un país.",
+  "publicaciones": [
+    {
+      "id": "dfs_2026_01_05",
+      "autoridad": "DFS Deutsche Flugsicherung",
+      "pais": "DE",
+      "idioma": "de",
+      "formato": "html",
+      "fecha": "2026-01-05",
+      "titulo": "Luftverkehr 2025 in Deutschland: mehr Flüge, gute Pünktlichkeit",
+      "url": "https://www.dfs.de/homepage/de/medien/presse/2026/05-01-2026-luftverkehr-2025-in-deutschland-mehr-fluege-gute-puenktlichkeit/"
+    },
+    {
+      "id": "dfs_2021_01_18",
+      "autoridad": "DFS Deutsche Flugsicherung",
+      "pais": "DE",
+      "idioma": "de",
+      "formato": "html",
+      "fecha": "2021-01-18",
+      "titulo": "Drohnen machen auch bei wenig Flugverkehr viel Ärger",
+      "url": "https://www.dfs.de/homepage/de/medien/presse/2021/18-01-2021-drohnen-machen-auch-bei-wenig-flugverkehr-viel-aerger/"
+    },
+    {
+      "id": "dfs_mobilitaet_2016",
+      "autoridad": "DFS Deutsche Flugsicherung",
+      "pais": "DE",
+      "idioma": "de",
+      "formato": "pdf",
+      "titulo": "Luftverkehr in Deutschland. Mobilitätsbericht 2016",
+      "url": "https://www.dfs.de/homepage/de/medien/publikationen/mobilitaetsbericht2016-web.pdf?cid=7j"
+    },
+    {
+      "id": "dfs_mobilitaet_2017",
+      "autoridad": "DFS Deutsche Flugsicherung",
+      "pais": "DE",
+      "idioma": "de",
+      "formato": "pdf",
+      "titulo": "Luftverkehr in Deutschland. Mobilitätsbericht 2017",
+      "url": "https://www.dfs.de/homepage/de/medien/publikationen/mobilitaetsbericht2017-web.pdf?cid=7m"
+    },
+    {
+      "id": "dfs_mobilitaet_2018",
+      "autoridad": "DFS Deutsche Flugsicherung",
+      "pais": "DE",
+      "idioma": "de",
+      "formato": "pdf",
+      "titulo": "Luftverkehr in Deutschland. Mobilitätsbericht 2018",
+      "url": "https://www.dfs.de/homepage/de/medien/publikationen/mobilitaetsbericht-2018-web-k.pdf?cid=7g"
+    },
+    {
+      "id": "dfs_mobilitaet_2019",
+      "autoridad": "DFS Deutsche Flugsicherung",
+      "pais": "DE",
+      "idioma": "de",
+      "formato": "pdf",
+      "titulo": "Luftverkehr in Deutschland. Mobilitätsbericht 2019",
+      "url": "https://www.dfs.de/homepage/de/medien/publikationen/mobilitaetsbericht2019-web.pdf?cid=7y"
+    },
+    {
+      "id": "dfs_mobilitaet_2020",
+      "autoridad": "DFS Deutsche Flugsicherung",
+      "pais": "DE",
+      "idioma": "de",
+      "formato": "pdf",
+      "titulo": "Luftverkehr in Deutschland. Mobilitätsbericht 2020",
+      "url": "https://www.dfs.de/homepage/de/medien/publikationen/mobilitaetsbericht2020.pdf?cid=81"
+    },
+    {
+      "id": "dfs_mobilitaet_2021",
+      "autoridad": "DFS Deutsche Flugsicherung",
+      "pais": "DE",
+      "idioma": "de",
+      "formato": "pdf",
+      "titulo": "Luftverkehr in Deutschland. Mobilitätsbericht 2021",
+      "url": "https://www.dfs.de/homepage/de/medien/publikationen/luftverkehr-in-deutschland-mobilitaetsbericht-2021.pdf?cid=gvb"
+    },
+    {
+      "id": "dfs_mobilitaet_2022",
+      "autoridad": "DFS Deutsche Flugsicherung",
+      "pais": "DE",
+      "idioma": "de",
+      "formato": "pdf",
+      "titulo": "Luftverkehr in Deutschland. Mobilitätsbericht 2022",
+      "url": "https://www.dfs.de/homepage/de/medien/publikationen/mobilitaetsbericht2022-internet.pdf?cid=igf"
+    },
+    {
+      "id": "dfs_mobilitaet_2023",
+      "autoridad": "DFS Deutsche Flugsicherung",
+      "pais": "DE",
+      "idioma": "de",
+      "formato": "pdf",
+      "titulo": "Luftverkehr in Deutschland. Mobilitätsbericht 2023",
+      "url": "https://www.dfs.de/homepage/de/medien/publikationen/mobilitaetsbericht-2023-online.pdf?cid=isy"
+    },
+    {
+      "id": "bazl_asr24",
+      "autoridad": "Bundesamt für Zivilluftfahrt",
+      "pais": "CH",
+      "idioma": "de",
+      "formato": "html",
+      "titulo": "Annual Safety Report 2024: Konflikte mit Drohnen",
+      "url": "https://www.bazl.admin.ch/de/asr24-konflikte-mit-drohnen",
+      "fecha_patron": "Veröffentlicht am (\\d{1,2}\\. \\w+ \\d{4})"
+    },
+    {
+      "id": "iaa_2024",
+      "autoridad": "Irish Aviation Authority",
+      "pais": "IE",
+      "idioma": "en",
+      "formato": "pdf",
+      "titulo": "IAA Annual Safety Performance Review 2024",
+      "url": "https://www.iaa.ie/docs/default-source/publications/corporate-publications/performance/iaa-annual-safety-performance-review-2024.pdf?sfvrsn=5115c0db_4"
+    },
+    {
+      "id": "caa_lv_2025",
+      "autoridad": "Civilās aviācijas aģentūra",
+      "pais": "LV",
+      "idioma": "en",
+      "formato": "html",
+      "titulo": "Civil aviation safety occurrence reports declined in 2025",
+      "url": "https://www.caa.gov.lv/en/article/civil-aviation-safety-occurrence-reports-declined-2025",
+      "fecha_patron": "Published:\\s*(\\d{2}\\.\\d{2}\\.\\d{4})"
+    },
+    {
+      "id": "ulc_2025",
+      "autoridad": "Urząd Lotnictwa Cywilnego",
+      "pais": "PL",
+      "idioma": "pl",
+      "formato": "pdf",
+      "titulo": "Sprawozdanie o stanie bezpieczeństwa w lotnictwie cywilnym za rok 2025",
+      "url": "https://ulc.gov.pl/_download/2026/Sprawozdanie_o_stanie_bezpiecze%C5%84stwa_w_lotnictwie_cywilnym_za_rok_2025.pdf"
+    },
+    {
+      "id": "ansv_2025",
+      "autoridad": "Agenzia Nazionale per la Sicurezza del Volo",
+      "pais": "IT",
+      "idioma": "it",
+      "formato": "pdf",
+      "titulo": "Rapporto informativo ANSV, anno 2025",
+      "url": "https://ansv.it/wp-content/uploads/2026/03/RAPPORTO-ANSV-Anno-2025.pdf"
+    },
+    {
+      "id": "traficom_2025",
+      "autoridad": "Traficom",
+      "pais": "FI",
+      "idioma": "fi",
+      "formato": "pdf",
+      "titulo": "Suomen ilmailun turvallisuus 2025",
+      "url": "https://tieto.traficom.fi/files/media/publication/Suomen%20ilmailun%20turvallisuus%202025.pdf"
+    },
+    {
+      "id": "ilt_abl_2023",
+      "autoridad": "Inspectie Leefomgeving en Transport",
+      "pais": "NL",
+      "idioma": "nl",
+      "formato": "html",
+      "titulo": "Jaarpublicatie Analysebureau Luchtvaartvoorvallen 2023",
+      "url": "https://www.ilent.nl/documenten/luchtvaart/voorvallen-luchtvaart/publicaties/jaarpublicatie-analysebureau-luchtvaartvoorvallen-2023",
+      "fecha_patron": "Publicatie\\s+(\\d{2}-\\d{2}-\\d{4})"
+    },
+    {
+      "id": "caa_uk_cap3297",
+      "autoridad": "UK Civil Aviation Authority",
+      "pais": "GB",
+      "idioma": "en",
+      "formato": "pdf",
+      "titulo": "CAP3297 Annual Safety Review 2025",
+      "url": "https://www.caa.co.uk/publication/download/29548"
+    },
+    {
+      "id": "transpordiamet_2026",
+      "autoridad": "Transpordiamet",
+      "pais": "EE",
+      "idioma": "et",
+      "formato": "pdf",
+      "titulo": "Mehitamata lennunduse kasutuse ja trendi analüüs Eestis, lõpparuanne",
+      "url": "https://transpordiamet.ee/sites/default/files/documents/2026-04/Mehitamata%20lennunduse%20kasutuse%20ja%20trendi%20anal%C3%BC%C3%BCs%20Eestis%20-%20l%C3%B5pparuanne_v4.pdf"
+    },
+    {
+      "id": "naviair_2025",
+      "autoridad": "Naviair",
+      "pais": "DK",
+      "idioma": "da",
+      "formato": "pdf",
+      "titulo": "Naviair Årsrapport 2025",
+      "url": "https://www.naviair.dk/ref.aspx?id=13807"
+    },
+    {
+      "id": "at_parlament_1688ab",
+      "autoridad": "Bundesministerium für Verkehr, Innovation und Technologie",
+      "pais": "AT",
+      "idioma": "de",
+      "formato": "pdf",
+      "titulo": "Anfragebeantwortung 1688/AB (XXVI. GP)",
+      "url": "https://www.parlament.gv.at/dokument/XXVI/AB/1688/imfname_721337.pdf"
+    },
+    {
+      "id": "fr_an_qe94142",
+      "autoridad": "Gouvernement",
+      "pais": "FR",
+      "idioma": "fr",
+      "formato": "pdf",
+      "titulo": "Question écrite n° 94142 (XIVe législature)",
+      "url": "https://www.assemblee-nationale.fr/dyn/14/questions/QANR5L14QE94142.pdf",
+      "fecha_patron": "Réponse publiée au JO le.*?(\\d{1,2} \\w+ \\d{4})"
+    }
+  ]
+}

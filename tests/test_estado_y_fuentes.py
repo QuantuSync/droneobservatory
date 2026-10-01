@@ -30,6 +30,8 @@ def parcial() -> dict[str, object]:
         "oficiales": estado.EstadoFuente(estado.CON_AVISO),
         "extractor": estado.EstadoFuente(estado.CON_AVISO, dato(17, 20)),
         "firms": estado.EstadoFuente(estado.LEIDA, dato(15, 17)),
+        "airprox": estado.EstadoFuente(estado.LEIDA, dato(15, 5)),
+        "parlamentos": estado.EstadoFuente(estado.CON_AVISO, dato(12, 5)),
     }
     return {f: fuentes[f].documento(f) for f in fuentes}
 
@@ -50,6 +52,12 @@ def test_estado_de_una_recogida_correcta() -> None:
             {"id": "oficiales", "estado": "con_aviso", "ultimo_dato": None},
             {"id": "extractor", "estado": "con_aviso", "ultimo_dato": "2026-09-30T17:20Z"},
             {"id": "firms", "estado": "leida", "ultimo_dato": "2026-09-30T15:17Z"},
+            {"id": "airprox", "estado": "leida", "ultimo_dato": "2026-09-30T15:05Z"},
+            {"id": "parlamentos", "estado": "con_aviso", "ultimo_dato": "2026-09-30T12:05Z"},
+            # Las que la recogida no informa salen como no leídas.
+            {"id": "investigaciones", "estado": "no_leida", "ultimo_dato": None},
+            {"id": "estadisticas_oficiales", "estado": "no_leida", "ultimo_dato": None},
+            {"id": "paginas_js", "estado": "no_leida", "ultimo_dato": None},
         ],
     }
 

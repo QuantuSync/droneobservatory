@@ -352,3 +352,39 @@ def validar_episodio(documento: Documento, ahora: datetime) -> list[Error]:
 
 def fiabilidad_interna(fiabilidad: str) -> bool:
     return Fiabilidad(fiabilidad) in FIABILIDAD_INTERNA
+
+
+# --- Registros de las fuentes oficiales de detalle ----------------------------
+
+
+def validar_encuentro(documento: Documento, ahora: datetime) -> list[Error]:
+    return [
+        *errores_esquema(Esquema.ENCUENTRO, documento),
+        *errores_rangos(documento),
+        *errores_fechas(documento, ahora),
+        *errores_coordenadas(documento),
+    ]
+
+
+def validar_estadistica_oficial(documento: Documento, ahora: datetime) -> list[Error]:
+    errores = [
+        *errores_esquema(Esquema.ESTADISTICA_OFICIAL, documento),
+        *errores_rangos(documento),
+        *errores_fechas(documento, ahora),
+    ]
+    periodo = _dict(documento.get("periodo"))
+    inicio, fin = periodo.get("inicio"), periodo.get("fin")
+    if isinstance(inicio, str) and isinstance(fin, str) and fin < inicio:
+        errores.append(Error("periodo", "fin anterior al inicio"))
+    return errores
+
+
+def validar_documento_oficial(documento: Documento, ahora: datetime) -> list[Error]:
+    errores = [
+        *errores_esquema(Esquema.DOCUMENTO_OFICIAL, documento),
+        *errores_fechas(documento, ahora),
+    ]
+    fecha = documento.get("fecha")
+    if isinstance(fecha, str) and fecha > ahora.date().isoformat():
+        errores.append(Error("fecha", f"fecha futura: {fecha}"))
+    return errores

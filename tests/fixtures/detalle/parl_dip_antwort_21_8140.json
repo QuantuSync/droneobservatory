@@ -1,0 +1,55 @@
+{
+ "numFound": 1,
+ "documents": [
+  {
+   "id": "290953",
+   "drucksachetyp": "Antwort",
+   "dokumentart": "Drucksache",
+   "autoren_anzahl": 0,
+   "typ": "Dokument",
+   "vorgangsbezug_anzahl": 1,
+   "dokumentnummer": "21/8140",
+   "wahlperiode": 21,
+   "herausgeber": "BT",
+   "pdf_hash": "db79962e67a89af960d70e89377d7dfd",
+   "aktualisiert": "2026-09-28T07:12:25+02:00",
+   "vorgangsbezug": [
+    {
+     "id": "338837",
+     "titel": "Aktueller Stand der Drohnenabwehr in Deutschland im Geschäftsbereich der Bundesregierung",
+     "vorgangstyp": "Kleine Anfrage"
+    }
+   ],
+   "urheber": [
+    {
+     "einbringer": false,
+     "bezeichnung": "BRg",
+     "titel": "Bundesregierung"
+    }
+   ],
+   "ressort": [
+    {
+     "federfuehrend": true,
+     "titel": "Bundesministerium des Innern"
+    }
+   ],
+   "fundstelle": {
+    "pdf_url": "https://dserver.bundestag.de/btd/21/081/2108140.pdf",
+    "id": "290953",
+    "dokumentnummer": "21/8140",
+    "datum": "2026-09-22",
+    "verteildatum": "2026-09-28",
+    "dokumentart": "Drucksache",
+    "drucksachetyp": "Antwort",
+    "herausgeber": "BT",
+    "urheber": [
+     "Bundesregierung"
+    ]
+   },
+   "text": "Deutscher Bundestag Drucksache 21/8140\n21. Wahlperiode 22.09.2026\nAntwort \nder Bundesregierung \nauf die Kleine Anfrage der Abgeordneten Jan Krampe, Clara Bünger, \nDoris Achelwilm, weiterer Abgeordneter und der Fraktion Die Linke \n– Drucksache 21/7905 –\nAktueller Stand der Drohnenabwehr in Deutschland im Geschäftsbereich der \nBundesregierung\nV o r b e m e r k u n g  d e r  F r a g e s t e l l e r\nSeit einem Vorfall am Flughafen Leipzig/Halle wird wieder verstärkt über die \nDetektion und Abwehr von Drohnen debattiert. Am 4. August 2026 war auf \ndem Flughafengelände in der unmittelbaren Nähe zu Frachtmaschinen eines \nukrainischen Lufttransportunternehmens, das auch militärische Güter in die \nUkraine transportiert, eine Drohne gefunden worden. An der Drohne war ein \nSprengsatz befestigt, der wohl wegen eines technischen Defekts nicht\nexplodiert war. Außerdem kollidierte mutmaßlich eine Drohne mit einem\nFrachtflugzeug in der Luft, ohne dabei größeren Schaden anzurichten (tagesschau.de \nvom 5. August 2026, „Behörden sprechen von ‚sehr ernstem\nSicherheitsvorfall‘„). Der Rechercheverbund von WDR, NDR und „Süddeutsche Zeitung“ \nberichtet außerdem, es seien noch Hinweise auf eine dritte Drohne gefunden \nworden (tagesschau.de vom 25. August 2026, „Ermittler finden weitere\nDrohne und Sprengstoff“). Der Generalbundesanwalt hat in dem Fall die\nErmittlungen wegen des Verdachts der Herbeiführung einer Sprengstoffexplosion und \ngefährlichem Eingriff in den Luftverkehr übernommen. Aufgrund des\nverwendeten Sprengstoffs und der Professionalität des Vorgehens gehen die\nSicherheitsbehörden von einem staatlichen Akteur hinter dem Anschlag aus.\nDas Problem der Spionage und Sabotage wird in der Bundesrepublik\nDeutschland nach einer Reihe von Drohnensichtungen in den vergangenen Jahren\ndiskutiert. Politisch wurden verschiedene Maßnahmen ergriffen, zu denen im\nGeschäftsbereich des Bundesministeriums des Innern der Aufbau eines\n„Gemeinsamen Drohnenabwehrzentrums“ (GDAZ) von Bund und Ländern am 17.\nDezember 2025 gehört. Das GDAZ ist räumlich bei der Direktion 11 der\nBundespolizei in Berlin angesiedelt, unter deren Dach die Spezialkräfte der\nBundespolizei zusammengefasst sind. Dazu gehört auch eine eigene\nDrohnenabwehreinheit mit 150 Kräften, die bislang an vier Standorten in Deutschland\nangesiedelt sind. Der Bundesminister des Innern, Alexander Dobrindt, kündigte \nnach dem Vorfall in Leipzig an, diese Einheit auf 300 Kräfte anwachsen zu \nlassen und auf acht Standorte zu verteilen (dpa vom 10. August 2026,\nDrohnenabwehreinheit der Bundespolizei wird deutlich größer). Die Einheit solle KI-\ngestützte Störsysteme und automatische Abfangdrohnen einsetzen.\nDie Antwort wurde namens der Bundesregierung mit Schreiben des Bundesministeriums des Innern vom 22. September \n2026 übermittelt.\nDie Drucksache enthält zusätzlich – in kleinerer Schrifttype – den Fragetext.\nEin Vorfall mit einer Drohne in der Nacht zum 11. August 2026 zeigte, dass \nhier offenbar noch Verbesserungsbedarf bestehtngsfähig sind.\nV o r b e m e r k u n g  d e r  B u n d e s r e g i e r u n g\nDie Bundesregierung hat die Fähigkeiten zur Drohnendetektion und -abwehr \nseit 2025 erheblich ausgebaut und in kurzer Zeit deutlich verstärkt. Im\nMittelpunkt stehen der Schutz von Verkehrsflughäfen und kritischen Infrastrukturen, \ndie Stärkung der polizeilichen Fähigkeiten, die behördenübergreifende\nLagebewertung sowie die Weiterentwicklung technischer und rechtlicher\nMöglichkeiten.\nDer Schwerpunkt liegt auf dem Aufbau personeller und technischer\nFähigkeiten, dem Schutz besonders gefährdeter Verkehrsflughäfen, der Verbesserung \nder behördenübergreifenden Lagebewertung sowie der Erprobung und\nBeschaffung geeigneter Technologien.\nAufgrund der dynamischen technischen Entwicklung und der unterschiedlichen \nBedrohungsszenarien wird ein risikobasierter sowie technologieoffener Ansatz \nverfolgt und fortlaufend angepasst. Erforderlich ist insofern das\nZusammenwirken unterschiedlicher Fähigkeiten.\nDie Bundesregierung ist nach sorgfältiger Abwägung des parlamentarischen\nInformationsanspruches des Deutschen Bundestages mit dem Wohl des Bundes \n(Staatswohl), das durch Bekanntwerden geheimhaltungsbedürftiger\nInformationen gefährdet werden könnte, der Auffassung, dass eine Bekanntgabe der\nerfragten Daten zu Detektion und Abwehr von Drohnen nicht erfolgen kann, da \ndiese ganz konkrete Rückschlüsse auf Fähigkeiten wie verwendete Technik und \nUmfang, technische Leistungsparameter, Standorte und Einsatzbereitschaft \nund-taktiken der Sicherheitsbehörden der Bundesrepublik Deutschland\nzulassen würden. Dadurch könnte die Sicherheit von Schutzobjekten,\nLiegenschaften und Personen gefährdet sein. Gerade im Hinblick auf die Gefahren durch \nDrohnen und die sich deutlich verschärfte hybride Bedrohungslage – wie z. B. \nim Fall Leipzig – und einer damit einhergehenden Steigerung der Qualität und \nIntensität hybrider Angriffe muss hier ein hohes Maß an die Schutzinteressen \nder Bundesrepublik Deutschland gelegt werden. Eine Nennung der\nHerstellerfirmen und der Produkte würde genaue Rückschlüsse über deren Fähigkeiten \noffenbaren und deren schutzbedürftige Interessen verletzen. Die erbetenen\nAuskünfte sind geheimhaltungsbedürftig, weil sie sicherheitsrelevante Angaben \nenthalten, deren Bekanntwerden für die Interessen der Bundesrepublik \nDeutschland nachteilig sein könnten.\nEine Einstufung als Verschlusssache und Hinterlegung der angefragten\nInformationen in der Geheimschutzstelle des Deutschen Bundestages würde ihrer\nerheblichen Brisanz im Hinblick auf die Bedeutung für die Aufgabenerfüllung \nund Funktionsfähigkeit der Sicherheitsbehörden des Bundes nicht ausreichend \nRechnung tragen. Die Ausstattung der Sicherheitsbehörden und Schutzobjekte \nerfolgt risikobasiert. Auskünfte über Hersteller und konkret in der Anwendung \nbefindliche Techniken lassen Rückschlüsse auf diese risikobasierte Betrachtung \nund auch auf die Leistungsfähigkeit gegebenenfalls damit auch auf die Grenzen \nder Leistungsfähigkeit schließen. Zudem befindet sich der Bund in\numfangreichen Beschaffungsmaßnahmen. Kenntnisse zu aktuellen Ausstattungen und \nAusstattungsplanungen könnten daher zudem die umfangreichen, teils\ndringlichen Vergaben gefährden. Aus dem Vorgesagten ergibt sich, dass die\ngesamtstaatliche Aufgabe der Drohnenabwehr derart schutzbedürftige\nGeheimhaltungsinteressen berührt, dass das Staatswohl gegenüber dem parlamentarischen \nInformationsrecht überwiegt. Insofern muss ausnahmsweise das Fragerecht der \nAbgeordneten gegenüber dem Geheimhaltungsinteresse der Bundesregierung \nund ihrer Partnernationen zurückstehen, sodass auch eine VS-Einstufung der in \nRede stehenden Informationen hier nicht möglich ist.\n 1. Wie viele Dienstposten existieren derzeit bei der Bundespolizei, die mit \nder Aufgabe der Drohnendetektion und Drohnenabwehr befasst sind, und\na) wie ist der derzeitige Stand bei der Besetzung der Dienstposten\n(Sollbzw. Ist-Stand, Personal im Zulauf, etc.),\nb) auf welche Organisationseinheiten sind diese Dienstposten verteilt,\nc) wie sind diese Kräfte und insbesondere die Angehörigen der\nDrohnenabwehreinheit der Bundespolizeidirektion 11 räumlich disloziert \n(Standorte mit Soll- bzw. Ist-Besetzung)?\nDie Drohnenabwehreinheit der Bundespolizei soll perspektivisch auf 300\nPolizeivollzugsbeamtinnen und -beamte aufwachsen. Darüber hinaus plant man \ninsgesamt die Drohnenabwehrfähigkeit der Bundespolizei auch in der Fläche \nzu stärken. Die Umsetzung erfolgt auf Grundlage einsatzfachlicher und\norganisatorischer Prüfungen. Konkrete Angaben zu Standorten und\nEinsatzbereitschaften können nicht zur Verfügung gestellt werden. Auf die Vorbemerkung \nwird verwiesen.",
+   "titel": "auf die Kleine Anfrage\r\n- Drucksache 21/7905 -\r\nAktueller Stand der Drohnenabwehr in Deutschland im Geschäftsbereich der Bundesregierung",
+   "datum": "2026-09-22"
+  }
+ ],
+ "cursor": "x"
+}

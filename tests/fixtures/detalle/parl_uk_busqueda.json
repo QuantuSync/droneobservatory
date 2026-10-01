@@ -1,0 +1,251 @@
+{
+ "totalResults": 18,
+ "results": [
+  {
+   "value": {
+    "id": 1941625,
+    "askingMemberId": 5062,
+    "askingMember": null,
+    "house": "Commons",
+    "memberHasInterest": false,
+    "dateTabled": "2026-09-11T00:00:00",
+    "dateForAnswer": "2026-09-15T00:00:00",
+    "uin": "29213",
+    "questionText": "To ask the Secretary of State for Justice, when he plans to reply to the letters from the hon. Member for West Suffolk of 26 June and 3 September 2026 regarding USAF Lakenheath.",
+    "answeringBodyId": 54,
+    "answeringBodyName": "Ministry of Justice",
+    "isWithdrawn": false,
+    "isNamedDay": false,
+    "groupedQuestions": [],
+    "answerIsHolding": false,
+    "answerIsCorrection": false,
+    "answeringMemberId": 5082,
+    "answeringMember": null,
+    "correctingMemberId": null,
+    "correctingMember": null,
+    "dateAnswered": "2026-09-21T00:00:00",
+    "answerText": "The Department recognises the importance of responding to correspondence from Honourable and Right Honourable Members in a timely manner. The Hon. Member's letters of 26 June and 3 September have been received and were carefully considered. The Hon. Membe...",
+    "originalAnswerText": "",
+    "comparableAnswerText": "",
+    "dateAnswerCorrected": null,
+    "dateHoldingAnswer": null,
+    "attachmentCount": 0,
+    "heading": "Members: Correspondence",
+    "attachments": [],
+    "groupedQuestionsDates": []
+   },
+   "links": [
+    {
+     "rel": "self",
+     "href": "/Questions/1941625",
+     "method": "GET"
+    }
+   ]
+  },
+  {
+   "value": {
+    "id": 1933300,
+    "askingMemberId": 5089,
+    "askingMember": null,
+    "house": "Commons",
+    "memberHasInterest": false,
+    "dateTabled": "2026-08-28T00:00:00",
+    "dateForAnswer": "2026-09-02T00:00:00",
+    "uin": "22815",
+    "questionText": "To ask the Secretary of State for Justice, pursuant to the answer of 17 July 2026 to question 14519 on USA: Armed Forces, what discussions has his department held with the Ministry of Defence regarding the details of this case.",
+    "answeringBodyId": 54,
+    "answeringBodyName": "Ministry of Justice",
+    "isWithdrawn": false,
+    "isNamedDay": false,
+    "groupedQuestions": [],
+    "answerIsHolding": false,
+    "answerIsCorrection": false,
+    "answeringMemberId": 5204,
+    "answeringMember": null,
+    "correctingMemberId": null,
+    "correctingMember": null,
+    "dateAnswered": "2026-09-08T00:00:00",
+    "answerText": "This question relates to a sexual offence case involving a member of the US armed forces stationed at RAF Lakenheath, and a British citizen.Following this case and others like it coming to light, Departments including the Ministry of Justice, Ministry of ...",
+    "originalAnswerText": "",
+    "comparableAnswerText": "",
+    "dateAnswerCorrected": null,
+    "dateHoldingAnswer": null,
+    "attachmentCount": 0,
+    "heading": "Armed Forces: USA",
+    "attachments": [],
+    "groupedQuestionsDates": []
+   },
+   "links": [
+    {
+     "rel": "self",
+     "href": "/Questions/1933300",
+     "method": "GET"
+    }
+   ]
+  },
+  {
+   "value": {
+    "id": 1928711,
+    "askingMemberId": 5275,
+    "askingMember": null,
+    "house": "Commons",
+    "memberHasInterest": false,
+    "dateTabled": "2026-07-16T00:00:00",
+    "dateForAnswer": "2026-09-02T00:00:00",
+    "uin": "19664",
+    "questionText": "To ask the Secretary of State for Defence, what estimate he has made of the cost of the disruption of drones flying over (i) RAF Lakenheath, (ii) RAF Mildenhall and (iii) RAF Feltwell in November 2024.",
+    "answeringBodyId": 11,
+    "answeringBodyName": "Ministry of Defence",
+    "isWithdrawn": false,
+    "isNamedDay": false,
+    "groupedQuestions": [],
+    "answerIsHolding": false,
+    "answerIsCorrection": false,
+    "answeringMemberId": 5258,
+    "answeringMember": null,
+    "correctingMemberId": null,
+    "correctingMember": null,
+    "dateAnswered": "2026-09-02T00:00:00",
+    "answerText": "The Ministry of Defence (MOD) does not hold a central estimate of the full cost of disruption caused by drone activity in November 2024. The UK investigation into the disruption led by the MOD Police incurred an estimated cost £607,883.87. The United Stat...",
+    "originalAnswerText": "",
+    "comparableAnswerText": "",
+    "dateAnswerCorrected": null,
+    "dateHoldingAnswer": null,
+    "attachmentCount": 0,
+    "heading": "Military Bases: Unmanned Air Systems",
+    "attachments": [],
+    "groupedQuestionsDates": []
+   },
+   "links": [
+    {
+     "rel": "self",
+     "href": "/Questions/1928711",
+     "method": "GET"
+    }
+   ]
+  },
+  {
+   "value": {
+    "id": 1924579,
+    "askingMemberId": 5062,
+    "askingMember": null,
+    "house": "Commons",
+    "memberHasInterest": false,
+    "dateTabled": "2026-07-06T00:00:00",
+    "dateForAnswer": "2026-07-09T00:00:00",
+    "uin": "16130",
+    "questionText": "To ask the Secretary of State for Justice, whether he has made representations to his counterpart in the US Government on the case of Sarah Steele and the use of a military trial at RAF Lakenheath for her case.",
+    "answeringBodyId": 54,
+    "answeringBodyName": "Ministry of Justice",
+    "isWithdrawn": false,
+    "isNamedDay": true,
+    "groupedQuestions": [],
+    "answerIsHolding": false,
+    "answerIsCorrection": false,
+    "answeringMemberId": 5204,
+    "answeringMember": null,
+    "correctingMemberId": null,
+    "correctingMember": null,
+    "dateAnswered": "2026-07-13T00:00:00",
+    "answerText": "Halving violence against women and girls is a decade-long mission for this Government. This case is extremely concerning and our thoughts are with the victim, and with the other victims whose experiences have subsequently come to light. Given the cross-ag...",
+    "originalAnswerText": "",
+    "comparableAnswerText": "",
+    "dateAnswerCorrected": null,
+    "dateHoldingAnswer": null,
+    "attachmentCount": 0,
+    "heading": "Sarah Steele",
+    "attachments": [],
+    "groupedQuestionsDates": []
+   },
+   "links": [
+    {
+     "rel": "self",
+     "href": "/Questions/1924579",
+     "method": "GET"
+    }
+   ]
+  },
+  {
+   "value": {
+    "id": 1882819,
+    "askingMemberId": 5089,
+    "askingMember": null,
+    "house": "Commons",
+    "memberHasInterest": false,
+    "dateTabled": "2026-02-20T00:00:00",
+    "dateForAnswer": "2026-02-24T00:00:00",
+    "uin": "114084",
+    "questionText": "To ask the Secretary of State for Defence, how many intercept scrambles of Russian military aircraft by USAF aircraft have taken place from a) RAF Lakenheath and b) RAF Mildenhall since 2020.",
+    "answeringBodyId": 11,
+    "answeringBodyName": "Ministry of Defence",
+    "isWithdrawn": false,
+    "isNamedDay": false,
+    "groupedQuestions": [],
+    "answerIsHolding": false,
+    "answerIsCorrection": false,
+    "answeringMemberId": 5235,
+    "answeringMember": null,
+    "correctingMemberId": null,
+    "correctingMember": null,
+    "dateAnswered": "2026-03-02T00:00:00",
+    "answerText": "For operational security reasons, we do not offer comment or information in relation to foreign nations’ military operations.",
+    "originalAnswerText": "",
+    "comparableAnswerText": "",
+    "dateAnswerCorrected": null,
+    "dateHoldingAnswer": null,
+    "attachmentCount": 0,
+    "heading": "Russia: Military Aircraft",
+    "attachments": [],
+    "groupedQuestionsDates": []
+   },
+   "links": [
+    {
+     "rel": "self",
+     "href": "/Questions/1882819",
+     "method": "GET"
+    }
+   ]
+  },
+  {
+   "value": {
+    "id": 1874198,
+    "askingMemberId": 185,
+    "askingMember": null,
+    "house": "Commons",
+    "memberHasInterest": true,
+    "dateTabled": "2026-01-22T00:00:00",
+    "dateForAnswer": "2026-01-27T00:00:00",
+    "uin": "107672",
+    "questionText": "To ask the Secretary of State for Defence, how much his Department has spent on running costs for RAF (a) Menwith Hill, (b) Lakenheath and (c) Croughton in each of the last three years; and how much of the cost for each year has been reimbursed by the Uni",
+    "answeringBodyId": 11,
+    "answeringBodyName": "Ministry of Defence",
+    "isWithdrawn": false,
+    "isNamedDay": true,
+    "groupedQuestions": [],
+    "answerIsHolding": false,
+    "answerIsCorrection": false,
+    "answeringMemberId": 4682,
+    "answeringMember": null,
+    "correctingMemberId": null,
+    "correctingMember": null,
+    "dateAnswered": "2026-01-27T00:00:00",
+    "answerText": "The information requested is not centrally held, and could only be collected and verified for the purpose of answering this question at disproportionate cost. There is no one identified budget for three sites, the officials would have to go into each indi...",
+    "originalAnswerText": "",
+    "comparableAnswerText": "",
+    "dateAnswerCorrected": null,
+    "dateHoldingAnswer": null,
+    "attachmentCount": 0,
+    "heading": "USA: Military Bases",
+    "attachments": [],
+    "groupedQuestionsDates": []
+   },
+   "links": [
+    {
+     "rel": "self",
+     "href": "/Questions/1874198",
+     "method": "GET"
+    }
+   ]
+  }
+ ]
+}

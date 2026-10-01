@@ -1,0 +1,3 @@
+# Navegador sin interfaz para las listas de noticias oficiales que se cargan con JavaScript
+# (recogida/navegador.py). Solo en el servidor: la recogida horaria no lo necesita.
+playwright==1.62.0

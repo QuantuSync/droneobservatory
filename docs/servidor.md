@@ -39,6 +39,8 @@ En `/home/eodi`:
     publicar los ficheros de la web;
   - `known_hosts`: la clave de host publicada por GitHub;
   - `exportacion.json`: la última exportación semanal correcta (versión, hora y huella).
+- `datos/detalle/`, con permisos 700 y propiedad de `eodi`: lo que descargan las fuentes
+  oficiales de detalle (apartado «Fuentes oficiales de detalle»).
 - `datos/firms/`, con permisos 700 y propiedad de `eodi`: los CSV diarios de anomalías
   térmicas de NASA FIRMS, comprimidos, uno por producto y día
   (`<producto>/<año>/<AAAA-MM-DD>.csv.gz`), y `control.json` con la última descarga
@@ -148,7 +150,8 @@ El script:
 3. copia la clave age y las variables del extractor, con la clave de FIRMS;
 4. sustituye en GitHub las claves de despliegue «servidor eodi-recogida» de los dos
    repositorios por las del servidor;
-5. activa los temporizadores de la recogida horaria y de la exportación semanal.
+5. activa los temporizadores de la recogida horaria, de la exportación semanal y de las
+   fuentes oficiales de detalle.
 
 Puede repetirse sobre un servidor que ya existe: deja igual lo que ya está y vuelve a
 aplicar la configuración. Para empezar de verdad desde cero se borra antes el servidor:
@@ -171,9 +174,11 @@ commit en git, así que la web no se reconstruye cada hora.
 
 El fichero lleva la hora de inicio y de fin de la recogida, su resultado (`correcta`,
 `con_avisos` o `fallida`), la hora de la última correcta, la de la siguiente prevista
-(minuto 17) y, por cada fuente (`fuerza_aerea_ua`, `mindef_ru`, `gdelt`, `oficiales` y
-`extractor` y `firms`), su estado (`leida`, `con_aviso` o `no_leida`) y la hora de su
-último dato; en `firms`, la de la última descarga correcta.
+(minuto 17) y, por cada fuente (`fuerza_aerea_ua`, `mindef_ru`, `gdelt`, `oficiales`,
+`extractor`, `firms` y las de detalle: `airprox`, `parlamentos`, `investigaciones`,
+`estadisticas_oficiales` y `paginas_js`), su estado (`leida`, `con_aviso` o `no_leida`) y la hora de su
+último dato; en `firms`, la de la última descarga correcta; en las de detalle, la de su
+última lectura correcta.
 Lleva también `ultima_exportacion`: la hora en que terminó la última exportación semanal
 correcta (o null si no consta ninguna), del registro que deja la exportación.
 No lleva ningún contenido. La recogida deja el estado de cada fuente en un fichero
@@ -240,6 +245,66 @@ sudo -u eodi sh -c 'cd /home/eodi/droneobservatory && EODI_FIRMS_DATOS=/home/eod
 ```
 
 Si se corta (reinicio, seis fallos seguidos), se vuelve a lanzar igual y sigue donde lo dejó.
+
+## Fuentes oficiales de detalle
+
+UK Airprox Board, respuestas de gobiernos en el Bundestag, la Tweede Kamer y el Parlamento
+británico, informes de organismos de investigación, comunicados de la policía danesa,
+sentencias, estadísticas oficiales y las tres listas de noticias oficiales que se cargan con
+JavaScript ([`recogida/detalle.py`](../recogida/detalle.py), tabla de fuentes en
+[`configuracion/fuentes_detalle.json`](../configuracion/fuentes_detalle.json), informe en
+[`docs/informe_fuentes_detalle.md`](informe_fuentes_detalle.md)). Se leen en dos tiempos:
+
+1. **Recogida**: `eodi-detalle.timer` lanza `eodi-detalle.service` cada 3 horas en el minuto 52
+   (02:52, 05:52…, UTC), como `eodi`, con un tope de 120 minutos y prioridad baja (`Nice=15`).
+   La unidad ejecuta [`servidor/detalle.sh`](../servidor/detalle.sh), que toma su propio
+   cerrojo (`detalle.lock`: no espera a la recogida horaria ni la hace esperar), reinstala
+   Playwright y Chromium solo si cambia `requirements-navegador.txt`, y ejecuta
+   `python -m recogida.detalle recoger` con el código del clon tal como lo dejó la última
+   recogida. Descarga lo nuevo de cada fuente y lo deja en `datos/detalle/`; no toca la base.
+   Una fuente que falla queda en `datos/detalle/control.json` con su error y no para las
+   demás.
+2. **Incorporación**: la recogida horaria, con su cerrojo de siempre, guarda en la base lo
+   que dejó la recogida (encuentros, documentos, estadísticas y resultados de lotes),
+   extrae los documentos de los últimos 30 días con lo que deje del límite diario el
+   extractor de noticias y cruza todo con los incidentes. Un fallo aquí deja aviso en sus
+   fuentes de `estado.json` (`airprox`, `parlamentos`, `investigaciones`,
+   `estadisticas_oficiales`, `paginas_js`, con su última lectura correcta) y no cambia el
+   resultado de la recogida.
+
+En `/home/eodi/datos/detalle/`, con permisos 700 y propiedad de `eodi`: `airprox/` (Excel
+histórico, catálogos y texto de los informes de la UKAB, comprimido, y los encuentros
+leídos), `documentos/` (por fuente, cada documento con sus pasajes sobre drones, nunca el
+texto entero), `estadisticas/` (tablas leídas por código), `paginas_js/` (la última lista
+renderizada de cada fuente con JavaScript, con su tiempo y su memoria), `lotes/` (resultados
+del histórico) y `control.json`.
+
+**Navegador sin interfaz.** `instalar.sh` instala Playwright en el entorno del observatorio,
+las bibliotecas del sistema que pide Chromium (como root; si su herramienta no reconoce esta
+Ubuntu, la lista de paquetes a mano) y Chromium en la caché de `eodi`. Solo lo usa la
+recogida de detalle, nunca la horaria.
+
+Lanzarla a mano y ver cómo va, como `operador`:
+
+```
+sudo systemctl start eodi-detalle.service
+journalctl -u eodi-detalle.service -n 60
+systemctl show eodi-detalle.service -p MemoryPeak -p CPUUsageNSec
+sudo -u eodi cat /home/eodi/datos/detalle/control.json
+```
+
+**Histórico, una sola vez.** Recoge todo lo que cada fuente permite y envía al extractor, como
+un lote, los documentos de antes de los últimos 30 días, con su presupuesto propio (3
+dólares, modo de gasto «detalle», aparte del límite diario). Espera al lote y deja los
+resultados en `datos/detalle/lotes/`; la recogida horaria siguiente los incorpora y anota su
+gasto. Si no caben todos en una tanda (se recorta por el peor caso), se vuelve a lanzar
+después de esa incorporación.
+
+```
+sudo systemd-run --unit=eodi-detalle-historico --uid=eodi --gid=eodi \
+  /usr/bin/env bash /home/eodi/droneobservatory/servidor/detalle_historico.sh
+journalctl -u eodi-detalle-historico -n 40
+```
 
 ## Revisión de todo lo publicado
 

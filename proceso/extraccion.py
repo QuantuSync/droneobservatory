@@ -37,7 +37,7 @@ from almacen.base import Almacen, DocumentoInvalido
 from esquema import Documento
 from modelo import coste, ficha, paginas
 from modelo.cliente import ErrorTemporal, LlamadaFallida
-from proceso import declaraciones
+from proceso import declaraciones, detalle
 from proceso.estados import Estado, TransicionNoPermitida, transitar
 from proceso.incidentes import aplicar_reglas, construir, huella
 from proceso.noticias import (
@@ -510,6 +510,8 @@ def _alta(
     )
     if anterior is not None:
         incidente = conservar_oficiales(incidente, anterior)
+        # Lo que aportan los registros oficiales de detalle vuelve entero (proceso/detalle.py).
+        incidente = detalle.reaplicar(almacen, incidente)
     incidente = aplicar_reglas(incidente)
     try:
         almacen.guardar_incidente(incidente, ahora, modelos)

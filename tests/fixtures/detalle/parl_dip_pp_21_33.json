@@ -1,0 +1,53 @@
+{
+ "numFound": 1,
+ "documents": [
+  {
+   "id": "5740",
+   "dokumentart": "Plenarprotokoll",
+   "typ": "Dokument",
+   "vorgangsbezug_anzahl": 72,
+   "dokumentnummer": "21/33",
+   "wahlperiode": 21,
+   "herausgeber": "BT",
+   "pdf_hash": "d17a6ef59e2d690f9afb8dfbff047b91",
+   "aktualisiert": "2025-10-21T16:27:37+02:00",
+   "vorgangsbezug": [
+    {
+     "id": "326601",
+     "titel": "Fortsetzung der Beteiligung bewaffneter deutscher Streitkräfte an der durch die Europäische Union geführten Operation EUNAVFOR MED IRINI",
+     "vorgangstyp": "Antrag"
+    },
+    {
+     "id": "326765",
+     "titel": "Aktuelle Lage der deutschen Wirtschaft\r\n",
+     "vorgangstyp": "Mündliche Frage"
+    },
+    {
+     "id": "325403",
+     "titel": "Neufassung der Geschäftsordnung des Deutschen Bundestages",
+     "vorgangstyp": "Geschäftsordnung"
+    },
+    {
+     "id": "326602",
+     "titel": "Fortsetzung der Beteiligung bewaffneter deutscher Streitkräfte an der NATO-geführten Maritimen Sicherheitsoperation SEA GUARDIAN",
+     "vorgangstyp": "Antrag"
+    }
+   ],
+   "fundstelle": {
+    "pdf_url": "https://dserver.bundestag.de/btp/21/21033.pdf",
+    "id": "5740",
+    "dokumentnummer": "21/33",
+    "datum": "2025-10-15",
+    "verteildatum": "2025-10-16",
+    "xml_url": "https://dserver.bundestag.de/btp/21/21033.xml",
+    "dokumentart": "Plenarprotokoll",
+    "herausgeber": "BT",
+    "urheber": []
+   },
+   "text": "Plenarprotokoll 21/33\nDeutscher Bundestag\nStenografischer Bericht\n33. Sitzung\nBerlin, Mittwoch, den 15. Oktober 2025\n\n\nInhalt:\n\nErweiterung und Abwicklung der Tagesordnung \n\n\n\nAbsetzung der Tagesordnungspunkte 3, 10b, 19c, 21, 24, 25 und 27 \n\n\n\nZur Geschäftsordnung:\n\nCatarina dos Santos-Wintz (CDU/C\nFrage 64\nFrage des Abgeordneten Jan Köstering (Die Linke):\nWelche Erkenntnisse hat die Bundesregierung darüber, wie viele Verdachtsfälle mutmaßlicher Sabotage und/oder Spionage durch sogenannte „Wegwerf-Agenten“ im Jahr 2025 zu verzeichnen sind, und sollten keine Statistiken im Sinne der Frage vorliegen, mit welcher Begründung führen die Bundesregierung bzw. ihr nachgeordnete Behörden keine solche Statistiken (www.spiegel.de/panorama/justiz/spionage-bka-und-nachrichtendienste-warnen-vor-anwerbung-als-wegwerf-agent-a-65184cc8-9002-42f5-bd26-c48c4f68b068, www.zeit.de/2024/41/russische-sabotage-wegwerf-agenten-geheimdienst-sicherheitsbehoerde)?\nAntwort des Parl. Staatssekretärs Christoph de Vries:\nDie Bundesregierung führt keine Statistik im Sinne der Fragestellung.\nDie Bundessicherheitsbehörden gehen verschiedenen Sachverhalten nach, bei denen eine Verdachtslage im Sinne der Fragestellung naheliegt bzw. angenommen wird. Fälle sogenannter „Wegwerf-Agenten“ oder sogenannter „Low-Level-Agenten“ zeichnen sich durch ein besonders verdecktes und arbeitsteilig verschleiertes Vorgehen aus. Das bedeutet: Eine eindeutige Zuordnung zu diesem Phänomen ist selbst bei intensivem Ermittlungsaufwand teils nur eingeschränkt oder auch zeitlich verzögert möglich.\nZudem ist darauf hinzuweisen, dass erste Ermittlungen und phänomenologische Einordnungen in der Regel durch die zuständigen Landesbehörden geführt werden. Die Bundessicherheitsbehörden werden im Rahmen ihrer Zuständigkeit eingebunden und schöpfen selbstverständlich alle verfügbaren Ermittlungsansätze aus.\nFrage 65\nFrage des Abgeordneten Jan Köstering (Die Linke):\nWie viele Flugbehinderungen durch Drohnen im bundesdeutschen Luftraum wurden durch die Deutsche Flugsicherung – nach Artikel 87d des Grundgesetzes Teil der Bundesverwaltung – und die Bundespolizei in den Jahren 2022, 2023, 2024 und 2025 insgesamt erfasst, und wie verteilen sich die Behinderungen im Verantwortungsbereich der Bundespolizei nach Einschätzung der Bundesregierung auf die Kategorien private Drohnen, Organisierte Kriminalität, Industriespionage, ausländische Spionage oder unbekannte Herkunft?\nAntwort des Parl. Staatssekretärs Christoph de Vries:\nDie Anzahl der durch die Deutsche Flugsicherung GmbH (DFS) gemeldeten Behinderungen durch Drohnen im bundesdeutschen Luftraum stellen sich wie folgt dar: Im Jahr 2022 wurden 152 Drohnenbehinderungen dokumentiert. Im Jahr 2023 waren dies 151, im Jahr 2024 161 und bis zum 30. September 2025 172 festgestellte Drohnenbehinderungen. Diese Zahlen dokumentieren die der DFS bekannten bzw. gemeldeten Behinderungen von Luftfahrzeugen durch unbemannte Luftfahrtzeuge, ferngesteuerte Luftfahrtsysteme oder Modellflugzeuge.\nEine statistische Erfassung durch die Bundespolizei im Sinne der Fragestellung erfolgt nicht.\nFrage 66\nFrage der Abgeordneten Cansin Köktürk (Die Linke):\nWie schätzt die Bundesregierung angesichts von aktuell rund 400 000 fehlenden Fachkräften und einem für das Jahr 2027 prognostizierten Defizit von 700 000 Fachkräften (www.deutschlandfunk.de/fachkraeftemangel-deutschland-wirtschaft-demografie-rezession-100.html) die Auswirkungen der Abschaffung der Turboeinbürgerung auf die Anwerbung ausländischer Fachkräfte für den Wirtschaftsstandort Deutschland ein?\nAntwort des Parl. Staatssekretärs Christoph de Vries:\nDie Bundesregierung kann die in der Frage zitierten Zahlen zu fehlenden Fachkräften nicht bestätigen, da es keine allgemein gültige Kennzahl gibt, um die Zahl von fehlenden Fachkräften zu berechnen.\nDie aktuelle Fachkräfteengpassanalyse der Bundesagentur für Arbeit weist für das Jahr 2024 163 Engpassberufe aus, nach 183 im Jahr 2023 und 200 im Jahr 2022.\nErgänzend werden im Fachkräftemonitoring für das Bundesministerium für Arbeit und Soziales plausible mittelfristige Fachkräftebedarfe sowie wahrscheinliche Fachkräfteengpässe und Fachkräfteüberschüsse in kritischen Berufsgruppen abgeschätzt (sogenannte Mittelfristprognose). Die Mittelfristprognose für die Jahre 2025 bis 2029 wird noch in diesem Herbst veröffentlicht.\n",
+   "titel": "Protokoll der 33. Sitzung des 21. Deutschen Bundestages",
+   "datum": "2025-10-15"
+  }
+ ],
+ "cursor": "x"
+}

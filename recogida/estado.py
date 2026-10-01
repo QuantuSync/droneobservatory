@@ -17,9 +17,11 @@ ultima_exportacion es la hora en que terminó bien la última exportación seman
 (recogida/exportacion.py), que la deja escrita en su registro; null si no consta ninguna. Sin
 --exportacion el campo no va.
 
-Las fuentes van siempre las seis y en este orden: fuerza_aerea_ua, mindef_ru, gdelt,
-oficiales, extractor y firms. En firms, el último dato es la hora de la última descarga
-correcta de NASA FIRMS (se descarga cada 3 horas).
+Las fuentes van siempre todas y en este orden: fuerza_aerea_ua, mindef_ru, gdelt, oficiales,
+extractor, firms y las oficiales de detalle (recogida/detalle.py): airprox, parlamentos,
+investigaciones, estadisticas_oficiales y paginas_js. En firms, el último dato es la hora de la
+última descarga correcta de NASA FIRMS (se descarga cada 3 horas); en las de detalle, la de su
+última lectura correcta (las lee su propio temporizador cada 3 horas).
 
 Uso: python -m recogida.estado --inicio <ISO> --codigo <N> --parcial <json> --anterior <json>
     --salida <json> --minuto <minuto de la recogida> [--exportacion <json>]
@@ -34,7 +36,10 @@ from pathlib import Path
 from typing import Any
 
 VERSION = 1
-FUENTES = ("fuerza_aerea_ua", "mindef_ru", "gdelt", "oficiales", "extractor", "firms")
+FUENTES = (
+    "fuerza_aerea_ua", "mindef_ru", "gdelt", "oficiales", "extractor", "firms",
+    "airprox", "parlamentos", "investigaciones", "estadisticas_oficiales", "paginas_js",
+)  # fmt: skip
 LEIDA, CON_AVISO, NO_LEIDA = "leida", "con_aviso", "no_leida"
 CORRECTA, CON_AVISOS, FALLIDA = "correcta", "con_avisos", "fallida"
 # Código con avisos de la recogida (recogida.horaria.SALIDA_AVISO): se lee y se publica, pero

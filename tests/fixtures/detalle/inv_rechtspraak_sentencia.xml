@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="utf-8"?>
+<open-rechtspraak>
+  <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:ecli="https://e-justice.europa.eu/ecli" xmlns:tr="http://tuchtrecht.overheid.nl/" xmlns:eu="http://publications.europa.eu/celex/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:bwb="bwb-dl" xmlns:cvdr="http://decentrale.regelgeving.overheid.nl/cvdr/" xmlns:psi="http://psi.rechtspraak.nl/" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+    <rdf:Description>
+      <dcterms:identifier>ECLI:NL:GHAMS:2025:1930</dcterms:identifier>
+      <dcterms:format>text/xml</dcterms:format>
+      <dcterms:accessRights>public</dcterms:accessRights>
+      <dcterms:modified>2025-10-17T10:05:38</dcterms:modified>
+      <dcterms:issued rdfs:label="Publicatiedatum">2025-07-22</dcterms:issued>
+      <dcterms:publisher resourceIdentifier="http://rechtspraak.nl/">Raad voor de Rechtspraak</dcterms:publisher>
+      <dcterms:language>nl</dcterms:language>
+      <dcterms:creator rdfs:label="Instantie" resourceIdentifier="http://standaarden.overheid.nl/owms/terms/Gerechtshof_Amsterdam" scheme="overheid.RechterlijkeMacht">Gerechtshof Amsterdam</dcterms:creator>
+      <dcterms:date rdfs:label="Uitspraakdatum">2025-07-08</dcterms:date>
+      <psi:zaaknummer rdfs:label="Zaaknr">23-000771-24</psi:zaaknummer>
+      <dcterms:type rdf:language="nl" resourceIdentifier="http://psi.rechtspraak.nl/uitspraak">Uitspraak</dcterms:type>
+      <psi:procedure rdf:language="nl" rdfs:label="Procedure" resourceIdentifier="http://psi.rechtspraak.nl/procedure#hogerBeroep">Hoger beroep</psi:procedure>
+      <dcterms:coverage>NL</dcterms:coverage>
+      <dcterms:spatial rdfs:label="Zittingsplaats">Amsterdam</dcterms:spatial>
+      <dcterms:subject rdfs:label="Rechtsgebied" resourceIdentifier="http://psi.rechtspraak.nl/rechtsgebied#strafrecht">Strafrecht</dcterms:subject>
+      <dcterms:hasVersion rdfs:label="Vindplaatsen" resourceIdentifier="http://psi.rechtspraak.nl/vindplaats">
+        <rdf:list>
+          <rdf:li>Rechtspraak.nl</rdf:li>
+          <rdf:li>NJFS 2025/239</rdf:li>
+        </rdf:list>
+      </dcterms:hasVersion>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://deeplink.rechtspraak.nl/uitspraak?id=ECLI:NL:GHAMS:2025:1930">
+      <dcterms:identifier>http://deeplink.rechtspraak.nl/uitspraak?id=ECLI:NL:GHAMS:2025:1930</dcterms:identifier>
+      <dcterms:format>text/html</dcterms:format>
+      <dcterms:accessRights>public</dcterms:accessRights>
+      <dcterms:modified>2025-07-22T14:19:30</dcterms:modified>
+      <dcterms:issued rdfs:label="Publicatiedatum">2025-07-22</dcterms:issued>
+      <dcterms:publisher resourceIdentifier="http://rechtspraak.nl/">Raad voor de Rechtspraak</dcterms:publisher>
+      <dcterms:language>nl</dcterms:language>
+      <dcterms:title rdf:language="nl">ECLI:NL:GHAMS:2025:1930 Gerechtshof Amsterdam , 08-07-2025 / 23-000771-24</dcterms:title>
+      <dcterms:abstract resourceIdentifier="../../rs:inhoudsindicatie" />
+    </rdf:Description>
+  </rdf:RDF>
+  <inhoudsindicatie id="ECLI:NL:GHAMS:2025:1930:INH" lang="nl" xml:space="preserve" xmlns="http://www.rechtspraak.nl/schema/rechtspraak-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <para>Vliegen met een drone zonder over de benodigde vergunning en (bewijs van) vaardigheden te beschikken.</para>
+    </inhoudsindicatie>
+  <uitspraak id="ECLI:NL:GHAMS:2025:1930:DOC" lang="nl" xml:space="preserve" xmlns="http://www.rechtspraak.nl/schema/rechtspraak-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <parablock>
+    <para>afdeling strafrecht</para>
+    <para>parketnummer: 23-000771-24 </para>
+    <para>datum uitspraak: 22 juli 2025 </para>
+  </parablock>
+  <parablock>
+    <para>TEGENSPRAAK </para>
+  </parablock>
+  <parablock>
+    <para>Verkort arrest van het gerechtshof Amsterdam gewezen op het hoger beroep, ingesteld tegen het vonnis van de kantonrechter in de rechtbank Noord-Holland (locatie Haarlem) van 27 maart 2024 in de strafzaak onder parketnummer 15-313588-23 tegen</para>
+  </parablock>
+  <parablock>
+    <para>
+      <emphasis role="bold">
+        [verdachte]
+      </emphasis>,</para>
+    <para>geboren te [geboorteplaats] op [geboortedag] 2002, </para>
+    <para>adres: [adres]</para>
+  </parablock>
+  <section>
+    <title>Onderzoek van de zaak</title>
+    <para />
+    <parablock>
+      <para>Dit arrest is gewezen naar aanleiding van het onderzoek ter terechtzitting in hoger beroep van 8 juli 2025.</para>
+    </parablock>
+    <para />
+    <parablock>
+      <para>De verdachte heeft hoger beroep ingesteld tegen voormeld vonnis.</para>
+    </parablock>
+    <para />
+    <parablock>
+      <para>Het hof heeft kennisgenomen van de vordering van de advocaat-generaal en van hetgeen de verdachte en de raadsvrouw naar voren hebben gebracht.</para>
+    </parablock>
+    <para />
+  </section>
+  <section>
+    <title>Tenlastelegging</title>
+    <para />
+    <parablock>
+      <para>Aan de verdachte is tenlastegelegd dat:</para>
+    </parablock>
+    <para />
+    <para>1.<?linebreak?>hij op of omstreeks 6 maart 2023 te Zuid-Scharwoude en/of Heerhugowaard, althans in de gemeente Dijk en Waard, in ieder geval in Nederland, (buiten de daglichtperiode) als piloot op afstand een vlucht heeft uitgevoerd met een onbemand luchtvaartuig (een drone), te weten een onbemand luchtvaartuig van het merk DJI en het type Mavic 2, in ieder geval een onbemand luchtvaartuig, terwijl </para>
+    <para>- niet was voldaan aan alle voorwaarden voor een vluchtuitvoering in de open categorie als bedoeld in art. 4 lid 1 van Uitvoeringsverordening 2019/947 en evenmin een exploitatievergunning voor een vluchtuitvoering in de specifieke categorie was aangevraagd en/of verkregen als bedoeld in art. 5 lid 1 van Uitvoeringsverordening 2019/947, en/of </para>
+    <para>- hij, verdachte, (aldus) niet beschikte over de passende vaardigheden (gedefinieerd in een exploitatievergunning van de bevoegde autoriteit en/of in het standaardscenario van aanhangsel 1 van de bijlage bij voormelde uitvoeringsverordening) en/of evenmin een bewijs van die vaardigheden bij zich had terwijl hij de vlucht uitvoerde, </para>
+    <para />
+    <parablock>
+      <para>immers heeft hij, verdachte, als piloot op afstand toen en daar (tussen omstreeks 01.00 uur en 01.30 uur) met het onbemande luchtvaartuig een vlucht uitgevoerd </para>
+    </parablock>
+    <para>- zonder dat onbemande luchtvaartuig voortdurend in Visual Line Of Sight (VLOS) te houden (schending voorwaarde art. 4 lid 1 onder d van Uitvoeringsverordening 2019/947) en/of </para>
+    <para>- waarbij materiaal (een telefoon) is vervoerd met de kennelijke bedoeling om dat materiaal te laten vallen (binnen de Penitentiaire Inrichting Heerhugowaard) (schending voorwaarde art. 4 lid 1 onder f van Uitvoeringsverordening 2019/947), terwijl voor deze vlucht geen exploitatievergunning is afgegeven, </para>
+    <para />
+    <parablock>
+      <para>en/of </para>
+    </parablock>
+    <para />
+    <parablock>
+      <para>de bevoegde autoriteit (aldus) evenmin vaardigheden voor de piloot op afstand heeft vastgesteld in een exploitatievergunning en/of hij, verdachte, kennelijk niet over de vaardigheden beschikte als bedoeld in aanhangsel 1, althans niet over de vaardigheden om </para>
+    </parablock>
+    <para>- relevante gegevens te selecteren over de informatie over het luchtruim (waaronder geografische zones voor onbemande luchtvaartuigen, zoals de zone rondom de Penitentiaire Inrichting Heerhugowaard) (vaardigheid vermeld in aanhangsel 1, tabel 1 onder a, i en E) </para>
+    <para>- te waarborgen dat de gekozen lading compatibel is met het voor de vluchtuitvoering gebruikte onbemande luchtvaartuig (vaardigheid vermeld in aanhangsel 1, tabel 1 onder a, i en F) en/of </para>
+    <para>- te allen tijde scherp te blijven opletten en het onbemande luchtvaartuig binnen het gezichtsveld te houden (VLOS) zodat het situationeel bewustzijn van de locatie wordt behouden (vaardigheid vermeld in aanhangsel 1, tabel 1 onder b en i), en hij, verdachte, evenmin over een bewijs van die vaardigheden beschikte; </para>
+    <para />
+    <parablock>
+      <para>subsidiair althans, indien het vorenstaande niet tot een veroordeling mocht of zou kunnen leiden: </para>
+    </parablock>
+    <para />
+    <parablock>
+      <para>hij op of omstreeks 6 maart 2023 te Zuid-Scharwoude en/of Heerhugowaard, althans in de gemeente Dijk en Waard, in ieder geval in Nederland, (buiten de daglichtperiode) als piloot op afstand tijdens de uitvoering van een vlucht met een onbemand luchtvaartuig (een drone), te weten een onbemand luchtvaartuig van het merk DJI en het type Mavic 2, in ieder geval een onbemand luchtvaartuig, niet de vluchtuitvoeringsbeperkingen in de overeenkomstig artikel 15 van Uitvoeringsverordening 2019/947 afgebakende geografische zones heeft nageleefd, immers heeft hij, verdachte, toen en daar (tussen omstreeks 01.00 uur en 01.30 uur) met voormeld onbemand luchtvaartuig een vlucht uitgevoerd in de omgeving van de Penitentiaire Inrichting Heerhugowaard, die (in de open categorie) is afgebakend als een (verboden) geografische zone van een beveiligd gebied of een locatie met vitale processen; </para>
+    </parablock>
+    <para />
+    <parablock>
+      <para>meer subsidiair althans, indien het vorenstaande niet tot een veroordeling mocht of zou kunnen leiden: </para>
+    </parablock>
+    <para />
+    <parablock>
+      <para>hij op of omstreeks 6 maart 2023 te Zuid-Scharwoude en/of Heerhugowaard, althans in de gemeente Dijk en Waard, in ieder geval in Nederland,(met behulp van een onbemand luchtvaartuig) een voorwerp, te weten een telefoon, binnen een (afdeling van een) inrichting en/of een instelling waarop de Penitentiaire beginselenwet, de Beginselenwet verpleging ter beschikking gestelden of de Beginselenwet justitiële jeugdinrichtingen van toepassing was, namelijk de Penitentiaire Inrichting Heerhugowaard, heeft getracht te brengen, terwijl het bezit van een telefoon binnen die (afdeling van die) inrichting en/of instelling verboden was. </para>
+    </parablock>
+    <para />
+    <para>2.<?linebreak?>hij op of omstreeks 6 maart 2023 te Zuid-Scharwoude en/of Heerhugowaard, althans in de gemeente Dijk en Waard, in ieder geval in Nederland, buiten de daglichtperiode, namelijk tussen omstreeks 01.00 uur en 01.30 uur, een VFR-vlucht heeft uitgevoerd met een onbemand luchtvaartuig (een drone), te weten een onbemand luchtvaartuig van het merk DJI en het type Mavic 2, in ieder geval een onbemand luchtvaartuig.</para>
+    <para />
+    <parablock>
+      <para>Voor zover in de tenlastelegging taal- en/of schrijffouten voorkomen, zal het hof deze verbeterd lezen. De verdachte wordt daardoor niet in de verdediging geschaad.</para>
+    </parablock>
+    <para />
+  </section>
+  <section>
+    <title>Vonnis waarvan beroep</title>
+    <para />
+    <parablock>
+      <para>Het vonnis waarvan beroep zal worden vernietigd, omdat daarvan slechts aantekening is gedaan ingevolge artikel 395a van het Wetboek van Strafvordering.</para>
+    </parablock>
+    <para />
+  </section>
+  <section>
+    <title>Bewijsoverweging</title>
+    <para />
+    <parablock>
+      <para>De advocaat-generaal heeft gerekwireerd tot bewezenverklaring van het onder feit 1 primair en onder feit 2 ten laste gelegde.</para>
+    </parablock>
+    <para />
+    <parablock>
+      <para>De raadsvrouw heeft ter terechtzitting in hoger beroep integrale vrijspraak bepleit. Daartoe heeft zij aangevoerd dat niet buiten redelijke twijfel is komen vast te staan dat de verdachte degene is geweest die de drone heeft bestuurd. De enkele waarneming van verbalisanten dat de verdachte kwam lopen uit de richting van de plek waar de drone is aangetroffen, is niet voldoende. Daarnaast zou sprake geweest kunnen zijn van een vlucht met behulp van een waarnemer of in de follow-me-modus, hetgeen een uitzondering vormt op de voorwaarde dat de drone in de ‘visual line of sight’ moet worden gehouden. </para>
+    </parablock>
+    <para />
+    <parablock>
+      <para>Het hof overweegt als volgt.</para>
+    </parablock>
+    <para />
+    <parablock>
+      <para>Op 6 maart 2023 omstreeks 01:10 uur ontvingen verbalisanten een melding dat een drone richting of over de penitentiaire inrichting in Heerhugowaard had gevlogen en dat de piloot van de drone zich op de Oosterdijk zou bevinden. Ter plaatste zagen de verbalisanten een auto onder een viaduct. Eén van de verbalisanten zag achter de auto een persoon die later bleek te zijn genaamd [naam] . In de lucht zag hij een rood lampje dat met gelijkmatige snelheid naar beneden kwam en achter [naam] uit het zicht verdween. [naam] liep vervolgens in de richting van de verbalisanten en kort daarna kwam de verdachte aanlopen. Vlakbij, in de richting waaruit de verdachte kwam lopen, trof één van de verbalisanten een drone met afstandsbediening in een bosschage aan. De drone lag ongeveer zes meter van de plaats waar hij het lampje naar beneden had zien komen. In de auto is een tas aangetroffen, waarin onderdelen zaten die eenzelfde kleur als de drone hadden. De verdachte en [naam] zijn samen weggereden in diezelfde auto. </para>
+    </parablock>
+    <para />
+    <parablock>
+      <para>Op grond van het voorgaande stelt het hof vast dat de verdachte degene is geweest die de drone heeft bestuurd. Verbalisanten hebben de drone in de lucht waargenomen, terwijl zij zicht hadden op [naam] en [naam] de drone klaarblijkelijk niet bestuurde. Vervolgens is de drone aangetroffen in de richting waaruit de verdachte aan kwam lopen. De verdachte is weggereden in de auto waarin de bij de drone behorende onderdelen zijn aangetroffen. Niet is gebleken dat er andere personen in de buurt waren. De verdediging heeft evenmin gesteld dat er meerdere personen aanwezig waren. Het hof acht het gelet op voornoemde feiten en omstandigheden onaannemelijk dat een ander dan de verdachte de drone heeft bestuurd. </para>
+    </parablock>
+    <para />
+    <parablock>
+      <para>De vluchtuitvoering valt niet in de “open” categorie, omdat de verdachte als piloot de drone niet voortdurend in de “visual line of sight” heeft gehouden gezien de afstand die de drone heeft afgelegd en het feit dat de vlucht in de nacht is uitgevoerd. Voor zover de raadsvrouw heeft gesteld dat de vlucht is uitgevoerd met behulp van een waarnemer of in de follow-me-modus, is het hof van oordeel dat die stelling onvoldoende is onderbouwd, gelet ook op hetgeen het hof hiervoor heeft vastgesteld en de route die de drone heeft afgelegd. Zodoende is niet aan de voorwaarden voldaan, zoals gesteld in artikel 4, eerste lid, onder d, van de Uitvoeringsverordening 2019/947 (hierna: de Uitvoeringsverordening) en valt de vluchtuitvoering in de categorie “specifiek”. Daarvoor is in dit geval een exploitatievergunning vereist, zoals vermeld in artikel 5 van de Uitvoeringsverordening. Daarnaast dient de piloot te voldoen aan de vaardigheidseisen die in die exploitatievergunning zijn vastgesteld en moet hij de vaardigheden hebben zoals genoemd in artikel 8, tweede lid, van de Uitvoeringsverordening. Ook moet hij een bewijs van zijn vaardigheden bij zich hebben, zoals is bepaald in UAS.SPEC.060, eerste lid, onder b van de bijlage bij de Uitvoeringsverordening. Niet is gebleken dat de verdachte beschikte over die vergunning of over (een bewijs van) die vaardigheden. </para>
+    </parablock>
+    <para />
+    <parablock>
+      <para>Op grond van het voorgaande is naar het oordeel van het hof wettig en overtuigend bewezen dat de verdachte het onder 1 primair en onder 2 ten laste gelegde heeft begaan.</para>
+    </parablock>
+    <para />
+  </section>
+  <section>
+    <title>Bewezenverklaring</title>
+    <para />
+    <parablock>
+      <para>Het hof acht wettig en overtuigend bewezen dat de verdachte het onder 1 en 2 tenlastegelegde heeft begaan, met dien verstande dat: </para>
+    </parablock>
+    <para />
+    <para>1.<?linebreak?>hij op 6 maart 2023 te Zuid-Scharwoude en Heerhugowaard buiten de daglichtperiode als piloot op afstand een vlucht heeft uitgevoerd met een onbemand luchtvaartuig (een drone), te weten een onbemand luchtvaartuig van het merk DJI en het type Mavic 2, terwijl </para>
+    <para>- niet was voldaan aan alle voorwaarden voor een vluchtuitvoering in de open categorie als bedoeld in art. 4 lid 1 van Uitvoeringsverordening 2019/947 en evenmin een exploitatievergunning voor een vluchtuitvoering in de specifieke categorie was aangevraagd of verkregen als bedoeld in art. 5 lid 1 van Uitvoeringsverordening 2019/947, en</para>
+    <para>- hij, verdachte, niet beschikte over de passende vaardigheden (gedefinieerd in een exploitatievergunning van de bevoegde autoriteit of in het standaardscenario van aanhangsel 1 van de bijlage bij voormelde uitvoeringsverordening) en evenmin een bewijs van die vaardigheden bij zich had terwijl hij de vlucht uitvoerde, </para>
+    <para />
+    <parablock>
+      <para>immers heeft hij, verdachte, als piloot op afstand toen en daar tussen omstreeks 01.00 uur en 01.30 uur met het onbemande luchtvaartuig een vlucht uitgevoerd </para>
+    </parablock>
+    <para>- zonder dat onbemande luchtvaartuig voortdurend in Visual Line Of Sight (VLOS) te houden (schending voorwaarde art. 4 lid 1 onder d van Uitvoeringsverordening 2019/947),</para>
+    <para />
+    <parablock>
+      <para>terwijl voor deze vlucht geen exploitatievergunning is afgegeven, en de bevoegde autoriteit aldus evenmin vaardigheden voor de piloot op afstand heeft vastgesteld in een exploitatievergunning en hij, verdachte, kennelijk niet over de vaardigheden beschikte als bedoeld in aanhangsel 1, althans niet over de vaardigheden om </para>
+    </parablock>
+    <para>- relevante gegevens te selecteren over de informatie over het luchtruim (waaronder geografische zones voor onbemande luchtvaartuigen, zoals de zone rondom de Penitentiaire Inrichting Heerhugowaard) (vaardigheid vermeld in aanhangsel 1, tabel 1 onder a, i en E) </para>
+    <para>- te waarborgen dat de gekozen lading compatibel is met het voor de vluchtuitvoering gebruikte onbemande luchtvaartuig (vaardigheid vermeld in aanhangsel 1, tabel 1 onder a, i en F) en/of </para>
+    <para>- te allen tijde scherp te blijven opletten en het onbemande luchtvaartuig binnen het gezichtsveld te houden (VLOS) zodat het situationeel bewustzijn van de locatie wordt behouden (vaardigheid vermeld in aanhangsel 1, tabel 1 onder b en i), en hij, verdachte, evenmin over een bewijs van die vaardigheden beschikte; </para>
+    <para />
+    <para>2.<?linebreak?>hij op 6 maart 2023 te Zuid-Scharwoude en Heerhugowaard buiten de daglichtperiode, namelijk tussen omstreeks 01.00 uur en 01.30 uur, een VFR-vlucht heeft uitgevoerd met een onbemand luchtvaartuig (een drone), te weten een onbemand luchtvaartuig van het merk DJI en het type Mavic 2.</para>
+    <para />
+    <parablock>
+      <para>Hetgeen onder 1 en 2 meer of anders is tenlastegelegd, is niet bewezen. De verdachte moet hiervan worden vrijgesproken.</para>
+    </parablock>
+    <para />
+    <parablock>
+      <para>Het bewezenverklaarde is gegrond op de feiten en omstandigheden die in de bewijsmiddelen zijn vervat, zoals deze na het eventueel instellen van beroep in cassatie zullen worden opgenomen in de op te maken aanvulling op dit arrest.</para>
+    </parablock>
+    <para />
+    <para />
+  </section>
+  <section>
+    <title>Strafbaarheid van het bewezenverklaarde</title>
+    <para />
+    <parablock>
+      <para>Geen omstandigheid is aannemelijk geworden die de strafbaarheid van het onder 1 en 2 bewezenverklaarde uitsluit, zodat dit strafbaar is.</para>
+    </parablock>
+    <para />
+    <parablock>
+      <para>Het onder 1 bewezenverklaarde levert op:</para>
+      <para>
+        <emphasis role="bold">handelen in strijd met hetgeen bij de uitvoeringsverordening (EU) 2019/947 is bepaald.</emphasis>
+      </para>
+    </parablock>
+    <para />
+    <parablock>
+      <para>Het onder 2 bewezenverklaarde levert op:</para>
+      <para>
+        <emphasis role="bold">overtreding van hetgeen is bepaald in artikel 18 lid 1 Besluit luchtverkeer 2014. </emphasis>
+      </para>
+    </parablock>
+    <para />
+  </section>
+  <section>
+    <title>Strafbaarheid van de verdachte</title>
+    <para />
+    <parablock>
+      <para>De verdachte is strafbaar, omdat geen omstandigheid aannemelijk is geworden die de strafbaarheid ten aanzien van het onder 1 en 2 bewezenverklaarde uitsluit.</para>
+    </parablock>
+    <para />
+    <para />
+  </section>
+  <section>
+    <title>Oplegging van straffen</title>
+    <para />
+    <parablock>
+      <para>De kantonrechter heeft de verdachte voor het in eerste aanleg bewezenverklaarde veroordeeld tot een taakstraf van 60 uur voor feit 1 en een taakstraf van 20 uur voor feit 2.</para>
+    </parablock>
+    <para />
+    <parablock>
+      <para>De advocaat-generaal heeft gevorderd dat de verdachte voor het tenlastegelegde zal worden veroordeeld tot een taakstraf van 40 uur voor feit 1 en een taakstraf van 20 uur voor feit 2.</para>
+    </parablock>
+    <para />
+    <parablock>
+      <para>Het hof heeft in hoger beroep de op te leggen straffen bepaald op grond van de ernst van de feiten en de omstandigheden waaronder deze zijn begaan en gelet op de persoon van de verdachte. Het hof heeft daarbij in het bijzonder het volgende in beschouwing genomen.</para>
+    </parablock>
+    <para />
+    <parablock>
+      <para>De verdachte heeft met een drone gevlogen zonder over de benodigde vergunning en (bewijs van) vaardigheden te beschikken. De overtreden bepalingen beogen de luchtvaartveiligheid te waarborgen en door hiermee in strijd te handelen, heeft de verdachte die veiligheid in het geding gebracht. </para>
+    </parablock>
+    <para />
+    <parablock>
+      <para>Uit een uittreksel uit de Justitiële Documentatie van 24 juni 2025 blijkt dat de verdachte na het begaan van de bewezenverklaarde feiten is veroordeeld tot onder meer een deels voorwaardelijke gevangenisstraf. Het hof houdt op grond van artikel 63 van het Wetboek van Strafrecht rekening met die veroordelingen. </para>
+    </parablock>
+    <para />
+    <parablock>
+      <para>Het hof acht, alles afwegende, een taakstraf van  40 uur voor feit 1 en 20 uur voor feit 2 passend en geboden.</para>
+    </parablock>
+    <para />
+    <para />
+  </section>
+  <section>
+    <title>Toepasselijke wettelijke voorschriften</title>
+    <para />
+    <parablock>
+      <para>De op te leggen straffen zijn gegrond op de artikelen 9, 22c, 22d, 62 en 63 van het Wetboek van Strafrecht, de artikelen 1.6, 5.5 en 11.9 van de Wet luchtvaart, de artikelen 18 en 33 van het Besluit luchtverkeer 2014, artikel 3.1 van de Regeling uitvoering en handhaving luchtvaartveiligheid en de artikelen 5 en 8 en UAS.SPEC.060 van Uitvoeringsverordening (EU) 2019/947.</para>
+    </parablock>
+    <para />
+    <para />
+  </section>
+  <section role="beslissing">
+    <title>BESLISSING</title>
+    <para />
+    <parablock>
+      <para>Het hof:</para>
+    </parablock>
+    <para />
+    <parablock>
+      <para>Vernietigt het vonnis waarvan beroep en doet opnieuw recht:</para>
+    </parablock>
+    <para />
+    <parablock>
+      <para>Verklaart zoals hiervoor overwogen bewezen dat de verdachte het onder 1 en 2 tenlastegelegde heeft begaan.</para>
+    </parablock>
+    <para />
+    <parablock>
+      <para>Verklaart niet bewezen hetgeen de verdachte meer of anders is tenlastegelegd dan hierboven is bewezenverklaard en spreekt de verdachte daarvan vrij.</para>
+    </parablock>
+    <para />
+    <parablock>
+      <para>Verklaart het onder 1 en 2 bewezenverklaarde strafbaar, kwalificeert dit als hiervoor vermeld en verklaart de verdachte strafbaar.</para>
+    </parablock>
+    <para />
+    <parablock>
+      <para>Ten aanzien van het onder 1 bewezenverklaarde:</para>
+    </parablock>
+    <para />
+    <parablock>
+      <para>Veroordeelt de verdachte tot een <emphasis role="bold">taakstraf</emphasis> voor de duur van <emphasis role="bold">40 (veertig) uren</emphasis>, indien niet naar behoren verricht te vervangen door <emphasis role="bold">20 (twintig) dagen hechtenis</emphasis>.</para>
+    </parablock>
+    <para />
+    <parablock>
+      <para>Ten aanzien van het onder 2 bewezenverklaarde:</para>
+    </parablock>
+    <para />
+    <parablock>
+      <para>Veroordeelt de verdachte tot een <emphasis role="bold">taakstraf</emphasis> voor de duur van <emphasis role="bold">20 (twintig) uren</emphasis>, indien niet naar behoren verricht te vervangen door <emphasis role="bold">10 (tien) dagen hechtenis</emphasis>.</para>
+    </parablock>
+    <para />
+    <para />
+    <parablock>
+      <para>Dit arrest is gewezen door de meervoudige economische kamer van het gerechtshof Amsterdam, waarin zitting hadden mr. A.M. Koolen – Zwijnenburg, mr. L.F. Roseval en mr. C. Beuze, in tegenwoordigheid van mr. R. Vosman, griffier, en is uitgesproken op de openbare terechtzitting van dit gerechtshof van </para>
+      <para>22 juli 2025.</para>
+    </parablock>
+    <para />
+    <parablock>
+      <para>Mr. A.M. Koolen – Zwijnenburg is buiten staat dit arrest mede te ondertekenen.</para>
+    </parablock>
+    <para />
+  </section>
+</uitspraak>
+</open-rechtspraak>

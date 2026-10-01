@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:eodi:esquema:1.3.0:documento_oficial",
+  "title": "Documento oficial leído",
+  "description": "Un documento de una autoridad leído por la recogida de fuentes oficiales de detalle: respuesta del gobierno en el parlamento, informe final de investigación, comunicado de cierre de una investigación policial, sentencia o estadística. Guarda los datos, nunca el texto: título, enlace, fecha, si habla de drones y lo que se sacó de él, cada dato con su frase literal y su confianza. Registro interno.",
+  "x-version": "1.3.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "fuente_detalle", "tipo", "autoridad", "pais", "idioma", "titulo", "enlace", "fecha", "estado", "control"],
+  "$defs": {
+    "tipo": {"enum": ["respuesta_parlamentaria", "informe_investigacion", "cierre_investigacion", "sentencia", "estadistica", "nota_oficial"]},
+    "dato": {
+      "description": "Un valor con la frase literal del documento de la que sale y la confianza de la extracción (1 si lo lee el código).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["valor", "frase", "confianza"],
+      "properties": {
+        "valor": {"x-visibilidad": "interno"},
+        "frase": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.3.0:comun#/$defs/frase_breve"},
+        "confianza": {"x-visibilidad": "interno", "type": "number", "minimum": 0, "maximum": 1}
+      }
+    }
+  },
+  "properties": {
+    "id": {"x-visibilidad": "interno", "type": "string", "pattern": "^[a-z0-9_]+:[A-Za-z0-9_.:/-]+$"},
+    "fuente_detalle": {"x-visibilidad": "interno", "description": "Fuente de configuracion/fuentes_detalle.json que lo leyó.", "type": "string", "minLength": 1},
+    "tipo": {"x-visibilidad": "interno", "$ref": "#/$defs/tipo"},
+    "autoridad": {"x-visibilidad": "interno", "type": "string", "minLength": 1},
+    "pais": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.3.0:comun#/$defs/pais"},
+    "idioma": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.3.0:comun#/$defs/idioma"},
+    "titulo": {"x-visibilidad": "interno", "type": "string", "minLength": 1},
+    "enlace": {"x-visibilidad": "interno", "type": "string", "pattern": "^https?://\\S+$"},
+    "fecha": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.3.0:comun#/$defs/fecha"},
+    "fiabilidad": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.3.0:comun#/$defs/fiabilidad"},
+    "credibilidad": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.3.0:comun#/$defs/credibilidad"},
+    "estado": {
+      "x-visibilidad": "interno",
+      "description": "sin_drones: no habla de drones en lo que interesa; pendiente: tiene pasajes que esperan al extractor; extraido: procesado; sin_datos: procesado sin ningún dato válido.",
+      "enum": ["sin_drones", "pendiente", "extraido", "sin_datos"]
+    },
+    "pasajes": {"x-visibilidad": "interno", "description": "Párrafos y tablas que se localizaron por palabras clave (cuántos y cuántas letras).", "type": "object", "additionalProperties": false, "properties": {
+      "numero": {"x-visibilidad": "interno", "type": "integer", "minimum": 0},
+      "letras": {"x-visibilidad": "interno", "type": "integer", "minimum": 0},
+      "huella": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.3.0:comun#/$defs/huella"}
+    }},
+    "sucesos": {
+      "x-visibilidad": "interno",
+      "description": "Incidentes concretos que cita el documento, con lo que dice de cada uno y su cruce con la base.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["datos", "cruce"],
+        "properties": {
+          "datos": {"x-visibilidad": "interno", "type": "object", "additionalProperties": {"$ref": "#/$defs/dato"}},
+          "cruce": {"x-visibilidad": "interno", "description": "existente: coincide con un incidente; nuevo: se dio de alta (solo respuestas parlamentarias); sin_incidente: no coincide con ninguno y el tipo de documento no da de alta; sin_lugar o sin_fecha: no se puede cruzar; varios: encaja con más de uno y no se enlaza; no_valido: el incidente nuevo no valida.", "enum": ["existente", "nuevo", "sin_incidente", "sin_lugar", "sin_fecha", "varios", "no_valido"]},
+          "incidente": {"x-visibilidad": "interno", "type": "string", "pattern": "^EODI-\\d{4}-\\d{5}$"},
+          "punto": {
+            "x-visibilidad": "interno",
+            "description": "Lugar del suceso situado con el nomenclátor, como en las noticias.",
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["lat", "lon", "radio_km"],
+            "properties": {
+              "lat": {"x-visibilidad": "interno", "type": "number", "minimum": -90, "maximum": 90},
+              "lon": {"x-visibilidad": "interno", "type": "number", "minimum": -180, "maximum": 180},
+              "radio_km": {"x-visibilidad": "interno", "type": "number", "minimum": 0.1, "maximum": 50}
+            }
+          },
+          "motivos": {"x-visibilidad": "interno", "type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "estadisticas": {"x-visibilidad": "interno", "description": "Estadísticas oficiales que salen de él.", "type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^EST-[0-9a-f]{16}$"}},
+    "descartados": {"x-visibilidad": "interno", "description": "Datos que no pasaron la validación, con su motivo.", "type": "array", "items": {"type": "string"}},
+    "control": {
+      "x-visibilidad": "interno",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["alta"],
+      "properties": {
+        "alta": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.3.0:comun#/$defs/instante"},
+        "extraido": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.3.0:comun#/$defs/instante"},
+        "metodo": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.3.0:comun#/$defs/metodo"},
+        "version_extractor": {"x-visibilidad": "interno", "type": "string", "minLength": 1}
+      }
+    }
+  }
+}

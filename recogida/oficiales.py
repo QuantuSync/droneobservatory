@@ -17,6 +17,7 @@ import contextlib
 import copy
 import json
 import logging
+import os
 import re
 import xml.etree.ElementTree as ET
 from collections import Counter
@@ -35,13 +36,15 @@ from proceso import incidentes
 from proceso.credibilidad import Credibilidad
 from proceso.estados import Estado, TransicionNoPermitida, transitar
 from proceso.noticias import filtro, lugar, lugar_del_suceso, nomenclator
-from recogida import paginas_oficiales
+from recogida import navegador, paginas_oficiales
 from recogida.descarga import AGENTE_EODI, Descargador, DescargaFallida
 from recogida.plazo import Plazo, TiempoAgotado
 
 registro = logging.getLogger(__name__)
 
 DIRECTORIO = Path(__file__).resolve().parent.parent / "configuracion"
+# Carpeta de datos de las fuentes de detalle en el servidor (servidor/configuracion.sh).
+VARIABLE_DATOS_DETALLE = "EODI_DETALLE_DATOS"
 MAX_PALABRAS_FRASE = 25
 # Tope de tiempo por ejecución. Leer todas las fuentes tarda de 90 a 97 s (medido del 28
 # al 30 de septiembre de 2026); 240 s son dos veces y media. Las notas se leen enteras en
@@ -85,6 +88,11 @@ class Recuentos:
             f"confirmadas={self.confirmadas} bloqueadas={self.bloqueadas} "
             f"sin_leer={self.sin_leer}"
         )
+
+
+def carpeta_renders() -> Path:
+    """Donde deja el temporizador de las fuentes de detalle las listas renderizadas."""
+    return Path(os.environ.get(VARIABLE_DATOS_DETALLE, "data/detalle")) / "paginas_js"
 
 
 @cache
@@ -208,9 +216,13 @@ def enlazar(almacen: Almacen, nota: Nota, ahora: datetime, modelos: frozenset[st
     return str(incidente["id"])
 
 
-def leer_pagina(descargador: Descargador, lector: RobotFileParser, fuente: Documento) -> list[Nota]:
-    """Las notas de la página de noticias que pueden hablar de drones."""
-    html = descargador.texto(fuente["url"], lambda t: "<" in t)
+def leer_pagina(
+    descargador: Descargador, lector: RobotFileParser, fuente: Documento, html: str | None = None
+) -> list[Nota]:
+    """Las notas de la página de noticias que pueden hablar de drones. Con `html`, la lista ya
+    renderizada (fuentes que la cargan con JavaScript, recogida/navegador.py)."""
+    if html is None:
+        html = descargador.texto(fuente["url"], lambda t: "<" in t)
     candidatas = [
         (direccion, titulo)
         for direccion, titulo in paginas_oficiales.enlaces(html, fuente)
@@ -227,6 +239,9 @@ def leer_pagina(descargador: Descargador, lector: RobotFileParser, fuente: Docum
         if leido is None:
             continue
         fecha, precision, texto = leido
+        if fuente.get("titulo_nota"):
+            # La lista no trae el título («Läs mer»): se toma el de la propia nota.
+            titulo = paginas_oficiales.leer(articulo).meta.get("og:title") or titulo
         id_ = paginas_oficiales.identificador(fuente, direccion)
         notas.append(Nota(fuente, id_, titulo, direccion, fecha, texto, precision))
     return notas
@@ -250,6 +265,15 @@ def recoger(
     try:
         if fuente["tipo"] == "pagina":
             notas = leer_pagina(descargador, lector, fuente)
+        elif fuente["tipo"] == navegador.TIPO:
+            # La lista la renderiza el temporizador de las fuentes de detalle; si no hay un
+            # render reciente, la fuente queda sin leer en esta ejecución.
+            html = navegador.guardado(fuente, carpeta_renders(), ahora)
+            if html is None:
+                recuentos.bloqueadas += 1
+                motivos["sin_render"] += 1
+                return
+            notas = leer_pagina(descargador, lector, fuente, html)
         else:
             notas = leer_rss(descargador.texto(fuente["url"], lambda t: "<rss" in t[:200]), fuente)
     except (DescargaFallida, ET.ParseError, ValueError):

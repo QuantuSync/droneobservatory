@@ -1,0 +1,98 @@
+{
+ "numFound": 3,
+ "documents": [
+  {
+   "id": "338837",
+   "beratungsstand": "Beantwortet",
+   "vorgangstyp": "Kleine Anfrage",
+   "sachgebiet": [
+    "Innere Sicherheit"
+   ],
+   "typ": "Vorgang",
+   "wahlperiode": 21,
+   "initiative": [
+    "Fraktion DIE LINKE"
+   ],
+   "aktualisiert": "2026-09-28T07:12:25+02:00",
+   "deskriptor": [
+    {
+     "fundstelle": false,
+     "name": "Bundespolizei",
+     "typ": "Institutionen"
+    },
+    {
+     "fundstelle": false,
+     "name": "Gefahrenabwehr",
+     "typ": "Sachbegriffe"
+    },
+    {
+     "fundstelle": false,
+     "name": "Personalausstattung",
+     "typ": "Sachbegriffe"
+    },
+    {
+     "fundstelle": false,
+     "name": "Unbemanntes Fluggerät",
+     "typ": "Sachbegriffe"
+    }
+   ],
+   "titel": "Aktueller Stand der Drohnenabwehr in Deutschland im Geschäftsbereich der Bundesregierung",
+   "datum": "2026-09-22"
+  },
+  {
+   "id": "332718",
+   "beratungsstand": "Beantwortet",
+   "vorgangstyp": "Schriftliche Frage",
+   "typ": "Vorgang",
+   "wahlperiode": 21,
+   "aktualisiert": "2026-07-21T14:39:54+02:00",
+   "deskriptor": [
+    {
+     "fundstelle": true,
+     "name": "Schleswig-Holstein",
+     "typ": "Geograph. Begriffe"
+    },
+    {
+     "fundstelle": false,
+     "name": "Sicherheitsbehörde",
+     "typ": "Sachbegriffe"
+    },
+    {
+     "fundstelle": true,
+     "name": "Unbemanntes Fluggerät",
+     "typ": "Sachbegriffe"
+    }
+   ],
+   "titel": "Unerlaubte Drohnenüberflüge über Schleswig-Holstein zwischen den Jahren 2022 und 2025",
+   "datum": "2026-03-13"
+  },
+  {
+   "id": "326997",
+   "beratungsstand": "Beantwortet",
+   "vorgangstyp": "Mündliche Frage",
+   "typ": "Vorgang",
+   "wahlperiode": 21,
+   "aktualisiert": "2026-01-13T07:50:56+01:00",
+   "deskriptor": [
+    {
+     "fundstelle": false,
+     "name": "Luftverkehr",
+     "typ": "Sachbegriffe"
+    },
+    {
+     "fundstelle": false,
+     "name": "Spionage",
+     "typ": "Sachbegriffe"
+    },
+    {
+     "fundstelle": true,
+     "name": "Unbemanntes Fluggerät",
+     "typ": "Sachbegriffe"
+    }
+   ],
+   "titel": "Flugbehinderungen durch Drohnen seit 2022",
+   "datum": "2025-10-15"
+  }
+ ],
+ "cursor": "fin"
+}

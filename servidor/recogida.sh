@@ -95,6 +95,8 @@ principal() {
   done < "$EXTRACTOR"
   # Los CSV de FIRMS, en el disco del servidor (recogida/firms.py).
   export EODI_FIRMS_DATOS="$FIRMS_DATOS"
+  # Lo que dejan las fuentes oficiales de detalle (recogida/detalle.py), para incorporarlo.
+  export EODI_DETALLE_DATOS="$DETALLE_DATOS"
 
   GIT_SSH_COMMAND="$ssh_base -i $DESPLIEGUE_DATOS" \
     "$python" -m recogida.horaria --correo "$CORREO" --repositorio "$URL_DATOS" \

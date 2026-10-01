@@ -1,0 +1,46 @@
+{
+ "numFound": 1,
+ "documents": [
+  {
+   "id": "688911",
+   "vorgangsposition": "Schriftliche Frage/Schriftliche Antwort",
+   "zuordnung": "BT",
+   "gang": true,
+   "fortsetzung": false,
+   "nachtrag": false,
+   "vorgangstyp": "Schriftliche Frage",
+   "titel": "Unerlaubte Drohnenüberflüge über Schleswig-Holstein zwischen den Jahren 2022 und 2025",
+   "typ": "Vorgangsposition",
+   "aktivitaet_anzahl": 2,
+   "dokumentart": "Drucksache",
+   "aktualisiert": "2026-06-02T09:08:16+02:00",
+   "fundstelle": {
+    "id": "285795",
+    "dokumentnummer": "21/4657",
+    "datum": "2026-03-13",
+    "verteildatum": "2026-03-18",
+    "dokumentart": "Drucksache",
+    "drucksachetyp": "Schriftliche Fragen",
+    "herausgeber": "BT",
+    "urheber": [],
+    "pdf_url": "https://dserver.bundestag.de/btd/21/046/2104657.pdf",
+    "frage_nummer": "52"
+   },
+   "aktivitaet_anzeige": [
+    {
+     "aktivitaetsart": "Frage",
+     "titel": "Stefan Seidler, MdB, fraktionslos",
+     "pdf_url": "https://dserver.bundestag.de/btd/21/046/2104657.pdf"
+    },
+    {
+     "aktivitaetsart": "Antwort",
+     "titel": "Christoph de Vries, Parl. Staatssekr., Bundesministerium des Innern",
+     "pdf_url": "https://dserver.bundestag.de/btd/21/046/2104657.pdf"
+    }
+   ],
+   "datum": "2026-03-13",
+   "vorgang_id": "332718"
+  }
+ ],
+ "cursor": "x"
+}

@@ -31,7 +31,7 @@ from exportacion.publicar import modelos, publicar
 from proceso import focos_termicos, incursiones, presencia, solapes
 from proceso.ataques import SENTIDO_UA_RU
 from proceso.extraccion import Parada
-from recogida import extractor, firms, gdelt, oficiales
+from recogida import detalle, extractor, firms, gdelt, oficiales
 from recogida.cache import CachePaginas
 from recogida.descarga import Descargador, DescargaFallida
 from recogida.ejecucion import SinCursor, ejecutar
@@ -106,6 +106,22 @@ def paso_firms(almacen: Almacen, ahora: datetime) -> EstadoFuente:
     return EstadoFuente(estado, lectura.ultima_correcta)
 
 
+def paso_detalle(almacen: Almacen, ahora: datetime) -> dict[str, EstadoFuente]:
+    """Incorporación de las fuentes oficiales de detalle. Nada de lo que falle aquí sale de esta
+    función: queda en el registro y sus fuentes, con aviso en estado.json."""
+    leidas = detalle.estados()
+    try:
+        hecho = detalle.incorporar(almacen, ahora, modelos(almacen), plazo=Plazo(detalle.TOPE_S))
+        registro.info("fuentes de detalle: %s", hecho.texto())
+    except Exception as error:
+        registro.warning("fuentes de detalle no incorporadas: %s", str(error)[:300])
+        return {
+            grupo: EstadoFuente(CON_AVISO if e.estado == LEIDA else e.estado, e.ultimo_dato)
+            for grupo, e in leidas.items()
+        }
+    return leidas
+
+
 def principal(argumentos: list[str] | None = None) -> int:
     opciones = argparse.ArgumentParser(description=__doc__)
     opciones.add_argument("--correo", required=True, help="correo del autor del commit de estado")
@@ -176,6 +192,10 @@ def principal(argumentos: list[str] | None = None) -> int:
             else CON_AVISO
         )  # fmt: skip
         estados["extractor"] = EstadoFuente(estado_extractor, ultima_llamada(almacen))
+        # Fuentes oficiales de detalle: lo que dejó en disco su temporizador entra en la base y
+        # se cruza con los incidentes; lo nuevo se extrae con lo que deje del límite diario el
+        # extractor de noticias. Como FIRMS, no cambia el código de salida.
+        estados.update(paso_detalle(almacen, ahora))
         # Anomalías térmicas: no cambian el código de salida.
         estados[firms.FUENTE_ID] = paso_firms(almacen, ahora)
         # Presencia del dron que confirman las declaraciones oficiales ya guardadas: la regla

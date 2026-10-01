@@ -1,0 +1,137 @@
+{
+ "cases": [
+  {
+   "documents": [
+    {
+     "id": "12329",
+     "displayTitle": "Domsresume",
+     "revokedDateTime": null,
+     "matchScore": 1,
+     "documentType": {
+      "enumValue": 4,
+      "displayText": "Domsresumé"
+     },
+     "verdictDateTime": null,
+     "ecli": null,
+     "references": [],
+     "style": null,
+     "numPages": 0,
+     "firstPageHtml": null,
+     "displayAsPdfInsteadOfHtml": false
+    },
+    {
+     "id": "12328",
+     "displayTitle": "Dom",
+     "revokedDateTime": null,
+     "matchScore": 1,
+     "documentType": {
+      "enumValue": 1,
+      "displayText": "Dom"
+     },
+     "verdictDateTime": "2025-09-09T07:00:00",
+     "ecli": "ECLI:DK:HJR:2025:BS0000001523",
+     "references": [
+      {
+       "markingId": "a5b63c48-aedf-430f-8a73-08de32fff269",
+       "content": "THI KENDES FOR RET",
+       "type": 6
+      }
+     ],
+     "style": null,
+     "numPages": 0,
+     "firstPageHtml": null,
+     "displayAsPdfInsteadOfHtml": false
+    }
+   ],
+   "caseSubjects": [
+    {
+     "enumValue": 15,
+     "displayText": "Forsikring"
+    }
+   ],
+   "caseTags": [],
+   "headline": "2 sager om regres ved erstatning for skade ved færdselsuheld i udlandet forvoldt af udenlandsk indregistreret sættevognstrækker med dansk indregistreret sættevogn",
+   "hasHorizontalCotreatment": true,
+   "hasVerticalCotreatment": true,
+   "profession": {
+    "enumValue": 1,
+    "displayText": "Civilsag"
+   },
+   "instance": {
+    "enumValue": 3,
+    "displayText": "3. instans"
+   },
+   "caseType": {
+    "enumValue": 1,
+    "displayText": "Almindelig civil sag"
+   },
+   "id": "10466",
+   "revokedDateTime": null,
+   "courtCaseNumber": "BS-21201/2022-HJR",
+   "officeAbbreviation": "HJR",
+   "officeName": "Højesteret"
+  },
+  {
+   "documents": [
+    {
+     "id": "3764",
+     "displayTitle": "Dom",
+     "revokedDateTime": null,
+     "matchScore": 1,
+     "documentType": {
+      "enumValue": 1,
+      "displayText": "Dom"
+     },
+     "verdictDateTime": "2022-05-06T08:00:00",
+     "ecli": "ECLI:DK:OLR:2023:BS0000002169",
+     "references": [
+      {
+       "markingId": "01d9d07c-21fa-49f9-f700-08db461b5261",
+       "content": "THI KENDES FOR RET:",
+       "type": 6
+      }
+     ],
+     "style": null,
+     "numPages": 0,
+     "firstPageHtml": null,
+     "displayAsPdfInsteadOfHtml": false
+    }
+   ],
+   "caseSubjects": [
+    {
+     "enumValue": 15,
+     "displayText": "Forsikring"
+    },
+    {
+     "enumValue": 20,
+     "displayText": "International ret"
+    }
+   ],
+   "caseTags": [],
+   "headline": "Sag om regreskrav i forbindelse med skader forvoldt ved færdselsuheld i udlandet af vogntog bestående af udenlandsk indregistrerede sættevognstrækkere  og dansk indregistrerede sættevogne",
+   "hasHorizontalCotreatment": true,
+   "hasVerticalCotreatment": true,
+   "profession": {
+    "enumValue": 1,
+    "displayText": "Civilsag"
+   },
+   "instance": {
+    "enumValue": 2,
+    "displayText": "2. instans"
+   },
+   "caseType": {
+    "enumValue": 1,
+    "displayText": "Almindelig civil sag"
+   },
+   "id": "3168",
+   "revokedDateTime": null,
+   "courtCaseNumber": "BS-3242/2019-OLR",
+   "officeAbbreviation": "OLR",
+   "officeName": "Østre Landsret"
+  }
+ ],
+ "totalCount": 313,
+ "pageCount": 7,
+ "currentPage": 1,
+ "pageSize": 50
+}

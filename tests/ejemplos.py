@@ -120,6 +120,14 @@ def incidente_completo() -> Documento:
             "fallecidos": {"min": 0, "max": 0},
         },
         "foco_termico": foco_termico(),
+        "detalle_oficial": {
+            "inicio": instante("2025-10-01T20:25Z"),
+            "punto": {"lat": 55.61, "lon": 12.64},
+            "radio_km": 2.0,
+            "numero": {"min": 4, "max": 4},
+            "medidas": ["cierre_espacio_aereo"],
+        },
+        "encuentros": ["UKAB-2025022"],
         "respuesta": {
             "medidas": ["cierre_espacio_aereo", "patrulla"],
             "deteccion": ["radar", "piloto"],
@@ -132,7 +140,12 @@ def incidente_completo() -> Documento:
         },
         "fuentes": [
             fuente("F1", "B"),
-            fuente("F2", "A", es_autoridad=True),
+            {
+                **fuente("F2", "A", es_autoridad=True),
+                "metodo": "parser",
+                "documento_oficial": "UKAB-2025022",
+                "campos_respaldados": ["detalle_oficial", "estado"],
+            },
             fuente("F3", "E", publica=False),
             fuente("F4", "C", publica=False, interna_fuera_de_ucrania=True),
         ],
@@ -273,4 +286,106 @@ def episodio() -> Documento:
         "titulo": {"es": "Noche de drones", "en": "Night of drones"},
         "noche": "2025-10-01",
         "incidentes": ["EODI-2025-00001"],
+    }
+
+
+def encuentro() -> Documento:
+    """Un encuentro con aeronave de la UK Airprox Board, con los datos del informe 2025022."""
+    return {
+        "id": "UKAB-2025022",
+        "autoridad": "UK Airprox Board",
+        "numero": "2025022",
+        "enlace": "https://www.airproxboard.org.uk/Documents/Download/2501/x/3600",
+        "catalogo": "https://www.airproxboard.org.uk/Documents/Download/2501/x/4178",
+        "reunion": "2025-04-23",
+        "instante": instante("2025-03-03T12:15Z"),
+        "luz": "Daylight",
+        "pais": "GB",
+        "posicion": {"punto": {"lat": 52.08333, "lon": -1.21667}, "descripcion": "5NM E Banbury"},
+        "altitud": {"pies": 375, "texto": "375ft", "referencia": "sin_referencia"},
+        "espacio_aereo": {"clase": "G", "nombre": "London FIR"},
+        "aeronave": {
+            "tipo": "OTHER - Military - Atlas A400M",
+            "categoria": "Fixed Wing - Aeroplane",
+        },
+        "objeto": {
+            "clasificacion": "Drone",
+            "categoria_catalogo": "RPAS/UAS",
+            "tipo_catalogo": "OTHER - UAS/RPAS",
+            "descripcion": (
+                "a grey quadcopter type UAS was observed to pass over the top of the aircraft"
+            ),
+            "clase": "multirrotor_pequeno",
+            "altura_m": {"min": 99.06, "max": 129.54},
+        },
+        "separacion": {
+            "texto": "50ft V/0m H",
+            "vertical_m": {"min": 15.24, "max": 15.24},
+            "horizontal_m": {"min": 0, "max": 0},
+        },
+        "riesgo_notificado": "Medium",
+        "categoria_riesgo": "A",
+        "fuente": {
+            "medio": "UK Airprox Board",
+            "fiabilidad": "A",
+            "credibilidad": 2,
+            "licencia": "Open Government Licence v3.0",
+        },
+        "procedencia": {
+            "instante": {"origen": "oficial", "metodo": "parser", "fuentes": ["UKAB-2025022"]},
+        },
+        "control": {"alta": instante("2025-12-01T10:00Z"), "lector": "airprox/1"},
+    }
+
+
+def documento_oficial() -> Documento:
+    return {
+        "id": "bundestag_dip:21/1234",
+        "fuente_detalle": "bundestag_dip",
+        "tipo": "respuesta_parlamentaria",
+        "autoridad": "Bundesregierung",
+        "pais": "DE",
+        "idioma": "de",
+        "titulo": "Drohnenüberflüge über Liegenschaften der Bundeswehr",
+        "enlace": "https://dserver.bundestag.de/btd/21/012/2101234.pdf",
+        "fecha": "2025-11-20",
+        "fiabilidad": "A",
+        "credibilidad": 1,
+        "estado": "extraido",
+        "pasajes": {"numero": 2, "letras": 1800},
+        "sucesos": [],
+        "estadisticas": ["EST-0123456789abcdef"],
+        "control": {"alta": instante("2025-12-01T10:00Z"), "metodo": "extractor"},
+    }
+
+
+def estadistica_oficial() -> Documento:
+    return {
+        "id": "EST-0123456789abcdef",
+        "autoridad": "Bundesregierung",
+        "pais_autoridad": "DE",
+        "documento": {
+            "id": "bundestag_dip:21/1234",
+            "tipo": "respuesta_parlamentaria",
+            "enlace": "https://dserver.bundestag.de/btd/21/012/2101234.pdf",
+            "fecha": "2025-11-20",
+        },
+        "periodo": {"inicio": "2025-01-01", "fin": "2025-09-30"},
+        "ambito": {"pais": "DE", "categoria": "base_militar"},
+        "metrica": "sobrevuelos",
+        "cifra": {"min": 536, "max": 536},
+        "frase": (
+            "Im Jahr 2025 wurden bislang 536 Drohnenüberflüge über Liegenschaften der "
+            "Bundeswehr gemeldet."
+        ),
+        "confianza": 0.95,
+        "fuente": {"medio": "Bundesregierung", "fiabilidad": "A", "credibilidad": 1},
+        "procedencia": {
+            "cifra": {
+                "origen": "oficial",
+                "metodo": "extractor",
+                "fuentes": ["bundestag_dip:21/1234"],
+            }
+        },
+        "control": {"alta": instante("2025-12-01T10:00Z")},
     }

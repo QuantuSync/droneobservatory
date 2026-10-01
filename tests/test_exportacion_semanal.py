@@ -42,6 +42,7 @@ def incidente_con_fuente_e() -> Documento:
 # ninguna fuente dice (sin fuente, un valor no se exporta: no tendría origen).
 RESPALDA_F2 = [
     "consecuencias",
+    "detalle_oficial",
     "drones",
     "estado",
     "lugar.localidad",
@@ -330,3 +331,47 @@ def test_la_salud_escribe_las_dos_salidas(tmp_path: Path, monkeypatch: pytest.Mo
     texto = salida.read_text(encoding="utf-8")
     assert "problema=false" in texto
     assert "problema_exportacion=true" in texto
+
+
+def con_registros_de_detalle() -> Almacen:
+    almacen = poblado()
+    almacen.guardar_encuentro(ejemplos.encuentro(), AHORA)
+    estadistica = ejemplos.estadistica_oficial()
+    estadistica["ambito"] = {"pais": "DK", "categoria": "aeropuerto"}
+    estadistica["periodo"] = {"inicio": "2025-10-01", "fin": "2025-10-31"}
+    almacen.guardar_estadistica_oficial(estadistica, AHORA)
+    almacen.guardar_documento_oficial(ejemplos.documento_oficial(), AHORA)
+    return almacen
+
+
+def test_los_registros_de_detalle_salen_en_sus_ficheros_con_su_esquema() -> None:
+    ficheros = por_nombre(semanal.generar(con_registros_de_detalle()))
+    for nombre, esquema in (
+        ("encuentros.jsonl", "esquema/eodi/encuentro.schema.json"),
+        ("estadisticas_oficiales.jsonl", "esquema/eodi/estadistica_oficial.schema.json"),
+        ("documentos_oficiales.jsonl", "esquema/eodi/documento_oficial.schema.json"),
+    ):
+        assert ficheros[nombre].esquema == esquema and ficheros[nombre].registros == 1
+        assert esquema in ficheros
+    (encuentro,) = lineas(ficheros["encuentros.jsonl"])
+    assert encuentro == ejemplos.encuentro()
+
+
+def test_las_frecuencias_ponen_cada_cifra_oficial_junto_a_lo_que_recoge_el_observatorio() -> None:
+    datos = json.loads(
+        por_nombre(semanal.generar(con_registros_de_detalle()))["frecuencias.json"].contenido
+    )
+    (referencia,) = datos["sesgo_cobertura"]["referencias_oficiales"]
+    assert referencia["cifra"] == {"min": 536, "max": 536}
+    # El incidente de aeropuerto en Dinamarca de octubre de 2025.
+    assert referencia["incidentes_observatorio"] == 1
+    assert datos["sesgo_cobertura"]["correccion"] == "ninguna"
+
+
+def test_el_vocabulario_lleva_las_metricas_de_las_estadisticas() -> None:
+    vocabulario = json.loads(por_nombre(semanal.generar(poblado()))["vocabulario.json"].contenido)
+    assert set(vocabulario["metricas_estadistica"]) >= {
+        "avistamientos",
+        "sobrevuelos",
+        "encuentros",
+    }

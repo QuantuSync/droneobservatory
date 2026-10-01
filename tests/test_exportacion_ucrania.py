@@ -44,8 +44,14 @@ def test_la_lista_cerrada_solo_contiene_campos_publicos_del_esquema() -> None:
 
 def test_el_ejemplo_rellena_todos_los_campos_internos() -> None:
     presentes = set(rutas(ataque_con_fuente_interna()))
-    # El motivo solo lo lleva un foco no detectado, que nunca sale: tiene su propio test.
-    internos = VISIBILIDAD[Visibilidad.INTERNO] - {"regiones[].foco_termico.motivo"}
+    # El motivo solo lo lleva un foco no detectado, que nunca sale: tiene su propio test. El
+    # método y el documento de la fuente solo los llevan las fuentes oficiales de detalle,
+    # que no llegan a la capa de Ucrania.
+    internos = VISIBILIDAD[Visibilidad.INTERNO] - {
+        "regiones[].foco_termico.motivo",
+        "fuentes[].metodo",
+        "fuentes[].documento_oficial",
+    }
     assert internos - presentes == set()
 
 

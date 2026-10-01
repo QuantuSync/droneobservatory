@@ -1,0 +1,67 @@
+{
+ "results": [
+  {
+   "title": "AAIB investigation to Skymagic X245, (UAS registration n/a)",
+   "link": "/aaib-reports/aaib-investigation-to-skymagic-x245-uas-registration-n-slash-a",
+   "public_timestamp": "2026-08-13T08:56:37Z",
+   "description": "Loss of positional accuracy during UAS swarm display, London Eye Pier, South Bank, 23 March 2026",
+   "aircraft_category": [
+    "unmanned-aircraft-systems"
+   ],
+   "date_of_occurrence": "2026-03-23",
+   "report_type": [
+    "correspondence-investigation"
+   ],
+   "aircraft_type": "Skymagic X245",
+   "index": "govuk",
+   "es_score": null,
+   "_id": "/aaib-reports/aaib-investigation-to-skymagic-x245-uas-registration-n-slash-a",
+   "elasticsearch_type": "aaib_report",
+   "document_type": "aaib_report"
+  },
+  {
+   "title": "AAIB investigation to Cagatay CGT-50, (UAS registration n/a)",
+   "link": "/aaib-reports/aaib-investigation-to-cagatay-cgt-50-uas-registration-n-slash-a",
+   "public_timestamp": "2026-04-16T09:02:57Z",
+   "description": "Right wing separated from airframe in-flight, Radnor Range, Powys, 5 October 2023",
+   "aircraft_category": [
+    "unmanned-aircraft-systems"
+   ],
+   "date_of_occurrence": "2023-10-05",
+   "report_type": [
+    "field-investigation"
+   ],
+   "aircraft_type": "Cagatay CGT-50",
+   "index": "govuk",
+   "es_score": null,
+   "_id": "/aaib-reports/aaib-investigation-to-cagatay-cgt-50-uas-registration-n-slash-a",
+   "elasticsearch_type": "aaib_report",
+   "document_type": "aaib_report"
+  },
+  {
+   "title": "AAIB investigation to Experimental Drone Variant 4J, (UAS registration n/a)",
+   "link": "/aaib-reports/experimental-drone-variant-4j-uas-registration-n-slash-a",
+   "public_timestamp": "2026-04-09T09:00:19Z",
+   "description": "Loss of navigational control, emergency flight termination, Salisbury Plain Training Area, Wiltshire, 11 December 2025",
+   "aircraft_category": [
+    "unmanned-aircraft-systems"
+   ],
+   "date_of_occurrence": "2025-12-11",
+   "report_type": [
+    "correspondence-investigation"
+   ],
+   "aircraft_type": "Experimental Drone Variant 4J",
+   "index": "govuk",
+   "es_score": null,
+   "_id": "/aaib-reports/experimental-drone-variant-4j-uas-registration-n-slash-a",
+   "elasticsearch_type": "aaib_report",
+   "document_type": "aaib_report"
+  }
+ ],
+ "total": 95,
+ "start": 0,
+ "aggregates": {},
+ "suggested_queries": [],
+ "suggested_autocomplete": [],
+ "es_cluster": "A"
+}

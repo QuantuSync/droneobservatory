@@ -1,0 +1,216 @@
+Consolidated Drone/Balloon/Model/Unknown Object Report Sheet for UKAB Meeting on 24th May 2017 
+ 
+Total Risk A Risk B Risk C Risk D Risk E 
+22 5 9 5 2 1 
+ 
+Airprox 
+Number 
+Date 
+Time (UTC) 
+Aircraft 
+(Operator) Object 
+Location 
+Description 
+Altitude 
+Airspace 
+(Class) 
+Pilot/Controller Report 
+Reported Separation 
+Reported Risk 
+Cause/Risk Statement ICAO 
+Risk 
+2017004 5 Jan 17 
+1212 
+C152 
+(Civ Pte) 
+ 
+Drone 5118N 00032W 
+1.5nm SE Woking 
+310ft agl 
+London FIR 
+(G) 
+THE DRONE PILOT reports conducting an aerial 
+survey of a building. Fairoaks aerodrome, Woking 
+police and HMP Send had previously been 
+contacted to advise them of the activity.  Fairoaks 
+were re-contacted on the morning of flight and the 
+drone operator was  asked to advise when 
+finished. On the second sortie around the building 
+he heard an aircraft approaching from behind, 
+heading toward the drone . The operator saw a 
+white/cream colour ed, high- wing, single- engine 
+aircraft. He started to descend the drone but then 
+stopped because he could not assess whether he 
+was descending into the flight -path of the 
+approaching aircraft. The aircraft passed over the 
+drone.  
+ 
+THE C152 PILOT reports transiting the area at 
+1100ft altitude. He did not see a drone. 
+Cause: The drone was entitled to operate at 
+that location and altitude, and was not 
+endangering other aircraft by , for example,  
+being flown in proximit y to airfield approach 
+paths. T he Board commended the drone pilot 
+for reporting the Airprox and agreed that he had 
+been conce rned due to his perception of the 
+C152 aircraft’s altitude but that the radar 
+analysis showed it was at an altitude which 
+provided adequate separation from the drone. 
+The incident was therefore best described as  a 
+sighting report. 
+ 
+Risk: The Board consider ed that the drone’s 
+separation, allied to the operator’s  ability to 
+avoid the C152 portrayed a situation where  
+normal procedures and/or safety standards had 
+applied. 
+E 
+2017007 2 Jan 17 
+1450 
+A320 
+(CAT) 
+Drone 5124N 00004W 
+5nm NW BIG VOR 
+6000ft 
+London TMA 
+(A) 
+THE A320 PILOT  reports that they had reached 
+the initial SID altitude when the first officer noticed 
+a ‘regular-sized’, light grey quadcopter type drone 
+a few hundred meters away  in the 1 o’clock 
+position which passed down the right hand side of 
+the aircraft.  
+ 
+Reported Separation: 300ft V/200m H 
+Reported Risk of Collision: Medium 
+Cause: The drone  was being flown beyond 
+VLOS limits and was endangering other aircraft 
+at that location and altitude. The Board agreed 
+that t he incident was therefore best described 
+as the drone was flown into conflict with the 
+A320. 
+ 
+Risk: The Board considered that the pilot’s 
+estimate of separation, allied to his overall 
+account of the incident and his ability  to avoid 
+the object portrayed a situation where although 
+safety had been compromised, there had been 
+no risk of collision. 
+C 
+Airprox 
+Number 
+Date 
+Time (UTC) 
+Aircraft 
+(Operator) Object 
+Location 
+Description 
+Altitude 
+Airspace 
+(Class) 
+Pilot/Controller Report 
+Reported Separation 
+Reported Risk 
+Cause/Risk Statement ICAO 
+Risk 
+2017008 21 Jan 17 
+1615 
+S92 
+(SAR) 
+Drone 5311N 00413W 
+Menai Strait 
+500ft 
+London FIR 
+(G) 
+THE S92 PILOT reports en-route from Bangor 
+Hospital to Caernarfon when a black quadcopter 
+drone was seen. The aircraft was turned away 
+and continued to base. 
+ 
+Reported Separation: 0ft V/200m H 
+Reported Risk of Collision: High 
+Cause: The drone  was entitled to operate at 
+that location and altitude, and was not 
+endangering other aircraft by being flown in 
+proximity to airfield approach paths etc, and so 
+the Board agreed that the incident was 
+therefore best described as  a conflict in Class 
+G. 
+ 
+Risk: T he Board considered that the pilot’s 
+estimate of separation, allied to his overall 
+account of the incident portrayed a situation 
+where although safety had been compromised, 
+there had been no risk of collision. 
+C 
+2017009 22 Jan 17 
+1437 
+Bell 206 
+(Civ Comm) 
+Drone 5129N 00007W 
+Vauxhall Bridge 
+1300ft 
+London CTR 
+(D) 
+THE BELL  206 PILOT reports that whilst on 
+Heliroute H4 at Vauxhall Bridge, he encountered 
+a drone at the same altitude, approx 200ft away. 
+ 
+Reported Separation: 0ft V/200ft H 
+ 
+THE LTCC RADAR CONTROLLER reports that 
+at about 1437Z the Bell 206 pilot on Heliroute H4 
+reported a drone encounter.  He reported it as 
+being black and at approx 1500ft in the vicinity of 
+the Oval cricket stadium.  
+Other aircraft in the 
+vicinity were warne d, but no further reports were 
+received. 
+Cause: The drone was being flown beyond 
+practical VLOS limits and was endangering 
+other aircraft at that location and altitude. The 
+Board agreed that the incident was therefore 
+best described as the drone was flown into 
+conflict with the Bell 206. 
+ 
+Risk: The Board considered that the pilot’s 
+estimate of separation, allied to his overall 
+account of the incident and his inability to avoid 
+the object portrayed a situation where safety 
+had been much reduced below the nor m to the 
+extent that safety had not been assured. 
+B 
+2017011 26 Jan 17 
+0854 
+A321 
+(CAT) 
+Balloon 5156N 00003W 
+5nm SW of BKY 
+FL070 
+London TMA 
+(A) 
+THE A321 PILOT reports that whilst on departure 
+towards CPT an object, probably a weather 
+balloon was observed passing overhead the 
+aircraft within a few hundred feet. 
+ 
+Reported Separation: 100-200ft V/0m H 
+ 
+THE SWANWICK NW DEPS RADAR 
+CONTROLLER reports that the A321 was 
+outbound, about 7nm west of BKY, when the crew 
+reported a weather balloon passing them. The 
+following aircraft did not report seeing anything. 
+Cause: Being an un -tethered and unmanned 
+balloon or unknown object, the Board agreed 
+that it was not under direct control and that the 
+incident was therefore best described as  a 
+conflict in Class A airspace. 
+ 
+Risk: The Board considered that the pilot’s 
+estimate of separation, allied to his overall 
+account of the incident and his inability to avoid 
+the object portrayed a situation where safety 
+had been much reduced below the norm. 
+B 

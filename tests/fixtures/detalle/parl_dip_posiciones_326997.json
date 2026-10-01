@@ -1,0 +1,79 @@
+{
+ "numFound": 2,
+ "documents": [
+  {
+   "id": "678747",
+   "vorgangsposition": "Mündliche Frage",
+   "zuordnung": "BT",
+   "gang": false,
+   "fortsetzung": false,
+   "nachtrag": false,
+   "vorgangstyp": "Mündliche Frage",
+   "titel": "Flugbehinderungen durch Drohnen seit 2022",
+   "typ": "Vorgangsposition",
+   "aktivitaet_anzahl": 0,
+   "dokumentart": "Drucksache",
+   "aktualisiert": "2026-01-13T07:50:56+01:00",
+   "fundstelle": {
+    "id": "282157",
+    "dokumentnummer": "21/2142",
+    "datum": "2025-10-10",
+    "verteildatum": "2025-10-13",
+    "dokumentart": "Drucksache",
+    "drucksachetyp": "Fragen",
+    "herausgeber": "BT",
+    "urheber": [],
+    "pdf_url": "https://dserver.bundestag.de/btd/21/021/2102142.pdf",
+    "frage_nummer": "65"
+   },
+   "datum": "2025-10-10",
+   "vorgang_id": "326997"
+  },
+  {
+   "id": "678795",
+   "vorgangsposition": "Mündliche Frage/Schriftliche Antwort",
+   "zuordnung": "BT",
+   "gang": true,
+   "fortsetzung": false,
+   "nachtrag": false,
+   "vorgangstyp": "Mündliche Frage",
+   "titel": "Flugbehinderungen durch Drohnen seit 2022",
+   "typ": "Vorgangsposition",
+   "aktivitaet_anzahl": 2,
+   "dokumentart": "Plenarprotokoll",
+   "aktualisiert": "2025-10-21T16:27:37+02:00",
+   "fundstelle": {
+    "id": "5740",
+    "dokumentnummer": "21/33",
+    "datum": "2025-10-15",
+    "verteildatum": "2025-10-16",
+    "xml_url": "https://dserver.bundestag.de/btp/21/21033.xml",
+    "dokumentart": "Plenarprotokoll",
+    "herausgeber": "BT",
+    "urheber": [],
+    "pdf_url": "https://dserver.bundestag.de/btp/21/21033.pdf#P.3628",
+    "anfangsseite": 3628,
+    "endseite": 3628,
+    "anfangsquadrant": "B",
+    "endquadrant": "C"
+   },
+   "aktivitaet_anzeige": [
+    {
+     "seite": "3628B",
+     "aktivitaetsart": "Frage",
+     "titel": "Jan Köstering, MdB, DIE LINKE",
+     "pdf_url": "https://dserver.bundestag.de/btp/21/21033.pdf#P.3628"
+    },
+    {
+     "seite": "3628C",
+     "aktivitaetsart": "Antwort",
+     "titel": "Christoph de Vries, Parl. Staatssekr., Bundesministerium des Innern",
+     "pdf_url": "https://dserver.bundestag.de/btp/21/21033.pdf#P.3628"
+    }
+   ],
+   "datum": "2025-10-15",
+   "vorgang_id": "326997"
+  }
+ ],
+ "cursor": "x"
+}

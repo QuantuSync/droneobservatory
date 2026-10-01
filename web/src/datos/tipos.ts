@@ -1,4 +1,4 @@
-// Forma de los ficheros públicos de publicacion/ (esquema 1.2.0, solo campos públicos)
+// Forma de los ficheros públicos de publicacion/ (esquema 1.3.0, solo campos públicos)
 // y de los resúmenes que la web deriva de ellos en el build.
 
 export type Estado = "notificado" | "confirmado" | "atribuido" | "desmentido";
@@ -314,7 +314,12 @@ export type FuenteDelSistema =
   | "gdelt"
   | "oficiales"
   | "extractor"
-  | "firms";
+  | "firms"
+  | "airprox"
+  | "parlamentos"
+  | "investigaciones"
+  | "estadisticas_oficiales"
+  | "paginas_js";
 
 export interface EstadoSistema {
   version: 1;

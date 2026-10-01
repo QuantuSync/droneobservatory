@@ -31,8 +31,8 @@ IDENTIDAD = {
 # Doble de `python -m recogida.horaria`: deja anotado lo que recibe, cambia un fichero
 # publicado si se le pide y sale con el código que se le pide.
 DOBLE_PYTHON = """#!/usr/bin/env bash
-if [ "$2" = pip ]; then
-  echo instalado >> "$PRUEBA_INSTALACIONES"
+if [ "$2" = pip ] || [ "$2" = playwright ]; then
+  echo "instalado $2" >> "$PRUEBA_INSTALACIONES"
   exit 0
 fi
 if [ "$2" = recogida.estado ]; then
@@ -45,7 +45,7 @@ if [ "$2" = recogida.estado ]; then
   exit 0
 fi
 printf '%s\\n' "$*" "$EODI_CLAVE_AGE" "$EODI_EXTRACTOR_CABECERAS" "$GIT_SSH_COMMAND" \\
-  > "$PRUEBA_VISTO"
+  "${EODI_DETALLE_DATOS:-}" > "$PRUEBA_VISTO"
 if [ -n "$PRUEBA_CAMBIO" ]; then
   printf '%s' "$PRUEBA_CAMBIO" > publicacion/ucrania.json
 fi
@@ -128,6 +128,25 @@ class Servidor:
             check=False,
         )
 
+    def detalle(self, datos: Path) -> subprocess.CompletedProcess[str]:
+        entorno = {
+            **os.environ,
+            "EODI_CLON": str(self.clon),
+            "EODI_SECRETOS": str(self.secretos),
+            "EODI_DETALLE_DATOS": str(datos),
+            "PRUEBA_CODIGO": "0",
+            "PRUEBA_CAMBIO": "",
+            "PRUEBA_VISTO": str(self.visto),
+            "PRUEBA_INSTALACIONES": str(self.instalaciones),
+        }
+        return subprocess.run(
+            ["bash", str(self.clon / "servidor" / "detalle.sh")],
+            env=entorno,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+
     def commits(self) -> int:
         return int(git("rev-list", "--count", RAMA, directorio=self.origen))
 
@@ -149,6 +168,7 @@ def servidor(tmp_path: Path) -> Servidor:
     (trabajo / "publicacion" / "incidentes.geojson").write_text("{}", encoding="utf-8")
     (trabajo / "publicacion" / "incidentes_sin_ubicacion.json").write_text("{}", encoding="utf-8")
     (trabajo / "requirements.txt").write_text("", encoding="utf-8")
+    (trabajo / "requirements-navegador.txt").write_text("", encoding="utf-8")
     (trabajo / ".gitignore").write_text(".venv/\n", encoding="utf-8")
     git("add", ".", directorio=trabajo)
     git("commit", "--quiet", "-m", "Inicio", directorio=trabajo)
@@ -240,7 +260,7 @@ def test_parte_de_la_ultima_version_de_main_y_descarta_lo_que_no_se_envio(
 def test_las_dependencias_solo_se_instalan_cuando_cambian(servidor: Servidor) -> None:
     assert servidor.recoger().returncode == 0
     assert servidor.recoger().returncode == 0
-    assert servidor.instalaciones.read_text(encoding="utf-8").splitlines() == ["instalado"]
+    assert servidor.instalaciones.read_text(encoding="utf-8").splitlines() == ["instalado pip"]
 
 
 def test_no_se_lanza_si_hay_otra_en_marcha(servidor: Servidor) -> None:
@@ -343,3 +363,56 @@ def test_la_exportacion_espera_a_la_recogida_en_marcha(servidor: Servidor) -> No
     assert resultado.returncode == 0
     assert "esperando el cerrojo" in resultado.stdout
     assert servidor.visto.exists()
+
+
+def test_detalle_recoge_en_su_carpeta_e_instala_el_navegador_una_vez(
+    servidor: Servidor, tmp_path: Path
+) -> None:
+    datos = tmp_path / "datos" / "detalle"
+    for _ in range(2):
+        resultado = servidor.detalle(datos)
+        assert resultado.returncode == 0, resultado.stderr
+    visto = servidor.visto.read_text(encoding="utf-8").splitlines()
+    assert visto[0] == "-m recogida.detalle recoger"
+    assert visto[-1] == str(datos)
+    assert datos.is_dir()
+    assert servidor.instalaciones.read_text(encoding="utf-8").splitlines() == [
+        "instalado pip",
+        "instalado playwright",
+    ]
+
+
+def _con_cerrojo(cerrojo: Path) -> subprocess.Popen[str]:
+    otra = subprocess.Popen(
+        ["bash", "-c", f'exec 9> "{cerrojo}"; flock 9; echo listo; read -r _'],
+        stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True,
+    )  # fmt: skip
+    assert otra.stdout is not None
+    assert otra.stdout.readline().strip() == "listo"
+    return otra
+
+
+def _soltar(otra: subprocess.Popen[str]) -> None:
+    assert otra.stdin is not None and otra.stdout is not None
+    otra.stdin.close()
+    otra.wait()
+    otra.stdout.close()
+
+
+def test_detalle_tiene_su_propio_cerrojo(servidor: Servidor, tmp_path: Path) -> None:
+    # El de la recogida horaria no lo frena: no toca la base.
+    otra = _con_cerrojo(servidor.secretos / "recogida.lock")
+    try:
+        assert servidor.detalle(tmp_path / "d1").returncode == 0
+        assert servidor.visto.exists()
+    finally:
+        _soltar(otra)
+    # Con el suyo tomado, no se lanza.
+    servidor.visto.unlink()
+    otra = _con_cerrojo(servidor.secretos / "detalle.lock")
+    try:
+        resultado = servidor.detalle(tmp_path / "d2")
+    finally:
+        _soltar(otra)
+    assert "hay otra recogida de detalle en marcha" in resultado.stdout
+    assert not servidor.visto.exists()

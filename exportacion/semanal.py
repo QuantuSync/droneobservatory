@@ -15,6 +15,10 @@ age con la misma clave pública que la base:
   hechas por dudosas, desmentidos y retirados;
 - vocabulario.json: la correspondencia con las categorías y clases de AEGIS
   (configuracion/vocabulario_aegis.json);
+- encuentros.jsonl, estadisticas_oficiales.jsonl y documentos_oficiales.jsonl: los registros
+  internos de las fuentes oficiales de detalle (encuentros de drones con aeronaves de la UK
+  Airprox Board, cifras oficiales y documentos oficiales leídos, con los sucesos que citan y su
+  cruce con los incidentes);
 - esquema/: el JSON Schema de cada fichero. Los de la base (esquema/eodi/) llevan la marca
   de visibilidad de cada campo: un campo interno nuevo entra en la exportación sin tocar
   este código, porque se exportan los documentos enteros.
@@ -48,7 +52,7 @@ from proceso import incidentes as reglas
 from proceso.estados import Estado
 from proceso.focos_termicos import con_focos
 
-VERSION_FORMATO = "1.0.0"
+VERSION_FORMATO = "1.1.0"
 RAIZ = Path(__file__).resolve().parent.parent
 DIRECTORIO_ESQUEMAS = RAIZ / "esquema" / "exportacion" / VERSION_FORMATO
 VOCABULARIO = RAIZ / "configuracion" / "vocabulario_aegis.json"
@@ -268,6 +272,18 @@ FUENTES_COBERTURA = (
         "fuente oficial leída, no por haber más incidentes.",
     },
     {
+        "id": "fuentes_detalle",
+        "cubre": "Respuestas de gobiernos en el Bundestag, la Tweede Kamer y el Parlamento "
+        "británico; informes de organismos de investigación, cierres policiales y sentencias "
+        "leídos; encuentros con aeronaves de la UK Airprox Board; estadísticas de gestores y "
+        "autoridades (referencias_oficiales). Confirman y precisan incidentes que ya hay; solo "
+        "una respuesta parlamentaria con fecha y lugar da de alta uno nuevo.",
+        "sesgo": "Los países con estas fuentes (DE, NL, GB, DK y los de las estadísticas) tienen "
+        "más incidentes confirmados y más detalle que los demás por tener la fuente, no por "
+        "haber más incidentes. Las cifras oficiales cuentan cosas distintas (avistamientos, "
+        "afectaciones, encuentros): solo se comparan en el mismo país, categoría y periodo.",
+    },
+    {
         "id": "fuerza_aerea_ua",
         "cubre": "Capa de Ucrania y cruces a otros países que cuenta el parte de la Fuerza Aérea "
         "de Ucrania.",
@@ -285,7 +301,49 @@ MOTIVO_SIN_CORRECCION = (
 )
 
 
-def frecuencias(almacen: Almacen, incidentes: list[Documento]) -> Documento:
+def _en_periodo(incidente: Documento, periodo: Documento) -> bool:
+    dia = incidente["tiempo"]["inicio"]["valor"][:10]
+    return bool(periodo["inicio"] <= dia <= periodo["fin"])
+
+
+def _de_la_cifra(incidente: Documento, ambito: Documento) -> bool:
+    """El incidente es del ámbito de la cifra: su país y, si la cifra los da, su categoría y su
+    instalación (por el nombre del objetivo o el OACI)."""
+    if incidente["lugar"]["pais"] != ambito["pais"]:
+        return False
+    objetivo = incidente.get("objetivo", {})
+    if ambito.get("categoria") and objetivo.get("categoria") != ambito["categoria"]:
+        return False
+    if ambito.get("oaci"):
+        return bool(objetivo.get("oaci") == ambito["oaci"])
+    if ambito.get("instalacion"):
+        nombre = str(objetivo.get("nombre", "")).casefold()
+        return bool(nombre) and (nombre in ambito["instalacion"].casefold()
+                                 or ambito["instalacion"].casefold() in nombre)  # fmt: skip
+    return True
+
+
+def referencias_oficiales(
+    activos: list[Documento], estadisticas: list[Documento]
+) -> list[Documento]:
+    """Cada cifra oficial con los incidentes que el observatorio tiene en su ámbito y periodo."""
+    return [
+        {
+            "estadistica": e["id"], "autoridad": e["autoridad"], "pais": e["ambito"]["pais"],
+            "categoria": e["ambito"].get("categoria"),
+            "instalacion": e["ambito"].get("instalacion"),
+            "periodo": e["periodo"], "metrica": e["metrica"], "cifra": e["cifra"],
+            "incidentes_observatorio": sum(
+                _de_la_cifra(i, e["ambito"]) and _en_periodo(i, e["periodo"]) for i in activos
+            ),
+        }
+        for e in sorted(estadisticas, key=lambda x: x["id"])
+    ]  # fmt: skip
+
+
+def frecuencias(
+    almacen: Almacen, incidentes: list[Documento], estadisticas: list[Documento] | None = None
+) -> Documento:
     activos = [i for i in incidentes if reglas.activo(i)]
     grupos: dict[tuple[str, str, str], list[Documento]] = defaultdict(list)
     for incidente in activos:
@@ -339,6 +397,7 @@ def frecuencias(almacen: Almacen, incidentes: list[Documento]) -> Documento:
                 }
                 for pais in paises
             ],
+            "referencias_oficiales": referencias_oficiales(activos, estadisticas or []),
         },
     }
 
@@ -466,7 +525,10 @@ def generar(almacen: Almacen) -> list[Fichero]:
     ]
     lista_afirmaciones = afirmaciones(almacen, base, ataques_base, fichas)
     lista_descartes = descartes(almacen, base)
-    datos_frecuencias = frecuencias(almacen, incidentes)
+    encuentros = almacen.encuentros()
+    estadisticas = almacen.estadisticas_oficiales()
+    documentos = almacen.documentos_oficiales()
+    datos_frecuencias = frecuencias(almacen, incidentes, estadisticas)
     datos_vocabulario = vocabulario()
     entradas_vocabulario = sum(
         len(datos_vocabulario[c]) for c in ("categorias_objetivo", "clases_dron")
@@ -487,13 +549,21 @@ def generar(almacen: Almacen) -> list[Fichero]:
     _comprobar("descartes.jsonl", lista_descartes, validador_propio("descarte"))
     _comprobar("frecuencias.json", [datos_frecuencias], validador_propio("frecuencias"))
     _comprobar("vocabulario.json", [datos_vocabulario], validador_propio("vocabulario"))
+    _comprobar("encuentros.jsonl", encuentros, validador(Esquema.ENCUENTRO))
+    _comprobar("estadisticas_oficiales.jsonl", estadisticas, validador(Esquema.ESTADISTICA_OFICIAL))
+    _comprobar("documentos_oficiales.jsonl", documentos, validador(Esquema.DOCUMENTO_OFICIAL))
 
     datos = [
         Fichero("afirmaciones.jsonl", _jsonl(lista_afirmaciones), len(lista_afirmaciones),
                 _propio("afirmacion")),
         Fichero("descartes.jsonl", _jsonl(lista_descartes), len(lista_descartes),
                 _propio("descarte")),
+        Fichero("documentos_oficiales.jsonl", _jsonl(documentos), len(documentos),
+                _base("documento_oficial")),
+        Fichero("encuentros.jsonl", _jsonl(encuentros), len(encuentros), _base("encuentro")),
         Fichero("episodios.jsonl", _jsonl(episodios), len(episodios), _base("episodio")),
+        Fichero("estadisticas_oficiales.jsonl", _jsonl(estadisticas), len(estadisticas),
+                _base("estadistica_oficial")),
         Fichero("frecuencias.json", _json(datos_frecuencias), len(datos_frecuencias["filas"]),
                 _propio("frecuencias")),
         Fichero("incidentes.jsonl", _jsonl(incidentes), len(incidentes), _base("incidente")),

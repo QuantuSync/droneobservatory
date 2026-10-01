@@ -1,0 +1,119 @@
+1 
+AIRPROX REPORT No 2015024 
+ 
+Date: 15 Mar 2015 Time: 0923Z Position: 5129N 00037W  Location: 5nm west of Heathrow 
+(Sunday)  
+ 
+ 
+PART A: SUMMARY OF INFORMATION REPORTED TO UKAB 
+Recorded Aircraft 1 Aircraft 2 
+Aircraft A320 Drone? 
+Operator CAT Unknown 
+Airspace London CTR London CTR 
+Class D D 
+Rules IFR  
+Service Aerodrome  
+Provider Heathrow  
+Transponder  A/C/S  
+Reported   
+Colours White/blue Black 
+Lighting All on  
+Conditions VMC  
+Visibility >10km  
+Altitude/FL 1800ft  
+Altimeter QNH (1029hPa)  
+Heading 090°  
+Speed 160kt  
+ACAS/TAS TCAS II  
+Alert Nil  
+Separation 
+Reported 50ft V/0m H  
+Recorded NK 
+ 
+THE A320 PILOT reports conducting a normal approach to RW 09L at London Heathrow . At 4.5nm 
+from the threshold, a black object appeared and was observed tracking in a westerly direction, up the 
+approach path. The object passed about 50ft directly above the aircraft. ATC were informed. The pilot 
+did not take avoiding action, and the approach was continued to a normal landing. The pilot stated 
+that the object was rectangular in shape and appeared to be propeller driven, ‘like a drone’. 
+ 
+He did not make an assessment of the risk of collision. 
+ 
+THE DRONE OPERATOR: Despite extensive investigation, a drone operator could not be traced. 
+ 
+THE HEATHROW AERODROME CONTROLLER reports that the A320 pilot reported a balloon or 
+drone like object passed above the aircraft at approximately 4.5nm from touchdown, at 1700ft. 
+ 
+Factual Background 
+ 
+The weather at Heathrow was recorded as follows: 
+ 
+METAR EGLL 150920Z 05008KT 020V080 9999 SCT018 BKN044 06/03 Q1028 NOSIG 
+METAR EGLL 150950Z 06010KT 9999 SCT021 BKN040 06/03 Q1028 NOSIG 
+ 
+Analysis and Investigation 
+ 
+CAA ATSI 
+ 
+The A320 was on a scheduled flight to Heathrow and making an approach to RW09L. At 0923:10, 
+the aircraft had just passed 4.5nm final and was passing approximately 1700ft. At this point the 
+
+Airprox 2015024 
+2 
+pilot reported passing an object “…some kind of balloon or drone, small drone ty pe object that 
+flew over us ”. The controller questioned which direction the object was moving and the pilot 
+replied west bound. The controller initially misidentified the reporting aircraft but requested again 
+the details of the report to which the pilot c onfirmed “…a balloon or drone like object… ” The radar 
+replay did not indicate another object at the position during this time. Further landing aircraft were 
+advised of the report but there were no other sightings . It has not been possible to identify  
+whether the object was a balloon or a drone. 
+ 
+UKAB Secretariat 
+ 
+The incident occurred at such an altitude that it is considered unlikely that the object was a drone 
+controlled visually from the ground. The possibility exists that it may have been a drone controlled 
+by ‘First Person View’. It is estimated that the prevailing wind at altitude would have caused a 
+balloon to track almost di rectly along the approach path. T he pilot stated that the object was 
+rectangular in shape and appeared to be propeller driven. 
+ 
+Summary 
+ 
+An Airprox was reported when an Airbus A320 flew into proximity with a reported drone or balloon at 
+about 0923 on Sunday 15 th March 2015. The A320 pilot was operating under IFR in VMC, in receipt 
+of an Aerodrome Control Service from Heathrow. 
+ 
+ 
+PART B: SUMMARY OF THE BOARD'S DISCUSSIONS 
+Information available consisted of a report from the A320 pilot, radar photographs/video recordings, a 
+report from the air traffic controller involved and a report from the appropriate ATC authority. 
+ 
+The Board cons idered the actions of the A320 pilot and noted that, with his aircraft  configured for 
+landing, he had had only a limited capability to take avoiding action  had it been required. The y also 
+noted that the pilot had simply reported that the encounter had involved a non-specific drone-like or 
+balloon-like object; Board members opined that it had probably been a combination of his closure 
+speed and the startle factor of suddenly seeing something on his approach path that had contributed 
+to his uncertainty.  Some members felt that it may indeed have been a balloon, which the prevailing 
+wind would have blown along the approach path, but others noted that he had later commented that it 
+appeared to be propeller -driven and so this indicated to them that it was more possibly a small 
+unmanned object.  After much discussion, members agreed that , although there had clearly been 
+something there, in this case there was simply too little information to make a reliable assessment of 
+either what it was or the risk  of collision.  Nevertheless, it was clear that the A320 pilot had been 
+concerned by its proximity and the consequent safety of his aircraft. 
+ 
+The Board also commented on the increasing incidence of Airprox involving ‘drones’.   Members 
+noted that, although drones were often marketed as toys, they were capable of being operated in the 
+same airspace as commercial and GA aircraft to which they could easily cause catastrophic damage 
+in a collision.  They reiterated that even casual drone operators held the responsibility to ensure their 
+activities were conducted legally and preferably with due regard to other airspace users.  In this 
+respect, m embers noted the contents and requirements of CAP722 ( Unmanned Aircraft System 
+Operations in UK Airspace – Guidance) and recent changes  to CAP493 (Manual of Air Traffic 
+Services Part 1), as set out in SI 2015/02 (Issue 1) dated 8 May 2015, concerning the procedure to 
+be adopted when reporting an Airprox involving a ‘drone’. 
+ 
+[UKAB Note: SI 2015/02 (Issue 1) is included at Annex A to this report.] 
+ 
+ 
+PART C: ASSESSMENT OF CAUSE AND RISK 
+Cause
+ 
+: The A320 pilot was concerned by the proximity of the balloon/drone. 
+Degree of Risk: D.

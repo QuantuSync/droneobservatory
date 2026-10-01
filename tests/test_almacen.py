@@ -98,6 +98,9 @@ def _poblar(almacen: Almacen) -> None:
     almacen.guardar_episodio(ejemplos.episodio(), AHORA)
     almacen.guardar_foco_termico("EODI-2025-00001", ejemplos.foco_termico())
     almacen.guardar_focos_casados("EODI-2025-00001", [{"lat": 55.6, "lon": 12.6}])
+    almacen.guardar_encuentro(ejemplos.encuentro(), AHORA)
+    almacen.guardar_estadistica_oficial(ejemplos.estadistica_oficial(), AHORA)
+    almacen.guardar_documento_oficial(ejemplos.documento_oficial(), AHORA)
 
 
 @pytest.mark.parametrize(

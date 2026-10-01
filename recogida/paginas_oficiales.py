@@ -31,8 +31,26 @@ _MESES = {m: i for i, m in enumerate(
 )} | {"maj": 5, "okt": 10}  # fmt: skip
 _ISO = re.compile(r"(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2}):(\d{2})(?::\d{2}(?:\.\d+)?)?"
                   r"(Z|[+-]\d{2}:?\d{2})?)?")  # fmt: skip
-_NUMERICA = re.compile(r"(\d{1,2})[./](\d{1,2})[./](\d{4})")
-_CON_MES = re.compile(r"(\d{1,2})\.? ([A-Za-z]{3})[a-z]* (\d{4})")
+_NUMERICA = re.compile(r"(\d{1,2})[./-](\d{1,2})[./-](\d{4})")
+_CON_MES = re.compile(r"(\d{1,2})\.?\s+([^\W\d_]{3,})\.?,?\s+(\d{4})")
+# Nombres completos de los meses en los idiomas de las fuentes con fecha en texto (sueco,
+# danés y noruego, italiano, español, estonio, neerlandés, alemán): con solo las tres primeras
+# letras, «juuni» y «juuli» serían el mismo mes.
+_NOMBRES_MES = (
+    ("januari", "januar", "gennaio", "enero", "jaanuar", "january"),
+    ("februari", "februar", "febbraio", "febrero", "veebruar", "february"),
+    ("mars", "marts", "marzo", "märts", "maart", "märz", "march"),
+    ("april", "aprile", "abril", "aprill"),
+    ("maj", "mai", "maggio", "mayo", "mei", "may"),
+    ("juni", "giugno", "junio", "juuni", "june"),
+    ("juli", "luglio", "julio", "juuli", "july"),
+    ("augusti", "august", "agosto", "augustus"),
+    ("september", "settembre", "septiembre", "septembre"),
+    ("oktober", "ottobre", "octubre", "oktoober", "october"),
+    ("november", "novembre", "noviembre"),
+    ("december", "dicembre", "diciembre", "detsember", "dezember"),
+)
+_MESES_COMPLETOS = {nombre: i for i, nombres in enumerate(_NOMBRES_MES, 1) for nombre in nombres}
 _LD_FECHA = re.compile(r'"datePublished"\s*:\s*"([^"]+)"')
 
 
@@ -146,11 +164,19 @@ def _desde_iso(valor: str, zona: ZoneInfo) -> tuple[datetime, str] | None:
     return datetime.fromisoformat(iso).astimezone(UTC), "minuto"
 
 
+def dia_de_texto(valor: str) -> datetime | None:
+    """El día que dice un texto («15-08-2024», «18. August 2025», «16 mai 2017»), o None."""
+    return _desde_texto(valor)
+
+
 def _desde_texto(valor: str) -> datetime | None:
     if m := _NUMERICA.search(valor):
         return datetime(int(m[3]), int(m[2]), int(m[1]), tzinfo=UTC)
-    if (m := _CON_MES.search(valor)) and m[2].lower() in _MESES:
-        return datetime(int(m[3]), _MESES[m[2].lower()], int(m[1]), tzinfo=UTC)
+    for m in _CON_MES.finditer(valor):
+        nombre = m[2].lower()
+        mes = _MESES_COMPLETOS.get(nombre) or _MESES.get(nombre[:3])
+        if mes is not None:
+            return datetime(int(m[3]), mes, int(m[1]), tzinfo=UTC)
     return None
 
 

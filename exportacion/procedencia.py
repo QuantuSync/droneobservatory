@@ -71,8 +71,23 @@ def origen_de_fuente(fuente: Documento) -> str:
 
 def metodo_de_fuente(fuente: Documento) -> str:
     """Cómo llega a la base lo que dice una fuente que no es una noticia: la declaración la
-    encuentra el extractor en la noticia que la cita; partes y notas oficiales, un parser."""
+    encuentra el extractor en la noticia que la cita; partes y notas oficiales, un parser. Las
+    fuentes oficiales de detalle declaran el suyo (parser, extractor o regla)."""
+    if fuente.get("metodo"):
+        return str(fuente["metodo"])
     return EXTRACTOR if MARCA_DECLARACION in fuente["id"] else PARSER
+
+
+def confirma(fuente: Documento) -> bool:
+    """Fuente de una autoridad que respalda el estado: confirma el incidente aunque ya lo
+    hubiera confirmado otra antes (y su paso no esté en el historial). Solo las leídas
+    directamente (fiabilidad A): una declaración citada puede negar el incidente."""
+    return (
+        bool(fuente.get("es_autoridad"))
+        and fuente["fiabilidad"] == "A"
+        and MARCA_DECLARACION not in fuente["id"]
+        and "estado" in fuente.get("campos_respaldados", [])
+    )
 
 
 # --- Recorrido de valores ------------------------------------------------------------
@@ -81,7 +96,7 @@ def metodo_de_fuente(fuente: Documento) -> str:
 # proceso y lo que añade la exportación. El título es una etiqueta descriptiva.
 META_INCIDENTE = frozenset({
     "id", "titulo", "fuentes", "afirmaciones", "afirmaciones_publicas", "control",
-    "procedencia", "nivel_detalle", "fusionado_en", "retirado", "episodio",
+    "procedencia", "nivel_detalle", "fusionado_en", "retirado", "episodio", "encuentros",
 })  # fmt: skip
 META_ATAQUE = frozenset({"id", "fuentes", "afirmaciones", "control", "procedencia"})
 # Nodos que se tratan como un solo valor.
@@ -348,6 +363,8 @@ def procedencia_incidente(documento: Documento, fichas: Fichas) -> tuple[Documen
             actual = documento["estado"]["actual"]
             pasos = [p for p in documento["estado"]["historial"] if p["estado"] == actual]
             valor.fuentes = {p["fuente_id"] for p in pasos if p["fuente_id"] in fuentes}
+            if actual in CONFIRMADOS:
+                valor.fuentes |= {id_ for id_, f in fuentes.items() if confirma(f)}
             valor.origenes = {origen[f] for f in valor.fuentes}
             valor.metodo = REGLA
             return valor if valor.fuentes else None
@@ -466,7 +483,8 @@ def procedencia_incidente(documento: Documento, fichas: Fichas) -> tuple[Documen
 
 
 def _origen_confirmacion(documento: Documento, procedencia: Documento) -> str | None:
-    """Origen de la fuente que confirmó el incidente (el último paso a confirmado)."""
+    """Origen de la confirmación del incidente: el de la fuente del último paso a confirmado
+    y el de las autoridades que, además, respaldan el estado; el de mayor rango."""
     if documento["estado"]["actual"] not in CONFIRMADOS:
         return None
     fuentes = {f["id"]: f for f in documento["fuentes"]}
@@ -474,7 +492,23 @@ def _origen_confirmacion(documento: Documento, procedencia: Documento) -> str | 
     if not pasos or pasos[-1]["fuente_id"] not in fuentes:
         origen: str | None = procedencia.get("estado", {}).get("origen")
         return origen
-    return origen_de_fuente(fuentes[pasos[-1]["fuente_id"]])
+    origenes = {origen_de_fuente(fuentes[pasos[-1]["fuente_id"]])}
+    origenes |= {origen_de_fuente(f) for f in fuentes.values() if confirma(f)}
+    return mejor(origenes)
+
+
+def _precision_b(documento: Documento) -> bool:
+    """Hora con precisión de minuto u hora y radio de 5 km o menos, en los valores públicos o
+    en los que precisa un registro oficial (detalle_oficial)."""
+    detalle = documento.get("detalle_oficial", {})
+    precisiones = {documento["tiempo"]["inicio"]["precision"]}
+    if "inicio" in detalle:
+        precisiones.add(detalle["inicio"]["precision"])
+    radios = [
+        float(r) for r in (documento["lugar"].get("radio_km"), detalle.get("radio_km"))
+        if r is not None
+    ]  # fmt: skip
+    return bool(precisiones & PRECISIONES_B) and bool(radios) and min(radios) <= RADIO_MAX_B_KM
 
 
 def nivel_detalle(documento: Documento, procedencia: Documento) -> str:
@@ -486,9 +520,7 @@ def nivel_detalle(documento: Documento, procedencia: Documento) -> str:
         }:  # fmt: skip
             return "A"
     confirmacion = _origen_confirmacion(documento, procedencia)
-    inicio = documento["tiempo"]["inicio"]["precision"]
-    radio = documento["lugar"].get("radio_km")
-    precisa = inicio in PRECISIONES_B and radio is not None and float(radio) <= RADIO_MAX_B_KM
+    precisa = _precision_b(documento)
     if precisa and confirmacion == OFICIAL:
         return "B"
     if confirmacion in {OFICIAL, OFICIAL_CITADO}:
@@ -578,7 +610,7 @@ def exportar_afirmacion(
     """La afirmación con su origen y su método. La del extractor sin respaldo no lleva su
     valor: «sin_respaldo», con la confianza."""
     resultado = {**afirmacion, "origen": origen_de_fuente(fuente)}
-    if not extractor:
+    if not extractor or fuente.get("metodo"):
         resultado["metodo"] = metodo_de_fuente(fuente)
         return resultado
     if de_regla(afirmacion):

@@ -1,0 +1,72 @@
+56
+All times are UTC©  Crown copyright 2026
+ AAIB Bulletin: 4/2026 Experimental Drone V ariant 4J  AAIB-31425
+Accident
+Aircraft Type and Registration: Experimental Drone Variant 4J 
+No & Type of Engines:
+ 4 electric motors
+Y
+ear of Manufacture:
+ 2025 (Serial no: PT
+-1046)
+Date & Time (UTC):
+ 1
+1 December 2025 at 1500 hrs
+Location:
+ Salisbury Plain 
+Training Area, Wiltshire
+Type of Flight:
+ Commercial Operations (UAS) 
+Persons on Board:
+ Crew - N/A Passengers - N/A
+Injuries:
+ Crew - N/A Passengers - N/A
+Nature of Damage:
+ UA
+ destroyed beyond economic repair
+Commander’s Licence:
+ CAA
+ Level 1 and 3 Category A
+Commander’s Age:
+ 32 years
+Commander
+’s Flying Experience:
+ 60 hours (of which 7 were on type)
+Last 90 days - 7 hours
+Last 28 days - 2 hours
+Information Source:
+ Aircraft 
+Accident Report Form submitted by the 
+pilot
+Synopsis
+During 
+a verification and validation test flight of a fixed wing UA command and control was 
+lost.  The flight was terminated when it was confirmed the UA was over a safe area.  The 
+UA descended to the ground and the wreckage recovered.  A fault was found within its 
+navigation module which caused it to breach the geofenced area in which it was flying.  The 
+operator has taken safety actions which introduce a fall-back logic within the system which 
+can switch to other navigational sources and has modified the user interface to provide a 
+clear alert to the remote pilot in the event of a positioning data anomaly.
+History of the flight
+A UA was conducting a verification and validation test flight within an authorised test 
+area.  Shortly after launch the ground control station experienced a loss of command and 
+control which led to the UA disregarding its preset geofence.  Attempts to recover accurate 
+navigational control were ineffective and, when it was confirmed the UA had not strayed 
+over a populated area, the ground control operator initiated an immediate flight termination.  
+The UA entered a vertical descent and struck the ground.
+Technical cause
+The operator recovered the UA wreckage and conducted an investigation to determine 
+the cause of the loss of control.  It found that the ‘in-house’ navigation module undergoing 
+57
+All times are UTC©  Crown copyright 2026
+ AAIB Bulletin: 4/2026 Experimental Drone Variant 4J AAIB-31425
+the test was faulty.  Whether it was a hardware or software fault could not be positively 
+determined.  This module manages both visual and the fall-back logic to alternative systems 
+such as GPS.  The fault prevented the module switching to alternative navigational sources 
+and led the UA to become ‘trapped’ in a non-recoverable navigation state resulting in its 
+breach of the geofence.
+Operator’s analysis
+The operator considered that this event highlighted the need for clearer flight termination 
+procedures to be briefed pre-flight and for robust Emergency Response Plan training for the 
+remote pilots.  The operator’s Safety Review Board has mandated a staged return to flight 
+to mitiga
