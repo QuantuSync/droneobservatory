@@ -484413,13 +484413,24 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-01T19:17Z"
+     "valor": "2026-10-01T22:17Z"
     }
    },
-   "credibilidad": 2,
+   "credibilidad": 1,
    "fecha": {
     "precision": "minuto",
     "valor": "2025-07-09T18:52Z"
+   },
+   "foco_termico": {
+    "distancia_km": 4.4,
+    "instrumento": "VIIRS",
+    "numero_focos": 4,
+    "primer_foco": {
+     "precision": "minuto",
+     "valor": "2025-07-10T09:43Z"
+    },
+    "resultado": "detectado",
+    "satelite": "NOAA-21"
    },
    "fuentes": [
     {
@@ -541912,13 +541923,24 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-01T19:17Z"
+     "valor": "2026-10-01T22:17Z"
     }
    },
-   "credibilidad": 2,
+   "credibilidad": 1,
    "fecha": {
     "precision": "minuto",
     "valor": "2025-07-01T09:24Z"
+   },
+   "foco_termico": {
+    "distancia_km": 5.2,
+    "instrumento": "VIIRS",
+    "numero_focos": 6,
+    "primer_foco": {
+     "precision": "minuto",
+     "valor": "2025-06-30T23:26Z"
+    },
+    "resultado": "detectado",
+    "satelite": "NOAA-21"
    },
    "fuentes": [
     {
@@ -773083,6 +773105,1620 @@
     "radio_km": 10.0
    },
    "region": "RU-BRY",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0561",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-01T22:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-03-22T19:26Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/drozdenko_au_lo/9457",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-03-22T19:26Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Воронка от падения обнаружена, поле потушено.",
+     "id": "drozdenko_au_lo-9457",
+     "idioma": "ru",
+     "medio": "Губернатор Ленинградской области",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03377",
+   "impacto": "restos",
+   "lugar": {
+    "id": "geonames:6646423",
+    "nivel": "localidad",
+    "nombre": "Воронка",
+    "nombre_latino": "Voronka",
+    "punto": {
+     "lat": 59.80118,
+     "lon": 29.05503
+    },
+    "radio_km": 1.5
+   },
+   "region": "RU-LEN",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0561",
+   "categorias_objetivo": [
+    "puerto"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-01T22:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-03-23T01:47Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/drozdenko_au_lo/9459",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-03-23T01:47Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "В порту Приморска повреждена емкость с топливом, возникло возгорание.",
+     "id": "drozdenko_au_lo-9459",
+     "idioma": "ru",
+     "medio": "Губернатор Ленинградской области",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03378",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:505269",
+    "nivel": "localidad",
+    "nombre": "Приморск",
+    "nombre_latino": "Primorsk",
+    "punto": {
+     "lat": 60.36622,
+     "lon": 28.60615
+    },
+    "radio_km": 1.5
+   },
+   "region": "RU-LEN",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "categorias_objetivo": [
+    "energia"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-01T22:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "dia": "2026-03-22",
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-03-23T05:21Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/drozdenko_au_lo/9461",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-03-23T05:21Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Один из беспилотников при падении повредил опору ЛЭП в районе поселка Ермилово Выборгского района.",
+     "id": "drozdenko_au_lo-9461",
+     "idioma": "ru",
+     "medio": "Губернатор Ленинградской области",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03379",
+   "impacto": "restos",
+   "lugar": {
+    "id": "geonames:467253",
+    "nivel": "localidad",
+    "nombre": "Ермилово",
+    "nombre_latino": "Yermilovo",
+    "punto": {
+     "lat": 60.35804,
+     "lon": 28.77045
+    },
+    "radio_km": 1.5
+   },
+   "parte_diario": true,
+   "region": "RU-LEN",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0569",
+   "categorias_objetivo": [
+    "puerto"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-01T22:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-03-25T01:42Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/drozdenko_au_lo/9483",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-03-25T01:42Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Ликвидируется возгорание в порту Усть-Луга.",
+     "id": "drozdenko_au_lo-9483",
+     "idioma": "ru",
+     "medio": "Губернатор Ленинградской области",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/drozdenko_au_lo/9484",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-03-25T04:13Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "В Усть-Луге в зоне порта ведется локализация возгорания.",
+     "id": "drozdenko_au_lo-9484",
+     "idioma": "ru",
+     "medio": "Губернатор Ленинградской области",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03380",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:478036",
+    "nivel": "localidad",
+    "nombre": "Усть-Луга",
+    "nombre_latino": "Ust'-Luga",
+    "punto": {
+     "lat": 59.66755,
+     "lon": 28.28713
+    },
+    "radio_km": 1.5
+   },
+   "region": "RU-LEN",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0569",
+   "categorias_objetivo": [
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-01T22:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-03-25T04:13Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/drozdenko_au_lo/9484",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-03-25T04:13Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "В Выборге повреждена кровля жилого дома.",
+     "id": "drozdenko_au_lo-9484",
+     "idioma": "ru",
+     "medio": "Губернатор Ленинградской области",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03381",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:470546",
+    "nivel": "localidad",
+    "nombre": "Выборг",
+    "nombre_latino": "Vyborg",
+    "punto": {
+     "lat": 60.70763,
+     "lon": 28.75283
+    },
+    "radio_km": 5.0
+   },
+   "region": "RU-LEN",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0582",
+   "categorias_objetivo": [
+    "puerto"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-01T22:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-03-29T02:11Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/drozdenko_au_lo/9517",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-03-29T02:11Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Есть повреждения в порту Усть-Луга.",
+     "id": "drozdenko_au_lo-9517",
+     "idioma": "ru",
+     "medio": "Губернатор Ленинградской области",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/drozdenko_au_lo/9518",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-03-29T03:46Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Спасатели работают на тушении возгорания в порту Усть-Луга.",
+     "id": "drozdenko_au_lo-9518",
+     "idioma": "ru",
+     "medio": "Губернатор Ленинградской области",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03382",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:478036",
+    "nivel": "localidad",
+    "nombre": "Усть-Луга",
+    "nombre_latino": "Ust'-Luga",
+    "punto": {
+     "lat": 59.66755,
+     "lon": 28.28713
+    },
+    "radio_km": 1.5
+   },
+   "region": "RU-LEN",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0584",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-01T22:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-03-29T16:05Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/drozdenko_au_lo/9525",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-03-29T16:05Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "⚡️ Возгорание в Усть-Луге, возникшее в результате атаки БПЛА, локализовано, на остальных объектах — последствия устранены.",
+     "id": "drozdenko_au_lo-9525",
+     "idioma": "ru",
+     "medio": "Губернатор Ленинградской области",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03383",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:478036",
+    "nivel": "localidad",
+    "nombre": "Усть-Луга",
+    "nombre_latino": "Ust'-Luga",
+    "punto": {
+     "lat": 59.66755,
+     "lon": 28.28713
+    },
+    "radio_km": 1.5
+   },
+   "region": "RU-LEN",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0589",
+   "categorias_objetivo": [
+    "puerto"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-01T22:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-03-31T03:18Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/drozdenko_au_lo/9539",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-03-31T03:18Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Есть повреждения в порту Усть-Луга.",
+     "id": "drozdenko_au_lo-9539",
+     "idioma": "ru",
+     "medio": "Губернатор Ленинградской области",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/drozdenko_au_lo/9544",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-03-31T12:29Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "В Усть-Луге также уже устранены последствия атаки БПЛА.",
+     "id": "drozdenko_au_lo-9544",
+     "idioma": "ru",
+     "medio": "Губернатор Ленинградской области",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03384",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:478036",
+    "nivel": "localidad",
+    "nombre": "Усть-Луга",
+    "nombre_latino": "Ust'-Luga",
+    "punto": {
+     "lat": 59.66755,
+     "lon": 28.28713
+    },
+    "radio_km": 1.5
+   },
+   "region": "RU-LEN",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0589",
+   "categorias_objetivo": [
+    "energia",
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-01T22:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-03-31T12:29Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/drozdenko_au_lo/9544",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-03-31T12:29Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "В Молодцово взрывной волной была повреждена котельная и остекление в трех многоквартирных домах.",
+     "id": "drozdenko_au_lo-9544",
+     "idioma": "ru",
+     "medio": "Губернатор Ленинградской области",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03385",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:8630146",
+    "nivel": "localidad",
+    "nombre": "Молодцово",
+    "nombre_latino": "Molodtsovo",
+    "punto": {
+     "lat": 59.82843,
+     "lon": 31.10161
+    },
+    "radio_km": 1.5
+   },
+   "region": "RU-LEN",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0605",
+   "categorias_objetivo": [
+    "puerto"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-01T22:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-04-05T04:37Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/drozdenko_au_lo/9593",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-04-05T04:37Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Обломками поврежден один из участков нефтепровода в районе порта Приморск, идёт безопасное выгорание из перекрытой трубы.",
+     "id": "drozdenko_au_lo-9593",
+     "idioma": "ru",
+     "medio": "Губернатор Ленинградской области",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03386",
+   "impacto": "restos",
+   "lugar": {
+    "id": "geonames:505269",
+    "nivel": "localidad",
+    "nombre": "Приморск",
+    "nombre_latino": "Primorsk",
+    "punto": {
+     "lat": 60.36622,
+     "lon": 28.60615
+    },
+    "radio_km": 1.5
+   },
+   "region": "RU-LEN",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0606",
+   "categorias_objetivo": [
+    "puerto"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-01T22:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-04-05T06:37Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/drozdenko_au_lo/9594",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-04-05T06:37Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "По уточненным данным, нефтепровод в районе порта Приморск не был поврежден.",
+     "id": "drozdenko_au_lo-9594",
+     "idioma": "ru",
+     "medio": "Губернатор Ленинградской области",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03387",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:505269",
+    "nivel": "localidad",
+    "nombre": "Приморск",
+    "nombre_latino": "Primorsk",
+    "punto": {
+     "lat": 60.36622,
+     "lon": 28.60615
+    },
+    "radio_km": 1.5
+   },
+   "region": "RU-LEN",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0634",
+   "categorias_objetivo": [
+    "industrial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-01T22:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-04-17T04:21Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/drozdenko_au_lo/9739",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-04-17T04:21Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "В Выборгском районе в Ермилово, при отражении атаки БПЛА , в результате падения обломков , произошло возгорание складского помещения.",
+     "id": "drozdenko_au_lo-9739",
+     "idioma": "ru",
+     "medio": "Губернатор Ленинградской области",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03388",
+   "impacto": "restos",
+   "lugar": {
+    "id": "geonames:467253",
+    "nivel": "localidad",
+    "nombre": "Ермилово",
+    "nombre_latino": "Yermilovo",
+    "punto": {
+     "lat": 60.35804,
+     "lon": 28.77045
+    },
+    "radio_km": 1.5
+   },
+   "region": "RU-LEN",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0637",
+   "categorias_objetivo": [
+    "puerto"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-01T22:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-04-18T03:35Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/drozdenko_au_lo/9765",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-04-18T03:35Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "В районе порта Высоцк есть возгорание, в данный момент оно ликвидируется.",
+     "id": "drozdenko_au_lo-9765",
+     "idioma": "ru",
+     "medio": "Губернатор Ленинградской области",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03389",
+   "impacto": "impacto",
+   "lugar": {
+    "categoria": "puerto",
+    "id": "osm:relation/3846263",
+    "localidad": "Высоцк",
+    "nivel": "instalacion",
+    "nombre": "порт Выборг",
+    "punto": {
+     "lat": 60.70745,
+     "lon": 28.73435
+    },
+    "radio_km": 3.0
+   },
+   "region": "RU-LEN",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0638",
+   "categorias_objetivo": [
+    "puerto"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-01T22:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-04-18T06:48Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/drozdenko_au_lo/9766",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-04-18T06:48Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Возгорание, возникшее после утренней атаки БПЛА в порту Высоцк полностью ликвидировано.",
+     "id": "drozdenko_au_lo-9766",
+     "idioma": "ru",
+     "medio": "Губернатор Ленинградской области",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03390",
+   "impacto": "impacto",
+   "lugar": {
+    "categoria": "puerto",
+    "id": "osm:relation/3846263",
+    "localidad": "Высоцк",
+    "nivel": "instalacion",
+    "nombre": "порт Выборг",
+    "punto": {
+     "lat": 60.70745,
+     "lon": 28.73435
+    },
+    "radio_km": 3.0
+   },
+   "region": "RU-LEN",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0676",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-01T22:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-05-03T05:48Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/drozdenko_au_lo/10044",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-05-03T05:48Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "В результате отражения атаки в Приморске возникло возгорание, на данный момент последствия возгорания ликвидированы.",
+     "id": "drozdenko_au_lo-10044",
+     "idioma": "ru",
+     "medio": "Губернатор Ленинградской области",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03391",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:505269",
+    "nivel": "localidad",
+    "nombre": "Приморск",
+    "nombre_latino": "Primorsk",
+    "punto": {
+     "lat": 60.36622,
+     "lon": 28.60615
+    },
+    "radio_km": 1.5
+   },
+   "region": "RU-LEN",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0684",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-01T22:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-05-05T01:22Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/drozdenko_au_lo/10063",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-05-05T01:22Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Зафиксировано возгорание в промзоне в Киришах.",
+     "id": "drozdenko_au_lo-10063",
+     "idioma": "ru",
+     "medio": "Губернатор Ленинградской области",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03392",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:548442",
+    "nivel": "localidad",
+    "nombre": "Кириши",
+    "nombre_latino": "Kirishi",
+    "punto": {
+     "lat": 59.47417,
+     "lon": 32.04007
+    },
+    "radio_km": 5.0
+   },
+   "region": "RU-LEN",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0685",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-01T22:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-05-05T05:08Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/drozdenko_au_lo/10064",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-05-05T05:08Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Пожар в промзоне Кириши локализован, завершаются работы по тушению .",
+     "id": "drozdenko_au_lo-10064",
+     "idioma": "ru",
+     "medio": "Губернатор Ленинградской области",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03393",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:548442",
+    "nivel": "localidad",
+    "nombre": "Кириши",
+    "nombre_latino": "Kirishi",
+    "punto": {
+     "lat": 59.47417,
+     "lon": 32.04007
+    },
+    "radio_km": 5.0
+   },
+   "region": "RU-LEN",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0769",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-01T22:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-06-06T10:29Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/drozdenko_au_lo/10574",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-06-06T10:29Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Продолжается ликвидация последствий пожара на объекте Минобороны в Большой Ижоре, произошедшего в результате атаки БПЛА.",
+     "id": "drozdenko_au_lo-10574",
+     "idioma": "ru",
+     "medio": "Губернатор Ленинградской области",
+     "replicas": 0
+    }
+   ],
+   "heridos": {
+    "max": 1,
+    "min": 1
+   },
+   "id": "EODI-IG-2026-03394",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:575070",
+    "nivel": "localidad",
+    "nombre": "Большая Ижора",
+    "nombre_latino": "Bol'shaya Izhora",
+    "punto": {
+     "lat": 59.93819,
+     "lon": 29.56859
+    },
+    "radio_km": 1.5
+   },
+   "region": "RU-LEN",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0830",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-01T22:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-07-02T07:14Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/drozdenko_au_lo/10932",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-07-02T07:14Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Зафиксировано падение обломков БПЛА в районе посёлка Оредеж в Лужском районе.",
+     "id": "drozdenko_au_lo-10932",
+     "idioma": "ru",
+     "medio": "Губернатор Ленинградской области",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03395",
+   "impacto": "restos",
+   "lugar": {
+    "id": "geonames:515079",
+    "nivel": "localidad",
+    "nombre": "Оредеж",
+    "nombre_latino": "Oredezh",
+    "punto": {
+     "lat": 58.81827,
+     "lon": 30.33746
+    },
+    "radio_km": 1.5
+   },
+   "region": "RU-LEN",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0835",
+   "categorias_objetivo": [
+    "puerto"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-01T22:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-07-04T04:32Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/drozdenko_au_lo/10958",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-07-04T04:32Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Падение обломков зафиксировано в районе порта Высоцк.",
+     "id": "drozdenko_au_lo-10958",
+     "idioma": "ru",
+     "medio": "Губернатор Ленинградской области",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03396",
+   "impacto": "restos",
+   "lugar": {
+    "categoria": "puerto",
+    "id": "osm:relation/3846263",
+    "localidad": "Высоцк",
+    "nivel": "instalacion",
+    "nombre": "порт Выборг",
+    "punto": {
+     "lat": 60.70745,
+     "lon": 28.73435
+    },
+    "radio_km": 3.0
+   },
+   "region": "RU-LEN",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0835",
+   "categorias_objetivo": [
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-01T22:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-07-04T09:15Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/drozdenko_au_lo/10961",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-07-04T09:15Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "- В Ломоносовском районе, в деревне Ускуля поврежден фасад и остекление в частном доме, без пострадавших.",
+     "id": "drozdenko_au_lo-10961",
+     "idioma": "ru",
+     "medio": "Губернатор Ленинградской области",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03397",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:6647812",
+    "nivel": "localidad",
+    "nombre": "Ускуля",
+    "nombre_latino": "Uskulya",
+    "punto": {
+     "lat": 59.89018,
+     "lon": 29.68551
+    },
+    "radio_km": 1.5
+   },
+   "region": "RU-LEN",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0835",
+   "categorias_objetivo": [
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-01T22:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-07-04T09:15Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/drozdenko_au_lo/10961",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-07-04T09:15Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "- В Лужском районе, в деревне Мужич повреждено остекление и фасад в частном доме.",
+     "id": "drozdenko_au_lo-10961",
+     "idioma": "ru",
+     "medio": "Губернатор Ленинградской области",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03398",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:12650278",
+    "nivel": "localidad",
+    "nombre": "Мужич",
+    "nombre_latino": "Muzhich",
+    "punto": {
+     "lat": 58.8689,
+     "lon": 29.0555
+    },
+    "radio_km": 1.5
+   },
+   "region": "RU-LEN",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0838",
+   "categorias_objetivo": [
+    "puerto"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-01T22:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-07-06T04:32Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/drozdenko_au_lo/10968",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-07-06T04:32Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Также зафиксировано падение фрагментов БПЛА в районе порта Усть-Луга.",
+     "id": "drozdenko_au_lo-10968",
+     "idioma": "ru",
+     "medio": "Губернатор Ленинградской области",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/drozdenko_au_lo/10969",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-07-06T05:40Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Предварительно, есть повреждения объектов инфраструктуры на Лужском полигоне, в районах портов Усть-Луга и Высоцк.",
+     "id": "drozdenko_au_lo-10969",
+     "idioma": "ru",
+     "medio": "Губернатор Ленинградской области",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03399",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:478036",
+    "nivel": "localidad",
+    "nombre": "Усть-Луга",
+    "nombre_latino": "Ust'-Luga",
+    "punto": {
+     "lat": 59.66755,
+     "lon": 28.28713
+    },
+    "radio_km": 1.5
+   },
+   "region": "RU-LEN",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0838",
+   "categorias_objetivo": [
+    "puerto"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-01T22:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-07-06T05:40Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/drozdenko_au_lo/10969",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-07-06T05:40Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Предварительно, есть повреждения объектов инфраструктуры на Лужском полигоне, в районах портов Усть-Луга и Высоцк.",
+     "id": "drozdenko_au_lo-10969",
+     "idioma": "ru",
+     "medio": "Губернатор Ленинградской области",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03400",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:469995",
+    "nivel": "localidad",
+    "nombre": "Высоцк",
+    "nombre_latino": "Vysotsk",
+    "punto": {
+     "lat": 60.62534,
+     "lon": 28.56808
+    },
+    "radio_km": 1.5
+   },
+   "region": "RU-LEN",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0873",
+   "categorias_objetivo": [
+    "industrial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-01T22:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-07-24T03:44Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/drozdenko_au_lo/11220",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-07-24T03:44Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "В результате попадания БПЛА произошло возгорание на складах компании «Вайлдберриз» в деревне Новосаратовка Всеволожского района.",
+     "id": "drozdenko_au_lo-11220",
+     "idioma": "ru",
+     "medio": "Губернатор Ленинградской области",
+     "replicas": 0
+    }
+   ],
+   "heridos": {
+    "max": 3,
+    "min": 3
+   },
+   "id": "EODI-IG-2026-03401",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:518223",
+    "nivel": "localidad",
+    "nombre": "Новосаратовка",
+    "nombre_latino": "Novosaratovka",
+    "punto": {
+     "lat": 59.83722,
+     "lon": 30.52944
+    },
+    "radio_km": 1.5
+   },
+   "region": "RU-LEN",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0917",
+   "categorias_objetivo": [
+    "puerto"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-01T22:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-08-14T02:52Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/drozdenko_au_lo/11600",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-08-14T02:52Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Зафиксировано повреждение в районе порта Усть-Луга.",
+     "id": "drozdenko_au_lo-11600",
+     "idioma": "ru",
+     "medio": "Губернатор Ленинградской области",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/drozdenko_au_lo/11601",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-08-14T03:21Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "В результате повреждения зафиксировано возгорание в порту Усть-Луга.",
+     "id": "drozdenko_au_lo-11601",
+     "idioma": "ru",
+     "medio": "Губернатор Ленинградской области",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03402",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:478036",
+    "nivel": "localidad",
+    "nombre": "Усть-Луга",
+    "nombre_latino": "Ust'-Luga",
+    "punto": {
+     "lat": 59.66755,
+     "lon": 28.28713
+    },
+    "radio_km": 1.5
+   },
+   "region": "RU-LEN",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0920",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-01T22:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-08-15T07:46Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/drozdenko_au_lo/11627",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-08-15T07:46Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Обломками БПЛА повреждены постройки на четырех участках в деревне Чирково в Пчевском с.",
+     "id": "drozdenko_au_lo-11627",
+     "idioma": "ru",
+     "medio": "Губернатор Ленинградской области",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03403",
+   "impacto": "restos",
+   "lugar": {
+    "id": "geonames:536380",
+    "nivel": "localidad",
+    "nombre": "Чирково",
+    "nombre_latino": "Chirkovo",
+    "punto": {
+     "lat": 59.5199,
+     "lon": 32.12365
+    },
+    "radio_km": 1.5
+   },
+   "region": "RU-LEN",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0948",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-01T22:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-08-30T02:00Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/drozdenko_au_lo/11901",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-08-30T02:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "В результате атаки БПЛА в промзоне города Кириши зафиксировано возгорание, экстренные службы работают на месте.",
+     "id": "drozdenko_au_lo-11901",
+     "idioma": "ru",
+     "medio": "Губернатор Ленинградской области",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03404",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:548442",
+    "nivel": "localidad",
+    "nombre": "Кириши",
+    "nombre_latino": "Kirishi",
+    "punto": {
+     "lat": 59.47417,
+     "lon": 32.04007
+    },
+    "radio_km": 5.0
+   },
+   "region": "RU-LEN",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0949",
+   "categorias_objetivo": [
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-01T22:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-08-30T06:37Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/drozdenko_au_lo/11904",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-08-30T06:37Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "В результате отражения атаки БПЛА противника на промзону города Кириши повреждены несколько жилых домов: в некоторых квартирах были выбиты стекла.",
+     "id": "drozdenko_au_lo-11904",
+     "idioma": "ru",
+     "medio": "Губернатор Ленинградской области",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03405",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:548442",
+    "nivel": "localidad",
+    "nombre": "Кириши",
+    "nombre_latino": "Kirishi",
+    "punto": {
+     "lat": 59.47417,
+     "lon": 32.04007
+    },
+    "radio_km": 5.0
+   },
+   "region": "RU-LEN",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "categorias_objetivo": [
+    "puerto"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-01T22:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-09-01T02:12Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/drozdenko_au_lo/11937",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-09-01T02:12Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "🟠 В результате атаки БПЛА зафиксированы повреждения в портовой зоне Усть-Луга, есть возгорание.",
+     "id": "drozdenko_au_lo-11937",
+     "idioma": "ru",
+     "medio": "Губернатор Ленинградской области",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03406",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:478036",
+    "nivel": "localidad",
+    "nombre": "Усть-Луга",
+    "nombre_latino": "Ust'-Luga",
+    "punto": {
+     "lat": 59.66755,
+     "lon": 28.28713
+    },
+    "radio_km": 1.5
+   },
+   "region": "RU-LEN",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0952",
+   "categorias_objetivo": [
+    "puerto"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-01T22:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-09-01T06:27Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/drozdenko_au_lo/11940",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-09-01T06:27Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "🟢 Горение, возникшее в результате атаки БПЛА в порту Усть-Луги ликвидировано.",
+     "id": "drozdenko_au_lo-11940",
+     "idioma": "ru",
+     "medio": "Губернатор Ленинградской области",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03407",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:478036",
+    "nivel": "localidad",
+    "nombre": "Усть-Луга",
+    "nombre_latino": "Ust'-Luga",
+    "punto": {
+     "lat": 59.66755,
+     "lon": 28.28713
+    },
+    "radio_km": 1.5
+   },
+   "region": "RU-LEN",
    "reivindicacion_de_parte": true,
    "sentido": "UA_RU",
    "tipo": "impacto_guerra"
