@@ -64,7 +64,10 @@ RELECTURA = timedelta(hours=12)
 # comprobación correcta durante 30 días.
 COMPROBAR_WEB_CADA = timedelta(hours=24)
 VIGENCIA_WEB = timedelta(days=30)
-LIMITE_WEB_S = 20.0
+# Algunas webs oficiales (favt.gov.ru) dejan colgada la primera conexión tras un rato sin
+# visitas y responden en menos de un segundo a la siguiente: intentos cortos y varios.
+LIMITE_WEB_S = 10.0
+REINTENTOS_WEB = 3
 # Tope de páginas de un canal en una lectura incremental: 30 páginas son unas 600
 # publicaciones, más de diez días de la administración más activa. Si no alcanza el cursor,
 # el resto lo recoge el histórico.
@@ -286,7 +289,7 @@ def verificar_web(
         estado["web_ultima_comprobacion"] = _instante(ahora)
         # Muchas webs oficiales bloquean las direcciones extranjeras o no responden: un solo
         # reintento y 20 s, para no gastar en ellas el tiempo de la lectura.
-        web = descargador.con_limites(reintentos=1, limite_s=LIMITE_WEB_S)
+        web = descargador.con_limites(reintentos=REINTENTOS_WEB, limite_s=LIMITE_WEB_S)
         try:
             html = web.texto(canal.web_oficial, lambda t: "<html" in t.lower())
         except (DescargaFallida, TiempoAgotado) as error:
