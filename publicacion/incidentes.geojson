@@ -110033,30 +110033,6 @@
       "valor": "DE"
      },
      {
-      "campo": "objetivo.categoria",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-10-01T08:00Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-5c6c036359b878f1",
-      "medio": "n-tv.de",
-      "valor": "aeropuerto"
-     },
-     {
-      "campo": "objetivo.nombre",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-10-01T08:00Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-5c6c036359b878f1",
-      "medio": "n-tv.de",
-      "valor": "Flughafen München"
-     },
-     {
       "campo": "tipo",
       "credibilidad": 3,
       "fecha": {
@@ -110077,7 +110053,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-01T08:17Z"
+      "valor": "2026-10-01T09:17Z"
      }
     },
     "drones": {
@@ -110109,7 +110085,7 @@
       "id": "gdelt-5c6c036359b878f1",
       "idioma": "de",
       "medio": "n-tv.de",
-      "replicas": 0
+      "replicas": 1
      },
      {
       "credibilidad": 3,
@@ -110123,6 +110099,20 @@
       "id": "gdelt-af822666381ca715",
       "idioma": "de",
       "medio": "zeit.de",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://abendzeitung-muenchen.de/muenchen/drohnen-verbotszone-rund-um-flughafen-muenchen-mehrfach-missachtet-art-1162598",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-01T08:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Drohnen-Verbotszone rund um Flughafen München mehrfach missachtet",
+      "id": "gdelt-235c33f3a9e65d85",
+      "idioma": "de",
+      "medio": "abendzeitung-muenchen.de",
       "replicas": 0
      }
     ],
@@ -110146,7 +110136,7 @@
     "tipo": "sobrevuelo",
     "titulo": {
      "en": "Amateur drones cause restrictions at Munich airport during Oktoberfest",
-     "es": "Drones de aficionados causan restricciones en el aeropuerto de Múnich durante el Oktoberfest"
+     "es": "Drones aficionados causan restricciones en el aeropuerto de Múnich durante el Oktoberfest"
     }
    },
    "type": "Feature"
