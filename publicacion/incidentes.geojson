@@ -109868,6 +109868,146 @@
     }
    },
    "type": "Feature"
+  },
+  {
+   "geometry": {
+    "coordinates": [
+     28.92856,
+     47.30526
+    ],
+    "type": "Point"
+   },
+   "id": "EODI-2026-00259",
+   "properties": {
+    "afirmaciones_publicas": [
+     {
+      "campo": "lugar.pais",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-30T22:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-4520ed2253d45665",
+      "medio": "protv.md",
+      "valor": "MD"
+     },
+     {
+      "campo": "presencia_dron",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-30T22:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-4520ed2253d45665",
+      "medio": "protv.md",
+      "valor": "no_confirmada"
+     },
+     {
+      "campo": "tiempo.inicio",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-30T22:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-4520ed2253d45665",
+      "medio": "protv.md",
+      "valor": {
+       "precision": "minuto",
+       "valor": "2026-09-30T17:45Z"
+      }
+     }
+    ],
+    "consecuencias": {
+     "cierre": {
+      "valor": "desconocido"
+     }
+    },
+    "control": {
+     "ultima_actualizacion": {
+      "precision": "minuto",
+      "valor": "2026-10-01T00:17Z"
+     }
+    },
+    "drones": {
+     "numero": "desconocido"
+    },
+    "estado": {
+     "actual": "confirmado",
+     "historial": [
+      {
+       "estado": "notificado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2026-09-30T22:30Z"
+       },
+       "fuente_id": "gdelt-4520ed2253d45665"
+      },
+      {
+       "estado": "confirmado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2026-09-30T22:30Z"
+       },
+       "fuente_id": "gdelt-4520ed2253d45665-declaracion-1"
+      }
+     ]
+    },
+    "fuentes": [
+     {
+      "credibilidad": 3,
+      "enlace": "https://protv.md/actualitate/inca-o-drona-a-survolat-spatiul-aerian-al-republicii-moldova-detaliile-ministerului-apararii---2768526.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-30T22:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Un obiect aerian neautorizat a pătruns din nou în spațiul aerian al Republicii Moldova",
+      "id": "gdelt-4520ed2253d45665",
+      "idioma": "ro",
+      "medio": "protv.md",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 1,
+      "enlace": "https://protv.md/actualitate/inca-o-drona-a-survolat-spatiul-aerian-al-republicii-moldova-detaliile-ministerului-apararii---2768526.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-30T22:30Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Un obiect aerian neautorizat a pătruns din nou în spațiul aerian al Republicii Moldova",
+      "id": "gdelt-4520ed2253d45665-declaracion-1",
+      "idioma": "ro",
+      "medio": "Ministerul Apărării (declaración oficial citada en protv.md)",
+      "replicas": 0
+     }
+    ],
+    "id": "EODI-2026-00259",
+    "lugar": {
+     "pais": "MD",
+     "radio_km": 3.0
+    },
+    "objetivo": {
+     "categoria": "otra",
+     "nombre": "Brăneşti"
+    },
+    "presencia_dron": "no_confirmada",
+    "tiempo": {
+     "inicio": {
+      "precision": "minuto",
+      "valor": "2026-09-30T17:45Z"
+     }
+    },
+    "tipo": "incursion",
+    "titulo": {
+     "en": "Unauthorized aerial object penetrates Moldova's airspace from Ukraine",
+     "es": "Objeto aéreo no autorizado penetra el espacio aéreo de Moldavia desde Ucrania"
+    }
+   },
+   "type": "Feature"
   }
  ],
  "type": "FeatureCollection"

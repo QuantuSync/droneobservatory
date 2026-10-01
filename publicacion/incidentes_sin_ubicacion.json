@@ -33118,6 +33118,143 @@
     "en": "Drones crash in Latvia triggers resignation of Riga government",
     "es": "Drones caídos en Letonia provocan la dimisión del gobierno de Riga"
    }
+  },
+  {
+   "afirmaciones_publicas": [
+    {
+     "campo": "lugar.pais",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-30T19:00Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-30c4112074a5be9e",
+     "medio": "news.yam.md",
+     "valor": "MD"
+    },
+    {
+     "campo": "presencia_dron",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-30T19:00Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-30c4112074a5be9e",
+     "medio": "news.yam.md",
+     "valor": "no_confirmada"
+    },
+    {
+     "campo": "tiempo.inicio",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-30T19:00Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-30c4112074a5be9e",
+     "medio": "news.yam.md",
+     "valor": {
+      "precision": "minuto",
+      "valor": "2026-09-30T17:45Z"
+     }
+    },
+    {
+     "campo": "tipo",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-30T19:00Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-30c4112074a5be9e",
+     "medio": "news.yam.md",
+     "valor": "sobrevuelo"
+    }
+   ],
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-01T00:17Z"
+    }
+   },
+   "drones": {
+    "numero": "desconocido"
+   },
+   "estado": {
+    "actual": "confirmado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-30T19:00Z"
+      },
+      "fuente_id": "gdelt-30c4112074a5be9e"
+     },
+     {
+      "estado": "confirmado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-30T19:00Z"
+      },
+      "fuente_id": "gdelt-30c4112074a5be9e-declaracion-1"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://news.yam.md/ro/story/69265445",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-30T19:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "În contextul atacurilor masive ale Federației Ruse asupra Ucrainei",
+     "id": "gdelt-30c4112074a5be9e",
+     "idioma": "ro",
+     "medio": "news.yam.md",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 1,
+     "enlace": "https://news.yam.md/ro/story/69265445",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-30T19:00Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "informează despre un zbor neautorizat în spațiul aerian național, la ora 20:45",
+     "id": "gdelt-30c4112074a5be9e-declaracion-1",
+     "idioma": "ro",
+     "medio": "Serviciul Operații Aeriene al Armatei Naționale (declaración oficial citada en news.yam.md)",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-2026-00258",
+   "lugar": {
+    "nivel": "pais",
+    "pais": "MD"
+   },
+   "presencia_dron": "no_confirmada",
+   "tiempo": {
+    "inicio": {
+     "precision": "minuto",
+     "valor": "2026-09-30T17:45Z"
+    }
+   },
+   "tipo": "incursion",
+   "titulo": {
+    "en": "Unauthorized drone in Moldavian airspace",
+    "es": "Dron no autorizado en el espacio aéreo de Moldavia"
+   }
   }
  ]
 }
