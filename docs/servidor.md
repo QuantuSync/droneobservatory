@@ -48,6 +48,15 @@ En `/home/eodi`:
   (`<producto>/<año>/<AAAA-MM-DD>.csv.gz`), y `control.json` con la última descarga
   correcta y el estado del histórico. Fuera del repositorio y de la base, que se sube cifrada
   cada hora y no debe crecer con los focos agrícolas. Se pueden volver a descargar.
+- `datos/trafico/`, con permisos 700 y propiedad de `eodi`: lo que sale del procesado de cada
+  día del archivo de adsb.lol (`dias/<año>/<AAAA-MM-DD>/`: movimientos, aeronaves militares,
+  interferencia GNSS por celda y hora y por día, trazas filtradas y `resumen.json`), los METAR
+  de cada día (`metar/`), la referencia de EUROCONTROL (`referencia/`), los incidentes que
+  necesita el procesado (`zonas.json`, lo escribe la recogida horaria) y `control.json` (último
+  día correcto y días que adsb.lol no publicó). Unos 16 MB por día procesado; todo se puede
+  volver a calcular desde el archivo de adsb.lol.
+- `datos/meteo/`, con permisos 700 y propiedad de `eodi`: la caché de Open-Meteo
+  (`openmeteo/<AAAA-MM-DD>/`) y de los METAR del IEM que no estaban en el día procesado.
 
 Las dos claves de despliegue se generan en el servidor y la privada no sale de él. En
 GitHub figuran en cada repositorio con el título «servidor eodi-recogida».
@@ -119,6 +128,49 @@ journalctl -u eodi-exportacion.service -n 40
 systemctl list-timers eodi-exportacion.timer
 ```
 
+## Tráfico aéreo de adsb.lol y condiciones medidas
+
+Informe: [`informe_trafico_aereo.md`](informe_trafico_aereo.md).
+
+**Procesado de cada día.** `eodi-trafico.timer` lanza `eodi-trafico.service` en el minuto 40
+de cada hora, como `eodi`, con prioridad baja de CPU y de disco (`Nice=15`,
+`IOSchedulingClass=idle`). La unidad ejecuta [`servidor/trafico.sh`](../servidor/trafico.sh),
+que toma su propio cerrojo (`/home/eodi/.eodi/trafico.lock`; si la ejecución anterior sigue,
+esta no se lanza) y ejecuta `python -m recogida.trafico pendientes --tope-min 50`: procesa días
+de la cola mientras quepa otro en 50 minutos. La cola va primero con los 35 últimos días (el
+diario, del más nuevo al más viejo) y después con los días de los incidentes europeos y los de
+su línea base, con los confirmados y atribuidos delante. Un día se descarga en flujo, sin
+guardarlo en disco, y tarda unos 10 minutos de un núcleo y menos de 300 MB de memoria
+(medido el 1 de octubre de 2026); adsb.lol lo publica hacia las 03:25 UTC del día siguiente,
+así que entra en la ejecución de las 03:40 o en la siguiente. Un día que adsb.lol no ha
+publicado se vuelve a mirar cada hora y, tres días después de terminado, se da por perdido
+(`control.json`). El procesado no toca el clon (lo pone al día la recogida horaria) ni la base.
+
+**Nunca retiene el cerrojo de la recogida horaria.** Lo que sale del procesado son ficheros
+en `datos/trafico/`; la recogida horaria, que ya tiene su cerrojo y la base abierta, los lee
+al final y escribe en la base los resultados agregados en segundos
+([`recogida/mediciones.py`](../recogida/mediciones.py)): cobertura por aeropuerto y día,
+interferencia GNSS diaria por celda, interrupciones (anomalías) y, por incidente, el tráfico
+aéreo medido y las condiciones (Open-Meteo y METAR, con su cupo por ejecución). Un fallo de
+esa parte no cambia el resultado de la recogida: queda en el diario y en `estado.json`
+(fuentes `trafico_aereo` y `condiciones`).
+
+Órdenes:
+
+```
+systemctl list-timers eodi-trafico.timer          # cuándo fue la última y cuándo es la siguiente
+journalctl -u eodi-trafico.service -n 40          # días procesados, con duración y CPU
+sudo systemctl start eodi-trafico.service         # lanzar una ahora (sigue con la cola)
+sudo systemctl stop eodi-trafico.timer            # parar el procesado
+sudo -u eodi sh -c 'cd /home/eodi/droneobservatory && EODI_TRAFICO_DATOS=/home/eodi/datos/trafico .venv/bin/python -m recogida.trafico resumen'
+```
+
+Un día suelto (por ejemplo, para repetirlo tras un cambio de regla, borrando antes su carpeta):
+
+```
+sudo -u eodi sh -c 'cd /home/eodi/droneobservatory && EODI_TRAFICO_DATOS=/home/eodi/datos/trafico .venv/bin/python -m recogida.trafico dia 2025-09-22'
+```
+
 ## Secretos en local
 
 En `%USERPROFILE%\.eodi\`, fuera de cualquier repositorio:
@@ -148,12 +200,13 @@ El script:
 
 1. crea, si no existen, el par de claves SSH local, la clave en Hetzner, el cortafuegos y
    el servidor;
-2. copia `servidor/` al servidor y ejecuta `endurecer.sh` y `instalar.sh`;
+2. copia `servidor/` al servidor y ejecuta `endurecer.sh` y `instalar.sh` (que deja también
+   la unidad y el temporizador del procesado de adsb.lol y sus carpetas de datos);
 3. copia la clave age y las variables del extractor, con la clave de FIRMS;
 4. sustituye en GitHub las claves de despliegue «servidor eodi-recogida» de los dos
    repositorios por las del servidor;
-5. activa los temporizadores de la recogida horaria, de la exportación semanal y de las
-   fuentes oficiales de detalle.
+5. activa los temporizadores de la recogida horaria, de la exportación semanal, de las
+   fuentes oficiales de detalle y del procesado de adsb.lol.
 
 Puede repetirse sobre un servidor que ya existe: deja igual lo que ya está y vuelve a
 aplicar la configuración. Para empezar de verdad desde cero se borra antes el servidor:
@@ -177,12 +230,16 @@ commit en git, así que la web no se reconstruye cada hora.
 El fichero lleva la hora de inicio y de fin de la recogida, su resultado (`correcta`,
 `con_avisos` o `fallida`), la hora de la última correcta, la de la siguiente prevista
 (minuto 17) y, por cada fuente (`fuerza_aerea_ua`, `mindef_ru`, `gdelt`, `oficiales`,
-`extractor`, `firms` y las de detalle: `airprox`, `parlamentos`, `investigaciones`,
-`estadisticas_oficiales` y `paginas_js`, y las de la capa de guerra con lugar: `ova_ua`,
-`estado_mayor_ua`, `gobernadores_ru` y `rosaviatsia`), su estado (`leida`, `con_aviso` o
-`no_leida`) y la hora de su último dato; en `firms`, la de la última descarga correcta; en las
-de detalle, la de su última lectura correcta; en las de la capa de guerra, la de la última
-lectura correcta de alguno de sus canales (leída si se leyeron todos; con aviso si alguno no).
+`extractor`, `firms`, las de detalle: `airprox`, `parlamentos`, `investigaciones`,
+`estadisticas_oficiales` y `paginas_js`, las de la capa de guerra con lugar: `ova_ua`,
+`estado_mayor_ua`, `gobernadores_ru` y `rosaviatsia`, y las medidas: `trafico_aereo` y
+`condiciones`), su estado (`leida`, `con_aviso` o `no_leida`) y la hora de su último dato; en
+`firms`, la de la última descarga correcta; en las de detalle, la de su última lectura
+correcta; en las de la capa de guerra, la de la última lectura correcta de alguno de sus
+canales (leída si se leyeron todos; con aviso si alguno no); en `trafico_aereo`, la hora en
+que terminó de procesarse el último día del archivo de adsb.lol (con aviso si pasan más de 48
+horas sin procesar ninguno); en `condiciones`, la de la última petición correcta a Open-Meteo
+o al IEM.
 Lleva también `ultima_exportacion`: la hora en que terminó la última exportación semanal
 correcta (o null si no consta ninguna), del registro que deja la exportación.
 No lleva ningún contenido. La recogida deja el estado de cada fuente en un fichero

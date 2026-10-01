@@ -44,6 +44,7 @@ import {
   fuente,
   incidente,
   publicacion,
+  traficoAereo,
 } from "./ejemplos.ts";
 
 /** Campos que la web ya acepta aunque el esquema todavía no los marque como públicos. */
@@ -312,7 +313,7 @@ describe("validación contra el esquema", () => {
 
 describe("listas cerradas iguales a las del esquema", () => {
   type Esquema = Record<string, unknown>;
-  const leer = (nombre: string) => leerJson("esquema", "1.4.0", `${nombre}.schema.json`) as Esquema;
+  const leer = (nombre: string) => leerJson("esquema", "1.5.0", `${nombre}.schema.json`) as Esquema;
   const en = (objeto: unknown, ...claves: string[]): unknown =>
     claves.reduce<unknown>((actual, clave) => (actual as Esquema)[clave], objeto);
 
@@ -402,6 +403,7 @@ describe("listas cerradas iguales a las del esquema", () => {
       },
       afirmaciones_publicas: [afirmacion()],
       foco_termico: focoTermico(),
+      trafico_aereo: traficoAereo(),
     });
     expect(Object.keys(completo.properties).sort()).toEqual(
       [...new Set([...publicos, ...CAMPOS_ANTICIPADOS])].sort(),

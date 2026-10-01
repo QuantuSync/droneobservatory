@@ -22,6 +22,7 @@ TABLAS_CON_HISTORIAL = (
     "incidentes", "fuentes", "episodios", "ataques_ucrania", "regiones_ucrania", "focos_termicos",
     "encuentros", "estadisticas_oficiales", "documentos_oficiales",
     "impactos_guerra", "restricciones_aeropuertos",
+    "trafico_aereo", "condiciones", "anomalias_trafico",
 )  # fmt: skip
 # Campos de la fuente que dependen del incidente y no se guardan en la tabla común.
 CAMPOS_FUENTE_POR_ENTIDAD = frozenset({"credibilidad", "campos_respaldados"})
@@ -200,6 +201,58 @@ CREATE TABLE IF NOT EXISTS mensajes_guerra (
 CREATE INDEX IF NOT EXISTS mensajes_guerra_resultado ON mensajes_guerra (resultado);
 CREATE TRIGGER IF NOT EXISTS mensajes_guerra_sin_delete BEFORE DELETE ON mensajes_guerra
 BEGIN SELECT RAISE(ABORT, 'mensajes_guerra: nada se borra'); END;
+-- Tráfico aéreo medido con adsb.lol y condiciones medidas (proceso/mediciones.py). Por
+-- incidente, el cierre medido, la respuesta militar y la interferencia GNSS
+-- (trafico_aereo) y la meteorología y la astronomía (condiciones; también por ataque de la
+-- capa de guerra), documentos con historial. Las interrupciones de cada aeropuerto
+-- (anomalias_trafico: casadas con un incidente, explicadas por el tiempo o candidatas), con
+-- historial. La cobertura por aeropuerto y día y la interferencia GNSS diaria por celda, una
+-- fila por resultado que no cambia (una versión nueva de la regla es otra fila). Las trazas
+-- no están en la base: viven en el disco del servidor.
+CREATE TABLE IF NOT EXISTS trafico_aereo (
+    id TEXT PRIMARY KEY,
+    resultado TEXT NOT NULL,
+    documento TEXT NOT NULL CHECK (json_valid(documento))
+);
+CREATE TABLE IF NOT EXISTS condiciones (
+    id TEXT PRIMARY KEY,
+    documento TEXT NOT NULL CHECK (json_valid(documento))
+);
+CREATE TABLE IF NOT EXISTS anomalias_trafico (
+    id TEXT PRIMARY KEY,
+    oaci TEXT NOT NULL,
+    dia TEXT NOT NULL,
+    estado TEXT NOT NULL,
+    documento TEXT NOT NULL CHECK (json_valid(documento))
+);
+CREATE INDEX IF NOT EXISTS anomalias_trafico_dia ON anomalias_trafico (dia);
+CREATE TABLE IF NOT EXISTS cobertura_trafico (
+    oaci TEXT NOT NULL,
+    dia TEXT NOT NULL,
+    version TEXT NOT NULL,
+    vistos INTEGER NOT NULL,
+    referencia REAL,
+    origen_referencia TEXT,
+    indice REAL,
+    nivel TEXT NOT NULL,
+    PRIMARY KEY (oaci, dia, version)
+) WITHOUT ROWID;
+CREATE TABLE IF NOT EXISTS gnss_diaria (
+    dia TEXT NOT NULL,
+    celda TEXT NOT NULL,
+    version TEXT NOT NULL,
+    aeronaves INTEGER NOT NULL,
+    degradadas INTEGER NOT NULL,
+    PRIMARY KEY (dia, celda, version)
+) WITHOUT ROWID;
+CREATE TRIGGER IF NOT EXISTS cobertura_trafico_sin_update BEFORE UPDATE ON cobertura_trafico
+BEGIN SELECT RAISE(ABORT, 'cobertura_trafico: un resultado nuevo es una fila nueva'); END;
+CREATE TRIGGER IF NOT EXISTS cobertura_trafico_sin_delete BEFORE DELETE ON cobertura_trafico
+BEGIN SELECT RAISE(ABORT, 'cobertura_trafico: nada se borra'); END;
+CREATE TRIGGER IF NOT EXISTS gnss_diaria_sin_update BEFORE UPDATE ON gnss_diaria
+BEGIN SELECT RAISE(ABORT, 'gnss_diaria: un resultado nuevo es una fila nueva'); END;
+CREATE TRIGGER IF NOT EXISTS gnss_diaria_sin_delete BEFORE DELETE ON gnss_diaria
+BEGIN SELECT RAISE(ABORT, 'gnss_diaria: nada se borra'); END;
 CREATE TRIGGER IF NOT EXISTS focos_casados_sin_update BEFORE UPDATE ON focos_casados
 BEGIN SELECT RAISE(ABORT, 'focos_casados: un foco nuevo es una fila nueva'); END;
 CREATE TRIGGER IF NOT EXISTS focos_casados_sin_delete BEFORE DELETE ON focos_casados
@@ -582,6 +635,132 @@ class Almacen:
             {"enlace": e, "canal": c, "fecha": f, "huella": h, "resultado": r, **json.loads(d)}
             for e, c, f, h, r, d in filas
         ]
+
+    # --- Tráfico aéreo y condiciones medidas ------------------------------------
+
+    def _guardar_medicion(
+        self, tabla: str, id_: str, documento: Documento, columnas: dict[str, Any]
+    ) -> bool:
+        """Guarda el documento si ha cambiado algo más que la hora en que se evaluó: el
+        historial solo crece cuando cambia el resultado. True si lo ha guardado."""
+        fila = self._conexion.execute(
+            f"SELECT documento FROM {tabla} WHERE id = ?", (id_,)
+        ).fetchone()
+        if fila is not None and _sin_hora(json.loads(fila[0])) == _sin_hora(documento):
+            return False
+        with self._conexion:
+            self._upsert(tabla, {"id": id_, **columnas, "documento": _json(documento)})
+        return True
+
+    def _validar(self, definicion: str, documento: Documento) -> None:
+        errores = sorted(validador_definicion(definicion).iter_errors(documento), key=str)
+        if errores:
+            raise DocumentoInvalido([Error(definicion, e.message) for e in errores])
+
+    def guardar_trafico_aereo(self, incidente_id: str, documento: Documento) -> bool:
+        self._validar("trafico_aereo", documento)
+        resultado = documento["cierre"]["resultado"]
+        return self._guardar_medicion(
+            "trafico_aereo", incidente_id, documento, {"resultado": resultado}
+        )
+
+    def trafico_aereo(self) -> dict[str, Documento]:
+        filas = self._conexion.execute(
+            "SELECT id, documento FROM trafico_aereo ORDER BY id"
+        ).fetchall()
+        return {id_: json.loads(documento) for id_, documento in filas}
+
+    def guardar_condiciones(self, entidad_id: str, documento: Documento) -> bool:
+        self._validar("condiciones", documento)
+        return self._guardar_medicion("condiciones", entidad_id, documento, {})
+
+    def condiciones(self) -> dict[str, Documento]:
+        filas = self._conexion.execute(
+            "SELECT id, documento FROM condiciones ORDER BY id"
+        ).fetchall()
+        return {id_: json.loads(documento) for id_, documento in filas}
+
+    def guardar_anomalia(self, documento: Documento) -> bool:
+        self._validar("anomalia_trafico", documento)
+        id_ = f"{documento['oaci']}/{documento['inicio']}"
+        columnas = {
+            "oaci": documento["oaci"], "dia": documento["inicio"][:10],
+            "estado": documento["estado"],
+        }  # fmt: skip
+        return self._guardar_medicion("anomalias_trafico", id_, documento, columnas)
+
+    def anomalias(self, dia: str | None = None) -> list[Documento]:
+        if dia is None:
+            return self._documentos("SELECT documento FROM anomalias_trafico ORDER BY id")
+        return self._documentos(
+            "SELECT documento FROM anomalias_trafico WHERE dia = ? ORDER BY id", (dia,)
+        )
+
+    def guardar_coberturas(self, version: str, filas: list[Documento]) -> int:
+        """Añade la cobertura de cada aeropuerto y día que aún no estaba. Devuelve cuántas."""
+        nuevas = 0
+        with self._conexion:
+            for f in filas:
+                cursor = self._conexion.execute(
+                    "INSERT INTO cobertura_trafico (oaci, dia, version, vistos, referencia, "
+                    "origen_referencia, indice, nivel) VALUES (?, ?, ?, ?, ?, ?, ?, ?) "
+                    "ON CONFLICT DO NOTHING",
+                    (f["oaci"], f["dia"], version, f["vistos"], f.get("referencia"),
+                     f.get("origen_referencia"), f.get("indice"), f["nivel"]),
+                )  # fmt: skip
+                nuevas += cursor.rowcount
+        return nuevas
+
+    def coberturas(self, oaci: str | None = None) -> list[Documento]:
+        sql = (
+            "SELECT oaci, dia, version, vistos, referencia, origen_referencia, indice, nivel "
+            "FROM cobertura_trafico"
+        )
+        parametros: tuple[Any, ...] = ()
+        if oaci is not None:
+            sql += " WHERE oaci = ?"
+            parametros = (oaci,)
+        claves = ("oaci", "dia", "version", "vistos", "referencia", "origen_referencia",
+                  "indice", "nivel")  # fmt: skip
+        filas = self._conexion.execute(sql + " ORDER BY oaci, dia, version", parametros)
+        return [dict(zip(claves, f, strict=True)) for f in filas.fetchall()]
+
+    def guardar_gnss_diaria(self, version: str, dia: str, filas: list[tuple[str, int, int]]) -> int:
+        nuevas = 0
+        with self._conexion:
+            for celda, aeronaves, degradadas in filas:
+                cursor = self._conexion.execute(
+                    "INSERT INTO gnss_diaria (dia, celda, version, aeronaves, degradadas) "
+                    "VALUES (?, ?, ?, ?, ?) ON CONFLICT DO NOTHING",
+                    (dia, celda, version, aeronaves, degradadas),
+                )
+                nuevas += cursor.rowcount
+        return nuevas
+
+    def gnss_diaria(self, dia: str | None = None) -> list[Documento]:
+        sql = "SELECT dia, celda, version, aeronaves, degradadas FROM gnss_diaria"
+        parametros: tuple[Any, ...] = ()
+        if dia is not None:
+            sql += " WHERE dia = ?"
+            parametros = (dia,)
+        claves = ("dia", "celda", "version", "aeronaves", "degradadas")
+        filas = self._conexion.execute(sql + " ORDER BY dia, celda", parametros)
+        return [dict(zip(claves, f, strict=True)) for f in filas.fetchall()]
+
+    def dias_gnss(self, version: str) -> set[str]:
+        filas = self._conexion.execute(
+            "SELECT DISTINCT dia FROM gnss_diaria WHERE version = ?", (version,)
+        ).fetchall()
+        return {f[0] for f in filas}
+
+    def guardar_fuente(self, fuente: Documento) -> None:
+        """Una fuente de una medición: solo la tabla común, sin los campos por entidad."""
+        with self._conexion:
+            self._guardar_fuentes([fuente])
+
+    def guardar_afirmaciones(self, entidad_id: str, afirmaciones: list[Documento]) -> None:
+        with self._conexion:
+            self._guardar_afirmaciones(entidad_id, afirmaciones)
 
     # --- Recogida ----------------------------------------------------------
 

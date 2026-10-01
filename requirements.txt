@@ -6,3 +6,5 @@ tzdata==2026.4
 pypdf==6.19.0
 # Algunos PDF oficiales van cifrados con AES (con contraseña de propietario vacía).
 cryptography==50.0.2
+# Celdas hexagonales H3 de la interferencia GNSS (proceso/gnss.py).
+h3==4.5.0

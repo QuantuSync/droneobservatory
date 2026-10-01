@@ -235,6 +235,16 @@ export interface Textos {
     incluidoEn: string;
     solapadoCon: string;
   };
+  trafico: {
+    /** Rótulo de la fila en las fichas. */
+    rotulo: string;
+    cierreMedido: string;
+    duracion: (minutos: string) => string;
+    desviados: (n: string) => string;
+    enEspera: (n: string) => string;
+    declarado: string;
+    datos: string;
+  };
   foco: {
     /** Rótulo de la fila en las fichas. */
     rotulo: string;

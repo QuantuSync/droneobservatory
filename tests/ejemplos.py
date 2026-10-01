@@ -61,6 +61,203 @@ def foco_termico() -> Documento:
     }
 
 
+def trafico_aereo() -> Documento:
+    """Tráfico aéreo medido con cierre, respuesta militar e interferencia GNSS, con todos sus
+    campos (Copenhague, 22 de septiembre de 2025)."""
+    return {
+        "cierre": {
+            "resultado": "cierre_medido",
+            "aeropuerto": "EKCH",
+            "inicio": instante("2025-09-22T18:26Z"),
+            "fin": instante("2025-09-22T22:38Z"),
+            "duracion_min": 252,
+            "vuelos_desviados": 31,
+            "vuelos_en_espera": 6,
+            "difiere_de_declarado": False,
+            "aproximaciones_frustradas": 1,
+            "llegadas_perdidas": 52,
+            "salidas_perdidas": 48,
+            "precision_bordes": "movimientos",
+            "linea_base": {
+                "semanas": 4,
+                "llegadas": 54.0,
+                "salidas": 50.0,
+                "llegadas_vistas": 2,
+                "salidas_vistas": 2,
+                "esperas": 1.0,
+                "frustradas": 0.0,
+                "desvios": 0.0,
+            },
+            "cobertura": {
+                "nivel": "alta",
+                "vistos": 694,
+                "referencia": 780.0,
+                "origen_referencia": "eurocontrol",
+                "indice": 0.89,
+            },
+            "motivos_meteorologicos": [],
+            "declarado": {
+                "minutos": {"min": 240, "max": 240},
+                "vuelos_desviados": {"min": 35, "max": 35},
+            },
+            "diferencias": [],
+            "otras_interrupciones": 0,
+            "indicios": {
+                "base_ventana": 3.0,
+                "vistos_ventana": 0,
+                "esperas_ventana": 2,
+                "desvios_ventana": 1,
+            },
+        },
+        "respuesta_militar": {
+            "resultado": "vistas",
+            "radio_km": 150.0,
+            "ventana": {
+                "inicio": instante("2025-09-22T16:30Z"),
+                "fin": instante("2025-09-23T01:00Z"),
+            },
+            "aeronaves": 1,
+            "por_clase": {"helicoptero": 1},
+            "tipos": ["EH10"],
+            "primera": instante("2025-09-22T19:02Z"),
+            "distancia_min_km": 12.4,
+            "detalle": [
+                {
+                    "icao": "45d001",
+                    "tipo": "EH10",
+                    "clase": "helicoptero",
+                    "indicativos": ["DAF123"],
+                    "primera": instante("2025-09-22T19:02Z"),
+                    "distancia_min_km": 12.4,
+                }
+            ],
+            "ausencia_no_concluyente": True,
+        },
+        "interferencia_gnss": {
+            "resultado": "medida",
+            "celda": "841f059ffffffff",
+            "resolucion_h3": 4,
+            "ventana": {
+                "inicio": instante("2025-09-22T18:30Z"),
+                "fin": instante("2025-09-22T23:00Z"),
+            },
+            "propia": {
+                "aeronaves": 40,
+                "degradadas": 1,
+                "proporcion": 0.0,
+                "nivel": "sin_interferencia",
+            },
+            "vecinas": {
+                "aeronaves": 210,
+                "degradadas": 3,
+                "proporcion": 0.01,
+                "nivel": "sin_interferencia",
+            },
+        },
+        "datos": [
+            "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.09.22-planes-readsb-prod-0"
+        ],
+        "fuente_id": "adsblol-EKCH-2025-09-22-EODI-2025-00001",
+        "ventana": {"inicio": instante("2025-09-22T18:30Z"), "fin": instante("2025-09-22T23:00Z")},
+        "precision_incidente": "hora",
+        "origen": "medido",
+        "metodo": "regla",
+        "regla": {"nombre": "trafico_aereo", "version": "1.0.0"},
+        "huella": "a" * 64,
+        "evaluado": instante("2025-09-23T09:17Z"),
+    }
+
+
+def condiciones() -> Documento:
+    """Condiciones medidas con todos sus campos: el lugar de un incidente y, como en un ataque
+    de la capa de guerra, una zona de lanzamiento y una de impacto."""
+    lugar = _lugar_condiciones()
+    return {
+        "lugar": lugar,
+        "lanzamiento": [{**lugar, "nombre": "Primorsko-Ajtarsk", "lat": 46.05, "lon": 38.17}],
+        "impacto": [{**lugar, "nombre": "Járkov", "lat": 49.99, "lon": 36.23}],
+        "origen_lugar": "punto",
+        "niveles_desde": "2022-11-24",
+        "fuentes": [
+            "https://open-meteo.com/",
+            "https://mesonet.agron.iastate.edu/request/download.phtml",
+        ],
+        "fuente_id": "condiciones-EODI-2025-00001",
+        "origen": "medido",
+        "metodo": "regla",
+        "regla": {"nombre": "condiciones", "version": "1.0.0"},
+        "huella": "b" * 64,
+        "evaluado": instante("2025-09-23T09:17Z"),
+    }
+
+
+def _lugar_condiciones() -> Documento:
+    return {
+        "lat": 55.618,
+        "lon": 12.656,
+        "momento": {"valor": "2025-09-22T18:00Z", "precision": "hora"},
+        "rango_dia": False,
+        "superficie": {
+            "temperatura_c": 12.4,
+            "viento_10m_ms": 6.1,
+            "direccion_10m": 280.0,
+            "racha_10m_ms": 11.2,
+            "precipitacion_mm": 0.0,
+        },
+        "niveles": {"850": {"viento_ms": 16.3, "direccion": 299.0, "temperatura_c": 3.0}},
+        "metar": {
+            "estacion": "EKCH",
+            "distancia_km": 0.0,
+            "hora": {"valor": "2025-09-22T18:20Z", "precision": "minuto"},
+            "texto": "EKCH 221820Z AUTO 28012KT 9999 NCD 12/07 Q1014 NOSIG",
+            "visibilidad_m": 10000,
+            "techo_ft": None,
+            "fenomenos": [],
+            "viento_kt": 12.0,
+            "racha_kt": None,
+            "viento_dir": 280,
+        },
+        "astronomia": {
+            "elevacion_sol": -12.2,
+            "luz": "noche",
+            "altura_luna": -12.3,
+            "luna_iluminada": 0.01,
+            "horas_de_luz": 12.0,
+        },
+        "nombre": "Kastrup",
+    }
+
+
+def anomalia() -> Documento:
+    return {
+        "oaci": "EKCH",
+        "inicio": "2025-09-22T18:26Z",
+        "fin": "2025-09-22T22:38Z",
+        "duracion_min": 252,
+        "estado": "casada",
+        "incidentes": ["EODI-2025-00001"],
+        "precision": "movimientos",
+        "llegadas_perdidas": 52,
+        "salidas_perdidas": 48,
+        "llegadas_vistas": 2,
+        "salidas_vistas": 2,
+        "llegadas_base": 54.0,
+        "salidas_base": 50.0,
+        "esperas": 6,
+        "esperas_base": 1.0,
+        "frustradas": 1,
+        "frustradas_base": 0.0,
+        "desvios": 31,
+        "desvios_base": 0.0,
+        "semanas_base": 4,
+        "motivos_meteorologicos": [],
+        "cobertura": {"nivel": "alta", "vistos": 694},
+        "datos": "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.09.22-planes-readsb-prod-0",
+        "regla": {"nombre": "trafico_aereo", "version": "1.0.0"},
+        "evaluado": instante("2025-09-23T09:17Z"),
+    }
+
+
 def incidente_completo() -> Documento:
     """Incidente con todos los campos, públicos e internos, rellenos."""
     return {
@@ -133,6 +330,8 @@ def incidente_completo() -> Documento:
             "medidas": ["cierre_espacio_aereo"],
         },
         "encuentros": ["UKAB-2025022"],
+        "trafico_aereo": trafico_aereo(),
+        "condiciones": condiciones(),
         "respuesta": {
             "medidas": ["cierre_espacio_aereo", "patrulla"],
             "deteccion": ["radar", "piloto"],
@@ -260,6 +459,7 @@ def ataque_completo() -> Documento:
         "duracion_oleada_min": 420,
         "proporcion_senuelos": 0.2,
         "regiones": [{**region(), "foco_termico": foco_termico()}],
+        "condiciones": condiciones(),
         "fuentes": [
             fuente("P1", "B", es_autoridad=True),
             fuente("P2", "C", interna_fuera_de_ucrania=True),

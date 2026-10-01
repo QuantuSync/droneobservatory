@@ -1,4 +1,4 @@
-// Forma de los ficheros públicos de publicacion/ (esquema 1.4.0, solo campos públicos)
+// Forma de los ficheros públicos de publicacion/ (esquema 1.5.0, solo campos públicos)
 // y de los resúmenes que la web deriva de ellos en el build.
 
 export type Estado = "notificado" | "confirmado" | "atribuido" | "desmentido";
@@ -96,6 +96,28 @@ export interface FocoTermico {
   numero_focos: number;
 }
 
+/**
+ * Cierre medido con el tráfico aéreo real del archivo de adsb.lol. Solo se publica un cierre
+ * medido con cobertura suficiente; la respuesta militar y la interferencia GNSS no se publican.
+ */
+export interface TraficoAereo {
+  cierre: {
+    resultado: "cierre_medido";
+    aeropuerto: string;
+    /** Último movimiento antes del hueco. */
+    inicio: Instante;
+    /** Primer movimiento después del hueco. */
+    fin: Instante;
+    duracion_min: number;
+    vuelos_desviados: number;
+    vuelos_en_espera: number;
+    /** La duración o los desvíos medidos difieren de lo que declaran las fuentes. */
+    difiere_de_declarado?: boolean;
+  };
+  /** Publicaciones diarias de adsb.lol usadas (ODbL 1.0). */
+  datos?: string[];
+}
+
 /** Precisión con la que se conoce el lugar de un incidente sin punto en el mapa. */
 export type NivelUbicacion = "instalacion" | "localidad" | "region" | "pais";
 
@@ -127,6 +149,7 @@ export interface PropiedadesIncidente {
   respuesta?: { medidas?: Medida[] };
   atribucion?: { actor: string; autoridad: string; fecha: Instante };
   foco_termico?: FocoTermico;
+  trafico_aereo?: TraficoAereo;
   fuentes: Fuente[];
   afirmaciones_publicas?: AfirmacionPublica[];
   control: { ultima_actualizacion: Instante; motivo_desmentido?: string };
@@ -411,7 +434,9 @@ export type FuenteDelSistema =
   | "ova_ua"
   | "estado_mayor_ua"
   | "gobernadores_ru"
-  | "rosaviatsia";
+  | "rosaviatsia"
+  | "trafico_aereo"
+  | "condiciones";
 
 export interface EstadoSistema {
   version: 1;

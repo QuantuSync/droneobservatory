@@ -111,11 +111,36 @@ def _poblar(almacen: Almacen) -> None:
         "impactos",
         {"id": 31198},
     )
+    almacen.guardar_trafico_aereo("EODI-2025-00001", ejemplos.trafico_aereo())
+    almacen.guardar_condiciones("EODI-2025-00001", ejemplos.condiciones())
+    almacen.guardar_anomalia(ejemplos.anomalia())
+    almacen.guardar_coberturas(
+        "trafico-1.0.0",
+        [
+            {
+                "oaci": "EKCH",
+                "dia": "2025-09-22",
+                "vistos": 694,
+                "referencia": 780.0,
+                "indice": 0.89,
+                "nivel": "alta",
+            }
+        ],
+    )
+    almacen.guardar_gnss_diaria("trafico-1.0.0", "2025-09-22", [("841f059ffffffff", 120, 9)])
 
 
 @pytest.mark.parametrize(
     "tabla",
-    [*TABLAS_CON_HISTORIAL, "afirmaciones", "focos_casados", "historial", "mensajes_guerra"],
+    [
+        *TABLAS_CON_HISTORIAL,
+        "afirmaciones",
+        "focos_casados",
+        "historial",
+        "mensajes_guerra",
+        "cobertura_trafico",
+        "gnss_diaria",
+    ],
 )
 def test_delete_prohibido(almacen: Almacen, tabla: str) -> None:
     _poblar(almacen)
@@ -123,11 +148,14 @@ def test_delete_prohibido(almacen: Almacen, tabla: str) -> None:
         almacen.conexion.execute(f"DELETE FROM {tabla}")
 
 
-@pytest.mark.parametrize("tabla", ["afirmaciones", "focos_casados", "historial"])
+@pytest.mark.parametrize(
+    "tabla", ["afirmaciones", "focos_casados", "historial", "cobertura_trafico", "gnss_diaria"]
+)
 def test_update_prohibido_en_tablas_de_solo_insercion(almacen: Almacen, tabla: str) -> None:
     _poblar(almacen)
     with pytest.raises(sqlite3.IntegrityError):
-        almacen.conexion.execute(f"UPDATE {tabla} SET id = id")
+        columna = "dia" if tabla in ("cobertura_trafico", "gnss_diaria") else "id"
+        almacen.conexion.execute(f"UPDATE {tabla} SET {columna} = {columna}")
 
 
 def test_insert_or_replace_no_esquiva_el_bloqueo(almacen: Almacen) -> None:

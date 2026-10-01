@@ -19,14 +19,16 @@ ultima_exportacion es la hora en que terminó bien la última exportación seman
 
 Las fuentes van siempre todas y en este orden: fuerza_aerea_ua, mindef_ru, gdelt, oficiales,
 extractor, firms, las oficiales de detalle (recogida/detalle.py): airprox, parlamentos,
-investigaciones, estadisticas_oficiales y paginas_js, y las de la capa de guerra con lugar
-(recogida/canales_guerra.py): ova_ua, estado_mayor_ua, gobernadores_ru y rosaviatsia. En firms,
-el último dato es la hora de la última descarga correcta de NASA FIRMS (se descarga cada 3
-horas); en las de detalle, la de su última lectura correcta (las lee su propio temporizador
-cada 3 horas); en las de la capa de guerra (administraciones militares regionales de Ucrania,
-Estado Mayor ucraniano, gobernadores rusos y Rosaviatsia), la de la última lectura correcta de
-alguno de sus canales por el lector del servidor: leída si se leyeron todos sus canales, con
-aviso si alguno no, no leída si ninguno.
+investigaciones, estadisticas_oficiales y paginas_js, las de la capa de guerra con lugar
+(recogida/canales_guerra.py): ova_ua, estado_mayor_ua, gobernadores_ru y rosaviatsia, y las
+medidas: trafico_aereo y condiciones. En firms, el último dato es la hora de la última descarga
+correcta de NASA FIRMS (se descarga cada 3 horas); en las de detalle, la de su última lectura
+correcta (las lee su propio temporizador cada 3 horas); en las de la capa de guerra
+(administraciones militares regionales de Ucrania, Estado Mayor ucraniano, gobernadores rusos y
+Rosaviatsia), la de la última lectura correcta de alguno de sus canales por el lector del
+servidor: leída si se leyeron todos sus canales, con aviso si alguno no, no leída si ninguno;
+en trafico_aereo, la hora en que terminó de procesarse el último día del archivo de adsb.lol;
+en condiciones, la de la última petición correcta a Open-Meteo o al IEM.
 
 Uso: python -m recogida.estado --inicio <ISO> --codigo <N> --parcial <json> --anterior <json>
     --salida <json> --minuto <minuto de la recogida> [--exportacion <json>]
@@ -45,6 +47,7 @@ FUENTES = (
     "fuerza_aerea_ua", "mindef_ru", "gdelt", "oficiales", "extractor", "firms",
     "airprox", "parlamentos", "investigaciones", "estadisticas_oficiales", "paginas_js",
     "ova_ua", "estado_mayor_ua", "gobernadores_ru", "rosaviatsia",
+    "trafico_aereo", "condiciones",
 )  # fmt: skip
 LEIDA, CON_AVISO, NO_LEIDA = "leida", "con_aviso", "no_leida"
 CORRECTA, CON_AVISOS, FALLIDA = "correcta", "con_avisos", "fallida"

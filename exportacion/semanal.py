@@ -59,6 +59,7 @@ from modelo import ficha
 from proceso import incidentes as reglas
 from proceso.estados import Estado
 from proceso.focos_termicos import con_focos
+from proceso.mediciones import con_mediciones
 from proceso.restricciones import por_ataque
 
 VERSION_FORMATO = "1.1.0"
@@ -524,6 +525,9 @@ def generar(almacen: Almacen) -> list[Fichero]:
     # El foco térmico de FIRMS vive en su propia tabla: aquí va completo, con lo interno.
     focos = almacen.focos_termicos()
     base, ataques_base = con_focos(almacen.incidentes(), almacen.ataques_ucrania(), focos)
+    # Igual con el tráfico aéreo y las condiciones medidas (proceso/mediciones.py), con su
+    # fuente y sus afirmaciones medidas, que así quedan vigentes.
+    base, ataques_base = con_mediciones(base, ataques_base, almacen)
     episodios = almacen.episodios()
     fichas = origenes.Fichas.de(almacen)
     try:

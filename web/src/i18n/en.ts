@@ -65,6 +65,8 @@ export const en: Textos = {
       estado_mayor_ua: "Ukrainian General Staff",
       gobernadores_ru: "Russian governors",
       rosaviatsia: "Rosaviatsia",
+      trafico_aereo: "Air traffic (adsb.lol)",
+      condiciones: "Weather (Open-Meteo, METAR)",
     },
     estadoFuente: { leida: "read", con_aviso: "with warning", no_leida: "not read" },
     ultimoDato: "latest data",
@@ -343,6 +345,15 @@ export const en: Textos = {
     cruces: "Crossings into other countries",
     incluidoEn: "Figures included in report",
     solapadoCon: "Overlaps with report",
+  },
+  trafico: {
+    rotulo: "Air traffic",
+    cierreMedido: "Closure measured with real air traffic",
+    duracion: (minutos) => `${minutos} min`,
+    desviados: (n) => `${n} diverted flights`,
+    enEspera: (n) => `${n} holding`,
+    declarado: "According to the sources",
+    datos: "adsb.lol data",
   },
   foco: {
     rotulo: "Satellite",
@@ -763,6 +774,54 @@ export const en: Textos = {
         ],
       },
       {
+        id: "trafico",
+        titulo: "Measured air traffic",
+        bloques: [
+          {
+            parrafo: [
+              "For incidents at airports with scheduled flights, the closure is measured with " +
+                "real traffic: the daily archive of ",
+              { texto: "adsb.lol", enlace: "https://adsb.lol/" },
+              ", an open network of ADS-B receivers. Landings and take-offs by airliners and " +
+                "business jets are counted in 15-minute slots and compared with the same slot " +
+                "on the same weekday of the four previous weeks. A measured closure is a " +
+                "stretch with 30% or less of the usual traffic that matches the incident; its " +
+                "start and end are the last movement before the gap and the first one after.",
+            ],
+          },
+          {
+            parrafo: [
+              "A diverted flight is one that was descending towards the airport and landed " +
+                "at another, or one that landed at another airport with a flight number that " +
+                "arrived there at that time in previous weeks. A holding flight is one that " +
+                "flew holding patterns, found with the detector of the open traffic library. " +
+                "If the measurement differs from what the sources say, both are shown.",
+            ],
+          },
+          {
+            parrafo: [
+              "Limits: adsb.lol does not see every aircraft or every airport equally. Each day " +
+                "what it sees is compared with EUROCONTROL's reference IFR flights; below half, " +
+                "no gap is interpreted. If the weather (fog, thunderstorm, snow, strong wind " +
+                "or a contaminated runway in the METARs) explains a gap, that is taken into " +
+                "account. Many military aircraft fly without transmitting, so their absence " +
+                "from these data proves nothing. A gap in traffic does not tell its cause: " +
+                "airports also close for balloons, technical failures or strikes, which is why " +
+                "it is only shown next to a known incident.",
+            ],
+          },
+          {
+            parrafo: [
+              "The figure is missing when the incident is not at an airport with scheduled " +
+                "flights, when adsb.lol did not publish that day or published it incomplete, " +
+                "when coverage at that airport that day is insufficient, when there are not yet " +
+                "four weeks of baseline, or when no gap matches the incident. A value that " +
+                "cannot be measured is left empty; it is never filled in.",
+            ],
+          },
+        ],
+      },
+      {
         id: "sesgo",
         titulo: "Coverage bias",
         bloques: [
@@ -821,6 +880,35 @@ export const en: Textos = {
                 texto: [
                   { texto: "GeoNames", enlace: "https://www.geonames.org/" },
                   " (CC BY 4.0).",
+                ],
+              },
+              {
+                termino: "Air traffic",
+                texto: [
+                  "© adsb.lol contributors (",
+                  { texto: "adsb.lol", enlace: "https://adsb.lol/" },
+                  "), ",
+                  { texto: "ODbL 1.0", enlace: "https://opendatacommons.org/licenses/odbl/1-0/" },
+                  ". The air traffic block of the published files is derived from those data " +
+                    "and is offered under the same licence. Airports and runways from ",
+                  { texto: "OurAirports", enlace: "https://ourairports.com/data/" },
+                  " (public domain); coverage reference from EUROCONTROL (Aviation " +
+                    "Intelligence Portal), not published; holding patterns with the method of " +
+                    "the ",
+                  { texto: "traffic", enlace: "https://github.com/xoolive/traffic" },
+                  " library (MIT, © Xavier Olive).",
+                ],
+              },
+              {
+                termino: "Weather",
+                texto: [
+                  { texto: "Weather data by Open-Meteo.com", enlace: "https://open-meteo.com/" },
+                  " (CC BY 4.0) and METARs from the ",
+                  {
+                    texto: "Iowa Environmental Mesonet",
+                    enlace: "https://mesonet.agron.iastate.edu/",
+                  },
+                  " of Iowa State University.",
                 ],
               },
               {

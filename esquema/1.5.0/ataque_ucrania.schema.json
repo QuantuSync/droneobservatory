@@ -1,9 +1,9 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:eodi:esquema:1.4.0:ataque_ucrania",
+  "$id": "urn:eodi:esquema:1.5.0:ataque_ucrania",
   "title": "Ataque de la capa de Ucrania",
   "description": "Un ataque agregado, normalmente una noche, con el periodo tal como lo declara el parte. La atribución no aplica y el parte oficial cuenta como confirmación.",
-  "x-version": "1.4.0",
+  "x-version": "1.5.0",
   "type": "object",
   "additionalProperties": false,
   "required": ["id", "tipo", "periodo", "sentido", "estado", "fuentes", "control"],
@@ -16,8 +16,8 @@
       "additionalProperties": false,
       "required": ["inicio", "fin"],
       "properties": {
-        "inicio": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.4.0:comun#/$defs/instante"},
-        "fin": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.4.0:comun#/$defs/instante"}
+        "inicio": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.5.0:comun#/$defs/instante"},
+        "fin": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.5.0:comun#/$defs/instante"}
       }
     },
     "sentido": {"x-visibilidad": "publico", "enum": ["RU_UA", "UA_RU"]},
@@ -26,19 +26,19 @@
       "description": "Las cifras son lo que dice una de las partes en guerra (Fuerza Aérea de Ucrania o Ministerio de Defensa ruso), sin otra fuente que lo confirme.",
       "const": true
     },
-    "estado": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.4.0:comun#/$defs/estado_historial"},
+    "estado": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.5.0:comun#/$defs/estado_historial"},
     "lanzados": {
       "x-visibilidad": "publico",
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "shahed_geran": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.4.0:comun#/$defs/rango_entero_o_desconocido"},
-        "gerbera_senuelos": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.4.0:comun#/$defs/rango_entero_o_desconocido"},
-        "otros": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.4.0:comun#/$defs/rango_entero_o_desconocido"},
+        "shahed_geran": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.5.0:comun#/$defs/rango_entero_o_desconocido"},
+        "gerbera_senuelos": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.5.0:comun#/$defs/rango_entero_o_desconocido"},
+        "otros": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.5.0:comun#/$defs/rango_entero_o_desconocido"},
         "total": {
           "x-visibilidad": "publico",
           "description": "Total declarado. Los partes suelen dar una sola cifra para varios modelos: entonces cada modelo es un rango y el total es la cifra exacta.",
-          "$ref": "urn:eodi:esquema:1.4.0:comun#/$defs/rango_entero_o_desconocido"
+          "$ref": "urn:eodi:esquema:1.5.0:comun#/$defs/rango_entero_o_desconocido"
         }
       }
     },
@@ -54,22 +54,22 @@
       "uniqueItems": true,
       "items": {"enum": ["ala_fija", "multirrotor"]}
     },
-    "derribados": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.4.0:comun#/$defs/rango_entero_o_desconocido"},
+    "derribados": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.5.0:comun#/$defs/rango_entero_o_desconocido"},
     "derribados_categoria": {
       "x-visibilidad": "publico",
       "description": "Qué cuenta la cifra de derribados. 'derribados_o_neutralizados' cuando el parte da una sola cifra para derribados y neutralizados por guerra electrónica ('збито/подавлено'): la web lo muestra así.",
       "enum": ["derribados", "derribados_o_neutralizados"]
     },
-    "perdidos_guerra_electronica": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.4.0:comun#/$defs/rango_entero_o_desconocido"},
+    "perdidos_guerra_electronica": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.5.0:comun#/$defs/rango_entero_o_desconocido"},
     "localizaciones_impacto": {
       "x-visibilidad": "publico",
       "description": "Número de localizaciones con impacto que declara el parte, aunque no las nombre.",
-      "$ref": "urn:eodi:esquema:1.4.0:comun#/$defs/rango_entero_o_desconocido"
+      "$ref": "urn:eodi:esquema:1.5.0:comun#/$defs/rango_entero_o_desconocido"
     },
     "localizaciones_restos": {
       "x-visibilidad": "publico",
       "description": "Número de localizaciones con caída de restos que declara el parte.",
-      "$ref": "urn:eodi:esquema:1.4.0:comun#/$defs/rango_entero_o_desconocido"
+      "$ref": "urn:eodi:esquema:1.5.0:comun#/$defs/rango_entero_o_desconocido"
     },
     "lugares_impacto": {
       "x-visibilidad": "publico",
@@ -90,15 +90,15 @@
         "additionalProperties": false,
         "required": ["pais", "numero"],
         "properties": {
-          "pais": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.4.0:comun#/$defs/pais"},
-          "numero": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.4.0:comun#/$defs/rango_entero_o_desconocido"}
+          "pais": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.5.0:comun#/$defs/pais"},
+          "numero": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.5.0:comun#/$defs/rango_entero_o_desconocido"}
         }
       }
     },
     "horas_llegada": {
       "x-visibilidad": "interno",
       "type": "array",
-      "items": {"$ref": "urn:eodi:esquema:1.4.0:comun#/$defs/instante"}
+      "items": {"$ref": "urn:eodi:esquema:1.5.0:comun#/$defs/instante"}
     },
     "duracion_oleada_min": {"x-visibilidad": "interno", "type": "integer", "minimum": 0},
     "proporcion_senuelos": {
@@ -112,14 +112,14 @@
       "x-visibilidad": "publico",
       "description": "Regiones afectadas por los drones del ataque.",
       "type": "array",
-      "items": {"$ref": "urn:eodi:esquema:1.4.0:region_ucrania"}
+      "items": {"$ref": "urn:eodi:esquema:1.5.0:region_ucrania"}
     },
     "regiones_misiles": {
       "x-visibilidad": "publico",
       "description": "Regiones que el parte solo cita por los misiles del mismo ataque: no cuentan como afectadas por drones.",
       "type": "array",
       "uniqueItems": true,
-      "items": {"$ref": "urn:eodi:esquema:1.4.0:comun#/$defs/region_iso"}
+      "items": {"$ref": "urn:eodi:esquema:1.5.0:comun#/$defs/region_iso"}
     },
     "incluido_en": {
       "x-visibilidad": "publico",
@@ -133,16 +133,17 @@
       "type": "string",
       "pattern": "^EODI-UA-\\d{4}-\\d{4}$"
     },
+    "condiciones": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.5.0:comun#/$defs/condiciones"},
     "fuentes": {
       "x-visibilidad": "publico",
       "type": "array",
       "minItems": 1,
-      "items": {"$ref": "urn:eodi:esquema:1.4.0:fuente"}
+      "items": {"$ref": "urn:eodi:esquema:1.5.0:fuente"}
     },
     "afirmaciones": {
       "x-visibilidad": "interno",
       "type": "array",
-      "items": {"$ref": "urn:eodi:esquema:1.4.0:afirmacion"}
+      "items": {"$ref": "urn:eodi:esquema:1.5.0:afirmacion"}
     },
     "restricciones_aeropuertos": {
       "x-visibilidad": "interno",
@@ -159,7 +160,7 @@
       "x-visibilidad": "interno",
       "description": "Origen y método de cada valor del ataque, por campo. Lo calcula la exportación semanal; la base no lo guarda.",
       "type": "object",
-      "additionalProperties": {"$ref": "urn:eodi:esquema:1.4.0:comun#/$defs/procedencia"}
+      "additionalProperties": {"$ref": "urn:eodi:esquema:1.5.0:comun#/$defs/procedencia"}
     },
     "control": {
       "x-visibilidad": "publico",
@@ -167,11 +168,11 @@
       "additionalProperties": false,
       "required": ["alta", "ultima_actualizacion"],
       "properties": {
-        "alta": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.4.0:comun#/$defs/instante"},
-        "ultima_actualizacion": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.4.0:comun#/$defs/instante"},
+        "alta": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.5.0:comun#/$defs/instante"},
+        "ultima_actualizacion": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.5.0:comun#/$defs/instante"},
         "motivo_desmentido": {"x-visibilidad": "publico", "type": "string", "minLength": 1},
         "version_extractor": {"x-visibilidad": "interno", "type": "string", "minLength": 1},
-        "huella_fuentes": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.4.0:comun#/$defs/huella"}
+        "huella_fuentes": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.5.0:comun#/$defs/huella"}
       }
     }
   }

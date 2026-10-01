@@ -75,6 +75,27 @@ def _foco_termico(ruta: str) -> set[str]:
     }
 
 
+def _trafico_aereo(ruta: str) -> set[str]:
+    """Tráfico aéreo medido: solo sale con un cierre medido válido
+    (proceso.mediciones.solo_publico), con su aeropuerto, horas, duración, desvíos, esperas, si
+    difiere de lo declarado y las publicaciones de adsb.lol usadas. Sin la respuesta militar,
+    la interferencia GNSS, la cobertura ni la línea base."""
+    cierre = f"{ruta}.cierre"
+    return {
+        ruta,
+        cierre,
+        f"{cierre}.resultado",
+        f"{cierre}.aeropuerto",
+        *_instante(f"{cierre}.inicio"),
+        *_instante(f"{cierre}.fin"),
+        f"{cierre}.duracion_min",
+        f"{cierre}.vuelos_desviados",
+        f"{cierre}.vuelos_en_espera",
+        f"{cierre}.difiere_de_declarado",
+        f"{ruta}.datos",
+    }
+
+
 CAMPOS_PUBLICOS_INCIDENTE: frozenset[str] = frozenset(
     {
         "id",
@@ -115,6 +136,7 @@ CAMPOS_PUBLICOS_INCIDENTE: frozenset[str] = frozenset(
         *_rango("consecuencias.heridos"),
         *_rango("consecuencias.fallecidos"),
         *_foco_termico("foco_termico"),
+        *_trafico_aereo("trafico_aereo"),
         "respuesta",
         "respuesta.medidas",
         "atribucion",

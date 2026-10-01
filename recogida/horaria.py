@@ -15,6 +15,10 @@ lector de canales dejó en el disco del servidor se convierten en impactos con l
 instalación, y el extractor lee, con su límite diario propio, los mensajes que el código no
 resuelve. Un fallo ahí tampoco cambia el resultado de la recogida.
 
+Después de FIRMS, el tráfico aéreo medido con adsb.lol (lo que el procesado diario dejó en el
+disco del servidor) y las condiciones medidas de Open-Meteo y del IEM (`recogida/mediciones.py`),
+cada uno con su tope y sin cambiar el código de salida si fallan.
+
 Con --estado, deja escrito cómo fue cada fuente y la fecha de su último dato, para el
 estado del sistema que publica el servidor (`recogida/estado.py`).
 
@@ -36,7 +40,7 @@ from exportacion.publicar import modelos, publicar
 from proceso import focos_termicos, impactos_guerra, incursiones, presencia, solapes
 from proceso.ataques import SENTIDO_UA_RU
 from proceso.extraccion import Parada
-from recogida import detalle, extractor, firms, gdelt, guerra, oficiales
+from recogida import detalle, extractor, firms, gdelt, guerra, mediciones, oficiales
 from recogida.cache import CachePaginas
 from recogida.descarga import Descargador, DescargaFallida
 from recogida.ejecucion import SinCursor, ejecutar
@@ -267,6 +271,9 @@ def principal(argumentos: list[str] | None = None) -> int:
             )
         except Exception as error:
             registro.warning("credibilidad con focos fallida: %s", error)
+        # Tráfico aéreo y condiciones medidas: tampoco cambian el código de salida.
+        estados[mediciones.FUENTE_TRAFICO] = mediciones.paso_trafico(almacen, ahora)
+        estados[mediciones.FUENTE_CONDICIONES] = mediciones.paso_condiciones(almacen, ahora)
         # Presencia del dron que confirman las declaraciones oficiales ya guardadas: la regla
         # se amplió y lo anterior se revisa en cada pasada; ya aplicada, no cambia nada.
         confirmadas, sin_guardar = presencia.revisar(almacen, ahora, modelos(almacen))

@@ -11,6 +11,7 @@ import type { Textos } from "../i18n/index.ts";
 import type { Idioma } from "../sitio.ts";
 import { EstadoConTexto, Historial, ListaFuentes } from "./Fuentes.tsx";
 import { LineaFoco, ZOOM_VISOR_PUNTO } from "./FocoTermico.tsx";
+import { LineaTrafico } from "./TraficoAereo.tsx";
 import { Fila } from "./Panel.tsx";
 import { Simbolo } from "./Simbolo.tsx";
 
@@ -287,6 +288,14 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
             </span>
             <QueDiceCadaFuente t={t} idioma={idioma} afirmaciones={de(CAMPOS_DE_FILA.atribucion)} />
           </Fila>
+        )}
+        {incidente.trafico_aereo !== undefined && (
+          <LineaTrafico
+            t={t}
+            idioma={idioma}
+            trafico={incidente.trafico_aereo}
+            consecuencias={consecuencias}
+          />
         )}
         {incidente.foco_termico !== undefined && incidente.lon !== null && (
           <LineaFoco

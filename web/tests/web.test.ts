@@ -67,6 +67,7 @@ describe("textos en español e inglés", () => {
       "historial",
       "fuentes",
       "focos",
+      "trafico",
       "sesgo",
       "licencias",
     ]);
@@ -85,6 +86,10 @@ describe("textos en español e inglés", () => {
       "GeoNames",
       "NASA FIRMS",
       "no demuestra nada",
+      "adsb.lol",
+      "© adsb.lol contributors",
+      "Weather data by Open-Meteo.com",
+      "no indica su causa",
       "antorchas",
       "nubes",
     ]) {

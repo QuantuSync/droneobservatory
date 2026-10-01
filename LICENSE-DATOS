@@ -13,3 +13,13 @@ reproducen como cita breve junto al enlace a la fuente; no quedan
 sujetas a esta licencia.
 
 El código del repositorio se distribuye bajo Apache-2.0 (fichero LICENSE).
+
+Excepción: el tráfico aéreo medido. El bloque trafico_aereo de los
+incidentes publicados deriva del archivo de adsb.lol (© adsb.lol
+contributors), que se distribuye bajo la Open Database License
+(ODbL 1.0). Ese bloque es una base de datos derivada y se ofrece bajo
+la misma licencia ODbL 1.0, atribuyendo a adsb.lol; el resto de los
+datos de los ficheros mantiene la licencia CC BY 4.0. Ver
+docs/licencias_terceros.md.
+
+Texto legal de la ODbL 1.0: https://opendatacommons.org/licenses/odbl/1-0/

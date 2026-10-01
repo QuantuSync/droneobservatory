@@ -1,4 +1,4 @@
-// Validación de los datos contra el esquema 1.4.0 (campos públicos), escrita a mano para
+// Validación de los datos contra el esquema 1.5.0 (campos públicos), escrita a mano para
 // que no necesite generar código en el navegador. Se usa en el build, sobre los ficheros de
 // publicacion/, y en la web al cargar cada fichero: un fichero que no valida no se pinta.
 
@@ -179,6 +179,25 @@ const focoTermico = objeto({
   numero_focos: numero(1, Number.MAX_SAFE_INTEGER, true),
 });
 
+/** Tráfico aéreo medido: solo el cierre medido es público. */
+const traficoAereo = objeto(
+  {
+    cierre: objeto(
+      {
+        resultado: constante(v.RESULTADO_TRAFICO_PUBLICO),
+        aeropuerto: cadena(v.PATRON_OACI),
+        inicio: instante,
+        fin: instante,
+        duracion_min: enteroNoNegativo,
+        vuelos_desviados: enteroNoNegativo,
+        vuelos_en_espera: enteroNoNegativo,
+      },
+      { difiere_de_declarado: enumerado([true, false]) },
+    ),
+  },
+  { datos: lista(cadena(v.PATRON_DATOS_ADSBLOL)) },
+);
+
 const longitud = numero(-v.LONGITUD_MAX, v.LONGITUD_MAX);
 const latitud = numero(-v.LATITUD_MAX, v.LATITUD_MAX);
 const radio = numero(v.RADIO_KM_MIN, v.RADIO_KM_MAX);
@@ -237,6 +256,7 @@ const CAMPOS_INCIDENTE_OPCIONALES: Record<string, Comprobacion> = {
   respuesta: objeto({}, { medidas: lista(enumerado(v.MEDIDAS)) }),
   atribucion: objeto({ actor: cadena(), autoridad: cadena(), fecha: instante }),
   foco_termico: focoTermico,
+  trafico_aereo: traficoAereo,
 };
 
 const propiedadesIncidente = objeto(CAMPOS_INCIDENTE_OBLIGATORIOS, CAMPOS_INCIDENTE_OPCIONALES);

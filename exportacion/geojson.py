@@ -20,6 +20,7 @@ from exportacion.proyeccion import (
 )
 from proceso.estados import Capa
 from proceso.focos_termicos import solo_detectado
+from proceso.mediciones import solo_publico
 from proceso.validaciones import errores_ubicacion, validar_incidente
 
 registro = logging.getLogger(__name__)
@@ -46,12 +47,13 @@ def feature(incidente: Documento) -> Documento | None:
 
 
 def con_afirmaciones(incidente: Documento) -> Documento | None:
-    """Copia con solo las fuentes públicas, si las hay sus afirmaciones públicas y el foco
-    térmico solo si es detectado."""
+    """Copia con solo las fuentes públicas, si las hay sus afirmaciones públicas, el foco
+    térmico solo si es detectado y el tráfico aéreo solo si hay un cierre medido válido."""
     documento = solo_fuentes_publicas(incidente, Capa.GENERAL)
     if documento is None:
         return None
     solo_detectado(documento)
+    solo_publico(documento)
     afirmaciones = afirmaciones_publicas(documento)
     if afirmaciones:
         documento["afirmaciones_publicas"] = afirmaciones

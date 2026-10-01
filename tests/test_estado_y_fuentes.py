@@ -36,6 +36,8 @@ def parcial() -> dict[str, object]:
         "estado_mayor_ua": estado.EstadoFuente(estado.LEIDA, dato(17, 52)),
         "gobernadores_ru": estado.EstadoFuente(estado.NO_LEIDA),
         "rosaviatsia": estado.EstadoFuente(estado.LEIDA, dato(17, 52)),
+        "trafico_aereo": estado.EstadoFuente(estado.LEIDA, dato(4, 2)),
+        "condiciones": estado.EstadoFuente(estado.NO_LEIDA, dato(17, 17)),
     }
     return {f: fuentes[f].documento(f) for f in fuentes}
 
@@ -66,6 +68,8 @@ def test_estado_de_una_recogida_correcta() -> None:
             {"id": "estado_mayor_ua", "estado": "leida", "ultimo_dato": "2026-09-30T17:52Z"},
             {"id": "gobernadores_ru", "estado": "no_leida", "ultimo_dato": None},
             {"id": "rosaviatsia", "estado": "leida", "ultimo_dato": "2026-09-30T17:52Z"},
+            {"id": "trafico_aereo", "estado": "leida", "ultimo_dato": "2026-09-30T04:02Z"},
+            {"id": "condiciones", "estado": "no_leida", "ultimo_dato": "2026-09-30T17:17Z"},
         ],
     }
 

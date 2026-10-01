@@ -112,9 +112,12 @@ META_INCIDENTE = frozenset({
     "procedencia", "nivel_detalle", "fusionado_en", "retirado", "episodio", "encuentros",
 })  # fmt: skip
 META_ATAQUE = frozenset({"id", "fuentes", "afirmaciones", "control", "procedencia"})
+# Bloques de mediciones físicas, con origen medido y método regla.
+MEDICIONES = frozenset({"trafico_aereo", "condiciones"})
 # Nodos que se tratan como un solo valor.
 HOJAS = frozenset({
     "estado", "atribucion", "foco_termico", "drones.trayectoria", "consecuencias.danos",
+    "trafico_aereo", "condiciones",
 })  # fmt: skip
 CLAVES_VALOR = (frozenset({"valor", "precision"}), frozenset({"min", "max"}),
                 frozenset({"lat", "lon"}))  # fmt: skip
@@ -390,6 +393,11 @@ def procedencia_incidente(documento: Documento, fichas: Fichas) -> tuple[Documen
             return valor if valor.fuentes else None
         if ruta == "foco_termico":
             return Valor({MEDIDO}, PARSER)
+        if ruta in MEDICIONES:
+            # Tráfico aéreo y condiciones medidas: los calcula el código (proceso/mediciones.py)
+            # a partir de datos físicos; su regla y su versión van en el propio bloque.
+            bloque = documento[ruta]
+            return Valor({MEDIDO}, REGLA, {bloque["fuente_id"]} if "fuente_id" in bloque else set())
         if ruta == "presencia_dron":
             confirmadas = [a for a in regla.get("presencia_dron", [])
                            if a["valor"] == documento.get("presencia_dron")]  # fmt: skip
@@ -693,7 +701,9 @@ def exportar_afirmacion(
     afirmacion: Documento, entidad: str, fuente: Documento, fichas: Fichas, extractor: bool
 ) -> Documento:
     """La afirmación con su origen y su método. La del extractor sin respaldo no lleva su
-    valor: «sin_respaldo», con la confianza."""
+    valor: «sin_respaldo», con la confianza. Las medidas (tráfico aéreo) ya traen los suyos."""
+    if afirmacion.get("origen") == MEDIDO and afirmacion.get("metodo") == REGLA:
+        return dict(afirmacion)
     resultado = {**afirmacion, "origen": origen_de_fuente(fuente)}
     if not extractor or fuente.get("metodo"):
         resultado["metodo"] = metodo_de_fuente(fuente)

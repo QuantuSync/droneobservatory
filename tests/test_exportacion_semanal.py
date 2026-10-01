@@ -16,6 +16,7 @@ from almacen.base import Almacen
 from almacen.cifrado import VARIABLE_CLAVE, guardar_cifrada
 from esquema import Documento
 from exportacion import semanal
+from proceso import mediciones
 from recogida import estado, exportacion, salud
 from tests import ejemplos
 from tests.ejemplos import AHORA, VOCABULARIO_MODELOS
@@ -126,6 +127,40 @@ def test_el_foco_termico_va_completo_con_lo_interno() -> None:
     assert ataque["regiones"][0]["foco_termico"] == ejemplos.foco_termico()
     (region,) = lineas(ficheros["ucrania_regiones.jsonl"])
     assert region["region"]["foco_termico"]["frp_max_mw"] == 48.2
+
+
+def test_el_trafico_aereo_y_las_condiciones_van_completos_con_su_origen_medido() -> None:
+    """Las mediciones viven en sus tablas: AEGIS recibe los bloques enteros (también la
+    respuesta militar y la interferencia GNSS, que la web nunca ve), su procedencia medida y
+    las afirmaciones de la fuente medida, vigentes, junto a lo declarado."""
+    almacen = poblado()
+    bloque = ejemplos.trafico_aereo()
+    cierre = bloque["cierre"]
+    fuente = mediciones.fuente_trafico("EODI-2025-00002", cierre, bloque["datos"], 2)
+    bloque["fuente_id"] = fuente["id"]
+    almacen.guardar_fuente(fuente)
+    almacen.guardar_afirmaciones(
+        "EODI-2025-00002", mediciones.afirmaciones_trafico(fuente, cierre, 2)
+    )
+    almacen.guardar_trafico_aereo("EODI-2025-00002", bloque)
+    almacen.guardar_condiciones("EODI-2025-00002", ejemplos.condiciones())
+    ficheros = por_nombre(semanal.generar(almacen))
+    incidentes = {i["id"]: i for i in lineas(ficheros["incidentes.jsonl"])}
+    exportado = incidentes["EODI-2025-00002"]
+    assert exportado["trafico_aereo"] == bloque
+    assert exportado["condiciones"] == ejemplos.condiciones()
+    assert exportado["procedencia"]["trafico_aereo"] == {
+        "origen": "medido",
+        "metodo": "regla",
+        "fuentes": [fuente["id"]],
+    }
+    medidas = [a for a in lineas(ficheros["afirmaciones.jsonl"]) if a["fuente_id"] == fuente["id"]]
+    assert {(a["campo"], a["origen"], a["metodo"], a["vigente"]) for a in medidas} == {
+        ("cierre", "medido", "regla", True),
+        ("cierre_minutos", "medido", "regla", True),
+        ("vuelos_desviados", "medido", "regla", True),
+    }
+    assert {a["fuente"]["medio"] for a in medidas} == {"Tráfico aéreo medido (adsb.lol)"}
 
 
 def test_las_afirmaciones_llevan_todas_las_fuentes_tambien_las_internas() -> None:

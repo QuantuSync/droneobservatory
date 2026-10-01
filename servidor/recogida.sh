@@ -99,6 +99,9 @@ principal() {
   export EODI_DETALLE_DATOS="$DETALLE_DATOS"
   # Lo que dejó el lector de canales de la capa de guerra (servidor/guerra.sh).
   export EODI_GUERRA_DATOS="$GUERRA_DATOS"
+  # Lo que deja el procesado de adsb.lol y la caché de Open-Meteo y del IEM
+  # (recogida/mediciones.py).
+  export EODI_TRAFICO_DATOS="$TRAFICO_DATOS" EODI_METEO_DATOS="$METEO_DATOS"
 
   GIT_SSH_COMMAND="$ssh_base -i $DESPLIEGUE_DATOS" \
     "$python" -m recogida.horaria --correo "$CORREO" --repositorio "$URL_DATOS" \

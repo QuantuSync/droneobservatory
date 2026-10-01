@@ -146,6 +146,24 @@ CERROJO_GUERRA="$SECRETOS/guerra.lock"
 GUERRA_DESDE="2025-01-01"
 GUERRA_HISTORICO_MINUTOS=40
 TOPE_GUERRA_MINUTOS=55
+# --- Tráfico aéreo de adsb.lol y condiciones medidas (recogida/trafico.py) -----------
+# Lo que sale del procesado de cada día (movimientos, militares, GNSS, trazas filtradas, METAR
+# y la referencia de EUROCONTROL) y la caché de Open-Meteo y del IEM: fuera del repositorio y
+# de la base, del usuario del observatorio y solo para él.
+TRAFICO_DATOS="${EODI_TRAFICO_DATOS:-$CASA/datos/trafico}"
+METEO_DATOS="${EODI_METEO_DATOS:-$CASA/datos/meteo}"
+# Cerrojo propio del procesado: nunca el de la recogida horaria.
+CERROJO_TRAFICO="$SECRETOS/trafico.lock"
+UNIDAD_TRAFICO="eodi-trafico"
+# Cada hora en el minuto 40. Un día tarda unos 10 minutos de un núcleo; cada ejecución sigue
+# con los días pendientes hasta 50 minutos y no empieza otro si no cabe, así que el histórico
+# avanza sin pausa y el día nuevo entra en la primera ejecución tras su publicación (hacia las
+# 03:25 UTC del día siguiente). El tope de la unidad, 70 minutos, es la última red.
+MINUTO_TRAFICO=40
+TRAFICO_TOPE_MINUTOS=50
+TRAFICO_TOPE_UNIDAD=70
+# Prioridad baja de CPU y de disco: la recogida horaria va siempre por delante.
+TRAFICO_NICE=15
 
 # --- Endurecimiento ------------------------------------------------------------------
 # Reinicio tras una actualización de seguridad que lo pida: de madrugada y a los 28

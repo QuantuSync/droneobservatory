@@ -1,4 +1,4 @@
-// Listas cerradas del esquema 1.4.0 (campos públicos). Un test las compara con los
+// Listas cerradas del esquema 1.5.0 (campos públicos). Un test las compara con los
 // ficheros de esquema/ para que no se separen.
 
 export const TIPOS = ["incursion", "interrupcion_aeroportuaria", "sobrevuelo"] as const;
@@ -70,6 +70,8 @@ export const FUENTES_DEL_SISTEMA = [
   "estado_mayor_ua",
   "gobernadores_ru",
   "rosaviatsia",
+  "trafico_aereo",
+  "condiciones",
 ] as const;
 /** Satélites e instrumentos de los focos térmicos de NASA FIRMS. */
 export const SATELITES_FIRMS = ["Suomi NPP", "NOAA-20", "NOAA-21", "Terra", "Aqua"] as const;
@@ -78,6 +80,10 @@ export const INSTRUMENTOS_FIRMS = ["VIIRS", "MODIS"] as const;
 export const RESULTADO_FOCO_PUBLICO = "detectado";
 /** El radio de búsqueda de un foco no pasa de 10 km. */
 export const RADIO_FOCO_MAX_KM = 10;
+/** Lo único que se publica del tráfico aéreo medido: el cierre medido. */
+export const RESULTADO_TRAFICO_PUBLICO = "cierre_medido";
+/** Las publicaciones diarias de adsb.lol usadas, en GitHub. */
+export const PATRON_DATOS_ADSBLOL = /^https:\/\/github\.com\/adsblol\/\S+$/;
 export const VERSION_ESTADO_SISTEMA = 1;
 
 export const PATRON_ID_INCIDENTE = /^EODI-\d{4}-\d{5}$/;

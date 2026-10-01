@@ -24,13 +24,13 @@ en [droneobservatory.eu](https://droneobservatory.eu), en español e inglés.
 
 | Carpeta | Contenido |
 | --- | --- |
-| `esquema/` | JSON Schema versionados (1.4.0; `esquema/exportacion/` para la exportación semanal), con marca de visibilidad por campo |
+| `esquema/` | JSON Schema versionados (1.5.0; `esquema/exportacion/` para la exportación semanal), con marca de visibilidad por campo |
 | `configuracion/` | Fuentes con su fiabilidad, vocabularios de modelos de dron y de regiones, nomenclátor de lugares europeos, cajas de coordenadas de los países, vocabulario de noticias, medios europeos de GDELT y la lista de referencia de 2025 |
 | `proceso/` | Validaciones, máquina de estados, regla de credibilidad, ataques, tramos solapados, noticias (filtro, réplicas y agrupación), extracción, validación de fichas, incidentes, fusión y episodios |
 | `modelo/` | Extractor: cliente HTTP del servicio (configurado por secretos), ficha con salida obligada por esquema, coste y límites, lectura de las primeras frases |
 | `almacen/` | Base de datos SQLite con historial, cifrado con age y rama `estado` del repositorio de datos |
 | `exportacion/` | `incidentes.geojson`, `incidentes_sin_ubicacion.json` y `ucrania.json` para la web, cada uno con su lista cerrada de campos; y la exportación semanal interna y cifrada para AEGIS, con el origen de cada dato y el nivel de detalle de cada incidente ([`docs/informe_exportacion_aegis.md`](docs/informe_exportacion_aegis.md)) |
-| `recogida/` | Descarga educada, caché, fuentes de partes (Fuerza Aérea y Ministerio de Defensa ruso), GDELT, anomalías térmicas de NASA FIRMS, ejecución horaria, histórico y auditoría de cobertura |
+| `recogida/` | Descarga educada, caché, fuentes de partes (Fuerza Aérea y Ministerio de Defensa ruso), GDELT, anomalías térmicas de NASA FIRMS, tráfico aéreo de adsb.lol, meteorología de Open-Meteo y METAR, ejecución horaria, histórico y auditoría de cobertura |
 | `publicacion/` | Ficheros públicos generados: `ucrania.json`, `incidentes.geojson` (incidentes con punto, para el mapa) e `incidentes_sin_ubicacion.json` (incidentes cuyo lugar solo se sabe a nivel de país o de región) |
 | `web/` | Web pública de una sola pantalla: mapa, fichas, línea de tiempo, metodología y datos abiertos ([`web/README.md`](web/README.md)) |
 | `tests/` | Tests |
@@ -121,3 +121,10 @@ Decisiones, valores y cobertura en [`docs/informe_recogida.md`](docs/informe_rec
   imagery from NASA's Fire Information for Resource Management System (FIRMS)
   (https://www.earthdata.nasa.gov/firms), part of NASA's Earth Science Data and Information
   System (ESDIS).
+- El tráfico aéreo medido sale del archivo diario de [adsb.lol](https://adsb.lol/)
+  (© adsb.lol contributors, [ODbL 1.0](https://opendatacommons.org/licenses/odbl/1-0/)), que se
+  procesa en el servidor; el bloque `trafico_aereo` de los datos publicados se ofrece con la
+  misma licencia (`LICENSE-DATOS`). `configuracion/aeropuertos_trafico.json` sale de
+  [OurAirports](https://ourairports.com/data/) (dominio público). Meteorología: «Weather data
+  by Open-Meteo.com» (CC BY 4.0) y METAR del Iowa Environmental Mesonet. Código y modelos de
+  terceros (traffic, skylight, gods-eye-view): `docs/licencias_terceros.md`.

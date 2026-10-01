@@ -11,6 +11,7 @@ import type {
   ImpactoGuerra,
   PropiedadesIncidente,
   PublicacionUcrania,
+  TraficoAereo,
 } from "../src/datos/tipos.ts";
 
 export function fuente(cambios: Partial<Fuente> = {}): Fuente {
@@ -150,8 +151,30 @@ export function estadoSistema(cambios: Partial<EstadoSistema> = {}): EstadoSiste
       { id: "oficiales", estado: "con_aviso", ultimo_dato: null },
       { id: "extractor", estado: "leida", ultimo_dato: "2026-09-30T17:00Z" },
       { id: "firms", estado: "leida", ultimo_dato: "2026-09-30T15:17Z" },
+      { id: "trafico_aereo", estado: "leida", ultimo_dato: "2026-09-30T04:02Z" },
+      { id: "condiciones", estado: "leida", ultimo_dato: "2026-09-30T18:17Z" },
     ],
     ...cambios,
+  };
+}
+
+/** Cierre medido con tráfico aéreo real (Copenhague, 22 de septiembre de 2025). */
+export function traficoAereo(cambios: Partial<TraficoAereo["cierre"]> = {}): TraficoAereo {
+  return {
+    cierre: {
+      resultado: "cierre_medido",
+      aeropuerto: "EKCH",
+      inicio: { valor: "2025-09-22T18:26Z", precision: "minuto" },
+      fin: { valor: "2025-09-22T22:38Z", precision: "minuto" },
+      duracion_min: 252,
+      vuelos_desviados: 31,
+      vuelos_en_espera: 6,
+      difiere_de_declarado: true,
+      ...cambios,
+    },
+    datos: [
+      "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.09.22-planes-readsb-prod-0",
+    ],
   };
 }
 

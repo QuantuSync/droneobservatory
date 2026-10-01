@@ -65,6 +65,8 @@ export const es: Textos = {
       estado_mayor_ua: "Estado Mayor ucraniano",
       gobernadores_ru: "Gobernadores rusos",
       rosaviatsia: "Rosaviatsia",
+      trafico_aereo: "Tráfico aéreo (adsb.lol)",
+      condiciones: "Meteorología (Open-Meteo, METAR)",
     },
     estadoFuente: { leida: "leída", con_aviso: "con aviso", no_leida: "no leída" },
     ultimoDato: "último dato",
@@ -350,6 +352,15 @@ export const es: Textos = {
     cruces: "Cruces a otros países",
     incluidoEn: "Cifras incluidas en el parte",
     solapadoCon: "Se solapa con el parte",
+  },
+  trafico: {
+    rotulo: "Tráfico aéreo",
+    cierreMedido: "Cierre medido con tráfico aéreo real",
+    duracion: (minutos) => `${minutos} min`,
+    desviados: (n) => `${n} vuelos desviados`,
+    enEspera: (n) => `${n} en espera`,
+    declarado: "Según las fuentes",
+    datos: "Datos de adsb.lol",
   },
   foco: {
     rotulo: "Satélite",
@@ -766,6 +777,55 @@ export const es: Textos = {
         ],
       },
       {
+        id: "trafico",
+        titulo: "Tráfico aéreo medido",
+        bloques: [
+          {
+            parrafo: [
+              "En los incidentes en aeropuertos con vuelos regulares, el cierre se mide con el " +
+                "tráfico real: el archivo diario de ",
+              { texto: "adsb.lol", enlace: "https://adsb.lol/" },
+              ", una red abierta de receptores ADS-B. Se cuentan los aterrizajes y despegues " +
+                "de aviones de línea y de negocios en franjas de 15 minutos y se comparan con " +
+                "la misma franja del mismo día de la semana de las cuatro semanas anteriores. " +
+                "Un cierre medido es un tramo con el 30 % o menos del tráfico habitual que " +
+                "coincide con el incidente; su inicio y su fin son el último movimiento antes " +
+                "del hueco y el primero después.",
+            ],
+          },
+          {
+            parrafo: [
+              "Un vuelo desviado es el que bajaba hacia el aeropuerto y aterrizó en otro, o el " +
+                "que aterrizó en otro aeropuerto con un número de vuelo que las semanas " +
+                "anteriores llegaba allí a esa hora. Un vuelo en espera es el que hizo " +
+                "circuitos de espera, con el detector de la biblioteca abierta traffic. Si lo " +
+                "medido difiere de lo que dicen las fuentes, se muestran los dos.",
+            ],
+          },
+          {
+            parrafo: [
+              "Límites: adsb.lol no ve todos los aviones ni todos los aeropuertos igual. Cada " +
+                "día se compara lo visto con los vuelos IFR de referencia de EUROCONTROL; con " +
+                "menos de la mitad no se interpreta ningún hueco. Si el tiempo (niebla, " +
+                "tormenta, nieve, viento fuerte o pista contaminada en los METAR) explica un " +
+                "hueco, se tiene en cuenta. Muchas aeronaves militares vuelan sin emitir, así " +
+                "que su ausencia en estos datos no demuestra nada. Un hueco en el tráfico no " +
+                "indica su causa: también cierran aeropuertos los globos, los fallos técnicos " +
+                "o las huelgas; por eso solo se muestra junto a un incidente conocido.",
+            ],
+          },
+          {
+            parrafo: [
+              "El dato falta cuando el incidente no es en un aeropuerto con vuelos regulares, " +
+                "cuando adsb.lol no publicó ese día o lo publicó incompleto, cuando la cobertura " +
+                "de ese aeropuerto ese día es insuficiente, cuando aún no hay cuatro semanas de " +
+                "línea base o cuando no se ve ningún hueco que coincida con el incidente. Un " +
+                "dato que no se puede medir queda vacío; nunca se rellena.",
+            ],
+          },
+        ],
+      },
+      {
         id: "sesgo",
         titulo: "Sesgo de cobertura",
         bloques: [
@@ -823,6 +883,35 @@ export const es: Textos = {
                 texto: [
                   { texto: "GeoNames", enlace: "https://www.geonames.org/" },
                   " (CC BY 4.0).",
+                ],
+              },
+              {
+                termino: "Tráfico aéreo",
+                texto: [
+                  "© adsb.lol contributors (",
+                  { texto: "adsb.lol", enlace: "https://adsb.lol/" },
+                  "), ",
+                  { texto: "ODbL 1.0", enlace: "https://opendatacommons.org/licenses/odbl/1-0/" },
+                  ". El bloque de tráfico aéreo de los ficheros publicados deriva de esos datos " +
+                    "y se ofrece con la misma licencia. Aeropuertos y pistas de ",
+                  { texto: "OurAirports", enlace: "https://ourairports.com/data/" },
+                  " (dominio público); referencia de cobertura de EUROCONTROL (Aviation " +
+                    "Intelligence Portal), que no se publica; esperas con el método de la " +
+                    "biblioteca ",
+                  { texto: "traffic", enlace: "https://github.com/xoolive/traffic" },
+                  " (MIT, © Xavier Olive).",
+                ],
+              },
+              {
+                termino: "Meteorología",
+                texto: [
+                  { texto: "Weather data by Open-Meteo.com", enlace: "https://open-meteo.com/" },
+                  " (CC BY 4.0) y METAR del ",
+                  {
+                    texto: "Iowa Environmental Mesonet",
+                    enlace: "https://mesonet.agron.iastate.edu/",
+                  },
+                  " de Iowa State University.",
                 ],
               },
               {
