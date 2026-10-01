@@ -110,6 +110,24 @@ class Servidor:
             check=False,
         )
 
+    def exportar(self, codigo: int = 0, cambio: str = "") -> subprocess.CompletedProcess[str]:
+        entorno = {
+            **os.environ,
+            "EODI_CLON": str(self.clon),
+            "EODI_SECRETOS": str(self.secretos),
+            "PRUEBA_CODIGO": str(codigo),
+            "PRUEBA_CAMBIO": cambio,
+            "PRUEBA_VISTO": str(self.visto),
+            "PRUEBA_INSTALACIONES": str(self.instalaciones),
+        }
+        return subprocess.run(
+            ["bash", str(self.clon / "servidor" / "exportacion.sh")],
+            env=entorno,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+
     def commits(self) -> int:
         return int(git("rev-list", "--count", RAMA, directorio=self.origen))
 
@@ -282,3 +300,46 @@ def test_si_la_subida_falla_la_recogida_no_falla(servidor: Servidor) -> None:
     assert resultado.returncode == 0
     assert "no se pudo subir estado.json" in resultado.stdout
     assert not (servidor.secretos / "estado.json").exists()
+
+
+def test_la_exportacion_recibe_la_clave_el_repositorio_de_datos_y_el_registro(
+    servidor: Servidor,
+) -> None:
+    resultado = servidor.exportar()
+    assert resultado.returncode == 0, resultado.stderr
+    orden, *resto = servidor.visto.read_text(encoding="utf-8").splitlines()
+    assert orden.startswith("-m recogida.exportacion --correo 192205734+QuantuSync@")
+    assert "--repositorio git@github.com:QuantuSync/droneobservatory-datos.git" in orden
+    assert f"--registro {servidor.secretos}/exportacion.json" in orden
+    assert resto[:2] == CLAVE_AGE.splitlines()
+    assert f"-i {servidor.secretos}/despliegue_datos" in resto[3]
+    assert "exportación terminada con código 0" in resultado.stdout
+
+
+def test_si_la_exportacion_falla_no_publica_nada_y_sale_con_su_codigo(servidor: Servidor) -> None:
+    antes = servidor.commits()
+    resultado = servidor.exportar(codigo=SALIDA_FALLO, cambio='{"ataques": 5}')
+    assert resultado.returncode == SALIDA_FALLO
+    assert servidor.commits() == antes
+    # La recogida siguiente no se ve afectada: deja el clon en main y publica como siempre.
+    assert servidor.recoger().returncode == 0
+    assert servidor.publicado() == "{}"
+
+
+def test_la_exportacion_espera_a_la_recogida_en_marcha(servidor: Servidor) -> None:
+    cerrojo = servidor.secretos / "recogida.lock"
+    otra = subprocess.Popen(
+        ["bash", "-c", f'exec 9> "{cerrojo}"; flock 9; echo listo; sleep 2'],
+        stdout=subprocess.PIPE,
+        text=True,
+    )
+    assert otra.stdout is not None
+    try:
+        assert otra.stdout.readline().strip() == "listo"
+        resultado = servidor.exportar()
+    finally:
+        otra.wait()
+        otra.stdout.close()
+    assert resultado.returncode == 0
+    assert "esperando el cerrojo" in resultado.stdout
+    assert servidor.visto.exists()

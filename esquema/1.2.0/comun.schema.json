@@ -1,9 +1,9 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:eodi:esquema:1.1.0:comun",
+  "$id": "urn:eodi:esquema:1.2.0:comun",
   "title": "Definiciones comunes",
   "description": "Tipos compartidos. La visibilidad efectiva de un campo es la más restrictiva de su cadena: si algún antecesor es interno, el campo es interno.",
-  "x-version": "1.1.0",
+  "x-version": "1.2.0",
   "$defs": {
     "desconocido": {
       "description": "Ninguna fuente lo dice. Un campo ausente significa que aún no se ha procesado.",
@@ -188,6 +188,49 @@
           }
         }
       }
+    },
+    "origen": {
+      "description": "De dónde sale un dato, del más al menos directo: medido (sensor o dato físico: satélite, tráfico aéreo, meteorología), oficial (lo publica directamente una autoridad: partes de la Fuerza Aérea de Ucrania, notas oficiales leídas, comunicados de aeropuertos, gestores, policías y ministerios), oficial_citado (declaración de una autoridad que se conoce porque la cita un medio), parte (reivindicación de una parte en conflicto: Ministerio de Defensa ruso), prensa (lo dice un medio sin atribuirlo a una autoridad) y deducido (reservado para el motor de deducción; hoy no se usa). Sale de la fuente, nunca se supone.",
+      "enum": ["medido", "oficial", "oficial_citado", "parte", "prensa", "deducido"]
+    },
+    "metodo": {
+      "description": "Cómo se obtuvo el valor: parser (lectura de una fuente estructurada), extractor (ficha del extractor sobre el texto de una noticia) o regla (código que lo calcula a partir de otros valores).",
+      "enum": ["parser", "extractor", "regla"]
+    },
+    "procedencia": {
+      "description": "Origen y método de un valor. origen es el de mayor rango de sus fuentes (medido, oficial, oficial_citado, parte, prensa); el de un valor calculado por regla, el de mayor rango de los valores de que sale. sin_respaldo: el extractor dio el valor sin frase de origen o con confianza por debajo del umbral de la validación; el valor no se exporta, solo su confianza. desconocido: ninguna fuente lo dice (el valor es «desconocido»). regla: para origen deducido, la regla y su versión.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["origen", "metodo", "fuentes"],
+      "properties": {
+        "origen": {"$ref": "#/$defs/origen"},
+        "metodo": {"$ref": "#/$defs/metodo"},
+        "fuentes": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "confianza": {"description": "Mayor confianza de extracción de las afirmaciones del extractor que lo respaldan.", "type": "number", "minimum": 0, "maximum": 1},
+        "sin_respaldo": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["confianza", "motivo"],
+          "properties": {
+            "confianza": {"type": "number", "minimum": 0, "maximum": 1},
+            "motivo": {"enum": ["sin_frase", "confianza_baja"]}
+          }
+        },
+        "desconocido": {"const": true},
+        "regla": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["nombre", "version"],
+          "properties": {
+            "nombre": {"type": "string", "minLength": 1},
+            "version": {"type": "string", "minLength": 1}
+          }
+        }
+      }
+    },
+    "nivel_detalle": {
+      "description": "Nivel de detalle del incidente, calculado por código al exportar. A: trayectoria, altura o velocidad del dron con origen medido u oficial. B: hora con precisión de minuto u hora, radio del lugar de 5 km o menos y confirmación de origen oficial. C: confirmado con origen oficial u oficial_citado, sin la precisión de B. D: el resto (sin confirmación de una autoridad: solo prensa o solo parte). Se asigna el primero que se cumple.",
+      "enum": ["A", "B", "C", "D"]
     },
     "titulo": {
       "type": "object",

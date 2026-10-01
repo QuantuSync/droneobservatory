@@ -28,7 +28,7 @@ from almacen import remoto
 from almacen.base import Almacen
 from almacen.cifrado import abrir_cifrada, guardar_cifrada
 from exportacion.publicar import modelos, publicar
-from proceso import focos_termicos, incursiones, solapes
+from proceso import focos_termicos, incursiones, presencia, solapes
 from proceso.ataques import SENTIDO_UA_RU
 from proceso.extraccion import Parada
 from recogida import extractor, firms, gdelt, oficiales
@@ -178,6 +178,14 @@ def principal(argumentos: list[str] | None = None) -> int:
         estados["extractor"] = EstadoFuente(estado_extractor, ultima_llamada(almacen))
         # Anomalías térmicas: no cambian el código de salida.
         estados[firms.FUENTE_ID] = paso_firms(almacen, ahora)
+        # Presencia del dron que confirman las declaraciones oficiales ya guardadas: la regla
+        # se amplió y lo anterior se revisa en cada pasada; ya aplicada, no cambia nada.
+        confirmadas, sin_guardar = presencia.revisar(almacen, ahora, modelos(almacen))
+        registro.info("presencia del dron confirmada por declaraciones: %d", len(confirmadas))
+        if sin_guardar:
+            registro.warning(
+                "presencia sin guardar en %d incidentes que no validan", len(sin_guardar)
+            )
         if args.estado is not None:
             escribir_parcial(args.estado, estados)
         cambiados = publicar(almacen, ahora)

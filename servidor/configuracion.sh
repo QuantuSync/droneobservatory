@@ -85,6 +85,17 @@ ESTADO_CACHE="public, max-age=60"
 ESTADO_TOPE_S=30
 LOCAL_R2="$LOCAL_SECRETOS/r2_estado.env"
 
+# --- Exportación semanal para AEGIS (servidor/exportacion.sh) ----------------------------
+UNIDAD_EXPORTACION="eodi-exportacion"
+# Los lunes a las 03:47 UTC: a mitad de camino entre la recogida de las 03:17 y la de las
+# 04:17, de madrugada en Europa y antes del reinicio de seguridad de las 04:45.
+CALENDARIO_EXPORTACION="Mon *-*-* 03:47:00 UTC"
+# Espera por el cerrojo (como mucho los 45 minutos de una recogida) más la exportación, que
+# tarda un par de minutos.
+TOPE_EXPORTACION_MINUTOS=90
+# La última exportación correcta (versión y hora): la lee estado.json.
+EXPORTACION_REGISTRO="$SECRETOS/exportacion.json"
+
 # --- Revisión de lo publicado (servidor/revision.sh) -----------------------------------
 # Espera por el cerrojo: una recogida dura como mucho los 45 minutos de su tope.
 ESPERA_CERROJO_S=3600

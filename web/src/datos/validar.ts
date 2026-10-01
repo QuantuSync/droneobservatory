@@ -1,4 +1,4 @@
-// Validación de los datos contra el esquema 1.1.0 (campos públicos), escrita a mano para
+// Validación de los datos contra el esquema 1.2.0 (campos públicos), escrita a mano para
 // que no necesite generar código en el navegador. Se usa en el build, sobre los ficheros de
 // publicacion/, y en la web al cargar cada fichero: un fichero que no valida no se pinta.
 
@@ -438,21 +438,25 @@ export const CAMPOS_INCIDENTE: readonly string[] = [
   ...Object.keys(CAMPOS_INCIDENTE_OPCIONALES),
 ];
 
-const estadoSistema = objeto({
-  version: constante(v.VERSION_ESTADO_SISTEMA),
-  inicio: cadena(v.PATRON_INSTANTE),
-  fin: cadena(v.PATRON_INSTANTE),
-  resultado: enumerado(v.RESULTADOS_RECOGIDA),
-  ultima_correcta: nulable(cadena(v.PATRON_INSTANTE)),
-  siguiente: cadena(v.PATRON_INSTANTE),
-  fuentes: lista(
-    objeto({
-      id: enumerado(v.FUENTES_DEL_SISTEMA),
-      estado: enumerado(v.ESTADOS_FUENTE),
-      ultimo_dato: nulable(cadena(v.PATRON_INSTANTE)),
-    }),
-  ),
-});
+const estadoSistema = objeto(
+  {
+    version: constante(v.VERSION_ESTADO_SISTEMA),
+    inicio: cadena(v.PATRON_INSTANTE),
+    fin: cadena(v.PATRON_INSTANTE),
+    resultado: enumerado(v.RESULTADOS_RECOGIDA),
+    ultima_correcta: nulable(cadena(v.PATRON_INSTANTE)),
+    siguiente: cadena(v.PATRON_INSTANTE),
+    fuentes: lista(
+      objeto({
+        id: enumerado(v.FUENTES_DEL_SISTEMA),
+        estado: enumerado(v.ESTADOS_FUENTE),
+        ultimo_dato: nulable(cadena(v.PATRON_INSTANTE)),
+      }),
+    ),
+  },
+  // Fin de la última exportación semanal correcta; la web no la muestra.
+  { ultima_exportacion: nulable(cadena(v.PATRON_INSTANTE)) },
+);
 
 export function validarEstadoSistema(valor: unknown): Resultado<EstadoSistema> {
   return validar(estadoSistema, valor);

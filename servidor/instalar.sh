@@ -4,7 +4,8 @@
 #
 # - Python, el clon del repositorio y su entorno virtual, del usuario sin privilegios;
 # - la carpeta de secretos con las claves de despliegue (las privadas no salen de aquí);
-# - la unidad y el temporizador de systemd de la recogida horaria.
+# - las unidades y los temporizadores de systemd de la recogida horaria y de la
+#   exportación semanal.
 #
 # La clave age y las variables del extractor las deja después reconstruir.sh, que es
 # también quien da de alta las claves de despliegue y activa el temporizador.
@@ -103,6 +104,37 @@ Description=Recogida horaria del EODI, en el minuto $MINUTO_RECOGIDA de cada hor
 OnCalendar=*-*-* *:$MINUTO_RECOGIDA:00 UTC
 AccuracySec=1s
 # Si el servidor estaba apagado a su hora, la ejecución pendiente se lanza al arrancar.
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+FIN
+cat > "/etc/systemd/system/$UNIDAD_EXPORTACION.service" <<FIN
+[Unit]
+Description=Exportación semanal del EODI para AEGIS
+Wants=network-online.target
+After=network-online.target time-sync.target
+
+[Service]
+Type=oneshot
+User=$USUARIO
+Group=$USUARIO
+WorkingDirectory=$CLON
+ExecStart=/usr/bin/env bash $CLON/servidor/exportacion.sh
+SyslogIdentifier=$UNIDAD_EXPORTACION
+TimeoutStartSec=${TOPE_EXPORTACION_MINUTOS}min
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=full
+FIN
+cat > "/etc/systemd/system/$UNIDAD_EXPORTACION.timer" <<FIN
+[Unit]
+Description=Exportación semanal del EODI para AEGIS, los lunes a las 03:47 UTC
+
+[Timer]
+OnCalendar=$CALENDARIO_EXPORTACION
+AccuracySec=1s
+# Si el servidor estaba apagado a su hora, la exportación pendiente se lanza al arrancar.
 Persistent=true
 
 [Install]

@@ -137,7 +137,14 @@ def incidente_completo() -> Documento:
             fuente("F4", "C", publica=False, interna_fuera_de_ucrania=True),
         ],
         "afirmaciones": [
-            {"campo": "drones.numero", "valor": 10, "fuente_id": "F1", "confianza_extraccion": 0.9},
+            {
+                "campo": "drones.numero",
+                "valor": 10,
+                "fuente_id": "F1",
+                "confianza_extraccion": 0.9,
+                "origen": "prensa",
+                "metodo": "extractor",
+            },
             {
                 "campo": "drones.numero",
                 "valor": 20,
@@ -155,6 +162,16 @@ def incidente_completo() -> Documento:
             "vocabulario_aegis": {"tipo": "airport_disruption"},
             "distancia_instalaciones_km": 12.5,
         },
+        # Lo añade la exportación semanal; la base no lo guarda.
+        "procedencia": {
+            "drones.numero": {
+                "origen": "oficial",
+                "metodo": "parser",
+                "fuentes": ["F1", "F2"],
+                "confianza": 0.9,
+            },
+        },
+        "nivel_detalle": "C",
     }
 
 
@@ -236,8 +253,11 @@ def ataque_completo() -> Documento:
                 "fuente_id": "P1",
                 "confianza_extraccion": 1,
                 "credibilidad": 1,
+                "origen": "oficial",
+                "metodo": "parser",
             }
         ],
+        "procedencia": {"derribados": {"origen": "oficial", "metodo": "parser", "fuentes": ["P1"]}},
         "control": {
             "alta": instante("2025-10-06T06:35Z"),
             "ultima_actualizacion": instante("2025-10-06T07:05Z"),

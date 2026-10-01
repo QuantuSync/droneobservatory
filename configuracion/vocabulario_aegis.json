@@ -1,0 +1,148 @@
+{
+  "version": "1.0.0",
+  "descripcion": "Correspondencia entre las categorías de objetivo y las clases de dron del European Observatory of Drone Incidents y las categorías de emplazamiento y las clases de dron de AEGIS. Los valores de AEGIS salen de su código, no se inventan: si una categoría o clase no tiene equivalente se marca como sin_equivalente. equivalencia: exacta (mismo concepto), parcial (el valor de AEGIS cubre solo una parte, o hay varios posibles) o sin_equivalente. origenes, metodos y niveles_detalle son los valores de procedencia y nivel_detalle que lleva cada dato exportado. AEGIS copia esta tabla en tools/vocabulario_eodi.json y un test comprueba que coincide con la de la versión importada.",
+  "aegis": {
+    "repositorio": "QuantuSync/AEGIS",
+    "commit": "0615fa9",
+    "emplazamientos": {
+      "campo": "sector",
+      "origen": "aegis/sim/sites_data/*.json (campo sector), generados por tools/fetch_sites.py; aegis/sim/sites.py",
+      "valores": [
+        "aeropuerto",
+        "agua",
+        "energia",
+        "espacio_publico",
+        "puerto"
+      ]
+    },
+    "clases_dron": {
+      "campo": "size_class",
+      "origen": "aegis/demo/scenario.py (DroneIdSpec.size_class) y aegis/demo/sensors.py (SIZE_CLASSES: mini 249 g, phantom 1 kg, inspire 3 kg, todos multirrotores); la clase verdadera del blanco es true_class «dron» (aegis/sensors/base.py, TRUE_CLASSES)",
+      "valores": [
+        "inspire",
+        "mini",
+        "phantom"
+      ]
+    }
+  },
+  "categorias_objetivo": {
+    "aeropuerto": {
+      "aegis": [
+        "aeropuerto"
+      ],
+      "equivalencia": "exacta",
+      "nota": "Emplazamiento de AEGIS: barajas."
+    },
+    "base_militar": {
+      "aegis": [],
+      "equivalencia": "sin_equivalente",
+      "nota": "AEGIS solo modela infraestructura crítica civil."
+    },
+    "energia": {
+      "aegis": [
+        "energia"
+      ],
+      "equivalencia": "parcial",
+      "nota": "AEGIS modela una central termosolar (andasol); en el observatorio la categoría incluye centrales nucleares, refinerías, terminales de gas y subestaciones."
+    },
+    "estadio": {
+      "aegis": [
+        "espacio_publico"
+      ],
+      "equivalencia": "parcial",
+      "nota": "El emplazamiento de AEGIS es un estadio (san_mames), pero su sector espacio_publico es más amplio que la categoría del observatorio."
+    },
+    "gubernamental": {
+      "aegis": [],
+      "equivalencia": "sin_equivalente",
+      "nota": "AEGIS no tiene sedes de gobierno entre sus emplazamientos."
+    },
+    "industrial": {
+      "aegis": [],
+      "equivalencia": "sin_equivalente",
+      "nota": "AEGIS no tiene plantas industriales entre sus emplazamientos."
+    },
+    "otra": {
+      "aegis": [],
+      "equivalencia": "sin_equivalente",
+      "nota": "Categoría residual del observatorio."
+    },
+    "presa": {
+      "aegis": [
+        "agua"
+      ],
+      "equivalencia": "parcial",
+      "nota": "El emplazamiento de AEGIS es una presa con central hidroeléctrica (alcantara); su sector agua incluye también otras instalaciones hidráulicas."
+    },
+    "puerto": {
+      "aegis": [
+        "puerto"
+      ],
+      "equivalencia": "exacta",
+      "nota": "Emplazamiento de AEGIS: algeciras (y los puertos sintéticos de aegis/sim/ports.py)."
+    }
+  },
+  "clases_dron": {
+    "ala_fija": {
+      "aegis": [],
+      "equivalencia": "sin_equivalente",
+      "nota": "Las tres clases de tamaño de AEGIS son multirrotores."
+    },
+    "ataque_largo_alcance": {
+      "aegis": [],
+      "equivalencia": "sin_equivalente",
+      "nota": "Drones de ataque de largo alcance (Shahed, Gerbera): fuera de las clases de AEGIS y de su alcance, que es detección y no defensa frente a ataques."
+    },
+    "desconocido": {
+      "aegis": [],
+      "equivalencia": "sin_equivalente",
+      "nota": "Ninguna fuente dice la clase."
+    },
+    "multirrotor_pequeno": {
+      "aegis": [
+        "inspire",
+        "mini",
+        "phantom"
+      ],
+      "equivalencia": "parcial",
+      "nota": "El observatorio no distingue el tamaño dentro de los multirrotores pequeños: cualquiera de las tres clases de AEGIS es posible."
+    }
+  },
+  "origenes": {
+    "medido": {
+      "rango": 1,
+      "descripcion": "Sale de un sensor o de un dato físico (satélite, tráfico aéreo, meteorología). Hoy, solo el foco térmico de NASA FIRMS."
+    },
+    "oficial": {
+      "rango": 2,
+      "descripcion": "Lo publica directamente una autoridad: partes de la Fuerza Aérea de Ucrania, notas oficiales leídas, comunicados de aeropuertos, gestores, policías y ministerios."
+    },
+    "oficial_citado": {
+      "rango": 3,
+      "descripcion": "Declaración de una autoridad que se conoce porque la cita un medio."
+    },
+    "parte": {
+      "rango": 4,
+      "descripcion": "Reivindicación de una parte en conflicto (Ministerio de Defensa ruso). Conserva su código del Almirantazgo."
+    },
+    "prensa": {
+      "rango": 5,
+      "descripcion": "Lo dice un medio sin atribuirlo a una autoridad."
+    },
+    "deducido": {
+      "rango": 6,
+      "descripcion": "Reservado para el motor de deducción (con la regla y su versión). Hoy no se usa."
+    }
+  },
+  "metodos": {
+    "parser": "Lectura de una fuente estructurada (partes, notas oficiales).",
+    "extractor": "Ficha del extractor sobre el texto de una noticia, con su confianza.",
+    "regla": "Código que calcula el valor a partir de otros valores."
+  },
+  "niveles_detalle": {
+    "A": "Trayectoria, altura o velocidad del dron con origen medido u oficial.",
+    "B": "Hora con precisión de minuto u hora, radio del lugar de 5 km o menos y confirmación de origen oficial.",
+    "C": "Confirmado con origen oficial u oficial_citado, sin la precisión de B.",
+    "D": "El resto: sin confirmación de una autoridad (solo prensa o solo parte)."
+  }
+}

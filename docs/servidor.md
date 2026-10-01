@@ -33,10 +33,12 @@ En `/home/eodi`:
   - `clave_age.txt`: la identidad age de la base;
   - `extractor.env`: las variables del extractor, una por línea, y la clave de NASA FIRMS
     (`EODI_FIRMS_MAP_KEY`);
-  - `despliegue_datos`: clave de despliegue con escritura solo en `droneobservatory-datos`;
+  - `despliegue_datos`: clave de despliegue con escritura solo en `droneobservatory-datos`
+    (la usan la recogida, para la rama `estado`, y la exportación semanal, para `main`);
   - `despliegue_web`: clave de despliegue con escritura solo en `droneobservatory`, para
     publicar los ficheros de la web;
-  - `known_hosts`: la clave de host publicada por GitHub.
+  - `known_hosts`: la clave de host publicada por GitHub;
+  - `exportacion.json`: la última exportación semanal correcta (versión, hora y huella).
 - `datos/firms/`, con permisos 700 y propiedad de `eodi`: los CSV diarios de anomalías
   térmicas de NASA FIRMS, comprimidos, uno por producto y día
   (`<producto>/<año>/<AAAA-MM-DD>.csv.gz`), y `control.json` con la última descarga
@@ -73,9 +75,45 @@ Sale con el código de la recogida: con avisos, la unidad queda como fallida en 
 igual que el workflow quedaba en rojo, y la hora siguiente se lanza igual.
 
 El script se ejecuta desde el clon, así que un cambio suyo en `main` vale desde la
-recogida siguiente. Las unidades de systemd y el endurecimiento, en cambio, se instalan:
+recogida siguiente (bash lo lee entero al empezar: en realidad, desde la otra). Las unidades de systemd y el endurecimiento, en cambio, se instalan:
 si cambian `instalar.sh`, `endurecer.sh` o `configuracion.sh`, hay que volver a ejecutar
 `reconstruir.sh`.
+
+## Exportación semanal
+
+`eodi-exportacion.timer` lanza `eodi-exportacion.service` los lunes a las 03:47 UTC (si el
+servidor estaba apagado a esa hora, al arrancar). La unidad ejecuta
+[`servidor/exportacion.sh`](../servidor/exportacion.sh) como `eodi`, con un tope de 90
+minutos, y el script:
+
+1. espera, como mucho una hora, al cerrojo de la recogida horaria (el mismo `flock`): si hay
+   una recogida en marcha, la exportación empieza cuando termina; mientras exporta, la
+   recogida de esa hora no se lanza (tarda menos de un minuto);
+2. ejecuta `python -m recogida.exportacion` con el código del clon tal como lo dejó la última
+   recogida, sin actualizarlo: descarga la base de la rama `estado`, genera la versión del
+   día (`AAAA.MM.DD`), la valida contra sus esquemas, la cifra con la clave pública de la
+   base y la sube a `main` del repositorio de datos como `exportaciones/AAAA.MM.DD/`, con la
+   etiqueta `eodi-AAAA.MM.DD`, con la clave de despliegue `despliegue_datos`;
+3. si termina bien, deja la versión, la hora y la huella del manifiesto en
+   `/home/eodi/.eodi/exportacion.json`, de donde `estado.json` saca `ultima_exportacion`
+   en la recogida siguiente.
+
+No escribe en la base, ni en el clon, ni en la rama `estado`, y tiene su propia unidad: si
+falla, la recogida horaria sigue igual. Una versión que no valida no se publica, y una que ya
+existe (carpeta o etiqueta) no se sobrescribe: se avisa y se sale sin error. Contenido y
+formato en [`exportacion/semanal.py`](../exportacion/semanal.py) y
+[`docs/informe_exportacion_aegis.md`](informe_exportacion_aegis.md).
+
+Si pasan más de 8 días sin una exportación correcta, el workflow `vigia-recogida` abre la
+incidencia «La exportación semanal no se genera» y la cierra cuando vuelve a haberla.
+
+Lanzarla a mano (por ejemplo, tras un fallo), como `operador`:
+
+```
+sudo systemctl start eodi-exportacion.service
+journalctl -u eodi-exportacion.service -n 40
+systemctl list-timers eodi-exportacion.timer
+```
 
 ## Secretos en local
 
@@ -110,7 +148,7 @@ El script:
 3. copia la clave age y las variables del extractor, con la clave de FIRMS;
 4. sustituye en GitHub las claves de despliegue «servidor eodi-recogida» de los dos
    repositorios por las del servidor;
-5. activa el temporizador.
+5. activa los temporizadores de la recogida horaria y de la exportación semanal.
 
 Puede repetirse sobre un servidor que ya existe: deja igual lo que ya está y vuelve a
 aplicar la configuración. Para empezar de verdad desde cero se borra antes el servidor:
@@ -136,6 +174,8 @@ El fichero lleva la hora de inicio y de fin de la recogida, su resultado (`corre
 (minuto 17) y, por cada fuente (`fuerza_aerea_ua`, `mindef_ru`, `gdelt`, `oficiales` y
 `extractor` y `firms`), su estado (`leida`, `con_aviso` o `no_leida`) y la hora de su
 último dato; en `firms`, la de la última descarga correcta.
+Lleva también `ultima_exportacion`: la hora en que terminó la última exportación semanal
+correcta (o null si no consta ninguna), del registro que deja la exportación.
 No lleva ningún contenido. La recogida deja el estado de cada fuente en un fichero
 temporal (`recogida.horaria --estado`). El último estado publicado se guarda en
 `/home/eodi/.eodi/estado.json`, de donde sale la hora de la última recogida correcta.

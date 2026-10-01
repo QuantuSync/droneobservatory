@@ -708,6 +708,36 @@ class Almacen:
             "SELECT documento FROM afirmaciones WHERE entidad_id = ? ORDER BY id", (entidad_id,)
         )
 
+    # --- Exportación ---------------------------------------------------------
+
+    def todas_las_afirmaciones(self) -> list[tuple[str, Documento]]:
+        """(entidad, afirmación) de todas, también las que ya no están en su entidad."""
+        filas = self._conexion.execute(
+            "SELECT entidad_id, documento FROM afirmaciones ORDER BY entidad_id, id"
+        ).fetchall()
+        return [(entidad, json.loads(documento)) for entidad, documento in filas]
+
+    def todas_las_regiones_ucrania(self) -> list[tuple[str, Documento]]:
+        filas = self._conexion.execute(
+            "SELECT ataque_id, documento FROM regiones_ucrania ORDER BY ataque_id, region"
+        ).fetchall()
+        return [(ataque, json.loads(documento)) for ataque, documento in filas]
+
+    def todos_los_fallidos(self) -> list[Documento]:
+        filas = self._conexion.execute(
+            "SELECT enlace, fuente_id, motivo, fecha, resuelto FROM partes_fallidos "
+            "ORDER BY fuente_id, fecha, enlace"
+        ).fetchall()
+        return [
+            {"enlace": e, "fuente_id": f, "motivo": m, "fecha": d, "resuelto": bool(r)}
+            for e, f, m, d, r in filas
+        ]
+
+    def ultimo_cambio(self) -> str | None:
+        """Fecha (UTC) del último cambio registrado en el historial."""
+        fila = self._conexion.execute("SELECT max(fecha) FROM historial").fetchone()
+        return str(fila[0]) if fila and fila[0] else None
+
     def historial(self, entidad_id: str) -> list[Documento]:
         filas = self._conexion.execute(
             "SELECT tabla, operacion, anterior, nuevo, fecha FROM historial "

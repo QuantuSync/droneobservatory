@@ -1,4 +1,4 @@
-// Forma de los ficheros públicos de publicacion/ (esquema 1.1.0, solo campos públicos)
+// Forma de los ficheros públicos de publicacion/ (esquema 1.2.0, solo campos públicos)
 // y de los resúmenes que la web deriva de ellos en el build.
 
 export type Estado = "notificado" | "confirmado" | "atribuido" | "desmentido";
@@ -325,6 +325,8 @@ export interface EstadoSistema {
   ultima_correcta: string | null;
   siguiente: string;
   fuentes: { id: FuenteDelSistema; estado: EstadoFuente; ultimo_dato: string | null }[];
+  /** Fin de la última exportación semanal correcta; null si no consta ninguna. */
+  ultima_exportacion?: string | null;
 }
 
 /** Cifras para prerenderizar la cabecera y la barra de estado sin esperar a los datos. */

@@ -307,7 +307,7 @@ describe("validación contra el esquema", () => {
 
 describe("listas cerradas iguales a las del esquema", () => {
   type Esquema = Record<string, unknown>;
-  const leer = (nombre: string) => leerJson("esquema", "1.1.0", `${nombre}.schema.json`) as Esquema;
+  const leer = (nombre: string) => leerJson("esquema", "1.2.0", `${nombre}.schema.json`) as Esquema;
   const en = (objeto: unknown, ...claves: string[]): unknown =>
     claves.reduce<unknown>((actual, clave) => (actual as Esquema)[clave], objeto);
 
@@ -480,6 +480,13 @@ describe("estado del sistema", () => {
   it("acepta el formato acordado", () => {
     expect(validarEstadoSistema(estadoSistema()).ok).toBe(true);
     expect(validarEstadoSistema(estadoSistema({ ultima_correcta: null })).ok).toBe(true);
+  });
+
+  it("acepta la última exportación semanal, con hora o null", () => {
+    const conExportacion = { ...estadoSistema(), ultima_exportacion: "2026-10-01T10:12Z" };
+    expect(validarEstadoSistema(conExportacion).ok).toBe(true);
+    expect(validarEstadoSistema({ ...conExportacion, ultima_exportacion: null }).ok).toBe(true);
+    expect(validarEstadoSistema({ ...conExportacion, ultima_exportacion: "ayer" }).ok).toBe(false);
   });
 
   it.each([

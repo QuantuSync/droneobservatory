@@ -10,6 +10,9 @@ name: vigia-recogida
 # En el minuto 41: lejos de las horas en punto, cuando GitHub más retrasa las ejecuciones
 # programadas, y cuando la recogida del minuto 17 ya ha terminado. GitHub puede lanzarla
 # tarde o saltarse alguna: el aviso llega tarde, pero llega.
+#
+# Con el mismo estado.json vigila la exportación semanal para AEGIS: si la última correcta
+# tiene más de 8 días, abre otra incidencia («La exportación semanal no se genera»).
 
 on:
   schedule:
@@ -56,4 +59,26 @@ jobs:
             fi
           elif [ -n "$abierta" ]; then
             gh issue close "$abierta" --comment "La recogida vuelve a terminar bien. $MENSAJE"
+          fi
+      # La exportación semanal para AEGIS (servidor/exportacion.sh, los lunes a las 03:47 UTC):
+      # otra incidencia si la última correcta tiene más de 8 días o no consta ninguna.
+      - name: Abrir o cerrar la incidencia de la exportación
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TITULO: La exportación semanal no se genera
+          PROBLEMA: ${{ steps.salud.outputs.problema_exportacion }}
+          MENSAJE: ${{ steps.salud.outputs.mensaje_exportacion }}
+        run: |
+          set -euo pipefail
+          abierta="$(gh issue list --state open --limit 100 --json number,title \
+            --jq 'map(select(.title == env.TITULO)) | .[0].number // empty')"
+          if [ "$PROBLEMA" = "true" ]; then
+            if [ -z "$abierta" ]; then
+              gh issue create --title "$TITULO" --body "$MENSAJE Cómo revisarla y lanzarla a mano: \`docs/servidor.md\`, «Exportación semanal». Esta incidencia se cierra sola cuando vuelve a haber una exportación correcta."
+            else
+              echo "la incidencia #$abierta sigue abierta"
+            fi
+          elif [ -n "$abierta" ]; then
+            gh issue close "$abierta" --comment "Vuelve a haber una exportación correcta. $MENSAJE"
           fi

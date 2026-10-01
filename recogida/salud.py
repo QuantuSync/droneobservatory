@@ -10,8 +10,13 @@ Hay problema si la última recogida correcta tiene más de dos horas o si el fic
 responde en tres intentos espaciados. Una recogida fallida o con avisos no es problema
 mientras haya una correcta reciente.
 
+Aparte, la exportación semanal para AEGIS: hay problema si la última correcta
+(ultima_exportacion) tiene más de 8 días o no consta ninguna. Si estado.json no responde o
+aún no trae el campo, eso lo cuenta la comprobación de la recogida y aquí no se avisa.
+
 Lo usan el workflow de tests, que lo deja en su resumen, y el workflow vigia-recogida, que
-abre o cierra la incidencia con lo que escribe en su salida (`problema` y `mensaje`).
+abre o cierra las incidencias con lo que escribe en su salida (`problema` y `mensaje` de la
+recogida; `problema_exportacion` y `mensaje_exportacion` de la exportación).
 
 Uso: python -m recogida.salud [--url <estado.json>]
 """
@@ -33,6 +38,9 @@ URL = "https://tiles.droneobservatory.eu/estado.json"
 # La recogida es horaria: dos horas sin una correcta son dos recogidas seguidas que no lo
 # han sido (o que no se han lanzado).
 MAX_SIN_CORRECTA = timedelta(hours=2)
+# La exportación es semanal: ocho días dan un día de margen sobre el lunes siguiente.
+MAX_SIN_EXPORTACION = timedelta(days=8)
+DIA = timedelta(days=1)
 HORA = timedelta(hours=1)
 # Tres intentos con un minuto entre ellos: un fallo de red o del bucket de unos segundos no
 # es una caída del servidor.
@@ -43,6 +51,7 @@ VARIABLE_RESUMEN = "GITHUB_STEP_SUMMARY"
 VARIABLE_SALIDA = "GITHUB_OUTPUT"
 ANOTACION_AVISO = "::warning::"
 TITULO = "### Salud de la recogida horaria"
+TITULO_EXPORTACION = "### Exportación semanal"
 
 Estado = tuple[bool, str]
 Lector = Callable[[str], bytes]
@@ -103,18 +112,36 @@ def diagnostico(estado: dict[str, Any] | None, ahora: datetime) -> Estado:
     return True, f"{frase}."
 
 
-def informar(resultado: Estado) -> None:
+def diagnostico_exportacion(estado: dict[str, Any] | None, ahora: datetime) -> Estado:
+    """Si la exportación semanal está al día y la frase que lo cuenta."""
+    if estado is None or "ultima_exportacion" not in estado:
+        return True, "estado.json no informa de la exportación semanal: no se comprueba."
+    ultima = _instante(estado.get("ultima_exportacion"))
+    if ultima is None:
+        return False, "No consta ninguna exportación semanal correcta."
+    dias = (ahora - ultima) / DIA
+    frase = (
+        f"La última exportación semanal correcta terminó el {ultima:%Y-%m-%d %H:%M} UTC, "
+        f"hace {dias:.1f} días"
+    )
+    if ahora - ultima > MAX_SIN_EXPORTACION:
+        return False, f"{frase}: más de {MAX_SIN_EXPORTACION / DIA:.0f} días."
+    return True, f"{frase}."
+
+
+def informar(resultado: Estado, titulo: str = TITULO, sufijo: str = "") -> None:
     """La frase en el registro, en el resumen del trabajo y en su salida."""
     al_dia, frase = resultado
     print(frase if al_dia else f"{ANOTACION_AVISO}{frase}")
     resumen = os.environ.get(VARIABLE_RESUMEN)
     if resumen:
         with Path(resumen).open("a", encoding="utf-8") as fichero:
-            fichero.write(f"{TITULO}\n\n{'✅' if al_dia else '⚠️'} {frase}\n")
+            fichero.write(f"{titulo}\n\n{'✅' if al_dia else '⚠️'} {frase}\n")
     salida = os.environ.get(VARIABLE_SALIDA)
     if salida:
         with Path(salida).open("a", encoding="utf-8") as fichero:
-            fichero.write(f"problema={'false' if al_dia else 'true'}\nmensaje={frase}\n")
+            problema = "false" if al_dia else "true"
+            fichero.write(f"problema{sufijo}={problema}\nmensaje{sufijo}={frase}\n")
 
 
 def principal(
@@ -127,7 +154,9 @@ def principal(
     opciones.add_argument("--url", default=URL)
     args = opciones.parse_args(argumentos)
     estado = leer_estado(args.url, leer, dormir)
-    informar(diagnostico(estado, ahora or datetime.now(UTC)))
+    momento = ahora or datetime.now(UTC)
+    informar(diagnostico(estado, momento))
+    informar(diagnostico_exportacion(estado, momento), TITULO_EXPORTACION, "_exportacion")
     return 0
 
 

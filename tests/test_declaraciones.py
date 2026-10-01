@@ -4,12 +4,13 @@ Las frases siguen las de los casos de 2025 (Copenhague, Múnich, Polonia, Garder
 """
 
 import json
+from datetime import timedelta
 from typing import Any
 
 from almacen.base import Almacen
 from esquema import Documento
-from modelo import ficha
-from proceso import declaraciones
+from modelo import coste, ficha
+from proceso import declaraciones, extraccion, presencia
 from proceso.validaciones import validar_incidente
 from tests.test_extraccion import AHORA, MODELOS, a_servicio, extraer_ejemplo, ficha_ejemplo
 
@@ -117,3 +118,142 @@ def test_la_ficha_trae_las_declaraciones_y_las_antiguas_se_leen_sin_ellas() -> N
     assert [d["frase"] for d in ficha.leer_respuesta(nueva)["declaraciones"]] == [
         "lufthavnen er lukket"
     ]
+
+
+# --- Presencia del dron: una autoridad que dice expresamente que hubo drones ----------------
+
+
+def afirmaciones_de_presencia(incidente: Documento) -> list[Documento]:
+    """Las que confirman la presencia (la ficha deja además la suya, de la noticia)."""
+    return [
+        a
+        for a in incidente.get("afirmaciones", [])
+        if a["campo"] == "presencia_dron" and a["valor"] == "confirmada"
+    ]
+
+
+def test_la_atribucion_oficial_que_habla_de_drones_confirma_la_presencia() -> None:
+    # Caso de Chișinău: confirmado por un ministerio y atribuido por el gobierno.
+    confirma = declaracion(
+        "incidente", "Lufthavnen er lukket", "ministerio", autoridad="Ministerul de Interne"
+    )
+    atribuye = declaracion(
+        "autoria", "Rusia es responsable de los drones que sobrevolaron el aeropuerto",
+        "gobierno", autoridad="Guvernul Republicii Moldova", autor="Rusia",
+    )  # fmt: skip
+    resultado = aplicar(confirma, atribuye)
+    assert resultado["estado"]["actual"] == "atribuido"
+    assert resultado["presencia_dron"] == "confirmada"
+    [afirmacion] = afirmaciones_de_presencia(resultado)
+    assert afirmacion["valor"] == "confirmada"
+    assert afirmacion["fuente_id"] == resultado["fuentes"][-1]["id"]
+    assert afirmacion["fuente_id"].endswith("-declaracion-2")
+
+
+def test_la_confirmacion_del_cierre_sin_nombrar_drones_no_confirma_la_presencia() -> None:
+    resultado = aplicar(declaracion(
+        "incidente", "El espacio aéreo se cerró durante una hora", "navegacion_aerea",
+        autoridad="ENAIRE",
+    ))  # fmt: skip
+    assert resultado["estado"]["actual"] == "confirmado"
+    assert resultado["presencia_dron"] == "no_confirmada"
+    assert afirmaciones_de_presencia(resultado) == []
+
+
+def test_la_autoridad_que_cuenta_los_drones_al_confirmar_confirma_la_presencia() -> None:
+    resultado = aplicar(declaracion(
+        "incidente", "Lufthavnen er lukket på grund af to til tre droner", "policia"
+    ))  # fmt: skip
+    assert resultado["presencia_dron"] == "confirmada"
+
+
+def test_el_aeropuerto_que_nombra_drones_no_confirma_la_presencia() -> None:
+    resultado = aplicar(declaracion(
+        "incidente", "Der Flugbetrieb wurde wegen Drohnen eingestellt", "aeropuerto",
+        autoridad="Flughafen München",
+    ))  # fmt: skip
+    assert resultado["estado"]["actual"] == "confirmado"
+    assert resultado["presencia_dron"] == "no_confirmada"
+
+
+def test_la_frase_que_duda_o_cuenta_un_aviso_no_confirma_la_presencia() -> None:
+    for frase in (
+        "Vi har en begrundet mistanke om droneaktivitet ved lufthavnen",
+        "Vi har ikke fået hverken be- eller afkræftet, om det var droner",
+        "Policja potwierdziła, że pilot zgłosił obiekt przypominający drona",
+        "Buvo gauta informacija, kad pastebėtas dronas",
+    ):
+        resultado = aplicar(declaracion("incidente", frase, "policia"))
+        assert resultado["presencia_dron"] == "no_confirmada", frase
+
+
+def test_el_desmentido_pesa_mas_que_la_frase_que_cuenta_los_drones() -> None:
+    cuenta_drones = declaracion("incidente", "Fem droner fløj over basen", "policia")
+    niega = declaracion(
+        "niega_incidente", "Der har ikke været nogen droner", "fuerzas_armadas",
+        autoridad="Forsvaret",
+    )  # fmt: skip
+    resultado = aplicar(cuenta_drones, niega)
+    assert resultado["estado"]["actual"] == "desmentido"
+    assert resultado["presencia_dron"] == "no_confirmada"
+    descarta = declaracion("sin_drones", "Det var ingen droner", "fuerzas_armadas")
+    assert aplicar(cuenta_drones, descarta)["presencia_dron"] == "descartada"
+
+
+TEXTO_DECLARACION = "Københavns Politi: der blev observeret tre til fire store droner."
+
+
+def extraer_con_declaracion(almacen: Almacen) -> str:
+    """Un incidente extraído con una declaración de la policía que nombra los drones."""
+    from tests import test_extraccion as te
+
+    candidato = te.candidato_con_articulos(almacen)
+    peticion = extraccion.preparar(almacen, candidato, None)
+    peticion = extraccion.Peticion(
+        **{**peticion.__dict__, "fuentes": [
+            ficha.FuenteTexto(f.medio, f.fecha, f.idioma, f.titular,
+                              f"{te.TEXTO} {TEXTO_DECLARACION}")
+            for f in peticion.fuentes
+        ]}
+    )  # fmt: skip
+    salida = a_servicio(ficha_ejemplo())
+    salida["declaraciones"] = [declaracion(
+        "incidente", "der blev observeret tre til fire store droner", pais="DK"
+    )]  # fmt: skip
+    respuesta = {**te.respuesta(ficha_ejemplo()),
+                 "content": [{"type": "text", "text": json.dumps(salida)}]}  # fmt: skip
+    id_ = extraccion.procesar_respuesta(
+        almacen, peticion, respuesta, AHORA, coste.Modo.HISTORICO, True, MODELOS
+    )
+    assert id_ is not None
+    return id_
+
+
+def test_la_revision_confirma_la_presencia_de_lo_ya_guardado_con_su_fuente() -> None:
+    almacen = Almacen.abrir()
+    id_ = extraer_con_declaracion(almacen)
+    nuevo = almacen.incidente(id_)
+    assert nuevo is not None and nuevo["presencia_dron"] == "confirmada"
+    # Como quedó con la regla anterior: la declaración, sin confirmar la presencia.
+    anterior = {**nuevo, "presencia_dron": "no_confirmada",
+                "afirmaciones": [a for a in nuevo["afirmaciones"]
+                                 if a not in afirmaciones_de_presencia(nuevo)]}  # fmt: skip
+    almacen.guardar_incidente(anterior, AHORA, MODELOS)
+    despues = AHORA + timedelta(hours=1)
+    hechos, fallidos = presencia.revisar(almacen, despues, MODELOS)
+    assert fallidos == []
+    [cambio] = hechos
+    assert cambio.incidente == id_
+    assert cambio.fuente_id.endswith("-declaracion-1")
+    assert "Københavns Politi" in cambio.motivo
+    revisado = almacen.incidente(id_)
+    assert revisado is not None and revisado["presencia_dron"] == "confirmada"
+    assert revisado["control"]["ultima_actualizacion"]["valor"] == "2025-09-24T13:00Z"
+    # El historial guarda el cambio con la afirmación y la fuente que lo provoca.
+    ultimo = almacen.historial(id_)[-1]
+    assert ultimo["anterior"]["presencia_dron"] == "no_confirmada"
+    assert afirmaciones_de_presencia(ultimo["nuevo"]) == [
+        declaraciones.afirmacion_presencia(cambio.fuente_id)
+    ]
+    # Idempotente: otra pasada no cambia nada.
+    assert presencia.revisar(almacen, despues, MODELOS) == ([], [])

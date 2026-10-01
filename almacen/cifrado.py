@@ -52,6 +52,11 @@ def cifrar_datos(datos: bytes) -> bytes:
     return pyrage.encrypt(datos, [_identidad().to_public()])
 
 
+def destinatario() -> str:
+    """La clave pública de la base (age1…): con ella se cifra también la exportación."""
+    return str(_identidad().to_public())
+
+
 def descifrar_datos(cifrado: bytes) -> bytes:
     return pyrage.decrypt(cifrado, [_identidad()])
 

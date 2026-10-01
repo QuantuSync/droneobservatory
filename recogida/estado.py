@@ -10,14 +10,19 @@ Formato (versión 1), con los instantes como AAAA-MM-DDThh:mmZ:
 
     {"version": 1, "inicio", "fin", "resultado": correcta | con_avisos | fallida,
      "ultima_correcta": instante o null, "siguiente",
-     "fuentes": [{"id", "estado": leida | con_aviso | no_leida, "ultimo_dato": instante o null}]}
+     "fuentes": [{"id", "estado": leida | con_aviso | no_leida, "ultimo_dato": instante o null}],
+     "ultima_exportacion": instante o null}
+
+ultima_exportacion es la hora en que terminó bien la última exportación semanal para AEGIS
+(recogida/exportacion.py), que la deja escrita en su registro; null si no consta ninguna. Sin
+--exportacion el campo no va.
 
 Las fuentes van siempre las seis y en este orden: fuerza_aerea_ua, mindef_ru, gdelt,
 oficiales, extractor y firms. En firms, el último dato es la hora de la última descarga
 correcta de NASA FIRMS (se descarga cada 3 horas).
 
 Uso: python -m recogida.estado --inicio <ISO> --codigo <N> --parcial <json> --anterior <json>
-    --salida <json> --minuto <minuto de la recogida>
+    --salida <json> --minuto <minuto de la recogida> [--exportacion <json>]
 """
 
 import argparse
@@ -97,10 +102,12 @@ def componer(
     parcial: dict[str, Any] | None,
     anterior: dict[str, Any] | None,
     minuto: int,
+    exportacion: dict[str, Any] | None = None,
+    con_exportacion: bool = False,
 ) -> dict[str, Any]:
     fallo = resultado(codigo)
     ultima = instante(fin) if fallo == CORRECTA else (anterior or {}).get("ultima_correcta")
-    return {
+    estado: dict[str, Any] = {
         "version": VERSION,
         "inicio": instante(inicio),
         "fin": instante(fin),
@@ -109,6 +116,9 @@ def componer(
         "siguiente": instante(siguiente(fin, minuto)),
         "fuentes": _fuentes(parcial, anterior),
     }
+    if con_exportacion:
+        estado["ultima_exportacion"] = (exportacion or {}).get("fin")
+    return estado
 
 
 def _leer(ruta: Path | None) -> dict[str, Any] | None:
@@ -129,11 +139,12 @@ def principal(argumentos: list[str] | None = None) -> int:
     opciones.add_argument("--anterior", type=Path)
     opciones.add_argument("--salida", type=Path, required=True)
     opciones.add_argument("--minuto", type=int, required=True)
+    opciones.add_argument("--exportacion", type=Path, help="registro de la exportación semanal")
     args = opciones.parse_args(argumentos)
     inicio = leer_instante(args.inicio) or datetime.now(UTC)
     estado = componer(
         inicio, datetime.now(UTC), args.codigo, _leer(args.parcial), _leer(args.anterior),
-        args.minuto,
+        args.minuto, _leer(args.exportacion), args.exportacion is not None,
     )  # fmt: skip
     args.salida.write_text(json.dumps(estado, ensure_ascii=False) + "\n", encoding="utf-8")
     return 0

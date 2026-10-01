@@ -136,6 +136,62 @@ def subir_parcial(
     raise RemotoFallido("sin intentos")
 
 
+# Exportación semanal para AEGIS: en main, una carpeta por versión y una etiqueta.
+RAMA_EXPORTACIONES = "main"
+DIRECTORIO_EXPORTACIONES = "exportaciones"
+PREFIJO_ETIQUETA = "eodi-"
+# Si otro commit llega a main a la vez, el push se rechaza: se vuelve a clonar y se reintenta.
+INTENTOS_EXPORTACION = 3
+ESPERA_EXPORTACION_S = 10.0
+
+
+class ExportacionExistente(RuntimeError):
+    """La versión ya está publicada: nunca se sobrescribe."""
+
+
+def etiqueta(version: str) -> str:
+    return f"{PREFIJO_ETIQUETA}{version}"
+
+
+def subir_exportacion(
+    origen: Path,
+    version: str,
+    correo: str,
+    repositorio: str = REPOSITORIO,
+    dormir: Callable[[float], None] = time.sleep,
+) -> None:
+    """Añade la carpeta `origen` como exportaciones/<versión>/ en main, con la etiqueta
+    eodi-<versión>, en un único push atómico. Si la versión o la etiqueta ya existen, no
+    toca nada (ExportacionExistente). Clona sin descargar las versiones anteriores."""
+    destino_relativo = f"{DIRECTORIO_EXPORTACIONES}/{version}"
+    nombre_etiqueta = etiqueta(version)
+    for intento in range(1, INTENTOS_EXPORTACION + 1):
+        if _git("ls-remote", "--tags", repositorio, f"refs/tags/{nombre_etiqueta}").strip():
+            raise ExportacionExistente(f"la etiqueta {nombre_etiqueta} ya existe")
+        with TemporaryDirectory() as temporal:
+            clon = Path(temporal) / "datos"
+            _git("clone", "--quiet", "--depth", "1", "--filter=blob:none", "--sparse", "--branch",
+                 RAMA_EXPORTACIONES, "--single-branch", repositorio, str(clon))  # fmt: skip
+            if _git("ls-tree", "-d", "HEAD", destino_relativo, directorio=clon).strip():
+                raise ExportacionExistente(f"{destino_relativo} ya existe")
+            _git("sparse-checkout", "set", destino_relativo, directorio=clon)
+            shutil.copytree(origen, clon / destino_relativo)
+            _git("add", destino_relativo, directorio=clon)
+            _git("commit", "--quiet", "-m", f"Exportación {version}", directorio=clon,
+                 **_identidad_git(correo))  # fmt: skip
+            _git("tag", "--annotate", "-m", f"Exportación {version}", nombre_etiqueta,
+                 directorio=clon, **_identidad_git(correo))  # fmt: skip
+            try:
+                _git("push", "--quiet", "--atomic", "origin", f"HEAD:{RAMA_EXPORTACIONES}",
+                     f"refs/tags/{nombre_etiqueta}", directorio=clon)  # fmt: skip
+            except RemotoFallido:
+                if intento == INTENTOS_EXPORTACION:
+                    raise
+                dormir(ESPERA_EXPORTACION_S * intento)
+                continue
+            return
+
+
 def descargar_parciales(destino: Path, repositorio: str = REPOSITORIO) -> list[Path]:
     """Copia los ficheros de la rama de parciales a `destino`, ordenados por nombre."""
     with TemporaryDirectory() as temporal:
