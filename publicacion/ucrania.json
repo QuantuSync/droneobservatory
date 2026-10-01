@@ -477802,13 +477802,24 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-01T19:17Z"
+     "valor": "2026-10-01T20:17Z"
     }
    },
-   "credibilidad": 2,
+   "credibilidad": 1,
    "fecha": {
     "precision": "minuto",
     "valor": "2025-04-19T15:30Z"
+   },
+   "foco_termico": {
+    "distancia_km": 1.9,
+    "instrumento": "VIIRS",
+    "numero_focos": 2,
+    "primer_foco": {
+     "precision": "minuto",
+     "valor": "2025-04-19T23:01Z"
+    },
+    "resultado": "detectado",
+    "satelite": "Suomi NPP"
    },
    "fuentes": [
     {
@@ -484028,10 +484039,10 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-01T19:17Z"
+     "valor": "2026-10-01T20:17Z"
     }
    },
-   "credibilidad": 2,
+   "credibilidad": 1,
    "fallecidos": {
     "max": 3,
     "min": 3
@@ -484039,6 +484050,17 @@
    "fecha": {
     "precision": "minuto",
     "valor": "2025-06-07T11:37Z"
+   },
+   "foco_termico": {
+    "distancia_km": 4.9,
+    "instrumento": "VIIRS",
+    "numero_focos": 2,
+    "primer_foco": {
+     "precision": "minuto",
+     "valor": "2025-06-08T11:23Z"
+    },
+    "resultado": "detectado",
+    "satelite": "NOAA-21"
    },
    "fuentes": [
     {
@@ -538495,13 +538517,24 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-01T19:17Z"
+     "valor": "2026-10-01T20:17Z"
     }
    },
-   "credibilidad": 2,
+   "credibilidad": 1,
    "fecha": {
     "precision": "minuto",
     "valor": "2025-06-18T02:26Z"
+   },
+   "foco_termico": {
+    "distancia_km": 7.1,
+    "instrumento": "VIIRS",
+    "numero_focos": 5,
+    "primer_foco": {
+     "precision": "minuto",
+     "valor": "2025-06-17T22:55Z"
+    },
+    "resultado": "detectado",
+    "satelite": "Suomi NPP"
    },
    "fuentes": [
     {
@@ -760406,20 +760439,63 @@
   {
    "ataque": "EODI-UA-2026-1019",
    "categorias_objetivo": [
-    "energia"
+    "energia",
+    "residencial"
    ],
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-01T19:17Z"
+     "valor": "2026-10-01T20:17Z"
     }
    },
    "credibilidad": 2,
    "fecha": {
     "precision": "minuto",
-    "valor": "2026-10-01T18:28Z"
+    "valor": "2026-10-01T08:37Z"
    },
    "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/VA_Kyiv/21315",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-10-01T08:37Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "У Печерському районі виявлено уламки БпЛА на відкритій території.",
+     "id": "VA_Kyiv-21315",
+     "idioma": "uk",
+     "medio": "Київська міська військова адміністрація",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/VA_Kyiv/21316",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-10-01T08:56Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "У Києві рятувальники та всі необхідні служби працюють на місці влучання російського «шахеда» у звичайну школу.",
+     "id": "VA_Kyiv-21316",
+     "idioma": "uk",
+     "medio": "Київська міська військова адміністрація",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/VA_Kyiv/21327",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-10-01T12:02Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "У Подільському районі зафіксовано падіння уламків БПЛА на покрівлю багатоповерхового житлового будинку, що спричинило пожежу.",
+     "id": "VA_Kyiv-21327",
+     "idioma": "uk",
+     "medio": "Київська міська військова адміністрація",
+     "replicas": 0
+    },
     {
      "credibilidad": 2,
      "enlace": "https://t.me/VA_Kyiv/21348",
@@ -760449,6 +760525,162 @@
     "radio_km": 15.0
    },
    "region": "UA-30",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-1019",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-01T20:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-10-01T19:40Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/synegubov/26150",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-10-01T19:40Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Впродовж години ворог наніс дронові удари по Харкову",
+     "id": "synegubov-26150",
+     "idioma": "uk",
+     "medio": "Харківська ОВА (канал начальника)",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/kharkivoda/31233",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-10-01T19:41Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Впродовж години ворог наніс дронові удари по Харкову",
+     "id": "kharkivoda-31233",
+     "idioma": "uk",
+     "medio": "Харківська ОВА",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03156",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA63120270010096107",
+    "nivel": "localidad",
+    "nombre": "Харків",
+    "nombre_latino": "Kharkiv",
+    "punto": {
+     "lat": 49.99232,
+     "lon": 36.23101
+    },
+    "radio_km": 15.0
+   },
+   "region": "UA-63",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-01T20:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "dia": "2026-09-26",
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-10-01T08:28Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/khersonskaODA/68773",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-10-01T08:28Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "❗До медиків по допомогу звернулась 55-річна працівниця одного з медзакладів Білозерки, яка постраждала через російську дронову атаку 26 вересня.",
+     "id": "khersonskaODA-68773",
+     "idioma": "uk",
+     "medio": "Херсонська ОВА",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03157",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA65100010010090594",
+    "nivel": "localidad",
+    "nombre": "Білозерка",
+    "nombre_latino": "Bilozerka",
+    "punto": {
+     "lat": 46.63078,
+     "lon": 32.44537
+    },
+    "radio_km": 2.5
+   },
+   "region": "UA-65",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-1009",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-01T20:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "dia": "2026-09-29",
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-10-01T11:44Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/khersonskaODA/68788",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-10-01T11:44Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "❗️До лікарні звернулись двоє людей, які вночі 29 вересня постраждали через атаку російського дрона у Корабельному районі Херсона.",
+     "id": "khersonskaODA-68788",
+     "idioma": "uk",
+     "medio": "Херсонська ОВА",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03158",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA65100150010064384",
+    "nivel": "localidad",
+    "nombre": "Херсон",
+    "nombre_latino": "Kherson",
+    "punto": {
+     "lat": 46.64013,
+     "lon": 32.61439
+    },
+    "radio_km": 7.0
+   },
+   "region": "UA-65",
    "sentido": "RU_UA",
    "tipo": "impacto_guerra"
   }
