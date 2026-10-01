@@ -1,6 +1,6 @@
 # Exportación semanal para AEGIS
 
-Fecha: 1 de octubre de 2026. Rama `exportacion-aegis`.
+Fecha: 1 de octubre de 2026. PR #29 (código) y este (primera versión y comprobaciones); en AEGIS, PR #41.
 
 Una vez por semana, el servidor de recogida genera una versión interna y completa de la base
 del European Observatory of Drone Incidents, cifrada, que solo puede leer AEGIS, y la sube al
@@ -125,8 +125,8 @@ las use normalice.
   esquema entra sin tocar el código de la exportación, siempre que se sepa su origen. Para el
   bloque `foco_termico` de FIRMS el origen ya está previsto (`medido`, método `parser`); un
   campo nuevo sin origen deducible de sus fuentes invalida la versión hasta que se le dé uno,
-  porque la calidad manda sobre la inclusión automática. FIRMS no se ha fusionado a la hora
-  de esta versión: la primera exportación no trae `foco_termico`.
+  porque la calidad manda sobre la inclusión automática. FIRMS se fusionó antes que este PR:
+  la primera versión ya trae `foco_termico` (apartado 7).
 
 ## 3. Origen de cada dato, sin relleno y nivel de detalle
 
@@ -243,7 +243,149 @@ de git, con su huella en `control.json`. Documentación en `docs/eodi.md` de AEG
 
 ## 7. Primera versión, importación y fusión
 
-Pendiente de la ejecución en el servidor: se completa tras el despliegue.
+**Fusión.** PR #29, fusionado el 1 de octubre de 2026 a las 10:30 UTC (f51fb8d) con el
+procedimiento de `docs/fusiones.md`: fetch, rebase sobre `main`, que ya traía FIRMS (PR #27
+y #28, esquema 1.1.0), con el esquema reconstruido como el 1.1.0 de FIRMS más lo de este PR
+y llevado a la 1.2.0; tests y workflow otra vez sobre la rama rebasada (verde); un commit con
+el autor anónimo; `git diff --name-only origin/main HEAD` sin ningún fichero de
+`publicacion/`; avance rápido. Producción servía 374 incidentes antes de fusionar y 374
+después (`/datos/resumen.json`).
+
+**Servidor.** `bash servidor/reconstruir.sh` desde `main`, como pide `docs/servidor.md`
+cuando cambia `instalar.sh`: instaló `eodi-exportacion.service` y su temporizador (siguiente:
+lunes 5 de octubre de 2026, 03:47 UTC). La recogida que se lanzó a las 10:43 UTC, ya con el
+código fusionado, aplicó la regla de presencia: «presencia del dron confirmada por
+declaraciones: 23», los mismos 23 incidentes del apartado 1, cada uno con la afirmación que
+nombra su declaración en el historial de la base. Las recogidas horarias siguientes (11:17 y
+una lanzada a mano a las 11:31) terminaron bien y ya no cambiaron nada («0»).
+
+**Primera versión: 2026.10.01**, lanzada a mano en el servidor a las 11:28 UTC
+(`sudo systemctl start eodi-exportacion.service`): 48 s, sin esperar al cerrojo. Subida a
+`exportaciones/2026.10.01/` con la etiqueta `eodi-2026.10.01`.
+
+- Huella del manifiesto: `a97bf0d2467609ce78b6efe81602b4ad7e2430bb184c48700970879031ff28d8`.
+- Fecha de corte 2026-10-01T10:47:29Z; esquema 1.2.0, formato 1.0.0, lógica `ficha/5`,
+  vocabulario 1.0.0. 3,0 MB cifrados (unos 66 MB en claro).
+
+| Fichero | Registros | Bytes en claro | Huella en claro (inicio) |
+| --- | ---: | ---: | --- |
+| `incidentes.jsonl` | 537 (376 activos) | 6.974.666 | `9fad5d35f3c4020a` |
+| `afirmaciones.jsonl` | 47.786 | 23.166.240 | `5ed45f5a984e71b4` |
+| `episodios.jsonl` | 2 | 198 | `b325ce4e00b5646f` |
+| `ucrania_ataques.jsonl` | 4.601 | 16.847.847 | `fb4309aa5427146c` |
+| `ucrania_regiones.jsonl` | 16.275 | 2.591.598 | `66f09df12dbde586` |
+| `frecuencias.json` | 198 filas | 63.902 | `41ae65c3ef2c8c5e` |
+| `descartes.jsonl` | 1.378 | 1.072.234 | `d30aa772588ddb36` |
+| `vocabulario.json` | 13 entradas | 5.466 | `8be42accab636c6b` |
+| `esquema/` | 14 esquemas | | |
+
+Cifras principales:
+
+- Incidentes activos: 376 (204 sobrevuelos, 90 incursiones, 82 interrupciones de aeropuerto;
+  232 notificados, 138 confirmados, 3 atribuidos, 3 desmentidos). Presencia del dron: 201
+  confirmada, 171 no confirmada, 4 descartada. EODI-2025-00247 sale con presencia
+  confirmada y nivel C.
+- Afirmaciones: 28.644 del Ministerio de Defensa ruso (`parte`, `parser`, fiabilidad D),
+  9.359 de la Fuerza Aérea de Ucrania (`oficial`, `parser`), 9.267 de noticias (`prensa`,
+  `extractor`), 486 de declaraciones citadas (`oficial_citado`, `extractor`), 23 de la regla
+  de presencia (`oficial_citado`, `regla`) y 7 de la reconstrucción (`prensa`, `regla`).
+  Ninguna sin respaldo. La base no tiene hoy ninguna fuente de fiabilidad E o F: la
+  exportación las llevaría sin filtrar (lo prueban los tests), pero en esta versión no hay.
+- Descartes: 646 duplicados, 641 noticias rechazadas, 65 retirados, 22 partes que no se
+  entienden y 4 desmentidos; ninguna fusión dudosa pendiente.
+- Capa de Ucrania: de sus valores, 62.726 de origen `parte`, 18.615 `oficial` y 24
+  `medido` (focos térmicos de FIRMS en regiones).
+- FIRMS se fusionó antes que este PR y su bloque `foco_termico` entra en la exportación sin
+  tocar código, como `medido`: 46 incidentes y 24 valores de la capa de Ucrania lo llevan.
+
+**Completitud** de la versión exportada (no de la base): `python -m exportacion.completitud`
+sobre los ficheros cifrados de la versión, con las huellas comprobadas. Porcentaje de los 376
+incidentes activos con el campo lleno y, de esos, cuántos por origen. «desconocido», el falso
+o la lista vacía de `pruebas` sin fuentes y lo que queda sin respaldo no cuentan como llenos.
+`foco_termico` cuenta cualquier resultado del cruce (detectado o no).
+
+Versión 2026.10.01: 537 incidentes exportados, 376 activos (ni fundidos ni retirados); los porcentajes son sobre los activos.
+
+| Campo | Lleno | medido | oficial | oficial_citado | parte | prensa | Sin respaldo |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `atribucion` | 0.8 % (3) | 0 | 0 | 3 | 0 | 0 | 0 |
+| `consecuencias.cierre.minutos` | 9.0 % (34) | 0 | 0 | 0 | 0 | 34 | 0 |
+| `consecuencias.danos` | 0.0 % (0) | 0 | 0 | 0 | 0 | 0 | 0 |
+| `consecuencias.fallecidos` | 0.0 % (0) | 0 | 0 | 0 | 0 | 0 | 0 |
+| `consecuencias.heridos` | 0.0 % (0) | 0 | 0 | 0 | 0 | 0 | 0 |
+| `consecuencias.vuelos_cancelados` | 1.3 % (5) | 0 | 0 | 0 | 0 | 5 | 0 |
+| `consecuencias.vuelos_desviados` | 7.7 % (29) | 0 | 0 | 0 | 0 | 29 | 0 |
+| `consecuencias.vuelos_retrasados` | 5.1 % (19) | 0 | 0 | 0 | 0 | 19 | 0 |
+| `drones.altura_m` | 0.0 % (0) | 0 | 0 | 0 | 0 | 0 | 0 |
+| `drones.clase` | 0.0 % (0) | 0 | 0 | 0 | 0 | 0 | 0 |
+| `drones.luces` | 0.0 % (0) | 0 | 0 | 0 | 0 | 0 | 0 |
+| `drones.modelo` | 6.6 % (25) | 0 | 0 | 0 | 0 | 25 | 0 |
+| `drones.numero` | 75.3 % (283) | 0 | 1 | 0 | 0 | 282 | 0 |
+| `drones.patron` | 0.0 % (0) | 0 | 0 | 0 | 0 | 0 | 0 |
+| `drones.trayectoria` | 0.0 % (0) | 0 | 0 | 0 | 0 | 0 | 0 |
+| `drones.velocidad_ms` | 0.0 % (0) | 0 | 0 | 0 | 0 | 0 | 0 |
+| `estado` | 100.0 % (376) | 0 | 1 | 144 | 0 | 231 | 0 |
+| `foco_termico` | 12.2 % (46) | 46 | 0 | 0 | 0 | 0 | 0 |
+| `lugar.geocodificacion` | 66.5 % (250) | 0 | 0 | 0 | 0 | 250 | 0 |
+| `lugar.localidad` | 18.4 % (69) | 0 | 0 | 0 | 0 | 69 | 0 |
+| `lugar.nivel` | 100.0 % (376) | 0 | 1 | 0 | 0 | 375 | 0 |
+| `lugar.nuts2` | 0.0 % (0) | 0 | 0 | 0 | 0 | 0 | 0 |
+| `lugar.pais` | 100.0 % (376) | 0 | 1 | 0 | 0 | 375 | 0 |
+| `lugar.punto` | 66.5 % (250) | 0 | 0 | 0 | 0 | 250 | 0 |
+| `lugar.radio_km` | 66.5 % (250) | 0 | 0 | 0 | 0 | 250 | 0 |
+| `lugar.region` | 71.0 % (267) | 0 | 0 | 0 | 0 | 267 | 0 |
+| `lugar.suceso` | 92.3 % (347) | 0 | 0 | 0 | 0 | 347 | 0 |
+| `objetivo.categoria` | 67.8 % (255) | 0 | 0 | 0 | 0 | 255 | 0 |
+| `objetivo.nombre` | 67.3 % (253) | 0 | 0 | 0 | 0 | 253 | 0 |
+| `objetivo.oaci` | 41.5 % (156) | 0 | 0 | 0 | 0 | 156 | 0 |
+| `objetivo.uso` | 0.0 % (0) | 0 | 0 | 0 | 0 | 0 | 0 |
+| `origen_demostrado_por` | 23.9 % (90) | 0 | 1 | 52 | 0 | 37 | 0 |
+| `presencia_dron` | 100.0 % (376) | 0 | 1 | 45 | 0 | 330 | 0 |
+| `pruebas.dron_estatal` | 60.1 % (226) | 0 | 1 | 0 | 0 | 225 | 0 |
+| `pruebas.entrada_exterior` | 38.8 % (146) | 0 | 1 | 0 | 0 | 145 | 0 |
+| `pruebas.evidencia` | 27.7 % (104) | 0 | 1 | 0 | 0 | 103 | 0 |
+| `respuesta.deteccion` | 0.0 % (0) | 0 | 0 | 0 | 0 | 0 | 0 |
+| `respuesta.medidas` | 34.3 % (129) | 0 | 0 | 0 | 0 | 129 | 0 |
+| `respuesta.resultado_contramedidas` | 0.0 % (0) | 0 | 0 | 0 | 0 | 0 | 0 |
+| `tiempo.duracion_min` | 11.4 % (43) | 0 | 0 | 0 | 0 | 43 | 0 |
+| `tiempo.fin` | 11.7 % (44) | 0 | 1 | 0 | 0 | 43 | 0 |
+| `tiempo.inicio` | 100.0 % (376) | 0 | 1 | 0 | 0 | 375 | 0 |
+| `tipo` | 100.0 % (376) | 0 | 1 | 6 | 0 | 369 | 0 |
+
+| Nivel de detalle | Incidentes | % |
+| --- | ---: | ---: |
+| A | 0 | 0.0 % |
+| B | 0 | 0.0 % |
+| C | 141 | 37.5 % |
+| D | 235 | 62.5 % |
+
+Lo que dice la tabla para decidir fuentes nuevas: casi todo es `prensa`; las autoridades
+aparecen en el estado (144 confirmaciones citadas por la prensa y ninguna leída
+directamente) y en la presencia; no hay ningún incidente de nivel A ni B porque ninguna
+fuente leída directamente confirma incidentes fuera de la capa de guerra y ninguna da
+trayectoria, altura o velocidad; las consecuencias humanas, los daños, el uso del objetivo y
+los campos de detección y contramedidas están vacíos. Las fuentes que más subirían el nivel
+son las que confirman directamente (notas oficiales leídas, que hoy no enlazan ningún
+incidente) y las que miden (tráfico aéreo para cierres y desvíos; datos de radar o de
+rastreo, que no son públicos).
+
+**Importación en AEGIS.** PR #41 de AEGIS, fusionado como un commit con el autor anónimo
+(0c332c7) tras pasar la suite completa en local (784 tests; AEGIS no tiene minutos de
+GitHub Actions). Desde `C:\dev\aegis-importador`, `python tools/import_eodi.py` importó la
+2026.10.01 con la misma huella del manifiesto (`a97bf0d2…`) y este resumen: 376 incidentes
+activos; por emplazamiento de AEGIS, 165 aeropuerto, 7 energia, 3 espacio_publico, 80 sin
+equivalente (72 «otra» y 8 bases militares) y 121 sin objetivo; por nivel de detalle, 141 C y
+235 D. La primera importación dio otra huella del manifiesto: git en Windows convertía los
+finales de línea del manifiesto al sacarlo (`core.autocrlf`). El importador desactiva esa
+conversión solo para su clon y un test lo comprueba; se volvió a importar desde cero con la
+huella correcta. El clon habitual de AEGIS (`C:\dev\aegis`) estaba limpio y en `main`: se
+actualizó por avance rápido, se instaló el extra `eodi` en su entorno y la importación dio la
+misma versión y la misma huella.
+
+**Estado y vigilancia.** La recogida de las 11:17 se lanzó antes de la primera exportación
+y publicó `ultima_exportacion: null`; para que la vigilancia no abriera una incidencia
+falsa, se lanzó una recogida más a las 11:31, que publicó `ultima_exportacion:
+2026-10-01T11:28Z`. `python -m recogida.salud` da las dos comprobaciones en verde.
 
 ## 8. Qué faltaría en AEGIS para cada uso
 
