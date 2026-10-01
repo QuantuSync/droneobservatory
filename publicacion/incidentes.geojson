@@ -3,156 +3,6 @@
   {
    "geometry": {
     "coordinates": [
-     7.55533,
-     49.44452
-    ],
-    "type": "Point"
-   },
-   "id": "EODI-2024-00002",
-   "properties": {
-    "afirmaciones_publicas": [
-     {
-      "campo": "lugar.pais",
-      "credibilidad": 1,
-      "fecha": {
-       "precision": "dia",
-       "valor": "2025-10-10T00:00Z"
-      },
-      "fiabilidad": "A",
-      "fuente_id": "detalle-ece2ea26d71e08a3",
-      "medio": "Bundesregierung",
-      "valor": "DE"
-     },
-     {
-      "campo": "objetivo.categoria",
-      "credibilidad": 1,
-      "fecha": {
-       "precision": "dia",
-       "valor": "2025-10-10T00:00Z"
-      },
-      "fiabilidad": "A",
-      "fuente_id": "detalle-ece2ea26d71e08a3",
-      "medio": "Bundesregierung",
-      "valor": "base_militar"
-     },
-     {
-      "campo": "objetivo.nombre",
-      "credibilidad": 1,
-      "fecha": {
-       "precision": "dia",
-       "valor": "2025-10-10T00:00Z"
-      },
-      "fiabilidad": "A",
-      "fuente_id": "detalle-ece2ea26d71e08a3",
-      "medio": "Bundesregierung",
-      "valor": "Militärflughafen Ramstein"
-     },
-     {
-      "campo": "tiempo.inicio",
-      "credibilidad": 1,
-      "fecha": {
-       "precision": "dia",
-       "valor": "2025-10-10T00:00Z"
-      },
-      "fiabilidad": "A",
-      "fuente_id": "detalle-ece2ea26d71e08a3",
-      "medio": "Bundesregierung",
-      "valor": {
-       "precision": "dia",
-       "valor": "2024-01-01T00:00Z"
-      }
-     },
-     {
-      "campo": "tipo",
-      "credibilidad": 1,
-      "fecha": {
-       "precision": "dia",
-       "valor": "2025-10-10T00:00Z"
-      },
-      "fiabilidad": "A",
-      "fuente_id": "detalle-ece2ea26d71e08a3",
-      "medio": "Bundesregierung",
-      "valor": "sobrevuelo"
-     }
-    ],
-    "consecuencias": {
-     "cierre": {
-      "valor": "desconocido"
-     }
-    },
-    "control": {
-     "ultima_actualizacion": {
-      "precision": "minuto",
-      "valor": "2026-10-01T19:17Z"
-     }
-    },
-    "drones": {
-     "numero": "desconocido"
-    },
-    "estado": {
-     "actual": "confirmado",
-     "historial": [
-      {
-       "estado": "notificado",
-       "fecha": {
-        "precision": "dia",
-        "valor": "2025-10-10T00:00Z"
-       },
-       "fuente_id": "detalle-ece2ea26d71e08a3"
-      },
-      {
-       "estado": "confirmado",
-       "fecha": {
-        "precision": "dia",
-        "valor": "2025-10-10T00:00Z"
-       },
-       "fuente_id": "detalle-ece2ea26d71e08a3"
-      }
-     ]
-    },
-    "fuentes": [
-     {
-      "credibilidad": 1,
-      "enlace": "https://dserver.bundestag.de/btd/21/021/2102141.pdf",
-      "fecha": {
-       "precision": "dia",
-       "valor": "2025-10-10T00:00Z"
-      },
-      "fiabilidad": "A",
-      "frase_origen": "Drohnen-Sachverhalte am Militärflughafen in Ramstein aus dem Jahr 2024",
-      "id": "detalle-ece2ea26d71e08a3",
-      "idioma": "de",
-      "medio": "Bundesregierung",
-      "replicas": 0
-     }
-    ],
-    "id": "EODI-2024-00002",
-    "lugar": {
-     "pais": "DE",
-     "radio_km": 3.0
-    },
-    "objetivo": {
-     "categoria": "otra",
-     "nombre": "Ramstein-Miesenbach"
-    },
-    "presencia_dron": "no_confirmada",
-    "tiempo": {
-     "inicio": {
-      "precision": "dia",
-      "valor": "2024-01-01T00:00Z"
-     }
-    },
-    "tipo": "sobrevuelo",
-    "titulo": {
-     "en": "Drone overflights over Ramstein military airfield",
-     "es": "Sobrevuelos de drones sobre el aeropuerto militar de Ramstein"
-    }
-   },
-   "type": "Feature"
-  },
-  {
-   "geometry": {
-    "coordinates": [
      5.2875,
      51.65333
     ],
@@ -16629,6 +16479,21 @@
     "afirmaciones_publicas": [
      {
       "campo": "consecuencias.cierre.minutos",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-11-04T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EBBR-2025-11-04-EODI-2025-00072",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 195,
+       "min": 195
+      }
+     },
+     {
+      "campo": "consecuencias.cierre.minutos",
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
@@ -16641,6 +16506,18 @@
        "max": 120,
        "min": 120
       }
+     },
+     {
+      "campo": "consecuencias.cierre.valor",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-11-04T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EBBR-2025-11-04-EODI-2025-00072",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": "si"
      },
      {
       "campo": "consecuencias.cierre.valor",
@@ -16691,6 +16568,21 @@
       "valor": {
        "max": 40,
        "min": 40
+      }
+     },
+     {
+      "campo": "consecuencias.vuelos_desviados",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-11-04T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EBBR-2025-11-04-EODI-2025-00072",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 17,
+       "min": 17
       }
      },
      {
@@ -19597,6 +19489,20 @@
       "idioma": "fr",
       "medio": "lavenir.net",
       "replicas": 0
+     },
+     {
+      "credibilidad": 2,
+      "enlace": "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.11.04-planes-readsb-prod-0",
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-11-04T00:00Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Cierre medido en EBBR: 18:45–22:00 UTC, 195 minutos, 17 desvíos y 8 esperas.",
+      "id": "adsblol-EBBR-2025-11-04-EODI-2025-00072",
+      "idioma": "es",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "replicas": 0
      }
     ],
     "id": "EODI-2025-00072",
@@ -19625,6 +19531,27 @@
     "titulo": {
      "en": "Airspace violation over Brussels Airport forces closure",
      "es": "Violación del espacio aéreo sobre el aeropuerto de Bruselas obliga a su cierre"
+    },
+    "trafico_aereo": {
+     "cierre": {
+      "aeropuerto": "EBBR",
+      "difiere_de_declarado": false,
+      "duracion_min": 195,
+      "fin": {
+       "precision": "minuto",
+       "valor": "2025-11-04T22:00Z"
+      },
+      "inicio": {
+       "precision": "minuto",
+       "valor": "2025-11-04T18:45Z"
+      },
+      "resultado": "cierre_medido",
+      "vuelos_desviados": 17,
+      "vuelos_en_espera": 8
+     },
+     "datos": [
+      "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.11.04-planes-readsb-prod-0"
+     ]
     }
    },
    "type": "Feature"
@@ -23306,6 +23233,48 @@
    "properties": {
     "afirmaciones_publicas": [
      {
+      "campo": "consecuencias.cierre.minutos",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-09-11T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EYVI-2025-09-11-EODI-2025-00099",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 82,
+       "min": 82
+      }
+     },
+     {
+      "campo": "consecuencias.cierre.valor",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-09-11T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EYVI-2025-09-11-EODI-2025-00099",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": "si"
+     },
+     {
+      "campo": "consecuencias.vuelos_desviados",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-09-11T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EYVI-2025-09-11-EODI-2025-00099",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 1,
+       "min": 1
+      }
+     },
+     {
       "campo": "consecuencias.vuelos_desviados",
       "credibilidad": 3,
       "fecha": {
@@ -23450,6 +23419,20 @@
       "idioma": "lt",
       "medio": "ve.lt",
       "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.09.11-planes-readsb-prod-0",
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-09-11T00:00Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Cierre medido en EYVI: 17:48–19:10 UTC, 82 minutos, 1 desvíos y 3 esperas.",
+      "id": "adsblol-EYVI-2025-09-11-EODI-2025-00099",
+      "idioma": "es",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "replicas": 0
      }
     ],
     "id": "EODI-2025-00099",
@@ -23478,6 +23461,27 @@
     "titulo": {
      "en": "Drone over Vilnius airport forces flight diversion",
      "es": "Dron sobre el aeropuerto de Vilna obliga a desviar un vuelo"
+    },
+    "trafico_aereo": {
+     "cierre": {
+      "aeropuerto": "EYVI",
+      "difiere_de_declarado": false,
+      "duracion_min": 82,
+      "fin": {
+       "precision": "minuto",
+       "valor": "2025-09-11T19:10Z"
+      },
+      "inicio": {
+       "precision": "minuto",
+       "valor": "2025-09-11T17:48Z"
+      },
+      "resultado": "cierre_medido",
+      "vuelos_desviados": 1,
+      "vuelos_en_espera": 3
+     },
+     "datos": [
+      "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.09.11-planes-readsb-prod-0"
+     ]
     }
    },
    "type": "Feature"
@@ -30148,6 +30152,21 @@
     "afirmaciones_publicas": [
      {
       "campo": "consecuencias.cierre.minutos",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-09-22T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EKCH-2025-09-22-EODI-2025-00154",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 252,
+       "min": 252
+      }
+     },
+     {
+      "campo": "consecuencias.cierre.minutos",
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
@@ -30175,6 +30194,18 @@
        "max": 240,
        "min": 240
       }
+     },
+     {
+      "campo": "consecuencias.cierre.valor",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-09-22T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EKCH-2025-09-22-EODI-2025-00154",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": "si"
      },
      {
       "campo": "consecuencias.cierre.valor",
@@ -30223,6 +30254,21 @@
       "fuente_id": "gdelt-c1ce59d898774fe0",
       "medio": "rpp.pe",
       "valor": "si"
+     },
+     {
+      "campo": "consecuencias.vuelos_desviados",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-09-22T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EKCH-2025-09-22-EODI-2025-00154",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 48,
+       "min": 48
+      }
      },
      {
       "campo": "consecuencias.vuelos_desviados",
@@ -31343,6 +31389,20 @@
       "idioma": "da",
       "medio": "Københavns Politi",
       "replicas": 0
+     },
+     {
+      "credibilidad": 2,
+      "enlace": "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.09.22-planes-readsb-prod-0",
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-09-22T00:00Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Cierre medido en EKCH: 18:26–22:38 UTC, 252 minutos, 48 desvíos y 13 esperas.",
+      "id": "adsblol-EKCH-2025-09-22-EODI-2025-00154",
+      "idioma": "es",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "replicas": 0
      }
     ],
     "id": "EODI-2025-00154",
@@ -31371,6 +31431,28 @@
     "titulo": {
      "en": "Drones close Copenhagen Airport and divert over 35 flights",
      "es": "Drones cierran el aeropuerto de Copenhague y desvían más de 35 vuelos"
+    },
+    "trafico_aereo": {
+     "cierre": {
+      "aeropuerto": "EKCH",
+      "difiere_de_declarado": true,
+      "duracion_min": 252,
+      "fin": {
+       "precision": "minuto",
+       "valor": "2025-09-22T22:38Z"
+      },
+      "inicio": {
+       "precision": "minuto",
+       "valor": "2025-09-22T18:26Z"
+      },
+      "resultado": "cierre_medido",
+      "vuelos_desviados": 48,
+      "vuelos_en_espera": 13
+     },
+     "datos": [
+      "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.09.22-planes-readsb-prod-0",
+      "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.09.23-planes-readsb-prod-0"
+     ]
     }
    },
    "type": "Feature"
@@ -53727,6 +53809,33 @@
    "properties": {
     "afirmaciones_publicas": [
      {
+      "campo": "consecuencias.cierre.minutos",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-10-02T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EDDM-2025-10-02-EODI-2025-00277",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 30,
+       "min": 30
+      }
+     },
+     {
+      "campo": "consecuencias.cierre.valor",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-10-02T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EDDM-2025-10-02-EODI-2025-00277",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": "si"
+     },
+     {
       "campo": "consecuencias.cierre.valor",
       "credibilidad": 3,
       "fecha": {
@@ -53817,6 +53926,21 @@
       "valor": {
        "max": 17,
        "min": 17
+      }
+     },
+     {
+      "campo": "consecuencias.vuelos_desviados",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-10-02T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EDDM-2025-10-02-EODI-2025-00277",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 12,
+       "min": 12
       }
      },
      {
@@ -65136,6 +65260,20 @@
       "idioma": "en",
       "medio": "bloomberg.com",
       "replicas": 0
+     },
+     {
+      "credibilidad": 2,
+      "enlace": "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.10.02-planes-readsb-prod-0",
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-10-02T00:00Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Cierre medido en EDDM: 21:15–21:45 UTC, 30 minutos, 12 desvíos y 6 esperas.",
+      "id": "adsblol-EDDM-2025-10-02-EODI-2025-00277",
+      "idioma": "es",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "replicas": 0
      }
     ],
     "id": "EODI-2025-00277",
@@ -65171,6 +65309,27 @@
     "titulo": {
      "en": "Drones over Munich airport force closure of operations",
      "es": "Drones sobre el aeropuerto de Múnich cierran las operaciones"
+    },
+    "trafico_aereo": {
+     "cierre": {
+      "aeropuerto": "EDDM",
+      "difiere_de_declarado": false,
+      "duracion_min": 30,
+      "fin": {
+       "precision": "minuto",
+       "valor": "2025-10-02T21:45Z"
+      },
+      "inicio": {
+       "precision": "minuto",
+       "valor": "2025-10-02T21:15Z"
+      },
+      "resultado": "cierre_medido",
+      "vuelos_desviados": 12,
+      "vuelos_en_espera": 6
+     },
+     "datos": [
+      "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.10.02-planes-readsb-prod-0"
+     ]
     }
    },
    "type": "Feature"
