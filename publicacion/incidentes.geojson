@@ -4114,6 +4114,18 @@
       "valor": "Schaffen"
      },
      {
+      "campo": "presencia_dron",
+      "credibilidad": 1,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-05T11:45Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "gdelt-4ba1d21ac88d29c4-declaracion-1",
+      "medio": "Burgemeester Geert Cluckers (declaración oficial citada en vrt.be)",
+      "valor": "confirmada"
+     },
+     {
       "campo": "tiempo.inicio",
       "credibilidad": 3,
       "fecha": {
@@ -4149,7 +4161,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-30T21:56Z"
+      "valor": "2026-10-01T10:43Z"
      }
     },
     "drones": {
@@ -4218,7 +4230,7 @@
      "categoria": "base_militar",
      "nombre": "Diest Schaffen Airfield"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "tiempo": {
      "inicio": {
       "precision": "hora",
@@ -8360,6 +8372,18 @@
       "valor": "no_confirmada"
      },
      {
+      "campo": "presencia_dron",
+      "credibilidad": 1,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-09-29T17:45Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "gdelt-aa2db442fa90fa0c-declaracion-1",
+      "medio": "Politiet Nordland (declaración oficial citada en rb.no)",
+      "valor": "confirmada"
+     },
+     {
       "campo": "respuesta.medidas",
       "credibilidad": 3,
       "fecha": {
@@ -8409,7 +8433,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-30T21:56Z"
+      "valor": "2026-10-01T10:43Z"
      }
     },
     "drones": {
@@ -8493,7 +8517,7 @@
      "nombre": "Oslo lufthavn, Gardermoen",
      "oaci": "ENGM"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "respuesta": {
      "medidas": [
       "cierre_espacio_aereo"
@@ -16577,6 +16601,18 @@
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
+       "valor": "2025-11-05T07:45Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "gdelt-a7d870eebfb019e0-declaracion-1",
+      "medio": "serviciul belgian de control al traficului aerian (declaración oficial citada en europafm.ro)",
+      "valor": "confirmada"
+     },
+     {
+      "campo": "presencia_dron",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
        "valor": "2025-11-05T20:30Z"
       },
       "fiabilidad": "C",
@@ -16753,7 +16789,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-30T21:56Z"
+      "valor": "2026-10-01T10:43Z"
      }
     },
     "drones": {
@@ -19248,7 +19284,7 @@
      "nombre": "Brussels Airport",
      "oaci": "EBBR"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "respuesta": {
      "medidas": [
       "patrulla"
@@ -20133,6 +20169,18 @@
       "valor": "no_confirmada"
      },
      {
+      "campo": "presencia_dron",
+      "credibilidad": 1,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-03T05:45Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "gdelt-380466e47a5476b8-declaracion-2",
+      "medio": "Theo Francken (declaración oficial citada en jutarnji.hr)",
+      "valor": "confirmada"
+     },
+     {
       "campo": "tipo",
       "credibilidad": 3,
       "fecha": {
@@ -20153,7 +20201,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-30T21:56Z"
+      "valor": "2026-10-01T10:43Z"
      }
     },
     "drones": {
@@ -20264,7 +20312,7 @@
      "categoria": "otra",
      "nombre": "Kleine-Brogel"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "tiempo": {
      "inicio": {
       "precision": "dia",
@@ -23235,6 +23283,18 @@
       "valor": "no_confirmada"
      },
      {
+      "campo": "presencia_dron",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-08-21T07:30Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "gdelt-802592d65fb5ef30-declaracion-1",
+      "medio": "Policijos departamentas (declaración oficial citada en respublika.lt)",
+      "valor": "confirmada"
+     },
+     {
       "campo": "respuesta.medidas",
       "credibilidad": 3,
       "fecha": {
@@ -23326,7 +23386,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-30T21:56Z"
+      "valor": "2026-10-01T10:43Z"
      }
     },
     "drones": {
@@ -23579,7 +23639,7 @@
      "nombre": "Tarptautinis Vilniaus oro uostas",
      "oaci": "EYVI"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "respuesta": {
      "medidas": [
       "patrulla"
@@ -30054,6 +30114,18 @@
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
+       "valor": "2025-09-22T20:15Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "gdelt-9e0a0524f60e569b-declaracion-1",
+      "medio": "Københavns Politi (declaración oficial citada en tv2bornholm.dk)",
+      "valor": "confirmada"
+     },
+     {
+      "campo": "presencia_dron",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
        "valor": "2025-09-22T21:00Z"
       },
       "fiabilidad": "C",
@@ -30314,7 +30386,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-30T21:56Z"
+      "valor": "2026-10-01T10:43Z"
      }
     },
     "drones": {
@@ -30922,7 +30994,7 @@
      "nombre": "Københavns Lufthavn",
      "oaci": "EKCH"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "tiempo": {
      "duracion_min": 270,
      "fin": {
@@ -33400,6 +33472,18 @@
       "valor": "no_confirmada"
      },
      {
+      "campo": "presencia_dron",
+      "credibilidad": 1,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-02-12T12:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "gdelt-eaf548fa39415164-declaracion-1",
+      "medio": "Politiet (declaración oficial citada en nettavisen.no)",
+      "valor": "confirmada"
+     },
+     {
       "campo": "respuesta.medidas",
       "credibilidad": 3,
       "fecha": {
@@ -33449,7 +33533,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-30T21:56Z"
+      "valor": "2026-10-01T10:43Z"
      }
     },
     "drones": {
@@ -33519,7 +33603,7 @@
      "nombre": "Alta lufthavn",
      "oaci": "ENAT"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "respuesta": {
      "medidas": [
       "patrulla"
@@ -36227,6 +36311,18 @@
       "valor": "no_confirmada"
      },
      {
+      "campo": "presencia_dron",
+      "credibilidad": 1,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-09-28T09:30Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "gdelt-9fb7b309007f093c-declaracion-1",
+      "medio": "Deutsche Flugsicherung (declaración oficial citada en t-online.de)",
+      "valor": "confirmada"
+     },
+     {
       "campo": "tipo",
       "credibilidad": 3,
       "fecha": {
@@ -36247,7 +36343,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-30T21:56Z"
+      "valor": "2026-10-01T10:43Z"
      }
     },
     "drones": {
@@ -36317,7 +36413,7 @@
      "nombre": "Flughafen Hannover-Langenhagen",
      "oaci": "EDDV"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "tiempo": {
      "inicio": {
       "precision": "dia",
@@ -36413,6 +36509,18 @@
       "valor": "no_confirmada"
      },
      {
+      "campo": "presencia_dron",
+      "credibilidad": 1,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-02-24T13:30Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "gdelt-98ce7b764740a939-declaracion-1",
+      "medio": "Controladores Aéreos de España (declaración oficial citada en abc.es)",
+      "valor": "confirmada"
+     },
+     {
       "campo": "tiempo.inicio",
       "credibilidad": 3,
       "fecha": {
@@ -36456,7 +36564,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-30T21:56Z"
+      "valor": "2026-10-01T10:43Z"
      }
     },
     "drones": {
@@ -36540,7 +36648,7 @@
      "nombre": "Aeropuerto internacional de Sevilla - San Pablo",
      "oaci": "LEZL"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "tiempo": {
      "inicio": {
       "precision": "hora",
@@ -40191,6 +40299,18 @@
       "valor": "no_confirmada"
      },
      {
+      "campo": "presencia_dron",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-10-29T05:30Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "gdelt-63ee32e6041f026b-declaracion-1",
+      "medio": "Theo Francken (declaración oficial citada en vrt.be)",
+      "valor": "confirmada"
+     },
+     {
       "campo": "tiempo.inicio",
       "credibilidad": 3,
       "fecha": {
@@ -40253,7 +40373,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-30T21:56Z"
+      "valor": "2026-10-01T10:43Z"
      }
     },
     "drones": {
@@ -40524,7 +40644,7 @@
      "categoria": "otra",
      "nombre": "Marche-en-Famenne"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "tiempo": {
      "inicio": {
       "precision": "dia",
@@ -44531,6 +44651,18 @@
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
+       "valor": "2025-09-24T21:15Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "gdelt-f80270dad2f01812-declaracion-1",
+      "medio": "Flyvevåbnets afdeling for transportfly (declaración oficial citada en ekstrabladet.dk)",
+      "valor": "confirmada"
+     },
+     {
+      "campo": "presencia_dron",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
        "valor": "2025-09-24T22:45Z"
       },
       "fiabilidad": "C",
@@ -44724,7 +44856,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-30T21:56Z"
+      "valor": "2026-10-01T10:43Z"
      }
     },
     "drones": {
@@ -48156,7 +48288,7 @@
      "nombre": "Flyvestation Aalborg",
      "oaci": "EKYT"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "respuesta": {
      "medidas": [
       "patrulla"
@@ -51267,6 +51399,18 @@
       "valor": "no_confirmada"
      },
      {
+      "campo": "presencia_dron",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-29T08:15Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "gdelt-c08e8d52cf0f9a22-declaracion-1",
+      "medio": "Ministerul de Interne (declaración oficial citada en news.yam.md)",
+      "valor": "confirmada"
+     },
+     {
       "campo": "respuesta.medidas",
       "credibilidad": 3,
       "fecha": {
@@ -51355,7 +51499,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-30T21:56Z"
+      "valor": "2026-10-01T10:43Z"
      }
     },
     "drones": {
@@ -51530,7 +51674,7 @@
      "categoria": "otra",
      "nombre": "Chisinau"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "respuesta": {
      "medidas": [
       "cierre_espacio_aereo"
@@ -51685,6 +51829,18 @@
       "valor": "no_confirmada"
      },
      {
+      "campo": "presencia_dron",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-11T14:45Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "gdelt-acc9061313d7bb68-declaracion-1",
+      "medio": "Préfecture de la Dordogne (declaración oficial citada en sudouest.fr)",
+      "valor": "confirmada"
+     },
+     {
       "campo": "respuesta.medidas",
       "credibilidad": 3,
       "fecha": {
@@ -51749,7 +51905,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-30T21:56Z"
+      "valor": "2026-10-01T10:43Z"
      }
     },
     "drones": {
@@ -51948,7 +52104,7 @@
      "categoria": "otra",
      "nombre": "Bergerac"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "respuesta": {
      "medidas": [
       "patrulla"
@@ -52731,6 +52887,18 @@
       "valor": "no_confirmada"
      },
      {
+      "campo": "presencia_dron",
+      "credibilidad": 1,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-01-04T05:30Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "gdelt-1533b4481da4df24-declaracion-1",
+      "medio": "Midt- og Vestsjællands Politi (declaración oficial citada en kristeligt-dagblad.dk)",
+      "valor": "confirmada"
+     },
+     {
       "campo": "respuesta.medidas",
       "credibilidad": 3,
       "fecha": {
@@ -52780,7 +52948,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-30T21:56Z"
+      "valor": "2026-10-01T10:43Z"
      }
     },
     "drones": {
@@ -52920,7 +53088,7 @@
      "categoria": "otra",
      "nombre": "Køge"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "respuesta": {
      "medidas": [
       "patrulla"
@@ -52991,6 +53159,18 @@
       "valor": "no_confirmada"
      },
      {
+      "campo": "presencia_dron",
+      "credibilidad": 1,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-01-21T08:15Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "gdelt-0760178e49c5a272-declaracion-1",
+      "medio": "Satiksmes ministrija (declaración oficial citada en tvnet.lv)",
+      "valor": "confirmada"
+     },
+     {
       "campo": "tipo",
       "credibilidad": 3,
       "fecha": {
@@ -53011,7 +53191,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-30T21:56Z"
+      "valor": "2026-10-01T10:43Z"
      }
     },
     "drones": {
@@ -53109,7 +53289,7 @@
      "nombre": "RIX Rīgas lidosta",
      "oaci": "EVRA"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "tiempo": {
      "inicio": {
       "precision": "dia",
@@ -69183,6 +69363,18 @@
      },
      {
       "campo": "presencia_dron",
+      "credibilidad": 1,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-08T16:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "gdelt-56bd635521648bd4-declaracion-2",
+      "medio": "Prefectul Iași (declaración oficial citada en stiripesurse.ro)",
+      "valor": "confirmada"
+     },
+     {
+      "campo": "presencia_dron",
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
@@ -69251,7 +69443,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-30T21:56Z"
+      "valor": "2026-10-01T10:43Z"
      }
     },
     "drones": {
@@ -69466,7 +69658,7 @@
      "nombre": "Aeroportul Internațional Iași",
      "oaci": "LRIA"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "respuesta": {
      "medidas": [
       "cierre_espacio_aereo"
@@ -75328,6 +75520,18 @@
       "valor": "no_confirmada"
      },
      {
+      "campo": "presencia_dron",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-05-20T08:45Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "gdelt-fb1f307d2c35791e-declaracion-1",
+      "medio": "Lithuanian Defence Ministry (declaración oficial citada en mirror.co.uk)",
+      "valor": "confirmada"
+     },
+     {
       "campo": "respuesta.medidas",
       "credibilidad": 3,
       "fecha": {
@@ -75403,7 +75607,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-30T21:56Z"
+      "valor": "2026-10-01T10:43Z"
      }
     },
     "drones": {
@@ -75949,7 +76153,7 @@
      "categoria": "aeropuerto",
      "nombre": "Vilnius"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "respuesta": {
      "medidas": [
       "cazas"
@@ -78661,6 +78865,18 @@
       "valor": "no_confirmada"
      },
      {
+      "campo": "presencia_dron",
+      "credibilidad": 1,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-08-13T13:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "gdelt-70ba5993098b48e7-declaracion-1",
+      "medio": "Bundespolizei (declaración oficial citada en soester-anzeiger.de)",
+      "valor": "confirmada"
+     },
+     {
       "campo": "tiempo.inicio",
       "credibilidad": 3,
       "fecha": {
@@ -78704,7 +78920,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-30T21:56Z"
+      "valor": "2026-10-01T10:43Z"
      }
     },
     "drones": {
@@ -78858,7 +79074,7 @@
      "nombre": "Flughafen Köln/Bonn",
      "oaci": "EDDK"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "tiempo": {
      "inicio": {
       "precision": "hora",
@@ -104817,6 +105033,17 @@
       }
      ]
     },
+    "foco_termico": {
+     "distancia_km": 7.4,
+     "instrumento": "VIIRS",
+     "numero_focos": 4,
+     "primer_foco": {
+      "precision": "minuto",
+      "valor": "2026-04-26T10:45Z"
+     },
+     "resultado": "detectado",
+     "satelite": "NOAA-21"
+    },
     "fuentes": [
      {
       "credibilidad": 3,
@@ -109872,146 +110099,6 @@
   {
    "geometry": {
     "coordinates": [
-     28.92856,
-     47.30526
-    ],
-    "type": "Point"
-   },
-   "id": "EODI-2026-00259",
-   "properties": {
-    "afirmaciones_publicas": [
-     {
-      "campo": "lugar.pais",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-09-30T22:30Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-4520ed2253d45665",
-      "medio": "protv.md",
-      "valor": "MD"
-     },
-     {
-      "campo": "presencia_dron",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-09-30T22:30Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-4520ed2253d45665",
-      "medio": "protv.md",
-      "valor": "no_confirmada"
-     },
-     {
-      "campo": "tiempo.inicio",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-09-30T22:30Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-4520ed2253d45665",
-      "medio": "protv.md",
-      "valor": {
-       "precision": "minuto",
-       "valor": "2026-09-30T17:45Z"
-      }
-     }
-    ],
-    "consecuencias": {
-     "cierre": {
-      "valor": "desconocido"
-     }
-    },
-    "control": {
-     "ultima_actualizacion": {
-      "precision": "minuto",
-      "valor": "2026-10-01T00:17Z"
-     }
-    },
-    "drones": {
-     "numero": "desconocido"
-    },
-    "estado": {
-     "actual": "confirmado",
-     "historial": [
-      {
-       "estado": "notificado",
-       "fecha": {
-        "precision": "aproximada",
-        "valor": "2026-09-30T22:30Z"
-       },
-       "fuente_id": "gdelt-4520ed2253d45665"
-      },
-      {
-       "estado": "confirmado",
-       "fecha": {
-        "precision": "aproximada",
-        "valor": "2026-09-30T22:30Z"
-       },
-       "fuente_id": "gdelt-4520ed2253d45665-declaracion-1"
-      }
-     ]
-    },
-    "fuentes": [
-     {
-      "credibilidad": 3,
-      "enlace": "https://protv.md/actualitate/inca-o-drona-a-survolat-spatiul-aerian-al-republicii-moldova-detaliile-ministerului-apararii---2768526.html",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-09-30T22:30Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Un obiect aerian neautorizat a pătruns din nou în spațiul aerian al Republicii Moldova",
-      "id": "gdelt-4520ed2253d45665",
-      "idioma": "ro",
-      "medio": "protv.md",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 1,
-      "enlace": "https://protv.md/actualitate/inca-o-drona-a-survolat-spatiul-aerian-al-republicii-moldova-detaliile-ministerului-apararii---2768526.html",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-09-30T22:30Z"
-      },
-      "fiabilidad": "B",
-      "frase_origen": "Un obiect aerian neautorizat a pătruns din nou în spațiul aerian al Republicii Moldova",
-      "id": "gdelt-4520ed2253d45665-declaracion-1",
-      "idioma": "ro",
-      "medio": "Ministerul Apărării (declaración oficial citada en protv.md)",
-      "replicas": 0
-     }
-    ],
-    "id": "EODI-2026-00259",
-    "lugar": {
-     "pais": "MD",
-     "radio_km": 3.0
-    },
-    "objetivo": {
-     "categoria": "otra",
-     "nombre": "Brăneşti"
-    },
-    "presencia_dron": "no_confirmada",
-    "tiempo": {
-     "inicio": {
-      "precision": "minuto",
-      "valor": "2026-09-30T17:45Z"
-     }
-    },
-    "tipo": "incursion",
-    "titulo": {
-     "en": "Unauthorized aerial object penetrates Moldova's airspace from Ukraine",
-     "es": "Objeto aéreo no autorizado penetra el espacio aéreo de Moldavia desde Ucrania"
-    }
-   },
-   "type": "Feature"
-  },
-  {
-   "geometry": {
-    "coordinates": [
      11.78603,
      48.35372
     ],
@@ -110031,6 +110118,18 @@
       "fuente_id": "gdelt-5c6c036359b878f1",
       "medio": "n-tv.de",
       "valor": "DE"
+     },
+     {
+      "campo": "presencia_dron",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-01T08:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-5c6c036359b878f1",
+      "medio": "n-tv.de",
+      "valor": "no_confirmada"
      },
      {
       "campo": "tipo",
@@ -110053,7 +110152,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-01T09:17Z"
+      "valor": "2026-10-01T10:43Z"
      }
     },
     "drones": {
@@ -110081,7 +110180,7 @@
        "valor": "2026-10-01T08:00Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "In zwei Fällen führte das laut Polizeipräsidium Oberbayern Nord zu kurzzeitigen Einschränkungen des Flughafenbetriebs.",
+      "frase_origen": "Mehrere Hobby-Drohnenflieger haben gegen das während des Oktoberfests verschärfte Flugverbot im Umkreis des Münchner Flughafens verstoßen.",
       "id": "gdelt-5c6c036359b878f1",
       "idioma": "de",
       "medio": "n-tv.de",
@@ -110114,6 +110213,20 @@
       "idioma": "de",
       "medio": "abendzeitung-muenchen.de",
       "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://merkur.de/lokales/muenchen/oktoberfest/oktoberfest-ansturm-am-flughafen-muenchen-dringende-warnung-an-drohnen-piloten-94519354.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-01T08:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Oktoberfest-Ansturm am Flughafen München: Dringende Warnung an Drohnen-Piloten",
+      "id": "gdelt-bf4ef522d1bf4786",
+      "idioma": "de",
+      "medio": "merkur.de",
+      "replicas": 0
      }
     ],
     "id": "EODI-2026-00261",
@@ -110136,7 +110249,257 @@
     "tipo": "sobrevuelo",
     "titulo": {
      "en": "Amateur drones cause restrictions at Munich airport during Oktoberfest",
-     "es": "Drones aficionados causan restricciones en el aeropuerto de Múnich durante el Oktoberfest"
+     "es": "Drones de aficionados causan restricciones en el aeropuerto de Múnich durante el Oktoberfest"
+    }
+   },
+   "type": "Feature"
+  },
+  {
+   "geometry": {
+    "coordinates": [
+     28.82535,
+     47.38503
+    ],
+    "type": "Point"
+   },
+   "id": "EODI-2026-00262",
+   "properties": {
+    "afirmaciones_publicas": [
+     {
+      "campo": "drones.modelo",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-01T08:45Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-312af3a9583f7e89",
+      "medio": "protv.md",
+      "valor": "Geran"
+     },
+     {
+      "campo": "drones.numero",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-01T08:45Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-312af3a9583f7e89",
+      "medio": "protv.md",
+      "valor": {
+       "max": 1,
+       "min": 1
+      }
+     },
+     {
+      "campo": "lugar.pais",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-30T22:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-4520ed2253d45665",
+      "medio": "protv.md",
+      "valor": "MD"
+     },
+     {
+      "campo": "lugar.pais",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-01T08:45Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-312af3a9583f7e89",
+      "medio": "protv.md",
+      "valor": "MD"
+     },
+     {
+      "campo": "presencia_dron",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-30T22:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-4520ed2253d45665",
+      "medio": "protv.md",
+      "valor": "no_confirmada"
+     },
+     {
+      "campo": "presencia_dron",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-01T08:45Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-312af3a9583f7e89",
+      "medio": "protv.md",
+      "valor": "confirmada"
+     },
+     {
+      "campo": "tiempo.inicio",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-30T22:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-4520ed2253d45665",
+      "medio": "protv.md",
+      "valor": {
+       "precision": "minuto",
+       "valor": "2026-09-30T17:45Z"
+      }
+     },
+     {
+      "campo": "tiempo.inicio",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-01T08:45Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-312af3a9583f7e89",
+      "medio": "protv.md",
+      "valor": {
+       "precision": "dia",
+       "valor": "2026-09-30T00:00Z"
+      }
+     },
+     {
+      "campo": "tipo",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-01T08:45Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-312af3a9583f7e89",
+      "medio": "protv.md",
+      "valor": "incursion"
+     }
+    ],
+    "consecuencias": {
+     "cierre": {
+      "valor": "desconocido"
+     }
+    },
+    "control": {
+     "ultima_actualizacion": {
+      "precision": "minuto",
+      "valor": "2026-10-01T10:43Z"
+     }
+    },
+    "drones": {
+     "modelo": "Geran",
+     "numero": {
+      "max": 1,
+      "min": 1
+     }
+    },
+    "estado": {
+     "actual": "confirmado",
+     "historial": [
+      {
+       "estado": "notificado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2026-10-01T08:45Z"
+       },
+       "fuente_id": "gdelt-312af3a9583f7e89"
+      },
+      {
+       "estado": "confirmado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2026-10-01T08:45Z"
+       },
+       "fuente_id": "gdelt-312af3a9583f7e89-declaracion-1"
+      }
+     ]
+    },
+    "fuentes": [
+     {
+      "credibilidad": 3,
+      "enlace": "https://protv.md/actualitate/inca-o-drona-a-survolat-spatiul-aerian-al-republicii-moldova-detaliile-ministerului-apararii---2768526.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-30T22:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Un obiect aerian neautorizat a pătruns din nou în spațiul aerian al Republicii Moldova",
+      "id": "gdelt-4520ed2253d45665",
+      "idioma": "ro",
+      "medio": "protv.md",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://protv.md/actualitate/inca-o-drona-a-survolat-spatiul-aerian-al-republicii-moldova-detaliile-ministerului-apararii---2768526.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-30T22:30Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Un obiect aerian neautorizat a pătruns din nou în spațiul aerian al Republicii Moldova",
+      "id": "gdelt-4520ed2253d45665-declaracion-1",
+      "idioma": "ro",
+      "medio": "Ministerul Apărării (declaración oficial citada en protv.md)",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://protv.md/actualitate/condamnam-si-vom-continua-sa-condamnam-fiecare-survolarea-ilegala-reactia-lui-igor-grosu-dupa-explozia-unei-drone-geran-la-orhei---2768558.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-01T08:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "o dronă a intrat ilegal noaptea trecută în spațiul aerian al Republicii Moldova",
+      "id": "gdelt-312af3a9583f7e89",
+      "idioma": "ro",
+      "medio": "protv.md",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://protv.md/actualitate/condamnam-si-vom-continua-sa-condamnam-fiecare-survolarea-ilegala-reactia-lui-igor-grosu-dupa-explozia-unei-drone-geran-la-orhei---2768558.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-01T08:45Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "o dronă a intrat ilegal noaptea trecută în spațiul aerian al Republicii Moldova și ulterior a explodat la Orhei",
+      "id": "gdelt-312af3a9583f7e89-declaracion-1",
+      "idioma": "ro",
+      "medio": "Igor Grosu (declaración oficial citada en protv.md)",
+      "replicas": 0
+     }
+    ],
+    "id": "EODI-2026-00262",
+    "lugar": {
+     "pais": "MD",
+     "radio_km": 5.0
+    },
+    "objetivo": {
+     "categoria": "otra",
+     "nombre": "Orhei"
+    },
+    "presencia_dron": "confirmada",
+    "tiempo": {
+     "inicio": {
+      "precision": "dia",
+      "valor": "2026-09-30T00:00Z"
+     }
+    },
+    "tipo": "incursion",
+    "titulo": {
+     "en": "Geran drone explodes in Orhei after illegally entering Moldovan airspace",
+     "es": "Dron Geran explota en Orhei tras entrar ilegalmente en el espacio aéreo de Moldavia"
     }
    },
    "type": "Feature"
