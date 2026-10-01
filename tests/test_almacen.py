@@ -96,16 +96,20 @@ def _poblar(almacen: Almacen) -> None:
     guardar(almacen, ejemplos.incidente_completo())
     almacen.guardar_ataque_ucrania(ejemplos.ataque_completo(), AHORA)
     almacen.guardar_episodio(ejemplos.episodio(), AHORA)
+    almacen.guardar_foco_termico("EODI-2025-00001", ejemplos.foco_termico())
+    almacen.guardar_focos_casados("EODI-2025-00001", [{"lat": 55.6, "lon": 12.6}])
 
 
-@pytest.mark.parametrize("tabla", [*TABLAS_CON_HISTORIAL, "afirmaciones", "historial"])
+@pytest.mark.parametrize(
+    "tabla", [*TABLAS_CON_HISTORIAL, "afirmaciones", "focos_casados", "historial"]
+)
 def test_delete_prohibido(almacen: Almacen, tabla: str) -> None:
     _poblar(almacen)
     with pytest.raises(sqlite3.IntegrityError, match=r"nada se borra|solo admite inserciones"):
         almacen.conexion.execute(f"DELETE FROM {tabla}")
 
 
-@pytest.mark.parametrize("tabla", ["afirmaciones", "historial"])
+@pytest.mark.parametrize("tabla", ["afirmaciones", "focos_casados", "historial"])
 def test_update_prohibido_en_tablas_de_solo_insercion(almacen: Almacen, tabla: str) -> None:
     _poblar(almacen)
     with pytest.raises(sqlite3.IntegrityError):

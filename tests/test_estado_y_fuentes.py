@@ -29,6 +29,7 @@ def parcial() -> dict[str, object]:
         "gdelt": estado.EstadoFuente(estado.LEIDA, dato(18)),
         "oficiales": estado.EstadoFuente(estado.CON_AVISO),
         "extractor": estado.EstadoFuente(estado.CON_AVISO, dato(17, 20)),
+        "firms": estado.EstadoFuente(estado.LEIDA, dato(15, 17)),
     }
     return {f: fuentes[f].documento(f) for f in fuentes}
 
@@ -48,6 +49,7 @@ def test_estado_de_una_recogida_correcta() -> None:
             {"id": "gdelt", "estado": "leida", "ultimo_dato": "2026-09-30T18:00Z"},
             {"id": "oficiales", "estado": "con_aviso", "ultimo_dato": None},
             {"id": "extractor", "estado": "con_aviso", "ultimo_dato": "2026-09-30T17:20Z"},
+            {"id": "firms", "estado": "leida", "ultimo_dato": "2026-09-30T15:17Z"},
         ],
     }
 

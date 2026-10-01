@@ -24,13 +24,13 @@ en [droneobservatory.eu](https://droneobservatory.eu), en español e inglés.
 
 | Carpeta | Contenido |
 | --- | --- |
-| `esquema/` | JSON Schema versionados (1.0.0), con marca de visibilidad por campo |
+| `esquema/` | JSON Schema versionados (1.1.0), con marca de visibilidad por campo |
 | `configuracion/` | Fuentes con su fiabilidad, vocabularios de modelos de dron y de regiones, nomenclátor de lugares europeos, cajas de coordenadas de los países, vocabulario de noticias, medios europeos de GDELT y la lista de referencia de 2025 |
 | `proceso/` | Validaciones, máquina de estados, regla de credibilidad, ataques, tramos solapados, noticias (filtro, réplicas y agrupación), extracción, validación de fichas, incidentes, fusión y episodios |
 | `modelo/` | Extractor: cliente HTTP del servicio (configurado por secretos), ficha con salida obligada por esquema, coste y límites, lectura de las primeras frases |
 | `almacen/` | Base de datos SQLite con historial, cifrado con age y rama `estado` del repositorio de datos |
 | `exportacion/` | `incidentes.geojson`, `incidentes_sin_ubicacion.json` y `ucrania.json` para la web, cada uno con su lista cerrada de campos |
-| `recogida/` | Descarga educada, caché, fuentes de partes (Fuerza Aérea y Ministerio de Defensa ruso), GDELT, ejecución horaria, histórico y auditoría de cobertura |
+| `recogida/` | Descarga educada, caché, fuentes de partes (Fuerza Aérea y Ministerio de Defensa ruso), GDELT, anomalías térmicas de NASA FIRMS, ejecución horaria, histórico y auditoría de cobertura |
 | `publicacion/` | Ficheros públicos generados: `ucrania.json`, `incidentes.geojson` (incidentes con punto, para el mapa) e `incidentes_sin_ubicacion.json` (incidentes cuyo lugar solo se sabe a nivel de país o de región) |
 | `web/` | Web pública de una sola pantalla: mapa, fichas, línea de tiempo, metodología y datos abiertos ([`web/README.md`](web/README.md)) |
 | `tests/` | Tests |
@@ -116,3 +116,8 @@ Decisiones, valores y cobertura en [`docs/informe_recogida.md`](docs/informe_rec
 - `configuracion/localidades_europa.json` contiene datos de
   [GeoNames](https://www.geonames.org), bajo licencia
   [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+- El foco térmico de cada impacto sale de las anomalías térmicas de NASA FIRMS, que se
+  descargan en el servidor y no se redistribuyen. We acknowledge the use of data and/or
+  imagery from NASA's Fire Information for Resource Management System (FIRMS)
+  (https://www.earthdata.nasa.gov/firms), part of NASA's Earth Science Data and Information
+  System (ESDIS).

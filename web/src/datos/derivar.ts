@@ -8,6 +8,7 @@ import type {
   EpisodioResumen,
   Estado,
   EventoResumen,
+  FocoRegion,
   FeatureIncidente,
   PropiedadesSinUbicacion,
   PublicacionSinUbicacion,
@@ -49,6 +50,7 @@ export function resumirIncidente(feature: FeatureIncidente): IncidenteResumen {
     pais: p.lugar.pais,
     objetivo: p.objetivo?.nombre ?? null,
     episodio: p.episodio ?? null,
+    foco: p.foco_termico !== undefined,
   };
 }
 
@@ -65,6 +67,7 @@ export function resumirSinUbicacion(p: PropiedadesSinUbicacion): IncidenteResume
     pais: p.lugar.pais,
     objetivo: p.objetivo?.nombre ?? null,
     episodio: p.episodio ?? null,
+    foco: p.foco_termico !== undefined,
   };
 }
 
@@ -218,7 +221,83 @@ function filaAtaque(ataque: Ataque, indiceRegion: Map<string, number>): FilaAtaq
   ];
 }
 
-export function resumirUcrania(ucrania: PublicacionUcrania): ResumenUcrania {
+type Anillo = [number, number][];
+type Poligono = Anillo[];
+
+/** Centro (centroide del área) del anillo exterior de mayor área de una región. */
+export function centroDe(poligonos: readonly Poligono[]): [number, number] | null {
+  let mejor: { area: number; centro: [number, number] } | null = null;
+  for (const [exterior] of poligonos) {
+    if (exterior === undefined || exterior.length < 3) continue;
+    let area = 0;
+    let x = 0;
+    let y = 0;
+    for (let i = 0; i < exterior.length - 1; i += 1) {
+      const [x0, y0] = exterior[i] as [number, number];
+      const [x1, y1] = exterior[i + 1] as [number, number];
+      const cruce = x0 * y1 - x1 * y0;
+      area += cruce;
+      x += (x0 + x1) * cruce;
+      y += (y0 + y1) * cruce;
+    }
+    if (area === 0) continue;
+    const centro: [number, number] = [x / (3 * area), y / (3 * area)];
+    if (mejor === null || Math.abs(area) > mejor.area) mejor = { area: Math.abs(area), centro };
+  }
+  return mejor === null ? null : mejor.centro;
+}
+
+/** Contornos de las regiones de Ucrania (public/mapa/ucrania-regiones.geojson) por código. */
+export interface ContornosRegiones {
+  features: {
+    properties: { iso: string };
+    geometry:
+      | { type: "Polygon"; coordinates: Poligono }
+      | { type: "MultiPolygon"; coordinates: Poligono[] };
+  }[];
+}
+
+export function centrosDeRegiones(contornos: ContornosRegiones): Map<string, [number, number]> {
+  const centros = new Map<string, [number, number]>();
+  for (const { properties, geometry } of contornos.features) {
+    const poligonos = geometry.type === "Polygon" ? [geometry.coordinates] : geometry.coordinates;
+    const centro = centroDe(poligonos);
+    if (centro !== null) {
+      centros.set(properties.iso, [
+        Math.round(centro[0] * 1e4) / 1e4,
+        Math.round(centro[1] * 1e4) / 1e4,
+      ]);
+    }
+  }
+  return centros;
+}
+
+/** Regiones con foco térmico detectado de cada ataque, con el centro de la región. */
+export function focosDeRegiones(
+  ucrania: PublicacionUcrania,
+  centros: ReadonlyMap<string, [number, number]>,
+): FocoRegion[] {
+  const focos: FocoRegion[] = [];
+  for (const ataque of ucrania.ataques) {
+    for (const region of ataque.regiones ?? []) {
+      const centro = centros.get(region.region);
+      if (region.foco_termico === undefined || centro === undefined) continue;
+      focos.push({
+        ataque: ataque.id,
+        dia: diaDeInstante(ataque.periodo.inicio.valor),
+        region: region.region,
+        foco: region.foco_termico,
+        centro,
+      });
+    }
+  }
+  return focos.sort((a, b) => b.dia - a.dia || a.ataque.localeCompare(b.ataque));
+}
+
+export function resumirUcrania(
+  ucrania: PublicacionUcrania,
+  centros: ReadonlyMap<string, [number, number]> = new Map(),
+): ResumenUcrania {
   const codigos = new Set<string>();
   for (const ataque of ucrania.ataques) {
     for (const region of ataque.regiones ?? []) {
@@ -230,5 +309,5 @@ export function resumirUcrania(ucrania: PublicacionUcrania): ResumenUcrania {
   const ataques = ucrania.ataques
     .map((ataque) => filaAtaque(ataque, indiceRegion))
     .sort((a, b) => a[1] - b[1] || a[0].localeCompare(b[0]));
-  return { regiones, ataques };
+  return { regiones, ataques, focos: focosDeRegiones(ucrania, centros) };
 }

@@ -40,6 +40,7 @@ import {
   ataque,
   coleccion,
   estadoSistema,
+  focoTermico,
   fuente,
   incidente,
   publicacion,
@@ -126,7 +127,13 @@ describe("resúmenes", () => {
       pais: "DE",
       objetivo: "Flughafen München",
       episodio: null,
+      foco: false,
     });
+  });
+
+  it("marca los incidentes con foco térmico detectado", () => {
+    const conFoco = resumir(coleccion([incidente({ foco_termico: focoTermico() })]), ataques);
+    expect(conFoco.incidentes[0]?.foco).toBe(true);
   });
 
   it("une los incidentes de un episodio en orden cronológico", () => {
@@ -300,7 +307,7 @@ describe("validación contra el esquema", () => {
 
 describe("listas cerradas iguales a las del esquema", () => {
   type Esquema = Record<string, unknown>;
-  const leer = (nombre: string) => leerJson("esquema", "1.0.0", `${nombre}.schema.json`) as Esquema;
+  const leer = (nombre: string) => leerJson("esquema", "1.1.0", `${nombre}.schema.json`) as Esquema;
   const en = (objeto: unknown, ...claves: string[]): unknown =>
     claves.reduce<unknown>((actual, clave) => (actual as Esquema)[clave], objeto);
 
@@ -389,6 +396,7 @@ describe("listas cerradas iguales a las del esquema", () => {
         fecha: { valor: "2026-01-01T00:00Z", precision: "dia" },
       },
       afirmaciones_publicas: [afirmacion()],
+      foco_termico: focoTermico(),
     });
     expect(Object.keys(completo.properties).sort()).toEqual(
       [...new Set([...publicos, ...CAMPOS_ANTICIPADOS])].sort(),

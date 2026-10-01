@@ -14,7 +14,7 @@ from almacen.base import Almacen
 from almacen.cifrado import VARIABLE_CLAVE, abrir_cifrada, guardar_cifrada
 from exportacion import publicar
 from proceso.extraccion import Parada
-from recogida import extractor, fuerza_aerea, gdelt, horaria, mindef, oficiales
+from recogida import extractor, firms, fuerza_aerea, gdelt, horaria, mindef, oficiales
 from recogida.cache import CachePaginas
 from recogida.descarga import Descargador, Respuesta
 from tests.telegram_falso import CanalFalso, descargador
@@ -39,6 +39,9 @@ def entorno(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> tuple[str, Canal
     )
     salida = tmp_path / "publicacion"
     monkeypatch.setattr(horaria, "publicar", lambda a, ahora: publicar.publicar(a, ahora, salida))
+    # FIRMS sin red y sin clave: sus CSV, en una carpeta de la prueba.
+    monkeypatch.setenv(firms.VARIABLE_DATOS, str(tmp_path / "firms"))
+    monkeypatch.delenv(firms.VARIABLE_CLAVE, raising=False)
     return desnudo.as_uri(), falso, salida
 
 
@@ -178,6 +181,39 @@ def test_fuentes_oficiales_sin_leer_por_tiempo_es_un_aviso(
     salida = horaria.principal(["--correo", "a@b.org", "--repositorio", repositorio])
     assert salida == horaria.SALIDA_AVISO
     assert len(base_remota(repositorio, tmp_path).ataques_ucrania()) == 3
+
+
+@pytest.mark.parametrize("codigo", [500, 403])
+def test_firms_caido_no_cambia_el_resultado_ni_la_publicacion(
+    entorno: tuple[str, CanalFalso, Path],
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    caplog: pytest.LogCaptureFixture,
+    codigo: int,
+) -> None:
+    repositorio, _, salida_publicacion = entorno
+    clave = "f" * 32
+    monkeypatch.setenv(firms.VARIABLE_CLAVE, clave)
+
+    def caido(url: str, cabeceras: dict[str, str], limite_s: float) -> Respuesta:
+        return codigo, {}, b""
+
+    monkeypatch.setattr(
+        firms,
+        "descargador",
+        lambda plazo=None: Descargador(caido, dormir=lambda _: None, pausa_minima_s=0),
+    )
+    subir_base(repositorio, tmp_path, ultimo_id=1)
+    estado = tmp_path / "estado.json"
+    salida = horaria.principal(
+        ["--correo", "a@b.org", "--repositorio", repositorio, "--estado", str(estado)]
+    )
+    assert salida == 0
+    assert (salida_publicacion / publicar.UCRANIA).exists()
+    assert len(base_remota(repositorio, tmp_path).ataques_ucrania()) == 3
+    fuentes = json.loads(estado.read_text(encoding="utf-8"))
+    assert fuentes["firms"] == {"id": "firms", "estado": "no_leida", "ultimo_dato": None}
+    assert "firms no se lee" in caplog.text and clave not in caplog.text
 
 
 def test_publicar_solo_informa_de_lo_que_cambia(tmp_path: Path) -> None:

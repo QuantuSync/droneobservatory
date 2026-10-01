@@ -5,6 +5,11 @@ la medida que lo justifica). Entre todos suman 24 minutos en el peor caso, frent
 5 a 7 de una ejecución normal y a los 45 que tiene el trabajo: ningún paso puede dejar
 sin tiempo a los demás ni impedir que la base se suba.
 
+Al final, cada 3 horas, las anomalías térmicas de NASA FIRMS y su cruce con los impactos
+(`recogida/firms.py`, `proceso/focos_termicos.py`). Un fallo de FIRMS no cambia el resultado
+de la recogida ni la retrasa más que su tope: queda en el registro y en estado.json, y la
+ejecución siguiente vuelve a intentarlo.
+
 Con --estado, deja escrito cómo fue cada fuente y la fecha de su último dato, para el
 estado del sistema que publica el servidor (`recogida/estado.py`).
 
@@ -23,16 +28,17 @@ from almacen import remoto
 from almacen.base import Almacen
 from almacen.cifrado import abrir_cifrada, guardar_cifrada
 from exportacion.publicar import modelos, publicar
-from proceso import incursiones, solapes
+from proceso import focos_termicos, incursiones, solapes
 from proceso.ataques import SENTIDO_UA_RU
 from proceso.extraccion import Parada
-from recogida import extractor, gdelt, oficiales
+from recogida import extractor, firms, gdelt, oficiales
 from recogida.cache import CachePaginas
 from recogida.descarga import Descargador, DescargaFallida
 from recogida.ejecucion import SinCursor, ejecutar
 from recogida.estado import CON_AVISO, LEIDA, NO_LEIDA, EstadoFuente, escribir_parcial
 from recogida.fuente import CanalNoVerificado, HuecoDemasiadoGrande
 from recogida.fuentes import FUENTES
+from recogida.parte import vocabulario
 from recogida.plazo import Plazo, TiempoAgotado
 
 registro = logging.getLogger("recogida")
@@ -59,6 +65,45 @@ def ultimo_dato(almacen: Almacen, cursor: str, campo: str) -> datetime | None:
 def ultima_llamada(almacen: Almacen) -> datetime | None:
     fechas = [ll["fecha"] for ll in almacen.llamadas()]
     return datetime.fromisoformat(max(fechas).replace("Z", "+00:00")) if fechas else None
+
+
+def impactos(almacen: Almacen) -> list[focos_termicos.Impacto]:
+    """Los impactos que se cruzan con FIRMS: incidentes con explosión o caída y regiones con
+    impacto de los ataques RU→UA."""
+    codigos = {nombre: codigo for codigo, nombre in vocabulario().nombres.items()}
+    hallados = [i for d in almacen.incidentes() if (i := focos_termicos.impacto_de_incidente(d))]
+    for ataque in almacen.ataques_ucrania():
+        hallados += focos_termicos.impactos_de_ataque(ataque, codigos)
+    return hallados
+
+
+def paso_firms(almacen: Almacen, ahora: datetime) -> EstadoFuente:
+    """Descarga de FIRMS (si toca) y cruce con los impactos. Nada de lo que falle aquí sale
+    de esta función: se registra, sin la clave, y la fuente queda como no leída."""
+    datos = firms.Datos(firms.directorio_datos())
+    clave = firms.clave_desde_entorno()
+    estado = LEIDA
+    lectura = firms.lectura_sin_descarga(datos)
+    try:
+        lectura = firms.recoger(datos, ahora, clave, firms.descargador(Plazo(firms.TOPE_S)))
+        if lectura.descargada:
+            registro.info("firms: %d focos en los dos últimos días", lectura.focos)
+    except Exception as error:
+        registro.warning("firms no se lee: %s", firms.redactar(str(error), clave))
+        estado, lectura = NO_LEIDA, firms.lectura_sin_descarga(datos)
+    try:
+        todos = impactos(almacen)
+        # Al leer los CSV solo se guardan los focos de alrededor de los impactos.
+        datos.zonas = [(i.lat, i.lon) for i in todos if i.lat is not None and i.lon is not None]
+        resumen = focos_termicos.evaluar_todos(
+            almacen, todos, datos.focos, ahora, firms.CAJA,
+            Plazo(focos_termicos.TOPE_S),
+        )  # fmt: skip
+        registro.info("focos térmicos: %s", resumen.texto())
+    except Exception as error:
+        registro.warning("cruce con firms fallido: %s", firms.redactar(str(error), clave))
+        estado = NO_LEIDA
+    return EstadoFuente(estado, lectura.ultima_correcta)
 
 
 def principal(argumentos: list[str] | None = None) -> int:
@@ -131,6 +176,8 @@ def principal(argumentos: list[str] | None = None) -> int:
             else CON_AVISO
         )  # fmt: skip
         estados["extractor"] = EstadoFuente(estado_extractor, ultima_llamada(almacen))
+        # Anomalías térmicas: no cambian el código de salida.
+        estados[firms.FUENTE_ID] = paso_firms(almacen, ahora)
         if args.estado is not None:
             escribir_parcial(args.estado, estados)
         cambiados = publicar(almacen, ahora)

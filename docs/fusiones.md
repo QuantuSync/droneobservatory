@@ -20,15 +20,56 @@ defecto en todo lo que la cuenta hace desde la web.
 
 **Mientras la cuenta no tenga esa opción**, el mismo resultado se consigue sin la API de
 merge, con los commits firmados por la configuración local del clon (la dirección
-anónima, sin `--global`). Así se fusionaron los PR 9, 10 y 11:
+anónima, sin `--global`), siguiendo estos pasos en este orden:
 
 ```
-git switch <rama> && git reset --soft origin/main
-git commit -F <fichero con el mensaje>      # título «… (#<número>)» y el porqué
-git push --force-with-lease origin <rama>   # y esperar al workflow de tests
-git push origin <rama>:main                 # avance rápido: GitHub marca el PR como fusionado
+# a. traer main justo antes de fusionar
+git fetch origin
+# b. rebase sobre main; en un conflicto en publicacion/ gana siempre main
+git switch <rama> && git rebase origin/main
+# c. puerta local y workflow de tests sobre la rama rebasada
+git push --force-with-lease origin <rama>        # y esperar al workflow en verde
+# d. un solo commit con el autor anónimo
+git reset --soft origin/main
+git commit -F <fichero con el mensaje>            # título «… (#<número>)» y el porqué
+# e. comprobación obligatoria antes de publicar
+git diff --name-only origin/main HEAD             # solo lo que el PR cambia a propósito
+# f. avance rápido, nunca forzado sobre main
+git push --force-with-lease origin <rama>
+git push origin <rama>:main
 git push origin --delete <rama>
+# g. el número de incidentes publicados no baja
 ```
+
+Por qué existe cada paso:
+
+- **a y b. Fetch y rebase justo antes.** El servidor de recogida publica cada hora en `main`
+  un commit «Actualiza los datos publicados» (`publicacion/ucrania.json`,
+  `publicacion/incidentes.geojson` y `publicacion/incidentes_sin_ubicacion.json`). El commit
+  único del paso d lleva el árbol de la rama: si la rama no tiene esos commits, el commit
+  único deshace los datos que entraron en `main` mientras la rama vivía. Al fusionar el PR
+  #26 se vio que el commit de datos 14e7a02 se habría revertido así; se detectó al comparar
+  con `main` antes de publicar. Durante el rebase, un conflicto en `publicacion/` se resuelve
+  siempre con la versión de `main` (en un rebase, `main` es «ours»:
+  `git checkout --ours publicacion/<fichero>` y `git rebase --continue`), salvo que el PR
+  cambie a propósito esos ficheros.
+- **c. Tests sobre lo rebasado.** Lo que se fusiona es la rama ya rebasada, no la que pasó
+  los tests antes: los datos nuevos de `main` también tienen que validar (la build de la web
+  valida `publicacion/` contra el esquema).
+- **d. Un commit, autor anónimo.** Como hasta ahora (ver más abajo).
+- **e. Comprobar la lista de ficheros.** `git diff --name-only origin/main HEAD` tiene que
+  listar solo ficheros que el PR modifica de verdad. Las rutas de los datos publicados son las
+  que salen en `git log --name-only --grep="Actualiza los datos publicados" origin/main`. Si
+  aparece alguna que el PR no toca a propósito, se aborta, no se publica y se vuelve al paso
+  a.
+- **f. Solo avance rápido.** Si `main` avanza entre la comprobación y el push (la recogida
+  publica en el minuto 17 de cada hora más unos minutos), `git push origin <rama>:main` falla:
+  se vuelve al paso a. Nunca se fuerza un push sobre `main`. Para no chocar, no se fusiona
+  entre el minuto 12 y el 30 de la hora.
+- **g. Comprobar producción.** Después del push, el número de incidentes que sirve
+  droneobservatory.eu (la lista `incidentes` de `/datos/resumen.json`) no puede haber bajado
+  respecto al de antes de fusionar; si baja, se restauran los ficheros de datos desde el
+  último commit «Actualiza los datos publicados» del servidor.
 
 En `main` queda un commit por pull request con autor anónimo, igual que con el squash.
 Las diferencias: los commits atómicos de la rama se sustituyen por ese único commit

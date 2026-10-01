@@ -1,10 +1,11 @@
 import { useState } from "react";
-import type { Sentido } from "../datos/tipos.ts";
+import type { FocoRegion, Sentido } from "../datos/tipos.ts";
 import type { CifrasRegion } from "../datos/ucrania.ts";
 import { fechaDia, numero, rango, region } from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
 import { rutaDeFicha } from "../sitio.ts";
 import type { Idioma } from "../sitio.ts";
+import { LineaFoco, ZOOM_VISOR_REGION } from "./FocoTermico.tsx";
 import { Fila } from "./Panel.tsx";
 import { Enlace } from "../navegacion.tsx";
 
@@ -20,10 +21,12 @@ interface Props {
   cifras: CifrasRegion;
   /** Periodo elegido, ya escrito. */
   periodo: string;
+  /** Focos térmicos detectados en la región en el periodo, del más reciente al más antiguo. */
+  focos?: readonly FocoRegion[];
 }
 
 /** Cifras de una región de Ucrania en el periodo elegido, con los partes que la citan. */
-export function FichaRegion({ t, idioma, codigo, cifras, periodo }: Props) {
+export function FichaRegion({ t, idioma, codigo, cifras, periodo, focos = [] }: Props) {
   const [todos, setTodos] = useState(false);
   const total = cifras.ataques.RU_UA + cifras.ataques.UA_RU;
   const visibles = todos ? cifras.lista : cifras.lista.slice(0, ATAQUES_VISIBLES);
@@ -61,6 +64,18 @@ export function FichaRegion({ t, idioma, codigo, cifras, periodo }: Props) {
                 <span className="mono">{fechaDia(ultimo.dia)}</span>
               </Fila>
             )}
+            {focos.map((f) => (
+              <LineaFoco
+                key={f.ataque}
+                t={t}
+                idioma={idioma}
+                foco={f.foco}
+                lon={f.centro[0]}
+                lat={f.centro[1]}
+                zoom={ZOOM_VISOR_REGION}
+                ataque={f.ataque}
+              />
+            ))}
           </dl>
           <p className="mt-2 text-xs text-secundario">{t.region.nota}</p>
           <section className="mt-4">

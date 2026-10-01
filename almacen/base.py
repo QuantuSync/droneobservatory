@@ -6,7 +6,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from esquema import Documento
+from esquema import Documento, validador_definicion
 from proceso.validaciones import (
     Error,
     validar_ataque_ucrania,
@@ -15,7 +15,9 @@ from proceso.validaciones import (
 )
 
 # Tablas de documentos con historial automático y sin DELETE.
-TABLAS_CON_HISTORIAL = ("incidentes", "fuentes", "episodios", "ataques_ucrania", "regiones_ucrania")
+TABLAS_CON_HISTORIAL = (
+    "incidentes", "fuentes", "episodios", "ataques_ucrania", "regiones_ucrania", "focos_termicos",
+)  # fmt: skip
 # Campos de la fuente que dependen del incidente y no se guardan en la tabla común.
 CAMPOS_FUENTE_POR_ENTIDAD = frozenset({"credibilidad", "campos_respaldados"})
 
@@ -135,6 +137,25 @@ CREATE TABLE IF NOT EXISTS fusiones (
     fuentes TEXT NOT NULL CHECK (json_valid(fuentes)),
     revertida INTEGER NOT NULL DEFAULT 0
 );
+-- Focos térmicos de NASA FIRMS (proceso/focos_termicos.py). La evaluación de cada impacto
+-- (id del incidente, o del ataque y la región: «EODI-UA-2025-0201/UA-30») es un documento
+-- con historial; los focos que han casado con un impacto, una fila por foco que no cambia.
+-- Los CSV de FIRMS no están en la base: viven en el disco del servidor.
+CREATE TABLE IF NOT EXISTS focos_termicos (
+    id TEXT PRIMARY KEY,
+    resultado TEXT NOT NULL,
+    documento TEXT NOT NULL CHECK (json_valid(documento))
+);
+CREATE TABLE IF NOT EXISTS focos_casados (
+    id INTEGER PRIMARY KEY,
+    impacto_id TEXT NOT NULL,
+    documento TEXT NOT NULL CHECK (json_valid(documento)),
+    UNIQUE (impacto_id, documento)
+);
+CREATE TRIGGER IF NOT EXISTS focos_casados_sin_update BEFORE UPDATE ON focos_casados
+BEGIN SELECT RAISE(ABORT, 'focos_casados: un foco nuevo es una fila nueva'); END;
+CREATE TRIGGER IF NOT EXISTS focos_casados_sin_delete BEFORE DELETE ON focos_casados
+BEGIN SELECT RAISE(ABORT, 'focos_casados: nada se borra'); END;
 CREATE TRIGGER IF NOT EXISTS llamadas_extractor_sin_delete BEFORE DELETE ON llamadas_extractor
 BEGIN SELECT RAISE(ABORT, 'llamadas_extractor: nada se borra'); END;
 CREATE TRIGGER IF NOT EXISTS extracciones_sin_delete BEFORE DELETE ON extracciones
@@ -187,6 +208,10 @@ class DocumentoInvalido(ValueError):
     def __init__(self, errores: list[Error]) -> None:
         super().__init__("; ".join(f"{e.ruta}: {e.mensaje}" for e in errores))
         self.errores = errores
+
+
+def _sin_hora(evaluacion: Documento) -> Documento:
+    return {k: v for k, v in evaluacion.items() if k != "evaluado"}
 
 
 def _json(documento: Any) -> str:
@@ -299,6 +324,52 @@ class Almacen:
             raise DocumentoInvalido(errores)
         with self._conexion:
             self._upsert("episodios", {"id": documento["id"], "documento": _json(documento)})
+
+    # --- Focos térmicos -------------------------------------------------------
+
+    def guardar_foco_termico(self, impacto_id: str, documento: Documento) -> bool:
+        """Guarda la evaluación del impacto si ha cambiado algo más que la hora en que se hizo:
+        así el historial solo crece cuando cambia el resultado. True si la ha guardado."""
+        errores = sorted(validador_definicion("foco_termico").iter_errors(documento), key=str)
+        if errores:
+            raise DocumentoInvalido([Error("foco_termico", e.message) for e in errores])
+        anterior = self.focos_termicos().get(impacto_id)
+        if anterior is not None and _sin_hora(anterior) == _sin_hora(documento):
+            return False
+        with self._conexion:
+            self._upsert(
+                "focos_termicos",
+                {
+                    "id": impacto_id,
+                    "resultado": documento["resultado"],
+                    "documento": _json(documento),
+                },
+            )
+        return True
+
+    def guardar_focos_casados(self, impacto_id: str, focos: list[Documento]) -> int:
+        """Añade los focos que casan con el impacto y aún no estaban. Devuelve cuántos."""
+        nuevos = 0
+        with self._conexion:
+            for foco in focos:
+                cursor = self._conexion.execute(
+                    "INSERT INTO focos_casados (impacto_id, documento) VALUES (?, ?) "
+                    "ON CONFLICT (impacto_id, documento) DO NOTHING",
+                    (impacto_id, _json(foco)),
+                )
+                nuevos += cursor.rowcount
+        return nuevos
+
+    def focos_termicos(self) -> dict[str, Documento]:
+        filas = self._conexion.execute(
+            "SELECT id, documento FROM focos_termicos ORDER BY id"
+        ).fetchall()
+        return {id_: json.loads(documento) for id_, documento in filas}
+
+    def focos_casados(self, impacto_id: str) -> list[Documento]:
+        return self._documentos(
+            "SELECT documento FROM focos_casados WHERE impacto_id = ? ORDER BY id", (impacto_id,)
+        )
 
     # --- Recogida ----------------------------------------------------------
 

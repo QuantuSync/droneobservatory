@@ -3,6 +3,7 @@ import { useEffect, useRef } from "react";
 import { ESTADOS, TIPOS } from "../datos/vocabulario.ts";
 import { ATAJOS } from "../estado/atajos.ts";
 import type { Textos } from "../i18n/index.ts";
+import { MarcaFoco } from "./FocoTermico.tsx";
 import { Simbolo } from "./Simbolo.tsx";
 
 interface Props {
@@ -80,6 +81,12 @@ export function Ayuda({ t, abierta, onCerrar }: Props) {
               <li key={texto}>{texto}</li>
             ),
           )}
+          <li className="flex items-start gap-2">
+            <span className="pt-1">
+              <MarcaFoco />
+            </span>
+            {a.foco}
+          </li>
         </ul>
         <section className="sm:col-span-2">
           <h3 className="font-medium">{a.atajos}</h3>

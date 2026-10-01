@@ -37,6 +37,25 @@ def fuente(
     }
 
 
+def foco_termico() -> Documento:
+    """Foco térmico detectado con todos sus campos, públicos e internos."""
+    return {
+        "resultado": "detectado",
+        "primer_foco": instante("2025-10-01T23:42Z"),
+        "satelite": "NOAA-20",
+        "instrumento": "VIIRS",
+        "distancia_km": 1.4,
+        "numero_focos": 3,
+        "frp_max_mw": 48.2,
+        "radio_km": 5,
+        "ventana": {"inicio": instante("2025-10-01T20:30Z"), "fin": instante("2025-10-03T11:30Z")},
+        "focos_en_ventana": 4,
+        "linea_base": {"focos": 2, "dias": 2, "frp_max_mw": 3.1},
+        "fuentes_firms": ["VIIRS_NOAA20_SP", "MODIS_SP"],
+        "evaluado": instante("2025-10-04T00:17Z"),
+    }
+
+
 def incidente_completo() -> Documento:
     """Incidente con todos los campos, públicos e internos, rellenos."""
     return {
@@ -100,6 +119,7 @@ def incidente_completo() -> Documento:
             "heridos": {"min": 0, "max": 0},
             "fallecidos": {"min": 0, "max": 0},
         },
+        "foco_termico": foco_termico(),
         "respuesta": {
             "medidas": ["cierre_espacio_aereo", "patrulla"],
             "deteccion": ["radar", "piloto"],
@@ -204,7 +224,7 @@ def ataque_completo() -> Documento:
         "horas_llegada": [instante("2025-10-05T22:10Z")],
         "duracion_oleada_min": 420,
         "proporcion_senuelos": 0.2,
-        "regiones": [region()],
+        "regiones": [{**region(), "foco_termico": foco_termico()}],
         "fuentes": [
             fuente("P1", "B", es_autoridad=True),
             fuente("P2", "C", interna_fuera_de_ucrania=True),

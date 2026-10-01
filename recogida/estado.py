@@ -12,8 +12,9 @@ Formato (versión 1), con los instantes como AAAA-MM-DDThh:mmZ:
      "ultima_correcta": instante o null, "siguiente",
      "fuentes": [{"id", "estado": leida | con_aviso | no_leida, "ultimo_dato": instante o null}]}
 
-Las fuentes van siempre las cinco y en este orden: fuerza_aerea_ua, mindef_ru, gdelt,
-oficiales y extractor.
+Las fuentes van siempre las seis y en este orden: fuerza_aerea_ua, mindef_ru, gdelt,
+oficiales, extractor y firms. En firms, el último dato es la hora de la última descarga
+correcta de NASA FIRMS (se descarga cada 3 horas).
 
 Uso: python -m recogida.estado --inicio <ISO> --codigo <N> --parcial <json> --anterior <json>
     --salida <json> --minuto <minuto de la recogida>
@@ -28,7 +29,7 @@ from pathlib import Path
 from typing import Any
 
 VERSION = 1
-FUENTES = ("fuerza_aerea_ua", "mindef_ru", "gdelt", "oficiales", "extractor")
+FUENTES = ("fuerza_aerea_ua", "mindef_ru", "gdelt", "oficiales", "extractor", "firms")
 LEIDA, CON_AVISO, NO_LEIDA = "leida", "con_aviso", "no_leida"
 CORRECTA, CON_AVISOS, FALLIDA = "correcta", "con_avisos", "fallida"
 # Código con avisos de la recogida (recogida.horaria.SALIDA_AVISO): se lee y se publica, pero

@@ -3,7 +3,7 @@
 import json
 from pathlib import Path
 
-from esquema import VERSION, Documento, Esquema, validador
+from esquema import VERSION, Documento, Esquema, compatible, validador
 
 DIRECTORIO = Path(__file__).resolve().parent.parent / "configuracion"
 
@@ -14,8 +14,8 @@ class ConfiguracionInvalida(ValueError):
 
 def _leer(ruta: Path) -> Documento:
     contenido: Documento = json.loads(ruta.read_text(encoding="utf-8"))
-    if contenido.get("version_esquema") != VERSION:
-        raise ConfiguracionInvalida(f"{ruta.name}: versión distinta de {VERSION}")
+    if not compatible(contenido.get("version_esquema")):
+        raise ConfiguracionInvalida(f"{ruta.name}: versión no compatible con {VERSION}")
     return contenido
 
 

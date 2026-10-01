@@ -1,4 +1,4 @@
-// Validación de los datos contra el esquema 1.0.0 (campos públicos), escrita a mano para
+// Validación de los datos contra el esquema 1.1.0 (campos públicos), escrita a mano para
 // que no necesite generar código en el navegador. Se usa en el build, sobre los ficheros de
 // publicacion/, y en la web al cargar cada fichero: un fichero que no valida no se pinta.
 
@@ -168,6 +168,16 @@ const fuente = objeto({
 
 const control = objeto({ ultima_actualizacion: instante }, { motivo_desmentido: cadena() });
 
+/** Foco térmico de FIRMS: solo el detectado es público. */
+const focoTermico = objeto({
+  resultado: constante(v.RESULTADO_FOCO_PUBLICO),
+  primer_foco: instante,
+  satelite: enumerado(v.SATELITES_FIRMS),
+  instrumento: enumerado(v.INSTRUMENTOS_FIRMS),
+  distancia_km: numero(0, v.RADIO_FOCO_MAX_KM),
+  numero_focos: numero(1, Number.MAX_SAFE_INTEGER, true),
+});
+
 const longitud = numero(-v.LONGITUD_MAX, v.LONGITUD_MAX);
 const latitud = numero(-v.LATITUD_MAX, v.LATITUD_MAX);
 const radio = numero(v.RADIO_KM_MIN, v.RADIO_KM_MAX);
@@ -225,6 +235,7 @@ const CAMPOS_INCIDENTE_OPCIONALES: Record<string, Comprobacion> = {
   ),
   respuesta: objeto({}, { medidas: lista(enumerado(v.MEDIDAS)) }),
   atribucion: objeto({ actor: cadena(), autoridad: cadena(), fecha: instante }),
+  foco_termico: focoTermico,
 };
 
 const propiedadesIncidente = objeto(CAMPOS_INCIDENTE_OBLIGATORIOS, CAMPOS_INCIDENTE_OPCIONALES);
@@ -273,6 +284,7 @@ const regionAtaque = objeto(
     categorias_objetivo: lista(enumerado(v.CATEGORIAS_OBJETIVO_UCRANIA)),
     heridos: rangoODesconocido,
     fallecidos: rangoODesconocido,
+    foco_termico: focoTermico,
   },
 );
 
@@ -333,6 +345,7 @@ const resumen = objeto({
       pais: cadena(v.PATRON_PAIS),
       objetivo: nulable(cadena()),
       episodio: nulable(cadena(v.PATRON_ID_EPISODIO)),
+      foco: enumerado([true, false]),
     }),
   ),
   episodios: lista(
@@ -370,6 +383,15 @@ const resumenUcrania: Comprobacion = (valor, ruta, errores) => {
         bandera,
         lista(tupla([enteroNoNegativo, cifra, cifra])),
       ]),
+    ),
+    focos: lista(
+      objeto({
+        ataque: cadena(v.PATRON_ID_ATAQUE),
+        dia: entero,
+        region: cadena(v.PATRON_REGION),
+        foco: focoTermico,
+        centro: tupla([longitud, latitud]),
+      }),
     ),
   })(valor, ruta, errores);
   if (errores.length > 0) return;

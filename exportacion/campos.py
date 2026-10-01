@@ -61,6 +61,20 @@ def _afirmaciones() -> set[str]:
     }
 
 
+def _foco_termico(ruta: str) -> set[str]:
+    """Foco térmico de FIRMS: solo sale si es detectado (proceso.focos_termicos.solo_detectado),
+    y sin la potencia, el motivo, la ventana, la línea base ni los productos consultados."""
+    return {
+        ruta,
+        f"{ruta}.resultado",
+        *_instante(f"{ruta}.primer_foco"),
+        f"{ruta}.satelite",
+        f"{ruta}.instrumento",
+        f"{ruta}.distancia_km",
+        f"{ruta}.numero_focos",
+    }
+
+
 CAMPOS_PUBLICOS_INCIDENTE: frozenset[str] = frozenset(
     {
         "id",
@@ -100,6 +114,7 @@ CAMPOS_PUBLICOS_INCIDENTE: frozenset[str] = frozenset(
         "consecuencias.danos.frase",
         *_rango("consecuencias.heridos"),
         *_rango("consecuencias.fallecidos"),
+        *_foco_termico("foco_termico"),
         "respuesta",
         "respuesta.medidas",
         "atribucion",
@@ -158,6 +173,7 @@ CAMPOS_PUBLICOS_ATAQUE: frozenset[str] = frozenset(
         "regiones_misiles",
         *_rango("regiones[].heridos"),
         *_rango("regiones[].fallecidos"),
+        *_foco_termico("regiones[].foco_termico"),
         *_fuentes(),
         *_control(),
     }

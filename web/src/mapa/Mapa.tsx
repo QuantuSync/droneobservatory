@@ -12,7 +12,7 @@ import { Protocol } from "pmtiles";
 import { useEffect, useRef, useState } from "react";
 
 import type { Capas } from "../componentes/Controles.tsx";
-import type { EpisodioResumen, IncidenteResumen } from "../datos/tipos.ts";
+import type { EpisodioResumen, FocoRegion, IncidenteResumen } from "../datos/tipos.ts";
 import type { Textos } from "../i18n/index.ts";
 import { ESCALA_UCRANIA, acento } from "../paleta.ts";
 import type { Idioma } from "../sitio.ts";
@@ -29,6 +29,7 @@ import {
   CAPA_REGION_ELEGIDA,
   FUENTE_AREAS,
   FUENTE_EPISODIOS,
+  FUENTE_FOCOS_UCRANIA,
   FUENTE_PUNTOS,
   FUENTE_PUNTOS_SUELTOS,
   FUENTE_SELECCION,
@@ -36,7 +37,7 @@ import {
   capasBase,
   estilo,
 } from "./estilo.ts";
-import { areas, lineasDeEpisodio, pilas } from "./geometria.ts";
+import { areas, focosDeRegiones, lineasDeEpisodio, pilas } from "./geometria.ts";
 import { registrarIconos } from "./iconos.ts";
 import { colocarLetrero, hayRaton } from "./letrero.ts";
 import { colocarPulsos, pulsosDe } from "./pulsos.ts";
@@ -121,6 +122,8 @@ export interface PropsMapa {
   intensidad: ReadonlyMap<string, number> | null;
   /** Intensidad de una sola noche mientras se reproduce la guerra noche a noche. */
   noche: ReadonlyMap<string, number> | null;
+  /** Regiones de Ucrania con foco térmico detectado en el periodo; null sin la capa. */
+  focosUcrania: readonly FocoRegion[] | null;
   elegido: IncidenteResumen | null;
   paisResaltado: string | null;
   regionesElegidas: readonly string[];
@@ -164,6 +167,7 @@ function capasActivas(mapa: MapaGL): string[] {
 
 export default function Mapa(props: PropsMapa) {
   const { t, idioma, incidentes, episodios, capas, intensidad, noche, elegido } = props;
+  const { focosUcrania } = props;
   const { paisResaltado, regionesElegidas, novedades, hoy, encuadre, reserva } = props;
   // El vuelo lee la reserva del momento, pero no se repite porque cambie (al arrastrar una hoja).
   const reservaActual = useRef(reserva);
@@ -401,6 +405,13 @@ export default function Mapa(props: PropsMapa) {
       actual === null ? 0 : opacidadPorRegion(actual),
     );
   }, [listo, intensidad, noche]);
+
+  // Focos térmicos de las regiones de Ucrania, en el centro de cada región.
+  useEffect(() => {
+    const mapa = mapaRef.current;
+    if (!listo || mapa === null) return;
+    fuente(mapa, FUENTE_FOCOS_UCRANIA)?.setData(focosDeRegiones(focosUcrania ?? []));
+  }, [listo, focosUcrania]);
 
   useEffect(() => {
     const mapa = mapaRef.current;

@@ -45,7 +45,8 @@ def test_el_ejemplo_completo_rellena_todos_los_campos_internos() -> None:
     internos_hoja = {
         r
         for r in VISIBILIDAD[Visibilidad.INTERNO]
-        if not r.startswith(("drones.velocidad_ms.", "retirado")) and r != "fusionado_en"
+        if not r.startswith(("drones.velocidad_ms.", "retirado"))
+        and r not in {"fusionado_en", "foco_termico.motivo"}
     }
     assert internos_hoja - presentes == set()
 

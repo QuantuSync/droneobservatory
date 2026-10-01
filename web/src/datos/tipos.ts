@@ -1,4 +1,4 @@
-// Forma de los ficheros públicos de publicacion/ (esquema 1.0.0, solo campos públicos)
+// Forma de los ficheros públicos de publicacion/ (esquema 1.1.0, solo campos públicos)
 // y de los resúmenes que la web deriva de ellos en el build.
 
 export type Estado = "notificado" | "confirmado" | "atribuido" | "desmentido";
@@ -78,6 +78,24 @@ export interface AfirmacionPublica {
   valor: unknown;
 }
 
+export type SateliteFirms = "Suomi NPP" | "NOAA-20" | "NOAA-21" | "Terra" | "Aqua";
+export type InstrumentoFirms = "VIIRS" | "MODIS";
+
+/**
+ * Foco térmico detectado por satélite (NASA FIRMS) en el radio y la ventana de un impacto.
+ * Solo se publica el positivo: su ausencia no demuestra nada.
+ */
+export interface FocoTermico {
+  resultado: "detectado";
+  /** Hora UTC de paso del satélite en el primer foco que cuenta. */
+  primer_foco: Instante;
+  satelite: SateliteFirms;
+  instrumento: InstrumentoFirms;
+  /** Distancia del primer foco al punto del impacto. */
+  distancia_km: number;
+  numero_focos: number;
+}
+
 /** Precisión con la que se conoce el lugar de un incidente sin punto en el mapa. */
 export type NivelUbicacion = "instalacion" | "localidad" | "region" | "pais";
 
@@ -108,6 +126,7 @@ export interface PropiedadesIncidente {
   };
   respuesta?: { medidas?: Medida[] };
   atribucion?: { actor: string; autoridad: string; fecha: Instante };
+  foco_termico?: FocoTermico;
   fuentes: Fuente[];
   afirmaciones_publicas?: AfirmacionPublica[];
   control: { ultima_actualizacion: Instante; motivo_desmentido?: string };
@@ -154,6 +173,7 @@ export interface RegionAtaque {
   categorias_objetivo?: CategoriaObjetivoUcrania[];
   heridos?: RangoODesconocido;
   fallecidos?: RangoODesconocido;
+  foco_termico?: FocoTermico;
 }
 
 export interface Ataque {
@@ -209,6 +229,8 @@ export interface IncidenteResumen {
   pais: string;
   objetivo: string | null;
   episodio: string | null;
+  /** Si tiene un foco térmico detectado por satélite: el mapa le pone su marca. */
+  foco: boolean;
 }
 
 export interface EpisodioResumen {
@@ -260,17 +282,39 @@ export type FilaAtaque = [
   regiones: [region: number, derribadosMin: number, derribadosMax: number][],
 ];
 
+/**
+ * Foco térmico detectado en una región de un ataque. El parte no da el punto del impacto: la
+ * marca va en el centro de la región, que sale de su contorno público.
+ */
+export interface FocoRegion {
+  ataque: string;
+  /** Día UTC del inicio del ataque, como días desde 1970-01-01. */
+  dia: number;
+  region: string;
+  foco: FocoTermico;
+  /** [lon, lat] del centro de la región. */
+  centro: [number, number];
+}
+
 export interface ResumenUcrania {
   /** Códigos ISO 3166-2 de las regiones de Ucrania que aparecen en los ataques. */
   regiones: string[];
   ataques: FilaAtaque[];
+  /** Regiones con foco térmico detectado, por ataque. */
+  focos: FocoRegion[];
 }
 
 // ---- Estado del sistema (estado.json, lo publica la recogida en el bucket de teselas) ----
 
 export type ResultadoRecogida = "correcta" | "con_avisos" | "fallida";
 export type EstadoFuente = "leida" | "con_aviso" | "no_leida";
-export type FuenteDelSistema = "fuerza_aerea_ua" | "mindef_ru" | "gdelt" | "oficiales" | "extractor";
+export type FuenteDelSistema =
+  | "fuerza_aerea_ua"
+  | "mindef_ru"
+  | "gdelt"
+  | "oficiales"
+  | "extractor"
+  | "firms";
 
 export interface EstadoSistema {
   version: 1;

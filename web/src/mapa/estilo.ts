@@ -29,6 +29,7 @@ export const FUENTE_EPISODIOS = "episodios";
 export const FUENTE_SELECCION = "seleccion";
 export const FUENTE_REGIONES = "ucrania-regiones";
 export const FUENTE_CONTORNO = "ucrania-contorno";
+export const FUENTE_FOCOS_UCRANIA = "ucrania-focos";
 
 export const CAPA_GRUPOS = "grupos";
 export const CAPA_INCIDENTES_GRAVES = "incidentes-graves";
@@ -39,6 +40,8 @@ export const CAPA_PAIS = "pais-resaltado";
 export const CAPA_RECIENTES = "recientes";
 export const CAPA_SELECCION = "seleccion";
 export const CAPA_EPISODIOS = "episodios";
+export const CAPA_FOCOS = "focos-termicos";
+export const CAPA_FOCOS_UCRANIA = "ucrania-focos-termicos";
 
 /** Capas que se pueden pulsar, de la de más arriba a la de más abajo. */
 export const CAPAS_PULSABLES: readonly string[] = [
@@ -60,6 +63,7 @@ export const CAPAS_DE_INCIDENTES: readonly string[] = [
   "novedades",
   CAPA_INCIDENTES_DISCRETOS,
   CAPA_INCIDENTES_GRAVES,
+  CAPA_FOCOS,
   CAPA_SELECCION,
 ];
 export const CAPAS_DE_UCRANIA: readonly string[] = [
@@ -67,8 +71,13 @@ export const CAPAS_DE_UCRANIA: readonly string[] = [
   "ucrania-regiones-linea",
   "ucrania-contorno",
   CAPA_REGION_ELEGIDA,
+  CAPA_FOCOS_UCRANIA,
 ];
 export const CAPAS_DE_DENSIDAD: readonly string[] = ["densidad"];
+
+/** Marca del foco térmico: pequeña, junto al símbolo, como en la ayuda (MarcaFoco). */
+const RADIO_MARCA_FOCO = 3.5;
+const DESPLAZAMIENTO_MARCA_FOCO: [number, number] = [9, -9];
 
 /** Hasta este zoom los incidentes cercanos se agrupan con su contador. */
 export const ZOOM_MAXIMO_AGRUPADO = 5;
@@ -467,6 +476,34 @@ function capasPropias(acento: string): LayerSpecification[] {
         "icon-ignore-placement": true,
       },
     },
+    // Foco térmico detectado por satélite: un punto claro con borde oscuro arriba a la
+    // derecha del símbolo, sin color de estado (los colores son solo para los estados).
+    {
+      id: CAPA_FOCOS,
+      type: "circle",
+      source: FUENTE_PUNTOS,
+      // También en una pila (varios incidentes en el mismo punto) que tenga alguno con foco;
+      // no en los grupos de los zooms lejanos, que juntan puntos distintos.
+      filter: ["all", ["!", ["has", "point_count"]], ["==", ["get", "foco"], 1]],
+      paint: {
+        "circle-radius": RADIO_MARCA_FOCO,
+        "circle-color": PALETA.texto,
+        "circle-stroke-color": PALETA.fondo,
+        "circle-stroke-width": 1.5,
+        "circle-translate": DESPLAZAMIENTO_MARCA_FOCO,
+      },
+    },
+    {
+      id: CAPA_FOCOS_UCRANIA,
+      type: "circle",
+      source: FUENTE_FOCOS_UCRANIA,
+      paint: {
+        "circle-radius": RADIO_MARCA_FOCO + 0.5,
+        "circle-color": PALETA.texto,
+        "circle-stroke-color": PALETA.fondo,
+        "circle-stroke-width": 1.5,
+      },
+    },
     {
       id: CAPA_SELECCION,
       type: "circle",
@@ -521,6 +558,7 @@ export function estilo(idioma: Idioma, origen: string, acento: string): StyleSpe
       [FUENTE_SELECCION]: { type: "geojson", data: VACIA },
       [FUENTE_REGIONES]: { type: "geojson", data: `${origen}/mapa/ucrania-regiones.geojson` },
       [FUENTE_CONTORNO]: { type: "geojson", data: `${origen}/mapa/ucrania-contorno.geojson` },
+      [FUENTE_FOCOS_UCRANIA]: { type: "geojson", data: VACIA },
     },
     layers: [fondo, tierraDeFondo, ...base, ...capasPropias(acento)],
   };

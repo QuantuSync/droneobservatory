@@ -1,9 +1,9 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:eodi:esquema:1.0.0:afirmacion",
+  "$id": "urn:eodi:esquema:1.1.0:afirmacion",
   "title": "Afirmación",
   "description": "Valor de un campo según una fuente, con la confianza de la extracción. Si dos fuentes discrepan se guardan las dos afirmaciones.",
-  "x-version": "1.0.0",
+  "x-version": "1.1.0",
   "type": "object",
   "additionalProperties": false,
   "required": ["campo", "valor", "fuente_id", "confianza_extraccion"],
@@ -12,6 +12,6 @@
     "valor": {"x-visibilidad": "interno"},
     "fuente_id": {"x-visibilidad": "interno", "type": "string", "minLength": 1},
     "confianza_extraccion": {"x-visibilidad": "interno", "type": "number", "minimum": 0, "maximum": 1},
-    "credibilidad": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.0.0:comun#/$defs/credibilidad"}
+    "credibilidad": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.1.0:comun#/$defs/credibilidad"}
   }
 }

@@ -131,6 +131,7 @@ export interface Textos {
     reciente: string;
     novedad: string;
     ucrania: string;
+    foco: string;
     atajos: string;
     acciones: Record<Accion, string>;
   };
@@ -225,6 +226,13 @@ export interface Textos {
     cruces: string;
     incluidoEn: string;
     solapadoCon: string;
+  };
+  foco: {
+    /** Rótulo de la fila en las fichas. */
+    rotulo: string;
+    detectado: string;
+    distancia: (km: string) => string;
+    visor: string;
   };
   region: {
     etiqueta: string;

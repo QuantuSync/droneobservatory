@@ -59,6 +59,7 @@ jobs:
           EODI_EXTRACTOR_URL_LOTES: ${{ secrets.EODI_EXTRACTOR_URL_LOTES }}
           EODI_EXTRACTOR_MODELO: ${{ secrets.EODI_EXTRACTOR_MODELO }}
           EODI_EXTRACTOR_CABECERAS: ${{ secrets.EODI_EXTRACTOR_CABECERAS }}
+          EODI_FIRMS_MAP_KEY: ${{ secrets.EODI_FIRMS_MAP_KEY }}
         run: |
           export GIT_SSH_COMMAND="ssh -i $RUNNER_TEMP/ssh/despliegue -o IdentitiesOnly=yes -o UserKnownHostsFile=$RUNNER_TEMP/ssh/known_hosts"
           codigo=0

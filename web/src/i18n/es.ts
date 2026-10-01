@@ -54,6 +54,7 @@ export const es: Textos = {
       gdelt: "Noticias (GDELT)",
       oficiales: "Notas oficiales",
       extractor: "Extracción automática",
+      firms: "Focos térmicos (NASA FIRMS)",
     },
     estadoFuente: { leida: "leída", con_aviso: "con aviso", no_leida: "no leída" },
     ultimoDato: "último dato",
@@ -134,6 +135,10 @@ export const es: Textos = {
     novedad: "Un anillo del color de la interfaz marca lo que ha cambiado desde tu última visita.",
     ucrania:
       "En la capa de Ucrania, cada región se colorea según los ataques que la citan en el periodo.",
+    foco:
+      "Un punto claro junto a un incidente, o en el centro de una región de Ucrania, marca un " +
+      "foco térmico detectado por satélite (NASA FIRMS) en su lugar y su hora. Su ausencia no " +
+      "demuestra nada.",
     atajos: "Atajos de teclado",
     acciones: {
       ayuda: "Abrir o cerrar esta ayuda",
@@ -304,6 +309,12 @@ export const es: Textos = {
     cruces: "Cruces a otros países",
     incluidoEn: "Cifras incluidas en el parte",
     solapadoCon: "Se solapa con el parte",
+  },
+  foco: {
+    rotulo: "Satélite",
+    detectado: "Foco térmico detectado por satélite",
+    distancia: (km) => `a ${km} km`,
+    visor: "Ver en el visor de NASA FIRMS",
   },
   region: {
     etiqueta: "Región · capa de Ucrania",
@@ -607,6 +618,40 @@ export const es: Textos = {
         ],
       },
       {
+        id: "focos",
+        titulo: "Focos térmicos por satélite",
+        bloques: [
+          {
+            parrafo: [
+              "Cada impacto declarado (un dron que explotó o cayó, con su lugar a 10 km o " +
+                "menos) se cruza con las anomalías térmicas que detectan los satélites de ",
+              { texto: "NASA FIRMS", enlace: "https://www.earthdata.nasa.gov/firms" },
+              " (VIIRS en Suomi NPP, NOAA-20 y NOAA-21, y MODIS en Terra y Aqua). La marca " +
+                "dice que hubo al menos dos focos dentro de su radio de precisión (entre 2 y " +
+                "10 km) desde el inicio del ataque hasta 36 horas después de su fin.",
+            ],
+          },
+          {
+            parrafo: [
+              "Las refinerías y las plantas tienen antorchas que el satélite ve siempre: solo " +
+                "cuenta un foco nuevo respecto a los 30 días anteriores o con una potencia más " +
+                "de cuatro veces la habitual de ese sitio. Se descartan los focos de baja " +
+                "confianza. Los impactos que solo se conocen por región, como los de los " +
+                "partes de la Fuerza Aérea de Ucrania, no se evalúan.",
+            ],
+          },
+          {
+            parrafo: [
+              "Límites: las nubes y el humo tapan el fuego, los satélites pasan pocas veces " +
+                "al día y un incendio corto puede no coincidir con ningún paso; la ausencia de " +
+                "foco no demuestra nada y no se muestra. Un foco dentro del radio puede ser " +
+                "otro fuego cercano, como una quema agrícola. Es un indicio físico, no una " +
+                "confirmación.",
+            ],
+          },
+        ],
+      },
+      {
         id: "sesgo",
         titulo: "Sesgo de cobertura",
         bloques: [
@@ -664,6 +709,18 @@ export const es: Textos = {
                 texto: [
                   { texto: "GeoNames", enlace: "https://www.geonames.org/" },
                   " (CC BY 4.0).",
+                ],
+              },
+              {
+                termino: "Focos térmicos",
+                texto: [
+                  "We acknowledge the use of data and/or imagery from NASA's Fire " +
+                    "Information for Resource Management System (FIRMS) (",
+                  {
+                    texto: "https://www.earthdata.nasa.gov/firms",
+                    enlace: "https://www.earthdata.nasa.gov/firms",
+                  },
+                  "), part of NASA's Earth Science Data and Information System (ESDIS).",
                 ],
               },
             ],

@@ -10,6 +10,7 @@ import { esRangoAbierto, fechaHora, instante, numero, pais, rango } from "../i18
 import type { Textos } from "../i18n/index.ts";
 import type { Idioma } from "../sitio.ts";
 import { EstadoConTexto, Historial, ListaFuentes } from "./Fuentes.tsx";
+import { LineaFoco, ZOOM_VISOR_PUNTO } from "./FocoTermico.tsx";
 import { Fila } from "./Panel.tsx";
 import { Simbolo } from "./Simbolo.tsx";
 
@@ -286,6 +287,16 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
             </span>
             <QueDiceCadaFuente t={t} idioma={idioma} afirmaciones={de(CAMPOS_DE_FILA.atribucion)} />
           </Fila>
+        )}
+        {incidente.foco_termico !== undefined && incidente.lon !== null && (
+          <LineaFoco
+            t={t}
+            idioma={idioma}
+            foco={incidente.foco_termico}
+            lon={incidente.lon}
+            lat={incidente.lat}
+            zoom={ZOOM_VISOR_PUNTO}
+          />
         )}
         {incidente.control.motivo_desmentido !== undefined && (
           <Fila nombre={t.ficha.motivoDesmentido}>{incidente.control.motivo_desmentido}</Fila>

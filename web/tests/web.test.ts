@@ -66,6 +66,7 @@ describe("textos en español e inglés", () => {
       "declaraciones",
       "historial",
       "fuentes",
+      "focos",
       "sesgo",
       "licencias",
     ]);
@@ -82,9 +83,32 @@ describe("textos en español e inglés", () => {
       "Natural Earth",
       "https://www.gdeltproject.org/",
       "GeoNames",
+      "NASA FIRMS",
+      "no demuestra nada",
+      "antorchas",
+      "nubes",
     ]) {
       expect(texto).toContain(obligado);
     }
+  });
+
+  it("la atribución de NASA FIRMS va completa en los dos idiomas", () => {
+    const AGRADECIMIENTO =
+      "We acknowledge the use of data and/or imagery from NASA's Fire Information for " +
+      "Resource Management System (FIRMS) (https://www.earthdata.nasa.gov/firms), part of " +
+      "NASA's Earth Science Data and Information System (ESDIS).";
+    for (const t of [es, en]) {
+      const licencias = t.metodologia.secciones.find((s) => s.id === "licencias");
+      const textos = (licencias?.bloques ?? []).flatMap((bloque) =>
+        "lista" in bloque
+          ? bloque.lista.map((item) =>
+              item.texto.map((trozo) => (typeof trozo === "string" ? trozo : trozo.texto)).join(""),
+            )
+          : [],
+      );
+      expect(textos).toContain(AGRADECIMIENTO);
+    }
+    expect(JSON.stringify(en.metodologia)).toContain("absence of a hotspot proves nothing");
   });
 
   it("todo valor de las listas cerradas tiene su texto", () => {

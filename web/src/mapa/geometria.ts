@@ -4,7 +4,7 @@
 import type { Feature, FeatureCollection, LineString, Point, Polygon } from "geojson";
 
 import { esGrave } from "../datos/derivar.ts";
-import type { EpisodioResumen, Estado, IncidenteResumen } from "../datos/tipos.ts";
+import type { EpisodioResumen, Estado, FocoRegion, IncidenteResumen } from "../datos/tipos.ts";
 import { GRAVEDAD } from "../paleta.ts";
 
 const RADIO_TERRESTRE_KM = 6371.0088;
@@ -92,6 +92,8 @@ export interface PropiedadesPila {
   reciente: 0 | 1;
   /** 1 si alguno cambió desde la visita anterior. */
   novedad: 0 | 1;
+  /** 1 si alguno tiene un foco térmico detectado por satélite. */
+  foco: 0 | 1;
 }
 
 /**
@@ -133,6 +135,7 @@ export function pilas(
         n_notificados: cuenta("notificado"),
         reciente: ordenados.some((i) => i.dia >= opciones.hoy - 1) ? 1 : 0,
         novedad: ordenados.some((i) => opciones.novedades.has(i.id)) ? 1 : 0,
+        foco: ordenados.some((i) => i.foco) ? 1 : 0,
       },
     });
   }
@@ -156,6 +159,22 @@ export function areas(
         properties: { id: incidente.id, estado: incidente.estado },
       }),
     ),
+  };
+}
+
+/** Un punto por región de Ucrania con foco térmico en el periodo, en su centro. */
+export function focosDeRegiones(
+  focos: readonly FocoRegion[],
+): FeatureCollection<Point, { region: string }> {
+  const porRegion = new Map<string, [number, number]>();
+  for (const foco of focos) porRegion.set(foco.region, foco.centro);
+  return {
+    type: "FeatureCollection",
+    features: [...porRegion].map(([region, centro]) => ({
+      type: "Feature",
+      geometry: { type: "Point", coordinates: centro },
+      properties: { region },
+    })),
   };
 }
 

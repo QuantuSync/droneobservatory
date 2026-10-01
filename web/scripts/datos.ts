@@ -9,12 +9,14 @@ import { fileURLToPath } from "node:url";
 
 import { csvAtaques, csvIncidentes } from "../src/datos/csv.ts";
 import {
+  centrosDeRegiones,
   detalleIncidente,
   detalleSinUbicacion,
   meta,
   resumir,
   resumirUcrania,
 } from "../src/datos/derivar.ts";
+import type { ContornosRegiones } from "../src/datos/derivar.ts";
 import type { PublicacionSinUbicacion } from "../src/datos/tipos.ts";
 import {
   validarColeccion,
@@ -90,7 +92,12 @@ async function principal(): Promise<void> {
 
   const resumen = resumir(coleccion, ucrania, sinUbicacion);
   await escribir(join(DATOS, "resumen.json"), JSON.stringify(resumen));
-  await escribir(join(DATOS, "ucrania-resumen.json"), JSON.stringify(resumirUcrania(ucrania)));
+  // El foco térmico de una región se marca en su centro: el parte no da el punto.
+  const contornos = (await leerJson(
+    join(PUBLICO, "mapa", "ucrania-regiones.geojson"),
+  )) as ContornosRegiones;
+  const resumenUcrania = resumirUcrania(ucrania, centrosDeRegiones(contornos));
+  await escribir(join(DATOS, "ucrania-resumen.json"), JSON.stringify(resumenUcrania));
   for (const feature of coleccion.features) {
     const detalle = JSON.stringify(detalleIncidente(feature));
     await escribir(join(DATOS, "incidentes", `${feature.id}.json`), detalle);

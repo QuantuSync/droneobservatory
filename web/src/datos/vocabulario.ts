@@ -1,4 +1,4 @@
-// Listas cerradas del esquema 1.0.0 (campos públicos). Un test las compara con los
+// Listas cerradas del esquema 1.1.0 (campos públicos). Un test las compara con los
 // ficheros de esquema/ para que no se separen.
 
 export const TIPOS = ["incursion", "interrupcion_aeroportuaria", "sobrevuelo"] as const;
@@ -60,7 +60,15 @@ export const FUENTES_DEL_SISTEMA = [
   "gdelt",
   "oficiales",
   "extractor",
+  "firms",
 ] as const;
+/** Satélites e instrumentos de los focos térmicos de NASA FIRMS. */
+export const SATELITES_FIRMS = ["Suomi NPP", "NOAA-20", "NOAA-21", "Terra", "Aqua"] as const;
+export const INSTRUMENTOS_FIRMS = ["VIIRS", "MODIS"] as const;
+/** Lo único que se publica del cruce con FIRMS: el foco detectado. */
+export const RESULTADO_FOCO_PUBLICO = "detectado";
+/** El radio de búsqueda de un foco no pasa de 10 km. */
+export const RADIO_FOCO_MAX_KM = 10;
 export const VERSION_ESTADO_SISTEMA = 1;
 
 export const PATRON_ID_INCIDENTE = /^EODI-\d{4}-\d{5}$/;

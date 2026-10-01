@@ -51,6 +51,10 @@ printf '%s\n' "$HOST_GITHUB" > "$HOSTS_CONOCIDOS"
 chown "$USUARIO:$USUARIO" "$HOSTS_CONOCIDOS"
 chmod 600 "$HOSTS_CONOCIDOS"
 
+# --- Datos de FIRMS -----------------------------------------------------------------
+# Los CSV diarios de anomalías térmicas: del usuario del observatorio y solo para él.
+install -d -m 700 -o "$USUARIO" -g "$USUARIO" "$(dirname "$FIRMS_DATOS")" "$FIRMS_DATOS"
+
 # --- Clon y entorno virtual ----------------------------------------------------------
 # El repositorio es público: se lee sin credenciales. Solo el envío usa la clave de
 # despliegue, y solo desde el script de la recogida.

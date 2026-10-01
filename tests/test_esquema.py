@@ -11,6 +11,7 @@ from esquema import (
     Esquema,
     Visibilidad,
     cargar,
+    compatible,
     recorrer,
     rutas_por_visibilidad,
     validador,
@@ -157,7 +158,7 @@ def test_campo_desconocido_rechazado() -> None:
 @pytest.mark.parametrize("nombre", ["fuentes.json", "modelos_dron.json"])
 def test_configuracion_declara_version(nombre: str) -> None:
     contenido = json.loads((RAIZ / "configuracion" / nombre).read_text(encoding="utf-8"))
-    assert contenido["version_esquema"] == VERSION
+    assert compatible(contenido["version_esquema"])
 
 
 def test_configuracion_de_fuentes_valida() -> None:

@@ -94,7 +94,20 @@ dejar_secreto() {
   conectar "$OPERADOR" sudo chmod 600 "$2"
 }
 dejar_secreto "$LOCAL_CLAVE_AGE" "$CLAVE_AGE"
-dejar_secreto "$LOCAL_EXTRACTOR" "$EXTRACTOR"
+# Las variables del extractor y, en el mismo fichero, la clave de FIRMS si está en local.
+variables="$(mktemp)"
+trap 'rm -f "$variables"' EXIT
+(
+  umask 077
+  grep -v "^$VARIABLE_FIRMS=" "$LOCAL_EXTRACTOR" > "$variables" || true
+  if [ -s "$LOCAL_FIRMS" ]; then
+    printf '%s=%s\n' "$VARIABLE_FIRMS" "$(tr -d ' \r\n' < "$LOCAL_FIRMS")" >> "$variables"
+  else
+    echo "aviso: sin $LOCAL_FIRMS, la recogida no descargará FIRMS" >&2
+  fi
+)
+dejar_secreto "$variables" "$EXTRACTOR"
+rm -f "$variables"
 
 # Credenciales S3 de R2 para subir estado.json. El token de Cloudflare no puede crear otros
 # tokens, así que salen de él mismo: identificador del token y SHA-256 del token, con la

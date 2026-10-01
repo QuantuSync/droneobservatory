@@ -6,6 +6,7 @@ import type {
   Ataque,
   ColeccionIncidentes,
   FeatureIncidente,
+  FocoTermico,
   Fuente,
   PropiedadesIncidente,
   PublicacionUcrania,
@@ -147,7 +148,21 @@ export function estadoSistema(cambios: Partial<EstadoSistema> = {}): EstadoSiste
       { id: "gdelt", estado: "leida", ultimo_dato: "2026-09-30T18:00Z" },
       { id: "oficiales", estado: "con_aviso", ultimo_dato: null },
       { id: "extractor", estado: "leida", ultimo_dato: "2026-09-30T17:00Z" },
+      { id: "firms", estado: "leida", ultimo_dato: "2026-09-30T15:17Z" },
     ],
+    ...cambios,
+  };
+}
+
+/** Foco térmico detectado, con sus campos públicos. */
+export function focoTermico(cambios: Partial<FocoTermico> = {}): FocoTermico {
+  return {
+    resultado: "detectado",
+    primer_foco: { valor: "2026-04-25T00:47Z", precision: "minuto" },
+    satelite: "NOAA-21",
+    instrumento: "VIIRS",
+    distancia_km: 7.4,
+    numero_focos: 4,
     ...cambios,
   };
 }

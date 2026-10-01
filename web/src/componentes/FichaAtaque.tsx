@@ -4,6 +4,7 @@ import type { Textos } from "../i18n/index.ts";
 import { rutaDeFicha } from "../sitio.ts";
 import type { Idioma } from "../sitio.ts";
 import { Historial, ListaFuentes } from "./Fuentes.tsx";
+import { LineaFoco, ZOOM_VISOR_REGION } from "./FocoTermico.tsx";
 import { Fila } from "./Panel.tsx";
 import { Enlace } from "../navegacion.tsx";
 
@@ -11,7 +12,13 @@ interface Props {
   t: Textos;
   idioma: Idioma;
   ataque: Ataque;
+  /** Centro [lon, lat] de las regiones con foco térmico, para abrir el visor de FIRMS. */
+  centros?: ReadonlyMap<string, [number, number]> | undefined;
 }
+
+/** Centro de Ucrania: si no se sabe el de la región, el visor se abre en el país entero. */
+const CENTRO_UCRANIA: [number, number] = [31.2, 48.4];
+const ZOOM_VISOR_PAIS = 5;
 
 function cifra(valor: RangoODesconocido | undefined, idioma: Idioma): string | null {
   return rango(valor, idioma);
@@ -44,7 +51,7 @@ function EnlaceAtaque({ id, idioma }: { id: string; idioma: Idioma }) {
 }
 
 /** Ficha de un ataque de la capa de Ucrania: lo que declara una de las partes en guerra. */
-export function FichaAtaque({ t, idioma, ataque }: Props) {
+export function FichaAtaque({ t, idioma, ataque, centros }: Props) {
   const regiones = ataque.regiones ?? [];
   const desglose: [string, RangoODesconocido | undefined][] = [
     [t.ataque.shahed, ataque.lanzados?.shahed_geran],
@@ -116,6 +123,22 @@ export function FichaAtaque({ t, idioma, ataque }: Props) {
             </ul>
           </Fila>
         )}
+        {regiones.map((r) => {
+          if (r.foco_termico === undefined) return null;
+          const centro = centros?.get(r.region);
+          return (
+            <LineaFoco
+              key={r.region}
+              t={t}
+              idioma={idioma}
+              foco={r.foco_termico}
+              lon={(centro ?? CENTRO_UCRANIA)[0]}
+              lat={(centro ?? CENTRO_UCRANIA)[1]}
+              zoom={centro === undefined ? ZOOM_VISOR_PAIS : ZOOM_VISOR_REGION}
+              ataque={region(r.region, idioma)}
+            />
+          );
+        })}
         {soloMisiles.length > 0 && (
           <Fila nombre={t.ataque.regionesMisiles}>
             {soloMisiles.map((codigo) => region(codigo, idioma)).join(" · ")}

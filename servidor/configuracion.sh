@@ -94,6 +94,22 @@ ESPERA_CERROJO_S=3600
 ESPERA_FUSION_S=10800
 PAUSA_AVISO_S=30
 
+# --- Anomalías térmicas de NASA FIRMS (recogida/firms.py) ------------------------------
+# CSV diarios comprimidos, fuera del repositorio y de la base: la base se sube cifrada cada
+# hora y no debe crecer con los focos agrícolas.
+FIRMS_DATOS="${EODI_FIRMS_DATOS:-$CASA/datos/firms}"
+# La clave va como una línea más del fichero de variables del extractor.
+VARIABLE_FIRMS="EODI_FIRMS_MAP_KEY"
+LOCAL_FIRMS="$LOCAL_SECRETOS/firms_map_key.txt"
+# Histórico (servidor/firms_historico.sh): cada tanda acaba en el minuto 12 de la hora, cinco
+# antes de la recogida horaria, y no empieza otra hasta que esta ha terminado. Una tanda de
+# menos de dos minutos no merece la pena. Tras un fallo (FIRMS caído, sin red) se espera
+# diez minutos; seis fallos seguidos lo paran.
+FIRMS_FIN_TANDA=12
+FIRMS_TANDA_MINIMA_S=120
+FIRMS_ESPERA_FALLO_S=600
+FIRMS_FALLOS_MAXIMOS=6
+
 # --- Endurecimiento ------------------------------------------------------------------
 # Reinicio tras una actualización de seguridad que lo pida: de madrugada y a los 28
 # minutos del lanzamiento de las 04:17, cuando hasta la recogida más lenta ha terminado.

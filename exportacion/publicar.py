@@ -1,6 +1,9 @@
 """Escribe los ficheros públicos a partir de la base: ucrania.json, incidentes.geojson (los
 incidentes con punto, para el mapa) e incidentes_sin_ubicacion.json (los que solo se saben a
-nivel de país o de región)."""
+nivel de país o de región).
+
+El foco térmico de cada impacto (proceso/focos_termicos.py) vive en su propia tabla y se
+añade aquí a su incidente o a su región antes de exportar."""
 
 from datetime import datetime
 from pathlib import Path
@@ -10,6 +13,7 @@ from exportacion.geojson import exportar, exportar_sin_ubicacion
 from exportacion.proyeccion import escribir
 from exportacion.ucrania import exportar_ucrania
 from proceso.configuracion import cargar_vocabulario_modelos
+from proceso.focos_termicos import con_focos
 
 DIRECTORIO = Path(__file__).resolve().parent.parent / "publicacion"
 UCRANIA = "ucrania.json"
@@ -25,9 +29,12 @@ def modelos(almacen: Almacen) -> frozenset[str]:
 def publicar(almacen: Almacen, ahora: datetime, directorio: Path = DIRECTORIO) -> list[Path]:
     """Regenera los ficheros y devuelve los que han cambiado."""
     directorio.mkdir(parents=True, exist_ok=True)
-    incidentes, vocabulario = almacen.incidentes(), modelos(almacen)
+    incidentes, ataques = con_focos(
+        almacen.incidentes(), almacen.ataques_ucrania(), almacen.focos_termicos()
+    )
+    vocabulario = modelos(almacen)
     documentos = {
-        UCRANIA: exportar_ucrania(almacen.ataques_ucrania(), ahora),
+        UCRANIA: exportar_ucrania(ataques, ahora),
         INCIDENTES: exportar(incidentes, ahora, vocabulario),
         SIN_UBICACION: exportar_sin_ubicacion(incidentes, ahora, vocabulario),
     }

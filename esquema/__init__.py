@@ -11,12 +11,25 @@ from jsonschema import Draft202012Validator
 from referencing import Registry, Resource
 from referencing.jsonschema import DRAFT202012
 
-VERSION = "1.0.0"
+VERSION = "1.1.0"
 DIRECTORIO = Path(__file__).parent / VERSION
 PREFIJO_ID = f"urn:eodi:esquema:{VERSION}:"
 MARCA = "x-visibilidad"
 
 Documento = dict[str, Any]
+
+
+def compatible(version: object) -> bool:
+    """Una versión anterior con la misma mayor es compatible: los cambios menores solo añaden
+    campos opcionales, así que lo escrito con ella sigue siendo válido."""
+    if not isinstance(version, str) or version.count(".") != 2:
+        return False
+    try:
+        partes = tuple(int(x) for x in version.split("."))
+    except ValueError:
+        return False
+    actual = tuple(int(x) for x in VERSION.split("."))
+    return partes[0] == actual[0] and partes <= actual
 
 
 class Visibilidad(StrEnum):
@@ -54,6 +67,13 @@ def registro() -> Registry[Any]:
 
 def validador(esquema: Esquema) -> Draft202012Validator:
     return Draft202012Validator(cargar(esquema), registry=registro())
+
+
+def validador_definicion(nombre: str) -> Draft202012Validator:
+    """Validador de una definición común (comun.schema.json#/$defs/<nombre>)."""
+    return Draft202012Validator(
+        {"$ref": f"{PREFIJO_ID}{Esquema.COMUN.value}#/$defs/{nombre}"}, registry=registro()
+    )
 
 
 def _recorrer(

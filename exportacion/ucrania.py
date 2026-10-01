@@ -12,6 +12,7 @@ from exportacion.proyeccion import (
     solo_fuentes_publicas,
 )
 from proceso.estados import Capa
+from proceso.focos_termicos import solo_detectado
 from proceso.validaciones import validar_ataque_ucrania
 
 
@@ -25,6 +26,9 @@ def ataque_publico(ataque: Documento) -> Documento | None:
     if documento is None:
         return None
     documento["regiones"] = sorted(documento.get("regiones", []), key=lambda r: r["region"])
+    # El foco térmico de una región sale solo si es detectado.
+    for region in documento["regiones"]:
+        solo_detectado(region)
     publico: Documento = proyectar(documento, CAMPOS_PUBLICOS_ATAQUE)
     return publico
 

@@ -44,7 +44,9 @@ def test_la_lista_cerrada_solo_contiene_campos_publicos_del_esquema() -> None:
 
 def test_el_ejemplo_rellena_todos_los_campos_internos() -> None:
     presentes = set(rutas(ataque_con_fuente_interna()))
-    assert VISIBILIDAD[Visibilidad.INTERNO] - presentes == set()
+    # El motivo solo lo lleva un foco no detectado, que nunca sale: tiene su propio test.
+    internos = VISIBILIDAD[Visibilidad.INTERNO] - {"regiones[].foco_termico.motivo"}
+    assert internos - presentes == set()
 
 
 def test_la_comprobacion_detecta_un_campo_colado() -> None:
@@ -57,7 +59,9 @@ def test_la_comprobacion_detecta_un_campo_colado() -> None:
 def test_regiones_por_codigo_iso_ordenadas() -> None:
     (ataque,) = exportar_ejemplo()["ataques"]
     assert [r["region"] for r in ataque["regiones"]] == ["UA-18", "UA-63", "UA-71"]
-    assert ataque["regiones"][1] == ejemplos.region()
+    assert {k: v for k, v in ataque["regiones"][1].items() if k != "foco_termico"} == (
+        ejemplos.region()
+    )
 
 
 def test_fuentes_en_la_capa_de_ucrania() -> None:

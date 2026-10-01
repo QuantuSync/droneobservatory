@@ -54,6 +54,7 @@ export const en: Textos = {
       gdelt: "News (GDELT)",
       oficiales: "Official statements",
       extractor: "Automatic extraction",
+      firms: "Thermal hotspots (NASA FIRMS)",
     },
     estadoFuente: { leida: "read", con_aviso: "with warning", no_leida: "not read" },
     ultimoDato: "latest data",
@@ -129,6 +130,10 @@ export const en: Textos = {
     reciente: "A soft glow marks what started in the last 24 hours.",
     novedad: "A ring in the interface colour marks what has changed since your last visit.",
     ucrania: "In the Ukraine layer, each region is shaded by the attacks that name it in the period.",
+    foco:
+      "A light dot next to an incident, or at the centre of a Ukrainian region, marks a " +
+      "thermal hotspot detected by satellite (NASA FIRMS) at its place and time. Its absence " +
+      "proves nothing.",
     atajos: "Keyboard shortcuts",
     acciones: {
       ayuda: "Open or close this help",
@@ -298,6 +303,12 @@ export const en: Textos = {
     cruces: "Crossings into other countries",
     incluidoEn: "Figures included in report",
     solapadoCon: "Overlaps with report",
+  },
+  foco: {
+    rotulo: "Satellite",
+    detectado: "Thermal hotspot detected by satellite",
+    distancia: (km) => `${km} km away`,
+    visor: "View in the NASA FIRMS viewer",
   },
   region: {
     etiqueta: "Region · Ukraine layer",
@@ -604,6 +615,41 @@ export const en: Textos = {
         ],
       },
       {
+        id: "focos",
+        titulo: "Thermal hotspots from satellites",
+        bloques: [
+          {
+            parrafo: [
+              "Each declared impact (a drone that exploded or crashed, with its place known " +
+                "to within 10 km) is checked against the thermal anomalies detected by the " +
+                "satellites of ",
+              { texto: "NASA FIRMS", enlace: "https://www.earthdata.nasa.gov/firms" },
+              " (VIIRS on Suomi NPP, NOAA-20 and NOAA-21, and MODIS on Terra and Aqua). The " +
+                "mark means there were at least two hotspots within its precision radius " +
+                "(between 2 and 10 km) from the start of the attack until 36 hours after it " +
+                "ended.",
+            ],
+          },
+          {
+            parrafo: [
+              "Refineries and plants have flares the satellites always see: a hotspot only " +
+                "counts if it is new compared with the previous 30 days or more than four " +
+                "times as powerful as usual for that spot. Low-confidence hotspots are " +
+                "discarded. Impacts known only by region, such as those in the Ukrainian " +
+                "Air Force reports, are not assessed.",
+            ],
+          },
+          {
+            parrafo: [
+              "Limits: clouds and smoke hide fires, the satellites pass only a few times a " +
+                "day and a short fire may fall between passes; the absence of a hotspot " +
+                "proves nothing and is not shown. A hotspot within the radius may be another " +
+                "nearby fire, such as a crop burn. It is physical evidence, not confirmation.",
+            ],
+          },
+        ],
+      },
+      {
         id: "sesgo",
         titulo: "Coverage bias",
         bloques: [
@@ -662,6 +708,18 @@ export const en: Textos = {
                 texto: [
                   { texto: "GeoNames", enlace: "https://www.geonames.org/" },
                   " (CC BY 4.0).",
+                ],
+              },
+              {
+                termino: "Thermal hotspots",
+                texto: [
+                  "We acknowledge the use of data and/or imagery from NASA's Fire " +
+                    "Information for Resource Management System (FIRMS) (",
+                  {
+                    texto: "https://www.earthdata.nasa.gov/firms",
+                    enlace: "https://www.earthdata.nasa.gov/firms",
+                  },
+                  "), part of NASA's Earth Science Data and Information System (ESDIS).",
                 ],
               },
             ],

@@ -31,11 +31,17 @@ En `/home/eodi`:
   Python 3.13 y `requirements.txt`.
 - `.eodi/`, con permisos 600 y propiedad de `eodi`:
   - `clave_age.txt`: la identidad age de la base;
-  - `extractor.env`: las variables del extractor, una por línea;
+  - `extractor.env`: las variables del extractor, una por línea, y la clave de NASA FIRMS
+    (`EODI_FIRMS_MAP_KEY`);
   - `despliegue_datos`: clave de despliegue con escritura solo en `droneobservatory-datos`;
   - `despliegue_web`: clave de despliegue con escritura solo en `droneobservatory`, para
     publicar los ficheros de la web;
   - `known_hosts`: la clave de host publicada por GitHub.
+- `datos/firms/`, con permisos 700 y propiedad de `eodi`: los CSV diarios de anomalías
+  térmicas de NASA FIRMS, comprimidos, uno por producto y día
+  (`<producto>/<año>/<AAAA-MM-DD>.csv.gz`), y `control.json` con la última descarga
+  correcta y el estado del histórico. Fuera del repositorio y de la base, que se sube cifrada
+  cada hora y no debe crecer con los focos agrícolas. Se pueden volver a descargar.
 
 Las dos claves de despliegue se generan en el servidor y la privada no sale de él. En
 GitHub figuran en cada repositorio con el título «servidor eodi-recogida».
@@ -52,6 +58,12 @@ de 45 minutos, y el script:
    cambiado `requirements.txt`;
 3. ejecuta `python -m recogida.horaria`, que descarga la base de la rama `estado`, recoge
    lo nuevo y vuelve a subirla;
+   Al final, si han pasado 3 horas o más desde la última descarga correcta, descarga de
+   NASA FIRMS los dos últimos días de los productos NRT (VIIRS de Suomi NPP, NOAA-20 y
+   NOAA-21 y MODIS) y cruza los focos con los impactos ([`recogida/firms.py`](../recogida/firms.py),
+   [`proceso/focos_termicos.py`](../proceso/focos_termicos.py)). Un fallo de FIRMS no cambia
+   el resultado de la recogida: queda en el diario («firms no se lee», sin la clave) y en
+   `estado.json`, y la siguiente ejecución vuelve a intentarlo;
 4. publica en `main` `publicacion/ucrania.json`, `publicacion/incidentes.geojson` y
    `publicacion/incidentes_sin_ubicacion.json` si han cambiado, con autor QuantuSync y la
    dirección anónima. También cuando la recogida
@@ -76,6 +88,7 @@ En `%USERPROFILE%\.eodi\`, fuera de cualquier repositorio:
 | `servidor_known_hosts` | Clave de host del servidor, anotada en la primera conexión |
 | `clave_age.txt` | Identidad age de la base |
 | `extractor.env` | Variables del extractor (`EODI_EXTRACTOR_*`) |
+| `firms_map_key.txt` | Clave de la API de NASA FIRMS (32 caracteres); `reconstruir.sh` la añade como `EODI_FIRMS_MAP_KEY` al `extractor.env` del servidor. También es el secreto `EODI_FIRMS_MAP_KEY` del repositorio, para la recogida de emergencia |
 | `cloudflare_token.txt` | Token de la API de Cloudflare (R2 y DNS de las teselas) |
 | `r2_estado.env` | Credenciales S3 de R2 para subir `estado.json` (`R2_ID`, `R2_SECRETO`, `R2_CUENTA`), derivadas del token por `reconstruir.sh` si no existen |
 
@@ -94,7 +107,7 @@ El script:
 1. crea, si no existen, el par de claves SSH local, la clave en Hetzner, el cortafuegos y
    el servidor;
 2. copia `servidor/` al servidor y ejecuta `endurecer.sh` y `instalar.sh`;
-3. copia la clave age y las variables del extractor;
+3. copia la clave age y las variables del extractor, con la clave de FIRMS;
 4. sustituye en GitHub las claves de despliegue «servidor eodi-recogida» de los dos
    repositorios por las del servidor;
 5. activa el temporizador.
@@ -121,7 +134,8 @@ commit en git, así que la web no se reconstruye cada hora.
 El fichero lleva la hora de inicio y de fin de la recogida, su resultado (`correcta`,
 `con_avisos` o `fallida`), la hora de la última correcta, la de la siguiente prevista
 (minuto 17) y, por cada fuente (`fuerza_aerea_ua`, `mindef_ru`, `gdelt`, `oficiales` y
-`extractor`), su estado (`leida`, `con_aviso` o `no_leida`) y la hora de su último dato.
+`extractor` y `firms`), su estado (`leida`, `con_aviso` o `no_leida`) y la hora de su
+último dato; en `firms`, la de la última descarga correcta.
 No lleva ningún contenido. La recogida deja el estado de cada fuente en un fichero
 temporal (`recogida.horaria --estado`). El último estado publicado se guarda en
 `/home/eodi/.eodi/estado.json`, de donde sale la hora de la última recogida correcta.
@@ -157,6 +171,35 @@ sudo systemctl start eodi-recogida.service    # lanzar una ahora
 sudo systemctl stop eodi-recogida.timer       # parar la recogida horaria
 sudo systemctl start eodi-recogida.timer      # reanudarla
 ```
+
+## NASA FIRMS
+
+Clave: `EODI_FIRMS_MAP_KEY` en `/home/eodi/.eodi/extractor.env`. Para cambiarla, se cambia
+`%USERPROFILE%\.eodi\firms_map_key.txt` y se vuelve a ejecutar `reconstruir.sh` (o se
+edita esa línea en el servidor como `eodi`); el secreto del repositorio, con
+`gh secret set EODI_FIRMS_MAP_KEY < firms_map_key.txt`. Lo que quedan de transacciones (sin
+mostrar la clave):
+
+```
+sudo -u eodi sh -c 'k=$(sed -n "s/^EODI_FIRMS_MAP_KEY=//p" /home/eodi/.eodi/extractor.env); curl -s "https://firms.modaps.eosdis.nasa.gov/mapserver/mapkey_status/?MAP_KEY=$k"'
+```
+
+**Histórico.** Desde octubre de 2022, con los productos SP (procesado estándar: Suomi NPP,
+NOAA-20 y MODIS hasta unos meses atrás) y NRT donde SP no llega (NOAA-21 y los últimos
+meses). Lo lanza [`servidor/firms_historico.sh`](../servidor/firms_historico.sh), en segundo
+plano y por tandas con el cerrojo de la recogida: cada tanda termina en el minuto 12 de la
+hora y no empieza otra hasta que la recogida horaria ha terminado, así que nunca se solapan.
+Es reanudable (lo descargado no se vuelve a pedir) y respeta el límite de 5000 transacciones
+cada 10 minutos (una llamada cada 2 s y espera si el contador pasa de 4000).
+
+```
+sudo systemd-run --unit=eodi-firms-historico --uid=eodi --gid=eodi \
+  /usr/bin/env bash /home/eodi/droneobservatory/servidor/firms_historico.sh
+journalctl -u eodi-firms-historico -n 40          # cómo va
+sudo -u eodi sh -c 'cd /home/eodi/droneobservatory && EODI_FIRMS_DATOS=/home/eodi/datos/firms .venv/bin/python -m recogida.firms resumen'
+```
+
+Si se corta (reinicio, seis fallos seguidos), se vuelve a lanzar igual y sigue donde lo dejó.
 
 ## Revisión de todo lo publicado
 

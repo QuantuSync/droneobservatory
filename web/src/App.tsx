@@ -49,7 +49,9 @@ import type {
 } from "./datos/tipos.ts";
 import {
   ataquesPorRegion,
+  centrosDeFocos,
   cifrasDeRegion,
+  focosDelPeriodo,
   dominioUcrania,
   lanzamientosPorNoche,
   nochesDeGuerra,
@@ -359,6 +361,11 @@ export function App() {
   const intensidad = useMemo(
     () =>
       ucraniaActiva === null || periodo === null ? null : ataquesPorRegion(ucraniaActiva, periodo),
+    [ucraniaActiva, periodo],
+  );
+  const focosUcrania = useMemo(
+    () =>
+      ucraniaActiva === null || periodo === null ? null : focosDelPeriodo(ucraniaActiva, periodo),
     [ucraniaActiva, periodo],
   );
   const noches = useMemo(
@@ -734,7 +741,14 @@ export function App() {
           />
           <div className="overflow-y-auto px-4 py-3">
             <SegunCarga t={t} carga={ataque}>
-              {(detalle) => <FichaAtaque t={t} idioma={idioma} ataque={detalle} />}
+              {(detalle) => (
+                <FichaAtaque
+                  t={t}
+                  idioma={idioma}
+                  ataque={detalle}
+                  centros={datosUcrania === null ? undefined : centrosDeFocos(datosUcrania)}
+                />
+              )}
             </SegunCarga>
           </div>
         </>
@@ -754,6 +768,7 @@ export function App() {
               codigo={panelLocal.codigo}
               cifras={cifrasDeRegion(datosUcrania, panelLocal.codigo, periodo)}
               periodo={textoPeriodo}
+              focos={focosDelPeriodo(datosUcrania, periodo, panelLocal.codigo)}
             />
           </div>
         </>
@@ -944,6 +959,7 @@ export function App() {
               capas={capas}
               intensidad={intensidad}
               noche={nocheActual?.regiones ?? null}
+              focosUcrania={focosUcrania}
               elegido={elegido}
               paisResaltado={paisImpreciso}
               regionesElegidas={regionesElegidas}
