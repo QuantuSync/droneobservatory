@@ -46,6 +46,7 @@ from exportacion import procedencia as origenes
 from modelo import ficha
 from proceso import incidentes as reglas
 from proceso.estados import Estado
+from proceso.focos_termicos import con_focos
 
 VERSION_FORMATO = "1.0.0"
 RAIZ = Path(__file__).resolve().parent.parent
@@ -443,9 +444,10 @@ def _propio(nombre: str) -> str:
 
 def generar(almacen: Almacen) -> list[Fichero]:
     """Los ficheros de una versión, en claro y ya validados."""
-    base = almacen.incidentes()
+    # El foco térmico de FIRMS vive en su propia tabla: aquí va completo, con lo interno.
+    focos = almacen.focos_termicos()
+    base, ataques_base = con_focos(almacen.incidentes(), almacen.ataques_ucrania(), focos)
     episodios = almacen.episodios()
-    ataques_base = almacen.ataques_ucrania()
     fichas = origenes.Fichas.de(almacen)
     try:
         incidentes = [origenes.exportar_incidente(i, fichas) for i in base]
@@ -455,7 +457,12 @@ def generar(almacen: Almacen) -> list[Fichero]:
     por_ataque = {a["id"]: a["procedencia"] for a in ataques}
     regiones = [
         {"ataque_id": a, "region": r, "procedencia": origenes.procedencia_region(r, por_ataque[a])}
-        for a, r in almacen.todas_las_regiones_ucrania()
+        for a, r in (
+            (a, {**r, "foco_termico": focos[f"{a}/{r['region']}"]})
+            if f"{a}/{r['region']}" in focos
+            else (a, r)
+            for a, r in almacen.todas_las_regiones_ucrania()
+        )
     ]
     lista_afirmaciones = afirmaciones(almacen, base, ataques_base, fichas)
     lista_descartes = descartes(almacen, base)

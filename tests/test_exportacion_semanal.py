@@ -107,6 +107,26 @@ def test_los_incidentes_salen_enteros_con_los_campos_internos() -> None:
     assert "pruebas" in exportados[0] and "alta" in exportados[0]["control"]
 
 
+def test_el_foco_termico_va_completo_con_lo_interno() -> None:
+    """El cruce con FIRMS vive en su tabla: AEGIS recibe el bloque entero, también un no
+    detectado con su motivo, que la web nunca ve."""
+    almacen = poblado()
+    no_detectado = {
+        "resultado": "no_detectado", "motivo": "sin_focos", "radio_km": 10,
+        "focos_en_ventana": 0, "linea_base": {"focos": 0, "dias": 0},
+        "evaluado": ejemplos.instante("2025-11-06T00:17Z"),
+    }  # fmt: skip
+    almacen.guardar_foco_termico("EODI-2025-00002", no_detectado)
+    almacen.guardar_foco_termico("EODI-UA-2025-0001/UA-63", ejemplos.foco_termico())
+    ficheros = por_nombre(semanal.generar(almacen))
+    incidentes = {i["id"]: i for i in lineas(ficheros["incidentes.jsonl"])}
+    assert incidentes["EODI-2025-00002"]["foco_termico"] == no_detectado
+    (ataque,) = lineas(ficheros["ucrania_ataques.jsonl"])
+    assert ataque["regiones"][0]["foco_termico"] == ejemplos.foco_termico()
+    (region,) = lineas(ficheros["ucrania_regiones.jsonl"])
+    assert region["region"]["foco_termico"]["frp_max_mw"] == 48.2
+
+
 def test_las_afirmaciones_llevan_todas_las_fuentes_tambien_las_internas() -> None:
     afirmaciones = lineas(por_nombre(semanal.generar(poblado()))["afirmaciones.jsonl"])
     de_e = [a for a in afirmaciones if a["fuente_id"] == "FE"]
