@@ -66,8 +66,8 @@
         "resultado": {"x-visibilidad": "publico", "enum": ["detectado", "no_detectado", "no_evaluable"]},
         "motivo": {
           "x-visibilidad": "interno",
-          "description": "Por qué no hay foco detectado: sin focos válidos en el radio y la ventana, solo focos de baja confianza, solo focos de una fuente de calor habitual (antorchas) sin potencia anómala, un solo foco que cuenta (no basta), lugar sin precisión de 10 km o menos, fuera de la zona descargada o sin datos de FIRMS para la ventana y la línea base.",
-          "enum": ["sin_focos", "solo_baja_confianza", "fuente_habitual", "foco_aislado", "sin_lugar_preciso", "fuera_de_zona", "sin_datos_firms"]
+          "description": "Por qué no hay foco detectado: sin focos válidos en el radio y la ventana, solo focos de baja confianza, solo focos de una fuente de calor habitual (antorchas) sin potencia anómala, un solo foco que cuenta (no basta), lugar sin precisión de 10 km o menos, fuera de la zona descargada, sin datos de FIRMS para la ventana y la línea base, o un radio que ardió la mitad de los días de la línea base o más repartido en 15 o más celdas de 0,01° (una ciudad del frente, una zona de quemas), donde un foco nuevo no dice nada.",
+          "enum": ["sin_focos", "solo_baja_confianza", "fuente_habitual", "foco_aislado", "sin_lugar_preciso", "fuera_de_zona", "sin_datos_firms", "fuego_frecuente"]
         },
         "primer_foco": {"x-visibilidad": "publico", "description": "Hora UTC de paso del satélite en el primer foco que cuenta.", "$ref": "#/$defs/instante"},
         "satelite": {"x-visibilidad": "publico", "enum": ["Suomi NPP", "NOAA-20", "NOAA-21", "Terra", "Aqua"]},

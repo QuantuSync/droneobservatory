@@ -764,8 +764,10 @@ export const es: Textos = {
                 "mismo paso del satélite vea tres o más. Se descartan los focos de baja " +
                 "confianza. Los impactos que solo se conocen por región no se evalúan; los " +
                 "lugares alcanzados de los canales regionales y del Estado Mayor, sí, salvo los " +
-                "de los partes diarios de la línea del frente, donde la artillería da focos " +
-                "cada día.",
+                "de los partes diarios de la línea del frente y los ataques con FPV, donde la " +
+                "artillería da focos cada día. Tampoco se evalúa un lugar cuyo radio ardió la " +
+                "mitad de los 30 días anteriores o más, repartido por muchos sitios: un foco " +
+                "nuevo allí no dice nada.",
             ],
           },
           {

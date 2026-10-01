@@ -47,11 +47,18 @@ SIN_FOCOS, SOLO_BAJA_CONFIANZA, FUENTE_HABITUAL, FOCO_AISLADO = (
     "fuente_habitual",
     "foco_aislado",
 )
-SIN_LUGAR_PRECISO, FUERA_DE_ZONA, SIN_DATOS = (
+SIN_LUGAR_PRECISO, FUERA_DE_ZONA, SIN_DATOS, FUEGO_FRECUENTE = (
     "sin_lugar_preciso",
     "fuera_de_zona",
     "sin_datos_firms",
+    "fuego_frecuente",
 )
+# Un radio que ardió la mitad de los días de la base o más, repartido por muchos sitios (una
+# ciudad del frente, una zona de quemas), no se puede evaluar: cualquier foco nuevo de la
+# ventana sería uno más de los de cada día. Las antorchas de una refinería caen en uno a tres
+# píxeles y no llegan al número de celdas (de 0,01°, en torno a 1 km).
+DIAS_FUEGO_FRECUENTE = 15
+CELDAS_FUEGO_FRECUENTE = 15
 
 RADIO_MIN_KM = 2.0
 RADIO_MAX_KM = 10.0
@@ -255,6 +262,12 @@ def no_evaluable(motivo: str, ahora: datetime) -> Documento:
     return {"resultado": NO_EVALUABLE, "motivo": motivo, "evaluado": _instante(ahora)}
 
 
+def fuego_frecuente(base: list[Foco], dias_con_focos: int) -> bool:
+    """Si el radio arde de forma habitual y dispersa en la base (ver DIAS_FUEGO_FRECUENTE)."""
+    celdas = {(round(f.lat, 2), round(f.lon, 2)) for f in base if not f.baja_confianza()}
+    return dias_con_focos >= DIAS_FUEGO_FRECUENTE and len(celdas) >= CELDAS_FUEGO_FRECUENTE
+
+
 def evaluar(impacto: Impacto, lector: Lector, ahora: datetime, caja: Caja) -> Evaluacion | None:
     """Evalúa el impacto. None si aún faltan datos de FIRMS de algún día de la ventana o de la
     base: se vuelve a intentar en la ejecución siguiente."""
@@ -299,6 +312,8 @@ def evaluar(impacto: Impacto, lector: Lector, ahora: datetime, caja: Caja) -> Ev
         base += del_dia
     if dias_con_datos < DIAS_BASE_MINIMOS:
         return None
+    if fuego_frecuente(base, dias_con_focos):
+        return Evaluacion(no_evaluable(FUEGO_FRECUENTE, ahora), [])
     validos = [(f, d) for f, d in ventana if not f.baja_confianza()]
     cuentan = sorted(
         ((f, d) for f, d in validos if cuenta(f, base)), key=lambda x: (x[0].instante, x[1])
@@ -457,7 +472,8 @@ def evaluar_todos(
     reevaluar_todo: bool = False,
 ) -> Resumen:
     """Evalúa cada impacto que aún puede cambiar y guarda su resultado y sus focos. Uno cuya
-    ventana cerró hace más de una semana y ya tiene resultado no se vuelve a mirar, salvo con
+    ventana cerró hace más de una semana y ya tiene resultado (que no sea «detectado») no se
+    vuelve a mirar, salvo con
     `reevaluar_todo`: mientras se descarga el histórico, un día puede tener solo algunos
     productos, y lo evaluado con ellos se rehace cuando llegan los demás. Por orden de fecha,
     para que impactos vecinos lean los mismos días; los que no caben en el plazo quedan
@@ -466,7 +482,14 @@ def evaluar_todos(
     previos: dict[str, Documento] = almacen.focos_termicos()
     for impacto in sorted(impactos, key=lambda i: (i.inicio, i.id)):
         anterior = previos.get(impacto.id)
-        if anterior is not None and not reevaluar_todo and ahora - impacto.ventana_fin > REEVALUAR:
+        # Las detecciones se rehacen siempre: son pocas y así les llega cualquier cambio de la
+        # regla (un «detectado» sube la credibilidad y se publica; lo demás, no).
+        if (
+            anterior is not None
+            and not reevaluar_todo
+            and anterior.get("resultado") != DETECTADO
+            and ahora - impacto.ventana_fin > REEVALUAR
+        ):
             resumen.sin_cambios += 1
             continue
         if plazo is not None and plazo.agotado():

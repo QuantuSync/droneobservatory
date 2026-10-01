@@ -33,6 +33,7 @@ igual que la rusa confirmada por la administración ucraniana.
 
 import bisect
 import copy
+import re
 from dataclasses import dataclass
 from datetime import UTC, date, datetime, time, timedelta
 from functools import cache
@@ -56,6 +57,8 @@ TRAS_PERIODO = timedelta(hours=6)
 REENLAZAR = timedelta(days=4)
 # Un impacto sin ataque es el mismo que otro del mismo lugar sin ataque a menos de 12 horas.
 MISMO_IMPACTO = timedelta(hours=12)
+# Drones de visión en primera persona: ataques de corto alcance en la línea del frente.
+FPV = re.compile(r"\bFPV\b|\bФПВ\b", re.IGNORECASE)
 DIA_SIGUIENTE = timedelta(hours=24)
 FIRMS = "firms"
 
@@ -434,10 +437,12 @@ def vigentes(almacen: "Almacen") -> list[Documento]:
 
 
 def con_firms(documento: Documento) -> bool:
-    """Si el impacto se cruza con FIRMS. Los partes diarios no: sobre todo son ataques de
+    """Si el impacto se cruza con FIRMS. Ni los partes diarios ni los ataques con FPV: son de
     corto alcance en la línea del frente, donde la artillería y los incendios dan focos todos
     los días, y el foco no diría nada del dron."""
-    return not documento.get("parte_diario")
+    if documento.get("parte_diario"):
+        return False
+    return not any(FPV.search(f.get("frase_origen", "")) for f in documento["fuentes"])
 
 
 def periodo_del_impacto(

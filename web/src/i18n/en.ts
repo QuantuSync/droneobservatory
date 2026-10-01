@@ -762,7 +762,9 @@ export const en: Textos = {
                 "one satellite pass sees three or more. Low-confidence hotspots are discarded. " +
                 "Impacts known only by region are not assessed; places hit from the regional " +
                 "channels and the General Staff are, except those in the daily front-line " +
-                "reports, where artillery causes hotspots every day.",
+                "reports and FPV attacks, where artillery causes hotspots every day. Nor is a " +
+                "place assessed whose radius burned on half or more of the previous 30 days " +
+                "at many spots: a new hotspot there says nothing.",
             ],
           },
           {

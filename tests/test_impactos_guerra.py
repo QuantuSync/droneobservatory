@@ -444,3 +444,14 @@ def test_el_lote_del_historico_se_envia_una_vez_y_se_incorpora_sin_esperar(
     # Una sola vez: después no hace nada.
     assert paso_lote() is None
     assert len(servicio.enviadas) == 1
+
+
+def test_los_ataques_fpv_no_se_cruzan_con_firms() -> None:
+    almacen = Almacen.abrir()
+    impacto = _refineria(almacen)
+    assert impactos_guerra.con_firms(impacto)
+    fuente = {
+        **impacto["fuentes"][0],
+        "frase_origen": "У Костянтинівці внаслідок атаки FPV-дроном загинув чоловік.",
+    }
+    assert not impactos_guerra.con_firms({**impacto, "fuentes": [fuente]})

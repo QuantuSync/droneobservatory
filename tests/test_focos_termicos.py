@@ -1,6 +1,7 @@
 """Regla de cruce de los impactos con los focos de FIRMS y su paso a la publicación."""
 
 import copy
+import dataclasses
 from datetime import UTC, date, datetime, timedelta
 
 import pytest
@@ -488,3 +489,16 @@ def test_la_base_de_30_dias_toca_31_fechas_y_el_documento_vale() -> None:
     documento = evaluar([*antorcha(), madrugada])
     assert documento["linea_base"]["dias"] == 31
     Almacen.abrir().guardar_foco_termico("EODI-2025-00099", documento)
+
+
+def test_un_radio_que_arde_cada_dia_por_muchos_sitios_no_es_evaluable() -> None:
+    # Una ciudad del frente: fuego casi cada día de la base, repartido por todo el radio.
+    dispersos = [
+        dataclasses.replace(foco(INICIO - timedelta(days=d), km_norte=(d % 6) - 3.0),
+                            lon=LON + ((d // 6) - 2) * 0.02)
+        for d in range(1, 31)
+    ]  # fmt: skip
+    documento = evaluar([*dispersos, *pixeles(FIN, km_norte=1.9)], impacto(10.0))
+    assert (documento["resultado"], documento["motivo"]) == ("no_evaluable", "fuego_frecuente")
+    # La antorcha de la refinería, cada día pero en el mismo sitio, sí se evalúa.
+    assert evaluar([*antorcha(), *pixeles(FIN, km_norte=1.8, frp=4.0)])["resultado"] == "detectado"
