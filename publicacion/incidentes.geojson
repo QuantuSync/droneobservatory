@@ -107,7 +107,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-01T19:17Z"
+      "valor": "2026-10-02T09:17Z"
      }
     },
     "drones": {
@@ -30469,6 +30469,18 @@
       "valor": "DK"
      },
      {
+      "campo": "lugar.pais",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-09-24T00:15Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-a12fa6ed9ab12c1e",
+      "medio": "abc.net.au",
+      "valor": "DK"
+     },
+     {
       "campo": "presencia_dron",
       "credibilidad": 3,
       "fecha": {
@@ -30550,6 +30562,18 @@
       "fiabilidad": "C",
       "fuente_id": "gdelt-815681379f7f9f5c",
       "medio": "ilmessaggero.it",
+      "valor": "no_confirmada"
+     },
+     {
+      "campo": "presencia_dron",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-09-24T00:15Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-a12fa6ed9ab12c1e",
+      "medio": "abc.net.au",
       "valor": "no_confirmada"
      },
      {
@@ -30743,6 +30767,18 @@
       "fuente_id": "gdelt-815681379f7f9f5c",
       "medio": "ilmessaggero.it",
       "valor": "interrupcion_aeroportuaria"
+     },
+     {
+      "campo": "tipo",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-09-24T00:15Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-a12fa6ed9ab12c1e",
+      "medio": "abc.net.au",
+      "valor": "interrupcion_aeroportuaria"
      }
     ],
     "consecuencias": {
@@ -30757,7 +30793,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-01T19:17Z"
+      "valor": "2026-10-02T09:17Z"
      }
     },
     "drones": {
@@ -31363,6 +31399,174 @@
       "replicas": 1
      },
      {
+      "credibilidad": 3,
+      "enlace": "https://cnnespanol.cnn.com/2025/09/23/mundo/dinamarca-drones-aeropuerto-copenhague-ataques-hibridos-europa-reux",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-09-24T00:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Dinamarca vincula drones en el aeropuerto de Copenhague con ataques híbridos en toda Europa",
+      "id": "gdelt-0769a84290fdb77b",
+      "idioma": "es",
+      "medio": "cnn.com",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://abc.net.au/news/2025-09-24/naus_denmarknbk_2409/105809602",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-09-24T00:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Denmark links drones at Copenhagen airport to Russia.",
+      "id": "gdelt-a12fa6ed9ab12c1e",
+      "idioma": "en",
+      "medio": "abc.net.au",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://yahoo.com/news/articles/copenhagen-airport-flights-halted-drone-203245434.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-09-24T01:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Copenhagen airport drone incursion 'attack' on critical infrastructure, PM says",
+      "id": "gdelt-d5508b143249e867",
+      "idioma": "en",
+      "medio": "yahoo.com",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://united24media.com/latest-news/danish-authorities-suspect-russian-ships-behind-drone-operation-over-copenhagen-airport-11909",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-09-24T10:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Danish Authorities Suspect Russian Ships Behind Drone Operation Over Copenhagen Airport",
+      "id": "gdelt-a8aba62b308f4af5",
+      "idioma": "en",
+      "medio": "united24media.com",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://lemonde.fr/international/article/2025/09/24/drones-au-dessus-de-l-aeroport-de-copenhague-le-danemark-denonce-une-attaque_6642739_3210.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-09-24T10:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Drones au-dessus de l'aéroport de Copenhague : le Danemark dénonce une « attaque »",
+      "id": "gdelt-861dd343ae97aa15",
+      "idioma": "fr",
+      "medio": "lemonde.fr",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://zazoom.it/2025-09-24/droni-su-aeroporto-di-copenhagen-polizia-danese-amplia-indagini-sospettiamo-che-siano-stati-lanciati-da-una-nave-nello-stretto-di-oresund/17811680",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-09-24T12:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Droni su aeroporto di Copenhagen polizia danese amplia indagini | Sospettiamo che siano stati lanciati da una nave nello stretto di Oresund",
+      "id": "gdelt-88a12146498e9902",
+      "idioma": "it",
+      "medio": "zazoom.it",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://bnr.bg/post/102215678",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-09-24T16:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Дания разследва възможна руска намеса в случая с дроновете над летището в Копенхаген",
+      "id": "gdelt-3e6b30b0733b90a9",
+      "idioma": "bg",
+      "medio": "bnr.bg",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://realitatea.net/stiri/actual/haos-pe-aeroportul-din-copenhaga-romanca-blocata-intrun-avion-dupa-atacul-cu-drone_68d4325f3dcc7f0cc00332c6",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-09-24T18:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Haos pe aeroportul din Copenhaga: româncă blocată într-un avion după atacul cu drone",
+      "id": "gdelt-d9194b2e662cadb7",
+      "idioma": "ro",
+      "medio": "realitatea.net",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://t-online.de/nachrichten/panorama/kriminalitaet/id_100928942/drohnen-am-flughafen-kopenhagen-drei-schiffe-stehen-unter-verdacht.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-09-24T20:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Drohnen am Flughafen Kopenhagen: Drei Schiffe stehen unter Verdacht",
+      "id": "gdelt-3201783bcaded099",
+      "idioma": "de",
+      "medio": "t-online.de",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://dailystar.co.uk/news/latest-news/breaking-major-airport-forced-close-35961286",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-09-24T22:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Aalborg Airport forced to close over drones just days after Copenhagen incident",
+      "id": "gdelt-101cb64e03293cbb",
+      "idioma": "en",
+      "medio": "dailystar.co.uk",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://alt.dk/kendte/drone-koebenhavns-lufthavn-troels-mascha-wallmans/5642344",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-09-24T23:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Troels Krohn Dehlis og Mascha Vang reagerer på droneflyvning over Københavns Lufthavn.",
+      "id": "gdelt-62d43ac964d30a37",
+      "idioma": "da",
+      "medio": "alt.dk",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://thesun.ie/news/15883364/more-mystery-drones-airport-denmark",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-09-24T23:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "More mystery drones shut down ANOTHER airport in Denmark after 'Russia was behind halting flights in Copenhagen'",
+      "id": "gdelt-fbd5c5ec0cc156ad",
+      "idioma": "en",
+      "medio": "thesun.ie",
+      "replicas": 1
+     },
+     {
       "credibilidad": 1,
       "enlace": "https://politi.dk/rigspolitiet/nyhedsliste/nosten-er-i-operationsberedskab-grundet-de-seneste-dages-droneaktivitet/2025/09/25",
       "fecha": {
@@ -31374,6 +31578,216 @@
       "id": "detalle-c164c43ddf12cd41",
       "idioma": "da",
       "medio": "Rigspolitiet",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://firstpost.com/world/second-danish-airport-shuts-down-after-drone-sightings-two-days-after-copenhagen-disruption-13936686.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-09-25T00:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Second Danish airport shuts down after drone sightings, two days after Copenhagen disruption",
+      "id": "gdelt-82ed6df3b35bc3dc",
+      "idioma": "en",
+      "medio": "firstpost.com",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://nbcnews.com/world/europe/denmarks-aalborg-airport-closed-due-drones-two-days-copenhagen-incursi-rcna233583",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-09-25T01:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Denmark's Aalborg Airport closed due to drones two days after Copenhagen incursion",
+      "id": "gdelt-7b83283521ada127",
+      "idioma": "en",
+      "medio": "nbcnews.com",
+      "replicas": 3
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://indianexpress.com/article/world/copenhagen-incursion-denmark-aalborg-airport-shut-drones-flights-diverted-10269926",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-09-25T01:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Two days after Copenhagen incursion, Denmark's Aalborg airport shut due to drones; flights diverted | World News",
+      "id": "gdelt-e5f738ee10ad22e9",
+      "idioma": "en",
+      "medio": "indianexpress.com",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://livemint.com/news/world/drone-sighting-shuts-down-denmarks-aalborg-airport-two-days-after-copenhagen-incursion-are-russian-involved-11758764332411.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-09-25T03:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Drone sighting shuts down Denmark's Aalborg airport two days after Copenhagen incursion; are Russian involved?",
+      "id": "gdelt-35068b5abf39f72a",
+      "idioma": "en",
+      "medio": "livemint.com",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://nypost.com/2025/09/24/world-news/drones-shut-down-another-airport-in-denmark-days-after-copenhagen-airport-sightings",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-09-25T03:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Drones shut down another airport in Denmark days after Copenhagen airport sightings",
+      "id": "gdelt-5ffe4d5c67141a45",
+      "idioma": "en",
+      "medio": "nypost.com",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://nieuwsblad.be/buitenland/paar-dagen-na-kopenhagen-opnieuw-mysterieuze-droneactiviteit-aan-deense-luchthaven-vergelijkbaar-vliegpatroon/92842466.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-09-25T04:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Paar dagen na Kopenhagen opnieuw mysterieuze droneactiviteit aan Deense luchthaven: \"Vergelijkbaar vliegpatroon\"",
+      "id": "gdelt-8e3fad94eb71cdf6",
+      "idioma": "nl",
+      "medio": "nieuwsblad.be",
+      "replicas": 2
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://nzherald.co.nz/world/denmarks-drone-problem-expands-to-four-airports-after-previous-incident-at-copenhagen/PVNLXN7L5BEZ7BM3WU3HKJC3IY",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-09-25T04:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Denmark's drone problem expands to four airports, after previous incident at Copenhagen",
+      "id": "gdelt-ec4713ddb46e7fe8",
+      "idioma": "en",
+      "medio": "nzherald.co.nz",
+      "replicas": 1
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://ledevoir.com/monde/europe/919953/drones-reperes-niveau-plusieurs-aeroports-danois",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-09-25T06:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Des drones repérés au niveau de quatre aéroports au Danemark, après un épisode similaire lundi à Copenhague",
+      "id": "gdelt-25aae325406da655",
+      "idioma": "fr",
+      "medio": "ledevoir.com",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://standard.co.uk/news/world/aalborg-airport-drones-denmark-copenhagen-b1249561.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-09-25T07:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Denmark's Aalborg airport closes due to drone sightings two days after incursion at Copenhagen",
+      "id": "gdelt-205e74f53a5bcbe3",
+      "idioma": "en",
+      "medio": "standard.co.uk",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://telegram.hr/vijesti/novi-incident-s-dronovima-u-danskoj-zatvorena-zracna-luka-na-sjeveru-zemlje-videni-su-u-jos-tri-grada",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-09-25T07:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Nakon Kopenhagena, zbog dronova zatvorena i zračna luka u Aalborgu",
+      "id": "gdelt-c64283b7c05ca261",
+      "idioma": "hr",
+      "medio": "telegram.hr",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://naslovi.net/2025-09-25/rts/dronovi-ponovo-iznad-aerodroma-u-danskoj-kopenhagen-smatra-da-je-rec-o-hibridnom-napadu/40545989",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-09-25T10:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Dronovi ponovo iznad aerodroma u Danskoj, Kopenhagen smatra da je reč o hibridnom napadu",
+      "id": "gdelt-48080f9f71066c38",
+      "idioma": "sr",
+      "medio": "naslovi.net",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://monitorulcj.ro/externe/132204-drone-neidentificate-observate-in-apropierea-mai-multor-aeroporturi-din-danemarca-copenhaga-denunta-un-atac-hibrid-sistematic",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-09-25T12:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Drone neidentificate, observate în apropierea mai multor aeroporturi din Danemarca: Copenhaga denunță un „atac hibrid sistematic\"",
+      "id": "gdelt-f43e4833933d79c4",
+      "idioma": "ro",
+      "medio": "monitorulcj.ro",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://jurnalul.ro/stiri/externe/drone-necunoscute-danemarca-aeroporturi-vizate-incident-copenhaga-1010418.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-09-25T12:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Drone necunoscute terorizează Danemarca. Patru aeroporturi, vizate după incidentul de la Copenhaga",
+      "id": "gdelt-861b54e1f62a8425",
+      "idioma": "ro",
+      "medio": "jurnalul.ro",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://zf.ro/business-international/drone-misterioase-paralizeaza-aeroporturi-baze-militare-danemarca-22911728",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-09-25T16:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Drone misterioase paralizează aeroporturi şi baze militare în Danemarca. Copenhaga...",
+      "id": "gdelt-585d56631a6e56de",
+      "idioma": "ro",
+      "medio": "zf.ro",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://gamereactor.eu/drones-disrupting-copenhagen-airport-may-have-been-launched-from-ships-here-are-the-three-vessels-under-investigation-1607213",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-09-25T22:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Drones disrupting Copenhagen Airport may have been launched from ships... Here are the three vessels under investigation -",
+      "id": "gdelt-55d5bf3ea1f65c7d",
+      "idioma": "en",
+      "medio": "gamereactor.eu",
       "replicas": 0
      },
      {
@@ -31417,14 +31831,14 @@
     },
     "presencia_dron": "confirmada",
     "tiempo": {
-     "duracion_min": 270,
+     "duracion_min": 180,
      "fin": {
       "precision": "minuto",
       "valor": "2025-09-22T23:00Z"
      },
      "inicio": {
       "precision": "hora",
-      "valor": "2025-09-22T18:30Z"
+      "valor": "2025-09-22T20:00Z"
      }
     },
     "tipo": "interrupcion_aeroportuaria",
@@ -34532,486 +34946,6 @@
     "titulo": {
      "en": "Illegal drones over Riga airport in January",
      "es": "Drones ilegales sobre el aeropuerto de Riga en enero"
-    }
-   },
-   "type": "Feature"
-  },
-  {
-   "geometry": {
-    "coordinates": [
-     12.63793,
-     55.60927
-    ],
-    "type": "Point"
-   },
-   "id": "EODI-2025-00172",
-   "properties": {
-    "afirmaciones_publicas": [
-     {
-      "campo": "lugar.pais",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-09-24T00:15Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-a12fa6ed9ab12c1e",
-      "medio": "abc.net.au",
-      "valor": "DK"
-     },
-     {
-      "campo": "presencia_dron",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-09-24T00:15Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-a12fa6ed9ab12c1e",
-      "medio": "abc.net.au",
-      "valor": "no_confirmada"
-     },
-     {
-      "campo": "tipo",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-09-24T00:15Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-a12fa6ed9ab12c1e",
-      "medio": "abc.net.au",
-      "valor": "interrupcion_aeroportuaria"
-     }
-    ],
-    "consecuencias": {
-     "cierre": {
-      "valor": "desconocido"
-     }
-    },
-    "control": {
-     "ultima_actualizacion": {
-      "precision": "minuto",
-      "valor": "2026-09-30T21:56Z"
-     }
-    },
-    "drones": {
-     "numero": "desconocido"
-    },
-    "estado": {
-     "actual": "notificado",
-     "historial": [
-      {
-       "estado": "notificado",
-       "fecha": {
-        "precision": "aproximada",
-        "valor": "2025-09-24T00:15Z"
-       },
-       "fuente_id": "gdelt-a12fa6ed9ab12c1e"
-      }
-     ]
-    },
-    "fuentes": [
-     {
-      "credibilidad": 3,
-      "enlace": "https://abc.net.au/news/2025-09-24/naus_denmarknbk_2409/105809602",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-09-24T00:15Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Denmark links drones at Copenhagen airport to Russia.",
-      "id": "gdelt-a12fa6ed9ab12c1e",
-      "idioma": "en",
-      "medio": "abc.net.au",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://cnnespanol.cnn.com/2025/09/23/mundo/dinamarca-drones-aeropuerto-copenhague-ataques-hibridos-europa-reux",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-09-24T00:15Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Dinamarca vincula drones en el aeropuerto de Copenhague con ataques híbridos en toda Europa",
-      "id": "gdelt-0769a84290fdb77b",
-      "idioma": "es",
-      "medio": "cnn.com",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://yahoo.com/news/articles/copenhagen-airport-flights-halted-drone-203245434.html",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-09-24T01:00Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Copenhagen airport drone incursion 'attack' on critical infrastructure, PM says",
-      "id": "gdelt-d5508b143249e867",
-      "idioma": "en",
-      "medio": "yahoo.com",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://united24media.com/latest-news/danish-authorities-suspect-russian-ships-behind-drone-operation-over-copenhagen-airport-11909",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-09-24T10:00Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Danish Authorities Suspect Russian Ships Behind Drone Operation Over Copenhagen Airport",
-      "id": "gdelt-a8aba62b308f4af5",
-      "idioma": "en",
-      "medio": "united24media.com",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://lemonde.fr/international/article/2025/09/24/drones-au-dessus-de-l-aeroport-de-copenhague-le-danemark-denonce-une-attaque_6642739_3210.html",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-09-24T10:15Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Drones au-dessus de l'aéroport de Copenhague : le Danemark dénonce une « attaque »",
-      "id": "gdelt-861dd343ae97aa15",
-      "idioma": "fr",
-      "medio": "lemonde.fr",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://zazoom.it/2025-09-24/droni-su-aeroporto-di-copenhagen-polizia-danese-amplia-indagini-sospettiamo-che-siano-stati-lanciati-da-una-nave-nello-stretto-di-oresund/17811680",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-09-24T12:30Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Droni su aeroporto di Copenhagen polizia danese amplia indagini | Sospettiamo che siano stati lanciati da una nave nello stretto di Oresund",
-      "id": "gdelt-88a12146498e9902",
-      "idioma": "it",
-      "medio": "zazoom.it",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://bnr.bg/post/102215678",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-09-24T16:15Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Дания разследва възможна руска намеса в случая с дроновете над летището в Копенхаген",
-      "id": "gdelt-3e6b30b0733b90a9",
-      "idioma": "bg",
-      "medio": "bnr.bg",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://realitatea.net/stiri/actual/haos-pe-aeroportul-din-copenhaga-romanca-blocata-intrun-avion-dupa-atacul-cu-drone_68d4325f3dcc7f0cc00332c6",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-09-24T18:45Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Haos pe aeroportul din Copenhaga: româncă blocată într-un avion după atacul cu drone",
-      "id": "gdelt-d9194b2e662cadb7",
-      "idioma": "ro",
-      "medio": "realitatea.net",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://t-online.de/nachrichten/panorama/kriminalitaet/id_100928942/drohnen-am-flughafen-kopenhagen-drei-schiffe-stehen-unter-verdacht.html",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-09-24T20:30Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Drohnen am Flughafen Kopenhagen: Drei Schiffe stehen unter Verdacht",
-      "id": "gdelt-3201783bcaded099",
-      "idioma": "de",
-      "medio": "t-online.de",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://dailystar.co.uk/news/latest-news/breaking-major-airport-forced-close-35961286",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-09-24T22:45Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Aalborg Airport forced to close over drones just days after Copenhagen incident",
-      "id": "gdelt-101cb64e03293cbb",
-      "idioma": "en",
-      "medio": "dailystar.co.uk",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://alt.dk/kendte/drone-koebenhavns-lufthavn-troels-mascha-wallmans/5642344",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-09-24T23:15Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Troels Krohn Dehlis og Mascha Vang reagerer på droneflyvning over Københavns Lufthavn.",
-      "id": "gdelt-62d43ac964d30a37",
-      "idioma": "da",
-      "medio": "alt.dk",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://thesun.ie/news/15883364/more-mystery-drones-airport-denmark",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-09-24T23:15Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "More mystery drones shut down ANOTHER airport in Denmark after 'Russia was behind halting flights in Copenhagen'",
-      "id": "gdelt-fbd5c5ec0cc156ad",
-      "idioma": "en",
-      "medio": "thesun.ie",
-      "replicas": 1
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://firstpost.com/world/second-danish-airport-shuts-down-after-drone-sightings-two-days-after-copenhagen-disruption-13936686.html",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-09-25T00:15Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Second Danish airport shuts down after drone sightings, two days after Copenhagen disruption",
-      "id": "gdelt-82ed6df3b35bc3dc",
-      "idioma": "en",
-      "medio": "firstpost.com",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://indianexpress.com/article/world/copenhagen-incursion-denmark-aalborg-airport-shut-drones-flights-diverted-10269926",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-09-25T01:30Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Two days after Copenhagen incursion, Denmark's Aalborg airport shut due to drones; flights diverted | World News",
-      "id": "gdelt-e5f738ee10ad22e9",
-      "idioma": "en",
-      "medio": "indianexpress.com",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://nbcnews.com/world/europe/denmarks-aalborg-airport-closed-due-drones-two-days-copenhagen-incursi-rcna233583",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-09-25T01:30Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Denmark's Aalborg Airport closed due to drones two days after Copenhagen incursion",
-      "id": "gdelt-7b83283521ada127",
-      "idioma": "en",
-      "medio": "nbcnews.com",
-      "replicas": 3
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://livemint.com/news/world/drone-sighting-shuts-down-denmarks-aalborg-airport-two-days-after-copenhagen-incursion-are-russian-involved-11758764332411.html",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-09-25T03:00Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Drone sighting shuts down Denmark's Aalborg airport two days after Copenhagen incursion; are Russian involved?",
-      "id": "gdelt-35068b5abf39f72a",
-      "idioma": "en",
-      "medio": "livemint.com",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://nypost.com/2025/09/24/world-news/drones-shut-down-another-airport-in-denmark-days-after-copenhagen-airport-sightings",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-09-25T03:15Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Drones shut down another airport in Denmark days after Copenhagen airport sightings",
-      "id": "gdelt-5ffe4d5c67141a45",
-      "idioma": "en",
-      "medio": "nypost.com",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://nieuwsblad.be/buitenland/paar-dagen-na-kopenhagen-opnieuw-mysterieuze-droneactiviteit-aan-deense-luchthaven-vergelijkbaar-vliegpatroon/92842466.html",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-09-25T04:30Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Paar dagen na Kopenhagen opnieuw mysterieuze droneactiviteit aan Deense luchthaven: \"Vergelijkbaar vliegpatroon\"",
-      "id": "gdelt-8e3fad94eb71cdf6",
-      "idioma": "nl",
-      "medio": "nieuwsblad.be",
-      "replicas": 2
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://nzherald.co.nz/world/denmarks-drone-problem-expands-to-four-airports-after-previous-incident-at-copenhagen/PVNLXN7L5BEZ7BM3WU3HKJC3IY",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-09-25T04:45Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Denmark's drone problem expands to four airports, after previous incident at Copenhagen",
-      "id": "gdelt-ec4713ddb46e7fe8",
-      "idioma": "en",
-      "medio": "nzherald.co.nz",
-      "replicas": 1
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://ledevoir.com/monde/europe/919953/drones-reperes-niveau-plusieurs-aeroports-danois",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-09-25T06:15Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Des drones repérés au niveau de quatre aéroports au Danemark, après un épisode similaire lundi à Copenhague",
-      "id": "gdelt-25aae325406da655",
-      "idioma": "fr",
-      "medio": "ledevoir.com",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://standard.co.uk/news/world/aalborg-airport-drones-denmark-copenhagen-b1249561.html",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-09-25T07:15Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Denmark's Aalborg airport closes due to drone sightings two days after incursion at Copenhagen",
-      "id": "gdelt-205e74f53a5bcbe3",
-      "idioma": "en",
-      "medio": "standard.co.uk",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://telegram.hr/vijesti/novi-incident-s-dronovima-u-danskoj-zatvorena-zracna-luka-na-sjeveru-zemlje-videni-su-u-jos-tri-grada",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-09-25T07:15Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Nakon Kopenhagena, zbog dronova zatvorena i zračna luka u Aalborgu",
-      "id": "gdelt-c64283b7c05ca261",
-      "idioma": "hr",
-      "medio": "telegram.hr",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://naslovi.net/2025-09-25/rts/dronovi-ponovo-iznad-aerodroma-u-danskoj-kopenhagen-smatra-da-je-rec-o-hibridnom-napadu/40545989",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-09-25T10:15Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Dronovi ponovo iznad aerodroma u Danskoj, Kopenhagen smatra da je reč o hibridnom napadu",
-      "id": "gdelt-48080f9f71066c38",
-      "idioma": "sr",
-      "medio": "naslovi.net",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://monitorulcj.ro/externe/132204-drone-neidentificate-observate-in-apropierea-mai-multor-aeroporturi-din-danemarca-copenhaga-denunta-un-atac-hibrid-sistematic",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-09-25T12:15Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Drone neidentificate, observate în apropierea mai multor aeroporturi din Danemarca: Copenhaga denunță un „atac hibrid sistematic\"",
-      "id": "gdelt-f43e4833933d79c4",
-      "idioma": "ro",
-      "medio": "monitorulcj.ro",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://jurnalul.ro/stiri/externe/drone-necunoscute-danemarca-aeroporturi-vizate-incident-copenhaga-1010418.html",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-09-25T12:30Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Drone necunoscute terorizează Danemarca. Patru aeroporturi, vizate după incidentul de la Copenhaga",
-      "id": "gdelt-861b54e1f62a8425",
-      "idioma": "ro",
-      "medio": "jurnalul.ro",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://zf.ro/business-international/drone-misterioase-paralizeaza-aeroporturi-baze-militare-danemarca-22911728",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-09-25T16:15Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Drone misterioase paralizează aeroporturi şi baze militare în Danemarca. Copenhaga...",
-      "id": "gdelt-585d56631a6e56de",
-      "idioma": "ro",
-      "medio": "zf.ro",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://gamereactor.eu/drones-disrupting-copenhagen-airport-may-have-been-launched-from-ships-here-are-the-three-vessels-under-investigation-1607213",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-09-25T22:00Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Drones disrupting Copenhagen Airport may have been launched from ships... Here are the three vessels under investigation -",
-      "id": "gdelt-55d5bf3ea1f65c7d",
-      "idioma": "en",
-      "medio": "gamereactor.eu",
-      "replicas": 0
-     }
-    ],
-    "id": "EODI-2025-00172",
-    "lugar": {
-     "pais": "DK",
-     "radio_km": 5.0
-    },
-    "objetivo": {
-     "categoria": "aeropuerto",
-     "nombre": "Københavns Lufthavn",
-     "oaci": "EKCH"
-    },
-    "presencia_dron": "no_confirmada",
-    "tiempo": {
-     "inicio": {
-      "precision": "dia",
-      "valor": "2025-09-24T00:15Z"
-     }
-    },
-    "tipo": "sobrevuelo",
-    "titulo": {
-     "en": "Drones at Copenhagen airport linked to Russia",
-     "es": "Drones sobre el aeropuerto de Copenhague vinculados a Rusia"
     }
    },
    "type": "Feature"
@@ -51222,7 +51156,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-01T19:17Z"
+      "valor": "2026-10-02T09:17Z"
      }
     },
     "drones": {
@@ -51365,8 +51299,8 @@
     "presencia_dron": "no_confirmada",
     "tiempo": {
      "inicio": {
-      "precision": "dia",
-      "valor": "2025-09-26T08:30Z"
+      "precision": "minuto",
+      "valor": "2025-09-25T21:44Z"
      }
     },
     "tipo": "interrupcion_aeroportuaria",
@@ -53427,7 +53361,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-01T19:17Z"
+      "valor": "2026-10-02T09:17Z"
      }
     },
     "drones": {
@@ -53590,7 +53524,7 @@
     "tiempo": {
      "inicio": {
       "precision": "hora",
-      "valor": "2025-01-03T21:00Z"
+      "valor": "2025-01-03T22:00Z"
      }
     },
     "tipo": "sobrevuelo",
@@ -78105,6 +78039,33 @@
    "properties": {
     "afirmaciones_publicas": [
      {
+      "campo": "consecuencias.cierre.minutos",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2026-09-08T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-LUKK-2026-09-08-EODI-2026-00074",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 141,
+       "min": 141
+      }
+     },
+     {
+      "campo": "consecuencias.cierre.valor",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2026-09-08T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-LUKK-2026-09-08-EODI-2026-00074",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": "si"
+     },
+     {
       "campo": "consecuencias.cierre.valor",
       "credibilidad": 3,
       "fecha": {
@@ -78126,6 +78087,21 @@
       "fiabilidad": "C",
       "fuente_id": "gdelt-316b6142e4fd19bf",
       "medio": "news.mail.ru",
+      "valor": {
+       "max": 0,
+       "min": 0
+      }
+     },
+     {
+      "campo": "consecuencias.vuelos_desviados",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2026-09-08T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-LUKK-2026-09-08-EODI-2026-00074",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
       "valor": {
        "max": 0,
        "min": 0
@@ -78451,6 +78427,20 @@
       "idioma": "ru",
       "medio": "Autoritățile moldave (declaración oficial citada en news.mail.ru)",
       "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://github.com/adsblol/globe_history_2026/releases/tag/v2026.09.08-planes-readsb-prod-0",
+      "fecha": {
+       "precision": "dia",
+       "valor": "2026-09-08T00:00Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Cierre medido en LUKK: 12:32–14:53 UTC, 141 minutos, 0 desvíos y 0 esperas.",
+      "id": "adsblol-LUKK-2026-09-08-EODI-2026-00074",
+      "idioma": "es",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "replicas": 0
      }
     ],
     "id": "EODI-2026-00074",
@@ -78474,6 +78464,27 @@
     "titulo": {
      "en": "Confirmed drone flies over Chișinău airport as Zelenski's aircraft prepares to take off",
      "es": "Un dron confirmado vuela sobre el aeropuerto de Chisináu mientras el avión de Zelenski se prepara para despegar"
+    },
+    "trafico_aereo": {
+     "cierre": {
+      "aeropuerto": "LUKK",
+      "difiere_de_declarado": false,
+      "duracion_min": 141,
+      "fin": {
+       "precision": "minuto",
+       "valor": "2026-09-08T14:53Z"
+      },
+      "inicio": {
+       "precision": "minuto",
+       "valor": "2026-09-08T12:32Z"
+      },
+      "resultado": "cierre_medido",
+      "vuelos_desviados": 0,
+      "vuelos_en_espera": 0
+     },
+     "datos": [
+      "https://github.com/adsblol/globe_history_2026/releases/tag/v2026.09.08-planes-readsb-prod-0"
+     ]
     }
    },
    "type": "Feature"
@@ -80754,6 +80765,21 @@
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
+       "valor": "2026-08-06T14:15Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-2e9d1a47940d3955",
+      "medio": "volksstimme.de",
+      "valor": {
+       "max": 1,
+       "min": 1
+      }
+     },
+     {
+      "campo": "drones.numero",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
        "valor": "2026-08-11T07:30Z"
       },
       "fiabilidad": "C",
@@ -80798,6 +80824,18 @@
       "fiabilidad": "C",
       "fuente_id": "gdelt-d53fe537ca54b680",
       "medio": "midilibre.fr",
+      "valor": "Leipzig"
+     },
+     {
+      "campo": "lugar.localidad",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-08-06T14:15Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-2e9d1a47940d3955",
+      "medio": "volksstimme.de",
       "valor": "Leipzig"
      },
      {
@@ -80870,6 +80908,18 @@
       "fiabilidad": "C",
       "fuente_id": "gdelt-d53fe537ca54b680",
       "medio": "midilibre.fr",
+      "valor": "DE"
+     },
+     {
+      "campo": "lugar.pais",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-08-06T14:15Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-2e9d1a47940d3955",
+      "medio": "volksstimme.de",
       "valor": "DE"
      },
      {
@@ -81002,6 +81052,18 @@
       "fiabilidad": "C",
       "fuente_id": "gdelt-d53fe537ca54b680",
       "medio": "midilibre.fr",
+      "valor": "confirmada"
+     },
+     {
+      "campo": "presencia_dron",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-08-06T14:15Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-2e9d1a47940d3955",
+      "medio": "volksstimme.de",
       "valor": "confirmada"
      },
      {
@@ -81154,6 +81216,21 @@
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
+       "valor": "2026-08-06T14:15Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-2e9d1a47940d3955",
+      "medio": "volksstimme.de",
+      "valor": {
+       "precision": "dia",
+       "valor": "2026-08-05T00:00Z"
+      }
+     },
+     {
+      "campo": "tiempo.inicio",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
        "valor": "2026-08-11T07:30Z"
       },
       "fiabilidad": "C",
@@ -81241,6 +81318,18 @@
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
+       "valor": "2026-08-06T14:15Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-2e9d1a47940d3955",
+      "medio": "volksstimme.de",
+      "valor": "sobrevuelo"
+     },
+     {
+      "campo": "tipo",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
        "valor": "2026-08-11T07:30Z"
       },
       "fiabilidad": "C",
@@ -81257,7 +81346,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-30T21:56Z"
+      "valor": "2026-10-02T09:17Z"
      }
     },
     "drones": {
@@ -85216,6 +85305,20 @@
      },
      {
       "credibilidad": 3,
+      "enlace": "https://volksstimme.de/panorama/kreise-flughafenmitarbeiter-trat-drohne-mit-fuss-zu-boden-4297550",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-08-06T14:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Eine Drohne mit gefährlicher Ladung",
+      "id": "gdelt-2e9d1a47940d3955",
+      "idioma": "de",
+      "medio": "volksstimme.de",
+      "replicas": 1
+     },
+     {
+      "credibilidad": 3,
       "enlace": "https://fr.euronews.com/my-europe/2026/08/06/drone-explosif-a-leipzig-halle-pourquoi-cet-aeroport-strategique-est-regulierement-pris-po",
       "fecha": {
        "precision": "aproximada",
@@ -85226,6 +85329,20 @@
       "id": "gdelt-5ed3714976de94d4",
       "idioma": "fr",
       "medio": "euronews.com",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://welt.de/politik/deutschland/article6a747b48b2e4e184db1499f4/leipzig-flughafenmitarbeiter-holte-drohne-mit-fusstritt-zu-boden-antonow-war-angeblich-mit-munition-beladen.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-08-06T14:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Leipzig: Flughafenmitarbeiter holte Drohne mit Fußtritt zu Boden – Antonow war angeblich mit Munition beladen",
+      "id": "gdelt-0036bcdac3600ed6",
+      "idioma": "de",
+      "medio": "welt.de",
       "replicas": 0
      },
      {
@@ -85241,6 +85358,20 @@
       "idioma": "de",
       "medio": "welt.de",
       "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://finanznachrichten.de/nachrichten-2026-08/69239483-kreise-flughafenmitarbeiter-trat-drohne-mit-fuss-zu-boden-016.htm",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-08-06T14:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Kreise: Flughafenmitarbeiter trat Drohne mit Fuß zu Boden",
+      "id": "gdelt-70070c8bef60c25d",
+      "idioma": "de",
+      "medio": "finanznachrichten.de",
+      "replicas": 1
      },
      {
       "credibilidad": 3,
@@ -85268,6 +85399,20 @@
       "id": "gdelt-56e42f5f13c45f0c",
       "idioma": "sr",
       "medio": "nin.rs",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://n-tv.de/politik/16-05-Kreise-Flughafenmitarbeiter-brachte-Drohne-mit-Fusstritt-zu-Boden-id30859357.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-08-06T14:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Ukraine-Krieg im Liveticker: +++ 16:05 Kreise: Flughafenmitarbeiter brachte Drohne mit Fußtritt zu Boden +++",
+      "id": "gdelt-614b6ee69cb92967",
+      "idioma": "de",
+      "medio": "n-tv.de",
       "replicas": 0
      },
      {
@@ -85409,6 +85554,20 @@
       "idioma": "de",
       "medio": "stuttgarter-zeitung.de",
       "replicas": 1
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://stuttgarter-zeitung.de/politik/vorfall-am-flughafen-leipzig-flughafenmitarbeiter-trat-offenbar-drohne-mit-fuss-zu-boden-79364560.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-08-06T15:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Vorfall am Flughafen Leipzig: Flughafenmitarbeiter trat offenbar Drohne mit Fuß zu Boden",
+      "id": "gdelt-5d44f8347f0ecea8",
+      "idioma": "de",
+      "medio": "stuttgarter-zeitung.de",
+      "replicas": 0
      },
      {
       "credibilidad": 3,
@@ -85786,6 +85945,20 @@
       "id": "gdelt-30b4cbe8bed1e391",
       "idioma": "de",
       "medio": "nwzonline.de",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://merkur.de/politik/startup-chef-nach-drohnen-alarm-das-war-ein-angriff-auf-nato-boden-94432544.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-08-06T20:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Startup-Chef nach Drohnen-Alarm: „Das war ein Angriff auf NATO-Boden\"",
+      "id": "gdelt-9dbf666513831940",
+      "idioma": "de",
+      "medio": "merkur.de",
       "replicas": 0
      },
      {
@@ -86506,14 +86679,9 @@
      ]
     },
     "tiempo": {
-     "duracion_min": 1555,
-     "fin": {
-      "precision": "minuto",
-      "valor": "2026-08-05T01:55Z"
-     },
      "inicio": {
       "precision": "dia",
-      "valor": "2026-08-04T00:00Z"
+      "valor": "2026-08-05T00:00Z"
      }
     },
     "tipo": "sobrevuelo",
@@ -105234,6 +105402,21 @@
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
+       "valor": "2026-09-19T07:45Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-a189991626dd32d6",
+      "medio": "stiripesurse.ro",
+      "valor": {
+       "max": 10,
+       "min": 2
+      }
+     },
+     {
+      "campo": "drones.numero",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
        "valor": "2026-09-19T09:45Z"
       },
       "fiabilidad": "C",
@@ -105243,6 +105426,18 @@
        "max": 10,
        "min": 2
       }
+     },
+     {
+      "campo": "lugar.localidad",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-19T08:15Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-f2a63c8c9de92947",
+      "medio": "mediafax.ro",
+      "valor": "Căplani"
      },
      {
       "campo": "lugar.localidad",
@@ -105264,9 +105459,33 @@
        "valor": "2026-09-19T07:45Z"
       },
       "fiabilidad": "C",
+      "fuente_id": "gdelt-a189991626dd32d6",
+      "medio": "stiripesurse.ro",
+      "valor": "MD"
+     },
+     {
+      "campo": "lugar.pais",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-19T07:45Z"
+      },
+      "fiabilidad": "C",
       "fuente_id": "gdelt-a267cb087b34e415",
       "medio": "news.yam.md",
       "valor": "MD"
+     },
+     {
+      "campo": "presencia_dron",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-19T07:45Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-a189991626dd32d6",
+      "medio": "stiripesurse.ro",
+      "valor": "no_confirmada"
      },
      {
       "campo": "presencia_dron",
@@ -105299,6 +105518,21 @@
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
+       "valor": "2026-09-19T08:15Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-f2a63c8c9de92947",
+      "medio": "mediafax.ro",
+      "valor": {
+       "precision": "minuto",
+       "valor": "2026-09-19T04:00Z"
+      }
+     },
+     {
+      "campo": "tiempo.inicio",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
        "valor": "2026-09-19T09:45Z"
       },
       "fiabilidad": "C",
@@ -105308,6 +105542,18 @@
        "precision": "minuto",
        "valor": "2026-09-19T02:00Z"
       }
+     },
+     {
+      "campo": "tipo",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-19T07:45Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-a189991626dd32d6",
+      "medio": "stiripesurse.ro",
+      "valor": "incursion"
      },
      {
       "campo": "tipo",
@@ -105330,7 +105576,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-30T21:56Z"
+      "valor": "2026-10-02T09:17Z"
      }
     },
     "drones": {
@@ -105353,6 +105599,20 @@
      ]
     },
     "fuentes": [
+     {
+      "credibilidad": 3,
+      "enlace": "https://stiripesurse.ro/alerta-in-republica-moldova-un-roi-de-drone-a-survolat-tara-una-a-cazut-si-a-produs-o-explozie_3921382",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-19T07:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Una a căzut și a produs o explozie.",
+      "id": "gdelt-a189991626dd32d6",
+      "idioma": "ro",
+      "medio": "stiripesurse.ro",
+      "replicas": 2
+     },
      {
       "credibilidad": 3,
       "enlace": "https://news.yam.md/ro/story/65431571",
@@ -105383,6 +105643,48 @@
      },
      {
       "credibilidad": 3,
+      "enlace": "https://mediafax.ro/externe/mai-multe-drone-au-survolat-republica-moldova-una-a-cazut-si-a-luat-foc-23810113",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-19T08:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "În jurul orei 4.00, patrulele Poliției de Frontieră din Republica Moldova au observat mai multe aparate de zbor necunoscute.",
+      "id": "gdelt-f2a63c8c9de92947",
+      "idioma": "ro",
+      "medio": "mediafax.ro",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://mediafax.ro/externe/mai-multe-drone-au-survolat-republica-moldova-una-a-cazut-si-a-luat-foc-23810113",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-19T08:15Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "patrulele Poliției de Frontieră din Republica Moldova au observat mai multe aparate de zbor necunoscute în zona localității Căplani.",
+      "id": "gdelt-f2a63c8c9de92947-declaracion-1",
+      "idioma": "ro",
+      "medio": "Poliția de Frontieră (declaración oficial citada en mediafax.ro)",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://jurnalul.ro/stiri/externe/drone-necunoscute-survol-republica-moldova-1044649.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-19T08:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Drone necunoscute au survolat Republica Moldova. Una s-a prăbușit și a luat foc lângă frontieră",
+      "id": "gdelt-63bde95e52f56611",
+      "idioma": "ro",
+      "medio": "jurnalul.ro",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
       "enlace": "https://adevarul.ro/stiri-externe/europa/explozie-la-granita-republicii-moldova-mai-multe-2558545.html",
       "fecha": {
        "precision": "aproximada",
@@ -105407,6 +105709,20 @@
       "id": "gdelt-94d68ab992385628",
       "idioma": "ro",
       "medio": "news.yam.md",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://hotnews.ro/mai-multe-drone-au-survolat-sambata-dimineata-spatiul-aerian-al-republicii-moldova-2353148",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-19T13:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Mai multe drone au survolat sâmbătă dimineaţă spaţiul aerian al Republicii Moldova",
+      "id": "gdelt-f768d7c2a1e5c0ee",
+      "idioma": "ro",
+      "medio": "hotnews.ro",
       "replicas": 0
      },
      {
@@ -105448,7 +105764,7 @@
      "categoria": "otra",
      "nombre": "Căplani"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "respuesta": {
      "medidas": [
       "patrulla"
@@ -111163,6 +111479,21 @@
    "properties": {
     "afirmaciones_publicas": [
      {
+      "campo": "drones.numero",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-02T06:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-1238a5a4d379ebe0",
+      "medio": "stiripesurse.ro",
+      "valor": {
+       "max": 1,
+       "min": 1
+      }
+     },
+     {
       "campo": "lugar.localidad",
       "credibilidad": 3,
       "fecha": {
@@ -111223,7 +111554,7 @@
       "fiabilidad": "C",
       "fuente_id": "gdelt-1238a5a4d379ebe0",
       "medio": "stiripesurse.ro",
-      "valor": "sobrevuelo"
+      "valor": "incursion"
      }
     ],
     "consecuencias": {
@@ -111234,11 +111565,14 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-02T07:17Z"
+      "valor": "2026-10-02T09:17Z"
      }
     },
     "drones": {
-     "numero": "desconocido"
+     "numero": {
+      "max": 1,
+      "min": 1
+     }
     },
     "estado": {
      "actual": "notificado",
@@ -111283,6 +111617,20 @@
       "replicas": 0
      },
      {
+      "credibilidad": 3,
+      "enlace": "https://actualitateaprahoveana.ro/actual/stiri-nationale/76169-incendiu-in-zona-localitatii-plauru-vineri-dimineata-dupa-posibila-prabusire-a-unei-drone-mapn-radarele-nu-au-raportat-nicio-patrundere-neautorizata-in-spatiul-aerian-national",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-02T08:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Incendiu în zona localității Plauru, vineri dimineață, după posibila prăbușire a unei drone. MApN: Radarele nu au raportat nicio pătrundere neautorizată în spațiul aerian național",
+      "id": "gdelt-60900cd0d3799a18",
+      "idioma": "ro",
+      "medio": "actualitateaprahoveana.ro",
+      "replicas": 0
+     },
+     {
       "credibilidad": 1,
       "enlace": "https://maszol.ro/belfold/Lezuhant-egy-dron-es-tuz-utott-ki-A-radarok-nem-jeleztek-legtersertest",
       "fecha": {
@@ -111290,7 +111638,7 @@
        "valor": "2026-10-02T07:00Z"
       },
       "fiabilidad": "B",
-      "frase_origen": "A radarrendszerek az éjszaka folyamán nem észleltek jogosulatlan behatolást a nemzeti légtérbe.",
+      "frase_origen": "A hatóságok a területet lezárták, és kiemelték: a radarrendszerek az éjszaka folyamán nem észleltek jogosulatlan behatolást a nemzeti légtérbe.",
       "id": "gdelt-0adee471b07ff5ff-declaracion-1",
       "idioma": "hu",
       "medio": "Ministry of National Defence (declaración oficial citada en maszol.ro)",
@@ -111311,13 +111659,205 @@
     "tiempo": {
      "inicio": {
       "precision": "hora",
-      "valor": "2026-10-02T03:00Z"
+      "valor": "2026-10-01T03:00Z"
      }
     },
     "tipo": "incursion",
     "titulo": {
      "en": "Drone crashes in Plauru, Tulcea, following Russian attacks on Ukraine",
      "es": "Dron cae en Plauru, Tulcea, tras ataques rusos contra Ucrania"
+    }
+   },
+   "type": "Feature"
+  },
+  {
+   "geometry": {
+    "coordinates": [
+     9.73322,
+     52.37052
+    ],
+    "type": "Point"
+   },
+   "id": "EODI-2026-00276",
+   "properties": {
+    "afirmaciones_publicas": [
+     {
+      "campo": "lugar.localidad",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-15T11:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-7e35f706499bef3f",
+      "medio": "mopo.de",
+      "valor": "Hannover"
+     },
+     {
+      "campo": "lugar.pais",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-15T11:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-7e35f706499bef3f",
+      "medio": "mopo.de",
+      "valor": "DE"
+     },
+     {
+      "campo": "presencia_dron",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-15T11:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-7e35f706499bef3f",
+      "medio": "mopo.de",
+      "valor": "no_confirmada"
+     },
+     {
+      "campo": "respuesta.medidas",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-15T11:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-7e35f706499bef3f",
+      "medio": "mopo.de",
+      "valor": [
+       "patrulla"
+      ]
+     },
+     {
+      "campo": "tiempo.inicio",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-15T13:45Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-672ceb28189706b1",
+      "medio": "ndr.de",
+      "valor": {
+       "precision": "dia",
+       "valor": "2026-09-15T00:00Z"
+      }
+     }
+    ],
+    "consecuencias": {
+     "cierre": {
+      "valor": "desconocido"
+     }
+    },
+    "control": {
+     "ultima_actualizacion": {
+      "precision": "minuto",
+      "valor": "2026-10-02T09:17Z"
+     }
+    },
+    "drones": {
+     "numero": "desconocido"
+    },
+    "estado": {
+     "actual": "notificado",
+     "historial": [
+      {
+       "estado": "notificado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2026-09-15T11:30Z"
+       },
+       "fuente_id": "gdelt-7e35f706499bef3f"
+      }
+     ]
+    },
+    "fuentes": [
+     {
+      "credibilidad": 3,
+      "enlace": "https://mopo.de/im-norden/niedersachsen/drohnenteile-nahe-bundeswehr-fliegerhorst-gefunden-polizei-im-grosseinsatz/4989760",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-15T11:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Teile einer vermutlich abgestürzten Drohne werden nahe dem Steinhuder Meer gefunden",
+      "id": "gdelt-7e35f706499bef3f",
+      "idioma": "de",
+      "medio": "mopo.de",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://nwzonline.de/blaulicht-thema/drohnenfund-am-steinhuder-meer-polizei-sucht-gelaende-ab_a_4,3,1809232658.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-15T12:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Drohnenfund am Steinhuder Meer: Polizei sucht Gelände ab",
+      "id": "gdelt-b91f0aaca22b4d2d",
+      "idioma": "de",
+      "medio": "nwzonline.de",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://ndr.de/nachrichten/niedersachsen/hannover_weser-leinegebiet/drohne-stuerzt-nahe-steinhuder-meer-ab-grosseinsatz-der-polizei,drohne-458.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-15T13:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Einsatzkräfte der Polizei sind seit Dienstag östlich des Steinhuder Meeres im Einsatz",
+      "id": "gdelt-672ceb28189706b1",
+      "idioma": "de",
+      "medio": "ndr.de",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://web.de/magazine/regio/niedersachsen/drohnenteile-nahe-steinhuder-meer-entdeckt-polizei-grosseinsatz-42727028",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-15T16:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Drohnenteile nahe Steinhuder Meer entdeckt – Polizei im Großeinsatz",
+      "id": "gdelt-aebeb5d18f169dd4",
+      "idioma": "de",
+      "medio": "web.de",
+      "replicas": 0
+     }
+    ],
+    "id": "EODI-2026-00276",
+    "lugar": {
+     "localidad": "Hannover",
+     "pais": "DE",
+     "radio_km": 10.0
+    },
+    "objetivo": {
+     "categoria": "otra",
+     "nombre": "Hannover"
+    },
+    "presencia_dron": "no_confirmada",
+    "respuesta": {
+     "medidas": [
+      "patrulla"
+     ]
+    },
+    "tiempo": {
+     "inicio": {
+      "precision": "dia",
+      "valor": "2026-09-15T00:00Z"
+     }
+    },
+    "tipo": "sobrevuelo",
+    "titulo": {
+     "en": "Drone parts found near Steinhuder Meer in Germany",
+     "es": "Restos de dron hallados cerca del Steinhuder Meer en Alemania"
     }
    },
    "type": "Feature"

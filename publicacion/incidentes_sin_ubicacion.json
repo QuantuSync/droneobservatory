@@ -33920,7 +33920,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-01T19:17Z"
+     "valor": "2026-10-02T09:17Z"
     }
    },
    "drones": {
@@ -34157,21 +34157,6 @@
      "credibilidad": 3,
      "fecha": {
       "precision": "aproximada",
-      "valor": "2026-10-01T09:45Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-1730b7a4e5e63c92",
-     "medio": "stiripesurse.ro",
-     "valor": {
-      "max": 3,
-      "min": 3
-     }
-    },
-    {
-     "campo": "drones.numero",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
       "valor": "2026-10-02T04:15Z"
      },
      "fiabilidad": "C",
@@ -34187,36 +34172,12 @@
      "credibilidad": 3,
      "fecha": {
       "precision": "aproximada",
-      "valor": "2026-10-01T09:45Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-1730b7a4e5e63c92",
-     "medio": "stiripesurse.ro",
-     "valor": "MD"
-    },
-    {
-     "campo": "lugar.pais",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
       "valor": "2026-10-02T04:15Z"
      },
      "fiabilidad": "C",
      "fuente_id": "gdelt-c47a60dff21b41ef",
      "medio": "adevarul.ro",
      "valor": "MD"
-    },
-    {
-     "campo": "presencia_dron",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-01T09:45Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-1730b7a4e5e63c92",
-     "medio": "stiripesurse.ro",
-     "valor": "confirmada"
     },
     {
      "campo": "presencia_dron",
@@ -34250,24 +34211,12 @@
      "credibilidad": 3,
      "fecha": {
       "precision": "aproximada",
-      "valor": "2026-10-01T09:45Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-1730b7a4e5e63c92",
-     "medio": "stiripesurse.ro",
-     "valor": "incursion"
-    },
-    {
-     "campo": "tipo",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
       "valor": "2026-10-02T04:15Z"
      },
      "fiabilidad": "C",
      "fuente_id": "gdelt-c47a60dff21b41ef",
      "medio": "adevarul.ro",
-     "valor": "incursion"
+     "valor": "sobrevuelo"
     }
    ],
    "consecuencias": {
@@ -34278,7 +34227,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-02T05:17Z"
+     "valor": "2026-10-02T09:17Z"
     }
    },
    "drones": {
@@ -34288,7 +34237,7 @@
     }
    },
    "estado": {
-    "actual": "confirmado",
+    "actual": "notificado",
     "historial": [
      {
       "estado": "notificado",
@@ -34297,102 +34246,10 @@
        "valor": "2026-10-02T04:15Z"
       },
       "fuente_id": "gdelt-c47a60dff21b41ef"
-     },
-     {
-      "estado": "confirmado",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-10-02T04:15Z"
-      },
-      "fuente_id": "gdelt-c47a60dff21b41ef-declaracion-1"
      }
     ]
    },
    "fuentes": [
-    {
-     "credibilidad": 3,
-     "enlace": "https://stiripesurse.ro/drone-rusesti-au-incalcat-spatiul-aerian-al-rapublicii-moldova-amabsadorul-rus-convocat-la-mae-de-la-chisinau_3924728",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-01T09:45Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "trei drone au încălcat miercuri spațiul aerian al țării, în contextul atacurilor rusești asupra Ucrainei",
-     "id": "gdelt-1730b7a4e5e63c92",
-     "idioma": "ro",
-     "medio": "stiripesurse.ro",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://stiripesurse.ro/drone-rusesti-au-incalcat-spatiul-aerian-al-rapublicii-moldova-amabsadorul-rus-convocat-la-mae-de-la-chisinau_3924728",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-01T09:45Z"
-     },
-     "fiabilidad": "B",
-     "frase_origen": "condamnă ferm încălcarea spațiului aerian al Republicii Moldova de către trei drone, miercuri",
-     "id": "gdelt-1730b7a4e5e63c92-declaracion-1",
-     "idioma": "ro",
-     "medio": "Ministerul Afacerilor Externe al Republicii Moldova (declaración oficial citada en stiripesurse.ro)",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://stiripesurse.ro/drone-rusesti-au-incalcat-spatiul-aerian-al-rapublicii-moldova-amabsadorul-rus-convocat-la-mae-de-la-chisinau_3924728",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-01T09:45Z"
-     },
-     "fiabilidad": "B",
-     "frase_origen": "Două dintre drone au căzut și au explodat pe teritoriul Republicii Moldova",
-     "id": "gdelt-1730b7a4e5e63c92-declaracion-2",
-     "idioma": "ro",
-     "medio": "Ministerul Afacerilor Externe al Republicii Moldova (declaración oficial citada en stiripesurse.ro)",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://news.yam.md/ro/story/69526551",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-01T10:00Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "trei drone, miercuri, 30 septembrie",
-     "id": "gdelt-52b5094f832874fd",
-     "idioma": "ro",
-     "medio": "news.yam.md",
-     "replicas": 2
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://protv.md/actualitate/ambasadorul-rusiei-la-chisinau-oleg-ozerov-convocat-la-mae-dupa-ce-trei-drone-au-incalcat-spatiul-aerian-al-moldovei-iar-doua-dintre-ele-au-explodat---2768562.html",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-01T12:30Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "Ambasadorul Rusiei la Chișinău, Oleg Ozerov - convocat la MAE după ce trei drone au încălcat spațiul aerian al Moldovei, iar două dintre ele au",
-     "id": "gdelt-5299fd55f7c8e994",
-     "idioma": "ro",
-     "medio": "protv.md",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://dailybusiness.ro/actualitate/mae-din-republica-moldova-il-convoaca-pe-ambasadorul-rusiei-dupa-ce-mai-multe-drone-au-incalcat-spatiul-aerian-al-tarii-552251",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-01T14:15Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "MAE din Republica Moldova îl convoacă pe ambasadorul Rusiei, după ce mai multe drone au încălcat spațiul aerian al țării",
-     "id": "gdelt-a1fabe5e2f7443b6",
-     "idioma": "ro",
-     "medio": "dailybusiness.ro",
-     "replicas": 0
-    },
     {
      "credibilidad": 3,
      "enlace": "https://adevarul.ro/stiri-externe/republica-moldova/ambasadorul-rusiei-la-chisinau-reactioneaza-la-2561255.html",
@@ -34401,7 +34258,7 @@
       "valor": "2026-10-02T04:15Z"
      },
      "fiabilidad": "C",
-     "frase_origen": "Suntem sătui. Luaţi-le pe cele americane, sunt la fel",
+     "frase_origen": "Autoritățile moldovene au condamnat ferm incidentul, pe care îl consideră o încălcare gravă a suveranității și un risc direct pentru populație, subliniind totodată că războiul",
      "id": "gdelt-c47a60dff21b41ef",
      "idioma": "ro",
      "medio": "adevarul.ro",
@@ -34409,16 +34266,16 @@
     },
     {
      "credibilidad": 3,
-     "enlace": "https://adevarul.ro/stiri-externe/republica-moldova/ambasadorul-rusiei-la-chisinau-reactioneaza-la-2561255.html",
+     "enlace": "https://stirileprotv.ro/stiri/international/ambasadorul-agreat-al-rusiei-la-chisinau-a-negat-ca-dronele-care-survoleaza-moldova-ar-fi-rusesti-toate-seamana.html",
      "fecha": {
       "precision": "aproximada",
-      "valor": "2026-10-02T04:15Z"
+      "valor": "2026-10-02T09:00Z"
      },
-     "fiabilidad": "B",
-     "frase_origen": "Autoritățile moldovene au condamnat ferm incidentul, pe care îl consideră o încălcare gravă",
-     "id": "gdelt-c47a60dff21b41ef-declaracion-1",
+     "fiabilidad": "C",
+     "frase_origen": "Ambasadorul agreat al Rusiei la Chișinău a negat că dronele care survolează Moldova ar fi rusești: „Toate seamănă\"",
+     "id": "gdelt-98e7d5be9e056c7b",
      "idioma": "ro",
-     "medio": "Ministerul Afacerilor Externe al Republicii Moldova (declaración oficial citada en adevarul.ro)",
+     "medio": "stirileprotv.ro",
      "replicas": 0
     }
    ],
@@ -34427,17 +34284,17 @@
     "nivel": "pais",
     "pais": "MD"
    },
-   "presencia_dron": "confirmada",
+   "presencia_dron": "no_confirmada",
    "tiempo": {
     "inicio": {
      "precision": "dia",
      "valor": "2026-10-01T00:00Z"
     }
    },
-   "tipo": "incursion",
+   "tipo": "sobrevuelo",
    "titulo": {
-    "en": "Three Russian drones violate Moldova's airspace",
-    "es": "Tres drones rusos violan el espacio aéreo de Moldavia"
+    "en": "Three drones violate Moldova's airspace",
+    "es": "Tres drones violan el espacio aéreo de Moldavia"
    }
   },
   {
@@ -34557,6 +34414,226 @@
    "titulo": {
     "en": "Drone sightings over Denmark in 2025",
     "es": "Avistamientos de drones sobre Dinamarca en 2025"
+   }
+  },
+  {
+   "afirmaciones_publicas": [
+    {
+     "campo": "drones.numero",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-03-25T10:15Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-eac766b7f3a833ff",
+     "medio": "dnoticias.pt",
+     "valor": {
+      "max": 1,
+      "min": 1
+     }
+    },
+    {
+     "campo": "lugar.pais",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-03-25T10:15Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-eac766b7f3a833ff",
+     "medio": "dnoticias.pt",
+     "valor": "EE"
+    },
+    {
+     "campo": "objetivo.categoria",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-03-25T11:00Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-dc4e6bc6fcbcbacc",
+     "medio": "infobae.com",
+     "valor": "energia"
+    },
+    {
+     "campo": "objetivo.nombre",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-03-25T11:00Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-dc4e6bc6fcbcbacc",
+     "medio": "infobae.com",
+     "valor": "Central Eléctrica de Auvere"
+    },
+    {
+     "campo": "tiempo.inicio",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-03-25T11:00Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-dc4e6bc6fcbcbacc",
+     "medio": "infobae.com",
+     "valor": {
+      "precision": "minuto",
+      "valor": "2026-03-25T01:43Z"
+     }
+    },
+    {
+     "campo": "tipo",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-03-25T10:15Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-eac766b7f3a833ff",
+     "medio": "dnoticias.pt",
+     "valor": "incursion"
+    }
+   ],
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T09:17Z"
+    }
+   },
+   "drones": {
+    "numero": {
+     "max": 1,
+     "min": 1
+    }
+   },
+   "estado": {
+    "actual": "notificado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-03-25T10:15Z"
+      },
+      "fuente_id": "gdelt-eac766b7f3a833ff"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://dnoticias.pt/2026/3/25/486050-drone-atingiu-uma-central-eletrica-na-estonia-sem-causar-vitimas",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-03-25T10:15Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "o aparelho aéreo não tripulado (drone) entrou no espaço aéreo da Estónia vindo da Rússia",
+     "id": "gdelt-eac766b7f3a833ff",
+     "idioma": "pt",
+     "medio": "dnoticias.pt",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://europapress.es/internacional/noticia-estonia-denuncia-incidente-dron-central-electrica-cerca-frontera-rusia-20260325112516.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-03-25T10:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Estonia denuncia un incidente con un dron en una central eléctrica cerca de la frontera con Rusia",
+     "id": "gdelt-8e5ed774dd12a24e",
+     "idioma": "es",
+     "medio": "europapress.es",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://infobae.com/espana/2026/03/25/estonia-investiga-el-impacto-de-un-dron-ruso-en-una-central-electrica-y-convoca-una-reunion-de-emergencia-pero-adelanta-que-no-era-el-objetivo-y-que-no-se-han-producido-danos",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-03-25T11:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Durante la noche del 25 de marzo a las 3.43 de la madrugada, un dron impactó contra la chimenea",
+     "id": "gdelt-dc4e6bc6fcbcbacc",
+     "idioma": "es",
+     "medio": "infobae.com",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://vilaweb.cat/noticies/estonia-denuncia-un-incident-amb-un-dron-en-una-central-electrica-prop-de-la-frontera-amb-russia",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-03-25T11:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Estònia denuncia un incident amb un dron en una central elèctrica prop de la frontera amb Rússia",
+     "id": "gdelt-1e21fc086b5e847c",
+     "idioma": "ca",
+     "medio": "vilaweb.cat",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://es.euronews.com/2026/03/25/un-dron-ruso-ataca-la-chimenea-de-una-central-electrica-en-estonia",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-03-25T11:15Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Un dron ruso ataca la chimenea de una central eléctrica en Estonia",
+     "id": "gdelt-9303147562e5a71e",
+     "idioma": "es",
+     "medio": "euronews.com",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://elmundo.es/internacional/2026/03/25/69c3b0c4fc6c837b278b45b4.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-03-25T12:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Un dron procedente del espacio aéreo ruso choca contra la chimenea de una central eléctrica de Estonia",
+     "id": "gdelt-f299beed486a30f8",
+     "idioma": "es",
+     "medio": "elmundo.es",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-2026-00274",
+   "lugar": {
+    "nivel": "instalacion",
+    "pais": "EE",
+    "region": "Ida-Viru"
+   },
+   "objetivo": {
+    "categoria": "energia",
+    "nombre": "Central Eléctrica de Auvere"
+   },
+   "presencia_dron": "no_confirmada",
+   "tiempo": {
+    "inicio": {
+     "precision": "minuto",
+     "valor": "2026-03-25T01:43Z"
+    }
+   },
+   "tipo": "incursion",
+   "titulo": {
+    "en": "Drone from Russia impacts power plant in Estonia",
+    "es": "Dron procedente de Rusia impacta contra central eléctrica en Estonia"
    }
   }
  ]
