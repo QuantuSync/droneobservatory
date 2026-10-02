@@ -88042,6 +88042,21 @@
     "afirmaciones_publicas": [
      {
       "campo": "consecuencias.cierre.minutos",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2026-09-23T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EDDB-2026-09-23-EODI-2026-00116",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 53,
+       "min": 53
+      }
+     },
+     {
+      "campo": "consecuencias.cierre.minutos",
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
@@ -88057,6 +88072,18 @@
      },
      {
       "campo": "consecuencias.cierre.valor",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2026-09-23T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EDDB-2026-09-23-EODI-2026-00116",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": "si"
+     },
+     {
+      "campo": "consecuencias.cierre.valor",
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
@@ -88066,6 +88093,21 @@
       "fuente_id": "gdelt-52c4a75d544be1d1",
       "medio": "unternehmen-heute.de",
       "valor": "si"
+     },
+     {
+      "campo": "consecuencias.vuelos_desviados",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2026-09-23T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EDDB-2026-09-23-EODI-2026-00116",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 10,
+       "min": 10
+      }
      },
      {
       "campo": "lugar.localidad",
@@ -88679,6 +88721,20 @@
       "idioma": "es",
       "medio": "calibre800.com",
       "replicas": 0
+     },
+     {
+      "credibilidad": 2,
+      "enlace": "https://github.com/adsblol/globe_history_2026/releases/tag/v2026.09.23-planes-readsb-prod-0",
+      "fecha": {
+       "precision": "dia",
+       "valor": "2026-09-23T00:00Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Cierre medido en EDDB: 18:14–19:07 UTC, 53 minutos, 10 desvíos y 6 esperas.",
+      "id": "adsblol-EDDB-2026-09-23-EODI-2026-00116",
+      "idioma": "es",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "replicas": 0
      }
     ],
     "id": "EODI-2026-00116",
@@ -88708,6 +88764,27 @@
     "titulo": {
      "en": "Drone sighting closes Berlin airport",
      "es": "Avistamiento de dron cierra el aeropuerto de Berlín"
+    },
+    "trafico_aereo": {
+     "cierre": {
+      "aeropuerto": "EDDB",
+      "difiere_de_declarado": false,
+      "duracion_min": 53,
+      "fin": {
+       "precision": "minuto",
+       "valor": "2026-09-23T19:07Z"
+      },
+      "inicio": {
+       "precision": "minuto",
+       "valor": "2026-09-23T18:14Z"
+      },
+      "resultado": "cierre_medido",
+      "vuelos_desviados": 10,
+      "vuelos_en_espera": 6
+     },
+     "datos": [
+      "https://github.com/adsblol/globe_history_2026/releases/tag/v2026.09.23-planes-readsb-prod-0"
+     ]
     }
    },
    "type": "Feature"

@@ -614253,6 +614253,410 @@
    "tipo": "impacto_guerra"
   },
   {
+   "ataque": "EODI-UA-2025-0584",
+   "categorias_objetivo": [
+    "industrial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T01:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-03-10T13:02Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/SamarOblast/58648",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-03-10T13:02Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "‼️В социальных сетях распространяется недостоверная информация о том, что причиной возгорания на складе в Новокуйбышевске стало попадание в здание БПЛА.",
+     "id": "SamarOblast-58648",
+     "idioma": "ru",
+     "medio": "Правительство Самарской области",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02734",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:518659",
+    "nivel": "localidad",
+    "nombre": "Новокуйбышевск",
+    "nombre_latino": "Novokuybyshevsk",
+    "punto": {
+     "lat": 53.09709,
+     "lon": 49.94001
+    },
+    "radio_km": 7.0
+   },
+   "region": "RU-SAM",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2025-0666",
+   "categorias_objetivo": [
+    "industrial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T01:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-04-05T02:56Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/SamarOblast/59230",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-04-05T02:56Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Беспилотники ВСУ сегодня рано утром атаковали промышленное предприятие в Чапаевске.",
+     "id": "SamarOblast-59230",
+     "idioma": "ru",
+     "medio": "Правительство Самарской области",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02735",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:569955",
+    "nivel": "localidad",
+    "nombre": "Чапаєвськ",
+    "nombre_latino": "Chapayevsk",
+    "punto": {
+     "lat": 52.9771,
+     "lon": 49.7086
+    },
+    "radio_km": 5.0
+   },
+   "region": "RU-SAM",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2025-0882",
+   "categorias_objetivo": [
+    "industrial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T01:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-06-14T01:56Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/SamarOblast/60826",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-06-14T01:56Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Уважаемые жители Самарской области, сегодня ночью была совершена попытка атаки БПЛА одного из промышленных предприятий Новокуйбышевска.",
+     "id": "SamarOblast-60826",
+     "idioma": "ru",
+     "medio": "Правительство Самарской области",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02736",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:518659",
+    "nivel": "localidad",
+    "nombre": "Новокуйбышевск",
+    "nombre_latino": "Novokuybyshevsk",
+    "punto": {
+     "lat": 53.09709,
+     "lon": 49.94001
+    },
+    "radio_km": 7.0
+   },
+   "region": "RU-SAM",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2025-1081",
+   "categorias_objetivo": [
+    "industrial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T01:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-08-02T03:36Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/SamarOblast/62168",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-08-02T03:36Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Сегодня утром вражеские БПЛА атаковали одно из промышленных предприятий в Новокуйбышевске.",
+     "id": "SamarOblast-62168",
+     "idioma": "ru",
+     "medio": "Правительство Самарской области",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02737",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:518659",
+    "nivel": "localidad",
+    "nombre": "Новокуйбышевск",
+    "nombre_latino": "Novokuybyshevsk",
+    "punto": {
+     "lat": 53.09709,
+     "lon": 49.94001
+    },
+    "radio_km": 7.0
+   },
+   "region": "RU-SAM",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2025-1081",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T01:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-08-02T04:53Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/SamarOblast/62169",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-08-02T04:53Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "В результате вражеской атаки в Куйбышевском районе Самары погиб пожилой мужчина.",
+     "id": "SamarOblast-62169",
+     "idioma": "ru",
+     "medio": "Правительство Самарской области",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02738",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:499099",
+    "nivel": "localidad",
+    "nombre": "Самара",
+    "nombre_latino": "Samara",
+    "punto": {
+     "lat": 53.20767,
+     "lon": 50.13553
+    },
+    "radio_km": 15.0
+   },
+   "region": "RU-SAM",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2025-1088",
+   "categorias_objetivo": [
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T01:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-08-04T11:24Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/SamarOblast/62205",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-08-04T11:24Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "В субботу из-за падения обломков беспилотника в Куйбышевском районе Самары загорелся дом, погиб пожилой мужчина.",
+     "id": "SamarOblast-62205",
+     "idioma": "ru",
+     "medio": "Правительство Самарской области",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02739",
+   "impacto": "restos",
+   "lugar": {
+    "id": "geonames:499099",
+    "nivel": "localidad",
+    "nombre": "Самара",
+    "nombre_latino": "Samara",
+    "punto": {
+     "lat": 53.20767,
+     "lon": 50.13553
+    },
+    "radio_km": 15.0
+   },
+   "region": "RU-SAM",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2025-1173",
+   "categorias_objetivo": [
+    "industrial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T01:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-08-24T04:15Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/SamarOblast/62721",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-08-24T04:15Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Сегодня вражеские БПЛА атаковали промышленное предприятие в Сызрани.",
+     "id": "SamarOblast-62721",
+     "idioma": "ru",
+     "medio": "Правительство Самарской области",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02740",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:484972",
+    "nivel": "localidad",
+    "nombre": "Сызрань",
+    "nombre_latino": "Syzran",
+    "punto": {
+     "lat": 53.1585,
+     "lon": 48.4681
+    },
+    "radio_km": 7.0
+   },
+   "region": "RU-SAM",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2025-1506",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T01:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fallecidos": {
+    "max": 2,
+    "min": 2
+   },
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-11-22T06:17Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/SamarOblast/64973",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-11-22T06:17Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "⚡️В Сызрани 2 человека погибли в результате падения БПЛА.",
+     "id": "SamarOblast-64973",
+     "idioma": "ru",
+     "medio": "Правительство Самарской области",
+     "replicas": 0
+    }
+   ],
+   "heridos": {
+    "max": 2,
+    "min": 2
+   },
+   "id": "EODI-IG-2025-02741",
+   "impacto": "restos",
+   "lugar": {
+    "id": "geonames:484972",
+    "nivel": "localidad",
+    "nombre": "Сызрань",
+    "nombre_latino": "Syzran",
+    "punto": {
+     "lat": 53.1585,
+     "lon": 48.4681
+    },
+    "radio_km": 7.0
+   },
+   "region": "RU-SAM",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
    "ataque": "EODI-UA-2026-0038",
    "categorias_objetivo": [],
    "control": {
@@ -785957,6 +786361,330 @@
     "radio_km": 5.0
    },
    "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0586",
+   "categorias_objetivo": [
+    "industrial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T01:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-03-30T06:42Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/SamarOblast/67161",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-03-30T06:42Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Сегодня рано утром вражеские БПЛА атаковали промышленное предприятие в Тольятти.",
+     "id": "SamarOblast-67161",
+     "idioma": "ru",
+     "medio": "Правительство Самарской области",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03455",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:482283",
+    "nivel": "localidad",
+    "nombre": "Тольятти",
+    "nombre_latino": "Tolyatti",
+    "punto": {
+     "lat": 53.5303,
+     "lon": 49.3461
+    },
+    "radio_km": 10.0
+   },
+   "region": "RU-SAM",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0602",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T01:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-04-04T03:25Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/SamarOblast/67234",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-04-04T03:25Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Сегодня ночью вражеские беспилотники атаковали Тольятти",
+     "id": "SamarOblast-67234",
+     "idioma": "ru",
+     "medio": "Правительство Самарской области",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03456",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:482283",
+    "nivel": "localidad",
+    "nombre": "Тольятти",
+    "nombre_latino": "Tolyatti",
+    "punto": {
+     "lat": 53.5303,
+     "lon": 49.3461
+    },
+    "radio_km": 10.0
+   },
+   "region": "RU-SAM",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0638",
+   "categorias_objetivo": [
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T01:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-04-18T06:10Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/SamarOblast/67346",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-04-18T06:10Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Зафиксировано падение беспилотника в непосредственной близости от родильного дома в Новокуйбышевске.",
+     "id": "SamarOblast-67346",
+     "idioma": "ru",
+     "medio": "Правительство Самарской области",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/SamarOblast/67347",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-04-18T09:35Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "ВСУ пытались нанести удар по родильному дому в Новокуйбышевске, в котором находились младенцы, роженицы, пациентки гинекологического отделения и персонал.",
+     "id": "SamarOblast-67347",
+     "idioma": "ru",
+     "medio": "Правительство Самарской области",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03457",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:518659",
+    "nivel": "localidad",
+    "nombre": "Новокуйбышевск",
+    "nombre_latino": "Novokuybyshevsk",
+    "punto": {
+     "lat": 53.09709,
+     "lon": 49.94001
+    },
+    "radio_km": 7.0
+   },
+   "region": "RU-SAM",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0648",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T01:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fallecidos": {
+    "max": 2,
+    "min": 2
+   },
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-04-22T07:14Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/SamarOblast/67384",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-04-22T07:14Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "В Сызрани после атаки вражеского дрона погибли двое: взрослая женщина и ребёнок.",
+     "id": "SamarOblast-67384",
+     "idioma": "ru",
+     "medio": "Правительство Самарской области",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03458",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:484972",
+    "nivel": "localidad",
+    "nombre": "Сызрань",
+    "nombre_latino": "Syzran",
+    "punto": {
+     "lat": 53.1585,
+     "lon": 48.4681
+    },
+    "radio_km": 7.0
+   },
+   "region": "RU-SAM",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0650",
+   "categorias_objetivo": [
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T01:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fallecidos": {
+    "max": 1,
+    "min": 1
+   },
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-04-23T03:48Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/SamarOblast/67388",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-04-23T03:48Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Обломки одного из дронов ВСУ попали на крышу многоквартирного дома в Самаре.",
+     "id": "SamarOblast-67388",
+     "idioma": "ru",
+     "medio": "Правительство Самарской области",
+     "replicas": 0
+    }
+   ],
+   "heridos": {
+    "max": 1,
+    "min": 1
+   },
+   "id": "EODI-IG-2026-03459",
+   "impacto": "restos",
+   "lugar": {
+    "id": "geonames:499099",
+    "nivel": "localidad",
+    "nombre": "Самара",
+    "nombre_latino": "Samara",
+    "punto": {
+     "lat": 53.20767,
+     "lon": 50.13553
+    },
+    "radio_km": 15.0
+   },
+   "region": "RU-SAM",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0651",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T01:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fallecidos": {
+    "max": 1,
+    "min": 1
+   },
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-04-23T11:15Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/SamarOblast/67398",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-04-23T11:15Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "К сожалению, в Новокуйбышевске в результате атаки погибла женщина.",
+     "id": "SamarOblast-67398",
+     "idioma": "ru",
+     "medio": "Правительство Самарской области",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03460",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:518659",
+    "nivel": "localidad",
+    "nombre": "Новокуйбышевск",
+    "nombre_latino": "Novokuybyshevsk",
+    "punto": {
+     "lat": 53.09709,
+     "lon": 49.94001
+    },
+    "radio_km": 7.0
+   },
+   "region": "RU-SAM",
    "reivindicacion_de_parte": true,
    "sentido": "UA_RU",
    "tipo": "impacto_guerra"
