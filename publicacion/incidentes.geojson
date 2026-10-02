@@ -80159,48 +80159,6 @@
    "properties": {
     "afirmaciones_publicas": [
      {
-      "campo": "consecuencias.cierre.minutos",
-      "credibilidad": 2,
-      "fecha": {
-       "precision": "dia",
-       "valor": "2026-09-11T00:00Z"
-      },
-      "fiabilidad": "B",
-      "fuente_id": "adsblol-EBBR-2026-09-11-EODI-2026-00094",
-      "medio": "Tráfico aéreo medido (adsb.lol)",
-      "valor": {
-       "max": 11,
-       "min": 11
-      }
-     },
-     {
-      "campo": "consecuencias.cierre.valor",
-      "credibilidad": 2,
-      "fecha": {
-       "precision": "dia",
-       "valor": "2026-09-11T00:00Z"
-      },
-      "fiabilidad": "B",
-      "fuente_id": "adsblol-EBBR-2026-09-11-EODI-2026-00094",
-      "medio": "Tráfico aéreo medido (adsb.lol)",
-      "valor": "si"
-     },
-     {
-      "campo": "consecuencias.vuelos_desviados",
-      "credibilidad": 2,
-      "fecha": {
-       "precision": "dia",
-       "valor": "2026-09-11T00:00Z"
-      },
-      "fiabilidad": "B",
-      "fuente_id": "adsblol-EBBR-2026-09-11-EODI-2026-00094",
-      "medio": "Tráfico aéreo medido (adsb.lol)",
-      "valor": {
-       "max": 2,
-       "min": 2
-      }
-     },
-     {
       "campo": "drones.numero",
       "credibilidad": 3,
       "fecha": {
@@ -80581,20 +80539,6 @@
       "idioma": "el",
       "medio": "Skeyes (declaración oficial citada en inewsgr.com)",
       "replicas": 0
-     },
-     {
-      "credibilidad": 2,
-      "enlace": "https://github.com/adsblol/globe_history_2026/releases/tag/v2026.09.11-planes-readsb-prod-0",
-      "fecha": {
-       "precision": "dia",
-       "valor": "2026-09-11T00:00Z"
-      },
-      "fiabilidad": "B",
-      "frase_origen": "Cierre medido en EBBR: 20:06–20:16 UTC, 11 minutos, 2 desvíos y 8 esperas.",
-      "id": "adsblol-EBBR-2026-09-11-EODI-2026-00094",
-      "idioma": "es",
-      "medio": "Tráfico aéreo medido (adsb.lol)",
-      "replicas": 0
      }
     ],
     "id": "EODI-2026-00094",
@@ -80619,28 +80563,6 @@
     "titulo": {
      "en": "Drones near Brussels Airport disrupt air traffic",
      "es": "Drones sobre el aeropuerto de Bruselas alteran el tráfico aéreo"
-    },
-    "trafico_aereo": {
-     "cierre": {
-      "aeropuerto": "EBBR",
-      "difiere_de_declarado": false,
-      "duracion_min": 11,
-      "fin": {
-       "precision": "minuto",
-       "valor": "2026-09-11T20:16Z"
-      },
-      "inicio": {
-       "precision": "minuto",
-       "valor": "2026-09-11T20:06Z"
-      },
-      "resultado": "cierre_medido",
-      "vuelos_desviados": 2,
-      "vuelos_en_espera": 8
-     },
-     "datos": [
-      "https://github.com/adsblol/globe_history_2026/releases/tag/v2026.09.11-planes-readsb-prod-0",
-      "https://github.com/adsblol/globe_history_2026/releases/tag/v2026.09.12-planes-readsb-prod-0"
-     ]
     }
    },
    "type": "Feature"

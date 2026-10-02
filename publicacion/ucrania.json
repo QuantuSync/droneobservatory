@@ -787912,6 +787912,667 @@
    "reivindicacion_de_parte": true,
    "sentido": "UA_RU",
    "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0182",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T08:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-07-06T05:01Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/odesaoda/10503",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-07-06T05:01Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "❗️Вночі ворог атакував Одесу ударними безпілотниками.",
+     "id": "odesaoda-10503",
+     "idioma": "uk",
+     "medio": "Одеська ОВА",
+     "replicas": 0
+    }
+   ],
+   "heridos": {
+    "max": 1,
+    "min": 1
+   },
+   "id": "EODI-IG-2026-03475",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA51100270010076757",
+    "nivel": "localidad",
+    "nombre": "Одеса",
+    "nombre_latino": "Odesa",
+    "punto": {
+     "lat": 46.4843,
+     "lon": 30.73229
+    },
+    "radio_km": 15.0
+   },
+   "region": "UA-51",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T08:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-07-10T11:12Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/odesaoda/10710",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-07-10T11:12Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Один із трагічних випадків стався поблизу Грибівки, де чоловік загинув унаслідок вибуху під час пірнання в морі.",
+     "id": "odesaoda-10710",
+     "idioma": "uk",
+     "medio": "Одеська ОВА",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03476",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA51100130030059925",
+    "nivel": "localidad",
+    "nombre": "Грибівка",
+    "nombre_latino": "Hrybivka",
+    "punto": {
+     "lat": 46.20851,
+     "lon": 30.56454
+    },
+    "radio_km": 1.5
+   },
+   "region": "UA-51",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T08:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-07-10T11:12Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/odesaoda/10710",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-07-10T11:12Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Також 23 червня внаслідок російської дронової атаки на пляжі «Відрада» загинула молода дівчина, а хлопець отримав поранення.",
+     "id": "odesaoda-10710",
+     "idioma": "uk",
+     "medio": "Одеська ОВА",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03477",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA51120030080023813",
+    "nivel": "localidad",
+    "nombre": "Відрада",
+    "nombre_latino": "Vidrada",
+    "punto": {
+     "lat": 47.87018,
+     "lon": 29.54842
+    },
+    "radio_km": 1.5
+   },
+   "region": "UA-51",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0208",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T08:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-08-01T08:55Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/odesaoda/11551",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-08-01T08:55Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "❗️Ворог атакував Одесу ударними безпілотниками.",
+     "id": "odesaoda-11551",
+     "idioma": "uk",
+     "medio": "Одеська ОВА",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03478",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA51100270010076757",
+    "nivel": "localidad",
+    "nombre": "Одеса",
+    "nombre_latino": "Odesa",
+    "punto": {
+     "lat": 46.4843,
+     "lon": 30.73229
+    },
+    "radio_km": 15.0
+   },
+   "region": "UA-51",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0219",
+   "categorias_objetivo": [
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T08:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-08-11T20:53Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/odesaoda/11919",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-08-11T20:53Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "❗️За попередніми даними, в Одесі ворожий дрон влучив у 5-поверх житлового будинку.",
+     "id": "odesaoda-11919",
+     "idioma": "uk",
+     "medio": "Одеська ОВА",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03479",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA51100270010076757",
+    "nivel": "localidad",
+    "nombre": "Одеса",
+    "nombre_latino": "Odesa",
+    "punto": {
+     "lat": 46.4843,
+     "lon": 30.73229
+    },
+    "radio_km": 15.0
+   },
+   "region": "UA-51",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0223",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T08:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-08-16T12:06Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/odesaoda/12130",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-08-16T12:06Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "❗️Ворог цинічно атакував реактивним безпілотником поштове відділення у торговельному центрі в передмісті Одеси.",
+     "id": "odesaoda-12130",
+     "idioma": "uk",
+     "medio": "Одеська ОВА",
+     "replicas": 0
+    }
+   ],
+   "heridos": {
+    "max": 2,
+    "min": 2
+   },
+   "id": "EODI-IG-2026-03480",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA51100270010076757",
+    "nivel": "localidad",
+    "nombre": "Одеса",
+    "nombre_latino": "Odesa",
+    "punto": {
+     "lat": 46.4843,
+     "lon": 30.73229
+    },
+    "radio_km": 15.0
+   },
+   "region": "UA-51",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0245",
+   "categorias_objetivo": [
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T08:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-09-03T08:05Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/odesaoda/12770",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-09-03T08:05Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "В Одесі на місці влучання дрона в житлову багатоповерхівку продовжують працювати необхідні служби.",
+     "id": "odesaoda-12770",
+     "idioma": "uk",
+     "medio": "Одеська ОВА",
+     "replicas": 0
+    }
+   ],
+   "heridos": {
+    "max": 17,
+    "min": 17
+   },
+   "id": "EODI-IG-2026-03481",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA51100270010076757",
+    "nivel": "localidad",
+    "nombre": "Одеса",
+    "nombre_latino": "Odesa",
+    "punto": {
+     "lat": 46.4843,
+     "lon": 30.73229
+    },
+    "radio_km": 15.0
+   },
+   "region": "UA-51",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0251",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T08:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fallecidos": {
+    "max": 2,
+    "min": 2
+   },
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-09-09T05:01Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/odesaoda/12909",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-09-09T05:01Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Сьогодні вночі ворожі безпілотники атакували міжнародний пункт пропуску для автосполучення «Старокозаче» на кордоні з Молдовою.",
+     "id": "odesaoda-12909",
+     "idioma": "uk",
+     "medio": "Одеська ОВА",
+     "replicas": 0
+    }
+   ],
+   "heridos": {
+    "max": 3,
+    "min": 3
+   },
+   "id": "EODI-IG-2026-03482",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA51040230010038726",
+    "nivel": "localidad",
+    "nombre": "Старокозаче",
+    "nombre_latino": "Starokozache",
+    "punto": {
+     "lat": 46.3376,
+     "lon": 29.98665
+    },
+    "radio_km": 1.5
+   },
+   "region": "UA-51",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T08:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fallecidos": {
+    "max": 1,
+    "min": 1
+   },
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-09-16T12:54Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/odesaoda/13219",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-09-16T12:54Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Ворог завдав удару по Одесі реактивним БпЛА.",
+     "id": "odesaoda-13219",
+     "idioma": "uk",
+     "medio": "Одеська ОВА",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03483",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA51100270010076757",
+    "nivel": "localidad",
+    "nombre": "Одеса",
+    "nombre_latino": "Odesa",
+    "punto": {
+     "lat": 46.4843,
+     "lon": 30.73229
+    },
+    "radio_km": 15.0
+   },
+   "region": "UA-51",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0261",
+   "categorias_objetivo": [
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T08:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-09-17T05:00Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/odesaoda/13237",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-09-17T05:00Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Один з російських безпілотників влучив у багатоповерховий житловий будинок в Одесі.",
+     "id": "odesaoda-13237",
+     "idioma": "uk",
+     "medio": "Одеська ОВА",
+     "replicas": 0
+    }
+   ],
+   "heridos": {
+    "max": 7,
+    "min": 7
+   },
+   "id": "EODI-IG-2026-03484",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA51100270010076757",
+    "nivel": "localidad",
+    "nombre": "Одеса",
+    "nombre_latino": "Odesa",
+    "punto": {
+     "lat": 46.4843,
+     "lon": 30.73229
+    },
+    "radio_km": 15.0
+   },
+   "region": "UA-51",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T08:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-09-18T13:24Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/odesaoda/13326",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-09-18T13:24Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "❗️Ворог атакував центр Одеси.",
+     "id": "odesaoda-13326",
+     "idioma": "uk",
+     "medio": "Одеська ОВА",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03485",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA51100270010076757",
+    "nivel": "localidad",
+    "nombre": "Одеса",
+    "nombre_latino": "Odesa",
+    "punto": {
+     "lat": 46.4843,
+     "lon": 30.73229
+    },
+    "radio_km": 15.0
+   },
+   "region": "UA-51",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0270",
+   "categorias_objetivo": [
+    "puerto"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T08:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fallecidos": {
+    "max": 1,
+    "min": 1
+   },
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-09-25T08:49Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/odesaoda/13544",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-09-25T08:49Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Одна людина загинула в Одесі через повторний удар по поштовому терміналу.",
+     "id": "odesaoda-13544",
+     "idioma": "uk",
+     "medio": "Одеська ОВА",
+     "replicas": 0
+    }
+   ],
+   "heridos": {
+    "max": 7,
+    "min": 7
+   },
+   "id": "EODI-IG-2026-03486",
+   "impacto": "impacto",
+   "lugar": {
+    "categoria": "puerto",
+    "id": "osm:way/743275038",
+    "localidad": "Одеса",
+    "nivel": "instalacion",
+    "nombre": "Євротермінал",
+    "nombre_latino": "Euroterminal",
+    "punto": {
+     "lat": 46.51193,
+     "lon": 30.69775
+    },
+    "radio_km": 3.0
+   },
+   "region": "UA-51",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-1021",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T08:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fallecidos": {
+    "max": 1,
+    "min": 1
+   },
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-10-02T07:24Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/VA_Kyiv/21373",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-10-02T07:24Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "У Києві декілька разів «шахедами» вдарили по Південному мосту.",
+     "id": "VA_Kyiv-21373",
+     "idioma": "uk",
+     "medio": "Київська міська військова адміністрація",
+     "replicas": 0
+    }
+   ],
+   "heridos": {
+    "max": 4,
+    "min": 4
+   },
+   "id": "EODI-IG-2026-03487",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA80000000000093317",
+    "nivel": "localidad",
+    "nombre": "Київ",
+    "nombre_latino": "Kyiv",
+    "punto": {
+     "lat": 50.45003,
+     "lon": 30.52414
+    },
+    "radio_km": 15.0
+   },
+   "region": "UA-30",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
   }
  ]
 }
