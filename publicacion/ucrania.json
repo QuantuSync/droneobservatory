@@ -615105,6 +615105,55 @@
    "tipo": "impacto_guerra"
   },
   {
+   "ataque": "EODI-UA-2025-0023",
+   "categorias_objetivo": [
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T17:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-01-24T19:54Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/khmelnytskaODA/3789",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-01-24T19:54Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Сьогоднішні влучання «шахедів» у будинки в Броварах та у Глевасі – це дрони, які вироблені вже в Росії.",
+     "id": "khmelnytskaODA-3789",
+     "idioma": "uk",
+     "medio": "Хмельницька ОВА",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02746",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA68020130020031177",
+    "nivel": "localidad",
+    "nombre": "Броварі",
+    "nombre_latino": "Brovari",
+    "punto": {
+     "lat": 48.70018,
+     "lon": 26.86096
+    },
+    "radio_km": 1.5
+   },
+   "region": "UA-68",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
    "ataque": "EODI-UA-2026-0038",
    "categorias_objetivo": [],
    "control": {
@@ -788713,6 +788762,58 @@
     "radio_km": 1.5
    },
    "region": "UA-63",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0256",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T17:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "dia": "2026-09-13",
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-09-14T08:24Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/khmelnytskaODA/11447",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-09-14T08:24Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Внаслідок атаки відбулося падіння уламків та загоряння на території одного з ринків у Хмельницькому.",
+     "id": "khmelnytskaODA-11447",
+     "idioma": "uk",
+     "medio": "Хмельницька ОВА",
+     "replicas": 0
+    }
+   ],
+   "heridos": {
+    "max": 4,
+    "min": 4
+   },
+   "id": "EODI-IG-2026-03490",
+   "impacto": "restos",
+   "lugar": {
+    "id": "katotth:UA68040470010096613",
+    "nivel": "localidad",
+    "nombre": "Хмельницький",
+    "nombre_latino": "Khmelnytskyi",
+    "punto": {
+     "lat": 49.41964,
+     "lon": 26.97938
+    },
+    "radio_km": 7.0
+   },
+   "region": "UA-68",
    "sentido": "RU_UA",
    "tipo": "impacto_guerra"
   }

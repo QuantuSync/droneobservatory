@@ -152415,18 +152415,6 @@
       }
      },
      {
-      "campo": "lugar.localidad",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-10-02T14:00Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-67a73688bbfa7370",
-      "medio": "blic.rs",
-      "valor": "Leipzig"
-     },
-     {
       "campo": "lugar.pais",
       "credibilidad": 3,
       "fecha": {
@@ -152455,12 +152443,12 @@
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
-       "valor": "2026-10-02T14:00Z"
+       "valor": "2026-10-02T15:30Z"
       },
       "fiabilidad": "C",
-      "fuente_id": "gdelt-67a73688bbfa7370",
-      "medio": "blic.rs",
-      "valor": "aerodrom u Lajpcigu"
+      "fuente_id": "gdelt-5fe1ddb8adaf65d8",
+      "medio": "lifo.gr",
+      "valor": "Leipzig/Halle"
      },
      {
       "campo": "presencia_dron",
@@ -152484,7 +152472,7 @@
       "fiabilidad": "C",
       "fuente_id": "gdelt-67a73688bbfa7370",
       "medio": "blic.rs",
-      "valor": "interrupcion_aeroportuaria"
+      "valor": "incursion"
      }
     ],
     "consecuencias": {
@@ -152495,7 +152483,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-02T16:17Z"
+      "valor": "2026-10-02T17:17Z"
      }
     },
     "drones": {
@@ -152554,7 +152542,7 @@
        "valor": "2026-10-02T15:30Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "Λειψία: Ρώσος μοτοσικλετιστής ο «εγκέφαλος» της σχεδιαζόμενης επίθεσης με drones στο αεροδρόμιο",
+      "frase_origen": "αεροδρόμιο Λειψίας/Χάλλης της Γερμανίας",
       "id": "gdelt-5fe1ddb8adaf65d8",
       "idioma": "el",
       "medio": "lifo.gr",
@@ -152573,11 +152561,24 @@
       "idioma": "fr",
       "medio": "lexpress.fr",
       "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://informer.rs/planeta/vesti/1156596/ruski-motociklista-dron-lajpcig-aerodrom",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-02T16:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Ruski motociklista osumnjičen za napad dronom na aerodrom u Lajpcigu",
+      "id": "gdelt-dafef653e63ec0a8",
+      "idioma": "sr",
+      "medio": "informer.rs",
+      "replicas": 0
      }
     ],
     "id": "EODI-2026-00369",
     "lugar": {
-     "localidad": "Leipzig",
      "pais": "DE",
      "radio_km": 10.0
     },
@@ -152594,8 +152595,8 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Drone attack at Leipzig airport",
-     "es": "Ataque con dron en el aeropuerto de Leipzig"
+     "en": "Drone attack on Leipzig airport",
+     "es": "Ataque con dron contra el aeropuerto de Leipzig"
     }
    },
    "type": "Feature"
