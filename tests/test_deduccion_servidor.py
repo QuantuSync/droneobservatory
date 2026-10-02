@@ -54,6 +54,26 @@ def test_la_unidad_va_con_prioridad_baja_y_su_propio_temporizador() -> None:
     assert '--deduccion "$DEDUCCION_REGISTRO"' in recogida
 
 
+def test_los_scripts_no_llevan_saltos_de_linea_escritos_a_mano() -> None:
+    # Un «\\n» literal en una orden partida en varias líneas pasa un argumento «n» de más: así
+    # dejó de componerse estado.json la primera recogida tras fusionar el motor.
+    for script in sorted((RAIZ / "servidor").glob("*.sh")):
+        for numero, linea in enumerate(script.read_text(encoding="utf-8").splitlines(), 1):
+            if linea.lstrip().startswith("#"):
+                continue
+            assert '" \\n' not in linea and not linea.rstrip().endswith("\\n"), (
+                f"{script.name}:{numero}"
+            )
+
+
+def test_la_recogida_pasa_el_registro_del_motor_a_estado_json() -> None:
+    recogida = (RAIZ / "servidor" / "recogida.sh").read_text(encoding="utf-8")
+    orden = recogida.split("-m recogida.estado")[1].split("; then")[0]
+    argumentos = orden.replace("\\\n", " ").split()
+    assert argumentos[-2:] == ["--deduccion", '"$DEDUCCION_REGISTRO"']
+    assert "n" not in argumentos
+
+
 def test_el_paso_horario_no_toma_ningun_cerrojo() -> None:
     for modulo in ("recogida/deduccion.py", "proceso/deduccion/motor.py"):
         texto = (RAIZ / modulo).read_text(encoding="utf-8")
