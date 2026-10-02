@@ -72312,6 +72312,21 @@
       "campo": "consecuencias.cierre.minutos",
       "credibilidad": 3,
       "fecha": {
+       "precision": "dia",
+       "valor": "2026-09-16T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EBCI-2026-09-16-EODI-2026-00035",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 39,
+       "min": 39
+      }
+     },
+     {
+      "campo": "consecuencias.cierre.minutos",
+      "credibilidad": 3,
+      "fecha": {
        "precision": "aproximada",
        "valor": "2026-09-16T21:00Z"
       },
@@ -72327,6 +72342,18 @@
       "campo": "consecuencias.cierre.valor",
       "credibilidad": 3,
       "fecha": {
+       "precision": "dia",
+       "valor": "2026-09-16T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EBCI-2026-09-16-EODI-2026-00035",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": "si"
+     },
+     {
+      "campo": "consecuencias.cierre.valor",
+      "credibilidad": 3,
+      "fecha": {
        "precision": "aproximada",
        "valor": "2026-09-16T20:00Z"
       },
@@ -72334,6 +72361,21 @@
       "fuente_id": "gdelt-3afe8513c064df77",
       "medio": "vrt.be",
       "valor": "si"
+     },
+     {
+      "campo": "consecuencias.vuelos_desviados",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2026-09-16T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EBCI-2026-09-16-EODI-2026-00035",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 0,
+       "min": 0
+      }
      },
      {
       "campo": "drones.numero",
@@ -72531,6 +72573,20 @@
       "idioma": "de",
       "medio": "brf.be",
       "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://github.com/adsblol/globe_history_2026/releases/tag/v2026.09.16-planes-readsb-prod-0",
+      "fecha": {
+       "precision": "dia",
+       "valor": "2026-09-16T00:00Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Cierre medido en EBCI: 11:39–12:18 UTC, 39 minutos, 0 desvíos y 0 esperas.",
+      "id": "adsblol-EBCI-2026-09-16-EODI-2026-00035",
+      "idioma": "es",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "replicas": 0
      }
     ],
     "id": "EODI-2026-00035",
@@ -72559,6 +72615,27 @@
     "titulo": {
      "en": "Drone overflies Charleroi airport forcing suspension of operations",
      "es": "Un dron sobrevuela el aeropuerto de Charleroi y obliga a interrumpir las operaciones"
+    },
+    "trafico_aereo": {
+     "cierre": {
+      "aeropuerto": "EBCI",
+      "difiere_de_declarado": false,
+      "duracion_min": 39,
+      "fin": {
+       "precision": "minuto",
+       "valor": "2026-09-16T12:18Z"
+      },
+      "inicio": {
+       "precision": "minuto",
+       "valor": "2026-09-16T11:39Z"
+      },
+      "resultado": "cierre_medido",
+      "vuelos_desviados": 0,
+      "vuelos_en_espera": 0
+     },
+     "datos": [
+      "https://github.com/adsblol/globe_history_2026/releases/tag/v2026.09.16-planes-readsb-prod-0"
+     ]
     }
    },
    "type": "Feature"
