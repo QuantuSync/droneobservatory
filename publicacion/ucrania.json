@@ -785445,13 +785445,24 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-02T00:17Z"
+     "valor": "2026-10-02T15:17Z"
     }
    },
-   "credibilidad": 3,
+   "credibilidad": 2,
    "fecha": {
     "precision": "minuto",
     "valor": "2026-04-16T01:57Z"
+   },
+   "foco_termico": {
+    "distancia_km": 0.5,
+    "instrumento": "VIIRS",
+    "numero_focos": 50,
+    "primer_foco": {
+     "precision": "minuto",
+     "valor": "2026-04-15T23:07Z"
+    },
+    "resultado": "detectado",
+    "satelite": "NOAA-21"
    },
    "fuentes": [
     {
@@ -785497,7 +785508,6 @@
     "radio_km": 5.0
    },
    "region": "RU-KDA",
-   "reivindicacion_de_parte": true,
    "sentido": "UA_RU",
    "tipo": "impacto_guerra"
   },
