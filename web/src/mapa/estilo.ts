@@ -1,6 +1,6 @@
 // Estilo del mapa: la base de Protomaps, oscura y apagada para que manden los incidentes, y
 // las capas propias. Glifos y sprites se sirven desde este mismo sitio; las teselas, desde
-// el subdominio de teselas.
+// el almacén público (configuracion/almacen_publico.json).
 
 import { layers } from "@protomaps/basemaps";
 import type { Flavor } from "@protomaps/basemaps";
@@ -10,13 +10,13 @@ import type {
   StyleSpecification,
 } from "maplibre-gl";
 
+import { OBJETO_TESELAS, urlDelAlmacen } from "../almacenPublico.ts";
 import { ESTADOS } from "../datos/vocabulario.ts";
 import { COLOR_ESTADO, PALETA, TRAZO_DESMENTIDO } from "../paleta.ts";
 import type { Idioma } from "../sitio.ts";
 
 export const URL_TESELAS: string =
-  (import.meta.env.VITE_TESELAS as string | undefined) ??
-  "https://tiles.droneobservatory.eu/europa-z14.pmtiles";
+  (import.meta.env.VITE_TESELAS as string | undefined) ?? urlDelAlmacen(OBJETO_TESELAS);
 
 export const FUENTE_BASE = "protomaps";
 /** Tierra de Natural Earth para lo que queda fuera del recorte de teselas. */

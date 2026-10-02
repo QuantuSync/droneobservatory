@@ -25,6 +25,8 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   ssgOptions,
   worker: { format: "es" },
+  // En desarrollo, además de web/, solo la dirección del almacén público (src/almacenPublico.ts).
+  server: { fs: { allow: [".", "../configuracion/almacen_publico.json"] } },
   // Nada en línea como data: (la política de contenido solo admite fuentes de este sitio).
   build: { target: "es2022", sourcemap: false, assetsInlineLimit: 0 },
   test: {

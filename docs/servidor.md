@@ -40,7 +40,10 @@ En `/home/eodi`:
     publicar los ficheros de la web;
   - `known_hosts`: la clave de host publicada por GitHub;
   - `exportacion.json`: la última exportación semanal correcta (versión, hora y huella);
-  - `deduccion.json`: la última ejecución correcta del motor de deducción.
+  - `deduccion.json`: la última ejecución correcta del motor de deducción;
+  - `almacen.env`: las credenciales S3 del almacén público (`ALMACEN_ID` y
+    `ALMACEN_SECRETO`), para subir `estado.json`;
+  - `estado.json`: el último estado publicado.
 - `datos/detalle/`, con permisos 700 y propiedad de `eodi`: lo que descargan las fuentes
   oficiales de detalle (apartado «Fuentes oficiales de detalle»).
 - `datos/guerra/`, con permisos 700 y propiedad de `eodi`: lo que guarda el lector de canales
@@ -67,6 +70,8 @@ En `/home/eodi`:
   deducción (apartado «Motor de deducción»): `resultados.jsonl.gz`, `control.json`,
   `validacion.json`, `horizontes.json` y las teselas de Copernicus DEM GLO-90 (`dem/`). Todo
   se puede volver a calcular.
+- `datos/reintentos/`, propiedad de `eodi`: un fichero por sitio con los reintentos del día
+  (apartado «Reintentos por fuente»).
 
 Las dos claves de despliegue se generan en el servidor y la privada no sale de él. En
 GitHub figuran en cada repositorio con el título «servidor eodi-recogida».
@@ -296,8 +301,9 @@ En `%USERPROFILE%\.eodi\`, fuera de cualquier repositorio:
 | `clave_age.txt` | Identidad age de la base |
 | `extractor.env` | Variables del extractor (`EODI_EXTRACTOR_*`) |
 | `firms_map_key.txt` | Clave de la API de NASA FIRMS (32 caracteres); `reconstruir.sh` la añade como `EODI_FIRMS_MAP_KEY` al `extractor.env` del servidor. También es el secreto `EODI_FIRMS_MAP_KEY` del repositorio, para la recogida de emergencia |
-| `cloudflare_token.txt` | Token de la API de Cloudflare (R2 y DNS de las teselas) |
-| `r2_estado.env` | Credenciales S3 de R2 para subir `estado.json` (`R2_ID`, `R2_SECRETO`, `R2_CUENTA`), derivadas del token por `reconstruir.sh` si no existen |
+| `almacen.env` | Credenciales S3 del almacén público de Hetzner (`ALMACEN_ID=…` y `ALMACEN_SECRETO=…`, una por línea); las llevan al servidor `reconstruir.sh` y `preparar_almacen.sh` |
+| `cloudflare_token.txt` | Token de la API de Cloudflare: solo el DNS del dominio. El almacén de Cloudflare ya no se usa |
+| `r2_estado.env` | Credenciales S3 del bucket R2 anterior (`eodi-teselas`); solo como origen de la copia de las teselas |
 
 ## Reconstruir desde cero
 
@@ -337,9 +343,10 @@ caché de páginas (`data/cache/`) se vuelve a llenar sola.
 ## Estado del sistema para la web
 
 Al salir, con el código que sea, [`servidor/recogida.sh`](../servidor/recogida.sh) compone
-`estado.json` ([`recogida/estado.py`](../recogida/estado.py)) y lo sube al bucket R2
-`eodi-teselas`, que se sirve en <https://tiles.droneobservatory.eu/estado.json>. No hay
-commit en git, así que la web no se reconstruye cada hora.
+`estado.json` ([`recogida/estado.py`](../recogida/estado.py)) y lo sube al almacén público
+(apartado siguiente), que lo sirve en
+<https://droneobservatory-almacen.nbg1.your-objectstorage.com/estado.json>. No hay commit en
+git, así que la web no se reconstruye cada hora.
 
 El fichero lleva la hora de inicio y de fin de la recogida, su resultado (`correcta`,
 `con_avisos` o `fallida`), la hora de la última correcta, la de la siguiente prevista
@@ -361,18 +368,84 @@ No lleva ningún contenido. La recogida deja el estado de cada fuente en un fich
 temporal (`recogida.horaria --estado`). El último estado publicado se guarda en
 `/home/eodi/.eodi/estado.json`, de donde sale la hora de la última recogida correcta.
 
-- **Subida**: `curl --aws-sigv4` contra el punto S3 de R2, con `Cache-Control: public,
-  max-age=60` (la web lo pide cada 5 minutos). El CORS es el del bucket, el mismo que para
-  las teselas. Las credenciales llegan a curl por su entrada, no por la línea de órdenes.
-- **Si falla** (sin credenciales, sin red, R2 caído), la recogida no cambia de resultado:
-  queda un aviso en el diario («aviso: no se pudo subir estado.json al bucket»).
-- **Credenciales**: `/home/eodi/.eodi/r2.env`, con permisos 600. El token de Cloudflare no
-  puede crear otros tokens (la API responde 9109) y las credenciales temporales de R2
-  caducan, así que se derivan del propio token: identificador del token como clave de
-  acceso y SHA-256 del token como secreto. Tienen los permisos de R2 del token, que son de
-  toda la cuenta, no solo de este bucket. Para limitarlas al bucket hay que crear en el
-  panel de Cloudflare un token de R2 con escritura solo en `eodi-teselas`, guardarlo en
-  `r2_estado.env` con el mismo formato y volver a ejecutar `reconstruir.sh`.
+- **Subida**: [`recogida/almacen_publico.py`](../recogida/almacen_publico.py) firma la
+  petición S3 (Signature Version 4, sin dependencias) con `Cache-Control: public,
+  max-age=60` (la web lo pide cada 5 minutos). Tres intentos con 2 y 4 s de espera entre
+  ellos y 60 s como mucho en total; un 400, 401, 403 o 404 no se repite. Las credenciales
+  van en el entorno del proceso, no en la línea de órdenes.
+- **Si falla** (sin credenciales, sin red, almacén caído), la recogida no cambia de
+  resultado y publica igual la base y los ficheros de la web: queda un aviso en el diario
+  («aviso: no se pudo subir estado.json al almacén»). La web, mientras tanto, mide la
+  antigüedad desde el último cambio de los datos.
+- **Credenciales**: `/home/eodi/.eodi/almacen.env`, con permisos 600.
+
+## Almacén público
+
+Teselas del mapa de fondo y `estado.json`, en Hetzner Object Storage (compatible con S3),
+en Núremberg, la misma ubicación que el servidor. Sustituye al bucket R2 `eodi-teselas`
+de Cloudflare desde el 2 de octubre de 2026 (informe en
+[`informe_migracion_almacen.md`](informe_migracion_almacen.md)).
+
+| | |
+| --- | --- |
+| Configuración | [`configuracion/almacen_publico.json`](../configuracion/almacen_publico.json): ubicación, punto S3, bucket, dirección pública, objetos, huella de las teselas y CORS. Ningún programa lleva la dirección escrita |
+| Bucket | `droneobservatory-almacen`, `nbg1`, lectura pública (política del bucket: solo `s3:GetObject`) |
+| Dirección pública | <https://droneobservatory-almacen.nbg1.your-objectstorage.com> |
+| Objetos | `europa-z14.pmtiles` (24 570 229 564 bytes, SHA-256 `393c9a0d…11c98`, `Cache-Control: public, max-age=3600`) y `estado.json` |
+| CORS | `https://droneobservatory.eu` y `https://www.droneobservatory.eu`; GET y HEAD; cabecera `Range`; expone `ETag`, `Content-Range`, `Content-Length` y `Accept-Ranges` |
+| Quién lo lee | La web (teselas y estado), los workflows `vigia-recogida` y `tests` (estado) |
+| Quién escribe | La recogida horaria (`estado.json`) y `preparar_almacen.sh` (bucket y teselas) |
+
+**Preparación**, con una orden desde Git Bash en la raíz del clon (repetible):
+
+```
+bash servidor/preparar_almacen.sh
+```
+
+Lleva las credenciales al servidor, crea el bucket con su política y su CORS, copia las
+teselas desde R2 sin pasar por el disco del servidor (unos 5 minutos a 90 MB/s; el disco
+del servidor, 38 GB con 29 libres, no daría para una copia intermedia) o, si R2 no responde,
+desde la copia local `C:\dev\eodi-teselas-copia\europa-z14.pmtiles`; comprueba la huella
+mientras sube, publica el último `estado.json` y comprueba por la dirección pública el tamaño,
+la respuesta 206 a una petición Range y el CORS de cada origen.
+
+**Credenciales.** La API de Hetzner Cloud no gestiona Object Storage (ni buckets ni
+credenciales): las credenciales S3 se generan en la consola, en el proyecto EODI →
+*Security* → *S3 credentials* → *Generate credentials*. El secreto solo se muestra una vez;
+se guarda en `%USERPROFILE%\.eodi\almacen.env` como `ALMACEN_ID=<Access key>` y
+`ALMACEN_SECRETO=<Secret key>`. Valen para todos los buckets del proyecto.
+
+**Coste.** Hetzner cobra un precio base por hora mientras haya al menos un bucket, con 1 TB
+de almacenamiento y 1 TB de tráfico de salida incluidos al mes; la entrada, el tráfico
+interno de eu-central (el servidor está en `nbg1`) y las llamadas a la API no se cobran. La
+tarifa publicada desde el 1 de abril de 2026 es de 6,49 € al mes sin IVA; lo que pase de la
+cuota, 1 € por TB de salida. Con lo que hay (24,57 GB, el 2,5 % del almacenamiento incluido)
+el coste es el precio base: **6,49 € al mes sin IVA**. La salida incluida da para unas
+200 000 visitas al mes con unos 5 MB de teselas cada una; por encima, 1 € por TB. El precio
+exacto de la cuenta se ve en la consola, en *Object Storage*, al crear el bucket.
+
+**Cambiar las teselas**: se sube el fichero nuevo con otro nombre, se cambian
+`objetos.teselas` y `huellas_sha256` en la configuración, se despliega la web y después se
+borra el objeto anterior.
+
+## Reintentos por fuente
+
+Dentro de una ejecución, el descargador común
+([`recogida/descarga.py`](../recogida/descarga.py)) espera el doble en cada reintento (5,
+10, 20 y 40 s) y no reintenta 403 ni 404. Entre ejecuciones
+([`recogida/reintentos.py`](../recogida/reintentos.py)):
+
+- **Tope diario por sitio**: 40 reintentos al día entre todas las unidades, anotados en
+  `/home/eodi/datos/reintentos/<sitio>.json` (variable `EODI_REINTENTOS_DATOS`, en
+  `configuracion.sh`). Pasado el tope, ese día cada petición a ese sitio se hace una vez.
+- **Espera creciente tras fallos seguidos** en la comprobación de la web oficial de cada
+  canal de la capa de guerra: 1, 2, 4, 8 y 16 horas y después una vez al día; un rechazo
+  (401, 403, 451 o una página de bloqueo), un día entero. Antes se repetía en cada lectura
+  horaria y otra vez en el histórico.
+- **Reanudaciones del archivo de adsb.lol** con 2, 4, 8, 16 y 32 s de espera.
+
+Las cifras medidas antes del cambio están en
+[`informe_migracion_almacen.md`](informe_migracion_almacen.md).
 
 ## Órdenes útiles
 
@@ -570,7 +643,8 @@ vez se pisarían la rama `estado`.
 ## Cómo se ve si la recogida se para
 
 El workflow `vigia-recogida` se lanza cada hora en el minuto 41 y lee
-<https://tiles.droneobservatory.eu/estado.json> ([`recogida/salud.py`](../recogida/salud.py)).
+`estado.json` en el almacén público ([`recogida/salud.py`](../recogida/salud.py), que toma
+la dirección de `configuracion/almacen_publico.json`).
 Si la última recogida correcta tiene más de 2 horas, o si el fichero no responde en tres
 intentos separados un minuto, abre una incidencia en este repositorio («La recogida horaria
 no actualiza la base»), una sola mientras dure el problema, y la cierra cuando la recogida

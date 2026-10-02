@@ -3,7 +3,8 @@
 // despliegue. Por eso aquí toda duda termina en 1: sin commit anterior, con un commit
 // anterior que no está en el clon (Vercel clona sin historial completo y un push forzado
 // lo borra) o ante cualquier error de git, se construye. Solo se omite cuando git dice
-// con seguridad que nada de web/, publicacion/ ni vercel.json ha cambiado.
+// con seguridad que nada de web/, publicacion/, vercel.json ni la dirección del almacén
+// público ha cambiado.
 //
 // Uso (desde la raíz del repositorio): node web/scripts/omitir-build.ts
 
@@ -12,7 +13,13 @@ import { fileURLToPath } from "node:url";
 
 export const OMITIR = 0;
 export const CONSTRUIR = 1;
-export const RUTAS_QUE_DESPLIEGAN: readonly string[] = ["web", "publicacion", "vercel.json"];
+export const RUTAS_QUE_DESPLIEGAN: readonly string[] = [
+  "web",
+  "publicacion",
+  "vercel.json",
+  // La dirección del almacén público (teselas y estado.json) la lee la web en el build.
+  "configuracion/almacen_publico.json",
+];
 /** Rama de la que salen los despliegues de producción normales. */
 export const RAMA_DE_PRODUCCION = "main";
 

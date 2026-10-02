@@ -83,6 +83,8 @@ describe("script con un repositorio real", () => {
     confirmar("docs", "docs/informe.md");
     confirmar("datos", "publicacion/ucrania.json");
     confirmar("despliegue", "vercel.json");
+    confirmar("almacen", "configuracion/almacen_publico.json");
+    confirmar("otra_configuracion", "configuracion/fuentes.json");
   });
 
   afterAll(() => {
@@ -92,6 +94,16 @@ describe("script con un repositorio real", () => {
   it("un commit que solo toca docs/ se omite", () => {
     en("checkout", "-q", commits.docs ?? "");
     expect(salida(commits.inicial)).toBe(OMITIR);
+  });
+
+  it("un cambio de la dirección del almacén público construye", () => {
+    en("checkout", "-q", commits.almacen ?? "");
+    expect(salida(commits.despliegue)).toBe(CONSTRUIR);
+  });
+
+  it("otro fichero de configuración se omite", () => {
+    en("checkout", "-q", commits.otra_configuracion ?? "");
+    expect(salida(commits.almacen)).toBe(OMITIR);
   });
 
   it("un commit de datos del servidor construye", () => {

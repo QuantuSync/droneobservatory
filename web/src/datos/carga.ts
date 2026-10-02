@@ -1,6 +1,7 @@
 // Carga de los ficheros de datos. Cada fichero se valida contra el esquema antes de usarlo:
 // si no valida, no se pinta nada de él.
 
+import { OBJETO_ESTADO, urlDelAlmacen } from "../almacenPublico.ts";
 import type {
   Ataque,
   EstadoSistema,
@@ -91,12 +92,11 @@ export function cargarImpacto(
 }
 
 /**
- * estado.json lo sube la recogida al bucket de teselas cada hora, sin pasar por git.
- * Se pide sin caché del navegador: la cabecera del bucket ya da una caducidad corta.
+ * estado.json lo sube la recogida al almacén público cada hora, sin pasar por git.
+ * Se pide sin caché del navegador: la cabecera del objeto ya da una caducidad corta.
  */
 export const URL_ESTADO_SISTEMA: string =
-  (import.meta.env.VITE_ESTADO as string | undefined) ??
-  "https://tiles.droneobservatory.eu/estado.json";
+  (import.meta.env.VITE_ESTADO as string | undefined) ?? urlDelAlmacen(OBJETO_ESTADO);
 
 export function cargarEstadoSistema(
   descargar: Descarga,

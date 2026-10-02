@@ -58,8 +58,9 @@ EXTRACTOR="$SECRETOS/extractor.env"
 DESPLIEGUE_DATOS="$SECRETOS/despliegue_datos"
 DESPLIEGUE_WEB="$SECRETOS/despliegue_web"
 HOSTS_CONOCIDOS="$SECRETOS/known_hosts"
-# Credenciales S3 de R2 (R2_ID, R2_SECRETO, R2_CUENTA), una por línea, para subir estado.json.
-R2_CREDENCIALES="$SECRETOS/r2.env"
+# Credenciales S3 del almacén público (ALMACEN_ID, ALMACEN_SECRETO), una por línea, para
+# subir estado.json. La dirección del almacén está en configuracion/almacen_publico.json.
+ALMACEN_CREDENCIALES="$SECRETOS/almacen.env"
 # El último estado publicado: de él sale la hora de la última recogida correcta.
 ESTADO_ANTERIOR="$SECRETOS/estado.json"
 CERROJO="$SECRETOS/recogida.lock"
@@ -76,14 +77,12 @@ MINUTO_RECOGIDA=17
 # peor caso (recogida/horaria.py). Los 45 son la última red, por si algo se cuelga.
 TOPE_MINUTOS=45
 
-# --- Estado del sistema (estado.json en el bucket de teselas) ------------------------
-R2_BUCKET="eodi-teselas"
+# --- Estado del sistema (estado.json en el almacén público) ---------------------------
 ESTADO_OBJETO="estado.json"
 # La web lo pide cada 5 minutos; un minuto de caché basta para no servir uno viejo.
 ESTADO_CACHE="public, max-age=60"
-# Subir un fichero de 1 kB tarda menos de un segundo; 30 s cubren una red lenta.
-ESTADO_TOPE_S=30
-LOCAL_R2="$LOCAL_SECRETOS/r2_estado.env"
+# La subida (recogida/almacen_publico.py) reintenta con espera creciente y no pasa de 60 s.
+LOCAL_ALMACEN="$LOCAL_SECRETOS/almacen.env"
 
 # --- Exportación semanal para AEGIS (servidor/exportacion.sh) ----------------------------
 UNIDAD_EXPORTACION="eodi-exportacion"
@@ -104,6 +103,12 @@ ESPERA_CERROJO_S=3600
 # fallo que haya que arreglar antes.
 ESPERA_FUSION_S=10800
 PAUSA_AVISO_S=30
+
+# --- Reintentos por sitio (recogida/reintentos.py) ------------------------------------
+# Un fichero por sitio con los reintentos del día: el descargador común deja de reintentar a
+# un sitio que pasa del tope diario. Lo comparten todas las unidades.
+REINTENTOS_DATOS="${EODI_REINTENTOS_DATOS:-$CASA/datos/reintentos}"
+export EODI_REINTENTOS_DATOS="$REINTENTOS_DATOS"
 
 # --- Anomalías térmicas de NASA FIRMS (recogida/firms.py) ------------------------------
 # CSV diarios comprimidos, fuera del repositorio y de la base: la base se sube cifrada cada

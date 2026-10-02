@@ -6,8 +6,10 @@ Web pública de una sola pantalla del European Observatory of Drone Incidents:
 
 Vite, React y TypeScript estricto, con Tailwind y prerenderizado estático
 (vite-react-ssg). El mapa es MapLibre GL JS con el protocolo pmtiles; las teselas
-de Protomaps se sirven desde `tiles.droneobservatory.eu` (Cloudflare R2) y todo lo
-demás (trabajador del mapa, glifos, sprites, fuentes, geometrías de Natural Earth)
+de Protomaps y el estado de la recogida (`estado.json`) se sirven desde el almacén
+público de Hetzner Object Storage, cuya dirección está en
+[`configuracion/almacen_publico.json`](../configuracion/almacen_publico.json)
+(`src/almacenPublico.ts` la lee en el build), y todo lo demás (trabajador del mapa, glifos, sprites, fuentes, geometrías de Natural Earth)
 desde el propio sitio. Decisiones y resultados en
 [`docs/informe_web.md`](../docs/informe_web.md).
 
@@ -80,6 +82,6 @@ npx mapshaper ne_50m_land.geojson -clip bbox=-80,10,110,85 -simplify 25% keep-sh
   hostiles por las fichas.
 - Los enlaces externos solo se crean si son http o https, se abren en otra pestaña
   con `rel="noopener noreferrer"` y llevan la marca ↗.
-- La política de contenido solo admite este sitio y el subdominio de teselas, sin
+- La política de contenido solo admite este sitio y el almacén público, sin
   estilos ni scripts en línea: el build saca a ficheros los scripts en línea del
   prerenderizado.

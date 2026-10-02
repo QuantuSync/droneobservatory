@@ -1,0 +1,35 @@
+{
+  "descripcion": "Almacén público de la web (Hetzner Object Storage, compatible con S3): teselas del mapa de fondo y estado.json de la recogida. Lo leen recogida/almacen_publico.py (subida desde el servidor), recogida/salud.py (vigilancia), servidor/preparar_almacen.py (bucket, permisos, CORS y teselas) y la web (web/src/almacenPublico.ts). El origen público también está en la política de seguridad de contenido de vercel.json; un test comprueba que coinciden.",
+  "proveedor": "Hetzner Object Storage",
+  "ubicacion": "nbg1",
+  "punto_s3": "https://nbg1.your-objectstorage.com",
+  "bucket": "droneobservatory-almacen",
+  "publico": "https://droneobservatory-almacen.nbg1.your-objectstorage.com",
+  "objetos": {
+    "estado": "estado.json",
+    "teselas": "europa-z14.pmtiles"
+  },
+  "huellas_sha256": {
+    "europa-z14.pmtiles": "393c9a0da1ef1c55c2338b61eeabaa840b3e96011a1ad5cc9c38ff6cc8a11c98"
+  },
+  "cors": {
+    "origenes": [
+      "https://droneobservatory.eu",
+      "https://www.droneobservatory.eu"
+    ],
+    "metodos": [
+      "GET",
+      "HEAD"
+    ],
+    "cabeceras": [
+      "Range"
+    ],
+    "expuestas": [
+      "ETag",
+      "Content-Range",
+      "Content-Length",
+      "Accept-Ranges"
+    ],
+    "max_edad_s": 86400
+  }
+}

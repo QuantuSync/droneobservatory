@@ -1,7 +1,7 @@
 name: vigia-recogida
 
 # Aviso si el servidor deja de recoger. Cada hora lee estado.json, que el servidor publica en
-# el bucket de las teselas al final de cada recogida (recogida/salud.py): si la última
+# el almacén público al final de cada recogida (recogida/salud.py): si la última
 # recogida correcta tiene más de dos horas, o si el fichero no responde en tres intentos
 # espaciados, abre una incidencia en este repositorio (una sola mientras dure el problema)
 # y la cierra cuando se recupera. Una recogida que no trae nada nuevo sigue siendo correcta:

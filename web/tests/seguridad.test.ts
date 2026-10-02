@@ -20,6 +20,7 @@ import type { ConfiguracionDespliegue } from "../src/seguridad/despliegue.ts";
 import { enlaceSeguro } from "../src/seguridad/enlaces.ts";
 import { contarScriptsEnLinea, separarScriptsEnLinea } from "../src/seguridad/scripts.ts";
 import { RUTA_SECURITY_TXT, securityTxt } from "../src/seguridad/securityTxt.ts";
+import { ORIGEN_ALMACEN } from "../src/almacenPublico.ts";
 import { CONTACTO_SEGURIDAD, ORIGEN } from "../src/sitio.ts";
 import { CARGAS_MALICIOSAS } from "./ejemplos.ts";
 
@@ -152,13 +153,18 @@ describe("cabeceras del despliegue", () => {
     expect(cabeceras.has("Content-Security-Policy")).toBe(true);
   });
 
-  it("la política de contenido solo admite este sitio y el subdominio de teselas", () => {
+  it("la política de contenido solo admite este sitio y el almacén público", () => {
     const csp = directivasCsp(cabecerasDe(vercel, "/").get("Content-Security-Policy") ?? "");
     expect(csp.get("default-src")).toEqual(["'self'"]);
     expect(csp.get("script-src")).toEqual(["'self'"]);
     expect(csp.get("style-src")).toEqual(["'self'"]);
     expect(csp.get("font-src")).toEqual(["'self'"]);
-    expect(csp.get("connect-src")).toEqual(["'self'", "https://tiles.droneobservatory.eu"]);
+    expect(csp.get("connect-src")).toEqual(["'self'", ORIGEN_ALMACEN]);
+    expect(ORIGEN_ALMACEN).toBe("https://droneobservatory-almacen.nbg1.your-objectstorage.com");
+    // Nada se sirve ya desde Cloudflare.
+    const politica = cabecerasDe(vercel, "/").get("Content-Security-Policy") ?? "";
+    expect(politica).not.toContain("tiles.droneobservatory.eu");
+    expect(politica).not.toMatch(/cloudflare|r2\.dev/);
     expect(csp.get("object-src")).toEqual(["'none'"]);
     expect(csp.get("base-uri")).toEqual(["'self'"]);
     expect(csp.get("form-action")).toEqual(["'none'"]);

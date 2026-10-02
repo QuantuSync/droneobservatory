@@ -43,7 +43,7 @@ jobs:
       - run: npm run build
 
   # La recogida la lanza cada hora un servidor propio, que al final de cada una publica
-  # estado.json en el bucket de las teselas. Este trabajo señala en su resumen si la última
+  # estado.json en el almacén público. Este trabajo señala en su resumen si la última
   # recogida correcta tiene más de dos horas. Solo informa: no lanza nada ni hace fallar
   # los tests.
   salud-recogida:

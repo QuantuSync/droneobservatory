@@ -1,0 +1,3 @@
+# Solo para servidor/preparar_almacen.py (preparar el almacén público y copiarle las
+# teselas). La recogida no lo necesita: sube estado.json con recogida/almacen_publico.py.
+boto3==1.43.108

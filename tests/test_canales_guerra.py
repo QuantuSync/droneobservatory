@@ -182,3 +182,65 @@ def test_el_historico_empieza_por_los_canales_que_situan_impactos_en_rusia() -> 
     grupos = [c.grupo for c in cg.orden_historico(cg.cargar_canales())]
     assert grupos[0] == "estado_mayor_ua"
     assert grupos.index("ova_ua") > max(i for i, g in enumerate(grupos) if g == "gobernadores_ru")
+
+
+@dataclasses.dataclass
+class WebQueFalla(CanalFalso):
+    """La web oficial responde siempre con `codigo_web`; el canal, bien."""
+
+    codigo_web: int = 502
+
+    def __call__(self, url: str, cabeceras: dict[str, str], limite_s: float) -> Respuesta:
+        if url == self.web and self.codigo_web != 200:
+            self.pedidas.append(url)
+            return self.codigo_web, {}, b""
+        return super().__call__(url, cabeceras, limite_s)
+
+
+def _web_que_falla(codigo: int) -> WebQueFalla:
+    return WebQueFalla(**dataclasses.asdict(falso()), codigo_web=codigo)
+
+
+def _comprobar(canal: WebQueFalla, estado: dict[str, object], ahora: datetime) -> int:
+    """Peticiones a la web oficial en una comprobación (con sus reintentos dentro de ella)."""
+    antes = canal.pedidas.count(WEB)
+    cg.verificar_web(CANAL, descargador(canal), estado, ahora)
+    return canal.pedidas.count(WEB) - antes
+
+
+def test_una_web_que_falla_se_vuelve_a_pedir_con_espera_creciente() -> None:
+    canal = _web_que_falla(502)
+    estado: dict[str, object] = {"web_ultima_correcta": "2026-09-20T00:00:00Z"}
+    horas_con_peticion = [
+        h for h in range(0, 56) if _comprobar(canal, estado, AHORA + timedelta(hours=h))
+    ]
+    # Fallos seguidos: espera de 1, 2, 4, 8 y 16 h, después una vez al día.
+    assert horas_con_peticion == [0, 1, 3, 7, 15, 31, 55]
+    assert estado["web_fallos_seguidos"] == 7
+    # Antes, una comprobación por hora (y dos con el histórico): más de 56 en este tiempo.
+
+
+def test_una_web_que_rechaza_al_servidor_se_pide_una_vez_al_dia() -> None:
+    canal = _web_que_falla(403)
+    estado: dict[str, object] = {"web_ultima_correcta": "2026-09-20T00:00:00Z"}
+    horas = [h for h in range(0, 49) if _comprobar(canal, estado, AHORA + timedelta(hours=h))]
+    assert horas == [0, 24, 48]
+    assert estado["web_siguiente"] == "2026-10-04T12:00:00Z"
+
+
+def test_la_lectura_y_el_historico_de_la_misma_hora_no_repiten_la_comprobacion() -> None:
+    canal = _web_que_falla(502)
+    estado: dict[str, object] = {"web_ultima_correcta": "2026-09-20T00:00:00Z"}
+    assert _comprobar(canal, estado, AHORA) > 0
+    assert _comprobar(canal, estado, AHORA + timedelta(minutes=40)) == 0
+
+
+def test_una_comprobacion_correcta_borra_la_espera() -> None:
+    canal = _web_que_falla(502)
+    estado: dict[str, object] = {"web_ultima_correcta": "2026-09-20T00:00:00Z"}
+    _comprobar(canal, estado, AHORA)
+    canal.codigo_web = 200
+    assert _comprobar(canal, estado, AHORA + timedelta(hours=1)) == 1
+    assert "web_fallos_seguidos" not in estado
+    assert "web_siguiente" not in estado
+    assert estado["web_resultado"] == "enlaza"

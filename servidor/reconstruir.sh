@@ -109,27 +109,13 @@ trap 'rm -f "$variables"' EXIT
 dejar_secreto "$variables" "$EXTRACTOR"
 rm -f "$variables"
 
-# Credenciales S3 de R2 para subir estado.json. El token de Cloudflare no puede crear otros
-# tokens, así que salen de él mismo: identificador del token y SHA-256 del token, con la
-# cuenta que muestra la API. Sin ellas, la recogida avisa y no publica el estado.
-derivar_r2() {
-  local token id cuenta
-  token="$(tr -d '\r\n' < "$LOCAL_SECRETOS/cloudflare_token.txt")"
-  id="$(curl --fail --silent -H "Authorization: Bearer $token" \
-    https://api.cloudflare.com/client/v4/user/tokens/verify | sed -n 's/.*"id":"\([0-9a-f]*\)".*/\1/p')"
-  cuenta="$(curl --fail --silent -H "Authorization: Bearer $token" \
-    https://api.cloudflare.com/client/v4/accounts | sed -n 's/.*"id":"\([0-9a-f]*\)".*/\1/p' | head -1)"
-  [ -n "$id" ] && [ -n "$cuenta" ] || return 1
-  (umask 077 && printf 'R2_ID=%s\nR2_SECRETO=%s\nR2_CUENTA=%s\n' "$id" \
-    "$(printf '%s' "$token" | sha256sum | cut -d' ' -f1)" "$cuenta" > "$LOCAL_R2")
-}
-if [ ! -s "$LOCAL_R2" ] && [ -s "$LOCAL_SECRETOS/cloudflare_token.txt" ]; then
-  derivar_r2 || echo "aviso: no se pudieron derivar las credenciales de R2" >&2
-fi
-if [ -s "$LOCAL_R2" ]; then
-  dejar_secreto "$LOCAL_R2" "$R2_CREDENCIALES"
+# Credenciales S3 del almacén público para subir estado.json (ALMACEN_ID y ALMACEN_SECRETO,
+# una por línea). Se generan en la consola de Hetzner (docs/servidor.md). Sin ellas, la
+# recogida avisa y no publica el estado.
+if [ -s "$LOCAL_ALMACEN" ]; then
+  dejar_secreto "$LOCAL_ALMACEN" "$ALMACEN_CREDENCIALES"
 else
-  echo "aviso: sin $LOCAL_R2, la recogida no publicará estado.json" >&2
+  echo "aviso: sin $LOCAL_ALMACEN, la recogida no publicará estado.json" >&2
 fi
 
 # --- Claves de despliegue ------------------------------------------------------------

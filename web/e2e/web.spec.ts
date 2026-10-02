@@ -5,6 +5,7 @@ import type { Page } from "@playwright/test";
 
 import type { Resumen, ResumenUcrania } from "../src/datos/tipos.ts";
 import { numero as formatear } from "../src/i18n/index.ts";
+import { OBJETO_ESTADO, ORIGEN_ALMACEN, urlDelAlmacen } from "../src/almacenPublico.ts";
 import { RUTA_SECURITY_TXT } from "../src/seguridad/securityTxt.ts";
 import { CONTACTO_SEGURIDAD, DESCARGAS, NOMBRE } from "../src/sitio.ts";
 
@@ -20,7 +21,7 @@ const MS_DE_ASENTAMIENTO = 2500;
 const CROMA_DE_UN_GRIS = 0.2;
 
 /** El estado de la recogida que publica el servidor; en local no existe. */
-const ESTADO_PUBLICADO = "https://tiles.droneobservatory.eu/estado.json";
+const ESTADO_PUBLICADO = urlDelAlmacen(OBJETO_ESTADO);
 
 /** Una cifra como la escribe el marcador en español. */
 function numero(n: number): string {
@@ -502,7 +503,7 @@ test("todas las rutas llevan las cabeceras de seguridad", async ({ page }) => {
   expect(texto).toMatch(/Expires: \d{4}-\d{2}-\d{2}T/);
 });
 
-test("el mapa solo habla con este sitio y con el subdominio de teselas", async ({ page }) => {
+test("el mapa solo habla con este sitio y con el almacén público", async ({ page }) => {
   const origenes = new Set<string>();
   page.on("request", (peticion) => origenes.add(new URL(peticion.url()).origin));
   await page.goto("/");
@@ -510,7 +511,7 @@ test("el mapa solo habla con este sitio y con el subdominio de teselas", async (
   await page.waitForTimeout(MS_DE_ASENTAMIENTO);
   const propio = new URL(page.url()).origin;
   const ajenos = [...origenes].filter(
-    (origen) => origen !== propio && origen !== "https://tiles.droneobservatory.eu",
+    (origen) => origen !== propio && origen !== ORIGEN_ALMACEN,
   );
   expect(ajenos).toEqual([]);
 });

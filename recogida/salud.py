@@ -1,7 +1,7 @@
 """Salud de la recogida horaria: cuándo terminó bien por última vez, según estado.json.
 
 La recogida la lanza cada hora un servidor propio (servidor/), fuera de GitHub. Al salir,
-cada recogida sube estado.json al bucket de las teselas (recogida/estado.py) con la hora de
+cada recogida sube estado.json al almacén público (recogida/estado.py) con la hora de
 la última recogida correcta. Esa hora avanza con cada recogida correcta, traiga o no datos
 nuevos; la fecha de la rama estado, en cambio, no avanza cuando la base no cambia, y daba
 avisos falsos.
@@ -32,9 +32,12 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+from recogida import almacen_publico
 from recogida.descarga import AGENTE_EODI
 
-URL = "https://tiles.droneobservatory.eu/estado.json"
+# La dirección pública de estado.json sale de configuracion/almacen_publico.json.
+_ALMACEN = almacen_publico.cargar()
+URL = _ALMACEN.url_publica(_ALMACEN.objetos["estado"])
 # La recogida es horaria: dos horas sin una correcta son dos recogidas seguidas que no lo
 # han sido (o que no se han lanzado).
 MAX_SIN_CORRECTA = timedelta(hours=2)
@@ -58,8 +61,7 @@ Lector = Callable[[str], bytes]
 
 
 def _descargar(url: str) -> bytes:
-    # Con la identificación del observatorio: al agente por defecto de Python, Cloudflare le
-    # responde 403.
+    # Con la identificación del observatorio, como todos los lectores.
     cabeceras = {"Cache-Control": "no-cache", "User-Agent": AGENTE_EODI}
     peticion = urllib.request.Request(url, headers=cabeceras)
     with urllib.request.urlopen(peticion, timeout=TOPE_S) as respuesta:

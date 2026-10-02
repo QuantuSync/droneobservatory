@@ -4,6 +4,9 @@ Pausa mínima entre peticiones al mismo sitio, identificación de un navegador
 real, reintentos con espera creciente y comprobación de que la respuesta es
 contenido real y no una página de bloqueo servida con código 200.
 
+Los reintentos de cada sitio tienen además un tope diario que dura entre ejecuciones
+(recogida/reintentos.py): pasado el tope, ese día se pide una sola vez.
+
 Con un plazo, el descargador no empieza una petición ni una espera que no quepa
 en él: lanza TiempoAgotado, que no es un fallo de descarga, y quien lo usa
 decide qué deja para la siguiente ejecución.
@@ -17,6 +20,7 @@ from collections.abc import Callable
 from urllib.parse import urlsplit
 
 from recogida.plazo import Plazo
+from recogida.reintentos import TopeDiario
 
 # Navegador de escritorio real y reciente: algunos sitios sirven otra página a
 # clientes que no se identifican como navegador.
@@ -92,8 +96,11 @@ class Descargador:
         agente: str | None = None,
         limite_s: float = TIEMPO_LIMITE_S,
         plazo: Plazo | None = None,
+        tope_diario: TopeDiario | None = None,
     ) -> None:
         self._limite_s = limite_s
+        # Tope diario de reintentos por sitio: por defecto, el del servidor si está configurado.
+        self.tope_diario = tope_diario if tope_diario is not None else TopeDiario.desde_entorno()
         # Tope de tiempo del paso que usa el descargador; se puede cambiar entre pasos.
         self.plazo = plazo
         # Por defecto, un navegador; los servicios que piden identificarse reciben el
@@ -115,7 +122,7 @@ class Descargador:
         pero con otros reintentos y otro tiempo límite (para sitios que suelen no responder)."""
         otro = Descargador(
             self._transporte, self._dormir, self._reloj, self._pausa_minima_s, self._pausas,
-            reintentos, self._espera_inicial_s, None, limite_s, self.plazo,
+            reintentos, self._espera_inicial_s, None, limite_s, self.plazo, self.tope_diario,
         )  # fmt: skip
         otro._cabeceras = self._cabeceras
         return otro
@@ -143,9 +150,13 @@ class Descargador:
         """Descarga en bruto y comprueba con `valido` que es el contenido esperado."""
         sitio = urlsplit(url).netloc
         motivo = ""
+        hechos = 0
         for intento in range(self._reintentos + 1):
             if intento:
                 self.recuentos["reintentos"] += 1
+                if self.tope_diario is not None:
+                    self.tope_diario.anotar(sitio)
+            hechos = intento
             self._dentro_del_plazo()
             self._esperar_turno(sitio)
             self.recuentos["peticiones"] += 1
@@ -167,9 +178,14 @@ class Descargador:
                     raise NoEncontrado(f"{url}: código {codigo}")
                 else:
                     raise DescargaFallida(f"{url}: código {codigo}")
+            sin_tope = self.tope_diario is not None and not self.tope_diario.permite(sitio)
+            if intento < self._reintentos and sin_tope:
+                self.recuentos["tope_diario"] += 1
+                motivo += " (tope diario de reintentos del sitio)"
+                break
             if intento < self._reintentos:
                 self._dentro_del_plazo(espera)
                 self._dormir(espera)
         self.recuentos["fallos"] += 1
         tipo = PaginaBloqueada if motivo.startswith("contenido") else DescargaFallida
-        raise tipo(f"{url}: {motivo} tras {self._reintentos} reintentos")
+        raise tipo(f"{url}: {motivo} tras {hechos} reintentos")

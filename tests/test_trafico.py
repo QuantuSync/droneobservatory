@@ -419,10 +419,12 @@ def test_una_conexion_cortada_se_reanuda_desde_donde_iba() -> None:
         # La primera conexión se corta a mitad; la reanudación llega entera.
         return Cortada(contenido[desde:], 5000) if desde == 0 else Respuesta(contenido[desde:])
 
-    flujo = adsb.Encadenado(["https://x/v.tar"], abrir, (len(contenido),))
+    esperas: list[float] = []
+    flujo = adsb.Encadenado(["https://x/v.tar"], abrir, (len(contenido),), esperas.append)
     leidos = [d["icao"] for d in adsb.documentos(io.BufferedReader(flujo))]
     assert leidos == ["47875c", "4ab562"]
     assert peticiones == [0, 5000] and flujo.bytes == len(contenido)
+    assert esperas == [adsb.ESPERA_REANUDACION_S]
 
 
 def test_una_descarga_que_no_llega_entera_falla() -> None:
@@ -431,10 +433,13 @@ def test_una_descarga_que_no_llega_entera_falla() -> None:
     def abrir(url: str, metodo: str, desde: int = 0) -> Respuesta:
         return Cortada(contenido[desde:], 1000)
 
-    flujo = adsb.Encadenado(["https://x/v.tar"], abrir, (len(contenido) + 10**9,))
+    esperas: list[float] = []
+    flujo = adsb.Encadenado(["https://x/v.tar"], abrir, (len(contenido) + 10**9,), esperas.append)
     with pytest.raises(adsb.LecturaIncompleta):
         while flujo.read(1 << 16):
             pass
+    # Las reanudaciones esperan cada vez el doble.
+    assert esperas == [2.0, 4.0, 8.0, 16.0, 32.0]
 
 
 def test_si_prod_no_se_lee_entero_se_usa_staging(tmp_path: Path) -> None:

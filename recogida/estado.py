@@ -1,10 +1,10 @@
-"""Estado del sistema para la web: estado.json, que el servidor sube al bucket de teselas.
+"""Estado del sistema para la web: estado.json, que el servidor sube al almacén público.
 
 Al final de cada recogida horaria, `servidor/recogida.sh` compone el estado con lo que
 dejó escrito la recogida (cómo fue cada fuente y la fecha de su último dato), el código
 con que terminó y el estado anterior (de donde sale la última recogida correcta), y lo
-sube a R2 sin commit en git: así la web no se reconstruye cada hora. Solo lleva horas y
-estados, ningún contenido.
+sube al almacén público (recogida/almacen_publico.py) sin commit en git: así la web no se
+reconstruye cada hora. Solo lleva horas y estados, ningún contenido.
 
 Formato (versión 1), con los instantes como AAAA-MM-DDThh:mmZ:
 

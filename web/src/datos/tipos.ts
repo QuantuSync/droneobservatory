@@ -415,7 +415,7 @@ export interface ResumenUcrania {
   fuentes: Record<Sentido, FuenteSentido | null>;
 }
 
-// ---- Estado del sistema (estado.json, lo publica la recogida en el bucket de teselas) ----
+// ---- Estado del sistema (estado.json, lo publica la recogida en el almacén público) ----
 
 export type ResultadoRecogida = "correcta" | "con_avisos" | "fallida";
 export type EstadoFuente = "leida" | "con_aviso" | "no_leida";

@@ -46,8 +46,9 @@ from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
-from recogida.descarga import AGENTE_EODI, Descargador, DescargaFallida
+from recogida.descarga import AGENTE_EODI, Descargador, DescargaFallida, PaginaBloqueada
 from recogida.plazo import Plazo, TiempoAgotado
+from recogida.reintentos import siguiente_intento
 from recogida.telegram import Pagina, Publicacion, es_pagina_de_canal, leer_pagina, url_pagina
 
 registro = logging.getLogger("recogida.canales_guerra")
@@ -68,6 +69,8 @@ VIGENCIA_WEB = timedelta(days=30)
 # visitas y responden en menos de un segundo a la siguiente: intentos cortos y varios.
 LIMITE_WEB_S = 10.0
 REINTENTOS_WEB = 3
+# Códigos con que una web rechaza al servidor: no se arreglan en la hora siguiente.
+_RECHAZO = re.compile(r"código (401|403|451)\b")
 # Tope de páginas de un canal en una lectura incremental: 30 páginas son unas 600
 # publicaciones, más de diez días de la administración más activa. Si no alcanza el cursor,
 # el resto lo recoge el histórico.
@@ -281,11 +284,15 @@ def verificar_web(
         return
     correcta = _leer_instante(estado.get("web_ultima_correcta"))
     ultima = _leer_instante(estado.get("web_ultima_comprobacion"))
-    # Tras una comprobación correcta se espera un día; tras un fallo se reintenta en la
-    # lectura siguiente (hay webs oficiales que alternan respuestas y cortes). Las webs que no
-    # cargan desde el servidor se intentan una vez al día.
+    siguiente = _leer_instante(estado.get("web_siguiente"))
+    # Tras una comprobación correcta se espera un día. Tras un fallo, la espera crece con los
+    # fallos seguidos (1, 2, 4… horas, como mucho un día; un rechazo, un día entero:
+    # recogida/reintentos.py): hay webs oficiales que alternan respuestas y cortes, pero otras
+    # (favt.gov.ru con 502, admin-smolensk.ru con 403) fallan siempre y se pedían cada hora,
+    # dos veces con el histórico. Las webs que no cargan desde el servidor, una vez al día.
     referencia = correcta if canal.web_desde_servidor else ultima
-    if referencia is None or ahora - referencia >= COMPROBAR_WEB_CADA:
+    toca = referencia is None or ahora - referencia >= COMPROBAR_WEB_CADA
+    if toca and (siguiente is None or ahora >= siguiente):
         estado["web_ultima_comprobacion"] = _instante(ahora)
         # Muchas webs oficiales bloquean las direcciones extranjeras o no responden: un solo
         # reintento y 20 s, para no gastar en ellas el tiempo de la lectura.
@@ -294,7 +301,14 @@ def verificar_web(
             html = web.texto(canal.web_oficial, lambda t: "<html" in t.lower())
         except (DescargaFallida, TiempoAgotado) as error:
             estado["web_resultado"] = f"no carga: {str(error)[:120]}"
+            if isinstance(error, DescargaFallida):
+                fallos = int(estado.get("web_fallos_seguidos", 0)) + 1
+                rechazo = isinstance(error, PaginaBloqueada) or bool(_RECHAZO.search(str(error)))
+                estado["web_fallos_seguidos"] = fallos
+                estado["web_siguiente"] = _instante(siguiente_intento(ahora, fallos, rechazo))
         else:
+            estado.pop("web_fallos_seguidos", None)
+            estado.pop("web_siguiente", None)
             if enlaza_canal(html, canal.web_enlaza):
                 estado["web_resultado"] = "enlaza"
                 estado["web_ultima_correcta"] = _instante(ahora)

@@ -34,6 +34,7 @@ import http.client
 import io
 import json
 import tarfile
+import time
 import urllib.error
 import urllib.request
 import zlib
@@ -57,8 +58,10 @@ BLOQUE = 1 << 20
 
 # Abre una URL con un método («HEAD» o «GET») desde un byte (petición Range si no es 0).
 Abridor = Callable[..., Any]
-# Una conexión que se corta antes de tiempo se reanuda desde donde iba, como mucho tantas veces.
+# Una conexión que se corta antes de tiempo se reanuda desde donde iba, como mucho tantas veces,
+# con espera creciente entre una y otra (2, 4, 8, 16 y 32 s): antes se reanudaba en el acto.
 REANUDACIONES = 5
+ESPERA_REANUDACION_S = 2.0
 
 
 class SinPublicar(LookupError):
@@ -162,8 +165,13 @@ class Encadenado(io.RawIOBase):
     Range) hasta REANUDACIONES veces; si aun así un trozo no llega entero, LecturaIncompleta."""
 
     def __init__(
-        self, urls: list[str], abrir: Abridor = abrir_urllib, tamanos: tuple[int, ...] = ()
+        self,
+        urls: list[str],
+        abrir: Abridor = abrir_urllib,
+        tamanos: tuple[int, ...] = (),
+        dormir: Callable[[float], None] = time.sleep,
     ) -> None:
+        self._dormir = dormir
         self._pendientes = list(urls)
         self._tamanos = list(tamanos)
         self._abrir = abrir
@@ -201,6 +209,7 @@ class Encadenado(io.RawIOBase):
                     raise LecturaIncompleta(
                         f"{self._url}: {self._leidos_trozo} de {self._esperado} bytes"
                     )
+                self._dormir(ESPERA_REANUDACION_S * 2**self._reanudaciones)
                 self._reanudaciones += 1
                 self._actual = self._abrir(self._url, "GET", self._leidos_trozo)
 
