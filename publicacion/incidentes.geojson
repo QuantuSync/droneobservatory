@@ -41390,6 +41390,21 @@
       }
      },
      {
+      "campo": "drones.numero",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-01T01:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-ba4ffc89fff8886e",
+      "medio": "malatyaguncel.com",
+      "valor": {
+       "max": 10,
+       "min": 2
+      }
+     },
+     {
       "campo": "lugar.localidad",
       "credibilidad": 3,
       "fecha": {
@@ -41411,6 +41426,18 @@
       "fiabilidad": "C",
       "fuente_id": "gdelt-42a16839295d699f",
       "medio": "news.de",
+      "valor": "DE"
+     },
+     {
+      "campo": "lugar.pais",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-01T01:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-ba4ffc89fff8886e",
+      "medio": "malatyaguncel.com",
       "valor": "DE"
      },
      {
@@ -41436,6 +41463,30 @@
       "fuente_id": "gdelt-184463ead88f4bd8",
       "medio": "vosgesmatin.fr",
       "valor": "Berlin Brandenburg Airport"
+     },
+     {
+      "campo": "presencia_dron",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-01T01:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-ba4ffc89fff8886e",
+      "medio": "malatyaguncel.com",
+      "valor": "no_confirmada"
+     },
+     {
+      "campo": "presencia_dron",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-01T08:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "gdelt-5f0e87547567d8c7-declaracion-1",
+      "medio": "Polizei Berlin (declaración oficial citada en n-tv.de)",
+      "valor": "confirmada"
      },
      {
       "campo": "presencia_dron",
@@ -41480,6 +41531,21 @@
       }
      },
      {
+      "campo": "tiempo.inicio",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-01T01:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-ba4ffc89fff8886e",
+      "medio": "malatyaguncel.com",
+      "valor": {
+       "precision": "minuto",
+       "valor": "2025-10-31T22:00Z"
+      }
+     },
+     {
       "campo": "tipo",
       "credibilidad": 3,
       "fecha": {
@@ -41489,6 +41555,18 @@
       "fiabilidad": "C",
       "fuente_id": "gdelt-184463ead88f4bd8",
       "medio": "vosgesmatin.fr",
+      "valor": "interrupcion_aeroportuaria"
+     },
+     {
+      "campo": "tipo",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-01T01:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-ba4ffc89fff8886e",
+      "medio": "malatyaguncel.com",
       "valor": "interrupcion_aeroportuaria"
      }
     ],
@@ -41504,7 +41582,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-09-30T21:56Z"
+      "valor": "2026-10-02T10:17Z"
      }
     },
     "drones": {
@@ -41565,20 +41643,6 @@
      },
      {
       "credibilidad": 3,
-      "enlace": "https://hnonline.sk/svet/96243287-dron-narusil-prevadzku-letiska-berlin-brandenbursko-v-nemecku-policia-nasadila-aj-vrtulnik",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-10-31T23:15Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "HNonline.sk - Dron narušil prevádzku letiska Berlín - Brandenbursko v Nemecku. Polícia nasadila aj vrtuľník",
-      "id": "gdelt-cfaa6fa0e2df52c6",
-      "idioma": "sk",
-      "medio": "hnonline.sk",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
       "enlace": "https://ilmessaggero.it:443/mondo/droni_aeroporto_berlino_allarme_cosa_e_successo-9161370.html",
       "fecha": {
        "precision": "aproximada",
@@ -41607,16 +41671,44 @@
      },
      {
       "credibilidad": 3,
-      "enlace": "https://cedarnews.net/newstasks/berlin-airport-reopens-after-temporary-suspension-due-to-drone-sightings/886730",
+      "enlace": "https://hnonline.sk/svet/96243287-dron-narusil-prevadzku-letiska-berlin-brandenbursko-v-nemecku-policia-nasadila-aj-vrtulnik",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-10-31T23:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "HNonline.sk - Dron narušil prevádzku letiska Berlín - Brandenbursko v Nemecku. Polícia nasadila aj vrtuľník",
+      "id": "gdelt-cfaa6fa0e2df52c6",
+      "idioma": "sk",
+      "medio": "hnonline.sk",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://vosgesmatin.fr/defense-guerre-conflit/2025/10/31/alerte-aux-drones-a-l-aeroport-de-berlin-les-vols-suspendus-pendant-pres-de-deux-heures",
       "fecha": {
        "precision": "aproximada",
        "valor": "2025-10-31T23:30Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "Berlin Airport Reopens After Temporary Suspension Due to Drone Sightings",
-      "id": "gdelt-abb14cf34b3c17ed",
-      "idioma": "en",
-      "medio": "cedarnews.net",
+      "frase_origen": "Les décollages et atterrissages ont été interrompus entre 20h08 et 21h58.",
+      "id": "gdelt-184463ead88f4bd8",
+      "idioma": "fr",
+      "medio": "vosgesmatin.fr",
+      "replicas": 26
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://sapo.pt/artigo/voos-suspensos-durante-2h-por-alerta-de-drones-no-aeroporto-de-berlim-6905409983bf480a24788964",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-10-31T23:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Voos suspensos durante 2h por alerta de drones no aeroporto de Berlim",
+      "id": "gdelt-65136b9ef2e07fce",
+      "idioma": "pt",
+      "medio": "sapo.pt",
       "replicas": 0
      },
      {
@@ -41635,31 +41727,17 @@
      },
      {
       "credibilidad": 3,
-      "enlace": "https://sapo.pt/artigo/voos-suspensos-durante-2h-por-alerta-de-drones-no-aeroporto-de-berlim-6905409983bf480a24788964",
+      "enlace": "https://cedarnews.net/newstasks/berlin-airport-reopens-after-temporary-suspension-due-to-drone-sightings/886730",
       "fecha": {
        "precision": "aproximada",
        "valor": "2025-10-31T23:30Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "Voos suspensos durante 2h por alerta de drones no aeroporto de Berlim",
-      "id": "gdelt-65136b9ef2e07fce",
-      "idioma": "pt",
-      "medio": "sapo.pt",
+      "frase_origen": "Berlin Airport Reopens After Temporary Suspension Due to Drone Sightings",
+      "id": "gdelt-abb14cf34b3c17ed",
+      "idioma": "en",
+      "medio": "cedarnews.net",
       "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://vosgesmatin.fr/defense-guerre-conflit/2025/10/31/alerte-aux-drones-a-l-aeroport-de-berlin-les-vols-suspendus-pendant-pres-de-deux-heures",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-10-31T23:30Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Les décollages et atterrissages ont été interrompus entre 20h08 et 21h58.",
-      "id": "gdelt-184463ead88f4bd8",
-      "idioma": "fr",
-      "medio": "vosgesmatin.fr",
-      "replicas": 26
      },
      {
       "credibilidad": 3,
@@ -41691,6 +41769,20 @@
      },
      {
       "credibilidad": 3,
+      "enlace": "https://volksstimme.de/panorama/drohnensichtung-flugbetrieb-in-berlin-am-abend-unterbrochen-4141142",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-01T00:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Berliner Hauptstadtflughafen: Drohnensichtung: Flugbetrieb in Berlin am Abend unterbrochen",
+      "id": "gdelt-2c33f1d2c1bb239e",
+      "idioma": "de",
+      "medio": "volksstimme.de",
+      "replicas": 1
+     },
+     {
+      "credibilidad": 3,
       "enlace": "https://adnkronos.com/internazionale/esteri/germania-allerta-droni-allaeroporto-di-berlino-voli-sospesi-e-dirottati-per-circa-2-ore_n148F6PmrEKCiKahLHdtJ",
       "fecha": {
        "precision": "aproximada",
@@ -41702,20 +41794,6 @@
       "idioma": "it",
       "medio": "adnkronos.com",
       "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://rfj.ch/rfj/Actualite/Monde/Alerte-aux-drones-a-l-aeroport-de-Berlin-vols-suspendus-2-heures.html",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-01T00:00Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Alerte aux drones à l'aéroport de Berlin: vols suspendus 2 heures",
-      "id": "gdelt-c2404c12ad8c427d",
-      "idioma": "fr",
-      "medio": "rfj.ch",
-      "replicas": 1
      },
      {
       "credibilidad": 3,
@@ -41733,16 +41811,16 @@
      },
      {
       "credibilidad": 3,
-      "enlace": "https://volksstimme.de/panorama/drohnensichtung-flugbetrieb-in-berlin-am-abend-unterbrochen-4141142",
+      "enlace": "https://rfj.ch/rfj/Actualite/Monde/Alerte-aux-drones-a-l-aeroport-de-Berlin-vols-suspendus-2-heures.html",
       "fecha": {
        "precision": "aproximada",
        "valor": "2025-11-01T00:00Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "Berliner Hauptstadtflughafen: Drohnensichtung: Flugbetrieb in Berlin am Abend unterbrochen",
-      "id": "gdelt-2c33f1d2c1bb239e",
-      "idioma": "de",
-      "medio": "volksstimme.de",
+      "frase_origen": "Alerte aux drones à l'aéroport de Berlin: vols suspendus 2 heures",
+      "id": "gdelt-c2404c12ad8c427d",
+      "idioma": "fr",
+      "medio": "rfj.ch",
       "replicas": 1
      },
      {
@@ -41789,34 +41867,6 @@
      },
      {
       "credibilidad": 3,
-      "enlace": "https://corriere.it/esteri/diretta-live/25_novembre_01/ucraina-russia-le-notizie-sul-conflitto-in-diretta-allerta-droni-all-aeroporto-di-berlino-voli-sospesi-per-quasi-due-ore-cnn-ok.shtml",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-01T00:30Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Ucraina - Russia, le notizie sul conflitto in diretta | Allerta droni all'aeroporto di Berlino: voli sospesi per quasi due ore. Cnn: ok Pentagono a",
-      "id": "gdelt-14bd86fd3a526168",
-      "idioma": "it",
-      "medio": "corriere.it",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://em.com.br/internacional/2025/10/7283320-voos-suspensos-temporariamente-no-aeroporto-de-berlim-por-alerta-de-drones.html",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-01T00:30Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Voos suspensos temporariamente no aeroporto de Berlim por alerta de drones",
-      "id": "gdelt-cbe32a88656ea705",
-      "idioma": "pt",
-      "medio": "em.com.br",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
       "enlace": "https://news.bg/int-politics/dronove-obarkaha-trafika-na-letishteto-v-berlin.html",
       "fecha": {
        "precision": "aproximada",
@@ -41827,6 +41877,20 @@
       "id": "gdelt-01aafc52568bd5cc",
       "idioma": "bg",
       "medio": "news.bg",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://corriere.it/esteri/diretta-live/25_novembre_01/ucraina-russia-le-notizie-sul-conflitto-in-diretta-allerta-droni-all-aeroporto-di-berlino-voli-sospesi-per-quasi-due-ore-cnn-ok.shtml",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-01T00:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Ucraina - Russia, le notizie sul conflitto in diretta | Allerta droni all'aeroporto di Berlino: voli sospesi per quasi due ore. Cnn: ok Pentagono a",
+      "id": "gdelt-14bd86fd3a526168",
+      "idioma": "it",
+      "medio": "corriere.it",
       "replicas": 0
      },
      {
@@ -41845,17 +41909,17 @@
      },
      {
       "credibilidad": 3,
-      "enlace": "https://ansa.it/sito/notizie/mondo/2025/10/31/allerta-droni-allaeroporto-di-berlino-voli-sospesi-per-due-ore_b9d6061e-9ac3-428a-bc3e-001d9ba28431.html",
+      "enlace": "https://em.com.br/internacional/2025/10/7283320-voos-suspensos-temporariamente-no-aeroporto-de-berlim-por-alerta-de-drones.html",
       "fecha": {
        "precision": "aproximada",
-       "valor": "2025-11-01T00:45Z"
+       "valor": "2025-11-01T00:30Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "Allerta droni all'aeroporto di Berlino, voli sospesi per due ore - Notizie",
-      "id": "gdelt-f82ad3ace250d085",
-      "idioma": "it",
-      "medio": "ansa.it",
-      "replicas": 2
+      "frase_origen": "Voos suspensos temporariamente no aeroporto de Berlim por alerta de drones",
+      "id": "gdelt-cbe32a88656ea705",
+      "idioma": "pt",
+      "medio": "em.com.br",
+      "replicas": 0
      },
      {
       "credibilidad": 3,
@@ -41887,6 +41951,20 @@
      },
      {
       "credibilidad": 3,
+      "enlace": "https://ansa.it/sito/notizie/mondo/2025/10/31/allerta-droni-allaeroporto-di-berlino-voli-sospesi-per-due-ore_b9d6061e-9ac3-428a-bc3e-001d9ba28431.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-01T00:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Allerta droni all'aeroporto di Berlino, voli sospesi per due ore - Notizie",
+      "id": "gdelt-f82ad3ace250d085",
+      "idioma": "it",
+      "medio": "ansa.it",
+      "replicas": 2
+     },
+     {
+      "credibilidad": 3,
       "enlace": "https://dennikn.sk/minuta/4943033",
       "fecha": {
        "precision": "aproximada",
@@ -41897,20 +41975,6 @@
       "id": "gdelt-1d06ce7f1edd7df4",
       "idioma": "sk",
       "medio": "dennikn.sk",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://dw.com/en/berlin-airport-briefly-halts-flights-due-to-drone-sightings/a-74579743",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-01T01:00Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Berlin airport briefly halts flights due to drone sightings – DW – 11/01/2025",
-      "id": "gdelt-ac46947ec3b97400",
-      "idioma": "en",
-      "medio": "dw.com",
       "replicas": 0
      },
      {
@@ -41929,6 +41993,48 @@
      },
      {
       "credibilidad": 3,
+      "enlace": "https://dw.com/en/berlin-airport-briefly-halts-flights-due-to-drone-sightings/a-74579743",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-01T01:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Berlin airport briefly halts flights due to drone sightings – DW – 11/01/2025",
+      "id": "gdelt-ac46947ec3b97400",
+      "idioma": "en",
+      "medio": "dw.com",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://malatyaguncel.com/brandenburg-havalimani-semalarinda-supheli-dronlar-2930612h.htm",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-01T01:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Brandenburg Havalimanı semalarında şüpheli dronların görülmesi üzerine uçuşlar yaklaşık 2 saat süreyle askıya alındı.",
+      "id": "gdelt-ba4ffc89fff8886e",
+      "idioma": "tr",
+      "medio": "malatyaguncel.com",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://timesofindia.indiatimes.com/world/rest-of-world/danger-has-been-averted-berlin-airport-briefly-halts-flights-after-unidentified-drone-sightings/articleshow/125007966.cms",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-01T01:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "'Danger has been averted': Berlin airport briefly halts flights after unidentified drone sightings",
+      "id": "gdelt-5e2f26fa5f878ea2",
+      "idioma": "en",
+      "medio": "indiatimes.com",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
       "enlace": "https://20minutes.fr/monde/allemagne/4182960-20251101-allemagne-vols-suspendus-pendant-deux-heures-aeroport-berlin-apres-nouveau-survol-drones",
       "fecha": {
        "precision": "aproximada",
@@ -41939,20 +42045,6 @@
       "id": "gdelt-5eadb1e5c2cee425",
       "idioma": "fr",
       "medio": "20minutes.fr",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://aa.com.tr/en/europe/berlin-airport-briefly-suspends-operations-due-to-drone-sighting-/3732334",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-01T01:15Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Berlin Airport briefly suspends operations due to drone sighting",
-      "id": "gdelt-a13efbce52fcfaeb",
-      "idioma": "en",
-      "medio": "aa.com.tr",
       "replicas": 0
      },
      {
@@ -41971,30 +42063,16 @@
      },
      {
       "credibilidad": 3,
-      "enlace": "https://timesofindia.indiatimes.com/world/rest-of-world/danger-has-been-averted-berlin-airport-briefly-halts-flights-after-unidentified-drone-sightings/articleshow/125007966.cms",
+      "enlace": "https://aa.com.tr/en/europe/berlin-airport-briefly-suspends-operations-due-to-drone-sighting-/3732334",
       "fecha": {
        "precision": "aproximada",
        "valor": "2025-11-01T01:15Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "'Danger has been averted': Berlin airport briefly halts flights after unidentified drone sightings",
-      "id": "gdelt-5e2f26fa5f878ea2",
+      "frase_origen": "Berlin Airport briefly suspends operations due to drone sighting",
+      "id": "gdelt-a13efbce52fcfaeb",
       "idioma": "en",
-      "medio": "indiatimes.com",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://leparisien.fr/international/allemagne/alerte-aux-drones-le-trafic-aerien-suspendu-a-laeroport-de-berlin-31-10-2025-TBWGAOBDXNETTM3OIQORM5AGMA.php",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-01T01:30Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Alerte aux drones : le trafic aérien temporairement suspendu à l'aéroport de Berlin",
-      "id": "gdelt-c7e0d2f6dd9ffe65",
-      "idioma": "fr",
-      "medio": "leparisien.fr",
+      "medio": "aa.com.tr",
       "replicas": 0
      },
      {
@@ -42013,6 +42091,20 @@
      },
      {
       "credibilidad": 3,
+      "enlace": "https://leparisien.fr/international/allemagne/alerte-aux-drones-le-trafic-aerien-suspendu-a-laeroport-de-berlin-31-10-2025-TBWGAOBDXNETTM3OIQORM5AGMA.php",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-01T01:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Alerte aux drones : le trafic aérien temporairement suspendu à l'aéroport de Berlin",
+      "id": "gdelt-c7e0d2f6dd9ffe65",
+      "idioma": "fr",
+      "medio": "leparisien.fr",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
       "enlace": "https://dw.com/es/suspenden-vuelos-en-aeropuerto-de-berl%C3%ADn-por-alerta-de-drones/a-74579947",
       "fecha": {
        "precision": "aproximada",
@@ -42023,6 +42115,20 @@
       "id": "gdelt-5a2817d98d4ff2de",
       "idioma": "es",
       "medio": "dw.com",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://mersinhaber.com/haber-berlin-brandenburg-havalimaninda-dron-goruldu-ucuslar-durdu/448952",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-01T02:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Berlin Brandenburg Havalimanı'nda Dron Görüldü, Uçuşlar Durdu",
+      "id": "gdelt-da87aa15c3049464",
+      "idioma": "tr",
+      "medio": "mersinhaber.com",
       "replicas": 0
      },
      {
@@ -42083,6 +42189,20 @@
      },
      {
       "credibilidad": 3,
+      "enlace": "https://hurriyet.com.tr/dunya/almanyada-dron-alarmi-brandenburg-havalimaninda-ucuslar-durdu-43004115",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-01T03:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Almanya'da dron alarmı! Brandenburg Havalimanı'nda uçuşlar durdu",
+      "id": "gdelt-4333dc905ca892a6",
+      "idioma": "tr",
+      "medio": "hurriyet.com.tr",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
       "enlace": "https://yahoo.com/news/articles/berlin-airport-temporarily-halts-flights-041006047.html",
       "fecha": {
        "precision": "aproximada",
@@ -42125,20 +42245,6 @@
      },
      {
       "credibilidad": 3,
-      "enlace": "https://diariosigloxxi.com/texto-ep/mostrar/20251101021836/aeropuerto-berlin-suspende-parte-actividad-durante-horas-presencia-dron",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-01T05:30Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "El aeropuerto de Berlín suspende parte de su actividad durante dos horas por la presencia de un dron",
-      "id": "gdelt-4c78d2a33ae5da1e",
-      "idioma": "es",
-      "medio": "diariosigloxxi.com",
-      "replicas": 3
-     },
-     {
-      "credibilidad": 3,
       "enlace": "https://excelsior.com.mx/global/alerta-drones-aeropuerto-berlin-alemania/1749074",
       "fecha": {
        "precision": "aproximada",
@@ -42150,6 +42256,20 @@
       "idioma": "es",
       "medio": "excelsior.com.mx",
       "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://diariosigloxxi.com/texto-ep/mostrar/20251101021836/aeropuerto-berlin-suspende-parte-actividad-durante-horas-presencia-dron",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-01T05:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "El aeropuerto de Berlín suspende parte de su actividad durante dos horas por la presencia de un dron",
+      "id": "gdelt-4c78d2a33ae5da1e",
+      "idioma": "es",
+      "medio": "diariosigloxxi.com",
+      "replicas": 3
      },
      {
       "credibilidad": 3,
@@ -42181,20 +42301,6 @@
      },
      {
       "credibilidad": 3,
-      "enlace": "https://idnes.cz/zpravy/zahranicni/berlin-letiste-drony-provoz.A251101_031403_zahranicni_bur",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-01T06:30Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Letiště v Berlíně kvůli dronu zastavilo provoz",
-      "id": "gdelt-d30548a59120fa08",
-      "idioma": "cs",
-      "medio": "idnes.cz",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
       "enlace": "https://mediafax.ro/externe/alerta-cu-drone-la-aeroportul-din-berlin-zborurile-au-fost-suspendate-timp-de-doua-ore-23635082",
       "fecha": {
        "precision": "aproximada",
@@ -42209,30 +42315,16 @@
      },
      {
       "credibilidad": 3,
-      "enlace": "https://rtl.fr/actu/international/alerte-aux-drones-a-l-aeroport-de-berlin-les-vols-suspendus-pendant-pres-de-deux-heures-afp-7900561227",
+      "enlace": "https://idnes.cz/zpravy/zahranicni/berlin-letiste-drony-provoz.A251101_031403_zahranicni_bur",
       "fecha": {
        "precision": "aproximada",
-       "valor": "2025-11-01T06:45Z"
+       "valor": "2025-11-01T06:30Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "Les vols suspendus deux heures à l'aéroport de Berlin après un survol de drones",
-      "id": "gdelt-d8f2d8f86f06f75b",
-      "idioma": "fr",
-      "medio": "rtl.fr",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://vesti.bg/sviat/dron-predizvika-haos-na-letishteto-v-berlin-6242726",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-01T06:45Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Дрон предизвика хаос на летището в Берлин",
-      "id": "gdelt-b844eee29bb50fa4",
-      "idioma": "bg",
-      "medio": "vesti.bg",
+      "frase_origen": "Letiště v Berlíně kvůli dronu zastavilo provoz",
+      "id": "gdelt-d30548a59120fa08",
+      "idioma": "cs",
+      "medio": "idnes.cz",
       "replicas": 0
      },
      {
@@ -42251,16 +42343,58 @@
      },
      {
       "credibilidad": 3,
-      "enlace": "https://bfmtv.com/international/europe/allemagne/le-trafic-aerien-suspendu-pendant-deux-heures-a-l-aeroport-de-berlin-apres-un-survol-de-drones_AD-202511010101.html",
+      "enlace": "https://vesti.bg/sviat/dron-predizvika-haos-na-letishteto-v-berlin-6242726",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-01T06:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Дрон предизвика хаос на летището в Берлин",
+      "id": "gdelt-b844eee29bb50fa4",
+      "idioma": "bg",
+      "medio": "vesti.bg",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://rtl.fr/actu/international/alerte-aux-drones-a-l-aeroport-de-berlin-les-vols-suspendus-pendant-pres-de-deux-heures-afp-7900561227",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-01T06:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Les vols suspendus deux heures à l'aéroport de Berlin après un survol de drones",
+      "id": "gdelt-d8f2d8f86f06f75b",
+      "idioma": "fr",
+      "medio": "rtl.fr",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://manager.bg/%D1%81%D0%B2%D1%8F%D1%82/neidentificiran-dron-predizvika-zakasnenia-i-otkloneni-poleti-na-letisteto-v-berlin",
       "fecha": {
        "precision": "aproximada",
        "valor": "2025-11-01T07:00Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "Le trafic aérien suspendu pendant deux heures à l'aéroport de Berlin après un survol de drones",
-      "id": "gdelt-b763439599bdade3",
-      "idioma": "fr",
-      "medio": "bfmtv.com",
+      "frase_origen": "Неидентифициран дрон предизвика закъснения и отклонени полети на летището в Берлин",
+      "id": "gdelt-75c7ae3e115629e0",
+      "idioma": "bg",
+      "medio": "manager.bg",
+      "replicas": 1
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://yahoo.com/news/articles/berlin-airport-suspends-operations-due-031700734.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-01T07:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Berlin airport suspends operations due to unidentified drone",
+      "id": "gdelt-a7be8a5f22020489",
+      "idioma": "en",
+      "medio": "yahoo.com",
       "replicas": 0
      },
      {
@@ -42279,17 +42413,17 @@
      },
      {
       "credibilidad": 3,
-      "enlace": "https://manager.bg/%D1%81%D0%B2%D1%8F%D1%82/neidentificiran-dron-predizvika-zakasnenia-i-otkloneni-poleti-na-letisteto-v-berlin",
+      "enlace": "https://bfmtv.com/international/europe/allemagne/le-trafic-aerien-suspendu-pendant-deux-heures-a-l-aeroport-de-berlin-apres-un-survol-de-drones_AD-202511010101.html",
       "fecha": {
        "precision": "aproximada",
        "valor": "2025-11-01T07:00Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "Неидентифициран дрон предизвика закъснения и отклонени полети на летището в Берлин",
-      "id": "gdelt-75c7ae3e115629e0",
-      "idioma": "bg",
-      "medio": "manager.bg",
-      "replicas": 1
+      "frase_origen": "Le trafic aérien suspendu pendant deux heures à l'aéroport de Berlin après un survol de drones",
+      "id": "gdelt-b763439599bdade3",
+      "idioma": "fr",
+      "medio": "bfmtv.com",
+      "replicas": 0
      },
      {
       "credibilidad": 3,
@@ -42303,34 +42437,6 @@
       "id": "gdelt-d20850894fc077dc",
       "idioma": "it",
       "medio": "primapress.it",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://yahoo.com/news/articles/berlin-airport-suspends-operations-due-031700734.html",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-01T07:00Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Berlin airport suspends operations due to unidentified drone",
-      "id": "gdelt-a7be8a5f22020489",
-      "idioma": "en",
-      "medio": "yahoo.com",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://news.az/news/berlin-airport-pauses-flights-after-suspicious-drone-sighting",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-01T07:15Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Berlin airport pauses flights after suspicious drone sighting",
-      "id": "gdelt-772772f17575442c",
-      "idioma": "en",
-      "medio": "news.az",
       "replicas": 0
      },
      {
@@ -42349,6 +42455,20 @@
      },
      {
       "credibilidad": 3,
+      "enlace": "https://news.az/news/berlin-airport-pauses-flights-after-suspicious-drone-sighting",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-01T07:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Berlin airport pauses flights after suspicious drone sighting",
+      "id": "gdelt-772772f17575442c",
+      "idioma": "en",
+      "medio": "news.az",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
       "enlace": "https://dhnet.be/actu/monde/2025/11/01/alerte-aux-drones-a-laeroport-de-berlin-nous-supposons-que-le-danger-est-ecarte-pour-le-moment-AGFXDN3PXRC3ZC6KZZAJXDHAYE",
       "fecha": {
        "precision": "aproximada",
@@ -42360,20 +42480,6 @@
       "idioma": "fr",
       "medio": "dhnet.be",
       "replicas": 1
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://dnes.bg/a/2-svyat/698311-zaradi-dronove-letishteto-v-berlin-sprya-rabota-za-dva-chasa",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-01T07:30Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Заради дронове: Летището в Берлин спря работа за два часа",
-      "id": "gdelt-eb8ef5b69e6669d1",
-      "idioma": "bg",
-      "medio": "dnes.bg",
-      "replicas": 0
      },
      {
       "credibilidad": 3,
@@ -42405,16 +42511,16 @@
      },
      {
       "credibilidad": 3,
-      "enlace": "https://realitatea.net/stiri/actual/haos-pe-aeroportul-berlinbrandenburg-drone-neautorizate-au-oprit-traficul-aerian_6905a083a0d31a442f530a92",
+      "enlace": "https://dnes.bg/a/2-svyat/698311-zaradi-dronove-letishteto-v-berlin-sprya-rabota-za-dva-chasa",
       "fecha": {
        "precision": "aproximada",
-       "valor": "2025-11-01T07:45Z"
+       "valor": "2025-11-01T07:30Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "Haos pe Aeroportul Berlin-Brandenburg. Drone neautorizate au oprit traficul aerian",
-      "id": "gdelt-5a02e778ce1238d3",
-      "idioma": "ro",
-      "medio": "realitatea.net",
+      "frase_origen": "Заради дронове: Летището в Берлин спря работа за два часа",
+      "id": "gdelt-eb8ef5b69e6669d1",
+      "idioma": "bg",
+      "medio": "dnes.bg",
       "replicas": 0
      },
      {
@@ -42433,6 +42539,20 @@
      },
      {
       "credibilidad": 3,
+      "enlace": "https://realitatea.net/stiri/actual/haos-pe-aeroportul-berlinbrandenburg-drone-neautorizate-au-oprit-traficul-aerian_6905a083a0d31a442f530a92",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-01T07:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Haos pe Aeroportul Berlin-Brandenburg. Drone neautorizate au oprit traficul aerian",
+      "id": "gdelt-5a02e778ce1238d3",
+      "idioma": "ro",
+      "medio": "realitatea.net",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
       "enlace": "https://zocalo.com.mx/suspenden-vuelos-en-berlin-por-drones-no-identificados",
       "fecha": {
        "precision": "aproximada",
@@ -42444,6 +42564,20 @@
       "idioma": "es",
       "medio": "zocalo.com.mx",
       "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://lr-online.de/nachrichten/brandenburg/flughafen-ber-flugbetrieb-nachdrohnensichtung-in-schoenefeld-unterbrochen-78418107.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-01T08:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Drohne bei Flughafen BER: Flugbetrieb nach Drohnensichtung in Schönefeld unterbrochen",
+      "id": "gdelt-2302531e35d6a3e8",
+      "idioma": "de",
+      "medio": "lr-online.de",
+      "replicas": 1
      },
      {
       "credibilidad": 3,
@@ -42461,6 +42595,34 @@
      },
      {
       "credibilidad": 3,
+      "enlace": "https://n-tv.de/regionales/berlin-und-brandenburg/Drohnen-Sichtung-Keine-Beeintraechtigungen-mehr-am-BER-article26134704.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-01T08:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Berlin & Brandenburg: Drohnen-Sichtung – Keine Beeinträchtigungen mehr am BER",
+      "id": "gdelt-5f0e87547567d8c7",
+      "idioma": "de",
+      "medio": "n-tv.de",
+      "replicas": 1
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://n-tv.de/regionales/berlin-und-brandenburg/Drohnen-Sichtung-Keine-Beeintraechtigungen-mehr-am-BER-article26134704.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-01T08:00Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Nach einer Drohnensichtung am Berliner Hauptstadtflughafen BER und einer rund zweistündigen Sperrung des Flugbetriebs",
+      "id": "gdelt-5f0e87547567d8c7-declaracion-1",
+      "idioma": "de",
+      "medio": "Polizei Berlin (declaración oficial citada en n-tv.de)",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
       "enlace": "https://botasot.info/evrope-bota/2407665/serish-drone-ne-gjermani-aeroporti-berlin-bradenburg-ndalon-fluturimet-per-dy-ore",
       "fecha": {
        "precision": "aproximada",
@@ -42472,20 +42634,6 @@
       "idioma": "sq",
       "medio": "botasot.info",
       "replicas": 2
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://lr-online.de/nachrichten/brandenburg/flughafen-ber-flugbetrieb-nachdrohnensichtung-in-schoenefeld-unterbrochen-78418107.html",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-01T08:00Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Drohne bei Flughafen BER: Flugbetrieb nach Drohnensichtung in Schönefeld unterbrochen",
-      "id": "gdelt-2302531e35d6a3e8",
-      "idioma": "de",
-      "medio": "lr-online.de",
-      "replicas": 1
      },
      {
       "credibilidad": 3,
@@ -42545,16 +42693,30 @@
      },
      {
       "credibilidad": 3,
-      "enlace": "https://actualitateaprahoveana.ro/actual/stiri-internationale/68221-zboruri-suspendate-timp-de-aproape-doua-ore-pe-aeroportul-din-berlin-din-cauza-prezentei-unor-drone",
+      "enlace": "https://vienna.at/flughafen-berlin-wegen-drohnensichtung-gesperrt/9776168",
       "fecha": {
        "precision": "aproximada",
        "valor": "2025-11-01T09:15Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "Zboruri suspendate timp de aproape două ore, pe aeroportul din Berlin, din cauza prezenței unor drone",
-      "id": "gdelt-57fe3219299cfa2c",
-      "idioma": "ro",
-      "medio": "actualitateaprahoveana.ro",
+      "frase_origen": "Flughafen Berlin BER wegen Drohnensichtung gesperrt",
+      "id": "gdelt-1b4b514d69f6dd20",
+      "idioma": "de",
+      "medio": "vienna.at",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://yahoo.com/news/articles/no-further-disruptions-berlin-airport-081625054.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-01T09:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "No further disruptions at Berlin airport following drone sighting",
+      "id": "gdelt-416d6f8105c5fc49",
+      "idioma": "en",
+      "medio": "yahoo.com",
       "replicas": 0
      },
      {
@@ -42573,6 +42735,20 @@
      },
      {
       "credibilidad": 3,
+      "enlace": "https://actualitateaprahoveana.ro/actual/stiri-internationale/68221-zboruri-suspendate-timp-de-aproape-doua-ore-pe-aeroportul-din-berlin-din-cauza-prezentei-unor-drone",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-01T09:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Zboruri suspendate timp de aproape două ore, pe aeroportul din Berlin, din cauza prezenței unor drone",
+      "id": "gdelt-57fe3219299cfa2c",
+      "idioma": "ro",
+      "medio": "actualitateaprahoveana.ro",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
       "enlace": "https://ilsole24ore.com/art/allarme-droni-notte-aeroporto-berlino-chiuso-due-ore-AHpbCPUD",
       "fecha": {
        "precision": "aproximada",
@@ -42584,34 +42760,6 @@
       "idioma": "it",
       "medio": "ilsole24ore.com",
       "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://lematin.ch/story/aeroport-de-berlin-all-vols-suspendus-pendant-deux-heures-apres-une-alerte-aux-drones-103444052",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-01T09:15Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Aéroport de Berlin (All): Vols suspendus pendant deux heures après une alerte aux drones",
-      "id": "gdelt-e7bc34d51bc2ad62",
-      "idioma": "fr",
-      "medio": "lematin.ch",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://news.yam.md/ro/s/18049160",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-01T09:15Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "News.yam.md: Zborurile de pe Aeroportul Berlin-Brandenburg, suspendate două ore din cauza dronelor misterioase – zeci de curse redirecționate și întârzieri masive...",
-      "id": "gdelt-91fa7a603d791671",
-      "idioma": "ro",
-      "medio": "news.yam.md",
-      "replicas": 1
      },
      {
       "credibilidad": 3,
@@ -42629,16 +42777,44 @@
      },
      {
       "credibilidad": 3,
-      "enlace": "https://yahoo.com/news/articles/no-further-disruptions-berlin-airport-081625054.html",
+      "enlace": "https://news.yam.md/ro/s/18049160",
       "fecha": {
        "precision": "aproximada",
        "valor": "2025-11-01T09:15Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "No further disruptions at Berlin airport following drone sighting",
-      "id": "gdelt-416d6f8105c5fc49",
-      "idioma": "en",
-      "medio": "yahoo.com",
+      "frase_origen": "News.yam.md: Zborurile de pe Aeroportul Berlin-Brandenburg, suspendate două ore din cauza dronelor misterioase – zeci de curse redirecționate și întârzieri masive...",
+      "id": "gdelt-91fa7a603d791671",
+      "idioma": "ro",
+      "medio": "news.yam.md",
+      "replicas": 1
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://lematin.ch/story/aeroport-de-berlin-all-vols-suspendus-pendant-deux-heures-apres-une-alerte-aux-drones-103444052",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-01T09:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Aéroport de Berlin (All): Vols suspendus pendant deux heures après une alerte aux drones",
+      "id": "gdelt-e7bc34d51bc2ad62",
+      "idioma": "fr",
+      "medio": "lematin.ch",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://news.yam.md/ro/story/18049160",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-01T09:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Zborurile de pe Aeroportul Berlin-Brandenburg, suspendate două ore din cauza dronelor misterioase – zeci de curse redirecționate și întârzieri masive",
+      "id": "gdelt-f5ca29901478989e",
+      "idioma": "ro",
+      "medio": "news.yam.md",
       "replicas": 0
      },
      {
@@ -42653,6 +42829,20 @@
       "id": "gdelt-0ceaec8c3f7b7299",
       "idioma": "el",
       "medio": "iefimerida.gr",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://n-tv.de/regionales/berlin-und-brandenburg/Drohnen-Sichtung-Flugbetrieb-am-BER-laeuft-ohne-Stoerung-article26134704.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-01T09:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Berlin & Brandenburg: Drohnen-Sichtung – Flugbetrieb am BER läuft ohne Störung",
+      "id": "gdelt-36f3207e326ad7e1",
+      "idioma": "de",
+      "medio": "n-tv.de",
       "replicas": 0
      },
      {
@@ -42769,6 +42959,34 @@
      },
      {
       "credibilidad": 3,
+      "enlace": "https://yahoo.com/news/articles/drone-sighting-temporarily-suspends-air-101801494.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-01T10:45Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Police confirmed the sighting but did not find the drone.",
+      "id": "gdelt-fc294945c0a0eb02-declaracion-1",
+      "idioma": "en",
+      "medio": "Berliner Polizei (declaración oficial citada en yahoo.com)",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://curierulnational.ro/zboruri-suspendate-temporar-din-cauza-unor-drone-neidentificate-pe-aeroportul-berlin-brandenburg",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-01T11:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Zboruri suspendate temporar din cauza unor drone neidentificate pe Aeroportul Berlin Brandenburg",
+      "id": "gdelt-f63c67440c078c5a",
+      "idioma": "ro",
+      "medio": "curierulnational.ro",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
       "enlace": "https://antena3.ro/externe/alerta-pe-aeroportul-din-berlin-mai-multe-zboruri-au-fost-suspendate-din-cauza-unei-drone-neidentificate-765278.html",
       "fecha": {
        "precision": "aproximada",
@@ -42793,20 +43011,6 @@
       "id": "gdelt-440e7d942ea96506",
       "idioma": "ca",
       "medio": "3cat.cat",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://news.yam.md/ro/story/18049724",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-01T11:45Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Alertă pe Aeroportul din Berlin: Mai multe zboruri au fost suspendate timp de aproape două ore, din cauza unei drone",
-      "id": "gdelt-e588c9e1bff92a72",
-      "idioma": "ro",
-      "medio": "news.yam.md",
       "replicas": 0
      },
      {
@@ -42839,16 +43043,16 @@
      },
      {
       "credibilidad": 3,
-      "enlace": "https://digi24.ro/stiri/externe/o-drona-a-dus-la-suspendarea-traficului-aerian-pe-aeroportul-din-berlin-3483103",
+      "enlace": "https://news.yam.md/ro/story/18049724",
       "fecha": {
        "precision": "aproximada",
-       "valor": "2025-11-01T12:00Z"
+       "valor": "2025-11-01T11:45Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "O dronă a dus la suspendarea traficului aerian pe Aeroportul din Berlin",
-      "id": "gdelt-e19ba1bad69d8af3",
+      "frase_origen": "Alertă pe Aeroportul din Berlin: Mai multe zboruri au fost suspendate timp de aproape două ore, din cauza unei drone",
+      "id": "gdelt-e588c9e1bff92a72",
       "idioma": "ro",
-      "medio": "digi24.ro",
+      "medio": "news.yam.md",
       "replicas": 0
      },
      {
@@ -42877,6 +43081,20 @@
       "id": "gdelt-7114429847987fc2",
       "idioma": "pt",
       "medio": "euronews.com",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://digi24.ro/stiri/externe/o-drona-a-dus-la-suspendarea-traficului-aerian-pe-aeroportul-din-berlin-3483103",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-01T12:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "O dronă a dus la suspendarea traficului aerian pe Aeroportul din Berlin",
+      "id": "gdelt-e19ba1bad69d8af3",
+      "idioma": "ro",
+      "medio": "digi24.ro",
       "replicas": 0
      },
      {
@@ -42965,16 +43183,16 @@
      },
      {
       "credibilidad": 3,
-      "enlace": "https://elimparcial.com/mundo/2025/11/01/vuelos-suspendidos-en-aeropuerto-de-berlin-por-presunta-presencia-de-dron-europa-se-mantiene-en-alerta",
+      "enlace": "https://n-tv.de/regionales/berlin-und-brandenburg/Vorfall-am-BER-Spranger-will-bessere-Drohnenabwehr-article26135028.html",
       "fecha": {
        "precision": "aproximada",
-       "valor": "2025-11-01T13:45Z"
+       "valor": "2025-11-01T13:15Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "Vuelos suspendidos en aeropuerto de Berlín por presunta presencia de dron; Europa se mantiene en alerta",
-      "id": "gdelt-eab3a3d738b17448",
-      "idioma": "es",
-      "medio": "elimparcial.com",
+      "frase_origen": "Berlin & Brandenburg: Vorfall am BER - Spranger will bessere Drohnenabwehr",
+      "id": "gdelt-7e4e6d8c7c18a1aa",
+      "idioma": "de",
+      "medio": "n-tv.de",
       "replicas": 0
      },
      {
@@ -42989,6 +43207,20 @@
       "id": "gdelt-045a956e0b70a919",
       "idioma": "fr",
       "medio": "nouvelobs.com",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://elimparcial.com/mundo/2025/11/01/vuelos-suspendidos-en-aeropuerto-de-berlin-por-presunta-presencia-de-dron-europa-se-mantiene-en-alerta",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-01T13:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Vuelos suspendidos en aeropuerto de Berlín por presunta presencia de dron; Europa se mantiene en alerta",
+      "id": "gdelt-eab3a3d738b17448",
+      "idioma": "es",
+      "medio": "elimparcial.com",
       "replicas": 0
      },
      {
@@ -43087,20 +43319,6 @@
       "id": "gdelt-9bd2056a2e324614",
       "idioma": "it",
       "medio": "meteoweb.eu",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 1,
-      "enlace": "https://yahoo.com/news/articles/drone-sighting-temporarily-suspends-air-101801494.html",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-01T10:45Z"
-      },
-      "fiabilidad": "B",
-      "frase_origen": "Police confirmed the sighting but did not find the drone.",
-      "id": "gdelt-fc294945c0a0eb02-declaracion-1",
-      "idioma": "en",
-      "medio": "Berliner Polizei (declaración oficial citada en yahoo.com)",
       "replicas": 0
      }
     ],
@@ -68733,6 +68951,352 @@
   {
    "geometry": {
     "coordinates": [
+     7.14205,
+     50.86787
+    ],
+    "type": "Point"
+   },
+   "id": "EODI-2025-00322",
+   "properties": {
+    "afirmaciones_publicas": [
+     {
+      "campo": "consecuencias.cierre.minutos",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-11-05T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EDDK-2025-11-05-EODI-2025-00322",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 56,
+       "min": 56
+      }
+     },
+     {
+      "campo": "consecuencias.cierre.valor",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-11-05T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EDDK-2025-11-05-EODI-2025-00322",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": "si"
+     },
+     {
+      "campo": "consecuencias.vuelos_desviados",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-11-05T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EDDK-2025-11-05-EODI-2025-00322",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 0,
+       "min": 0
+      }
+     },
+     {
+      "campo": "presencia_dron",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-05T11:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-fc8931ef5b891421",
+      "medio": "rundschau-online.de",
+      "valor": "no_confirmada"
+     },
+     {
+      "campo": "tipo",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-05T11:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-fc8931ef5b891421",
+      "medio": "rundschau-online.de",
+      "valor": "interrupcion_aeroportuaria"
+     }
+    ],
+    "consecuencias": {
+     "cierre": {
+      "valor": "desconocido"
+     }
+    },
+    "control": {
+     "ultima_actualizacion": {
+      "precision": "minuto",
+      "valor": "2026-10-02T10:17Z"
+     }
+    },
+    "drones": {
+     "numero": "desconocido"
+    },
+    "estado": {
+     "actual": "notificado",
+     "historial": [
+      {
+       "estado": "notificado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2025-11-05T11:30Z"
+       },
+       "fuente_id": "gdelt-fc8931ef5b891421"
+      }
+     ]
+    },
+    "fuentes": [
+     {
+      "credibilidad": 3,
+      "enlace": "https://rundschau-online.de:443/koeln/drohnensichtung-fluege-von-bruessel-nach-koeln-bonn-umgeleitet-1143824",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-05T11:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Drohnensichtung: Flüge von Brüssel nach Köln/Bonn umgeleitet.",
+      "id": "gdelt-fc8931ef5b891421",
+      "idioma": "de",
+      "medio": "rundschau-online.de",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://rundschau-online.de:443/koeln/drohnensichtung-stoert-flugbetrieb-flugzeug-nach-koeln-bonn-umgeleitet-1144353",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-06T09:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Drohnensichtung in Hannover - Flugzeug nach Köln/Bonn umgeleitet",
+      "id": "gdelt-e37ab1f6348042bb",
+      "idioma": "de",
+      "medio": "rundschau-online.de",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 2,
+      "enlace": "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.11.04-planes-readsb-prod-0",
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-11-05T00:00Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Cierre medido en EDDK: 04:51–05:47 UTC, 56 minutos, 0 desvíos y 0 esperas.",
+      "id": "adsblol-EDDK-2025-11-05-EODI-2025-00322",
+      "idioma": "es",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "replicas": 0
+     }
+    ],
+    "id": "EODI-2025-00322",
+    "lugar": {
+     "pais": "DE",
+     "radio_km": 5.0
+    },
+    "objetivo": {
+     "categoria": "aeropuerto",
+     "nombre": "Flughafen Köln/Bonn",
+     "oaci": "EDDK"
+    },
+    "presencia_dron": "no_confirmada",
+    "tiempo": {
+     "inicio": {
+      "precision": "aproximada",
+      "valor": "2025-11-05T11:30Z"
+     }
+    },
+    "tipo": "sobrevuelo",
+    "titulo": {
+     "en": "Drone sighting forces flight diversions at Cologne/Bonn airport",
+     "es": "Avistamiento de dron obliga a desviar vuelos en el aeropuerto de Colonia/Bonn"
+    },
+    "trafico_aereo": {
+     "cierre": {
+      "aeropuerto": "EDDK",
+      "difiere_de_declarado": false,
+      "duracion_min": 56,
+      "fin": {
+       "precision": "minuto",
+       "valor": "2025-11-05T05:47Z"
+      },
+      "inicio": {
+       "precision": "minuto",
+       "valor": "2025-11-05T04:51Z"
+      },
+      "resultado": "cierre_medido",
+      "vuelos_desviados": 0,
+      "vuelos_en_espera": 0
+     },
+     "datos": [
+      "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.11.04-planes-readsb-prod-0",
+      "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.11.05-planes-readsb-prod-0"
+     ]
+    }
+   },
+   "type": "Feature"
+  },
+  {
+   "geometry": {
+    "coordinates": [
+     13.49691,
+     52.36577
+    ],
+    "type": "Point"
+   },
+   "id": "EODI-2025-00323",
+   "properties": {
+    "afirmaciones_publicas": [
+     {
+      "campo": "lugar.pais",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-02T13:15Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-1fd1143b94f88527",
+      "medio": "n-tv.de",
+      "valor": "DE"
+     },
+     {
+      "campo": "presencia_dron",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-02T13:15Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-1fd1143b94f88527",
+      "medio": "n-tv.de",
+      "valor": "no_confirmada"
+     },
+     {
+      "campo": "presencia_dron",
+      "credibilidad": 1,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-02T13:15Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "gdelt-1fd1143b94f88527-declaracion-1",
+      "medio": "Polizei Berlin (declaración oficial citada en n-tv.de)",
+      "valor": "confirmada"
+     },
+     {
+      "campo": "tipo",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-02T13:15Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-1fd1143b94f88527",
+      "medio": "n-tv.de",
+      "valor": "interrupcion_aeroportuaria"
+     }
+    ],
+    "consecuencias": {
+     "cierre": {
+      "valor": "desconocido"
+     }
+    },
+    "control": {
+     "ultima_actualizacion": {
+      "precision": "minuto",
+      "valor": "2026-10-02T10:17Z"
+     }
+    },
+    "drones": {
+     "numero": "desconocido"
+    },
+    "estado": {
+     "actual": "confirmado",
+     "historial": [
+      {
+       "estado": "notificado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2025-11-02T13:15Z"
+       },
+       "fuente_id": "gdelt-1fd1143b94f88527"
+      },
+      {
+       "estado": "confirmado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2025-11-02T13:15Z"
+       },
+       "fuente_id": "gdelt-1fd1143b94f88527-declaracion-1"
+      }
+     ]
+    },
+    "fuentes": [
+     {
+      "credibilidad": 3,
+      "enlace": "https://n-tv.de/regionales/berlin-und-brandenburg/Nach-Drohnensichtung-am-BER-Noch-viele-Fragen-offen-article26136004.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-02T13:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Nach der Drohnensichtung am Berliner Hauptstadtflughafen BER",
+      "id": "gdelt-1fd1143b94f88527",
+      "idioma": "de",
+      "medio": "n-tv.de",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 1,
+      "enlace": "https://n-tv.de/regionales/berlin-und-brandenburg/Nach-Drohnensichtung-am-BER-Noch-viele-Fragen-offen-article26136004.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-02T13:15Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Nach der Drohnensichtung am Berliner Hauptstadtflughafen BER und der zeitweiligen Sperrung des Flugbetriebs",
+      "id": "gdelt-1fd1143b94f88527-declaracion-1",
+      "idioma": "de",
+      "medio": "Polizei Berlin (declaración oficial citada en n-tv.de)",
+      "replicas": 0
+     }
+    ],
+    "id": "EODI-2025-00323",
+    "lugar": {
+     "pais": "DE",
+     "radio_km": 5.0
+    },
+    "objetivo": {
+     "categoria": "aeropuerto",
+     "nombre": "Flughafen Berlin Brandenburg",
+     "oaci": "EDDB"
+    },
+    "presencia_dron": "confirmada",
+    "tiempo": {
+     "inicio": {
+      "precision": "aproximada",
+      "valor": "2025-11-02T13:15Z"
+     }
+    },
+    "tipo": "sobrevuelo",
+    "titulo": {
+     "en": "Drone temporarily halts air traffic at Berlin airport",
+     "es": "Dron paraliza temporalmente el tráfico aéreo en el aeropuerto de Berlín"
+    }
+   },
+   "type": "Feature"
+  },
+  {
+   "geometry": {
+    "coordinates": [
      32.48864,
      34.71797
     ],
@@ -74972,6 +75536,21 @@
     "afirmaciones_publicas": [
      {
       "campo": "consecuencias.cierre.minutos",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2026-09-13T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EYVI-2026-09-13-EODI-2026-00049",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 47,
+       "min": 47
+      }
+     },
+     {
+      "campo": "consecuencias.cierre.minutos",
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
@@ -74987,6 +75566,18 @@
      },
      {
       "campo": "consecuencias.cierre.valor",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2026-09-13T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EYVI-2026-09-13-EODI-2026-00049",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": "si"
+     },
+     {
+      "campo": "consecuencias.cierre.valor",
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
@@ -74996,6 +75587,21 @@
       "fuente_id": "gdelt-50392741a2452ebe",
       "medio": "bt.dk",
       "valor": "si"
+     },
+     {
+      "campo": "consecuencias.vuelos_desviados",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2026-09-13T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EYVI-2026-09-13-EODI-2026-00049",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 2,
+       "min": 2
+      }
      },
      {
       "campo": "drones.numero",
@@ -75409,6 +76015,20 @@
       "idioma": "bs",
       "medio": "klix.ba",
       "replicas": 0
+     },
+     {
+      "credibilidad": 2,
+      "enlace": "https://github.com/adsblol/globe_history_2026/releases/tag/v2026.09.13-planes-readsb-prod-0",
+      "fecha": {
+       "precision": "dia",
+       "valor": "2026-09-13T00:00Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Cierre medido en EYVI: 10:11–10:59 UTC, 47 minutos, 2 desvíos y 1 esperas.",
+      "id": "adsblol-EYVI-2026-09-13-EODI-2026-00049",
+      "idioma": "es",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "replicas": 0
      }
     ],
     "id": "EODI-2026-00049",
@@ -75443,6 +76063,27 @@
     "titulo": {
      "en": "Vilnius airport closure due to possible drone sighting",
      "es": "Cierre del aeropuerto de Vilnius por posible observación de dron"
+    },
+    "trafico_aereo": {
+     "cierre": {
+      "aeropuerto": "EYVI",
+      "difiere_de_declarado": false,
+      "duracion_min": 47,
+      "fin": {
+       "precision": "minuto",
+       "valor": "2026-09-13T10:59Z"
+      },
+      "inicio": {
+       "precision": "minuto",
+       "valor": "2026-09-13T10:11Z"
+      },
+      "resultado": "cierre_medido",
+      "vuelos_desviados": 2,
+      "vuelos_en_espera": 1
+     },
+     "datos": [
+      "https://github.com/adsblol/globe_history_2026/releases/tag/v2026.09.13-planes-readsb-prod-0"
+     ]
     }
    },
    "type": "Feature"
@@ -111858,6 +112499,255 @@
     "titulo": {
      "en": "Drone parts found near Steinhuder Meer in Germany",
      "es": "Restos de dron hallados cerca del Steinhuder Meer en Alemania"
+    }
+   },
+   "type": "Feature"
+  },
+  {
+   "geometry": {
+    "coordinates": [
+     26.24423,
+     47.61914
+    ],
+    "type": "Point"
+   },
+   "id": "EODI-2026-00277",
+   "properties": {
+    "afirmaciones_publicas": [
+     {
+      "campo": "drones.numero",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-12T17:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-5141fc4260685075",
+      "medio": "dcnews.ro",
+      "valor": {
+       "max": 1,
+       "min": 1
+      }
+     },
+     {
+      "campo": "lugar.localidad",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-12T17:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-5141fc4260685075",
+      "medio": "dcnews.ro",
+      "valor": "Suceava"
+     },
+     {
+      "campo": "lugar.pais",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-12T17:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-5141fc4260685075",
+      "medio": "dcnews.ro",
+      "valor": "RO"
+     },
+     {
+      "campo": "objetivo.categoria",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-12T17:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-5141fc4260685075",
+      "medio": "dcnews.ro",
+      "valor": "energia"
+     },
+     {
+      "campo": "objetivo.nombre",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-12T17:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-5141fc4260685075",
+      "medio": "dcnews.ro",
+      "valor": "Suceava"
+     },
+     {
+      "campo": "presencia_dron",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-12T17:45Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-88b35f12fa7e6ad7",
+      "medio": "news.yam.md",
+      "valor": "confirmada"
+     },
+     {
+      "campo": "tiempo.inicio",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-12T17:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-5141fc4260685075",
+      "medio": "dcnews.ro",
+      "valor": {
+       "precision": "minuto",
+       "valor": "2026-09-12T14:20Z"
+      }
+     },
+     {
+      "campo": "tipo",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-12T17:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-5141fc4260685075",
+      "medio": "dcnews.ro",
+      "valor": "incursion"
+     }
+    ],
+    "consecuencias": {
+     "cierre": {
+      "valor": "desconocido"
+     }
+    },
+    "control": {
+     "ultima_actualizacion": {
+      "precision": "minuto",
+      "valor": "2026-10-02T10:17Z"
+     }
+    },
+    "drones": {
+     "numero": {
+      "max": 1,
+      "min": 1
+     }
+    },
+    "estado": {
+     "actual": "confirmado",
+     "historial": [
+      {
+       "estado": "notificado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2026-09-12T17:30Z"
+       },
+       "fuente_id": "gdelt-5141fc4260685075"
+      },
+      {
+       "estado": "confirmado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2026-09-12T17:30Z"
+       },
+       "fuente_id": "gdelt-5141fc4260685075-declaracion-1"
+      }
+     ]
+    },
+    "fuentes": [
+     {
+      "credibilidad": 3,
+      "enlace": "https://dcnews.ro/alerta-aeriana-in-botosani-o-drona-a-intrat-in-spatiul-aerian-al-tarii-si-s-a-prabusit-intr-un-lan-de-porumb-din-suceava_1082286.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-12T17:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "O dronă a intrat în spațiul aerian al țării și s-a prăbușit într-un lan de porumb din Suceava.",
+      "id": "gdelt-5141fc4260685075",
+      "idioma": "ro",
+      "medio": "dcnews.ro",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://news.yam.md/ro/story/63538497",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-12T17:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Aparatul a căzut într-un lan de porumb, iar în urma impactului s-a produs un incendiu.",
+      "id": "gdelt-88b35f12fa7e6ad7",
+      "idioma": "ro",
+      "medio": "news.yam.md",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://protv.md/international/drona-care-a-traversat-spatiul-aerian-al-republicii-moldova-si-ucrainei-s-ar-fi-indreptat-spre-romania-un-aparat-de-zbor-s-a-prabusit-in-judetul-suceava---2767123.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-12T18:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Drona care a traversat spațiul aerian al Moldovei s-ar fi îndreptat spre România. Aparat de zbor prăbușit la Suceava: imagini și mărturii",
+      "id": "gdelt-56ebc3eb0c75f3a0",
+      "idioma": "ro",
+      "medio": "protv.md",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://news.az/news/drone-crashes-in-romanias-suceava-county",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-12T20:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Drone crashes in Romania's Suceava county",
+      "id": "gdelt-afbeeab12db360a9",
+      "idioma": "en",
+      "medio": "news.az",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 1,
+      "enlace": "https://dcnews.ro/alerta-aeriana-in-botosani-o-drona-a-intrat-in-spatiul-aerian-al-tarii-si-s-a-prabusit-intr-un-lan-de-porumb-din-suceava_1082286.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-12T17:30Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Potrivit unui comunicat de presă emis de MApN, drona a traversat spațiul aerian al Ucrainei și al Republicii Moldova înainte de a pătrunde în cel",
+      "id": "gdelt-5141fc4260685075-declaracion-1",
+      "idioma": "ro",
+      "medio": "Ministerul Apărării Naționale (declaración oficial citada en dcnews.ro)",
+      "replicas": 0
+     }
+    ],
+    "id": "EODI-2026-00277",
+    "lugar": {
+     "localidad": "Suceava",
+     "pais": "RO",
+     "radio_km": 1.0
+    },
+    "objetivo": {
+     "categoria": "energia",
+     "nombre": "Suceava"
+    },
+    "presencia_dron": "confirmada",
+    "tiempo": {
+     "inicio": {
+      "precision": "dia",
+      "valor": "2026-09-12T14:20Z"
+     }
+    },
+    "tipo": "incursion",
+    "titulo": {
+     "en": "Drone that crossed Ukraine and Moldova crashes in Suceava, Romania",
+     "es": "Dron que atravesó Ucrania y Moldavia se estrella en Suceava, Rumania"
     }
    },
    "type": "Feature"

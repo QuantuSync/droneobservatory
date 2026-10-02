@@ -34635,6 +34635,216 @@
     "en": "Drone from Russia impacts power plant in Estonia",
     "es": "Dron procedente de Rusia impacta contra central eléctrica en Estonia"
    }
+  },
+  {
+   "afirmaciones_publicas": [
+    {
+     "campo": "drones.numero",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-09T11:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-417400cfb5a5d6b6",
+     "medio": "newstalk.com",
+     "valor": {
+      "max": 1,
+      "min": 1
+     }
+    },
+    {
+     "campo": "lugar.pais",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-09T09:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-1b5202738536d388",
+     "medio": "breakingnews.ie",
+     "valor": "IE"
+    },
+    {
+     "campo": "presencia_dron",
+     "credibilidad": 1,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-09T09:30Z"
+     },
+     "fiabilidad": "B",
+     "fuente_id": "gdelt-1b5202738536d388-declaracion-1",
+     "medio": "Gardaí (declaración oficial citada en breakingnews.ie)",
+     "valor": "confirmada"
+    },
+    {
+     "campo": "presencia_dron",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-09T10:15Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-242bb21d1e850e3b",
+     "medio": "irishtimes.com",
+     "valor": "no_confirmada"
+    },
+    {
+     "campo": "tiempo.inicio",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-09T11:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-417400cfb5a5d6b6",
+     "medio": "newstalk.com",
+     "valor": {
+      "precision": "minuto",
+      "valor": "2026-09-08T17:00Z"
+     }
+    },
+    {
+     "campo": "tipo",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-09T11:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-417400cfb5a5d6b6",
+     "medio": "newstalk.com",
+     "valor": "sobrevuelo"
+    }
+   ],
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T10:17Z"
+    }
+   },
+   "drones": {
+    "numero": {
+     "max": 1,
+     "min": 1
+    }
+   },
+   "estado": {
+    "actual": "confirmado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-09T09:30Z"
+      },
+      "fuente_id": "gdelt-1b5202738536d388"
+     },
+     {
+      "estado": "confirmado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-09T09:30Z"
+      },
+      "fuente_id": "gdelt-1b5202738536d388-declaracion-1"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://breakingnews.ie/ireland/gardai-investigating-alleged-sighting-of-large-drone-close-to-dublin-bay-1948364.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-09T09:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Gardaí investigating alleged sighting of large drone close to Dublin Bay.",
+     "id": "gdelt-1b5202738536d388",
+     "idioma": "en",
+     "medio": "breakingnews.ie",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://irishtimes.com/ireland/2026/09/09/gardai-investigating-sighting-of-large-drone-close-to-dublin-bay",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-09T10:15Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "It will also seek to rule out the possibility a drone was being flown as part of US security preparations.",
+     "id": "gdelt-242bb21d1e850e3b",
+     "idioma": "en",
+     "medio": "irishtimes.com",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://newstalk.com/podcasts/highlights-from-newstalk-breakfast/large-drone-spotted-close-to-dublin-bay",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-09T11:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "An Aer Lingus pilot has reported seeing a large drone close to Dublin Bay.",
+     "id": "gdelt-417400cfb5a5d6b6",
+     "idioma": "en",
+     "medio": "newstalk.com",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://nova.ie/gardai-investigating-report-of-large-black-drone-spotted-near-dublin-bay",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-09T14:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Gardaí Investigating Report Of 'Large Black Drone' Spotted Near Dublin Bay",
+     "id": "gdelt-51393358f3501359",
+     "idioma": "en",
+     "medio": "nova.ie",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 1,
+     "enlace": "https://breakingnews.ie/ireland/gardai-investigating-alleged-sighting-of-large-drone-close-to-dublin-bay-1948364.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-09T09:30Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Gardaí investigating alleged sighting of large drone close to Dublin Bay.",
+     "id": "gdelt-1b5202738536d388-declaracion-1",
+     "idioma": "en",
+     "medio": "Gardaí (declaración oficial citada en breakingnews.ie)",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-2026-00278",
+   "lugar": {
+    "nivel": "region",
+    "pais": "IE",
+    "region": "Dublin Bay"
+   },
+   "presencia_dron": "confirmada",
+   "tiempo": {
+    "inicio": {
+     "precision": "hora",
+     "valor": "2026-09-08T17:00Z"
+    }
+   },
+   "tipo": "sobrevuelo",
+   "titulo": {
+    "en": "Large drone sighting near Dublin Bay",
+    "es": "Avistamiento de un dron grande cerca de Dublin Bay"
+   }
   }
  ]
 }

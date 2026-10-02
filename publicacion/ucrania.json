@@ -788624,6 +788624,57 @@
    "region": "UA-65",
    "sentido": "RU_UA",
    "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-1021",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T10:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fallecidos": {
+    "max": 2,
+    "min": 2
+   },
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-10-02T08:56Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/kharkivoda/31247",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-10-02T08:56Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "удару дроном військові рф завдали по трактору, що їхав дорогою Сковородинівка — Писарівка",
+     "id": "kharkivoda-31247",
+     "idioma": "uk",
+     "medio": "Харківська ОВА",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03489",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA63020050490062030",
+    "nivel": "localidad",
+    "nombre": "Сковородинівка",
+    "nombre_latino": "Skovorodynivka",
+    "punto": {
+     "lat": 50.15808,
+     "lon": 35.77183
+    },
+    "radio_km": 1.5
+   },
+   "region": "UA-63",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
   }
  ]
 }
