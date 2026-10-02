@@ -886,6 +886,52 @@ class Almacen:
         with self._conexion:
             self._upsert("candidatos", {"id": documento["id"], "documento": _json(documento)})
 
+    def corregir_candidatos(self, documentos: list[Documento], motivo: str) -> None:
+        """Guarda candidatos que cambian por una regla nueva (un candidato que se separa en
+        dos, uno que recibe artículos que antes no se situaban) y deja cada cambio en el
+        historial con su motivo: la tabla de candidatos no lleva historial automático porque
+        cambia con cada artículo nuevo."""
+        with self._conexion:
+            for documento in documentos:
+                fila = self._conexion.execute(
+                    "SELECT documento FROM candidatos WHERE id = ?", (documento["id"],)
+                ).fetchone()
+                nuevo = _json(documento)
+                if fila is not None and fila[0] == nuevo:
+                    continue
+                self._upsert("candidatos", {"id": documento["id"], "documento": nuevo})
+                self._conexion.execute(
+                    "INSERT INTO historial (tabla, entidad_id, operacion, anterior, nuevo) "
+                    "VALUES ('candidatos', ?, ?, ?, ?)",
+                    (documento["id"], "alta" if fila is None else "cambio",
+                     fila[0] if fila else None, _json({"motivo": motivo, "documento": documento})),
+                )  # fmt: skip
+                for url in documento["articulos"]:
+                    self._conexion.execute(
+                        "UPDATE articulos SET candidato = ? WHERE url = ? AND candidato IS NOT ?",
+                        (documento["id"], url, documento["id"]),
+                    )
+
+    def corregir_lugares_articulo(self, url: str, lugares: list[str], motivo: str) -> bool:
+        """Los lugares de un artículo con el nomenclátor de ahora, con el cambio en el
+        historial. True si cambian."""
+        with self._conexion:
+            fila = self._conexion.execute(
+                "SELECT lugares FROM articulos WHERE url = ?", (url,)
+            ).fetchone()
+            if fila is None or json.loads(fila[0]) == lugares:
+                return False
+            self._conexion.execute(
+                "UPDATE articulos SET lugares = ? WHERE url = ?", (_json(lugares), url)
+            )
+            self._conexion.execute(
+                "INSERT INTO historial (tabla, entidad_id, operacion, anterior, nuevo) "
+                "VALUES ('articulos', ?, 'cambio', ?, ?)",
+                (url, _json({"lugares": json.loads(fila[0])}),
+                 _json({"lugares": lugares, "motivo": motivo})),
+            )  # fmt: skip
+        return True
+
     def candidatos_desde(self, fecha: str) -> list[Documento]:
         """Candidatos con actividad desde `fecha`: los que aún pueden crecer."""
         return self._documentos(

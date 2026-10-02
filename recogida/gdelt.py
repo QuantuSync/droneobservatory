@@ -331,6 +331,8 @@ def _documento_candidato(c: Candidato) -> Documento:
     # Registro interno de dónde sale el sitio cuando no es una instalación.
     if c.lugar.tipo in {LOCALIDAD, GKG}:
         documento["ubicacion"] = c.lugar.tipo
+    if c.separado_de:
+        documento["separado_de"] = c.separado_de
     return documento
 
 
@@ -343,6 +345,7 @@ def _candidato(documento: Documento, nom: Nomenclator) -> Candidato:
         ultimo=datetime.fromisoformat(documento["ultimo"]),
         precision=documento["precision"],
         articulos=list(documento["articulos"]),
+        separado_de=documento.get("separado_de"),
     )
 
 

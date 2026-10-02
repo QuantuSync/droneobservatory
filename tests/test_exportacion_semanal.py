@@ -56,7 +56,7 @@ RESPALDA_F2 = [
 def completo_con_fuentes() -> Documento:
     documento = ejemplos.incidente_completo()
     # Como está en la base: procedencia y nivel los calcula la exportación.
-    del documento["procedencia"], documento["nivel_detalle"]
+    del documento["procedencia"], documento["nivel_detalle"], documento["indicadores"]
     for fuente in documento["fuentes"]:
         if fuente["id"] == "F2":
             fuente["campos_respaldados"] = RESPALDA_F2
@@ -99,10 +99,11 @@ def test_estan_todos_los_ficheros_con_su_esquema() -> None:
 def test_los_incidentes_salen_enteros_con_los_campos_internos() -> None:
     almacen = poblado()
     exportados = lineas(por_nombre(semanal.generar(almacen))["incidentes.jsonl"])
-    # Como están en la base, más su procedencia y su nivel de detalle: un campo interno nuevo
-    # del esquema entra sin tocar código si sus fuentes dicen que lo respaldan.
+    # Como están en la base, más su procedencia, su nivel de detalle y sus indicadores: un
+    # campo interno nuevo del esquema entra sin tocar código si sus fuentes dicen que lo
+    # respaldan.
     sin_anadidos = [
-        {k: v for k, v in e.items() if k not in {"procedencia", "nivel_detalle"}}
+        {k: v for k, v in e.items() if k not in {"procedencia", "nivel_detalle", "indicadores"}}
         for e in exportados
     ]
     assert sin_anadidos == almacen.incidentes()

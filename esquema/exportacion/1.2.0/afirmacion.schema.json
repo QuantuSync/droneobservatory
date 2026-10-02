@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:eodi:exportacion:1.1.0:afirmacion",
+  "$id": "urn:eodi:exportacion:1.2.0:afirmacion",
   "title": "Afirmación exportada (una línea de afirmaciones.jsonl)",
   "description": "Cada dato por fuente, con la fuente que lo dice: su código del Almirantazgo, su origen y si es interna. Van todas: también las de fiabilidad E y F y las del Ministerio de Defensa ruso fuera de la capa de guerra, que no se publican en la web. origen: el de la fuente (comun#/$defs/origen de la base). metodo: extractor (ficha de una noticia, con su confianza), parser (partes y notas oficiales: el valor es el de la entidad en ese campo o, para el estado, el paso que provoca; sin confianza de extracción) o regla (la presencia que confirman las declaraciones). sin_respaldo: el extractor dio el valor sin frase de origen o con confianza por debajo del umbral; valor es entonces «sin_respaldo» y no se exporta el dato. vigente: si la afirmación está en el documento actual de la entidad (las anteriores se conservan: nada se borra).",
   "type": "object",

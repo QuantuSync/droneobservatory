@@ -165,6 +165,21 @@ TRAFICO_TOPE_UNIDAD=70
 # Prioridad baja de CPU y de disco: la recogida horaria va siempre por delante.
 TRAFICO_NICE=15
 
+# --- Búsqueda dirigida de noticias (recogida/busqueda_dirigida.py) ---------------------
+# Los titulares con dron de cada día leído de GDELT y lo hallado para cada cierre medido sin
+# incidente, fuera del repositorio y de la base.
+BUSQUEDA_DATOS="${EODI_BUSQUEDA_DATOS:-$CASA/datos/busqueda}"
+UNIDAD_BUSQUEDA="eodi-busqueda"
+CERROJO_BUSQUEDA="$SECRETOS/busqueda.lock"
+# Minuto 2: termina antes de la recogida (17) si no hay nada que leer y, con días que leer
+# (unos 2 minutos cada uno, 192 ficheros), sigue hasta su tope con prioridad baja.
+MINUTO_BUSQUEDA=2
+BUSQUEDA_TOPE_MINUTOS=40
+BUSQUEDA_TOPE_UNIDAD=50
+
+# --- Revisión de la calidad de los datos (servidor/calidad.sh) -------------------------
+CALIDAD_INFORME="$CASA/calidad-informe.json"
+
 # --- Endurecimiento ------------------------------------------------------------------
 # Reinicio tras una actualización de seguridad que lo pida: de madrugada y a los 28
 # minutos del lanzamiento de las 04:17, cuando hasta la recogida más lenta ha terminado.

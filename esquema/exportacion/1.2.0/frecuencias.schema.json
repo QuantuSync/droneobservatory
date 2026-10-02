@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:eodi:exportacion:1.1.0:frecuencias",
+  "$id": "urn:eodi:exportacion:1.2.0:frecuencias",
   "title": "Frecuencias de incidentes (frecuencias.json)",
   "description": "Incidentes activos de la capa general (ni fundidos ni retirados) por categoría de objetivo, país del suceso y mes de inicio, con el sesgo de cobertura declarado.",
   "type": "object",

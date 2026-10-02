@@ -14,7 +14,10 @@ Límites, compartidos por todo lo que llama al extractor:
 - 0,20 dólares al día para los mensajes de la capa de guerra que el código no resuelve
   (modo «guerra», en la recogida horaria), aparte del límite horario;
 - 5 dólares para el histórico de esos mensajes desde el 1 de enero de 2025 (modo
-  «guerra_historico», `python -m proceso.extraccion_guerra lote`).
+  «guerra_historico», `python -m proceso.extraccion_guerra lote`);
+- 2 dólares, una sola vez, para la tercera revisión de la calidad de los datos (modo
+  «calidad», `python -m recogida.calidad`): candidatos separados por suceso, artículos que
+  ahora se sitúan, candidatos de la búsqueda dirigida y los prioritarios nunca extraídos.
 
 Antes de cada llamada se suma lo gastado y el peor caso de la llamada (sus
 tokens de entrada estimados y el máximo de salida); si pasa del límite, no se
@@ -43,6 +46,7 @@ LIMITE_REVISION_USD = 5.00
 LIMITE_DETALLE_USD = 3.00
 LIMITE_GUERRA_DIARIO_USD = 0.20
 LIMITE_GUERRA_HISTORICO_USD = 5.00
+LIMITE_CALIDAD_USD = 2.00
 # Una letra son unos 0,3 tokens en los idiomas europeos; se estima por lo alto con 0,5
 # para que el peor caso no se quede corto.
 TOKENS_POR_LETRA = 0.5
@@ -55,6 +59,7 @@ class Modo(StrEnum):
     DETALLE = "detalle"
     GUERRA = "guerra"
     GUERRA_HISTORICO = "guerra_historico"
+    CALIDAD = "calidad"
 
 
 class LimiteGasto(RuntimeError):
@@ -100,6 +105,7 @@ def limite(modo: Modo) -> float:
         Modo.DETALLE: LIMITE_DETALLE_USD,
         Modo.GUERRA: LIMITE_GUERRA_DIARIO_USD,
         Modo.GUERRA_HISTORICO: LIMITE_GUERRA_HISTORICO_USD,
+        Modo.CALIDAD: LIMITE_CALIDAD_USD,
     }[modo]
 
 

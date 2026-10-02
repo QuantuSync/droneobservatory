@@ -167,8 +167,9 @@ def _punto(nota: Nota) -> Documento | None:
         "lugar": {"punto": {"lat": sitio.lat, "lon": sitio.lon}, "radio_km": sitio.radio_km,
                   "pais": sitio.pais},
         "objetivo": {"nombre": sitio.nombre},
+        # La fecha de la nota es la de publicación: el suceso es de ese día o del anterior.
         "tiempo": {"inicio": {"valor": nota.fecha.strftime("%Y-%m-%dT%H:%MZ"),
-                              "precision": "dia"}},
+                              "precision": "aproximada"}},
         "fuentes": [],
     }  # fmt: skip
 

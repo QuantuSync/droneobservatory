@@ -39,9 +39,11 @@ from proceso.noticias import (
     RADIO_GKG_KM,
     Lugar,
     Nomenclator,
+    distancia_km,
     localidades_declinadas,
     lugares_en,
     normalizar,
+    plegar,
 )
 from proceso.validacion_ficha import (
     MIN_LETRAS_PALABRA,
@@ -247,7 +249,8 @@ def localidades_pequenas(
     filas: dict[str, list[Any]] = json.loads(gzip.decompress(ruta.read_bytes()))["localidades"]
     indice: dict[str, list[str]] = defaultdict(list)
     for id_, fila in filas.items():
-        for nombre in fila[5]:
+        # Los nombres se guardaron normalizados antes de plegar «ø», «ł»…: se pliegan aquí.
+        for nombre in dict.fromkeys(plegar(n) for n in fila[5]):
             indice[nombre].append(id_)
     return {k: tuple(v) for k, v in indice.items()}, filas
 
@@ -330,6 +333,87 @@ def ubicar(ficha: Validada, pistas: Pistas, nom: Nomenclator) -> Ubicacion:
                          motivo="; ".join(fuera), valida=False)  # fmt: skip
     return Ubicacion(pais, nivel, nombre=nombre, region=region,
                      motivo="; ".join(fuera) or "lugar del suceso sin situar")  # fmt: skip
+
+
+# --- Afinado de un lugar que solo se sabe a nivel de región -----------------------------
+
+
+# Una instalación es de la región de su ciudad: una localidad con ese nombre a 30 km o menos.
+RADIO_CIUDAD_KM = 30.0
+
+
+def region_del_sitio(sitio: Lugar, nom: Nomenclator) -> str | None:
+    """Código de la región de primer nivel de una localidad o, para una instalación, de su
+    ciudad."""
+    datos = regiones()["localidades"]
+    if sitio.id in datos:
+        return str(datos[sitio.id])
+    for ciudad in sitio.ciudades:
+        for id_ in nom.localidades.get(normalizar(ciudad), ()):
+            otra = nom.lugares[id_]
+            if otra.pais == sitio.pais and distancia_km(sitio, otra) <= RADIO_CIUDAD_KM:
+                codigo = datos.get(id_)
+                if codigo is not None:
+                    return str(codigo)
+    return None
+
+
+def nombres_en_idiomas(id_: str, nom: Nomenclator) -> set[str]:
+    """Los nombres normalizados de una instalación y de su ciudad en todos sus idiomas: los de
+    las localidades del nomenclátor que se llaman como una de sus ciudades, del mismo país y a
+    30 km o menos («Lüttich», «Luik», «Lieja» para el aeropuerto de Lieja). Sin siglas: «NATO»
+    es una ciudad de la base de Geilenkirchen en OpenStreetMap y no la nombra."""
+    sitio = nom.lugares.get(id_)
+    if sitio is None:
+        return set()
+    ciudades = [c for c in sitio.ciudades if not c.isupper()]
+    propios = {normalizar(n) for n in (sitio.nombre, *sitio.alias, *ciudades)}
+    for ciudad in ciudades:
+        for otro_id in nom.localidades.get(normalizar(ciudad), ()):
+            otro = nom.lugares[otro_id]
+            if otro.pais == sitio.pais and distancia_km(sitio, otro) <= RADIO_CIUDAD_KM:
+                propios |= {normalizar(n) for n in (otro.nombre, *otro.alias)}
+    return {n for n in propios if len(n) >= MIN_LETRAS_PALABRA}
+
+
+def afinar(ubicacion: Ubicacion, textos: tuple[str, ...], nom: Nomenclator) -> Ubicacion:
+    """Un suceso que la ficha solo sitúa en una región gana el punto de la única instalación
+    (o, si no hay ninguna, de la única localidad) de esa región que nombran las frases de la
+    ficha y los titulares de sus fuentes: «Drohnen über Schleswig-Holstein» con «Drohnensich-
+    tungen über Kraftwerk, Klinik und Werft in Kiel». Solo si la región se reconoce y el sitio
+    está en ella; con dos sitios distintos no se elige ninguno. La localidad que se llama como
+    la región no cuenta («Tulcea» es casi siempre la provincia). Un suceso de nivel país no se
+    afina: la capital donde habla un ministro no es el lugar del suceso."""
+    if ubicacion.sitio is not None or ubicacion.nivel != "region" or not ubicacion.region:
+        return ubicacion
+    if not regiones_con_nombre(ubicacion.pais, ubicacion.region):
+        return ubicacion
+    for buscar, origen_nivel in (
+        (lugares_en, "instalacion"),
+        (localidades_declinadas, "localidad"),
+    ):
+        sitios: dict[str, Lugar] = {}
+        for texto in textos:
+            for id_ in buscar(texto, nom):
+                sitio = nom.lugares.get(id_)
+                if sitio is None or sitio.pais != ubicacion.pais:
+                    continue
+                if mismo_nombre((sitio.nombre,), ubicacion.region, GENERICOS_REGION):
+                    # «Tulcea» en el titular es, casi siempre, la provincia de Tulcea.
+                    continue
+                codigo = region_del_sitio(sitio, nom)
+                dentro = codigo in regiones_con_nombre(ubicacion.pais, ubicacion.region)
+                if dentro and dentro_del_pais(sitio.pais, sitio.lat, sitio.lon):
+                    sitios[id_] = sitio
+        if len(sitios) == 1:
+            sitio = next(iter(sitios.values()))
+            return Ubicacion(
+                ubicacion.pais, origen_nivel, Objetivo.de_lugar(sitio), "frase_origen",
+                ubicacion.nombre, ubicacion.region,
+            )  # fmt: skip
+        if sitios:
+            return ubicacion
+    return ubicacion
 
 
 # --- País deducido del lugar del suceso ------------------------------------------------

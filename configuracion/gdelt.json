@@ -1,6 +1,6 @@
 {
   "version_esquema": "1.0.0",
-  "descripcion": "Recogida de noticias europeas sobre drones en los ficheros GKG 2.0 de GDELT (flujo inglés y traducido). palabras_dron: la palabra para dron en cada idioma europeo, en singular y plural; el filtro local casa también con sus declinaciones sobre el titular original de la página. Se incluyen el ruso y el ucraniano porque los medios de Moldavia, los países bálticos y Bulgaria publican también en ellos. excluir: ocio, comercio y usos civiles que no son incidentes. senales: palabras que indican un incidente, agrupadas por el tipo aparente que sugieren. tipo_de_lugar: palabras que, junto al nombre de una ciudad, dicen que se habla de su aeropuerto, su base o su central. paises: países europeos, con el nombre que usa la lista de medios de GDELT y su ISO 3166-1; quedan fuera Rusia, Bielorrusia y Ucrania, cuyos medios cubren la guerra y ahogarían las noticias de incidentes en el resto de Europa. idiomas: código de idioma de origen del flujo traducido (ISO 639-3) a ISO 639-1; el flujo inglés es inglés.",
+  "descripcion": "Recogida de noticias europeas sobre drones en los ficheros GKG 2.0 de GDELT (flujo inglés y traducido). palabras_dron: la palabra para dron en cada idioma europeo, en singular y plural; el filtro local casa también con sus declinaciones sobre el titular original de la página. Se incluyen el ruso y el ucraniano porque los medios de Moldavia, los países bálticos y Bulgaria publican también en ellos. excluir: ocio, comercio y usos civiles que no son incidentes. repeticion: expresiones que dicen que el suceso se repite («erneut», «again», «de nuevo»); un titular con una de ellas 18 horas o más después del inicio de un candidato abre otro en el mismo sitio (proceso/noticias.py). senales: palabras que indican un incidente, agrupadas por el tipo aparente que sugieren. tipo_de_lugar: palabras que, junto al nombre de una ciudad, dicen que se habla de su aeropuerto, su base o su central; las de base aérea valen también para los aeropuertos, porque un aeródromo civil y militar (Ørland, Skrydstrup) es un aeropuerto en el nomenclátor. paises: países europeos, con el nombre que usa la lista de medios de GDELT y su ISO 3166-1; quedan fuera Rusia, Bielorrusia y Ucrania, cuyos medios cubren la guerra y ahogarían las noticias de incidentes en el resto de Europa. idiomas: código de idioma de origen del flujo traducido (ISO 639-3) a ISO 639-1; el flujo inglés es inglés.",
   "palabras_dron": {
     "en": ["drone", "drones", "UAV", "UAVs"],
     "es": ["dron", "drones"],
@@ -41,6 +41,36 @@
     "dostaw", "leverans", "Paket", "photograph", "fotógraf", "Fotograf", "película", "Kinofilm",
     "Black Friday", "oferta", "Angebot", "rebajas", "Rabatt"
   ],
+  "repeticion": {
+    "en": ["again", "once again", "once more", "second time", "2nd time", "second night", "another night", "renewed", "fresh drone", "new drone sighting", "new drone sightings", "yet another", "another drone"],
+    "de": ["erneut", "erneute", "erneuter", "erneuten", "schon wieder", "wieder Drohnen", "wieder Drohnenalarm", "wieder gesperrt", "wieder geschlossen", "zweiten Mal", "zweiter Abend", "zweiten Abend", "zweite Nacht", "zweiten Nacht", "neue Drohnensichtung", "neue Drohnensichtungen", "neuer Drohnenalarm", "neue Drohnen"],
+    "fr": ["à nouveau", "de nouveau", "une nouvelle fois", "nouvelle apparition", "nouvelles apparitions", "nouveau drone", "nouveaux drones", "nouvelle alerte", "deuxième nuit", "deuxième fois", "seconde fois"],
+    "es": ["de nuevo", "nuevamente", "otra vez", "vuelve a", "vuelven a", "nuevo avistamiento", "nuevos avistamientos", "nuevos drones", "segunda noche", "segunda vez"],
+    "it": ["di nuovo", "nuovamente", "torna a", "tornano a", "nuovo avvistamento", "nuovi avvistamenti", "nuovi droni", "seconda notte", "seconda volta"],
+    "pt": ["de novo", "novamente", "volta a", "voltam a", "outra vez", "segunda noite", "segunda vez", "novos drones"],
+    "nl": ["opnieuw", "weer dicht", "weer drones", "weer gesloten", "nieuwe drone", "nieuwe drones", "nieuwe dronemelding", "nieuwe dronemeldingen", "tweede nacht", "tweede keer"],
+    "pl": ["ponownie", "znów", "znowu", "kolejne drony", "kolejny dron", "drugą noc", "drugi raz"],
+    "ro": ["din nou", "a doua oară", "a doua noapte", "noi drone"],
+    "da": ["igen", "på ny", "nye droner", "anden aften", "anden nat"],
+    "no": ["igjen", "på nytt", "nye droner", "andre natt", "andre kveld"],
+    "sv": ["igen", "återigen", "åter", "nya drönare", "andra natten"],
+    "cs": ["opět", "znovu", "druhou noc"],
+    "sk": ["opäť", "znova", "znovu", "druhú noc"],
+    "hu": ["ismét", "újra", "megint"],
+    "el": ["ξανά", "εκ νέου", "πάλι", "δεύτερη σερί", "δεύτερη νύχτα"],
+    "bg": ["отново", "пак"],
+    "ru": ["снова", "опять", "вновь", "повторно", "вторую ночь"],
+    "uk": ["знову", "вдруге", "повторно", "другу ніч"],
+    "lt": ["vėl", "pakartotinai"],
+    "lv": ["atkal"],
+    "et": ["jälle", "taas", "uuesti"],
+    "fi": ["jälleen", "taas", "uudelleen"],
+    "hr": ["ponovno", "ponovo", "opet"],
+    "sr": ["ponovo", "opet", "поново", "опет"],
+    "sl": ["ponovno", "spet"],
+    "sq": ["sërish", "përsëri"],
+    "tr": ["yeniden", "tekrar"]
+  },
   "senales": {
     "aeropuerto": [
       "airport", "aeropuerto", "aeroport", "Flughafen", "aéroport", "aeroporto", "lotnisk",
@@ -85,11 +115,14 @@
       "airport", "aeropuerto", "aeroport", "Flughafen", "aéroport", "aeroporto", "lotnisk",
       "luchthaven", "lufthavn", "flygplats", "lentoasem", "lentokentt", "letiště", "letisk", "repülőt",
       "летищ", "αεροδρόμι", "аэропорт", "аеропорт", "lennujaam", "oro uost", "lidost",
-      "zračn", "aerodrom"
+      "zračn", "aerodrom", "flyplass", "air base", "flybase", "flygbas", "kampflybase",
+      "flystasjon", "flyvestation", "base aérea", "base aérienne", "base aerea",
+      "Luftwaffenbasis", "Militärflugplatz", "Fliegerhorst"
     ],
     "base": [
       "base", "air base", "Stützpunkt", "Fliegerhorst", "Luftwaffenbasis", "Militärflugplatz",
-      "base aérea", "base aérienne", "base aerea", "baza", "flybase", "flygbas", "lentotukikohta",
+      "base aérea", "base aérienne", "base aerea", "baza", "flybase", "flygbas", "kampflybase",
+      "flystasjon", "hovedflystasjon", "flyvestation", "lentotukikohta",
       "vliegbasis", "militar", "military", "Militär", "militaire", "militare", "wojsk",
       "авиабаз", "авіабаз", "στρατιωτικ"
     ],

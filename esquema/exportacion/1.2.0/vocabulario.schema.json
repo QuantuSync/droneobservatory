@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:eodi:exportacion:1.1.0:vocabulario",
+  "$id": "urn:eodi:exportacion:1.2.0:vocabulario",
   "title": "Vocabulario del observatorio y de AEGIS (vocabulario.json)",
   "type": "object",
   "additionalProperties": false,
@@ -13,7 +13,9 @@
     "origenes",
     "metodos",
     "niveles_detalle",
-    "metricas_estadistica"
+    "metricas_estadistica",
+    "indicadores",
+    "origenes_inicio"
   ],
   "$defs": {
     "entrada": {
@@ -299,6 +301,70 @@
       "type": "object",
       "additionalProperties": {
         "type": "string"
+      }
+    },
+    "indicadores": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "tiene_cierre_medido",
+        "tiene_condiciones_medidas",
+        "tiene_respuesta_militar_observada",
+        "tiene_interferencia_gnss_medida",
+        "tiene_foco_termico",
+        "tiene_confirmacion_oficial_directa",
+        "fecha_del_suceso_verificada"
+      ],
+      "properties": {
+        "tiene_cierre_medido": {
+          "type": "string"
+        },
+        "tiene_condiciones_medidas": {
+          "type": "string"
+        },
+        "tiene_respuesta_militar_observada": {
+          "type": "string"
+        },
+        "tiene_interferencia_gnss_medida": {
+          "type": "string"
+        },
+        "tiene_foco_termico": {
+          "type": "string"
+        },
+        "tiene_confirmacion_oficial_directa": {
+          "type": "string"
+        },
+        "fecha_del_suceso_verificada": {
+          "type": "string"
+        }
+      }
+    },
+    "origenes_inicio": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "explicita",
+        "relativa",
+        "oficial",
+        "parte",
+        "publicacion"
+      ],
+      "properties": {
+        "explicita": {
+          "type": "string"
+        },
+        "relativa": {
+          "type": "string"
+        },
+        "oficial": {
+          "type": "string"
+        },
+        "parte": {
+          "type": "string"
+        },
+        "publicacion": {
+          "type": "string"
+        }
       }
     }
   }

@@ -40,7 +40,16 @@ from exportacion.publicar import modelos, publicar
 from proceso import focos_termicos, impactos_guerra, incursiones, presencia, solapes
 from proceso.ataques import SENTIDO_UA_RU
 from proceso.extraccion import Parada
-from recogida import detalle, extractor, firms, gdelt, guerra, mediciones, oficiales
+from recogida import (
+    busqueda_dirigida,
+    detalle,
+    extractor,
+    firms,
+    gdelt,
+    guerra,
+    mediciones,
+    oficiales,
+)
 from recogida.cache import CachePaginas
 from recogida.descarga import Descargador, DescargaFallida
 from recogida.ejecucion import SinCursor, ejecutar
@@ -181,6 +190,15 @@ def paso_firms(almacen: Almacen, ahora: datetime) -> EstadoFuente:
     return EstadoFuente(estado, lectura.ultima_correcta)
 
 
+def paso_busqueda(almacen: Almacen, ahora: datetime) -> None:
+    """Incorporación de la búsqueda dirigida. Un fallo no cambia el resultado de la recogida."""
+    try:
+        hecho = busqueda_dirigida.paso_horario(almacen, ahora)
+        registro.info("búsqueda dirigida: %s", hecho.texto())
+    except Exception as error:
+        registro.warning("búsqueda dirigida no incorporada: %s", str(error)[:300])
+
+
 def paso_detalle(almacen: Almacen, ahora: datetime) -> dict[str, EstadoFuente]:
     """Incorporación de las fuentes oficiales de detalle. Nada de lo que falle aquí sale de esta
     función: queda en el registro y sus fuentes, con aviso en estado.json."""
@@ -285,6 +303,9 @@ def principal(argumentos: list[str] | None = None) -> int:
         # Tráfico aéreo y condiciones medidas: tampoco cambian el código de salida.
         estados[mediciones.FUENTE_TRAFICO] = mediciones.paso_trafico(almacen, ahora)
         estados[mediciones.FUENTE_CONDICIONES] = mediciones.paso_condiciones(almacen, ahora)
+        # Búsqueda dirigida: lo que halló su temporizador para los cierres medidos sin
+        # incidente entra como artículos; y la lista de lo que falta buscar, al día.
+        paso_busqueda(almacen, ahora)
         # Presencia del dron que confirman las declaraciones oficiales ya guardadas: la regla
         # se amplió y lo anterior se revisa en cada pasada; ya aplicada, no cambia nada.
         confirmadas, sin_guardar = presencia.revisar(almacen, ahora, modelos(almacen))

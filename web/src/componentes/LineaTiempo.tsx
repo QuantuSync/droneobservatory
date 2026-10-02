@@ -419,7 +419,9 @@ export function LineaTiempo({
           ? "px-3 pb-2"
           : forma === "barra"
             ? "flotante rounded-none px-2 apaisado:bg-transparent apaisado:px-0 apaisado:shadow-none"
-            : "flotante px-3 pb-1.5 pt-1.5"
+            : // Opaca: desplegada sobre el mapa, a través de un fondo semitransparente se leían
+              // los rótulos de las ciudades por debajo de las barras y del eje.
+              "flotante bg-panel-solido px-3 pb-1.5 pt-1.5"
       }
     >
       {!desplegada && forma !== "barra" && (

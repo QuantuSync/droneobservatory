@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:eodi:exportacion:1.1.0:manifiesto",
+  "$id": "urn:eodi:exportacion:1.2.0:manifiesto",
   "title": "Manifiesto de una versión de la exportación semanal",
   "description": "Va en claro: solo lleva versiones, recuentos y huellas. Cada fichero se publica comprimido con gzip y cifrado con age (nombre + .gz.age); la huella del cifrado se comprueba antes de descifrar y la huella en claro, después de descifrar y descomprimir.",
   "type": "object",

@@ -35,6 +35,7 @@ from modelo import cliente as servicio
 from modelo import coste, ficha, paginas
 from proceso import extraccion, incidentes
 from proceso.configuracion import cargar_vocabulario_modelos
+from proceso.noticias import TIPO_APARENTE, nomenclator
 from recogida.descarga import Descargador
 from recogida.plazo import Plazo, TiempoAgotado
 
@@ -120,6 +121,42 @@ MAX_REPROCESO_POR_HORA = 10
 FRACCION_REPROCESO = 0.5
 
 
+# Candidatos nunca extraídos que merecen una llamada aunque ya no sean recientes: los de una
+# instalación con noticias de dos medios o más, y los de una localidad con tres o más. Así
+# entraron Esbjerg y Skrydstrup (24 de septiembre de 2025), que el histórico dejó sin extraer.
+MIN_MEDIOS_INSTALACION = 2
+MIN_MEDIOS_LOCALIDAD = 3
+# Los de la búsqueda dirigida van delante de todos.
+MAX_MEDIOS_ORDEN = 1_000_000
+# Cursor de la búsqueda dirigida (recogida/busqueda_dirigida.FUENTE_ID).
+BUSQUEDA = "busqueda_dirigida"
+
+
+def prioritarios(almacen: Almacen) -> list[Documento]:
+    """Candidatos nunca extraídos: primero los de la búsqueda dirigida (un cierre medido sin
+    incidente), después los que tienen noticias de varios medios, de más medios a menos y, a
+    la par, del más reciente al más antiguo."""
+    nom = nomenclator()
+    dirigidos = {
+        c for a in (almacen.cursor(BUSQUEDA) or {}).get("anomalias", {}).values()
+        for c in a.get("candidatos", [])
+    }  # fmt: skip
+    elegidos: list[tuple[int, str, Documento]] = []
+    for candidato in almacen.candidatos():
+        if almacen.extracciones(candidato["id"]):
+            continue
+        if candidato["id"] in dirigidos:
+            elegidos.append((MAX_MEDIOS_ORDEN, candidato["ultimo"], candidato))
+            continue
+        sitio = nom.lugares.get(candidato["lugar"])
+        instalacion = sitio is not None and sitio.tipo in TIPO_APARENTE
+        medios = len({a["medio"] for a in almacen.articulos_de(candidato["articulos"])})
+        minimo = MIN_MEDIOS_INSTALACION if instalacion else MIN_MEDIOS_LOCALIDAD
+        if medios >= minimo:
+            elegidos.append((medios, candidato["ultimo"], candidato))
+    return [c for _, _, c in sorted(elegidos, key=lambda e: (e[0], e[1]), reverse=True)]
+
+
 def modelos_base() -> frozenset[str]:
     return cargar_vocabulario_modelos()
 
@@ -198,6 +235,11 @@ def horaria(
          if c["id"] not in vistos and extraccion.desactualizado(almacen, c)),
         key=lambda c: c["ultimo"], reverse=True,
     )[:MAX_REPROCESO_POR_HORA]  # fmt: skip
+    # Con lo que queda del cupo de reproceso, los nunca extraídos con varios medios.
+    vistos |= {c["id"] for c in historicos}
+    historicos += [c for c in prioritarios(almacen) if c["id"] not in vistos][
+        : MAX_REPROCESO_POR_HORA - len(historicos)
+    ]
     if almacen.gastado(coste.Modo.HORARIO.value, coste.dia(ahora)) >= (
         coste.LIMITE_DIARIO_USD * FRACCION_REPROCESO
     ):

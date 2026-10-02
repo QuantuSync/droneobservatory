@@ -2,9 +2,11 @@
 
 Reglas del diseño:
 - Fusión: mismo objetivo o puntos a menos de la suma de radios más 10 km; con
-  precisión de hora, inicios a menos de 6 horas; con precisión de día, el
-  mismo día o el siguiente; más de 12 horas sin actividad es otro incidente.
-  Una fusión dudosa (el incidente encaja con dos) no se hace. Toda fusión es
+  precisión de hora, inicios a menos de 6 horas; con precisión de día, el mismo día;
+  con una fecha aproximada (la de publicación), ese día o el anterior; más de 12 horas
+  sin actividad del suceso (su inicio y su fin, no la fecha de las noticias) es otro
+  incidente: la misma instalación dos noches seguidas son dos incidentes. Una fusión
+  dudosa (el incidente encaja con dos) no se hace. Toda fusión es
   reversible: el absorbido queda en la base con `fusionado_en` y la tabla de
   fusiones anota qué fuentes aportó; el historial guarda cada cambio.
 - Un incidente sin punto (su lugar solo se sabe a nivel de país o de región) solo se
@@ -26,11 +28,12 @@ import copy
 import hashlib
 import math
 from collections import defaultdict
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, date, datetime, timedelta
 from typing import Any
 
 from almacen.base import Almacen
 from esquema import Documento
+from proceso import fechas
 from proceso.credibilidad import Declaracion, Fiabilidad, Postura, credibilidad
 from proceso.estados import Estado, nuevo_estado
 from proceso.noticias import normalizar
@@ -49,6 +52,12 @@ HORA_INICIO_NOCHE = 16
 HORA_FIN_NOCHE = 6
 MEDIODIA = 12
 PRECISIONES_HORA = frozenset({"minuto", "hora"})
+APROXIMADA = "aproximada"
+# Un suceso con drones no dura más de dos días: un fin más lejano es de otro.
+MAX_DURACION = timedelta(days=2)
+MAX_MOTIVO = 300
+# Hasta las 06:00 locales, una hora es aún de la noche que empezó la víspera.
+MADRUGADA = timedelta(hours=6)
 FIABILIDAD_NOTICIAS = "C"
 # «Varios objetivos»: dos o más.
 MIN_OBJETIVOS_EPISODIO = 2
@@ -139,6 +148,21 @@ def _hay_interrupcion(documento: Documento) -> bool:
     return (cierre and documento.get("objetivo", {}).get("categoria") == "aeropuerto") or vuelos
 
 
+def origen_inicio(
+    resolucion: "fechas.Resolucion", enviadas: list[str], ficha: Validada
+) -> Documento:
+    """De dónde sale el día del inicio: la frase que lo escribe (explícito o relativo a la
+    publicación) o, si no lo escribe ninguna, la fecha de publicación."""
+    origen: Documento = {"tipo": resolucion.origen, "motivo": resolucion.motivo[:MAX_MOTIVO]}
+    campo = ficha.campos.get("inicio")
+    fuente = campo.get("fuente") if campo else None
+    if isinstance(fuente, int) and 1 <= fuente <= len(enviadas):
+        origen["fuente_id"] = id_fuente(enviadas[fuente - 1])
+    if resolucion.corregido:
+        origen["corregido"] = True
+    return origen
+
+
 def documento_lugar(ubicacion: Ubicacion, localidad: str | None) -> Documento:
     """El lugar del incidente: con punto y radio solo si la ubicación lo tiene."""
     lugar: Documento = {"pais": ubicacion.pais, "nivel": ubicacion.nivel}
@@ -222,17 +246,21 @@ def construir(
     """Documento del incidente a partir del candidato y la ficha ya validada."""
     fuentes = fuentes_incidente(articulos, enviadas, ficha)
     primera = fuentes[0]
-    inicio_ficha = leer_fecha(ficha.valor("inicio") or "")
-    if inicio_ficha is not None:
-        precision = ficha.valor("inicio_precision") or "dia"
-        if "T" not in ficha.valor("inicio"):
-            precision = "dia"
-        inicio = _instante(inicio_ficha, precision)
-    else:
-        inicio = _instante(datetime.fromisoformat(candidato["inicio"]), "dia")
-    tiempo: Documento = {"inicio": inicio}
+    # El día del suceso, comprobado con la frase que lo dice (proceso/fechas.py): si la frase
+    # no escribe el día, la fecha es la de publicación, aproximada, y así se declara.
+    resolucion = fechas.inicio_de_ficha(
+        ficha.campos, enviadas, articulos, candidato["inicio"], ubicacion.pais
+    )
+    inicio = _instante(resolucion.valor, resolucion.precision)
+    tiempo: Documento = {"inicio": inicio, "origen_inicio": origen_inicio(resolucion, enviadas,
+                                                                          ficha)}  # fmt: skip
     fin_ficha = leer_fecha(ficha.valor("fin") or "")
-    if fin_ficha is not None and "T" in ficha.valor("fin"):
+    if (
+        fin_ficha is not None
+        and "T" in ficha.valor("fin")
+        and resolucion.precision in PRECISIONES_HORA
+        and timedelta(0) <= fin_ficha - resolucion.valor <= MAX_DURACION
+    ):
         tiempo["fin"] = _instante(fin_ficha, "minuto")
         tiempo["duracion_min"] = int((fin_ficha - _leer_instante(inicio)).total_seconds()) // 60
     lugar = documento_lugar(ubicacion, ficha.valor("localidad"))
@@ -329,27 +357,66 @@ def mismo_sitio(a: Documento, b: Documento) -> bool:
 
 
 def ultima_actividad(documento: Documento) -> datetime:
+    """El último momento del suceso: su fin, si se sabe, o su inicio. Las noticias no son
+    actividad: se siguen publicando un día entero después de un cierre."""
     momentos = [_leer_instante(documento["tiempo"]["inicio"])]
     if "fin" in documento["tiempo"]:
         momentos.append(_leer_instante(documento["tiempo"]["fin"]))
-    momentos += [_leer_instante(f["fecha"]) for f in documento["fuentes"]]
     return max(momentos)
+
+
+def _dia_local(momento: datetime, precision: str, pais: str) -> date:
+    """El día del suceso en su país: una fecha con solo el día ya es la del país (la que dice
+    la fuente); una hora en UTC se pasa a la hora local («la una de la madrugada en Galați»
+    es el día anterior en UTC)."""
+    if precision == "dia" and (momento.hour, momento.minute) == (0, 0):
+        return momento.date()
+    # Una hora en UTC (también la de un día que el extractor dio con su hora).
+    zona = fechas.zona(pais)
+    return momento.astimezone(zona).date() if zona else momento.date()
+
+
+def _dias_posibles(instante: Documento, pais: str) -> set[date]:
+    """Días locales en que pudo empezar el suceso: el suyo; con la fecha de publicación
+    (aproximada), también el anterior, porque la noticia sale el mismo día o el siguiente; y
+    con una hora de madrugada, también la víspera, porque la prensa fecha una noche por su
+    tarde («anoche», «la noche del jueves»)."""
+    momento = _leer_instante(instante)
+    dia = _dia_local(momento, instante["precision"], pais)
+    dias = {dia}
+    solo_dia = instante["precision"] == "dia" and (momento.hour, momento.minute) == (0, 0)
+    if instante["precision"] == APROXIMADA or (
+        not solo_dia and dia != _dia_local(momento - MADRUGADA, instante["precision"], pais)
+    ):
+        dias.add(dia - timedelta(days=1))
+    return dias
 
 
 def misma_ventana(a: Documento, b: Documento) -> bool:
     """`a` empezó antes o a la vez que `b`."""
     inicio_a, inicio_b = a["tiempo"]["inicio"], b["tiempo"]["inicio"]
     ta, tb = _leer_instante(inicio_a), _leer_instante(inicio_b)
-    if inicio_b["precision"] in PRECISIONES_HORA and tb - ultima_actividad(a) > SIN_ACTIVIDAD:
-        return False
     if inicio_a["precision"] in PRECISIONES_HORA and inicio_b["precision"] in PRECISIONES_HORA:
-        return abs(tb - ta) < INICIOS_HORA
-    return tb.date() in {ta.date(), ta.date() + timedelta(days=1)}
+        return abs(tb - ta) < INICIOS_HORA and tb - ultima_actividad(a) <= SIN_ACTIVIDAD
+    # Con un día sin hora no se miden las 12 horas: casan si comparten día posible (local),
+    # contando los que abarca el suceso de `a` si se sabe su fin (un cierre que pasa de
+    # medianoche).
+    pais = str(a["lugar"].get("pais", ""))
+    dias_a = _dias_posibles(inicio_a, pais)
+    if "fin" in a["tiempo"]:
+        dias_a.add(_dia_local(ultima_actividad(a), "minuto", pais))
+    return bool(dias_a & _dias_posibles(inicio_b, pais))
 
 
 def encajan(a: Documento, b: Documento) -> bool:
     primero, segundo = sorted((a, b), key=lambda d: (d["tiempo"]["inicio"]["valor"], d["id"]))
     return mismo_sitio(a, b) and misma_ventana(primero, segundo)
+
+
+def fecha_verificada(documento: Documento) -> bool:
+    """El día del inicio lo escribe una fuente (o lo da una autoridad o un parte)."""
+    origen = documento["tiempo"].get("origen_inicio", {}).get("tipo")
+    return origen in fechas.VERIFICADOS
 
 
 def absorber(
@@ -370,7 +437,10 @@ def absorber(
     resultado["afirmaciones"] = resultado.get("afirmaciones", []) + [
         a for a in absorbido.get("afirmaciones", []) if a["fuente_id"] in aportadas_ids
     ]
-    # Lo que al destino le faltaba y el absorbido sabe.
+    # Lo que al destino le faltaba y el absorbido sabe. Un día escrito por una fuente manda
+    # sobre la fecha de publicación.
+    if not fecha_verificada(resultado) and fecha_verificada(absorbido):
+        resultado["tiempo"] = copy.deepcopy(absorbido["tiempo"])
     if "fin" not in resultado["tiempo"] and "fin" in absorbido["tiempo"]:
         fin = absorbido["tiempo"]["fin"]
         if fin["valor"] >= resultado["tiempo"]["inicio"]["valor"]:
@@ -399,17 +469,52 @@ def absorber(
     return aplicar_reglas(resultado), sorted(aportadas_ids)
 
 
+def primera_noticia(documento: Documento) -> str:
+    """Cuándo se publicó la primera de sus fuentes."""
+    return min((f["fecha"]["valor"] for f in documento["fuentes"]), default="9999")
+
+
+def destino_de(
+    uno: Documento, otro: Documento, publicados: frozenset[str] = frozenset()
+) -> tuple[Documento, Documento]:
+    """(destino, absorbido) de dos incidentes que encajan. Queda el que ya estaba publicado si
+    solo lo estaba uno (su enlace sigue valiendo); si no, el que tiene más fuentes oficiales
+    leídas directamente, después el de más fuentes, el que se conoció antes (su primera
+    noticia salió antes) y, a la par, el de número más bajo. Una noticia que vuelve semanas
+    después sobre un suceso no le quita su número: Copenhague sigue siendo el
+    EODI-2025-00154, con las notas de la policía y casi 300 noticias."""
+
+    def clave(d: Documento) -> tuple[bool, int, int, str, str]:
+        oficiales = sum(1 for f in d["fuentes"] if f["fiabilidad"] == "A" and f.get("es_autoridad"))
+        return (d["id"] not in publicados, -oficiales, -len(d["fuentes"]), primera_noticia(d),
+                d["id"])  # fmt: skip
+
+    primero, segundo = sorted((uno, otro), key=clave)
+    return primero, segundo
+
+
 def activo(documento: Documento) -> bool:
     """Ni fundido en otro ni retirado."""
     return "fusionado_en" not in documento and "retirado" not in documento
 
 
-def fusionar(almacen: Almacen, ahora: datetime, modelos: frozenset[str]) -> int:
-    """Funde los incidentes que encajan con uno solo anterior. Devuelve cuántas fusiones hace."""
+def fusionar(
+    almacen: Almacen,
+    ahora: datetime,
+    modelos: frozenset[str],
+    publicados: frozenset[str] | None = None,
+) -> int:
+    """Funde los incidentes que encajan con uno solo anterior. Devuelve cuántas fusiones hace.
+
+    `publicados`: los que estaban publicados antes (al rehacer todo, los activos de antes de
+    deshacer las fusiones); por defecto, los dados de alta antes de esta ejecución."""
     activos = sorted(
         (i for i in almacen.incidentes() if activo(i)),
         key=lambda d: (d["tiempo"]["inicio"]["valor"], d["id"]),
     )
+    if publicados is None:
+        marca = _instante(ahora, "minuto")["valor"]
+        publicados = frozenset(i["id"] for i in activos if i["control"]["alta"]["valor"] < marca)
     vivos = {i["id"]: i for i in activos}
     hechas = 0
     for incidente in activos:
@@ -426,17 +531,18 @@ def fusionar(almacen: Almacen, ahora: datetime, modelos: frozenset[str]) -> int:
         # Dudosa si encaja con dos: no se hace.
         if len(anteriores) != 1:
             continue
-        destino = anteriores[0]
-        nuevo, aportadas = absorber(destino, incidente, ahora)
-        fundido = {**copy.deepcopy(incidente), "fusionado_en": destino["id"]}
+        destino, absorbido = destino_de(anteriores[0], incidente, publicados)
+        nuevo, aportadas = absorber(destino, absorbido, ahora)
+        fundido = {**copy.deepcopy(absorbido), "fusionado_en": destino["id"]}
+        fundido.pop("episodio", None)
         almacen.guardar_incidente(nuevo, ahora, modelos)
         almacen.guardar_incidente(fundido, ahora, modelos)
         almacen.registrar_fusion(
-            _instante(ahora, "minuto")["valor"], incidente["id"], destino["id"],
+            _instante(ahora, "minuto")["valor"], absorbido["id"], destino["id"],
             "mismo sitio y misma ventana", aportadas,
         )  # fmt: skip
         vivos[destino["id"]] = nuevo
-        del vivos[incidente["id"]]
+        del vivos[absorbido["id"]]
         hechas += 1
     return hechas
 

@@ -46,15 +46,25 @@ from proceso.noticias import (
     Nomenclator,
     configuracion,
     lugar,
+    lugares_en,
     nomenclator,
     normalizar,
 )
-from proceso.ubicacion import Objetivo, Pistas, Ubicacion, pais_del_suceso, ubicar
+from proceso.ubicacion import (
+    Objetivo,
+    Pistas,
+    Ubicacion,
+    afinar,
+    nombres_en_idiomas,
+    pais_del_suceso,
+    ubicar,
+)
 from proceso.validacion_ficha import (
     MIN_LETRAS_PALABRA,
     Contexto,
     Validada,
     otro_objetivo,
+    recuperar_inicio,
     revalidar,
     validar,
 )
@@ -279,6 +289,76 @@ def palabras_objetivo(id_lugar: str) -> frozenset[str]:
     )
 
 
+def publicaciones(articulos: list[Documento], enviadas: list[str]) -> tuple[datetime, ...]:
+    """La hora de publicación de cada fuente enviada, en su orden (la del primer artículo si
+    una ya no está entre los del candidato)."""
+    por_url = {a["url"]: datetime.fromisoformat(a["fecha"]) for a in articulos}
+    primera = min(por_url.values(), default=datetime.now(UTC))
+    return tuple(por_url.get(url, primera) for url in enviadas)
+
+
+# Titulares del candidato que nombran a la vez su objetivo y el que da la ficha para que el
+# suceso cuente también en el suyo («Brussels, Liege airports closed for hours due to drones»).
+MIN_TITULARES_COMPARTIDOS = 2
+MAX_PALABRAS_FRASE = 25
+
+
+def _nombra(titular: str, nombres: set[str]) -> bool:
+    texto = f" {normalizar(titular)} "
+    return any(f" {n} " in texto for n in nombres)
+
+
+def objetivo_compartido(
+    validada: Validada, id_lugar: str, articulos: list[Documento], enviadas: list[str]
+) -> bool:
+    """Un incidente por objetivo: si los titulares del candidato nombran a la vez su
+    instalación y otra del mismo país («cierran los aeropuertos de Bruselas y Lieja») y la
+    ficha sitúa el suceso en la otra, el de este candidato es el de su instalación; el de la
+    otra lo da su propio candidato. True si cambia el lugar del suceso."""
+    nom = nomenclator()
+    propio = nom.lugares.get(id_lugar)
+    suceso = validada.valor("lugar_suceso")
+    if (
+        propio is None
+        or propio.tipo not in TIPO_APARENTE
+        or not suceso
+        or suceso.get("nivel") != "instalacion"
+        or validada.valor("objetivo_conocido") is not False
+    ):
+        return False
+    otros = [i for i in lugares_en(str(suceso["nombre"]), nom) if i != id_lugar]
+    if len(otros) != 1 or nom.lugares[otros[0]].pais != propio.pais:
+        return False
+    nombres_propio, nombres_otro = (
+        nombres_en_idiomas(id_lugar, nom),
+        nombres_en_idiomas(otros[0], nom),
+    )
+    ambos = [
+        a for a in articulos
+        if _nombra(str(a["titular"]), nombres_propio) and _nombra(str(a["titular"]), nombres_otro)
+    ]  # fmt: skip
+    if len(ambos) < MIN_TITULARES_COMPARTIDOS:
+        return False
+    enviada = next((a for a in ambos if a["url"] in enviadas), None)
+    fuente = enviadas.index(enviada["url"]) + 1 if enviada else 1
+    frase = " ".join(str((enviada or ambos[0])["titular"]).split()[:MAX_PALABRAS_FRASE])
+    validada.campos["lugar_suceso"] = {
+        "valor": {"nombre": propio.nombre, "nivel": "instalacion", "pais": propio.pais,
+                  "region": ""},
+        "fuente": fuente, "frase": frase, "confianza": 1.0,
+    }  # fmt: skip
+    validada.campos["objetivo_conocido"] = {
+        "valor": True, "fuente": fuente, "frase": frase, "confianza": 1.0,
+    }  # fmt: skip
+    for campo in ("objetivo_nombre", "objetivo_categoria"):
+        validada.campos.pop(campo, None)
+    validada.motivos.append(
+        f"lugar_suceso: {len(ambos)} titulares nombran {propio.nombre} junto a "
+        f"{nom.lugares[otros[0]].nombre}: un incidente por objetivo"
+    )
+    return True
+
+
 def completar_pais(
     validada: Validada, ficha_bruta: dict[str, Any], textos: tuple[str, ...]
 ) -> None:
@@ -332,9 +412,13 @@ def procesar_respuesta(
             ahora=ahora,
             palabras_objetivo=palabras_objetivo(peticion.candidato["lugar"]),
             prefijos_genericos=prefijos_genericos(),
+            publicaciones=publicaciones(peticion.articulos, peticion.enviadas),
         )
         validada = validar(leida, contexto)
         completar_pais(validada, leida, contexto.textos)
+        objetivo_compartido(
+            validada, peticion.candidato["lugar"], peticion.articulos, peticion.enviadas
+        )
         # La ficha en bruto se guarda para poder revalidarla sin volver a llamar.
         documento = {
             "motivos": validada.motivos,
@@ -485,6 +569,14 @@ def _alta(
     conserva su fusión ni su episodio: se vuelven a calcular después."""
     _ampliar_modelos(almacen, validada)
     ubicacion = ubicar(validada, pistas(almacen, peticion), nomenclator())
+    if ubicacion.valida and ubicacion.sitio is None:
+        # Un suceso que solo se sitúa en una región gana el punto del único sitio de esa
+        # región que nombran sus frases y los titulares de su candidato.
+        textos = tuple(
+            [str(c.get("frase") or "") for c in validada.campos.values()]
+            + [str(a["titular"]) for a in peticion.articulos]
+        )
+        ubicacion = afinar(ubicacion, textos, nomenclator())
     if not ubicacion.valida:
         documento["motivos"] = [*documento["motivos"], f"ubicación: {ubicacion.motivo}"]
         return None
@@ -566,6 +658,11 @@ def reconstruir(
             prefijos_genericos(),
         )
         completar_pais(validada, ultima["ficha"], titulares)
+        recuperar_inicio(
+            validada, ultima["ficha"], list(ultima.get("motivos", [])),
+            publicaciones(peticion.articulos, list(enviadas)), ahora,
+        )  # fmt: skip
+        objetivo_compartido(validada, candidato["lugar"], peticion.articulos, list(enviadas))
         nombre = validada.valor("objetivo_nombre")
         contexto = Contexto(
             textos=(), pais_objetivo=peticion.objetivo.pais, primer_articulo=ahora, ahora=ahora,

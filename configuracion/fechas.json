@@ -1,0 +1,252 @@
+{
+ "version_esquema": "1.0.0",
+ "descripcion": "Léxico para leer el día de un suceso en la frase de una noticia (proceso/fechas.py). Por idioma: meses (enero a diciembre, con sus formas declinadas), días de la semana (lunes a domingo), expresiones relativas al día de publicación (0 hoy, -1 ayer, -2 anteayer), noches (la última noche: la víspera si la nota sale por la mañana) y marcas de «la noche del … al …» o «la noche hacia el …», que adelantan un día el día de la semana que nombran. Las formas se escriben como en la noticia; el código las normaliza igual que la frase (minúsculas, sin acentos, sin apóstrofos). Un día de la semana casa también como comienzo de palabra en los idiomas que los componen («Donnerstagabend», «mandagaften», «maandagavond»). zonas: zona horaria de cada país, para pasar la hora de publicación a la fecha local del medio.",
+ "componen_dias": ["de", "nl", "da", "no", "sv", "fi", "et", "lt", "lv", "hu"],
+ "idiomas": {
+  "en": {
+   "meses": [["january", "jan"], ["february", "feb"], ["march"], ["april", "apr"], ["may"], ["june", "jun"], ["july", "jul"], ["august", "aug"], ["september", "sep", "sept"], ["october", "oct"], ["november", "nov"], ["december", "dec"]],
+   "dias": [["monday"], ["tuesday"], ["wednesday"], ["thursday"], ["friday"], ["saturday"], ["sunday"]],
+   "relativos": {"0": ["today", "this morning", "this afternoon", "this evening", "earlier today"], "-1": ["yesterday", "last evening"], "-2": ["day before yesterday"]},
+   "noches": ["last night", "overnight", "tonight", "during the night"],
+   "noche_hacia": ["night to", "night into"]
+  },
+  "es": {
+   "meses": [["enero"], ["febrero"], ["marzo"], ["abril"], ["mayo"], ["junio"], ["julio"], ["agosto"], ["septiembre", "setiembre"], ["octubre"], ["noviembre"], ["diciembre"]],
+   "dias": [["lunes"], ["martes"], ["miércoles"], ["jueves"], ["viernes"], ["sábado"], ["domingo"]],
+   "relativos": {"0": ["hoy", "esta mañana", "esta tarde"], "-1": ["ayer"], "-2": ["anteayer", "antes de ayer", "antier"]},
+   "noches": ["anoche", "esta noche", "la pasada noche", "la noche pasada", "esta madrugada", "la madrugada de hoy", "durante la noche"],
+   "noche_hacia": []
+  },
+  "ca": {
+   "meses": [["gener"], ["febrer"], ["març"], ["abril"], ["maig"], ["juny"], ["juliol"], ["agost"], ["setembre"], ["octubre"], ["novembre"], ["desembre"]],
+   "dias": [["dilluns"], ["dimarts"], ["dimecres"], ["dijous"], ["divendres"], ["dissabte"], ["diumenge"]],
+   "relativos": {"0": ["avui", "aquest matí"], "-1": ["ahir"], "-2": ["abans d'ahir", "abans-d'ahir"]},
+   "noches": ["anit", "aquesta nit", "aquesta matinada"],
+   "noche_hacia": []
+  },
+  "gl": {
+   "meses": [["xaneiro"], ["febreiro"], ["marzo"], ["abril"], ["maio"], ["xuño"], ["xullo"], ["agosto"], ["setembro"], ["outubro"], ["novembro"], ["decembro"]],
+   "dias": [["luns"], ["martes"], ["mércores"], ["xoves"], ["venres"], ["sábado"], ["domingo"]],
+   "relativos": {"0": ["hoxe"], "-1": ["onte"], "-2": ["antonte"]},
+   "noches": ["esta madrugada", "onte á noite"],
+   "noche_hacia": []
+  },
+  "fr": {
+   "meses": [["janvier"], ["février"], ["mars"], ["avril"], ["mai"], ["juin"], ["juillet"], ["août"], ["septembre"], ["octobre"], ["novembre"], ["décembre"]],
+   "dias": [["lundi"], ["mardi"], ["mercredi"], ["jeudi"], ["vendredi"], ["samedi"], ["dimanche"]],
+   "relativos": {"0": ["aujourd'hui", "ce matin", "cet après-midi", "ce soir"], "-1": ["hier"], "-2": ["avant-hier"]},
+   "noches": ["dans la soirée", "la nuit dernière", "cette nuit", "dans la nuit", "durant la nuit", "pendant la nuit"],
+   "noche_hacia": []
+  },
+  "de": {
+   "meses": [["januar", "jänner"], ["februar", "feber"], ["märz"], ["april"], ["mai"], ["juni"], ["juli"], ["august"], ["september"], ["oktober"], ["november"], ["dezember"]],
+   "dias": [["montag"], ["dienstag"], ["mittwoch"], ["donnerstag"], ["freitag"], ["samstag", "sonnabend"], ["sonntag"]],
+   "relativos": {"0": ["heute", "heute morgen", "heute früh", "heute abend", "heute nachmittag", "am morgen", "am vormittag", "am nachmittag"], "-1": ["gestern", "gestern abend"], "-2": ["vorgestern"]},
+   "noches": ["am abend", "am späten abend", "heute nacht", "in der nacht", "letzte nacht", "vergangene nacht", "in der vergangenen nacht", "in der letzten nacht", "über nacht"],
+   "noche_hacia": ["nacht zum", "nacht zu", "nacht auf"]
+  },
+  "it": {
+   "meses": [["gennaio"], ["febbraio"], ["marzo"], ["aprile"], ["maggio"], ["giugno"], ["luglio"], ["agosto"], ["settembre"], ["ottobre"], ["novembre"], ["dicembre"]],
+   "dias": [["lunedì"], ["martedì"], ["mercoledì"], ["giovedì"], ["venerdì"], ["sabato"], ["domenica"]],
+   "relativos": {"0": ["oggi", "stamattina", "stamani", "questa mattina", "stasera", "questa sera"], "-1": ["ieri", "ieri sera"], "-2": ["l'altro ieri", "altroieri"]},
+   "noches": ["in serata", "nella serata", "stanotte", "questa notte", "la scorsa notte", "nella notte", "durante la notte", "in nottata"],
+   "noche_hacia": []
+  },
+  "pt": {
+   "meses": [["janeiro"], ["fevereiro"], ["março"], ["abril"], ["maio"], ["junho"], ["julho"], ["agosto"], ["setembro"], ["outubro"], ["novembro"], ["dezembro"]],
+   "dias": [["segunda-feira"], ["terça-feira"], ["quarta-feira"], ["quinta-feira"], ["sexta-feira"], ["sábado"], ["domingo"]],
+   "relativos": {"0": ["hoje", "esta manhã", "esta tarde"], "-1": ["ontem", "ontem à noite"], "-2": ["anteontem"]},
+   "noches": ["esta noite", "na noite passada", "nesta madrugada", "esta madrugada", "durante a noite"],
+   "noche_hacia": []
+  },
+  "nl": {
+   "meses": [["januari"], ["februari"], ["maart"], ["april"], ["mei"], ["juni"], ["juli"], ["augustus"], ["september"], ["oktober"], ["november"], ["december"]],
+   "dias": [["maandag"], ["dinsdag"], ["woensdag"], ["donderdag"], ["vrijdag"], ["zaterdag"], ["zondag"]],
+   "relativos": {"0": ["vandaag", "vanochtend", "vanmorgen", "vanmiddag", "vanavond"], "-1": ["gisteren", "gisteravond"], "-2": ["eergisteren"]},
+   "noches": ["vannacht", "afgelopen nacht", "de afgelopen nacht", "in de nacht"],
+   "noche_hacia": ["nacht op"]
+  },
+  "pl": {
+   "meses": [["styczeń", "stycznia"], ["luty", "lutego"], ["marzec", "marca"], ["kwiecień", "kwietnia"], ["maj", "maja"], ["czerwiec", "czerwca"], ["lipiec", "lipca"], ["sierpień", "sierpnia"], ["wrzesień", "września"], ["październik", "października"], ["listopad", "listopada"], ["grudzień", "grudnia"]],
+   "dias": [["poniedziałek", "poniedziałku"], ["wtorek", "wtorku"], ["środa", "środę", "środy"], ["czwartek", "czwartku"], ["piątek", "piątku"], ["sobota", "sobotę", "soboty"], ["niedziela", "niedzielę", "niedzieli"]],
+   "relativos": {"0": ["dziś", "dzisiaj", "dziś rano", "dzisiaj rano", "dziś wieczorem"], "-1": ["wczoraj", "wczoraj wieczorem"], "-2": ["przedwczoraj"]},
+   "noches": ["w nocy", "ostatniej nocy", "zeszłej nocy", "minionej nocy", "tej nocy", "dzisiejszej nocy"],
+   "noche_hacia": []
+  },
+  "ro": {
+   "meses": [["ianuarie"], ["februarie"], ["martie"], ["aprilie"], ["mai"], ["iunie"], ["iulie"], ["august"], ["septembrie"], ["octombrie"], ["noiembrie"], ["decembrie"]],
+   "dias": [["luni seara", "luni dimineața", "luni noaptea", "noaptea de luni", "ziua de luni", "luni după-amiază"], ["marți"], ["miercuri"], ["joi"], ["vineri"], ["sâmbătă"], ["duminică"]],
+   "relativos": {"0": ["astăzi", "azi", "azi dimineață", "în această dimineață", "în această seară", "în seara aceasta"], "-1": ["ieri", "aseară", "în ajun"], "-2": ["alaltăieri", "alaltăseară"]},
+   "noches": ["azi-noapte", "azi noapte", "noaptea trecută", "în noaptea trecută", "în această noapte", "noaptea aceasta", "peste noapte", "în cursul nopții"],
+   "noche_hacia": ["noaptea spre"]
+  },
+  "lt": {
+   "meses": [["sausio", "sausis"], ["vasario", "vasaris"], ["kovo", "kovas"], ["balandžio", "balandis"], ["gegužės", "gegužė"], ["birželio", "birželis"], ["liepos", "liepa"], ["rugpjūčio", "rugpjūtis"], ["rugsėjo", "rugsėjis"], ["spalio", "spalis"], ["lapkričio", "lapkritis"], ["gruodžio", "gruodis"]],
+   "dias": [["pirmadien"], ["antradien"], ["trečiadien"], ["ketvirtadien"], ["penktadien"], ["šeštadien"], ["sekmadien"]],
+   "relativos": {"0": ["šiandien", "šįryt", "šiandien ryte"], "-1": ["vakar", "vakar vakare"], "-2": ["užvakar"]},
+   "noches": ["šiąnakt", "praėjusią naktį", "naktį"],
+   "noche_hacia": ["naktį į"]
+  },
+  "lv": {
+   "meses": [["janvāris", "janvārī", "janvāra"], ["februāris", "februārī", "februāra"], ["marts", "martā", "marta"], ["aprīlis", "aprīlī", "aprīļa"], ["maijs", "maijā", "maija"], ["jūnijs", "jūnijā", "jūnija"], ["jūlijs", "jūlijā", "jūlija"], ["augusts", "augustā", "augusta"], ["septembris", "septembrī", "septembra"], ["oktobris", "oktobrī", "oktobra"], ["novembris", "novembrī", "novembra"], ["decembris", "decembrī", "decembra"]],
+   "dias": [["pirmdien"], ["otrdien"], ["trešdien"], ["ceturtdien"], ["piektdien"], ["sestdien"], ["svētdien"]],
+   "relativos": {"0": ["šodien", "šorīt", "šovakar"], "-1": ["vakar", "vakar vakarā"], "-2": ["aizvakar"]},
+   "noches": ["šonakt", "pagājušajā naktī", "naktī"],
+   "noche_hacia": ["naktī uz"]
+  },
+  "et": {
+   "meses": [["jaanuar", "jaanuaril", "jaanuari"], ["veebruar", "veebruaril", "veebruari"], ["märts", "märtsil", "märtsi"], ["aprill", "aprillil", "aprilli"], ["mai", "mail"], ["juuni", "juunil"], ["juuli", "juulil"], ["august", "augustil", "augusti"], ["september", "septembril", "septembri"], ["oktoober", "oktoobril", "oktoobri"], ["november", "novembril", "novembri"], ["detsember", "detsembril", "detsembri"]],
+   "dias": [["esmaspäev"], ["teisipäev"], ["kolmapäev"], ["neljapäev"], ["reede"], ["laupäev"], ["pühapäev"]],
+   "relativos": {"0": ["täna", "täna hommikul", "täna õhtul"], "-1": ["eile", "eile õhtul"], "-2": ["üleeile"]},
+   "noches": ["öösel", "eile öösel", "möödunud öösel", "täna öösel"],
+   "noche_hacia": ["ööl vastu"]
+  },
+  "fi": {
+   "meses": [["tammikuu", "tammikuuta"], ["helmikuu", "helmikuuta"], ["maaliskuu", "maaliskuuta"], ["huhtikuu", "huhtikuuta"], ["toukokuu", "toukokuuta"], ["kesäkuu", "kesäkuuta"], ["heinäkuu", "heinäkuuta"], ["elokuu", "elokuuta"], ["syyskuu", "syyskuuta"], ["lokakuu", "lokakuuta"], ["marraskuu", "marraskuuta"], ["joulukuu", "joulukuuta"]],
+   "dias": [["maanantai"], ["tiistai"], ["keskiviiko", "keskiviikko"], ["torstai"], ["perjantai"], ["lauantai"], ["sunnuntai"]],
+   "relativos": {"0": ["tänään", "tänä aamuna", "tänään aamulla", "tänä iltana"], "-1": ["eilen", "eilen illalla"], "-2": ["toissapäivänä"]},
+   "noches": ["viime yönä", "yöllä", "tänä yönä"],
+   "noche_hacia": ["vastaisena yönä"]
+  },
+  "sv": {
+   "meses": [["januari"], ["februari"], ["mars"], ["april"], ["maj"], ["juni"], ["juli"], ["augusti"], ["september"], ["oktober"], ["november"], ["december"]],
+   "dias": [["måndag"], ["tisdag"], ["onsdag"], ["torsdag"], ["fredag"], ["lördag"], ["söndag"]],
+   "relativos": {"0": ["idag", "i dag", "i morse", "i kväll"], "-1": ["igår", "i går", "igår kväll", "i går kväll"], "-2": ["i förrgår", "förrgår"]},
+   "noches": ["i natt", "inatt", "under natten"],
+   "noche_hacia": ["natten till", "natten mot"]
+  },
+  "da": {
+   "meses": [["januar"], ["februar"], ["marts"], ["april"], ["maj"], ["juni"], ["juli"], ["august"], ["september"], ["oktober"], ["november"], ["december"]],
+   "dias": [["mandag"], ["tirsdag"], ["onsdag"], ["torsdag"], ["fredag"], ["lørdag"], ["søndag"]],
+   "relativos": {"0": ["i dag", "idag", "i morges", "i aften"], "-1": ["i går", "igår", "i går aftes"], "-2": ["i forgårs"]},
+   "noches": ["i nat", "inat", "i løbet af natten"],
+   "noche_hacia": ["natten til"]
+  },
+  "no": {
+   "meses": [["januar"], ["februar"], ["mars"], ["april"], ["mai"], ["juni"], ["juli"], ["august"], ["september"], ["oktober"], ["november"], ["desember"]],
+   "dias": [["mandag"], ["tirsdag"], ["onsdag"], ["torsdag"], ["fredag"], ["lørdag"], ["søndag"]],
+   "relativos": {"0": ["i dag", "idag", "i morges", "i kveld"], "-1": ["i går", "igår", "i går kveld"], "-2": ["i forgårs"]},
+   "noches": ["i natt", "inatt", "i løpet av natten"],
+   "noche_hacia": ["natt til", "natten til"]
+  },
+  "cs": {
+   "meses": [["leden", "ledna"], ["únor", "února"], ["březen", "března"], ["duben", "dubna"], ["květen", "května"], ["červen", "června"], ["červenec", "července"], ["srpen", "srpna"], ["září"], ["říjen", "října"], ["listopad", "listopadu"], ["prosinec", "prosince"]],
+   "dias": [["pondělí"], ["úterý"], ["středa", "středu", "středy"], ["čtvrtek", "čtvrtka"], ["pátek", "pátku"], ["sobota", "sobotu", "soboty"], ["neděle", "neděli"]],
+   "relativos": {"0": ["dnes", "dnes ráno", "dnes večer"], "-1": ["včera", "včera večer"], "-2": ["předevčírem"]},
+   "noches": ["v noci", "dnes v noci", "minulou noc", "tuto noc"],
+   "noche_hacia": ["noci na"]
+  },
+  "sk": {
+   "meses": [["január", "januára"], ["február", "februára"], ["marec", "marca"], ["apríl", "apríla"], ["máj", "mája"], ["jún", "júna"], ["júl", "júla"], ["august", "augusta"], ["september", "septembra"], ["október", "októbra"], ["november", "novembra"], ["december", "decembra"]],
+   "dias": [["pondelok", "pondelka"], ["utorok", "utorka"], ["streda", "stredu", "stredy"], ["štvrtok", "štvrtka"], ["piatok", "piatka"], ["sobota", "sobotu", "soboty"], ["nedeľa", "nedeľu", "nedele"]],
+   "relativos": {"0": ["dnes", "dnes ráno", "dnes večer"], "-1": ["včera", "včera večer"], "-2": ["predvčerom"]},
+   "noches": ["v noci", "dnes v noci", "minulú noc", "tejto noci", "cez noc"],
+   "noche_hacia": ["noci na"]
+  },
+  "hu": {
+   "meses": [["január", "januári"], ["február", "februári"], ["március", "márciusi"], ["április", "áprilisi"], ["május", "májusi"], ["június", "júniusi"], ["július", "júliusi"], ["augusztus", "augusztusi"], ["szeptember", "szeptemberi"], ["október", "októberi"], ["november", "novemberi"], ["december", "decemberi"]],
+   "dias": [["hétf"], ["kedd"], ["szerd"], ["csütörtök"], ["péntek"], ["szombat"], ["vasárnap"]],
+   "relativos": {"0": ["ma", "ma reggel", "ma este"], "-1": ["tegnap", "tegnap este"], "-2": ["tegnapelőtt"]},
+   "noches": ["ma éjjel", "éjjel", "az éjjel", "éjszaka"],
+   "noche_hacia": []
+  },
+  "hr": {
+   "meses": [["siječanj", "siječnja"], ["veljača", "veljače"], ["ožujak", "ožujka"], ["travanj", "travnja"], ["svibanj", "svibnja"], ["lipanj", "lipnja"], ["srpanj", "srpnja"], ["kolovoz", "kolovoza"], ["rujan", "rujna"], ["listopad", "listopada"], ["studeni", "studenoga", "studenog"], ["prosinac", "prosinca"]],
+   "dias": [["ponedjeljak", "ponedjeljka"], ["utorak", "utorka"], ["srijeda", "srijedu", "srijede"], ["četvrtak", "četvrtka"], ["petak", "petka"], ["subota", "subotu", "subote"], ["nedjelja", "nedjelju", "nedjelje"]],
+   "relativos": {"0": ["danas", "jutros", "večeras"], "-1": ["jučer", "juče"], "-2": ["prekjučer"]},
+   "noches": ["sinoć", "noćas", "prošle noći", "tijekom noći", "tokom noći"],
+   "noche_hacia": ["noći na"]
+  },
+  "bs": {
+   "meses": [["januar", "januara"], ["februar", "februara"], ["mart", "marta"], ["april", "aprila"], ["maj", "maja"], ["juni", "juna"], ["juli", "jula"], ["august", "augusta"], ["septembar", "septembra"], ["oktobar", "oktobra"], ["novembar", "novembra"], ["decembar", "decembra"]],
+   "dias": [["ponedjeljak", "ponedjeljka"], ["utorak", "utorka"], ["srijeda", "srijedu", "srijede"], ["četvrtak", "četvrtka"], ["petak", "petka"], ["subota", "subotu", "subote"], ["nedjelja", "nedjelju", "nedjelje"]],
+   "relativos": {"0": ["danas", "jutros", "večeras"], "-1": ["jučer", "juče"], "-2": ["prekjučer", "prekjuče"]},
+   "noches": ["sinoć", "noćas", "prošle noći", "tokom noći"],
+   "noche_hacia": ["noći na"]
+  },
+  "sr": {
+   "meses": [["januar", "januara", "јануар", "јануара"], ["februar", "februara", "фебруар", "фебруара"], ["mart", "marta", "март", "марта"], ["april", "aprila", "април", "априла"], ["maj", "maja", "мај", "маја"], ["jun", "juna", "јун", "јуна"], ["jul", "jula", "јул", "јула"], ["avgust", "avgusta", "август", "августа"], ["septembar", "septembra", "септембар", "септембра"], ["oktobar", "oktobra", "октобар", "октобра"], ["novembar", "novembra", "новембар", "новембра"], ["decembar", "decembra", "децембар", "децембра"]],
+   "dias": [["ponedeljak", "ponedeljka", "понедељак", "понедељка"], ["utorak", "utorka", "уторак", "уторка"], ["sreda", "sredu", "среда", "среду"], ["četvrtak", "četvrtka", "четвртак", "четвртка"], ["petak", "petka", "петак", "петка"], ["subota", "subotu", "субота", "суботу"], ["nedelja", "nedelju", "недеља", "недељу"]],
+   "relativos": {"0": ["danas", "jutros", "večeras", "данас", "јутрос", "вечерас"], "-1": ["juče", "јуче"], "-2": ["prekjuče", "прекјуче"]},
+   "noches": ["sinoć", "noćas", "prošle noći", "tokom noći", "синоћ", "ноћас", "током ноћи"],
+   "noche_hacia": []
+  },
+  "sl": {
+   "meses": [["januar", "januarja"], ["februar", "februarja"], ["marec", "marca"], ["april", "aprila"], ["maj", "maja"], ["junij", "junija"], ["julij", "julija"], ["avgust", "avgusta"], ["september", "septembra"], ["oktober", "oktobra"], ["november", "novembra"], ["december", "decembra"]],
+   "dias": [["ponedeljek", "ponedeljka"], ["torek", "torka"], ["sreda", "sredo"], ["četrtek", "četrtka"], ["petek", "petka"], ["sobota", "soboto"], ["nedelja", "nedeljo"]],
+   "relativos": {"0": ["danes", "davi", "nocoj"], "-1": ["včeraj", "sinoči"], "-2": ["predvčerajšnjim"]},
+   "noches": ["ponoči", "to noč", "prejšnjo noč"],
+   "noche_hacia": ["noči na"]
+  },
+  "bg": {
+   "meses": [["януари"], ["февруари"], ["март"], ["април"], ["май"], ["юни"], ["юли"], ["август"], ["септември"], ["октомври"], ["ноември"], ["декември"]],
+   "dias": [["понеделник"], ["вторник"], ["сряда"], ["четвъртък"], ["петък"], ["събота"], ["неделя"]],
+   "relativos": {"0": ["днес", "тази сутрин", "тази вечер"], "-1": ["вчера", "снощи"], "-2": ["онзи ден"]},
+   "noches": ["през нощта", "тази нощ", "нощес"],
+   "noche_hacia": ["нощта срещу"]
+  },
+  "mk": {
+   "meses": [["јануари"], ["февруари"], ["март"], ["април"], ["мај"], ["јуни"], ["јули"], ["август"], ["септември"], ["октомври"], ["ноември"], ["декември"]],
+   "dias": [["понеделник"], ["вторник"], ["среда"], ["четврток"], ["петок"], ["сабота"], ["недела"]],
+   "relativos": {"0": ["денес"], "-1": ["вчера", "синоќа"], "-2": ["завчера"]},
+   "noches": ["ноќва", "ноќеска", "во текот на ноќта"],
+   "noche_hacia": []
+  },
+  "el": {
+   "meses": [["ιανουαρίου", "ιανουάριος"], ["φεβρουαρίου", "φεβρουάριος"], ["μαρτίου", "μάρτιος"], ["απριλίου", "απρίλιος"], ["μαΐου", "μάιος"], ["ιουνίου", "ιούνιος"], ["ιουλίου", "ιούλιος"], ["αυγούστου", "αύγουστος"], ["σεπτεμβρίου", "σεπτέμβριος"], ["οκτωβρίου", "οκτώβριος"], ["νοεμβρίου", "νοέμβριος"], ["δεκεμβρίου", "δεκέμβριος"]],
+   "dias": [["δευτέρα", "δευτέρας"], ["τρίτη", "τρίτης"], ["τετάρτη", "τετάρτης"], ["πέμπτη", "πέμπτης"], ["παρασκευή", "παρασκευής"], ["σάββατο", "σαββάτου"], ["κυριακή", "κυριακής"]],
+   "relativos": {"0": ["σήμερα", "σήμερα το πρωί", "απόψε"], "-1": ["χθες", "χτες", "χθες το βράδυ"], "-2": ["προχθές", "προχτές"]},
+   "noches": ["τη νύχτα", "τα ξημερώματα", "κατά τη διάρκεια της νύχτας"],
+   "noche_hacia": ["νύχτα προς"]
+  },
+  "ru": {
+   "meses": [["январь", "января"], ["февраль", "февраля"], ["март", "марта"], ["апрель", "апреля"], ["май", "мая"], ["июнь", "июня"], ["июль", "июля"], ["август", "августа"], ["сентябрь", "сентября"], ["октябрь", "октября"], ["ноябрь", "ноября"], ["декабрь", "декабря"]],
+   "dias": [["понедельник"], ["вторник"], ["среда", "среду"], ["четверг"], ["пятница", "пятницу"], ["суббота", "субботу"], ["воскресенье"]],
+   "relativos": {"0": ["сегодня", "этим утром", "сегодня утром", "сегодня вечером"], "-1": ["вчера", "вчера вечером"], "-2": ["позавчера"]},
+   "noches": ["ночью", "этой ночью", "прошлой ночью", "минувшей ночью"],
+   "noche_hacia": ["в ночь на", "ночь на"]
+  },
+  "uk": {
+   "meses": [["січень", "січня"], ["лютий", "лютого"], ["березень", "березня"], ["квітень", "квітня"], ["травень", "травня"], ["червень", "червня"], ["липень", "липня"], ["серпень", "серпня"], ["вересень", "вересня"], ["жовтень", "жовтня"], ["листопад", "листопада"], ["грудень", "грудня"]],
+   "dias": [["понеділок", "понеділка"], ["вівторок", "вівторка"], ["середа", "середу"], ["четвер", "четверга"], ["п'ятниця", "п'ятницю"], ["субота", "суботу"], ["неділя", "неділю"]],
+   "relativos": {"0": ["сьогодні", "цього ранку", "сьогодні вранці"], "-1": ["вчора", "учора"], "-2": ["позавчора"]},
+   "noches": ["вночі", "уночі", "цієї ночі", "минулої ночі"],
+   "noche_hacia": ["в ніч на", "у ніч на", "ніч на"]
+  },
+  "sq": {
+   "meses": [["janar", "janarit"], ["shkurt", "shkurtit"], ["mars", "marsit"], ["prill", "prillit"], ["maj", "majit"], ["qershor", "qershorit"], ["korrik", "korrikut"], ["gusht", "gushtit"], ["shtator", "shtatorit"], ["tetor", "tetorit"], ["nëntor", "nëntorit"], ["dhjetor", "dhjetorit"]],
+   "dias": [["e hënë", "të hënën"], ["e martë", "të martën"], ["e mërkurë", "të mërkurën"], ["e enjte", "të enjten"], ["e premte", "të premten"], ["e shtunë", "të shtunën"], ["e diel", "të dielën"]],
+   "relativos": {"0": ["sot"], "-1": ["dje", "mbrëmë"], "-2": ["pardje"]},
+   "noches": ["natën e kaluar", "gjatë natës", "mbrëmjen e kaluar"],
+   "noche_hacia": []
+  },
+  "tr": {
+   "meses": [["ocak"], ["şubat"], ["mart"], ["nisan"], ["mayıs"], ["haziran"], ["temmuz"], ["ağustos"], ["eylül"], ["ekim"], ["kasım"], ["aralık"]],
+   "dias": [["pazartesi"], ["salı günü"], ["çarşamba"], ["perşembe"], ["cuma"], ["cumartesi"], ["pazar günü"]],
+   "relativos": {"0": ["bugün"], "-1": ["dün"], "-2": ["evvelsi gün"]},
+   "noches": ["dün gece", "bu gece"],
+   "noche_hacia": []
+  },
+  "is": {
+   "meses": [["janúar"], ["febrúar"], ["mars"], ["apríl"], ["maí"], ["júní"], ["júlí"], ["ágúst"], ["september"], ["október"], ["nóvember"], ["desember"]],
+   "dias": [["mánudag"], ["þriðjudag"], ["miðvikudag"], ["fimmtudag"], ["föstudag"], ["laugardag"], ["sunnudag"]],
+   "relativos": {"0": ["í dag"], "-1": ["í gær"], "-2": ["í fyrradag"]},
+   "noches": ["í nótt"],
+   "noche_hacia": []
+  }
+ },
+ "zonas": {
+  "AD": "Europe/Andorra", "AL": "Europe/Tirane", "AT": "Europe/Vienna", "BA": "Europe/Sarajevo",
+  "BE": "Europe/Brussels", "BG": "Europe/Sofia", "BY": "Europe/Minsk", "CH": "Europe/Zurich",
+  "CY": "Asia/Nicosia", "CZ": "Europe/Prague", "DE": "Europe/Berlin", "DK": "Europe/Copenhagen",
+  "EE": "Europe/Tallinn", "ES": "Europe/Madrid", "FI": "Europe/Helsinki", "FR": "Europe/Paris",
+  "GB": "Europe/London", "GI": "Europe/Gibraltar", "GR": "Europe/Athens", "HR": "Europe/Zagreb",
+  "HU": "Europe/Budapest", "IE": "Europe/Dublin", "IS": "Atlantic/Reykjavik", "IT": "Europe/Rome",
+  "LI": "Europe/Vaduz", "LT": "Europe/Vilnius", "LU": "Europe/Luxembourg", "LV": "Europe/Riga",
+  "MC": "Europe/Monaco", "MD": "Europe/Chisinau", "ME": "Europe/Podgorica", "MK": "Europe/Skopje",
+  "MT": "Europe/Malta", "NL": "Europe/Amsterdam", "NO": "Europe/Oslo", "PL": "Europe/Warsaw",
+  "PT": "Europe/Lisbon", "RO": "Europe/Bucharest", "RS": "Europe/Belgrade", "RU": "Europe/Moscow",
+  "SE": "Europe/Stockholm", "SI": "Europe/Ljubljana", "SK": "Europe/Bratislava", "SM": "Europe/San_Marino",
+  "TR": "Europe/Istanbul", "UA": "Europe/Kyiv", "VA": "Europe/Vatican", "XK": "Europe/Belgrade"
+ }
+}

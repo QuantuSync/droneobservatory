@@ -8,13 +8,19 @@ Agrupación con la regla de fusión del diseño: mismo objetivo o puntos a menos
 de la suma de radios más 10 km; con precisión de hora, inicios a menos de 6
 horas; con precisión de día, el mismo día o el siguiente; más de 12 horas sin
 actividad es un incidente nuevo. Una agrupación dudosa no se hace.
+
+Las noticias de un cierre se siguen publicando todo el día siguiente, así que un
+segundo suceso en el mismo sitio a la noche siguiente caería en el mismo candidato.
+Un titular que dice que se repite («erneut», «again», «de nuevo») 18 horas o más
+después del inicio del candidato abre otro, que recibe desde entonces las noticias
+del sitio: un candidato por objetivo y suceso.
 """
 
 import json
 import math
 import re
 import unicodedata
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from datetime import datetime, timedelta
 from functools import cache
 from pathlib import Path
@@ -29,6 +35,12 @@ DIRECTORIO = Path(__file__).resolve().parent.parent / "configuracion"
 MARGEN_FUSION_KM = 10.0
 INICIOS_HORA = timedelta(hours=6)
 SIN_ACTIVIDAD = timedelta(hours=12)
+# Un titular que dice que el suceso se repite abre otro candidato si llega 18 horas o más
+# después del inicio del que tiene el sitio. Antes habla del mismo suceso: otra oleada de
+# la misma noche o la crónica de la mañana siguiente («reabre tras cerrar de nuevo»), que
+# llega de 10 a 16 horas después; un suceso de la noche siguiente llega a las 18 a 26 horas
+# (Múnich, 2 y 3 de octubre de 2025: 19 h 45 min).
+REPETICION_MIN = timedelta(hours=18)
 # Las réplicas de una nota de agencia salen en uno o dos días: se buscan en 72 horas.
 VENTANA_REPLICAS = timedelta(hours=72)
 # «Casi idéntico»: comparten al menos el 85 % de las palabras (índice de Jaccard), lo
@@ -77,6 +89,8 @@ class Candidato:
     ultimo: datetime
     precision: str
     articulos: list[str] = field(default_factory=list)
+    # Candidato del mismo sitio del que se separó por un titular de repetición.
+    separado_de: str | None = None
 
 
 # --- Normalización ---------------------------------------------------------------
@@ -98,9 +112,24 @@ def sin_acentos(texto: str) -> str:
     return "".join(c for c in descompuesto if not unicodedata.combining(c))
 
 
+# Letras que la descomposición Unicode no separa de su base: «Sønderborg» se escribe
+# «Sonderborg» en los titulares de fuera de Dinamarca, «Łódź» «Lodz», «Straße» «Strasse».
+_PLEGADO = str.maketrans({
+    "ø": "o", "æ": "ae", "œ": "oe", "ß": "ss", "ł": "l", "đ": "d", "ð": "d", "þ": "th",
+    "ı": "i", "ŀ": "l",
+})  # fmt: skip
+
+
+def plegar(normal: str) -> str:
+    """Un texto ya normalizado (en minúsculas) con esas letras como en su forma latina simple.
+    Para los índices que se guardaron normalizados antes de este pliegue."""
+    return normal.translate(_PLEGADO)
+
+
 def normalizar(texto: str) -> str:
-    """Minúsculas, sin acentos, sin puntuación y con los espacios simples."""
-    limpio = re.sub(r"[^\w\s]", " ", sin_acentos(texto).lower())
+    """Minúsculas, sin acentos (también ø, æ, ß, ł…), sin puntuación y con los espacios
+    simples."""
+    limpio = re.sub(r"[^\w\s]", " ", plegar(sin_acentos(texto).lower()))
     return " ".join(limpio.split())
 
 
@@ -127,6 +156,11 @@ class Filtro:
     excluir: re.Pattern[str]
     senales: re.Pattern[str]
     tipos: tuple[tuple[str, re.Pattern[str]], ...]
+    repeticion: re.Pattern[str] = re.compile(r"(?!)")
+
+    def repite(self, titular: str) -> bool:
+        """El titular dice que el suceso se repite («erneut gesperrt», «closes again»)."""
+        return bool(self.repeticion.search(titular))
 
     def pasa(self, titular: str, lugares: tuple[str, ...]) -> bool:
         """Menciona drones, no es ocio ni comercio y trae una señal de incidente o un lugar."""
@@ -170,6 +204,14 @@ def filtro(config: dict[str, Any] | None = None) -> Filtro:
         tipos=tuple(
             (tipo, re.compile(frontera + _alternativas(lista, True) + ")", re.IGNORECASE))
             for tipo, lista in config["senales"].items()
+        ),
+        repeticion=re.compile(
+            frontera
+            + _alternativas(
+                [p for lista in config.get("repeticion", {}).values() for p in lista], False
+            )
+            + r")(?!\w)",
+            re.IGNORECASE,
         ),
     )
 
@@ -505,25 +547,65 @@ def _agrupar_en(
         and mismo_sitio(c.lugar, sitio)
         and misma_ventana(c, articulo.fecha, precision)
     ]
+    if len(encajan) > 1 and len({(c.lugar.id, c.tipo) for c in encajan}) == 1:
+        # Un sitio con varios candidatos abiertos solo los tiene por una repetición: lo nuevo
+        # es del suceso más reciente.
+        encajan = [max(encajan, key=lambda c: c.inicio)]
     if len(encajan) > 1:
         resultado.dudosos += 1
         return
     if encajan:
         candidato = encajan[0]
-        if articulo.url not in candidato.articulos:
-            candidato.articulos.append(articulo.url)
-        candidato.ultimo = max(candidato.ultimo, articulo.fecha)
+        if not repeticion(candidato, articulo, filtro_):
+            if articulo.url not in candidato.articulos:
+                candidato.articulos.append(articulo.url)
+            candidato.ultimo = max(candidato.ultimo, articulo.fecha)
+            return
+        resultado.candidatos.append(nuevo_candidato(articulo, sitio, tipo, precision, candidato.id))
         return
-    resultado.candidatos.append(
-        Candidato(
-            # Inicio y lugar: dos candidatos no empiezan en el mismo minuto en el mismo sitio
-            # sin fundirse, salvo que sean de tipo distinto.
-            id=f"CAND-{articulo.fecha:%Y%m%dT%H%M}-{sitio.id}-{tipo}",
-            tipo=tipo,
-            lugar=sitio,
-            inicio=articulo.fecha,
-            ultimo=articulo.fecha,
-            precision=precision,
-            articulos=[articulo.url],
-        )
+    resultado.candidatos.append(nuevo_candidato(articulo, sitio, tipo, precision))
+
+
+def repeticion(candidato: Candidato, articulo: Articulo, filtro_: Filtro) -> bool:
+    """El artículo cuenta que el suceso del candidato se ha repetido: abre otro."""
+    return (
+        filtro_.repite(articulo.titular)
+        and articulo.fecha - candidato.inicio >= REPETICION_MIN
+        and articulo.url not in candidato.articulos
     )
+
+
+def nuevo_candidato(
+    articulo: Articulo, sitio: Lugar, tipo: str, precision: str, separado_de: str | None = None
+) -> Candidato:
+    return Candidato(
+        # Inicio y lugar: dos candidatos no empiezan en el mismo minuto en el mismo sitio
+        # sin fundirse, salvo que sean de tipo distinto.
+        id=f"CAND-{articulo.fecha:%Y%m%dT%H%M}-{sitio.id}-{tipo}",
+        tipo=tipo,
+        lugar=sitio,
+        inicio=articulo.fecha,
+        ultimo=articulo.fecha,
+        precision=precision,
+        articulos=[articulo.url],
+        separado_de=separado_de,
+    )
+
+
+def separar(candidato: Candidato, articulos: list[Articulo], filtro_: Filtro) -> list[Candidato]:
+    """El candidato repasado con la regla de repetición, para los que se agruparon antes de
+    ella: el primero conserva su identificador y los artículos hasta la primera repetición;
+    cada repetición abre otro con los que siguen. Repasar uno ya separado no cambia nada."""
+    grupos = [replace(candidato, articulos=[], ultimo=candidato.inicio)]
+    for articulo in sorted(articulos, key=lambda a: (a.fecha, a.url)):
+        actual = grupos[-1]
+        if actual.articulos and repeticion(actual, articulo, filtro_):
+            nuevo = nuevo_candidato(
+                articulo, candidato.lugar, candidato.tipo, candidato.precision, actual.id
+            )
+            if nuevo.id != actual.id:
+                grupos.append(nuevo)
+                continue
+        actual.articulos.append(articulo.url)
+        actual.ultimo = max(actual.ultimo, articulo.fecha)
+    return grupos

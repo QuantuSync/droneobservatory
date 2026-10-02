@@ -842,7 +842,8 @@ def condiciones_incidente(
     lat, lon, origen = lugar
     inicio = trafico.leer_instante(incidente["tiempo"]["inicio"]["valor"])
     precision = incidente["tiempo"]["inicio"]["precision"]
-    momento = None if precision == "dia" else inicio
+    # Con la fecha de publicación no se sabe la hora: valores del día, como con solo el día.
+    momento = None if precision in {"dia", "aproximada"} else inicio
     dia = inicio.date()
     horario = pedir([(lat, lon)], dia, "incidente")[0]
     if horario is None:

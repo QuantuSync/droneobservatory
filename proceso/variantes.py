@@ -88,6 +88,15 @@ def _escandinavo(n: str) -> set[str]:
     return set() if n.endswith(("s", "x", "z")) else {n + "s"}
 
 
+def _noruego(n: str) -> set[str]:
+    """Genitivo en -s y forma definida de los nombres de península o comarca en -land:
+    «kampflybasen på Ørlandet» es la base de Ørland."""
+    formas = _escandinavo(n)
+    if n.endswith("land"):
+        formas.add(n + "et")
+    return formas
+
+
 REGLAS: dict[str, Regla] = {
     "DE": _aleman, "AT": _aleman, "CH": _aleman, "LI": _aleman, "LU": _aleman,
     "PL": _polaco,
@@ -95,7 +104,7 @@ REGLAS: dict[str, Regla] = {
     "LV": _leton,
     "EE": _estonio,
     "FI": _fines,
-    "SE": _escandinavo, "DK": _escandinavo, "NO": _escandinavo,
+    "SE": _escandinavo, "DK": _escandinavo, "NO": _noruego,
 }  # fmt: skip
 # Una forma más corta que esto casaría con palabras sueltas cualesquiera.
 MIN_LETRAS = 4

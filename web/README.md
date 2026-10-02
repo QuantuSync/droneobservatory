@@ -38,7 +38,7 @@ peticiones Range. El recorte se saca con
 ## Datos
 
 El build (`scripts/datos.ts`) valida `publicacion/incidentes.geojson` y
-`publicacion/ucrania.json` contra los campos públicos del esquema 1.5.0; si no
+`publicacion/ucrania.json` contra los campos públicos del esquema 1.6.0; si no
 cumplen, el build falla y sigue publicada la versión anterior. Genera:
 
 | Fichero | Contenido |

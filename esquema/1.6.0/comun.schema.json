@@ -1,9 +1,9 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:eodi:esquema:1.5.0:comun",
+  "$id": "urn:eodi:esquema:1.6.0:comun",
   "title": "Definiciones comunes",
   "description": "Tipos compartidos. La visibilidad efectiva de un campo es la más restrictiva de su cadena: si algún antecesor es interno, el campo es interno.",
-  "x-version": "1.5.0",
+  "x-version": "1.6.0",
   "$defs": {
     "desconocido": {
       "description": "Ninguna fuente lo dice. Un campo ausente significa que aún no se ha procesado.",
@@ -543,8 +543,23 @@
       }
     },
     "nivel_detalle": {
-      "description": "Nivel de detalle del incidente, calculado por código al exportar. A: trayectoria, altura o velocidad del dron con origen medido u oficial. B: hora con precisión de minuto u hora, radio del lugar de 5 km o menos (en los valores públicos o en los que precisa un registro oficial, detalle_oficial) y confirmación de origen oficial (el último paso a confirmado o una autoridad leída directamente que respalda el estado). C: confirmado con origen oficial u oficial_citado, sin la precisión de B. D: el resto (sin confirmación de una autoridad: solo prensa o solo parte). Se asigna el primero que se cumple.",
+      "description": "Nivel de detalle del incidente, calculado por código al exportar (exportacion/procedencia.py). A: trayectoria, altura o velocidad del dron con origen medido u oficial. B: hora con precisión de minuto u hora y radio del lugar de 5 km o menos (en los valores públicos o en los que precisa un registro oficial, detalle_oficial), y además confirmación de origen oficial (el último paso a confirmado o una autoridad leída directamente que respalda el estado) o un cierre medido con tráfico aéreo en un aeropuerto de cobertura alta. C: confirmado con origen oficial u oficial_citado, sin la precisión de B. D: el resto (solo prensa o solo parte). Se asigna el primero que se cumple. Para filtrar por lo que se mide, los indicadores (comun#/$defs/indicadores).",
       "enum": ["A", "B", "C", "D"]
+    },
+    "indicadores": {
+      "description": "Lo que tiene cada incidente, por separado del nivel, para filtrar por lo que se necesita. Calculados por código al exportar (exportacion/procedencia.py). tiene_cierre_medido: trafico_aereo.cierre con resultado cierre_medido (con cobertura alta o media). tiene_condiciones_medidas: condiciones con meteorología u observación METAR del lugar. tiene_respuesta_militar_observada: aeronaves militares vistas en la ventana del incidente (su ausencia no demuestra nada). tiene_interferencia_gnss_medida: interferencia GNSS medida con nivel media o alta en la celda o sus vecinas. tiene_foco_termico: foco térmico de FIRMS detectado. tiene_confirmacion_oficial_directa: una autoridad leída directamente (fiabilidad A, no citada por un medio) respalda el estado confirmado o atribuido. fecha_del_suceso_verificada: el día del inicio lo escribe una fuente (explícito o relativo a la publicación), lo da una autoridad o un parte, o lo confirma un cierre medido en un aeropuerto de cobertura alta ese día; false si la fecha es la de publicación.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tiene_cierre_medido", "tiene_condiciones_medidas", "tiene_respuesta_militar_observada", "tiene_interferencia_gnss_medida", "tiene_foco_termico", "tiene_confirmacion_oficial_directa", "fecha_del_suceso_verificada"],
+      "properties": {
+        "tiene_cierre_medido": {"x-visibilidad": "interno", "type": "boolean"},
+        "tiene_condiciones_medidas": {"x-visibilidad": "interno", "type": "boolean"},
+        "tiene_respuesta_militar_observada": {"x-visibilidad": "interno", "type": "boolean"},
+        "tiene_interferencia_gnss_medida": {"x-visibilidad": "interno", "type": "boolean"},
+        "tiene_foco_termico": {"x-visibilidad": "interno", "type": "boolean"},
+        "tiene_confirmacion_oficial_directa": {"x-visibilidad": "interno", "type": "boolean"},
+        "fecha_del_suceso_verificada": {"x-visibilidad": "interno", "type": "boolean"}
+      }
     },
     "titulo": {
       "type": "object",

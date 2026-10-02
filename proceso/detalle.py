@@ -39,6 +39,7 @@ from esquema import Documento
 from proceso import incidentes
 from proceso.credibilidad import Credibilidad
 from proceso.estados import Estado, TransicionNoPermitida, transitar
+from proceso.fronteras import dentro_del_pais
 from proceso.noticias import nomenclator
 from proceso.ubicacion import Pistas, Ubicacion, ubicar
 from proceso.validacion_ficha import Validada
@@ -52,6 +53,10 @@ RADIO_ENCUENTRO_KM = 2.0
 # La presencia del dron solo la confirma una frase con confianza alta: «Drohnen wurden
 # detektiert», no «möglicherweise eine Drohne».
 CONFIANZA_PRESENCIA = 0.9
+# Un punto oficial vale como punto del incidente con un radio de 50 km o menos (el máximo del
+# esquema); por debajo de 0,1 km, el mínimo del esquema.
+RADIO_MAX_PUNTO_KM = 50.0
+RADIO_MIN_KM = 0.1
 VOCABULARIO_LUGARES = "lugar"
 
 # Campo del suceso que da el extractor → ruta del valor en el incidente. Los públicos que el
@@ -322,9 +327,23 @@ def aplicar(incidente: Documento, lista: list[Aportacion]) -> Documento:
             if afirmacion not in afirmaciones:
                 afirmaciones.append(afirmacion)
     resultado["afirmaciones"] = afirmaciones
-    for ruta, valor in sorted(_combinar(lista).items()):
+    combinados = _combinar(lista)
+    for ruta, valor in sorted(combinados.items()):
         if ruta != "presencia_dron":
             _poner(resultado, ruta, valor)
+    resultado["lugar"] = punto_oficial(resultado["lugar"], combinados)
+    if "detalle_oficial.inicio" in combinados:
+        oficial = combinados["detalle_oficial.inicio"]
+        fuente_inicio = next(
+            a.fuente for a in sorted(lista, key=lambda a: a.fuente["id"])
+            if a.valores.get("detalle_oficial.inicio") == oficial
+        )  # fmt: skip
+        resultado["tiempo"] = inicio_oficial(resultado["tiempo"], oficial, fuente_inicio)
+        for fuente in resultado["fuentes"]:
+            if fuente["id"] == fuente_inicio["id"]:
+                fuente["campos_respaldados"] = sorted(
+                    {*fuente.get("campos_respaldados", []), "tiempo.inicio"}
+                )
     encuentros = sorted(
         {a.encuentro for a in lista if a.encuentro} | set(resultado.get("encuentros", []))
     )
@@ -349,6 +368,62 @@ def aplicar(incidente: Documento, lista: list[Aportacion]) -> Documento:
                 {f["id"]: f for f in resultado["fuentes"]},
             )  # fmt: skip
     return incidentes.aplicar_reglas(resultado)
+
+
+def punto_oficial(lugar: Documento, combinados: dict[str, Any]) -> Documento:
+    """Un incidente sin punto (solo se sabía la región o el país) toma el punto y el radio que
+    da la autoridad en su documento, si caen en su país. Uno que ya tenía punto lo conserva:
+    el oficial queda en detalle_oficial."""
+    punto, radio = (
+        combinados.get("detalle_oficial.punto"),
+        combinados.get("detalle_oficial.radio_km"),
+    )
+    if "punto" in lugar or punto is None or radio is None or float(radio) > RADIO_MAX_PUNTO_KM:
+        return lugar
+    if not dentro_del_pais(lugar["pais"], float(punto["lat"]), float(punto["lon"])):
+        return lugar
+    resultado = copy.deepcopy(lugar)
+    resultado["punto"] = {
+        "lat": round(float(punto["lat"]), 5),
+        "lon": round(float(punto["lon"]), 5),
+    }
+    resultado["radio_km"] = max(float(radio), RADIO_MIN_KM)
+    resultado["geocodificacion"] = "oficial"
+    if resultado.get("nivel") in {"region", "pais"}:
+        resultado["nivel"] = "localidad"
+    return resultado
+
+
+def inicio_oficial(tiempo: Documento, oficial: Documento, fuente: Documento) -> Documento:
+    """El inicio del incidente con la fecha de la fuente oficial, que manda sobre la de la
+    prensa: su día está escrito en el documento (o es el instante de un encuentro). Si la
+    autoridad solo da el día y la prensa da la hora de ese mismo día, se queda la hora de la
+    prensa con el día confirmado por la autoridad."""
+    resultado = copy.deepcopy(tiempo)
+    actual = tiempo["inicio"]
+    mismo_dia = actual["valor"][:10] == oficial["valor"][:10]
+    if oficial["precision"] == "dia" and mismo_dia and actual["precision"] in {"minuto", "hora"}:
+        inicio = actual
+        motivo = f"el día lo da {fuente['medio']} ({fuente['enlace']}); la hora, la prensa"
+    else:
+        inicio = copy.deepcopy(oficial)
+        motivo = f"fecha de {fuente['medio']} ({fuente['enlace']})"
+    resultado["inicio"] = inicio
+    origen = {"tipo": "oficial", "motivo": motivo[:300], "fuente_id": fuente["id"]}
+    previo = tiempo.get("origen_inicio", {})
+    ya_aplicado = previo.get("tipo") == "oficial" and previo.get("fuente_id") == fuente["id"]
+    if inicio != actual or (ya_aplicado and previo.get("corregido")):
+        origen["corregido"] = True
+    resultado["origen_inicio"] = origen
+    if "fin" in resultado and resultado["fin"]["valor"] < inicio["valor"]:
+        # El fin de la prensa era de otro día: no casa con el inicio oficial.
+        resultado.pop("fin")
+        resultado.pop("duracion_min", None)
+    elif "fin" in resultado:
+        fin = datetime.strptime(resultado["fin"]["valor"], "%Y-%m-%dT%H:%MZ")
+        comienzo = datetime.strptime(inicio["valor"], "%Y-%m-%dT%H:%MZ")
+        resultado["duracion_min"] = int((fin - comienzo).total_seconds()) // 60
+    return resultado
 
 
 def reaplicar(almacen: Almacen, incidente: Documento) -> Documento:
@@ -494,6 +569,14 @@ def alta(
     nuevo["estado"] = transitar(
         nuevo["estado"], Estado.CONFIRMADO, fuente["fecha"], fuente["id"], {fuente["id"]: fuente}
     )
+    # El día está escrito en el documento oficial (validacion_oficial.dia_en_frase).
+    precision = ficha.valor("inicio_precision") if "T" in inicio else "dia"
+    nuevo["tiempo"] = {
+        "inicio": {"valor": inicio + ("Z" if "T" in inicio else "T00:00Z"),
+                   "precision": precision or "dia"},
+        "origen_inicio": {"tipo": "oficial", "fuente_id": fuente["id"],
+                          "motivo": f"día escrito en el documento de {documento['autoridad']}"},
+    }  # fmt: skip
     return incidentes.aplicar_reglas(nuevo)
 
 

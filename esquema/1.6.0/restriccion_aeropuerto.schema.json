@@ -1,9 +1,9 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:eodi:esquema:1.5.0:restriccion_aeropuerto",
+  "$id": "urn:eodi:esquema:1.6.0:restriccion_aeropuerto",
   "title": "Restricción temporal de un aeropuerto ruso",
   "description": "Serie interna de las restricciones temporales a la llegada y salida de aviones que anuncia Rosaviatsia en su canal oficial: aeropuerto, hora en que se anuncian y hora en que se levantan. Los mensajes no dicen la causa (solo «seguridad de los vuelos»): se enlaza con el ataque UA_RU del mismo periodo, si lo hay. No es un incidente de interrupción aeroportuaria y no se publica en la web.",
-  "x-version": "1.5.0",
+  "x-version": "1.6.0",
   "type": "object",
   "additionalProperties": false,
   "required": ["id", "aeropuerto", "inicio", "fuente_inicio"],
@@ -19,12 +19,12 @@
         "nombre": {"x-visibilidad": "interno", "description": "Como lo escribe Rosaviatsia: «КАЛУГА (Грабцево)».", "type": "string", "minLength": 1},
         "oaci": {"x-visibilidad": "interno", "type": "string", "pattern": "^[A-Z]{4}$"},
         "lugar_id": {"x-visibilidad": "interno", "type": "string", "pattern": "^osm:\\S+$"},
-        "region": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.5.0:comun#/$defs/region_iso"},
-        "punto": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.5.0:comun#/$defs/punto"}
+        "region": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.6.0:comun#/$defs/region_iso"},
+        "punto": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.6.0:comun#/$defs/punto"}
       }
     },
-    "inicio": {"x-visibilidad": "interno", "description": "Hora del mensaje que la anuncia (el texto no da hora).", "$ref": "urn:eodi:esquema:1.5.0:comun#/$defs/instante"},
-    "fin": {"x-visibilidad": "interno", "description": "Hora del mensaje que la levanta. Ausente mientras no se levante.", "$ref": "urn:eodi:esquema:1.5.0:comun#/$defs/instante"},
+    "inicio": {"x-visibilidad": "interno", "description": "Hora del mensaje que la anuncia (el texto no da hora).", "$ref": "urn:eodi:esquema:1.6.0:comun#/$defs/instante"},
+    "fin": {"x-visibilidad": "interno", "description": "Hora del mensaje que la levanta. Ausente mientras no se levante.", "$ref": "urn:eodi:esquema:1.6.0:comun#/$defs/instante"},
     "horas": {"x-visibilidad": "interno", "type": "number", "minimum": 0},
     "fuente_inicio": {"x-visibilidad": "interno", "type": "string", "pattern": "^https://t\\.me/\\S+$"},
     "fuente_fin": {"x-visibilidad": "interno", "type": "string", "pattern": "^https://t\\.me/\\S+$"},
@@ -38,7 +38,7 @@
       "x-visibilidad": "interno",
       "description": "Origen y método de cada valor. Lo calcula la exportación semanal; la base no lo guarda.",
       "type": "object",
-      "additionalProperties": {"$ref": "urn:eodi:esquema:1.5.0:comun#/$defs/procedencia"}
+      "additionalProperties": {"$ref": "urn:eodi:esquema:1.6.0:comun#/$defs/procedencia"}
     }
   }
 }

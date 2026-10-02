@@ -70,7 +70,15 @@ def incidente(id_: str, ataque: Documento, cruce: Documento, ahora: datetime) ->
             "en": f"Drones from the Russian attack on Ukraine cross into {NOMBRES_EN[pais]}",
         },
         "presencia_dron": "confirmada",
-        "tiempo": {"inicio": periodo["inicio"], "fin": periodo["fin"]},
+        "tiempo": {
+            "inicio": periodo["inicio"],
+            "fin": periodo["fin"],
+            "origen_inicio": {
+                "tipo": "parte",
+                "fuente_id": fuente["id"],
+                "motivo": "periodo del ataque en el parte de la Fuerza Aérea",
+            },
+        },
         "lugar": {"pais": pais, "nivel": "pais"},
         "drones": {"numero": cruce["numero"]},
         # La Fuerza Aérea sigue por radar a drones del ataque ruso hasta la frontera.

@@ -704,13 +704,18 @@ def interferencia(
 
 def ventana_incidente(incidente: dict[str, Any]) -> tuple[float, float, str]:
     """Inicio y fin del incidente (segundos) y la precisión con que se conocen. Con solo el
-    día, el día UTC entero; con hora, esa hora; con minuto y sin fin, una hora."""
+    día, el día UTC entero; con la fecha de publicación (aproximada), desde el comienzo de la
+    víspera hasta la publicación, como un día (solo casa una interrupción significativa); con
+    hora, esa hora; con minuto y sin fin, una hora."""
     tiempo = incidente["tiempo"]
     inicio = leer_instante(tiempo["inicio"]["valor"])
     precision = tiempo["inicio"]["precision"]
     if precision == "dia":
         comienzo = datetime(inicio.year, inicio.month, inicio.day, tzinfo=UTC)
         return comienzo.timestamp(), (comienzo + timedelta(days=1)).timestamp(), "dia"
+    if precision == "aproximada":
+        comienzo = datetime(inicio.year, inicio.month, inicio.day, tzinfo=UTC) - timedelta(days=1)
+        return comienzo.timestamp(), inicio.timestamp(), "dia"
     fin = leer_instante(tiempo["fin"]["valor"]) if "fin" in tiempo else None
     if fin is None or fin < inicio:
         fin = inicio + timedelta(hours=1)

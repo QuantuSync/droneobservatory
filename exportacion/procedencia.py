@@ -28,7 +28,7 @@ from typing import Any
 
 from almacen.base import Almacen
 from esquema import Documento
-from proceso import declaraciones, extraccion
+from proceso import declaraciones, extraccion, fechas
 from proceso.estados import Estado
 from proceso.validacion_ficha import UMBRAL_CONFIANZA
 
@@ -44,6 +44,11 @@ NIVELES = ("A", "B", "C", "D")
 CANAL_FUERZA_AEREA = "t.me/kpszsu"
 MARCA_DECLARACION = "-declaracion-"
 RADIO_MAX_B_KM = 5.0
+CIERRE_MEDIDO = "cierre_medido"
+# Un cierre medido cuenta como indicador con cobertura alta o media (como sale a la web) y
+# para el nivel B solo con cobertura alta.
+COBERTURA_MEDIDA = frozenset({"alta", "media"})
+COBERTURA_B = frozenset({"alta"})
 PRECISIONES_B = frozenset({"minuto", "hora"})
 DINAMICA = ("drones.trayectoria", "drones.altura_m", "drones.velocidad_ms")
 
@@ -109,7 +114,8 @@ def confirma(fuente: Documento) -> bool:
 # proceso y lo que añade la exportación. El título es una etiqueta descriptiva.
 META_INCIDENTE = frozenset({
     "id", "titulo", "fuentes", "afirmaciones", "afirmaciones_publicas", "control",
-    "procedencia", "nivel_detalle", "fusionado_en", "retirado", "episodio", "encuentros",
+    "procedencia", "nivel_detalle", "indicadores", "fusionado_en", "retirado", "episodio",
+    "encuentros",
 })  # fmt: skip
 META_ATAQUE = frozenset({"id", "fuentes", "afirmaciones", "control", "procedencia"})
 # Bloques de mediciones físicas, con origen medido y método regla.
@@ -117,7 +123,7 @@ MEDICIONES = frozenset({"trafico_aereo", "condiciones"})
 # Nodos que se tratan como un solo valor.
 HOJAS = frozenset({
     "estado", "atribucion", "foco_termico", "drones.trayectoria", "consecuencias.danos",
-    "trafico_aereo", "condiciones",
+    "trafico_aereo", "condiciones", "tiempo.origen_inicio",
 })  # fmt: skip
 CLAVES_VALOR = (frozenset({"valor", "precision"}), frozenset({"min", "max"}),
                 frozenset({"lat", "lon"}))  # fmt: skip
@@ -194,6 +200,7 @@ REGLAS: dict[str, tuple[str, ...]] = {
              "objetivo.categoria", "ficha:tipo"),
     "origen_demostrado_por": _TIPO,
     "tiempo.duracion_min": ("tiempo.inicio", "tiempo.fin"),
+    "tiempo.origen_inicio": ("tiempo.inicio",),
     "tiempo.inicio": ("ficha:inicio", NOTICIAS),
     "lugar.suceso": ("ficha:lugar_suceso", "ficha:lugar_nuevo", "ficha:localidad",
                      "ficha:objetivo_nombre", NOTICIAS),
@@ -532,6 +539,13 @@ def _precision_b(documento: Documento) -> bool:
     return bool(precisiones & PRECISIONES_B) and bool(radios) and min(radios) <= RADIO_MAX_B_KM
 
 
+def _cierre_medido(documento: Documento, cobertura: frozenset[str] = COBERTURA_MEDIDA) -> bool:
+    """Cierre medido con tráfico aéreo con la cobertura pedida (alta para el nivel B)."""
+    cierre = documento.get("trafico_aereo", {}).get("cierre", {})
+    nivel = cierre.get("cobertura", {}).get("nivel")
+    return cierre.get("resultado") == CIERRE_MEDIDO and nivel in cobertura
+
+
 def nivel_detalle(documento: Documento, procedencia: Documento) -> str:
     """A, B, C o D (comun#/$defs/nivel_detalle), sobre el incidente ya exportado."""
     for ruta in DINAMICA:
@@ -542,17 +556,63 @@ def nivel_detalle(documento: Documento, procedencia: Documento) -> str:
             return "A"
     confirmacion = _origen_confirmacion(documento, procedencia)
     precisa = _precision_b(documento)
-    if precisa and confirmacion == OFICIAL:
+    if precisa and (confirmacion == OFICIAL or _cierre_medido(documento, COBERTURA_B)):
         return "B"
     if confirmacion in {OFICIAL, OFICIAL_CITADO}:
         return "C"
     return "D"
 
 
+def _fecha_verificada(documento: Documento) -> bool:
+    """El día del inicio lo escribe una fuente, lo da una autoridad o un parte, o lo confirma
+    un cierre medido con cobertura alta que empieza ese mismo día."""
+    origen = documento["tiempo"].get("origen_inicio", {}).get("tipo")
+    if origen in fechas.VERIFICADOS:
+        return True
+    cierre = documento.get("trafico_aereo", {}).get("cierre", {})
+    inicio_medido = cierre.get("inicio", {}).get("valor", "")
+    return (
+        _cierre_medido(documento, COBERTURA_B)
+        and inicio_medido[:10] == documento["tiempo"]["inicio"]["valor"][:10]
+    )
+
+
+def _con_valores(datos: Any) -> bool:
+    """Algún valor medido: Open-Meteo deja vacío (null) lo que no da."""
+    return isinstance(datos, dict) and any(v is not None for v in datos.values())
+
+
+def indicadores(documento: Documento) -> Documento:
+    """Lo que tiene el incidente, por separado del nivel (comun#/$defs/indicadores)."""
+    medido = documento.get("trafico_aereo", {})
+    condiciones = documento.get("condiciones", {})
+    lugar = condiciones.get("lugar", {}) if isinstance(condiciones, dict) else {}
+    gnss = medido.get("interferencia_gnss", {})
+    niveles_gnss = {gnss.get(z, {}).get("nivel") for z in ("propia", "vecinas")}
+    confirmado = documento["estado"]["actual"] in CONFIRMADOS
+    return {
+        "tiene_cierre_medido": _cierre_medido(documento),
+        "tiene_condiciones_medidas": _con_valores(lugar.get("superficie"))
+        or "metar" in lugar
+        or any(_con_valores(n) for n in lugar.get("niveles", {}).values()),
+        "tiene_respuesta_militar_observada": (
+            medido.get("respuesta_militar", {}).get("resultado") == "vistas"
+        ),
+        "tiene_interferencia_gnss_medida": (
+            gnss.get("resultado") == "medida" and bool(niveles_gnss & {"media", "alta"})
+        ),
+        "tiene_foco_termico": documento.get("foco_termico", {}).get("resultado") == "detectado",
+        "tiene_confirmacion_oficial_directa": confirmado
+        and any(confirma(f) for f in documento["fuentes"]),
+        "fecha_del_suceso_verificada": _fecha_verificada(documento),
+    }
+
+
 def exportar_incidente(documento: Documento, fichas: Fichas) -> Documento:
     exportado, procedencia = procedencia_incidente(documento, fichas)
     exportado["procedencia"] = procedencia
     exportado["nivel_detalle"] = nivel_detalle(exportado, procedencia)
+    exportado["indicadores"] = indicadores(exportado)
     return exportado
 
 

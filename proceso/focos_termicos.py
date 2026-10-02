@@ -398,9 +398,13 @@ def impacto_de_incidente(incidente: Documento) -> Impacto | None:
         return None
     lugar, tiempo = incidente["lugar"], incidente["tiempo"]
     punto = lugar.get("punto")
+    inicio = _leer(tiempo["inicio"]["valor"])
+    if tiempo["inicio"]["precision"] == "aproximada":
+        # La fecha de publicación: el suceso es de ese día o de la víspera.
+        inicio -= DURACION_POR_PRECISION["aproximada"]
     return Impacto(
         id=incidente["id"],
-        inicio=_leer(tiempo["inicio"]["valor"]),
+        inicio=inicio,
         fin=_fin(tiempo),
         lat=punto["lat"] if punto else None,
         lon=punto["lon"] if punto else None,

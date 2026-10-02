@@ -5,8 +5,8 @@
 # - Python, el clon del repositorio y su entorno virtual, del usuario sin privilegios;
 # - la carpeta de secretos con las claves de despliegue (las privadas no salen de aquí);
 # - las unidades y los temporizadores de systemd de la recogida horaria, de la exportación
-#   semanal, de las fuentes de detalle, del lector de canales de la capa de guerra y del
-#   procesado del archivo diario de adsb.lol.
+#   semanal, de las fuentes de detalle, del lector de canales de la capa de guerra, del
+#   procesado del archivo diario de adsb.lol y de la búsqueda dirigida de noticias.
 #
 # La clave age y las variables del extractor las deja después reconstruir.sh, que es
 # también quien da de alta las claves de despliegue y activa el temporizador.
@@ -61,6 +61,9 @@ install -d -m 700 -o "$USUARIO" -g "$USUARIO" "$GUERRA_DATOS"
 
 # --- Datos de las fuentes oficiales de detalle ----------------------------------------
 install -d -m 700 -o "$USUARIO" -g "$USUARIO" "$(dirname "$DETALLE_DATOS")" "$DETALLE_DATOS"
+
+# --- Datos de la búsqueda dirigida de noticias ---------------------------------------
+install -d -m 700 -o "$USUARIO" -g "$USUARIO" "$(dirname "$BUSQUEDA_DATOS")" "$BUSQUEDA_DATOS"
 
 # --- Datos del tráfico aéreo y de las condiciones medidas ----------------------------
 install -d -m 700 -o "$USUARIO" -g "$USUARIO" "$(dirname "$TRAFICO_DATOS")" "$TRAFICO_DATOS" \
@@ -256,6 +259,40 @@ Description=Tráfico aéreo de adsb.lol del EODI, en el minuto $MINUTO_TRAFICO d
 
 [Timer]
 OnCalendar=*-*-* *:$MINUTO_TRAFICO:00 UTC
+AccuracySec=1s
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+FIN
+# Búsqueda dirigida de noticias para los cierres medidos sin incidente
+# (servidor/busqueda.sh): cerrojo propio, prioridad baja, no toca la base.
+cat > "/etc/systemd/system/$UNIDAD_BUSQUEDA.service" <<FIN
+[Unit]
+Description=Búsqueda dirigida de noticias del EODI (cierres medidos sin incidente)
+Wants=network-online.target
+After=network-online.target time-sync.target
+
+[Service]
+Type=oneshot
+User=$USUARIO
+Group=$USUARIO
+WorkingDirectory=$CLON
+ExecStart=/usr/bin/env bash $CLON/servidor/busqueda.sh
+SyslogIdentifier=$UNIDAD_BUSQUEDA
+TimeoutStartSec=${BUSQUEDA_TOPE_UNIDAD}min
+Nice=15
+IOSchedulingClass=idle
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=full
+FIN
+cat > "/etc/systemd/system/$UNIDAD_BUSQUEDA.timer" <<FIN
+[Unit]
+Description=Búsqueda dirigida de noticias del EODI, en el minuto $MINUTO_BUSQUEDA de cada hora
+
+[Timer]
+OnCalendar=*-*-* *:0$MINUTO_BUSQUEDA:00 UTC
 AccuracySec=1s
 Persistent=true
 

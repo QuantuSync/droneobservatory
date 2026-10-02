@@ -154,7 +154,7 @@ def revisado(almacen: Almacen) -> Documento:
     return incidente
 
 
-def test_el_encuentro_aporta_sus_datos_sin_tocar_lo_publico() -> None:
+def test_el_encuentro_aporta_sus_datos_y_su_fecha() -> None:
     almacen = base(heathrow())
     almacen.guardar_encuentro(encuentro(), AHORA)
     antes = heathrow()
@@ -170,8 +170,16 @@ def test_el_encuentro_aporta_sus_datos_sin_tocar_lo_publico() -> None:
     assert incidente["drones"]["altura_m"] == {"min": 99.06, "max": 129.54}
     assert incidente["respuesta"]["deteccion"] == ["piloto"]
     assert incidente["encuentros"] == ["UKAB-2025150"]
-    # Lo público no cambia: hora, lugar y número siguen siendo los de la prensa.
-    for campo in ("tiempo", "lugar", "objetivo", "presencia_dron"):
+    # La fecha de la autoridad manda sobre la de la prensa (calidad de los datos, 3): el
+    # inicio pasa a la hora del encuentro, con su origen y el cambio declarado.
+    assert incidente["tiempo"]["inicio"] == instante("2025-08-20T13:45Z")
+    origen = incidente["tiempo"]["origen_inicio"]
+    assert (origen["tipo"], origen["fuente_id"], origen["corregido"]) == (
+        "oficial", "ukab-2025150", True,
+    )  # fmt: skip
+    assert "tiempo.inicio" in fuente["campos_respaldados"]
+    # Lo demás que es público no cambia: lugar y número siguen siendo los de la prensa.
+    for campo in ("lugar", "objetivo", "presencia_dron"):
         assert incidente[campo] == antes[campo]
     assert incidente["drones"]["numero"] == antes["drones"]["numero"]
 

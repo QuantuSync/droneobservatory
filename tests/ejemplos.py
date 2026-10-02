@@ -280,6 +280,12 @@ def incidente_completo() -> Documento:
             "inicio": instante("2025-10-01T20:30Z"),
             "fin": instante("2025-10-01T23:30Z"),
             "duracion_min": 180,
+            "origen_inicio": {
+                "tipo": "relativa",
+                "fuente_id": "F1",
+                "motivo": "«mandag» en una nota publicada el 2025-10-02 07:10",
+                "corregido": True,
+            },
         },
         "lugar": {
             "punto": {"lat": 55.61806, "lon": 12.65611},
@@ -389,6 +395,15 @@ def incidente_completo() -> Documento:
             },
         },
         "nivel_detalle": "C",
+        "indicadores": {
+            "tiene_cierre_medido": False,
+            "tiene_condiciones_medidas": False,
+            "tiene_respuesta_militar_observada": False,
+            "tiene_interferencia_gnss_medida": False,
+            "tiene_foco_termico": False,
+            "tiene_confirmacion_oficial_directa": True,
+            "fecha_del_suceso_verificada": True,
+        },
     }
 
 

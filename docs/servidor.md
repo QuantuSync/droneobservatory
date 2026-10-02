@@ -57,6 +57,10 @@ En `/home/eodi`:
   volver a calcular desde el archivo de adsb.lol.
 - `datos/meteo/`, con permisos 700 y propiedad de `eodi`: la caché de Open-Meteo
   (`openmeteo/<AAAA-MM-DD>/`) y de los METAR del IEM que no estaban en el día procesado.
+- `datos/busqueda/`, con permisos 700 y propiedad de `eodi`: la búsqueda dirigida de noticias
+  (apartado «Búsqueda dirigida de noticias»): `anomalias.json` (lo que falta buscar, lo
+  escribe la recogida horaria), `dias/<AAAA-MM-DD>.jsonl.gz` (todos los titulares con dron de
+  ese día leídos de GDELT, para no volver a bajarlos) y `hallados/<anomalía>.json`.
 
 Las dos claves de despliegue se generan en el servidor y la privada no sale de él. En
 GitHub figuran en cada repositorio con el título «servidor eodi-recogida».
@@ -177,6 +181,54 @@ Un día suelto (por ejemplo, para repetirlo tras un cambio de regla, borrando an
 sudo -u eodi sh -c 'cd /home/eodi/droneobservatory && EODI_TRAFICO_DATOS=/home/eodi/datos/trafico .venv/bin/python -m recogida.trafico dia 2025-09-22'
 ```
 
+## Búsqueda dirigida de noticias
+
+Informe: [`informe_calidad_datos_3.md`](informe_calidad_datos_3.md). Cuando el tráfico aéreo
+mide en un aeropuerto con cobertura alta una interrupción que no casa con ningún incidente ni
+explica el tiempo (anomalía candidata), se buscan en los GKG de GDELT de ese día y del
+siguiente las noticias que nombran el aeropuerto o su ciudad, en cualquiera de sus nombres,
+junto a una palabra de dron ([`recogida/busqueda_dirigida.py`](../recogida/busqueda_dirigida.py)).
+En dos tiempos:
+
+1. **Lectura**: `eodi-busqueda.timer` lanza `eodi-busqueda.service` en el minuto 2 de cada
+   hora, como `eodi`, con prioridad baja (`Nice=15`, E/S en reposo) y su propio cerrojo
+   (`busqueda.lock`). La unidad ejecuta [`servidor/busqueda.sh`](../servidor/busqueda.sh), que
+   lee `datos/busqueda/anomalias.json` y descarga los GKG de los días que faltan, hasta 40
+   minutos por ejecución (un día son 192 ficheros: de 2 a 5 minutos). No toca la base ni el
+   clon.
+2. **Incorporación**: la recogida horaria guarda lo hallado como artículos del aeropuerto por
+   el flujo normal (deduplicado, candidato), anota cada anomalía como buscada (cursor
+   `busqueda_dirigida`) y deja al día `anomalias.json`. Sus candidatos van los primeros en la
+   cola del extractor horario (recogida/extractor.prioritarios), dentro del límite diario. Un
+   fallo aquí queda en el diario («búsqueda dirigida no incorporada») y no cambia el resultado
+   de la recogida.
+
+Órdenes, como `operador`:
+
+```
+sudo systemctl start eodi-busqueda.service       # una lectura ahora
+journalctl -u eodi-busqueda.service -n 40
+sudo -u eodi ls /home/eodi/datos/busqueda/hallados | wc -l
+```
+
+## Revisión de la calidad de los datos (una vez)
+
+[`servidor/calidad.sh`](../servidor/calidad.sh) aplica a lo ya recogido las reglas de la tercera
+revisión ([`recogida/calidad.py`](../recogida/calidad.py)): separa los candidatos que juntan dos
+sucesos del mismo sitio, sitúa los artículos que ahora nombran una instalación reconocible,
+incorpora lo hallado por la búsqueda dirigida, extrae en un lote lo pendiente (modo de gasto
+«calidad», 2 dólares en total) y rehace incidentes, fusiones y episodios. Toma el cerrojo de la
+recogida, trabaja en un clon aparte (`/home/eodi/calidad`) con la rama `main` y sube la base;
+la recogida siguiente publica y repite los cruces que dependen de la fecha (FIRMS, tráfico
+aéreo, condiciones). Si el lote se queda a medias, se relanza con `--lote <id>`.
+
+```
+sudo systemd-run --unit=eodi-calidad --uid=eodi --gid=eodi \
+  /usr/bin/env bash /home/eodi/droneobservatory/servidor/calidad.sh
+journalctl -u eodi-calidad -n 60
+sudo -u eodi cat /home/eodi/calidad-informe.json | head
+```
+
 ## Secretos en local
 
 En `%USERPROFILE%\.eodi\`, fuera de cualquier repositorio:
@@ -212,8 +264,8 @@ El script:
 4. sustituye en GitHub las claves de despliegue «servidor eodi-recogida» de los dos
    repositorios por las del servidor;
 5. activa los temporizadores de la recogida horaria, de la exportación semanal, de las
-   fuentes oficiales de detalle, del lector de canales de la capa de guerra y del procesado de
-   adsb.lol.
+   fuentes oficiales de detalle, del lector de canales de la capa de guerra, del procesado de
+   adsb.lol y de la búsqueda dirigida de noticias.
 
 Puede repetirse sobre un servidor que ya existe: deja igual lo que ya está y vuelve a
 aplicar la configuración. Para empezar de verdad desde cero se borra antes el servidor:

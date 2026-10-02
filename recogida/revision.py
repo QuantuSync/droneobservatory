@@ -119,7 +119,9 @@ def estimar(
 
 
 def rehacer(almacen: Almacen, ahora: datetime, modelos_base: frozenset[str]) -> dict[str, int]:
-    """Todos los incidentes con las reglas actuales; fusiones y episodios, de nuevo."""
+    """Todos los incidentes con las reglas actuales; fusiones y episodios, de nuevo. En una
+    fusión queda el incidente que ya estaba publicado: su enlace sigue valiendo."""
+    publicados = frozenset(i["id"] for i in almacen.incidentes() if incidentes.activo(i))
     for fusion in almacen.fusiones():
         if not fusion["revertida"]:
             almacen.revertir_fusion(fusion["absorbido"])
@@ -133,7 +135,7 @@ def rehacer(almacen: Almacen, ahora: datetime, modelos_base: frozenset[str]) -> 
     resultado = {
         "rehechos": rehechos,
         "incursiones_rehechas": rehechas,
-        "fusiones": incidentes.fusionar(almacen, ahora, vocabulario),
+        "fusiones": incidentes.fusionar(almacen, ahora, vocabulario, publicados),
         "cambios_episodio": incidentes.agrupar_episodios(almacen, ahora, vocabulario),
     }
     # Los episodios que las reglas ya no forman no enlazan ningún incidente: se quitan, con

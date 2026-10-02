@@ -15,8 +15,9 @@ Comprobaciones:
 - el cierre solo vale si su frase habla de un cierre (o, para «no», de que todo
   siguió con normalidad): el modelo no puede poner un cierre que la fuente no dice;
 - los rangos son coherentes y caben en los topes;
-- las fechas son posibles: no futuras, no posteriores al primer artículo y no
-  más de una semana anteriores;
+- las fechas son posibles: no futuras, el inicio no posterior a la nota de la que sale y,
+  si es más de una semana anterior a esa nota (una noticia que vuelve sobre un suceso
+  pasado), solo con el día escrito en su frase («el 22 de septiembre»);
 - el país del suceso se sabe: el de la ficha o el del lugar del suceso. Nunca sale
   del objetivo del candidato, que es donde casó un nombre de la noticia y no
   necesariamente donde ocurrió el suceso.
@@ -30,6 +31,7 @@ from functools import cache
 from pathlib import Path
 from typing import Any
 
+from proceso import fechas
 from proceso.fronteras import dentro_del_pais, nombres_del_pais, paises
 from proceso.noticias import normalizar
 
@@ -112,6 +114,14 @@ class Contexto:
     # vacío si el objetivo es una localidad o un lugar del GKG.
     palabras_objetivo: frozenset[str] = frozenset()
     prefijos_genericos: tuple[str, ...] = ()
+    # Hora de publicación de cada fuente enviada, en su orden: el inicio se compara con la de
+    # la nota que lo dice, no con la primera del candidato (que puede ser de otro día).
+    publicaciones: tuple[datetime, ...] = ()
+
+    def publicacion(self, fuente: Any) -> datetime:
+        if isinstance(fuente, int) and 1 <= fuente <= len(self.publicaciones):
+            return self.publicaciones[fuente - 1]
+        return self.primer_articulo
 
 
 @dataclass
@@ -254,7 +264,30 @@ def _cierre_valido(valor: Any, frase: str) -> str | None:
     return "la frase no habla de cierre"
 
 
-def _valor_valido(nombre: str, valor: Any, frase: str, contexto: Contexto) -> str | None:
+def fecha_valida(
+    nombre: str, valor: Any, frase: str, publicacion: datetime, ahora: datetime
+) -> str | None:
+    """Motivo por el que el inicio o el fin no valen, o None. `publicacion`: la de la nota de
+    la que sale el dato."""
+    momento = leer_fecha(valor) if isinstance(valor, str) else None
+    if momento is None:
+        return "fecha imposible"
+    if momento > ahora:
+        return "fecha futura"
+    if nombre == "inicio" and momento > publicacion + MARGEN_ARTICULO:
+        return "inicio posterior a su nota"
+    if (
+        nombre == "inicio"
+        and momento < publicacion - MAX_ANTELACION
+        and not fechas.dia_escrito(str(valor), frase, publicacion)
+    ):
+        return "inicio más de una semana antes de su nota sin el día escrito"
+    return None
+
+
+def _valor_valido(
+    nombre: str, valor: Any, frase: str, contexto: Contexto, fuente: Any = None
+) -> str | None:
     """Motivo por el que el valor no vale, o None."""
     if nombre in RANGOS:
         return _rango_valido(nombre, valor)
@@ -267,16 +300,7 @@ def _valor_valido(nombre: str, valor: Any, frase: str, contexto: Contexto) -> st
     if nombre == "cierre" and valor in {"si", "no"}:
         return _cierre_valido(valor, frase)
     if nombre in {"inicio", "fin"}:
-        momento = leer_fecha(valor) if isinstance(valor, str) else None
-        if momento is None:
-            return "fecha imposible"
-        if momento > contexto.ahora:
-            return "fecha futura"
-        if nombre == "inicio" and momento > contexto.primer_articulo + MARGEN_ARTICULO:
-            return "inicio posterior al primer artículo"
-        if nombre == "inicio" and momento < contexto.primer_articulo - MAX_ANTELACION:
-            return "inicio más de una semana antes del primer artículo"
-        return None
+        return fecha_valida(nombre, valor, frase, contexto.publicacion(fuente), contexto.ahora)
     if nombre in {"localidad", "objetivo_nombre", "modelo_dron"}:
         texto_ok = isinstance(valor, str) and 0 < len(valor.strip()) <= MAX_LETRAS_NOMBRE
         return None if texto_ok else "texto vacío o demasiado largo"
@@ -315,7 +339,7 @@ def validar(ficha: dict[str, Any], contexto: Contexto) -> Validada:
             # Una frase más larga se recorta a sus primeras 25 palabras: sigue siendo cita literal.
             campo = {**campo, "frase": " ".join(campo["frase"].split()[:MAX_PALABRAS_FRASE])}
         motivo = _frase_valida(campo, contexto.textos) or _valor_valido(
-            nombre, campo["valor"], str(campo["frase"]), contexto
+            nombre, campo["valor"], str(campo["frase"]), contexto, campo.get("fuente")
         )
         if motivo:
             resultado.motivos.append(f"{nombre}: {motivo}")
@@ -389,6 +413,39 @@ def _pais_nombrado(resultado: Validada, ficha: dict[str, Any], textos: tuple[str
     if isinstance(valor, str) and valor in paises() and pais_nombrado(valor, textos):
         resultado.campos["pais"] = campo
         resultado.motivos.append("pais: la fuente nombra el país")
+
+
+# Motivos con que se rechazó un inicio cuya frase sí estaba en la fuente: solo la ventana de
+# fechas, que se comparaba con la primera nota del candidato y no con la suya.
+_MOTIVOS_VENTANA = (
+    "inicio: inicio posterior al primer artículo",
+    "inicio: inicio más de una semana antes del primer artículo",
+)
+
+
+def recuperar_inicio(
+    resultado: Validada,
+    ficha: dict[str, Any],
+    motivos_previos: list[str],
+    publicaciones: tuple[datetime, ...],
+    ahora: datetime,
+) -> None:
+    """Vuelve a comprobar con la regla de ahora un inicio rechazado solo por la ventana de
+    fechas (su frase y su confianza ya habían pasado): una noticia que vuelve sobre un suceso
+    de semanas atrás vale con el día escrito, y la fecha se compara con su propia nota."""
+    campo = ficha.get("inicio")
+    if "inicio" in resultado.campos or not isinstance(campo, dict):
+        return
+    if not any(m in motivos_previos for m in _MOTIVOS_VENTANA):
+        return
+    fuente = campo.get("fuente")
+    if not isinstance(fuente, int) or not 1 <= fuente <= len(publicaciones):
+        return
+    frase = " ".join(str(campo.get("frase") or "").split()[:MAX_PALABRAS_FRASE])
+    if fecha_valida("inicio", campo.get("valor"), frase, publicaciones[fuente - 1], ahora):
+        return
+    resultado.campos["inicio"] = {**campo, "frase": frase}
+    resultado.motivos.append("inicio: válido con la ventana de su nota")
 
 
 def revalidar(

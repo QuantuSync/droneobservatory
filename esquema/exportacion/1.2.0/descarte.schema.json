@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:eodi:exportacion:1.1.0:descarte",
+  "$id": "urn:eodi:exportacion:1.2.0:descarte",
   "title": "Descarte (una línea de descartes.jsonl)",
   "description": "Lo que no llega a incidente publicado y por qué. noticia_rechazada: candidato de noticias cuya última ficha no dio incidente. parte_fallido: parte de la capa de Ucrania que el lector no entiende. duplicado: incidente fundido en otro. fusion_dudosa: incidente que encaja con dos o más anteriores y por eso no se funde. desmentido: incidente desmentido por una autoridad, con su motivo. retirado: incidente que deja de publicarse.",
   "type": "object",
