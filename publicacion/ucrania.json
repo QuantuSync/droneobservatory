@@ -791339,6 +791339,52 @@
    "reivindicacion_de_parte": true,
    "sentido": "UA_RU",
    "tipo": "impacto_guerra"
+  },
+  {
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T21:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-10-02T19:57Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/kyivoda/59778",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-10-02T19:57Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "У Гостомелі кількість постраждалих внаслідок атаки ворожих БпЛА зросла до 4 людей.",
+     "id": "kyivoda-59778",
+     "idioma": "uk",
+     "medio": "Київська обласна військова адміністрація",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03503",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA32080110010033149",
+    "nivel": "localidad",
+    "nombre": "Гостомель",
+    "nombre_latino": "Hostomel",
+    "punto": {
+     "lat": 50.58826,
+     "lon": 30.25909
+    },
+    "radio_km": 4.0
+   },
+   "region": "UA-32",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
   }
  ]
 }
