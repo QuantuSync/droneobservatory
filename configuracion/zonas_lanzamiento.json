@@ -1,0 +1,634 @@
+{
+ "version": "1.0.0",
+ "version_esquema": "1.0.0",
+ "descripcion": "Zonas de lanzamiento de drones de largo alcance que nombran los partes de la Fuerza Aérea de Ucrania, con las raíces con que aparecen en ellos, su punto (con la fuente que lo da literalmente) y las fuentes que documentan su uso para lanzar drones. Verificado el 2 de octubre de 2026. La coordenada que daba el borrador para Primorsko-Ajtarsk (46°40′34.48″N 38°07′49.75″E) es la del pie de la figura 3 del informe del Institute for Science and International Security (B1), que corresponde al emplazamiento de Yeysk: aquí está en la zona de Yeysk, y Primorsko-Ajtarsk lleva la de su base aérea (B27) y la del puerto de drones cercano (B7). El radio de cada zona como origen no sale de las fuentes: lo pone el motor por tipo (proceso/deduccion/catalogo.py).",
+ "zonas": [
+  {
+   "id": "primorsko_akhtarsk_aerodromo",
+   "nombre": "Primorsko-Ajtarsk, base aérea",
+   "raices": [
+    "приморсько-ахтар",
+    "приморсько - ахтар",
+    "приморсько-ахтарсь"
+   ],
+   "tipo": "aerodromo",
+   "punto": {
+    "lat": 46.057222,
+    "lon": 38.23,
+    "fuente": "B27",
+    "cita": "46°03′26″N 38°13′48″E",
+    "nota": "conversión exacta a decimal de la cita en grados, minutos y segundos"
+   },
+   "uso": [
+    {
+     "fuente": "B14",
+     "cita": "У ніч на 02 жовтня (з 18:00 01 жовтня) противник атакував 108 ударними БпЛА типу Shahed (47 із них - реактивні), Гербера, дронами-імітаторами типу “Пародія” із напрямків:  Брянськ, Приморсько-Ахтарськ - рф, ТОТ Донецької обл. та ТОТ АР Крим – Гвардійське.",
+     "fecha": "2026-10-02"
+    },
+    {
+     "fuente": "B27",
+     "cita": "The airbase is used, according to Ukraine, to launch Shahed-136 type drones and Kalibr missiles."
+    },
+    {
+     "fuente": "B2",
+     "cita": "Satellite imagery of the Primorsko-Akhtarsk military air base – used by Russia to launch long-range drones – has confirmed damage to key infrastructure following Ukrainian strikes.",
+     "fecha": "2025-08-07"
+    },
+    {
+     "fuente": "B1",
+     "cita": "Yeysk and Cape Fiolent are two of five main launch sites of Shahed 136 drones. The other three are Primorsko-Akhtarsk, Kursk, and Cape Chauda, Crimea.",
+     "fecha": "2024-07-09"
+    }
+   ],
+   "notas": "La Fuerza Aérea lo nombra como dirección de lanzamiento casi a diario (último parte consultado: 02-10-2026). La coordenada del borrador (46°40′34.48″N 38°07′49.75″E, atribuida a B1) es en realidad el emplazamiento de Yeysk; véase verificaciones."
+  },
+  {
+   "id": "primorsko_akhtarsk_droneport",
+   "nombre": "Primorsko-Ajtarsk, «droneport» junto a la base aérea («Port Arthur» en documentos de Alabuga)",
+   "raices": [
+    "приморсько-ахтар",
+    "приморсько - ахтар",
+    "приморсько-ахтарсь"
+   ],
+   "tipo": "instalacion_lanzamiento",
+   "punto": {
+    "lat": 46.066107,
+    "lon": 38.220378,
+    "fuente": "B7",
+    "cita": "“Port Arthur”: Satellite image showing a Shahed launch Primorsko-Akhtarsk airfield, Krasnodar Krai. Coordinates: 46.066107, 38.220378 ; 46.058452, 38.220521 ; 46.049881, 38.240103 .",
+    "nota": "primer punto de los tres que da la fuente"
+   },
+   "uso": [
+    {
+     "fuente": "B2",
+     "cita": "However, with the increased use of strike drones, a separate infrastructure for launching UAVs was constructed near the main base. The so-called ‘droneport’ consists of three small areas used exclusively for storage, pre-flight preparation, and the launch of drones. Geoint researcher Dnipro identified eight stationary drone launch platforms deployed on the premises.",
+     "fecha": "2025-08-07"
+    },
+    {
+     "fuente": "B7",
+     "cita": "The site includes two areas for storing drones, 24 garage units, a launch strip for mobile launchers, and, most likely, four fixed launchers.",
+     "fecha": "2026-01-05"
+    }
+   ],
+   "notas": "B2 (Militarnyi) describe el droneport pero no da coordenadas. B7 (Molfar) da tres puntos, a 1–2 km de la coordenada de la base en Wikipedia (B27), coherente con «near the main base». Discrepancia en lanzadores fijos: ocho según B2, «most likely, four» según B7. Otros puntos publicados: 46.058452, 38.220521 [B7]; 46.049881, 38.240103 [B7]"
+  },
+  {
+   "id": "kursk_khalino",
+   "nombre": "Kursk (Jalino / Kursk-Vostochny)",
+   "raices": [
+    "курськ",
+    "курська"
+   ],
+   "excluir": [
+    "обл"
+   ],
+   "tipo": "aerodromo",
+   "punto": {
+    "lat": 51.75,
+    "lon": 36.295,
+    "fuente": "B4",
+    "cita": "Coordinates 51° 45.0' N 36° 17.7' E (51.7500,36.2950)",
+    "nota": "decimal tal como lo da la fuente"
+   },
+   "uso": [
+    {
+     "fuente": "B15",
+     "cita": "У ніч на 30 вересня (з 18:00 29 вересня) противник атакував протикорабельними ракетами Циркон/Онікс із Курської обл. рф, балістичними ракетами Іскандер-М/С-400 із Воронезької, Брянської обл. рф, 188 ударними БпЛА типу Shahed (86 із них - реактивні), Гербера, дронами-імітаторами типу “Пародія” із напрямків:  Орел, Міллерово, Курськ, Приморсько-Ахтарськ – рф., ТОТ Донецьк, Гвардійське, Чауда – ТОТ АР Крим.",
+     "fecha": "2026-09-30"
+    },
+    {
+     "fuente": "B7",
+     "cita": "“Kustanai” indicates Kursk Oblast, specifically the Khalino airport",
+     "fecha": "2026-01-05"
+    },
+    {
+     "fuente": "B7",
+     "cita": "Some of the protective structures are likely being used to store Shahed drones.",
+     "fecha": "2026-01-05"
+    },
+    {
+     "fuente": "B5",
+     "cita": "Key sites include Khalino military airfield in Kursk Oblast, as well as positions near the villages of Asovitsa and Aleshok in Bryansk Oblast, as confirmed by comparative satellite imagery spanning the summers of 2025 and 2026.",
+     "fecha": "2026-08-17"
+    },
+    {
+     "fuente": "B1",
+     "cita": "The other three are Primorsko-Akhtarsk, Kursk, and Cape Chauda, Crimea.",
+     "fecha": "2024-07-09"
+    }
+   ],
+   "notas": "La Fuerza Aérea dice solo «Курськ»; la asociación con el aeródromo de Jalino la hacen B7 y B5. Otros puntos publicados: 51.759911, 36.287219 [B7]; 51.759075, 36.290792 [B7]; 51.751667, 36.296667 [B28]"
+  },
+  {
+   "id": "oryol_yuzhny",
+   "nombre": "Oriol (aeródromo Oryol-Yuzhny)",
+   "raices": [
+    "орел",
+    "орла"
+   ],
+   "tipo": "zona",
+   "punto": {
+    "lat": 52.935,
+    "lon": 36.001667,
+    "fuente": "B29",
+    "cita": "52°56′6″N 36°0′6″E",
+    "nota": "conversión exacta a decimal de la cita en grados, minutos y segundos"
+   },
+   "uso": [
+    {
+     "fuente": "B15",
+     "cita": "У ніч на 30 вересня (з 18:00 29 вересня) противник атакував протикорабельними ракетами Циркон/Онікс із Курської обл. рф, балістичними ракетами Іскандер-М/С-400 із Воронезької, Брянської обл. рф, 188 ударними БпЛА типу Shahed (86 із них - реактивні), Гербера, дронами-імітаторами типу “Пародія” із напрямків:  Орел, Міллерово, Курськ, Приморсько-Ахтарськ – рф., ТОТ Донецьк, Гвардійське, Чауда – ТОТ АР Крим.",
+     "fecha": "2026-09-30"
+    }
+   ],
+   "notas": "La Fuerza Aérea dice solo «Орел». No he encontrado fuente que documente lanzamientos desde el aeródromo Oryol-Yuzhny; las fuentes OSINT sitúan la instalación de lanzamiento de la región en Tsymbulove (entrada tsymbulove, unos 50 km al norte). El punto es el del aeródromo y solo sirve como referencia de la dirección."
+  },
+  {
+   "id": "tsymbulove",
+   "nombre": "Tsymbulove / Tsimbulova, región de Oriol («gran droneport», «Orlando» en documentos de Alabuga)",
+   "raices": [
+    "орел",
+    "орла"
+   ],
+   "tipo": "instalacion_lanzamiento",
+   "punto": {
+    "lat": 53.36893,
+    "lon": 35.815759,
+    "fuente": "B7",
+    "cita": "This is the “large drone port” featured in the video by Russia’s Zvezda TV channel, located in the village of Tsimbulova, Oryol Oblast. Coordinates: 53.368930, 35.815759 .",
+    "nota": "la misma coordenada figura en B3: «Tsimbulovo, Oryol Oblast — the “big drone port” Coordinates: 53.368930, 35.815759.»"
+   },
+   "uso": [
+    {
+     "fuente": "B2",
+     "cita": "One launch site is situated near the village of Tsymbulovo in the Oryol region, approximately 175 kilometers from the Ukrainian border. It is considered the main droneport for Russia’s long-range UAVs.",
+     "fecha": "2025-08-07"
+    },
+    {
+     "fuente": "B2",
+     "cita": "The site hosts eight stationary launch platforms and a 2.80 km stretch of road used for launching Shahed drones from vehicles.",
+     "fecha": "2025-08-07"
+    },
+    {
+     "fuente": "B8",
+     "cita": "According to geolocation analysis by X user Mark Krutov , the launches took place at coordinates 53.37280109648919, 35.80028358981446 —the same facility previously hit by Ukrainian strikes.",
+     "fecha": "2025-03-16"
+    },
+    {
+     "fuente": "B12",
+     "cita": "The analysts estimate that this is Russia's largest launch site, with a total area exceeding 5 sq km and a launch runway more than 2.5 km long.",
+     "fecha": "2025-11-11"
+    },
+    {
+     "fuente": "B15",
+     "cita": "У ніч на 30 вересня (з 18:00 29 вересня) противник атакував протикорабельними ракетами Циркон/Онікс із Курської обл. рф, балістичними ракетами Іскандер-М/С-400 із Воронезької, Брянської обл. рф, 188 ударними БпЛА типу Shahed (86 із них - реактивні), Гербера, дронами-імітаторами типу “Пародія” із напрямків:  Орел, Міллерово, Курськ, Приморсько-Ахтарськ – рф., ТОТ Донецьк, Гвардійське, Чауда – ТОТ АР Крим.",
+     "fecha": "2026-09-30"
+    }
+   ],
+   "notas": "radio_km null: B12 da una superficie («exceeding 5 sq km») y B2 una longitud de pista (2.80 km), no un radio. La Fuerza Aérea no nombra Tsymbulove; su dirección «Орел» se asigna aquí por las fuentes OSINT, no por la propia Fuerza Aérea. Los tres puntos (B7, B8, B6) están a menos de 1,5 km entre sí. Otros puntos publicados: 53.37280109648919, 35.80028358981446 [B8]; 53.371473, 35.80294 [B6]"
+  },
+  {
+   "id": "bryansk",
+   "nombre": "Briansk",
+   "raices": [
+    "брянськ"
+   ],
+   "excluir": [
+    "обл"
+   ],
+   "tipo": "zona",
+   "punto": {
+    "lat": 53.214167,
+    "lon": 34.176389,
+    "fuente": "B30",
+    "cita": "53°12′51″N 34°10′35″E",
+    "nota": "conversión exacta a decimal de la cita en grados, minutos y segundos"
+   },
+   "uso": [
+    {
+     "fuente": "B14",
+     "cita": "У ніч на 02 жовтня (з 18:00 01 жовтня) противник атакував 108 ударними БпЛА типу Shahed (47 із них - реактивні), Гербера, дронами-імітаторами типу “Пародія” із напрямків:  Брянськ, Приморсько-Ахтарськ - рф, ТОТ Донецької обл. та ТОТ АР Крим – Гвардійське.",
+     "fecha": "2026-10-02"
+    }
+   ],
+   "notas": "La Fuerza Aérea dice solo «Брянськ». No he encontrado fuente que documente lanzamientos desde el aeropuerto de Briansk; las instalaciones OSINT de la provincia son Navlia (entrada navlia), Asovitsa (B3: «Asovitsa Coordinates: 52.322906, 34.503120.») y Aleshok (B5, sin coordenada). El punto es el del aeropuerto, solo como referencia."
+  },
+  {
+   "id": "millerovo",
+   "nombre": "Millerovo",
+   "raices": [
+    "міллерово",
+    "міллєрово",
+    "мілерово",
+    "міллерове"
+   ],
+   "tipo": "aerodromo",
+   "punto": {
+    "lat": 48.952222,
+    "lon": 40.302222,
+    "fuente": "B31",
+    "cita": "48°57′08″N 40°18′08″E",
+    "nota": "conversión exacta a decimal de la cita en grados, minutos y segundos"
+   },
+   "uso": [
+    {
+     "fuente": "B15",
+     "cita": "У ніч на 30 вересня (з 18:00 29 вересня) противник атакував протикорабельними ракетами Циркон/Онікс із Курської обл. рф, балістичними ракетами Іскандер-М/С-400 із Воронезької, Брянської обл. рф, 188 ударними БпЛА типу Shahed (86 із них - реактивні), Гербера, дронами-імітаторами типу “Пародія” із напрямків:  Орел, Міллерово, Курськ, Приморсько-Ахтарськ – рф., ТОТ Донецьк, Гвардійське, Чауда – ТОТ АР Крим.",
+     "fecha": "2026-09-30"
+    },
+    {
+     "fuente": "B7",
+     "cita": "In the western part of the airfield, they built a platform with four fixed launchers for Shahed drones, just like at the Shanghai airfield.",
+     "fecha": "2026-01-05"
+    }
+   ],
+   "notas": "El punto OSINT de B7 (plataforma de lanzadores en la parte occidental) está unos 2 km al oeste del punto de Wikipedia. Otros puntos publicados: 48.954484, 40.273963 [B7]"
+  },
+  {
+   "id": "hvardiiske",
+   "nombre": "Hvardiiske, Crimea ocupada",
+   "raices": [
+    "гвардійськ"
+   ],
+   "tipo": "zona",
+   "punto": {
+    "lat": 45.116111,
+    "lon": 33.978889,
+    "fuente": "B32",
+    "cita": "45°06′58″N 33°58′44″E",
+    "nota": "conversión exacta a decimal de la cita en grados, minutos y segundos"
+   },
+   "uso": [
+    {
+     "fuente": "B14",
+     "cita": "У ніч на 02 жовтня (з 18:00 01 жовтня) противник атакував 108 ударними БпЛА типу Shahed (47 із них - реактивні), Гербера, дронами-імітаторами типу “Пародія” із напрямків:  Брянськ, Приморсько-Ахтарськ - рф, ТОТ Донецької обл. та ТОТ АР Крим – Гвардійське.",
+     "fecha": "2026-10-02"
+    }
+   ],
+   "notas": "La Fuerza Aérea escribe «ТОТ АР Крим – Гвардійське» sin precisar si es la base aérea. El punto es el de la base aérea Gvardeyskoye (Wikipedia), solo como referencia; no he encontrado fuente que sitúe los lanzamientos dentro de la base."
+  },
+  {
+   "id": "cabo_chauda",
+   "nombre": "Cabo Chauda, Crimea ocupada (polígono)",
+   "raices": [
+    "чауда",
+    "чуада"
+   ],
+   "tipo": "poligono",
+   "punto": {
+    "lat": 45.0025,
+    "lon": 35.83944,
+    "fuente": "B42",
+    "cita": "45°0′9″ пн. ш. 35°50′22″ сх. д.",
+    "nota": "decimal tal como lo da la propia página: «45.00250; 35.83944»"
+   },
+   "uso": [
+    {
+     "fuente": "B15",
+     "cita": "У ніч на 30 вересня (з 18:00 29 вересня) противник атакував протикорабельними ракетами Циркон/Онікс із Курської обл. рф, балістичними ракетами Іскандер-М/С-400 із Воронезької, Брянської обл. рф, 188 ударними БпЛА типу Shahed (86 із них - реактивні), Гербера, дронами-імітаторами типу “Пародія” із напрямків:  Орел, Міллерово, Курськ, Приморсько-Ахтарськ – рф., ТОТ Донецьк, Гвардійське, Чауда – ТОТ АР Крим.",
+     "fecha": "2026-09-30"
+    },
+    {
+     "fuente": "B11",
+     "cita": "A fire broke out at Cape Chauda, occupied Crimea, where the Russian forces’ military training ground is located, from where Russians launch Shaheds drones on Ukraine.",
+     "fecha": "2024-06-26"
+    },
+    {
+     "fuente": "B1",
+     "cita": "The other three are Primorsko-Akhtarsk, Kursk, and Cape Chauda, Crimea.",
+     "fecha": "2024-07-09"
+    }
+   ],
+   "notas": "Punto del cabo (accidente geográfico), no del polígono. La Wikipedia rusa da otro punto para el cabo (enlace GeoHack 45_00_17_N_35_49_49_E), a unos 300 m."
+  },
+  {
+   "id": "shatalovo",
+   "nombre": "Shatalovo",
+   "raices": [
+    "шаталов"
+   ],
+   "tipo": "aerodromo",
+   "punto": {
+    "lat": 54.34,
+    "lon": 32.473333,
+    "fuente": "B33",
+    "cita": "54°20′24″N 32°28′24″E",
+    "nota": "conversión exacta a decimal de la cita en grados, minutos y segundos"
+   },
+   "uso": [
+    {
+     "fuente": "B16",
+     "cita": "У ніч на 28 вересня (з 18:00 27 вересня) противник атакував 165 ударними БпЛА типу Shahed (79 із них - реактивні), Гербера, дронами-імітаторами типу “Пародія” із напрямків: Орел, Міллерово, Приморсько-Ахтарськ, Шаталово - рф, ТОТ Донецької та ТОТ АР Крим – Гвардійське.",
+     "fecha": "2026-09-28"
+    },
+    {
+     "fuente": "B3",
+     "cita": "The airfield was fitted with four stationary launch systems for launching Shahed drones.",
+     "fecha": "2026-08-17"
+    }
+   ],
+   "notas": "Otros puntos publicados: 54.343392, 32.472524 [B7]; 54.334886, 32.491853 [B7]"
+  },
+  {
+   "id": "donetsk_ocupado",
+   "nombre": "Donetsk ocupado (dirección)",
+   "raices": [
+    "донецьк"
+   ],
+   "tipo": "zona",
+   "punto": null,
+   "uso": [
+    {
+     "fuente": "B15",
+     "cita": "У ніч на 30 вересня (з 18:00 29 вересня) противник атакував протикорабельними ракетами Циркон/Онікс із Курської обл. рф, балістичними ракетами Іскандер-М/С-400 із Воронезької, Брянської обл. рф, 188 ударними БпЛА типу Shahed (86 із них - реактивні), Гербера, дронами-імітаторами типу “Пародія” із напрямків:  Орел, Міллерово, Курськ, Приморсько-Ахтарськ – рф., ТОТ Донецьк, Гвардійське, Чауда – ТОТ АР Крим.",
+     "fecha": "2026-09-30"
+    },
+    {
+     "fuente": "B14",
+     "cita": "У ніч на 02 жовтня (з 18:00 01 жовтня) противник атакував 108 ударними БпЛА типу Shahed (47 із них - реактивні), Гербера, дронами-імітаторами типу “Пародія” із напрямків:  Брянськ, Приморсько-Ахтарськ - рф, ТОТ Донецької обл. та ТОТ АР Крим – Гвардійське.",
+     "fecha": "2026-10-02"
+    }
+   ],
+   "notas": "La Fuerza Aérea alterna «ТОТ Донецьк» (la ciudad) y «ТОТ Донецької обл.» (la provincia ocupada): es una dirección, no un punto. El único emplazamiento concreto documentado es el aeropuerto (entrada donetsk_aeropuerto)."
+  },
+  {
+   "id": "donetsk_aeropuerto",
+   "nombre": "Donetsk, aeropuerto internacional (ocupado)",
+   "raices": [
+    "донецьк"
+   ],
+   "excluir": [
+    "обл"
+   ],
+   "tipo": "aerodromo",
+   "punto": {
+    "lat": 48.075,
+    "lon": 37.725556,
+    "fuente": "B34",
+    "cita": "48°04′30″N 37°43′32″E",
+    "nota": "conversión exacta a decimal de la cita en grados, minutos y segundos"
+   },
+   "uso": [
+    {
+     "fuente": "B10",
+     "cita": "CyberBoroshno assessed the infrastructure development aims to launch \"Shahed-type strike drones, Gerbera-type decoy drones, and possibly Geran (Shahed) jet-powered drones.\"",
+     "fecha": "2025-08-04"
+    },
+    {
+     "fuente": "B34",
+     "cita": "In August, satellite photos revealed multi launch pads for Geran-2 drones, showing the airport is now fully functional and used for drone launches."
+    },
+    {
+     "fuente": "B12",
+     "cita": "Earlier, Ukraine's defence forces struck a Shahed storage base in Donetsk , located on the territory of Donetsk Airport.",
+     "fecha": "2025-11-11"
+    }
+   ]
+  },
+  {
+   "id": "yeysk",
+   "nombre": "Yeysk (emplazamiento de almacenamiento y preparación junto a la base aérea)",
+   "raices": [
+    "єйськ"
+   ],
+   "tipo": "instalacion_lanzamiento",
+   "punto": {
+    "lat": 46.676244,
+    "lon": 38.130486,
+    "fuente": "B1",
+    "cita": "46°40’34.48”N, 38° 7’49.75”E.",
+    "nota": "pie de la Figura 3 de B1, que empieza «Top: A Google Earth image predating the attack on the Shahed-136 storage and launch preparation site.» (Yeysk); conversión exacta a decimal"
+   },
+   "uso": [
+    {
+     "fuente": "B18",
+     "cita": "У ніч на 14 вересня 2024 року противник атакував ударними БпЛА типу «Shahed». Усього радіотехнічними військами Повітряних Сил виявлено та здійснено супровід 76 «шахедів» із напрямків Курськ, Єйськ – рф, Чауда – Крим.",
+     "fecha": "2024-09-14"
+    },
+    {
+     "fuente": "B1",
+     "cita": "Figure 3 shows pre- and post-attack images of the Shahed storage and launch preparation site in Yeysk, Russia.",
+     "fecha": "2024-07-09"
+    }
+   ],
+   "notas": "Es la coordenada que el borrador atribuía por error a Primorsko-Ajtarsk. B1 dice: «Ukrainian official sources have not yet reported any launches from Yeysk or Cape Fiolent following the corresponding Ukrainian strikes on those sites.», pero la Fuerza Aérea vuelve a citar Єйськ el 31-07-2024 (B19) y el 14-09-2024 (B18, el último encontrado). Otros puntos publicados: 46.6835, 38.2145 [B35]"
+  },
+  {
+   "id": "balaklava",
+   "nombre": "Balaklava, Crimea ocupada",
+   "raices": [
+    "балаклав"
+   ],
+   "tipo": "zona",
+   "punto": {
+    "lat": 44.505344,
+    "lon": 33.597952,
+    "fuente": "B43",
+    "cita": "44°30′19″ пн. ш. 33°35′53″ сх. д.",
+    "nota": "decimal tal como lo da la propia página (enlace GeoHack 44.505344_N_33.597952_E)"
+   },
+   "uso": [
+    {
+     "fuente": "B20",
+     "cita": "- 13 ударних БпЛА типу «Shahed-131/136» (район пусків – Приморсько-Ахтарськ – рф., Балаклава – Крим).",
+     "fecha": "2024-06-22"
+    },
+    {
+     "fuente": "B25",
+     "cita": "🛬 Ударними БпЛА «Shahed-136/131» противник почав атакувати з 19.00 13 грудня. Пуски здійснювались хвилями з трьох напрямків: Балаклава, Чауда – Крим та Приморсько-Ахтарськ – рф. Загалом зафіксовано пуски 42 ворожих ударних БпЛА.",
+     "fecha": "2023-12-14"
+    }
+   ],
+   "notas": "Punto de la ciudad. B1 documenta un depósito de Shahed atacado en el cabo Fiolent (distrito de Balaklava), pie de la Figura 1: «44°30’24.93”N, 33°32’25.07”E.», pero ninguna fuente dice que ese sea el punto de la dirección «Балаклава» de la Fuerza Aérea. Último parte con Балаклава encontrado: 22-06-2024."
+  },
+  {
+   "id": "kacha",
+   "nombre": "Kacha, Crimea ocupada",
+   "raices": [
+    "кача"
+   ],
+   "tipo": "aerodromo",
+   "punto": {
+    "lat": 44.783056,
+    "lon": 33.561389,
+    "fuente": "B36",
+    "cita": "44°46′59″N 33°33′41″E",
+    "nota": "conversión exacta a decimal de la cita en grados, minutos y segundos"
+   },
+   "uso": [
+    {
+     "fuente": "B17",
+     "cita": "У ніч на 21 червня (з 18:00 20 червня) противник атакував 2 балістичними ракетами Іскандер-М/С-400 із Воронезької області, 2 аеробалістичними ракетами “Кинджал” (район пуску – повітряний простір Рязанської обл.) та 105 ударними БпЛА типу Shahed (в т.ч. реактивними), Гербера, Італмас, баражуючими боєприпасами \"Бандероль\" та дронами-імітаторами типу «Пародія» із напрямків: Орел, Курськ, Брянськ, Міллєрово, Приморсько-Ахтарськ – рф., Кача, Чауда – ТОТ АР Крим.",
+     "fecha": "2026-06-21"
+    },
+    {
+     "fuente": "B9",
+     "cita": "Russia used the Kacha airfield on the western coast of occupied Crimea to launch Shahed attack drones for the first time during its Sept. 28 missile and dron e attack, the monitoring channel eRadar on Telegram reported.",
+     "fecha": "2025-09-29"
+    }
+   ],
+   "notas": "La cita de B9 conserva la errata de la fuente («dron e»)."
+  },
+  {
+   "id": "seshcha",
+   "nombre": "Seshcha",
+   "raices": [
+    "сеща"
+   ],
+   "tipo": "aerodromo",
+   "punto": {
+    "lat": 53.715,
+    "lon": 33.338889,
+    "fuente": "B37",
+    "cita": "53°42′54″N 33°20′20″E",
+    "nota": "conversión exacta a decimal de la cita en grados, minutos y segundos"
+   },
+   "uso": [
+    {
+     "fuente": "B19",
+     "cita": "У ніч на 31 липня 2024 року ворог атакував керованою авіаційною ракетою Х-59 із повітряного простору окупованої Херсонщини та 89-ма ударними БпЛА типу «Shahed» із районів Єйськ, Сеща, Курськ, Приморсько-Ахтарськ. Основний напрямок удару – Київщина!",
+     "fecha": "2024-07-31"
+    },
+    {
+     "fuente": "B3",
+     "cita": "According to a satellite image from 5 February 2026, no stationary launch systems for Shahed drones have been identified on the airfield’s territory. The site has hangars and small structures that could be used to store UAVs. The airfield could be used to launch UAVs from mobile launch systems.",
+     "fecha": "2026-08-17"
+    }
+   ],
+   "notas": "Último parte de la Fuerza Aérea con Сеща encontrado: 31-07-2024. B3 (2026) no ve lanzadores fijos. Otros puntos publicados: 53.717675, 33.3443891 [B3]"
+  },
+  {
+   "id": "dzhankoi",
+   "nombre": "Dzhankói, Crimea ocupada",
+   "raices": [
+    "джанкой"
+   ],
+   "tipo": "zona",
+   "punto": {
+    "lat": 45.700833,
+    "lon": 34.417222,
+    "fuente": "B38",
+    "cita": "45°42′03″N 34°25′02″E",
+    "nota": "conversión exacta a decimal de la cita en grados, minutos y segundos"
+   },
+   "uso": [],
+   "notas": "Sin fuente de uso para Shahed/Geran/Gerbera. En el canal de la Fuerza Aérea, «Джанкой» aparece solo como zona de lanzamiento de misiles Iskander (B26: «Балістичну ракету «Іскандер-М» випущено з району Джанкой (Крим)»). B13 (2022) solo dice que había instructores iraníes alojados allí: «the Iranians are based in the settlements of Zaliznyi Port, Hladivtsi (Kherson Oblast), and Dzhankoi (Crimea).»"
+  },
+  {
+   "id": "belbek",
+   "nombre": "Belbek, Crimea ocupada",
+   "raices": [
+    "бельбек"
+   ],
+   "tipo": "zona",
+   "punto": {
+    "lat": 44.691944,
+    "lon": 33.574444,
+    "fuente": "B39",
+    "cita": "44°41′31″N 33°34′28″E",
+    "nota": "conversión exacta a decimal de la cita en grados, minutos y segundos"
+   },
+   "uso": [
+    {
+     "fuente": "B21",
+     "cita": "У ніч на 11 грудня 2023 року окупанти атакували Україну безпілотниками  типу «Shahed» із окупованого Криму, райони пусків – Чауда, Бельбек.",
+     "fecha": "2023-12-11"
+    }
+   ],
+   "notas": "Un solo parte encontrado (11-12-2023). La Fuerza Aérea no precisa si es el aeródromo; el punto es el del aeródromo de Belbek (Sevastopol International Airport en Wikipedia), solo como referencia."
+  },
+  {
+   "id": "engels",
+   "nombre": "Engels",
+   "raices": [
+    "енгельс"
+   ],
+   "tipo": "zona",
+   "punto": {
+    "lat": 51.481111,
+    "lon": 46.210556,
+    "fuente": "B40",
+    "cita": "51°28′52″N 46°12′38″E",
+    "nota": "conversión exacta a decimal de la cita en grados, minutos y segundos"
+   },
+   "uso": [],
+   "notas": "Sin fuente de uso para drones. En el canal de la Fuerza Aérea «Енгельс» aparece como zona de lanzamiento de misiles de crucero desde Tu-95MS, no de Shahed (B24: «29-ма крилатими ракетами Х-101/Х-555 із 14 літаків стратегічної авіації Ту-95МС (район пусків Енгельс – рф.)»; en ese mismo parte los Shahed salen de Primorsko-Ajtarsk y Chauda)."
+  },
+  {
+   "id": "berdiansk",
+   "nombre": "Berdiansk (ocupado)",
+   "raices": [
+    "бердянськ"
+   ],
+   "tipo": "zona",
+   "punto": {
+    "lat": 46.814722,
+    "lon": 36.758056,
+    "fuente": "B41",
+    "cita": "46°48′53″N 36°45′29″E",
+    "nota": "conversión exacta a decimal de la cita en grados, minutos y segundos"
+   },
+   "uso": [
+    {
+     "fuente": "B22",
+     "cita": "У ніч на 22 грудня 2024 року (із 09.00 21 грудня) противник, атакував 103-ма ударними БпЛА типу «Shahed» і безпілотниками інших типів із напрямків Брянськ, Міллерово, Орел, Курськ, Приморсько-Ахтарськ, Бердянськ. Також зафіксовано пуск балістичної ракети Іскандер-М із Криму у напрямку Херсонщини.",
+     "fecha": "2024-12-22"
+    }
+   ],
+   "notas": "La Fuerza Aérea dice solo «Бердянськ» (partes del 21 y el 22-12-2024). El punto es el del aeropuerto de Berdiansk, solo como referencia; ninguna fuente sitúa ahí los lanzamientos."
+  },
+  {
+   "id": "prymorsk",
+   "nombre": "Prymorsk, provincia de Zaporiyia (ocupado)",
+   "raices": [
+    "приморськ – запорізьк",
+    "приморськ - запорізьк"
+   ],
+   "tipo": "zona",
+   "punto": {
+    "lat": 46.73333333,
+    "lon": 36.35,
+    "fuente": "B44",
+    "cita": "\"title\":\"Prymorsk\",\"coordinates\":[{\"lat\":46.73333333,\"lon\":36.35,\"primary\":\"\",\"globe\":\"earth\"}]",
+    "nota": "decimal tal como lo da la fuente; punto de la localidad"
+   },
+   "uso": [
+    {
+     "fuente": "B23",
+     "cita": "У ніч на 11 травня (із 02.00 11 травня) противник атакував 108-ма ударними БпЛА типу Shahed і безпілотниками-імітаторами різних типів із напрямків: Брянськ, Шаталово, Міллерово, Приморсько-Ахтарськ – рф., Приморськ – ТОТ Запорізької обл., Гвардійське – ТОТ Криму.",
+     "fecha": "2025-05-11"
+    }
+   ],
+   "notas": "La Fuerza Aérea escribe «Приморськ – ТОТ Запорізької обл.» (partes de marzo a mayo de 2025). No confundir con Приморсько-Ахтарськ: la búsqueda en el canal por «Приморськ» devuelve sobre todo Приморсько-Ахтарськ."
+  },
+  {
+   "id": "navlia",
+   "nombre": "Navlia, provincia de Briansk («Navoiy» en documentos de Alabuga)",
+   "raices": [
+    "навля",
+    "навлі"
+   ],
+   "tipo": "instalacion_lanzamiento",
+   "punto": {
+    "lat": 52.855678,
+    "lon": 34.517882,
+    "fuente": "B3",
+    "cita": "Navlya Coordinates: 52.855678, 34.517882; 52.855132, 34.505611.",
+    "nota": "área principal; la misma coordenada en B7"
+   },
+   "uso": [
+    {
+     "fuente": "B3",
+     "cita": "In August 2024, construction was in full swing, and by October the main site for launching Shahed drones from vehicles had been completed.",
+     "fecha": "2026-08-17"
+    },
+    {
+     "fuente": "B2",
+     "cita": "Another launch site is located near the village of Navlya in the Bryansk region. It is significantly smaller than the previously mentioned facility but replicates its infrastructure. The site contains three bunker-style storage units and does not have stationary launch platforms, relying solely on vehicle-based drone launches.",
+     "fecha": "2025-08-07"
+    }
+   ],
+   "notas": "nombre_ucraniano null: no he encontrado «Навля» en los partes de la Fuerza Aérea (su dirección más probable es «Брянськ», pero ninguna fuente lo dice). El punto occidental (B3) es la zona de garajes construida en 2025. Otros puntos publicados: 52.855132, 34.505611 [B3]"
+  }
+ ]
+}

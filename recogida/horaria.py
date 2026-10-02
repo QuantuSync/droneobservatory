@@ -19,6 +19,10 @@ Después de FIRMS, el tráfico aéreo medido con adsb.lol (lo que el procesado d
 disco del servidor) y las condiciones medidas de Open-Meteo y del IEM (`recogida/mediciones.py`),
 cada uno con su tope y sin cambiar el código de salida si fallan.
 
+Después, lo que el motor de deducción dejó calculado en el disco del servidor con su propio
+temporizador (`recogida/deduccion.py`): se guarda en la base en segundos y un fallo no cambia el
+resultado de la recogida.
+
 Con --estado, deja escrito cómo fue cada fuente y la fecha de su último dato, para el
 estado del sistema que publica el servidor (`recogida/estado.py`).
 
@@ -42,6 +46,7 @@ from proceso.ataques import SENTIDO_UA_RU
 from proceso.extraccion import Parada
 from recogida import (
     busqueda_dirigida,
+    deduccion,
     detalle,
     extractor,
     firms,
@@ -306,6 +311,9 @@ def principal(argumentos: list[str] | None = None) -> int:
         # Búsqueda dirigida: lo que halló su temporizador para los cierres medidos sin
         # incidente entra como artículos; y la lista de lo que falta buscar, al día.
         paso_busqueda(almacen, ahora)
+        # Lo que dejó calculado el motor de deducción (su propio temporizador): no cambia el
+        # código de salida si falla.
+        deduccion.paso_horario(almacen)
         # Presencia del dron que confirman las declaraciones oficiales ya guardadas: la regla
         # se amplió y lo anterior se revisa en cada pasada; ya aplicada, no cambia nada.
         confirmadas, sin_guardar = presencia.revisar(almacen, ahora, modelos(almacen))

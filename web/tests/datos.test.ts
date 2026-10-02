@@ -313,7 +313,7 @@ describe("validación contra el esquema", () => {
 
 describe("listas cerradas iguales a las del esquema", () => {
   type Esquema = Record<string, unknown>;
-  const leer = (nombre: string) => leerJson("esquema", "1.6.0", `${nombre}.schema.json`) as Esquema;
+  const leer = (nombre: string) => leerJson("esquema", "1.7.0", `${nombre}.schema.json`) as Esquema;
   const en = (objeto: unknown, ...claves: string[]): unknown =>
     claves.reduce<unknown>((actual, clave) => (actual as Esquema)[clave], objeto);
 
@@ -494,6 +494,13 @@ describe("estado del sistema", () => {
     expect(validarEstadoSistema(conExportacion).ok).toBe(true);
     expect(validarEstadoSistema({ ...conExportacion, ultima_exportacion: null }).ok).toBe(true);
     expect(validarEstadoSistema({ ...conExportacion, ultima_exportacion: "ayer" }).ok).toBe(false);
+  });
+
+  it("acepta la última ejecución del motor de deducción, con hora o null", () => {
+    const conMotor = { ...estadoSistema(), ultima_deduccion: "2026-10-02T09:05Z" };
+    expect(validarEstadoSistema(conMotor).ok).toBe(true);
+    expect(validarEstadoSistema({ ...conMotor, ultima_deduccion: null }).ok).toBe(true);
+    expect(validarEstadoSistema({ ...conMotor, ultima_deduccion: "ayer" }).ok).toBe(false);
   });
 
   it.each([

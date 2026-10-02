@@ -1,6 +1,6 @@
 {
-  "version": "1.2.0",
-  "descripcion": "Correspondencia entre las categorías de objetivo y las clases de dron del European Observatory of Drone Incidents y las categorías de emplazamiento y las clases de dron de AEGIS. Los valores de AEGIS salen de su código, no se inventan: si una categoría o clase no tiene equivalente se marca como sin_equivalente. equivalencia: exacta (mismo concepto), parcial (el valor de AEGIS cubre solo una parte, o hay varios posibles) o sin_equivalente. origenes, metodos y niveles_detalle son los valores de procedencia y nivel_detalle que lleva cada dato exportado; indicadores, lo que dice cada indicador de un incidente; origenes_inicio, de dónde sale el día de su inicio (tiempo.origen_inicio); metricas_estadistica, lo que cuenta cada métrica de las estadísticas oficiales. AEGIS copia esta tabla en tools/vocabulario_eodi.json y un test comprueba que coincide con la de la versión importada.",
+  "version": "1.3.0",
+  "descripcion": "Correspondencia entre las categorías de objetivo y las clases de dron del European Observatory of Drone Incidents y las categorías de emplazamiento y las clases de dron de AEGIS. Los valores de AEGIS salen de su código, no se inventan: si una categoría o clase no tiene equivalente se marca como sin_equivalente. equivalencia: exacta (mismo concepto), parcial (el valor de AEGIS cubre solo una parte, o hay varios posibles) o sin_equivalente. origenes, metodos y niveles_detalle son los valores de procedencia y nivel_detalle que lleva cada dato exportado; indicadores, lo que dice cada indicador de un incidente; origenes_inicio, de dónde sale el día de su inicio (tiempo.origen_inicio); metricas_estadistica, lo que cuenta cada métrica de las estadísticas oficiales. AEGIS copia esta tabla en tools/vocabulario_eodi.json y un test comprueba que coincide con la de la versión importada. clases_deduccion: las clases de dron del motor de deducción (configuracion/catalogo_drones.json) con su clase de tamaño de AEGIS y la clase del esquema de la base (clase_esquema; null si ninguna).",
   "aegis": {
     "repositorio": "QuantuSync/AEGIS",
     "commit": "0615fa9",
@@ -108,6 +108,88 @@
       "nota": "El observatorio no distingue el tamaño dentro de los multirrotores pequeños: cualquiera de las tres clases de AEGIS es posible."
     }
   },
+  "clases_deduccion": {
+    "multirrotor_consumo_sub250": {
+      "aegis": [
+        "mini"
+      ],
+      "equivalencia": "exacta",
+      "nota": "Multirrotores de consumo de clase C0, por debajo de 250 g.",
+      "clase_esquema": "multirrotor_pequeno"
+    },
+    "multirrotor_consumo": {
+      "aegis": [
+        "phantom"
+      ],
+      "equivalencia": "parcial",
+      "nota": "Multirrotores de consumo con cámara, de 250 g a 2 kg.",
+      "clase_esquema": "multirrotor_pequeno"
+    },
+    "multirrotor_profesional": {
+      "aegis": [
+        "inspire"
+      ],
+      "equivalencia": "parcial",
+      "nota": "Multirrotores de empresa, seguridad e inspección, con cámara térmica en la mayoría.",
+      "clase_esquema": "multirrotor_pequeno"
+    },
+    "multirrotor_pesado_carga": {
+      "aegis": [],
+      "equivalencia": "sin_equivalente",
+      "nota": "Multirrotores de decenas de kilos (agrícolas y de transporte). Las clases de tamaño de AEGIS son multirrotores pequeños.",
+      "clase_esquema": null
+    },
+    "fpv": {
+      "aegis": [
+        "mini"
+      ],
+      "equivalencia": "parcial",
+      "nota": "Multirrotores pilotados en primera persona, de consumo o militares (por radio o por fibra óptica).",
+      "clase_esquema": "multirrotor_pequeno"
+    },
+    "ala_fija_tactica_electrica": {
+      "aegis": [],
+      "equivalencia": "sin_equivalente",
+      "nota": "Drones de reconocimiento de ala fija con motor eléctrico, lanzados con catapulta. Las clases de tamaño de AEGIS son multirrotores pequeños.",
+      "clase_esquema": "ala_fija"
+    },
+    "ala_fija_reconocimiento_combustion": {
+      "aegis": [],
+      "equivalencia": "sin_equivalente",
+      "nota": "Drones de reconocimiento de ala fija con motor de combustión, de tamaño mediano. Las clases de tamaño de AEGIS son multirrotores pequeños.",
+      "clase_esquema": "ala_fija"
+    },
+    "ala_fija_male": {
+      "aegis": [],
+      "equivalencia": "sin_equivalente",
+      "nota": "Drones grandes de reconocimiento y ataque con enlace de largo alcance o por satélite. Las clases de tamaño de AEGIS son multirrotores pequeños.",
+      "clase_esquema": "ala_fija"
+    },
+    "municion_merodeadora": {
+      "aegis": [],
+      "equivalencia": "sin_equivalente",
+      "nota": "Munición merodeadora y drones de ataque de ala fija de alcance corto y medio. Las clases de tamaño de AEGIS son multirrotores pequeños.",
+      "clase_esquema": "ala_fija"
+    },
+    "ataque_largo_alcance_piston": {
+      "aegis": [],
+      "equivalencia": "sin_equivalente",
+      "nota": "Drones de ataque de un solo uso de cientos a miles de kilómetros, con motor de pistón. Las clases de tamaño de AEGIS son multirrotores pequeños.",
+      "clase_esquema": "ataque_largo_alcance"
+    },
+    "senuelo_largo_alcance": {
+      "aegis": [],
+      "equivalencia": "sin_equivalente",
+      "nota": "Drones baratos que imitan a los de ataque para saturar la defensa aérea; algunos llevan carga. Las clases de tamaño de AEGIS son multirrotores pequeños.",
+      "clase_esquema": "ataque_largo_alcance"
+    },
+    "ataque_reaccion": {
+      "aegis": [],
+      "equivalencia": "sin_equivalente",
+      "nota": "Drones de ataque con turborreactor. Las clases de tamaño de AEGIS son multirrotores pequeños.",
+      "clase_esquema": "ataque_largo_alcance"
+    }
+  },
   "origenes": {
     "medido": {
       "rango": 1,
@@ -131,7 +213,7 @@
     },
     "deducido": {
       "rango": 6,
-      "descripcion": "Reservado para el motor de deducción (con la regla y su versión). Hoy no se usa."
+      "descripcion": "Lo calcula el motor de deducción con reglas físicas explícitas sobre el catálogo de prestaciones, con la regla y su versión (bloque deduccion de incidentes, ataques e impactos). Nunca se mezcla con lo medido ni con lo oficial y no cuenta para el nivel de detalle."
     }
   },
   "metodos": {

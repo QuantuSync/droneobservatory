@@ -27,6 +27,12 @@ age con la misma clave pública que la base:
   internos de las fuentes oficiales de detalle (encuentros de drones con aeronaves de la UK
   Airprox Board, cifras oficiales y documentos oficiales leídos, con los sucesos que citan y su
   cruce con los incidentes);
+- catalogo_drones.json, catalogo_fuentes.json y zonas_lanzamiento.json: el catálogo de
+  prestaciones del motor de deducción, sus fuentes numeradas y las zonas de lanzamiento, tal como
+  están en configuracion/; clases_dron.json: las clases del motor con su envolvente por campo (los
+  límites de movimiento por clase que usa AEGIS); deduccion_validacion.json: el resumen de la
+  validación del motor. Lo deducido de cada incidente, ataque e impacto va en su bloque
+  deduccion (origen deducido, interno);
 - esquema/: el JSON Schema de cada fichero. Los de la base (esquema/eodi/) llevan la marca
   de visibilidad de cada campo: un campo interno nuevo entra en la exportación sin tocar
   este código, porque se exportan los documentos enteros.
@@ -57,12 +63,13 @@ from esquema import Documento, Esquema, validador
 from exportacion import procedencia as origenes
 from modelo import ficha
 from proceso import incidentes as reglas
+from proceso.deduccion import catalogo as catalogo_deduccion
 from proceso.estados import Estado
 from proceso.focos_termicos import con_focos
 from proceso.mediciones import con_mediciones
 from proceso.restricciones import por_ataque
 
-VERSION_FORMATO = "1.2.0"
+VERSION_FORMATO = "1.3.0"
 RAIZ = Path(__file__).resolve().parent.parent
 DIRECTORIO_ESQUEMAS = RAIZ / "esquema" / "exportacion" / VERSION_FORMATO
 VOCABULARIO = RAIZ / "configuracion" / "vocabulario_aegis.json"
@@ -80,6 +87,7 @@ PREFIJO_UCRANIA = "EODI-UA-"
 PREFIJO_IMPACTO = "EODI-IG-"
 ESQUEMAS_BASE = "esquema/eodi"
 ESQUEMAS_PROPIOS = "esquema/exportacion"
+ESQUEMAS_CATALOGO = "esquema/catalogo"
 
 
 class ExportacionInvalida(ValueError):
@@ -509,7 +517,15 @@ def _esquemas() -> list[Fichero]:
         Fichero(f"{ESQUEMAS_PROPIOS}/{ruta.name}", ruta.read_bytes(), 1, "")
         for ruta in sorted(DIRECTORIO_ESQUEMAS.glob("*.schema.json"))
     ]
-    return base + propios
+    catalogo = [
+        Fichero(f"{ESQUEMAS_CATALOGO}/{ruta.name}", ruta.read_bytes(), 1, "")
+        for ruta in sorted(catalogo_deduccion.ESQUEMAS.glob("*.schema.json"))
+    ]
+    return base + propios + catalogo
+
+
+def _catalogo(nombre: str) -> str:
+    return f"{ESQUEMAS_CATALOGO}/{nombre}.schema.json"
 
 
 def _base(nombre: str) -> str:
@@ -528,6 +544,12 @@ def generar(almacen: Almacen) -> list[Fichero]:
     # Igual con el tráfico aéreo y las condiciones medidas (proceso/mediciones.py), con su
     # fuente y sus afirmaciones medidas, que así quedan vigentes.
     base, ataques_base = con_mediciones(base, ataques_base, almacen)
+    # Y lo que deduce el motor de deducción (tabla deducciones): origen deducido, interno.
+    deducciones = almacen.deducciones()
+    base = [{**d, "deduccion": deducciones[d["id"]]} if d["id"] in deducciones else d
+            for d in base]  # fmt: skip
+    ataques_base = [{**a, "deduccion": deducciones[a["id"]]} if a["id"] in deducciones else a
+                    for a in ataques_base]  # fmt: skip
     episodios = almacen.episodios()
     fichas = origenes.Fichas.de(almacen)
     try:
@@ -536,9 +558,12 @@ def generar(almacen: Almacen) -> list[Fichero]:
     except origenes.SinOrigen as error:
         raise ExportacionInvalida(f"valor sin origen: {error}") from error
     guerra = [
-        origenes.exportar_impacto({**d, "foco_termico": focos[d["id"]]} if d["id"] in focos else d)
+        origenes.exportar_impacto(
+            {**d, **({"foco_termico": focos[d["id"]]} if d["id"] in focos else {}),
+             **({"deduccion": deducciones[d["id"]]} if d["id"] in deducciones else {})}
+        )
         for d in almacen.impactos_guerra()
-    ]
+    ]  # fmt: skip
     restricciones = [origenes.exportar_restriccion(r) for r in almacen.restricciones()]
     mensajes = [{k: v for k, v in m.items() if k != "huella"} for m in almacen.mensajes_guerra()]
     # Restricciones de aeropuertos de cada ataque UA_RU: cuántos aeropuertos y cuántas horas.
@@ -600,10 +625,32 @@ def generar(almacen: Almacen) -> list[Fichero]:
     _comprobar("encuentros.jsonl", encuentros, validador(Esquema.ENCUENTRO))
     _comprobar("estadisticas_oficiales.jsonl", estadisticas, validador(Esquema.ESTADISTICA_OFICIAL))
     _comprobar("documentos_oficiales.jsonl", documentos, validador(Esquema.DOCUMENTO_OFICIAL))
+    # Catálogo de prestaciones, clases con su envolvente, zonas de lanzamiento y fuentes, y el
+    # resumen de la validación del motor: AEGIS los usa como límites de movimiento por clase.
+    catalogo = catalogo_deduccion.cargar()
+    ficheros_catalogo = catalogo_deduccion.ficheros()
+    datos_clases = catalogo_deduccion.clases_con_envolvente(catalogo)
+    datos_validacion = almacen.cursor("deduccion") or {}
+    _comprobar("clases_dron.json", [datos_clases], validador_propio("clases_dron"))
+    _comprobar("deduccion_validacion.json", [datos_validacion],
+               validador_propio("deduccion_validacion"))  # fmt: skip
 
     datos = [
         Fichero("afirmaciones.jsonl", _jsonl(lista_afirmaciones), len(lista_afirmaciones),
                 _propio("afirmacion")),
+        Fichero("catalogo_drones.json", _json(ficheros_catalogo["catalogo_drones.json"]),
+                len(ficheros_catalogo["catalogo_drones.json"]["modelos"]),
+                _catalogo("catalogo_drones")),
+        Fichero("catalogo_fuentes.json", _json(ficheros_catalogo["catalogo_fuentes.json"]),
+                len(ficheros_catalogo["catalogo_fuentes.json"]["fuentes"]),
+                _catalogo("catalogo_fuentes")),
+        Fichero("clases_dron.json", _json(datos_clases), len(datos_clases["clases"]),
+                _propio("clases_dron")),
+        Fichero("deduccion_validacion.json", _json(datos_validacion), 1,
+                _propio("deduccion_validacion")),
+        Fichero("zonas_lanzamiento.json", _json(ficheros_catalogo["zonas_lanzamiento.json"]),
+                len(ficheros_catalogo["zonas_lanzamiento.json"]["zonas"]),
+                _catalogo("zonas_lanzamiento")),
         Fichero("descartes.jsonl", _jsonl(lista_descartes), len(lista_descartes),
                 _propio("descarte")),
         Fichero("documentos_oficiales.jsonl", _jsonl(documentos), len(documentos),

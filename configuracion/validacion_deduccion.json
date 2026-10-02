@@ -1,0 +1,947 @@
+{
+ "version": "1.0.0",
+ "descripcion": "Casos con el modelo de dron establecido por restos, por una incautación o por una declaración oficial, para validar el motor de deducción (proceso/deduccion/validacion.py). Cada caso con sus fuentes (enlace, fecha y frase literal), el punto de su localidad (OpenStreetMap Nominatim) y las clases del catálogo que le corresponden. Reunidos el 2 de octubre de 2026. entrada_exterior: la fuente oficial dice desde dónde entró. incidente: el incidente de la base que es el mismo suceso, si lo hay.",
+ "casos": [
+  {
+   "id": "V01",
+   "pais": "PL",
+   "lugar": "Cześniki (powiat zamojski, Lubelskie)",
+   "punto": {
+    "lat": 50.70306,
+    "lon": 23.44076,
+    "fuente": "OpenStreetMap Nominatim (ODbL), consultado el 2026-10-02",
+    "consulta": "https://nominatim.openstreetmap.org/search?q=Cze%C5%9Bniki%2C+Polska&format=jsonv2&limit=1",
+    "resultado": "Cześniki, gmina Sitno, powiat zamojski, województwo lubelskie, Polska"
+   },
+   "fecha": "2025-09-10",
+   "hora_utc": null,
+   "modelo": "Gerbera",
+   "clases_reales": [
+    "senuelo_largo_alcance"
+   ],
+   "como": "restos",
+   "entrada_exterior": false,
+   "procedencia_declarada": "No declarada por dron; incursión de la noche del 9 al 10 de septiembre de 2025 durante un ataque ruso contra Ucrania.",
+   "incidente": null,
+   "fuentes": [
+    {
+     "url": "https://www.polskieradio.pl/395/7784/Artykul/3578034,polish-prosecutors-gerbera-decoy-drones-found-in-lublin-region-none-armed",
+     "fecha": "2025-09-11",
+     "tipo": "prensa_citando_oficial",
+     "cita": "The Regional Prosecutor's Office in Lublin said Gerbera drones were recovered in Cześniki (Zamość county), Czosnówka (Biała Podlaska county) and Wielki Łan (Włodawa county)."
+    },
+    {
+     "url": "https://www.polskieradio.pl/395/7784/Artykul/3578034,polish-prosecutors-gerbera-decoy-drones-found-in-lublin-region-none-armed",
+     "fecha": "2025-09-11",
+     "tipo": "prensa_citando_oficial",
+     "cita": "Investigators found 32 fragments in Cześniki and intact machines at the other two sites, spokeswoman Beata Syk-Jankowska said."
+    }
+   ],
+   "nota": "32 fragmentos; sin explosivo."
+  },
+  {
+   "id": "V02",
+   "pais": "PL",
+   "lugar": "Czosnówka (powiat bialski, Lubelskie)",
+   "punto": {
+    "lat": 52.01447,
+    "lon": 23.22587,
+    "fuente": "OpenStreetMap Nominatim (ODbL), consultado el 2026-10-02",
+    "consulta": "https://nominatim.openstreetmap.org/search?q=Czosn%C3%B3wka%2C+Polska&format=jsonv2&limit=1",
+    "resultado": "Czosnówka, gmina Biała Podlaska, powiat bialski, województwo lubelskie, 21-500, Polska"
+   },
+   "fecha": "2025-09-10",
+   "hora_utc": null,
+   "modelo": "Gerbera",
+   "clases_reales": [
+    "senuelo_largo_alcance"
+   ],
+   "como": "restos",
+   "entrada_exterior": false,
+   "procedencia_declarada": "No declarada por dron; incursión del 9-10 de septiembre de 2025.",
+   "incidente": null,
+   "fuentes": [
+    {
+     "url": "https://www.polskieradio.pl/395/7784/Artykul/3578034,polish-prosecutors-gerbera-decoy-drones-found-in-lublin-region-none-armed",
+     "fecha": "2025-09-11",
+     "tipo": "prensa_citando_oficial",
+     "cita": "The Regional Prosecutor's Office in Lublin said Gerbera drones were recovered in Cześniki (Zamość county), Czosnówka (Biała Podlaska county) and Wielki Łan (Włodawa county)."
+    }
+   ],
+   "nota": "Aparato entero, con inscripciones en cirílico según el portavoz del Ministerio del Interior."
+  },
+  {
+   "id": "V03",
+   "pais": "PL",
+   "lugar": "Wielki Łan (powiat włodawski, Lubelskie)",
+   "punto": {
+    "lat": 51.48375,
+    "lon": 23.20494,
+    "fuente": "OpenStreetMap Nominatim (ODbL), consultado el 2026-10-02",
+    "consulta": "https://nominatim.openstreetmap.org/search?q=Wielki+%C5%81an%2C+Polska&format=jsonv2&limit=1",
+    "resultado": "Wielki Łan, Wołoskowola, gmina Stary Brus, powiat włodawski, województwo lubelskie, 22-244, Polska"
+   },
+   "fecha": "2025-09-10",
+   "hora_utc": null,
+   "modelo": "Gerbera",
+   "clases_reales": [
+    "senuelo_largo_alcance"
+   ],
+   "como": "restos",
+   "entrada_exterior": false,
+   "procedencia_declarada": "No declarada por dron; incursión del 9-10 de septiembre de 2025.",
+   "incidente": null,
+   "fuentes": [
+    {
+     "url": "https://www.polskieradio.pl/395/7784/Artykul/3578034,polish-prosecutors-gerbera-decoy-drones-found-in-lublin-region-none-armed",
+     "fecha": "2025-09-11",
+     "tipo": "prensa_citando_oficial",
+     "cita": "Polish prosecutors said at least three drones that fell in the Lublin region were Russian Gerbera decoys and others were polystyrene, with none carrying explosives."
+    }
+   ],
+   "nota": "Aparato entero."
+  },
+  {
+   "id": "V04",
+   "pais": "PL",
+   "lugar": "Sulmice (powiat zamojski, Lubelskie)",
+   "punto": {
+    "lat": 50.872,
+    "lon": 23.31099,
+    "fuente": "OpenStreetMap Nominatim (ODbL), consultado el 2026-10-02",
+    "consulta": "https://nominatim.openstreetmap.org/search?q=Sulmice%2C+Polska&format=jsonv2&limit=1",
+    "resultado": "Sulmice, gmina Skierbieszów, powiat zamojski, województwo lubelskie, Polska"
+   },
+   "fecha": "2025-09-21",
+   "hora_utc": null,
+   "modelo": "Gerbera",
+   "clases_reales": [
+    "senuelo_largo_alcance"
+   ],
+   "como": "restos",
+   "entrada_exterior": false,
+   "procedencia_declarada": "No declarada; atribuido a la incursión del 9-10 de septiembre de 2025.",
+   "incidente": null,
+   "fuentes": [
+    {
+     "url": "https://www.bankier.pl/wiadomosc/Wychodza-kolejne-drony-ZW-W-Sulmicach-znaleziono-dwa-typu-Gerbera-9012474.html",
+     "fecha": "2025-09-21",
+     "tipo": "prensa_citando_oficial",
+     "cita": "To jest dron typu Gerbera, czyli ten tzw. wabik"
+    }
+   ],
+   "nota": "Fecha = hallazgo por un recolector de setas (domingo); la caída no está fechada. Parte del dron quedó en un árbol."
+  },
+  {
+   "id": "V05",
+   "pais": "PL",
+   "lugar": "Rusinowo, cerca de Jarosławiec (playa del Báltico, Zachodniopomorskie)",
+   "punto": {
+    "lat": 54.511,
+    "lon": 16.50991,
+    "fuente": "OpenStreetMap Nominatim (ODbL), consultado el 2026-10-02",
+    "consulta": "https://nominatim.openstreetmap.org/search?q=Rusinowo%2C+gmina+Postomino%2C+Polska&format=jsonv2&limit=1",
+    "resultado": "Rusinowo, gmina Postomino, powiat sławieński, województwo zachodniopomorskie, Polska"
+   },
+   "fecha": "2026-09-14",
+   "hora_utc": null,
+   "modelo": "Gerbera 2 (con ojiva de fragmentación de unos 4 kg)",
+   "clases_reales": [
+    "senuelo_largo_alcance"
+   ],
+   "como": "restos",
+   "entrada_exterior": false,
+   "procedencia_declarada": "Desde el mar Báltico; el ministro de Defensa apuntó a que Rusia pudo perderlo en maniobras sobre el Báltico; la fiscalía investiga punto de lanzamiento y posible paso previo sobre Lituania.",
+   "incidente": null,
+   "fuentes": [
+    {
+     "url": "https://dlapilota.pl/wiadomosci/prokuratura-dron-z-rusinowa-mial-glowice-bojowa-wstepne-ustalenia-rosyjska-gerbera-2-2",
+     "fecha": "2026-09-16",
+     "tipo": "prensa_citando_oficial",
+     "cita": "Ze wstępnych ustaleń wynika, iż ten bezzałogowy statek powietrzny to jest dron typu Gerbera 2"
+    },
+    {
+     "url": "https://militarnyi.com/en/news/russian-drone-poland-equipped-with-warhead/",
+     "fecha": null,
+     "tipo": "prensa_citando_oficial",
+     "cita": "According to preliminary findings, the drone was identified as a Russian Gerbera 2 UAV."
+    }
+   ],
+   "nota": "Fecha = localización (lunes); la caída no está fechada."
+  },
+  {
+   "id": "V06",
+   "pais": "LT",
+   "lugar": "Cerca del paso fronterizo cerrado de Šumskas (distrito de Vilna), a ~1 km de Bielorrusia",
+   "punto": {
+    "lat": 54.60743,
+    "lon": 25.72199,
+    "fuente": "OpenStreetMap Nominatim (ODbL), consultado el 2026-10-02",
+    "consulta": "https://nominatim.openstreetmap.org/search?q=%C5%A0umskas%2C+Lietuva&format=jsonv2&limit=1",
+    "resultado": "Šumskas, Kalvelių seniūnija, Vilniaus rajono savivaldybė, Vilniaus apskritis, Lietuva"
+   },
+   "fecha": "2025-07-10",
+   "hora_utc": null,
+   "modelo": "Gerbera",
+   "clases_reales": [
+    "senuelo_largo_alcance"
+   ],
+   "como": "declaracion_oficial",
+   "entrada_exterior": true,
+   "procedencia_declarada": "Desde Bielorrusia",
+   "incidente": null,
+   "fuentes": [
+    {
+     "url": "https://www.lrt.lt/en/news-in-english/19/2612108/lithuania-hands-in-protest-note-to-belarus-over-gerbera-drone-airspace-violation",
+     "fecha": "2025-07-17",
+     "tipo": "prensa_citando_oficial",
+     "cita": "a strong protest was expressed over the unlawful entry of a Russian-made Gerbera multi-purpose unmanned aerial vehicle into Lithuanian airspace from Belarus."
+    },
+    {
+     "url": "https://www.lrt.lt/en/news-in-english/19/2605860/lithuanian-military-investigates-airspace-intrusion-by-flying-object-from-belarus",
+     "fecha": "2025-07-10",
+     "tipo": "prensa_citando_oficial",
+     "cita": "It landed near the closed Šumskas border checkpoint, approximately one kilometre from the Belarusian border."
+    }
+   ],
+   "nota": "Entró 'around midday' hora local y cayó a los tres minutos; sin carga."
+  },
+  {
+   "id": "V07",
+   "pais": "LT",
+   "lugar": "Polígono militar de Gaižiūnai (distrito de Jonava)",
+   "punto": {
+    "lat": 55.03979,
+    "lon": 24.3283,
+    "fuente": "OpenStreetMap Nominatim (ODbL), consultado el 2026-10-02",
+    "consulta": "https://nominatim.openstreetmap.org/search?q=Gai%C5%BEi%C5%ABnai%2C+Lietuva&format=jsonv2&limit=1",
+    "resultado": "Gaižiūnai, Šveicarijos seniūnija, Jonavos rajono savivaldybė, Kauno apskritis, 55107, Lietuva"
+   },
+   "fecha": "2025-07-28",
+   "hora_utc": null,
+   "modelo": "Gerbera (identificación preliminar; con unos 2 kg de explosivo)",
+   "clases_reales": [
+    "senuelo_largo_alcance"
+   ],
+   "como": "restos",
+   "entrada_exterior": true,
+   "procedencia_declarada": "Desde Bielorrusia, en línea recta desde la frontera hasta Gaižiūnai",
+   "incidente": null,
+   "fuentes": [
+    {
+     "url": "https://www.lrt.lt/en/news-in-english/19/2630183/drone-from-belarus-discovered-after-four-days-of-search-in-central-lithuania",
+     "fecha": "2025-08-01",
+     "tipo": "prensa_citando_oficial",
+     "cita": "The drone was believed to have crossed into Lithuania from Belarus on the morning of July 28."
+    },
+    {
+     "url": "https://lrt.lt/en/news-in-english/19/2634744/explosive-device-found-in-drone-from-belarus-that-crashed-in-lithuania",
+     "fecha": "2025-08-05",
+     "tipo": "prensa_citando_oficial",
+     "cita": "Grunskienė said preliminary evidence suggests the latest drone may also have been a Gerbera, though the investigation is ongoing."
+    }
+   ],
+   "nota": "Fecha = entrada (mañana del 28 de julio); hallado el 1 de agosto de 2025."
+  },
+  {
+   "id": "V08",
+   "pais": "LV",
+   "lugar": "Región de Rēzekne (parroquia de Gaigalava según otras fuentes)",
+   "punto": {
+    "lat": 56.73233,
+    "lon": 27.06803,
+    "fuente": "OpenStreetMap Nominatim (ODbL), consultado el 2026-10-02",
+    "consulta": "https://nominatim.openstreetmap.org/search?q=Gaigalava%2C+Latvija&format=jsonv2&limit=1",
+    "resultado": "Gaigalava, Gaigalavas pagasts, Rēzeknes novads, Latvija"
+   },
+   "fecha": "2024-09-07",
+   "hora_utc": null,
+   "modelo": "Shahed (con explosivo)",
+   "clases_reales": [
+    "ataque_largo_alcance_piston"
+   ],
+   "como": "declaracion_oficial",
+   "entrada_exterior": true,
+   "procedencia_declarada": "Desde Bielorrusia",
+   "incidente": null,
+   "fuentes": [
+    {
+     "url": "https://news.err.ee/1609447271/russian-drone-that-entered-from-belarus-crashes-in-latvia",
+     "fecha": "2024-09-09",
+     "tipo": "prensa_citando_oficial",
+     "cita": "A Russian drone crashed in the Rezekne region of Latvia after crossing the border from Belarus on Saturday (September 7), the Latvian Ministry of Defense reported."
+    },
+    {
+     "url": "https://news.err.ee/1609447271/russian-drone-that-entered-from-belarus-crashes-in-latvia",
+     "fecha": "2024-09-09",
+     "tipo": "prensa_citando_oficial",
+     "cita": "At a press conference on Monday (September 9), representatives of the Latvian National Armed Forces (NBS) said the drone was a 'Shahed' type equipped with explosives."
+    }
+   ]
+  },
+  {
+   "id": "V09",
+   "pais": "RO",
+   "lugar": "Sur de Plauru (judeţul Tulcea), orilla rumana del Danubio frente a Izmail",
+   "punto": {
+    "lat": 45.32358,
+    "lon": 28.82937,
+    "fuente": "OpenStreetMap Nominatim (ODbL), consultado el 2026-10-02",
+    "consulta": "https://nominatim.openstreetmap.org/search?q=Plauru%2C+Romania&format=jsonv2&limit=1",
+    "resultado": "Plauru, Ceatalchioi, Tulcea, 827042, România"
+   },
+   "fecha": "2024-09-24",
+   "hora_utc": null,
+   "modelo": "Geran-2",
+   "clases_reales": [
+    "ataque_largo_alcance_piston"
+   ],
+   "como": "restos",
+   "entrada_exterior": false,
+   "procedencia_declarada": "No declarada (zona fronteriza con Ucrania, puertos del Danubio)",
+   "incidente": null,
+   "fuentes": [
+    {
+     "url": "https://english.mapn.ro/cpresa/6336_press-information",
+     "fecha": "2024-09-25",
+     "tipo": "oficial",
+     "cita": "the respective fragments are part of a Russian Geran-2 drone. They were removed to be examined by experts, according to the legal procedures in force."
+    }
+   ],
+   "nota": "Fecha = hallazgo; la caída no está fechada."
+  },
+  {
+   "id": "V10",
+   "pais": "RO",
+   "lugar": "Chilia Veche (judeţul Tulcea)",
+   "punto": {
+    "lat": 45.32473,
+    "lon": 29.33666,
+    "fuente": "OpenStreetMap Nominatim (ODbL), consultado el 2026-10-02",
+    "consulta": "https://nominatim.openstreetmap.org/search?q=Chilia+Veche%2C+Romania&format=jsonv2&limit=1",
+    "resultado": "Chilia Veche, Tulcea, România"
+   },
+   "fecha": "2025-01-17",
+   "hora_utc": null,
+   "modelo": "Geran-2",
+   "clases_reales": [
+    "ataque_largo_alcance_piston"
+   ],
+   "como": "restos",
+   "entrada_exterior": false,
+   "procedencia_declarada": "No declarada en la fuente",
+   "incidente": null,
+   "fuentes": [
+    {
+     "url": "https://english.mapn.ro/cpresa/6786_Press-release",
+     "fecha": "2026-05-31",
+     "tipo": "oficial",
+     "cita": "The evidence identified at the scene is structurally and functionally identical to that recovered and attributed to the Russian Federation in previous incidents involving GERAN-2 type UASs (Chilia Veche/Tulcea – 17.01.2025; Ceatalchioi/Tulcea – 17.01.2025; Galați/Galați – 28.02.2025; Grindu/Tulcea – 13.02.2025; Galați/Galați – 25.04.2026; Luncavița/Tulcea – 26.04.2026)."
+    }
+   ]
+  },
+  {
+   "id": "V11",
+   "pais": "RO",
+   "lugar": "Ceatalchioi (judeţul Tulcea)",
+   "punto": {
+    "lat": 45.27553,
+    "lon": 28.81013,
+    "fuente": "OpenStreetMap Nominatim (ODbL), consultado el 2026-10-02",
+    "consulta": "https://nominatim.openstreetmap.org/search?q=Ceatalchioi%2C+Romania&format=jsonv2&limit=1",
+    "resultado": "Ceatalchioi, Tulcea, România"
+   },
+   "fecha": "2025-01-17",
+   "hora_utc": null,
+   "modelo": "Geran-2",
+   "clases_reales": [
+    "ataque_largo_alcance_piston"
+   ],
+   "como": "restos",
+   "entrada_exterior": false,
+   "procedencia_declarada": "No declarada en la fuente",
+   "incidente": null,
+   "fuentes": [
+    {
+     "url": "https://english.mapn.ro/cpresa/6786_Press-release",
+     "fecha": "2026-05-31",
+     "tipo": "oficial",
+     "cita": "The evidence identified at the scene is structurally and functionally identical to that recovered and attributed to the Russian Federation in previous incidents involving GERAN-2 type UASs (Chilia Veche/Tulcea – 17.01.2025; Ceatalchioi/Tulcea – 17.01.2025; Galați/Galați – 28.02.2025; Grindu/Tulcea – 13.02.2025; Galați/Galați – 25.04.2026; Luncavița/Tulcea – 26.04.2026)."
+    }
+   ]
+  },
+  {
+   "id": "V12",
+   "pais": "RO",
+   "lugar": "Grindu (judeţul Tulcea)",
+   "punto": {
+    "lat": 45.40987,
+    "lon": 28.21771,
+    "fuente": "OpenStreetMap Nominatim (ODbL), consultado el 2026-10-02",
+    "consulta": "https://nominatim.openstreetmap.org/search?q=Grindu%2C+Tulcea%2C+Romania&format=jsonv2&limit=1",
+    "resultado": "Grindu, Tulcea, 827085, România"
+   },
+   "fecha": "2025-02-13",
+   "hora_utc": null,
+   "modelo": "Geran-2",
+   "clases_reales": [
+    "ataque_largo_alcance_piston"
+   ],
+   "como": "restos",
+   "entrada_exterior": false,
+   "procedencia_declarada": "No declarada en la fuente",
+   "incidente": null,
+   "fuentes": [
+    {
+     "url": "https://english.mapn.ro/cpresa/6786_Press-release",
+     "fecha": "2026-05-31",
+     "tipo": "oficial",
+     "cita": "The evidence identified at the scene is structurally and functionally identical to that recovered and attributed to the Russian Federation in previous incidents involving GERAN-2 type UASs (Chilia Veche/Tulcea – 17.01.2025; Ceatalchioi/Tulcea – 17.01.2025; Galați/Galați – 28.02.2025; Grindu/Tulcea – 13.02.2025; Galați/Galați – 25.04.2026; Luncavița/Tulcea – 26.04.2026)."
+    }
+   ]
+  },
+  {
+   "id": "V13",
+   "pais": "RO",
+   "lugar": "Galați (judeţul Galați)",
+   "punto": {
+    "lat": 45.43382,
+    "lon": 28.05494,
+    "fuente": "OpenStreetMap Nominatim (ODbL), consultado el 2026-10-02",
+    "consulta": "https://nominatim.openstreetmap.org/search?q=Gala%C8%9Bi%2C+Romania&format=jsonv2&limit=1",
+    "resultado": "Galați, România"
+   },
+   "fecha": "2025-02-28",
+   "hora_utc": null,
+   "modelo": "Geran-2",
+   "clases_reales": [
+    "ataque_largo_alcance_piston"
+   ],
+   "como": "restos",
+   "entrada_exterior": false,
+   "procedencia_declarada": "No declarada en la fuente",
+   "incidente": null,
+   "fuentes": [
+    {
+     "url": "https://english.mapn.ro/cpresa/6786_Press-release",
+     "fecha": "2026-05-31",
+     "tipo": "oficial",
+     "cita": "The evidence identified at the scene is structurally and functionally identical to that recovered and attributed to the Russian Federation in previous incidents involving GERAN-2 type UASs (Chilia Veche/Tulcea – 17.01.2025; Ceatalchioi/Tulcea – 17.01.2025; Galați/Galați – 28.02.2025; Grindu/Tulcea – 13.02.2025; Galați/Galați – 25.04.2026; Luncavița/Tulcea – 26.04.2026)."
+    }
+   ]
+  },
+  {
+   "id": "V14",
+   "pais": "RO",
+   "lugar": "Galați (judeţul Galați)",
+   "punto": {
+    "lat": 45.43382,
+    "lon": 28.05494,
+    "fuente": "OpenStreetMap Nominatim (ODbL), consultado el 2026-10-02",
+    "consulta": "https://nominatim.openstreetmap.org/search?q=Gala%C8%9Bi%2C+Romania&format=jsonv2&limit=1",
+    "resultado": "Galați, România"
+   },
+   "fecha": "2026-04-25",
+   "hora_utc": null,
+   "modelo": "Geran-2",
+   "clases_reales": [
+    "ataque_largo_alcance_piston"
+   ],
+   "como": "restos",
+   "entrada_exterior": false,
+   "procedencia_declarada": "No declarada en la fuente",
+   "incidente": "EODI-2026-00200",
+   "fuentes": [
+    {
+     "url": "https://english.mapn.ro/cpresa/6786_Press-release",
+     "fecha": "2026-05-31",
+     "tipo": "oficial",
+     "cita": "The evidence identified at the scene is structurally and functionally identical to that recovered and attributed to the Russian Federation in previous incidents involving GERAN-2 type UASs (Chilia Veche/Tulcea – 17.01.2025; Ceatalchioi/Tulcea – 17.01.2025; Galați/Galați – 28.02.2025; Grindu/Tulcea – 13.02.2025; Galați/Galați – 25.04.2026; Luncavița/Tulcea – 26.04.2026)."
+    }
+   ]
+  },
+  {
+   "id": "V15",
+   "pais": "RO",
+   "lugar": "Luncavița (judeţul Tulcea)",
+   "punto": {
+    "lat": 45.28106,
+    "lon": 28.30378,
+    "fuente": "OpenStreetMap Nominatim (ODbL), consultado el 2026-10-02",
+    "consulta": "https://nominatim.openstreetmap.org/search?q=Luncavi%C8%9Ba%2C+Tulcea%2C+Romania&format=jsonv2&limit=1",
+    "resultado": "Luncavița, Tulcea, România"
+   },
+   "fecha": "2026-04-26",
+   "hora_utc": null,
+   "modelo": "Geran-2",
+   "clases_reales": [
+    "ataque_largo_alcance_piston"
+   ],
+   "como": "restos",
+   "entrada_exterior": false,
+   "procedencia_declarada": "No declarada en la fuente",
+   "incidente": null,
+   "fuentes": [
+    {
+     "url": "https://english.mapn.ro/cpresa/6786_Press-release",
+     "fecha": "2026-05-31",
+     "tipo": "oficial",
+     "cita": "The evidence identified at the scene is structurally and functionally identical to that recovered and attributed to the Russian Federation in previous incidents involving GERAN-2 type UASs (Chilia Veche/Tulcea – 17.01.2025; Ceatalchioi/Tulcea – 17.01.2025; Galați/Galați – 28.02.2025; Grindu/Tulcea – 13.02.2025; Galați/Galați – 25.04.2026; Luncavița/Tulcea – 26.04.2026)."
+    }
+   ]
+  },
+  {
+   "id": "V16",
+   "pais": "RO",
+   "lugar": "Galați, zona STIREX, strada Brăilei 50, bloque BR1B (impacto en un 10.º piso)",
+   "punto": {
+    "lat": 45.4075,
+    "lon": 27.974,
+    "fuente": "OpenStreetMap Nominatim (ODbL), consultado el 2026-10-02",
+    "consulta": "https://nominatim.openstreetmap.org/search?q=Strada+Br%C4%83ilei+50%2C+Gala%C8%9Bi&format=jsonv2&limit=1",
+    "resultado": "Strada Brăilei, Galați, 800628, România"
+   },
+   "fecha": "2026-05-29",
+   "hora_utc": "23:00",
+   "modelo": "Geran-2 (ojiva HE de 30 kg, navegación Kometa)",
+   "clases_reales": [
+    "ataque_largo_alcance_piston"
+   ],
+   "como": "restos",
+   "entrada_exterior": true,
+   "procedencia_declarada": "Desde el espacio aéreo ucraniano: detectado a las 01:46 a unos 19 km de la frontera, 10 km al este de Reni",
+   "incidente": "EODI-2026-00124",
+   "fuentes": [
+    {
+     "url": "https://english.mapn.ro/cpresa/6786_Press-release",
+     "fecha": "2026-05-31",
+     "tipo": "oficial",
+     "cita": "Model: GERAN-2, Russian-made (evidence bearing the inscription \"ГЕРАНЬ 2\", partially readable"
+    },
+    {
+     "url": "https://english.mapn.ro/cpresa/6786_Press-release",
+     "fecha": "2026-05-31",
+     "tipo": "oficial",
+     "cita": "The target was initially identified at 01:46 while in Ukrainian airspace, approximately 19 kilometers from the national border (10 kilometers east of the locality of Reni)."
+    },
+    {
+     "url": "https://agerpres.ro/english/2026/05/29/drone-crash-in-galati-mapn-the-entire-payload-of-the-russian-provenance-geran-2-drone-exploded-on-im--1561104",
+     "fecha": "2026-05-29",
+     "tipo": "prensa_citando_oficial",
+     "cita": "the entire payload of the Russian-provenance Geran-2 drone exploded on impact"
+    }
+   ],
+   "nota": "Hora local ~02:00 del 29-05 (EEST) = 23:00 UTC del 28-05-2026."
+  },
+  {
+   "id": "V17",
+   "pais": "RO",
+   "lugar": "Mar Negro frente a Costinești (judeţul Constanța)",
+   "punto": {
+    "lat": 43.94697,
+    "lon": 28.61241,
+    "fuente": "OpenStreetMap Nominatim (ODbL), consultado el 2026-10-02",
+    "consulta": "https://nominatim.openstreetmap.org/search?q=Costine%C8%99ti%2C+Romania&format=jsonv2&limit=1",
+    "resultado": "Costinești, Zona Metropolitană Constanța, Constanța, România"
+   },
+   "fecha": "2026-08-23",
+   "hora_utc": null,
+   "modelo": "Gerbera (fuselaje sin carga explosiva)",
+   "clases_reales": [
+    "senuelo_largo_alcance"
+   ],
+   "como": "restos",
+   "entrada_exterior": false,
+   "procedencia_declarada": "Mar Negro (flotando); origen de lanzamiento no declarado",
+   "incidente": null,
+   "fuentes": [
+    {
+     "url": "https://spotmedia.ro/stiri/eveniment/corp-de-drona-gerbera-observat-in-mare-langa-costinesti",
+     "fecha": "2026-08-23",
+     "tipo": "prensa_citando_oficial",
+     "cita": "O echipă de scafandri de luptă EOD din cadrul Forţelor Navale Române s-a deplasat în zona indicată, la bordul unei nave aparţinând Gărzii de Coastă, şi a identificat un corp de dronă de tip Gerbera."
+    }
+   ],
+   "nota": "Avistado el domingo por la mañana; recuperado por la Guardia Costera."
+  },
+  {
+   "id": "V18",
+   "pais": "RO",
+   "lugar": "Gura Portiței (judeţul Tulcea, litoral del Mar Negro)",
+   "punto": {
+    "lat": 44.68926,
+    "lon": 29.00405,
+    "fuente": "OpenStreetMap Nominatim (ODbL), consultado el 2026-10-02",
+    "consulta": "https://nominatim.openstreetmap.org/search?q=Gura+Porti%C8%9Bei%2C+Romania&format=jsonv2&limit=1",
+    "resultado": "Gura Portiței, Jurilovca, Tulcea, România"
+   },
+   "fecha": "2026-08-23",
+   "hora_utc": null,
+   "modelo": "Gerbera (fragmento con carga explosiva)",
+   "clases_reales": [
+    "senuelo_largo_alcance"
+   ],
+   "como": "restos",
+   "entrada_exterior": false,
+   "procedencia_declarada": "Mar Negro; origen de lanzamiento no declarado",
+   "incidente": null,
+   "fuentes": [
+    {
+     "url": "https://spotmedia.ro/stiri/eveniment/corp-de-drona-gerbera-observat-in-mare-langa-costinesti",
+     "fecha": "2026-08-23",
+     "tipo": "prensa_citando_oficial",
+     "cita": "Duminică seară, Ministerul Apărării a anunțat că un nou fragment de dronă aeriană, model Gerbera, care prezenta încărcătură explozivă, a fost neutralizat în zona Gura Portiţei."
+    }
+   ]
+  },
+  {
+   "id": "V19",
+   "pais": "MD",
+   "lugar": "Cuhureștii de Jos (raionul Florești), sobre la casa del guarda de un huerto",
+   "punto": {
+    "lat": 47.9285,
+    "lon": 28.5915,
+    "fuente": "OpenStreetMap Nominatim (ODbL), consultado el 2026-10-02",
+    "consulta": "https://nominatim.openstreetmap.org/search?q=Cuhure%C8%99tii+de+Jos%2C+Moldova&format=jsonv2&limit=1",
+    "resultado": "Cuhureștii de Jos, Raionul Florești, MD-6643, Moldova"
+   },
+   "fecha": "2025-11-25",
+   "hora_utc": null,
+   "modelo": "Gerbera (sin carga explosiva)",
+   "clases_reales": [
+    "senuelo_largo_alcance"
+   ],
+   "como": "restos",
+   "entrada_exterior": false,
+   "procedencia_declarada": "No declarada en la fuente; seis drones sobrevolaron Moldavia ese día durante el ataque ruso contra Ucrania",
+   "incidente": "EODI-2025-00261",
+   "fuentes": [
+    {
+     "url": "https://romania.europalibera.org/a/ambasadorul-rus-asteptat-cu-drona-pe-prag-la-ministerul-de-externe-de-la-chisinau/33606185.html",
+     "fecha": "2025-11-26",
+     "tipo": "prensa_citando_oficial",
+     "cita": "La ieșire, pe scările ministerului, pe ambasadorul rus îl aștepta drona rusească de tip „Gerbera” care a căzut pe casa paznicului unei livezi din satul Cuhureștii de Jos, raionul Florești pe 25 noiembrie."
+    }
+   ],
+   "nota": "El Ministerio de Exteriores expuso el dron en su escalinata ante el embajador ruso el 26-11-2025."
+  },
+  {
+   "id": "V20",
+   "pais": "MD",
+   "lugar": "Raionul Florești (cerca de Cernița según united24media)",
+   "punto": {
+    "lat": 47.96625,
+    "lon": 28.46555,
+    "fuente": "OpenStreetMap Nominatim (ODbL), consultado el 2026-10-02",
+    "consulta": "https://nominatim.openstreetmap.org/search?q=Cerni%C8%9Ba%2C+Flore%C8%99ti%2C+Moldova&format=jsonv2&limit=1",
+    "resultado": "Cernița, Raionul Florești, Moldova"
+   },
+   "fecha": "2026-09-24",
+   "hora_utc": null,
+   "modelo": "Gerbera con cámara a bordo (identificación preliminar de la policía)",
+   "clases_reales": [
+    "senuelo_largo_alcance"
+   ],
+   "como": "restos",
+   "entrada_exterior": false,
+   "procedencia_declarada": "No declarada; durante el ataque ruso masivo contra Ucrania (cuatro incidentes de espacio aéreo esa mañana entre 05:21 y 06:58 hora local)",
+   "incidente": null,
+   "fuentes": [
+    {
+     "url": "https://unn.ua/en/news/fragments-of-what-is-likely-a-gerbera-drone-with-an-onboard-camera-were-found-in-moldova",
+     "fecha": "2026-09-24",
+     "tipo": "prensa_citando_oficial",
+     "cita": "In Moldova's Florești District, fragments of a Gerbera-type drone were discovered, which, according to the police's preliminary findings, is used by Russia."
+    },
+    {
+     "url": "https://united24media.com/world/moldova-finds-camera-equipped-russian-gerbera-drone-on-its-territory-for-first-time-22839",
+     "fecha": "2026-09-24",
+     "tipo": "prensa_citando_oficial",
+     "cita": "According to preliminary findings, this is the first time a device of this type has been detected on the territory of the Republic of Moldova."
+    }
+   ],
+   "nota": "Chocó con un árbol, cayó y explotó."
+  },
+  {
+   "id": "V21",
+   "pais": "MD",
+   "lugar": "Afueras de Cotiujeni (raionul Briceni), ~1,7 km de la frontera con Ucrania",
+   "punto": {
+    "lat": 48.34598,
+    "lon": 26.93912,
+    "fuente": "OpenStreetMap Nominatim (ODbL), consultado el 2026-10-02",
+    "consulta": "https://nominatim.openstreetmap.org/search?q=Cotiujeni%2C+Briceni%2C+Moldova&format=jsonv2&limit=1",
+    "resultado": "Cotiujeni, Raionul Briceni, Moldova"
+   },
+   "fecha": "2026-09-24",
+   "hora_utc": null,
+   "modelo": "Geran-4 (marcado en las alas; motor turborreactor)",
+   "clases_reales": [],
+   "como": "restos",
+   "entrada_exterior": false,
+   "procedencia_declarada": "No declarada; hallado junto a la frontera con Ucrania",
+   "incidente": null,
+   "fuentes": [
+    {
+     "url": "https://censor.net/en/news/4025266/geran-4-drone-debris-found-near-moldova-ukraine-border",
+     "fecha": "2026-09-25",
+     "tipo": "prensa_citando_oficial",
+     "cita": "Some components bore 'Geran-4' markings."
+    },
+    {
+     "url": "https://censor.net/en/news/4025266/geran-4-drone-debris-found-near-moldova-ukraine-border",
+     "fecha": "2026-09-25",
+     "tipo": "prensa_citando_oficial",
+     "cita": "A Moldovan border patrol discovered the wreckage on the evening of September 24, about 1.7 kilometres from the state border."
+    }
+   ],
+   "nota": "Hallado por una patrulla de la Policía de Fronteras la tarde del 24-09; explotó a ~10 m de altura tras chocar con árboles. Geran-4: modelo que no está en el catálogo (sin ficha con fuente); no se valida."
+  },
+  {
+   "id": "V22",
+   "pais": "MD",
+   "lugar": "Copanca (raionul Căușeni)",
+   "punto": {
+    "lat": 46.71594,
+    "lon": 29.62512,
+    "fuente": "OpenStreetMap Nominatim (ODbL), consultado el 2026-10-02",
+    "consulta": "https://nominatim.openstreetmap.org/search?q=Copanca%2C+Moldova&format=jsonv2&limit=1",
+    "resultado": "Copanca, Raionul Căușeni, MD-5716, Moldova"
+   },
+   "fecha": "2026-07-13",
+   "hora_utc": "22:03",
+   "modelo": "Geran-2 / Shahed-136 (ojiva de 40 kg sin detonar)",
+   "clases_reales": [
+    "ataque_largo_alcance_piston"
+   ],
+   "como": "restos",
+   "entrada_exterior": true,
+   "procedencia_declarada": "Desde Ucrania, tras los ataques rusos contra la región de Odesa",
+   "incidente": null,
+   "fuentes": [
+    {
+     "url": "https://www.army.md/en/press-releases/inform-1",
+     "fecha": "2026-07-13",
+     "tipo": "oficial",
+     "cita": "this night, July 13, at 1:03, a flying object was detected, which exploded in the area of ​​the village of Copanca, Căușeni district. Preliminary, the Gheran 2 (Shahed 136) flying object flew over the airspace of the Republic of Moldova following the air attacks of the Russian Federation on the Odessa region, Ukraine."
+    },
+    {
+     "url": "https://www.army.md/en/press-releases/inform-1",
+     "fecha": "2026-07-13",
+     "tipo": "oficial",
+     "cita": "The unmanned aerial vehicle is a Gheran-2 drone of Russian origin, which, as a result of the explosion caused by the impact with the ground and the ignition of the fuel in the tank, had its wings and rear part burned."
+    }
+   ],
+   "nota": "Hora local 01:03 del 13-07 (EEST) = 22:03 UTC del 12-07-2026."
+  },
+  {
+   "id": "V23",
+   "pais": "MD",
+   "lugar": "Cerca de Văleni (raionul Cahul)",
+   "punto": {
+    "lat": 45.65426,
+    "lon": 28.17954,
+    "fuente": "OpenStreetMap Nominatim (ODbL), consultado el 2026-10-02",
+    "consulta": "https://nominatim.openstreetmap.org/search?q=V%C4%83leni%2C+Cahul%2C+Moldova&format=jsonv2&limit=1",
+    "resultado": "Văleni, Raionul Cahul, MD-5322, Moldova"
+   },
+   "fecha": "2026-08-05",
+   "hora_utc": null,
+   "modelo": "Geran-2",
+   "clases_reales": [
+    "ataque_largo_alcance_piston"
+   ],
+   "como": "restos",
+   "entrada_exterior": false,
+   "procedencia_declarada": "No determinada (hora de caída y trayectoria sin establecer)",
+   "incidente": null,
+   "fuentes": [
+    {
+     "url": "https://radiomoldova.md/p/82468",
+     "fecha": "2026-08-05",
+     "tipo": "prensa_citando_oficial",
+     "cita": "This evening, several fragments of a Geran-2 drone were discovered near the village of Văleni in the Cahul district."
+    },
+    {
+     "url": "https://radiomoldova.md/p/82468",
+     "fecha": "2026-08-05",
+     "tipo": "prensa_citando_oficial",
+     "cita": "The identification was based on the drone's construction characteristics, the materials used in its manufacture, and the markings found on the fragments."
+    }
+   ],
+   "nota": "Fecha = hallazgo; identificado por construcción, materiales y marcas."
+  },
+  {
+   "id": "V24",
+   "pais": "TR",
+   "lugar": "Playa de Başoğlu, distrito de Kaynarca (Sakarya), costa del Mar Negro",
+   "punto": {
+    "lat": 41.1491,
+    "lon": 30.39274,
+    "fuente": "OpenStreetMap Nominatim (ODbL), consultado el 2026-10-02",
+    "consulta": "https://nominatim.openstreetmap.org/search?q=Ba%C5%9Fo%C4%9Flu%2C+Kaynarca%2C+Sakarya&format=jsonv2&limit=1",
+    "resultado": "Başoğlu, Kaynarca, Sakarya, Marmara Bölgesi, Türkiye"
+   },
+   "fecha": "2026-08-15",
+   "hora_utc": null,
+   "modelo": "Gerbera (fuselaje, sin explosivo)",
+   "clases_reales": [
+    "senuelo_largo_alcance"
+   ],
+   "como": "restos",
+   "entrada_exterior": false,
+   "procedencia_declarada": "Arrastrado a la costa desde el Mar Negro; lanzamiento no declarado",
+   "incidente": null,
+   "fuentes": [
+    {
+     "url": "https://www.turkiyetoday.com/nation/russian-gerbera-drone-found-on-turkish-coast-3226192",
+     "fecha": "2026-08-16",
+     "tipo": "prensa_citando_oficial",
+     "cita": "A suspicious object that washed ashore in Sakarya's Kaynarca district prompted a security response Saturday, with authorities determining it was the fuselage of a Gerbera-type unmanned aerial vehicle (UAV) that contained no explosive material."
+    }
+   ],
+   "nota": "Examinado por Gendarmería, Guardacostas y equipo SAS de la Armada."
+  },
+  {
+   "id": "V25",
+   "pais": "TR",
+   "lugar": "Barrio de Çubuklubala, distrito de Izmit (Kocaeli)",
+   "punto": {
+    "lat": 40.86296,
+    "lon": 30.02798,
+    "fuente": "OpenStreetMap Nominatim (ODbL), consultado el 2026-10-02",
+    "consulta": "https://nominatim.openstreetmap.org/search?q=%C3%87ubuklubala%2C+%C4%B0zmit&format=jsonv2&limit=1",
+    "resultado": "Çubuklubala Mahallesi, İzmit, Kocaeli, Marmara Bölgesi, Türkiye"
+   },
+   "fecha": "2025-12-17",
+   "hora_utc": "08:00",
+   "modelo": "Orlan-10 (evaluación inicial del Ministerio del Interior)",
+   "clases_reales": [
+    "ala_fija_reconocimiento_combustion"
+   ],
+   "como": "restos",
+   "entrada_exterior": false,
+   "procedencia_declarada": "No declarada",
+   "incidente": null,
+   "fuentes": [
+    {
+     "url": "https://www.dailysabah.com/politics/diplomacy/russian-drone-found-in-turkiyes-kocaeli",
+     "fecha": "2025-12-19",
+     "tipo": "prensa_citando_oficial",
+     "cita": "In a statement, the ministry said the drone was located within the boundaries of the Çubuklubala neighborhood in Izmit and was initially assessed to be a Russian-made Orlan-10 type used for reconnaissance and surveillance purposes."
+    },
+    {
+     "url": "https://www.dailysabah.com/politics/diplomacy/russian-drone-found-in-turkiyes-kocaeli",
+     "fecha": "2025-12-19",
+     "tipo": "prensa_citando_oficial",
+     "cita": "Çubuklubala neighborhood headman Muharrem Kaymaz said the resident saw an object flying on Wednesday around 11 a.m. before it crashed into the field."
+    }
+   ],
+   "nota": "Caída el miércoles hacia las 11:00 hora local (TRT, UTC+3) según el jefe del barrio; comunicado por el Ministerio el 19-12-2025. Aparato casi intacto."
+  },
+  {
+   "id": "V26",
+   "pais": "BG",
+   "lugar": "Zona de General Toshevo, a 200 m del antiguo paso de Kardam (frontera con Rumanía), en un campo de girasol",
+   "punto": {
+    "lat": 43.70015,
+    "lon": 28.03621,
+    "fuente": "OpenStreetMap Nominatim (ODbL), consultado el 2026-10-02",
+    "consulta": "https://nominatim.openstreetmap.org/search?q=General+Toshevo%2C+Bulgaria&format=jsonv2&limit=1",
+    "resultado": "Генерал Тошево, Добрич, 9500, България"
+   },
+   "fecha": "2026-08-08",
+   "hora_utc": "05:10",
+   "modelo": "Maya (señuelo usado por Ucrania; 'most likely' según análisis inicial)",
+   "clases_reales": [],
+   "como": "restos",
+   "entrada_exterior": true,
+   "procedencia_declarada": "Entró desde el norte, cruzando desde Rumanía; explotó ~100 m dentro de Bulgaria",
+   "incidente": "EODI-2026-00209",
+   "fuentes": [
+    {
+     "url": "https://sofiaglobe.com/?p=128591",
+     "fecha": "2026-08-08",
+     "tipo": "prensa_citando_oficial",
+     "cita": "The drone that crashed and exploded in Bulgaria on the morning of August 8 is 'most likely' a Maya decoy drone of the type widely used by the Ukrainian armed forces, Bulgaria's Defence Ministry told local media, reporting its findings of 'initial analysis' of the remnants."
+    },
+    {
+     "url": "https://bta.bg/en/news/bulgaria/1182001-drone-explodes-100-metres-inside-bulgaria-after-crossing-from-romania",
+     "fecha": "2026-08-08",
+     "tipo": "prensa_citando_oficial",
+     "cita": "A drone entered Bulgarian airspace from the north, and exploded approximately 100 metres inside Bulgarian territory"
+    }
+   ],
+   "nota": "Hora local 08:10 (EEST). Maya: señuelo ucraniano que no está en el catálogo; no se valida."
+  },
+  {
+   "id": "V27",
+   "pais": "IE",
+   "lugar": "Zona crítica del aeropuerto de Dublín",
+   "punto": {
+    "lat": 53.42829,
+    "lon": -6.24727,
+    "fuente": "OpenStreetMap Nominatim (ODbL), consultado el 2026-10-02",
+    "consulta": "https://nominatim.openstreetmap.org/search?q=Dublin+Airport&format=jsonv2&limit=1",
+    "resultado": "Dublin Airport, Swords Road, Airport ED, Dublin, Fingal, County Dublin, Leinster, Éire / Ireland"
+   },
+   "fecha": "2022-07-02",
+   "hora_utc": null,
+   "modelo": "DJI Mini 2",
+   "clases_reales": [
+    "multirrotor_consumo_sub250"
+   ],
+   "como": "incautacion",
+   "entrada_exterior": false,
+   "procedencia_declarada": "Operador local (residía a unos 2,5 km del aeropuerto); dron y pasaporte confiscados",
+   "incidente": null,
+   "fuentes": [
+    {
+     "url": "https://dronedj.com/2023/06/08/dublin-airport-dji-drone-case/",
+     "fecha": "2023-06-08",
+     "tipo": "prensa_citando_oficial",
+     "cita": "Ainis Guzauskas was arrested in February and charged with knowingly causing a false alarm by flying a DJI Mini 2 drone into a critical area of Dublin Airport."
+    },
+    {
+     "url": "https://dronedj.com/2023/06/08/dublin-airport-dji-drone-case/",
+     "fecha": "2023-06-08",
+     "tipo": "prensa_citando_oficial",
+     "cita": "The offense, which took place on July 2, 2022, allegedly interfered with the operation of an aerodrome."
+    }
+   ]
+  },
+  {
+   "id": "V28",
+   "pais": "DE",
+   "lugar": "Arsenal naval de Wilhelmshaven (zona de seguridad militar, centro de la ciudad)",
+   "punto": {
+    "lat": 53.51278,
+    "lon": 8.12111,
+    "fuente": "OpenStreetMap Nominatim (ODbL), consultado el 2026-10-02",
+    "consulta": "https://nominatim.openstreetmap.org/search?q=Wilhelmshaven+Marinearsenal&format=jsonv2&limit=1",
+    "resultado": "Marinearsenal (Entmagnetisierungsstelle), Innenhafen, Wilhelmshaven, Niedersachsen, Deutschland"
+   },
+   "fecha": "2025-05-15",
+   "hora_utc": null,
+   "modelo": "DJI (modelo concreto no indicado)",
+   "clases_reales": [
+    "multirrotor_consumo_sub250",
+    "multirrotor_consumo",
+    "multirrotor_profesional"
+   ],
+   "como": "declaracion_oficial",
+   "entrada_exterior": false,
+   "procedencia_declarada": "Operador local de 20 años identificado por la policía (vuelos de prueba para producción audiovisual)",
+   "incidente": null,
+   "fuentes": [
+    {
+     "url": "https://heise.de/-10484612",
+     "fecha": "2025-07-11",
+     "tipo": "prensa_citando_oficial",
+     "cita": "In mid-May, police in the city had already identified a 20-year-old as a drone pilot who flew his DJI drone over a military security area."
+    }
+   ],
+   "nota": "Fecha aproximada: la fuente solo dice 'mid-May' 2025."
+  }
+ ]
+}

@@ -1,0 +1,1324 @@
+{
+ "version": "1.0.0",
+ "version_esquema": "1.0.0",
+ "descripcion": "Fuentes numeradas del catálogo de prestaciones (catalogo_drones.json) y de las zonas de lanzamiento (zonas_lanzamiento.json). Prioridad baja: estimación débil; ninguna regla descarta una clase apoyándose solo en ella.",
+ "fuentes": {
+  "A1": {
+   "titulo": "EVO II Pro V3 (página de producto y especificaciones técnicas, pestaña V3)",
+   "url": "https://www.autelrobotics.com/productdetail/evo-ii-pro-v3.html",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Página oficial de Autel Robotics. La cabecera promocional dice «27 mph (12m/s) Maximum Flight Speed», en contradicción con su propia tabla (Ludicrous: 20 m/s). El IP43 de esta página es del mando Smart Controller SE, no de la aeronave."
+  },
+  "A2": {
+   "titulo": "EVO II Pro V3 Multi-rotor Drone User Manual V2.1 2025.01",
+   "url": "https://www.autelrobotics.com/wp-content/uploads/2025/01/EN_EVO-II-Pro-V3-Multi-rotor-Drone-User-Manual_V2.1.pdf",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Manual oficial V2.1 fechado «2025.01» (solo mes)."
+  },
+  "A3": {
+   "titulo": "EVO II Dual 640T V3 (página de producto y especificaciones técnicas, pestaña V3)",
+   "url": "https://www.autelrobotics.com/productdetail/evo-ii-dual-640t-drones/",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "La página contiene también la tabla V2; solo se ha usado la tabla V3. El IP43 de la página es del mando."
+  },
+  "A4": {
+   "titulo": "EVO II Dual 640T V3 Multi-rotor Drone User Manual V2.1 2025.01",
+   "url": "https://www.autelrobotics.com/wp-content/uploads/2025/01/EN_EVO-II-Dual-640T-V3-Multi-rotor-Drone-User-Manual_V2.1.pdf",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Manual oficial V2.1 fechado «2025.01» (solo mes)."
+  },
+  "A5": {
+   "titulo": "EVO Max 4T V2 (página de producto y especificaciones técnicas «EVO Max Series V2»)",
+   "url": "https://www.autelrobotics.com/productdetail/evo-max-4t/",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Versión vigente V2 (batería ABX41-D). Título de la página: «EVO Max 4T V2»."
+  },
+  "A6": {
+   "titulo": "EVO Max Series (página de serie; tabla «EVO Max Series», primera versión con baterías ABX40/ABX41)",
+   "url": "https://www.autelrobotics.com/productdetail/evo-max-series.html",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Tabla de la primera versión del EVO Max 4T (no V2)."
+  },
+  "A7": {
+   "titulo": "EVO Max Series Multirotor Aircraft User Manual V1.2.2 2024.09",
+   "url": "https://www.autelrobotics.com/wp-content/uploads/2024/09/EN_EVO-Max-Series-Multirotor-Aircraft-User-Manual_V1.2.2.pdf",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Manual oficial fechado «2024.09» (solo mes); primera versión de la serie."
+  },
+  "A8": {
+   "titulo": "Autel Robotics EVO Max Series Achieves C2 Certification, Leading the Way in Drone Compliance",
+   "url": "https://www.autelrobotics.com/news/autel-robotics-evo-max-series-achieves-c2-certification-leading-the-way-in-drone-compliance/",
+   "fecha": "2024-02-19",
+   "consultada": "2026-10-02",
+   "tipo": "fabricante",
+   "prioridad": "normal"
+  },
+  "B1": {
+   "titulo": "Strikes on Russia’s Shahed Launch Capabilities",
+   "url": "https://isis-online.org/isis-reports/strikes-on-russias-shahed-launch-capabilities",
+   "fecha": "2024-07-09",
+   "consultada": "2026-10-02",
+   "tipo": "analisis_tecnico",
+   "prioridad": "normal",
+   "notas": "Institute for Science and International Security. La página dice «July 9, 2024» (el borrador decía 08-07-2024). La coordenada 46°40’34.48”N, 38° 7’49.75”E es el pie de la Figura 3 y corresponde al emplazamiento de Yeysk, no a Primorsko-Ajtarsk."
+  },
+  "B2": {
+   "titulo": "Ukraine Strikes Droneport Used for Shahed UAV Launches",
+   "url": "https://militarnyi.com/en/news/ukraine-strikes-droneport-used-for-shahed-uav-launches/",
+   "fecha": "2025-08-07",
+   "consultada": "2026-10-02",
+   "tipo": "prensa_tecnica",
+   "prioridad": "normal",
+   "notas": "Militarnyi (Oleksandr Yan), «August 7, 2025 12:46». Cita a CyberBoroshno y al investigador Dnipro Osint. No da coordenadas."
+  },
+  "B3": {
+   "titulo": "Military activity by Belarus and Russia on the border with Ukraine: analysis by Molfar Intelligence Institute",
+   "url": "https://www.molfar.institute/en/military-activity-by-belarus-and-russia-on-the-border-with-ukraine-analysis-by-molfar-intelligence-institute",
+   "fecha": "2026-08-17",
+   "consultada": "2026-10-02",
+   "tipo": "estimacion_osint",
+   "prioridad": "normal",
+   "notas": "La página dice «17.08.2026» (el borrador decía 16-08-2026). Geolocalización por imágenes satelitales."
+  },
+  "B4": {
+   "titulo": "Kursk/Khalino - Russian Airfield Index",
+   "url": "https://www.weathergraphics.com/tim/russia/Kursk_Khalino.htm",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "geografica",
+   "prioridad": "normal",
+   "notas": "Tim Vasquez; coordenadas atribuidas a DAFIF (Departamento de Defensa de EE. UU.). La página solo muestra «©2005,2009»; no da fecha de publicación (el 31-12-2004 del borrador no consta)."
+  },
+  "B5": {
+   "titulo": "Russia sets up network of secret bases to launch jet-powered Shaheds across Europe — The Telegraph",
+   "url": "https://english.nv.ua/nation/satellite-imagery-reveals-russia-s-expanding-jet-shahed-launch-network-50633182.html",
+   "fecha": "2026-08-17",
+   "consultada": "2026-10-02",
+   "tipo": "prensa_tecnica",
+   "prioridad": "normal",
+   "notas": "New Voice of Ukraine; la página dice «17 August, 09:50 AM» (el año no aparece junto a la fecha; las imágenes son de «the summers of 2025 and 2026»). Cita a The Telegraph y a DroneSec. No da coordenadas."
+  },
+  "B6": {
+   "titulo": "Russia building new Shahed drone launch base: Location and details revealed",
+   "url": "https://newsukraine.rbc.ua/news/russia-building-new-shahed-drone-launch-base-1775893065.html",
+   "fecha": "2026-04-11",
+   "consultada": "2026-10-02",
+   "tipo": "prensa_tecnica",
+   "prioridad": "normal",
+   "notas": "RBC-Ukraine, «Sat, April 11, 2026 - 10:47» (el borrador decía 10-04-2026); cita al movimiento partisano Atesh. No nombra Tsymbulove."
+  },
+  "B7": {
+   "titulo": "Orlando, Milan, Shanghai: where do Russians launch Shahed drones from? Molfar Intelligence Institute analyzes secret documents from Alabuga",
+   "url": "https://www.molfar.institute/en/orlando-milan-shanghai-where-do-russians-launch-shahed-drones-from-molfar-intelligence-institute-analyzes-secret-documents-from-alabuga/",
+   "fecha": "2026-01-05",
+   "consultada": "2026-10-02",
+   "tipo": "estimacion_osint",
+   "prioridad": "normal",
+   "notas": "Molfar Intelligence Institute, «05.01.2026». Documentos internos de Alabuga e imágenes satelitales; da coordenadas de Tsimbulova, Khalino, Navlya, Shatalovo, Millerovo y Primorsko-Ajtarsk."
+  },
+  "B8": {
+   "titulo": "Drone Facility in the Oryol Oblast Now Used for Shahed Launches from Pickup Trucks",
+   "url": "https://militarnyi.com/en/news/drone-facility-in-the-oryol-oblast-now-used-for-shahed-launches-from-pickup-trucks/",
+   "fecha": "2025-03-16",
+   "consultada": "2026-10-02",
+   "tipo": "prensa_tecnica",
+   "prioridad": "normal",
+   "notas": "Militarnyi, «March 16, 2025 14:42»; la coordenada procede de la geolocalización de Mark Krutov (X)."
+  },
+  "B9": {
+   "titulo": "New Shahed Base in Crimea Puts Southern Ukraine’s Civilians on Quick-Reaction Alert",
+   "url": "https://www.kyivpost.com/post/61083",
+   "fecha": "2025-09-29",
+   "consultada": "2026-10-02",
+   "tipo": "prensa_tecnica",
+   "prioridad": "normal",
+   "notas": "Kyiv Post (Alisa Orlova); cita al canal de seguimiento eRadar."
+  },
+  "B10": {
+   "titulo": "Russia converts Donetsk airport into drone launch base to target Ukraine faster",
+   "url": "https://euromaidanpress.com/2025/08/04/russia-converts-donetsk-airport-into-drone-launch-base-to-target-ukraine-faster/",
+   "fecha": "2025-08-04",
+   "consultada": "2026-10-02",
+   "tipo": "prensa_tecnica",
+   "prioridad": "normal",
+   "notas": "Euromaidan Press; cita al grupo OSINT CyberBoroshno."
+  },
+  "B11": {
+   "titulo": "Fire breaks out on Crimean cape from where Russia launches Shaheds on Ukraine – photo, video",
+   "url": "https://www.pravda.com.ua/eng/news/2024/06/26/7462644/",
+   "fecha": "2024-06-26",
+   "consultada": "2026-10-02",
+   "tipo": "prensa_tecnica",
+   "prioridad": "normal",
+   "notas": "Ukrainska Pravda; cita a Radio Liberty / Krym.Realii."
+  },
+  "B12": {
+   "titulo": "Satellite images show Russia's largest launch site for attack drones – photos",
+   "url": "https://www.pravda.com.ua/eng/news/2025/11/11/8006809/",
+   "fecha": "2025-11-11",
+   "consultada": "2026-10-02",
+   "tipo": "prensa_tecnica",
+   "prioridad": "normal",
+   "notas": "Ukrainska Pravda; cita a comunidades OSINT."
+  },
+  "B13": {
+   "titulo": "Russians bring Iranian instructors to Zaliznyi Port to launch Shahed drones",
+   "url": "https://www.pravda.com.ua/eng/news/2022/10/12/7371609/",
+   "fecha": "2022-10-12",
+   "consultada": "2026-10-02",
+   "tipo": "prensa_tecnica",
+   "prioridad": "normal",
+   "notas": "Ukrainska Pravda; cita al Centro de Resistencia Nacional. No afirma lanzamientos desde Dzhankói."
+  },
+  "B14": {
+   "titulo": "Повітряні сили ЗС України, canal de Telegram kpszsu, mensaje 82252",
+   "url": "https://t.me/kpszsu/82252",
+   "fecha": "2026-10-02",
+   "consultada": "2026-10-02",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Canal oficial de la Fuerza Aérea de Ucrania; parte diario de ataques. Texto leído en la vista pública de t.me."
+  },
+  "B15": {
+   "titulo": "Повітряні сили ЗС України, canal de Telegram kpszsu, mensaje 81648",
+   "url": "https://t.me/kpszsu/81648",
+   "fecha": "2026-09-30",
+   "consultada": "2026-10-02",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Canal oficial de la Fuerza Aérea de Ucrania; parte diario de ataques. Texto leído en la vista pública de t.me."
+  },
+  "B16": {
+   "titulo": "Повітряні сили ЗС України, canal de Telegram kpszsu, mensaje 80852",
+   "url": "https://t.me/kpszsu/80852",
+   "fecha": "2026-09-28",
+   "consultada": "2026-10-02",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Canal oficial de la Fuerza Aérea de Ucrania; parte diario de ataques. Texto leído en la vista pública de t.me."
+  },
+  "B17": {
+   "titulo": "Повітряні сили ЗС України, canal de Telegram kpszsu, mensaje 65808",
+   "url": "https://t.me/kpszsu/65808",
+   "fecha": "2026-06-21",
+   "consultada": "2026-10-02",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Canal oficial de la Fuerza Aérea de Ucrania; parte diario de ataques. Texto leído en la vista pública de t.me."
+  },
+  "B18": {
+   "titulo": "Повітряні сили ЗС України, canal de Telegram kpszsu, mensaje 19320",
+   "url": "https://t.me/kpszsu/19320",
+   "fecha": "2024-09-14",
+   "consultada": "2026-10-02",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Canal oficial de la Fuerza Aérea de Ucrania; parte diario de ataques. Texto leído en la vista pública de t.me."
+  },
+  "B19": {
+   "titulo": "Повітряні сили ЗС України, canal de Telegram kpszsu, mensaje 17189",
+   "url": "https://t.me/kpszsu/17189",
+   "fecha": "2024-07-31",
+   "consultada": "2026-10-02",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Canal oficial de la Fuerza Aérea de Ucrania; parte diario de ataques. Texto leído en la vista pública de t.me."
+  },
+  "B20": {
+   "titulo": "Повітряні сили ЗС України, canal de Telegram kpszsu, mensaje 15703",
+   "url": "https://t.me/kpszsu/15703",
+   "fecha": "2024-06-22",
+   "consultada": "2026-10-02",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Canal oficial de la Fuerza Aérea de Ucrania; parte diario de ataques. Texto leído en la vista pública de t.me."
+  },
+  "B21": {
+   "titulo": "Повітряні сили ЗС України, canal de Telegram kpszsu, mensaje 8409",
+   "url": "https://t.me/kpszsu/8409",
+   "fecha": "2023-12-11",
+   "consultada": "2026-10-02",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Canal oficial de la Fuerza Aérea de Ucrania; parte diario de ataques. Texto leído en la vista pública de t.me."
+  },
+  "B22": {
+   "titulo": "Повітряні сили ЗС України, canal de Telegram kpszsu, mensaje 25356",
+   "url": "https://t.me/kpszsu/25356",
+   "fecha": "2024-12-22",
+   "consultada": "2026-10-02",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Canal oficial de la Fuerza Aérea de Ucrania; parte diario de ataques. Texto leído en la vista pública de t.me."
+  },
+  "B23": {
+   "titulo": "Повітряні сили ЗС України, canal de Telegram kpszsu, mensaje 34173",
+   "url": "https://t.me/kpszsu/34173",
+   "fecha": "2025-05-11",
+   "consultada": "2026-10-02",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Canal oficial de la Fuerza Aérea de Ucrania; parte diario de ataques. Texto leído en la vista pública de t.me."
+  },
+  "B24": {
+   "titulo": "Повітряні сили ЗС України, canal de Telegram kpszsu, mensaje 12302",
+   "url": "https://t.me/kpszsu/12302",
+   "fecha": "2024-03-24",
+   "consultada": "2026-10-02",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Canal oficial de la Fuerza Aérea de Ucrania; parte diario de ataques. Texto leído en la vista pública de t.me."
+  },
+  "B25": {
+   "titulo": "Повітряні сили ЗС України, canal de Telegram kpszsu, mensaje 8483",
+   "url": "https://t.me/kpszsu/8483",
+   "fecha": "2023-12-14",
+   "consultada": "2026-10-02",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Canal oficial de la Fuerza Aérea de Ucrania; parte diario de ataques. Texto leído en la vista pública de t.me."
+  },
+  "B26": {
+   "titulo": "Повітряні сили ЗС України, canal de Telegram kpszsu, mensaje 7473",
+   "url": "https://t.me/kpszsu/7473",
+   "fecha": "2023-11-14",
+   "consultada": "2026-10-02",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Canal oficial de la Fuerza Aérea de Ucrania; parte diario de ataques. Texto leído en la vista pública de t.me."
+  },
+  "B27": {
+   "titulo": "Primorsko-Akhtarsk air base",
+   "url": "https://en.wikipedia.org/wiki/Primorsko-Akhtarsk_air_base",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "geografica",
+   "prioridad": "normal",
+   "notas": "Wikipedia; coordenadas del cuadro de la página (enlace GeoHack). Sin fecha de publicación; revisión vigente el día de la consulta."
+  },
+  "B28": {
+   "titulo": "Kursk Vostochny Airport",
+   "url": "https://en.wikipedia.org/wiki/Kursk_Vostochny_Airport",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "geografica",
+   "prioridad": "normal",
+   "notas": "Wikipedia; coordenadas del cuadro de la página (enlace GeoHack). Sin fecha de publicación; revisión vigente el día de la consulta."
+  },
+  "B29": {
+   "titulo": "Oryol Yuzhny Airport",
+   "url": "https://en.wikipedia.org/wiki/Oryol_Yuzhny_Airport",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "geografica",
+   "prioridad": "normal",
+   "notas": "Wikipedia; coordenadas del cuadro de la página (enlace GeoHack). Sin fecha de publicación; revisión vigente el día de la consulta."
+  },
+  "B30": {
+   "titulo": "Bryansk International Airport",
+   "url": "https://en.wikipedia.org/wiki/Bryansk_International_Airport",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "geografica",
+   "prioridad": "normal",
+   "notas": "Wikipedia; coordenadas del cuadro de la página (enlace GeoHack). Sin fecha de publicación; revisión vigente el día de la consulta."
+  },
+  "B31": {
+   "titulo": "Millerovo air base",
+   "url": "https://en.wikipedia.org/wiki/Millerovo_air_base",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "geografica",
+   "prioridad": "normal",
+   "notas": "Wikipedia; coordenadas del cuadro de la página (enlace GeoHack). Sin fecha de publicación; revisión vigente el día de la consulta."
+  },
+  "B32": {
+   "titulo": "Gvardeyskoye (air base)",
+   "url": "https://en.wikipedia.org/wiki/Gvardeyskoye_(air_base)",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "geografica",
+   "prioridad": "normal",
+   "notas": "Wikipedia; coordenadas del cuadro de la página (enlace GeoHack). Sin fecha de publicación; revisión vigente el día de la consulta."
+  },
+  "B33": {
+   "titulo": "Shatalovo air base",
+   "url": "https://en.wikipedia.org/wiki/Shatalovo_air_base",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "geografica",
+   "prioridad": "normal",
+   "notas": "Wikipedia; coordenadas del cuadro de la página (enlace GeoHack). Sin fecha de publicación; revisión vigente el día de la consulta."
+  },
+  "B34": {
+   "titulo": "Donetsk International Airport",
+   "url": "https://en.wikipedia.org/wiki/Donetsk_International_Airport",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "geografica",
+   "prioridad": "normal",
+   "notas": "Wikipedia; coordenadas del cuadro de la página (enlace GeoHack). Sin fecha de publicación; revisión vigente el día de la consulta."
+  },
+  "B35": {
+   "titulo": "Yeysk air base",
+   "url": "https://en.wikipedia.org/wiki/Yeysk_air_base",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "geografica",
+   "prioridad": "normal",
+   "notas": "Wikipedia; coordenadas del cuadro de la página (enlace GeoHack). Sin fecha de publicación; revisión vigente el día de la consulta."
+  },
+  "B36": {
+   "titulo": "Kacha (air base)",
+   "url": "https://en.wikipedia.org/wiki/Kacha_(air_base)",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "geografica",
+   "prioridad": "normal",
+   "notas": "Wikipedia; coordenadas del cuadro de la página (enlace GeoHack). Sin fecha de publicación; revisión vigente el día de la consulta."
+  },
+  "B37": {
+   "titulo": "Seshcha air base",
+   "url": "https://en.wikipedia.org/wiki/Seshcha_air_base",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "geografica",
+   "prioridad": "normal",
+   "notas": "Wikipedia; coordenadas del cuadro de la página (enlace GeoHack). Sin fecha de publicación; revisión vigente el día de la consulta."
+  },
+  "B38": {
+   "titulo": "Dzhankoi (air base)",
+   "url": "https://en.wikipedia.org/wiki/Dzhankoi_(air_base)",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "geografica",
+   "prioridad": "normal",
+   "notas": "Wikipedia; coordenadas del cuadro de la página (enlace GeoHack). Sin fecha de publicación; revisión vigente el día de la consulta."
+  },
+  "B39": {
+   "titulo": "Sevastopol International Airport (Belbek)",
+   "url": "https://en.wikipedia.org/wiki/Sevastopol_International_Airport",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "geografica",
+   "prioridad": "normal",
+   "notas": "Wikipedia; coordenadas del cuadro de la página (enlace GeoHack). Sin fecha de publicación; revisión vigente el día de la consulta."
+  },
+  "B40": {
+   "titulo": "Engels-2",
+   "url": "https://en.wikipedia.org/wiki/Engels-2",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "geografica",
+   "prioridad": "normal",
+   "notas": "Wikipedia; coordenadas del cuadro de la página (enlace GeoHack). Sin fecha de publicación; revisión vigente el día de la consulta."
+  },
+  "B41": {
+   "titulo": "Berdiansk Airport",
+   "url": "https://en.wikipedia.org/wiki/Berdiansk_Airport",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "geografica",
+   "prioridad": "normal",
+   "notas": "Wikipedia; coordenadas del cuadro de la página (enlace GeoHack). Sin fecha de publicación; revisión vigente el día de la consulta."
+  },
+  "B42": {
+   "titulo": "Мис Чауда — Вікіпедія",
+   "url": "https://uk.wikipedia.org/wiki/Мис_Чауда",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "geografica",
+   "prioridad": "normal",
+   "notas": "Wikipedia; coordenadas del cuadro de la página (enlace GeoHack). Sin fecha de publicación; revisión vigente el día de la consulta."
+  },
+  "B43": {
+   "titulo": "Балаклава — Вікіпедія",
+   "url": "https://uk.wikipedia.org/wiki/Балаклава",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "geografica",
+   "prioridad": "normal",
+   "notas": "Wikipedia; coordenadas del cuadro de la página (enlace GeoHack). Sin fecha de publicación; revisión vigente el día de la consulta."
+  },
+  "B44": {
+   "titulo": "Prymorsk — Wikipedia API (prop=coordinates)",
+   "url": "https://en.wikipedia.org/w/api.php?action=query&prop=coordinates&format=json&titles=Prymorsk",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "geografica",
+   "prioridad": "normal",
+   "notas": "La página en inglés no muestra coordenadas en el texto; el API de coordenadas de Wikipedia devuelve el punto del artículo «Prymorsk» (provincia de Zaporiyia)."
+  },
+  "D1": {
+   "titulo": "DJI Mini 4 Pro - Soporte (especificaciones)",
+   "url": "https://www.dji.com/global/support/product/mini-4-pro",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Consultada desde España: la URL redirige a la versión /es/ del sitio oficial; citas en español copiadas de esa versión. Destino: https://www.dji.com/es/support/product/mini-4-pro"
+  },
+  "D2": {
+   "titulo": "DJI Air 3S - Soporte (especificaciones)",
+   "url": "https://www.dji.com/global/support/product/air-3s",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Consultada desde España: la URL redirige a la versión /es/ del sitio oficial; citas en español copiadas de esa versión. Destino: https://www.dji.com/es/support/product/air-3s"
+  },
+  "D3": {
+   "titulo": "DJI Mavic 3 Classic - Soporte (especificaciones)",
+   "url": "https://www.dji.com/global/support/product/mavic-3-classic",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Consultada desde España: la URL redirige a la versión /es/ del sitio oficial; citas en español copiadas de esa versión. Destino: https://www.dji.com/es/support/product/mavic-3-classic. La página de especificaciones de producto (/mavic-3-classic/specs) también redirige a esta página de soporte."
+  },
+  "D4": {
+   "titulo": "EU Declaration of Conformity - DJI España",
+   "url": "https://www.dji.com/euro-compliance",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Consultada desde España: la URL redirige a la versión /es/ del sitio oficial; citas en español copiadas de esa versión. Destino: https://www.dji.com/es/euro-compliance. Las citas son los títulos de los documentos de declaración de conformidad listados en la página."
+  },
+  "D5": {
+   "titulo": "DJI Mavic 3 Pro - Soporte (especificaciones)",
+   "url": "https://www.dji.com/global/support/product/mavic-3-pro",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Consultada desde España: la URL redirige a la versión /es/ del sitio oficial; citas en español copiadas de esa versión. Destino: https://www.dji.com/es/support/product/mavic-3-pro"
+  },
+  "D6": {
+   "titulo": "DJI Mavic 3 Pro - Soporte, versión regional Filipinas",
+   "url": "https://www.dji.com/ph/support/product/mavic-3-pro",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "La URL /ph/ redirige desde España a https://www.dji.com/es/support/product/mavic-3-pro (misma página que D5); no se pudo leer la versión filipina como tal."
+  },
+  "D7": {
+   "titulo": "Specs - DJI Mavic 3 Enterprise - DJI Enterprise",
+   "url": "https://www.dji.com/global/mavic-3-enterprise/specs",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Consultada desde España: la URL redirige a la versión /es/ del sitio oficial; citas en español copiadas de esa versión. Destino final: https://enterprise.dji.com/es/mavic-3-enterprise/specs"
+  },
+  "D8": {
+   "titulo": "Serie DJI Mavic 3 Enterprise - DJI Enterprise",
+   "url": "https://enterprise.dji.com/mavic-3-enterprise",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Consultada desde España: la URL redirige a la versión /es/ del sitio oficial; citas en español copiadas de esa versión. Destino: https://enterprise.dji.com/es/mavic-3-enterprise"
+  },
+  "D9": {
+   "titulo": "DJI Mavic 4 Pro - Especificaciones",
+   "url": "https://www.dji.com/sk/mavic-4-pro/specs",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "La URL /sk/ redirige desde España a https://www.dji.com/es/mavic-4-pro/specs; citas de esa versión."
+  },
+  "D10": {
+   "titulo": "DJI Mavic 4 Pro - Tu mundo en 360° - DJI España",
+   "url": "https://www.dji.com/es/mavic-4-pro",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Las cifras están en los textos de la página (incluidos en el código de la página, versión es/en)."
+  },
+  "D11": {
+   "titulo": "DJI Goggles N3 - Especificaciones",
+   "url": "https://www.dji.com/sg/goggles-n3/specs",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "La URL /sg/ redirige desde España a https://www.dji.com/es/goggles-n3/specs; citas de esa versión."
+  },
+  "D12": {
+   "titulo": "DJI Matrice 30 - Soporte (especificaciones)",
+   "url": "https://www.dji.com/global/support/product/matrice-30",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Consultada desde España: la URL redirige a la versión /es/ del sitio oficial; citas en español copiadas de esa versión. Destino: https://www.dji.com/es/support/product/matrice-30. Mismos datos que https://enterprise.dji.com/es/matrice-30/specs. Ficha común de la serie M30/M30T."
+  },
+  "D13": {
+   "titulo": "Top 9 Features of the Matrice 30 (DJI Enterprise Insights)",
+   "url": "https://enterprise-insights.dji.com/blog/matrice-30-top-features",
+   "fecha": "2022-03-21",
+   "consultada": "2026-10-02",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Blog oficial de DJI Enterprise; texto comercial, no ficha técnica. Fecha visible en la página: «March 21, 2022»."
+  },
+  "D14": {
+   "titulo": "DJI Matrice 350 RTK - Soporte (especificaciones)",
+   "url": "https://www.dji.com/global/support/product/matrice-350-rtk",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Consultada desde España: la URL redirige a la versión /es/ del sitio oficial; citas en español copiadas de esa versión. Destino: https://www.dji.com/es/support/product/matrice-350-rtk. Mismos datos que https://enterprise.dji.com/es/matrice-350-rtk/specs."
+  },
+  "D15": {
+   "titulo": "MATRICE 350 RTK User Manual v1.0",
+   "url": "https://dl.djicdn.com/downloads/matrice_350_rtk/Matrice_350_RTK_User_Manual_en.pdf",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Manual oficial en PDF; el documento indica «v1.0 2023.05» (sin día)."
+  },
+  "D16": {
+   "titulo": "Seguridad privada - Seguridad pública - DJI Enterprise",
+   "url": "https://enterprise.dji.com/public-safety/private-security",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Consultada desde España: la URL redirige a la versión /es/ del sitio oficial; citas en español copiadas de esa versión. Destino: https://enterprise.dji.com/es/public-safety/private-security"
+  },
+  "D17": {
+   "titulo": "Serie DJI Matrice 4 - FAQ - DJI",
+   "url": "https://enterprise.dji.com/matrice-4-series/faq",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Consultada desde España: la URL redirige a la versión /es/ del sitio oficial; citas en español copiadas de esa versión. Destino: https://enterprise.dji.com/es/matrice-4-series/faq"
+  },
+  "D18": {
+   "titulo": "Matrice 4D Series Now C6 Compliant in Standalone Mode (DJI Enterprise Insights)",
+   "url": "https://enterprise-insights.dji.com/blog/matrice-4d-series-c6-compliant",
+   "fecha": "2026-06-12",
+   "consultada": "2026-10-02",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Fecha visible en la página: «June 12, 2026»."
+  },
+  "D19": {
+   "titulo": "DJI Mini 4 Pro - Especificaciones - DJI",
+   "url": "https://www.dji.com/es/mini-4-pro/specs",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Sustituye a la ficha de tienda de terceros (techgadget) usada en el borrador. /global/ redirige a /es/ desde España."
+  },
+  "D20": {
+   "titulo": "DJI Air 3 - Especificaciones - DJI",
+   "url": "https://www.dji.com/es/air-3/specs",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Sustituye a la ficha de tienda de terceros (coptrz) usada en el borrador. /global/ redirige a /es/ desde España."
+  },
+  "D21": {
+   "titulo": "DJI Air 3S - Especificaciones - DJI",
+   "url": "https://www.dji.com/es/air-3s/specs",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Sustituye a la ficha de tienda de terceros (lindinger) usada en el borrador. /global/ redirige a /es/ desde España."
+  },
+  "D22": {
+   "titulo": "DJI Avata 2 - Dron FPV - Especificaciones - DJI",
+   "url": "https://www.dji.com/es/avata-2/specs",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "/global/ redirige a /es/ desde España."
+  },
+  "D23": {
+   "titulo": "Serie DJI Matrice 4 - Especificaciones - DJI Enterprise",
+   "url": "https://enterprise.dji.com/es/matrice-4-series/specs",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Ficha común Matrice 4T / Matrice 4E; las cifras de aeronave no se separan por modelo salvo donde se indica."
+  },
+  "D24": {
+   "titulo": "DJI Dock 3 - Especificaciones - DJI Enterprise (sección Aeronave: Matrice 4D/4TD)",
+   "url": "https://enterprise.dji.com/es/dock-3/specs",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "La página propia de la Serie Matrice 4D (enterprise.dji.com/matrice-4d-series/specs) devuelve 404; las especificaciones de la aeronave Matrice 4D/4TD están en la página del Dock 3."
+  },
+  "D25": {
+   "titulo": "AGRAS T50/T25 Unmanned Aircraft Flight Manual v1.0",
+   "url": "https://dl.djicdn.com/downloads/t50_t25/20250109/T50_T25_User_Manual_v1.0_EN.pdf",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Manual oficial en PDF (carpeta de descarga 20250109; pie «© 2024 DJI»). Enlazado desde https://ag.dji.com/t50/downloads. Los símbolos de grado se pierden en la extracción de texto; se restituyen en las citas."
+  },
+  "D26": {
+   "titulo": "DJI Mavic 3 Pro - Especificaciones - DJI",
+   "url": "https://www.dji.com/es/mavic-3-pro/specs",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "/global/ redirige a /es/ desde España."
+  },
+  "F1": {
+   "titulo": "Topwar (Military Review), The simplest design: kamikaze drone \"Molniya-1\"",
+   "url": "https://en.topwar.ru/248064-prostejshaja-konstrukcija-bespilotnik-kamikadze-molnija-1.html",
+   "fecha": "2024-08-13",
+   "consultada": "2026-10-02",
+   "tipo": "estimacion_osint",
+   "prioridad": "normal",
+   "notas": "Estimación del autor, no dato oficial; la página está fechada el 13-08-2024 (el borrador decía 12-08-2024)."
+  },
+  "F2": {
+   "titulo": "Forbes, Russian Molniya-2 Drone Able To Evade Ukrainian Counter-Drone Defenses (Vikram Mittal)",
+   "url": "https://www.forbes.com/sites/vikrammittal/2026/04/27/russian-molniya-2-drone-evades-ukrainian-counter-drone-defenses/",
+   "fecha": "2026-04-27",
+   "consultada": "2026-10-02",
+   "tipo": "prensa_tecnica",
+   "prioridad": "normal",
+   "notas": "Inaccesible el 02-10-2026 (HTTP 403 y captcha); no se ha podido leer y ninguna cifra se toma de ella."
+  },
+  "F3": {
+   "titulo": "Ukrainska Pravda, Cheap but dangerous: how Russia's plywood Molniya drone has become a big problem for Ukraine's defence forces (Iryna Lutsak)",
+   "url": "https://www.pravda.com.ua/eng/news/2026/01/15/8016295/",
+   "fecha": "2026-01-15",
+   "consultada": "2026-10-02",
+   "tipo": "prensa_tecnica",
+   "prioridad": "normal",
+   "notas": "Prensa que cita al analista Nazarii Barchuk (Ukrainian Security and Cooperation Center), al especialista en radio Serhii Beskrestnov y a militares ucranianos."
+  },
+  "F4": {
+   "titulo": "War&Sanctions, FPV drone of the airplane type Molniya-2R (componentes extranjeros)",
+   "url": "https://war-sanctions.gur.gov.ua/en/page-molniya",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "No publica prestaciones; lista componentes de la variante Molniya-2R (controlador SpeedyBee, terminal satelital SpaceX, Raspberry Pi 5, cámara SIYI ZR10). Fabricante: ATLANT AERO LLC."
+  },
+  "F5": {
+   "titulo": "Lowy Institute, The Interpreter, Fibre-optic drones reshape Ukraine's technological war (David Kirichenko)",
+   "url": "https://www.lowyinstitute.org/the-interpreter/fibre-optic-drones-reshape-ukraine-s-technological-war",
+   "fecha": "2025-08-06",
+   "consultada": "2026-10-02",
+   "tipo": "analisis_tecnico",
+   "prioridad": "normal",
+   "notas": "La página fecha el artículo el 6 de agosto de 2025 (el borrador decía 05-08-2025)."
+  },
+  "F6": {
+   "titulo": "RUSI, In the News: Fibre-optic drones reshaped the war in Ukraine. Hezbollah are now adopting the weapon",
+   "url": "https://www.rusi.org/news-and-comment/in-the-news/fibre-optic-drones-reshaped-war-ukraine-hezbollah-are-now-adopting-weapon",
+   "fecha": "2026-04-30",
+   "consultada": "2026-10-02",
+   "tipo": "analisis_tecnico",
+   "prioridad": "normal",
+   "notas": "Declaración de Robert Tollast (RUSI) recogida en prensa y reproducida por RUSI."
+  },
+  "F7": {
+   "titulo": "RUSI, Tactical Developments During the Third Year of the Russo-Ukrainian War (Jack Watling y Nick Reynolds)",
+   "url": "https://static.rusi.org/tactical-developments-third-year-russo-ukrainian-war-february-2205.pdf",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "analisis_tecnico",
+   "prioridad": "normal",
+   "notas": "«Published February 2025» (sin día)."
+  },
+  "F8": {
+   "titulo": "CSIS, The Russia-Ukraine Drone War: Innovation on the Frontlines and Beyond (transcripción del acto)",
+   "url": "https://www.csis.org/analysis/russia-ukraine-drone-war-innovation-frontlines-and-beyond",
+   "fecha": "2025-05-28",
+   "consultada": "2026-10-02",
+   "tipo": "analisis_tecnico",
+   "prioridad": "normal",
+   "notas": "Intervención de Kateryna Bondar en el acto de CSIS del 28-05-2025."
+  },
+  "F9": {
+   "titulo": "RUSI, Protecting the Force from Uncrewed Aerial Systems (Jack Watling y Justin Bronk), Occasional Paper",
+   "url": "https://static.rusi.org/protecting-the-force-from-uncrewed-uas.pdf",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "analisis_tecnico",
+   "prioridad": "normal",
+   "notas": "«RUSI Occasional Paper, October 2024» (sin día). La tabla 1 reproduce la clasificación por grupos del Departamento de Defensa de EE. UU."
+  },
+  "G1": {
+   "titulo": "War&Sanctions, GERAN-2 (Shahed-136)",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/336",
+   "fecha": "2025-06-09",
+   "consultada": "2026-10-02",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "La página viva devuelve 404 el 2026-10-02 (la ficha ya no figura en el listado de UAV). Cifras verificadas en la copia de Internet Archive del 2025-09-11: https://web.archive.org/web/20250911205114/https://war-sanctions.gur.gov.ua/en/uav/336 ('Updated: 09.06.2025')."
+  },
+  "G2": {
+   "titulo": "War&Sanctions, Geran-2 UAV (series \"Э\", with Verba MPADS)",
+   "url": "https://war-sanctions.gur.gov.ua/en/page-shahed-with-mpads",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Página de componentes; no da cifras de prestaciones."
+  },
+  "G3": {
+   "titulo": "War&Sanctions, Geran-2 UAV (series \"Э\", with R-60 missile)",
+   "url": "https://war-sanctions.gur.gov.ua/en/page-shahed-with-aam",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Página de componentes; no da cifras de prestaciones."
+  },
+  "G4": {
+   "titulo": "War&Sanctions, noticias del portal: Components and schematic image of Shahed-136 (Geran-2) UAV of the new MS series",
+   "url": "https://war-sanctions.gur.gov.ua/en/news?page=15&per-page=6",
+   "fecha": "2025-06-27",
+   "consultada": "2026-10-02",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "La noticia ya no está en news?page=2 (la paginación avanza); el 2026-10-02 aparece en la página 15. URL original del borrador: https://war-sanctions.gur.gov.ua/en/news?page=2&per-page=6"
+  },
+  "G5": {
+   "titulo": "Militarnyi, Russia Receives Upgraded Shahed-136 Drone With Thermal Guidance",
+   "url": "https://militarnyi.com/en/news/russia-receives-upgraded-shahed-136-drone-with-thermal-guidance/",
+   "fecha": "2025-06-27",
+   "consultada": "2026-10-02",
+   "tipo": "prensa_tecnica",
+   "prioridad": "normal",
+   "notas": "Cita el análisis de la inteligencia militar ucraniana publicado en War&Sanctions. El ejemplar descrito es el MS001 (el mismo de G4). Las cifras de 220 km y más de 1.000 km proceden de un documento de 2022 sobre el sistema Shahed-236, no de una medición del ejemplar."
+  },
+  "G6": {
+   "titulo": "Defence Intelligence of Ukraine, The russian UAV “Gerbera” contains Sanctioned Electronic Parts",
+   "url": "https://gur.gov.ua/en/content/herbery-z-fanery-ta-inozemnoi-elektroniky-detali-budovy-cherhovoho-rosiiskoho-drona",
+   "fecha": "2024-11-18",
+   "consultada": "2026-10-02",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "La página viva devuelve 403; texto verificado en la copia de Internet Archive."
+  },
+  "G7": {
+   "titulo": "Forbes (Vikram Mittal), The Russian Gerbera Drone Is Evolving Beyond Being a Simple Decoy",
+   "url": "https://www.forbes.com/sites/vikrammittal/2026/08/02/the-russian-gerbera-drone-is-evolving-beyond-being-a-simple-decoy/",
+   "fecha": "2026-08-02",
+   "consultada": "2026-10-02",
+   "tipo": "prensa_tecnica",
+   "prioridad": "normal",
+   "notas": "La página viva devuelve 403; texto verificado en la copia de Internet Archive del 2026-08-02. Las cifras coinciden con la ficha War&Sanctions (L2), que es la fuente técnica preferente."
+  },
+  "G8": {
+   "titulo": "Türkiye Today, Russian Gerbera drone found on Turkish coast",
+   "url": "https://www.turkiyetoday.com/nation/russian-gerbera-drone-found-on-turkish-coast-3226192",
+   "fecha": "2026-08-16",
+   "consultada": "2026-10-02",
+   "tipo": "estimacion_osint",
+   "prioridad": "normal",
+   "notas": "Prensa que recopila 'open-source data' sin identificar la fuente técnica."
+  },
+  "G9": {
+   "titulo": "Armada International, No Pasarán (Ukrainian Atlas C-UAV system)",
+   "url": "https://www.armadainternational.com/2025/03/ukrainian-atlas-cuav-system-electronic-warfare/",
+   "fecha": "2025-03-04",
+   "consultada": "2026-10-02",
+   "tipo": "prensa_tecnica",
+   "prioridad": "normal",
+   "notas": "La cifra se presenta como 'Figures seen by Armada'; estimación sin fuente técnica identificada."
+  },
+  "G10": {
+   "titulo": "Euronews, What we know about the Geran-2 drone that hit a residential building in Romania",
+   "url": "https://www.euronews.com/2026/05/29/what-we-know-about-the-geran-2-drone-that-hit-a-residential-building-in-romania",
+   "fecha": "2026-05-29",
+   "consultada": "2026-10-02",
+   "tipo": "prensa_tecnica",
+   "prioridad": "normal",
+   "notas": "Prensa generalista descriptiva; no cita fuente técnica."
+  },
+  "G11": {
+   "titulo": "GlobalSecurity, Geran-2",
+   "url": "https://www.globalsecurity.org/military/world/russia/geran-2.html",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "analisis_tecnico",
+   "prioridad": "normal",
+   "notas": "Análisis secundario sin fecha; menciona fuentes (ISIS, HUR) de forma genérica."
+  },
+  "I1": {
+   "titulo": "War&Sanctions, Izdeliye-54 (Italmas)",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/368",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-02",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "La página indica 'Updated: 04.05.2026' (el borrador decía 13-01-2025)."
+  },
+  "L1": {
+   "titulo": "War&Sanctions, GERAN-1 (Shahed-131)",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/338",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-02",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "La página indica 'Updated: 04.05.2026'."
+  },
+  "L2": {
+   "titulo": "War&Sanctions, Gerbera",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/329",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-02",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "La página indica 'Updated: 04.05.2026'."
+  },
+  "L3": {
+   "titulo": "War&Sanctions, Geran-3 UAV (componentes)",
+   "url": "https://war-sanctions.gur.gov.ua/en/page-geran-3",
+   "fecha": "2025-09-16",
+   "consultada": "2026-10-02",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Página de componentes; fecha de la noticia de publicación en el portal (16.09.2025). No hay ficha de prestaciones del Geran-3 en la sección de UAV."
+  },
+  "L4": {
+   "titulo": "War&Sanctions, Shahed-136 (GERAN-2) MS001 (componentes)",
+   "url": "https://war-sanctions.gur.gov.ua/en/page-shahed-136",
+   "fecha": "2025-06-27",
+   "consultada": "2026-10-02",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Página de componentes del ejemplar MS001; fecha de la noticia de publicación (27.06.2025)."
+  },
+  "L5": {
+   "titulo": "CSIS Missile Threat, Shahed-131 and 136",
+   "url": "https://missilethreat.csis.org/missile/shahed-131-and-136/",
+   "fecha": "2026-06-02",
+   "consultada": "2026-10-02",
+   "tipo": "analisis_tecnico",
+   "prioridad": "normal",
+   "notas": "'Last Updated June 2, 2026'. Cifras para los modelos iraníes; CSIS indica como nombres alternativos Geran-1 y Geran-2."
+  },
+  "L6": {
+   "titulo": "CSIS Missile Threat, Shahed-238",
+   "url": "https://missilethreat.csis.org/missile/shahed-238/",
+   "fecha": "2026-06-02",
+   "consultada": "2026-10-02",
+   "tipo": "analisis_tecnico",
+   "prioridad": "normal",
+   "notas": "'Last Updated June 2, 2026'. Nombre alternativo indicado: Geran-3. La ficha resumen agrega variantes iraní y rusa."
+  },
+  "L7": {
+   "titulo": "Ukrainska Pravda, Ukrainian intelligence shows Russian jet drone components",
+   "url": "https://www.pravda.com.ua/eng/news/2025/09/16/7531118/",
+   "fecha": "2025-09-16",
+   "consultada": "2026-10-02",
+   "tipo": "prensa_tecnica",
+   "prioridad": "normal",
+   "notas": "Reproduce entre comillas el comunicado de la inteligencia militar ucraniana (HUR) sobre el Geran-3 serie U."
+  },
+  "L8": {
+   "titulo": "War&Sanctions, noticias del portal (11.11.2024 Parodya; 18.11.2024 Gerbera)",
+   "url": "https://war-sanctions.gur.gov.ua/en/news?page=20&per-page=6",
+   "fecha": "2024-11-18",
+   "consultada": "2026-10-02",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Paginación variable: el 2026-10-02 las dos noticias aparecen en la página 20."
+  },
+  "L9": {
+   "titulo": "Forbes (Vikram Mittal), The Liutyi Drone: Ukraine’s Response To Russia’s Shaheds",
+   "url": "https://www.forbes.com/sites/vikrammittal/2025/08/04/the-liutyi-drone-ukraines-response-to-russias-shaheds/",
+   "fecha": "2025-08-04",
+   "consultada": "2026-10-02",
+   "tipo": "prensa_tecnica",
+   "prioridad": "normal",
+   "notas": "Es la fuente 'forbes' del borrador (fechada allí 03-08-2025). La página viva bloquea con captcha; texto verificado en Internet Archive. No es ficha oficial; no cita fuente técnica concreta. Existe traducción en forbes.es del 2025-08-05."
+  },
+  "L10": {
+   "titulo": "Euromaidan Press, Ukraine’s Liutyi drone warhead grew by 50%—at the cost of 400 km of range",
+   "url": "https://euromaidanpress.com/2025/08/09/ukraine-liutyi-drone-warhead-50-percent-growth/",
+   "fecha": "2025-08-09",
+   "consultada": "2026-10-02",
+   "tipo": "prensa_tecnica",
+   "prioridad": "normal",
+   "notas": "Prensa; no cita ficha oficial."
+  },
+  "L11": {
+   "titulo": "EDR Magazine, Eurosatory 2026 - Fire Point lights up the sky over Moscow",
+   "url": "https://www.edrmagazine.eu/eurosatory-2026-fire-point-lights-up-the-sky-over-moscow",
+   "fecha": "2026-06-19",
+   "consultada": "2026-10-02",
+   "tipo": "prensa_tecnica",
+   "prioridad": "normal",
+   "notas": "Crónica del stand del fabricante Fire Point en Eurosatory 2026; cifras atribuibles a la información presentada por el fabricante."
+  },
+  "L12": {
+   "titulo": "Ukrainska Pravda (vía Yahoo News), Ministry of Strategic Industries presents FP-1 long-range drone flying up to 1600 km",
+   "url": "https://www.yahoo.com/news/ministry-strategic-industries-presents-fp-165400224.html",
+   "fecha": "2025-05-06",
+   "consultada": "2026-10-02",
+   "tipo": "prensa_tecnica",
+   "prioridad": "normal",
+   "notas": "Cifras tomadas del panel expuesto en la presentación del Ministerio de Industrias Estratégicas (fuente: Mezha/Oboronka)."
+  },
+  "L13": {
+   "titulo": "New Voice of Ukraine (NV), Inside Ukrainian UJ-26 Bober drone used to target Moscow",
+   "url": "https://english.nv.ua/nation/uj-26-bober-the-drone-hitting-deep-inside-russia-50619436.html",
+   "fecha": "2026-06-26",
+   "consultada": "2026-10-02",
+   "tipo": "prensa_tecnica",
+   "prioridad": "normal",
+   "notas": "Es la fuente 'english.nv' del borrador (fechada allí 25-06-2026). La tabla de características no atribuye las cifras a la HUR ni al fabricante; la HUR solo se cita sobre el empleo."
+  },
+  "L14": {
+   "titulo": "АрміяInform, Вітчизняний виробник розробив багатоцільовий БПЛА, здатний виконувати польоти за будь-якої погоди",
+   "url": "https://armyinform.com.ua/2021/06/17/vitchyznyanyj-vyrobnyk-rozrobyv-bagatoczilovyj-bpla-zdatnyj-vykonuvaty-poloty-za-bud-yakoyi-pogody/",
+   "fecha": "2021-06-17",
+   "consultada": "2026-10-02",
+   "tipo": "prensa_tecnica",
+   "prioridad": "normal",
+   "notas": "Agencia de información del Ministerio de Defensa de Ucrania; reproduce las características presentadas por el fabricante UKRJET en «Зброя та безпека — 2021». Página viva inaccesible desde aquí; verificada en Internet Archive."
+  },
+  "L15": {
+   "titulo": "The War Zone (TWZ), Ukrainian Drone Gets Within 70 Miles Of Moscow",
+   "url": "https://www.twz.com/ukrainian-drone-gets-within-70-miles-of-moscow",
+   "fecha": "2023-02-28",
+   "consultada": "2026-10-02",
+   "tipo": "prensa_tecnica",
+   "prioridad": "normal",
+   "notas": "Cita expresamente la web del fabricante UKRJET."
+  },
+  "L16": {
+   "titulo": "Вікна (vikna.tv), Безпілотники атакували Москву. Що відомо про БпЛА UJ-22 Airborne — характеристики",
+   "url": "https://vikna.tv/dlia-tebe/vijna-v-ukrayini/dron-uj-22-airborne-harakterystyky-ta-dalnist-polotu-droniv-yaki-atakuvaly-moskvu/",
+   "fecha": "2023-05-30",
+   "consultada": "2026-10-02",
+   "tipo": "prensa_tecnica",
+   "prioridad": "normal",
+   "notas": "Atribuye la tabla de características a Militarnyi."
+  },
+  "L17": {
+   "titulo": "GlobalSecurity, Tu-141 Strizh",
+   "url": "https://www.globalsecurity.org/military/world/russia/tu-141.htm",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "analisis_tecnico",
+   "prioridad": "normal",
+   "notas": "Base histórica secundaria sin fecha (es la fuente 'globalsecurity' del borrador)."
+  },
+  "L20": {
+   "titulo": "War&Sanctions, noticias del portal (03.03.2025: antena CRP circular del GERAN-2)",
+   "url": "https://war-sanctions.gur.gov.ua/en/news?page=18&per-page=6",
+   "fecha": "2025-03-03",
+   "consultada": "2026-10-02",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Paginación variable: el 2026-10-02 la noticia aparece en la página 18."
+  },
+  "M1": {
+   "titulo": "War&Sanctions, Orion",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/291",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Página marcada «Updated: 04.05.2026» (el borrador decía 09-06-2025). Ficha de características declaradas; la cita une la etiqueta y el valor de la tabla, que la página muestra en líneas separadas."
+  },
+  "M2": {
+   "titulo": "War&Sanctions, ORION UAV system (componentes extranjeros)",
+   "url": "https://war-sanctions.gur.gov.ua/en/page-orion",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Segunda página del mismo catálogo; su bloque «Specifications» coincide con uav/291. Lista componentes (motor APD 115T, módem satelital BSM, antena adaptativa Comet A-8 OTK, luces de navegación, designador láser LCD-50)."
+  },
+  "M3": {
+   "titulo": "War&Sanctions, Forpost-R",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/281",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Página marcada «Updated: 04.05.2026» (el borrador decía 13-01-2025). Ficha de características declaradas; la cita une la etiqueta y el valor de la tabla, que la página muestra en líneas separadas."
+  },
+  "M4": {
+   "titulo": "Baykar, Bayraktar AKINCI",
+   "url": "https://baykartech.com/en/uav/bayraktar-akinci/",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "fabricante",
+   "prioridad": "normal"
+  },
+  "P1": {
+   "titulo": "Institute for Science and International Security, Russian Decoy Drones that Depend on Western Parts Pose a Great Challenge to Ukrainian Defenses",
+   "url": "https://isis-online.org/isis-reports/russian-decoy-drones-that-depend-on-western-parts-pose-a-great-challenge/",
+   "fecha": "2024-12-18",
+   "consultada": "2026-10-02",
+   "tipo": "analisis_tecnico",
+   "prioridad": "normal"
+  },
+  "P2": {
+   "titulo": "AmalNews (amalantra.ru), Приманка с крыльями: дрон «Пародия» против высокотехнологичных систем ПВО",
+   "url": "https://amalantra.ru/dron-parodiya/",
+   "fecha": "2025-05-02",
+   "consultada": "2026-10-02",
+   "tipo": "estimacion_osint",
+   "prioridad": "baja",
+   "notas": "baja prioridad. Medio ruso; las cifras se presentan como estimaciones ('оценивается') o 'согласно открытым данным' sin fuente técnica."
+  },
+  "P3": {
+   "titulo": "Covert Shores (H I Sutton), Deceptively Simple: Ukraine's Decoy Drone",
+   "url": "https://www.hisutton.com/Ukraine-Decoy-UAV.html",
+   "fecha": "2024-10-24",
+   "consultada": "2026-10-02",
+   "tipo": "estimacion_osint",
+   "prioridad": "normal",
+   "notas": "El artículo trata del señuelo ucraniano; sobre la Parodiya solo da una frase cualitativa, sin cifras."
+  },
+  "S1": {
+   "titulo": "Skydio X10 | Skydio",
+   "url": "https://www.skydio.com/x10",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Las cifras de la cabecera (mph, min) se cargan por script y no aparecen en el HTML; se han tomado de S2/S3."
+  },
+  "S2": {
+   "titulo": "Skydio X10 Technical Specs",
+   "url": "https://www.skydio.com/x10/technical-specs",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "fabricante",
+   "prioridad": "normal"
+  },
+  "S3": {
+   "titulo": "Skydio X10 Data Sheet (PDF)",
+   "url": "https://pages.skydio.com/rs/784-TUF-591/images/X10_Data%20Sheet_Digital_10_09_2023.pdf",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "El nombre del fichero indica 10_09_2023; el documento no da fecha."
+  },
+  "S4": {
+   "titulo": "How to fly Skydio X10 at night (Skydio Support)",
+   "url": "https://support.skydio.com/hc/en-us/articles/21479288051867-How-to-fly-Skydio-X10-at-night",
+   "fecha": "2023-12-22",
+   "consultada": "2026-10-02",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Actualizado 2026-08-05. La página web devuelve 403; leída por la API oficial del centro de ayuda (support.skydio.com/api/v2/help_center/en-us/articles/21479288051867.json)."
+  },
+  "S5": {
+   "titulo": "What do the lights on Skydio X10 indicate? (Skydio Support)",
+   "url": "https://support.skydio.com/hc/en-us/articles/22823144002971-What-do-the-lights-on-Skydio-X10-indicate",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "fabricante",
+   "prioridad": "normal"
+  },
+  "T1": {
+   "titulo": "War&Sanctions, Orlan-30",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/406",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Página marcada «Updated: 04.05.2026» (el borrador decía 09-06-2025). Ficha de características declaradas; la cita une la etiqueta y el valor de la tabla, que la página muestra en líneas separadas."
+  },
+  "T2": {
+   "titulo": "War&Sanctions, Supercam S350",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/217",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Página marcada «Updated: 04.05.2026». Ficha de características declaradas; la cita une la etiqueta y el valor de la tabla, que la página muestra en líneas separadas."
+  },
+  "T3": {
+   "titulo": "War&Sanctions, Zala Z-16 (421-16E)",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/272",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Página marcada «Updated: 04.05.2026». Ficha de características declaradas; la cita une la etiqueta y el valor de la tabla, que la página muestra en líneas separadas."
+  },
+  "T4": {
+   "titulo": "War&Sanctions, Izdeliye-51 (Lancet)",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/365",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Página marcada «Updated: 04.05.2026». Ficha de características declaradas; la cita une la etiqueta y el valor de la tabla, que la página muestra en líneas separadas."
+  },
+  "T5": {
+   "titulo": "War&Sanctions, Izdeliye-52 (Lancet)",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/366",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Página marcada «Updated: 04.05.2026». Ficha de características declaradas; la cita une la etiqueta y el valor de la tabla, que la página muestra en líneas separadas."
+  },
+  "T6": {
+   "titulo": "War&Sanctions, KUB-UAV",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/305",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Página marcada «Updated: 04.05.2026». Ficha de características declaradas; la cita une la etiqueta y el valor de la tabla, que la página muestra en líneas separadas."
+  },
+  "T7": {
+   "titulo": "War&Sanctions, Orlan-10",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/207",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Página marcada «Updated: 04.05.2026». Ficha de características declaradas; la cita une la etiqueta y el valor de la tabla, que la página muestra en líneas separadas."
+  },
+  "T8": {
+   "titulo": "War&Sanctions, componentes: The engine is a single-cylinder, gasoline, four-stroke engine FG-40 (Orlan-10 UAV, June 2022)",
+   "url": "https://war-sanctions.gur.gov.ua/en/components/1744",
+   "fecha": "2024-06-01",
+   "consultada": "2026-10-02",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Componente hallado en un Orlan-10; fabricante Saito (Japón). Otra ficha del mismo catálogo (components/2570) lista «Engine. Saito» en un Orlan-10 de julio de 2022. Fecha: «Publication date 01.06.2024»."
+  },
+  "T9": {
+   "titulo": "War&Sanctions, componentes: GPS module NEO-M8Q-0-10 (UAV Orlan-10, July 2022)",
+   "url": "https://war-sanctions.gur.gov.ua/en/components/2534",
+   "fecha": "2024-06-01",
+   "consultada": "2026-10-02",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Fabricante U-blox (Suiza); bloque «GPS tracker»."
+  },
+  "T10": {
+   "titulo": "War&Sanctions, componentes: Four-element small-sized adaptive antenna array of the series Комета-М-ВТ (UAV Orlan-10, July 2022)",
+   "url": "https://war-sanctions.gur.gov.ua/en/components/2542",
+   "fecha": "2024-06-01",
+   "consultada": "2026-10-02",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Bloque «Navigation and positioning system»; fabricante АО ВНИИР-Прогресс."
+  },
+  "T11": {
+   "titulo": "RUSI, The Orlan Complex: Tracking the Supply Chains of Russia's Most Successful UAV (Byrne, Bronk, Watling y otros)",
+   "url": "https://static.rusi.org/SR-Orlan-complex-web-final.pdf",
+   "fecha": "2022-12-15",
+   "consultada": "2026-10-02",
+   "tipo": "analisis_tecnico",
+   "prioridad": "normal",
+   "notas": "Informe especial; las cifras de velocidad y altitud las toma del Worldwide Equipment Guide del Ejército de EE. UU. (nota 15). Página de presentación: https://www.rusi.org/explore-our-research/publications/special-resources/orlan-complex-tracking-supply-chains-russias-most-successful-uav"
+  },
+  "T12": {
+   "titulo": "Institute for Science and International Security, Russian Military UAV Used in Ukraine Depends on Foreign Parts (Spencer Faragasso)",
+   "url": "https://isis-online.org/isis-reports/russian-military-uav-used-in-ukraine-depends-on-foreign-parts",
+   "fecha": "2022-05-11",
+   "consultada": "2026-10-02",
+   "tipo": "analisis_tecnico",
+   "prioridad": "normal"
+  },
+  "T13": {
+   "titulo": "ZALA Aero, ZALA Z-51E",
+   "url": "https://zala-aero.com/en/product/izdelie-51-2/",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Versión de exportación del Izdeliye-51 (en ruso «Изделие 51Э», https://zala-aero.com/product/izd-51-e/)."
+  },
+  "T14": {
+   "titulo": "ZALA Aero, ZALA Z-52E",
+   "url": "https://zala-aero.com/en/product/izdelie-52/",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Versión de exportación del Izdeliye-52 (en ruso «Изделие 52Э», https://zala-aero.com/product/izdelie-52-e/)."
+  },
+  "T15": {
+   "titulo": "ZALA Aero, ZALA Z-53",
+   "url": "https://zala-aero.com/en/product/izdelie-53/",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "La página no publica cifras de prestaciones (en ruso «Изделие 53», https://zala-aero.com/product/izdelie-53/)."
+  },
+  "T16": {
+   "titulo": "ZALA Aero, ZALA Z-16E",
+   "url": "https://zala-aero.com/en/product/zala-z-16/",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Versión de exportación del Z-16; la versión rusa de la página (https://zala-aero.com/product/zala-z-16-e/) ofrece cargas útiles «для БВС самолетного типа ZALA 421-16E»."
+  },
+  "T17": {
+   "titulo": "Defence24, Kałasznikow zbudował drona-kamikadze",
+   "url": "https://defence24.pl/przemysl/kalasznikow-zbudowal-drona-kamikadze",
+   "fecha": "2019-02-20",
+   "consultada": "2026-10-02",
+   "tipo": "prensa_tecnica",
+   "prioridad": "normal",
+   "notas": "Prensa que atribuye las dimensiones a los materiales oficiales de Kalashnikov presentados en IDEX 2019 («według oficjalnych materiałów»). La web de Kalashnikov no fue accesible (403)."
+  },
+  "T18": {
+   "titulo": "War&Sanctions, Lancet loitering munition (Izdeliye-51), componentes",
+   "url": "https://war-sanctions.gur.gov.ua/en/page-lancet",
+   "fecha": null,
+   "consultada": "2026-10-02",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Repite las especificaciones de uav/365 y lista componentes (cámara, radio módem, sistema de navegación y posicionamiento, módulo Nvidia Jetson TX2)."
+  }
+ }
+}

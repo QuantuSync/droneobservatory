@@ -11,11 +11,12 @@ Formato (versión 1), con los instantes como AAAA-MM-DDThh:mmZ:
     {"version": 1, "inicio", "fin", "resultado": correcta | con_avisos | fallida,
      "ultima_correcta": instante o null, "siguiente",
      "fuentes": [{"id", "estado": leida | con_aviso | no_leida, "ultimo_dato": instante o null}],
-     "ultima_exportacion": instante o null}
+     "ultima_exportacion": instante o null, "ultima_deduccion": instante o null}
 
 ultima_exportacion es la hora en que terminó bien la última exportación semanal para AEGIS
 (recogida/exportacion.py), que la deja escrita en su registro; null si no consta ninguna. Sin
---exportacion el campo no va.
+--exportacion el campo no va. ultima_deduccion es la hora de la última ejecución correcta del
+motor de deducción (recogida/deduccion.py), del registro que deja; sin --deduccion no va.
 
 Las fuentes van siempre todas y en este orden: fuerza_aerea_ua, mindef_ru, gdelt, oficiales,
 extractor, firms, las oficiales de detalle (recogida/detalle.py): airprox, parlamentos,
@@ -31,7 +32,7 @@ en trafico_aereo, la hora en que terminó de procesarse el último día del arch
 en condiciones, la de la última petición correcta a Open-Meteo o al IEM.
 
 Uso: python -m recogida.estado --inicio <ISO> --codigo <N> --parcial <json> --anterior <json>
-    --salida <json> --minuto <minuto de la recogida> [--exportacion <json>]
+    --salida <json> --minuto <minuto de la recogida> [--exportacion <json>] [--deduccion <json>]
 """
 
 import argparse
@@ -118,6 +119,8 @@ def componer(
     minuto: int,
     exportacion: dict[str, Any] | None = None,
     con_exportacion: bool = False,
+    deduccion: dict[str, Any] | None = None,
+    con_deduccion: bool = False,
 ) -> dict[str, Any]:
     fallo = resultado(codigo)
     ultima = instante(fin) if fallo == CORRECTA else (anterior or {}).get("ultima_correcta")
@@ -132,6 +135,8 @@ def componer(
     }
     if con_exportacion:
         estado["ultima_exportacion"] = (exportacion or {}).get("fin")
+    if con_deduccion:
+        estado["ultima_deduccion"] = (deduccion or {}).get("ultima_correcta")
     return estado
 
 
@@ -154,11 +159,13 @@ def principal(argumentos: list[str] | None = None) -> int:
     opciones.add_argument("--salida", type=Path, required=True)
     opciones.add_argument("--minuto", type=int, required=True)
     opciones.add_argument("--exportacion", type=Path, help="registro de la exportación semanal")
+    opciones.add_argument("--deduccion", type=Path, help="registro del motor de deducción")
     args = opciones.parse_args(argumentos)
     inicio = leer_instante(args.inicio) or datetime.now(UTC)
     estado = componer(
         inicio, datetime.now(UTC), args.codigo, _leer(args.parcial), _leer(args.anterior),
         args.minuto, _leer(args.exportacion), args.exportacion is not None,
+        _leer(args.deduccion), args.deduccion is not None,
     )  # fmt: skip
     args.salida.write_text(json.dumps(estado, ensure_ascii=False) + "\n", encoding="utf-8")
     return 0

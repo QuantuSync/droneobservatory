@@ -38,7 +38,8 @@ En `/home/eodi`:
   - `despliegue_web`: clave de despliegue con escritura solo en `droneobservatory`, para
     publicar los ficheros de la web;
   - `known_hosts`: la clave de host publicada por GitHub;
-  - `exportacion.json`: la última exportación semanal correcta (versión, hora y huella).
+  - `exportacion.json`: la última exportación semanal correcta (versión, hora y huella);
+  - `deduccion.json`: la última ejecución correcta del motor de deducción.
 - `datos/detalle/`, con permisos 700 y propiedad de `eodi`: lo que descargan las fuentes
   oficiales de detalle (apartado «Fuentes oficiales de detalle»).
 - `datos/guerra/`, con permisos 700 y propiedad de `eodi`: lo que guarda el lector de canales
@@ -61,6 +62,10 @@ En `/home/eodi`:
   (apartado «Búsqueda dirigida de noticias»): `anomalias.json` (lo que falta buscar, lo
   escribe la recogida horaria), `dias/<AAAA-MM-DD>.jsonl.gz` (todos los titulares con dron de
   ese día leídos de GDELT, para no volver a bajarlos) y `hallados/<anomalía>.json`.
+- `datos/deduccion/`, con permisos 700 y propiedad de `eodi`: lo que calcula el motor de
+  deducción (apartado «Motor de deducción»): `resultados.jsonl.gz`, `control.json`,
+  `validacion.json`, `horizontes.json` y las teselas de Copernicus DEM GLO-90 (`dem/`). Todo
+  se puede volver a calcular.
 
 Las dos claves de despliegue se generan en el servidor y la privada no sale de él. En
 GitHub figuran en cada repositorio con el título «servidor eodi-recogida».
@@ -229,6 +234,46 @@ journalctl -u eodi-calidad -n 60
 sudo -u eodi cat /home/eodi/calidad-informe.json | head
 ```
 
+## Motor de deducción
+
+Informe: [`informe_deduccion.md`](informe_deduccion.md). Para cada incidente europeo, cada
+impacto con lugar de la capa de guerra (sin los partes diarios ni los FPV de la línea del
+frente) y cada ataque, qué clases de dron son compatibles, cuáles quedan descartadas y por
+qué, con reglas físicas sobre el catálogo de prestaciones (`configuracion/catalogo_drones.json`).
+En dos tiempos:
+
+1. **Cálculo.** `eodi-deduccion.timer` lanza `eodi-deduccion.service` en el minuto 5 de cada
+   hora (`Nice=15`, E/S en reposo, tope de 50 minutos). La unidad ejecuta
+   [`servidor/deduccion.sh`](../servidor/deduccion.sh), que toma su propio cerrojo
+   (`deduccion.lock`; si el cálculo anterior sigue, este no se lanza) y ejecuta
+   `python -m recogida.deduccion calcular` con el código del clon tal como lo dejó la última
+   recogida. Descarga la base de la rama `estado` solo para leerla (no toma el cerrojo de la
+   recogida horaria: un clon es atómico, como mucho lee la versión anterior), recalcula solo
+   lo que ha cambiado (cada caso lleva la huella de sus datos y de la versión del motor, de
+   cada regla, del catálogo y de las zonas: al subir una versión se recalcula todo) y deja
+   los resultados en `datos/deduccion/`. La validación pide a Open-Meteo, con la caché común
+   y un tope de 100 llamadas por ejecución, el tiempo de los casos que no están en la base. El
+   horizonte de radar descarga de AWS las teselas de Copernicus DEM que necesita (como mucho
+   150 nuevas por ejecución). Si termina bien, deja la hora en `/home/eodi/.eodi/deduccion.json`.
+2. **Incorporación.** La recogida horaria, con su cerrojo, guarda en la tabla `deducciones` lo
+   que ha cambiado, en segundos, y el resumen de la validación en el cursor `deduccion`. Un
+   fallo ahí queda en el diario y no cambia el resultado de la recogida.
+
+`estado.json` lleva `ultima_deduccion` (la última ejecución correcta, del registro), que la
+web acepta sin mostrarla. Un fallo del motor no rompe la recogida horaria: la base sigue con
+lo último que se incorporó.
+
+Órdenes, como `operador`:
+
+```
+systemctl list-timers eodi-deduccion.timer
+journalctl -u eodi-deduccion.service -n 40          # recuentos, duración, teselas, validación
+sudo systemctl start eodi-deduccion.service         # un cálculo ahora (incremental)
+sudo systemd-run --unit=eodi-deduccion-todo --uid=eodi --gid=eodi \
+  /usr/bin/env bash /home/eodi/droneobservatory/servidor/deduccion.sh --todo
+sudo -u eodi cat /home/eodi/datos/deduccion/control.json
+```
+
 ## Secretos en local
 
 En `%USERPROFILE%\.eodi\`, fuera de cualquier repositorio:
@@ -265,7 +310,7 @@ El script:
    repositorios por las del servidor;
 5. activa los temporizadores de la recogida horaria, de la exportación semanal, de las
    fuentes oficiales de detalle, del lector de canales de la capa de guerra, del procesado de
-   adsb.lol y de la búsqueda dirigida de noticias.
+   adsb.lol, de la búsqueda dirigida de noticias y del motor de deducción.
 
 Puede repetirse sobre un servidor que ya existe: deja igual lo que ya está y vuelve a
 aplicar la configuración. Para empezar de verdad desde cero se borra antes el servidor:
@@ -300,7 +345,8 @@ que terminó de procesarse el último día del archivo de adsb.lol (con aviso si
 horas sin procesar ninguno); en `condiciones`, la de la última petición correcta a Open-Meteo
 o al IEM.
 Lleva también `ultima_exportacion`: la hora en que terminó la última exportación semanal
-correcta (o null si no consta ninguna), del registro que deja la exportación.
+correcta (o null si no consta ninguna), del registro que deja la exportación, y
+`ultima_deduccion`: la de la última ejecución correcta del motor de deducción.
 No lleva ningún contenido. La recogida deja el estado de cada fuente en un fichero
 temporal (`recogida.horaria --estado`). El último estado publicado se guarda en
 `/home/eodi/.eodi/estado.json`, de donde sale la hora de la última recogida correcta.

@@ -385,6 +385,7 @@ def incidente_completo() -> Documento:
             "vocabulario_aegis": {"tipo": "airport_disruption"},
             "distancia_instalaciones_km": 12.5,
         },
+        "deduccion": deduccion_completa(),
         # Lo añade la exportación semanal; la base no lo guarda.
         "procedencia": {
             "drones.numero": {
@@ -491,6 +492,7 @@ def ataque_completo() -> Documento:
             }
         ],
         "restricciones_aeropuertos": {"aeropuertos": 2, "horas": 10.9},
+        "deduccion": deduccion_completa(),
         "procedencia": {"derribados": {"origen": "oficial", "metodo": "parser", "fuentes": ["P1"]}},
         "control": {
             "alta": instante("2025-10-06T06:35Z"),
@@ -655,4 +657,109 @@ def restriccion() -> Documento:
         "fuente_inicio": "https://t.me/favt_info/8287",
         "fuente_fin": "https://t.me/favt_info/8289",
         "emparejado": "respuesta",
+    }
+
+
+def deduccion() -> Documento:
+    """Lo que deja el motor de deducción para un incidente (origen deducido, interno)."""
+    return {
+        "origen": "deducido",
+        "metodo": "regla",
+        "version_motor": "1.0.0",
+        "version_catalogo": "1.0.0",
+        "version_zonas": "1.0.0",
+        "reglas": [{"nombre": "distancia", "version": "1.0.0"}],
+        "compatibles": [{"clase": "multirrotor_consumo", "reglas": ["meteorologia"]}],
+        "descartadas": [
+            {
+                "clase": "multirrotor_consumo_sub250",
+                "por": [
+                    {
+                        "regla": "meteorologia",
+                        "version": "1.0.0",
+                        "efecto": "descarta",
+                        "motivo": "viento por encima de su límite",
+                        "datos": {"viento_banda_ms": 18.0},
+                    }
+                ],
+            }
+        ],
+        "indeterminadas": [{"clase": "fpv", "motivo": "sin_datos"}],
+        "conflictos": [],
+        "conclusiones": [],
+        "huella": "a" * 64,
+        "evaluado": {"precision": "minuto", "valor": "2025-09-23T10:00Z"},
+    }
+
+
+def _evidencia(efecto: str) -> Documento:
+    return {
+        "regla": "distancia",
+        "version": "1.0.0",
+        "efecto": efecto,
+        "motivo": "prueba",
+        "datos": {"distancia_km": 12.0},
+    }
+
+
+def deduccion_completa() -> Documento:
+    """Bloque del motor de deducción con todos sus campos (internos) rellenos."""
+    return {
+        **deduccion(),
+        "compatibles": [
+            {
+                "clase": "multirrotor_consumo",
+                "reglas": ["distancia"],
+                "impactos": 2,
+                "condiciones": [_evidencia("condicion")],
+                "indicios": [_evidencia("a_favor")],
+                "anotaciones": [_evidencia("anotacion")],
+            }
+        ],
+        "indeterminadas": [
+            {
+                "clase": "fpv",
+                "motivo": "conflicto",
+                "indicios": [_evidencia("a_favor")],
+                "anotaciones": [_evidencia("anotacion")],
+            }
+        ],
+        "conflictos": [
+            {
+                "clase": "fpv",
+                "motivo": "conflicto",
+                "descartan": [_evidencia("descarta")],
+                "apoyan": [_evidencia("a_favor")],
+            }
+        ],
+        "conclusiones": [
+            {
+                "regla": "distancia",
+                "version": "1.0.0",
+                "conclusion": "despegue_cercano_o_largo_alcance",
+                "datos": {"exterior_km": 40.0},
+            }
+        ],
+        "exterior": {
+            "tierra_extranjera_km": 16.1,
+            "pais_extranjero": "SE",
+            "costa_km": 0.0,
+            "aguas_internacionales_km": 22.2,
+        },
+        "gnss": "media",
+        "origenes": [{"zona": "kursk_khalino", "distancia_km": 120.5}],
+        "alcance_exigido_km": 120.5,
+        "zona_despegue": {
+            "regla": "zona_despegue",
+            "version": "1.0.0",
+            "clases": [{"clase": "multirrotor_consumo", "radio_km": 41.0}],
+        },
+        "deriva": {
+            "regla": "deriva",
+            "version": "1.0.0",
+            "resultado": "indeterminado",
+            "motivo": "prueba",
+            "datos": {"viento_ms": 1.0},
+        },
+        "horizonte_radar": {"regla": "horizonte_radar", "version": "1.0.0", "sectores": []},
     }

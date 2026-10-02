@@ -180,6 +180,23 @@ BUSQUEDA_TOPE_UNIDAD=50
 # --- Revisión de la calidad de los datos (servidor/calidad.sh) -------------------------
 CALIDAD_INFORME="$CASA/calidad-informe.json"
 
+# --- Motor de deducción (servidor/deduccion.sh, recogida/deduccion.py) -----------------
+# Resultados, relieve de Copernicus DEM y validación, fuera del repositorio y de la base: la
+# recogida horaria los guarda en la base.
+DEDUCCION_DATOS="${EODI_DEDUCCION_DATOS:-$CASA/datos/deduccion}"
+UNIDAD_DEDUCCION="eodi-deduccion"
+# Minuto 5: tras arrancar la búsqueda dirigida (2), con la base que subió la recogida horaria
+# anterior (17); el lector de la capa de guerra (50) ha terminado y el cálculo de FIRMS (12) y la
+# recogida siguiente quedan lejos para una pasada incremental, que tarda un minuto.
+MINUTO_DEDUCCION=5
+# Una pasada incremental tarda segundos; una completa, unos minutos (más la primera descarga del
+# relieve). El tope es la última red.
+TOPE_DEDUCCION_MINUTOS=50
+DEDUCCION_NICE=15
+CERROJO_DEDUCCION="$SECRETOS/deduccion.lock"
+# Última ejecución correcta del motor: la lee estado.json (ultima_deduccion).
+DEDUCCION_REGISTRO="$SECRETOS/deduccion.json"
+
 # --- Endurecimiento ------------------------------------------------------------------
 # Reinicio tras una actualización de seguridad que lo pida: de madrugada y a los 28
 # minutos del lanzamiento de las 04:17, cuando hasta la recogida más lenta ha terminado.

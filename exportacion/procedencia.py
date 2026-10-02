@@ -116,8 +116,10 @@ META_INCIDENTE = frozenset({
     "id", "titulo", "fuentes", "afirmaciones", "afirmaciones_publicas", "control",
     "procedencia", "nivel_detalle", "indicadores", "fusionado_en", "retirado", "episodio",
     "encuentros",
+    "deduccion",
 })  # fmt: skip
-META_ATAQUE = frozenset({"id", "fuentes", "afirmaciones", "control", "procedencia"})
+# deduccion: lo deducido va aparte, con su propia procedencia (procedencia_deduccion).
+META_ATAQUE = frozenset({"id", "fuentes", "afirmaciones", "control", "procedencia", "deduccion"})
 # Bloques de mediciones físicas, con origen medido y método regla.
 MEDICIONES = frozenset({"trafico_aereo", "condiciones"})
 # Nodos que se tratan como un solo valor.
@@ -608,12 +610,37 @@ def indicadores(documento: Documento) -> Documento:
     }
 
 
+def procedencia_deduccion(deduccion: Documento) -> Documento:
+    """Lo que deduce el motor de deducción: origen deducido, método regla, con su versión. Va
+    aparte de lo medido y de lo oficial y no cuenta para el nivel de detalle."""
+    return {
+        "origen": DEDUCIDO, "metodo": REGLA, "fuentes": [],
+        "regla": {"nombre": "motor_deduccion", "version": deduccion["version_motor"]},
+    }  # fmt: skip
+
+
+def _sin_deduccion(documento: Documento) -> tuple[Documento, Documento | None]:
+    deduccion = documento.get("deduccion")
+    if deduccion is None:
+        return documento, None
+    return {k: v for k, v in documento.items() if k != "deduccion"}, deduccion
+
+
+def _con_deduccion(exportado: Documento, deduccion: Documento | None) -> Documento:
+    if deduccion is None:
+        return exportado
+    procedencia = {**exportado["procedencia"], "deduccion": procedencia_deduccion(deduccion)}
+    return {**exportado, "deduccion": deduccion, "procedencia": dict(sorted(procedencia.items()))}
+
+
 def exportar_incidente(documento: Documento, fichas: Fichas) -> Documento:
+    documento, deduccion = _sin_deduccion(documento)
     exportado, procedencia = procedencia_incidente(documento, fichas)
     exportado["procedencia"] = procedencia
+    # El nivel de detalle no cambia por tener deducción: se calcula sin ella.
     exportado["nivel_detalle"] = nivel_detalle(exportado, procedencia)
     exportado["indicadores"] = indicadores(exportado)
-    return exportado
+    return _con_deduccion(exportado, deduccion)
 
 
 # --- Capa de Ucrania -----------------------------------------------------------------
@@ -679,13 +706,15 @@ def procedencia_region(region: Documento, del_ataque: Documento) -> Documento:
 
 
 def exportar_ataque(documento: Documento) -> Documento:
-    return {**documento, "procedencia": procedencia_ataque(documento)}
+    documento, deduccion = _sin_deduccion(documento)
+    return _con_deduccion({**documento, "procedencia": procedencia_ataque(documento)}, deduccion)
 
 
 # --- Capa de guerra con lugar ----------------------------------------------------------
 
 META_IMPACTO = frozenset({
     "id", "tipo", "fuentes", "lecturas", "control", "procedencia", "fusionado_en", "retirado",
+    "deduccion",
 })  # fmt: skip
 # Valores que calcula el código: el enlace con el ataque, la región (la del lugar), la
 # credibilidad y la marca de reivindicación (de las fuentes y el foco).
@@ -732,7 +761,8 @@ def procedencia_impacto(documento: Documento) -> Documento:
 
 
 def exportar_impacto(documento: Documento) -> Documento:
-    return {**documento, "procedencia": procedencia_impacto(documento)}
+    documento, deduccion = _sin_deduccion(documento)
+    return _con_deduccion({**documento, "procedencia": procedencia_impacto(documento)}, deduccion)
 
 
 # Rosaviatsia, agencia federal: lo que anuncia es oficial; el enlace con el ataque, regla.

@@ -677,7 +677,8 @@ def test_la_fecha_de_publicacion_abre_la_ventana_de_trafico_y_de_firms_a_la_visp
 
 
 def test_esquema_1_6_0_con_el_origen_del_inicio() -> None:
-    assert VERSION == "1.6.0"
+    # 1.6.0 o posterior de la misma mayor (el motor de deducción subió a 1.7.0).
+    assert tuple(int(x) for x in VERSION.split(".")) >= (1, 6, 0)
     documento = ejemplos.incidente_minimo()
     documento["tiempo"]["origen_inicio"] = {"tipo": "publicacion", "motivo": "x", "corregido": True}
     assert validador(Esquema.INCIDENTE).is_valid(documento)
@@ -699,7 +700,8 @@ def test_el_vocabulario_describe_cada_indicador_y_cada_origen_del_inicio() -> No
     from exportacion import semanal
 
     vocabulario = semanal.vocabulario()
-    assert vocabulario["version"] == "1.2.0" and semanal.VERSION_FORMATO == "1.2.0"
+    # 1.2.0 o posteriores (el motor de deducción subió los dos a 1.3.0).
+    assert vocabulario["version"] >= "1.2.0" and semanal.VERSION_FORMATO >= "1.2.0"
     assert set(vocabulario["indicadores"]) == set(exportar(de_prensa())["indicadores"])
     assert set(vocabulario["origenes_inicio"]) == {
         "explicita", "relativa", "oficial", "parte", "publicacion",

@@ -22,7 +22,7 @@ TABLAS_CON_HISTORIAL = (
     "incidentes", "fuentes", "episodios", "ataques_ucrania", "regiones_ucrania", "focos_termicos",
     "encuentros", "estadisticas_oficiales", "documentos_oficiales",
     "impactos_guerra", "restricciones_aeropuertos",
-    "trafico_aereo", "condiciones", "anomalias_trafico",
+    "trafico_aereo", "condiciones", "anomalias_trafico", "deducciones",
 )  # fmt: skip
 # Campos de la fuente que dependen del incidente y no se guardan en la tabla común.
 CAMPOS_FUENTE_POR_ENTIDAD = frozenset({"credibilidad", "campos_respaldados"})
@@ -226,6 +226,15 @@ CREATE TABLE IF NOT EXISTS anomalias_trafico (
     documento TEXT NOT NULL CHECK (json_valid(documento))
 );
 CREATE INDEX IF NOT EXISTS anomalias_trafico_dia ON anomalias_trafico (dia);
+-- Motor de deducción (proceso/deduccion): por incidente, impacto con lugar o ataque, las clases
+-- de dron compatibles, descartadas e indeterminadas con las reglas que lo deciden. Origen
+-- deducido, interno. Lo calcula el servicio del motor fuera de la base; la recogida horaria lo
+-- guarda aquí (recogida/deduccion.py). Documento con historial.
+CREATE TABLE IF NOT EXISTS deducciones (
+    id TEXT PRIMARY KEY,
+    tipo TEXT NOT NULL,
+    documento TEXT NOT NULL CHECK (json_valid(documento))
+);
 CREATE TABLE IF NOT EXISTS cobertura_trafico (
     oaci TEXT NOT NULL,
     dia TEXT NOT NULL,
@@ -678,6 +687,22 @@ class Almacen:
         filas = self._conexion.execute(
             "SELECT id, documento FROM condiciones ORDER BY id"
         ).fetchall()
+        return {id_: json.loads(documento) for id_, documento in filas}
+
+    def guardar_deduccion(self, entidad_id: str, tipo: str, documento: Documento) -> bool:
+        """Guarda lo deducido de una entidad si ha cambiado algo más que la hora."""
+        self._validar("deduccion", documento)
+        return self._guardar_medicion("deducciones", entidad_id, documento, {"tipo": tipo})
+
+    def deducciones(self, tipo: str | None = None) -> dict[str, Documento]:
+        sql = "SELECT id, documento FROM deducciones ORDER BY id"
+        parametros: tuple[str, ...] = ()
+        if tipo is not None:
+            sql, parametros = (
+                "SELECT id, documento FROM deducciones WHERE tipo = ? ORDER BY id",
+                (tipo,),
+            )
+        filas = self._conexion.execute(sql, parametros).fetchall()
         return {id_: json.loads(documento) for id_, documento in filas}
 
     def guardar_anomalia(self, documento: Documento) -> bool:

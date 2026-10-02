@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:eodi:exportacion:1.3.0:deduccion_validacion",
+  "title": "Resumen de la validación del motor de deducción (deduccion_validacion.json)",
+  "description": "Métricas de la última ejecución correcta del motor de deducción (recogida/deduccion.py): casos de modelo conocido (configuracion/validacion_deduccion.json) con aciertos (la clase real queda compatible), fallos graves (la clase real queda descartada) e indeterminados; coherencia con los encuentros de la UK Airprox Board; y poder de descarte por tipo de caso (en cuántos se descarta al menos una clase y cuántas quedan compatibles de media). Vacío ({}) si el motor aún no ha dejado ninguna.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "ultima_correcta": {"type": ["string", "null"]},
+    "version_motor": {"type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$"},
+    "version_catalogo": {"type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$"},
+    "validacion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["casos", "evaluados", "aciertos", "fallos_graves", "indeterminados"],
+      "properties": {
+        "casos": {"type": "integer", "minimum": 0},
+        "evaluados": {"type": "integer", "minimum": 0},
+        "aciertos": {"type": "integer", "minimum": 0},
+        "fallos_graves": {"type": "integer", "minimum": 0},
+        "indeterminados": {"type": "integer", "minimum": 0},
+        "en_la_base": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}}
+      }
+    },
+    "airprox": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+    "poder_de_descarte": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["casos", "con_descarte", "compatibles_media"],
+        "properties": {
+          "casos": {"type": "integer", "minimum": 0},
+          "con_descarte": {"type": "integer", "minimum": 0},
+          "con_conflicto": {"type": "integer", "minimum": 0},
+          "sin_ninguna_compatible": {"type": "integer", "minimum": 0},
+          "compatibles_media": {"type": ["number", "null"]}
+        }
+      }
+    }
+  }
+}

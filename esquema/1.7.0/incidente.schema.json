@@ -1,0 +1,337 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:eodi:esquema:1.7.0:incidente",
+  "title": "Incidente",
+  "description": "Ficha de un incidente con drones fuera de la capa de Ucrania. Cada campo declara su visibilidad en x-visibilidad.",
+  "x-version": "1.7.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "tipo", "estado", "titulo", "tiempo", "lugar", "fuentes", "control"],
+  "properties": {
+    "id": {"x-visibilidad": "publico", "type": "string", "pattern": "^EODI-\\d{4}-\\d{5}$"},
+    "tipo": {
+      "x-visibilidad": "publico",
+      "description": "Tipo principal. Si hay interrupción de aeropuerto manda ese tipo; es incursión cuando un dron militar o estatal entra desde fuera y lo demuestra una autoridad o una prueba física; sin origen demostrado nunca es incursión.",
+      "enum": ["incursion", "interrupcion_aeroportuaria", "sobrevuelo"]
+    },
+    "estado": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.7.0:comun#/$defs/estado_historial"},
+    "titulo": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.7.0:comun#/$defs/titulo"},
+    "episodio": {"x-visibilidad": "publico", "type": "string", "pattern": "^EODI-EP-\\d{4}-\\d{4}$"},
+    "presencia_dron": {
+      "x-visibilidad": "publico",
+      "description": "Si se sabe que había un dron: confirmada (restos, rastreo por radar o una autoridad que lo afirma expresamente), no_confirmada (solo avistamientos) o descartada. Independiente del estado: un cierre confirmado no implica dron confirmado.",
+      "enum": ["confirmada", "no_confirmada", "descartada"]
+    },
+    "fusionado_en": {
+      "x-visibilidad": "interno",
+      "description": "Incidente en el que se ha fundido este. No se publica; la fusión se revierte quitando el campo.",
+      "type": "string",
+      "pattern": "^EODI-\\d{4}-\\d{5}$"
+    },
+    "origen_demostrado_por": {
+      "x-visibilidad": "interno",
+      "description": "Qué demuestra la incursión: una autoridad, el rastreo por radar o una prueba física del propio dron. Obligatorio para el tipo incursión.",
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"enum": ["autoridad", "rastreo", "restos", "explosion", "caida", "derribo", "recuperado"]}
+    },
+    "pruebas": {
+      "x-visibilidad": "interno",
+      "description": "Lo que dicen las fuentes del dron y de su entrada, de lo que salen el tipo y la presencia del dron.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dron_estatal", "entrada_exterior", "evidencia"],
+      "properties": {
+        "dron_estatal": {"x-visibilidad": "interno", "type": "boolean"},
+        "entrada_exterior": {"x-visibilidad": "interno", "type": "boolean"},
+        "evidencia": {
+          "x-visibilidad": "interno",
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"enum": ["rastreo", "restos", "explosion", "caida", "derribo", "recuperado"]}
+        }
+      }
+    },
+    "retirado": {
+      "x-visibilidad": "interno",
+      "description": "Incidente que deja de publicarse (nada se borra): una ficha nueva dice que no es un incidente o su ubicación no vale.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fecha", "motivo"],
+      "properties": {
+        "fecha": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.7.0:comun#/$defs/instante"},
+        "motivo": {"x-visibilidad": "interno", "type": "string", "minLength": 1}
+      }
+    },
+    "tiempo": {
+      "x-visibilidad": "publico",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["inicio"],
+      "properties": {
+        "inicio": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.7.0:comun#/$defs/instante"},
+        "fin": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.7.0:comun#/$defs/instante"},
+        "duracion_min": {
+          "x-visibilidad": "publico",
+          "description": "Derivada de inicio y fin.",
+          "type": "integer",
+          "minimum": 0
+        },
+        "origen_inicio": {
+          "x-visibilidad": "interno",
+          "description": "De dónde sale el día del inicio (proceso/fechas.py). explicita: la frase de la fuente escribe el día («22 de septiembre»); relativa: lo da respecto a la publicación («anoche», «el lunes»), resuelto con la fecha local del medio; oficial: lo da una autoridad en su propio documento (o es el instante de un encuentro de la UKAB); parte: el periodo de un parte; publicacion: ninguna frase escribe el día y la fecha es la de publicación de la nota (precisión aproximada; si la frase daba la hora, se conserva). corregido: la fecha cambió al comprobarla. motivo: la expresión y la publicación con que se resolvió.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["tipo"],
+          "properties": {
+            "tipo": {"x-visibilidad": "interno", "enum": ["explicita", "relativa", "oficial", "parte", "publicacion"]},
+            "fuente_id": {"x-visibilidad": "interno", "type": "string", "minLength": 1},
+            "motivo": {"x-visibilidad": "interno", "type": "string", "minLength": 1, "maxLength": 300},
+            "corregido": {"x-visibilidad": "interno", "const": true}
+          }
+        }
+      }
+    },
+    "lugar": {
+      "x-visibilidad": "publico",
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Dónde ocurrió el suceso. Punto y radio van juntos y solo si el lugar se sitúa a nivel de instalación o de localidad; si solo se sabe el país o la región, no hay punto y el incidente se publica sin mapa.",
+      "required": ["pais"],
+      "dependentRequired": {"punto": ["radio_km"], "radio_km": ["punto"]},
+      "properties": {
+        "punto": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.7.0:comun#/$defs/punto"},
+        "radio_km": {"x-visibilidad": "publico", "type": "number", "minimum": 0.1, "maximum": 50},
+        "pais": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.7.0:comun#/$defs/pais"},
+        "localidad": {"x-visibilidad": "publico", "type": "string", "minLength": 1},
+        "region": {"x-visibilidad": "publico", "description": "Región de primer nivel del país, tal como la da la fuente.", "type": "string", "minLength": 1},
+        "nivel": {"x-visibilidad": "publico", "description": "Nivel al que se sabe el lugar del suceso.", "enum": ["instalacion", "localidad", "region", "pais"]},
+        "suceso": {"x-visibilidad": "interno", "description": "Nombre del lugar del suceso tal como lo escribe la fuente.", "type": "string", "minLength": 1},
+        "geocodificacion": {"x-visibilidad": "interno", "description": "De dónde sale el punto. frase_origen: el lugar del suceso solo se sabía a nivel de región y una sola instalación o localidad de esa región sale en las frases y los titulares de sus fuentes; oficial: el punto y el radio que da una autoridad en su documento (detalle_oficial).", "enum": ["nomenclator", "candidato", "vocabulario", "localidad", "localidad_pequena", "lugar_nuevo", "gkg", "frase_origen", "oficial"]},
+        "nuts2": {"x-visibilidad": "interno", "type": "string", "pattern": "^[A-Z]{2}[A-Z0-9]{2}$"}
+      }
+    },
+    "objetivo": {
+      "x-visibilidad": "publico",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["categoria"],
+      "properties": {
+        "categoria": {
+          "x-visibilidad": "publico",
+          "enum": ["aeropuerto", "base_militar", "puerto", "energia", "presa", "estadio", "industrial", "gubernamental", "otra"]
+        },
+        "nombre": {"x-visibilidad": "publico", "type": "string", "minLength": 1},
+        "oaci": {"x-visibilidad": "publico", "type": "string", "pattern": "^[A-Z]{4}$"},
+        "uso": {"x-visibilidad": "publico", "enum": ["civil", "militar", "mixto"]}
+      }
+    },
+    "drones": {
+      "x-visibilidad": "publico",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "numero": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.7.0:comun#/$defs/rango_entero_o_desconocido"},
+        "clase": {
+          "x-visibilidad": "publico",
+          "enum": ["multirrotor_pequeno", "ala_fija", "ataque_largo_alcance", "desconocido"]
+        },
+        "modelo": {
+          "x-visibilidad": "publico",
+          "description": "Valor del vocabulario controlado de configuracion/modelos_dron.json.",
+          "type": "string",
+          "minLength": 1
+        },
+        "luces": {"x-visibilidad": "interno", "enum": ["si", "no", "desconocido"]},
+        "altura_m": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.7.0:comun#/$defs/rango_real_o_desconocido"},
+        "velocidad_ms": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.7.0:comun#/$defs/rango_real_o_desconocido"},
+        "trayectoria": {
+          "x-visibilidad": "interno",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "entrada_grados": {"x-visibilidad": "interno", "type": "number", "minimum": 0, "exclusiveMaximum": 360},
+            "salida_grados": {"x-visibilidad": "interno", "type": "number", "minimum": 0, "exclusiveMaximum": 360},
+            "puntos": {
+              "x-visibilidad": "interno",
+              "type": "array",
+              "items": {"$ref": "urn:eodi:esquema:1.7.0:comun#/$defs/punto"}
+            }
+          }
+        },
+        "patron": {"x-visibilidad": "interno", "enum": ["hover", "merodeo", "transito", "enjambre"]}
+      }
+    },
+    "consecuencias": {
+      "x-visibilidad": "publico",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "cierre": {
+          "x-visibilidad": "publico",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["valor"],
+          "properties": {
+            "valor": {"x-visibilidad": "publico", "enum": ["si", "no", "desconocido"]},
+            "minutos": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.7.0:comun#/$defs/rango_entero_o_desconocido"}
+          }
+        },
+        "vuelos_desviados": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.7.0:comun#/$defs/rango_entero_o_desconocido"},
+        "vuelos_cancelados": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.7.0:comun#/$defs/rango_entero_o_desconocido"},
+        "vuelos_retrasados": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.7.0:comun#/$defs/rango_entero_o_desconocido"},
+        "danos": {
+          "x-visibilidad": "publico",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["nivel"],
+          "properties": {
+            "nivel": {"x-visibilidad": "publico", "enum": ["ninguno", "menores", "graves", "desconocido"]},
+            "frase": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.7.0:comun#/$defs/frase_breve"}
+          }
+        },
+        "heridos": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.7.0:comun#/$defs/rango_entero_o_desconocido"},
+        "fallecidos": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.7.0:comun#/$defs/rango_entero_o_desconocido"}
+      }
+    },
+    "respuesta": {
+      "x-visibilidad": "publico",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "medidas": {
+          "x-visibilidad": "publico",
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"enum": ["cierre_espacio_aereo", "patrulla", "cazas", "derribo", "inhibicion", "ninguna_conocida"]}
+        },
+        "deteccion": {
+          "x-visibilidad": "interno",
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"enum": ["radar", "visual", "piloto", "camara", "ciudadano"]}
+        },
+        "resultado_contramedidas": {"x-visibilidad": "interno", "enum": ["funciono", "no_funciono", "desconocido"]}
+      }
+    },
+    "atribucion": {
+      "x-visibilidad": "publico",
+      "description": "Solo con estado atribuido.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["actor", "autoridad", "fecha"],
+      "properties": {
+        "actor": {"x-visibilidad": "publico", "type": "string", "minLength": 1},
+        "autoridad": {"x-visibilidad": "publico", "type": "string", "minLength": 1},
+        "fecha": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.7.0:comun#/$defs/instante"}
+      }
+    },
+    "detalle_oficial": {
+      "x-visibilidad": "interno",
+      "description": "Lo que precisa un registro oficial de detalle (encuentro con aeronave, respuesta parlamentaria, informe de investigación, sentencia) sobre valores públicos del incidente, sin cambiarlos: la hora, el lugar, el número de drones y las medidas según la autoridad. Su origen y sus fuentes, en procedencia.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "inicio": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.7.0:comun#/$defs/instante"},
+        "punto": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.7.0:comun#/$defs/punto"},
+        "radio_km": {"x-visibilidad": "interno", "type": "number", "minimum": 0.1, "maximum": 50},
+        "numero": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.7.0:comun#/$defs/rango_entero_o_desconocido"},
+        "medidas": {
+          "x-visibilidad": "interno",
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"enum": ["cierre_espacio_aereo", "patrulla", "cazas", "derribo", "inhibicion", "ninguna_conocida"]}
+        }
+      }
+    },
+    "encuentros": {
+      "x-visibilidad": "interno",
+      "description": "Encuentros con aeronave (encuentro.schema.json) que coinciden con el incidente y le aportan sus datos.",
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^UKAB-\\d{7}$"}
+    },
+    "foco_termico": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.7.0:comun#/$defs/foco_termico"},
+    "trafico_aereo": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.7.0:comun#/$defs/trafico_aereo"},
+    "condiciones": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.7.0:comun#/$defs/condiciones"},
+    "fuentes": {
+      "x-visibilidad": "publico",
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "urn:eodi:esquema:1.7.0:fuente"}
+    },
+    "afirmaciones_publicas": {
+      "x-visibilidad": "publico",
+      "description": "Quién dice qué: el valor de cada campo público según cada fuente pública, con su medio, su código del Almirantazgo y su fecha. Se genera al publicar desde las afirmaciones internas; no se guarda.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["campo", "fuente_id", "medio", "fiabilidad", "credibilidad", "fecha", "valor"],
+        "properties": {
+          "campo": {"x-visibilidad": "publico", "type": "string", "minLength": 1},
+          "fuente_id": {"x-visibilidad": "publico", "type": "string", "minLength": 1},
+          "medio": {"x-visibilidad": "publico", "type": "string", "minLength": 1},
+          "fiabilidad": {"x-visibilidad": "publico", "enum": ["A", "B", "C", "D"]},
+          "credibilidad": {"x-visibilidad": "publico", "type": "integer", "minimum": 1, "maximum": 6},
+          "fecha": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.7.0:comun#/$defs/instante"},
+          "valor": {
+            "x-visibilidad": "publico",
+            "anyOf": [
+              {"type": "string"},
+              {"type": "array", "items": {"type": "string"}},
+              {"$ref": "urn:eodi:esquema:1.7.0:comun#/$defs/rango_entero_o_desconocido"},
+              {"$ref": "urn:eodi:esquema:1.7.0:comun#/$defs/instante"}
+            ]
+          }
+        }
+      }
+    },
+    "afirmaciones": {
+      "x-visibilidad": "interno",
+      "type": "array",
+      "items": {"$ref": "urn:eodi:esquema:1.7.0:afirmacion"}
+    },
+    "procedencia": {
+      "x-visibilidad": "interno",
+      "description": "Origen y método de cada valor del incidente, por ruta («drones.numero»). Lo calcula la exportación semanal a partir de las fuentes y las afirmaciones; la base no lo guarda.",
+      "type": "object",
+      "additionalProperties": {"$ref": "urn:eodi:esquema:1.7.0:comun#/$defs/procedencia"}
+    },
+    "nivel_detalle": {
+      "x-visibilidad": "interno",
+      "description": "Lo calcula la exportación semanal (regla en comun#/$defs/nivel_detalle); la base no lo guarda.",
+      "$ref": "urn:eodi:esquema:1.7.0:comun#/$defs/nivel_detalle"
+    },
+    "indicadores": {
+      "x-visibilidad": "interno",
+      "description": "Lo calcula la exportación semanal (regla en comun#/$defs/indicadores); la base no lo guarda.",
+      "$ref": "urn:eodi:esquema:1.7.0:comun#/$defs/indicadores"
+    },
+    "deduccion": {
+      "x-visibilidad": "interno",
+      "description": "Clases de dron compatibles, descartadas e indeterminadas según el motor de deducción. Origen deducido; interno. Lo añade la exportación desde la tabla deducciones.",
+      "$ref": "urn:eodi:esquema:1.7.0:comun#/$defs/deduccion"
+    },
+    "control": {
+      "x-visibilidad": "publico",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["alta", "ultima_actualizacion"],
+      "properties": {
+        "alta": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.7.0:comun#/$defs/instante"},
+        "ultima_actualizacion": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.7.0:comun#/$defs/instante"},
+        "motivo_desmentido": {"x-visibilidad": "publico", "type": "string", "minLength": 1},
+        "version_extractor": {"x-visibilidad": "interno", "type": "string", "minLength": 1},
+        "candidato": {"x-visibilidad": "interno", "description": "Candidato de noticias del que sale el incidente.", "type": "string", "minLength": 1},
+        "huella_fuentes": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.7.0:comun#/$defs/huella"},
+        "vocabulario_aegis": {
+          "x-visibilidad": "interno",
+          "type": "object",
+          "additionalProperties": {"type": "string"}
+        },
+        "distancia_instalaciones_km": {"x-visibilidad": "interno", "type": "number", "minimum": 0}
+      }
+    }
+  }
+}
