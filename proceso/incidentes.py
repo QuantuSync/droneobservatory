@@ -365,47 +365,58 @@ def ultima_actividad(documento: Documento) -> datetime:
     return max(momentos)
 
 
-def _dia_local(momento: datetime, precision: str, pais: str) -> date:
-    """El día del suceso en su país: una fecha con solo el día ya es la del país (la que dice
-    la fuente); una hora en UTC se pasa a la hora local («la una de la madrugada en Galați»
-    es el día anterior en UTC)."""
-    if precision == "dia" and (momento.hour, momento.minute) == (0, 0):
-        return momento.date()
-    # Una hora en UTC (también la de un día que el extractor dio con su hora).
+def _dia_local(momento: datetime, pais: str) -> date:
+    """El día local de una hora en UTC («la una de la madrugada en Galați» es el día anterior
+    en UTC)."""
     zona = fechas.zona(pais)
     return momento.astimezone(zona).date() if zona else momento.date()
 
 
-def _dias_posibles(instante: Documento, pais: str) -> set[date]:
-    """Días locales en que pudo empezar el suceso: el suyo; con la fecha de publicación
-    (aproximada), también el anterior, porque la noticia sale el mismo día o el siguiente; y
-    con una hora de madrugada, también la víspera, porque la prensa fecha una noche por su
-    tarde («anoche», «la noche del jueves»)."""
+def _dias_de(instante: Documento, pais: str) -> tuple[str, set[date]]:
+    """La clase de fecha («hora», «dia» o «publicacion») y sus días locales posibles. Un día
+    es el que dice la fuente (si el extractor le puso hora, cuenta su fecha); con hora, su día
+    local y, de madrugada, también la víspera, porque la prensa fecha una noche por su tarde;
+    con la fecha de publicación, ese día y el anterior."""
     momento = _leer_instante(instante)
-    dia = _dia_local(momento, instante["precision"], pais)
-    dias = {dia}
-    solo_dia = instante["precision"] == "dia" and (momento.hour, momento.minute) == (0, 0)
-    if instante["precision"] == APROXIMADA or (
-        not solo_dia and dia != _dia_local(momento - MADRUGADA, instante["precision"], pais)
-    ):
-        dias.add(dia - timedelta(days=1))
-    return dias
+    precision = instante["precision"]
+    if precision == "dia":
+        return "dia", {momento.date()}
+    dia = _dia_local(momento, pais)
+    if precision == APROXIMADA:
+        return "publicacion", {dia, dia - timedelta(days=1)}
+    if dia != _dia_local(momento - MADRUGADA, pais):
+        return "hora", {dia, dia - timedelta(days=1)}
+    return "hora", {dia}
 
 
 def misma_ventana(a: Documento, b: Documento) -> bool:
-    """`a` empezó antes o a la vez que `b`."""
+    """`a` empezó antes o a la vez que `b`.
+
+    - Hora con hora: inicios a menos de 6 horas y sin 12 horas sin actividad del suceso.
+    - Día con día: el mismo o el siguiente; sin hora no se mide la actividad.
+    - Día con hora: la hora local cae ese día (o en la madrugada del siguiente).
+    - Con la fecha de publicación: el suceso es de ese día o de la víspera.
+    """
     inicio_a, inicio_b = a["tiempo"]["inicio"], b["tiempo"]["inicio"]
     ta, tb = _leer_instante(inicio_a), _leer_instante(inicio_b)
     if inicio_a["precision"] in PRECISIONES_HORA and inicio_b["precision"] in PRECISIONES_HORA:
         return abs(tb - ta) < INICIOS_HORA and tb - ultima_actividad(a) <= SIN_ACTIVIDAD
-    # Con un día sin hora no se miden las 12 horas: casan si comparten día posible (local),
-    # contando los que abarca el suceso de `a` si se sabe su fin (un cierre que pasa de
-    # medianoche).
+    if (
+        "fin" in a["tiempo"]
+        and inicio_b["precision"] in PRECISIONES_HORA
+        and tb - ultima_actividad(a) > SIN_ACTIVIDAD
+    ):
+        # Con un fin conocido sí se miden las 12 horas sin actividad.
+        return False
     pais = str(a["lugar"].get("pais", ""))
-    dias_a = _dias_posibles(inicio_a, pais)
+    clase_a, dias_a = _dias_de(inicio_a, pais)
+    clase_b, dias_b = _dias_de(inicio_b, pais)
     if "fin" in a["tiempo"]:
-        dias_a.add(_dia_local(ultima_actividad(a), "minuto", pais))
-    return bool(dias_a & _dias_posibles(inicio_b, pais))
+        # Un suceso que pasa de medianoche abarca también el día de su fin.
+        dias_a.add(_dia_local(ultima_actividad(a), pais))
+    if clase_a == clase_b == "dia":
+        return abs((min(dias_b) - min(dias_a)).days) <= 1
+    return bool(dias_a & dias_b)
 
 
 def encajan(a: Documento, b: Documento) -> bool:
@@ -475,6 +486,18 @@ def absorber(
     return aplicar_reglas(resultado), sorted(aportadas_ids)
 
 
+CLASE_FECHA = {"minuto": 0, "hora": 0, "dia": 1, APROXIMADA: 2}
+
+
+def de_mejor_fecha(documentos: list[Documento]) -> list[Documento]:
+    """Los de la clase de fecha más precisa: con hora, con solo el día o con la de publicación."""
+    if len(documentos) < 2:
+        return documentos
+    clase = {d["id"]: CLASE_FECHA.get(d["tiempo"]["inicio"]["precision"], 2) for d in documentos}
+    mejor = min(clase.values())
+    return [d for d in documentos if clase[d["id"]] == mejor]
+
+
 def primera_noticia(documento: Documento) -> str:
     """Cuándo se publicó la primera de sus fuentes."""
     return min((f["fecha"]["valor"] for f in documento["fuentes"]), default="9999")
@@ -534,7 +557,10 @@ def fusionar(
             < (incidente["tiempo"]["inicio"]["valor"], incidente["id"])
             and encajan(otro, incidente)
         ]
-        # Dudosa si encaja con dos: no se hace.
+        # Dudosa si encaja con dos: no se hace. Una fecha de publicación no compite con una
+        # escrita: entre los que encajan cuenta solo la mejor clase de fecha (hora, día,
+        # publicación), y si de esa hay uno solo, es ese.
+        anteriores = de_mejor_fecha(anteriores)
         if len(anteriores) != 1:
             continue
         destino, absorbido = destino_de(anteriores[0], incidente, publicados)

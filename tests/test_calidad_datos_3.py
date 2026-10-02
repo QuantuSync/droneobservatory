@@ -363,15 +363,41 @@ def test_lo_que_hereda_el_destino_lleva_su_afirmacion_aunque_compartan_fuente() 
     assert exportado["procedencia"]["respuesta.medidas"]["origen"] == "prensa"
 
 
+def test_un_dia_con_hora_no_hace_de_puente_hacia_la_noche_siguiente() -> None:
+    # El extractor dio «2 de octubre, 22:00 UTC» con precisión de día: cuenta su fecha, el 2,
+    # y el cierre del 3 por la tarde es otro suceso. Dos días seguidos sin hora sí casan.
+    puente = inc("EODI-2025-00001", "2025-10-02T22:00Z", "dia")
+    tercero = inc("EODI-2025-00002", "2025-10-03T19:30Z", "hora")
+    assert not incidentes.encajan(puente, tercero)
+    assert incidentes.encajan(puente, inc("EODI-2025-00003", "2025-10-03T00:00Z", "dia"))
+    # Con un fin conocido se miden las 12 horas sin actividad aunque el inicio sea un día.
+    puente["tiempo"]["fin"] = ejemplos.instante("2025-10-03T03:00Z")
+    tercero["tiempo"]["inicio"] = ejemplos.instante("2025-10-03T17:30Z", "hora")
+    assert not incidentes.encajan(puente, tercero)
+
+
 def test_la_fusion_dudosa_no_se_hace(almacen: Almacen) -> None:
     for documento in (
         inc("EODI-2025-00001", "2025-10-02T20:18Z", "minuto"),
         inc("EODI-2025-00002", "2025-10-03T19:30Z", "hora"),
-        # La nota del 3 por la mañana encaja con los dos: no se funde.
+        # La nota del 3 por la noche encaja con los dos: no se funde.
         inc("EODI-2025-00003", "2025-10-03T20:00Z", "aproximada"),
     ):
         almacen.guardar_incidente(documento, AHORA, VOCABULARIO_MODELOS)
     assert incidentes.fusionar(almacen, AHORA, VOCABULARIO_MODELOS) == 0
+
+
+def test_una_fecha_de_publicacion_no_compite_con_una_escrita(almacen: Almacen) -> None:
+    for documento in (
+        inc("EODI-2025-00001", "2025-10-03T19:00Z", "hora"),
+        inc("EODI-2025-00002", "2025-10-03T19:30Z", "aproximada"),
+        # Una hora del 4 de madrugada encaja con el cierre del 3 y con la nota: va al cierre.
+        inc("EODI-2025-00003", "2025-10-04T00:00Z", "hora"),
+    ):
+        almacen.guardar_incidente(documento, AHORA, VOCABULARIO_MODELOS)
+    incidentes.fusionar(almacen, AHORA, VOCABULARIO_MODELOS)
+    fundido = almacen.incidente("EODI-2025-00003")
+    assert fundido is not None and fundido["fusionado_en"] == "EODI-2025-00001"
 
 
 # --- Los incidentes que faltaban ------------------------------------------------------
