@@ -614226,13 +614226,24 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-02T00:17Z"
+     "valor": "2026-10-02T14:17Z"
     }
    },
-   "credibilidad": 3,
+   "credibilidad": 2,
    "fecha": {
     "precision": "minuto",
     "valor": "2025-11-14T05:49Z"
+   },
+   "foco_termico": {
+    "distancia_km": 6.4,
+    "instrumento": "VIIRS",
+    "numero_focos": 8,
+    "primer_foco": {
+     "precision": "minuto",
+     "valor": "2025-11-13T23:04Z"
+    },
+    "resultado": "detectado",
+    "satelite": "Suomi NPP"
    },
    "fuentes": [
     {
@@ -614264,7 +614275,6 @@
     "radio_km": 7.0
    },
    "region": "RU-KDA",
-   "reivindicacion_de_parte": true,
    "sentido": "UA_RU",
    "tipo": "impacto_guerra"
   },
@@ -614277,13 +614287,24 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-02T00:17Z"
+     "valor": "2026-10-02T14:17Z"
     }
    },
-   "credibilidad": 3,
+   "credibilidad": 2,
    "fecha": {
     "precision": "minuto",
     "valor": "2025-11-14T05:49Z"
+   },
+   "foco_termico": {
+    "distancia_km": 0.0,
+    "instrumento": "VIIRS",
+    "numero_focos": 17,
+    "primer_foco": {
+     "precision": "minuto",
+     "valor": "2025-11-13T22:35Z"
+    },
+    "resultado": "detectado",
+    "satelite": "NOAA-21"
    },
    "fuentes": [
     {
@@ -614315,7 +614336,6 @@
     "radio_km": 1.5
    },
    "region": "RU-KDA",
-   "reivindicacion_de_parte": true,
    "sentido": "UA_RU",
    "tipo": "impacto_guerra"
   },
@@ -785357,10 +785377,10 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-02T00:17Z"
+     "valor": "2026-10-02T14:17Z"
     }
    },
-   "credibilidad": 3,
+   "credibilidad": 2,
    "fallecidos": {
     "max": 1,
     "min": 1
@@ -785368,6 +785388,17 @@
    "fecha": {
     "precision": "minuto",
     "valor": "2026-03-18T00:37Z"
+   },
+   "foco_termico": {
+    "distancia_km": 6.2,
+    "instrumento": "MODIS",
+    "numero_focos": 3,
+    "primer_foco": {
+     "precision": "minuto",
+     "valor": "2026-03-18T12:14Z"
+    },
+    "resultado": "detectado",
+    "satelite": "Aqua"
    },
    "fuentes": [
     {
@@ -785403,7 +785434,6 @@
     "radio_km": 10.0
    },
    "region": "RU-KDA",
-   "reivindicacion_de_parte": true,
    "sentido": "UA_RU",
    "tipo": "impacto_guerra"
   },
