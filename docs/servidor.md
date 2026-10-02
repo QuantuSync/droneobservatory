@@ -15,6 +15,7 @@ cero con una sola orden.
 | Usuario `operador` | Administra: entra por SSH con clave y usa `sudo` |
 | SSH | Solo con clave, sin contraseña y sin root |
 | Además | fail2ban, actualizaciones de seguridad automáticas con reinicio a las 04:45 si hace falta, zona horaria UTC, hora sincronizada, diario de systemd con tope de tamaño y de antigüedad |
+| needrestart | No reinicia las unidades `eodi-*` tras una actualización (`/etc/needrestart/conf.d/50-eodi.conf`): son trabajos con temporizador y reiniciarlos corta su trabajo |
 
 Dos particularidades:
 
@@ -225,7 +226,16 @@ incorpora lo hallado por la búsqueda dirigida, extrae en un lote lo pendiente (
 «calidad», 2 dólares en total) y rehace incidentes, fusiones y episodios. Toma el cerrojo de la
 recogida, trabaja en un clon aparte (`/home/eodi/calidad`) con la rama `main` y sube la base;
 la recogida siguiente publica y repite los cruces que dependen de la fecha (FIRMS, tráfico
-aéreo, condiciones). Si el lote se queda a medias, se relanza con `--lote <id>`.
+aéreo, condiciones). Si el lote se queda a medias, se relanza con `--lote <id>`; si quedan peticiones fuera del
+límite por el peor caso, se vuelve a lanzar y sigue con ellas.
+
+Ejecutada el 2 de octubre de 2026, tras el barrido inicial de la búsqueda dirigida (216
+anomalías, 57 días de GKG en 3 h 44 min): tres tandas, 0,692 USD; de 383 a 466 incidentes
+publicados ([`informe_calidad_datos_3.md`](informe_calidad_datos_3.md)). Usa unos 2,2 GB al
+cifrar y subir la base: con el histórico de tráfico y la búsqueda dirigida en marcha una pasada
+murió por falta de memoria (antes de subir nada); se repite con `eodi-busqueda` parado
+(`sudo systemctl stop eodi-busqueda.timer eodi-busqueda.service`, y `start` del temporizador al
+terminar).
 
 ```
 sudo systemd-run --unit=eodi-calidad --uid=eodi --gid=eodi \
