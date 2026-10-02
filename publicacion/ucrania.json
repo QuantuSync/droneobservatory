@@ -615039,6 +615039,52 @@
    "tipo": "impacto_guerra"
   },
   {
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T07:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-12-21T15:39Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/people_of_action/57687",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-12-21T15:39Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Стрий» у форматі «Волонтерської ініціативи 34» полагодили автомобіль для евакуації поранених воїнів окремого дивізіону безпілотних систем.",
+     "id": "people_of_action-57687",
+     "idioma": "uk",
+     "medio": "Львівська обласна військова адміністрація",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02745",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA46100230010074173",
+    "nivel": "localidad",
+    "nombre": "Стрий",
+    "nombre_latino": "Stryi",
+    "punto": {
+     "lat": 49.25588,
+     "lon": 23.85309
+    },
+    "radio_km": 5.0
+   },
+   "region": "UA-46",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
    "ataque": "EODI-UA-2026-0038",
    "categorias_objetivo": [],
    "control": {
@@ -776478,7 +776524,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-01T21:17Z"
+     "valor": "2026-10-02T07:17Z"
     }
    },
    "credibilidad": 3,
@@ -776500,6 +776546,34 @@
      "id": "E_V_Kovalchuk-2963",
      "idioma": "ru",
      "medio": "Губернатор Брянской области",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/E_V_Kovalchuk/2999",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-10-02T06:08Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "В поселке Климово от удара дрона ранения получила женщина.",
+     "id": "E_V_Kovalchuk-2999",
+     "idioma": "ru",
+     "medio": "Губернатор Брянской области",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/koronavirus32/28095",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-10-02T06:08Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "В поселке Климово от удара дрона ранения получила женщина.",
+     "id": "koronavirus32-28095",
+     "idioma": "ru",
+     "medio": "Правительство Брянской области",
      "replicas": 0
     }
    ],
@@ -787183,6 +787257,660 @@
    },
    "region": "UA-35",
    "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0015",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T07:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-01-15T04:58Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/people_of_action/58420",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-01-15T04:58Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "За попередньою інформацією, є влучання ворожого бойового безпілотника у центрі Львова.",
+     "id": "people_of_action-58420",
+     "idioma": "uk",
+     "medio": "Львівська обласна військова адміністрація",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/people_of_action/58421",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-01-15T05:10Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "За уточненою інформацією, ворожий безпілотник влучив у дитмайданчик на вулиці Степана Бандери у Львові.",
+     "id": "people_of_action-58421",
+     "idioma": "uk",
+     "medio": "Львівська обласна військова адміністрація",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/people_of_action/58426",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-01-15T07:13Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "У ніч на 15 січня 2026 року окупанти атакували бойовим безпілотником дитячий майданчик на вулиці Степана Бандери у Львові.",
+     "id": "people_of_action-58426",
+     "idioma": "uk",
+     "medio": "Львівська обласна військова адміністрація",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/people_of_action/58429",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-01-15T10:07Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Важливо розуміти: ворожий безпілотник влучив по території історичного ареалу Львова, у межах буферної зони пам'яток, які є у списку Всесвітньої Спадщини ЮНЕСКО – «Ансамбль історичного",
+     "id": "people_of_action-58429",
+     "idioma": "uk",
+     "medio": "Львівська обласна військова адміністрація",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03463",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA46060250010015970",
+    "nivel": "localidad",
+    "nombre": "Львів",
+    "nombre_latino": "Lviv",
+    "punto": {
+     "lat": 49.84195,
+     "lon": 24.03159
+    },
+    "radio_km": 10.0
+   },
+   "region": "UA-46",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0038",
+   "categorias_objetivo": [
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T07:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-02-07T07:41Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/people_of_action/59310",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-02-07T07:41Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "У селі Старий Добротвір, попередньо через влучання ворожого безпілотника, загорівся житловий будинок.",
+     "id": "people_of_action-59310",
+     "idioma": "uk",
+     "medio": "Львівська обласна військова адміністрація",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03464",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA46120050160014973",
+    "nivel": "localidad",
+    "nombre": "Старий Добротвір",
+    "nombre_latino": "Staryi Dobrotvir",
+    "punto": {
+     "lat": 50.22197,
+     "lon": 24.37821
+    },
+    "radio_km": 1.5
+   },
+   "region": "UA-46",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "categorias_objetivo": [
+    "industrial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T07:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "dia": "2025-09-19",
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-03-16T11:46Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/people_of_action/60728",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-03-16T11:46Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Три ворожі «Шахеди» влучили по складах у Львові.",
+     "id": "people_of_action-60728",
+     "idioma": "uk",
+     "medio": "Львівська обласна військова адміністрація",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03465",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA46060250010015970",
+    "nivel": "localidad",
+    "nombre": "Львів",
+    "nombre_latino": "Lviv",
+    "punto": {
+     "lat": 49.84195,
+     "lon": 24.03159
+    },
+    "radio_km": 10.0
+   },
+   "region": "UA-46",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0078",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T07:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-03-18T20:39Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/people_of_action/60852",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-03-18T20:39Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Під час повітряної тривоги ворожий безпілотник атакував Львів.",
+     "id": "people_of_action-60852",
+     "idioma": "uk",
+     "medio": "Львівська обласна військова адміністрація",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/people_of_action/60853",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-03-18T21:00Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Також у Львові виявляють уламки БпЛА.",
+     "id": "people_of_action-60853",
+     "idioma": "uk",
+     "medio": "Львівська обласна військова адміністрація",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03466",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA46060250010015970",
+    "nivel": "localidad",
+    "nombre": "Львів",
+    "nombre_latino": "Lviv",
+    "punto": {
+     "lat": 49.84195,
+     "lon": 24.03159
+    },
+    "radio_km": 10.0
+   },
+   "region": "UA-46",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0083",
+   "categorias_objetivo": [
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T07:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-03-24T15:12Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/people_of_action/61056",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-03-24T15:12Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Унаслідок атаки ворожих безпілотників у Львові є загорання житлових будинків на площі Соборній, вулиці Братів Рогатинців та вулиці Червоної Калини.",
+     "id": "people_of_action-61056",
+     "idioma": "uk",
+     "medio": "Львівська обласна військова адміністрація",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03467",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA46060250010015970",
+    "nivel": "localidad",
+    "nombre": "Львів",
+    "nombre_latino": "Lviv",
+    "punto": {
+     "lat": 49.84195,
+     "lon": 24.03159
+    },
+    "radio_km": 10.0
+   },
+   "region": "UA-46",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0083",
+   "categorias_objetivo": [
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T07:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-03-24T15:12Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/people_of_action/61056",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-03-24T15:12Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Також внаслідок падіння уламків БпЛА загорівся приватний будинок у селі Серники Бібрської територіальної громади.",
+     "id": "people_of_action-61056",
+     "idioma": "uk",
+     "medio": "Львівська обласна військова адміністрація",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03468",
+   "impacto": "restos",
+   "lugar": {
+    "id": "katotth:UA46060010380095747",
+    "nivel": "localidad",
+    "nombre": "Серники",
+    "nombre_latino": "Sernyky",
+    "punto": {
+     "lat": 49.59331,
+     "lon": 24.33828
+    },
+    "radio_km": 1.5
+   },
+   "region": "UA-46",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0084",
+   "categorias_objetivo": [
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T07:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-03-24T18:20Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/people_of_action/61067",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-03-24T18:20Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "На жаль, є влучання також у звичайні будинки – атаковані центри наших міст, історичний центр Львова.",
+     "id": "people_of_action-61067",
+     "idioma": "uk",
+     "medio": "Львівська обласна військова адміністрація",
+     "replicas": 0
+    }
+   ],
+   "heridos": {
+    "max": 40,
+    "min": 40
+   },
+   "id": "EODI-IG-2026-03469",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA46060250010015970",
+    "nivel": "localidad",
+    "nombre": "Львів",
+    "nombre_latino": "Lviv",
+    "punto": {
+     "lat": 49.84195,
+     "lon": 24.03159
+    },
+    "radio_km": 10.0
+   },
+   "region": "UA-46",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T07:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "dia": "2026-04-04",
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-04-19T06:45Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/people_of_action/62019",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-04-19T06:45Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "І так склалося, що вперше він почув хор уже тут, у Львові – в церкві Святого Андрія, яка нещодавно постраждала від російського безпілотника.",
+     "id": "people_of_action-62019",
+     "idioma": "uk",
+     "medio": "Львівська обласна військова адміністрація",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03470",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA46060250010015970",
+    "nivel": "localidad",
+    "nombre": "Львів",
+    "nombre_latino": "Lviv",
+    "punto": {
+     "lat": 49.84195,
+     "lon": 24.03159
+    },
+    "radio_km": 10.0
+   },
+   "region": "UA-46",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T07:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "dia": "2026-04-16",
+   "fallecidos": {
+    "max": 2024,
+    "min": 2024
+   },
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-04-23T06:00Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/people_of_action/62214",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-04-23T06:00Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Загинув 24 квітня 2024 року під час виконання бойового завдання поблизу населеного пункту Богданівка на Бахмутському напрямку фронту.",
+     "id": "people_of_action-62214",
+     "idioma": "uk",
+     "medio": "Львівська обласна військова адміністрація",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03471",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA46040090040069077",
+    "nivel": "localidad",
+    "nombre": "Богданівка",
+    "nombre_latino": "Bohdanivka",
+    "punto": {
+     "lat": 49.85601,
+     "lon": 24.43883
+    },
+    "radio_km": 1.5
+   },
+   "region": "UA-46",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0219",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T07:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-08-12T11:43Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/people_of_action/66958",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-08-12T11:43Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "39-річний Володимир Ананчик із Шептицького отримав високу ампутацію після влучання ворожого FPV-дрона.",
+     "id": "people_of_action-66958",
+     "idioma": "uk",
+     "medio": "Львівська обласна військова адміністрація",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03472",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA46120130010071117",
+    "nivel": "localidad",
+    "nombre": "Шептицький",
+    "nombre_latino": "Sheptytskyi",
+    "punto": {
+     "lat": 50.39403,
+     "lon": 24.23961
+    },
+    "radio_km": 5.0
+   },
+   "region": "UA-46",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0257",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T07:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-09-13T09:24Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/people_of_action/68190",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-09-13T09:24Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Під час повітряної тривоги ворог атакував Стрий ударними безпілотниками.",
+     "id": "people_of_action-68190",
+     "idioma": "uk",
+     "medio": "Львівська обласна військова адміністрація",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03473",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA46100230010074173",
+    "nivel": "localidad",
+    "nombre": "Стрий",
+    "nombre_latino": "Stryi",
+    "punto": {
+     "lat": 49.25588,
+     "lon": 23.85309
+    },
+    "radio_km": 5.0
+   },
+   "region": "UA-46",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T07:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "dia": "2026-10-01",
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-10-02T06:08Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/E_V_Kovalchuk/2999",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-10-02T06:08Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "❗️ Возле поселка Мамай Новозыбковского городского округа вражеский дрон атаковал двигавшийся на буксире автомобиль.",
+     "id": "E_V_Kovalchuk-2999",
+     "idioma": "ru",
+     "medio": "Губернатор Брянской области",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/koronavirus32/28095",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-10-02T06:08Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "❗️ Возле поселка Мамай Новозыбковского городского округа вражеский дрон атаковал двигавшийся на буксире автомобиль.",
+     "id": "koronavirus32-28095",
+     "idioma": "ru",
+     "medio": "Правительство Брянской области",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03474",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:7450083",
+    "nivel": "localidad",
+    "nombre": "Мамай",
+    "nombre_latino": "Mamay",
+    "punto": {
+     "lat": 52.5083,
+     "lon": 32.0039
+    },
+    "radio_km": 1.5
+   },
+   "parte_diario": true,
+   "region": "RU-BRY",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
    "tipo": "impacto_guerra"
   }
  ]

@@ -111277,18 +111277,6 @@
       "valor": "no_confirmada"
      },
      {
-      "campo": "presencia_dron",
-      "credibilidad": 1,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-10-02T06:00Z"
-      },
-      "fiabilidad": "B",
-      "fuente_id": "gdelt-1238a5a4d379ebe0-declaracion-1",
-      "medio": "Ministry of National Defence (declaración oficial citada en stiripesurse.ro)",
-      "valor": "confirmada"
-     },
-     {
       "campo": "tiempo.inicio",
       "credibilidad": 3,
       "fecha": {
@@ -111324,14 +111312,14 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-02T06:17Z"
+      "valor": "2026-10-02T07:17Z"
      }
     },
     "drones": {
      "numero": "desconocido"
     },
     "estado": {
-     "actual": "confirmado",
+     "actual": "notificado",
      "historial": [
       {
        "estado": "notificado",
@@ -111340,14 +111328,6 @@
         "valor": "2026-10-02T06:00Z"
        },
        "fuente_id": "gdelt-1238a5a4d379ebe0"
-      },
-      {
-       "estado": "confirmado",
-       "fecha": {
-        "precision": "aproximada",
-        "valor": "2026-10-02T06:00Z"
-       },
-       "fuente_id": "gdelt-1238a5a4d379ebe0-declaracion-1"
       }
      ]
     },
@@ -111367,17 +111347,31 @@
       "replicas": 0
      },
      {
-      "credibilidad": 1,
-      "enlace": "https://stiripesurse.ro/drone-crashes-in-tulcea-county-defence-ministry-teams-conduct-on-site-investigation_3924972",
+      "credibilidad": 3,
+      "enlace": "https://maszol.ro/belfold/Lezuhant-egy-dron-es-tuz-utott-ki-A-radarok-nem-jeleztek-legtersertest",
       "fecha": {
        "precision": "aproximada",
-       "valor": "2026-10-02T06:00Z"
+       "valor": "2026-10-02T07:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Lezuhant egy drón és tűz ütött ki – A radarok nem jeleztek légtérsértést",
+      "id": "gdelt-0adee471b07ff5ff",
+      "idioma": "hu",
+      "medio": "maszol.ro",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 1,
+      "enlace": "https://maszol.ro/belfold/Lezuhant-egy-dron-es-tuz-utott-ki-A-radarok-nem-jeleztek-legtersertest",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-02T07:00Z"
       },
       "fiabilidad": "B",
-      "frase_origen": "a drone had crashed in the area of Plauru, Tulcea County",
-      "id": "gdelt-1238a5a4d379ebe0-declaracion-1",
-      "idioma": "en",
-      "medio": "Ministry of National Defence (declaración oficial citada en stiripesurse.ro)",
+      "frase_origen": "A radarrendszerek az éjszaka folyamán nem észleltek jogosulatlan behatolást a nemzeti légtérbe.",
+      "id": "gdelt-0adee471b07ff5ff-declaracion-1",
+      "idioma": "hu",
+      "medio": "Ministry of National Defence (declaración oficial citada en maszol.ro)",
       "replicas": 0
      }
     ],
@@ -111391,7 +111385,7 @@
      "categoria": "otra",
      "nombre": "Plauru"
     },
-    "presencia_dron": "confirmada",
+    "presencia_dron": "descartada",
     "tiempo": {
      "inicio": {
       "precision": "hora",
@@ -111400,8 +111394,8 @@
     },
     "tipo": "incursion",
     "titulo": {
-     "en": "Drone crashes in Tulcea County after incursion from Ukraine",
-     "es": "Dron cae en Tulcea tras incursión desde Ucrania"
+     "en": "Drone crashes in Plauru, Tulcea, following Russian attacks on Ukraine",
+     "es": "Dron cae en Plauru, Tulcea, tras ataques rusos contra Ucrania"
     }
    },
    "type": "Feature"
