@@ -14,6 +14,15 @@ aqui="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 . "$aqui/configuracion.sh"
 
 export DEBIAN_FRONTEND=noninteractive
+# needrestart reinicia tras cada actualización los servicios que usan bibliotecas cambiadas.
+# Las unidades del observatorio son trabajos con su propio temporizador: reiniciar una corta
+# su trabajo (el 2 de octubre de 2026 cortó un día del histórico de tráfico) y, como son de
+# tipo oneshot, deja la actualización esperando a que terminen. Se excluyen todas las
+# «eodi-»: la siguiente ejecución de su temporizador ya usa las bibliotecas nuevas.
+install -d -m 755 /etc/needrestart/conf.d
+cat > /etc/needrestart/conf.d/50-eodi.conf <<'FIN'
+$nrconf{override_rc}{qr(^eodi-)} = 0;
+FIN
 apt-get update -q
 # La imagen sale con retraso: se pone al día antes de nada.
 apt-get upgrade -y -q

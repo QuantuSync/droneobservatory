@@ -347,6 +347,22 @@ def test_en_la_fusion_queda_el_publicado_y_despues_el_de_mas_fuentes_oficiales(
     assert destino["id"] == "EODI-2025-00025"  # solo él estaba publicado
 
 
+def test_lo_que_hereda_el_destino_lleva_su_afirmacion_aunque_compartan_fuente() -> None:
+    destino = inc("EODI-2025-00001", "2025-10-02T20:18Z", "minuto")
+    absorbido = inc("EODI-2025-00002", "2025-10-02T21:00Z", "hora")
+    compartida = destino["fuentes"][0]
+    absorbido["fuentes"] = [compartida]
+    absorbido["respuesta"] = {"medidas": ["patrulla"]}
+    afirmacion = {"campo": "medidas", "valor": ["patrulla"], "fuente_id": compartida["id"],
+                  "confianza_extraccion": 0.9}  # fmt: skip
+    absorbido["afirmaciones"] = [afirmacion]
+    nuevo, aportadas = incidentes.absorber(destino, absorbido, AHORA)
+    assert aportadas == [] and nuevo["respuesta"] == {"medidas": ["patrulla"]}
+    assert afirmacion in nuevo["afirmaciones"]
+    exportado = exportar(nuevo)
+    assert exportado["procedencia"]["respuesta.medidas"]["origen"] == "prensa"
+
+
 def test_la_fusion_dudosa_no_se_hace(almacen: Almacen) -> None:
     for documento in (
         inc("EODI-2025-00001", "2025-10-02T20:18Z", "minuto"),

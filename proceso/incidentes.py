@@ -434,9 +434,15 @@ def absorber(
     for fuente in resultado["fuentes"]:
         fuente["credibilidad"] = nivel
     aportadas_ids = {f["id"] for f in aportadas}
-    resultado["afirmaciones"] = resultado.get("afirmaciones", []) + [
-        a for a in absorbido.get("afirmaciones", []) if a["fuente_id"] in aportadas_ids
-    ]
+    # Las afirmaciones del absorbido de todas las fuentes que quedan en el destino, no solo
+    # de las nuevas: un valor que el destino hereda (sus medidas, su fin) tiene que llevar la
+    # afirmación que lo respalda aunque su fuente ya estuviera en el destino.
+    en_destino = {f["id"] for f in resultado["fuentes"]}
+    propias = resultado.get("afirmaciones", [])
+    resultado["afirmaciones"] = propias + [
+        a for a in absorbido.get("afirmaciones", [])
+        if a["fuente_id"] in en_destino and a not in propias
+    ]  # fmt: skip
     # Lo que al destino le faltaba y el absorbido sabe. Un día escrito por una fuente manda
     # sobre la fecha de publicación.
     if not fecha_verificada(resultado) and fecha_verificada(absorbido):
