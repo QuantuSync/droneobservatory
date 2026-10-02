@@ -151528,48 +151528,6 @@
    "properties": {
     "afirmaciones_publicas": [
      {
-      "campo": "consecuencias.cierre.minutos",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "dia",
-       "valor": "2026-08-09T00:00Z"
-      },
-      "fiabilidad": "B",
-      "fuente_id": "adsblol-EDDP-2026-08-09-EODI-2026-00364",
-      "medio": "Tráfico aéreo medido (adsb.lol)",
-      "valor": {
-       "max": 60,
-       "min": 60
-      }
-     },
-     {
-      "campo": "consecuencias.cierre.valor",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "dia",
-       "valor": "2026-08-09T00:00Z"
-      },
-      "fiabilidad": "B",
-      "fuente_id": "adsblol-EDDP-2026-08-09-EODI-2026-00364",
-      "medio": "Tráfico aéreo medido (adsb.lol)",
-      "valor": "si"
-     },
-     {
-      "campo": "consecuencias.vuelos_desviados",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "dia",
-       "valor": "2026-08-09T00:00Z"
-      },
-      "fiabilidad": "B",
-      "fuente_id": "adsblol-EDDP-2026-08-09-EODI-2026-00364",
-      "medio": "Tráfico aéreo medido (adsb.lol)",
-      "valor": {
-       "max": 0,
-       "min": 0
-      }
-     },
-     {
       "campo": "lugar.pais",
       "credibilidad": 3,
       "fecha": {
@@ -151661,20 +151619,6 @@
       "idioma": "de",
       "medio": "onvista.de",
       "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://github.com/adsblol/globe_history_2026/releases/tag/v2026.08.08-planes-readsb-prod-0",
-      "fecha": {
-       "precision": "dia",
-       "valor": "2026-08-09T00:00Z"
-      },
-      "fiabilidad": "B",
-      "frase_origen": "Cierre medido en EDDP: 12:45–13:45 UTC, 60 minutos, 0 desvíos y 0 esperas.",
-      "id": "adsblol-EDDP-2026-08-09-EODI-2026-00364",
-      "idioma": "es",
-      "medio": "Tráfico aéreo medido (adsb.lol)",
-      "replicas": 0
      }
     ],
     "id": "EODI-2026-00364",
@@ -151698,28 +151642,6 @@
     "titulo": {
      "en": "Explosive drone found at Leipzig airport",
      "es": "Dron con explosivos hallado en el aeropuerto de Leipzig"
-    },
-    "trafico_aereo": {
-     "cierre": {
-      "aeropuerto": "EDDP",
-      "difiere_de_declarado": false,
-      "duracion_min": 60,
-      "fin": {
-       "precision": "minuto",
-       "valor": "2026-08-09T13:45Z"
-      },
-      "inicio": {
-       "precision": "minuto",
-       "valor": "2026-08-09T12:45Z"
-      },
-      "resultado": "cierre_medido",
-      "vuelos_desviados": 0,
-      "vuelos_en_espera": 0
-     },
-     "datos": [
-      "https://github.com/adsblol/globe_history_2026/releases/tag/v2026.08.08-planes-readsb-prod-0",
-      "https://github.com/adsblol/globe_history_2026/releases/tag/v2026.08.09-planes-readsb-prod-0"
-     ]
     }
    },
    "type": "Feature"
