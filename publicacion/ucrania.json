@@ -613394,6 +613394,865 @@
    "tipo": "impacto_guerra"
   },
   {
+   "ataque": "EODI-UA-2025-0766",
+   "categorias_objetivo": [
+    "combustible",
+    "puerto"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-05-03T03:54Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/46814",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-05-03T03:54Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Также в Новороссийске обломки БПЛА повредили три резервуара на зерновом терминале.",
+     "id": "admkrai-46814",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02717",
+   "impacto": "restos",
+   "lugar": {
+    "categoria": "puerto",
+    "id": "osm:node/2415913729",
+    "localidad": "Новороссийск",
+    "nivel": "instalacion",
+    "nombre": "Нефтегавань Шесхарис",
+    "punto": {
+     "lat": 44.7081,
+     "lon": 37.84071
+    },
+    "radio_km": 3.0
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2025-0766",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-05-03T03:54Z"
+   },
+   "foco_termico": {
+    "distancia_km": 0.4,
+    "instrumento": "VIIRS",
+    "numero_focos": 5,
+    "primer_foco": {
+     "precision": "minuto",
+     "valor": "2025-05-02T22:40Z"
+    },
+    "resultado": "detectado",
+    "satelite": "NOAA-20"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/46814",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-05-03T03:54Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Обломки беспилотников также упали в станице Тамань Темрюкского района, в селах Юровка и Цибанобалка под Анапой.",
+     "id": "admkrai-46814",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02718",
+   "impacto": "restos",
+   "lugar": {
+    "id": "geonames:484670",
+    "nivel": "localidad",
+    "nombre": "Тамань",
+    "nombre_latino": "Taman",
+    "punto": {
+     "lat": 45.2117,
+     "lon": 36.71609
+    },
+    "radio_km": 1.5
+   },
+   "region": "RU-KDA",
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2025-0766",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-05-03T03:54Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/46814",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-05-03T03:54Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Обломки беспилотников также упали в станице Тамань Темрюкского района, в селах Юровка и Цибанобалка под Анапой.",
+     "id": "admkrai-46814",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02719",
+   "impacto": "restos",
+   "lugar": {
+    "id": "geonames:466314",
+    "nivel": "localidad",
+    "nombre": "Юровка",
+    "nombre_latino": "Yurovka",
+    "punto": {
+     "lat": 45.1147,
+     "lon": 37.41882
+    },
+    "radio_km": 1.5
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2025-0766",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-05-03T03:54Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/46814",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-05-03T03:54Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Обломки беспилотников также упали в станице Тамань Темрюкского района, в селах Юровка и Цибанобалка под Анапой.",
+     "id": "admkrai-46814",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02720",
+   "impacto": "restos",
+   "lugar": {
+    "id": "geonames:866210",
+    "nivel": "localidad",
+    "nombre": "Цибанобалка",
+    "nombre_latino": "Tsibanobalka",
+    "punto": {
+     "lat": 44.98034,
+     "lon": 37.34384
+    },
+    "radio_km": 1.5
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2025-0766",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-05-03T03:54Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/46814",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-05-03T03:54Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Обломки беспилотников также упали в станице Тамань Темрюкского района, в селах Юровка и Цибанобалка под Анапой.",
+     "id": "admkrai-46814",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02721",
+   "impacto": "restos",
+   "lugar": {
+    "id": "geonames:582182",
+    "nivel": "localidad",
+    "nombre": "Анапа",
+    "nombre_latino": "Anapa",
+    "punto": {
+     "lat": 44.89497,
+     "lon": 37.31623
+    },
+    "radio_km": 5.0
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2025-0766",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-05-03T11:04Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/46816",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-05-03T11:04Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "В Новороссийске ввели локальный режим ЧС из-за падения обломков беспилотников",
+     "id": "admkrai-46816",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02722",
+   "impacto": "restos",
+   "lugar": {
+    "id": "geonames:518255",
+    "nivel": "localidad",
+    "nombre": "Новороссийск",
+    "nombre_latino": "Novorossiysk",
+    "punto": {
+     "lat": 44.73188,
+     "lon": 37.76176
+    },
+    "radio_km": 7.0
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2025-1056",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-07-24T06:28Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/49157",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-07-24T06:28Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "В Адлерском районе Сочи обломки сбитого беспилотника упали на улице Авиационной.",
+     "id": "admkrai-49157",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02723",
+   "impacto": "restos",
+   "lugar": {
+    "id": "geonames:584243",
+    "nivel": "localidad",
+    "nombre": "Адлер",
+    "nombre_latino": "Adler",
+    "punto": {
+     "lat": 43.42896,
+     "lon": 39.92391
+    },
+    "radio_km": 5.0
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2025-1056",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-07-24T06:28Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/49157",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-07-24T06:28Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "В Адлерском районе Сочи обломки сбитого беспилотника упали на улице Авиационной.",
+     "id": "admkrai-49157",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02724",
+   "impacto": "restos",
+   "lugar": {
+    "id": "geonames:491422",
+    "nivel": "localidad",
+    "nombre": "Сочи",
+    "nombre_latino": "Sochi",
+    "punto": {
+     "lat": 43.59699,
+     "lon": 39.72477
+    },
+    "radio_km": 10.0
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2025-1058",
+   "categorias_objetivo": [
+    "ferrocarril"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-07-25T01:51Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/49181",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-07-25T01:51Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "В Тимашевске обломки БПЛА упали на территорию вокзала, повредили один из вагонов проходящего через город пассажирского поезда.",
+     "id": "admkrai-49181",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02725",
+   "impacto": "restos",
+   "lugar": {
+    "id": "geonames:482965",
+    "nivel": "localidad",
+    "nombre": "Тимашёвск",
+    "nombre_latino": "Timashyovsk",
+    "punto": {
+     "lat": 45.61694,
+     "lon": 38.94528
+    },
+    "radio_km": 5.0
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2025-1084",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-08-03T01:26Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/49425",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-08-03T01:26Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "В Адлерском районе обломки беспилотника попали в цистерну с нефтепродуктами, в результате чего произошло возгорание.",
+     "id": "admkrai-49425",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02726",
+   "impacto": "restos",
+   "lugar": {
+    "id": "geonames:584243",
+    "nivel": "localidad",
+    "nombre": "Адлер",
+    "nombre_latino": "Adler",
+    "punto": {
+     "lat": 43.42896,
+     "lon": 39.92391
+    },
+    "radio_km": 5.0
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2025-1191",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-08-28T15:05Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/50023",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-08-28T15:05Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Так, в школе №45 станицы Северской педагоги и сотрудники охраны отработали навыки действий в чрезвычайных ситуациях: при вооруженном нападении и захвате заложников, обнаружении взрывного устройства,",
+     "id": "admkrai-50023",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02727",
+   "impacto": "restos",
+   "lugar": {
+    "id": "geonames:496267",
+    "nivel": "localidad",
+    "nombre": "Северская",
+    "nombre_latino": "Severskaya",
+    "punto": {
+     "lat": 44.85393,
+     "lon": 38.67924
+    },
+    "radio_km": 4.0
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2025-1282",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fallecidos": {
+    "max": 2,
+    "min": 2
+   },
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-09-24T10:36Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/50746",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-09-24T10:36Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Атаковали центральную часть города, в районе гостиницы «Новороссийск».",
+     "id": "admkrai-50746",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "heridos": {
+    "max": 3,
+    "min": 3
+   },
+   "id": "EODI-IG-2025-02728",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:518255",
+    "nivel": "localidad",
+    "nombre": "Новороссийск",
+    "nombre_latino": "Novorossiysk",
+    "punto": {
+     "lat": 44.73188,
+     "lon": 37.76176
+    },
+    "radio_km": 7.0
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2025-1475",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-11-14T05:49Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/51877",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-11-14T05:49Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Больше всего пострадал Новороссийск.",
+     "id": "admkrai-51877",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02729",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:518255",
+    "nivel": "localidad",
+    "nombre": "Новороссийск",
+    "nombre_latino": "Novorossiysk",
+    "punto": {
+     "lat": 44.73188,
+     "lon": 37.76176
+    },
+    "radio_km": 7.0
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2025-1475",
+   "categorias_objetivo": [
+    "combustible",
+    "puerto"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-11-14T05:49Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/51877",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-11-14T05:49Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Фрагменты беспилотников затронули нефтебазу комплекса «Шесхарис», контейнерный терминал, береговые сооружения и одно гражданское судно в порту, где ранены трое членов экипажа.",
+     "id": "admkrai-51877",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02730",
+   "impacto": "impacto",
+   "lugar": {
+    "categoria": "deposito_combustible",
+    "id": "osm:way/183488914",
+    "nivel": "instalacion",
+    "nombre": "Шесхариз",
+    "punto": {
+     "lat": 44.70934,
+     "lon": 37.85052
+    },
+    "radio_km": 1.5
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2025-1541",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-12-03T15:47Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/52313",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-12-03T15:47Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "– Как и обещал, заехал в детские сады №40 и №41, пострадавшие в результате атаки БПЛА на Туапсе.",
+     "id": "admkrai-52313",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02731",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:480716",
+    "nivel": "localidad",
+    "nombre": "Туапсэ",
+    "nombre_latino": "Tuapse",
+    "punto": {
+     "lat": 44.10083,
+     "lon": 39.08326
+    },
+    "radio_km": 5.0
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2025-1606",
+   "categorias_objetivo": [
+    "puerto"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-12-22T06:40Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/52667",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-12-22T06:40Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "В результате падения обломков в поселке Волна на одном из терминалов произошли возгорания – повреждены два причала, два судна и трубопровод.",
+     "id": "admkrai-52667",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/52669",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-12-22T09:07Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "последствий атаки БПЛА координирует заместитель главы региона Дмитрий Маслов, который выехал на место ЧС в поселок Волна сразу после заседания оперативного штаба ночью 22 декабря.",
+     "id": "admkrai-52669",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02732",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:826078",
+    "nivel": "localidad",
+    "nombre": "Волна",
+    "nombre_latino": "Volna",
+    "punto": {
+     "lat": 45.12704,
+     "lon": 36.71062
+    },
+    "radio_km": 1.5
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2025-1606",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-12-22T09:07Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/52669",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-12-22T09:07Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Кондратьева работы по ликвидации последствий атаки БПЛА координирует заместитель главы региона Дмитрий Маслов, который выехал на место ЧС в поселок Волна сразу после заседания оперативного",
+     "id": "admkrai-52669",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02733",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:528745",
+    "nivel": "localidad",
+    "nombre": "Маслов",
+    "nombre_latino": "Maslov",
+    "punto": {
+     "lat": 44.70111,
+     "lon": 38.99222
+    },
+    "radio_km": 1.5
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
    "ataque": "EODI-UA-2026-0038",
    "categorias_objetivo": [],
    "control": {
@@ -783408,6 +784267,1696 @@
     "radio_km": 7.0
    },
    "region": "RU-NIZ",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0350",
+   "categorias_objetivo": [
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-01-20T23:02Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/53023",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-01-20T23:02Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Там в поселке Афипском на территорию рядом с многоквартирным домом упали обломки БПЛА, один из них - боевая часть.",
+     "id": "admkrai-53023",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03423",
+   "impacto": "restos",
+   "lugar": {
+    "id": "geonames:584126",
+    "nivel": "localidad",
+    "nombre": "Афипский",
+    "nombre_latino": "Afipskiy",
+    "punto": {
+     "lat": 44.90005,
+     "lon": 38.84265
+    },
+    "radio_km": 4.0
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0350",
+   "categorias_objetivo": [
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-01-20T23:02Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/53023",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-01-20T23:02Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Также два частных дома повреждено в Приморско-Ахтарске.",
+     "id": "admkrai-53023",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03424",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:505259",
+    "nivel": "localidad",
+    "nombre": "Приморско-Ахтарск",
+    "nombre_latino": "Primorsko-Akhtarsk",
+    "punto": {
+     "lat": 46.04847,
+     "lon": 38.17899
+    },
+    "radio_km": 4.0
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0350",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-01-20T23:02Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/53023",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-01-20T23:02Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "В Сочи упавшие обломки не нанесли ущерба.",
+     "id": "admkrai-53023",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03425",
+   "impacto": "restos",
+   "lugar": {
+    "id": "geonames:491422",
+    "nivel": "localidad",
+    "nombre": "Сочи",
+    "nombre_latino": "Sochi",
+    "punto": {
+     "lat": 43.59699,
+     "lon": 39.72477
+    },
+    "radio_km": 10.0
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0524",
+   "categorias_objetivo": [
+    "industrial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-03-12T10:59Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/53751",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-03-12T10:59Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Днем, 12 марта в результате атаки беспилотников пострадало сельскохозяйственное предприятие в промзоне станицы Новоминской Каневского района.",
+     "id": "admkrai-53751",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "heridos": {
+    "max": 2,
+    "min": 2
+   },
+   "id": "EODI-IG-2026-03426",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:518568",
+    "nivel": "localidad",
+    "nombre": "Новоминская",
+    "nombre_latino": "Novominskaya",
+    "punto": {
+     "lat": 46.3163,
+     "lon": 38.9586
+    },
+    "radio_km": 4.0
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0544",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fallecidos": {
+    "max": 1,
+    "min": 1
+   },
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-03-18T00:37Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/53825",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-03-18T00:37Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "В результате террористической атаки беспилотников в Краснодаре погиб один человек.",
+     "id": "admkrai-53825",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "heridos": {
+    "max": 3,
+    "min": 3
+   },
+   "id": "EODI-IG-2026-03427",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:542420",
+    "nivel": "localidad",
+    "nombre": "Краснодар",
+    "nombre_latino": "Krasnodar",
+    "punto": {
+     "lat": 45.04534,
+     "lon": 38.98178
+    },
+    "radio_km": 10.0
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0631",
+   "categorias_objetivo": [
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-04-16T01:57Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/54263",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-04-16T01:57Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "В Туапсе в результате падения обломков повреждено 5 частных и 1 многоквартирный жилой дом.",
+     "id": "admkrai-54263",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/54265",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-04-16T07:21Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Число пострадавших из-за атаки БПЛА на Туапсе увеличилось до семи человек.",
+     "id": "admkrai-54265",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03428",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:480716",
+    "nivel": "localidad",
+    "nombre": "Туапсэ",
+    "nombre_latino": "Tuapse",
+    "punto": {
+     "lat": 44.10083,
+     "lon": 39.08326
+    },
+    "radio_km": 5.0
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0631",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-04-16T01:57Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/54263",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-04-16T01:57Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "В сочинском поселке Лоо обломки беспилотников упали по нескольким адресам.",
+     "id": "admkrai-54263",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03429",
+   "impacto": "restos",
+   "lugar": {
+    "id": "geonames:805581",
+    "nivel": "localidad",
+    "nombre": "Лоо",
+    "nombre_latino": "Loo",
+    "punto": {
+     "lat": 43.70387,
+     "lon": 39.58692
+    },
+    "radio_km": 1.5
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0631",
+   "categorias_objetivo": [
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-04-16T07:21Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/54265",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-04-16T07:21Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "В Сочи из-за падения обломков повреждены два частных дома в Лазаревском районе и многоквартирный дом в Центральном – в них выбито остекление.",
+     "id": "admkrai-54265",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03430",
+   "impacto": "restos",
+   "lugar": {
+    "id": "geonames:491422",
+    "nivel": "localidad",
+    "nombre": "Сочи",
+    "nombre_latino": "Sochi",
+    "punto": {
+     "lat": 43.59699,
+     "lon": 39.72477
+    },
+    "radio_km": 10.0
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0631",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-04-16T07:21Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/54265",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-04-16T07:21Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Также частично повреждено ограждение и оконные блоки в детском саду в Дагомысе – территорию оцепили, детей принимают в другом корпусе учреждения",
+     "id": "admkrai-54265",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03431",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:823674",
+    "nivel": "localidad",
+    "nombre": "Дагомыс",
+    "nombre_latino": "Dagomys",
+    "punto": {
+     "lat": 43.66974,
+     "lon": 39.66863
+    },
+    "radio_km": 4.0
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0631",
+   "categorias_objetivo": [
+    "puerto"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-04-16T07:21Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/54265",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-04-16T07:21Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "В Новороссийске обломки БПЛА попали в гражданское судно, произошло возгорание, которое оперативно ликвидировали.",
+     "id": "admkrai-54265",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03432",
+   "impacto": "restos",
+   "lugar": {
+    "id": "geonames:518255",
+    "nivel": "localidad",
+    "nombre": "Новороссийск",
+    "nombre_latino": "Novorossiysk",
+    "punto": {
+     "lat": 44.73188,
+     "lon": 37.76176
+    },
+    "radio_km": 7.0
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0662",
+   "categorias_objetivo": [
+    "combustible",
+    "industrial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-04-28T14:17Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/54466",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-04-28T14:17Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Падение БПЛА вызвало новый пожар на Туапсинском нефтеперерабатывающем заводе, произошел разлив нефтепродуктов в реку Туапсе.",
+     "id": "admkrai-54466",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03433",
+   "impacto": "restos",
+   "lugar": {
+    "categoria": "industrial",
+    "id": "osm:way/179391696",
+    "localidad": "Туапсэ",
+    "nivel": "instalacion",
+    "nombre": "Асфальто-бетонный завод",
+    "punto": {
+     "lat": 44.19991,
+     "lon": 39.24213
+    },
+    "radio_km": 2.0
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0668",
+   "categorias_objetivo": [
+    "combustible",
+    "industrial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-04-30T06:49Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/54499",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-04-30T06:49Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "В Туапсе на нефтеперерабатывающем заводе потушили пожар, возникший в результате атаки вражеских беспилотников.",
+     "id": "admkrai-54499",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03434",
+   "impacto": "impacto",
+   "lugar": {
+    "categoria": "industrial",
+    "id": "osm:way/179391696",
+    "localidad": "Туапсэ",
+    "nivel": "instalacion",
+    "nombre": "Асфальто-бетонный завод",
+    "punto": {
+     "lat": 44.19991,
+     "lon": 39.24213
+    },
+    "radio_km": 2.0
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0671",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-05-01T12:26Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/54520",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-05-01T12:26Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Туапсе вновь был атакован беспилотниками.",
+     "id": "admkrai-54520",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03435",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:480716",
+    "nivel": "localidad",
+    "nombre": "Туапсэ",
+    "nombre_latino": "Tuapse",
+    "punto": {
+     "lat": 44.10083,
+     "lon": 39.08326
+    },
+    "radio_km": 5.0
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0779",
+   "categorias_objetivo": [
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-06-11T00:14Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/55347",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-06-11T00:14Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Обломки БПЛА попали в многоквартирный дом в Краснодаре.",
+     "id": "admkrai-55347",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "heridos": {
+    "max": 1,
+    "min": 1
+   },
+   "id": "EODI-IG-2026-03436",
+   "impacto": "restos",
+   "lugar": {
+    "id": "geonames:542420",
+    "nivel": "localidad",
+    "nombre": "Краснодар",
+    "nombre_latino": "Krasnodar",
+    "punto": {
+     "lat": 45.04534,
+     "lon": 38.98178
+    },
+    "radio_km": 10.0
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0869",
+   "categorias_objetivo": [
+    "industrial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-07-22T05:30Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/56027",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-07-22T05:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "В Армавире обломки беспилотника попали на территорию одного из предприятий, в результате чего погиб сотрудник.",
+     "id": "admkrai-56027",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03437",
+   "impacto": "restos",
+   "lugar": {
+    "id": "geonames:580922",
+    "nivel": "localidad",
+    "nombre": "Армавир",
+    "nombre_latino": "Armavir",
+    "punto": {
+     "lat": 44.99849,
+     "lon": 41.11472
+    },
+    "radio_km": 7.0
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0869",
+   "categorias_objetivo": [
+    "industrial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-07-22T05:30Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/56027",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-07-22T05:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "При атаке складского комплекса в Краснодаре пострадали десять человек.",
+     "id": "admkrai-56027",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03438",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:542420",
+    "nivel": "localidad",
+    "nombre": "Краснодар",
+    "nombre_latino": "Krasnodar",
+    "punto": {
+     "lat": 45.04534,
+     "lon": 38.98178
+    },
+    "radio_km": 10.0
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0870",
+   "categorias_objetivo": [
+    "industrial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-07-22T11:11Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/56028",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-07-22T11:11Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Пожар на территории складского комплекса в Краснодаре локализован",
+     "id": "admkrai-56028",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03439",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:542420",
+    "nivel": "localidad",
+    "nombre": "Краснодар",
+    "nombre_latino": "Krasnodar",
+    "punto": {
+     "lat": 45.04534,
+     "lon": 38.98178
+    },
+    "radio_km": 10.0
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0870",
+   "categorias_objetivo": [
+    "industrial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-07-22T11:11Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/56028",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-07-22T11:11Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Беспилотники атаковали предприятие в Армавире, где погиб один человек, а также логистический склад в Краснодаре, на котором пострадали десять человек, четверо из них доставили в",
+     "id": "admkrai-56028",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03440",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:580922",
+    "nivel": "localidad",
+    "nombre": "Армавир",
+    "nombre_latino": "Armavir",
+    "punto": {
+     "lat": 44.99849,
+     "lon": 41.11472
+    },
+    "radio_km": 7.0
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0894",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-08-03T08:15Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/56201",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-08-03T08:15Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "В селе Архипо-Осиповка из-за падения обломков БПЛА, по предварительной информации, погибли 3 человека.",
+     "id": "admkrai-56201",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03441",
+   "impacto": "restos",
+   "lugar": {
+    "id": "geonames:580969",
+    "nivel": "localidad",
+    "nombre": "Архипо-Осиповка",
+    "nombre_latino": "Arkhipo-Osipovka",
+    "punto": {
+     "lat": 44.37194,
+     "lon": 38.52972
+    },
+    "radio_km": 1.5
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0894",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-08-03T08:15Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/56201",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-08-03T08:15Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Поручил главе Геленджика Алексею Богодистову оказать всю необходимую поддержку пострадавшим и семьям погибших.",
+     "id": "admkrai-56201",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03442",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:561667",
+    "nivel": "localidad",
+    "nombre": "Геленджик",
+    "nombre_latino": "Gelendzhik",
+    "punto": {
+     "lat": 44.58014,
+     "lon": 38.06646
+    },
+    "radio_km": 5.0
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0897",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-08-04T17:18Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/56220",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-08-04T17:18Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Министр здравоохранения края посетил в клиниках Краснодара пострадавших после падения обломков БПЛА в Архипо-Осиповке",
+     "id": "admkrai-56220",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03443",
+   "impacto": "restos",
+   "lugar": {
+    "id": "geonames:542420",
+    "nivel": "localidad",
+    "nombre": "Краснодар",
+    "nombre_latino": "Krasnodar",
+    "punto": {
+     "lat": 45.04534,
+     "lon": 38.98178
+    },
+    "radio_km": 10.0
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0897",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-08-04T17:18Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/56220",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-08-04T17:18Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Министр здравоохранения края посетил в клиниках Краснодара пострадавших после падения обломков БПЛА в Архипо-Осиповке",
+     "id": "admkrai-56220",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03444",
+   "impacto": "restos",
+   "lugar": {
+    "id": "geonames:580969",
+    "nivel": "localidad",
+    "nombre": "Архипо-Осиповка",
+    "nombre_latino": "Arkhipo-Osipovka",
+    "punto": {
+     "lat": 44.37194,
+     "lon": 38.52972
+    },
+    "radio_km": 1.5
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0913",
+   "categorias_objetivo": [
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-08-12T04:26Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/56308",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-08-12T04:26Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "В Новороссийске погиб восьмилетний ребенок.",
+     "id": "admkrai-56308",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/56309",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-08-12T13:39Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Наибольшие повреждения получил Новороссийск, где помимо жилых домов, пострадала городская инфраструктура.",
+     "id": "admkrai-56309",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03445",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:518255",
+    "nivel": "localidad",
+    "nombre": "Новороссийск",
+    "nombre_latino": "Novorossiysk",
+    "punto": {
+     "lat": 44.73188,
+     "lon": 37.76176
+    },
+    "radio_km": 7.0
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0913",
+   "categorias_objetivo": [
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-08-12T04:26Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/56308",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-08-12T04:26Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "В поселке Волна Темрюкского района обломки БПЛА упали во дворе частного дома.",
+     "id": "admkrai-56308",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03446",
+   "impacto": "restos",
+   "lugar": {
+    "id": "geonames:826078",
+    "nivel": "localidad",
+    "nombre": "Волна",
+    "nombre_latino": "Volna",
+    "punto": {
+     "lat": 45.12704,
+     "lon": 36.71062
+    },
+    "radio_km": 1.5
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0913",
+   "categorias_objetivo": [
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-08-12T04:26Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/56308",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-08-12T04:26Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "В Анапе обломки БПЛА также повредили жилой дом, пострадали два человека, им оказали необходимую медицинскую помощь без госпитализации.",
+     "id": "admkrai-56308",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/56309",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-08-12T13:39Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Также есть повреждения жилых домов в Геленджике, Анапе и Темрюкском районе.",
+     "id": "admkrai-56309",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03447",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:582182",
+    "nivel": "localidad",
+    "nombre": "Анапа",
+    "nombre_latino": "Anapa",
+    "punto": {
+     "lat": 44.89497,
+     "lon": 37.31623
+    },
+    "radio_km": 5.0
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0913",
+   "categorias_objetivo": [
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-08-12T04:26Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/56308",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-08-12T04:26Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "В Геленджике повреждены три частных домовладения, пострадали два человека.",
+     "id": "admkrai-56308",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/56309",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-08-12T13:39Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Также есть повреждения жилых домов в Геленджике, Анапе и Темрюкском районе.",
+     "id": "admkrai-56309",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03448",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:561667",
+    "nivel": "localidad",
+    "nombre": "Геленджик",
+    "nombre_latino": "Gelendzhik",
+    "punto": {
+     "lat": 44.58014,
+     "lon": 38.06646
+    },
+    "radio_km": 5.0
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0914",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-08-12T14:59Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/56313",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-08-12T14:59Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Вениамин Кондратьев: Важно в кратчайшие сроки восстановить поврежденную при атаке БПЛА городскую инфраструктуру Новороссийска",
+     "id": "admkrai-56313",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/56325",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-08-13T12:04Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Вениамин Кондратьев осмотрел поврежденную при атаке БПЛА школу в Новороссийске",
+     "id": "admkrai-56325",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03449",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:518255",
+    "nivel": "localidad",
+    "nombre": "Новороссийск",
+    "nombre_latino": "Novorossiysk",
+    "punto": {
+     "lat": 44.73188,
+     "lon": 37.76176
+    },
+    "radio_km": 7.0
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0916",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-08-13T12:17Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/56327",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-08-13T12:17Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "В Новороссийске восстановили поврежденный при атаке БПЛА водовод",
+     "id": "admkrai-56327",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03450",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:518255",
+    "nivel": "localidad",
+    "nombre": "Новороссийск",
+    "nombre_latino": "Novorossiysk",
+    "punto": {
+     "lat": 44.73188,
+     "lon": 37.76176
+    },
+    "radio_km": 7.0
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0937",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fallecidos": {
+    "max": 2,
+    "min": 2
+   },
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-08-23T23:01Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/56458",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-08-23T23:01Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Обломки беспилотника упали на частный детский центр в Краснодаре.",
+     "id": "admkrai-56458",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "heridos": {
+    "max": 7,
+    "min": 7
+   },
+   "id": "EODI-IG-2026-03451",
+   "impacto": "restos",
+   "lugar": {
+    "id": "geonames:542420",
+    "nivel": "localidad",
+    "nombre": "Краснодар",
+    "nombre_latino": "Krasnodar",
+    "punto": {
+     "lat": 45.04534,
+     "lon": 38.98178
+    },
+    "radio_km": 10.0
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "categorias_objetivo": [
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fallecidos": {
+    "max": 2,
+    "min": 2
+   },
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-08-25T03:30Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/56473",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-08-25T03:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Кроме того, в поселке Афипский повреждено как минимум 10 частных домов.",
+     "id": "admkrai-56473",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "heridos": {
+    "max": 2,
+    "min": 2
+   },
+   "id": "EODI-IG-2026-03452",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:584126",
+    "nivel": "localidad",
+    "nombre": "Афипский",
+    "nombre_latino": "Afipskiy",
+    "punto": {
+     "lat": 44.90005,
+     "lon": 38.84265
+    },
+    "radio_km": 4.0
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0957",
+   "categorias_objetivo": [
+    "combustible",
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-09-04T12:47Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/56641",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-09-04T12:47Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "В Сочи из-за падения обломков БПЛА повреждены жилые дома, произошел пожар на территории нефтебазы.",
+     "id": "admkrai-56641",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03453",
+   "impacto": "restos",
+   "lugar": {
+    "id": "geonames:491422",
+    "nivel": "localidad",
+    "nombre": "Сочи",
+    "nombre_latino": "Sochi",
+    "punto": {
+     "lat": 43.59699,
+     "lon": 39.72477
+    },
+    "radio_km": 10.0
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0967",
+   "categorias_objetivo": [
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T00:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fallecidos": {
+    "max": 4,
+    "min": 4
+   },
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-09-09T05:50Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/56696",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-09-09T05:50Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "В Анапе обломками беспилотника повреждены три частных дома и детский сад.",
+     "id": "admkrai-56696",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "heridos": {
+    "max": 29,
+    "min": 29
+   },
+   "id": "EODI-IG-2026-03454",
+   "impacto": "restos",
+   "lugar": {
+    "id": "geonames:582182",
+    "nivel": "localidad",
+    "nombre": "Анапа",
+    "nombre_latino": "Anapa",
+    "punto": {
+     "lat": 44.89497,
+     "lon": 37.31623
+    },
+    "radio_km": 5.0
+   },
+   "region": "RU-KDA",
    "reivindicacion_de_parte": true,
    "sentido": "UA_RU",
    "tipo": "impacto_guerra"
