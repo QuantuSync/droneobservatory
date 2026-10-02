@@ -1,7 +1,7 @@
 # Informe: motor de deducción por descarte físico
 
-Fecha: 2 de octubre de 2026. Pull request #50 (código, catálogo, esquema, exportación y este
-informe). En AEGIS, PR #45 (importador, vocabulario y límites de movimiento por clase).
+Fecha: 2 de octubre de 2026. Pull requests #50 (código, catálogo, esquema, exportación y este
+informe), #52 (arreglo de `estado.json` tras el despliegue) y el de las cifras de producción. En AEGIS, PR #45 (importador, vocabulario y límites de movimiento por clase).
 
 Para cada incidente europeo, cada impacto con lugar de la capa de guerra y cada ataque, el
 motor dice con reglas físicas explícitas qué clases de dron son compatibles, cuáles quedan
@@ -34,11 +34,11 @@ nivel de detalle y no se publica en la web.
   clase descartada: la base no trae alturas, velocidades ni trayectorias, el viento medido en
   los incidentes nunca supera el límite de una clase con el margen, y la regla de distancia
   solo descarta cuando una autoridad declara que el dron entró desde fuera (en los casos con
-  punto, no ocurre). De media quedan 7,4 clases compatibles por incidente con datos. Lo que sí
-  da es la conclusión «despegue cercano o dron de largo alcance» en 18 incidentes (Hannover,
+  punto, no ocurre). De media quedan 7,8 clases compatibles por incidente. Lo que sí
+  da es la conclusión «despegue cercano o dron de largo alcance» en 20 incidentes (Hannover,
   Fráncfort, Leipzig, Varsovia, Sofía…), la zona de despegue por clase y, en la capa de guerra,
-  descartes reales: 38 impactos con alguna clase descartada (los multirrotores de consumo y
-  profesionales a cientos de kilómetros de la zona de lanzamiento) y 25 ataques.
+  descartes reales: 86 impactos con alguna clase descartada (los multirrotores de consumo y
+  profesionales a cientos de kilómetros de la zona de lanzamiento) y 59 ataques.
 - **Deriva** en los cruces a países de la OTAN: 30 incidentes evaluados; 1 compatible con
   deriva (Rumanía, base aérea, 2026), 1 no compatible (Vilna) y 28 indeterminados, casi todos
   porque el incidente solo tiene el día y el viento del día no tiene dirección.
@@ -260,22 +260,22 @@ perfil cada 250 m hasta 30 km sobre Copernicus DEM GLO-90; por sector y a 1, 2, 
 
 ## 6. Resultados en la base
 
-Pasada completa sobre la base del 2 de octubre de 2026 (382 incidentes vigentes, 753 impactos
+Primera pasada completa en producción, el 2 de octubre de 2026 a las 09:33 UTC (384 incidentes vigentes, 778 impactos
 con lugar que no son partes diarios ni FPV, 4.605 ataques):
 
 | Tipo | Casos | Con alguna clase descartada | Sin ninguna compatible (sin datos) | Compatibles de media | Con conflicto |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Incidentes | 382 | 0 | 147 | 7,36 | 0 |
-| Impactos de guerra | 753 | 38 | 80 | 6,96 | 0 |
-| Ataques | 4.605 | 25 | 4.124 (sin impactos con lugar) | 0,81 | 0 |
+| Incidentes | 384 | 0 | 133 | 7,83 | 0 |
+| Impactos de guerra | 778 | 86 | 91 | 7,01 | 0 |
+| Ataques | 4.605 | 59 | 4.119 (sin impactos con lugar) | 0,84 | 0 |
 
 - En los impactos, las clases descartadas son los multirrotores (de consumo, profesionales y
-  pesados: 37–38 impactos) y el ala fija táctica eléctrica (6): impactos a cientos de km de la
+  pesados: 85–86 impactos) y el ala fija táctica eléctrica (9): impactos a cientos de km de la
   zona de lanzamiento del parte o de las fronteras de Ucrania. Las de largo alcance quedan
   compatibles o indeterminadas (algún modelo sin dato).
-- Conclusiones en incidentes: «despegue cercano o dron de largo alcance» en 18 (los que están a
+- Conclusiones en incidentes: «despegue cercano o dron de largo alcance» en 20 (los que están a
   más de 100 km de cualquier exterior: Hannover, Fráncfort, Leipzig, Varsovia, Sofía, Wunstorf);
-  «varios drones o equipos» en 2. Interferencia GNSS medida en 85: alta en 10, media en 23.
+  «varios drones o equipos» en 2. Interferencia GNSS medida en 91: alta en 11, media en 24.
 - Ningún incidente europeo con clase descartada. Es lo que dan los datos: sin altura, velocidad
   ni trayectoria, con viento medido por debajo de los límites con margen y sin entrada declarada
   por una autoridad en los incidentes con punto.
@@ -345,6 +345,22 @@ contradicen casos conocidos), no una medida de lo que discrimina el motor.
   viento y peso, con su unidad y `None` donde no hay cota) y su clase de tamaño de AEGIS. Puerta
   local completa: 791 tests, ruff, formato y mypy --strict con numpy 2.4.6 y mypy 2.1.0.
 
+**Horizonte de radar** en 186 incidentes con punto en una instalación (antena supuesta a 15 m).
+Mediana entre incidentes de la altura sobre el terreno por debajo de la cual un dron queda
+oculto: en el sector mediano, 0 m a 2 km, 4,5 m a 5 km y 15 m a 10 km; en el sector más tapado,
+13 m a 2 km, 46 m a 5 km y 101 m a 10 km. Ejemplos (sector mediano / sector más tapado):
+
+| Incidente | 2 km | 5 km | 10 km | 20 km |
+| --- | --- | --- | --- | --- |
+| EODI-2025-00154 Copenhague | 0 / 2,3 m | 0 / 7,8 m | 0 / 19,5 m | 0,2 / 33,7 m |
+| EODI-2025-00060 Vilna | 0 / 8,3 m | 33,8 / 124 m | 41,2 / 153,4 m | 96 / 236,4 m |
+| EODI-2025-00072 Bruselas | 0,6 / 14,9 m | 8,6 / 27,9 m | 15,5 / 101,4 m | 52 / 214,6 m |
+| EODI-2025-00277 Múnich | 0 / 0 m | 0,1 / 10,6 m | 8,2 / 81,3 m | 35 / 106,8 m |
+
+En Copenhague (llano y junto al mar) casi nada se esconde del radar; en Vilna el relieve y la
+superficie (bosque) ocultan un dron por debajo de unos 30–40 m a 5–10 km en la mitad de los
+sectores.
+
 ## 9. Servidor
 
 `eodi-deduccion.timer` en el minuto 5 de cada hora, `servidor/deduccion.sh` con su propio cerrojo (`deduccion.lock`), `Nice=15` y E/S en reposo; nunca toma el cerrojo de la recogida horaria (solo lee la base de la rama `estado`). La recogida horaria incorpora los resultados a la tabla `deducciones` en segundos. Detalle y órdenes en [`servidor.md`](servidor.md), «Motor de deducción».
@@ -360,6 +376,20 @@ Medido en el servidor (CX23, 2 vCPU, 3,8 GB) el 2 de octubre de 2026, con la ram
 | Teselas de relieve descargadas | 150 (el tope por ejecución), 641 MB | 0 |
 
 La memoria es la de la base descifrada en memoria (unos 390 MB) más el cálculo; el pico de la recogida horaria es de 1,6–2 GB y van a horas distintas (minuto 5 frente al 17). El relieve se completa en las ejecuciones siguientes (tope de 150 teselas por ejecución) y luego solo crece con los incidentes nuevos en sitios nuevos. Disco libre del servidor: 31 GB. El horizonte de radar se calcula, por tanto, para todos los incidentes con punto en una instalación, no solo para los de nivel B: cabe.
+
+**En producción.** Fusionado el 2 de octubre de 2026 a las 08:59 UTC (#50, b665f7e) con el
+procedimiento de `docs/fusiones.md`: la otra sesión fusionó el #51 (esquema 1.6.0, exportación
+1.2.0) minutos antes, así que se rehízo sobre él con esquema 1.7.0, exportación 1.3.0 y
+vocabulario 1.3.0, con la puerta local y la CI otra vez en verde. Producción servía 383
+incidentes antes y 383 después. `bash servidor/reconstruir.sh` (esperando a que terminara el de
+la otra sesión) instaló `eodi-deduccion.timer` (minuto 5). La recogida de las 09:17 incorporó
+lo calculado en las pruebas (383 incidentes, 777 impactos, 4.605 ataques) y terminó bien, pero
+no pudo componer `estado.json`: en `servidor/recogida.sh` la línea de `--deduccion` llevaba un
+salto de línea escrito como «\n» literal. Arreglado en #52 (con un test que recorre los scripts
+del servidor), fusionado a las 09:40 y llevado al clon del servidor con el cerrojo de la
+recogida. La primera pasada completa en producción (`--todo`, 09:33 UTC): 4 min 48 s, 1 GB de
+pico, 15 teselas más (165 en total, 722 MB: el relieve de todos los incidentes ya está),
+validación 26 de 26 sin fallos graves. El temporizador de las 10:05 hizo la primera pasada incremental (1 min 8 s, 9 incidentes recalculados, 1 GB de pico) y la recogida de las 10:17 terminó bien, incorporó los cambios (384 incidentes, 10 impactos y 7 ataques) y publicó `estado.json` con `ultima_deduccion` 2026-10-02T10:05Z.
 
 ## 10. Límites y pendiente
 
