@@ -72312,21 +72312,6 @@
       "campo": "consecuencias.cierre.minutos",
       "credibilidad": 3,
       "fecha": {
-       "precision": "dia",
-       "valor": "2026-09-16T00:00Z"
-      },
-      "fiabilidad": "B",
-      "fuente_id": "adsblol-EBCI-2026-09-16-EODI-2026-00035",
-      "medio": "Tráfico aéreo medido (adsb.lol)",
-      "valor": {
-       "max": 39,
-       "min": 39
-      }
-     },
-     {
-      "campo": "consecuencias.cierre.minutos",
-      "credibilidad": 3,
-      "fecha": {
        "precision": "aproximada",
        "valor": "2026-09-16T21:00Z"
       },
@@ -72342,18 +72327,6 @@
       "campo": "consecuencias.cierre.valor",
       "credibilidad": 3,
       "fecha": {
-       "precision": "dia",
-       "valor": "2026-09-16T00:00Z"
-      },
-      "fiabilidad": "B",
-      "fuente_id": "adsblol-EBCI-2026-09-16-EODI-2026-00035",
-      "medio": "Tráfico aéreo medido (adsb.lol)",
-      "valor": "si"
-     },
-     {
-      "campo": "consecuencias.cierre.valor",
-      "credibilidad": 3,
-      "fecha": {
        "precision": "aproximada",
        "valor": "2026-09-16T20:00Z"
       },
@@ -72361,21 +72334,6 @@
       "fuente_id": "gdelt-3afe8513c064df77",
       "medio": "vrt.be",
       "valor": "si"
-     },
-     {
-      "campo": "consecuencias.vuelos_desviados",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "dia",
-       "valor": "2026-09-16T00:00Z"
-      },
-      "fiabilidad": "B",
-      "fuente_id": "adsblol-EBCI-2026-09-16-EODI-2026-00035",
-      "medio": "Tráfico aéreo medido (adsb.lol)",
-      "valor": {
-       "max": 0,
-       "min": 0
-      }
      },
      {
       "campo": "drones.numero",
@@ -72573,20 +72531,6 @@
       "idioma": "de",
       "medio": "brf.be",
       "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://github.com/adsblol/globe_history_2026/releases/tag/v2026.09.16-planes-readsb-prod-0",
-      "fecha": {
-       "precision": "dia",
-       "valor": "2026-09-16T00:00Z"
-      },
-      "fiabilidad": "B",
-      "frase_origen": "Cierre medido en EBCI: 11:39–12:18 UTC, 39 minutos, 0 desvíos y 0 esperas.",
-      "id": "adsblol-EBCI-2026-09-16-EODI-2026-00035",
-      "idioma": "es",
-      "medio": "Tráfico aéreo medido (adsb.lol)",
-      "replicas": 0
      }
     ],
     "id": "EODI-2026-00035",
@@ -72615,27 +72559,6 @@
     "titulo": {
      "en": "Drone overflies Charleroi airport forcing suspension of operations",
      "es": "Un dron sobrevuela el aeropuerto de Charleroi y obliga a interrumpir las operaciones"
-    },
-    "trafico_aereo": {
-     "cierre": {
-      "aeropuerto": "EBCI",
-      "difiere_de_declarado": false,
-      "duracion_min": 39,
-      "fin": {
-       "precision": "minuto",
-       "valor": "2026-09-16T12:18Z"
-      },
-      "inicio": {
-       "precision": "minuto",
-       "valor": "2026-09-16T11:39Z"
-      },
-      "resultado": "cierre_medido",
-      "vuelos_desviados": 0,
-      "vuelos_en_espera": 0
-     },
-     "datos": [
-      "https://github.com/adsblol/globe_history_2026/releases/tag/v2026.09.16-planes-readsb-prod-0"
-     ]
     }
    },
    "type": "Feature"
@@ -111302,6 +111225,183 @@
     "titulo": {
      "en": "Geran drone explodes in Orhei after illegally entering Moldovan airspace",
      "es": "Dron Geran explota en Orhei tras entrar ilegalmente en el espacio aéreo de Moldavia"
+    }
+   },
+   "type": "Feature"
+  },
+  {
+   "geometry": {
+    "coordinates": [
+     28.83017,
+     45.32397
+    ],
+    "type": "Point"
+   },
+   "id": "EODI-2026-00271",
+   "properties": {
+    "afirmaciones_publicas": [
+     {
+      "campo": "lugar.localidad",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-02T06:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-1238a5a4d379ebe0",
+      "medio": "stiripesurse.ro",
+      "valor": "Plauru"
+     },
+     {
+      "campo": "lugar.pais",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-02T06:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-1238a5a4d379ebe0",
+      "medio": "stiripesurse.ro",
+      "valor": "RO"
+     },
+     {
+      "campo": "presencia_dron",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-02T06:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-1238a5a4d379ebe0",
+      "medio": "stiripesurse.ro",
+      "valor": "no_confirmada"
+     },
+     {
+      "campo": "presencia_dron",
+      "credibilidad": 1,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-02T06:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "gdelt-1238a5a4d379ebe0-declaracion-1",
+      "medio": "Ministry of National Defence (declaración oficial citada en stiripesurse.ro)",
+      "valor": "confirmada"
+     },
+     {
+      "campo": "tiempo.inicio",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-02T06:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-1238a5a4d379ebe0",
+      "medio": "stiripesurse.ro",
+      "valor": {
+       "precision": "minuto",
+       "valor": "2026-10-02T03:00Z"
+      }
+     },
+     {
+      "campo": "tipo",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-02T06:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-1238a5a4d379ebe0",
+      "medio": "stiripesurse.ro",
+      "valor": "sobrevuelo"
+     }
+    ],
+    "consecuencias": {
+     "cierre": {
+      "valor": "desconocido"
+     }
+    },
+    "control": {
+     "ultima_actualizacion": {
+      "precision": "minuto",
+      "valor": "2026-10-02T06:17Z"
+     }
+    },
+    "drones": {
+     "numero": "desconocido"
+    },
+    "estado": {
+     "actual": "confirmado",
+     "historial": [
+      {
+       "estado": "notificado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2026-10-02T06:00Z"
+       },
+       "fuente_id": "gdelt-1238a5a4d379ebe0"
+      },
+      {
+       "estado": "confirmado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2026-10-02T06:00Z"
+       },
+       "fuente_id": "gdelt-1238a5a4d379ebe0-declaracion-1"
+      }
+     ]
+    },
+    "fuentes": [
+     {
+      "credibilidad": 3,
+      "enlace": "https://stiripesurse.ro/drone-crashes-in-tulcea-county-defence-ministry-teams-conduct-on-site-investigation_3924972",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-02T06:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "During the night of October 1 to 2, the radar surveillance system of the Ministry of National Defence detected new drone attacks.",
+      "id": "gdelt-1238a5a4d379ebe0",
+      "idioma": "en",
+      "medio": "stiripesurse.ro",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 1,
+      "enlace": "https://stiripesurse.ro/drone-crashes-in-tulcea-county-defence-ministry-teams-conduct-on-site-investigation_3924972",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-02T06:00Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "a drone had crashed in the area of Plauru, Tulcea County",
+      "id": "gdelt-1238a5a4d379ebe0-declaracion-1",
+      "idioma": "en",
+      "medio": "Ministry of National Defence (declaración oficial citada en stiripesurse.ro)",
+      "replicas": 0
+     }
+    ],
+    "id": "EODI-2026-00271",
+    "lugar": {
+     "localidad": "Plauru",
+     "pais": "RO",
+     "radio_km": 3.0
+    },
+    "objetivo": {
+     "categoria": "otra",
+     "nombre": "Plauru"
+    },
+    "presencia_dron": "confirmada",
+    "tiempo": {
+     "inicio": {
+      "precision": "hora",
+      "valor": "2026-10-02T03:00Z"
+     }
+    },
+    "tipo": "incursion",
+    "titulo": {
+     "en": "Drone crashes in Tulcea County after incursion from Ukraine",
+     "es": "Dron cae en Tulcea tras incursión desde Ucrania"
     }
    },
    "type": "Feature"

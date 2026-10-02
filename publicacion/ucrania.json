@@ -475927,6 +475927,131 @@
     "Донецької обл",
     "Гвардійське"
    ]
+  },
+  {
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T06:17Z"
+    }
+   },
+   "cruces": [],
+   "derribados": {
+    "max": 646,
+    "min": 646
+   },
+   "derribados_categoria": "derribados",
+   "estado": {
+    "actual": "confirmado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "minuto",
+       "valor": "2026-10-02T05:59Z"
+      },
+      "fuente_id": "mod_russia-67844"
+     },
+     {
+      "estado": "confirmado",
+      "fecha": {
+       "precision": "minuto",
+       "valor": "2026-10-02T05:59Z"
+      },
+      "fuente_id": "mod_russia-67844"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/mod_russia/67844",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-10-02T05:59Z"
+     },
+     "fiabilidad": "D",
+     "frase_origen": "В течение прошедшей ночи в период с 20.00 мск 1 октября до 8.00 мск 2 октября дежурными силами ПВО перехвачены и уничтожены 646 украинских беспилотных",
+     "id": "mod_russia-67844",
+     "idioma": "ru",
+     "medio": "Минобороны России",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-UA-2026-1022",
+   "lanzados": {
+    "gerbera_senuelos": "desconocido",
+    "otros": "desconocido",
+    "shahed_geran": "desconocido",
+    "total": "desconocido"
+   },
+   "localizaciones_impacto": "desconocido",
+   "localizaciones_restos": "desconocido",
+   "lugares_impacto": [],
+   "lugares_restos": [],
+   "perdidos_guerra_electronica": "desconocido",
+   "periodo": {
+    "fin": {
+     "precision": "minuto",
+     "valor": "2026-10-02T05:00Z"
+    },
+    "inicio": {
+     "precision": "minuto",
+     "valor": "2026-10-01T17:00Z"
+    }
+   },
+   "regiones": [
+    {
+     "region": "RU-AST"
+    },
+    {
+     "region": "RU-BEL"
+    },
+    {
+     "region": "RU-BRY"
+    },
+    {
+     "region": "RU-KLU"
+    },
+    {
+     "region": "RU-KRS"
+    },
+    {
+     "region": "RU-ORL"
+    },
+    {
+     "region": "RU-ROS"
+    },
+    {
+     "region": "RU-SAM"
+    },
+    {
+     "region": "RU-SAR"
+    },
+    {
+     "region": "RU-TUL"
+    },
+    {
+     "region": "RU-ULY"
+    },
+    {
+     "region": "RU-VGG"
+    },
+    {
+     "region": "RU-VOR"
+    },
+    {
+     "region": "UA-43"
+    }
+   ],
+   "regiones_misiles": [],
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "ataque_guerra",
+   "tipos_dron": [
+    "ala_fija"
+   ],
+   "zonas_lanzamiento": []
   }
  ],
  "impactos": [
@@ -614764,13 +614889,24 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-02T05:17Z"
+     "valor": "2026-10-02T06:17Z"
     }
    },
-   "credibilidad": 2,
+   "credibilidad": 1,
    "fecha": {
     "precision": "minuto",
     "valor": "2025-09-03T05:31Z"
+   },
+   "foco_termico": {
+    "distancia_km": 0.6,
+    "instrumento": "VIIRS",
+    "numero_focos": 8,
+    "primer_foco": {
+     "precision": "minuto",
+     "valor": "2025-09-02T22:34Z"
+    },
+    "resultado": "detectado",
+    "satelite": "NOAA-20"
    },
    "fuentes": [
     {
@@ -770394,7 +770530,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-01T21:17Z"
+     "valor": "2026-10-02T06:17Z"
     }
    },
    "credibilidad": 2,
@@ -770430,8 +770566,26 @@
      "idioma": "uk",
      "medio": "Харківська ОВА",
      "replicas": 0
+    },
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/synegubov/26151",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-10-02T05:18Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Харків пошкоджено 5 автомобілів, магазин;",
+     "id": "synegubov-26151",
+     "idioma": "uk",
+     "medio": "Харківська ОВА (канал начальника)",
+     "replicas": 0
     }
    ],
+   "heridos": {
+    "max": 6,
+    "min": 6
+   },
    "id": "EODI-IG-2026-03156",
    "impacto": "impacto",
    "lugar": {
