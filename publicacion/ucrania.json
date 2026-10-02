@@ -480582,15 +480582,29 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-01T22:30Z"
+     "valor": "2026-10-02T20:17Z"
     }
    },
    "credibilidad": 2,
    "fecha": {
     "precision": "minuto",
-    "valor": "2025-09-19T06:38Z"
+    "valor": "2025-09-19T04:30Z"
    },
    "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/adm_dp/36239",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-09-19T04:30Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Вночі ворог масовано атакував Павлоград. Спрямував на місто безпілотники.",
+     "id": "adm_dp-36239",
+     "idioma": "uk",
+     "medio": "Дніпропетровська ОВА",
+     "replicas": 0
+    },
     {
      "credibilidad": 2,
      "enlace": "https://t.me/adm_dp/36240",
@@ -492642,7 +492656,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-01T22:30Z"
+     "valor": "2026-10-02T20:17Z"
     }
    },
    "credibilidad": 2,
@@ -492665,6 +492679,20 @@
      "fiabilidad": "B",
      "frase_origen": "Понад 20 тисяч абонентів були знеструмлені - такі наслідки ворожої атаки на Запоріжжя, станом на 8.",
      "id": "zoda_gov_ua-37809",
+     "idioma": "uk",
+     "medio": "Запорізька ОВА",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/zoda_gov_ua/37827",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-01-23T09:57Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "дрони-камікадзе влучили в енергетичний об'єкт",
+     "id": "zoda_gov_ua-37827",
      "idioma": "uk",
      "medio": "Запорізька ОВА",
      "replicas": 0
@@ -505632,7 +505660,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-01T22:30Z"
+     "valor": "2026-10-02T20:17Z"
     }
    },
    "credibilidad": 2,
@@ -505655,8 +505683,26 @@
      "idioma": "uk",
      "medio": "Запорізька ОВА",
      "replicas": 0
+    },
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/zoda_gov_ua/39478",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-03-07T10:35Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "чоловік з Гуляйполя, який поранений внаслідок скиду fpv-дрона 6 березня",
+     "id": "zoda_gov_ua-39478",
+     "idioma": "uk",
+     "medio": "Запорізька ОВА",
+     "replicas": 0
     }
    ],
+   "heridos": {
+    "max": 2100,
+    "min": 2100
+   },
    "id": "EODI-IG-2025-00558",
    "impacto": "impacto",
    "lugar": {
@@ -537633,7 +537679,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-01T22:30Z"
+     "valor": "2026-10-02T20:17Z"
     }
    },
    "credibilidad": 2,
@@ -537672,6 +537718,20 @@
     },
     {
      "credibilidad": 2,
+     "enlace": "https://t.me/zoda_gov_ua/43783",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-06-14T09:39Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Внаслідок російського обстрілу сталася пожежа на гуманітарному підприємстві.",
+     "id": "zoda_gov_ua-43783",
+     "idioma": "uk",
+     "medio": "Запорізька ОВА",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 2,
      "enlace": "https://t.me/zoda_gov_ua/43816",
      "fecha": {
       "precision": "minuto",
@@ -537686,8 +537746,8 @@
     }
    ],
    "heridos": {
-    "max": 2,
-    "min": 2
+    "max": 3,
+    "min": 3
    },
    "id": "EODI-IG-2025-01199",
    "impacto": "impacto",
@@ -615279,6 +615339,1702 @@
    "tipo": "impacto_guerra"
   },
   {
+   "ataque": "EODI-UA-2025-0361",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T20:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-08-26T08:59Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/DonetskaODA/46960",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-08-26T08:59Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "уламки ворожого дрона-камікадзе «Герань-2» та FPV-дронів, які були знищені",
+     "id": "DonetskaODA-46960",
+     "idioma": "uk",
+     "medio": "Донецька ОВА",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02747",
+   "impacto": "restos",
+   "lugar": {
+    "id": "katotth:UA14160210010099403",
+    "nivel": "localidad",
+    "nombre": "Покровськ",
+    "nombre_latino": "Pokrovsk",
+    "punto": {
+     "lat": 48.27711,
+     "lon": 37.17725
+    },
+    "radio_km": 5.0
+   },
+   "region": "UA-14",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T20:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-05-08T04:30Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/adm_dp/32149",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-05-08T04:30Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Продовжувалися атаки на Нікопольщину дронами-камікадзе та артилерією. Агресор поцілив по Нікополю",
+     "id": "adm_dp-32149",
+     "idioma": "uk",
+     "medio": "Дніпропетровська ОВА",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02748",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA12080050010010114",
+    "nivel": "localidad",
+    "nombre": "Нікополь",
+    "nombre_latino": "Nikopol",
+    "punto": {
+     "lat": 47.56921,
+     "lon": 34.39173
+    },
+    "radio_km": 7.0
+   },
+   "region": "UA-12",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2025-0288",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T20:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-10-26T16:31Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/adm_dp/37261",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-10-26T16:31Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Надвечір вороже військо скерувало БпЛА на Павлоградський район.",
+     "id": "adm_dp-37261",
+     "idioma": "uk",
+     "medio": "Дніпропетровська ОВА",
+     "replicas": 0
+    }
+   ],
+   "heridos": {
+    "max": 24,
+    "min": 24
+   },
+   "id": "EODI-IG-2025-02749",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA12120070010055676",
+    "nivel": "localidad",
+    "nombre": "Павлоград",
+    "nombre_latino": "Pavlohrad",
+    "punto": {
+     "lat": 48.53168,
+     "lon": 35.87037
+    },
+    "radio_km": 7.0
+   },
+   "region": "UA-12",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T20:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-03-12T16:30Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/adm_dp/30381",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-03-12T16:30Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Через влучання ворожого БпЛА постраждала 64-річна жінка",
+     "id": "adm_dp-30381",
+     "idioma": "uk",
+     "medio": "Дніпропетровська ОВА",
+     "replicas": 0
+    }
+   ],
+   "heridos": {
+    "max": 1,
+    "min": 1
+   },
+   "id": "EODI-IG-2025-02750",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA12060170010065850",
+    "nivel": "localidad",
+    "nombre": "Кривий Ріг",
+    "nombre_latino": "Kryvyi Rih",
+    "punto": {
+     "lat": 47.91027,
+     "lon": 33.39177
+    },
+    "radio_km": 10.0
+   },
+   "region": "UA-12",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "categorias_objetivo": [
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T20:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-07-22T13:55Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/DonetskaODA/44316",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-07-22T13:55Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "місто зазнало 2 авіаударів і 4 ударів БПЛА «Герань-2». Пошкоджено щонайменше 12 багатоповерхівок",
+     "id": "DonetskaODA-44316",
+     "idioma": "uk",
+     "medio": "Донецька ОВА",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02751",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA14120210010032554",
+    "nivel": "localidad",
+    "nombre": "Слов'янськ",
+    "nombre_latino": "Sloviansk",
+    "punto": {
+     "lat": 48.85227,
+     "lon": 37.60582
+    },
+    "radio_km": 4.0
+   },
+   "region": "UA-14",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T20:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-07-22T13:55Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/DonetskaODA/44316",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-07-22T13:55Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "у Щуровому Лиманської громади росіяни атакували цивільне авто FPV-дроном і поранили людину",
+     "id": "DonetskaODA-44316",
+     "idioma": "uk",
+     "medio": "Донецька ОВА",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02752",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA14120110340037768",
+    "nivel": "localidad",
+    "nombre": "Щурове",
+    "nombre_latino": "Shchurove",
+    "punto": {
+     "lat": 48.95514,
+     "lon": 37.72483
+    },
+    "radio_km": 1.5
+   },
+   "region": "UA-14",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2025-0250",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T20:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-09-19T04:30Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/adm_dp/36239",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-09-19T04:30Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "По Нікопольщині агресор застосував FPV-дрон та артилерію. Поцілив по райцентру.",
+     "id": "adm_dp-36239",
+     "idioma": "uk",
+     "medio": "Дніпропетровська ОВА",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02753",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA12080050010010114",
+    "nivel": "localidad",
+    "nombre": "Нікополь",
+    "nombre_latino": "Nikopol",
+    "punto": {
+     "lat": 47.56921,
+     "lon": 34.39173
+    },
+    "radio_km": 7.0
+   },
+   "region": "UA-12",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2025-1095",
+   "categorias_objetivo": [
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T20:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-08-07T03:32Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/49507",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-08-07T03:32Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "В Славянске-на-Кубани в результате падения обломков БПЛА есть пострадавший.",
+     "id": "admkrai-49507",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02754",
+   "impacto": "restos",
+   "lugar": {
+    "id": "geonames:492094",
+    "nivel": "localidad",
+    "nombre": "Славянск-на-Кубани",
+    "nombre_latino": "Slavyansk-na-Kubani",
+    "punto": {
+     "lat": 45.25145,
+     "lon": 38.12129
+    },
+    "radio_km": 5.0
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2025-0203",
+   "categorias_objetivo": [
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T20:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-08-02T09:09Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/DonetskaODA/45036",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-08-02T09:09Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Місто зазнало масованої дронової атаки. Пошкоджено 2 будинки, ринок, крамницю",
+     "id": "DonetskaODA-45036",
+     "idioma": "uk",
+     "medio": "Донецька ОВА",
+     "replicas": 0
+    }
+   ],
+   "heridos": {
+    "max": 5,
+    "min": 5
+   },
+   "id": "EODI-IG-2025-02755",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA14120030010055241",
+    "nivel": "localidad",
+    "nombre": "Дружківка",
+    "nombre_latino": "Druzhkivka",
+    "punto": {
+     "lat": 48.61986,
+     "lon": 37.52495
+    },
+    "radio_km": 5.0
+   },
+   "region": "UA-14",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2025-0340",
+   "categorias_objetivo": [
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T20:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fallecidos": {
+    "max": 76,
+    "min": 76
+   },
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-12-17T16:30Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/adm_dp/38826",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-12-17T16:30Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Ворог атакував сам Нікополь, Марганецьку, Мирівську, Покровстку, Червоногригорівську громаду. Цілив FPV-дронами та артилерією.",
+     "id": "adm_dp-38826",
+     "idioma": "uk",
+     "medio": "Дніпропетровська ОВА",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02756",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA12080050010010114",
+    "nivel": "localidad",
+    "nombre": "Нікополь",
+    "nombre_latino": "Nikopol",
+    "punto": {
+     "lat": 47.56921,
+     "lon": 34.39173
+    },
+    "radio_km": 7.0
+   },
+   "region": "UA-12",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2025-0109",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T20:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-04-28T04:30Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/adm_dp/31835",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-04-28T04:30Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Поцілив по самому Нікополю та Марганецькій громаді. Застосовував важку артилерію і дрони-камікадзе.",
+     "id": "adm_dp-31835",
+     "idioma": "uk",
+     "medio": "Дніпропетровська ОВА",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02757",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA12080010010085669",
+    "nivel": "localidad",
+    "nombre": "Марганець",
+    "nombre_latino": "Marhanets",
+    "punto": {
+     "lat": 47.64906,
+     "lon": 34.64919
+    },
+    "radio_km": 4.0
+   },
+   "region": "UA-12",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2025-0331",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T20:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-12-09T05:30Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/adm_dp/38531",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-12-09T05:30Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "вдарив FPV-дронами по Нікополю",
+     "id": "adm_dp-38531",
+     "idioma": "uk",
+     "medio": "Дніпропетровська ОВА",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02758",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA12080050010010114",
+    "nivel": "localidad",
+    "nombre": "Нікополь",
+    "nombre_latino": "Nikopol",
+    "punto": {
+     "lat": 47.56921,
+     "lon": 34.39173
+    },
+    "radio_km": 7.0
+   },
+   "region": "UA-12",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "categorias_objetivo": [
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T20:17Z"
+    }
+   },
+   "credibilidad": 1,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-04-18T15:30Z"
+   },
+   "foco_termico": {
+    "distancia_km": 1.9,
+    "instrumento": "VIIRS",
+    "numero_focos": 2,
+    "primer_foco": {
+     "precision": "minuto",
+     "valor": "2025-04-19T23:01Z"
+    },
+    "resultado": "detectado",
+    "satelite": "Suomi NPP"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/adm_dp/31590",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-04-18T15:30Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Атакував агресор і сам Нікополь. Застосовував дрони-камікадзе та артилерію.",
+     "id": "adm_dp-31590",
+     "idioma": "uk",
+     "medio": "Дніпропетровська ОВА",
+     "replicas": 0
+    }
+   ],
+   "heridos": {
+    "max": 1,
+    "min": 1
+   },
+   "id": "EODI-IG-2025-02759",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA12080050010010114",
+    "nivel": "localidad",
+    "nombre": "Нікополь",
+    "nombre_latino": "Nikopol",
+    "punto": {
+     "lat": 47.56921,
+     "lon": 34.39173
+    },
+    "radio_km": 7.0
+   },
+   "region": "UA-12",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2025-0243",
+   "categorias_objetivo": [
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T20:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-09-12T07:35Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/kirovohradskaODA/35301",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-09-12T07:35Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "У Знам'янці тривають відновлювальні роботи після ворожого обстрілу дронами",
+     "id": "kirovohradskaODA-35301",
+     "idioma": "uk",
+     "medio": "Кіровоградська ОВА",
+     "replicas": 0
+    }
+   ],
+   "heridos": {
+    "max": 23,
+    "min": 23
+   },
+   "id": "EODI-IG-2025-02760",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA35040130010097956",
+    "nivel": "localidad",
+    "nombre": "Знам'янка",
+    "nombre_latino": "Znamianka",
+    "punto": {
+     "lat": 48.71996,
+     "lon": 32.66595
+    },
+    "radio_km": 4.0
+   },
+   "region": "UA-35",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2025-0198",
+   "categorias_objetivo": [
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T20:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "dia": "2025-07-28",
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-09-12T14:01Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/kirovohradskaODA/35317",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-09-12T14:01Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "у ніч з 27 на 28 липня внаслідок ворожого російського удару шахедами по Кропивницькому, постраждала будівля обласної філармонії",
+     "id": "kirovohradskaODA-35317",
+     "idioma": "uk",
+     "medio": "Кіровоградська ОВА",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02761",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA35040210010019355",
+    "nivel": "localidad",
+    "nombre": "Кропивницький",
+    "nombre_latino": "Kropyvnytskyi",
+    "punto": {
+     "lat": 48.51058,
+     "lon": 32.26563
+    },
+    "radio_km": 7.0
+   },
+   "region": "UA-35",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2025-0008",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T20:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-01-09T05:31Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/adm_dp/28369",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-01-09T05:31Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Двічі вдарив по Нікополю – дроном-камікадзе та артилерією.",
+     "id": "adm_dp-28369",
+     "idioma": "uk",
+     "medio": "Дніпропетровська ОВА",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02762",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA12080050010010114",
+    "nivel": "localidad",
+    "nombre": "Нікополь",
+    "nombre_latino": "Nikopol",
+    "punto": {
+     "lat": 47.56921,
+     "lon": 34.39173
+    },
+    "radio_km": 7.0
+   },
+   "region": "UA-12",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "categorias_objetivo": [
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T20:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-09-03T15:12Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/DonetskaODA/47602",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-09-03T15:12Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Цивільні люди були вбиті та поранені ударами fpv-дронів та ствольної артилерії.",
+     "id": "DonetskaODA-47602",
+     "idioma": "uk",
+     "medio": "Донецька ОВА",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02763",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA14120070010085843",
+    "nivel": "localidad",
+    "nombre": "Костянтинівка",
+    "nombre_latino": "Kostiantynivka",
+    "punto": {
+     "lat": 48.5349,
+     "lon": 37.69238
+    },
+    "radio_km": 5.0
+   },
+   "region": "UA-14",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2025-0179",
+   "categorias_objetivo": [
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T20:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fallecidos": {
+    "max": 5,
+    "min": 5
+   },
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-07-09T11:02Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/DonetskaODA/43484",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-07-09T11:02Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Ворог атакував місто FPV-дронами, знищив 2 цивільні автівки.",
+     "id": "DonetskaODA-43484",
+     "idioma": "uk",
+     "medio": "Донецька ОВА",
+     "replicas": 0
+    }
+   ],
+   "heridos": {
+    "max": 2,
+    "min": 2
+   },
+   "id": "EODI-IG-2025-02764",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA14160210020079908",
+    "nivel": "localidad",
+    "nombre": "Родинське",
+    "nombre_latino": "Rodynske",
+    "punto": {
+     "lat": 48.35399,
+     "lon": 37.20337
+    },
+    "radio_km": 4.0
+   },
+   "region": "UA-14",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "categorias_objetivo": [
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T20:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-03-18T16:31Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/adm_dp/30591",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-03-18T16:31Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Поцілив по самому Нікополю, Марганецькій і Покровській громадах.",
+     "id": "adm_dp-30591",
+     "idioma": "uk",
+     "medio": "Дніпропетровська ОВА",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02765",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA12080050010010114",
+    "nivel": "localidad",
+    "nombre": "Нікополь",
+    "nombre_latino": "Nikopol",
+    "punto": {
+     "lat": 47.56921,
+     "lon": 34.39173
+    },
+    "radio_km": 7.0
+   },
+   "region": "UA-12",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2025-0295",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T20:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-11-03T05:30Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/adm_dp/37463",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-11-03T05:30Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "По Нікополю російська армія застосовувала артилерію та FPV-дрони.",
+     "id": "adm_dp-37463",
+     "idioma": "uk",
+     "medio": "Дніпропетровська ОВА",
+     "replicas": 0
+    }
+   ],
+   "heridos": {
+    "max": 4,
+    "min": 4
+   },
+   "id": "EODI-IG-2025-02766",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA12080050010010114",
+    "nivel": "localidad",
+    "nombre": "Нікополь",
+    "nombre_latino": "Nikopol",
+    "punto": {
+     "lat": 47.56921,
+     "lon": 34.39173
+    },
+    "radio_km": 7.0
+   },
+   "region": "UA-12",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2025-0251",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T20:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fallecidos": {
+    "max": 1,
+    "min": 1
+   },
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-09-20T04:31Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/adm_dp/36275",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-09-20T04:31Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "По Нікопольщині російська армія била FPV-дронами та артилерією. Поцілила по райцентру",
+     "id": "adm_dp-36275",
+     "idioma": "uk",
+     "medio": "Дніпропетровська ОВА",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02767",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA12080050010010114",
+    "nivel": "localidad",
+    "nombre": "Нікополь",
+    "nombre_latino": "Nikopol",
+    "punto": {
+     "lat": 47.56921,
+     "lon": 34.39173
+    },
+    "radio_km": 7.0
+   },
+   "region": "UA-12",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2025-0145",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T20:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-06-05T07:51Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/adm_dp/32935",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-06-05T07:51Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "У Нікополі через скид снаряду з ворожого дрону постраждав 71-річний чоловік.",
+     "id": "adm_dp-32935",
+     "idioma": "uk",
+     "medio": "Дніпропетровська ОВА",
+     "replicas": 0
+    }
+   ],
+   "heridos": {
+    "max": 1,
+    "min": 1
+   },
+   "id": "EODI-IG-2025-02768",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA12080050010010114",
+    "nivel": "localidad",
+    "nombre": "Нікополь",
+    "nombre_latino": "Nikopol",
+    "punto": {
+     "lat": 47.56921,
+     "lon": 34.39173
+    },
+    "radio_km": 7.0
+   },
+   "region": "UA-12",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2025-0217",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T20:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-08-16T04:30Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/adm_dp/35163",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-08-16T04:30Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Нікополь агресор обстріляв з артилерії та поцілив FPV-дроном",
+     "id": "adm_dp-35163",
+     "idioma": "uk",
+     "medio": "Дніпропетровська ОВА",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02769",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA12080050010010114",
+    "nivel": "localidad",
+    "nombre": "Нікополь",
+    "nombre_latino": "Nikopol",
+    "punto": {
+     "lat": 47.56921,
+     "lon": 34.39173
+    },
+    "radio_km": 7.0
+   },
+   "region": "UA-12",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2025-0328",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T20:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-12-06T05:33Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/adm_dp/38423",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-12-06T05:33Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Внаслідок удару БпЛА у Павлограді горіли гараж і господарська споруда.",
+     "id": "adm_dp-38423",
+     "idioma": "uk",
+     "medio": "Дніпропетровська ОВА",
+     "replicas": 0
+    }
+   ],
+   "heridos": {
+    "max": 1,
+    "min": 1
+   },
+   "id": "EODI-IG-2025-02770",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA12120070010055676",
+    "nivel": "localidad",
+    "nombre": "Павлоград",
+    "nombre_latino": "Pavlohrad",
+    "punto": {
+     "lat": 48.53168,
+     "lon": 35.87037
+    },
+    "radio_km": 7.0
+   },
+   "region": "UA-12",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T20:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fallecidos": {
+    "max": 1,
+    "min": 1
+   },
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-05-04T15:30Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/adm_dp/32029",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-05-04T15:30Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Під час цього влучання БпЛА побило декілька автомобілів.",
+     "id": "adm_dp-32029",
+     "idioma": "uk",
+     "medio": "Дніпропетровська ОВА",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02771",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA12080010010085669",
+    "nivel": "localidad",
+    "nombre": "Марганець",
+    "nombre_latino": "Marhanets",
+    "punto": {
+     "lat": 47.64906,
+     "lon": 34.64919
+    },
+    "radio_km": 4.0
+   },
+   "region": "UA-12",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "categorias_objetivo": [
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T20:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-08-22T15:30Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/adm_dp/35347",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-08-22T15:30Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Поцілив по Нікополю, Марганецькій, Покровській і Мирівській громадах.",
+     "id": "adm_dp-35347",
+     "idioma": "uk",
+     "medio": "Дніпропетровська ОВА",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02772",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA12080050010010114",
+    "nivel": "localidad",
+    "nombre": "Нікополь",
+    "nombre_latino": "Nikopol",
+    "punto": {
+     "lat": 47.56921,
+     "lon": 34.39173
+    },
+    "radio_km": 7.0
+   },
+   "region": "UA-12",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2025-0225",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T20:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fallecidos": {
+    "max": 1,
+    "min": 1
+   },
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-08-24T04:30Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/adm_dp/35400",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-08-24T04:30Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Нікопольщину агресор атакував FPV-дронами та артилерією. Поцілив по Нікополю.",
+     "id": "adm_dp-35400",
+     "idioma": "uk",
+     "medio": "Дніпропетровська ОВА",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02773",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA12080050010010114",
+    "nivel": "localidad",
+    "nombre": "Нікополь",
+    "nombre_latino": "Nikopol",
+    "punto": {
+     "lat": 47.56921,
+     "lon": 34.39173
+    },
+    "radio_km": 7.0
+   },
+   "region": "UA-12",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "categorias_objetivo": [
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T20:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-06-27T15:31Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/adm_dp/33707",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-06-27T15:31Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "По Нікопольщині агресор бив безпілотниками та артилерією",
+     "id": "adm_dp-33707",
+     "idioma": "uk",
+     "medio": "Дніпропетровська ОВА",
+     "replicas": 0
+    }
+   ],
+   "heridos": {
+    "max": 25,
+    "min": 25
+   },
+   "id": "EODI-IG-2025-02774",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA12080050010010114",
+    "nivel": "localidad",
+    "nombre": "Нікополь",
+    "nombre_latino": "Nikopol",
+    "punto": {
+     "lat": 47.56921,
+     "lon": 34.39173
+    },
+    "radio_km": 7.0
+   },
+   "region": "UA-12",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "categorias_objetivo": [
+    "combustible"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T20:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-01-14T13:03Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/GeneralStaffZSU/19975",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-01-14T13:03Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Знову успішно атаковано базу зберігання нафтопродуктів «Комбінат Крістал» в Енгельсі",
+     "id": "GeneralStaffZSU-19975",
+     "idioma": "uk",
+     "medio": "Генеральний штаб ЗСУ",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02775",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:563464",
+    "nivel": "localidad",
+    "nombre": "Энгельс",
+    "nombre_latino": "Engels",
+    "punto": {
+     "lat": 51.48389,
+     "lon": 46.10528
+    },
+    "radio_km": 7.0
+   },
+   "region": "RU-SAR",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "categorias_objetivo": [
+    "combustible"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T20:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-01-14T13:03Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/GeneralStaffZSU/19975",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-01-14T13:03Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "уражено стратегічні об'єкти військово-промислового комплексу рф - Саратовський нафтопереробний завод",
+     "id": "GeneralStaffZSU-19975",
+     "idioma": "uk",
+     "medio": "Генеральний штаб ЗСУ",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02776",
+   "impacto": "impacto",
+   "lugar": {
+    "categoria": "refineria",
+    "id": "osm:relation/12537907",
+    "localidad": "Саратовъ",
+    "nivel": "instalacion",
+    "nombre": "Саратовский нефтеперерабатывающий завод",
+    "punto": {
+     "lat": 51.45085,
+     "lon": 45.94402
+    },
+    "radio_km": 3.0
+   },
+   "region": "RU-SAR",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "categorias_objetivo": [
+    "industrial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T20:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-01-14T13:03Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/GeneralStaffZSU/19975",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-01-14T13:03Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "та завод «Казаньоргсинтез». На обох об'єктах зайнялась пожежа.",
+     "id": "GeneralStaffZSU-19975",
+     "idioma": "uk",
+     "medio": "Генеральний штаб ЗСУ",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02777",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:551487",
+    "nivel": "localidad",
+    "nombre": "Къазан",
+    "nombre_latino": "Kazan",
+    "punto": {
+     "lat": 55.78874,
+     "lon": 49.12214
+    },
+    "radio_km": 15.0
+   },
+   "region": "RU-TA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2025-0011",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T20:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-01-12T05:31Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/adm_dp/28482",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-01-12T05:31Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "скерував дрон-камікадзе по Нікополю",
+     "id": "adm_dp-28482",
+     "idioma": "uk",
+     "medio": "Дніпропетровська ОВА",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02778",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA12080050010010114",
+    "nivel": "localidad",
+    "nombre": "Нікополь",
+    "nombre_latino": "Nikopol",
+    "punto": {
+     "lat": 47.56921,
+     "lon": 34.39173
+    },
+    "radio_km": 7.0
+   },
+   "region": "UA-12",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2025-0170",
+   "categorias_objetivo": [
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T20:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-06-30T04:30Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/adm_dp/33742",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-06-30T04:30Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Поцілив по Нікополю, Покровській, Мирівській і Марганецькій громадах.",
+     "id": "adm_dp-33742",
+     "idioma": "uk",
+     "medio": "Дніпропетровська ОВА",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02779",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA12080050010010114",
+    "nivel": "localidad",
+    "nombre": "Нікополь",
+    "nombre_latino": "Nikopol",
+    "punto": {
+     "lat": 47.56921,
+     "lon": 34.39173
+    },
+    "radio_km": 7.0
+   },
+   "region": "UA-12",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2025-0170",
+   "categorias_objetivo": [
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T20:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2025-06-30T04:30Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/adm_dp/33742",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2025-06-30T04:30Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Поцілив по Нікополю, Покровській, Мирівській і Марганецькій громадах.",
+     "id": "adm_dp-33742",
+     "idioma": "uk",
+     "medio": "Дніпропетровська ОВА",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2025-02780",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA12080010010085669",
+    "nivel": "localidad",
+    "nombre": "Марганець",
+    "nombre_latino": "Marhanets",
+    "punto": {
+     "lat": 47.64906,
+     "lon": 34.64919
+    },
+    "radio_km": 4.0
+   },
+   "region": "UA-12",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
    "ataque": "EODI-UA-2026-0038",
    "categorias_objetivo": [],
    "control": {
@@ -620048,11 +621804,14 @@
   },
   {
    "ataque": "EODI-UA-2026-0002",
-   "categorias_objetivo": [],
+   "categorias_objetivo": [
+    "energia",
+    "residencial"
+   ],
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-01T22:30Z"
+     "valor": "2026-10-02T20:17Z"
     }
    },
    "credibilidad": 2,
@@ -620085,6 +621844,20 @@
      "fiabilidad": "B",
      "frase_origen": "❗️Ворог атакував Запоріжжя безпілотником.",
      "id": "zoda_gov_ua-54162",
+     "idioma": "uk",
+     "medio": "Запорізька ОВА",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/zoda_gov_ua/54168",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-01-02T11:45Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "росіяни завдали девʼять ударів безпілотниками по території обласного центру",
+     "id": "zoda_gov_ua-54168",
      "idioma": "uk",
      "medio": "Запорізька ОВА",
      "replicas": 0
@@ -788940,6 +790713,631 @@
    },
    "region": "UA-68",
    "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T20:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "dia": "2026-04-19",
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-04-20T06:56Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/DonetskaODA/61522",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-04-20T06:56Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Краматорськ зазнав удару авіабомбою та FPV-дроном",
+     "id": "DonetskaODA-61522",
+     "idioma": "uk",
+     "medio": "Донецька ОВА",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03491",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA14120090010038661",
+    "nivel": "localidad",
+    "nombre": "Краматорськ",
+    "nombre_latino": "Kramatorsk",
+    "punto": {
+     "lat": 48.73894,
+     "lon": 37.58438
+    },
+    "radio_km": 5.0
+   },
+   "parte_diario": true,
+   "region": "UA-14",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0057",
+   "categorias_objetivo": [
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T20:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-02-26T10:59Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/zoda_gov_ua/56563",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-02-26T10:59Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Завдали по обласному центру щонайменше 20 ударів різними засобами ураження: «шахедами».",
+     "id": "zoda_gov_ua-56563",
+     "idioma": "uk",
+     "medio": "Запорізька ОВА",
+     "replicas": 0
+    }
+   ],
+   "heridos": {
+    "max": 10,
+    "min": 10
+   },
+   "id": "EODI-IG-2026-03492",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA23060070010069526",
+    "nivel": "localidad",
+    "nombre": "Запоріжжя",
+    "nombre_latino": "Zaporizhzhia",
+    "punto": {
+     "lat": 47.85079,
+     "lon": 35.11829
+    },
+    "radio_km": 10.0
+   },
+   "region": "UA-23",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0246",
+   "categorias_objetivo": [
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T20:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-09-03T18:20Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/kirovohradskaODA/48088",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-09-03T18:20Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "у Кропивницькому зафіксовано влучання ворожого дрона по багатоповерховому житловому будинку",
+     "id": "kirovohradskaODA-48088",
+     "idioma": "uk",
+     "medio": "Кіровоградська ОВА",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/kirovohradskaODA/48111",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-09-04T07:31Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "біля будинку, пошкодженого російськими безпілотниками, працює штаб",
+     "id": "kirovohradskaODA-48111",
+     "idioma": "uk",
+     "medio": "Кіровоградська ОВА",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03493",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA35040210010019355",
+    "nivel": "localidad",
+    "nombre": "Кропивницький",
+    "nombre_latino": "Kropyvnytskyi",
+    "punto": {
+     "lat": 48.51058,
+     "lon": 32.26563
+    },
+    "radio_km": 7.0
+   },
+   "region": "UA-35",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0268",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T20:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-09-24T08:02Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/kirovohradskaODA/49120",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-09-24T08:02Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Ворожий дрон влучив по стоянці авто у Кропивницькому.",
+     "id": "kirovohradskaODA-49120",
+     "idioma": "uk",
+     "medio": "Кіровоградська ОВА",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03494",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA35040210010019355",
+    "nivel": "localidad",
+    "nombre": "Кропивницький",
+    "nombre_latino": "Kropyvnytskyi",
+    "punto": {
+     "lat": 48.51058,
+     "lon": 32.26563
+    },
+    "radio_km": 7.0
+   },
+   "region": "UA-35",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0033",
+   "categorias_objetivo": [
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T20:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fallecidos": {
+    "max": 1,
+    "min": 1
+   },
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-02-02T11:36Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/zoda_gov_ua/55535",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-02-02T11:36Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "росіяни безпілотником зруйнували будинок у Веселому Гаї",
+     "id": "zoda_gov_ua-55535",
+     "idioma": "uk",
+     "medio": "Запорізька ОВА",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03495",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA23060190060063043",
+    "nivel": "localidad",
+    "nombre": "Веселий Гай",
+    "nombre_latino": "Veselyi Hai",
+    "punto": {
+     "lat": 47.98759,
+     "lon": 35.80273
+    },
+    "radio_km": 1.5
+   },
+   "region": "UA-23",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0362",
+   "categorias_objetivo": [
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T20:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-01-25T04:43Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/koronavirus32/23509",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-01-25T04:43Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "В Бежицком районе города Брянска в двух жилых одноэтажных домах повреждены остекление и фасады.",
+     "id": "koronavirus32-23509",
+     "idioma": "ru",
+     "medio": "Правительство Брянской области",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03496",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:571476",
+    "nivel": "localidad",
+    "nombre": "Брянск",
+    "nombre_latino": "Bryansk",
+    "punto": {
+     "lat": 53.27096,
+     "lon": 34.32143
+    },
+    "radio_km": 10.0
+   },
+   "region": "RU-BRY",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0270",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T20:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-09-25T14:12Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/zoda_gov_ua/67909",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-09-25T14:12Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "ворожий FPV-дрон влучив у приміщення Біленьківської сільської ради",
+     "id": "zoda_gov_ua-67909",
+     "idioma": "uk",
+     "medio": "Запорізька ОВА",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03497",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA23060010010065997",
+    "nivel": "localidad",
+    "nombre": "Біленьке",
+    "nombre_latino": "Bilenke",
+    "punto": {
+     "lat": 47.62161,
+     "lon": 35.03025
+    },
+    "radio_km": 1.5
+   },
+   "region": "UA-23",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0224",
+   "categorias_objetivo": [
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T20:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fallecidos": {
+    "max": 6,
+    "min": 6
+   },
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-08-16T16:19Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/DonetskaODA/69719",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-08-16T16:19Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "росіяни атакували місто безпілотником — влучили у приміщення пошти",
+     "id": "DonetskaODA-69719",
+     "idioma": "uk",
+     "medio": "Донецька ОВА",
+     "replicas": 0
+    }
+   ],
+   "heridos": {
+    "max": 6,
+    "min": 6
+   },
+   "id": "EODI-IG-2026-03498",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA14120090010038661",
+    "nivel": "localidad",
+    "nombre": "Краматорськ",
+    "nombre_latino": "Kramatorsk",
+    "punto": {
+     "lat": 48.73894,
+     "lon": 37.58438
+    },
+    "radio_km": 5.0
+   },
+   "region": "UA-14",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0033",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T20:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-02-01T16:32Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/adm_dp/39937",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-02-01T16:32Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "скеровував FPV-дрони по Нікополю",
+     "id": "adm_dp-39937",
+     "idioma": "uk",
+     "medio": "Дніпропетровська ОВА",
+     "replicas": 0
+    }
+   ],
+   "heridos": {
+    "max": 15,
+    "min": 15
+   },
+   "id": "EODI-IG-2026-03499",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA12080050010010114",
+    "nivel": "localidad",
+    "nombre": "Нікополь",
+    "nombre_latino": "Nikopol",
+    "punto": {
+     "lat": 47.56921,
+     "lon": 34.39173
+    },
+    "radio_km": 7.0
+   },
+   "region": "UA-12",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T20:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "dia": "2025-10-23",
+   "fallecidos": {
+    "max": 2025,
+    "min": 2025
+   },
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-01-22T17:56Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/DonetskaODA/56084",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-01-22T17:56Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Російський ударний дрон влучив у знімальну групу під час роботи на місці обстрілу.",
+     "id": "DonetskaODA-56084",
+     "idioma": "uk",
+     "medio": "Донецька ОВА",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03500",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA14120090010038661",
+    "nivel": "localidad",
+    "nombre": "Краматорськ",
+    "nombre_latino": "Kramatorsk",
+    "punto": {
+     "lat": 48.73894,
+     "lon": 37.58438
+    },
+    "radio_km": 5.0
+   },
+   "region": "UA-14",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0108",
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T20:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-04-21T09:03Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/kirovohradskaODA/42389",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-04-21T09:03Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Внаслідок влучання БпЛА, на одному з об'єктів поблизу Кропивницького, виникла пожежа.",
+     "id": "kirovohradskaODA-42389",
+     "idioma": "uk",
+     "medio": "Кіровоградська ОВА",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03501",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA35040210010019355",
+    "nivel": "localidad",
+    "nombre": "Кропивницький",
+    "nombre_latino": "Kropyvnytskyi",
+    "punto": {
+     "lat": 48.51058,
+     "lon": 32.26563
+    },
+    "radio_km": 7.0
+   },
+   "region": "UA-35",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
+  },
+  {
+   "ataque": "EODI-UA-2026-0822",
+   "categorias_objetivo": [
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T20:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fallecidos": {
+    "max": 1,
+    "min": 1
+   },
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-06-28T03:11Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/admkrai/55662",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-06-28T03:11Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "В Славянске-на-Кубани в результате падения обломков БПЛА повреждены несколько домов.",
+     "id": "admkrai-55662",
+     "idioma": "ru",
+     "medio": "Администрация Краснодарского края",
+     "replicas": 0
+    }
+   ],
+   "heridos": {
+    "max": 1,
+    "min": 1
+   },
+   "id": "EODI-IG-2026-03502",
+   "impacto": "restos",
+   "lugar": {
+    "id": "geonames:492094",
+    "nivel": "localidad",
+    "nombre": "Славянск-на-Кубани",
+    "nombre_latino": "Slavyansk-na-Kubani",
+    "punto": {
+     "lat": 45.25145,
+     "lon": 38.12129
+    },
+    "radio_km": 5.0
+   },
+   "region": "RU-KDA",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
    "tipo": "impacto_guerra"
   }
  ]
