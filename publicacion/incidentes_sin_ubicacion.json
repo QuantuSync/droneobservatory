@@ -33445,202 +33445,6 @@
      "credibilidad": 3,
      "fecha": {
       "precision": "aproximada",
-      "valor": "2026-10-01T09:45Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-1730b7a4e5e63c92",
-     "medio": "stiripesurse.ro",
-     "valor": {
-      "max": 3,
-      "min": 3
-     }
-    },
-    {
-     "campo": "lugar.pais",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-01T09:45Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-1730b7a4e5e63c92",
-     "medio": "stiripesurse.ro",
-     "valor": "MD"
-    },
-    {
-     "campo": "presencia_dron",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-01T09:45Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-1730b7a4e5e63c92",
-     "medio": "stiripesurse.ro",
-     "valor": "confirmada"
-    },
-    {
-     "campo": "tipo",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-01T09:45Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-1730b7a4e5e63c92",
-     "medio": "stiripesurse.ro",
-     "valor": "incursion"
-    }
-   ],
-   "consecuencias": {
-    "cierre": {
-     "valor": "desconocido"
-    }
-   },
-   "control": {
-    "ultima_actualizacion": {
-     "precision": "minuto",
-     "valor": "2026-10-01T15:17Z"
-    }
-   },
-   "drones": {
-    "numero": {
-     "max": 3,
-     "min": 3
-    }
-   },
-   "estado": {
-    "actual": "confirmado",
-    "historial": [
-     {
-      "estado": "notificado",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-10-01T09:45Z"
-      },
-      "fuente_id": "gdelt-1730b7a4e5e63c92"
-     },
-     {
-      "estado": "confirmado",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-10-01T09:45Z"
-      },
-      "fuente_id": "gdelt-1730b7a4e5e63c92-declaracion-1"
-     }
-    ]
-   },
-   "fuentes": [
-    {
-     "credibilidad": 3,
-     "enlace": "https://stiripesurse.ro/drone-rusesti-au-incalcat-spatiul-aerian-al-rapublicii-moldova-amabsadorul-rus-convocat-la-mae-de-la-chisinau_3924728",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-01T09:45Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "trei drone au încălcat miercuri spațiul aerian al țării, în contextul atacurilor rusești asupra Ucrainei",
-     "id": "gdelt-1730b7a4e5e63c92",
-     "idioma": "ro",
-     "medio": "stiripesurse.ro",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://news.yam.md/ro/story/69526551",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-01T10:00Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "trei drone, miercuri, 30 septembrie",
-     "id": "gdelt-52b5094f832874fd",
-     "idioma": "ro",
-     "medio": "news.yam.md",
-     "replicas": 2
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://protv.md/actualitate/ambasadorul-rusiei-la-chisinau-oleg-ozerov-convocat-la-mae-dupa-ce-trei-drone-au-incalcat-spatiul-aerian-al-moldovei-iar-doua-dintre-ele-au-explodat---2768562.html",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-01T12:30Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "Ambasadorul Rusiei la Chișinău, Oleg Ozerov - convocat la MAE după ce trei drone au încălcat spațiul aerian al Moldovei, iar două dintre ele au",
-     "id": "gdelt-5299fd55f7c8e994",
-     "idioma": "ro",
-     "medio": "protv.md",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://dailybusiness.ro/actualitate/mae-din-republica-moldova-il-convoaca-pe-ambasadorul-rusiei-dupa-ce-mai-multe-drone-au-incalcat-spatiul-aerian-al-tarii-552251",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-01T14:15Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "MAE din Republica Moldova îl convoacă pe ambasadorul Rusiei, după ce mai multe drone au încălcat spațiul aerian al țării",
-     "id": "gdelt-a1fabe5e2f7443b6",
-     "idioma": "ro",
-     "medio": "dailybusiness.ro",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 1,
-     "enlace": "https://stiripesurse.ro/drone-rusesti-au-incalcat-spatiul-aerian-al-rapublicii-moldova-amabsadorul-rus-convocat-la-mae-de-la-chisinau_3924728",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-01T09:45Z"
-     },
-     "fiabilidad": "B",
-     "frase_origen": "condamnă ferm încălcarea spațiului aerian al Republicii Moldova de către trei drone, miercuri",
-     "id": "gdelt-1730b7a4e5e63c92-declaracion-1",
-     "idioma": "ro",
-     "medio": "Ministerul Afacerilor Externe al Republicii Moldova (declaración oficial citada en stiripesurse.ro)",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 1,
-     "enlace": "https://stiripesurse.ro/drone-rusesti-au-incalcat-spatiul-aerian-al-rapublicii-moldova-amabsadorul-rus-convocat-la-mae-de-la-chisinau_3924728",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-01T09:45Z"
-     },
-     "fiabilidad": "B",
-     "frase_origen": "Două dintre drone au căzut și au explodat pe teritoriul Republicii Moldova",
-     "id": "gdelt-1730b7a4e5e63c92-declaracion-2",
-     "idioma": "ro",
-     "medio": "Ministerul Afacerilor Externe al Republicii Moldova (declaración oficial citada en stiripesurse.ro)",
-     "replicas": 0
-    }
-   ],
-   "id": "EODI-2026-00263",
-   "lugar": {
-    "nivel": "pais",
-    "pais": "MD"
-   },
-   "presencia_dron": "confirmada",
-   "tiempo": {
-    "inicio": {
-     "precision": "dia",
-     "valor": "2026-10-01T09:45Z"
-    }
-   },
-   "tipo": "incursion",
-   "titulo": {
-    "en": "Three Russian drones violate Moldova's airspace and two explode",
-    "es": "Tres drones rusos violan el espacio aéreo de Moldavia y dos explotan"
-   }
-  },
-  {
-   "afirmaciones_publicas": [
-    {
-     "campo": "drones.numero",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
       "valor": "2026-10-01T10:00Z"
      },
      "fiabilidad": "C",
@@ -34344,6 +34148,296 @@
    "titulo": {
     "en": "Drones over Denmark cause airport shutdowns in autumn 2025",
     "es": "Drones sobre Dinamarca causan cierres aeroportuarios en otoño de 2025"
+   }
+  },
+  {
+   "afirmaciones_publicas": [
+    {
+     "campo": "drones.numero",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-01T09:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-1730b7a4e5e63c92",
+     "medio": "stiripesurse.ro",
+     "valor": {
+      "max": 3,
+      "min": 3
+     }
+    },
+    {
+     "campo": "drones.numero",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-02T04:15Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-c47a60dff21b41ef",
+     "medio": "adevarul.ro",
+     "valor": {
+      "max": 3,
+      "min": 3
+     }
+    },
+    {
+     "campo": "lugar.pais",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-01T09:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-1730b7a4e5e63c92",
+     "medio": "stiripesurse.ro",
+     "valor": "MD"
+    },
+    {
+     "campo": "lugar.pais",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-02T04:15Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-c47a60dff21b41ef",
+     "medio": "adevarul.ro",
+     "valor": "MD"
+    },
+    {
+     "campo": "presencia_dron",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-01T09:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-1730b7a4e5e63c92",
+     "medio": "stiripesurse.ro",
+     "valor": "confirmada"
+    },
+    {
+     "campo": "presencia_dron",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-02T04:15Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-c47a60dff21b41ef",
+     "medio": "adevarul.ro",
+     "valor": "no_confirmada"
+    },
+    {
+     "campo": "tiempo.inicio",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-02T04:15Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-c47a60dff21b41ef",
+     "medio": "adevarul.ro",
+     "valor": {
+      "precision": "dia",
+      "valor": "2026-10-01T00:00Z"
+     }
+    },
+    {
+     "campo": "tipo",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-01T09:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-1730b7a4e5e63c92",
+     "medio": "stiripesurse.ro",
+     "valor": "incursion"
+    },
+    {
+     "campo": "tipo",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-02T04:15Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-c47a60dff21b41ef",
+     "medio": "adevarul.ro",
+     "valor": "incursion"
+    }
+   ],
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-02T05:17Z"
+    }
+   },
+   "drones": {
+    "numero": {
+     "max": 3,
+     "min": 3
+    }
+   },
+   "estado": {
+    "actual": "confirmado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-02T04:15Z"
+      },
+      "fuente_id": "gdelt-c47a60dff21b41ef"
+     },
+     {
+      "estado": "confirmado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-02T04:15Z"
+      },
+      "fuente_id": "gdelt-c47a60dff21b41ef-declaracion-1"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://stiripesurse.ro/drone-rusesti-au-incalcat-spatiul-aerian-al-rapublicii-moldova-amabsadorul-rus-convocat-la-mae-de-la-chisinau_3924728",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-01T09:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "trei drone au încălcat miercuri spațiul aerian al țării, în contextul atacurilor rusești asupra Ucrainei",
+     "id": "gdelt-1730b7a4e5e63c92",
+     "idioma": "ro",
+     "medio": "stiripesurse.ro",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://stiripesurse.ro/drone-rusesti-au-incalcat-spatiul-aerian-al-rapublicii-moldova-amabsadorul-rus-convocat-la-mae-de-la-chisinau_3924728",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-01T09:45Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "condamnă ferm încălcarea spațiului aerian al Republicii Moldova de către trei drone, miercuri",
+     "id": "gdelt-1730b7a4e5e63c92-declaracion-1",
+     "idioma": "ro",
+     "medio": "Ministerul Afacerilor Externe al Republicii Moldova (declaración oficial citada en stiripesurse.ro)",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://stiripesurse.ro/drone-rusesti-au-incalcat-spatiul-aerian-al-rapublicii-moldova-amabsadorul-rus-convocat-la-mae-de-la-chisinau_3924728",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-01T09:45Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Două dintre drone au căzut și au explodat pe teritoriul Republicii Moldova",
+     "id": "gdelt-1730b7a4e5e63c92-declaracion-2",
+     "idioma": "ro",
+     "medio": "Ministerul Afacerilor Externe al Republicii Moldova (declaración oficial citada en stiripesurse.ro)",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://news.yam.md/ro/story/69526551",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-01T10:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "trei drone, miercuri, 30 septembrie",
+     "id": "gdelt-52b5094f832874fd",
+     "idioma": "ro",
+     "medio": "news.yam.md",
+     "replicas": 2
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://protv.md/actualitate/ambasadorul-rusiei-la-chisinau-oleg-ozerov-convocat-la-mae-dupa-ce-trei-drone-au-incalcat-spatiul-aerian-al-moldovei-iar-doua-dintre-ele-au-explodat---2768562.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-01T12:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Ambasadorul Rusiei la Chișinău, Oleg Ozerov - convocat la MAE după ce trei drone au încălcat spațiul aerian al Moldovei, iar două dintre ele au",
+     "id": "gdelt-5299fd55f7c8e994",
+     "idioma": "ro",
+     "medio": "protv.md",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://dailybusiness.ro/actualitate/mae-din-republica-moldova-il-convoaca-pe-ambasadorul-rusiei-dupa-ce-mai-multe-drone-au-incalcat-spatiul-aerian-al-tarii-552251",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-01T14:15Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "MAE din Republica Moldova îl convoacă pe ambasadorul Rusiei, după ce mai multe drone au încălcat spațiul aerian al țării",
+     "id": "gdelt-a1fabe5e2f7443b6",
+     "idioma": "ro",
+     "medio": "dailybusiness.ro",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://adevarul.ro/stiri-externe/republica-moldova/ambasadorul-rusiei-la-chisinau-reactioneaza-la-2561255.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-02T04:15Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Suntem sătui. Luaţi-le pe cele americane, sunt la fel",
+     "id": "gdelt-c47a60dff21b41ef",
+     "idioma": "ro",
+     "medio": "adevarul.ro",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://adevarul.ro/stiri-externe/republica-moldova/ambasadorul-rusiei-la-chisinau-reactioneaza-la-2561255.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-02T04:15Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Autoritățile moldovene au condamnat ferm incidentul, pe care îl consideră o încălcare gravă",
+     "id": "gdelt-c47a60dff21b41ef-declaracion-1",
+     "idioma": "ro",
+     "medio": "Ministerul Afacerilor Externe al Republicii Moldova (declaración oficial citada en adevarul.ro)",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-2026-00270",
+   "lugar": {
+    "nivel": "pais",
+    "pais": "MD"
+   },
+   "presencia_dron": "confirmada",
+   "tiempo": {
+    "inicio": {
+     "precision": "dia",
+     "valor": "2026-10-01T00:00Z"
+    }
+   },
+   "tipo": "incursion",
+   "titulo": {
+    "en": "Three Russian drones violate Moldova's airspace",
+    "es": "Tres drones rusos violan el espacio aéreo de Moldavia"
    }
   }
  ]
