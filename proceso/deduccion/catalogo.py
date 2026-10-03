@@ -436,7 +436,11 @@ def aplicar_vivo(
         propio = modelo.setdefault("vivo", {"alta": entrada["alta"], "fuentes": []})
         if entrada["dato"]["fuente"] not in propio["fuentes"]:
             propio["fuentes"] = sorted({*propio["fuentes"], entrada["dato"]["fuente"]})
-    return catalogo, fuentes
+    # Las aceleraciones de los modelos nuevos se derivan como las de la configuración (ángulo de
+    # inclinación, empuje/peso...), con su fórmula y sus datos de partida.
+    from proceso.deduccion import aceleraciones
+
+    return aceleraciones.con_derivadas(catalogo), fuentes
 
 
 @cache

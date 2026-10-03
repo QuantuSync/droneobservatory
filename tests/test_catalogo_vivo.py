@@ -474,3 +474,25 @@ def test_la_exportacion_admite_la_version_del_catalogo_vivo() -> None:
         patron = re.compile(propiedad["pattern"])
         assert patron.match("1.1.0") and patron.match("1.1.0+vivo.12")
         assert not patron.match("1.1.0+otro")
+
+
+def test_los_modelos_nuevos_del_catalogo_vivo_llevan_sus_aceleraciones_derivadas() -> None:
+    base = json.loads(catalogo.CATALOGO.read_text(encoding="utf-8"))
+    fuentes = json.loads(catalogo.FUENTES.read_text(encoding="utf-8"))
+    nuevo = {
+        "id": "dji_inspire_3", "nombre": "DJI Inspire 3", "otros_nombres": [],
+        "pais": "no consta en la fuente", "fabricante": "no consta en la fuente",
+        "tipo_aeronave": "multirrotor", "clase": "multirrotor_profesional",
+        "campos": {"angulo_inclinacion": {"datos": [{"fuente": "V1", "valor": 35.0, "unidad": "°",
+                                                     "cita": "Ángulo máx. de inclinación 35°"}],
+                                          "sin_fuente": False}},
+    }  # fmt: skip
+    vivo = {"version": 1, "modelos": [nuevo], "datos": [],
+            "fuentes": {"V1": {"titulo": "t", "url": "https://www.dji.com/es/inspire-3/specs",
+                               "fecha": None, "consultada": "2026-10-03", "tipo": "fabricante",
+                               "prioridad": "normal", "notas": "n"}}}  # fmt: skip
+    resultado, _ = catalogo.aplicar_vivo(base, fuentes, vivo)
+    inspire = next(m for m in resultado["modelos"] if m["id"] == "dji_inspire_3")
+    dato = inspire["campos"]["aceleracion_horizontal"]["datos"][0]
+    assert math.isclose(dato["valor"], 9.80665 * math.tan(math.radians(35)), rel_tol=1e-3)
+    assert dato["derivada"]["formula"] == "a = g·tan(θ)"
