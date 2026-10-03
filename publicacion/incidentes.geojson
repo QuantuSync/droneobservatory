@@ -67431,6 +67431,21 @@
       }
      },
      {
+      "campo": "drones.numero",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-10-03T17:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-8e7a25181ab6fc11",
+      "medio": "odnako.org",
+      "valor": {
+       "max": 15,
+       "min": 15
+      }
+     },
+     {
       "campo": "lugar.pais",
       "credibilidad": 3,
       "fecha": {
@@ -67464,6 +67479,18 @@
       "fiabilidad": "C",
       "fuente_id": "gdelt-c3661b7407180d69",
       "medio": "top-channel.tv",
+      "valor": "BE"
+     },
+     {
+      "campo": "lugar.pais",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-10-03T17:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-8e7a25181ab6fc11",
+      "medio": "odnako.org",
       "valor": "BE"
      },
      {
@@ -67587,6 +67614,18 @@
       "valor": "no_confirmada"
      },
      {
+      "campo": "presencia_dron",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-10-03T17:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-8e7a25181ab6fc11",
+      "medio": "odnako.org",
+      "valor": "no_confirmada"
+     },
+     {
       "campo": "tiempo.inicio",
       "credibilidad": 3,
       "fecha": {
@@ -67614,6 +67653,21 @@
       "valor": {
        "precision": "dia",
        "valor": "2025-10-02T00:00Z"
+      }
+     },
+     {
+      "campo": "tiempo.inicio",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-10-03T17:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-8e7a25181ab6fc11",
+      "medio": "odnako.org",
+      "valor": {
+       "precision": "dia",
+       "valor": "2025-10-03T00:00Z"
       }
      },
      {
@@ -67651,6 +67705,18 @@
       "fuente_id": "gdelt-c3661b7407180d69",
       "medio": "top-channel.tv",
       "valor": "sobrevuelo"
+     },
+     {
+      "campo": "tipo",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-10-03T17:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-8e7a25181ab6fc11",
+      "medio": "odnako.org",
+      "valor": "sobrevuelo"
      }
     ],
     "consecuencias": {
@@ -67661,7 +67727,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-02T15:09Z"
+      "valor": "2026-10-03T00:17Z"
      }
     },
     "drones": {
@@ -67878,6 +67944,34 @@
       "id": "gdelt-b094779fc3109a90",
       "idioma": "en",
       "medio": "devdiscourse.com",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://odnako.org/droni-sighted-in-the-night-on-a-military-base-in-belgium-a-new-alarm-after-monaco-brussels-europe-is-at-risk",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-10-03T17:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "About fifteen drones was spotted this night over the military area of Elsenborn, in Eastern Belgium.",
+      "id": "gdelt-8e7a25181ab6fc11",
+      "idioma": "en",
+      "medio": "odnako.org",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://odnako.org/droni-sighted-in-the-night-on-a-military-base-in-belgium-a-new-alarm-after-monaco-brussels-europe-is-at-risk",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-10-03T17:00Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "The Belgian local media made it known by quoting the Ministry of Defense that is investigating the accident.",
+      "id": "gdelt-8e7a25181ab6fc11-declaracion-1",
+      "idioma": "en",
+      "medio": "Ministry of Defense (declaración oficial citada en odnako.org)",
       "replicas": 0
      },
      {
@@ -99390,6 +99484,21 @@
     "afirmaciones_publicas": [
      {
       "campo": "consecuencias.cierre.minutos",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2026-06-16T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-LEIB-2026-06-16-EODI-2026-00028",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 46,
+       "min": 46
+      }
+     },
+     {
+      "campo": "consecuencias.cierre.minutos",
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
@@ -99402,6 +99511,18 @@
        "max": 60,
        "min": 60
       }
+     },
+     {
+      "campo": "consecuencias.cierre.valor",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2026-06-16T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-LEIB-2026-06-16-EODI-2026-00028",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": "si"
      },
      {
       "campo": "consecuencias.cierre.valor",
@@ -99426,6 +99547,21 @@
       "fuente_id": "gdelt-f46af85372aa967a",
       "medio": "diariodeibiza.es",
       "valor": "si"
+     },
+     {
+      "campo": "consecuencias.vuelos_desviados",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2026-06-16T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-LEIB-2026-06-16-EODI-2026-00028",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 3,
+       "min": 3
+      }
      },
      {
       "campo": "consecuencias.vuelos_desviados",
@@ -99675,6 +99811,20 @@
       "idioma": "es",
       "medio": "diariodeibiza.es",
       "replicas": 0
+     },
+     {
+      "credibilidad": 2,
+      "enlace": "https://github.com/adsblol/globe_history_2026/releases/tag/v2026.06.16-planes-readsb-prod-0",
+      "fecha": {
+       "precision": "dia",
+       "valor": "2026-06-16T00:00Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Cierre medido en LEIB: 11:17–12:04 UTC, 46 minutos, 3 desvíos y 7 esperas.",
+      "id": "adsblol-LEIB-2026-06-16-EODI-2026-00028",
+      "idioma": "es",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "replicas": 0
      }
     ],
     "id": "EODI-2026-00028",
@@ -99698,6 +99848,27 @@
     "titulo": {
      "en": "Drone paralyzes Ibiza airport for one hour",
      "es": "Dron paraliza el aeropuerto de Ibiza durante una hora"
+    },
+    "trafico_aereo": {
+     "cierre": {
+      "aeropuerto": "LEIB",
+      "difiere_de_declarado": false,
+      "duracion_min": 46,
+      "fin": {
+       "precision": "minuto",
+       "valor": "2026-06-16T12:04Z"
+      },
+      "inicio": {
+       "precision": "minuto",
+       "valor": "2026-06-16T11:17Z"
+      },
+      "resultado": "cierre_medido",
+      "vuelos_desviados": 3,
+      "vuelos_en_espera": 7
+     },
+     "datos": [
+      "https://github.com/adsblol/globe_history_2026/releases/tag/v2026.06.16-planes-readsb-prod-0"
+     ]
     }
    },
    "type": "Feature"
