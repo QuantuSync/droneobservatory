@@ -302,6 +302,19 @@ y la ficha más antigua (`EODI-2024-00001`, también con `?ultimos=24h`) abren l
 historial de estados (EODI-2026-00015, EODI-2026-00074 y EODI-2026-00283), la leyenda, y que
 laten 4 o 5 novedades con una visita anterior y ninguna en la primera visita.
 
+## 7 quater. Todos los incidentes como círculo
+
+Desde el PR #78 el marcador de un incidente suelto solo indica su estado: círculo naranja relleno
+(notificado), círculo rojo relleno (confirmado), círculo gris de borde discontinuo (desmentido) y
+la bandera roja (atribuido). El tipo se lee como texto en la ficha, la lista y los filtros, y la
+leyenda tiene cuatro entradas. «Europa ahora» lleva todas sus cifras en una columna fija; la del
+GPS es el número de zonas con interferencia alta del día («384 zonas con interferencia GPS hoy»
+el 2 de octubre de 2026), el mismo que da la leyenda de la capa. Paneles, hojas y desplegables
+son opacos. Los avisos en directo tienen su propia etiqueta con el código OACI, por encima del
+punto del aeropuerto, y el número de los grupos va por encima de todo. Comprobado en producción
+con `web/data/comprobar-circulos.mjs` (escritorio y 390×844): 49 comprobaciones bien y 0 mal;
+capturas `europa-*-entrada.png` y `europa-*-ahora.png`.
+
 ## 8. Servidor y vigilancia
 
 - Unidad `eodi-directo.service`, siempre en marcha (`Restart=always`), con su propio cerrojo,
