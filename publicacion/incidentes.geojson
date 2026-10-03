@@ -105922,6 +105922,21 @@
     "afirmaciones_publicas": [
      {
       "campo": "consecuencias.cierre.minutos",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2026-05-30T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EDDM-2026-05-30-EODI-2026-00065",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 75,
+       "min": 75
+      }
+     },
+     {
+      "campo": "consecuencias.cierre.minutos",
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
@@ -105952,6 +105967,18 @@
      },
      {
       "campo": "consecuencias.cierre.valor",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2026-05-30T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EDDM-2026-05-30-EODI-2026-00065",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": "si"
+     },
+     {
+      "campo": "consecuencias.cierre.valor",
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
@@ -105973,6 +106000,21 @@
       "fuente_id": "gdelt-d8266fa581c4786f",
       "medio": "lefigaro.fr",
       "valor": "si"
+     },
+     {
+      "campo": "consecuencias.vuelos_desviados",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2026-05-30T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EDDM-2026-05-30-EODI-2026-00065",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 23,
+       "min": 23
+      }
      },
      {
       "campo": "drones.numero",
@@ -108045,6 +108087,20 @@
       "idioma": "de",
       "medio": "idowa.de",
       "replicas": 4
+     },
+     {
+      "credibilidad": 2,
+      "enlace": "https://github.com/adsblol/globe_history_2026/releases/tag/v2026.05.30-planes-readsb-prod-0",
+      "fecha": {
+       "precision": "dia",
+       "valor": "2026-05-30T00:00Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Cierre medido en EDDM: 06:56–08:11 UTC, 75 minutos, 23 desvíos y 12 esperas.",
+      "id": "adsblol-EDDM-2026-05-30-EODI-2026-00065",
+      "idioma": "es",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "replicas": 0
      }
     ],
     "id": "EODI-2026-00065",
@@ -108073,6 +108129,27 @@
     "titulo": {
      "en": "Munich airport closure following drone sighting",
      "es": "Cierre del aeropuerto de Múnich por avistamiento de dron"
+    },
+    "trafico_aereo": {
+     "cierre": {
+      "aeropuerto": "EDDM",
+      "difiere_de_declarado": false,
+      "duracion_min": 75,
+      "fin": {
+       "precision": "minuto",
+       "valor": "2026-05-30T08:11Z"
+      },
+      "inicio": {
+       "precision": "minuto",
+       "valor": "2026-05-30T06:56Z"
+      },
+      "resultado": "cierre_medido",
+      "vuelos_desviados": 23,
+      "vuelos_en_espera": 12
+     },
+     "datos": [
+      "https://github.com/adsblol/globe_history_2026/releases/tag/v2026.05.30-planes-readsb-prod-0"
+     ]
     }
    },
    "type": "Feature"
