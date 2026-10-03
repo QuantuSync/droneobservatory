@@ -791967,6 +791967,74 @@
    "region": "UA-30",
    "sentido": "RU_UA",
    "tipo": "impacto_guerra"
+  },
+  {
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-03T18:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fallecidos": {
+    "max": 1,
+    "min": 1
+   },
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-10-03T17:45Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/kharkivoda/31340",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-10-03T17:45Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Шестакове зафіксовано влучання ворожого дрону по цивільному авто.",
+     "id": "kharkivoda-31340",
+     "idioma": "uk",
+     "medio": "Харківська ОВА",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/synegubov/26208",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-10-03T17:45Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Шестакове зафіксовано влучання ворожого дрону по цивільному авто.",
+     "id": "synegubov-26208",
+     "idioma": "uk",
+     "medio": "Харківська ОВА (канал начальника)",
+     "replicas": 0
+    }
+   ],
+   "heridos": {
+    "max": 1,
+    "min": 1
+   },
+   "id": "EODI-IG-2026-03508",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA63140130190049849",
+    "nivel": "localidad",
+    "nombre": "Шестакове",
+    "nombre_latino": "Shestakove",
+    "punto": {
+     "lat": 50.07256,
+     "lon": 36.6254
+    },
+    "radio_km": 1.5
+   },
+   "region": "UA-63",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
   }
  ]
 }

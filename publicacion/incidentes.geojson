@@ -151439,6 +151439,21 @@
       }
      },
      {
+      "campo": "drones.numero",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T16:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-a4506b7dae29e74b",
+      "medio": "atitudinea.ro",
+      "valor": {
+       "max": 6,
+       "min": 6
+      }
+     },
+     {
       "campo": "lugar.pais",
       "credibilidad": 3,
       "fecha": {
@@ -151463,6 +151478,18 @@
       "valor": "MD"
      },
      {
+      "campo": "lugar.pais",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T16:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-a4506b7dae29e74b",
+      "medio": "atitudinea.ro",
+      "valor": "MD"
+     },
+     {
       "campo": "presencia_dron",
       "credibilidad": 3,
       "fecha": {
@@ -151472,6 +151499,18 @@
       "fiabilidad": "C",
       "fuente_id": "gdelt-c891ab25b11aba18",
       "medio": "news.yam.md",
+      "valor": "confirmada"
+     },
+     {
+      "campo": "presencia_dron",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T16:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-a4506b7dae29e74b",
+      "medio": "atitudinea.ro",
       "valor": "confirmada"
      },
      {
@@ -151535,6 +151574,21 @@
       }
      },
      {
+      "campo": "tiempo.inicio",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T16:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-a4506b7dae29e74b",
+      "medio": "atitudinea.ro",
+      "valor": {
+       "precision": "dia",
+       "valor": "2026-10-03T00:00Z"
+      }
+     },
+     {
       "campo": "tipo",
       "credibilidad": 3,
       "fecha": {
@@ -151544,6 +151598,18 @@
       "fiabilidad": "C",
       "fuente_id": "gdelt-c891ab25b11aba18",
       "medio": "news.yam.md",
+      "valor": "incursion"
+     },
+     {
+      "campo": "tipo",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T16:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-a4506b7dae29e74b",
+      "medio": "atitudinea.ro",
       "valor": "incursion"
      }
     ],
@@ -151555,7 +151621,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-03T13:23Z"
+      "valor": "2026-10-03T18:17Z"
      }
     },
     "drones": {
@@ -151618,6 +151684,20 @@
       "id": "gdelt-aae2cbecceeb21dd",
       "idioma": "ro",
       "medio": "news.yam.md",
+      "replicas": 1
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://atitudinea.ro/sase-drone-si-rachete-au-fost-semnalate-in-spatiul-aerian-al-moldovei-toate-au-explodat-unele-au-provocat-incendii-fara-victime-audio",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T16:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Sâmbătă dimineaţă, în decurs de circa 15 minute, cinci drone şi rachete au traversat spaţiul aerian.",
+      "id": "gdelt-a4506b7dae29e74b",
+      "idioma": "ro",
+      "medio": "atitudinea.ro",
       "replicas": 1
      }
     ],
