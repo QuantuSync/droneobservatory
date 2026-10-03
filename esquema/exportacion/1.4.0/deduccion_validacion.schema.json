@@ -8,7 +8,7 @@
   "properties": {
     "ultima_correcta": {"type": ["string", "null"]},
     "version_motor": {"type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$"},
-    "version_catalogo": {"type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$"},
+    "version_catalogo": {"type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+(\\+vivo\\.\\d+)?$"},
     "validacion": {
       "type": "object",
       "additionalProperties": false,

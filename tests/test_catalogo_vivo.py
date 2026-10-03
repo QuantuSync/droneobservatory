@@ -4,6 +4,7 @@ tácticas, incorporación a la base y exportación. Sin red: las páginas son de
 
 import json
 import math
+import re
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -423,3 +424,13 @@ def test_incorporacion_a_la_base_y_exportacion_por_semana(tmp_path: Path) -> Non
     datos = semanal.novedades_catalogo(almacen, "1.1.0+vivo.2", {"version": 2})
     assert datos["semanas"] == [{"semana": "2026-W41", "novedades": [novedad]}]
     assert semanal.tacticas_catalogo(almacen)["tacticas"][0]["clave"] == "tactica|ruta||BY"
+
+
+def test_la_exportacion_admite_la_version_del_catalogo_vivo() -> None:
+    from exportacion import semanal
+
+    for nombre in ("clases_dron", "deduccion_validacion"):
+        propiedad = semanal.esquema_propio(nombre)["properties"]["version_catalogo"]
+        patron = re.compile(propiedad["pattern"])
+        assert patron.match("1.1.0") and patron.match("1.1.0+vivo.12")
+        assert not patron.match("1.1.0+otro")

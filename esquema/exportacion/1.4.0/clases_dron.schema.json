@@ -7,7 +7,7 @@
   "additionalProperties": false,
   "required": ["version_catalogo", "clases"],
   "properties": {
-    "version_catalogo": {"type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$"},
+    "version_catalogo": {"type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+(\\+vivo\\.\\d+)?$"},
     "clases": {
       "type": "array",
       "minItems": 1,
