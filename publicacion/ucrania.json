@@ -791628,6 +791628,65 @@
    "region": "UA-32",
    "sentido": "RU_UA",
    "tipo": "impacto_guerra"
+  },
+  {
+   "categorias_objetivo": [
+    "energia",
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-03T07:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "dia": "2026-10-02",
+   "fallecidos": {
+    "max": 66,
+    "min": 66
+   },
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-10-03T05:51Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/synegubov/26189",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-10-03T05:51Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Харків пошкоджено 23 приватні будинки, навчальний заклад, офісні будівлі, 7 автомобілів, електромережі;",
+     "id": "synegubov-26189",
+     "idioma": "uk",
+     "medio": "Харківська ОВА (канал начальника)",
+     "replicas": 0
+    }
+   ],
+   "heridos": {
+    "max": 49,
+    "min": 49
+   },
+   "id": "EODI-IG-2026-03504",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA63120270010096107",
+    "nivel": "localidad",
+    "nombre": "Харків",
+    "nombre_latino": "Kharkiv",
+    "punto": {
+     "lat": 49.99232,
+     "lon": 36.23101
+    },
+    "radio_km": 15.0
+   },
+   "parte_diario": true,
+   "region": "UA-63",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
   }
  ]
 }

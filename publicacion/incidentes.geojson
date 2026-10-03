@@ -101769,6 +101769,21 @@
     "afirmaciones_publicas": [
      {
       "campo": "consecuencias.cierre.minutos",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2026-05-14T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EFHK-2026-05-14-EODI-2026-00041",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 319,
+       "min": 319
+      }
+     },
+     {
+      "campo": "consecuencias.cierre.minutos",
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
@@ -101784,6 +101799,18 @@
      },
      {
       "campo": "consecuencias.cierre.valor",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2026-05-14T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EFHK-2026-05-14-EODI-2026-00041",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": "si"
+     },
+     {
+      "campo": "consecuencias.cierre.valor",
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
@@ -101793,6 +101820,21 @@
       "fuente_id": "gdelt-f7db86960cca3348",
       "medio": "straitstimes.com",
       "valor": "si"
+     },
+     {
+      "campo": "consecuencias.vuelos_desviados",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2026-05-14T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EFHK-2026-05-14-EODI-2026-00041",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 7,
+       "min": 7
+      }
      },
      {
       "campo": "drones.numero",
@@ -102859,6 +102901,20 @@
       "idioma": "es",
       "medio": "eldestapeweb.com",
       "replicas": 0
+     },
+     {
+      "credibilidad": 2,
+      "enlace": "https://github.com/adsblol/globe_history_2026/releases/tag/v2026.05.14-planes-readsb-prod-0",
+      "fecha": {
+       "precision": "dia",
+       "valor": "2026-05-14T00:00Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Cierre medido en EFHK: 22:52–04:11 UTC, 319 minutos, 7 desvíos y 0 esperas.",
+      "id": "adsblol-EFHK-2026-05-14-EODI-2026-00041",
+      "idioma": "es",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "replicas": 0
      }
     ],
     "id": "EODI-2026-00041",
@@ -102888,6 +102944,28 @@
     "titulo": {
      "en": "Helsinki airport closure due to suspected drone activity",
      "es": "Cierre del aeropuerto de Helsinki por sospecha de actividad de drones"
+    },
+    "trafico_aereo": {
+     "cierre": {
+      "aeropuerto": "EFHK",
+      "difiere_de_declarado": true,
+      "duracion_min": 319,
+      "fin": {
+       "precision": "minuto",
+       "valor": "2026-05-15T04:11Z"
+      },
+      "inicio": {
+       "precision": "minuto",
+       "valor": "2026-05-14T22:52Z"
+      },
+      "resultado": "cierre_medido",
+      "vuelos_desviados": 7,
+      "vuelos_en_espera": 0
+     },
+     "datos": [
+      "https://github.com/adsblol/globe_history_2026/releases/tag/v2026.05.14-planes-readsb-prod-0",
+      "https://github.com/adsblol/globe_history_2026/releases/tag/v2026.05.15-planes-readsb-prod-0"
+     ]
     }
    },
    "type": "Feature"
@@ -152767,6 +152845,140 @@
     "titulo": {
      "en": "Drone attack on Leipzig airport",
      "es": "Ataque con dron contra el aeropuerto de Leipzig"
+    }
+   },
+   "type": "Feature"
+  },
+  {
+   "geometry": {
+    "coordinates": [
+     11.78603,
+     48.35372
+    ],
+    "type": "Point"
+   },
+   "id": "EODI-2026-00370",
+   "properties": {
+    "afirmaciones_publicas": [
+     {
+      "campo": "drones.numero",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T06:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-29bded2031a21da3",
+      "medio": "merkur.de",
+      "valor": {
+       "max": 10,
+       "min": 2
+      }
+     },
+     {
+      "campo": "lugar.pais",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T06:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-29bded2031a21da3",
+      "medio": "merkur.de",
+      "valor": "DE"
+     },
+     {
+      "campo": "presencia_dron",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T06:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-29bded2031a21da3",
+      "medio": "merkur.de",
+      "valor": "no_confirmada"
+     },
+     {
+      "campo": "tipo",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T06:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-29bded2031a21da3",
+      "medio": "merkur.de",
+      "valor": "interrupcion_aeroportuaria"
+     }
+    ],
+    "consecuencias": {
+     "cierre": {
+      "valor": "desconocido"
+     }
+    },
+    "control": {
+     "ultima_actualizacion": {
+      "precision": "minuto",
+      "valor": "2026-10-03T07:17Z"
+     }
+    },
+    "drones": {
+     "numero": {
+      "max": 10,
+      "min": 2
+     }
+    },
+    "estado": {
+     "actual": "notificado",
+     "historial": [
+      {
+       "estado": "notificado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2026-10-03T06:30Z"
+       },
+       "fuente_id": "gdelt-29bded2031a21da3"
+      }
+     ]
+    },
+    "fuentes": [
+     {
+      "credibilidad": 3,
+      "enlace": "https://merkur.de/lokales/freising/freising-ort28692/drohnen-am-flughafen-muenchen-polizei-warnt-vor-schadensersatz-94520832.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T06:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "In den vergangenen Tagen im Umfeld des Flughafens München vermehrt Drohnenlenker festgestellt wurden.",
+      "id": "gdelt-29bded2031a21da3",
+      "idioma": "de",
+      "medio": "merkur.de",
+      "replicas": 0
+     }
+    ],
+    "id": "EODI-2026-00370",
+    "lugar": {
+     "pais": "DE",
+     "radio_km": 5.0
+    },
+    "objetivo": {
+     "categoria": "aeropuerto",
+     "nombre": "Flughafen München",
+     "oaci": "EDDM"
+    },
+    "presencia_dron": "no_confirmada",
+    "tiempo": {
+     "inicio": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T06:30Z"
+     }
+    },
+    "tipo": "sobrevuelo",
+    "titulo": {
+     "en": "Illegal drones cause restrictions at Munich airport",
+     "es": "Drones ilegales causan restricciones en el aeropuerto de Múnich"
     }
    },
    "type": "Feature"

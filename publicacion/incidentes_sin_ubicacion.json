@@ -42079,6 +42079,127 @@
     "en": "Naval drone explodes at Port of Constanza",
     "es": "Dron marino explota en el Puerto de Constanza"
    }
+  },
+  {
+   "afirmaciones_publicas": [
+    {
+     "campo": "drones.numero",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T06:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-67d0887d266deee1",
+     "medio": "news.yam.md",
+     "valor": {
+      "max": 10,
+      "min": 2
+     }
+    },
+    {
+     "campo": "lugar.pais",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T06:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-67d0887d266deee1",
+     "medio": "news.yam.md",
+     "valor": "MD"
+    },
+    {
+     "campo": "presencia_dron",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T06:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-67d0887d266deee1",
+     "medio": "news.yam.md",
+     "valor": "confirmada"
+    },
+    {
+     "campo": "tiempo.inicio",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T06:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-67d0887d266deee1",
+     "medio": "news.yam.md",
+     "valor": {
+      "precision": "dia",
+      "valor": "2026-10-03T00:00Z"
+     }
+    }
+   ],
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-03T07:17Z"
+    }
+   },
+   "drones": {
+    "numero": {
+     "max": 10,
+     "min": 2
+    }
+   },
+   "estado": {
+    "actual": "notificado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T06:45Z"
+      },
+      "fuente_id": "gdelt-67d0887d266deee1"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://news.yam.md/ro/story/70573677",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T06:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Mai multe drone au survolat spațiul aerian al Republicii Moldova.",
+     "id": "gdelt-67d0887d266deee1",
+     "idioma": "ro",
+     "medio": "news.yam.md",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-2026-00371",
+   "lugar": {
+    "nivel": "localidad",
+    "pais": "MD"
+   },
+   "presencia_dron": "confirmada",
+   "tiempo": {
+    "inicio": {
+     "precision": "dia",
+     "valor": "2026-10-03T00:00Z"
+    }
+   },
+   "tipo": "sobrevuelo",
+   "titulo": {
+    "en": "Multiple drones fly over Moldova and cause explosions",
+    "es": "Múltiples drones sobrevuelan Moldavia y causan explosiones"
+   }
   }
  ]
 }
