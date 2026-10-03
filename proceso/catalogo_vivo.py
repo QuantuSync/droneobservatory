@@ -25,7 +25,6 @@ análisis, la prensa técnica y los datos propios. Aquí está lo que no depende
 import functools
 import hashlib
 import html
-import itertools
 import re
 from dataclasses import dataclass, field
 from typing import Any
@@ -246,9 +245,12 @@ def fibra(ficha: Ficha) -> bool:
 # Etiquetas de las tablas de especificaciones (inglés y español: las de DJI se sirven en la
 # edición del país del visitante).
 ETIQUETAS_FICHA: tuple[tuple[str, str], ...] = (
-    (r"max(?:imum)?\.? ascent speed|velocidad m[aá]x(?:ima)?\.? de ascenso", "velocidad_ascenso"),
     (
-        r"max(?:imum)?\.? descent speed|velocidad m[aá]x(?:ima)?\.? de descenso",
+        r"max(?:imum)?\.? ascent speed|velocidad m[aá]x(?:ima)?\.? (?:de|en) ascenso",
+        "velocidad_ascenso",
+    ),
+    (
+        r"max(?:imum)?\.? descent speed|velocidad m[aá]x(?:ima)?\.? (?:de|en) descenso",
         "velocidad_descenso",
     ),
     (
@@ -257,10 +259,11 @@ ETIQUETAS_FICHA: tuple[tuple[str, str], ...] = (
     ),
     (r"max(?:imum)?\.? (?:flight )?time|tiempo m[aá]x(?:imo)?\.? de vuelo", "autonomia"),
     (
-        r"max(?:imum)?\.? wind (?:speed )?resistance|resistencia m[aá]x(?:ima)?\.? al viento",
+        r"(?:max(?:imum)?\.? )?wind (?:speed )?resistance"
+        r"|resistencia (?:m[aá]x(?:ima)?\.? )?al viento",
         "viento_maximo",
     ),
-    (r"take-?off weight|peso de despegue", "mtow"),
+    (r"take-?off weight|peso (?:m[aá]x(?:imo)?\.? )?de despegue", "mtow"),
     (
         r"max(?:imum)?\.? (?:tilt|pitch|attitude) angle"
         r"|[aá]ngulo m[aá]x(?:imo)?\.? de (?:cabeceo|inclinaci[oó]n)",
@@ -278,15 +281,46 @@ def ficha_fabricante(url: str, nombre: str, pagina: str) -> Ficha:
     plano = _texto(pagina)
     ficha.texto = plano
     partes = [p.strip() for p in plano.split("|") if p.strip()]
-    for etiqueta, valor in itertools.pairwise(partes):
-        if len(etiqueta) > 80 or not re.search(r"\d", valor):
+    for n, etiqueta in enumerate(partes[:-1]):
+        if len(etiqueta) > 80:
             continue
         for patron, campo in ETIQUETAS_FICHA:
             if re.search(patron, etiqueta, re.I):
-                for cifra in cifras_de_valor(etiqueta, valor, UNIDADES_FICHA)[:1]:
+                # El valor es la celda siguiente; si esa celda solo explica las condiciones
+                # («A una altitud equivalente al nivel del mar y sin viento:»), la de después.
+                cifras = cifras_de_valor(etiqueta, partes[n + 1], UNIDADES_FICHA)
+                if not cifras and n + 2 < len(partes) and not re.search(r"\d", partes[n + 1]):
+                    valor = f"{partes[n + 1]} {partes[n + 2]}"
+                    cifras = cifras_de_valor(etiqueta, valor, UNIDADES_FICHA)
+                for cifra in cifras[:1]:
                     ficha.cifras.setdefault(campo, []).append(cifra)
                 break
     return ficha
+
+
+_SUFIJO_FICHA = re.compile(
+    r"\s*[-–|:]?\s*(?:especificaciones|specs|specifications|ficha t[eé]cnica|datos t[eé]cnicos)"
+    r"\b.*$",
+    re.I,
+)
+
+
+def nombre_de_titulo(titulo: str, url: str) -> str:
+    """El nombre del modelo en el título de su ficha: sin «- Especificaciones» y, si el título
+    nombra varios («DJI Mini 4K | DJI Mini 2 SE»), el que coincide con la dirección."""
+    limpio = _SUFIJO_FICHA.sub("", " ".join(titulo.split())).strip(" -–|:")
+    partes = [p.strip(" -–:") for p in re.split(r"\s+[|–]\s+|\s*\|\s*|\s+-\s+", limpio)]
+    partes = [p for p in partes if p]
+    if not partes:
+        return limpio
+    camino = re.sub(r"[^a-z0-9]", "", url.lower().split("?")[0].rstrip("/").replace("/specs", ""))
+
+    def coincide(parte: str) -> int:
+        clave = re.sub(r"[^a-z0-9]", "", parte.lower())
+        palabras = re.sub(r"[^a-z0-9 ]", "", parte.lower()).split()
+        return sum(len(p) for p in palabras if p in camino) + (clave in camino)
+
+    return max(partes, key=coincide)
 
 
 # --- Tácticas ----------------------------------------------------------------------------

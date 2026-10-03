@@ -388,6 +388,9 @@ def barrer_war_sanctions(barrido: Barrido, fuente: Documento, control: Documento
     return len(lista)
 
 
+PESO_PROFESIONAL_KG = 2.0
+
+
 def _clase_fabricante(fuente: Documento, ficha: cv.Ficha) -> str | None:
     from proceso.deduccion.catalogo import convertir
 
@@ -398,6 +401,10 @@ def _clase_fabricante(fuente: Documento, ficha: cv.Ficha) -> str | None:
     ]
     if pesos and max(pesos) < 0.25 and fuente.get("clase", "").startswith("multirrotor_consumo"):
         return "multirrotor_consumo_sub250"
+    # Un multirrotor de más de PESO_PROFESIONAL_KG en la lista de consumo de un fabricante
+    # (Inspire 3, 4,3 kg) es de la clase profesional.
+    if pesos and max(pesos) > PESO_PROFESIONAL_KG and fuente.get("clase") == "multirrotor_consumo":
+        return "multirrotor_profesional"
     clase: str | None = fuente.get("clase")
     return clase
 
@@ -422,10 +429,10 @@ def barrer_fabricante(barrido: Barrido, fuente: Documento, control: Documento) -
         except DescargaFallida as error:
             registro.warning("%s %s: %s", fuente["id"], url_ficha, error)
             continue
-        nombre = re.sub(r"\s*[-|–].*$", "", entrada.titulo).strip()
+        nombre = cv.nombre_de_titulo(entrada.titulo, base)
         if not nombre or nombre.startswith("http"):
             titulo = re.search(r"<title[^>]*>(.*?)</title>", pagina, re.S | re.I)
-            nombre = cv._texto(titulo.group(1)).split(" - ")[0].strip() if titulo else base
+            nombre = cv.nombre_de_titulo(cv._texto(titulo.group(1)), base) if titulo else base
         if fuente.get("excluir") and re.search(fuente["excluir"], nombre, re.I):
             continue
         ficha = cv.ficha_fabricante(url_ficha, nombre, pagina)

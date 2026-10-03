@@ -206,6 +206,46 @@ def test_ficha_de_fabricante_por_etiquetas() -> None:
     assert ficha.cifras["angulo_inclinacion"][0]["unidad"] == "°"
 
 
+def test_ficha_con_condiciones_antes_del_valor_y_etiquetas_con_maximo() -> None:
+    pagina = ("<div>Velocidad horizontal máxima</div>"
+              "<div>A una altitud equivalente al nivel del mar y sin viento:</div>"
+              "<div>12 m/s* (modo Sport)</div>"
+              "<div>Peso máx. de despegue</div><div>Aprox. 4310 g</div>"
+              "<div>Resistencia al viento</div><div>10,7 m/s</div>"
+              "<div>Velocidad máx. en ascenso</div><div>5 m/s (modo S)</div>")  # fmt: skip
+    ficha = cv.ficha_fabricante("u", "DJI Flip", pagina)
+    assert ficha.cifras["velocidad_maxima"][0]["valor"] == 12.0
+    assert ficha.cifras["mtow"][0] == {"valor": 4310.0, "unidad": "g",
+                                       "cita": "Peso máx. de despegue Aprox. 4310 g"}  # fmt: skip
+    assert ficha.cifras["viento_maximo"][0]["valor"] == 10.7
+    # «Velocidad máx. en ascenso» es la de ascenso, no la máxima.
+    assert len(ficha.cifras["velocidad_maxima"]) == 1
+    assert ficha.cifras["velocidad_ascenso"][0]["valor"] == 5.0
+
+
+def test_nombre_del_modelo_en_el_titulo_de_su_ficha() -> None:
+    titulo = "DJI Mini 4K | DJI Mini 2 SE- Especificaciones"
+    assert cv.nombre_de_titulo(titulo, "https://www.dji.com/es/mini-2-se/specs") == "DJI Mini 2 SE"
+    assert cv.nombre_de_titulo(
+        "DJI Flip - Especificaciones - DJI", "https://www.dji.com/es/flip"
+    ) == ("DJI Flip")
+    assert cv.nombre_de_titulo("DJI Neo 2", "https://www.dji.com/es/neo-2") == "DJI Neo 2"
+
+
+def test_un_multirrotor_pesado_de_la_lista_de_consumo_es_profesional() -> None:
+    from recogida.catalogo_vivo import _clase_fabricante
+
+    ficha = cv.Ficha("u", "DJI Inspire 3")
+    ficha.cifras["mtow"] = [{"valor": 4310.0, "unidad": "g", "cita": "c"}]
+    assert _clase_fabricante({"clase": "multirrotor_consumo"}, ficha) == "multirrotor_profesional"
+    ficha.cifras["mtow"] = [{"valor": 249.0, "unidad": "g", "cita": "c"}]
+    assert (
+        _clase_fabricante({"clase": "multirrotor_consumo"}, ficha) == "multirrotor_consumo_sub250"
+    )
+    ficha.cifras["mtow"] = [{"valor": 720.0, "unidad": "g", "cita": "c"}]
+    assert _clase_fabricante({"clase": "multirrotor_consumo"}, ficha) == "multirrotor_consumo"
+
+
 def test_nombres_de_modelo_con_marcas_comerciales(real: catalogo.Catalogo) -> None:
     nombres = cv.nombres_de(json.loads(catalogo.CATALOGO.read_text(encoding="utf-8")))
     assert cv.modelo_de("DJI MAVIC 3T EU", nombres) == "dji_mavic_3t"
