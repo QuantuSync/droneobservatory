@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import type { Estado, Fuente, FuenteImpacto, PasoHistorial, Tipo } from "../datos/tipos.ts";
+import type { Estado, Fuente, FuenteImpacto, PasoHistorial } from "../datos/tipos.ts";
 import { instante } from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
 import { EnlaceExterno } from "./EnlaceExterno.tsx";
@@ -96,11 +96,9 @@ interface PropsHistorial {
   t: Textos;
   historial: readonly PasoHistorial[];
   fuentes: readonly Fuente[];
-  /** Forma con la que se dibuja el estado: la del tipo del incidente. */
-  tipo: Tipo;
 }
 
-export function Historial({ t, historial, fuentes, tipo }: PropsHistorial) {
+export function Historial({ t, historial, fuentes }: PropsHistorial) {
   const medios = new Map(fuentes.map((fuente) => [fuente.id, fuente.medio]));
   return (
     <section className="mt-4">
@@ -108,7 +106,7 @@ export function Historial({ t, historial, fuentes, tipo }: PropsHistorial) {
       <ol className="mt-1">
         {historial.map((paso, i) => (
           <li key={i} className="flex flex-wrap items-center gap-x-2 border-b border-linea py-1.5">
-            <EstadoConTexto t={t} tipo={tipo} estado={paso.estado} />
+            <EstadoConTexto t={t} estado={paso.estado} />
             <span className="mono text-xs text-secundario">{instante(paso.fecha)}</span>
             <span className="w-full text-xs text-secundario">
               {paso.fuente_id === undefined
@@ -123,10 +121,10 @@ export function Historial({ t, historial, fuentes, tipo }: PropsHistorial) {
 }
 
 /** El estado, siempre con su símbolo y su nombre: nunca solo con color. */
-export function EstadoConTexto({ t, tipo, estado }: { t: Textos; tipo: Tipo; estado: Estado }) {
+export function EstadoConTexto({ t, estado }: { t: Textos; estado: Estado }) {
   return (
     <span className="inline-flex items-center gap-1.5">
-      <Simbolo tipo={tipo} estado={estado} />
+      <Simbolo estado={estado} />
       {t.estado[estado]}
     </span>
   );

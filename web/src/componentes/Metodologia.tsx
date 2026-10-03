@@ -39,11 +39,7 @@ function Texto({ t, trozos }: { t: Textos; trozos: readonly Trozo[] }) {
 }
 
 function SimboloDeMarca({ marca }: { marca: Marca }) {
-  return "tipo" in marca ? (
-    <Simbolo tipo={marca.tipo} estado="notificado" />
-  ) : (
-    <Simbolo tipo="interrupcion_aeroportuaria" estado={marca.estado} />
-  );
+  return <Simbolo estado={marca.estado} />;
 }
 
 function BloqueDeTexto({ t, bloque }: { t: Textos; bloque: Bloque }) {

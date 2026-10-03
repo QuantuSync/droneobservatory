@@ -14,7 +14,7 @@ import { OBJETO_TESELAS, urlDelAlmacen } from "../almacenPublico.ts";
 import { OPACIDAD_GNSS } from "../datos/gnss.ts";
 import { ESTADOS } from "../datos/vocabulario.ts";
 import { COLOR_ESTADO, PALETA, TRAZO_DESMENTIDO } from "../paleta.ts";
-import { ICONO_BANDERA_ELEGIDA } from "./iconos.ts";
+import { ETIQUETA_AVISO, ICONO_BANDERA_ELEGIDA } from "./iconos.ts";
 import type { Idioma } from "../sitio.ts";
 
 export const URL_TESELAS: string =
@@ -38,6 +38,7 @@ export const FUENTE_GNSS = "gnss";
 export const FUENTE_DIRECTO = "directo";
 
 export const CAPA_GRUPOS = "grupos";
+export const CAPA_NUMERO_GRUPOS = "grupos-numero";
 export const CAPA_INCIDENTES_GRAVES = "incidentes-graves";
 export const CAPA_INCIDENTES_DISCRETOS = "incidentes-discretos";
 export const CAPA_REGIONES = "ucrania-relleno";
@@ -61,8 +62,6 @@ export const CAPA_PRESION_LINEA = "presion-linea";
 export const CAPA_GNSS = "gnss-relleno";
 export const CAPA_GNSS_LINEA = "gnss-linea";
 export const CAPA_DIRECTO = "directo-avisos";
-export const CAPA_DIRECTO_HALO = "directo-halo";
-export const CAPA_DIRECTO_ROTULO = "directo-rotulo";
 
 /** Capas que se pueden pulsar, de la de más arriba a la de más abajo. */
 export const CAPAS_PULSABLES: readonly string[] = [
@@ -85,7 +84,7 @@ export const CAPAS_DE_INCIDENTES: readonly string[] = [
   "areas-contorno-desmentido",
   CAPA_EPISODIOS,
   CAPA_GRUPOS,
-  "grupos-numero",
+  CAPA_NUMERO_GRUPOS,
   CAPA_RECIENTES,
   CAPA_INCIDENTES_DISCRETOS,
   CAPA_INCIDENTES_GRAVES,
@@ -126,17 +125,6 @@ export const COLOR_GNSS: ExpressionSpecification = [
   ["interpolate", ["linear"], ["get", "proporcion"], 0, GRIS_GNSS_BAJO, 0.1, GRIS_GNSS_ALTO],
 ];
 
-/** Avisos en directo: el color de su estado (posible, confirmado, reanudado). */
-export const COLOR_AVISO: ExpressionSpecification = [
-  "match",
-  ["get", "estado"],
-  "posible_cierre",
-  PALETA.notificado,
-  "cierre_confirmado",
-  PALETA.confirmado,
-  PALETA.secundario,
-];
-
 /** Marca del foco térmico: pequeña, junto al símbolo, como en la ayuda (MarcaFoco). */
 const RADIO_MARCA_FOCO = 3.5;
 const DESPLAZAMIENTO_MARCA_FOCO: [number, number] = [9, -9];
@@ -166,6 +154,12 @@ const OPACIDAD_DISCRETOS = 0.72;
 const OPACIDAD_RECIENTE = 0.22;
 
 const FUENTE_TIPOGRAFICA_NUMEROS = ["Noto Sans Medium"];
+/** Tamaño del número dentro de un grupo. */
+export const TAMANO_NUMERO_GRUPO = 12;
+/** Código OACI dentro de la etiqueta de un aviso, centrado en la píldora. */
+export const TAMANO_TEXTO_AVISO = 10;
+/** Altura del centro de la píldora sobre el punto del aeropuerto, en píxeles. */
+export const CENTRO_TEXTO_AVISO = ETIQUETA_AVISO.hueco + ETIQUETA_AVISO.punta + ETIQUETA_AVISO.alto / 2;
 
 /** Base apagada: tierra casi del color del fondo y rótulos tenues. */
 const TIERRA = "#0b111c";
@@ -555,19 +549,6 @@ function capasPropias(acento: string): LayerSpecification[] {
       },
     },
     {
-      id: "grupos-numero",
-      type: "symbol",
-      source: FUENTE_PUNTOS,
-      filter: ES_GRUPO,
-      layout: {
-        "text-field": ["to-string", CUENTA],
-        "text-font": FUENTE_TIPOGRAFICA_NUMEROS,
-        "text-size": 12,
-        "text-allow-overlap": true,
-      },
-      paint: { "text-color": PALETA.texto },
-    },
-    {
       id: CAPA_RECIENTES,
       type: "circle",
       source: FUENTE_PUNTOS,
@@ -747,43 +728,44 @@ function capasPropias(acento: string): LayerSpecification[] {
         "icon-ignore-placement": true,
       },
     },
-    // Avisos de la detección en directo: un aro y un punto del color de su estado, con el
-    // código OACI del aeropuerto.
-    {
-      id: CAPA_DIRECTO_HALO,
-      type: "circle",
-      source: FUENTE_DIRECTO,
-      paint: {
-        "circle-radius": 15,
-        "circle-color": "rgba(0, 0, 0, 0)",
-        "circle-stroke-color": COLOR_AVISO,
-        "circle-stroke-width": 1.5,
-        "circle-stroke-opacity": 0.8,
-      },
-    },
+    // Avisos de la detección en directo: una etiqueta con el código OACI dentro, borde del
+    // color de su estado y una punta que señala el aeropuerto, levantada sobre el punto para
+    // no tapar el número de un grupo en el mismo sitio. Sin pulso.
     {
       id: CAPA_DIRECTO,
-      type: "circle",
-      source: FUENTE_DIRECTO,
-      paint: {
-        "circle-radius": 7,
-        "circle-color": COLOR_AVISO,
-        "circle-stroke-color": PALETA.fondo,
-        "circle-stroke-width": 2,
-      },
-    },
-    {
-      id: CAPA_DIRECTO_ROTULO,
       type: "symbol",
       source: FUENTE_DIRECTO,
       layout: {
+        "icon-image": ["concat", "aviso-", ["get", "estado"]],
+        "icon-anchor": "bottom",
+        "icon-offset": [0, -ETIQUETA_AVISO.hueco],
+        "icon-allow-overlap": true,
+        "icon-ignore-placement": true,
         "text-field": ["get", "oaci"],
         "text-font": FUENTE_TIPOGRAFICA_NUMEROS,
-        "text-size": 11,
-        "text-offset": [0, 1.9],
+        "text-size": TAMANO_TEXTO_AVISO,
+        "text-anchor": "center",
+        "text-offset": [0, -CENTRO_TEXTO_AVISO / TAMANO_TEXTO_AVISO],
         "text-allow-overlap": true,
+        "text-ignore-placement": true,
       },
-      paint: { "text-color": PALETA.texto, "text-halo-color": PALETA.fondo, "text-halo-width": 1.2 },
+      paint: { "text-color": PALETA.texto },
+    },
+    // El número de un grupo va encima de todo, con un halo del fondo: ni un incidente suelto
+    // en un punto muy cercano ni la etiqueta de un aviso lo tapan.
+    {
+      id: CAPA_NUMERO_GRUPOS,
+      type: "symbol",
+      source: FUENTE_PUNTOS,
+      filter: ES_GRUPO,
+      layout: {
+        "text-field": ["to-string", CUENTA],
+        "text-font": FUENTE_TIPOGRAFICA_NUMEROS,
+        "text-size": TAMANO_NUMERO_GRUPO,
+        "text-allow-overlap": true,
+        "text-ignore-placement": true,
+      },
+      paint: { "text-color": PALETA.texto, "text-halo-color": PALETA.panelSolido, "text-halo-width": 2 },
     },
   ];
 }

@@ -143,9 +143,7 @@ export const en: Textos = {
     incidentes: "incidents in 7 days",
     drones: "drones launched last night",
     focos: "confirmed thermal hotspots in 7 days",
-    gnss: "GPS interference today",
-    nivel: { sin: "no interference", media: "medium", alta: "high" },
-    celdasAltas: (n) => (n === 1 ? "1 high cell" : `${n} high cells`),
+    gnss: "GPS interference zones today",
     sinDato: "no figure",
     ir: (que) => `Show on the map: ${que}`,
     abrir: "Open “Europe now”",
@@ -193,6 +191,7 @@ export const en: Textos = {
     degradadas: "with degraded position",
     periodo: "Period",
     dias: (n) => (n === 1 ? "1 day with data" : `${n} days with data`),
+    zonasAltas: (n) => (n === 1 ? "1 zone with high interference" : `${n} zones with high interference`),
     sinDatos: "No interference data for this period",
     cargando: "Loading interference…",
     letrero: (proporcion) => `GPS interference · ${proporcion} of aircraft`,
@@ -223,12 +222,12 @@ export const en: Textos = {
   ayuda: {
     titulo: "How to read the map",
     cerrar: "Close help",
-    formas: "The shape shows the type of incident.",
     colores:
-      "The colour shows the status: orange, reported; red, confirmed. Denied incidents have a " +
-      "dashed grey outline and no fill. An attributed incident (a confirmed one whose " +
-      "perpetrator a government has named) is just a red flag on its pole, with no type " +
-      "shape: the foot of the pole marks the place.",
+      "Each incident is a circle filled with the colour of its status: orange, reported; red, " +
+      "confirmed. A denied incident is a grey circle with a dashed outline and no fill. An " +
+      "attributed incident (a confirmed one whose perpetrator a government has named) is just " +
+      "a red flag on its pole: the foot of the pole marks the place. The type of incident is " +
+      "written in the record, the list and the filters.",
     periodo:
       "The “Filters” button opens the period (everything, the last 24 hours, the last 7 or 30 " +
       "days, the last year or between two dates) and the status, type and country filters. " +
@@ -243,7 +242,8 @@ export const en: Textos = {
       "happened (for attributed incidents, the foot of the flag marks the place).",
     lineas: "A thin line joins the incidents of one episode: several targets on the same night.",
     numeros:
-      "A circle with a number groups several incidents: it grows with the number, and its ring " +
+      "A circle with a number inside groups several incidents (a single incident is filled " +
+      "and has no number): it grows with the number, and its ring " +
       "is red if it holds any confirmed or attributed incident and orange if all are reported. " +
       "Zoom in and they separate.",
     pila: "If the incidents share the exact same spot, tap the circle to choose which one to open.",
@@ -266,8 +266,10 @@ export const en: Textos = {
       "A light dot next to an incident, a place hit or a group of places, or at the centre of a Ukrainian region, marks a " +
       "thermal hotspot detected by satellite (NASA FIRMS) at its place and time.",
     directo:
-      "A dot with a ring and the ICAO code is an airport in the live detection, without pulse: " +
-      "orange, possible closure in progress; red, closure confirmed; grey, operations resumed.",
+      "A tag with the ICAO code inside and a point towards the airport is an alert from the " +
+      "live detection, without pulse. Its border shows the status: orange, possible closure in " +
+      "progress; red, closure confirmed; grey, operations resumed. It sits above the spot so " +
+      "it never hides the number of a group.",
     atajos: "Keyboard shortcuts",
     acciones: {
       ayuda: "Open or close this help",
@@ -582,7 +584,6 @@ export const en: Textos = {
             lista: [
               {
                 termino: "Airport disruption",
-                marca: { tipo: "interrupcion_aeroportuaria" },
                 texto: [
                   "An airport closes or has flights diverted, cancelled or delayed. When it " +
                     "applies, this type takes precedence over the others.",
@@ -590,7 +591,6 @@ export const en: Textos = {
               },
               {
                 termino: "Incursion",
-                marca: { tipo: "incursion" },
                 texto: [
                   "The drone enters from outside the country and its origin is proven by " +
                     "tracking or by debris. A sighting with no proven origin is never an " +
@@ -599,7 +599,6 @@ export const en: Textos = {
               },
               {
                 termino: "Overflight",
-                marca: { tipo: "sobrevuelo" },
                 texto: ["Any other drone flight over a facility or a town."],
               },
             ],
@@ -627,8 +626,8 @@ export const en: Textos = {
                 marca: { estado: "atribuido" },
                 texto: [
                   "A confirmed incident for which an authority names a government as " +
-                    "responsible: on the map, a red flag on its pole, whose foot marks the place, " +
-                    "instead of the type shape. The record shows it as " +
+                    "responsible: on the map, a red flag on its pole, whose foot marks the place. " +
+                    "The record shows it as " +
                     "“Confirmed · attributed to…”, with who attributes it and to whom.",
                 ],
               },
@@ -992,22 +991,23 @@ export const en: Textos = {
           {
             parrafo: [
               "Every ADS-B position carries its integrity (NIC) and accuracy (NACp). An " +
-                "aircraft has a degraded position in a cell on a day if any of its positions " +
+                "aircraft has a degraded position in a zone on a day if any of its positions " +
                 "there has NIC below 7 or NACp below 8, the minimums of the ADS-B Out rule. " +
-                "Cells are H3 hexagons at resolution 4 (about 1,770 km²), the grid of " +
+                "Zones are H3 hexagons at resolution 4 (about 1,770 km²), the grid of " +
                 "gpsjam.org. The share of aircraft affected subtracts one degraded aircraft, so " +
-                "that a single faulty unit does not colour the cell: (degraded − 1) / aircraft.",
+                "that a single faulty unit does not colour the zone: (degraded − 1) / aircraft.",
             ],
           },
           {
             parrafo: [
-              "Each cell on the map gathers 20 or more aircraft in the day. Levels: under 2% " +
+              "Each zone on the map gathers 20 or more aircraft in the day. Levels: under 2% " +
                 "no interference, 2 to 10% medium and over 10% high, in grey that gets lighter " +
                 "with the share and the high level in red. For a period, aircraft " +
-                "and degraded aircraft are added up per cell over each day (each month for " +
+                "and degraded aircraft are added up per zone over each day (each month for " +
                 "periods longer than 7 days). It is computed on the server from the daily " +
-                "adsb.lol archive. The level of the day in “Europe now” is the one " +
-                "reached by one cell in ten (the 90th percentile), next to the number of high cells.",
+                "adsb.lol archive. “Europe now” counts the zones with high " +
+                "interference on the latest published day; the layer legend counts, with the " +
+                "same calculation, those of the chosen period.",
             ],
           },
         ],

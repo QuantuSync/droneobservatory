@@ -4,6 +4,7 @@
 import { cleanup, render } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 
+import { Ayuda } from "../src/componentes/Ayuda.tsx";
 import { BarraEstado } from "../src/componentes/BarraEstado.tsx";
 import { FichaIncidente } from "../src/componentes/FichaIncidente.tsx";
 import { BANDERA_SIMBOLO, Simbolo } from "../src/componentes/Simbolo.tsx";
@@ -15,13 +16,28 @@ import {
   CAPA_RECIENTES,
   CAPA_SELECCION,
   CAPA_SELECCION_BANDERA,
-  COLOR_AVISO,
+  CAPA_DIRECTO,
+  CAPA_INCIDENTES_DISCRETOS,
+  CAPA_NUMERO_GRUPOS,
+  CENTRO_TEXTO_AVISO,
+  TAMANO_NUMERO_GRUPO,
+  TAMANO_TEXTO_AVISO,
   COLOR_DE_GRUPO,
   ES_ATRIBUIDO,
   estilo,
 } from "../src/mapa/estilo.ts";
 import { OBJETIVO_TACTIL_PX } from "../src/mapa/Mapa.tsx";
-import { BANDERA, LADO as LADO_ICONO } from "../src/mapa/iconos.ts";
+import { nombreIcono } from "../src/mapa/geometria.ts";
+import {
+  BANDERA,
+  COLOR_DE_AVISO,
+  ESTADOS_AVISO,
+  ETIQUETA_AVISO,
+  ICONO_BANDERA_ELEGIDA,
+  LADO as LADO_ICONO,
+  nombreIconoAviso,
+  registrarIconos,
+} from "../src/mapa/iconos.ts";
 import { COLOR_BANDERA, COLOR_ESTADO, PALETA, contraste, trazadoBandera } from "../src/paleta.ts";
 import { incidente } from "./ejemplos.ts";
 
@@ -130,7 +146,7 @@ describe("colores de los estados", () => {
   it("ningún estado de incidente es verde: el verde es solo el de «datos al día»", () => {
     const verde = PALETA.alDia;
     for (const color of Object.values(COLOR_ESTADO)) expect(color).not.toBe(verde);
-    expect(JSON.stringify(COLOR_AVISO)).not.toContain(verde);
+    for (const color of Object.values(COLOR_DE_AVISO)) expect(color).not.toBe(verde);
     expect(JSON.stringify(COLOR_DE_GRUPO)).not.toContain(verde);
   });
 
@@ -146,37 +162,172 @@ describe("colores de los estados", () => {
   });
 
   it("los avisos en directo van en la misma escala, sin verde: naranja posible, rojo confirmado", () => {
-    expect(COLOR_AVISO).toEqual([
-      "match",
-      ["get", "estado"],
-      "posible_cierre",
-      COLOR_ESTADO.notificado,
-      "cierre_confirmado",
-      COLOR_ESTADO.confirmado,
-      PALETA.secundario,
-    ]);
+    expect(COLOR_DE_AVISO).toEqual({
+      posible_cierre: COLOR_ESTADO.notificado,
+      cierre_confirmado: COLOR_ESTADO.confirmado,
+      operacion_reanudada: PALETA.secundario,
+    });
   });
 });
 
 describe("bandera de los atribuidos", () => {
   it("el atribuido es solo una bandera roja: sin forma, círculo ni punto", () => {
-    for (const tipo of ["incursion", "interrupcion_aeroportuaria", "sobrevuelo"] as const) {
-      const { container } = render(<Simbolo tipo={tipo} estado="atribuido" />);
-      const svg = container.querySelector("svg");
-      expect(svg?.hasAttribute("data-bandera"), tipo).toBe(true);
-      expect(svg?.querySelectorAll("circle, rect, ellipse")).toHaveLength(0);
-      for (const trazo of Array.from(svg?.querySelectorAll("path") ?? [])) {
-        expect(trazo.getAttribute("d")).toBe(trazadoBandera(BANDERA_SIMBOLO));
-      }
-      expect(svg?.innerHTML).toContain(COLOR_BANDERA);
-      cleanup();
+    const { container } = render(<Simbolo estado="atribuido" />);
+    const svg = container.querySelector("svg");
+    expect(svg?.hasAttribute("data-bandera")).toBe(true);
+    expect(svg?.querySelectorAll("circle, rect, ellipse, polygon")).toHaveLength(0);
+    for (const trazo of Array.from(svg?.querySelectorAll("path") ?? [])) {
+      expect(trazo.getAttribute("d")).toBe(trazadoBandera(BANDERA_SIMBOLO));
     }
-    for (const estado of ["notificado", "confirmado", "desmentido"] as const) {
-      const { container } = render(<Simbolo tipo="incursion" estado={estado} />);
-      expect(container.querySelector("[data-bandera]"), estado).toBeNull();
-      cleanup();
-    }
+    expect(svg?.innerHTML).toContain(COLOR_BANDERA);
     expect(COLOR_BANDERA).toBe(COLOR_ESTADO.confirmado);
+  });
+
+  it("todo lo demás es un círculo: relleno el notificado y el confirmado, discontinuo el desmentido", () => {
+    for (const estado of ["notificado", "confirmado", "desmentido"] as const) {
+      const { container } = render(<Simbolo estado={estado} />);
+      const svg = container.querySelector("svg");
+      expect(svg?.querySelector("[data-bandera]"), estado).toBeNull();
+      expect(svg?.children, estado).toHaveLength(1);
+      const circulo = svg?.querySelector("circle");
+      expect(circulo, estado).not.toBeNull();
+      if (estado === "desmentido") {
+        expect(circulo?.getAttribute("fill")).toBe("none");
+        expect(circulo?.getAttribute("stroke")).toBe(COLOR_ESTADO.desmentido);
+        expect(circulo?.getAttribute("stroke-dasharray")).toBeTruthy();
+      } else {
+        expect(circulo?.getAttribute("fill")).toBe(COLOR_ESTADO[estado]);
+        expect(circulo?.getAttribute("fill-opacity")).toBeNull();
+      }
+      cleanup();
+    }
+  });
+
+  it("en el mapa, un icono por estado: círculos y la bandera, ninguna otra forma", () => {
+    // Un lienzo que apunta lo que se dibuja.
+    const dibujos = new Map<string, string[]>();
+    let actual: string[] = [];
+    const contexto = new Proxy(
+      {},
+      {
+        get: (_objeto, nombre: string) =>
+          nombre === "getImageData"
+            ? () => {
+                const hecho = actual;
+                actual = [];
+                return { hecho };
+              }
+            : (...argumentos: unknown[]) => {
+                actual.push(nombre);
+                return argumentos;
+              },
+        set: (_objeto, nombre: string, valor: unknown) => {
+          actual.push(`${nombre}=${String(valor)}`);
+          return true;
+        },
+      },
+    );
+    const original = HTMLCanvasElement.prototype.getContext;
+    HTMLCanvasElement.prototype.getContext = (() => contexto) as never;
+    try {
+      const imagenes = new Set<string>();
+      const mapa = {
+        hasImage: (nombre: string) => imagenes.has(nombre),
+        addImage: (nombre: string, imagen: { hecho: string[] }) => {
+          imagenes.add(nombre);
+          dibujos.set(nombre, imagen.hecho);
+        },
+      };
+      registrarIconos(mapa as never, "#ffffff");
+      expect([...imagenes].sort()).toEqual(
+        [
+          ICONO_BANDERA_ELEGIDA,
+          ...["atribuido", "confirmado", "desmentido", "notificado"].map(nombreIcono),
+          ...ESTADOS_AVISO.map(nombreIconoAviso),
+        ].sort(),
+      );
+      // La etiqueta de un aviso no es un círculo relleno: una píldora con punta (líneas rectas),
+      // fondo de panel opaco y solo el borde del color de su estado.
+      for (const estado of ESTADOS_AVISO) {
+        const hecho = dibujos.get(nombreIconoAviso(estado)) ?? [];
+        expect(hecho, estado).toContain("lineTo");
+        expect(hecho, estado).toContain(`fillStyle=${PALETA.panelSolido}`);
+        expect(hecho, estado).toContain(`strokeStyle=${COLOR_DE_AVISO[estado]}`);
+        expect(hecho.filter((paso) => paso.startsWith("fillStyle=")), estado).toEqual([
+          `fillStyle=${PALETA.panelSolido}`,
+        ]);
+      }
+      for (const estado of ["notificado", "confirmado", "desmentido"]) {
+        const hecho = dibujos.get(nombreIcono(estado)) ?? [];
+        expect(hecho, estado).toContain("arc");
+        for (const prohibido of ["rect", "lineTo", "moveTo", "ellipse", "quadraticCurveTo", "bezierCurveTo"]) {
+          expect(hecho, `${estado} ${prohibido}`).not.toContain(prohibido);
+        }
+        expect(hecho.includes("fill"), estado).toBe(estado !== "desmentido");
+        expect(hecho.includes(`fillStyle=${COLOR_ESTADO[estado as "notificado"]}`), estado).toBe(estado !== "desmentido");
+      }
+      for (const nombre of [nombreIcono("atribuido"), ICONO_BANDERA_ELEGIDA]) {
+        const hecho = dibujos.get(nombre) ?? [];
+        expect(hecho, nombre).not.toContain("arc");
+        expect(hecho, nombre).not.toContain("rect");
+        expect(hecho, nombre).toContain("lineTo");
+      }
+    } finally {
+      HTMLCanvasElement.prototype.getContext = original;
+    }
+  });
+
+  it("el aviso en directo es una etiqueta levantada que no pisa el número de un grupo", () => {
+    const { layers } = estilo("es", "https://droneobservatory.eu", "#f4f7fb");
+    const capa = layers.find((c) => c.id === CAPA_DIRECTO);
+    expect(capa?.type).toBe("symbol");
+    const disposicion = (capa as { layout: Record<string, unknown> }).layout;
+    // Ni círculo ni relleno del color del estado: su icono y el OACI escrito dentro.
+    expect(layers.filter((c) => c.id.startsWith("directo") && c.type === "circle")).toHaveLength(0);
+    expect(disposicion["icon-image"]).toEqual(["concat", "aviso-", ["get", "estado"]]);
+    expect(disposicion["text-field"]).toEqual(["get", "oaci"]);
+    expect(disposicion["icon-anchor"]).toBe("bottom");
+    // Encima de todo, solo el número de los grupos: el de un grupo vecino tampoco queda tapado.
+    expect(layers.at(-1)?.id).toBe(CAPA_NUMERO_GRUPOS);
+    expect(layers.at(-2)?.id).toBe(CAPA_DIRECTO);
+    // Geometría, en píxeles sobre el punto del aeropuerto (y hacia arriba es negativo):
+    // la punta queda `hueco` píxeles por encima, y el número de un grupo centrado en el
+    // mismo punto ocupa como mucho media altura de su letra por encima.
+    const [, desplazamiento] = disposicion["icon-offset"] as [number, number];
+    const puntaDeLaEtiqueta = desplazamiento;
+    const arribaDelNumero = -TAMANO_NUMERO_GRUPO / 2;
+    expect(puntaDeLaEtiqueta).toBeLessThan(arribaDelNumero);
+    expect(Math.abs(puntaDeLaEtiqueta)).toBe(ETIQUETA_AVISO.hueco);
+    // El OACI va centrado en la píldora, no en el punto.
+    const [, textoY] = disposicion["text-offset"] as [number, number];
+    expect(textoY * TAMANO_TEXTO_AVISO).toBeCloseTo(-CENTRO_TEXTO_AVISO);
+    const abajoDelTexto = textoY * TAMANO_TEXTO_AVISO + TAMANO_TEXTO_AVISO / 2;
+    expect(abajoDelTexto).toBeLessThan(arribaDelNumero);
+    // Tampoco pisa el círculo relleno de un incidente suelto en el mismo punto.
+    expect(puntaDeLaEtiqueta).toBeLessThan(-LADO_ICONO / 4);
+    // Y el número de un grupo va encima de los incidentes sueltos, con halo del fondo.
+    const numero = layers.find((c) => c.id === CAPA_NUMERO_GRUPOS) as { paint: Record<string, unknown> };
+    expect(numero.paint["text-halo-width"]).toBeGreaterThan(0);
+    const orden = layers.map((c) => c.id);
+    expect(orden.indexOf(CAPA_NUMERO_GRUPOS)).toBeGreaterThan(orden.indexOf(CAPA_INCIDENTES_GRAVES));
+    expect(orden.indexOf(CAPA_NUMERO_GRUPOS)).toBeGreaterThan(orden.indexOf(CAPA_INCIDENTES_DISCRETOS));
+    // Sin pulso: ningún pulso se dibuja para los avisos.
+    expect(JSON.stringify(disposicion)).not.toContain("pulso");
+  });
+
+  it("la leyenda tiene cuatro entradas: notificado, confirmado, atribuido y desmentido", () => {
+    render(<Ayuda t={es} abierta={false} onCerrar={() => undefined} />);
+    const leyenda = document.querySelector("[data-leyenda-estados]");
+    const entradas = Array.from(leyenda?.querySelectorAll("li") ?? []);
+    expect(entradas.map((li) => li.textContent)).toEqual([
+      es.estado.notificado,
+      es.estado.confirmado,
+      es.estado.atribuido,
+      es.estado.desmentido,
+    ]);
+    // Ningún otro símbolo de incidente en la ayuda: nada de formas por tipo.
+    const simbolos = document.querySelectorAll("svg[data-circulo], svg[data-bandera]");
+    expect(simbolos).toHaveLength(4);
   });
 
   it("en el mapa, el pie del mástil es el punto del incidente: el centro del icono", () => {

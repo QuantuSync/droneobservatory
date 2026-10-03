@@ -261,6 +261,7 @@ export default function Mapa(props: PropsMapa) {
   const mapaRef = useRef<MapaGL | null>(null);
   const volar = useRef<((destino: Encuadre) => void) | null>(null);
   const [listo, setListo] = useState(false);
+  const [iconos, setIconos] = useState("");
   // Los manejadores del mapa se registran una vez: leen siempre las funciones actuales.
   const manejadores = useRef(props);
   useEffect(() => {
@@ -317,7 +318,17 @@ export default function Mapa(props: PropsMapa) {
     volar.current = volarA;
 
     mapa.on("load", () => {
+      const delMapaBase = new Set(mapa.listImages());
       registrarIconos(mapa, acento());
+      // Los iconos que la web pone en el mapa (sin los del mapa de fondo), a la vista en el
+      // documento para comprobarlos desde fuera.
+      setIconos(
+        mapa
+          .listImages()
+          .filter((nombre) => !delMapaBase.has(nombre))
+          .sort()
+          .join(" "),
+      );
       setListo(true);
       manejadores.current.onListo({
         proyectar: (lon, lat) => mapa.project([lon, lat]),
@@ -653,7 +664,7 @@ export default function Mapa(props: PropsMapa) {
 
   return (
     <div className="absolute inset-0">
-      <div ref={contenedor} className="size-full" data-mapa-listo={listo} />
+      <div ref={contenedor} className="size-full" data-mapa-listo={listo} data-iconos={iconos} />
       <div ref={capaPulsos} aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden" />
       <div
         ref={letrero}

@@ -6,6 +6,7 @@ import type { CifrasAhora } from "../componentes/EuropaAhora.tsx";
 import { diaDeInstante } from "../tiempo/dias.ts";
 import { cierresEnCurso } from "./directo.ts";
 import type { Directo } from "./directo.ts";
+import { agregar, zonasAltas } from "./gnss.ts";
 import type { FicheroGnss } from "./gnss.ts";
 import type { Resumen, ResumenUcrania } from "./tipos.ts";
 import { lanzamientosPorNoche } from "./ucrania.ts";
@@ -51,10 +52,6 @@ export function cifrasAhora({ resumen, ucrania, directo, gnssHoy }: FuentesAhora
     gnss:
       gnssHoy === null
         ? null
-        : {
-            nivel: gnssHoy.resumen.nivel,
-            altas: gnssHoy.resumen.celdas_alta,
-            dia: diaDeInstante(gnssHoy.periodo),
-          },
+        : { zonas: zonasAltas(agregar([gnssHoy])), dia: diaDeInstante(gnssHoy.periodo) },
   };
 }

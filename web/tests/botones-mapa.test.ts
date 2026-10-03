@@ -14,8 +14,23 @@ describe("botones sobre el mapa", () => {
     const boton = css.indexOf(".control.boton-mapa {");
     expect(control).toBeGreaterThan(-1);
     expect(boton).toBeGreaterThan(control);
-    expect(css.slice(boton, css.indexOf("}", boton))).toContain("background-color: var(--color-panel)");
+    expect(css.slice(boton, css.indexOf("}", boton))).toContain("background-color: var(--color-panel-solido)");
     const componente = readFileSync(join(raiz, "componentes", "BotonesMapa.tsx"), "utf-8");
     expect(componente).toMatch(/CLASE_BOTON = "[^"]*\bboton-mapa\b/);
+  });
+
+  it("todo lo que se abre sobre el mapa tiene fondo opaco", () => {
+    const css = readFileSync(join(raiz, "estilos.css"), "utf-8");
+    // Seis cifras hexadecimales: sin canal alfa.
+    expect(css).toMatch(/--color-panel-solido:\s*#[0-9a-f]{6};/i);
+    for (const selector of [".flotante {", ".superficie {", ".control.boton-mapa {"]) {
+      const inicio = css.indexOf(selector);
+      expect(inicio, selector).toBeGreaterThan(-1);
+      const bloque = css.slice(inicio, css.indexOf("}", inicio));
+      expect(bloque, selector).toContain("background-color: var(--color-panel-solido)");
+    }
+    // Ningún fondo semitransparente que se pueda poner a un panel.
+    expect(css).not.toMatch(/--color-panel:/);
+    expect(css).not.toMatch(/backdrop-filter/);
   });
 });

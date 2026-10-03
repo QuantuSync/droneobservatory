@@ -170,7 +170,7 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
   return (
     <article>
       <p className="rotulo flex items-center gap-2">
-        <Simbolo tipo={incidente.tipo} estado={incidente.estado.actual} />
+        <Simbolo estado={incidente.estado.actual} />
         {t.tipo[incidente.tipo]}
       </p>
       <h2 className="text-xl font-semibold tracking-tight mt-1 text-2xl">{nombre}</h2>
@@ -181,11 +181,11 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
         <Fila nombre={t.ficha.estado}>
           {incidente.estado.actual === "atribuido" && atribucion !== undefined ? (
             <span className="inline-flex items-center gap-1.5" data-estado-atribuido="">
-              <Simbolo tipo={incidente.tipo} estado="atribuido" />
+              <Simbolo estado="atribuido" />
               {t.ficha.confirmadoAtribuido(atribucion.actor, atribucion.autoridad)}
             </span>
           ) : (
-            <EstadoConTexto t={t} tipo={incidente.tipo} estado={incidente.estado.actual} />
+            <EstadoConTexto t={t} estado={incidente.estado.actual} />
           )}
         </Fila>
         {incidente.presencia_dron !== undefined && (
@@ -330,7 +330,6 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
         t={t}
         historial={incidente.estado.historial}
         fuentes={incidente.fuentes}
-        tipo={incidente.tipo}
       />
       <p className="mono mt-4 text-xs text-secundario">
         {t.ficha.actualizada}: {fechaHora(incidente.control.ultima_actualizacion.valor)}

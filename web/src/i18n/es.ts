@@ -143,9 +143,7 @@ export const es: Textos = {
     incidentes: "incidentes en 7 días",
     drones: "drones lanzados la última noche",
     focos: "focos térmicos confirmados en 7 días",
-    gnss: "interferencia GPS del día",
-    nivel: { sin: "sin interferencia", media: "media", alta: "alta" },
-    celdasAltas: (n) => (n === 1 ? "1 celda alta" : `${n} celdas altas`),
+    gnss: "zonas con interferencia GPS hoy",
     sinDato: "sin dato",
     ir: (que) => `Ver en el mapa: ${que}`,
     abrir: "Abrir «Europa ahora»",
@@ -193,6 +191,7 @@ export const es: Textos = {
     degradadas: "con la posición degradada",
     periodo: "Periodo",
     dias: (n) => (n === 1 ? "1 día con datos" : `${n} días con datos`),
+    zonasAltas: (n) => (n === 1 ? "1 zona con interferencia alta" : `${n} zonas con interferencia alta`),
     sinDatos: "Sin datos de interferencia para este periodo",
     cargando: "Cargando la interferencia…",
     letrero: (proporcion) => `Interferencia GPS · ${proporcion} de las aeronaves`,
@@ -224,12 +223,12 @@ export const es: Textos = {
   ayuda: {
     titulo: "Cómo leer el mapa",
     cerrar: "Cerrar la ayuda",
-    formas: "La forma dice el tipo de incidente.",
     colores:
-      "El color dice el estado: naranja, notificado; rojo, confirmado. El desmentido va sin " +
-      "relleno y con contorno gris discontinuo. Un atribuido (un confirmado del que un " +
-      "gobierno ha señalado al responsable) es solo una bandera roja con su mástil, sin forma " +
-      "de tipo: el pie del mástil marca el lugar.",
+      "Cada incidente es un círculo relleno del color de su estado: naranja, notificado; " +
+      "rojo, confirmado. El desmentido es un círculo gris de borde discontinuo, sin relleno. " +
+      "Un atribuido (un confirmado del que un gobierno ha señalado al responsable) es solo una " +
+      "bandera roja con su mástil: el pie del mástil marca el lugar. El tipo de incidente va " +
+      "escrito en la ficha, la lista y los filtros.",
     periodo:
       "El botón «Filtros» abre el periodo (todo, las últimas 24 horas, los últimos 7 o 30 " +
       "días, el último año o entre dos fechas) y los filtros de estado, tipo y país. Con un " +
@@ -244,7 +243,8 @@ export const es: Textos = {
       "atribuidos, el lugar lo marca el pie de la bandera).",
     lineas: "Una línea fina une los incidentes de un mismo episodio: varios objetivos en una noche.",
     numeros:
-      "Un círculo con un número junta varios incidentes: crece con el número, y su anillo " +
+      "Un círculo con un número dentro junta varios incidentes (el de un solo incidente va " +
+      "relleno y sin número): crece con el número, y su anillo " +
       "es rojo si contiene algún confirmado o atribuido y naranja si todos son notificados. Al " +
       "acercar el mapa se separan.",
     pila:
@@ -270,9 +270,10 @@ export const es: Textos = {
       "Un punto claro junto a un incidente, un impacto o un grupo de impactos, o en el centro de una región de Ucrania, marca un " +
       "foco térmico detectado por satélite (NASA FIRMS) en su lugar y su hora.",
     directo:
-      "Un punto con aro y el código OACI es un aeropuerto de la detección en directo, sin " +
-      "pulso: naranja, posible cierre en curso; rojo, cierre confirmado; gris, operación " +
-      "reanudada.",
+      "Una etiqueta con el código OACI dentro y una punta que señala el aeropuerto es un aviso " +
+      "de la detección en directo, sin pulso. Su borde dice el estado: naranja, posible cierre " +
+      "en curso; rojo, cierre confirmado; gris, operación reanudada. Va levantada sobre el " +
+      "punto para no tapar el número de un grupo.",
     atajos: "Atajos de teclado",
     acciones: {
       ayuda: "Abrir o cerrar esta ayuda",
@@ -588,7 +589,6 @@ export const es: Textos = {
             lista: [
               {
                 termino: "Interrupción aeroportuaria",
-                marca: { tipo: "interrupcion_aeroportuaria" },
                 texto: [
                   "Un aeropuerto cierra o tiene vuelos desviados, cancelados o retrasados. " +
                     "Si se da, este tipo manda sobre los demás.",
@@ -596,7 +596,6 @@ export const es: Textos = {
               },
               {
                 termino: "Incursión",
-                marca: { tipo: "incursion" },
                 texto: [
                   "El dron entra desde fuera del país y su origen está demostrado por " +
                     "rastreo o por restos. Un avistamiento sin origen demostrado nunca es " +
@@ -605,7 +604,6 @@ export const es: Textos = {
               },
               {
                 termino: "Sobrevuelo",
-                marca: { tipo: "sobrevuelo" },
                 texto: ["Cualquier otro vuelo de drones sobre una instalación o una localidad."],
               },
             ],
@@ -635,8 +633,7 @@ export const es: Textos = {
                 marca: { estado: "atribuido" },
                 texto: [
                   "Un confirmado del que una autoridad señala a un gobierno como responsable: " +
-                    "en el mapa, una bandera roja con su mástil, cuyo pie marca el lugar, en lugar " +
-                    "de la forma del tipo. La ficha lo muestra como " +
+                    "en el mapa, una bandera roja con su mástil, cuyo pie marca el lugar. La ficha lo muestra como " +
                     "«Confirmado · atribuido a…», con quién atribuye y a quién.",
                 ],
               },
@@ -997,23 +994,24 @@ export const es: Textos = {
           {
             parrafo: [
               "Cada posición ADS-B lleva su integridad (NIC) y su precisión (NACp). Una " +
-                "aeronave tiene la posición degradada en una celda un día si alguna de sus " +
+                "aeronave tiene la posición degradada en una zona un día si alguna de sus " +
                 "posiciones allí trae NIC menor que 7 o NACp menor que 8, los mínimos de la " +
-                "norma de ADS-B Out. Las celdas son hexágonos H3 de resolución 4 (unos 1770 " +
+                "norma de ADS-B Out. Las zonas son hexágonos H3 de resolución 4 (unos 1770 " +
                 "km²), la rejilla de gpsjam.org. La proporción de aeronaves afectadas resta " +
-                "una degradada, para que un solo equipo averiado no tiña la celda: (degradadas " +
+                "una degradada, para que un solo equipo averiado no tiña la zona: (degradadas " +
                 "− 1) / aeronaves.",
             ],
           },
           {
             parrafo: [
-              "Cada celda del mapa reúne 20 aeronaves o más en el día. Niveles: menos del 2 % " +
+              "Cada zona del mapa reúne 20 aeronaves o más en el día. Niveles: menos del 2 % " +
                 "sin interferencia, del 2 al 10 % media y más del 10 % alta, en gris cuanto más " +
                 "claro más proporción y el nivel alto en rojo. En un periodo se " +
-                "suman por celda las aeronaves y las degradadas de cada día (de cada mes en los " +
+                "suman por zona las aeronaves y las degradadas de cada día (de cada mes en los " +
                 "periodos de más de 7 días). Se calcula en el servidor con el archivo diario " +
-                "de adsb.lol. El nivel del día en «Europa ahora» es el que alcanza una " +
-                "de cada diez celdas (el percentil 90), junto al número de celdas altas.",
+                "de adsb.lol. «Europa ahora» cuenta las zonas con " +
+                "interferencia alta del último día publicado; la leyenda de la capa cuenta, con " +
+                "el mismo cálculo, las del periodo elegido.",
             ],
           },
         ],

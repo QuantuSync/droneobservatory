@@ -25,7 +25,7 @@ import type { EstadoFrescura } from "../tiempo/frescura.ts";
 export type Trozo = string | { texto: string; enlace: string };
 
 /** Marca gráfica que acompaña a una definición de la metodología. */
-export type Marca = { tipo: Tipo } | { estado: Estado };
+export type Marca = { estado: Estado };
 
 export type Bloque =
   | { parrafo: Trozo[] }
@@ -135,8 +135,6 @@ export interface Textos {
     drones: string;
     focos: string;
     gnss: string;
-    nivel: Record<NivelGnss, string>;
-    celdasAltas: (n: number) => string;
     sinDato: string;
     ir: (que: string) => string;
     abrir: string;
@@ -179,6 +177,7 @@ export interface Textos {
     degradadas: string;
     periodo: string;
     dias: (n: number) => string;
+    zonasAltas: (n: number) => string;
     sinDatos: string;
     cargando: string;
     letrero: (proporcion: string) => string;
@@ -210,7 +209,6 @@ export interface Textos {
   ayuda: {
     titulo: string;
     cerrar: string;
-    formas: string;
     colores: string;
     areas: string;
     lineas: string;

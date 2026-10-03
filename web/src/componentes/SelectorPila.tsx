@@ -26,7 +26,7 @@ export function SelectorPila({ t, idioma, incidentes }: Props) {
               a={rutaDeFicha(incidente.id, idioma)}
               className="flex items-start gap-2 rounded-sm px-1 py-2 hover:bg-elevado"
             >
-              <Simbolo tipo={incidente.tipo} estado={incidente.estado} className="mt-0.5 shrink-0" />
+              <Simbolo estado={incidente.estado} className="mt-0.5 shrink-0" />
               <span className="min-w-0">
                 <span className="block leading-snug">{incidente.titulo[idioma]}</span>
                 <span className="mono block text-xs text-secundario">

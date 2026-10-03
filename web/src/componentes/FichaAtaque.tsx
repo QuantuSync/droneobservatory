@@ -179,7 +179,6 @@ export function FichaAtaque({ t, idioma, ataque, centros }: Props) {
         t={t}
         historial={ataque.estado.historial}
         fuentes={ataque.fuentes}
-        tipo="incursion"
       />
       <p className="mono mt-4 text-xs text-secundario">
         {t.ficha.actualizada}: {fechaHora(ataque.control.ultima_actualizacion.valor)}

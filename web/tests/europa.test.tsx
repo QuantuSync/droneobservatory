@@ -30,6 +30,7 @@ import {
   proporcion,
   validarFicheroGnss,
   validarIndiceGnss,
+  zonasAltas,
 } from "../src/datos/gnss.ts";
 import {
   cifrasDePais,
@@ -140,9 +141,11 @@ describe("interferencia GPS", () => {
     expect(screen.getByRole("status").textContent).toBe(es.gnss.cargando);
     rerender(<LeyendaGnss t={es} estado="sin_datos" />);
     expect(screen.getByRole("status").textContent).toBe(es.gnss.sinDatos);
-    rerender(<LeyendaGnss t={en} estado={{ dias: 3 }} />);
+    expect(document.querySelector("[data-zonas-altas]")).toBeNull();
+    rerender(<LeyendaGnss t={en} estado={{ dias: 3, zonas: 12 }} />);
     expect(screen.getByRole("status").textContent).toBe("3 days with data");
     expect(document.body.textContent).toContain("over 10%");
+    expect(document.querySelector("[data-zonas-altas]")?.textContent).toBe("12 zones with high interference");
   });
 });
 
@@ -380,7 +383,42 @@ describe("panel «Europa ahora»", () => {
     expect(cifras.incidentes).toBe(1);
     expect(cifras.drones).not.toBeNull();
     expect(cifras.focos).toBe(0);
-    expect(cifras.gnss).toEqual({ nivel: "media", altas: 2, dia: dia("2026-10-02") });
+    const fichero = ficheroGnss("2026-10-02");
+    // Las zonas altas del fichero diario, con la misma cuenta que la leyenda de la capa.
+    expect(cifras.gnss).toEqual({ zonas: fichero.resumen.celdas_alta, dia: dia("2026-10-02") });
+    expect(cifras.gnss?.zonas).toBe(zonasAltas(agregar([fichero])));
+    expect(cifras.gnss?.zonas).toBeGreaterThan(0);
+  });
+
+  it("todas las líneas: un número a la izquierda (nunca palabras) y su texto a la derecha", () => {
+    const cifras: CifrasAhora = {
+      cierres: 0,
+      incidentes: 9999,
+      drones: { lanzados: 1234, dia: dia("2026-10-02") },
+      focos: 7,
+      gnss: { zonas: 0, dia: dia("2026-10-02") },
+    };
+    for (const idioma of ["es", "en"] as const) {
+      const t = idioma === "es" ? es : en;
+      render(<EuropaAhora t={t} idioma={idioma} cifras={cifras} onIr={() => undefined} />);
+      const filas = Array.from(document.querySelectorAll("[data-cifra]"));
+      expect(filas).toHaveLength(5);
+      for (const fila of filas) {
+        // La misma rejilla en todas: columna fija para el número, el resto para el texto.
+        expect(fila.className).toContain("grid-cols-[3.25rem_minmax(0,1fr)]");
+        const numero = fila.querySelector("[data-numero]");
+        const texto = fila.querySelector("[data-texto]");
+        expect(numero?.textContent).toMatch(/^[\d.,]+$/);
+        expect(numero?.className).toContain("text-right");
+        expect(texto?.className).toContain("min-w-0");
+        expect(fila.children).toHaveLength(2);
+      }
+      const gnss = document.querySelector('[data-cifra="gnss"]');
+      expect(gnss?.querySelector("[data-numero]")?.textContent).toBe("0");
+      expect(gnss?.querySelector("[data-texto]")?.textContent).toBe(t.ahora.gnss);
+      expect(gnss?.textContent).not.toMatch(/sin interferencia|no interference/);
+      cleanup();
+    }
   });
 
   it("sin ficheros, cada cifra sale como «—» y no rompe", () => {
@@ -401,14 +439,14 @@ describe("panel «Europa ahora»", () => {
       incidentes: 14,
       drones: { lanzados: 120, dia: dia("2026-10-02") },
       focos: 3,
-      gnss: { nivel: "alta", altas: 4, dia: dia("2026-10-02") },
+      gnss: { zonas: 4, dia: dia("2026-10-02") },
     };
     render(<EuropaAhora t={es} idioma="es" cifras={cifras} onIr={ir} />);
     await usuario.click(screen.getByRole("button", { name: /cierres de aeropuerto en curso/ }));
-    await usuario.click(screen.getByRole("button", { name: /interferencia GPS del día/ }));
+    await usuario.click(screen.getByRole("button", { name: /zonas con interferencia GPS hoy/ }));
     expect(ir.mock.calls).toEqual([["cierres"], ["gnss"]]);
-    expect(document.querySelector('[data-cifra="cierres"] .mono')?.className).toContain("text-notificado");
-    expect(document.querySelector('[data-cifra="gnss"] .mono')?.className).toContain("text-atribuido");
+    expect(document.querySelector('[data-cifra="cierres"] [data-numero]')?.className).toContain("text-notificado");
+    expect(document.querySelector('[data-cifra="gnss"] [data-numero]')?.className).toContain("text-atribuido");
   });
 });
 
@@ -470,16 +508,48 @@ describe("aplicación con los ficheros del almacén", () => {
     const panel = await screen.findByRole("dialog", { name: es.ahora.etiqueta });
     const cierres = within(panel).getByRole("button", { name: /cierres de aeropuerto en curso/ });
     expect(cierres.textContent?.startsWith("1")).toBe(true);
+    const lineaGnss = within(panel).getByRole("button", { name: /interferencia GPS/ });
+    const fichero = ficheroGnss("2025-09-22");
     await waitFor(() =>
-      expect(within(panel).getByRole("button", { name: /interferencia GPS/ }).textContent).toContain(
-        "media",
-      ),
+      expect(lineaGnss.querySelector("[data-numero]")?.textContent).toBe(String(fichero.resumen.celdas_alta)),
     );
     await usuario.click(cierres);
     const ficha = await screen.findByRole("complementary", { name: /EKCH/ });
     expect(within(ficha).getByText("Posible cierre en curso")).toBeTruthy();
     // Pulsar una cifra cierra el desplegable.
     expect(screen.queryByRole("dialog", { name: es.ahora.etiqueta })).toBeNull();
+  });
+
+  it("el número GPS del panel es el que da la leyenda de la capa para ese día", async () => {
+    servir({
+      ...base,
+      [`${BASE_GNSS}/indice.json`]: indiceGnss(["2026-09-28", "2026-09-29"]),
+      [`${BASE_GNSS}/dia/2026-09-28.json`]: ficheroGnss("2026-09-28", [celda("841f053ffffffff", 20.6, 55.4, 100, 50)]),
+      [`${BASE_GNSS}/dia/2026-09-29.json`]: ficheroGnss("2026-09-29"),
+    });
+    const usuario = userEvent.setup();
+    render(
+      <ProveedorDeRuta inicial="/">
+        <App />
+      </ProveedorDeRuta>,
+    );
+    await screen.findByTestId("mapa");
+    await usuario.click(screen.getByRole("button", { name: new RegExp(`^${es.ahora.etiqueta}`) }));
+    const panel = await screen.findByRole("dialog", { name: es.ahora.etiqueta });
+    const linea = within(panel).getByRole("button", { name: /interferencia GPS/ });
+    await waitFor(() => expect(linea.querySelector("[data-numero]")?.textContent).not.toBe("—"));
+    const enPanel = Number(linea.querySelector("[data-numero]")?.textContent);
+    expect(enPanel).toBeGreaterThan(0);
+    // Pulsarla abre la capa en ese día: su leyenda cuenta lo mismo.
+    await usuario.click(linea);
+    await waitFor(() => expect(window.location.search).toBe("?desde=2026-09-29&hasta=2026-09-29"));
+    const leyenda = await waitFor(() => {
+      const zonas = document.querySelector("[data-zonas-altas]");
+      if (zonas === null) throw new Error(`sin leyenda: ${document.querySelector("[data-leyenda=gnss]")?.textContent}`);
+      return zonas;
+    });
+    expect(Number(leyenda.getAttribute("data-zonas-altas"))).toBe(enPanel);
+    expect(leyenda.textContent).toBe(es.gnss.zonasAltas(enPanel));
   });
 
   it("sin directo.json ni interferencia, el panel muestra «—» y la web sigue", async () => {

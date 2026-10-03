@@ -33,7 +33,6 @@
 @theme {
   --color-*: initial;
   --color-fondo: #060a12;
-  --color-panel: rgb(9 14 25 / 0.9);
   --color-panel-solido: #0b111d;
   --color-elevado: #131c2c;
   --color-linea: #1f2b3f;
@@ -169,17 +168,12 @@
 }
 
 @layer components {
-  /* Panel que flota sobre el mapa: semitransparente, con desenfoque detrás para leerse. */
+  /* Lo que se abre sobre el mapa (desplegables, leyendas, avisos, la ayuda): opaco en todos
+     los tamaños, para que el mapa no se lea a través. */
   .flotante {
-    /* Semitransparente sin desenfoque: desenfocar lo que hay detrás obliga a recalcularlo
-       cada vez que el mapa se mueve y retrasaba la primera pintura. En el teléfono, opaco:
-       en una pantalla pequeña el mapa no debe leerse a través. */
-    background-color: var(--color-panel);
+    background-color: var(--color-panel-solido);
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-panel);
-    @variant tel {
-      background-color: var(--color-panel-solido);
-    }
   }
 
   /* Superficie acoplada (cabecera, barra de filtros, paneles laterales): opaca y con borde. */
@@ -231,7 +225,7 @@
   /* Botones sobre el mapa: con el fondo de los paneles, para que no se mezclen con los
      nombres del mapa (.control, que va después de .flotante, los dejaría transparentes). */
   .control.boton-mapa {
-    background-color: var(--color-panel);
+    background-color: var(--color-panel-solido);
     box-shadow: var(--shadow-panel);
   }
   .control:hover {

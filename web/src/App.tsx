@@ -49,7 +49,7 @@ import type { Carga } from "./datos/carga.ts";
 import { cifrasAhora, ultimaNoche } from "./datos/ahora.ts";
 import { cargarDirecto, cierresEnCurso, ordenarAvisos } from "./datos/directo.ts";
 import type { Directo } from "./datos/directo.ts";
-import { agregar, cargarFicheroGnss, cargarIndiceGnss, ficherosDelPeriodo } from "./datos/gnss.ts";
+import { agregar, cargarFicheroGnss, cargarIndiceGnss, ficherosDelPeriodo, zonasAltas } from "./datos/gnss.ts";
 import type { Agregado, FicheroGnss, IndiceGnss } from "./datos/gnss.ts";
 import { cifrasDePais, presionPorPais } from "./datos/presion.ts";
 import { cifras } from "./datos/derivar.ts";
@@ -479,7 +479,7 @@ export function App() {
           : "cargando"
         : gnssActual === null
           ? "sin_datos"
-          : { dias: gnssActual.dias };
+          : { dias: gnssActual.dias, zonas: zonasAltas(gnssActual) };
   const presion = useMemo(
     () =>
       capas.presion && periodo !== null && dominio !== null
@@ -1207,7 +1207,7 @@ export function App() {
       )}
       {(avisoDeDatos !== null || mapaFallido) && (
         <p role="alert" className="flotante pointer-events-auto flex max-w-md items-center gap-2 p-4">
-          <Simbolo tipo="incursion" estado="confirmado" />
+          <Simbolo estado="confirmado" />
           {avisoDeDatos ?? t.avisos.mapaNoDisponible}
         </p>
       )}

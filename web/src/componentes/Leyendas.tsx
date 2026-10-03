@@ -12,7 +12,7 @@ export const MUESTRA_GNSS: Record<NivelGnss, string> = {
 };
 
 /** Estado de la capa de interferencia para el periodo elegido. */
-export type EstadoGnss = "cargando" | "sin_datos" | { dias: number };
+export type EstadoGnss = "cargando" | "sin_datos" | { dias: number; zonas: number };
 
 function Muestra({ color, opacidad }: { color: string; opacidad: number }) {
   return (
@@ -40,6 +40,11 @@ export function LeyendaGnss({ t, estado }: { t: Textos; estado: EstadoGnss }) {
       <p className="mt-0.5 text-secundario" role="status">
         {estado === "cargando" ? g.cargando : estado === "sin_datos" ? g.sinDatos : g.dias(estado.dias)}
       </p>
+      {typeof estado === "object" && (
+        <p className="text-secundario" data-zonas-altas={estado.zonas}>
+          {g.zonasAltas(estado.zonas)}
+        </p>
+      )}
     </details>
   );
 }

@@ -1,4 +1,3 @@
-import type { NivelGnss } from "../datos/gnss.ts";
 import { fechaDia, numero } from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
 import type { Idioma } from "../sitio.ts";
@@ -12,7 +11,8 @@ export interface CifrasAhora {
   incidentes: number | null;
   drones: { lanzados: number; dia: number } | null;
   focos: number | null;
-  gnss: { nivel: NivelGnss; altas: number; dia: number } | null;
+  /** Zonas con interferencia alta del último día publicado. */
+  gnss: { zonas: number; dia: number } | null;
 }
 
 interface Props {
@@ -24,63 +24,67 @@ interface Props {
 
 const SIN_DATO = "—";
 
-function valor(t: Textos, idioma: Idioma, cifras: CifrasAhora, cifra: CifraAhora): string | null {
+/** El número de cada línea: siempre un número (o la raya si falta su fichero), nunca palabras. */
+function valor(cifras: CifrasAhora, cifra: CifraAhora): number | null {
   switch (cifra) {
     case "cierres":
-      return cifras.cierres === null ? null : numero(cifras.cierres, idioma);
+      return cifras.cierres;
     case "incidentes":
-      return cifras.incidentes === null ? null : numero(cifras.incidentes, idioma);
+      return cifras.incidentes;
     case "drones":
-      return cifras.drones === null ? null : numero(cifras.drones.lanzados, idioma);
+      return cifras.drones?.lanzados ?? null;
     case "focos":
-      return cifras.focos === null ? null : numero(cifras.focos, idioma);
+      return cifras.focos;
     case "gnss":
-      return cifras.gnss === null ? null : t.ahora.nivel[cifras.gnss.nivel];
+      return cifras.gnss?.zonas ?? null;
   }
 }
 
-/** Color de estado de una cifra: solo los cierres en curso y la interferencia alta lo llevan. */
+/** Color de estado de una cifra: solo los cierres en curso y las zonas de interferencia alta. */
 function claseDe(cifras: CifrasAhora, cifra: CifraAhora): string {
   if (cifra === "cierres" && (cifras.cierres ?? 0) > 0) return "text-notificado";
-  if (cifra === "gnss" && cifras.gnss?.nivel === "alta") return "text-atribuido";
+  if (cifra === "gnss" && (cifras.gnss?.zonas ?? 0) > 0) return "text-atribuido";
   return "text-texto";
 }
 
-/** Detalle que acompaña a una cifra: la noche de los drones, las celdas altas del día. */
-function detalle(t: Textos, cifras: CifrasAhora, cifra: CifraAhora): string | null {
+/** Detalle que acompaña al texto: la noche de los drones. */
+function detalle(cifras: CifrasAhora, cifra: CifraAhora): string | null {
   if (cifra === "drones" && cifras.drones !== null) return fechaDia(cifras.drones.dia);
-  if (cifra === "gnss" && cifras.gnss !== null && cifras.gnss.altas > 0) {
-    return t.ahora.celdasAltas(cifras.gnss.altas);
-  }
   return null;
 }
 
 /**
  * «Europa ahora»: cierres en curso, incidentes de 7 días, drones de la última noche, focos
- * térmicos de 7 días e interferencia GPS del día, una cifra por fila. Va dentro del desplegable
- * (escritorio) o de la hoja inferior (teléfono) que abre su botón. Cada cifra lleva al sitio
- * del mapa que la explica. Una cifra sin su fichero sale como «—».
+ * térmicos de 7 días y zonas con interferencia GPS alta del día, una cifra por fila. Todas las
+ * filas iguales: el número a la izquierda, alineado a la derecha en una columna fija en la que
+ * caben cuatro cifras, y el texto a su derecha, que salta de línea dentro de su columna. Va
+ * dentro del desplegable (escritorio) o de la hoja inferior (teléfono) que abre su botón. Cada
+ * cifra lleva al sitio del mapa que la explica. Una cifra sin su fichero sale como «—».
  */
 export function EuropaAhora({ t, idioma, cifras, onIr }: Props) {
   return (
     <ul aria-label={t.ahora.etiqueta} data-europa-ahora="" className="flex flex-col gap-1">
       {CIFRAS_AHORA.map((cifra) => {
-        const texto = valor(t, idioma, cifras, cifra);
+        const n = valor(cifras, cifra);
+        const texto = n === null ? null : numero(n, idioma);
         const nombre = t.ahora[cifra];
-        const extra = detalle(t, cifras, cifra);
+        const extra = detalle(cifras, cifra);
         return (
           <li key={cifra}>
             <button
               type="button"
               data-cifra={cifra}
-              className="control min-h-11 w-full justify-start gap-2 text-left text-sm esc:min-h-9"
+              className="control grid min-h-11 w-full grid-cols-[3.25rem_minmax(0,1fr)] items-baseline justify-items-stretch gap-x-3 py-1.5 text-left text-sm esc:min-h-9"
               aria-label={`${t.ahora.ir(nombre)}: ${texto ?? t.ahora.sinDato}${extra === null ? "" : ` (${extra})`}`}
               onClick={() => onIr(cifra)}
             >
-              <span className={`mono min-w-10 text-right font-medium ${claseDe(cifras, cifra)}`}>
+              <span
+                data-numero=""
+                className={`mono overflow-hidden text-right font-medium tabular-nums ${claseDe(cifras, cifra)}`}
+              >
                 {texto ?? SIN_DATO}
               </span>
-              <span className="text-secundario">
+              <span data-texto="" className="min-w-0 break-words text-secundario">
                 {nombre}
                 {extra !== null && ` · ${extra}`}
               </span>

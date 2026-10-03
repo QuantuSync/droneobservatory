@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-import { ESTADOS, TIPOS } from "../datos/vocabulario.ts";
+import { ESTADOS } from "../datos/vocabulario.ts";
 import { ATAJOS } from "../estado/atajos.ts";
 import type { Textos } from "../i18n/index.ts";
 import { PALETA } from "../paleta.ts";
@@ -29,12 +29,20 @@ function MarcaImpacto({ parte }: { parte: boolean }) {
   );
 }
 
-/** Aviso de la detección en directo, como en el mapa: punto y aro del color de su estado. */
+/** Aviso de la detección en directo, como en el mapa: etiqueta con el código OACI y punta. */
 function MarcaAviso() {
   return (
-    <svg aria-hidden="true" width="14" height="14" viewBox="0 0 14 14" data-marca-aviso="">
-      <circle cx="7" cy="7" r="6" fill="none" stroke={PALETA.notificado} strokeWidth="1.2" />
-      <circle cx="7" cy="7" r="3" fill={PALETA.notificado} stroke={PALETA.fondo} strokeWidth="1" />
+    <svg aria-hidden="true" width="34" height="18" viewBox="0 0 34 18" data-marca-aviso="">
+      <path
+        d="M7 0.75H27A6.25 6.25 0 0 1 27 13.25H19.5L17 17L14.5 13.25H7A6.25 6.25 0 0 1 7 0.75Z"
+        fill={PALETA.panelSolido}
+        stroke={PALETA.notificado}
+        strokeWidth="1.2"
+        strokeLinejoin="round"
+      />
+      <text x="17" y="9.6" textAnchor="middle" fontSize="7" fill={PALETA.texto}>
+        OACI
+      </text>
     </svg>
   );
 }
@@ -98,23 +106,12 @@ export function Ayuda({ t, abierta, onCerrar }: Props) {
         </button>
       </div>
       <div className="grid gap-5 px-5 py-4 sm:grid-cols-2">
-        <section>
-          <p className="text-secundario">{a.formas}</p>
-          <ul className="mt-2 flex flex-col gap-1">
-            {TIPOS.map((tipo) => (
-              <li key={tipo} className="flex items-center gap-2">
-                <Simbolo tipo={tipo} estado="notificado" />
-                {t.tipo[tipo]}
-              </li>
-            ))}
-          </ul>
-        </section>
-        <section>
+        <section className="sm:col-span-2">
           <p className="text-secundario">{a.colores}</p>
-          <ul className="mt-2 flex flex-col gap-1">
+          <ul className="mt-2 flex flex-col gap-1" data-leyenda-estados="">
             {ESTADOS.map((estado) => (
               <li key={estado} className="flex items-center gap-2">
-                <Simbolo tipo="interrupcion_aeroportuaria" estado={estado} />
+                <Simbolo estado={estado} />
                 {t.estado[estado]}
               </li>
             ))}

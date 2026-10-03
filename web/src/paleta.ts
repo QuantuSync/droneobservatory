@@ -38,8 +38,7 @@ export const COLOR_ESTADO: Record<Estado, string> = {
 export const COLOR_BANDERA = PALETA.atribuido;
 
 /**
- * Forma de la bandera de los atribuidos (en lugar de la forma del tipo: sin círculo ni nada
- * debajo), en unidades de una caja de `lado`: el pie del mástil está en `pie`, que es el punto
+ * Forma de la bandera de los atribuidos (en lugar del círculo de los demás: sin nada debajo), en unidades de una caja de `lado`: el pie del mástil está en `pie`, que es el punto
  * del incidente; el mástil sube en vertical y el banderín sale hacia la derecha desde arriba.
  */
 export interface FormaBandera {
@@ -81,8 +80,7 @@ export const GRAVEDAD: Record<Estado, number> = {
   atribuido: 3,
 };
 
-/** Relleno del color de estado a baja opacidad, con contorno del mismo color. */
-export const OPACIDAD_RELLENO = 0.25;
+/** Grosor del contorno de los círculos (el discontinuo del desmentido y el borde del relleno). */
 export const GROSOR_CONTORNO = 1.2;
 /** El desmentido no lleva relleno: solo contorno discontinuo. */
 export const TRAZO_DESMENTIDO: readonly [number, number] = [3, 2];

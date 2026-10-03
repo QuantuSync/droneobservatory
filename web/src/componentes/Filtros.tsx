@@ -10,8 +10,6 @@ import { fechaDeDia, diaDeInstante } from "../tiempo/dias.ts";
 import type { Periodo } from "../tiempo/dias.ts";
 import { Simbolo } from "./Simbolo.tsx";
 
-/** El símbolo de cada estado en los filtros: la forma no importa aquí, solo el color. */
-const TIPO_DE_MUESTRA = "sobrevuelo";
 type ClavePeriodo = "todo" | Reciente | "entre";
 const CLAVES_PERIODO: readonly ClavePeriodo[] = ["todo", ...RECIENTES, "entre"];
 
@@ -168,7 +166,7 @@ export function Filtros(props: Props) {
             activa={filtros.estados.includes(estado)}
             onClick={() => onFiltros({ ...filtros, estados: alternar(filtros.estados, estado) })}
           >
-            <Simbolo tipo={TIPO_DE_MUESTRA} estado={estado} />
+            <Simbolo estado={estado} />
             {t.estado[estado]}
           </Opcion>
         ))}
@@ -180,7 +178,6 @@ export function Filtros(props: Props) {
             activa={filtros.tipos.includes(tipo)}
             onClick={() => onFiltros({ ...filtros, tipos: alternar(filtros.tipos, tipo) })}
           >
-            <Simbolo tipo={tipo} estado="notificado" />
             {t.tipo[tipo]}
           </Opcion>
         ))}

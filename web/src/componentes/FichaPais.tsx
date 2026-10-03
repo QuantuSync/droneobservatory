@@ -66,8 +66,7 @@ export function FichaPais({ t, idioma, iso, presion, cifras, periodo }: Props) {
             <Fila nombre={p.porTipo}>
               <ul>
                 {TIPOS.filter((tipo) => cifras.porTipo[tipo] > 0).map((tipo) => (
-                  <li key={tipo} className="flex items-center gap-2">
-                    <Simbolo tipo={tipo} estado="notificado" />
+                  <li key={tipo}>
                     {t.tipo[tipo]}: <span className="mono">{numero(cifras.porTipo[tipo], idioma)}</span>
                   </li>
                 ))}
@@ -77,7 +76,7 @@ export function FichaPais({ t, idioma, iso, presion, cifras, periodo }: Props) {
               <ul>
                 {ESTADOS.filter((estado) => cifras.porEstado[estado] > 0).map((estado) => (
                   <li key={estado} className="flex items-center gap-2">
-                    <Simbolo tipo="interrupcion_aeroportuaria" estado={estado} />
+                    <Simbolo estado={estado} />
                     {t.estado[estado]}:{" "}
                     <span className="mono">{numero(cifras.porEstado[estado], idioma)}</span>
                   </li>

@@ -10,6 +10,7 @@ import type { Carga, Descarga } from "./carga.ts";
 
 export type NivelGnss = "sin" | "media" | "alta";
 export const NIVELES_GNSS: readonly NivelGnss[] = ["sin", "media", "alta"];
+const NIVEL_ALTO: NivelGnss = "alta";
 
 /** Por debajo del 2 % no hay interferencia; del 2 al 10 %, media; por encima, alta (gpsjam.org). */
 export const UMBRAL_MEDIA = 0.02;
@@ -223,13 +224,21 @@ export function agregar(ficheros: readonly FicheroGnss[]): Agregado {
     resumen: {
       celdas: celdas.length,
       celdas_media: celdas.filter((c) => c.nivel === "media").length,
-      celdas_alta: celdas.filter((c) => c.nivel === "alta").length,
+      celdas_alta: celdas.filter((c) => c.nivel === NIVEL_ALTO).length,
       aeronaves,
       degradadas,
       proporcion: media,
       nivel: nivelDe(media),
     },
   };
+}
+
+/**
+ * Zonas (celdas H3) con interferencia alta, más del 10 %: la misma cuenta para «Europa ahora»
+ * (sobre el último día publicado) y para la leyenda de la capa (sobre el periodo elegido).
+ */
+export function zonasAltas(agregado: Agregado): number {
+  return agregado.celdas.filter((c) => c.nivel === NIVEL_ALTO).length;
 }
 
 /** Celdas como GeoJSON para el mapa: polígonos cerrados con su proporción y su nivel. */

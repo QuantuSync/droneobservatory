@@ -59,8 +59,9 @@ export function circulo(lon: number, lat: number, radioKm: number): Polygon {
   return { type: "Polygon", coordinates: [anillo] };
 }
 
-export function nombreIcono(tipo: string, estado: string): string {
-  return `${tipo}-${estado}`;
+/** Nombre del icono de un estado: el tipo no cambia el símbolo. */
+export function nombreIcono(estado: string): string {
+  return `incidente-${estado}`;
 }
 
 /** Los incidentes con punto, que son los únicos que se dibujan. */
@@ -84,7 +85,6 @@ export interface PropiedadesPila {
   /** Todos los incidentes de ese punto, del más grave al menos, separados por comas. */
   ids: string;
   n: number;
-  tipo: string;
   estado: Estado;
   icono: string;
   /** 1 si el representante está confirmado o atribuido: se dibuja encima y late. */
@@ -103,9 +103,8 @@ export interface PropiedadesPila {
 }
 
 /**
- * Un símbolo por punto. Varios incidentes en el mismo sitio, con formas distintas, se
- * pisaban y dibujaban figuras que no significan nada (un cuadrado y un rombo encima hacen
- * una estrella de ocho puntas): se dibuja el más grave con el número de incidentes.
+ * Un símbolo por punto. Varios incidentes en el mismo sitio se pisaban: se dibuja el más
+ * grave con el número de incidentes.
  */
 export function pilas(
   incidentes: readonly IncidenteResumen[],
@@ -131,9 +130,8 @@ export function pilas(
         id: primero.id,
         ids: ordenados.map((i) => i.id).join(","),
         n: ordenados.length,
-        tipo: primero.tipo,
         estado: primero.estado,
-        icono: nombreIcono(primero.tipo, primero.estado),
+        icono: nombreIcono(primero.estado),
         grave: esGrave(primero.estado) ? 1 : 0,
         atribuido: primero.estado === "atribuido" ? 1 : 0,
         n_atribuidos: cuenta("atribuido"),

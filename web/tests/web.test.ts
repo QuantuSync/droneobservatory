@@ -333,17 +333,17 @@ describe("geometría del mapa", () => {
     expect(areas([munich]).features[0]?.properties.estado).toBe("notificado");
   });
 
-  it("cada punto lleva el icono de su tipo y su estado", () => {
+  it("cada punto lleva el icono de su estado, sea del tipo que sea", () => {
     const opciones = { hoy: 0, novedades: new Set<string>() };
+    expect(munich.tipo).not.toBe(diest.tipo);
     expect(pilas([munich, diest], opciones).features.map((f) => f.properties.icono)).toEqual([
-      "interrupcion_aeroportuaria-notificado",
-      "sobrevuelo-notificado",
+      "incidente-notificado",
+      "incidente-notificado",
     ]);
   });
 
-  it("varios incidentes en el mismo punto son un solo símbolo: nada de estrellas", () => {
-    // Un cuadrado (sobrevuelo) y un rombo (incursión) en el mismo sitio hacían una estrella de
-    // ocho puntas. Ahora se dibuja el más grave con el número de incidentes.
+  it("varios incidentes en el mismo punto son un solo símbolo con su número", () => {
+    // Se dibuja el más grave con el número de incidentes.
     const mismoSitio = [
       resumirIncidente(incidente({ id: "EODI-2026-00001", tipo: "sobrevuelo" }, [25.4, 47.53333])),
       resumirIncidente(
@@ -366,7 +366,6 @@ describe("geometría del mapa", () => {
       id: "EODI-2026-00002",
       ids: "EODI-2026-00002,EODI-2026-00001",
       n: 2,
-      tipo: "incursion",
       estado: "confirmado",
       grave: 1,
       n_confirmados: 1,
