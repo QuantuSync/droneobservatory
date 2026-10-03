@@ -6,13 +6,23 @@ import { afterEach, describe, expect, it } from "vitest";
 
 import { BarraEstado } from "../src/componentes/BarraEstado.tsx";
 import { FichaIncidente } from "../src/componentes/FichaIncidente.tsx";
-import { Simbolo } from "../src/componentes/Simbolo.tsx";
+import { BANDERA_SIMBOLO, Simbolo } from "../src/componentes/Simbolo.tsx";
 import { detalleIncidente } from "../src/datos/derivar.ts";
 import { novedadesQueLaten } from "../src/estado/novedades.ts";
 import { textos } from "../src/i18n/index.ts";
-import { COLOR_AVISO, COLOR_DE_GRUPO, estilo } from "../src/mapa/estilo.ts";
-import { BANDERA } from "../src/mapa/iconos.ts";
-import { COLOR_BANDERA, COLOR_ESTADO, PALETA, contraste } from "../src/paleta.ts";
+import {
+  CAPA_INCIDENTES_GRAVES,
+  CAPA_RECIENTES,
+  CAPA_SELECCION,
+  CAPA_SELECCION_BANDERA,
+  COLOR_AVISO,
+  COLOR_DE_GRUPO,
+  ES_ATRIBUIDO,
+  estilo,
+} from "../src/mapa/estilo.ts";
+import { OBJETIVO_TACTIL_PX } from "../src/mapa/Mapa.tsx";
+import { BANDERA, LADO as LADO_ICONO } from "../src/mapa/iconos.ts";
+import { COLOR_BANDERA, COLOR_ESTADO, PALETA, contraste, trazadoBandera } from "../src/paleta.ts";
 import { incidente } from "./ejemplos.ts";
 
 afterEach(cleanup);
@@ -149,38 +159,67 @@ describe("colores de los estados", () => {
 });
 
 describe("bandera de los atribuidos", () => {
-  it("solo el atribuido lleva bandera, roja", () => {
+  it("el atribuido es solo una bandera roja: sin forma, círculo ni punto", () => {
+    for (const tipo of ["incursion", "interrupcion_aeroportuaria", "sobrevuelo"] as const) {
+      const { container } = render(<Simbolo tipo={tipo} estado="atribuido" />);
+      const svg = container.querySelector("svg");
+      expect(svg?.hasAttribute("data-bandera"), tipo).toBe(true);
+      expect(svg?.querySelectorAll("circle, rect, ellipse")).toHaveLength(0);
+      for (const trazo of Array.from(svg?.querySelectorAll("path") ?? [])) {
+        expect(trazo.getAttribute("d")).toBe(trazadoBandera(BANDERA_SIMBOLO));
+      }
+      expect(svg?.innerHTML).toContain(COLOR_BANDERA);
+      cleanup();
+    }
     for (const estado of ["notificado", "confirmado", "desmentido"] as const) {
       const { container } = render(<Simbolo tipo="incursion" estado={estado} />);
       expect(container.querySelector("[data-bandera]"), estado).toBeNull();
       cleanup();
     }
-    const { container } = render(<Simbolo tipo="incursion" estado="atribuido" />);
-    const bandera = container.querySelector("[data-bandera]");
-    expect(bandera).not.toBeNull();
-    expect(bandera?.innerHTML).toContain(COLOR_BANDERA);
-    expect(COLOR_BANDERA).toBe(COLOR_ESTADO.atribuido);
+    expect(COLOR_BANDERA).toBe(COLOR_ESTADO.confirmado);
   });
 
-  it("en el mapa, la bandera queda fuera de la forma del símbolo, que sigue diciendo el tipo", () => {
-    // Icono de 28 px con la forma centrada en (14, 14): círculo de radio 7, rombo de 8,5 y
-    // cuadrado de 6,5 de media anchura. Ningún punto de la bandera cae dentro de ninguna.
-    const centro = 14;
-    const puntos: (readonly [number, number])[] = [
-      [BANDERA.mastil[0], BANDERA.mastil[1]],
-      [BANDERA.mastil[2], BANDERA.mastil[3]],
-      ...BANDERA.banderin,
-    ];
-    for (const [x, y] of puntos) {
-      const dx = Math.abs(x - centro);
-      const dy = Math.abs(y - centro);
-      expect(Math.hypot(dx, dy), "círculo").toBeGreaterThan(7);
-      expect(dx + dy, "rombo").toBeGreaterThan(8.5);
-      expect(Math.max(dx, dy), "cuadrado").toBeGreaterThan(6.5);
+  it("en el mapa, el pie del mástil es el punto del incidente: el centro del icono", () => {
+    expect(BANDERA.lado).toBe(LADO_ICONO);
+    expect(BANDERA.pie).toEqual([LADO_ICONO / 2, LADO_ICONO / 2]);
+    // El mástil sube en vertical desde el pie y todo el banderín queda arriba a la derecha.
+    expect(BANDERA.tope[0]).toBe(BANDERA.pie[0]);
+    expect(BANDERA.tope[1]).toBeLessThan(BANDERA.pie[1]);
+    for (const [x, y] of BANDERA.banderin) {
+      expect(x).toBeGreaterThanOrEqual(BANDERA.pie[0]);
+      expect(y).toBeLessThan(BANDERA.pie[1]);
+      expect(x).toBeLessThanOrEqual(LADO_ICONO);
+      expect(y).toBeGreaterThanOrEqual(0);
     }
-    // Y se distingue: unos 7 px de banderín sobre un mástil de 9,5.
-    const ancho = Math.max(...BANDERA.banderin.map((p) => p[0])) - BANDERA.mastil[0];
-    expect(ancho).toBeGreaterThanOrEqual(6);
+    // 13 px de mástil y 11 de banderín: tan grande como las formas de los demás (14 px).
+    expect(BANDERA.pie[1] - BANDERA.tope[1]).toBe(13);
+    const ancho = Math.max(...BANDERA.banderin.map((p) => p[0])) - BANDERA.pie[0];
+    expect(ancho).toBeGreaterThanOrEqual(10);
+    // Y en la leyenda y las fichas, el pie abajo a la izquierda.
+    expect(BANDERA_SIMBOLO.pie[0]).toBeLessThan(BANDERA_SIMBOLO.lado / 3);
+    expect(BANDERA_SIMBOLO.pie[1]).toBeGreaterThan((BANDERA_SIMBOLO.lado * 2) / 3);
+  });
+
+  it("en el mapa, el atribuido no lleva área, destello ni aro de selección; sí su bandera", () => {
+    const { layers } = estilo("es", "https://droneobservatory.eu", "#f4f7fb");
+    const capa = (id: string) => layers.find((c) => c.id === id) as { filter?: unknown };
+    for (const id of ["areas-relleno", "areas-contorno", CAPA_RECIENTES, CAPA_SELECCION]) {
+      expect(JSON.stringify(capa(id).filter), id).toContain(JSON.stringify(["!", ES_ATRIBUIDO]));
+    }
+    expect(capa(CAPA_SELECCION_BANDERA).filter).toEqual(ES_ATRIBUIDO);
+    // Las capas de incidentes sueltos usan el icono sin cambiar el ancla (el centro = el pie).
+    const graves = layers.find((c) => c.id === CAPA_INCIDENTES_GRAVES) as {
+      layout: Record<string, unknown>;
+    };
+    expect(graves.layout["icon-anchor"]).toBeUndefined();
+    // El grupo sigue siendo rojo si contiene atribuidos.
+    expect(JSON.stringify(COLOR_DE_GRUPO)).toContain("n_atribuidos");
+  });
+
+  it("el área pulsable es la de los demás y, con el dedo, de 44 px", () => {
+    // La caja del icono (lo que se pulsa con el ratón) es la misma para la bandera y las formas.
+    expect(LADO_ICONO).toBeGreaterThanOrEqual(28);
+    expect(OBJETIVO_TACTIL_PX).toBe(44);
   });
 
   it("la ficha dice «Confirmado · atribuido a…» con el actor y la autoridad", () => {

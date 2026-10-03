@@ -6,10 +6,11 @@ import {
   OPACIDAD_RELLENO,
   PALETA,
   TRAZO_DESMENTIDO,
+  bandera,
+  trazadoBandera,
 } from "../paleta.ts";
 
-/** Con sitio arriba a la izquierda para la bandera de los atribuidos. */
-const LADO = 20;
+const LADO = 16;
 const CENTRO = LADO / 2;
 /** Media anchura de cada forma, para que las tres pesen lo mismo a la vista. */
 const RADIO_CIRCULO = 5.5;
@@ -25,10 +26,12 @@ interface Props {
 /**
  * Símbolo de un incidente: la forma dice el tipo (círculo, interrupción aeroportuaria;
  * rombo, incursión; cuadrado, sobrevuelo) y el color, el estado: naranja notificado, rojo
- * confirmado, rojo con bandera atribuido, contorno gris discontinuo desmentido. Es
- * decorativo: el tipo y el estado van siempre escritos al lado.
+ * confirmado, contorno gris discontinuo desmentido. El atribuido es solo una bandera roja con
+ * su mástil, sin la forma del tipo. Es decorativo: el tipo y el estado van siempre escritos al
+ * lado.
  */
 export function Simbolo({ tipo, estado, className }: Props) {
+  if (estado === "atribuido") return <IconoBandera className={className} lado={LADO} />;
   const color = COLOR_ESTADO[estado];
   const desmentido = estado === "desmentido";
   const trazo = {
@@ -58,7 +61,6 @@ export function Simbolo({ tipo, estado, className }: Props) {
           {...trazo}
         />
       )}
-      {estado === "atribuido" && <Bandera />}
       {tipo === "sobrevuelo" && (
         <rect
           x={CENTRO - MEDIO_CUADRADO}
@@ -72,31 +74,35 @@ export function Simbolo({ tipo, estado, className }: Props) {
   );
 }
 
-/** Bandera de los atribuidos: mástil y banderín rojos con un borde del color del fondo. */
-export function Bandera() {
-  const banderin = "M2.5 1L7.6 3L2.5 5Z";
-  return (
-    <g data-bandera="" strokeLinejoin="round">
-      <path d={`M2 1V8${banderin}`} fill="none" stroke={PALETA.fondo} strokeWidth={2.2} />
-      <path d="M2 1V8" stroke={COLOR_BANDERA} strokeWidth={1.1} />
-      <path d={banderin} fill={COLOR_BANDERA} stroke={COLOR_BANDERA} strokeWidth={0.8} />
-    </g>
-  );
-}
+/** La bandera de la leyenda y las fichas: en una caja de 16, con el pie abajo a la izquierda. */
+export const BANDERA_SIMBOLO = bandera(16, [4, 15], 13);
 
-/** La bandera sola, para acompañar el rótulo de los atribuidos (contadores, leyendas). */
-export function IconoBandera({ className }: { className?: string }) {
+/**
+ * Bandera de los atribuidos, sola: mástil y banderín rojos, con un borde fino del color del
+ * fondo para que se lea sobre cualquier cosa. Nada más: ni círculo ni forma ni punto en el pie.
+ */
+export function IconoBandera({
+  className,
+  lado = 16,
+}: {
+  className?: string | undefined;
+  lado?: number;
+}) {
+  const trazado = trazadoBandera(BANDERA_SIMBOLO);
   return (
     <svg
-      viewBox="0 0 9 9"
-      width={9}
-      height={9}
+      viewBox={`0 0 ${BANDERA_SIMBOLO.lado} ${BANDERA_SIMBOLO.lado}`}
+      width={lado}
+      height={lado}
       aria-hidden="true"
       focusable="false"
       className={className}
-      data-icono-bandera=""
+      data-bandera=""
     >
-      <Bandera />
+      <g strokeLinejoin="round" strokeLinecap="round">
+        <path d={trazado} fill="none" stroke={PALETA.fondo} strokeWidth={3} />
+        <path d={trazado} fill={COLOR_BANDERA} stroke={COLOR_BANDERA} strokeWidth={1.4} />
+      </g>
     </svg>
   );
 }

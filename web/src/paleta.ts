@@ -34,9 +34,44 @@ export const COLOR_ESTADO: Record<Estado, string> = {
   desmentido: PALETA.desmentido,
 };
 
-/** Bandera de los atribuidos: el mismo rojo, con un borde del color del fondo que la separa
- *  de la forma del símbolo. */
+/** Bandera de los atribuidos: el mismo rojo que el confirmado. */
 export const COLOR_BANDERA = PALETA.atribuido;
+
+/**
+ * Forma de la bandera de los atribuidos (en lugar de la forma del tipo: sin círculo ni nada
+ * debajo), en unidades de una caja de `lado`: el pie del mástil está en `pie`, que es el punto
+ * del incidente; el mástil sube en vertical y el banderín sale hacia la derecha desde arriba.
+ */
+export interface FormaBandera {
+  lado: number;
+  pie: readonly [number, number];
+  tope: readonly [number, number];
+  banderin: readonly (readonly [number, number])[];
+}
+
+/** La bandera en una caja dada, con el pie en `pie` y `alto` de mástil. */
+export function bandera(lado: number, pie: readonly [number, number], alto: number): FormaBandera {
+  const [x, y] = pie;
+  const arriba = y - alto;
+  const ancho = alto * 0.85;
+  const caida = alto * 0.58;
+  return {
+    lado,
+    pie,
+    tope: [x, arriba],
+    banderin: [
+      [x + 0.5, arriba],
+      [x + ancho, arriba + caida / 2],
+      [x + 0.5, arriba + caida],
+    ],
+  };
+}
+
+/** Trazado SVG de la bandera: mástil y banderín cerrado. */
+export function trazadoBandera(b: FormaBandera): string {
+  const [a, c, d] = b.banderin as [readonly [number, number], readonly [number, number], readonly [number, number]];
+  return `M${b.pie[0]} ${b.pie[1]}V${b.tope[1]}M${a[0]} ${a[1]}L${c[0]} ${c[1]}L${d[0]} ${d[1]}Z`;
+}
 
 /** Gravedad de cada estado para decidir el color de un grupo: manda el más grave. */
 export const GRAVEDAD: Record<Estado, number> = {

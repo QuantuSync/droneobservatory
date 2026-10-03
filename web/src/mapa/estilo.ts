@@ -14,6 +14,7 @@ import { OBJETO_TESELAS, urlDelAlmacen } from "../almacenPublico.ts";
 import { OPACIDAD_GNSS } from "../datos/gnss.ts";
 import { ESTADOS } from "../datos/vocabulario.ts";
 import { COLOR_ESTADO, PALETA, TRAZO_DESMENTIDO } from "../paleta.ts";
+import { ICONO_BANDERA_ELEGIDA } from "./iconos.ts";
 import type { Idioma } from "../sitio.ts";
 
 export const URL_TESELAS: string =
@@ -44,6 +45,8 @@ export const CAPA_REGION_ELEGIDA = "ucrania-elegida";
 export const CAPA_PAIS = "pais-resaltado";
 export const CAPA_RECIENTES = "recientes";
 export const CAPA_SELECCION = "seleccion";
+export const CAPA_SELECCION_BANDERA = "seleccion-bandera";
+export const CAPA_FOCOS_BANDERA = "focos-termicos-bandera";
 export const CAPA_EPISODIOS = "episodios";
 export const CAPA_FOCOS = "focos-termicos";
 export const CAPA_FOCOS_UCRANIA = "ucrania-focos-termicos";
@@ -87,7 +90,9 @@ export const CAPAS_DE_INCIDENTES: readonly string[] = [
   CAPA_INCIDENTES_DISCRETOS,
   CAPA_INCIDENTES_GRAVES,
   CAPA_FOCOS,
+  CAPA_FOCOS_BANDERA,
   CAPA_SELECCION,
+  CAPA_SELECCION_BANDERA,
 ];
 export const CAPAS_DE_UCRANIA: readonly string[] = [
   CAPA_REGIONES_RUSIA,
@@ -314,6 +319,8 @@ export const COLOR_DE_GRUPO: ExpressionSpecification = [
 ];
 
 const ES_DESMENTIDO: ExpressionSpecification = ["==", ["get", "estado"], "desmentido"];
+/** Un atribuido es solo su bandera: sin área, destello ni aro alrededor. */
+export const ES_ATRIBUIDO: ExpressionSpecification = ["==", ["get", "estado"], "atribuido"];
 /**
  * Un solo sistema de marcas: todo lo que junta más de un incidente (un grupo de la
  * agrupación o una pila en el mismo punto exacto) es un círculo con su número; un símbolo
@@ -485,7 +492,7 @@ function capasPropias(acento: string): LayerSpecification[] {
       type: "fill",
       source: FUENTE_AREAS,
       minzoom: ZOOM_AREAS,
-      filter: ["!", ES_DESMENTIDO],
+      filter: ["all", ["!", ES_DESMENTIDO], ["!", ES_ATRIBUIDO]],
       paint: {
         "fill-color": COLOR_POR_ESTADO,
         "fill-opacity": [
@@ -508,7 +515,7 @@ function capasPropias(acento: string): LayerSpecification[] {
       type: "line",
       source: FUENTE_AREAS,
       minzoom: ZOOM_AREAS,
-      filter: ["!", ES_DESMENTIDO],
+      filter: ["all", ["!", ES_DESMENTIDO], ["!", ES_ATRIBUIDO]],
       paint: {
         "line-color": COLOR_POR_ESTADO,
         "line-width": 1,
@@ -564,7 +571,7 @@ function capasPropias(acento: string): LayerSpecification[] {
       id: CAPA_RECIENTES,
       type: "circle",
       source: FUENTE_PUNTOS,
-      filter: ["all", ["!", ES_GRUPO], ["==", ["get", "reciente"], 1]],
+      filter: ["all", ["!", ES_GRUPO], ["==", ["get", "reciente"], 1], ["!", ES_ATRIBUIDO]],
       paint: {
         "circle-radius": 16,
         "circle-color": COLOR_POR_ESTADO,
@@ -603,13 +610,33 @@ function capasPropias(acento: string): LayerSpecification[] {
       source: FUENTE_PUNTOS,
       // También en una pila (varios incidentes en el mismo punto) que tenga alguno con foco;
       // no en los grupos de los zooms lejanos, que juntan puntos distintos.
-      filter: ["all", ["!", ["has", "point_count"]], ["==", ["get", "foco"], 1]],
+      filter: [
+        "all",
+        ["!", ["has", "point_count"]],
+        ["==", ["get", "foco"], 1],
+        ["any", ES_GRUPO, ["!", ES_ATRIBUIDO]],
+      ],
       paint: {
         "circle-radius": RADIO_MARCA_FOCO,
         "circle-color": PALETA.texto,
         "circle-stroke-color": PALETA.fondo,
         "circle-stroke-width": 1.5,
         "circle-translate": DESPLAZAMIENTO_MARCA_FOCO,
+      },
+    },
+    // En un atribuido suelto, la marca del foco va a la izquierda: a la derecha está el
+    // banderín.
+    {
+      id: CAPA_FOCOS_BANDERA,
+      type: "circle",
+      source: FUENTE_PUNTOS,
+      filter: ["all", ["!", ES_GRUPO], ["==", ["get", "foco"], 1], ES_ATRIBUIDO],
+      paint: {
+        "circle-radius": RADIO_MARCA_FOCO,
+        "circle-color": PALETA.texto,
+        "circle-stroke-color": PALETA.fondo,
+        "circle-stroke-width": 1.5,
+        "circle-translate": [-DESPLAZAMIENTO_MARCA_FOCO[0], DESPLAZAMIENTO_MARCA_FOCO[1]],
       },
     },
     {
@@ -700,11 +727,24 @@ function capasPropias(acento: string): LayerSpecification[] {
       id: CAPA_SELECCION,
       type: "circle",
       source: FUENTE_SELECCION,
+      filter: ["!", ES_ATRIBUIDO],
       paint: {
         "circle-radius": 14,
         "circle-color": "rgba(0, 0, 0, 0)",
         "circle-stroke-color": acento,
         "circle-stroke-width": 1.5,
+      },
+    },
+    // Un atribuido abierto: su bandera con un contorno del acento, sin aro.
+    {
+      id: CAPA_SELECCION_BANDERA,
+      type: "symbol",
+      source: FUENTE_SELECCION,
+      filter: ES_ATRIBUIDO,
+      layout: {
+        "icon-image": ICONO_BANDERA_ELEGIDA,
+        "icon-allow-overlap": true,
+        "icon-ignore-placement": true,
       },
     },
     // Avisos de la detección en directo: un aro y un punto del color de su estado, con el

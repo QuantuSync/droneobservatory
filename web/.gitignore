@@ -10,3 +10,5 @@ playwright-report/
 *.local
 .vercel/
 public/.well-known/security.txt
+# Caché de la comprobación de tipos
+*.tsbuildinfo

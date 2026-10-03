@@ -1,7 +1,7 @@
 import { join } from "node:path";
 
 import { expect, test } from "@playwright/test";
-import type { Page } from "@playwright/test";
+import type { Locator, Page } from "@playwright/test";
 
 import type { Resumen, ResumenUcrania } from "../src/datos/tipos.ts";
 import { numero as formatear } from "../src/i18n/index.ts";
@@ -99,6 +99,20 @@ async function datos<T>(pagina: Page, ruta: string): Promise<T> {
 }
 
 /** En el teléfono casi todo está en el menú: lo abre si hace falta y devuelve cómo cerrarlo. */
+/** Abre los filtros desde su botón sobre el mapa; devuelve cómo cerrarlos. */
+async function abrirFiltros(pagina: Page): Promise<{ grupo: Locator; cerrar: () => Promise<void> }> {
+  await pagina.getByRole("button", { name: /^(Abrir los filtros|Open the filters)/ }).filter({ visible: true }).click();
+  const grupo = pagina.getByRole("group", { name: /^(Filtros|Filters)$/ }).filter({ visible: true });
+  await expect(grupo).toBeVisible();
+  return {
+    grupo,
+    cerrar: async () => {
+      const equis = pagina.getByRole("button", { name: /^(Cerrar los filtros|Close the filters)$/ }).filter({ visible: true });
+      if ((await equis.count()) > 0) await equis.first().click();
+    },
+  };
+}
+
 async function menu(pagina: Page, proyecto: string): Promise<() => Promise<void>> {
   if (proyecto !== "movil") return async () => undefined;
   await pagina.getByRole("banner").getByRole("button", { name: /^(Menú|Menu)$/ }).click();
@@ -171,9 +185,6 @@ test("cambia de capas y reproduce la guerra noche a noche", async ({ page }, inf
   await expect(ucrania).toHaveAttribute("aria-pressed", "true");
   await page.getByRole("button", { name: "Densidad", exact: true }).click();
   await cerrar();
-  await page.keyboard.press("t");
-  await expect(page.getByText("Drones lanzados contra Ucrania")).toBeVisible();
-  await page.keyboard.press("Escape");
   await capturar(page, info.project.name, "capas");
   cerrar = await menu(page, info.project.name);
   await page.getByRole("button", { name: "Noche a noche" }).click();
@@ -253,13 +264,11 @@ test("en escritorio el letrero nunca se sale de la pantalla y desaparece al abri
   await page.waitForTimeout(MS_DE_VUELO);
   // El mapa ha volado al incidente: queda en el centro del hueco libre.
   const arriba = await page.locator("header").first().boundingBox();
-  // Arriba, lo que tapa el mapa acaba en la franja «Europa ahora», bajo los filtros.
-  const filtros = await page.locator('[data-europa-ahora="franja"]').boundingBox();
-  // Abajo, lo que tapa el mapa empieza en la fila del zoom y las atribuciones.
+  // Arriba, lo que tapa el mapa acaba en la cabecera; abajo, empieza en la fila del zoom.
   const abajo = await page.getByRole("group", { name: "Zoom" }).boundingBox();
   const panel = await ficha.boundingBox();
-  if (arriba === null || filtros === null || abajo === null || panel === null) throw new Error("sin medidas");
-  const simbolo = { x: panel.x / 2, y: (filtros.y + filtros.height + abajo.y) / 2 };
+  if (arriba === null || abajo === null || panel === null) throw new Error("sin medidas");
+  const simbolo = { x: panel.x / 2, y: (arriba.y + arriba.height + abajo.y) / 2 };
   await page.keyboard.press("Escape");
   await expect(ficha).toBeHidden();
   const letrero = page.locator("[data-letrero]");
@@ -321,40 +330,31 @@ test("la dirección de un ataque de Ucrania abre su ficha", async ({ page }, inf
   expect(problemas).toEqual([]);
 });
 
-test("la línea de tiempo acota el periodo, atrás lo deshace y «Ver todo» vuelve a todo", async ({ page }, info) => {
+test("el periodo se elige en los filtros, atrás lo deshace y la equis vuelve a todo", async ({ page }, info) => {
   const problemas = vigilar(page);
   await page.goto("/");
   await page.waitForSelector(MAPA_LISTO);
-  const contadores = page.getByLabel("Cifras del periodo elegido");
+  // Al entrar, ninguna barra ni panel: el mapa llega hasta abajo.
+  await expect(page.getByRole("slider")).toHaveCount(0);
+  await expect(page.locator("[data-desplegable]")).toHaveCount(0);
+  const contadores = page.getByLabel("Cifras del periodo elegido", { exact: true }).first();
   const todos = await contadores.textContent();
-  await page.keyboard.press("t");
-  await page.getByRole("radio", { name: "Mes" }).click();
-  const fin = page.getByRole("slider", { name: "Fin del periodo" });
-  await fin.focus();
-  for (let i = 0; i < 6; i += 1) await page.keyboard.press("ArrowLeft");
-  await expect(contadores).not.toHaveText(todos ?? "");
-  await expect(page).toHaveURL(/\?desde=\d{4}-\d{2}-\d{2}&hasta=\d{4}-\d{2}-\d{2}$/);
-  const verTodo = page.getByRole("button", { name: "Ver todo" }).first();
-  await expect(verTodo).toBeVisible();
+  const { grupo, cerrar } = await abrirFiltros(page);
+  await grupo.getByRole("combobox", { name: "Periodo" }).selectOption("30d");
+  await expect(page).toHaveURL(/\?ultimos=30d$/);
+  await cerrar();
+  await page.keyboard.press("Escape");
+  const boton = page.getByRole("button", { name: /^Abrir los filtros/ }).filter({ visible: true });
+  await expect(boton).toContainText("Últimos 30 días");
   await capturar(page, info.project.name, "periodo");
   // El botón atrás deshace el cambio de periodo; adelante lo rehace.
   await page.goBack();
   await expect(page).toHaveURL(/\/$/);
-  await expect(contadores).toHaveText(todos ?? "");
+  await expect(boton).not.toContainText("Últimos 30 días");
   await page.goForward();
-  await expect(page).toHaveURL(/\?desde=/);
-  await expect(contadores).not.toHaveText(todos ?? "");
-  await verTodo.click();
+  await expect(page).toHaveURL(/\?ultimos=30d$/);
+  await page.getByRole("button", { name: /^Quitar el periodo/ }).filter({ visible: true }).click();
   await expect(page).toHaveURL(/\/$/);
-  await expect(contadores).toHaveText(todos ?? "");
-  await expect(page.getByRole("button", { name: "Ver todo" })).toHaveCount(0);
-  await capturar(page, info.project.name, "ver-todo");
-  // Reproducir, pausar y detener: al detener vuelve al periodo de antes (el completo).
-  await page.getByRole("button", { name: "Reproducir" }).click();
-  await page.getByRole("button", { name: "Pausar" }).click();
-  await expect(page.getByRole("button", { name: "Reanudar" })).toBeVisible();
-  await expect(contadores).not.toHaveText(todos ?? "");
-  await page.getByRole("button", { name: "Detener" }).click();
   await expect(contadores).toHaveText(todos ?? "");
   expect(problemas).toEqual([]);
 });
@@ -363,9 +363,7 @@ test("los filtros quedan en la dirección y el feed abre fichas", async ({ page 
   const problemas = vigilar(page);
   await page.goto("/");
   await page.waitForSelector(MAPA_LISTO);
-  let cerrar = await menu(page, info.project.name);
-  const filtros = page.getByRole("group", { name: "Filtros" });
-  await expect(filtros).toBeVisible();
+  let { grupo: filtros, cerrar } = await abrirFiltros(page);
   await filtros.getByRole("button", { name: "Confirmado" }).click();
   await filtros.getByRole("button", { name: "Atribuido" }).click();
   await expect(page).toHaveURL(/\?solo=graves$/);
@@ -376,8 +374,14 @@ test("los filtros quedan en la dirección y el feed abre fichas", async ({ page 
   await expect(page.getByLabel("Cifras del periodo elegido")).toContainText(
     `incidentes${numero(graves.length)}`,
   );
-  await page.getByRole("button", { name: "En directo", exact: true }).click();
   await cerrar();
+  await page.keyboard.press("Escape");
+  if (info.project.name === "movil") {
+    await page.getByRole("banner").getByRole("button", { name: "Menú" }).click();
+    await page.getByRole("dialog", { name: "Menú" }).getByRole("button", { name: "En directo", exact: true }).click();
+  } else {
+    await page.getByRole("button", { name: "En directo", exact: true }).click();
+  }
   const feed = page.getByRole("complementary", { name: "En directo" });
   await expect(feed.getByRole("listitem").first()).toBeVisible();
   await capturar(page, info.project.name, "feed");
@@ -385,8 +389,8 @@ test("los filtros quedan en la dirección y el feed abre fichas", async ({ page 
   await expect(page).toHaveURL(/\/EODI-\d{4}-\d{5}\?solo=graves$/);
   // La dirección filtrada se puede compartir: al abrirla, el filtro sigue puesto.
   await page.goto("/?solo=graves");
-  cerrar = await menu(page, info.project.name);
-  await expect(page.getByRole("group", { name: "Filtros" }).getByRole("button", { name: "Confirmado" })).toHaveAttribute(
+  ({ grupo: filtros, cerrar } = await abrirFiltros(page));
+  await expect(filtros.getByRole("button", { name: "Confirmado" })).toHaveAttribute(
     "aria-pressed",
     "true",
   );
@@ -469,7 +473,9 @@ test("la interfaz no lleva color propio: solo el de los estados", async ({ page 
     }
     return [...encontrados];
   }, CROMA_DE_UN_GRIS);
-  const estados = ["rgb(86, 194, 113)", "rgb(237, 169, 58)", "rgb(242, 92, 79)"];
+  // Verde de «datos al día», naranja de notificado, rojo de confirmado y atribuido, y el rojo
+  // propio de la capa de guerra.
+  const estados = ["rgb(86, 194, 113)", "rgb(255, 154, 46)", "rgb(245, 58, 80)", "rgb(242, 92, 79)"];
   expect(saturados.filter((color) => !estados.includes(color))).toEqual([]);
   await capturar(page, info.project.name, "sin-acento");
   expect(problemas).toEqual([]);

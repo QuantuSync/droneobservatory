@@ -7,7 +7,9 @@
 // principal (y que para con la pestaña en segundo plano o con movimiento reducido). Aquí
 // solo se decide dónde va cada uno; se recoloca cuando el mapa se mueve.
 
+import { trazadoBandera } from "../paleta.ts";
 import { radioDeGrupo } from "./estilo.ts";
+import { BANDERA, LADO } from "./iconos.ts";
 
 /** Radio del contorno que late alrededor de un símbolo suelto. */
 export const RADIO_PULSO = 11;
@@ -20,6 +22,8 @@ export interface Pulso {
   x: number;
   y: number;
   radio: number;
+  /** Un atribuido suelto late con la forma de su bandera, no con un anillo. */
+  forma: "anillo" | "bandera";
 }
 
 /** Lo que devuelve MapLibre de cada símbolo o grupo dibujado, en lo que aquí importa. */
@@ -63,9 +67,12 @@ export function pulsosDe(
       pulso = {
         clave: "cluster_id" in p ? `grupo-${String(p.cluster_id)}` : `pila-${String(p.ids)}`,
         radio: radioDeGrupo(cuenta) + SEPARACION_PULSO_GRUPO,
+        forma: "anillo",
       };
+    } else if (numero(p.atribuido) === 1) {
+      pulso = { clave: String(p.id), radio: LADO / 2, forma: "bandera" };
     } else {
-      pulso = { clave: String(p.id), radio: RADIO_PULSO };
+      pulso = { clave: String(p.id), radio: RADIO_PULSO, forma: "anillo" };
     }
     if (vistos.has(pulso.clave)) continue;
     const { x, y } = proyectar(lugar[0], lugar[1]);
@@ -88,22 +95,42 @@ export function colocarPulsos(capa: HTMLElement, pulsos: readonly Pulso[]): void
   for (const pulso of pulsos) {
     let sitio = previos.get(pulso.clave);
     previos.delete(pulso.clave);
+    if (sitio !== undefined && sitio.dataset.forma !== pulso.forma) {
+      sitio.remove();
+      sitio = undefined;
+    }
     if (sitio === undefined) {
       sitio = document.createElement("span");
       sitio.dataset.clave = pulso.clave;
+      sitio.dataset.forma = pulso.forma;
       sitio.className = "pulso-sitio";
-      sitio.append(document.createElement("span"));
+      sitio.append(pulso.forma === "bandera" ? banderaQueLate() : document.createElement("span"));
       capa.append(sitio);
     }
-    const anillo = sitio.firstElementChild;
-    if (anillo instanceof HTMLElement) {
-      if (anillo.className !== "pulso") anillo.className = "pulso";
+    const marca = sitio.firstElementChild;
+    if (marca instanceof HTMLElement && pulso.forma === "anillo") {
+      if (marca.className !== "pulso") marca.className = "pulso";
       const lado = `${2 * pulso.radio}px`;
-      anillo.style.width = lado;
-      anillo.style.height = lado;
-      anillo.style.margin = `${-pulso.radio}px 0 0 ${-pulso.radio}px`;
+      marca.style.width = lado;
+      marca.style.height = lado;
+      marca.style.margin = `${-pulso.radio}px 0 0 ${-pulso.radio}px`;
     }
     sitio.style.transform = `translate(${pulso.x.toFixed(1)}px, ${pulso.y.toFixed(1)}px)`;
   }
   for (const sobrante of previos.values()) sobrante.remove();
+}
+
+const SVG = "http://www.w3.org/2000/svg";
+
+/** La silueta de la bandera, del tamaño del icono y con el pie en el punto, que late. */
+function banderaQueLate(): SVGSVGElement {
+  const svg = document.createElementNS(SVG, "svg");
+  svg.setAttribute("class", "pulso-bandera");
+  svg.setAttribute("viewBox", `0 0 ${LADO} ${LADO}`);
+  svg.setAttribute("width", String(LADO));
+  svg.setAttribute("height", String(LADO));
+  const trazo = document.createElementNS(SVG, "path");
+  trazo.setAttribute("d", trazadoBandera(BANDERA));
+  svg.append(trazo);
+  return svg;
 }

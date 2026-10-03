@@ -1,18 +1,20 @@
-// Filtros rápidos y periodo. Van en la dirección (?estado=…&ultimos=7d&tipo=…&pais=…&desde=…
-// &hasta=…) para poder compartir una vista filtrada y para que el botón atrás del navegador
-// deshaga el último cambio de periodo; lo que no se entiende se ignora.
+// Filtros y periodo. Van en la dirección (?estado=…&ultimos=7d&tipo=…&pais=…&desde=…&hasta=…)
+// para poder compartir una vista filtrada y para que el botón atrás del navegador deshaga el
+// último cambio; lo que no se entiende se ignora. El periodo es uno de los rápidos (últimas 24
+// horas, 7 días, 30 días o el último año, contados hasta el último día con datos), uno entre
+// dos fechas o, sin nada en la dirección, todo.
 
 import type { Estado, IncidenteResumen, Tipo } from "../datos/tipos.ts";
 import { ESTADOS, PATRON_PAIS, TIPOS } from "../datos/vocabulario.ts";
 import { diaDeInstante, fechaDeDia } from "../tiempo/dias.ts";
 import type { Periodo } from "../tiempo/dias.ts";
 
-export type Reciente = "24h" | "7d";
+export type Reciente = "24h" | "7d" | "30d" | "1a";
 
 export interface Filtros {
   /** Estados que se muestran; vacío es todos. */
   estados: Estado[];
-  /** Solo lo de las últimas 24 horas o los últimos 7 días (por día de inicio). */
+  /** Periodo rápido: los últimos días hasta el último con datos (por día de inicio). */
   reciente: Reciente | null;
   /** Tipos que se muestran; vacío es todos. */
   tipos: Tipo[];
@@ -40,8 +42,16 @@ const SEPARADOR = ",";
 const PATRON_DIA = /^\d{4}-\d{2}-\d{2}$/;
 const LARGO_DIA = 10;
 /** Días que cubre cada filtro de lo reciente, contando el último día con datos. */
-export const DIAS_RECIENTES: Record<Reciente, number> = { "24h": 1, "7d": 7 };
-const RECIENTES = Object.keys(DIAS_RECIENTES) as Reciente[];
+export const DIAS_RECIENTES: Record<Reciente, number> = { "24h": 1, "7d": 7, "30d": 30, "1a": 365 };
+export const RECIENTES = Object.keys(DIAS_RECIENTES) as Reciente[];
+
+/** Lo que se ve: todo (por defecto), un periodo rápido o uno entre dos fechas. */
+export type SeleccionPeriodo =
+  | { clase: "todo" }
+  | { clase: "reciente"; reciente: Reciente }
+  | { clase: "entre"; periodo: Periodo };
+
+export const TODO: SeleccionPeriodo = { clase: "todo" };
 
 function lista(valor: string | null): string[] {
   return (valor ?? "").split(SEPARADOR).filter((parte) => parte.length > 0);
@@ -126,36 +136,57 @@ export function escribirBusqueda(filtros: Filtros, periodo: Periodo | null): str
   return texto.length === 0 ? "" : `?${texto}`;
 }
 
+/** El periodo elegido en la dirección: el rápido manda sobre las fechas. */
+export function leerSeleccion(busqueda: string): SeleccionPeriodo {
+  const reciente = leerFiltros(busqueda).reciente;
+  if (reciente !== null) return { clase: "reciente", reciente };
+  const periodo = leerPeriodo(busqueda);
+  return periodo === null ? TODO : { clase: "entre", periodo };
+}
+
+/** Los días que cubre una selección, con «hoy» el último día con datos; null es todo. */
+export function periodoDeSeleccion(seleccion: SeleccionPeriodo, hoy: number): Periodo | null {
+  if (seleccion.clase === "todo") return null;
+  if (seleccion.clase === "entre") return seleccion.periodo;
+  return { desde: hoy - DIAS_RECIENTES[seleccion.reciente] + 1, hasta: hoy };
+}
+
+/** La dirección con los filtros y una selección de periodo (una sola de las dos formas). */
+export function escribirSeleccion(filtros: Filtros, seleccion: SeleccionPeriodo): string {
+  return escribirBusqueda(
+    { ...filtros, reciente: seleccion.clase === "reciente" ? seleccion.reciente : null },
+    seleccion.clase === "entre" ? seleccion.periodo : null,
+  );
+}
+
+export function mismaSeleccion(a: SeleccionPeriodo, b: SeleccionPeriodo): boolean {
+  if (a.clase === "todo" || b.clase === "todo") return a.clase === b.clase;
+  if (a.clase === "reciente" && b.clase === "reciente") return a.reciente === b.reciente;
+  if (a.clase === "entre" && b.clase === "entre") {
+    return a.periodo.desde === b.periodo.desde && a.periodo.hasta === b.periodo.hasta;
+  }
+  return false;
+}
+
 /** La búsqueda con solo los filtros, sin periodo. */
 export function escribirFiltros(filtros: Filtros): string {
   return escribirBusqueda(filtros, null);
 }
 
-/** Cuántos filtros hay puestos: cada estado, tipo y país cuentan por separado. */
+/** Cuántos filtros hay puestos, sin contar el periodo: cada estado, tipo y país por separado. */
 export function cuantosFiltros(filtros: Filtros): number {
-  return (
-    filtros.estados.length +
-    Number(filtros.reciente !== null) +
-    filtros.tipos.length +
-    filtros.paises.length
-  );
+  return filtros.estados.length + filtros.tipos.length + filtros.paises.length;
 }
 
 export function hayFiltros(filtros: Filtros): boolean {
   return cuantosFiltros(filtros) > 0;
 }
 
-/** Incidentes que pasan los filtros; «hoy» es el último día con datos. */
-export function filtrar(
-  incidentes: readonly IncidenteResumen[],
-  filtros: Filtros,
-  hoy: number,
-): IncidenteResumen[] {
-  const desde = filtros.reciente === null ? null : hoy - DIAS_RECIENTES[filtros.reciente] + 1;
+/** Incidentes que pasan los filtros de estado, tipo y país (el periodo va aparte). */
+export function filtrar(incidentes: readonly IncidenteResumen[], filtros: Filtros): IncidenteResumen[] {
   return incidentes.filter(
     (i) =>
       (filtros.estados.length === 0 || filtros.estados.includes(i.estado)) &&
-      (desde === null || i.dia >= desde) &&
       (filtros.tipos.length === 0 || filtros.tipos.includes(i.tipo)) &&
       (filtros.paises.length === 0 || filtros.paises.includes(i.pais)),
   );

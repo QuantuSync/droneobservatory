@@ -11,7 +11,9 @@ import {
   estilo,
   radioDeGrupo,
 } from "../src/mapa/estilo.ts";
+import { BANDERA } from "../src/mapa/iconos.ts";
 import { RADIO_PULSO, SEPARACION_PULSO_GRUPO, colocarPulsos, pulsosDe } from "../src/mapa/pulsos.ts";
+import { trazadoBandera } from "../src/paleta.ts";
 import type { RasgoDibujado } from "../src/mapa/pulsos.ts";
 
 const css = readFileSync(join(import.meta.dirname, "..", "src", "estilos.css"), "utf8");
@@ -32,7 +34,7 @@ describe("pulso del mapa", () => {
       ],
       proyectar,
     );
-    expect(pulsos).toEqual([{ clave: "C", x: 50, y: 60, radio: RADIO_PULSO }]);
+    expect(pulsos).toEqual([{ clave: "C", x: 50, y: 60, radio: RADIO_PULSO, forma: "anillo" }]);
   });
 
   it("los grupos y las pilas laten si contienen algún incidente nuevo", () => {
@@ -70,15 +72,32 @@ describe("pulso del mapa", () => {
   it("recoloca reutilizando los elementos y quita los que sobran", () => {
     const capa = document.createElement("div");
     colocarPulsos(capa, [
-      { clave: "A", x: 1, y: 2, radio: 11 },
-      { clave: "B", x: 3, y: 4, radio: 11 },
+      { clave: "A", x: 1, y: 2, radio: 11, forma: "anillo" },
+      { clave: "B", x: 3, y: 4, radio: 11, forma: "anillo" },
     ]);
     const primero = capa.children[0];
     expect(capa.querySelectorAll(".pulso")).toHaveLength(2);
-    colocarPulsos(capa, [{ clave: "A", x: 5, y: 6, radio: 11 }]);
+    colocarPulsos(capa, [{ clave: "A", x: 5, y: 6, radio: 11, forma: "anillo" }]);
     expect(capa.children).toHaveLength(1);
     expect(capa.children[0]).toBe(primero);
     expect((capa.children[0] as HTMLElement).style.transform).toBe("translate(5.0px, 6.0px)");
+  });
+
+  it("un atribuido nuevo late con la silueta de su bandera, sin ningún círculo", () => {
+    const pulsos = pulsosDe([punto({ id: "F", grave: 1, atribuido: 1, novedad: 1 })], proyectar);
+    expect(pulsos).toEqual([{ clave: "F", x: 10, y: 20, radio: 14, forma: "bandera" }]);
+    const capa = document.createElement("div");
+    colocarPulsos(capa, pulsos);
+    expect(capa.querySelector(".pulso")).toBeNull();
+    const silueta = capa.querySelector("svg.pulso-bandera");
+    expect(silueta?.querySelector("path")?.getAttribute("d")).toBe(trazadoBandera(BANDERA));
+    expect(silueta?.querySelectorAll("circle")).toHaveLength(0);
+    // El pie de la silueta cae en el punto: la caja de 28 px se desplaza media caja.
+    expect(css).toMatch(/\.pulso-bandera \{[^}]*top: -14px;[^}]*left: -14px;/);
+    expect(css).toMatch(/\.pulso-bandera \{[^}]*animation: latido/);
+    // Si deja de ser nuevo, desaparece.
+    colocarPulsos(capa, []);
+    expect(capa.children).toHaveLength(0);
   });
 
   it("el pulso es sutil: solo cambia la opacidad del anillo, y con movimiento reducido queda fijo", () => {
@@ -87,7 +106,10 @@ describe("pulso del mapa", () => {
     expect(latido).not.toMatch(/transform|scale|width|height|margin/);
     expect(css).not.toContain("latido-fuerte");
     expect(css).not.toContain("pulso-atribuido");
-    const reducido = /@media \(prefers-reduced-motion: reduce\) \{\s*\.pulso \{([^}]*)\}/.exec(css)?.[1] ?? "";
+    const reducido =
+      /@media \(prefers-reduced-motion: reduce\) \{\s*\.pulso,\s*\.pulso-bandera \{([^}]*)\}/.exec(
+        css,
+      )?.[1] ?? "";
     expect(reducido).toContain("animation: none");
     expect(reducido).toMatch(/opacity: 0\.\d+/);
   });

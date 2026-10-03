@@ -96,6 +96,20 @@ export const en: Textos = {
     graves: "Only confirmed and attributed",
     ultimas24h: "Last 24 hours",
     ultimos7d: "Last 7 days",
+    periodos: {
+      todo: "All",
+      "24h": "Last 24 hours",
+      "7d": "Last 7 days",
+      "30d": "Last 30 days",
+      "1a": "Last year",
+      entre: "Between dates",
+    },
+    desde: "From",
+    hasta: "To",
+    entreFechas: (desde, hasta) => `${desde} – ${hasta}`,
+    abrir: "Open the filters",
+    cerrar: "Close the filters",
+    volverATodo: (periodo) => `Remove the period “${periodo}” and show everything`,
     tipo: "Type",
     pais: "Country",
     todosLosPaises: "All countries",
@@ -130,17 +144,17 @@ export const en: Textos = {
     drones: "drones launched last night",
     focos: "confirmed thermal hotspots in 7 days",
     gnss: "GPS interference today",
-    cortos: {
-      cierres: "closures",
-      incidentes: "7 days",
-      drones: "last night",
-      focos: "hotspots 7 d",
-      gnss: "GPS",
-    },
     nivel: { sin: "no interference", media: "medium", alta: "high" },
     celdasAltas: (n) => (n === 1 ? "1 high cell" : `${n} high cells`),
     sinDato: "no figure",
     ir: (que) => `Show on the map: ${que}`,
+    abrir: "Open “Europe now”",
+    cerrar: "Close “Europe now”",
+    avisoCierres: (n) => (n === 1 ? "1 closure in progress" : `${n} closures in progress`),
+    avisoNovedades: (n) => (n === 1 ? "1 update since your last visit" : `${n} updates since your last visit`),
+  },
+  desplegable: {
+    escape: "Press Escape to close.",
   },
   directo: {
     etiqueta: "Airport · live detection",
@@ -211,10 +225,22 @@ export const en: Textos = {
     cerrar: "Close help",
     formas: "The shape shows the type of incident.",
     colores:
-      "The colour shows the status: orange, reported; red, confirmed; red with a small flag, " +
-      "attributed (a confirmed incident whose perpetrator a government has named). Denied " +
-      "incidents have a dashed grey outline and no fill.",
-    areas: "Each incident covers an area: the circle is the radius within which it is known to have happened.",
+      "The colour shows the status: orange, reported; red, confirmed. Denied incidents have a " +
+      "dashed grey outline and no fill. An attributed incident (a confirmed one whose " +
+      "perpetrator a government has named) is just a red flag on its pole, with no type " +
+      "shape: the foot of the pole marks the place.",
+    periodo:
+      "The “Filters” button opens the period (everything, the last 24 hours, the last 7 or 30 " +
+      "days, the last year or between two dates) and the status, type and country filters. " +
+      "With a period chosen, the button shows it and its cross goes back to everything. The " +
+      "map, the list, the figures and every layer show that period.",
+    ahora:
+      "“Europe now” opens the figures of the moment; each one leads to the place on the map " +
+      "that explains it. A number on the button counts the airport closures in progress and " +
+      "a dot flags what has changed since the previous visit.",
+    areas:
+      "Each incident covers an area: the circle is the radius within which it is known to have " +
+      "happened (for attributed incidents, the foot of the flag marks the place).",
     lineas: "A thin line joins the incidents of one episode: several targets on the same night.",
     numeros:
       "A circle with a number groups several incidents: it grows with the number, and its ring " +
@@ -245,7 +271,7 @@ export const en: Textos = {
     atajos: "Keyboard shortcuts",
     acciones: {
       ayuda: "Open or close this help",
-      cerrar: "Close the record or the open panel, or clear the selected period",
+      cerrar: "Close what is open: the drop-down, the record or the panel",
       capaIncidentes: "Incidents layer",
       capaUcrania: "Ukraine layer",
       capaDensidad: "Density layer",
@@ -253,8 +279,8 @@ export const en: Textos = {
       filtro24h: "Last 24 hours",
       filtro7d: "Last 7 days",
       sinFiltros: "Clear filters",
-      lineaTiempo: "Open or close the timeline",
-      reproducir: "Play the timeline",
+      filtros: "Open or close the filters and the period",
+      ahora: "Open or close “Europe now”",
       feed: "Open or close the live panel",
       lista: "Incident list",
       metodologia: "Methodology and open data",
@@ -513,27 +539,9 @@ export const en: Textos = {
     regiones: "War layer regions",
   },
   tiempo: {
-    titulo: "Timeline",
-    granularidad: "Group by",
-    porGranularidad: { dia: "Day", semana: "Week", mes: "Month" },
-    reproducir: "Play",
-    pausar: "Pause",
-    reanudar: "Resume",
-    detener: "Stop",
-    verTodo: "Show all",
-    periodoBoton: "Period",
-    desde: "Start of the period",
-    hasta: "End of the period",
     periodo: (desde, hasta) => `${desde} – ${hasta}`,
-    incidentesPorTramo: "Incidents",
-    lanzamientosPorNoche: "Drones launched against Ukraine",
-    instrucciones:
-      "Drag across the histogram to choose a period, or move either end with the arrow keys.",
-    plegar: "Collapse",
-    desplegar: "Expand",
-    acotado: "period narrowed",
-    maximo: (n) => `max ${n}`,
   },
+
   metodologia: {
     titulo: "Methodology",
     cerrar: "Close the methodology",
@@ -619,7 +627,8 @@ export const en: Textos = {
                 marca: { estado: "atribuido" },
                 texto: [
                   "A confirmed incident for which an authority names a government as " +
-                    "responsible: red, with a small flag on the symbol. The record shows it as " +
+                    "responsible: on the map, a red flag on its pole, whose foot marks the place, " +
+                    "instead of the type shape. The record shows it as " +
                     "“Confirmed · attributed to…”, with who attributes it and to whom.",
                 ],
               },
@@ -991,7 +1000,7 @@ export const en: Textos = {
                 "with the share and the high level in red. For a period, aircraft " +
                 "and degraded aircraft are added up per cell over each day (each month for " +
                 "periods longer than 7 days). It is computed on the server from the daily " +
-                "adsb.lol archive. The level of the day in the “Europe now” strip is the one " +
+                "adsb.lol archive. The level of the day in “Europe now” is the one " +
                 "reached by one cell in ten (the 90th percentile), next to the number of high cells.",
             ],
           },

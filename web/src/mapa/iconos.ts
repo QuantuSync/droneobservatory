@@ -1,7 +1,9 @@
 // Iconos de los incidentes en el mapa, dibujados en un lienzo: la forma dice el tipo y el
-// color, el estado, igual que el componente Simbolo de la leyenda y las fichas. Los
-// atribuidos llevan además una bandera roja pequeña arriba a la izquierda, fuera de la forma
-// (arriba a la derecha va la marca del foco térmico).
+// color, el estado, igual que el componente Simbolo de la leyenda y las fichas. Un atribuido
+// es solo una bandera roja con su mástil, sin la forma del tipo: el pie del mástil está en el
+// centro del icono, que es el punto del incidente (el ancla del símbolo es el centro), así que
+// las líneas de los episodios y la selección llegan al pie. La caja del icono, que es lo que
+// se puede pulsar, es la misma que la de los demás.
 
 import type { Map as Mapa } from "maplibre-gl";
 
@@ -14,12 +16,14 @@ import {
   OPACIDAD_RELLENO,
   PALETA,
   TRAZO_DESMENTIDO,
+  bandera,
 } from "../paleta.ts";
+import type { FormaBandera } from "../paleta.ts";
 import { nombreIcono } from "./geometria.ts";
 
-/** Lado del icono en píxeles de pantalla y densidad a la que se dibuja (con sitio para la
- *  bandera de los atribuidos alrededor de la forma, que no cambia de tamaño). */
-const LADO = 28;
+/** Lado del icono en píxeles de pantalla (y de lo que se puede pulsar) y densidad a la que se
+ *  dibuja. */
+export const LADO = 28;
 const DENSIDAD = 2;
 const CENTRO = LADO / 2;
 const RADIO_CIRCULO = 7;
@@ -55,6 +59,10 @@ function dibujar(tipo: Tipo, estado: Estado): ImageData | null {
   const contexto = lienzo.getContext("2d");
   if (contexto === null) return null;
   contexto.scale(DENSIDAD, DENSIDAD);
+  if (estado === "atribuido") {
+    pintarBandera(contexto, BANDERA, COLOR_BANDERA);
+    return contexto.getImageData(0, 0, lienzo.width, lienzo.height);
+  }
   const color = COLOR_ESTADO[estado];
   trazar(contexto, tipo);
   if (estado === "desmentido") {
@@ -68,27 +76,30 @@ function dibujar(tipo: Tipo, estado: Estado): ImageData | null {
   contexto.strokeStyle = color;
   contexto.lineWidth = GROSOR_CONTORNO;
   contexto.stroke();
-  if (estado === "atribuido") bandera(contexto);
   return contexto.getImageData(0, 0, lienzo.width, lienzo.height);
 }
 
-/** Mástil y banderín, con un borde del color del fondo que los separa del mapa y la forma. */
-export const BANDERA = {
-  mastil: [3, 1.5, 3, 11] as const,
-  banderin: [
-    [3.6, 1.5],
-    [10.5, 4.2],
-    [3.6, 6.9],
-  ] as const,
-};
+/** La bandera en el icono del mapa: pie en el centro de la caja, 13 px de mástil. */
+export const BANDERA: FormaBandera = bandera(LADO, [CENTRO, CENTRO], 13);
+/** Nombre del icono de la bandera elegida (la selección del incidente abierto). */
+export const ICONO_BANDERA_ELEGIDA = "bandera-elegida";
 
-function bandera(contexto: CanvasRenderingContext2D): void {
-  const [x0, y0, x1, y1] = BANDERA.mastil;
+function pintarBandera(
+  contexto: CanvasRenderingContext2D,
+  forma: FormaBandera,
+  color: string,
+  borde: string = PALETA.fondo,
+  grosorBorde = 3,
+): void {
   const trazar = () => {
     contexto.beginPath();
-    contexto.moveTo(x0, y0);
-    contexto.lineTo(x1, y1);
-    const [a, b, c] = BANDERA.banderin;
+    contexto.moveTo(forma.pie[0], forma.pie[1]);
+    contexto.lineTo(forma.tope[0], forma.tope[1]);
+    const [a, b, c] = forma.banderin as [
+      readonly [number, number],
+      readonly [number, number],
+      readonly [number, number],
+    ];
     contexto.moveTo(a[0], a[1]);
     contexto.lineTo(b[0], b[1]);
     contexto.lineTo(c[0], c[1]);
@@ -96,20 +107,37 @@ function bandera(contexto: CanvasRenderingContext2D): void {
   };
   contexto.setLineDash([]);
   contexto.lineJoin = "round";
+  contexto.lineCap = "round";
   trazar();
-  contexto.strokeStyle = PALETA.fondo;
-  contexto.lineWidth = 2.6;
+  contexto.strokeStyle = borde;
+  contexto.lineWidth = grosorBorde;
   contexto.stroke();
   trazar();
-  contexto.fillStyle = COLOR_BANDERA;
+  contexto.fillStyle = color;
   contexto.fill();
-  contexto.strokeStyle = COLOR_BANDERA;
-  contexto.lineWidth = 1.2;
+  contexto.strokeStyle = color;
+  contexto.lineWidth = 1.6;
   contexto.stroke();
 }
 
+/** La bandera del incidente abierto: la misma, con un contorno del acento en lugar de un aro. */
+function dibujarBanderaElegida(acento: string): ImageData | null {
+  const lienzo = document.createElement("canvas");
+  lienzo.width = LADO * DENSIDAD;
+  lienzo.height = LADO * DENSIDAD;
+  const contexto = lienzo.getContext("2d");
+  if (contexto === null) return null;
+  contexto.scale(DENSIDAD, DENSIDAD);
+  pintarBandera(contexto, BANDERA, COLOR_BANDERA, acento, 4.5);
+  return contexto.getImageData(0, 0, lienzo.width, lienzo.height);
+}
+
 /** Registra en el mapa un icono por cada combinación de tipo y estado. */
-export function registrarIconos(mapa: Mapa): void {
+export function registrarIconos(mapa: Mapa, acento: string): void {
+  if (!mapa.hasImage(ICONO_BANDERA_ELEGIDA)) {
+    const elegida = dibujarBanderaElegida(acento);
+    if (elegida !== null) mapa.addImage(ICONO_BANDERA_ELEGIDA, elegida, { pixelRatio: DENSIDAD });
+  }
   for (const tipo of TIPOS) {
     for (const estado of ESTADOS) {
       const nombre = nombreIcono(tipo, estado);

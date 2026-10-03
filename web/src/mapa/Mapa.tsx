@@ -209,6 +209,40 @@ function fuente(mapa: MapaGL, id: string): GeoJSONSource | undefined {
   return mapa.getSource<GeoJSONSource>(id);
 }
 
+/** Objetivo táctil de una marca del mapa, como el resto de controles en el teléfono. */
+export const OBJETIVO_TACTIL_PX = 44;
+const CAPAS_DE_MARCAS = [CAPA_DIRECTO, CAPA_INCIDENTES_GRAVES, CAPA_INCIDENTES_DISCRETOS, CAPA_GRUPOS];
+
+function punteroGrueso(): boolean {
+  return typeof window.matchMedia === "function" && window.matchMedia("(pointer: coarse)").matches;
+}
+
+/** La marca (incidente, grupo o aviso) más cercana a un punto dentro del objetivo táctil. */
+function marcaMasCercana(mapa: MapaGL, x: number, y: number): MapGeoJSONFeature | undefined {
+  const medio = OBJETIVO_TACTIL_PX / 2;
+  const capas = CAPAS_DE_MARCAS.filter((id) => mapa.getLayer(id) !== undefined);
+  const rasgos = mapa.queryRenderedFeatures(
+    [
+      [x - medio, y - medio],
+      [x + medio, y + medio],
+    ],
+    { layers: capas },
+  );
+  let mejor: MapGeoJSONFeature | undefined;
+  let distancia = Infinity;
+  for (const rasgo of rasgos) {
+    if (rasgo.geometry.type !== "Point") continue;
+    const [lon, lat] = rasgo.geometry.coordinates as [number, number];
+    const p = mapa.project([lon, lat]);
+    const d = Math.hypot(p.x - x, p.y - y);
+    if (d < distancia) {
+      distancia = d;
+      mejor = rasgo;
+    }
+  }
+  return mejor;
+}
+
 function capasActivas(mapa: MapaGL): string[] {
   return CAPAS_PULSABLES.filter((id) => mapa.getLayer(id) !== undefined);
 }
@@ -283,7 +317,7 @@ export default function Mapa(props: PropsMapa) {
     volar.current = volarA;
 
     mapa.on("load", () => {
-      registrarIconos(mapa);
+      registrarIconos(mapa, acento());
       setListo(true);
       manejadores.current.onListo({
         proyectar: (lon, lat) => mapa.project([lon, lat]),
@@ -308,7 +342,10 @@ export default function Mapa(props: PropsMapa) {
     });
 
     function primeroBajo(evento: MapMouseEvent): MapGeoJSONFeature | undefined {
-      return mapa.queryRenderedFeatures(evento.point, { layers: capasActivas(mapa) })[0];
+      const exacto = mapa.queryRenderedFeatures(evento.point, { layers: capasActivas(mapa) })[0];
+      if (exacto !== undefined || !punteroGrueso()) return exacto;
+      // Con el dedo, el objetivo de cada marca es de 44 px: la más cercana dentro de ese cuadro.
+      return marcaMasCercana(mapa, evento.point.x, evento.point.y);
     }
 
     function textoDeLetrero(rasgo: MapGeoJSONFeature): string | null {
@@ -472,7 +509,7 @@ export default function Mapa(props: PropsMapa) {
               {
                 type: "Feature",
                 geometry: { type: "Point", coordinates: [punto.lon, punto.lat] },
-                properties: {},
+                properties: { estado: elegido?.estado ?? "notificado" },
               },
             ],
     });

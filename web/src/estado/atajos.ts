@@ -10,8 +10,8 @@ export type Accion =
   | "filtro24h"
   | "filtro7d"
   | "sinFiltros"
-  | "lineaTiempo"
-  | "reproducir"
+  | "filtros"
+  | "ahora"
   | "feed"
   | "lista"
   | "metodologia";
@@ -27,8 +27,8 @@ export const ATAJOS: readonly (readonly [tecla: string, accion: Accion])[] = [
   ["h", "filtro24h"],
   ["s", "filtro7d"],
   ["0", "sinFiltros"],
-  ["t", "lineaTiempo"],
-  ["p", "reproducir"],
+  ["f", "filtros"],
+  ["a", "ahora"],
   ["e", "feed"],
   ["l", "lista"],
   ["m", "metodologia"],

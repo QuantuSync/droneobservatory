@@ -3,6 +3,7 @@ import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } fro
 import { AvisoNovedades } from "./componentes/AvisoNovedades.tsx";
 import { Ayuda } from "./componentes/Ayuda.tsx";
 import { BarraEstado } from "./componentes/BarraEstado.tsx";
+import { BotonAhora, BotonFiltros, Desplegable } from "./componentes/BotonesMapa.tsx";
 import { BarraMovil, Cabecera } from "./componentes/Cabecera.tsx";
 import {
   Atribuciones,
@@ -23,9 +24,7 @@ import { FichaImpacto } from "./componentes/FichaImpacto.tsx";
 import { FichaIncidente } from "./componentes/FichaIncidente.tsx";
 import { FichaPais } from "./componentes/FichaPais.tsx";
 import { FichaRegion } from "./componentes/FichaRegion.tsx";
-import { Filtros } from "./componentes/Filtros.tsx";
-import { LineaTiempo } from "./componentes/LineaTiempo.tsx";
-import type { EstadoReproduccion } from "./componentes/LineaTiempo.tsx";
+import { Filtros, textoDeSeleccion } from "./componentes/Filtros.tsx";
 import { LeyendaGnss, LeyendaPresion } from "./componentes/Leyendas.tsx";
 import type { EstadoGnss } from "./componentes/Leyendas.tsx";
 import { Lista } from "./componentes/Lista.tsx";
@@ -47,13 +46,13 @@ import {
   cargarResumenUcrania,
 } from "./datos/carga.ts";
 import type { Carga } from "./datos/carga.ts";
-import { cifrasAhora, DIAS_SEMANA, ultimaNoche } from "./datos/ahora.ts";
+import { cifrasAhora, ultimaNoche } from "./datos/ahora.ts";
 import { cargarDirecto, cierresEnCurso, ordenarAvisos } from "./datos/directo.ts";
 import type { Directo } from "./datos/directo.ts";
 import { agregar, cargarFicheroGnss, cargarIndiceGnss, ficherosDelPeriodo } from "./datos/gnss.ts";
 import type { Agregado, FicheroGnss, IndiceGnss } from "./datos/gnss.ts";
 import { cifrasDePais, presionPorPais } from "./datos/presion.ts";
-import { cifras, esGrave } from "./datos/derivar.ts";
+import { cifras } from "./datos/derivar.ts";
 import type {
   Ataque,
   EstadoSistema,
@@ -70,7 +69,6 @@ import {
   focosDelPeriodo,
   dominioUcrania,
   impactosDelPeriodo,
-  lanzamientosPorNoche,
   nochesDeGuerra,
 } from "./datos/ucrania.ts";
 import { accionDe } from "./estado/atajos.ts";
@@ -78,13 +76,16 @@ import type { Accion } from "./estado/atajos.ts";
 import {
   GRAVES,
   SIN_FILTROS,
-  escribirBusqueda,
+  TODO,
+  cuantosFiltros,
+  escribirSeleccion,
   filtrar,
   leerFiltros,
-  leerPeriodo,
+  leerSeleccion,
+  periodoDeSeleccion,
   soloGraves,
 } from "./estado/filtros.ts";
-import type { Filtros as EstadoFiltros } from "./estado/filtros.ts";
+import type { Filtros as EstadoFiltros, SeleccionPeriodo } from "./estado/filtros.ts";
 import {
   almacenLocal,
   incidentesDe,
@@ -100,8 +101,8 @@ import { useNavegacion } from "./navegacion.tsx";
 import { analizarRuta } from "./rutas.ts";
 import { ORIGEN, rutaDeFicha, rutaDeIdioma } from "./sitio.ts";
 import type { Idioma } from "./sitio.ts";
-import { diaDeInstante, enPeriodo, inicioDeTramoSiguiente } from "./tiempo/dias.ts";
-import type { Granularidad, Periodo } from "./tiempo/dias.ts";
+import { diaDeInstante, enPeriodo } from "./tiempo/dias.ts";
+import type { Periodo } from "./tiempo/dias.ts";
 
 const Mapa = lazy(() => import("./mapa/Mapa.tsx"));
 
@@ -113,8 +114,6 @@ const MS_ENTRE_ESTADOS = 300_000;
 const MS_ENTRE_DIRECTOS = 60_000;
 /** Zoom al que vuela el mapa al abrir un aviso de aeropuerto. */
 const ZOOM_DE_AVISO = 9;
-/** Ritmo de la reproducción: un tramo de la línea de tiempo en cada paso. */
-const MS_POR_PASO = 450;
 /** Ritmo de la reproducción de la guerra: una noche en cada paso. */
 const MS_POR_NOCHE = 420;
 /** Espera máxima antes de cargar el mapa si el navegador no queda libre antes. */
@@ -127,12 +126,6 @@ export const CONSULTA_MOVIL = "(max-width: 767.98px), (max-height: 500px) and (p
 /** Anchos de los paneles laterales de escritorio: la ficha a la derecha y el directo a la izquierda. */
 const ANCHO_FICHA_PX = 416;
 const ANCHO_FEED_PX = 352;
-/**
- * Cambios de periodo seguidos (un arrastre, las flechas) cuentan como uno solo en el
- * historial: el botón atrás deshace el gesto entero, no cada paso.
- */
-const MS_DE_GESTO = 800;
-const GRANULARIDAD_INICIAL: Granularidad = "semana";
 
 type PanelLocal =
   | { clase: "region"; codigo: string }
@@ -146,12 +139,9 @@ type PanelLocal =
 /** Regiones que se pueden abrir: las de Ucrania (con lo ocupado) y las de Rusia. */
 const REGION_DE_LA_CAPA = /^(UA|RU)-[A-Z0-9]{1,3}$/;
 /** Hojas del teléfono que no son una ficha: una sola a la vez. */
-type HojaPropia = "tiempo" | "directo" | null;
-/** Reproducción de la línea de tiempo en marcha o en pausa, con su periodo. */
-interface Reproduccion {
-  estado: Exclude<EstadoReproduccion, "parada">;
-  periodo: Periodo;
-}
+type HojaPropia = "filtros" | "ahora" | "directo" | null;
+/** Desplegables de los botones sobre el mapa, en el escritorio: uno a la vez. */
+type Desplegado = "filtros" | "ahora" | null;
 
 /** Con el teléfono en horizontal apenas hay alto: una hoja a media altura no enseña nada. */
 const ALTO_DE_TELEFONO_APAISADO = 500;
@@ -239,15 +229,15 @@ export function App() {
   const idFicha = fichaDeRuta?.id ?? null;
   const claseFicha = fichaDeRuta?.clase ?? null;
   const filtros = useMemo(() => leerFiltros(busqueda), [busqueda]);
-  const periodoDeDireccion = useMemo(() => leerPeriodo(busqueda), [busqueda]);
+  const seleccion = useMemo(() => leerSeleccion(busqueda), [busqueda]);
 
   // La primera pintura es igual a la prerenderizada: la ficha de la ruta y todo lo que
   // depende del navegador (hora, anchura, almacenamiento) entran después de montar.
   const [montado, setMontado] = useState(false);
   const [ahora, setAhora] = useState<Date | null>(null);
   const [movil, setMovil] = useState(false);
-  // Altos de lo que tapa el mapa arriba (cabecera y filtros) y abajo (línea de tiempo), en
-  // cada disposición.
+  // Altos de lo que tapa el mapa arriba (cabecera) y abajo (atribuciones y leyendas), en cada
+  // disposición.
   const [refArribaEsc, altoArribaEsc] = useAlto();
   const [refAbajoEsc, altoAbajoEsc] = useAlto();
   const [refArribaTel, altoArribaTel] = useAlto();
@@ -264,8 +254,6 @@ export function App() {
   const [incidente, setIncidente] = useState<Carga<IncidenteDetalle>>(CARGANDO);
   const [ataque, setAtaque] = useState<Carga<Ataque>>(CARGANDO);
   const [capas, setCapas] = useState<Capas>(CAPAS_INICIALES);
-  const [granularidad, setGranularidad] = useState<Granularidad>(GRANULARIDAD_INICIAL);
-  const [reproduccion, setReproduccion] = useState<Reproduccion | null>(null);
   const [panelLocal, setPanelLocal] = useState<PanelLocal>(null);
   const [impacto, setImpacto] = useState<Carga<ImpactoGuerra>>(CARGANDO);
   const idImpacto = panelLocal?.clase === "impacto" ? panelLocal.id : null;
@@ -282,13 +270,14 @@ export function App() {
   const [pestana, setPestana] = useState<Pestana>("directo");
   const [metodologia, setMetodologia] = useState(false);
   const [ayuda, setAyuda] = useState(false);
-  const [lineaAbierta, setLineaAbierta] = useState(false);
+  const [desplegado, setDesplegado] = useState<Desplegado>(null);
+  const botonFiltros = useRef<HTMLButtonElement>(null);
+  const botonAhora = useRef<HTMLButtonElement>(null);
   const [noche, setNoche] = useState<number | null>(null);
   const [nochePausada, setNochePausada] = useState(false);
   const [menu, setMenu] = useState(false);
   const [hojaPropia, setHojaPropia] = useState<HojaPropia>(null);
   const [altura, setAltura] = useState<Altura>("media");
-  const ultimoCambioDePeriodo = useRef(0);
   const [mapaFallido, setMapaFallido] = useState(false);
   const [mapaPermitido, setMapaPermitido] = useState(false);
   const [api, setApi] = useState<ApiMapa | null>(null);
@@ -432,10 +421,10 @@ export function App() {
   );
   const periodo = useMemo(
     () =>
-      dominio === null
+      dominio === null || hoy === null
         ? null
-        : acotarPeriodo(reproduccion?.periodo ?? periodoDeDireccion, dominio),
-    [dominio, reproduccion, periodoDeDireccion],
+        : acotarPeriodo(periodoDeSeleccion(seleccion, hoy), dominio),
+    [dominio, hoy, seleccion],
   );
   const porId = useMemo(
     () => new Map((datosResumen?.incidentes ?? VACIO).map((i) => [i.id, i])),
@@ -445,7 +434,7 @@ export function App() {
     () =>
       datosResumen === null || hoy === null
         ? VACIO
-        : filtrar(datosResumen.incidentes, filtros, hoy),
+        : filtrar(datosResumen.incidentes, filtros),
     [datosResumen, filtros, hoy],
   );
   const delPeriodo = useMemo(
@@ -500,24 +489,10 @@ export function App() {
   );
   const avisos = directo?.avisos ?? VACIO;
 
-  const incidentesPorDia = useMemo(() => {
-    const porDia = new Map<number, number>();
-    for (const i of filtrados) porDia.set(i.dia, (porDia.get(i.dia) ?? 0) + 1);
-    return porDia;
-  }, [filtrados]);
-  const destellos = useMemo(
-    () =>
-      filtrados.filter((i) => esGrave(i.estado)).map((i) => ({ dia: i.dia, estado: i.estado })),
-    [filtrados],
-  );
   const eventos = useMemo(() => {
     const visibles = new Set(filtrados.map((i) => i.id));
     return (datosResumen?.eventos ?? VACIO).filter((evento) => visibles.has(evento.id));
   }, [datosResumen, filtrados]);
-  const lanzamientos = useMemo(
-    () => (ucraniaActiva === null ? null : lanzamientosPorNoche(ucraniaActiva)),
-    [ucraniaActiva],
-  );
   const intensidad = useMemo(
     () =>
       ucraniaActiva === null || periodo === null ? null : ataquesPorRegion(ucraniaActiva, periodo),
@@ -565,73 +540,21 @@ export function App() {
   const contadores = datosResumen === null ? metaInicial : cifras(delPeriodo);
 
   const cambiarFiltros = useCallback(
-    (nuevos: EstadoFiltros) => cambiarBusqueda(escribirBusqueda(nuevos, periodoDeDireccion)),
-    [cambiarBusqueda, periodoDeDireccion],
+    (nuevos: EstadoFiltros) => cambiarBusqueda(escribirSeleccion(nuevos, seleccion)),
+    [cambiarBusqueda, seleccion],
   );
-
   /**
-   * Pone el periodo en la dirección. Cada gesto deja una entrada en el historial, para que el
-   * botón atrás lo deshaga; el periodo completo es no tener periodo.
+   * Pone el periodo en la dirección (el de por defecto, todo, es no tener periodo). Cada cambio
+   * deja una entrada en el historial: el botón atrás lo deshace.
    */
-  const ponerPeriodo = useCallback(
-    (nuevo: Periodo | null) => {
-      const completo =
-        nuevo === null ||
-        (dominio !== null && nuevo.desde <= dominio.desde && nuevo.hasta >= dominio.hasta);
-      const ahoraMs = Date.now();
-      const mismoGesto = ahoraMs - ultimoCambioDePeriodo.current < MS_DE_GESTO;
-      ultimoCambioDePeriodo.current = ahoraMs;
-      cambiarBusqueda(escribirBusqueda(filtros, completo ? null : nuevo), !mismoGesto);
-    },
-    [cambiarBusqueda, filtros, dominio],
+  const elegirSeleccion = useCallback(
+    (nueva: SeleccionPeriodo) => cambiarBusqueda(escribirSeleccion(filtros, nueva), true),
+    [cambiarBusqueda, filtros],
   );
-
-  // Reproducción de la línea de tiempo: el final del periodo avanza un tramo en cada paso. Al
-  // llegar al final queda en pausa; detenerla vuelve al periodo de antes de reproducir, que
-  // sigue en la dirección.
-  const reproduciendo = reproduccion?.estado === "reproduciendo";
-  useEffect(() => {
-    if (!reproduciendo || dominio === null) return undefined;
-    const temporizador = window.setInterval(() => {
-      setReproduccion((anterior) => {
-        if (anterior === null) return null;
-        const actual = acotarPeriodo(anterior.periodo, dominio);
-        const hasta = Math.min(
-          dominio.hasta,
-          inicioDeTramoSiguiente(actual.hasta + 1, granularidad) - 1,
-        );
-        return {
-          estado: hasta >= dominio.hasta ? "pausada" : "reproduciendo",
-          periodo: { desde: actual.desde, hasta },
-        };
-      });
-    }, MS_POR_PASO);
-    return () => window.clearInterval(temporizador);
-  }, [reproduciendo, dominio, granularidad]);
-
-  const reproducir = useCallback(() => {
-    if (dominio === null || periodo === null) return;
-    setReproduccion((anterior) => {
-      if (anterior !== null) return { ...anterior, estado: "reproduciendo" };
-      // Empieza por el primer tramo del periodo y lo va ampliando hasta el final de los datos.
-      return {
-        estado: "reproduciendo",
-        periodo: {
-          desde: periodo.desde,
-          hasta: Math.min(dominio.hasta, inicioDeTramoSiguiente(periodo.desde, granularidad) - 1),
-        },
-      };
-    });
-  }, [dominio, periodo, granularidad]);
-  const pausar = useCallback(
-    () => setReproduccion((anterior) => (anterior === null ? null : { ...anterior, estado: "pausada" })),
-    [],
+  const quitarFiltros = useCallback(
+    () => cambiarBusqueda(escribirSeleccion(SIN_FILTROS, TODO)),
+    [cambiarBusqueda],
   );
-  const detener = useCallback(() => setReproduccion(null), []);
-  const alternarReproduccion = useCallback(() => {
-    if (reproduciendo) pausar();
-    else reproducir();
-  }, [reproduciendo, pausar, reproducir]);
 
   // Reproducción de la guerra noche a noche: se puede pausar, reanudar y detener.
   useEffect(() => {
@@ -650,21 +573,6 @@ export function App() {
     setNoche(null);
     setNochePausada(false);
   }, []);
-
-  const elegirPeriodo = useCallback(
-    (nuevo: Periodo) => {
-      setReproduccion(null);
-      ponerPeriodo(nuevo);
-    },
-    [ponerPeriodo],
-  );
-  /** Quita el periodo elegido y para las reproducciones (Escape, doble clic). */
-  const quitarSeleccion = useCallback(() => {
-    setReproduccion(null);
-    detenerNoches();
-    if (periodoDeDireccion !== null) ponerPeriodo(null);
-  }, [detenerNoches, periodoDeDireccion, ponerPeriodo]);
-  const hayQueVerTodo = periodoDeDireccion !== null || reproduccion !== null || noche !== null;
 
   const fichaActiva = montado ? fichaDeRuta : null;
   const idAbierto = fichaActiva?.clase === "incidente" ? fichaActiva.id : null;
@@ -777,12 +685,6 @@ export function App() {
     },
     [cerrarFicha],
   );
-  /** «Ver todo»: el periodo completo, sin reproducciones y con la vista inicial del mapa. */
-  const verTodo = useCallback(() => {
-    quitarSeleccion();
-    api?.vistaInicial();
-  }, [quitarSeleccion, api]);
-
   const cifrasDelMomento = useMemo(
     () => cifrasAhora({ resumen: datosResumen, ucrania: datosUcrania, directo, gnssHoy }),
     [datosResumen, datosUcrania, directo, gnssHoy],
@@ -791,7 +693,8 @@ export function App() {
   const irACifra = useCallback(
     (cifra: CifraAhora) => {
       setMenu(false);
-      setReproduccion(null);
+      setDesplegado(null);
+      setHojaPropia(null);
       switch (cifra) {
         case "cierres": {
           const primero = ordenarAvisos(cierresEnCurso(directo))[0];
@@ -801,38 +704,34 @@ export function App() {
         }
         case "incidentes":
           setCapas((c) => ({ ...c, incidentes: true }));
-          cambiarBusqueda(escribirBusqueda({ ...filtros, reciente: "7d" }, null));
+          elegirSeleccion({ clase: "reciente", reciente: "7d" });
           api?.vistaInicial();
           return;
         case "drones": {
           const noche = datosUcrania === null ? null : ultimaNoche(datosUcrania);
           setCapas((c) => ({ ...c, ucrania: true }));
           if (noche !== null) {
-            cambiarBusqueda(escribirBusqueda(filtros, { desde: noche.dia, hasta: noche.dia }));
+            elegirSeleccion({ clase: "entre", periodo: { desde: noche.dia, hasta: noche.dia } });
           }
           api?.volar("ucrania");
           return;
         }
         case "focos":
           setCapas((c) => ({ ...c, incidentes: true, ucrania: true }));
-          if (hoy !== null) {
-            cambiarBusqueda(
-              escribirBusqueda(filtros, { desde: hoy - (DIAS_SEMANA - 1), hasta: hoy }),
-            );
-          }
+          elegirSeleccion({ clase: "reciente", reciente: "7d" });
           api?.vistaInicial();
           return;
         case "gnss":
           setCapas((c) => ({ ...c, gnss: true }));
           if (cifrasDelMomento.gnss !== null) {
             const dia = cifrasDelMomento.gnss.dia;
-            cambiarBusqueda(escribirBusqueda(filtros, { desde: dia, hasta: dia }));
+            elegirSeleccion({ clase: "entre", periodo: { desde: dia, hasta: dia } });
           }
           api?.vistaInicial();
           return;
       }
     },
-    [directo, abrirAviso, api, cambiarBusqueda, filtros, datosUcrania, hoy, cifrasDelMomento],
+    [directo, abrirAviso, api, elegirSeleccion, datosUcrania, cifrasDelMomento],
   );
 
   const irANovedad = useCallback(
@@ -846,6 +745,19 @@ export function App() {
     [incidentesNuevos, abrirIncidente],
   );
 
+  // En el teléfono, las hojas de los filtros y de «Europa ahora» se cierran tocando fuera
+  // (un toque, no un arrastre: se puede mover el mapa con ellas abiertas).
+  useEffect(() => {
+    if (!movil || (hojaPropia !== "filtros" && hojaPropia !== "ahora")) return;
+    const alTocar = (evento: MouseEvent) => {
+      const objetivo = evento.target;
+      if (objetivo instanceof Element && objetivo.closest("[data-hoja-propia]") !== null) return;
+      setHojaPropia(null);
+    };
+    document.addEventListener("click", alTocar, true);
+    return () => document.removeEventListener("click", alTocar, true);
+  }, [movil, hojaPropia]);
+
   // Atajos de teclado.
   const hayFicha = fichaActiva !== null || panelLocal !== null;
   const ejecutar = useCallback(
@@ -855,12 +767,12 @@ export function App() {
           setAyuda((abierta) => !abierta);
           return;
         case "cerrar":
-          // Primero lo abierto (ficha, hoja, directo); después, la selección de periodo.
-          if (hayFicha) cerrarFicha();
+          // Primero lo abierto: desplegable, ficha, hoja, directo; y la reproducción de noches.
+          if (desplegado !== null) setDesplegado(null);
+          else if (hayFicha) cerrarFicha();
           else if (hojaPropia !== null) setHojaPropia(null);
           else if (feedAbierto) setFeedAbierto(false);
-          else if (hayQueVerTodo) quitarSeleccion();
-          else if (lineaAbierta) setLineaAbierta(false);
+          else if (noche !== null) detenerNoches();
           return;
         case "capaIncidentes":
           setCapas((c) => ({ ...c, incidentes: !c.incidentes }));
@@ -875,20 +787,21 @@ export function App() {
           cambiarFiltros({ ...filtros, estados: soloGraves(filtros.estados) ? [] : [...GRAVES] });
           return;
         case "filtro24h":
-          cambiarFiltros({ ...filtros, reciente: filtros.reciente === "24h" ? null : "24h" });
+          elegirSeleccion(filtros.reciente === "24h" ? TODO : { clase: "reciente", reciente: "24h" });
           return;
         case "filtro7d":
-          cambiarFiltros({ ...filtros, reciente: filtros.reciente === "7d" ? null : "7d" });
+          elegirSeleccion(filtros.reciente === "7d" ? TODO : { clase: "reciente", reciente: "7d" });
           return;
         case "sinFiltros":
-          cambiarFiltros(SIN_FILTROS);
+          quitarFiltros();
           return;
-        case "lineaTiempo":
-          if (movil) abrirHoja("tiempo");
-          else setLineaAbierta((abierta) => !abierta);
+        case "filtros":
+          if (movil) abrirHoja("filtros");
+          else setDesplegado((actual) => (actual === "filtros" ? null : "filtros"));
           return;
-        case "reproducir":
-          alternarReproduccion();
+        case "ahora":
+          if (movil) abrirHoja("ahora");
+          else setDesplegado((actual) => (actual === "ahora" ? null : "ahora"));
           return;
         case "feed":
           if (movil) abrirHoja("directo");
@@ -905,16 +818,17 @@ export function App() {
       }
     },
     [
+      desplegado,
       hayFicha,
       cerrarFicha,
       hojaPropia,
       feedAbierto,
-      hayQueVerTodo,
-      quitarSeleccion,
-      lineaAbierta,
+      noche,
+      detenerNoches,
       cambiarFiltros,
+      elegirSeleccion,
+      quitarFiltros,
       filtros,
-      alternarReproduccion,
       movil,
       abrirHoja,
     ],
@@ -1151,42 +1065,19 @@ export function App() {
       alinear={corta ? "derecha" : "izquierda"}
     />
   );
-  const filtrosDeLaPantalla = (apilado: boolean) => (
+  const filtrosDeLaPantalla = (
     <Filtros
       t={t}
       idioma={idioma}
       filtros={filtros}
       onFiltros={cambiarFiltros}
+      seleccion={seleccion}
+      onSeleccion={elegirSeleccion}
+      dominio={dominio}
       paises={paisesConIncidentes}
-      apilado={apilado}
+      onQuitar={quitarFiltros}
     />
   );
-  const lineaDeTiempo = (forma: "franja" | "barra" | "hoja") =>
-    dominio !== null &&
-    periodo !== null && (
-      <LineaTiempo
-        t={t}
-        idioma={idioma}
-        dominio={dominio}
-        periodo={periodo}
-        onPeriodo={elegirPeriodo}
-        granularidad={granularidad}
-        onGranularidad={setGranularidad}
-        incidentesPorDia={incidentesPorDia}
-        lanzamientosPorDia={lanzamientos}
-        reproduccion={reproduccion?.estado ?? "parada"}
-        onReproducir={reproducir}
-        onPausar={pausar}
-        onDetener={detener}
-        hayQueVerTodo={hayQueVerTodo}
-        onVerTodo={verTodo}
-        onQuitarSeleccion={quitarSeleccion}
-        destellos={destellos}
-        abierta={forma === "barra" ? false : lineaAbierta}
-        onAbierta={forma === "barra" ? () => abrirHoja("tiempo") : setLineaAbierta}
-        forma={forma}
-      />
-    );
   const feed = (enHoja: boolean) => (
     <Feed
       t={t}
@@ -1209,8 +1100,59 @@ export function App() {
       {capas.gnss && <LeyendaGnss t={t} estado={estadoGnss} />}
     </div>
   );
-  const europaAhora = (forma: "franja" | "corta") => (
-    <EuropaAhora t={t} idioma={idioma} cifras={cifrasDelMomento} onIr={irACifra} forma={forma} />
+  const europaAhora = <EuropaAhora t={t} idioma={idioma} cifras={cifrasDelMomento} onIr={irACifra} />;
+  const periodoEscrito = textoDeSeleccion(t, seleccion);
+  const cierresActivos = cierresEnCurso(directo).length;
+  const novedadesPendientes = latentes.size;
+  /** Los botones pequeños sobre el mapa: filtros y «Europa ahora». */
+  const botonesMapa = (enTelefono: boolean) => (
+    <div className="pointer-events-auto relative flex flex-wrap items-start gap-1.5" data-botones-mapa="">
+      <BotonFiltros
+        t={t}
+        cuantos={cuantosFiltros(filtros)}
+        periodo={periodoEscrito}
+        abierto={enTelefono ? hojaPropia === "filtros" : desplegado === "filtros"}
+        onAbrir={() =>
+          enTelefono
+            ? abrirHoja("filtros")
+            : setDesplegado((actual) => (actual === "filtros" ? null : "filtros"))
+        }
+        onTodo={() => elegirSeleccion(TODO)}
+        referencia={enTelefono === movil ? botonFiltros : undefined}
+      />
+      <BotonAhora
+        t={t}
+        abierto={enTelefono ? hojaPropia === "ahora" : desplegado === "ahora"}
+        onAbrir={() =>
+          enTelefono ? abrirHoja("ahora") : setDesplegado((actual) => (actual === "ahora" ? null : "ahora"))
+        }
+        cierres={cierresActivos}
+        novedades={novedadesPendientes}
+        referencia={enTelefono === movil ? botonAhora : undefined}
+      />
+      {!enTelefono && desplegado === "filtros" && (
+        <Desplegable
+          t={t}
+          titulo={t.filtros.titulo}
+          cerrar={t.filtros.cerrar}
+          boton={botonFiltros}
+          onCerrar={() => setDesplegado(null)}
+        >
+          {filtrosDeLaPantalla}
+        </Desplegable>
+      )}
+      {!enTelefono && desplegado === "ahora" && (
+        <Desplegable
+          t={t}
+          titulo={t.ahora.etiqueta}
+          cerrar={t.ahora.cerrar}
+          boton={botonAhora}
+          onCerrar={() => setDesplegado(null)}
+        >
+          {europaAhora}
+        </Desplegable>
+      )}
+    </div>
   );
   const botonNoches = (grande: boolean) => (
     <button
@@ -1362,8 +1304,6 @@ export function App() {
                 </>
               }
             />
-            <div className="superficie border-b px-3 py-1.5">{filtrosDeLaPantalla(false)}</div>
-            <div className="superficie border-b px-3 py-1">{europaAhora("franja")}</div>
             {avisosArriba}
           </div>
           <div className="flex min-h-0 flex-1">
@@ -1371,6 +1311,7 @@ export function App() {
               <div className="pointer-events-auto w-[22rem] shrink-0 p-3 pr-0">{feed(false)}</div>
             )}
             <div className="relative min-w-0 flex-1">
+              <div className="absolute left-3 top-3 z-20">{botonesMapa(false)}</div>
               <div ref={refAbajoEsc} className="absolute inset-x-3 bottom-3 flex flex-col gap-2">
                 <div className="flex items-end justify-between gap-2">
                   <div className="pointer-events-auto">{leyendas}</div>
@@ -1379,7 +1320,6 @@ export function App() {
                     <Zoom t={t} onZoom={(paso) => api?.zoom(paso)} />
                   </div>
                 </div>
-                <div className="pointer-events-auto">{lineaDeTiempo("franja")}</div>
               </div>
             </div>
             {ficha !== null && (
@@ -1399,13 +1339,12 @@ export function App() {
               estado={estadoDatos(true)}
               menuAbierto={menu}
               onMenu={() => setMenu(true)}
-              onPeriodo={() => abrirHoja("tiempo")}
-              debajo={europaAhora("corta")}
             />
             {avisosArriba}
           </div>
           <div className="relative min-h-0 flex-1">
-            {/* Con una hoja abierta, la barra de abajo queda tapada: no se pinta. */}
+            {!hojaAbierta && <div className="absolute left-2 top-2 z-20">{botonesMapa(true)}</div>}
+            {/* Con una hoja abierta, lo de abajo queda tapado: no se pinta. */}
             {!hojaAbierta && (
               <div
                 ref={refAbajoTel}
@@ -1417,7 +1356,6 @@ export function App() {
                     <Atribuciones t={t} />
                   </div>
                 </div>
-                <div className="pointer-events-auto w-full">{lineaDeTiempo("barra")}</div>
               </div>
             )}
             {movil && ficha !== null && (
@@ -1433,16 +1371,41 @@ export function App() {
                 </HojaInferior>
               </div>
             )}
-            {movil && ficha === null && hojaPropia === "tiempo" && (
-              <div className="pointer-events-auto">
+            {movil && ficha === null && hojaPropia === "filtros" && (
+              <div className="pointer-events-auto" data-hoja-propia="">
                 <HojaInferior
                   t={t}
-                  nombre={t.tiempo.titulo}
+                  nombre={t.filtros.titulo}
                   altura={altura}
                   onAltura={setAltura}
                   onCerrar={() => setHojaPropia(null)}
                 >
-                  <div className="min-h-0 flex-1 overflow-y-auto">{lineaDeTiempo("hoja")}</div>
+                  <CabeceraFicha
+                    t={t}
+                    etiqueta={t.filtros.titulo}
+                    onCerrar={() => setHojaPropia(null)}
+                    cerrar={t.filtros.cerrar}
+                  />
+                  <div className="min-h-0 flex-1 overflow-y-auto px-4 py-3">{filtrosDeLaPantalla}</div>
+                </HojaInferior>
+              </div>
+            )}
+            {movil && ficha === null && hojaPropia === "ahora" && (
+              <div className="pointer-events-auto" data-hoja-propia="">
+                <HojaInferior
+                  t={t}
+                  nombre={t.ahora.etiqueta}
+                  altura={altura}
+                  onAltura={setAltura}
+                  onCerrar={() => setHojaPropia(null)}
+                >
+                  <CabeceraFicha
+                    t={t}
+                    etiqueta={t.ahora.etiqueta}
+                    onCerrar={() => setHojaPropia(null)}
+                    cerrar={t.ahora.cerrar}
+                  />
+                  <div className="min-h-0 flex-1 overflow-y-auto px-3 py-2">{europaAhora}</div>
                 </HojaInferior>
               </div>
             )}
@@ -1477,11 +1440,6 @@ export function App() {
           <SeccionMenu rotulo={t.controles.capas}>
             <SelectorDeCapas t={t} capas={capas} onCapas={setCapas} grande />
             {botonNoches(true)}
-          </SeccionMenu>
-          <SeccionMenu rotulo={t.filtros.titulo}>
-            <div className="rounded-sm border border-linea bg-elevado/40 p-3">
-              {filtrosDeLaPantalla(true)}
-            </div>
           </SeccionMenu>
           <SeccionMenu rotulo={t.controles.paneles}>
             <button type="button" className="control w-full justify-start text-sm text-texto" onClick={() => abrirHoja("directo")}>

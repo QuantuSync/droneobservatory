@@ -1,34 +1,39 @@
 import type { ReactNode } from "react";
 
 import { ESTADOS, TIPOS } from "../datos/vocabulario.ts";
-import { SIN_FILTROS, alternar, hayFiltros } from "../estado/filtros.ts";
-import type { Filtros as EstadoFiltros, Reciente } from "../estado/filtros.ts";
-import { pais } from "../i18n/index.ts";
+import { RECIENTES, TODO, alternar, hayFiltros } from "../estado/filtros.ts";
+import type { Filtros as EstadoFiltros, Reciente, SeleccionPeriodo } from "../estado/filtros.ts";
+import { fechaDia, pais } from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
 import type { Idioma } from "../sitio.ts";
+import { fechaDeDia, diaDeInstante } from "../tiempo/dias.ts";
+import type { Periodo } from "../tiempo/dias.ts";
 import { Simbolo } from "./Simbolo.tsx";
 
-const RECIENTES: readonly Reciente[] = ["24h", "7d"];
 /** El símbolo de cada estado en los filtros: la forma no importa aquí, solo el color. */
 const TIPO_DE_MUESTRA = "sobrevuelo";
+type ClavePeriodo = "todo" | Reciente | "entre";
+const CLAVES_PERIODO: readonly ClavePeriodo[] = ["todo", ...RECIENTES, "entre"];
 
 interface Props {
   t: Textos;
   idioma: Idioma;
   filtros: EstadoFiltros;
   onFiltros: (filtros: EstadoFiltros) => void;
+  seleccion: SeleccionPeriodo;
+  onSeleccion: (seleccion: SeleccionPeriodo) => void;
+  /** Primer y último día con datos: los límites de «Entre fechas». */
+  dominio: Periodo | null;
   /** Países con algún incidente, para el selector. */
   paises: readonly string[];
-  /** Apilado y con controles de 44 px, para el menú del teléfono; si no, una barra. */
-  apilado?: boolean;
+  /** Quita los filtros y el periodo de una vez. */
+  onQuitar: () => void;
 }
 
-function Grupo({ rotulo, apilado, children }: { rotulo: string; apilado: boolean; children: ReactNode }) {
+function Grupo({ rotulo, children }: { rotulo: string; children: ReactNode }) {
   return (
-    <fieldset className={apilado ? "flex flex-col gap-1.5" : "flex items-center gap-1.5"}>
-      <legend className={`text-xs text-secundario ${apilado ? "mb-1.5" : "float-left mr-1"}`}>
-        {rotulo}
-      </legend>
+    <fieldset className="flex flex-col gap-1.5">
+      <legend className="mb-1.5 text-xs text-secundario">{rotulo}</legend>
       <div className="flex flex-wrap items-center gap-1">{children}</div>
     </fieldset>
   );
@@ -37,18 +42,16 @@ function Grupo({ rotulo, apilado, children }: { rotulo: string; apilado: boolean
 function Opcion({
   activa,
   onClick,
-  apilado,
   children,
 }: {
   activa: boolean;
   onClick: () => void;
-  apilado: boolean;
   children: ReactNode;
 }) {
   return (
     <button
       type="button"
-      className={`control rounded-sm border border-linea text-xs ${apilado ? "min-h-11 px-3" : "min-h-7 px-2"}`}
+      className="control min-h-11 rounded-sm border border-linea px-3 text-xs esc:min-h-8"
       aria-pressed={activa}
       onClick={onClick}
     >
@@ -57,29 +60,111 @@ function Opcion({
   );
 }
 
+function claveDe(seleccion: SeleccionPeriodo): ClavePeriodo {
+  return seleccion.clase === "todo" ? "todo" : seleccion.clase === "entre" ? "entre" : seleccion.reciente;
+}
+
+/** Día (número) como AAAA-MM-DD, para los campos de fecha. */
+export function textoDeDia(dia: number): string {
+  return fechaDeDia(dia).toISOString().slice(0, 10);
+}
+
+/** El periodo elegido, escrito: «Últimos 7 días», «01/11/2025 – 30/11/2025»; null si es todo. */
+export function textoDeSeleccion(t: Textos, seleccion: SeleccionPeriodo): string | null {
+  if (seleccion.clase === "todo") return null;
+  if (seleccion.clase === "reciente") return t.filtros.periodos[seleccion.reciente];
+  return t.filtros.entreFechas(fechaDia(seleccion.periodo.desde), fechaDia(seleccion.periodo.hasta));
+}
+
 /**
- * Filtros rápidos en su contenedor, agrupados por categoría con su rótulo: estado, tipo,
- * periodo rápido y país. Todos los controles miden lo mismo y «Quitar filtros» aparece en
- * cuanto hay alguno puesto. Se guardan en la dirección.
+ * Los filtros, apilados por categoría con su rótulo: periodo (todo, los rápidos o entre dos
+ * fechas), estado, tipo y país, con controles de 44 px en el teléfono. «Quitar filtros» aparece
+ * en cuanto hay alguno puesto. Todo va a la dirección.
  */
-export function Filtros({ t, idioma, filtros, onFiltros, paises, apilado = false }: Props) {
+export function Filtros(props: Props) {
+  const { t, idioma, filtros, onFiltros, seleccion, onSeleccion, dominio, paises, onQuitar } = props;
   const ordenados = [...paises].sort((a, b) => pais(a, idioma).localeCompare(pais(b, idioma), idioma));
   const elegido = filtros.paises[0] ?? "";
+  const clave = claveDe(seleccion);
+  const limites = {
+    min: dominio === null ? undefined : textoDeDia(dominio.desde),
+    max: dominio === null ? undefined : textoDeDia(dominio.hasta),
+  };
+  const entre: Periodo | null =
+    seleccion.clase === "entre"
+      ? seleccion.periodo
+      : dominio === null
+        ? null
+        : { desde: Math.max(dominio.desde, dominio.hasta - 29), hasta: dominio.hasta };
+
+  function elegirClave(nueva: ClavePeriodo) {
+    if (nueva === "todo") onSeleccion(TODO);
+    else if (nueva === "entre") {
+      if (entre !== null) onSeleccion({ clase: "entre", periodo: entre });
+    } else onSeleccion({ clase: "reciente", reciente: nueva });
+  }
+
+  function cambiarFecha(extremo: "desde" | "hasta", texto: string) {
+    if (entre === null || !/^\d{4}-\d{2}-\d{2}$/.test(texto)) return;
+    const dia = diaDeInstante(texto);
+    const nuevo = { ...entre, [extremo]: dia };
+    if (nuevo.hasta < nuevo.desde) {
+      if (extremo === "desde") nuevo.hasta = dia;
+      else nuevo.desde = dia;
+    }
+    onSeleccion({ clase: "entre", periodo: nuevo });
+  }
+
+  const campo = "control min-h-11 rounded-sm border border-linea px-2 text-xs text-texto esc:min-h-8";
   return (
-    <div
-      role="group"
-      aria-label={t.filtros.titulo}
-      className={
-        apilado
-          ? "flex flex-col gap-4"
-          : "flex flex-wrap items-center gap-x-5 gap-y-1.5"
-      }
-    >
-      <Grupo rotulo={t.filtros.estado} apilado={apilado}>
+    <div role="group" aria-label={t.filtros.titulo} className="flex flex-col gap-4" data-filtros="">
+      <div className="flex flex-col gap-1.5">
+        <label className="flex flex-col gap-1.5 text-xs">
+          <span className="text-secundario">{t.filtros.recientes}</span>
+          <select
+            className={`${campo} w-full`}
+            value={clave}
+            data-periodo=""
+            onChange={(evento) => elegirClave(evento.target.value as ClavePeriodo)}
+          >
+            {CLAVES_PERIODO.map((opcion) => (
+              <option key={opcion} value={opcion} className="bg-panel-solido">
+                {t.filtros.periodos[opcion]}
+              </option>
+            ))}
+          </select>
+        </label>
+        {clave === "entre" && entre !== null && (
+          <div className="flex flex-wrap gap-2">
+            <label className="flex flex-1 flex-col gap-1 text-xs">
+              <span className="text-secundario">{t.filtros.desde}</span>
+              <input
+                type="date"
+                className={campo}
+                value={textoDeDia(entre.desde)}
+                {...limites}
+                data-desde=""
+                onChange={(evento) => cambiarFecha("desde", evento.target.value)}
+              />
+            </label>
+            <label className="flex flex-1 flex-col gap-1 text-xs">
+              <span className="text-secundario">{t.filtros.hasta}</span>
+              <input
+                type="date"
+                className={campo}
+                value={textoDeDia(entre.hasta)}
+                {...limites}
+                data-hasta=""
+                onChange={(evento) => cambiarFecha("hasta", evento.target.value)}
+              />
+            </label>
+          </div>
+        )}
+      </div>
+      <Grupo rotulo={t.filtros.estado}>
         {ESTADOS.map((estado) => (
           <Opcion
             key={estado}
-            apilado={apilado}
             activa={filtros.estados.includes(estado)}
             onClick={() => onFiltros({ ...filtros, estados: alternar(filtros.estados, estado) })}
           >
@@ -88,11 +173,10 @@ export function Filtros({ t, idioma, filtros, onFiltros, paises, apilado = false
           </Opcion>
         ))}
       </Grupo>
-      <Grupo rotulo={t.filtros.tipo} apilado={apilado}>
+      <Grupo rotulo={t.filtros.tipo}>
         {TIPOS.map((tipo) => (
           <Opcion
             key={tipo}
-            apilado={apilado}
             activa={filtros.tipos.includes(tipo)}
             onClick={() => onFiltros({ ...filtros, tipos: alternar(filtros.tipos, tipo) })}
           >
@@ -101,26 +185,10 @@ export function Filtros({ t, idioma, filtros, onFiltros, paises, apilado = false
           </Opcion>
         ))}
       </Grupo>
-      <Grupo rotulo={t.filtros.recientes} apilado={apilado}>
-        {RECIENTES.map((opcion) => (
-          <Opcion
-            key={opcion}
-            apilado={apilado}
-            activa={filtros.reciente === opcion}
-            onClick={() =>
-              onFiltros({ ...filtros, reciente: filtros.reciente === opcion ? null : opcion })
-            }
-          >
-            {opcion === "24h" ? t.filtros.ultimas24h : t.filtros.ultimos7d}
-          </Opcion>
-        ))}
-      </Grupo>
-      <label className={apilado ? "flex flex-col gap-1.5 text-xs" : "flex items-center gap-1.5 text-xs"}>
+      <label className="flex flex-col gap-1.5 text-xs">
         <span className="text-secundario">{t.filtros.pais}</span>
         <select
-          className={`control rounded-sm border border-linea text-xs text-texto ${
-            apilado ? "min-h-11 w-full" : "min-h-7 px-2"
-          }`}
+          className={`${campo} w-full`}
           value={elegido}
           onChange={(evento) =>
             onFiltros({
@@ -139,11 +207,11 @@ export function Filtros({ t, idioma, filtros, onFiltros, paises, apilado = false
           ))}
         </select>
       </label>
-      {hayFiltros(filtros) && (
+      {(hayFiltros(filtros) || seleccion.clase !== "todo") && (
         <button
           type="button"
-          className={`control text-xs text-texto underline underline-offset-2 ${apilado ? "min-h-11" : "min-h-7"}`}
-          onClick={() => onFiltros(SIN_FILTROS)}
+          className="control min-h-11 self-start text-xs text-texto underline underline-offset-2 esc:min-h-8"
+          onClick={onQuitar}
         >
           {t.filtros.quitar}
         </button>

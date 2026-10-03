@@ -82,6 +82,22 @@
   will-change: opacity;
 }
 
+/* Un atribuido late con la silueta de su bandera (el pie, en el punto), sin ningún círculo. */
+.pulso-bandera {
+  position: absolute;
+  top: -14px;
+  left: -14px;
+  overflow: visible;
+  fill: none;
+  stroke: var(--acento);
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  opacity: 0.85;
+  animation: latido 2.4s ease-in-out infinite;
+  will-change: opacity;
+}
+
 @keyframes latido {
   0%,
   100% {
@@ -93,7 +109,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .pulso {
+  .pulso,
+  .pulso-bandera {
     animation: none;
     opacity: 0.85;
   }

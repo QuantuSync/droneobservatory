@@ -121,7 +121,7 @@ export function Ayuda({ t, abierta, onCerrar }: Props) {
           </ul>
         </section>
         <ul className="flex flex-col gap-2 text-secundario sm:col-span-2">
-          {[a.areas, a.lineas, a.numeros, a.pila, a.pulsos, a.reciente, a.novedad, a.ucrania].map(
+          {[a.periodo, a.ahora, a.areas, a.lineas, a.numeros, a.pila, a.pulsos, a.reciente, a.novedad, a.ucrania].map(
             (texto) => (
               <li key={texto}>{texto}</li>
             ),

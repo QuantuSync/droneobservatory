@@ -20,8 +20,6 @@ interface Props {
   idioma: Idioma;
   cifras: CifrasAhora;
   onIr: (cifra: CifraAhora) => void;
-  /** «franja»: la fila de escritorio; «corta»: la versión reducida del teléfono. */
-  forma: "franja" | "corta";
 }
 
 const SIN_DATO = "—";
@@ -59,41 +57,37 @@ function detalle(t: Textos, cifras: CifrasAhora, cifra: CifraAhora): string | nu
 
 /**
  * «Europa ahora»: cierres en curso, incidentes de 7 días, drones de la última noche, focos
- * térmicos de 7 días e interferencia GPS del día. Cada cifra lleva al sitio del mapa que la
- * explica. Una cifra sin su fichero sale como «—».
+ * térmicos de 7 días e interferencia GPS del día, una cifra por fila. Va dentro del desplegable
+ * (escritorio) o de la hoja inferior (teléfono) que abre su botón. Cada cifra lleva al sitio
+ * del mapa que la explica. Una cifra sin su fichero sale como «—».
  */
-export function EuropaAhora({ t, idioma, cifras, onIr, forma }: Props) {
-  const corta = forma === "corta";
+export function EuropaAhora({ t, idioma, cifras, onIr }: Props) {
   return (
-    <section
-      aria-label={t.ahora.etiqueta}
-      data-europa-ahora={forma}
-      className={
-        corta
-          ? "flex items-center gap-0.5 overflow-x-auto px-1 [scrollbar-width:none]"
-          : "flex flex-wrap items-center gap-x-1 gap-y-0.5"
-      }
-    >
-      {!corta && <h2 className="rotulo mr-2 whitespace-nowrap">{t.ahora.etiqueta}</h2>}
+    <ul aria-label={t.ahora.etiqueta} data-europa-ahora="" className="flex flex-col gap-1">
       {CIFRAS_AHORA.map((cifra) => {
         const texto = valor(t, idioma, cifras, cifra);
         const nombre = t.ahora[cifra];
         const extra = detalle(t, cifras, cifra);
         return (
-          <button
-            key={cifra}
-            type="button"
-            data-cifra={cifra}
-            className={`control shrink-0 whitespace-nowrap ${corta ? "min-h-11 px-2 text-xs" : "min-h-7 px-2 text-xs"}`}
-            aria-label={`${t.ahora.ir(nombre)}: ${texto ?? t.ahora.sinDato}${extra === null ? "" : ` (${extra})`}`}
-            onClick={() => onIr(cifra)}
-          >
-            <span className={`mono font-medium ${claseDe(cifras, cifra)}`}>{texto ?? SIN_DATO}</span>
-            <span className="ml-1 text-secundario">{corta ? t.ahora.cortos[cifra] : nombre}</span>
-            {!corta && extra !== null && <span className="ml-1 text-secundario">· {extra}</span>}
-          </button>
+          <li key={cifra}>
+            <button
+              type="button"
+              data-cifra={cifra}
+              className="control min-h-11 w-full justify-start gap-2 text-left text-sm esc:min-h-9"
+              aria-label={`${t.ahora.ir(nombre)}: ${texto ?? t.ahora.sinDato}${extra === null ? "" : ` (${extra})`}`}
+              onClick={() => onIr(cifra)}
+            >
+              <span className={`mono min-w-10 text-right font-medium ${claseDe(cifras, cifra)}`}>
+                {texto ?? SIN_DATO}
+              </span>
+              <span className="text-secundario">
+                {nombre}
+                {extra !== null && ` · ${extra}`}
+              </span>
+            </button>
+          </li>
         );
       })}
-    </section>
+    </ul>
   );
 }

@@ -114,22 +114,28 @@ window.webVitals = webVitals;` });
   await page.goto("/robots.txt");
   await page.goto("/");
   await page.waitForSelector(MAPA_LISTO);
-  // Las interacciones de uso normal: filtrar el mapa, cambiar de capa, abrir la línea de
-  // tiempo y el directo. En el teléfono, los filtros y las capas se tocan desde el menú.
-  const filtros = page.getByRole("group", { name: "Filtros" });
+  // Las interacciones de uso normal: abrir los filtros y filtrar el mapa, cambiar de capa,
+  // abrir «Europa ahora» y el directo. En el teléfono, las capas se tocan desde el menú.
+  const filtros = page.getByRole("group", { name: "Filtros" }).filter({ visible: true });
+  const abrirFiltros = () =>
+    page.getByRole("button", { name: /^Abrir los filtros/ }).filter({ visible: true }).click();
   const acciones =
     info.project.name === "movil"
       ? [
-          () => page.getByRole("banner").getByRole("button", { name: "Menú" }).click(),
+          abrirFiltros,
           () => filtros.getByRole("button", { name: "Confirmado" }).click(),
+          () => page.getByRole("button", { name: "Cerrar los filtros" }).click(),
+          () => page.getByRole("banner").getByRole("button", { name: "Menú" }).click(),
           () => page.getByRole("button", { name: "Ucrania", exact: true }).click(),
           () => page.getByRole("button", { name: "Cerrar el menú" }).click(),
-          () => page.getByRole("button", { name: /^Periodo/ }).filter({ visible: true }).click(),
+          () => page.getByRole("button", { name: /^Europa ahora/ }).filter({ visible: true }).click(),
         ]
       : [
+          abrirFiltros,
           () => filtros.getByRole("button", { name: "Confirmado" }).click(),
+          () => page.keyboard.press("Escape"),
           () => page.getByRole("button", { name: "Ucrania", exact: true }).click(),
-          () => page.keyboard.press("t"),
+          () => page.getByRole("button", { name: /^Europa ahora/ }).click(),
           () => page.getByRole("button", { name: "En directo", exact: true }).click(),
         ];
   for (const accion of acciones) {

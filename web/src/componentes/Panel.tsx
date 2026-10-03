@@ -13,10 +13,12 @@ interface PropsCabecera {
   /** Dirección propia de la ficha; sin ella no hay botón de copiar enlace. */
   enlace?: string;
   onCerrar: () => void;
+  /** Texto de la equis; por defecto, «Cerrar la ficha». */
+  cerrar?: string;
 }
 
 /** Cabecera de una ficha: qué es, copiar su enlace y cerrarla. */
-export function CabeceraFicha({ t, etiqueta, enlace, onCerrar }: PropsCabecera) {
+export function CabeceraFicha({ t, etiqueta, enlace, onCerrar, cerrar }: PropsCabecera) {
   const [copia, setCopia] = useState<"bien" | "mal" | null>(null);
 
   useEffect(() => {
@@ -49,8 +51,8 @@ export function CabeceraFicha({ t, etiqueta, enlace, onCerrar }: PropsCabecera) 
       )}
       <button
         type="button"
-        className="control min-h-7 px-2 text-xs"
-        aria-label={t.ficha.cerrar}
+        className="control min-h-11 min-w-11 px-2 text-xs esc:min-h-7 esc:min-w-0"
+        aria-label={cerrar ?? t.ficha.cerrar}
         onClick={onCerrar}
       >
         <span aria-hidden="true">✕</span>

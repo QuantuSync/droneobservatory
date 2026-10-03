@@ -20,7 +20,6 @@ import type { EstadoAviso, FuenteDirecto, TipoConfirmacion } from "../datos/dire
 import type { NivelGnss } from "../datos/gnss.ts";
 import type { Sentido as SentidoTendencia } from "../datos/presion.ts";
 import type { EstadoFrescura } from "../tiempo/frescura.ts";
-import type { Granularidad } from "../tiempo/dias.ts";
 
 /** Trozo de un párrafo: texto llano o un enlace. */
 export type Trozo = string | { texto: string; enlace: string };
@@ -97,6 +96,13 @@ export interface Textos {
     mapaNoDisponible: string;
   };
   filtros: {
+    periodos: Record<"todo" | "24h" | "7d" | "30d" | "1a" | "entre", string>;
+    desde: string;
+    hasta: string;
+    entreFechas: (desde: string, hasta: string) => string;
+    abrir: string;
+    cerrar: string;
+    volverATodo: (periodo: string) => string;
     titulo: string;
     graves: string;
     ultimas24h: string;
@@ -129,11 +135,17 @@ export interface Textos {
     drones: string;
     focos: string;
     gnss: string;
-    cortos: Record<"cierres" | "incidentes" | "drones" | "focos" | "gnss", string>;
     nivel: Record<NivelGnss, string>;
     celdasAltas: (n: number) => string;
     sinDato: string;
     ir: (que: string) => string;
+    abrir: string;
+    cerrar: string;
+    avisoCierres: (n: number) => string;
+    avisoNovedades: (n: number) => string;
+  };
+  desplegable: {
+    escape: string;
   };
   /** Detección en directo de cierres de aeropuerto. */
   directo: {
@@ -204,6 +216,8 @@ export interface Textos {
     lineas: string;
     numeros: string;
     pila: string;
+    periodo: string;
+    ahora: string;
     pulsos: string;
     reciente: string;
     novedad: string;
@@ -377,26 +391,9 @@ export interface Textos {
     regiones: string;
   };
   tiempo: {
-    titulo: string;
-    granularidad: string;
-    porGranularidad: Record<Granularidad, string>;
-    reproducir: string;
-    pausar: string;
-    reanudar: string;
-    detener: string;
-    verTodo: string;
-    periodoBoton: string;
-    desde: string;
-    hasta: string;
     periodo: (desde: string, hasta: string) => string;
-    incidentesPorTramo: string;
-    lanzamientosPorNoche: string;
-    instrucciones: string;
-    plegar: string;
-    desplegar: string;
-    acotado: string;
-    maximo: (n: string) => string;
   };
+
   metodologia: {
     titulo: string;
     cerrar: string;

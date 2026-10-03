@@ -120,7 +120,6 @@ async function parteDelMapa(pagina: Page): Promise<number> {
   return pagina.evaluate(() => {
     const tapan = [
       document.querySelector("header"),
-      document.querySelector("section[aria-label='Línea de tiempo']"),
       document.querySelector("[aria-label='Atribuciones del mapa']"),
     ];
     const total = window.innerWidth * window.innerHeight;
@@ -153,7 +152,7 @@ for (const { ancho, alto } of TAMANOS) {
     test.describe(nombre, () => {
       test.use({ viewport, isMobile: true, hasTouch: true, deviceScaleFactor: 2 });
 
-      test(`${nombre}: pantalla, menú, ficha, punto con varios y línea de tiempo`, async ({ page, baseURL }, info) => {
+      test(`${nombre}: pantalla, menú, ficha, punto con varios, filtros y «Europa ahora»`, async ({ page, baseURL }, info) => {
         test.skip(info.project.name !== "movil", "la versión de teléfono se comprueba una sola vez");
         if (Object.keys(ACCESO).length > 0 && baseURL !== undefined) {
           const propio = new URL(baseURL).origin;
@@ -185,7 +184,7 @@ for (const { ancho, alto } of TAMANOS) {
         await page.getByRole("banner").getByRole("button", { name: "Menú" }).click();
         const menu = page.getByRole("dialog", { name: "Menú" });
         await expect(menu).toBeVisible();
-        for (const seccion of ["Cifras del periodo elegido", "Capas", "Filtros", "Más", "Idioma"]) {
+        for (const seccion of ["Cifras del periodo elegido", "Capas", "Más", "Idioma"]) {
           await expect(menu.getByRole("heading", { name: seccion, exact: true })).toBeVisible();
         }
         expect(await menu.evaluate((e) => getComputedStyle(e).backgroundColor)).toMatch(/^rgb\(/);
@@ -232,23 +231,28 @@ for (const { ancho, alto } of TAMANOS) {
         expect(await pila.evaluate((e) => getComputedStyle(e).backgroundColor)).toMatch(/^rgb\(/);
         await capturar(page, `${nombre}-pila`);
 
-        // La línea de tiempo en su hoja: al abrirla se cierra la anterior.
+        // Los filtros y «Europa ahora», cada uno en su hoja: al abrir una se cierra la otra.
         await page.goto("/");
         await page.waitForSelector(MAPA_LISTO);
-        await page.getByRole("button", { name: /^Periodo/ }).filter({ visible: true }).click();
-        const tiempo = page.getByRole("complementary", { name: "Línea de tiempo" });
-        await expect(tiempo).toBeVisible();
-        await tiempo.getByRole("radio", { name: "Mes" }).click();
-        await tiempo.getByRole("slider", { name: "Fin del periodo" }).focus();
-        await page.keyboard.press("ArrowLeft");
-        await expect(tiempo.getByRole("button", { name: "Ver todo" })).toBeVisible();
-        for (const control of ["Reproducir", "Día", "Semana", "Mes", "Ver todo"]) {
-          const caja = await tiempo.getByRole(control === "Reproducir" || control === "Ver todo" ? "button" : "radio", { name: control }).boundingBox();
-          expect(caja?.height ?? 0, control).toBeGreaterThanOrEqual(LADO_TACTIL_MINIMO - 0.5);
-        }
-        await capturar(page, `${nombre}-tiempo`);
+        await page.getByRole("button", { name: /^Abrir los filtros/ }).filter({ visible: true }).click();
+        const filtros = page.getByRole("complementary", { name: "Filtros" });
+        await expect(filtros).toBeVisible();
+        await filtros.getByRole("combobox", { name: "Periodo" }).selectOption("7d");
+        await expect(page).toHaveURL(/\?ultimos=7d$/);
+        await capturar(page, `${nombre}-filtros`);
         expect(await objetivosPequenos(page)).toEqual([]);
-        await tiempo.getByRole("button", { name: "Ver todo" }).click();
+        await filtros.getByRole("button", { name: "Cerrar los filtros" }).click();
+        await expect(filtros).toBeHidden();
+        const boton = page.getByRole("button", { name: /^Abrir los filtros/ }).filter({ visible: true });
+        await expect(boton).toContainText("Últimos 7 días");
+        await page.getByRole("button", { name: /^Europa ahora/ }).filter({ visible: true }).click();
+        const ahora = page.getByRole("complementary", { name: "Europa ahora" });
+        await expect(ahora).toBeVisible();
+        await capturar(page, `${nombre}-ahora`);
+        expect(await objetivosPequenos(page)).toEqual([]);
+        await ahora.getByRole("button", { name: "Cerrar «Europa ahora»" }).click();
+        await expect(ahora).toBeHidden();
+        await page.getByRole("button", { name: /^Quitar el periodo/ }).filter({ visible: true }).click();
         await expect(page).toHaveURL(/\/$/);
       });
     });

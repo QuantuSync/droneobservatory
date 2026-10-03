@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { cleanup, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -9,8 +9,6 @@ import { EnlaceExterno } from "../src/componentes/EnlaceExterno.tsx";
 import { FichaAtaque } from "../src/componentes/FichaAtaque.tsx";
 import { FichaIncidente } from "../src/componentes/FichaIncidente.tsx";
 import { FUENTES_VISIBLES, ordenarFuentes } from "../src/componentes/Fuentes.tsx";
-import { LineaTiempo } from "../src/componentes/LineaTiempo.tsx";
-import type { EstadoReproduccion } from "../src/componentes/LineaTiempo.tsx";
 import { Metodologia } from "../src/componentes/Metodologia.tsx";
 import { ProveedorDeRuta } from "../src/navegacion.tsx";
 import {
@@ -21,8 +19,6 @@ import {
 } from "../src/datos/derivar.ts";
 import { textos } from "../src/i18n/index.ts";
 import { DESCARGAS } from "../src/sitio.ts";
-import { diaDeInstante } from "../src/tiempo/dias.ts";
-import type { Periodo } from "../src/tiempo/dias.ts";
 import {
   CARGAS_MALICIOSAS,
   afirmacion,
@@ -452,151 +448,6 @@ describe("metodología", () => {
       expect(enlace.getAttribute("rel")).toBe("noopener noreferrer");
     }
     expect(container.textContent).toContain("automatic extraction validated by rules");
-  });
-});
-
-describe("línea de tiempo", () => {
-  const dominio = { desde: diaDeInstante("2025-01-01"), hasta: diaDeInstante("2025-12-31") };
-  const ANCHO = 730;
-
-  beforeEach(() => {
-    vi.spyOn(HTMLElement.prototype, "clientWidth", "get").mockReturnValue(ANCHO);
-  });
-
-  function montar(
-    periodo: Periodo = dominio,
-    opciones: {
-      reproduccion?: EstadoReproduccion;
-      hayQueVerTodo?: boolean;
-      forma?: "franja" | "barra" | "hoja";
-    } = {},
-  ) {
-    const onPeriodo = vi.fn();
-    const onGranularidad = vi.fn();
-    const onReproducir = vi.fn();
-    const onPausar = vi.fn();
-    const onDetener = vi.fn();
-    const onVerTodo = vi.fn();
-    const onQuitarSeleccion = vi.fn();
-    const onAbierta = vi.fn();
-    render(
-      <LineaTiempo
-        t={es}
-        idioma="es"
-        dominio={dominio}
-        periodo={periodo}
-        onPeriodo={onPeriodo}
-        granularidad="mes"
-        onGranularidad={onGranularidad}
-        incidentesPorDia={new Map([[diaDeInstante("2025-03-10"), 4]])}
-        lanzamientosPorDia={null}
-        reproduccion={opciones.reproduccion ?? "parada"}
-        onReproducir={onReproducir}
-        onPausar={onPausar}
-        onDetener={onDetener}
-        hayQueVerTodo={opciones.hayQueVerTodo ?? false}
-        onVerTodo={onVerTodo}
-        onQuitarSeleccion={onQuitarSeleccion}
-        destellos={[{ dia: diaDeInstante("2025-03-10"), estado: "confirmado" }]}
-        abierta
-        onAbierta={onAbierta}
-        forma={opciones.forma ?? "franja"}
-      />,
-    );
-    return {
-      onPeriodo,
-      onGranularidad,
-      onReproducir,
-      onPausar,
-      onDetener,
-      onVerTodo,
-      onQuitarSeleccion,
-      onAbierta,
-    };
-  }
-
-  it("sus dos extremos se mueven con el teclado, de tramo en tramo", () => {
-    const { onPeriodo } = montar();
-    const inicio = screen.getByRole("slider", { name: es.tiempo.desde });
-    const fin = screen.getByRole("slider", { name: es.tiempo.hasta });
-    expect(inicio.getAttribute("aria-valuetext")).toBe("01/01/2025");
-    fireEvent.keyDown(inicio, { key: "ArrowRight" });
-    expect(onPeriodo).toHaveBeenLastCalledWith({
-      desde: diaDeInstante("2025-02-01"),
-      hasta: dominio.hasta,
-    });
-    fireEvent.keyDown(fin, { key: "ArrowLeft" });
-    expect(onPeriodo).toHaveBeenLastCalledWith({
-      desde: dominio.desde,
-      hasta: diaDeInstante("2025-11-30"),
-    });
-    fireEvent.keyDown(fin, { key: "Home" });
-    expect(onPeriodo).toHaveBeenLastCalledWith({ desde: dominio.desde, hasta: dominio.desde });
-  });
-
-  it("un extremo no cruza al otro ni sale del dominio", () => {
-    const unMes = { desde: diaDeInstante("2025-03-01"), hasta: diaDeInstante("2025-03-31") };
-    const { onPeriodo } = montar(unMes);
-    fireEvent.keyDown(screen.getByRole("slider", { name: es.tiempo.desde }), { key: "End" });
-    expect(onPeriodo).toHaveBeenLastCalledWith({ desde: unMes.hasta, hasta: unMes.hasta });
-    fireEvent.keyDown(screen.getByRole("slider", { name: es.tiempo.hasta }), { key: "PageUp" });
-    expect(onPeriodo).toHaveBeenLastCalledWith({
-      desde: unMes.desde,
-      hasta: diaDeInstante("2025-08-31"),
-    });
-  });
-
-  it("cambia de granularidad y reproduce", async () => {
-    const unMes = { desde: diaDeInstante("2025-03-01"), hasta: diaDeInstante("2025-03-31") };
-    const { onGranularidad, onReproducir } = montar(unMes);
-    expect(screen.getByRole("radio", { name: "Mes" }).getAttribute("aria-checked")).toBe("true");
-    await userEvent.click(screen.getByRole("radio", { name: "Día" }));
-    expect(onGranularidad).toHaveBeenCalledWith("dia");
-    await userEvent.click(screen.getByRole("button", { name: es.tiempo.reproducir }));
-    expect(onReproducir).toHaveBeenCalledOnce();
-    expect(screen.getByText("01/03/2025 – 31/03/2025")).toBeTruthy();
-  });
-
-  it("«Ver todo» solo aparece con un periodo elegido o una reproducción, y lo quita", async () => {
-    montar();
-    expect(screen.queryByRole("button", { name: es.tiempo.verTodo })).toBeNull();
-    cleanup();
-    const { onVerTodo } = montar(dominio, { hayQueVerTodo: true });
-    await userEvent.click(screen.getByRole("button", { name: es.tiempo.verTodo }));
-    expect(onVerTodo).toHaveBeenCalledOnce();
-  });
-
-  it("reproduciendo se puede pausar y detener; en pausa, reanudar", async () => {
-    const reproduciendo = montar(dominio, { reproduccion: "reproduciendo", hayQueVerTodo: true });
-    await userEvent.click(screen.getByRole("button", { name: es.tiempo.pausar }));
-    expect(reproduciendo.onPausar).toHaveBeenCalledOnce();
-    await userEvent.click(screen.getByRole("button", { name: es.tiempo.detener }));
-    expect(reproduciendo.onDetener).toHaveBeenCalledOnce();
-    cleanup();
-    const pausada = montar(dominio, { reproduccion: "pausada", hayQueVerTodo: true });
-    expect(screen.queryByRole("button", { name: es.tiempo.pausar })).toBeNull();
-    await userEvent.click(screen.getByRole("button", { name: es.tiempo.reanudar }));
-    expect(pausada.onReproducir).toHaveBeenCalledOnce();
-    expect(screen.getByRole("button", { name: es.tiempo.detener })).toBeTruthy();
-    cleanup();
-    montar();
-    expect(screen.queryByRole("button", { name: es.tiempo.detener })).toBeNull();
-  });
-
-  it("el doble clic en el histograma quita la selección", () => {
-    const unMes = { desde: diaDeInstante("2025-03-01"), hasta: diaDeInstante("2025-03-31") };
-    const { onQuitarSeleccion } = montar(unMes, { hayQueVerTodo: true });
-    const histograma = document.querySelector("rect.cursor-crosshair");
-    if (histograma === null) throw new Error("sin histograma");
-    fireEvent.doubleClick(histograma);
-    expect(onQuitarSeleccion).toHaveBeenCalledOnce();
-  });
-
-  it("en el teléfono, plegada, es una barra con el botón «Periodo» que abre la hoja", async () => {
-    const { onAbierta } = montar(dominio, { forma: "barra" });
-    expect(screen.queryByRole("slider")).toBeNull();
-    await userEvent.click(screen.getByRole("button", { name: es.tiempo.periodoBoton }));
-    expect(onAbierta).toHaveBeenCalledWith(true);
   });
 });
 

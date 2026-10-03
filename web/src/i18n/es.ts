@@ -96,6 +96,20 @@ export const es: Textos = {
     graves: "Solo confirmados y atribuidos",
     ultimas24h: "Últimas 24 horas",
     ultimos7d: "Últimos 7 días",
+    periodos: {
+      todo: "Todo",
+      "24h": "Últimas 24 horas",
+      "7d": "Últimos 7 días",
+      "30d": "Últimos 30 días",
+      "1a": "Último año",
+      entre: "Entre fechas",
+    },
+    desde: "Desde",
+    hasta: "Hasta",
+    entreFechas: (desde, hasta) => `${desde} – ${hasta}`,
+    abrir: "Abrir los filtros",
+    cerrar: "Cerrar los filtros",
+    volverATodo: (periodo) => `Quitar el periodo «${periodo}» y ver todo`,
     tipo: "Tipo",
     pais: "País",
     todosLosPaises: "Todos los países",
@@ -130,17 +144,17 @@ export const es: Textos = {
     drones: "drones lanzados la última noche",
     focos: "focos térmicos confirmados en 7 días",
     gnss: "interferencia GPS del día",
-    cortos: {
-      cierres: "cierres",
-      incidentes: "7 días",
-      drones: "última noche",
-      focos: "focos 7 d",
-      gnss: "GPS",
-    },
     nivel: { sin: "sin interferencia", media: "media", alta: "alta" },
     celdasAltas: (n) => (n === 1 ? "1 celda alta" : `${n} celdas altas`),
     sinDato: "sin dato",
     ir: (que) => `Ver en el mapa: ${que}`,
+    abrir: "Abrir «Europa ahora»",
+    cerrar: "Cerrar «Europa ahora»",
+    avisoCierres: (n) => (n === 1 ? "1 cierre en curso" : `${n} cierres en curso`),
+    avisoNovedades: (n) => (n === 1 ? "1 novedad desde tu última visita" : `${n} novedades desde tu última visita`),
+  },
+  desplegable: {
+    escape: "Se cierra con Escape.",
   },
   directo: {
     etiqueta: "Aeropuerto · detección en directo",
@@ -212,11 +226,22 @@ export const es: Textos = {
     cerrar: "Cerrar la ayuda",
     formas: "La forma dice el tipo de incidente.",
     colores:
-      "El color dice el estado: naranja, notificado; rojo, confirmado; rojo con una bandera " +
-      "pequeña, atribuido (un confirmado del que un gobierno ha señalado al responsable). El " +
-      "desmentido va sin relleno y con contorno gris discontinuo.",
+      "El color dice el estado: naranja, notificado; rojo, confirmado. El desmentido va sin " +
+      "relleno y con contorno gris discontinuo. Un atribuido (un confirmado del que un " +
+      "gobierno ha señalado al responsable) es solo una bandera roja con su mástil, sin forma " +
+      "de tipo: el pie del mástil marca el lugar.",
+    periodo:
+      "El botón «Filtros» abre el periodo (todo, las últimas 24 horas, los últimos 7 o 30 " +
+      "días, el último año o entre dos fechas) y los filtros de estado, tipo y país. Con un " +
+      "periodo elegido, el botón lo lleva escrito y su equis vuelve a todo. El mapa, la lista, " +
+      "las cifras y todas las capas muestran ese periodo.",
+    ahora:
+      "«Europa ahora» abre las cifras del momento; cada una lleva al sitio del mapa que la " +
+      "explica. Un número en el botón cuenta los cierres de aeropuerto en curso y un punto " +
+      "avisa de lo que ha cambiado desde la visita anterior.",
     areas:
-      "Cada incidente ocupa un área: el círculo es el radio en que se sabe que ocurrió.",
+      "Cada incidente ocupa un área: el círculo es el radio en que se sabe que ocurrió (en los " +
+      "atribuidos, el lugar lo marca el pie de la bandera).",
     lineas: "Una línea fina une los incidentes de un mismo episodio: varios objetivos en una noche.",
     numeros:
       "Un círculo con un número junta varios incidentes: crece con el número, y su anillo " +
@@ -251,7 +276,7 @@ export const es: Textos = {
     atajos: "Atajos de teclado",
     acciones: {
       ayuda: "Abrir o cerrar esta ayuda",
-      cerrar: "Cerrar la ficha o el panel abierto, o quitar el periodo elegido",
+      cerrar: "Cerrar lo abierto: el desplegable, la ficha o el panel",
       capaIncidentes: "Capa de incidentes",
       capaUcrania: "Capa de Ucrania",
       capaDensidad: "Capa de densidad",
@@ -259,8 +284,8 @@ export const es: Textos = {
       filtro24h: "Últimas 24 horas",
       filtro7d: "Últimos 7 días",
       sinFiltros: "Quitar los filtros",
-      lineaTiempo: "Abrir o cerrar la línea de tiempo",
-      reproducir: "Reproducir la línea de tiempo",
+      filtros: "Abrir o cerrar los filtros y el periodo",
+      ahora: "Abrir o cerrar «Europa ahora»",
       feed: "Abrir o cerrar el panel en directo",
       lista: "Lista de incidentes",
       metodologia: "Metodología y datos abiertos",
@@ -520,28 +545,9 @@ export const es: Textos = {
     regiones: "Regiones de la capa de guerra",
   },
   tiempo: {
-    titulo: "Línea de tiempo",
-    granularidad: "Agrupar por",
-    porGranularidad: { dia: "Día", semana: "Semana", mes: "Mes" },
-    reproducir: "Reproducir",
-    pausar: "Pausar",
-    reanudar: "Reanudar",
-    detener: "Detener",
-    verTodo: "Ver todo",
-    periodoBoton: "Periodo",
-    desde: "Inicio del periodo",
-    hasta: "Fin del periodo",
     periodo: (desde, hasta) => `${desde} – ${hasta}`,
-    incidentesPorTramo: "Incidentes",
-    lanzamientosPorNoche: "Drones lanzados contra Ucrania",
-    instrucciones:
-      "Arrastra sobre el histograma para elegir un periodo, o mueve sus dos extremos con las " +
-      "flechas del teclado.",
-    plegar: "Plegar",
-    desplegar: "Desplegar",
-    acotado: "periodo acotado",
-    maximo: (n) => `máx. ${n}`,
   },
+
   metodologia: {
     titulo: "Metodología",
     cerrar: "Cerrar la metodología",
@@ -629,7 +635,8 @@ export const es: Textos = {
                 marca: { estado: "atribuido" },
                 texto: [
                   "Un confirmado del que una autoridad señala a un gobierno como responsable: " +
-                    "rojo, con una bandera pequeña sobre el símbolo. La ficha lo muestra como " +
+                    "en el mapa, una bandera roja con su mástil, cuyo pie marca el lugar, en lugar " +
+                    "de la forma del tipo. La ficha lo muestra como " +
                     "«Confirmado · atribuido a…», con quién atribuye y a quién.",
                 ],
               },
@@ -999,7 +1006,7 @@ export const es: Textos = {
                 "claro más proporción y el nivel alto en rojo. En un periodo se " +
                 "suman por celda las aeronaves y las degradadas de cada día (de cada mes en los " +
                 "periodos de más de 7 días). Se calcula en el servidor con el archivo diario " +
-                "de adsb.lol. El nivel del día del panel «Europa ahora» es el que alcanza una " +
+                "de adsb.lol. El nivel del día en «Europa ahora» es el que alcanza una " +
                 "de cada diez celdas (el percentil 90), junto al número de celdas altas.",
             ],
           },

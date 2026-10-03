@@ -65,14 +65,14 @@ test.describe("escritorio", () => {
     await servirAlmacen(page);
     await page.goto("/");
     await page.waitForSelector(MAPA_LISTO);
-    const panel = page.locator('[data-europa-ahora="franja"]');
-    await expect(panel).toBeVisible();
+    // Al entrar está cerrado; el botón avisa con el número de cierres en curso.
+    await expect(page.locator("[data-europa-ahora]")).toHaveCount(0);
+    const boton = page.getByRole("button", { name: /^Europa ahora/ });
+    await expect(boton.locator("[data-indicador=numero]")).toHaveText("2");
+    await boton.click();
+    const panel = page.getByRole("dialog", { name: "Europa ahora" });
     const cierres = panel.locator('[data-cifra="cierres"]');
     await expect(cierres).toContainText("2");
-    // El panel no tapa el mapa: queda por encima de él, en la cabecera.
-    const caja = await panel.boundingBox();
-    const cabecera = await page.locator("header:visible").boundingBox();
-    expect(caja !== null && cabecera !== null && caja.y >= cabecera.y + cabecera.height - 1).toBe(true);
     await capturar(page, "escritorio-panel");
 
     await cierres.click();
@@ -82,7 +82,8 @@ test.describe("escritorio", () => {
     await capturar(page, "escritorio-aviso");
     await ficha.getByRole("button", { name: "Cerrar la ficha" }).click();
 
-    await panel.locator('[data-cifra="gnss"]').click();
+    await boton.click();
+    await page.getByRole("dialog", { name: "Europa ahora" }).locator('[data-cifra="gnss"]').click();
     await expect(page.getByRole("button", { name: "GPS", exact: true })).toHaveAttribute("aria-pressed", "true");
     await expect(page.locator('[data-leyenda="gnss"]')).toContainText("1 día con datos");
     await capturar(page, "escritorio-gnss");
@@ -100,25 +101,24 @@ test.describe("teléfono", () => {
   test.skip(({ isMobile }) => !isMobile, "solo teléfono");
 
   for (const tamano of TELEFONOS) {
-    test(`${tamano.nombre}: el panel reducido no tapa la hoja inferior`, async ({ page }) => {
+    test(`${tamano.nombre}: «Europa ahora» se abre en una hoja y lleva a la ficha`, async ({ page }) => {
       await page.setViewportSize({ width: tamano.width, height: tamano.height });
       await servirAlmacen(page);
       await page.goto("/");
       await page.waitForSelector(MAPA_LISTO);
-      const panel = page.locator('[data-europa-ahora="corta"]');
-      await expect(panel).toBeVisible();
+      const boton = page.getByRole("button", { name: /^Europa ahora/ }).filter({ visible: true });
+      await expect(boton.locator("[data-indicador=numero]")).toHaveText("2");
+      await boton.click();
+      const panel = page.getByRole("complementary", { name: "Europa ahora" });
       await expect(panel.locator('[data-cifra="cierres"]')).toContainText("2");
       await capturar(page, `${tamano.nombre}-panel`);
       await panel.locator('[data-cifra="cierres"]').click();
       const hoja = page.getByRole("complementary", { name: /EBBR/ });
       await expect(hoja).toContainText("Cierre confirmado");
-      const cajaPanel = await panel.boundingBox();
-      const cajaHoja = await hoja.boundingBox();
-      expect(cajaPanel).not.toBeNull();
-      expect(cajaHoja).not.toBeNull();
-      if (cajaPanel !== null && cajaHoja !== null) {
-        expect(cajaPanel.y + cajaPanel.height).toBeLessThanOrEqual(cajaHoja.y + 1);
-      }
+      // Pulsar una cifra cierra «Europa ahora» y abre la ficha; con una hoja abierta, los
+      // botones sobre el mapa no se pintan, así que nada tapa la hoja.
+      await expect(panel).toBeHidden();
+      await expect(page.locator("[data-botones-mapa]:visible")).toHaveCount(0);
       await capturar(page, `${tamano.nombre}-aviso`);
     });
   }

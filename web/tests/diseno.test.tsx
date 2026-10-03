@@ -10,17 +10,25 @@ import type { Altura } from "../src/componentes/Paneles.tsx";
 import { detalleIncidente, resumir, resumirIncidente, resumirUcrania } from "../src/datos/derivar.ts";
 import type { EventoResumen } from "../src/datos/tipos.ts";
 import { accionDe } from "../src/estado/atajos.ts";
+import { textoDeSeleccion } from "../src/componentes/Filtros.tsx";
 import {
   DIAS_RECIENTES,
   GRAVES,
+  RECIENTES,
   SIN_FILTROS,
+  TODO,
   escribirBusqueda,
   escribirFiltros,
+  escribirSeleccion,
   filtrar,
   hayFiltros,
   leerFiltros,
   leerPeriodo,
+  leerSeleccion,
+  mismaSeleccion,
+  periodoDeSeleccion,
 } from "../src/estado/filtros.ts";
+import type { Reciente, SeleccionPeriodo } from "../src/estado/filtros.ts";
 import {
   CLAVE_VISITA,
   incidentesDe,
@@ -151,7 +159,7 @@ describe("filtros y periodo en la dirección", () => {
   });
 
   it("lo que no se entiende se ignora", () => {
-    expect(leerFiltros("?solo=todo&estado=roto,confirmado&ultimos=1a&tipo=globo,incursion&pais=de,xxx,<b>")).toEqual({
+    expect(leerFiltros("?solo=todo&estado=roto,confirmado&ultimos=2a&tipo=globo,incursion&pais=de,xxx,<b>")).toEqual({
       estados: ["confirmado"],
       reciente: null,
       tipos: ["incursion"],
@@ -170,8 +178,7 @@ describe("filtros y periodo en la dirección", () => {
     expect(leerPeriodo("")).toBeNull();
   });
 
-  it("filtran por estado, antigüedad, tipo y país", () => {
-    const hoy = diaDeInstante("2026-09-30");
+  it("filtran por estado, tipo y país; el periodo va aparte", () => {
     const lista = [
       resumirIncidente(incidente({ id: "EODI-2026-00001", tiempo: { inicio: { valor: "2026-09-30T08:00Z", precision: "hora" } } })),
       resumirIncidente(
@@ -184,14 +191,66 @@ describe("filtros y periodo en la dirección", () => {
         }),
       ),
     ];
-    const ids = (filtros: Parameters<typeof filtrar>[1]) => filtrar(lista, filtros, hoy).map((i) => i.id);
+    const ids = (filtros: Parameters<typeof filtrar>[1]) => filtrar(lista, filtros).map((i) => i.id);
     expect(ids({ ...SIN_FILTROS, estados: [...GRAVES] })).toEqual(["EODI-2026-00002"]);
     expect(ids({ ...SIN_FILTROS, estados: ["notificado"] })).toEqual(["EODI-2026-00001"]);
-    expect(ids({ ...SIN_FILTROS, reciente: "24h" })).toEqual(["EODI-2026-00001"]);
-    expect(ids({ ...SIN_FILTROS, reciente: "7d" })).toHaveLength(2);
+    expect(ids({ ...SIN_FILTROS, reciente: "24h" })).toHaveLength(2);
     expect(ids({ ...SIN_FILTROS, tipos: ["incursion"] })).toEqual(["EODI-2026-00002"]);
     expect(ids({ ...SIN_FILTROS, paises: ["DE"] })).toEqual(["EODI-2026-00001"]);
-    expect(DIAS_RECIENTES["24h"]).toBe(1);
+  });
+});
+
+// ---------------------------------------------------------------------------------------
+describe("selector de periodo", () => {
+  const hoy = diaDeInstante("2026-09-30");
+
+  it("los periodos rápidos cuentan hasta el último día con datos, y por defecto se ve todo", () => {
+    expect(leerSeleccion("")).toEqual(TODO);
+    expect(periodoDeSeleccion(TODO, hoy)).toBeNull();
+    const dias = (reciente: Reciente) => {
+      const periodo = periodoDeSeleccion({ clase: "reciente", reciente }, hoy);
+      return periodo === null ? null : [periodo.hasta - hoy, periodo.hasta - periodo.desde + 1];
+    };
+    expect(dias("24h")).toEqual([0, 1]);
+    expect(dias("7d")).toEqual([0, 7]);
+    expect(dias("30d")).toEqual([0, 30]);
+    expect(dias("1a")).toEqual([0, 365]);
+    expect(RECIENTES).toEqual(["24h", "7d", "30d", "1a"]);
+    expect(DIAS_RECIENTES["30d"]).toBe(30);
+  });
+
+  it("cada periodo va en la dirección de una sola forma y se vuelve a leer igual", () => {
+    const noviembre = { desde: diaDeInstante("2025-11-01"), hasta: diaDeInstante("2025-11-30") };
+    const casos: [SeleccionPeriodo, string][] = [
+      [TODO, ""],
+      [{ clase: "reciente", reciente: "30d" }, "?ultimos=30d"],
+      [{ clase: "reciente", reciente: "1a" }, "?ultimos=1a"],
+      [{ clase: "entre", periodo: noviembre }, "?desde=2025-11-01&hasta=2025-11-30"],
+    ];
+    for (const [seleccion, busqueda] of casos) {
+      expect(escribirSeleccion(SIN_FILTROS, seleccion)).toBe(busqueda);
+      expect(mismaSeleccion(leerSeleccion(busqueda), seleccion)).toBe(true);
+    }
+    // Elegir un periodo rápido quita las fechas, y al revés.
+    const conAmbos = "?ultimos=7d&desde=2025-11-01&hasta=2025-11-30";
+    expect(leerSeleccion(conAmbos)).toEqual({ clase: "reciente", reciente: "7d" });
+    expect(escribirSeleccion(leerFiltros(conAmbos), { clase: "entre", periodo: noviembre })).toBe(
+      "?desde=2025-11-01&hasta=2025-11-30",
+    );
+    // Los enlaces de antes (?ultimos=24h, ?desde=…&hasta=…) siguen abriendo su periodo.
+    expect(leerSeleccion("?ultimos=24h")).toEqual({ clase: "reciente", reciente: "24h" });
+  });
+
+  it("el periodo elegido se escribe como en el botón de filtros", () => {
+    expect(textoDeSeleccion(es, TODO)).toBeNull();
+    expect(textoDeSeleccion(es, { clase: "reciente", reciente: "30d" })).toBe("Últimos 30 días");
+    expect(
+      textoDeSeleccion(es, {
+        clase: "entre",
+        periodo: { desde: diaDeInstante("2025-11-01"), hasta: diaDeInstante("2025-11-30") },
+      }),
+    ).toBe("01/11/2025 – 30/11/2025");
+    expect(textoDeSeleccion(textos("en"), { clase: "reciente", reciente: "1a" })).toBe("Last year");
   });
 });
 
@@ -254,7 +313,9 @@ describe("atajos de teclado", () => {
     expect(pulsar("Escape")).toBe("cerrar");
     expect(pulsar("2")).toBe("capaUcrania");
     expect(pulsar("C")).toBe("filtroGraves");
-    expect(pulsar("t")).toBe("lineaTiempo");
+    expect(pulsar("f")).toBe("filtros");
+    expect(pulsar("a")).toBe("ahora");
+    expect(pulsar("t")).toBeNull();
     expect(pulsar("x")).toBeNull();
   });
 
@@ -370,39 +431,65 @@ describe("aplicación con el diseño nuevo", () => {
     );
   }
 
+  async function abrirFiltros(usuario: ReturnType<typeof userEvent.setup>) {
+    await usuario.click(screen.getByRole("button", { name: new RegExp(`^${es.filtros.abrir}`) }));
+    const desplegable = await screen.findByRole("dialog", { name: es.filtros.titulo });
+    return within(desplegable).getByRole("group", { name: es.filtros.titulo });
+  }
+
   it("los filtros de la dirección filtran el mapa y los cambios quedan en la dirección", async () => {
     servir();
     const usuario = userEvent.setup();
     abrir("/?solo=graves");
     const mapa = await screen.findByTestId("mapa");
     await waitFor(() => expect(within(mapa).getAllByRole("listitem").map((li) => li.textContent)).toEqual(["EODI-2026-00007"]));
-    const barra = screen.getByRole("group", { name: es.filtros.titulo });
-    expect(within(barra).getByRole("button", { name: es.estado.confirmado }).getAttribute("aria-pressed")).toBe("true");
-    await usuario.click(within(barra).getByRole("button", { name: es.filtros.quitar }));
+    const grupo = await abrirFiltros(usuario);
+    expect(within(grupo).getByRole("button", { name: es.estado.confirmado }).getAttribute("aria-pressed")).toBe("true");
+    await usuario.click(within(grupo).getByRole("button", { name: es.filtros.quitar }));
     await waitFor(() => expect(within(mapa).getAllByRole("listitem")).toHaveLength(3));
     expect(window.location.search).toBe("");
-    expect(within(barra).queryByRole("button", { name: es.filtros.quitar })).toBeNull();
-    await usuario.click(within(barra).getByRole("button", { name: es.filtros.ultimos7d }));
+    expect(within(grupo).queryByRole("button", { name: es.filtros.quitar })).toBeNull();
+    await usuario.selectOptions(within(grupo).getByRole("combobox", { name: es.filtros.recientes }), "7d");
     expect(window.location.search).toBe("?ultimos=7d");
-    await usuario.click(within(barra).getByRole("button", { name: es.estado.notificado }));
+    await usuario.click(within(grupo).getByRole("button", { name: es.estado.notificado }));
     expect(window.location.search).toBe("?estado=notificado&ultimos=7d");
   });
 
-  it("los filtros van en su barra, agrupados por categoría y cada opción con su texto", async () => {
+  it("al entrar no hay barras ni paneles: solo botones pequeños sobre el mapa", async () => {
     servir();
     abrir("/");
     await screen.findByTestId("mapa");
-    const barra = screen.getByRole("group", { name: es.filtros.titulo });
-    const grupos = within(barra).getAllByRole("group").map((g) => g.querySelector("legend")?.textContent);
-    expect(grupos).toEqual([es.filtros.estado, es.filtros.tipo, es.filtros.recientes]);
-    expect(within(barra).getByRole("combobox", { name: es.filtros.pais })).toBeTruthy();
-    for (const opcion of within(barra).getAllByRole("button")) {
+    expect(screen.queryByRole("group", { name: es.filtros.titulo })).toBeNull();
+    expect(screen.queryByRole("dialog")).toBeNull();
+    expect(screen.queryByRole("slider")).toBeNull();
+    expect(document.querySelector("[data-europa-ahora]")).toBeNull();
+    const botones = document.querySelector<HTMLElement>("[data-botones-mapa]");
+    if (botones === null) throw new Error("sin botones sobre el mapa");
+    expect(within(botones).getAllByRole("button").map((b) => b.getAttribute("aria-expanded"))).toEqual([
+      "false",
+      "false",
+    ]);
+  });
+
+  it("los filtros se abren desde su botón, agrupados por categoría y cada opción con su texto", async () => {
+    servir();
+    const usuario = userEvent.setup();
+    abrir("/");
+    await screen.findByTestId("mapa");
+    const grupo = await abrirFiltros(usuario);
+    const grupos = within(grupo).getAllByRole("group").map((g) => g.querySelector("legend")?.textContent);
+    expect(grupos).toEqual([es.filtros.estado, es.filtros.tipo]);
+    expect(within(grupo).getByRole("combobox", { name: es.filtros.recientes })).toBeTruthy();
+    expect(within(grupo).getByRole("combobox", { name: es.filtros.pais })).toBeTruthy();
+    for (const opcion of within(grupo).getAllByRole("button")) {
       expect(opcion.textContent?.trim().length).toBeGreaterThan(2);
       expect(opcion.getAttribute("aria-label")).toBeNull();
     }
     for (const nombre of [...Object.values(es.tipo), ...Object.values(es.estado)]) {
-      expect(within(barra).getByRole("button", { name: nombre })).toBeTruthy();
+      expect(within(grupo).getByRole("button", { name: nombre })).toBeTruthy();
     }
+    const periodos = within(grupo).getAllByRole("option").slice(0, 6).map((o) => o.textContent);
+    expect(periodos).toEqual(Object.values(es.filtros.periodos));
   });
 
   it("la cabecera es una sola barra: nombre, cifras, estado y controles, sin flechas", async () => {
@@ -428,55 +515,97 @@ describe("aplicación con el diseño nuevo", () => {
     }
   });
 
-  it("el periodo queda en la dirección, atrás lo deshace y «Ver todo» o Escape lo quitan", async () => {
-    // jsdom no mide: la línea de tiempo necesita un ancho para dibujar el histograma.
-    vi.spyOn(HTMLElement.prototype, "clientWidth", "get").mockReturnValue(1000);
+  it("entre fechas: el periodo va a la dirección, el botón lo lleva escrito y su equis vuelve a todo", async () => {
+    servir();
+    const usuario = userEvent.setup();
+    abrir("/");
+    const mapa = await screen.findByTestId("mapa");
+    await waitFor(() => expect(within(mapa).getAllByRole("listitem")).toHaveLength(3));
+    const grupo = await abrirFiltros(usuario);
+    await usuario.selectOptions(within(grupo).getByRole("combobox", { name: es.filtros.recientes }), "entre");
+    const desde = within(grupo).getByLabelText(es.filtros.desde);
+    const hasta = within(grupo).getByLabelText(es.filtros.hasta);
+    fireEvent.change(desde, { target: { value: "2026-09-13" } });
+    await waitFor(() => expect(window.location.search).toMatch(/^\?desde=2026-09-13&hasta=/));
+    fireEvent.change(within(grupo).getByLabelText(es.filtros.hasta), { target: { value: "2026-09-13" } });
+    await waitFor(() => expect(window.location.search).toBe("?desde=2026-09-13&hasta=2026-09-13"));
+    expect(hasta).toBeTruthy();
+    // Solo el incidente de ese día: el mapa, la lista y las cifras siguen el periodo.
+    await waitFor(() =>
+      expect(within(mapa).getAllByRole("listitem").map((li) => li.textContent)).toEqual(["EODI-2026-00007"]),
+    );
+    const boton = screen.getByRole("button", { name: new RegExp(`^${es.filtros.abrir}`) });
+    expect(boton.textContent).toContain("13/09/2026 – 13/09/2026");
+    // El botón atrás deshace el cambio de periodo.
+    window.history.back();
+    await waitFor(() => expect(window.location.search).toMatch(/^\?desde=2026-09-13&hasta=(?!2026-09-13)/));
+    window.history.forward();
+    await waitFor(() => expect(window.location.search).toBe("?desde=2026-09-13&hasta=2026-09-13"));
+    await usuario.click(screen.getByRole("button", { name: es.filtros.volverATodo("13/09/2026 – 13/09/2026") }));
+    await waitFor(() => expect(window.location.search).toBe(""));
+    expect(screen.queryByRole("button", { name: /Quitar el periodo/ })).toBeNull();
+  });
+
+  it("un enlace con periodo lo abre, y uno a una ficha la abre aunque quede fuera", async () => {
+    servir();
+    abrir("/EODI-2026-00007?ultimos=24h");
+    const mapa = await screen.findByTestId("mapa");
+    await waitFor(() => expect(within(mapa).queryAllByRole("listitem")).toHaveLength(0));
+    expect(await screen.findByRole("complementary", { name: /EODI-2026-00007/ })).toBeTruthy();
+    expect(screen.getByRole("button", { name: new RegExp(`^${es.filtros.abrir}`) }).textContent).toContain(
+      es.filtros.periodos["24h"],
+    );
+  });
+
+  it("el desplegable se abre y se cierra con su botón, la equis, Escape y pulsando fuera", async () => {
     servir();
     const usuario = userEvent.setup();
     abrir("/");
     await screen.findByTestId("mapa");
-    expect(screen.queryByRole("button", { name: es.tiempo.verTodo })).toBeNull();
-    fireEvent.keyDown(window, { key: "t" });
-    const fin = await screen.findByRole("slider", { name: es.tiempo.hasta });
-    fireEvent.keyDown(fin, { key: "Home" });
-    await waitFor(() => expect(window.location.search).toMatch(/^\?desde=\d{4}-\d{2}-\d{2}&hasta=/));
-    const elegido = window.location.search;
-    // El botón atrás del navegador deshace el último cambio de periodo.
-    window.history.back();
-    await waitFor(() => expect(window.location.search).toBe(""));
-    window.history.forward();
-    await waitFor(() => expect(window.location.search).toBe(elegido));
-    await usuario.click(screen.getAllByRole("button", { name: es.tiempo.verTodo })[0]!);
-    await waitFor(() => expect(window.location.search).toBe(""));
-    expect(screen.queryByRole("button", { name: es.tiempo.verTodo })).toBeNull();
-    fireEvent.keyDown(screen.getByRole("slider", { name: es.tiempo.hasta }), { key: "Home" });
-    await waitFor(() => expect(window.location.search).not.toBe(""));
-    fireEvent.keyDown(window, { key: "Escape" });
-    await waitFor(() => expect(window.location.search).toBe(""));
+    const boton = screen.getByRole("button", { name: es.ahora.etiqueta });
+    expect(boton.getAttribute("aria-haspopup")).toBe("dialog");
+    // Abrir y cerrar con el mismo botón.
+    await usuario.click(boton);
+    const desplegable = await screen.findByRole("dialog", { name: es.ahora.etiqueta });
+    expect(boton.getAttribute("aria-expanded")).toBe("true");
+    expect(document.activeElement).toBe(desplegable);
+    expect(within(desplegable).getAllByRole("button", { name: /^Ver en el mapa/ })).toHaveLength(5);
+    await usuario.click(boton);
+    expect(screen.queryByRole("dialog")).toBeNull();
+    // La equis devuelve el foco al botón.
+    await usuario.click(boton);
+    await usuario.click(within(screen.getByRole("dialog")).getByRole("button", { name: es.ahora.cerrar }));
+    expect(screen.queryByRole("dialog")).toBeNull();
+    expect(document.activeElement).toBe(boton);
+    // Escape.
+    await usuario.click(boton);
+    await usuario.keyboard("{Escape}");
+    expect(screen.queryByRole("dialog")).toBeNull();
+    expect(document.activeElement).toBe(boton);
+    // Pulsar fuera.
+    await usuario.click(boton);
+    fireEvent.pointerDown(document.body);
+    expect(screen.queryByRole("dialog")).toBeNull();
+    // Con el teclado: la tecla «a» lo abre y lo cierra.
+    fireEvent.keyDown(window, { key: "a" });
+    expect(await screen.findByRole("dialog", { name: es.ahora.etiqueta })).toBeTruthy();
+    fireEvent.keyDown(window, { key: "a" });
+    await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
   });
 
-  it("la reproducción se pausa, se reanuda y al detenerla vuelve al periodo de antes", async () => {
-    // jsdom no mide: la línea de tiempo necesita un ancho para dibujar el histograma.
-    vi.spyOn(HTMLElement.prototype, "clientWidth", "get").mockReturnValue(1000);
+  it("pulsar una cifra de «Europa ahora» lleva a su sitio y cierra el desplegable", async () => {
     servir();
     const usuario = userEvent.setup();
-    abrir("/?desde=2026-09-13&hasta=2026-09-13");
+    abrir("/");
     await screen.findByTestId("mapa");
-    fireEvent.keyDown(window, { key: "t" });
-    const fin = await screen.findByRole("slider", { name: es.tiempo.hasta });
-    expect(fin.getAttribute("aria-valuetext")).toBe("13/09/2026");
-    await usuario.click(screen.getByRole("button", { name: es.tiempo.reproducir }));
-    await usuario.click(screen.getByRole("button", { name: es.tiempo.pausar }));
-    expect(screen.getByRole("button", { name: es.tiempo.reanudar })).toBeTruthy();
-    await usuario.click(screen.getByRole("button", { name: es.tiempo.detener }));
-    expect(screen.queryByRole("button", { name: es.tiempo.detener })).toBeNull();
-    expect(window.location.search).toBe("?desde=2026-09-13&hasta=2026-09-13");
-    expect(screen.getByRole("slider", { name: es.tiempo.hasta }).getAttribute("aria-valuetext")).toBe(
-      "13/09/2026",
-    );
+    await usuario.click(screen.getByRole("button", { name: es.ahora.etiqueta }));
+    const desplegable = await screen.findByRole("dialog", { name: es.ahora.etiqueta });
+    await usuario.click(within(desplegable).getByRole("button", { name: new RegExp(es.ahora.incidentes) }));
+    expect(screen.queryByRole("dialog")).toBeNull();
+    expect(window.location.search).toBe("?ultimos=7d");
   });
 
-  it("«noche a noche» se pausa, se reanuda y se detiene, también con «Ver todo»", async () => {
+  it("«noche a noche» se pausa, se reanuda y se detiene, también con Escape", async () => {
     servir();
     const usuario = userEvent.setup();
     abrir("/");
@@ -491,7 +620,7 @@ describe("aplicación con el diseño nuevo", () => {
     await waitFor(() => expect(screen.queryByText(/^Noche del /)).toBeNull());
     await usuario.click(within(cabecera).getByRole("button", { name: es.guerra.reproducir }));
     await screen.findByText(/^Noche del /);
-    await usuario.click(screen.getAllByRole("button", { name: es.tiempo.verTodo })[0]!);
+    fireEvent.keyDown(window, { key: "Escape" });
     await waitFor(() => expect(screen.queryByText(/^Noche del /)).toBeNull());
   });
 
@@ -506,19 +635,18 @@ describe("aplicación con el diseño nuevo", () => {
     abrir("/");
     await screen.findByTestId("mapa");
     const barra = await screen.findByRole("banner", { name: es.cabecera.etiqueta });
-    // Solo el logo, «EODI», el estado y el menú (y «Periodo», que el CSS solo muestra con el
-    // teléfono en horizontal), y debajo la franja reducida de «Europa ahora»: nada de capas ni
-    // filtros a la vista.
-    const franja = within(barra).getByRole("region", { name: es.ahora.etiqueta });
-    const fuera = (b: HTMLElement) => !franja.contains(b);
+    // Solo el logo, «EODI», el estado y el menú; sobre el mapa, dos botones pequeños de 44 px.
     await waitFor(() =>
-      expect(within(barra).getAllByRole("button").filter(fuera).map((b) => b.textContent)).toEqual([
+      expect(within(barra).getAllByRole("button").map((b) => b.textContent)).toEqual([
         expect.stringMatching(/hace/),
-        es.tiempo.periodoBoton,
         es.cabecera.menu,
       ]),
     );
-    expect(within(franja).getAllByRole("button")).toHaveLength(5);
+    const botones = document.querySelector<HTMLElement>("[data-botones-mapa]");
+    if (botones === null) throw new Error("sin botones sobre el mapa");
+    for (const boton of within(botones).getAllByRole("button")) {
+      expect(boton.className).toContain("min-h-11");
+    }
     expect(screen.queryByRole("group", { name: es.filtros.titulo })).toBeNull();
     expect(screen.queryByRole("button", { name: es.controles.acercar })).toBeNull();
     await usuario.click(within(barra).getByRole("button", { name: es.cabecera.menu }));
@@ -528,16 +656,29 @@ describe("aplicación con el diseño nuevo", () => {
     expect(secciones).toEqual([
       es.marcador.etiqueta,
       es.controles.capas,
-      es.filtros.titulo,
       es.controles.paneles,
       es.controles.idioma,
     ]);
     await usuario.click(within(menu).getByRole("button", { name: es.controles.feed, hidden: true }));
     expect(await screen.findByRole("complementary", { name: es.feed.titulo })).toBeTruthy();
-    fireEvent.keyDown(window, { key: "t" });
-    expect(await screen.findByRole("complementary", { name: es.tiempo.titulo })).toBeTruthy();
+    // Una sola hoja a la vez: «Europa ahora» sustituye al panel en directo.
+    fireEvent.keyDown(window, { key: "a" });
+    const hoja = await screen.findByRole("complementary", { name: es.ahora.etiqueta });
     expect(screen.queryByRole("complementary", { name: es.feed.titulo })).toBeNull();
-    expect(screen.getByRole("button", { name: es.tiempo.reproducir })).toBeTruthy();
+    for (const cifra of within(hoja).getAllByRole("button", { name: /^Ver en el mapa/ })) {
+      expect(cifra.className).toContain("min-h-11");
+    }
+    await usuario.click(within(hoja).getByRole("button", { name: es.ahora.cerrar }));
+    await waitFor(() => expect(screen.queryByRole("complementary", { name: es.ahora.etiqueta })).toBeNull());
+    // Los filtros, en otra hoja, desde su botón.
+    await usuario.click(screen.getByRole("button", { name: new RegExp(`^${es.filtros.abrir}`) }));
+    const filtros = await screen.findByRole("complementary", { name: es.filtros.titulo });
+    expect(within(filtros).getByRole("combobox", { name: es.filtros.recientes })).toBeTruthy();
+    // Un toque dentro no la cierra; uno fuera (en el mapa), sí.
+    await usuario.click(within(filtros).getByRole("combobox", { name: es.filtros.recientes }));
+    expect(screen.getByRole("complementary", { name: es.filtros.titulo })).toBeTruthy();
+    await usuario.click(screen.getByTestId("mapa"));
+    await waitFor(() => expect(screen.queryByRole("complementary", { name: es.filtros.titulo })).toBeNull());
   });
 
   it("los atajos abren la ayuda y aplican filtros", async () => {

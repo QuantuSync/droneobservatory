@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 // Europa en directo: detección de cierres, interferencia GPS, presión por país y panel
 // «Europa ahora». Sin red: los ficheros del almacén se sirven con un fetch simulado.
-import { cleanup, render, screen, waitFor, within } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -386,7 +386,7 @@ describe("panel «Europa ahora»", () => {
   it("sin ficheros, cada cifra sale como «—» y no rompe", () => {
     const vacias: CifrasAhora = { cierres: null, incidentes: null, drones: null, focos: null, gnss: null };
     expect(cifrasAhora({ resumen: null, ucrania: null, directo: null, gnssHoy: null })).toEqual(vacias);
-    render(<EuropaAhora t={es} idioma="es" cifras={vacias} onIr={() => undefined} forma="franja" />);
+    render(<EuropaAhora t={es} idioma="es" cifras={vacias} onIr={() => undefined} />);
     const botones = screen.getAllByRole("button");
     expect(botones).toHaveLength(5);
     for (const boton of botones) expect(boton.textContent?.startsWith("—")).toBe(true);
@@ -403,7 +403,7 @@ describe("panel «Europa ahora»", () => {
       focos: 3,
       gnss: { nivel: "alta", altas: 4, dia: dia("2026-10-02") },
     };
-    render(<EuropaAhora t={es} idioma="es" cifras={cifras} onIr={ir} forma="corta" />);
+    render(<EuropaAhora t={es} idioma="es" cifras={cifras} onIr={ir} />);
     await usuario.click(screen.getByRole("button", { name: /cierres de aeropuerto en curso/ }));
     await usuario.click(screen.getByRole("button", { name: /interferencia GPS del día/ }));
     expect(ir.mock.calls).toEqual([["cierres"], ["gnss"]]);
@@ -462,9 +462,14 @@ describe("aplicación con los ficheros del almacén", () => {
     );
     const mapa = await screen.findByTestId("mapa");
     await waitFor(() => expect(within(mapa).getAllByRole("listitem")).toHaveLength(1));
-    const panel = screen.getAllByRole("region", { name: es.ahora.etiqueta })[0] as HTMLElement;
+    // El botón avisa sin abrirse: un número con los cierres en curso.
+    const boton = screen.getByRole("button", { name: new RegExp(`^${es.ahora.etiqueta}`) });
+    await waitFor(() => expect(boton.querySelector("[data-indicador=numero]")?.textContent).toBe("1"));
+    expect(boton.getAttribute("aria-label")).toBe(`${es.ahora.etiqueta} · ${es.ahora.avisoCierres(1)}`);
+    await usuario.click(boton);
+    const panel = await screen.findByRole("dialog", { name: es.ahora.etiqueta });
     const cierres = within(panel).getByRole("button", { name: /cierres de aeropuerto en curso/ });
-    await waitFor(() => expect(cierres.textContent?.startsWith("1")).toBe(true));
+    expect(cierres.textContent?.startsWith("1")).toBe(true);
     await waitFor(() =>
       expect(within(panel).getByRole("button", { name: /interferencia GPS/ }).textContent).toContain(
         "media",
@@ -473,6 +478,8 @@ describe("aplicación con los ficheros del almacén", () => {
     await usuario.click(cierres);
     const ficha = await screen.findByRole("complementary", { name: /EKCH/ });
     expect(within(ficha).getByText("Posible cierre en curso")).toBeTruthy();
+    // Pulsar una cifra cierra el desplegable.
+    expect(screen.queryByRole("dialog", { name: es.ahora.etiqueta })).toBeNull();
   });
 
   it("sin directo.json ni interferencia, el panel muestra «—» y la web sigue", async () => {
@@ -483,7 +490,10 @@ describe("aplicación con los ficheros del almacén", () => {
       </ProveedorDeRuta>,
     );
     await screen.findByTestId("mapa");
-    const panel = screen.getAllByRole("region", { name: es.ahora.etiqueta })[0] as HTMLElement;
+    const boton = screen.getByRole("button", { name: es.ahora.etiqueta });
+    expect(boton.querySelector("[data-indicador]")).toBeNull();
+    fireEvent.click(boton);
+    const panel = await screen.findByRole("dialog", { name: es.ahora.etiqueta });
     const cierres = within(panel).getByRole("button", { name: /cierres de aeropuerto en curso/ });
     expect(cierres.textContent?.startsWith("—")).toBe(true);
     expect(screen.queryByRole("alert")).toBeNull();

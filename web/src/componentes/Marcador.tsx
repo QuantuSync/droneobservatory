@@ -112,7 +112,7 @@ export function Marcador({ t, idioma, cifras, animar, forma = "linea" }: Props) 
         activa={animar}
         forma={forma}
         color="text-atribuido"
-        marca={<IconoBandera />}
+        marca={<IconoBandera lado={12} />}
       />
       <Cifra valor={cifras.paises} rotulo={t.marcador.paises} idioma={idioma} activa={animar} forma={forma} />
     </dl>

@@ -22,11 +22,12 @@ function Muestra({ color, opacidad }: { color: string; opacidad: number }) {
   );
 }
 
+/** Las leyendas solo salen con su capa activa y se pliegan pulsando su título. */
 export function LeyendaGnss({ t, estado }: { t: Textos; estado: EstadoGnss }) {
   const g = t.gnss;
   return (
-    <div className="flotante px-2.5 py-1.5 text-xs" data-leyenda="gnss">
-      <p className="font-medium text-texto">{g.etiqueta}</p>
+    <details open className="flotante px-2.5 py-1.5 text-xs" data-leyenda="gnss">
+      <summary className="cursor-pointer font-medium text-texto">{g.etiqueta}</summary>
       <p className="text-secundario">{g.leyenda}</p>
       <ul className="mt-1 flex flex-wrap gap-x-3 gap-y-0.5">
         {NIVELES_GNSS.map((nivel) => (
@@ -39,15 +40,15 @@ export function LeyendaGnss({ t, estado }: { t: Textos; estado: EstadoGnss }) {
       <p className="mt-0.5 text-secundario" role="status">
         {estado === "cargando" ? g.cargando : estado === "sin_datos" ? g.sinDatos : g.dias(estado.dias)}
       </p>
-    </div>
+    </details>
   );
 }
 
 export function LeyendaPresion({ t }: { t: Textos }) {
   const p = t.presion;
   return (
-    <div className="flotante px-2.5 py-1.5 text-xs" data-leyenda="presion">
-      <p className="font-medium text-texto">{t.controles.presion}</p>
+    <details open className="flotante px-2.5 py-1.5 text-xs" data-leyenda="presion">
+      <summary className="cursor-pointer font-medium text-texto">{t.controles.presion}</summary>
       <p className="text-secundario">{p.leyenda}</p>
       <div className="mt-1 flex items-center gap-1.5 text-secundario">
         <span>{p.menos}</span>
@@ -58,6 +59,6 @@ export function LeyendaPresion({ t }: { t: Textos }) {
         </span>
         <span>{p.mas}</span>
       </div>
-    </div>
+    </details>
   );
 }
