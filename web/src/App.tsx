@@ -12,15 +12,22 @@ import {
   Zoom,
 } from "./componentes/Controles.tsx";
 import type { Capas } from "./componentes/Controles.tsx";
+import { EuropaAhora } from "./componentes/EuropaAhora.tsx";
+import type { CifraAhora } from "./componentes/EuropaAhora.tsx";
 import { Feed } from "./componentes/Feed.tsx";
 import type { Pestana } from "./componentes/Feed.tsx";
 import { FichaAtaque } from "./componentes/FichaAtaque.tsx";
+import { FichaAviso } from "./componentes/FichaAviso.tsx";
+import { FichaCelda } from "./componentes/FichaCelda.tsx";
 import { FichaImpacto } from "./componentes/FichaImpacto.tsx";
 import { FichaIncidente } from "./componentes/FichaIncidente.tsx";
+import { FichaPais } from "./componentes/FichaPais.tsx";
 import { FichaRegion } from "./componentes/FichaRegion.tsx";
 import { Filtros } from "./componentes/Filtros.tsx";
 import { LineaTiempo } from "./componentes/LineaTiempo.tsx";
 import type { EstadoReproduccion } from "./componentes/LineaTiempo.tsx";
+import { LeyendaGnss, LeyendaPresion } from "./componentes/Leyendas.tsx";
+import type { EstadoGnss } from "./componentes/Leyendas.tsx";
 import { Lista } from "./componentes/Lista.tsx";
 import { Marcador } from "./componentes/Marcador.tsx";
 import { MenuMovil, SeccionMenu } from "./componentes/MenuMovil.tsx";
@@ -40,6 +47,12 @@ import {
   cargarResumenUcrania,
 } from "./datos/carga.ts";
 import type { Carga } from "./datos/carga.ts";
+import { cifrasAhora, DIAS_SEMANA, ultimaNoche } from "./datos/ahora.ts";
+import { cargarDirecto, cierresEnCurso, ordenarAvisos } from "./datos/directo.ts";
+import type { Directo } from "./datos/directo.ts";
+import { agregar, cargarFicheroGnss, cargarIndiceGnss, ficherosDelPeriodo } from "./datos/gnss.ts";
+import type { Agregado, FicheroGnss, IndiceGnss } from "./datos/gnss.ts";
+import { cifrasDePais, presionPorPais } from "./datos/presion.ts";
 import { cifras, esGrave } from "./datos/derivar.ts";
 import type {
   Ataque,
@@ -72,7 +85,13 @@ import {
   soloGraves,
 } from "./estado/filtros.ts";
 import type { Filtros as EstadoFiltros } from "./estado/filtros.ts";
-import { almacenLocal, incidentesDe, novedadesDesde, registrarVisita } from "./estado/novedades.ts";
+import {
+  almacenLocal,
+  incidentesDe,
+  novedadesDesde,
+  novedadesQueLaten,
+  registrarVisita,
+} from "./estado/novedades.ts";
 import metaInicial from "./generado/meta.json";
 import { fechaDia, numero, textos } from "./i18n/index.ts";
 import type { ApiMapa, Encuadre, Reserva } from "./mapa/Mapa.tsx";
@@ -90,6 +109,10 @@ const Mapa = lazy(() => import("./mapa/Mapa.tsx"));
 const MS_ENTRE_COMPROBACIONES = 60_000;
 /** Cada cuánto se vuelve a pedir estado.json, que la recogida publica cada hora. */
 const MS_ENTRE_ESTADOS = 300_000;
+/** Cada cuánto se vuelve a pedir directo.json mientras la pestaña está a la vista. */
+const MS_ENTRE_DIRECTOS = 60_000;
+/** Zoom al que vuela el mapa al abrir un aviso de aeropuerto. */
+const ZOOM_DE_AVISO = 9;
 /** Ritmo de la reproducción: un tramo de la línea de tiempo en cada paso. */
 const MS_POR_PASO = 450;
 /** Ritmo de la reproducción de la guerra: una noche en cada paso. */
@@ -113,6 +136,9 @@ const GRANULARIDAD_INICIAL: Granularidad = "semana";
 
 type PanelLocal =
   | { clase: "region"; codigo: string }
+  | { clase: "aviso"; id: string }
+  | { clase: "celda"; h3: string }
+  | { clase: "pais"; iso: string }
   | { clase: "pila"; ids: string[] }
   | { clase: "impacto"; id: string }
   | null;
@@ -175,6 +201,9 @@ function acotarPeriodo(periodo: Periodo | null, dominio: Periodo): Periodo {
 
 type Centro = { lon: number; lat: number };
 
+/** Interferencia GPS del periodo elegido, sumada por celda; null mientras no se pide. */
+type GnssDelPeriodo = { clave: string; estado: "cargando" } | { clave: string; estado: "listo"; agregado: Agregado | null };
+
 /** Centro de cada país (Natural Earth), para anclar las fichas de ubicación imprecisa. */
 function useCentrosDePais(activo: boolean): ReadonlyMap<string, Centro> | null {
   const [centros, setCentros] = useState<Map<string, Centro> | null>(null);
@@ -226,6 +255,12 @@ export function App() {
   const [resumen, setResumen] = useState<Carga<Resumen>>(CARGANDO);
   const [ucrania, setUcrania] = useState<Carga<ResumenUcrania>>(CARGANDO);
   const [sistema, setSistema] = useState<EstadoSistema | null>(null);
+  const [directo, setDirecto] = useState<Directo | null>(null);
+  const [indiceGnss, setIndiceGnss] = useState<IndiceGnss | null>(null);
+  const [gnssHoy, setGnssHoy] = useState<FicheroGnss | null>(null);
+  const [gnssPeriodo, setGnssPeriodo] = useState<GnssDelPeriodo | null>(null);
+  // Los ficheros de interferencia ya pedidos: cambiar de periodo no los vuelve a descargar.
+  const ficherosGnss = useRef(new Map<string, Promise<FicheroGnss | null>>());
   const [incidente, setIncidente] = useState<Carga<IncidenteDetalle>>(CARGANDO);
   const [ataque, setAtaque] = useState<Carga<Ataque>>(CARGANDO);
   const [capas, setCapas] = useState<Capas>(CAPAS_INICIALES);
@@ -260,6 +295,10 @@ export function App() {
   const [visitaAnterior, setVisitaAnterior] = useState<string | null>(null);
   const [recorrido, setRecorrido] = useState<number | null>(null);
   const [novedadesDescartadas, setNovedadesDescartadas] = useState(false);
+  // El pulso de las novedades se apaga al recorrerlas («Verlas»), al descartarlas o, una a
+  // una, al abrir cada incidente.
+  const [novedadesVistas, setNovedadesVistas] = useState(false);
+  const [abiertos, setAbiertos] = useState<ReadonlySet<string>>(SIN_NOVEDADES);
 
   useEffect(() => {
     setMontado(true);
@@ -310,6 +349,57 @@ export function App() {
       window.clearInterval(temporizador);
     };
   }, []);
+
+  // Detección en directo: directo.json cada minuto mientras la pestaña está a la vista, y
+  // en cuanto vuelve a estarlo.
+  useEffect(() => {
+    const control = new AbortController();
+    const pedir = () => {
+      if (document.visibilityState === "hidden") return;
+      void cargarDirecto(fetch, control.signal).then((carga) => {
+        if (control.signal.aborted) return;
+        if (carga.estado === "listo") setDirecto(carga.datos);
+        else if (carga.estado !== "no_disponible") setDirecto(null);
+      });
+    };
+    pedir();
+    const temporizador = window.setInterval(pedir, MS_ENTRE_DIRECTOS);
+    document.addEventListener("visibilitychange", pedir);
+    return () => {
+      control.abort();
+      window.clearInterval(temporizador);
+      document.removeEventListener("visibilitychange", pedir);
+    };
+  }, []);
+
+  // Índice de la interferencia GPS y el último día publicado (para «Europa ahora»).
+  const pedirGnss = useCallback((objeto: string): Promise<FicheroGnss | null> => {
+    const guardado = ficherosGnss.current.get(objeto);
+    if (guardado !== undefined) return guardado;
+    const promesa = cargarFicheroGnss(objeto, fetch).then((carga) =>
+      carga.estado === "listo" ? carga.datos : null,
+    );
+    ficherosGnss.current.set(objeto, promesa);
+    return promesa;
+  }, []);
+  useEffect(() => {
+    const control = new AbortController();
+    void cargarIndiceGnss(fetch, control.signal).then((carga) => {
+      if (control.signal.aborted) return;
+      if (carga.estado !== "listo") {
+        // Sin índice no hay ningún periodo con datos.
+        setIndiceGnss({ version: 1, generado: "", dias: [], meses: [] });
+        return;
+      }
+      setIndiceGnss(carga.datos);
+      const ultimo = carga.datos.dias[carga.datos.dias.length - 1];
+      if (ultimo === undefined) return;
+      void pedirGnss(`dia/${ultimo}.json`).then((fichero) => {
+        if (!control.signal.aborted) setGnssHoy(fichero);
+      });
+    });
+    return () => control.abort();
+  }, [pedirGnss]);
 
   // Ficha de la ruta: se carga y se valida su fichero.
   useEffect(() => {
@@ -362,6 +452,54 @@ export function App() {
     () => (periodo === null ? VACIO : filtrados.filter((i) => enPeriodo(i.dia, periodo))),
     [filtrados, periodo],
   );
+  // Interferencia GPS del periodo: los ficheros diarios (o mensuales) que lo cubren, sumados.
+  const objetosGnss = useMemo(
+    () => (capas.gnss && indiceGnss !== null && periodo !== null ? ficherosDelPeriodo(indiceGnss, periodo) : null),
+    [capas.gnss, indiceGnss, periodo],
+  );
+  const claveGnss = objetosGnss === null ? null : objetosGnss.join("|");
+  useEffect(() => {
+    if (objetosGnss === null || claveGnss === null) return undefined;
+    let vigente = true;
+    setGnssPeriodo({ clave: claveGnss, estado: "cargando" });
+    void Promise.all(objetosGnss.map(pedirGnss)).then((ficheros) => {
+      if (!vigente) return;
+      const validos = ficheros.filter((f): f is FicheroGnss => f !== null);
+      setGnssPeriodo({
+        clave: claveGnss,
+        estado: "listo",
+        agregado: validos.length === 0 ? null : agregar(validos),
+      });
+    });
+    return () => {
+      vigente = false;
+    };
+    // La clave resume la lista de ficheros: no se vuelve a pedir si no cambia.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [claveGnss, pedirGnss]);
+  const gnssActual =
+    gnssPeriodo !== null && gnssPeriodo.clave === claveGnss && gnssPeriodo.estado === "listo"
+      ? gnssPeriodo.agregado
+      : null;
+  const estadoGnss: EstadoGnss =
+    indiceGnss === null
+      ? "cargando"
+      : gnssPeriodo === null || gnssPeriodo.clave !== claveGnss || gnssPeriodo.estado === "cargando"
+        ? objetosGnss !== null && objetosGnss.length === 0
+          ? "sin_datos"
+          : "cargando"
+        : gnssActual === null
+          ? "sin_datos"
+          : { dias: gnssActual.dias };
+  const presion = useMemo(
+    () =>
+      capas.presion && periodo !== null && dominio !== null
+        ? presionPorPais(filtrados, periodo, dominio.desde)
+        : null,
+    [capas.presion, periodo, dominio, filtrados],
+  );
+  const avisos = directo?.avisos ?? VACIO;
+
   const incidentesPorDia = useMemo(() => {
     const porDia = new Map<number, number>();
     for (const i of filtrados) porDia.set(i.dia, (porDia.get(i.dia) ?? 0) + 1);
@@ -411,6 +549,17 @@ export function App() {
   const novedades = useMemo(
     () => (novedadesDescartadas ? SIN_NOVEDADES : new Set(incidentesNuevos)),
     [incidentesNuevos, novedadesDescartadas],
+  );
+
+  /** Lo que late en el mapa: las novedades que el visitante aún no ha visto. */
+  const latentes = useMemo(
+    () =>
+      novedadesQueLaten(incidentesNuevos, {
+        descartadas: novedadesDescartadas,
+        recorridas: novedadesVistas,
+        abiertos,
+      }),
+    [incidentesNuevos, novedadesDescartadas, novedadesVistas, abiertos],
   );
 
   const contadores = datosResumen === null ? metaInicial : cifras(delPeriodo);
@@ -518,6 +667,10 @@ export function App() {
   const hayQueVerTodo = periodoDeDireccion !== null || reproduccion !== null || noche !== null;
 
   const fichaActiva = montado ? fichaDeRuta : null;
+  const idAbierto = fichaActiva?.clase === "incidente" ? fichaActiva.id : null;
+  useEffect(() => {
+    if (idAbierto !== null) setAbiertos((previos) => new Set([...previos, idAbierto]));
+  }, [idAbierto]);
   const elegido =
     fichaActiva?.clase === "incidente" ? (porId.get(fichaActiva.id) ?? null) : null;
   const paisImpreciso = elegido !== null && elegido.punto === null ? elegido.pais : null;
@@ -534,12 +687,17 @@ export function App() {
     [panelLocal, porId],
   );
 
+  const avisoAbierto =
+    panelLocal?.clase === "aviso" ? (avisos.find((a) => a.id === panelLocal.id) ?? null) : null;
   const encuadre = useMemo<Encuadre | null>(() => {
     if (elegido?.punto) return { lon: elegido.punto.lon, lat: elegido.punto.lat };
+    if (avisoAbierto !== null) return { lon: avisoAbierto.lon, lat: avisoAbierto.lat, zoom: ZOOM_DE_AVISO };
     if (centroPais !== null) return { ...centroPais, zoom: ZOOM_DE_PAIS };
     if (fichaActiva?.clase === "ataque") return "ucrania";
     return null;
-  }, [elegido, centroPais, fichaActiva]);
+    // El vuelo depende del aviso abierto, no de que directo.json se renueve cada minuto.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [elegido, centroPais, fichaActiva, avisoAbierto?.id]);
 
   const regionesDelAtaque = useMemo(() => {
     const actual = datos(ataque);
@@ -591,6 +749,18 @@ export function App() {
     },
     [navegar, idioma],
   );
+  const abrirLocal = useCallback(
+    (panel: Exclude<PanelLocal, null>) => {
+      setHojaPropia(null);
+      setAltura(alturaInicial());
+      setPanelLocal(panel);
+      if (analizarRuta(window.location.pathname).ficha !== null) navegar(rutaDeIdioma(idioma));
+    },
+    [navegar, idioma],
+  );
+  const abrirAviso = useCallback((id: string) => abrirLocal({ clase: "aviso", id }), [abrirLocal]);
+  const abrirCelda = useCallback((h3: string) => abrirLocal({ clase: "celda", h3 }), [abrirLocal]);
+  const abrirPais = useCallback((iso: string) => abrirLocal({ clase: "pais", iso }), [abrirLocal]);
   const cerrarFicha = useCallback(() => {
     setPanelLocal(null);
     if (analizarRuta(window.location.pathname).ficha !== null) navegar(rutaDeIdioma(idioma));
@@ -613,10 +783,63 @@ export function App() {
     api?.vistaInicial();
   }, [quitarSeleccion, api]);
 
+  const cifrasDelMomento = useMemo(
+    () => cifrasAhora({ resumen: datosResumen, ucrania: datosUcrania, directo, gnssHoy }),
+    [datosResumen, datosUcrania, directo, gnssHoy],
+  );
+  /** Cada cifra de «Europa ahora» lleva al sitio del mapa que la explica. */
+  const irACifra = useCallback(
+    (cifra: CifraAhora) => {
+      setMenu(false);
+      setReproduccion(null);
+      switch (cifra) {
+        case "cierres": {
+          const primero = ordenarAvisos(cierresEnCurso(directo))[0];
+          if (primero !== undefined) abrirAviso(primero.id);
+          else api?.vistaInicial();
+          return;
+        }
+        case "incidentes":
+          setCapas((c) => ({ ...c, incidentes: true }));
+          cambiarBusqueda(escribirBusqueda({ ...filtros, reciente: "7d" }, null));
+          api?.vistaInicial();
+          return;
+        case "drones": {
+          const noche = datosUcrania === null ? null : ultimaNoche(datosUcrania);
+          setCapas((c) => ({ ...c, ucrania: true }));
+          if (noche !== null) {
+            cambiarBusqueda(escribirBusqueda(filtros, { desde: noche.dia, hasta: noche.dia }));
+          }
+          api?.volar("ucrania");
+          return;
+        }
+        case "focos":
+          setCapas((c) => ({ ...c, incidentes: true, ucrania: true }));
+          if (hoy !== null) {
+            cambiarBusqueda(
+              escribirBusqueda(filtros, { desde: hoy - (DIAS_SEMANA - 1), hasta: hoy }),
+            );
+          }
+          api?.vistaInicial();
+          return;
+        case "gnss":
+          setCapas((c) => ({ ...c, gnss: true }));
+          if (cifrasDelMomento.gnss !== null) {
+            const dia = cifrasDelMomento.gnss.dia;
+            cambiarBusqueda(escribirBusqueda(filtros, { desde: dia, hasta: dia }));
+          }
+          api?.vistaInicial();
+          return;
+      }
+    },
+    [directo, abrirAviso, api, cambiarBusqueda, filtros, datosUcrania, hoy, cifrasDelMomento],
+  );
+
   const irANovedad = useCallback(
     (posicion: number) => {
       const id = incidentesNuevos[posicion];
       if (id === undefined) return;
+      setNovedadesVistas(true);
       setRecorrido(posicion);
       abrirIncidente(id);
     },
@@ -828,6 +1051,53 @@ export function App() {
         </>
       ),
     };
+  } else if (panelLocal?.clase === "aviso" && avisoAbierto !== null && directo !== null) {
+    ficha = {
+      nombre: `${t.directo.etiqueta} ${avisoAbierto.oaci}`,
+      contenido: (
+        <>
+          <CabeceraFicha t={t} etiqueta={t.directo.etiqueta} onCerrar={cerrarFicha} />
+          <div className="overflow-y-auto px-4 py-3">
+            <FichaAviso t={t} idioma={idioma} aviso={avisoAbierto} directo={directo} />
+          </div>
+        </>
+      ),
+    };
+  } else if (panelLocal?.clase === "celda" && gnssActual !== null) {
+    const celda = gnssActual.celdas.find((c) => c.h3 === panelLocal.h3);
+    if (celda !== undefined) {
+      ficha = {
+        nombre: `${t.gnss.etiqueta} ${celda.h3}`,
+        contenido: (
+          <>
+            <CabeceraFicha t={t} etiqueta={t.gnss.etiqueta} onCerrar={cerrarFicha} />
+            <div className="overflow-y-auto px-4 py-3">
+              <FichaCelda t={t} idioma={idioma} celda={celda} periodo={textoPeriodo} dias={gnssActual.dias} />
+            </div>
+          </>
+        ),
+      };
+    }
+  } else if (panelLocal?.clase === "pais" && periodo !== null) {
+    ficha = {
+      nombre: `${t.presion.etiqueta} ${panelLocal.iso}`,
+      contenido: (
+        <>
+          <CabeceraFicha t={t} etiqueta={t.presion.etiqueta} onCerrar={cerrarFicha} />
+          <div className="overflow-y-auto px-4 py-3">
+            <FichaPais
+              key={panelLocal.iso}
+              t={t}
+              idioma={idioma}
+              iso={panelLocal.iso}
+              presion={presion?.get(panelLocal.iso) ?? null}
+              cifras={cifrasDePais(filtrados, panelLocal.iso, periodo)}
+              periodo={textoPeriodo}
+            />
+          </div>
+        </>
+      ),
+    };
   } else if (panelLocal?.clase === "pila" && pila.length > 0) {
     ficha = {
       nombre: t.pila.titulo(pila.length),
@@ -933,6 +1203,15 @@ export function App() {
       enHoja={enHoja}
     />
   );
+  const leyendas = (capas.gnss || capas.presion) && (
+    <div className="flex flex-col items-start gap-1.5" data-leyendas="">
+      {capas.presion && <LeyendaPresion t={t} />}
+      {capas.gnss && <LeyendaGnss t={t} estado={estadoGnss} />}
+    </div>
+  );
+  const europaAhora = (forma: "franja" | "corta") => (
+    <EuropaAhora t={t} idioma={idioma} cifras={cifrasDelMomento} onIr={irACifra} forma={forma} />
+  );
   const botonNoches = (grande: boolean) => (
     <button
       type="button"
@@ -944,7 +1223,7 @@ export function App() {
     </button>
   );
   // Lo que aparece bajo la cabecera, centrado: las novedades, la noche de la guerra y los avisos.
-  const avisos = (
+  const avisosArriba = (
     <div className="pointer-events-none absolute inset-x-3 top-full z-10 mt-2 flex flex-col items-center gap-2">
       {!novedadesDescartadas && incidentesNuevos.length > 0 && (
         <div className="flotante pointer-events-auto px-3 py-1.5">
@@ -964,7 +1243,7 @@ export function App() {
             <span className="block text-sm text-secundario">{t.guerra.sinCifra}</span>
           ) : (
             <>
-              <span className="cifra block text-xl text-atribuido">
+              <span className="cifra block text-xl text-guerra">
                 {numero(nocheActual.lanzados, idioma)}
               </span>
               <span className="block text-xs text-secundario">{t.guerra.drones}</span>
@@ -986,7 +1265,7 @@ export function App() {
       )}
       {(avisoDeDatos !== null || mapaFallido) && (
         <p role="alert" className="flotante pointer-events-auto flex max-w-md items-center gap-2 p-4">
-          <Simbolo tipo="incursion" estado="atribuido" />
+          <Simbolo tipo="incursion" estado="confirmado" />
           {avisoDeDatos ?? t.avisos.mapaNoDisponible}
         </p>
       )}
@@ -1015,10 +1294,13 @@ export function App() {
               noche={nocheActual?.regiones ?? null}
               focosUcrania={focosUcrania}
               impactos={impactos}
+              gnss={gnssActual?.celdas ?? null}
+              presion={presion}
+              avisos={avisos}
               elegido={elegido}
               paisResaltado={paisImpreciso}
               regionesElegidas={regionesElegidas}
-              novedades={novedades}
+              novedades={latentes}
               hoy={hoy}
               encuadre={encuadre}
               reserva={reserva}
@@ -1026,6 +1308,9 @@ export function App() {
               onPila={abrirPila}
               onRegion={abrirRegion}
               onImpacto={abrirImpacto}
+              onAviso={abrirAviso}
+              onCelda={abrirCelda}
+              onPais={abrirPais}
               onListo={setApi}
               onFallo={fallarMapa}
             />
@@ -1078,7 +1363,8 @@ export function App() {
               }
             />
             <div className="superficie border-b px-3 py-1.5">{filtrosDeLaPantalla(false)}</div>
-            {avisos}
+            <div className="superficie border-b px-3 py-1">{europaAhora("franja")}</div>
+            {avisosArriba}
           </div>
           <div className="flex min-h-0 flex-1">
             {feedAbierto && (
@@ -1086,9 +1372,12 @@ export function App() {
             )}
             <div className="relative min-w-0 flex-1">
               <div ref={refAbajoEsc} className="absolute inset-x-3 bottom-3 flex flex-col gap-2">
-                <div className="pointer-events-auto flex items-end gap-2 self-end">
-                  <Atribuciones t={t} />
-                  <Zoom t={t} onZoom={(paso) => api?.zoom(paso)} />
+                <div className="flex items-end justify-between gap-2">
+                  <div className="pointer-events-auto">{leyendas}</div>
+                  <div className="pointer-events-auto flex items-end gap-2">
+                    <Atribuciones t={t} />
+                    <Zoom t={t} onZoom={(paso) => api?.zoom(paso)} />
+                  </div>
                 </div>
                 <div className="pointer-events-auto">{lineaDeTiempo("franja")}</div>
               </div>
@@ -1111,8 +1400,9 @@ export function App() {
               menuAbierto={menu}
               onMenu={() => setMenu(true)}
               onPeriodo={() => abrirHoja("tiempo")}
+              debajo={europaAhora("corta")}
             />
-            {avisos}
+            {avisosArriba}
           </div>
           <div className="relative min-h-0 flex-1">
             {/* Con una hoja abierta, la barra de abajo queda tapada: no se pinta. */}
@@ -1121,8 +1411,11 @@ export function App() {
                 ref={refAbajoTel}
                 className="absolute inset-x-0 bottom-0 flex flex-col items-end gap-1 pb-[env(safe-area-inset-bottom)]"
               >
-                <div className="pointer-events-auto mr-2">
-                  <Atribuciones t={t} />
+                <div className="flex w-full items-end justify-between gap-2 px-2">
+                  <div className="pointer-events-auto">{leyendas}</div>
+                  <div className="pointer-events-auto">
+                    <Atribuciones t={t} />
+                  </div>
                 </div>
                 <div className="pointer-events-auto w-full">{lineaDeTiempo("barra")}</div>
               </div>

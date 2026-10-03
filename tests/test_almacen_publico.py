@@ -28,7 +28,12 @@ def test_la_configuracion_da_el_almacen_de_hetzner(almacen: Almacen) -> None:
     )
     assert almacen.url_publica("estado.json") == f"{almacen.publico}/estado.json"
     assert almacen.url_s3("estado.json") == (f"{almacen.punto_s3}/{almacen.bucket}/estado.json")
-    assert almacen.objetos == {"estado": "estado.json", "teselas": "europa-z14.pmtiles"}
+    assert almacen.objetos == {
+        "estado": "estado.json",
+        "teselas": "europa-z14.pmtiles",
+        "directo": "directo.json",
+        "gnss": "gnss",
+    }
 
 
 def test_ninguna_direccion_del_almacen_es_de_cloudflare() -> None:

@@ -41,6 +41,7 @@ En `/home/eodi`:
   - `known_hosts`: la clave de host publicada por GitHub;
   - `exportacion.json`: la última exportación semanal correcta (versión, hora y huella);
   - `deduccion.json`: la última ejecución correcta del motor de deducción;
+  - `directo.json`: el último ciclo correcto de la detección en directo y su fuente;
   - `almacen.env`: las credenciales S3 del almacén público (`ALMACEN_ID` y
     `ALMACEN_SECRETO`), para subir `estado.json`;
   - `estado.json`: el último estado publicado.
@@ -75,6 +76,9 @@ En `/home/eodi`:
   `historial.jsonl`, `tacticas.json`, `apariciones.json`, `control.json` y `gasto.json`.
 - `datos/reintentos/`, propiedad de `eodi`: un fichero por sitio con los reintentos del día
   (apartado «Reintentos por fuente»).
+- `datos/directo/`, con permisos 700 y propiedad de `eodi`: el estado de la detección en directo
+  de cierres y lo publicado del mapa de interferencia GPS (apartado «Detección en directo de
+  cierres»).
 
 Las dos claves de despliegue se generan en el servidor y la privada no sale de él. En
 GitHub figuran en cada repositorio con el título «servidor eodi-recogida».
@@ -368,6 +372,65 @@ journalctl -u eodi-dirigido -n 60
 
 Si el lote se queda a medias, se relanza con `--lote <id>`.
 
+## Detección en directo de cierres
+
+Informe: [`informe_europa_directo.md`](informe_europa_directo.md). Cada minuto, las posiciones en
+tiempo real de los aeropuertos vigilados (los de cobertura alta del archivo de adsb.lol, unos
+noventa), sus aterrizajes y despegues frente a la línea base del mismo día de la semana y la
+misma hora local, y los avisos de cierre ([`recogida/directo.py`](../recogida/directo.py),
+reglas en [`proceso/directo.py`](../proceso/directo.py)).
+
+- **Unidad.** `eodi-directo.service`, siempre en marcha (`Restart=always`, a los 30 s), como
+  `eodi`, con `Nice=5` y un tope de 1,5 GB de memoria. Ejecuta
+  [`servidor/directo.sh`](../servidor/directo.sh), que toma su propio cerrojo
+  (`directo.lock`): nunca toma el de la recogida horaria ni la hace esperar, y no toca la base
+  ni el clon. Usa el código del clon tal como lo deja la recogida horaria: cuando ve un commit
+  nuevo, guarda sus trazas y sale, y systemd la vuelve a lanzar con el código nuevo.
+- **Fuente.** adsb.lol (`/v2/point`, sin clave), en círculos de 200 millas que cubren todos los
+  aeropuertos vigilados, una petición cada 1,5 s como mucho y con compresión. Respaldo
+  automático: adsb.fi (mismo formato), si en un ciclo falla la mitad de los círculos; tras tres
+  ciclos así sigue con el respaldo y prueba la principal cada 10 minutos. Los reintentos esperan
+  2 y 4 s y cuentan en el tope diario por sitio de `datos/reintentos/`.
+- **Datos** en `datos/directo/`, con permisos 700 y propiedad de `eodi`: `estado.json` (avisos,
+  señales y fuente en uso), `avisos.json` (los avisos, para la búsqueda dirigida y la recogida
+  horaria), `avisos_historial.jsonl` (cada aviso al abrirse y al reanudarse),
+  `confirmaciones.json` (lo escribe la recogida horaria), `vivos.pickle` (las trazas de las tres
+  últimas horas, guardadas cada 10 minutos y al parar: al volver a arrancar en menos de 15
+  minutos sigue con ellas) y `gnss.json` (los días publicados del mapa de interferencia GPS).
+  El registro para `estado.json` (último ciclo correcto y fuente) es
+  `/home/eodi/.eodi/directo.json`.
+- **Publica** en el almacén público, en cada ciclo, `directo.json` (`Cache-Control: public,
+  max-age=30`), y al aparecer cada día nuevo del archivo, el mapa de interferencia GPS de ese
+  día y de su mes y el índice (`gnss/`, con compresión gzip), unos pocos días por ciclo hasta
+  tener todo el histórico.
+- **Un aviso nuevo** lanza la búsqueda dirigida de noticias de ese aeropuerto
+  (`python -m recogida.busqueda_dirigida directo`, con el cerrojo de la búsqueda) y la repite
+  cada media hora mientras sigue abierto; la recogida horaria incorpora lo hallado y, cuando un
+  incidente de la base recoge el cierre, lo deja en `confirmaciones.json`.
+- **Vigilancia.** `estado.json` lleva `directo` (en marcha, con respaldo o parada, y el último
+  ciclo correcto), y el workflow `vigia-recogida` abre la incidencia «La detección en directo no
+  se actualiza» si `directo.json` lleva más de media hora sin publicarse.
+
+Órdenes, como `operador`:
+
+```
+systemctl status eodi-directo.service
+journalctl -u eodi-directo.service -n 40            # un ciclo por minuto: peticiones, señales, avisos
+sudo systemctl restart eodi-directo.service         # relanzar (sigue con las trazas guardadas)
+sudo -u eodi cat /home/eodi/datos/directo/estado.json | head -40
+sudo -u eodi tail -n 5 /home/eodi/datos/directo/avisos_historial.jsonl
+```
+
+**Reproducir días pasados** con las trazas guardadas del archivo (para ajustar umbrales; no toca
+nada del servicio):
+
+```
+sudo systemd-run --unit=eodi-directo-reproduccion --uid=eodi --gid=eodi --nice=10 \
+  --working-directory=/home/eodi/droneobservatory /home/eodi/droneobservatory/.venv/bin/python \
+  -m recogida.directo_reproduccion 2025-09-22 --datos /home/eodi/datos/trafico \
+  --salida /home/eodi/datos/directo/reproduccion.jsonl
+```
+
 ## Secretos en local
 
 En `%USERPROFILE%\.eodi\`, fuera de cualquier repositorio:
@@ -406,7 +469,7 @@ El script:
 5. activa los temporizadores de la recogida horaria, de la exportación semanal, de las
    fuentes oficiales de detalle, del lector de canales de la capa de guerra, del procesado de
    adsb.lol, de la búsqueda dirigida de noticias, del motor de deducción y del barrido del
-   catálogo vivo.
+   catálogo vivo, y el servicio de detección en directo de cierres.
 
 Puede repetirse sobre un servidor que ya existe: deja igual lo que ya está y vuelve a
 aplicar la configuración. Para empezar de verdad desde cero se borra antes el servidor:
@@ -443,7 +506,9 @@ horas sin procesar ninguno); en `condiciones`, la de la última petición correc
 o al IEM.
 Lleva también `ultima_exportacion`: la hora en que terminó la última exportación semanal
 correcta (o null si no consta ninguna), del registro que deja la exportación, y
-`ultima_deduccion`: la de la última ejecución correcta del motor de deducción.
+`ultima_deduccion`: la de la última ejecución correcta del motor de deducción, y `directo`: el
+estado de la detección en directo (`en_marcha`, `con_respaldo` o `parado`, este si no ha
+tenido un ciclo correcto en 10 minutos) con su último ciclo correcto.
 No lleva ningún contenido. La recogida deja el estado de cada fuente en un fichero
 temporal (`recogida.horaria --estado`). El último estado publicado se guarda en
 `/home/eodi/.eodi/estado.json`, de donde sale la hora de la última recogida correcta.

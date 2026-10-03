@@ -49,6 +49,7 @@ from recogida import (
     catalogo_vivo,
     deduccion,
     detalle,
+    directo_horaria,
     extractor,
     firms,
     gdelt,
@@ -205,6 +206,16 @@ def paso_busqueda(almacen: Almacen, ahora: datetime) -> None:
         registro.warning("búsqueda dirigida no incorporada: %s", str(error)[:300])
 
 
+def paso_directo(almacen: Almacen, ahora: datetime) -> None:
+    """Confirmación de los avisos en directo. Un fallo no cambia el resultado de la recogida."""
+    try:
+        registro.info(
+            "avisos en directo confirmados: %d", directo_horaria.paso_horario(almacen, ahora)
+        )
+    except Exception as error:
+        registro.warning("avisos en directo sin confirmar: %s", str(error)[:300])
+
+
 def paso_detalle(almacen: Almacen, ahora: datetime) -> dict[str, EstadoFuente]:
     """Incorporación de las fuentes oficiales de detalle. Nada de lo que falle aquí sale de esta
     función: queda en el registro y sus fuentes, con aviso en estado.json."""
@@ -312,6 +323,9 @@ def principal(argumentos: list[str] | None = None) -> int:
         # Búsqueda dirigida: lo que halló su temporizador para los cierres medidos sin
         # incidente entra como artículos; y la lista de lo que falta buscar, al día.
         paso_busqueda(almacen, ahora)
+        # Avisos de la detección en directo: los que recoge un incidente de la base pasan a
+        # confirmados (recogida/directo_horaria.py). No cambia el código de salida.
+        paso_directo(almacen, ahora)
         # Lo que dejó calculado el motor de deducción (su propio temporizador): no cambia el
         # código de salida si falla.
         deduccion.paso_horario(almacen)

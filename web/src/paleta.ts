@@ -10,10 +10,18 @@ export const PALETA = {
   linea: "#1f2b3f",
   texto: "#e8eef6",
   secundario: "#93a0b4",
-  confirmado: "#56c271",
-  notificado: "#eda93a",
-  atribuido: "#f25c4f",
+  // Estados de un incidente: naranja lo notificado, rojo lo confirmado (y lo atribuido, que
+  // es un confirmado con responsable señalado: lleva además una bandera). Se distinguen por
+  // luminancia, no solo por tono, para que se separen también con daltonismo (test en
+  // tests/colores.test.ts).
+  notificado: "#ff9a2e",
+  confirmado: "#f53a50",
+  atribuido: "#f53a50",
   desmentido: "#93a0b4",
+  // El verde solo dice que el sistema funciona (datos al día, en la barra de estado).
+  alDia: "#56c271",
+  // Capa de guerra: su propio rojo coral, distinto del rojo de los estados.
+  guerra: "#f25c4f",
 } as const;
 
 /** Acento por defecto; la web usa el de la variable --acento de estilos.css. */
@@ -25,6 +33,10 @@ export const COLOR_ESTADO: Record<Estado, string> = {
   atribuido: PALETA.atribuido,
   desmentido: PALETA.desmentido,
 };
+
+/** Bandera de los atribuidos: el mismo rojo, con un borde del color del fondo que la separa
+ *  de la forma del símbolo. */
+export const COLOR_BANDERA = PALETA.atribuido;
 
 /** Gravedad de cada estado para decidir el color de un grupo: manda el más grave. */
 export const GRAVEDAD: Record<Estado, number> = {

@@ -70,7 +70,8 @@ def test_la_recogida_pasa_el_registro_del_motor_a_estado_json() -> None:
     recogida = (RAIZ / "servidor" / "recogida.sh").read_text(encoding="utf-8")
     orden = recogida.split("-m recogida.estado")[1].split("; then")[0]
     argumentos = orden.replace("\\\n", " ").split()
-    assert argumentos[-2:] == ["--deduccion", '"$DEDUCCION_REGISTRO"']
+    posicion = argumentos.index("--deduccion")
+    assert argumentos[posicion + 1] == '"$DEDUCCION_REGISTRO"'
     assert "n" not in argumentos
 
 

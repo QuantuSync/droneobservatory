@@ -56,3 +56,16 @@ export function novedadesDesde(
 export function incidentesDe(eventos: readonly EventoResumen[]): string[] {
   return [...new Set(eventos.map((evento) => evento.id))];
 }
+
+/**
+ * Los incidentes que laten en el mapa: los nuevos desde la visita anterior que el visitante
+ * aún no ha visto. Nada late si ha descartado las novedades o ha empezado a recorrerlas
+ * («Verlas»), y deja de latir cada incidente que abre. En la primera visita no hay nuevos.
+ */
+export function novedadesQueLaten(
+  nuevos: readonly string[],
+  vistas: { descartadas: boolean; recorridas: boolean; abiertos: ReadonlySet<string> },
+): ReadonlySet<string> {
+  if (vistas.descartadas || vistas.recorridas) return new Set();
+  return new Set(nuevos.filter((id) => !vistas.abiertos.has(id)));
+}

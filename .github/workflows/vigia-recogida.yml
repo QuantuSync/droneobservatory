@@ -82,3 +82,25 @@ jobs:
           elif [ -n "$abierta" ]; then
             gh issue close "$abierta" --comment "Vuelve a haber una exportación correcta. $MENSAJE"
           fi
+      # La detección en directo de cierres (servidor/directo.sh, siempre en marcha): otra
+      # incidencia si directo.json lleva más de media hora sin publicarse o no responde.
+      - name: Abrir o cerrar la incidencia de la detección en directo
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TITULO: La detección en directo no se actualiza
+          PROBLEMA: ${{ steps.salud.outputs.problema_directo }}
+          MENSAJE: ${{ steps.salud.outputs.mensaje_directo }}
+        run: |
+          set -euo pipefail
+          abierta="$(gh issue list --state open --limit 100 --json number,title \
+            --jq 'map(select(.title == env.TITULO)) | .[0].number // empty')"
+          if [ "$PROBLEMA" = "true" ]; then
+            if [ -z "$abierta" ]; then
+              gh issue create --title "$TITULO" --body "$MENSAJE Cómo revisarla y relanzarla: \`docs/servidor.md\`, «Detección en directo de cierres». Esta incidencia se cierra sola cuando el servicio vuelve a publicar."
+            else
+              echo "la incidencia #$abierta sigue abierta"
+            fi
+          elif [ -n "$abierta" ]; then
+            gh issue close "$abierta" --comment "La detección en directo vuelve a publicar. $MENSAJE"
+          fi

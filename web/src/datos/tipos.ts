@@ -451,7 +451,11 @@ export interface EstadoSistema {
   ultima_exportacion?: string | null;
   /** Fin de la última ejecución correcta del motor de deducción; null si no consta ninguna. */
   ultima_deduccion?: string | null;
+  /** Servicio de detección en directo de cierres: su estado y su último ciclo correcto. */
+  directo?: { estado: EstadoDirecto; ultimo_ciclo_correcto: string | null };
 }
+
+export type EstadoDirecto = "en_marcha" | "con_respaldo" | "parado";
 
 /** Cifras para prerenderizar la cabecera y la barra de estado sin esperar a los datos. */
 export interface Meta {

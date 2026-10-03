@@ -46,6 +46,15 @@ export function numero(n: number, idioma: Idioma): string {
   return new Intl.NumberFormat(idioma, { useGrouping: "always" }).format(n);
 }
 
+/** Proporción (0–1) como porcentaje con un decimal por debajo del 10 %: «2,4 %», «17 %». */
+export function porcentaje(p: number, idioma: Idioma): string {
+  const valor = p * 100;
+  return new Intl.NumberFormat(idioma, {
+    maximumFractionDigits: valor < 10 ? 1 : 0,
+    minimumFractionDigits: 0,
+  }).format(valor) + " %";
+}
+
 /** «12» si el rango es exacto y «2–10» si no; null cuando ninguna fuente da la cifra. */
 export function rango(r: RangoODesconocido | undefined, idioma: Idioma): string | null {
   if (r === undefined || r === "desconocido") return null;

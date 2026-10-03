@@ -555,6 +555,11 @@ const estadoSistema = objeto(
   {
     ultima_exportacion: nulable(cadena(v.PATRON_INSTANTE)),
     ultima_deduccion: nulable(cadena(v.PATRON_INSTANTE)),
+    // Servicio de detección en directo de cierres de aeropuerto.
+    directo: objeto({
+      estado: enumerado(v.ESTADOS_DIRECTO),
+      ultimo_ciclo_correcto: nulable(cadena(v.PATRON_INSTANTE)),
+    }),
   },
 );
 

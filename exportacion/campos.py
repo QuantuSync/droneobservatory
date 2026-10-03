@@ -238,3 +238,64 @@ CAMPOS_PUBLICOS_IMPACTO: frozenset[str] = frozenset(
         *_control(),
     }
 )
+
+# Mapa diario de interferencia GPS (recogida/gnss_publico.py): el índice de días y meses
+# publicados y, por día o mes, las celdas H3 con sus aeronaves, las degradadas, la proporción,
+# el nivel y el contorno. Sin la serie por hora ni nada de las aeronaves.
+CAMPOS_PUBLICOS_GNSS: frozenset[str] = frozenset(
+    {
+        "version",
+        "generado",
+        "dias",
+        "meses",
+        "periodo",
+        "resolucion_h3",
+        "resumen",
+        "resumen.celdas",
+        "resumen.celdas_media",
+        "resumen.celdas_alta",
+        "resumen.aeronaves",
+        "resumen.degradadas",
+        "resumen.proporcion",
+        "resumen.nivel",
+        "celdas",
+        "celdas[].h3",
+        "celdas[].aeronaves",
+        "celdas[].degradadas",
+        "celdas[].proporcion",
+        "celdas[].nivel",
+        "celdas[].contorno",
+    }
+)
+
+# Detección en directo de cierres de aeropuerto (recogida/directo.py, directo.json): cada
+# aviso con su aeropuerto, su estado, sus horas, la evidencia medida, la confirmación y la
+# ventaja frente a la primera noticia. Sin los motivos internos, el factor de cobertura ni la
+# versión de la regla.
+CAMPOS_PUBLICOS_AVISO_DIRECTO: frozenset[str] = frozenset(
+    {
+        "id",
+        "oaci",
+        "nombre",
+        "pais",
+        "lat",
+        "lon",
+        "estado",
+        "inicio",
+        "detectado",
+        "reanudado",
+        "evidencia",
+        "evidencia.esperados",
+        "evidencia.vistos",
+        "evidencia.llegadas_perdidas",
+        "evidencia.salidas_perdidas",
+        "evidencia.esperas",
+        "evidencia.desvios",
+        "confirmacion",
+        "confirmacion.tipo",
+        "confirmacion.incidente",
+        "confirmacion.hora",
+        "primera_noticia",
+        "ventaja_min",
+    }
+)

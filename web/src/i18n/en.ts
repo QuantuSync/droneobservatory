@@ -1,6 +1,7 @@
 import { LICENCIA_DATOS, LICENCIA_DATOS_URL, NOMBRE, ORIGEN, REPOSITORIO } from "../sitio.ts";
 import { REGIONES_RUSIA_EN } from "./regionesRusia.ts";
 import type { Textos } from "./tipos.ts";
+import { UMBRALES_DIRECTO } from "./umbrales.ts";
 
 export const en: Textos = {
   descripcion:
@@ -25,6 +26,8 @@ export const en: Textos = {
     incidentes: "Incidents",
     ucrania: "Ukraine",
     densidad: "Density",
+    presion: "Pressure",
+    gnss: "GPS",
     feed: "Live",
     ayuda: "Help",
     cambiarIdioma: "Versión en español",
@@ -69,6 +72,9 @@ export const en: Textos = {
       condiciones: "Weather (Open-Meteo, METAR)",
     },
     estadoFuente: { leida: "read", con_aviso: "with warning", no_leida: "not read" },
+    directo: "Live detection",
+    estadoDirecto: { en_marcha: "running", con_respaldo: "on the backup source", parado: "stopped" },
+    ultimoCiclo: "last good cycle",
     ultimoDato: "latest data",
     sinUltimoDato: "no data yet",
     nuncaCorrecta: "No successful collection",
@@ -117,6 +123,81 @@ export const en: Textos = {
     const dias = Math.floor(horas / 24);
     return dias < 30 ? `${dias} ${dias === 1 ? "day" : "days"} ago` : `on ${fecha}`;
   },
+  ahora: {
+    etiqueta: "Europe now",
+    cierres: "airport closures in progress",
+    incidentes: "incidents in 7 days",
+    drones: "drones launched last night",
+    focos: "confirmed thermal hotspots in 7 days",
+    gnss: "GPS interference today",
+    cortos: {
+      cierres: "closures",
+      incidentes: "7 days",
+      drones: "last night",
+      focos: "hotspots 7 d",
+      gnss: "GPS",
+    },
+    nivel: { sin: "no interference", media: "medium", alta: "high" },
+    celdasAltas: (n) => (n === 1 ? "1 high cell" : `${n} high cells`),
+    sinDato: "no figure",
+    ir: (que) => `Show on the map: ${que}`,
+  },
+  directo: {
+    etiqueta: "Airport · live detection",
+    estado: {
+      posible_cierre: "Possible closure in progress",
+      cierre_confirmado: "Closure confirmed",
+      operacion_reanudada: "Operations resumed",
+    },
+    detectado: "Detected",
+    inicio: "Start of the gap",
+    reanudado: "Resumed",
+    evidencia: "Evidence",
+    movimientos: (vistos, esperados) => `${vistos} movements seen out of ${esperados} expected`,
+    llegadasPerdidas: (n) => `${n} missing arrivals`,
+    salidasPerdidas: (n) => `${n} missing departures`,
+    esperas: (n) => `${n} aircraft holding`,
+    desvios: (n) => `${n} diverted flights`,
+    confirmacion: "Confirmation",
+    confirmacionTipo: { incidente: "incident in the database", oficial: "official source" },
+    primeraNoticia: "First news",
+    ventaja: (minutos) =>
+      minutos >= 0
+        ? `detected ${minutos} min before the first news`
+        : `detected ${-minutos} min after the first news`,
+    actualizado: "Updated",
+    fuente: "Real-time traffic",
+    fuentes: { adsb_lol: "adsb.lol", adsb_fi: "adsb.fi" },
+    vigilados: (n) => `${n} airports monitored`,
+  },
+  gnss: {
+    etiqueta: "GPS interference",
+    leyenda: "Aircraft with degraded position",
+    niveles: { sin: "under 2%", media: "2 to 10%", alta: "over 10%" },
+    proporcion: "Aircraft affected",
+    aeronaves: "Aircraft",
+    degradadas: "with degraded position",
+    periodo: "Period",
+    dias: (n) => (n === 1 ? "1 day with data" : `${n} days with data`),
+    sinDatos: "No interference data for this period",
+    cargando: "Loading interference…",
+    letrero: (proporcion) => `GPS interference · ${proporcion} of aircraft`,
+  },
+  presion: {
+    etiqueta: "Country · pressure",
+    leyenda: "Incidents in the period",
+    menos: "fewer",
+    mas: "more",
+    tendencia: { sube: "up", baja: "down", estable: "stable" },
+    frente: (anterior) => `compared with ${anterior} in the previous period of equal length`,
+    sinComparacion: "no previous period with data",
+    incidentes: (n) => (n === 1 ? "1 incident" : `${n} incidents`),
+    porTipo: "By type",
+    porEstado: "By status",
+    lista: "Incidents in the period",
+    vacia: "No incidents in the selected period.",
+    letrero: (pais, n) => `${pais} · ${n === 1 ? "1 incident" : `${n} incidents`}`,
+  },
   novedades: {
     aviso: (n) => (n === 1 ? "1 update since your last visit" : `${n} updates since your last visit`),
     recorrer: "Show me",
@@ -129,18 +210,23 @@ export const en: Textos = {
     titulo: "How to read the map",
     cerrar: "Close help",
     formas: "The shape shows the type of incident.",
-    colores: "The colour shows the status. Denied incidents have a dashed outline and no fill.",
+    colores:
+      "The colour shows the status: orange, reported; red, confirmed; red with a small flag, " +
+      "attributed (a confirmed incident whose perpetrator a government has named). Denied " +
+      "incidents have a dashed grey outline and no fill.",
     areas: "Each incident covers an area: the circle is the radius within which it is known to have happened.",
     lineas: "A thin line joins the incidents of one episode: several targets on the same night.",
     numeros:
       "A circle with a number groups several incidents: it grows with the number, and its ring " +
-      "takes the colour of the most serious status inside. Zoom in and they separate.",
+      "is red if it holds any confirmed or attributed incident and orange if all are reported. " +
+      "Zoom in and they separate.",
     pila: "If the incidents share the exact same spot, tap the circle to choose which one to open.",
     pulsos:
-      "Confirmed and attributed incidents pulse slowly; attributed ones a little more. " +
-      "Reported incidents are dimmer.",
+      "Only what is new since your last visit pulses (and the circle that holds it): it stops " +
+      "when you press “Show me” or “Dismiss” or open the incident. With the system's reduced " +
+      "motion setting, it gets a fixed ring instead. Reported incidents are dimmer.",
     reciente: "A soft glow marks what started in the last 24 hours.",
-    novedad: "A ring in the interface colour marks what has changed since your last visit.",
+    novedad: "Nothing pulses on a first visit: there is no earlier visit to compare with yet.",
     ucrania: "In the Ukraine layer, each region is shaded by the attacks that name it in the period.",
     rusia:
       "Russian regions are grey with a dashed outline: their figures are those of the " +
@@ -149,11 +235,13 @@ export const en: Textos = {
       "A small dot is a specific place hit (a town or a facility) according to the regional " +
       "administrations, the Ukrainian General Staff or Russian governors. Filled: official " +
       "source; ring only: claim by a party. Zoomed out, they group with their count. Daily " +
-      "front-line reports are not drawn.",
+      "front-line reports are in the downloadable data.",
     foco:
       "A light dot next to an incident, a place hit or a group of places, or at the centre of a Ukrainian region, marks a " +
-      "thermal hotspot detected by satellite (NASA FIRMS) at its place and time. Its absence " +
-      "proves nothing.",
+      "thermal hotspot detected by satellite (NASA FIRMS) at its place and time.",
+    directo:
+      "A dot with a ring and the ICAO code is an airport in the live detection, without pulse: " +
+      "orange, possible closure in progress; red, closure confirmed; grey, operations resumed.",
     atajos: "Keyboard shortcuts",
     acciones: {
       ayuda: "Open or close this help",
@@ -291,6 +379,7 @@ export const en: Textos = {
     efecto: "Effect",
     respuesta: "Response",
     atribucion: "Attribution",
+    confirmadoAtribuido: (actor, autoridad) => `Confirmed · attributed to ${actor}, according to ${autoridad}`,
     atribuidoA: (actor, autoridad) => `${actor}, according to ${autoridad}`,
     motivoDesmentido: "Reason for the denial",
     desconocido: "No data",
@@ -376,7 +465,7 @@ export const en: Textos = {
     masAtaques: (n) => `Show ${n} more`,
     nota:
       "The figures are those each party gives in its statements. Shootdowns per region are " +
-      "only counted when the report breaks them down.",
+      "those each party breaks down by region.",
     fuenteCifras: (medio) => `Figures from ${medio}`,
     reivindicacion: "claim by a party to the war",
     impactos: "Places hit in the period",
@@ -518,19 +607,20 @@ export const en: Textos = {
               {
                 termino: "Reported",
                 marca: { estado: "notificado" },
-                texto: ["The news reports it. It is the initial status of every incident."],
+                texto: ["The news reports it. It is the initial status of every incident. In orange."],
               },
               {
                 termino: "Confirmed",
                 marca: { estado: "confirmado" },
-                texto: ["An authority states that the incident happened."],
+                texto: ["An authority states that the incident happened. In red."],
               },
               {
                 termino: "Attributed",
                 marca: { estado: "atribuido" },
                 texto: [
-                  "An authority names a government as responsible. The record says who " +
-                    "attributes it and to whom.",
+                  "A confirmed incident for which an authority names a government as " +
+                    "responsible: red, with a small flag on the symbol. The record shows it as " +
+                    "“Confirmed · attributed to…”, with who attributes it and to whom.",
                 ],
               },
               {
@@ -548,7 +638,8 @@ export const en: Textos = {
             parrafo: [
               "In the scoreboard, confirmed and attributed incidents are counted separately: an " +
                 "attributed incident is no longer counted as confirmed. Status is always shown " +
-                "with both colour and text.",
+                "with both colour and text. A circle that groups several incidents is red if it " +
+                "holds any confirmed or attributed incident and orange if all are reported.",
             ],
           },
         ],
@@ -769,10 +860,10 @@ export const en: Textos = {
           },
           {
             parrafo: [
-              "Limits: clouds and smoke hide fires, the satellites pass only a few times a " +
-                "day and a short fire may fall between passes; the absence of a hotspot " +
-                "proves nothing and is not shown. A hotspot within the radius may be another " +
-                "nearby fire, such as a crop burn. It is physical evidence, not confirmation.",
+              "The satellites pass over each place several times a day and every pass leaves " +
+                "its detections. The mark appears when there is a hotspot: a measured physical " +
+                "fact, a fire within the radius in the attack window, shown alongside what the " +
+                "sources say.",
             ],
           },
         ],
@@ -804,38 +895,125 @@ export const en: Textos = {
           },
           {
             parrafo: [
-              "Limits: adsb.lol does not see every aircraft or every airport equally. Each day " +
-                "what it sees is compared with EUROCONTROL's reference IFR flights; below half, " +
-                "no gap is interpreted. If the weather (fog, thunderstorm, snow, strong wind " +
-                "or a contaminated runway in the METARs) explains a gap, that is taken into " +
-                "account. Many military aircraft fly without transmitting, so their absence " +
-                "from these data proves nothing. A gap in traffic does not tell its cause: " +
-                "airports also close for balloons, technical failures or strikes, which is why " +
-                "it is only shown next to a known incident.",
+              "Coverage: each day what adsb.lol sees at each airport is compared with " +
+                "EUROCONTROL's reference IFR flights, and gaps are read at the airports and on " +
+                "the days where half or more is seen. Each gap is checked against the airport's " +
+                "METARs: those explained by the weather (fog, thunderstorm, snow, strong wind or " +
+                "a contaminated runway) are set aside. The measured closure is shown next to " +
+                "the incident it matches.",
             ],
           },
           {
             parrafo: [
-              "The figure is missing when the incident is not at an airport with scheduled " +
-                "flights, when adsb.lol did not publish that day or published it incomplete, " +
-                "when coverage at that airport that day is insufficient, when there are not yet " +
-                "four weeks of baseline, or when no gap matches the incident. A value that " +
-                "cannot be measured is left empty; it is never filled in.",
+              "The record carries the measured closure when the incident is at an airport with " +
+                "scheduled flights, adsb.lol published the full day, coverage at that airport " +
+                "that day is sufficient, there are four weeks of baseline and a gap matches the " +
+                "incident. Every value comes from the measurement; none is estimated.",
             ],
           },
         ],
       },
       {
-        id: "sesgo",
-        titulo: "Coverage bias",
+        id: "directo",
+        titulo: "Live closure detection",
         bloques: [
           {
             parrafo: [
-              "The number of incidents in a country depends on how much its media publish, " +
-                "on which languages are read best and on whether its authorities report " +
-                "openly. A country with more records does not necessarily have more " +
-                "incidents: it has more news. The figures cannot be used to compare " +
-                "countries without taking this into account.",
+              `Every ${UMBRALES_DIRECTO.cicloS} seconds the positions of aircraft around the ` +
+                "monitored airports (those with high coverage on all four days of their " +
+                "baseline in the daily archive) are requested from ",
+              { texto: "adsb.lol", enlace: "https://adsb.lol/" },
+              "; if it does not answer, the service switches by itself to ",
+              { texto: "adsb.fi", enlace: "https://adsb.fi/" },
+              ". From those positions arrivals and departures are rebuilt, with the same rules " +
+                `as the measured traffic and a delay of ${UMBRALES_DIRECTO.retrasoMin} minutes so that each ` +
+                "movement is complete, and compared with the median of the same weekday and " +
+                "the same local time over the four previous weeks.",
+            ],
+          },
+          {
+            lista: [
+              {
+                termino: "Possible closure in progress",
+                texto: [
+                  `Since the last movement at least ${UMBRALES_DIRECTO.esperadosMin} expected movements are ` +
+                    `missing, at most ${UMBRALES_DIRECTO.fraccionVistos} of them are seen, the shortfall ` +
+                    `grows by at least ${UMBRALES_DIRECTO.ritmo.replace(",", ".")} movements per minute of gap, no ` +
+                    "aircraft is taking off or landing, all of it for " +
+                    `${UMBRALES_DIRECTO.persistenciaMin} minutes, and no METAR since one hour ` +
+                    "before explains it (fog, visibility, ceiling, thunderstorm, snow, strong wind " +
+                    "or a contaminated runway).",
+                ],
+              },
+              {
+                termino: "Closure confirmed",
+                texto: ["An official source or an incident in the database reports the closure."],
+              },
+              {
+                termino: "Operations resumed",
+                texto: [
+                  `At least ${UMBRALES_DIRECTO.reanudacion} movements return and half or more of the ` +
+                    "expected traffic is seen over the last half hour. The alert stays on the map " +
+                    `for ${UMBRALES_DIRECTO.permanenciaH} hours.`,
+                ],
+              },
+            ],
+          },
+          {
+            parrafo: [
+              "Each alert keeps its detection time, its evidence (expected and seen movements, " +
+                "missing arrivals and departures, aircraft holding and diverted flights) and, " +
+                "once it arrives, the time of the first news, which gives the detection's lead. " +
+                "An alert triggers the directed news search; once confirmed, the incident " +
+                "enters the database through the normal flow with the measured closure.",
+            ],
+          },
+        ],
+      },
+      {
+        id: "gnss",
+        titulo: "GPS interference",
+        bloques: [
+          {
+            parrafo: [
+              "Every ADS-B position carries its integrity (NIC) and accuracy (NACp). An " +
+                "aircraft has a degraded position in a cell on a day if any of its positions " +
+                "there has NIC below 7 or NACp below 8, the minimums of the ADS-B Out rule. " +
+                "Cells are H3 hexagons at resolution 4 (about 1,770 km²), the grid of " +
+                "gpsjam.org. The share of aircraft affected subtracts one degraded aircraft, so " +
+                "that a single faulty unit does not colour the cell: (degraded − 1) / aircraft.",
+            ],
+          },
+          {
+            parrafo: [
+              "Each cell on the map gathers 20 or more aircraft in the day. Levels: under 2% " +
+                "no interference, 2 to 10% medium and over 10% high, in grey that gets lighter " +
+                "with the share and the high level in red. For a period, aircraft " +
+                "and degraded aircraft are added up per cell over each day (each month for " +
+                "periods longer than 7 days). It is computed on the server from the daily " +
+                "adsb.lol archive.",
+            ],
+          },
+        ],
+      },
+      {
+        id: "presion",
+        titulo: "Pressure by country",
+        bloques: [
+          {
+            parrafo: [
+              "Each country is filled in grey by its incidents in the selected period, with " +
+                "the active filters: five steps relative to the country with the most. The " +
+                "trend compares with the previous period of the same length: stable if the " +
+                "difference is zero, or one and no more than 10% of the previous figure; " +
+                "otherwise up or down, with the figure. Tapping a country shows its figures by " +
+                "type and by status and its incidents.",
+            ],
+          },
+          {
+            parrafo: [
+              "The figures per country count the incidents recorded from what each country's " +
+                "media and authorities publish openly, in the languages the collection reads.",
             ],
           },
         ],
@@ -901,6 +1079,18 @@ export const en: Textos = {
                     "the ",
                   { texto: "traffic", enlace: "https://github.com/xoolive/traffic" },
                   " library (MIT, © Xavier Olive).",
+                ],
+              },
+              {
+                termino: "Real-time traffic",
+                texto: [
+                  "© adsb.lol contributors (",
+                  { texto: "adsb.lol", enlace: "https://adsb.lol/" },
+                  "), ",
+                  { texto: "ODbL 1.0", enlace: "https://opendatacommons.org/licenses/odbl/1-0/" },
+                  "; and, as backup, ",
+                  { texto: "adsb.fi", enlace: "https://adsb.fi/" },
+                  ".",
                 ],
               },
               {

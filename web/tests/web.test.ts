@@ -68,7 +68,9 @@ describe("textos en español e inglés", () => {
       "fuentes",
       "focos",
       "trafico",
-      "sesgo",
+      "directo",
+      "gnss",
+      "presion",
       "licencias",
     ]);
     const texto = JSON.stringify(es.metodologia);
@@ -85,13 +87,17 @@ describe("textos en español e inglés", () => {
       "https://www.gdeltproject.org/",
       "GeoNames",
       "NASA FIRMS",
-      "no demuestra nada",
       "adsb.lol",
+      "adsb.fi",
+      "Posible cierre en curso",
+      "Cierre confirmado",
+      "Operación reanudada",
+      "H3",
+      "gpsjam.org",
+      "periodo anterior de la misma duración",
       "© adsb.lol contributors",
       "Weather data by Open-Meteo.com",
-      "no indica su causa",
       "antorchas",
-      "nubes",
     ]) {
       expect(texto).toContain(obligado);
     }
@@ -113,7 +119,13 @@ describe("textos en español e inglés", () => {
       );
       expect(textos).toContain(AGRADECIMIENTO);
     }
-    expect(JSON.stringify(en.metodologia)).toContain("absence of a hotspot proves nothing");
+  });
+
+  it("la web describe lo que hace cada dato, sin textos de límites ni del proveedor anterior", () => {
+    const espanol = textosDe(es).join(" ");
+    const ingles = textosDe(en).join(" ");
+    expect(espanol).not.toMatch(/l[íi]mite|limitaci|no demuestra|cloudflare/i);
+    expect(ingles).not.toMatch(/\blimit|proves nothing|cloudflare/i);
   });
 
   it("todo valor de las listas cerradas tiene su texto", () => {

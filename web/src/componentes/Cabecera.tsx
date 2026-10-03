@@ -50,6 +50,7 @@ export function BarraMovil({
   menuAbierto,
   onMenu,
   onPeriodo,
+  debajo,
 }: {
   t: Textos;
   estado: ReactNode;
@@ -57,31 +58,33 @@ export function BarraMovil({
   onMenu: () => void;
   /** Con el teléfono en horizontal, el botón «Periodo» sube aquí para dejar sitio al mapa. */
   onPeriodo: () => void;
+  /** Lo que va bajo la barra, dentro de la cabecera (la franja «Europa ahora»). */
+  debajo?: ReactNode;
 }) {
   return (
-    <header
-      aria-label={t.cabecera.etiqueta}
-      className="superficie flex min-h-11 items-center gap-2 border-b pl-3 pr-1 pt-[env(safe-area-inset-top)]"
-    >
-      <LogoPequeno lado={24} />
-      {/* El nombre completo va siempre en inglés; en la barra del teléfono se ve la sigla. */}
-      <h1 className="text-sm font-semibold text-texto">
-        <span aria-hidden="true">EODI</span>
-        <span className="sr-only">{NOMBRE}</span>
-      </h1>
-      <div className="ml-auto">{estado}</div>
-      <button type="button" className="control hidden text-sm text-texto apaisado:inline-flex" onClick={onPeriodo}>
-        {t.tiempo.periodoBoton}
-      </button>
-      <button
-        type="button"
-        className="control min-h-11 min-w-11 text-sm text-texto"
-        aria-haspopup="dialog"
-        aria-expanded={menuAbierto}
-        onClick={onMenu}
-      >
-        {t.cabecera.menu}
-      </button>
+    <header aria-label={t.cabecera.etiqueta} className="superficie border-b pt-[env(safe-area-inset-top)]">
+      <div className="flex min-h-11 items-center gap-2 pl-3 pr-1">
+        <LogoPequeno lado={24} />
+        {/* El nombre completo va siempre en inglés; en la barra del teléfono se ve la sigla. */}
+        <h1 className="text-sm font-semibold text-texto">
+          <span aria-hidden="true">EODI</span>
+          <span className="sr-only">{NOMBRE}</span>
+        </h1>
+        <div className="ml-auto">{estado}</div>
+        <button type="button" className="control hidden text-sm text-texto apaisado:inline-flex" onClick={onPeriodo}>
+          {t.tiempo.periodoBoton}
+        </button>
+        <button
+          type="button"
+          className="control min-h-11 min-w-11 text-sm text-texto"
+          aria-haspopup="dialog"
+          aria-expanded={menuAbierto}
+          onClick={onMenu}
+        >
+          {t.cabecera.menu}
+        </button>
+      </div>
+      {debajo !== undefined && <div className="border-t border-linea apaisado:hidden">{debajo}</div>}
     </header>
   );
 }

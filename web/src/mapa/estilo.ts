@@ -11,6 +11,7 @@ import type {
 } from "maplibre-gl";
 
 import { OBJETO_TESELAS, urlDelAlmacen } from "../almacenPublico.ts";
+import { OPACIDAD_GNSS } from "../datos/gnss.ts";
 import { ESTADOS } from "../datos/vocabulario.ts";
 import { COLOR_ESTADO, PALETA, TRAZO_DESMENTIDO } from "../paleta.ts";
 import type { Idioma } from "../sitio.ts";
@@ -32,6 +33,8 @@ export const FUENTE_CONTORNO = "ucrania-contorno";
 export const FUENTE_FOCOS_UCRANIA = "ucrania-focos";
 export const FUENTE_REGIONES_RUSIA = "rusia-regiones";
 export const FUENTE_IMPACTOS = "guerra-impactos";
+export const FUENTE_GNSS = "gnss";
+export const FUENTE_DIRECTO = "directo";
 
 export const CAPA_GRUPOS = "grupos";
 export const CAPA_INCIDENTES_GRAVES = "incidentes-graves";
@@ -50,9 +53,17 @@ export const CAPA_IMPACTOS = "guerra-impactos";
 export const CAPA_IMPACTOS_GRUPOS = "guerra-impactos-grupos";
 export const CAPA_IMPACTOS_FOCO = "guerra-impactos-foco";
 export const CAPA_IMPACTOS_FOCO_GRUPO = "guerra-impactos-foco-grupo";
+export const CAPA_PRESION = "presion-relleno";
+export const CAPA_PRESION_LINEA = "presion-linea";
+export const CAPA_GNSS = "gnss-relleno";
+export const CAPA_GNSS_LINEA = "gnss-linea";
+export const CAPA_DIRECTO = "directo-avisos";
+export const CAPA_DIRECTO_HALO = "directo-halo";
+export const CAPA_DIRECTO_ROTULO = "directo-rotulo";
 
 /** Capas que se pueden pulsar, de la de más arriba a la de más abajo. */
 export const CAPAS_PULSABLES: readonly string[] = [
+  CAPA_DIRECTO,
   CAPA_INCIDENTES_GRAVES,
   CAPA_INCIDENTES_DISCRETOS,
   CAPA_GRUPOS,
@@ -60,6 +71,8 @@ export const CAPAS_PULSABLES: readonly string[] = [
   CAPA_IMPACTOS_GRUPOS,
   CAPA_REGIONES,
   CAPA_REGIONES_RUSIA,
+  CAPA_GNSS,
+  CAPA_PRESION,
 ];
 
 /** Capas propias de cada capa del selector. */
@@ -71,7 +84,6 @@ export const CAPAS_DE_INCIDENTES: readonly string[] = [
   CAPA_GRUPOS,
   "grupos-numero",
   CAPA_RECIENTES,
-  "novedades",
   CAPA_INCIDENTES_DISCRETOS,
   CAPA_INCIDENTES_GRAVES,
   CAPA_FOCOS,
@@ -93,6 +105,32 @@ export const CAPAS_DE_UCRANIA: readonly string[] = [
   CAPA_IMPACTOS_FOCO_GRUPO,
 ];
 export const CAPAS_DE_DENSIDAD: readonly string[] = ["densidad"];
+export const CAPAS_DE_PRESION: readonly string[] = [CAPA_PRESION, CAPA_PRESION_LINEA];
+export const CAPAS_DE_GNSS: readonly string[] = [CAPA_GNSS, CAPA_GNSS_LINEA];
+
+/**
+ * Interferencia GPS: gris más claro cuanta más proporción de aeronaves afectadas, y el nivel
+ * alto (más del 10 %) con el color de estado de alerta.
+ */
+const GRIS_GNSS_BAJO = PALETA.linea;
+const GRIS_GNSS_ALTO = PALETA.texto;
+export const COLOR_GNSS: ExpressionSpecification = [
+  "case",
+  ["==", ["get", "nivel"], "alta"],
+  PALETA.atribuido,
+  ["interpolate", ["linear"], ["get", "proporcion"], 0, GRIS_GNSS_BAJO, 0.1, GRIS_GNSS_ALTO],
+];
+
+/** Avisos en directo: el color de su estado (posible, confirmado, reanudado). */
+export const COLOR_AVISO: ExpressionSpecification = [
+  "match",
+  ["get", "estado"],
+  "posible_cierre",
+  PALETA.notificado,
+  "cierre_confirmado",
+  PALETA.confirmado,
+  PALETA.secundario,
+];
 
 /** Marca del foco térmico: pequeña, junto al símbolo, como en la ayuda (MarcaFoco). */
 const RADIO_MARCA_FOCO = 3.5;
@@ -262,12 +300,13 @@ const COLOR_POR_ESTADO: ExpressionSpecification = [
   PALETA.secundario,
 ] as unknown as ExpressionSpecification;
 
-/** Color del anillo de un grupo: el del estado más grave que contiene. */
+/**
+ * Color del anillo de un grupo: el del estado más grave que contiene. Rojo si hay algún
+ * confirmado o atribuido; naranja si todos son notificados.
+ */
 export const COLOR_DE_GRUPO: ExpressionSpecification = [
   "case",
-  [">", ["get", "n_atribuidos"], 0],
-  COLOR_ESTADO.atribuido,
-  [">", ["get", "n_confirmados"], 0],
+  [">", ["+", ["get", "n_atribuidos"], ["get", "n_confirmados"]], 0],
   COLOR_ESTADO.confirmado,
   [">", ["get", "n_notificados"], 0],
   COLOR_ESTADO.notificado,
@@ -323,6 +362,40 @@ function capasPropias(acento: string): LayerSpecification[] {
       filter: ["==", ["get", "iso"], ""],
       paint: { "fill-color": PALETA.texto, "fill-opacity": 0.07 },
     },
+    // Presión por país: gris según los incidentes del periodo (la opacidad la pone el mapa).
+    {
+      id: CAPA_PRESION,
+      type: "fill",
+      source: FUENTE_PAISES,
+      layout: { visibility: "none" },
+      paint: {
+        "fill-color": PALETA.texto,
+        "fill-opacity": 0,
+        "fill-opacity-transition": { duration: 260, delay: 0 },
+      },
+    },
+    {
+      id: CAPA_PRESION_LINEA,
+      type: "line",
+      source: FUENTE_PAISES,
+      layout: { visibility: "none" },
+      filter: ["in", ["get", "iso"], ["literal", []]],
+      paint: { "line-color": PALETA.secundario, "line-width": 0.6, "line-opacity": 0.6 },
+    },
+    {
+      id: CAPA_GNSS,
+      type: "fill",
+      source: FUENTE_GNSS,
+      layout: { visibility: "none" },
+      paint: { "fill-color": COLOR_GNSS, "fill-opacity": OPACIDAD_GNSS },
+    },
+    {
+      id: CAPA_GNSS_LINEA,
+      type: "line",
+      source: FUENTE_GNSS,
+      layout: { visibility: "none" },
+      paint: { "line-color": PALETA.fondo, "line-width": 0.4, "line-opacity": 0.6 },
+    },
     // Regiones rusas: grises, con el contorno discontinuo, para distinguirlas de las de
     // Ucrania (cuyo relleno es el color de los ataques). Sus cifras son las del Ministerio de
     // Defensa ruso, reivindicación de parte.
@@ -359,7 +432,7 @@ function capasPropias(acento: string): LayerSpecification[] {
       type: "fill",
       source: FUENTE_REGIONES,
       paint: {
-        "fill-color": PALETA.atribuido,
+        "fill-color": PALETA.guerra,
         "fill-opacity": 0,
         "fill-opacity-transition": { duration: 260, delay: 0 },
       },
@@ -368,13 +441,13 @@ function capasPropias(acento: string): LayerSpecification[] {
       id: "ucrania-regiones-linea",
       type: "line",
       source: FUENTE_REGIONES,
-      paint: { "line-color": PALETA.atribuido, "line-width": 0.5, "line-opacity": 0.45 },
+      paint: { "line-color": PALETA.guerra, "line-width": 0.5, "line-opacity": 0.45 },
     },
     {
       id: "ucrania-contorno",
       type: "line",
       source: FUENTE_CONTORNO,
-      paint: { "line-color": PALETA.atribuido, "line-width": 1.5, "line-dasharray": [4, 3] },
+      paint: { "line-color": PALETA.guerra, "line-width": 1.5, "line-dasharray": [4, 3] },
     },
     {
       id: CAPA_REGION_ELEGIDA,
@@ -497,19 +570,6 @@ function capasPropias(acento: string): LayerSpecification[] {
         "circle-color": COLOR_POR_ESTADO,
         "circle-blur": 1,
         "circle-opacity": OPACIDAD_RECIENTE,
-      },
-    },
-    {
-      id: "novedades",
-      type: "circle",
-      source: FUENTE_PUNTOS,
-      filter: ["all", ["!", ES_GRUPO], ["==", ["get", "novedad"], 1]],
-      paint: {
-        "circle-radius": 15,
-        "circle-color": "rgba(0, 0, 0, 0)",
-        "circle-stroke-color": acento,
-        "circle-stroke-width": 1,
-        "circle-stroke-opacity": 0.85,
       },
     },
     {
@@ -647,6 +707,44 @@ function capasPropias(acento: string): LayerSpecification[] {
         "circle-stroke-width": 1.5,
       },
     },
+    // Avisos de la detección en directo: un aro y un punto del color de su estado, con el
+    // código OACI del aeropuerto.
+    {
+      id: CAPA_DIRECTO_HALO,
+      type: "circle",
+      source: FUENTE_DIRECTO,
+      paint: {
+        "circle-radius": 15,
+        "circle-color": "rgba(0, 0, 0, 0)",
+        "circle-stroke-color": COLOR_AVISO,
+        "circle-stroke-width": 1.5,
+        "circle-stroke-opacity": 0.8,
+      },
+    },
+    {
+      id: CAPA_DIRECTO,
+      type: "circle",
+      source: FUENTE_DIRECTO,
+      paint: {
+        "circle-radius": 7,
+        "circle-color": COLOR_AVISO,
+        "circle-stroke-color": PALETA.fondo,
+        "circle-stroke-width": 2,
+      },
+    },
+    {
+      id: CAPA_DIRECTO_ROTULO,
+      type: "symbol",
+      source: FUENTE_DIRECTO,
+      layout: {
+        "text-field": ["get", "oaci"],
+        "text-font": FUENTE_TIPOGRAFICA_NUMEROS,
+        "text-size": 11,
+        "text-offset": [0, 1.9],
+        "text-allow-overlap": true,
+      },
+      paint: { "text-color": PALETA.texto, "text-halo-color": PALETA.fondo, "text-halo-width": 1.2 },
+    },
   ];
 }
 
@@ -682,6 +780,7 @@ export function estilo(idioma: Idioma, origen: string, acento: string): StyleSpe
           n_atribuidos: ["+", ["get", "n_atribuidos"]],
           n_confirmados: ["+", ["get", "n_confirmados"]],
           n_notificados: ["+", ["get", "n_notificados"]],
+          n_novedades: ["+", ["get", "novedad"]],
         },
       },
       [FUENTE_PUNTOS_SUELTOS]: { type: "geojson", data: VACIA },
@@ -692,6 +791,8 @@ export function estilo(idioma: Idioma, origen: string, acento: string): StyleSpe
       [FUENTE_CONTORNO]: { type: "geojson", data: `${origen}/mapa/ucrania-contorno.geojson` },
       [FUENTE_FOCOS_UCRANIA]: { type: "geojson", data: VACIA },
       [FUENTE_REGIONES_RUSIA]: { type: "geojson", data: `${origen}/mapa/rusia-regiones.geojson` },
+      [FUENTE_GNSS]: { type: "geojson", data: VACIA },
+      [FUENTE_DIRECTO]: { type: "geojson", data: VACIA },
       [FUENTE_IMPACTOS]: {
         type: "geojson",
         data: VACIA,

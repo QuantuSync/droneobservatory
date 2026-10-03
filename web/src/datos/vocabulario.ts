@@ -85,6 +85,7 @@ export const RESULTADO_TRAFICO_PUBLICO = "cierre_medido";
 /** Las publicaciones diarias de adsb.lol usadas, en GitHub. */
 export const PATRON_DATOS_ADSBLOL = /^https:\/\/github\.com\/adsblol\/\S+$/;
 export const VERSION_ESTADO_SISTEMA = 1;
+export const ESTADOS_DIRECTO = ["en_marcha", "con_respaldo", "parado"] as const;
 
 export const PATRON_ID_INCIDENTE = /^EODI-\d{4}-\d{5}$/;
 export const PATRON_ID_ATAQUE = /^EODI-UA-\d{4}-\d{4}$/;

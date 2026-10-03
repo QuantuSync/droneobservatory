@@ -40,10 +40,12 @@
   --color-texto: #e8eef6;
   --color-secundario: #93a0b4;
   --color-acento: var(--acento);
-  --color-confirmado: #56c271;
-  --color-notificado: #eda93a;
-  --color-atribuido: #f25c4f;
+  --color-confirmado: #f53a50;
+  --color-notificado: #ff9a2e;
+  --color-atribuido: #f53a50;
   --color-desmentido: #93a0b4;
+  --color-al-dia: #56c271;
+  --color-guerra: #f25c4f;
   --color-transparente: transparent;
 
   --font-texto: "Onest Variable", system-ui, sans-serif;
@@ -61,9 +63,9 @@
   --animate-aparecer: aparecer 280ms ease-out both;
 }
 
-/* Pulso de confirmados y atribuidos sobre el mapa (src/mapa/pulsos.ts): solo escala y
-   opacidad, que el navegador anima fuera del hilo principal. Los atribuidos laten más. Con
-   movimiento reducido la animación termina al instante y el anillo queda quieto. */
+/* Pulso de los incidentes nuevos desde la última visita (src/mapa/pulsos.ts): un anillo
+   alrededor de la marca que solo cambia de opacidad, sin mover ni agrandar la marca; el
+   navegador lo anima fuera del hilo principal. Con movimiento reducido, el anillo queda fijo. */
 .pulso-sitio {
   position: absolute;
   top: 0;
@@ -73,38 +75,27 @@
 
 .pulso {
   display: block;
-  border: 1.5px solid var(--color-confirmado);
+  border: 1.5px solid var(--acento);
   border-radius: 9999px;
+  opacity: 0.85;
   animation: latido 2.4s ease-in-out infinite;
-  will-change: transform, opacity;
-}
-
-.pulso-atribuido {
-  border-color: var(--color-atribuido);
-  animation-name: latido-fuerte;
+  will-change: opacity;
 }
 
 @keyframes latido {
   0%,
   100% {
-    opacity: 0.7;
-    transform: scale(1);
+    opacity: 0.85;
   }
   50% {
-    opacity: 0.15;
-    transform: scale(1.36);
+    opacity: 0.2;
   }
 }
 
-@keyframes latido-fuerte {
-  0%,
-  100% {
-    opacity: 0.9;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.3;
-    transform: scale(1.55);
+@media (prefers-reduced-motion: reduce) {
+  .pulso {
+    animation: none;
+    opacity: 0.85;
   }
 }
 

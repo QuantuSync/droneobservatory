@@ -1,8 +1,9 @@
-// Pulsos del mapa: el contorno de confirmados y atribuidos late despacio (los atribuidos,
-// más), y los grupos que contienen alguno también. No los dibuja MapLibre: animar una capa
+// Pulsos del mapa: solo laten los incidentes nuevos desde la última visita del visitante (los
+// que cuenta el aviso «N novedades desde tu última visita»), y los grupos o pilas que
+// contienen alguno. Ningún estado late por sí mismo. No los dibuja MapLibre: animar una capa
 // obliga a repintar el mapa entero en cada fotograma y deja el hilo principal ocupado, de
 // modo que la web tarda en responder al tacto. Cada pulso es un elemento sobre el mapa que
-// anima solo su escala y su opacidad con CSS, algo que el navegador hace fuera del hilo
+// anima solo su opacidad con CSS, algo que el navegador hace fuera del hilo
 // principal (y que para con la pestaña en segundo plano o con movimiento reducido). Aquí
 // solo se decide dónde va cada uno; se recoloca cuando el mapa se mueve.
 
@@ -13,15 +14,12 @@ export const RADIO_PULSO = 11;
 /** Separación del anillo de un grupo respecto a su círculo. */
 export const SEPARACION_PULSO_GRUPO = 3;
 
-export type EstadoDePulso = "confirmado" | "atribuido";
-
 export interface Pulso {
   /** Identifica el pulso entre recolocaciones: el incidente, la pila o el grupo. */
   clave: string;
   x: number;
   y: number;
   radio: number;
-  estado: EstadoDePulso;
 }
 
 /** Lo que devuelve MapLibre de cada símbolo o grupo dibujado, en lo que aquí importa. */
@@ -43,9 +41,9 @@ function coordenadas(rasgo: RasgoDibujado): [number, number] | null {
 }
 
 /**
- * Pulsos de los rasgos dibujados: los incidentes graves sueltos y los grupos (o pilas) con
- * algún confirmado o atribuido. Un rasgo puede llegar repetido (uno por tesela); sale una
- * vez.
+ * Pulsos de los rasgos dibujados: los incidentes nuevos sueltos y los grupos (o pilas) que
+ * contienen alguno nuevo (`novedad` en un incidente o una pila, `n_novedades` en un grupo).
+ * Un rasgo puede llegar repetido (uno por tesela); sale una vez.
  */
 export function pulsosDe(
   rasgos: readonly RasgoDibujado[],
@@ -57,25 +55,19 @@ export function pulsosDe(
     const lugar = coordenadas(rasgo);
     if (lugar === null) continue;
     const esGrupo = "point_count" in p || numero(p.n) > 1;
-    let pulso: Omit<Pulso, "x" | "y"> | null = null;
+    const nuevo = "point_count" in p ? numero(p.n_novedades) > 0 : numero(p.novedad) === 1;
+    if (!nuevo) continue;
+    let pulso: Omit<Pulso, "x" | "y">;
     if (esGrupo) {
-      const atribuidos = numero(p.n_atribuidos);
-      const confirmados = numero(p.n_confirmados);
-      if (atribuidos + confirmados === 0) continue;
       const cuenta = "total" in p ? numero(p.total) : numero(p.n);
       pulso = {
         clave: "cluster_id" in p ? `grupo-${String(p.cluster_id)}` : `pila-${String(p.ids)}`,
         radio: radioDeGrupo(cuenta) + SEPARACION_PULSO_GRUPO,
-        estado: atribuidos > 0 ? "atribuido" : "confirmado",
       };
-    } else if (numero(p.grave) === 1) {
-      pulso = {
-        clave: String(p.id),
-        radio: RADIO_PULSO,
-        estado: numero(p.atribuido) === 1 ? "atribuido" : "confirmado",
-      };
+    } else {
+      pulso = { clave: String(p.id), radio: RADIO_PULSO };
     }
-    if (pulso === null || vistos.has(pulso.clave)) continue;
+    if (vistos.has(pulso.clave)) continue;
     const { x, y } = proyectar(lugar[0], lugar[1]);
     vistos.set(pulso.clave, { ...pulso, x, y });
   }
@@ -105,8 +97,7 @@ export function colocarPulsos(capa: HTMLElement, pulsos: readonly Pulso[]): void
     }
     const anillo = sitio.firstElementChild;
     if (anillo instanceof HTMLElement) {
-      const clase = `pulso pulso-${pulso.estado}`;
-      if (anillo.className !== clase) anillo.className = clase;
+      if (anillo.className !== "pulso") anillo.className = "pulso";
       const lado = `${2 * pulso.radio}px`;
       anillo.style.width = lado;
       anillo.style.height = lado;

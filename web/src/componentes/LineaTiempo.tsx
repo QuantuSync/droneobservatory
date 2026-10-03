@@ -340,7 +340,7 @@ export function LineaTiempo({
               <path
                 d={escalones(tramosUcrania, ancho, dominio)}
                 fill="none"
-                stroke={PALETA.atribuido}
+                stroke={PALETA.guerra}
                 strokeWidth={1}
               />
             )}
@@ -499,7 +499,7 @@ export function LineaTiempo({
           </span>
           {tramosUcrania !== null && (
             <span>
-              <span aria-hidden="true" className="text-atribuido">
+              <span aria-hidden="true" className="text-guerra">
                 —{" "}
               </span>
               {t.tiempo.lanzamientosPorNoche} ·{" "}

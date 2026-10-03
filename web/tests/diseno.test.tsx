@@ -507,12 +507,18 @@ describe("aplicación con el diseño nuevo", () => {
     await screen.findByTestId("mapa");
     const barra = await screen.findByRole("banner", { name: es.cabecera.etiqueta });
     // Solo el logo, «EODI», el estado y el menú (y «Periodo», que el CSS solo muestra con el
-    // teléfono en horizontal): nada de capas ni filtros a la vista.
-    await waitFor(() => expect(within(barra).getAllByRole("button").map((b) => b.textContent)).toEqual([
-      expect.stringMatching(/hace/),
-      es.tiempo.periodoBoton,
-      es.cabecera.menu,
-    ]));
+    // teléfono en horizontal), y debajo la franja reducida de «Europa ahora»: nada de capas ni
+    // filtros a la vista.
+    const franja = within(barra).getByRole("region", { name: es.ahora.etiqueta });
+    const fuera = (b: HTMLElement) => !franja.contains(b);
+    await waitFor(() =>
+      expect(within(barra).getAllByRole("button").filter(fuera).map((b) => b.textContent)).toEqual([
+        expect.stringMatching(/hace/),
+        es.tiempo.periodoBoton,
+        es.cabecera.menu,
+      ]),
+    );
+    expect(within(franja).getAllByRole("button")).toHaveLength(5);
     expect(screen.queryByRole("group", { name: es.filtros.titulo })).toBeNull();
     expect(screen.queryByRole("button", { name: es.controles.acercar })).toBeNull();
     await usuario.click(within(barra).getByRole("button", { name: es.cabecera.menu }));

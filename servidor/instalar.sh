@@ -69,6 +69,7 @@ install -d -m 700 -o "$USUARIO" -g "$USUARIO" "$(dirname "$BUSQUEDA_DATOS")" "$B
 # --- Datos del motor de deducción -----------------------------------------------------
 install -d -m 700 -o "$USUARIO" -g "$USUARIO" "$DEDUCCION_DATOS"
 install -d -m 700 -o "$USUARIO" -g "$USUARIO" "$CATALOGO_DATOS"
+install -d -m 700 -o "$USUARIO" -g "$USUARIO" "$DIRECTO_DATOS"
 
 # --- Datos del tráfico aéreo y de las condiciones medidas ----------------------------
 install -d -m 700 -o "$USUARIO" -g "$USUARIO" "$(dirname "$TRAFICO_DATOS")" "$TRAFICO_DATOS" \
@@ -371,6 +372,33 @@ Persistent=true
 
 [Install]
 WantedBy=timers.target
+FIN
+# Detección en directo (servidor/directo.sh): siempre en marcha, con su propio cerrojo; systemd
+# la vuelve a lanzar si se para (también cuando sale para tomar el código nuevo del clon).
+cat > "/etc/systemd/system/$UNIDAD_DIRECTO.service" <<FIN
+[Unit]
+Description=Detección en directo de cierres de aeropuerto del EODI
+Wants=network-online.target
+After=network-online.target time-sync.target
+
+[Service]
+Type=simple
+User=$USUARIO
+Group=$USUARIO
+WorkingDirectory=$CLON
+ExecStart=/usr/bin/env bash $CLON/servidor/directo.sh
+SyslogIdentifier=$UNIDAD_DIRECTO
+Restart=always
+RestartSec=30
+TimeoutStopSec=60
+Nice=$DIRECTO_NICE
+MemoryMax=$DIRECTO_MEMORIA
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=full
+
+[Install]
+WantedBy=multi-user.target
 FIN
 systemctl daemon-reload
 

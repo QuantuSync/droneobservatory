@@ -14,11 +14,15 @@ Aparte, la exportación semanal para AEGIS: hay problema si la última correcta
 (ultima_exportacion) tiene más de 8 días o no consta ninguna. Si estado.json no responde o
 aún no trae el campo, eso lo cuenta la comprobación de la recogida y aquí no se avisa.
 
+Y la detección en directo de cierres (recogida/directo.py), que publica directo.json cada
+minuto: hay problema si su última publicación tiene más de media hora o si no responde.
+
 Lo usan el workflow de tests, que lo deja en su resumen, y el workflow vigia-recogida, que
 abre o cierra las incidencias con lo que escribe en su salida (`problema` y `mensaje` de la
-recogida; `problema_exportacion` y `mensaje_exportacion` de la exportación).
+recogida; `problema_exportacion` y `mensaje_exportacion` de la exportación;
+`problema_directo` y `mensaje_directo` de la detección en directo).
 
-Uso: python -m recogida.salud [--url <estado.json>]
+Uso: python -m recogida.salud [--url <estado.json>] [--url-directo <directo.json>]
 """
 
 import argparse
@@ -38,6 +42,11 @@ from recogida.descarga import AGENTE_EODI
 # La dirección pública de estado.json sale de configuracion/almacen_publico.json.
 _ALMACEN = almacen_publico.cargar()
 URL = _ALMACEN.url_publica(_ALMACEN.objetos["estado"])
+URL_DIRECTO = _ALMACEN.url_publica(_ALMACEN.objetos["directo"])
+# La detección en directo publica directo.json cada minuto: media hora sin publicar es que el
+# servicio se ha parado (systemd lo relanza a los 30 s si se cae).
+MAX_SIN_DIRECTO = timedelta(minutes=30)
+TITULO_DIRECTO = "### Detección en directo"
 # La recogida es horaria: dos horas sin una correcta son dos recogidas seguidas que no lo
 # han sido (o que no se han lanzado).
 MAX_SIN_CORRECTA = timedelta(hours=2)
@@ -131,6 +140,23 @@ def diagnostico_exportacion(estado: dict[str, Any] | None, ahora: datetime) -> E
     return True, f"{frase}."
 
 
+def diagnostico_directo(directo: dict[str, Any] | None, ahora: datetime) -> Estado:
+    """Si la detección en directo publica (directo.json reciente) y la frase que lo cuenta."""
+    if directo is None:
+        return False, f"directo.json no responde tras {INTENTOS} intentos espaciados."
+    generado = _instante(directo.get("generado"))
+    if generado is None:
+        return False, "directo.json no dice cuándo se generó."
+    minutos = (ahora - generado).total_seconds() / 60
+    frase = (
+        f"La detección en directo publicó por última vez el {generado:%Y-%m-%d %H:%M} UTC, "
+        f"hace {minutos:.0f} min, con {directo.get('fuente')}"
+    )
+    if ahora - generado > MAX_SIN_DIRECTO:
+        return False, f"{frase}: más de {MAX_SIN_DIRECTO.total_seconds() / 60:.0f} min."
+    return True, f"{frase}."
+
+
 def informar(resultado: Estado, titulo: str = TITULO, sufijo: str = "") -> None:
     """La frase en el registro, en el resumen del trabajo y en su salida."""
     al_dia, frase = resultado
@@ -154,11 +180,14 @@ def principal(
 ) -> int:
     opciones = argparse.ArgumentParser(description=__doc__)
     opciones.add_argument("--url", default=URL)
+    opciones.add_argument("--url-directo", default=URL_DIRECTO)
     args = opciones.parse_args(argumentos)
     estado = leer_estado(args.url, leer, dormir)
     momento = ahora or datetime.now(UTC)
     informar(diagnostico(estado, momento))
     informar(diagnostico_exportacion(estado, momento), TITULO_EXPORTACION, "_exportacion")
+    directo = leer_estado(args.url_directo, leer, dormir)
+    informar(diagnostico_directo(directo, momento), TITULO_DIRECTO, "_directo")
     return 0
 
 

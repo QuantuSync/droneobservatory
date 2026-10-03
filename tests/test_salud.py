@@ -86,9 +86,17 @@ def test_la_salida_del_trabajo_dice_si_hay_problema(
     salida, resumen = tmp_path / "salida", tmp_path / "resumen"
     monkeypatch.setenv(salud.VARIABLE_SALIDA, str(salida))
     monkeypatch.setenv(salud.VARIABLE_RESUMEN, str(resumen))
-    bucket = Bucket(publicado(estado(hace)))
+    directo: dict[str, object] = {
+        "generado": (AHORA - hace).strftime("%Y-%m-%dT%H:%MZ"),
+        "fuente": "adsb_lol",
+    }
+    bucket = Bucket(publicado(estado(hace)), publicado(directo))
     assert salud.principal([], AHORA, bucket.leer, bucket.dormir) == 0
     lineas = salida.read_text(encoding="utf-8").splitlines()
     assert lineas[0] == f"problema={problema}"
     assert lineas[1].startswith("mensaje=La última recogida")
+    # La detección en directo, con su propia salida: 40 minutos sin publicar ya es problema.
+    assert lineas[4] == "problema_directo=true"
+    assert lineas[5].startswith("mensaje_directo=La detección en directo publicó")
     assert salud.TITULO in resumen.read_text(encoding="utf-8")
+    assert salud.TITULO_DIRECTO in resumen.read_text(encoding="utf-8")

@@ -8,14 +8,22 @@ export interface Capas {
   incidentes: boolean;
   ucrania: boolean;
   densidad: boolean;
+  presion: boolean;
+  gnss: boolean;
 }
 
-export const CAPAS_INICIALES: Capas = { incidentes: true, ucrania: false, densidad: false };
+export const CAPAS_INICIALES: Capas = {
+  incidentes: true,
+  ucrania: false,
+  densidad: false,
+  presion: false,
+  gnss: false,
+};
 
-const ORDEN: readonly (keyof Capas)[] = ["incidentes", "ucrania", "densidad"];
+const ORDEN: readonly (keyof Capas)[] = ["incidentes", "ucrania", "densidad", "presion", "gnss"];
 
 /**
- * Las tres capas en un solo control compacto; cada una se enciende y se apaga por separado.
+ * Las capas en un solo control compacto; cada una se enciende y se apaga por separado.
  * `grande` da a cada opción al menos 44 px de alto, para el dedo.
  */
 export function SelectorDeCapas({

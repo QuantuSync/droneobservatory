@@ -221,6 +221,19 @@ CERROJO_CATALOGO="$SECRETOS/catalogo.lock"
 # --- Barrido dirigido (servidor/dirigido.sh, recogida/barrido_dirigido.py) --------------------
 DIRIGIDO_INFORME="$CASA/dirigido-informe.json"
 
+# --- Detección en directo de cierres (servidor/directo.sh, recogida/directo.py) -----------
+# Estado de los avisos, trazas recientes guardadas al parar y lo publicado del mapa de
+# interferencia GPS, fuera del repositorio y de la base.
+DIRECTO_DATOS="${EODI_DIRECTO_DATOS:-$CASA/datos/directo}"
+UNIDAD_DIRECTO="eodi-directo"
+# Siempre en marcha, con su propio cerrojo; prioridad algo más baja que la recogida horaria y
+# más alta que los procesados largos (un ciclo por minuto tiene que caber en su minuto).
+CERROJO_DIRECTO="$SECRETOS/directo.lock"
+DIRECTO_NICE=5
+DIRECTO_MEMORIA="1500M"
+# Último ciclo correcto: lo lee estado.json (fuente directo).
+DIRECTO_REGISTRO="$SECRETOS/directo.json"
+
 # --- Endurecimiento ------------------------------------------------------------------
 # Reinicio tras una actualización de seguridad que lo pida: de madrugada y a los 28
 # minutos del lanzamiento de las 04:17, cuando hasta la recogida más lenta ha terminado.

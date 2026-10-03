@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from "react";
+import type { ReactNode } from "react";
 
 import type { Cifras } from "../datos/derivar.ts";
 import { numero } from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
 import { movimientoReducido } from "../mapa/animacion.ts";
 import type { Idioma } from "../sitio.ts";
+import { IconoBandera } from "./Simbolo.tsx";
 
 /** Lo que tarda una cifra en contar hacia arriba al cargar. */
 const MS_CUENTA = 900;
@@ -46,6 +48,7 @@ function Cifra({
   activa,
   color,
   forma,
+  marca,
 }: {
   valor: number;
   rotulo: string;
@@ -53,18 +56,25 @@ function Cifra({
   activa: boolean;
   color?: string;
   forma: Forma;
+  marca?: ReactNode;
 }) {
   const mostrada = useCifraAnimada(valor, activa);
   const tono = color ?? "text-texto";
   // En línea: la cifra y su rótulo uno tras otro, en pequeño. En rejilla: la cifra encima.
   return forma === "linea" ? (
     <div className="flex flex-row-reverse items-baseline gap-1">
-      <dt className="text-xs text-secundario">{rotulo}</dt>
+      <dt className="inline-flex items-center gap-1 text-xs text-secundario">
+        {marca}
+        {rotulo}
+      </dt>
       <dd className={`cifra text-sm font-medium ${tono}`}>{numero(mostrada, idioma)}</dd>
     </div>
   ) : (
     <div className="flex flex-col-reverse gap-1">
-      <dt className="text-xs text-secundario">{rotulo}</dt>
+      <dt className="inline-flex items-center gap-1 text-xs text-secundario">
+        {marca}
+        {rotulo}
+      </dt>
       <dd className={`cifra text-2xl font-medium leading-none ${tono}`}>{numero(mostrada, idioma)}</dd>
     </div>
   );
@@ -102,6 +112,7 @@ export function Marcador({ t, idioma, cifras, animar, forma = "linea" }: Props) 
         activa={animar}
         forma={forma}
         color="text-atribuido"
+        marca={<IconoBandera />}
       />
       <Cifra valor={cifras.paises} rotulo={t.marcador.paises} idioma={idioma} activa={animar} forma={forma} />
     </dl>

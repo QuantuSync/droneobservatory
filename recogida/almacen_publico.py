@@ -151,6 +151,7 @@ def subir(
     dormir: Callable[[float], None] = time.sleep,
     reloj: Callable[[], float] = time.monotonic,
     ahora: Callable[[], datetime] = lambda: datetime.now(UTC),
+    codificacion: str | None = None,
 ) -> tuple[bool, str]:
     """Sube un objeto con reintentos de espera creciente. Nunca lanza: (correcto, motivo)."""
     url = almacen.url_s3(objeto)
@@ -158,6 +159,8 @@ def subir(
     cabeceras = {"Content-Type": tipo}
     if cache:
         cabeceras["Cache-Control"] = cache
+    if codificacion:
+        cabeceras["Content-Encoding"] = codificacion
     inicio = reloj()
     espera = ESPERA_INICIAL_S
     motivo, hechos = "sin intentos", 0

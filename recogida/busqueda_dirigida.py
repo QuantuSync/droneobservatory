@@ -10,6 +10,11 @@ como artículo del aeropuerto por el flujo normal (deduplicado, candidato, extra
 aparece nada, la anomalía sigue interna, como hasta ahora. Se buscan también los documentos
 oficiales guardados (`recogida/detalle.py`) que citan un suceso en ese aeropuerto esos días.
 
+Los avisos de la detección en directo (`recogida/directo.py`) se buscan igual, sin esperar
+al día siguiente: el servicio en directo lanza `directo` al abrir un aviso (y cada media hora
+mientras sigue abierto), que lee las franjas de GDELT ya publicadas desde una hora antes del
+comienzo del hueco hasta 36 horas después.
+
 En dos tiempos, como las fuentes oficiales de detalle:
 
 1. **Lectura** (`servidor/busqueda.sh`, temporizador propio, sin tocar la base): lee
@@ -23,6 +28,7 @@ En dos tiempos, como las fuentes oficiales de detalle:
 
 Uso:
     python -m recogida.busqueda_dirigida buscar --datos <dir> [--tope-min 50]
+    python -m recogida.busqueda_dirigida directo --datos <dir> [--directo <dir>] [--tope-min 15]
     python -m recogida.busqueda_dirigida pendientes --datos <dir> [--base <db.age>]
         [--repositorio <url del repositorio de datos>]
 """
@@ -38,6 +44,7 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
+from typing import Any
 
 from almacen.base import Almacen
 from esquema import Documento
@@ -226,6 +233,97 @@ def buscar(
     return recuentos
 
 
+# --- Avisos de la detección en directo ------------------------------------------------------
+
+DIRECTO_DATOS_POR_DEFECTO = Path("/home/eodi/datos/directo")
+VARIABLE_DIRECTO = "EODI_DIRECTO_DATOS"
+DIRECTO = "directo"
+# Desde una hora antes del comienzo del hueco hasta 36 horas después, por franjas de GDELT a
+# medida que se publican; los avisos de más de dos días ya no se buscan.
+DIRECTO_ANTES = timedelta(hours=1)
+DIRECTO_DESPUES = timedelta(hours=36)
+DIRECTO_VIGENCIA = timedelta(days=2)
+
+
+def version_directo(cache: dict[str, Any]) -> str:
+    return f"{VERSION}-directo-{len(cache['franjas'])}"
+
+
+def avisos_directo(datos_directo: Path, ahora: datetime) -> list[Documento]:
+    """Los avisos de la detección en directo como anomalías por buscar (con oaci e inicio)."""
+    try:
+        avisos = json.loads((datos_directo / "avisos.json").read_text(encoding="utf-8"))["avisos"]
+    except (OSError, ValueError, KeyError):
+        return []
+    resultado = []
+    for aviso in avisos:
+        inicio = datetime.fromisoformat(aviso["inicio"].replace("Z", "+00:00"))
+        if ahora - inicio <= DIRECTO_VIGENCIA:
+            resultado.append({"oaci": aviso["oaci"], "inicio": aviso["inicio"], "directo": True,
+                              "estado": "candidata", "aviso": aviso["id"]})  # fmt: skip
+    return resultado
+
+
+def buscar_directo(
+    datos: Path,
+    datos_directo: Path,
+    leer_franja: Callable[[datetime], list[Articulo]],
+    ahora: datetime,
+    plazo: Plazo | None = None,
+    nom: Nomenclator | None = None,
+) -> dict[str, int]:
+    """Lee las franjas de GDELT publicadas desde el comienzo de cada aviso en directo y deja lo
+    hallado, como las anomalías del archivo, en `hallados/`, con una versión que cambia con
+    cada franja leída (la recogida horaria lo vuelve a incorporar: los artículos ya guardados
+    no se repiten)."""
+    nom = nom or nomenclator()
+    recuentos = {"avisos": 0, "franjas": 0, "con_noticias": 0}
+    for anomalia in avisos_directo(datos_directo, ahora):
+        id_ = identificador(anomalia)
+        cache_ruta = datos / DIRECTO / nombre_fichero(id_)
+        try:
+            cache = json.loads(cache_ruta.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            cache = {"franjas": [], "articulos": []}
+        inicio = datetime.fromisoformat(anomalia["inicio"].replace("Z", "+00:00"))
+        franja = gdelt.franja_de(inicio - DIRECTO_ANTES)
+        hasta = min(ahora - gdelt.FRANJA, inicio + DIRECTO_DESPUES)
+        nombres_ = nombres(anomalia["oaci"], nom)
+        leidas = set(cache["franjas"])
+        try:
+            while franja <= hasta:
+                clave = franja.strftime("%Y-%m-%dT%H:%MZ")
+                if clave not in leidas:
+                    if plazo is not None:
+                        plazo.comprobar()
+                    for a in leer_franja(franja):
+                        if nombra(a.titular, nombres_):
+                            cache["articulos"].append(_documento(a))
+                    cache["franjas"].append(clave)
+                    leidas.add(clave)
+                    recuentos["franjas"] += 1
+                franja += gdelt.FRANJA
+        except (TiempoAgotado, DescargaFallida, gdelt.FranjaPendiente) as error:
+            registro.info("búsqueda de avisos en directo parada: %s", type(error).__name__)
+        cache["articulos"] = sorted(
+            {d["url"]: d for d in cache["articulos"]}.values(), key=lambda d: (d["fecha"], d["url"])
+        )
+        cache_ruta.parent.mkdir(parents=True, exist_ok=True)
+        cache_ruta.write_text(json.dumps(cache, ensure_ascii=False), encoding="utf-8")
+        destino = datos / HALLADOS / nombre_fichero(id_)
+        destino.parent.mkdir(parents=True, exist_ok=True)
+        temporal = destino.with_suffix(".tmp")
+        temporal.write_text(
+            json.dumps({"anomalia": anomalia, "version": version_directo(cache),
+                        "articulos": cache["articulos"]}, ensure_ascii=False, indent=1),
+            encoding="utf-8",
+        )  # fmt: skip
+        temporal.replace(destino)
+        recuentos["avisos"] += 1
+        recuentos["con_noticias"] += bool(cache["articulos"])
+    return recuentos
+
+
 def escribir_pendientes(almacen: Almacen, datos: Path) -> int:
     """Deja en anomalias.json las anomalías por buscar (lo hace la recogida horaria)."""
     anomalias = elegibles(almacen)
@@ -352,6 +450,14 @@ def principal(argumentos: list[str] | None = None) -> int:
     o_buscar = ordenes.add_parser("buscar")
     o_buscar.add_argument("--datos", type=Path, default=directorio_datos())
     o_buscar.add_argument("--tope-min", type=float, default=50.0)
+    o_directo = ordenes.add_parser("directo")
+    o_directo.add_argument("--datos", type=Path, default=directorio_datos())
+    o_directo.add_argument(
+        "--directo",
+        type=Path,
+        default=Path(os.environ.get(VARIABLE_DIRECTO, DIRECTO_DATOS_POR_DEFECTO)),
+    )
+    o_directo.add_argument("--tope-min", type=float, default=15.0)
     o_pendientes = ordenes.add_parser("pendientes")
     o_pendientes.add_argument("--datos", type=Path, default=directorio_datos())
     o_pendientes.add_argument("--base", type=Path, help="base cifrada local; si no, la remota")
@@ -364,6 +470,16 @@ def principal(argumentos: list[str] | None = None) -> int:
         plazo = Plazo(args.tope_min * 60)
         recuentos = buscar(args.datos, _lector(plazo), plazo)
         registro.info("búsqueda dirigida: %s en %.0f s", recuentos, time.monotonic() - inicio)
+        return 0
+    if args.orden == "directo":
+        inicio = time.monotonic()
+        plazo = Plazo(args.tope_min * 60)
+        recuentos = buscar_directo(
+            args.datos, args.directo, _lector(plazo), datetime.now(UTC), plazo
+        )
+        registro.info(
+            "búsqueda de avisos en directo: %s en %.0f s", recuentos, time.monotonic() - inicio
+        )
         return 0
     return _pendientes(args.datos, args.base, args.repositorio)
 

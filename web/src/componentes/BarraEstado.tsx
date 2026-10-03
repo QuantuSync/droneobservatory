@@ -1,7 +1,12 @@
 import { useEffect, useId, useRef, useState } from "react";
 import type { ReactNode } from "react";
 
-import type { EstadoFuente, EstadoSistema, ResultadoRecogida } from "../datos/tipos.ts";
+import type {
+  EstadoDirecto,
+  EstadoFuente,
+  EstadoSistema,
+  ResultadoRecogida,
+} from "../datos/tipos.ts";
 import { fechaHora } from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
 import { frescura, referenciaDeFrescura } from "../tiempo/frescura.ts";
@@ -25,25 +30,31 @@ interface Props {
 }
 
 const COLOR_PUNTO: Record<EstadoFrescura, string> = {
-  al_dia: "bg-confirmado",
+  al_dia: "bg-al-dia",
   con_retraso: "bg-notificado",
   desactualizado: "bg-atribuido",
 };
 
 const COLOR_TEXTO: Record<EstadoFrescura, string> = {
-  al_dia: "text-confirmado",
+  al_dia: "text-al-dia",
   con_retraso: "text-notificado",
   desactualizado: "text-atribuido",
 };
 
 const COLOR_RESULTADO: Record<ResultadoRecogida, string> = {
-  correcta: "bg-confirmado",
+  correcta: "bg-al-dia",
   con_avisos: "bg-notificado",
   fallida: "bg-atribuido",
 };
 
+const COLOR_DIRECTO: Record<EstadoDirecto, string> = {
+  en_marcha: "bg-al-dia",
+  con_respaldo: "bg-notificado",
+  parado: "bg-atribuido",
+};
+
 const COLOR_FUENTE: Record<EstadoFuente, string> = {
-  leida: "bg-confirmado",
+  leida: "bg-al-dia",
   con_aviso: "bg-notificado",
   no_leida: "bg-atribuido",
 };
@@ -133,6 +144,24 @@ function Detalle({ t, id, estado, actualizado, sistema, ahora }: PropsDetalle) {
               </li>
             ))}
           </ul>
+          {sistema.directo !== undefined && (
+            <div
+              className="mt-1.5 grid grid-cols-[auto_1fr_auto] items-center gap-x-2"
+              data-servicio-directo={sistema.directo.estado}
+            >
+              <Punto color={COLOR_DIRECTO[sistema.directo.estado]} />
+              <span className="text-texto">{e.directo}</span>
+              <span className="text-secundario">{e.estadoDirecto[sistema.directo.estado]}</span>
+              <span className="col-start-2 col-end-4 text-secundario">
+                {e.ultimoCiclo}:{" "}
+                {sistema.directo.ultimo_ciclo_correcto === null ? (
+                  e.sinUltimoDato
+                ) : (
+                  <span className="mono">{fechaHora(sistema.directo.ultimo_ciclo_correcto)}</span>
+                )}
+              </span>
+            </div>
+          )}
         </div>
       )}
     </div>

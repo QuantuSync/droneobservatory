@@ -336,11 +336,11 @@ describe("barra de estado", () => {
     expect(container.textContent).toContain("Actualizado");
     expect(container.textContent).not.toContain("hace");
     expect(container.textContent).not.toContain("al día");
-    expect(punto(container).className).not.toContain("bg-confirmado");
+    expect(punto(container).className).not.toContain("bg-al-dia");
   });
 
   it.each([
-    [0.5, "al_dia", "bg-confirmado", "text-confirmado", "Actualizado hace 30 min", "datos al día"],
+    [0.5, "al_dia", "bg-al-dia", "text-al-dia", "Actualizado hace 30 min", "datos al día"],
     [3.6, "con_retraso", "bg-notificado", "text-notificado", "Actualizado hace 3 h", "datos con retraso"],
     [30, "desactualizado", "bg-atribuido", "text-atribuido", "Actualizado hace 1 día", "datos desactualizados"],
   ])("a las %s horas dice %s con color y con texto", (horas, estado, color, colorTexto, linea, etiqueta) => {

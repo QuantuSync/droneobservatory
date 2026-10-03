@@ -222,14 +222,16 @@ def lineas_trazas(traza: vuelos.Traza, zonas: Zonas) -> list[str]:
     return lineas
 
 
-def leer_trazas(contenido: str) -> Iterator[tuple[str, list[list[Any]]]]:
-    """Lee `trazas.txt.gz` ya descomprimido: por aeronave, su cabecera y sus puntos con los
-    valores enteros (tiempo, lat×1e4, lon×1e4, altitud/25 o "S" o None, velocidad, rumbo,
-    velocidad vertical, NIC, NACp)."""
+def leer_trazas(contenido: str | Iterable[str]) -> Iterator[tuple[str, list[list[Any]]]]:
+    """Lee `trazas.txt.gz` ya descomprimido (el texto entero o sus líneas, para leerlo en
+    flujo): por aeronave, su cabecera y sus puntos con los valores enteros (tiempo, lat×1e4,
+    lon×1e4, altitud/25 o "S" o None, velocidad, rumbo, velocidad vertical, NIC, NACp)."""
     cabecera: str | None = None
     puntos: list[list[Any]] = []
     anterior: list[Any] | None = None
-    for linea in contenido.splitlines():
+    lineas = contenido.splitlines() if isinstance(contenido, str) else contenido
+    for linea in lineas:
+        linea = linea.rstrip("\n")
         if linea.startswith("#"):
             if cabecera is not None:
                 yield cabecera, puntos

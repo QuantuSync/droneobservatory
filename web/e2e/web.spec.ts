@@ -8,6 +8,7 @@ import { numero as formatear } from "../src/i18n/index.ts";
 import { OBJETO_ESTADO, ORIGEN_ALMACEN, urlDelAlmacen } from "../src/almacenPublico.ts";
 import { RUTA_SECURITY_TXT } from "../src/seguridad/securityTxt.ts";
 import { CONTACTO_SEGURIDAD, DESCARGAS, NOMBRE } from "../src/sitio.ts";
+import { directo, indiceGnss } from "../tests/ejemplos-europa.ts";
 
 /** Las capturas quedan fuera de git, en data/capturas. */
 const CAPTURAS = join(import.meta.dirname, "..", "..", "data", "capturas");
@@ -40,6 +41,21 @@ const ACCESO: Record<string, string> =
     : { "x-vercel-protection-bypass": process.env.VERCEL_BYPASS };
 
 test.beforeEach(async ({ page, baseURL }) => {
+  // En local, el almacén público no admite el origen (su CORS es el del sitio publicado): sus
+  // ficheros se sirven aquí, estado.json sin publicar y la detección en directo sin avisos.
+  if (baseURL?.includes("localhost") === true) {
+    const cors = { "access-control-allow-origin": "*" };
+    await page.route(`${ORIGEN_ALMACEN}/**`, (ruta) => {
+      const camino = new URL(ruta.request().url()).pathname;
+      if (camino.endsWith("/directo.json")) {
+        return ruta.fulfill({ status: 200, headers: cors, contentType: "application/json", body: JSON.stringify(directo([])) });
+      }
+      if (camino.endsWith("/gnss/indice.json")) {
+        return ruta.fulfill({ status: 200, headers: cors, contentType: "application/json", body: JSON.stringify(indiceGnss([])) });
+      }
+      return ruta.fulfill({ status: 404, headers: cors, body: "" });
+    });
+  }
   if (Object.keys(ACCESO).length === 0 || baseURL === undefined) return;
   const propio = new URL(baseURL).origin;
   await page.route(
@@ -237,7 +253,8 @@ test("en escritorio el letrero nunca se sale de la pantalla y desaparece al abri
   await page.waitForTimeout(MS_DE_VUELO);
   // El mapa ha volado al incidente: queda en el centro del hueco libre.
   const arriba = await page.locator("header").first().boundingBox();
-  const filtros = await page.getByRole("group", { name: "Filtros" }).boundingBox();
+  // Arriba, lo que tapa el mapa acaba en la franja «Europa ahora», bajo los filtros.
+  const filtros = await page.locator('[data-europa-ahora="franja"]').boundingBox();
   // Abajo, lo que tapa el mapa empieza en la fila del zoom y las atribuciones.
   const abajo = await page.getByRole("group", { name: "Zoom" }).boundingBox();
   const panel = await ficha.boundingBox();

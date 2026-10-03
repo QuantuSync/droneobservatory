@@ -12,23 +12,37 @@ import { Protocol } from "pmtiles";
 import { useEffect, useRef, useState } from "react";
 
 import type { Capas } from "../componentes/Controles.tsx";
+import { avisosEnMapa } from "../datos/directo.ts";
+import type { Aviso } from "../datos/directo.ts";
+import { celdasEnMapa } from "../datos/gnss.ts";
+import type { CeldaGnss } from "../datos/gnss.ts";
+import { escalones } from "../datos/presion.ts";
+import type { PresionPais } from "../datos/presion.ts";
 import type {
   EpisodioResumen,
   FilaImpacto,
   FocoRegion,
   IncidenteResumen,
 } from "../datos/tipos.ts";
+import { pais as nombrePais, porcentaje } from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
 import { ESCALA_UCRANIA, acento } from "../paleta.ts";
 import type { Idioma } from "../sitio.ts";
 import { movimientoReducido } from "./animacion.ts";
 import {
   CAPAS_DE_DENSIDAD,
+  CAPAS_DE_GNSS,
   CAPAS_DE_INCIDENTES,
+  CAPAS_DE_PRESION,
   CAPAS_DE_UCRANIA,
   CAPAS_PULSABLES,
+  CAPA_DIRECTO,
+  CAPA_GNSS,
   CAPA_GRUPOS,
+  CAPA_INCIDENTES_DISCRETOS,
   CAPA_INCIDENTES_GRAVES,
+  CAPA_PRESION,
+  CAPA_PRESION_LINEA,
   CAPA_PAIS,
   CAPA_IMPACTOS,
   CAPA_IMPACTOS_GRUPOS,
@@ -37,6 +51,8 @@ import {
   CAPA_REGION_ELEGIDA,
   CAPA_REGION_ELEGIDA_RUSIA,
   FUENTE_AREAS,
+  FUENTE_DIRECTO,
+  FUENTE_GNSS,
   FUENTE_IMPACTOS,
   FUENTE_EPISODIOS,
   FUENTE_FOCOS_UCRANIA,
@@ -110,6 +126,8 @@ export interface ApiMapa {
   zoom: (paso: number) => void;
   /** Vuelve a la vista inicial: Europa entera, en el hueco que deja libre la interfaz. */
   vistaInicial: () => void;
+  /** Vuela a un punto o a Ucrania, como al abrir una ficha. */
+  volar: (destino: Encuadre) => void;
 }
 
 /** Lo que tapa el mapa por cada lado (cabecera, filtros, paneles, hoja inferior), en px. */
@@ -136,6 +154,12 @@ export interface PropsMapa {
   focosUcrania: readonly FocoRegion[] | null;
   /** Impactos con lugar de la capa de guerra en el periodo; null sin la capa. */
   impactos: readonly FilaImpacto[] | null;
+  /** Celdas de interferencia GPS del periodo; null sin la capa o sin datos. */
+  gnss: readonly CeldaGnss[] | null;
+  /** Incidentes por país del periodo y su tendencia; null sin la capa. */
+  presion: ReadonlyMap<string, PresionPais> | null;
+  /** Avisos de la detección en directo. */
+  avisos: readonly Aviso[];
   elegido: IncidenteResumen | null;
   paisResaltado: string | null;
   regionesElegidas: readonly string[];
@@ -149,6 +173,9 @@ export interface PropsMapa {
   onPila: (ids: string[]) => void;
   onRegion: (codigo: string) => void;
   onImpacto: (id: string) => void;
+  onAviso: (id: string) => void;
+  onCelda: (h3: string) => void;
+  onPais: (iso: string) => void;
   onListo: (api: ApiMapa) => void;
   onFallo: () => void;
 }
@@ -188,7 +215,7 @@ function capasActivas(mapa: MapaGL): string[] {
 
 export default function Mapa(props: PropsMapa) {
   const { t, idioma, incidentes, episodios, capas, intensidad, noche, elegido } = props;
-  const { focosUcrania, impactos } = props;
+  const { focosUcrania, impactos, gnss, presion, avisos } = props;
   const { paisResaltado, regionesElegidas, novedades, hoy, encuadre, reserva } = props;
   // El vuelo lee la reserva del momento, pero no se repite porque cambie (al arrastrar una hoja).
   const reservaActual = useRef(reserva);
@@ -198,6 +225,7 @@ export default function Mapa(props: PropsMapa) {
   const textoLetrero = useRef<HTMLSpanElement>(null);
   const capaPulsos = useRef<HTMLDivElement>(null);
   const mapaRef = useRef<MapaGL | null>(null);
+  const volar = useRef<((destino: Encuadre) => void) | null>(null);
   const [listo, setListo] = useState(false);
   // Los manejadores del mapa se registran una vez: leen siempre las funciones actuales.
   const manejadores = useRef(props);
@@ -233,6 +261,27 @@ export default function Mapa(props: PropsMapa) {
     mapa.touchZoomRotate.disableRotation();
     mapa.keyboard.disableRotation();
 
+    function volarA(destino: Encuadre) {
+      const animate = !movimientoReducido();
+      if (destino === "ucrania") {
+        mapa.fitBounds(CAJA_UCRANIA, {
+          padding: margenes(reservaActual.current, MARGEN_ENCUADRE_PX),
+          animate,
+          duration: DURACION_VUELO_MS,
+        });
+        return;
+      }
+      mapa.flyTo({
+        center: [destino.lon, destino.lat],
+        zoom: destino.zoom ?? Math.max(mapa.getZoom(), ZOOM_DE_FICHA),
+        // El símbolo queda en el hueco que dejan a la vista la cabecera y la ficha.
+        padding: margenes(reservaActual.current, 0),
+        duration: DURACION_VUELO_MS,
+        animate,
+      });
+    }
+    volar.current = volarA;
+
     mapa.on("load", () => {
       registrarIconos(mapa);
       setListo(true);
@@ -246,6 +295,7 @@ export default function Mapa(props: PropsMapa) {
             animate: !movimientoReducido(),
             duration: DURACION_VUELO_MS,
           }),
+        volar: volarA,
         alMover: (aviso) => {
           mapa.on("move", aviso);
           mapa.on("resize", aviso);
@@ -275,6 +325,20 @@ export default function Mapa(props: PropsMapa) {
       }
       if (rasgo.layer.id === CAPA_IMPACTOS) {
         return textos.mapa.impacto(Number(p.parte) === 1, Number(p.foco) === 1);
+      }
+      if (rasgo.layer.id === CAPA_DIRECTO) {
+        const aviso = manejadores.current.avisos.find((a) => a.id === String(p.id));
+        return aviso === undefined
+          ? null
+          : `${aviso.nombre} (${aviso.oaci}) · ${textos.directo.estado[aviso.estado]}`;
+      }
+      if (rasgo.layer.id === CAPA_GNSS) {
+        return textos.gnss.letrero(porcentaje(Number(p.proporcion), lengua));
+      }
+      if (rasgo.layer.id === CAPA_PRESION) {
+        const iso = String(p.iso);
+        const cuenta = manejadores.current.presion?.get(iso)?.incidentes ?? 0;
+        return textos.presion.letrero(nombrePais(iso, lengua), cuenta);
       }
       const incidente = porId.get(String(p.id));
       if (incidente === undefined) return null;
@@ -313,6 +377,12 @@ export default function Mapa(props: PropsMapa) {
           );
       } else if (primero.layer.id === CAPA_IMPACTOS) {
         manejadores.current.onImpacto(String(propiedades.id));
+      } else if (primero.layer.id === CAPA_DIRECTO) {
+        manejadores.current.onAviso(String(propiedades.id));
+      } else if (primero.layer.id === CAPA_GNSS) {
+        manejadores.current.onCelda(String(propiedades.h3));
+      } else if (primero.layer.id === CAPA_PRESION) {
+        manejadores.current.onPais(String(propiedades.iso));
       } else if (
         primero.layer.id === CAPA_REGIONES || primero.layer.id === CAPA_REGIONES_RUSIA
       ) {
@@ -424,6 +494,8 @@ export default function Mapa(props: PropsMapa) {
         [CAPAS_DE_INCIDENTES, capas.incidentes],
         [CAPAS_DE_UCRANIA, capas.ucrania],
         [CAPAS_DE_DENSIDAD, capas.densidad],
+        [CAPAS_DE_PRESION, capas.presion],
+        [CAPAS_DE_GNSS, capas.gnss],
       ];
       for (const [ids, visible] of grupos) {
         for (const id of ids) {
@@ -460,6 +532,38 @@ export default function Mapa(props: PropsMapa) {
     });
   }, [listo, impactos]);
 
+  // Interferencia GPS del periodo.
+  useEffect(() => {
+    const mapa = mapaRef.current;
+    if (!listo || mapa === null) return undefined;
+    return trasPintar(() => {
+      fuente(mapa, FUENTE_GNSS)?.setData(celdasEnMapa(gnss ?? []));
+    });
+  }, [listo, gnss]);
+
+  // Presión por país: opacidad del gris según sus incidentes, y contorno de los que tienen.
+  useEffect(() => {
+    const mapa = mapaRef.current;
+    if (!listo || mapa === null) return;
+    const opacidades = presion === null ? new Map<string, number>() : escalones(presion);
+    const pares = [...opacidades].flatMap(([iso, opacidad]) => [iso, opacidad]);
+    mapa.setPaintProperty(
+      CAPA_PRESION,
+      "fill-opacity",
+      pares.length === 0
+        ? 0
+        : (["match", ["get", "iso"], ...pares, 0] as unknown as ExpressionSpecification),
+    );
+    mapa.setFilter(CAPA_PRESION_LINEA, ["in", ["get", "iso"], ["literal", [...opacidades.keys()]]]);
+  }, [listo, presion]);
+
+  // Avisos de la detección en directo.
+  useEffect(() => {
+    const mapa = mapaRef.current;
+    if (!listo || mapa === null) return;
+    fuente(mapa, FUENTE_DIRECTO)?.setData(avisosEnMapa(avisos));
+  }, [listo, avisos]);
+
   // Focos térmicos de las regiones de Ucrania, en el centro de cada región.
   useEffect(() => {
     const mapa = mapaRef.current;
@@ -477,14 +581,15 @@ export default function Mapa(props: PropsMapa) {
     mapa.setFilter(CAPA_REGION_ELEGIDA_RUSIA, filtro);
   }, [listo, regionesElegidas]);
 
-  // Pulsos: confirmados y atribuidos laten, y los grupos que los contienen. Van fuera del
-  // mapa (ver pulsos.ts) y solo se recolocan cuando el mapa se mueve o cambia lo dibujado.
+  // Pulsos: solo los incidentes nuevos desde la última visita (y los grupos que los
+  // contienen). Van fuera del mapa (ver pulsos.ts) y se recolocan cuando el mapa se mueve o
+  // cambia lo dibujado.
   useEffect(() => {
     const mapa = mapaRef.current;
     const capa = capaPulsos.current;
     if (!listo || mapa === null || capa === null) return undefined;
     const recolocar = () => {
-      const capas = [CAPA_GRUPOS, CAPA_INCIDENTES_GRAVES].filter(
+      const capas = [CAPA_GRUPOS, CAPA_INCIDENTES_GRAVES, CAPA_INCIDENTES_DISCRETOS].filter(
         (id) => mapa.getLayoutProperty(id, "visibility") !== "none",
       );
       const rasgos = capas.length === 0 ? [] : mapa.queryRenderedFeatures({ layers: capas });
@@ -506,20 +611,7 @@ export default function Mapa(props: PropsMapa) {
   useEffect(() => {
     const mapa = mapaRef.current;
     if (!listo || mapa === null || encuadre === null) return;
-    const padding = margenes(reservaActual.current, MARGEN_ENCUADRE_PX);
-    const animate = !movimientoReducido();
-    if (encuadre === "ucrania") {
-      mapa.fitBounds(CAJA_UCRANIA, { padding, animate, duration: DURACION_VUELO_MS });
-    } else {
-      mapa.flyTo({
-        center: [encuadre.lon, encuadre.lat],
-        zoom: encuadre.zoom ?? Math.max(mapa.getZoom(), ZOOM_DE_FICHA),
-        // El símbolo queda en el hueco que dejan a la vista la cabecera y la ficha.
-        padding: margenes(reservaActual.current, 0),
-        duration: DURACION_VUELO_MS,
-        animate,
-      });
-    }
+    volar.current?.(encuadre);
   }, [listo, encuadre]);
 
   return (

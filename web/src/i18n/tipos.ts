@@ -5,6 +5,7 @@ import type {
   CategoriaObjetivoGuerra,
   CategoriaObjetivoUcrania,
   Estado,
+  EstadoDirecto,
   EstadoFuente,
   FuenteDelSistema,
   Medida,
@@ -15,6 +16,9 @@ import type {
   Sentido,
   Tipo,
 } from "../datos/tipos.ts";
+import type { EstadoAviso, FuenteDirecto, TipoConfirmacion } from "../datos/directo.ts";
+import type { NivelGnss } from "../datos/gnss.ts";
+import type { Sentido as SentidoTendencia } from "../datos/presion.ts";
 import type { EstadoFrescura } from "../tiempo/frescura.ts";
 import type { Granularidad } from "../tiempo/dias.ts";
 
@@ -52,6 +56,8 @@ export interface Textos {
     incidentes: string;
     ucrania: string;
     densidad: string;
+    presion: string;
+    gnss: string;
     feed: string;
     ayuda: string;
     cambiarIdioma: string;
@@ -74,6 +80,9 @@ export interface Textos {
     resultado: Record<ResultadoRecogida, string>;
     fuente: Record<FuenteDelSistema, string>;
     estadoFuente: Record<EstadoFuente, string>;
+    directo: string;
+    estadoDirecto: Record<EstadoDirecto, string>;
+    ultimoCiclo: string;
     ultimoDato: string;
     sinUltimoDato: string;
     nuncaCorrecta: string;
@@ -112,6 +121,72 @@ export interface Textos {
     vacio: string;
   };
   relativo: (minutos: number, fecha: string) => string;
+  /** Panel «Europa ahora»: las cifras del momento, cada una con su sitio en el mapa. */
+  ahora: {
+    etiqueta: string;
+    cierres: string;
+    incidentes: string;
+    drones: string;
+    focos: string;
+    gnss: string;
+    cortos: Record<"cierres" | "incidentes" | "drones" | "focos" | "gnss", string>;
+    nivel: Record<NivelGnss, string>;
+    celdasAltas: (n: number) => string;
+    sinDato: string;
+    ir: (que: string) => string;
+  };
+  /** Detección en directo de cierres de aeropuerto. */
+  directo: {
+    etiqueta: string;
+    estado: Record<EstadoAviso, string>;
+    detectado: string;
+    inicio: string;
+    reanudado: string;
+    evidencia: string;
+    movimientos: (vistos: string, esperados: string) => string;
+    llegadasPerdidas: (n: string) => string;
+    salidasPerdidas: (n: string) => string;
+    esperas: (n: string) => string;
+    desvios: (n: string) => string;
+    confirmacion: string;
+    confirmacionTipo: Record<TipoConfirmacion, string>;
+    primeraNoticia: string;
+    ventaja: (minutos: number) => string;
+    actualizado: string;
+    fuente: string;
+    fuentes: Record<FuenteDirecto, string>;
+    vigilados: (n: string) => string;
+  };
+  /** Mapa de interferencia GPS. */
+  gnss: {
+    etiqueta: string;
+    leyenda: string;
+    niveles: Record<NivelGnss, string>;
+    proporcion: string;
+    aeronaves: string;
+    degradadas: string;
+    periodo: string;
+    dias: (n: number) => string;
+    sinDatos: string;
+    cargando: string;
+    letrero: (proporcion: string) => string;
+  };
+  /** Presión por país. */
+  presion: {
+    etiqueta: string;
+    leyenda: string;
+    menos: string;
+    mas: string;
+    tendencia: Record<SentidoTendencia, string>;
+    frente: (anterior: string) => string;
+    sinComparacion: string;
+    incidentes: (n: number) => string;
+    porTipo: string;
+    porEstado: string;
+    lista: string;
+    vacia: string;
+    letrero: (pais: string, n: number) => string;
+  };
   novedades: {
     aviso: (n: number) => string;
     recorrer: string;
@@ -136,6 +211,7 @@ export interface Textos {
     rusia: string;
     impactos: string;
     foco: string;
+    directo: string;
     atajos: string;
     acciones: Record<Accion, string>;
   };
@@ -184,6 +260,7 @@ export interface Textos {
     efecto: string;
     respuesta: string;
     atribucion: string;
+    confirmadoAtribuido: (actor: string, autoridad: string) => string;
     atribuidoA: (actor: string, autoridad: string) => string;
     motivoDesmentido: string;
     desconocido: string;

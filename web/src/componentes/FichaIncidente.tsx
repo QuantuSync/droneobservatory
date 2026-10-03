@@ -178,7 +178,14 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
 
       <dl className="mt-3">
         <Fila nombre={t.ficha.estado}>
-          <EstadoConTexto t={t} tipo={incidente.tipo} estado={incidente.estado.actual} />
+          {incidente.estado.actual === "atribuido" && atribucion !== undefined ? (
+            <span className="inline-flex items-center gap-1.5" data-estado-atribuido="">
+              <Simbolo tipo={incidente.tipo} estado="atribuido" />
+              {t.ficha.confirmadoAtribuido(atribucion.actor, atribucion.autoridad)}
+            </span>
+          ) : (
+            <EstadoConTexto t={t} tipo={incidente.tipo} estado={incidente.estado.actual} />
+          )}
         </Fila>
         {incidente.presencia_dron !== undefined && (
           <Fila nombre={t.ficha.presenciaDron}>

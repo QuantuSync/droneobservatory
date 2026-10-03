@@ -29,6 +29,16 @@ function MarcaImpacto({ parte }: { parte: boolean }) {
   );
 }
 
+/** Aviso de la detección en directo, como en el mapa: punto y aro del color de su estado. */
+function MarcaAviso() {
+  return (
+    <svg aria-hidden="true" width="14" height="14" viewBox="0 0 14 14" data-marca-aviso="">
+      <circle cx="7" cy="7" r="6" fill="none" stroke={PALETA.notificado} strokeWidth="1.2" />
+      <circle cx="7" cy="7" r="3" fill={PALETA.notificado} stroke={PALETA.fondo} strokeWidth="1" />
+    </svg>
+  );
+}
+
 /** Región rusa, como en el mapa: gris con contorno discontinuo. */
 function MarcaRusia() {
   return (
@@ -134,6 +144,12 @@ export function Ayuda({ t, abierta, onCerrar }: Props) {
               <MarcaFoco />
             </span>
             {a.foco}
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="pt-1">
+              <MarcaAviso />
+            </span>
+            {a.directo}
           </li>
         </ul>
         <section className="sm:col-span-2">

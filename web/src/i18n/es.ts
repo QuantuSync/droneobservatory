@@ -1,6 +1,7 @@
 import { LICENCIA_DATOS, LICENCIA_DATOS_URL, NOMBRE, ORIGEN, REPOSITORIO } from "../sitio.ts";
 import { REGIONES_RUSIA_ES } from "./regionesRusia.ts";
 import type { Textos } from "./tipos.ts";
+import { UMBRALES_DIRECTO } from "./umbrales.ts";
 
 export const es: Textos = {
   descripcion:
@@ -25,6 +26,8 @@ export const es: Textos = {
     incidentes: "Incidentes",
     ucrania: "Ucrania",
     densidad: "Densidad",
+    presion: "Presión",
+    gnss: "GPS",
     feed: "En directo",
     ayuda: "Ayuda",
     cambiarIdioma: "English version",
@@ -69,6 +72,9 @@ export const es: Textos = {
       condiciones: "Meteorología (Open-Meteo, METAR)",
     },
     estadoFuente: { leida: "leída", con_aviso: "con aviso", no_leida: "no leída" },
+    directo: "Detección en directo",
+    estadoDirecto: { en_marcha: "en marcha", con_respaldo: "con la fuente de respaldo", parado: "parada" },
+    ultimoCiclo: "último ciclo correcto",
     ultimoDato: "último dato",
     sinUltimoDato: "sin datos todavía",
     nuncaCorrecta: "Ninguna recogida correcta",
@@ -117,6 +123,81 @@ export const es: Textos = {
     const dias = Math.floor(horas / 24);
     return dias < 30 ? `hace ${dias} ${dias === 1 ? "día" : "días"}` : `el ${fecha}`;
   },
+  ahora: {
+    etiqueta: "Europa ahora",
+    cierres: "cierres de aeropuerto en curso",
+    incidentes: "incidentes en 7 días",
+    drones: "drones lanzados la última noche",
+    focos: "focos térmicos confirmados en 7 días",
+    gnss: "interferencia GPS del día",
+    cortos: {
+      cierres: "cierres",
+      incidentes: "7 días",
+      drones: "última noche",
+      focos: "focos 7 d",
+      gnss: "GPS",
+    },
+    nivel: { sin: "sin interferencia", media: "media", alta: "alta" },
+    celdasAltas: (n) => (n === 1 ? "1 celda alta" : `${n} celdas altas`),
+    sinDato: "sin dato",
+    ir: (que) => `Ver en el mapa: ${que}`,
+  },
+  directo: {
+    etiqueta: "Aeropuerto · detección en directo",
+    estado: {
+      posible_cierre: "Posible cierre en curso",
+      cierre_confirmado: "Cierre confirmado",
+      operacion_reanudada: "Operación reanudada",
+    },
+    detectado: "Detectado",
+    inicio: "Inicio del hueco",
+    reanudado: "Reanudado",
+    evidencia: "Evidencia",
+    movimientos: (vistos, esperados) => `${vistos} movimientos vistos de ${esperados} esperados`,
+    llegadasPerdidas: (n) => `${n} llegadas perdidas`,
+    salidasPerdidas: (n) => `${n} salidas perdidas`,
+    esperas: (n) => `${n} aviones en espera`,
+    desvios: (n) => `${n} vuelos desviados`,
+    confirmacion: "Confirmación",
+    confirmacionTipo: { incidente: "incidente de la base", oficial: "fuente oficial" },
+    primeraNoticia: "Primera noticia",
+    ventaja: (minutos) =>
+      minutos >= 0
+        ? `detectado ${minutos} min antes de la primera noticia`
+        : `detectado ${-minutos} min después de la primera noticia`,
+    actualizado: "Actualizado",
+    fuente: "Tráfico en tiempo real",
+    fuentes: { adsb_lol: "adsb.lol", adsb_fi: "adsb.fi" },
+    vigilados: (n) => `${n} aeropuertos vigilados`,
+  },
+  gnss: {
+    etiqueta: "Interferencia GPS",
+    leyenda: "Aeronaves con la posición degradada",
+    niveles: { sin: "menos del 2 %", media: "del 2 al 10 %", alta: "más del 10 %" },
+    proporcion: "Aeronaves afectadas",
+    aeronaves: "Aeronaves",
+    degradadas: "con la posición degradada",
+    periodo: "Periodo",
+    dias: (n) => (n === 1 ? "1 día con datos" : `${n} días con datos`),
+    sinDatos: "Sin datos de interferencia para este periodo",
+    cargando: "Cargando la interferencia…",
+    letrero: (proporcion) => `Interferencia GPS · ${proporcion} de las aeronaves`,
+  },
+  presion: {
+    etiqueta: "País · presión",
+    leyenda: "Incidentes en el periodo",
+    menos: "menos",
+    mas: "más",
+    tendencia: { sube: "sube", baja: "baja", estable: "estable" },
+    frente: (anterior) => `frente a ${anterior} en el periodo anterior de igual duración`,
+    sinComparacion: "sin periodo anterior con datos",
+    incidentes: (n) => (n === 1 ? "1 incidente" : `${n} incidentes`),
+    porTipo: "Por tipo",
+    porEstado: "Por estado",
+    lista: "Incidentes del periodo",
+    vacia: "Ningún incidente en el periodo elegido.",
+    letrero: (pais, n) => `${pais} · ${n === 1 ? "1 incidente" : `${n} incidentes`}`,
+  },
   novedades: {
     aviso: (n) =>
       n === 1 ? "1 novedad desde tu última visita" : `${n} novedades desde tu última visita`,
@@ -131,20 +212,24 @@ export const es: Textos = {
     cerrar: "Cerrar la ayuda",
     formas: "La forma dice el tipo de incidente.",
     colores:
-      "El color dice el estado. El desmentido va sin relleno y con contorno discontinuo.",
+      "El color dice el estado: naranja, notificado; rojo, confirmado; rojo con una bandera " +
+      "pequeña, atribuido (un confirmado del que un gobierno ha señalado al responsable). El " +
+      "desmentido va sin relleno y con contorno gris discontinuo.",
     areas:
       "Cada incidente ocupa un área: el círculo es el radio en que se sabe que ocurrió.",
     lineas: "Una línea fina une los incidentes de un mismo episodio: varios objetivos en una noche.",
     numeros:
       "Un círculo con un número junta varios incidentes: crece con el número, y su anillo " +
-      "lleva el color del estado más grave que contiene. Al acercar el mapa se separan.",
+      "es rojo si contiene algún confirmado o atribuido y naranja si todos son notificados. Al " +
+      "acercar el mapa se separan.",
     pila:
       "Si los incidentes están en el mismo punto exacto, al pulsar el círculo eliges cuál abrir.",
     pulsos:
-      "Los confirmados y los atribuidos laten despacio; los atribuidos, algo más. Los " +
-      "notificados van más apagados.",
+      "Solo late lo nuevo desde tu última visita (y el círculo que lo contiene): deja de latir " +
+      "al pulsar «Verlas» o «Descartar» o al abrir el incidente. Con el movimiento reducido " +
+      "del sistema, en lugar de latir lleva un anillo fijo. Los notificados van más apagados.",
     reciente: "Un destello suave marca lo que empezó en las últimas 24 horas.",
-    novedad: "Un anillo del color de la interfaz marca lo que ha cambiado desde tu última visita.",
+    novedad: "En la primera visita no late nada: aún no hay una visita anterior con la que comparar.",
     ucrania:
       "En la capa de Ucrania, cada región se colorea según los ataques que la citan en el periodo.",
     rusia:
@@ -154,12 +239,15 @@ export const es: Textos = {
       "Un punto pequeño es un lugar concreto alcanzado (una localidad o una instalación) " +
       "según las administraciones regionales, el Estado Mayor ucraniano o los gobernadores " +
       "rusos. Relleno: fuente oficial; solo el aro: reivindicación de parte. Al alejar se " +
-      "agrupan con su número. Los partes diarios de ataques en la línea del frente no se " +
-      "dibujan.",
+      "agrupan con su número. Los partes diarios de la línea del frente van en los datos " +
+      "descargables.",
     foco:
       "Un punto claro junto a un incidente, un impacto o un grupo de impactos, o en el centro de una región de Ucrania, marca un " +
-      "foco térmico detectado por satélite (NASA FIRMS) en su lugar y su hora. Su ausencia no " +
-      "demuestra nada.",
+      "foco térmico detectado por satélite (NASA FIRMS) en su lugar y su hora.",
+    directo:
+      "Un punto con aro y el código OACI es un aeropuerto de la detección en directo, sin " +
+      "pulso: naranja, posible cierre en curso; rojo, cierre confirmado; gris, operación " +
+      "reanudada.",
     atajos: "Atajos de teclado",
     acciones: {
       ayuda: "Abrir o cerrar esta ayuda",
@@ -297,6 +385,7 @@ export const es: Textos = {
     efecto: "Efecto",
     respuesta: "Respuesta",
     atribucion: "Atribución",
+    confirmadoAtribuido: (actor, autoridad) => `Confirmado · atribuido a ${actor}, según ${autoridad}`,
     atribuidoA: (actor, autoridad) => `${actor}, según ${autoridad}`,
     motivoDesmentido: "Motivo del desmentido",
     desconocido: "Sin dato",
@@ -382,8 +471,8 @@ export const es: Textos = {
     listaAtaques: "Partes que la citan",
     masAtaques: (n) => `Ver ${n} más`,
     nota:
-      "Las cifras son las que da cada parte en sus comunicados. Los derribos por región " +
-      "solo se cuentan cuando el parte los desglosa.",
+      "Las cifras son las que da cada parte en sus comunicados. Los derribos por región son " +
+      "los que cada parte desglosa por región.",
     fuenteCifras: (medio) => `Cifras de ${medio}`,
     reivindicacion: "reivindicación de parte",
     impactos: "Impactos con lugar en el periodo",
@@ -526,19 +615,22 @@ export const es: Textos = {
               {
                 termino: "Notificado",
                 marca: { estado: "notificado" },
-                texto: ["Lo cuentan las noticias. Es el estado inicial de todo incidente."],
+                texto: [
+                  "Lo cuentan las noticias. Es el estado inicial de todo incidente. En naranja.",
+                ],
               },
               {
                 termino: "Confirmado",
                 marca: { estado: "confirmado" },
-                texto: ["Una autoridad afirma que el incidente ocurrió."],
+                texto: ["Una autoridad afirma que el incidente ocurrió. En rojo."],
               },
               {
                 termino: "Atribuido",
                 marca: { estado: "atribuido" },
                 texto: [
-                  "Una autoridad señala a un gobierno como responsable. La ficha dice quién " +
-                    "atribuye y a quién.",
+                  "Un confirmado del que una autoridad señala a un gobierno como responsable: " +
+                    "rojo, con una bandera pequeña sobre el símbolo. La ficha lo muestra como " +
+                    "«Confirmado · atribuido a…», con quién atribuye y a quién.",
                 ],
               },
               {
@@ -555,7 +647,8 @@ export const es: Textos = {
             parrafo: [
               "En el marcador, los confirmados y los atribuidos se cuentan por separado: un " +
                 "incidente atribuido ya no suma entre los confirmados. El estado se indica " +
-                "siempre con color y con texto.",
+                "siempre con color y con texto. Un círculo que junta varios incidentes es rojo " +
+                "si contiene algún confirmado o atribuido y naranja si todos son notificados.",
             ],
           },
         ],
@@ -772,11 +865,10 @@ export const es: Textos = {
           },
           {
             parrafo: [
-              "Límites: las nubes y el humo tapan el fuego, los satélites pasan pocas veces " +
-                "al día y un incendio corto puede no coincidir con ningún paso; la ausencia de " +
-                "foco no demuestra nada y no se muestra. Un foco dentro del radio puede ser " +
-                "otro fuego cercano, como una quema agrícola. Es un indicio físico, no una " +
-                "confirmación.",
+              "Los satélites pasan varias veces al día sobre cada lugar y cada paso deja sus " +
+                "detecciones. La marca aparece cuando hay foco: es un dato físico medido, un " +
+                "fuego dentro del radio en la ventana del ataque, que acompaña a lo que dicen " +
+                "las fuentes.",
             ],
           },
         ],
@@ -809,37 +901,128 @@ export const es: Textos = {
           },
           {
             parrafo: [
-              "Límites: adsb.lol no ve todos los aviones ni todos los aeropuertos igual. Cada " +
-                "día se compara lo visto con los vuelos IFR de referencia de EUROCONTROL; con " +
-                "menos de la mitad no se interpreta ningún hueco. Si el tiempo (niebla, " +
-                "tormenta, nieve, viento fuerte o pista contaminada en los METAR) explica un " +
-                "hueco, se tiene en cuenta. Muchas aeronaves militares vuelan sin emitir, así " +
-                "que su ausencia en estos datos no demuestra nada. Un hueco en el tráfico no " +
-                "indica su causa: también cierran aeropuertos los globos, los fallos técnicos " +
-                "o las huelgas; por eso solo se muestra junto a un incidente conocido.",
+              "Cobertura: cada día se compara lo que ve adsb.lol en cada aeropuerto con los " +
+                "vuelos IFR de referencia de EUROCONTROL, y los huecos se interpretan en los " +
+                "aeropuertos y días en que se ve la mitad o más. Cada hueco se cruza con los " +
+                "METAR del aeropuerto: los que explica el tiempo (niebla, tormenta, nieve, " +
+                "viento fuerte o pista contaminada) se apartan. El cierre medido se muestra " +
+                "junto al incidente con el que coincide.",
             ],
           },
           {
             parrafo: [
-              "El dato falta cuando el incidente no es en un aeropuerto con vuelos regulares, " +
-                "cuando adsb.lol no publicó ese día o lo publicó incompleto, cuando la cobertura " +
-                "de ese aeropuerto ese día es insuficiente, cuando aún no hay cuatro semanas de " +
-                "línea base o cuando no se ve ningún hueco que coincida con el incidente. Un " +
-                "dato que no se puede medir queda vacío; nunca se rellena.",
+              "La ficha lleva el cierre medido cuando el incidente es en un aeropuerto con " +
+                "vuelos regulares, adsb.lol publicó el día completo, la cobertura de ese " +
+                "aeropuerto ese día es suficiente, hay cuatro semanas de línea base y un hueco " +
+                "coincide con el incidente. Cada valor sale de la medida; ninguno se estima.",
             ],
           },
         ],
       },
       {
-        id: "sesgo",
-        titulo: "Sesgo de cobertura",
+        id: "directo",
+        titulo: "Detección en directo de cierres",
         bloques: [
           {
             parrafo: [
-              "El número de incidentes de un país depende de cuánto publican sus medios, de " +
-                "los idiomas que se leen mejor y de si sus autoridades informan en abierto. " +
-                "Un país con más registros no tiene por fuerza más incidentes: tiene más " +
-                "noticias. Las cifras no sirven para comparar países sin tener esto en cuenta.",
+              `Cada ${UMBRALES_DIRECTO.cicloS} segundos se piden las posiciones de las aeronaves ` +
+                "alrededor de los aeropuertos vigilados (los de cobertura alta los cuatro días " +
+                "de su línea base en el archivo diario) a ",
+              { texto: "adsb.lol", enlace: "https://adsb.lol/" },
+              "; si no responde, el servicio pasa solo a ",
+              { texto: "adsb.fi", enlace: "https://adsb.fi/" },
+              ". Con esas posiciones se reconstruyen las llegadas y las salidas, con las mismas " +
+                `reglas que el tráfico medido y un retraso de ${UMBRALES_DIRECTO.retrasoMin} minutos para que ` +
+                "cada movimiento quede completo, y se comparan con la mediana del mismo día de " +
+                "la semana y la misma hora local de las cuatro semanas anteriores.",
+            ],
+          },
+          {
+            lista: [
+              {
+                termino: "Posible cierre en curso",
+                texto: [
+                  `Desde el último movimiento faltan al menos ${UMBRALES_DIRECTO.esperadosMin} movimientos ` +
+                    `esperados, se ve como mucho el ${UMBRALES_DIRECTO.fraccionVistos} de ellos, lo que ` +
+                    `falta crece al menos ${UMBRALES_DIRECTO.ritmo} movimientos por minuto de hueco, ` +
+                    "ninguna aeronave está despegando o aterrizando, todo ello durante " +
+                    `${UMBRALES_DIRECTO.persistenciaMin} minutos, y ningún METAR ` +
+                    "desde una hora antes lo explica (niebla, visibilidad, techo, tormenta, nieve, " +
+                    "viento fuerte o pista contaminada).",
+                ],
+              },
+              {
+                termino: "Cierre confirmado",
+                texto: ["Una fuente oficial o un incidente de la base recoge el cierre."],
+              },
+              {
+                termino: "Operación reanudada",
+                texto: [
+                  `Vuelven al menos ${UMBRALES_DIRECTO.reanudacion} movimientos y en la última media ` +
+                    "hora se ve la mitad o más de lo esperado. El aviso sigue " +
+                    `${UMBRALES_DIRECTO.permanenciaH} horas en el mapa.`,
+                ],
+              },
+            ],
+          },
+          {
+            parrafo: [
+              "Cada aviso guarda su hora de detección, su evidencia (movimientos esperados y " +
+                "vistos, llegadas y salidas perdidas, aviones en espera y vuelos desviados) y, " +
+                "cuando llega, la hora de la primera noticia, que da la ventaja de la " +
+                "detección. Un aviso pone en marcha la búsqueda dirigida de noticias; cuando se " +
+                "confirma, el incidente entra en la base por el flujo normal con el cierre " +
+                "medido.",
+            ],
+          },
+        ],
+      },
+      {
+        id: "gnss",
+        titulo: "Interferencia GPS",
+        bloques: [
+          {
+            parrafo: [
+              "Cada posición ADS-B lleva su integridad (NIC) y su precisión (NACp). Una " +
+                "aeronave tiene la posición degradada en una celda un día si alguna de sus " +
+                "posiciones allí trae NIC menor que 7 o NACp menor que 8, los mínimos de la " +
+                "norma de ADS-B Out. Las celdas son hexágonos H3 de resolución 4 (unos 1770 " +
+                "km²), la rejilla de gpsjam.org. La proporción de aeronaves afectadas resta " +
+                "una degradada, para que un solo equipo averiado no tiña la celda: (degradadas " +
+                "− 1) / aeronaves.",
+            ],
+          },
+          {
+            parrafo: [
+              "Cada celda del mapa reúne 20 aeronaves o más en el día. Niveles: menos del 2 % " +
+                "sin interferencia, del 2 al 10 % media y más del 10 % alta, en gris cuanto más " +
+                "claro más proporción y el nivel alto en rojo. En un periodo se " +
+                "suman por celda las aeronaves y las degradadas de cada día (de cada mes en los " +
+                "periodos de más de 7 días). Se calcula en el servidor con el archivo diario " +
+                "de adsb.lol.",
+            ],
+          },
+        ],
+      },
+      {
+        id: "presion",
+        titulo: "Presión por país",
+        bloques: [
+          {
+            parrafo: [
+              "Cada país se rellena en gris según sus incidentes en el periodo elegido, con " +
+                "los filtros activos: cinco escalones respecto al país con más. La tendencia " +
+                "compara con el periodo anterior de la misma duración: estable si la " +
+                "diferencia es cero, o de uno y no pasa del 10 % de lo anterior; si no, sube " +
+                "o baja, con la cifra. Al pulsar un país salen sus cifras por tipo y por " +
+                "estado y sus incidentes.",
+            ],
+          },
+          {
+            parrafo: [
+              "Las cifras por país cuentan los incidentes registrados con lo que publican en " +
+                "abierto los medios y las autoridades de cada país, en las lenguas que lee la " +
+                "recogida.",
             ],
           },
         ],
@@ -905,6 +1088,18 @@ export const es: Textos = {
                     "biblioteca ",
                   { texto: "traffic", enlace: "https://github.com/xoolive/traffic" },
                   " (MIT, © Xavier Olive).",
+                ],
+              },
+              {
+                termino: "Tráfico en tiempo real",
+                texto: [
+                  "© adsb.lol contributors (",
+                  { texto: "adsb.lol", enlace: "https://adsb.lol/" },
+                  "), ",
+                  { texto: "ODbL 1.0", enlace: "https://opendatacommons.org/licenses/odbl/1-0/" },
+                  "; y, como respaldo, ",
+                  { texto: "adsb.fi", enlace: "https://adsb.fi/" },
+                  ".",
                 ],
               },
               {
