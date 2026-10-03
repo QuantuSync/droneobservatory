@@ -60,6 +60,7 @@ from jsonschema import Draft202012Validator
 import esquema
 from almacen.base import Almacen
 from esquema import Documento, Esquema, validador
+from exportacion import mejor_origen
 from exportacion import procedencia as origenes
 from modelo import ficha
 from proceso import incidentes as reglas
@@ -69,7 +70,7 @@ from proceso.focos_termicos import con_focos
 from proceso.mediciones import con_mediciones
 from proceso.restricciones import por_ataque
 
-VERSION_FORMATO = "1.3.0"
+VERSION_FORMATO = "1.4.0"
 RAIZ = Path(__file__).resolve().parent.parent
 DIRECTORIO_ESQUEMAS = RAIZ / "esquema" / "exportacion" / VERSION_FORMATO
 VOCABULARIO = RAIZ / "configuracion" / "vocabulario_aegis.json"
@@ -536,6 +537,59 @@ def _propio(nombre: str) -> str:
     return f"{ESQUEMAS_PROPIOS}/{nombre}.schema.json"
 
 
+def novedades_catalogo(
+    almacen: Almacen, version_catalogo: str, vivo: Documento | None
+) -> Documento:
+    """Registro de novedades del catálogo vivo por semana (la de su detección), con la versión
+    del catálogo, su historial y los modelos que el barrido registró sin clase."""
+    por_semana: dict[str, list[Documento]] = defaultdict(list)
+    for novedad in almacen.catalogo_vivo("novedad").values():
+        por_semana[novedad["semana"]].append(novedad)
+    return {
+        "version_catalogo": version_catalogo,
+        "version_vivo": int((vivo or {}).get("version", 0)),
+        "semanas": [
+            {"semana": s, "novedades": sorted(lista, key=lambda n: (n["fecha"], n["id"]))}
+            for s, lista in sorted(por_semana.items())
+        ],
+        "sin_clase": list((vivo or {}).get("sin_clase", [])),
+    }
+
+
+def tacticas_catalogo(almacen: Almacen) -> Documento:
+    """Las tácticas observadas, con su primera y última vez, veces y ejemplos con su fuente."""
+    registro_ = almacen.catalogo_vivo("tacticas").get("tacticas", {})
+    return {"tacticas": [{"clave": k, **v} for k, v in sorted(registro_.items())]}
+
+
+def contextos_mejor_origen(
+    almacen: Almacen, base: list[Documento]
+) -> dict[str, mejor_origen.Contexto]:
+    """Lo que necesita exportacion/mejor_origen.py de cada incidente: sus documentos oficiales,
+    sus encuentros de UK Airprox y las interrupciones medidas en su aeropuerto."""
+    por_oaci: dict[str, list[Documento]] = {}
+    for anomalia in almacen.anomalias():
+        por_oaci.setdefault(anomalia["oaci"], []).append(anomalia)
+    sucesos_por_pais: dict[str, list[tuple[str, Documento]]] = {}
+    for oficial in almacen.documentos_oficiales():
+        for suceso in oficial.get("sucesos", []):
+            if suceso.get("cruce") == "sin_incidente":
+                pais = str(oficial.get("pais") or "")
+                sucesos_por_pais.setdefault(pais, []).append((oficial["id"], suceso))
+    contextos = {}
+    for documento in base:
+        oaci = (documento.get("objetivo") or {}).get("oaci")
+        contextos[documento["id"]] = mejor_origen.Contexto(
+            documentos=almacen.documentos_oficiales_de(documento["id"]),
+            encuentros=almacen.encuentros_de(documento["id"]),
+            anomalias=por_oaci.get(oaci, []) if oaci else [],
+            sucesos_sin_incidente=sucesos_por_pais.get(
+                str((documento.get("lugar") or {}).get("pais") or ""), []
+            ),
+        )
+    return contextos
+
+
 def generar(almacen: Almacen) -> list[Fichero]:
     """Los ficheros de una versión, en claro y ya validados."""
     # El foco térmico de FIRMS vive en su propia tabla: aquí va completo, con lo interno.
@@ -552,8 +606,9 @@ def generar(almacen: Almacen) -> list[Fichero]:
                     for a in ataques_base]  # fmt: skip
     episodios = almacen.episodios()
     fichas = origenes.Fichas.de(almacen)
+    contextos = contextos_mejor_origen(almacen, base)
     try:
-        incidentes = [origenes.exportar_incidente(i, fichas) for i in base]
+        incidentes = [origenes.exportar_incidente(i, fichas, contextos.get(i["id"])) for i in base]
         ataques = [origenes.exportar_ataque(a) for a in ataques_base]
     except origenes.SinOrigen as error:
         raise ExportacionInvalida(f"valor sin origen: {error}") from error
@@ -627,9 +682,20 @@ def generar(almacen: Almacen) -> list[Fichero]:
     _comprobar("documentos_oficiales.jsonl", documentos, validador(Esquema.DOCUMENTO_OFICIAL))
     # Catálogo de prestaciones, clases con su envolvente, zonas de lanzamiento y fuentes, y el
     # resumen de la validación del motor: AEGIS los usa como límites de movimiento por clase.
-    catalogo = catalogo_deduccion.cargar()
-    ficheros_catalogo = catalogo_deduccion.ficheros()
+    # Con lo que ha admitido el barrido del catálogo vivo (tabla catalogo_vivo).
+    vivo = almacen.catalogo_vivo("catalogo").get("catalogo")
+    catalogo = catalogo_deduccion.cargar_vivo(vivo)
+    ficheros_catalogo = catalogo_deduccion.ficheros(vivo)
     datos_clases = catalogo_deduccion.clases_con_envolvente(catalogo)
+    datos_novedades = novedades_catalogo(almacen, catalogo.version, vivo)
+    datos_tacticas = tacticas_catalogo(almacen)
+    datos_apariciones = almacen.catalogo_vivo("apariciones").get(
+        "apariciones", {"fecha": None, "modelos": {}}
+    )
+    _comprobar("catalogo_novedades.json", [datos_novedades], validador_propio("catalogo_novedades"))
+    _comprobar("catalogo_tacticas.json", [datos_tacticas], validador_propio("catalogo_tacticas"))
+    _comprobar("catalogo_apariciones.json", [datos_apariciones],
+               validador_propio("catalogo_apariciones"))  # fmt: skip
     datos_validacion = almacen.cursor("deduccion") or {}
     _comprobar("clases_dron.json", [datos_clases], validador_propio("clases_dron"))
     _comprobar("deduccion_validacion.json", [datos_validacion],
@@ -641,6 +707,13 @@ def generar(almacen: Almacen) -> list[Fichero]:
         Fichero("catalogo_drones.json", _json(ficheros_catalogo["catalogo_drones.json"]),
                 len(ficheros_catalogo["catalogo_drones.json"]["modelos"]),
                 _catalogo("catalogo_drones")),
+        Fichero("catalogo_novedades.json", _json(datos_novedades),
+                sum(len(s["novedades"]) for s in datos_novedades["semanas"]),
+                _propio("catalogo_novedades")),
+        Fichero("catalogo_tacticas.json", _json(datos_tacticas), len(datos_tacticas["tacticas"]),
+                _propio("catalogo_tacticas")),
+        Fichero("catalogo_apariciones.json", _json(datos_apariciones),
+                len(datos_apariciones["modelos"]), _propio("catalogo_apariciones")),
         Fichero("catalogo_fuentes.json", _json(ficheros_catalogo["catalogo_fuentes.json"]),
                 len(ficheros_catalogo["catalogo_fuentes.json"]["fuentes"]),
                 _catalogo("catalogo_fuentes")),

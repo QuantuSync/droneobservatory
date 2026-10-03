@@ -209,26 +209,31 @@ def para_extraer(almacen: Almacen, prioridad: list[str]) -> list[Documento]:
     return elegidos
 
 
-def extraer(almacen: Almacen, candidatos: list[Documento], lote_id: str | None) -> Documento:
-    """Un lote del extractor dentro del límite del modo calidad (o procesa uno ya enviado)."""
+def extraer(
+    almacen: Almacen,
+    candidatos: list[Documento],
+    lote_id: str | None,
+    modo: coste.Modo = coste.Modo.CALIDAD,
+) -> Documento:
+    """Un lote del extractor dentro del límite de su modo (o procesa uno ya enviado)."""
     cliente = servicio.Cliente(servicio.configuracion(), insistencia=servicio.HISTORICO)
     peticiones = preparar_todas(almacen, candidatos, Descargador)
-    antes = almacen.gastado(coste.Modo.CALIDAD.value)
+    antes = almacen.gastado(modo.value)
     if lote_id is not None:
         recuentos = extraccion.procesar_lote(
             almacen, cliente, cliente.lote(lote_id), peticiones, lambda: datetime.now(UTC),
-            modelos_base(), coste.Modo.CALIDAD,
+            modelos_base(), modo,
         )  # fmt: skip
     else:
         recuentos = extraccion.extraer_lote(
             almacen, cliente, peticiones, lambda: datetime.now(UTC), modelos_base(),
-            modo=coste.Modo.CALIDAD,
+            modo=modo,
         )  # fmt: skip
     return {
         **recuentos,
         "candidatos": len(candidatos),
-        "gasto_usd": round(almacen.gastado(coste.Modo.CALIDAD.value) - antes, 4),
-        "gasto_total_usd": round(almacen.gastado(coste.Modo.CALIDAD.value), 4),
+        "gasto_usd": round(almacen.gastado(modo.value) - antes, 4),
+        "gasto_total_usd": round(almacen.gastado(modo.value), 4),
     }
 
 

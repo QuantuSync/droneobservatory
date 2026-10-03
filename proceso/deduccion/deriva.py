@@ -26,7 +26,7 @@ from typing import Any
 from proceso.deduccion import capacidades, geo, viento
 from proceso.deduccion.catalogo import Catalogo
 
-VERSION = ("deriva", "1.0.0")
+VERSION = ("deriva", "1.1.0")
 ORIGENES = ("UA", "RU", "BY")
 TOLERANCIA_GRADOS = 45.0
 CONTRA_GRADOS = 90.0
@@ -171,3 +171,37 @@ def evaluar(
         if al_alcance and desvio <= TOLERANCIA_GRADOS + dispersion:
             return Deriva(COMPATIBLE, "a sotavento y al alcance del viento", datos)
     return Deriva(INDETERMINADO, "ni a favor ni en contra del viento", datos)
+
+
+def evaluar_horas(
+    catalogo: Catalogo, clase: str, lat: float, lon: float, lugares: list[dict[str, Any]]
+) -> Deriva | None:
+    """Con solo el día no se sabe a qué hora fue: la deriva con el viento de cada hora del día
+    local. Compatible con deriva si lo es en alguna hora (pudo ser a esa hora); no compatible
+    solo si no lo es en ninguna hora y lo descarta en todas; si no, indeterminado."""
+    resultados = [r for r in (evaluar(catalogo, clase, lat, lon, x) for x in lugares) if r]
+    if not resultados:
+        return None
+    datos = dict(resultados[0].datos)
+    for clave in (
+        "viento_ms", "viento_hacia", "dispersion_grados", "niveles", "desvio_grados",
+        "viento_cubre_km", "tiempo_max_min",
+    ):  # fmt: skip
+        datos.pop(clave, None)
+    cuenta = {
+        r: sum(1 for x in resultados if x.resultado == r)
+        for r in (COMPATIBLE, NO_COMPATIBLE, INDETERMINADO)
+    }
+    datos.update({"horas": len(resultados), "por_resultado": cuenta})
+    if cuenta[COMPATIBLE]:
+        motivo = (
+            f"a sotavento y al alcance del viento en {cuenta[COMPATIBLE]} de las "
+            f"{len(resultados)} horas del día"
+        )
+        return Deriva(COMPATIBLE, motivo, datos)
+    if cuenta[NO_COMPATIBLE] == len(resultados):
+        motivo = "contra el viento o fuera de su alcance en todas las horas del día"
+        return Deriva(NO_COMPATIBLE, motivo, datos)
+    return Deriva(
+        INDETERMINADO, "ninguna hora del día lo deja a sotavento ni lo descarta en todas", datos
+    )

@@ -115,6 +115,7 @@ def _poblar(almacen: Almacen) -> None:
     almacen.guardar_condiciones("EODI-2025-00001", ejemplos.condiciones())
     almacen.guardar_anomalia(ejemplos.anomalia())
     almacen.guardar_deduccion("EODI-2025-00001", "incidente", ejemplos.deduccion())
+    almacen.guardar_catalogo_vivo("catalogo", "catalogo", {"version": 1})
     almacen.guardar_coberturas(
         "trafico-1.0.0",
         [

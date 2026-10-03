@@ -46,7 +46,7 @@ R3 = ("autonomia", "1.0.0")
 R4 = ("velocidad", "1.0.0")
 R5 = ("radar", "1.0.0")
 R6 = ("simultaneidad", "1.0.0")
-R7 = ("descripcion", "1.0.0")
+R7 = ("descripcion", "1.1.0")
 R8 = ("gnss", "1.0.0")
 REGLAS = (R1, R2, R3, R4, R5, R6, R7, R8)
 # Las que pueden decir que una clase es compatible (las demás solo anotan o suman indicios).
@@ -125,6 +125,13 @@ class Caso:
     origenes: list[Origen] = field(default_factory=list)
     altura_m: tuple[float, float] | None = None
     lanzados: dict[str, Any] = field(default_factory=dict)
+    # De dónde sale la hora (medido, oficial, oficial_citado...; None si es la de la base).
+    origen_inicio: str | None = None
+    # Lugares meteorológicos de cada hora del día del incidente, si solo se sabe el día (para la
+    # deriva hora a hora).
+    lugares_horas: list[dict[str, Any]] = field(default_factory=list)
+    # País desde el que una autoridad dice que entró el dron, con su origen, fuente y frase.
+    entrada_desde: dict[str, str] | None = None
 
     @property
     def con_punto(self) -> bool:
@@ -615,6 +622,12 @@ PALABRAS: dict[str, tuple[str, ...]] = {
         "aripa fixa",
         "skrzydl",
         "wing",
+        "model aircraft",
+        "model plane",
+        "rc plane",
+        "modellflugzeug",
+        "aeromodelo",
+        "modelfly",
     ),
     "ala_delta": ("delta", "triangular", "triangle"),
     "reaccion": ("jet", "reactiv", "turbojet", "реактив"),

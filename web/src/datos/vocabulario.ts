@@ -1,4 +1,4 @@
-// Listas cerradas del esquema 1.7.0 (campos públicos). Un test las compara con los
+// Listas cerradas del esquema 1.8.0 (campos públicos). Un test las compara con los
 // ficheros de esquema/ para que no se separen.
 
 export const TIPOS = ["incursion", "interrupcion_aeroportuaria", "sobrevuelo"] as const;

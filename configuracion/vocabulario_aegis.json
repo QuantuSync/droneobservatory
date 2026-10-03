@@ -1,5 +1,5 @@
 {
-  "version": "1.3.0",
+  "version": "1.4.0",
   "descripcion": "Correspondencia entre las categorías de objetivo y las clases de dron del European Observatory of Drone Incidents y las categorías de emplazamiento y las clases de dron de AEGIS. Los valores de AEGIS salen de su código, no se inventan: si una categoría o clase no tiene equivalente se marca como sin_equivalente. equivalencia: exacta (mismo concepto), parcial (el valor de AEGIS cubre solo una parte, o hay varios posibles) o sin_equivalente. origenes, metodos y niveles_detalle son los valores de procedencia y nivel_detalle que lleva cada dato exportado; indicadores, lo que dice cada indicador de un incidente; origenes_inicio, de dónde sale el día de su inicio (tiempo.origen_inicio); metricas_estadistica, lo que cuenta cada métrica de las estadísticas oficiales. AEGIS copia esta tabla en tools/vocabulario_eodi.json y un test comprueba que coincide con la de la versión importada. clases_deduccion: las clases de dron del motor de deducción (configuracion/catalogo_drones.json) con su clase de tamaño de AEGIS y la clase del esquema de la base (clase_esquema; null si ninguna).",
   "aegis": {
     "repositorio": "QuantuSync/AEGIS",
@@ -188,31 +188,41 @@
       "equivalencia": "sin_equivalente",
       "nota": "Drones de ataque con turborreactor. Las clases de tamaño de AEGIS son multirrotores pequeños.",
       "clase_esquema": "ataque_largo_alcance"
+    },
+    "aeromodelo_ala_fija_pequeno": {
+      "aegis": [],
+      "equivalencia": "sin_equivalente",
+      "nota": "Aviones de radiocontrol de aficionado (aeromodelos eléctricos de ala fija). Las clases de tamaño de AEGIS son multirrotores.",
+      "clase_esquema": "ala_fija"
     }
   },
   "origenes": {
     "medido": {
       "rango": 1,
-      "descripcion": "Sale de un sensor o de un dato físico (satélite, tráfico aéreo, meteorología). Hoy, solo el foco térmico de NASA FIRMS."
+      "descripcion": "Sale de un sensor o de un dato físico: satélite (foco térmico de NASA FIRMS), tráfico aéreo medido (cierres e interrupciones de adsb.lol) y meteorología (Open-Meteo y METAR)."
     },
     "oficial": {
       "rango": 2,
       "descripcion": "Lo publica directamente una autoridad: partes de la Fuerza Aérea de Ucrania, notas oficiales leídas, comunicados de aeropuertos, gestores, policías y ministerios, informes de la UK Airprox Board, respuestas de gobiernos en el parlamento, informes de investigación, cierres de investigaciones policiales, sentencias y estadísticas oficiales."
     },
-    "oficial_citado": {
+    "registro": {
       "rango": 3,
+      "descripcion": "Dato de un registro público de instalaciones: la categoría, el nombre, el código OACI y el país de la instalación del nomenclátor del observatorio, hecho con OpenStreetMap. Lo lleva el objetivo de un incidente cuando es una instalación del registro."
+    },
+    "oficial_citado": {
+      "rango": 4,
       "descripcion": "Declaración de una autoridad que se conoce porque la cita un medio."
     },
     "parte": {
-      "rango": 4,
+      "rango": 5,
       "descripcion": "Reivindicación de una parte en conflicto (Ministerio de Defensa ruso). Conserva su código del Almirantazgo."
     },
     "prensa": {
-      "rango": 5,
+      "rango": 6,
       "descripcion": "Lo dice un medio sin atribuirlo a una autoridad."
     },
     "deducido": {
-      "rango": 6,
+      "rango": 7,
       "descripcion": "Lo calcula el motor de deducción con reglas físicas explícitas sobre el catálogo de prestaciones, con la regla y su versión (bloque deduccion de incidentes, ataques e impactos). Nunca se mezcla con lo medido ni con lo oficial y no cuenta para el nivel de detalle."
     }
   },

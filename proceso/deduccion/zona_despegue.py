@@ -70,7 +70,7 @@ def _envolvente(puntos: list[tuple[float, float]]) -> list[tuple[float, float]]:
     return abajo[:-1] + arriba[:-1]
 
 
-def _dentro(x: float, y: float, poligono: list[tuple[float, float]]) -> bool:
+def dentro(x: float, y: float, poligono: list[tuple[float, float]]) -> bool:
     dentro = False
     anterior = poligono[-1]
     for actual in poligono:
@@ -138,7 +138,7 @@ def _cruzar(
         for j in range(MUESTRAS_LADO):
             x = min(xs) + (max(xs) - min(xs)) * (i + 0.5) / MUESTRAS_LADO
             y = min(ys) + (max(ys) - min(ys)) * (j + 0.5) / MUESTRAS_LADO
-            if not _dentro(x, y, local):
+            if not dentro(x, y, local):
                 continue
             total += 1
             plat, plon = geo.de_local(lat, lon, x, y)

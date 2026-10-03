@@ -1,4 +1,4 @@
-// Forma de los ficheros públicos de publicacion/ (esquema 1.7.0, solo campos públicos)
+// Forma de los ficheros públicos de publicacion/ (esquema 1.8.0, solo campos públicos)
 // y de los resúmenes que la web deriva de ellos en el build.
 
 export type Estado = "notificado" | "confirmado" | "atribuido" | "desmentido";

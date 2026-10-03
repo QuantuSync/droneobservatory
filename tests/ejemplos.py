@@ -762,4 +762,18 @@ def deduccion_completa() -> Documento:
             "datos": {"viento_ms": 1.0},
         },
         "horizonte_radar": {"regla": "horizonte_radar", "version": "1.0.0", "sectores": []},
+        "direccion_entrada": {
+            "regla": "direccion_entrada",
+            "version": "1.0.0",
+            "tipo": "declarada",
+            "desde_grados": 75.0,
+            "pais": "BY",
+            "distancia_km": 32.5,
+            "origen": "oficial_citado",
+            "fuente": "F1-declaracion-1",
+            "frase": "the drone entered from Belarus",
+            "sectores": [0.0, 0.0, 0.5, 0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            "concentracion": 0.9,
+            "clases": ["multirrotor_consumo"],
+        },
     }

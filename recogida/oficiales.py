@@ -27,7 +27,7 @@ from email.utils import parsedate_to_datetime
 from functools import cache
 from pathlib import Path
 from typing import Any
-from urllib.parse import urlsplit
+from urllib.parse import urljoin, urlsplit
 from urllib.robotparser import RobotFileParser
 
 from almacen.base import Almacen, DocumentoInvalido
@@ -112,12 +112,51 @@ def robots(descargador: Descargador, url: str) -> RobotFileParser:
     return lector
 
 
+ATOM = "{http://www.w3.org/2005/Atom}"
+
+
+def _entradas(raiz: ET.Element) -> list[tuple[str, str | None, str, str, bool]]:
+    """(enlace, fecha, título, texto, es_atom) de cada entrada de un canal RSS o Atom."""
+    entradas: list[tuple[str, str | None, str, str, bool]] = []
+    for item in raiz.iter("item"):
+        entradas.append((
+            (item.findtext("link") or "").strip(), item.findtext("pubDate"),
+            item.findtext("title") or "", item.findtext("description") or "", False,
+        ))  # fmt: skip
+    for entrada in raiz.iter(f"{ATOM}entry"):
+        enlace = entrada.find(f"{ATOM}link")
+        entradas.append((
+            (enlace.get("href", "") if enlace is not None else "").strip(),
+            entrada.findtext(f"{ATOM}published") or entrada.findtext(f"{ATOM}updated"),
+            entrada.findtext(f"{ATOM}title") or "",
+            entrada.findtext(f"{ATOM}summary") or entrada.findtext(f"{ATOM}content") or "", True,
+        ))  # fmt: skip
+    return entradas
+
+
+def _fecha_canal(texto: str, atom: bool) -> datetime:
+    if atom:
+        return datetime.fromisoformat(texto.strip().replace("Z", "+00:00")).astimezone(UTC)
+    return parsedate_to_datetime(texto).astimezone(UTC)
+
+
+def es_canal(texto: str) -> bool:
+    """Un canal RSS o Atom (no una página de error o de comprobación)."""
+    cabeza = texto[:300]
+    return "<rss" in cabeza or "<feed" in cabeza
+
+
 def leer_rss(texto: str, fuente: Documento) -> list[Nota]:
+    """Las notas de un canal RSS o Atom. Un enlace relativo se resuelve con la dirección del
+    canal (el Atom del Ministerio de Defensa los da relativos)."""
     notas = []
-    for item in ET.fromstring(texto).iter("item"):
-        enlace = (item.findtext("link") or "").strip()
-        fecha = item.findtext("pubDate")
+    for enlace, fecha, titulo, descripcion, atom in _entradas(ET.fromstring(texto)):
+        enlace = urljoin(fuente["url"], enlace) if enlace else enlace
         if not enlace or not fecha:
+            continue
+        try:
+            momento = _fecha_canal(fecha, atom)
+        except (TypeError, ValueError):
             continue
         # Las actualizaciones de una misma nota comparten página: las distingue el fragmento.
         partes = urlsplit(enlace)
@@ -126,10 +165,10 @@ def leer_rss(texto: str, fuente: Documento) -> list[Nota]:
             Nota(
                 fuente=fuente,
                 id=f"{fuente['id']}-{identificador}".strip("-"),
-                titulo=" ".join((item.findtext("title") or "").split()),
+                titulo=" ".join(titulo.split()),
                 enlace=enlace,
-                fecha=parsedate_to_datetime(fecha).astimezone(UTC),
-                texto=" ".join((item.findtext("description") or "").split()),
+                fecha=momento,
+                texto=" ".join(re.sub(r"<[^>]+>", " ", descripcion).split()),
             )
         )
     return notas
@@ -276,7 +315,7 @@ def recoger(
                 return
             notas = leer_pagina(descargador, lector, fuente, html)
         else:
-            notas = leer_rss(descargador.texto(fuente["url"], lambda t: "<rss" in t[:200]), fuente)
+            notas = leer_rss(descargador.texto(fuente["url"], es_canal), fuente)
     except (DescargaFallida, ET.ParseError, ValueError):
         recuentos.bloqueadas += 1
         motivos["descarga"] += 1

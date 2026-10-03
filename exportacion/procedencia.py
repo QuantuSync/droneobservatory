@@ -28,14 +28,17 @@ from typing import Any
 
 from almacen.base import Almacen
 from esquema import Documento
+from exportacion import mejor_origen
 from proceso import declaraciones, extraccion, fechas
 from proceso.estados import Estado
 from proceso.validacion_ficha import UMBRAL_CONFIANZA
 
-MEDIDO, OFICIAL, OFICIAL_CITADO, PARTE, PRENSA, DEDUCIDO = (
-    "medido", "oficial", "oficial_citado", "parte", "prensa", "deducido",
+MEDIDO, OFICIAL, REGISTRO, OFICIAL_CITADO, PARTE, PRENSA, DEDUCIDO = (
+    "medido", "oficial", "registro", "oficial_citado", "parte", "prensa", "deducido",
 )  # fmt: skip
-RANGO = (MEDIDO, OFICIAL, OFICIAL_CITADO, PARTE, PRENSA, DEDUCIDO)
+# registro: dato de un registro público de instalaciones (el nomenclátor, de OpenStreetMap),
+# lo pone exportacion/mejor_origen.py en los campos de la instalación.
+RANGO = (MEDIDO, OFICIAL, REGISTRO, OFICIAL_CITADO, PARTE, PRENSA, DEDUCIDO)
 PARSER, EXTRACTOR, REGLA = "parser", "extractor", "regla"
 DESCONOCIDO = "desconocido"
 CONFIRMADOS = frozenset({Estado.CONFIRMADO, Estado.ATRIBUIDO})
@@ -566,10 +569,11 @@ def nivel_detalle(documento: Documento, procedencia: Documento) -> str:
 
 
 def _fecha_verificada(documento: Documento) -> bool:
-    """El día del inicio lo escribe una fuente, lo da una autoridad o un parte, o lo confirma
-    un cierre medido con cobertura alta que empieza ese mismo día."""
+    """El día del inicio lo escribe una fuente, lo da una autoridad o un parte, lo mide el
+    tráfico aéreo (exportacion/mejor_origen.py) o lo confirma un cierre medido con cobertura
+    alta que empieza ese mismo día."""
     origen = documento["tiempo"].get("origen_inicio", {}).get("tipo")
-    if origen in fechas.VERIFICADOS:
+    if origen in fechas.VERIFICADOS or origen == "medido":
         return True
     cierre = documento.get("trafico_aereo", {}).get("cierre", {})
     inicio_medido = cierre.get("inicio", {}).get("valor", "")
@@ -633,9 +637,15 @@ def _con_deduccion(exportado: Documento, deduccion: Documento | None) -> Documen
     return {**exportado, "deduccion": deduccion, "procedencia": dict(sorted(procedencia.items()))}
 
 
-def exportar_incidente(documento: Documento, fichas: Fichas) -> Documento:
+def exportar_incidente(
+    documento: Documento, fichas: Fichas, contexto: "mejor_origen.Contexto | None" = None
+) -> Documento:
     documento, deduccion = _sin_deduccion(documento)
     exportado, procedencia = procedencia_incidente(documento, fichas)
+    # Valor a valor, el de mejor origen que hay en la base (medido, oficial, registro).
+    mejor_origen.aplicar(exportado, procedencia, contexto or mejor_origen.Contexto(),
+                         origen_de_fuente)  # fmt: skip
+    procedencia = dict(sorted(procedencia.items()))
     exportado["procedencia"] = procedencia
     # El nivel de detalle no cambia por tener deducción: se calcula sin ella.
     exportado["nivel_detalle"] = nivel_detalle(exportado, procedencia)

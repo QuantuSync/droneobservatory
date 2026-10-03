@@ -21,16 +21,17 @@ oficial (va en su propio bloque `deduccion`, interno).
 import hashlib
 import json
 from collections import defaultdict
-from collections.abc import Callable, Iterable
+from collections.abc import Callable, Iterable, Sequence
 from dataclasses import asdict
 from datetime import UTC, datetime, timedelta
 from typing import Any
 
-from proceso.deduccion import deriva, geo, reglas, viento, zona_despegue
+from proceso import textos_dron
+from proceso.deduccion import deriva, direccion, geo, reglas, viento, zona_despegue
 from proceso.deduccion.catalogo import Catalogo
 from proceso.deduccion.reglas import Caso, Evidencia, Origen, Sitio
 
-VERSION = "1.0.0"
+VERSION = "1.1.0"
 COMPATIBLE = "compatible"
 DESCARTADA = "descartada"
 INDETERMINADA = "indeterminada"
@@ -80,18 +81,38 @@ def caso_de_incidente(
     condiciones: dict[str, Any] | None,
     trafico: dict[str, Any] | None,
     encuentros: list[dict[str, Any]] = (),  # type: ignore[assignment]
+    mejor: dict[str, Any] | None = None,
+    frases: Sequence[tuple[str, str, str, str | None]] = (),
 ) -> Caso:
+    """`mejor`: el tiempo de mejor origen (exportacion/mejor_origen.momento): la hora de un
+    cierre medido, de un registro oficial o de una autoridad, con su duración. `frases`: lo que
+    escriben las fuentes del incidente ((origen, fuente, frase, idioma)), para la descripción y
+    para el país desde el que una autoridad dice que entró."""
     lugar = incidente.get("lugar", {})
     detalle = incidente.get("detalle_oficial", {})
     punto = detalle.get("punto") or lugar.get("punto")
     radio = detalle.get("radio_km") or lugar.get("radio_km") or 0.0
     tiempo = incidente.get("tiempo", {})
     inicio_doc = detalle.get("inicio") or tiempo.get("inicio")
+    origen_inicio = None
+    if mejor and mejor.get("origen"):
+        tiempo = mejor["tiempo"]
+        inicio_doc = tiempo.get("inicio")
+        origen_inicio = mejor["origen"]
     drones = incidente.get("drones", {})
     respuesta = incidente.get("respuesta", {})
     textos = [str(drones.get("modelo") or "")]
     for encuentro in encuentros:
         textos.append(str(encuentro.get("objeto", {}).get("descripcion") or ""))
+    textos += [frase for _, _, frase, _ in frases]
+    entrada_desde = None
+    for origen, fuente, frase, _ in frases:
+        if origen not in ORIGENES_OFICIALES:
+            continue
+        pais = textos_dron.pais_de_entrada(frase, lugar.get("pais"))
+        if pais is not None:
+            entrada_desde = {"pais": pais, "origen": origen, "fuente": fuente, "frase": frase}
+            break
     gnss = (trafico or {}).get("interferencia_gnss") or {}
     nivel_gnss = None
     for clave in ("propia", "vecinas"):
@@ -113,8 +134,9 @@ def caso_de_incidente(
         fin=_segundos(tiempo.get("fin")),
         precision=(inicio_doc or {}).get("precision"),
         duracion_min=tiempo.get("duracion_min"),
-        entrada_exterior=bool(incidente.get("pruebas", {}).get("entrada_exterior")),
-        entrada_confirmada=entrada_confirmada(incidente),
+        entrada_exterior=bool(incidente.get("pruebas", {}).get("entrada_exterior"))
+        or entrada_desde is not None,
+        entrada_confirmada=entrada_confirmada(incidente) or entrada_desde is not None,
         condiciones=condiciones,
         gnss=nivel_gnss,
         textos=[t for t in textos if t],
@@ -125,6 +147,8 @@ def caso_de_incidente(
         velocidad_oficial=velocidad is not None,
         deteccion_radar=any("radar" in str(d) for d in deteccion),
         altura_m=_rango(drones.get("altura_m")),
+        origen_inicio=origen_inicio,
+        entrada_desde=entrada_desde,
     )
 
 
@@ -339,8 +363,36 @@ def evaluar_incidente(
             cruce = deriva.evaluar(
                 catalogo, CLASE_DERIVA, caso.lat, caso.lon, (caso.condiciones or {}).get("lugar")
             )
+            # Con solo el día, el viento de cada hora del día: decide si todas dan lo mismo.
+            if (
+                cruce is not None
+                and cruce.resultado == deriva.INDETERMINADO
+                and "viento_ms" not in cruce.datos
+                and caso.lugares_horas
+            ):
+                cruce = (
+                    deriva.evaluar_horas(
+                        catalogo, CLASE_DERIVA, caso.lat, caso.lon, caso.lugares_horas
+                    )
+                    or cruce
+                )
             if cruce is not None:
                 resultado["deriva"] = cruce.documento()
+        # Dirección de entrada: la que declara una autoridad o la deducida de la zona de despegue.
+        sentido: dict[str, Any] | None = None
+        if caso.entrada_desde is not None:
+            sentido = direccion.declarada(
+                caso.lat,
+                caso.lon,
+                caso.entrada_desde["pais"],
+                caso.entrada_desde["origen"],
+                caso.entrada_desde["fuente"],
+                caso.entrada_desde["frase"],
+            )
+        if sentido is None and zonas:
+            sentido = direccion.deducida(catalogo, caso.lat, caso.lon, zonas)
+        if sentido is not None:
+            resultado["direccion_entrada"] = sentido
         if horizonte_de is not None:
             calculado = horizonte_de(caso.lat, caso.lon)
             if calculado is not None:

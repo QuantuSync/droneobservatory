@@ -180,6 +180,7 @@ CLASES_AIRPROX = {
         "ala_fija_tactica_electrica",
         "ala_fija_reconocimiento_combustion",
         "municion_merodeadora",
+        "aeromodelo_ala_fija_pequeno",
     ),
 }
 DESDE_AIRPROX = "2022-01-01"

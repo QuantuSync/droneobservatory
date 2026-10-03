@@ -1,5 +1,5 @@
 {
- "version": "1.0.0",
+ "version": "1.1.0",
  "descripcion": "Casos con el modelo de dron establecido por restos, por una incautación o por una declaración oficial, para validar el motor de deducción (proceso/deduccion/validacion.py). Cada caso con sus fuentes (enlace, fecha y frase literal), el punto de su localidad (OpenStreetMap Nominatim) y las clases del catálogo que le corresponden. Reunidos el 2 de octubre de 2026. entrada_exterior: la fuente oficial dice desde dónde entró. incidente: el incidente de la base que es el mismo suceso, si lo hay.",
  "casos": [
   {
@@ -676,7 +676,9 @@
    "fecha": "2026-09-24",
    "hora_utc": null,
    "modelo": "Geran-4 (marcado en las alas; motor turborreactor)",
-   "clases_reales": [],
+   "clases_reales": [
+    "ataque_reaccion"
+   ],
    "como": "restos",
    "entrada_exterior": false,
    "procedencia_declarada": "No declarada; hallado junto a la frontera con Ucrania",
@@ -695,7 +697,7 @@
      "cita": "A Moldovan border patrol discovered the wreckage on the evening of September 24, about 1.7 kilometres from the state border."
     }
    ],
-   "nota": "Hallado por una patrulla de la Policía de Fronteras la tarde del 24-09; explotó a ~10 m de altura tras chocar con árboles. Geran-4: modelo que no está en el catálogo (sin ficha con fuente); no se valida."
+   "nota": "Hallado por una patrulla de la Policía de Fronteras la tarde del 24-09; explotó a ~10 m de altura tras chocar con árboles. Geran-4: en el catálogo desde la versión 1.1.0 (ficha de War&Sanctions: a reacción, 350 km/h)."
   },
   {
    "id": "V22",
@@ -853,7 +855,9 @@
    "fecha": "2026-08-08",
    "hora_utc": "05:10",
    "modelo": "Maya (señuelo usado por Ucrania; 'most likely' según análisis inicial)",
-   "clases_reales": [],
+   "clases_reales": [
+    "senuelo_largo_alcance"
+   ],
    "como": "restos",
    "entrada_exterior": true,
    "procedencia_declarada": "Entró desde el norte, cruzando desde Rumanía; explotó ~100 m dentro de Bulgaria",
@@ -872,7 +876,7 @@
      "cita": "A drone entered Bulgarian airspace from the north, and exploded approximately 100 metres inside Bulgarian territory"
     }
    ],
-   "nota": "Hora local 08:10 (EEST). Maya: señuelo ucraniano que no está en el catálogo; no se valida."
+   "nota": "Hora local 08:10 (EEST). Maya: señuelo ucraniano, en el catálogo desde la versión 1.1.0."
   },
   {
    "id": "V27",

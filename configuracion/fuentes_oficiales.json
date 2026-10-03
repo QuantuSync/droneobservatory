@@ -235,6 +235,78 @@
       "url": "https://www.skyguide.ch/media-centre/news-media-releases",
       "enlace": "skyguide\\.ch/media-centre/post/\\d+$",
       "fecha": "(\\d{1,2} (?:January|February|March|April|May|June|July|August|September|October|November|December) \\d{4})"
+    },
+    {
+      "id": "aesa",
+      "medio": "Agencia Estatal de Seguridad Aérea",
+      "pais": "ES",
+      "idioma": "es",
+      "tipo": "rss",
+      "url": "https://www.seguridadaerea.gob.es/es/rss.xml"
+    },
+    {
+      "id": "mde_es",
+      "medio": "Ministerio de Defensa",
+      "pais": "ES",
+      "idioma": "es",
+      "tipo": "rss",
+      "url": "https://www.defensa.gob.es/comun/rssChannel/rssNotasPrensa.xml"
+    },
+    {
+      "id": "puertos_del_estado",
+      "medio": "Puertos del Estado",
+      "pais": "ES",
+      "idioma": "es",
+      "tipo": "rss",
+      "url": "https://www.puertos.es/rss.xml"
+    },
+    {
+      "id": "csn_sucesos",
+      "medio": "Consejo de Seguridad Nuclear",
+      "pais": "ES",
+      "idioma": "es",
+      "tipo": "rss",
+      "url": "https://www.csn.es/sucesos-notificados/-/asset_publisher/AhgtIexAjt0q/rss"
+    },
+    {
+      "id": "moncloa_notas",
+      "medio": "La Moncloa (notas de los ministerios)",
+      "pais": "ES",
+      "idioma": "es",
+      "tipo": "rss",
+      "url": "https://www.lamoncloa.gob.es/Paginas/rss.aspx?tipo=42"
+    },
+    {
+      "id": "valenciaport",
+      "medio": "Autoridad Portuaria de Valencia",
+      "pais": "ES",
+      "idioma": "es",
+      "tipo": "rss",
+      "url": "https://www.valenciaport.com/feed/"
+    },
+    {
+      "id": "port_gdansk",
+      "medio": "Zarząd Morskiego Portu Gdańsk",
+      "pais": "PL",
+      "idioma": "en",
+      "tipo": "rss",
+      "url": "https://www.portgdansk.pl/en/feed/"
+    },
+    {
+      "id": "tallinna_sadam",
+      "medio": "Tallinna Sadam",
+      "pais": "EE",
+      "idioma": "en",
+      "tipo": "rss",
+      "url": "https://www.ts.ee/en/feed/"
+    },
+    {
+      "id": "koge_havn",
+      "medio": "Køge Havn",
+      "pais": "DK",
+      "idioma": "da",
+      "tipo": "rss",
+      "url": "https://koegehavn.dk/feed/"
     }
   ]
 }

@@ -68,6 +68,7 @@ install -d -m 700 -o "$USUARIO" -g "$USUARIO" "$(dirname "$BUSQUEDA_DATOS")" "$B
 
 # --- Datos del motor de deducción -----------------------------------------------------
 install -d -m 700 -o "$USUARIO" -g "$USUARIO" "$DEDUCCION_DATOS"
+install -d -m 700 -o "$USUARIO" -g "$USUARIO" "$CATALOGO_DATOS"
 
 # --- Datos del tráfico aéreo y de las condiciones medidas ----------------------------
 install -d -m 700 -o "$USUARIO" -g "$USUARIO" "$(dirname "$TRAFICO_DATOS")" "$TRAFICO_DATOS" \
@@ -331,6 +332,40 @@ Description=Motor de deducción del EODI, en el minuto $MINUTO_DEDUCCION de cada
 
 [Timer]
 OnCalendar=*-*-* *:0$MINUTO_DEDUCCION:00 UTC
+AccuracySec=1s
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+FIN
+# Barrido del catálogo vivo (servidor/catalogo.sh): su propio cerrojo y prioridad baja; solo lee
+# la base de la rama estado y deja lo que encuentra en CATALOGO_DATOS, que guarda la recogida.
+cat > "/etc/systemd/system/$UNIDAD_CATALOGO.service" <<FIN
+[Unit]
+Description=Barrido del catálogo de prestaciones del EODI (catálogo vivo)
+Wants=network-online.target
+After=network-online.target time-sync.target
+
+[Service]
+Type=oneshot
+User=$USUARIO
+Group=$USUARIO
+WorkingDirectory=$CLON
+ExecStart=/usr/bin/env bash $CLON/servidor/catalogo.sh
+SyslogIdentifier=$UNIDAD_CATALOGO
+TimeoutStartSec=${TOPE_CATALOGO_MINUTOS}min
+Nice=$CATALOGO_NICE
+IOSchedulingClass=idle
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=full
+FIN
+cat > "/etc/systemd/system/$UNIDAD_CATALOGO.timer" <<FIN
+[Unit]
+Description=Barrido del catálogo de prestaciones del EODI, una vez al día
+
+[Timer]
+OnCalendar=$CALENDARIO_CATALOGO
 AccuracySec=1s
 Persistent=true
 

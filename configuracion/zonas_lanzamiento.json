@@ -1,6 +1,6 @@
 {
  "version": "1.0.0",
- "version_esquema": "1.0.0",
+ "version_esquema": "1.1.0",
  "descripcion": "Zonas de lanzamiento de drones de largo alcance que nombran los partes de la Fuerza Aérea de Ucrania, con las raíces con que aparecen en ellos, su punto (con la fuente que lo da literalmente) y las fuentes que documentan su uso para lanzar drones. Verificado el 2 de octubre de 2026. La coordenada que daba el borrador para Primorsko-Ajtarsk (46°40′34.48″N 38°07′49.75″E) es la del pie de la figura 3 del informe del Institute for Science and International Security (B1), que corresponde al emplazamiento de Yeysk: aquí está en la zona de Yeysk, y Primorsko-Ajtarsk lleva la de su base aérea (B27) y la del puerto de drones cercano (B7). El radio de cada zona como origen no sale de las fuentes: lo pone el motor por tipo (proceso/deduccion/catalogo.py).",
  "zonas": [
   {

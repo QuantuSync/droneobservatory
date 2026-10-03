@@ -477,6 +477,33 @@ def test_lieja_un_incidente_por_objetivo() -> None:
     assert validada.valor("objetivo_conocido") is True
 
 
+def test_skrydstrup_un_titular_que_enumera_aeropuertos_da_el_del_candidato() -> None:
+    """La ficha del candidato de Skrydstrup situaba el suceso en Aalborg (otro titular lo nombra
+    declinado, «Aalborgu»); el titular que enumera «Esbjerg, Sonderborg, Skrydstrup» y no
+    nombra Aalborg da el suceso del candidato."""
+    validada = Validada(campos={
+        "lugar_suceso": campo(suceso("Flyvestation Aalborg", "instalacion", "DK"), "x"),
+        "objetivo_conocido": campo(False, "x"),
+    })  # fmt: skip
+    articulos = [
+        {"url": "https://a/1", "titular": "Letisko v dánskom Aalborgu uzavreli pre drony"},
+        {"url": "https://b/2", "titular": "Danish Police Says Drones Observed by Airports in "
+                                          "Esbjerg, Sonderborg, Skrydstrup -Reports"},
+    ]  # fmt: skip
+    assert extraccion.objetivo_compartido(validada, "EKSP", articulos, ["https://b/2"])
+    assert validada.valor("lugar_suceso")["nombre"] == lugar("EKSP", nomenclator()).nombre
+    # Si algún titular nombra los dos, sigue haciendo falta la regla de dos titulares.
+    otra = Validada(campos={
+        "lugar_suceso": campo(suceso("Flyvestation Aalborg", "instalacion", "DK"), "x"),
+        "objetivo_conocido": campo(False, "x"),
+    })  # fmt: skip
+    ambos = [
+        *articulos,
+        {"url": "https://c/3", "titular": "Drones over Aalborg and Skrydstrup air bases"},
+    ]
+    assert not extraccion.objetivo_compartido(otra, "EKSP", ambos, [])
+
+
 def test_objetivo_compartido_necesita_dos_titulares_y_no_cuenta_siglas() -> None:
     def con_suceso() -> Validada:
         return Validada(campos={
@@ -653,9 +680,14 @@ def exportar(documento: Documento) -> Documento:
 def test_b_con_un_cierre_medido_en_un_aeropuerto_de_cobertura_alta() -> None:
     assert exportar(de_prensa())["nivel_detalle"] == "D"
     assert exportar(con_cierre(de_prensa()))["nivel_detalle"] == "B"
-    # Con cobertura media no basta; sin la precisión de B, tampoco.
+    # Con cobertura media no basta.
     assert exportar(con_cierre(de_prensa(), "media"))["nivel_detalle"] == "D"
-    assert exportar(con_cierre(de_prensa("dia")))["nivel_detalle"] == "D"
+    # Con solo el día de la prensa, el cierre medido da la hora (origen medido,
+    # exportacion/mejor_origen.py): ya tiene la precisión de B.
+    medido = exportar(con_cierre(de_prensa("dia")))
+    assert medido["nivel_detalle"] == "B"
+    assert medido["procedencia"]["tiempo.inicio"]["origen"] == "medido"
+    assert medido["procedencia"]["tiempo.inicio"]["sustituye"]["origen"] == "prensa"
     assert exportar(con_cierre(de_prensa(radio=10)))["nivel_detalle"] == "D"
 
 
@@ -693,8 +725,16 @@ def test_la_fecha_la_verifica_un_cierre_medido_ese_dia() -> None:
     publicada["tiempo"]["origen_inicio"] = {"tipo": "publicacion"}
     assert not exportar(publicada)["indicadores"]["fecha_del_suceso_verificada"]
     assert exportar(con_cierre(publicada))["indicadores"]["fecha_del_suceso_verificada"]
+    # Publicada al día siguiente: el cierre medido en las 48 horas antes da la fecha real.
+    siguiente = con_cierre(publicada)
+    siguiente["tiempo"]["inicio"] = ejemplos.instante("2025-09-24T08:00Z", "aproximada")
+    exportado = exportar(siguiente)
+    assert exportado["indicadores"]["fecha_del_suceso_verificada"]
+    assert exportado["tiempo"]["origen_inicio"]["tipo"] == "medido"
+    assert exportado["tiempo"]["inicio"] == siguiente["trafico_aereo"]["cierre"]["inicio"]
+    # Mucho después, el cierre es de otro suceso: la fecha sigue sin verificar.
     otro_dia = con_cierre(publicada)
-    otro_dia["tiempo"]["inicio"] = ejemplos.instante("2025-09-24T08:00Z", "aproximada")
+    otro_dia["tiempo"]["inicio"] = ejemplos.instante("2025-09-28T08:00Z", "aproximada")
     assert not exportar(otro_dia)["indicadores"]["fecha_del_suceso_verificada"]
 
 

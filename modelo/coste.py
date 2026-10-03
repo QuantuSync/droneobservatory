@@ -18,6 +18,11 @@ Límites, compartidos por todo lo que llama al extractor:
 - 2 dólares, una sola vez, para la tercera revisión de la calidad de los datos (modo
   «calidad», `python -m recogida.calidad`): candidatos separados por suceso, artículos que
   ahora se sitúan, candidatos de la búsqueda dirigida y los prioritarios nunca extraídos.
+- 3 dólares, una sola vez, para el barrido dirigido desde enero de 2025 (modo «dirigida»,
+  `python -m recogida.barrido_dirigido incorporar`): incidentes en España y en puertos y presas.
+
+El barrido del catálogo vivo (recogida/catalogo_vivo.py) lleva su propio registro de gasto
+fuera de la base: 0,10 dólares al día y 3 dólares una vez para su primera pasada.
 
 Antes de cada llamada se suma lo gastado y el peor caso de la llamada (sus
 tokens de entrada estimados y el máximo de salida); si pasa del límite, no se
@@ -47,6 +52,7 @@ LIMITE_DETALLE_USD = 3.00
 LIMITE_GUERRA_DIARIO_USD = 0.20
 LIMITE_GUERRA_HISTORICO_USD = 5.00
 LIMITE_CALIDAD_USD = 2.00
+LIMITE_DIRIGIDA_USD = 3.00
 # Una letra son unos 0,3 tokens en los idiomas europeos; se estima por lo alto con 0,5
 # para que el peor caso no se quede corto.
 TOKENS_POR_LETRA = 0.5
@@ -60,6 +66,7 @@ class Modo(StrEnum):
     GUERRA = "guerra"
     GUERRA_HISTORICO = "guerra_historico"
     CALIDAD = "calidad"
+    DIRIGIDA = "dirigida"
 
 
 class LimiteGasto(RuntimeError):
@@ -106,6 +113,7 @@ def limite(modo: Modo) -> float:
         Modo.GUERRA: LIMITE_GUERRA_DIARIO_USD,
         Modo.GUERRA_HISTORICO: LIMITE_GUERRA_HISTORICO_USD,
         Modo.CALIDAD: LIMITE_CALIDAD_USD,
+        Modo.DIRIGIDA: LIMITE_DIRIGIDA_USD,
     }[modo]
 
 

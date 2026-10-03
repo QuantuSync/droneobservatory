@@ -22,7 +22,7 @@ TABLAS_CON_HISTORIAL = (
     "incidentes", "fuentes", "episodios", "ataques_ucrania", "regiones_ucrania", "focos_termicos",
     "encuentros", "estadisticas_oficiales", "documentos_oficiales",
     "impactos_guerra", "restricciones_aeropuertos",
-    "trafico_aereo", "condiciones", "anomalias_trafico", "deducciones",
+    "trafico_aereo", "condiciones", "anomalias_trafico", "deducciones", "catalogo_vivo",
 )  # fmt: skip
 # Campos de la fuente que dependen del incidente y no se guardan en la tabla común.
 CAMPOS_FUENTE_POR_ENTIDAD = frozenset({"credibilidad", "campos_respaldados"})
@@ -231,6 +231,15 @@ CREATE INDEX IF NOT EXISTS anomalias_trafico_dia ON anomalias_trafico (dia);
 -- deducido, interno. Lo calcula el servicio del motor fuera de la base; la recogida horaria lo
 -- guarda aquí (recogida/deduccion.py). Documento con historial.
 CREATE TABLE IF NOT EXISTS deducciones (
+    id TEXT PRIMARY KEY,
+    tipo TEXT NOT NULL,
+    documento TEXT NOT NULL CHECK (json_valid(documento))
+);
+-- Catálogo vivo (recogida/catalogo_vivo.py): lo que admite el barrido periódico del catálogo de
+-- prestaciones (id «catalogo»), cada novedad («novedad:<id>»), el registro de tácticas
+-- («tacticas») y las apariciones de cada modelo en los datos propios («apariciones»). Interno,
+-- con historial: cada versión del catálogo vivo queda en él.
+CREATE TABLE IF NOT EXISTS catalogo_vivo (
     id TEXT PRIMARY KEY,
     tipo TEXT NOT NULL,
     documento TEXT NOT NULL CHECK (json_valid(documento))
@@ -703,6 +712,29 @@ class Almacen:
                 (tipo,),
             )
         filas = self._conexion.execute(sql, parametros).fetchall()
+        return {id_: json.loads(documento) for id_, documento in filas}
+
+    def guardar_catalogo_vivo(self, id_: str, tipo: str, documento: Documento) -> bool:
+        """Guarda un documento del catálogo vivo si ha cambiado. True si lo ha guardado."""
+        fila = self._conexion.execute(
+            "SELECT documento FROM catalogo_vivo WHERE id = ?", (id_,)
+        ).fetchone()
+        if fila is not None and json.loads(fila[0]) == documento:
+            return False
+        with self._conexion:
+            self._upsert("catalogo_vivo", {"id": id_, "tipo": tipo, "documento": _json(documento)})
+        return True
+
+    def catalogo_vivo(self, tipo: str | None = None) -> dict[str, Documento]:
+        """Los documentos del catálogo vivo (de un tipo: catalogo, novedad, tacticas...)."""
+        if tipo is None:
+            filas = self._conexion.execute(
+                "SELECT id, documento FROM catalogo_vivo ORDER BY id"
+            ).fetchall()
+        else:
+            filas = self._conexion.execute(
+                "SELECT id, documento FROM catalogo_vivo WHERE tipo = ? ORDER BY id", (tipo,)
+            ).fetchall()
         return {id_: json.loads(documento) for id_, documento in filas}
 
     def guardar_anomalia(self, documento: Documento) -> bool:

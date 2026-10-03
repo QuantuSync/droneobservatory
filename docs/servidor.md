@@ -70,6 +70,9 @@ En `/home/eodi`:
   deducción (apartado «Motor de deducción»): `resultados.jsonl.gz`, `control.json`,
   `validacion.json`, `horizontes.json` y las teselas de Copernicus DEM GLO-90 (`dem/`). Todo
   se puede volver a calcular.
+- `datos/catalogo/`, con permisos 700 y propiedad de `eodi`: lo que encuentra el barrido del
+  catálogo vivo (apartado «Catálogo vivo»): `novedades.jsonl`, `catalogo_vivo.json`,
+  `historial.jsonl`, `tacticas.json`, `apariciones.json`, `control.json` y `gasto.json`.
 - `datos/reintentos/`, propiedad de `eodi`: un fichero por sitio con los reintentos del día
   (apartado «Reintentos por fuente»).
 
@@ -289,6 +292,82 @@ sudo systemd-run --unit=eodi-deduccion-todo --uid=eodi --gid=eodi \
 sudo -u eodi cat /home/eodi/datos/deduccion/control.json
 ```
 
+El motor 1.1.0 toma de cada incidente la hora y la duración de mejor origen con las mismas
+reglas que la exportación (`exportacion/mejor_origen.py`: un cierre medido, un registro oficial,
+la hora que escribe una autoridad o la única interrupción medida antes de una fecha de
+publicación), pide a Open-Meteo el viento de esa hora si las condiciones guardadas son de otra
+hora o solo del día (tope de 400 llamadas por ejecución, con la caché común) y, en los cruces a
+países de la OTAN con solo el día, el viento de cada hora del día local para la deriva. Usa
+además las frases de las fuentes (testigos, pilotos, autoridades) para la regla de la
+descripción y para el país desde el que una autoridad dice que entró el dron, y deja en cada
+incidente la dirección de entrada (`direccion_entrada`: declarada o deducida de la zona de
+despegue y el viento). Usa el catálogo con lo que ha admitido el barrido del catálogo vivo.
+
+## Catálogo vivo
+
+Barrido periódico del catálogo de prestaciones ([`recogida/catalogo_vivo.py`](../recogida/catalogo_vivo.py),
+lógica sin red en [`proceso/catalogo_vivo.py`](../proceso/catalogo_vivo.py), fuentes y ritmo en
+[`configuracion/barrido_catalogo.json`](../configuracion/barrido_catalogo.json), informe en
+[`informe_catalogo_vivo.md`](informe_catalogo_vivo.md)). En dos tiempos:
+
+1. **Barrido.** `eodi-catalogo.timer` lanza `eodi-catalogo.service` una vez al día a las 05:23
+   UTC (`Nice=15`, E/S en reposo, tope de 60 minutos). La unidad ejecuta
+   [`servidor/catalogo.sh`](../servidor/catalogo.sh), que toma su propio cerrojo
+   (`catalogo.lock`) y ejecuta `python -m recogida.catalogo_vivo barrer`: descarga la base de la
+   rama `estado` solo para leerla (los datos propios) y lee War&Sanctions y los datos propios cada
+   día y el resto de fuentes (fabricantes, listas de marcado de clase, autoridades, centros de
+   análisis y prensa técnica) una vez a la semana, con la identificación del observatorio, el
+   robots.txt de cada sitio, una petición cada 5 s por sitio, la espera creciente del
+   descargador y el tope diario de reintentos por sitio. Lo estructurado (fichas de
+   War&Sanctions, tablas de especificaciones, listas de marcado de clase) lo lee el código; el
+   extractor solo lee las frases que nombran un modelo con una cifra que el código no resuelve,
+   con salida por esquema y cada cifra validada por código (la frase en el texto, el número en
+   la frase). Presupuesto del extractor: 0,10 dólares al día y 3 dólares una vez para la primera
+   pasada, en su propio registro (`gasto.json`). Deja todo en `datos/catalogo/`.
+2. **Incorporación.** La recogida horaria guarda en la tabla `catalogo_vivo` de la base (con
+   historial) el catálogo vivo, las novedades, las tácticas y las apariciones, en segundos. El
+   motor de deducción y la exportación semanal usan el catálogo de la configuración con lo
+   admitido (versión `1.1.0+vivo.N`). Nada de esto se publica en la web.
+
+Regla de entrada: lo que viene de un fabricante, de inteligencia, de una lista oficial, de una
+autoridad o de un centro de análisis entra directo; lo que viene solo de prensa queda como
+candidato hasta que lo diga una segunda fuente de otro sitio. Un dato nuevo se añade a los que ya
+hay (la envolvente de una clase solo se ensancha) y cada versión queda en `historial.jsonl`.
+
+Órdenes, como `operador`:
+
+```
+systemctl list-timers eodi-catalogo.timer
+journalctl -u eodi-catalogo.service -n 40          # hallazgos, novedades, versión y gasto
+sudo systemctl start eodi-catalogo.service         # un barrido ahora (solo lo que toca hoy)
+sudo systemd-run --unit=eodi-catalogo-primera --uid=eodi --gid=eodi \
+  /usr/bin/env bash /home/eodi/droneobservatory/servidor/catalogo.sh --primera
+sudo -u eodi sh -c 'cd /home/eodi/droneobservatory && EODI_CATALOGO_DATOS=/home/eodi/datos/catalogo .venv/bin/python -m recogida.catalogo_vivo resumen'
+```
+
+## Barrido dirigido de España, puertos y presas (una vez)
+
+[`recogida/barrido_dirigido.py`](../recogida/barrido_dirigido.py): las noticias de GDELT desde el
+1 de enero de 2025 con una palabra de dron (también en catalán, gallego y euskera) que nombran
+una instalación de España o un puerto o una presa de Europa del nomenclátor. Primero la lectura
+de los días que faltan, sin la base y con prioridad baja (comparte la caché de días de la
+búsqueda dirigida); después, con el cerrojo de la recogida, la búsqueda, la incorporación como
+artículos y candidatos, el lote del extractor (modo «dirigida», 3 dólares una vez) y la
+reconstrucción de los incidentes. El informe queda en `/home/eodi/dirigido-informe.json`.
+
+```
+sudo systemd-run --unit=eodi-dirigido-lectura --uid=eodi --gid=eodi -p Nice=19 \
+  -p IOSchedulingClass=idle -p MemoryMax=900M \
+  --setenv=EODI_BUSQUEDA_DATOS=/home/eodi/datos/busqueda \
+  --working-directory=/home/eodi/droneobservatory \
+  /home/eodi/droneobservatory/.venv/bin/python -m recogida.barrido_dirigido leer --hilos 2
+sudo systemd-run --unit=eodi-dirigido --uid=eodi --gid=eodi \
+  /usr/bin/env bash /home/eodi/droneobservatory/servidor/dirigido.sh
+journalctl -u eodi-dirigido -n 60
+```
+
+Si el lote se queda a medias, se relanza con `--lote <id>`.
+
 ## Secretos en local
 
 En `%USERPROFILE%\.eodi\`, fuera de cualquier repositorio:
@@ -326,7 +405,8 @@ El script:
    repositorios por las del servidor;
 5. activa los temporizadores de la recogida horaria, de la exportación semanal, de las
    fuentes oficiales de detalle, del lector de canales de la capa de guerra, del procesado de
-   adsb.lol, de la búsqueda dirigida de noticias y del motor de deducción.
+   adsb.lol, de la búsqueda dirigida de noticias, del motor de deducción y del barrido del
+   catálogo vivo.
 
 Puede repetirse sobre un servidor que ya existe: deja igual lo que ya está y vuelve a
 aplicar la configuración. Para empezar de verdad desde cero se borra antes el servidor:

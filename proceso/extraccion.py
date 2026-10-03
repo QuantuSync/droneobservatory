@@ -338,7 +338,19 @@ def objetivo_compartido(
         if _nombra(str(a["titular"]), nombres_propio) and _nombra(str(a["titular"]), nombres_otro)
     ]  # fmt: skip
     if len(ambos) < MIN_TITULARES_COMPARTIDOS:
-        return False
+        # Un titular que enumera varias instalaciones del mismo tipo, entre ellas la del
+        # candidato y no la de la ficha («Drones Observed by Airports in Esbjerg, Sonderborg,
+        # Skrydstrup»), y ninguno que nombre las dos: el suceso del candidato es el suyo.
+        enumeran = [
+            a for a in articulos
+            if _nombra(str(a["titular"]), nombres_propio)
+            and not _nombra(str(a["titular"]), nombres_otro)
+            and any(i != id_lugar and nom.lugares[i].tipo == propio.tipo
+                    for i in lugares_en(str(a["titular"]), nom))
+        ]  # fmt: skip
+        if ambos or not enumeran:
+            return False
+        ambos = enumeran
     enviada = next((a for a in ambos if a["url"] in enviadas), None)
     fuente = enviadas.index(enviada["url"]) + 1 if enviada else 1
     frase = " ".join(str((enviada or ambos[0])["titular"]).split()[:MAX_PALABRAS_FRASE])
@@ -353,8 +365,8 @@ def objetivo_compartido(
     for campo in ("objetivo_nombre", "objetivo_categoria"):
         validada.campos.pop(campo, None)
     validada.motivos.append(
-        f"lugar_suceso: {len(ambos)} titulares nombran {propio.nombre} junto a "
-        f"{nom.lugares[otros[0]].nombre}: un incidente por objetivo"
+        f"lugar_suceso: {len(ambos)} titulares nombran {propio.nombre} (con "
+        f"{nom.lugares[otros[0]].nombre} o en una lista): un incidente por objetivo"
     )
     return True
 

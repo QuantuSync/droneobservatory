@@ -1,0 +1,375 @@
+{
+ "version": "1.0.0",
+ "descripcion": "Fuentes del barrido periódico del catálogo de prestaciones (recogida/catalogo_vivo.py), todas comprobadas el 3 de octubre de 2026: se leen sin JavaScript y su robots.txt lo permite. tipo decide la regla de entrada: fabricante, inteligencia, lista_oficial, autoridad y analisis_tecnico entran directo; prensa_tecnica queda como candidato hasta una segunda fuente de otro sitio; propios (los datos del observatorio) nunca da cifras. ritmo: diario (War&Sanctions y datos propios) o semanal. lector: war_sanctions (lista y fichas), rss (RSS o Atom), enlaces (los enlaces de una página que cumplen patron), tabla_clases (tabla modelo, fabricante y clase de la UE) o propios. ficha: la página de especificaciones de cada producto ({base}: su dirección sin consulta). leer_pagina: se lee la nota entera; solo_dron: solo las notas cuyo título o resumen hablan de drones; clase_ue: lista de marcado de clase (C0 a C6).",
+ "fuentes": [
+  {
+   "id": "war_sanctions",
+   "nombre": "War&Sanctions, inteligencia militar de Ucrania: drones",
+   "tipo": "inteligencia",
+   "ritmo": "diario",
+   "lector": "war_sanctions",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav",
+   "paginas_max": 30
+  },
+  {
+   "id": "propios",
+   "nombre": "Datos propios: incidentes en Europa, partes de la capa de guerra y UK Airprox",
+   "tipo": "propios",
+   "ritmo": "diario",
+   "lector": "propios"
+  },
+  {
+   "id": "dji_productos",
+   "nombre": "DJI: drones con cámara (ficha de cada producto)",
+   "tipo": "fabricante",
+   "ritmo": "semanal",
+   "lector": "enlaces",
+   "url": "https://www.dji.com/global/products/camera-drones",
+   "patron": "dji\\.com/[a-z-]+/(?!goggles|dji-goggles|rc|motion|camera-drones|downloads|delivery|dsa|contact|flyingtips|company|support|media-center|products)[a-z0-9-]+\\?site=brandsite&(?:amp;)?from=landing_page",
+   "ficha": "{base}/specs",
+   "clase": "multirrotor_consumo",
+   "excluir": "goggles|gafas|mando|\\brc\\b|motion"
+  },
+  {
+   "id": "dji_anuncios",
+   "nombre": "DJI: anuncios",
+   "tipo": "fabricante",
+   "ritmo": "semanal",
+   "lector": "enlaces",
+   "url": "https://www.dji.com/global/media-center/announcements",
+   "patron": "/media-center/announcements/[a-z0-9-]+$",
+   "leer_pagina": true
+  },
+  {
+   "id": "dji_enterprise",
+   "nombre": "DJI Enterprise: noticias",
+   "tipo": "fabricante",
+   "ritmo": "semanal",
+   "lector": "enlaces",
+   "url": "https://enterprise.dji.com/news",
+   "patron": "/news/detail/[a-z0-9-]+",
+   "leer_pagina": true
+  },
+  {
+   "id": "skydio",
+   "nombre": "Skydio: blog",
+   "tipo": "fabricante",
+   "ritmo": "semanal",
+   "lector": "enlaces",
+   "url": "https://www.skydio.com/blog",
+   "patron": "skydio\\.com/blog/[a-z0-9-]+$"
+  },
+  {
+   "id": "parrot",
+   "nombre": "Parrot: sala de prensa",
+   "tipo": "fabricante",
+   "ritmo": "semanal",
+   "lector": "enlaces",
+   "url": "https://www.parrot.com/en/newsroom",
+   "patron": "/en/newsroom/[a-z0-9-]+$"
+  },
+  {
+   "id": "quantum_systems",
+   "nombre": "Quantum-Systems: noticias",
+   "tipo": "fabricante",
+   "ritmo": "semanal",
+   "lector": "rss",
+   "url": "https://quantum-systems.com/feed/"
+  },
+  {
+   "id": "delair",
+   "nombre": "Delair: noticias",
+   "tipo": "fabricante",
+   "ritmo": "semanal",
+   "lector": "rss",
+   "url": "https://delair.aero/feed/"
+  },
+  {
+   "id": "tekever",
+   "nombre": "Tekever: noticias",
+   "tipo": "fabricante",
+   "ritmo": "semanal",
+   "lector": "enlaces",
+   "url": "https://www.tekever.com/news/",
+   "patron": "tekever\\.com/news/[a-z0-9-]+/?$"
+  },
+  {
+   "id": "atlas",
+   "nombre": "Atlas Dynamics: noticias",
+   "tipo": "fabricante",
+   "ritmo": "semanal",
+   "lector": "enlaces",
+   "url": "https://atlasuas.com/atlas/news",
+   "patron": "/news/[a-z0-9-]+$"
+  },
+  {
+   "id": "flyability",
+   "nombre": "Flyability: noticias",
+   "tipo": "fabricante",
+   "ritmo": "semanal",
+   "lector": "enlaces",
+   "url": "https://www.flyability.com/news",
+   "patron": "flyability\\.com/news/[a-z0-9-]+$"
+  },
+  {
+   "id": "easa_marcado_clase",
+   "nombre": "EASA: drones con marcado de clase",
+   "tipo": "lista_oficial",
+   "ritmo": "semanal",
+   "lector": "enlaces",
+   "url": "https://www.easa.europa.eu/en/domains/drones-air-mobility/drones-evtol-designs/drones-eu-operations",
+   "patron": "/drones-eu-operations/[a-z0-9-]+$",
+   "clase_ue": true
+  },
+  {
+   "id": "droneport_clases",
+   "nombre": "Droneport (organismo notificado): drones certificados por clase",
+   "tipo": "lista_oficial",
+   "ritmo": "semanal",
+   "lector": "tabla_clases",
+   "url": "https://eudroneport.com/blog/list-of-certified-drones/"
+  },
+  {
+   "id": "pl_mon",
+   "nombre": "Polonia: Ministerio de Defensa",
+   "tipo": "autoridad",
+   "ritmo": "semanal",
+   "lector": "enlaces",
+   "url": "https://www.gov.pl/web/obrona-narodowa/aktualnosci5",
+   "patron": "gov\\.pl/web/obrona-narodowa/[a-z0-9-]+$",
+   "leer_pagina": true,
+   "solo_dron": true
+  },
+  {
+   "id": "pl_mswia",
+   "nombre": "Polonia: Ministerio del Interior",
+   "tipo": "autoridad",
+   "ritmo": "semanal",
+   "lector": "enlaces",
+   "url": "https://www.gov.pl/web/mswia/aktualnosci",
+   "patron": "gov\\.pl/web/mswia/[a-z0-9-]+$",
+   "leer_pagina": true,
+   "solo_dron": true
+  },
+  {
+   "id": "pl_policja",
+   "nombre": "Polonia: Policía",
+   "tipo": "autoridad",
+   "ritmo": "semanal",
+   "lector": "rss",
+   "url": "https://policja.pl/dokumenty/rss/1-rss-1.rss",
+   "leer_pagina": true,
+   "solo_dron": true
+  },
+  {
+   "id": "ro_mapn",
+   "nombre": "Rumanía: Ministerio de Defensa Nacional",
+   "tipo": "autoridad",
+   "ritmo": "semanal",
+   "lector": "enlaces",
+   "url": "https://www.mapn.ro/cpresa/",
+   "patron": "mapn\\.ro/cpresa/\\d+_",
+   "leer_pagina": true,
+   "solo_dron": true
+  },
+  {
+   "id": "md_armata",
+   "nombre": "Moldavia: Ministerio de Defensa",
+   "tipo": "autoridad",
+   "ritmo": "semanal",
+   "lector": "enlaces",
+   "url": "https://www.army.md/ro/comunicate-de-presa",
+   "patron": "/ro/comunicate-de-presa/[a-z0-9-]+",
+   "leer_pagina": true,
+   "solo_dron": true
+  },
+  {
+   "id": "md_mai",
+   "nombre": "Moldavia: Ministerio del Interior",
+   "tipo": "autoridad",
+   "ritmo": "semanal",
+   "lector": "enlaces",
+   "url": "https://mai.gov.md/ro/news",
+   "patron": "/ro/news/[a-z0-9-]+",
+   "leer_pagina": true,
+   "solo_dron": true
+  },
+  {
+   "id": "md_frontiera",
+   "nombre": "Moldavia: Policía de Fronteras",
+   "tipo": "autoridad",
+   "ritmo": "semanal",
+   "lector": "enlaces",
+   "url": "https://www.border.gov.md/comunicate-de-presa",
+   "patron": "border\\.gov\\.md/[a-z0-9-]{12,}$",
+   "leer_pagina": true,
+   "solo_dron": true
+  },
+  {
+   "id": "lt_vsat",
+   "nombre": "Lituania: Servicio de Guardia de Fronteras",
+   "tipo": "autoridad",
+   "ritmo": "semanal",
+   "lector": "enlaces",
+   "url": "https://vsat.lrv.lt/lt/naujienos/",
+   "patron": "/lt/naujienos/[a-z0-9-]+",
+   "leer_pagina": true,
+   "solo_dron": true
+  },
+  {
+   "id": "lv_aizsardziba",
+   "nombre": "Letonia: Ministerio de Defensa",
+   "tipo": "autoridad",
+   "ritmo": "semanal",
+   "lector": "rss",
+   "url": "https://www.mod.gov.lv/lv/rss.xml",
+   "leer_pagina": true,
+   "solo_dron": true
+  },
+  {
+   "id": "ee_kaitsevagi",
+   "nombre": "Estonia: Fuerzas de Defensa",
+   "tipo": "autoridad",
+   "ritmo": "semanal",
+   "lector": "rss",
+   "url": "https://mil.ee/feed/",
+   "leer_pagina": true,
+   "solo_dron": true
+  },
+  {
+   "id": "ee_riigikaitse",
+   "nombre": "Estonia: portal de defensa del Estado",
+   "tipo": "autoridad",
+   "ritmo": "semanal",
+   "lector": "rss",
+   "url": "https://riigikaitsest.ee/feed/",
+   "leer_pagina": true,
+   "solo_dron": true
+  },
+  {
+   "id": "fi_puolustusvoimat",
+   "nombre": "Finlandia: Fuerzas de Defensa",
+   "tipo": "autoridad",
+   "ritmo": "semanal",
+   "lector": "rss",
+   "url": "https://puolustusvoimat.fi/ajankohtaista/-/asset_publisher/JIbSQ9miX9H6/rss",
+   "leer_pagina": true,
+   "solo_dron": true
+  },
+  {
+   "id": "car",
+   "nombre": "Conflict Armament Research",
+   "tipo": "analisis_tecnico",
+   "ritmo": "semanal",
+   "lector": "enlaces",
+   "url": "https://www.conflictarm.com/publications/",
+   "patron": "conflictarm\\.com/(?:reports|dispatches)/[a-z0-9-]+",
+   "leer_pagina": true,
+   "solo_dron": true
+  },
+  {
+   "id": "csis",
+   "nombre": "CSIS: análisis",
+   "tipo": "analisis_tecnico",
+   "ritmo": "semanal",
+   "lector": "enlaces",
+   "url": "https://www.csis.org/analysis",
+   "patron": "/analysis/[a-z0-9-]+$",
+   "leer_pagina": true,
+   "solo_dron": true
+  },
+  {
+   "id": "rusi",
+   "nombre": "RUSI: publicaciones",
+   "tipo": "analisis_tecnico",
+   "ritmo": "semanal",
+   "lector": "rss",
+   "url": "https://www.rusi.org/rss/latest-publications.xml",
+   "leer_pagina": true,
+   "solo_dron": true
+  },
+  {
+   "id": "isw",
+   "nombre": "Institute for the Study of War",
+   "tipo": "analisis_tecnico",
+   "ritmo": "semanal",
+   "lector": "enlaces",
+   "url": "https://understandingwar.org/research/",
+   "patron": "understandingwar\\.org/research/[a-z0-9-]+/[a-z0-9-]+",
+   "leer_pagina": true,
+   "solo_dron": true
+  },
+  {
+   "id": "isis",
+   "nombre": "Institute for Science and International Security",
+   "tipo": "analisis_tecnico",
+   "ritmo": "semanal",
+   "lector": "enlaces",
+   "url": "https://isis-online.org/isis-reports",
+   "patron": "isis-online\\.org/isis-reports/[a-z0-9-]+",
+   "leer_pagina": true,
+   "solo_dron": true
+  },
+  {
+   "id": "militarnyi",
+   "nombre": "Militarnyi",
+   "tipo": "prensa_tecnica",
+   "ritmo": "semanal",
+   "lector": "rss",
+   "url": "https://militarnyi.com/en/news/feed/",
+   "leer_pagina": true,
+   "solo_dron": true
+  },
+  {
+   "id": "defence_express",
+   "nombre": "Defense Express",
+   "tipo": "prensa_tecnica",
+   "ritmo": "semanal",
+   "lector": "rss",
+   "url": "https://en.defence-ua.com/rss/feed.xml",
+   "leer_pagina": true,
+   "solo_dron": true
+  },
+  {
+   "id": "the_war_zone",
+   "nombre": "The War Zone",
+   "tipo": "prensa_tecnica",
+   "ritmo": "semanal",
+   "lector": "rss",
+   "url": "https://www.twz.com/feed",
+   "leer_pagina": true,
+   "solo_dron": true
+  },
+  {
+   "id": "army_recognition",
+   "nombre": "Army Recognition",
+   "tipo": "prensa_tecnica",
+   "ritmo": "semanal",
+   "lector": "enlaces",
+   "url": "https://www.armyrecognition.com/news/army-news/2026",
+   "patron": "/news/[a-z-]+/\\d{4}/[a-z0-9-]+",
+   "leer_pagina": true,
+   "solo_dron": true
+  },
+  {
+   "id": "dronedj",
+   "nombre": "DroneDJ",
+   "tipo": "prensa_tecnica",
+   "ritmo": "semanal",
+   "lector": "rss",
+   "url": "https://dronedj.com/feed/",
+   "leer_pagina": true,
+   "solo_dron": true
+  },
+  {
+   "id": "dronexl",
+   "nombre": "DroneXL",
+   "tipo": "prensa_tecnica",
+   "ritmo": "semanal",
+   "lector": "rss",
+   "url": "https://dronexl.co/feed.xml",
+   "leer_pagina": true,
+   "solo_dron": true
+  }
+ ]
+}

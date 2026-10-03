@@ -1,6 +1,6 @@
 """Catálogo de prestaciones de drones, sus fuentes, las clases del motor y las zonas de lanzamiento.
 
-Tres ficheros de `configuracion/`, cada uno con su esquema propio en `esquema/catalogo/1.0.0/`:
+Tres ficheros de `configuracion/`, cada uno con su esquema propio en `esquema/catalogo/1.1.0/`:
 
 - `catalogo_drones.json`: prestaciones por modelo, cada valor con su fuente y la frase de la
   fuente que lo da, y las clases que usa el motor. Las cifras están con la unidad de la fuente;
@@ -30,7 +30,7 @@ CONFIGURACION = RAIZ / "configuracion"
 CATALOGO = CONFIGURACION / "catalogo_drones.json"
 FUENTES = CONFIGURACION / "catalogo_fuentes.json"
 ZONAS = CONFIGURACION / "zonas_lanzamiento.json"
-VERSION_ESQUEMA = "1.0.0"
+VERSION_ESQUEMA = "1.1.0"
 ESQUEMAS = RAIZ / "esquema" / "catalogo" / VERSION_ESQUEMA
 
 Documento = dict[str, Any]
@@ -54,6 +54,11 @@ CONVERSION: dict[str, tuple[float, str]] = {
     "h": (60.0, "min"),
     "°C": (1.0, "°C"),
     "m2": (1.0, "m2"),
+    "ft/min": (0.00508, "m/s"),
+    "°": (1.0, "°"),
+    "m/s2": (1.0, "m/s2"),
+    "n": (1.0, "n"),
+    "s": (1.0, "s"),
 }
 
 
@@ -384,16 +389,75 @@ def construir(catalogo: Documento, fuentes: Documento, zonas: Documento) -> Cata
     )
 
 
+def version_viva(base: str, vivo: Documento | None) -> str:
+    """Versión del catálogo con los cambios admitidos por el barrido: «1.1.0+vivo.N»."""
+    if not vivo or not vivo.get("version"):
+        return base
+    return f"{base}+vivo.{int(vivo['version'])}"
+
+
+def aplicar_vivo(
+    catalogo: Documento, fuentes: Documento, vivo: Documento | None
+) -> tuple[Documento, Documento]:
+    """El catálogo y sus fuentes con lo que ha admitido el barrido periódico
+    (recogida/catalogo_vivo.py): fuentes nuevas, modelos nuevos y cifras nuevas de modelos ya
+    conocidos. Nada se quita ni se cambia: una cifra nueva se añade a las que ya hay, así que la
+    envolvente de una clase solo puede ensancharse (nunca descarta más que antes por un dato
+    nuevo). Sin cambios admitidos devuelve los ficheros tal cual."""
+    if not vivo or not vivo.get("version"):
+        return catalogo, fuentes
+    catalogo = json.loads(json.dumps(catalogo))
+    fuentes = json.loads(json.dumps(fuentes))
+    version = version_viva(catalogo["version"], vivo)
+    catalogo["version"] = version
+    fuentes["version"] = version_viva(fuentes["version"], vivo)
+    for id_, fuente in sorted(vivo.get("fuentes", {}).items()):
+        fuentes["fuentes"].setdefault(id_, fuente)
+    vacio = {"datos": [], "sin_fuente": True}
+    modelos = {m["id"]: m for m in catalogo["modelos"]}
+    for nuevo in vivo.get("modelos", []):
+        if nuevo["id"] in modelos:
+            continue
+        modelo = json.loads(json.dumps(nuevo))
+        modelo["campos"] = {
+            c: modelo.get("campos", {}).get(c, dict(vacio)) for c in catalogo["campos"]
+        }
+        catalogo["modelos"].append(modelo)
+        modelos[modelo["id"]] = modelo
+    for entrada in vivo.get("datos", []):
+        modelo = modelos.get(entrada["modelo"])
+        if modelo is None or "campos" not in modelo or entrada["campo"] not in catalogo["campos"]:
+            continue
+        campo = modelo["campos"].setdefault(entrada["campo"], dict(vacio))
+        if entrada["dato"] in campo["datos"]:
+            continue
+        campo["datos"] = [*campo["datos"], entrada["dato"]]
+        campo["sin_fuente"] = False
+        propio = modelo.setdefault("vivo", {"alta": entrada["alta"], "fuentes": []})
+        if entrada["dato"]["fuente"] not in propio["fuentes"]:
+            propio["fuentes"] = sorted({*propio["fuentes"], entrada["dato"]["fuente"]})
+    return catalogo, fuentes
+
+
 @cache
 def cargar() -> Catalogo:
     return construir(_leer(CATALOGO), _leer(FUENTES), _leer(ZONAS))
 
 
-def ficheros() -> dict[str, Documento]:
-    """Los tres ficheros tal como están, para la exportación."""
+def cargar_vivo(vivo: Documento | None) -> Catalogo:
+    """El catálogo con los cambios admitidos por el barrido (o el de la configuración)."""
+    if not vivo or not vivo.get("version"):
+        return cargar()
+    catalogo, fuentes = aplicar_vivo(_leer(CATALOGO), _leer(FUENTES), vivo)
+    return construir(catalogo, fuentes, _leer(ZONAS))
+
+
+def ficheros(vivo: Documento | None = None) -> dict[str, Documento]:
+    """Los tres ficheros, con los cambios admitidos por el barrido, para la exportación."""
+    catalogo, fuentes = aplicar_vivo(_leer(CATALOGO), _leer(FUENTES), vivo)
     return {
-        "catalogo_drones.json": _leer(CATALOGO),
-        "catalogo_fuentes.json": _leer(FUENTES),
+        "catalogo_drones.json": catalogo,
+        "catalogo_fuentes.json": fuentes,
         "zonas_lanzamiento.json": _leer(ZONAS),
     }
 

@@ -15,7 +15,7 @@ from almacen import remoto
 from almacen.base import Almacen
 from almacen.cifrado import VARIABLE_CLAVE, guardar_cifrada
 from esquema import Documento
-from exportacion import semanal
+from exportacion import mejor_origen, semanal
 from proceso import mediciones
 from recogida import estado, exportacion, salud
 from tests import ejemplos
@@ -96,16 +96,37 @@ def test_estan_todos_los_ficheros_con_su_esquema() -> None:
     assert ficheros["incidentes.jsonl"].registros == 2
 
 
+def deshacer_mejor_origen(exportado: Documento) -> Documento:
+    """El incidente exportado con los valores que tenía en la base."""
+    copia = json.loads(json.dumps(exportado))
+    for ruta, origen in exportado["procedencia"].items():
+        if origen.get("regla", {}).get("nombre") not in mejor_origen.REGLAS:
+            continue
+        *padres, hoja = ruta.split(".")
+        nodo = copia
+        for parte in padres:
+            nodo = nodo[parte]
+        if "sustituye" in origen:
+            nodo[hoja] = origen["sustituye"]["valor"]
+        else:
+            nodo.pop(hoja, None)
+    resultado: Documento = copia
+    return resultado
+
+
 def test_los_incidentes_salen_enteros_con_los_campos_internos() -> None:
     almacen = poblado()
     exportados = lineas(por_nombre(semanal.generar(almacen))["incidentes.jsonl"])
     # Como están en la base, más su procedencia, su nivel de detalle y sus indicadores: un
     # campo interno nuevo del esquema entra sin tocar código si sus fuentes dicen que lo
     # respaldan.
+    # Lo que cambia exportacion/mejor_origen.py (el valor de mejor origen) se deshace con lo
+    # que guarda su procedencia en «sustituye».
     sin_anadidos = [
-        {k: v for k, v in e.items() if k not in {"procedencia", "nivel_detalle", "indicadores"}}
+        {k: v for k, v in deshacer_mejor_origen(e).items()
+         if k not in {"procedencia", "nivel_detalle", "indicadores"}}
         for e in exportados
-    ]
+    ]  # fmt: skip
     assert sin_anadidos == almacen.incidentes()
     assert "pruebas" in exportados[0] and "alta" in exportados[0]["control"]
 

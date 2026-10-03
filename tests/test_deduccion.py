@@ -89,7 +89,7 @@ def fuentes(**prioridades: str) -> dict[str, Any]:
     lista = {"X1": "normal", "X2": "normal", **prioridades}
     return {
         "version": "1.0.0",
-        "version_esquema": "1.0.0",
+        "version_esquema": "1.1.0",
         "descripcion": "prueba",
         "fuentes": {
             i: {
@@ -108,7 +108,7 @@ def fuentes(**prioridades: str) -> dict[str, Any]:
 def zonas() -> dict[str, Any]:
     return {
         "version": "1.0.0",
-        "version_esquema": "1.0.0",
+        "version_esquema": "1.1.0",
         "descripcion": "prueba",
         "zonas": [
             {
@@ -169,7 +169,7 @@ def construir(*modelos: dict[str, Any], prioridades: dict[str, str] | None = Non
     ]
     documento = {
         "version": "9.9.9",
-        "version_esquema": "1.0.0",
+        "version_esquema": "1.1.0",
         "descripcion": "prueba",
         "campos": real["campos"],
         "clases": [c for c in todas if c["id"] in clases_usadas],
@@ -257,9 +257,13 @@ def test_las_fuentes_de_prioridad_baja_solo_dan_estimaciones_debiles(real: Catal
     # Y una cota débil no sirve para descartar.
     parodiya = real.modelos["parodiya"]
     assert parodiya.valor("velocidad_maxima").debil
-    assert capacidades.de_clase(
-        real, "senuelo_largo_alcance", capacidades.velocidad_max_ms
-    ).sin_dato == ("parodiya",)
+    # El Parodiya cuenta como sin dato (solo tiene la cota débil); el Maya no publica velocidad.
+    assert (
+        "parodiya"
+        in capacidades.de_clase(
+            real, "senuelo_largo_alcance", capacidades.velocidad_max_ms
+        ).sin_dato
+    )
 
 
 def test_las_referencias_genericas_son_derivadas(real: Catalogo) -> None:

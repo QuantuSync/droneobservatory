@@ -36,15 +36,18 @@ import time
 import urllib.error
 import urllib.request
 from collections import Counter
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from typing import Any
 
 from almacen.base import Almacen
-from proceso import impactos_guerra
+from exportacion import mejor_origen, procedencia, semanal
+from proceso import condiciones as meteo_lugar
+from proceso import fechas, impactos_guerra
 from proceso.deduccion import catalogo as catalogo_
-from proceso.deduccion import horizonte, motor, validacion
+from proceso.deduccion import deriva, horizonte, motor, validacion
+from proceso.deduccion.reglas import Caso
 from recogida import dem
 from recogida.descarga import AGENTE_EODI
 
@@ -60,6 +63,11 @@ HORIZONTES = "horizontes.json"
 VALIDACION = "validacion.json"
 # Llamadas a Open-Meteo por ejecución para la validación (se guardan en la caché común).
 TOPE_METEO = 100
+# Y para los incidentes: el viento de la hora de mejor origen (un cierre medido, una autoridad)
+# cuando las condiciones guardadas son de otra hora o solo del día, y el de cada hora del día en
+# los cruces a países de la OTAN con solo el día (deriva hora a hora). Con la caché común, cada
+# día y lugar se pide una vez.
+TOPE_METEO_INCIDENTES = 400
 # Teselas nuevas del relieve por ejecución: unas 2 MB y 2 s cada una.
 TESELAS_POR_EJECUCION = 150
 # Tiempo de la incorporación en la recogida horaria.
@@ -130,10 +138,12 @@ def calcular(
     todo: bool = False,
     relieve: dem.Relieve | None = None,
     meteo: validacion.Meteo | None = None,
+    meteo_incidentes: validacion.Meteo | None = None,
 ) -> dict[str, Any]:
     """Evalúa lo nuevo o cambiado y reescribe los resultados. Devuelve el resumen."""
     inicio = time.monotonic()
-    catalogo = catalogo_.cargar()
+    # Con lo que ha admitido el barrido del catálogo vivo (tabla catalogo_vivo de la base).
+    catalogo = catalogo_.cargar_vivo(almacen.catalogo_vivo("catalogo").get("catalogo"))
     anteriores = {} if todo else leer_resultados(datos)
     relieve = relieve or dem.Relieve(datos / "dem", descargar_url, TESELAS_POR_EJECUCION)
     condiciones = almacen.condiciones()
@@ -158,12 +168,22 @@ def calcular(
     incidentes = [
         d for d in almacen.incidentes() if "fusionado_en" not in d and "retirado" not in d
     ]
-    casos = {
-        d["id"]: motor.caso_de_incidente(
-            d, condiciones.get(d["id"]), trafico.get(d["id"]), almacen.encuentros_de(d["id"])
+    # La hora, la duración y las frases de mejor origen (las mismas reglas que la exportación).
+    contextos = semanal.contextos_mejor_origen(almacen, incidentes)
+    casos = {}
+    for d in incidentes:
+        contexto = contextos[d["id"]]
+        caso = motor.caso_de_incidente(
+            d,
+            condiciones.get(d["id"]),
+            trafico.get(d["id"]),
+            contexto.encuentros,
+            mejor_origen.momento(d, contexto, procedencia.origen_de_fuente),
+            mejor_origen.frases(d, contexto, procedencia.origen_de_fuente),
         )
-        for d in incidentes
-    }
+        if meteo_incidentes is not None:
+            con_viento_de_su_hora(caso, meteo_incidentes)
+        casos[d["id"]] = caso
     sitios = motor.sitios_de(casos.values())
     # El horizonte de cada punto no cambia con el incidente: se guarda aparte y se reutiliza.
     horizontes: dict[str, Any] = (
@@ -317,7 +337,60 @@ def paso_horario(almacen: Almacen) -> None:
         registro.warning("deducción no incorporada: %s", str(error)[:300])
 
 
-def cliente_meteo() -> validacion.Meteo:
+def _segundos(lugar: dict[str, Any]) -> float | None:
+    momento = (lugar.get("momento") or {}).get("valor")
+    if not momento:
+        return None
+    return datetime.fromisoformat(momento.replace("Z", "+00:00")).timestamp()
+
+
+def con_viento_de_su_hora(caso: Caso, meteo: validacion.Meteo) -> None:
+    """Pone en el caso el viento de su hora (si las condiciones guardadas son de otra hora o
+    solo del día) y, con solo el día en un cruce a un país de la OTAN, el de cada hora del día."""
+    if not caso.con_punto or caso.inicio is None:
+        return
+    assert caso.lat is not None and caso.lon is not None
+    lugar = (caso.condiciones or {}).get("lugar") or {}
+    momento = datetime.fromtimestamp(caso.inicio, UTC)
+    if caso.precision in motor.PRECISIONES_HORA:
+        guardado = _segundos(lugar)
+        if (
+            lugar.get("rango_dia") is False
+            and guardado is not None
+            and (abs(guardado - caso.inicio) < 3600)
+        ):
+            return
+        horario = meteo(caso.lat, caso.lon, momento.date())
+        if horario:
+            nuevo = meteo_lugar.lugar_incidente(
+                None, caso.lat, caso.lon, momento, momento.date(), horario, [], None
+            )
+            caso.condiciones = {**(caso.condiciones or {}), "lugar": nuevo}
+        return
+    if caso.pais not in deriva.OTAN or not caso.entrada_exterior:
+        return
+    # El día local del incidente, en horas UTC (puede tocar dos días UTC).
+    zona = fechas.zona(caso.pais)
+    dia = momento.date()
+    inicio_local = datetime(dia.year, dia.month, dia.day, tzinfo=zona or UTC).astimezone(UTC)
+    horarios: dict[Any, Any] = {}
+    lugares = []
+    for h in range(24):
+        hora = inicio_local + timedelta(hours=h)
+        if hora.date() not in horarios:
+            horarios[hora.date()] = meteo(caso.lat, caso.lon, hora.date())
+        horario = horarios[hora.date()]
+        if horario:
+            lugares.append(
+                meteo_lugar.lugar_incidente(
+                    None, caso.lat, caso.lon, hora, hora.date(), horario, [], None
+                )
+            )
+    if len(lugares) == 24:
+        caso.lugares_horas = lugares
+
+
+def cliente_meteo(tope: int = TOPE_METEO) -> validacion.Meteo:
     """Open-Meteo con la caché común del servidor y un tope de llamadas por ejecución. El cliente
     (y el plazo de su descargador) se crea en la primera llamada, cuando empieza la validación,
     no al arrancar el cálculo. Tras el primer fallo no se vuelve a pedir nada en la ejecución."""
@@ -331,7 +404,7 @@ def cliente_meteo() -> validacion.Meteo:
             return None
         if "cliente" not in estado:
             estado["cliente"] = meteo.Cliente(
-                meteo.directorio_datos(), meteo.descargador(Plazo(meteo.TOPE_S)), tope=TOPE_METEO
+                meteo.directorio_datos(), meteo.descargador(Plazo(meteo.TOPE_S)), tope=tope
             )
         try:
             resultado: dict[str, list[Any]] | None = estado["cliente"].horas(
@@ -369,7 +442,14 @@ def principal(argumentos: list[str] | None = None) -> int:
                 registro.error("no hay base en la rama %s", remoto.RAMA)
                 return 1
         almacen = Almacen(abrir_cifrada(ruta))
-        resumen = calcular(almacen, datos, ahora, todo=args.todo, meteo=cliente_meteo())
+        resumen = calcular(
+            almacen,
+            datos,
+            ahora,
+            todo=args.todo,
+            meteo=cliente_meteo(),
+            meteo_incidentes=cliente_meteo(TOPE_METEO_INCIDENTES),
+        )
         almacen.cerrar()
     registro.info("deducción: %s", json.dumps(resumen, ensure_ascii=False))
     if args.registro is not None:

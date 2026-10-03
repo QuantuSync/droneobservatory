@@ -1,4 +1,4 @@
-// Validación de los datos contra el esquema 1.7.0 (campos públicos), escrita a mano para
+// Validación de los datos contra el esquema 1.8.0 (campos públicos), escrita a mano para
 // que no necesite generar código en el navegador. Se usa en el build, sobre los ficheros de
 // publicacion/, y en la web al cargar cada fichero: un fichero que no valida no se pinta.
 

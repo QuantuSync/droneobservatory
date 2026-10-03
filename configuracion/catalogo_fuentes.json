@@ -1,6 +1,6 @@
 {
- "version": "1.0.0",
- "version_esquema": "1.0.0",
+ "version": "1.1.0",
+ "version_esquema": "1.1.0",
  "descripcion": "Fuentes numeradas del catálogo de prestaciones (catalogo_drones.json) y de las zonas de lanzamiento (zonas_lanzamiento.json). Prioridad baja: estimación débil; ninguna regla descarta una clase apoyándose solo en ella.",
  "fuentes": {
   "A1": {
@@ -1319,6 +1319,942 @@
    "tipo": "inteligencia",
    "prioridad": "normal",
    "notas": "Repite las especificaciones de uav/365 y lista componentes (cámara, radio módem, sistema de navegación y posicionamiento, módulo Nvidia Jetson TX2)."
+  },
+  "C1": {
+   "titulo": "DJI Mavic 4 Pro - Especificaciones - DJI",
+   "url": "https://www.dji.com/es/mavic-4-pro/specs",
+   "fecha": null,
+   "consultada": "2026-10-03",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Página servida en la edición española de dji.com (redirección geográfica desde /global/). La página no da fecha. Valor único sin modo; el manual v1.2 no lo desglosa."
+  },
+  "C2": {
+   "titulo": "DJI Mini 4 Pro User Manual (EN)",
+   "url": "https://dl.djicdn.com/downloads/DJI_Mini_4_Pro/20240627/DJI_Mini_4_Pro_User_Manual_EN.pdf",
+   "fecha": "2024-06-24",
+   "consultada": "2026-10-03",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Descripción del modo Normal. Fecha = fecha de modificación del PDF."
+  },
+  "C3": {
+   "titulo": "DJI Air 3 User Manual v1.6 (EN)",
+   "url": "https://dl.djicdn.com/downloads/DJI_Air_3/UM/20240627/DJI_Air_3_User_Manual_v1.6_EN.pdf",
+   "fecha": "2024-06-21",
+   "consultada": "2026-10-03",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Descripción del modo Normal. Fecha = fecha de modificación del PDF."
+  },
+  "C4": {
+   "titulo": "DJI Mavic 3 Pro User Manual (EN)",
+   "url": "https://dl.djicdn.com/downloads/DJI_Mavic_3_Pro/20240816/DJI_Mavic_3_Pro_User_Manual_EN.pdf",
+   "fecha": "2026-01-12",
+   "consultada": "2026-10-03",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Descripción del modo Normal. Fecha = fecha de modificación del PDF."
+  },
+  "C5": {
+   "titulo": "DJI Mavic 3 Classic Manual de usuario v1.4 (ES)",
+   "url": "https://dl.djicdn.com/downloads/DJI_Mavic_3_Classic/20240723/DJI_Mavic_3_Classic_User_Manual_v1.4_ES.pdf",
+   "fecha": "2026-01-12",
+   "consultada": "2026-10-03",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "La ficha web (dji.com/…/mavic-3-classic/specs) ya no existe: redirige a la página de soporte. Se usa el manual oficial; la versión EN de la misma ruta devuelve 403. Fecha = fecha de modificación del PDF."
+  },
+  "C6": {
+   "titulo": "Specs - DJI Mavic 3 Enterprise - DJI Enterprise",
+   "url": "https://enterprise.dji.com/es/mavic-3-enterprise/specs",
+   "fecha": null,
+   "consultada": "2026-10-03",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Edición española de enterprise.dji.com (redirección geográfica). La ficha cubre DJI Mavic 3E/3T/3TA. Sin fecha."
+  },
+  "C7": {
+   "titulo": "DJI Mavic 3 Enterprise Series User Manual (EN)",
+   "url": "https://dl.djicdn.com/downloads/DJI_Mavic_3_Enterprise/20250916/DJI_Mavic_3_Enterprise_Series_User_Manual_EN.pdf",
+   "fecha": "2025-09-12",
+   "consultada": "2026-10-03",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Confirma el valor de la ficha para el modo Normal. Fecha = modificación del PDF."
+  },
+  "C8": {
+   "titulo": "Especificaciones - Matrice Serie 30 - DJI Enterprise",
+   "url": "https://enterprise.dji.com/es/matrice-30/specs",
+   "fecha": null,
+   "consultada": "2026-10-03",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Edición española de enterprise.dji.com; ficha común a M30 y M30T. Sin fecha. 35° sin modo explícito (presumiblemente S)."
+  },
+  "C9": {
+   "titulo": "Matrice 350 RTK - Especificaciones - DJI",
+   "url": "https://enterprise.dji.com/es/matrice-350-rtk/specs",
+   "fecha": null,
+   "consultada": "2026-10-03",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Edición española de enterprise.dji.com. Sin fecha."
+  },
+  "C10": {
+   "titulo": "EVO II Pro V3",
+   "url": "https://www.autelrobotics.com/productdetail/evo-ii-pro-drones/",
+   "fecha": null,
+   "consultada": "2026-10-03",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Ficha 'Technical Specifications' de la página del EVO II Pro V3 (la URL /productdetail/evo-ii-pro-v3/ da 404). Sin fecha."
+  },
+  "C11": {
+   "titulo": "DJI FPV User Manual v1.2 (EN)",
+   "url": "https://dl.djicdn.com/downloads/DJI_FPV/20210615UM/DJI_FPV_User_Manual_v1.2_EN.pdf",
+   "fecha": "2023-07-21",
+   "consultada": "2026-10-03",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Manual oficial v1.2; la ficha web dji.com/dji-fpv/specs redirige a soporte. Fecha = modificación del PDF. Confirmado: equivale a ~13.9 m/s² medio."
+  },
+  "C12": {
+   "titulo": "DJI FPV - Technische Daten - DJI",
+   "url": "https://web.archive.org/web/20240113215052/https://www.dji.com/de/dji-fpv/specs",
+   "fecha": null,
+   "consultada": "2026-10-03",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Copia de web.archive.org (captura 2024-01-13) de la ficha oficial alemana, ya retirada. Coincide con el manual."
+  },
+  "C13": {
+   "titulo": "DJI Avata User Manual (EN)",
+   "url": "https://dl.djicdn.com/downloads/DJI_Avata/20230329/DJI_Avata_User_Manual_EN.pdf",
+   "fecha": "2024-04-25",
+   "consultada": "2026-10-03",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Manual oficial; la ficha web dji.com/avata/specs redirige a soporte. Fecha = modificación del PDF. Tabla en p. 79."
+  },
+  "C14": {
+   "titulo": "Nazgul ECO DC5 O4 6S HD",
+   "url": "https://shop.iflight.com/Nazgul-DC5-ECO-6S-O4-HD-Pro2263",
+   "fecha": null,
+   "consultada": "2026-10-03",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Tienda oficial de iFlight. Sin fecha. No publica empuje del motor (XING-E Pro 2207 1800KV) en la ficha del aparato."
+  },
+  "C15": {
+   "titulo": "Nazgul Evoque F5 V3 O4 6S HD",
+   "url": "https://shop.iflight.com/Nazgul-Evoque-F5-V3-O4-6S-HD-Pro2397",
+   "fecha": null,
+   "consultada": "2026-10-03",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Tienda oficial de iFlight. Sin fecha."
+  },
+  "C16": {
+   "titulo": "Range of 50-65 km: Russians Modernized Fiber Optic FPV Drone Prince Vandal",
+   "url": "https://militarnyi.com/en/news/range-of-50-65-km-russians-modernized-fiber-optic-fpv-drone-prince-vandal/",
+   "fecha": "2025-12-27",
+   "consultada": "2026-10-03",
+   "tipo": "prensa_tecnica",
+   "prioridad": "normal",
+   "notas": "Militarnyi cita a Oleksiy Chadayev (director general de NPC Ushkuynik) vía el canal de Telegram War Engineering. Discrepa de la ficha de GUR (20 km): versión modernizada con bobinas nuevas. No da velocidad."
+  },
+  "C17": {
+   "titulo": "Shchegol",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/341",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha."
+  },
+  "C18": {
+   "titulo": "Rusak",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/342",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha."
+  },
+  "C19": {
+   "titulo": "Golub",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/343",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha."
+  },
+  "C20": {
+   "titulo": "Veterok-7",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/390",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha."
+  },
+  "C21": {
+   "titulo": "Veterok-10",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/391",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha."
+  },
+  "C22": {
+   "titulo": "KBR-9",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/397",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha. La ficha rotula 'Speed' sin calificar; se toma como velocidad máxima declarada."
+  },
+  "C23": {
+   "titulo": "KBR-10",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/398",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha. La ficha rotula 'Speed' sin calificar; se toma como velocidad máxima declarada."
+  },
+  "C24": {
+   "titulo": "Shturm",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/402",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha. La ficha rotula 'Speed' sin calificar; se toma como velocidad máxima declarada."
+  },
+  "C25": {
+   "titulo": "RTD-K10",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/408",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha. Peso del aparato según la ficha: 'Weight 950 g'."
+  },
+  "C26": {
+   "titulo": "RTD-K8",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/409",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha. Peso del aparato según la ficha: 'Weight 720 g'."
+  },
+  "C27": {
+   "titulo": "RTD-4M",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/410",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha. Peso del aparato según la ficha: 'Weight 2.3 kg'."
+  },
+  "C28": {
+   "titulo": "RTD-D",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/411",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha. Peso del aparato según la ficha: 'Weight 1.53 kg'."
+  },
+  "C29": {
+   "titulo": "RTD-KM",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/412",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha. Peso del aparato según la ficha: 'Weight 1.57 kg'."
+  },
+  "C30": {
+   "titulo": "RTD-KS",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/413",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha. Peso del aparato según la ficha: 'Weight 2.73 kg'."
+  },
+  "C31": {
+   "titulo": "Bumerang-E",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/415",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha."
+  },
+  "C32": {
+   "titulo": "Gortenziya-7",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/419",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha."
+  },
+  "C33": {
+   "titulo": "Gortenziya-10",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/420",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha."
+  },
+  "C34": {
+   "titulo": "PVC-1 (BT-40)",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/421",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha."
+  },
+  "C35": {
+   "titulo": "Ovod",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/422",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha."
+  },
+  "C36": {
+   "titulo": "Skvorec-7",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/429",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha."
+  },
+  "C37": {
+   "titulo": "Skvorec-10",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/430",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha."
+  },
+  "C38": {
+   "titulo": "Skvorec-Z",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/431",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha."
+  },
+  "C39": {
+   "titulo": "Skvorec-PRO",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/432",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha."
+  },
+  "C40": {
+   "titulo": "Vorobey (Era)",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/433",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha."
+  },
+  "C41": {
+   "titulo": "Bumerang",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/435",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha."
+  },
+  "C42": {
+   "titulo": "Brus-1",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/436",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha."
+  },
+  "C43": {
+   "titulo": "Osa",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/437",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha."
+  },
+  "C44": {
+   "titulo": "Kort",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/438",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha."
+  },
+  "C45": {
+   "titulo": "Lun-7",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/439",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha."
+  },
+  "C46": {
+   "titulo": "Lun-10",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/440",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha."
+  },
+  "C47": {
+   "titulo": "Pirania-7",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/445",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha."
+  },
+  "C48": {
+   "titulo": "Pirania-10",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/446",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha."
+  },
+  "C49": {
+   "titulo": "Pirania-13",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/447",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha. Texto adicional en la fuente: '(15)'."
+  },
+  "C50": {
+   "titulo": "Veter-8",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/454",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha. Peso del aparato según la ficha: 'Weight 635 g (without battery)'."
+  },
+  "C51": {
+   "titulo": "Veter-10",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/455",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha. Peso del aparato según la ficha: 'Weight 840 g (without battery)'."
+  },
+  "C52": {
+   "titulo": "Veter-13",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/456",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha. Peso del aparato según la ficha: 'Weight 2 105 g (without battery)'."
+  },
+  "C53": {
+   "titulo": "Soroka",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/465",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha."
+  },
+  "C54": {
+   "titulo": "Tribunal",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/466",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha."
+  },
+  "C55": {
+   "titulo": "Knyaz Vandal Novgorodsky",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/486",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha."
+  },
+  "C56": {
+   "titulo": "Plamya-9",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/488",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha."
+  },
+  "C57": {
+   "titulo": "Plamya-13",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/489",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha."
+  },
+  "C58": {
+   "titulo": "Ultimatum-10",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/496",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha. La ficha rotula 'Speed' sin calificar; se toma como velocidad máxima declarada."
+  },
+  "C59": {
+   "titulo": "Joker-10",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/497",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha. Texto adicional en la fuente: ', with load - 100 km/h'."
+  },
+  "C60": {
+   "titulo": "Hotoy-10",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/499",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha."
+  },
+  "C61": {
+   "titulo": "Mikrob 10c",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/500",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha."
+  },
+  "C62": {
+   "titulo": "Mikrob 13c",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/501",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha."
+  },
+  "C63": {
+   "titulo": "Gorgona 15",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/505",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha."
+  },
+  "C64": {
+   "titulo": "Argo 13",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/506",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha."
+  },
+  "C65": {
+   "titulo": "Ikar 10",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/507",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha."
+  },
+  "C66": {
+   "titulo": "Satir 7",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/508",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha."
+  },
+  "C67": {
+   "titulo": "Hermes 10",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/509",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha."
+  },
+  "C68": {
+   "titulo": "Skif",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/512",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha. Distancia de enlace."
+  },
+  "C69": {
+   "titulo": "Veles",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/517",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha. La ficha rotula 'Speed' sin calificar; se toma como velocidad máxima declarada."
+  },
+  "C70": {
+   "titulo": "Ploschad-K",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/526",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha."
+  },
+  "C71": {
+   "titulo": "Krechet-7",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/540",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha. La ficha rotula 'Speed' sin calificar; se toma como velocidad máxima declarada."
+  },
+  "C72": {
+   "titulo": "Krechet-9",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/541",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha. La ficha rotula 'Speed' sin calificar; se toma como velocidad máxima declarada."
+  },
+  "C73": {
+   "titulo": "Krechet-10",
+   "url": "https://war-sanctions.gur.gov.ua/en/uav/542",
+   "fecha": "2026-05-04",
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Base War&Sanctions de la Inteligencia de Defensa de Ucrania (GUR), apartado 'Declared characteristics' (características declaradas por el fabricante ruso). Fecha = 'Updated' de la sección UAV, no de la ficha. La ficha rotula 'Speed' sin calificar; se toma como velocidad máxima declarada."
+  },
+  "C74": {
+   "titulo": "Russian MoD confirms the use of Orlan-10 drones in Ukraine",
+   "url": "https://web.archive.org/web/20221204050210/https://www.airrecognition.com/index.php/news/defense-aviation-news/2022-news-aviation-aerospace/march/8314-russian-mod-confirms-the-use-of-orlan-10-drones-in-ukraine.html",
+   "fecha": null,
+   "consultada": "2026-10-03",
+   "tipo": "prensa_tecnica",
+   "prioridad": "normal",
+   "notas": "Air Recognition (Army Recognition). La URL original airrecognition.com hoy sirve un sitio ajeno (dominio secuestrado); se leyó la copia de web.archive.org del 2022-12-04. El artículo es de marzo de 2022 (cita a TASS del 31-03-2022), sin fecha exacta de publicación en la página. Consultado 2026-10-03. Unidad escrita en la fuente: «hours»."
+  },
+  "C75": {
+   "titulo": "Орлан-10 — Википедия",
+   "url": "https://ru.wikipedia.org/wiki/%D0%9E%D1%80%D0%BB%D0%B0%D0%BD-10",
+   "fecha": null,
+   "consultada": "2026-10-03",
+   "tipo": "estimacion_osint",
+   "prioridad": "normal",
+   "notas": "Enciclopedia colaborativa; la tabla remite (nota 51) a bastion-opk.ru/orlan-10, archivado en web.archive.org el 2014-05-31, que no se pudo abrir (la copia devuelve la página de error del archivo). Fabricante STC sin ficha accesible. Consultado 2026-10-03. Es viento máximo en el lanzamiento, no en vuelo. Unidad escrita en la fuente: «м/с»."
+  },
+  "C76": {
+   "titulo": "Supercam S350",
+   "url": "https://supercam.aero/catalog/supercam-s350",
+   "fecha": null,
+   "consultada": "2026-10-03",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Ficha del fabricante (Supercam / ГК «Беспилотные системы»), apartado «Характеристики» y «Условия эксплуатации»; sin fecha en la página. Consultado 2026-10-03. Condición de explotación del sistema. Unidad escrita en la fuente: «м/c»."
+  },
+  "C77": {
+   "titulo": "Supercam S-350",
+   "url": "https://mchs.gov.ru/ministerstvo/o-ministerstve/tehnika/aviacionnaya-tehnika/supercam-s-350",
+   "fecha": null,
+   "consultada": "2026-10-03",
+   "tipo": "analisis_tecnico",
+   "prioridad": "normal",
+   "notas": "Ficha del operador estatal ruso (MChS de Rusia), «Летно-технические характеристики»; sin fecha. Discrepa del fabricante en autonomía (4 h frente a 4,5 h) y altura (3600 m frente a 5000 m). Consultado 2026-10-03. Unidad escrita en la fuente: «ч»."
+  },
+  "C78": {
+   "titulo": "ZALA 421-16E | ZALA AERO Группа компаний",
+   "url": "http://web.archive.org/web/20130926232250/http://zala.aero:80/zala-421-16e-2/",
+   "fecha": null,
+   "consultada": "2026-10-03",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Ficha antigua del fabricante (zala.aero), leída en web.archive.org (captura 2013-09-26); la página no da fecha. Los valores con * son del 421-16E2. Consultado 2026-10-03. Unidad escrita en la fuente: «ч»."
+  },
+  "C79": {
+   "titulo": "ZALA T-16-2 tactical unmanned aerial vehicle",
+   "url": "https://zala-aero.com/en/product/zala-421-16e2-takticheskoe-bespilotnoe-vozdushnoe-sudno/",
+   "fecha": "2025-04-22",
+   "consultada": "2026-10-03",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Ficha del fabricante de la variante ZALA 421-16E2 (comercializada como T-16-2), misma familia que el 421-16E; modificación 2025-04-22 (metadatos). Única cifra de viento del fabricante encontrada para la familia 16E. La versión rusa (zala-aero.com/product/...) dice 'Допустимая скорость ветра | 15 м/с', igual que la del 421-16E5G HD. Consultado 2026-10-03."
+  },
+  "C80": {
+   "titulo": "Беспилотное воздушное судно ZALA ЛАНЦЕТ — 3",
+   "url": "http://web.archive.org/web/20190822003722/https://zala.aero/zala-lancet/",
+   "fecha": null,
+   "consultada": "2026-10-03",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Ficha antigua del fabricante (zala.aero) del ZALA Lancet-3 presentado en Army-2019, leída en web.archive.org (captura 2019-08-22). Lancet-3 es la versión grande asociada a Izdeliye-51. Consultado 2026-10-03. Unidad escrita en la fuente: «км/ч»."
+  },
+  "C81": {
+   "titulo": "«Калашников» представил самовзрывающийся беспилотник",
+   "url": "https://snob.ru/news/172572/",
+   "fecha": "2019-02-17",
+   "consultada": "2026-10-03",
+   "tipo": "prensa_tecnica",
+   "prioridad": "normal",
+   "notas": "Prensa que reproduce la declaración del director general de Rostec (matriz del fabricante) en la presentación de 2019; publicada 2019-02-17. Consultado 2026-10-03. Unidad escrita en la fuente: «минут»."
+  },
+  "C82": {
+   "titulo": "Molniya: The wooden FPV drone that's made in Russia and copied in Ukraine",
+   "url": "https://www.forcesnews.com/ukraine/molniya-wooden-fpv-drone-thats-made-russia-and-copied-ukraine",
+   "fecha": "2024-10-29",
+   "consultada": "2026-10-03",
+   "tipo": "prensa_tecnica",
+   "prioridad": "normal",
+   "notas": "Forces News (prensa militar británica); publicado 2024-10-29. Habla de 'Molniya' sin número; por fecha y descripción corresponde a la primera versión (Molniya-1). Consultado 2026-10-03. Unidad escrita en la fuente: «minutes»."
+  },
+  "C83": {
+   "titulo": "\"Molniya\" delivered an FPV drone 70 km: military revealed the range of the carrier's use",
+   "url": "https://www1.ru/en/news/2026/09/23/437806-molniia-dostavila-fpv-dron-na-70-km-voennye-raskryli-dalnost-primeneniia-nositelia.html",
+   "fecha": "2026-09-23",
+   "consultada": "2026-10-03",
+   "tipo": "prensa_tecnica",
+   "prioridad": "normal",
+   "notas": "Medio ruso (www1.ru) citando a RIA Novosti y a un mando ruso; 'Molniya' modernizada como portadora de FPV, versión no precisada. Alcance observado, no declarado (declarado 30 km). Consultado 2026-10-03. Unidad escrita en la fuente: «kilometers»."
+  },
+  "C84": {
+   "titulo": "Geran-2 UAV",
+   "url": "https://www.globalsecurity.org/intell/world/russia/geran-2.htm",
+   "fecha": null,
+   "consultada": "2026-10-03",
+   "tipo": "estimacion_osint",
+   "prioridad": "normal",
+   "notas": "GlobalSecurity.org, compilación OSINT sin fuente primaria citada en la tabla; sin fecha. Consultado 2026-10-03."
+  },
+  "C85": {
+   "titulo": "Russia to Make Jet-Powered Shahed Drone With New Warhead",
+   "url": "https://kyivpost.com/post/47445",
+   "fecha": "2025-02-20",
+   "consultada": "2026-10-03",
+   "tipo": "prensa_tecnica",
+   "prioridad": "normal",
+   "notas": "Kyiv Post, 2025-02-20, citando a la inteligencia militar ucraniana (HUR) sobre las modificaciones de 2025 del Geran-2, que incluyen 'an 8-channel CRP satellite navigation antenna with interference protection' (antena tipo Kometa). No da cifras de vuelo de esta variante. Consultado 2026-10-03. Unidad escrita en la fuente: «kilograms»."
+  },
+  "C86": {
+   "titulo": "Ukrainian Intelligence Releases Detailed Analysis of Russian Geran-3 Jet-Powered UAV (Series U)",
+   "url": "https://militarnyi.com/en/news/ukrainian-intelligence-releases-detailed-analysis-of-russian-geran-3-jet-powered-uav-series-u",
+   "fecha": "2025-09-16",
+   "consultada": "2026-10-03",
+   "tipo": "prensa_tecnica",
+   "prioridad": "normal",
+   "notas": "Militarnyi, 2025-09-16, resumen del análisis de la inteligencia militar ucraniana (la ficha War&Sanctions page-geran-3 existe pero no publica tabla técnica). Consultado 2026-10-03. Rango de velocidad de vuelo."
+  },
+  "C87": {
+   "titulo": "Russia Halts Production of Geran-3 Jet-Powered Drones — DIU",
+   "url": "https://militarnyi.com/en/news/russia-halts-production-of-geran-3/",
+   "fecha": "2026-08-11",
+   "consultada": "2026-10-03",
+   "tipo": "prensa_tecnica",
+   "prioridad": "normal",
+   "notas": "Militarnyi, 2026-08-11, con datos de la inteligencia militar ucraniana; informa del fin de su producción y paso a Geran-4. Consultado 2026-10-03."
+  },
+  "C88": {
+   "titulo": "Geran-4 UAV",
+   "url": "https://war-sanctions.gur.gov.ua/en/page-geran-4",
+   "fecha": null,
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Ficha War&Sanctions (inteligencia militar ucraniana), bloque 'Specifications'; la ficha no muestra fecha de actualización. Consultado 2026-10-03."
+  },
+  "C89": {
+   "titulo": "Geran-5 UAV",
+   "url": "https://war-sanctions.gur.gov.ua/en/page-geran-5",
+   "fecha": null,
+   "consultada": "2026-10-03",
+   "tipo": "inteligencia",
+   "prioridad": "normal",
+   "notas": "Ficha War&Sanctions (inteligencia militar ucraniana), bloque 'Specifications'; la ficha no muestra fecha de actualización. Consultado 2026-10-03."
+  },
+  "C90": {
+   "titulo": "New Russian Geran-5 attack drone can fly up to 950 km",
+   "url": "https://www.pravda.com.ua/eng/news/2026/01/19/8016827",
+   "fecha": "2026-01-19",
+   "consultada": "2026-10-03",
+   "tipo": "prensa_tecnica",
+   "prioridad": "normal",
+   "notas": "Ukrainska Pravda, 2026-01-19, resumiendo el análisis de la inteligencia militar ucraniana; '3 km' expresado como 3000 m en el valor máximo pero unidad mixta en la cita (m y km). Consultado 2026-10-03."
+  },
+  "C91": {
+   "titulo": "Ukrainian Drone Tech Outsmarts Russia’s Shahed UAV Decoys",
+   "url": "https://www.kyivpost.com/post/55848",
+   "fecha": "2025-07-07",
+   "consultada": "2026-10-03",
+   "tipo": "prensa_tecnica",
+   "prioridad": "normal",
+   "notas": "Kyiv Post, 2025-07-07, 'according to open sources'; DISCREPA de los 600 km de la ficha GUR. Consultado 2026-10-03. Unidad escrita en la fuente: «kilometers»."
+  },
+  "C92": {
+   "titulo": "Дрон Лютий: український далекобійний ударний БПЛА - visnyk-nanu.org.ua",
+   "url": "https://visnyk-nanu.org.ua/dron-lyutyj-ukrayinskyj-dalekobijnyj-udarnyj-bpla/",
+   "fecha": "2026-08-21",
+   "consultada": "2026-10-03",
+   "tipo": "estimacion_osint",
+   "prioridad": "normal",
+   "notas": "Publicado 2026-08-21; la propia página dice 'Дані узагальнені з відкритих джерел, включно з матеріалами Wikipedia та профільних військових видань' (datos agregados de fuentes abiertas). El fabricante (Antonov / Ukroboronprom) no publica ficha. Consultado 2026-10-03. Unidad escrita en la fuente: «км»."
+  },
+  "C93": {
+   "titulo": "БпЛА Лютий — характеристики дрона, що вдарив по Туапсе",
+   "url": "https://vikna.tv/dlia-tebe/vijna-v-ukrayini/bpla-lyutyj-harakterystyky-drona/",
+   "fecha": "2025-05-19",
+   "consultada": "2026-10-03",
+   "tipo": "estimacion_osint",
+   "prioridad": "normal",
+   "notas": "Vikna, publicado 2024-09-10 y actualizado 2025-05-19; 'приблизні ТТХ' a partir de restos recogidos en Rusia. Consultado 2026-10-03. Unidad escrita en la fuente: «км»."
+  },
+  "C94": {
+   "titulo": "UJ-22 Airborne",
+   "url": "https://www.globalsecurity.org/military/world/ukraine/uj-22-specs.htm",
+   "fecha": null,
+   "consultada": "2026-10-03",
+   "tipo": "estimacion_osint",
+   "prioridad": "normal",
+   "notas": "GlobalSecurity.org, tabla 'UJ-22 Airborne - Specifications' (parece reproducir la ficha de Ukrjet; dos cifras por casilla, probablemente versión estándar / alcance extendido); sin fecha. El sitio de Ukrjet no respondió. Consultado 2026-10-03. Unidad escrita en la fuente: «km/hour»."
+  },
+  "C95": {
+   "titulo": "Defense Minister: Bulgaria Awaits Ukraine Answer on Drone That Fell Near Kardam - Novinite.com - Sofia News Agency",
+   "url": "https://www.novinite.com/view_news.php?id=240044",
+   "fecha": "2026-08-10",
+   "consultada": "2026-10-03",
+   "tipo": "prensa_tecnica",
+   "prioridad": "normal",
+   "notas": "Novinite, 2026-08-10, declaraciones del ministro de Defensa búlgaro sobre la evaluación preliminar del aparato caído; no es ficha técnica. Consultado 2026-10-03. '2 por 2 m' (envergadura y longitud aproximadas). Unidad escrita en la fuente: «meters»."
+  },
+  "C96": {
+   "titulo": "RR EasyStar 3 | HITEC EUROPE / MULTIPLEX",
+   "url": "https://shop.multiplex-rc.de/en/rr-easystar-3-p4199/",
+   "fecha": null,
+   "consultada": "2026-10-03",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Tienda oficial del fabricante (Multiplex / Hitec Europe), 'Technical data'; sin fecha. La URL multiplex-rc.de/en/product/kit-easystar-3/ da 404. Consultado 2026-10-03."
+  },
+  "C97": {
+   "titulo": "MPX Prospekt Modelle 2025 V01 EN WEB (catálogo de modelos Multiplex 2025)",
+   "url": "https://www.multiplex-rc.de/userdata/files/MPX-Prospekt-Modelle-2025-V01-EN-WEB.pdf",
+   "fecha": null,
+   "consultada": "2026-10-03",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Catálogo PDF del fabricante 2025, ficha 'EASYSTAR 3 - Flying can be this easy!'; cifras en fila sin rótulo (orden: autonomía, envergadura, longitud, peso, batería). Discrepa levemente de la tienda (1366 mm, 700 g). Consultado 2026-10-03."
+  },
+  "C98": {
+   "titulo": "Apprentice STS — manual de instrucciones (EFL3700, E-flite / Horizon Hobby)",
+   "url": "https://www.horizonhobby.com/on/demandware.static/-/Sites-horizon-master/default/Manuals/EFL3700-Manual-EN.pdf",
+   "fecha": null,
+   "consultada": "2026-10-03",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Manual oficial del fabricante (PDF); sin fecha. La página de producto de Horizon Hobby no muestra la tabla de especificaciones sin JavaScript (producto marcado como 'Discontinued'). Consultado 2026-10-03."
+  },
+  "C99": {
+   "titulo": "Sport Cub S 2 615mm — manual de instrucciones (HBZ44000, HobbyZone / Horizon Hobby)",
+   "url": "https://www.horizonhobby.com/on/demandware.static/-/Sites-horizon-master/default/Manuals/HBZ44000-Manual-EN.pdf",
+   "fecha": null,
+   "consultada": "2026-10-03",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Manual oficial del fabricante (PDF); sin fecha. Consultado 2026-10-03."
+  },
+  "C100": {
+   "titulo": "T1 Ranger - KIT – HEEWING",
+   "url": "https://www.heewing.com/products/t1-ranger-kit",
+   "fecha": null,
+   "consultada": "2026-10-03",
+   "tipo": "fabricante",
+   "prioridad": "normal",
+   "notas": "Ficha del fabricante (HEEWING), apartado 'Specification'; sin fecha. Consultado 2026-10-03."
+  },
+  "C101": {
+   "titulo": "Review Hee Wing T1 Ranger - Printable Version",
+   "url": "https://intofpv.com/printthread.php?tid=20182",
+   "fecha": null,
+   "consultada": "2026-10-03",
+   "tipo": "prensa_tecnica",
+   "prioridad": "normal",
+   "notas": "Medición de un usuario en el foro IntoFPV (INAV, con GPS) con motores cambiados (1507 2800Kv T-Motor, 4S); no es la configuración de serie. El mensaje se cita en una respuesta fechada 11 Jul 2022; fecha exacta del original no visible. No es prensa: es un foro técnico. Consultado 2026-10-03."
+  },
+  "C102": {
+   "titulo": "Commission Implementing Regulation (EU) 2019/947 of 24 May 2019 on the rules and procedures for the operation of unmanned aircraft (Text with EEA relevance) — Article 4",
+   "url": "https://www.legislation.gov.uk/eur/2019/947/article/4",
+   "fecha": null,
+   "consultada": "2026-10-03",
+   "tipo": "normativa",
+   "prioridad": "normal",
+   "notas": "Texto normativo oficial: Reglamento de Ejecución (UE) 2019/947, art. 4.1.e (categoría abierta). EUR-Lex devolvió respuesta vacía (HTTP 202) en todas las URL; se leyó la copia de legislation.gov.uk (versión retenida en el Reino Unido, mismo texto del artículo). Límite legal superior, no altura medida. Consultado 2026-10-03. Unidad escrita en la fuente: «metres». Límite legal de altura de la categoría, no del modelo."
+  },
+  "C103": {
+   "titulo": "Open Category — Low Risk — Civil Drones | EASA",
+   "url": "https://www.easa.europa.eu/en/domains/drones-air-mobility/operating-drone/open-category-low-risk-civil-drones",
+   "fecha": null,
+   "consultada": "2026-10-03",
+   "tipo": "normativa",
+   "prioridad": "normal",
+   "notas": "Página oficial de EASA sobre la categoría abierta (restricción operativa de las subcategorías A1/A2/A3); sin fecha de página clara. Límite legal, no altura medida. Consultado 2026-10-03. Límite legal de altura de la categoría, no del modelo."
+  },
+  "C104": {
+   "titulo": "Where you can fly (points 3 to 9) | UK Civil Aviation Authority",
+   "url": "https://www.caa.co.uk/drones/open-category/drone-code/where-you-can-fly-points-3-to-9/",
+   "fecha": null,
+   "consultada": "2026-10-03",
+   "tipo": "normativa",
+   "prioridad": "normal",
+   "notas": "The Drone and Model Aircraft Code (CAA del Reino Unido), punto 3; aplica a 'drones, model aeroplanes, model gliders, model helicopters'. Sin fecha visible. Límite legal, no altura medida. Consultado 2026-10-03. Límite legal de altura de la categoría, no del modelo."
   }
  }
 }

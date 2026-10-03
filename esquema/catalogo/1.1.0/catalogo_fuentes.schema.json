@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:eodi:catalogo:1.1.0:catalogo_fuentes",
+  "title": "Fuentes numeradas del catálogo de prestaciones y de las zonas de lanzamiento",
+  "description": "Cada fuente con su enlace, su fecha de publicación (null si la página no la da), el día en que se consultó, su tipo y su prioridad. Prioridad baja: un valor que solo depende de fuentes de prioridad baja es una estimación débil y ninguna regla descarta una clase apoyándose solo en él.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "version_esquema", "descripcion", "fuentes"],
+  "properties": {
+    "version": {"type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+(\\+vivo\\.\\d+)?$"},
+    "version_esquema": {"const": "1.1.0"},
+    "descripcion": {"type": "string", "minLength": 1},
+    "fuentes": {
+      "type": "object",
+      "propertyNames": {"pattern": "^[A-Z]+\\d+$"},
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["titulo", "url", "fecha", "consultada", "tipo", "prioridad"],
+        "properties": {
+          "titulo": {"type": "string", "minLength": 1},
+          "url": {"type": "string", "pattern": "^https?://\\S+$"},
+          "fecha": {"description": "Publicación o última actualización que da la página.", "type": ["string", "null"], "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
+          "consultada": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
+          "tipo": {"enum": ["fabricante", "inteligencia", "analisis_tecnico", "prensa_tecnica", "estimacion_osint", "geografica", "autoridad", "lista_oficial", "normativa", "prensa"]},
+          "prioridad": {"enum": ["normal", "baja"]},
+          "notas": {"type": "string", "minLength": 1}
+        }
+      }
+    }
+  }
+}

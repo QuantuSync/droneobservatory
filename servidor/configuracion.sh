@@ -202,6 +202,24 @@ CERROJO_DEDUCCION="$SECRETOS/deduccion.lock"
 # Última ejecución correcta del motor: la lee estado.json (ultima_deduccion).
 DEDUCCION_REGISTRO="$SECRETOS/deduccion.json"
 
+# --- Catálogo vivo (servidor/catalogo.sh, recogida/catalogo_vivo.py) ------------------------
+# Lo que encuentra el barrido periódico del catálogo de prestaciones (novedades, catálogo vivo,
+# historial, tácticas, apariciones, control y gasto), fuera del repositorio y de la base: la
+# recogida horaria lo guarda en la base.
+CATALOGO_DATOS="${EODI_CATALOGO_DATOS:-$CASA/datos/catalogo}"
+UNIDAD_CATALOGO="eodi-catalogo"
+# Una vez al día a las 05:23 UTC: tras el reinicio de seguridad (04:45) y lejos de la recogida
+# (17), del tráfico aéreo (40), del lector de canales (50) y del motor de deducción (05). Lee
+# War&Sanctions y los datos propios cada día y el resto de fuentes una vez a la semana.
+CALENDARIO_CATALOGO="*-*-* 05:23:00 UTC"
+# Unos minutos al día con las pausas por sitio; la primera pasada lee más. El tope es la red.
+TOPE_CATALOGO_MINUTOS=60
+CATALOGO_NICE=15
+CERROJO_CATALOGO="$SECRETOS/catalogo.lock"
+
+# --- Barrido dirigido (servidor/dirigido.sh, recogida/barrido_dirigido.py) --------------------
+DIRIGIDO_INFORME="$CASA/dirigido-informe.json"
+
 # --- Endurecimiento ------------------------------------------------------------------
 # Reinicio tras una actualización de seguridad que lo pida: de madrugada y a los 28
 # minutos del lanzamiento de las 04:17, cuando hasta la recogida más lenta ha terminado.

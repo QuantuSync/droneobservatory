@@ -46,6 +46,7 @@ from proceso.ataques import SENTIDO_UA_RU
 from proceso.extraccion import Parada
 from recogida import (
     busqueda_dirigida,
+    catalogo_vivo,
     deduccion,
     detalle,
     extractor,
@@ -314,6 +315,9 @@ def principal(argumentos: list[str] | None = None) -> int:
         # Lo que dejó calculado el motor de deducción (su propio temporizador): no cambia el
         # código de salida si falla.
         deduccion.paso_horario(almacen)
+        # Lo que dejó el barrido del catálogo vivo (su propio temporizador): tampoco cambia el
+        # código de salida si falla.
+        catalogo_vivo.paso_horario(almacen)
         # Presencia del dron que confirman las declaraciones oficiales ya guardadas: la regla
         # se amplió y lo anterior se revisa en cada pasada; ya aplicada, no cambia nada.
         confirmadas, sin_guardar = presencia.revisar(almacen, ahora, modelos(almacen))
