@@ -17,6 +17,8 @@ import {
   resumirUcrania,
 } from "../src/datos/derivar.ts";
 import type { ContornosRegiones } from "../src/datos/derivar.ts";
+import { casarZonas, puntoMasCercano } from "../src/datos/guerraSatelite.ts";
+import type { ZonaConfig } from "../src/datos/guerraSatelite.ts";
 import type { PublicacionSinUbicacion } from "../src/datos/tipos.ts";
 import {
   validarColeccion,
@@ -28,6 +30,7 @@ import { RUTA_SECURITY_TXT, securityTxt } from "../src/seguridad/securityTxt.ts"
 
 const WEB = join(dirname(fileURLToPath(import.meta.url)), "..");
 const PUBLICACION = join(WEB, "..", "publicacion");
+const CONFIGURACION = join(WEB, "..", "configuracion");
 const PUBLICO = join(WEB, "public");
 const DATOS = join(PUBLICO, "datos");
 const GENERADO = join(WEB, "src", "generado");
@@ -96,7 +99,36 @@ async function principal(): Promise<void> {
   const contornos = (await leerJson(
     join(PUBLICO, "mapa", "ucrania-regiones.geojson"),
   )) as ContornosRegiones;
-  const resumenUcrania = resumirUcrania(ucrania, centrosDeRegiones(contornos));
+  const centrosUcrania = centrosDeRegiones(contornos);
+  // Corredores de ataque: las zonas de lanzamiento del catálogo y, para los ataques contra
+  // Rusia (el parte no da el origen), el punto de la frontera de Ucrania más cercano.
+  const contornosRusia = (await leerJson(
+    join(PUBLICO, "mapa", "rusia-regiones.geojson"),
+  )) as ContornosRegiones;
+  const centrosRusia = centrosDeRegiones(contornosRusia);
+  // El contorno exterior de Ucrania es una línea (o varias).
+  const contornoUcrania = (await leerJson(join(PUBLICO, "mapa", "ucrania-contorno.geojson"))) as {
+    features: {
+      geometry:
+        | { type: "LineString"; coordinates: [number, number][] }
+        | { type: "MultiLineString"; coordinates: [number, number][][] };
+    }[];
+  };
+  const anillosUcrania = contornoUcrania.features.flatMap(({ geometry }) =>
+    geometry.type === "LineString" ? [geometry.coordinates] : geometry.coordinates,
+  );
+  const zonasConfig = (await leerJson(join(CONFIGURACION, "zonas_lanzamiento.json"))) as {
+    zonas: ZonaConfig[];
+  };
+  const { zonas, casar } = casarZonas(zonasConfig.zonas);
+  const resumenUcrania = resumirUcrania(ucrania, centrosUcrania, {
+    zonas,
+    casar,
+    centros: new Map([...centrosUcrania, ...centrosRusia]),
+    fronteraUcrania: new Map(
+      [...centrosRusia].map(([codigo, centro]) => [codigo, puntoMasCercano(anillosUcrania, centro)]),
+    ),
+  });
   await escribir(join(DATOS, "ucrania-resumen.json"), JSON.stringify(resumenUcrania));
   for (const feature of coleccion.features) {
     const detalle = JSON.stringify(detalleIncidente(feature));

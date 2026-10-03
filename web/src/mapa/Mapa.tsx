@@ -18,6 +18,7 @@ import { celdasEnMapa } from "../datos/gnss.ts";
 import type { CeldaGnss } from "../datos/gnss.ts";
 import { escalones } from "../datos/presion.ts";
 import type { PresionPais } from "../datos/presion.ts";
+import type { CiudadSinLuz, Corredor, FocoVivo } from "../datos/guerraSatelite.ts";
 import type {
   EpisodioResumen,
   FilaImpacto,
@@ -27,9 +28,11 @@ import type {
 import { pais as nombrePais, porcentaje } from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
 import { ESCALA_UCRANIA, acento } from "../paleta.ts";
+import { opacidadDePerdida } from "../datos/guerraSatelite.ts";
 import type { Idioma } from "../sitio.ts";
 import { movimientoReducido } from "./animacion.ts";
 import {
+  CAPAS_DE_CORREDORES,
   CAPAS_DE_DENSIDAD,
   CAPAS_DE_GNSS,
   CAPAS_DE_INCIDENTES,
@@ -38,6 +41,16 @@ import {
   CAPAS_PULSABLES,
   CAPA_DIRECTO,
   CAPA_GNSS,
+  CAPAS_DE_FOCOS_VIVOS,
+  CAPAS_DE_LUZ,
+  CAPA_CORREDORES,
+  CAPA_FOCOS_VIVOS_IMPACTO,
+  CAPA_LUZ_CIUDADES,
+  CAPA_LUZ_REGIONES,
+  CAPA_LUZ_REGIONES_RUSIA,
+  FUENTE_CORREDORES,
+  FUENTE_FOCOS_VIVOS,
+  FUENTE_LUZ_CIUDADES,
   CAPA_GRUPOS,
   CAPA_INCIDENTES_DISCRETOS,
   CAPA_INCIDENTES_GRAVES,
@@ -63,7 +76,16 @@ import {
   capasBase,
   estilo,
 } from "./estilo.ts";
-import { areas, focosDeRegiones, impactosEnMapa, lineasDeEpisodio, pilas } from "./geometria.ts";
+import {
+  areas,
+  ciudadesSinLuzEnMapa,
+  corredoresEnMapa,
+  focosDeRegiones,
+  focosVivosEnMapa,
+  impactosEnMapa,
+  lineasDeEpisodio,
+  pilas,
+} from "./geometria.ts";
 import { registrarIconos } from "./iconos.ts";
 import { colocarLetrero, hayRaton } from "./letrero.ts";
 import { colocarPulsos, pulsosDe } from "./pulsos.ts";
@@ -160,6 +182,14 @@ export interface PropsMapa {
   presion: ReadonlyMap<string, PresionPais> | null;
   /** Avisos de la detección en directo. */
   avisos: readonly Aviso[];
+  /** Corredores de ataque del periodo; null sin la capa. */
+  corredores: readonly Corredor[] | null;
+  /** Mayor pérdida de luz (en %) de cada región en el periodo; null sin la capa. */
+  luzRegiones: ReadonlyMap<string, number> | null;
+  /** Ciudades que perdieron luz en el periodo; null sin la capa. */
+  ciudadesSinLuz: readonly CiudadSinLuz[] | null;
+  /** Focos de calor de las últimas 24 horas; null si no se han cargado. */
+  focosVivos: readonly FocoVivo[] | null;
   elegido: IncidenteResumen | null;
   paisResaltado: string | null;
   regionesElegidas: readonly string[];
@@ -176,6 +206,8 @@ export interface PropsMapa {
   onAviso: (id: string) => void;
   onCelda: (h3: string) => void;
   onPais: (iso: string) => void;
+  onCorredor: (clave: string) => void;
+  onCiudadLuz: (clave: string) => void;
   onListo: (api: ApiMapa) => void;
   onFallo: () => void;
 }
@@ -202,6 +234,14 @@ function opacidadPorRegion(
     );
     pares.push(codigo, ESCALA_UCRANIA[escalon] ?? 0);
   }
+  return ["match", ["get", "iso"], ...pares, 0] as unknown as ExpressionSpecification;
+}
+
+/** Oscurecimiento de las regiones con pérdida de luz: más pérdida, más oscuro. */
+function opacidadDeLuz(perdidas: ReadonlyMap<string, number>): ExpressionSpecification | number {
+  if (perdidas.size === 0) return 0;
+  const pares: (string | number)[] = [];
+  for (const [codigo, perdida] of perdidas) pares.push(codigo, opacidadDePerdida(perdida));
   return ["match", ["get", "iso"], ...pares, 0] as unknown as ExpressionSpecification;
 }
 
@@ -250,6 +290,7 @@ function capasActivas(mapa: MapaGL): string[] {
 export default function Mapa(props: PropsMapa) {
   const { t, idioma, incidentes, episodios, capas, intensidad, noche, elegido } = props;
   const { focosUcrania, impactos, gnss, presion, avisos } = props;
+  const { corredores, luzRegiones, ciudadesSinLuz, focosVivos } = props;
   const { paisResaltado, regionesElegidas, novedades, hoy, encuadre, reserva } = props;
   // El vuelo lee la reserva del momento, pero no se repite porque cambie (al arrastrar una hoja).
   const reservaActual = useRef(reserva);
@@ -388,6 +429,25 @@ export default function Mapa(props: PropsMapa) {
         const cuenta = manejadores.current.presion?.get(iso)?.incidentes ?? 0;
         return textos.presion.letrero(nombrePais(iso, lengua), cuenta);
       }
+      if (rasgo.layer.id === CAPA_CORREDORES) {
+        const corredor = manejadores.current.corredores?.find((c) => c.clave === String(p.clave));
+        if (corredor === undefined) return null;
+        const origen =
+          corredor.origen === null
+            ? textos.satelite.corredor.desdeUcrania
+            : textos.satelite.zona(corredor.clave.split("|")[0] ?? "", corredor.origen);
+        return textos.satelite.letreroCorredor(
+          origen,
+          textos.regiones[corredor.region] ?? corredor.region,
+          new Intl.NumberFormat(lengua).format(corredor.drones),
+        );
+      }
+      if (rasgo.layer.id === CAPA_LUZ_CIUDADES) {
+        return textos.satelite.letreroCiudad(String(p.nombre), String(p.perdida));
+      }
+      if (rasgo.layer.id === CAPA_FOCOS_VIVOS_IMPACTO) {
+        return textos.satelite.letreroFoco(String(p.hora).slice(11, 16), true);
+      }
       const incidente = porId.get(String(p.id));
       if (incidente === undefined) return null;
       return `${textos.tipo[incidente.tipo]} · ${textos.estado[incidente.estado]} · ${
@@ -431,6 +491,12 @@ export default function Mapa(props: PropsMapa) {
         manejadores.current.onCelda(String(propiedades.h3));
       } else if (primero.layer.id === CAPA_PRESION) {
         manejadores.current.onPais(String(propiedades.iso));
+      } else if (primero.layer.id === CAPA_FOCOS_VIVOS_IMPACTO) {
+        manejadores.current.onImpacto(String(propiedades.impacto));
+      } else if (primero.layer.id === CAPA_CORREDORES) {
+        manejadores.current.onCorredor(String(propiedades.clave));
+      } else if (primero.layer.id === CAPA_LUZ_CIUDADES) {
+        manejadores.current.onCiudadLuz(String(propiedades.clave));
       } else if (
         primero.layer.id === CAPA_REGIONES || primero.layer.id === CAPA_REGIONES_RUSIA
       ) {
@@ -544,6 +610,9 @@ export default function Mapa(props: PropsMapa) {
         [CAPAS_DE_DENSIDAD, capas.densidad],
         [CAPAS_DE_PRESION, capas.presion],
         [CAPAS_DE_GNSS, capas.gnss],
+        [CAPAS_DE_CORREDORES, capas.ucrania && capas.corredores],
+        [CAPAS_DE_LUZ, capas.ucrania && capas.luz],
+        [CAPAS_DE_FOCOS_VIVOS, capas.ucrania && capas.focosVivos],
       ];
       for (const [ids, visible] of grupos) {
         for (const id of ids) {
@@ -611,6 +680,36 @@ export default function Mapa(props: PropsMapa) {
     if (!listo || mapa === null) return;
     fuente(mapa, FUENTE_DIRECTO)?.setData(avisosEnMapa(avisos));
   }, [listo, avisos]);
+
+  // Corredores de ataque del periodo.
+  useEffect(() => {
+    const mapa = mapaRef.current;
+    if (!listo || mapa === null) return undefined;
+    return trasPintar(() => {
+      fuente(mapa, FUENTE_CORREDORES)?.setData(corredoresEnMapa(corredores ?? []));
+    });
+  }, [listo, corredores]);
+
+  // Pérdida de luz nocturna: regiones oscurecidas y ciudades.
+  useEffect(() => {
+    const mapa = mapaRef.current;
+    if (!listo || mapa === null) return undefined;
+    return trasPintar(() => {
+      const regiones = luzRegiones ?? new Map<string, number>();
+      const rusas = new Map([...regiones].filter(([c]) => c.startsWith("RU-")));
+      const ucranianas = new Map([...regiones].filter(([c]) => !c.startsWith("RU-")));
+      mapa.setPaintProperty(CAPA_LUZ_REGIONES, "fill-opacity", opacidadDeLuz(ucranianas));
+      mapa.setPaintProperty(CAPA_LUZ_REGIONES_RUSIA, "fill-opacity", opacidadDeLuz(rusas));
+      fuente(mapa, FUENTE_LUZ_CIUDADES)?.setData(ciudadesSinLuzEnMapa(ciudadesSinLuz ?? []));
+    });
+  }, [listo, luzRegiones, ciudadesSinLuz]);
+
+  // Focos de calor de las últimas 24 horas.
+  useEffect(() => {
+    const mapa = mapaRef.current;
+    if (!listo || mapa === null) return;
+    fuente(mapa, FUENTE_FOCOS_VIVOS)?.setData(focosVivosEnMapa(focosVivos ?? []));
+  }, [listo, focosVivos]);
 
   // Focos térmicos de las regiones de Ucrania, en el centro de cada región.
   useEffect(() => {

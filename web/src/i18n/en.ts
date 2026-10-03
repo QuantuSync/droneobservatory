@@ -253,18 +253,21 @@ export const en: Textos = {
       "motion setting, it gets a fixed ring instead. Reported incidents are dimmer.",
     reciente: "A soft glow marks what started in the last 24 hours.",
     novedad: "Nothing pulses on a first visit: there is no earlier visit to compare with yet.",
-    ucrania: "In the Ukraine layer, each region is shaded by the attacks that name it in the period.",
+    ucrania:
+      "In the Ukraine layer, each region is shaded violet by the attacks that name it in the " +
+      "period: the colour of the whole war layer, distinct from the red and orange of incidents.",
     rusia:
-      "Russian regions are grey with a dashed outline: their figures are those of the " +
+      "Russian regions are muted violet with a dashed outline: their figures are those of the " +
       "Russian Ministry of Defence, a claim by a party to the war.",
     impactos:
-      "A small dot is a specific place hit (a town or a facility) according to the regional " +
+      "A small violet dot is a specific place hit (a town or a facility) according to the regional " +
       "administrations, the Ukrainian General Staff or Russian governors. Filled: official " +
       "source; ring only: claim by a party. Zoomed out, they group with their count. Daily " +
       "front-line reports are in the downloadable data.",
     foco:
       "A light dot next to an incident, a place hit or a group of places, or at the centre of a Ukrainian region, marks a " +
-      "thermal hotspot detected by satellite (NASA FIRMS) at its place and time.",
+      "thermal hotspot detected by satellite (NASA FIRMS) at its place and time: white on " +
+      "incidents and light violet in the war layer.",
     directo:
       "A tag with the ICAO code inside and a point towards the airport is an alert from the " +
       "live detection, without pulse. Its border shows the status: orange, possible closure in " +
@@ -883,6 +886,59 @@ export const en: Textos = {
         ],
       },
       {
+        id: "satelite",
+        titulo: "War seen from space",
+        bloques: [
+          {
+            parrafo: [
+              "In the war layer, four pieces come from satellites and from the official " +
+                "reports. Before and after images: for each strike with a detected thermal " +
+                "hotspot and for each strike on an installation, the last cloud-free ",
+              { texto: "Sentinel-2", enlace: "https://registry.opendata.aws/sentinel-2-l2a-cogs/" },
+              " image before the attack and the first one after it, cropped over the site in " +
+                "natural colour with the same brightness adjustment. Cloud is measured over the " +
+                "crop itself with ESA's scene classification: an image with 3% cloud or less " +
+                "over the installation is used even if the whole scene is cloudy. The pair is " +
+                "completed automatically when the first clear image after the attack arrives.",
+            ],
+          },
+          {
+            parrafo: [
+              "Night lights: after each attack on energy targets (a strike on the power grid or " +
+                "an official regional message naming it), the brightness of the affected " +
+                "cities and regions in the VIIRS day-night band (NOAA-20), from the ",
+              { texto: "NOAA open archive", enlace: "https://registry.opendata.aws/noaa-jpss/" },
+              ". Brightness is the city's light above the surrounding background, measured in " +
+                "the same satellite pass (which removes moonlight reflected by the ground); only " +
+                "cloud-free nights count (Open-Meteo cloud cover at the time of the pass) with " +
+                "the satellite close to overhead. The reference is the median of the valid " +
+                "nights of the previous three weeks; there is a loss of light when a night of " +
+                "the following week loses half or more. The threshold was set with documented " +
+                "blackouts from 2024 to 2026 and control nights without attacks.",
+            ],
+          },
+          {
+            parrafo: [
+              "Fire hotspots of the last 24 hours: those of NASA FIRMS over Ukraine and " +
+                "European Russia, with the same filters as the strike cross-check (refinery " +
+                "flares and plants with habitual heat, low confidence and areas that burn every " +
+                "day, such as front-line cities, are left out). Those falling within the radius " +
+                "of a reported strike within 36 hours are highlighted.",
+            ],
+          },
+          {
+            parrafo: [
+              "Attack corridors: arcs from the launch zones named by the Ukrainian Air Force " +
+                "reports (with the point from the deduction engine's zone catalogue) to the " +
+                "regions reached, with the width given by the drones of those attacks in the " +
+                "selected period. For attacks on Russia, whose report gives shoot-downs by " +
+                "region, the arc starts at the point of the Ukrainian border closest to each " +
+                "region and its figure is those shoot-downs.",
+            ],
+          },
+        ],
+      },
+      {
         id: "trafico",
         titulo: "Measured air traffic",
         bloques: [
@@ -1122,6 +1178,19 @@ export const en: Textos = {
                 ],
               },
               {
+                termino: "Satellite images",
+                texto: [
+                  "Contains modified Copernicus Sentinel data (",
+                  {
+                    texto: "Sentinel-2 L2A on AWS",
+                    enlace: "https://registry.opendata.aws/sentinel-2-l2a-cogs/",
+                  },
+                  "). Night lights: NOAA-20 VIIRS, ",
+                  { texto: "NOAA Open Data Dissemination", enlace: "https://registry.opendata.aws/noaa-jpss/" },
+                  ".",
+                ],
+              },
+              {
                 termino: "Thermal hotspots",
                 texto: [
                   "We acknowledge the use of data and/or imagery from NASA's Fire " +
@@ -1191,4 +1260,100 @@ export const en: Textos = {
     "UA-74": "Chernihiv",
     "UA-77": "Chernivtsi",
   },
+  satelite: {
+    capas: "War layer",
+    corredores: "Corridors",
+    focos: "Fires 24 h",
+    luz: "Night lights",
+    letreroCorredor: (origen, region, drones) => `${origen} → ${region} · ${drones} drones`,
+    letreroFoco: (hora, coincide) =>
+      `Fire hotspot · ${hora} UTC${coincide ? " · matches a reported strike" : ""}`,
+    letreroCiudad: (ciudad, perdida) => `${ciudad} · ${perdida}% less night light`,
+    focosUltimo: (hora) => `Fire hotspots, last 24 h · latest data ${hora} UTC`,
+    focosVacio: "Fire hotspots, last 24 h · none in the last 24 hours",
+    corredor: {
+      etiqueta: "Attack corridor · war layer",
+      origen: "Origin",
+      destino: "Destination",
+      desdeUcrania: "Ukraine",
+      desdeUcraniaTexto:
+        "The arc starts at the point of the Ukrainian border closest to the region; the figure " +
+        "is the Russian report's shoot-downs for the region.",
+      drones: "Drones in the period",
+      dronesTexto: {
+        RU_UA:
+          "Drones launched in the attacks of the period that came from this zone (among others, " +
+          "when the report names several) and reached this region, according to the Ukrainian " +
+          "Air Force.",
+        UA_RU: "Drones the Russian Ministry of Defence says it shot down over the region.",
+      },
+      ataques: (n) => (n === 1 ? "1 attack" : `${n} attacks`),
+      periodo: "Period",
+    },
+    luzFicha: {
+      etiqueta: "Night lights · war layer",
+      rotulo: "Night lights",
+      perdida: (pct) => `${pct}% less light`,
+      peorNoche: (fecha) => `on the night of ${fecha}`,
+      noches: (n) => (n === 1 ? "1 night with loss" : `${n} nights with loss`),
+      referencia: (desde, hasta, n) =>
+        `against the median of ${n} cloud-free nights from ${desde} to ${hasta}`,
+      origen: "Measured by satellite",
+      ataque: "Attack",
+      region: "Region",
+      regionEntera: "sum of its measured cities",
+      sinPerdida: "No night-light loss measured in the period.",
+      metodo:
+        "Brightness above background in the VIIRS day-night band (NOAA-20), cloud-free nights. " +
+        "Nights are dated by their evening; the satellite passes at about 01:30 local time.",
+    },
+    imagen: {
+      rotulo: "Satellite image",
+      antes: "Before",
+      despues: "After",
+      deslizador: "Compare the before and after images",
+      escena: (id) => `scene ${id}`,
+      nubes: (pct) => `${pct}% cloud over the crop`,
+      producto: (lado) => `Sentinel-2 L2A, natural colour, 10 m per pixel, ${lado} km crop`,
+      esperando: "The cloud-free after image is added as soon as Sentinel-2 takes it.",
+      cargando: "Loading the images…",
+      alt: (momento, fecha) => `Satellite image ${momento} the attack, ${fecha}`,
+    },
+    zona: (id, nombre) => ZONAS_EN[id] ?? nombre,
+    ayudaCorredores:
+      "A thin violet arc runs from a launch zone to a region reached: thicker means more drones " +
+      "in the period. Towards Russia it starts at the nearest point of the Ukrainian border.",
+    ayudaFocos:
+      "A tiny violet dot is a fire hotspot of the last 24 hours (NASA FIRMS); a larger light violet one " +
+      "matches a reported strike.",
+    ayudaLuz:
+      "A darkened region or city lost night light after an attack on the power grid, measured " +
+      "by satellite: darker means a larger loss.",
+  },
+};
+
+/** Zonas de lanzamiento (configuracion/zonas_lanzamiento.json) en inglés. */
+const ZONAS_EN: Record<string, string> = {
+  primorsko_akhtarsk_aerodromo: "Primorsko-Akhtarsk air base",
+  primorsko_akhtarsk_droneport: "Primorsko-Akhtarsk, drone port by the air base",
+  kursk_khalino: "Kursk (Khalino / Kursk-Vostochny)",
+  oryol_yuzhny: "Oryol (Oryol-Yuzhny airfield)",
+  tsymbulove: "Tsimbulova, Oryol region (large drone port)",
+  bryansk: "Bryansk",
+  millerovo: "Millerovo",
+  hvardiiske: "Hvardiiske, occupied Crimea",
+  cabo_chauda: "Cape Chauda, occupied Crimea (test range)",
+  shatalovo: "Shatalovo",
+  donetsk_ocupado: "Occupied Donetsk",
+  donetsk_aeropuerto: "Donetsk international airport (occupied)",
+  yeysk: "Yeysk (storage and launch preparation site by the air base)",
+  balaklava: "Balaklava, occupied Crimea",
+  kacha: "Kacha, occupied Crimea",
+  seshcha: "Seshcha",
+  dzhankoi: "Dzhankoi, occupied Crimea",
+  belbek: "Belbek, occupied Crimea",
+  engels: "Engels",
+  berdiansk: "Berdiansk (occupied)",
+  prymorsk: "Prymorsk, Zaporizhzhia province (occupied)",
+  navlia: "Navlya, Bryansk region",
 };

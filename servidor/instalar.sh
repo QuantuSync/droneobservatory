@@ -69,6 +69,9 @@ install -d -m 700 -o "$USUARIO" -g "$USUARIO" "$(dirname "$BUSQUEDA_DATOS")" "$B
 # --- Datos del motor de deducción -----------------------------------------------------
 install -d -m 700 -o "$USUARIO" -g "$USUARIO" "$DEDUCCION_DATOS"
 install -d -m 700 -o "$USUARIO" -g "$USUARIO" "$CATALOGO_DATOS"
+# Guerra por satélite: imágenes de Sentinel-2, luz nocturna y focos en vivo.
+install -d -m 700 -o "$USUARIO" -g "$USUARIO" "$SATELITE_DATOS" "$LUCES_DATOS" \
+  "$FOCOS_VIVO_DATOS"
 install -d -m 700 -o "$USUARIO" -g "$USUARIO" "$DIRECTO_DATOS"
 
 # --- Datos del tráfico aéreo y de las condiciones medidas ----------------------------
@@ -400,6 +403,54 @@ ProtectSystem=full
 [Install]
 WantedBy=multi-user.target
 FIN
+# Guerra por satélite (servidor/satelite.sh, luces.sh y focos_vivo.sh): cada uno con su propio
+# cerrojo y prioridad baja; ninguno toca la base ni el clon.
+unidad_satelite() {
+  local unidad="$1" descripcion="$2" script="$3" tope="$4" calendario="$5" cuando="$6"
+  cat > "/etc/systemd/system/$unidad.service" <<FIN
+[Unit]
+Description=$descripcion
+Wants=network-online.target
+After=network-online.target time-sync.target
+
+[Service]
+Type=oneshot
+User=$USUARIO
+Group=$USUARIO
+WorkingDirectory=$CLON
+ExecStart=/usr/bin/env bash $CLON/servidor/$script
+SyslogIdentifier=$unidad
+TimeoutStartSec=${tope}min
+Nice=$SATELITE_NICE
+IOSchedulingClass=idle
+MemoryMax=$SATELITE_MEMORIA_MAXIMA
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=full
+FIN
+  cat > "/etc/systemd/system/$unidad.timer" <<FIN
+[Unit]
+Description=$descripcion, $cuando
+
+[Timer]
+OnCalendar=$calendario
+AccuracySec=1s
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+FIN
+}
+unidad_satelite "$UNIDAD_SATELITE" \
+  "Imágenes de satélite de antes y después de las instalaciones alcanzadas (EODI)" \
+  satelite.sh "$SATELITE_TOPE_UNIDAD" "*-*-* $HORAS_SATELITE:$MINUTO_SATELITE:00 UTC" \
+  "a las $HORAS_SATELITE:$MINUTO_SATELITE"
+unidad_satelite "$UNIDAD_LUCES" "Luz nocturna tras los ataques contra la red eléctrica (EODI)" \
+  luces.sh "$LUCES_TOPE_UNIDAD" "*-*-* *:$MINUTO_LUCES:00 UTC" \
+  "en el minuto $MINUTO_LUCES de cada hora"
+unidad_satelite "$UNIDAD_FOCOS_VIVO" "Focos de calor de las últimas 24 horas (EODI)" \
+  focos_vivo.sh "$FOCOS_VIVO_TOPE_UNIDAD" "*-*-* *:$MINUTO_FOCOS_VIVO:00 UTC" \
+  "en el minuto $MINUTO_FOCOS_VIVO de cada hora"
 systemctl daemon-reload
 
 echo "instalación hecha"

@@ -11,6 +11,8 @@ import type {
   FocoRegion,
   IncidenteResumen,
 } from "../datos/tipos.ts";
+import { anchoDeCorredor, arco, opacidadDePerdida } from "../datos/guerraSatelite.ts";
+import type { CiudadSinLuz, Corredor, FocoVivo } from "../datos/guerraSatelite.ts";
 import { GRAVEDAD } from "../paleta.ts";
 
 const RADIO_TERRESTRE_KM = 6371.0088;
@@ -224,4 +226,74 @@ export function lineasDeEpisodio(
     });
   }
   return { type: "FeatureCollection", features };
+}
+
+export interface PropiedadesCorredor {
+  clave: string;
+  ancho: number;
+  drones: number;
+}
+
+/** Los corredores del periodo como arcos, con el grosor según sus drones. */
+export function corredoresEnMapa(
+  corredores: readonly Corredor[],
+): FeatureCollection<LineString, PropiedadesCorredor> {
+  const maximo = Math.max(0, ...corredores.map((c) => c.drones));
+  return {
+    type: "FeatureCollection",
+    // Los gruesos al final: quedan encima de los finos.
+    features: [...corredores]
+      .sort((a, b) => a.drones - b.drones)
+      .map((c) => ({
+        type: "Feature",
+        geometry: { type: "LineString", coordinates: arco(c.desde, c.hasta) },
+        properties: { clave: c.clave, ancho: anchoDeCorredor(c.drones, maximo), drones: c.drones },
+      })),
+  };
+}
+
+export interface PropiedadesCiudadLuz {
+  clave: string;
+  nombre: string;
+  perdida: number;
+  opacidad: number;
+}
+
+/** Ciudades con pérdida de luz en el periodo. */
+export function ciudadesSinLuzEnMapa(
+  ciudades: readonly CiudadSinLuz[],
+): FeatureCollection<Point, PropiedadesCiudadLuz> {
+  return {
+    type: "FeatureCollection",
+    features: ciudades.map((c) => ({
+      type: "Feature",
+      geometry: { type: "Point", coordinates: [c.lon, c.lat] },
+      properties: {
+        clave: `${c.region}|${c.nombre}`,
+        nombre: c.nombre,
+        perdida: c.perdida,
+        opacidad: opacidadDePerdida(c.perdida),
+      },
+    })),
+  };
+}
+
+export interface PropiedadesFocoVivo {
+  hora: string;
+  /** Impacto con el que coincide; vacío si ninguno (las expresiones del mapa no leen null). */
+  impacto: string;
+}
+
+/** Focos de calor de las últimas 24 horas. */
+export function focosVivosEnMapa(
+  focos: readonly FocoVivo[],
+): FeatureCollection<Point, PropiedadesFocoVivo> {
+  return {
+    type: "FeatureCollection",
+    features: focos.map(([lon, lat, hora, , impacto]) => ({
+      type: "Feature",
+      geometry: { type: "Point", coordinates: [lon, lat] },
+      properties: { hora, impacto: impacto ?? "" },
+    })),
+  };
 }

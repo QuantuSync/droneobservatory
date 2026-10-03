@@ -1,0 +1,21 @@
+{
+ "descripcion": "Recortes reales de Sentinel-2 L2A (Earth Search, archivo abierto de AWS) sobre la refinería de Kirishi: clasificación de escena (SCL, 20 m, 1,5 km de lado) de una escena despejada y otra nublada, y color natural (TCI, 10 m, 600 m de lado) de la despejada. Contains modified Copernicus Sentinel data 2025.",
+ "recorte": {
+  "lat": 59.49,
+  "lon": 32.078
+ },
+ "escenas": [
+  {
+   "nombre": "despejada",
+   "escena": "S2C_36VVL_20251001_0_L2A",
+   "fecha": "2025-10-01T09:14:11.598000+00:00",
+   "nubes_escena": 0.032349
+  },
+  {
+   "nombre": "nublada",
+   "escena": "S2C_36VVL_20251004_0_L2A",
+   "fecha": "2025-10-04T09:24:08.461000+00:00",
+   "nubes_escena": 98.216599
+  }
+ ]
+}

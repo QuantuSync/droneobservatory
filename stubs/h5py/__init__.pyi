@@ -1,0 +1,3 @@
+from typing import Any
+
+def File(nombre: Any, modo: str = ..., **opciones: Any) -> Any: ...

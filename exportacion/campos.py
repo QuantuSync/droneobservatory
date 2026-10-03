@@ -76,6 +76,34 @@ def _foco_termico(ruta: str) -> set[str]:
     }
 
 
+def _perdida_luz(ruta: str) -> set[str]:
+    """Pérdida de luz nocturna medida por satélite (proceso/luces.py): solo se guarda la que llega
+    al umbral. La región o la ciudad, la pérdida de la peor noche, las noches con pérdida, la
+    referencia y el origen medido."""
+    elemento = f"{ruta}[]"
+    return {
+        ruta,
+        f"{elemento}.zona",
+        f"{elemento}.region",
+        f"{elemento}.ciudad",
+        f"{elemento}.ciudad.id",
+        f"{elemento}.ciudad.nombre",
+        f"{elemento}.ciudad.punto",
+        f"{elemento}.ciudad.punto.lat",
+        f"{elemento}.ciudad.punto.lon",
+        f"{elemento}.perdida_pct",
+        f"{elemento}.noche",
+        f"{elemento}.noches",
+        f"{elemento}.referencia",
+        f"{elemento}.referencia.desde",
+        f"{elemento}.referencia.hasta",
+        f"{elemento}.referencia.noches",
+        f"{elemento}.referencia.brillo",
+        f"{elemento}.brillo",
+        f"{elemento}.origen",
+    }
+
+
 def _trafico_aereo(ruta: str) -> set[str]:
     """Tráfico aéreo medido: solo sale con un cierre medido válido
     (proceso.mediciones.solo_publico), con su aeropuerto, horas, duración, desvíos, esperas, si
@@ -197,6 +225,7 @@ CAMPOS_PUBLICOS_ATAQUE: frozenset[str] = frozenset(
         *_rango("regiones[].heridos"),
         *_rango("regiones[].fallecidos"),
         *_foco_termico("regiones[].foco_termico"),
+        *_perdida_luz("perdida_luz"),
         *_fuentes(),
         *_control(),
     }

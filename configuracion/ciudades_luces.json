@@ -1,0 +1,656 @@
+{
+ "version_esquema": "1.0.0",
+ "descripcion": "Ciudades cuyo brillo nocturno se mide (proceso/luces.py), generadas por recogida/ciudades_luces.py desde el nomenclátor de la capa de guerra.",
+ "ciudades": [
+  {
+   "id": "geonames:487928",
+   "nombre": "Старый Оскол",
+   "nombre_latino": "Staryy Oskol",
+   "region": "RU-BEL",
+   "lat": 51.3025,
+   "lon": 37.84613,
+   "radio_km": 7.0,
+   "poblacion": 226977
+  },
+  {
+   "id": "geonames:578072",
+   "nombre": "Белгород",
+   "nombre_latino": "Belgorod",
+   "region": "RU-BEL",
+   "lat": 50.60343,
+   "lon": 36.58091,
+   "radio_km": 10.0,
+   "poblacion": 345289
+  },
+  {
+   "id": "geonames:571476",
+   "nombre": "Брянск",
+   "nombre_latino": "Bryansk",
+   "region": "RU-BRY",
+   "lat": 53.27096,
+   "lon": 34.32143,
+   "radio_km": 10.0,
+   "poblacion": 427236
+  },
+  {
+   "id": "geonames:555312",
+   "nombre": "Іваново",
+   "nombre_latino": "Ivanovo",
+   "region": "RU-IVA",
+   "lat": 56.99988,
+   "lon": 40.97257,
+   "radio_km": 10.0,
+   "poblacion": 406113
+  },
+  {
+   "id": "geonames:491422",
+   "nombre": "Сочи",
+   "nombre_latino": "Sochi",
+   "region": "RU-KDA",
+   "lat": 43.59699,
+   "lon": 39.72477,
+   "radio_km": 10.0,
+   "poblacion": 327608
+  },
+  {
+   "id": "geonames:518255",
+   "nombre": "Новороссийск",
+   "nombre_latino": "Novorossiysk",
+   "region": "RU-KDA",
+   "lat": 44.73188,
+   "lon": 37.76176,
+   "radio_km": 7.0,
+   "poblacion": 241856
+  },
+  {
+   "id": "geonames:542420",
+   "nombre": "Краснодар",
+   "nombre_latino": "Krasnodar",
+   "region": "RU-KDA",
+   "lat": 45.04534,
+   "lon": 38.98178,
+   "radio_km": 10.0,
+   "poblacion": 899541
+  },
+  {
+   "id": "geonames:553915",
+   "nombre": "Калуга",
+   "nombre_latino": "Kaluga",
+   "region": "RU-KLU",
+   "lat": 54.53063,
+   "lon": 36.27,
+   "radio_km": 10.0,
+   "poblacion": 340851
+  },
+  {
+   "id": "geonames:538560",
+   "nombre": "Курск",
+   "nombre_latino": "Kursk",
+   "region": "RU-KRS",
+   "lat": 51.72689,
+   "lon": 36.18457,
+   "radio_km": 10.0,
+   "poblacion": 448733
+  },
+  {
+   "id": "geonames:535121",
+   "nombre": "Липецк",
+   "nombre_latino": "Lipetsk",
+   "region": "RU-LIP",
+   "lat": 52.5876,
+   "lon": 39.55151,
+   "radio_km": 10.0,
+   "poblacion": 509735
+  },
+  {
+   "id": "geonames:463829",
+   "nombre": "Зеленоград",
+   "nombre_latino": "Zelenograd",
+   "region": "RU-MOW",
+   "lat": 55.9825,
+   "lon": 37.18139,
+   "radio_km": 7.0,
+   "poblacion": 215727
+  },
+  {
+   "id": "geonames:524901",
+   "nombre": "Москъва",
+   "nombre_latino": "Moscow",
+   "region": "RU-MOW",
+   "lat": 55.75204,
+   "lon": 37.61781,
+   "radio_km": 15.0,
+   "poblacion": 10381222
+  },
+  {
+   "id": "geonames:515012",
+   "nombre": "Орёл",
+   "nombre_latino": "Orel",
+   "region": "RU-ORL",
+   "lat": 52.96879,
+   "lon": 36.0791,
+   "radio_km": 10.0,
+   "poblacion": 303696
+  },
+  {
+   "id": "geonames:484907",
+   "nombre": "Таганрог",
+   "nombre_latino": "Taganrog",
+   "region": "RU-ROS",
+   "lat": 47.23627,
+   "lon": 38.9053,
+   "radio_km": 7.0,
+   "poblacion": 279056
+  },
+  {
+   "id": "geonames:496015",
+   "nombre": "Шахты",
+   "nombre_latino": "Shakhty",
+   "region": "RU-ROS",
+   "lat": 47.71916,
+   "lon": 40.21603,
+   "radio_km": 7.0,
+   "poblacion": 221312
+  },
+  {
+   "id": "geonames:501175",
+   "nombre": "Ростов на Дон",
+   "nombre_latino": "Rostov-on-Don",
+   "region": "RU-ROS",
+   "lat": 47.21997,
+   "lon": 39.70769,
+   "radio_km": 15.0,
+   "poblacion": 1130305
+  },
+  {
+   "id": "geonames:500096",
+   "nombre": "Рязань",
+   "nombre_latino": "Ryazan'",
+   "region": "RU-RYA",
+   "lat": 54.62696,
+   "lon": 39.70415,
+   "radio_km": 10.0,
+   "poblacion": 538962
+  },
+  {
+   "id": "geonames:491687",
+   "nombre": "Смоленск",
+   "nombre_latino": "Smolensk",
+   "region": "RU-SMO",
+   "lat": 54.77826,
+   "lon": 32.05088,
+   "radio_km": 10.0,
+   "poblacion": 330025
+  },
+  {
+   "id": "geonames:487846",
+   "nombre": "Ставрополь",
+   "nombre_latino": "Stavropol",
+   "region": "RU-STA",
+   "lat": 45.03442,
+   "lon": 41.9642,
+   "radio_km": 10.0,
+   "poblacion": 433931
+  },
+  {
+   "id": "geonames:484646",
+   "nombre": "Тамбов",
+   "nombre_latino": "Tambov",
+   "region": "RU-TAM",
+   "lat": 52.73632,
+   "lon": 41.44102,
+   "radio_km": 7.0,
+   "poblacion": 293661
+  },
+  {
+   "id": "geonames:480562",
+   "nombre": "Тула",
+   "nombre_latino": "Tula",
+   "region": "RU-TUL",
+   "lat": 54.19609,
+   "lon": 37.61822,
+   "radio_km": 10.0,
+   "poblacion": 482873
+  },
+  {
+   "id": "geonames:480060",
+   "nombre": "Тверь",
+   "nombre_latino": "Tver",
+   "region": "RU-TVE",
+   "lat": 56.85836,
+   "lon": 35.90057,
+   "radio_km": 10.0,
+   "poblacion": 420065
+  },
+  {
+   "id": "geonames:473247",
+   "nombre": "Владимир",
+   "nombre_latino": "Vladimir",
+   "region": "RU-VLA",
+   "lat": 56.13854,
+   "lon": 40.39976,
+   "radio_km": 10.0,
+   "poblacion": 357024
+  },
+  {
+   "id": "geonames:472045",
+   "nombre": "Воронеж",
+   "nombre_latino": "Voronezh",
+   "region": "RU-VOR",
+   "lat": 51.66833,
+   "lon": 39.19204,
+   "radio_km": 15.0,
+   "poblacion": 1047549
+  },
+  {
+   "id": "katotth:UA05020030010063857",
+   "nombre": "Вінниця",
+   "nombre_latino": "Vinnytsia",
+   "region": "UA-05",
+   "lat": 49.23202,
+   "lon": 28.46797,
+   "radio_km": 10.0,
+   "poblacion": 373302
+  },
+  {
+   "id": "katotth:UA07080170010083384",
+   "nombre": "Луцьк",
+   "nombre_latino": "Lutsk",
+   "region": "UA-07",
+   "lat": 50.74507,
+   "lon": 25.32008,
+   "radio_km": 7.0,
+   "poblacion": 217502
+  },
+  {
+   "id": "katotth:UA44020010010037242",
+   "nombre": "Алчевськ",
+   "nombre_latino": "Alchevsk",
+   "region": "UA-09",
+   "lat": 48.4702,
+   "lon": 38.80102,
+   "radio_km": 7.0,
+   "poblacion": 112013
+  },
+  {
+   "id": "katotth:UA44060010010012753",
+   "nombre": "Луганськ",
+   "nombre_latino": "Luhansk",
+   "region": "UA-09",
+   "lat": 48.57171,
+   "lon": 39.29732,
+   "radio_km": 10.0,
+   "poblacion": 414509
+  },
+  {
+   "id": "katotth:UA44120110010072887",
+   "nombre": "Сіверськодонецьк",
+   "nombre_latino": "Siverskodonetsk",
+   "region": "UA-09",
+   "lat": 48.94787,
+   "lon": 38.49365,
+   "radio_km": 7.0,
+   "poblacion": 110612
+  },
+  {
+   "id": "katotth:UA12020010010037010",
+   "nombre": "Дніпро",
+   "nombre_latino": "Dnipro",
+   "region": "UA-12",
+   "lat": 48.46802,
+   "lon": 35.04177,
+   "radio_km": 15.0,
+   "poblacion": 1080486
+  },
+  {
+   "id": "katotth:UA12040150010056523",
+   "nombre": "Кам'янське",
+   "nombre_latino": "Kamianske",
+   "region": "UA-12",
+   "lat": 48.51677,
+   "lon": 34.60688,
+   "radio_km": 7.0,
+   "poblacion": 239237
+  },
+  {
+   "id": "katotth:UA12060170010065850",
+   "nombre": "Кривий Ріг",
+   "nombre_latino": "Kryvyi Rih",
+   "region": "UA-12",
+   "lat": 47.91027,
+   "lon": 33.39177,
+   "radio_km": 10.0,
+   "poblacion": 656700
+  },
+  {
+   "id": "katotth:UA12080050010010114",
+   "nombre": "Нікополь",
+   "nombre_latino": "Nikopol",
+   "region": "UA-12",
+   "lat": 47.56921,
+   "lon": 34.39173,
+   "radio_km": 7.0,
+   "poblacion": 119939
+  },
+  {
+   "id": "katotth:UA12120070010055676",
+   "nombre": "Павлоград",
+   "nombre_latino": "Pavlohrad",
+   "region": "UA-12",
+   "lat": 48.53168,
+   "lon": 35.87037,
+   "radio_km": 7.0,
+   "poblacion": 110609
+  },
+  {
+   "id": "katotth:UA14060030010082815",
+   "nombre": "Горлівка",
+   "nombre_latino": "Horlivka",
+   "region": "UA-14",
+   "lat": 48.30587,
+   "lon": 38.00277,
+   "radio_km": 7.0,
+   "poblacion": 289872
+  },
+  {
+   "id": "katotth:UA14080030010048113",
+   "nombre": "Донецьк",
+   "nombre_latino": "Donetsk",
+   "region": "UA-14",
+   "lat": 48.01588,
+   "lon": 37.80134,
+   "radio_km": 10.0,
+   "poblacion": 929063
+  },
+  {
+   "id": "katotth:UA14140050010029262",
+   "nombre": "Маріуполь",
+   "nombre_latino": "Mariupol",
+   "region": "UA-14",
+   "lat": 47.09576,
+   "lon": 37.54996,
+   "radio_km": 10.0,
+   "poblacion": 453623
+  },
+  {
+   "id": "katotth:UA18040190010057814",
+   "nombre": "Житомир",
+   "nombre_latino": "Zhytomyr",
+   "region": "UA-18",
+   "lat": 50.26011,
+   "lon": 28.66963,
+   "radio_km": 7.0,
+   "poblacion": 267610
+  },
+  {
+   "id": "katotth:UA21100230010016545",
+   "nombre": "Ужгород",
+   "nombre_latino": "Uzhhorod",
+   "region": "UA-21",
+   "lat": 48.62237,
+   "lon": 22.30226,
+   "radio_km": 7.0,
+   "poblacion": 114867
+  },
+  {
+   "id": "katotth:UA23020050010019935",
+   "nombre": "Бердянськ",
+   "nombre_latino": "Berdiansk",
+   "region": "UA-23",
+   "lat": 46.75568,
+   "lon": 36.78876,
+   "radio_km": 7.0,
+   "poblacion": 116450
+  },
+  {
+   "id": "katotth:UA23060070010069526",
+   "nombre": "Запоріжжя",
+   "nombre_latino": "Zaporizhzhia",
+   "region": "UA-23",
+   "lat": 47.85079,
+   "lon": 35.11829,
+   "radio_km": 10.0,
+   "poblacion": 706116
+  },
+  {
+   "id": "katotth:UA23080070010092407",
+   "nombre": "Мелітополь",
+   "nombre_latino": "Melitopol",
+   "region": "UA-23",
+   "lat": 46.84673,
+   "lon": 35.38273,
+   "radio_km": 7.0,
+   "poblacion": 156917
+  },
+  {
+   "id": "katotth:UA26040190010045761",
+   "nombre": "Івано-Франківськ",
+   "nombre_latino": "Ivano-Frankivsk",
+   "region": "UA-26",
+   "lat": 48.92248,
+   "lon": 24.71033,
+   "radio_km": 7.0,
+   "poblacion": 230929
+  },
+  {
+   "id": "katotth:UA80000000000093317",
+   "nombre": "Київ",
+   "nombre_latino": "Kyiv",
+   "region": "UA-30",
+   "lat": 50.45003,
+   "lon": 30.52414,
+   "radio_km": 15.0,
+   "poblacion": 2952301
+  },
+  {
+   "id": "katotth:UA32020010010081183",
+   "nombre": "Біла Церква",
+   "nombre_latino": "Bila Tserkva",
+   "region": "UA-32",
+   "lat": 49.79697,
+   "lon": 30.11581,
+   "radio_km": 7.0,
+   "poblacion": 209815
+  },
+  {
+   "id": "katotth:UA35040210010019355",
+   "nombre": "Кропивницький",
+   "nombre_latino": "Kropyvnytskyi",
+   "region": "UA-35",
+   "lat": 48.51058,
+   "lon": 32.26563,
+   "radio_km": 7.0,
+   "poblacion": 234712
+  },
+  {
+   "id": "katotth:UA85000000000065278",
+   "nombre": "Севастополь",
+   "nombre_latino": "Sevastopol",
+   "region": "UA-40",
+   "lat": 44.60544,
+   "lon": 33.52208,
+   "radio_km": 10.0,
+   "poblacion": 458253
+  },
+  {
+   "id": "katotth:UA01080150010090810",
+   "nombre": "Євпаторія",
+   "nombre_latino": "Yevpatoriya",
+   "region": "UA-43",
+   "lat": 45.19076,
+   "lon": 33.3679,
+   "radio_km": 7.0,
+   "poblacion": 108149
+  },
+  {
+   "id": "katotth:UA01100210010057785",
+   "nombre": "Керч",
+   "nombre_latino": "Kerch",
+   "region": "UA-43",
+   "lat": 45.35634,
+   "lon": 36.46706,
+   "radio_km": 7.0,
+   "poblacion": 151103
+  },
+  {
+   "id": "katotth:UA01160330010074014",
+   "nombre": "Сімферополь",
+   "nombre_latino": "Simferopol",
+   "region": "UA-43",
+   "lat": 44.95215,
+   "lon": 34.10249,
+   "radio_km": 10.0,
+   "poblacion": 340540
+  },
+  {
+   "id": "katotth:UA46060250010015970",
+   "nombre": "Львів",
+   "nombre_latino": "Lviv",
+   "region": "UA-46",
+   "lat": 49.84195,
+   "lon": 24.03159,
+   "radio_km": 10.0,
+   "poblacion": 724822
+  },
+  {
+   "id": "katotth:UA48060150010035747",
+   "nombre": "Миколаїв",
+   "nombre_latino": "Mykolaiv",
+   "region": "UA-48",
+   "lat": 46.97586,
+   "lon": 31.99397,
+   "radio_km": 10.0,
+   "poblacion": 480080
+  },
+  {
+   "id": "katotth:UA51100270010076757",
+   "nombre": "Одеса",
+   "nombre_latino": "Odesa",
+   "region": "UA-51",
+   "lat": 46.4843,
+   "lon": 30.73229,
+   "radio_km": 15.0,
+   "poblacion": 1008852
+  },
+  {
+   "id": "katotth:UA53020110010031694",
+   "nombre": "Кременчук",
+   "nombre_latino": "Kremenchuk",
+   "region": "UA-53",
+   "lat": 49.06296,
+   "lon": 33.40352,
+   "radio_km": 7.0,
+   "poblacion": 226400
+  },
+  {
+   "id": "katotth:UA53080370010073240",
+   "nombre": "Полтава",
+   "nombre_latino": "Poltava",
+   "region": "UA-53",
+   "lat": 49.58974,
+   "lon": 34.55079,
+   "radio_km": 7.0,
+   "poblacion": 297600
+  },
+  {
+   "id": "katotth:UA56060470010041018",
+   "nombre": "Рівне",
+   "nombre_latino": "Rivne",
+   "region": "UA-56",
+   "lat": 50.61962,
+   "lon": 26.25132,
+   "radio_km": 7.0,
+   "poblacion": 245323
+  },
+  {
+   "id": "katotth:UA59080270010036634",
+   "nombre": "Суми",
+   "nombre_latino": "Sumy",
+   "region": "UA-59",
+   "lat": 50.91198,
+   "lon": 34.80277,
+   "radio_km": 7.0,
+   "poblacion": 267633
+  },
+  {
+   "id": "katotth:UA61040490010069060",
+   "nombre": "Тернопіль",
+   "nombre_latino": "Ternopil",
+   "region": "UA-61",
+   "lat": 49.55579,
+   "lon": 25.59238,
+   "radio_km": 7.0,
+   "poblacion": 217326
+  },
+  {
+   "id": "katotth:UA63120270010096107",
+   "nombre": "Харків",
+   "nombre_latino": "Kharkiv",
+   "region": "UA-63",
+   "lat": 49.99232,
+   "lon": 36.23101,
+   "radio_km": 15.0,
+   "poblacion": 1447652
+  },
+  {
+   "id": "katotth:UA65100150010064384",
+   "nombre": "Херсон",
+   "nombre_latino": "Kherson",
+   "region": "UA-65",
+   "lat": 46.64013,
+   "lon": 32.61439,
+   "radio_km": 7.0,
+   "poblacion": 294941
+  },
+  {
+   "id": "katotth:UA68020110010097898",
+   "nombre": "Кам'янець-Подільський",
+   "nombre_latino": "Kamianets-Podilskyi",
+   "region": "UA-68",
+   "lat": 48.67813,
+   "lon": 26.5854,
+   "radio_km": 7.0,
+   "poblacion": 101235
+  },
+  {
+   "id": "katotth:UA68040470010096613",
+   "nombre": "Хмельницький",
+   "nombre_latino": "Khmelnytskyi",
+   "region": "UA-68",
+   "lat": 49.41964,
+   "lon": 26.97938,
+   "radio_km": 7.0,
+   "poblacion": 269308
+  },
+  {
+   "id": "katotth:UA71080490010015879",
+   "nombre": "Черкаси",
+   "nombre_latino": "Cherkasy",
+   "region": "UA-71",
+   "lat": 49.44471,
+   "lon": 32.05881,
+   "radio_km": 7.0,
+   "poblacion": 274343
+  },
+  {
+   "id": "katotth:UA74100390010054825",
+   "nombre": "Чернігів",
+   "nombre_latino": "Chernihiv",
+   "region": "UA-74",
+   "lat": 51.4941,
+   "lon": 31.29433,
+   "radio_km": 7.0,
+   "poblacion": 293969
+  },
+  {
+   "id": "katotth:UA73060610010033137",
+   "nombre": "Чернівці",
+   "nombre_latino": "Chernivtsi",
+   "region": "UA-77",
+   "lat": 48.28647,
+   "lon": 25.93765,
+   "radio_km": 7.0,
+   "poblacion": 266650
+  }
+ ]
+}

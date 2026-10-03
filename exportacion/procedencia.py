@@ -657,6 +657,9 @@ def exportar_incidente(
 # El cruce con las anomalías térmicas de NASA FIRMS: dato de satélite.
 FOCO_TERMICO: Documento = {"origen": MEDIDO, "metodo": PARSER, "fuentes": []}
 
+# La pérdida de luz nocturna (proceso/luces.py): dato de satélite con una regla sobre él.
+PERDIDA_LUZ: Documento = {"origen": MEDIDO, "metodo": REGLA, "fuentes": []}
+
 # Valores que calcula el código a partir de otros del mismo ataque.
 REGLAS_ATAQUE: dict[str, tuple[str, ...]] = {
     "proporcion_senuelos": ("lanzados",),
@@ -686,6 +689,9 @@ def procedencia_ataque(documento: Documento) -> Documento:
             metodo = PARSER
         if ruta == "foco_termico":
             procedencia[ruta] = dict(FOCO_TERMICO)
+            continue
+        if ruta == "perdida_luz":
+            procedencia[ruta] = dict(PERDIDA_LUZ)
             continue
         procedencia[ruta] = {"origen": mejor(origen[f] for f in ids), "metodo": metodo,
                              "fuentes": sorted(ids)}  # fmt: skip

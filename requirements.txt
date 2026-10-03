@@ -8,3 +8,8 @@ pypdf==6.19.0
 cryptography==50.0.2
 # Celdas hexagonales H3 de la interferencia GNSS (proceso/gnss.py).
 h3==4.5.0
+# Guerra por satélite: ventanas de imágenes de Sentinel-2 y gránulos de VIIRS (recogida/cog.py,
+# recogida/luces.py), lectura de HDF5 y recortes en JPEG (recogida/satelite.py).
+numpy==2.5.3
+h5py==3.16.0
+pillow==12.3.0

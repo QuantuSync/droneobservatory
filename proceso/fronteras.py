@@ -77,6 +77,22 @@ def _poligono(crudo: list[list[list[float]]]) -> Poligono:
     return Poligono((min(xs), min(ys), max(xs), max(ys)), anillos)
 
 
+def poligonos_geojson(ruta: Path) -> list[Poligono]:
+    """Los polígonos de una colección GeoJSON de Polygon o MultiPolygon (las regiones de la
+    web: web/public/mapa)."""
+    datos = json.loads(ruta.read_text(encoding="utf-8"))
+    resultado = []
+    for rasgo in datos["features"]:
+        geometria = rasgo["geometry"]
+        partes = (
+            [geometria["coordinates"]]
+            if geometria["type"] == "Polygon"
+            else geometria["coordinates"]
+        )
+        resultado += [_poligono(parte) for parte in partes]
+    return resultado
+
+
 @dataclass(frozen=True)
 class Fronteras:
     paises: dict[str, tuple[Poligono, ...]]

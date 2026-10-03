@@ -1,4 +1,4 @@
-// Validación de los datos contra el esquema 1.8.0 (campos públicos), escrita a mano para
+// Validación de los datos contra el esquema 1.9.0 (campos públicos), escrita a mano para
 // que no necesite generar código en el navegador. Se usa en el build, sobre los ficheros de
 // publicacion/, y en la web al cargar cada fichero: un fichero que no valida no se pinta.
 
@@ -13,6 +13,7 @@ import type {
   Resumen,
   ResumenUcrania,
 } from "./tipos.ts";
+import type { FocosVivos, IndiceSatelite } from "./guerraSatelite.ts";
 import * as v from "./vocabulario.ts";
 
 export type Resultado<T> = { ok: true; datos: T } | { ok: false; errores: string[] };
@@ -115,6 +116,21 @@ function nulable(comprobar: Comprobacion): Comprobacion {
 
 function constante(esperado: unknown): Comprobacion {
   return enumerado([esperado]);
+}
+
+/** Objeto de claves libres (que cumplen `clave`) con valores que cumplen `elemento`. */
+function diccionario(clave: Comprobacion, elemento: Comprobacion): Comprobacion {
+  return (valor, ruta, errores) => {
+    if (!esObjeto(valor)) {
+      anotar(errores, ruta, "se esperaba un objeto");
+      return;
+    }
+    for (const [nombre, hijo] of Object.entries(valor)) {
+      if (errores.length >= MAX_ERRORES) return;
+      clave(nombre, `${ruta}.${nombre}`, errores);
+      elemento(hijo, `${ruta}.${nombre}`, errores);
+    }
+  };
 }
 
 /** Vale si cumple alguna de las alternativas; si no cumple ninguna, se dan los errores de la primera. */
@@ -312,6 +328,34 @@ const regionAtaque = objeto(
   },
 );
 
+const DIA = /^\d{4}-\d{2}-\d{2}$/;
+
+/** Pérdida de luz nocturna medida por satélite (esquema: comun.perdida_luz). */
+const perdidaLuz = objeto(
+  {
+    zona: enumerado(["region", "ciudad"]),
+    region: cadena(v.PATRON_REGION),
+    perdida_pct: numero(0, 100, true),
+    noche: cadena(DIA),
+    noches: lista(cadena(DIA), 1),
+    referencia: objeto({
+      desde: cadena(DIA),
+      hasta: cadena(DIA),
+      noches: numero(1, Number.MAX_SAFE_INTEGER, true),
+      brillo: numero(0, Number.MAX_SAFE_INTEGER),
+    }),
+    brillo: numero(0, Number.MAX_SAFE_INTEGER),
+    origen: constante("medido"),
+  },
+  {
+    ciudad: objeto({
+      id: cadena(),
+      nombre: cadena(),
+      punto: objeto({ lat: latitud, lon: longitud }),
+    }),
+  },
+);
+
 const ataque = objeto(
   {
     id: cadena(v.PATRON_ID_ATAQUE),
@@ -347,6 +391,7 @@ const ataque = objeto(
     regiones_misiles: lista(cadena(v.PATRON_REGION)),
     incluido_en: cadena(v.PATRON_ID_ATAQUE),
     solapado_con: cadena(v.PATRON_ID_ATAQUE),
+    perdida_luz: lista(perdidaLuz),
   },
 );
 
@@ -492,10 +537,37 @@ const resumenUcrania: Comprobacion = (valor, ruta, errores) => {
       ]),
     ),
     fuentes: objeto({ RU_UA: nulable(fuenteSentido), UA_RU: nulable(fuenteSentido) }),
+    luces: lista(
+      objeto({
+        ataque: cadena(v.PATRON_ID_ATAQUE),
+        dia: entero,
+        zona: enumerado(["region", "ciudad"]),
+        region: cadena(v.PATRON_REGION),
+        ciudad: nulable(objeto({ nombre: cadena(), lon: longitud, lat: latitud })),
+        perdida: numero(0, 100, true),
+        noche: cadena(DIA),
+        noches: lista(cadena(DIA), 1),
+        referencia: objeto({
+          desde: cadena(DIA),
+          hasta: cadena(DIA),
+          noches: numero(1, Number.MAX_SAFE_INTEGER, true),
+        }),
+      }),
+    ),
+    zonas: lista(objeto({ id: cadena(), nombre: cadena(), lon: longitud, lat: latitud })),
+    origenes: diccionario(cadena(v.PATRON_ID_ATAQUE), lista(enteroNoNegativo, 1)),
+    centros: diccionario(cadena(v.PATRON_REGION), tupla([longitud, latitud])),
+    fronteraUcrania: diccionario(cadena(v.PATRON_REGION), tupla([longitud, latitud])),
   })(valor, ruta, errores);
   if (errores.length > 0) return;
-  // Cada región de un ataque tiene que existir en la tabla de regiones.
+  // Cada región de un ataque tiene que existir en la tabla de regiones, y cada origen en la
+  // tabla de zonas.
   const datos = valor as ResumenUcrania;
+  for (const [id, indices] of Object.entries(datos.origenes)) {
+    if (indices.some((i) => i >= datos.zonas.length)) {
+      anotar(errores, `${ruta}.origenes.${id}`, "zona fuera de la tabla");
+    }
+  }
   datos.ataques.forEach((fila, i) => {
     for (const [indice] of fila[8]) {
       if (indice >= datos.regiones.length) {
@@ -580,4 +652,59 @@ export function validarImpacto(valor: unknown): Resultado<ImpactoGuerra> {
 
 export function validarAtaque(valor: unknown): Resultado<Ataque> {
   return validar(ataque, valor);
+}
+
+const focosVivos = objeto({
+  generado: cadena(v.PATRON_INSTANTE),
+  desde: cadena(v.PATRON_INSTANTE),
+  ultimo_foco: nulable(cadena(v.PATRON_INSTANTE)),
+  fuente: cadena(),
+  atribucion: cadena(),
+  zona: objeto({
+    oeste: longitud,
+    sur: latitud,
+    este: longitud,
+    norte: latitud,
+  }),
+  descartados: objeto({
+    baja_confianza: enteroNoNegativo,
+    fuentes_habituales: enteroNoNegativo,
+    fuego_frecuente: enteroNoNegativo,
+  }),
+  focos: lista(
+    tupla([longitud, latitud, cadena(v.PATRON_INSTANTE), cadena(), nulable(cadena(v.PATRON_ID_IMPACTO))]),
+  ),
+});
+
+/** focos/ultimas24h.json del almacén público (recogida/focos_vivo.py). */
+export function validarFocosVivos(valor: unknown): Resultado<FocosVivos> {
+  return validar(focosVivos, valor);
+}
+
+const imagenSatelite = nulable(
+  objeto({
+    fecha: cadena(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/),
+    escena: cadena(/^S2[A-D]_\w+_L2A$/),
+    objeto: cadena(/^satelite\/EODI-IG-\d{4}-\d{5}\/(antes|despues)-\d{8}-S2[A-D]_\w+_L2A\.jpg$/),
+    nubes_recorte: numero(0, 1),
+  }),
+);
+
+const indiceSatelite = objeto({
+  generado: cadena(v.PATRON_INSTANTE),
+  fuente: cadena(),
+  atribucion: cadena(),
+  parejas: diccionario(
+    cadena(v.PATRON_ID_IMPACTO),
+    objeto({
+      recorte: objeto({ lat: latitud, lon: longitud, lado_m: numero(100, 20000, true) }),
+      antes: imagenSatelite,
+      despues: imagenSatelite,
+    }),
+  ),
+});
+
+/** satelite/parejas.json del almacén público (recogida/satelite.py). */
+export function validarIndiceSatelite(valor: unknown): Resultado<IndiceSatelite> {
+  return validar(indiceSatelite, valor);
 }

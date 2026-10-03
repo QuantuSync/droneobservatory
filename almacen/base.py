@@ -23,6 +23,7 @@ TABLAS_CON_HISTORIAL = (
     "encuentros", "estadisticas_oficiales", "documentos_oficiales",
     "impactos_guerra", "restricciones_aeropuertos",
     "trafico_aereo", "condiciones", "anomalias_trafico", "deducciones", "catalogo_vivo",
+    "luces_nocturnas",
 )  # fmt: skip
 # Campos de la fuente que dependen del incidente y no se guardan en la tabla común.
 CAMPOS_FUENTE_POR_ENTIDAD = frozenset({"credibilidad", "campos_respaldados"})
@@ -242,6 +243,14 @@ CREATE TABLE IF NOT EXISTS deducciones (
 CREATE TABLE IF NOT EXISTS catalogo_vivo (
     id TEXT PRIMARY KEY,
     tipo TEXT NOT NULL,
+    documento TEXT NOT NULL CHECK (json_valid(documento))
+);
+-- Pérdida de luz nocturna medida por satélite tras un ataque contra la red eléctrica
+-- (proceso/luces.py): por ataque, las regiones y ciudades que perdieron luz. Origen medido. Lo
+-- calcula el servicio de luces fuera de la base; la recogida horaria lo guarda aquí
+-- (recogida/luces.py). Documento con historial.
+CREATE TABLE IF NOT EXISTS luces_nocturnas (
+    id TEXT PRIMARY KEY,
     documento TEXT NOT NULL CHECK (json_valid(documento))
 );
 CREATE TABLE IF NOT EXISTS cobertura_trafico (
@@ -735,6 +744,18 @@ class Almacen:
             filas = self._conexion.execute(
                 "SELECT id, documento FROM catalogo_vivo WHERE tipo = ? ORDER BY id", (tipo,)
             ).fetchall()
+        return {id_: json.loads(documento) for id_, documento in filas}
+
+    def guardar_luces_nocturnas(self, ataque_id: str, documento: Documento) -> bool:
+        """Guarda las pérdidas de luz de un ataque si han cambiado."""
+        for perdida in documento["perdidas"]:
+            self._validar("perdida_luz", perdida)
+        return self._guardar_medicion("luces_nocturnas", ataque_id, documento, {})
+
+    def luces_nocturnas(self) -> dict[str, Documento]:
+        filas = self._conexion.execute(
+            "SELECT id, documento FROM luces_nocturnas ORDER BY id"
+        ).fetchall()
         return {id_: json.loads(documento) for id_, documento in filas}
 
     def guardar_anomalia(self, documento: Documento) -> bool:

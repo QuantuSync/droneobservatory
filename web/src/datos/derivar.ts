@@ -2,6 +2,7 @@
 // script del build (scripts/datos.ts) y se prueban sin red ni disco.
 
 import { diaDeInstante } from "../tiempo/dias.ts";
+import { lucesDeAtaques, origenesDeAtaques } from "./guerraSatelite.ts";
 import type {
   Ataque,
   ColeccionIncidentes,
@@ -24,6 +25,7 @@ import type {
   Resumen,
   ResumenUcrania,
   Sentido,
+  ZonaResumen,
 } from "./tipos.ts";
 
 /** Marca de una cifra que ninguna fuente da, en las filas numéricas de los ataques. */
@@ -343,9 +345,28 @@ export function fuentesPorSentido(ucrania: PublicacionUcrania): Record<Sentido, 
   return resultado;
 }
 
+/** Lo que el resumen de la capa de guerra necesita de la geografía (build: scripts/datos.ts). */
+export interface GeografiaGuerra {
+  /** Zonas de lanzamiento con punto y cómo casa un nombre de los partes con una de ellas. */
+  zonas: ZonaResumen[];
+  casar: (nombre: string) => number | null;
+  /** Centro de cada región de Ucrania y de Rusia. */
+  centros: ReadonlyMap<string, [number, number]>;
+  /** Punto de la frontera de Ucrania más cercano a cada región rusa. */
+  fronteraUcrania: ReadonlyMap<string, [number, number]>;
+}
+
+const SIN_GEOGRAFIA: GeografiaGuerra = {
+  zonas: [],
+  casar: () => null,
+  centros: new Map(),
+  fronteraUcrania: new Map(),
+};
+
 export function resumirUcrania(
   ucrania: PublicacionUcrania,
   centros: ReadonlyMap<string, [number, number]> = new Map(),
+  geografia: GeografiaGuerra = SIN_GEOGRAFIA,
 ): ResumenUcrania {
   // Todas las regiones: las de Ucrania (con lo ocupado) y las de Rusia, donde se cuentan los
   // drones que el Ministerio de Defensa ruso dice haber derribado.
@@ -370,5 +391,10 @@ export function resumirUcrania(
     focos: focosDeRegiones(ucrania, centros),
     impactos,
     fuentes: fuentesPorSentido(ucrania),
+    luces: lucesDeAtaques(ucrania),
+    zonas: geografia.zonas,
+    origenes: origenesDeAtaques(ucrania, geografia.casar),
+    centros: Object.fromEntries(geografia.centros),
+    fronteraUcrania: Object.fromEntries(geografia.fronteraUcrania),
   };
 }
