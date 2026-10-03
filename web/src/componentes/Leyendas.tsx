@@ -26,14 +26,14 @@ function Muestra({ color, opacidad }: { color: string; opacidad: number }) {
 export function LeyendaGnss({ t, estado }: { t: Textos; estado: EstadoGnss }) {
   const g = t.gnss;
   return (
-    <details open className="flotante px-2.5 py-1.5 text-xs" data-leyenda="gnss">
+    <details open className="flotante w-max max-w-[min(20rem,calc(100vw-2rem))] px-2.5 py-1.5 text-xs" data-leyenda="gnss">
       <summary className="cursor-pointer font-medium text-texto">{g.etiqueta}</summary>
       <p className="text-secundario">{g.leyenda}</p>
       <ul className="mt-1 flex flex-wrap gap-x-3 gap-y-0.5">
         {NIVELES_GNSS.map((nivel) => (
           <li key={nivel} className="flex items-center gap-1.5">
             <Muestra color={MUESTRA_GNSS[nivel]} opacidad={OPACIDAD_GNSS} />
-            <span className="text-secundario">{g.niveles[nivel]}</span>
+            <span className="whitespace-nowrap text-secundario">{g.niveles[nivel]}</span>
           </li>
         ))}
       </ul>
@@ -47,7 +47,7 @@ export function LeyendaGnss({ t, estado }: { t: Textos; estado: EstadoGnss }) {
 export function LeyendaPresion({ t }: { t: Textos }) {
   const p = t.presion;
   return (
-    <details open className="flotante px-2.5 py-1.5 text-xs" data-leyenda="presion">
+    <details open className="flotante w-max max-w-[min(20rem,calc(100vw-2rem))] px-2.5 py-1.5 text-xs" data-leyenda="presion">
       <summary className="cursor-pointer font-medium text-texto">{t.controles.presion}</summary>
       <p className="text-secundario">{p.leyenda}</p>
       <div className="mt-1 flex items-center gap-1.5 text-secundario">
