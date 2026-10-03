@@ -204,8 +204,10 @@ def comprobar(configuracion: dict[str, Any], tamano: int | None) -> list[str]:
             problemas.append(f"Range/CORS desde {origen}: {codigo} {cuerpo!r} {permitido}")
     estado = f"{base}/{configuracion['objetos']['estado']}"
     codigo, _, _ = pedir(estado, {"Origin": configuracion["cors"]["origenes"][0]})
-    print(f"estado.json: {codigo}")
-    if codigo not in (200, 404):
+    # Con lectura pública solo de objetos (sin listar), un objeto que aún no existe responde
+    # 403 y no 404: estado.json lo sube la recogida y puede no estar todavía.
+    print(f"estado.json: {codigo}" + ("" if codigo == 200 else " (aún no publicado)"))
+    if codigo not in (200, 403, 404):
         problemas.append(f"estado.json: {codigo}")
     return problemas
 
