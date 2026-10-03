@@ -117,8 +117,8 @@ para el periodo de la línea de tiempo:
   sin punto y no tiene arco.
 - **Contra Rusia**: el parte ruso da los derribos por región; el arco sale del punto de la
   frontera de Ucrania más cercano al centro de la región y su cifra son esos derribos.
-- **Dibujo**: arcos suaves sin animación, grises, de opacidad 0,2 y grosor de 0,4 a 3 px según la
-  raíz de los drones (sobre el máximo del periodo), por debajo de impactos, focos y ciudades; los
+- **Dibujo**: arcos suaves sin animación, en el violeta de la capa de guerra con opacidad 0,18 y
+  grosor de 0,4 a 3 px según la raíz de los drones (sobre el máximo del periodo), por debajo de impactos, focos y ciudades; los
   arcos sin cifra no se dibujan. Se ocultan con «Corredores» en el selector de capas y, al
   pulsarlos, la ficha da origen, destino, drones del periodo y número de ataques.
 
@@ -136,5 +136,43 @@ para el periodo de la línea de tiempo:
   Sentinel y de NOAA. Ayuda del mapa: las tres marcas nuevas.
 - Comprobado en escritorio y en 360×800, 390×844 y 412×915, en local, en la vista previa del
   PR y en producción (apartado 9).
+
+## 8. Color de la capa de guerra
+
+Toda la capa de guerra (regiones de Ucrania y de Rusia, impactos, corredores, focos de 24 horas,
+ciudades sin luz, marcas de los focos de un impacto, línea de la cortinilla y sus leyendas) usa
+una sola familia **violeta azulada**:
+
+| Uso | Color |
+| --- | --- |
+| Principal: regiones de Ucrania, impactos, corredores | `#9d7bff` |
+| Resaltado: focos de un impacto, focos de 24 h que coinciden con uno, cortinilla | `#cbbcff` |
+| Apagado: regiones de Rusia (con contorno discontinuo), focos de 24 h, aro de las ciudades sin luz | `#7a6cc0` |
+
+**Por qué.** Los estados de los incidentes europeos ocupan el rojo (confirmado, `#f53a50`), el
+naranja (notificado, `#ff9a2e`) y el verde (datos al día, `#56c271`). El coral anterior de la
+capa de guerra (`#f25c4f`) se quedaba a ΔE 15 del rojo de «confirmado» con visión normal y a
+ΔE 5 con deuteranopía: eran el mismo color para una de cada doce personas. El violeta azulado es
+el tono que queda lejos de los tres a la vez y con los tres tipos de daltonismo, porque su
+diferencia con el rojo está en el canal azul, que la deuteranopía y la protanopía conservan.
+Medido con la simulación de Machado (2009) sobre CIELAB, `#9d7bff` frente a:
+
+| Visión | Confirmado | Notificado | Datos al día |
+| --- | --- | --- | --- |
+| Normal | ΔE 98 | ΔE 130 | ΔE 131 |
+| Deuteranopía | ΔE 102 | ΔE 131 | ΔE 91 |
+| Protanopía | ΔE 80 | ΔE 128 | ΔE 101 |
+| Tritanopía | ΔE 99 | ΔE 61 | ΔE 42 |
+
+El coral anterior, con las mismas cuentas: ΔE 15, 5, 12 y 12 frente a «confirmado».
+
+Contraste con el fondo del mapa (`#060a12`): 6,3:1. No es cian ni dorado. Dentro de la capa se
+mantienen las diferencias que ya había: impacto de fuente oficial (relleno) frente a
+reivindicación de parte (aro sin relleno), Ucrania (violeta pleno) frente a Rusia (violeta
+apagado y contorno discontinuo), focos normales frente a coincidentes (apagado frente a claro).
+El test `web/tests/colores.test.tsx` lo comprueba con las cuatro visiones: cada color de la
+familia a ΔE 30 o más de los tres estados, el principal a ΔE 75 o más del rojo con visión normal,
+deuteranopía y protanopía, contraste 4,5:1 sobre el fondo, y que ninguna capa de la guerra use un
+color de estado.
 
 <!-- PRODUCCION -->
