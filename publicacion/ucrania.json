@@ -476177,6 +476177,237 @@
     "ala_fija"
    ],
    "zonas_lanzamiento": []
+  },
+  {
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-03T06:17Z"
+    }
+   },
+   "cruces": [],
+   "derribados": {
+    "max": 131,
+    "min": 131
+   },
+   "derribados_categoria": "derribados_o_neutralizados",
+   "estado": {
+    "actual": "confirmado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "minuto",
+       "valor": "2026-10-03T06:01Z"
+      },
+      "fuente_id": "kpszsu-82542"
+     },
+     {
+      "estado": "confirmado",
+      "fecha": {
+       "precision": "minuto",
+       "valor": "2026-10-03T06:01Z"
+      },
+      "fuente_id": "kpszsu-82542"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/kpszsu/82542",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-10-03T06:01Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "У ніч на 03 жовтня (з 18:00 02 жовтня) противник атакував 157 ударними БпЛА типу Shahed (45 із них - реактивні), Гербера, дронами-імітаторами типу “Пародія”",
+     "id": "kpszsu-82542",
+     "idioma": "uk",
+     "medio": "Повітряні Сили ЗС України",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-UA-2026-1024",
+   "lanzados": {
+    "gerbera_senuelos": {
+     "max": 157,
+     "min": 0
+    },
+    "otros": {
+     "max": 0,
+     "min": 0
+    },
+    "shahed_geran": {
+     "max": 157,
+     "min": 45
+    },
+    "total": {
+     "max": 157,
+     "min": 157
+    }
+   },
+   "localizaciones_impacto": {
+    "max": 12,
+    "min": 12
+   },
+   "localizaciones_restos": {
+    "max": 5,
+    "min": 5
+   },
+   "lugares_impacto": [],
+   "lugares_restos": [],
+   "perdidos_guerra_electronica": "desconocido",
+   "periodo": {
+    "fin": {
+     "precision": "minuto",
+     "valor": "2026-10-03T06:00Z"
+    },
+    "inicio": {
+     "precision": "minuto",
+     "valor": "2026-10-02T15:00Z"
+    }
+   },
+   "regiones": [
+    {
+     "region": "UA-51"
+    }
+   ],
+   "regiones_misiles": [],
+   "reivindicacion_de_parte": true,
+   "sentido": "RU_UA",
+   "tipo": "ataque_guerra",
+   "zonas_lanzamiento": [
+    "Брянськ",
+    "Приморсько-Ахтарськ",
+    "Донецьк",
+    "Гвардійське"
+   ]
+  },
+  {
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-03T06:17Z"
+    }
+   },
+   "cruces": [],
+   "derribados": {
+    "max": 218,
+    "min": 218
+   },
+   "derribados_categoria": "derribados",
+   "estado": {
+    "actual": "confirmado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "minuto",
+       "valor": "2026-10-03T05:43Z"
+      },
+      "fuente_id": "mod_russia-67892"
+     },
+     {
+      "estado": "confirmado",
+      "fecha": {
+       "precision": "minuto",
+       "valor": "2026-10-03T05:43Z"
+      },
+      "fuente_id": "mod_russia-67892"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/mod_russia/67892",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-10-03T05:43Z"
+     },
+     "fiabilidad": "D",
+     "frase_origen": "В течение прошедшей ночи в период с 20.00 мск 2 октября до 8.00 мск 3 октября дежурными силами ПВО перехвачены и уничтожены 218 украинских беспилотных",
+     "id": "mod_russia-67892",
+     "idioma": "ru",
+     "medio": "Минобороны России",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-UA-2026-1025",
+   "lanzados": {
+    "gerbera_senuelos": "desconocido",
+    "otros": "desconocido",
+    "shahed_geran": "desconocido",
+    "total": "desconocido"
+   },
+   "localizaciones_impacto": "desconocido",
+   "localizaciones_restos": "desconocido",
+   "lugares_impacto": [],
+   "lugares_restos": [],
+   "perdidos_guerra_electronica": "desconocido",
+   "periodo": {
+    "fin": {
+     "precision": "minuto",
+     "valor": "2026-10-03T05:00Z"
+    },
+    "inicio": {
+     "precision": "minuto",
+     "valor": "2026-10-02T17:00Z"
+    }
+   },
+   "regiones": [
+    {
+     "region": "RU-AST"
+    },
+    {
+     "region": "RU-BEL"
+    },
+    {
+     "region": "RU-BRY"
+    },
+    {
+     "region": "RU-KDA"
+    },
+    {
+     "region": "RU-KLU"
+    },
+    {
+     "region": "RU-KRS"
+    },
+    {
+     "region": "RU-MOS"
+    },
+    {
+     "region": "RU-ORL"
+    },
+    {
+     "region": "RU-ROS"
+    },
+    {
+     "region": "RU-RYA"
+    },
+    {
+     "region": "RU-SMO"
+    },
+    {
+     "region": "RU-TUL"
+    },
+    {
+     "region": "RU-VOR"
+    },
+    {
+     "region": "UA-43"
+    }
+   ],
+   "regiones_misiles": [],
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "ataque_guerra",
+   "tipos_dron": [
+    "ala_fija"
+   ],
+   "zonas_lanzamiento": []
   }
  ],
  "impactos": [
@@ -791352,11 +791583,12 @@
    "tipo": "impacto_guerra"
   },
   {
+   "ataque": "EODI-UA-2026-1024",
    "categorias_objetivo": [],
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-02T21:17Z"
+     "valor": "2026-10-03T06:17Z"
     }
    },
    "credibilidad": 2,
