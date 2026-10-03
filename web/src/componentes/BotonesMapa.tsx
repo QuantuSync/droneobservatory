@@ -8,7 +8,7 @@ import type { ReactNode, RefObject } from "react";
 
 import type { Textos } from "../i18n/index.ts";
 
-const CLASE_BOTON = "control flotante min-h-11 px-3 text-xs text-texto esc:min-h-8 esc:px-2.5";
+const CLASE_BOTON = "control flotante boton-mapa min-h-11 px-3 text-xs text-texto esc:min-h-8 esc:px-2.5";
 
 export function BotonFiltros({
   t,

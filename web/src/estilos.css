@@ -228,6 +228,12 @@
       min-width: 2.75rem !important;
     }
   }
+  /* Botones sobre el mapa: con el fondo de los paneles, para que no se mezclen con los
+     nombres del mapa (.control, que va después de .flotante, los dejaría transparentes). */
+  .control.boton-mapa {
+    background-color: var(--color-panel);
+    box-shadow: var(--shadow-panel);
+  }
   .control:hover {
     color: var(--color-texto);
     background-color: var(--color-elevado);

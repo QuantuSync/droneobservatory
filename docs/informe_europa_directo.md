@@ -259,6 +259,10 @@ atribuido y naranja si todos son notificados. Los avisos en directo usan la mism
 (naranja posible, rojo confirmado, gris reanudado) con su propia marca de aeropuerto y sin
 pulso. El verde queda solo para los indicadores de funcionamiento de la barra de estado.
 
+**Atribuido** se dibuja como una bandera roja con su mástil, sin forma debajo: icono de 28 px
+con el pie del mástil en el punto del incidente y, en el teléfono, la marca más cercana en 44 px
+como objetivo del dedo; los grupos y los episodios unidos por línea lo tratan como al resto.
+
 **Pulso.** Solo laten los incidentes nuevos desde la última visita (los que cuenta el aviso de
 novedades) y los grupos que contienen alguno; se apagan con «Verlas», «Descartar» o al abrir el
 incidente; en la primera visita no late nada; con movimiento reducido, un anillo fijo. El pulso
@@ -270,6 +274,33 @@ token `PALETA.guerra`) muy cercano al rojo nuevo de los confirmados (1,15:1 de l
 tono): esa sesión debería moverlo a otro tono o a grises. Los impactos y sus grupos no laten,
 así que el pulso no le afecta. El cambio de nombre del token toca `src/mapa/estilo.ts`,
 `src/componentes/LineaTiempo.tsx` y `src/App.tsx`, que también edita esa sesión.
+
+## 7 ter. La pantalla es el mapa
+
+Sobre el mapa solo hay botones pequeños; lo demás se abre al pedirlo:
+
+- **Sin barra de tiempo inferior.** El periodo se elige en los filtros: últimas 24 horas, 7 días,
+  30 días, último año, todo (por defecto, como al abrir la web hasta ahora) o entre dos fechas. Con
+  un periodo distinto, el botón de filtros lo lleva escrito («Filtros · Últimos 7 días ×»; la
+  equis vuelve a todo). El mapa, la lista, las cifras y todas las capas siguen el periodo; los
+  enlaces `?ultimos=` y `?desde=…&hasta=…` lo abren, y un enlace a una ficha la abre aunque quede
+  fuera del periodo.
+- **«Europa ahora»** es un botón con desplegable (hoja inferior en el teléfono), cerrado al
+  entrar; lleva un número si hay cierres en curso y un punto si hay novedades desde la última
+  visita. Se cierra con el botón, la equis, Escape, pulsando fuera o, en el teléfono, arrastrando
+  la hoja hacia abajo; pulsar una entrada lleva a su sitio y lo cierra.
+- **Además se pliega:** la barra de filtros pasa a un botón con desplegable, el botón «Periodo»
+  de la cabecera del teléfono desaparece, y las leyendas solo salen con su capa activa y se
+  pliegan. Los botones sobre el mapa llevan el fondo de los paneles.
+
+Comprobado en producción el 3 de octubre de 2026 con `web/data/comprobar-pantalla.mjs` (escritorio
+y 390×844): 72 comprobaciones bien y 0 mal. Al entrar, el mapa llega hasta el borde inferior, sin
+ningún panel ni desplegable abierto. Las cifras de cada periodo coinciden con la lista: todo 507,
+24 horas 10, 7 días 33, 30 días 92, último año 379 y noviembre de 2025 61. Los enlaces con periodo
+y la ficha más antigua (`EODI-2024-00001`, también con `?ultimos=24h`) abren lo que deben. Con
+`web/data/capturar-estados.mjs` se comprobaron tres atribuidos en el mapa y en su ficha con el
+historial de estados (EODI-2026-00015, EODI-2026-00074 y EODI-2026-00283), la leyenda, y que
+laten 4 o 5 novedades con una visita anterior y ninguna en la primera visita.
 
 ## 8. Servidor y vigilancia
 
@@ -311,7 +342,8 @@ publicándose:
 | [`europa-escritorio-gps.png`](capturas/europa-escritorio-gps.png) | Capa de interferencia GPS del último día, con su leyenda: el rojo del Báltico, Kaliningrado, el mar Negro y el este de Turquía |
 | [`europa-escritorio-presion.png`](capturas/europa-escritorio-presion.png) | Capa de presión por país |
 | [`europa-390x844-panel.png`](capturas/europa-390x844-panel.png), [`europa-390x844-gps.png`](capturas/europa-390x844-gps.png) | Versión reducida de la franja en la cabecera del teléfono, y la capa GPS |
-| [`estados-escritorio.png`](capturas/estados-escritorio.png), [`estados-390x844.png`](capturas/estados-390x844.png) | Notificados en naranja, confirmados en rojo y atribuidos en rojo con bandera (Moldavia y Rumanía) |
+| [`estados-escritorio.png`](capturas/estados-escritorio.png), [`estados-390x844.png`](capturas/estados-390x844.png) | Notificados en naranja, confirmados en rojo y atribuidos como bandera roja (Moldavia y Rumanía) |
+| `atribuido-{1,2,3}-mapa-*.png`, `atribuido-{1,2,3}-ficha-*.png`, `leyenda-*.png` | Tres atribuidos como bandera sin forma en el mapa y en su ficha con el historial de estados, y la leyenda, en escritorio y 390×844 |
 | [`novedades-escritorio.png`](capturas/novedades-escritorio.png), [`novedades-390x844.png`](capturas/novedades-390x844.png) | Con una visita anterior de hace tres días: laten las 4 marcas con novedades |
 | [`sin-novedades-escritorio.png`](capturas/sin-novedades-escritorio.png), [`sin-novedades-390x844.png`](capturas/sin-novedades-390x844.png) | Primera visita: no late nada |
 
