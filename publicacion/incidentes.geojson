@@ -152982,6 +152982,496 @@
     }
    },
    "type": "Feature"
+  },
+  {
+   "geometry": {
+    "coordinates": [
+     29.98525,
+     46.45135
+    ],
+    "type": "Point"
+   },
+   "id": "EODI-2026-00373",
+   "properties": {
+    "afirmaciones_publicas": [
+     {
+      "campo": "drones.numero",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T07:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-c891ab25b11aba18",
+      "medio": "news.yam.md",
+      "valor": {
+       "max": 5,
+       "min": 5
+      }
+     },
+     {
+      "campo": "drones.numero",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T07:45Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-1f3bbacbd266f8a0",
+      "medio": "digi24.ro",
+      "valor": {
+       "max": 5,
+       "min": 5
+      }
+     },
+     {
+      "campo": "lugar.pais",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T07:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-c891ab25b11aba18",
+      "medio": "news.yam.md",
+      "valor": "MD"
+     },
+     {
+      "campo": "lugar.pais",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T07:45Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-1f3bbacbd266f8a0",
+      "medio": "digi24.ro",
+      "valor": "MD"
+     },
+     {
+      "campo": "presencia_dron",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T07:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-c891ab25b11aba18",
+      "medio": "news.yam.md",
+      "valor": "confirmada"
+     },
+     {
+      "campo": "tiempo.fin",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T07:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-c891ab25b11aba18",
+      "medio": "news.yam.md",
+      "valor": {
+       "precision": "minuto",
+       "valor": "2026-10-03T05:00Z"
+      }
+     },
+     {
+      "campo": "tiempo.fin",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T07:45Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-1f3bbacbd266f8a0",
+      "medio": "digi24.ro",
+      "valor": {
+       "precision": "minuto",
+       "valor": "2026-10-03T08:00Z"
+      }
+     },
+     {
+      "campo": "tiempo.inicio",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T07:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-c891ab25b11aba18",
+      "medio": "news.yam.md",
+      "valor": {
+       "precision": "minuto",
+       "valor": "2026-10-03T04:45Z"
+      }
+     },
+     {
+      "campo": "tiempo.inicio",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T07:45Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-1f3bbacbd266f8a0",
+      "medio": "digi24.ro",
+      "valor": {
+       "precision": "minuto",
+       "valor": "2026-10-03T07:45Z"
+      }
+     },
+     {
+      "campo": "tipo",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T07:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-c891ab25b11aba18",
+      "medio": "news.yam.md",
+      "valor": "incursion"
+     }
+    ],
+    "consecuencias": {
+     "cierre": {
+      "valor": "desconocido"
+     }
+    },
+    "control": {
+     "ultima_actualizacion": {
+      "precision": "minuto",
+      "valor": "2026-10-03T08:17Z"
+     }
+    },
+    "drones": {
+     "numero": {
+      "max": 5,
+      "min": 5
+     }
+    },
+    "estado": {
+     "actual": "notificado",
+     "historial": [
+      {
+       "estado": "notificado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2026-10-03T07:30Z"
+       },
+       "fuente_id": "gdelt-c891ab25b11aba18"
+      }
+     ]
+    },
+    "fuentes": [
+     {
+      "credibilidad": 3,
+      "enlace": "https://news.yam.md/ro/story/70594342",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T07:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "au provocat un incendiu de vegetație și pagube materiale",
+      "id": "gdelt-c891ab25b11aba18",
+      "idioma": "ro",
+      "medio": "news.yam.md",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://digi24.ro/stiri/externe/moldova/cinci-drone-au-intrat-sambata-dimineata-in-spatiul-aerian-al-r-moldova-incendiu-provocat-de-explozia-uneia-dintre-ele-fara-victime-3976107",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T07:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Explozii au fost semnalate în mai multe raioane, inclusiv la Crocmaz, unde deflagraţia a provocat un incendiu.",
+      "id": "gdelt-1f3bbacbd266f8a0",
+      "idioma": "ro",
+      "medio": "digi24.ro",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://news.yam.md/ro/story/70598338",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T07:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Spațiul aerian al R. Moldova, survolat de cinci drone. Fragmente găsite în patru raioane și incedii de vegetație în doua localități",
+      "id": "gdelt-aae2cbecceeb21dd",
+      "idioma": "ro",
+      "medio": "news.yam.md",
+      "replicas": 0
+     }
+    ],
+    "id": "EODI-2026-00373",
+    "lugar": {
+     "pais": "MD",
+     "radio_km": 3.0
+    },
+    "objetivo": {
+     "categoria": "otra",
+     "nombre": "Crocmaz"
+    },
+    "presencia_dron": "confirmada",
+    "tiempo": {
+     "duracion_min": 15,
+     "fin": {
+      "precision": "minuto",
+      "valor": "2026-10-03T05:00Z"
+     },
+     "inicio": {
+      "precision": "minuto",
+      "valor": "2026-10-03T04:45Z"
+     }
+    },
+    "tipo": "incursion",
+    "titulo": {
+     "en": "Five drones fly over Moldova and cause a fire",
+     "es": "Cinco drones sobrevuelan Moldavia y provocan un incendio"
+    }
+   },
+   "type": "Feature"
+  },
+  {
+   "geometry": {
+    "coordinates": [
+     25.2798,
+     54.68916
+    ],
+    "type": "Point"
+   },
+   "id": "EODI-2026-00376",
+   "properties": {
+    "afirmaciones_publicas": [
+     {
+      "campo": "lugar.localidad",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T08:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-910dfd6caac3a5de",
+      "medio": "ekstrabladet.dk",
+      "valor": "Vilnius"
+     },
+     {
+      "campo": "lugar.pais",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T08:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-910dfd6caac3a5de",
+      "medio": "ekstrabladet.dk",
+      "valor": "LT"
+     },
+     {
+      "campo": "objetivo.categoria",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T08:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-910dfd6caac3a5de",
+      "medio": "ekstrabladet.dk",
+      "valor": "aeropuerto"
+     },
+     {
+      "campo": "objetivo.nombre",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T08:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-910dfd6caac3a5de",
+      "medio": "ekstrabladet.dk",
+      "valor": "Vilnius"
+     },
+     {
+      "campo": "presencia_dron",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T08:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-910dfd6caac3a5de",
+      "medio": "ekstrabladet.dk",
+      "valor": "no_confirmada"
+     },
+     {
+      "campo": "respuesta.medidas",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T07:45Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-35cfabf2abdb3b22",
+      "medio": "inewsgr.com",
+      "valor": [
+       "cazas"
+      ]
+     },
+     {
+      "campo": "tiempo.inicio",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T08:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-910dfd6caac3a5de",
+      "medio": "ekstrabladet.dk",
+      "valor": {
+       "precision": "minuto",
+       "valor": "2026-10-03T07:50Z"
+      }
+     },
+     {
+      "campo": "tipo",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T07:45Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-35cfabf2abdb3b22",
+      "medio": "inewsgr.com",
+      "valor": "interrupcion_aeroportuaria"
+     }
+    ],
+    "consecuencias": {
+     "cierre": {
+      "valor": "desconocido"
+     }
+    },
+    "control": {
+     "motivo_desmentido": "Litauens nationale krisehåndteringscenter: «der ikke er nogen fare»",
+     "ultima_actualizacion": {
+      "precision": "minuto",
+      "valor": "2026-10-03T08:17Z"
+     }
+    },
+    "drones": {
+     "numero": "desconocido"
+    },
+    "estado": {
+     "actual": "desmentido",
+     "historial": [
+      {
+       "estado": "notificado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2026-10-03T07:45Z"
+       },
+       "fuente_id": "gdelt-35cfabf2abdb3b22"
+      },
+      {
+       "estado": "desmentido",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2026-10-03T08:00Z"
+       },
+       "fuente_id": "gdelt-910dfd6caac3a5de-declaracion-1"
+      }
+     ]
+    },
+    "fuentes": [
+     {
+      "credibilidad": 3,
+      "enlace": "https://inewsgr.com/97/ekleise-to-aerodromio-tou-vilnious--sikothikan-machitika-tou-nato-meta-ton-entopismo-drone.htm",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T07:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Σηκώθηκαν μαχητικά του ΝΑΤΟ μετά τον εντοπισμό drone.",
+      "id": "gdelt-35cfabf2abdb3b22",
+      "idioma": "el",
+      "medio": "inewsgr.com",
+      "replicas": 2
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://ekstrabladet.dk/nyheder/Udland/litauisk-lufthavn-lukket-efter-dronemeldinger/11308784",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T08:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Myndighederne fik indledningsvis meldinger fra borgere om et 'muligt objekt' i nærheden af Vilnius-regionen.",
+      "id": "gdelt-910dfd6caac3a5de",
+      "idioma": "da",
+      "medio": "ekstrabladet.dk",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://inewsgr.com/182/lithouania-ekleise-to-aerodromio-tou-vilnious-meta-apo-anafora-gia-ypopto-drone--apogeiothikan-machitika-tou-nato.htm",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T08:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Λιθουανία: Έκλεισε το αεροδρόμιο του Βίλνιους μετά από αναφορά για ύποπτο drone – Απογειώθηκαν μαχητικά του ΝΑΤΟ",
+      "id": "gdelt-5673db7010553f96",
+      "idioma": "el",
+      "medio": "inewsgr.com",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 1,
+      "enlace": "https://ekstrabladet.dk/nyheder/Udland/litauisk-lufthavn-lukket-efter-dronemeldinger/11308784",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T08:00Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "der ikke er nogen fare",
+      "id": "gdelt-910dfd6caac3a5de-declaracion-1",
+      "idioma": "da",
+      "medio": "Litauens nationale krisehåndteringscenter (declaración oficial citada en ekstrabladet.dk)",
+      "replicas": 0
+     }
+    ],
+    "id": "EODI-2026-00376",
+    "lugar": {
+     "localidad": "Vilnius",
+     "pais": "LT",
+     "radio_km": 10.0
+    },
+    "objetivo": {
+     "categoria": "otra",
+     "nombre": "Vilnius"
+    },
+    "presencia_dron": "no_confirmada",
+    "respuesta": {
+     "medidas": [
+      "cazas"
+     ]
+    },
+    "tiempo": {
+     "inicio": {
+      "precision": "hora",
+      "valor": "2026-10-03T07:50Z"
+     }
+    },
+    "tipo": "sobrevuelo",
+    "titulo": {
+     "en": "Vilnius airport closure following drone alert",
+     "es": "Cierre del aeropuerto de Vilnius tras alerta de dron"
+    }
+   },
+   "type": "Feature"
   }
  ],
  "type": "FeatureCollection"
