@@ -424,6 +424,11 @@ def encajan(a: Documento, b: Documento) -> bool:
     return mismo_sitio(a, b) and misma_ventana(primero, segundo)
 
 
+def todos_encajan(documentos: list[Documento]) -> bool:
+    """Cada par de la lista encaja (mismo sitio y misma ventana)."""
+    return all(encajan(a, b) for n, a in enumerate(documentos) for b in documentos[n + 1 :])
+
+
 def fecha_verificada(documento: Documento) -> bool:
     """El día del inicio lo escribe una fuente (o lo da una autoridad o un parte)."""
     origen = documento["tiempo"].get("origen_inicio", {}).get("tipo")
@@ -561,6 +566,10 @@ def fusionar(
         # escrita: entre los que encajan cuenta solo la mejor clase de fecha (hora, día,
         # publicación), y si de esa hay uno solo, es ese.
         anteriores = de_mejor_fecha(anteriores)
+        if len(anteriores) > 1 and todos_encajan(anteriores):
+            # Si los anteriores encajan también entre sí, son un mismo suceso partido (noticias
+            # del mismo cierre fechadas en días seguidos): no hay duda, va al primero.
+            anteriores = anteriores[:1]
         if len(anteriores) != 1:
             continue
         destino, absorbido = destino_de(anteriores[0], incidente, publicados)

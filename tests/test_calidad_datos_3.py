@@ -387,6 +387,22 @@ def test_la_fusion_dudosa_no_se_hace(almacen: Almacen) -> None:
     assert incidentes.fusionar(almacen, AHORA, VOCABULARIO_MODELOS) == 0
 
 
+def test_si_los_anteriores_encajan_entre_si_no_hay_duda(almacen: Almacen) -> None:
+    for documento in (
+        inc("EODI-2026-00001", "2026-08-04T00:00Z", "dia"),
+        inc("EODI-2026-00002", "2026-08-05T00:00Z", "dia"),
+        # El 5 encaja con el 4 y con el 5 (días seguidos del mismo sitio), y esos dos encajan
+        # entre sí: es un mismo suceso partido y se funde.
+        inc("EODI-2026-00003", "2026-08-05T00:00Z", "dia"),
+    ):
+        almacen.guardar_incidente(documento, AHORA, VOCABULARIO_MODELOS)
+    assert incidentes.todos_encajan(
+        [i for i in almacen.incidentes() if i["id"] != "EODI-2026-00003"]
+    )
+    assert incidentes.fusionar(almacen, AHORA, VOCABULARIO_MODELOS) >= 1
+    assert len([i for i in almacen.incidentes() if incidentes.activo(i)]) < 3
+
+
 def test_una_fecha_de_publicacion_no_compite_con_una_escrita(almacen: Almacen) -> None:
     for documento in (
         inc("EODI-2025-00001", "2025-10-03T19:00Z", "hora"),
