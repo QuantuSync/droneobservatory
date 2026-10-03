@@ -4,8 +4,9 @@
 
 # --- Servidor en Hetzner Cloud -------------------------------------------------------
 SERVIDOR_NOMBRE="eodi-recogida"
-# El tipo compartido más pequeño de la gama: la recogida usa un núcleo unos minutos por hora.
-SERVIDOR_TIPO="cx23"
+# Tipo compartido de 8 GB: con 4 GB una pasada de revisión murió por falta de memoria
+# (la recogida horaria sola ocupa unos 2,3 GB) y vienen más servicios.
+SERVIDOR_TIPO="cx33"
 SERVIDOR_LOCALIZACION="nbg1"
 # La última Ubuntu con soporte largo.
 SERVIDOR_IMAGEN="ubuntu-26.04"

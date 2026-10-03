@@ -16,8 +16,9 @@ sin `estado.json` la barra de estado mide la antigüedad desde el último cambio
 («Actualizado hace 2 h» a las 20:17 UTC, cuando el último cambio de incidentes era de las
 18:17), no desde la última recogida correcta.
 
-El DNS del dominio sigue en Cloudflare y funciona; no se ha tocado, como tampoco el bucket,
-los registros ni los tokens.
+El DNS del dominio siguió en Cloudflare y funcionando hasta que se llevó a Hetzner el 3 de
+octubre (apartado «Salida del DNS»); en la cuenta de Cloudflare no se ha tocado nada: ni el
+bucket, ni los registros, ni los tokens.
 
 ## La recogida
 
@@ -106,6 +107,7 @@ diario por sitio.
 | Política de contenido | `connect-src 'self' https://tiles.droneobservatory.eu` | `connect-src 'self' https://droneobservatory-almacen.nbg1.your-objectstorage.com`; el resto, igual |
 | Vigilancia (`vigia-recogida`, `tests`) | `tiles.droneobservatory.eu/estado.json` | la dirección de la configuración |
 | Copia de las teselas | solo en R2 | además, `C:\dev\eodi-teselas-copia\europa-z14.pmtiles` en este equipo |
+| DNS de `droneobservatory.eu` | Cloudflare (`brit` y `jake.ns.cloudflare.com`) | Hetzner DNS desde el 3 de octubre de 2026 (apartado «Salida del DNS») |
 
 La copia local se descargó de R2 por su API S3 (sigue respondiendo con la cuenta suspendida)
 en 373 s y se verificó: 24 570 229 564 bytes, el mismo ETag multiparte que R2
@@ -188,37 +190,77 @@ Capturas en [`capturas/`](capturas/): `almacen-cloudflare-bloqueado-*.png` (ante
 `almacen-medio-*.png` y `almacen-cercano-*.png` (en marcha), cada una en `escritorio` y
 `390x844`.
 
+## Salida del DNS (3 de octubre de 2026)
+
+Con la cuenta de Cloudflare suspendida, su DNS seguía resolviendo pero podía dejar de
+hacerlo en cualquier momento. Se llevó a Hetzner DNS, en el mismo proyecto que el servidor
+y el almacén, sin tocar nada en Cloudflare.
+
+**Inventario**, consultando directamente a los servidores de Cloudflare (sin su API): ápex A
+`216.150.1.1` y `216.150.16.1` y `www` CNAME `60d65e86c6f6416c.vercel-dns-016.com`, que son
+exactamente los valores que pide Vercel (su API: dominio verificado, reto http-01, sin
+TXT); el correo del dominio en Arsys (MX `10 mx.serviciodecorreo.es`, SPF
+`v=spf1 include:_spf.serviciodecorreo.es ~all` y los CNAME `autodiscover`, `autoconfig` y
+`webmail`); la CAA del ápex, y `tiles`, apuntando a Cloudflare. Ni AAAA en el ápex, ni DMARC,
+ni DKIM, ni comodín. Se probaron además unos sesenta nombres habituales (correo,
+verificaciones, `_vercel`, `_acme-challenge`, `api`, `estado`…): no existen.
+
+**DNSSEC**: el registro .eu no tenía registro DS del dominio (la respuesta firmada de .eu lo
+prueba con NSEC3), así que no hubo que retirar nada antes del cambio.
+
+**Zona en Hetzner**: creada a las 07:24 UTC con la API de Hetzner Cloud y el token del
+proyecto (la API antigua de `dns.hetzner.com` cerró en mayo de 2026), protegida contra
+borrado, con TTL de 300 s durante el cambio. Registros: los del inventario, con dos
+diferencias a propósito:
+
+- **CAA**: solo `letsencrypt.org` (la que usa Vercel) y `pki.goog`. Cloudflare servía
+  además `comodoca.com`, `digicert.com` y `ssl.com`, en `issue` e `issuewild`: los añade él
+  para emitir sus propios certificados, que ya no se usan.
+- **`tiles`**: no se crea. Nada en producción lo pide (en el código solo aparece en las
+  pruebas que comprueban que no se usa).
+
+La zona queda en [`configuracion/dns_droneobservatory.eu.zone`](../configuracion/dns_droneobservatory.eu.zone).
+
+**Antes del cambio**, consultando a cada uno de los tres servidores asignados por Hetzner
+(`hydrogen.ns.hetzner.com`, `oxygen.ns.hetzner.com`, `helium.ns.hetzner.de`): 33 de 39
+respuestas idénticas a las de Cloudflare, con autoridad; las 6 restantes eran las dos
+diferencias anteriores en cada servidor.
+
+**Cambio en Arsys** a las 07:39 UTC: los servidores de nombres de Cloudflare se
+sustituyeron por los tres de Hetzner. El panel de Arsys exige una IP por servidor de
+nombres aunque sean de otro dominio; se dieron las IPv4 consultadas en el momento
+(213.133.100.98, 88.198.229.192 y 193.47.99.5).
+
+**Después**:
+
+| Comprobación | Resultado |
+| --- | --- |
+| Delegación en .eu (los cinco servidores del registro) | los tres de Hetzner a las 07:41 UTC, sin DS |
+| Resolvedores públicos (1.1.1.1, 8.8.8.8, 9.9.9.9, 208.67.222.222) | SOA de Hetzner a las 07:41 UTC |
+| Vercel | ve los servidores de Hetzner; ápex y `www` sin errores de configuración |
+| Certificados | Let's Encrypt, válidos hasta el 29 de diciembre de 2026, para el ápex y para `www` |
+| Cabeceras de seguridad (ápex y redirección de `www`) | idénticas a las de antes del cambio |
+| Mozilla Observatory | A+ (115, 12 de 12), igual que antes |
+| Web por el ápex y por `www`, escritorio y 390×844 | `www` redirige al ápex (308); mapa de fondo desde el almacén, «Actualizado hace 13 min», sin errores ni violaciones de la política de contenido |
+| Vigilancia (`recogida.salud` y `vigia-recogida`) | lee `estado.json`; el workflow lanzado a las 07:43 UTC, en verde |
+
+La delegación anterior de .eu tenía TTL de un día: hasta el 4 de octubre algún resolvedor
+puede seguir preguntando a Cloudflare, que da los mismos datos. Tras cuatro horas estable,
+a las 11:45 UTC los TTL de la zona se subieron a 3600 s (importando el fichero de la zona y
+con `hcloud zone change-ttl`); las respuestas de los tres servidores siguieron siendo las
+mismas, ya con TTL de 3600 s, y la delegación en .eu, la misma.
+
 ## Pendientes y su arreglo
 
 Hechos el 3 de octubre: credenciales de Hetzner, bucket, teselas, `estado.json`, mapa y
-hora en producción y borrado de `r2.env` en el servidor (apartado «Puesta en marcha»).
+hora en producción, borrado de `r2.env` en el servidor y DNS en Hetzner.
 
 1. **Bucket R2 antiguo.** El bucket `eodi-teselas` y su objeto siguen en la cuenta de
    Cloudflare. Arreglo: cuando la cuenta vuelva a estar operativa, borrarlo (24,6 GB por
    encima de los 10 GB gratuitos) junto con `%USERPROFILE%\.eodi\r2_estado.env`.
-2. **El registro `tiles` del DNS** sigue apuntando a R2. Arreglo: borrarlo cuando la cuenta
-   lo permita; ya nada lo usa.
-3. **Factura real del almacén.** Arreglo: a final de octubre, comparar en la consola de
-   Hetzner (*Billing*) el cargo de Object Storage con los 6,49 € sin IVA previstos y anotarlo
-   aquí y en `docs/servidor.md`.
-
-### Sacar también el DNS de Cloudflare (sin hacer)
-
-Hoy Cloudflare es el DNS autoritativo de `droneobservatory.eu`. Para salir:
-
-1. Crear la zona en otro DNS (Hetzner DNS, que el CLI `hcloud zone` ya gestiona con el mismo
-   token, o el del registrador) con los registros actuales: apex A `216.150.1.1` y
-   `216.150.16.1` (Vercel), `www` CNAME `60d65e86c6f6416c.vercel-dns-016.com`, CAA del apex
-   (`letsencrypt.org` y `pki.goog`; sin los socios que añade Cloudflare), y los TXT de
-   verificación que haya. `tiles` no hace falta.
-2. Bajar el TTL de los registros en Cloudflare unos días antes, si la cuenta lo permite.
-3. Cambiar los servidores de nombres en el registrador del dominio a los del DNS nuevo; si
-   hay DNSSEC, quitar antes el registro DS en el registrador y volver a firmarlo con el DNS
-   nuevo.
-4. Comprobar con `dig +trace` que responde el DNS nuevo, que Vercel sigue validando el
-   dominio y que el certificado se renueva (la CAA tiene que admitir a la autoridad que use
-   Vercel).
-5. Revisar lo que dependía de Cloudflare: `Always Use HTTPS`, HSTS y TLS mínimo eran de la
-   zona de `tiles`; la web ya los pone en sus propias cabeceras (`vercel.json`). En
-   `docs/servidor.md` y en `reconstruir.sh` no queda nada que use el token de Cloudflare
-   salvo la tabla de secretos.
+2. **Zona antigua y cuenta de Cloudflare.** La zona de `droneobservatory.eu` sigue en
+   Cloudflare, ya sin delegación. Arreglo: cuando la cuenta lo permita, borrar la zona y el
+   bucket, revocar el token, cerrar la cuenta y borrar `%USERPROFILE%\.eodi\cloudflare_token.txt`.
+3. **Factura real.** Arreglo: a final de octubre, comparar en la consola de Hetzner
+   (*Billing*) los cargos con los previstos en `docs/servidor.md` (15,48 € al mes sin IVA:
+   servidor, IPv4 y Object Storage) y anotarlo aquí y allí.

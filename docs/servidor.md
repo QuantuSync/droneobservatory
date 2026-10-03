@@ -9,7 +9,7 @@ cero con una sola orden.
 
 | | |
 | --- | --- |
-| Servidor | `eodi-recogida`, tipo CX23, Núremberg (`nbg1`), Ubuntu 26.04 LTS |
+| Servidor | `eodi-recogida`, tipo CX33 (4 núcleos compartidos, 8 GB de memoria, 80 GB de disco), Núremberg (`nbg1`), Ubuntu 26.04 LTS, IPv4 2.28.197.102 |
 | Cortafuegos de Hetzner | `eodi-recogida`: solo entra SSH (TCP 22); lo demás, cerrado |
 | Usuario `eodi` | Ejecuta el observatorio. Sin privilegios, sin contraseña y sin entrada por SSH |
 | Usuario `operador` | Administra: entra por SSH con clave y usa `sudo` |
@@ -381,7 +381,7 @@ En `%USERPROFILE%\.eodi\`, fuera de cualquier repositorio:
 | `extractor.env` | Variables del extractor (`EODI_EXTRACTOR_*`) |
 | `firms_map_key.txt` | Clave de la API de NASA FIRMS (32 caracteres); `reconstruir.sh` la añade como `EODI_FIRMS_MAP_KEY` al `extractor.env` del servidor. También es el secreto `EODI_FIRMS_MAP_KEY` del repositorio, para la recogida de emergencia |
 | `almacen.env` | Credenciales S3 del almacén público de Hetzner (`ALMACEN_ID=…` y `ALMACEN_SECRETO=…`, una por línea); las llevan al servidor `reconstruir.sh` y `preparar_almacen.sh` |
-| `cloudflare_token.txt` | Token de la API de Cloudflare: solo el DNS del dominio. El almacén de Cloudflare ya no se usa |
+| `cloudflare_token.txt` | Token de la API de Cloudflare. Ya no se usa: el DNS está en Hetzner desde el 3 de octubre de 2026. Se borra al cerrar la cuenta de Cloudflare |
 | `r2_estado.env` | Credenciales S3 del bucket R2 anterior (`eodi-teselas`); ya no responden (401). En el servidor se borraron |
 
 ## Reconstruir desde cero
@@ -512,6 +512,79 @@ en la consola de Hetzner, en *Billing*, a final de mes.
 **Cambiar las teselas**: se sube el fichero nuevo con otro nombre, se cambian
 `objetos.teselas` y `huellas_sha256` en la configuración, se despliega la web y después se
 borra el objeto anterior.
+
+## Dónde está cada cosa
+
+Desde el 3 de octubre de 2026 la infraestructura está en tres sitios y ninguno es Cloudflare:
+
+| Qué | Dónde |
+| --- | --- |
+| Servidor de recogida | Hetzner Cloud, proyecto EODI: `eodi-recogida`, CX33, `nbg1` |
+| Almacén público (teselas y `estado.json`) | Hetzner Object Storage, bucket `droneobservatory-almacen`, `nbg1` (apartado «Almacén público») |
+| DNS de `droneobservatory.eu` | Hetzner DNS, zona en el proyecto EODI (apartado «DNS») |
+| Web | Vercel, proyecto `droneobservatory` |
+| Código y datos | GitHub: `QuantuSync/droneobservatory` (público) y `QuantuSync/droneobservatory-datos` (privado) |
+| Dominio | Registrado en Arsys, que también da el correo del dominio |
+
+## DNS
+
+El DNS autoritativo de `droneobservatory.eu` es Hetzner DNS desde el 3 de octubre de 2026
+(informe en [`informe_migracion_almacen.md`](informe_migracion_almacen.md)). La zona se
+gestiona con la API de Hetzner Cloud y el mismo token del proyecto (`hcloud_token.txt`):
+`hcloud zone …`. La API antigua de DNS de Hetzner (`dns.hetzner.com`) cerró en mayo de 2026.
+
+| | |
+| --- | --- |
+| Servidores de nombres | `hydrogen.ns.hetzner.com` (213.133.100.98), `oxygen.ns.hetzner.com` (88.198.229.192), `helium.ns.hetzner.de` (193.47.99.5) |
+| Registros | [`configuracion/dns_droneobservatory.eu.zone`](../configuracion/dns_droneobservatory.eu.zone): web en Vercel (ápex A y `www` CNAME), CAA y correo de Arsys (MX, SPF, `autodiscover`, `autoconfig`, `webmail`) |
+| TTL | 3600 s (1 hora) |
+| DNSSEC | No. El registro .eu no tiene registro DS del dominio |
+| Protección | La zona no se puede borrar sin quitar antes la protección |
+| Registrador | Arsys: allí se cambian los servidores de nombres |
+
+Órdenes:
+
+```
+export HCLOUD_TOKEN="$(tr -d '\r\n' < ~/.eodi/hcloud_token.txt)"
+hcloud zone describe droneobservatory.eu          # servidores asignados y delegación
+hcloud zone rrset list droneobservatory.eu        # registros
+hcloud zone export-zonefile droneobservatory.eu   # la zona en formato BIND
+```
+
+Un cambio de registros se hace en el fichero de la zona y se aplica con
+`hcloud zone import-zonefile droneobservatory.eu --zonefile configuracion/dns_droneobservatory.eu.zone`,
+que sustituye todos los registros por los del fichero. Avisa `@: missing (@, NS)` porque el
+fichero no lleva NS ni SOA: los pone Hetzner y los conserva. Si se borrara la zona, se
+recrea con la orden de la cabecera del fichero.
+
+Vercel no pide ningún TXT de verificación: el dominio está verificado y los certificados
+(Let's Encrypt) se renuevan por el reto HTTP, sin tocar el DNS. Si Vercel cambiara los
+valores que recomienda, los da su API:
+`GET https://api.vercel.com/v6/domains/droneobservatory.eu/config`.
+
+## Coste mensual en Hetzner
+
+Precios de la API de precios de Hetzner Cloud y de la página de Object Storage, consultados
+el 3 de octubre de 2026, sin IVA; la cuenta factura con un 21 % de IVA.
+
+| Qué | Sin IVA | Con IVA |
+| --- | --- | --- |
+| Servidor CX33 (`nbg1`), con 20 TB de tráfico incluidos | 8,49 € | 10,27 € |
+| Dirección IPv4 principal | 0,50 € | 0,61 € |
+| Object Storage (precio base: 1 TB de almacenamiento y 1 TB de salida) | 6,49 € | 7,85 € |
+| DNS | sin coste | sin coste |
+| **Total** | **15,48 €** | **18,73 €** |
+
+Sin copias de seguridad ni instantáneas de pago. Hasta el 3 de octubre de 2026 el servidor
+era un CX23 (2 núcleos, 4 GB, 5,49 € sin IVA): una pasada de revisión murió por falta de
+memoria el 2 de octubre y la recogida horaria sola llega a 3 GB de pico. El cambio a CX33
+se hizo el 3 de octubre a las 07:40 UTC con el servidor apagado: misma IP, mismos datos.
+Las horarias de las 08:17, 09:17, 10:17 y 11:17 terminaron bien, con picos de 2,9 a 3,1 GB
+de los 7,7 GB disponibles; tardaron de 14,7 a 16,6 minutos (unos 12 antes del cambio),
+con lo que publican hacia el minuto 33: sigue dentro de la ventana de los minutos 12 a 40.
+Al cambiar de tipo Hetzner amplió también el disco a 80 GB, que no se puede reducir: para
+volver a un CX23 hay que recrear el servidor con `reconstruir.sh` (con `SERVIDOR_TIPO="cx23"`
+en `configuracion.sh`) y copiar antes `/home/eodi/datos`.
 
 ## Reintentos por fuente
 

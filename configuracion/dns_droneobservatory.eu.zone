@@ -1,0 +1,23 @@
+; Zona DNS de droneobservatory.eu en Hetzner DNS (proyecto EODI de Hetzner Cloud).
+; Servidores de nombres: hydrogen.ns.hetzner.com, oxygen.ns.hetzner.com, helium.ns.hetzner.de.
+; SOA y NS los pone Hetzner. Para recrearla (docs/servidor.md, apartado «DNS»):
+;   hcloud zone create --name droneobservatory.eu --ttl 3600 \
+;     --zonefile configuracion/dns_droneobservatory.eu.zone --enable-protection delete
+$ORIGIN droneobservatory.eu.
+$TTL 3600
+
+; Web en Vercel: los valores que pide Vercel para el ápex y para www (www redirige al ápex).
+@            IN A     216.150.1.1
+@            IN A     216.150.16.1
+www          IN CNAME 60d65e86c6f6416c.vercel-dns-016.com.
+
+; Certificados: Vercel emite con Let's Encrypt (reto http-01).
+@            IN CAA   0 issue "letsencrypt.org"
+@            IN CAA   0 issue "pki.goog"
+
+; Correo del dominio en Arsys.
+@            IN MX    10 mx.serviciodecorreo.es.
+@            IN TXT   "v=spf1 include:_spf.serviciodecorreo.es ~all"
+autodiscover IN CNAME autodiscover.serviciodecorreo.es.
+autoconfig   IN CNAME autoconfig.serviciodecorreo.es.
+webmail      IN CNAME serviciodecorreo.es.
