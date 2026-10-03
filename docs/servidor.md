@@ -303,7 +303,7 @@ En `%USERPROFILE%\.eodi\`, fuera de cualquier repositorio:
 | `firms_map_key.txt` | Clave de la API de NASA FIRMS (32 caracteres); `reconstruir.sh` la añade como `EODI_FIRMS_MAP_KEY` al `extractor.env` del servidor. También es el secreto `EODI_FIRMS_MAP_KEY` del repositorio, para la recogida de emergencia |
 | `almacen.env` | Credenciales S3 del almacén público de Hetzner (`ALMACEN_ID=…` y `ALMACEN_SECRETO=…`, una por línea); las llevan al servidor `reconstruir.sh` y `preparar_almacen.sh` |
 | `cloudflare_token.txt` | Token de la API de Cloudflare: solo el DNS del dominio. El almacén de Cloudflare ya no se usa |
-| `r2_estado.env` | Credenciales S3 del bucket R2 anterior (`eodi-teselas`); solo como origen de la copia de las teselas |
+| `r2_estado.env` | Credenciales S3 del bucket R2 anterior (`eodi-teselas`); ya no responden (401). En el servidor se borraron |
 
 ## Reconstruir desde cero
 
@@ -403,11 +403,12 @@ bash servidor/preparar_almacen.sh
 ```
 
 Lleva las credenciales al servidor, crea el bucket con su política y su CORS, copia las
-teselas desde R2 sin pasar por el disco del servidor (unos 5 minutos a 90 MB/s; el disco
-del servidor, 38 GB con 29 libres, no daría para una copia intermedia) o, si R2 no responde,
-desde la copia local `C:\dev\eodi-teselas-copia\europa-z14.pmtiles`; comprueba la huella
-mientras sube, publica el último `estado.json` y comprueba por la dirección pública el tamaño,
-la respuesta 206 a una petición Range y el CORS de cada origen.
+teselas (si ya están con la misma huella no las vuelve a subir), publica el último
+`estado.json` y comprueba por la dirección pública el tamaño, la respuesta 206 a una
+petición Range y el CORS de cada origen. Las teselas salen de la copia verificada
+`C:\dev\eodi-teselas-copia\europa-z14.pmtiles` (desde este equipo, unos 10 minutos a
+40 MB/s); la vía desde R2 ya no responde (401 desde el 3 de octubre de 2026). Preparado el
+3 de octubre de 2026 a las 02:27 UTC.
 
 **Credenciales.** La API de Hetzner Cloud no gestiona Object Storage (ni buckets ni
 credenciales): las credenciales S3 se generan en la consola, en el proyecto EODI →
@@ -415,14 +416,18 @@ credenciales): las credenciales S3 se generan en la consola, en el proyecto EODI
 se guarda en `%USERPROFILE%\.eodi\almacen.env` como `ALMACEN_ID=<Access key>` y
 `ALMACEN_SECRETO=<Secret key>`. Valen para todos los buckets del proyecto.
 
-**Coste.** Hetzner cobra un precio base por hora mientras haya al menos un bucket, con 1 TB
-de almacenamiento y 1 TB de tráfico de salida incluidos al mes; la entrada, el tráfico
-interno de eu-central (el servidor está en `nbg1`) y las llamadas a la API no se cobran. La
-tarifa publicada desde el 1 de abril de 2026 es de 6,49 € al mes sin IVA; lo que pase de la
-cuota, 1 € por TB de salida. Con lo que hay (24,57 GB, el 2,5 % del almacenamiento incluido)
-el coste es el precio base: **6,49 € al mes sin IVA**. La salida incluida da para unas
-200 000 visitas al mes con unos 5 MB de teselas cada una; por encima, 1 € por TB. El precio
-exacto de la cuenta se ve en la consola, en *Object Storage*, al crear el bucket.
+**Coste.** Tarifa de Hetzner (la de su página de Object Storage, consultada el 3 de octubre
+de 2026; la API de precios de Hetzner Cloud no incluye Object Storage): precio base de
+**6,49 € al mes sin IVA**, cobrado por horas mientras haya al menos un bucket y con ese
+máximo al mes, con 1 TB de almacenamiento y 1 TB de tráfico de salida incluidos. Por encima
+de la cuota, 6,26 € por TB y mes de almacenamiento y 1 € por TB de salida. La entrada, el
+tráfico interno de eu-central (el servidor está en `nbg1`) y las llamadas a la API no se
+cobran. La cuenta factura con un 21 % de IVA: **7,85 € al mes con IVA**.
+
+Con lo que hay (24,57 GB de teselas más 2 kB de estado, el 2,5 % del almacenamiento incluido)
+el coste es el precio base mientras la salida no pase de 1 TB al mes (unas 200 000 visitas
+con unos 5 MB de teselas cada una); cada TB de salida más, 1 € sin IVA. La factura real se ve
+en la consola de Hetzner, en *Billing*, a final de mes.
 
 **Cambiar las teselas**: se sube el fichero nuevo con otro nombre, se cambian
 `objetos.teselas` y `huellas_sha256` en la configuración, se despliega la web y después se
