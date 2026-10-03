@@ -173,6 +173,23 @@ def test_la_clase_de_un_modelo_nuevo_por_su_proposito_y_sus_cifras() -> None:
     assert cv.clase_por_proposito(ficha("Barrage", 40, 110))[0] == cv.MERODEADORA
     # Un dron de reconocimiento puede ser un multirrotor o un ala fija: no se decide.
     assert cv.clase_por_proposito(ficha("Reconnaissance", 100, 120))[0] is None
+    # El nodriza que lleva drones FPV no es un FPV.
+    assert cv.clase_por_proposito(ficha("Carrier of FPV drones", 70, None))[0] is None
+    assert (
+        cv.clase_por_proposito(ficha("Reconnaissance / Carrier of FPV drones", 300, None))[0]
+        is None
+    )
+
+
+def test_una_cifra_con_una_unidad_que_no_es_la_del_campo_no_entra(real: catalogo.Catalogo) -> None:
+    from recogida.catalogo_vivo import unidad_del_campo
+
+    crudo = json.loads(catalogo.CATALOGO.read_text(encoding="utf-8"))
+    assert unidad_del_campo(crudo, "autonomia", {"valor": 31, "unidad": "min"})
+    assert unidad_del_campo(crudo, "autonomia", {"valor": 4, "unidad": "h"})
+    assert not unidad_del_campo(crudo, "autonomia", {"valor": 10, "unidad": "km"})
+    assert unidad_del_campo(crudo, "alcance", {"valor": 900, "unidad": "m"})
+    assert unidad_del_campo(crudo, "clase_ue", {"texto": "C1"})
 
 
 def test_ficha_de_fabricante_por_etiquetas() -> None:

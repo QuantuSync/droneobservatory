@@ -285,8 +285,22 @@ def _fuente_doc(fuente: Documento, url: str, titulo: str, fecha: str | None) -> 
     }
 
 
+def unidad_del_campo(catalogo: Documento, campo: str, dato: Documento) -> bool:
+    """Si la unidad de una cifra cabe en el campo: «autonomía 10 km» no es una autonomía."""
+    canonica = catalogo["campos"].get(campo, {}).get("unidad")
+    unidad = dato.get("unidad")
+    if canonica is None or unidad is None:
+        return True
+    return unidad in catalogo_.CONVERSION and catalogo_.convertible(unidad, canonica)
+
+
 def _hallazgo(barrido: Barrido, tipo: str, fuente: Documento, url: str, titulo: str,
               fecha: str | None, **datos: Any) -> None:  # fmt: skip
+    if tipo == cv.CIFRA_NUEVA and not unidad_del_campo(
+        barrido.catalogo, datos.get("campo", ""), datos.get("dato", {})
+    ):
+        barrido.cuentas["cifras_con_unidad_ajena"] += 1
+        return
     barrido.hallazgos.append(
         {"tipo": tipo, "fuente": _fuente_doc(fuente, url, titulo, fecha), **datos}
     )

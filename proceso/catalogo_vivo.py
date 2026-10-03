@@ -194,9 +194,15 @@ def _km(entradas: list[Documento]) -> float | None:
     return max(valores) if valores else None
 
 
+PORTADOR_FPV = re.compile(r"carrier of fpv(?: drones)?|fpv[- ]carrier|nodriza")
+
+
 def clase_por_proposito(ficha: Ficha) -> tuple[str | None, str]:
     """La clase de un modelo nuevo de War&Sanctions y el porqué, o None si no se decide."""
     proposito = (ficha.proposito or "").lower()
+    # «Carrier of FPV drones» es el dron nodriza que lleva los FPV, no un FPV.
+    portador = bool(PORTADOR_FPV.search(proposito))
+    proposito = PORTADOR_FPV.sub("", proposito).strip(" /,")
     texto = ficha.texto.lower()
     alcance = _km(ficha.cifras.get("alcance", []))
     velocidad = _kmh(ficha.cifras.get("velocidad_maxima", []))
@@ -223,6 +229,8 @@ def clase_por_proposito(ficha: Ficha) -> tuple[str | None, str]:
                 MERODEADORA,
                 f"propósito «Barrage» (munición merodeadora), alcance {alcance:.0f} km",
             )
+    if portador:
+        return None, f"propósito «{ficha.proposito}»: nodriza de drones FPV, no un FPV"
     return (
         None,
         f"propósito «{ficha.proposito or 'sin propósito'}»: la clase no se decide por código",
