@@ -55,6 +55,7 @@ def _afirmaciones() -> set[str]:
         f"{ruta}.medio",
         f"{ruta}.fiabilidad",
         f"{ruta}.credibilidad",
+        f"{ruta}.cita",
         *_instante(f"{ruta}.fecha"),
         *_rango(f"{ruta}.valor"),
         *_instante(f"{ruta}.valor"),

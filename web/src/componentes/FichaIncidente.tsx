@@ -95,6 +95,7 @@ function QueDiceCadaFuente({
                 <span aria-hidden="true">{codigo}</span>
               </span>{" "}
               <span className="mono text-secundario">{instante(afirmacion.fecha)}</span>
+              {afirmacion.cita && <q className="block text-secundario">{afirmacion.cita}</q>}
             </li>
           );
         })}

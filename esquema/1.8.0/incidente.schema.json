@@ -19,7 +19,7 @@
     "episodio": {"x-visibilidad": "publico", "type": "string", "pattern": "^EODI-EP-\\d{4}-\\d{4}$"},
     "presencia_dron": {
       "x-visibilidad": "publico",
-      "description": "Si se sabe que había un dron: confirmada (restos, rastreo por radar o una autoridad que lo afirma expresamente), no_confirmada (solo avistamientos) o descartada. Independiente del estado: un cierre confirmado no implica dron confirmado.",
+      "description": "Si la autoridad competente atribuye el suceso a un dron. confirmada: una autoridad competente (gestor aeroportuario, gestor de navegación aérea, policía, fuerzas armadas, ministerio, gobierno, fiscalía, autoridad de aviación civil) actúa o declara atribuyendo el suceso a un dron (un cierre por dron, un aviso de dron que comunica, una intervención por dron); no se piden restos, grabación ni detección por sensor. no_confirmada: la propia autoridad lo deja abierto (posible dron, objeto no identificado, se investiga si era un dron) o ninguna autoridad lo atribuye a un dron y solo lo cuentan la prensa o los testigos. descartada: una autoridad lo niega. Un incidente confirmado o atribuido cuya fuente oficial atribuye el suceso a un dron tiene siempre la presencia confirmada (proceso/validaciones.errores_presencia). El titular dice lo mismo (proceso/titulares.py).",
       "enum": ["confirmada", "no_confirmada", "descartada"]
     },
     "fusionado_en": {
@@ -275,6 +275,7 @@
           "fiabilidad": {"x-visibilidad": "publico", "enum": ["A", "B", "C", "D"]},
           "credibilidad": {"x-visibilidad": "publico", "type": "integer", "minimum": 1, "maximum": 6},
           "fecha": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.8.0:comun#/$defs/instante"},
+          "cita": {"x-visibilidad": "publico", "description": "Frase literal de la fuente que justifica el valor (presencia de dron): la de la autoridad o la de la noticia que cuenta su actuación.", "type": "string", "minLength": 1},
           "valor": {
             "x-visibilidad": "publico",
             "anyOf": [

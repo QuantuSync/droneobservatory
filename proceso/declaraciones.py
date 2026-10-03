@@ -6,13 +6,14 @@ literal, que tiene que estar en el texto enviado) se registra como fuente
 «declaración oficial citada», de fiabilidad B, con el enlace a la noticia. Reglas:
 
 - incidente o drones: pasa a confirmado (la autoridad dice que ocurrió).
-- drones: presencia_dron confirmada; solo si la frase no habla de avisos recibidos
-  («la policía recibió avisos de drones» no confirma nada).
-- incidente o autoria de un gobierno, ministerio, fuerzas armadas, policía o gestor del
-  espacio aéreo cuya frase dice expresamente que hubo drones: presencia_dron confirmada
-  también. Una atribución oficial que habla de drones afirma que los hubo; la que confirma
-  un cierre sin nombrar drones no dice nada del dron. Cada confirmación así deja una
-  afirmación de presencia_dron con la fuente que la provoca.
+- Presencia del dron: si la autoridad competente lo da por hecho, está confirmada. Basta con
+  que actúe o declare atribuyendo el suceso a un dron (un cierre por dron, un aviso de dron
+  que comunica, una intervención por dron): drones, incidente o autoria de un gobierno,
+  ministerio, fuerzas armadas, policía, fiscalía, autoridad de aviación civil, gestor de
+  navegación aérea o gestor aeroportuario confirman la presencia. No se piden restos, grabación
+  ni detección por sensor. Solo queda sin confirmar si la propia autoridad lo deja abierto
+  («posible dron», «objeto no identificado», «se investiga si era un dron»). Cada confirmación
+  deja una afirmación de presencia_dron con la fuente que la provoca.
 - sin_drones: presencia_dron descartada. niega_incidente: desmentido.
 - autoria: atribuido, solo si quien atribuye es un gobierno.
 
@@ -35,40 +36,41 @@ from proceso.noticias import filtro
 
 MAX_PALABRAS_FRASE = 25
 FIABILIDAD = "B"
-# Autoridades cuya palabra de que hubo drones confirma su presencia: gobierno, ministerio,
-# fuerzas armadas, policía y gestor del espacio aéreo. El aeropuerto no: confirma el cierre.
+# Autoridades competentes: si atribuyen el suceso a un dron, la presencia está confirmada.
 AUTORIDADES_DEL_DRON = frozenset(
-    {"gobierno", "ministerio", "fuerzas_armadas", "policia", "navegacion_aerea"}
-)
-# Declaraciones cuya frase, si nombra drones, afirma que los hubo.
+    {
+        "gobierno", "ministerio", "fuerzas_armadas", "policia", "navegacion_aerea",
+        "aeropuerto", "fiscalia", "aviacion_civil",
+    }
+)  # fmt: skip
+# Declaraciones que, de una autoridad competente, atribuyen el suceso (un dron) a lo que pasó.
 _CON_DRONES = frozenset({"incidente", "autoria"})
 # Formas que el filtro de noticias no recoge por la declinación (genitivo griego) o por ser
 # el adjetivo y no el nombre («bezpilotní letoun»).
 _DRONES_DECLINADOS = re.compile(
     r"(?<!\w)(μη επανδρωμέν\w*|bezpilot\w*|беспилот\w*|безпілот\w*)", re.IGNORECASE
 )
-# Frases que nombran drones sin afirmar que los hubo: niegan o no lo saben («no hemos
-# confirmado ni descartado que fueran drones»), lo suponen («si creemos ver un dron»,
-# «un objeto parecido a un dron») o cuentan un aviso recibido («recibimos información de
-# que se vio un dron»). Solo para la regla de la frase: el filtro de avisos de `cuenta`
-# sigue igual para lo demás.
-_SIN_AFIRMAR = re.compile(
-    r"(?<!\w)(ikke|hverken|inte|nicht|kein\w*|not|nie|niet|geen|nijedn\w*|δεν|не|"
-    r"afkræft\w*|denken|possibl\w*|posibil\w*|suspect\w*|mutma\w*|vermut\w*|mulig\w*|"
-    r"formod\w*|mistænk\w*|misstänk\w*|mistank\w*|misstank\w*|podejrzan\w*|przypominaj\w*|resembl\w*|presunt\w*|"
-    r"sospech\w*|présum\w*|prijav\w*|pranešim\w*|informacij\w*|ilmoitu\w*|zgłosi\w*|"
-    r"signalement\w*|segnalazion\w*)(?!\w)",
+# La autoridad lo deja abierto: posible, presunto o sospechoso; objeto no identificado; se
+# investiga si era un dron; no confirma que lo fuera.
+ABIERTO = re.compile(
+    r"(?<!\w)(?:possibl\w*|posibl\w*|possív\w*|mogelijk\w*|möglich\w*|eventuel\w*|"
+    r"mulig\w*|möjlig\w*|mahdollis\w*|możliw\w*|ewentualn\w*|pravděpodob\w*|tikėtin\w*|"
+    r"galim\w*|iespējam\w*|võimalik\w*|πιθαν\w*|можлив\w*|возможн\w*|"
+    r"mutma\w*|vermut\w*|vermoed\w*|presunt\w*|présum\w*|supuest\w*|alleged\w*|"
+    r"suspect\w*|sospech\w*|verdacht\w*|podejrzan\w*|misstänk\w*|mistænk\w*|mistenk\w*|"
+    r"formod\w*|mistank\w*|misstank\w*|afkræft\w*|hverken|denken|denkt|resembl\w*|parecid\w*|przypominaj\w*|unidentified|"
+    r"no identificad\w*|non identifi\w*|niet[- ]ge(?:ï|i)dentificeerd\w*|"
+    r"nicht identifiziert\w*|unbekannte[snm]? (?:flug)?objekt\w*|onbekend\w* object\w*|"
+    r"niezidentyfikowan\w*|oidentifier\w*|uidentificer\w*|uidentifiser\w*|"
+    r"investigat\w* whether|se investiga si|investiga si|onderzo\w* of|ermittel\w* ob|"
+    r"unclear|no está claro|nicht klar|niet duidelijk|pas clair|"
+    r"(?:no|not|nicht|niet|pas|ikke|inte|nie)\s+(?:\w+\s+){0,3}"
+    r"(?:confirm|bestätig|bevestig|bekræft|bekräft|potwierdz|confirmar)\w*)(?!\w)",
     re.IGNORECASE,
 )
 # Confianza de la afirmación de presencia que deja la regla: la frase es literal, comprobada
 # en el texto de la noticia (validas), y la regla no interpreta nada más.
 CONFIANZA_REGLA = 1.0
-# Avisos o llamadas recibidos por la autoridad: no son una afirmación suya.
-_AVISOS = re.compile(
-    r"\b(avisos?|llamadas|report(s|ed)?|tips?|meldinger|henvendelser|anmeldelser|"
-    r"Hinweise|Meldungen|Anrufe|zgłosze\w*|sesizări|meldingen)\b",
-    re.IGNORECASE,
-)
 _CONFIRMAN = frozenset({"incidente", "drones"})
 
 
@@ -91,29 +93,26 @@ def validas(declaraciones: Sequence[dict[str, Any]], textos: Sequence[str]) -> l
     return resultado
 
 
-def cuenta(declaracion: dict[str, Any]) -> bool:
-    """Si la declaración es una afirmación de la autoridad y no un aviso que recibió."""
-    return not (declaracion["afirma"] in _CONFIRMAN and _AVISOS.search(declaracion["frase"]))
-
-
 def habla_de_drones(frase: str) -> bool:
     return bool(filtro().dron.search(frase) or _DRONES_DECLINADOS.search(frase))
 
 
-def confirma_dron(declaracion: dict[str, Any]) -> bool:
-    """Si la declaración afirma que hubo drones: lo dice expresamente (drones), o es la
-    confirmación o la atribución de una autoridad del dron que los nombra. Un aviso recibido
-    no cuenta."""
-    if not cuenta(declaracion):
+def abierto(*textos: str) -> bool:
+    """Si alguno de los textos deja abierto que fuera un dron."""
+    return any(ABIERTO.search(texto or "") for texto in textos)
+
+
+def confirma_dron(declaracion: dict[str, Any], contexto: str = "") -> bool:
+    """Si la autoridad da por hecho el dron: afirma que hubo drones (drones), o una autoridad
+    competente confirma o atribuye el suceso (incidente, autoria), que es un suceso de dron.
+    No si la frase o el `contexto` (la frase de la noticia que la cita) lo dejan abierto."""
+    if abierto(str(declaracion.get("frase", "")), contexto):
         return False
     if declaracion["afirma"] == "drones":
         return True
-    frase = str(declaracion.get("frase", ""))
     return (
         declaracion["afirma"] in _CON_DRONES
         and declaracion.get("categoria") in AUTORIDADES_DEL_DRON
-        and habla_de_drones(frase)
-        and not _SIN_AFIRMAR.search(frase)
     )
 
 
@@ -177,7 +176,7 @@ def aplicar(
     for numero, declaracion in enumerate(declaraciones, 1):
         noticia = por_enlace.get(enviadas[declaracion["fuente"] - 1])
         pais = str(declaracion.get("pais") or "").strip().upper()
-        if noticia is None or not cuenta(declaracion):
+        if noticia is None:
             continue
         if pais and pais != resultado["lugar"]["pais"]:
             continue
@@ -190,10 +189,11 @@ def aplicar(
         afirma = declaracion["afirma"]
         if afirma in _CONFIRMAN:
             _transitar(resultado, Estado.CONFIRMADO, origen)
-        if afirma == "drones" and confirma_dron(declaracion):
+        contexto = str(por_enlace.get(origen["enlace"], {}).get("frase_origen", ""))
+        if afirma == "drones" and confirma_dron(declaracion, contexto):
             # Lo afirma expresamente: vale aunque la ficha lo hubiera descartado.
             confirmar_presencia(resultado, origen["id"], expresa=True)
-        elif confirma_dron(declaracion):
+        elif confirma_dron(declaracion, contexto):
             por_frase.append(origen)
         if afirma == "sin_drones":
             resultado["presencia_dron"] = "descartada"

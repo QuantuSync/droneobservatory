@@ -47,6 +47,7 @@ from proceso.extraccion import Parada
 from recogida import (
     busqueda_dirigida,
     catalogo_vivo,
+    criterio_presencia,
     deduccion,
     detalle,
     directo_horaria,
@@ -287,6 +288,13 @@ def principal(argumentos: list[str] | None = None) -> int:
         estados["oficiales"] = EstadoFuente(
             CON_AVISO if avisos_oficiales else LEIDA, confirmaciones.ultima
         )
+        # Una vez por versión: criterio de presencia, titulares y un incidente por noche de
+        # cierre en lo ya guardado (recogida/criterio_presencia.py), antes del extractor para
+        # que extraiga en esta pasada los candidatos que se separan.
+        try:
+            criterio_presencia.aplicar(almacen, ahora, extractor.modelos_base())
+        except Exception as error:
+            registro.warning("criterio de presencia sin aplicar: %s", str(error)[:300])
         # Candidatos de noticias a incidentes. El límite de gasto o una caída temporal del
         # servicio dejan candidatos pendientes sin más; un error que no se arregla solo o
         # una caída larga dejan la ejecución en rojo.

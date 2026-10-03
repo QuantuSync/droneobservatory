@@ -372,6 +372,21 @@ journalctl -u eodi-dirigido -n 60
 
 Si el lote se queda a medias, se relanza con `--lote <id>`.
 
+## Criterio de presencia del dron, titulares y noches de cierre (una vez)
+
+[`recogida/criterio_presencia.py`](../recogida/criterio_presencia.py) lo aplica la propia recogida
+horaria, antes del extractor, una vez por versión (cursor `criterio_presencia` de la base): separa
+los candidatos que juntaron el cierre de una noche y la repetición de la siguiente (la repetición se
+mide desde el inicio del suceso), rehace todos los incidentes con el criterio de presencia y los
+titulares coherentes, funde hasta que no queda nada que fundir (dos cierres de noches distintas nunca
+se funden) y deja el motivo de cada cambio en el historial. No lanza ningún trabajo aparte. Los
+candidatos separados (las dos partes) van delante en el extractor (recogida/extractor.prioritarios),
+hasta 10 por hora. El resumen queda en el cursor:
+
+```
+sudo -u eodi sh -c 'cd /home/eodi/droneobservatory && journalctl -u eodi-recogida -n 400 | grep "criterio de presencia"'
+```
+
 ## Detección en directo de cierres
 
 Informe: [`informe_europa_directo.md`](informe_europa_directo.md). Cada minuto, las posiciones en

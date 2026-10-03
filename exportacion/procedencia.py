@@ -319,10 +319,9 @@ def sin_respaldo(afirmacion: Documento, entidad: str, fichas: Fichas) -> dict[st
 
 
 def de_regla(afirmacion: Documento) -> bool:
-    """La afirmación de presencia que deja la regla de las declaraciones (no el extractor)."""
-    return MARCA_DECLARACION in afirmacion["fuente_id"] and afirmacion == (
-        declaraciones.afirmacion_presencia(afirmacion["fuente_id"])
-    )
+    """La afirmación de presencia que deja el criterio de presencia (no el extractor): la de una
+    declaración oficial citada, la de un cierre por dron o la de un documento oficial."""
+    return afirmacion == declaraciones.afirmacion_presencia(afirmacion["fuente_id"])
 
 
 def de_reconstruccion(afirmacion: Documento) -> bool:

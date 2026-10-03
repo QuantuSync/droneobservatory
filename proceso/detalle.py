@@ -36,7 +36,7 @@ from typing import Any
 
 from almacen.base import Almacen, DocumentoInvalido
 from esquema import Documento
-from proceso import incidentes
+from proceso import declaraciones, incidentes, titulares
 from proceso.credibilidad import Credibilidad
 from proceso.estados import Estado, TransicionNoPermitida, transitar
 from proceso.fronteras import dentro_del_pais
@@ -359,6 +359,17 @@ def aplicar(incidente: Documento, lista: list[Aportacion]) -> Documento:
             key=lambda a: (a.fuente["fecha"]["valor"], -prudencia[str(a.presencia)]),
         )
         resultado["presencia_dron"] = ultima.presencia
+    elif (
+        resultado.get("presencia_dron") == "no_confirmada"
+        and resultado["estado"]["actual"] != Estado.DESMENTIDO
+    ):
+        # Criterio de presencia: la autoridad que en su documento atribuye el suceso a un dron
+        # sin dejarlo abierto lo da por hecho (proceso/declaraciones.py).
+        for aportacion in sorted(lista, key=lambda a: (a.fuente["fecha"]["valor"], a.fuente["id"])):
+            frase = str(aportacion.fuente.get("frase_origen", ""))
+            if declaraciones.habla_de_drones(frase) and not declaraciones.abierto(frase):
+                declaraciones.confirmar_presencia(resultado, aportacion.fuente["id"])
+                break
     confirmante = min(lista, key=lambda a: (a.fuente["credibilidad"], a.fuente["id"])).fuente
     if resultado["estado"]["actual"] not in incidentes.CONFIRMADOS:
         # Un desmentido de una autoridad más fiable no se revierte con esta fuente.
@@ -577,7 +588,14 @@ def alta(
         "origen_inicio": {"tipo": "oficial", "fuente_id": fuente["id"],
                           "motivo": f"día escrito en el documento de {documento['autoridad']}"},
     }  # fmt: skip
-    return incidentes.aplicar_reglas(nuevo)
+    # Criterio de presencia: el documento de la autoridad que atribuye el suceso a un dron.
+    if (
+        nuevo.get("presencia_dron") == "no_confirmada"
+        and declaraciones.habla_de_drones(frase)
+        and not declaraciones.abierto(frase)
+    ):
+        declaraciones.confirmar_presencia(nuevo, fuente["id"])
+    return incidentes.aplicar_reglas(titulares.ajustar_incidente(nuevo))
 
 
 # Campo de la ficha → ruta, para los campos que respalda la fuente de un incidente nuevo.

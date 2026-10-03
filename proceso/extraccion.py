@@ -37,7 +37,7 @@ from almacen.base import Almacen, DocumentoInvalido
 from esquema import Documento
 from modelo import coste, ficha, paginas
 from modelo.cliente import ErrorTemporal, LlamadaFallida
-from proceso import declaraciones, detalle
+from proceso import declaraciones, detalle, presencia
 from proceso.estados import Estado, TransicionNoPermitida, transitar
 from proceso.incidentes import aplicar_reglas, construir, huella
 from proceso.noticias import (
@@ -141,12 +141,24 @@ def _articulos(almacen: Almacen, candidato: Documento) -> list[Documento]:
     return almacen.articulos_de(candidato["articulos"])
 
 
+def articulos_retirados(almacen: Almacen, candidato: Documento) -> bool:
+    """La última ficha se hizo con artículos que el candidato ya no tiene (se separó en dos
+    sucesos): ya no describe el candidato y hay que volver a extraerlo."""
+    anteriores = almacen.extracciones(candidato["id"])
+    if not anteriores:
+        return False
+    actuales = set(candidato["articulos"])
+    return any(url not in actuales for url in anteriores[-1].get("enviadas") or [])
+
+
 def necesita_extraccion(almacen: Almacen, candidato: Documento) -> bool:
     anteriores = almacen.extracciones(candidato["id"])
     if not anteriores:
         return True
     if len(anteriores) >= MAX_LLAMADAS_POR_CANDIDATO:
         return False
+    if articulos_retirados(almacen, candidato):
+        return True
     ultima = anteriores[-1]
     if ultima["huella"] == huella(candidato["articulos"]):
         return False
@@ -616,6 +628,8 @@ def _alta(
         incidente = conservar_oficiales(incidente, anterior)
         # Lo que aportan los registros oficiales de detalle vuelve entero (proceso/detalle.py).
         incidente = detalle.reaplicar(almacen, incidente)
+    # Criterio de presencia (un cierre por dron la confirma) y titular coherente con ella.
+    incidente = presencia.aplicar(incidente)
     incidente = aplicar_reglas(incidente)
     try:
         almacen.guardar_incidente(incidente, ahora, modelos)
@@ -648,10 +662,15 @@ def reconstruir(
         ultima = legibles[-1]
         peticion = preparar(almacen, candidato, None)
         enviadas = ultima.get("enviadas") or peticion.enviadas
+        # Un dato de un artículo que el candidato ya no tiene (se separó) no vale para él: se
+        # queda sin ese dato hasta que se vuelva a extraer.
+        actuales = set(candidato["articulos"])
         campos = {
             nombre: campo
             for nombre, campo in ultima["campos"].items()
-            if isinstance(campo.get("fuente"), int) and 1 <= campo["fuente"] <= len(enviadas)
+            if isinstance(campo.get("fuente"), int)
+            and 1 <= campo["fuente"] <= len(enviadas)
+            and enviadas[campo["fuente"] - 1] in actuales
         }
         # De las fuentes solo se guardan los titulares: son el texto con que se comprueba
         # que la fuente nombra el país.

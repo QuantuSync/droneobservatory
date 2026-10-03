@@ -400,7 +400,7 @@ export const es: Textos = {
     copiarEnlace: "Copiar enlace",
     enlaceCopiado: "Enlace copiado",
     enlaceNoCopiado: "No se ha podido copiar",
-    estado: "Estado",
+    estado: "Estado del suceso",
     presenciaDron: "Presencia de dron",
     fecha: "Fecha",
     lugar: "Lugar",
@@ -666,20 +666,25 @@ export const es: Textos = {
         bloques: [
           {
             parrafo: [
-              "El estado dice si el incidente ocurrió; la presencia de dron dice si se sabe " +
-                "que había un dron. Son dos preguntas distintas. La presencia es confirmada " +
-                "cuando hay restos, rastreo por radar o una autoridad que lo afirma " +
-                "expresamente; no confirmada cuando solo hay avistamientos; y descartada " +
-                "cuando una autoridad lo niega.",
+              "El estado del suceso dice si el incidente ocurrió; la presencia de dron dice si " +
+                "la autoridad lo atribuye a un dron. Si la autoridad competente lo da por " +
+                "hecho, está confirmado: basta con que el gestor aeroportuario, el de " +
+                "navegación aérea, la policía, el ejército, un ministerio, la fiscalía o la " +
+                "autoridad de aviación civil actúe o declare atribuyendo el suceso a un dron " +
+                "(un cierre por dron, un aviso de dron que comunica, una intervención por " +
+                "dron). No se piden restos, grabación ni detección por sensor. Queda sin " +
+                "confirmar si la propia autoridad lo deja abierto («posible dron», «objeto no " +
+                "identificado», «se investiga si era un dron») o si solo lo cuentan la prensa " +
+                "o los testigos. Es descartada cuando una autoridad lo niega.",
             ],
           },
           {
             parrafo: [
-              "El caso de Copenhague lo muestra. En septiembre de 2025 el aeropuerto cerró " +
-                "varias horas tras el aviso de drones. El cierre es un hecho que la " +
-                "autoridad confirma, pero que lo visto fueran drones es otra afirmación: sin " +
-                "restos ni rastreo, un incidente puede estar confirmado y tener la presencia " +
-                "de dron sin confirmar.",
+              "El caso de Lieja lo muestra. En noviembre de 2025 el gestor de navegación " +
+                "aérea cerró el tráfico del aeropuerto tras el aviso de un dron: la autoridad " +
+                "lo atribuye a un dron y la presencia es confirmada. El titular de cada ficha " +
+                "dice lo mismo que este campo: afirma el dron cuando está confirmado y lo da " +
+                "como posible cuando no lo está.",
             ],
           },
         ],
@@ -735,7 +740,8 @@ export const es: Textos = {
               "Dos noticias son el mismo incidente si hablan del mismo objetivo o de puntos " +
                 "a menos de la suma de sus radios más 10 km, y sus inicios distan menos de 6 " +
                 "horas o, cuando solo se conoce el día, caen en el mismo día o en el " +
-                "siguiente. Más de 12 horas sin actividad abren un incidente nuevo.",
+                "siguiente. Más de 12 horas sin actividad abren un incidente nuevo. Dos " +
+                "cierres del mismo sitio en noches distintas son siempre dos incidentes.",
             ],
           },
           {
@@ -754,9 +760,9 @@ export const es: Textos = {
             parrafo: [
               "Cuando una noticia cita a una autoridad, la declaración se registra como " +
                 "fuente propia, de fiabilidad B, con el enlace a la noticia que la recoge. " +
-                "Confirma el incidente si la autoridad afirma que ocurrió; confirma la " +
-                "presencia de dron solo si afirma que había drones, no si habla de avisos " +
-                "recibidos; y lo desmiente o atribuye si eso es lo que dice.",
+                "Confirma el incidente si la autoridad afirma que ocurrió, y con él la " +
+                "presencia de dron, salvo que la propia autoridad lo deje abierto; y lo " +
+                "desmiente o atribuye si eso es lo que dice.",
             ],
           },
         ],

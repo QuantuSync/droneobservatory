@@ -6,6 +6,9 @@ traduce al campo público que corresponde (`drones` es `drones.numero`, `inicio`
 `tiempo.inicio`…), con el valor en el mismo formato que ese campo, y se acompaña del
 medio, el código del Almirantazgo (fiabilidad y credibilidad) y la fecha de la fuente.
 
+La presencia de dron lleva además la cita de la fuente que justifica el valor (la frase
+literal de la autoridad o de la noticia, de 25 palabras como máximo).
+
 Solo salen las fuentes que ya salen en el incidente (`solo_fuentes_publicas`: nunca de
 fiabilidad E ni F, ni internas fuera de la capa de Ucrania, como el Ministerio de Defensa
 ruso) y solo los campos de la lista cerrada.
@@ -36,6 +39,8 @@ CAMPO_PUBLICO = {
     "medidas": "respuesta.medidas",
 }
 INSTANTES = frozenset({"inicio", "fin"})
+# Campos cuya afirmación pública lleva la cita literal de su fuente.
+CON_CITA = frozenset({"presencia_dron"})
 # Las fechas de la ficha van sin zona («2025-09-22T18:30» o «2025-09-22»), en UTC.
 HORA_DEL_DIA = "T00:00"
 
@@ -76,6 +81,8 @@ def afirmaciones_publicas(documento: Documento) -> list[Documento]:
             "fecha": fuente["fecha"],
             "valor": _valor(afirmacion["campo"], afirmacion["valor"]),
         }
+        if afirmacion["campo"] in CON_CITA and fuente.get("frase_origen"):
+            entrada["cita"] = fuente["frase_origen"]
         clave = json.dumps(entrada, sort_keys=True, ensure_ascii=False)
         if clave not in vistas:
             vistas.add(clave)

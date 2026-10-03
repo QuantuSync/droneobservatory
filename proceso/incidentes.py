@@ -419,9 +419,35 @@ def misma_ventana(a: Documento, b: Documento) -> bool:
     return bool(dias_a & dias_b)
 
 
+def noche_del_cierre(documento: Documento) -> date | None:
+    """La noche (el día local de su tarde) de un cierre con el día sabido: con hora, la de la
+    hora local (la madrugada es de la noche anterior); con el día escrito, ese día. None si no
+    hubo cierre o si el día es el de la publicación."""
+    if (documento.get("consecuencias", {}).get("cierre") or {}).get("valor") != "si":
+        return None
+    inicio = documento["tiempo"]["inicio"]
+    momento = _leer_instante(inicio)
+    if inicio["precision"] == "dia":
+        return momento.date()
+    if inicio["precision"] in PRECISIONES_HORA:
+        return _dia_local(momento - MADRUGADA, str(documento["lugar"].get("pais", "")))
+    return None
+
+
+def cierres_de_noches_distintas(a: Documento, b: Documento) -> bool:
+    """Dos cierres del mismo sitio en noches distintas son dos incidentes, aunque las noticias
+    del segundo salgan al día siguiente del primero (Lieja, 8 y 9 de noviembre de 2025)."""
+    noche_a, noche_b = noche_del_cierre(a), noche_del_cierre(b)
+    return noche_a is not None and noche_b is not None and noche_a != noche_b
+
+
 def encajan(a: Documento, b: Documento) -> bool:
     primero, segundo = sorted((a, b), key=lambda d: (d["tiempo"]["inicio"]["valor"], d["id"]))
-    return mismo_sitio(a, b) and misma_ventana(primero, segundo)
+    return (
+        mismo_sitio(a, b)
+        and not cierres_de_noches_distintas(a, b)
+        and misma_ventana(primero, segundo)
+    )
 
 
 def todos_encajan(documentos: list[Documento]) -> bool:

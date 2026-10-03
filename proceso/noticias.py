@@ -91,6 +91,9 @@ class Candidato:
     articulos: list[str] = field(default_factory=list)
     # Candidato del mismo sitio del que se separó por un titular de repetición.
     separado_de: str | None = None
+    # Inicio del suceso, cuando su incidente lo sabe (no se guarda: sale del incidente). La
+    # repetición se mide desde él: las primeras noticias pueden salir horas después del suceso.
+    suceso: datetime | None = None
 
 
 # --- Normalización ---------------------------------------------------------------
@@ -567,10 +570,13 @@ def _agrupar_en(
 
 
 def repeticion(candidato: Candidato, articulo: Articulo, filtro_: Filtro) -> bool:
-    """El artículo cuenta que el suceso del candidato se ha repetido: abre otro."""
+    """El artículo cuenta que el suceso del candidato se ha repetido: abre otro. Las horas se
+    cuentan desde el suceso si se sabe (Lieja: el cierre del sábado por la noche sale en las
+    noticias del domingo por la mañana y el «opnieuw» del domingo por la noche es otro)."""
+    referencia = min(candidato.inicio, candidato.suceso) if candidato.suceso else candidato.inicio
     return (
         filtro_.repite(articulo.titular)
-        and articulo.fecha - candidato.inicio >= REPETICION_MIN
+        and articulo.fecha - referencia >= REPETICION_MIN
         and articulo.url not in candidato.articulos
     )
 

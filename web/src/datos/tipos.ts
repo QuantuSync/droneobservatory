@@ -76,6 +76,8 @@ export interface AfirmacionPublica {
   fecha: Instante;
   /** Valor según esa fuente, del mismo tipo que el campo público. */
   valor: unknown;
+  /** Frase literal de la fuente que justifica el valor (presencia de dron). */
+  cita?: string;
 }
 
 export type SateliteFirms = "Suomi NPP" | "NOAA-20" | "NOAA-21" | "Terra" | "Aqua";

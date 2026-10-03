@@ -395,7 +395,7 @@ export const en: Textos = {
     copiarEnlace: "Copy link",
     enlaceCopiado: "Link copied",
     enlaceNoCopiado: "Could not copy",
-    estado: "Status",
+    estado: "Event status",
     presenciaDron: "Drone presence",
     fecha: "Date",
     lugar: "Place",
@@ -659,20 +659,26 @@ export const en: Textos = {
         bloques: [
           {
             parrafo: [
-              "Status says whether the incident happened; drone presence says whether a " +
-                "drone is known to have been there. They are two different questions. " +
-                "Presence is confirmed when there is debris, radar tracking or an authority " +
-                "that states it explicitly; not confirmed when there are only sightings; and " +
-                "ruled out when an authority denies it.",
+              "Event status says whether the incident happened; drone presence says whether " +
+                "the authority attributes it to a drone. If the competent authority takes it " +
+                "as a fact, it is confirmed: it is enough for the airport operator, the air " +
+                "navigation service provider, the police, the armed forces, a ministry, the " +
+                "public prosecutor or the civil aviation authority to act or state that the " +
+                "event was caused by a drone (a closure because of a drone, a drone report it " +
+                "passes on, a police response to a drone). No debris, footage or sensor " +
+                "detection is required. It stays not confirmed if the authority itself leaves " +
+                "it open («possible drone», «unidentified object», «investigating whether it " +
+                "was a drone») or if only the press or witnesses report it. It is ruled out " +
+                "when an authority denies it.",
             ],
           },
           {
             parrafo: [
-              "The Copenhagen case shows the difference. In September 2025 the airport " +
-                "closed for several hours after drones were reported. The closure is a fact " +
-                "the authority confirms, but that what was seen were drones is a separate " +
-                "claim: without debris or tracking, an incident can be confirmed while drone " +
-                "presence remains unconfirmed.",
+              "The Liège case shows it. In November 2025 the air navigation service provider " +
+                "halted traffic at the airport after a drone report: the authority attributes " +
+                "the event to a drone and presence is confirmed. The headline of each record " +
+                "says the same as this field: it states the drone when it is confirmed and " +
+                "presents it as possible when it is not.",
             ],
           },
         ],
@@ -729,7 +735,8 @@ export const en: Textos = {
                 "points closer than the sum of their radii plus 10 km, and their start times " +
                 "are less than 6 hours apart or, when only the day is known, fall on the " +
                 "same day or the next. More than 12 hours without activity start a new " +
-                "incident.",
+                "incident. Two closures of the same site on different nights are always two " +
+                "incidents.",
             ],
           },
           {
@@ -749,10 +756,9 @@ export const en: Textos = {
             parrafo: [
               "When a news report quotes an authority, the statement is recorded as a " +
                 "source of its own, rated B, with the link to the report that carries it. It " +
-                "confirms the incident if the authority states that it happened; it confirms " +
-                "drone presence only if it states there were drones, not if it refers to " +
-                "reports received; and it denies or attributes the incident if that is what " +
-                "it says.",
+                "confirms the incident if the authority states that it happened, and with it " +
+                "drone presence, unless the authority itself leaves it open; and it denies " +
+                "or attributes the incident if that is what it says.",
             ],
           },
         ],

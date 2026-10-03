@@ -60,7 +60,7 @@ def test_un_incidente_fundido_en_otro_no_se_publica() -> None:
 
 def test_presencia_dron_se_publica() -> None:
     (feature, _) = exportar_ejemplos()["features"]
-    assert feature["properties"]["presencia_dron"] == "no_confirmada"
+    assert feature["properties"]["presencia_dron"] == "confirmada"
 
 
 def test_la_comprobacion_detecta_un_campo_colado() -> None:

@@ -219,15 +219,18 @@ const lugarSinUbicacion = objeto(
   { region: cadena(), localidad: cadena() },
 );
 
-const afirmacionPublica = objeto({
-  campo: cadena(),
-  fuente_id: cadena(),
-  medio: cadena(),
-  fiabilidad: enumerado(v.FIABILIDADES_PUBLICAS),
-  credibilidad: numero(v.CREDIBILIDAD_MIN, v.CREDIBILIDAD_MAX, true),
-  fecha: instante,
-  valor: cualquiera,
-});
+const afirmacionPublica = objeto(
+  {
+    campo: cadena(),
+    fuente_id: cadena(),
+    medio: cadena(),
+    fiabilidad: enumerado(v.FIABILIDADES_PUBLICAS),
+    credibilidad: numero(v.CREDIBILIDAD_MIN, v.CREDIBILIDAD_MAX, true),
+    fecha: instante,
+    valor: cualquiera,
+  },
+  { cita: cadena() },
+);
 
 const CAMPOS_INCIDENTE_OPCIONALES: Record<string, Comprobacion> = {
   afirmaciones_publicas: lista(afirmacionPublica),

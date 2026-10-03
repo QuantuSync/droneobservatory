@@ -61,7 +61,12 @@ from proceso.noticias import (
 from recogida import revision
 from recogida.descarga import Descargador
 from recogida.extractor import con_base, modelos_base, opciones_base, preparar_todas, prioritarios
-from recogida.gdelt import _candidato, _documento_candidato, articulo_de_documento
+from recogida.gdelt import (
+    _candidato,
+    _documento_candidato,
+    articulo_de_documento,
+    sucesos_de_candidatos,
+)
 
 registro = logging.getLogger("recogida")
 
@@ -96,9 +101,10 @@ class Resumen:
 
 def _candidatos(almacen: Almacen, nom: Nomenclator) -> list[Candidato]:
     resultado = []
+    sucesos = sucesos_de_candidatos(almacen)
     for documento in almacen.candidatos():
         try:
-            resultado.append(_candidato(documento, nom))
+            resultado.append(_candidato(documento, nom, sucesos))
         except KeyError:
             # Un lugar del vocabulario (un lugar nuevo de una ficha): no se reagrupa.
             continue

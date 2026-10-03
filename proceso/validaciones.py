@@ -253,8 +253,50 @@ def errores_ubicacion(documento: Documento) -> list[Error]:
     return [Error("lugar.punto", f"fuera de {pais}: {lat}, {lon}")]
 
 
+def errores_presencia(documento: Documento) -> list[Error]:
+    """Coherencia del criterio de presencia: un incidente confirmado o atribuido cuya fuente
+    oficial atribuye el suceso a un dron (sin dejarlo abierto) tiene el dron confirmado. Lo que
+    dice una autoridad en su propio documento sobre la presencia manda."""
+    from proceso import declaraciones
+
+    estado = _dict(documento.get("estado")).get("actual")
+    if estado not in (Estado.CONFIRMADO, Estado.ATRIBUIDO):
+        return []
+    if documento.get("presencia_dron") != "no_confirmada":
+        return []
+    fuentes = [f for f in documento.get("fuentes", []) if isinstance(f, dict)]
+    if any(
+        f.get("documento_oficial") and "presencia_dron" in f.get("campos_respaldados", [])
+        for f in fuentes
+    ):
+        return []
+    # Las fuentes oficiales que llevaron el suceso a confirmado o atribuido.
+    confirmantes = {
+        p.get("fuente_id")
+        for p in _dict(documento.get("estado")).get("historial", [])
+        if isinstance(p, dict) and p.get("estado") in (Estado.CONFIRMADO, Estado.ATRIBUIDO)
+    }
+    # La frase de la noticia que cita a la autoridad también puede dejarlo abierto.
+    contexto = {
+        f.get("enlace"): str(f.get("frase_origen", ""))
+        for f in fuentes
+        if not f.get("es_autoridad")
+    }
+    for fuente in fuentes:
+        frase = str(fuente.get("frase_origen", ""))
+        if (
+            fuente.get("id") in confirmantes
+            and fuente.get("es_autoridad")
+            and declaraciones.habla_de_drones(frase)
+            and not declaraciones.abierto(frase, contexto.get(fuente.get("enlace"), ""))
+        ):
+            return [Error("presencia_dron", f"la fuente oficial {fuente.get('id')} atribuye el "
+                          "suceso a un dron y la presencia no está confirmada")]  # fmt: skip
+    return []
+
+
 def errores_incidente(documento: Documento, vocabulario_modelos: frozenset[str]) -> list[Error]:
-    errores: list[Error] = errores_ubicacion(documento)
+    errores: list[Error] = [*errores_ubicacion(documento), *errores_presencia(documento)]
 
     tiempo = _dict(documento.get("tiempo"))
     inicio, fin = leer_instante(tiempo.get("inicio")), leer_instante(tiempo.get("fin"))

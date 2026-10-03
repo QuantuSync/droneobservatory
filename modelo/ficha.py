@@ -52,6 +52,7 @@ EVIDENCIAS = ("explosion", "restos", "caida", "derribo", "recuperado")
 NIVELES = ("instalacion", "localidad", "region", "pais")
 AUTORIDADES = (
     "policia", "aeropuerto", "navegacion_aerea", "fuerzas_armadas", "ministerio", "gobierno",
+    "fiscalia", "aviacion_civil",
 )  # fmt: skip
 AFIRMACIONES = ("incidente", "drones", "sin_drones", "niega_incidente", "autoria")
 
@@ -176,9 +177,13 @@ presa, estadio, industrial, gubernamental u otra) y objetivo_nombre: la instalac
 «nombre; categoría; país; latitud; longitud», con coordenadas aproximadas en grados \
 decimales. Si no sabes dónde está, no lo incluyas.
 - drones: número de drones como «N» o «mínimo-máximo» («varios» es 2-10; «un enjambre», 5-50).
-- presencia_dron: confirmada solo si hay restos, rastreo por radar o una autoridad afirma \
-expresamente que era un dron; descartada si una autoridad dice que no lo era (un globo, un \
-avión, una estrella); no_confirmada si solo hay avistamientos.
+- presencia_dron: confirmada si una autoridad competente (gestor aeroportuario, gestor de \
+navegación aérea, policía, fuerzas armadas, ministerio, gobierno, fiscalía, autoridad de aviación \
+civil) actúa o declara atribuyendo el suceso a un dron: un cierre por dron, un aviso de dron que \
+comunica, una intervención por dron; no hacen falta restos, grabación ni detección por sensor. \
+no_confirmada si la propia autoridad lo deja abierto («posible dron», «objeto no identificado», \
+«se investiga si era un dron») o si solo lo cuentan la prensa o los testigos. descartada si una \
+autoridad dice que no lo era (un globo, un avión, una estrella).
 - dron_estatal: true si la fuente dice que el dron es militar o de un Estado (un dron ruso o \
 ucraniano de la guerra lo es), nombra un modelo militar (Shahed, Geran, Gerbera) o dice que \
 llevaba explosivos; false si dice que era de un particular.
@@ -201,13 +206,14 @@ se encontraron restos que prueban el origen; separado por comas.
 noticia (vacía si no hay). autoridad: su nombre («Københavns Politi»). pais: el código ISO \
 del país de la autoridad (una autoridad de un país habla de lo que pasa en el suyo; un gobierno \
 que dice que en su país no pasó nada no desmiente un suceso de otro país). categoria: policia, \
-aeropuerto, navegacion_aerea (gestor de navegación aérea), fuerzas_armadas, ministerio o \
-gobierno. afirma: incidente si dice que el incidente o el cierre ocurrió; drones si afirma \
+aeropuerto, navegacion_aerea (gestor de navegación aérea), fuerzas_armadas, ministerio, \
+gobierno, fiscalia o aviacion_civil. afirma: incidente si dice que el incidente o el cierre \
+ocurrió; drones si afirma \
 expresamente que había drones (los vio ella misma, por radar o por restos); sin_drones si dice \
 que no los hubo; niega_incidente si dice que no pasó nada; autoria si atribuye la autoría (a \
 quién, en autor; vacío en los demás casos). fuente: el número de la fuente. frase: la frase \
-literal de la declaración, de 25 palabras como máximo. Que la policía recibiera avisos o \
-llamadas no es una afirmación suya: no la incluyas como incidente ni como drones.
+literal de la declaración, de 25 palabras como máximo. Si la autoridad comunica un aviso de \
+dron o actúa por él (cierra, interviene), inclúyela como incidente.
 - titulo_es y titulo_en: un título breve y neutro, en español y en inglés, con lugar y hecho \
 («Drones sobre el aeropuerto de Copenhague obligan a cerrarlo»), sin fecha. Van aparte de los \
 datos y siempre.
@@ -225,7 +231,8 @@ Datos esperados: es_incidente «true» (fuente 1, «Københavns Lufthavn var luk
 20.30 mandag aften», 0.95); tipo «interrupcion_aeroportuaria»; inicio «2025-09-22T18:30» (20.30 \
 en Copenhague es 18.30 UTC) con inicio_precision «minuto»; pais «DK»; lugar_suceso «Københavns \
 Lufthavn; instalacion; DK; Hovedstaden»; objetivo_conocido «true»; \
-drones «3-4»; presencia_dron «no_confirmada» (solo observación); cierre «si»; cierre_minutos \
+drones «3-4»; presencia_dron «confirmada» (el aeropuerto cerró por los drones); cierre «si»; \
+cierre_minutos \
 «240»; vuelos_desviados «31».
 
 Ejemplo 2.
@@ -236,7 +243,8 @@ am Donnerstagabend gegen 22 Uhr eingestellt worden. 17 Flüge konnten nicht star
 landende Maschinen wurden umgeleitet. Die Bundespolizei suchte das Gelände ab.
 Datos esperados: tipo «interrupcion_aeroportuaria»; inicio «2025-10-02T20:00» con precisión \
 «hora» («gegen 22 Uhr»); drones «2-10» («mehrerer»); vuelos_cancelados «17»; vuelos_desviados \
-«15»; cierre «si»; medidas «patrulla»; presencia_dron «no_confirmada».
+«15»; cierre «si»; medidas «patrulla»; presencia_dron «confirmada» (el aeropuerto cerró por \
+los drones).
 
 Ejemplo 3.
 Objetivo conocido: Base aérea de Kleine Brogel (base_militar, BE).
@@ -244,7 +252,7 @@ Fuente 1 (vrt.be, 2025-11-01T09:00Z, nl). Titular: Opnieuw drones gespot boven m
 basis Kleine Brogel. Texto: Vrijdagavond zijn opnieuw drones gezien boven de basis. Defensie \
 bevestigt de waarnemingen maar kon de toestellen niet uitschakelen.
 Datos esperados: tipo «sobrevuelo»; inicio «2025-10-31» con precisión «dia»; drones «2-10»; \
-presencia_dron «no_confirmada» (Defensie confirma que hubo avistamientos, no que fueran drones).
+presencia_dron «confirmada» (Defensie confirma los avistamientos de drones).
 
 Ejemplo 4.
 Objetivo conocido: Aeropuerto de Rzeszów (aeropuerto, PL, EPRZ).
@@ -280,7 +288,7 @@ Datos esperados: tipo «incursion» (entró desde fuera, explotó y el ministeri
 «MD»; lugar_suceso «Anenii Noi; localidad; MD; Anenii Noi»; objetivo_conocido «false» (el \
 suceso no ocurre en Fundu Moldovei, que solo casa por el nombre del país); dron_estatal «true» \
 (explotó: llevaba explosivos); entrada_exterior «true»; evidencia «caida, explosion»; \
-presencia_dron «no_confirmada» si nadie afirma expresamente que era un dron; sin cierre (la \
+presencia_dron «confirmada» (el ministerio confirma el suceso del dron); sin cierre (la \
 fuente no habla de él). Declaración: Ministerul Apărării, MD, ministerio, afirma «incidente».
 
 Ejemplo 8.

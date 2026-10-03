@@ -1232,6 +1232,18 @@ class Almacen:
         fila = self._conexion.execute("SELECT max(fecha) FROM historial").fetchone()
         return str(fila[0]) if fila and fila[0] else None
 
+    def anotar_motivo(
+        self, tabla: str, entidad_id: str, anterior: Documento, nuevo: Documento, motivo: str
+    ) -> None:
+        """Deja en el historial el motivo de un cambio por una regla (los campos que cambian,
+        antes y después): el documento ya guardado lleva su propia versión anterior."""
+        with self._conexion:
+            self._conexion.execute(
+                "INSERT INTO historial (tabla, entidad_id, operacion, anterior, nuevo) "
+                "VALUES (?, ?, 'cambio', ?, ?)",
+                (tabla, entidad_id, _json(anterior), _json({**nuevo, "motivo": motivo})),
+            )
+
     def historial(self, entidad_id: str) -> list[Documento]:
         filas = self._conexion.execute(
             "SELECT tabla, operacion, anterior, nuevo, fecha FROM historial "

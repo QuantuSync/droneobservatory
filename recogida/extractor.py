@@ -133,9 +133,10 @@ BUSQUEDA = "busqueda_dirigida"
 
 
 def prioritarios(almacen: Almacen) -> list[Documento]:
-    """Candidatos nunca extraídos: primero los de la búsqueda dirigida (un cierre medido sin
-    incidente), después los que tienen noticias de varios medios, de más medios a menos y, a
-    la par, del más reciente al más antiguo."""
+    """Candidatos nunca extraídos, y los separados en dos sucesos: primero los separados,
+    después los de la búsqueda dirigida (un cierre medido sin incidente), después los que
+    tienen noticias de varios medios, de más medios a menos y, a la par, del más reciente al
+    más antiguo."""
     nom = nomenclator()
     dirigidos = {
         c for a in (almacen.cursor(BUSQUEDA) or {}).get("anomalias", {}).values()
@@ -143,6 +144,14 @@ def prioritarios(almacen: Almacen) -> list[Documento]:
     }  # fmt: skip
     elegidos: list[tuple[int, str, Documento]] = []
     for candidato in almacen.candidatos():
+        # Los que se separaron en dos sucesos (las dos partes) van delante de todos: la ficha
+        # anterior ya no los describe.
+        if candidato.get("separado_de") and not almacen.extracciones(candidato["id"]):
+            elegidos.append((MAX_MEDIOS_ORDEN + 1, candidato["ultimo"], candidato))
+            continue
+        if extraccion.articulos_retirados(almacen, candidato):
+            elegidos.append((MAX_MEDIOS_ORDEN + 1, candidato["ultimo"], candidato))
+            continue
         if almacen.extracciones(candidato["id"]):
             continue
         if candidato["id"] in dirigidos:

@@ -76,7 +76,7 @@ describe("textos en español e inglés", () => {
     const texto = JSON.stringify(es.metodologia);
     for (const obligado of [
       "Solo drones",
-      "Copenhague",
+      "Lieja",
       "extracción automática validada por reglas",
       "Apache-2.0",
       "CC BY 4.0",

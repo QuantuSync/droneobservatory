@@ -336,7 +336,29 @@ def _documento_candidato(c: Candidato) -> Documento:
     return documento
 
 
-def _candidato(documento: Documento, nom: Nomenclator) -> Candidato:
+def sucesos_de_candidatos(almacen: Almacen) -> dict[str, datetime]:
+    """Inicio del suceso de cada candidato con incidente activo y día sabido (no la fecha de
+    publicación): la regla de repetición mide desde él."""
+    resultado: dict[str, datetime] = {}
+    for incidente in almacen.incidentes():
+        candidato = incidente["control"].get("candidato")
+        inicio = incidente["tiempo"]["inicio"]
+        if (
+            not candidato
+            or "fusionado_en" in incidente
+            or "retirado" in incidente
+            or inicio["precision"] not in {"minuto", "hora", "dia"}
+        ):
+            continue
+        resultado[candidato] = datetime.strptime(inicio["valor"], "%Y-%m-%dT%H:%MZ").replace(
+            tzinfo=UTC
+        )
+    return resultado
+
+
+def _candidato(
+    documento: Documento, nom: Nomenclator, sucesos: dict[str, datetime] | None = None
+) -> Candidato:
     return Candidato(
         id=documento["id"],
         tipo=documento["tipo"],
@@ -346,6 +368,7 @@ def _candidato(documento: Documento, nom: Nomenclator) -> Candidato:
         precision=documento["precision"],
         articulos=list(documento["articulos"]),
         separado_de=documento.get("separado_de"),
+        suceso=(sucesos or {}).get(documento["id"]),
     )
 
 
@@ -393,7 +416,8 @@ def incorporar(
     if not nuevos:
         return recuentos
     desde = _fecha(nuevos[0].fecha - timedelta(hours=12))
-    previos = [_candidato(d, nom) for d in almacen.candidatos_desde(desde)]
+    sucesos = sucesos_de_candidatos(almacen)
+    previos = [_candidato(d, nom, sucesos) for d in almacen.candidatos_desde(desde)]
     conocidos = {c.id for c in previos}
     agrupacion = agrupar(nuevos, filtro_, nom, Agrupacion(candidatos=previos))
     for candidato in agrupacion.candidatos:
