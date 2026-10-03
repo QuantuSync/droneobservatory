@@ -45982,6 +45982,140 @@
     "en": "Drones violate Moldova's airspace and explode in several localities",
     "es": "Drones violan el espacio aéreo de Moldavia y explotan en varias localidades"
    }
+  },
+  {
+   "afirmaciones_publicas": [
+    {
+     "campo": "drones.numero",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T14:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-043a51e2ebd37120",
+     "medio": "kyivpost.com",
+     "valor": {
+      "max": 10,
+      "min": 2
+     }
+    },
+    {
+     "campo": "lugar.pais",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T14:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-043a51e2ebd37120",
+     "medio": "kyivpost.com",
+     "valor": "MD"
+    },
+    {
+     "campo": "presencia_dron",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T14:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-043a51e2ebd37120",
+     "medio": "kyivpost.com",
+     "valor": "confirmada"
+    },
+    {
+     "campo": "tiempo.inicio",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T14:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-043a51e2ebd37120",
+     "medio": "kyivpost.com",
+     "valor": {
+      "precision": "dia",
+      "valor": "2026-10-03T00:00Z"
+     }
+    },
+    {
+     "campo": "tipo",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T14:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-043a51e2ebd37120",
+     "medio": "kyivpost.com",
+     "valor": "incursion"
+    }
+   ],
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-03T16:17Z"
+    }
+   },
+   "drones": {
+    "numero": {
+     "max": 10,
+     "min": 2
+    }
+   },
+   "estado": {
+    "actual": "notificado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T14:45Z"
+      },
+      "fuente_id": "gdelt-043a51e2ebd37120"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://kyivpost.com/post/86022",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T14:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Russian strike drones violated Moldovan airspace during an attack on Ukraine on Saturday, Oct. 3",
+     "id": "gdelt-043a51e2ebd37120",
+     "idioma": "en",
+     "medio": "kyivpost.com",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-2026-00422",
+   "lugar": {
+    "nivel": "region",
+    "pais": "MD",
+    "region": "Căușeni, Ștefan Vodă, Hîncești, Anenii Noi"
+   },
+   "presencia_dron": "confirmada",
+   "tiempo": {
+    "inicio": {
+     "precision": "dia",
+     "valor": "2026-10-03T00:00Z"
+    }
+   },
+   "tipo": "incursion",
+   "titulo": {
+    "en": "Russian drones breach Moldovan airspace and explode in four districts",
+    "es": "Drones rusos violan el espacio aéreo de Moldavia y explotan en cuatro distritos"
+   }
   }
  ]
 }

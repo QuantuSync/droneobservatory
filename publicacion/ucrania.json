@@ -791804,6 +791804,52 @@
    "region": "UA-35",
    "sentido": "RU_UA",
    "tipo": "impacto_guerra"
+  },
+  {
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-03T16:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-10-03T15:22Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/VA_Kyiv/21410",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-10-03T15:22Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Зранку в Києві «шахед» ударив по Північному мосту.",
+     "id": "VA_Kyiv-21410",
+     "idioma": "uk",
+     "medio": "Київська міська військова адміністрація",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03507",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "katotth:UA80000000000093317",
+    "nivel": "localidad",
+    "nombre": "Київ",
+    "nombre_latino": "Kyiv",
+    "punto": {
+     "lat": 50.45003,
+     "lon": 30.52414
+    },
+    "radio_km": 15.0
+   },
+   "region": "UA-30",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
   }
  ]
 }
