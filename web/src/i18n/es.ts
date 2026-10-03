@@ -999,7 +999,8 @@ export const es: Textos = {
                 "claro más proporción y el nivel alto en rojo. En un periodo se " +
                 "suman por celda las aeronaves y las degradadas de cada día (de cada mes en los " +
                 "periodos de más de 7 días). Se calcula en el servidor con el archivo diario " +
-                "de adsb.lol.",
+                "de adsb.lol. El nivel del día del panel «Europa ahora» es el que alcanza una " +
+                "de cada diez celdas (el percentil 90), junto al número de celdas altas.",
             ],
           },
         ],

@@ -7,8 +7,8 @@ solo las celdas con 20 aeronaves o más en el día; nivel «sin» por debajo del
 2 al 10 % y «alta» por encima. Cada celda lleva su contorno (seis vértices, longitud y
 latitud con 3 decimales) para que la web la dibuje sin calcular H3. En el fichero de un mes,
 aeronaves y degradadas son la suma de sus días (aeronaves-día) y la proporción se recalcula
-igual. El resumen da el número de celdas por nivel y el nivel de la proporción de toda
-Europa (degradadas menos una por celda, entre todas las aeronaves).
+igual. El resumen da el número de celdas por nivel, la proporción de toda Europa y el nivel del
+periodo: el de la celda del percentil 90 por proporción (el que alcanza una de cada diez).
 
 Objetos (`configuracion/almacen_publico.json`, `objetos.gnss`): `gnss/indice.json` (días y
 meses publicados), `gnss/dia/AAAA-MM-DD.json` y `gnss/mes/AAAA-MM.json`, con compresión gzip
@@ -38,6 +38,9 @@ from recogida import trafico as procesado
 registro = logging.getLogger("recogida.directo")
 
 VERSION = 1
+# Versión del cálculo: al cambiar, se vuelve a publicar todo (el nivel del resumen pasó de la
+# media de Europa al percentil 90 de las celdas).
+CALCULO = 2
 CONTROL = "gnss.json"
 CACHE_DIA = "public, max-age=86400"
 CACHE_INDICE = "public, max-age=300"
@@ -48,6 +51,17 @@ Subir = Callable[[str, bytes, str, str | None, str | None], bool]
 
 def nivel(aeronaves: int, degradadas: int) -> str:
     p = gnss.proporcion(aeronaves, degradadas)
+    return "alta" if p > gnss.NIVEL_ALTO else "media" if p >= gnss.NIVEL_MEDIO else "sin"
+
+
+def nivel_resumen(celdas: list[dict[str, Any]]) -> str:
+    """El nivel del periodo: el de la celda del percentil 90 por proporción (el que alcanza una
+    de cada diez celdas). La media de toda Europa queda casi siempre por debajo del 2 % aunque
+    haya cientos de celdas con interferencia alta."""
+    if not celdas:
+        return "sin"
+    proporciones = sorted(c["proporcion"] for c in celdas)
+    p = proporciones[min(len(proporciones) - 1, int(0.9 * len(proporciones)))]
     return "alta" if p > gnss.NIVEL_ALTO else "media" if p >= gnss.NIVEL_MEDIO else "sin"
 
 
@@ -87,13 +101,7 @@ def documento(periodo: str, dias: int, filas: dict[str, tuple[int, int]]) -> dic
             "aeronaves": total,
             "degradadas": sum(c["degradadas"] for c in celdas),
             "proporcion": round(proporcion, 4),
-            "nivel": (
-                "alta"
-                if proporcion > gnss.NIVEL_ALTO
-                else "media"
-                if proporcion >= gnss.NIVEL_MEDIO
-                else "sin"
-            ),
+            "nivel": nivel_resumen(celdas),
         },
         "celdas": celdas,
     }
@@ -124,7 +132,9 @@ class Publicador:
             contenido: dict[str, Any] = json.loads(self.ruta_control.read_text(encoding="utf-8"))
             return contenido
         except (OSError, ValueError):
-            return {"dias": [], "meses": []}
+            return {"dias": [], "meses": [], "calculo": CALCULO}
+        if contenido.get("calculo") != CALCULO:
+            return {"dias": [], "meses": [], "calculo": CALCULO}
 
     def _guardar(self, control: dict[str, Any]) -> None:
         self.ruta_control.parent.mkdir(parents=True, exist_ok=True)

@@ -196,7 +196,8 @@ Ahora se publica ([`recogida/gnss_publico.py`](../recogida/gnss_publico.py)):
   del 2 %, `media` del 2 al 10 %, `alta` por encima) y contorno (seis vértices, para que la web
   la dibuje sin calcular H3). Solo las celdas con 20 aeronaves o más en el día. En un mes,
   aeronaves y degradadas son la suma de sus días.
-- Resumen del día: celdas por nivel y el nivel de la proporción de toda Europa. Un día típico
+- Resumen del día: celdas por nivel, la proporción de toda Europa y el nivel del día, el de la
+  celda del percentil 90 (el que alcanza una de cada diez celdas). Un día típico
   tiene unas 4500 celdas, de ellas unas 600 con interferencia media y entre 280 y 390 altas; la
   proporción de Europa está entre el 1,7 y el 2,1 % (22/09/2025, 30/09 y 02/10/2026).
 - Lista cerrada de campos en `exportacion/campos.CAMPOS_PUBLICOS_GNSS`, comprobada antes de cada
@@ -299,7 +300,23 @@ corrieron tres a la vez con 2,5 GB cada una y coincidieron con las recogidas de 
 
 ## 9. Capturas de producción
 
-CAPTURAS_PENDIENTES
+Tomadas en droneobservatory.eu el 3 de octubre de 2026 hacia las 15:58 UTC, con el servicio en
+directo recién instalado (0 cierres en curso a esa hora) y el histórico del mapa GPS
+publicándose:
+
+| Captura | Qué se ve |
+| --- | --- |
+| [`europa-escritorio-panel.png`](capturas/europa-escritorio-panel.png) | Franja «Europa ahora» bajo los filtros, con las cinco cifras |
+| [`europa-escritorio-directo.png`](capturas/europa-escritorio-directo.png) | Panel en directo, sin cierres en curso |
+| [`europa-escritorio-gps.png`](capturas/europa-escritorio-gps.png) | Capa de interferencia GPS del último día, con su leyenda: el rojo del Báltico, Kaliningrado, el mar Negro y el este de Turquía |
+| [`europa-escritorio-presion.png`](capturas/europa-escritorio-presion.png) | Capa de presión por país |
+| [`europa-390x844-panel.png`](capturas/europa-390x844-panel.png), [`europa-390x844-gps.png`](capturas/europa-390x844-gps.png) | Versión reducida de la franja en la cabecera del teléfono, y la capa GPS |
+| [`estados-escritorio.png`](capturas/estados-escritorio.png), [`estados-390x844.png`](capturas/estados-390x844.png) | Notificados en naranja, confirmados en rojo y atribuidos en rojo con bandera (Moldavia y Rumanía) |
+| [`novedades-escritorio.png`](capturas/novedades-escritorio.png), [`novedades-390x844.png`](capturas/novedades-390x844.png) | Con una visita anterior de hace tres días: laten las 4 marcas con novedades |
+| [`sin-novedades-escritorio.png`](capturas/sin-novedades-escritorio.png), [`sin-novedades-390x844.png`](capturas/sin-novedades-390x844.png) | Primera visita: no late nada |
+
+En las capturas, la cifra GPS del panel aún sale con el nivel calculado como media de Europa
+(«sin interferencia» con 384 celdas altas); desde este cierre es el del percentil 90.
 
 ## 10. Pendientes
 

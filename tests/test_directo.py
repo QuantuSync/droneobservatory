@@ -493,7 +493,7 @@ def test_el_mapa_de_interferencia_gps_solo_lleva_campos_de_la_lista_cerrada(tmp_
     assert len(alta["contorno"]) == 6
     assert dia["resumen"] == {
         "celdas": 2, "celdas_media": 0, "celdas_alta": 1, "aeronaves": 160, "degradadas": 16,
-        "proporcion": round(14 / 160, 4), "nivel": "media",
+        "proporcion": round(14 / 160, 4), "nivel": "alta",
     }  # fmt: skip
     indice = json.loads(gzip.decompress(subidos["gnss/indice.json"][0]))
     assert indice["dias"] == ["2025-09-22"] and indice["meses"] == ["2025-09"]

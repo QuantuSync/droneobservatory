@@ -991,7 +991,8 @@ export const en: Textos = {
                 "with the share and the high level in red. For a period, aircraft " +
                 "and degraded aircraft are added up per cell over each day (each month for " +
                 "periods longer than 7 days). It is computed on the server from the daily " +
-                "adsb.lol archive.",
+                "adsb.lol archive. The level of the day in the “Europe now” strip is the one " +
+                "reached by one cell in ten (the 90th percentile), next to the number of high cells.",
             ],
           },
         ],
