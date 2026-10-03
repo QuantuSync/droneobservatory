@@ -798,7 +798,8 @@ def servir(args: argparse.Namespace) -> int:
         if comienzo - ultimo_guardado >= GUARDAR_VIVOS_S:
             servicio.guardar_vivos(comienzo)
             ultimo_guardado = comienzo
-            if version_clon(Path.cwd()) != version:
+            nueva = version_clon(Path.cwd())
+            if nueva and nueva != version:
                 # Código nuevo en el clon (lo pone al día la recogida horaria): se guarda y se
                 # sale; systemd vuelve a lanzar el servicio con el código nuevo y las trazas.
                 registro.info("código nuevo en el clon: el servicio se reinicia")
@@ -809,16 +810,22 @@ def servir(args: argparse.Namespace) -> int:
     return 0
 
 
+# Lo que el servicio ejecuta: un cambio aquí lo reinicia; los commits de datos publicados
+# (`publicacion/`, cada hora) no.
+CODIGO = ("almacen", "configuracion", "esquema", "exportacion", "modelo", "proceso", "recogida")
+
+
 def version_clon(clon: Path) -> str:
-    """El commit del clon (vacío si no se puede leer)."""
+    """La huella del código del clon (los árboles de git de sus carpetas de código), vacía si no
+    se puede leer."""
     try:
         salida = subprocess.run(
-            ["git", "-C", str(clon), "rev-parse", "HEAD"],
+            ["git", "-C", str(clon), "rev-parse", *(f"HEAD:{c}" for c in CODIGO)],
             capture_output=True, text=True, timeout=10, check=False,
         )  # fmt: skip
     except (OSError, subprocess.SubprocessError):
         return ""
-    return salida.stdout.strip()
+    return salida.stdout.strip() if salida.returncode == 0 else ""
 
 
 def principal(argumentos: list[str] | None = None) -> int:

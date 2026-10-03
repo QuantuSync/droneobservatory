@@ -724,3 +724,57 @@ def test_un_dia_incompleto_de_la_linea_base_no_cuenta() -> None:
 
     bases = base_constante()
     assert directo.vigilables(dia, candidatos, coberturas, bases) == candidatos[:9]
+
+
+def test_al_cambiar_el_calculo_se_vuelve_a_publicar_sin_perder_dias_del_indice(
+    tmp_path: Path,
+) -> None:
+    from recogida import gnss_publico
+    from recogida import trafico as procesado
+
+    datos = tmp_path / "trafico"
+    for d in (DIA, DIA + timedelta(days=1)):
+        carpeta = procesado.directorio_dia(datos, d)
+        carpeta.mkdir(parents=True)
+        filas = "celda,aeronaves,degradadas\n841f051ffffffff,120,15\n"
+        (carpeta / "gnss_dia.csv.gz").write_bytes(gzip.compress(filas.encode()))
+        (carpeta / procesado.RESUMEN).write_text("{}")
+    control = tmp_path / "directo" / gnss_publico.CONTROL
+    control.parent.mkdir(parents=True)
+    # Lo publicado con un cálculo anterior: los dos días.
+    control.write_text(json.dumps({"dias": ["2025-09-22", "2025-09-23"], "meses": ["2025-09"]}))
+    subidos: dict[str, bytes] = {}
+
+    def subir(objeto: str, cuerpo: bytes, tipo: str, cache: str | None, cod: str | None) -> bool:
+        subidos[objeto] = cuerpo
+        return True
+
+    publicador = gnss_publico.Publicador(datos, tmp_path / "directo", subir)
+    assert publicador.publicar_pendientes(tope=1) == 1
+    indice = json.loads(gzip.decompress(subidos["gnss/indice.json"]))
+    assert indice["dias"] == ["2025-09-22", "2025-09-23"]  # el índice no pierde el otro día
+    assert publicador.publicar_pendientes(tope=1) == 1
+    assert publicador.publicar_pendientes(tope=1) == 0
+
+
+def test_el_servicio_solo_se_reinicia_con_codigo_nuevo(tmp_path: Path) -> None:
+    import subprocess
+
+    def git(*a: str) -> None:
+        subprocess.run(["git", "-C", str(tmp_path), *a], check=True, capture_output=True)
+
+    git("init", "-q")
+    git("config", "user.email", "prueba@example.org")
+    git("config", "user.name", "prueba")
+    for carpeta in (*servicio.CODIGO, "publicacion"):
+        (tmp_path / carpeta).mkdir()
+        (tmp_path / carpeta / "a.txt").write_text("1")
+    git("add", "-A")
+    git("commit", "-q", "-m", "uno")
+    antes = servicio.version_clon(tmp_path)
+    (tmp_path / "publicacion" / "a.txt").write_text("2")
+    git("commit", "-q", "-am", "datos")
+    assert antes and servicio.version_clon(tmp_path) == antes
+    (tmp_path / "proceso" / "a.txt").write_text("2")
+    git("commit", "-q", "-am", "código")
+    assert servicio.version_clon(tmp_path) != antes

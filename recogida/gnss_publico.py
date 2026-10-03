@@ -128,13 +128,20 @@ class Publicador:
         self.ruta_control = datos / CONTROL
 
     def _control(self) -> dict[str, Any]:
+        """Lo publicado: `dias` y `meses` (todo lo que hay en el almacén, con el cálculo que sea,
+        para que el índice no pierda días mientras se vuelve a publicar) y `al_dia`, los días
+        publicados con el cálculo actual."""
         try:
             contenido: dict[str, Any] = json.loads(self.ruta_control.read_text(encoding="utf-8"))
-            return contenido
         except (OSError, ValueError):
-            return {"dias": [], "meses": [], "calculo": CALCULO}
+            contenido = {}
         if contenido.get("calculo") != CALCULO:
-            return {"dias": [], "meses": [], "calculo": CALCULO}
+            contenido["al_dia"] = []
+            contenido["calculo"] = CALCULO
+        contenido.setdefault("dias", [])
+        contenido.setdefault("meses", [])
+        contenido.setdefault("al_dia", [])
+        return contenido
 
     def _guardar(self, control: dict[str, Any]) -> None:
         self.ruta_control.parent.mkdir(parents=True, exist_ok=True)
@@ -150,7 +157,7 @@ class Publicador:
         return self.subir(f"gnss/{objeto}", comprimir(contenido), "application/json", cache, "gzip")
 
     def pendientes(self) -> list[date]:
-        hechos = set(self._control().get("dias", []))
+        hechos = set(self._control()["al_dia"])
         dias = procesado.Dias(self.datos_trafico).procesados()
         return sorted((d for d in dias if d.isoformat() not in hechos), reverse=True)
 
@@ -169,11 +176,12 @@ class Publicador:
                 f"dia/{dia.isoformat()}.json", documento(dia.isoformat(), 1, filas), CACHE_DIA
             ):
                 break
-            control["dias"] = sorted(set(control.get("dias", [])) | {dia.isoformat()})
+            control["dias"] = sorted(set(control["dias"]) | {dia.isoformat()})
+            control["al_dia"] = sorted(set(control["al_dia"]) | {dia.isoformat()})
             meses.add(dia.isoformat()[:7])
             hechos += 1
         for mes in sorted(meses):
-            dias = [d for d in control["dias"] if d.startswith(mes)]
+            dias = [d for d in control["al_dia"] if d.startswith(mes)]
             suma: dict[str, tuple[int, int]] = {}
             for d in dias:
                 for celda, (n, m) in (
