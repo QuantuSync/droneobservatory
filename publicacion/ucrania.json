@@ -791687,6 +791687,69 @@
    "region": "UA-63",
    "sentido": "RU_UA",
    "tipo": "impacto_guerra"
+  },
+  {
+   "categorias_objetivo": [
+    "residencial"
+   ],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-03T14:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-10-03T12:22Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/E_V_Kovalchuk/3017",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-10-03T12:22Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "❗️Украинский дрон нанес удар по жилому дому в селе Новый Ропск Климовского района.",
+     "id": "E_V_Kovalchuk-3017",
+     "idioma": "ru",
+     "medio": "Губернатор Брянской области",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/koronavirus32/28113",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-10-03T12:22Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "❗️Украинский дрон нанес удар по жилому дому в селе Новый Ропск Климовского района.",
+     "id": "koronavirus32-28113",
+     "idioma": "ru",
+     "medio": "Правительство Брянской области",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-IG-2026-03505",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:516874",
+    "nivel": "localidad",
+    "nombre": "Новый Ропск",
+    "nombre_latino": "Novyy Ropsk",
+    "punto": {
+     "lat": 52.29678,
+     "lon": 32.31226
+    },
+    "radio_km": 1.5
+   },
+   "region": "RU-BRY",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
   }
  ]
 }
