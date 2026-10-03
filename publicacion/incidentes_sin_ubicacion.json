@@ -45827,6 +45827,161 @@
     "en": "Drone exploded at Port of Constanța",
     "es": "Dron explotado en el Puerto de Constanza"
    }
+  },
+  {
+   "afirmaciones_publicas": [
+    {
+     "campo": "drones.numero",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T13:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-308343884be307e6",
+     "medio": "wiadomosci.gazeta.pl",
+     "valor": {
+      "max": 10,
+      "min": 2
+     }
+    },
+    {
+     "campo": "lugar.pais",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T13:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-308343884be307e6",
+     "medio": "wiadomosci.gazeta.pl",
+     "valor": "MD"
+    },
+    {
+     "campo": "presencia_dron",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T13:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-308343884be307e6",
+     "medio": "wiadomosci.gazeta.pl",
+     "valor": "confirmada"
+    },
+    {
+     "campo": "tiempo.inicio",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T13:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-308343884be307e6",
+     "medio": "wiadomosci.gazeta.pl",
+     "valor": {
+      "precision": "dia",
+      "valor": "2026-10-03T00:00Z"
+     }
+    },
+    {
+     "campo": "tipo",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T13:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-308343884be307e6",
+     "medio": "wiadomosci.gazeta.pl",
+     "valor": "incursion"
+    }
+   ],
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-03T15:17Z"
+    }
+   },
+   "drones": {
+    "numero": {
+     "max": 10,
+     "min": 2
+    }
+   },
+   "estado": {
+    "actual": "confirmado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T13:30Z"
+      },
+      "fuente_id": "gdelt-308343884be307e6"
+     },
+     {
+      "estado": "confirmado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T13:30Z"
+      },
+      "fuente_id": "gdelt-308343884be307e6-declaracion-1"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://wiadomosci.gazeta.pl/swiat/7,198075,33058344,drony-naruszyly-przestrzen-powietrzna-moldawii-slychac-bylo.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T13:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "krajowy zintegrowany system monitorowania zidentyfikował kilka dronów przelatujących w pobliżu miejscowości Anenii Noi, Stefan Voda, Tudora i Causeni",
+     "id": "gdelt-308343884be307e6",
+     "idioma": "pl",
+     "medio": "wiadomosci.gazeta.pl",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 1,
+     "enlace": "https://wiadomosci.gazeta.pl/swiat/7,198075,33058344,drony-naruszyly-przestrzen-powietrzna-moldawii-slychac-bylo.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T13:30Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "krajowy zintegrowany system monitorowania zidentyfikował kilka dronów przelatujących w pobliżu miejscowości Anenii Noi, Stefan Voda, Tudora i Causeni",
+     "id": "gdelt-308343884be307e6-declaracion-1",
+     "idioma": "pl",
+     "medio": "Ministerstwo Obrony Mołdawii (declaración oficial citada en wiadomosci.gazeta.pl)",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-2026-00421",
+   "lugar": {
+    "nivel": "localidad",
+    "pais": "MD"
+   },
+   "presencia_dron": "confirmada",
+   "tiempo": {
+    "inicio": {
+     "precision": "dia",
+     "valor": "2026-10-03T00:00Z"
+    }
+   },
+   "tipo": "sobrevuelo",
+   "titulo": {
+    "en": "Drones violate Moldova's airspace and explode in several localities",
+    "es": "Drones violan el espacio aéreo de Moldavia y explotan en varias localidades"
+   }
   }
  ]
 }

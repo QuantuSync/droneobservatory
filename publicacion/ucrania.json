@@ -791750,6 +791750,60 @@
    "reivindicacion_de_parte": true,
    "sentido": "UA_RU",
    "tipo": "impacto_guerra"
+  },
+  {
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-03T15:17Z"
+    }
+   },
+   "credibilidad": 2,
+   "fallecidos": {
+    "max": 1,
+    "min": 1
+   },
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-10-03T14:24Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 2,
+     "enlace": "https://t.me/kirovohradskaODA/49636",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-10-03T14:24Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Сьогодні під час повітряної тривоги внаслідок падіння БпЛА на проїжджу частину в місті Гайворон загинув чоловік.",
+     "id": "kirovohradskaODA-49636",
+     "idioma": "uk",
+     "medio": "Кіровоградська ОВА",
+     "replicas": 0
+    }
+   ],
+   "heridos": {
+    "max": 1,
+    "min": 1
+   },
+   "id": "EODI-IG-2026-03506",
+   "impacto": "restos",
+   "lugar": {
+    "id": "katotth:UA35020050010071459",
+    "nivel": "localidad",
+    "nombre": "Гайворон",
+    "nombre_latino": "Haivoron",
+    "punto": {
+     "lat": 48.34069,
+     "lon": 29.85932
+    },
+    "radio_km": 4.0
+   },
+   "region": "UA-35",
+   "sentido": "RU_UA",
+   "tipo": "impacto_guerra"
   }
  ]
 }
