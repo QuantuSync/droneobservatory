@@ -42087,14 +42087,44 @@
      "credibilidad": 3,
      "fecha": {
       "precision": "aproximada",
-      "valor": "2026-10-03T06:45Z"
+      "valor": "2026-10-03T08:15Z"
      },
      "fiabilidad": "C",
-     "fuente_id": "gdelt-67d0887d266deee1",
-     "medio": "news.yam.md",
+     "fuente_id": "gdelt-c4f32e3053685be6",
+     "medio": "antena3.ro",
+     "valor": {
+      "max": 5,
+      "min": 5
+     }
+    },
+    {
+     "campo": "drones.numero",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T09:15Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-c4828a463607fd7f",
+     "medio": "bursa.ro",
      "valor": {
       "max": 10,
       "min": 2
+     }
+    },
+    {
+     "campo": "drones.numero",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T09:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-091e142045965879",
+     "medio": "hotnews.ro",
+     "valor": {
+      "max": 5,
+      "min": 5
      }
     },
     {
@@ -42110,6 +42140,42 @@
      "valor": "MD"
     },
     {
+     "campo": "lugar.pais",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T08:15Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-c4f32e3053685be6",
+     "medio": "antena3.ro",
+     "valor": "MD"
+    },
+    {
+     "campo": "lugar.pais",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T09:15Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-c4828a463607fd7f",
+     "medio": "bursa.ro",
+     "valor": "MD"
+    },
+    {
+     "campo": "lugar.pais",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T09:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-a5b48ee756c6b150",
+     "medio": "ziarulnational.md",
+     "valor": "MD"
+    },
+    {
      "campo": "presencia_dron",
      "credibilidad": 3,
      "fecha": {
@@ -42122,19 +42188,151 @@
      "valor": "confirmada"
     },
     {
+     "campo": "presencia_dron",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T08:15Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-c4f32e3053685be6",
+     "medio": "antena3.ro",
+     "valor": "confirmada"
+    },
+    {
+     "campo": "presencia_dron",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T09:15Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-c4828a463607fd7f",
+     "medio": "bursa.ro",
+     "valor": "confirmada"
+    },
+    {
+     "campo": "presencia_dron",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T09:30Z"
+     },
+     "fiabilidad": "B",
+     "fuente_id": "gdelt-a5b48ee756c6b150-declaracion-1",
+     "medio": "Serviciul Operaţii Aeriane al Armatei Naţionale (declaración oficial citada en ziarulnational.md)",
+     "valor": "confirmada"
+    },
+    {
+     "campo": "tiempo.fin",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T09:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-a5b48ee756c6b150",
+     "medio": "ziarulnational.md",
+     "valor": {
+      "precision": "minuto",
+      "valor": "2026-10-03T08:00Z"
+     }
+    },
+    {
      "campo": "tiempo.inicio",
      "credibilidad": 3,
      "fecha": {
       "precision": "aproximada",
-      "valor": "2026-10-03T06:45Z"
+      "valor": "2026-10-03T08:15Z"
      },
      "fiabilidad": "C",
-     "fuente_id": "gdelt-67d0887d266deee1",
-     "medio": "news.yam.md",
+     "fuente_id": "gdelt-c4f32e3053685be6",
+     "medio": "antena3.ro",
      "valor": {
       "precision": "dia",
       "valor": "2026-10-03T00:00Z"
      }
+    },
+    {
+     "campo": "tiempo.inicio",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T09:15Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-c4828a463607fd7f",
+     "medio": "bursa.ro",
+     "valor": {
+      "precision": "dia",
+      "valor": "2026-10-03T00:00Z"
+     }
+    },
+    {
+     "campo": "tiempo.inicio",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T09:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-a5b48ee756c6b150",
+     "medio": "ziarulnational.md",
+     "valor": {
+      "precision": "minuto",
+      "valor": "2026-10-03T07:45Z"
+     }
+    },
+    {
+     "campo": "tiempo.inicio",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T09:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-091e142045965879",
+     "medio": "hotnews.ro",
+     "valor": {
+      "precision": "minuto",
+      "valor": "2026-10-03T07:45Z"
+     }
+    },
+    {
+     "campo": "tipo",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T08:15Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-c4f32e3053685be6",
+     "medio": "antena3.ro",
+     "valor": "incursion"
+    },
+    {
+     "campo": "tipo",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T09:15Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-c4828a463607fd7f",
+     "medio": "bursa.ro",
+     "valor": "incursion"
+    },
+    {
+     "campo": "tipo",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T09:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-091e142045965879",
+     "medio": "hotnews.ro",
+     "valor": "incursion"
     }
    ],
    "consecuencias": {
@@ -42145,13 +42343,13 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T07:17Z"
+     "valor": "2026-10-03T10:17Z"
     }
    },
    "drones": {
     "numero": {
-     "max": 10,
-     "min": 2
+     "max": 5,
+     "min": 5
     }
    },
    "estado": {
@@ -42176,29 +42374,104 @@
       "valor": "2026-10-03T06:45Z"
      },
      "fiabilidad": "C",
-     "frase_origen": "Mai multe drone au survolat spațiul aerian al Republicii Moldova.",
+     "frase_origen": "Explozii au fost raportate în mai multe localități din raioanele Căușeni, Ștefan Vodă, Anenii Noi și Hâncești.",
      "id": "gdelt-67d0887d266deee1",
      "idioma": "ro",
      "medio": "news.yam.md",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://antena3.ro/externe/cinci-drone-au-intrat-in-spatiul-aerian-al-republicii-moldova-explozii-langa-cel-putin-doua-localitati-805657.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T08:15Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Cinci drone au intrat în spațiul aerian al Republicii Moldova.",
+     "id": "gdelt-c4f32e3053685be6",
+     "idioma": "ro",
+     "medio": "antena3.ro",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://bursa.ro/mai-multe-drone-au-survolat-sambata-dimineata-spatiul-aerian-al-republicii-moldova-86084064",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T09:15Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Mai multe drone au survolat în această dimineaţă spaţiul aerian al Republicii Moldova",
+     "id": "gdelt-c4828a463607fd7f",
+     "idioma": "ro",
+     "medio": "bursa.ro",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://ziarulnational.md/cinci-drone-au-survolat-republica-moldova-explozii-si-fragmente-gasite-in-patru-raioane-fara-victime",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T09:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Explozii au fost semnalate în mai multe raioane, inclusiv în apropierea localităţii Crocmaz, unde deflagraţia a provocat un incendiu.",
+     "id": "gdelt-a5b48ee756c6b150",
+     "idioma": "ro",
+     "medio": "ziarulnational.md",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://ziarulnational.md/cinci-drone-au-survolat-republica-moldova-explozii-si-fragmente-gasite-in-patru-raioane-fara-victime",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T09:30Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "spaţiul aerian naţional, a fost survolat de cinci aparate de zbor fără pilot.",
+     "id": "gdelt-a5b48ee756c6b150-declaracion-1",
+     "idioma": "ro",
+     "medio": "Serviciul Operaţii Aeriane al Armatei Naţionale (declaración oficial citada en ziarulnational.md)",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://hotnews.ro/val-de-drone-in-spatiul-aerian-al-republicii-moldova-explozii-in-mai-multe-raioane-anuntul-autoritatilor-de-la-chisinau-2365527",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T09:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Mai multe drone au intrat, sâmbătă dimineaţă, în spaţiul aerian al Republicii Moldova.",
+     "id": "gdelt-091e142045965879",
+     "idioma": "ro",
+     "medio": "hotnews.ro",
      "replicas": 0
     }
    ],
    "id": "EODI-2026-00371",
    "lugar": {
-    "nivel": "localidad",
+    "nivel": "pais",
     "pais": "MD"
    },
    "presencia_dron": "confirmada",
    "tiempo": {
+    "duracion_min": 15,
+    "fin": {
+     "precision": "minuto",
+     "valor": "2026-10-03T08:00Z"
+    },
     "inicio": {
-     "precision": "dia",
-     "valor": "2026-10-03T00:00Z"
+     "precision": "minuto",
+     "valor": "2026-10-03T07:45Z"
     }
    },
-   "tipo": "sobrevuelo",
+   "tipo": "incursion",
    "titulo": {
-    "en": "Multiple drones fly over Moldova and cause explosions",
-    "es": "Múltiples drones sobrevuelan Moldavia y causan explosiones"
+    "en": "Multiple drones fly over Moldavian airspace causing explosions",
+    "es": "Múltiples drones sobrevuelan el espacio aéreo de Moldavia causando explosiones"
    }
   },
   {
@@ -42266,7 +42539,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T08:17Z"
+     "valor": "2026-10-03T10:17Z"
     }
    },
    "drones": {
@@ -42312,6 +42585,20 @@
      "replicas": 0
     },
     {
+     "credibilidad": 3,
+     "enlace": "https://news.yam.md/ro/story/70614959",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T08:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "MAE condamnă survolarea Republicii Moldova de cinci drone",
+     "id": "gdelt-4fd5ae744c06e05e",
+     "idioma": "ro",
+     "medio": "news.yam.md",
+     "replicas": 0
+    },
+    {
      "credibilidad": 1,
      "enlace": "https://news.yam.md/ro/story/70585486",
      "fecha": {
@@ -42347,30 +42634,18 @@
   {
    "afirmaciones_publicas": [
     {
-     "campo": "consecuencias.cierre.valor",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-03T08:00Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-48e4088bd8d70c33",
-     "medio": "zazoom.it",
-     "valor": "si"
-    },
-    {
      "campo": "drones.numero",
      "credibilidad": 3,
      "fecha": {
       "precision": "aproximada",
-      "valor": "2026-10-03T08:00Z"
+      "valor": "2026-10-03T08:30Z"
      },
      "fiabilidad": "C",
-     "fuente_id": "gdelt-fc1b83d89eb5bf0a",
-     "medio": "ilfattoquotidiano.it",
+     "fuente_id": "gdelt-9a3079a50a004aaf",
+     "medio": "news.yam.md",
      "valor": {
-      "max": 1,
-      "min": 1
+      "max": 2,
+      "min": 2
      }
     },
     {
@@ -42378,49 +42653,35 @@
      "credibilidad": 3,
      "fecha": {
       "precision": "aproximada",
-      "valor": "2026-10-03T08:00Z"
+      "valor": "2026-10-03T08:30Z"
      },
      "fiabilidad": "C",
-     "fuente_id": "gdelt-fc1b83d89eb5bf0a",
-     "medio": "ilfattoquotidiano.it",
-     "valor": "LT"
+     "fuente_id": "gdelt-9a3079a50a004aaf",
+     "medio": "news.yam.md",
+     "valor": "MD"
     },
     {
      "campo": "presencia_dron",
      "credibilidad": 3,
      "fecha": {
       "precision": "aproximada",
-      "valor": "2026-10-03T08:00Z"
+      "valor": "2026-10-03T08:30Z"
      },
      "fiabilidad": "C",
-     "fuente_id": "gdelt-fc1b83d89eb5bf0a",
-     "medio": "ilfattoquotidiano.it",
-     "valor": "no_confirmada"
-    },
-    {
-     "campo": "respuesta.medidas",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-03T08:00Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-48e4088bd8d70c33",
-     "medio": "zazoom.it",
-     "valor": [
-      "cazas"
-     ]
+     "fuente_id": "gdelt-9a3079a50a004aaf",
+     "medio": "news.yam.md",
+     "valor": "confirmada"
     },
     {
      "campo": "tiempo.inicio",
      "credibilidad": 3,
      "fecha": {
       "precision": "aproximada",
-      "valor": "2026-10-03T08:00Z"
+      "valor": "2026-10-03T08:30Z"
      },
      "fiabilidad": "C",
-     "fuente_id": "gdelt-fc1b83d89eb5bf0a",
-     "medio": "ilfattoquotidiano.it",
+     "fuente_id": "gdelt-9a3079a50a004aaf",
+     "medio": "news.yam.md",
      "valor": {
       "precision": "dia",
       "valor": "2026-10-03T00:00Z"
@@ -42431,12 +42692,395 @@
      "credibilidad": 3,
      "fecha": {
       "precision": "aproximada",
-      "valor": "2026-10-03T08:00Z"
+      "valor": "2026-10-03T08:30Z"
      },
      "fiabilidad": "C",
-     "fuente_id": "gdelt-fc1b83d89eb5bf0a",
-     "medio": "ilfattoquotidiano.it",
+     "fuente_id": "gdelt-9a3079a50a004aaf",
+     "medio": "news.yam.md",
      "valor": "incursion"
+    }
+   ],
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-03T10:17Z"
+    }
+   },
+   "drones": {
+    "numero": {
+     "max": 2,
+     "min": 2
+    }
+   },
+   "estado": {
+    "actual": "notificado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T08:30Z"
+      },
+      "fuente_id": "gdelt-9a3079a50a004aaf"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://news.yam.md/ro/story/70615119",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T08:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Cele cinci aparate de zbor care au survolat și explodat în R. Moldova sunt trei rachete și două drone.",
+     "id": "gdelt-9a3079a50a004aaf",
+     "idioma": "ro",
+     "medio": "news.yam.md",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-2026-00379",
+   "lugar": {
+    "nivel": "pais",
+    "pais": "MD"
+   },
+   "presencia_dron": "confirmada",
+   "tiempo": {
+    "inicio": {
+     "precision": "aproximada",
+     "valor": "2026-10-03T08:30Z"
+    }
+   },
+   "tipo": "incursion",
+   "titulo": {
+    "en": "Two Russian drones explode over Moldova",
+    "es": "Dos drones rusos explotan en Moldavia"
+   }
+  },
+  {
+   "afirmaciones_publicas": [
+    {
+     "campo": "drones.numero",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T08:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-5cafff66815f35b8",
+     "medio": "ziuaconstanta.ro",
+     "valor": {
+      "max": 10,
+      "min": 2
+     }
+    },
+    {
+     "campo": "lugar.pais",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T08:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-5cafff66815f35b8",
+     "medio": "ziuaconstanta.ro",
+     "valor": "MD"
+    },
+    {
+     "campo": "presencia_dron",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T08:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-5cafff66815f35b8",
+     "medio": "ziuaconstanta.ro",
+     "valor": "confirmada"
+    },
+    {
+     "campo": "respuesta.medidas",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T08:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-5cafff66815f35b8",
+     "medio": "ziuaconstanta.ro",
+     "valor": [
+      "patrulla"
+     ]
+    },
+    {
+     "campo": "tiempo.inicio",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T08:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-5cafff66815f35b8",
+     "medio": "ziuaconstanta.ro",
+     "valor": {
+      "precision": "dia",
+      "valor": "2026-10-03T00:00Z"
+     }
+    },
+    {
+     "campo": "tipo",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T08:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-5cafff66815f35b8",
+     "medio": "ziuaconstanta.ro",
+     "valor": "sobrevuelo"
+    }
+   ],
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-03T10:17Z"
+    }
+   },
+   "drones": {
+    "numero": {
+     "max": 10,
+     "min": 2
+    }
+   },
+   "estado": {
+    "actual": "confirmado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T08:45Z"
+      },
+      "fuente_id": "gdelt-5cafff66815f35b8"
+     },
+     {
+      "estado": "confirmado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T08:45Z"
+      },
+      "fuente_id": "gdelt-5cafff66815f35b8-declaracion-1"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://ziuaconstanta.ro/stiri/eveniment/panica-in-moldova-mai-multe-drone-de-origine-necunoscuta-au-survolat-spatiul-aerian-955375.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T08:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "drone de origine necunoscută",
+     "id": "gdelt-5cafff66815f35b8",
+     "idioma": "ro",
+     "medio": "ziuaconstanta.ro",
+     "replicas": 1
+    },
+    {
+     "credibilidad": 1,
+     "enlace": "https://ziuaconstanta.ro/stiri/eveniment/panica-in-moldova-mai-multe-drone-de-origine-necunoscuta-au-survolat-spatiul-aerian-955375.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T08:45Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "dronele au fost monitorizate în proximitatea mai multor localități din centrul și sud-estul țării",
+     "id": "gdelt-5cafff66815f35b8-declaracion-1",
+     "idioma": "ro",
+     "medio": "Ministerul Apărării (declaración oficial citada en ziuaconstanta.ro)",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-2026-00381",
+   "lugar": {
+    "nivel": "localidad",
+    "pais": "MD"
+   },
+   "presencia_dron": "confirmada",
+   "respuesta": {
+    "medidas": [
+     "patrulla"
+    ]
+   },
+   "tiempo": {
+    "inicio": {
+     "precision": "dia",
+     "valor": "2026-10-03T00:00Z"
+    }
+   },
+   "tipo": "sobrevuelo",
+   "titulo": {
+    "en": "Multiple drones of unknown origin fly over Moldavian airspace",
+    "es": "Múltiples drones de origen desconocido sobrevuelan el espacio aéreo de Moldavia"
+   }
+  },
+  {
+   "afirmaciones_publicas": [
+    {
+     "campo": "consecuencias.cierre.valor",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T09:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-d07eac49e6186bee",
+     "medio": "primapress.it",
+     "valor": "si"
+    },
+    {
+     "campo": "drones.numero",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T09:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-d07eac49e6186bee",
+     "medio": "primapress.it",
+     "valor": {
+      "max": 1,
+      "min": 1
+     }
+    },
+    {
+     "campo": "lugar.pais",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T09:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-d07eac49e6186bee",
+     "medio": "primapress.it",
+     "valor": "LT"
+    },
+    {
+     "campo": "lugar.pais",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T10:00Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-faeb620ff0072571",
+     "medio": "ilfattonisseno.it",
+     "valor": "LT"
+    },
+    {
+     "campo": "presencia_dron",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T09:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-d07eac49e6186bee",
+     "medio": "primapress.it",
+     "valor": "no_confirmada"
+    },
+    {
+     "campo": "presencia_dron",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T10:00Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-faeb620ff0072571",
+     "medio": "ilfattonisseno.it",
+     "valor": "no_confirmada"
+    },
+    {
+     "campo": "respuesta.medidas",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T09:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-d07eac49e6186bee",
+     "medio": "primapress.it",
+     "valor": [
+      "cazas"
+     ]
+    },
+    {
+     "campo": "respuesta.medidas",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T10:00Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-faeb620ff0072571",
+     "medio": "ilfattonisseno.it",
+     "valor": [
+      "cazas"
+     ]
+    },
+    {
+     "campo": "tiempo.inicio",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T09:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-d07eac49e6186bee",
+     "medio": "primapress.it",
+     "valor": {
+      "precision": "dia",
+      "valor": "2026-10-03T00:00Z"
+     }
+    },
+    {
+     "campo": "tipo",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T09:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-d07eac49e6186bee",
+     "medio": "primapress.it",
+     "valor": "interrupcion_aeroportuaria"
+    },
+    {
+     "campo": "tipo",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T10:00Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-faeb620ff0072571",
+     "medio": "ilfattonisseno.it",
+     "valor": "sobrevuelo"
     }
    ],
    "consecuencias": {
@@ -42447,7 +43091,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T08:17Z"
+     "valor": "2026-10-03T10:17Z"
     }
    },
    "drones": {
@@ -42463,107 +43107,79 @@
       "estado": "notificado",
       "fecha": {
        "precision": "aproximada",
-       "valor": "2026-10-03T07:30Z"
+       "valor": "2026-10-03T09:30Z"
       },
-      "fuente_id": "gdelt-128c9f405e59381f"
+      "fuente_id": "gdelt-d07eac49e6186bee"
      },
      {
       "estado": "confirmado",
       "fecha": {
        "precision": "aproximada",
-       "valor": "2026-10-03T08:00Z"
+       "valor": "2026-10-03T09:30Z"
       },
-      "fuente_id": "gdelt-fc1b83d89eb5bf0a-declaracion-1"
+      "fuente_id": "gdelt-d07eac49e6186bee-declaracion-1"
      }
     ]
    },
    "fuentes": [
     {
      "credibilidad": 3,
-     "enlace": "https://ansa.it/sito/notizie/mondo/europa/2026/10/03/drone-viola-lo-spazio-aereo-lituano-allerta-alla-popolazione_56200a97-785e-4e6d-b43a-d0b4c6b6621e.html",
+     "enlace": "https://primapress.it/lituania-allarme-aereo-per-un-drone-dalla-bielorussia-in-volo-intercettori-nato",
      "fecha": {
       "precision": "aproximada",
-      "valor": "2026-10-03T07:30Z"
+      "valor": "2026-10-03T09:30Z"
      },
      "fiabilidad": "C",
-     "frase_origen": "Drone viola lo spazio aereo lituano, allerta alla popolazione - Europa",
-     "id": "gdelt-128c9f405e59381f",
+     "frase_origen": "Un drone ha violato lo spazio aereo lituano.",
+     "id": "gdelt-d07eac49e6186bee",
      "idioma": "it",
-     "medio": "ansa.it",
+     "medio": "primapress.it",
      "replicas": 0
     },
     {
      "credibilidad": 3,
-     "enlace": "https://ilfattoquotidiano.it/2026/10/03/lituania-drone-viola-spazio-aereo-cercate-luogo-sicuro-rifugi-antiaere/8526307",
+     "enlace": "https://primapress.it/lituania-allarme-aereo-per-un-drone-dalla-bielorussia-in-volo-intercettori-nato",
      "fecha": {
       "precision": "aproximada",
-      "valor": "2026-10-03T08:00Z"
+      "valor": "2026-10-03T09:30Z"
      },
-     "fiabilidad": "C",
-     "frase_origen": "a seguito dell'avvistamento di un drone che ha violato lo spazio aereo",
-     "id": "gdelt-fc1b83d89eb5bf0a",
+     "fiabilidad": "B",
+     "frase_origen": "Allarme per incursione aerea. Cercate un luogo sicuro.",
+     "id": "gdelt-d07eac49e6186bee-declaracion-1",
      "idioma": "it",
-     "medio": "ilfattoquotidiano.it",
+     "medio": "Forze armate lituane (declaración oficial citada en primapress.it)",
      "replicas": 0
     },
     {
      "credibilidad": 3,
-     "enlace": "https://zazoom.it/2026-10-03/drone-viola-lo-spazio-aereo-lituano-lallerta-ai-cittadini-possibile-incursione-aerea-cercate-un-luogo-sicuro/19752609",
+     "enlace": "https://ilfattonisseno.it/2026/10/lituania-drone-invade-spazio-aereo-popolazione-invitata-a-cercare-luogo-sicuro",
      "fecha": {
       "precision": "aproximada",
-      "valor": "2026-10-03T08:00Z"
+      "valor": "2026-10-03T10:00Z"
      },
      "fiabilidad": "C",
-     "frase_origen": "provocando un allarme e la chiusura temporanea dell'aeroporto",
-     "id": "gdelt-48e4088bd8d70c33",
+     "frase_origen": "possibile allarme per incursione aerea",
+     "id": "gdelt-faeb620ff0072571",
      "idioma": "it",
-     "medio": "zazoom.it",
+     "medio": "ilfattonisseno.it",
      "replicas": 0
     },
     {
      "credibilidad": 3,
-     "enlace": "https://zazoom.it/2026-10-03/lituania-drone-viola-lo-spazio-aereo-allerta-alla-popolazione-cercate-un-luogo-sicuro-se-vedete-un-oggetto-sospetto-allontanatevi/19752588",
+     "enlace": "https://ilfattonisseno.it/2026/10/lituania-drone-invade-spazio-aereo-popolazione-invitata-a-cercare-luogo-sicuro",
      "fecha": {
       "precision": "aproximada",
-      "valor": "2026-10-03T08:00Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "Lituania drone viola lo spazio aereo Allerta alla popolazione | Cercate un luogo sicuro se vedete un oggetto sospetto allontanatevi",
-     "id": "gdelt-197d1f9b1dc7f446",
-     "idioma": "it",
-     "medio": "zazoom.it",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://zazoom.it/2026-10-03/lituania-drone-viola-spazio-aereo-allarme-delle-autorita-cercate-un-luogo-sicuro/19752611",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-03T08:00Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "Lituania drone viola spazio aereo Allarme delle autorità | Cercate un luogo sicuro",
-     "id": "gdelt-f541de07976c19f5",
-     "idioma": "it",
-     "medio": "zazoom.it",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 1,
-     "enlace": "https://ilfattoquotidiano.it/2026/10/03/lituania-drone-viola-spazio-aereo-cercate-luogo-sicuro-rifugi-antiaere/8526307",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-03T08:00Z"
+      "valor": "2026-10-03T10:00Z"
      },
      "fiabilidad": "B",
      "frase_origen": "possibile allarme per incursione aerea. Cercate un luogo sicuro.",
-     "id": "gdelt-fc1b83d89eb5bf0a-declaracion-1",
+     "id": "gdelt-faeb620ff0072571-declaracion-1",
      "idioma": "it",
-     "medio": "Forze armate lituane (declaración oficial citada en ilfattoquotidiano.it)",
+     "medio": "Forze Armate lituane (declaración oficial citada en ilfattonisseno.it)",
      "replicas": 0
     }
    ],
-   "id": "EODI-2026-00374",
+   "id": "EODI-2026-00384",
    "lugar": {
     "nivel": "pais",
     "pais": "LT"
@@ -42577,13 +43193,147 @@
    "tiempo": {
     "inicio": {
      "precision": "aproximada",
-     "valor": "2026-10-03T08:00Z"
+     "valor": "2026-10-03T09:30Z"
     }
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "Drone violates Lithuanian airspace and causes airport closure",
-    "es": "Drone viola el espacio aéreo de Lituania y provoca cierre del aeropuerto"
+    "en": "Drone from Belarus violates Lithuanian airspace and forces airport closure",
+    "es": "Dron desde Bielorrusia viola el espacio aéreo de Lituania y obliga a cerrar el aeropuerto"
+   }
+  },
+  {
+   "afirmaciones_publicas": [
+    {
+     "campo": "lugar.pais",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T09:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-d7b63f3679eafff9",
+     "medio": "dr.dk",
+     "valor": "LT"
+    },
+    {
+     "campo": "presencia_dron",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T09:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-d7b63f3679eafff9",
+     "medio": "dr.dk",
+     "valor": "no_confirmada"
+    },
+    {
+     "campo": "respuesta.medidas",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T09:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-d7b63f3679eafff9",
+     "medio": "dr.dk",
+     "valor": [
+      "cazas"
+     ]
+    },
+    {
+     "campo": "tiempo.inicio",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T09:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-d7b63f3679eafff9",
+     "medio": "dr.dk",
+     "valor": {
+      "precision": "minuto",
+      "valor": "2026-10-03T07:00Z"
+     }
+    },
+    {
+     "campo": "tipo",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T09:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-d7b63f3679eafff9",
+     "medio": "dr.dk",
+     "valor": "interrupcion_aeroportuaria"
+    }
+   ],
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-03T10:17Z"
+    }
+   },
+   "drones": {
+    "numero": "desconocido"
+   },
+   "estado": {
+    "actual": "notificado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T09:45Z"
+      },
+      "fuente_id": "gdelt-d7b63f3679eafff9"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://dr.dk/nyheder/seneste/sas-fly-maatte-vende-om-da-drone-alarm-lukkede-lufthavn-i-litauen",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T09:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "her til formiddag",
+     "id": "gdelt-d7b63f3679eafff9",
+     "idioma": "da",
+     "medio": "dr.dk",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-2026-00385",
+   "lugar": {
+    "nivel": "pais",
+    "pais": "LT"
+   },
+   "presencia_dron": "no_confirmada",
+   "respuesta": {
+    "medidas": [
+     "cazas"
+    ]
+   },
+   "tiempo": {
+    "inicio": {
+     "precision": "aproximada",
+     "valor": "2026-10-03T07:00Z"
+    }
+   },
+   "tipo": "sobrevuelo",
+   "titulo": {
+    "en": "Drone alert closes Vilnius airport and diverts SAS flight",
+    "es": "Alerta de dron cierra el aeropuerto de Vilnius y desvía un vuelo de SAS"
    }
   }
  ]
