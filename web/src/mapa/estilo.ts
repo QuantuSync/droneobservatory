@@ -147,8 +147,8 @@ export const CAPAS_DE_LUZ: readonly string[] = [
 export const CAPAS_DE_FOCOS_VIVOS: readonly string[] = [CAPA_FOCOS_VIVOS, CAPA_FOCOS_VIVOS_IMPACTO];
 
 /** Corredores: trazo fino, gris y de baja opacidad, por debajo de los impactos. */
-const COLOR_CORREDOR = PALETA.secundario;
-const OPACIDAD_CORREDOR = 0.2;
+const COLOR_CORREDOR = PALETA.guerra;
+const OPACIDAD_CORREDOR = 0.24;
 /** Focos de calor de 24 h: puntos pequeños; los que coinciden con un impacto, resaltados. */
 const RADIO_FOCO_VIVO = 1.7;
 const OPACIDAD_FOCO_VIVO = 0.7;
@@ -426,15 +426,15 @@ function capasPropias(acento: string): LayerSpecification[] {
       layout: { visibility: "none" },
       paint: { "line-color": PALETA.fondo, "line-width": 0.4, "line-opacity": 0.6 },
     },
-    // Regiones rusas: grises, con el contorno discontinuo, para distinguirlas de las de
-    // Ucrania (cuyo relleno es el color de los ataques). Sus cifras son las del Ministerio de
+    // Regiones rusas: el violeta apagado de la capa de guerra, con el contorno discontinuo,
+    // para distinguirlas de las de Ucrania (violeta pleno). Sus cifras son las del Ministerio de
     // Defensa ruso, reivindicación de parte.
     {
       id: CAPA_REGIONES_RUSIA,
       type: "fill",
       source: FUENTE_REGIONES_RUSIA,
       paint: {
-        "fill-color": PALETA.secundario,
+        "fill-color": PALETA.guerraTenue,
         "fill-opacity": 0,
         "fill-opacity-transition": { duration: 260, delay: 0 },
       },
@@ -444,9 +444,9 @@ function capasPropias(acento: string): LayerSpecification[] {
       type: "line",
       source: FUENTE_REGIONES_RUSIA,
       paint: {
-        "line-color": PALETA.secundario,
+        "line-color": PALETA.guerraTenue,
         "line-width": 0.6,
-        "line-opacity": 0.55,
+        "line-opacity": 0.7,
         "line-dasharray": [3, 2],
       },
     },
@@ -684,7 +684,7 @@ function capasPropias(acento: string): LayerSpecification[] {
         "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, 5, 8, 9, 11, 16],
         "circle-color": PALETA.fondo,
         "circle-opacity": ["get", "opacidad"],
-        "circle-stroke-color": PALETA.secundario,
+        "circle-stroke-color": PALETA.guerraTenue,
         "circle-stroke-width": 0.8,
         "circle-stroke-opacity": 0.6,
       },
@@ -697,7 +697,7 @@ function capasPropias(acento: string): LayerSpecification[] {
       filter: ["==", ["get", "impacto"], ""],
       paint: {
         "circle-radius": RADIO_FOCO_VIVO,
-        "circle-color": PALETA.secundario,
+        "circle-color": PALETA.guerraTenue,
         "circle-opacity": OPACIDAD_FOCO_VIVO,
       },
     },
@@ -708,7 +708,7 @@ function capasPropias(acento: string): LayerSpecification[] {
       filter: ["!=", ["get", "impacto"], ""],
       paint: {
         "circle-radius": RADIO_FOCO_VIVO_IMPACTO,
-        "circle-color": PALETA.texto,
+        "circle-color": PALETA.guerraClaro,
         "circle-stroke-color": PALETA.fondo,
         "circle-stroke-width": 1.2,
       },
@@ -719,12 +719,12 @@ function capasPropias(acento: string): LayerSpecification[] {
       source: FUENTE_FOCOS_UCRANIA,
       paint: {
         "circle-radius": RADIO_MARCA_FOCO + 0.5,
-        "circle-color": PALETA.texto,
+        "circle-color": PALETA.guerraClaro,
         "circle-stroke-color": PALETA.fondo,
         "circle-stroke-width": 1.5,
       },
     },
-    // Impactos con lugar de la capa de guerra. Sin color: el relleno gris es una fuente
+    // Impactos con lugar de la capa de guerra, en su violeta: el relleno es una fuente
     // oficial; el aro sin relleno, una reivindicación de parte. Al alejar se agrupan con su
     // contador; el foco térmico detectado se marca como en los incidentes, también en el grupo.
     {
@@ -739,7 +739,7 @@ function capasPropias(acento: string): LayerSpecification[] {
           CUENTA_GRUPO_IMPACTOS_MAXIMA, RADIO_GRUPO_IMPACTOS_MAXIMO,
         ],
         "circle-color": PALETA.elevado,
-        "circle-stroke-color": PALETA.secundario,
+        "circle-stroke-color": PALETA.guerra,
         "circle-stroke-width": 1.2,
       },
     },
@@ -764,8 +764,8 @@ function capasPropias(acento: string): LayerSpecification[] {
       filter: ["!", ["has", "point_count"]],
       paint: {
         "circle-radius": RADIO_IMPACTO,
-        "circle-color": ["case", ["==", ["get", "parte"], 1], PALETA.fondo, PALETA.secundario],
-        "circle-stroke-color": PALETA.secundario,
+        "circle-color": ["case", ["==", ["get", "parte"], 1], PALETA.fondo, PALETA.guerra],
+        "circle-stroke-color": PALETA.guerra,
         "circle-stroke-width": 1.2,
       },
     },
@@ -778,7 +778,7 @@ function capasPropias(acento: string): LayerSpecification[] {
       filter: ["all", ["!", ["has", "point_count"]], ["==", ["get", "foco"], 1]],
       paint: {
         "circle-radius": RADIO_MARCA_FOCO,
-        "circle-color": PALETA.texto,
+        "circle-color": PALETA.guerraClaro,
         "circle-stroke-color": PALETA.fondo,
         "circle-stroke-width": 1.5,
         "circle-translate": [6, -6],
@@ -791,7 +791,7 @@ function capasPropias(acento: string): LayerSpecification[] {
       filter: ["all", ["has", "point_count"], [">", ["get", "focos"], 0]],
       paint: {
         "circle-radius": RADIO_MARCA_FOCO,
-        "circle-color": PALETA.texto,
+        "circle-color": PALETA.guerraClaro,
         "circle-stroke-color": PALETA.fondo,
         "circle-stroke-width": 1.5,
         "circle-translate": [12, -12],

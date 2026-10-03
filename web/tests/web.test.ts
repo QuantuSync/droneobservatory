@@ -253,6 +253,9 @@ describe("paleta", () => {
     expect(token("notificado")).toBe(COLOR_ESTADO.notificado);
     expect(token("atribuido")).toBe(COLOR_ESTADO.atribuido);
     expect(token("desmentido")).toBe(COLOR_ESTADO.desmentido);
+    expect(token("guerra")).toBe(PALETA.guerra);
+    expect(token("guerra-claro")).toBe(PALETA.guerraClaro);
+    expect(token("guerra-tenue")).toBe(PALETA.guerraTenue);
   });
 
   it("los colores de texto cumplen el contraste AA sobre todas las superficies", () => {

@@ -44,7 +44,9 @@
   --color-atribuido: #f53a50;
   --color-desmentido: #93a0b4;
   --color-al-dia: #56c271;
-  --color-guerra: #f25c4f;
+  --color-guerra: #9d7bff;
+  --color-guerra-claro: #cbbcff;
+  --color-guerra-tenue: #7a6cc0;
   --color-transparente: transparent;
 
   --font-texto: "Onest Variable", system-ui, sans-serif;

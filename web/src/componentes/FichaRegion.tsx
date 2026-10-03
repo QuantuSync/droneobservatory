@@ -8,6 +8,7 @@ import type { Idioma } from "../sitio.ts";
 import { LineaFoco, ZOOM_VISOR_REGION } from "./FocoTermico.tsx";
 import { ListaLuz } from "./GuerraSatelite.tsx";
 import { Fila } from "./Panel.tsx";
+import { PALETA } from "../paleta.ts";
 import { Enlace } from "../navegacion.tsx";
 
 /** Partes que se listan antes de pedir «ver más». */
@@ -105,6 +106,7 @@ export function FichaRegion(props: Props) {
                 lat={f.centro[1]}
                 zoom={ZOOM_VISOR_REGION}
                 ataque={f.ataque}
+                color={PALETA.guerraClaro}
               />
             ))}
             {luces.length > 0 && (

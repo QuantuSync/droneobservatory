@@ -256,19 +256,22 @@ export const es: Textos = {
     reciente: "Un destello suave marca lo que empezó en las últimas 24 horas.",
     novedad: "En la primera visita no late nada: aún no hay una visita anterior con la que comparar.",
     ucrania:
-      "En la capa de Ucrania, cada región se colorea según los ataques que la citan en el periodo.",
+      "En la capa de Ucrania, cada región se colorea de violeta según los ataques que la citan " +
+      "en el periodo: es el color de toda la capa de guerra, distinto del rojo y el naranja de " +
+      "los incidentes.",
     rusia:
-      "Las regiones rusas van en gris y con contorno discontinuo: sus cifras son las del " +
+      "Las regiones rusas van en violeta apagado y con contorno discontinuo: sus cifras son las del " +
       "Ministerio de Defensa ruso, una reivindicación de parte.",
     impactos:
-      "Un punto pequeño es un lugar concreto alcanzado (una localidad o una instalación) " +
+      "Un punto violeta pequeño es un lugar concreto alcanzado (una localidad o una instalación) " +
       "según las administraciones regionales, el Estado Mayor ucraniano o los gobernadores " +
       "rusos. Relleno: fuente oficial; solo el aro: reivindicación de parte. Al alejar se " +
       "agrupan con su número. Los partes diarios de la línea del frente van en los datos " +
       "descargables.",
     foco:
       "Un punto claro junto a un incidente, un impacto o un grupo de impactos, o en el centro de una región de Ucrania, marca un " +
-      "foco térmico detectado por satélite (NASA FIRMS) en su lugar y su hora.",
+      "foco térmico detectado por satélite (NASA FIRMS) en su lugar y su hora: blanco en los " +
+      "incidentes y violeta claro en la capa de guerra.",
     directo:
       "Una etiqueta con el código OACI dentro y una punta que señala el aeropuerto es un aviso " +
       "de la detección en directo, sin pulso. Su borde dice el estado: naranja, posible cierre " +
@@ -1325,10 +1328,10 @@ export const es: Textos = {
     },
     zona: (_id, nombre) => nombre,
     ayudaCorredores:
-      "Un arco fino y gris va de una zona de lanzamiento a una región alcanzada: más grueso, más " +
+      "Un arco fino y violeta va de una zona de lanzamiento a una región alcanzada: más grueso, más " +
       "drones en el periodo. Contra Rusia sale del punto de la frontera de Ucrania más cercano.",
     ayudaFocos:
-      "Un punto gris diminuto es un foco de calor de las últimas 24 horas (NASA FIRMS); uno claro " +
+      "Un punto violeta diminuto es un foco de calor de las últimas 24 horas (NASA FIRMS); uno violeta claro " +
       "y mayor coincide con un impacto declarado.",
     ayudaLuz:
       "Una región o una ciudad oscurecida perdió luz nocturna tras un ataque contra la red " +

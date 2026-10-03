@@ -127,7 +127,7 @@ export function Cortinilla({
         />
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 w-px bg-texto/80"
+          className="pointer-events-none absolute inset-y-0 w-0.5 bg-guerra-claro"
           style={{ left: `${posicion}%` }}
         />
         <span className="flotante pointer-events-none absolute left-1.5 top-1.5 px-1.5 py-0.5 text-[0.6875rem]">

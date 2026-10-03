@@ -8,6 +8,7 @@ import { LineaFoco, ZOOM_VISOR_PUNTO } from "./FocoTermico.tsx";
 import { ImagenesSatelite } from "./GuerraSatelite.tsx";
 import { ListaFuentes } from "./Fuentes.tsx";
 import { Fila } from "./Panel.tsx";
+import { PALETA } from "../paleta.ts";
 import { Enlace } from "../navegacion.tsx";
 
 interface Props {
@@ -105,6 +106,7 @@ export function FichaImpacto({ t, idioma, impacto }: Props) {
             lon={lugar.punto.lon}
             lat={lugar.punto.lat}
             zoom={ZOOM_VISOR_PUNTO}
+            color={PALETA.guerraClaro}
           />
         )}
       </dl>

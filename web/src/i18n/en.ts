@@ -253,18 +253,21 @@ export const en: Textos = {
       "motion setting, it gets a fixed ring instead. Reported incidents are dimmer.",
     reciente: "A soft glow marks what started in the last 24 hours.",
     novedad: "Nothing pulses on a first visit: there is no earlier visit to compare with yet.",
-    ucrania: "In the Ukraine layer, each region is shaded by the attacks that name it in the period.",
+    ucrania:
+      "In the Ukraine layer, each region is shaded violet by the attacks that name it in the " +
+      "period: the colour of the whole war layer, distinct from the red and orange of incidents.",
     rusia:
-      "Russian regions are grey with a dashed outline: their figures are those of the " +
+      "Russian regions are muted violet with a dashed outline: their figures are those of the " +
       "Russian Ministry of Defence, a claim by a party to the war.",
     impactos:
-      "A small dot is a specific place hit (a town or a facility) according to the regional " +
+      "A small violet dot is a specific place hit (a town or a facility) according to the regional " +
       "administrations, the Ukrainian General Staff or Russian governors. Filled: official " +
       "source; ring only: claim by a party. Zoomed out, they group with their count. Daily " +
       "front-line reports are in the downloadable data.",
     foco:
       "A light dot next to an incident, a place hit or a group of places, or at the centre of a Ukrainian region, marks a " +
-      "thermal hotspot detected by satellite (NASA FIRMS) at its place and time.",
+      "thermal hotspot detected by satellite (NASA FIRMS) at its place and time: white on " +
+      "incidents and light violet in the war layer.",
     directo:
       "A tag with the ICAO code inside and a point towards the airport is an alert from the " +
       "live detection, without pulse. Its border shows the status: orange, possible closure in " +
@@ -1318,10 +1321,10 @@ export const en: Textos = {
     },
     zona: (id, nombre) => ZONAS_EN[id] ?? nombre,
     ayudaCorredores:
-      "A thin grey arc runs from a launch zone to a region reached: thicker means more drones " +
+      "A thin violet arc runs from a launch zone to a region reached: thicker means more drones " +
       "in the period. Towards Russia it starts at the nearest point of the Ukrainian border.",
     ayudaFocos:
-      "A tiny grey dot is a fire hotspot of the last 24 hours (NASA FIRMS); a larger light one " +
+      "A tiny violet dot is a fire hotspot of the last 24 hours (NASA FIRMS); a larger light violet one " +
       "matches a reported strike.",
     ayudaLuz:
       "A darkened region or city lost night light after an attack on the power grid, measured " +
