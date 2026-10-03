@@ -22074,6 +22074,19 @@
      "valor": "no_confirmada"
     },
     {
+     "campo": "presencia_dron",
+     "cita": "u raportua për disa dronë të paautorizuar pranë aeroportit",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-20T19:00Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-fef3d56a7d5b7bea",
+     "medio": "botasot.info",
+     "valor": "confirmada"
+    },
+    {
      "campo": "respuesta.medidas",
      "credibilidad": 3,
      "fecha": {
@@ -22124,7 +22137,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-03T21:17Z"
     }
    },
    "drones": {
@@ -22251,7 +22264,7 @@
     "nivel": "pais",
     "pais": "LU"
    },
-   "presencia_dron": "no_confirmada",
+   "presencia_dron": "confirmada",
    "respuesta": {
     "medidas": [
      "inhibicion",
@@ -22266,8 +22279,8 @@
    },
    "tipo": "sobrevuelo",
    "titulo": {
-    "en": "Unidentified possible drones close Luxembourg airport",
-    "es": "Posibles drones no identificados cierran el aeropuerto de Luxemburgo"
+    "en": "Unidentified drones close Luxembourg airport",
+    "es": "Drones no identificados cierran el aeropuerto de Luxemburgo"
    }
   },
   {
@@ -26821,6 +26834,19 @@
      "valor": "LT"
     },
     {
+     "campo": "presencia_dron",
+     "cita": "NATO head vows more Ukraine support after drone strikes near Polish border",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-14T13:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-1f89a7fc5969ba97",
+     "medio": "wsbradio.com",
+     "valor": "confirmada"
+    },
+    {
      "campo": "respuesta.medidas",
      "credibilidad": 3,
      "fecha": {
@@ -26871,7 +26897,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-03T21:17Z"
     }
    },
    "drones": {
@@ -27346,7 +27372,7 @@
     "pais": "LT",
     "region": "Kaisiadorys"
    },
-   "presencia_dron": "no_confirmada",
+   "presencia_dron": "confirmada",
    "respuesta": {
     "medidas": [
      "cazas",
@@ -27361,8 +27387,8 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "NATO fighter jets shoot down possible drone in Lithuanian airspace",
-    "es": "Cazas de la OTAN derriban un posible dron en el espacio aéreo de Lituania"
+    "en": "NATO fighter jets shoot down drone in Lithuanian airspace",
+    "es": "Cazas de la OTAN derriban un dron en el espacio aéreo de Lituania"
    }
   },
   {
@@ -28630,6 +28656,19 @@
      "valor": "RO"
     },
     {
+     "campo": "presencia_dron",
+     "cita": "O dronă a intrat în spațiul aerian al României sâmbătă noapte, potrivit Ministerului Apărării Naționale.",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-27T05:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-46a2b8a659122293",
+     "medio": "digi24.ro",
+     "valor": "confirmada"
+    },
+    {
      "campo": "respuesta.medidas",
      "credibilidad": 3,
      "fecha": {
@@ -28695,7 +28734,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-03T21:17Z"
     }
    },
    "drones": {
@@ -28795,7 +28834,7 @@
     "pais": "RO",
     "region": "Tulcea"
    },
-   "presencia_dron": "no_confirmada",
+   "presencia_dron": "confirmada",
    "respuesta": {
     "medidas": [
      "cazas",
@@ -28810,8 +28849,8 @@
    },
    "tipo": "sobrevuelo",
    "titulo": {
-    "en": "Possible drone enters Romanian airspace; Spanish fighter jets deployed",
-    "es": "Posible dron entra en el espacio aéreo de Rumania; cazas españoles desplegados"
+    "en": "Drone enters Romanian airspace; Spanish fighter jets deployed",
+    "es": "Dron entra en el espacio aéreo de Rumania; cazas españoles desplegados"
    }
   },
   {
@@ -29970,6 +30009,19 @@
      "valor": "no_confirmada"
     },
     {
+     "campo": "presencia_dron",
+     "cita": "Rusia a atacat cu drone lângă granița României.",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-06-21T06:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-d00e861a362cb50e",
+     "medio": "antena3.ro",
+     "valor": "confirmada"
+    },
+    {
      "campo": "respuesta.medidas",
      "credibilidad": 3,
      "fecha": {
@@ -30019,7 +30071,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-03T21:17Z"
     }
    },
    "drones": {
@@ -30060,7 +30112,7 @@
     "pais": "RO",
     "region": "Tulcea"
    },
-   "presencia_dron": "no_confirmada",
+   "presencia_dron": "confirmada",
    "respuesta": {
     "medidas": [
      "cazas"
@@ -30074,8 +30126,8 @@
    },
    "tipo": "sobrevuelo",
    "titulo": {
-    "en": "Russian possible drones near Romania's border trigger alert and fighter jet scramble",
-    "es": "Posibles drones rusos cerca de la frontera de Rumania provocan alerta y despegue de cazas"
+    "en": "Russian drones near Romania's border trigger alert and fighter jet scramble",
+    "es": "Drones rusos cerca de la frontera de Rumania provocan alerta y despegue de cazas"
    }
   },
   {
@@ -35920,6 +35972,19 @@
      "valor": "no_confirmada"
     },
     {
+     "campo": "presencia_dron",
+     "cita": "Drohnenfund am Steinhuder Meer: Polizei sucht Gelände ab",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-15T12:15Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-b91f0aaca22b4d2d",
+     "medio": "nwzonline.de",
+     "valor": "confirmada"
+    },
+    {
      "campo": "respuesta.medidas",
      "credibilidad": 3,
      "fecha": {
@@ -35998,7 +36063,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-03T21:17Z"
     }
    },
    "drones": {
@@ -36124,7 +36189,7 @@
     "pais": "DE",
     "region": "Niedersachsen"
    },
-   "presencia_dron": "no_confirmada",
+   "presencia_dron": "confirmada",
    "respuesta": {
     "medidas": [
      "patrulla"
@@ -36138,8 +36203,8 @@
    },
    "tipo": "sobrevuelo",
    "titulo": {
-    "en": "Possible drone parts found near Steinhuder Meer in Germany",
-    "es": "Restos de posible dron hallados cerca del Steinhuder Meer en Alemania"
+    "en": "Drone parts found near Steinhuder Meer in Germany",
+    "es": "Restos de dron hallados cerca del Steinhuder Meer en Alemania"
    }
   },
   {

@@ -7661,6 +7661,19 @@
      },
      {
       "campo": "presencia_dron",
+      "cita": "Police responding to drone threats near Prague airport",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-10-03T19:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-9cbd28b49c1a1c1c",
+      "medio": "biztoc.com",
+      "valor": "confirmada"
+     },
+     {
+      "campo": "presencia_dron",
       "cita": "The caller, speaking English, mentioned a larger number of drones",
       "credibilidad": 3,
       "fecha": {
@@ -7723,7 +7736,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-03T20:17Z"
+      "valor": "2026-10-03T21:17Z"
      }
     },
     "drones": {
@@ -7785,7 +7798,7 @@
      "nombre": "Letiště Václava Havla Praha",
      "oaci": "LKPR"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "respuesta": {
      "medidas": [
       "inhibicion",
@@ -7800,8 +7813,8 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Unverified possible drone threat at Prague Airport",
-     "es": "Amenaza de posibles drones no verificada en el aeropuerto de Praga"
+     "en": "Unverified drone threat at Prague Airport",
+     "es": "Amenaza de drones no verificada en el aeropuerto de Praga"
     }
    },
    "type": "Feature"
@@ -14368,6 +14381,19 @@
       "valor": "no_confirmada"
      },
      {
+      "campo": "presencia_dron",
+      "cita": "Edinburgh Airport was hit by delays on Wednesday morning after a drone was spotted in the exclusion zone.",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-02-19T11:45Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-e75a2ebf0743c87f",
+      "medio": "dailyrecord.co.uk",
+      "valor": "confirmada"
+     },
+     {
       "campo": "respuesta.medidas",
       "credibilidad": 3,
       "fecha": {
@@ -14417,7 +14443,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-03T20:17Z"
+      "valor": "2026-10-03T21:17Z"
      }
     },
     "drones": {
@@ -14465,7 +14491,7 @@
      "nombre": "Edinburgh Airport",
      "oaci": "EGPH"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "respuesta": {
      "medidas": [
       "patrulla"
@@ -14479,8 +14505,8 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Possible drone in Edinburgh Airport exclusion zone causes flight delays",
-     "es": "Posible dron en la zona de exclusión del aeropuerto de Edimburgo causa retrasos"
+     "en": "Drone in Edinburgh Airport exclusion zone causes flight delays",
+     "es": "Dron en la zona de exclusión del aeropuerto de Edimburgo causa retrasos"
     }
    },
    "type": "Feature"
@@ -21726,6 +21752,19 @@
       "valor": "GI"
      },
      {
+      "campo": "presencia_dron",
+      "cita": "tras la detección de drones no autorizados",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-10-21T20:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-3eb638f1c514be2e",
+      "medio": "europasur.es",
+      "valor": "confirmada"
+     },
+     {
       "campo": "respuesta.medidas",
       "credibilidad": 3,
       "fecha": {
@@ -21775,7 +21814,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-03T20:17Z"
+      "valor": "2026-10-03T21:17Z"
      }
     },
     "drones": {
@@ -21823,7 +21862,7 @@
      "nombre": "Royal Air Force Gibraltar",
      "oaci": "LXGB"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "respuesta": {
      "medidas": [
       "cierre_espacio_aereo"
@@ -21837,8 +21876,8 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Unauthorized possible drones delay flights at Gibraltar Airport",
-     "es": "Posibles drones no autorizados retrasan vuelos en el aeropuerto de Gibraltar"
+     "en": "Unauthorized drones delay flights at Gibraltar Airport",
+     "es": "Drones no autorizados retrasan vuelos en el aeropuerto de Gibraltar"
     }
    },
    "type": "Feature"
@@ -44949,6 +44988,19 @@
       "valor": "no_confirmada"
      },
      {
+      "campo": "presencia_dron",
+      "cita": "a drone coming close to them",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-04-05T07:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-c2354b4b1c003de7",
+      "medio": "edp24.co.uk",
+      "valor": "confirmada"
+     },
+     {
       "campo": "respuesta.medidas",
       "credibilidad": 3,
       "fecha": {
@@ -45013,7 +45065,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-03T20:17Z"
+      "valor": "2026-10-03T21:17Z"
      }
     },
     "drones": {
@@ -45061,7 +45113,7 @@
      "nombre": "RAF Lakenheath",
      "oaci": "EGUL"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "respuesta": {
      "medidas": [
       "patrulla"
@@ -45075,8 +45127,8 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Possible drone activity near RAF Lakenheath prompts helicopter near miss",
-     "es": "Actividad de posibles drones cerca de RAF Lakenheath causa incidente con helicóptero policial"
+     "en": "Drone activity near RAF Lakenheath prompts helicopter near miss",
+     "es": "Actividad de drones cerca de RAF Lakenheath causa incidente con helicóptero policial"
     }
    },
    "type": "Feature"
@@ -47443,6 +47495,19 @@
       "valor": "no_confirmada"
      },
      {
+      "campo": "presencia_dron",
+      "cita": "Ein Bürger hatte gegen 18:30 Uhr die Polizei angerufen, weil er eine Drohne in Flughafennähe gesehen haben will.",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-12-02T13:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-4676b4a37db2559c",
+      "medio": "wdr.de",
+      "valor": "confirmada"
+     },
+     {
       "campo": "respuesta.medidas",
       "credibilidad": 3,
       "fecha": {
@@ -47492,7 +47557,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-03T20:17Z"
+      "valor": "2026-10-03T21:17Z"
      }
     },
     "drones": {
@@ -47540,7 +47605,7 @@
      "nombre": "Flughafen Weeze/Niederrhein",
      "oaci": "EDLV"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "respuesta": {
      "medidas": [
       "patrulla"
@@ -47554,8 +47619,8 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Unconfirmed possible drone sighting at Weeze airport",
-     "es": "Avistamiento de posible dron en el aeropuerto de Weeze sin confirmación"
+     "en": "Unconfirmed drone sighting at Weeze airport",
+     "es": "Avistamiento de dron en el aeropuerto de Weeze sin confirmación"
     }
    },
    "type": "Feature"
@@ -48170,6 +48235,19 @@
       "valor": "no_confirmada"
      },
      {
+      "campo": "presencia_dron",
+      "cita": "a drone was discovered flying near the airport",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-07-02T08:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-124dcf11a645bee1",
+      "medio": "heraldscotland.com",
+      "valor": "confirmada"
+     },
+     {
       "campo": "respuesta.medidas",
       "credibilidad": 3,
       "fecha": {
@@ -48219,7 +48297,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-03T20:17Z"
+      "valor": "2026-10-03T21:17Z"
      }
     },
     "drones": {
@@ -48267,7 +48345,7 @@
      "nombre": "Edinburgh Airport",
      "oaci": "EGPH"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "respuesta": {
      "medidas": [
       "patrulla"
@@ -48281,8 +48359,8 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Delays at Edinburgh Airport after possible drone sighting",
-     "es": "Retrasos en el aeropuerto de Edimburgo tras avistamiento de posible dron"
+     "en": "Delays at Edinburgh Airport after drone sighting",
+     "es": "Retrasos en el aeropuerto de Edimburgo tras avistamiento de dron"
     }
    },
    "type": "Feature"
@@ -124864,6 +124942,19 @@
       "valor": "Isaccea"
      },
      {
+      "campo": "presencia_dron",
+      "cita": "Dronă detectată de radarele armatei",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-29T05:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-8562e629af6ba2bd",
+      "medio": "antena3.ro",
+      "valor": "confirmada"
+     },
+     {
       "campo": "respuesta.medidas",
       "credibilidad": 3,
       "fecha": {
@@ -124901,7 +124992,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-03T20:17Z"
+      "valor": "2026-10-03T21:17Z"
      }
     },
     "drones": {
@@ -125032,7 +125123,7 @@
      "categoria": "otra",
      "nombre": "Isaccea"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "respuesta": {
      "medidas": [
       "patrulla"
@@ -125046,8 +125137,8 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Possible drone detected by military radars north of Isaccea, near Ukraine border",
-     "es": "Posible dron detectado por radares militares al norte de Isaccea, cerca de la frontera con Ucrania"
+     "en": "Drone detected by military radars north of Isaccea, near Ukraine border",
+     "es": "Dron detectado por radares militares al norte de Isaccea, cerca de la frontera con Ucrania"
     }
    },
    "type": "Feature"
@@ -134849,6 +134940,19 @@
       "valor": "no_confirmada"
      },
      {
+      "campo": "presencia_dron",
+      "cita": "O dronă a intrat în spațiul aerian al României prin zona Ceatalchioi, județul Tulcea.",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-28T07:15Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-7c6740251fece821",
+      "medio": "radioresita.ro",
+      "valor": "confirmada"
+     },
+     {
       "campo": "respuesta.medidas",
       "credibilidad": 3,
       "fecha": {
@@ -134898,7 +135002,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-03T20:17Z"
+      "valor": "2026-10-03T21:17Z"
      }
     },
     "drones": {
@@ -134943,7 +135047,7 @@
      "categoria": "otra",
      "nombre": "Ceatalchioi"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "respuesta": {
      "medidas": [
       "patrulla"
@@ -134957,8 +135061,8 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Possible drone enters Romanian airspace near Tulcea",
-     "es": "Posible dron entra en el espacio aéreo de Rumania cerca de Tulcea"
+     "en": "Drone enters Romanian airspace near Tulcea",
+     "es": "Dron entra en el espacio aéreo de Rumania cerca de Tulcea"
     }
    },
    "type": "Feature"
@@ -135297,6 +135401,19 @@
       "valor": "no_confirmada"
      },
      {
+      "campo": "presencia_dron",
+      "cita": "Германия затяга мерките за сигурност след опита за атака с дрон на летище Лайпциг",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-06T13:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-bc6e65ba64f9ef36",
+      "medio": "mediapool.bg",
+      "valor": "confirmada"
+     },
+     {
       "campo": "respuesta.medidas",
       "credibilidad": 3,
       "fecha": {
@@ -135331,7 +135448,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-03T20:17Z"
+      "valor": "2026-10-03T21:17Z"
      }
     },
     "drones": {
@@ -135418,7 +135535,7 @@
      "nombre": "Flughafen Leipzig/Halle",
      "oaci": "EDDP"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "respuesta": {
      "medidas": [
       "patrulla"
@@ -135432,8 +135549,8 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Possible drone attack attempt at Leipzig/Halle airport",
-     "es": "Intento de ataque con posibles drones en el aeropuerto de Leipzig/Halle"
+     "en": "Drone attack attempt at Leipzig/Halle airport",
+     "es": "Intento de ataque con drones en el aeropuerto de Leipzig/Halle"
     }
    },
    "type": "Feature"
@@ -135770,6 +135887,19 @@
       "valor": "RO"
      },
      {
+      "campo": "presencia_dron",
+      "cita": "Momentul în care militarii detonează drona cu încărcătură explozivă descoperită în Tulcea",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-06-30T09:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-cb3efe7d7a55bd1e",
+      "medio": "digi24.ro",
+      "valor": "confirmada"
+     },
+     {
       "campo": "respuesta.medidas",
       "credibilidad": 3,
       "fecha": {
@@ -135819,7 +135949,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-03T20:17Z"
+      "valor": "2026-10-03T21:17Z"
      }
     },
     "drones": {
@@ -135878,7 +136008,7 @@
      "categoria": "otra",
      "nombre": "Tulcea"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "respuesta": {
      "medidas": [
       "derribo"
@@ -135892,8 +136022,8 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Possible drone wreckage found in Tulcea, Romania",
-     "es": "Restos de posible dron encontrados en Tulcea, Rumania"
+     "en": "Drone wreckage found in Tulcea, Romania",
+     "es": "Restos de dron encontrados en Tulcea, Rumania"
     }
    },
    "type": "Feature"
@@ -140912,6 +141042,19 @@
       "valor": "RO"
      },
      {
+      "campo": "presencia_dron",
+      "cita": "Alertă în Tulcea din cauza unei drone în apropierea Dunării.",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-08-02T10:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-9c47078d234efd2c",
+      "medio": "news.yam.md",
+      "valor": "confirmada"
+     },
+     {
       "campo": "respuesta.medidas",
       "credibilidad": 3,
       "fecha": {
@@ -140949,7 +141092,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-03T20:17Z"
+      "valor": "2026-10-03T21:17Z"
      }
     },
     "drones": {
@@ -141036,7 +141179,7 @@
      "categoria": "otra",
      "nombre": "Sulina"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "respuesta": {
      "medidas": [
       "patrulla"
@@ -141050,8 +141193,8 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Ukrainian possible drone overflies Romanian airspace near Tulcea",
-     "es": "Posible dron ucraniano sobrevuela el espacio aéreo de Rumania cerca de Tulcea"
+     "en": "Ukrainian drone overflies Romanian airspace near Tulcea",
+     "es": "Dron ucraniano sobrevuela el espacio aéreo de Rumania cerca de Tulcea"
     }
    },
    "type": "Feature"
@@ -141888,6 +142031,19 @@
       "valor": "no_confirmada"
      },
      {
+      "campo": "presencia_dron",
+      "cita": "Drohnenalarm! Flugbetrieb in Hamburg kurz unterbrochen",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-08-08T22:15Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-8ef0923b64519c0f",
+      "medio": "bild.de",
+      "valor": "confirmada"
+     },
+     {
       "campo": "respuesta.medidas",
       "credibilidad": 3,
       "fecha": {
@@ -141937,7 +142093,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-03T20:17Z"
+      "valor": "2026-10-03T21:17Z"
      }
     },
     "drones": {
@@ -142023,7 +142179,7 @@
      "categoria": "otra",
      "nombre": "Hamburg"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "respuesta": {
      "medidas": [
       "patrulla"
@@ -142037,8 +142193,8 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Possible drone alert briefly interrupts air traffic at Hamburg airport",
-     "es": "Alarma de posible dron interrumpe brevemente el tráfico aéreo en Hamburgo"
+     "en": "Drone alert briefly interrupts air traffic at Hamburg airport",
+     "es": "Alarma de dron interrumpe brevemente el tráfico aéreo en Hamburgo"
     }
    },
    "type": "Feature"
@@ -142936,6 +143092,19 @@
      },
      {
       "campo": "presencia_dron",
+      "cita": "Guerra Ucraina, Droni a Copenaghen, chiusa area intorno all'ambasciata Usa. Ue eroga 3,3 miliardi. Nyt: «Trump valuta accordi commerciali con Putin»",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-18T09:45Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-b4e6dd117de53736",
+      "medio": "ilgazzettino.it",
+      "valor": "confirmada"
+     },
+     {
+      "campo": "presencia_dron",
       "cita": "Sono stati segnalati droni nei cieli di Copenaghen.",
       "credibilidad": 3,
       "fecha": {
@@ -142997,7 +143166,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-03T20:17Z"
+      "valor": "2026-10-03T21:17Z"
      }
     },
     "drones": {
@@ -143073,7 +143242,7 @@
      "categoria": "otra",
      "nombre": "Copenhagen"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "respuesta": {
      "medidas": [
       "patrulla"
@@ -143087,8 +143256,8 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Possible drones over Copenhagen close area around US embassy",
-     "es": "Posibles drones sobre Copenhague cierran área de embajada estadounidense"
+     "en": "Drones over Copenhagen close area around US embassy",
+     "es": "Drones sobre Copenhague cierran área de embajada estadounidense"
     }
    },
    "type": "Feature"
