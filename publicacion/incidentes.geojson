@@ -153248,30 +153248,27 @@
    "properties": {
     "afirmaciones_publicas": [
      {
-      "campo": "drones.numero",
+      "campo": "consecuencias.cierre.valor",
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
-       "valor": "2026-10-03T08:00Z"
+       "valor": "2026-10-03T08:45Z"
       },
       "fiabilidad": "C",
-      "fuente_id": "gdelt-fc1b83d89eb5bf0a",
-      "medio": "ilfattoquotidiano.it",
-      "valor": {
-       "max": 1,
-       "min": 1
-      }
+      "fuente_id": "gdelt-ab33d5128aa1c6f8",
+      "medio": "index.hr",
+      "valor": "si"
      },
      {
       "campo": "drones.numero",
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
-       "valor": "2026-10-03T08:30Z"
+       "valor": "2026-10-03T08:45Z"
       },
       "fiabilidad": "C",
-      "fuente_id": "gdelt-783cf4fb61eca9ff",
-      "medio": "vesti.ru",
+      "fuente_id": "gdelt-ab33d5128aa1c6f8",
+      "medio": "index.hr",
       "valor": {
        "max": 1,
        "min": 1
@@ -153282,11 +153279,11 @@
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
-       "valor": "2026-10-03T08:30Z"
+       "valor": "2026-10-03T08:45Z"
       },
       "fiabilidad": "C",
-      "fuente_id": "gdelt-783cf4fb61eca9ff",
-      "medio": "vesti.ru",
+      "fuente_id": "gdelt-ab33d5128aa1c6f8",
+      "medio": "index.hr",
       "valor": "Vilnius"
      },
      {
@@ -153306,24 +153303,12 @@
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
-       "valor": "2026-10-03T08:30Z"
+       "valor": "2026-10-03T08:45Z"
       },
       "fiabilidad": "C",
-      "fuente_id": "gdelt-783cf4fb61eca9ff",
-      "medio": "vesti.ru",
+      "fuente_id": "gdelt-ab33d5128aa1c6f8",
+      "medio": "index.hr",
       "valor": "LT"
-     },
-     {
-      "campo": "objetivo.categoria",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-10-03T08:00Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-fc1b83d89eb5bf0a",
-      "medio": "ilfattoquotidiano.it",
-      "valor": "otra"
      },
      {
       "campo": "objetivo.categoria",
@@ -153342,18 +153327,6 @@
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
-       "valor": "2026-10-03T08:00Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-fc1b83d89eb5bf0a",
-      "medio": "ilfattoquotidiano.it",
-      "valor": "Vilnius"
-     },
-     {
-      "campo": "objetivo.nombre",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
        "valor": "2026-10-03T08:15Z"
       },
       "fiabilidad": "C",
@@ -153378,23 +153351,11 @@
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
-       "valor": "2026-10-03T08:30Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-783cf4fb61eca9ff",
-      "medio": "vesti.ru",
-      "valor": "no_confirmada"
-     },
-     {
-      "campo": "presencia_dron",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
        "valor": "2026-10-03T08:45Z"
       },
       "fiabilidad": "C",
-      "fuente_id": "gdelt-f0715351f02b12cf",
-      "medio": "spotandweb.it",
+      "fuente_id": "gdelt-ab33d5128aa1c6f8",
+      "medio": "index.hr",
       "valor": "no_confirmada"
      },
      {
@@ -153416,28 +153377,29 @@
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
-       "valor": "2026-10-03T08:30Z"
+       "valor": "2026-10-03T08:45Z"
       },
       "fiabilidad": "C",
-      "fuente_id": "gdelt-783cf4fb61eca9ff",
-      "medio": "vesti.ru",
+      "fuente_id": "gdelt-ab33d5128aa1c6f8",
+      "medio": "index.hr",
       "valor": [
        "cazas"
       ]
      },
      {
-      "campo": "respuesta.medidas",
+      "campo": "tiempo.fin",
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
-       "valor": "2026-10-03T08:45Z"
+       "valor": "2026-10-03T09:30Z"
       },
       "fiabilidad": "C",
-      "fuente_id": "gdelt-f0715351f02b12cf",
-      "medio": "spotandweb.it",
-      "valor": [
-       "cazas"
-      ]
+      "fuente_id": "gdelt-6ba5459caea87392",
+      "medio": "teraz.sk",
+      "valor": {
+       "precision": "dia",
+       "valor": "2026-10-03T00:00Z"
+      }
      },
      {
       "campo": "tiempo.inicio",
@@ -153459,42 +153421,15 @@
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
-       "valor": "2026-10-03T08:30Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-783cf4fb61eca9ff",
-      "medio": "vesti.ru",
-      "valor": {
-       "precision": "dia",
-       "valor": "2026-10-03T00:00Z"
-      }
-     },
-     {
-      "campo": "tiempo.inicio",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
        "valor": "2026-10-03T08:45Z"
       },
       "fiabilidad": "C",
-      "fuente_id": "gdelt-f0715351f02b12cf",
-      "medio": "spotandweb.it",
+      "fuente_id": "gdelt-ab33d5128aa1c6f8",
+      "medio": "index.hr",
       "valor": {
        "precision": "dia",
        "valor": "2026-10-03T00:00Z"
       }
-     },
-     {
-      "campo": "tipo",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-10-03T08:00Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-fc1b83d89eb5bf0a",
-      "medio": "ilfattoquotidiano.it",
-      "valor": "incursion"
      },
      {
       "campo": "tipo",
@@ -153513,11 +153448,11 @@
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
-       "valor": "2026-10-03T08:30Z"
+       "valor": "2026-10-03T08:45Z"
       },
       "fiabilidad": "C",
-      "fuente_id": "gdelt-783cf4fb61eca9ff",
-      "medio": "vesti.ru",
+      "fuente_id": "gdelt-ab33d5128aa1c6f8",
+      "medio": "index.hr",
       "valor": "interrupcion_aeroportuaria"
      }
     ],
@@ -153529,7 +153464,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-03T10:17Z"
+      "valor": "2026-10-03T12:17Z"
      }
     },
     "drones": {
@@ -153559,20 +153494,6 @@
     "fuentes": [
      {
       "credibilidad": 3,
-      "enlace": "https://ansa.it/sito/notizie/mondo/europa/2026/10/03/drone-viola-lo-spazio-aereo-lituano-allerta-alla-popolazione_56200a97-785e-4e6d-b43a-d0b4c6b6621e.html",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-10-03T07:30Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Drone viola lo spazio aereo lituano, allerta alla popolazione - Europa",
-      "id": "gdelt-128c9f405e59381f",
-      "idioma": "it",
-      "medio": "ansa.it",
-      "replicas": 4
-     },
-     {
-      "credibilidad": 3,
       "enlace": "https://inewsgr.com/97/ekleise-to-aerodromio-tou-vilnious--sikothikan-machitika-tou-nato-meta-ton-entopismo-drone.htm",
       "fecha": {
        "precision": "aproximada",
@@ -153583,35 +153504,7 @@
       "id": "gdelt-35cfabf2abdb3b22",
       "idioma": "el",
       "medio": "inewsgr.com",
-      "replicas": 4
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://zazoom.it/2026-10-03/lituania-drone-viola-lo-spazio-aereo-allerta-alla-popolazione-cercate-un-luogo-sicuro-se-vedete-un-oggetto-sospetto-allontanatevi/19752588",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-10-03T08:00Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Lituania drone viola lo spazio aereo Allerta alla popolazione | Cercate un luogo sicuro se vedete un oggetto sospetto allontanatevi",
-      "id": "gdelt-197d1f9b1dc7f446",
-      "idioma": "it",
-      "medio": "zazoom.it",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://zazoom.it/2026-10-03/drone-viola-lo-spazio-aereo-lituano-lallerta-ai-cittadini-possibile-incursione-aerea-cercate-un-luogo-sicuro/19752609",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-10-03T08:00Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Drone viola lo spazio aereo lituano l'allerta ai cittadini | Possibile incursione aerea Cercate un luogo sicuro",
-      "id": "gdelt-48e4088bd8d70c33",
-      "idioma": "it",
-      "medio": "zazoom.it",
-      "replicas": 0
+      "replicas": 6
      },
      {
       "credibilidad": 3,
@@ -153643,48 +153536,6 @@
      },
      {
       "credibilidad": 3,
-      "enlace": "https://zazoom.it/2026-10-03/lituania-drone-viola-spazio-aereo-allarme-delle-autorita-cercate-un-luogo-sicuro/19752611",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-10-03T08:00Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Lituania drone viola spazio aereo Allarme delle autorità | Cercate un luogo sicuro",
-      "id": "gdelt-f541de07976c19f5",
-      "idioma": "it",
-      "medio": "zazoom.it",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://ilfattoquotidiano.it/2026/10/03/lituania-drone-viola-spazio-aereo-cercate-luogo-sicuro-rifugi-antiaere/8526307",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-10-03T08:00Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "È stato visto fuori dall'area di Vilnius, mentre si muoveva verso Jonava.",
-      "id": "gdelt-fc1b83d89eb5bf0a",
-      "idioma": "it",
-      "medio": "ilfattoquotidiano.it",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://ilsole24ore.com/art/lituania-drone-viola-spazio-aereo-popolazione-allerta-AJ4EejXB",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-10-03T08:15Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Lituania, drone viola lo spazio aereo: popolazione in allerta",
-      "id": "gdelt-0cda714f241625fd",
-      "idioma": "it",
-      "medio": "ilsole24ore.com",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
       "enlace": "https://cyprusnews.eu/vima-kosmos/lithouania-ekleise-to-aerodromio-tou-vilnious-logo-drone-sikothikan-machitika-tou-nato",
       "fecha": {
        "precision": "aproximada",
@@ -153695,7 +153546,7 @@
       "id": "gdelt-160803f4b0bff3ce",
       "idioma": "el",
       "medio": "cyprusnews.eu",
-      "replicas": 4
+      "replicas": 5
      },
      {
       "credibilidad": 3,
@@ -153723,20 +153574,6 @@
       "id": "gdelt-2a8006bc4a13e8f1",
       "idioma": "el",
       "medio": "inewsgr.com",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://ansa.it/sito/notizie/mondo/europa/2026/10/03/drone-viola-lo-spazio-aereo-lituano-rientrata-lallerta-alla-popolazione_56200a97-785e-4e6d-b43a-d0b4c6b6621e.html",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-10-03T08:15Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Drone viola lo spazio aereo lituano, rientrata l'allerta alla popolazione - Europa",
-      "id": "gdelt-3b47821a653d0a53",
-      "idioma": "it",
-      "medio": "ansa.it",
       "replicas": 0
      },
      {
@@ -153779,6 +153616,20 @@
       "id": "gdelt-d0b308ae9a5f5b35",
       "idioma": "el",
       "medio": "cyprusnews.eu",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://timesofindia.indiatimes.com/world/europe/lithuania-airport-shut-nato-jets-scramble-as-drone-spotted-along-belarus-border/articleshow/134654089.cms",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T08:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Lithuania airport shut, Nato jets scramble as 'drone spotted' along Belarus border",
+      "id": "gdelt-d45f3a53ce1e29ae",
+      "idioma": "en",
+      "medio": "indiatimes.com",
       "replicas": 0
      },
      {
@@ -153839,34 +153690,6 @@
      },
      {
       "credibilidad": 3,
-      "enlace": "https://zazoom.it/2026-10-03/drone-viola-lo-spazio-aereo-della-lituania-scatta-lallerta/19752735",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-10-03T08:30Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Drone viola lo spazio aereo della Lituania",
-      "id": "gdelt-33802a11335ebab7",
-      "idioma": "it",
-      "medio": "zazoom.it",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://vesti.ru/ns/aehroport-vilnyusa-zakrylsya-iz-za-vozmozhnogo-obnaruzheniya-bespilotnika",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-10-03T08:30Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "из-за предполагаемого беспилотника",
-      "id": "gdelt-783cf4fb61eca9ff",
-      "idioma": "ru",
-      "medio": "vesti.ru",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
       "enlace": "https://newsbomb.gr/kosmos/story/1767525/lithouania-ekleise-to-aerodromio-tou-vilnious-logo-apeilis-gia-drone",
       "fecha": {
        "precision": "aproximada",
@@ -153881,58 +153704,30 @@
      },
      {
       "credibilidad": 3,
-      "enlace": "https://adnkronos.com/internazionale/esteri/drone-invade-spazio-aereo-lituania-jet_58TlFCWhMrTilTOBbPFtDm",
+      "enlace": "https://index.hr/vijesti/clanak/u-clanici-natoa-zatvorili-aerodrom-i-digli-borbene-avione-uletio-im-dron-s-istoka/2841536.aspx?index_ref=naslovnica_vijesti_najnovije_d&index_tid=1176336",
       "fecha": {
        "precision": "aproximada",
        "valor": "2026-10-03T08:45Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "Drone invade spazio aereo Lituania, si alzano i jet: \"Cercate un luogo sicuro\"",
-      "id": "gdelt-d7449dc93b13986d",
-      "idioma": "it",
-      "medio": "adnkronos.com",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://spotandweb.it/news/924382/lituania-drone-invade-spazio-aereo-popolazione-invitata-a-cercare-luogo-sicuro.html",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-10-03T08:45Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Possibile allarme per incursione aerea.",
-      "id": "gdelt-f0715351f02b12cf",
-      "idioma": "it",
-      "medio": "spotandweb.it",
+      "frase_origen": "ZRAČNA luka u glavnom gradu Litve, Vilniusu, bila je jutros zatvorena",
+      "id": "gdelt-ab33d5128aa1c6f8",
+      "idioma": "hr",
+      "medio": "index.hr",
       "replicas": 2
      },
      {
       "credibilidad": 3,
-      "enlace": "https://spotandweb.it/news/924382/lituania-drone-invade-spazio-aereo-popolazione-invitata-a-cercare-luogo-sicuro.html",
+      "enlace": "https://index.hr/vijesti/clanak/u-clanici-natoa-zatvorili-aerodrom-i-digli-borbene-avione-uletio-im-dron-s-istoka/2841536.aspx?index_ref=naslovnica_vijesti_najnovije_d&index_tid=1176336",
       "fecha": {
        "precision": "aproximada",
        "valor": "2026-10-03T08:45Z"
       },
       "fiabilidad": "B",
-      "frase_origen": "Possibile allarme per incursione aerea. Cercate un luogo sicuro.",
-      "id": "gdelt-f0715351f02b12cf-declaracion-1",
-      "idioma": "it",
-      "medio": "Forze Armate lituane (declaración oficial citada en spotandweb.it)",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://zazoom.it/2026-10-03/possibile-drone-nello-spazio-aereo-della-lituania-jet-in-volo-e-allerta-alla-popolazione/19752785",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-10-03T09:00Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Possibile drone nello spazio aereo della Lituania | jet in volo e allerta alla popolazione",
-      "id": "gdelt-37cb26f9ffa6442f",
-      "idioma": "it",
-      "medio": "zazoom.it",
+      "frase_origen": "Centar je priopćio da nadležne službe tijekom cijele subote intenzivno rade na utvrđivanju",
+      "id": "gdelt-ab33d5128aa1c6f8-declaracion-1",
+      "idioma": "hr",
+      "medio": "Nacionalni centar za krizno upravljanje (declaración oficial citada en index.hr)",
       "replicas": 0
      },
      {
@@ -153965,6 +153760,20 @@
      },
      {
       "credibilidad": 3,
+      "enlace": "https://vecernji.hr/vijesti/dron-usao-u-zracni-prostor-clanice-nato-a-digli-borbene-avione-i-zatvorili-aerodrom-2000931",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T09:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Dron ušao u zračni prostor članice NATO-a: Digli borbene avione i zatvorili aerodrom",
+      "id": "gdelt-1f08f17d9613269b",
+      "idioma": "hr",
+      "medio": "vecernji.hr",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
       "enlace": "https://diariosigloxxi.com/texto-ep/mostrar/20261003100012/alerta-posible-dron-cierra-aeropuerto-vilna-activa-despliegue-aereo-otan",
       "fecha": {
        "precision": "aproximada",
@@ -153993,6 +153802,20 @@
      },
      {
       "credibilidad": 3,
+      "enlace": "https://teraz.sk/zahranicie/vo-vilniuse-uzavreli-letisko-po-hlasen/996972-clanok.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T09:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Letisko neskôr opäť otvorili a poplach odvolali",
+      "id": "gdelt-6ba5459caea87392",
+      "idioma": "sk",
+      "medio": "teraz.sk",
+      "replicas": 1
+     },
+     {
+      "credibilidad": 3,
       "enlace": "https://politis.com.cy/politis-news/kosmos/1043451/sinaghermos-sti-lithoyania-klinei-to-aerodromio-toy-bilnioys-makhitika-toy-nato-ston-aera-ghia-ypopto-drone",
       "fecha": {
        "precision": "aproximada",
@@ -154003,20 +153826,6 @@
       "id": "gdelt-f5980f0e7c071475",
       "idioma": "el",
       "medio": "politis.com.cy",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://ilgiornale.it/news/cronaca-internazionale/drone-viola-lo-spazio-aereo-lituano-allerta-alla-popolazione-dopo-unora-allarme-rientrato",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-10-03T09:45Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Drone viola lo spazio aereo lituano, allerta alla popolazione. Dopo un'ora allarme rientrato – il Giornale",
-      "id": "gdelt-9b9b861e9e766334",
-      "idioma": "it",
-      "medio": "ilgiornale.it",
       "replicas": 0
      },
      {
@@ -154035,30 +153844,198 @@
      },
      {
       "credibilidad": 3,
-      "enlace": "https://italpress.com/drone-viola-lo-spazio-aereo-della-lituania-allarme-rientrato",
+      "enlace": "https://javanews.al/tensione-ne-qiell-droni-alarmon-nato-n-ngrihen-avionet-luftarake-lituania-ne-alarm-mbyllet-aeroporti-ne-bjellorusi",
       "fecha": {
        "precision": "aproximada",
        "valor": "2026-10-03T10:00Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "Drone viola lo spazio aereo della Lituania, allarme rientrato",
-      "id": "gdelt-77da83f8f172d6c7",
-      "idioma": "it",
-      "medio": "italpress.com",
+      "frase_origen": "Tensione në qiell, droni alarmon NATO-n, ngrihen avionët luftarakë! Lituania në alarm, mbyllet aeroporti në Bjellorusi",
+      "id": "gdelt-12d6c97a92b39e90",
+      "idioma": "sq",
+      "medio": "javanews.al",
       "replicas": 0
      },
      {
       "credibilidad": 3,
-      "enlace": "https://livesicilia.it/drone-viola-lo-spazio-aereo-lituano-allerta-alla-popolazione",
+      "enlace": "https://rtsh.al/dron-i-dyshimte-nga-bjellorusia-alarmon-lituanine-mbyllet-perkohesisht-aeroporti-i-vilniusit-ngrihen-avionet-e-nato-s",
       "fecha": {
        "precision": "aproximada",
        "valor": "2026-10-03T10:00Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "Drone viola lo spazio aereo lituano, popolazione in allerta",
-      "id": "gdelt-8dc0f3883eb0e1cc",
-      "idioma": "it",
-      "medio": "livesicilia.it",
+      "frase_origen": "Dron i dyshimtë nga Bjellorusia alarmon Lituaninë, mbyllet përkohësisht aeroporti i Vilniusit. Ngrihen avionët e NATO-s",
+      "id": "gdelt-b5aac301bccf449c",
+      "idioma": "sq",
+      "medio": "rtsh.al",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://top-channel.tv/2026/10/03/aeroporti-ne-bjellorusi-mbyllet-pas-raportimit-per-nje-dron-te-dyshimte-avione-luftarake-te-nato-s-ngrihen-ne-ajer",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T10:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Aeroporti në Bjellorusi mbyllet pas raportimit për një dron të dyshimtë, avionë luftarakë të NATO-s ngrihen në ajër",
+      "id": "gdelt-dbb2f94321b7c0ab",
+      "idioma": "sq",
+      "medio": "top-channel.tv",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://pravda.sk/spravy/svet/clanok/2052139-stihacky-nato-opat-vo-vzduchu-letisko-vo-vilniuse-uzavreli-pre-podozrivy-dron-z-bieloruska",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T10:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Stíhačky NATO opäť vo vzduchu. Letisko vo Vilniuse uzavreli pre podozrivý dron z Bieloruska - Svet - Správy",
+      "id": "gdelt-1278ae5ade69124d",
+      "idioma": "sk",
+      "medio": "pravda.sk",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://athensvoice.gr/epikairotita/diethni/989181/lithouania-kleisto-to-aerodromio-tou-vilnious-mahitika-tou-nato-meta-ton-edopismo-drone",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T10:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Λιθουανία: Κλειστό το αεροδρόμιο του Βίλνιους - Μαχητικά του ΝΑΤΟ μετά τον εντοπισμό drone",
+      "id": "gdelt-ce9e0e8bfddc93d9",
+      "idioma": "el",
+      "medio": "athensvoice.gr",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://dw.com/ru/aeroport-vilnusa-vnov-ostanavlival-rabotu-izza-vozdusnoj-trevogi-posle-vozmoznogo-obnaruzenia-drona-byli-podnaty-v-vozduh-istrebiteli-nato/a-79528550",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T10:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Аэропорт Вильнюса останавливал работу из-за возможного БПЛА",
+      "id": "gdelt-4845684db9426510",
+      "idioma": "ru",
+      "medio": "dw.com",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://lavozdegalicia.es/noticia/internacional/2026/10/03/cierran-temporalmente-espacio-aereo-aeropuerto-vilna-posible-presencia-dron/00031791021825505644870.htm",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T10:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Cierran temporalmente el espacio aéreo del aeropuerto de Vilna por la posible presencia de un dron",
+      "id": "gdelt-61571e2c1f38d1d9",
+      "idioma": "es",
+      "medio": "lavozdegalicia.es",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://aktuality.sk/clanok/mnDDGmb/letisko-v-litovskom-vilniuse-uzavreli-kvoli-podozrivemu-dronu-z-bieloruska-vzlietli-stihacky-nato",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T10:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Vilniuské letisko uzavreli pre podozrivý dron, do vzduchu vzlietli stíhačky NATO",
+      "id": "gdelt-6e5ccc78ac46334e",
+      "idioma": "sk",
+      "medio": "aktuality.sk",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://emakedonia.gr/synagermos-sti-lithoyania-ekleise-to-aerodromio-toy-vilnioys-apogeiothikan-machitika-toy-nato-gia-ypopto-drone-apo-ti-leykorosia",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T10:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Συναγερμός στη Λιθουανία: Έκλεισε το αεροδρόμιο του Βίλνιους - Απογειώθηκαν μαχητικά του ΝΑΤΟ για ύποπτο drone από τη Λευκορωσία",
+      "id": "gdelt-f87da08972a182cf",
+      "idioma": "el",
+      "medio": "emakedonia.gr",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://life.ru/p/trevoga-v-litve-aeroport-vilnyusa-ostanovil-rabotu-v-nebo-podnyali-aviatsiyu",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T11:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Аэропорт Вильнюса временно закрылся из-за угрозы беспилотника",
+      "id": "gdelt-13c2269f8c189579",
+      "idioma": "ru",
+      "medio": "life.ru",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://dw.com/es/cierran-moment%C3%A1neamente-el-espacio-a%C3%A9reo-del-aeropuerto-de-vilna-en-lituania-por-la-posible-presencia-de-un-dron/a-79529477",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T11:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Cierra temporalmente el aeropuerto de Vilna por posible dron",
+      "id": "gdelt-4fdac86488055d95",
+      "idioma": "es",
+      "medio": "dw.com",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://hnonline.sk/svet/96305818-poplach-v-litve-letisko-vo-vilniuse-uzavreli-po-hlaseni-o-drone-z-bieloruska-vzlietli-aj-stihacky-nato",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T11:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Poplach v Litve: letisko vo Vilniuse uzavreli po hlásení o drone z Bieloruska, vzlietli aj stíhačky NATO",
+      "id": "gdelt-54f159eef96f0b57",
+      "idioma": "sk",
+      "medio": "hnonline.sk",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://rtve.es/noticias/20261003/cierran-espacio-aereo-aeropuerto-dron/17252003.shtml",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T11:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Lituania cierra temporalmente el aeropuerto de Vilna por un posible dron y activa un despliegue de la OTAN",
+      "id": "gdelt-c0399a4c305b0516",
+      "idioma": "es",
+      "medio": "rtve.es",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://ura.news/news/1053132976",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T11:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Вильнюсский аэропорт временно закрыл воздушное пространство из-за БПЛА",
+      "id": "gdelt-f07967275c88c887",
+      "idioma": "ru",
+      "medio": "ura.news",
       "replicas": 0
      }
     ],
@@ -154085,7 +154062,7 @@
     },
     "tipo": "incursion",
     "titulo": {
-     "en": "Vilnius airport closure due to drone detection",
+     "en": "Vilnius airport closure following drone detection",
      "es": "Cierre del aeropuerto de Vilna por detección de dron"
     }
    },

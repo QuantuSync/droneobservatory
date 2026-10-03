@@ -42128,6 +42128,21 @@
      }
     },
     {
+     "campo": "drones.numero",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T10:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-8f66a4b488f24bc6",
+     "medio": "news.yam.md",
+     "valor": {
+      "max": 1,
+      "min": 1
+     }
+    },
+    {
      "campo": "lugar.pais",
      "credibilidad": 3,
      "fecha": {
@@ -42176,6 +42191,18 @@
      "valor": "MD"
     },
     {
+     "campo": "lugar.pais",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T10:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-8f66a4b488f24bc6",
+     "medio": "news.yam.md",
+     "valor": "MD"
+    },
+    {
      "campo": "presencia_dron",
      "credibilidad": 3,
      "fecha": {
@@ -42221,6 +42248,18 @@
      "fiabilidad": "B",
      "fuente_id": "gdelt-a5b48ee756c6b150-declaracion-1",
      "medio": "Serviciul Operaţii Aeriane al Armatei Naţionale (declaración oficial citada en ziarulnational.md)",
+     "valor": "confirmada"
+    },
+    {
+     "campo": "presencia_dron",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T10:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-8f66a4b488f24bc6",
+     "medio": "news.yam.md",
      "valor": "confirmada"
     },
     {
@@ -42299,6 +42338,21 @@
      }
     },
     {
+     "campo": "tiempo.inicio",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T10:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-8f66a4b488f24bc6",
+     "medio": "news.yam.md",
+     "valor": {
+      "precision": "dia",
+      "valor": "2026-10-03T00:00Z"
+     }
+    },
+    {
      "campo": "tipo",
      "credibilidad": 3,
      "fecha": {
@@ -42333,6 +42387,18 @@
      "fuente_id": "gdelt-091e142045965879",
      "medio": "hotnews.ro",
      "valor": "incursion"
+    },
+    {
+     "campo": "tipo",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T10:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-8f66a4b488f24bc6",
+     "medio": "news.yam.md",
+     "valor": "incursion"
     }
    ],
    "consecuencias": {
@@ -42343,7 +42409,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T10:17Z"
+     "valor": "2026-10-03T12:17Z"
     }
    },
    "drones": {
@@ -42448,6 +42514,34 @@
      "id": "gdelt-091e142045965879",
      "idioma": "ro",
      "medio": "hotnews.ro",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://news.yam.md/ro/story/70666172",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T10:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Un al șaselea zbor neautorizat a fost detectat astăzi în spațiul aerian al Republicii Moldova",
+     "id": "gdelt-8f66a4b488f24bc6",
+     "idioma": "ro",
+     "medio": "news.yam.md",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://news.yam.md/ro/story/70666172",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T10:30Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Un al șaselea zbor neautorizat a fost detectat astăzi în spațiul aerian al Republicii Moldova",
+     "id": "gdelt-8f66a4b488f24bc6-declaracion-1",
+     "idioma": "ro",
+     "medio": "Ministerul Apărării (declaración oficial citada en news.yam.md)",
      "replicas": 0
     }
    ],
@@ -42953,21 +43047,6 @@
      "valor": "si"
     },
     {
-     "campo": "drones.numero",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-03T09:30Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-d07eac49e6186bee",
-     "medio": "primapress.it",
-     "valor": {
-      "max": 1,
-      "min": 1
-     }
-    },
-    {
      "campo": "lugar.pais",
      "credibilidad": 3,
      "fecha": {
@@ -42977,18 +43056,6 @@
      "fiabilidad": "C",
      "fuente_id": "gdelt-d07eac49e6186bee",
      "medio": "primapress.it",
-     "valor": "LT"
-    },
-    {
-     "campo": "lugar.pais",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-03T10:00Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-faeb620ff0072571",
-     "medio": "ilfattonisseno.it",
      "valor": "LT"
     },
     {
@@ -43004,18 +43071,6 @@
      "valor": "no_confirmada"
     },
     {
-     "campo": "presencia_dron",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-03T10:00Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-faeb620ff0072571",
-     "medio": "ilfattonisseno.it",
-     "valor": "no_confirmada"
-    },
-    {
      "campo": "respuesta.medidas",
      "credibilidad": 3,
      "fecha": {
@@ -43025,20 +43080,6 @@
      "fiabilidad": "C",
      "fuente_id": "gdelt-d07eac49e6186bee",
      "medio": "primapress.it",
-     "valor": [
-      "cazas"
-     ]
-    },
-    {
-     "campo": "respuesta.medidas",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-03T10:00Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-faeb620ff0072571",
-     "medio": "ilfattonisseno.it",
      "valor": [
       "cazas"
      ]
@@ -43068,19 +43109,7 @@
      "fiabilidad": "C",
      "fuente_id": "gdelt-d07eac49e6186bee",
      "medio": "primapress.it",
-     "valor": "interrupcion_aeroportuaria"
-    },
-    {
-     "campo": "tipo",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-03T10:00Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-faeb620ff0072571",
-     "medio": "ilfattonisseno.it",
-     "valor": "sobrevuelo"
+     "valor": "incursion"
     }
    ],
    "consecuencias": {
@@ -43091,14 +43120,11 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T10:17Z"
+     "valor": "2026-10-03T12:17Z"
     }
    },
    "drones": {
-    "numero": {
-     "max": 1,
-     "min": 1
-    }
+    "numero": "desconocido"
    },
    "estado": {
     "actual": "confirmado",
@@ -43138,6 +43164,20 @@
     },
     {
      "credibilidad": 3,
+     "enlace": "https://oslobodjenje.ba/vijesti/svijet/incident-na-istocnom-krilu-nato-a-dignuti-borbeni-avioni-zbog-sumnjivog-drona",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T11:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Incident na istočnom krilu NATO-a, dignuti borbeni avioni zbog sumnjivog drona",
+     "id": "gdelt-8b3a9694d036d255",
+     "idioma": "hr",
+     "medio": "oslobodjenje.ba",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 1,
      "enlace": "https://primapress.it/lituania-allarme-aereo-per-un-drone-dalla-bielorussia-in-volo-intercettori-nato",
      "fecha": {
       "precision": "aproximada",
@@ -43148,34 +43188,6 @@
      "id": "gdelt-d07eac49e6186bee-declaracion-1",
      "idioma": "it",
      "medio": "Forze armate lituane (declaración oficial citada en primapress.it)",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://ilfattonisseno.it/2026/10/lituania-drone-invade-spazio-aereo-popolazione-invitata-a-cercare-luogo-sicuro",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-03T10:00Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "possibile allarme per incursione aerea",
-     "id": "gdelt-faeb620ff0072571",
-     "idioma": "it",
-     "medio": "ilfattonisseno.it",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://ilfattonisseno.it/2026/10/lituania-drone-invade-spazio-aereo-popolazione-invitata-a-cercare-luogo-sicuro",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-03T10:00Z"
-     },
-     "fiabilidad": "B",
-     "frase_origen": "possibile allarme per incursione aerea. Cercate un luogo sicuro.",
-     "id": "gdelt-faeb620ff0072571-declaracion-1",
-     "idioma": "it",
-     "medio": "Forze Armate lituane (declaración oficial citada en ilfattonisseno.it)",
      "replicas": 0
     }
    ],
@@ -43198,8 +43210,8 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "Drone from Belarus violates Lithuanian airspace and forces airport closure",
-    "es": "Dron desde Bielorrusia viola el espacio aéreo de Lituania y obliga a cerrar el aeropuerto"
+    "en": "Drone from Belarus violates Lithuanian airspace; airport closed",
+    "es": "Dron desde Bielorrusia viola el espacio aéreo de Lituania; cierran el aeropuerto"
    }
   },
   {
@@ -43334,6 +43346,152 @@
    "titulo": {
     "en": "Drone alert closes Vilnius airport and diverts SAS flight",
     "es": "Alerta de dron cierra el aeropuerto de Vilnius y desvía un vuelo de SAS"
+   }
+  },
+  {
+   "afirmaciones_publicas": [
+    {
+     "campo": "consecuencias.cierre.valor",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T10:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-a103fac336005bb1",
+     "medio": "londonlovesbusiness.com",
+     "valor": "si"
+    },
+    {
+     "campo": "lugar.pais",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T10:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-a103fac336005bb1",
+     "medio": "londonlovesbusiness.com",
+     "valor": "LT"
+    },
+    {
+     "campo": "presencia_dron",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T10:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-a103fac336005bb1",
+     "medio": "londonlovesbusiness.com",
+     "valor": "confirmada"
+    },
+    {
+     "campo": "respuesta.medidas",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T10:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-a103fac336005bb1",
+     "medio": "londonlovesbusiness.com",
+     "valor": [
+      "cazas"
+     ]
+    },
+    {
+     "campo": "tiempo.inicio",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T10:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-a103fac336005bb1",
+     "medio": "londonlovesbusiness.com",
+     "valor": {
+      "precision": "dia",
+      "valor": "2026-10-03T00:00Z"
+     }
+    },
+    {
+     "campo": "tipo",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T10:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-a103fac336005bb1",
+     "medio": "londonlovesbusiness.com",
+     "valor": "incursion"
+    }
+   ],
+   "consecuencias": {
+    "cierre": {
+     "valor": "si"
+    }
+   },
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-03T12:17Z"
+    }
+   },
+   "drones": {
+    "numero": "desconocido"
+   },
+   "estado": {
+    "actual": "notificado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T10:45Z"
+      },
+      "fuente_id": "gdelt-a103fac336005bb1"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://londonlovesbusiness.com/lithuania-issues-find-a-safe-place-drone-alert-as-nato-fighter-jets-scrambled",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T10:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "NATO fighter jets were scrambled over Lithuania after a drone crossed into the country's airspace",
+     "id": "gdelt-a103fac336005bb1",
+     "idioma": "en",
+     "medio": "londonlovesbusiness.com",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-2026-00389",
+   "lugar": {
+    "nivel": "pais",
+    "pais": "LT"
+   },
+   "presencia_dron": "confirmada",
+   "respuesta": {
+    "medidas": [
+     "cazas"
+    ]
+   },
+   "tiempo": {
+    "inicio": {
+     "precision": "aproximada",
+     "valor": "2026-10-03T10:45Z"
+    }
+   },
+   "tipo": "sobrevuelo",
+   "titulo": {
+    "en": "Drone crosses Lithuanian airspace from Belarus, triggering airspace closure",
+    "es": "Dron cruza el espacio aéreo de Lituania desde Bielorrusia y obliga a cerrar el espacio aéreo"
    }
   }
  ]
