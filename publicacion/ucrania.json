@@ -476408,6 +476408,122 @@
     "ala_fija"
    ],
    "zonas_lanzamiento": []
+  },
+  {
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-03T17:17Z"
+    }
+   },
+   "cruces": [],
+   "derribados": {
+    "max": 244,
+    "min": 244
+   },
+   "derribados_categoria": "derribados",
+   "estado": {
+    "actual": "confirmado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "minuto",
+       "valor": "2026-10-03T17:10Z"
+      },
+      "fuente_id": "mod_russia-67908"
+     },
+     {
+      "estado": "confirmado",
+      "fecha": {
+       "precision": "minuto",
+       "valor": "2026-10-03T17:10Z"
+      },
+      "fuente_id": "mod_russia-67908"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/mod_russia/67908",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-10-03T17:10Z"
+     },
+     "fiabilidad": "D",
+     "frase_origen": "В течение дня с 8.00 мск до 20.00 мск дежурными силами ПВО перехвачены и уничтожены 244 украинских беспилотных летательных аппарата самолетного типа над территориями Белгородской,",
+     "id": "mod_russia-67908",
+     "idioma": "ru",
+     "medio": "Минобороны России",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-UA-2026-1026",
+   "lanzados": {
+    "gerbera_senuelos": "desconocido",
+    "otros": "desconocido",
+    "shahed_geran": "desconocido",
+    "total": "desconocido"
+   },
+   "localizaciones_impacto": "desconocido",
+   "localizaciones_restos": "desconocido",
+   "lugares_impacto": [],
+   "lugares_restos": [],
+   "perdidos_guerra_electronica": "desconocido",
+   "periodo": {
+    "fin": {
+     "precision": "minuto",
+     "valor": "2026-10-03T17:00Z"
+    },
+    "inicio": {
+     "precision": "minuto",
+     "valor": "2026-10-03T05:00Z"
+    }
+   },
+   "regiones": [
+    {
+     "region": "RU-AD"
+    },
+    {
+     "region": "RU-BEL"
+    },
+    {
+     "region": "RU-BRY"
+    },
+    {
+     "region": "RU-KDA"
+    },
+    {
+     "region": "RU-KLU"
+    },
+    {
+     "region": "RU-KRS"
+    },
+    {
+     "region": "RU-MOS"
+    },
+    {
+     "region": "RU-ORL"
+    },
+    {
+     "region": "RU-SMO"
+    },
+    {
+     "region": "RU-TUL"
+    },
+    {
+     "region": "UA-43"
+    }
+   ],
+   "regiones_misiles": [],
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "ataque_guerra",
+   "tipos_dron": [
+    "ala_fija"
+   ],
+   "zonas_lanzamiento": []
   }
  ],
  "impactos": [
@@ -791689,13 +791805,14 @@
    "tipo": "impacto_guerra"
   },
   {
+   "ataque": "EODI-UA-2026-1026",
    "categorias_objetivo": [
     "residencial"
    ],
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T14:17Z"
+     "valor": "2026-10-03T17:17Z"
     }
    },
    "credibilidad": 3,

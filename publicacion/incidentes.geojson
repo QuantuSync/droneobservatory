@@ -121676,6 +121676,21 @@
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
+       "valor": "2026-08-05T17:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-582acd3c1601c276",
+      "medio": "hna.de",
+      "valor": {
+       "max": 3,
+       "min": 1
+      }
+     },
+     {
+      "campo": "drones.numero",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
        "valor": "2026-08-06T07:45Z"
       },
       "fiabilidad": "C",
@@ -121778,6 +121793,18 @@
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
+       "valor": "2026-08-05T09:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-202c11d8ce568610",
+      "medio": "schwaebische.de",
+      "valor": "Leipzig"
+     },
+     {
+      "campo": "lugar.localidad",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
        "valor": "2026-08-06T07:45Z"
       },
       "fiabilidad": "C",
@@ -121855,6 +121882,18 @@
       "fiabilidad": "C",
       "fuente_id": "gdelt-a5d089f1afd78180",
       "medio": "mz.de",
+      "valor": "DE"
+     },
+     {
+      "campo": "lugar.pais",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-08-05T09:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-202c11d8ce568610",
+      "medio": "schwaebische.de",
       "valor": "DE"
      },
      {
@@ -122030,6 +122069,18 @@
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
+       "valor": "2026-08-05T09:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-202c11d8ce568610",
+      "medio": "schwaebische.de",
+      "valor": "confirmada"
+     },
+     {
+      "campo": "presencia_dron",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
        "valor": "2026-08-05T09:45Z"
       },
       "fiabilidad": "C",
@@ -122145,6 +122196,20 @@
       "medio": "bild.de",
       "valor": [
        "derribo",
+       "patrulla"
+      ]
+     },
+     {
+      "campo": "respuesta.medidas",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-08-05T09:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-202c11d8ce568610",
+      "medio": "schwaebische.de",
+      "valor": [
        "patrulla"
       ]
      },
@@ -122341,6 +122406,18 @@
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
+       "valor": "2026-08-05T09:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-202c11d8ce568610",
+      "medio": "schwaebische.de",
+      "valor": "sobrevuelo"
+     },
+     {
+      "campo": "tipo",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
        "valor": "2026-08-05T10:30Z"
       },
       "fiabilidad": "C",
@@ -122437,7 +122514,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-03T16:17Z"
+      "valor": "2026-10-03T17:17Z"
      }
     },
     "drones": {
@@ -122666,6 +122743,20 @@
      },
      {
       "credibilidad": 3,
+      "enlace": "https://noz.de/deutschland-welt/wirtschaft/artikel/verdaechtiger-fund-am-flughafen-leipzig-fluege-umgeleitet-51028562",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-08-05T09:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Nato-Sprecher: Drohne nahe ukrainischem Flugzeug in Leipzig:",
+      "id": "gdelt-3543d917382743f8",
+      "idioma": "de",
+      "medio": "noz.de",
+      "replicas": 2
+     },
+     {
+      "credibilidad": 3,
       "enlace": "https://badische-zeitung.de/nato-sprecher-drohne-nahe-ukrainischem-flugzeug-x1x",
       "fecha": {
        "precision": "aproximada",
@@ -122705,6 +122796,20 @@
       "idioma": "de",
       "medio": "20min.ch",
       "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://schwaebische.de/politik/nato-sprecher-drohne-mit-sprengstoff-nahe-ukrainischem-flugzeug-in-leipzig-4765942",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-08-05T09:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "an der Drohne ein Sprengstoff mit Zünder befestigt gewesen sein",
+      "id": "gdelt-202c11d8ce568610",
+      "idioma": "de",
+      "medio": "schwaebische.de",
+      "replicas": 1
      },
      {
       "credibilidad": 3,
@@ -124500,6 +124605,20 @@
      },
      {
       "credibilidad": 3,
+      "enlace": "https://20minutes.fr/monde/ukraine/4237958-20260805-allemagne-sait-drone-explosif-touche-avion-leipzig-hub-strategique-otan-ukraine",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-08-05T16:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Allemagne : Ce que l'on sait du drone explosif qui a touché un avion à Leipzig, hub stratégique pour l'Otan et l'Ukraine",
+      "id": "gdelt-bfc572b989500d3b",
+      "idioma": "fr",
+      "medio": "20minutes.fr",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
       "enlace": "https://nrc.nl/nieuws/2026/08/05/mogelijke-aanslag-drone-met-explosief-ontmanteld-op-luchthaven-leipzig-a4933925",
       "fecha": {
        "precision": "aproximada",
@@ -124651,6 +124770,20 @@
       "idioma": "de",
       "medio": "berliner-zeitung.de",
       "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://hna.de/welt/umgeleitet-verdaechtiger-fund-am-flughafen-leipzig-fluege-zr-94429283.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-08-05T17:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Statt einer Drohne offenbar gleich drei im Einsatz",
+      "id": "gdelt-582acd3c1601c276",
+      "idioma": "de",
+      "medio": "hna.de",
+      "replicas": 5
      },
      {
       "credibilidad": 3,
@@ -124819,6 +124952,20 @@
       "idioma": "ro",
       "medio": "realitatea.net",
       "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://ksta.de:443/politik/drohnen-alarm-in-leipzig-deutschland-sollte-nato-konsultationen-anstrengen-1342103",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-08-05T18:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Drohnen-Alarm in Leipzig: „Deutschland sollte Nato-Konsultationen anstrengen\"",
+      "id": "gdelt-b0ca6c63f19769d8",
+      "idioma": "de",
+      "medio": "ksta.de",
+      "replicas": 1
      },
      {
       "credibilidad": 3,
@@ -125057,6 +125204,20 @@
       "idioma": "ro",
       "medio": "hotnews.ro",
       "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://zazoom.it/2026-08-05/germania-drone-bomba-vicino-ad-aerei-ucraini-a-lipsia-scatta-lallarme-nato/19540238",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-08-05T20:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Germania | drone-bomba vicino ad aerei ucraini a Lipsia Scatta l'allarme Nato",
+      "id": "gdelt-fc7b9614c8ee4c02",
+      "idioma": "it",
+      "medio": "zazoom.it",
+      "replicas": 1
      },
      {
       "credibilidad": 3,
@@ -127803,241 +127964,6 @@
     "titulo": {
      "en": "Drone with explosive charge causes closure of Leipzig airport",
      "es": "Dron con carga explosiva causa cierre del aeropuerto de Leipzig"
-    }
-   },
-   "type": "Feature"
-  },
-  {
-   "geometry": {
-    "coordinates": [
-     12.37129,
-     51.33962
-    ],
-    "type": "Point"
-   },
-   "id": "EODI-2026-00143",
-   "properties": {
-    "afirmaciones_publicas": [
-     {
-      "campo": "drones.numero",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-08-05T17:30Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-582acd3c1601c276",
-      "medio": "hna.de",
-      "valor": {
-       "max": 3,
-       "min": 1
-      }
-     },
-     {
-      "campo": "lugar.localidad",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-08-05T09:30Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-202c11d8ce568610",
-      "medio": "schwaebische.de",
-      "valor": "Leipzig"
-     },
-     {
-      "campo": "lugar.pais",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-08-05T09:30Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-202c11d8ce568610",
-      "medio": "schwaebische.de",
-      "valor": "DE"
-     },
-     {
-      "campo": "presencia_dron",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-08-05T09:30Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-202c11d8ce568610",
-      "medio": "schwaebische.de",
-      "valor": "confirmada"
-     },
-     {
-      "campo": "respuesta.medidas",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-08-05T09:30Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-202c11d8ce568610",
-      "medio": "schwaebische.de",
-      "valor": [
-       "patrulla"
-      ]
-     },
-     {
-      "campo": "tipo",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-08-05T09:30Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-202c11d8ce568610",
-      "medio": "schwaebische.de",
-      "valor": "sobrevuelo"
-     }
-    ],
-    "consecuencias": {
-     "cierre": {
-      "valor": "desconocido"
-     }
-    },
-    "control": {
-     "ultima_actualizacion": {
-      "precision": "minuto",
-      "valor": "2026-10-03T13:23Z"
-     }
-    },
-    "drones": {
-     "numero": {
-      "max": 3,
-      "min": 1
-     }
-    },
-    "estado": {
-     "actual": "notificado",
-     "historial": [
-      {
-       "estado": "notificado",
-       "fecha": {
-        "precision": "aproximada",
-        "valor": "2026-08-05T09:15Z"
-       },
-       "fuente_id": "gdelt-3543d917382743f8"
-      }
-     ]
-    },
-    "fuentes": [
-     {
-      "credibilidad": 3,
-      "enlace": "https://noz.de/deutschland-welt/wirtschaft/artikel/verdaechtiger-fund-am-flughafen-leipzig-fluege-umgeleitet-51028562",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-08-05T09:15Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Nato-Sprecher: Drohne nahe ukrainischem Flugzeug in Leipzig:",
-      "id": "gdelt-3543d917382743f8",
-      "idioma": "de",
-      "medio": "noz.de",
-      "replicas": 2
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://schwaebische.de/politik/nato-sprecher-drohne-mit-sprengstoff-nahe-ukrainischem-flugzeug-in-leipzig-4765942",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-08-05T09:30Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "an der Drohne ein Sprengstoff mit Zünder befestigt gewesen sein",
-      "id": "gdelt-202c11d8ce568610",
-      "idioma": "de",
-      "medio": "schwaebische.de",
-      "replicas": 1
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://20minutes.fr/monde/ukraine/4237958-20260805-allemagne-sait-drone-explosif-touche-avion-leipzig-hub-strategique-otan-ukraine",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-08-05T16:30Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Allemagne : Ce que l'on sait du drone explosif qui a touché un avion à Leipzig, hub stratégique pour l'Otan et l'Ukraine",
-      "id": "gdelt-bfc572b989500d3b",
-      "idioma": "fr",
-      "medio": "20minutes.fr",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://hna.de/welt/umgeleitet-verdaechtiger-fund-am-flughafen-leipzig-fluege-zr-94429283.html",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-08-05T17:30Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Statt einer Drohne offenbar gleich drei im Einsatz",
-      "id": "gdelt-582acd3c1601c276",
-      "idioma": "de",
-      "medio": "hna.de",
-      "replicas": 5
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://ksta.de:443/politik/drohnen-alarm-in-leipzig-deutschland-sollte-nato-konsultationen-anstrengen-1342103",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-08-05T18:15Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Drohnen-Alarm in Leipzig: „Deutschland sollte Nato-Konsultationen anstrengen\"",
-      "id": "gdelt-b0ca6c63f19769d8",
-      "idioma": "de",
-      "medio": "ksta.de",
-      "replicas": 1
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://zazoom.it/2026-08-05/germania-drone-bomba-vicino-ad-aerei-ucraini-a-lipsia-scatta-lallarme-nato/19540238",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-08-05T20:30Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Germania | drone-bomba vicino ad aerei ucraini a Lipsia Scatta l'allarme Nato",
-      "id": "gdelt-fc7b9614c8ee4c02",
-      "idioma": "it",
-      "medio": "zazoom.it",
-      "replicas": 1
-     }
-    ],
-    "id": "EODI-2026-00143",
-    "lugar": {
-     "localidad": "Leipzig",
-     "pais": "DE",
-     "radio_km": 10.0
-    },
-    "objetivo": {
-     "categoria": "otra",
-     "nombre": "Leipzig"
-    },
-    "presencia_dron": "confirmada",
-    "respuesta": {
-     "medidas": [
-      "patrulla"
-     ]
-    },
-    "tiempo": {
-     "inicio": {
-      "precision": "aproximada",
-      "valor": "2026-08-05T09:15Z"
-     }
-    },
-    "tipo": "sobrevuelo",
-    "titulo": {
-     "en": "Drone with explosives intercepted near Ukrainian aircraft in Leipzig",
-     "es": "Dron con explosivos interceptado cerca de avión ucraniano en Leipzig"
     }
    },
    "type": "Feature"
