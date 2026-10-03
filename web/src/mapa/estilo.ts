@@ -148,7 +148,7 @@ export const CAPAS_DE_FOCOS_VIVOS: readonly string[] = [CAPA_FOCOS_VIVOS, CAPA_F
 
 /** Corredores: trazo fino, gris y de baja opacidad, por debajo de los impactos. */
 const COLOR_CORREDOR = PALETA.guerra;
-const OPACIDAD_CORREDOR = 0.24;
+const OPACIDAD_CORREDOR = 0.18;
 /** Focos de calor de 24 h: puntos pequeños; los que coinciden con un impacto, resaltados. */
 const RADIO_FOCO_VIVO = 1.7;
 const OPACIDAD_FOCO_VIVO = 0.7;
