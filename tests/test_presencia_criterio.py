@@ -90,6 +90,20 @@ def test_un_cierre_por_dron_confirma_la_presencia_con_la_frase_de_la_fuente() ->
     assert validar_incidente(resultado, AHORA, VOCABULARIO_MODELOS) == []
 
 
+def test_una_intervencion_policial_por_dron_confirma_la_presencia() -> None:
+    # Caso de Alta: «Politiet rykker til … etter melding om at det flyr en drone».
+    documento = lieja(
+        "EODI-2025-00054", "2025-11-17T15:00Z",
+        frase_origen="Politiet rykker til Amtmannsneset etter melding om at det flyr en drone",
+    )  # fmt: skip
+    documento["consecuencias"] = {"cierre": {"valor": "desconocido"}}
+    documento["tipo"] = "sobrevuelo"
+    documento["respuesta"] = {"medidas": ["patrulla"]}
+    assert presencia.aplicar(documento)["presencia_dron"] == "confirmada"
+    documento["respuesta"] = {"medidas": ["ninguna_conocida"]}
+    assert presencia.aplicar(documento)["presencia_dron"] == "no_confirmada"
+
+
 def test_si_la_fuente_lo_deja_abierto_el_cierre_no_confirma() -> None:
     documento = lieja(
         "EODI-2025-00092", "2025-11-09T19:00Z",

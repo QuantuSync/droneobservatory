@@ -42,8 +42,11 @@ class Cambio:
 
     @property
     def motivo(self) -> str:
-        if self.afirma == "cierre":
-            return f"criterio de presencia: cierre por dron que cuenta la fuente: «{self.frase}»"
+        if self.afirma == "actuacion":
+            return (
+                "criterio de presencia: la autoridad actúa por un dron (cierre o intervención) "
+                f"y lo cuenta la fuente: «{self.frase}»"
+            )
         return (
             f"criterio de presencia: {self.autoridad} ({self.categoria}, declaración "
             f"«{self.afirma}») atribuye el suceso a un dron: «{self.frase}»"
@@ -66,12 +69,25 @@ def autoridad_lo_deja_abierto(incidente: Documento) -> bool:
     )
 
 
-def por_cierre(incidente: Documento) -> Documento | None:
-    """La fuente que cuenta el cierre por un dron: el gestor aeroportuario o el de navegación
-    aérea actúan atribuyendo el suceso a un dron. None si no hubo cierre o si la frase lo deja
-    abierto."""
+# Medidas de una autoridad por el dron (respuesta.medidas): intervención policial, cazas,
+# derribo, inhibición, cierre del espacio aéreo.
+MEDIDAS_DE_AUTORIDAD = frozenset(
+    {"cierre_espacio_aereo", "patrulla", "cazas", "derribo", "inhibicion"}
+)
+
+
+def actua_la_autoridad(incidente: Documento) -> bool:
+    """Una autoridad actuó por el suceso: cerró el aeropuerto o el espacio aéreo, o intervino."""
     cierre = (incidente.get("consecuencias", {}).get("cierre") or {}).get("valor")
-    if cierre != "si":
+    medidas = set((incidente.get("respuesta") or {}).get("medidas") or [])
+    return cierre == "si" or bool(medidas & MEDIDAS_DE_AUTORIDAD)
+
+
+def por_actuacion(incidente: Documento) -> Documento | None:
+    """La fuente que cuenta que la autoridad actuó por un dron (un cierre, una intervención
+    policial, cazas, un derribo): actúa atribuyendo el suceso a un dron. None si no actuó o si
+    la frase lo deja abierto."""
+    if not actua_la_autoridad(incidente):
         return None
     fuentes: list[Documento] = incidente["fuentes"]
     for fuente in sorted(fuentes, key=lambda f: (f["fecha"]["valor"], f["id"])):
@@ -82,7 +98,8 @@ def por_cierre(incidente: Documento) -> Documento | None:
 
 
 def aplicar(incidente: Documento) -> Documento:
-    """El incidente con la presencia confirmada por un cierre por dron, si el criterio lo
+    """El incidente con la presencia confirmada por la actuación de la autoridad (un cierre o una
+    intervención por dron), si el criterio lo
     alcanza y nada lo impide (desmentido, documento oficial, autoridad que lo deja abierto), y
     con el titular coherente con la presencia."""
     resultado = incidente
@@ -92,7 +109,7 @@ def aplicar(incidente: Documento) -> Documento:
         and not documento_oficial_decide(incidente)
         and not autoridad_lo_deja_abierto(incidente)
     ):
-        fuente = por_cierre(incidente)
+        fuente = por_actuacion(incidente)
         if fuente is not None:
             resultado = {**incidente, "afirmaciones": list(incidente.get("afirmaciones", []))}
             declaraciones.confirmar_presencia(resultado, fuente["id"])
@@ -172,8 +189,10 @@ def pendientes(almacen: Almacen) -> list[tuple[Documento, Cambio]]:
                     fuente["frase_origen"],
                 )  # fmt: skip
                 break
-        if cambio is None and (cierre := por_cierre(incidente)) is not None:
-            cambio = Cambio(incidente["id"], cierre["id"], "", "", "cierre", cierre["frase_origen"])
+        if cambio is None and (actua := por_actuacion(incidente)) is not None:
+            cambio = Cambio(
+                incidente["id"], actua["id"], "", "", "actuacion", actua["frase_origen"]
+            )
         if cambio is not None:
             resultado.append((incidente, cambio))
     return resultado
