@@ -777,3 +777,25 @@ def deduccion_completa() -> Documento:
             "clases": ["multirrotor_consumo"],
         },
     }
+
+
+def perdida_luz(zona: str = "ciudad") -> Documento:
+    """Pérdida de luz nocturna de Járkov tras el ataque del 22 de marzo de 2024
+    (proceso/luces.py)."""
+    documento: Documento = {
+        "zona": zona,
+        "region": "UA-63",
+        "perdida_pct": 87,
+        "noche": "2024-03-22",
+        "noches": ["2024-03-22", "2024-03-23"],
+        "referencia": {"desde": "2024-02-29", "hasta": "2024-03-20", "noches": 6, "brillo": 5.1},
+        "brillo": 0.66,
+        "origen": "medido",
+    }
+    if zona == "ciudad":
+        documento["ciudad"] = {
+            "id": "katotth:UA63120270010096107",
+            "nombre": "Харків",
+            "punto": {"lat": 49.99232, "lon": 36.23101},
+        }
+    return documento

@@ -23,6 +23,9 @@ Después, lo que el motor de deducción dejó calculado en el disco del servidor
 temporizador (`recogida/deduccion.py`): se guarda en la base en segundos y un fallo no cambia el
 resultado de la recogida.
 
+Igual con las pérdidas de luz nocturna tras los ataques contra la red eléctrica que dejó medidas
+el servicio de luces (`recogida/luces.py`).
+
 Con --estado, deja escrito cómo fue cada fuente y la fecha de su último dato, para el
 estado del sistema que publica el servidor (`recogida/estado.py`).
 
@@ -55,6 +58,7 @@ from recogida import (
     firms,
     gdelt,
     guerra,
+    luces,
     mediciones,
     oficiales,
 )
@@ -340,6 +344,9 @@ def principal(argumentos: list[str] | None = None) -> int:
         # Lo que dejó el barrido del catálogo vivo (su propio temporizador): tampoco cambia el
         # código de salida si falla.
         catalogo_vivo.paso_horario(almacen)
+        # Pérdidas de luz nocturna que dejó medidas su temporizador: tampoco cambian el código
+        # de salida si falla.
+        luces.paso_horario(almacen)
         # Presencia del dron que confirman las declaraciones oficiales ya guardadas: la regla
         # se amplió y lo anterior se revisa en cada pasada; ya aplicada, no cambia nada.
         confirmadas, sin_guardar = presencia.revisar(almacen, ahora, modelos(almacen))

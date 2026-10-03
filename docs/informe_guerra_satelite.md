@@ -1,0 +1,140 @@
+# Informe: guerra por satélite
+
+Fecha: 3 de octubre de 2026. Rama `guerra-satelite`, PR #65. Esquema 1.9.0.
+
+La capa de guerra del European Observatory of Drone Incidents suma cuatro piezas públicas que
+salen de satélites y de los partes:
+
+1. **Antes y después** de cada instalación alcanzada: la última imagen óptica de Sentinel-2 sin
+   nubes anterior al ataque y la primera posterior, recortadas sobre el sitio, con una cortinilla
+   en la ficha del impacto.
+2. **Apagones vistos desde el espacio**: el brillo nocturno de las ciudades y regiones afectadas
+   por cada ataque con objetivos de energía, antes y después, y la pérdida de luz cuando llega
+   al umbral validado.
+3. **Focos de calor en vivo**: los focos de NASA FIRMS de las últimas 24 horas sobre Ucrania y la
+   Rusia europea, con los que coinciden con un impacto declarado resaltados.
+4. **Corredores de ataque**: arcos desde las zonas de lanzamiento hasta las regiones alcanzadas,
+   con el grosor según los drones del periodo.
+
+## 1. Fuentes y acceso verificados
+
+Comprobado el 3 de octubre de 2026, sin cuenta en ninguna de las tres.
+
+| Pieza | Fuente | Acceso | Condiciones |
+| --- | --- | --- | --- |
+| Antes y después | Sentinel-2 L2A en el archivo abierto de AWS (bucket `sentinel-cogs`, GeoTIFF optimizados para la nube), con el catálogo STAC público de Earth Search (`earth-search.aws.element84.com/v1`, colección `sentinel-2-l2a`), de Element 84 | Sin cuenta ni clave (el registro de datos abiertos de AWS lo indica así) | «Access to Sentinel data is free, full and open» (aviso legal de los datos Sentinel); lo derivado lleva «Contains modified Copernicus Sentinel data <año>» |
+| Luz nocturna | Banda día-noche de VIIRS de NOAA-20: gránulos SDR (`VIIRS-DNB-SDR`, radiancia calibrada y su calidad) y GEO (`VIIRS-DNB-GEO`, posición y ángulos de satélite, Sol y Luna) del archivo abierto de NOAA en AWS (`noaa-nesdis-n20-pds`) | Sin cuenta | «NOAA data disseminated through NODD are open to the public and can be used as desired» |
+| Nubes de cada noche | Open-Meteo, Historical Forecast API (la misma de `recogida/meteo.py`) | Sin clave | CC BY 4.0, «Weather data by Open-Meteo.com» |
+| Focos en vivo | NASA FIRMS, los CSV que la recogida ya descarga cada 3 horas | La clave de FIRMS que ya tiene el servidor | Atribución de FIRMS en la metodología |
+| Corredores | Partes de la Fuerza Aérea de Ucrania (zonas declaradas) y `configuracion/zonas_lanzamiento.json` del motor de deducción | — | — |
+
+**Black Marble.** El producto diario corregido por Luna y nubes (VNP46A2) se lista sin cuenta en
+LAADS DAAC, pero la descarga de cada fichero devuelve la página de entrada de NASA Earthdata:
+exige un token. Como la radiancia calibrada sí se publica sin cuenta en el archivo de NOAA, la
+medida se hace con los gránulos SDR de VIIRS y con su propia corrección de Luna y de nubes
+(apartado 3). No hace falta ninguna cuenta.
+
+## 2. Antes y después de cada instalación alcanzada
+
+[`recogida/satelite.py`](../recogida/satelite.py), [`recogida/cog.py`](../recogida/cog.py).
+
+- **Qué impactos.** Los publicados con foco térmico detectado (de FIRMS) y, después, el resto de
+  impactos en instalaciones; como los publica la web (sin retirados ni unidos a otro). Hoy son
+  33: 17 con foco y 16 en instalaciones.
+- **Recorte.** Con foco, centrado en los focos que contaron (lo que ardió); en una instalación con
+  foco, en el punto medio entre la instalación y los focos, con lado de sobra para los dos; sin
+  foco, en la instalación. Lado según el tipo (4 km refinerías, puertos y aeródromos; 2,5 km
+  depósitos e industria; 1,5 km subestaciones; 3 km localidades), hasta 6 km.
+- **Lectura.** De cada escena candidata se lee solo la ventana del recorte: primero la
+  clasificación de escena (SCL, 20 m), y si vale, el color natural (TCI, 10 m). Una pareja son
+  unos 9 MB leídos, frente a unos 200 MB por banda de una escena entera.
+- **Nubes sobre el recorte.** Vale una escena con un 3 % o menos de nube media o alta, cirro o
+  sombra de nube y un 2 % o menos sin dato dentro del recorte. La nubosidad de la escena entera
+  no decide: sobre Kirishi, la escena S2A_36VVM del 3 de octubre de 2025, con un 49 % de nubes
+  en la escena, tenía el recorte cubierto del todo, y la del 1 de octubre (0,03 %) limpio; esos
+  recortes reales de la SCL son los de los tests.
+- **Fechas.** Antes: la más reciente que vale en los 180 días anteriores al inicio del ataque
+  (la misma ventana del impacto que usa el cruce con FIRMS). Después: la primera que vale desde
+  el fin del ataque y su publicación. Si aún no hay ninguna, la pareja queda a medias y cada
+  ejecución mira solo las escenas nuevas; de una misma toma va primero la tesela del huso UTM de
+  la imagen de antes, para que no queden giradas.
+- **Imagen.** El color natural de la ESA con la misma curva fija para todas (aclara los tonos
+  medios); JPEG de calidad 85 sin metadatos, 10 m por píxel. Las imágenes, inmutables, y el
+  índice `satelite/parejas.json` (escenas, fechas, nubes del recorte y la atribución) van al
+  almacén público de Hetzner.
+- **Web.** En la ficha del impacto, a todo el ancho: las dos imágenes con una cortinilla que se
+  arrastra (y un deslizador para el teclado), las fechas, las escenas, el producto y «Contains
+  modified Copernicus Sentinel data <años>». Con la pareja a medias, la imagen de antes y el
+  aviso de que la posterior se añade sola.
+
+<!-- RESULTADOS SATELITE -->
+
+## 3. Apagones vistos desde el espacio
+
+[`proceso/luces.py`](../proceso/luces.py) (regla), [`recogida/luces.py`](../recogida/luces.py)
+(medida en el servidor).
+
+<!-- LUCES -->
+
+## 4. Focos de calor en vivo
+
+[`recogida/focos_vivo.py`](../recogida/focos_vivo.py). Cada hora, de los CSV de FIRMS que la
+recogida descarga cada 3 horas, los focos de las últimas 24 horas que caen en Ucrania (con lo
+ocupado) o en una región de la Rusia europea (los polígonos de las regiones que dibuja la web;
+la caja de FIRMS incluye también Rumanía, Moldavia o Bielorrusia), con los mismos filtros que el
+cruce con los impactos:
+
+- fuera VIIRS de confianza baja y MODIS por debajo de 30;
+- fuera las fuentes de calor habituales: a menos de 1 km (VIIRS) o 2 km (MODIS) de un foco de
+  los 30 días anteriores sin pasar de 4 veces su potencia, o en un emplazamiento con 3 focos o
+  más en el año anterior sin pasar de 4 veces su percentil 90 (las antorchas de las refinerías,
+  como Kirishi);
+- fuera el fuego frecuente: un entorno de 5 km que ardió 15 días o más de los 30 anteriores
+  repartido en 15 celdas de 0,01° o más (las ciudades del frente).
+
+Se resaltan los que caen en el radio de búsqueda de un impacto publicado (sin partes diarios ni
+FPV) entre 36 horas antes y 36 horas después de su publicación. El fichero
+(`focos/ultimas24h.json`) va al almacén público con caché de 5 minutos y la web lo lee
+directamente cada 10 minutos; la capa muestra «Focos de calor de 24 h · último dato hh:mm UTC».
+
+Primera ejecución con los datos reales del servidor (3 de octubre, 09:51 UTC): 881 focos leídos
+en Ucrania y la Rusia europea; 467 fuera por fuentes habituales de los 30 días, 178 por
+emplazamientos del año y 11 de confianza baja; 225 publicados, 3 de ellos coincidentes con un
+impacto declarado. 10,8 kB, 2,3 s y 251 MB (la primera del día, con el resumen anual de
+emplazamientos, 9 s y 377 MB).
+
+## 5. Corredores de ataque
+
+[`web/src/datos/guerraSatelite.ts`](../web/src/datos/guerraSatelite.ts). Se calculan en la web
+para el periodo de la línea de tiempo:
+
+- **Contra Ucrania**: de cada zona de lanzamiento que nombra el parte de la Fuerza Aérea (casada
+  con `zonas_lanzamiento.json` por sus raíces, como el motor de deducción; de varias zonas con el
+  mismo nombre, la primera con punto) a cada región del ataque. Su cifra son los drones lanzados
+  en los ataques del periodo que salieron de esa zona (entre otras, si el parte nombra varias) y
+  alcanzaron esa región; los tramos cuyas cifras ya están en otro parte no se suman dos veces.
+  Hoy casan 862 ataques con 18 zonas con punto; «ТОТ Донецької обл.» es una zona del catálogo
+  sin punto y no tiene arco.
+- **Contra Rusia**: el parte ruso da los derribos por región; el arco sale del punto de la
+  frontera de Ucrania más cercano al centro de la región y su cifra son esos derribos.
+- **Dibujo**: arcos suaves sin animación, grises, de opacidad 0,2 y grosor de 0,4 a 3 px según la
+  raíz de los drones (sobre el máximo del periodo), por debajo de impactos, focos y ciudades; los
+  arcos sin cifra no se dibujan. Se ocultan con «Corredores» en el selector de capas y, al
+  pulsarlos, la ficha da origen, destino, drones del periodo y número de ataques.
+
+## 6. Servidor
+
+<!-- SERVIDOR -->
+
+## 7. Web
+
+- Selector de capas: con la capa de Ucrania encendida aparecen «Corredores», «Focos 24 h» y
+  «Luz nocturna», encendidas por defecto (en el teléfono, en el menú).
+- Política de contenido: `img-src` admite el almacén público (las imágenes de Sentinel-2); un
+  test lo comprueba.
+- Metodología (ES y EN): apartado «Guerra por satélite» y las atribuciones de Copernicus
+  Sentinel y de NOAA. Ayuda del mapa: las tres marcas nuevas.
+- Comprobado en escritorio y en 360×800, 390×844 y 412×915, en local, en la vista previa del
+  PR y en producción (apartado 9).
+
+<!-- PRODUCCION -->

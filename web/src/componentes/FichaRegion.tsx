@@ -1,11 +1,12 @@
 import { useState } from "react";
-import type { FilaImpacto, FocoRegion, FuenteSentido, Sentido } from "../datos/tipos.ts";
+import type { FilaImpacto, FocoRegion, FuenteSentido, LuzResumen, Sentido } from "../datos/tipos.ts";
 import type { CifrasRegion } from "../datos/ucrania.ts";
 import { fechaDia, numero, rango, region } from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
 import { rutaDeFicha } from "../sitio.ts";
 import type { Idioma } from "../sitio.ts";
 import { LineaFoco, ZOOM_VISOR_REGION } from "./FocoTermico.tsx";
+import { ListaLuz } from "./GuerraSatelite.tsx";
 import { Fila } from "./Panel.tsx";
 import { Enlace } from "../navegacion.tsx";
 
@@ -27,6 +28,8 @@ interface Props {
   fuentes?: Record<Sentido, FuenteSentido | null>;
   /** Impactos con lugar de la región en el periodo, del más reciente al más antiguo. */
   impactos?: readonly FilaImpacto[];
+  /** Pérdidas de luz nocturna de la región en el periodo (la región entera). */
+  luces?: readonly LuzResumen[];
   /** Abre la ficha de un impacto de la lista. */
   onImpacto?: (id: string) => void;
 }
@@ -51,7 +54,7 @@ function LineaFuente({ t, fuente }: { t: Textos; fuente: FuenteSentido }) {
 /** Cifras de una región de Ucrania en el periodo elegido, con los partes que la citan. */
 export function FichaRegion(props: Props) {
   const { t, idioma, codigo, cifras, periodo, focos = [], fuentes, impactos = [] } = props;
-  const { onImpacto } = props;
+  const { onImpacto, luces = [] } = props;
   const [todos, setTodos] = useState(false);
   const total = cifras.ataques.RU_UA + cifras.ataques.UA_RU;
   const visibles = todos ? cifras.lista : cifras.lista.slice(0, ATAQUES_VISIBLES);
@@ -104,6 +107,11 @@ export function FichaRegion(props: Props) {
                 ataque={f.ataque}
               />
             ))}
+            {luces.length > 0 && (
+              <Fila nombre={t.satelite.luzFicha.rotulo}>
+                <ListaLuz t={t} idioma={idioma} luces={[...luces].reverse()} />
+              </Fila>
+            )}
           </dl>
           <p className="mt-2 text-xs text-secundario">{t.region.nota}</p>
           {impactos.length > 0 && (

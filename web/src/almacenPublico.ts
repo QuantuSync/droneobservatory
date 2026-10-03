@@ -7,9 +7,13 @@ import almacen from "../../configuracion/almacen_publico.json" with { type: "jso
 
 export const ORIGEN_ALMACEN: string = new URL(almacen.publico).origin;
 
-/** Dirección pública de un objeto del almacén. */
+/**
+ * Dirección pública de un objeto del almacén. En desarrollo, VITE_ALMACEN puede apuntar a una
+ * copia servida por el servidor local (scripts/servidor-local.ts).
+ */
 export function urlDelAlmacen(objeto: string): string {
-  return `${ORIGEN_ALMACEN}/${objeto}`;
+  const local = import.meta.env.VITE_ALMACEN as string | undefined;
+  return `${local ?? ORIGEN_ALMACEN}/${objeto}`;
 }
 
 export const OBJETO_TESELAS: string = almacen.objetos.teselas;

@@ -5,6 +5,7 @@ import { rutaDeFicha } from "../sitio.ts";
 import type { Idioma } from "../sitio.ts";
 import { diaDeInstante } from "../tiempo/dias.ts";
 import { LineaFoco, ZOOM_VISOR_PUNTO } from "./FocoTermico.tsx";
+import { ImagenesSatelite } from "./GuerraSatelite.tsx";
 import { ListaFuentes } from "./Fuentes.tsx";
 import { Fila } from "./Panel.tsx";
 import { Enlace } from "../navegacion.tsx";
@@ -107,6 +108,7 @@ export function FichaImpacto({ t, idioma, impacto }: Props) {
           />
         )}
       </dl>
+      <ImagenesSatelite t={t} idioma={idioma} id={impacto.id} />
       <ListaFuentes t={t} fuentes={impacto.fuentes} />
     </article>
   );

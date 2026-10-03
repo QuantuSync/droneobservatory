@@ -884,6 +884,62 @@ export const es: Textos = {
         ],
       },
       {
+        id: "satelite",
+        titulo: "Guerra por satélite",
+        bloques: [
+          {
+            parrafo: [
+              "En la capa de guerra, cuatro piezas salen de satélites y de los partes. " +
+                "Imágenes de antes y después: para cada impacto con foco térmico detectado y " +
+                "para cada impacto en una instalación, la última imagen de ",
+              { texto: "Sentinel-2", enlace: "https://registry.opendata.aws/sentinel-2-l2a-cogs/" },
+              " sin nubes anterior al ataque y la primera posterior, recortadas sobre el sitio " +
+                "en color natural y con el mismo ajuste de brillo. Las nubes se miden en el " +
+                "propio recorte con la clasificación de escena de la ESA: vale una imagen con un " +
+                "3 % de nube o menos sobre la instalación, aunque la escena entera esté nublada. " +
+                "La pareja se completa sola cuando llega la primera imagen posterior despejada.",
+            ],
+          },
+          {
+            parrafo: [
+              "Luz nocturna: tras cada ataque con objetivos de energía (un impacto en la red " +
+                "eléctrica o un mensaje oficial de la región que la nombra), el brillo de las " +
+                "ciudades y regiones afectadas en la banda día-noche de VIIRS (NOAA-20), del ",
+              {
+                texto: "archivo abierto de NOAA",
+                enlace: "https://registry.opendata.aws/noaa-jpss/",
+              },
+              ". El brillo es la luz de la ciudad por encima del fondo que la rodea, medido en " +
+                "el mismo paso del satélite (así se quita la luz de la Luna reflejada por el " +
+                "suelo); solo cuentan las noches sin nubes (nubosidad de Open-Meteo a la hora " +
+                "del paso) y con el satélite casi en la vertical. La referencia es la mediana " +
+                "de las noches válidas de las tres semanas anteriores; hay pérdida de luz cuando " +
+                "una noche de la semana siguiente pierde la mitad o más. El umbral se fijó con " +
+                "apagones documentados de 2024 a 2026 y con noches de control sin ataques.",
+            ],
+          },
+          {
+            parrafo: [
+              "Focos de calor de las últimas 24 horas: los de NASA FIRMS sobre Ucrania y la " +
+                "Rusia europea, con los mismos filtros que el cruce con los impactos (fuera las " +
+                "antorchas de las refinerías y las plantas con calor habitual, la baja confianza " +
+                "y las zonas que arden a diario, como las ciudades del frente). Se resaltan los " +
+                "que caen en el radio de un impacto declarado en las 36 horas de alrededor.",
+            ],
+          },
+          {
+            parrafo: [
+              "Corredores de ataque: arcos desde las zonas de lanzamiento que nombran los " +
+                "partes de la Fuerza Aérea de Ucrania (con el punto del catálogo de zonas del " +
+                "motor de deducción) hasta las regiones alcanzadas, con el grosor según los " +
+                "drones de esos ataques en el periodo elegido. En los ataques contra Rusia, cuyo " +
+                "parte da los derribos por región, el arco sale del punto de la frontera de " +
+                "Ucrania más cercano a cada región y su cifra son esos derribos.",
+            ],
+          },
+        ],
+      },
+      {
         id: "trafico",
         titulo: "Tráfico aéreo medido",
         bloques: [
@@ -1127,6 +1183,19 @@ export const es: Textos = {
                 ],
               },
               {
+                termino: "Imágenes de satélite",
+                texto: [
+                  "Contains modified Copernicus Sentinel data (",
+                  {
+                    texto: "Sentinel-2 L2A en AWS",
+                    enlace: "https://registry.opendata.aws/sentinel-2-l2a-cogs/",
+                  },
+                  "). Luz nocturna: VIIRS de NOAA-20, ",
+                  { texto: "NOAA Open Data Dissemination", enlace: "https://registry.opendata.aws/noaa-jpss/" },
+                  ".",
+                ],
+              },
+              {
                 termino: "Focos térmicos",
                 texto: [
                   "We acknowledge the use of data and/or imagery from NASA's Fire " +
@@ -1195,5 +1264,74 @@ export const es: Textos = {
     "UA-71": "Cherkasy",
     "UA-74": "Chernígov",
     "UA-77": "Chernivtsi",
+  },
+  satelite: {
+    capas: "Capa de guerra",
+    corredores: "Corredores",
+    focos: "Focos 24 h",
+    luz: "Luz nocturna",
+    letreroCorredor: (origen, region, drones) => `${origen} → ${region} · ${drones} drones`,
+    letreroFoco: (hora, coincide) =>
+      `Foco de calor · ${hora} UTC${coincide ? " · coincide con un impacto declarado" : ""}`,
+    letreroCiudad: (ciudad, perdida) => `${ciudad} · ${perdida} % menos de luz nocturna`,
+    focosUltimo: (hora) => `Focos de calor de 24 h · último dato ${hora} UTC`,
+    focosVacio: "Focos de calor de 24 h · sin focos en las últimas 24 horas",
+    corredor: {
+      etiqueta: "Corredor de ataque · capa de guerra",
+      origen: "Origen",
+      destino: "Destino",
+      desdeUcrania: "Ucrania",
+      desdeUcraniaTexto:
+        "El arco sale del punto de la frontera de Ucrania más cercano a la región; la cifra " +
+        "es la de derribos por región del parte ruso.",
+      drones: "Drones en el periodo",
+      dronesTexto: {
+        RU_UA:
+          "Drones lanzados en los ataques del periodo que salieron de esta zona (entre otras, " +
+          "si el parte nombra varias) y alcanzaron esta región, según la Fuerza Aérea de Ucrania.",
+        UA_RU: "Drones que el Ministerio de Defensa ruso dice haber derribado sobre la región.",
+      },
+      ataques: (n) => (n === 1 ? "1 ataque" : `${n} ataques`),
+      periodo: "Periodo",
+    },
+    luzFicha: {
+      etiqueta: "Luz nocturna · capa de guerra",
+      rotulo: "Luz nocturna",
+      perdida: (pct) => `${pct} % menos de luz`,
+      peorNoche: (fecha) => `la noche del ${fecha}`,
+      noches: (n) => (n === 1 ? "1 noche con pérdida" : `${n} noches con pérdida`),
+      referencia: (desde, hasta, n) =>
+        `frente a la mediana de ${n} noches sin nubes del ${desde} al ${hasta}`,
+      origen: "Medido por satélite",
+      ataque: "Ataque",
+      region: "Región",
+      regionEntera: "suma de sus ciudades medidas",
+      sinPerdida: "Ninguna pérdida de luz medida en el periodo.",
+      metodo:
+        "Brillo de la banda día-noche de VIIRS (NOAA-20) sobre el fondo, noches sin nubes. " +
+        "Noches con la fecha de su tarde; el paso del satélite es hacia la 01:30 hora local.",
+    },
+    imagen: {
+      rotulo: "Imagen de satélite",
+      antes: "Antes",
+      despues: "Después",
+      deslizador: "Comparar la imagen de antes y la de después",
+      escena: (id) => `escena ${id}`,
+      nubes: (pct) => `${pct} % de nubes en el recorte`,
+      producto: (lado) => `Sentinel-2 L2A, color natural, 10 m por píxel, recorte de ${lado} km`,
+      esperando: "La imagen posterior sin nubes se añade en cuanto Sentinel-2 la toma.",
+      cargando: "Cargando las imágenes…",
+      alt: (momento, fecha) => `Imagen de satélite ${momento} del ataque, ${fecha}`,
+    },
+    zona: (_id, nombre) => nombre,
+    ayudaCorredores:
+      "Un arco fino y gris va de una zona de lanzamiento a una región alcanzada: más grueso, más " +
+      "drones en el periodo. Contra Rusia sale del punto de la frontera de Ucrania más cercano.",
+    ayudaFocos:
+      "Un punto gris diminuto es un foco de calor de las últimas 24 horas (NASA FIRMS); uno claro " +
+      "y mayor coincide con un impacto declarado.",
+    ayudaLuz:
+      "Una región o una ciudad oscurecida perdió luz nocturna tras un ataque contra la red " +
+      "eléctrica, medido por satélite: más oscura, más pérdida.",
   },
 };

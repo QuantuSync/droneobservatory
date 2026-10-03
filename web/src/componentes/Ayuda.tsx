@@ -65,6 +65,32 @@ function MarcaRusia() {
   );
 }
 
+/** Marcas de la guerra por satélite, como en el mapa. */
+function MarcaCorredor() {
+  return (
+    <svg aria-hidden="true" width="18" height="10" viewBox="0 0 18 10" data-marca-corredor="">
+      <path d="M1 9 Q9 0 17 7" fill="none" stroke={PALETA.secundario} strokeWidth="1.4" strokeOpacity="0.6" />
+    </svg>
+  );
+}
+
+function MarcaFocoVivo() {
+  return (
+    <svg aria-hidden="true" width="14" height="10" viewBox="0 0 14 10" data-marca-foco-vivo="">
+      <circle cx="3" cy="5" r="1.7" fill={PALETA.secundario} />
+      <circle cx="10" cy="5" r="3.2" fill={PALETA.texto} stroke={PALETA.fondo} strokeWidth="1.2" />
+    </svg>
+  );
+}
+
+function MarcaLuz() {
+  return (
+    <svg aria-hidden="true" width="10" height="10" viewBox="0 0 10 10" data-marca-luz="">
+      <circle cx="5" cy="5" r="4.2" fill={PALETA.fondo} stroke={PALETA.secundario} strokeWidth="0.8" />
+    </svg>
+  );
+}
+
 /** Nombre legible de una tecla en el panel de ayuda. */
 function tecla(nombre: string): string {
   return nombre === "Escape" ? "Esc" : nombre.toUpperCase();
@@ -148,6 +174,18 @@ export function Ayuda({ t, abierta, onCerrar }: Props) {
             </span>
             {a.directo}
           </li>
+          {(
+            [
+              [<MarcaCorredor key="c" />, t.satelite.ayudaCorredores],
+              [<MarcaFocoVivo key="f" />, t.satelite.ayudaFocos],
+              [<MarcaLuz key="l" />, t.satelite.ayudaLuz],
+            ] as const
+          ).map(([marca, texto]) => (
+            <li key={texto} className="flex items-start gap-2">
+              <span className="pt-1">{marca}</span>
+              {texto}
+            </li>
+          ))}
         </ul>
         <section className="sm:col-span-2">
           <h3 className="font-medium">{a.atajos}</h3>

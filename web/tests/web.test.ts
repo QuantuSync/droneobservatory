@@ -67,6 +67,7 @@ describe("textos en español e inglés", () => {
       "historial",
       "fuentes",
       "focos",
+      "satelite",
       "trafico",
       "directo",
       "gnss",

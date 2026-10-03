@@ -36,6 +36,9 @@ export const FUENTE_REGIONES_RUSIA = "rusia-regiones";
 export const FUENTE_IMPACTOS = "guerra-impactos";
 export const FUENTE_GNSS = "gnss";
 export const FUENTE_DIRECTO = "directo";
+export const FUENTE_CORREDORES = "guerra-corredores";
+export const FUENTE_LUZ_CIUDADES = "guerra-luz-ciudades";
+export const FUENTE_FOCOS_VIVOS = "guerra-focos-vivos";
 
 export const CAPA_GRUPOS = "grupos";
 export const CAPA_NUMERO_GRUPOS = "grupos-numero";
@@ -62,6 +65,12 @@ export const CAPA_PRESION_LINEA = "presion-linea";
 export const CAPA_GNSS = "gnss-relleno";
 export const CAPA_GNSS_LINEA = "gnss-linea";
 export const CAPA_DIRECTO = "directo-avisos";
+export const CAPA_CORREDORES = "guerra-corredores";
+export const CAPA_LUZ_REGIONES = "ucrania-luz";
+export const CAPA_LUZ_REGIONES_RUSIA = "rusia-luz";
+export const CAPA_LUZ_CIUDADES = "guerra-luz-ciudades";
+export const CAPA_FOCOS_VIVOS = "guerra-focos-vivos";
+export const CAPA_FOCOS_VIVOS_IMPACTO = "guerra-focos-vivos-impacto";
 
 /** Capas que se pueden pulsar, de la de más arriba a la de más abajo. */
 export const CAPAS_PULSABLES: readonly string[] = [
@@ -71,6 +80,9 @@ export const CAPAS_PULSABLES: readonly string[] = [
   CAPA_GRUPOS,
   CAPA_IMPACTOS,
   CAPA_IMPACTOS_GRUPOS,
+  CAPA_FOCOS_VIVOS_IMPACTO,
+  CAPA_LUZ_CIUDADES,
+  CAPA_CORREDORES,
   CAPA_REGIONES,
   CAPA_REGIONES_RUSIA,
   CAPA_GNSS,
@@ -124,6 +136,23 @@ export const COLOR_GNSS: ExpressionSpecification = [
   PALETA.atribuido,
   ["interpolate", ["linear"], ["get", "proporcion"], 0, GRIS_GNSS_BAJO, 0.1, GRIS_GNSS_ALTO],
 ];
+
+/** Capas de la guerra por satélite: se ven con la capa de Ucrania y su propio interruptor. */
+export const CAPAS_DE_CORREDORES: readonly string[] = [CAPA_CORREDORES];
+export const CAPAS_DE_LUZ: readonly string[] = [
+  CAPA_LUZ_REGIONES,
+  CAPA_LUZ_REGIONES_RUSIA,
+  CAPA_LUZ_CIUDADES,
+];
+export const CAPAS_DE_FOCOS_VIVOS: readonly string[] = [CAPA_FOCOS_VIVOS, CAPA_FOCOS_VIVOS_IMPACTO];
+
+/** Corredores: trazo fino, gris y de baja opacidad, por debajo de los impactos. */
+const COLOR_CORREDOR = PALETA.secundario;
+const OPACIDAD_CORREDOR = 0.2;
+/** Focos de calor de 24 h: puntos pequeños; los que coinciden con un impacto, resaltados. */
+const RADIO_FOCO_VIVO = 1.7;
+const OPACIDAD_FOCO_VIVO = 0.7;
+const RADIO_FOCO_VIVO_IMPACTO = 3.2;
 
 /** Marca del foco térmico: pequeña, junto al símbolo, como en la ayuda (MarcaFoco). */
 const RADIO_MARCA_FOCO = 3.5;
@@ -438,6 +467,20 @@ function capasPropias(acento: string): LayerSpecification[] {
         "fill-opacity-transition": { duration: 260, delay: 0 },
       },
     },
+    // Pérdida de luz nocturna: las regiones se oscurecen según la pérdida (opacidad por
+    // región, la pone el mapa con el periodo). Sin color: oscuro sobre el relleno.
+    {
+      id: CAPA_LUZ_REGIONES_RUSIA,
+      type: "fill",
+      source: FUENTE_REGIONES_RUSIA,
+      paint: { "fill-color": PALETA.fondo, "fill-opacity": 0 },
+    },
+    {
+      id: CAPA_LUZ_REGIONES,
+      type: "fill",
+      source: FUENTE_REGIONES,
+      paint: { "fill-color": PALETA.fondo, "fill-opacity": 0 },
+    },
     {
       id: "ucrania-regiones-linea",
       type: "line",
@@ -456,6 +499,18 @@ function capasPropias(acento: string): LayerSpecification[] {
       source: FUENTE_REGIONES,
       filter: ["in", ["get", "iso"], ["literal", []]],
       paint: { "line-color": acento, "line-width": 1.2 },
+    },
+    // Corredores de ataque: arcos sin animación, por debajo de impactos y focos.
+    {
+      id: CAPA_CORREDORES,
+      type: "line",
+      source: FUENTE_CORREDORES,
+      layout: { "line-cap": "round", "line-join": "round" },
+      paint: {
+        "line-color": COLOR_CORREDOR,
+        "line-opacity": OPACIDAD_CORREDOR,
+        "line-width": ["get", "ancho"],
+      },
     },
     {
       id: "densidad",
@@ -618,6 +673,44 @@ function capasPropias(acento: string): LayerSpecification[] {
         "circle-stroke-color": PALETA.fondo,
         "circle-stroke-width": 1.5,
         "circle-translate": [-DESPLAZAMIENTO_MARCA_FOCO[0], DESPLAZAMIENTO_MARCA_FOCO[1]],
+      },
+    },
+    // Ciudades que perdieron luz nocturna: un disco oscuro, más opaco cuanto mayor la pérdida.
+    {
+      id: CAPA_LUZ_CIUDADES,
+      type: "circle",
+      source: FUENTE_LUZ_CIUDADES,
+      paint: {
+        "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, 5, 8, 9, 11, 16],
+        "circle-color": PALETA.fondo,
+        "circle-opacity": ["get", "opacidad"],
+        "circle-stroke-color": PALETA.secundario,
+        "circle-stroke-width": 0.8,
+        "circle-stroke-opacity": 0.6,
+      },
+    },
+    // Focos de calor de las últimas 24 horas: pequeños y discretos.
+    {
+      id: CAPA_FOCOS_VIVOS,
+      type: "circle",
+      source: FUENTE_FOCOS_VIVOS,
+      filter: ["==", ["get", "impacto"], ""],
+      paint: {
+        "circle-radius": RADIO_FOCO_VIVO,
+        "circle-color": PALETA.secundario,
+        "circle-opacity": OPACIDAD_FOCO_VIVO,
+      },
+    },
+    {
+      id: CAPA_FOCOS_VIVOS_IMPACTO,
+      type: "circle",
+      source: FUENTE_FOCOS_VIVOS,
+      filter: ["!=", ["get", "impacto"], ""],
+      paint: {
+        "circle-radius": RADIO_FOCO_VIVO_IMPACTO,
+        "circle-color": PALETA.texto,
+        "circle-stroke-color": PALETA.fondo,
+        "circle-stroke-width": 1.2,
       },
     },
     {
@@ -815,6 +908,9 @@ export function estilo(idioma: Idioma, origen: string, acento: string): StyleSpe
       [FUENTE_REGIONES_RUSIA]: { type: "geojson", data: `${origen}/mapa/rusia-regiones.geojson` },
       [FUENTE_GNSS]: { type: "geojson", data: VACIA },
       [FUENTE_DIRECTO]: { type: "geojson", data: VACIA },
+      [FUENTE_CORREDORES]: { type: "geojson", data: VACIA },
+      [FUENTE_LUZ_CIUDADES]: { type: "geojson", data: VACIA },
+      [FUENTE_FOCOS_VIVOS]: { type: "geojson", data: VACIA },
       [FUENTE_IMPACTOS]: {
         type: "geojson",
         data: VACIA,

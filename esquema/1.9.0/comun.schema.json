@@ -1,10 +1,126 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:eodi:esquema:1.8.0:comun",
+  "$id": "urn:eodi:esquema:1.9.0:comun",
   "title": "Definiciones comunes",
   "description": "Tipos compartidos. La visibilidad efectiva de un campo es la más restrictiva de su cadena: si algún antecesor es interno, el campo es interno.",
-  "x-version": "1.8.0",
+  "x-version": "1.9.0",
   "$defs": {
+    "perdida_luz": {
+      "description": "Pérdida de luz nocturna medida por satélite tras un ataque contra la red eléctrica (proceso/luces.py): brillo de la región (suma de sus ciudades medidas) o de una ciudad en la banda día-noche de VIIRS, con la referencia de las noches anteriores sin nubes y la noche posterior de mayor pérdida. Solo se guarda y se publica cuando la pérdida llega al umbral de la regla. Noches con la fecha de la tarde, en UTC; brillo en nW/(cm²·sr) sobre el fondo.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "zona",
+        "region",
+        "perdida_pct",
+        "noche",
+        "noches",
+        "referencia",
+        "brillo",
+        "origen"
+      ],
+      "properties": {
+        "zona": {
+          "x-visibilidad": "publico",
+          "enum": [
+            "region",
+            "ciudad"
+          ]
+        },
+        "region": {
+          "x-visibilidad": "publico",
+          "$ref": "#/$defs/region_iso"
+        },
+        "ciudad": {
+          "x-visibilidad": "publico",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "nombre",
+            "punto"
+          ],
+          "properties": {
+            "id": {
+              "x-visibilidad": "publico",
+              "type": "string",
+              "minLength": 1
+            },
+            "nombre": {
+              "x-visibilidad": "publico",
+              "type": "string",
+              "minLength": 1
+            },
+            "punto": {
+              "x-visibilidad": "publico",
+              "$ref": "#/$defs/punto"
+            }
+          }
+        },
+        "perdida_pct": {
+          "x-visibilidad": "publico",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "noche": {
+          "x-visibilidad": "publico",
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "noches": {
+          "x-visibilidad": "publico",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          }
+        },
+        "referencia": {
+          "x-visibilidad": "publico",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "desde",
+            "hasta",
+            "noches",
+            "brillo"
+          ],
+          "properties": {
+            "desde": {
+              "x-visibilidad": "publico",
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            "hasta": {
+              "x-visibilidad": "publico",
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            "noches": {
+              "x-visibilidad": "publico",
+              "type": "integer",
+              "minimum": 1
+            },
+            "brillo": {
+              "x-visibilidad": "publico",
+              "type": "number",
+              "minimum": 0
+            }
+          }
+        },
+        "brillo": {
+          "x-visibilidad": "publico",
+          "type": "number",
+          "minimum": 0
+        },
+        "origen": {
+          "x-visibilidad": "publico",
+          "const": "medido"
+        }
+      }
+    },
     "evidencia_deduccion": {
       "description": "Lo que dice una regla del motor de deducción sobre una clase.",
       "type": "object",

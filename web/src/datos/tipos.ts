@@ -1,4 +1,4 @@
-// Forma de los ficheros públicos de publicacion/ (esquema 1.8.0, solo campos públicos)
+// Forma de los ficheros públicos de publicacion/ (esquema 1.9.0, solo campos públicos)
 // y de los resúmenes que la web deriva de ellos en el build.
 
 export type Estado = "notificado" | "confirmado" | "atribuido" | "desmentido";
@@ -228,8 +228,28 @@ export interface Ataque {
   regiones_misiles?: string[];
   incluido_en?: string;
   solapado_con?: string;
+  /** Regiones y ciudades que perdieron luz nocturna tras el ataque, medido por satélite. */
+  perdida_luz?: PerdidaLuz[];
   fuentes: Fuente[];
   control: { ultima_actualizacion: Instante; motivo_desmentido?: string };
+}
+
+/**
+ * Pérdida de luz nocturna medida por satélite (VIIRS, banda día-noche) en una región o una
+ * ciudad tras un ataque contra la red eléctrica. Las noches llevan la fecha de su tarde (UTC).
+ */
+export interface PerdidaLuz {
+  zona: "region" | "ciudad";
+  region: string;
+  ciudad?: { id: string; nombre: string; punto: { lat: number; lon: number } };
+  /** Pérdida de la peor noche respecto de la referencia, en %. */
+  perdida_pct: number;
+  noche: string;
+  /** Noches con pérdida por encima del umbral de la regla. */
+  noches: string[];
+  referencia: { desde: string; hasta: string; noches: number; brillo: number };
+  brillo: number;
+  origen: "medido";
 }
 
 export type CategoriaObjetivoGuerra =
@@ -415,6 +435,41 @@ export interface ResumenUcrania {
   impactos: FilaImpacto[];
   /** La fuente de los partes de cada sentido; null si no hay ninguno. */
   fuentes: Record<Sentido, FuenteSentido | null>;
+  /** Pérdidas de luz nocturna medidas tras los ataques, por orden de día. */
+  luces: LuzResumen[];
+  /** Zonas de lanzamiento con punto, una por nombre de los partes. */
+  zonas: ZonaResumen[];
+  /** Zonas de lanzamiento (índices en `zonas`) declaradas por cada ataque que las da. */
+  origenes: Record<string, number[]>;
+  /** [lon, lat] del centro de cada región de Ucrania y de Rusia. */
+  centros: Record<string, [number, number]>;
+  /**
+   * Para los ataques contra Rusia, cuyo parte no da el origen: el punto de la frontera de
+   * Ucrania más cercano al centro de cada región rusa, [lon, lat].
+   */
+  fronteraUcrania: Record<string, [number, number]>;
+}
+
+/** Pérdida de luz de un ataque reducida a lo que dibuja el mapa y lee la ficha. */
+export interface LuzResumen {
+  ataque: string;
+  /** Día UTC del inicio del ataque, como días desde 1970-01-01. */
+  dia: number;
+  zona: "region" | "ciudad";
+  region: string;
+  ciudad: { nombre: string; lon: number; lat: number } | null;
+  perdida: number;
+  noche: string;
+  noches: string[];
+  referencia: { desde: string; hasta: string; noches: number };
+}
+
+/** Zona de lanzamiento con su punto: el primero de la configuración que casa con el nombre. */
+export interface ZonaResumen {
+  id: string;
+  nombre: string;
+  lon: number;
+  lat: number;
 }
 
 // ---- Estado del sistema (estado.json, lo publica la recogida en el almacén público) ----
