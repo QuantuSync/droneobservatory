@@ -455,6 +455,17 @@ cerrojo de la recogida ni toca el clon. Consumo medido el 4 de octubre de 2026:
   satélite», **apagados**: se encienden y se apagan con su botón (el estilo de encendido es el del
   resto de botones de la web) y se mantienen mientras se navega y entre fichas; al apagar la capa
   de Ucrania se apagan también. Con la capa encendida se ven solo regiones e impactos.
+- **Menú del teléfono (#115).** Bajo las capas, con Ucrania activa, el rótulo «Capa de Ucrania»
+  y una fila propia con «Corredores» y «Con satélite · N», del mismo tamaño y estilo que los
+  botones de capas y en una línea. Debajo, a todo el ancho del menú: la leyenda de los cuatro
+  tipos (plegada al empezar, el signo a la izquierda y un texto corto: «Antes y después con cambio
+  visible», «Foco de calor que coincide con un impacto», «Ciudad que perdió luz tras un ataque»,
+  «Ciudad con alumbrado reducido permanente»), el filtro por tipo y «Lista · N», que abre la
+  lista. En escritorio, lo mismo en el desplegable de la flecha. Las pruebas de navegador
+  (`web/e2e/menu-satelite.spec.ts`) fallan si la leyenda ocupa menos del 80 % del ancho del menú
+  o si algún botón ocupa más de una línea, en 360, 390, 412 y escritorio.
+- **Cifras.** Con 0 atribuidos, esa cifra no se muestra (ni el número ni su círculo), en la
+  cabecera ni en el menú; las otras tres se reparten el sitio.
 - **Botones retirados.** «Focos 24 h» (pintaba todos los focos del día, casi todos sin relación
   con un ataque) y «Luz nocturna» (casi siempre muy pocos puntos): lo útil de los dos está en «Con
   satélite». La medida de luz y la recogida de focos del servidor siguen igual.
@@ -541,7 +552,8 @@ color de estado.
 En [`capturas/`](capturas/), cada una en `-escritorio.png` y `-390x844.png`:
 
 - Subcapas: `subcapas-inicial` (Ucrania encendida, subcapas apagadas), `subcapas-corredores`,
-  `subcapas-satelite`, `subcapas-satelite-lista` y `subcapas-enlace-corredores`.
+  `subcapas-satelite`, `subcapas-satelite-lista` (el menú con la leyenda desplegada, también en
+  `-360x800` y `-412x915`) y `subcapas-enlace-corredores`.
 - Cortinilla con su contorno: `satelite-cortinilla-<impacto>` de las siete parejas, y
   `satelite-filtro-antes-despues` (la lista filtrada).
 - Fichas sin pareja publicada: `satelite-sin-pareja-EODI-IG-2026-03427`, `-2025-00036` y

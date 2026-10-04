@@ -115,9 +115,11 @@ test("escritorio: el desplegable de «Con satélite» con su leyenda a todo el a
   const grupo = page.locator("[data-capas-guerra]");
   await expect(grupo.getByRole("button", { name: "Corredores", exact: true })).toBeVisible();
   const desplegable = page.locator("[data-con-satelite] [data-panel-satelite]");
-  if (!(await desplegable.isVisible())) {
-    await page.getByRole("button", { name: /Abrir la lista/ }).click();
-  }
+  // El enlace enciende «Con satélite»; su flecha abre el desplegable.
+  const flecha = page.locator("[data-con-satelite] button[aria-expanded]");
+  await expect(flecha).toBeVisible();
+  if ((await flecha.getAttribute("aria-expanded")) !== "true") await flecha.click();
+  await expect(desplegable).toBeVisible();
   await desplegable.getByRole("button", { name: /^Leyenda/ }).click();
   const leyenda = desplegable.locator("[data-leyenda-satelite]");
   await expect(leyenda).toBeVisible();
