@@ -44,6 +44,13 @@
     },
     "zonas_lanzamiento": {
       "x-visibilidad": "publico",
+      "description": "Zonas de lanzamiento con su nombre normalizado (configuracion/zonas_lanzamiento_nombres.json): una por zona, aunque el parte la escriba de otra forma.",
+      "type": "array",
+      "items": {"type": "string", "minLength": 1}
+    },
+    "zonas_lanzamiento_citadas": {
+      "x-visibilidad": "interno",
+      "description": "Las zonas de lanzamiento tal como las escribe el parte, antes de normalizarlas.",
       "type": "array",
       "items": {"type": "string", "minLength": 1}
     },

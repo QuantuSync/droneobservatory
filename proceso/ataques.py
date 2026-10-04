@@ -10,6 +10,7 @@ from almacen.base import Almacen
 from esquema import Documento
 from proceso.credibilidad import Declaracion, Fiabilidad, Postura, credibilidad
 from proceso.estados import Estado, nuevo_estado
+from proceso.zonas_lanzamiento import normalizar_lista
 from recogida.parte import Instante, ParteLeido, exacto
 from recogida.telegram import Publicacion
 
@@ -109,7 +110,10 @@ def datos_parte(leido: ParteLeido) -> Documento:
     datos: Documento = {
         "periodo": {"inicio": leido.inicio.documento(), "fin": leido.fin.documento()},
         "lanzados": copy.deepcopy(leido.lanzados),
-        "zonas_lanzamiento": list(leido.zonas_lanzamiento),
+        # Una zona con su nombre normalizado, aunque el parte la escriba de otra forma; lo
+        # escrito queda en zonas_lanzamiento_citadas.
+        "zonas_lanzamiento": normalizar_lista(leido.zonas_lanzamiento)[0],
+        "zonas_lanzamiento_citadas": list(leido.zonas_lanzamiento),
         "derribados": leido.derribados,
         "derribados_categoria": leido.derribados_categoria.value,
         "perdidos_guerra_electronica": leido.perdidos_guerra_electronica,

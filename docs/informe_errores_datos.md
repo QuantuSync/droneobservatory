@@ -201,3 +201,57 @@ con parte, 42 con lugar) y, desde ahora, Kursk. Los demás publican cada ataque 
 su centro y su alcance, la localidad gana a su comunidad, línea por lugar con varias armas, parte de
 la frontera de Sumy, nombre compuesto, histórico que llega después del cursor y relectura con una
 versión nueva del analizador.
+
+## Bloque 3. Zonas de lanzamiento duplicadas por grafía
+
+### Causa
+
+El parte de la Fuerza Aérea escribe la misma zona de varias formas («Міллерово», «Міллєрово»,
+«Мілерово», «Міллерево»; «Шаталово» y «Шаталове»; «Донецьк», «Донецьк - України», «Донецької
+обл», «Донеччини») y el lector guardaba en `zonas_lanzamiento` lo escrito tal cual: 85 nombres
+distintos en 4.611 ataques, que contaban como zonas distintas. Además dos zonas sin coma («Чауда
+Гвардійське») eran una sola, y entraban como zona restos de otras frases («двома – Х-59/Х-69»,
+«через Сумську»).
+
+### Cambios
+
+- **Tabla de nombres normalizados**, `configuracion/zonas_lanzamiento_nombres.json`, enlazada con el
+  catálogo del motor de deducción (`configuracion/zonas_lanzamiento.json`): cada nombre normalizado
+  lleva sus zonas del catálogo, y las raíces del catálogo más las variantes vistas en los partes
+  («міллерев», «чуада», «донеччин»…). Las direcciones genéricas sin emplazamiento («Крим»,
+  «Курська область», «Брянська область», «Краснодарський край», «Азовське море», «Каспійське
+  море») se conservan como tales: no tienen punto ni crean zona. Una dirección solo cuenta si el
+  nombre no da una zona concreta («Чауда – окупований Крим» es Чауда).
+- `proceso/zonas_lanzamiento.py`: compara sin distinguir «є» de «е» ni el tipo de guion; un
+  nombre puede dar dos zonas; lo que no es una zona (misiles, rutas, regiones de Ucrania) se
+  descarta con su motivo; lo que no se reconoce va al **registro de revisión** (cursor
+  `zonas_lanzamiento:revisar` de la base: nombre, cuántos ataques lo citan y uno de ejemplo), nunca
+  como zona nueva.
+- **Los partes nuevos** guardan la zona normalizada en `zonas_lanzamiento` y lo escrito en
+  `zonas_lanzamiento_citadas` (interno, esquema 1.9.0 ampliado).
+- **Los ataques guardados** se normalizan una vez por versión de la tabla en la recogida horaria
+  (cursor `zonas_lanzamiento`), con su motivo en el historial; lo escrito pasa a
+  `zonas_lanzamiento_citadas`.
+- **Motor de deducción y corredores de la web**: los dos casan el nombre con la zona por las raíces
+  del catálogo (`Zona.nombra` y `nombra` en `web/src/datos/guerraSatelite.ts`, la misma regla). Un
+  test comprueba que cada nombre normalizado casa exactamente con sus zonas del catálogo y que las
+  direcciones genéricas no casan con ninguna (salvo «Крим», que no tiene raíz en el catálogo y no
+  casa con nada).
+
+### Cifras
+
+| | Antes | Después |
+| --- | ---: | ---: |
+| Nombres de zona distintos en los ataques | 85 | 24 (18 zonas del catálogo y 6 direcciones) |
+| Ataques con zonas cambiadas | — | 305 |
+| Nombres en el registro de revisión | — | 3: «Бєлгород», «Маріуполя» y «Шахти», un ataque cada uno |
+
+Las más citadas, ya juntas: Приморсько-Ахтарськ 705 ataques, Курськ 643, Орел 549, Міллерово 521
+(antes repartida en 7 grafías), Брянськ 381, Гвардійське 278, Чауда 257, Шаталово 183,
+Донецьк 165.
+
+### Pruebas añadidas
+
+`tests/test_zonas_lanzamiento.py`: las grafías de los partes (las del encargo y las dobles), lo que
+no es una zona y lo desconocido, que cada nombre normalizado casa con sus zonas del catálogo, y la
+corrección de los ataques guardados con su registro de revisión y su historial.

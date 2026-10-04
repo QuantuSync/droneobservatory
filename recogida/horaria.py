@@ -44,7 +44,15 @@ from almacen import remoto
 from almacen.base import Almacen
 from almacen.cifrado import abrir_cifrada, guardar_cifrada
 from exportacion.publicar import modelos, publicar
-from proceso import focos_termicos, impactos_guerra, incidentes, incursiones, presencia, solapes
+from proceso import (
+    focos_termicos,
+    impactos_guerra,
+    incidentes,
+    incursiones,
+    presencia,
+    solapes,
+    zonas_lanzamiento,
+)
 from proceso.ataques import SENTIDO_UA_RU
 from proceso.extraccion import Parada
 from recogida import (
@@ -270,6 +278,14 @@ def principal(argumentos: list[str] | None = None) -> int:
         registro.info(
             "tramos con enlace cambiado: %d", solapes.enlazar(almacen, SENTIDO_UA_RU, ahora)
         )
+        # Zonas de lanzamiento con su nombre normalizado (una vez por versión de la tabla) y
+        # registro de los nombres que no reconoce.
+        try:
+            zonas = zonas_lanzamiento.corregir(almacen, ahora)
+            if zonas:
+                registro.info("zonas de lanzamiento normalizadas: %s", zonas)
+        except Exception as error:
+            registro.warning("zonas de lanzamiento no normalizadas: %s", error)
         estado_gdelt = LEIDA
         try:
             gdelt.ejecutar(almacen, gdelt.descargador(Plazo(gdelt.TOPE_S)), ahora)

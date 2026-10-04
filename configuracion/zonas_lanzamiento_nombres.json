@@ -1,0 +1,38 @@
+{
+  "version": "1.0.0",
+  "descripcion": "Nombres normalizados de las zonas de lanzamiento que nombran los partes de la Fuerza Aérea de Ucrania (proceso/zonas_lanzamiento.py, docs/informe_errores_datos.md, bloque 3). Cada nombre normalizado enlaza las zonas del catálogo del motor de deducción (configuracion/zonas_lanzamiento.json): un nombre de los partes es de una zona si contiene una de sus raíces (las del catálogo y las variantes de aquí, sin distinguir «є» de «е») y ninguna de sus exclusiones. Las direcciones son zonas genéricas sin emplazamiento (una región o un mar): se conservan con su nombre normalizado y no tienen punto. Lo que no es una zona (misiles, rutas) se descarta, y lo que no se reconoce queda en el registro de revisión (cursor zonas_lanzamiento:revisar de la base), nunca como zona nueva.",
+  "zonas": [
+    {"nombre": "Приморсько-Ахтарськ", "catalogo": ["primorsko_akhtarsk_aerodromo", "primorsko_akhtarsk_droneport"], "variantes": ["приморсько-ахтар"]},
+    {"nombre": "Курськ", "catalogo": ["kursk_khalino"], "variantes": []},
+    {"nombre": "Орел", "catalogo": ["oryol_yuzhny", "tsymbulove"], "variantes": []},
+    {"nombre": "Брянськ", "catalogo": ["bryansk"], "variantes": []},
+    {"nombre": "Міллерово", "catalogo": ["millerovo"], "variantes": ["міллерев", "мілерово", "міллерове", "міллеров"]},
+    {"nombre": "Гвардійське", "catalogo": ["hvardiiske"], "variantes": []},
+    {"nombre": "Чауда", "catalogo": ["cabo_chauda"], "variantes": ["чуада"]},
+    {"nombre": "Шаталово", "catalogo": ["shatalovo"], "variantes": []},
+    {"nombre": "Донецьк", "catalogo": ["donetsk_ocupado", "donetsk_aeropuerto"], "variantes": ["донеччин"]},
+    {"nombre": "Єйськ", "catalogo": ["yeysk"], "variantes": []},
+    {"nombre": "Балаклава", "catalogo": ["balaklava"], "variantes": []},
+    {"nombre": "Кача", "catalogo": ["kacha"], "variantes": []},
+    {"nombre": "Сеща", "catalogo": ["seshcha"], "variantes": []},
+    {"nombre": "Джанкой", "catalogo": ["dzhankoi"], "variantes": []},
+    {"nombre": "Бельбек", "catalogo": ["belbek"], "variantes": []},
+    {"nombre": "Енгельс", "catalogo": ["engels"], "variantes": []},
+    {"nombre": "Бердянськ", "catalogo": ["berdiansk"], "variantes": []},
+    {"nombre": "Приморськ – Запорізька область", "catalogo": ["prymorsk"], "variantes": []},
+    {"nombre": "Навля", "catalogo": ["navlia"], "variantes": []}
+  ],
+  "direcciones": [
+    {"nombre": "Крим", "region": "UA-43", "variantes": ["крим"]},
+    {"nombre": "Курська область", "region": "RU-KRS", "variantes": ["курська обл", "курської обл"]},
+    {"nombre": "Брянська область", "region": "RU-BRY", "variantes": ["брянська обл", "брянської обл"]},
+    {"nombre": "Краснодарський край", "region": "RU-KDA", "variantes": ["краснодарськ"]},
+    {"nombre": "Азовське море", "region": null, "variantes": ["азовськ"]},
+    {"nombre": "Каспійське море", "region": null, "variantes": ["каспі"]}
+  ],
+  "no_son_zonas": [
+    {"patron": "х-\\d|калібр", "motivo": "un misil, no una zona de lanzamiento de drones"},
+    {"patron": "^через\\s|спрямували", "motivo": "la ruta o el destino del ataque, no su origen"},
+    {"patron": "сумськ|чернігівськ|київщин", "motivo": "una región de Ucrania por la que entran los drones, no su origen"}
+  ]
+}

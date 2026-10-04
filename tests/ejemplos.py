@@ -462,6 +462,7 @@ def ataque_completo() -> Documento:
             "total": {"min": 100, "max": 100},
         },
         "zonas_lanzamiento": ["Kursk", "Oriol"],
+        "zonas_lanzamiento_citadas": ["Kursk", "Oriol"],
         "tipos_dron": ["ala_fija"],
         "derribados": {"min": 70, "max": 70},
         "derribados_categoria": "derribados_o_neutralizados",
