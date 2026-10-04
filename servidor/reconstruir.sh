@@ -136,8 +136,10 @@ clave_despliegue "$REPOSITORIO" "$DESPLIEGUE_WEB"
 # --- Temporizador --------------------------------------------------------------------
 conectar "$OPERADOR" sudo systemctl enable --now "$UNIDAD.timer" "$UNIDAD_EXPORTACION.timer" \
   "$UNIDAD_DETALLE.timer" "$UNIDAD_GUERRA.timer" "$UNIDAD_TRAFICO.timer" "$UNIDAD_BUSQUEDA.timer" \
-  "$UNIDAD_DEDUCCION.timer" "$UNIDAD_CATALOGO.timer" "$UNIDAD_DIRECTO.service"
+  "$UNIDAD_DEDUCCION.timer" "$UNIDAD_CATALOGO.timer" "$UNIDAD_DIRECTO.service" \
+  "$UNIDAD_SATELITE.timer" "$UNIDAD_LUCES.timer" "$UNIDAD_FOCOS_VIVO.timer"
 conectar "$OPERADOR" systemctl list-timers "$UNIDAD.timer" "$UNIDAD_EXPORTACION.timer" \
   "$UNIDAD_DETALLE.timer" "$UNIDAD_GUERRA.timer" "$UNIDAD_TRAFICO.timer" \
-  "$UNIDAD_BUSQUEDA.timer" "$UNIDAD_DEDUCCION.timer" "$UNIDAD_CATALOGO.timer" --no-pager
+  "$UNIDAD_BUSQUEDA.timer" "$UNIDAD_DEDUCCION.timer" "$UNIDAD_CATALOGO.timer" \
+  "$UNIDAD_SATELITE.timer" "$UNIDAD_LUCES.timer" "$UNIDAD_FOCOS_VIVO.timer" --no-pager
 echo "servidor reconstruido: $ip"

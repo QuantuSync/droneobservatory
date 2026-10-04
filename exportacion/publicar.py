@@ -3,8 +3,9 @@ incidentes con punto, para el mapa) e incidentes_sin_ubicacion.json (los que sol
 nivel de país o de región).
 
 El foco térmico de cada impacto (proceso/focos_termicos.py) y las mediciones de cada incidente
-(tráfico aéreo y condiciones, proceso/mediciones.py) viven en sus propias tablas y se añaden
-aquí a su incidente, a su región o a su ataque antes de exportar."""
+(tráfico aéreo y condiciones, proceso/mediciones.py) y la pérdida de luz nocturna de cada ataque
+(proceso/luces.py) viven en sus propias tablas y se añaden aquí a su incidente, a su región o a
+su ataque antes de exportar."""
 
 from datetime import datetime
 from pathlib import Path
@@ -16,6 +17,7 @@ from exportacion.ucrania import exportar_ucrania
 from proceso import impactos_guerra
 from proceso.configuracion import cargar_vocabulario_modelos
 from proceso.focos_termicos import con_focos
+from proceso.luces import con_luces
 from proceso.mediciones import con_mediciones
 
 DIRECTORIO = Path(__file__).resolve().parent.parent / "publicacion"
@@ -36,6 +38,7 @@ def publicar(almacen: Almacen, ahora: datetime, directorio: Path = DIRECTORIO) -
         almacen.incidentes(), almacen.ataques_ucrania(), almacen.focos_termicos()
     )
     incidentes, ataques = con_mediciones(incidentes, ataques, almacen)
+    ataques = con_luces(ataques, almacen.luces_nocturnas())
     vocabulario = modelos(almacen)
     focos = almacen.focos_termicos()
     impactos = [

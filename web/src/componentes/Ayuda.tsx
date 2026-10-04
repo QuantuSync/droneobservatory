@@ -21,8 +21,8 @@ function MarcaImpacto({ parte }: { parte: boolean }) {
         cx="5"
         cy="5"
         r="3.4"
-        fill={parte ? PALETA.fondo : PALETA.secundario}
-        stroke={PALETA.secundario}
+        fill={parte ? PALETA.fondo : PALETA.guerra}
+        stroke={PALETA.guerra}
         strokeWidth="1.2"
       />
     </svg>
@@ -47,7 +47,7 @@ function MarcaAviso() {
   );
 }
 
-/** Región rusa, como en el mapa: gris con contorno discontinuo. */
+/** Región rusa, como en el mapa: violeta apagado con contorno discontinuo. */
 function MarcaRusia() {
   return (
     <svg aria-hidden="true" width="14" height="10" viewBox="0 0 14 10" data-marca-rusia="">
@@ -56,11 +56,37 @@ function MarcaRusia() {
         y="0.6"
         width="12.8"
         height="8.8"
-        fill={PALETA.secundario}
+        fill={PALETA.guerraTenue}
         fillOpacity="0.4"
-        stroke={PALETA.secundario}
+        stroke={PALETA.guerraTenue}
         strokeDasharray="2 1.5"
       />
+    </svg>
+  );
+}
+
+/** Marcas de la guerra por satélite, como en el mapa. */
+function MarcaCorredor() {
+  return (
+    <svg aria-hidden="true" width="18" height="10" viewBox="0 0 18 10" data-marca-corredor="">
+      <path d="M1 9 Q9 0 17 7" fill="none" stroke={PALETA.guerra} strokeWidth="1.4" strokeOpacity="0.7" />
+    </svg>
+  );
+}
+
+function MarcaFocoVivo() {
+  return (
+    <svg aria-hidden="true" width="14" height="10" viewBox="0 0 14 10" data-marca-foco-vivo="">
+      <circle cx="3" cy="5" r="1.7" fill={PALETA.guerraTenue} />
+      <circle cx="10" cy="5" r="3.2" fill={PALETA.guerraClaro} stroke={PALETA.fondo} strokeWidth="1.2" />
+    </svg>
+  );
+}
+
+function MarcaLuz() {
+  return (
+    <svg aria-hidden="true" width="10" height="10" viewBox="0 0 10 10" data-marca-luz="">
+      <circle cx="5" cy="5" r="4.2" fill={PALETA.fondo} stroke={PALETA.guerraTenue} strokeWidth="0.8" />
     </svg>
   );
 }
@@ -137,8 +163,9 @@ export function Ayuda({ t, abierta, onCerrar }: Props) {
             {a.impactos}
           </li>
           <li className="flex items-start gap-2">
-            <span className="pt-1">
+            <span className="flex gap-1 pt-1">
               <MarcaFoco />
+              <MarcaFoco color={PALETA.guerraClaro} />
             </span>
             {a.foco}
           </li>
@@ -148,6 +175,18 @@ export function Ayuda({ t, abierta, onCerrar }: Props) {
             </span>
             {a.directo}
           </li>
+          {(
+            [
+              [<MarcaCorredor key="c" />, t.satelite.ayudaCorredores],
+              [<MarcaFocoVivo key="f" />, t.satelite.ayudaFocos],
+              [<MarcaLuz key="l" />, t.satelite.ayudaLuz],
+            ] as const
+          ).map(([marca, texto]) => (
+            <li key={texto} className="flex items-start gap-2">
+              <span className="pt-1">{marca}</span>
+              {texto}
+            </li>
+          ))}
         </ul>
         <section className="sm:col-span-2">
           <h3 className="font-medium">{a.atajos}</h3>

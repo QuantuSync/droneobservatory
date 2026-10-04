@@ -67,6 +67,7 @@ from proceso import incidentes as reglas
 from proceso.deduccion import catalogo as catalogo_deduccion
 from proceso.estados import Estado
 from proceso.focos_termicos import con_focos
+from proceso.luces import con_luces
 from proceso.mediciones import con_mediciones
 from proceso.restricciones import por_ataque
 
@@ -598,6 +599,7 @@ def generar(almacen: Almacen) -> list[Fichero]:
     # Igual con el tráfico aéreo y las condiciones medidas (proceso/mediciones.py), con su
     # fuente y sus afirmaciones medidas, que así quedan vigentes.
     base, ataques_base = con_mediciones(base, ataques_base, almacen)
+    ataques_base = con_luces(ataques_base, almacen.luces_nocturnas())
     # Y lo que deduce el motor de deducción (tabla deducciones): origen deducido, interno.
     deducciones = almacen.deducciones()
     base = [{**d, "deduccion": deducciones[d["id"]]} if d["id"] in deducciones else d

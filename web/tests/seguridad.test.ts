@@ -174,10 +174,12 @@ describe("cabeceras del despliegue", () => {
       expect(origenes).not.toContain("'unsafe-eval'");
       expect(origenes).not.toContain("*");
     }
-    // Ni scripts ni trabajadores ni imágenes salen de blob: o de data:.
-    for (const directiva of ["script-src", "worker-src", "child-src", "img-src"]) {
+    // Ni scripts ni trabajadores ni imágenes salen de blob: o de data:. Las imágenes de
+    // satélite de antes y después vienen del almacén público.
+    for (const directiva of ["script-src", "worker-src", "child-src"]) {
       expect(csp.get(directiva)).toEqual(["'self'"]);
     }
+    expect(csp.get("img-src")).toEqual(["'self'", ORIGEN_ALMACEN]);
   });
 
   it("los identificadores sin página propia abren la portada de su idioma", () => {

@@ -10,6 +10,10 @@ export interface Capas {
   densidad: boolean;
   presion: boolean;
   gnss: boolean;
+  /** Dentro de la capa de Ucrania (guerra por satélite): se ven si ella se ve. */
+  corredores: boolean;
+  focosVivos: boolean;
+  luz: boolean;
 }
 
 export const CAPAS_INICIALES: Capas = {
@@ -18,13 +22,29 @@ export const CAPAS_INICIALES: Capas = {
   densidad: false,
   presion: false,
   gnss: false,
+  corredores: true,
+  focosVivos: true,
+  luz: true,
 };
 
-const ORDEN: readonly (keyof Capas)[] = ["incidentes", "ucrania", "densidad", "presion", "gnss"];
+const ORDEN: readonly ("incidentes" | "ucrania" | "densidad" | "presion" | "gnss")[] = [
+  "incidentes",
+  "ucrania",
+  "densidad",
+  "presion",
+  "gnss",
+];
+const ORDEN_GUERRA: readonly ("corredores" | "focosVivos" | "luz")[] = [
+  "corredores",
+  "focosVivos",
+  "luz",
+];
 
 /**
- * Las capas en un solo control compacto; cada una se enciende y se apaga por separado.
- * `grande` da a cada opción al menos 44 px de alto, para el dedo.
+ * Las capas en un solo control compacto; cada una se enciende y se apaga por separado. Con la
+ * capa de Ucrania encendida aparecen al lado las de la guerra por satélite: corredores, focos
+ * de calor de 24 horas y luz nocturna. `grande` da a cada opción al menos 44 px de alto, para
+ * el dedo.
  */
 export function SelectorDeCapas({
   t,
@@ -37,23 +57,51 @@ export function SelectorDeCapas({
   onCapas: (capas: Capas) => void;
   grande?: boolean;
 }) {
+  const boton = `control text-xs ${grande ? "min-h-11 flex-1 px-3" : "min-h-7 px-2"}`;
+  const etiquetas: Record<(typeof ORDEN_GUERRA)[number], string> = {
+    corredores: t.satelite.corredores,
+    focosVivos: t.satelite.focos,
+    luz: t.satelite.luz,
+  };
   return (
-    <div
-      role="group"
-      aria-label={t.controles.capas}
-      className="flex rounded-sm border border-linea p-0.5"
-    >
-      {ORDEN.map((capa) => (
-        <button
-          key={capa}
-          type="button"
-          className={`control text-xs ${grande ? "min-h-11 flex-1 px-3" : "min-h-7 px-2"}`}
-          aria-pressed={capas[capa]}
-          onClick={() => onCapas({ ...capas, [capa]: !capas[capa] })}
+    <div className={`flex gap-1 ${grande ? "flex-col" : "items-center"}`}>
+      <div
+        role="group"
+        aria-label={t.controles.capas}
+        className={`flex rounded-sm border border-linea p-0.5 ${grande ? "flex-wrap" : ""}`}
+      >
+        {ORDEN.map((capa) => (
+          <button
+            key={capa}
+            type="button"
+            className={boton}
+            aria-pressed={capas[capa]}
+            onClick={() => onCapas({ ...capas, [capa]: !capas[capa] })}
+          >
+            {t.controles[capa]}
+          </button>
+        ))}
+      </div>
+      {capas.ucrania && (
+        <div
+          role="group"
+          aria-label={t.satelite.capas}
+          className="flex rounded-sm border border-linea/70 p-0.5"
+          data-capas-guerra=""
         >
-          {t.controles[capa]}
-        </button>
-      ))}
+          {ORDEN_GUERRA.map((capa) => (
+            <button
+              key={capa}
+              type="button"
+              className={boton}
+              aria-pressed={capas[capa]}
+              onClick={() => onCapas({ ...capas, [capa]: !capas[capa] })}
+            >
+              {etiquetas[capa]}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

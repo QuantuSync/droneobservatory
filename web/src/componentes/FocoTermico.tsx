@@ -19,7 +19,7 @@ export function enlaceVisorFirms(primerFoco: string, lon: number, lat: number, z
 }
 
 /** Marca del foco térmico: un punto claro con borde oscuro, igual que en el mapa. */
-export function MarcaFoco({ tamano = 10 }: { tamano?: number }) {
+export function MarcaFoco({ tamano = 10, color = PALETA.texto }: { tamano?: number; color?: string }) {
   return (
     <svg
       aria-hidden="true"
@@ -29,7 +29,7 @@ export function MarcaFoco({ tamano = 10 }: { tamano?: number }) {
       className="inline-block shrink-0"
       data-marca-foco=""
     >
-      <circle cx="5" cy="5" r="3.6" fill={PALETA.texto} stroke={PALETA.fondo} strokeWidth="1.4" />
+      <circle cx="5" cy="5" r="3.6" fill={color} stroke={PALETA.fondo} strokeWidth="1.4" />
     </svg>
   );
 }
@@ -44,17 +44,19 @@ interface Props {
   zoom: number;
   /** Para la ficha de una región: el ataque al que pertenece el foco. */
   ataque?: string;
+  /** Color de la marca: blanco en los incidentes, el violeta claro en la capa de guerra. */
+  color?: string;
 }
 
 /** Línea «Foco térmico detectado por satélite» con su hora, instrumento, distancia y enlace. */
-export function LineaFoco({ t, idioma, foco, lon, lat, zoom, ataque }: Props) {
+export function LineaFoco({ t, idioma, foco, lon, lat, zoom, ataque, color }: Props) {
   const distancia = new Intl.NumberFormat(idioma, { maximumFractionDigits: 1 }).format(
     foco.distancia_km,
   );
   return (
     <Fila nombre={t.foco.rotulo}>
       <span className="flex items-center gap-1.5" data-foco-termico="">
-        <MarcaFoco />
+        <MarcaFoco {...(color === undefined ? {} : { color })} />
         {t.foco.detectado}
       </span>
       <span className="mono block text-xs text-secundario">

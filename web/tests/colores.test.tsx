@@ -133,6 +133,67 @@ describe("colores de los estados", () => {
     }
   });
 
+  it("la capa de guerra es violeta y se separa del rojo, del naranja y del verde con daltonismo", () => {
+    // Distancia de color CIELAB (ΔE 1976) entre dos colores sRGB.
+    const lab = (hex: string): [number, number, number] => {
+      const [r, g, b] = [1, 3, 5].map((i) => lineal(parseInt(hex.slice(i, i + 2), 16))) as [
+        number,
+        number,
+        number,
+      ];
+      const x = (0.4124 * r + 0.3576 * g + 0.1805 * b) / 0.95047;
+      const y = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      const z = (0.0193 * r + 0.1192 * g + 0.9505 * b) / 1.08883;
+      const f = (t: number) => (t > 0.008856 ? Math.cbrt(t) : 7.787 * t + 16 / 116);
+      return [116 * f(y) - 16, 500 * (f(x) - f(y)), 200 * (f(y) - f(z))];
+    };
+    const distancia = (a: string, b: string) => {
+      const [p, q] = [lab(a), lab(b)];
+      return Math.hypot(p[0] - q[0], p[1] - q[1], p[2] - q[2]);
+    };
+    // Violeta azulado: ni rojo, ni naranja, ni cian, ni dorado.
+    expect(tono(PALETA.guerra)).toBeGreaterThan(245);
+    expect(tono(PALETA.guerra)).toBeLessThan(275);
+    const sinFiltro = [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
+    const visiones: [string, number[][]][] = [["normal", sinFiltro], ...Object.entries(DALTONISMO)];
+    const familia = [PALETA.guerra, PALETA.guerraClaro, PALETA.guerraTenue];
+    const estados = [COLOR_ESTADO.confirmado, COLOR_ESTADO.notificado, PALETA.alDia];
+    for (const [vision, matriz] of visiones) {
+      for (const propio of familia) {
+        for (const ajeno of estados) {
+          // Medido: el principal queda a ΔE 80 o más del rojo con visión normal y con daltonismo
+          // rojo-verde (el coral anterior, a 5 en deuteranopía).
+          expect(distancia(simular(propio, matriz), simular(ajeno, matriz)), `${vision} ${propio} ${ajeno}`)
+            .toBeGreaterThanOrEqual(30);
+        }
+      }
+      const rojo = distancia(simular(PALETA.guerra, matriz), simular(COLOR_ESTADO.confirmado, matriz));
+      if (vision !== "tritanopia") expect(rojo, vision).toBeGreaterThanOrEqual(75);
+    }
+    // Se lee sobre el fondo del mapa.
+    expect(contraste(PALETA.guerra, PALETA.fondo)).toBeGreaterThanOrEqual(4.5);
+    // Dentro de la capa las diferencias siguen: lo resaltado, lo principal y lo apagado.
+    expect(contraste(PALETA.guerraClaro, PALETA.guerra)).toBeGreaterThanOrEqual(1.5);
+    expect(contraste(PALETA.guerra, PALETA.guerraTenue)).toBeGreaterThanOrEqual(1.4);
+  });
+
+  it("los elementos de la capa de guerra usan su familia y no los colores de los estados", () => {
+    const { layers } = estilo("es", "https://droneobservatory.eu", "#f4f7fb");
+    const propias = layers.filter((c) => /^(ucrania-|rusia-|guerra-)/.test(c.id));
+    expect(propias.length).toBeGreaterThan(8);
+    const texto = JSON.stringify(propias);
+    for (const color of [COLOR_ESTADO.confirmado, COLOR_ESTADO.notificado, PALETA.alDia, "#f25c4f"]) {
+      expect(texto).not.toContain(color);
+    }
+    for (const id of ["guerra-impactos", "guerra-corredores", "ucrania-relleno", "rusia-relleno"]) {
+      const capa = JSON.stringify(propias.find((c) => c.id === id));
+      expect(
+        [PALETA.guerra, PALETA.guerraClaro, PALETA.guerraTenue].some((c) => capa.includes(c)),
+        id,
+      ).toBe(true);
+    }
+  });
+
   it("el rojo de los estados no es el de la capa de guerra", () => {
     expect(PALETA.guerra).not.toBe(COLOR_ESTADO.confirmado);
     expect(diferenciaDeTono(PALETA.guerra, COLOR_ESTADO.confirmado)).toBeGreaterThanOrEqual(10);

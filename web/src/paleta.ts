@@ -20,8 +20,14 @@ export const PALETA = {
   desmentido: "#93a0b4",
   // El verde solo dice que el sistema funciona (datos al día, en la barra de estado).
   alDia: "#56c271",
-  // Capa de guerra: su propio rojo coral, distinto del rojo de los estados.
-  guerra: "#f25c4f",
+  // Capa de guerra: una familia violeta azulada, lejos del rojo de «confirmado», del naranja
+  // de «notificado» y del verde de «al día» también con daltonismo (tests/colores.test.tsx).
+  // El principal (regiones de Ucrania, impactos, corredores), uno claro para lo que se resalta
+  // (focos de un impacto, focos de 24 horas que coinciden con uno, la cortinilla) y uno apagado
+  // para lo secundario (regiones de Rusia, focos de 24 horas, ciudades sin luz).
+  guerra: "#9d7bff",
+  guerraClaro: "#cbbcff",
+  guerraTenue: "#7a6cc0",
 } as const;
 
 /** Acento por defecto; la web usa el de la variable --acento de estilos.css. */

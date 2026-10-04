@@ -416,4 +416,62 @@ export interface Textos {
     lema: string;
   };
   regiones: Record<string, string>;
+  satelite: TextosSatelite;
+}
+
+/** Guerra por satélite: corredores, focos en vivo, luz nocturna e imágenes de antes y después. */
+export interface TextosSatelite {
+  /** Rótulo del grupo de capas de la guerra. */
+  capas: string;
+  corredores: string;
+  focos: string;
+  luz: string;
+  letreroCorredor: (origen: string, region: string, drones: string) => string;
+  letreroFoco: (hora: string, coincide: boolean) => string;
+  letreroCiudad: (ciudad: string, perdida: string) => string;
+  /** Hora del último foco de la capa de focos en vivo. */
+  focosUltimo: (hora: string) => string;
+  focosVacio: string;
+  corredor: {
+    etiqueta: string;
+    origen: string;
+    destino: string;
+    desdeUcrania: string;
+    desdeUcraniaTexto: string;
+    drones: string;
+    dronesTexto: Record<Sentido, string>;
+    ataques: (n: number) => string;
+    periodo: string;
+  };
+  luzFicha: {
+    etiqueta: string;
+    rotulo: string;
+    perdida: (pct: string) => string;
+    peorNoche: (fecha: string) => string;
+    noches: (n: number) => string;
+    referencia: (desde: string, hasta: string, n: number) => string;
+    origen: string;
+    ataque: string;
+    region: string;
+    regionEntera: string;
+    sinPerdida: string;
+    metodo: string;
+  };
+  imagen: {
+    rotulo: string;
+    antes: string;
+    despues: string;
+    deslizador: string;
+    escena: (id: string) => string;
+    nubes: (pct: string) => string;
+    producto: (lado: string) => string;
+    esperando: string;
+    cargando: string;
+    alt: (momento: string, fecha: string) => string;
+  };
+  zona: (id: string, nombre: string) => string;
+  /** Lo que dice la ayuda del mapa de cada marca. */
+  ayudaCorredores: string;
+  ayudaFocos: string;
+  ayudaLuz: string;
 }

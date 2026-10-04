@@ -24,6 +24,7 @@ import { FichaImpacto } from "./componentes/FichaImpacto.tsx";
 import { FichaIncidente } from "./componentes/FichaIncidente.tsx";
 import { FichaPais } from "./componentes/FichaPais.tsx";
 import { FichaRegion } from "./componentes/FichaRegion.tsx";
+import { FichaCorredor, FichaLuz } from "./componentes/GuerraSatelite.tsx";
 import { Filtros, textoDeSeleccion } from "./componentes/Filtros.tsx";
 import { LeyendaGnss, LeyendaPresion } from "./componentes/Leyendas.tsx";
 import type { EstadoGnss } from "./componentes/Leyendas.tsx";
@@ -53,6 +54,16 @@ import { agregar, cargarFicheroGnss, cargarIndiceGnss, ficherosDelPeriodo, zonas
 import type { Agregado, FicheroGnss, IndiceGnss } from "./datos/gnss.ts";
 import { cifrasDePais, presionPorPais } from "./datos/presion.ts";
 import { cifras } from "./datos/derivar.ts";
+import {
+  OBJETO_FOCOS_VIVOS,
+  ciudadesSinLuz as ciudadesSinLuzDe,
+  corredoresDelPeriodo,
+  lucesDelPeriodo,
+  perdidaPorRegion,
+} from "./datos/guerraSatelite.ts";
+import type { FocosVivos } from "./datos/guerraSatelite.ts";
+import { validarFocosVivos } from "./datos/validar.ts";
+import { urlDelAlmacen } from "./almacenPublico.ts";
 import type {
   Ataque,
   EstadoSistema,
@@ -134,7 +145,12 @@ type PanelLocal =
   | { clase: "pais"; iso: string }
   | { clase: "pila"; ids: string[] }
   | { clase: "impacto"; id: string }
+  | { clase: "corredor"; clave: string }
+  | { clase: "luz"; clave: string }
   | null;
+
+/** Cada cuánto se vuelven a pedir los focos de calor de 24 horas (el fichero cambia cada hora). */
+const MS_FOCOS_VIVOS = 10 * 60 * 1000;
 
 /** Regiones que se pueden abrir: las de Ucrania (con lo ocupado) y las de Rusia. */
 const REGION_DE_LA_CAPA = /^(UA|RU)-[A-Z0-9]{1,3}$/;
@@ -266,6 +282,28 @@ export function App() {
     });
     return () => control.abort();
   }, [idImpacto]);
+  // Focos de calor de las últimas 24 horas: del almacén público, mientras se ven.
+  const [focosVivos, setFocosVivos] = useState<FocosVivos | null>(null);
+  const verFocosVivos = capas.ucrania && capas.focosVivos;
+  useEffect(() => {
+    if (!verFocosVivos) return undefined;
+    const control = new AbortController();
+    const pedir = () => {
+      void fetch(urlDelAlmacen(OBJETO_FOCOS_VIVOS), { signal: control.signal, cache: "no-cache" })
+        .then(async (respuesta) => {
+          if (!respuesta.ok) return;
+          const resultado = validarFocosVivos(await respuesta.json());
+          if (resultado.ok && !control.signal.aborted) setFocosVivos(resultado.datos);
+        })
+        .catch(() => undefined);
+    };
+    pedir();
+    const intervalo = window.setInterval(pedir, MS_FOCOS_VIVOS);
+    return () => {
+      control.abort();
+      window.clearInterval(intervalo);
+    };
+  }, [verFocosVivos]);
   const [feedAbierto, setFeedAbierto] = useState(false);
   const [pestana, setPestana] = useState<Pestana>("directo");
   const [metodologia, setMetodologia] = useState(false);
@@ -513,6 +551,26 @@ export function App() {
     () => (ucraniaActiva === null ? VACIO : nochesDeGuerra(ucraniaActiva)),
     [ucraniaActiva],
   );
+  // Guerra por satélite: corredores y pérdida de luz del periodo.
+  const corredores = useMemo(
+    () =>
+      ucraniaActiva === null || periodo === null
+        ? null
+        : corredoresDelPeriodo(ucraniaActiva, periodo),
+    [ucraniaActiva, periodo],
+  );
+  const lucesPeriodo = useMemo(
+    () => (ucraniaActiva === null || periodo === null ? null : lucesDelPeriodo(ucraniaActiva, periodo)),
+    [ucraniaActiva, periodo],
+  );
+  const luzRegiones = useMemo(
+    () => (lucesPeriodo === null ? null : perdidaPorRegion(lucesPeriodo)),
+    [lucesPeriodo],
+  );
+  const ciudadesSinLuz = useMemo(
+    () => (lucesPeriodo === null ? null : ciudadesSinLuzDe(lucesPeriodo)),
+    [lucesPeriodo],
+  );
   const nocheActual = noche === null ? null : (noches[noche] ?? null);
 
   // Novedades desde la visita anterior: se resaltan y se pueden recorrer.
@@ -669,6 +727,14 @@ export function App() {
   const abrirAviso = useCallback((id: string) => abrirLocal({ clase: "aviso", id }), [abrirLocal]);
   const abrirCelda = useCallback((h3: string) => abrirLocal({ clase: "celda", h3 }), [abrirLocal]);
   const abrirPais = useCallback((iso: string) => abrirLocal({ clase: "pais", iso }), [abrirLocal]);
+  const abrirCorredor = useCallback(
+    (clave: string) => abrirLocal({ clase: "corredor", clave }),
+    [abrirLocal],
+  );
+  const abrirCiudadLuz = useCallback(
+    (clave: string) => abrirLocal({ clase: "luz", clave }),
+    [abrirLocal],
+  );
   const cerrarFicha = useCallback(() => {
     setPanelLocal(null);
     if (analizarRuta(window.location.pathname).ficha !== null) navegar(rutaDeIdioma(idioma));
@@ -945,6 +1011,9 @@ export function App() {
               focos={focosDelPeriodo(datosUcrania, periodo, panelLocal.codigo)}
               fuentes={datosUcrania.fuentes}
               impactos={impactosDelPeriodo(datosUcrania, periodo, panelLocal.codigo)}
+              luces={lucesDelPeriodo(datosUcrania, periodo, panelLocal.codigo).filter(
+                (l) => l.zona === "region",
+              )}
               onImpacto={abrirImpacto}
             />
           </div>
@@ -992,6 +1061,36 @@ export function App() {
         ),
       };
     }
+  } else if (panelLocal?.clase === "corredor" && corredores !== null) {
+    const corredor = corredores.find((c) => c.clave === panelLocal.clave);
+    if (corredor !== undefined) {
+      ficha = {
+        nombre: t.satelite.corredor.etiqueta,
+        contenido: (
+          <>
+            <CabeceraFicha t={t} etiqueta={t.satelite.corredor.etiqueta} onCerrar={cerrarFicha} />
+            <div className="overflow-y-auto px-4 py-3">
+              <FichaCorredor t={t} idioma={idioma} corredor={corredor} periodo={textoPeriodo} />
+            </div>
+          </>
+        ),
+      };
+    }
+  } else if (panelLocal?.clase === "luz" && ciudadesSinLuz !== null) {
+    const ciudad = ciudadesSinLuz.find((c) => `${c.region}|${c.nombre}` === panelLocal.clave);
+    if (ciudad !== undefined) {
+      ficha = {
+        nombre: `${t.satelite.luzFicha.etiqueta} ${ciudad.nombre}`,
+        contenido: (
+          <>
+            <CabeceraFicha t={t} etiqueta={t.satelite.luzFicha.etiqueta} onCerrar={cerrarFicha} />
+            <div className="overflow-y-auto px-4 py-3">
+              <FichaLuz t={t} idioma={idioma} ciudad={ciudad} periodo={textoPeriodo} />
+            </div>
+          </>
+        ),
+      };
+    }
   } else if (panelLocal?.clase === "pais" && periodo !== null) {
     ficha = {
       nombre: `${t.presion.etiqueta} ${panelLocal.iso}`,
@@ -1023,6 +1122,19 @@ export function App() {
       ),
     };
   }
+
+  const ultimoFoco =
+    verFocosVivos && focosVivos !== null ? (
+      <p
+        className="flotante whitespace-nowrap px-2 py-0.5 text-[0.6875rem] text-secundario tel:text-[0.625rem]"
+        data-focos-vivos=""
+        role="status"
+      >
+        {focosVivos.ultimo_foco === null
+          ? t.satelite.focosVacio
+          : t.satelite.focosUltimo(focosVivos.ultimo_foco.slice(11, 16))}
+      </p>
+    ) : null;
 
   const lista = (
     <Lista
@@ -1239,6 +1351,10 @@ export function App() {
               gnss={gnssActual?.celdas ?? null}
               presion={presion}
               avisos={avisos}
+              corredores={corredores}
+              luzRegiones={luzRegiones}
+              ciudadesSinLuz={ciudadesSinLuz}
+              focosVivos={focosVivos?.focos ?? null}
               elegido={elegido}
               paisResaltado={paisImpreciso}
               regionesElegidas={regionesElegidas}
@@ -1253,6 +1369,8 @@ export function App() {
               onAviso={abrirAviso}
               onCelda={abrirCelda}
               onPais={abrirPais}
+              onCorredor={abrirCorredor}
+              onCiudadLuz={abrirCiudadLuz}
               onListo={setApi}
               onFallo={fallarMapa}
             />
@@ -1316,6 +1434,7 @@ export function App() {
                 <div className="flex items-end justify-between gap-2">
                   <div className="pointer-events-auto">{leyendas}</div>
                   <div className="pointer-events-auto flex items-end gap-2">
+                    {ultimoFoco}
                     <Atribuciones t={t} />
                     <Zoom t={t} onZoom={(paso) => api?.zoom(paso)} />
                   </div>
@@ -1350,6 +1469,9 @@ export function App() {
                 ref={refAbajoTel}
                 className="absolute inset-x-0 bottom-0 flex flex-col items-end gap-1 pb-[env(safe-area-inset-bottom)]"
               >
+                {ultimoFoco !== null && (
+                  <div className="pointer-events-auto mr-2 self-end">{ultimoFoco}</div>
+                )}
                 <div className="flex w-full items-end justify-between gap-2 px-2">
                   <div className="pointer-events-auto">{leyendas}</div>
                   <div className="pointer-events-auto">

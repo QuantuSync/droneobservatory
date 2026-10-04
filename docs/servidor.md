@@ -74,6 +74,9 @@ En `/home/eodi`:
 - `datos/catalogo/`, con permisos 700 y propiedad de `eodi`: lo que encuentra el barrido del
   catálogo vivo (apartado «Catálogo vivo»): `novedades.jsonl`, `catalogo_vivo.json`,
   `historial.jsonl`, `tacticas.json`, `apariciones.json`, `control.json` y `gasto.json`.
+- `datos/satelite/`, `datos/luces/` y `datos/focos_vivo/`, con permisos 700 y propiedad de
+  `eodi`: lo que guardan las tres piezas de la guerra por satélite (apartado «Guerra por
+  satélite»). Todo se puede volver a calcular.
 - `datos/reintentos/`, propiedad de `eodi`: un fichero por sitio con los reintentos del día
   (apartado «Reintentos por fuente»).
 - `datos/directo/`, con permisos 700 y propiedad de `eodi`: el estado de la detección en directo
@@ -446,6 +449,47 @@ sudo systemd-run --unit=eodi-directo-reproduccion --uid=eodi --gid=eodi --nice=1
   --salida /home/eodi/datos/directo/reproduccion.jsonl
 ```
 
+## Guerra por satélite
+
+Informe: [`informe_guerra_satelite.md`](informe_guerra_satelite.md). Tres servicios, cada uno con
+su propio temporizador, su propio cerrojo (en `/home/eodi/.eodi/`), prioridad baja de CPU y de
+disco (`Nice=15`, E/S en reposo) y un tope de memoria de 1 GB (`MemoryMax`): si una pieza lo
+pasara, systemd la para a ella sola. Ninguno toma el cerrojo de la recogida horaria, toca el clon
+ni arranca entre los minutos 15 y 40, los de la recogida; la luz nocturna y las imágenes, además, no
+empiezan si el cerrojo de la recogida está ocupado.
+
+| Unidad | Cuándo | Qué hace | Datos |
+| --- | --- | --- | --- |
+| `eodi-satelite` ([`satelite.sh`](../servidor/satelite.sh), [`recogida/satelite.py`](../recogida/satelite.py)) | 06:43 y 18:43 UTC, tope de 30 minutos | Lee la base de la rama `estado` (sin su cerrojo) y, para cada impacto con foco térmico detectado o en una instalación, busca en el catálogo STAC de Earth Search la última imagen de Sentinel-2 sin nubes sobre el recorte antes del ataque y la primera después; lee solo la ventana del recorte de cada banda y sube las imágenes y el índice `satelite/parejas.json` al almacén público | `datos/satelite/control.json` (lo buscado) y una copia del índice |
+| `eodi-luces` ([`luces.sh`](../servidor/luces.sh), [`recogida/luces.py`](../recogida/luces.py)) | Minuto 41 de cada hora; no empieza una noche nueva pasados 29 minutos | Mide el brillo de cada ciudad en los gránulos de VIIRS de NOAA-20 de las noches que hacen falta (las de los ataques contra la energía y su referencia, las de la validación y la última) y evalúa cada ataque; la recogida horaria guarda el resultado en la base (tabla `luces_nocturnas`) | `datos/luces/`: `noches/`, `anillos/` (huellas de los gránulos), `nubes/` (Open-Meteo por ciudad y mes), `resultados.json`, `validacion.json`, `control.json` |
+| `eodi-focos-vivo` ([`focos_vivo.sh`](../servidor/focos_vivo.sh), [`recogida/focos_vivo.py`](../recogida/focos_vivo.py)) | Minuto 42 de cada hora | Con los CSV de FIRMS que descarga la recogida, los focos de las últimas 24 horas sobre Ucrania y la Rusia europea con los filtros del cruce; sube `focos/ultimas24h.json` (caché de 5 minutos) al almacén público | `datos/focos_vivo/` (resumen diario de emplazamientos del año y la última copia) |
+
+Las imágenes y los focos suben al almacén con las credenciales de `almacen.env`. La última
+ejecución correcta de cada pieza queda en `satelite.json`, `luces.json` y `focos_vivo.json` de
+`/home/eodi/.eodi/`.
+
+Órdenes, como `operador`:
+
+```
+systemctl list-timers eodi-satelite.timer eodi-luces.timer eodi-focos-vivo.timer
+journalctl -u eodi-luces.service -n 20             # noches medidas, pendientes y validación
+sudo systemctl start eodi-focos-vivo.service       # un fichero de focos ahora
+sudo -u eodi cat /home/eodi/datos/luces/control.json
+sudo -u eodi cat /home/eodi/datos/luces/validacion.json | head -c 2000
+```
+
+Un histórico se completa solo: cada ejecución de `eodi-luces` sigue con las noches pendientes de
+la más reciente a la más antigua, y `eodi-satelite` vuelve a mirar cada pareja a medias en las
+escenas nuevas. Para adelantarlo, se lanza la unidad a mano o, con más tiempo, con
+`systemd-run`:
+
+```
+sudo systemd-run --unit=eodi-luces-historico --uid=eodi --gid=eodi -p MemoryMax=1G \
+  -p Nice=15 -p IOSchedulingClass=idle /usr/bin/env bash /home/eodi/droneobservatory/servidor/luces.sh
+sudo systemd-run --unit=eodi-satelite-historico --uid=eodi --gid=eodi -p MemoryMax=1G \
+  -p Nice=15 -p IOSchedulingClass=idle /usr/bin/env bash /home/eodi/droneobservatory/servidor/satelite.sh
+```
+
 ## Secretos en local
 
 En `%USERPROFILE%\.eodi\`, fuera de cualquier repositorio:
@@ -484,7 +528,8 @@ El script:
 5. activa los temporizadores de la recogida horaria, de la exportación semanal, de las
    fuentes oficiales de detalle, del lector de canales de la capa de guerra, del procesado de
    adsb.lol, de la búsqueda dirigida de noticias, del motor de deducción y del barrido del
-   catálogo vivo, y el servicio de detección en directo de cierres.
+   catálogo vivo, de las tres piezas de la guerra por satélite (imágenes, luz nocturna y focos en
+   vivo) y el servicio de detección en directo de cierres.
 
 Puede repetirse sobre un servidor que ya existe: deja igual lo que ya está y vuelve a
 aplicar la configuración. Para empezar de verdad desde cero se borra antes el servidor:
