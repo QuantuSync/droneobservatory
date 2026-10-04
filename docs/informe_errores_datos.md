@@ -9,6 +9,40 @@ extractor salvo donde se dice.
 Cifras «antes» medidas sobre la base de la rama `estado` de las 08:15 del 4 de octubre (la que
 servía droneobservatory.eu), antes de cambiar nada.
 
+| Bloque | Pull request | Fusionado |
+| --- | --- | --- |
+| 1. Víctimas y homenajes | #91 | 08:54 |
+| 2. Partes regionales | #94 | 09:41 |
+| 3. Zonas de lanzamiento | #95 | 09:50 |
+| 4. Cruces de frontera | #96 | 10:49 |
+| 5. Partes del mismo día | #99 | 10:58 |
+| 6. Pendientes de presencia | #100 | 11:01 |
+| 7. Fuentes españolas | #101 | 11:42 |
+| Base en trozos de 50 MB | #107 | 12:47 |
+| Cruces sin copias | #112 | 14:55 |
+| Leipzig y Wunstorf | #113 | 15:06 |
+| Base en memoria sin tope de 1 GiB | #114 | 15:45 |
+| Ficha revisada con la hora de la ejecución | #118 | 16:40 |
+| Frase del cruce, Leipzig completo y ensayo de la recogida | #120 | 17:50 |
+| Mykoláiv por el anuncio oficial | #121 | 18:45 |
+
+Resumen de cifras, antes y después:
+
+| | Antes | Después |
+| --- | ---: | ---: |
+| Impactos con fallecidos igual a un año | 8 | 0 |
+| Impactos retirados por homenaje u obituario | — | 30 |
+| Impactos con la cifra de víctimas corregida | — | 75 |
+| Fallecidos de los impactos, 2024 T4 a 2026 T4 | 17.276 | 164 |
+| Impactos rusos localizados de Zaporiyia | 94 % (5.444 de 5.793) | 48,8 % (6.089 de 12.478) |
+| Nombres distintos de zonas de lanzamiento | 85 | 24 |
+| Ataques con cruces | 6 | 78 |
+| Incursiones europeas enlazadas con su ataque | 0 | 123 |
+| Cruces declarados solo por Ucrania, con su frase, dentro del ataque | — | 6 |
+| Incidentes europeos publicados (Rumanía, Moldavia) | 513 (106, 57) el 4 de octubre por la mañana; 592 (145, 95) con las copias | 507 (105, 60) |
+| Partes rusos con `incluido_en` | 6 | 78 |
+| Incidentes españoles de la Guardia Civil | 0 | 0 (no hay notas de intrusiones de 2024 a hoy) |
+
 ## Bloque 1. Víctimas imposibles y homenajes guardados como impactos
 
 ### Causa
@@ -507,3 +541,317 @@ una intrusión.
 `tests/test_fuentes_espana.py`: las cifras de contexto validan con su esquema, con su origen y con
 la respuesta del Congreso como fuente de Aena; la lista de noticias; qué es incidente y qué no
 (con las notas reales descartadas); el registro como fuente oficial de detalle que da de alta.
+
+## Incidencia: la base pasó de 100 MiB y la recogida de las 12:17 no publicó
+
+**Causa.** GitHub rechaza cualquier fichero de más de 100 MiB (104.857.600 bytes). El `db.age` de
+la rama `estado` de las 11:34 ocupaba 104.290.885 bytes; la recogida de las 12:17 leyó 6.265
+publicaciones de guerra (2.687 nuevas, la recuperación del bloque 2) y enlazó 200 cruces, la base
+creció por encima del límite y el `git push` de `almacen/remoto.subir` falló: «la recogida falló con
+código 1: no se publica». Nada se perdió: la recogida siguiente parte de la base de las 11:34 y
+vuelve a leer lo mismo, porque los cursores viven dentro de la base. La base sin comprimir mide
+1.013 MB; con gzip 9 seguiría en 102 MB, así que subir la compresión no bastaba.
+
+**Cambios.** Dos arreglos que se suman. Otra sesión cambió la compresión a xz (#106,
+`almacen/cifrado.py`): la base pasa a unos 50 MB. Este trabajo (#107, fusionado a las 12:47) hace
+que `almacen/remoto.subir` la guarde en trozos de 50 MB (`db.age.000`, `db.age.001`…) y que
+`descargar` los vuelva a unir, para que el crecimiento no vuelva a chocar con el límite; una rama
+con el `db.age` entero de antes se sigue leyendo. Todos los lectores de la rama (recogida horaria,
+deducción, detalle, catálogo, exportación, búsqueda dirigida, satélite) pasan por esas dos
+funciones, y cada trabajo del servidor toma `main` al empezar. Pruebas en `tests/test_remoto.py`:
+base grande en tres trozos que se vuelven a unir, tamaño justo y vacío, y lectura de la rama
+antigua.
+
+**Comprobación.** La recogida de las 13:17 terminó a las 13:34 («base subida a la rama estado»,
+«estado.json publicado en el almacén»), con 6.159 publicaciones de guerra leídas y 2.402 impactos
+nuevos. La rama `estado` tiene un solo trozo, `db.age.000`, de 49.644.381 bytes, y se abre y se
+lee entera.
+
+## Cruces convertidos en incidentes duplicados
+
+**Causa, en una línea.** `proceso/incursiones.registrar` daba de alta un incidente «Drones del
+ataque ruso contra Ucrania cruzan a …» por cada cruce de un ataque, y desde el bloque 4 los
+cruces de un ataque incluyen los países de las incursiones europeas enlazadas: cada incidente
+enlazado volvía en la recogida siguiente como copia con el parte como única fuente.
+
+El mecanismo era anterior (EODI-2024-00001, alta del 28 de septiembre, salió de un cruce que sí
+declaraba el parte); el enlace del bloque 4 lo disparó en masa el 4 de octubre: 76 altas nuevas,
+todas con una pareja del mismo país enlazada con el mismo ataque.
+
+**Cambios (#112).**
+
+- Enlazar nunca crea un incidente. `incursiones.registrar` desaparece; `incursiones.retirar` retira
+  las altas que salían solo del parte (versiones `incursion/1` y `/2`) con su motivo: duplicado del
+  incidente del mismo país y noche (el enlace con el ataque queda en él), cruce declarado solo por
+  Ucrania o sin cruce en el parte. La Fuerza Aérea de Ucrania no es autoridad sobre el espacio
+  aéreo de otro país: su parte no confirma por sí solo un dron en Rumanía o en Moldavia.
+- Un cruce que cuenta solo el parte queda dentro del ataque (`cruces` y `cruces_parte`) con la
+  frase literal que lo dice (`cruces[].frase`, campo nuevo del esquema 1.11.0). El lector la guarda
+  desde ahora (`recogida/parte.py`, `frases_cruces`); las de los seis partes guardados antes están
+  en `configuracion/frases_cruces.json`, copiadas del canal oficial. La ficha del ataque lo muestra
+  como «Declarado por Ucrania; sin incidente del país», con la frase. No cuenta en el total europeo
+  ni por país, ni en la capa de presión.
+- Pasa a incidente europeo solo si lo cuenta una fuente del país afectado: entra por las noticias o
+  las fuentes oficiales y `proceso/cruces.py` lo enlaza.
+- **La cita tiene que respaldar el titular** (`proceso/cita_titular.py`): alguna cita guardada debe
+  nombrar el país, el lugar o un nombre propio del titular. Un incidente cuyas fuentes son solo
+  partes de guerra y no pasa la comprobación no se publica (`exportacion/geojson.publicables`).
+
+**Revisión uno por uno de las 77 altas desde el parte** (75 de Rumanía y Moldavia, 2 de Polonia;
+ninguna otra de nivel país tenía un parte de guerra como única fuente, en ningún país):
+
+| Resultado | Incidentes |
+| --- | ---: |
+| Duplicado de otro del mismo país y la misma noche: retirado, el enlace queda en el bueno | 76 |
+| Sin pareja, el parte dice el cruce (kpszsu/20107, «Один безпілотник увійшов в повітряний простір Румунії»): retirado, queda como cruce declarado por Ucrania en EODI-UA-2024-0174 | 1 (EODI-2024-00001) |
+| Sin pareja y sin cruce en el parte | 0 |
+
+EODI-2025-00378 (Borcea), EODI-2025-00222 y EODI-2025-00260 siguen publicados, enlazados con
+EODI-UA-2025-0028, -0032 y -0046, y esos ataques los listan como cruces.
+
+**Comprobación de cita y titular en toda la base** (sin cambiar nada fuera de este encargo): de los
+515 incidentes publicados tras la retirada, 73 no la pasan. Arreglo pendiente para cada tipo: (A)
+guardar como cita la frase de la nota que nombra el lugar, cuando la tiene; (B) comparar también
+los nombres del lugar en otras escrituras; (C) revisar a mano si la cita es de otro suceso.
+
+Agrupados por tipo de fallo, con su titular y la primera cita guardada:
+
+**A. La cita cuenta el hecho sin nombrar el país ni el lugar** (54)
+
+| Incidente | Titular | Cita |
+| --- | --- | --- |
+| EODI-2025-00013 | Dos turistas detenidos por volar dron cerca del aeropuerto de Bardufoss | «To turister innbrakt etter mistanke om ulovlig droneflyvning.» |
+| EODI-2025-00034 | Dron interrumpe el aeropuerto de Vilna sin que se identifique su propietario | «jei dronas, pavyzdžiui, priklausė privačiam asmeniui» |
+| EODI-2025-00059 | Hombre detenido por volar dron en zona prohibida del aeropuerto de Sandefjord | «Mannen har fløyet innenfor sikkerhetssonen til flyplassen.» |
+| EODI-2025-00065 | Cinco drones perturban el tráfico aéreo en el aeropuerto de Dresde | «In den ersten neun Monaten dieses Jahres sichteten Piloten und Tower-Mitarbeiter bereits fünf unerlaubte Fluggeräte.» |
+| EODI-2025-00088 | Drones no autorizados retrasan vuelos en el aeropuerto de Gibraltar | «tras la detección de drones no autorizados» |
+| EODI-2025-00091 | Sobrevuelos sospechosos sobre la base de Kleine Brogel en Bélgica | «mai multe zboruri suspecte ale unor aparate neidentificate» |
+| EODI-2025-00102 | Globos meteorológicos cierran el aeropuerto de Vilna | «Uosto uždarymas paveikė apie 5 tūkstančius keleivių ir 30 skrydžių» |
+| EODI-2025-00114 | Posibles drones observados sobre el aeropuerto de Riga | «Katru nedēļu manai mājai pāri pārlido kāds drons» |
+| EODI-2025-00119 | Dron no identificado obliga a cerrar el aeropuerto de Gibraltar | «La presencia de un dron obligó en la noche del sábado a cerrar por precaución el aeropuerto» |
+| EODI-2025-00132 | Vuelo retrasado en el aeropuerto de Bergen por un dron no autorizado | «Avinor opplyser til NTB at flyplassen ikke ble stengt, men at én flyavgang ble holdt igjen i ti minutter.» |
+| EODI-2025-00134 | Casi colisión entre un avión y un posible dron cerca del aeropuerto de Heathrow | «A passenger jet came so close to colliding with a drone that the object filled the plane's windscreen.» |
+| EODI-2025-00140 | Múltiples avistamientos de drones sobre Arna, Suecia | «Ifølge stasjonssjefen skal det dreie seg om flere store droner.» |
+| EODI-2025-00142 | Posible dron casi colisiona con un Airbus A320 sobre Londres | «the plane flew in clear skies at 9,200ft - far beyond the 400ft UK limit for flying drones.» |
+| EODI-2025-00143 | Incidente de posible dron cerca del aeropuerto de Southampton | «a drone was involved in a near-miss with a passenger plane» |
+| EODI-2025-00145 | Dron detectado en el aeropuerto de Sundsvall Timrå obliga a desviar un vuelo | «En person är nu misstänkt för vårdslöshet i flygtrafik.» |
+| EODI-2025-00146 | Cierre de pista en Bergen por un dron en zona prohibida | «Det førte til at rullebanen ble stengt en kort periode.» |
+| EODI-2025-00149 | Posibles drones sobrevuelan una base militar belga | «deux observations de drones au-dessus d'une base militaire» |
+| EODI-2025-00150 | Investigación completada sobre posibles drones en RAF Lakenheath | «unidentified aircraft» |
+| EODI-2025-00152 | Drones no identificados cerca del aeropuerto de Dublín durante visita de Zelenskyy | «generated for the purpose of putting pressure on EU and Ukrainian interests» |
+| EODI-2025-00164 | Actividad de drones cerca de RAF Lakenheath causa incidente con helicóptero policial | «a drone coming close to them» |
+| EODI-2025-00166 | Drones sobre el aeropuerto de Alta obligan a intervenir a la policía | «Dronepiloten vil bli anmeldt for flyvningen, ilagt et forelegg og dronen vil bli inndratt.» |
+| EODI-2025-00170 | Drones ilegales sobre el aeropuerto de Riga en enero | «nelikumīgi pilotētajiem droniem» |
+| EODI-2025-00184 | Drones sobre el aeropuerto militar de Bardufoss obligan a desviar vuelos | «Drohnen gesichtet worden waren» |
+| EODI-2025-00202 | Posibles drones cierran el aeropuerto de Hannover y retrasan un transporte de órgano | «An die Drohnenflieger» |
+| EODI-2025-00256 | Sobrevuelo de dron sobre la pólvora Eurenco de Bergerac | «C'était un drone du commerce, classique» |
+| EODI-2025-00259 | Drones rusos penetran el espacio aéreo de Rumania durante ataque masivo | «tijekom masovnog ruskog napada dronovima i raketama na Ukrajinu» |
+| EODI-2025-00290 | Dron entra en el espacio aéreo de Rumania y provoca el despegue de cazas de la OTAN | «tijekom ruskog napada na ukrajinsku infrastrukturu» |
+| EODI-2025-00334 | Drones cierran el aeropuerto de Berlín-Brandenburg durante dos horas | «Tussen 20.08 uur en 21.58 uur heeft de luchthaven van de Duitse hoofdstad al het vliegverkeer stilgelegd.» |
+| EODI-2025-00346 | Posibles drones rusos penetran en el espacio aéreo de la base aérea de Ramstein | «offenbar steckt Russland dahinter» |
+| EODI-2025-00363 | Dron misterioso encontrado en la playa de Burgas | «O dronă a fost descoperită aruncată de valuri pe plaja» |
+| EODI-2025-00395 | Dron ucraniano detonado cerca del Puerto de Constanza | «Ar fi vorba despre o dronă militară ucraineană cu încărcătură explozivă la bord.» |
+| EODI-2025-00399 | Un dron obliga a paralizar el Aeropuerto de Lanzarote | «causó la paralización de todas las operaciones» |
+| EODI-2025-00401 | Un posible dron provoca el desvío de tres vuelos en el aeropuerto de Gran Canaria | «Se produjo el avistamiento de un dron que sobrevolaba cerca del recinto aeroportuario.» |
+| EODI-2026-00001 | Dron no autorizado detectado cerca del aeropuerto de Split | «39-godišnjeg njemačkog državljanina osumnjičenog za nedopušteno upravljanje dronom» |
+| EODI-2026-00032 | Dron detectado en zona prohibida del aeropuerto de Vilna | «sulaikė droną bei jo operatorių» |
+| EODI-2026-00047 | Turista vuela un posible dron cerca del aeropuerto de Svolvær durante el despegue de un avión | «Ein eldre mann plutseleg letta ei drone frå bakken like ved bilen.» |
+| EODI-2026-00056 | Drone agricola bloquea el aeropuerto de Cuneo-Levaldigi | «Un uomo di 55 anni, agricoltore, senza licenza di volo né autorizzazione o assicurazione, ne ha fatto volare uno» |
+| EODI-2026-00083 | Dron sobre el aeropuerto de Split obliga a cerrar la pista durante diez minutos | «egy 36 éves magyar állampolgárt, akit őrizetbe vettek és kihallgattak» |
+| EODI-2026-00145 | Dron estrellado cerca de la base aérea de Wunstorf | «möglicherweise mit Sprengstoff bestückt» |
+| EODI-2026-00154 | Posible dron detectado cerca de la frontera de Rumania en Suceava | «după detectarea unei drone în apropierea frontierei» |
+| EODI-2026-00166 | Dron no autorizado vuela sobre el aeropuerto de Budapest | «egy gyártelep épületéről reptette szabálytalanul a drónját egy férfi» |
+| EODI-2026-00174 | Dron derribado en el espacio aéreo de Letonia | «The incident came as Russia and Ukraine traded fresh drone strikes.» |
+| EODI-2026-00189 | Dron ruso derribado sobre base aérea en Rumania | «El objetivo, un dron ruso que había traspasado a territorio aliado» |
+| EODI-2026-00216 | Drones ucranianos atacan un depósito petroliero en Letonia | «două drone ucrainene au intrat dinspre Rusia și au lovit instalații petroliere» |
+| EODI-2026-00242 | Un dron entra en el espacio aéreo de Rumania y se estrella en el mar | «Rrmunski vojni radari noćas su ponovno zabilježili bespilotne letjelice u blizini granice s Ukrajinom.» |
+| EODI-2026-00246 | Posibles drones caídos en Letonia provocan la dimisión del gobierno de Riga | «incidentului de securitate ce a avut loc în urmă cu o săptămână» |
+| EODI-2026-00253 | Dos drones militares impactan contra una base de combustible en Rēzekne, Letonia | «Divi bruņoti droni ietriecās uzņēmuma East-West Transit naftas rezervuāros.» |
+| EODI-2026-00280 | Posibles drones sobre el aeropuerto de Luxemburgo obligan a cerrar el espacio aéreo | «Unbekannte Drohnen.» |
+| EODI-2026-00303 | Cierre temporal del aeropuerto de Múnich por avistamiento sospechoso | «Beide Start- und Landebahnen wurden am Sonntagnachmittag für eine halbe Stunde dichtgemacht.» |
+| EODI-2026-00309 | Dron estrellado cerca de la base aérea de Wunstorf | «Trümmerteile einer mutmaßlich abgestürzten Drohne» |
+| EODI-2026-00379 | Dos drones rusos explotan en Moldavia | «Dronele lansate de […] Rusă reprezintă un pericol pentru cetățeni.» |
+| EODI-2026-00381 | Múltiples drones de origen desconocido sobrevuelan el espacio aéreo de Moldavia | «drone de origine necunoscută» |
+| EODI-2026-00389 | Dron cruza el espacio aéreo de Lituania desde Bielorrusia y obliga a cerrar el espacio aéreo | «briefly closing its airspace» |
+| EODI-2026-00427 | Drones y cohetes rusos violan el espacio aéreo de Moldavia y explotan en el sur | «sâmbătă dimineața» |
+
+
+**B. La cita está en otra escritura (cirílico o griego) y el nombre del lugar no se compara** (5)
+
+| Incidente | Titular | Cita |
+| --- | --- | --- |
+| EODI-2025-00058 | Drones cierran una pista del aeropuerto de Ámsterdam Schiphol | «Аэропорт Схипхол приостанавливал работу взлетно-посадочной полосы из-за дрона.» |
+| EODI-2025-00127 | Un dron bloquea seis vuelos en el aeropuerto de Sofía | «Собственикът на дрона, блокирал 6 полета» |
+| EODI-2026-00150 | Dron caído en Leipzig causa incidente diplomático entre Alemania y Rusia | «в Лейпциге нашли какой-то там упавший беспилотник» |
+| EODI-2026-00356 | Drones turcos violan el espacio aéreo griego sobre el Egeo | «Τέσσερα μη επανδρωμένα αεροσκάφη (UAV).» |
+| EODI-2026-00367 | Dos drones cierran temporalmente el aeropuerto de Vasil Levski en Sofía | «по предварителна информация дроновете били управлявани от любители фотографи.» |
+
+
+**C. La cita nombra otro país y no el del titular** (14)
+
+| Incidente | Titular | Cita (país que nombra) |
+| --- | --- | --- |
+| EODI-2025-00060 | Dron avistado obliga a cerrar temporalmente el aeropuerto de Vilna | (GR) «galimai pastebėto drono» |
+| EODI-2025-00094 | Drones cerca de la base aérea de Geilenkirchen causan desvío de vuelos | (PL) «Primili smo prijave o dronu u vazduhu» |
+| EODI-2025-00099 | Dron sobre el aeropuerto de Vilna obliga a desviar un vuelo | (PL) «policija tikina gavusi pranešimą apie pastebėtą droną» |
+| EODI-2025-00156 | Varios drones paralizan el aeropuerto de Gibraltar y obligan a desviar un avión militar | (ES) «varios drones irrumpieran en el espacio aéreo próximo a la pista» |
+| EODI-2026-00011 | Dron incautado en la base aérea de Gilze-Rijen | (PL) «De politie weet inmiddels wie de drone bestuurde.» |
+| EODI-2026-00013 | Dron en zona prohibida afecta al tráfico aéreo en el aeropuerto de Stavanger | (PL) «Politiet var i kontakt med dronepiloten, en mindreårig gutt og hans mor» |
+| EODI-2026-00045 | Dron en la zona de vuelo prohibido del aeropuerto de Memmingen interrumpe operaciones | (PL) «der Flugbetrieb wird direkt eingestellt» |
+| EODI-2026-00149 | Dron marroquí causa retraso en vuelo a Melilla sin cruzar la frontera | (GR) «Een Marokkaanse drone die aan de Marokkaanse kant van de grens bleef.» |
+| EODI-2026-00258 | Dron no autorizado en el espacio aéreo de Moldavia | (ES) «În contextul atacurilor masive ale Federației Ruse asupra Ucrainei» |
+| EODI-2026-00264 | Tres drones violan el espacio aéreo de Moldavia | (ES) «MAE convoacă ambasadorul rus după ce trei drone au încălcat spațiul aerian» |
+| EODI-2026-00320 | Dron ucraniano se estrella en una central eléctrica de Estonia | (GR) «ces drones militaires ukrainiens chargés d'explosifs ont fini accidentellement leur course sur leur territoire» |
+| EODI-2026-00346 | Dron detectado en el aeropuerto de Rzeszów causa desviación de vuelos | (LV) «Dron z zapalnikiem na lotnisku» |
+| EODI-2026-00368 | Drone derribado sobre la cárcel de Poggioreale en Nápoles | (PL) «Un drone di grandi dimensioni, di fabbricazione europea e del valore stimato di circa 10mila euro, neutralizzato dai sistemi di difesa della Polizia Penitenziar» |
+| EODI-2026-00428 | Drones sobre el aeropuerto de Berlín causan múltiples interrupciones | (LV) «kolejny alarm, który niedawno zamknął całe lotnisko na 45 minut.» |
+
+**Pruebas** (`tests/test_incursiones.py`): enlazar un incidente existente con su ataque no crea
+ninguno; un cruce solo ucraniano queda en el ataque con su frase y no sale entre los publicados;
+EODI-2025-00417 se retira como duplicado de EODI-2025-00378 y el enlace queda en este; sin pareja,
+cruce declarado si el parte lo dice y retirada si no; la frase de los partes guardados antes.
+
+### Leipzig/Halle y Wunstorf (#113, #118)
+
+- **Leipzig/Halle, 4 de agosto de 2026**: el suceso estaba en seis registros publicados, los cinco
+  señalados (00391, 00239, 00129, 00190, 00318) y EODI-2026-00134, el mismo dron con el cierre de
+  100 minutos que dio la policía. Se unen en `configuracion/incidentes_revisados.json`
+  (`recogida/revisados.py`) en el que elige la regla de siempre: **EODI-2026-00134**, confirmado,
+  con 801 fuentes, el inicio del 4 de agosto escrito por una fuente y el cierre. Las fusiones
+  llevan su motivo y `revisar_fusiones` no las deshace.
+- **EODI-2026-00283**: sus tres noticias (18 de septiembre) son del dron de Wunstorf, pero la ficha
+  tomó la fecha y el lugar de Leipzig. Su candidato se vuelve a extraer una vez; si la ficha nueva
+  sigue dando Leipzig o una fecha anterior a septiembre, se retira con el motivo (el suceso de
+  Wunstorf tiene otros registros).
+- La primera extracción (recogida de las 16:17) usó la hora del reloj y la publicación, que valida
+  con la de inicio, la rechazó como fecha futura: esa recogida no publicó. #118 extrae con la hora
+  de la ejecución.
+- Pendiente con su arreglo: el dron de Wunstorf está en varios registros (2026-00023, 00145, 00276,
+  00297, 00309, 00363) y Leipzig tiene más noticias tardías sueltas (2026-00128, 00231, 00353,
+  00369, 00377); se añaden a `incidentes_revisados.json` tras revisarlos uno por uno.
+
+### Tope de 1 GiB de la base en memoria (#114)
+
+La recogida de las 15:17 falló con «database or disk is full» en la primera escritura (la retirada
+de las altas): la base se abre con `sqlite3.deserialize`, que no deja crecer una base en memoria
+por encima de 1 GiB, y la del 4 de octubre medía 1.044 MB tras la recuperación del bloque 2. No era
+el disco (62 GB libres). `almacen/cifrado.descifrar` copia la base deserializada a una base en
+memoria normal (0,8 s), sin tocar el disco en claro. Comprobado con la base real: escribir 100 MB
+falla con la deserializada y entra con la copia.
+
+### Comprobación en producción (recogida de las 17:17, publicada a las 17:33)
+
+| | Antes (publicación de las 13:34) | Después (17:33) |
+| --- | ---: | ---: |
+| Incidentes europeos publicados | 592 | 509 |
+| Rumanía | 145 | 105 |
+| Moldavia | 95 | 60 |
+
+- Ningún incidente publicado se titula «… cruzan a …» ni tiene un parte de guerra como única
+  fuente; la recogida retiró las 77 altas («incursiones del parte retiradas: 77»).
+- EODI-2025-00378, EODI-2025-00222 y EODI-2025-00260 siguen publicados, con `ataque` apuntando a
+  EODI-UA-2025-0028, -0032 y -0046, y cada uno de esos ataques los lista en `cruces[].incidentes`.
+- Leipzig/Halle: los seis registros quedaron en EODI-2026-00134 (801 fuentes, inicio el 4 de
+  agosto, cierre de 100 minutos). Quedaban dos más del mismo suceso fechados por su publicación
+  (EODI-2026-00286 del 7 de agosto y EODI-2026-00364 del 9): se añaden al grupo en #120.
+- EODI-2026-00283 se volvió a extraer a las 17:32; la ficha nueva seguía dando Leipzig y el 4 de
+  agosto, y se retiró con el motivo. Sus tres noticias de Wunstorf siguen en su candidato.
+- El cruce declarado por Ucrania de EODI-UA-2024-0174 se publicaba sin su frase: faltaba
+  `cruces[].frase` en la lista de campos públicos (`exportacion/campos.py`); se añade en #120.
+- La capa de presión por país se calcula en la web con los incidentes publicados: refleja las
+  cifras corregidas.
+
+### Punto 2 de la comprobación en producción: capa de guerra por región (17:33)
+
+Impactos rusos localizados publicados tras la recuperación del histórico (35.973 publicaciones
+leídas de unas 37.000 guardadas; quedan las de los canales nuevos):
+
+| Región | Impactos | Capturas |
+| --- | ---: | --- |
+| Zaporiyia | 6.089 (48,8 % de 12.478) | — |
+| Sumy | 2.701 | `errores-region-punto2-sumy-*` |
+| Járkov | 1.254 | `errores-region-punto2-jarkov-*` |
+| Jersón | 1.198 | `errores-region-punto2-jerson-*` |
+| Dnipropetrovsk | 610 | — |
+| Chernígov | 225 | — |
+| Odesa | 73 | `errores-region-punto2-odesa-*` |
+| Mykoláiv | 0 | `errores-region-punto2-mykolaiv-*` |
+
+Zaporiyia queda en el 48,8 % del total: cumple el objetivo de la mitad o menos. En los días con
+parte diario, la lectura del histórico completo da impactos localizados el 91 % de los días en
+Zaporiyia, el 85 % en Sumy y en Jersón y el 68 % en Járkov. Odesa casi nunca nombra el lugar
+(política de su administración: «на півдні Одещини»): 74 de los 269 días en que publica algo de
+drones. Mykoláiv no tenía impactos porque el lector se saltaba su canal: su web no enlaza ningún
+canal; se verifica desde #121 por el anuncio del canal oficial del anterior jefe de la
+administración (con insignia de verificado), que enlaza t.me/mykolaiv_ova.
+
+Cinco fichas al azar, con lugar, fecha y fuente correctos (capturas
+`errores-impacto-punto2-*-escritorio.png`):
+
+| Ficha | Lugar | Fecha | Fuente y cita |
+| --- | --- | --- | --- |
+| EODI-IG-2026-03516 | Zolochiv (Járkov) | 04/10/2026 08:59 UTC | Харківська ОВА: «…удару дроном по цивільному автомобілю у селищі Золочів» |
+| EODI-IG-2026-05283 | Járkov ciudad | 29/09/2026 16:08 UTC | Харківська ОВА: «Харків пошкоджено скління багатоквартирного будинку…» |
+| EODI-IG-2026-03517 | Jersón ciudad | 04/10/2026 08:53 UTC | Херсонська ОВА: «…атакували з дрона у Корабельному районі Херсона» |
+| EODI-IG-2026-03486 | Euroterminal, Odesa | 25/09/2026 08:49 UTC | Одеська ОВА: «…повторний удар по поштовому терміналу» |
+| EODI-IG-2026-04483 | Comunidad de Nedryhailiv (Sumy) | 02/10/2026 16:42 UTC | Сумська ОВА: «…у Недригайлівській громаді ворожий дрон влучив у цивільну автівку» |
+
+## Comprobación en producción del encargo
+
+En droneobservatory.eu y en los datos publicados, tras la recogida de las 18:17 (publicada a las
+18:33), con capturas a 390×844 y escritorio en `docs/capturas`:
+
+1. **EODI-IG-2025-00179 ya no se publica y ninguna ficha da un año como fallecidos.** De los
+   13.337 impactos publicados, la cifra de fallecidos más alta es 40 (EODI-IG-2025-05883) y
+   ninguna está entre 1900 y 2100. Capturas `errores-region-punto1-donetsk-*` y
+   `errores-impacto-punto1-donetsk-*`.
+2. **Capa de guerra**: Odesa, Járkov, Jersón y Sumy muestran impactos localizados; Mykoláiv
+   empieza a tenerlos con #121 (sección del punto 2, arriba). Cinco fichas al azar con lugar,
+   fecha y fuente correctos. Zaporiyia queda en el 48,8 % del total.
+3. **Corredores sin zonas repetidas**: 24 nombres normalizados. Capturas
+   `errores-punto3-corredores-*`.
+4. **Rumanía y Moldavia enlazados con el ataque de su noche, en los dos sentidos**:
+   EODI-2025-00316 (Rumanía) y EODI-2025-00261 (Moldavia) llevan «Parte del ataque»; las fichas
+   de EODI-UA-2025-0311 y -0317 los listan como cruces, ya sin copias (capturas `errores-punto4-*`,
+   rehechas a las 18:35). Además EODI-2025-00378 en EODI-UA-2025-0028
+   (`errores-cruces-ataque-borcea-*`) y el cruce declarado por Ucrania con su frase en
+   EODI-UA-2024-0174 (`errores-cruces-cruce-declarado-*`), comprobados también a 360×800 y
+   412×915, sin desbordamiento horizontal.
+5. **La última noche coincide**: EODI-UA-2026-1027, noche del 3 al 4 de octubre, 135 drones en
+   `ucrania.json` y en «Noche a noche» (capturas `errores-punto5-noche-a-noche-*`).
+6. **Incidente español de la Guardia Civil**: no hay ninguno que mostrar. Entre 2024 y hoy la
+   Guardia Civil no ha publicado ninguna nota de un dron que sobrevuele o entre en una
+   instalación (bloque 7.2); el lector queda en la recogida y la primera que se publique entrará
+   con su fuente oficial.
+7. **La recogida horaria publica tras cada despliegue**: 17:17 (publicada a las 17:33) y 18:17
+   (18:33). Las de las 12:17, 15:17 y 16:17 no publicaron, por las causas y arreglos de las
+   secciones de incidencias (#107, #114, #118); desde #120 todo cambio de la recogida se ensaya
+   de punta a punta sobre una copia de la base antes de fusionar (`docs/fusiones.md`, paso c2).
+
+## Pendientes, con su arreglo
+
+- **Unas pocas publicaciones de colectas o de balance guardadas como impactos** (bloque 1): el
+  analizador las lee como impactos porque nombran drones y lugares. Arreglo: un marcador de
+  colecta y de balance en `proceso/mensajes_guerra.py` y subir su versión; la relectura de la
+  recogida horaria las retira sola.
+- **Odesa nombra pocos lugares** (bloque 2): es la práctica de su administración. Arreglo: leer
+  también el canal del jefe de la administración (`odeskaODA`) cuando su carácter oficial pueda
+  probarse por la web o por un anuncio con insignia (la comprobación 6 de #121 ya lo permite).
+- **Bélgorod sin canal probado** (bloque 2): ni la web del Gobierno de la región ni otro canal
+  oficial enlazan el del gobernador. Arreglo: el mismo de Odesa, con la cadena o el anuncio.
+- **EODI-UA-2025-0008 junta dos noches** (bloque 5): el parte cubre más de una jornada y no está
+  marcado como resumen. Arreglo: revisar su periodo con `proceso/periodos.py` y, si es de varias
+  noches, marcarlo como resumen para que no se sume.
+- **Guardia Civil** (bloque 7.2): el aviso legal pide autorización de la Dirección General para
+  usos distintos del privado. Arreglo: solicitarla por escrito; mientras, solo se publica enlace,
+  atribución y una frase breve.
+- **Nota de Interior sobre SIGLO-CD** (bloque 7.1): interior.gob.es responde 403 al acceso
+  automático; la cifra sale de la copia del archivo de Internet. Arreglo: comprobarla a mano en la
+  web y guardar la fecha de la comprobación.
+- **73 incidentes cuya cita no respalda el titular** (sección de cruces): listados arriba, sin
+  cambiar. Arreglo por tipo: guardar como cita la frase que nombra el lugar (A), comparar nombres
+  en otras escrituras (B), revisar a mano las de otro país (C).
+- **Wunstorf en varios registros y noticias tardías de Leipzig sueltas**: añadirlos a
+  `configuracion/incidentes_revisados.json` tras revisarlos uno por uno.
+- **Tamaño de la base**: en claro mide ya más de 1 GiB; la sesión que la lleva
+  al disco del servidor la sacará de memoria.
