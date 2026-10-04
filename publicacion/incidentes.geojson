@@ -237,6 +237,19 @@
       "valor": "no_confirmada"
      },
      {
+      "campo": "presencia_dron",
+      "cita": "Germania avvistati droni misteriosi su Hannover | chiuso l' aeroporto",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-12-27T15:15Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-96a00d6ff951e3aa",
+      "medio": "zazoom.it",
+      "valor": "confirmada"
+     },
+     {
       "campo": "tipo",
       "credibilidad": 3,
       "fecha": {
@@ -257,7 +270,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-03T20:17Z"
+      "valor": "2026-10-04T06:17Z"
      }
     },
     "drones": {
@@ -624,7 +637,7 @@
      "nombre": "Flughafen Hannover-Langenhagen",
      "oaci": "EDDV"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "tiempo": {
      "inicio": {
       "precision": "aproximada",
@@ -633,8 +646,8 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Possible drones over Hannover airport force flight diversions",
-     "es": "Posibles drones sobre el aeropuerto de Hannover obligan a desviar vuelos"
+     "en": "Drones over Hannover airport force flight diversions",
+     "es": "Drones sobre el aeropuerto de Hannover obligan a desviar vuelos"
     }
    },
    "type": "Feature"
@@ -20936,6 +20949,19 @@
       "valor": "no_confirmada"
      },
      {
+      "campo": "presencia_dron",
+      "cita": "Aeropuerto de Múnich cierra por segunda noche ante la creciente amenaza de drones",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-12-21T04:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-439019c3f34e5847",
+      "medio": "cronicalibre.cl",
+      "valor": "confirmada"
+     },
+     {
       "campo": "tipo",
       "credibilidad": 3,
       "fecha": {
@@ -20956,7 +20982,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-03T20:17Z"
+      "valor": "2026-10-04T06:17Z"
      }
     },
     "drones": {
@@ -21001,7 +21027,7 @@
      "nombre": "Flughafen München",
      "oaci": "EDDM"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "tiempo": {
      "inicio": {
       "precision": "aproximada",
@@ -21010,8 +21036,8 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Munich Airport closes due to possible drone threat",
-     "es": "Aeropuerto de Múnich cierra por amenaza de posibles drones"
+     "en": "Munich Airport closes due to drone threat",
+     "es": "Aeropuerto de Múnich cierra por amenaza de drones"
     }
    },
    "type": "Feature"
@@ -22520,6 +22546,19 @@
       "valor": "DK"
      },
      {
+      "campo": "presencia_dron",
+      "cita": "Aalborg Lufthavn at lukke luftrummet i otte minutter.",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-09-30T09:15Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-5d9f9c118f142ab5",
+      "medio": "tv2nord.dk",
+      "valor": "confirmada"
+     },
+     {
       "campo": "tipo",
       "credibilidad": 3,
       "fecha": {
@@ -22544,7 +22583,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-04T04:17Z"
+      "valor": "2026-10-04T06:17Z"
      }
     },
     "drones": {
@@ -22592,7 +22631,7 @@
      "nombre": "Flyvestation Aalborg",
      "oaci": "EKYT"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "tiempo": {
      "inicio": {
       "precision": "aproximada",
@@ -22601,7 +22640,7 @@
     },
     "tipo": "interrupcion_aeroportuaria",
     "titulo": {
-     "en": "Aalborg airspace closure due to suspected drone",
+     "en": "Aalborg airspace closure due to drone",
      "es": "Cierre del espacio aéreo de Aalborg por sospecha de dron"
     }
    },
@@ -31928,6 +31967,19 @@
       "valor": "no_confirmada"
      },
      {
+      "campo": "presencia_dron",
+      "cita": "Det førte til at rullebanen ble stengt en kort periode.",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-07-02T21:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-5ffe1491c345e22a",
+      "medio": "abcnyheter.no",
+      "valor": "confirmada"
+     },
+     {
       "campo": "respuesta.medidas",
       "credibilidad": 3,
       "fecha": {
@@ -31977,7 +32029,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-03T20:17Z"
+      "valor": "2026-10-04T06:17Z"
      }
     },
     "drones": {
@@ -32025,7 +32077,7 @@
      "nombre": "Bergen lufthavn, Flesland",
      "oaci": "ENBR"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "respuesta": {
      "medidas": [
       "patrulla"
@@ -32039,8 +32091,8 @@
     },
     "tipo": "interrupcion_aeroportuaria",
     "titulo": {
-     "en": "Runway closure at Bergen airport due to possible drone in restricted zone",
-     "es": "Cierre de pista en Bergen por un posible dron en zona prohibida"
+     "en": "Runway closure at Bergen airport due to drone in restricted zone",
+     "es": "Cierre de pista en Bergen por un dron en zona prohibida"
     }
    },
    "type": "Feature"
@@ -66562,6 +66614,19 @@
       "valor": "no_confirmada"
      },
      {
+      "campo": "presencia_dron",
+      "cita": "Tussen 20.08 uur en 21.58 uur heeft de luchthaven van de Duitse hoofdstad al het vliegverkeer stilgelegd.",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-01T00:15Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-38cf1580acc335b0",
+      "medio": "vrt.be",
+      "valor": "confirmada"
+     },
+     {
       "campo": "tiempo.fin",
       "credibilidad": 3,
       "fecha": {
@@ -66620,7 +66685,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-03T20:17Z"
+      "valor": "2026-10-04T06:17Z"
      }
     },
     "drones": {
@@ -66681,7 +66746,7 @@
      "categoria": "aeropuerto",
      "nombre": "Aeropuerto de Berlín"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "tiempo": {
      "inicio": {
       "precision": "aproximada",
@@ -66690,8 +66755,8 @@
     },
     "tipo": "interrupcion_aeroportuaria",
     "titulo": {
-     "en": "Possible drones close Berlin-Brandenburg Airport for two hours",
-     "es": "Posibles drones cierran el aeropuerto de Berlín-Brandenburg durante dos horas"
+     "en": "Drones close Berlin-Brandenburg Airport for two hours",
+     "es": "Drones cierran el aeropuerto de Berlín-Brandenburg durante dos horas"
     }
    },
    "type": "Feature"
@@ -76780,6 +76845,19 @@
       "valor": "no_confirmada"
      },
      {
+      "campo": "presencia_dron",
+      "cita": "causó la paralización de todas las operaciones",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-08-14T11:45Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-4e38e88a858bdfe3",
+      "medio": "lavozdelanzarote.com",
+      "valor": "confirmada"
+     },
+     {
       "campo": "tiempo.fin",
       "credibilidad": 3,
       "fecha": {
@@ -76834,7 +76912,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-03T20:17Z"
+      "valor": "2026-10-04T06:17Z"
      }
     },
     "drones": {
@@ -76882,7 +76960,7 @@
      "categoria": "aeropuerto",
      "nombre": "Aeropuerto César Manrique Lanzarote"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "tiempo": {
      "duracion_min": 40,
      "fin": {
@@ -76896,8 +76974,8 @@
     },
     "tipo": "interrupcion_aeroportuaria",
     "titulo": {
-     "en": "Possible drone forces closure of Lanzarote Airport",
-     "es": "Un posible dron obliga a paralizar el Aeropuerto de Lanzarote"
+     "en": "Drone forces closure of Lanzarote Airport",
+     "es": "Un dron obliga a paralizar el Aeropuerto de Lanzarote"
     }
    },
    "type": "Feature"
@@ -80437,6 +80515,19 @@
      },
      {
       "campo": "presencia_dron",
+      "cita": "Drohnensichtung: Drohne am Flughafen Hannover – Betrieb zeitweise eingestellt",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-08-11T14:45Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-00fc69b40c5d6829",
+      "medio": "mz.de",
+      "valor": "confirmada"
+     },
+     {
+      "campo": "presencia_dron",
       "cita": "Eine Drohne legt den Flughafen Hannover vorübergehend lahm.",
       "credibilidad": 3,
       "fecha": {
@@ -80503,7 +80594,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-03T20:17Z"
+      "valor": "2026-10-04T06:17Z"
      }
     },
     "drones": {
@@ -80887,7 +80978,7 @@
      "nombre": "Flughafen Hannover-Langenhagen",
      "oaci": "EDDV"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "tiempo": {
      "inicio": {
       "precision": "aproximada",
@@ -80896,8 +80987,8 @@
     },
     "tipo": "interrupcion_aeroportuaria",
     "titulo": {
-     "en": "Hannover airport closure due to possible drone sighting",
-     "es": "Cierre del aeropuerto de Hannover por avistamiento de posible dron"
+     "en": "Hannover airport closure due to drone sighting",
+     "es": "Cierre del aeropuerto de Hannover por avistamiento de dron"
     }
    },
    "type": "Feature"
@@ -85567,6 +85658,19 @@
       "valor": "no_confirmada"
      },
      {
+      "campo": "presencia_dron",
+      "cita": "Le pilote, un soudeur toulousain, ignorait les règles strictes.",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-02-27T18:15Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-4b877ed4fee7656a",
+      "medio": "ladepeche.fr",
+      "valor": "confirmada"
+     },
+     {
       "campo": "respuesta.medidas",
       "credibilidad": 3,
       "fecha": {
@@ -85616,7 +85720,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-03T20:17Z"
+      "valor": "2026-10-04T06:17Z"
      }
     },
     "drones": {
@@ -85664,7 +85768,7 @@
      "nombre": "Aéroport de Toulouse-Blagnac",
      "oaci": "LFBO"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "respuesta": {
      "medidas": [
       "patrulla"
@@ -85678,8 +85782,8 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Possible drone flies over Toulouse-Blagnac airport",
-     "es": "Un posible dron sobrevuela el aeropuerto de Toulouse-Blagnac"
+     "en": "Drone flies over Toulouse-Blagnac airport",
+     "es": "Un dron sobrevuela el aeropuerto de Toulouse-Blagnac"
     }
    },
    "type": "Feature"
@@ -129386,6 +129490,19 @@
       "valor": "no_confirmada"
      },
      {
+      "campo": "presencia_dron",
+      "cita": "Ultima oră! O dronă Shahed, filmată cum zboară deasupra orașului Bălți. Spațiul aerian în zona de nord, închis",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-05-13T14:15Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-8973978158b59679",
+      "medio": "news.yam.md",
+      "valor": "confirmada"
+     },
+     {
       "campo": "tiempo.inicio",
       "credibilidad": 3,
       "fecha": {
@@ -129421,7 +129538,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-03T20:17Z"
+      "valor": "2026-10-04T06:17Z"
      }
     },
     "drones": {
@@ -129540,7 +129657,7 @@
      "categoria": "energia",
      "nombre": "Bălţi"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "tiempo": {
      "inicio": {
       "precision": "aproximada",
@@ -129549,8 +129666,8 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Possible drone flies over Bălți city in Moldova",
-     "es": "Posible dron sobrevuela la ciudad de Bălți en Moldavia"
+     "en": "Drone flies over Bălți city in Moldova",
+     "es": "Dron sobrevuela la ciudad de Bălți en Moldavia"
     }
    },
    "type": "Feature"
@@ -130673,6 +130790,19 @@
       "valor": "no_confirmada"
      },
      {
+      "campo": "presencia_dron",
+      "cita": "El aeropuerto de Lanzarote paralizó su actividad temporalmente este domingo.",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-04-26T18:15Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-177b3c01152c72ca",
+      "medio": "elespanol.com",
+      "valor": "confirmada"
+     },
+     {
       "campo": "tiempo.inicio",
       "credibilidad": 3,
       "fecha": {
@@ -130712,7 +130842,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-03T20:17Z"
+      "valor": "2026-10-04T06:17Z"
      }
     },
     "drones": {
@@ -130774,7 +130904,7 @@
      "categoria": "aeropuerto",
      "nombre": "Aeropuerto César Manrique Lanzarote"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "tiempo": {
      "inicio": {
       "precision": "minuto",
@@ -130783,8 +130913,8 @@
     },
     "tipo": "interrupcion_aeroportuaria",
     "titulo": {
-     "en": "A possible drone forces Lanzarote airport to close for 40 minutes",
-     "es": "Un posible dron obliga a cerrar el aeropuerto de Lanzarote durante 40 minutos"
+     "en": "A drone forces Lanzarote airport to close for 40 minutes",
+     "es": "Un dron obliga a cerrar el aeropuerto de Lanzarote durante 40 minutos"
     }
    },
    "type": "Feature"

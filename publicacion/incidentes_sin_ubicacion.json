@@ -18478,6 +18478,19 @@
      "valor": "MD"
     },
     {
+     "campo": "presencia_dron",
+     "cita": "Autoritățile, în alertă. Spațiul aerian a fost închis, vineri seara, după ce două drone au pătruns în R. Moldova",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-29T09:00Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-ca2e54158f5c6f9f",
+     "medio": "news.yam.md",
+     "valor": "confirmada"
+    },
+    {
      "campo": "tiempo.inicio",
      "credibilidad": 3,
      "fecha": {
@@ -18513,7 +18526,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T00:17Z"
+     "valor": "2026-10-04T06:17Z"
     }
    },
    "drones": {
@@ -18796,7 +18809,7 @@
     "pais": "MD",
     "region": "nord"
    },
-   "presencia_dron": "no_confirmada",
+   "presencia_dron": "confirmada",
    "tiempo": {
     "inicio": {
      "precision": "dia",
@@ -18805,8 +18818,8 @@
    },
    "tipo": "sobrevuelo",
    "titulo": {
-    "en": "Russian possible drones breach Moldova's airspace, forcing temporary closure",
-    "es": "Posibles drones rusos violan el espacio aéreo de Moldavia y obligan a cerrar temporalmente la zona"
+    "en": "Russian drones breach Moldova's airspace, forcing temporary closure",
+    "es": "Drones rusos violan el espacio aéreo de Moldavia y obligan a cerrar temporalmente la zona"
    }
   },
   {
@@ -25699,6 +25712,19 @@
      "valor": "no_confirmada"
     },
     {
+     "campo": "presencia_dron",
+     "cita": "Alertă de securitate în nordul Republicii Moldova: Spațiul aerian, închis după mai multe incursiuni ale unor drone neidentificate dinspre Ucraina",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-24T05:15Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-3bea5fd4849eb623",
+     "medio": "news.yam.md",
+     "valor": "confirmada"
+    },
+    {
      "campo": "tipo",
      "credibilidad": 3,
      "fecha": {
@@ -25719,7 +25745,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T06:17Z"
     }
    },
    "drones": {
@@ -26070,7 +26096,7 @@
     "nivel": "pais",
     "pais": "MD"
    },
-   "presencia_dron": "no_confirmada",
+   "presencia_dron": "confirmada",
    "tiempo": {
     "inicio": {
      "precision": "aproximada",
@@ -26079,8 +26105,8 @@
    },
    "tipo": "sobrevuelo",
    "titulo": {
-    "en": "Four Russian possible drones penetrate Moldavian airspace during attacks on Ukraine",
-    "es": "Cuatro posibles drones rusos penetran el espacio aéreo de Moldavia durante ataques a Ucrania"
+    "en": "Four Russian drones penetrate Moldavian airspace during attacks on Ukraine",
+    "es": "Cuatro drones rusos penetran el espacio aéreo de Moldavia durante ataques a Ucrania"
    }
   },
   {
