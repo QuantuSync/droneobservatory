@@ -13175,6 +13175,19 @@
       "valor": "no_confirmada"
      },
      {
+      "campo": "presencia_dron",
+      "cita": "Politiet rykker til Amtmannsneset etter melding om at det flyr en drone innenfor Sone-A til Alta lufthavn.",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-17T11:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-854e15ee7d4b0f1e",
+      "medio": "aftenposten.no",
+      "valor": "confirmada"
+     },
+     {
       "campo": "tipo",
       "credibilidad": 3,
       "fecha": {
@@ -13195,7 +13208,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-03T20:17Z"
+      "valor": "2026-10-04T05:17Z"
      }
     },
     "drones": {
@@ -13257,7 +13270,7 @@
      "nombre": "Alta lufthavn",
      "oaci": "ENAT"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "tiempo": {
      "inicio": {
       "precision": "aproximada",
@@ -13266,8 +13279,8 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Unauthorized possible drone in Alta lufthavn airspace",
-     "es": "Posible dron no autorizado en el espacio aéreo de Alta lufthavn"
+     "en": "Unauthorized drone in Alta lufthavn airspace",
+     "es": "Dron no autorizado en el espacio aéreo de Alta lufthavn"
     }
    },
    "type": "Feature"

@@ -107,6 +107,19 @@
      "valor": "no_confirmada"
     },
     {
+     "campo": "presencia_dron",
+     "cita": "To turister innbrakt etter mistanke om ulovlig droneflyvning.",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-09-30T10:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-72db4664304302c9",
+     "medio": "fremover.no",
+     "valor": "confirmada"
+    },
+    {
      "campo": "tiempo.inicio",
      "credibilidad": 3,
      "fecha": {
@@ -142,7 +155,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T05:17Z"
     }
    },
    "drones": {
@@ -186,7 +199,7 @@
     "pais": "NO",
     "region": "Troms og Finnmark"
    },
-   "presencia_dron": "no_confirmada",
+   "presencia_dron": "confirmada",
    "tiempo": {
     "inicio": {
      "precision": "hora",
@@ -195,8 +208,8 @@
    },
    "tipo": "sobrevuelo",
    "titulo": {
-    "en": "Two tourists detained for flying possible drone near Bardufoss airport",
-    "es": "Dos turistas detenidos por volar posible dron cerca del aeropuerto de Bardufoss"
+    "en": "Two tourists detained for flying drone near Bardufoss airport",
+    "es": "Dos turistas detenidos por volar dron cerca del aeropuerto de Bardufoss"
    }
   },
   {
