@@ -97098,6 +97098,33 @@
    "properties": {
     "afirmaciones_publicas": [
      {
+      "campo": "consecuencias.cierre.minutos",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-10-04T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EDDM-2025-10-04-EODI-2025-00348",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 42,
+       "min": 42
+      }
+     },
+     {
+      "campo": "consecuencias.cierre.valor",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-10-04T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EDDM-2025-10-04-EODI-2025-00348",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": "si"
+     },
+     {
       "campo": "consecuencias.cierre.valor",
       "credibilidad": 3,
       "fecha": {
@@ -97108,6 +97135,21 @@
       "fuente_id": "gdelt-2187da019e71a1f0",
       "medio": "wingsmagazine.com",
       "valor": "si"
+     },
+     {
+      "campo": "consecuencias.vuelos_desviados",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-10-04T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EDDM-2025-10-04-EODI-2025-00348",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 0,
+       "min": 0
+      }
      },
      {
       "campo": "drones.numero",
@@ -97515,6 +97557,20 @@
       "idioma": "ro",
       "medio": "antena3.ro",
       "replicas": 1
+     },
+     {
+      "credibilidad": 2,
+      "enlace": "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.10.04-planes-readsb-prod-0",
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-10-04T00:00Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Cierre medido en EDDM: 03:51–04:33 UTC, 42 minutos, 0 desvíos y 0 esperas.",
+      "id": "adsblol-EDDM-2025-10-04-EODI-2025-00348",
+      "idioma": "es",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "replicas": 0
      }
     ],
     "id": "EODI-2025-00348",
@@ -97543,6 +97599,28 @@
     "titulo": {
      "en": "Munich Airport closure due to drone sightings",
      "es": "Cierre del aeropuerto de Múnich por avistamientos de drones"
+    },
+    "trafico_aereo": {
+     "cierre": {
+      "aeropuerto": "EDDM",
+      "difiere_de_declarado": false,
+      "duracion_min": 42,
+      "fin": {
+       "precision": "minuto",
+       "valor": "2025-10-04T04:33Z"
+      },
+      "inicio": {
+       "precision": "minuto",
+       "valor": "2025-10-04T03:51Z"
+      },
+      "resultado": "cierre_medido",
+      "vuelos_desviados": 0,
+      "vuelos_en_espera": 0
+     },
+     "datos": [
+      "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.10.04-planes-readsb-prod-0",
+      "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.10.05-planes-readsb-prod-0"
+     ]
     }
    },
    "type": "Feature"
