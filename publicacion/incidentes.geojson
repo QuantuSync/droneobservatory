@@ -22231,21 +22231,6 @@
       }
      },
      {
-      "campo": "consecuencias.cierre.minutos",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-09T20:00Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-bc76e718d1f5cd2d",
-      "medio": "gva.be",
-      "valor": {
-       "max": 30,
-       "min": 30
-      }
-     },
-     {
       "campo": "consecuencias.cierre.valor",
       "credibilidad": 3,
       "fecha": {
@@ -22255,18 +22240,6 @@
       "fiabilidad": "C",
       "fuente_id": "gdelt-1dcacb1a1d4c76bd",
       "medio": "brf.be",
-      "valor": "si"
-     },
-     {
-      "campo": "consecuencias.cierre.valor",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-09T19:30Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-1562777601415244",
-      "medio": "nieuwsblad.be",
       "valor": "si"
      },
      {
@@ -22285,21 +22258,6 @@
       }
      },
      {
-      "campo": "drones.numero",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-09T20:00Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-bc76e718d1f5cd2d",
-      "medio": "gva.be",
-      "valor": {
-       "max": 3,
-       "min": 3
-      }
-     },
-     {
       "campo": "lugar.pais",
       "credibilidad": 3,
       "fecha": {
@@ -22309,18 +22267,6 @@
       "fiabilidad": "C",
       "fuente_id": "gdelt-1dcacb1a1d4c76bd",
       "medio": "brf.be",
-      "valor": "BE"
-     },
-     {
-      "campo": "lugar.pais",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-09T19:30Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-1562777601415244",
-      "medio": "nieuwsblad.be",
       "valor": "BE"
      },
      {
@@ -22334,19 +22280,6 @@
       "fiabilidad": "C",
       "fuente_id": "gdelt-1dcacb1a1d4c76bd",
       "medio": "brf.be",
-      "valor": "confirmada"
-     },
-     {
-      "campo": "presencia_dron",
-      "cita": "Vliegverkeer luchthaven Luik opnieuw stilgelegd na melding drone.",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-09T19:30Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-1562777601415244",
-      "medio": "nieuwsblad.be",
       "valor": "confirmada"
      },
      {
@@ -22380,21 +22313,6 @@
       }
      },
      {
-      "campo": "tiempo.inicio",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-09T19:30Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-1562777601415244",
-      "medio": "nieuwsblad.be",
-      "valor": {
-       "precision": "minuto",
-       "valor": "2025-11-09T19:30Z"
-      }
-     },
-     {
       "campo": "tipo",
       "credibilidad": 3,
       "fecha": {
@@ -22404,18 +22322,6 @@
       "fiabilidad": "C",
       "fuente_id": "gdelt-1dcacb1a1d4c76bd",
       "medio": "brf.be",
-      "valor": "interrupcion_aeroportuaria"
-     },
-     {
-      "campo": "tipo",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-09T19:30Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-1562777601415244",
-      "medio": "nieuwsblad.be",
       "valor": "interrupcion_aeroportuaria"
      }
     ],
@@ -22431,7 +22337,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-04T00:17Z"
+      "valor": "2026-10-04T03:17Z"
      }
     },
     "drones": {
@@ -22502,258 +22408,6 @@
       "id": "gdelt-bf7fe6480b109664",
       "idioma": "fr",
       "medio": "rtl.be",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://nieuwsblad.be/binnenland/live.-vliegverkeer-luchthaven-luik-opnieuw-stilgelegd-na-melding-drone/102527528.html",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-09T19:30Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Vliegverkeer luchthaven Luik opnieuw stilgelegd na melding drone.",
-      "id": "gdelt-1562777601415244",
-      "idioma": "nl",
-      "medio": "nieuwsblad.be",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://lalibre.be/belgique/societe/2025/11/09/intrusion-de-drones-dans-lespace-aerien-le-trafic-aerien-a-laeroport-de-liege-interrompu-dimanche-soir-apres-le-signalement-dun-appareil-XKEGLC34IBBSFK5KLPPAVTGC7I",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-09T19:45Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Intrusion de drones dans l'espace aérien : l'aéroport de Liège paralysé ce dimanche soir après le signalement d'un appareil",
-      "id": "gdelt-7bf43b3a3628c1e3",
-      "idioma": "fr",
-      "medio": "lalibre.be",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://vrt.be/vrtnws/nl/liveblog/vliegverkeer-op-luchthaven-van-luik-stilgelegd-na-melding-drone~1762286776579",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-09T20:00Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Drones boven België - Vliegverkeer op luchthaven van Luik stilgelegd na melding drone",
-      "id": "gdelt-b5057847e96e4a3e",
-      "idioma": "nl",
-      "medio": "vrt.be",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://gva.be/binnenland/live.-vliegverkeer-luchthaven-luik-opnieuw-half-uur-stilgelegd-wegens-drie-drones/102527588.html",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-09T20:00Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Vliegverkeer luchthaven Luik opnieuw half uur stilgelegd wegens drie drones.",
-      "id": "gdelt-bc76e718d1f5cd2d",
-      "idioma": "nl",
-      "medio": "gva.be",
-      "replicas": 2
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://telegraaf.nl/buitenland/vliegverkeer-luchthaven-luik-weer-stilgelegd-om-dronemelding/103838314.html",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-09T20:00Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Vliegverkeer luchthaven Luik stilgelegd door dronemelding - Britse hulp onderweg",
-      "id": "gdelt-f373a8fddbb15266",
-      "idioma": "nl",
-      "medio": "telegraaf.nl",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://nieuws.nl/buitenland/vliegverkeer-luchthaven-luik-weer-stilgelegd-om-dronemelding",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-09T20:15Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Vliegverkeer luchthaven Luik weer stilgelegd om dronemelding",
-      "id": "gdelt-568a7e0ddbe08ee4",
-      "idioma": "nl",
-      "medio": "nieuws.nl",
-      "replicas": 4
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://limburger.nl/grensregio/luik/vliegverkeer-op-luchthaven-luik-weer-stilgelegd-vanwege-dronemelding/103841180.html",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-09T20:45Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Vliegverkeer op luchthaven Luik weer stilgelegd vanwege dronemelding",
-      "id": "gdelt-324f18e5bbf99db2",
-      "idioma": "nl",
-      "medio": "limburger.nl",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://zazoom.it/2025-11-09/ucraina-in-100mila-senza-luce-e-gas-nel-kharkiv-per-i-raid-russi-a-liegi-ancora-droni-sugli-aeroporti-voli-bloccati-per-diversi-minuti/18103620",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-09T21:15Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Ucraina in 100mila senza luce e gas nel Kharkiv per i raid russi | A Liegi ancora droni sugli aeroporti",
-      "id": "gdelt-487584ce59415d84",
-      "idioma": "it",
-      "medio": "zazoom.it",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://rtl.be/actu/regions/liege/survols-de-drones-laeroport-de-liege-de-nouveau-perturbe-pour-le-troisieme-jour/2025-11-09/article/769900",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-09T22:30Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Survols de drones : l'aéroport de Liège de nouveau perturbé pour le troisième jour consécutif",
-      "id": "gdelt-eb7c1d508e74e1cc",
-      "idioma": "fr",
-      "medio": "rtl.be",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://zazoom.it/2025-11-10/ucraina-allarme-aereo-in-diverse-citta-attacco-con-missili-ipersonici-a-liegi-ancora-droni-sugli-aeroporti-voli-bloccati-per-diversi-minuti/18103947",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-09T23:30Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Ucraina allarme aereo in diverse città | attacco con missili ipersonici | A Liegi ancora droni sugli aeroporti",
-      "id": "gdelt-fe8e87066d61ed79",
-      "idioma": "it",
-      "medio": "zazoom.it",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://abc.com.py/internacionales/2025/11/10/detectan-drones-en-torno-a-una-central-nuclear-de-belgica-y-sobre-el-aeropuerto-de-lieja",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-10T09:15Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Detectan drones en torno a una central nuclear de Bélgica y sobre el aeropuerto de Lieja - Mundo",
-      "id": "gdelt-9a58c5c294111fde",
-      "idioma": "es",
-      "medio": "abc.com.py",
-      "replicas": 2
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://larazon.es/internacional/drones-origen-desconocido-sobrevuelan-centra-nuclear-belgica-aeropuerto-lieja_202511106911aa60de224c6cdd443bde.html",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-10T09:45Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Drones de origen desconocido sobrevuelan una central nuclear en Bélgica y el aeropuerto de Lieja",
-      "id": "gdelt-a87bce101db0ce01",
-      "idioma": "es",
-      "medio": "larazon.es",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://virgule.lu/international/survols-de-drones-les-aeroports-belges-mis-sous-protection-militaire/103881809.html",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-10T10:00Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Survols de drones en Belgique : protection militaire des aéroports Zaventem et Liège",
-      "id": "gdelt-d55dad1e6d25fe47",
-      "idioma": "fr",
-      "medio": "virgule.lu",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://sapo.pt/artigo/drones-avistados-sobre-central-nuclear-belga-e-aeroporto-de-liege-6911ba67f166236ff459fae1",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-10T10:30Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Drones avistados sobre central nuclear belga e aeroporto de Liège",
-      "id": "gdelt-b308f10651327771",
-      "idioma": "pt",
-      "medio": "sapo.pt",
-      "replicas": 1
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://20minutos.es/internacional/drones-central-nuclear-aeropuerto-lieja-cerrar-espacio_6880495_0.html",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-10T10:30Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Alerta en Bruselas por la presencia de drones en torno a una central nuclear y sobre el aeropuerto de Lieja",
-      "id": "gdelt-b63bf90c5a076759",
-      "idioma": "es",
-      "medio": "20minutos.es",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://federalna.ba/dronovi-prekrsili-zonu-zabrane-leta-iznad-nuklearne-elektrane-u-belgiji-obustavljene-operacije-aerodroma-liege-x5psi",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-10T11:15Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Dronovi prekršili zonu zabrane leta iznad nuklearne elektrane u Belgiji, obustavljene operacije aerodroma Liege",
-      "id": "gdelt-7b24de2536170671",
-      "idioma": "hr",
-      "medio": "federalna.ba",
-      "replicas": 1
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://elpuntavui.cat/punt-divers/article/4-divers/2594065-diversos-drons-sobrevolen-una-central-nuclear-a-prop-d-anvers-i-l-aeroport-de-lieja.html",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-10T11:15Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Diversos drons sobrevolen una central nuclear a prop d'Anvers i l'Aeroport de Lieja",
-      "id": "gdelt-eddef5793b920d13",
-      "idioma": "ca",
-      "medio": "elpuntavui.cat",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://infobae.com/america/mundo/2025/11/10/belgica-reporto-otra-incursion-de-drones-la-central-nuclear-de-doel-y-el-aeropuerto-de-lieja-suspendieron-sus-operaciones",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-10T13:15Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Bélgica reportó otra incursión de drones: la central nuclear de Doel y el aeropuerto de Lieja suspendieron sus operaciones",
-      "id": "gdelt-638da74d8e4c4fbd",
-      "idioma": "es",
-      "medio": "infobae.com",
       "replicas": 0
      }
     ],
@@ -73488,6 +73142,233 @@
   {
    "geometry": {
     "coordinates": [
+     11.78603,
+     48.35372
+    ],
+    "type": "Point"
+   },
+   "id": "EODI-2025-00342",
+   "properties": {
+    "afirmaciones_publicas": [
+     {
+      "campo": "consecuencias.cierre.valor",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-10-04T22:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-16d2aefd53cbe8f4",
+      "medio": "liberal.com.mx",
+      "valor": "si"
+     },
+     {
+      "campo": "consecuencias.vuelos_cancelados",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-10-04T23:15Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-07297f17738df6c6",
+      "medio": "freemalaysiatoday.com",
+      "valor": {
+       "max": 58,
+       "min": 12
+      }
+     },
+     {
+      "campo": "consecuencias.vuelos_desviados",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-10-04T23:15Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-07297f17738df6c6",
+      "medio": "freemalaysiatoday.com",
+      "valor": {
+       "max": 23,
+       "min": 23
+      }
+     },
+     {
+      "campo": "drones.numero",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-10-04T22:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-16d2aefd53cbe8f4",
+      "medio": "liberal.com.mx",
+      "valor": {
+       "max": 10,
+       "min": 2
+      }
+     },
+     {
+      "campo": "lugar.pais",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-10-04T22:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-16d2aefd53cbe8f4",
+      "medio": "liberal.com.mx",
+      "valor": "DE"
+     },
+     {
+      "campo": "presencia_dron",
+      "cita": "El aeropuerto de Múnich, Alemania, cerró ayer viernes por segunda noche consecutiva.",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-10-04T22:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-16d2aefd53cbe8f4",
+      "medio": "liberal.com.mx",
+      "valor": "no_confirmada"
+     },
+     {
+      "campo": "presencia_dron",
+      "cita": "from 9.30pm air traffic was restricted and then cancelled due to drone sightings",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-10-04T23:15Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-07297f17738df6c6",
+      "medio": "freemalaysiatoday.com",
+      "valor": "confirmada"
+     },
+     {
+      "campo": "tiempo.inicio",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-10-04T23:15Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-07297f17738df6c6",
+      "medio": "freemalaysiatoday.com",
+      "valor": {
+       "precision": "minuto",
+       "valor": "2025-10-03T19:30Z"
+      }
+     },
+     {
+      "campo": "tipo",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-10-04T22:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-16d2aefd53cbe8f4",
+      "medio": "liberal.com.mx",
+      "valor": "interrupcion_aeroportuaria"
+     }
+    ],
+    "consecuencias": {
+     "cierre": {
+      "valor": "si"
+     },
+     "vuelos_cancelados": {
+      "max": 58,
+      "min": 12
+     },
+     "vuelos_desviados": {
+      "max": 23,
+      "min": 23
+     }
+    },
+    "control": {
+     "ultima_actualizacion": {
+      "precision": "minuto",
+      "valor": "2026-10-03T20:17Z"
+     }
+    },
+    "drones": {
+     "numero": {
+      "max": 10,
+      "min": 2
+     }
+    },
+    "estado": {
+     "actual": "notificado",
+     "historial": [
+      {
+       "estado": "notificado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2025-10-04T22:30Z"
+       },
+       "fuente_id": "gdelt-16d2aefd53cbe8f4"
+      }
+     ]
+    },
+    "fuentes": [
+     {
+      "credibilidad": 3,
+      "enlace": "https://liberal.com.mx/aeropuerto-de-munich-vuelve-a-cerrar-por-alerta-de-drones",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-10-04T22:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "El aeropuerto de Múnich, Alemania, cerró ayer viernes por segunda noche consecutiva.",
+      "id": "gdelt-16d2aefd53cbe8f4",
+      "idioma": "es",
+      "medio": "liberal.com.mx",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://freemalaysiatoday.com/category/highlight/2025/10/05/flights-resume-at-munich-airport-after-second-drone-scare",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-10-04T23:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "from 9.30pm air traffic was restricted and then cancelled due to drone sightings",
+      "id": "gdelt-07297f17738df6c6",
+      "idioma": "en",
+      "medio": "freemalaysiatoday.com",
+      "replicas": 0
+     }
+    ],
+    "id": "EODI-2025-00342",
+    "lugar": {
+     "pais": "DE",
+     "radio_km": 5.0
+    },
+    "objetivo": {
+     "categoria": "aeropuerto",
+     "nombre": "Flughafen München",
+     "oaci": "EDDM"
+    },
+    "presencia_dron": "confirmada",
+    "tiempo": {
+     "inicio": {
+      "precision": "aproximada",
+      "valor": "2025-10-03T19:30Z"
+     }
+    },
+    "tipo": "interrupcion_aeroportuaria",
+    "titulo": {
+     "en": "Munich airport closure due to drone alert",
+     "es": "Cierre del aeropuerto de Múnich por alerta de drones"
+    }
+   },
+   "type": "Feature"
+  },
+  {
+   "geometry": {
+    "coordinates": [
      7.60005,
      49.4414
     ],
@@ -77255,6 +77136,425 @@
     "titulo": {
      "en": "Possible drones over Tarragona prison",
      "es": "Posibles drones sobre la cárcel de Tarragona"
+    }
+   },
+   "type": "Feature"
+  },
+  {
+   "geometry": {
+    "coordinates": [
+     5.44501,
+     50.63823
+    ],
+    "type": "Point"
+   },
+   "id": "EODI-2025-00408",
+   "properties": {
+    "afirmaciones_publicas": [
+     {
+      "campo": "consecuencias.cierre.minutos",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-09T20:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-bc76e718d1f5cd2d",
+      "medio": "gva.be",
+      "valor": {
+       "max": 30,
+       "min": 30
+      }
+     },
+     {
+      "campo": "consecuencias.cierre.valor",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-09T19:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-1562777601415244",
+      "medio": "nieuwsblad.be",
+      "valor": "si"
+     },
+     {
+      "campo": "drones.numero",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-09T20:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-bc76e718d1f5cd2d",
+      "medio": "gva.be",
+      "valor": {
+       "max": 3,
+       "min": 3
+      }
+     },
+     {
+      "campo": "lugar.pais",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-09T19:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-1562777601415244",
+      "medio": "nieuwsblad.be",
+      "valor": "BE"
+     },
+     {
+      "campo": "presencia_dron",
+      "cita": "Vliegverkeer luchthaven Luik opnieuw stilgelegd na melding drone.",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-09T19:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-1562777601415244",
+      "medio": "nieuwsblad.be",
+      "valor": "confirmada"
+     },
+     {
+      "campo": "tiempo.inicio",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-09T19:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-1562777601415244",
+      "medio": "nieuwsblad.be",
+      "valor": {
+       "precision": "minuto",
+       "valor": "2025-11-09T19:30Z"
+      }
+     },
+     {
+      "campo": "tipo",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-09T19:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-1562777601415244",
+      "medio": "nieuwsblad.be",
+      "valor": "interrupcion_aeroportuaria"
+     }
+    ],
+    "consecuencias": {
+     "cierre": {
+      "minutos": {
+       "max": 30,
+       "min": 30
+      },
+      "valor": "si"
+     }
+    },
+    "control": {
+     "ultima_actualizacion": {
+      "precision": "minuto",
+      "valor": "2026-10-04T00:17Z"
+     }
+    },
+    "drones": {
+     "numero": {
+      "max": 3,
+      "min": 3
+     }
+    },
+    "estado": {
+     "actual": "notificado",
+     "historial": [
+      {
+       "estado": "notificado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2025-11-09T19:30Z"
+       },
+       "fuente_id": "gdelt-1562777601415244"
+      }
+     ]
+    },
+    "fuentes": [
+     {
+      "credibilidad": 3,
+      "enlace": "https://nieuwsblad.be/binnenland/live.-vliegverkeer-luchthaven-luik-opnieuw-stilgelegd-na-melding-drone/102527528.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-09T19:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Vliegverkeer luchthaven Luik opnieuw stilgelegd na melding drone.",
+      "id": "gdelt-1562777601415244",
+      "idioma": "nl",
+      "medio": "nieuwsblad.be",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://lalibre.be/belgique/societe/2025/11/09/intrusion-de-drones-dans-lespace-aerien-le-trafic-aerien-a-laeroport-de-liege-interrompu-dimanche-soir-apres-le-signalement-dun-appareil-XKEGLC34IBBSFK5KLPPAVTGC7I",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-09T19:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Intrusion de drones dans l'espace aérien : l'aéroport de Liège paralysé ce dimanche soir après le signalement d'un appareil",
+      "id": "gdelt-7bf43b3a3628c1e3",
+      "idioma": "fr",
+      "medio": "lalibre.be",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://gva.be/binnenland/live.-vliegverkeer-luchthaven-luik-opnieuw-half-uur-stilgelegd-wegens-drie-drones/102527588.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-09T20:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Vliegverkeer luchthaven Luik opnieuw half uur stilgelegd wegens drie drones.",
+      "id": "gdelt-bc76e718d1f5cd2d",
+      "idioma": "nl",
+      "medio": "gva.be",
+      "replicas": 2
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://telegraaf.nl/buitenland/vliegverkeer-luchthaven-luik-weer-stilgelegd-om-dronemelding/103838314.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-09T20:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Vliegverkeer luchthaven Luik stilgelegd door dronemelding - Britse hulp onderweg",
+      "id": "gdelt-f373a8fddbb15266",
+      "idioma": "nl",
+      "medio": "telegraaf.nl",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://vrt.be/vrtnws/nl/liveblog/vliegverkeer-op-luchthaven-van-luik-stilgelegd-na-melding-drone~1762286776579",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-09T20:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Drones boven België - Vliegverkeer op luchthaven van Luik stilgelegd na melding drone",
+      "id": "gdelt-b5057847e96e4a3e",
+      "idioma": "nl",
+      "medio": "vrt.be",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://nieuws.nl/buitenland/vliegverkeer-luchthaven-luik-weer-stilgelegd-om-dronemelding",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-09T20:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Vliegverkeer luchthaven Luik weer stilgelegd om dronemelding",
+      "id": "gdelt-568a7e0ddbe08ee4",
+      "idioma": "nl",
+      "medio": "nieuws.nl",
+      "replicas": 4
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://limburger.nl/grensregio/luik/vliegverkeer-op-luchthaven-luik-weer-stilgelegd-vanwege-dronemelding/103841180.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-09T20:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Vliegverkeer op luchthaven Luik weer stilgelegd vanwege dronemelding",
+      "id": "gdelt-324f18e5bbf99db2",
+      "idioma": "nl",
+      "medio": "limburger.nl",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://zazoom.it/2025-11-09/ucraina-in-100mila-senza-luce-e-gas-nel-kharkiv-per-i-raid-russi-a-liegi-ancora-droni-sugli-aeroporti-voli-bloccati-per-diversi-minuti/18103620",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-09T21:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Ucraina in 100mila senza luce e gas nel Kharkiv per i raid russi | A Liegi ancora droni sugli aeroporti",
+      "id": "gdelt-487584ce59415d84",
+      "idioma": "it",
+      "medio": "zazoom.it",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://rtl.be/actu/regions/liege/survols-de-drones-laeroport-de-liege-de-nouveau-perturbe-pour-le-troisieme-jour/2025-11-09/article/769900",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-09T22:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Survols de drones : l'aéroport de Liège de nouveau perturbé pour le troisième jour consécutif",
+      "id": "gdelt-eb7c1d508e74e1cc",
+      "idioma": "fr",
+      "medio": "rtl.be",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://zazoom.it/2025-11-10/ucraina-allarme-aereo-in-diverse-citta-attacco-con-missili-ipersonici-a-liegi-ancora-droni-sugli-aeroporti-voli-bloccati-per-diversi-minuti/18103947",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-09T23:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Ucraina allarme aereo in diverse città | attacco con missili ipersonici | A Liegi ancora droni sugli aeroporti",
+      "id": "gdelt-fe8e87066d61ed79",
+      "idioma": "it",
+      "medio": "zazoom.it",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://abc.com.py/internacionales/2025/11/10/detectan-drones-en-torno-a-una-central-nuclear-de-belgica-y-sobre-el-aeropuerto-de-lieja",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-10T09:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Detectan drones en torno a una central nuclear de Bélgica y sobre el aeropuerto de Lieja - Mundo",
+      "id": "gdelt-9a58c5c294111fde",
+      "idioma": "es",
+      "medio": "abc.com.py",
+      "replicas": 2
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://larazon.es/internacional/drones-origen-desconocido-sobrevuelan-centra-nuclear-belgica-aeropuerto-lieja_202511106911aa60de224c6cdd443bde.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-10T09:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Drones de origen desconocido sobrevuelan una central nuclear en Bélgica y el aeropuerto de Lieja",
+      "id": "gdelt-a87bce101db0ce01",
+      "idioma": "es",
+      "medio": "larazon.es",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://virgule.lu/international/survols-de-drones-les-aeroports-belges-mis-sous-protection-militaire/103881809.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-10T10:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Survols de drones en Belgique : protection militaire des aéroports Zaventem et Liège",
+      "id": "gdelt-d55dad1e6d25fe47",
+      "idioma": "fr",
+      "medio": "virgule.lu",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://20minutos.es/internacional/drones-central-nuclear-aeropuerto-lieja-cerrar-espacio_6880495_0.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-10T10:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Alerta en Bruselas por la presencia de drones en torno a una central nuclear y sobre el aeropuerto de Lieja",
+      "id": "gdelt-b63bf90c5a076759",
+      "idioma": "es",
+      "medio": "20minutos.es",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://sapo.pt/artigo/drones-avistados-sobre-central-nuclear-belga-e-aeroporto-de-liege-6911ba67f166236ff459fae1",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-10T10:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Drones avistados sobre central nuclear belga e aeroporto de Liège",
+      "id": "gdelt-b308f10651327771",
+      "idioma": "pt",
+      "medio": "sapo.pt",
+      "replicas": 1
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://elpuntavui.cat/punt-divers/article/4-divers/2594065-diversos-drons-sobrevolen-una-central-nuclear-a-prop-d-anvers-i-l-aeroport-de-lieja.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-10T11:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Diversos drons sobrevolen una central nuclear a prop d'Anvers i l'Aeroport de Lieja",
+      "id": "gdelt-eddef5793b920d13",
+      "idioma": "ca",
+      "medio": "elpuntavui.cat",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://federalna.ba/dronovi-prekrsili-zonu-zabrane-leta-iznad-nuklearne-elektrane-u-belgiji-obustavljene-operacije-aerodroma-liege-x5psi",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-10T11:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Dronovi prekršili zonu zabrane leta iznad nuklearne elektrane u Belgiji, obustavljene operacije aerodroma Liege",
+      "id": "gdelt-7b24de2536170671",
+      "idioma": "hr",
+      "medio": "federalna.ba",
+      "replicas": 1
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://infobae.com/america/mundo/2025/11/10/belgica-reporto-otra-incursion-de-drones-la-central-nuclear-de-doel-y-el-aeropuerto-de-lieja-suspendieron-sus-operaciones",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-10T13:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Bélgica reportó otra incursión de drones: la central nuclear de Doel y el aeropuerto de Lieja suspendieron sus operaciones",
+      "id": "gdelt-638da74d8e4c4fbd",
+      "idioma": "es",
+      "medio": "infobae.com",
+      "replicas": 0
+     }
+    ],
+    "id": "EODI-2025-00408",
+    "lugar": {
+     "pais": "BE",
+     "radio_km": 5.0
+    },
+    "objetivo": {
+     "categoria": "aeropuerto",
+     "nombre": "Aéroport de Liège-Bierset",
+     "oaci": "EBLG"
+    },
+    "presencia_dron": "confirmada",
+    "tiempo": {
+     "inicio": {
+      "precision": "aproximada",
+      "valor": "2025-11-09T19:30Z"
+     }
+    },
+    "tipo": "interrupcion_aeroportuaria",
+    "titulo": {
+     "en": "Liège airport closure due to drone sighting",
+     "es": "Cierre del aeropuerto de Lieja por avistamiento de drones"
     }
    },
    "type": "Feature"
