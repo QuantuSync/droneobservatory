@@ -963,7 +963,7 @@
       "insignia": false,
       "descripcion_enlaza": [],
       "web_oficial": "https://www.mk.gov.ua/",
-      "web_enlaza": "mykolaiv_ova",
+      "web_enlaza": null,
       "web_desde_servidor": false,
       "fiabilidad": "B",
       "origen": "oficial",
@@ -972,8 +972,12 @@
       "identificado": {
         "fecha": "2026-10-04",
         "pagina": "https://t.me/VitaliiKimOfficial/22733",
-        "comprobado": "la web oficial no enlaza ningún canal (tampoco su copia del 2026-10-03 en el archivo de Internet); el canal oficial del anterior jefe de la administración (Vitali Kim, que figuraba en la lista de la Oficina del Presidente) anunció el 17 de julio de 2026 que la información operativa pasa a t.me/mykolaiv_ova, canal del jefe en funciones Heorhii Reshetilov (nombramiento del 16 de julio de 2026)",
+        "comprobado": "la web oficial no enlaza ningún canal (tampoco su copia del 2026-10-03 en el archivo de Internet); el canal oficial del anterior jefe de la administración (Vitali Kim, que figuraba en la lista de la Oficina del Presidente) anunció el 17 de julio de 2026 que la información operativa pasa a t.me/mykolaiv_ova, canal del jefe en funciones Heorhii Reshetilov (nombramiento del 16 de julio de 2026); como la web no enlaza ningún canal, el lector comprueba ese anuncio (insignia de verificado del canal que lo publica y enlace a t.me/mykolaiv_ova) en vez de la web",
         "nota": "historial desde el 17 de julio de 2026; el usuario mykolaivskaODA de la lista de 2022 está hoy en venta y no se usa"
+      },
+      "anuncio": {
+        "canal": "VitaliiKimOfficial",
+        "publicacion": 22733
       }
     },
     {

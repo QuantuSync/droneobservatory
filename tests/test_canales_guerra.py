@@ -4,6 +4,7 @@ filtro de lo que se guarda, relectura y histórico reanudable. Sin red: canal y 
 import dataclasses
 from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -244,3 +245,36 @@ def test_una_comprobacion_correcta_borra_la_espera() -> None:
     assert "web_fallos_seguidos" not in estado
     assert "web_siguiente" not in estado
     assert estado["web_resultado"] == "enlaza"
+
+
+ANUNCIO = (
+    '<div class="tgme_widget_message"><a class="tgme_widget_message_owner_name" '
+    'href="https://t.me/VitaliiKimOfficial"><span dir="auto">Vitalii KIM | Official</span>'
+    '<i class="verified-icon"></i></a><div class="tgme_widget_message_text">Обов’язки '
+    "начальника ОВА виконуватиме Георгій Решетілов "
+    '<a href="https://t.me/mykolaiv_ova">t.me/mykolaiv_ova</a></div></div>'
+)
+
+
+@dataclasses.dataclass
+class SoloTexto:
+    html: str
+
+    def texto(self, url: str, valida: Any) -> str:
+        assert url == "https://t.me/VitaliiKimOfficial/22733?embed=1&mode=tme"
+        return self.html
+
+
+def test_el_anuncio_del_canal_oficial_verifica_el_de_mykolaiv() -> None:
+    """La web de Mykoláiv no enlaza ningún canal: vale el anuncio del canal del anterior jefe
+    de la administración, con insignia de verificado, que enlaza el canal nuevo."""
+    (mykolaiv,) = [c for c in cg.cargar_canales() if c.id == "ova_mykolaiv"]
+    assert mykolaiv.anuncio == ("VitaliiKimOfficial", 22733) and mykolaiv.web_enlaza is None
+    cg.verificar_anuncio(mykolaiv, SoloTexto(ANUNCIO))  # type: ignore[arg-type]
+    for html, motivo in [
+        (ANUNCIO.replace("verified-icon", "icon"), "insignia"),
+        (ANUNCIO.replace("t.me/mykolaiv_ova", "t.me/otro"), "ya no enlaza"),
+        ("<div class='tgme_widget_message'>Post not found</div>", "ya no está publicado"),
+    ]:
+        with pytest.raises(cg.NoVerificado, match=motivo):
+            cg.verificar_anuncio(mykolaiv, SoloTexto(html))  # type: ignore[arg-type]

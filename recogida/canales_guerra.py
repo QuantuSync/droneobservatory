@@ -24,7 +24,10 @@ Antes de leer un canal se comprueba que sigue siendo el oficial:
    última comprobación correcta mientras no tenga más de 30 días; después, el canal deja
    de leerse hasta que vuelva a comprobarse. Los canales cuya web nunca ha cargado desde el
    servidor (lo dice la configuración, con la fecha y el sitio desde donde se comprobó) se
-   leen con las comprobaciones 1 a 4.
+   leen con las comprobaciones 1 a 4;
+6. si la web oficial no enlaza ningún canal y el canal se identificó por el anuncio de otro
+   canal oficial con insignia de verificado (el del anterior jefe de la administración que
+   anuncia el canal nuevo), ese anuncio sigue publicado, con la insignia, y enlaza el canal.
 
 Si algo falla, el canal no se lee y el motivo queda en `control.json`; los demás siguen.
 
@@ -114,6 +117,8 @@ class Canal:
     # Canales intermedios de la cadena oficial: la web enlaza el primero y la descripción de
     # cada uno enlaza el siguiente (favt.gov.ru → @favt_ru → @favt_info).
     cadena: tuple[tuple[str, str], ...] = ()
+    # Anuncio de otro canal oficial con insignia que enlaza este: (canal, número).
+    anuncio: tuple[str, int] | None = None
 
     @property
     def filtro(self) -> re.Pattern[str]:
@@ -146,6 +151,11 @@ def cargar_canales(ruta: Path = CONFIGURACION) -> list[Canal]:
                 identificado=c["identificado"],
                 institucion=c.get("institucion", c["id"]),
                 cadena=tuple((x["canal"], x["titulo"]) for x in c.get("cadena", [])),
+                anuncio=(
+                    (c["anuncio"]["canal"], int(c["anuncio"]["publicacion"]))
+                    if "anuncio" in c
+                    else None
+                ),
             )
         )
     return canales
@@ -271,6 +281,27 @@ def verificar_cadena(canal: Canal, descargador: Descargador) -> None:
             raise NoVerificado(f"{intermedio} ya no enlaza {siguiente}")
 
 
+def verificar_anuncio(canal: Canal, descargador: Descargador) -> None:
+    """Comprobación 6 (cabecera del módulo): el anuncio sigue publicado por su canal, con la
+    insignia de verificado, y enlaza el canal."""
+    if canal.anuncio is None:
+        return
+    origen, numero = canal.anuncio
+    html = descargador.texto(
+        f"https://t.me/{origen}/{numero}?embed=1&mode=tme",
+        lambda t: "tgme_widget_message" in t,
+    )
+    autor = re.search(
+        r'tgme_widget_message_owner_name"\s+href="https://t\.me/([A-Za-z0-9_]+)"', html
+    )
+    if autor is None or autor[1].lower() != origen.lower():
+        raise NoVerificado(f"el anuncio {origen}/{numero} ya no está publicado")
+    if "verified-icon" not in html:
+        raise NoVerificado(f"{origen} ya no lleva la insignia de verificado")
+    if not enlaza_canal(html, canal.canal):
+        raise NoVerificado(f"el anuncio {origen}/{numero} ya no enlaza el canal")
+
+
 def enlaza_canal(html: str, canal: str) -> bool:
     patron = re.compile(r"t\.me(?:/|%2F)(?:s/)?" + re.escape(canal) + r"(?![A-Za-z0-9_])", re.I)
     return bool(patron.search(html))
@@ -344,6 +375,7 @@ def recoger_canal(
     portada = portada or pagina(descargador, canal.canal, None)
     verificar_cabecera(canal, portada)
     verificar_cadena(canal, descargador)
+    verificar_anuncio(canal, descargador)
     verificar_web(canal, descargador, estado, ahora)
     ultimo = int(estado.get("ultimo_id", 0))
     desde = ahora - RELECTURA
@@ -445,6 +477,7 @@ def historico(
                 portada = pagina(descargador, canal.canal, None)
                 verificar_cabecera(canal, portada)
                 verificar_cadena(canal, descargador)
+                verificar_anuncio(canal, descargador)
                 verificar_web(canal, descargador, estado, ahora)
                 datos.anadir(canal.canal, [p for p in portada.publicaciones
                                            if canal.filtro.search(p.texto)])  # fmt: skip
