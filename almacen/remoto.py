@@ -3,6 +3,10 @@
 La rama tiene siempre un único commit que se sustituye con un push forzado en
 cada actualización: el historial de git no crece. El historial de cada
 incidente vive dentro de la base.
+
+GitHub rechaza cualquier fichero de más de 100 MiB, y la base cifrada llegó a ese tamaño el
+4 de octubre de 2026. Por eso se guarda en trozos de 50 MB (db.age.000, db.age.001...), que
+`descargar` vuelve a unir; una rama con el db.age entero de antes se sigue leyendo.
 """
 
 import os
@@ -18,6 +22,8 @@ FICHERO = "db.age"
 REPOSITORIO = "https://github.com/QuantuSync/droneobservatory-datos.git"
 AUTOR = "QuantuSync"
 MENSAJE = "Estado de la base"
+# Por debajo del aviso de GitHub (50 MiB) y muy lejos de su límite (100 MiB).
+TAMANO_TROZO = 50_000_000
 
 
 # Rama de los resultados parciales del histórico de noticias: cada trabajo añade su fichero.
@@ -61,21 +67,50 @@ def descargar(destino: Path, repositorio: str = REPOSITORIO) -> bool:
         clon = Path(temporal) / "estado"
         _git("clone", "--quiet", "--depth", "1", "--branch", RAMA, "--single-branch",
              repositorio, str(clon))  # fmt: skip
-        origen = clon / FICHERO
-        if not origen.exists():
+        trozos = trozos_en(clon)
+        if not trozos:
             raise RemotoFallido(f"la rama {RAMA} no contiene {FICHERO}")
         destino.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(origen, destino)
+        with destino.open("wb") as salida:
+            for trozo in trozos:
+                with trozo.open("rb") as entrada:
+                    shutil.copyfileobj(entrada, salida)
     return True
 
 
-def subir(origen: Path, correo: str, repositorio: str = REPOSITORIO) -> None:
-    """Sustituye la rama estado por un único commit con `origen` como db.age."""
+def trozos_en(directorio: Path) -> list[Path]:
+    """Los trozos de la base en orden, o el db.age entero de las ramas anteriores."""
+    trozos = sorted(directorio.glob(f"{FICHERO}.[0-9][0-9][0-9]"))
+    if trozos:
+        return trozos
+    entero = directorio / FICHERO
+    return [entero] if entero.exists() else []
+
+
+def trocear(origen: Path, directorio: Path, tamano: int = TAMANO_TROZO) -> list[str]:
+    """Copia `origen` a `directorio` en trozos db.age.000, db.age.001... de `tamano` bytes."""
+    nombres: list[str] = []
+    with origen.open("rb") as entrada:
+        while True:
+            datos = entrada.read(tamano)
+            if not datos and nombres:
+                break
+            nombre = f"{FICHERO}.{len(nombres):03d}"
+            (directorio / nombre).write_bytes(datos)
+            nombres.append(nombre)
+            if len(datos) < tamano:
+                break
+    return nombres
+
+
+def subir(
+    origen: Path, correo: str, repositorio: str = REPOSITORIO, tamano: int = TAMANO_TROZO
+) -> None:
+    """Sustituye la rama estado por un único commit con `origen` en trozos de db.age."""
     with TemporaryDirectory() as temporal:
         directorio = Path(temporal)
         _git("init", "--quiet", "--initial-branch", RAMA, directorio=directorio)
-        shutil.copyfile(origen, directorio / FICHERO)
-        _git("add", FICHERO, directorio=directorio)
+        _git("add", *trocear(origen, directorio, tamano), directorio=directorio)
         _git(
             "commit", "--quiet", "-m", MENSAJE, directorio=directorio,
             GIT_AUTHOR_NAME=AUTOR, GIT_AUTHOR_EMAIL=correo,
