@@ -9,7 +9,7 @@ import pytest
 
 from almacen.base import Almacen
 from proceso import incidentes
-from recogida import revisados, revision
+from recogida import revisados
 from tests import ejemplos
 
 AHORA = datetime(2026, 10, 4, 16, 17, tzinfo=UTC)
@@ -99,13 +99,15 @@ def test_la_ficha_que_mezcla_dos_sucesos_se_vuelve_a_extraer_una_vez(
     monkeypatch.setattr(revisados, "cargar", lambda: {"unir": [], "reextraer": [revision_]})
     llamadas = []
 
-    def falsa(almacen_: Almacen, cliente: Any, candidatos: list[Any]) -> dict[str, int]:
-        llamadas.append(candidatos[0]["id"])
+    def falsa(almacen_: Almacen, cliente: Any, candidato: Any, ahora: datetime) -> int:
+        # Con la hora de la ejecución, la misma con que se valida lo publicado.
+        assert ahora == AHORA
+        llamadas.append(candidato["id"])
         # La ficha nueva vuelve a dar Leipzig.
         almacen_.guardar_incidente(copy.deepcopy(mezclado), AHORA, MODELOS)
-        return {"candidatos": 1, "llamadas": 1, "publicables": 1}
+        return 1
 
-    monkeypatch.setattr(revision, "reextraer", falsa)
+    monkeypatch.setattr(revisados, "_extraer", falsa)
     assert revisados.reextraer(almacen, object(), AHORA, MODELOS) == ["EODI-2026-00283"]
     retirado = almacen.incidente("EODI-2026-00283")
     assert retirado is not None and "sigue mezclándolos" in retirado["retirado"]["motivo"]

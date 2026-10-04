@@ -123,22 +123,34 @@ def _mezcla(documento: Documento, revision: Documento) -> bool:
     )
 
 
+def _extraer(almacen: Almacen, cliente: Any, candidato: Documento, ahora: datetime) -> int:
+    """Una llamada directa para el candidato, con la hora de la ejecución (la misma con que se
+    valida lo publicado) y dentro del tope de la revisión. Devuelve cuántas llamadas hace."""
+    from modelo import coste
+    from recogida.descarga import Descargador
+    from recogida.extractor import modelos_base, preparar_todas
+
+    peticiones = preparar_todas(almacen, [candidato], Descargador)
+    extraidas = extraccion.extraer(
+        almacen, cliente, peticiones, ahora, coste.Modo.REVISION, modelos_base()
+    )
+    return len(extraidas.incidentes)
+
+
 def reextraer(
     almacen: Almacen, cliente: Any, ahora: datetime, modelos: frozenset[str]
 ) -> list[str]:
     """Vuelve a extraer, una vez, el candidato de cada incidente revisado. Devuelve los
     incidentes hechos."""
-    from recogida.revision import reextraer as llamar
-
     hechos = []
     candidatos = {c["id"]: c for c in almacen.candidatos()}
     for revision in cargar()["reextraer"]:
         clave = CURSOR + revision["incidente"]
         if almacen.cursor(clave) is not None or revision["candidato"] not in candidatos:
             continue
-        resumen = llamar(almacen, cliente, [candidatos[revision["candidato"]]])
-        if resumen["llamadas"] != 1:
-            registro.warning("%s sin volver a extraer: %s", revision["incidente"], resumen)
+        llamadas = _extraer(almacen, cliente, candidatos[revision["candidato"]], ahora)
+        if llamadas != 1:
+            registro.warning("%s sin volver a extraer", revision["incidente"])
             continue
         id_ = extraccion.incidente_del_candidato(almacen, revision["candidato"])
         documento = almacen.incidente(id_) if id_ else None
@@ -148,6 +160,6 @@ def reextraer(
                 f"{revision['motivo']}; la ficha vuelta a extraer sigue mezclándolos",
                 ahora, modelos,
             )  # fmt: skip
-        almacen.guardar_cursor(clave, {"fecha": ahora.strftime("%Y-%m-%dT%H:%MZ"), **resumen})
+        almacen.guardar_cursor(clave, {"fecha": ahora.strftime("%Y-%m-%dT%H:%MZ"), "llamadas": 1})
         hechos.append(revision["incidente"])
     return hechos
