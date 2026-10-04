@@ -127,8 +127,8 @@ META_ATAQUE = frozenset({"id", "fuentes", "afirmaciones", "control", "procedenci
 MEDICIONES = frozenset({"trafico_aereo", "condiciones"})
 # Nodos que se tratan como un solo valor.
 HOJAS = frozenset({
-    "estado", "atribucion", "foco_termico", "drones.trayectoria", "consecuencias.danos",
-    "trafico_aereo", "condiciones", "tiempo.origen_inicio", "ataque",
+    "estado", "atribucion", "investigacion", "foco_termico", "drones.trayectoria",
+    "consecuencias.danos", "trafico_aereo", "condiciones", "tiempo.origen_inicio", "ataque",
 })  # fmt: skip
 CLAVES_VALOR = (frozenset({"valor", "precision"}), frozenset({"min", "max"}),
                 frozenset({"lat", "lon"}))  # fmt: skip
@@ -401,6 +401,15 @@ def procedencia_incidente(documento: Documento, fichas: Fichas) -> tuple[Documen
             valor.origenes = {origen[f] for f in valor.fuentes}
             valor.metodo = min((metodo_de_fuente(fuentes[f]) for f in valor.fuentes),
                                default=None)  # fmt: skip
+            return valor if valor.fuentes else None
+        if ruta == "investigacion":
+            # Lo que las autoridades investigan: lo saca una regla (proceso/atribucion.py) de
+            # sus declaraciones citadas.
+            valor.fuentes = {
+                e["fuente_id"] for e in documento["investigacion"] if e["fuente_id"] in fuentes
+            }
+            valor.origenes = {origen[f] for f in valor.fuentes}
+            valor.metodo = REGLA
             return valor if valor.fuentes else None
         if ruta == "foco_termico":
             return Valor({MEDIDO}, PARSER)

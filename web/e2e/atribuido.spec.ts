@@ -23,6 +23,8 @@ const TELEFONOS = [
 ];
 const ESCRITORIO = { nombre: "escritorio", width: 1440, height: 900 };
 const CHISINAU = "EODI-2026-00074";
+/** Los cuatro atribuidos revisados con la regla estricta el 4 de octubre de 2026. */
+const REVISADOS = ["EODI-2025-00247", "EODI-2026-00015", "EODI-2026-00074", "EODI-2026-00283"];
 /** Una visita anterior lejana: todo lo publicado después cuenta como novedad y late. */
 const VISITA_ANTIGUA = "2026-09-01T00:00:00.000Z";
 const ES = textos("es");
@@ -93,7 +95,6 @@ for (const tamano of [...TELEFONOS, ESCRITORIO]) {
     test(`${nombre}: cada atribuido con su marcador en el mapa y en la ficha`, async ({ page, context, baseURL }) => {
       await preparar(context, baseURL);
       const lista = await atribuidos(page);
-      expect(lista.length).toBeGreaterThan(0);
       await entrar(page, "/");
       await expect(page.locator(MAPA_LISTO)).toHaveAttribute("data-iconos", /atribuido--1/);
       await sinMastil(page);
@@ -112,6 +113,43 @@ for (const tamano of [...TELEFONOS, ESCRITORIO]) {
         expect(await ficha.locator(`svg[data-atribuido="${bandera}"]`).count()).toBeGreaterThanOrEqual(3);
         await sinMastil(page);
         await capturar(page, `${incidente.id}-${nombre}`);
+      }
+    });
+
+    test(`${nombre}: los cuatro revisados, con su estado, su historial y sin el nombre del prefecto`, async ({
+      page,
+      context,
+      baseURL,
+    }) => {
+      await preparar(context, baseURL);
+      const datos = (await (await page.request.get("/datos/resumen.json")).json()) as Resumen;
+      const atribuidosAhora = datos.incidentes.filter((i) => i.estado === "atribuido").length;
+      for (const id of REVISADOS) {
+        const resumen = datos.incidentes.find((i) => i.id === id);
+        if (resumen === undefined) throw new Error(`${id} no está publicado`);
+        await entrar(page, `/${id}`);
+        const ficha = page.getByRole("complementary", { name: new RegExp(id) });
+        await expect(ficha).toBeVisible();
+        if (resumen.estado === "atribuido") {
+          await expect(ficha.locator("[data-estado-atribuido]")).toBeVisible();
+        } else {
+          // Ya no atribuido: su estado nuevo y, en el historial, el motivo de la retirada.
+          await expect(ficha.locator("[data-estado-atribuido]")).toHaveCount(0);
+          await expect(ficha.locator("[data-motivo-historial]").last()).toContainText("Se retira la atribución");
+        }
+        // El nombre del prefecto no aparece como autor en ningún sitio.
+        expect(await ficha.textContent()).not.toContain("Dolachi");
+        await capturar(page, `revisado-${id}-${nombre}`);
+      }
+      // La cifra de atribuidos coincide con los que quedan.
+      await page.goto("/");
+      await page.waitForSelector(MAPA_LISTO);
+      if (telefono) await page.getByRole("banner").getByRole("button", { name: "Menú" }).click();
+      const cifra = page.locator("[data-marca-cifra]").filter({ visible: true }).first().locator("xpath=..");
+      await expect(cifra).toHaveText(new RegExp(`^${atribuidosAhora}`));
+      // Ni en los datos publicados.
+      for (const ruta of ["/datos/resumen.json", "/datos/incidentes.geojson"]) {
+        expect(await (await page.request.get(ruta)).text()).not.toContain("Dolachi");
       }
     });
 

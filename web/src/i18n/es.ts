@@ -380,6 +380,7 @@ export const es: Textos = {
     aPersonaDe: (gentilicio) => `Atribuido a una persona de nacionalidad ${gentilicio}`,
     aPersonaDePais: (pais) => `Atribuido a una persona con nacionalidad de ${pais}`,
     aPersona: "Atribuido a una persona",
+    unaPersona: "una persona",
     leyendaEstado: "Atribuido por una autoridad a un Estado",
     leyendaPersona: "Atribuido por una autoridad a una persona",
     bandera:
@@ -472,6 +473,10 @@ export const es: Textos = {
     porFecha: "coincide en fecha y viene de Ucrania",
     confirmadoAtribuido: (actor, autoridad) => `Confirmado · atribuido a ${actor}, según ${autoridad}`,
     atribuidoA: (actor, autoridad) => `${actor}, según ${autoridad}`,
+    investigacion: "Investigación en curso",
+    investiga: (autoridad) => `Lo que investiga ${autoridad} (no cambia el estado del incidente):`,
+    verFuente: "ver la fuente",
+    declaracionCitada: (autoridad, medio) => `Declaración de ${autoridad}, citada en ${medio}`,
     motivoDesmentido: "Motivo del desmentido",
     desconocido: "Sin dato",
     minutos: (n) => `${n} min`,
@@ -700,8 +705,15 @@ export const es: Textos = {
                 termino: "Atribuido",
                 marca: { estado: "atribuido" },
                 texto: [
-                  "Un confirmado que una autoridad atribuye a un Estado o a una persona. Solo cuenta " +
-                    "si la frase citada de la autoridad nombra a quien se atribuye. En el mapa, un " +
+                  "Un confirmado del que una autoridad competente (gobierno, ministerio, fuerzas " +
+                    "armadas, fiscalía o policía) afirma expresamente, con sus propias palabras, quién " +
+                    "es el responsable: un Estado o una persona. No basta una noticia que lo cuente sin " +
+                    "sus palabras, ni que la autoridad investigue, examine una posible relación, no lo " +
+                    "descarte, lo vea posible o lo sospeche: eso va en la ficha como investigación en " +
+                    "curso y el incidente sigue confirmado. El autor nunca es la autoridad que declara. " +
+                    "A una persona, solo si la autoridad la ha detenido, acusado o condenado, y su nombre " +
+                    "solo si la autoridad lo da. Si una atribución deja de sostenerse, se retira con un " +
+                    "paso en el historial que dice por qué. En el mapa, un " +
                     "círculo con un aro rojo grueso, mayor que el de un incidente y por encima de " +
                     "todo, centrado en el lugar: dentro, la bandera del país al que la autoridad lo " +
                     "atribuye, el Estado o la nacionalidad de la persona (esta, solo si la autoridad " +

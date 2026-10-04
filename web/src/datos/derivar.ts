@@ -54,6 +54,9 @@ function instanteConHora(inicio: Instante): number | null {
   return Number.isNaN(ms) ? null : ms;
 }
 
+/** Actor de una atribución a una persona que la autoridad no nombra (proceso/atribucion.py). */
+export const ACTOR_SIN_NOMBRE = "persona sin nombre publicado";
+
 /** Tipo de actor y país de un atribuido (null en los demás estados). */
 export function atribucionResumida(p: {
   estado: { actual: Estado };

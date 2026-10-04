@@ -275,6 +275,8 @@ export interface Textos {
     aPersonaDe: (gentilicio: string) => string;
     aPersonaDePais: (pais: string) => string;
     aPersona: string;
+    /** El actor de una persona que la autoridad no nombra, dentro de una frase. */
+    unaPersona: string;
     leyendaEstado: string;
     leyendaPersona: string;
     /** Qué es la bandera: la del país al que la autoridad lo atribuye. */
@@ -311,6 +313,10 @@ export interface Textos {
     porFecha: string;
     confirmadoAtribuido: (actor: string, autoridad: string) => string;
     atribuidoA: (actor: string, autoridad: string) => string;
+    investigacion: string;
+    investiga: (autoridad: string) => string;
+    verFuente: string;
+    declaracionCitada: (autoridad: string, medio: string) => string;
     motivoDesmentido: string;
     desconocido: string;
     minutos: (n: string) => string;

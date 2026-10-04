@@ -1,6 +1,7 @@
 # Marcador de los atribuidos: círculo con la bandera del país
 
-Fecha: 4 de octubre de 2026.
+Fecha: 4 de octubre de 2026. PR #97 (marcador) y PR #102 (revisión de las atribuciones con la
+regla estricta, esquema 1.11.0).
 
 La bandera roja con mástil de los incidentes «atribuido» desaparece de toda la web. En su lugar,
 el mismo marcador en el mapa, la ficha, la lista, el historial de estados, la leyenda, los
@@ -46,7 +47,7 @@ atribuye, no una afirmación del observatorio. Ayuda y metodología, al día en 
 
 ## Los datos
 
-Esquema 1.10.0: la atribución lleva dos campos públicos más, `tipo` (`estado` o `persona`) y
+Esquema 1.10.0 (PR #97): la atribución lleva dos campos públicos más, `tipo` (`estado` o `persona`) y
 `pais` (ISO 3166-1 alfa-2: el Estado, o la nacionalidad de la persona). Están en la lista
 cerrada de campos públicos (`exportacion/campos.py`), en la validación de la web y en la
 exportación semanal interna (la atribución viaja entera con su procedencia; comprobado con una
@@ -71,27 +72,206 @@ Tests: `tests/test_atribucion.py` (21: las frases reales guardadas, nacionalidad
 dicha, país nombrado como lugar, tipo vacío, la extracción, la validación y la corrección de lo
 guardado).
 
-## Los atribuidos de hoy
+## Revisión de las atribuciones con la regla estricta (PR #102)
 
-Corrección de lo guardado (`recogida/tipo_atribucion.py`): una vez, dentro de la recogida
-horaria, como versión nueva de cada incidente con su motivo en el historial. Simulada sobre una
-copia de la base de producción del 4 de octubre:
+Atribuir un incidente a un Estado o a una persona es lo más grave que publica el observatorio.
+Tras el PR #97 se revisaron las cuatro atribuciones publicadas con una regla estricta: un
+incidente está «atribuido» solo si una autoridad competente afirma expresamente, en una
+declaración que se puede citar con sus propias palabras, quién es el responsable. **Ninguna de
+las cuatro la cumple: las cuatro se retiran y los cuatro incidentes vuelven a «confirmado».**
 
-| Incidente | Autoridad | Frase guardada | Resultado |
-| --- | --- | --- | --- |
-| EODI-2025-00247 (Chisináu) | Presidenta Maia Sandu | «Prezydent Maia Sandu oskarżyła Moskwę o próbę destabilizacji.» | Estado, RU |
-| EODI-2026-00074 (Chisináu) | Autoridades moldavas | «Молдавские власти сразу назвали аппарат «российским»» | Estado, RU |
-| EODI-2026-00283 (base aérea alemana) | Gobierno federal | «die Bundesregierung von einem russischen Anschlagsversuch ausging» | Estado, RU |
-| EODI-2026-00119 (Leipzig, fundido en EODI-2026-00391) | Gobierno federal | «…что Россия несет ответственность…» | Estado, RU |
-| EODI-2026-00015 (aeropuerto de Iasi) | Prefecto de Iasi | «The drone entered Romanian territory from the Republic of Moldova» | **Sin atribución: vuelve a confirmado** |
+### Las cuatro, una por una
 
-EODI-2026-00015 no estaba atribuido a una persona. El «autor» guardado, Constantin
-Dolachi-Pelin, es el propio prefecto de Iasi (el extractor puso el nombre de quien habla), y la
-frase solo dice por dónde entró el dron, sin atribuirlo a nadie. Con la regla, la atribución no
-se sostiene: el incidente queda confirmado (la declaración del prefecto sigue como fuente
-oficial), sin el paso a atribuido, con el motivo en el historial. En la web quedan tres
-atribuidos, los tres a Rusia, y ninguno a una persona: las variantes de persona se ven en las
-capturas con datos de prueba locales (abajo).
+Se leyeron todas las citas guardadas de cada incidente (las frases de las fuentes y de las
+declaraciones oficiales que recogió el extractor) en su idioma original.
+
+**EODI-2025-00247 · Chisináu, 29 de noviembre de 2025 · retirada.**
+
+- Cita que se usó para atribuir (wiadomosci.wp.pl, en polaco): «Prezydent Maia Sandu oskarżyła
+  Moskwę o próbę destabilizacji.» → «La presidenta Maia Sandu acusó a Moscú de intentar
+  desestabilizar [el país].»
+- Autoridad: Maia Sandu, presidenta de la República de Moldavia.
+- A quién atribuye: a Rusia («Moscú»), de intentar desestabilizar el país; no dice con sus
+  palabras que los drones fueran rusos.
+- Las demás citas: «Władze Mołdawii poinformowały, że rosyjskie drony ponownie wdarły się w
+  przestrzeń powietrzną kraju» (wiadomosci.wp.pl: «Las autoridades de Moldavia informaron de que
+  drones rusos volvieron a entrar en el espacio aéreo del país»), dos titulares griegos («Chisináu
+  declara que aeronaves no tripuladas rusas violaron su espacio aéreo») y el Ministerio del
+  Interior de Moldavia, que confirma el sobrevuelo sin atribuirlo («Ministerul de Interne, cu
+  precizări după ce două drone au survolat spațiul aerian al RM»: «El Ministerio del Interior, con
+  aclaraciones después de que dos drones sobrevolaran el espacio aéreo de la República de
+  Moldavia»).
+- Decisión: **retirada**. Todo lo que atribuye son noticias que cuentan lo que dijo la presidenta
+  o «las autoridades», sin sus palabras. Queda confirmado (el Ministerio del Interior lo confirma).
+  El titular deja de decir «rusos».
+
+**EODI-2026-00015 · aeropuerto de Iasi, 8 de septiembre de 2026 · retirada.**
+
+- Cita (stiripesurse.ro, en inglés): «The drone entered Romanian territory from the Republic of
+  Moldova» → «El dron entró en territorio rumano desde la República de Moldavia».
+- Autoridad: el prefecto del distrito de Iasi (representante del Gobierno rumano en el distrito).
+- A quién atribuye: a nadie. El «autor» guardado, Constantin Dolachi-Pelin, **es el propio
+  prefecto de Iasi** ([InfoCons](https://infocons.ro/institutia-prefectului-judetul-iasi-si-prefectul-constantin-dolachi-pelin-infocons-te-informeaza/)):
+  el extractor puso como autor del incidente el nombre de la autoridad que hacía la declaración.
+  Era el fallo más grave posible.
+- Decisión: **retirada**. Queda confirmado (la dirección del aeropuerto confirma la suspensión
+  de los vuelos).
+- Dónde salía ese nombre como autor: en `atribucion.actor` de `publicacion/incidentes.geojson`
+  y, a partir de ahí, en la ficha de la web, en su JSON (`/datos/incidentes/EODI-2026-00015.json`)
+  y en el CSV de descarga (`/datos/incidentes.csv`). Desde la corrección no sale en ninguno
+  (comprobado en los datos publicados y en producción). Pendiente con su arreglo: sigue en las
+  versiones anteriores de esos ficheros en el historial de git del repositorio público y en las
+  exportaciones semanales cifradas ya enviadas a AEGIS (2026.10.01 y siguientes). La próxima
+  exportación (lunes 5 de octubre, 03:47 UTC) lleva la corrección; AEGIS tiene que reimportarla.
+  Reescribir el historial público exige un push forzado sobre `main` y se deja a decisión
+  expresa.
+
+**EODI-2026-00074 · aeropuerto de Chisináu, 9 y 10 de septiembre de 2026 · retirada.**
+
+- Cita (news.mail.ru, en ruso): «Молдавские власти сразу назвали аппарат «российским»» → «Las
+  autoridades moldavas calificaron enseguida el aparato de «ruso»».
+- Autoridad: «las autoridades moldavas», sin decir cuál ni qué cargo.
+- A quién atribuye: a Rusia, según la noticia.
+- Las demás citas: el Ministerio de Defensa de Moldavia, citado por la misma noticia: «военные
+  засекли беспилотник, залетевший в страну со стороны Украины» («los militares detectaron un dron
+  que entró en el país desde Ucrania»), que confirma sin atribuir; y titulares de news.yam.md que
+  hablan de «drona rusească» (prensa).
+- Decisión: **retirada**. Ninguna autoridad identificada lo afirma con sus palabras. Queda
+  confirmado.
+
+**EODI-2026-00283 · dron hallado en septiembre de 2026 · retirada.**
+
+- Cita que se usó para atribuir (come-on.de, en alemán): «In der Nähe parkte eine ukrainische
+  Frachtmaschine vom Typ Antonow AN-124, weshalb die Bundesregierung von einem russischen
+  Anschlagsversuch ausging.» → «Cerca estaba estacionado un avión de carga ucraniano Antonov
+  AN-124, por lo que el Gobierno federal suponía un intento de atentado ruso.» Se refiere al dron
+  con explosivos del aeropuerto de Leipzig/Halle del 4 de agosto, no a este hallazgo, y es una
+  noticia que cuenta una suposición («ausging»).
+- La otra cita: «prüft die Bundesanwaltschaft einen möglichen Zusammenhang mit dem
+  Drohnenvorfall am Flughafen Leipzig» (schwaebische.de) → «la Fiscalía federal examina una
+  posible relación con el incidente del dron en el aeropuerto de Leipzig».
+- Autoridades: el Gobierno federal alemán (Bundesregierung) y la Fiscalía General federal
+  (Bundesanwaltschaft).
+- A quién atribuye: a nadie. La fiscalía examina una posible relación.
+- Decisión: **retirada**. Queda confirmado, con la investigación de la fiscalía en la ficha como
+  investigación en curso.
+- El titular: «Dron con explosivos en el aeropuerto de Leipzig/Halle». Ninguna autoridad dice en
+  las citas guardadas que este dron llevara explosivos: la frase de los explosivos («Am Abend des
+  4. August wurde eine mit Sprengstoff präparierte Drohne im Sicherheitsbereich des Flughafens
+  Leipzig/Halle entdeckt») es de la noticia y habla del incidente de agosto. Se corrige a «Dron en
+  el aeropuerto de Leipzig/Halle» («Drone found at Leipzig/Halle airport»).
+- Pendiente con su arreglo: el registro mezcla dos sucesos. Sus noticias son del dron hallado a
+  mediados de septiembre junto a la base aérea de Wunstorf (Baja Sajonia), en el que la fiscalía
+  federal examina la relación con Leipzig
+  ([ZDFheute](https://www.zdfheute.de/politik/deutschland/bundeswehr-fliegerhorst-wunstorf-drohnenfund-bundesanwaltschaft-leipzig-100.html)),
+  pero su fecha (4 de agosto) y su lugar (aeropuerto de Leipzig/Halle) son los del incidente de
+  agosto, que ya está en EODI-2026-00391. Arreglo: separar el candidato de Wunstorf, volver a
+  extraerlo con su lugar y su fecha, y unir lo de Leipzig con EODI-2026-00391. Lo hace la sesión
+  de corrección de errores de datos, que lleva la extracción y las fusiones.
+
+También se retira la de EODI-2026-00119 (Leipzig, 4 de agosto), fundido en EODI-2026-00391: su
+cita («правительство Германии приходит к заключению, что Россия несет ответственность за
+гибридную атаку», news.mail.ru: «el Gobierno de Alemania llega a la conclusión de que Rusia es
+responsable del ataque híbrido») es una noticia rusa que cuenta la conclusión del Gobierno
+alemán, sin sus palabras. No se publica (está fundido), pero sí va en la exportación semanal.
+
+### Cómo se retiran
+
+`recogida/tipo_atribucion.py` (versión `atribucion/2`), una vez dentro de la recogida horaria:
+cada atribución guardada se vuelve a decidir con la regla. Las guardadas no dicen si la frase es
+literal (la ficha lo pide desde ahora), así que ninguna se sostiene. Cada una se retira como
+versión nueva del incidente, sin borrar nada:
+
+- un paso nuevo en el historial de estados, de «atribuido» a «confirmado», con el motivo en
+  español y en inglés (`estado.historial[].motivo`), que la ficha enseña en el historial («Se
+  retira la atribución: la autoridad examina una posible relación, no la afirma…»). El paso a
+  «atribuido» anterior se conserva: la ficha enseña que lo estuvo y por qué dejó de estarlo. Solo
+  esta corrección puede pasar de atribuido a confirmado, y solo con motivo (lo comprueba la
+  validación del historial);
+- el motivo revisado a mano de cada uno (`configuracion/atribuciones_revisadas.json`) o, si no lo
+  hay, el de la regla;
+- lo que las autoridades dicen que investigan, como investigación en curso (`investigacion`,
+  campo público nuevo);
+- el titular sin lo que solo decía la atribución: la nacionalidad de los drones y, si ninguna
+  autoridad lo dice, los explosivos;
+- el motivo, también en el historial interno de la base.
+
+EODI-2026-00015 ya había salido de «atribuido» con la versión anterior de esta corrección (la del
+PR #97, que lo devolvía a confirmado quitando el paso). La versión nueva recupera ese paso de la
+versión guardada y añade la retirada con su motivo, para que el historial lo cuente igual que en
+los otros.
+
+Simulado sobre una copia de la base de producción del 4 de octubre, con y sin la versión anterior
+aplicada: los cinco (los cuatro publicados y el fundido) vuelven a confirmado con su paso y su
+motivo; 0 atribuidos publicados; el nombre del prefecto no aparece en ningún fichero publicado;
+la exportación semanal se genera y valida.
+
+### La regla, para lo que llegue
+
+En la extracción (`modelo/ficha.py`, sin cambiar de versión), en el proceso
+(`proceso/declaraciones.py`) y en la validación (`proceso/validaciones.py`), todo en
+`proceso/atribucion.py`:
+
+- Atribuye una autoridad competente: gobierno, ministerio, fuerzas armadas, fiscalía o policía.
+- Con sus propias palabras: el extractor dice si la frase es literal (`cita_literal`); una noticia
+  que cuenta que la autoridad atribuye no basta.
+- Sin duda ni investigación: una frase que investiga, examina, comprueba, ve posible, no descarta,
+  sospecha, supone, «apunta a», «todo indica», o que cita a fuentes de seguridad o a medios, nunca
+  atribuye (`configuracion/expresiones_duda.json`, en español, inglés, alemán, francés, rumano,
+  polaco, lituano, neerlandés, ucraniano y ruso). Lo que la autoridad investiga va a la ficha como
+  investigación en curso, sin cambiar el estado.
+- El autor nunca es la autoridad que declara: la validación rechaza un autor que comparte nombre
+  con ella, y la ficha pide no poner nunca a quien habla, a un portavoz, a un testigo ni a la
+  víctima.
+- A una persona, solo si la autoridad la ha detenido, acusado o condenado (`autor_situacion`). Su
+  nombre, solo si la autoridad lo da; si no, la web escribe «una persona». Su nacionalidad, solo
+  si la frase la dice.
+- La validación rechaza una atribución cuya cita tenga duda o investigación, o cuyo autor
+  coincida con la autoridad declarante.
+
+Tests (`tests/test_atribucion.py`): las citas reales de los cuatro casos; 48 frases de «no vale»
+(investigación, posible relación, no se descarta, podría, sospecha, apunta a, todo indica, fuentes
+de seguridad) en alemán, rumano, inglés, francés, polaco, lituano, neerlandés, ucraniano y ruso;
+afirmaciones expresas que sí valen; autor igual a quien declara; personas con y sin detención y
+con y sin nombre; la retirada con su paso, su motivo, su investigación y su titular.
+
+### Autorías que se han quedado fuera por el motivo contrario
+
+Declaraciones guardadas en las que una autoridad parece atribuir expresamente y el incidente no
+figura como atribuido. No se ha cambiado ninguna. Con la regla, ninguna basta tal como está
+guardada (todas son noticias que lo cuentan, sin las palabras de la autoridad), pero merecen
+buscar la declaración original:
+
+| Incidente (estado) | Autoridad | Lo guardado |
+| --- | --- | --- |
+| EODI-2026-00391 y los registros que repiten el mismo suceso: EODI-2026-00239, 00129, 00190, 00318 (notificados) | Gobierno federal alemán, Ministerio del Interior | El dron con explosivos de Leipzig/Halle del 4 de agosto: «Germany accuses Russia», «La Russia ha la responsabilità dell'attacco ibrido a Lipsia» (traducción italiana). Es el caso más claro: el Gobierno alemán lo atribuyó a Rusia públicamente. Hace falta su comunicado y unir los cinco registros. |
+| EODI-2026-00152 (notificado) | Administración presidencial de Rumanía | «drona maritima care a explodat in Portul Constanta in 5 iunie a fost controlata de catre Federatia Rusa» (sin diacríticos) («el dron marítimo que explotó en el puerto de Constanza el 5 de junio fue controlado por la Federación Rusa»); otra frase del mismo comunicado dice solo «indică posibilitatea». |
+| EODI-2026-00245 (notificado; incluye EODI-2026-00342) | Fuerzas Armadas de Suecia | «en drönare lyfte från det ryska signalspaningsfartyget Zhigulevsk i Öresund» («un dron despegó del buque ruso de inteligencia de señales Zhigulevsk en el Øresund»). |
+| EODI-2026-00125 (notificado; incluye EODI-2026-00331) | Ministerio de Defensa de Rumanía | «Moscova testează intenționat spațiul aerian românesc» («Moscú pone a prueba intencionadamente el espacio aéreo rumano»). |
+| EODI-2026-00228 (confirmado; incluye EODI-2026-00345) | Presidente de Rumanía | Noticia francesa: «Nicușor Dan a clairement désigné son homologue russe Vladimir Poutine comme responsable». |
+| EODI-2025-00295 (confirmado; incluye EODI-2025-00262) y EODI-2025-00305 | Gobierno de Polonia | «Nach Angaben von Regierungschef Donald Tusk handelte es sich um Drohnen aus Russland», «Polens Regierung spricht von einer russischen Provokation» (noticias). |
+| EODI-2026-00090 (notificado) | Gobierno de Lituania | «nach Angaben der Regierung in Vilnius um eine ukrainische Drohne» (noticia: un dron ucraniano que se desvió). |
+
+Pendiente con su arreglo: que la búsqueda dirigida y las fuentes oficiales traigan el texto de
+estas declaraciones; con la ficha nueva, una cita literal y expresa las atribuye sola. Varios de
+estos registros llevan además en el titular la nacionalidad de los drones sin atribución
+(«Dron ruso cargado de explosivos ataca Leipzig»); arreglo: aplicar a todos los titulares la
+misma regla que ya se aplica a los retirados.
+
+### Dos arreglos de texto
+
+- **El país, en el idioma de la web.** La ficha escribe el Estado a partir de su código («Rusia»,
+  «Russia»), nunca con el texto de la fuente («Russland»). Igual en el texto para lector de
+  pantalla, la lista y el letrero del mapa.
+- **La autoridad, que se entienda.** `web/src/i18n/autoridades.ts` traduce las autoridades de las
+  atribuciones y de las confirmaciones e investigaciones de estos incidentes: «según el Gobierno
+  federal alemán (Bundesregierung)», «según la presidenta de Moldavia, Maia Sandu», «el prefecto
+  de Iasi». Las fuentes que son declaraciones oficiales citadas se escriben igual en los dos
+  idiomas: «Declaración de la Fiscalía federal alemana (Bundesanwaltschaft), citada en
+  schwaebische.de» («Statement by the German Federal Prosecutor's Office (Bundesanwaltschaft),
+  quoted in schwaebische.de»), también en el historial. Una autoridad que no está en la tabla se
+  escribe tal cual; pendiente con su arreglo: que el extractor dé el nombre traducido de cada
+  autoridad para no depender de la tabla.
 
 ## Banderas
 

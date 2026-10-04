@@ -15,8 +15,11 @@ literal, que tiene que estar en el texto enviado) se registra como fuente
   («posible dron», «objeto no identificado», «se investiga si era un dron»). Cada confirmación
   deja una afirmación de presencia_dron con la fuente que la provoca.
 - sin_drones: presencia_dron descartada. niega_incidente: desmentido.
-- autoria: atribuido, solo si quien atribuye es un gobierno y su frase nombra a quien se
-  atribuye (un Estado o una persona; proceso/atribucion.py), con su tipo y su país.
+- autoria: atribuido, solo si una autoridad competente (gobierno, ministerio, fuerzas armadas,
+  fiscalía o policía) lo afirma con sus propias palabras, sin duda ni investigación, y nombra a
+  quien se atribuye (un Estado o una persona; proceso/atribucion.py), con su tipo y su país.
+- Lo que una autoridad dice que investiga, examina o comprueba va a la ficha como
+  investigación en curso, sin cambiar el estado.
 
 Una autoridad habla de su país: una declaración de una autoridad de otro país no
 cambia el incidente (el gobierno letón que dice que en Letonia no entró ningún dron
@@ -219,14 +222,17 @@ def aplicar(
                 resultado["control"]["motivo_desmentido"] = (
                     f"{declaracion['autoridad']}: «{declaracion['frase']}»"
                 )
-        elif afirma == "autoria" and declaracion["categoria"] == "gobierno":
+        elif afirma == "autoria" and declaracion["categoria"] in atribucion.CATEGORIAS:
             actor = str(declaracion.get("autor", "")).strip()
-            # Estado o persona y su país, solo si la frase de la autoridad lo sostiene
-            # (proceso/atribucion.py); si no, no hay atribución.
-            clase = atribucion.clasificar(
+            # Solo si la autoridad lo afirma con sus propias palabras, sin duda ni investigación,
+            # y el autor no es quien declara (proceso/atribucion.py); si no, no hay atribución.
+            decision = atribucion.evaluar(
                 actor, str(declaracion.get("frase", "")), declaracion.get("autor_tipo"),
-                declaracion.get("autor_pais"),
+                declaracion.get("autor_pais"), literal=declaracion.get("cita_literal"),
+                situacion=declaracion.get("autor_situacion"),
+                declarantes=[str(declaracion["autoridad"])],
             )  # fmt: skip
+            clase = decision.clase
             if clase is not None and resultado["estado"]["actual"] == Estado.CONFIRMADO:
                 _transitar(resultado, Estado.ATRIBUIDO, origen)
             if clase is not None and resultado["estado"]["actual"] == Estado.ATRIBUIDO:
@@ -236,6 +242,10 @@ def aplicar(
                     "fecha": origen["fecha"],
                     **clase,
                 }
+    # Lo que las autoridades dicen que investigan va a la ficha como investigación en curso,
+    # sin cambiar el estado.
+    if encontradas := atribucion.investigaciones(resultado):
+        resultado["investigacion"] = encontradas
     # La frase que nombra drones confirma su presencia si nadie los descartó y el incidente no
     # está desmentido: una autoridad que dice que no pasó nada pesa más que la que lo cuenta.
     if resultado["estado"]["actual"] != Estado.DESMENTIDO:

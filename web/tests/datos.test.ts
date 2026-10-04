@@ -309,7 +309,7 @@ describe("validación contra el esquema", () => {
 
 describe("listas cerradas iguales a las del esquema", () => {
   type Esquema = Record<string, unknown>;
-  const leer = (nombre: string) => leerJson("esquema", "1.10.0", `${nombre}.schema.json`) as Esquema;
+  const leer = (nombre: string) => leerJson("esquema", "1.11.0", `${nombre}.schema.json`) as Esquema;
   const en = (objeto: unknown, ...claves: string[]): unknown =>
     claves.reduce<unknown>((actual, clave) => (actual as Esquema)[clave], objeto);
 
@@ -398,6 +398,14 @@ describe("listas cerradas iguales a las del esquema", () => {
         fecha: { valor: "2026-01-01T00:00Z", precision: "dia" },
       },
       afirmaciones_publicas: [afirmacion()],
+      investigacion: [
+        {
+          autoridad: "Bundesanwaltschaft",
+          cita: "prüft einen möglichen Zusammenhang",
+          fuente_id: "gdelt-0000000000000001",
+          fecha: { valor: "2026-01-01T00:00Z", precision: "dia" },
+        },
+      ],
       foco_termico: focoTermico(),
       trafico_aereo: traficoAereo(),
       ataque: {

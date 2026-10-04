@@ -649,8 +649,8 @@ describe("marcador de los atribuidos", () => {
           ],
         },
         atribucion: {
-          actor: "Rusia",
-          autoridad: "Gobierno de Dinamarca",
+          actor: "Russland",
+          autoridad: "Bundesregierung",
           fecha: { valor: "2025-10-04T10:00Z", precision: "minuto" },
           tipo: "estado",
           pais: "RU",
@@ -659,7 +659,10 @@ describe("marcador de los atribuidos", () => {
     );
     const { container } = render(<FichaIncidente t={es} idioma="es" incidente={atribuido} />);
     const estado = container.querySelector("[data-estado-atribuido]");
-    expect(estado?.textContent).toBe("Confirmado · atribuido a Rusia, según Gobierno de Dinamarca");
+    // El país, a partir de su código y no con el texto de la fuente; la autoridad, traducida.
+    expect(estado?.textContent).toBe(
+      "Confirmado · atribuido a Rusia, según el Gobierno federal alemán (Bundesregierung)",
+    );
     // Junto al texto, el marcador con su bandera y su texto alternativo.
     const marca = estado?.querySelector("svg[data-atribuido]");
     expect(marca?.getAttribute("data-atribuido")).toBe("RU");
@@ -670,7 +673,7 @@ describe("marcador de los atribuidos", () => {
     cleanup();
     const ingles = render(<FichaIncidente t={en} idioma="en" incidente={atribuido} />);
     expect(ingles.container.querySelector("[data-estado-atribuido]")?.textContent).toBe(
-      "Confirmed · attributed to Rusia, according to Gobierno de Dinamarca",
+      "Confirmed · attributed to Russia, according to the German Federal Government (Bundesregierung)",
     );
   });
 

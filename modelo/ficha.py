@@ -106,6 +106,8 @@ ESQUEMA: dict[str, Any] = {
                     "autor",
                     "autor_tipo",
                     "autor_pais",
+                    "autor_situacion",
+                    "cita_literal",
                     "fuente",
                     "frase",
                 ],
@@ -117,6 +119,8 @@ ESQUEMA: dict[str, Any] = {
                     "autor": {"type": "string"},
                     "autor_tipo": {"enum": ["estado", "persona", ""]},
                     "autor_pais": {"type": "string"},
+                    "autor_situacion": {"enum": ["detenida", "acusada", "condenada", ""]},
+                    "cita_literal": {"type": "boolean"},
                     "fuente": {"type": "integer"},
                     "frase": {"type": "string"},
                 },
@@ -214,9 +218,18 @@ aeropuerto, navegacion_aerea (gestor de navegación aérea), fuerzas_armadas, mi
 gobierno, fiscalia o aviacion_civil. afirma: incidente si dice que el incidente o el cierre \
 ocurrió; drones si afirma \
 expresamente que había drones (los vio ella misma, por radar o por restos); sin_drones si dice \
-que no los hubo; niega_incidente si dice que no pasó nada; autoria si atribuye la autoría (a \
-quién, en autor, tal como lo nombra la frase: «Rusia», un nombre y apellidos; nunca el nombre de \
-la autoridad que habla; vacío en los demás casos). autor_tipo: estado si se atribuye a un Estado \
+que no los hubo; niega_incidente si dice que no pasó nada; autoria solo si la autoridad afirma \
+expresamente quién es el responsable («Rusia es responsable», «fue un dron ruso», «el autor es X \
+y ha sido detenido», una acusación formal, una sentencia); nunca si investiga, examina una posible \
+relación, no descarta, sospecha, dice que podría ser o que todo apunta a, ni si lo dicen fuentes \
+de seguridad, expertos, medios o un político sin cargo competente (entonces, incidente). autor: \
+a quién se atribuye, tal como lo nombra la frase («Rusia», un nombre y apellidos); nunca la \
+autoridad que habla ni su titular, un portavoz, un testigo ni la víctima; el nombre de una \
+persona solo si la autoridad la nombra como detenida, acusada o condenada, si no vacío; vacío en \
+los demás casos. autor_situacion: detenida, acusada o condenada si la autoridad dice eso de la \
+persona a la que atribuye; vacío si no. cita_literal: true solo si la frase son palabras de la \
+propia autoridad (una cita entre comillas o su comunicado); false si es la noticia contando lo \
+que dijo («X acusó a Moscú», «según el Gobierno»). autor_tipo: estado si se atribuye a un Estado \
 (también a su gobierno, su ejército o sus servicios), persona si se atribuye a una persona; vacío \
 si no es ninguno de los dos o no hay autoría. autor_pais: el código ISO del Estado al que se \
 atribuye; para una persona, el de su nacionalidad solo si la frase la dice expresamente («un \

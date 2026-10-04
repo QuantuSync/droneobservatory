@@ -101,7 +101,7 @@ def test_solo_un_gobierno_atribuye() -> None:
     assert aplicar(confirma, policia)["estado"]["actual"] == "confirmado"
     gobierno = declaracion(
         "autoria", "To była prowokacja rosyjskich dronów", "gobierno",
-        autoridad="Premier RP", autor="Rusia",
+        autoridad="Premier RP", autor="Rusia", cita_literal=True,
     )  # fmt: skip
     resultado = aplicar(confirma, gobierno)
     assert resultado["estado"]["actual"] == "atribuido"
@@ -149,7 +149,7 @@ def test_la_atribucion_oficial_que_habla_de_drones_confirma_la_presencia() -> No
     )
     atribuye = declaracion(
         "autoria", "Rusia es responsable de los drones que sobrevolaron el aeropuerto",
-        "gobierno", autoridad="Guvernul Republicii Moldova", autor="Rusia",
+        "gobierno", autoridad="Guvernul Republicii Moldova", autor="Rusia", cita_literal=True,
     )  # fmt: skip
     resultado = aplicar(confirma, atribuye)
     assert resultado["estado"]["actual"] == "atribuido"

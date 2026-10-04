@@ -36,6 +36,12 @@ TRANSICIONES: dict[Estado, frozenset[Estado]] = {
 # igual o mayor que la de la fuente que provocó el estado de origen.
 REVERSIONES = frozenset({(Estado.DESMENTIDO, Estado.CONFIRMADO)})
 
+# Retirada de una atribución que no se sostiene (proceso/atribucion.retirar): vuelve al estado
+# de antes y solo vale con su motivo en el paso del historial. No la provoca una fuente.
+RETIRADAS = frozenset(
+    {(Estado.ATRIBUIDO, Estado.CONFIRMADO), (Estado.ATRIBUIDO, Estado.NOTIFICADO)}
+)
+
 # En la capa de Ucrania la atribución no aplica.
 EXCLUIDOS_POR_CAPA: dict[Capa, frozenset[Estado]] = {
     Capa.GENERAL: frozenset(),
@@ -109,7 +115,10 @@ def errores_historial(
     for (origen, paso_origen), (destino, paso_destino) in itertools.pairwise(
         zip(historial, pasos, strict=True)
     ):
-        if not permitida(origen, destino, capa):
+        if (origen, destino) in RETIRADAS:
+            if not paso_destino.get("motivo"):
+                errores.append(f"retirada de la atribución sin motivo: {origen} → {destino}")
+        elif not permitida(origen, destino, capa):
             errores.append(f"transición no permitida: {origen} → {destino}")
         elif (origen, destino) in REVERSIONES:
             error = error_reversion(

@@ -1,4 +1,4 @@
-// Forma de los ficheros públicos de publicacion/ (esquema 1.10.0, solo campos públicos)
+// Forma de los ficheros públicos de publicacion/ (esquema 1.11.0, solo campos públicos)
 // y de los resúmenes que la web deriva de ellos en el build.
 
 export type Estado = "notificado" | "confirmado" | "atribuido" | "desmentido";
@@ -30,6 +30,16 @@ export interface PasoHistorial {
   fecha: Instante;
   // Ausente cuando el cambio lo provocó una fuente que no es pública.
   fuente_id?: string;
+  /** Por qué cambia el estado cuando lo cambia una corrección: la retirada de una atribución. */
+  motivo?: Titulo;
+}
+
+/** Lo que una autoridad dice que investiga del incidente, con su cita literal. */
+export interface Investigacion {
+  autoridad: string;
+  cita: string;
+  fuente_id: string;
+  fecha: Instante;
 }
 
 export interface Fuente {
@@ -150,6 +160,7 @@ export interface PropiedadesIncidente {
   };
   respuesta?: { medidas?: Medida[] };
   atribucion?: Atribucion;
+  investigacion?: Investigacion[];
   /** Ataque ruso contra Ucrania del que forma parte la incursión (proceso/cruces.py). */
   ataque?: {
     id: string;

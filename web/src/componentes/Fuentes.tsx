@@ -1,8 +1,10 @@
 import { useState } from "react";
 
 import type { AtribucionResumen, Estado, Fuente, FuenteImpacto, PasoHistorial } from "../datos/tipos.ts";
+import { autoridadEscrita, medioEscrito } from "../i18n/autoridades.ts";
 import { instante } from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
+import type { Idioma } from "../sitio.ts";
 import { EnlaceExterno } from "./EnlaceExterno.tsx";
 import { Simbolo } from "./Simbolo.tsx";
 
@@ -28,7 +30,18 @@ export function ordenarFuentes<F extends Fuente>(fuentes: readonly F[]): F[] {
     );
 }
 
-function FichaFuente({ t, fuente }: { t: Textos; fuente: FuenteImpacto }) {
+/** El nombre de una fuente en la ficha: una declaración oficial citada, con su autoridad escrita
+ *  en el idioma de la web; las demás, tal cual. */
+export function nombreDeFuente(t: Textos, medio: string, idioma: Idioma | undefined): string {
+  return idioma === undefined ? medio : medioEscrito(medio, idioma, t.ficha.declaracionCitada);
+}
+
+/** Una autoridad en el idioma de la web, o tal cual si no se sabe el idioma. */
+export function nombreDeAutoridad(autoridad: string, idioma: Idioma | undefined): string {
+  return idioma === undefined ? autoridad : autoridadEscrita(autoridad, idioma);
+}
+
+function FichaFuente({ t, fuente, idioma }: { t: Textos; fuente: FuenteImpacto; idioma: Idioma | undefined }) {
   const codigo = `${fuente.fiabilidad}${fuente.credibilidad}`;
   return (
     <li className="border-b border-linea py-2">
@@ -39,7 +52,7 @@ function FichaFuente({ t, fuente }: { t: Textos; fuente: FuenteImpacto }) {
           avisoNoValido={t.ficha.enlaceNoValido}
           className="font-medium"
         >
-          {fuente.medio}
+          {nombreDeFuente(t, fuente.medio, idioma)}
         </EnlaceExterno>
         <span className="mono rounded-sm border border-linea px-1 text-xs text-acento">
           <span className="sr-only">{t.ficha.codigo(codigo)}</span>
@@ -65,7 +78,15 @@ function FichaFuente({ t, fuente }: { t: Textos; fuente: FuenteImpacto }) {
   );
 }
 
-export function ListaFuentes({ t, fuentes }: { t: Textos; fuentes: readonly FuenteImpacto[] }) {
+export function ListaFuentes({
+  t,
+  fuentes,
+  idioma,
+}: {
+  t: Textos;
+  fuentes: readonly FuenteImpacto[];
+  idioma?: Idioma;
+}) {
   const [todas, setTodas] = useState(false);
   const ordenadas = ordenarFuentes(fuentes);
   const visibles = todas ? ordenadas : ordenadas.slice(0, FUENTES_VISIBLES);
@@ -75,7 +96,7 @@ export function ListaFuentes({ t, fuentes }: { t: Textos; fuentes: readonly Fuen
       <h3 className="rotulo">{t.ficha.fuentes(fuentes.length)}</h3>
       <ul>
         {visibles.map((fuente) => (
-          <FichaFuente key={fuente.id} t={t} fuente={fuente} />
+          <FichaFuente key={fuente.id} t={t} fuente={fuente} idioma={idioma} />
         ))}
       </ul>
       {ocultas > 0 && (
@@ -98,10 +119,11 @@ interface PropsHistorial {
   fuentes: readonly Fuente[];
   /** La atribución del incidente: el paso a atribuido lleva su marcador. */
   atribucion?: AtribucionResumen | null;
+  idioma?: Idioma;
 }
 
-export function Historial({ t, historial, fuentes, atribucion = null }: PropsHistorial) {
-  const medios = new Map(fuentes.map((fuente) => [fuente.id, fuente.medio]));
+export function Historial({ t, historial, fuentes, atribucion = null, idioma }: PropsHistorial) {
+  const medios = new Map(fuentes.map((fuente) => [fuente.id, nombreDeFuente(t, fuente.medio, idioma)]));
   return (
     <section className="mt-4">
       <h3 className="rotulo">{t.ficha.historial}</h3>
@@ -110,11 +132,18 @@ export function Historial({ t, historial, fuentes, atribucion = null }: PropsHis
           <li key={i} className="flex flex-wrap items-center gap-x-2 border-b border-linea py-1.5">
             <EstadoConTexto t={t} estado={paso.estado} atribucion={atribucion} />
             <span className="mono text-xs text-secundario">{instante(paso.fecha)}</span>
-            <span className="w-full text-xs text-secundario">
-              {paso.fuente_id === undefined
-                ? t.ficha.fuenteNoPublica
-                : (medios.get(paso.fuente_id) ?? paso.fuente_id)}
-            </span>
+            {paso.motivo === undefined ? (
+              <span className="w-full text-xs text-secundario">
+                {paso.fuente_id === undefined
+                  ? t.ficha.fuenteNoPublica
+                  : (medios.get(paso.fuente_id) ?? paso.fuente_id)}
+              </span>
+            ) : (
+              // Una corrección, no una fuente: el motivo, a la vista.
+              <span className="w-full text-xs text-texto" data-motivo-historial="">
+                {paso.motivo[idioma ?? "es"]}
+              </span>
+            )}
           </li>
         ))}
       </ol>

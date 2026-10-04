@@ -1,0 +1,27 @@
+{
+  "descripcion": "Expresiones que quitan valor de atribución a una frase (proceso/atribucion.py). «investigacion»: la autoridad investiga, examina o comprueba; lo que dice va a la ficha como investigación en curso y no cambia el estado. «duda»: posibilidad, sospecha, suposición o lo que dicen otros (fuentes, expertos, medios). Una frase con cualquiera de ellas nunca atribuye. Cada término es el comienzo de una palabra del texto, sin mayúsculas ni acentos (se normalizan al cargar); con «$» al final, solo la palabra entera; con espacios, las palabras seguidas.",
+  "investigacion": {
+    "es": ["investiga", "investigacion", "examina", "analiza", "comprueba", "verifica", "indaga", "pesquisa"],
+    "en": ["investigat", "examin", "probing", "looking into", "inquiry", "enquiry", "checking"],
+    "de": ["ermittl", "ermittel", "untersuch", "pruft", "prufen", "gepruft", "prufung"],
+    "fr": ["enquet", "examine", "analyse", "verifi"],
+    "ro": ["investiga", "investigh", "ancheta", "cercet", "verific", "analizeaz"],
+    "pl": ["bada$", "badaj", "badani", "sledztw", "dochodzeni", "sprawdza", "wyjasnia"],
+    "lt": ["tiria$", "tiriam", "tyrim", "aiskina", "patikrin"],
+    "nl": ["onderzo", "onderzoch", "bekijk", "nagaan"],
+    "uk": ["розслід", "перевіря", "перевірк", "з'ясову", "досліджу", "слідств"],
+    "ru": ["расслед", "проверя", "проверк", "выясня", "следств", "изуча"]
+  },
+  "duda": {
+    "es": ["posible", "posibilidad", "posiblemente", "podria", "puede que", "no descarta", "no se descarta", "sospech", "apunta a", "apuntan a", "todo indica", "indicios", "presunt", "probable", "probablemente", "al parecer", "parece", "supuest", "segun fuentes", "fuentes de seguridad", "fuentes cercanas", "cree que", "creen que", "habria", "seria$", "estaria"],
+    "en": ["possib", "could$", "might$", "may have", "may be", "suspect", "suspicion", "not rule out", "not ruled out", "cannot rule out", "points to", "point to", "pointing to", "indicat", "everything suggests", "suggest", "apparent", "appears", "seems", "likely", "probabl", "alleged", "reportedly", "believed", "believe$", "believes", "security sources", "sources say", "according to sources", "assum", "presum"],
+    "de": ["moglich", "konnte$", "konnten$", "durfte", "verdacht", "verdachtig", "vermut", "mutmasslich", "nicht ausgeschlossen", "nicht ausschliessen", "schliesst nicht aus", "deutet", "hinweis", "spricht vieles", "alles spricht", "offenbar", "scheinbar", "anscheinend", "wahrscheinlich", "angeblich", "sicherheitskreise", "sicherheitskreisen", "medienbericht", "zufolge", "ausging", "ausgeht", "ausgehen", "geht davon aus", "gehen davon aus", "glaubt", "glauben"],
+    "fr": ["possib", "pourrait", "pourraient", "soupcon", "n'exclut pas", "n exclut pas", "pas exclu", "semble", "semblent", "indiqu", "tout indique", "pointe vers", "probabl", "presum", "suppos", "selon des sources", "sources de securite", "aurait", "auraient", "croit", "croient"],
+    "ro": ["posib", "ar putea", "ar fi$", "nu exclude", "nu este exclus", "nu se exclude", "suspect", "suspiciun", "banui", "indica", "totul indica", "se pare", "pare ca", "probabil", "presupus", "prezumtiv", "potrivit unor surse", "surse din", "surse de securitate", "ar avea", "cred ca", "crede ca"],
+    "pl": ["mozliw", "mogl", "moze$", "podejrzew", "podejrzen", "nie wyklucza", "nie wykluczono", "wskazuj", "wszystko wskazuje", "wydaje sie", "prawdopodob", "domniema", "rzekom", "przypuszcza", "wedlug zrodel", "zrodla", "sadzi", "uwaza sie", "najpewniej", "najprawdopodobniej"],
+    "lt": ["galim", "galejo", "gali buti", "itari", "itaria", "itarim", "neatmeta", "neatmetama", "nurodo", "panasu", "tiketina", "tikriausiai", "spejam", "manoma", "saltiniai", "saltiniu", "greiciausiai", "veikiausiai"],
+    "nl": ["mogelijk", "zou$", "zouden$", "kan zijn", "vermoed", "verdacht", "sluit niet uit", "niet uitgesloten", "wijst op", "wijzen op", "alles wijst", "lijkt", "lijken", "waarschijnlijk", "vermeend", "zou zijn", "zouden zijn", "volgens bronnen", "bronnen", "denkt", "denken"],
+    "uk": ["можлив", "міг$", "могла$", "могли$", "може бути", "підозр", "не виключ", "вказує", "вказують", "все вказує", "схоже", "ймовірно", "імовірно", "вірогідно", "нібито", "припуска", "за даними джерел", "джерела", "вважа", "очевидно"],
+    "ru": ["возможн", "мог$", "могла$", "могли$", "может быть", "подозр", "не исключ", "указыва", "все указывает", "похоже", "вероятно", "предположительно", "предполага", "якобы", "по данным источников", "источники", "считают", "считается", "очевидно", "судя по"]
+  }
+}

@@ -1,8 +1,9 @@
 import { afirmacionesDe, rangoDeFuentes, valorLegible } from "../datos/afirmaciones.ts";
-import { atribucionResumida } from "../datos/derivar.ts";
+import { ACTOR_SIN_NOMBRE, atribucionResumida } from "../datos/derivar.ts";
 import { cierre as leerCierre } from "../datos/efecto.ts";
 import type {
   AfirmacionPublica,
+  Atribucion,
   IncidenteDetalle,
   PresenciaDron,
   RangoODesconocido,
@@ -22,7 +23,8 @@ import { Enlace } from "../navegacion.tsx";
 import { rutaDeFicha } from "../sitio.ts";
 import type { Idioma } from "../sitio.ts";
 import { diaDeInstante } from "../tiempo/dias.ts";
-import { EstadoConTexto, Historial, ListaFuentes } from "./Fuentes.tsx";
+import { EnlaceExterno } from "./EnlaceExterno.tsx";
+import { EstadoConTexto, Historial, ListaFuentes, nombreDeAutoridad } from "./Fuentes.tsx";
 import { LineaFoco, ZOOM_VISOR_PUNTO } from "./FocoTermico.tsx";
 import { LineaTrafico } from "./TraficoAereo.tsx";
 import { Fila } from "./Panel.tsx";
@@ -145,6 +147,14 @@ function Cifra({
   );
 }
 
+/** A quién se atribuye, en el idioma de la web: un Estado por su código, nunca con el texto de
+ *  la fuente («Russland»); una persona que la autoridad no nombra, «una persona». */
+function actorEscrito(t: Textos, idioma: Idioma, atribucion: Atribucion): string {
+  if (atribucion.tipo === "estado" && atribucion.pais !== undefined) return pais(atribucion.pais, idioma);
+  if (atribucion.tipo === "persona" && atribucion.actor === ACTOR_SIN_NOMBRE) return t.atribucion.unaPersona;
+  return atribucion.actor;
+}
+
 function tieneCifra(valor: RangoODesconocido | undefined): boolean {
   return valor !== undefined && valor !== "desconocido";
 }
@@ -153,6 +163,11 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
   const { tiempo, lugar, objetivo, drones, consecuencias, respuesta, atribucion } = incidente;
   // El marcador de un atribuido: su bandera y, si es una persona, el punto.
   const marcador = atribucionResumida(incidente);
+  // A quién y según quién, escrito en el idioma de la web: el país a partir de su código, la
+  // persona sin nombre como «una persona» y la autoridad traducida.
+  const actor = atribucion === undefined ? "" : actorEscrito(t, idioma, atribucion);
+  const autoridad = atribucion === undefined ? "" : nombreDeAutoridad(atribucion.autoridad, idioma);
+  const porFuente = new Map(incidente.fuentes.map((f) => [f.id, f]));
   const titulo = incidente.titulo[idioma];
   const nombre = objetivo?.nombre ?? titulo;
   const vuelos: [RangoODesconocido | undefined, string, string][] = [
@@ -197,7 +212,7 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
           {incidente.estado.actual === "atribuido" && atribucion !== undefined ? (
             <span className="inline-flex items-center gap-1.5" data-estado-atribuido="">
               <Simbolo estado="atribuido" atribucion={marcador} etiqueta={textoAtribuido(t, idioma, marcador)} />
-              {t.ficha.confirmadoAtribuido(atribucion.actor, atribucion.autoridad)}
+              {t.ficha.confirmadoAtribuido(actor, autoridad)}
             </span>
           ) : (
             <EstadoConTexto t={t} estado={incidente.estado.actual} />
@@ -305,11 +320,43 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
         )}
         {atribucion !== undefined && (
           <Fila nombre={t.ficha.atribucion}>
-            {t.ficha.atribuidoA(atribucion.actor, atribucion.autoridad)}
+            {t.ficha.atribuidoA(actor, autoridad)}
             <span className="mono block text-xs text-secundario">
               {instante(atribucion.fecha)}
             </span>
             <QueDiceCadaFuente t={t} idioma={idioma} afirmaciones={de(CAMPOS_DE_FILA.atribucion)} />
+          </Fila>
+        )}
+        {incidente.investigacion !== undefined && incidente.investigacion.length > 0 && (
+          <Fila nombre={t.ficha.investigacion}>
+            <ul data-investigacion="">
+              {incidente.investigacion.map((entrada) => {
+                const fuente = porFuente.get(entrada.fuente_id);
+                return (
+                  <li key={`${entrada.fuente_id}-${entrada.cita}`} className="mb-1.5">
+                    {t.ficha.investiga(nombreDeAutoridad(entrada.autoridad, idioma))}
+                    <blockquote lang={fuente?.idioma} className="mt-0.5 border-l border-acento pl-2 text-secundario">
+                      «{entrada.cita}»
+                    </blockquote>
+                    <span className="mono block text-xs text-secundario">
+                      {instante(entrada.fecha)}
+                      {fuente !== undefined && (
+                        <>
+                          {" · "}
+                          <EnlaceExterno
+                            enlace={fuente.enlace}
+                            aviso={t.ficha.enlaceExterno}
+                            avisoNoValido={t.ficha.enlaceNoValido}
+                          >
+                            {t.ficha.verFuente}
+                          </EnlaceExterno>
+                        </>
+                      )}
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
           </Fila>
         )}
         {incidente.ataque !== undefined && (
@@ -360,12 +407,13 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
         )}
       </dl>
 
-      <ListaFuentes t={t} fuentes={incidente.fuentes} />
+      <ListaFuentes t={t} fuentes={incidente.fuentes} idioma={idioma} />
       <Historial
         t={t}
         historial={incidente.estado.historial}
         fuentes={incidente.fuentes}
         atribucion={marcador}
+        idioma={idioma}
       />
       <p className="mono mt-4 text-xs text-secundario">
         {t.ficha.actualizada}: {fechaHora(incidente.control.ultima_actualizacion.valor)}

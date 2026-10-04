@@ -376,6 +376,7 @@ export const en: Textos = {
     aPersonaDe: (gentilicio) => `Attributed to a person of ${gentilicio} nationality`,
     aPersonaDePais: (pais) => `Attributed to a person (nationality: ${pais})`,
     aPersona: "Attributed to a person",
+    unaPersona: "a person",
     leyendaEstado: "Attributed by an authority to a State",
     leyendaPersona: "Attributed by an authority to a person",
     bandera:
@@ -468,6 +469,10 @@ export const en: Textos = {
     porFecha: "same date, and it came from Ukraine",
     confirmadoAtribuido: (actor, autoridad) => `Confirmed · attributed to ${actor}, according to ${autoridad}`,
     atribuidoA: (actor, autoridad) => `${actor}, according to ${autoridad}`,
+    investigacion: "Investigation under way",
+    investiga: (autoridad) => `What ${autoridad} is investigating (this does not change the incident's status):`,
+    verFuente: "see the source",
+    declaracionCitada: (autoridad, medio) => `Statement by ${autoridad}, quoted in ${medio}`,
     motivoDesmentido: "Reason for the denial",
     desconocido: "No data",
     minutos: (n) => `${n} min`,
@@ -693,8 +698,16 @@ export const en: Textos = {
                 termino: "Attributed",
                 marca: { estado: "atribuido" },
                 texto: [
-                  "A confirmed incident that an authority attributes to a State or to a person. It " +
-                    "only counts if the authority's quoted statement names who it is attributed to. " +
+                  "A confirmed incident for which a competent authority (government, ministry, armed " +
+                    "forces, prosecutor or police) expressly states, in its own words, who is " +
+                    "responsible: a State or a person. A news report saying so without the " +
+                    "authority's own words is not enough, nor is an authority investigating, examining " +
+                    "a possible link, not ruling it out, finding it possible or suspecting it: that " +
+                    "goes in the record as an investigation under way and the incident stays " +
+                    "confirmed. The perpetrator is never the authority making the statement. A person " +
+                    "only if the authority has arrested, charged or convicted them, and their name only " +
+                    "if the authority gives it. If an attribution no longer holds, it is withdrawn with " +
+                    "a step in the history saying why. " +
                     "On the map, a circle with a thick red ring, larger than an incident's and drawn " +
                     "on top of everything, centred on the place: inside, the flag of the country the " +
                     "authority attributes it to, the State or the person's nationality (the latter " +

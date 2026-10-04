@@ -22,6 +22,9 @@ def _estado() -> set[str]:
         "estado.historial[].estado",
         "estado.historial[].fuente_id",
         *_instante("estado.historial[].fecha"),
+        "estado.historial[].motivo",
+        "estado.historial[].motivo.es",
+        "estado.historial[].motivo.en",
     }
 
 
@@ -181,6 +184,11 @@ CAMPOS_PUBLICOS_INCIDENTE: frozenset[str] = frozenset(
         "atribucion.tipo",
         "atribucion.pais",
         *_instante("atribucion.fecha"),
+        "investigacion",
+        "investigacion[].autoridad",
+        "investigacion[].cita",
+        "investigacion[].fuente_id",
+        *_instante("investigacion[].fecha"),
         *_fuentes(),
         *_afirmaciones(),
         *_control(),

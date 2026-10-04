@@ -1,0 +1,55 @@
+{
+  "descripcion": "Motivo, revisado a mano el 4 de octubre de 2026, de cada atribución retirada con la regla estricta (proceso/atribucion.py, recogida/tipo_atribucion.py). La decisión la toma la regla; aquí solo se escribe por qué con lo que dicen las citas guardadas, en español y en inglés, para el historial de la ficha. El detalle, en docs/informe_marcador_atribuido.md. «por_regla»: el motivo de cada regla, para lo que no tiene uno revisado.",
+  "motivos": {
+    "EODI-2025-00247": {
+      "es": "Se retira la atribución: la única cita es de una noticia que cuenta que la presidenta de Moldavia acusó a Moscú de intentar desestabilizar el país, sin palabras literales de la presidenta que atribuyan los drones.",
+      "en": "Attribution withdrawn: the only quote is from a news report saying that the President of Moldova accused Moscow of attempting to destabilise the country, without the President's own words attributing the drones."
+    },
+    "EODI-2026-00015": {
+      "es": "Se retira la atribución: el nombre guardado como autor era el del propio prefecto que declara, y su frase solo dice que el dron entró desde la República de Moldavia, sin atribuirlo a nadie.",
+      "en": "Attribution withdrawn: the name stored as the perpetrator was that of the prefect making the statement, and his statement only says the drone entered from the Republic of Moldova, without attributing it to anyone."
+    },
+    "EODI-2026-00074": {
+      "es": "Se retira la atribución: la única cita es de una noticia que cuenta que las autoridades moldavas llamaron «ruso» al dron, sin decir qué autoridad ni con qué palabras.",
+      "en": "Attribution withdrawn: the only quote is from a news report saying that the Moldovan authorities called the drone “Russian”, without saying which authority or in what words."
+    },
+    "EODI-2026-00283": {
+      "es": "Se retira la atribución: la autoridad examina una posible relación, no la afirma. La fiscalía federal alemana examina si el dron hallado junto a la base aérea de Wunstorf guarda relación con el incidente de Leipzig; la otra frase solo es una noticia que cuenta que el Gobierno federal «suponía» un intento de atentado ruso.",
+      "en": "Attribution withdrawn: the authority examines a possible link, it does not assert it. The German Federal Prosecutor examines whether the drone found near the Wunstorf air base is linked to the Leipzig incident; the other quote is only a news report saying the Federal Government “assumed” a Russian attack attempt."
+    }
+  },
+  "por_regla": {
+    "investigacion": {
+      "es": "Se retira la atribución: la autoridad investiga o examina, no afirma quién es el responsable.",
+      "en": "Attribution withdrawn: the authority investigates or examines; it does not state who is responsible."
+    },
+    "duda": {
+      "es": "Se retira la atribución: la frase de la autoridad lo da por posible, no lo afirma.",
+      "en": "Attribution withdrawn: the authority's statement treats it as possible; it does not assert it."
+    },
+    "declarante": {
+      "es": "Se retira la atribución: el autor guardado es la propia autoridad que declara.",
+      "en": "Attribution withdrawn: the stored perpetrator is the authority making the statement."
+    },
+    "no_literal": {
+      "es": "Se retira la atribución: no hay palabras literales de la autoridad, solo una noticia que lo cuenta.",
+      "en": "Attribution withdrawn: there are no words from the authority itself, only a news report about it."
+    },
+    "no_nombra": {
+      "es": "Se retira la atribución: la frase de la autoridad no nombra a quien se atribuye.",
+      "en": "Attribution withdrawn: the authority's statement does not name who it is attributed to."
+    },
+    "categoria": {
+      "es": "Se retira la atribución: quien la hace no es una autoridad competente.",
+      "en": "Attribution withdrawn: it is not made by a competent authority."
+    },
+    "tipo": {
+      "es": "Se retira la atribución: no se atribuye a un Estado ni a una persona.",
+      "en": "Attribution withdrawn: it is not attributed to a State or to a person."
+    },
+    "persona": {
+      "es": "Se retira la atribución: la autoridad no ha detenido, acusado ni condenado a la persona.",
+      "en": "Attribution withdrawn: the authority has not arrested, charged or convicted the person."
+    }
+  }
+}
