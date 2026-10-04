@@ -96,5 +96,13 @@ describe("atribución retirada", () => {
       "Statement by the German Federal Government (Bundesregierung), quoted in come-on.de",
     );
     expect(medioEscrito("dr.dk", "es", es.ficha.declaracionCitada)).toBe("dr.dk");
+    // «de el» se contrae en «del»; «de la», no.
+    const declaracion = (medio: string) => medioEscrito(medio, "es", es.ficha.declaracionCitada);
+    expect(declaracion("Bundesregierung (declaración oficial citada en come-on.de)")).toBe(
+      "Declaración del Gobierno federal alemán (Bundesregierung), citada en come-on.de",
+    );
+    expect(declaracion("Bundesanwaltschaft (declaración oficial citada en tagesspiegel.de)")).toBe(
+      "Declaración de la Fiscalía federal alemana (Bundesanwaltschaft), citada en tagesspiegel.de",
+    );
   });
 });

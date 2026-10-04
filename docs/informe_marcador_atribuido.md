@@ -1,7 +1,7 @@
 # Marcador de los atribuidos: círculo con la bandera del país
 
-Fecha: 4 de octubre de 2026. PR #97 (marcador) y PR #102 (revisión de las atribuciones con la
-regla estricta, esquema 1.11.0).
+Fecha: 4 de octubre de 2026. PR #97 (marcador), PR #102 (revisión de las atribuciones con la
+regla estricta, esquema 1.11.0), PR #106 (base cifrada con xz) y el PR de este informe.
 
 La bandera roja con mástil de los incidentes «atribuido» desaparece de toda la web. En su lugar,
 el mismo marcador en el mapa, la ficha, la lista, el historial de estados, la leyenda, los
@@ -288,6 +288,79 @@ pruebas de la bandera (Vitest y los puntos 4 y 4c de `e2e/pulido.spec.ts`) y sus
 (`pulido-4-*.png`, `pulido-4c-*.png`). Las fuentes y capas del mapa pasan a llamarse
 «atribuidos».
 
+## La subida de la base que falló (PR #106)
+
+La recogida de las 12:17 del 4 de octubre aplicó la retirada («retiradas: 5»), pero no publicó:
+falló el `git push` de la base cifrada a la rama `estado` del repositorio de datos. La base,
+comprimida con gzip, ocupaba ya 99,4 MiB a las 11:17 (966 MiB en claro) y con lo recogido a las
+12:17 pasó de los 100 MiB que admite GitHub por fichero. No lo causó esta corrección (cinco
+versiones de incidente son unos pocos KB), pero bloqueaba toda publicación. El PR #106 comprime la
+base con xz, nivel 3: 45,7 MiB, unos 26 s para comprimir y 3 s para descomprimir; se siguen
+leyendo las bases con gzip y las anteriores sin comprimir. La recogida de las 13:17 leyó la base
+de las 11:17, volvió a aplicar la retirada, subió la base nueva y publicó. Los clones con código
+anterior al PR #106 no leen la base nueva hasta actualizarse.
+
 ## Comprobación
 
-PENDIENTE_PRODUCCION
+- Puerta local en cada PR: pytest (1703 en verde con 33 omitidos en el último), ruff, formato y
+  mypy estricto; en la web, lint, TypeScript estricto, Vitest (423 en verde), auditoría de npm y
+  build. Workflow de tests en verde sobre cada rama rebasada y sobre `main`.
+- Fusiones según `docs/fusiones.md`, fuera de los minutos 12 a 40: #97 a las 10:46, #102 a las
+  11:50 y #106 a las 12:41 (UTC). Antes del push del #102, la comprobación de la lista de
+  ficheros detectó que `main` había recibido el #101 entre el fetch y el commit único, que lo
+  habría revertido: se abortó, se rebasó y se repitió el workflow.
+- Recogida de las 13:17: «atribuciones clasificadas: 0; retiradas: 5; sin guardar: 0», base
+  subida a la rama `estado`, ficheros publicados en `main`.
+- En droneobservatory.eu, con los datos de las 13:17: 592 incidentes servidos (516 antes; no
+  bajan), **0 atribuidos**, y EODI-2025-00247, EODI-2026-00015, EODI-2026-00074 y EODI-2026-00283
+  en «confirmado». «Dolachi» no aparece en `resumen.json`, `incidentes.geojson`, `incidentes.csv`
+  ni en el JSON de la ficha de EODI-2026-00015. La ficha de EODI-2026-00283 lleva el titular
+  «Dron en el aeropuerto de Leipzig/Halle», el motivo de la retirada en el historial y la
+  investigación de la fiscalía federal.
+- Playwright contra producción (`e2e/atribuido.spec.ts`), en 360 × 800, 390 × 844, 412 × 915 y
+  escritorio: 20 pruebas en verde. Las cuatro fichas revisadas con su estado nuevo, el motivo de
+  la retirada en el historial y sin el nombre del prefecto; la cifra de atribuidos de la cabecera
+  y del menú (0) igual a los que quedan; el icono del marcador nuevo registrado en el mapa;
+  leyenda, filtros y cifras con el marcador nuevo; ninguna bandera con mástil (ni en el
+  documento, ni en los estilos, ni en los iconos del mapa).
+- Al revisar las capturas de producción se vio «Declaración de el prefecto de Iasi» en las
+  fuentes de la ficha: corregido a «del» (con su test) en el PR de este informe.
+
+Capturas en `docs/capturas`:
+
+- Las cuatro fichas revisadas, en producción, en los cuatro tamaños:
+  `atribuido-revisado-<id>-<tamaño>.png`.
+- El mapa, las cifras, la leyenda, los filtros y Chisináu de cerca y de lejos, en producción:
+  `atribuido-{mapa,cifras,leyenda,filtros,chisinau-cerca,chisinau-lejos}-<tamaño>.png`.
+- Una ampliada de cada variante del marcador (densidad 4, junto a los círculos de alrededor). En
+  producción ya no hay ningún atribuido, así que son de la construcción local con datos de prueba:
+  `atribuido-variante-estado-prueba-*.png` (Rusia, con la base simulada del PR #97),
+  `atribuido-variante-persona-con-pais-prueba-*.png` (Rumanía, con el punto) y
+  `atribuido-variante-persona-sin-pais-prueba-*.png` (relleno liso con el punto).
+- Retiradas las capturas de la bandera con mástil que quedaban del PR #73
+  (`atribuido-{1,2,3}-{mapa,ficha}-*.png`), además de las del pulido (`pulido-4-*`,
+  `pulido-4c-*`).
+
+## Pendientes, con su arreglo
+
+- **EODI-2026-00283 mezcla dos sucesos** (Wunstorf en septiembre; fecha y lugar de Leipzig del 4
+  de agosto). Arreglo: separar el candidato de Wunstorf y volver a extraerlo, y unir lo de Leipzig
+  con EODI-2026-00391. Lo lleva la sesión de corrección de errores de datos.
+- **El incidente de Leipzig del 4 de agosto está repetido** en EODI-2026-00391, 00239, 00129,
+  00190 y 00318, y el Gobierno alemán lo atribuyó a Rusia públicamente. Arreglo: unir los
+  registros y traer su comunicado con las palabras literales; con la ficha nueva, lo atribuye sola.
+- **Las autorías que se quedaron fuera** (tabla de arriba): buscar el texto original de cada
+  declaración por la búsqueda dirigida y las fuentes oficiales.
+- **Titulares con la nacionalidad de los drones sin atribución** en incidentes que no son de esta
+  revisión («Dron ruso cargado de explosivos ataca Leipzig»). Arreglo: aplicar a todos los
+  titulares la regla que ya se aplica a los retirados (`proceso/atribucion.titulo_sin_atribucion`)
+  dentro de la revisión horaria de titulares.
+- **El nombre del prefecto en el historial público**: sigue en versiones anteriores de los
+  ficheros de `publicacion/` en el historial de git del repositorio público y en las exportaciones
+  semanales cifradas ya enviadas a AEGIS. Arreglo: la exportación del lunes 5 de octubre lleva la
+  corrección y AEGIS la reimporta; quitarlo del historial de git exige reescribirlo con un push
+  forzado sobre `main`, que se deja a decisión expresa.
+- **Una reconstrucción completa de los incidentes** (como la del criterio de presencia) los
+  rehace desde las fichas: no volvería a atribuirlos, pero su historial perdería el paso de la
+  retirada. Arreglo: guardar las retiradas en el control del incidente y que la reconstrucción
+  las repita.
