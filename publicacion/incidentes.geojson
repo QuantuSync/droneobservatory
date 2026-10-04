@@ -3329,6 +3329,19 @@
      },
      {
       "campo": "presencia_dron",
+      "cita": "Eine Drohnensichtung im Nahbereich des Flughafens München hat am Freitagnachmittag zur Folge gehabt, dass gleich mehrere Flugzeuge zur Zwischenlandung nach Hörsching umgeleitet wurden.",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-05-02T18:15Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-e0eceb7c72d0f71c",
+      "medio": "tips.at",
+      "valor": "confirmada"
+     },
+     {
+      "campo": "presencia_dron",
       "cita": "Eine Drohne wurde im unmittelbaren Umfeld des Flughafens der bayerischen Landeshauptstadt gesichtet.",
       "credibilidad": 3,
       "fecha": {
@@ -3403,7 +3416,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-03T20:17Z"
+      "valor": "2026-10-04T07:17Z"
      }
     },
     "drones": {
@@ -3465,7 +3478,7 @@
      "nombre": "Flughafen München",
      "oaci": "EDDM"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "tiempo": {
      "inicio": {
       "precision": "hora",
@@ -3474,8 +3487,8 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Possible drone forces interruption of air traffic at Munich Airport",
-     "es": "Posible dron obliga a interrumpir el tráfico aéreo en el aeropuerto de Múnich"
+     "en": "Drone forces interruption of air traffic at Munich Airport",
+     "es": "Dron obliga a interrumpir el tráfico aéreo en el aeropuerto de Múnich"
     }
    },
    "type": "Feature"
@@ -23989,6 +24002,19 @@
       "valor": "no_confirmada"
      },
      {
+      "campo": "presencia_dron",
+      "cita": "policija tikina gavusi pranešimą apie pastebėtą droną",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-09-12T07:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-0a31d0c062ffa31f",
+      "medio": "ve.lt",
+      "valor": "confirmada"
+     },
+     {
       "campo": "tiempo.fin",
       "credibilidad": 3,
       "fecha": {
@@ -24043,7 +24069,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-03T20:17Z"
+      "valor": "2026-10-04T07:17Z"
      }
     },
     "drones": {
@@ -24105,7 +24131,7 @@
      "nombre": "Tarptautinis Vilniaus oro uostas",
      "oaci": "EYVI"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "tiempo": {
      "duracion_min": 30,
      "fin": {
@@ -24119,8 +24145,8 @@
     },
     "tipo": "interrupcion_aeroportuaria",
     "titulo": {
-     "en": "Possible drone over Vilnius airport forces flight diversion",
-     "es": "Posible dron sobre el aeropuerto de Vilna obliga a desviar un vuelo"
+     "en": "Drone over Vilnius airport forces flight diversion",
+     "es": "Dron sobre el aeropuerto de Vilna obliga a desviar un vuelo"
     },
     "trafico_aereo": {
      "cierre": {
@@ -24945,6 +24971,19 @@
       "valor": "no_confirmada"
      },
      {
+      "campo": "presencia_dron",
+      "cita": "Se pare că o dronă civilă, ridicată ilegal, a fost la un pas să lovească un avion Turkish Airlines.",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-09-30T01:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-3fa610e21fc7e06b",
+      "medio": "dcnews.ro",
+      "valor": "confirmada"
+     },
+     {
       "campo": "tiempo.inicio",
       "credibilidad": 3,
       "fecha": {
@@ -24984,7 +25023,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-03T20:17Z"
+      "valor": "2026-10-04T07:17Z"
      }
     },
     "drones": {
@@ -25046,7 +25085,7 @@
      "nombre": "Aeroportul Internațional Henri Coandă - Otopeni (OTP)",
      "oaci": "LROP"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "tiempo": {
      "inicio": {
       "precision": "dia",
@@ -25055,8 +25094,8 @@
     },
     "tipo": "interrupcion_aeroportuaria",
     "titulo": {
-     "en": "Civil possible drone causes incident at Bucharest Otopeni airport",
-     "es": "Posible dron civil causa incidente en el aeropuerto de Bucarest Otopeni"
+     "en": "Civil drone causes incident at Bucharest Otopeni airport",
+     "es": "Dron civil causa incidente en el aeropuerto de Bucarest Otopeni"
     }
    },
    "type": "Feature"
@@ -35376,6 +35415,19 @@
       "valor": "no_confirmada"
      },
      {
+      "campo": "presencia_dron",
+      "cita": "varios drones irrumpieran en el espacio aéreo próximo a la pista",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-23T15:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-5a801868a4465f4d",
+      "medio": "europasur.es",
+      "valor": "confirmada"
+     },
+     {
       "campo": "tiempo.inicio",
       "credibilidad": 3,
       "fecha": {
@@ -35419,7 +35471,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-03T20:17Z"
+      "valor": "2026-10-04T07:17Z"
      }
     },
     "drones": {
@@ -35467,7 +35519,7 @@
      "nombre": "Royal Air Force Gibraltar",
      "oaci": "LXGB"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "tiempo": {
      "inicio": {
       "precision": "dia",
@@ -35476,8 +35528,8 @@
     },
     "tipo": "interrupcion_aeroportuaria",
     "titulo": {
-     "en": "Multiple possible drones disrupt Gibraltar airport and force military aircraft to divert",
-     "es": "Varios posibles drones paralizan el aeropuerto de Gibraltar y obligan a desviar un avión militar"
+     "en": "Multiple drones disrupt Gibraltar airport and force military aircraft to divert",
+     "es": "Varios drones paralizan el aeropuerto de Gibraltar y obligan a desviar un avión militar"
     }
    },
    "type": "Feature"
@@ -38939,6 +38991,19 @@
       "valor": "no_confirmada"
      },
      {
+      "campo": "presencia_dron",
+      "cita": "Drohnen-Alarm im Norden: Flugverkehr am Bremer Airport für fast eine Stunde lahmgelegt",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-03T09:15Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-6ecbaadec7bef526",
+      "medio": "kreiszeitung.de",
+      "valor": "confirmada"
+     },
+     {
       "campo": "tiempo.fin",
       "credibilidad": 3,
       "fecha": {
@@ -38989,7 +39054,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-03T20:17Z"
+      "valor": "2026-10-04T07:17Z"
      }
     },
     "drones": {
@@ -39050,7 +39115,7 @@
      "nombre": "Flugplatz Norden-Norddeich",
      "oaci": "EDWS"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "tiempo": {
      "duracion_min": 52,
      "fin": {
@@ -39064,8 +39129,8 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Possible drone over Bremen airport forces airspace closure",
-     "es": "Posible dron sobre el aeropuerto de Bremen obliga a cerrar el espacio aéreo"
+     "en": "Drone over Bremen airport forces airspace closure",
+     "es": "Dron sobre el aeropuerto de Bremen obliga a cerrar el espacio aéreo"
     }
    },
    "type": "Feature"
@@ -66014,6 +66079,19 @@
       "valor": "no_confirmada"
      },
      {
+      "campo": "presencia_dron",
+      "cita": "Drohnensichtung: Flüge von Brüssel nach Köln/Bonn umgeleitet.",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-05T11:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-fc8931ef5b891421",
+      "medio": "rundschau-online.de",
+      "valor": "confirmada"
+     },
+     {
       "campo": "tipo",
       "credibilidad": 3,
       "fecha": {
@@ -66034,7 +66112,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-03T20:17Z"
+      "valor": "2026-10-04T07:17Z"
      }
     },
     "drones": {
@@ -66107,7 +66185,7 @@
      "nombre": "Flughafen Köln/Bonn",
      "oaci": "EDDK"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "tiempo": {
      "inicio": {
       "precision": "aproximada",
@@ -66116,8 +66194,8 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Possible drone sighting forces flight diversions at Cologne/Bonn airport",
-     "es": "Avistamiento de posible dron obliga a desviar vuelos en el aeropuerto de Colonia/Bonn"
+     "en": "Drone sighting forces flight diversions at Cologne/Bonn airport",
+     "es": "Avistamiento de dron obliga a desviar vuelos en el aeropuerto de Colonia/Bonn"
     },
     "trafico_aereo": {
      "cierre": {
@@ -76474,6 +76552,19 @@
       "valor": "no_confirmada"
      },
      {
+      "campo": "presencia_dron",
+      "cita": "Un nuevo avistamiento de dron en el aeropuerto de Fuerteventura obliga a desviar un vuelo de Ryanair.",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-10-19T17:15Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-d9d7696df47051eb",
+      "medio": "laprovincia.es",
+      "valor": "confirmada"
+     },
+     {
       "campo": "tipo",
       "credibilidad": 3,
       "fecha": {
@@ -76498,7 +76589,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-03T20:17Z"
+      "valor": "2026-10-04T07:17Z"
      }
     },
     "drones": {
@@ -76542,7 +76633,7 @@
      "categoria": "aeropuerto",
      "nombre": "Aeropuerto de Fuerteventura"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "tiempo": {
      "inicio": {
       "precision": "aproximada",
@@ -76551,8 +76642,8 @@
     },
     "tipo": "interrupcion_aeroportuaria",
     "titulo": {
-     "en": "Possible drone sighting at Fuerteventura airport forces flight diversion",
-     "es": "Avistamiento de posible dron en el aeropuerto de Fuerteventura obliga a desviar un vuelo"
+     "en": "Drone sighting at Fuerteventura airport forces flight diversion",
+     "es": "Avistamiento de dron en el aeropuerto de Fuerteventura obliga a desviar un vuelo"
     }
    },
    "type": "Feature"
@@ -81157,6 +81248,19 @@
      },
      {
       "campo": "presencia_dron",
+      "cita": "Eine Maschine umgeleitet und es gab Verspätungen. Ein Zeuge hatte der Polizei laut Mitteilung am Abend in der Einflugschneise des Flughafens eine Drohnensichtung gemeldet.",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-02-27T12:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-809a0c8f28fde394",
+      "medio": "weser-kurier.de",
+      "valor": "confirmada"
+     },
+     {
+      "campo": "presencia_dron",
       "cita": "Wer diese gesteuert hat, war zunächst unklar.",
       "credibilidad": 3,
       "fecha": {
@@ -81239,7 +81343,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-03T20:17Z"
+      "valor": "2026-10-04T07:17Z"
      }
     },
     "drones": {
@@ -81315,7 +81419,7 @@
      "nombre": "Flughafen Bremen",
      "oaci": "EDDW"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "tiempo": {
      "inicio": {
       "precision": "dia",
@@ -81324,8 +81428,8 @@
     },
     "tipo": "interrupcion_aeroportuaria",
     "titulo": {
-     "en": "Possible drone sighting causes disruptions at Bremen airport",
-     "es": "Avistamiento de posible dron causa perturbaciones en el aeropuerto de Bremen"
+     "en": "Drone sighting causes disruptions at Bremen airport",
+     "es": "Avistamiento de dron causa perturbaciones en el aeropuerto de Bremen"
     }
    },
    "type": "Feature"
@@ -83278,6 +83382,19 @@
       "valor": "no_confirmada"
      },
      {
+      "campo": "presencia_dron",
+      "cita": "Zweimal wurde der Flughafen Luxemburg innerhalb weniger Tage wegen Drohnen lahmgelegt.",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-23T07:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-5df528ca4e4eb863",
+      "medio": "tageblatt.lu",
+      "valor": "confirmada"
+     },
+     {
       "campo": "tipo",
       "credibilidad": 3,
       "fecha": {
@@ -83298,7 +83415,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-03T20:17Z"
+      "valor": "2026-10-04T07:17Z"
      }
     },
     "drones": {
@@ -83346,7 +83463,7 @@
      "nombre": "Aéroport de Luxembourg",
      "oaci": "ELLX"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "tiempo": {
      "inicio": {
       "precision": "aproximada",
@@ -83355,8 +83472,8 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Closures at Luxembourg Airport due to possible drone sightings",
-     "es": "Cierres en el aeropuerto de Luxemburgo por avistamientos de posibles drones"
+     "en": "Closures at Luxembourg Airport due to drone sightings",
+     "es": "Cierres en el aeropuerto de Luxemburgo por avistamientos de drones"
     }
    },
    "type": "Feature"
@@ -87755,6 +87872,19 @@
      },
      {
       "campo": "presencia_dron",
+      "cita": "Drohne in Leipzig/Halle: Verwirrung am Flughafen – zwei Flüge umgeleitet",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-08-28T06:45Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-dc64b865ae6ca20e",
+      "medio": "tlz.de",
+      "valor": "confirmada"
+     },
+     {
+      "campo": "presencia_dron",
       "cita": "Menschen hätten am Mittwoch im sachsen-anhaltischen Großkugel mit einer handelsüblichen Drohne Sanierungsarbeiten an einem Haus dokumentieren wollen.",
       "credibilidad": 3,
       "fecha": {
@@ -87806,7 +87936,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-03T20:17Z"
+      "valor": "2026-10-04T07:17Z"
      }
     },
     "drones": {
@@ -87882,7 +88012,7 @@
      "nombre": "Flughafen Leipzig/Halle",
      "oaci": "EDDP"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "tiempo": {
      "inicio": {
       "precision": "dia",
@@ -87891,8 +88021,8 @@
     },
     "tipo": "interrupcion_aeroportuaria",
     "titulo": {
-     "en": "Possible drone causes diversion of two flights at Leipzig/Halle airport",
-     "es": "Posible dron causa desvío de dos vuelos en el aeropuerto de Leipzig/Halle"
+     "en": "Drone causes diversion of two flights at Leipzig/Halle airport",
+     "es": "Dron causa desvío de dos vuelos en el aeropuerto de Leipzig/Halle"
     }
    },
    "type": "Feature"

@@ -792427,6 +792427,73 @@
    "region": "UA-63",
    "sentido": "RU_UA",
    "tipo": "impacto_guerra"
+  },
+  {
+   "categorias_objetivo": [],
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-04T07:17Z"
+    }
+   },
+   "credibilidad": 3,
+   "dia": "2026-10-03",
+   "fecha": {
+    "precision": "minuto",
+    "valor": "2026-10-04T06:27Z"
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/E_V_Kovalchuk/3023",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-10-04T06:27Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "❗Около посёлка Мамай Новозыбковского городского округа дрон-камикадзе ВСУ атаковал движущийся микроавтобус.",
+     "id": "E_V_Kovalchuk-3023",
+     "idioma": "ru",
+     "medio": "Губернатор Брянской области",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://t.me/koronavirus32/28119",
+     "fecha": {
+      "precision": "minuto",
+      "valor": "2026-10-04T06:27Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "❗Около посёлка Мамай Новозыбковского городского округа дрон-камикадзе ВСУ атаковал движущийся микроавтобус.",
+     "id": "koronavirus32-28119",
+     "idioma": "ru",
+     "medio": "Правительство Брянской области",
+     "replicas": 0
+    }
+   ],
+   "heridos": {
+    "max": 1,
+    "min": 1
+   },
+   "id": "EODI-IG-2026-03512",
+   "impacto": "impacto",
+   "lugar": {
+    "id": "geonames:7450083",
+    "nivel": "localidad",
+    "nombre": "Мамай",
+    "nombre_latino": "Mamay",
+    "punto": {
+     "lat": 52.5083,
+     "lon": 32.0039
+    },
+    "radio_km": 1.5
+   },
+   "parte_diario": true,
+   "region": "RU-BRY",
+   "reivindicacion_de_parte": true,
+   "sentido": "UA_RU",
+   "tipo": "impacto_guerra"
   }
  ]
 }

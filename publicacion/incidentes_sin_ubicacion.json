@@ -2025,6 +2025,19 @@
      "valor": "no_confirmada"
     },
     {
+     "campo": "presencia_dron",
+     "cita": "Собственикът на дрона, блокирал 6 полета",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-02-09T18:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-a2436f6e9b338515",
+     "medio": "btvnovinite.bg",
+     "valor": "confirmada"
+    },
+    {
      "campo": "tipo",
      "credibilidad": 3,
      "fecha": {
@@ -2049,7 +2062,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T07:17Z"
     }
    },
    "drones": {
@@ -2092,7 +2105,7 @@
     "nivel": "pais",
     "pais": "BG"
    },
-   "presencia_dron": "no_confirmada",
+   "presencia_dron": "confirmada",
    "tiempo": {
     "inicio": {
      "precision": "aproximada",
@@ -2101,8 +2114,8 @@
    },
    "tipo": "interrupcion_aeroportuaria",
    "titulo": {
-    "en": "Possible drone blocks six flights at Sofia airport",
-    "es": "Un posible dron bloquea seis vuelos en el aeropuerto de Sofía"
+    "en": "Drone blocks six flights at Sofia airport",
+    "es": "Un dron bloquea seis vuelos en el aeropuerto de Sofía"
    }
   },
   {
@@ -3492,6 +3505,19 @@
     },
     {
      "campo": "presencia_dron",
+     "cita": "Erneut Drohnen in Oslo gesichtet: Flüge umgeleitet",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-10-06T06:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-782753c1d5576ee5",
+     "medio": "diepresse.com",
+     "valor": "confirmada"
+    },
+    {
+     "campo": "presencia_dron",
      "cita": "pilot Norveških avijacija tokom prilaska aerodromu prijavio da je uočio između tri i pet dronova",
      "credibilidad": 3,
      "fecha": {
@@ -3524,7 +3550,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T07:17Z"
     }
    },
    "drones": {
@@ -4197,7 +4223,7 @@
     "nivel": "pais",
     "pais": "NO"
    },
-   "presencia_dron": "no_confirmada",
+   "presencia_dron": "confirmada",
    "tiempo": {
     "inicio": {
      "precision": "aproximada",
@@ -4206,8 +4232,8 @@
    },
    "tipo": "sobrevuelo",
    "titulo": {
-    "en": "Possible drones temporarily close Oslo airport",
-    "es": "Posibles drones cierran temporalmente el aeropuerto de Oslo"
+    "en": "Drones temporarily close Oslo airport",
+    "es": "Drones cierran temporalmente el aeropuerto de Oslo"
    }
   },
   {
@@ -32487,6 +32513,19 @@
      "valor": "no_confirmada"
     },
     {
+     "campo": "presencia_dron",
+     "cita": "The Vilnius-Riga-Tartu-Tallinn train is delayed on Tuesday as a drone threat alert has halted rail traffic in northern Latvia.",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-05-19T14:00Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-7d5326f77d03dfb3",
+     "medio": "baltictimes.com",
+     "valor": "confirmada"
+    },
+    {
      "campo": "tiempo.inicio",
      "credibilidad": 3,
      "fecha": {
@@ -32522,7 +32561,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T07:17Z"
     }
    },
    "drones": {
@@ -32578,7 +32617,7 @@
     "pais": "LV",
     "region": "northern Latvia"
    },
-   "presencia_dron": "no_confirmada",
+   "presencia_dron": "confirmada",
    "tiempo": {
     "inicio": {
      "precision": "dia",
@@ -32587,8 +32626,8 @@
    },
    "tipo": "sobrevuelo",
    "titulo": {
-    "en": "Possible drone threat halts rail traffic in Latvia",
-    "es": "Alerta de posibles drones detiene el tráfico ferroviario en Letonia"
+    "en": "Drone threat halts rail traffic in Latvia",
+    "es": "Alerta de drones detiene el tráfico ferroviario en Letonia"
    }
   },
   {
