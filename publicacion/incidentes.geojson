@@ -57241,6 +57241,21 @@
     "afirmaciones_publicas": [
      {
       "campo": "consecuencias.cierre.minutos",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-11-07T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EBLG-2025-11-07-EODI-2025-00163",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 71,
+       "min": 71
+      }
+     },
+     {
+      "campo": "consecuencias.cierre.minutos",
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
@@ -57256,6 +57271,18 @@
      },
      {
       "campo": "consecuencias.cierre.valor",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-11-07T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EBLG-2025-11-07-EODI-2025-00163",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": "si"
+     },
+     {
+      "campo": "consecuencias.cierre.valor",
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
@@ -57265,6 +57292,21 @@
       "fuente_id": "gdelt-579de9bb3746be6a",
       "medio": "elcorreo.com",
       "valor": "si"
+     },
+     {
+      "campo": "consecuencias.vuelos_desviados",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-11-07T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EBLG-2025-11-07-EODI-2025-00163",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 0,
+       "min": 0
+      }
      },
      {
       "campo": "drones.numero",
@@ -57994,6 +58036,20 @@
       "idioma": "es",
       "medio": "20minutos.es",
       "replicas": 1
+     },
+     {
+      "credibilidad": 2,
+      "enlace": "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.11.07-planes-readsb-prod-0",
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-11-07T00:00Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Cierre medido en EBLG: 04:26–05:37 UTC, 71 minutos, 0 desvíos y 0 esperas.",
+      "id": "adsblol-EBLG-2025-11-07-EODI-2025-00163",
+      "idioma": "es",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "replicas": 0
      }
     ],
     "id": "EODI-2025-00163",
@@ -58022,6 +58078,27 @@
     "titulo": {
      "en": "Drone sighting at Liège Airport interrupts air traffic",
      "es": "Dron avistado en el aeropuerto de Lieja interrumpe el tráfico aéreo"
+    },
+    "trafico_aereo": {
+     "cierre": {
+      "aeropuerto": "EBLG",
+      "difiere_de_declarado": true,
+      "duracion_min": 71,
+      "fin": {
+       "precision": "minuto",
+       "valor": "2025-11-07T05:37Z"
+      },
+      "inicio": {
+       "precision": "minuto",
+       "valor": "2025-11-07T04:26Z"
+      },
+      "resultado": "cierre_medido",
+      "vuelos_desviados": 0,
+      "vuelos_en_espera": 0
+     },
+     "datos": [
+      "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.11.07-planes-readsb-prod-0"
+     ]
     }
    },
    "type": "Feature"
@@ -97435,6 +97512,33 @@
    "properties": {
     "afirmaciones_publicas": [
      {
+      "campo": "consecuencias.cierre.minutos",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-11-04T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EDDM-2025-11-04-EODI-2025-00352",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 39,
+       "min": 39
+      }
+     },
+     {
+      "campo": "consecuencias.cierre.valor",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-11-04T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EDDM-2025-11-04-EODI-2025-00352",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": "si"
+     },
+     {
       "campo": "consecuencias.cierre.valor",
       "credibilidad": 3,
       "fecha": {
@@ -97445,6 +97549,21 @@
       "fuente_id": "gdelt-b36f84042b63d260",
       "medio": "sueddeutsche.de",
       "valor": "si"
+     },
+     {
+      "campo": "consecuencias.vuelos_desviados",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-11-04T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EDDM-2025-11-04-EODI-2025-00352",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 6,
+       "min": 6
+      }
      },
      {
       "campo": "lugar.pais",
@@ -97596,6 +97715,20 @@
       "idioma": "de",
       "medio": "sueddeutsche.de",
       "replicas": 0
+     },
+     {
+      "credibilidad": 2,
+      "enlace": "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.11.03-planes-readsb-prod-0",
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-11-04T00:00Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Cierre medido en EDDM: 18:50–19:30 UTC, 39 minutos, 6 desvíos y 14 esperas.",
+      "id": "adsblol-EDDM-2025-11-04-EODI-2025-00352",
+      "idioma": "es",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "replicas": 0
      }
     ],
     "id": "EODI-2025-00352",
@@ -97619,6 +97752,28 @@
     "titulo": {
      "en": "Temporary runway closure at Munich airport due to unconfirmed drone sighting",
      "es": "Cierre temporal de pista en el aeropuerto de Múnich por avistamiento de dron no confirmado"
+    },
+    "trafico_aereo": {
+     "cierre": {
+      "aeropuerto": "EDDM",
+      "difiere_de_declarado": false,
+      "duracion_min": 39,
+      "fin": {
+       "precision": "minuto",
+       "valor": "2025-11-04T19:30Z"
+      },
+      "inicio": {
+       "precision": "minuto",
+       "valor": "2025-11-04T18:50Z"
+      },
+      "resultado": "cierre_medido",
+      "vuelos_desviados": 6,
+      "vuelos_en_espera": 14
+     },
+     "datos": [
+      "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.11.03-planes-readsb-prod-0",
+      "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.11.04-planes-readsb-prod-0"
+     ]
     }
    },
    "type": "Feature"
