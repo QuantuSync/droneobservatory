@@ -124617,6 +124617,21 @@
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
+       "valor": "2026-08-07T14:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-871d27132e546848",
+      "medio": "theweek.com",
+      "valor": {
+       "max": 1,
+       "min": 1
+      }
+     },
+     {
+      "campo": "drones.numero",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
        "valor": "2026-08-07T17:15Z"
       },
       "fiabilidad": "C",
@@ -125070,11 +125085,35 @@
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
+       "valor": "2026-08-07T14:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-871d27132e546848",
+      "medio": "theweek.com",
+      "valor": "DE"
+     },
+     {
+      "campo": "lugar.pais",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
        "valor": "2026-08-07T17:15Z"
       },
       "fiabilidad": "C",
       "fuente_id": "gdelt-041397546a719cf2",
       "medio": "wa.de",
+      "valor": "DE"
+     },
+     {
+      "campo": "lugar.pais",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-08-08T11:45Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-8b8bebb6db39150a",
+      "medio": "t-online.de",
       "valor": "DE"
      },
      {
@@ -125099,6 +125138,18 @@
       "fiabilidad": "C",
       "fuente_id": "gdelt-ae6719b27af5e459",
       "medio": "naslovi.net",
+      "valor": "DE"
+     },
+     {
+      "campo": "lugar.pais",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-08-09T13:45Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-48eab62b427454da",
+      "medio": "news.de",
       "valor": "DE"
      },
      {
@@ -125298,6 +125349,30 @@
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
+       "valor": "2026-08-07T14:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-871d27132e546848",
+      "medio": "theweek.com",
+      "valor": "aeropuerto"
+     },
+     {
+      "campo": "objetivo.categoria",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-08-08T11:45Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-8b8bebb6db39150a",
+      "medio": "t-online.de",
+      "valor": "aeropuerto"
+     },
+     {
+      "campo": "objetivo.categoria",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
        "valor": "2026-08-08T14:30Z"
       },
       "fiabilidad": "C",
@@ -125459,6 +125534,18 @@
       "fiabilidad": "C",
       "fuente_id": "gdelt-a5d089f1afd78180",
       "medio": "mz.de",
+      "valor": "Flughafen Leipzig/Halle"
+     },
+     {
+      "campo": "objetivo.nombre",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-08-08T11:45Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-8b8bebb6db39150a",
+      "medio": "t-online.de",
       "valor": "Flughafen Leipzig/Halle"
      },
      {
@@ -125737,6 +125824,32 @@
      },
      {
       "campo": "presencia_dron",
+      "cita": "The fact that a drone armed with explosives is here on the grounds of an airport represents a new threat scenario.",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-08-07T14:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-871d27132e546848",
+      "medio": "theweek.com",
+      "valor": "confirmada"
+     },
+     {
+      "campo": "presencia_dron",
+      "cita": "US-Geheimdienste sind zu dem Schluss gekommen, dass Russland mit hoher Wahrscheinlichkeit hinter dem Vorfall steckt.",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-08-08T11:45Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-8b8bebb6db39150a",
+      "medio": "t-online.de",
+      "valor": "confirmada"
+     },
+     {
+      "campo": "presencia_dron",
       "cita": "Un drone carico di esplosivo trovato all'interno dell'aeroporto tedesco di Lipsia-Halle potrebbe essere riconducibile al governo russo",
       "credibilidad": 3,
       "fecha": {
@@ -125759,6 +125872,19 @@
       "fiabilidad": "C",
       "fuente_id": "gdelt-7df0b4f3aa849ef7",
       "medio": "thueringer-allgemeine.de",
+      "valor": "confirmada"
+     },
+     {
+      "campo": "presencia_dron",
+      "cita": "Nach dem Drohnenfund am Flughafen Leipzig/Halle berichten US-Medien über Hinweise auf eine Verbindung zu Russland.",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-08-09T13:45Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-48eab62b427454da",
+      "medio": "news.de",
       "valor": "confirmada"
      },
      {
@@ -126194,6 +126320,21 @@
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
+       "valor": "2026-08-07T14:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-871d27132e546848",
+      "medio": "theweek.com",
+      "valor": {
+       "precision": "dia",
+       "valor": "2026-08-06T00:00Z"
+      }
+     },
+     {
+      "campo": "tiempo.inicio",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
        "valor": "2026-08-07T17:15Z"
       },
       "fiabilidad": "C",
@@ -126202,6 +126343,21 @@
       "valor": {
        "precision": "minuto",
        "valor": "2026-08-06T22:00Z"
+      }
+     },
+     {
+      "campo": "tiempo.inicio",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-08-08T11:45Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-8b8bebb6db39150a",
+      "medio": "t-online.de",
+      "valor": {
+       "precision": "dia",
+       "valor": "2026-08-08T00:00Z"
       }
      },
      {
@@ -126452,12 +126608,36 @@
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
+       "valor": "2026-08-07T14:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-871d27132e546848",
+      "medio": "theweek.com",
+      "valor": "interrupcion_aeroportuaria"
+     },
+     {
+      "campo": "tipo",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
        "valor": "2026-08-07T17:15Z"
       },
       "fiabilidad": "C",
       "fuente_id": "gdelt-041397546a719cf2",
       "medio": "wa.de",
       "valor": "sobrevuelo"
+     },
+     {
+      "campo": "tipo",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-08-08T11:45Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-8b8bebb6db39150a",
+      "medio": "t-online.de",
+      "valor": "interrupcion_aeroportuaria"
      },
      {
       "campo": "tipo",
@@ -126481,6 +126661,18 @@
       "fiabilidad": "C",
       "fuente_id": "gdelt-7df0b4f3aa849ef7",
       "medio": "thueringer-allgemeine.de",
+      "valor": "interrupcion_aeroportuaria"
+     },
+     {
+      "campo": "tipo",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-08-09T13:45Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-48eab62b427454da",
+      "medio": "news.de",
       "valor": "interrupcion_aeroportuaria"
      },
      {
@@ -126680,7 +126872,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-04T17:17Z"
+      "valor": "2026-10-04T18:17Z"
      }
     },
     "drones": {
@@ -131711,6 +131903,20 @@
      },
      {
       "credibilidad": 3,
+      "enlace": "https://theweek.com/defence/leipzig-drone-explosives-is-germany-centre-of-hybrid-russia-nato-war",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-08-07T14:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "The fact that a drone armed with explosives is here on the grounds of an airport represents a new threat scenario.",
+      "id": "gdelt-871d27132e546848",
+      "idioma": "en",
+      "medio": "theweek.com",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
       "enlace": "https://wa.de/welt/den-boden-kein-erkennunsyssytem-am-flughafen-busfahrer-holte-drohne-auf-zr-94431153.html",
       "fecha": {
        "precision": "aproximada",
@@ -131736,6 +131942,20 @@
       "idioma": "de",
       "medio": "gea.de",
       "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://ksta.de:443/region/euskirchen-eifel/mechernich/nach-vorfall-in-leipzig-drohnensichtung-ueber-militaerstuetzpunkt-in-nrw-1343916",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-08-07T18:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Nach Vorfall in Leipzig Drohnensichtung über Militärstützpunkt in NRW",
+      "id": "gdelt-2fce5876438dae76",
+      "idioma": "de",
+      "medio": "ksta.de",
+      "replicas": 1
      },
      {
       "credibilidad": 3,
@@ -131767,6 +131987,34 @@
      },
      {
       "credibilidad": 3,
+      "enlace": "https://zazoom.it/2026-08-07/avvistati-altri-due-droni-sopra-una-base-militare-in-germania-lambasciata-russa-sul-caso-di-lipsia-provocazione-orchestrata/19547364",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-08-07T19:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Avvistati altri due droni sopra una base militare in Germania L'ambasciata russa sul caso di Lipsia",
+      "id": "gdelt-e853924528291eb0",
+      "idioma": "it",
+      "medio": "zazoom.it",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://rtl.be/actu/monde/europe/nouvelle-alerte-en-allemagne-apres-le-drone-explosif-de-leipzig-deux-drones/2026-08-07/article/796727",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-08-07T20:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Nouvelle alerte en Allemagne : après le drone explosif de Leipzig, deux drones détectés au-dessus d'une base militaire",
+      "id": "gdelt-bfa55bbdab23e577",
+      "idioma": "fr",
+      "medio": "rtl.be",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
       "enlace": "https://rnz.de/politik/nachrichten_artikel,-Innere-Sicherheit-Sprengstoff-Drohne-in-Leipzig-Russland-sieht-Provokation-_arid,2397927.html",
       "fecha": {
        "precision": "aproximada",
@@ -131791,6 +132039,62 @@
       "id": "gdelt-67bdc43eac44644c",
       "idioma": "de",
       "medio": "merkur.de",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://ilgiornale.it/news/guerra/lallarme-per-i-patriot-le-sanzioni-e-quei-sospetti-sul-drone-russo-a-lipsia-tutti-i-fronti-dello-scontro-con-putin",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-08-08T06:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "L'allarme per i Patriot, le sanzioni e quei sospetti sul drone russo a Lipsia: tutti i fronti dello scontro con Putin",
+      "id": "gdelt-24211dc00059f803",
+      "idioma": "it",
+      "medio": "ilgiornale.it",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://watson.ch/international/usa/845741388-drohnenvorfall-in-leipzig-us-geheimdienste-verdaechtigen-wohl-russland",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-08-08T11:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Drohnenvorfall in Leipzig: US-Geheimdienste verdächtigen wohl Russland",
+      "id": "gdelt-f930f4d6afd37fe5",
+      "idioma": "de",
+      "medio": "watson.ch",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://t-online.de/nachrichten/deutschland/militaer-verteidigung/id_101380040/drohnenangriff-leipzig-us-geheimdienste-verdaechtigen-wohl-russland.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-08-08T11:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "US-Geheimdienste sind zu dem Schluss gekommen, dass Russland mit hoher Wahrscheinlichkeit hinter dem Vorfall steckt.",
+      "id": "gdelt-8b8bebb6db39150a",
+      "idioma": "de",
+      "medio": "t-online.de",
+      "replicas": 1
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://lindependant.fr/2026/08/08/deux-jours-a-peine-apres-lincident-de-leipzig-lallemagne-en-alerte-apres-la-detection-de-drones-suspects-dans-le-ciel-dune-base-strategique-pour-les-13501739.php",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-08-08T13:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Deux jours à peine après l'incident de Leipzig : l'Allemagne en alerte après la détection de drones suspects dans le ciel d'une base stratégique pour",
+      "id": "gdelt-fff53d8747f55efd",
+      "idioma": "fr",
+      "medio": "lindependant.fr",
       "replicas": 0
      },
      {
@@ -132016,6 +132320,34 @@
       "idioma": "de",
       "medio": "deutschlandfunk.de",
       "replicas": 1
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://news.de/auto/859890535/sprengstoff-drohne-neuer-radar-wachposten-am-flughafen-leipzig-verkehr-news-der-dpa-aktuell-zu-innere-sicherheit-luftverkehr-und-drohnen/1",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-08-09T13:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Nach dem Drohnenfund am Flughafen Leipzig/Halle berichten US-Medien über Hinweise auf eine Verbindung zu Russland.",
+      "id": "gdelt-48eab62b427454da",
+      "idioma": "de",
+      "medio": "news.de",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://onvista.de/news/2026/08-09-roundup-2-sprengstoff-drohne-neuer-radar-wachposten-am-flughafen-leipzig-0-10-26541189",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-08-09T16:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "ROUNDUP 2/Sprengstoff-Drohne: Neuer Radar-Wachposten am Flughafen Leipzig",
+      "id": "gdelt-f1eda9b9378cd4b6",
+      "idioma": "de",
+      "medio": "onvista.de",
+      "replicas": 0
      },
      {
       "credibilidad": 3,
@@ -152708,341 +153040,6 @@
   {
    "geometry": {
     "coordinates": [
-     12.37129,
-     51.33962
-    ],
-    "type": "Point"
-   },
-   "id": "EODI-2026-00286",
-   "properties": {
-    "afirmaciones_publicas": [
-     {
-      "campo": "drones.numero",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-08-07T14:00Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-871d27132e546848",
-      "medio": "theweek.com",
-      "valor": {
-       "max": 1,
-       "min": 1
-      }
-     },
-     {
-      "campo": "lugar.pais",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-08-07T14:00Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-871d27132e546848",
-      "medio": "theweek.com",
-      "valor": "DE"
-     },
-     {
-      "campo": "lugar.pais",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-08-08T11:45Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-8b8bebb6db39150a",
-      "medio": "t-online.de",
-      "valor": "DE"
-     },
-     {
-      "campo": "objetivo.categoria",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-08-07T14:00Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-871d27132e546848",
-      "medio": "theweek.com",
-      "valor": "aeropuerto"
-     },
-     {
-      "campo": "objetivo.categoria",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-08-08T11:45Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-8b8bebb6db39150a",
-      "medio": "t-online.de",
-      "valor": "aeropuerto"
-     },
-     {
-      "campo": "objetivo.nombre",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-08-08T11:45Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-8b8bebb6db39150a",
-      "medio": "t-online.de",
-      "valor": "Flughafen Leipzig/Halle"
-     },
-     {
-      "campo": "presencia_dron",
-      "cita": "The fact that a drone armed with explosives is here on the grounds of an airport represents a new threat scenario.",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-08-07T14:00Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-871d27132e546848",
-      "medio": "theweek.com",
-      "valor": "confirmada"
-     },
-     {
-      "campo": "presencia_dron",
-      "cita": "US-Geheimdienste sind zu dem Schluss gekommen, dass Russland mit hoher Wahrscheinlichkeit hinter dem Vorfall steckt.",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-08-08T11:45Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-8b8bebb6db39150a",
-      "medio": "t-online.de",
-      "valor": "confirmada"
-     },
-     {
-      "campo": "tiempo.inicio",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-08-07T14:00Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-871d27132e546848",
-      "medio": "theweek.com",
-      "valor": {
-       "precision": "dia",
-       "valor": "2026-08-06T00:00Z"
-      }
-     },
-     {
-      "campo": "tiempo.inicio",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-08-08T11:45Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-8b8bebb6db39150a",
-      "medio": "t-online.de",
-      "valor": {
-       "precision": "dia",
-       "valor": "2026-08-08T00:00Z"
-      }
-     },
-     {
-      "campo": "tipo",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-08-07T14:00Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-871d27132e546848",
-      "medio": "theweek.com",
-      "valor": "interrupcion_aeroportuaria"
-     },
-     {
-      "campo": "tipo",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-08-08T11:45Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-8b8bebb6db39150a",
-      "medio": "t-online.de",
-      "valor": "interrupcion_aeroportuaria"
-     }
-    ],
-    "consecuencias": {
-     "cierre": {
-      "valor": "desconocido"
-     }
-    },
-    "control": {
-     "ultima_actualizacion": {
-      "precision": "minuto",
-      "valor": "2026-10-04T11:17Z"
-     }
-    },
-    "drones": {
-     "numero": {
-      "max": 1,
-      "min": 1
-     }
-    },
-    "estado": {
-     "actual": "notificado",
-     "historial": [
-      {
-       "estado": "notificado",
-       "fecha": {
-        "precision": "aproximada",
-        "valor": "2026-08-07T14:00Z"
-       },
-       "fuente_id": "gdelt-871d27132e546848"
-      }
-     ]
-    },
-    "fuentes": [
-     {
-      "credibilidad": 3,
-      "enlace": "https://theweek.com/defence/leipzig-drone-explosives-is-germany-centre-of-hybrid-russia-nato-war",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-08-07T14:00Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "The fact that a drone armed with explosives is here on the grounds of an airport represents a new threat scenario.",
-      "id": "gdelt-871d27132e546848",
-      "idioma": "en",
-      "medio": "theweek.com",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://ksta.de:443/region/euskirchen-eifel/mechernich/nach-vorfall-in-leipzig-drohnensichtung-ueber-militaerstuetzpunkt-in-nrw-1343916",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-08-07T18:30Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Nach Vorfall in Leipzig Drohnensichtung über Militärstützpunkt in NRW",
-      "id": "gdelt-2fce5876438dae76",
-      "idioma": "de",
-      "medio": "ksta.de",
-      "replicas": 1
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://zazoom.it/2026-08-07/avvistati-altri-due-droni-sopra-una-base-militare-in-germania-lambasciata-russa-sul-caso-di-lipsia-provocazione-orchestrata/19547364",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-08-07T19:30Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Avvistati altri due droni sopra una base militare in Germania L'ambasciata russa sul caso di Lipsia",
-      "id": "gdelt-e853924528291eb0",
-      "idioma": "it",
-      "medio": "zazoom.it",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://rtl.be/actu/monde/europe/nouvelle-alerte-en-allemagne-apres-le-drone-explosif-de-leipzig-deux-drones/2026-08-07/article/796727",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-08-07T20:30Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Nouvelle alerte en Allemagne : après le drone explosif de Leipzig, deux drones détectés au-dessus d'une base militaire",
-      "id": "gdelt-bfa55bbdab23e577",
-      "idioma": "fr",
-      "medio": "rtl.be",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://ilgiornale.it/news/guerra/lallarme-per-i-patriot-le-sanzioni-e-quei-sospetti-sul-drone-russo-a-lipsia-tutti-i-fronti-dello-scontro-con-putin",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-08-08T06:45Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "L'allarme per i Patriot, le sanzioni e quei sospetti sul drone russo a Lipsia: tutti i fronti dello scontro con Putin",
-      "id": "gdelt-24211dc00059f803",
-      "idioma": "it",
-      "medio": "ilgiornale.it",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://watson.ch/international/usa/845741388-drohnenvorfall-in-leipzig-us-geheimdienste-verdaechtigen-wohl-russland",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-08-08T11:30Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Drohnenvorfall in Leipzig: US-Geheimdienste verdächtigen wohl Russland",
-      "id": "gdelt-f930f4d6afd37fe5",
-      "idioma": "de",
-      "medio": "watson.ch",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://t-online.de/nachrichten/deutschland/militaer-verteidigung/id_101380040/drohnenangriff-leipzig-us-geheimdienste-verdaechtigen-wohl-russland.html",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-08-08T11:45Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "US-Geheimdienste sind zu dem Schluss gekommen, dass Russland mit hoher Wahrscheinlichkeit hinter dem Vorfall steckt.",
-      "id": "gdelt-8b8bebb6db39150a",
-      "idioma": "de",
-      "medio": "t-online.de",
-      "replicas": 1
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://lindependant.fr/2026/08/08/deux-jours-a-peine-apres-lincident-de-leipzig-lallemagne-en-alerte-apres-la-detection-de-drones-suspects-dans-le-ciel-dune-base-strategique-pour-les-13501739.php",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-08-08T13:30Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Deux jours à peine après l'incident de Leipzig : l'Allemagne en alerte après la détection de drones suspects dans le ciel d'une base stratégique pour",
-      "id": "gdelt-fff53d8747f55efd",
-      "idioma": "fr",
-      "medio": "lindependant.fr",
-      "replicas": 0
-     }
-    ],
-    "id": "EODI-2026-00286",
-    "lugar": {
-     "pais": "DE",
-     "radio_km": 10.0
-    },
-    "objetivo": {
-     "categoria": "otra",
-     "nombre": "Leipzig"
-    },
-    "presencia_dron": "confirmada",
-    "tiempo": {
-     "inicio": {
-      "precision": "aproximada",
-      "valor": "2026-08-07T14:00Z"
-     }
-    },
-    "tipo": "sobrevuelo",
-    "titulo": {
-     "en": "Drone with explosives found at Leipzig airport",
-     "es": "Dron con explosivos hallado en el aeropuerto de Leipzig"
-    }
-   },
-   "type": "Feature"
-  },
-  {
-   "geometry": {
-    "coordinates": [
      4.4844,
      50.9008
     ],
@@ -159647,137 +159644,6 @@
     "titulo": {
      "en": "Drone found at coal mine in Poland",
      "es": "Dron hallado en una mina de carbón en Polonia"
-    }
-   },
-   "type": "Feature"
-  },
-  {
-   "geometry": {
-    "coordinates": [
-     12.23654,
-     51.42105
-    ],
-    "type": "Point"
-   },
-   "id": "EODI-2026-00364",
-   "properties": {
-    "afirmaciones_publicas": [
-     {
-      "campo": "lugar.pais",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-08-09T13:45Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-48eab62b427454da",
-      "medio": "news.de",
-      "valor": "DE"
-     },
-     {
-      "campo": "presencia_dron",
-      "cita": "Nach dem Drohnenfund am Flughafen Leipzig/Halle berichten US-Medien über Hinweise auf eine Verbindung zu Russland.",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-08-09T13:45Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-48eab62b427454da",
-      "medio": "news.de",
-      "valor": "confirmada"
-     },
-     {
-      "campo": "tipo",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-08-09T13:45Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-48eab62b427454da",
-      "medio": "news.de",
-      "valor": "interrupcion_aeroportuaria"
-     }
-    ],
-    "consecuencias": {
-     "cierre": {
-      "valor": "desconocido"
-     }
-    },
-    "control": {
-     "ultima_actualizacion": {
-      "precision": "minuto",
-      "valor": "2026-10-04T11:17Z"
-     }
-    },
-    "drones": {
-     "numero": "desconocido"
-    },
-    "estado": {
-     "actual": "notificado",
-     "historial": [
-      {
-       "estado": "notificado",
-       "fecha": {
-        "precision": "aproximada",
-        "valor": "2026-08-09T13:45Z"
-       },
-       "fuente_id": "gdelt-48eab62b427454da"
-      }
-     ]
-    },
-    "fuentes": [
-     {
-      "credibilidad": 3,
-      "enlace": "https://news.de/auto/859890535/sprengstoff-drohne-neuer-radar-wachposten-am-flughafen-leipzig-verkehr-news-der-dpa-aktuell-zu-innere-sicherheit-luftverkehr-und-drohnen/1",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-08-09T13:45Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Nach dem Drohnenfund am Flughafen Leipzig/Halle berichten US-Medien über Hinweise auf eine Verbindung zu Russland.",
-      "id": "gdelt-48eab62b427454da",
-      "idioma": "de",
-      "medio": "news.de",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://onvista.de/news/2026/08-09-roundup-2-sprengstoff-drohne-neuer-radar-wachposten-am-flughafen-leipzig-0-10-26541189",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-08-09T16:45Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "ROUNDUP 2/Sprengstoff-Drohne: Neuer Radar-Wachposten am Flughafen Leipzig",
-      "id": "gdelt-f1eda9b9378cd4b6",
-      "idioma": "de",
-      "medio": "onvista.de",
-      "replicas": 0
-     }
-    ],
-    "id": "EODI-2026-00364",
-    "lugar": {
-     "pais": "DE",
-     "radio_km": 5.0
-    },
-    "objetivo": {
-     "categoria": "aeropuerto",
-     "nombre": "Flughafen Leipzig/Halle",
-     "oaci": "EDDP"
-    },
-    "presencia_dron": "confirmada",
-    "tiempo": {
-     "inicio": {
-      "precision": "aproximada",
-      "valor": "2026-08-09T13:45Z"
-     }
-    },
-    "tipo": "sobrevuelo",
-    "titulo": {
-     "en": "Explosive drone found at Leipzig airport",
-     "es": "Dron con explosivos hallado en el aeropuerto de Leipzig"
     }
    },
    "type": "Feature"
