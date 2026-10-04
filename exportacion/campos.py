@@ -237,6 +237,7 @@ CAMPOS_PUBLICOS_ATAQUE: frozenset[str] = frozenset(
         "cruces",
         "cruces[].pais",
         "cruces[].incidentes",
+        "cruces[].frase",
         *_rango("cruces[].numero"),
         "regiones",
         "regiones[].region",

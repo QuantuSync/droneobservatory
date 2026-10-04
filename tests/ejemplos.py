@@ -480,7 +480,12 @@ def ataque_completo() -> Documento:
         "lugares_impacto": ["Járkov"],
         "lugares_restos": ["Poltava"],
         "cruces": [
-            {"pais": "PL", "numero": {"min": 1, "max": 2}, "incidentes": ["EODI-2025-00001"]}
+            {"pais": "PL", "numero": {"min": 1, "max": 2}, "incidentes": ["EODI-2025-00001"]},
+            {
+                "pais": "BY",
+                "numero": {"min": 1, "max": 1},
+                "frase": "Один БпЛА полетів у бік Білорусі.",
+            },
         ],
         "cruces_parte": [
             {"pais": "PL", "numero": {"min": 1, "max": 2}, "frase": "Два БпЛА полетіли до Польщі."}

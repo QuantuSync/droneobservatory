@@ -119,6 +119,6 @@ def test_la_ficha_que_mezcla_dos_sucesos_se_vuelve_a_extraer_una_vez(
 def test_la_configuracion_revisada() -> None:
     datos = revisados.cargar()
     (grupo,) = datos["unir"]
-    assert "EODI-2026-00391" in grupo["registros"] and len(grupo["registros"]) == 6
+    assert "EODI-2026-00391" in grupo["registros"] and len(grupo["registros"]) == 8
     (revision_,) = datos["reextraer"]
     assert revision_["incidente"] == "EODI-2026-00283"

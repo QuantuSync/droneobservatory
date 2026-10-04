@@ -29,6 +29,8 @@ git fetch origin
 git switch <rama> && git rebase origin/main
 # c. puerta local y workflow de tests sobre la rama rebasada
 git push --force-with-lease origin <rama>        # y esperar al workflow en verde
+# c2. si el cambio toca la recogida: ensayo de punta a punta sobre una copia de la base real
+python -m recogida.horaria --correo <correo> --base <copia de db.age> --ensayo <carpeta>
 # d. un solo commit con el autor anónimo
 git reset --soft origin/main
 git commit -F <fichero con el mensaje>            # título «… (#<número>)» y el porqué
@@ -56,6 +58,15 @@ Por qué existe cada paso:
 - **c. Tests sobre lo rebasado.** Lo que se fusiona es la rama ya rebasada, no la que pasó
   los tests antes: los datos nuevos de `main` también tienen que validar (la build de la web
   valida `publicacion/` contra el esquema).
+- **c2. Ensayo de la recogida.** Todo cambio que toque la recogida (`recogida/`, `proceso/`,
+  `almacen/`, `exportacion/`, `esquema/`, `configuracion/`) se ensaya antes de fusionar con
+  una recogida completa sobre una copia de la base real de la rama `estado`: `--base` la lee
+  de un fichero local y `--ensayo` publica en una carpeta aparte y no sube nada. Sin la clave
+  del extractor en el entorno no gasta. Tiene que terminar con «ficheros publicados» y salida
+  0 o 2 (avisos). El 4 de octubre de 2026 tres recogidas no publicaron (12:17, 15:17 y 16:17)
+  por límites y cambios que solo se habían probado por partes: el de 100 MiB de GitHub por
+  fichero, el tope de 1 GiB de la base en memoria y una ficha guardada con la hora del reloj,
+  que la publicación rechazó como fecha futura.
 - **d. Un commit, autor anónimo.** Como hasta ahora (ver más abajo).
 - **e. Comprobar la lista de ficheros.** `git diff --name-only origin/main HEAD` tiene que
   listar solo ficheros que el PR modifica de verdad. Las rutas de los datos publicados son las

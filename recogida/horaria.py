@@ -255,13 +255,19 @@ def principal(argumentos: list[str] | None = None) -> int:
     opciones.add_argument("--correo", required=True, help="correo del autor del commit de estado")
     opciones.add_argument("--repositorio", default=remoto.REPOSITORIO)
     opciones.add_argument("--estado", type=Path, help="estado de cada fuente, en JSON")
+    # Ensayo de punta a punta antes de fusionar un cambio de la recogida (docs/fusiones.md):
+    # sobre una copia local de la base, publica en una carpeta aparte y no sube nada.
+    opciones.add_argument("--base", type=Path, help="db.age local en vez de la rama estado")
+    opciones.add_argument("--ensayo", type=Path, help="carpeta donde publicar, sin subir la base")
     args = opciones.parse_args(argumentos)
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
     ahora = datetime.now(UTC)
     salida = 0
     with TemporaryDirectory() as temporal:
         ruta = Path(temporal) / remoto.FICHERO
-        if not remoto.descargar(ruta, args.repositorio):
+        if args.base is not None:
+            ruta.write_bytes(args.base.read_bytes())
+        elif not remoto.descargar(ruta, args.repositorio):
             registro.error("no hay base en la rama %s: ejecuta antes el histórico", remoto.RAMA)
             return 1
         almacen = Almacen(abrir_cifrada(ruta))
@@ -423,9 +429,15 @@ def principal(argumentos: list[str] | None = None) -> int:
             registro.warning("cruces sin enlazar: %s", str(error)[:300])
         if args.estado is not None:
             escribir_parcial(args.estado, estados)
-        cambiados = publicar(almacen, ahora)
+        cambiados = (
+            publicar(almacen, ahora)
+            if args.ensayo is None
+            else publicar(almacen, ahora, args.ensayo)
+        )
         registro.info("ficheros publicados con cambios: %d", len(cambiados))
-        if almacen.conexion.serialize() != antes:
+        if args.ensayo is not None:
+            registro.info("ensayo: base sin subir")
+        elif almacen.conexion.serialize() != antes:
             guardar_cifrada(almacen.conexion, ruta)
             remoto.subir(ruta, args.correo, args.repositorio)
             registro.info("base subida a la rama %s", remoto.RAMA)

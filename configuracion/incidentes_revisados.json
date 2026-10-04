@@ -8,9 +8,11 @@
         "EODI-2026-00239",
         "EODI-2026-00129",
         "EODI-2026-00190",
-        "EODI-2026-00318"
+        "EODI-2026-00318",
+        "EODI-2026-00286",
+        "EODI-2026-00364"
       ],
-      "motivo": "el mismo suceso: el dron con explosivos del aeropuerto de Leipzig/Halle del 4 de agosto de 2026, junto al avión ucraniano (00134 con el cierre de 100 minutos que dio la policía; 00239, 00129, 00190 y 00318 son noticias de finales de agosto y septiembre sobre la acusación del Gobierno alemán, fechadas por su publicación)"
+      "motivo": "el mismo suceso: el dron con explosivos del aeropuerto de Leipzig/Halle del 4 de agosto de 2026, junto al avión ucraniano (00134 con el cierre de 100 minutos que dio la policía; 00286 y 00364 son noticias del 7 y el 9 de agosto y 00239, 00129, 00190 y 00318 de finales de agosto y septiembre sobre la acusación del Gobierno alemán, fechadas por su publicación)"
     }
   ],
   "reextraer": [
