@@ -155,19 +155,19 @@ export function pilas(
 }
 
 /**
- * Una bandera por atribuido, cada uno en su punto: no se juntan en pilas ni en grupos, para
- * que el estado más grave siempre esté a la vista.
+ * Una bandera por punto con atribuidos: no se juntan con los círculos ni con sus grupos, para
+ * que el estado más grave siempre esté a la vista. Varios atribuidos en el mismo punto exacto
+ * son una sola bandera con su número (y una lista para elegir); los cercanos los junta la
+ * agrupación propia de las banderas al alejar.
  */
 export function banderas(
   incidentes: readonly IncidenteResumen[],
   opciones: { recientes: Periodo; novedades: ReadonlySet<string> },
 ): FeatureCollection<Point, PropiedadesPila> {
-  return {
-    type: "FeatureCollection",
-    features: incidentes
-      .filter((i) => i.estado === "atribuido")
-      .flatMap((i) => pilas([i], opciones).features),
-  };
+  return pilas(
+    incidentes.filter((i) => i.estado === "atribuido"),
+    opciones,
+  );
 }
 
 /** Lo que va en círculos y grupos: todo menos los atribuidos, que llevan su bandera. */

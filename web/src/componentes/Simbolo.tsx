@@ -3,13 +3,14 @@ import {
   BANDERA,
   COLOR_BANDERA,
   COLOR_ESTADO,
+  COLOR_MASTIL,
   CONTORNO_BANDERA,
   GROSOR_CONTORNO,
   GROSOR_CONTORNO_BANDERA,
   GROSOR_MASTIL,
+  GROSOR_PANO,
   PALETA,
   TRAZO_DESMENTIDO,
-  trazadoBandera,
   trazadoMastil,
   trazadoPano,
 } from "../paleta.ts";
@@ -57,8 +58,8 @@ export function Simbolo({ estado, className }: Props) {
 }
 
 /**
- * Bandera de los atribuidos, sola: la misma forma que en el mapa (mástil y paño rojos con un
- * contorno claro), a `lado` píxeles de alto. Nada más: ni círculo ni forma ni punto en el pie.
+ * Bandera de los atribuidos, sola: la misma forma que en el mapa (paño rojo relleno, mástil en
+ * un rojo algo más oscuro y un filo de 1 px del color del fondo), a `lado` píxeles de alto. Nada más: ni círculo ni forma ni punto en el pie.
  */
 export function IconoBandera({
   className,
@@ -85,13 +86,19 @@ export function IconoBandera({
     >
       <g strokeLinejoin="round" strokeLinecap="round">
         <path
-          d={trazadoBandera(BANDERA)}
-          fill={CONTORNO_BANDERA}
+          d={trazadoMastil(BANDERA)}
+          fill="none"
           stroke={CONTORNO_BANDERA}
           strokeWidth={GROSOR_MASTIL + 2 * GROSOR_CONTORNO_BANDERA}
         />
-        <path d={trazadoPano(BANDERA)} fill={COLOR_BANDERA} stroke={COLOR_BANDERA} strokeWidth={1} />
-        <path d={trazadoMastil(BANDERA)} fill="none" stroke={COLOR_BANDERA} strokeWidth={GROSOR_MASTIL} />
+        <path
+          d={trazadoPano(BANDERA)}
+          fill={CONTORNO_BANDERA}
+          stroke={CONTORNO_BANDERA}
+          strokeWidth={GROSOR_PANO + 2 * GROSOR_CONTORNO_BANDERA}
+        />
+        <path d={trazadoPano(BANDERA)} fill={COLOR_BANDERA} stroke={COLOR_BANDERA} strokeWidth={GROSOR_PANO} />
+        <path d={trazadoMastil(BANDERA)} fill="none" stroke={COLOR_MASTIL} strokeWidth={GROSOR_MASTIL} />
       </g>
     </svg>
   );

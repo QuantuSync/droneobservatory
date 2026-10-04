@@ -386,6 +386,8 @@ export type FilaAtaque = [
   derribadosMax: number,
   suma: 0 | 1,
   regiones: [region: number, derribadosMin: number, derribadosMax: number][],
+  /** Fin del periodo que cubre el parte (ms desde 1970): decide su noche (ver jornadaDeParte). */
+  fin: number,
 ];
 
 /**
@@ -427,15 +429,6 @@ export interface FuenteSentido {
   reivindicacion: boolean;
 }
 
-/** El parte más reciente de los ataques contra Ucrania que da la cifra de drones lanzados. */
-export interface UltimoParte {
-  id: string;
-  lanzados: number;
-  /** Inicio y fin del periodo que cubre el parte (instantes del esquema, UTC). */
-  inicio: string;
-  fin: string;
-}
-
 export interface ResumenUcrania {
   /** Códigos ISO 3166-2 de las regiones (de Ucrania y de Rusia) que aparecen en los ataques. */
   regiones: string[];
@@ -459,8 +452,6 @@ export interface ResumenUcrania {
    * Ucrania más cercano al centro de cada región rusa, [lon, lat].
    */
   fronteraUcrania: Record<string, [number, number]>;
-  /** El último parte publicado con la cifra de drones lanzados contra Ucrania. */
-  ultimoParte?: UltimoParte | null;
 }
 
 /** Pérdida de luz de un ataque reducida a lo que dibuja el mapa y lee la ficha. */

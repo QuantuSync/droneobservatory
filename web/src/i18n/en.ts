@@ -258,7 +258,7 @@ export const en: Textos = {
       "Each incident is a circle filled with the colour of its status: orange, reported; red, " +
       "confirmed. A denied incident is a grey circle with a dashed outline and no fill. An " +
       "attributed incident (a confirmed one whose perpetrator a government has named) is just " +
-      "a red flag with a light outline: the foot of the pole marks the place. It is always drawn " +
+      "a red flag, larger than a circle: the foot of the pole marks the place. It is always drawn " +
       "on top and is never grouped with others. The type of incident is written in the record, " +
       "the list and the filters.",
     periodo:
@@ -342,7 +342,6 @@ export const en: Textos = {
     pausar: "Pause",
     reanudar: "Resume",
     detener: "Stop",
-    noche: (fecha) => `Night of ${fecha}`,
     drones: "drones launched against Ukraine",
     sinCifra: "no launch figure",
   },
@@ -353,6 +352,7 @@ export const en: Textos = {
       "incident list opens the same records without using the map.",
     grupo: (n) => (n === 1 ? "1 incident: zoom in to see it" : `${n} incidents: zoom in to see them`),
     pila: (n) => `${n} incidents at this exact spot: tap to choose one`,
+    banderas: (n) => `${n} attributed incidents: zoom in to separate them`,
     grupoImpactos: (n) => `${n} places hit: zoom in to see them`,
     impacto: (parte, foco) =>
       `Place hit${parte ? " · claim by a party" : ""}${foco ? " · thermal hotspot" : ""}`,
@@ -674,7 +674,7 @@ export const en: Textos = {
                 marca: { estado: "atribuido" },
                 texto: [
                   "A confirmed incident for which an authority names a government as " +
-                    "responsible: on the map, a red flag with a light outline, drawn on top of everything, whose foot marks the place. " +
+                    "responsible: on the map, a red flag, larger than a circle and drawn on top of everything, whose foot marks the place. " +
                     "The record shows it as " +
                     "“Confirmed · attributed to…”, with who attributes it and to whom.",
                 ],

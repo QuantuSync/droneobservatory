@@ -61,15 +61,17 @@ export function pulsosDe(
     const nuevo = "point_count" in p ? numero(p.n_novedades) > 0 : numero(p.novedad) === 1;
     if (!nuevo) continue;
     let pulso: Omit<Pulso, "x" | "y">;
-    if (esGrupo) {
+    if (numero(p.atribuido) === 1) {
+      // Una bandera (sola o con otras juntas) late con su silueta, nunca con un anillo.
+      const clave = "cluster_id" in p ? `banderas-${String(p.cluster_id)}` : esGrupo ? `pila-${String(p.ids)}` : String(p.id);
+      pulso = { clave, radio: BANDERA.mastil, forma: "bandera" };
+    } else if (esGrupo) {
       const cuenta = "total" in p ? numero(p.total) : numero(p.n);
       pulso = {
         clave: "cluster_id" in p ? `grupo-${String(p.cluster_id)}` : `pila-${String(p.ids)}`,
         radio: radioDeGrupo(cuenta) + SEPARACION_PULSO_GRUPO,
         forma: "anillo",
       };
-    } else if (numero(p.atribuido) === 1) {
-      pulso = { clave: String(p.id), radio: BANDERA.mastil, forma: "bandera" };
     } else {
       pulso = { clave: String(p.id), radio: RADIO_PULSO, forma: "anillo" };
     }

@@ -240,31 +240,6 @@ describe("capa de Ucrania", () => {
     expect(cifrasDeRegion(ucrania, "UA-99", todo).lista).toEqual([]);
   });
 
-  it("el último parte es el más reciente contra Ucrania con su cifra, sin sumar partes", () => {
-    // El tramo incluido en otro parte y el ataque contra Rusia no cuentan.
-    expect(ucrania.ultimoParte).toEqual({
-      id: "EODI-UA-2026-1013",
-      lanzados: 188,
-      inicio: "2026-09-29T15:00Z",
-      fin: "2026-09-30T05:00Z",
-    });
-    // Un parte de día publicado después pasa a ser el último, con su propia cifra.
-    const conParteDeDia = resumirUcrania(
-      publicacion([
-        ataque(),
-        ataque({
-          id: "EODI-UA-2026-1015",
-          periodo: {
-            inicio: { valor: "2026-09-30T03:30Z", precision: "minuto" },
-            fin: { valor: "2026-09-30T15:30Z", precision: "minuto" },
-          },
-          lanzados: { total: { min: 285, max: 285 } },
-        }),
-      ]),
-    );
-    expect(conParteDeDia.ultimoParte).toMatchObject({ id: "EODI-UA-2026-1015", lanzados: 285 });
-    expect(resumirUcrania(publicacion([])).ultimoParte).toBeNull();
-  });
 });
 
 describe("validación contra el esquema", () => {
@@ -651,6 +626,7 @@ describe("la guerra noche a noche", () => {
     const noches = nochesDeGuerra(resumirUcrania(ataques));
     expect(noches).toHaveLength(1);
     expect(noches[0]?.lanzados).toBe(188);
+    expect(noches[0]?.jornada).toEqual({ tipo: "noche", desde: diaDeInstante("2026-09-29"), hasta: diaDeInstante("2026-09-30") });
     // UA-32 trae derribos desglosados (12, y 5 de un tramo que no suma: cuenta 1).
     expect(Object.fromEntries(noches[0]?.regiones ?? [])).toEqual({ "UA-32": 13, "UA-63": 1 });
   });

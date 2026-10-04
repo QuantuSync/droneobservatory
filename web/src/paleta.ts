@@ -70,12 +70,18 @@ export const BANDERA: FormaBandera = {
   pano: { ancho: 20, alto: 13, onda: 2 },
 };
 
-/** Contorno claro de la bandera: la separa del fondo oscuro y de los círculos vecinos. */
-export const CONTORNO_BANDERA = PALETA.texto;
-/** Grosor del contorno, por fuera del trazo rojo. */
-export const GROSOR_CONTORNO_BANDERA = 1.5;
-/** Grosor del mástil. */
+/**
+ * Filo de la bandera: fino y del color del fondo del mapa, lo justo para que no se funda con un
+ * círculo rojo que tenga al lado. La fuerza la dan el tamaño y el paño relleno, no el borde.
+ */
+export const CONTORNO_BANDERA = PALETA.fondo;
+/** Lo que asoma el filo por fuera del rojo: 1 px como mucho. */
+export const GROSOR_CONTORNO_BANDERA = 1;
+/** Grosor del mástil y del trazo rojo que remata el paño. */
 export const GROSOR_MASTIL = 2;
+export const GROSOR_PANO = 1;
+/** El mástil, en un rojo algo más oscuro que el paño. */
+export const COLOR_MASTIL = "#c82a3e";
 
 /** Trazado SVG del mástil. */
 export function trazadoMastil(b: FormaBandera): string {

@@ -14,10 +14,12 @@ import {
   BANDERA,
   COLOR_BANDERA,
   COLOR_ESTADO,
+  COLOR_MASTIL,
   CONTORNO_BANDERA,
   GROSOR_CONTORNO,
   GROSOR_CONTORNO_BANDERA,
   GROSOR_MASTIL,
+  GROSOR_PANO,
   PALETA,
   TRAZO_DESMENTIDO,
   trazadoMastil,
@@ -60,8 +62,8 @@ function dibujar(estado: Exclude<Estado, "atribuido">): ImageData | null {
 
 /** Nombre del icono de la bandera de un atribuido. */
 export const ICONO_BANDERA = "bandera";
-/** Nombre del icono de la bandera elegida (la del incidente abierto). */
-export const ICONO_BANDERA_ELEGIDA = "bandera-elegida";
+/** La bandera del incidente abierto: la misma, algo más grande, sin ningún borde. */
+export const ESCALA_BANDERA_ELEGIDA = 1.2;
 /**
  * Dónde va la caja de la bandera respecto al punto: el mapa la ancla por su esquina de abajo a
  * la izquierda y la desplaza para que el pie del mástil caiga en el punto exacto.
@@ -69,10 +71,10 @@ export const ICONO_BANDERA_ELEGIDA = "bandera-elegida";
 export const DESPLAZAMIENTO_BANDERA: [number, number] = [-BANDERA.pie[0], BANDERA.alto - BANDERA.pie[1]];
 
 /**
- * La bandera: primero el contorno claro (el trazo de todo, más ancho), encima el paño relleno
- * de rojo y el mástil rojo. `grosorContorno` es lo que asoma el contorno por fuera.
+ * La bandera: primero el filo oscuro (el trazo de todo, un poco más ancho), encima el paño
+ * relleno de rojo y el mástil en un rojo algo más oscuro. El filo asoma 1 px por fuera.
  */
-function dibujarBandera(contorno: string, grosorContorno: number): ImageData | null {
+function dibujarBandera(): ImageData | null {
   const lienzo = document.createElement("canvas");
   lienzo.width = BANDERA.ancho * DENSIDAD;
   lienzo.height = BANDERA.alto * DENSIDAD;
@@ -83,17 +85,19 @@ function dibujarBandera(contorno: string, grosorContorno: number): ImageData | n
   const pano = new Path2D(trazadoPano(BANDERA));
   contexto.lineJoin = "round";
   contexto.lineCap = "round";
-  contexto.strokeStyle = contorno;
-  contexto.fillStyle = contorno;
-  contexto.lineWidth = GROSOR_MASTIL + 2 * grosorContorno;
+  contexto.strokeStyle = CONTORNO_BANDERA;
+  contexto.fillStyle = CONTORNO_BANDERA;
+  contexto.lineWidth = GROSOR_MASTIL + 2 * GROSOR_CONTORNO_BANDERA;
   contexto.stroke(mastil);
+  contexto.lineWidth = GROSOR_PANO + 2 * GROSOR_CONTORNO_BANDERA;
   contexto.fill(pano);
   contexto.stroke(pano);
   contexto.fillStyle = COLOR_BANDERA;
   contexto.strokeStyle = COLOR_BANDERA;
   contexto.fill(pano);
-  contexto.lineWidth = 1;
+  contexto.lineWidth = GROSOR_PANO;
   contexto.stroke(pano);
+  contexto.strokeStyle = COLOR_MASTIL;
   contexto.lineWidth = GROSOR_MASTIL;
   contexto.stroke(mastil);
   return contexto.getImageData(0, 0, lienzo.width, lienzo.height);
@@ -173,15 +177,10 @@ function dibujarAviso(estado: EstadoAviso): ImageData | null {
 }
 
 /** Registra en el mapa un icono por estado y una etiqueta por estado de aviso. */
-export function registrarIconos(mapa: Mapa, acento: string): void {
+export function registrarIconos(mapa: Mapa): void {
   if (!mapa.hasImage(ICONO_BANDERA)) {
-    const imagen = dibujarBandera(CONTORNO_BANDERA, GROSOR_CONTORNO_BANDERA);
+    const imagen = dibujarBandera();
     if (imagen !== null) mapa.addImage(ICONO_BANDERA, imagen, { pixelRatio: DENSIDAD });
-  }
-  if (!mapa.hasImage(ICONO_BANDERA_ELEGIDA)) {
-    // La del incidente abierto: la misma, con un contorno del acento más ancho.
-    const elegida = dibujarBandera(acento, GROSOR_CONTORNO_BANDERA * 2);
-    if (elegida !== null) mapa.addImage(ICONO_BANDERA_ELEGIDA, elegida, { pixelRatio: DENSIDAD });
   }
   if (!mapa.hasImage(ICONO_OBSTACULO)) mapa.addImage(ICONO_OBSTACULO, dibujarObstaculo());
   for (const estado of ESTADOS) {

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { FilaImpacto, FocoRegion, FuenteSentido, LuzResumen, Sentido } from "../datos/tipos.ts";
 import type { CifrasRegion } from "../datos/ucrania.ts";
-import { fechaDia, numero, rango, region } from "../i18n/index.ts";
+import { fechaDia, jornadaEscrita, numero, rango, region } from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
 import { rutaDeFicha } from "../sitio.ts";
 import type { Idioma } from "../sitio.ts";
@@ -117,7 +117,7 @@ export function FichaRegion(props: Props) {
             )}
             {ultimo !== undefined && (
               <Fila nombre={t.region.ultimoAtaque}>
-                <span className="mono">{fechaDia(ultimo.dia)}</span>
+                <span>{jornadaEscrita(t, ultimo.jornada)}</span>
               </Fila>
             )}
           </dl>
@@ -157,7 +157,7 @@ export function FichaRegion(props: Props) {
                   <Enlace a={rutaDeFicha(ataque.id, idioma)} className="enlace mono">
                     {ataque.id}
                   </Enlace>
-                  <span className="mono ml-2 text-xs text-secundario">{fechaDia(ataque.dia)}</span>
+                  <span className="ml-2 text-xs text-secundario">{jornadaEscrita(t, ataque.jornada)}</span>
                   <span className="block text-xs text-secundario">{t.sentido[ataque.sentido]}</span>
                 </li>
               ))}

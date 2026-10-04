@@ -1,4 +1,5 @@
 import type { Instante, RangoODesconocido } from "../datos/tipos.ts";
+import type { Jornada } from "../datos/ucrania.ts";
 import type { Idioma } from "../sitio.ts";
 import { fechaDeDia } from "../tiempo/dias.ts";
 import { en } from "./en.ts";
@@ -28,6 +29,16 @@ export function fechaDia(dia: number): string {
 export function fechaEscrita(dia: number): FechaEscrita {
   const f = fechaDeDia(dia);
   return { dia: f.getUTCDate(), mes: f.getUTCMonth(), anio: f.getUTCFullYear() };
+}
+
+/**
+ * Lo que cubre un parte de la guerra, escrito igual en toda la web: «noche del 3 al 4 de
+ * octubre» o «día 1 de octubre». `mayuscula` para empezar una frase.
+ */
+export function jornadaEscrita(t: Textos, j: Jornada, mayuscula = false): string {
+  const texto =
+    j.tipo === "noche" ? t.tiempo.noche(fechaEscrita(j.desde), fechaEscrita(j.hasta)) : t.tiempo.dia(fechaEscrita(j.desde));
+  return mayuscula ? texto.charAt(0).toUpperCase() + texto.slice(1) : texto;
 }
 
 /** Hora UTC como hh:mm. */

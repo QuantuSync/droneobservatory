@@ -500,7 +500,7 @@ export default function Mapa(props: PropsMapa) {
 
     mapa.on("load", () => {
       const delMapaBase = new Set(mapa.listImages());
-      registrarIconos(mapa, acento());
+      registrarIconos(mapa);
       // Con el dedo, la zona sensible de los arcos es más ancha.
       if (punteroGrueso()) {
         mapa.setPaintProperty(CAPA_CORREDORES_ZONA, "line-width", [
@@ -634,6 +634,9 @@ export default function Mapa(props: PropsMapa) {
       if (rasgo.layer.id === CAPA_GRUPOS) {
         return "point_count" in p ? textos.mapa.grupo(Number(p.total)) : textos.mapa.pila(Number(p.n));
       }
+      if (rasgo.layer.id === CAPA_BANDERAS && ("point_count" in p || Number(p.n) > 1)) {
+        return "point_count" in p ? textos.mapa.banderas(Number(p.total)) : textos.mapa.pila(Number(p.n));
+      }
       if (rasgo.layer.id === CAPA_REGIONES || rasgo.layer.id === CAPA_REGIONES_RUSIA) {
         return textos.regiones[String(p.iso)] ?? String(p.iso);
       }
@@ -698,7 +701,15 @@ export default function Mapa(props: PropsMapa) {
       }
       const primero = eleccion.valor.rasgo;
       const propiedades = primero.properties;
-      if (primero.layer.id === CAPA_GRUPOS && Number(propiedades.n) > 1) {
+      if (primero.layer.id === CAPA_BANDERAS && "point_count" in propiedades) {
+        // Banderas juntas al alejar: se acerca hasta el zoom en que se separan.
+        const fuenteBanderas = fuente(mapa, FUENTE_BANDERAS);
+        void fuenteBanderas
+          ?.getClusterExpansionZoom(Number(propiedades.cluster_id))
+          .then((zoom) =>
+            mapa.easeTo({ center: evento.lngLat, zoom, animate: !movimientoReducido() }),
+          );
+      } else if ((primero.layer.id === CAPA_GRUPOS || primero.layer.id === CAPA_BANDERAS) && Number(propiedades.n) > 1) {
         // Varios incidentes en el mismo punto exacto: se elige cuál abrir.
         manejadores.current.onPila(String(propiedades.ids).split(","));
       } else if (primero.layer.id === CAPA_GRUPOS) {
@@ -822,6 +833,9 @@ export default function Mapa(props: PropsMapa) {
               },
             ],
     });
+    // Un atribuido abierto se dibuja solo con su bandera de selección, más grande: la normal
+    // asomaría por debajo.
+    mapa.setFilter(CAPA_BANDERAS, ["!=", ["get", "id"], elegido?.estado === "atribuido" ? elegido.id : ""]);
   }, [listo, elegido]);
 
   // País de un incidente sin punto, resaltado de forma tenue.

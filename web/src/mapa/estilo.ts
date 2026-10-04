@@ -18,7 +18,7 @@ import {
   DESPLAZAMIENTO_BANDERA,
   ETIQUETA_AVISO,
   ICONO_BANDERA,
-  ICONO_BANDERA_ELEGIDA,
+  ESCALA_BANDERA_ELEGIDA,
   ICONO_OBSTACULO,
   LADO_OBSTACULO,
   RADIO_INCIDENTE,
@@ -97,6 +97,7 @@ export const CAPA_ALUMBRADO_PUNTO = "guerra-alumbrado-punto";
 export const CAPA_FOCOS_VIVOS = "guerra-focos-vivos";
 export const CAPA_FOCOS_VIVOS_IMPACTO = "guerra-focos-vivos-impacto";
 export const CAPA_BANDERAS = "banderas";
+export const CAPA_NUMERO_BANDERAS = "banderas-numero";
 export const CAPA_OBSTACULOS = "obstaculos";
 export const CAPA_OBSTACULOS_IMPACTOS = "guerra-impactos-obstaculos";
 
@@ -133,6 +134,7 @@ export const CAPAS_DE_INCIDENTES: readonly string[] = [
   CAPA_INCIDENTES_GRAVES,
   CAPA_FOCOS,
   CAPA_BANDERAS,
+  CAPA_NUMERO_BANDERAS,
   CAPA_FOCOS_BANDERA,
   CAPA_SELECCION,
   CAPA_SELECCION_BANDERA,
@@ -254,6 +256,17 @@ const RADIO_GRUPO_IMPACTOS: ExpressionSpecification = [
   2, RADIO_GRUPO_IMPACTOS_MINIMO,
   CUENTA_GRUPO_IMPACTOS_MAXIMA, RADIO_GRUPO_IMPACTOS_MAXIMO,
 ];
+
+/**
+ * Banderas de los atribuidos: se juntan solo entre ellas, cuando se pisarían en la pantalla,
+ * hasta el zoom 7. Desde el 8 (el de las fichas) cada una va en su punto.
+ */
+export const ZOOM_MAXIMO_AGRUPADO_BANDERAS = 7;
+const RADIO_DE_AGRUPACION_BANDERAS_PX = 18;
+/** Atribuidos que junta una bandera: los de su grupo o los de su punto exacto. */
+const CUENTA_BANDERAS: ExpressionSpecification = ["coalesce", ["get", "total"], ["get", "n"]];
+/** El número va a la derecha del paño, a su altura, en ems del texto. */
+const POSICION_NUMERO_BANDERA: [number, number] = [2.4, -1.75];
 
 /** Hasta este zoom los incidentes cercanos se agrupan con su contador. */
 export const ZOOM_MAXIMO_AGRUPADO = 5;
@@ -1039,6 +1052,22 @@ function capasPropias(acento: string): LayerSpecification[] {
         "icon-ignore-placement": false,
       },
     },
+    // Varios atribuidos juntos: la bandera con su número al lado, como el de los grupos.
+    {
+      id: CAPA_NUMERO_BANDERAS,
+      type: "symbol",
+      source: FUENTE_BANDERAS,
+      filter: [">", CUENTA_BANDERAS, 1],
+      layout: {
+        "text-field": ["to-string", CUENTA_BANDERAS],
+        "text-font": FUENTE_TIPOGRAFICA_NUMEROS,
+        "text-size": TAMANO_NUMERO_GRUPO,
+        "text-offset": POSICION_NUMERO_BANDERA,
+        "text-allow-overlap": true,
+        "text-ignore-placement": false,
+      },
+      paint: { "text-color": PALETA.texto, "text-halo-color": PALETA.panelSolido, "text-halo-width": 2 },
+    },
     // El foco térmico de un atribuido va a la izquierda del mástil: a la derecha está el paño.
     {
       id: CAPA_FOCOS_BANDERA,
@@ -1053,14 +1082,16 @@ function capasPropias(acento: string): LayerSpecification[] {
         "circle-translate": [-DESPLAZAMIENTO_MARCA_FOCO[0], DESPLAZAMIENTO_MARCA_FOCO[1]],
       },
     },
-    // Un atribuido abierto: su bandera con un contorno del acento más ancho, sin aro.
+    // Un atribuido abierto: su bandera, algo más grande, sin aro ni borde. El desplazamiento
+    // se escala con el icono, así que el pie sigue en el punto.
     {
       id: CAPA_SELECCION_BANDERA,
       type: "symbol",
       source: FUENTE_SELECCION,
       filter: ES_ATRIBUIDO,
       layout: {
-        "icon-image": ICONO_BANDERA_ELEGIDA,
+        "icon-image": ICONO_BANDERA,
+        "icon-size": ESCALA_BANDERA_ELEGIDA,
         "icon-anchor": "bottom-left",
         "icon-offset": DESPLAZAMIENTO_BANDERA,
         "icon-allow-overlap": true,
@@ -1129,7 +1160,19 @@ export function estilo(idioma: Idioma, origen: string, acento: string): StyleSpe
         },
       },
       [FUENTE_PUNTOS_SUELTOS]: { type: "geojson", data: VACIA },
-      [FUENTE_BANDERAS]: { type: "geojson", data: VACIA },
+      [FUENTE_BANDERAS]: {
+        type: "geojson",
+        data: VACIA,
+        cluster: true,
+        clusterMaxZoom: ZOOM_MAXIMO_AGRUPADO_BANDERAS,
+        clusterRadius: RADIO_DE_AGRUPACION_BANDERAS_PX,
+        clusterProperties: {
+          total: ["+", ["get", "n"]],
+          n_novedades: ["+", ["get", "novedad"]],
+          atribuido: ["max", ["get", "atribuido"]],
+          foco: ["max", ["get", "foco"]],
+        },
+      },
       [FUENTE_AREAS]: { type: "geojson", data: VACIA },
       [FUENTE_EPISODIOS]: { type: "geojson", data: VACIA },
       [FUENTE_SELECCION]: { type: "geojson", data: VACIA },

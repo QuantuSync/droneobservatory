@@ -63,6 +63,14 @@ describe("pulso del mapa", () => {
     ).toEqual([]);
   });
 
+  it("varias banderas juntas laten con la silueta de la bandera, no con un anillo", () => {
+    const pulsos = pulsosDe(
+      [punto({ point_count: 2, cluster_id: 7, total: 2, atribuido: 1, n_novedades: 1 })],
+      proyectar,
+    );
+    expect(pulsos).toEqual([{ clave: "banderas-7", x: 10, y: 20, radio: BANDERA.mastil, forma: "bandera" }]);
+  });
+
   it("un rasgo repetido en dos teselas da un solo pulso", () => {
     const rasgo = punto({ id: "A", grave: 1, atribuido: 0, novedad: 1 });
     expect(pulsosDe([rasgo, rasgo], proyectar)).toHaveLength(1);

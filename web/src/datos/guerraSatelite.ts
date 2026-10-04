@@ -5,6 +5,7 @@
 
 import { diaDeInstante, enPeriodo } from "../tiempo/dias.ts";
 import type { Periodo } from "../tiempo/dias.ts";
+import { diaDeParte } from "./ucrania.ts";
 import type {
   FilaImpacto,
   LuzResumen,
@@ -234,7 +235,7 @@ export function corredoresDelPeriodo(ucrania: ResumenUcrania, periodo: Periodo):
     }
   };
   for (const fila of ucrania.ataques) {
-    if (!enPeriodo(fila[1], periodo)) continue;
+    if (!enPeriodo(diaDeParte(fila), periodo)) continue;
     const suma = fila[7] === 1;
     if (fila[2] === 0) {
       const zonas = ucrania.origenes[fila[0]];

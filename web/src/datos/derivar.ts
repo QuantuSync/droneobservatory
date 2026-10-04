@@ -27,7 +27,6 @@ import type {
   ResumenUcrania,
   Sentido,
   ZonaResumen,
-  UltimoParte,
 } from "./tipos.ts";
 
 /** Marca de una cifra que ninguna fuente da, en las filas numéricas de los ataques. */
@@ -238,6 +237,7 @@ function filaAtaque(ataque: Ataque, indiceRegion: Map<string, number>): FilaAtaq
     derribadosMax,
     yaSumado ? 0 : 1,
     regiones,
+    Date.parse(ataque.periodo.fin.valor),
   ];
 }
 
@@ -410,24 +410,5 @@ export function resumirUcrania(
     origenes: origenesDeAtaques(ucrania, geografia.casar),
     centros: Object.fromEntries(geografia.centros),
     fronteraUcrania: Object.fromEntries(geografia.fronteraUcrania),
-    ultimoParte: ultimoParte(ucrania),
   };
-}
-
-/**
- * El último parte publicado de ataques contra Ucrania con la cifra de lanzados: el que acaba
- * más tarde. Cada parte cubre una noche (de las 18:00 a la mañana, hora de Kiev) o un día; no
- * se suman, y los que ya cuenta otro parte no cuentan.
- */
-export function ultimoParte(ucrania: PublicacionUcrania): UltimoParte | null {
-  let ultimo: UltimoParte | null = null;
-  for (const ataque of ucrania.ataques) {
-    const total = ataque.lanzados?.total;
-    if (ataque.sentido !== "RU_UA" || total === undefined || total === "desconocido") continue;
-    if (ataque.incluido_en !== undefined || ataque.solapado_con !== undefined) continue;
-    const fin = ataque.periodo.fin.valor;
-    if (ultimo !== null && Date.parse(fin) <= Date.parse(ultimo.fin)) continue;
-    ultimo = { id: ataque.id, lanzados: total.max, inicio: ataque.periodo.inicio.valor, fin };
-  }
-  return ultimo;
 }

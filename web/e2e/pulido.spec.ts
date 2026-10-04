@@ -8,7 +8,10 @@ import { join } from "node:path";
 import { expect, test } from "@playwright/test";
 import type { BrowserContext, Page } from "@playwright/test";
 
+import { validarResumenUcrania } from "../src/datos/validar.ts";
+import { nochesDeGuerra, ultimaNocheConCifra } from "../src/datos/ucrania.ts";
 import type { Resumen, ResumenUcrania } from "../src/datos/tipos.ts";
+import { jornadaEscrita, textos } from "../src/i18n/index.ts";
 
 const CAPTURAS = process.env.CAPTURAS ?? join(import.meta.dirname, "..", "..", "docs", "capturas");
 const MAPA_LISTO = "[data-mapa-listo=true]";
@@ -94,6 +97,15 @@ async function encimaDeLosBotones(pagina: Page): Promise<string[]> {
     }
     return problemas;
   });
+}
+
+const ES = textos("es");
+
+/** El resumen de la capa de guerra publicado, validado igual que en la web. */
+async function ucraniaPublicada(pagina: Page): Promise<ResumenUcrania> {
+  const resultado = validarResumenUcrania(await (await pagina.request.get("/datos/ucrania-resumen.json")).json());
+  if (!resultado.ok) throw new Error("ucrania-resumen.json no valida");
+  return resultado.datos;
 }
 
 async function resumen(pagina: Page): Promise<Resumen> {
@@ -215,6 +227,39 @@ for (const tamano of [...TELEFONOS, ESCRITORIO]) {
       }
     });
 
+    test(`${nombre}: 4. la bandera ampliada, junto a los círculos`, async ({ browser, baseURL }) => {
+      // Densidad 4 para ver el dibujo de cerca: paño rojo relleno, mástil algo más oscuro y un
+      // filo oscuro de 1 px, sin reborde claro.
+      const contexto = await browser.newContext({
+        viewport: { width: tamano.width, height: tamano.height },
+        isMobile: telefono,
+        hasTouch: telefono,
+        deviceScaleFactor: 4,
+        ...(baseURL === undefined ? {} : { baseURL }),
+      });
+      await preparar(contexto, baseURL);
+      const pagina = await contexto.newPage();
+      for (const id of ATRIBUIDOS) {
+        await entrar(pagina, `/${id}`, false);
+        const ficha = pagina.getByRole("complementary", { name: new RegExp(id) });
+        await expect(ficha).toBeVisible();
+        await pagina.waitForTimeout(MS_DE_ASENTAMIENTO);
+        // El mapa deja el incidente en el centro del hueco libre entre la cabecera y la ficha.
+        const cabecera = await pagina.locator("header").filter({ visible: true }).first().boundingBox();
+        const hoja = await ficha.boundingBox();
+        if (cabecera === null || hoja === null) throw new Error("sin medidas");
+        const arriba = cabecera.y + cabecera.height;
+        const x = telefono ? tamano.width / 2 : hoja.x / 2;
+        const y = telefono ? (arriba + hoja.y) / 2 : (arriba + tamano.height) / 2;
+        await pagina.screenshot({
+          path: join(CAPTURAS, `pulido-4-ampliada-${id}-${nombre}.png`),
+          // El pie queda en el centro del hueco y la bandera sube unos 35 px desde él.
+          clip: { x: x - 80, y: y - 85, width: 160, height: 110 },
+        });
+      }
+      await contexto.close();
+    });
+
     test(`${nombre}: 5. la leyenda de la presión dice el periodo`, async ({ page, context, baseURL }) => {
       await preparar(context, baseURL);
       await entrar(page, "/", false);
@@ -252,23 +297,66 @@ for (const tamano of [...TELEFONOS, ESCRITORIO]) {
     test(`${nombre}: 7. los drones de la última noche dicen la noche`, async ({ page, context, baseURL }) => {
       await preparar(context, baseURL);
       await entrar(page, "/", false);
-      const ucrania = (await (await page.request.get("/datos/ucrania-resumen.json")).json()) as ResumenUcrania;
-      const parte = ucrania.ultimoParte;
-      if (parte === undefined || parte === null) throw new Error("sin último parte");
+      const ultima = ultimaNocheConCifra(await ucraniaPublicada(page));
+      if (ultima === null || ultima.lanzados === null) throw new Error("sin noche con cifra");
       await page.locator("[data-boton-ahora]").filter({ visible: true }).click();
       const linea = page.locator('[data-cifra="drones"]').filter({ visible: true });
-      await expect(linea.locator("[data-numero]")).toHaveText(new Intl.NumberFormat("es").format(parte.lanzados));
-      const [desde, hasta] = [new Date(parte.inicio), new Date(parte.fin)];
-      const antiguo = Date.now() - hasta.getTime() > 36 * 3_600_000;
-      const mes = (f: Date) => f.toLocaleString("es", { month: "long", timeZone: "UTC" });
-      if (desde.getUTCDate() !== hasta.getUTCDate()) {
-        const noche =
-          mes(desde) === mes(hasta)
-            ? `noche del ${desde.getUTCDate()} al ${hasta.getUTCDate()} de ${mes(hasta)}`
-            : `noche del ${desde.getUTCDate()} de ${mes(desde)} al ${hasta.getUTCDate()} de ${mes(hasta)}`;
-        await expect(linea.locator("[data-texto]")).toContainText(antiguo ? `último parte: ${noche}` : noche);
-      }
+      await expect(linea.locator("[data-numero]")).toHaveText(new Intl.NumberFormat("es").format(ultima.lanzados));
+      const antiguo = Date.now() - ultima.fin > 36 * 3_600_000;
+      const cuando = jornadaEscrita(ES, ultima.jornada);
+      await expect(linea.locator("[data-texto]")).toContainText(antiguo ? `último parte: ${cuando}` : cuando);
       await capturar(page, `7-drones-${nombre}`);
+    });
+
+    test(`${nombre}: 7b. «Noche a noche» da la misma cifra que «Europa ahora»`, async ({ page, context, baseURL }) => {
+      await preparar(context, baseURL);
+      await entrar(page, "/", false);
+      const noches = nochesDeGuerra(await ucraniaPublicada(page));
+      const ultima = ultimaNocheConCifra(await ucraniaPublicada(page));
+      const primeroDeOctubre = noches.find(
+        (n) => n.jornada.tipo === "noche" && n.jornada.desde === Math.floor(Date.parse("2026-10-01T00:00Z") / MS_POR_DIA),
+      );
+      if (ultima === null || primeroDeOctubre === undefined) throw new Error("faltan noches");
+      // La noche del 1 al 2 de octubre: 108 drones, no los 205 de sumarle el parte de día.
+      expect(primeroDeOctubre.lanzados).toBe(108);
+      for (const [nombreNoche, noche] of [
+        ["1-oct", primeroDeOctubre],
+        ["ultima", ultima],
+      ] as const) {
+        const diaTexto = new Date(noche.jornada.desde * MS_POR_DIA).toISOString().slice(0, 10);
+        await page.goto(`/?desde=${diaTexto}&hasta=${diaTexto}`);
+        await page.waitForSelector(MAPA_LISTO);
+        if (telefono) {
+          await page.getByRole("banner").getByRole("button", { name: "Menú" }).click();
+          await page.getByRole("dialog", { name: "Menú" }).getByRole("button", { name: "Noche a noche" }).click();
+        } else {
+          await page.getByRole("button", { name: "Noche a noche" }).click();
+        }
+        // Recorre las noches del día elegido y se queda, en pausa, en la última.
+        const panel = page.locator("[data-noche]").filter({ visible: true });
+        await expect(panel.getByRole("button", { name: "Reanudar" })).toBeVisible({ timeout: 15_000 });
+        await expect(panel).toContainText(jornadaEscrita(ES, noche.jornada, true));
+        await expect(panel).toContainText(new Intl.NumberFormat("es").format(noche.lanzados ?? 0));
+        await capturar(page, `7b-noche-a-noche-${nombreNoche}-${nombre}`);
+      }
+    });
+
+    test(`${nombre}: 4c. Chisináu: una bandera con un «2» al alejar y dos al acercar`, async ({ page, context, baseURL }) => {
+      await preparar(context, baseURL);
+      const chisinau = "EODI-2026-00074";
+      await entrar(page, `/${chisinau}`, false);
+      const ficha = page.getByRole("complementary", { name: new RegExp(chisinau) });
+      await expect(ficha).toBeVisible();
+      await page.waitForTimeout(MS_DE_ASENTAMIENTO);
+      await capturar(page, `4c-chisinau-cerca-${nombre}`);
+      // Se cierra la ficha y se aleja con el teclado del mapa hasta el zoom de los grupos.
+      await ficha.getByRole("button", { name: "Cerrar la ficha" }).click();
+      await page.locator(".maplibregl-canvas").focus();
+      for (let i = 0; i < 3; i += 1) {
+        await page.keyboard.press("Minus");
+        await page.waitForTimeout(700);
+      }
+      await capturar(page, `4c-chisinau-lejos-${nombre}`);
     });
 
     test(`${nombre}: 8. «Últimas 24 horas» cuenta 24 horas y coincide con «En directo»`, async ({ page, context, baseURL }) => {

@@ -409,6 +409,11 @@ describe("geometría del mapa", () => {
     const conBandera = banderas([munich, atribuido], opciones);
     expect(conBandera.features).toHaveLength(1);
     expect(conBandera.features[0]?.properties).toMatchObject({ id: atribuido.id, n: 1, atribuido: 1, novedad: 1 });
+    // Dos atribuidos en el mismo punto exacto: una bandera con su número y la lista para elegir.
+    const otro = { ...atribuido, id: "EODI-2026-00004" };
+    const juntas = banderas([atribuido, otro, munich], opciones).features;
+    expect(juntas).toHaveLength(1);
+    expect(juntas[0]?.properties).toMatchObject({ n: 2, ids: "EODI-2026-00004,EODI-2026-00003", atribuido: 1 });
   });
 
   it("la línea de un episodio solo une incidentes visibles y necesita dos", () => {

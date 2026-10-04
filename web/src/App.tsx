@@ -120,14 +120,14 @@ import {
   registrarVisita,
 } from "./estado/novedades.ts";
 import metaInicial from "./generado/meta.json";
-import { fechaDia, numero, textos } from "./i18n/index.ts";
+import { fechaDia, jornadaEscrita, numero, textos } from "./i18n/index.ts";
 import type { ApiMapa, Encuadre, Reserva } from "./mapa/Mapa.tsx";
 import { ZOOM_DE_PAIS } from "./mapa/encuadre.ts";
 import { useNavegacion } from "./navegacion.tsx";
 import { analizarRuta } from "./rutas.ts";
 import { ORIGEN, rutaDeFicha, rutaDeIdioma } from "./sitio.ts";
 import type { Idioma } from "./sitio.ts";
-import { diaDeInstante, incidenteEnPeriodo } from "./tiempo/dias.ts";
+import { diaDeInstante, enPeriodo, incidenteEnPeriodo } from "./tiempo/dias.ts";
 import type { Periodo } from "./tiempo/dias.ts";
 
 const Mapa = lazy(() => import("./mapa/Mapa.tsx"));
@@ -594,9 +594,15 @@ export function App() {
       ucraniaActiva === null || periodo === null ? null : impactosDelPeriodo(ucraniaActiva, periodo),
     [ucraniaActiva, periodo],
   );
+  // «Noche a noche» recorre las noches del periodo elegido (con «Todo», todas).
   const noches = useMemo(
-    () => (ucraniaActiva === null ? VACIO : nochesDeGuerra(ucraniaActiva)),
-    [ucraniaActiva],
+    () =>
+      ucraniaActiva === null
+        ? VACIO
+        : nochesDeGuerra(ucraniaActiva).filter(
+            (n) => seleccion.clase === "todo" || periodo === null || enPeriodo(n.jornada.desde, periodo),
+          ),
+    [ucraniaActiva, seleccion.clase, periodo],
   );
   // Guerra por satélite: corredores y pérdida de luz del periodo.
   const corredores = useMemo(
@@ -702,11 +708,13 @@ export function App() {
     [cambiarBusqueda],
   );
 
-  // Reproducción de la guerra noche a noche: se puede pausar, reanudar y detener.
+  // Reproducción de la guerra noche a noche: se puede pausar, reanudar y detener. Al llegar a
+  // la última noche se queda en ella, en pausa; reanudar desde ahí vuelve a empezar.
   useEffect(() => {
     if (noche === null || nochePausada) return undefined;
     const temporizador = window.setTimeout(() => {
-      setNoche((actual) => (actual === null || actual + 1 >= noches.length ? null : actual + 1));
+      if (noche + 1 >= noches.length) setNochePausada(true);
+      else setNoche(noche + 1);
     }, MS_POR_NOCHE);
     return () => window.clearTimeout(temporizador);
   }, [noche, nochePausada, noches.length]);
@@ -895,8 +903,8 @@ export function App() {
           api?.vistaInicial();
           return;
         case "drones": {
-          // Los ataques van por el día en que empiezan: el del inicio del parte.
-          const parte = cifrasDelMomento.drones;
+          // Los ataques entran en un periodo por el día en que empieza su noche.
+          const parte = cifrasDelMomento.drones?.jornada ?? null;
           setCapas((c) => ({ ...c, ucrania: true }));
           if (parte !== null) {
             elegirSeleccion({ clase: "entre", periodo: { desde: parte.desde, hasta: parte.desde } });
@@ -1467,8 +1475,8 @@ export function App() {
   const avisosArriba = hayAvisosArriba && (
     <div className="pointer-events-none flex flex-col items-center gap-2 self-stretch" data-avisos-arriba="">
       {nocheActual !== null && (
-        <div role="status" className="flotante pointer-events-auto flex flex-col items-center gap-1 px-4 py-2 text-center">
-          <span className="block text-sm">{t.guerra.noche(fechaDia(nocheActual.dia))}</span>
+        <div role="status" data-noche="" className="flotante pointer-events-auto flex flex-col items-center gap-1 px-4 py-2 text-center">
+          <span className="block text-sm">{jornadaEscrita(t, nocheActual.jornada, true)}</span>
           {nocheActual.lanzados === null ? (
             <span className="block text-sm text-secundario">{t.guerra.sinCifra}</span>
           ) : (
@@ -1483,7 +1491,10 @@ export function App() {
             <button
               type="button"
               className="control min-h-7 text-xs text-texto"
-              onClick={() => setNochePausada(!nochePausada)}
+              onClick={() => {
+                if (nochePausada && noche !== null && noche + 1 >= noches.length) setNoche(0);
+                setNochePausada(!nochePausada);
+              }}
             >
               {nochePausada ? t.guerra.reanudar : t.guerra.pausar}
             </button>

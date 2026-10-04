@@ -252,7 +252,6 @@ export interface Textos {
     pausar: string;
     reanudar: string;
     detener: string;
-    noche: (fecha: string) => string;
     drones: string;
     sinCifra: string;
   };
@@ -261,6 +260,8 @@ export interface Textos {
     instrucciones: string;
     grupo: (n: number) => string;
     pila: (n: number) => string;
+    /** Varias banderas de atribuidos juntas al alejar el mapa. */
+    banderas: (n: number) => string;
     grupoImpactos: (n: number) => string;
     impacto: (parte: boolean, foco: boolean) => string;
   };

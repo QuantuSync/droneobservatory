@@ -259,7 +259,7 @@ export const es: Textos = {
       "Cada incidente es un círculo relleno del color de su estado: naranja, notificado; " +
       "rojo, confirmado. El desmentido es un círculo gris de borde discontinuo, sin relleno. " +
       "Un atribuido (un confirmado del que un gobierno ha señalado al responsable) es solo una " +
-      "bandera roja con un contorno claro: el pie del mástil marca el lugar. Va siempre por " +
+      "bandera roja, mayor que un círculo: el pie del mástil marca el lugar. Va siempre por " +
       "encima de todo y no se agrupa nunca con otros. El tipo de incidente va escrito en la " +
       "ficha, la lista y los filtros.",
     periodo:
@@ -347,7 +347,6 @@ export const es: Textos = {
     pausar: "Pausar",
     reanudar: "Reanudar",
     detener: "Detener",
-    noche: (fecha) => `Noche del ${fecha}`,
     drones: "drones lanzados contra Ucrania",
     sinCifra: "sin cifra de lanzamientos",
   },
@@ -358,6 +357,7 @@ export const es: Textos = {
       "zoom. La lista de incidentes da acceso a las mismas fichas sin usar el mapa.",
     grupo: (n) => (n === 1 ? "1 incidente: acerca para verlo" : `${n} incidentes: acerca para verlos`),
     pila: (n) => `${n} incidentes en este mismo punto: pulsa para elegir uno`,
+    banderas: (n) => `${n} incidentes atribuidos: acerca para separarlos`,
     grupoImpactos: (n) => `${n} impactos con lugar: acerca para verlos`,
     impacto: (parte, foco) =>
       `Impacto con lugar${parte ? " · reivindicación de parte" : ""}${foco ? " · foco térmico" : ""}`,
@@ -682,7 +682,7 @@ export const es: Textos = {
                 marca: { estado: "atribuido" },
                 texto: [
                   "Un confirmado del que una autoridad señala a un gobierno como responsable: " +
-                    "en el mapa, una bandera roja con un contorno claro, por encima de todo, cuyo pie marca el lugar. La ficha lo muestra como " +
+                    "en el mapa, una bandera roja, más grande que un círculo y por encima de todo, cuyo pie marca el lugar. La ficha lo muestra como " +
                     "«Confirmado · atribuido a…», con quién atribuye y a quién.",
                 ],
               },

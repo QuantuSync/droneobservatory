@@ -1,17 +1,16 @@
-import { fechaEscrita, numero } from "../i18n/index.ts";
+import type { Jornada } from "../datos/ucrania.ts";
+import { jornadaEscrita, numero } from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
 import type { Idioma } from "../sitio.ts";
 
 export type CifraAhora = "cierres" | "incidentes" | "drones" | "focos" | "gnss";
 export const CIFRAS_AHORA: readonly CifraAhora[] = ["cierres", "incidentes", "drones", "focos", "gnss"];
 
-/** Los drones del último parte publicado y lo que cubre. */
+/** Los drones de la última noche (o día) con cifra. */
 export interface DronesAhora {
   lanzados: number;
-  /** Días UTC del inicio y del fin del parte: distintos en una noche, iguales en un día. */
-  desde: number;
-  hasta: number;
-  /** El parte tiene más de 36 horas: ya no es «la última noche». */
+  jornada: Jornada;
+  /** Su último parte tiene más de 36 horas: ya no es «la última noche». */
   antiguo: boolean;
 }
 
@@ -62,7 +61,7 @@ function nombreDe(t: Textos, cifras: CifrasAhora, cifra: CifraAhora): string {
   const drones = cifras.drones;
   if (cifra !== "drones" || drones === null) return t.ahora[cifra];
   if (drones.antiguo) return t.ahora.dronesParte;
-  return drones.desde === drones.hasta ? t.ahora.dronesDia : t.ahora.drones;
+  return drones.jornada.tipo === "dia" ? t.ahora.dronesDia : t.ahora.drones;
 }
 
 /**
@@ -72,10 +71,7 @@ function nombreDe(t: Textos, cifras: CifrasAhora, cifra: CifraAhora): string {
 function detalle(t: Textos, cifras: CifrasAhora, cifra: CifraAhora): string | null {
   const drones = cifras.drones;
   if (cifra !== "drones" || drones === null) return null;
-  const cuando =
-    drones.desde === drones.hasta
-      ? t.tiempo.dia(fechaEscrita(drones.desde))
-      : t.tiempo.noche(fechaEscrita(drones.desde), fechaEscrita(drones.hasta));
+  const cuando = jornadaEscrita(t, drones.jornada);
   return drones.antiguo ? t.ahora.ultimoParte(cuando) : cuando;
 }
 

@@ -386,8 +386,7 @@ describe("panel «Europa ahora»", () => {
     // El último parte: la noche del 29 al 30 de septiembre, publicada hace 15 horas.
     expect(cifras.drones).toEqual({
       lanzados: 188,
-      desde: dia("2026-09-29"),
-      hasta: dia("2026-09-30"),
+      jornada: { tipo: "noche", desde: dia("2026-09-29"), hasta: dia("2026-09-30") },
       antiguo: false,
     });
     expect(cifras.focos).toBe(0);
@@ -402,7 +401,7 @@ describe("panel «Europa ahora»", () => {
     const cifras: CifrasAhora = {
       cierres: 0,
       incidentes: 9999,
-      drones: { lanzados: 1234, desde: dia("2026-10-02"), hasta: dia("2026-10-03"), antiguo: false },
+      drones: { lanzados: 1234, jornada: { tipo: "noche", desde: dia("2026-10-02"), hasta: dia("2026-10-03") }, antiguo: false },
       focos: 7,
       gnss: { zonas: 0, dia: dia("2026-10-02") },
     };
@@ -437,16 +436,20 @@ describe("panel «Europa ahora»", () => {
       cleanup();
       return texto;
     };
-    const noche = { lanzados: 157, desde: dia("2026-10-02"), hasta: dia("2026-10-03"), antiguo: false };
+    const noche: NonNullable<CifrasAhora["drones"]> = {
+      lanzados: 157,
+      jornada: { tipo: "noche", desde: dia("2026-10-02"), hasta: dia("2026-10-03") },
+      antiguo: false,
+    };
     expect(fila(noche)).toBe("drones lanzados la última noche · noche del 2 al 3 de octubre");
     expect(fila(noche, en)).toBe("drones launched last night · night of 2 to 3 October");
     expect(fila({ ...noche, antiguo: true })).toBe("drones lanzados · último parte: noche del 2 al 3 de octubre");
     expect(fila({ ...noche, antiguo: true }, en)).toBe("drones launched · latest report: night of 2 to 3 October");
     // Una noche que cambia de mes, y un parte de día.
-    expect(fila({ ...noche, desde: dia("2026-09-30"), hasta: dia("2026-10-01") })).toBe(
+    expect(fila({ ...noche, jornada: { tipo: "noche", desde: dia("2026-09-30"), hasta: dia("2026-10-01") } })).toBe(
       "drones lanzados la última noche · noche del 30 de septiembre al 1 de octubre",
     );
-    expect(fila({ ...noche, desde: dia("2026-10-01"), hasta: dia("2026-10-01") })).toBe(
+    expect(fila({ ...noche, jornada: { tipo: "dia", desde: dia("2026-10-01"), hasta: dia("2026-10-01") } })).toBe(
       "drones lanzados en el último parte de día · día 1 de octubre",
     );
   });
@@ -479,7 +482,7 @@ describe("panel «Europa ahora»", () => {
     const cifras: CifrasAhora = {
       cierres: 2,
       incidentes: 14,
-      drones: { lanzados: 120, desde: dia("2026-10-02"), hasta: dia("2026-10-03"), antiguo: false },
+      drones: { lanzados: 120, jornada: { tipo: "noche", desde: dia("2026-10-02"), hasta: dia("2026-10-03") }, antiguo: false },
       focos: 3,
       gnss: { zonas: 4, dia: dia("2026-10-02") },
     };

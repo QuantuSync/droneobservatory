@@ -198,11 +198,93 @@ incidentes y «En directo» dan los mismos incidentes. Los periodos de días, «
   dejó fuera; se restauró enseguida, tal cual, con un commit propio (16a4223). Desde entonces el
   paso de comprobar la lista de ficheros se hace justo después del último fetch.
 
+## Segunda tanda: bandera sin reborde, «Noche a noche» y las banderas de Chisináu
+
+PR #90, el mismo 4 de octubre de 2026.
+
+### La bandera, sin reborde claro
+
+**Causa.** El contorno claro de 1,5 px por fuera del rojo (y el de 3 px de la bandera abierta)
+se veía más que la propia bandera.
+
+**Cambio.** Sin reborde claro en ningún sitio. La bandera se separa del fondo y de un círculo
+rojo vecino con un filo del color del fondo del mapa que asoma 1 px por fuera del rojo. El paño
+sigue relleno en el rojo de «confirmado» y del mismo tamaño (28 px de mástil, paño de 20 × 13);
+el mástil va en un rojo algo más oscuro (`#c82a3e`). La del incidente abierto es la misma
+bandera, un 20 % más grande, sin borde; la normal de ese incidente se oculta para que no asome
+por debajo. El pulso de las novedades es un trazo fino sobre la silueta. Un solo dibujo para el
+mapa, la ficha, el historial de estados, la leyenda y la cifra de atribuidos (`BANDERA`,
+`CONTORNO_BANDERA` y `COLOR_MASTIL` en `web/src/paleta.ts`).
+
+**Pruebas.** `tests/colores.test.tsx`: el filo es del color del fondo y asoma 1 px como mucho,
+el mástil es más oscuro que el paño, y ni el mapa ni el símbolo de la leyenda llevan ningún
+color claro. `e2e/pulido.spec.ts`, punto 4: capturas ampliadas (densidad 4) de los tres
+atribuidos, en 390 × 844 y en escritorio, con los círculos rojos de al lado
+(`pulido-4-ampliada-*.png`).
+
+### «Noche a noche» sumaba dos partes
+
+**Causa.** La reproducción agrupaba los partes por el día en que empiezan, como hacía antes
+«Europa ahora»: el parte de día (de 06:30 a 18:00, hora de Kiev) y el de la noche siguiente
+(desde las 18:00) caían en el mismo día y se sumaban. La noche del 1 al 2 de octubre salía con
+205 drones en lugar de 108.
+
+**Cambio.** Una sola regla decide a qué noche pertenece un parte (`jornadaDeParte` en
+`web/src/datos/ucrania.ts`): si acaba al día siguiente de empezar es la noche de esos dos días;
+si empieza y acaba el mismo día, es un día aparte. Cada fila de la capa de guerra lleva ahora el
+fin del parte para aplicarla. La usan «Europa ahora», «Noche a noche», la capa de Ucrania (las
+regiones y sus fichas), los corredores y el periodo de cada ataque; «Europa ahora» enseña la
+última noche de la misma lista que reproduce «Noche a noche», así que las dos dan siempre el
+mismo número. Se escribe igual en todas partes: «noche del 3 al 4 de octubre», «día 1 de
+octubre» (también en la lista de ataques de cada región, que antes ponía la fecha suelta). Los
+tramos incluidos en otro parte (`incluido_en`) o solapados (`solapado_con`) no se suman. Los
+dos partes diarios del Ministerio de Defensa ruso (de 05:00 a 17:00 y de 17:00 a 05:00 UTC) son
+un día y una noche distintos y cada derribo cuenta una vez.
+
+«Noche a noche» recorre ahora las noches del periodo elegido (con «Todo», todas) y al terminar
+se queda en pausa en la última, en lugar de desaparecer; «Reanudar» vuelve a empezar.
+
+Revisión de los datos publicados: entre los partes que se suman, 29 de los de la Fuerza Aérea
+de Ucrania y 305 de los del Ministerio de Defensa ruso se solapan en el tiempo con el siguiente
+sin marca de solapado. De los ucranianos, 21 solo se tocan en el borde (hasta dos horas): el
+parte de la noche llega hasta las 08:00 de Kiev y el del día empieza a las 06:30, y son partes
+distintos que la propia fuente da por separado, también los de septiembre y octubre de 2026;
+siete se solapan más de seis horas, ninguno desde octubre de 2025. De los rusos, 147 son de
+borde y 140 se solapan más de seis horas, casi todos de 2024 y 2025 y tres de agosto de 2026.
+Los largos revisados son comunicados distintos (un ataque a las 23:00 MSK y el balance de esa
+noche, con el fin puesto a la hora de publicación), pero no se han podido revisar uno a uno:
+queda como pendiente.
+
+**Pruebas.** `tests/noches.test.tsx`, con los partes reales del 30 de septiembre al 4 de
+octubre de 2026: la noche del 1 al 2 da 108 en «Noche a noche» y en «Europa ahora» (y el día 1,
+97, aparte); tres noches de control (del 30 de septiembre al 1 de octubre, 107; del 2 al 3,
+157, con un tramo incluido; del 3 al 4, 135, con un parte solapado) dan lo mismo en las dos
+vistas; el 2 de octubre, con los dos partes rusos, suma 209 + 218 una sola vez cada uno; la
+regla y los textos de la noche en los dos idiomas. `e2e/pulido.spec.ts`, punto 7b, en
+producción: «Noche a noche» con el periodo del 1 de octubre se queda en «Noche del 1 al 2 de
+octubre» con 108, y con el de la última noche da la cifra de «Europa ahora».
+
+### Las dos banderas de Chisináu se pisaban
+
+**Causa.** Los atribuidos no se agrupaban nunca, y dos a pocos kilómetros se dibujaban una
+encima de otra al alejar.
+
+**Cambio.** Las banderas se agrupan solo entre ellas (nunca con los círculos): dos o más que
+se pisarían en la pantalla son una sola bandera con su número al lado, con el mismo estilo que
+el número de los grupos, hasta el zoom 7. Al pulsarla, el mapa se acerca hasta el zoom en que se
+separan; desde el 8 (el de las fichas) cada una va en su punto. Varias en el mismo punto exacto
+son siempre una bandera con su número, y al pulsarla se elige de una lista. Con las novedades,
+el grupo late con la silueta de la bandera, nunca con un anillo.
+
+**Pruebas.** `tests/colores.test.tsx` (agrupación propia, zoom máximo de agrupación por debajo
+del de las fichas, número con el estilo de los grupos), `tests/web.test.ts` (mismo punto
+exacto: una bandera con 2 y su lista) y `tests/pulso.test.ts`. `e2e/pulido.spec.ts`, punto 4c:
+Chisináu de cerca (dos banderas) y alejado (una con un «2»).
+
 ## Pendientes
 
-- **Banderas casi en el mismo punto.** Dos atribuidos a pocos kilómetros (Chisináu) se dibujan
-  una sobre otra al alejar. Arreglo: abrir en abanico las banderas a menos de 20 px entre sí,
-  con una línea fina al punto real.
-- **«Noche a noche» suma el parte de día con la noche siguiente.** La reproducción agrupa los
-  partes por el día de inicio, como hacía la línea de «Europa ahora». Arreglo: agrupar por parte
-  (con su inicio y su fin), igual que el último parte.
+- **Solapes largos sin marcar en el histórico de partes.** Los 7 ucranianos y 140 rusos que se
+  solapan más de seis horas con el parte siguiente (de 2023 a agosto de 2026). Arreglo: que la
+  recogida compare cada par (sentido, horas del texto, regiones y cifras), corrija el fin cuando
+  es la hora de publicación y marque `solapado_con` en los que repitan aparatos; la web deja de
+  sumarlos en cuanto llevan la marca.

@@ -9,6 +9,7 @@ import type { Directo } from "./directo.ts";
 import { agregar, zonasAltas } from "./gnss.ts";
 import type { FicheroGnss } from "./gnss.ts";
 import type { Resumen, ResumenUcrania } from "./tipos.ts";
+import { ultimaNocheConCifra } from "./ucrania.ts";
 
 /** Días que cuentan como «últimos 7 días», contando el último día con datos. */
 export const DIAS_SEMANA = 7;
@@ -26,15 +27,17 @@ export interface FuentesAhora {
   ahora: number | null;
 }
 
-/** Los drones del último parte publicado, con los días que cubre y si ya tiene más de 36 h. */
-export function dronesDelUltimoParte(ucrania: ResumenUcrania, ahora: number | null): DronesAhora | null {
-  const parte = ucrania.ultimoParte ?? null;
-  if (parte === null) return null;
+/**
+ * Los drones de la última noche (o día) con cifra, contados igual que en «Noche a noche», y si
+ * su último parte ya tiene más de 36 horas.
+ */
+export function dronesDeLaUltimaNoche(ucrania: ResumenUcrania, ahora: number | null): DronesAhora | null {
+  const noche = ultimaNocheConCifra(ucrania);
+  if (noche === null || noche.lanzados === null) return null;
   return {
-    lanzados: parte.lanzados,
-    desde: diaDeInstante(parte.inicio),
-    hasta: diaDeInstante(parte.fin),
-    antiguo: ahora !== null && ahora - Date.parse(parte.fin) > HORAS_PARTE_RECIENTE * MS_POR_HORA,
+    lanzados: noche.lanzados,
+    jornada: noche.jornada,
+    antiguo: ahora !== null && ahora - noche.fin > HORAS_PARTE_RECIENTE * MS_POR_HORA,
   };
 }
 
@@ -53,7 +56,7 @@ export function cifrasAhora({ resumen, ucrania, directo, gnssHoy, ahora }: Fuent
   return {
     cierres: directo === null ? null : cierresEnCurso(directo).length,
     incidentes: resumen === null ? null : resumen.incidentes.filter((i) => enSemana(i.dia)).length,
-    drones: ucrania === null ? null : dronesDelUltimoParte(ucrania, ahora),
+    drones: ucrania === null ? null : dronesDeLaUltimaNoche(ucrania, ahora),
     focos,
     gnss:
       gnssHoy === null
