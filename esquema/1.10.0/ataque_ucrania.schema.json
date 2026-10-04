@@ -109,6 +109,16 @@
         }
       }
     },
+    "resumen": {
+      "x-visibilidad": "publico",
+      "description": "Parte de resumen (una semana, desde el inicio, o más de dos días): nunca se suma con los partes diarios (proceso/periodos.py).",
+      "const": true
+    },
+    "jornada": {
+      "x-visibilidad": "publico",
+      "description": "Noche (o día) a que pertenece el parte, con la regla única de proceso/ataques.jornada, la misma que usa la web. La añade la publicación; la base no la guarda.",
+      "$ref": "urn:eodi:esquema:1.10.0:comun#/$defs/jornada"
+    },
     "cruces_parte": {
       "x-visibilidad": "interno",
       "description": "Los cruces que declara el parte, sin las incursiones que añade proceso/cruces.py.",

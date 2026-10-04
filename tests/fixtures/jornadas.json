@@ -1,0 +1,12 @@
+{
+  "descripcion": "Casos de la regla única de la noche de un parte: los comprueban proceso/ataques.jornada (tests/test_partes_del_dia.py) y jornada de web/src/datos/ucrania.ts (web/tests/jornadas.test.ts). Si una de las dos cambia, los dos tests fallan.",
+  "casos": [
+    {"inicio": "2026-10-03T17:00Z", "fin": "2026-10-04T05:00Z", "jornada": {"tipo": "noche", "desde": "2026-10-03", "hasta": "2026-10-04"}},
+    {"inicio": "2026-10-03T05:00Z", "fin": "2026-10-03T17:00Z", "jornada": {"tipo": "dia", "desde": "2026-10-03", "hasta": "2026-10-03"}},
+    {"inicio": "2026-09-30T03:30Z", "fin": "2026-09-30T15:30Z", "jornada": {"tipo": "dia", "desde": "2026-09-30", "hasta": "2026-09-30"}},
+    {"inicio": "2026-09-29T15:00Z", "fin": "2026-09-30T05:00Z", "jornada": {"tipo": "noche", "desde": "2026-09-29", "hasta": "2026-09-30"}},
+    {"inicio": "2026-10-04T00:30Z", "fin": "2026-10-04T04:00Z", "jornada": {"tipo": "dia", "desde": "2026-10-04", "hasta": "2026-10-04"}},
+    {"inicio": "2025-01-07T17:30Z", "fin": "2025-01-09T07:00Z", "jornada": {"tipo": "noche", "desde": "2025-01-07", "hasta": "2025-01-08"}},
+    {"inicio": "2026-10-03T22:15Z", "fin": "2026-10-03T22:15Z", "jornada": {"tipo": "dia", "desde": "2026-10-03", "hasta": "2026-10-03"}}
+  ]
+}

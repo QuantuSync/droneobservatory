@@ -310,3 +310,76 @@ relación con un ataque y sucesos de día sin ataque en curso.
 `tests/test_cruces.py`: la noche de un parte con la misma regla que la web, enlace por la fuente y
 por la fecha, lo que no se enlaza (Bielorrusia, globos, drones ucranianos y marinos, Letonia sin
 dron ruso), los dos sentidos en la base con su historial y sin escrituras repetidas.
+
+## Bloque 5. Partes del mismo día
+
+### Causa
+
+El Ministerio de Defensa ruso publica de media 3,3 partes al día: tramos de la tarde («В период с
+21.00 до 22.00 мск … три»), el de día y, por la mañana, el de toda la noche. Ese parte de la noche
+no escribía las horas hasta 2026 («В течение прошедшей ночи … 50») y la regla de solapes lo
+tomaba como contiguo al último tramo, así que la noche y sus tramos se sumaban; desde 2026 escribe
+las horas («В течение прошедшей ночи с 20.00 мск 3 октября до 8.00 мск 4 октября … 559») y se ve
+que cubre la noche entera. Solo 6 partes rusos llevaban `incluido_en`. Además, cinco partes de la
+Fuerza Aérea guardaban mal su periodo (año equivocado, «Увечері 11 лютого» leído desde la medianoche,
+noches publicadas tarde con el fin a la hora de publicación) y la noche de cada parte solo la
+calculaba la web.
+
+### Cambios
+
+- **Parte de toda la noche** (`proceso/solapes.py`): el parte «В течение прошедшей ночи» sin horas
+  cubre la noche desde las 20.00 de Moscú; si sus cifras no son menores que las de los tramos de esa
+  noche publicados antes, en conjunto y región a región, es su total y los tramos quedan
+  `incluido_en`. Los partes de día y de noche de la Fuerza Aérea se solapan una o dos horas pero
+  cuentan cosas distintas: siguen sumándose los dos (la regla de solapes solo se aplica al
+  ministerio ruso, como antes).
+- **Periodos comprobados** (`proceso/periodos.py`, en cada recogida horaria, con su motivo en el
+  historial): año equivocado del parte, ataque que empieza la tarde del día que escribe el parte,
+  noche publicada tarde que acaba por la mañana.
+- **Partes de resumen** (`resumen`, público): una semana, desde el inicio o más de dos días; nunca se
+  suman con los diarios (ni en los datos ni en la web). Los resúmenes del ministerio ruso («Главное
+  за день», «Итоги недели») ya se descartaban al leerlos y no hay ninguno guardado.
+- **La noche de cada ataque en los datos publicados** (`jornada` en `ucrania.json`, con
+  `proceso/ataques.jornada`): la misma regla que la web unificó en el PR #90 (`jornada` de
+  `web/src/datos/ucrania.ts`): noche si el periodo acaba un día UTC después del que empieza, día si
+  empieza y acaba el mismo día. Un fichero de casos compartido (`tests/fixtures/jornadas.json`) lo
+  comprueban los tests de los dos lados, y un test de la web comprueba que la noche publicada de
+  cada ataque es la que calcula la web.
+
+### Cifras
+
+| | Antes | Después |
+| --- | ---: | ---: |
+| Partes rusos con `incluido_en` | 6 | 78 |
+| Partes rusos con `solapado_con` | 10 | 9 |
+| Partes con el periodo corregido | — | 5 |
+| Partes de resumen | 0 | 0 |
+
+Media diaria de drones que el Ministerio de Defensa ruso dice haber derribado, por trimestre (cada
+parte en su noche o su día, sin los tramos incluidos en otro):
+
+| Trimestre | Antes | Después |
+| --- | ---: | ---: |
+| 2023 T3 | 5,3 | 5,3 |
+| 2023 T4 | 7,7 | 7,7 |
+| 2024 T1 | 11,2 | 11,2 |
+| 2024 T2 | 18,9 | 18,6 |
+| 2024 T3 | 24,6 | 24,3 |
+| 2024 T4 | 33,7 | 32,3 |
+| 2025 T1 | 44,1 | 43,8 |
+| 2025 T2 | 75,9 | 75,9 |
+| 2025 T3 | 91,8 | 91,5 |
+| 2025 T4 | 122,6 | 122,6 |
+| 2026 T1 | 173,4 | 173,4 |
+| 2026 T2 | 292,4 | 292,4 |
+| 2026 T3 | 502,3 | 502,3 |
+
+La corrección pesa sobre todo en 2024 (hasta un 4 %): desde mediados de 2025 el ministerio apenas
+publica tramos sueltos de la tarde.
+
+### Pruebas añadidas
+
+`tests/test_partes_del_dia.py` y `web/tests/jornadas.test.ts`: la misma noche en los dos lados con
+los casos compartidos, la noche de cada ataque publicado, el parte de toda la noche que incluye el
+tramo de la tarde (y no lo incluye si el tramo dice más), los periodos mal guardados con los partes
+reales y el parte de resumen que no se suma.

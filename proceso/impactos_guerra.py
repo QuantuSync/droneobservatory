@@ -87,7 +87,7 @@ class Ataques:
     def __init__(self, ataques: list[Documento]) -> None:
         self.por_sentido: dict[str, list[Periodo]] = {}
         for ataque in ataques:
-            if "incluido_en" in ataque or "solapado_con" in ataque:
+            if "incluido_en" in ataque or "solapado_con" in ataque or "resumen" in ataque:
                 continue
             periodo = ataque["periodo"]
             self.por_sentido.setdefault(ataque["sentido"], []).append(

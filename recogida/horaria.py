@@ -50,6 +50,7 @@ from proceso import (
     impactos_guerra,
     incidentes,
     incursiones,
+    periodos,
     presencia,
     solapes,
     zonas_lanzamiento,
@@ -276,6 +277,11 @@ def principal(argumentos: list[str] | None = None) -> int:
                 registro.warning("%s no se lee: %s", fuente.id, error)
                 salida, leida = SALIDA_AVISO, NO_LEIDA
             estados[fuente.id] = EstadoFuente(leida, ultimo_dato(almacen, fuente.id, "fecha"))
+        # Periodos de los partes comprobados y partes de resumen marcados (no se suman).
+        try:
+            registro.info("periodos de los partes: %s", periodos.revisar(almacen, ahora))
+        except Exception as error:
+            registro.warning("periodos de los partes sin revisar: %s", str(error)[:300])
         # Los tramos del ministerio que ya cubre un total, o que se solapan, no se suman.
         registro.info(
             "tramos con enlace cambiado: %d", solapes.enlazar(almacen, SENTIDO_UA_RU, ahora)

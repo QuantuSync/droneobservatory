@@ -12,14 +12,20 @@ Sumar todos contaría dos veces. La regla:
 - Si no, dos tramos exactos que se solapan más de lo que da el redondeo de las
   horas no se suman los dos: cuenta el de más derribos y el otro queda enlazado
   a él («solapado_con»).
-- Un periodo con inicio aproximado («в течение прошедшей ночи», sin horas) no
-  prueba que cubra a nadie: el ministerio lo publica a continuación del último
-  tramo, así que se toma como contiguo y siempre cuenta.
+- El parte de toda la noche («В течение прошедшей ночи … 1110», publicado por la
+  mañana) cubre la noche entera desde las 20.00 de Moscú, aunque no escriba las horas:
+  desde 2026 el ministerio escribe ese mismo parte con ellas («В течение прошедшей ночи
+  с 20.00 мск 3 октября до 8.00 мск 4 октября … 559»). Si sus cifras no son menores
+  que las de los tramos de esa noche publicados antes, es su total y los tramos quedan
+  «incluido_en». Antes se tomaba como contiguo al último tramo y se sumaban los dos.
+- Cualquier otro periodo con inicio aproximado no prueba que cubra a nadie y siempre
+  cuenta.
 
 Los enlaces se recalculan con todos los ataques del sentido cada vez, así que
 un parte nuevo puede cambiar un enlace; el cambio queda en el historial.
 """
 
+import re
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 
@@ -32,6 +38,10 @@ SOLAPADO_CON = "solapado_con"
 # los extremos («до 4.05 21 мая» y «с 4.00 до 8.00»). Medido en la caché: los tramos
 # consecutivos se pisan como mucho 10 minutos por redondeo; 15 dejan margen.
 SOLAPE_TOLERADO = timedelta(minutes=15)
+NOCHE_ENTERA = re.compile(
+    r"в\s+течение\s+(?:прошедшей\s+)?ночи|за\s+(?:прошедшую\s+)?ночь|прошедшей\s+ночью",
+    re.IGNORECASE,
+)
 EXACTA = "minuto"
 
 
@@ -47,6 +57,8 @@ class Tramo:
     publicado: str
     derribados: int
     regiones: dict[str, int]
+    # Parte de toda la noche sin horas escritas: cubre desde las 20.00 de Moscú.
+    noche_entera: bool = False
 
     @property
     def localizable(self) -> bool:
@@ -75,6 +87,9 @@ def tramo(ataque: Documento) -> Tramo | None:
         puntual=inicio == fin and periodo["inicio"]["precision"] in {EXACTA, "aproximada"},
         publicado=max(f["fecha"]["valor"] for f in ataque["fuentes"]),
         derribados=derribados["min"],
+        noche_entera=periodo["inicio"]["precision"] == "aproximada"
+        and fin > inicio
+        and any(NOCHE_ENTERA.search(f.get("frase_origen", "")) for f in ataque["fuentes"]),
         regiones={
             r["region"]: r["derribados"]["min"]
             for r in ataque.get("regiones", [])
@@ -112,7 +127,7 @@ def enlaces(tramos: list[Tramo]) -> dict[str, tuple[str, str]]:
     resultado: dict[str, tuple[str, str]] = {}
     # Los totales más largos primero: un tramo cubierto por dos totales anidados va al mayor.
     for total in sorted(
-        (t for t in tramos if t.exacto and t.fin > t.inicio),
+        (t for t in tramos if (t.exacto or t.noche_entera) and t.fin > t.inicio),
         key=lambda t: (t.inicio - t.fin, t.id),
     ):
         if total.id in resultado:
@@ -168,5 +183,8 @@ def derribados_contados(ataques: list[Documento]) -> int:
     return sum(
         a["derribados"]["min"]
         for a in ataques
-        if isinstance(a.get("derribados"), dict) and INCLUIDO_EN not in a and SOLAPADO_CON not in a
+        if isinstance(a.get("derribados"), dict)
+        and INCLUIDO_EN not in a
+        and SOLAPADO_CON not in a
+        and "resumen" not in a
     )

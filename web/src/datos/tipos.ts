@@ -234,6 +234,10 @@ export interface Ataque {
   regiones_misiles?: string[];
   incluido_en?: string;
   solapado_con?: string;
+  /** Parte de resumen (una semana, desde el inicio): nunca se suma con los diarios. */
+  resumen?: true;
+  /** Noche o día del parte según los datos (proceso/ataques.jornada), igual que `jornada`. */
+  jornada?: { tipo: "noche" | "dia"; desde: string; hasta: string };
   /** Regiones y ciudades que perdieron luz nocturna tras el ataque, medido por satélite. */
   perdida_luz?: PerdidaLuz[];
   fuentes: Fuente[];

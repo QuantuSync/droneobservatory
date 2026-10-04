@@ -239,7 +239,10 @@ function filaAtaque(ataque: Ataque, indiceRegion: Map<string, number>): FilaAtaq
     if (indice === undefined) continue;
     regiones.push([indice, ...par(region.derribados)]);
   }
-  const yaSumado = ataque.incluido_en !== undefined || ataque.solapado_con !== undefined;
+  const yaSumado =
+    ataque.incluido_en !== undefined ||
+    ataque.solapado_con !== undefined ||
+    ataque.resumen === true;
   return [
     ataque.id,
     diaDeInstante(ataque.periodo.inicio.valor),

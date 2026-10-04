@@ -408,6 +408,12 @@ const ataque = objeto(
     regiones_misiles: lista(cadena(v.PATRON_REGION)),
     incluido_en: cadena(v.PATRON_ID_ATAQUE),
     solapado_con: cadena(v.PATRON_ID_ATAQUE),
+    resumen: constante(true),
+    jornada: objeto({
+      tipo: enumerado(["noche", "dia"] as const),
+      desde: cadena(/^\d{4}-\d{2}-\d{2}$/),
+      hasta: cadena(/^\d{4}-\d{2}-\d{2}$/),
+    }),
     perdida_luz: lista(perdidaLuz),
   },
 );
