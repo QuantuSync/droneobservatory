@@ -252,14 +252,15 @@ SATELITE_TOPE_MINUTOS=30
 SATELITE_TOPE_UNIDAD=32
 # Luz nocturna tras los ataques contra la red eléctrica (servidor/luces.sh, recogida/luces.py):
 # cada hora en el minuto 41, fuera de los minutos 15 a 40 de la recogida horaria; no empieza una
-# noche nueva pasados 29 minutos (cada una tarda alrededor de un minuto), así que acaba antes del
-# minuto 12. Sigue en la hora siguiente.
+# noche nueva pasados 22 minutos (cada una tarda alrededor de un minuto; después quedan las
+# ciudades con alumbrado reducido y la subida), así que acaba antes del minuto 12. Sigue en la
+# hora siguiente.
 LUCES_DATOS="${EODI_LUCES_DATOS:-$CASA/datos/luces}"
 UNIDAD_LUCES="eodi-luces"
 CERROJO_LUCES="$SECRETOS/luces.lock"
 LUCES_REGISTRO="$SECRETOS/luces.json"
 MINUTO_LUCES=41
-LUCES_TOPE_MINUTOS=29
+LUCES_TOPE_MINUTOS=22
 LUCES_TOPE_UNIDAD=32
 # Focos de calor en vivo (servidor/focos_vivo.sh, recogida/focos_vivo.py): cada hora en el
 # minuto 42, cuando la recogida ya ha descargado FIRMS (cada 3 horas) y publicado los impactos.

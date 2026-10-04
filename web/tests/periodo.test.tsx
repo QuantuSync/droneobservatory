@@ -258,4 +258,20 @@ describe("en la aplicación, con la hora puesta", () => {
     await waitFor(() => expect(document.querySelector("[data-periodo-leyenda]")?.textContent).toBe("Incidentes en los últimos 7 días"));
     expect(window.location.search).toBe("?ultimos=7d");
   });
+
+  it("un enlace con «Corredores» encendido abre la capa de Ucrania con ellos y no los borra", async () => {
+    servir(Date.parse(`${DIA}T06:45Z`));
+    window.history.replaceState(null, "", "/?ultimos=7d&guerra=corredores");
+    render(
+      <ProveedorDeRuta inicial="/">
+        <App />
+      </ProveedorDeRuta>,
+    );
+    await screen.findByTestId("mapa");
+    await waitFor(() =>
+      expect(screen.getByRole("button", { name: es.satelite.corredores }).getAttribute("aria-pressed")).toBe("true"),
+    );
+    expect(screen.getByRole("button", { name: es.controles.ucrania }).getAttribute("aria-pressed")).toBe("true");
+    expect(window.location.search).toBe("?ultimos=7d&guerra=corredores");
+  });
 });

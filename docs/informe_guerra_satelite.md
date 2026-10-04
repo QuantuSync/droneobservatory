@@ -6,13 +6,13 @@ La capa de guerra del European Observatory of Drone Incidents suma cuatro piezas
 salen de satélites y de los partes:
 
 1. **Antes y después** de cada instalación alcanzada: la última imagen óptica de Sentinel-2 sin
-   nubes anterior al ataque y la primera posterior, recortadas sobre el sitio, con una cortinilla
-   en la ficha del impacto.
+   nubes anterior al ataque y la primera posterior en la que se ve el cambio, recortadas sobre el
+   sitio, con una cortinilla y el contorno de la zona cambiada en la ficha del impacto.
 2. **Apagones vistos desde el espacio**: el brillo nocturno de las ciudades y regiones afectadas
    por cada ataque con objetivos de energía, antes y después, y la pérdida de luz cuando llega
    al umbral validado.
-3. **Focos de calor en vivo**: los focos de NASA FIRMS de las últimas 24 horas sobre Ucrania y la
-   Rusia europea, con los que coinciden con un impacto declarado resaltados.
+3. **Focos de calor en vivo**: de los focos de NASA FIRMS de las últimas 24 horas sobre Ucrania y
+   la Rusia europea, los que coinciden con un impacto declarado.
 4. **Corredores de ataque**: arcos desde las zonas de lanzamiento hasta las regiones alcanzadas,
    con el grosor según los drones del periodo.
 
@@ -105,7 +105,43 @@ imágenes iguales. Ahora una pareja solo se publica si en ella se ve el cambio:
 - **Retirada.** Lo publicado de una pareja que no pasa se borra del almacén (DELETE firmado); si
   el borrado falla, se reintenta en la ejecución siguiente.
 
-<!-- LISTA CAMBIO -->
+**Las 33 parejas.** Ensayo con el código final sobre los 33 objetivos (967 MB leídos). «Mancha principal» es la medida con la primera imagen posterior despejada; «Escenas revisadas», cuántas imágenes posteriores despejadas se midieron dentro de los 15 días. Pasan **7**: las cuatro en las que se veía el daño a simple vista con la primera imagen (00068, 02593, 02600, 03428) y tres en las que lo enseña una imagen posterior (02693, el 2 de junio; 03153, el 26 de marzo; 03412, el 18 de agosto, reencuadrada a 1,8 km). 25 quedan sin cambio y se retiran del almacén; 03486 sigue buscando hasta que se cierre su plazo.
+
+| Impacto | Lugar | Primera imagen después | Mancha principal (ha) con ella | Daño visible a ojo | Escenas revisadas | Resultado |
+| --- | --- | --- | --- | --- | --- | --- |
+| EODI-IG-2025-00036 | Нікополь | 2025-04-20 | 0,32 | no | 9 | sin cambio |
+| EODI-IG-2025-00068 | Павлоград | 2025-08-08 | 11,78 | sí | 1 | **publicada** (2025-08-08, mancha 11,8 ha, zona 18,5 ha) |
+| EODI-IG-2025-02562 | Приморско-Ахтарск | 2025-02-08 | 0,62 | no | 2 | sin cambio |
+| EODI-IG-2025-02563 | Саратовский нефтеперерабатывающий завод | 2025-02-20 | 0,0 | no | 1 | sin cambio |
+| EODI-IG-2025-02564 | Радуга | 2025-06-09 | 0,44 | no | 1 | sin cambio |
+| EODI-IG-2025-02569 | Киришский НПЗ | 2025-10-01 | 0,22 | no | 1 | sin cambio |
+| EODI-IG-2025-02570 | Саратовский нефтеперерабатывающий завод | 2025-09-23 | 5,23 | no | 2 | sin cambio |
+| EODI-IG-2025-02572 | Донецкий международный аэропорт | 2025-11-18 | 0,23 | no | 2 | sin cambio |
+| EODI-IG-2025-02576 | порт Темрюк | 2026-03-08 | 1,66 | no | 1 | sin cambio |
+| EODI-IG-2025-02593 | Зёрново | 2025-04-18 | 7,35 | sí | 1 | **publicada** (2025-04-18, mancha 16,6 ha, zona 24,6 ha) |
+| EODI-IG-2025-02600 | Брахлов | 2025-04-23 | 16,06 | sí | 1 | **publicada** (2025-04-23, mancha 120,8 ha, zona 121,4 ha) |
+| EODI-IG-2025-02603 | Брянск | 2025-04-28 | 1,56 | no | 1 | sin cambio |
+| EODI-IG-2025-02693 | Зеленоград | 2025-05-28 | 5,33 | no | 2 | **publicada** (2025-06-02, mancha 16,7 ha, zona 31,1 ha) |
+| EODI-IG-2025-02717 | Нефтегавань Шесхарис | 2025-05-07 | 1,3 | no | 1 | sin cambio |
+| EODI-IG-2025-02718 | Тамань | 2025-05-07 | 1,32 | no | 2 | sin cambio |
+| EODI-IG-2025-02729 | Новороссийск | 2025-11-15 | 0,0 | no | 6 | sin cambio |
+| EODI-IG-2025-02730 | Шесхариз | 2025-11-15 | 2,66 | no | 3 | sin cambio |
+| EODI-IG-2025-02742 | Знам'янка | 2025-09-03 | 0,24 | no | 4 | sin cambio |
+| EODI-IG-2025-02759 | Нікополь | 2025-04-20 | 0,4 | no | 9 | sin cambio |
+| EODI-IG-2025-02761 | Кропивницький | 2025-09-23 | 0,38 | no | 2 | sin cambio |
+| EODI-IG-2025-02776 | Саратовский нефтеперерабатывающий завод | 2025-02-10 | 0,0 | no | 1 | sin cambio |
+| EODI-IG-2026-03153 | Івано-Франківськ | 2026-03-25 | 0,99 | no | 3 | **publicada** (2026-03-26, mancha 65,5 ha, zona 65,6 ha) |
+| EODI-IG-2026-03350 | Севск | 2026-05-03 | 0,61 | no | 1 | sin cambio |
+| EODI-IG-2026-03389 | порт Выборг | 2026-05-05 | 0,2 | no | 1 | sin cambio |
+| EODI-IG-2026-03390 | порт Выборг | 2026-05-05 | 0,2 | no | 1 | sin cambio |
+| EODI-IG-2026-03396 | порт Выборг | 2026-07-12 | 0,21 | no | 2 | sin cambio |
+| EODI-IG-2026-03409 | Туапсинский нефтеперерабатывающий завод | 2026-01-29 | 0,16 | no | 1 | sin cambio |
+| EODI-IG-2026-03412 | Военный аэродром Саки | 2026-08-16 | 0,0 | no | 3 | **publicada** (2026-08-18, mancha 13,9 ha, zona 14,2 ha) |
+| EODI-IG-2026-03427 | Краснодар | 2026-04-06 | 1,18 | no | 1 | sin cambio |
+| EODI-IG-2026-03428 | Туапсэ | 2026-04-26 | 2,99 | sí | 1 | **publicada** (2026-04-26, mancha 37,0 ha, zona 44,2 ha) |
+| EODI-IG-2026-03433 | Асфальто-бетонный завод | 2026-05-09 | 5,11 | no | 2 | sin cambio |
+| EODI-IG-2026-03434 | Асфальто-бетонный завод | 2026-05-09 | 5,11 | no | 2 | sin cambio |
+| EODI-IG-2026-03486 | Євротермінал | 2026-09-30 | 0,8 | no | 6 | buscando (plazo abierto) |
 
 ## 3. Apagones vistos desde el espacio
 
@@ -409,15 +445,15 @@ con su recorte y sus fechas) y `eodi-satelite` solo lee ese fichero.
 
 ## 9. Color de la capa de guerra
 
-Toda la capa de guerra (regiones de Ucrania y de Rusia, impactos, corredores, focos de 24 horas,
-ciudades sin luz, marcas de los focos de un impacto, línea de la cortinilla y sus leyendas) usa
+Toda la capa de guerra (regiones de Ucrania y de Rusia, impactos, corredores, signos de «Con
+satélite», marcas de los focos de un impacto, línea de la cortinilla y sus leyendas) usa
 una sola familia **violeta azulada**:
 
 | Uso | Color |
 | --- | --- |
 | Principal: regiones de Ucrania, impactos, corredores | `#9d7bff` |
-| Resaltado: focos de un impacto, focos de 24 h que coinciden con uno, cortinilla | `#cbbcff` |
-| Apagado: regiones de Rusia (con contorno discontinuo), focos de 24 h, aro de las ciudades sin luz | `#7a6cc0` |
+| Resaltado: focos de un impacto, aro de los impactos con satélite, cortinilla y su contorno | `#cbbcff` |
+| Apagado: regiones de Rusia (con contorno discontinuo), aro de los apagones y de las ciudades a oscuras | `#7a6cc0` |
 
 **Por qué.** Los estados de los incidentes europeos ocupan el rojo (confirmado, `#f53a50`), el
 naranja (notificado, `#ff9a2e`) y el verde (datos al día, `#56c271`). El coral anterior de la
@@ -439,7 +475,7 @@ El coral anterior, con las mismas cuentas: ΔE 15, 5, 12 y 12 frente a «confirm
 Contraste con el fondo del mapa (`#060a12`): 6,3:1. No es cian ni dorado. Dentro de la capa se
 mantienen las diferencias que ya había: impacto de fuente oficial (relleno) frente a
 reivindicación de parte (aro sin relleno), Ucrania (violeta pleno) frente a Rusia (violeta
-apagado y contorno discontinuo), focos normales frente a coincidentes (apagado frente a claro).
+apagado y contorno discontinuo), impactos sin y con satélite (aro principal frente a aro claro).
 El test `web/tests/colores.test.tsx` lo comprueba con las cuatro visiones: cada color de la
 familia a ΔE 30 o más de los tres estados, el principal a ΔE 75 o más del rojo con visión normal,
 deuteranopía y protanopía, contraste 4,5:1 sobre el fondo, y que ninguna capa de la guerra use un

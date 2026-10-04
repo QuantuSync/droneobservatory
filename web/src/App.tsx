@@ -707,21 +707,18 @@ export function App() {
       cambiarBusqueda(conSubcapasDe(escribirSeleccion(filtros, nueva), busqueda), true),
     [cambiarBusqueda, filtros, busqueda],
   );
-  /**
-   * Cambia las capas. La presión compara el periodo con el anterior de igual duración: con
-   * «Todo» no hay anterior, así que al encenderla con «Todo» el periodo pasa a 30 días.
-   */
-  // Ninguna capa enciende nada por su cuenta: al apagar la de Ucrania, sus subcapas se apagan y
-  // al volver a encenderla salen apagadas.
+  // Cambia las capas. Ninguna capa enciende nada por su cuenta: al apagar la de Ucrania, sus
+  // subcapas se apagan y al volver a encenderla salen apagadas.
   const cambiarCapas = useCallback((nuevas: Capas) => {
     setCapas(nuevas.ucrania ? nuevas : { ...nuevas, corredores: false, satelite: false });
   }, []);
-  // Un enlace con subcapas encendidas las abre encendidas (y con la capa de Ucrania).
+  // Un enlace con subcapas encendidas las abre encendidas (y con la capa de Ucrania). Se leen de
+  // la dirección del navegador al montar: la búsqueda de la navegación llega vacía en la primera
+  // pintura (la del prerenderizado) y se rellena justo después.
   const subcapasLeidas = useRef(false);
   useEffect(() => {
-    if (subcapasLeidas.current) return;
     subcapasLeidas.current = true;
-    const delEnlace = leerSubcapas(busqueda);
+    const delEnlace = leerSubcapas(window.location.search);
     if (delEnlace === null) return;
     setCapas((c) => ({
       ...c,
@@ -731,9 +728,10 @@ export function App() {
     }));
     setFiltroSatelite(delEnlace.filtro);
     if (delEnlace.filtro.length > 0) setListaSatelite(true);
-  }, [busqueda]);
+  }, []);
+  // Las subcapas encendidas, en la dirección (una vez leída la del enlace).
   useEffect(() => {
-    if (!subcapasLeidas.current) return;
+    if (!subcapasLeidas.current || busqueda !== window.location.search) return;
     const nueva = conSubcapas(busqueda, {
       corredores: capas.ucrania && capas.corredores,
       satelite: capas.ucrania && capas.satelite,
@@ -971,7 +969,8 @@ export function App() {
           setCapas((c) => ({ ...c, ucrania: true, satelite: true }));
           setFiltroSatelite(["foco"]);
           setListaSatelite(true);
-          elegirSeleccion({ clase: "reciente", reciente: "7d" });
+          // Sin tocar el periodo: la lista, de la más reciente a la más antigua, empieza por los
+          // focos de la semana y sigue con los anteriores.
           api?.vistaInicial();
           return;
         case "gnss":
