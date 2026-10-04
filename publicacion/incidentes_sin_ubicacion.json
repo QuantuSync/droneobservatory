@@ -16567,6 +16567,176 @@
   {
    "afirmaciones_publicas": [
     {
+     "campo": "drones.numero",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-02T09:15Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-72010da5c30eb1c2",
+     "medio": "adnkronos.com",
+     "valor": {
+      "max": 1,
+      "min": 1
+     }
+    },
+    {
+     "campo": "lugar.pais",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-02T09:15Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-72010da5c30eb1c2",
+     "medio": "adnkronos.com",
+     "valor": "BE"
+    },
+    {
+     "campo": "presencia_dron",
+     "cita": "nella tarda serata di ieri per la seconda volta in meno di 24 ore",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-02T09:15Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-72010da5c30eb1c2",
+     "medio": "adnkronos.com",
+     "valor": "confirmada"
+    },
+    {
+     "campo": "tiempo.inicio",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-02T09:15Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-72010da5c30eb1c2",
+     "medio": "adnkronos.com",
+     "valor": {
+      "precision": "dia",
+      "valor": "2025-11-01T00:00Z"
+     }
+    },
+    {
+     "campo": "tipo",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-02T09:15Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-72010da5c30eb1c2",
+     "medio": "adnkronos.com",
+     "valor": "sobrevuelo"
+    }
+   ],
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-04T01:17Z"
+    }
+   },
+   "drones": {
+    "numero": {
+     "max": 1,
+     "min": 1
+    }
+   },
+   "estado": {
+    "actual": "confirmado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-02T08:45Z"
+      },
+      "fuente_id": "gdelt-710e06a17f44919d"
+     },
+     {
+      "estado": "confirmado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-02T09:15Z"
+      },
+      "fuente_id": "gdelt-72010da5c30eb1c2-declaracion-1"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://zazoom.it/2025-11-02/ancora-droni-sul-belgio-nuovo-avvistamento-su-una-base-militare-di-kleine-brogel/18056587",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-02T08:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Ancora droni sul Belgio nuovo avvistamento su una base militare di Kleine Brogel",
+     "id": "gdelt-710e06a17f44919d",
+     "idioma": "it",
+     "medio": "zazoom.it",
+     "replicas": 10
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://adnkronos.com/internazionale/esteri/ancora-droni-sul-belgio-nuovo-avvistamento-su-una-base-militare_4XVR5Od46stxHNkqAXwLbT",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-02T09:15Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "nella tarda serata di ieri per la seconda volta in meno di 24 ore",
+     "id": "gdelt-72010da5c30eb1c2",
+     "idioma": "it",
+     "medio": "adnkronos.com",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 1,
+     "enlace": "https://adnkronos.com/internazionale/esteri/ancora-droni-sul-belgio-nuovo-avvistamento-su-una-base-militare_4XVR5Od46stxHNkqAXwLbT",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-02T09:15Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "diversi droni erano stati avvistati sulla stessa base aerea, ha annunciato il ministro della Difesa belga Theo Francken",
+     "id": "gdelt-72010da5c30eb1c2-declaracion-1",
+     "idioma": "it",
+     "medio": "Ministero della Difesa belga (declaración oficial citada en adnkronos.com)",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-2025-00344",
+   "lugar": {
+    "nivel": "pais",
+    "pais": "BE"
+   },
+   "presencia_dron": "confirmada",
+   "tiempo": {
+    "inicio": {
+     "precision": "dia",
+     "valor": "2025-11-01T00:00Z"
+    }
+   },
+   "tipo": "sobrevuelo",
+   "titulo": {
+    "en": "New drone sighting over Kleine Brogel military base in Belgium",
+    "es": "Nuevo avistamiento de drones sobre la base militar de Kleine Brogel en Bélgica"
+   }
+  },
+  {
+   "afirmaciones_publicas": [
+    {
      "campo": "consecuencias.cierre.valor",
      "credibilidad": 3,
      "fecha": {
