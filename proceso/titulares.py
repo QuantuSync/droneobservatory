@@ -38,6 +38,33 @@ _OBJETO = {
     "en": re.compile(r"\bunidentified\s+(?:flying\s+)?(?P<obj>objects?)\b", re.IGNORECASE),
 }
 
+# El titular ya duda del dron con otra palabra («posiblemente», «sospecha de», «unidentified»):
+# no hace falta añadir «posible», y si se añadió sobra.
+_DUDA = {
+    "es": re.compile(
+        r"\b(?:posiblemente|probablemente|presunt\w*|supuest\w*|sospech\w*|no identificad\w*)",
+        re.IGNORECASE,
+    ),
+    "en": re.compile(
+        r"\b(?:possibly|probably|suspected|suspicious|alleged|presumed|unidentified)\b",
+        re.IGNORECASE,
+    ),
+}
+_AÑADIDO = {
+    "es": re.compile(r"\bposibles?\s+(?=(?:drones|dron)\b)", re.IGNORECASE),
+    "en": re.compile(r"\bpossible\s+(?=(?:drones|drone)\b)", re.IGNORECASE),
+}
+DISTANCIA_DUDA = 40
+
+
+def _sin_doble(titulo: str, idioma: str) -> str:
+    """Sin el «posible» que sobra tras otra palabra de duda («posiblemente un posible dron»)."""
+    for duda in _DUDA[idioma].finditer(titulo):
+        for m in _AÑADIDO[idioma].finditer(titulo):
+            if 0 < m.start() - duda.end() <= DISTANCIA_DUDA:
+                return titulo[: m.start()] + titulo[m.end() :]
+    return titulo
+
 
 def _mayuscula(texto: str, como: str) -> str:
     return texto[:1].upper() + texto[1:] if como[:1].isupper() else texto
@@ -56,10 +83,12 @@ def afirma_dron(titulo: str, idioma: str) -> bool:
 
 
 def coherente(titulo: str, presencia: str | None, idioma: str) -> bool:
+    if idioma in _DUDA and _sin_doble(titulo, idioma) != titulo:
+        return False
     if presencia == CONFIRMADA:
         return not da_por_posible(titulo, idioma)
     if presencia == NO_CONFIRMADA:
-        return not afirma_dron(titulo, idioma)
+        return not afirma_dron(titulo, idioma) or bool(_DUDA[idioma].search(titulo))
     return True
 
 
@@ -94,7 +123,10 @@ def _como_posible(titulo: str, idioma: str) -> str:
 
 def ajustar(titulo: str, presencia: str | None, idioma: str) -> str:
     """El titular coherente con la presencia (el mismo si ya lo es)."""
-    if idioma not in _DRON or coherente(titulo, presencia, idioma):
+    if idioma not in _DRON:
+        return titulo
+    titulo = _sin_doble(titulo, idioma)
+    if coherente(titulo, presencia, idioma):
         return titulo
     if presencia == CONFIRMADA:
         return _afirmar(titulo, idioma)

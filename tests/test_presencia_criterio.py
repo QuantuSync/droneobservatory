@@ -68,6 +68,18 @@ def test_el_titular_se_ajusta_a_la_presencia() -> None:
     assert titulares.ajustar("Possible drones close the airport", "confirmada", "en") == (
         "Drones close the airport"
     )
+    # Si el titular ya duda del dron con otra palabra, no se añade «posible»; si se añadió, sobra.
+    for titulo, limpio in (
+        ("Objeto sospechoso en Agigea, posiblemente un posible dron",
+         "Objeto sospechoso en Agigea, posiblemente un dron"),
+        ("Cierre del espacio aéreo de Aalborg por sospecha de posible dron",
+         "Cierre del espacio aéreo de Aalborg por sospecha de dron"),
+    ):  # fmt: skip
+        assert not titulares.coherente(titulo, "no_confirmada", "es")
+        assert titulares.ajustar(titulo, "no_confirmada", "es") == limpio
+        assert titulares.coherente(limpio, "no_confirmada", "es")
+    assert titulares.ajustar("Unidentified possible drones near Dublin Airport", "no_confirmada",
+                             "en") == "Unidentified drones near Dublin Airport"  # fmt: skip
     # Descartada: el titular no se toca.
     assert titulares.ajustar("Drones sobre X", "descartada", "es") == "Drones sobre X"
 
