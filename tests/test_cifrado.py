@@ -1,3 +1,4 @@
+import gzip
 import os
 import sqlite3
 from pathlib import Path
@@ -102,5 +103,10 @@ def test_se_comprime_antes_de_cifrar_y_se_leen_las_bases_sin_comprimir(
     assert len(comprimido) < len(crudo)
     identidad = pyrage.x25519.Identity.from_str(clave_efimera)
     antiguo = pyrage.encrypt(crudo, [identidad.to_public()])
-    for cifrado in (comprimido, antiguo):
+    # La de antes del 4 de octubre de 2026, comprimida con gzip.
+    con_gzip = pyrage.encrypt(gzip.compress(crudo, 6, mtime=0), [identidad.to_public()])
+    for cifrado in (comprimido, antiguo, con_gzip):
         assert descifrar(cifrado).serialize() == crudo
+    # La de ahora va con xz, que ocupa menos que gzip.
+    assert pyrage.decrypt(comprimido, [identidad])[:6] == b"\xfd7zXZ\x00"
+    assert len(comprimido) < len(con_gzip)
