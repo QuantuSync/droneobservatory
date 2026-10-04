@@ -14,11 +14,12 @@ no se vuelve a leer. En cada hora se leen las publicaciones nuevas y las de las 
 horas; `procesar --todo` vuelve a mirar todas (tras cambiar el analizador o el nomenclátor),
 con el cerrojo de la recogida.
 
-Uso: python -m recogida.guerra procesar [--todo] (--base local.age [--guardar] | --remoto
+Uso: python -m recogida.guerra procesar [--todo] | corregir (--base local.age [--guardar] | --remoto
     --correo <autor>)
 """
 
 import argparse
+import copy
 import hashlib
 import logging
 import sys
@@ -236,6 +237,151 @@ def procesar(
     return resumen
 
 
+# --- Corrección de lo ya guardado (una vez por versión) ----------------------------------------
+
+CURSOR_CORRECCION = "guerra:correccion"
+VERSION_CORRECCION = "victimas-homenajes/1"
+# Lo que el mensaje, vuelto a leer, dice que no es un ataque con dron sobre un lugar.
+NO_ES_IMPACTO = {
+    "homenaje": "homenaje, obituario o memoria de un militar caído: no describe un ataque con "
+    "dron sobre un lugar",
+    "retrospectivo": "recuerda un ataque pasado (visita, condecoración, aniversario): no es un "
+    "ataque nuevo",
+    "sin_dron": "el mensaje no habla de un ataque con drones",
+    "aviso": "aviso de alarma, no un ataque",
+    "sin_impacto": "el mensaje no describe ningún impacto",
+}
+MOTIVO_VICTIMAS = (
+    "víctimas leídas frase a frase: un año escrito como fecha no es una cifra de víctimas y más "
+    "de 100 por impacto solo con la cifra pegada al verbo"
+)
+
+
+@dataclass
+class Correccion:
+    revisados: int = 0
+    retirados: int = 0
+    fuentes_quitadas: int = 0
+    victimas_cambiadas: int = 0
+    sin_texto: int = 0
+    motivos: dict[str, int] = field(default_factory=dict)
+
+    def documento(self, ahora: datetime) -> dict[str, Any]:
+        return {
+            "version": VERSION_CORRECCION, "fecha": instante(ahora)["valor"],
+            "revisados": self.revisados, "retirados": self.retirados,
+            "fuentes_quitadas": self.fuentes_quitadas,
+            "victimas_cambiadas": self.victimas_cambiadas, "sin_texto": self.sin_texto,
+            "motivos": self.motivos,
+        }  # fmt: skip
+
+
+def corregir(
+    almacen: Almacen,
+    datos: Datos,
+    canales: list[Canal],
+    nomenclator: Nomenclator,
+    ahora: datetime,
+    forzar: bool = False,
+) -> Correccion | None:
+    """Vuelve a leer, con las reglas de ahora, el mensaje de cada fuente de los impactos
+    vigentes, desde los textos guardados por el lector (sin descargar nada ni llamar al
+    extractor). Una fuente cuyo mensaje no describe un ataque con dron sobre un lugar
+    (homenajes y obituarios de militares, memoria, avisos) se quita; un impacto sin fuentes
+    queda retirado con su motivo. Las víctimas de cada fuente se vuelven a leer (solo si el
+    mensaje da un único lugar) y el impacto lleva la mayor. Cada cambio es una versión nueva
+    con su motivo en el historial. Una vez por versión (cursor CURSOR_CORRECCION); None si ya
+    estaba aplicada."""
+    hecho = almacen.cursor(CURSOR_CORRECCION) or {}
+    if hecho.get("version") == VERSION_CORRECCION and not forzar:
+        return None
+    por_nombre = {c.canal.lower(): c for c in canales}
+    textos: dict[str, dict[int, dict[str, Any]]] = {}
+    vigentes = impactos_guerra.vigentes(almacen)
+    # Cuántos impactos da cada mensaje: las víctimas solo se asignan si da uno solo.
+    por_fuente: dict[str, int] = {}
+    for documento in vigentes:
+        for fuente in documento["fuentes"]:
+            por_fuente[fuente["id"]] = por_fuente.get(fuente["id"], 0) + 1
+    leidos: dict[str, MensajeLeido | None] = {}
+    focos = almacen.focos_termicos()
+    resultado = Correccion()
+    for documento in vigentes:
+        resultado.revisados += 1
+        fuentes = []
+        lecturas = {x["fuente_id"]: x for x in documento.get("lecturas", [])}
+        quitadas: list[str] = []
+        for fuente in documento["fuentes"]:
+            partes = fuente["enlace"].split("/")
+            canal = por_nombre.get(partes[3].lower()) if len(partes) > 4 else None
+            if fuente["id"] not in leidos:
+                leido = None
+                if canal is not None and canal.grupo != "rosaviatsia":
+                    if canal.canal not in textos:
+                        textos[canal.canal] = datos.ultimas(canal.canal)
+                    publicacion = textos[canal.canal].get(int(partes[4]))
+                    if publicacion is not None:
+                        leido = analizar(
+                            publicacion["texto"], _fecha(publicacion["fecha"]), nomenclator,
+                            regiones_del_canal(canal), raices_regiones(),
+                            reivindicacion=canal.grupo == "estado_mayor_ua",
+                        )  # fmt: skip
+                leidos[fuente["id"]] = leido
+            leido = leidos[fuente["id"]]
+            if leido is None:
+                resultado.sin_texto += 1
+                fuentes.append(fuente)
+                continue
+            if leido.motivo in NO_ES_IMPACTO:
+                quitadas.append(leido.motivo)
+                lecturas.pop(fuente["id"], None)
+                continue
+            fuentes.append(fuente)
+            unico = por_fuente.get(fuente["id"]) == 1
+            victimas = {
+                c: getattr(leido, c) for c in ("heridos", "fallecidos")
+                if unico and getattr(leido, c) is not None
+            }  # fmt: skip
+            if fuente["id"] in lecturas:
+                lecturas[fuente["id"]] = {**lecturas[fuente["id"]], "victimas": victimas}
+        nuevo = copy.deepcopy(documento)
+        motivos = []
+        if not fuentes:
+            motivo = NO_ES_IMPACTO[quitadas[0]]
+            nuevo["retirado"] = {"fecha": instante(ahora), "motivo": motivo}
+            resultado.retirados += 1
+            resultado.motivos[quitadas[0]] = resultado.motivos.get(quitadas[0], 0) + 1
+            motivos.append(motivo)
+        else:
+            if quitadas:
+                resultado.fuentes_quitadas += len(quitadas)
+                motivos.append("fuente quitada: " + NO_ES_IMPACTO[quitadas[0]])
+            nuevo["fuentes"] = fuentes
+            nuevo["lecturas"] = sorted(lecturas.values(), key=lambda x: x["fuente_id"])
+            impactos_guerra.victimas_por_lecturas(nuevo, documento)
+            if any(nuevo.get(c) != documento.get(c) for c in ("heridos", "fallecidos")):
+                resultado.victimas_cambiadas += 1
+                motivos.append(MOTIVO_VICTIMAS)
+            foco = focos.get(documento["id"], {}).get("resultado")
+            impactos_guerra._recalcular(
+                nuevo, foco == "detectado" and impactos_guerra.con_firms(nuevo)
+            )
+        if nuevo == documento:
+            continue
+        nuevo["control"] = {**documento["control"], "ultima_actualizacion": instante(ahora)}
+        almacen.guardar_impacto_guerra(nuevo)
+        cambios = {
+            c: nuevo.get(c) for c in ("heridos", "fallecidos", "retirado", "credibilidad")
+            if nuevo.get(c) != documento.get(c)
+        }  # fmt: skip
+        almacen.anotar_motivo(
+            "impactos_guerra", documento["id"],
+            {c: documento.get(c) for c in cambios}, cambios, "; ".join(motivos),
+        )  # fmt: skip
+    almacen.guardar_cursor(CURSOR_CORRECCION, resultado.documento(ahora))
+    return resultado
+
+
 def estado_fuentes(datos: Datos, canales: list[Canal]) -> dict[str, dict[str, Any]]:
     """Por grupo de fuentes: si el último paso del lector leyó todos sus canales y la hora de
     la última lectura correcta de alguno (para estado.json)."""
@@ -266,8 +412,12 @@ def paso_horario(almacen: Almacen, ahora: datetime) -> tuple[dict[str, dict[str,
     if not (datos.raiz / "control.json").exists():
         registro.info("guerra: el lector de canales aún no ha dejado datos")
         return estados, Resumen()
+    nomenclator = cargar()
+    correccion = corregir(almacen, datos, canales, nomenclator, ahora)
+    if correccion is not None:
+        registro.info("guerra: corrección de lo guardado %s", correccion.documento(ahora))
     plazo = Plazo(TOPE_S)
-    resumen = procesar(almacen, datos, canales, cargar(), ahora, plazo)
+    resumen = procesar(almacen, datos, canales, nomenclator, ahora, plazo)
     registro.info("guerra: %s", resumen.texto())
     return estados, resumen
 
@@ -319,13 +469,17 @@ def con_base(args: argparse.Namespace) -> Iterator[Almacen]:
 
 def principal(argumentos: list[str] | None = None) -> int:
     opciones = opciones_base(__doc__)
-    opciones.add_argument("orden", choices=["procesar"])
+    opciones.add_argument("orden", choices=["procesar", "corregir"])
     opciones.add_argument("--todo", action="store_true")
     args = opciones.parse_args(argumentos)
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
     ahora = datetime.now(UTC)
     datos = Datos(args.datos or directorio_datos())
     with con_base(args) as almacen:
+        if args.orden == "corregir":
+            hecho = corregir(almacen, datos, cargar_canales(), cargar(), ahora, forzar=True)
+            registro.info("corrección: %s", hecho.documento(ahora) if hecho else None)
+            return 0
         resumen = procesar(almacen, datos, cargar_canales(), cargar(), ahora, None, args.todo)
         registro.info("guerra: %s", resumen.texto())
         registro.info(

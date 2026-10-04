@@ -284,15 +284,35 @@ def _anadir_fuente(
     resultado["categorias_objetivo"] = sorted(cats)
     if impacto.tipo == "impacto":
         resultado["impacto"] = "impacto"
-    for campo in ("heridos", "fallecidos"):
-        nuevo = getattr(impacto, campo)
-        if nuevo is not None:
-            anterior = resultado.get(campo)
-            maximo = max(nuevo, anterior["max"]) if isinstance(anterior, dict) else nuevo
-            resultado[campo] = _rango(maximo)
+    victimas_por_lecturas(resultado, documento)
     resultado["fecha"] = min(resultado["fecha"], fuente["fecha"], key=lambda i: i["valor"])
     _recalcular(resultado, foco)
     return resultado
+
+
+def victimas_de(impacto: ImpactoLeido) -> Documento:
+    """Las víctimas que da una fuente para el impacto, para su lectura."""
+    return {
+        c: getattr(impacto, c) for c in ("heridos", "fallecidos") if getattr(impacto, c) is not None
+    }
+
+
+def victimas_por_lecturas(resultado: Documento, anterior: Documento | None = None) -> None:
+    """Heridos y fallecidos del impacto: la mayor cifra que da alguna de sus fuentes, cada una
+    leída con las reglas de ahora (`victimas` de su lectura). Una lectura anterior a esas
+    reglas (sin `victimas`) conserva lo que el impacto ya tenía; así, volver a leer un mensaje
+    con una cifra mal leída la corrige en vez de quedarse con la mayor."""
+    lecturas = resultado.get("lecturas", [])
+    antiguas = any("victimas" not in x for x in lecturas)
+    for campo in ("heridos", "fallecidos"):
+        cifras = [x["victimas"][campo] for x in lecturas if campo in x.get("victimas", {})]
+        previo = (anterior or {}).get(campo)
+        if antiguas and isinstance(previo, dict):
+            cifras.append(previo["max"])
+        if cifras:
+            resultado[campo] = _rango(max(cifras))
+        else:
+            resultado.pop(campo, None)
 
 
 def _recalcular(documento: Documento, foco: bool) -> None:
@@ -321,7 +341,10 @@ def incorporar(
     ataque, como = enlazar(ataques, canal.sentido, publicado, leido)
     for impacto in leido.impactos:
         fuente = fuente_de(canal, publicacion_id, publicado, impacto)
-        lectura: Documento = {"fuente_id": fuente["id"], "metodo": metodo, "version": version}
+        lectura: Documento = {
+            "fuente_id": fuente["id"], "metodo": metodo, "version": version,
+            "victimas": victimas_de(impacto),
+        }  # fmt: skip
         if confianza is not None:
             lectura["confianza"] = round(confianza, 3)
         existente = _mismo(_vigentes(almacen, impacto.lugar.id), ataque, publicado)
@@ -397,6 +420,7 @@ def reenlazar(almacen: "Almacen", ataques: Ataques, ahora: datetime) -> Resumen:
                                              *documento.get("lecturas", [])]}.values(),
                 key=lambda x: x["fuente_id"],
             )  # fmt: skip
+            victimas_por_lecturas(unido, destino)
             unido["categorias_objetivo"] = sorted(
                 set(unido.get("categorias_objetivo", []))
                 | set(documento.get("categorias_objetivo", []))

@@ -100,7 +100,17 @@
           "fuente_id": {"x-visibilidad": "interno", "type": "string", "minLength": 1},
           "metodo": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.9.0:comun#/$defs/metodo"},
           "version": {"x-visibilidad": "interno", "type": "string", "minLength": 1},
-          "confianza": {"x-visibilidad": "interno", "type": "number", "minimum": 0, "maximum": 1}
+          "confianza": {"x-visibilidad": "interno", "type": "number", "minimum": 0, "maximum": 1},
+          "victimas": {
+            "x-visibilidad": "interno",
+            "description": "Heridos y fallecidos que da esta fuente para el impacto, leídos frase a frase (un año escrito como fecha no es una cifra; más de 100 solo con la cifra pegada al verbo). El impacto lleva la mayor cifra de sus fuentes. Ausente en lecturas anteriores a esa regla.",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "heridos": {"x-visibilidad": "interno", "type": "integer", "minimum": 0},
+              "fallecidos": {"x-visibilidad": "interno", "type": "integer", "minimum": 0}
+            }
+          }
         }
       }
     },
@@ -112,7 +122,7 @@
     },
     "retirado": {
       "x-visibilidad": "interno",
-      "description": "El mensaje que lo daba se editó y ya no lo dice, y no tenía otra fuente (nada se borra).",
+      "description": "Ya no lo da ninguna fuente (nada se borra): el mensaje se editó y ya no lo dice, o se volvió a leer con las reglas de ahora y no describe un ataque con dron sobre un lugar (homenaje u obituario de un militar caído, memoria). El motivo lo dice.",
       "type": "object",
       "additionalProperties": false,
       "required": ["fecha", "motivo"],

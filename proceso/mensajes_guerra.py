@@ -27,7 +27,7 @@ from proceso.lugares_guerra import TIPOS_INSTALACION, Hallazgo, Lugar, Nomenclat
 
 MAX_PALABRAS_FRASE = 25
 KYIV = ZoneInfo("Europe/Kyiv")
-VERSION = "mensajes-guerra/2"
+VERSION = "mensajes-guerra/3"
 
 DRON = re.compile(
     r"БпЛА|БПЛА|безпілотн|беспилотн|\bдрон|дронов|дронам|шахед|shahed|герань|гербер|"
@@ -66,6 +66,44 @@ RETROSPECTIVO = re.compile(
     r"нагород|відзнак|вшанув|річниц|роковин|зустрілас|зустрівс|подяку|орден\w*\s|"
     r"награ[дж]|памят|годовщин|встретил|вручил|вручи|навестил|відвідав|відвідала|провідав|"
     r"проверил,?\s+как|перевірив,?\s+як",
+    re.IGNORECASE,
+)
+_FECHA_CON_ANIO = (
+    r"\d{1,2}\s+(?:січня|лютого|березня|квітня|травня|червня|липня|серпня|вересня|жовтня|"
+    r"листопада|грудня|января|февраля|марта|апреля|мая|июня|июля|августа|сентября|октября|"
+    r"ноября|декабря)\s+(?:19|20)\d{2}"
+)
+_MUERE = r"(?:загинув|загинула|загинули|погиб|погибла|погибли|помер|померла|умер|умерла)"
+# Homenajes, obituarios y memoria: el mensaje entero recuerda a un caído y no describe un
+# ataque con dron sobre un lugar, aunque nombre el dron que lo mató y el pueblo donde cayó
+# («Донецька ОВА та платформа Меморіал згадують загиблих захисників», «на псевдо Бур»,
+# «загинув 30 грудня 2024 року поблизу селища Роздольне», «Пам'яті Ігоря Власова»).
+HOMENAJE = re.compile(
+    r"меморіал|мемориал|згадують\s+(?:загибл|убит|вбит|полегл)|на\s+псевдо|позивн\w*|"
+    r"позывн\w*|пам'яті\s+[А-ЯІЇЄҐ]|памяти\s+[А-ЯЁ]|посмертно|"
+    + _MUERE
+    + r"\b[^.!?\n]{0,60}?"
+    + _FECHA_CON_ANIO
+    + "|"
+    + _FECHA_CON_ANIO
+    + r"\s+(?:року|года)[^.!?\n]{0,100}?"
+    + _MUERE
+    + r"\b",
+    re.IGNORECASE,
+)
+# Frases de condolencia o de luto dentro de un parte («Світла пам'ять жертвам», «Схиляємо
+# голови», «Выражаю глубокие соболезнования»): no describen el ataque y no dan lugares ni
+# víctimas, pero el resto del mensaje sí puede.
+CONDOLENCIA = re.compile(
+    r"(?:вічна|світла)\s+пам|(?:вечная|светлая)\s+память|схиляємо\s+голов|співчутт|"
+    r"соболезн|скорбот|скорб|жалоб|оплаку|траур|хвилин\w*\s+мовчання|минут\w*\s+молчания",
+    re.IGNORECASE,
+)
+# Cifras que no son de un ataque: acumulados («з початку року», «с начала СВО», «загалом з
+# початку повномасштабного вторгнення поранені понад 2100 людей»).
+ACUMULADO = re.compile(
+    r"з\s+початку|від\s+початку|с\s+начала|за\s+(?:весь|увесь)\s+період|за\s+рік|за\s+год\b|"
+    r"за\s+(?:тиждень|місяць|неделю|месяц)",
     re.IGNORECASE,
 )
 # El dron como objetivo y no como arma: «уражено склад БпЛА», «місце запуску БпЛА»,
@@ -144,7 +182,8 @@ _UNA_PERSONA = (
     r"пенсионер\w*|водител\w*|водій\w*|мешкан\w*|житель\w*|жительниц\w*)"
 )
 _HERIDOS = (
-    r"(?:поранен\w*|травмован\w*|постраждал\w*|постраждав\w*|ранен\w*|травмирован\w*|"
+    r"(?:поранен\w*|травмован\w*|постраждал\w*|постраждав\w*|потерпіл\w*|ранен\w*|"
+    r"травмирован\w*|"
     r"пострадал\w*|госпіталізован\w*|госпитализирован\w*)"
 )
 _MUERTOS = r"(?:загин\w*|загибл\w*|вбит\w*|погиб\w*|убит\w*)"
@@ -193,26 +232,75 @@ _NO_PERSONAS = re.compile(
             "декабря",
         ]
     )
-    + r")|\d+\s*-\s*(?:річн|рiчн|летн|лiтн)\w*|\d{1,2}[:.]\d{2}|№\s*\d+|\d+-\w+",
+    + r")|\d+\s*-\s*(?:річн|рiчн|летн|лiтн)\w*|\d{1,2}[:.]\d{2}|№\s*\d+|\d+-\w+|"
+    # Animales: «загинули 500 голів свійської тварини».
+    r"\d+\s+(?:голів|голов\w*|тварин\w*|птиц\w*|свин\w*|кор[іо]в\w*|животн\w*)",
     re.IGNORECASE,
 )
 
 
-def _victimas(texto: str, verbo: str) -> int | None:
-    """La mayor cifra de víctimas del texto para el verbo («поранено 3 людей», «двоє
-    загиблих», «ранены два человека», «загинула жінка»), o None si no da ninguna."""
-    texto = _NO_PERSONAS.sub(" ", texto)
+_MESES_GENITIVO = (
+    "січня|лютого|березня|квітня|травня|червня|липня|серпня|вересня|жовтня|листопада|грудня|"
+    "января|февраля|марта|апреля|мая|июня|июля|августа|сентября|октября|ноября|декабря"
+)
+# Un año escrito como fecha en la frase: «30 грудня 2024 року», «у 2025 році», «2024 р.»,
+# «в 2024 году», «до 2023-го».
+_ANIO_FECHA = re.compile(
+    r"(?<![\d.,])((?:19|20)\d{2})(?![\d.,])(?=\s*(?:-?го\b|р\.|рок\w*|рік\w*|році|г\.|год\w*))|"
+    r"(?:" + _MESES_GENITIVO + r")\s+((?:19|20)\d{2})(?!\d)",
+    re.IGNORECASE,
+)
+# Edades sin guion: «жінки 59 та 67 років», «мужчина 45 лет».
+_EDADES = re.compile(
+    r"(?<![\w-])\d{1,3}(?:\s*(?:,|та|і|й|и)\s*\d{1,3})*\s+(?:років|роки|рік|лет|года)\b",
+    re.IGNORECASE,
+)
+# Por encima de esta cifra por impacto, la frase tiene que decirla sin duda: la cifra pegada al
+# verbo («загинули 120 людей», «130 поранених»), sin palabras en medio.
+MAX_VICTIMAS_SIN_FRASE_CLARA = 100
+_CIFRA_PEGADA_ANTES = r"(?<![\w-])" + _NUM + _PERSONAS + r"\s+"
+_CIFRA_PEGADA_DESPUES = r"\s+" + _NUM + _PERSONAS
+
+
+def anios_en_frase(frase: str) -> set[int]:
+    """Los años que la frase escribe como fecha («30 грудня 2024 року», «у 2025 році»)."""
+    return {int(m.group(1) or m.group(2)) for m in _ANIO_FECHA.finditer(frase)}
+
+
+def _victimas_frase(frase: str, verbo: str) -> list[int]:
+    anios = anios_en_frase(frase)
+    limpia = _ANIO_FECHA.sub(" ", _NO_PERSONAS.sub(" ", _EDADES.sub(" ", frase)))
     cifras = []
     for patron in (_CIFRA_ANTES + verbo, verbo + _CIFRA_DESPUES):
-        for m in re.finditer(patron, texto, re.IGNORECASE):
+        for m in re.finditer(patron, limpia, re.IGNORECASE):
             cifras.append(_numero(m.group(1)))
+    claras = {
+        _numero(m.group(1))
+        for patron in (_CIFRA_PEGADA_ANTES + verbo, verbo + _CIFRA_PEGADA_DESPUES)
+        for m in re.finditer(patron, limpia, re.IGNORECASE)
+    }
+    # Un número igual a un año que la frase escribe como fecha no es una cifra de víctimas,
+    # y una cifra alta solo vale si la frase la dice sin duda.
+    cifras = [
+        n for n in cifras
+        if n not in anios and (n <= MAX_VICTIMAS_SIN_FRASE_CLARA or n in claras)
+    ]  # fmt: skip
     if not cifras:
         persona = re.search(
             verbo + r"\s+(?:\d+-\w+\s+)?" + _UNA_PERSONA + "|" + _UNA_PERSONA + r"\s+" + verbo,
-            texto, re.IGNORECASE,
+            limpia, re.IGNORECASE,
         )  # fmt: skip
-        if persona and not re.search(r"(?:без|не)\s+" + verbo, texto, re.IGNORECASE):
+        if persona and not re.search(r"(?:без|не)\s+" + verbo, limpia, re.IGNORECASE):
             cifras.append(1)
+    return cifras
+
+
+def _victimas(texto: str, verbo: str) -> int | None:
+    """La mayor cifra de víctimas del texto para el verbo («поранено 3 людей», «двоє
+    загиблих», «ранены два человека», «загинула жінка»), o None si no da ninguna. Se lee frase
+    a frase: un año escrito como fecha en la frase no es una cifra, y por encima de 100 la
+    frase tiene que poner la cifra pegada al verbo."""
+    cifras = [n for m in _FRASES.finditer(texto) for n in _victimas_frase(m.group(0), verbo)]
     return max(cifras) if cifras else None
 
 
@@ -404,10 +492,11 @@ def analizar(
             leido.dia = (publicado.astimezone(KYIV) - timedelta(days=1)).date()
     derribos = [int(_numero(next(g for g in m.groups() if g))) for m in _DERRIBADOS.finditer(texto)]
     leido.derribados = max(derribos) if derribos else None
-    leido.heridos = _victimas(texto, _HERIDOS)
-    leido.fallecidos = _victimas(texto, _MUERTOS)
     if not IMPACTO.search(texto):
         leido.motivo = "aviso" if AVISO.search(texto) else "sin_impacto"
+        return leido
+    if HOMENAJE.search(texto):
+        leido.motivo = "homenaje"
         return leido
     if RETROSPECTIVO.search(texto):
         leido.motivo = "retrospectivo"
@@ -416,11 +505,19 @@ def analizar(
     anterior: frozenset[str] = frozenset()
     impactos: dict[str, ImpactoLeido] = {}
     mezclado = False
+    heridos: list[int] = []
+    fallecidos: list[int] = []
     for m in _FRASES.finditer(texto):
         frase = m.group(0)[:MAX_LETRAS_FRASE]
         propias = _armas(DRON_OBJETIVO.sub(" ", frase))
         armas = propias or anterior or armas_mensaje
         anterior = armas
+        if CONDOLENCIA.search(frase):
+            continue
+        # Víctimas: solo de las frases cuya arma son drones y nada más, sin acumulados.
+        if armas == frozenset({"dron"}) and not ACUMULADO.search(frase):
+            heridos += _victimas_frase(frase, _HERIDOS)
+            fallecidos += _victimas_frase(frase, _MUERTOS)
         if not IMPACTO.search(frase) or AVISO.search(frase):
             continue
         if DERRIBO.search(frase) and not _danos(frase):
@@ -471,6 +568,8 @@ def analizar(
                 ImpactoLeido(h.lugar, tipo, cats, frase_breve(frase, h.inicio)),
             )
     leido.impactos = list(impactos.values())
+    leido.heridos = max(heridos) if heridos else None
+    leido.fallecidos = max(fallecidos) if fallecidos else None
     if len(leido.impactos) == 1:
         unico = leido.impactos[0]
         leido.impactos = [

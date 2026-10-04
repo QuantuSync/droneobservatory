@@ -879,6 +879,13 @@ journalctl -u eodi-guerra.service -n 60
 sudo -u eodi sh -c 'cd /home/eodi/droneobservatory && .venv/bin/python -m recogida.canales_guerra resumen'
 ```
 
+**Corrección de lo guardado.** Una vez por versión (cursor `guerra:correccion`), la recogida
+horaria vuelve a leer con las reglas de ahora el mensaje de cada fuente de los impactos vigentes
+(`recogida/guerra.corregir`): quita las fuentes que no describen un ataque con dron sobre un lugar
+(homenajes, obituarios, memoria), retira con su motivo los impactos que se quedan sin fuentes y
+rehace sus víctimas ([`informe_errores_datos.md`](informe_errores_datos.md)). Tarda unos 30
+segundos y no lanza ningún trabajo aparte.
+
 **Reprocesar todo** (tras cambiar el analizador, el nomenclátor o las palabras corrientes) y,
 con `lote`, enviar ya el lote del histórico sin esperar a que el histórico termine (solo lo
 envía si no se envió antes; lo incorpora la recogida horaria).
