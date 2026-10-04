@@ -23151,6 +23151,21 @@
       "campo": "consecuencias.cierre.minutos",
       "credibilidad": 3,
       "fecha": {
+       "precision": "dia",
+       "valor": "2025-10-27T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-LEAL-2025-10-27-EODI-2025-00098",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 129,
+       "min": 129
+      }
+     },
+     {
+      "campo": "consecuencias.cierre.minutos",
+      "credibilidad": 3,
+      "fecha": {
        "precision": "aproximada",
        "valor": "2025-10-27T23:45Z"
       },
@@ -23196,6 +23211,18 @@
       "campo": "consecuencias.cierre.valor",
       "credibilidad": 3,
       "fecha": {
+       "precision": "dia",
+       "valor": "2025-10-27T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-LEAL-2025-10-27-EODI-2025-00098",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": "si"
+     },
+     {
+      "campo": "consecuencias.cierre.valor",
+      "credibilidad": 3,
+      "fecha": {
        "precision": "aproximada",
        "valor": "2025-10-27T21:45Z"
       },
@@ -23227,6 +23254,21 @@
       "fuente_id": "gdelt-0341f4ad32b4c4dd",
       "medio": "lavanguardia.com",
       "valor": "si"
+     },
+     {
+      "campo": "consecuencias.vuelos_desviados",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-10-27T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-LEAL-2025-10-27-EODI-2025-00098",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 0,
+       "min": 0
+      }
      },
      {
       "campo": "drones.numero",
@@ -23971,6 +24013,20 @@
       "idioma": "es",
       "medio": "Policía Nacional (declaración oficial citada en lavanguardia.com)",
       "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.10.27-planes-readsb-prod-0",
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-10-27T00:00Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Cierre medido en LEAL: 19:52–22:01 UTC, 129 minutos, 0 desvíos y 0 esperas.",
+      "id": "adsblol-LEAL-2025-10-27-EODI-2025-00098",
+      "idioma": "es",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "replicas": 0
      }
     ],
     "id": "EODI-2025-00098",
@@ -24004,6 +24060,28 @@
     "titulo": {
      "en": "Alicante-Elche airport closure due to drone sightings",
      "es": "Cierre del aeropuerto de Alicante-Elche por avistamiento de drones"
+    },
+    "trafico_aereo": {
+     "cierre": {
+      "aeropuerto": "LEAL",
+      "difiere_de_declarado": false,
+      "duracion_min": 129,
+      "fin": {
+       "precision": "minuto",
+       "valor": "2025-10-27T22:01Z"
+      },
+      "inicio": {
+       "precision": "minuto",
+       "valor": "2025-10-27T19:52Z"
+      },
+      "resultado": "cierre_medido",
+      "vuelos_desviados": 0,
+      "vuelos_en_espera": 0
+     },
+     "datos": [
+      "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.10.27-planes-readsb-prod-0",
+      "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.10.28-planes-readsb-prod-0"
+     ]
     }
    },
    "type": "Feature"
@@ -57241,21 +57319,6 @@
     "afirmaciones_publicas": [
      {
       "campo": "consecuencias.cierre.minutos",
-      "credibilidad": 2,
-      "fecha": {
-       "precision": "dia",
-       "valor": "2025-11-07T00:00Z"
-      },
-      "fiabilidad": "B",
-      "fuente_id": "adsblol-EBLG-2025-11-07-EODI-2025-00163",
-      "medio": "Tráfico aéreo medido (adsb.lol)",
-      "valor": {
-       "max": 71,
-       "min": 71
-      }
-     },
-     {
-      "campo": "consecuencias.cierre.minutos",
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
@@ -57271,18 +57334,6 @@
      },
      {
       "campo": "consecuencias.cierre.valor",
-      "credibilidad": 2,
-      "fecha": {
-       "precision": "dia",
-       "valor": "2025-11-07T00:00Z"
-      },
-      "fiabilidad": "B",
-      "fuente_id": "adsblol-EBLG-2025-11-07-EODI-2025-00163",
-      "medio": "Tráfico aéreo medido (adsb.lol)",
-      "valor": "si"
-     },
-     {
-      "campo": "consecuencias.cierre.valor",
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
@@ -57292,21 +57343,6 @@
       "fuente_id": "gdelt-579de9bb3746be6a",
       "medio": "elcorreo.com",
       "valor": "si"
-     },
-     {
-      "campo": "consecuencias.vuelos_desviados",
-      "credibilidad": 2,
-      "fecha": {
-       "precision": "dia",
-       "valor": "2025-11-07T00:00Z"
-      },
-      "fiabilidad": "B",
-      "fuente_id": "adsblol-EBLG-2025-11-07-EODI-2025-00163",
-      "medio": "Tráfico aéreo medido (adsb.lol)",
-      "valor": {
-       "max": 0,
-       "min": 0
-      }
      },
      {
       "campo": "drones.numero",
@@ -58036,20 +58072,6 @@
       "idioma": "es",
       "medio": "20minutos.es",
       "replicas": 1
-     },
-     {
-      "credibilidad": 2,
-      "enlace": "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.11.07-planes-readsb-prod-0",
-      "fecha": {
-       "precision": "dia",
-       "valor": "2025-11-07T00:00Z"
-      },
-      "fiabilidad": "B",
-      "frase_origen": "Cierre medido en EBLG: 04:26–05:37 UTC, 71 minutos, 0 desvíos y 0 esperas.",
-      "id": "adsblol-EBLG-2025-11-07-EODI-2025-00163",
-      "idioma": "es",
-      "medio": "Tráfico aéreo medido (adsb.lol)",
-      "replicas": 0
      }
     ],
     "id": "EODI-2025-00163",
@@ -58078,27 +58100,6 @@
     "titulo": {
      "en": "Drone sighting at Liège Airport interrupts air traffic",
      "es": "Dron avistado en el aeropuerto de Lieja interrumpe el tráfico aéreo"
-    },
-    "trafico_aereo": {
-     "cierre": {
-      "aeropuerto": "EBLG",
-      "difiere_de_declarado": true,
-      "duracion_min": 71,
-      "fin": {
-       "precision": "minuto",
-       "valor": "2025-11-07T05:37Z"
-      },
-      "inicio": {
-       "precision": "minuto",
-       "valor": "2025-11-07T04:26Z"
-      },
-      "resultado": "cierre_medido",
-      "vuelos_desviados": 0,
-      "vuelos_en_espera": 0
-     },
-     "datos": [
-      "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.11.07-planes-readsb-prod-0"
-     ]
     }
    },
    "type": "Feature"
