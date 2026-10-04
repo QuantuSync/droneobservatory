@@ -9537,7 +9537,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T04:17Z"
     }
    },
    "drones": {
@@ -9726,7 +9726,7 @@
    },
    "tipo": "sobrevuelo",
    "titulo": {
-    "en": "Unidentified possible drones fly over Karup military base in Denmark",
+    "en": "Unidentified drones fly over Karup military base in Denmark",
     "es": "Posibles drones no identificados sobrevuelan la base militar de Karup en Dinamarca"
    }
   },

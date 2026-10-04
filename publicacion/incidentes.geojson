@@ -22531,7 +22531,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-03T20:17Z"
+      "valor": "2026-10-04T04:17Z"
      }
     },
     "drones": {
@@ -22589,7 +22589,7 @@
     "tipo": "interrupcion_aeroportuaria",
     "titulo": {
      "en": "Aalborg airspace closure due to suspected drone",
-     "es": "Cierre del espacio aéreo de Aalborg por sospecha de posible dron"
+     "es": "Cierre del espacio aéreo de Aalborg por sospecha de dron"
     }
    },
    "type": "Feature"
@@ -32803,7 +32803,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-03T20:17Z"
+      "valor": "2026-10-04T04:17Z"
      }
     },
     "drones": {
@@ -32857,7 +32857,7 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Unidentified possible drones near Dublin Airport during Zelenskyy's visit",
+     "en": "Unidentified drones near Dublin Airport during Zelenskyy's visit",
      "es": "Posibles drones no identificados cerca del aeropuerto de Dublín durante visita de Zelenskyy"
     }
    },
@@ -40120,7 +40120,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-03T20:17Z"
+      "valor": "2026-10-04T04:17Z"
      }
     },
     "drones": {
@@ -40365,7 +40365,7 @@
     "tipo": "interrupcion_aeroportuaria",
     "titulo": {
      "en": "Suspected drone activity closes airspace at Aalborg Airport",
-     "es": "Sospecha de actividad de posibles drones cierra el espacio aéreo del aeropuerto de Aalborg"
+     "es": "Sospecha de actividad de drones cierra el espacio aéreo del aeropuerto de Aalborg"
     }
    },
    "type": "Feature"
@@ -59581,7 +59581,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-03T20:17Z"
+      "valor": "2026-10-04T04:17Z"
      }
     },
     "drones": {
@@ -59750,7 +59750,7 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Suspected Russian possible drone flies over European research center at Ispra",
+     "en": "Suspected Russian drone flies over European research center at Ispra",
      "es": "Drone ruso presunto sobrevuela el centro de investigación europeo de Ispra"
     }
    },
@@ -73151,6 +73151,33 @@
    "properties": {
     "afirmaciones_publicas": [
      {
+      "campo": "consecuencias.cierre.minutos",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-10-02T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EDDM-2025-10-02-EODI-2025-00342",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 382,
+       "min": 382
+      }
+     },
+     {
+      "campo": "consecuencias.cierre.valor",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-10-02T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EDDM-2025-10-02-EODI-2025-00342",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": "si"
+     },
+     {
       "campo": "consecuencias.cierre.valor",
       "credibilidad": 3,
       "fecha": {
@@ -73175,6 +73202,21 @@
       "valor": {
        "max": 58,
        "min": 12
+      }
+     },
+     {
+      "campo": "consecuencias.vuelos_desviados",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-10-02T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EDDM-2025-10-02-EODI-2025-00342",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 15,
+       "min": 15
       }
      },
      {
@@ -73339,6 +73381,20 @@
       "idioma": "en",
       "medio": "freemalaysiatoday.com",
       "replicas": 0
+     },
+     {
+      "credibilidad": 2,
+      "enlace": "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.10.02-planes-readsb-prod-0",
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-10-02T00:00Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Cierre medido en EDDM: 21:04–03:26 UTC, 382 minutos, 15 desvíos y 12 esperas.",
+      "id": "adsblol-EDDM-2025-10-02-EODI-2025-00342",
+      "idioma": "es",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "replicas": 0
      }
     ],
     "id": "EODI-2025-00342",
@@ -73362,6 +73418,28 @@
     "titulo": {
      "en": "Munich airport closure due to drone alert",
      "es": "Cierre del aeropuerto de Múnich por alerta de drones"
+    },
+    "trafico_aereo": {
+     "cierre": {
+      "aeropuerto": "EDDM",
+      "difiere_de_declarado": true,
+      "duracion_min": 382,
+      "fin": {
+       "precision": "minuto",
+       "valor": "2025-10-03T03:26Z"
+      },
+      "inicio": {
+       "precision": "minuto",
+       "valor": "2025-10-02T21:04Z"
+      },
+      "resultado": "cierre_medido",
+      "vuelos_desviados": 15,
+      "vuelos_en_espera": 12
+     },
+     "datos": [
+      "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.10.02-planes-readsb-prod-0",
+      "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.10.03-planes-readsb-prod-0"
+     ]
     }
    },
    "type": "Feature"
@@ -108264,7 +108342,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-03T20:17Z"
+      "valor": "2026-10-04T04:17Z"
      }
     },
     "drones": {
@@ -108317,8 +108395,8 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Suspicious object caught in stabilizers at Agigea, possibly a possible drone",
-     "es": "Objeto sospechoso se engancha en estabilizadores en Agigea, posiblemente un posible dron"
+     "en": "Suspicious object caught in stabilizers at Agigea, possibly a drone",
+     "es": "Objeto sospechoso se engancha en estabilizadores en Agigea, posiblemente un dron"
     }
    },
    "type": "Feature"
@@ -124814,7 +124892,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-03T20:17Z"
+      "valor": "2026-10-04T04:17Z"
      }
     },
     "drones": {
@@ -124898,7 +124976,7 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Six unidentified possible drone overflights over a German military base",
+     "en": "Six unidentified drone overflights over a German military base",
      "es": "Seis sobrevuelos de posibles drones no identificados sobre una base militar alemana"
     }
    },
