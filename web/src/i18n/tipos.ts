@@ -453,6 +453,7 @@ export interface TextosSatelite {
   letreroCorredor: (origen: string, region: string, drones: string) => string;
   letreroFoco: (hora: string, coincide: boolean) => string;
   letreroCiudad: (ciudad: string, perdida: string) => string;
+  letreroAlumbrado: (ciudad: string) => string;
   /** Hora del último foco de la capa de focos en vivo. */
   focosUltimo: (hora: string) => string;
   focosVacio: string;
@@ -466,6 +467,11 @@ export interface TextosSatelite {
     dronesTexto: Record<Sentido, string>;
     ataques: (n: number) => string;
     periodo: string;
+    /** Rótulo de la lista para elegir entre varios arcos. */
+    varios: string;
+    etiquetaVarios: string;
+    /** Nombre de la lista de corredores que se recorre con el teclado. */
+    lista: string;
   };
   luzFicha: {
     etiqueta: string;
@@ -479,6 +485,19 @@ export interface TextosSatelite {
     region: string;
     regionEntera: string;
     sinPerdida: string;
+    metodo: string;
+  };
+  alumbradoFicha: {
+    etiqueta: string;
+    titulo: string;
+    desde: string;
+    desdeTexto: (fecha: string, alMenos: boolean) => string;
+    porEncima: (mes: string) => string;
+    actual: string;
+    referencia: string;
+    brillo: (valor: string) => string;
+    tramo: (desde: string, hasta: string, noches: number) => string;
+    noches: string;
     metodo: string;
   };
   imagen: {
@@ -498,4 +517,13 @@ export interface TextosSatelite {
   ayudaCorredores: string;
   ayudaFocos: string;
   ayudaLuz: string;
+  ayudaAlumbrado: string;
+  /** El marcador de los puntos con información de satélite y el botón «Con satélite». */
+  ayudaSatelite: string;
+  conSatelite: (n: string) => string;
+  listaSatelite: string;
+  abrirLista: string;
+  cerrarLista: string;
+  tiene: { imagen: string; foco: string; luz: string };
+  letreroSatelite: (imagen: boolean, foco: boolean) => string;
 }

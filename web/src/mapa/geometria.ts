@@ -12,7 +12,13 @@ import type {
   IncidenteResumen,
 } from "../datos/tipos.ts";
 import { anchoDeCorredor, arco, opacidadDePerdida } from "../datos/guerraSatelite.ts";
-import type { CiudadSinLuz, Corredor, FocoVivo } from "../datos/guerraSatelite.ts";
+import type {
+  CiudadAlumbrado,
+  CiudadSinLuz,
+  Corredor,
+  FocoVivo,
+  PuntoSatelite,
+} from "../datos/guerraSatelite.ts";
 import { GRAVEDAD } from "../paleta.ts";
 import { incidenteEnPeriodo } from "../tiempo/dias.ts";
 import type { Periodo } from "../tiempo/dias.ts";
@@ -211,19 +217,46 @@ export interface PropiedadesImpacto {
   sentido: 0 | 1;
   foco: 0 | 1;
   parte: 0 | 1;
+  /** 1 si tiene información de satélite: el grupo que lo contiene lo señala. */
+  satelite: 0 | 1;
 }
 
 /** Los impactos con lugar del periodo como puntos para la fuente agrupada del mapa. */
 export function impactosEnMapa(
   filas: readonly FilaImpacto[],
+  conSatelite: ReadonlySet<string> = new Set(),
 ): FeatureCollection<Point, PropiedadesImpacto> {
   return {
     type: "FeatureCollection",
     features: filas.map(([id, , sentido, lon, lat, foco, parte]) => ({
       type: "Feature",
       geometry: { type: "Point", coordinates: [lon, lat] },
-      properties: { id, sentido, foco, parte },
+      properties: { id, sentido, foco, parte, satelite: conSatelite.has(id) ? 1 : 0 },
     })),
+  };
+}
+
+export interface PropiedadesSatelite {
+  id: string;
+  imagen: 0 | 1;
+  foco: 0 | 1;
+}
+
+/** Los impactos con información de satélite, sin agrupar: se ven siempre, por encima. */
+export function impactosConSateliteEnMapa(
+  puntos: readonly PuntoSatelite[],
+): FeatureCollection<Point, PropiedadesSatelite> {
+  return {
+    type: "FeatureCollection",
+    features: puntos
+      .filter((p) => p.clase === "impacto")
+      // Los de imagen, al final: quedan encima.
+      .sort((a, b) => Number(a.imagen) - Number(b.imagen))
+      .map((p) => ({
+        type: "Feature",
+        geometry: { type: "Point", coordinates: [p.lon, p.lat] },
+        properties: { id: p.clave, imagen: p.imagen ? 1 : 0, foco: p.foco ? 1 : 0 },
+      })),
   };
 }
 
@@ -295,6 +328,26 @@ export function ciudadesSinLuzEnMapa(
         perdida: c.perdida,
         opacidad: opacidadDePerdida(c.perdida),
       },
+    })),
+  };
+}
+
+export interface PropiedadesAlumbrado {
+  clave: string;
+  nombre: string;
+  brillo: number;
+}
+
+/** Ciudades con alumbrado reducido de forma permanente. */
+export function alumbradoEnMapa(
+  ciudades: readonly CiudadAlumbrado[],
+): FeatureCollection<Point, PropiedadesAlumbrado> {
+  return {
+    type: "FeatureCollection",
+    features: ciudades.map((c) => ({
+      type: "Feature",
+      geometry: { type: "Point", coordinates: [c.ciudad.punto.lon, c.ciudad.punto.lat] },
+      properties: { clave: c.ciudad.id, nombre: c.ciudad.nombre, brillo: c.actual.brillo },
     })),
   };
 }

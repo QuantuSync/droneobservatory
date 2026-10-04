@@ -1,5 +1,6 @@
 import { Map as MapaGL, addProtocol, setWorkerUrl } from "maplibre-gl";
 import type {
+  DataDrivenPropertyValueSpecification,
   ExpressionSpecification,
   GeoJSONSource,
   MapGeoJSONFeature,
@@ -18,7 +19,13 @@ import { celdasEnMapa } from "../datos/gnss.ts";
 import type { CeldaGnss } from "../datos/gnss.ts";
 import { escalones } from "../datos/presion.ts";
 import type { PresionPais } from "../datos/presion.ts";
-import type { CiudadSinLuz, Corredor, FocoVivo } from "../datos/guerraSatelite.ts";
+import type {
+  CiudadAlumbrado,
+  CiudadSinLuz,
+  Corredor,
+  FocoVivo,
+  PuntoSatelite,
+} from "../datos/guerraSatelite.ts";
 import type {
   EpisodioResumen,
   FilaImpacto,
@@ -39,6 +46,16 @@ import {
   CAPAS_DE_INCIDENTES,
   CAPAS_DE_PRESION,
   CAPAS_DE_UCRANIA,
+  CAPAS_DE_AREAS,
+  CAPAS_DE_PUNTOS_DE_GUERRA,
+  CAPA_CORREDORES_ZONA,
+  CAPA_REALCE_ARCO,
+  OPACIDAD_CORREDOR,
+  OPACIDAD_CORREDOR_ATENUADO,
+  ATENUADAS_SIN_SATELITE,
+  CAPA_SATELITE,
+  FUENTE_SATELITE,
+  OPACIDAD_CORREDOR_SIN_SATELITE,
   CAPAS_PULSABLES,
   CAPA_BANDERAS,
   CAPA_DIRECTO,
@@ -48,11 +65,15 @@ import {
   CAPA_CORREDORES,
   CAPA_FOCOS_VIVOS_IMPACTO,
   CAPA_LUZ_CIUDADES,
+  CAPA_ALUMBRADO,
   CAPA_LUZ_REGIONES,
   CAPA_LUZ_REGIONES_RUSIA,
   FUENTE_CORREDORES,
+  FUENTE_REALCE_ARCO,
+  FUENTE_REALCE_PUNTO,
   FUENTE_FOCOS_VIVOS,
   FUENTE_LUZ_CIUDADES,
+  FUENTE_ALUMBRADO,
   CAPA_GRUPOS,
   CAPA_INCIDENTES_DISCRETOS,
   CAPA_INCIDENTES_GRAVES,
@@ -83,6 +104,8 @@ import {
   areas,
   banderas,
   ciudadesSinLuzEnMapa,
+  alumbradoEnMapa,
+  impactosConSateliteEnMapa,
   corredoresEnMapa,
   focosDeRegiones,
   focosVivosEnMapa,
@@ -93,6 +116,9 @@ import {
 } from "./geometria.ts";
 import { registrarIconos } from "./iconos.ts";
 import { colocarLetrero, hayRaton } from "./letrero.ts";
+import { anchoZonaArco, distanciaALinea, elegir, ZONA_ARCO_DEDO_PX } from "./seleccion.ts";
+import type { Candidato } from "./seleccion.ts";
+import { letreroDeCorredor } from "../componentes/GuerraSatelite.tsx";
 import { colocarPulsos, pulsosDe } from "./pulsos.ts";
 
 setWorkerUrl(urlTrabajador);
@@ -195,6 +221,8 @@ export interface PropsMapa {
   ciudadesSinLuz: readonly CiudadSinLuz[] | null;
   /** Focos de calor de las últimas 24 horas; null si no se han cargado. */
   focosVivos: readonly FocoVivo[] | null;
+  /** Ciudades con alumbrado reducido de forma permanente; null si no se han cargado. */
+  alumbrado: readonly CiudadAlumbrado[] | null;
   elegido: IncidenteResumen | null;
   paisResaltado: string | null;
   regionesElegidas: readonly string[];
@@ -212,7 +240,16 @@ export interface PropsMapa {
   onCelda: (h3: string) => void;
   onPais: (iso: string) => void;
   onCorredor: (clave: string) => void;
+  /** Varios arcos casi a la misma distancia del punto pulsado. */
+  onCorredores: (claves: string[]) => void;
+  /** Corredor con la ficha abierta: su arco sigue realzado. */
+  corredorElegido: string | null;
+  /** Puntos con información de satélite del periodo; null sin la capa. */
+  puntosSatelite: readonly PuntoSatelite[] | null;
+  /** «Con satélite»: solo esos puntos, lo demás de la capa de guerra atenuado. */
+  soloSatelite: boolean;
   onCiudadLuz: (clave: string) => void;
+  onAlumbrado: (clave: string) => void;
   onListo: (api: ApiMapa) => void;
   onFallo: () => void;
 }
@@ -263,9 +300,17 @@ function punteroGrueso(): boolean {
 }
 
 /** La marca (incidente, grupo o aviso) más cercana a un punto dentro del objetivo táctil. */
-function marcaMasCercana(mapa: MapaGL, x: number, y: number): MapGeoJSONFeature | undefined {
-  const medio = OBJETIVO_TACTIL_PX / 2;
-  const capas = CAPAS_DE_MARCAS.filter((id) => mapa.getLayer(id) !== undefined);
+function marcaMasCercana(
+  mapa: MapaGL,
+  x: number,
+  y: number,
+  entre: readonly string[] = CAPAS_DE_MARCAS,
+  objetivo: number = OBJETIVO_TACTIL_PX,
+): MapGeoJSONFeature | undefined {
+  const medio = objetivo / 2;
+  const capas = entre.filter(
+    (id) => mapa.getLayer(id) !== undefined && mapa.getLayoutProperty(id, "visibility") !== "none",
+  );
   const rasgos = mapa.queryRenderedFeatures(
     [
       [x - medio, y - medio],
@@ -294,10 +339,22 @@ function capasActivas(mapa: MapaGL): string[] {
   return CAPAS_PULSABLES.filter((id) => mapa.getLayer(id) !== undefined);
 }
 
+/** Lo que hay bajo el puntero: un rasgo de una capa o un corredor por su clave. */
+type Objetivo = { tipo: "rasgo"; rasgo: MapGeoJSONFeature } | { tipo: "corredor"; clave: string };
+
+/** Un arco tal como se dibuja: su línea (lon, lat) y su grosor. */
+interface ArcoDibujado {
+  coordenadas: [number, number][];
+  ancho: number;
+}
+
+const VACIA_REALCE: GeoJSON.FeatureCollection = { type: "FeatureCollection", features: [] };
+
 export default function Mapa(props: PropsMapa) {
   const { t, idioma, incidentes, episodios, capas, intensidad, noche, elegido } = props;
   const { focosUcrania, impactos, gnss, presion, avisos } = props;
-  const { corredores, luzRegiones, ciudadesSinLuz, focosVivos } = props;
+  const { corredores, luzRegiones, ciudadesSinLuz, focosVivos, alumbrado, corredorElegido } = props;
+  const { puntosSatelite, soloSatelite } = props;
   const { paisResaltado, regionesElegidas, novedades, recientes, encuadre, reserva } = props;
   // El vuelo lee la reserva del momento, pero no se repite porque cambie (al arrastrar una hoja).
   const reservaActual = useRef(reserva);
@@ -316,6 +373,82 @@ export default function Mapa(props: PropsMapa) {
     manejadores.current = props;
   });
   const idiomaInicial = useRef(idioma);
+  // Arcos dibujados por clave (para medir la distancia del puntero a cada uno), el señalado con el
+  // ratón o el teclado y el de la ficha abierta.
+  const arcos = useRef(new Map<string, ArcoDibujado>());
+  const arcoSenalado = useRef<string | null>(null);
+  const arcoElegido = useRef(corredorElegido);
+  arcoElegido.current = corredorElegido;
+  const soloConSatelite = useRef(soloSatelite);
+  soloConSatelite.current = soloSatelite;
+  // Valores de pintura de antes de atenuar con «Con satélite», para devolverlos.
+  const pinturaOriginal = useRef(new Map<string, DataDrivenPropertyValueSpecification<number> | undefined>());
+
+  /** Realza el arco señalado (o, si no hay, el de la ficha abierta) y atenúa los demás. */
+  function pintarRealceArco() {
+    const mapa = mapaRef.current;
+    if (mapa === null || mapa.getLayer(CAPA_REALCE_ARCO) === undefined) return;
+    const clave = arcoSenalado.current ?? arcoElegido.current;
+    const arco = clave === null ? undefined : arcos.current.get(clave);
+    fuente(mapa, FUENTE_REALCE_ARCO)?.setData(
+      arco === undefined
+        ? VACIA_REALCE
+        : {
+            type: "FeatureCollection",
+            features: [
+              {
+                type: "Feature",
+                geometry: { type: "LineString", coordinates: arco.coordenadas },
+                properties: { ancho: arco.ancho },
+              },
+            ],
+          },
+    );
+    mapa.setPaintProperty(
+      CAPA_CORREDORES,
+      "line-opacity",
+      soloConSatelite.current
+        ? OPACIDAD_CORREDOR_SIN_SATELITE
+        : arco === undefined
+          ? OPACIDAD_CORREDOR
+          : OPACIDAD_CORREDOR_ATENUADO,
+    );
+  }
+
+  /** El letrero junto a un punto de la pantalla (o escondido, con null). */
+  function ponerLetrero(texto: string | null, punto: { x: number; y: number }) {
+    const caja = letrero.current;
+    const mapa = mapaRef.current;
+    if (caja === null || mapa === null) return;
+    if (texto === null) {
+      caja.hidden = true;
+      return;
+    }
+    if (textoLetrero.current !== null) textoLetrero.current.textContent = texto;
+    caja.hidden = false;
+    // Nunca se sale del mapa: se mide ya con su texto y se recoloca.
+    const { x, y } = colocarLetrero(
+      punto,
+      { ancho: caja.offsetWidth, alto: caja.offsetHeight },
+      { ancho: mapa.getContainer().clientWidth, alto: mapa.getContainer().clientHeight },
+    );
+    caja.style.transform = `translate(${x}px, ${y}px)`;
+  }
+
+  /** Con el teclado: el arco del botón enfocado, realzado y con su letrero en su punto medio. */
+  function enfocarArco(clave: string | null) {
+    const mapa = mapaRef.current;
+    arcoSenalado.current = clave;
+    pintarRealceArco();
+    const arco = clave === null ? undefined : arcos.current.get(clave);
+    const corredor = clave === null ? undefined : corredores?.find((c) => c.clave === clave);
+    if (mapa === null || arco === undefined || corredor === undefined) {
+      ponerLetrero(null, { x: 0, y: 0 });
+      return;
+    }
+    const medio = arco.coordenadas[Math.floor(arco.coordenadas.length / 2)];
+    if (medio !== undefined) ponerLetrero(letreroDeCorredor(t, idioma, corredor), mapa.project(medio));
+  }
 
   useEffect(() => {
     const elemento = contenedor.current;
@@ -368,6 +501,14 @@ export default function Mapa(props: PropsMapa) {
     mapa.on("load", () => {
       const delMapaBase = new Set(mapa.listImages());
       registrarIconos(mapa, acento());
+      // Con el dedo, la zona sensible de los arcos es más ancha.
+      if (punteroGrueso()) {
+        mapa.setPaintProperty(CAPA_CORREDORES_ZONA, "line-width", [
+          "+",
+          ["get", "ancho"],
+          ZONA_ARCO_DEDO_PX,
+        ]);
+      }
       // Los iconos que la web pone en el mapa (sin los del mapa de fondo), a la vista en el
       // documento para comprobarlos desde fuera.
       setIconos(
@@ -400,11 +541,91 @@ export default function Mapa(props: PropsMapa) {
       });
     });
 
-    function primeroBajo(evento: MapMouseEvent): MapGeoJSONFeature | undefined {
-      const exacto = mapa.queryRenderedFeatures(evento.point, { layers: capasActivas(mapa) })[0];
-      if (exacto !== undefined || !punteroGrueso()) return exacto;
-      // Con el dedo, el objetivo de cada marca es de 44 px: la más cercana dentro de ese cuadro.
-      return marcaMasCercana(mapa, evento.point.x, evento.point.y);
+    /** Todo lo que puede recibir la pulsación en ese punto, por clases (seleccion.ts). */
+    function candidatos(punto: { x: number; y: number }): Candidato<Objetivo>[] {
+      const lista: Candidato<Objetivo>[] = mapa
+        .queryRenderedFeatures([punto.x, punto.y], { layers: capasActivas(mapa) })
+        .map((rasgo) => ({
+          clase: CAPAS_DE_AREAS.includes(rasgo.layer.id) ? "area" : "marca",
+          distancia: 0,
+          valor: { tipo: "rasgo", rasgo },
+        }));
+      const dedo = punteroGrueso();
+      if (dedo && !lista.some((c) => c.clase === "marca")) {
+        // Con el dedo, el objetivo de cada marca es de 44 px: la más cercana dentro de ese cuadro.
+        // Las de la capa de guerra, muy juntas a la escala de Ucrania, el de los arcos (28 px).
+        const cercana =
+          marcaMasCercana(mapa, punto.x, punto.y) ??
+          marcaMasCercana(mapa, punto.x, punto.y, CAPAS_DE_PUNTOS_DE_GUERRA, ZONA_ARCO_DEDO_PX);
+        if (cercana !== undefined) {
+          lista.push({ clase: "marca", distancia: 1, valor: { tipo: "rasgo", rasgo: cercana } });
+        }
+      }
+      if (
+        mapa.getLayer(CAPA_CORREDORES_ZONA) !== undefined &&
+        mapa.getLayoutProperty(CAPA_CORREDORES_ZONA, "visibility") !== "none"
+      ) {
+        const medio = anchoZonaArco(dedo) / 2;
+        const cerca = mapa.queryRenderedFeatures(
+          [
+            [punto.x - medio, punto.y - medio],
+            [punto.x + medio, punto.y + medio],
+          ],
+          { layers: [CAPA_CORREDORES_ZONA] },
+        );
+        const vistas = new Set<string>();
+        for (const rasgo of cerca) {
+          const clave = String(rasgo.properties.clave);
+          const arco = arcos.current.get(clave);
+          if (vistas.has(clave) || arco === undefined) continue;
+          vistas.add(clave);
+          const enPantalla = arco.coordenadas.map((c) => {
+            const p = mapa.project(c);
+            return [p.x, p.y] as const;
+          });
+          // Desde el borde del arco: los gruesos tienen la zona igual de ancha a cada lado.
+          const distancia = Math.max(0, distanciaALinea([punto.x, punto.y], enPantalla) - arco.ancho / 2);
+          if (distancia <= medio) {
+            lista.push({ clase: "arco", distancia, valor: { tipo: "corredor", clave } });
+          }
+        }
+      }
+      return lista;
+    }
+
+    let senalado: string | null = null;
+    /** Realce del arco o del punto de la capa de guerra bajo el ratón. */
+    function realzar(objetivo: Objetivo | null) {
+      const esPunto =
+        objetivo?.tipo === "rasgo" &&
+        CAPAS_DE_PUNTOS_DE_GUERRA.includes(objetivo.rasgo.layer.id) &&
+        objetivo.rasgo.geometry.type === "Point";
+      const clave =
+        objetivo === null
+          ? null
+          : objetivo.tipo === "corredor"
+            ? `c|${objetivo.clave}`
+            : esPunto
+              ? `p|${objetivo.rasgo.layer.id}|${JSON.stringify(objetivo.rasgo.geometry)}`
+              : null;
+      if (clave === senalado) return;
+      senalado = clave;
+      arcoSenalado.current = objetivo?.tipo === "corredor" ? objetivo.clave : null;
+      pintarRealceArco();
+      fuente(mapa, FUENTE_REALCE_PUNTO)?.setData(
+        esPunto && objetivo.tipo === "rasgo"
+          ? {
+              type: "FeatureCollection",
+              features: [{ type: "Feature", geometry: objetivo.rasgo.geometry, properties: {} }],
+            }
+          : VACIA_REALCE,
+      );
+    }
+
+    function textoDeCorredor(clave: string): string | null {
+      const { t: textos, idioma: lengua } = manejadores.current;
+      const corredor = manejadores.current.corredores?.find((c) => c.clave === clave);
+      return corredor === undefined ? null : letreroDeCorredor(textos, lengua, corredor);
     }
 
     function textoDeLetrero(rasgo: MapGeoJSONFeature): string | null {
@@ -422,6 +643,9 @@ export default function Mapa(props: PropsMapa) {
       if (rasgo.layer.id === CAPA_IMPACTOS) {
         return textos.mapa.impacto(Number(p.parte) === 1, Number(p.foco) === 1);
       }
+      if (rasgo.layer.id === CAPA_SATELITE) {
+        return textos.satelite.letreroSatelite(Number(p.imagen) === 1, Number(p.foco) === 1);
+      }
       if (rasgo.layer.id === CAPA_DIRECTO) {
         const aviso = manejadores.current.avisos.find((a) => a.id === String(p.id));
         return aviso === undefined
@@ -436,21 +660,11 @@ export default function Mapa(props: PropsMapa) {
         const cuenta = manejadores.current.presion?.get(iso)?.incidentes ?? 0;
         return textos.presion.letrero(nombrePais(iso, lengua), cuenta);
       }
-      if (rasgo.layer.id === CAPA_CORREDORES) {
-        const corredor = manejadores.current.corredores?.find((c) => c.clave === String(p.clave));
-        if (corredor === undefined) return null;
-        const origen =
-          corredor.origen === null
-            ? textos.satelite.corredor.desdeUcrania
-            : textos.satelite.zona(corredor.clave.split("|")[0] ?? "", corredor.origen);
-        return textos.satelite.letreroCorredor(
-          origen,
-          textos.regiones[corredor.region] ?? corredor.region,
-          new Intl.NumberFormat(lengua).format(corredor.drones),
-        );
-      }
       if (rasgo.layer.id === CAPA_LUZ_CIUDADES) {
         return textos.satelite.letreroCiudad(String(p.nombre), String(p.perdida));
+      }
+      if (rasgo.layer.id === CAPA_ALUMBRADO) {
+        return textos.satelite.letreroAlumbrado(String(p.nombre));
       }
       if (rasgo.layer.id === CAPA_FOCOS_VIVOS_IMPACTO) {
         return textos.satelite.letreroFoco(String(p.hora).slice(11, 16), true);
@@ -469,8 +683,20 @@ export default function Mapa(props: PropsMapa) {
     mapa.on("click", (evento: MapMouseEvent) => {
       // Al abrir una ficha (o tocar el mapa), el letrero desaparece.
       esconderLetrero();
-      const primero = primeroBajo(evento);
-      if (primero === undefined) return;
+      const eleccion = elegir(candidatos(evento.point));
+      if (eleccion === null) return;
+      if (eleccion.tipo === "varios") {
+        // Varios arcos casi a la misma distancia: se elige de una lista.
+        manejadores.current.onCorredores(
+          eleccion.valores.flatMap((v) => (v.tipo === "corredor" ? [v.clave] : [])),
+        );
+        return;
+      }
+      if (eleccion.valor.tipo === "corredor") {
+        manejadores.current.onCorredor(eleccion.valor.clave);
+        return;
+      }
+      const primero = eleccion.valor.rasgo;
       const propiedades = primero.properties;
       if (primero.layer.id === CAPA_GRUPOS && Number(propiedades.n) > 1) {
         // Varios incidentes en el mismo punto exacto: se elige cuál abrir.
@@ -490,7 +716,7 @@ export default function Mapa(props: PropsMapa) {
           .then((zoom) =>
             mapa.easeTo({ center: evento.lngLat, zoom, animate: !movimientoReducido() }),
           );
-      } else if (primero.layer.id === CAPA_IMPACTOS) {
+      } else if (primero.layer.id === CAPA_IMPACTOS || primero.layer.id === CAPA_SATELITE) {
         manejadores.current.onImpacto(String(propiedades.id));
       } else if (primero.layer.id === CAPA_DIRECTO) {
         manejadores.current.onAviso(String(propiedades.id));
@@ -500,10 +726,11 @@ export default function Mapa(props: PropsMapa) {
         manejadores.current.onPais(String(propiedades.iso));
       } else if (primero.layer.id === CAPA_FOCOS_VIVOS_IMPACTO) {
         manejadores.current.onImpacto(String(propiedades.impacto));
-      } else if (primero.layer.id === CAPA_CORREDORES) {
-        manejadores.current.onCorredor(String(propiedades.clave));
+
       } else if (primero.layer.id === CAPA_LUZ_CIUDADES) {
         manejadores.current.onCiudadLuz(String(propiedades.clave));
+      } else if (primero.layer.id === CAPA_ALUMBRADO) {
+        manejadores.current.onAlumbrado(String(propiedades.clave));
       } else if (
         primero.layer.id === CAPA_REGIONES || primero.layer.id === CAPA_REGIONES_RUSIA
       ) {
@@ -517,30 +744,27 @@ export default function Mapa(props: PropsMapa) {
     // una pantalla táctil el navegador simula un paso del ratón al tocar y el letrero se
     // quedaba fijo encima del mapa.
     mapa.on("mousemove", (evento: MapMouseEvent) => {
-      const caja = letrero.current;
-      if (caja === null) return;
       if (!hayRaton()) {
-        caja.hidden = true;
+        ponerLetrero(null, evento.point);
         return;
       }
-      const primero = primeroBajo(evento);
-      mapa.getCanvas().style.cursor = primero === undefined ? "" : "pointer";
-      const texto = primero === undefined ? null : textoDeLetrero(primero);
-      if (texto === null) {
-        caja.hidden = true;
-        return;
-      }
-      if (textoLetrero.current !== null) textoLetrero.current.textContent = texto;
-      caja.hidden = false;
-      // Nunca se sale del mapa: se mide ya con su texto y se recoloca.
-      const { x, y } = colocarLetrero(
-        evento.point,
-        { ancho: caja.offsetWidth, alto: caja.offsetHeight },
-        { ancho: mapa.getContainer().clientWidth, alto: mapa.getContainer().clientHeight },
-      );
-      caja.style.transform = `translate(${x}px, ${y}px)`;
+      const eleccion = elegir(candidatos(evento.point));
+      const objetivo =
+        eleccion === null ? null : eleccion.tipo === "uno" ? eleccion.valor : (eleccion.valores[0] ?? null);
+      realzar(objetivo);
+      mapa.getCanvas().style.cursor = objetivo === null ? "" : "pointer";
+      const texto =
+        objetivo === null
+          ? null
+          : objetivo.tipo === "corredor"
+            ? textoDeCorredor(objetivo.clave)
+            : textoDeLetrero(objetivo.rasgo);
+      ponerLetrero(texto, evento.point);
     });
-    mapa.on("mouseout", esconderLetrero);
+    mapa.on("mouseout", () => {
+      esconderLetrero();
+      realzar(null);
+    });
     mapa.on("touchstart", esconderLetrero);
 
     return () => {
@@ -653,9 +877,32 @@ export default function Mapa(props: PropsMapa) {
     const mapa = mapaRef.current;
     if (!listo || mapa === null) return undefined;
     return trasPintar(() => {
-      fuente(mapa, FUENTE_IMPACTOS)?.setData(impactosEnMapa(impactos ?? []));
+      const conSatelite = new Set(
+        (puntosSatelite ?? []).filter((p) => p.clase === "impacto").map((p) => p.clave),
+      );
+      fuente(mapa, FUENTE_IMPACTOS)?.setData(impactosEnMapa(impactos ?? [], conSatelite));
+      fuente(mapa, FUENTE_SATELITE)?.setData(impactosConSateliteEnMapa(puntosSatelite ?? []));
     });
-  }, [listo, impactos]);
+  }, [listo, impactos, puntosSatelite]);
+
+  // «Con satélite»: lo demás de la capa de guerra, atenuado.
+  useEffect(() => {
+    const mapa = mapaRef.current;
+    if (!listo || mapa === null) return;
+    for (const [capa, propiedad, atenuado] of ATENUADAS_SIN_SATELITE) {
+      if (mapa.getLayer(capa) === undefined) continue;
+      const clave = `${capa}|${propiedad}`;
+      if (!pinturaOriginal.current.has(clave)) {
+        pinturaOriginal.current.set(clave, mapa.getPaintProperty(capa, propiedad));
+      }
+      mapa.setPaintProperty(
+        capa,
+        propiedad,
+        soloSatelite ? atenuado : pinturaOriginal.current.get(clave),
+      );
+    }
+    pintarRealceArco();
+  }, [listo, soloSatelite]);
 
   // Interferencia GPS del periodo.
   useEffect(() => {
@@ -694,9 +941,23 @@ export default function Mapa(props: PropsMapa) {
     const mapa = mapaRef.current;
     if (!listo || mapa === null) return undefined;
     return trasPintar(() => {
-      fuente(mapa, FUENTE_CORREDORES)?.setData(corredoresEnMapa(corredores ?? []));
+      const coleccion = corredoresEnMapa(corredores ?? []);
+      arcos.current = new Map(
+        coleccion.features.map((f) => [
+          f.properties.clave,
+          { coordenadas: f.geometry.coordinates as [number, number][], ancho: f.properties.ancho },
+        ]),
+      );
+      fuente(mapa, FUENTE_CORREDORES)?.setData(coleccion);
+      pintarRealceArco();
     });
   }, [listo, corredores]);
+
+  // El arco del corredor con la ficha abierta sigue realzado.
+  useEffect(() => {
+    if (!listo) return;
+    pintarRealceArco();
+  }, [listo, corredorElegido]);
 
   // Pérdida de luz nocturna: regiones oscurecidas y ciudades.
   useEffect(() => {
@@ -711,6 +972,13 @@ export default function Mapa(props: PropsMapa) {
       fuente(mapa, FUENTE_LUZ_CIUDADES)?.setData(ciudadesSinLuzEnMapa(ciudadesSinLuz ?? []));
     });
   }, [listo, luzRegiones, ciudadesSinLuz]);
+
+  // Ciudades con alumbrado reducido de forma permanente.
+  useEffect(() => {
+    const mapa = mapaRef.current;
+    if (!listo || mapa === null) return;
+    fuente(mapa, FUENTE_ALUMBRADO)?.setData(alumbradoEnMapa(alumbrado ?? []));
+  }, [listo, alumbrado]);
 
   // Focos de calor de las últimas 24 horas.
   useEffect(() => {
@@ -782,6 +1050,24 @@ export default function Mapa(props: PropsMapa) {
         {/* El recorte a dos líneas va dentro: con el relleno de la caja asomaría la tercera. */}
         <span ref={textoLetrero} className="line-clamp-2" />
       </div>
+      {/* Los corredores, uno a uno con el tabulador: el enfocado se realza en el mapa con su
+          letrero, e Intro abre su ficha. */}
+      {listo && capas.ucrania && capas.corredores && corredores !== null && corredores.length > 0 && (
+        <ul className="sr-only" aria-label={t.satelite.corredor.lista} data-corredores-teclado="">
+          {corredores.map((c) => (
+            <li key={c.clave}>
+              <button
+                type="button"
+                onFocus={() => enfocarArco(c.clave)}
+                onBlur={() => enfocarArco(null)}
+                onClick={() => props.onCorredor(c.clave)}
+              >
+                {letreroDeCorredor(t, idioma, c)}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }

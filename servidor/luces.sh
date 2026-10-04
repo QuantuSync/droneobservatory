@@ -12,7 +12,9 @@
 #    referencia, las de la validación y la última), hasta su tope de tiempo, y sigue en la
 #    ejecución siguiente;
 # 3. evalúa cada ataque con objetivos de energía y deja los resultados en LUCES_DATOS; la
-#    recogida horaria los guarda en la base con su cerrojo.
+#    recogida horaria los guarda en la base con su cerrojo;
+# 4. con todas las noches medidas, las ciudades con alumbrado reducido de forma permanente, que
+#    sube al almacén público (luces/alumbrado.json).
 #
 # Lee publicacion/ucrania.json del clon y los mensajes del lector de canales; no toca la base
 # ni el clon.
@@ -36,6 +38,15 @@ principal() {
     return 0
   fi
 
+  # Las credenciales del almacén público, para subir las ciudades con alumbrado reducido; sin
+  # ellas se mide y se evalúa igual.
+  if [ -r "$ALMACEN_CREDENCIALES" ]; then
+    # shellcheck disable=SC1090
+    . "$ALMACEN_CREDENCIALES"
+    export ALMACEN_ID ALMACEN_SECRETO
+  else
+    echo "sin $ALMACEN_CREDENCIALES: las ciudades con alumbrado reducido no se suben" >&2
+  fi
   export EODI_LUCES_DATOS="$LUCES_DATOS" EODI_GUERRA_DATOS="$GUERRA_DATOS"
   install -d -m 700 "$LUCES_DATOS"
   cd "$CLON"

@@ -82,7 +82,11 @@ describe("impactos con lugar", () => {
       sentido: 1,
       foco: 1,
       parte: 1,
+      satelite: 0,
     });
+    // Con información de satélite, el grupo que lo contiene lo señala.
+    const conSatelite = impactosEnMapa([filaImpacto(impacto())], new Set(["EODI-IG-2026-00001"]));
+    expect(conSatelite.features[0]?.properties.satelite).toBe(1);
   });
 });
 

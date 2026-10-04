@@ -26,10 +26,16 @@ eléctrica (las mismas palabras de energía de proceso/mensajes_guerra.py), con 
 afectada. Se leen de `publicacion/ucrania.json` del clon (lo que publica la recogida) y de los
 mensajes guardados por el lector de canales (`datos/guerra/canales`).
 
+**Ciudades con alumbrado reducido de forma permanente.** Con todas las noches medidas, las
+ciudades cuyo brillo se queda de forma sostenida por debajo de la referencia mínima de la regla
+(proceso/luces.py, `alumbrado_reducido`): con esa luz, un apagón no se ve desde el satélite.
+Van a `alumbrado.json` y al almacén público (`luces/alumbrado.json`), que lee la web.
+
 **Salida**, en `<datos>/` (`EODI_LUCES_DATOS`): `noches/<AAAA-MM-DD>.json` (la medida de cada
 ciudad esa noche), `resultados.json` (por ataque, las pérdidas de luz de sus regiones y
-ciudades), `validacion.json` y `control.json`. La recogida horaria guarda los resultados en la
-base (`incorporar`, tabla `luces_nocturnas`) y la publicación los añade a cada ataque.
+ciudades), `alumbrado.json`, `validacion.json` y `control.json`. La recogida horaria guarda los
+resultados en la base (`incorporar`, tabla `luces_nocturnas`) y la publicación los añade a cada
+ataque.
 
 Lo lanza `servidor/luces.sh` con su propio temporizador y cerrojo; nunca toca la base ni el clon.
 """
@@ -73,6 +79,9 @@ GUERRA = Path.home() / "datos" / "guerra" / "canales"
 VARIABLE_GUERRA = "EODI_GUERRA_DATOS"
 CONTROL = "control.json"
 RESULTADOS = "resultados.json"
+ALUMBRADO = "alumbrado.json"
+OBJETO_ALUMBRADO = "luces/alumbrado.json"
+CACHE_ALUMBRADO = "public, max-age=3600"
 FICHERO_VALIDACION = "validacion.json"
 FUENTE_ID = "luces_nocturnas"
 
@@ -560,10 +569,19 @@ def mensajes_de_energia(guerra: Path, canales: list[Documento]) -> list[tuple[st
     return resultado
 
 
+def _solape_con_el_dia(inicio: datetime, fin: datetime, dia: date) -> timedelta:
+    comienzo = datetime.combine(dia, datetime.min.time(), UTC)
+    return min(fin, comienzo + timedelta(days=1)) - max(inicio, comienzo)
+
+
 def ataques_de_energia(
-    publicacion: Documento, mensajes: Iterable[tuple[str, datetime]]
+    publicacion: Documento,
+    mensajes: Iterable[tuple[str, datetime]],
+    apagones: Iterable[tuple[date, str]] = (),
 ) -> list[AtaqueEnergia]:
-    """Ataques con objetivos de energía y sus regiones afectadas."""
+    """Ataques con objetivos de energía y sus regiones afectadas. Además de los impactos y los
+    mensajes, los apagones documentados de la validación (día y región de cada ciudad): cuentan
+    para el ataque contra Ucrania en curso ese día (el que más horas tiene en él)."""
     ataques = {a["id"]: a for a in publicacion.get("ataques", [])}
     regiones: dict[str, set[str]] = {}
     for impacto in publicacion.get("impactos", []):
@@ -592,6 +610,14 @@ def ataques_de_energia(
         ]
         if candidatos:
             regiones.setdefault(max(candidatos)[1], set()).add(region)
+    for dia, region in apagones:
+        solapes = [
+            (_solape_con_el_dia(inicio, fin, dia), id_)
+            for inicio, fin, id_ in por_sentido.get("RU_UA", [])
+        ]
+        positivos = [s for s in solapes if s[0] > timedelta(0)]
+        if positivos:
+            regiones.setdefault(max(positivos)[1], set()).add(region)
     resultado = []
     for id_, conjunto in regiones.items():
         ataque = ataques[id_]
@@ -721,6 +747,40 @@ def noches_pendientes(
 def casos_validacion(ruta: Path = VALIDACION) -> list[Documento]:
     datos: list[Documento] = json.loads(ruta.read_text(encoding="utf-8"))["casos"]
     return datos
+
+
+def apagones_documentados(
+    casos: list[Documento], ciudades: list[luces.Ciudad]
+) -> list[tuple[date, str]]:
+    """Día y región de cada ciudad de los apagones documentados de la validación."""
+    region = {c.id: c.region for c in ciudades}
+    return [
+        (date.fromisoformat(caso["inicio"]), region[ciudad_id])
+        for caso in casos
+        if caso["tipo"] == "apagon"
+        for ciudad_id in caso["ciudades"]
+        if ciudad_id in region
+    ]
+
+
+def noches_medidas(datos: Path) -> list[date]:
+    """Todas las noches con alguna medida guardada."""
+    carpeta = datos / "noches"
+    if not carpeta.is_dir():
+        return []
+    return sorted(date.fromisoformat(r.stem) for r in carpeta.glob("????-??-??.json"))
+
+
+def alumbrado(
+    ciudades: list[luces.Ciudad], serie: dict[str, dict[date, float | None]]
+) -> list[Documento]:
+    """Las ciudades con alumbrado reducido de forma permanente, de norte a sur."""
+    resultado = []
+    for ciudad in sorted(ciudades, key=lambda c: (-c.lat, c.id)):
+        encontrado = luces.alumbrado_reducido(serie.get(ciudad.id, {}))
+        if encontrado is not None:
+            resultado.append(luces.documento_alumbrado(ciudad, encontrado))
+    return resultado
 
 
 def noches_validacion(casos: list[Documento]) -> list[date]:
@@ -860,7 +920,11 @@ def calcular(
     ataques = (
         []
         if solo_validacion
-        else ataques_de_energia(publicacion, mensajes_de_energia(guerra, canales))
+        else ataques_de_energia(
+            publicacion,
+            mensajes_de_energia(guerra, canales),
+            apagones_documentados(casos, ciudades),
+        )
     )
     necesarias = noches_validacion(casos) + [
         n for a in ataques for n in noches_de(a.inicio.date(), a.fin.date())
@@ -914,10 +978,12 @@ def calcular(
         if perdidas:
             resultados[ataque.id] = perdidas
     validacion = validar(casos, ciudades, serie, ataques)
+    reducidas = alumbrado(ciudades, series(datos, noches_medidas(datos), ciudades, nubes))
     _escribir(
         datos / RESULTADOS,
         {"version": luces.VERSION, "generado": _hora(ahora), "ataques": resultados},
     )
+    _escribir(datos / ALUMBRADO, documento_de_alumbrado(reducidas, ahora))
     _escribir(datos / FICHERO_VALIDACION, validacion)
     restantes = len(noches_pendientes(datos, necesarias, ahora, [c.id for c in a_medir]))
     control = {
@@ -927,6 +993,7 @@ def calcular(
         "noches_pendientes": restantes,
         "ataques_energia": len(ataques),
         "ataques_con_perdida": len(resultados),
+        "alumbrado_reducido": len(reducidas),
         "nubes_llamadas": nubes.gastadas,
         "megabytes": round(lector.bytes / 1e6, 1),
         "duracion_s": round(reloj() - inicio_reloj),
@@ -940,6 +1007,25 @@ def calcular(
 
 def _hora(momento: datetime) -> str:
     return momento.astimezone(UTC).strftime("%Y-%m-%dT%H:%MZ")
+
+
+def documento_de_alumbrado(ciudades: list[Documento], ahora: datetime) -> Documento:
+    """El fichero público de las ciudades con alumbrado reducido."""
+    return {
+        "version": luces.VERSION,
+        "generado": _hora(ahora),
+        "referencia_minima": luces.BRILLO_REFERENCIA_MIN,
+        "satelite": "NOAA-20",
+        "ciudades": ciudades,
+    }
+
+
+def subir_alumbrado(datos: Path, subir: Callable[[str, bytes, str, str], bool]) -> bool:
+    """Sube alumbrado.json al almacén público (si existe)."""
+    ruta = datos / ALUMBRADO
+    if not ruta.exists():
+        return False
+    return subir(OBJETO_ALUMBRADO, ruta.read_bytes(), "application/json", CACHE_ALUMBRADO)
 
 
 def incorporar(almacen: "Almacen", datos: Path | None = None) -> int:
@@ -976,6 +1062,7 @@ def principal(argumentos: list[str] | None = None) -> int:
     opciones.add_argument("orden", choices=["calcular"])
     opciones.add_argument("--tope-min", type=float, default=TOPE_S / 60)
     opciones.add_argument("--solo-validacion", action="store_true")
+    opciones.add_argument("--sin-subir", action="store_true")
     opciones.add_argument("--registro", type=Path)
     args = opciones.parse_args(argumentos)
     datos = directorio_datos()
@@ -985,6 +1072,11 @@ def principal(argumentos: list[str] | None = None) -> int:
         datos, guerra, ahora, args.tope_min * 60, solo_validacion=args.solo_validacion
     )
     registro.info("luces: %s", json.dumps(control, ensure_ascii=False))
+    if not args.sin_subir and not args.solo_validacion:
+        from recogida.satelite import subida_al_almacen
+
+        subido = subir_alumbrado(datos, subida_al_almacen(os.environ))
+        registro.info("alumbrado reducido %s", "subido" if subido else "no subido")
     if args.registro is not None:
         _escribir(args.registro, {"ultima": control["ultima"], "duracion_s": control["duracion_s"]})
     return 0

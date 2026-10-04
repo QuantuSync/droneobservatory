@@ -71,6 +71,30 @@ export function FichaRegion(props: Props) {
         <p className="mt-3 text-secundario">{t.region.sinAtaques}</p>
       ) : (
         <>
+          {/* Lo que se ve desde el satélite, lo primero bajo el título: focos de calor y luz
+              nocturna. Sin ello, nada. */}
+          {(focos.length > 0 || luces.length > 0) && (
+            <dl className="mt-3" data-satelite-arriba="">
+              {focos.map((f) => (
+                <LineaFoco
+                  key={f.ataque}
+                  t={t}
+                  idioma={idioma}
+                  foco={f.foco}
+                  lon={f.centro[0]}
+                  lat={f.centro[1]}
+                  zoom={ZOOM_VISOR_REGION}
+                  ataque={f.ataque}
+                  color={PALETA.guerraClaro}
+                />
+              ))}
+              {luces.length > 0 && (
+                <Fila nombre={t.satelite.luzFicha.rotulo}>
+                  <ListaLuz t={t} idioma={idioma} luces={[...luces].reverse()} />
+                </Fila>
+              )}
+            </dl>
+          )}
           <dl className="mt-3">
             <Fila nombre={t.region.ataques}>
               <span className="mono">{numero(total, idioma)}</span>
@@ -94,24 +118,6 @@ export function FichaRegion(props: Props) {
             {ultimo !== undefined && (
               <Fila nombre={t.region.ultimoAtaque}>
                 <span className="mono">{fechaDia(ultimo.dia)}</span>
-              </Fila>
-            )}
-            {focos.map((f) => (
-              <LineaFoco
-                key={f.ataque}
-                t={t}
-                idioma={idioma}
-                foco={f.foco}
-                lon={f.centro[0]}
-                lat={f.centro[1]}
-                zoom={ZOOM_VISOR_REGION}
-                ataque={f.ataque}
-                color={PALETA.guerraClaro}
-              />
-            ))}
-            {luces.length > 0 && (
-              <Fila nombre={t.satelite.luzFicha.rotulo}>
-                <ListaLuz t={t} idioma={idioma} luces={[...luces].reverse()} />
               </Fila>
             )}
           </dl>

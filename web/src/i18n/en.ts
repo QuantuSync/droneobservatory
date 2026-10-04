@@ -965,6 +965,20 @@ export const en: Textos = {
           },
           {
             parrafo: [
+              "Permanently reduced street lighting: a city whose brightness stays below 0.5 " +
+                "nW/(cm²·sr) above the background cannot show a blackout with this rule, so it is " +
+                "marked on the map with its own sign instead. It is marked when the median of its " +
+                "last 10 valid nights is below that minimum and, going back month by month (months " +
+                "with 3 valid nights or more), the monthly median stays below it too; a single " +
+                "month above (snow reflects the city light, as in January 2026) does not break the " +
+                "run, two measured months in a row do. Its card gives the date since when (or «at " +
+                "least since» the first night measured), the current brightness and the earliest " +
+                "measured, each the median of 10 valid nights, and the number of nights it is " +
+                "based on. It is computed from all the nights measured by NOAA-20.",
+            ],
+          },
+          {
+            parrafo: [
               "Fire hotspots of the last 24 hours: those of NASA FIRMS over Ukraine and " +
                 "European Russia, with the same filters as the strike cross-check (refinery " +
                 "flares and plants with habitual heat, low confidence and areas that burn every " +
@@ -1314,6 +1328,7 @@ export const en: Textos = {
     letreroCorredor: (origen, region, drones) => `${origen} → ${region} · ${drones} drones`,
     letreroFoco: (hora, coincide) =>
       `Fire hotspot · ${hora} UTC${coincide ? " · matches a reported strike" : ""}`,
+    letreroAlumbrado: (ciudad) => `${ciudad} · permanently reduced street lighting`,
     letreroCiudad: (ciudad, perdida) => `${ciudad} · ${perdida}% less night light`,
     focosUltimo: (hora) => `Fire hotspots, last 24 h · latest data ${hora} UTC`,
     focosVacio: "Fire hotspots, last 24 h · none in the last 24 hours",
@@ -1335,6 +1350,9 @@ export const en: Textos = {
       },
       ataques: (n) => (n === 1 ? "1 attack" : `${n} attacks`),
       periodo: "Period",
+      varios: "Several corridors meet at that point. Choose one:",
+      etiquetaVarios: "Corridors · war layer",
+      lista: "Attack corridors in the period",
     },
     luzFicha: {
       etiqueta: "Night lights · war layer",
@@ -1353,6 +1371,23 @@ export const en: Textos = {
         "Brightness above background in the VIIRS day-night band (NOAA-20), cloud-free nights. " +
         "Nights are dated by their evening; the satellite passes at about 01:30 local time.",
     },
+    alumbradoFicha: {
+      etiqueta: "Reduced lighting · war layer",
+      titulo: "City with permanently reduced street lighting",
+      desde: "Since",
+      desdeTexto: (fecha, alMenos) => (alMenos ? `at least since ${fecha}` : fecha),
+      porEncima: (mes) => `In ${mes} it was still above the minimum reference.`,
+      actual: "Current brightness",
+      referencia: "Reference brightness",
+      brillo: (valor) => `${valor} nW/(cm²·sr)`,
+      tramo: (desde, hasta, noches) =>
+        `median of ${noches} valid nights from ${desde} to ${hasta}`,
+      noches: "Nights measured",
+      metodo:
+        "Below 0.5 nW/(cm²·sr) above the background, sustained over time, the city is almost " +
+        "dark and a blackout cannot be seen from the satellite. Reference brightness: the " +
+        "earliest measured. VIIRS on NOAA-20; a single month above (snow) does not count.",
+    },
     imagen: {
       rotulo: "Satellite image",
       antes: "Before",
@@ -1368,13 +1403,32 @@ export const en: Textos = {
     zona: (id, nombre) => ZONAS_EN[id] ?? nombre,
     ayudaCorredores:
       "A thin violet arc runs from a launch zone to a region reached: thicker means more drones " +
-      "in the period. Towards Russia it starts at the nearest point of the Ukrainian border.",
+      "in the period. Towards Russia it starts at the nearest point of the Ukrainian border. " +
+      "Moving the pointer or a finger close to an arc is enough: it lights up and takes " +
+      "precedence over the region below; the Tab key goes through them one by one.",
     ayudaFocos:
       "A tiny violet dot is a fire hotspot of the last 24 hours (NASA FIRMS); a larger light violet one " +
       "matches a reported strike.",
     ayudaLuz:
       "A darkened region or city lost night light after an attack on the power grid, measured " +
       "by satellite: darker means a larger loss.",
+    ayudaAlumbrado:
+      "A ring with a light dot is a city with permanently reduced street lighting: its night " +
+      "brightness has long been below the minimum needed to measure a blackout.",
+    ayudaSatelite:
+      "A larger strike with a light rim has satellite information: a second ring means a " +
+      "before-and-after image; the hotspot mark, a fire hotspot. Always on top of the rest; a " +
+      "cluster holding one has a light rim. «With satellite» leaves only those points and opens " +
+      "their list.",
+    conSatelite: (n) => `With satellite · ${n}`,
+    listaSatelite: "Points with satellite information",
+    abrirLista: "Open the list of points with satellite information",
+    cerrarLista: "Close the list of points with satellite information",
+    tiene: { imagen: "before and after", foco: "fire hotspot", luz: "night lights" },
+    letreroSatelite: (imagen, foco) =>
+      `Strike with satellite · ${[imagen ? "before and after" : null, foco ? "fire hotspot" : null]
+        .filter((x) => x !== null)
+        .join(" · ")}`,
   },
 };
 

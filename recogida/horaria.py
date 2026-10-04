@@ -61,6 +61,7 @@ from recogida import (
     luces,
     mediciones,
     oficiales,
+    satelite,
 )
 from recogida.cache import CachePaginas
 from recogida.descarga import Descargador, DescargaFallida
@@ -347,6 +348,9 @@ def principal(argumentos: list[str] | None = None) -> int:
         # Pérdidas de luz nocturna que dejó medidas su temporizador: tampoco cambian el código
         # de salida si falla.
         luces.paso_horario(almacen)
+        # Los objetivos de las imágenes de satélite, para su temporizador (que así no carga la
+        # base): tampoco cambian el código de salida si falla.
+        satelite.paso_horario(almacen)
         # Presencia del dron que confirman las declaraciones oficiales ya guardadas: la regla
         # se amplió y lo anterior se revisa en cada pasada; ya aplicada, no cambia nada.
         # Fusiones que las reglas de ahora ya no hacen (dos cierres de noches distintas, un cierre

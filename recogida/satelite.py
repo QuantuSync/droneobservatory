@@ -314,6 +314,8 @@ class Objetivo:
     antes_hasta: datetime
     despues_desde: datetime
     foco: bool
+    # Nombre del lugar alcanzado, para la lista de la web.
+    lugar: str = ""
 
 
 def _centroide(focos: list[Documento]) -> tuple[float, float]:
@@ -359,6 +361,7 @@ def objetivo_de_impacto(
         antes_hasta=inicio,
         despues_desde=max(fin, publicado),
         foco=detectado,
+        lugar=str(lugar.get("nombre") or ""),
     )
 
 
@@ -470,6 +473,7 @@ def indice(control: dict[str, Documento], ahora: datetime) -> Documento:
             "recorte": entrada["recorte"],
             "antes": entrada.get("antes"),
             "despues": entrada.get("despues"),
+            **({"lugar": entrada["lugar"]} if entrada.get("lugar") else {}),
         }
     anios = sorted(
         {
@@ -515,6 +519,8 @@ def actualizar(
     resumen = Resumen()
     for objetivo in ordenar(objetivos):
         anterior = control.get(objetivo.id, {})
+        if objetivo.lugar and anterior and anterior.get("lugar") != objetivo.lugar:
+            anterior = control[objetivo.id] = {**anterior, "lugar": objetivo.lugar}
         if anterior.get("antes") and anterior.get("despues"):
             continue
         if reloj() - inicio > tope_s:
@@ -529,7 +535,7 @@ def actualizar(
         resumen.nuevas += sum(
             1 for lado in ("antes", "despues") if entrada.get(lado) and not anterior.get(lado)
         )
-        control[objetivo.id] = entrada
+        control[objetivo.id] = {**entrada, "lugar": objetivo.lugar} if objetivo.lugar else entrada
     return resumir(control, resumen)
 
 
@@ -561,6 +567,67 @@ def objetivos_de_base(almacen: Almacen) -> list[Objetivo]:
         if objetivo is not None:
             resultado.append(objetivo)
     return resultado
+
+
+OBJETIVOS = "objetivos.json"
+
+
+def documento_de_objetivo(objetivo: Objetivo) -> Documento:
+    return {
+        "id": objetivo.id,
+        "recorte": {
+            "lat": objetivo.recorte.lat,
+            "lon": objetivo.recorte.lon,
+            "lado_m": objetivo.recorte.lado_m,
+        },
+        "antes_hasta": objetivo.antes_hasta.strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "despues_desde": objetivo.despues_desde.strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "foco": objetivo.foco,
+        "lugar": objetivo.lugar,
+    }
+
+
+def objetivo_de_documento(documento: Documento) -> Objetivo:
+    recorte = documento["recorte"]
+    return Objetivo(
+        id=str(documento["id"]),
+        recorte=Recorte(float(recorte["lat"]), float(recorte["lon"]), int(recorte["lado_m"])),
+        antes_hasta=_instante(str(documento["antes_hasta"])),
+        despues_desde=_instante(str(documento["despues_desde"])),
+        foco=bool(documento["foco"]),
+        lugar=str(documento.get("lugar") or ""),
+    )
+
+
+def directorio_datos() -> Path:
+    return Path(os.environ.get(VARIABLE_DATOS, DATOS))
+
+
+def paso_horario(almacen: Almacen) -> None:
+    """En la recogida horaria, que ya tiene la base abierta: deja los objetivos en
+    `objetivos.json` para el temporizador de las imágenes, que así no carga la base (unos 640 MB
+    descifrada). Nada de lo que falle aquí sale de esta función."""
+    try:
+        objetivos = objetivos_de_base(almacen)
+        datos = directorio_datos()
+        datos.mkdir(parents=True, exist_ok=True)
+        _escribir(
+            datos / OBJETIVOS,
+            {
+                "generado": datetime.now(UTC).strftime("%Y-%m-%dT%H:%MZ"),
+                "objetivos": [documento_de_objetivo(o) for o in objetivos],
+            },
+        )
+        registro.info("satélite: %d objetivos para las imágenes", len(objetivos))
+    except Exception as error:
+        registro.warning("objetivos de satélite no guardados: %s", str(error)[:300])
+
+
+def cargar_objetivos(ruta: Path) -> list[Objetivo] | None:
+    if not ruta.exists():
+        return None
+    documento = json.loads(ruta.read_text(encoding="utf-8"))
+    return [objetivo_de_documento(d) for d in documento.get("objetivos", [])]
 
 
 def _cargar_control(ruta: Path) -> dict[str, Documento]:
@@ -616,12 +683,14 @@ def principal(argumentos: list[str] | None = None) -> int:
     logging.basicConfig(level=logging.INFO, format="%(message)s")
     opciones = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     opciones.add_argument("orden", choices=["actualizar"])
-    opciones.add_argument("--repositorio", help="repositorio de datos (rama estado)")
-    opciones.add_argument("--base", type=Path, help="db.age local en vez de la rama estado")
+    opciones.add_argument(
+        "--repositorio", help="leer los objetivos de la base del repositorio (rama estado)"
+    )
+    opciones.add_argument("--base", type=Path, help="leer los objetivos de un db.age local")
     opciones.add_argument("--tope-min", type=float, default=TOPE_S / 60)
     opciones.add_argument("--registro", type=Path, help="fichero con la última ejecución correcta")
     args = opciones.parse_args(argumentos)
-    datos = Path(os.environ.get(VARIABLE_DATOS, DATOS))
+    datos = directorio_datos()
     datos.mkdir(parents=True, exist_ok=True)
     ruta_control = datos / CONTROL
     control = _cargar_control(ruta_control)
@@ -629,8 +698,16 @@ def principal(argumentos: list[str] | None = None) -> int:
     ahora = datetime.now(UTC)
     lector = Lector()
     subir = subida_al_almacen(os.environ)
-    with _base(args.repositorio, args.base) as almacen:
-        objetivos = objetivos_de_base(almacen)
+    if args.repositorio is None and args.base is None:
+        # Lo normal en el servidor: los objetivos que deja la recogida horaria.
+        cargados = cargar_objetivos(datos / OBJETIVOS)
+        if cargados is None:
+            registro.warning("sin %s: la recogida horaria aún no los ha dejado", OBJETIVOS)
+            return 1
+        objetivos = cargados
+    else:
+        with _base(args.repositorio, args.base) as almacen:
+            objetivos = objetivos_de_base(almacen)
     resumen = actualizar(
         objetivos, control, buscador_http(lector), lector, subir, ahora, args.tope_min * 60
     )

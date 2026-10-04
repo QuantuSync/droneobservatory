@@ -24,7 +24,14 @@ import { FichaImpacto } from "./componentes/FichaImpacto.tsx";
 import { FichaIncidente } from "./componentes/FichaIncidente.tsx";
 import { FichaPais } from "./componentes/FichaPais.tsx";
 import { FichaRegion } from "./componentes/FichaRegion.tsx";
-import { FichaCorredor, FichaLuz } from "./componentes/GuerraSatelite.tsx";
+import {
+  BotonSatelite,
+  FichaAlumbrado,
+  FichaCorredor,
+  FichaLuz,
+  ListaCorredores,
+  cargarIndiceSatelite,
+} from "./componentes/GuerraSatelite.tsx";
 import { Filtros, textoDeSeleccion } from "./componentes/Filtros.tsx";
 import { LeyendaGnss, LeyendaPresion } from "./componentes/Leyendas.tsx";
 import type { EstadoGnss } from "./componentes/Leyendas.tsx";
@@ -55,14 +62,21 @@ import type { Agregado, FicheroGnss, IndiceGnss } from "./datos/gnss.ts";
 import { cifrasDePais, presionPorPais } from "./datos/presion.ts";
 import { cifras } from "./datos/derivar.ts";
 import {
+  OBJETO_ALUMBRADO,
   OBJETO_FOCOS_VIVOS,
   ciudadesSinLuz as ciudadesSinLuzDe,
   corredoresDelPeriodo,
   lucesDelPeriodo,
   perdidaPorRegion,
+  puntosConSatelite,
 } from "./datos/guerraSatelite.ts";
-import type { FocosVivos } from "./datos/guerraSatelite.ts";
-import { validarFocosVivos } from "./datos/validar.ts";
+import type {
+  AlumbradoReducido,
+  FocosVivos,
+  IndiceSatelite,
+  PuntoSatelite,
+} from "./datos/guerraSatelite.ts";
+import { validarAlumbrado, validarFocosVivos } from "./datos/validar.ts";
 import { urlDelAlmacen } from "./almacenPublico.ts";
 import type {
   Ataque,
@@ -147,8 +161,13 @@ type PanelLocal =
   | { clase: "pila"; ids: string[] }
   | { clase: "impacto"; id: string }
   | { clase: "corredor"; clave: string }
+  | { clase: "corredores"; claves: string[] }
   | { clase: "luz"; clave: string }
+  | { clase: "alumbrado"; clave: string }
   | null;
+
+/** Zoom al ir a un punto desde la lista de «Con satélite». */
+const ZOOM_PUNTO_SATELITE = 9;
 
 /** Cada cuánto se vuelven a pedir los focos de calor de 24 horas (el fichero cambia cada hora). */
 const MS_FOCOS_VIVOS = 10 * 60 * 1000;
@@ -305,6 +324,22 @@ export function App() {
       window.clearInterval(intervalo);
     };
   }, [verFocosVivos]);
+  // Ciudades con alumbrado reducido de forma permanente: del almacén público, una vez por visita
+  // y solo si se ve la capa de luz nocturna (el fichero cambia como mucho cada hora).
+  const [alumbrado, setAlumbrado] = useState<AlumbradoReducido | null>(null);
+  const verAlumbrado = capas.ucrania && capas.luz;
+  useEffect(() => {
+    if (!verAlumbrado || alumbrado !== null) return undefined;
+    const control = new AbortController();
+    void fetch(urlDelAlmacen(OBJETO_ALUMBRADO), { signal: control.signal })
+      .then(async (respuesta) => {
+        if (!respuesta.ok) return;
+        const resultado = validarAlumbrado(await respuesta.json());
+        if (resultado.ok && !control.signal.aborted) setAlumbrado(resultado.datos);
+      })
+      .catch(() => undefined);
+    return () => control.abort();
+  }, [verAlumbrado, alumbrado]);
   const [feedAbierto, setFeedAbierto] = useState(false);
   const [pestana, setPestana] = useState<Pestana>("directo");
   const [metodologia, setMetodologia] = useState(false);
@@ -583,6 +618,34 @@ export function App() {
     () => (lucesPeriodo === null ? null : ciudadesSinLuzDe(lucesPeriodo)),
     [lucesPeriodo],
   );
+  // Puntos con información de satélite (imagen de antes y después, foco de calor, luz
+  // nocturna): el índice de imágenes del almacén público se pide con la capa de guerra.
+  const [indiceSatelite, setIndiceSatelite] = useState<IndiceSatelite | null>(null);
+  useEffect(() => {
+    if (!capas.ucrania || indiceSatelite !== null) return undefined;
+    let vigente = true;
+    void cargarIndiceSatelite().then((indice) => {
+      if (vigente && indice !== null) setIndiceSatelite(indice);
+    });
+    return () => {
+      vigente = false;
+    };
+  }, [capas.ucrania, indiceSatelite]);
+  const puntosSatelite = useMemo(
+    () =>
+      capas.ucrania
+        ? puntosConSatelite(
+            impactos,
+            indiceSatelite,
+            capas.luz ? ciudadesSinLuz : null,
+            capas.luz ? (alumbrado?.ciudades ?? null) : null,
+            (fecha) => diaDeInstante(`${fecha}T00:00Z`),
+          )
+        : null,
+    [capas.ucrania, capas.luz, impactos, indiceSatelite, ciudadesSinLuz, alumbrado],
+  );
+  const [soloSatelite, setSoloSatelite] = useState(false);
+  const [destinoSatelite, setDestinoSatelite] = useState<Encuadre | null>(null);
   const nocheActual = noche === null ? null : (noches[noche] ?? null);
 
   // Novedades desde la visita anterior: se resaltan y se pueden recorrer.
@@ -685,10 +748,12 @@ export function App() {
     if (avisoAbierto !== null) return { lon: avisoAbierto.lon, lat: avisoAbierto.lat, zoom: ZOOM_DE_AVISO };
     if (centroPais !== null) return { ...centroPais, zoom: ZOOM_DE_PAIS };
     if (fichaActiva?.clase === "ataque") return "ucrania";
+    // Un punto elegido en la lista de «Con satélite».
+    if (destinoSatelite !== null) return destinoSatelite;
     return null;
     // El vuelo depende del aviso abierto, no de que directo.json se renueve cada minuto.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [elegido, centroPais, fichaActiva, avisoAbierto?.id]);
+  }, [elegido, centroPais, fichaActiva, avisoAbierto?.id, destinoSatelite]);
 
   const regionesDelAtaque = useMemo(() => {
     const actual = datos(ataque);
@@ -760,6 +825,37 @@ export function App() {
     (clave: string) => abrirLocal({ clase: "luz", clave }),
     [abrirLocal],
   );
+  const abrirCorredores = useCallback(
+    (claves: string[]) => abrirLocal({ clase: "corredores", claves }),
+    [abrirLocal],
+  );
+  const abrirAlumbrado = useCallback(
+    (clave: string) => abrirLocal({ clase: "alumbrado", clave }),
+    [abrirLocal],
+  );
+  // Una fila de la lista de «Con satélite»: el mapa va al punto y se abre su ficha.
+  const elegirSatelite = useCallback(
+    (punto: PuntoSatelite) => {
+      setMenu(false);
+      setDestinoSatelite({ lon: punto.lon, lat: punto.lat, zoom: ZOOM_PUNTO_SATELITE });
+      if (punto.clase === "impacto") abrirImpacto(punto.clave);
+      else if (punto.clase === "luz") abrirCiudadLuz(punto.clave);
+      else abrirAlumbrado(punto.clave);
+    },
+    [abrirImpacto, abrirCiudadLuz, abrirAlumbrado],
+  );
+  const botonSatelite = (grande: boolean) =>
+    puntosSatelite === null ? null : (
+      <BotonSatelite
+        t={t}
+        idioma={idioma}
+        puntos={puntosSatelite}
+        activo={soloSatelite}
+        onActivo={setSoloSatelite}
+        onElegir={elegirSatelite}
+        grande={grande}
+      />
+    );
   const cerrarFicha = useCallback(() => {
     setPanelLocal(null);
     if (analizarRuta(window.location.pathname).ficha !== null) navegar(rutaDeIdioma(idioma));
@@ -1131,6 +1227,36 @@ export function App() {
         ),
       };
     }
+  } else if (panelLocal?.clase === "corredores" && corredores !== null) {
+    const elegibles = panelLocal.claves.flatMap((clave) =>
+      corredores.filter((c) => c.clave === clave),
+    );
+    ficha = {
+      nombre: t.satelite.corredor.etiquetaVarios,
+      contenido: (
+        <>
+          <CabeceraFicha t={t} etiqueta={t.satelite.corredor.etiquetaVarios} onCerrar={cerrarFicha} />
+          <div className="overflow-y-auto px-4 py-3">
+            <ListaCorredores t={t} corredores={elegibles} onElegir={abrirCorredor} />
+          </div>
+        </>
+      ),
+    };
+  } else if (panelLocal?.clase === "alumbrado" && alumbrado !== null) {
+    const ciudad = alumbrado.ciudades.find((c) => c.ciudad.id === panelLocal.clave);
+    if (ciudad !== undefined) {
+      ficha = {
+        nombre: `${t.satelite.alumbradoFicha.etiqueta} ${ciudad.ciudad.nombre}`,
+        contenido: (
+          <>
+            <CabeceraFicha t={t} etiqueta={t.satelite.alumbradoFicha.etiqueta} onCerrar={cerrarFicha} />
+            <div className="overflow-y-auto px-4 py-3">
+              <FichaAlumbrado t={t} idioma={idioma} ciudad={ciudad} />
+            </div>
+          </>
+        ),
+      };
+    }
   } else if (panelLocal?.clase === "pais" && periodo !== null) {
     ficha = {
       nombre: `${t.presion.etiqueta} ${panelLocal.iso}`,
@@ -1405,6 +1531,7 @@ export function App() {
               luzRegiones={luzRegiones}
               ciudadesSinLuz={ciudadesSinLuz}
               focosVivos={focosVivos?.focos ?? null}
+              alumbrado={verAlumbrado ? (alumbrado?.ciudades ?? null) : null}
               elegido={elegido}
               paisResaltado={paisImpreciso}
               regionesElegidas={regionesElegidas}
@@ -1420,7 +1547,12 @@ export function App() {
               onCelda={abrirCelda}
               onPais={abrirPais}
               onCorredor={abrirCorredor}
+              onCorredores={abrirCorredores}
+              corredorElegido={panelLocal?.clase === "corredor" ? panelLocal.clave : null}
+              puntosSatelite={puntosSatelite}
+              soloSatelite={capas.ucrania && soloSatelite}
               onCiudadLuz={abrirCiudadLuz}
+              onAlumbrado={abrirAlumbrado}
               onListo={setApi}
               onFallo={fallarMapa}
             />
@@ -1442,7 +1574,12 @@ export function App() {
               }
               derecha={
                 <>
-                  <SelectorDeCapas t={t} capas={capas} onCapas={cambiarCapas} />
+                  <SelectorDeCapas
+                    t={t}
+                    capas={capas}
+                    onCapas={cambiarCapas}
+                    extraGuerra={botonSatelite(false)}
+                  />
                   {botonNoches(false)}
                   <button
                     type="button"
@@ -1614,7 +1751,13 @@ export function App() {
             />
           </SeccionMenu>
           <SeccionMenu rotulo={t.controles.capas}>
-            <SelectorDeCapas t={t} capas={capas} onCapas={cambiarCapas} grande />
+            <SelectorDeCapas
+              t={t}
+              capas={capas}
+              onCapas={cambiarCapas}
+              grande
+              extraGuerra={botonSatelite(true)}
+            />
           </SeccionMenu>
           <SeccionMenu rotulo={t.controles.paneles}>
             <button type="button" className="control w-full justify-start text-sm text-texto" onClick={() => abrirHoja("directo")}>

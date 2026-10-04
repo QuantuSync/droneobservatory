@@ -91,6 +91,24 @@ function MarcaLuz() {
   );
 }
 
+function MarcaSatelite() {
+  return (
+    <svg aria-hidden="true" width="18" height="18" viewBox="0 0 18 18" data-marca-satelite="">
+      <circle cx="9" cy="9" r="7.6" fill="none" stroke={PALETA.guerraClaro} strokeWidth="1" />
+      <circle cx="9" cy="9" r="4.6" fill={PALETA.guerra} stroke={PALETA.guerraClaro} strokeWidth="1.4" />
+    </svg>
+  );
+}
+
+function MarcaAlumbrado() {
+  return (
+    <svg aria-hidden="true" width="10" height="10" viewBox="0 0 10 10" data-marca-alumbrado="">
+      <circle cx="5" cy="5" r="3.8" fill={PALETA.fondo} stroke={PALETA.guerraTenue} strokeWidth="1.2" />
+      <circle cx="5" cy="5" r="1.3" fill={PALETA.guerraClaro} />
+    </svg>
+  );
+}
+
 /** Nombre legible de una tecla en el panel de ayuda. */
 function tecla(nombre: string): string {
   return nombre === "Escape" ? "Esc" : nombre.toUpperCase();
@@ -180,6 +198,8 @@ export function Ayuda({ t, abierta, onCerrar }: Props) {
               [<MarcaCorredor key="c" />, t.satelite.ayudaCorredores],
               [<MarcaFocoVivo key="f" />, t.satelite.ayudaFocos],
               [<MarcaLuz key="l" />, t.satelite.ayudaLuz],
+              [<MarcaAlumbrado key="a" />, t.satelite.ayudaAlumbrado],
+              [<MarcaSatelite key="s" />, t.satelite.ayudaSatelite],
             ] as const
           ).map(([marca, texto]) => (
             <li key={texto} className="flex items-start gap-2">

@@ -71,6 +71,15 @@ DIAS_DESPUES = 7
 UMBRAL_PERDIDA = 0.5
 NOCHES_CON_PERDIDA_MIN = 2
 BRILLO_REFERENCIA_MIN = 0.5
+# Alumbrado reducido de forma permanente: una ciudad cuyo brillo se queda por debajo de
+# BRILLO_REFERENCIA_MIN (con esa luz, la regla no puede ver un apagón). Cada nivel (el actual y el
+# más antiguo medido) es la mediana de NOCHES_NIVEL noches válidas; un mes cuenta con
+# NOCHES_MES_MIN noches válidas o más. Un mes suelto por encima no rompe la racha (la nieve de
+# enero de 2026 subió todas las ciudades medidas, Kiev de 6 a 15 nW); MESES_POR_ENCIMA seguidos,
+# sí.
+NOCHES_NIVEL = 10
+NOCHES_MES_MIN = 3
+MESES_POR_ENCIMA = 2
 RADIO_TIERRA_KM = 6371.0088
 # Radiancia del SDR en W/(cm²·sr); la medida va en nW/(cm²·sr).
 NANO = 1e9
@@ -293,6 +302,107 @@ def documento(zona: Documento, resultado: Resultado, inicio: date, fin: date) ->
         "brillo": round(resultado.referencia * (1 - maxima[1]), 2),
         "origen": "medido",
     }
+
+
+@dataclass(frozen=True)
+class Nivel:
+    brillo: float
+    desde: date
+    hasta: date
+    noches: int
+
+
+@dataclass(frozen=True)
+class Alumbrado:
+    """Ciudad con el alumbrado reducido de forma permanente."""
+
+    # Primera noche medida del primer mes de la racha final de meses por debajo del mínimo; si la
+    # racha llega a la primera noche medida, esa noche y `al_menos`.
+    desde: date
+    al_menos: bool
+    # Último mes medido en que la ciudad aún pasaba del mínimo de forma sostenida (si lo hay).
+    ultimo_mes_por_encima: str | None
+    actual: Nivel
+    antiguo: Nivel
+    noches: int
+
+
+def _nivel(noches: list[tuple[date, float]]) -> Nivel:
+    return Nivel(
+        round(statistics.median(v for _, v in noches), 2), noches[0][0], noches[-1][0], len(noches)
+    )
+
+
+def alumbrado_reducido(serie: Serie) -> Alumbrado | None:
+    """Si el brillo de la ciudad está de forma sostenida por debajo de BRILLO_REFERENCIA_MIN: el
+    nivel actual (las últimas NOCHES_NIVEL noches válidas) por debajo y, hacia atrás, la racha de
+    meses medidos (con NOCHES_MES_MIN noches válidas o más) cuya mediana también lo está, que solo
+    se rompe con MESES_POR_ENCIMA meses medidos seguidos por encima. La racha empieza en `desde`;
+    si llega hasta la primera noche medida, «al menos desde» esa noche."""
+    validas = sorted((d, v) for d, v in serie.items() if v is not None)
+    if len(validas) < 2 * NOCHES_NIVEL:
+        return None
+    actual = _nivel(validas[-NOCHES_NIVEL:])
+    if actual.brillo >= BRILLO_REFERENCIA_MIN:
+        return None
+    por_mes: dict[str, list[tuple[date, float]]] = {}
+    for d, v in validas:
+        por_mes.setdefault(f"{d:%Y-%m}", []).append((d, v))
+    meses = sorted(m for m, lista in por_mes.items() if len(lista) >= NOCHES_MES_MIN)
+    racha: list[str] = []
+    seguidos: list[str] = []
+    por_encima: str | None = None
+    for mes in reversed(meses):
+        if statistics.median(v for _, v in por_mes[mes]) < BRILLO_REFERENCIA_MIN:
+            racha.append(mes)
+            seguidos = []
+        else:
+            seguidos.append(mes)
+            if len(seguidos) >= MESES_POR_ENCIMA:
+                por_encima = seguidos[0]
+                break
+    al_menos = por_encima is None
+    # Sin racha (los últimos meses completos aún pasaban del mínimo), desde las noches actuales.
+    inicio_racha = por_mes[racha[-1]][0][0] if racha else actual.desde
+    desde = validas[0][0] if al_menos else inicio_racha
+    return Alumbrado(
+        desde=desde,
+        al_menos=al_menos,
+        ultimo_mes_por_encima=por_encima,
+        actual=actual,
+        antiguo=_nivel(validas[:NOCHES_NIVEL]),
+        noches=len(validas),
+    )
+
+
+def _nivel_publico(nivel: Nivel) -> Documento:
+    return {
+        "brillo": nivel.brillo,
+        "desde": nivel.desde.isoformat(),
+        "hasta": nivel.hasta.isoformat(),
+        "noches": nivel.noches,
+    }
+
+
+def documento_alumbrado(ciudad: Ciudad, alumbrado: Alumbrado) -> Documento:
+    """La ciudad con alumbrado reducido tal como se publica."""
+    documento: Documento = {
+        "ciudad": {
+            "id": ciudad.id,
+            "nombre": ciudad.nombre,
+            "punto": {"lat": ciudad.lat, "lon": ciudad.lon},
+        },
+        "region": ciudad.region,
+        "desde": alumbrado.desde.isoformat(),
+        "al_menos": alumbrado.al_menos,
+        "actual": _nivel_publico(alumbrado.actual),
+        "antiguo": _nivel_publico(alumbrado.antiguo),
+        "noches": alumbrado.noches,
+        "origen": "medido",
+    }
+    if alumbrado.ultimo_mes_por_encima is not None:
+        documento["ultimo_mes_por_encima"] = alumbrado.ultimo_mes_por_encima
+    return documento
 
 
 def con_luces(

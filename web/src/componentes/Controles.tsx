@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 import type { Textos } from "../i18n/index.ts";
 import { Enlace } from "../navegacion.tsx";
 import { IDIOMAS } from "../sitio.ts";
@@ -52,11 +54,14 @@ export function SelectorDeCapas({
   capas,
   onCapas,
   grande = false,
+  extraGuerra = null,
 }: {
   t: Textos;
   capas: Capas;
   onCapas: (capas: Capas) => void;
   grande?: boolean;
+  /** Al final del grupo de la guerra (el botón «Con satélite»). */
+  extraGuerra?: ReactNode;
 }) {
   const boton = `control ${grande ? "min-h-11 px-2 text-sm" : "min-h-7 px-2 text-xs"}`;
   const rejilla = grande ? "grid grid-cols-3 gap-0.5" : "flex";
@@ -102,6 +107,7 @@ export function SelectorDeCapas({
               {etiquetas[capa]}
             </button>
           ))}
+          {extraGuerra}
         </div>
       )}
     </div>

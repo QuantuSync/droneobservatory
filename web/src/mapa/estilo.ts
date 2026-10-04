@@ -23,6 +23,7 @@ import {
   LADO_OBSTACULO,
   RADIO_INCIDENTE,
 } from "./iconos.ts";
+import { ZONA_ARCO_RATON_PX } from "./seleccion.ts";
 import type { Idioma } from "../sitio.ts";
 
 export const URL_TESELAS: string =
@@ -47,7 +48,11 @@ export const FUENTE_IMPACTOS = "guerra-impactos";
 export const FUENTE_GNSS = "gnss";
 export const FUENTE_DIRECTO = "directo";
 export const FUENTE_CORREDORES = "guerra-corredores";
+export const FUENTE_REALCE_ARCO = "guerra-realce-arco";
+export const FUENTE_SATELITE = "guerra-satelite";
+export const FUENTE_REALCE_PUNTO = "guerra-realce-punto";
 export const FUENTE_LUZ_CIUDADES = "guerra-luz-ciudades";
+export const FUENTE_ALUMBRADO = "guerra-alumbrado";
 export const FUENTE_FOCOS_VIVOS = "guerra-focos-vivos";
 
 export const CAPA_GRUPOS = "grupos";
@@ -76,27 +81,39 @@ export const CAPA_GNSS = "gnss-relleno";
 export const CAPA_GNSS_LINEA = "gnss-linea";
 export const CAPA_DIRECTO = "directo-avisos";
 export const CAPA_CORREDORES = "guerra-corredores";
+/** Zona sensible de los arcos: la misma geometría, ancha e invisible. */
+export const CAPA_CORREDORES_ZONA = "guerra-corredores-zona";
+export const CAPA_REALCE_ARCO = "guerra-realce-arco";
+/** Impactos con información de satélite: más grandes, con aro (doble si hay imagen). */
+export const CAPA_SATELITE = "guerra-satelite";
+export const CAPA_SATELITE_ARO = "guerra-satelite-aro";
+export const CAPA_SATELITE_FOCO = "guerra-satelite-foco";
+export const CAPA_REALCE_PUNTO = "guerra-realce-punto";
 export const CAPA_LUZ_REGIONES = "ucrania-luz";
 export const CAPA_LUZ_REGIONES_RUSIA = "rusia-luz";
 export const CAPA_LUZ_CIUDADES = "guerra-luz-ciudades";
+export const CAPA_ALUMBRADO = "guerra-alumbrado";
+export const CAPA_ALUMBRADO_PUNTO = "guerra-alumbrado-punto";
 export const CAPA_FOCOS_VIVOS = "guerra-focos-vivos";
 export const CAPA_FOCOS_VIVOS_IMPACTO = "guerra-focos-vivos-impacto";
 export const CAPA_BANDERAS = "banderas";
 export const CAPA_OBSTACULOS = "obstaculos";
 export const CAPA_OBSTACULOS_IMPACTOS = "guerra-impactos-obstaculos";
 
-/** Capas que se pueden pulsar, de la de más arriba a la de más abajo. */
+/** Capas que se pueden pulsar, de la de más arriba a la de más abajo. Los arcos de los
+ * corredores van aparte, con su zona sensible (seleccion.ts). */
 export const CAPAS_PULSABLES: readonly string[] = [
   CAPA_DIRECTO,
   CAPA_BANDERAS,
   CAPA_INCIDENTES_GRAVES,
   CAPA_INCIDENTES_DISCRETOS,
   CAPA_GRUPOS,
+  CAPA_SATELITE,
   CAPA_IMPACTOS,
   CAPA_IMPACTOS_GRUPOS,
   CAPA_FOCOS_VIVOS_IMPACTO,
   CAPA_LUZ_CIUDADES,
-  CAPA_CORREDORES,
+  CAPA_ALUMBRADO,
   CAPA_REGIONES,
   CAPA_REGIONES_RUSIA,
   CAPA_GNSS,
@@ -136,7 +153,30 @@ export const CAPAS_DE_UCRANIA: readonly string[] = [
   CAPA_IMPACTOS_FOCO,
   CAPA_IMPACTOS_FOCO_GRUPO,
   CAPA_OBSTACULOS_IMPACTOS,
+  CAPA_SATELITE_ARO,
+  CAPA_SATELITE,
+  CAPA_SATELITE_FOCO,
 ];
+
+/** Con «Con satélite», lo demás de la capa de guerra se atenúa: [capa, propiedad, valor]. */
+export const ATENUADAS_SIN_SATELITE: readonly [
+  string,
+  "circle-opacity" | "circle-stroke-opacity" | "text-opacity",
+  number,
+][] = [
+  [CAPA_IMPACTOS, "circle-opacity", 0.15],
+  [CAPA_IMPACTOS, "circle-stroke-opacity", 0.15],
+  [CAPA_IMPACTOS_GRUPOS, "circle-opacity", 0.2],
+  [CAPA_IMPACTOS_GRUPOS, "circle-stroke-opacity", 0.25],
+  ["guerra-impactos-numero", "text-opacity", 0.25],
+  [CAPA_IMPACTOS_FOCO, "circle-opacity", 0.15],
+  [CAPA_IMPACTOS_FOCO_GRUPO, "circle-opacity", 0.15],
+  [CAPA_FOCOS_UCRANIA, "circle-opacity", 0.15],
+  [CAPA_FOCOS_VIVOS, "circle-opacity", 0.12],
+  [CAPA_FOCOS_VIVOS_IMPACTO, "circle-opacity", 0.15],
+];
+/** Opacidad de los arcos con «Con satélite». */
+export const OPACIDAD_CORREDOR_SIN_SATELITE = 0.05;
 export const CAPAS_DE_DENSIDAD: readonly string[] = ["densidad"];
 export const CAPAS_DE_PRESION: readonly string[] = [CAPA_PRESION, CAPA_PRESION_LINEA];
 export const CAPAS_DE_GNSS: readonly string[] = [CAPA_GNSS, CAPA_GNSS_LINEA];
@@ -155,17 +195,43 @@ export const COLOR_GNSS: ExpressionSpecification = [
 ];
 
 /** Capas de la guerra por satélite: se ven con la capa de Ucrania y su propio interruptor. */
-export const CAPAS_DE_CORREDORES: readonly string[] = [CAPA_CORREDORES];
+export const CAPAS_DE_CORREDORES: readonly string[] = [
+  CAPA_CORREDORES,
+  CAPA_CORREDORES_ZONA,
+  CAPA_REALCE_ARCO,
+];
+/** Marcas puntuales de la capa de guerra que se realzan al pasar el ratón y ganan a los arcos. */
+export const CAPAS_DE_PUNTOS_DE_GUERRA: readonly string[] = [
+  CAPA_SATELITE,
+  CAPA_IMPACTOS,
+  CAPA_IMPACTOS_GRUPOS,
+  CAPA_FOCOS_VIVOS_IMPACTO,
+  CAPA_LUZ_CIUDADES,
+  CAPA_ALUMBRADO,
+];
+/** Áreas: solo reciben el clic si no hay ninguna marca ni ningún arco. */
+export const CAPAS_DE_AREAS: readonly string[] = [
+  CAPA_REGIONES,
+  CAPA_REGIONES_RUSIA,
+  CAPA_GNSS,
+  CAPA_PRESION,
+];
 export const CAPAS_DE_LUZ: readonly string[] = [
   CAPA_LUZ_REGIONES,
   CAPA_LUZ_REGIONES_RUSIA,
   CAPA_LUZ_CIUDADES,
+  CAPA_ALUMBRADO,
+  CAPA_ALUMBRADO_PUNTO,
 ];
 export const CAPAS_DE_FOCOS_VIVOS: readonly string[] = [CAPA_FOCOS_VIVOS, CAPA_FOCOS_VIVOS_IMPACTO];
 
 /** Corredores: trazo fino, gris y de baja opacidad, por debajo de los impactos. */
 const COLOR_CORREDOR = PALETA.guerra;
-const OPACIDAD_CORREDOR = 0.18;
+export const OPACIDAD_CORREDOR = 0.18;
+/** Opacidad de los demás arcos mientras uno está realzado. */
+export const OPACIDAD_CORREDOR_ATENUADO = 0.08;
+/** Radio del aro de realce de un punto de la capa de guerra. */
+export const RADIO_REALCE_PUNTO = 9;
 /** Focos de calor de 24 h: puntos pequeños; los que coinciden con un impacto, resaltados. */
 const RADIO_FOCO_VIVO = 1.7;
 const OPACIDAD_FOCO_VIVO = 0.7;
@@ -535,6 +601,30 @@ function capasPropias(acento: string): LayerSpecification[] {
         "line-width": ["get", "ancho"],
       },
     },
+    // Zona sensible de los arcos: invisible y ancha (la del dedo la pone el mapa al cargar).
+    {
+      id: CAPA_CORREDORES_ZONA,
+      type: "line",
+      source: FUENTE_CORREDORES,
+      layout: { "line-cap": "round", "line-join": "round" },
+      paint: {
+        "line-color": COLOR_CORREDOR,
+        "line-opacity": 0,
+        "line-width": ["+", ["get", "ancho"], ZONA_ARCO_RATON_PX],
+      },
+    },
+    // El arco señalado (con el ratón, el teclado o su ficha abierta): violeta claro y más grueso.
+    {
+      id: CAPA_REALCE_ARCO,
+      type: "line",
+      source: FUENTE_REALCE_ARCO,
+      layout: { "line-cap": "round", "line-join": "round" },
+      paint: {
+        "line-color": PALETA.guerraClaro,
+        "line-opacity": 0.95,
+        "line-width": ["+", ["*", ["get", "ancho"], 1.6], 1.5],
+      },
+    },
     {
       id: "densidad",
       type: "heatmap",
@@ -692,6 +782,39 @@ function capasPropias(acento: string): LayerSpecification[] {
         "circle-stroke-opacity": 0.6,
       },
     },
+    // Ciudades con alumbrado reducido de forma permanente: un aro violeta apagado con un punto
+    // claro en el centro, distinto del disco oscuro de una ciudad que perdió luz tras un ataque.
+    {
+      id: CAPA_ALUMBRADO,
+      type: "circle",
+      source: FUENTE_ALUMBRADO,
+      paint: {
+        "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, 4.5, 8, 6.5, 11, 9],
+        "circle-color": PALETA.fondo,
+        "circle-opacity": 0.55,
+        "circle-stroke-color": PALETA.guerraTenue,
+        "circle-stroke-width": 1.2,
+      },
+    },
+    {
+      id: CAPA_ALUMBRADO_PUNTO,
+      type: "circle",
+      source: FUENTE_ALUMBRADO,
+      paint: { "circle-radius": 1.6, "circle-color": PALETA.guerraClaro },
+    },
+    // El punto señalado de la capa de guerra: un aro violeta claro alrededor.
+    {
+      id: CAPA_REALCE_PUNTO,
+      type: "circle",
+      source: FUENTE_REALCE_PUNTO,
+      paint: {
+        "circle-radius": RADIO_REALCE_PUNTO,
+        "circle-color": PALETA.guerraClaro,
+        "circle-opacity": 0.12,
+        "circle-stroke-color": PALETA.guerraClaro,
+        "circle-stroke-width": 1.8,
+      },
+    },
     // Focos de calor de las últimas 24 horas: pequeños y discretos.
     {
       id: CAPA_FOCOS_VIVOS,
@@ -738,8 +861,10 @@ function capasPropias(acento: string): LayerSpecification[] {
       paint: {
         "circle-radius": RADIO_GRUPO_IMPACTOS,
         "circle-color": PALETA.elevado,
-        "circle-stroke-color": PALETA.guerra,
-        "circle-stroke-width": 1.2,
+        // Un grupo con algún impacto con información de satélite lleva el borde claro y más
+        // grueso: ahí conviene acercarse.
+        "circle-stroke-color": ["case", [">", ["get", "satelite"], 0], PALETA.guerraClaro, PALETA.guerra],
+        "circle-stroke-width": ["case", [">", ["get", "satelite"], 0], 2.2, 1.2],
       },
     },
     {
@@ -794,6 +919,45 @@ function capasPropias(acento: string): LayerSpecification[] {
         "circle-stroke-color": PALETA.fondo,
         "circle-stroke-width": 1.5,
         "circle-translate": [12, -12],
+      },
+    },
+    // Impactos con información de satélite, siempre encima de los demás y sin agrupar: más
+    // grandes, en violeta con el borde claro; con imagen de antes y después, un segundo aro; con
+    // foco de calor, la marca de foco arriba a la derecha.
+    {
+      id: CAPA_SATELITE_ARO,
+      type: "circle",
+      source: FUENTE_SATELITE,
+      filter: ["==", ["get", "imagen"], 1],
+      paint: {
+        "circle-radius": RADIO_IMPACTO + 6,
+        "circle-opacity": 0,
+        "circle-stroke-color": PALETA.guerraClaro,
+        "circle-stroke-width": 1.3,
+      },
+    },
+    {
+      id: CAPA_SATELITE,
+      type: "circle",
+      source: FUENTE_SATELITE,
+      paint: {
+        "circle-radius": RADIO_IMPACTO + 2.5,
+        "circle-color": PALETA.guerra,
+        "circle-stroke-color": PALETA.guerraClaro,
+        "circle-stroke-width": 1.8,
+      },
+    },
+    {
+      id: CAPA_SATELITE_FOCO,
+      type: "circle",
+      source: FUENTE_SATELITE,
+      filter: ["==", ["get", "foco"], 1],
+      paint: {
+        "circle-radius": RADIO_MARCA_FOCO,
+        "circle-color": PALETA.guerraClaro,
+        "circle-stroke-color": PALETA.fondo,
+        "circle-stroke-width": 1.5,
+        "circle-translate": [9, -9],
       },
     },
     {
@@ -977,6 +1141,10 @@ export function estilo(idioma: Idioma, origen: string, acento: string): StyleSpe
       [FUENTE_DIRECTO]: { type: "geojson", data: VACIA },
       [FUENTE_CORREDORES]: { type: "geojson", data: VACIA },
       [FUENTE_LUZ_CIUDADES]: { type: "geojson", data: VACIA },
+      [FUENTE_REALCE_ARCO]: { type: "geojson", data: VACIA },
+      [FUENTE_SATELITE]: { type: "geojson", data: VACIA },
+      [FUENTE_REALCE_PUNTO]: { type: "geojson", data: VACIA },
+      [FUENTE_ALUMBRADO]: { type: "geojson", data: VACIA },
       [FUENTE_FOCOS_VIVOS]: { type: "geojson", data: VACIA },
       [FUENTE_IMPACTOS]: {
         type: "geojson",
@@ -984,7 +1152,10 @@ export function estilo(idioma: Idioma, origen: string, acento: string): StyleSpe
         cluster: true,
         clusterMaxZoom: ZOOM_MAXIMO_AGRUPADO_IMPACTOS,
         clusterRadius: RADIO_DE_AGRUPACION_IMPACTOS_PX,
-        clusterProperties: { focos: ["+", ["get", "foco"]] },
+        clusterProperties: {
+          focos: ["+", ["get", "foco"]],
+          satelite: ["max", ["get", "satelite"]],
+        },
       },
     },
     layers: [fondo, tierraDeFondo, ...base, ...capasPropias(acento)],

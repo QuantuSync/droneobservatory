@@ -7,8 +7,9 @@
 #
 # 1. toma su propio cerrojo (nunca el de la recogida horaria); si hay otra ejecución en marcha,
 #    esta no se lanza;
-# 2. descarga la base de la rama estado solo para leerla (un clon es atómico: como mucho lee
-#    la versión anterior) y elige los impactos con foco térmico detectado o en una instalación;
+# 2. lee los impactos con foco térmico detectado o en una instalación que deja cada hora la
+#    recogida horaria en SATELITE_DATOS/objetivos.json (así no carga la base: unos 640 MB
+#    descifrada);
 # 3. busca en el catálogo abierto de Sentinel-2 la imagen de antes y la de después sin nubes
 #    sobre cada recorte, sube las nuevas al almacén público y después el índice
 #    satelite/parejas.json, que lee la web.
@@ -38,16 +39,13 @@ principal() {
     return 1
   fi
 
-  local ssh_base="ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$HOSTS_CONOCIDOS"
-  EODI_CLAVE_AGE="$(cat "$CLAVE_AGE")"
   # shellcheck disable=SC1090
   . "$ALMACEN_CREDENCIALES"
-  export EODI_CLAVE_AGE ALMACEN_ID ALMACEN_SECRETO
+  export ALMACEN_ID ALMACEN_SECRETO
   export EODI_SATELITE_DATOS="$SATELITE_DATOS"
   install -d -m 700 "$SATELITE_DATOS"
   cd "$CLON"
-  GIT_SSH_COMMAND="$ssh_base -i $DESPLIEGUE_DATOS" \
-    "$ENTORNO/bin/python" -m recogida.satelite actualizar --repositorio "$URL_DATOS" \
+  "$ENTORNO/bin/python" -m recogida.satelite actualizar \
     --tope-min "$SATELITE_TOPE_MINUTOS" --registro "$SATELITE_REGISTRO" || codigo=$?
   echo "imágenes de satélite terminadas con código $codigo"
   return "$codigo"

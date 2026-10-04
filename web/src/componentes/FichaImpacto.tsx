@@ -37,6 +37,22 @@ export function FichaImpacto({ t, idioma, impacto }: Props) {
       </h2>
       {latino && <p className="text-secundario">{lugar.nombre_latino}</p>}
       <p className="mono mt-1 text-xs text-secundario">{impacto.id}</p>
+      {/* Lo que se ve desde el satélite va lo primero, bajo el título: la cortinilla de antes y
+          después y el foco de calor. Sin ello, nada (ni hueco ni aviso). */}
+      <ImagenesSatelite t={t} idioma={idioma} id={impacto.id} />
+      {impacto.foco_termico !== undefined && (
+        <dl className="mt-3" data-foco-arriba="">
+          <LineaFoco
+            t={t}
+            idioma={idioma}
+            foco={impacto.foco_termico}
+            lon={lugar.punto.lon}
+            lat={lugar.punto.lat}
+            zoom={ZOOM_VISOR_PUNTO}
+            color={PALETA.guerraClaro}
+          />
+        </dl>
+      )}
       {impacto.reivindicacion_de_parte === true && (
         <p className="mt-3 border-l border-acento pl-2" data-reivindicacion="">
           <span className="font-medium">{t.impacto.reivindicacion}</span>
@@ -98,19 +114,7 @@ export function FichaImpacto({ t, idioma, impacto }: Props) {
           <span className="mono">{numero(impacto.credibilidad, idioma)}</span>
           <span className="ml-2">{t.impacto.credibilidadTexto[impacto.credibilidad]}</span>
         </Fila>
-        {impacto.foco_termico !== undefined && (
-          <LineaFoco
-            t={t}
-            idioma={idioma}
-            foco={impacto.foco_termico}
-            lon={lugar.punto.lon}
-            lat={lugar.punto.lat}
-            zoom={ZOOM_VISOR_PUNTO}
-            color={PALETA.guerraClaro}
-          />
-        )}
       </dl>
-      <ImagenesSatelite t={t} idioma={idioma} id={impacto.id} />
       <ListaFuentes t={t} fuentes={impacto.fuentes} />
     </article>
   );

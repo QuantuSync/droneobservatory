@@ -7,8 +7,10 @@ import type { KeyboardEvent, PointerEvent } from "react";
 import { urlDelAlmacen } from "../almacenPublico.ts";
 import { OBJETO_PAREJAS } from "../datos/guerraSatelite.ts";
 import type {
+  CiudadAlumbrado,
   CiudadSinLuz,
   Corredor,
+  PuntoSatelite,
   IndiceSatelite,
   ParejaSatelite,
 } from "../datos/guerraSatelite.ts";
@@ -276,7 +278,112 @@ export function FichaLuz({
   );
 }
 
+/** «AAAA-MM» como mm/aaaa. */
+function mes(valor: string): string {
+  return `${valor.slice(5, 7)}/${valor.slice(0, 4)}`;
+}
+
+/** Ficha de una ciudad con alumbrado reducido de forma permanente. */
+export function FichaAlumbrado({
+  t,
+  idioma,
+  ciudad,
+}: {
+  t: Textos;
+  idioma: Idioma;
+  ciudad: CiudadAlumbrado;
+}) {
+  const textos = t.satelite.alumbradoFicha;
+  const brillo = (valor: number) => numero(valor, idioma);
+  return (
+    <article data-ficha-alumbrado="">
+      <p className="text-secundario">{textos.titulo}</p>
+      <h2 className="text-2xl font-semibold tracking-tight">
+        <span lang={ciudad.region.startsWith("UA-") ? "uk" : "ru"}>{ciudad.ciudad.nombre}</span>
+      </h2>
+      <p className="mono mt-1 text-xs text-secundario">{region(ciudad.region, idioma)}</p>
+      <dl className="mt-3">
+        <Fila nombre={textos.desde}>
+          <span>{textos.desdeTexto(dia(ciudad.desde), ciudad.al_menos)}</span>
+          {ciudad.ultimo_mes_por_encima !== undefined && (
+            <span className="block text-xs text-secundario">
+              {textos.porEncima(mes(ciudad.ultimo_mes_por_encima))}
+            </span>
+          )}
+        </Fila>
+        <Fila nombre={textos.actual}>
+          <span className="font-medium">{textos.brillo(brillo(ciudad.actual.brillo))}</span>
+          <span className="block text-xs text-secundario">
+            {textos.tramo(dia(ciudad.actual.desde), dia(ciudad.actual.hasta), ciudad.actual.noches)}
+          </span>
+        </Fila>
+        <Fila nombre={textos.referencia}>
+          <span className="font-medium">{textos.brillo(brillo(ciudad.antiguo.brillo))}</span>
+          <span className="block text-xs text-secundario">
+            {textos.tramo(dia(ciudad.antiguo.desde), dia(ciudad.antiguo.hasta), ciudad.antiguo.noches)}
+          </span>
+        </Fila>
+        <Fila nombre={textos.noches}>
+          <span>{numero(ciudad.noches, idioma)}</span>
+        </Fila>
+      </dl>
+      <p className="mt-2 text-xs text-secundario">{textos.metodo}</p>
+    </article>
+  );
+}
+
 // ---- Corredores -----------------------------------------------------------------------
+
+/** Origen de un corredor: la zona de lanzamiento o, contra Rusia, Ucrania. */
+export function origenDeCorredor(t: Textos, corredor: Corredor): string {
+  return corredor.origen === null
+    ? t.satelite.corredor.desdeUcrania
+    : t.satelite.zona(corredor.clave.split("|")[0] ?? "", corredor.origen);
+}
+
+/** «Kursk → Járkov». */
+export function nombreDeCorredor(t: Textos, corredor: Corredor): string {
+  return `${origenDeCorredor(t, corredor)} → ${t.regiones[corredor.region] ?? corredor.region}`;
+}
+
+/** «Kursk → Járkov · 120 drones»: el letrero del arco y su nombre accesible. */
+export function letreroDeCorredor(t: Textos, idioma: Idioma, corredor: Corredor): string {
+  return t.satelite.letreroCorredor(
+    origenDeCorredor(t, corredor),
+    t.regiones[corredor.region] ?? corredor.region,
+    new Intl.NumberFormat(idioma).format(corredor.drones),
+  );
+}
+
+/** Varios arcos casi a la misma distancia del punto pulsado: se elige uno. */
+export function ListaCorredores({
+  t,
+  corredores,
+  onElegir,
+}: {
+  t: Textos;
+  corredores: readonly Corredor[];
+  onElegir: (clave: string) => void;
+}) {
+  return (
+    <div data-lista-corredores="">
+      <p className="text-secundario">{t.satelite.corredor.varios}</p>
+      <ul className="mt-2">
+        {corredores.map((c) => (
+          <li key={c.clave} className="border-b border-linea">
+            <button
+              type="button"
+              className="w-full py-2 text-left hover:text-texto"
+              onClick={() => onElegir(c.clave)}
+            >
+              {nombreDeCorredor(t, c)}
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
 
 /** Ficha de un corredor de ataque del periodo. */
 export function FichaCorredor({
@@ -290,10 +397,7 @@ export function FichaCorredor({
   corredor: Corredor;
   periodo: string;
 }) {
-  const origen =
-    corredor.origen === null
-      ? t.satelite.corredor.desdeUcrania
-      : t.satelite.zona(corredor.clave.split("|")[0] ?? "", corredor.origen);
+  const origen = origenDeCorredor(t, corredor);
   return (
     <article data-ficha-corredor="">
       <p className="text-secundario">{t.sentido[corredor.sentido]}</p>
@@ -323,5 +427,106 @@ export function FichaCorredor({
         </Fila>
       </dl>
     </article>
+  );
+}
+
+// ---- Con satélite ---------------------------------------------------------------------
+
+/** «antes y después · foco de calor»: lo que tiene un punto con información de satélite. */
+export function loQueTiene(t: Textos, punto: Pick<PuntoSatelite, "imagen" | "foco" | "luz">): string {
+  return [
+    punto.imagen ? t.satelite.tiene.imagen : null,
+    punto.foco ? t.satelite.tiene.foco : null,
+    punto.luz ? t.satelite.tiene.luz : null,
+  ]
+    .filter((x) => x !== null)
+    .join(" · ");
+}
+
+/**
+ * Botón «Con satélite · N» de la capa de guerra: deja en el mapa solo los puntos con
+ * información de satélite y despliega su lista, del más reciente al más antiguo. Pulsar una
+ * fila lleva al punto y abre su ficha. La lista se abre y se cierra (no queda fija).
+ */
+export function BotonSatelite({
+  t,
+  idioma,
+  puntos,
+  activo,
+  onActivo,
+  onElegir,
+  grande = false,
+}: {
+  t: Textos;
+  idioma: Idioma;
+  puntos: readonly PuntoSatelite[];
+  activo: boolean;
+  onActivo: (activo: boolean) => void;
+  onElegir: (punto: PuntoSatelite) => void;
+  grande?: boolean;
+}) {
+  const [abierta, setAbierta] = useState(false);
+  const boton = `control text-xs ${grande ? "min-h-11 px-3" : "min-h-7 px-2"}`;
+  const textos = t.satelite;
+  return (
+    <div className={grande ? "w-full" : "relative flex"} data-con-satelite="">
+      <div className="flex">
+        <button
+          type="button"
+          className={`${boton} ${grande ? "flex-1" : ""}`}
+          aria-pressed={activo}
+          aria-expanded={abierta}
+          onClick={() => {
+            onActivo(!activo);
+            setAbierta(!activo);
+          }}
+        >
+          {textos.conSatelite(numero(puntos.length, idioma))}
+        </button>
+        {activo && (
+          <button
+            type="button"
+            className={boton}
+            aria-expanded={abierta}
+            aria-label={abierta ? textos.cerrarLista : textos.abrirLista}
+            onClick={() => setAbierta(!abierta)}
+          >
+            <span aria-hidden="true">{abierta ? "▴" : "▾"}</span>
+          </button>
+        )}
+      </div>
+      {abierta && (
+        <div
+          className={
+            grande
+              ? "mt-1 max-h-[50vh] overflow-y-auto border-t border-linea"
+              : "flotante absolute right-0 top-full z-40 mt-1 max-h-[60vh] w-80 overflow-y-auto"
+          }
+          data-lista-satelite=""
+        >
+          <ul aria-label={textos.listaSatelite}>
+            {puntos.map((p) => (
+              <li key={`${p.clase}|${p.clave}`} className="border-b border-linea last:border-b-0">
+                <button
+                  type="button"
+                  className="w-full px-3 py-2 text-left text-sm hover:bg-elevado"
+                  onClick={() => {
+                    setAbierta(false);
+                    onElegir(p);
+                  }}
+                >
+                  <span className="block text-texto">
+                    {p.lugar === null ? region(p.region, idioma) : p.lugar}
+                  </span>
+                  <span className="mono block text-xs text-secundario">
+                    {fechaDia(p.dia)} · {loQueTiene(t, p)}
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
   );
 }

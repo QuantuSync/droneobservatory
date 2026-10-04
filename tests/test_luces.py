@@ -525,3 +525,100 @@ def test_la_exportacion_semanal_lleva_la_perdida_de_luz_medida() -> None:
     exportado = ataques[ataque_id]
     assert exportado["perdida_luz"] == [ejemplos.perdida_luz()]
     assert exportado["procedencia"]["perdida_luz"]["origen"] == "medido"
+
+
+# --- Alumbrado reducido de forma permanente ----------------------------------------------
+
+
+def _serie_mensual(valores: dict[str, float], noches_por_mes: int = 6) -> dict[date, float | None]:
+    """Una serie con `noches_por_mes` noches válidas en cada mes («AAAA-MM») con ese brillo."""
+    serie: dict[date, float | None] = {}
+    for mes, valor in valores.items():
+        primero = date.fromisoformat(f"{mes}-01")
+        for k in range(noches_por_mes):
+            serie[primero + timedelta(days=3 * k)] = valor
+            serie[primero + timedelta(days=3 * k + 1)] = None  # una noche nublada entre medias
+    return serie
+
+
+def test_alumbrado_reducido_desde_el_primer_mes_medido() -> None:
+    serie = _serie_mensual({"2024-03": 0.3, "2024-04": 0.32, "2024-05": 0.28, "2024-06": 0.3})
+    alumbrado = luces.alumbrado_reducido(serie)
+    assert alumbrado is not None
+    assert alumbrado.al_menos and alumbrado.desde == date(2024, 3, 1)
+    assert alumbrado.ultimo_mes_por_encima is None
+    assert alumbrado.actual.brillo == pytest.approx(0.3)
+    assert alumbrado.antiguo.brillo == pytest.approx(0.3) and alumbrado.antiguo.noches == 10
+    assert alumbrado.noches == 24
+
+
+def test_alumbrado_un_mes_de_nieve_no_rompe_la_racha() -> None:
+    # Enero con nieve: la ciudad refleja su luz y sube por encima del mínimo un mes suelto.
+    serie = _serie_mensual({"2025-11": 0.3, "2025-12": 0.3, "2026-01": 1.1, "2026-02": 0.3})
+    alumbrado = luces.alumbrado_reducido(serie)
+    assert alumbrado is not None and alumbrado.al_menos
+
+
+def test_alumbrado_desde_que_deja_de_pasar_del_minimo() -> None:
+    serie = _serie_mensual(
+        {"2024-03": 2.0, "2024-04": 2.1, "2024-05": 0.3, "2024-06": 0.25, "2024-07": 0.3}
+    )
+    alumbrado = luces.alumbrado_reducido(serie)
+    assert alumbrado is not None
+    assert not alumbrado.al_menos and alumbrado.desde == date(2024, 5, 1)
+    assert alumbrado.ultimo_mes_por_encima == "2024-04"
+    assert alumbrado.antiguo.brillo == pytest.approx(2.0)
+    documento = luces.documento_alumbrado(JARKOV, alumbrado)
+    assert documento["desde"] == "2024-05-01" and documento["ultimo_mes_por_encima"] == "2024-04"
+    assert documento["actual"]["noches"] == 10 and documento["origen"] == "medido"
+
+
+def test_alumbrado_no_en_ciudades_iluminadas_ni_con_pocas_noches() -> None:
+    assert luces.alumbrado_reducido(_serie_mensual({"2024-03": 2.0, "2024-04": 1.8})) is None
+    # Con menos de dos niveles de noches no se dice nada.
+    assert luces.alumbrado_reducido(_serie_mensual({"2024-03": 0.2}, noches_por_mes=8)) is None
+
+
+def test_alumbrado_en_el_fichero_publico() -> None:
+    meses = ("2024-03", "2024-04", "2024-05", "2024-06")
+    serie = {JARKOV.id: _serie_mensual(dict.fromkeys(meses, 0.3))}
+    otra = luces.Ciudad("c2", "Чугуїв", "UA-63", 49.83, 36.69, 5.0)
+    serie["c2"] = _serie_mensual(dict.fromkeys(meses, 3.0))
+    ciudades = recogida_luces.alumbrado([JARKOV, otra], serie)
+    assert [c["ciudad"]["nombre"] for c in ciudades] == ["Харків"]
+    publico = recogida_luces.documento_de_alumbrado(ciudades, datetime(2026, 10, 4, tzinfo=UTC))
+    assert publico["referencia_minima"] == luces.BRILLO_REFERENCIA_MIN
+
+
+def test_apagon_documentado_cuenta_para_el_ataque_de_ese_dia() -> None:
+    publicacion = {
+        "ataques": [
+            # La noche del 27 al 28: casi todo el día 28 cae en este.
+            _ataque("EODI-UA-2024-0227", "RU_UA", "2024-11-27T16:00Z", "2024-11-28T11:57Z"),
+            _ataque("EODI-UA-2024-0228", "RU_UA", "2024-11-28T16:30Z", "2024-11-29T07:00Z"),
+            _ataque("EODI-UA-2024-1418", "UA_RU", "2024-11-28T06:00Z", "2024-11-28T20:30Z"),
+        ],
+        "impactos": [],
+    }
+    ataques = recogida_luces.ataques_de_energia(publicacion, [], [(date(2024, 11, 28), "UA-56")])
+    assert [(a.id, a.regiones) for a in ataques] == [("EODI-UA-2024-0227", ("UA-56",))]
+    casos = [
+        {"tipo": "apagon", "inicio": "2024-11-28", "ciudades": [JARKOV.id, "otra"]},
+        {"tipo": "control", "inicio": "2024-07-01", "ciudades": [JARKOV.id]},
+    ]
+    assert recogida_luces.apagones_documentados(casos, [JARKOV]) == [(date(2024, 11, 28), "UA-63")]
+
+
+def test_alumbrado_se_sube_al_almacen(tmp_path: Path) -> None:
+    subidos: list[tuple[str, str, str]] = []
+
+    def subir(objeto: str, cuerpo: bytes, tipo: str, cache: str) -> bool:
+        subidos.append((objeto, tipo, cache))
+        assert json.loads(cuerpo)["ciudades"] == []
+        return True
+
+    assert not recogida_luces.subir_alumbrado(tmp_path, subir)
+    documento = recogida_luces.documento_de_alumbrado([], datetime(2026, 10, 4, tzinfo=UTC))
+    (tmp_path / recogida_luces.ALUMBRADO).write_text(json.dumps(documento), encoding="utf-8")
+    assert recogida_luces.subir_alumbrado(tmp_path, subir)
+    assert subidos == [("luces/alumbrado.json", "application/json", "public, max-age=3600")]

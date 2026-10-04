@@ -1,5 +1,5 @@
-// Guerra por satélite: pérdida de luz, corredores de ataque (arcos y grosor), focos de calor de
-// 24 horas e índice de imágenes de antes y después.
+// Guerra por satélite: pérdida de luz, ciudades con alumbrado reducido, corredores de ataque
+// (arcos y grosor), focos de calor de 24 horas e índice de imágenes de antes y después.
 
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -25,11 +25,12 @@ import type { ZonaConfig } from "../src/datos/guerraSatelite.ts";
 import type { PerdidaLuz } from "../src/datos/tipos.ts";
 import {
   validarAtaque,
+  validarAlumbrado,
   validarFocosVivos,
   validarIndiceSatelite,
   validarResumenUcrania,
 } from "../src/datos/validar.ts";
-import { corredoresEnMapa, focosVivosEnMapa } from "../src/mapa/geometria.ts";
+import { alumbradoEnMapa, corredoresEnMapa, focosVivosEnMapa } from "../src/mapa/geometria.ts";
 import { diaDeInstante } from "../src/tiempo/dias.ts";
 import { ataque, publicacion } from "./ejemplos.ts";
 
@@ -245,5 +246,62 @@ describe("índice de imágenes de antes y después", () => {
       parejas: { "EODI-IG-2025-02569": { ...indice.parejas["EODI-IG-2025-02569"], antes } },
     };
     expect(validarIndiceSatelite(roto).ok).toBe(false);
+  });
+});
+
+describe("ciudades con alumbrado reducido de forma permanente", () => {
+  const fichero = {
+    version: "luces/1",
+    generado: "2026-10-04T07:41Z",
+    referencia_minima: 0.5,
+    satelite: "NOAA-20",
+    ciudades: [
+      {
+        ciudad: { id: "katotth:UA63120270010096107", nombre: "Харків", punto: { lat: 49.99, lon: 36.23 } },
+        region: "UA-63",
+        desde: "2024-03-01",
+        al_menos: true,
+        actual: { brillo: 0.32, desde: "2026-08-29", hasta: "2026-10-02", noches: 10 },
+        antiguo: { brillo: 0.32, desde: "2024-03-01", hasta: "2024-04-01", noches: 10 },
+        noches: 202,
+        origen: "medido",
+      },
+      {
+        ciudad: { id: "c2", nombre: "Суми", punto: { lat: 50.91, lon: 34.8 } },
+        region: "UA-59",
+        desde: "2024-05-02",
+        al_menos: false,
+        ultimo_mes_por_encima: "2024-04",
+        actual: { brillo: 0.23, desde: "2026-08-24", hasta: "2026-10-02", noches: 10 },
+        antiguo: { brillo: 0.6, desde: "2024-02-29", hasta: "2024-04-03", noches: 10 },
+        noches: 172,
+        origen: "medido",
+      },
+    ],
+  };
+
+  it("validan y se dibujan en su punto, con su clave", () => {
+    const resultado = validarAlumbrado(fichero);
+    expect(resultado.ok).toBe(true);
+    if (!resultado.ok) return;
+    const mapa = alumbradoEnMapa(resultado.datos.ciudades);
+    expect(mapa.features.map((f) => f.geometry.coordinates)).toEqual([
+      [36.23, 49.99],
+      [34.8, 50.91],
+    ]);
+    expect(mapa.features[0]?.properties).toEqual({
+      clave: "katotth:UA63120270010096107",
+      nombre: "Харків",
+      brillo: 0.32,
+    });
+  });
+
+  it("rechazan otro origen, una fecha mal escrita o un mes que no es un mes", () => {
+    const [primera, segunda] = fichero.ciudades;
+    expect(validarAlumbrado({ ...fichero, ciudades: [{ ...primera, origen: "prensa" }] }).ok).toBe(false);
+    expect(validarAlumbrado({ ...fichero, ciudades: [{ ...primera, desde: "marzo" }] }).ok).toBe(false);
+    expect(
+      validarAlumbrado({ ...fichero, ciudades: [{ ...segunda, ultimo_mes_por_encima: "2024" }] }).ok,
+    ).toBe(false);
   });
 });

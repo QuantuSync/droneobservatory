@@ -151,12 +151,69 @@ Lo que se ve en los datos:
   noches; Lutsk (oeste, 28-11-2024) y Kiev (20-01-2026) la dan en la única noche válida o en
   una de tres.
 
-**Pendiente y su arreglo.** Más noches válidas por ataque: medir también los pasos de Suomi NPP
-y de NOAA-21, que llevan el mismo VIIRS y están en el mismo archivo abierto de NOAA sin cuenta
-(`noaa-nesdis-snpp-pds`, `noaa-nesdis-n21-pds`). Son tres pasos por noche en lugar de uno, a
-unos 50 minutos entre sí, y con nubes que se mueven, más noches con al menos un paso despejado. El arreglo es añadir los dos
-buckets a `recogida/luces.py` (el formato es el mismo), quedarse con el paso de cada noche con
-menos nubes y repetir la validación con la misma regla.
+### Apagones en el mapa
+
+El servicio evalúa cada ataque contra la energía (780 hoy: los que tienen un impacto de energía
+y los que un canal regional asocia a la red eléctrica) y, además, cada apagón documentado de la
+validación con el ataque contra Ucrania en curso ese día (el que más horas tiene en él), con la
+región de sus ciudades. Así entran en la capa los dos detectados:
+
+- **Odesa, 13-12-2025**: ataque EODI-UA-2025-0336, que ya tenía Odesa (UA-51) entre sus regiones.
+- **Rivne, 28-11-2024**: ataque EODI-UA-2024-0227 (del 27 a las 16:00 al 28 a las 11:57 UTC). El
+  parte no da regiones de ese ataque y ningún impacto con lugar es de energía en Rivne; la región
+  entra por el caso documentado (fuentes en `configuracion/validacion_luces.json`).
+
+### Ciudades con alumbrado reducido de forma permanente
+
+Una ciudad por debajo de la referencia mínima de la regla (0,5 nW/(cm²·sr) sobre el fondo) no puede
+dar un apagón: se marca en la capa con su propio signo (un aro violeta apagado con un punto claro,
+distinto del disco oscuro de una ciudad que perdió luz) y su ficha
+([`proceso/luces.py`](../proceso/luces.py), `alumbrado_reducido`):
+
+- **Cuándo.** La mediana de sus últimas 10 noches válidas está por debajo del mínimo y, mes a mes
+  hacia atrás (meses con 3 noches válidas o más), la mediana mensual también. Un mes suelto por
+  encima no rompe la racha: en enero de 2026 la nieve subió todas las ciudades medidas (Kiev de 6
+  a 15 nW, Járkov de 0,3 a 1,1). Dos meses medidos seguidos por encima, sí.
+- **Desde cuándo.** La primera noche del primer mes de la racha; si la racha llega a la primera
+  noche medida, «al menos desde» esa noche.
+- **Brillo actual y de referencia.** La mediana de las 10 últimas noches válidas y la de las 10
+  primeras medidas, cada una con sus fechas, y el número de noches en que se basa.
+- **Dónde.** `recogida/luces.py` lo calcula en cada ejecución con todas las noches medidas por
+  NOAA-20 y lo sube al almacén público (`luces/alumbrado.json`), que la web lee al encender la capa
+  de luz nocturna.
+
+Con las 529 noches medidas (las de la validación, del 29-02-2024 al 02-10-2026):
+
+| Ciudad | Desde | Brillo actual (nW) | Brillo de referencia (nW) | Noches válidas |
+| --- | --- | --- | --- | --- |
+| Chernígov | al menos desde el 29-02-2024 | 0,31 (23-08 a 02-10-2026) | 0,40 (29-02 a 16-03-2024) | 175 |
+| Sumy | al menos desde el 29-02-2024 | 0,23 (24-08 a 02-10-2026) | 0,24 (29-02 a 03-04-2024) | 172 |
+| Járkov | al menos desde el 01-03-2024 | 0,32 (29-08 a 02-10-2026) | 0,32 (01-03 a 01-04-2024) | 202 |
+| Mykoláiv | al menos desde el 01-03-2024 | 0,35 (03-09 a 02-10-2026) | 0,29 (01-03 a 03-04-2024) | 238 |
+
+Las cuatro ya estaban así en la primera noche del archivo de NOAA que se ha medido; la fecha
+exacta en que bajaron cae antes de 2024. Las otras ocho ciudades de la validación pasan del
+mínimo (de 0,87 nW en Kremenchuk a 6,03 nW en Kiev).
+
+**Pendientes y su arreglo.**
+
+- *Las otras 53 ciudades vigiladas.* Se marcan solas cuando tengan 20 noches válidas: el servicio
+  `eodi-luces` mide cada hora las noches que necesitan los ataques contra la energía, con todas
+  las ciudades, y el fichero se rehace en cada ejecución. No hace falta ninguna medida aparte.
+- *Fecha de inicio anterior a 2024.* Los gránulos SDR del archivo abierto de NOAA empiezan en 2023;
+  para fecharlo antes, el arreglo es leer la luz nocturna diaria de Black Marble (VNP46A2) de
+  Suomi NPP que NASA GIBS sirve sin cuenta desde 2012
+  (`VIIRS_SNPP_GapFilled_BRDF_Corrected_DayNightBand_Radiance`, a 500 m, con su tabla de color en
+  nW) y buscar en ella el mes en que cada ciudad cae por debajo del mínimo.
+- *Suomi NPP y NOAA-21.* Los otros dos satélites con el mismo VIIRS, en el mismo archivo abierto
+  de NOAA sin cuenta (`noaa-nesdis-snpp-pds`, `noaa-nesdis-n21-pds`), darían hasta tres pasadas
+  por noche. Comparten órbita con NOAA-20 y pasan con menos de una hora de diferencia, así que con
+  las nubes de invierno la mejora esperada en noches válidas es pequeña y no compensa las horas
+  de medida en el servidor (unas 1056 noches-satélite más solo para la validación). Queda
+  aplazado; el arreglo, cuando haya horas libres en el servidor, es añadir los dos buckets a
+  `recogida/luces.py` (mismo formato), combinar las pasadas válidas de cada noche con su mediana
+  tras comprobar con noches despejadas que dan el mismo brillo, y repetir la validación con la
+  misma regla.
 
 ## 4. Focos de calor en vivo
 
@@ -204,11 +261,79 @@ para el periodo de la línea de tiempo:
   arcos sin cifra no se dibujan. Se ocultan con «Corredores» en el selector de capas y, al
   pulsarlos, la ficha da origen, destino, drones del periodo y número de ataques.
 
-## 6. Servidor
+### Selección de los arcos
+
+Los arcos se ven finos, pero se seleccionan con holgura
+([`web/src/mapa/seleccion.ts`](../web/src/mapa/seleccion.ts)):
+
+- **Zona sensible.** Una capa invisible sobre la misma geometría, de 16 px más el grosor del arco
+  con ratón y de 28 px más el grosor con el dedo; la distancia se mide desde el borde del arco.
+- **Prioridad.** Marcas puntuales (incidentes, impactos, focos, ciudades), después arcos, después
+  áreas (regiones, celdas GPS, países): una región solo recibe el clic si no hay ninguna marca ni
+  ningún arco en su zona. Con el dedo, las marcas de la capa de guerra tienen la misma tolerancia
+  que los arcos (28 px); las de los incidentes europeos, sus 44 px de siempre.
+- **Varios arcos.** Gana el más cercano; si dos quedan a menos de 1 px de diferencia (arcos que
+  comparten trazado), se abre una lista corta para elegir («Kursk → Járkov», «Oriol → Járkov»).
+- **Realce.** Al pasar el ratón, el arco pasa al violeta claro (`#cbbcff`) y se engrosa, los
+  demás bajan al 8 % de opacidad, el puntero es la mano y aparece «origen → región · N drones».
+  Con la ficha de un corredor abierta, su arco sigue realzado. Los demás puntos de la capa
+  (impactos, focos, ciudades sin luz o con alumbrado reducido) llevan un aro claro al pasar.
+- **Teclado.** Una lista de botones, uno por corredor, con el letrero como nombre accesible: con el
+  tabulador se recorren (el arco enfocado se realza en el mapa con su letrero) e Intro abre la
+  ficha.
+- **Rendimiento.** El realce cambia una sola propiedad de pintura y los datos de una capa de un
+  arco, solo cuando cambia el arco señalado; la distancia se calcula para los arcos que caen en el
+  cuadro del puntero.
+
+Comprobado en un navegador real con el periodo «Todo» (331 corredores), localizando cada arco por
+su realce y pulsando junto a él:
+
+| Prueba | Resultado |
+| --- | --- |
+| Escritorio: ratón a unos 6 px de 30 arcos | 29 letreros del arco |
+| Escritorio: clic a unos 6 px del arco | 10 fichas de corredor y 12 listas de arcos superpuestos de 23 arcos localizados |
+| Escritorio: clic lejos de los arcos | ficha de la región |
+| Móvil 390×844, toque sobre el arco | 10 fichas de corredor y 9 listas de 23 arcos |
+
+A la escala de toda Europa, en un teléfono, los arcos que salen de la misma zona se solapan:
+ahí se abre la lista o el más cercano al dedo, que es lo que pide la regla.
+
+## 6. Puntos con información de satélite
+
+De los más de 6000 impactos de la capa, unas decenas tienen información de satélite. Se ven a
+simple vista ([`web/src/datos/guerraSatelite.ts`](../web/src/datos/guerraSatelite.ts),
+`puntosConSatelite`):
+
+- **Marcador.** Un impacto con imagen de antes y después o con foco de calor se dibuja desde una
+  fuente propia sin agrupar, siempre encima de los demás: más grande, en violeta con el borde
+  claro; con imagen, un segundo aro; con foco, la marca de foco arriba a la derecha. Las ciudades
+  que perdieron luz y las de alumbrado reducido ya tienen su signo.
+- **Agrupaciones.** Un grupo de impactos con alguno de ellos lleva el borde claro y más grueso
+  (propiedad `satelite` de la agrupación).
+- **«Con satélite · N».** En el grupo de capas de la guerra, junto a corredores, focos y luz
+  nocturna: deja esos puntos y atenúa el resto de la capa (impactos, grupos, focos, arcos), y
+  despliega la lista de todos, del más reciente al más antiguo, con el lugar, la fecha y lo que
+  tiene. Una fila lleva el mapa al punto y abre su ficha. La lista se abre y se cierra con su
+  flecha; en el teléfono va dentro del menú.
+- **En la ficha, arriba.** En la de un impacto, la cortinilla de antes y después y el foco de calor
+  van justo bajo el título; en la de una región, sus focos y su luz nocturna. Sin información de
+  satélite no hay hueco ni aviso.
+- **El nombre del lugar** de cada pareja de imágenes va en el índice `satelite/parejas.json`
+  (`lugar`), para la lista.
+
+**Imágenes en el servidor.** La búsqueda de imágenes cargaba la base cifrada entera en memoria
+(640 MB descifrada, el doble al cargarla) y pasaba del tope de 1 GB de su unidad. Ahora la
+recogida horaria, que ya tiene la base abierta, deja cada hora los objetivos en
+`datos/satelite/objetivos.json` (los impactos públicos con foco detectado o en una instalación,
+con su recorte y sus fechas) y `eodi-satelite` solo lee ese fichero.
+
+<!-- CON SATELITE -->
+
+## 7. Servidor
 
 <!-- SERVIDOR -->
 
-## 7. Web
+## 8. Web
 
 - Selector de capas: con la capa de Ucrania encendida aparecen «Corredores», «Focos 24 h» y
   «Luz nocturna», encendidas por defecto (en el teléfono, en el menú).
@@ -219,7 +344,7 @@ para el periodo de la línea de tiempo:
 - Comprobado en escritorio y en 360×800, 390×844 y 412×915, en local, en la vista previa del
   PR y en producción (apartado 9).
 
-## 8. Color de la capa de guerra
+## 9. Color de la capa de guerra
 
 Toda la capa de guerra (regiones de Ucrania y de Rusia, impactos, corredores, focos de 24 horas,
 ciudades sin luz, marcas de los focos de un impacto, línea de la cortinilla y sus leyendas) usa

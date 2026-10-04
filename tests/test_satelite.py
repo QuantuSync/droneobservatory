@@ -417,6 +417,7 @@ def test_indice_publico_con_atribucion_de_copernicus() -> None:
                 "nubes_recorte": 0,
             },
             "antes_buscado": True,
+            "lugar": "Kirishi refinery",
         },
         "EODI-IG-2025-00001": {"recorte": {"lat": 1, "lon": 1, "lado_m": 3000}, "antes": None},
     }
@@ -424,6 +425,8 @@ def test_indice_publico_con_atribucion_de_copernicus() -> None:
     assert list(indice["parejas"]) == ["EODI-IG-2025-02569"]
     assert indice["atribucion"] == "Contains modified Copernicus Sentinel data 2024-2025"
     assert "antes_buscado" not in indice["parejas"]["EODI-IG-2025-02569"]
+    # El nombre del lugar va al índice, para la lista de la web.
+    assert indice["parejas"]["EODI-IG-2025-02569"]["lugar"] == "Kirishi refinery"
 
 
 def test_escena_de_item_del_catalogo() -> None:
@@ -444,3 +447,20 @@ def test_de_una_misma_toma_va_primero_el_huso_de_la_imagen_de_antes() -> None:
     assert otra is not None and misma is not None and despues is not None
     orden = satelite.mismo_huso_primero([otra, misma, despues], "S2C_36TYP_20260315_0_L2A")
     assert [e.id for e in orden] == [misma.id, otra.id, despues.id]
+
+
+def test_objetivos_que_deja_la_recogida_horaria(tmp_path: Path) -> None:
+    objetivo = satelite.Objetivo(
+        id="EODI-IG-2025-02569",
+        recorte=satelite.Recorte(59.5, 32.08, 4000),
+        antes_hasta=datetime(2025, 9, 30, 17, 0, tzinfo=UTC),
+        despues_desde=datetime(2025, 10, 1, 6, 30, tzinfo=UTC),
+        foco=True,
+        lugar="Kirishi refinery",
+    )
+    ruta = tmp_path / satelite.OBJETIVOS
+    ruta.write_text(
+        json.dumps({"objetivos": [satelite.documento_de_objetivo(objetivo)]}), encoding="utf-8"
+    )
+    assert satelite.cargar_objetivos(ruta) == [objetivo]
+    assert satelite.cargar_objetivos(tmp_path / "otro.json") is None

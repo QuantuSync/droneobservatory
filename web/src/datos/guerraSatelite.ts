@@ -6,6 +6,7 @@
 import { diaDeInstante, enPeriodo } from "../tiempo/dias.ts";
 import type { Periodo } from "../tiempo/dias.ts";
 import type {
+  FilaImpacto,
   LuzResumen,
   PublicacionUcrania,
   ResumenUcrania,
@@ -325,6 +326,41 @@ export interface FocosVivos {
 
 export const OBJETO_FOCOS_VIVOS = "focos/ultimas24h.json";
 
+// ---- Alumbrado reducido de forma permanente (almacén público: luces/alumbrado.json) ----
+
+/** Brillo de una ciudad en un tramo de noches válidas (mediana), en nW/(cm²·sr). */
+export interface NivelLuz {
+  brillo: number;
+  desde: string;
+  hasta: string;
+  noches: number;
+}
+
+/** Ciudad cuyo brillo está de forma sostenida por debajo de la referencia mínima de la regla. */
+export interface CiudadAlumbrado {
+  ciudad: { id: string; nombre: string; punto: { lat: number; lon: number } };
+  region: string;
+  /** Desde qué noche está así; con `al_menos`, la primera noche medida. */
+  desde: string;
+  al_menos: boolean;
+  /** Último mes medido («AAAA-MM») en que aún pasaba de la referencia de forma sostenida. */
+  ultimo_mes_por_encima?: string;
+  actual: NivelLuz;
+  antiguo: NivelLuz;
+  noches: number;
+  origen: "medido";
+}
+
+export interface AlumbradoReducido {
+  version: string;
+  generado: string;
+  referencia_minima: number;
+  satelite: string;
+  ciudades: CiudadAlumbrado[];
+}
+
+export const OBJETO_ALUMBRADO = "luces/alumbrado.json";
+
 // ---- Imágenes de antes y después (almacén público: satelite/parejas.json) --------------
 
 export interface ImagenSatelite {
@@ -338,6 +374,8 @@ export interface ParejaSatelite {
   recorte: { lat: number; lon: number; lado_m: number };
   antes: ImagenSatelite | null;
   despues: ImagenSatelite | null;
+  /** Nombre del lugar alcanzado. */
+  lugar?: string;
 }
 
 export interface IndiceSatelite {
@@ -348,3 +386,80 @@ export interface IndiceSatelite {
 }
 
 export const OBJETO_PAREJAS = "satelite/parejas.json";
+
+// ---- Puntos con información de satélite ------------------------------------------------
+
+/** Un punto de la capa de guerra con información de satélite: un impacto con imagen de antes
+ * y después o con foco de calor, una ciudad que perdió luz o una con alumbrado reducido. */
+export interface PuntoSatelite {
+  clase: "impacto" | "luz" | "alumbrado";
+  /** Lo que abre su ficha: el identificador del impacto o la clave de la ciudad. */
+  clave: string;
+  /** Nombre del lugar; sin él, la región. */
+  lugar: string | null;
+  region: string;
+  /** Día de lo que tiene (el del impacto, el de la noche de mayor pérdida, la última medida). */
+  dia: number;
+  lon: number;
+  lat: number;
+  imagen: boolean;
+  foco: boolean;
+  luz: boolean;
+}
+
+/** Todos los puntos con información de satélite del periodo, del más reciente al más antiguo. */
+export function puntosConSatelite(
+  impactos: readonly FilaImpacto[] | null,
+  indice: IndiceSatelite | null,
+  ciudades: readonly CiudadSinLuz[] | null,
+  alumbrado: readonly CiudadAlumbrado[] | null,
+  diaDe: (fecha: string) => number,
+): PuntoSatelite[] {
+  const puntos: PuntoSatelite[] = [];
+  for (const [id, dia, , lon, lat, foco, , , region] of impactos ?? []) {
+    const pareja = indice?.parejas[id];
+    const imagen = pareja !== undefined && (pareja.antes !== null || pareja.despues !== null);
+    if (!imagen && foco !== 1) continue;
+    puntos.push({
+      clase: "impacto",
+      clave: id,
+      lugar: pareja?.lugar ?? null,
+      region,
+      dia,
+      lon,
+      lat,
+      imagen,
+      foco: foco === 1,
+      luz: false,
+    });
+  }
+  for (const c of ciudades ?? []) {
+    puntos.push({
+      clase: "luz",
+      clave: `${c.region}|${c.nombre}`,
+      lugar: c.nombre,
+      region: c.region,
+      dia: Math.max(...c.lista.map((l) => l.dia)),
+      lon: c.lon,
+      lat: c.lat,
+      imagen: false,
+      foco: false,
+      luz: true,
+    });
+  }
+  for (const c of alumbrado ?? []) {
+    puntos.push({
+      clase: "alumbrado",
+      clave: c.ciudad.id,
+      lugar: c.ciudad.nombre,
+      region: c.region,
+      dia: diaDe(c.actual.hasta),
+      lon: c.ciudad.punto.lon,
+      lat: c.ciudad.punto.lat,
+      imagen: false,
+      foco: false,
+      luz: true,
+    });
+  }
+  return puntos.sort((a, b) => b.dia - a.dia || a.clave.localeCompare(b.clave));
+}

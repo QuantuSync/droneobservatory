@@ -13,7 +13,7 @@ import type {
   Resumen,
   ResumenUcrania,
 } from "./tipos.ts";
-import type { FocosVivos, IndiceSatelite } from "./guerraSatelite.ts";
+import type { AlumbradoReducido, FocosVivos, IndiceSatelite } from "./guerraSatelite.ts";
 import * as v from "./vocabulario.ts";
 
 export type Resultado<T> = { ok: true; datos: T } | { ok: false; errores: string[] };
@@ -692,6 +692,44 @@ export function validarFocosVivos(valor: unknown): Resultado<FocosVivos> {
   return validar(focosVivos, valor);
 }
 
+const fechaDiaria = cadena(/^\d{4}-\d{2}-\d{2}$/);
+const nivelLuz = objeto({
+  brillo: numero(0, 1000),
+  desde: fechaDiaria,
+  hasta: fechaDiaria,
+  noches: numero(1, 10000, true),
+});
+const alumbradoReducido = objeto({
+  version: cadena(),
+  generado: cadena(v.PATRON_INSTANTE),
+  referencia_minima: numero(0, 1000),
+  satelite: cadena(),
+  ciudades: lista(
+    objeto(
+      {
+        ciudad: objeto({
+          id: cadena(),
+          nombre: cadena(),
+          punto: objeto({ lat: latitud, lon: longitud }),
+        }),
+        region: cadena(/^(UA|RU)-[A-Z0-9]+$/),
+        desde: fechaDiaria,
+        al_menos: enumerado([true, false]),
+        actual: nivelLuz,
+        antiguo: nivelLuz,
+        noches: numero(1, 100000, true),
+        origen: constante("medido"),
+      },
+      { ultimo_mes_por_encima: cadena(/^\d{4}-\d{2}$/) },
+    ),
+  ),
+});
+
+/** luces/alumbrado.json del almacén público (recogida/luces.py). */
+export function validarAlumbrado(valor: unknown): Resultado<AlumbradoReducido> {
+  return validar(alumbradoReducido, valor);
+}
+
 const imagenSatelite = nulable(
   objeto({
     fecha: cadena(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/),
@@ -707,11 +745,14 @@ const indiceSatelite = objeto({
   atribucion: cadena(),
   parejas: diccionario(
     cadena(v.PATRON_ID_IMPACTO),
-    objeto({
-      recorte: objeto({ lat: latitud, lon: longitud, lado_m: numero(100, 20000, true) }),
-      antes: imagenSatelite,
-      despues: imagenSatelite,
-    }),
+    objeto(
+      {
+        recorte: objeto({ lat: latitud, lon: longitud, lado_m: numero(100, 20000, true) }),
+        antes: imagenSatelite,
+        despues: imagenSatelite,
+      },
+      { lugar: cadena() },
+    ),
   ),
 });
 

@@ -971,6 +971,20 @@ export const es: Textos = {
           },
           {
             parrafo: [
+              "Alumbrado reducido de forma permanente: una ciudad cuyo brillo se queda por debajo " +
+                "de 0,5 nW/(cm²·sr) sobre el fondo no puede dar un apagón con esta regla, así que se " +
+                "marca en el mapa con un signo propio. Se marca cuando la mediana de sus últimas 10 " +
+                "noches válidas está por debajo de ese mínimo y, mes a mes hacia atrás (meses con 3 " +
+                "noches válidas o más), la mediana mensual también lo está; un mes suelto por encima " +
+                "(la nieve refleja la luz de la ciudad, como en enero de 2026) no rompe la racha, dos " +
+                "meses medidos seguidos sí. Su ficha da la fecha desde la que está así (o «al menos " +
+                "desde» la primera noche medida), el brillo actual y el más antiguo medido, cada uno " +
+                "la mediana de 10 noches válidas, y el número de noches en que se basa. Se calcula con " +
+                "todas las noches medidas por NOAA-20.",
+            ],
+          },
+          {
+            parrafo: [
               "Focos de calor de las últimas 24 horas: los de NASA FIRMS sobre Ucrania y la " +
                 "Rusia europea, con los mismos filtros que el cruce con los impactos (fuera las " +
                 "antorchas de las refinerías y las plantas con calor habitual, la baja confianza " +
@@ -1325,6 +1339,7 @@ export const es: Textos = {
     letreroFoco: (hora, coincide) =>
       `Foco de calor · ${hora} UTC${coincide ? " · coincide con un impacto declarado" : ""}`,
     letreroCiudad: (ciudad, perdida) => `${ciudad} · ${perdida} % menos de luz nocturna`,
+    letreroAlumbrado: (ciudad) => `${ciudad} · alumbrado reducido de forma permanente`,
     focosUltimo: (hora) => `Focos de calor de 24 h · último dato ${hora} UTC`,
     focosVacio: "Focos de calor de 24 h · sin focos en las últimas 24 horas",
     corredor: {
@@ -1344,6 +1359,9 @@ export const es: Textos = {
       },
       ataques: (n) => (n === 1 ? "1 ataque" : `${n} ataques`),
       periodo: "Periodo",
+      varios: "Hay varios corredores en ese punto. Elige uno:",
+      etiquetaVarios: "Corredores · capa de guerra",
+      lista: "Corredores de ataque del periodo",
     },
     luzFicha: {
       etiqueta: "Luz nocturna · capa de guerra",
@@ -1359,8 +1377,26 @@ export const es: Textos = {
       regionEntera: "suma de sus ciudades medidas",
       sinPerdida: "Ninguna pérdida de luz medida en el periodo.",
       metodo:
-        "Brillo de la banda día-noche de VIIRS (NOAA-20) sobre el fondo, noches sin nubes. " +
-        "Noches con la fecha de su tarde; el paso del satélite es hacia la 01:30 hora local.",
+        "Brillo de la banda día-noche de VIIRS (NOAA-20) sobre el fondo, en noches con el 70 % " +
+        "de nubes o menos. Noches con la fecha de su tarde; el paso del satélite es hacia la " +
+        "01:30 hora local.",
+    },
+    alumbradoFicha: {
+      etiqueta: "Alumbrado reducido · capa de guerra",
+      titulo: "Ciudad con alumbrado reducido de forma permanente",
+      desde: "Desde",
+      desdeTexto: (fecha, alMenos) => (alMenos ? `al menos desde el ${fecha}` : `el ${fecha}`),
+      porEncima: (mes) => `En ${mes} aún pasaba de la referencia mínima.`,
+      actual: "Brillo actual",
+      referencia: "Brillo de referencia",
+      brillo: (valor) => `${valor} nW/(cm²·sr)`,
+      tramo: (desde, hasta, noches) =>
+        `mediana de ${noches} noches válidas del ${desde} al ${hasta}`,
+      noches: "Noches medidas",
+      metodo:
+        "Por debajo de 0,5 nW/(cm²·sr) sobre el fondo, de forma sostenida, la ciudad está casi " +
+        "a oscuras y un apagón no se ve desde el satélite. Brillo de referencia: el más antiguo " +
+        "medido. VIIRS de NOAA-20; un mes suelto por encima (nieve) no cuenta.",
     },
     imagen: {
       rotulo: "Imagen de satélite",
@@ -1377,12 +1413,31 @@ export const es: Textos = {
     zona: (_id, nombre) => nombre,
     ayudaCorredores:
       "Un arco fino y violeta va de una zona de lanzamiento a una región alcanzada: más grueso, más " +
-      "drones en el periodo. Contra Rusia sale del punto de la frontera de Ucrania más cercano.",
+      "drones en el periodo. Contra Rusia sale del punto de la frontera de Ucrania más cercano. " +
+      "Basta con acercar el ratón o el dedo: el arco se ilumina y gana a la región de debajo; " +
+      "con el tabulador se recorren uno a uno.",
     ayudaFocos:
       "Un punto violeta diminuto es un foco de calor de las últimas 24 horas (NASA FIRMS); uno violeta claro " +
       "y mayor coincide con un impacto declarado.",
     ayudaLuz:
       "Una región o una ciudad oscurecida perdió luz nocturna tras un ataque contra la red " +
       "eléctrica, medido por satélite: más oscura, más pérdida.",
+    ayudaAlumbrado:
+      "Un aro con un punto claro es una ciudad con el alumbrado reducido de forma permanente: " +
+      "su brillo nocturno lleva tiempo por debajo del mínimo con que se mide un apagón.",
+    ayudaSatelite:
+      "Un impacto más grande con el borde claro tiene información de satélite: con un segundo " +
+      "aro, imagen de antes y después; con la marca de foco, foco de calor. Siempre encima de " +
+      "los demás; un grupo con alguno lleva el borde claro. «Con satélite» deja solo esos puntos " +
+      "y abre su lista.",
+    conSatelite: (n) => `Con satélite · ${n}`,
+    listaSatelite: "Puntos con información de satélite",
+    abrirLista: "Abrir la lista de puntos con satélite",
+    cerrarLista: "Cerrar la lista de puntos con satélite",
+    tiene: { imagen: "antes y después", foco: "foco de calor", luz: "luz nocturna" },
+    letreroSatelite: (imagen, foco) =>
+      `Impacto con satélite · ${[imagen ? "antes y después" : null, foco ? "foco de calor" : null]
+        .filter((x) => x !== null)
+        .join(" · ")}`,
   },
 };

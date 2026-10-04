@@ -1,17 +1,22 @@
 // @vitest-environment jsdom
 // Fichas de la guerra por satélite: imágenes de antes y después con su cortinilla y la
-// atribución de Copernicus, ficha de un corredor y de una ciudad con pérdida de luz.
+// atribución de Copernicus, ficha de un corredor, de una ciudad con pérdida de luz y de una
+// ciudad con alumbrado reducido de forma permanente.
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
+  FichaAlumbrado,
   FichaCorredor,
+  ListaCorredores,
+  letreroDeCorredor,
+  nombreDeCorredor,
   FichaLuz,
   ImagenesSatelite,
   cargarIndiceSatelite,
   olvidarIndiceSatelite,
 } from "../src/componentes/GuerraSatelite.tsx";
-import type { CiudadSinLuz, Corredor } from "../src/datos/guerraSatelite.ts";
+import type { CiudadAlumbrado, CiudadSinLuz, Corredor } from "../src/datos/guerraSatelite.ts";
 import { textos } from "../src/i18n/index.ts";
 
 const es = textos("es");
@@ -130,5 +135,69 @@ describe("corredores y luz nocturna", () => {
     expect(screen.getByText(/22\/03\/2024/)).toBeTruthy();
     expect(screen.getByText(/Medido por satélite/)).toBeTruthy();
     expect(screen.getByRole("link", { name: "EODI-UA-2024-0100" })).toBeTruthy();
+  });
+});
+
+describe("ficha de una ciudad con alumbrado reducido", () => {
+  const ciudad: CiudadAlumbrado = {
+    ciudad: { id: "c2", nombre: "Суми", punto: { lat: 50.91, lon: 34.8 } },
+    region: "UA-59",
+    desde: "2024-03-02",
+    al_menos: true,
+    actual: { brillo: 0.23, desde: "2026-08-24", hasta: "2026-10-02", noches: 10 },
+    antiguo: { brillo: 0.24, desde: "2024-02-29", hasta: "2024-04-03", noches: 10 },
+    noches: 172,
+    origen: "medido",
+  };
+
+  it("dice desde cuándo, el brillo actual y el de referencia y en cuántas noches se basa", () => {
+    const { container } = render(<FichaAlumbrado t={es} idioma="es" ciudad={ciudad} />);
+    expect(screen.getByText("Ciudad con alumbrado reducido de forma permanente")).toBeTruthy();
+    expect(screen.getByText("al menos desde el 02/03/2024")).toBeTruthy();
+    expect(screen.getByText("0,23 nW/(cm²·sr)")).toBeTruthy();
+    expect(screen.getByText("0,24 nW/(cm²·sr)")).toBeTruthy();
+    expect(screen.getByText("mediana de 10 noches válidas del 24/08/2026 al 02/10/2026")).toBeTruthy();
+    expect(screen.getByText("172")).toBeTruthy();
+    expect(container.textContent).not.toMatch(/aún pasaba/);
+  });
+
+  it("con la fecha en que dejó de pasar de la referencia, y en inglés", () => {
+    render(
+      <FichaAlumbrado
+        t={en}
+        idioma="en"
+        ciudad={{ ...ciudad, al_menos: false, desde: "2024-05-02", ultimo_mes_por_encima: "2024-04" }}
+      />,
+    );
+    expect(screen.getByText("City with permanently reduced street lighting")).toBeTruthy();
+    expect(screen.getByText("02/05/2024")).toBeTruthy();
+    expect(screen.getByText("In 04/2024 it was still above the minimum reference.")).toBeTruthy();
+  });
+});
+
+describe("varios corredores en el punto pulsado", () => {
+  const kursk: Corredor = {
+    clave: "kursk|UA-63",
+    sentido: "RU_UA",
+    origen: "Kursk",
+    desde: [36.19, 51.73],
+    region: "UA-63",
+    hasta: [36.23, 49.99],
+    drones: 120,
+    ataques: 4,
+  };
+  const oriol: Corredor = { ...kursk, clave: "oriol|UA-63", origen: "Oriol", desde: [36.08, 52.97] };
+
+  it("el letrero y el nombre accesible: origen → región · drones", () => {
+    expect(nombreDeCorredor(es, kursk)).toBe(`Kursk → ${es.regiones["UA-63"]}`);
+    expect(letreroDeCorredor(es, "es", kursk)).toBe(`Kursk → ${es.regiones["UA-63"]} · 120 drones`);
+  });
+
+  it("se elige uno de la lista corta", () => {
+    const elegir = vi.fn();
+    render(<ListaCorredores t={es} corredores={[kursk, oriol]} onElegir={elegir} />);
+    expect(screen.getByText(es.satelite.corredor.varios)).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: `Oriol → ${es.regiones["UA-63"]}` }));
+    expect(elegir).toHaveBeenCalledWith("oriol|UA-63");
   });
 });
