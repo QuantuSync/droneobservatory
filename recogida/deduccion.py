@@ -216,6 +216,18 @@ def calcular(
                 catalogo, c, sitios, horizonte_de if r else None
             ),
         )
+    # Los encuentros de la UK Airprox Board con altura: su altura oficial descarta las clases
+    # que no llegan (regla de altura).
+    for encuentro in almacen.encuentros():
+        caso_encuentro = motor.caso_de_encuentro(encuentro)
+        if caso_encuentro is None:
+            continue
+        guardar(
+            encuentro["id"],
+            "encuentro",
+            motor.huella_caso(catalogo, caso_encuentro),
+            lambda c=caso_encuentro: motor.evaluar_encuentro(catalogo, c),
+        )
     ataques = {a["id"]: a for a in almacen.ataques_ucrania()}
     por_ataque: dict[str, list[dict[str, Any]]] = {}
     for impacto in impactos_guerra.vigentes(almacen):

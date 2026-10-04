@@ -131,9 +131,46 @@ CIERRE_EN_FRASE = re.compile(
     r"cerrad\w*|cierr\w*|paraliz\w*|"
     r"closed|closure|shut|lukket|lukke\w*|stengt|stengte|stängd\w*|zamkni\w*|ferm[ée]\w*|"
     r"fermeture|stilgelegd|gesloten|chius\w*|[îi]nchis\w*|paralys\w*|suspendid\w*|"
-    r"suspended)(?!\w)",
+    r"suspended|приостанов\w*|закрыт\w*|закрыл\w*|прекращ\w*|остановлен\w*|зачинен\w*|"
+    r"закрил\w*|призупин\w*|gestaakt|buiten gebruik)(?!\w)",
     re.IGNORECASE,
 )
+# Una pista: su cierre es un cierre del aeropuerto, aunque el resto siga abierto (Schiphol,
+# EODI-2025-00058: «приостанавливал работу взлетно-посадочной полосы из-за дрона»).
+PISTA = re.compile(
+    r"(?<!\w)(?:pista\w*|runway\w*|landebahn\w*|start- en landingsbaan|landingsbaan|"
+    r"baan\b|piste\w*|взлетно-посадочн\w+\s+полос\w*|полос\w*|злітно-посадков\w+\s+смуг\w*|"
+    r"pas\w*\s+startow\w*|banan)(?!\w)",
+    re.IGNORECASE,
+)
+MOTIVO_PISTA = (
+    "cierre de una pista por un dron registrado como cierre (la autoridad del aeropuerto actúa por "
+    "el dron)"
+)
+
+
+def cierre_de_pista(incidente: Documento) -> Documento:
+    """Una interrupción aeroportuaria (o un suceso en un aeropuerto) sin cierre registrado cuya
+    fuente cuenta que se cerró o se suspendió una pista por un dron: el cierre de la pista es un
+    cierre (`consecuencias.cierre` «si») y el suceso, una interrupción del aeropuerto. Así cuenta
+    como actuación de la autoridad del aeropuerto para la presencia del dron."""
+    objetivo = (incidente.get("objetivo") or {}).get("categoria")
+    if incidente.get("tipo") != "interrupcion_aeroportuaria" and objetivo != "aeropuerto":
+        return incidente
+    consecuencias = incidente.get("consecuencias") or {}
+    if (consecuencias.get("cierre") or {}).get("valor") not in (None, "desconocido"):
+        return incidente
+    textos = [str(f.get("frase_origen", "")) for f in incidente.get("fuentes", [])]
+    textos.append(" ".join(str(v) for v in (incidente.get("titulo") or {}).values()))
+    if not any(
+        PISTA.search(t) and CIERRE_EN_FRASE.search(t) and declaraciones.habla_de_drones(t)
+        for t in textos
+    ):
+        return incidente
+    cierre = {**(consecuencias.get("cierre") or {}), "valor": "si"}
+    # Con el cierre, el suceso es una interrupción del aeropuerto (manda ese tipo).
+    return {**incidente, "tipo": "interrupcion_aeroportuaria",
+            "consecuencias": {**consecuencias, "cierre": cierre}}  # fmt: skip
 
 
 def por_actuacion(incidente: Documento) -> Documento | None:
@@ -177,6 +214,7 @@ def aplicar(incidente: Documento) -> Documento:
     intervención por dron), si el criterio lo
     alcanza y nada lo impide (desmentido, documento oficial, autoridad que lo deja abierto), y
     con el titular coherente con la presencia."""
+    incidente = cierre_de_pista(incidente)
     resultado = incidente
     if (
         incidente.get("presencia_dron") == "no_confirmada"
@@ -280,6 +318,21 @@ def revisar(
     pudieron guardar (no validan con las reglas de ahora; se quedan como estaban)."""
     hechos, fallidos = [], []
     instante = {"valor": ahora.astimezone(UTC).strftime("%Y-%m-%dT%H:%MZ"), "precision": "minuto"}
+    # El cierre de una pista por un dron se registra como cierre (antes de mirar la actuación).
+    for incidente in almacen.incidentes():
+        if not activo(incidente):
+            continue
+        documento = cierre_de_pista(incidente)
+        if documento is incidente:
+            continue
+        documento = {**documento, "control": {**documento["control"],
+                                              "ultima_actualizacion": instante}}  # fmt: skip
+        try:
+            almacen.guardar_incidente(documento, ahora, modelos)
+        except DocumentoInvalido:
+            fallidos.append(incidente["id"])
+            continue
+        anotar(almacen, incidente, documento, MOTIVO_PISTA)
     for incidente, cambio in pendientes(almacen):
         documento = {**incidente, "control": {**incidente["control"]}}
         if not declaraciones.confirmar_presencia(documento, cambio.fuente_id):

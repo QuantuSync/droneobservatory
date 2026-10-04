@@ -383,3 +383,57 @@ publica tramos sueltos de la tarde.
 los casos compartidos, la noche de cada ataque publicado, el parte de toda la noche que incluye el
 tramo de la tarde (y no lo incluye si el tramo dice más), los periodos mal guardados con los partes
 reales y el parte de resumen que no se suma.
+
+## Bloque 6. Pendientes de la revisión de presencia de dron
+
+### Siete incidentes con una noticia de «otra vez» sin separar
+
+Medidos con la hora de la fuente frente a la hora del suceso (la regla separa cuando la noticia de
+repetición se publica 18 horas o más después del suceso, es decir, pasada su noche):
+
+| Incidente | Lo que dice la fuente | Resultado |
+| --- | --- | --- |
+| EODI-2025-00066, Volkel | Suceso el 21 de noviembre a las 19:00; el 23 a las 09:45 «Another mystery drone sighted over … Volkel» y a las 11:30 «Wéér drones bij vliegbasis Volkel» | **Otra noche**: esas grafías no estaban entre las palabras de repetición. Se añaden («another mystery drone», «another unidentified drone», «wéér») y la corrección única de la recogida separa el candidato; la parte nueva se extrae en la recogida horaria (va delante en el extractor) |
+| EODI-2025-00136, Zaventem | Cierre a las 21:45; a las 06:30 «rond middernacht opnieuw even gesloten» | La misma noche (8 h 45 min después del suceso): un solo incidente |
+| EODI-2026-00293, Zaventem | Su única noticia es la de «Erneut Drohne … gesichtet» | Es la repetición misma, ya separada de la anterior: nada que separar |
+| EODI-2025-00228, Aalborg | Ninguna noticia de repetición del suceso (la marca venía de «Paar dagen na Kopenhagen») | Un solo incidente |
+| EODI-2025-00335, Bruselas | Las de «opnieuw», «for third time in a week» y «à nouveau» son de la misma tarde y noche del 6 de noviembre | La misma noche |
+| EODI-2025-00072, Bruselas | Noticias del 10 de noviembre sobre la intrusión anterior, sin repetición | Un solo incidente |
+| EODI-2026-00116, Berlín | «Dron opäť zastavil letisko v Berlíne» a las 05:00, 11 horas después del cierre | La misma noche |
+
+### Cierre de una pista (Schiphol)
+
+`proceso/presencia.cierre_de_pista`: un suceso en un aeropuerto sin cierre registrado cuya fuente
+cuenta que se cerró o se suspendió una pista por un dron («закрыта», «приостанавливал работу
+взлетно-посадочной полосы», «runway», «Landebahn», «baan») se registra como cierre y como
+interrupción del aeropuerto, con su motivo en el historial. Con el cierre, la autoridad del
+aeropuerto actúa por el dron y la presencia queda confirmada con la regla vigente (salvo que la
+autoridad lo deje abierto). Las palabras de cierre en ruso y ucraniano se añaden a la regla del
+cierre en la frase. EODI-2025-00058 pasa a «Drones cierran una pista del aeropuerto de Ámsterdam
+Schiphol», dron confirmado; el mismo cambio alcanza a EODI-2026-00065 (Múnich). La corrección única
+de la recogida (criterio de presencia, versión `presencia/2`) lo aplica a todo lo guardado.
+
+### Alturas de UK Airprox y de los informes de investigación
+
+Los 967 encuentros de la UK Airprox Board guardados traen su altura (en pies: 861 sin referencia,
+96 en nivel de vuelo, 10 sobre el terreno) con origen oficial y método por código; 60 documentos de
+investigación dan la altura de 61 sucesos con su frase y su confianza, y cuando el suceso es un
+incidente del observatorio la altura llega a `drones.altura_m` (proceso/detalle.py). Lo que faltaba
+era que el motor de deducción la usara:
+
+- **Regla de altura** (`R9`, `proceso/deduccion/reglas.py`): una clase cuyo techo (altitud máxima
+  sobre el nivel del mar, de todos sus modelos con dato fiable) queda por debajo de la altura
+  observada, con un 10 % de margen, queda descartada. Una altura sobre el terreno nunca es mayor que
+  la altitud sobre el mar, así que pasar el techo descarta con cualquier referencia. Solo descarta
+  con altura oficial; con la de la prensa queda como condición.
+- **Los encuentros como casos del motor** (`motor.caso_de_encuentro`, tipo `encuentro` en la tabla
+  `deducciones`), con su punto, su hora y su altura en metros. Los incidentes con encuentros
+  enlazados toman también su altura.
+- Medido sobre la base: 6 de los 967 encuentros quedan con clases descartadas por altura (los de
+  6.000 metros o más: ala fija táctica eléctrica, multirrotores pequeños y pesados).
+
+### Pruebas añadidas
+
+`tests/test_pendientes_presencia.py`: la otra noche de Volkel, la reapertura de la misma noche en
+Zaventem que no se separa, el cierre de la pista de Schiphol que confirma la presencia, la altura
+oficial de un encuentro que descarta clases y la de la prensa que no.

@@ -146,10 +146,66 @@ def caso_de_incidente(
         # La velocidad la escriben solo las fuentes oficiales de detalle (detalle_oficial).
         velocidad_oficial=velocidad is not None,
         deteccion_radar=any("radar" in str(d) for d in deteccion),
-        altura_m=_rango(drones.get("altura_m")),
+        altura_m=_rango(drones.get("altura_m")) or altura_de_encuentros(encuentros),
+        # La altura solo la escriben las fuentes oficiales de detalle o la UKAB.
+        altura_oficial=_rango(drones.get("altura_m")) is not None
+        or altura_de_encuentros(encuentros) is not None,
         origen_inicio=origen_inicio,
         entrada_desde=entrada_desde,
     )
+
+
+PIE_M = 0.3048
+
+
+def altura_de_encuentro(encuentro: dict[str, Any]) -> tuple[float, float] | None:
+    """La altura de un encuentro de la UK Airprox Board en metros: la del informe (sobre el
+    terreno, sobre el mar o nivel de vuelo, en pies), o None si no la da."""
+    pies = (encuentro.get("altitud") or {}).get("pies")
+    if not isinstance(pies, (int, float)) or pies <= 0:
+        return None
+    metros = round(float(pies) * PIE_M, 1)
+    return (metros, metros)
+
+
+def altura_de_encuentros(encuentros: list[dict[str, Any]] | None) -> tuple[float, float] | None:
+    alturas = [a for e in encuentros or [] if (a := altura_de_encuentro(e)) is not None]
+    if not alturas:
+        return None
+    return (min(a[0] for a in alturas), max(a[1] for a in alturas))
+
+
+def caso_de_encuentro(encuentro: dict[str, Any]) -> Caso | None:
+    """Un encuentro de la UK Airprox Board con un dron o un objeto, como caso del motor: su punto,
+    su hora y su altura (oficial). None sin altura o sin punto."""
+    altura = altura_de_encuentro(encuentro)
+    punto = (encuentro.get("posicion") or {}).get("punto")
+    if altura is None or not punto:
+        return None
+    objeto = encuentro.get("objeto") or {}
+    textos = [str(objeto.get(c)) for c in ("descripcion", "tipo_catalogo") if objeto.get(c)]
+    return Caso(
+        id=encuentro["id"],
+        tipo="encuentro",
+        pais=encuentro.get("pais"),
+        lat=punto["lat"],
+        lon=punto["lon"],
+        radio_km=5.0,
+        inicio=_segundos(encuentro.get("instante")),
+        precision=(encuentro.get("instante") or {}).get("precision"),
+        textos=textos,
+        altura_m=altura,
+        altura_oficial=True,
+    )
+
+
+def evaluar_encuentro(catalogo: Catalogo, caso: Caso) -> dict[str, Any]:
+    """Las reglas que dicen algo de un encuentro sin condiciones medidas: la altura y la
+    descripción."""
+    evidencias = reglas.r9_altura(catalogo, caso) + reglas.r7_descripcion(catalogo, caso)
+    resultado = {**_base(catalogo), **combinar(catalogo, evidencias)}
+    resultado["conclusiones"] = []
+    return resultado
 
 
 def _lugar_cercano(lista: list[dict[str, Any]], lat: float, lon: float, km: float) -> Any:
@@ -323,6 +379,7 @@ def evaluar_incidente(
     evidencias += simultaneos
     evidencias += reglas.r7_descripcion(catalogo, caso)
     evidencias += reglas.r8_gnss(catalogo, caso)
+    evidencias += reglas.r9_altura(catalogo, caso)
     resultado = {**_base(catalogo), **combinar(catalogo, evidencias)}
     if simultaneos:
         otros = sorted({x["otro"] for e in simultaneos for x in e.datos["sitios"]})

@@ -48,9 +48,10 @@ R5 = ("radar", "1.0.0")
 R6 = ("simultaneidad", "1.0.0")
 R7 = ("descripcion", "1.1.0")
 R8 = ("gnss", "1.0.0")
-REGLAS = (R1, R2, R3, R4, R5, R6, R7, R8)
+R9 = ("altura", "1.0.0")
+REGLAS = (R1, R2, R3, R4, R5, R6, R7, R8, R9)
 # Las que pueden decir que una clase es compatible (las demás solo anotan o suman indicios).
-FISICAS = frozenset({R1[0], R2[0], R3[0], R4[0], R5[0], R6[0]})
+FISICAS = frozenset({R1[0], R2[0], R3[0], R4[0], R5[0], R6[0], R9[0]})
 
 MARGEN_DISTANCIA = 0.10
 ERROR_VIENTO_MS = 2.0
@@ -124,6 +125,8 @@ class Caso:
     deteccion_radar: bool = False
     origenes: list[Origen] = field(default_factory=list)
     altura_m: tuple[float, float] | None = None
+    # La altura la da una fuente oficial (UK Airprox Board, un informe de investigación).
+    altura_oficial: bool = False
     lanzados: dict[str, Any] = field(default_factory=dict)
     # De dónde sale la hora (medido, oficial, oficial_citado...; None si es la de la base).
     origen_inicio: str | None = None
@@ -747,6 +750,41 @@ RESISTENTE = (
     "fibre",
     "fiber",
 )
+
+
+# --- R9: altura -----------------------------------------------------------------------
+
+# Margen sobre el techo: la altura que da un piloto o un informe es aproximada.
+MARGEN_ALTURA = 0.10
+
+
+def r9_altura(catalogo: Catalogo, caso: Caso) -> list[Evidencia]:
+    """Una clase cuyo techo (altitud máxima sobre el nivel del mar, de todos sus modelos con
+    dato fiable) queda por debajo de la altura observada no pudo ser. La altura de un encuentro
+    de Airprox puede ser sobre el terreno o sobre el mar: sobre el mar nunca es menor, así que
+    pasar el techo con cualquiera de las dos descarta igual. Solo descarta con altura oficial;
+    con la de la prensa queda como condición."""
+    if caso.altura_m is None:
+        return []
+    observada = caso.altura_m[0]
+    resultado = []
+    for clase in catalogo.clases:
+        techo = capacidades.de_clase(catalogo, clase, capacidades.techo_m)
+        if techo.valor is None:
+            continue
+        datos = dict(altura_observada_m=list(caso.altura_m), techo_m=techo,
+                     oficial=caso.altura_oficial)  # fmt: skip
+        efecto = _decide(observada <= techo.valor * (1 + MARGEN_ALTURA), techo)
+        if efecto == COMPATIBLE:
+            resultado.append(_ev(R9, clase, COMPATIBLE, "altura a su alcance", **datos))
+        elif efecto == DESCARTA:
+            if caso.altura_oficial:
+                resultado.append(_ev(R9, clase, DESCARTA, "más alto que su techo", **datos))
+            else:
+                resultado.append(
+                    _ev(R9, clase, CONDICION, "más alto que su techo (altura no oficial)", **datos)
+                )
+    return resultado
 
 
 def r8_gnss(catalogo: Catalogo, caso: Caso) -> list[Evidencia]:

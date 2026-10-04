@@ -31,7 +31,7 @@ registro = logging.getLogger(__name__)
 
 CURSOR = "criterio_presencia"
 PASADAS_FUSION = 5
-VERSION = "presencia/1"
+VERSION = "presencia/2"
 MOTIVO = (
     "criterio de presencia del dron (la autoridad competente que lo da por hecho lo confirma), "
     "titular coherente con la presencia y un incidente por noche de cierre"

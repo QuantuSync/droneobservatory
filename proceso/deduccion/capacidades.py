@@ -103,6 +103,11 @@ def crucero_max_ms(modelo: Modelo) -> Cota:
     return Cota(maxima.valor, deducida=True, debil=maxima.debil) if maxima.valor else SIN_COTA
 
 
+def techo_m(modelo: Modelo) -> Cota:
+    """Altitud máxima de operación sobre el nivel del mar."""
+    return _maximo(modelo, "techo")
+
+
 def enlace_max_km(modelo: Modelo) -> Cota:
     return _maximo(modelo, "enlace_alcance")
 
