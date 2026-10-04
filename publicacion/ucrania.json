@@ -212298,6 +212298,52 @@
     "Київська область"
    ],
    "lugares_restos": [],
+   "perdida_luz": [
+    {
+     "brillo": 1.15,
+     "ciudad": {
+      "id": "katotth:UA56060470010041018",
+      "nombre": "Рівне",
+      "punto": {
+       "lat": 50.61962,
+       "lon": 26.25132
+      }
+     },
+     "noche": "2025-08-17",
+     "noches": [
+      "2025-08-17",
+      "2025-08-22"
+     ],
+     "origen": "medido",
+     "perdida_pct": 55,
+     "referencia": {
+      "brillo": 2.56,
+      "desde": "2025-07-27",
+      "hasta": "2025-08-16",
+      "noches": 12
+     },
+     "region": "UA-56",
+     "zona": "ciudad"
+    },
+    {
+     "brillo": 1.15,
+     "noche": "2025-08-17",
+     "noches": [
+      "2025-08-17",
+      "2025-08-22"
+     ],
+     "origen": "medido",
+     "perdida_pct": 55,
+     "referencia": {
+      "brillo": 2.56,
+      "desde": "2025-07-27",
+      "hasta": "2025-08-16",
+      "noches": 12
+     },
+     "region": "UA-56",
+     "zona": "region"
+    }
+   ],
    "perdidos_guerra_electronica": "desconocido",
    "periodo": {
     "fin": {
@@ -218268,6 +218314,34 @@
    },
    "lugares_impacto": [],
    "lugares_restos": [],
+   "perdida_luz": [
+    {
+     "brillo": 0.44,
+     "ciudad": {
+      "id": "katotth:UA53020110010031694",
+      "nombre": "Кременчук",
+      "punto": {
+       "lat": 49.06296,
+       "lon": 33.40352
+      }
+     },
+     "noche": "2025-10-23",
+     "noches": [
+      "2025-10-15",
+      "2025-10-23"
+     ],
+     "origen": "medido",
+     "perdida_pct": 57,
+     "referencia": {
+      "brillo": 1.02,
+      "desde": "2025-09-24",
+      "hasta": "2025-10-14",
+      "noches": 4
+     },
+     "region": "UA-53",
+     "zona": "ciudad"
+    }
+   ],
    "perdidos_guerra_electronica": "desconocido",
    "periodo": {
     "fin": {
@@ -223861,6 +223935,52 @@
    "localizaciones_restos": "desconocido",
    "lugares_impacto": [],
    "lugares_restos": [],
+   "perdida_luz": [
+    {
+     "brillo": 0.41,
+     "ciudad": {
+      "id": "katotth:UA51100270010076757",
+      "nombre": "Одеса",
+      "punto": {
+       "lat": 46.4843,
+       "lon": 30.73229
+      }
+     },
+     "noche": "2025-12-13",
+     "noches": [
+      "2025-12-13",
+      "2025-12-14"
+     ],
+     "origen": "medido",
+     "perdida_pct": 69,
+     "referencia": {
+      "brillo": 1.33,
+      "desde": "2025-11-17",
+      "hasta": "2025-12-07",
+      "noches": 3
+     },
+     "region": "UA-51",
+     "zona": "ciudad"
+    },
+    {
+     "brillo": 0.41,
+     "noche": "2025-12-13",
+     "noches": [
+      "2025-12-13",
+      "2025-12-14"
+     ],
+     "origen": "medido",
+     "perdida_pct": 69,
+     "referencia": {
+      "brillo": 1.33,
+      "desde": "2025-11-17",
+      "hasta": "2025-12-07",
+      "noches": 3
+     },
+     "region": "UA-51",
+     "zona": "region"
+    }
+   ],
    "perdidos_guerra_electronica": "desconocido",
    "periodo": {
     "fin": {
@@ -224062,6 +224182,52 @@
    "localizaciones_restos": "desconocido",
    "lugares_impacto": [],
    "lugares_restos": [],
+   "perdida_luz": [
+    {
+     "brillo": 0.41,
+     "ciudad": {
+      "id": "katotth:UA51100270010076757",
+      "nombre": "Одеса",
+      "punto": {
+       "lat": 46.4843,
+       "lon": 30.73229
+      }
+     },
+     "noche": "2025-12-13",
+     "noches": [
+      "2025-12-13",
+      "2025-12-14"
+     ],
+     "origen": "medido",
+     "perdida_pct": 69,
+     "referencia": {
+      "brillo": 1.33,
+      "desde": "2025-11-19",
+      "hasta": "2025-12-09",
+      "noches": 3
+     },
+     "region": "UA-51",
+     "zona": "ciudad"
+    },
+    {
+     "brillo": 0.41,
+     "noche": "2025-12-13",
+     "noches": [
+      "2025-12-13",
+      "2025-12-14"
+     ],
+     "origen": "medido",
+     "perdida_pct": 69,
+     "referencia": {
+      "brillo": 1.33,
+      "desde": "2025-11-19",
+      "hasta": "2025-12-09",
+      "noches": 3
+     },
+     "region": "UA-51",
+     "zona": "region"
+    }
+   ],
    "perdidos_guerra_electronica": "desconocido",
    "periodo": {
     "fin": {
@@ -224278,6 +224444,52 @@
    },
    "lugares_impacto": [],
    "lugares_restos": [],
+   "perdida_luz": [
+    {
+     "brillo": 0.41,
+     "ciudad": {
+      "id": "katotth:UA51100270010076757",
+      "nombre": "Одеса",
+      "punto": {
+       "lat": 46.4843,
+       "lon": 30.73229
+      }
+     },
+     "noche": "2025-12-13",
+     "noches": [
+      "2025-12-13",
+      "2025-12-14"
+     ],
+     "origen": "medido",
+     "perdida_pct": 69,
+     "referencia": {
+      "brillo": 1.33,
+      "desde": "2025-11-21",
+      "hasta": "2025-12-11",
+      "noches": 3
+     },
+     "region": "UA-51",
+     "zona": "ciudad"
+    },
+    {
+     "brillo": 0.41,
+     "noche": "2025-12-13",
+     "noches": [
+      "2025-12-13",
+      "2025-12-14"
+     ],
+     "origen": "medido",
+     "perdida_pct": 69,
+     "referencia": {
+      "brillo": 1.33,
+      "desde": "2025-11-21",
+      "hasta": "2025-12-11",
+      "noches": 3
+     },
+     "region": "UA-51",
+     "zona": "region"
+    }
+   ],
    "perdidos_guerra_electronica": "desconocido",
    "periodo": {
     "fin": {
@@ -224376,6 +224588,52 @@
    "localizaciones_restos": "desconocido",
    "lugares_impacto": [],
    "lugares_restos": [],
+   "perdida_luz": [
+    {
+     "brillo": 0.41,
+     "ciudad": {
+      "id": "katotth:UA51100270010076757",
+      "nombre": "Одеса",
+      "punto": {
+       "lat": 46.4843,
+       "lon": 30.73229
+      }
+     },
+     "noche": "2025-12-13",
+     "noches": [
+      "2025-12-13",
+      "2025-12-14"
+     ],
+     "origen": "medido",
+     "perdida_pct": 69,
+     "referencia": {
+      "brillo": 1.33,
+      "desde": "2025-11-22",
+      "hasta": "2025-12-12",
+      "noches": 3
+     },
+     "region": "UA-51",
+     "zona": "ciudad"
+    },
+    {
+     "brillo": 0.41,
+     "noche": "2025-12-13",
+     "noches": [
+      "2025-12-13",
+      "2025-12-14"
+     ],
+     "origen": "medido",
+     "perdida_pct": 69,
+     "referencia": {
+      "brillo": 1.33,
+      "desde": "2025-11-22",
+      "hasta": "2025-12-12",
+      "noches": 3
+     },
+     "region": "UA-51",
+     "zona": "region"
+    }
+   ],
    "perdidos_guerra_electronica": "desconocido",
    "periodo": {
     "fin": {
