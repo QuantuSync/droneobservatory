@@ -437,3 +437,73 @@ era que el motor de deducción la usara:
 `tests/test_pendientes_presencia.py`: la otra noche de Volkel, la reapertura de la misma noche en
 Zaventem que no se separa, el cierre de la pista de Schiphol que confirma la presencia, la altura
 oficial de un encuentro que descarta clases y la de la prensa que no.
+
+## Bloque 7. Dos fuentes españolas
+
+### 7.1 Cifras oficiales agregadas de España
+
+Van en `configuracion/cifras_contexto.json` y en la exportación semanal interna
+(`contexto_pais.jsonl`, con su esquema propio y su origen por valor): son contexto de país, nunca
+incidentes, y ningún recuento de incidentes las lee. Cada enlace se comprobó el 4 de octubre de 2026:
+
+| Periodo | Categoría | Cifra | Publicador | Origen | Comprobación |
+| --- | --- | ---: | --- | --- | --- |
+| 2019 | Incidencias con drones en aeropuertos de Aena | 132 | Gobierno (respuesta 184/001553) | oficial | PDF del Congreso, 200 |
+| 2020 | ídem | 58 | ídem | oficial | ídem |
+| 2021 | ídem | 68 | ídem | oficial | ídem |
+| 2022 | ídem | 74 | ídem | oficial | ídem |
+| 2023 (hasta el 26 de noviembre) | ídem | 80 | ídem | oficial | ídem |
+| 2019-2023 | Incidencias con afección a las operaciones | 8 de 412 (menos del 2 %) | ídem | oficial | ídem |
+| 2020 (una semana) | Vuelos de drones detectados por SIGLO-CD | 112 | Guardia Civil / Ministerio del Interior | oficial | interior.gob.es responde 403; copia del archivo de Internet |
+| 2023 (Cumbre de Granada) | Drones detectados | 47 (11 en Málaga y 36 en Granada) | Interior y Defensa | oficial citado en prensa | elradar.es, 200 |
+
+Cambios frente a la tabla del encargo, con su prueba:
+
+- **Respuesta parlamentaria original encontrada**: pregunta escrita 184/001553 de Jon Iñarritu (EH
+  Bildu), contestada el 19 de diciembre de 2023 (BOCG, Congreso, serie D, núm. 64, de 15 de enero
+  de 2024); texto en https://www.congreso.es/entradap/l15p/e0/e_0006966_n_000.pdf. Las seis cifras
+  de Aena pasan a origen **oficial** con ese enlace. La de 2023 llega hasta el 26 de noviembre, y
+  la de afección es exacta: 8 de 412.
+- **El enlace de Europa Press del encargo responde 404**; la noticia está en
+  https://www.europapress.es/nacional/noticia-aeropuertos-registran-80-incidencias-drones-2023-solo-dos-afectacion-operaciones-20240121133353.html.
+  Ya no hace falta como origen.
+- **Los 112 vuelos de SIGLO-CD son de una semana de febrero de 2020**, no de 2022: la nota de
+  Interior es del 22 de febrero de 2020 («Este sistema ha detectado en la última semana 112 vuelos
+  de RPAS»). La dirección del encargo y la real responden 403 al acceso automático (protección de la
+  web de Interior); se comprobó en la copia del archivo de Internet del 19 de mayo de 2025.
+
+### 7.2 Lector de la Guardia Civil
+
+`recogida/guardia_civil.py`, fuente de detalle `guardia_civil` (fiabilidad A, grupo de
+investigaciones), con el mismo tratamiento que las demás: el temporizador de las fuentes de detalle
+recoge, la recogida horaria extrae la nota y la cruza con los incidentes.
+
+- **Sin canal RSS que funcione**: la página de canales solo enlaza un Atom que responde 404. Se leen
+  la lista de noticias (10 por página) y el buscador general con cada palabra (dron, drones, RPAS,
+  UAS, aeronave no tripulada, PEGASO, antidron), y la nota completa de las candidatas. Sin
+  robots.txt (404); identificación del observatorio y 3 s entre peticiones.
+- **Qué es incidente**: un dron que sobrevuela o entra en una instalación (aeropuerto, base, cárcel,
+  puerto, central, estadio, edificio oficial, evento); los de las cárceles cuentan aunque lleven
+  droga. **Se descartan** las redes de contrabando con drones, el uso de drones por la propia
+  Guardia Civil (equipos PEGASO, despliegues) y la divulgación (proyectos, jornadas).
+- **Confirma y da de alta**: una nota que corresponde a un incidente de la prensa se une a él y lo
+  confirma (cruce de las fuentes de detalle); una que no encaja con ninguno da de alta un incidente
+  (`extraccion_oficial.FUENTES_ALTA`).
+- **Condiciones de reutilización**: el aviso legal de web.guardiacivil.es limita el uso a la
+  descarga y el uso privado y pide autorización a la Dirección General para cualquier otro; no cita
+  la Ley 37/2007. Se guardan título, fecha, enlace, atribución y los pasajes sobre drones (nunca la
+  nota entera) y se publica solo el enlace, la atribución y una frase breve citada.
+
+**Histórico de 2024 a hoy**: la lista de noticias (912 notas, de 2019 a octubre de 2026) y el
+buscador dan 8 notas que nombran drones; ninguna es un incidente: dos proyectos europeos y
+seguridad de la Vuelta (divulgación y uso propio), búsquedas con el equipo de drones de la
+Guardia Civil, una operación contra el narcotráfico y un creador de contenido denunciado en el
+Parque Regional de Gredos (espacio natural, no instalación). Por eso hoy ningún incidente español
+procede de la Guardia Civil; el lector queda en la recogida y entrará la primera nota que cuente
+una intrusión.
+
+### Pruebas añadidas
+
+`tests/test_fuentes_espana.py`: las cifras de contexto validan con su esquema, con su origen y con
+la respuesta del Congreso como fuente de Aena; la lista de noticias; qué es incidente y qué no
+(con las notas reales descartadas); el registro como fuente oficial de detalle que da de alta.

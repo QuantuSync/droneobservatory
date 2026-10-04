@@ -183,7 +183,10 @@ def registrar_recolector(tipo: str, funcion: Recolector) -> None:
 
 def _cargar_recolectores() -> None:
     """Los recolectores de documentos viven en sus módulos y se registran al importarlos."""
-    for modulo in ("recogida.parlamentos", "recogida.investigaciones", "recogida.estadisticas"):
+    for modulo in (
+        "recogida.parlamentos", "recogida.investigaciones", "recogida.estadisticas",
+        "recogida.guardia_civil",
+    ):  # fmt: skip
         with contextlib.suppress(ModuleNotFoundError):
             __import__(modulo)
 

@@ -51,8 +51,11 @@ def guardados(raiz: Path, fuente_id: str) -> list[dict[str, Any]]:
 
 
 def test_cada_fuente_de_la_configuracion_tiene_su_lector() -> None:
+    from recogida import guardia_civil  # noqa: F401  (se registra al importarlo)
+
     tipos = {f["tipo"] for f in detalle.fuentes() if f["grupo"] == "investigaciones"}
-    assert tipos == set(investigaciones.RECOLECTORES)
+    # La Guardia Civil tiene su propio módulo (recogida/guardia_civil.py).
+    assert tipos - {"guardia_civil"} == set(investigaciones.RECOLECTORES)
     assert tipos <= set(detalle.RECOLECTORES)
 
 

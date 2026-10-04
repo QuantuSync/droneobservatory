@@ -42,6 +42,10 @@ MAX_PALABRAS = 25
 # informe de investigación o una sentencia llegan meses después y casi nunca son de un
 # incidente de la recogida; aportan a los que ya hay.
 TIPOS_ALTA = frozenset({"respuesta_parlamentaria"})
+# Las notas de la Guardia Civil que guarda su lector son ya de un incidente (un dron que entra
+# en una instalación, recogida/guardia_civil.py): si no encajan con uno que ya está, lo dan de
+# alta.
+FUENTES_ALTA = frozenset({"guardia_civil"})
 ESPERA_LOTE_S = 60.0
 MAX_ESPERA_LOTE = timedelta(hours=24)
 MAX_MOTIVOS = 20
@@ -208,7 +212,7 @@ def cruzar(
         return {**resultado, "cruce": "existente", "incidente": hallados[0]}
     if len(hallados) > 1:
         return {**resultado, "cruce": "varios", "motivos": sorted(hallados)[:MAX_MOTIVOS]}
-    if documento["tipo"] not in TIPOS_ALTA:
+    if documento["tipo"] not in TIPOS_ALTA and documento.get("fuente_detalle") not in FUENTES_ALTA:
         # Informes de investigación, cierres y sentencias aportan a los incidentes que ya hay;
         # no dan de alta ninguno.
         return {**resultado, "cruce": "sin_incidente"}

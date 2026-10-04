@@ -163,6 +163,19 @@
       "credibilidad": 1
     },
     {
+      "id": "guardia_civil",
+      "nombre": "Guardia Civil (notas de prensa)",
+      "tipo": "guardia_civil",
+      "autoridad": "Guardia Civil",
+      "pais": "ES",
+      "idioma": "es",
+      "url": "https://web.guardiacivil.es/es/destacados/noticias/",
+      "condiciones": "Sin canal RSS que funcione (el Atom de https://web.guardiacivil.es/es/tramites/rss_list/ responde 404); sin robots.txt (404); se leen la lista de noticias y el buscador general como un visitante. Aviso legal (https://web.guardiacivil.es/es/informacion-general/nota-legal/index.html, leído el 2026-10-04): uso limitado a la descarga y el uso privado, cualquier otro con autorización de la Dirección General; no cita la Ley 37/2007. Se guardan título, fecha, enlace, atribución y los pasajes sobre drones; se publica solo el enlace, la atribución y una frase breve citada.",
+      "grupo": "investigaciones",
+      "fiabilidad": "A",
+      "credibilidad": 1
+    },
+    {
       "id": "rechtspraak",
       "nombre": "Rechtspraak (Países Bajos, datos abiertos)",
       "tipo": "rechtspraak",

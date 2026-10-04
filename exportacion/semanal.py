@@ -21,6 +21,9 @@ age con la misma clave pública que la base:
   cobertura declarado;
 - descartes.jsonl: noticias rechazadas, partes que no se entienden, duplicados, fusiones no
   hechas por dudosas, desmentidos y retirados;
+- contexto_pais.jsonl: cifras oficiales agregadas de cada país (configuracion/
+  cifras_contexto.json), con su origen por valor: contexto, nunca incidentes ni parte de su
+  recuento;
 - vocabulario.json: la correspondencia con las categorías y clases de AEGIS
   (configuracion/vocabulario_aegis.json);
 - encuentros.jsonl, estadisticas_oficiales.jsonl y documentos_oficiales.jsonl: los registros
@@ -75,6 +78,7 @@ VERSION_FORMATO = "1.4.0"
 RAIZ = Path(__file__).resolve().parent.parent
 DIRECTORIO_ESQUEMAS = RAIZ / "esquema" / "exportacion" / VERSION_FORMATO
 VOCABULARIO = RAIZ / "configuracion" / "vocabulario_aegis.json"
+CIFRAS_CONTEXTO = RAIZ / "configuracion" / "cifras_contexto.json"
 MEDIOS = RAIZ / "configuracion" / "medios_europa.json"
 OFICIALES = RAIZ / "configuracion" / "fuentes_oficiales.json"
 MANIFIESTO = "manifiesto.json"
@@ -504,6 +508,17 @@ def descartes(almacen: Almacen, incidentes: list[Documento]) -> list[Documento]:
     return sorted(resultado, key=lambda d: (orden.index(d["tipo"]), d["id"], _linea(d)))
 
 
+def contexto_pais(ruta: Path = CIFRAS_CONTEXTO) -> list[Documento]:
+    """Las cifras oficiales de contexto de cada país (configuracion/cifras_contexto.json), con
+    su origen por valor. Son contexto: no son incidentes ni entran en ningún recuento."""
+    datos = _leer_json(ruta)
+    return [
+        {**c, "procedencia": {"valor": {"origen": c["origen"], "metodo": "transcripcion",
+                                        "fuentes": [c["enlace"]]}}}
+        for c in sorted(datos["cifras"], key=lambda c: (c["pais"], c["id"]))
+    ]  # fmt: skip
+
+
 def vocabulario() -> Documento:
     contenido: Documento = _leer_json(VOCABULARIO)
     return contenido
@@ -654,6 +669,7 @@ def generar(almacen: Almacen) -> list[Fichero]:
     estadisticas = almacen.estadisticas_oficiales()
     documentos = almacen.documentos_oficiales()
     datos_frecuencias = frecuencias(almacen, incidentes, estadisticas)
+    cifras_contexto = [{k: v for k, v in c.items() if k != "origen"} for c in contexto_pais()]
     datos_vocabulario = vocabulario()
     entradas_vocabulario = sum(
         len(datos_vocabulario[c]) for c in ("categorias_objetivo", "clases_dron")
@@ -678,6 +694,7 @@ def generar(almacen: Almacen) -> list[Fichero]:
     _comprobar("afirmaciones.jsonl", lista_afirmaciones, validador_propio("afirmacion"))
     _comprobar("descartes.jsonl", lista_descartes, validador_propio("descarte"))
     _comprobar("frecuencias.json", [datos_frecuencias], validador_propio("frecuencias"))
+    _comprobar("contexto_pais.jsonl", cifras_contexto, validador_propio("contexto_pais"))
     _comprobar("vocabulario.json", [datos_vocabulario], validador_propio("vocabulario"))
     _comprobar("encuentros.jsonl", encuentros, validador(Esquema.ENCUENTRO))
     _comprobar("estadisticas_oficiales.jsonl", estadisticas, validador(Esquema.ESTADISTICA_OFICIAL))
@@ -726,6 +743,8 @@ def generar(almacen: Almacen) -> list[Fichero]:
         Fichero("zonas_lanzamiento.json", _json(ficheros_catalogo["zonas_lanzamiento.json"]),
                 len(ficheros_catalogo["zonas_lanzamiento.json"]["zonas"]),
                 _catalogo("zonas_lanzamiento")),
+        Fichero("contexto_pais.jsonl", _jsonl(cifras_contexto), len(cifras_contexto),
+                _propio("contexto_pais")),
         Fichero("descartes.jsonl", _jsonl(lista_descartes), len(lista_descartes),
                 _propio("descarte")),
         Fichero("documentos_oficiales.jsonl", _jsonl(documentos), len(documentos),
