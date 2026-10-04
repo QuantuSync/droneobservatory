@@ -97,9 +97,22 @@ def habla_de_drones(frase: str) -> bool:
     return bool(filtro().dron.search(frase) or _DRONES_DECLINADOS.search(frase))
 
 
+# La sospecha de una infracción («mistanke om ulovlig droneflyvning», «suspected of illegally
+# flying a drone») no deja abierto que fuera un dron: lo que se sospecha es que fuera ilegal.
+_INFRACCION = re.compile(
+    r"^\W*(?:\w+\W+){0,2}(?:ulovlig\w*|olaglig\w*|ulovlig|illegal\w*|ilegal\w*|"
+    r"unerlaubt\w*|verboten\w*|illegaal|nielegaln\w*|unlawful\w*|unauthori[sz]ed)",
+    re.IGNORECASE,
+)
+
+
 def abierto(*textos: str) -> bool:
     """Si alguno de los textos deja abierto que fuera un dron."""
-    return any(ABIERTO.search(texto or "") for texto in textos)
+    for texto in textos:
+        for duda in ABIERTO.finditer(texto or ""):
+            if not _INFRACCION.search(texto[duda.end() : duda.end() + 40]):
+                return True
+    return False
 
 
 def confirma_dron(declaracion: dict[str, Any], contexto: str = "") -> bool:

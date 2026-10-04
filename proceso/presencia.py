@@ -18,6 +18,7 @@ como versión nueva del incidente, con la afirmación de presencia_dron y su fue
 queda en el historial. Es idempotente: la recogida horaria la ejecuta en cada pasada.
 """
 
+import re
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from typing import Any
@@ -83,16 +84,32 @@ def actua_la_autoridad(incidente: Documento) -> bool:
     return cierre == "si" or bool(medidas & MEDIDAS_DE_AUTORIDAD)
 
 
+# La policía acude, detiene, multa o decomisa por un dron: actúa por el dron.
+DETENCION = re.compile(
+    r"(?<!\w)(?:rykker (?:ut|til)|rykket (?:ut|til)|ryckte ut|rückt\w* aus|ausgerückt|"
+    r"responding to|responded to|acudi\w*|interv(?:ino|inieron|ened|ention)|ruszy\w*|"
+    r"detenid\w*|arrestad\w*|arrested|arrests?|festgenommen|festnahme\w*|"
+    r"verhaftet|anholdt|pågrepet|innbrakt|gripen|zatrzyma\w*|aangehouden|opgepakt|aresta\w*|"
+    r"interpel\w*|multad\w*|sancionad\w*|fined|bußgeld\w*|beboet|bötfäll\w*|"
+    r"incautad\w*|decomisad\w*|seized|beschlagnahmt|in beslag)(?!\w)",
+    re.IGNORECASE,
+)
+
+
 def por_actuacion(incidente: Documento) -> Documento | None:
     """La fuente que cuenta que la autoridad actuó por un dron (un cierre, una intervención
-    policial, cazas, un derribo): actúa atribuyendo el suceso a un dron. None si no actuó o si
-    la frase lo deja abierto."""
-    if not actua_la_autoridad(incidente):
-        return None
-    fuentes: list[Documento] = incidente["fuentes"]
-    for fuente in sorted(fuentes, key=lambda f: (f["fecha"]["valor"], f["id"])):
+    policial, cazas, un derribo, una detención o una multa por volarlo): actúa atribuyendo el
+    suceso a un dron. None si no actuó o si la frase lo deja abierto."""
+    fuentes: list[Documento] = sorted(
+        incidente["fuentes"], key=lambda f: (f["fecha"]["valor"], f["id"])
+    )
+    actua = actua_la_autoridad(incidente)
+    titulo = " ".join(str(v) for v in (incidente.get("titulo") or {}).values())
+    for fuente in fuentes:
         frase = str(fuente.get("frase_origen", ""))
-        if declaraciones.habla_de_drones(frase) and not declaraciones.abierto(frase):
+        if not declaraciones.habla_de_drones(frase) or declaraciones.abierto(frase):
+            continue
+        if actua or DETENCION.search(frase) or DETENCION.search(titulo):
             return fuente
     return None
 

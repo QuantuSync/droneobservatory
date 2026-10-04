@@ -112,8 +112,22 @@ def test_una_intervencion_policial_por_dron_confirma_la_presencia() -> None:
     documento["tipo"] = "sobrevuelo"
     documento["respuesta"] = {"medidas": ["patrulla"]}
     assert presencia.aplicar(documento)["presencia_dron"] == "confirmada"
+    # Sin medida registrada también: la frase dice que la policía acude por el dron.
     documento["respuesta"] = {"medidas": ["ninguna_conocida"]}
+    assert presencia.aplicar(documento)["presencia_dron"] == "confirmada"
+    documento["fuentes"][0]["frase_origen"] = "Vecinos vieron un dron sobre el aeropuerto"
     assert presencia.aplicar(documento)["presencia_dron"] == "no_confirmada"
+
+
+def test_una_detencion_por_volar_un_dron_confirma_la_presencia() -> None:
+    # Caso de Bardufoss: «Dos turistas detenidos por volar un dron cerca del aeropuerto».
+    documento = lieja(
+        "EODI-2025-00013", "2025-09-28T12:00Z",
+        frase_origen="To turister innbrakt etter mistanke om ulovlig droneflyvning.",
+    )  # fmt: skip
+    documento["consecuencias"] = {"cierre": {"valor": "desconocido"}}
+    documento["tipo"] = "sobrevuelo"
+    assert presencia.aplicar(documento)["presencia_dron"] == "confirmada"
 
 
 def test_si_la_fuente_lo_deja_abierto_el_cierre_no_confirma() -> None:
