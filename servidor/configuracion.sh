@@ -241,14 +241,15 @@ DIRECTO_REGISTRO="$SECRETOS/directo.json"
 #
 # Imagen de antes y después de cada instalación alcanzada (servidor/satelite.sh,
 # recogida/satelite.py): dos veces al día, a las 06:43 y las 18:43, fuera de los minutos 15 a 40
-# de la recogida horaria; con su tope de 30 minutos acaba antes de la siguiente.
+# de la recogida horaria; no empieza un impacto nuevo pasados 26 minutos (cada uno tarda alrededor
+# de un minuto), así que acaba antes del minuto 12.
 SATELITE_DATOS="${EODI_SATELITE_DATOS:-$CASA/datos/satelite}"
 UNIDAD_SATELITE="eodi-satelite"
 CERROJO_SATELITE="$SECRETOS/satelite.lock"
 SATELITE_REGISTRO="$SECRETOS/satelite.json"
 HORAS_SATELITE="06,18"
 MINUTO_SATELITE=43
-SATELITE_TOPE_MINUTOS=30
+SATELITE_TOPE_MINUTOS=26
 SATELITE_TOPE_UNIDAD=32
 # Luz nocturna tras los ataques contra la red eléctrica (servidor/luces.sh, recogida/luces.py):
 # cada hora en el minuto 41, fuera de los minutos 15 a 40 de la recogida horaria; no empieza una

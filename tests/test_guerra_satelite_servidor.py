@@ -75,6 +75,9 @@ def test_la_luz_nocturna_no_coincide_con_la_recogida() -> None:
     # de la hora siguiente (una noche tarda alrededor de un minuto).
     inicio, tope = valor("MINUTO_LUCES"), valor("LUCES_TOPE_MINUTOS")
     assert inicio > 40 and (inicio + tope) % 60 <= 10
+    # Lo mismo para la búsqueda de imágenes (un impacto tarda alrededor de un minuto).
+    inicio, tope = valor("MINUTO_SATELITE"), valor("SATELITE_TOPE_MINUTOS")
+    assert inicio > 40 and (inicio + tope) % 60 <= 10
     # Ninguna de las tres arranca entre los minutos 15 y 40 de la recogida horaria.
     for minuto in ("MINUTO_SATELITE", "MINUTO_LUCES", "MINUTO_FOCOS_VIVO"):
         assert not 15 <= valor(minuto) <= 40, minuto
