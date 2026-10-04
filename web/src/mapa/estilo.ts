@@ -211,6 +211,11 @@ export const CAPAS_DE_PUNTOS_DE_GUERRA: readonly string[] = [
   CAPA_LUZ_CIUDADES,
   CAPA_ALUMBRADO,
 ];
+/** Con el dedo, las marcas de la guerra que se alcanzan a 28 px (ZONA_ARCO_DEDO_PX): no los
+ * grupos de impactos, que ya son círculos grandes y cuentan solo si se tocan. */
+export const CAPAS_DE_PUNTOS_AL_TOQUE: readonly string[] = CAPAS_DE_PUNTOS_DE_GUERRA.filter(
+  (id) => id !== CAPA_IMPACTOS_GRUPOS,
+);
 /** Áreas: solo reciben el clic si no hay ninguna marca ni ningún arco. */
 export const CAPAS_DE_AREAS: readonly string[] = [
   CAPA_REGIONES,

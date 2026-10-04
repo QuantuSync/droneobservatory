@@ -271,7 +271,9 @@ Los arcos se ven finos, pero se seleccionan con holgura
 - **Prioridad.** Marcas puntuales (incidentes, impactos, focos, ciudades), después arcos, después
   áreas (regiones, celdas GPS, países): una región solo recibe el clic si no hay ninguna marca ni
   ningún arco en su zona. Con el dedo, las marcas de la capa de guerra tienen la misma tolerancia
-  que los arcos (28 px); las de los incidentes europeos, sus 44 px de siempre.
+  que los arcos (28 px), salvo los grupos de impactos, que ya son círculos grandes y cuentan solo
+  si se tocan (con margen se comían los arcos que pasan a su lado); las de los incidentes
+  europeos, sus 44 px de siempre.
 - **Varios arcos.** Gana el más cercano; si dos quedan a menos de 1 px de diferencia (arcos que
   comparten trazado), se abre una lista corta para elegir («Kursk → Járkov», «Oriol → Járkov»).
 - **Realce.** Al pasar el ratón, el arco pasa al violeta claro (`#cbbcff`) y se engrosa, los

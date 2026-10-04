@@ -6,8 +6,10 @@ import { describe, expect, it } from "vitest";
 import {
   CAPAS_DE_AREAS,
   CAPAS_DE_CORREDORES,
+  CAPAS_DE_PUNTOS_AL_TOQUE,
   CAPAS_DE_PUNTOS_DE_GUERRA,
   CAPAS_PULSABLES,
+  CAPA_IMPACTOS_GRUPOS,
   CAPA_CORREDORES,
   CAPA_CORREDORES_ZONA,
   CAPA_REALCE_ARCO,
@@ -57,6 +59,13 @@ describe("zona sensible de los arcos", () => {
     const orden = layers.map((c) => c.id);
     expect(orden.indexOf(CAPA_CORREDORES_ZONA)).toBeGreaterThan(orden.indexOf(CAPA_CORREDORES));
     expect(orden.indexOf(CAPA_REALCE_PUNTO)).toBeGreaterThan(orden.indexOf(CAPA_REALCE_ARCO));
+  });
+
+  it("con el dedo, los grupos de impactos no ganan a un arco que pasa a su lado", () => {
+    expect(CAPAS_DE_PUNTOS_AL_TOQUE).not.toContain(CAPA_IMPACTOS_GRUPOS);
+    expect(CAPAS_DE_PUNTOS_AL_TOQUE).toEqual(
+      CAPAS_DE_PUNTOS_DE_GUERRA.filter((id) => id !== CAPA_IMPACTOS_GRUPOS),
+    );
   });
 
   it("los arcos no se pulsan por su línea fina: van por su zona; las áreas, al final", () => {

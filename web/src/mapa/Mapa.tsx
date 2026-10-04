@@ -47,6 +47,7 @@ import {
   CAPAS_DE_PRESION,
   CAPAS_DE_UCRANIA,
   CAPAS_DE_AREAS,
+  CAPAS_DE_PUNTOS_AL_TOQUE,
   CAPAS_DE_PUNTOS_DE_GUERRA,
   CAPA_CORREDORES_ZONA,
   CAPA_REALCE_ARCO,
@@ -556,7 +557,7 @@ export default function Mapa(props: PropsMapa) {
         // Las de la capa de guerra, muy juntas a la escala de Ucrania, el de los arcos (28 px).
         const cercana =
           marcaMasCercana(mapa, punto.x, punto.y) ??
-          marcaMasCercana(mapa, punto.x, punto.y, CAPAS_DE_PUNTOS_DE_GUERRA, ZONA_ARCO_DEDO_PX);
+          marcaMasCercana(mapa, punto.x, punto.y, CAPAS_DE_PUNTOS_AL_TOQUE, ZONA_ARCO_DEDO_PX);
         if (cercana !== undefined) {
           lista.push({ clase: "marca", distancia: 1, valor: { tipo: "rasgo", rasgo: cercana } });
         }
