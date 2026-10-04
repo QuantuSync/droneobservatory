@@ -28,10 +28,17 @@ def declaracion(
 
 
 def incidente() -> tuple[Documento, list[str]]:
+    """El incidente tal como lo da la ficha, antes de las reglas de presencia (el cierre del
+    ejemplo ya la confirmaría): así cada prueba mira solo lo que hacen las declaraciones."""
     almacen = Almacen.abrir()
     id_ = extraer_ejemplo(almacen)
     resultado = almacen.incidente(str(id_))
     assert resultado is not None
+    resultado["presencia_dron"] = "no_confirmada"
+    resultado["afirmaciones"] = [
+        a for a in resultado["afirmaciones"]
+        if a != declaraciones.afirmacion_presencia(a["fuente_id"])
+    ]  # fmt: skip
     return resultado, [resultado["fuentes"][0]["enlace"]]
 
 

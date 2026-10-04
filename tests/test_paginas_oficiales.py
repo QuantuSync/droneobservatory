@@ -6,6 +6,7 @@ from typing import Any
 import pytest
 
 from almacen.base import Almacen
+from proceso import presencia
 from proceso.noticias import filtro
 from recogida import oficiales, paginas_oficiales
 from recogida.descarga import Descargador, Respuesta
@@ -189,6 +190,10 @@ def test_la_nota_de_una_pagina_confirma_sin_tocar_la_presencia() -> None:
     incidente = almacen.incidente(str(id_))
     assert incidente is not None
     assert incidente["estado"]["actual"] == "confirmado"
-    # «mulige droner»: la autoridad no afirma que hubiera drones.
+    # «mulige droner»: la autoridad lo deja abierto; la revisión horaria quita la confirmación
+    # que solo venía del cierre que contaba la prensa.
+    presencia.revisar(almacen, AHORA, MODELOS)
+    incidente = almacen.incidente(str(id_))
+    assert incidente is not None
     assert incidente["presencia_dron"] == "no_confirmada"
     assert "https://forsvar.ejemplo/om" not in sitio.pedidas

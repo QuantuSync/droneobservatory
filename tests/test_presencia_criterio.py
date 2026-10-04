@@ -130,6 +130,21 @@ def test_una_detencion_por_volar_un_dron_confirma_la_presencia() -> None:
     assert presencia.aplicar(documento)["presencia_dron"] == "confirmada"
 
 
+def test_el_cierre_por_dron_confirma_aunque_la_frase_no_repita_el_dron() -> None:
+    # Lanzarote: el cierre está registrado y la frase dice «causó la paralización de todas las
+    # operaciones»; Luxemburgo: la frase cuenta el cierre por drones sin el campo de cierre.
+    lanzarote = lieja("EODI-2025-00399", "2025-08-13T19:30Z",
+                      frase_origen="causó la paralización de todas las operaciones")  # fmt: skip
+    assert presencia.aplicar(lanzarote)["presencia_dron"] == "confirmada"
+    luxemburgo = lieja(
+        "EODI-2026-00038", "2026-09-23T19:00Z",
+        frase_origen="Zweimal wurde der Flughafen Luxemburg wegen Drohnen gesperrt",
+    )  # fmt: skip
+    luxemburgo["consecuencias"] = {"cierre": {"valor": "desconocido"}}
+    luxemburgo["tipo"] = "sobrevuelo"
+    assert presencia.aplicar(luxemburgo)["presencia_dron"] == "confirmada"
+
+
 def test_si_la_fuente_lo_deja_abierto_el_cierre_no_confirma() -> None:
     documento = lieja(
         "EODI-2025-00092", "2025-11-09T19:00Z",

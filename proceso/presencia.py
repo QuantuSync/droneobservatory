@@ -96,10 +96,22 @@ DETENCION = re.compile(
 )
 
 
+# La frase cuenta el cierre del aeropuerto o del espacio aéreo («wegen Drohnen gesperrt»).
+CIERRE_EN_FRASE = re.compile(
+    r"(?<!\w)(?:gesperrt|geschlossen|stillgelegt|eingestellt|cerrad\w*|cierr\w*|paraliz\w*|"
+    r"closed|closure|shut|lukket|lukke\w*|stengt|stengte|stängd\w*|zamkni\w*|ferm[ée]\w*|"
+    r"fermeture|stilgelegd|gesloten|chius\w*|[îi]nchis\w*|paralys\w*|suspendid\w*|"
+    r"suspended)(?!\w)",
+    re.IGNORECASE,
+)
+
+
 def por_actuacion(incidente: Documento) -> Documento | None:
     """La fuente que cuenta que la autoridad actuó por un dron (un cierre, una intervención
     policial, cazas, un derribo, una detención o una multa por volarlo): actúa atribuyendo el
-    suceso a un dron. None si no actuó o si la frase lo deja abierto."""
+    suceso a un dron. Con el cierre o la medida registrados basta la primera fuente que no lo
+    deja abierto, aunque su frase no repita la palabra dron (el incidente es de un dron). None si
+    no actuó o si las fuentes que nombran el dron lo dejan abierto."""
     fuentes: list[Documento] = sorted(
         incidente["fuentes"], key=lambda f: (f["fecha"]["valor"], f["id"])
     )
@@ -109,8 +121,22 @@ def por_actuacion(incidente: Documento) -> Documento | None:
         frase = str(fuente.get("frase_origen", ""))
         if not declaraciones.habla_de_drones(frase) or declaraciones.abierto(frase):
             continue
-        if actua or DETENCION.search(frase) or DETENCION.search(titulo):
+        if (
+            actua
+            or DETENCION.search(frase)
+            or DETENCION.search(titulo)
+            or CIERRE_EN_FRASE.search(frase)
+        ):
             return fuente
+    if actua and not any(
+        declaraciones.habla_de_drones(str(f.get("frase_origen", "")))
+        and declaraciones.abierto(str(f.get("frase_origen", "")))
+        for f in fuentes
+    ):
+        for fuente in fuentes:
+            frase = str(fuente.get("frase_origen", ""))
+            if frase and not declaraciones.abierto(frase):
+                return fuente
     return None
 
 
@@ -235,6 +261,23 @@ def revisar(
             continue
         anotar(almacen, incidente, documento, cambio.motivo)
         hechos.append(cambio)
+    # Confirmada solo por la actuación (un cierre o una intervención que cuenta la prensa) y la
+    # autoridad, después, lo deja abierto («mulige droner»): queda sin confirmar.
+    for incidente in almacen.incidentes():
+        if not activo(incidente) or incidente.get("presencia_dron") != "confirmada":
+            continue
+        documento = quitar_por_actuacion(incidente)
+        if documento is incidente:
+            continue
+        documento = titulares.ajustar_incidente(documento)
+        documento = {**documento, "control": {**documento["control"],
+                                              "ultima_actualizacion": instante}}  # fmt: skip
+        try:
+            almacen.guardar_incidente(documento, ahora, modelos)
+        except DocumentoInvalido:
+            fallidos.append(incidente["id"])
+            continue
+        anotar(almacen, incidente, documento, MOTIVO_ABIERTO)
     # Los titulares que no dicen lo mismo que la presencia (los guardados antes de la regla).
     for incidente in almacen.incidentes():
         if not activo(incidente):
@@ -254,6 +297,31 @@ def revisar(
 
 
 MOTIVO_TITULAR = "titular coherente con la presencia del dron (proceso/titulares.py)"
+MOTIVO_ABIERTO = (
+    "criterio de presencia: la autoridad lo deja abierto; la actuación que contaba la prensa no "
+    "basta"
+)
+
+
+def quitar_por_actuacion(incidente: Documento) -> Documento:
+    """Sin la confirmación que solo venía de la actuación (fuente que no es autoridad) cuando
+    todas las autoridades citadas lo dejan abierto. El mismo incidente si no hay nada que
+    quitar."""
+    if not autoridad_lo_deja_abierto(incidente) or documento_oficial_decide(incidente):
+        return incidente
+    fuentes = {f["id"]: f for f in incidente["fuentes"]}
+    de_regla = [
+        a for a in incidente.get("afirmaciones", [])
+        if a["campo"] == "presencia_dron" and a["valor"] == "confirmada"
+        and a == declaraciones.afirmacion_presencia(a["fuente_id"])
+    ]  # fmt: skip
+    if not de_regla or any(fuentes.get(a["fuente_id"], {}).get("es_autoridad") for a in de_regla):
+        return incidente
+    return {
+        **incidente,
+        "presencia_dron": "no_confirmada",
+        "afirmaciones": [a for a in incidente.get("afirmaciones", []) if a not in de_regla],
+    }
 
 
 def anotar(almacen: Almacen, anterior: Documento, nuevo: Documento, motivo: str) -> None:
