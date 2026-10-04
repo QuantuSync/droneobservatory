@@ -142,6 +142,47 @@ def test_dos_cierres_del_mismo_sitio_en_noches_distintas_no_se_funden() -> None:
     assert not incidentes.encajan(lieja("EODI-2025-00402", "2025-11-08T00:00Z", "dia"), domingo)
 
 
+def test_un_cierre_que_se_repite_no_se_funde_en_el_de_la_noche_anterior() -> None:
+    # Lieja: el cierre del sábado (con hora) y el del domingo, con la fecha de publicación y una
+    # fuente que dice «opnieuw stilgelegd».
+    sabado = lieja("EODI-2025-00092", "2025-11-08T19:00Z")
+    domingo = lieja(
+        "EODI-2025-00408",
+        "2025-11-09T19:30Z",
+        "aproximada",
+        frase_origen="Vliegverkeer luchthaven Luik opnieuw stilgelegd na melding drone",
+    )
+    domingo["fuentes"][0]["fecha"] = ejemplos.instante("2025-11-09T19:30Z", "aproximada")
+    assert incidentes.repite_un_cierre_anterior(sabado, domingo)
+    assert not incidentes.encajan(sabado, domingo)
+    # Sin palabra de repetición, la fecha de publicación casa con la víspera (como antes).
+    domingo["fuentes"][0]["frase_origen"] = "Vliegverkeer luchthaven Luik stilgelegd na melding"
+    assert incidentes.encajan(sabado, domingo)
+
+
+def test_la_revision_deshace_la_fusion_de_dos_cierres_de_noches_distintas() -> None:
+    almacen = Almacen.abrir()
+    sabado = lieja("EODI-2025-00092", "2025-11-08T19:00Z")
+    domingo = lieja(
+        "EODI-2025-00408",
+        "2025-11-09T19:30Z",
+        "aproximada",
+        frase_origen="Vliegverkeer luchthaven Luik opnieuw stilgelegd na melding drone",
+    )
+    domingo["fuentes"][0]["fecha"] = ejemplos.instante("2025-11-09T19:30Z", "aproximada")
+    for documento in (sabado, domingo):
+        almacen.guardar_incidente(documento, AHORA, VOCABULARIO_MODELOS)
+    # Una fusión hecha con las reglas anteriores.
+    nuevo, aportadas = incidentes.absorber(sabado, domingo, AHORA)
+    almacen.guardar_incidente(nuevo, AHORA, VOCABULARIO_MODELOS)
+    almacen.guardar_incidente({**domingo, "fusionado_en": sabado["id"]}, AHORA, VOCABULARIO_MODELOS)
+    almacen.registrar_fusion("2025-11-10T00:00Z", domingo["id"], sabado["id"], "prueba", aportadas)
+    assert incidentes.revisar_fusiones(almacen, AHORA, VOCABULARIO_MODELOS) == ["EODI-2025-00408"]
+    vuelto = almacen.incidente("EODI-2025-00408")
+    assert vuelto is not None and "fusionado_en" not in vuelto
+    assert incidentes.revisar_fusiones(almacen, AHORA, VOCABULARIO_MODELOS) == []
+
+
 def test_la_repeticion_se_mide_desde_el_suceso() -> None:
     sitio = nomenclator().lugares["EBLG"]
     # Primera noticia el domingo a las 09:00 sobre el cierre del sábado a las 19:00.

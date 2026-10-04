@@ -36,7 +36,7 @@ from esquema import Documento
 from proceso import fechas
 from proceso.credibilidad import Declaracion, Fiabilidad, Postura, credibilidad
 from proceso.estados import Estado, nuevo_estado
-from proceso.noticias import normalizar
+from proceso.noticias import filtro, normalizar
 from proceso.ubicacion import Ubicacion
 from proceso.validacion_ficha import Validada, leer_fecha
 
@@ -441,11 +441,38 @@ def cierres_de_noches_distintas(a: Documento, b: Documento) -> bool:
     return noche_a is not None and noche_b is not None and noche_a != noche_b
 
 
+def _cierre(documento: Documento) -> bool:
+    return (documento.get("consecuencias", {}).get("cierre") or {}).get("valor") == "si"
+
+
+def repite_un_cierre_anterior(anterior: Documento, posterior: Documento) -> bool:
+    """El posterior es otro cierre: sus fuentes dicen que se repite («opnieuw stilgelegd», «de
+    nouveau», «erneut») y se publican un día después de la noche del anterior. Vale aunque su
+    fecha sea la de publicación (Lieja: el cierre del domingo 9 de noviembre de 2025, contado
+    como «opnieuw», no es el del sábado 8)."""
+    # Con la fecha del suceso sabida decide la noche (cierres_de_noches_distintas): «igen» y
+    # «vėl» también dicen que se reabrió o que pasó en otro sitio.
+    if posterior["tiempo"]["inicio"]["precision"] != APROXIMADA:
+        return False
+    if not (_cierre(anterior) and _cierre(posterior)):
+        return False
+    noche = noche_del_cierre(anterior) or _leer_instante(anterior["tiempo"]["inicio"]).date()
+    pais = str(posterior["lugar"].get("pais", ""))
+    filtro_ = filtro()
+    return any(
+        filtro_.repite(str(fuente.get("frase_origen", "")))
+        and _dia_local(_leer_instante(fuente["fecha"]), pais) > noche
+        for fuente in posterior["fuentes"]
+        if not fuente.get("es_autoridad")
+    )
+
+
 def encajan(a: Documento, b: Documento) -> bool:
     primero, segundo = sorted((a, b), key=lambda d: (d["tiempo"]["inicio"]["valor"], d["id"]))
     return (
         mismo_sitio(a, b)
         and not cierres_de_noches_distintas(a, b)
+        and not repite_un_cierre_anterior(primero, segundo)
         and misma_ventana(primero, segundo)
     )
 
@@ -612,6 +639,27 @@ def fusionar(
         del vivos[absorbido["id"]]
         hechas += 1
     return hechas
+
+
+def revisar_fusiones(almacen: Almacen, ahora: datetime, modelos: frozenset[str]) -> list[str]:
+    """Deshace las fusiones que las reglas de ahora ya no hacen (dos cierres de noches distintas,
+    un cierre que se repite): el absorbido vuelve a publicarse con sus fuentes. Devuelve los
+    absorbidos que vuelven."""
+    vueltos = []
+    for fusion in almacen.fusiones():
+        if fusion["revertida"]:
+            continue
+        absorbido = almacen.incidente(fusion["absorbido"])
+        destino = almacen.incidente(fusion["destino"])
+        if absorbido is None or destino is None or "fusionado_en" not in absorbido:
+            continue
+        propio = {k: v for k, v in absorbido.items() if k != "fusionado_en"}
+        if cierres_de_noches_distintas(propio, destino) or repite_un_cierre_anterior(
+            *sorted((propio, destino), key=lambda d: (d["tiempo"]["inicio"]["valor"], d["id"]))
+        ):
+            revertir(almacen, fusion["absorbido"], ahora, modelos)
+            vueltos.append(fusion["absorbido"])
+    return vueltos
 
 
 def revertir(almacen: Almacen, absorbido_id: str, ahora: datetime, modelos: frozenset[str]) -> None:

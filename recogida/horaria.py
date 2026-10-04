@@ -41,7 +41,7 @@ from almacen import remoto
 from almacen.base import Almacen
 from almacen.cifrado import abrir_cifrada, guardar_cifrada
 from exportacion.publicar import modelos, publicar
-from proceso import focos_termicos, impactos_guerra, incursiones, presencia, solapes
+from proceso import focos_termicos, impactos_guerra, incidentes, incursiones, presencia, solapes
 from proceso.ataques import SENTIDO_UA_RU
 from proceso.extraccion import Parada
 from recogida import (
@@ -342,6 +342,13 @@ def principal(argumentos: list[str] | None = None) -> int:
         catalogo_vivo.paso_horario(almacen)
         # Presencia del dron que confirman las declaraciones oficiales ya guardadas: la regla
         # se amplió y lo anterior se revisa en cada pasada; ya aplicada, no cambia nada.
+        # Fusiones que las reglas de ahora ya no hacen (dos cierres de noches distintas, un cierre
+        # que se repite): se deshacen; el absorbido vuelve con sus fuentes.
+        try:
+            vueltos = incidentes.revisar_fusiones(almacen, ahora, modelos(almacen))
+            registro.info("fusiones deshechas por las reglas de ahora: %d", len(vueltos))
+        except Exception as error:
+            registro.warning("revisión de fusiones fallida: %s", str(error)[:300])
         confirmadas, sin_guardar = presencia.revisar(almacen, ahora, modelos(almacen))
         registro.info("presencia del dron confirmada por declaraciones: %d", len(confirmadas))
         if sin_guardar:
