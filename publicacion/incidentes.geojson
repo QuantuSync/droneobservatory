@@ -144610,6 +144610,195 @@
     }
    },
    "type": "Feature"
+  },
+  {
+   "geometry": {
+    "coordinates": [
+     13.29,
+     52.55
+    ],
+    "type": "Point"
+   },
+   "id": "EODI-2026-00428",
+   "properties": {
+    "afirmaciones_publicas": [
+     {
+      "campo": "consecuencias.cierre.minutos",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-04T10:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-13ca8240df540134",
+      "medio": "spidersweb.pl",
+      "valor": {
+       "max": 45,
+       "min": 45
+      }
+     },
+     {
+      "campo": "consecuencias.cierre.valor",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-04T10:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-13ca8240df540134",
+      "medio": "spidersweb.pl",
+      "valor": "si"
+     },
+     {
+      "campo": "drones.numero",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-04T10:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-13ca8240df540134",
+      "medio": "spidersweb.pl",
+      "valor": {
+       "max": 28,
+       "min": 28
+      }
+     },
+     {
+      "campo": "lugar.pais",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-04T10:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-13ca8240df540134",
+      "medio": "spidersweb.pl",
+      "valor": "DE"
+     },
+     {
+      "campo": "objetivo.categoria",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-04T10:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-13ca8240df540134",
+      "medio": "spidersweb.pl",
+      "valor": "aeropuerto"
+     },
+     {
+      "campo": "objetivo.nombre",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-04T10:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-13ca8240df540134",
+      "medio": "spidersweb.pl",
+      "valor": "Berlin Brandenburg"
+     },
+     {
+      "campo": "presencia_dron",
+      "cita": "Tylko w pierwszej połowie 2026 r.",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-04T10:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-13ca8240df540134",
+      "medio": "spidersweb.pl",
+      "valor": "confirmada"
+     },
+     {
+      "campo": "tipo",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-04T10:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-13ca8240df540134",
+      "medio": "spidersweb.pl",
+      "valor": "interrupcion_aeroportuaria"
+     }
+    ],
+    "consecuencias": {
+     "cierre": {
+      "minutos": {
+       "max": 45,
+       "min": 45
+      },
+      "valor": "si"
+     }
+    },
+    "control": {
+     "ultima_actualizacion": {
+      "precision": "minuto",
+      "valor": "2026-10-04T10:17Z"
+     }
+    },
+    "drones": {
+     "numero": {
+      "max": 28,
+      "min": 28
+     }
+    },
+    "estado": {
+     "actual": "notificado",
+     "historial": [
+      {
+       "estado": "notificado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2026-10-04T10:00Z"
+       },
+       "fuente_id": "gdelt-13ca8240df540134"
+      }
+     ]
+    },
+    "fuentes": [
+     {
+      "credibilidad": 3,
+      "enlace": "https://spidersweb.pl/2026/10/lotnisko-berlin-drony-detektor-ber.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-04T10:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Tylko w pierwszej połowie 2026 r.",
+      "id": "gdelt-13ca8240df540134",
+      "idioma": "pl",
+      "medio": "spidersweb.pl",
+      "replicas": 0
+     }
+    ],
+    "id": "EODI-2026-00428",
+    "lugar": {
+     "pais": "DE",
+     "radio_km": 5.0
+    },
+    "objetivo": {
+     "categoria": "aeropuerto",
+     "nombre": "Aeropuerto de Berlín"
+    },
+    "presencia_dron": "confirmada",
+    "tiempo": {
+     "inicio": {
+      "precision": "aproximada",
+      "valor": "2026-10-04T10:00Z"
+     }
+    },
+    "tipo": "interrupcion_aeroportuaria",
+    "titulo": {
+     "en": "Drones over Berlin airport cause multiple disruptions",
+     "es": "Drones sobre el aeropuerto de Berlín causan múltiples interrupciones"
+    }
+   },
+   "type": "Feature"
   }
  ],
  "type": "FeatureCollection"
