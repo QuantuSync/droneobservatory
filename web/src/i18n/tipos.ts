@@ -1,3 +1,4 @@
+import type { TipoSatelite } from "../datos/guerraSatelite.ts";
 import type { Accion } from "../estado/atajos.ts";
 import type {
   CategoriaInstalacion,
@@ -449,15 +450,9 @@ export interface TextosSatelite {
   /** Rótulo del grupo de capas de la guerra. */
   capas: string;
   corredores: string;
-  focos: string;
-  luz: string;
   letreroCorredor: (origen: string, region: string, drones: string) => string;
-  letreroFoco: (hora: string, coincide: boolean) => string;
   letreroCiudad: (ciudad: string, perdida: string) => string;
   letreroAlumbrado: (ciudad: string) => string;
-  /** Hora del último foco de la capa de focos en vivo. */
-  focosUltimo: (hora: string) => string;
-  focosVacio: string;
   corredor: {
     etiqueta: string;
     origen: string;
@@ -509,14 +504,17 @@ export interface TextosSatelite {
     escena: (id: string) => string;
     nubes: (pct: string) => string;
     producto: (lado: string) => string;
-    esperando: string;
-    cargando: string;
     alt: (momento: string, fecha: string) => string;
+    /** «Zona con cambios: N hectáreas», con las fechas de las dos imágenes. */
+    zonaCambio: (hectareas: string, antes: string, despues: string) => string;
+    ocultarContorno: string;
+    verContorno: string;
   };
   zona: (id: string, nombre: string) => string;
   /** Lo que dice la ayuda del mapa de cada marca. */
   ayudaCorredores: string;
-  ayudaFocos: string;
+  /** Las subcapas de la de Ucrania se encienden con su botón. */
+  ayudaSubcapas: string;
   ayudaLuz: string;
   ayudaAlumbrado: string;
   /** El marcador de los puntos con información de satélite y el botón «Con satélite». */
@@ -525,6 +523,11 @@ export interface TextosSatelite {
   listaSatelite: string;
   abrirLista: string;
   cerrarLista: string;
-  tiene: { imagen: string; foco: string; luz: string };
+  /** Los cuatro tipos de «Con satélite»: su nombre corto, lo que dice de cada uno la leyenda,
+   * el rótulo de la leyenda y el del filtro. */
+  tipos: Record<TipoSatelite, string>;
+  leyendaTipos: Record<TipoSatelite, string>;
+  leyenda: string;
+  filtrar: string;
   letreroSatelite: (imagen: boolean, foco: boolean) => string;
 }

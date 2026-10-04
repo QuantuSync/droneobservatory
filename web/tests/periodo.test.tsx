@@ -225,7 +225,7 @@ describe("en la aplicación, con la hora puesta", () => {
     });
   }
 
-  it("al encender la presión con «Todo», el periodo pasa a los últimos 30 días", async () => {
+  it("encender la presión no pone ningún periodo por su cuenta", async () => {
     const ahora = Date.parse(`${DIA}T06:45Z`);
     servir(ahora);
     const usuario = userEvent.setup();
@@ -236,10 +236,12 @@ describe("en la aplicación, con la hora puesta", () => {
     );
     await screen.findByTestId("mapa");
     await usuario.click(screen.getByRole("button", { name: es.controles.presion }));
-    await waitFor(() => expect(window.location.search).toBe("?ultimos=30d"));
-    expect(document.querySelector("[data-periodo-leyenda]")?.textContent).toBe("Incidentes en los últimos 30 días");
-    // El botón de filtros lo muestra como periodo activo.
-    expect(document.querySelector("[data-periodo-escrito]")?.textContent).toContain(es.filtros.periodos["30d"]);
+    // Las capas y los filtros se ponen, no se quitan: la presión se enciende y el periodo sigue
+    // siendo el que había.
+    await waitFor(() =>
+      expect(screen.getByRole("button", { name: es.controles.presion }).getAttribute("aria-pressed")).toBe("true"),
+    );
+    expect(window.location.search).toBe("");
   });
 
   it("con otro periodo elegido, encender la presión no lo cambia", async () => {

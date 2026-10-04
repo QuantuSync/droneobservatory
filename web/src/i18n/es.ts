@@ -321,6 +321,7 @@ export const es: Textos = {
       capaIncidentes: "Capa de incidentes",
       capaUcrania: "Capa de Ucrania",
       capaDensidad: "Capa de densidad",
+      capaSatelite: "Encender o apagar «Con satélite»",
       filtroGraves: "Solo confirmados y atribuidos",
       filtro24h: "Últimas 24 horas",
       filtro7d: "Últimos 7 días",
@@ -946,7 +947,16 @@ export const es: Textos = {
                 "en color natural y con el mismo ajuste de brillo. Las nubes se miden en el " +
                 "propio recorte con la clasificación de escena de la ESA: vale una imagen con un " +
                 "3 % de nube o menos sobre la instalación, aunque la escena entera esté nublada. " +
-                "La pareja se completa sola cuando llega la primera imagen posterior despejada.",
+                "Solo se publica la pareja en la que se ve el cambio: las dos imágenes se llevan a " +
+                "una misma rejilla de 10 m y se mide la diferencia del índice de quemado (bandas " +
+                "B8A y B12) y el oscurecimiento en el color natural, sin nubes, sombras, nieve ni " +
+                "agua, y por encima de lo que cambia el resto del recorte (la estación, los " +
+                "cultivos, la luz). Cuenta la mancha que toca un círculo de 800 m alrededor del " +
+                "impacto, y se publica si llega a 10 hectáreas; si la primera imagen posterior " +
+                "despejada no la muestra (el humo o una nube fina la tapan), se prueban las " +
+                "siguientes durante 15 días. La zona cambiada va marcada con un contorno y la " +
+                "imagen se encuadra en ella. Todo lo que sale del satélite se enciende con " +
+                "«Con satélite»; los corredores, con su botón.",
             ],
           },
           {
@@ -985,11 +995,15 @@ export const es: Textos = {
           },
           {
             parrafo: [
-              "Focos de calor de las últimas 24 horas: los de NASA FIRMS sobre Ucrania y la " +
-                "Rusia europea, con los mismos filtros que el cruce con los impactos (fuera las " +
-                "antorchas de las refinerías y las plantas con calor habitual, la baja confianza " +
-                "y las zonas que arden a diario, como las ciudades del frente). Se resaltan los " +
-                "que caen en el radio de un impacto declarado en las 36 horas de alrededor.",
+              "Focos de calor confirmados: de los de NASA FIRMS de las últimas 24 horas sobre " +
+                "Ucrania y la Rusia europea, con los mismos filtros que el cruce con los impactos " +
+                "(fuera las antorchas de las refinerías y las plantas con calor habitual, la baja " +
+                "confianza y las zonas que arden a diario, como las ciudades del frente), solo se " +
+                "publican los que caen en el radio de un impacto declarado en las 36 horas de " +
+                "alrededor. En «Con satélite» cuentan como impactos con foco en cuanto se " +
+                "confirman, junto a los del cruce histórico. Los demás (quemas agrícolas, " +
+                "industria, incendios forestales) se siguen descargando y cruzando, pero no se " +
+                "dibujan.",
             ],
           },
           {
@@ -1333,15 +1347,9 @@ export const es: Textos = {
   satelite: {
     capas: "Capa de guerra",
     corredores: "Corredores",
-    focos: "Focos 24 h",
-    luz: "Luz nocturna",
     letreroCorredor: (origen, region, drones) => `${origen} → ${region} · ${drones} drones`,
-    letreroFoco: (hora, coincide) =>
-      `Foco de calor · ${hora} UTC${coincide ? " · coincide con un impacto declarado" : ""}`,
     letreroCiudad: (ciudad, perdida) => `${ciudad} · ${perdida} % menos de luz nocturna`,
     letreroAlumbrado: (ciudad) => `${ciudad} · alumbrado reducido de forma permanente`,
-    focosUltimo: (hora) => `Focos de calor de 24 h · último dato ${hora} UTC`,
-    focosVacio: "Focos de calor de 24 h · sin focos en las últimas 24 horas",
     corredor: {
       etiqueta: "Corredor de ataque · capa de guerra",
       origen: "Origen",
@@ -1406,9 +1414,11 @@ export const es: Textos = {
       escena: (id) => `escena ${id}`,
       nubes: (pct) => `${pct} % de nubes en el recorte`,
       producto: (lado) => `Sentinel-2 L2A, color natural, 10 m por píxel, recorte de ${lado} km`,
-      esperando: "La imagen posterior sin nubes se añade en cuanto Sentinel-2 la toma.",
-      cargando: "Cargando las imágenes…",
       alt: (momento, fecha) => `Imagen de satélite ${momento} del ataque, ${fecha}`,
+      zonaCambio: (hectareas, antes, despues) =>
+        `Zona con cambios: ${hectareas} hectáreas · antes ${antes} · después ${despues}`,
+      ocultarContorno: "Ocultar contorno",
+      verContorno: "Ver contorno",
     },
     zona: (_id, nombre) => nombre,
     ayudaCorredores:
@@ -1416,25 +1426,41 @@ export const es: Textos = {
       "drones en el periodo. Contra Rusia sale del punto de la frontera de Ucrania más cercano. " +
       "Basta con acercar el ratón o el dedo: el arco se ilumina y gana a la región de debajo; " +
       "con el tabulador se recorren uno a uno.",
-    ayudaFocos:
-      "Un punto violeta diminuto es un foco de calor de las últimas 24 horas (NASA FIRMS); uno violeta claro " +
-      "y mayor coincide con un impacto declarado.",
+    ayudaSubcapas:
+      "Con la capa de Ucrania se ven sus regiones y sus impactos. «Corredores» y «Con " +
+      "satélite» se encienden con su botón (y se apagan con él); al apagar la capa de Ucrania se " +
+      "apagan también.",
+    tipos: {
+      cortinilla: "antes y después",
+      foco: "foco de calor",
+      apagon: "apagón",
+      oscura: "ciudad a oscuras",
+    },
+    leyendaTipos: {
+      cortinilla: "Impacto con imagen de antes y después en la que se ve el cambio",
+      foco: "Impacto con un foco de calor que coincide con él (también los de las últimas 24 horas)",
+      apagon: "Ciudad que perdió luz nocturna tras un ataque contra la red eléctrica",
+      oscura: "Ciudad con el alumbrado reducido de forma permanente",
+    },
+    leyenda: "Leyenda",
+    filtrar: "Filtrar la lista por tipo",
     ayudaLuz:
-      "Una región o una ciudad oscurecida perdió luz nocturna tras un ataque contra la red " +
-      "eléctrica, medido por satélite: más oscura, más pérdida.",
+      "Con «Con satélite»: una región o una ciudad oscurecida perdió luz nocturna tras un ataque " +
+      "contra la red eléctrica, medido por satélite (apagón): más oscura, más pérdida.",
     ayudaAlumbrado:
-      "Un aro con un punto claro es una ciudad con el alumbrado reducido de forma permanente: " +
+      "Con «Con satélite»: un aro con un punto claro es una ciudad a oscuras, con el alumbrado " +
+      "reducido de forma permanente: " +
       "su brillo nocturno lleva tiempo por debajo del mínimo con que se mide un apagón.",
     ayudaSatelite:
       "Un impacto más grande con el borde claro tiene información de satélite: con un segundo " +
-      "aro, imagen de antes y después; con la marca de foco, foco de calor. Siempre encima de " +
-      "los demás; un grupo con alguno lleva el borde claro. «Con satélite» deja solo esos puntos " +
-      "y abre su lista.",
+      "aro, imagen de antes y después en la que se ve el cambio; con la marca de foco, un foco " +
+      "de calor que coincide con él. Siempre encima de los demás; un grupo con alguno lleva el " +
+      "borde claro. «Con satélite» enciende los cuatro tipos (antes y después, foco, apagón y " +
+      "ciudad a oscuras), atenúa lo demás y abre su leyenda y su lista, que se filtra por tipo.",
     conSatelite: (n) => `Con satélite · ${n}`,
     listaSatelite: "Puntos con información de satélite",
     abrirLista: "Abrir la lista de puntos con satélite",
     cerrarLista: "Cerrar la lista de puntos con satélite",
-    tiene: { imagen: "antes y después", foco: "foco de calor", luz: "luz nocturna" },
     letreroSatelite: (imagen, foco) =>
       `Impacto con satélite · ${[imagen ? "antes y después" : null, foco ? "foco de calor" : null]
         .filter((x) => x !== null)

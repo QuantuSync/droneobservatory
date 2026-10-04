@@ -6,11 +6,13 @@ import type { KeyboardEvent, PointerEvent } from "react";
 
 import { urlDelAlmacen } from "../almacenPublico.ts";
 import { OBJETO_PAREJAS } from "../datos/guerraSatelite.ts";
+import { TIPOS_SATELITE, tiposDe } from "../datos/guerraSatelite.ts";
 import type {
   CiudadAlumbrado,
   CiudadSinLuz,
   Corredor,
   PuntoSatelite,
+  TipoSatelite,
   IndiceSatelite,
   ParejaSatelite,
 } from "../datos/guerraSatelite.ts";
@@ -22,6 +24,7 @@ import { Enlace } from "../navegacion.tsx";
 import { rutaDeFicha } from "../sitio.ts";
 import type { Idioma } from "../sitio.ts";
 import { diaDeInstante } from "../tiempo/dias.ts";
+import { PALETA } from "../paleta.ts";
 import { Fila } from "./Panel.tsx";
 
 /** «2025-09-11…» como dd/mm/aaaa. */
@@ -69,9 +72,10 @@ export function Cortinilla({
   pareja,
 }: {
   t: Textos;
-  pareja: ParejaSatelite & { antes: NonNullable<ParejaSatelite["antes"]>; despues: NonNullable<ParejaSatelite["despues"]> };
+  pareja: ParejaSatelite;
 }) {
   const [posicion, setPosicion] = useState(CORTINILLA_INICIAL);
+  const [contorno, setContorno] = useState(true);
   const caja = useRef<HTMLDivElement>(null);
   const arrastrando = useRef(false);
 
@@ -127,11 +131,37 @@ export function Cortinilla({
           loading="lazy"
           decoding="async"
         />
+        {contorno && (
+          <svg
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 size-full"
+            viewBox="0 0 1 1"
+            preserveAspectRatio="none"
+            data-contorno-cambio=""
+          >
+            <polygon
+              points={pareja.cambio.contorno.map(([x, y]) => `${x},${y}`).join(" ")}
+              fill="none"
+              stroke={PALETA.guerraClaro}
+              strokeWidth="1.5"
+              vectorEffect="non-scaling-stroke"
+            />
+          </svg>
+        )}
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-y-0 w-0.5 bg-guerra-claro"
           style={{ left: `${posicion}%` }}
         />
+        <button
+          type="button"
+          className="flotante absolute bottom-1.5 right-1.5 px-1.5 py-0.5 text-[0.6875rem]"
+          aria-pressed={contorno}
+          onPointerDown={(evento) => evento.stopPropagation()}
+          onClick={() => setContorno(!contorno)}
+        >
+          {contorno ? t.satelite.imagen.ocultarContorno : t.satelite.imagen.verContorno}
+        </button>
         <span className="flotante pointer-events-none absolute left-1.5 top-1.5 px-1.5 py-0.5 text-[0.6875rem]">
           {t.satelite.imagen.antes} · <span className="mono">{dia(antes.fecha)}</span>
         </span>
@@ -167,40 +197,27 @@ export function ImagenesSatelite({ t, idioma, id }: { t: Textos; idioma: Idioma;
     };
   }, []);
   const pareja = datos?.parejas[id];
-  if (datos === undefined || datos === null || pareja === undefined || pareja.antes === null) {
-    return null;
-  }
+  if (datos === undefined || datos === null || pareja === undefined) return null;
   const lado = new Intl.NumberFormat(idioma, { maximumFractionDigits: 1 }).format(
     pareja.recorte.lado_m / 1000,
   );
+  const hectareas = new Intl.NumberFormat(idioma, { maximumFractionDigits: 1 }).format(
+    pareja.cambio.hectareas,
+  );
   const { antes, despues } = pareja;
   return (
-    <section className="mt-4" data-imagenes-satelite="">
+    <section className="mt-3" data-imagenes-satelite="">
       <h3 className="rotulo">{t.satelite.imagen.rotulo}</h3>
       <div>
-        {despues === null ? (
-          <>
-            <img
-              src={urlDelAlmacen(antes.objeto)}
-              alt={t.satelite.imagen.alt(t.satelite.imagen.antes.toLowerCase(), dia(antes.fecha))}
-              className="mt-1 aspect-square w-full rounded-sm border border-linea object-cover"
-              loading="lazy"
-              decoding="async"
-            />
-            <span className="mt-1 block text-xs text-secundario">{t.satelite.imagen.esperando}</span>
-          </>
-        ) : (
-          <Cortinilla t={t} pareja={{ ...pareja, antes, despues }} />
-        )}
+        <Cortinilla t={t} pareja={pareja} />
+        <span className="block text-sm" data-zona-cambio="">
+          {t.satelite.imagen.zonaCambio(hectareas, dia(antes.fecha), dia(despues.fecha))}
+        </span>
         <span className="block text-xs text-secundario">{t.satelite.imagen.producto(lado)}</span>
         <span className="mono block text-[0.6875rem] text-secundario">
           {t.satelite.imagen.antes}: {dia(antes.fecha)} · {t.satelite.imagen.escena(antes.escena)}
-          {despues !== null && (
-            <>
-              <br />
-              {t.satelite.imagen.despues}: {dia(despues.fecha)} · {t.satelite.imagen.escena(despues.escena)}
-            </>
-          )}
+          <br />
+          {t.satelite.imagen.despues}: {dia(despues.fecha)} · {t.satelite.imagen.escena(despues.escena)}
         </span>
         <span className="block text-xs text-secundario" data-atribucion-copernicus="">
           {datos.atribucion}
@@ -433,20 +450,47 @@ export function FichaCorredor({
 // ---- Con satélite ---------------------------------------------------------------------
 
 /** «antes y después · foco de calor»: lo que tiene un punto con información de satélite. */
-export function loQueTiene(t: Textos, punto: Pick<PuntoSatelite, "imagen" | "foco" | "luz">): string {
-  return [
-    punto.imagen ? t.satelite.tiene.imagen : null,
-    punto.foco ? t.satelite.tiene.foco : null,
-    punto.luz ? t.satelite.tiene.luz : null,
-  ]
-    .filter((x) => x !== null)
+export function loQueTiene(t: Textos, punto: PuntoSatelite): string {
+  return tiposDe(punto)
+    .map((tipo) => t.satelite.tipos[tipo])
     .join(" · ");
 }
 
+/** El signo de cada tipo en el mapa, para la leyenda y el filtro. */
+export function SignoSatelite({ tipo }: { tipo: TipoSatelite }) {
+  return (
+    <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" data-signo={tipo}>
+      {tipo === "cortinilla" && (
+        <>
+          <circle cx="8" cy="8" r="7" fill="none" stroke={PALETA.guerraClaro} strokeWidth="1" />
+          <circle cx="8" cy="8" r="4.2" fill={PALETA.guerra} stroke={PALETA.guerraClaro} strokeWidth="1.4" />
+        </>
+      )}
+      {tipo === "foco" && (
+        <>
+          <circle cx="7" cy="9" r="4.2" fill={PALETA.guerra} stroke={PALETA.guerraClaro} strokeWidth="1.4" />
+          <circle cx="12" cy="4" r="2.4" fill={PALETA.guerraClaro} stroke={PALETA.fondo} strokeWidth="1" />
+        </>
+      )}
+      {tipo === "apagon" && (
+        <circle cx="8" cy="8" r="6" fill={PALETA.fondo} stroke={PALETA.guerraTenue} strokeWidth="1" />
+      )}
+      {tipo === "oscura" && (
+        <>
+          <circle cx="8" cy="8" r="5.6" fill={PALETA.fondo} stroke={PALETA.guerraTenue} strokeWidth="1.4" />
+          <circle cx="8" cy="8" r="1.8" fill={PALETA.guerraClaro} />
+        </>
+      )}
+    </svg>
+  );
+}
+
 /**
- * Botón «Con satélite · N» de la capa de guerra: deja en el mapa solo los puntos con
- * información de satélite y despliega su lista, del más reciente al más antiguo. Pulsar una
- * fila lleva al punto y abre su ficha. La lista se abre y se cierra (no queda fija).
+ * Botón «Con satélite · N» de la capa de guerra: enciende los cuatro tipos de lo que se ve desde
+ * el satélite (cortinilla con cambio, foco confirmado, apagón, ciudad a oscuras), cada uno con su
+ * signo, y atenúa lo demás de la capa. Con él encendido, su desplegable da la leyenda (plegable),
+ * el filtro por tipos y la lista, del más reciente al más antiguo; pulsar una fila lleva al
+ * punto y abre su ficha.
  */
 export function BotonSatelite({
   t,
@@ -454,6 +498,10 @@ export function BotonSatelite({
   puntos,
   activo,
   onActivo,
+  abierta,
+  onAbierta,
+  filtro,
+  onFiltro,
   onElegir,
   grande = false,
 }: {
@@ -462,12 +510,20 @@ export function BotonSatelite({
   puntos: readonly PuntoSatelite[];
   activo: boolean;
   onActivo: (activo: boolean) => void;
+  abierta: boolean;
+  onAbierta: (abierta: boolean) => void;
+  /** Tipos a los que se limita la lista; vacío, todos. */
+  filtro: readonly TipoSatelite[];
+  onFiltro: (filtro: TipoSatelite[]) => void;
   onElegir: (punto: PuntoSatelite) => void;
   grande?: boolean;
 }) {
-  const [abierta, setAbierta] = useState(false);
+  const [leyenda, setLeyenda] = useState(true);
   const boton = `control text-xs ${grande ? "min-h-11 px-3" : "min-h-7 px-2"}`;
   const textos = t.satelite;
+  const visibles =
+    filtro.length === 0 ? puntos : puntos.filter((p) => tiposDe(p).some((x) => filtro.includes(x)));
+  const cuenta = (tipo: TipoSatelite) => puntos.filter((p) => tiposDe(p).includes(tipo)).length;
   return (
     <div className={grande ? "w-full" : "relative flex"} data-con-satelite="">
       <div className="flex">
@@ -475,10 +531,9 @@ export function BotonSatelite({
           type="button"
           className={`${boton} ${grande ? "flex-1" : ""}`}
           aria-pressed={activo}
-          aria-expanded={abierta}
           onClick={() => {
             onActivo(!activo);
-            setAbierta(!activo);
+            onAbierta(!activo);
           }}
         >
           {textos.conSatelite(numero(puntos.length, idioma))}
@@ -489,29 +544,69 @@ export function BotonSatelite({
             className={boton}
             aria-expanded={abierta}
             aria-label={abierta ? textos.cerrarLista : textos.abrirLista}
-            onClick={() => setAbierta(!abierta)}
+            onClick={() => onAbierta(!abierta)}
           >
             <span aria-hidden="true">{abierta ? "▴" : "▾"}</span>
           </button>
         )}
       </div>
-      {abierta && (
+      {activo && abierta && (
         <div
           className={
             grande
               ? "mt-1 max-h-[50vh] overflow-y-auto border-t border-linea"
-              : "flotante absolute right-0 top-full z-40 mt-1 max-h-[60vh] w-80 overflow-y-auto"
+              : "flotante absolute right-0 top-full z-40 mt-1 max-h-[70vh] w-80 overflow-y-auto"
           }
           data-lista-satelite=""
         >
+          <div className="border-b border-linea px-3 py-2">
+            <button
+              type="button"
+              className="rotulo w-full text-left"
+              aria-expanded={leyenda}
+              onClick={() => setLeyenda(!leyenda)}
+            >
+              {textos.leyenda} <span aria-hidden="true">{leyenda ? "▴" : "▾"}</span>
+            </button>
+            {leyenda && (
+              <ul className="mt-1 text-xs text-secundario" data-leyenda-satelite="">
+                {TIPOS_SATELITE.map((tipo) => (
+                  <li key={tipo} className="flex items-start gap-2 py-0.5">
+                    <SignoSatelite tipo={tipo} />
+                    <span>{textos.leyendaTipos[tipo]}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+          <div role="group" aria-label={textos.filtrar} className="flex flex-wrap gap-1 border-b border-linea px-3 py-2">
+            {TIPOS_SATELITE.map((tipo) => (
+              <button
+                key={tipo}
+                type="button"
+                className="control min-h-7 gap-1 px-2 text-xs"
+                aria-pressed={filtro.includes(tipo)}
+                onClick={() =>
+                  onFiltro(
+                    filtro.includes(tipo)
+                      ? filtro.filter((x) => x !== tipo)
+                      : TIPOS_SATELITE.filter((x) => x === tipo || filtro.includes(x)),
+                  )
+                }
+              >
+                <SignoSatelite tipo={tipo} />
+                {textos.tipos[tipo]} · {numero(cuenta(tipo), idioma)}
+              </button>
+            ))}
+          </div>
           <ul aria-label={textos.listaSatelite}>
-            {puntos.map((p) => (
+            {visibles.map((p) => (
               <li key={`${p.clase}|${p.clave}`} className="border-b border-linea last:border-b-0">
                 <button
                   type="button"
                   className="w-full px-3 py-2 text-left text-sm hover:bg-elevado"
                   onClick={() => {
-                    setAbierta(false);
+                    onAbierta(false);
                     onElegir(p);
                   }}
                 >

@@ -721,14 +721,15 @@ export function validarAlumbrado(valor: unknown): Resultado<AlumbradoReducido> {
   return validar(alumbradoReducido, valor);
 }
 
-const imagenSatelite = nulable(
-  objeto({
-    fecha: cadena(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/),
-    escena: cadena(/^S2[A-D]_\w+_L2A$/),
-    objeto: cadena(/^satelite\/EODI-IG-\d{4}-\d{5}\/(antes|despues)-\d{8}-S2[A-D]_\w+_L2A\.jpg$/),
-    nubes_recorte: numero(0, 1),
-  }),
-);
+const imagenSatelite = objeto({
+  fecha: cadena(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/),
+  escena: cadena(/^S2[A-D]_\w+_L2A$/),
+  objeto: cadena(
+    /^satelite\/EODI-IG-\d{4}-\d{5}\/(antes|despues)-\d{8}-S2[A-D]_\w+_L2A(-\d+)?\.jpg$/,
+  ),
+  nubes_recorte: numero(0, 1),
+});
+const fraccion = numero(0, 1);
 
 const indiceSatelite = objeto({
   generado: cadena(v.PATRON_INSTANTE),
@@ -741,6 +742,10 @@ const indiceSatelite = objeto({
         recorte: objeto({ lat: latitud, lon: longitud, lado_m: numero(100, 20000, true) }),
         antes: imagenSatelite,
         despues: imagenSatelite,
+        cambio: objeto({
+          hectareas: numero(0, 1_000_000),
+          contorno: lista(tupla([fraccion, fraccion]), 3),
+        }),
       },
       { lugar: cadena() },
     ),

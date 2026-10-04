@@ -75,7 +75,9 @@ import type {
   FocosVivos,
   IndiceSatelite,
   PuntoSatelite,
+  TipoSatelite,
 } from "./datos/guerraSatelite.ts";
+import { conSubcapas, leerSubcapas } from "./estado/subcapas.ts";
 import { validarAlumbrado, validarFocosVivos } from "./datos/validar.ts";
 import { urlDelAlmacen } from "./almacenPublico.ts";
 import type {
@@ -165,6 +167,12 @@ type PanelLocal =
   | { clase: "luz"; clave: string }
   | { clase: "alumbrado"; clave: string }
   | null;
+
+/** La búsqueda `nueva` con las subcapas que dice `actual` (los filtros no las pisan). */
+function conSubcapasDe(nueva: string, actual: string): string {
+  const subcapas = leerSubcapas(actual);
+  return subcapas === null ? nueva : conSubcapas(nueva, subcapas);
+}
 
 /** Zoom al ir a un punto desde la lista de «Con satélite». */
 const ZOOM_PUNTO_SATELITE = 9;
@@ -302,9 +310,10 @@ export function App() {
     });
     return () => control.abort();
   }, [idImpacto]);
-  // Focos de calor de las últimas 24 horas: del almacén público, mientras se ven.
+  // Focos de calor de las últimas 24 horas que coinciden con un impacto (del almacén público):
+  // cuentan en «Con satélite» como impactos con foco en cuanto se confirman.
   const [focosVivos, setFocosVivos] = useState<FocosVivos | null>(null);
-  const verFocosVivos = capas.ucrania && capas.focosVivos;
+  const verFocosVivos = capas.ucrania;
   useEffect(() => {
     if (!verFocosVivos) return undefined;
     const control = new AbortController();
@@ -325,9 +334,9 @@ export function App() {
     };
   }, [verFocosVivos]);
   // Ciudades con alumbrado reducido de forma permanente: del almacén público, una vez por visita
-  // y solo si se ve la capa de luz nocturna (el fichero cambia como mucho cada hora).
+  // y con la capa de Ucrania (el fichero cambia como mucho cada hora).
   const [alumbrado, setAlumbrado] = useState<AlumbradoReducido | null>(null);
-  const verAlumbrado = capas.ucrania && capas.luz;
+  const verAlumbrado = capas.ucrania;
   useEffect(() => {
     if (!verAlumbrado || alumbrado !== null) return undefined;
     const control = new AbortController();
@@ -643,14 +652,20 @@ export function App() {
         ? puntosConSatelite(
             impactos,
             indiceSatelite,
-            capas.luz ? ciudadesSinLuz : null,
-            capas.luz ? (alumbrado?.ciudades ?? null) : null,
+            ciudadesSinLuz,
+            alumbrado?.ciudades ?? null,
             (fecha) => diaDeInstante(`${fecha}T00:00Z`),
+            new Set(
+              (focosVivos?.focos ?? []).flatMap(([, , , , impacto]) => (impacto ? [impacto] : [])),
+            ),
           )
         : null,
-    [capas.ucrania, capas.luz, impactos, indiceSatelite, ciudadesSinLuz, alumbrado],
+    [capas.ucrania, impactos, indiceSatelite, ciudadesSinLuz, alumbrado, focosVivos],
   );
-  const [soloSatelite, setSoloSatelite] = useState(false);
+  // Filtro y despliegue de la lista de «Con satélite» (se abren también desde «Europa ahora» y
+  // desde un enlace).
+  const [filtroSatelite, setFiltroSatelite] = useState<TipoSatelite[]>([]);
+  const [listaSatelite, setListaSatelite] = useState(false);
   const [destinoSatelite, setDestinoSatelite] = useState<Encuadre | null>(null);
   const nocheActual = noche === null ? null : (noches[noche] ?? null);
 
@@ -679,33 +694,56 @@ export function App() {
   const contadores = datosResumen === null ? metaInicial : cifras(delPeriodo);
 
   const cambiarFiltros = useCallback(
-    (nuevos: EstadoFiltros) => cambiarBusqueda(escribirSeleccion(nuevos, seleccion)),
-    [cambiarBusqueda, seleccion],
+    (nuevos: EstadoFiltros) =>
+      cambiarBusqueda(conSubcapasDe(escribirSeleccion(nuevos, seleccion), busqueda)),
+    [cambiarBusqueda, seleccion, busqueda],
   );
   /**
    * Pone el periodo en la dirección (el de por defecto, todo, es no tener periodo). Cada cambio
    * deja una entrada en el historial: el botón atrás lo deshace.
    */
   const elegirSeleccion = useCallback(
-    (nueva: SeleccionPeriodo) => cambiarBusqueda(escribirSeleccion(filtros, nueva), true),
-    [cambiarBusqueda, filtros],
+    (nueva: SeleccionPeriodo) =>
+      cambiarBusqueda(conSubcapasDe(escribirSeleccion(filtros, nueva), busqueda), true),
+    [cambiarBusqueda, filtros, busqueda],
   );
   /**
    * Cambia las capas. La presión compara el periodo con el anterior de igual duración: con
    * «Todo» no hay anterior, así que al encenderla con «Todo» el periodo pasa a 30 días.
    */
-  const cambiarCapas = useCallback(
-    (nuevas: Capas) => {
-      if (nuevas.presion && !capas.presion && seleccion.clase === "todo") {
-        elegirSeleccion({ clase: "reciente", reciente: "30d" });
-      }
-      setCapas(nuevas);
-    },
-    [capas.presion, seleccion, elegirSeleccion],
-  );
+  // Ninguna capa enciende nada por su cuenta: al apagar la de Ucrania, sus subcapas se apagan y
+  // al volver a encenderla salen apagadas.
+  const cambiarCapas = useCallback((nuevas: Capas) => {
+    setCapas(nuevas.ucrania ? nuevas : { ...nuevas, corredores: false, satelite: false });
+  }, []);
+  // Un enlace con subcapas encendidas las abre encendidas (y con la capa de Ucrania).
+  const subcapasLeidas = useRef(false);
+  useEffect(() => {
+    if (subcapasLeidas.current) return;
+    subcapasLeidas.current = true;
+    const delEnlace = leerSubcapas(busqueda);
+    if (delEnlace === null) return;
+    setCapas((c) => ({
+      ...c,
+      ucrania: true,
+      corredores: delEnlace.corredores,
+      satelite: delEnlace.satelite,
+    }));
+    setFiltroSatelite(delEnlace.filtro);
+    if (delEnlace.filtro.length > 0) setListaSatelite(true);
+  }, [busqueda]);
+  useEffect(() => {
+    if (!subcapasLeidas.current) return;
+    const nueva = conSubcapas(busqueda, {
+      corredores: capas.ucrania && capas.corredores,
+      satelite: capas.ucrania && capas.satelite,
+      filtro: filtroSatelite,
+    });
+    if (nueva !== busqueda) cambiarBusqueda(nueva);
+  }, [capas.ucrania, capas.corredores, capas.satelite, filtroSatelite, busqueda, cambiarBusqueda]);
   const quitarFiltros = useCallback(
-    () => cambiarBusqueda(escribirSeleccion(SIN_FILTROS, TODO)),
-    [cambiarBusqueda],
+    () => cambiarBusqueda(conSubcapasDe(escribirSeleccion(SIN_FILTROS, TODO), busqueda)),
+    [cambiarBusqueda, busqueda],
   );
 
   // Reproducción de la guerra noche a noche: se puede pausar, reanudar y detener. Al llegar a
@@ -825,12 +863,19 @@ export function App() {
   const abrirAviso = useCallback((id: string) => abrirLocal({ clase: "aviso", id }), [abrirLocal]);
   const abrirCelda = useCallback((h3: string) => abrirLocal({ clase: "celda", h3 }), [abrirLocal]);
   const abrirPais = useCallback((iso: string) => abrirLocal({ clase: "pais", iso }), [abrirLocal]);
+  // Abrir algo de una subcapa (un corredor, un apagón, una ciudad a oscuras) la enciende.
   const abrirCorredor = useCallback(
-    (clave: string) => abrirLocal({ clase: "corredor", clave }),
+    (clave: string) => {
+      setCapas((c) => ({ ...c, ucrania: true, corredores: true }));
+      abrirLocal({ clase: "corredor", clave });
+    },
     [abrirLocal],
   );
   const abrirCiudadLuz = useCallback(
-    (clave: string) => abrirLocal({ clase: "luz", clave }),
+    (clave: string) => {
+      setCapas((c) => ({ ...c, ucrania: true, satelite: true }));
+      abrirLocal({ clase: "luz", clave });
+    },
     [abrirLocal],
   );
   const abrirCorredores = useCallback(
@@ -838,7 +883,10 @@ export function App() {
     [abrirLocal],
   );
   const abrirAlumbrado = useCallback(
-    (clave: string) => abrirLocal({ clase: "alumbrado", clave }),
+    (clave: string) => {
+      setCapas((c) => ({ ...c, ucrania: true, satelite: true }));
+      abrirLocal({ clase: "alumbrado", clave });
+    },
     [abrirLocal],
   );
   // Una fila de la lista de «Con satélite»: el mapa va al punto y se abre su ficha.
@@ -858,8 +906,15 @@ export function App() {
         t={t}
         idioma={idioma}
         puntos={puntosSatelite}
-        activo={soloSatelite}
-        onActivo={setSoloSatelite}
+        activo={capas.satelite}
+        onActivo={(activo) => {
+          setCapas((c) => ({ ...c, satelite: activo }));
+          if (!activo) setListaSatelite(false);
+        }}
+        abierta={listaSatelite}
+        onAbierta={setListaSatelite}
+        filtro={filtroSatelite}
+        onFiltro={setFiltroSatelite}
         onElegir={elegirSatelite}
         grande={grande}
       />
@@ -913,7 +968,9 @@ export function App() {
           return;
         }
         case "focos":
-          setCapas((c) => ({ ...c, incidentes: true, ucrania: true }));
+          setCapas((c) => ({ ...c, ucrania: true, satelite: true }));
+          setFiltroSatelite(["foco"]);
+          setListaSatelite(true);
           elegirSeleccion({ clase: "reciente", reciente: "7d" });
           api?.vistaInicial();
           return;
@@ -975,7 +1032,14 @@ export function App() {
           setCapas((c) => ({ ...c, incidentes: !c.incidentes }));
           return;
         case "capaUcrania":
-          setCapas((c) => ({ ...c, ucrania: !c.ucrania }));
+          setCapas((c) =>
+            c.ucrania
+              ? { ...c, ucrania: false, corredores: false, satelite: false }
+              : { ...c, ucrania: true },
+          );
+          return;
+        case "capaSatelite":
+          setCapas((c) => ({ ...c, ucrania: true, satelite: !c.satelite }));
           return;
         case "capaDensidad":
           setCapas((c) => ({ ...c, densidad: !c.densidad }));
@@ -1297,18 +1361,6 @@ export function App() {
     };
   }
 
-  const ultimoFoco =
-    verFocosVivos && focosVivos !== null ? (
-      <p
-        className="flotante whitespace-nowrap px-2 py-0.5 text-[0.6875rem] text-secundario tel:text-[0.625rem]"
-        data-focos-vivos=""
-        role="status"
-      >
-        {focosVivos.ultimo_foco === null
-          ? t.satelite.focosVacio
-          : t.satelite.focosUltimo(focosVivos.ultimo_foco.slice(11, 16))}
-      </p>
-    ) : null;
 
   const lista = (
     <Lista
@@ -1541,7 +1593,6 @@ export function App() {
               corredores={corredores}
               luzRegiones={luzRegiones}
               ciudadesSinLuz={ciudadesSinLuz}
-              focosVivos={focosVivos?.focos ?? null}
               alumbrado={verAlumbrado ? (alumbrado?.ciudades ?? null) : null}
               elegido={elegido}
               paisResaltado={paisImpreciso}
@@ -1561,7 +1612,7 @@ export function App() {
               onCorredores={abrirCorredores}
               corredorElegido={panelLocal?.clase === "corredor" ? panelLocal.clave : null}
               puntosSatelite={puntosSatelite}
-              soloSatelite={capas.ucrania && soloSatelite}
+              soloSatelite={capas.ucrania && capas.satelite}
               onCiudadLuz={abrirCiudadLuz}
               onAlumbrado={abrirAlumbrado}
               onListo={setApi}
@@ -1634,7 +1685,6 @@ export function App() {
                 <div className="flex items-end justify-between gap-2">
                   <div className="pointer-events-auto">{leyendas}</div>
                   <div className="pointer-events-auto flex items-end gap-2">
-                    {ultimoFoco}
                     <Atribuciones t={t} />
                     <Zoom t={t} onZoom={(paso) => api?.zoom(paso)} />
                   </div>
@@ -1671,9 +1721,6 @@ export function App() {
                 ref={refAbajoTel}
                 className="absolute inset-x-0 bottom-0 flex flex-col items-end gap-1 pb-[env(safe-area-inset-bottom)]"
               >
-                {ultimoFoco !== null && (
-                  <div className="pointer-events-auto mr-2 self-end">{ultimoFoco}</div>
-                )}
                 <div className="flex w-full items-end justify-between gap-2 px-2">
                   <div className="pointer-events-auto">{leyendas}</div>
                   <div className="pointer-events-auto">

@@ -5,6 +5,8 @@ import { rutaDeFicha } from "../sitio.ts";
 import type { Idioma } from "../sitio.ts";
 import { Historial, ListaFuentes } from "./Fuentes.tsx";
 import { LineaFoco, ZOOM_VISOR_REGION } from "./FocoTermico.tsx";
+import { lucesDeAtaque } from "../datos/guerraSatelite.ts";
+import { ListaLuz } from "./GuerraSatelite.tsx";
 import { Fila } from "./Panel.tsx";
 import { Enlace } from "../navegacion.tsx";
 
@@ -69,6 +71,14 @@ export function FichaAtaque({ t, idioma, ataque, centros }: Props) {
         <p className="mt-2 border-l border-notificado pl-2 text-secundario">
           {t.ataque.reivindicacion}
         </p>
+      )}
+      {/* Lo que se ve desde el satélite va lo primero: la luz nocturna que perdió. */}
+      {(ataque.perdida_luz ?? []).length > 0 && (
+        <dl className="mt-3" data-satelite-arriba="">
+          <Fila nombre={t.satelite.luzFicha.rotulo}>
+            <ListaLuz t={t} idioma={idioma} luces={lucesDeAtaque(ataque)} />
+          </Fila>
+        </dl>
       )}
 
       <dl className="mt-3">

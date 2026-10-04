@@ -12,10 +12,10 @@ export interface Capas {
   densidad: boolean;
   presion: boolean;
   gnss: boolean;
-  /** Dentro de la capa de Ucrania (guerra por satélite): se ven si ella se ve. */
+  /** Subcapas de la de Ucrania: se ven si ella se ve, y solo si se encienden con su botón. */
   corredores: boolean;
-  focosVivos: boolean;
-  luz: boolean;
+  /** «Con satélite»: cortinillas con cambio, focos confirmados, apagones y ciudades a oscuras. */
+  satelite: boolean;
 }
 
 export const CAPAS_INICIALES: Capas = {
@@ -24,9 +24,8 @@ export const CAPAS_INICIALES: Capas = {
   densidad: false,
   presion: false,
   gnss: false,
-  corredores: true,
-  focosVivos: true,
-  luz: true,
+  corredores: false,
+  satelite: false,
 };
 
 const ORDEN: readonly ("incidentes" | "ucrania" | "densidad" | "presion" | "gnss")[] = [
@@ -36,16 +35,12 @@ const ORDEN: readonly ("incidentes" | "ucrania" | "densidad" | "presion" | "gnss
   "presion",
   "gnss",
 ];
-const ORDEN_GUERRA: readonly ("corredores" | "focosVivos" | "luz")[] = [
-  "corredores",
-  "focosVivos",
-  "luz",
-];
+const ORDEN_GUERRA: readonly "corredores"[] = ["corredores"];
 
 /**
  * Las capas en un solo control compacto; cada una se enciende y se apaga por separado. Con la
- * capa de Ucrania encendida aparecen al lado las de la guerra por satélite: corredores, focos
- * de calor de 24 horas y luz nocturna. `grande` (el menú del teléfono) da a cada opción al
+ * capa de Ucrania encendida aparecen al lado sus subcapas, apagadas hasta que se pulsan:
+ * corredores y «Con satélite». `grande` (el menú del teléfono) da a cada opción al
  * menos 44 px de alto, para el dedo, y las pone en una rejilla de tres columnas: las cinco
  * capas caben con holgura desde 360 px.
  */
@@ -67,8 +62,6 @@ export function SelectorDeCapas({
   const rejilla = grande ? "grid grid-cols-3 gap-0.5" : "flex";
   const etiquetas: Record<(typeof ORDEN_GUERRA)[number], string> = {
     corredores: t.satelite.corredores,
-    focosVivos: t.satelite.focos,
-    luz: t.satelite.luz,
   };
   return (
     <div className={`flex gap-1 ${grande ? "flex-col" : "items-center"}`}>

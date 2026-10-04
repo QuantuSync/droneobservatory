@@ -15,6 +15,7 @@ import struct
 import zlib
 from collections.abc import Callable
 from dataclasses import dataclass
+from typing import Any
 
 import numpy as np
 import numpy.typing as npt
@@ -53,6 +54,12 @@ class Cabecera:
     y0: float
     paso_x: float
     paso_y: float
+    # Bits por muestra: 8 (color natural, clasificación de escena) o 16 (reflectancias).
+    bits: int = 8
+
+    @property
+    def tipo(self) -> type[np.unsignedinteger[Any]]:
+        return np.uint16 if self.bits == 16 else np.uint8
 
 
 def _valores(
@@ -93,8 +100,9 @@ def leer_cabecera(lector: LectorRango) -> Cabecera:
             raise CogInvalido(f"falta la etiqueta {etiqueta}")
         return defecto
 
-    if any(int(b) != 8 for b in etiquetas.get(ETIQUETA_BITS, (8,))):
-        raise CogInvalido("solo muestras de 8 bits")
+    bits = {int(b) for b in etiquetas.get(ETIQUETA_BITS, (8,))}
+    if bits not in ({8}, {16}):
+        raise CogInvalido("solo muestras de 8 o 16 bits")
     if uno(ETIQUETA_PLANAR, 1) != 1:
         raise CogInvalido("solo muestras intercaladas")
     if ETIQUETA_ANCHO_TESELA not in etiquetas:
@@ -123,29 +131,31 @@ def leer_cabecera(lector: LectorRango) -> Cabecera:
         y0=float(enlace[4]) + float(enlace[1]) * paso_y,
         paso_x=paso_x,
         paso_y=paso_y,
+        bits=bits.pop(),
     )
 
 
-def decodificar_tesela(crudo: bytes, cabecera: Cabecera) -> npt.NDArray[np.uint8]:
-    """Una tesela como matriz (alto, ancho, muestras)."""
+def decodificar_tesela(crudo: bytes, cabecera: Cabecera) -> npt.NDArray[Any]:
+    """Una tesela como matriz (alto, ancho, muestras), de 8 o 16 bits."""
     datos = crudo if cabecera.compresion == SIN_COMPRESION else zlib.decompress(crudo)
     forma = (cabecera.tesela_alto, cabecera.tesela_ancho, cabecera.muestras)
-    esperado = forma[0] * forma[1] * forma[2]
+    tipo = np.dtype(cabecera.tipo).newbyteorder("<")
+    esperado = forma[0] * forma[1] * forma[2] * tipo.itemsize
     if len(datos) < esperado:
         raise CogInvalido("tesela incompleta")
-    tesela = np.frombuffer(datos[:esperado], dtype=np.uint8).reshape(forma)
+    tesela = np.frombuffer(datos[:esperado], dtype=tipo).reshape(forma)
     if cabecera.predictor == 2:
-        # Diferencias horizontales por muestra: la suma acumulada en 8 bits las deshace.
-        tesela = np.cumsum(tesela, axis=1, dtype=np.uint8)
-    return tesela
+        # Diferencias horizontales por muestra: la suma acumulada en su tamaño las deshace.
+        tesela = np.cumsum(tesela, axis=1, dtype=cabecera.tipo)
+    return tesela.astype(cabecera.tipo, copy=False)
 
 
 def leer_ventana(
     lector: LectorRango, cabecera: Cabecera, columna: int, fila: int, ancho: int, alto: int
-) -> npt.NDArray[np.uint8]:
+) -> npt.NDArray[Any]:
     """La ventana pedida (alto, ancho, muestras); lo que cae fuera de la imagen sale a 0, el
     valor sin dato de estas imágenes."""
-    salida = np.zeros((alto, ancho, cabecera.muestras), dtype=np.uint8)
+    salida = np.zeros((alto, ancho, cabecera.muestras), dtype=cabecera.tipo)
     por_fila = math.ceil(cabecera.ancho / cabecera.tesela_ancho)
     filas_teselas = math.ceil(cabecera.alto / cabecera.tesela_alto)
     tw, th = cabecera.tesela_ancho, cabecera.tesela_alto
@@ -216,6 +226,32 @@ def a_utm(lat: float, lon: float, huso: int, norte: bool = True) -> tuple[float,
     for j, a_j in enumerate(alfa, start=1):
         x_xi += a_j * math.sin(2 * j * xi) * math.cosh(2 * j * eta)
         x_eta += a_j * math.cos(2 * j * xi) * math.sinh(2 * j * eta)
+    x = 500000.0 + _K0 * a_rect * x_eta
+    y = _K0 * a_rect * x_xi + (0.0 if norte else 10000000.0)
+    return x, y
+
+
+def a_utm_matriz(
+    lat: npt.NDArray[np.float64], lon: npt.NDArray[np.float64], huso: int, norte: bool = True
+) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]]:
+    """a_utm para matrices de latitudes y longitudes."""
+    n = _F / (2 - _F)
+    a_rect = _A / (1 + n) * (1 + n**2 / 4 + n**4 / 64)
+    alfa = (
+        n / 2 - 2 * n**2 / 3 + 5 * n**3 / 16,
+        13 * n**2 / 48 - 3 * n**3 / 5,
+        61 * n**3 / 240,
+    )
+    fi = np.radians(lat)
+    dl = np.radians(lon) - math.radians((huso - 1) * 6 - 180 + 3)
+    e = 2 * math.sqrt(n) / (1 + n)
+    t = np.sinh(np.arctanh(np.sin(fi)) - e * np.arctanh(e * np.sin(fi)))
+    xi = np.arctan2(t, np.cos(dl))
+    eta = np.arctanh(np.sin(dl) / np.sqrt(1 + t * t))
+    x_xi, x_eta = xi.copy(), eta.copy()
+    for j, a_j in enumerate(alfa, start=1):
+        x_xi = x_xi + a_j * np.sin(2 * j * xi) * np.cosh(2 * j * eta)
+        x_eta = x_eta + a_j * np.cos(2 * j * xi) * np.sinh(2 * j * eta)
     x = 500000.0 + _K0 * a_rect * x_eta
     y = _K0 * a_rect * x_xi + (0.0 if norte else 10000000.0)
     return x, y

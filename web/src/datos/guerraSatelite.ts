@@ -19,30 +19,35 @@ import type {
 
 /** Las pérdidas de luz de todos los ataques, por orden de día. */
 export function lucesDeAtaques(ucrania: PublicacionUcrania): LuzResumen[] {
+  return ucrania.ataques
+    .flatMap(lucesDeAtaque)
+    .sort((a, b) => a.dia - b.dia || a.ataque.localeCompare(b.ataque));
+}
+
+/** Las pérdidas de luz de un ataque. */
+export function lucesDeAtaque(ataque: PublicacionUcrania["ataques"][number]): LuzResumen[] {
   const luces: LuzResumen[] = [];
-  for (const ataque of ucrania.ataques) {
-    for (const p of ataque.perdida_luz ?? []) {
-      luces.push({
-        ataque: ataque.id,
-        dia: diaDeInstante(ataque.periodo.inicio.valor),
-        zona: p.zona,
-        region: p.region,
-        ciudad:
-          p.ciudad === undefined
-            ? null
-            : { nombre: p.ciudad.nombre, lon: p.ciudad.punto.lon, lat: p.ciudad.punto.lat },
-        perdida: p.perdida_pct,
-        noche: p.noche,
-        noches: p.noches,
-        referencia: {
-          desde: p.referencia.desde,
-          hasta: p.referencia.hasta,
-          noches: p.referencia.noches,
-        },
-      });
-    }
+  for (const p of ataque.perdida_luz ?? []) {
+    luces.push({
+      ataque: ataque.id,
+      dia: diaDeInstante(ataque.periodo.inicio.valor),
+      zona: p.zona,
+      region: p.region,
+      ciudad:
+        p.ciudad === undefined
+          ? null
+          : { nombre: p.ciudad.nombre, lon: p.ciudad.punto.lon, lat: p.ciudad.punto.lat },
+      perdida: p.perdida_pct,
+      noche: p.noche,
+      noches: p.noches,
+      referencia: {
+        desde: p.referencia.desde,
+        hasta: p.referencia.hasta,
+        noches: p.referencia.noches,
+      },
+    });
   }
-  return luces.sort((a, b) => a.dia - b.dia || a.ataque.localeCompare(b.ataque));
+  return luces;
 }
 
 /** Pérdidas de luz de los ataques del periodo; de una región (y sus ciudades), si se da. */
@@ -373,10 +378,13 @@ export interface ImagenSatelite {
 
 export interface ParejaSatelite {
   recorte: { lat: number; lon: number; lado_m: number };
-  antes: ImagenSatelite | null;
-  despues: ImagenSatelite | null;
+  antes: ImagenSatelite;
+  despues: ImagenSatelite;
   /** Nombre del lugar alcanzado. */
   lugar?: string;
+  /** La zona en la que se ve el cambio: sus hectáreas y su contorno en fracciones de la
+   * imagen, [x, y] de 0 a 1 desde la esquina superior izquierda. */
+  cambio: { hectareas: number; contorno: [number, number][] };
 }
 
 export interface IndiceSatelite {
@@ -389,6 +397,11 @@ export interface IndiceSatelite {
 export const OBJETO_PAREJAS = "satelite/parejas.json";
 
 // ---- Puntos con información de satélite ------------------------------------------------
+
+/** Los cuatro tipos de lo que se ve desde el satélite: antes y después con cambio, foco de
+ * calor que coincide con un impacto, apagón y ciudad a oscuras (alumbrado reducido). */
+export type TipoSatelite = "cortinilla" | "foco" | "apagon" | "oscura";
+export const TIPOS_SATELITE: readonly TipoSatelite[] = ["cortinilla", "foco", "apagon", "oscura"];
 
 /** Un punto de la capa de guerra con información de satélite: un impacto con imagen de antes
  * y después o con foco de calor, una ciudad que perdió luz o una con alumbrado reducido. */
@@ -408,18 +421,32 @@ export interface PuntoSatelite {
   luz: boolean;
 }
 
-/** Todos los puntos con información de satélite del periodo, del más reciente al más antiguo. */
+/** Los tipos de un punto. */
+export function tiposDe(punto: PuntoSatelite): TipoSatelite[] {
+  if (punto.clase === "luz") return ["apagon"];
+  if (punto.clase === "alumbrado") return ["oscura"];
+  return [
+    ...(punto.imagen ? (["cortinilla"] as const) : []),
+    ...(punto.foco ? (["foco"] as const) : []),
+  ];
+}
+
+/** Todos los puntos con información de satélite del periodo, del más reciente al más antiguo.
+ * `focosRecientes` son los impactos con los que coincide un foco de las últimas 24 horas: cuentan
+ * como impactos con foco en cuanto se confirman. */
 export function puntosConSatelite(
   impactos: readonly FilaImpacto[] | null,
   indice: IndiceSatelite | null,
   ciudades: readonly CiudadSinLuz[] | null,
   alumbrado: readonly CiudadAlumbrado[] | null,
   diaDe: (fecha: string) => number,
+  focosRecientes: ReadonlySet<string> = new Set(),
 ): PuntoSatelite[] {
   const puntos: PuntoSatelite[] = [];
-  for (const [id, dia, , lon, lat, foco, , , region] of impactos ?? []) {
+  for (const [id, dia, , lon, lat, focoFila, , , region] of impactos ?? []) {
     const pareja = indice?.parejas[id];
-    const imagen = pareja !== undefined && (pareja.antes !== null || pareja.despues !== null);
+    const imagen = pareja !== undefined;
+    const foco = focoFila === 1 || focosRecientes.has(id) ? 1 : 0;
     if (!imagen && foco !== 1) continue;
     puntos.push({
       clase: "impacto",

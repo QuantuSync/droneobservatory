@@ -54,20 +54,58 @@ medida se hace con los gránulos SDR de VIIRS y con su propia corrección de Lun
   en la escena, tenía el recorte cubierto del todo, y la del 1 de octubre (0,03 %) limpio; esos
   recortes reales de la SCL son los de los tests.
 - **Fechas.** Antes: la más reciente que vale en los 180 días anteriores al inicio del ataque
-  (la misma ventana del impacto que usa el cruce con FIRMS). Después: la primera que vale desde
-  el fin del ataque y su publicación. Si aún no hay ninguna, la pareja queda a medias y cada
-  ejecución mira solo las escenas nuevas; de una misma toma va primero la tesela del huso UTM de
-  la imagen de antes, para que no queden giradas.
-- **Imagen.** El color natural de la ESA con la misma curva fija para todas (aclara los tonos
-  medios); JPEG de calidad 85 sin metadatos, 10 m por píxel. Las imágenes, inmutables, y el
-  índice `satelite/parejas.json` (escenas, fechas, nubes del recorte y la atribución) van al
-  almacén público de Hetzner.
-- **Web.** En la ficha del impacto, a todo el ancho: las dos imágenes con una cortinilla que se
-  arrastra (y un deslizador para el teclado), las fechas, las escenas, el producto y «Contains
-  modified Copernicus Sentinel data <años>». Con la pareja a medias, la imagen de antes y el
-  aviso de que la posterior se añade sola.
+  (la misma ventana del impacto que usa el cruce con FIRMS). Después: la primera despejada desde
+  el fin del ataque y su publicación **en la que se ve el cambio** (abajo), buscada durante 15
+  días; de una misma toma va primero la tesela del huso UTM de la imagen de antes.
+- **Imagen.** Las dos imágenes se generan en una misma rejilla de 10 m al norte (alineadas
+  aunque sus escenas estén en husos UTM distintos), con el color natural de la ESA y la misma
+  curva fija para todas; JPEG de calidad 85 sin metadatos. Las imágenes, inmutables, y el índice
+  `satelite/parejas.json` (escenas, fechas, nubes del recorte, zona cambiada y la atribución) van
+  al almacén público de Hetzner.
+- **Web.** En la ficha del impacto, lo primero bajo el título: las dos imágenes con una cortinilla
+  que se arrastra (y un deslizador para el teclado), el contorno de la zona cambiada en el violeta
+  claro de lo resaltado (`#cbbcff`), que se oculta con un toque, «Zona con cambios: N hectáreas»
+  con las fechas, las escenas, el producto y «Contains modified Copernicus Sentinel data <años>».
+  Una ficha sin pareja publicada no enseña nada de esto.
 
-<!-- RESULTADOS SATELITE -->
+### Solo con cambio visible
+
+[`proceso/cambio.py`](../proceso/cambio.py). Mirando las 33 primeras parejas publicadas, en la
+mayoría no se veía ninguna diferencia entre el antes y el después: una cortinilla sobre dos
+imágenes iguales. Ahora una pareja solo se publica si en ella se ve el cambio:
+
+- **Rejilla común.** Las dos fechas se llevan a la rejilla de 10 m del recorte: la clasificación
+  de escena (SCL), las bandas B8A y B12 (20 m, 16 bits; el lector de COG lee ahora también 16
+  bits) y el color natural.
+- **Quemado.** dNBR, la diferencia del índice normalizado de quemado (B8A − B12) / (B8A + B12)
+  entre antes y después.
+- **Visible.** El oscurecimiento en el color natural (luminancia de antes menos la de después),
+  para daños que no son incendio.
+- **Lo que no es daño fuera.** Píxeles de nube, sombra de nube, cirro, nieve, agua o sin dato en
+  cualquiera de las dos fechas (SCL); en la de después, la «sombra» con NBR de quemado sí vale
+  (lo quemado sale a veces así). A cada medida se le resta su mediana fuera de la zona del
+  impacto (la estación, los cultivos, la luz cambian todo el recorte), y cuenta solo lo que
+  supera el percentil 97 del resto del recorte (y como mínimo un dNBR de 0,1 o un oscurecimiento
+  de 20 sobre 255).
+- **Localizado.** La mancha principal es el mayor grupo de píxeles cambiados contiguos que toca un
+  círculo de 800 m alrededor del punto del impacto o de sus focos. Pasa con **10 hectáreas o
+  más**.
+- **Umbral.** Fijado mirando las 33 parejas una a una: las 4 en las que se veía el daño
+  (quemado en las cuatro) dan de 11,8 a 120,8 ha de mancha principal; las 29 sin él, 7,4 como
+  mucho. El exceso sobre lo que cambia el resto del recorte no separaba (02693, sin cambio en su
+  primera imagen, daba 29,7 ha de exceso por el verdor de la primavera).
+- **Hacia delante.** Si la primera imagen posterior despejada no muestra el cambio (el humo o una
+  nube fina lo tapan), se prueban las siguientes despejadas durante **15 días**; si ninguna lo
+  muestra, la pareja queda «sin cambio» y no se publica. Con 30 días se colaba el verdor: en
+  EODI-IG-2026-03427 (una zona de casas con huertos) la imagen de un mes después salía como
+  cambio sin daño.
+- **Encuadre.** Si la mancha queda a más de un sexto del lado del centro o ocupa menos de un
+  quinto del recorte, la imagen se reencuadra centrada en ella, con 2,5 veces su extensión (al
+  menos 1,5 km).
+- **Retirada.** Lo publicado de una pareja que no pasa se borra del almacén (DELETE firmado); si
+  el borrado falla, se reintenta en la ejecución siguiente.
+
+<!-- LISTA CAMBIO -->
 
 ## 3. Apagones vistos desde el espacio
 
@@ -231,10 +269,12 @@ cruce con los impactos:
 - fuera el fuego frecuente: un entorno de 5 km que ardió 15 días o más de los 30 anteriores
   repartido en 15 celdas de 0,01° o más (las ciudades del frente).
 
-Se resaltan los que caen en el radio de búsqueda de un impacto publicado (sin partes diarios ni
-FPV) entre 36 horas antes y 36 horas después de su publicación. El fichero
-(`focos/ultimas24h.json`) va al almacén público con caché de 5 minutos y la web lo lee
-directamente cada 10 minutos; la capa muestra «Focos de calor de 24 h · último dato hh:mm UTC».
+Solo se publican los que caen en el radio de búsqueda de un impacto publicado (sin partes
+diarios ni FPV) entre 36 horas antes y 36 horas después de su publicación: los demás (quemas
+agrícolas, antorchas, industria, incendios forestales) se siguen descargando y cruzando, pero ya
+no se publican ni se dibujan, y el fichero (`focos/ultimas24h.json`, caché de 5 minutos) pasa de
+unos 11 kB a unos cientos de bytes. La web lo lee cada 10 minutos con la capa de Ucrania: esos
+impactos cuentan en «Con satélite» como impactos con foco en cuanto se confirman (apartado 6).
 
 Primera ejecución con los datos reales del servidor (3 de octubre, 09:51 UTC): 881 focos leídos
 en Ucrania y la Rusia europea; 467 fuera por fuentes habituales de los 30 días, 178 por
@@ -312,14 +352,18 @@ simple vista ([`web/src/datos/guerraSatelite.ts`](../web/src/datos/guerraSatelit
   que perdieron luz y las de alumbrado reducido ya tienen su signo.
 - **Agrupaciones.** Un grupo de impactos con alguno de ellos lleva el borde claro y más grueso
   (propiedad `satelite` de la agrupación).
-- **«Con satélite · N».** En el grupo de capas de la guerra, junto a corredores, focos y luz
-  nocturna: deja esos puntos y atenúa el resto de la capa (impactos, grupos, focos, arcos), y
-  despliega la lista de todos, del más reciente al más antiguo, con el lugar, la fecha y lo que
-  tiene. Una fila lleva el mapa al punto y abre su ficha. La lista se abre y se cierra con su
-  flecha; en el teléfono va dentro del menú.
+- **«Con satélite · N».** Reúne todo lo que viene del satélite y tiene algo que enseñar, en
+  cuatro tipos con su signo en la familia de violetas: **antes y después** con cambio (aro doble),
+  **foco de calor** que coincide con un impacto, del cruce histórico o de las últimas 24 horas
+  (marca de foco), **apagón** (disco oscuro) y **ciudad a oscuras** con alumbrado reducido (aro con
+  punto claro). El número es la suma real de puntos. Encendido, atenúa lo demás de la capa
+  (impactos, grupos, arcos) y despliega la leyenda de los cuatro tipos (plegable), el filtro por
+  tipo y la lista, del más reciente al más antiguo, con el lugar, la fecha y lo que tiene. Una
+  fila lleva el mapa al punto y abre su ficha. La lista se abre y se cierra con su flecha; en el
+  teléfono va dentro del menú. Atajo de teclado: 4.
 - **En la ficha, arriba.** En la de un impacto, la cortinilla de antes y después y el foco de calor
-  van justo bajo el título; en la de una región, sus focos y su luz nocturna. Sin información de
-  satélite no hay hueco ni aviso.
+  van justo bajo el título; en la de una región, sus focos y su luz nocturna; en la de un ataque,
+  la luz nocturna que perdió. Sin información de satélite no hay hueco ni aviso.
 - **El nombre del lugar** de cada pareja de imágenes va en el índice `satelite/parejas.json`
   (`lugar`), para la lista.
 
@@ -337,8 +381,25 @@ con su recorte y sus fechas) y `eodi-satelite` solo lee ese fichero.
 
 ## 8. Web
 
-- Selector de capas: con la capa de Ucrania encendida aparecen «Corredores», «Focos 24 h» y
-  «Luz nocturna», encendidas por defecto (en el teléfono, en el menú).
+- Selector de capas: con la capa de Ucrania encendida aparecen dos botones, «Corredores» y «Con
+  satélite», **apagados**: se encienden y se apagan con su botón (el estilo de encendido es el del
+  resto de botones de la web) y se mantienen mientras se navega y entre fichas; al apagar la capa
+  de Ucrania se apagan también. Con la capa encendida se ven solo regiones e impactos.
+- **Botones retirados.** «Focos 24 h» (pintaba todos los focos del día, casi todos sin relación
+  con un ataque) y «Luz nocturna» (casi siempre muy pocos puntos): lo útil de los dos está en «Con
+  satélite». La medida de luz y la recogida de focos del servidor siguen igual.
+- **Excepciones a «apagadas».** Un enlace con subcapas en su dirección las abre encendidas
+  (`?guerra=corredores,satelite`, y `&satelite=` con el filtro de la lista). Las capas no se
+  guardaban antes en la dirección, así que ningún enlace anterior llevaba «Luz nocturna» ni «Focos
+  24 h»; aun así, `?satelite=luz` y `?satelite=focos` abren «Con satélite» con el filtro de apagones
+  y ciudades a oscuras o el de focos. Abrir algo de una subcapa (un corredor, un apagón, una
+  ciudad a oscuras) desde una lista o una ficha la enciende, y la línea de focos de «Europa ahora»
+  abre «Con satélite» filtrado por focos.
+- **Las demás capas.** Revisadas Incidentes, Densidad, Presión, GPS y los cierres en directo.
+  Encendía algo sola **Presión**: con el periodo en «Todo», al encenderla cambiaba el periodo a los
+  últimos 30 días (de #87). Ya no lo hace: la presión se enciende y el periodo sigue el que había.
+  Las demás no encendían nada; solo encienden capas las acciones de abrir algo de ellas («Europa
+  ahora», la ficha de un ataque, «Noche a noche»).
 - Política de contenido: `img-src` admite el almacén público (las imágenes de Sentinel-2); un
   test lo comprueba.
 - Metodología (ES y EN): apartado «Guerra por satélite» y las atribuciones de Copernicus

@@ -87,11 +87,10 @@ def test_filtros_como_en_el_cruce(tmp_path: Path) -> None:
     assert resumen.baja_confianza == 1
     assert resumen.habituales == 1
     assert resumen.frecuentes == 1
-    # Por orden de hora: el de Kyiv (hace 6 h) y la antorcha con potencia anómala (hace 4 h).
-    assert [f[:2] for f in documento["focos"]] == [[30.52, 50.45], [32.089, 59.502]]
-    # El foco de Kyiv coincide con el impacto declarado y va resaltado.
+    # Solo se publica el que coincide con un impacto declarado (Kyiv, hace 6 h); la antorcha con
+    # potencia anómala (hace 4 h) no, aunque cuenta para la hora del último foco.
+    assert [f[:2] for f in documento["focos"]] == [[30.52, 50.45]]
     assert documento["focos"][0][4] == "EODI-IG-2026-03500"
-    assert documento["focos"][1][4] is None
     assert documento["ultimo_foco"] == (AHORA - timedelta(hours=4)).strftime("%Y-%m-%dT%H:%MZ")
     assert documento["descartados"] == {
         "baja_confianza": 1,

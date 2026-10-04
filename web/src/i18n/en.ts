@@ -316,6 +316,7 @@ export const en: Textos = {
       capaIncidentes: "Incidents layer",
       capaUcrania: "Ukraine layer",
       capaDensidad: "Density layer",
+      capaSatelite: "Turn «With satellite» on or off",
       filtroGraves: "Confirmed and attributed only",
       filtro24h: "Last 24 hours",
       filtro7d: "Last 7 days",
@@ -943,8 +944,17 @@ export const en: Textos = {
               " image before the attack and the first one after it, cropped over the site in " +
                 "natural colour with the same brightness adjustment. Cloud is measured over the " +
                 "crop itself with ESA's scene classification: an image with 3% cloud or less " +
-                "over the installation is used even if the whole scene is cloudy. The pair is " +
-                "completed automatically when the first clear image after the attack arrives.",
+                "over the installation is used even if the whole scene is cloudy. A pair is " +
+                "published only if the change can be seen: both images are brought to the same " +
+                "10 m grid, and the difference of the burn index (bands B8A and B12) and the " +
+                "darkening in natural colour are measured, without clouds, shadows, snow or " +
+                "water, and above what changes in the rest of the crop (season, crops, light). " +
+                "The patch touching an 800 m circle around the strike counts, and the pair is " +
+                "published if it reaches 10 hectares; if the first clear image after the attack " +
+                "does not show it (smoke or thin cloud cover it), the next ones are tried for 15 " +
+                "days. The changed area is outlined and the image is framed on it. Everything " +
+                "from the satellite is switched on with «With satellite»; the corridors, with " +
+                "their own button.",
             ],
           },
           {
@@ -979,11 +989,14 @@ export const en: Textos = {
           },
           {
             parrafo: [
-              "Fire hotspots of the last 24 hours: those of NASA FIRMS over Ukraine and " +
-                "European Russia, with the same filters as the strike cross-check (refinery " +
-                "flares and plants with habitual heat, low confidence and areas that burn every " +
-                "day, such as front-line cities, are left out). Those falling within the radius " +
-                "of a reported strike within 36 hours are highlighted.",
+              "Confirmed fire hotspots: of the NASA FIRMS hotspots of the last 24 hours over " +
+                "Ukraine and European Russia, with the same filters as the strike cross-check " +
+                "(refinery flares and plants with habitual heat, low confidence and areas that " +
+                "burn every day, such as front-line cities, are left out), only those within the " +
+                "radius of a reported strike within 36 hours are published. In «With satellite» " +
+                "they count as strikes with a hotspot as soon as they are confirmed, together with " +
+                "those of the historical cross-check. The rest (crop burning, industry, wildfires) " +
+                "are still downloaded and cross-checked, but not drawn.",
             ],
           },
           {
@@ -1323,15 +1336,9 @@ export const en: Textos = {
   satelite: {
     capas: "War layer",
     corredores: "Corridors",
-    focos: "Fires 24 h",
-    luz: "Night lights",
     letreroCorredor: (origen, region, drones) => `${origen} → ${region} · ${drones} drones`,
-    letreroFoco: (hora, coincide) =>
-      `Fire hotspot · ${hora} UTC${coincide ? " · matches a reported strike" : ""}`,
     letreroAlumbrado: (ciudad) => `${ciudad} · permanently reduced street lighting`,
     letreroCiudad: (ciudad, perdida) => `${ciudad} · ${perdida}% less night light`,
-    focosUltimo: (hora) => `Fire hotspots, last 24 h · latest data ${hora} UTC`,
-    focosVacio: "Fire hotspots, last 24 h · none in the last 24 hours",
     corredor: {
       etiqueta: "Attack corridor · war layer",
       origen: "Origin",
@@ -1396,9 +1403,11 @@ export const en: Textos = {
       escena: (id) => `scene ${id}`,
       nubes: (pct) => `${pct}% cloud over the crop`,
       producto: (lado) => `Sentinel-2 L2A, natural colour, 10 m per pixel, ${lado} km crop`,
-      esperando: "The cloud-free after image is added as soon as Sentinel-2 takes it.",
-      cargando: "Loading the images…",
       alt: (momento, fecha) => `Satellite image ${momento} the attack, ${fecha}`,
+      zonaCambio: (hectareas, antes, despues) =>
+        `Area with changes: ${hectareas} hectares · before ${antes} · after ${despues}`,
+      ocultarContorno: "Hide outline",
+      verContorno: "Show outline",
     },
     zona: (id, nombre) => ZONAS_EN[id] ?? nombre,
     ayudaCorredores:
@@ -1406,25 +1415,41 @@ export const en: Textos = {
       "in the period. Towards Russia it starts at the nearest point of the Ukrainian border. " +
       "Moving the pointer or a finger close to an arc is enough: it lights up and takes " +
       "precedence over the region below; the Tab key goes through them one by one.",
-    ayudaFocos:
-      "A tiny violet dot is a fire hotspot of the last 24 hours (NASA FIRMS); a larger light violet one " +
-      "matches a reported strike.",
+    ayudaSubcapas:
+      "The Ukraine layer shows its regions and strikes. «Corridors» and «With satellite» are " +
+      "switched on with their own button (and off with it); turning the Ukraine layer off turns " +
+      "them off too.",
+    tipos: {
+      cortinilla: "before and after",
+      foco: "fire hotspot",
+      apagon: "blackout",
+      oscura: "darkened city",
+    },
+    leyendaTipos: {
+      cortinilla: "Strike with a before-and-after image in which the change can be seen",
+      foco: "Strike matched by a fire hotspot (including those of the last 24 hours)",
+      apagon: "City that lost night lights after an attack on the power grid",
+      oscura: "City with permanently reduced street lighting",
+    },
+    leyenda: "Legend",
+    filtrar: "Filter the list by type",
     ayudaLuz:
-      "A darkened region or city lost night light after an attack on the power grid, measured " +
-      "by satellite: darker means a larger loss.",
+      "With «With satellite»: a darkened region or city lost night light after an attack on the " +
+      "power grid, measured by satellite (blackout): darker means a larger loss.",
     ayudaAlumbrado:
-      "A ring with a light dot is a city with permanently reduced street lighting: its night " +
-      "brightness has long been below the minimum needed to measure a blackout.",
+      "With «With satellite»: a ring with a light dot is a darkened city, with permanently " +
+      "reduced street lighting: its night brightness has long been below the minimum needed to " +
+      "measure a blackout.",
     ayudaSatelite:
       "A larger strike with a light rim has satellite information: a second ring means a " +
-      "before-and-after image; the hotspot mark, a fire hotspot. Always on top of the rest; a " +
-      "cluster holding one has a light rim. «With satellite» leaves only those points and opens " +
-      "their list.",
+      "before-and-after image in which the change can be seen; the hotspot mark, a fire hotspot " +
+      "matching it. Always on top of the rest; a cluster holding one has a light rim. «With " +
+      "satellite» turns on the four types (before and after, hotspot, blackout and darkened " +
+      "city), dims the rest and opens their legend and their list, which can be filtered by type.",
     conSatelite: (n) => `With satellite · ${n}`,
     listaSatelite: "Points with satellite information",
     abrirLista: "Open the list of points with satellite information",
     cerrarLista: "Close the list of points with satellite information",
-    tiene: { imagen: "before and after", foco: "fire hotspot", luz: "night lights" },
     letreroSatelite: (imagen, foco) =>
       `Strike with satellite · ${[imagen ? "before and after" : null, foco ? "fire hotspot" : null]
         .filter((x) => x !== null)

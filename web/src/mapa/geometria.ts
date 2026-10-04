@@ -16,7 +16,6 @@ import type {
   CiudadAlumbrado,
   CiudadSinLuz,
   Corredor,
-  FocoVivo,
   PuntoSatelite,
 } from "../datos/guerraSatelite.ts";
 import { GRAVEDAD } from "../paleta.ts";
@@ -348,26 +347,6 @@ export function alumbradoEnMapa(
       type: "Feature",
       geometry: { type: "Point", coordinates: [c.ciudad.punto.lon, c.ciudad.punto.lat] },
       properties: { clave: c.ciudad.id, nombre: c.ciudad.nombre, brillo: c.actual.brillo },
-    })),
-  };
-}
-
-export interface PropiedadesFocoVivo {
-  hora: string;
-  /** Impacto con el que coincide; vacío si ninguno (las expresiones del mapa no leen null). */
-  impacto: string;
-}
-
-/** Focos de calor de las últimas 24 horas. */
-export function focosVivosEnMapa(
-  focos: readonly FocoVivo[],
-): FeatureCollection<Point, PropiedadesFocoVivo> {
-  return {
-    type: "FeatureCollection",
-    features: focos.map(([lon, lat, hora, , impacto]) => ({
-      type: "Feature",
-      geometry: { type: "Point", coordinates: [lon, lat] },
-      properties: { hora, impacto: impacto ?? "" },
     })),
   };
 }

@@ -23,7 +23,6 @@ import type {
   CiudadAlumbrado,
   CiudadSinLuz,
   Corredor,
-  FocoVivo,
   PuntoSatelite,
 } from "../datos/guerraSatelite.ts";
 import type {
@@ -61,10 +60,8 @@ import {
   CAPA_BANDERAS,
   CAPA_DIRECTO,
   CAPA_GNSS,
-  CAPAS_DE_FOCOS_VIVOS,
   CAPAS_DE_LUZ,
   CAPA_CORREDORES,
-  CAPA_FOCOS_VIVOS_IMPACTO,
   CAPA_LUZ_CIUDADES,
   CAPA_ALUMBRADO,
   CAPA_LUZ_REGIONES,
@@ -72,7 +69,6 @@ import {
   FUENTE_CORREDORES,
   FUENTE_REALCE_ARCO,
   FUENTE_REALCE_PUNTO,
-  FUENTE_FOCOS_VIVOS,
   FUENTE_LUZ_CIUDADES,
   FUENTE_ALUMBRADO,
   CAPA_GRUPOS,
@@ -109,7 +105,6 @@ import {
   impactosConSateliteEnMapa,
   corredoresEnMapa,
   focosDeRegiones,
-  focosVivosEnMapa,
   impactosEnMapa,
   lineasDeEpisodio,
   pilas,
@@ -220,8 +215,6 @@ export interface PropsMapa {
   luzRegiones: ReadonlyMap<string, number> | null;
   /** Ciudades que perdieron luz en el periodo; null sin la capa. */
   ciudadesSinLuz: readonly CiudadSinLuz[] | null;
-  /** Focos de calor de las últimas 24 horas; null si no se han cargado. */
-  focosVivos: readonly FocoVivo[] | null;
   /** Ciudades con alumbrado reducido de forma permanente; null si no se han cargado. */
   alumbrado: readonly CiudadAlumbrado[] | null;
   elegido: IncidenteResumen | null;
@@ -354,7 +347,7 @@ const VACIA_REALCE: GeoJSON.FeatureCollection = { type: "FeatureCollection", fea
 export default function Mapa(props: PropsMapa) {
   const { t, idioma, incidentes, episodios, capas, intensidad, noche, elegido } = props;
   const { focosUcrania, impactos, gnss, presion, avisos } = props;
-  const { corredores, luzRegiones, ciudadesSinLuz, focosVivos, alumbrado, corredorElegido } = props;
+  const { corredores, luzRegiones, ciudadesSinLuz, alumbrado, corredorElegido } = props;
   const { puntosSatelite, soloSatelite } = props;
   const { paisResaltado, regionesElegidas, novedades, recientes, encuadre, reserva } = props;
   // El vuelo lee la reserva del momento, pero no se repite porque cambie (al arrastrar una hoja).
@@ -670,9 +663,6 @@ export default function Mapa(props: PropsMapa) {
       if (rasgo.layer.id === CAPA_ALUMBRADO) {
         return textos.satelite.letreroAlumbrado(String(p.nombre));
       }
-      if (rasgo.layer.id === CAPA_FOCOS_VIVOS_IMPACTO) {
-        return textos.satelite.letreroFoco(String(p.hora).slice(11, 16), true);
-      }
       const incidente = porId.get(String(p.id));
       if (incidente === undefined) return null;
       return `${textos.tipo[incidente.tipo]} · ${textos.estado[incidente.estado]} · ${
@@ -736,9 +726,6 @@ export default function Mapa(props: PropsMapa) {
         manejadores.current.onCelda(String(propiedades.h3));
       } else if (primero.layer.id === CAPA_PRESION) {
         manejadores.current.onPais(String(propiedades.iso));
-      } else if (primero.layer.id === CAPA_FOCOS_VIVOS_IMPACTO) {
-        manejadores.current.onImpacto(String(propiedades.impacto));
-
       } else if (primero.layer.id === CAPA_LUZ_CIUDADES) {
         manejadores.current.onCiudadLuz(String(propiedades.clave));
       } else if (primero.layer.id === CAPA_ALUMBRADO) {
@@ -858,8 +845,8 @@ export default function Mapa(props: PropsMapa) {
         [CAPAS_DE_PRESION, capas.presion],
         [CAPAS_DE_GNSS, capas.gnss],
         [CAPAS_DE_CORREDORES, capas.ucrania && capas.corredores],
-        [CAPAS_DE_LUZ, capas.ucrania && capas.luz],
-        [CAPAS_DE_FOCOS_VIVOS, capas.ucrania && capas.focosVivos],
+        // Apagones y ciudades a oscuras, dentro de «Con satélite».
+        [CAPAS_DE_LUZ, capas.ucrania && capas.satelite],
       ];
       for (const [ids, visible] of grupos) {
         for (const id of ids) {
@@ -994,13 +981,6 @@ export default function Mapa(props: PropsMapa) {
     if (!listo || mapa === null) return;
     fuente(mapa, FUENTE_ALUMBRADO)?.setData(alumbradoEnMapa(alumbrado ?? []));
   }, [listo, alumbrado]);
-
-  // Focos de calor de las últimas 24 horas.
-  useEffect(() => {
-    const mapa = mapaRef.current;
-    if (!listo || mapa === null) return;
-    fuente(mapa, FUENTE_FOCOS_VIVOS)?.setData(focosVivosEnMapa(focosVivos ?? []));
-  }, [listo, focosVivos]);
 
   // Focos térmicos de las regiones de Ucrania, en el centro de cada región.
   useEffect(() => {

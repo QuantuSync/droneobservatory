@@ -6,6 +6,7 @@ export type Accion =
   | "capaIncidentes"
   | "capaUcrania"
   | "capaDensidad"
+  | "capaSatelite"
   | "filtroGraves"
   | "filtro24h"
   | "filtro7d"
@@ -23,6 +24,7 @@ export const ATAJOS: readonly (readonly [tecla: string, accion: Accion])[] = [
   ["1", "capaIncidentes"],
   ["2", "capaUcrania"],
   ["3", "capaDensidad"],
+  ["4", "capaSatelite"],
   ["c", "filtroGraves"],
   ["h", "filtro24h"],
   ["s", "filtro7d"],

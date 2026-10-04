@@ -53,7 +53,6 @@ export const FUENTE_SATELITE = "guerra-satelite";
 export const FUENTE_REALCE_PUNTO = "guerra-realce-punto";
 export const FUENTE_LUZ_CIUDADES = "guerra-luz-ciudades";
 export const FUENTE_ALUMBRADO = "guerra-alumbrado";
-export const FUENTE_FOCOS_VIVOS = "guerra-focos-vivos";
 
 export const CAPA_GRUPOS = "grupos";
 export const CAPA_NUMERO_GRUPOS = "grupos-numero";
@@ -94,8 +93,6 @@ export const CAPA_LUZ_REGIONES_RUSIA = "rusia-luz";
 export const CAPA_LUZ_CIUDADES = "guerra-luz-ciudades";
 export const CAPA_ALUMBRADO = "guerra-alumbrado";
 export const CAPA_ALUMBRADO_PUNTO = "guerra-alumbrado-punto";
-export const CAPA_FOCOS_VIVOS = "guerra-focos-vivos";
-export const CAPA_FOCOS_VIVOS_IMPACTO = "guerra-focos-vivos-impacto";
 export const CAPA_BANDERAS = "banderas";
 export const CAPA_NUMERO_BANDERAS = "banderas-numero";
 export const CAPA_OBSTACULOS = "obstaculos";
@@ -112,7 +109,6 @@ export const CAPAS_PULSABLES: readonly string[] = [
   CAPA_SATELITE,
   CAPA_IMPACTOS,
   CAPA_IMPACTOS_GRUPOS,
-  CAPA_FOCOS_VIVOS_IMPACTO,
   CAPA_LUZ_CIUDADES,
   CAPA_ALUMBRADO,
   CAPA_REGIONES,
@@ -174,8 +170,6 @@ export const ATENUADAS_SIN_SATELITE: readonly [
   [CAPA_IMPACTOS_FOCO, "circle-opacity", 0.15],
   [CAPA_IMPACTOS_FOCO_GRUPO, "circle-opacity", 0.15],
   [CAPA_FOCOS_UCRANIA, "circle-opacity", 0.15],
-  [CAPA_FOCOS_VIVOS, "circle-opacity", 0.12],
-  [CAPA_FOCOS_VIVOS_IMPACTO, "circle-opacity", 0.15],
 ];
 /** Opacidad de los arcos con «Con satélite». */
 export const OPACIDAD_CORREDOR_SIN_SATELITE = 0.05;
@@ -207,7 +201,6 @@ export const CAPAS_DE_PUNTOS_DE_GUERRA: readonly string[] = [
   CAPA_SATELITE,
   CAPA_IMPACTOS,
   CAPA_IMPACTOS_GRUPOS,
-  CAPA_FOCOS_VIVOS_IMPACTO,
   CAPA_LUZ_CIUDADES,
   CAPA_ALUMBRADO,
 ];
@@ -230,7 +223,6 @@ export const CAPAS_DE_LUZ: readonly string[] = [
   CAPA_ALUMBRADO,
   CAPA_ALUMBRADO_PUNTO,
 ];
-export const CAPAS_DE_FOCOS_VIVOS: readonly string[] = [CAPA_FOCOS_VIVOS, CAPA_FOCOS_VIVOS_IMPACTO];
 
 /** Corredores: trazo fino, gris y de baja opacidad, por debajo de los impactos. */
 const COLOR_CORREDOR = PALETA.guerra;
@@ -239,10 +231,6 @@ export const OPACIDAD_CORREDOR = 0.18;
 export const OPACIDAD_CORREDOR_ATENUADO = 0.08;
 /** Radio del aro de realce de un punto de la capa de guerra. */
 export const RADIO_REALCE_PUNTO = 9;
-/** Focos de calor de 24 h: puntos pequeños; los que coinciden con un impacto, resaltados. */
-const RADIO_FOCO_VIVO = 1.7;
-const OPACIDAD_FOCO_VIVO = 0.7;
-const RADIO_FOCO_VIVO_IMPACTO = 3.2;
 
 /** Marca del foco térmico: pequeña, junto al símbolo, como en la ayuda (MarcaFoco). */
 const RADIO_MARCA_FOCO = 3.5;
@@ -833,30 +821,6 @@ function capasPropias(acento: string): LayerSpecification[] {
         "circle-stroke-width": 1.8,
       },
     },
-    // Focos de calor de las últimas 24 horas: pequeños y discretos.
-    {
-      id: CAPA_FOCOS_VIVOS,
-      type: "circle",
-      source: FUENTE_FOCOS_VIVOS,
-      filter: ["==", ["get", "impacto"], ""],
-      paint: {
-        "circle-radius": RADIO_FOCO_VIVO,
-        "circle-color": PALETA.guerraTenue,
-        "circle-opacity": OPACIDAD_FOCO_VIVO,
-      },
-    },
-    {
-      id: CAPA_FOCOS_VIVOS_IMPACTO,
-      type: "circle",
-      source: FUENTE_FOCOS_VIVOS,
-      filter: ["!=", ["get", "impacto"], ""],
-      paint: {
-        "circle-radius": RADIO_FOCO_VIVO_IMPACTO,
-        "circle-color": PALETA.guerraClaro,
-        "circle-stroke-color": PALETA.fondo,
-        "circle-stroke-width": 1.2,
-      },
-    },
     {
       id: CAPA_FOCOS_UCRANIA,
       type: "circle",
@@ -1193,7 +1157,6 @@ export function estilo(idioma: Idioma, origen: string, acento: string): StyleSpe
       [FUENTE_SATELITE]: { type: "geojson", data: VACIA },
       [FUENTE_REALCE_PUNTO]: { type: "geojson", data: VACIA },
       [FUENTE_ALUMBRADO]: { type: "geojson", data: VACIA },
-      [FUENTE_FOCOS_VIVOS]: { type: "geojson", data: VACIA },
       [FUENTE_IMPACTOS]: {
         type: "geojson",
         data: VACIA,

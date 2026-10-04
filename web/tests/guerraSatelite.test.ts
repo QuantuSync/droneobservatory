@@ -30,7 +30,7 @@ import {
   validarIndiceSatelite,
   validarResumenUcrania,
 } from "../src/datos/validar.ts";
-import { alumbradoEnMapa, corredoresEnMapa, focosVivosEnMapa } from "../src/mapa/geometria.ts";
+import { alumbradoEnMapa, corredoresEnMapa } from "../src/mapa/geometria.ts";
 import { diaDeInstante } from "../src/tiempo/dias.ts";
 import { ataque, publicacion } from "./ejemplos.ts";
 
@@ -203,12 +203,11 @@ describe("focos de calor de 24 horas", () => {
     ],
   };
 
-  it("validan y se dibujan, resaltados los que coinciden con un impacto", () => {
+  it("validan, con el impacto con el que coincide cada uno", () => {
     const resultado = validarFocosVivos(fichero);
     expect(resultado.ok).toBe(true);
     if (!resultado.ok) return;
-    const mapa = focosVivosEnMapa(resultado.datos.focos);
-    expect(mapa.features.map((f) => f.properties.impacto)).toEqual(["EODI-IG-2026-03500", ""]);
+    expect(resultado.datos.focos.map((f) => f[4])).toEqual(["EODI-IG-2026-03500", null]);
   });
 
   it("rechazan un foco mal formado", () => {
@@ -230,13 +229,24 @@ describe("índice de imágenes de antes y después", () => {
           objeto: "satelite/EODI-IG-2025-02569/antes-20250911-S2C_36VVL_20250911_1_L2A.jpg",
           nubes_recorte: 0,
         },
-        despues: null,
+        despues: {
+          fecha: "2025-10-01T09:13:57Z",
+          escena: "S2C_36VVM_20251001_0_L2A",
+          objeto: "satelite/EODI-IG-2025-02569/despues-20251001-S2C_36VVM_20251001_0_L2A-4300.jpg",
+          nubes_recorte: 0,
+        },
+        cambio: { hectareas: 12.5, contorno: [[0.4, 0.4], [0.6, 0.4], [0.5, 0.6]] },
       },
     },
   };
 
-  it("valida con una pareja a medias", () => {
+  it("valida una pareja con su zona cambiada; sin ella o a medias, no", () => {
     expect(validarIndiceSatelite(indice).ok).toBe(true);
+    const pareja = indice.parejas["EODI-IG-2025-02569"];
+    const { cambio: _cambio, ...sinCambio } = pareja;
+    expect(validarIndiceSatelite({ ...indice, parejas: { "EODI-IG-2025-02569": sinCambio } }).ok).toBe(false);
+    const aMedias = { ...pareja, despues: null };
+    expect(validarIndiceSatelite({ ...indice, parejas: { "EODI-IG-2025-02569": aMedias } }).ok).toBe(false);
   });
 
   it("no acepta objetos fuera de su carpeta", () => {

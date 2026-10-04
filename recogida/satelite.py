@@ -39,6 +39,7 @@ import argparse
 import io
 import json
 import logging
+import math
 import os
 import sys
 import time
@@ -58,6 +59,7 @@ from PIL import Image
 from almacen import cifrado, remoto
 from almacen.base import Almacen
 from esquema import Documento
+from proceso import cambio
 from proceso.focos_termicos import distancia_km
 from recogida import almacen_publico, cog
 from recogida.descarga import AGENTE_EODI
@@ -86,6 +88,9 @@ MAXIMO_NUBE = 0.03
 MAXIMO_SIN_DATO = 0.02
 # Cuánto se busca hacia atrás la imagen de antes y cuántas escenas se miran por búsqueda.
 DIAS_ANTES = 180
+# Plazo para hallar, después del ataque, una imagen despejada en la que se vea el cambio (el humo
+# o una nube fina pueden taparlo el primer día).
+PLAZO_CAMBIO_DIAS = 15
 CANDIDATAS = 40
 # Escenas enteramente cubiertas no se miran: ni un píxel útil.
 NUBES_ESCENA_MAXIMA = 99.5
@@ -163,6 +168,9 @@ class Escena:
     tci: str
     scl: str
     nubes_escena: float
+    # Infrarrojo cercano estrecho (B8A) y de onda corta (B12), 20 m: el índice de quemado.
+    b8a: str = ""
+    b12: str = ""
 
 
 def _instante(texto: str) -> datetime:
@@ -186,6 +194,8 @@ def escena_de_item(item: Documento) -> Escena | None:
             tci=str(activos["visual"]["href"]),
             scl=str(activos["scl"]["href"]),
             nubes_escena=float(propiedades.get("eo:cloud_cover", 0.0)),
+            b8a=str(activos.get("nir08", {}).get("href", "")),
+            b12=str(activos.get("swir22", {}).get("href", "")),
         )
     except (KeyError, ValueError, TypeError):
         return None
@@ -271,6 +281,43 @@ def leer_banda(lector: Lector, url: str, recorte: Recorte, epsg: int) -> npt.NDA
     cabecera = cog.leer_cabecera(leer)
     columna, fila, ancho, alto = cog.ventana_de_caja(cabecera, *recorte.caja(epsg))
     return cog.leer_ventana(leer, cabecera, columna, fila, ancho, alto)
+
+
+def rejilla(recorte: Recorte, paso_m: float) -> tuple[npt.NDArray[np.float64], ...]:
+    """Latitudes y longitudes de los centros de una rejilla norte arriba de `paso_m` metros que
+    cubre el recorte (aproximación local; error de centímetros en unos kilómetros)."""
+    n = round(recorte.lado_m / paso_m)
+    desplazamientos = (np.arange(n) + 0.5) * paso_m - recorte.lado_m / 2
+    norte, este = np.meshgrid(-desplazamientos, desplazamientos, indexing="ij")
+    metros_por_grado = 111_320.0
+    lat = recorte.lat + norte / metros_por_grado
+    lon = recorte.lon + este / (metros_por_grado * math.cos(math.radians(recorte.lat)))
+    return lat, lon
+
+
+def en_rejilla(
+    lector: Lector, url: str, recorte: Recorte, epsg: int, paso_m: float = 10.0
+) -> npt.NDArray[Any]:
+    """La banda de una escena llevada a la rejilla común del recorte (vecino más cercano): así
+    se comparan dos fechas aunque sus escenas estén en husos UTM distintos."""
+    lat, lon = rejilla(recorte, paso_m)
+    huso_utm, norte = cog.zona_utm(epsg)
+    x, y = cog.a_utm_matriz(lat, lon, huso_utm, norte)
+    leer = lector.rango(url)
+    cabecera = cog.leer_cabecera(leer)
+    margen = 2 * max(cabecera.paso_x, cabecera.paso_y)
+    columna, fila, ancho, alto = cog.ventana_de_caja(
+        cabecera,
+        float(x.min()) - margen,
+        float(y.min()) - margen,
+        float(x.max()) + margen,
+        float(y.max()) + margen,
+    )
+    ventana = cog.leer_ventana(leer, cabecera, columna, fila, ancho, alto)
+    columnas = np.clip(((x - cabecera.x0) / cabecera.paso_x).astype(int) - columna, 0, ancho - 1)
+    filas = np.clip(((cabecera.y0 - y) / cabecera.paso_y).astype(int) - fila, 0, alto - 1)
+    resultado: npt.NDArray[Any] = ventana[filas, columnas]
+    return resultado
 
 
 def huso(escena: str) -> str:
@@ -374,32 +421,87 @@ def ordenar(objetivos: Iterable[Objetivo]) -> list[Objetivo]:
 # --- Ejecución ---------------------------------------------------------------------------
 
 
-def _imagen(escena: Escena, medida: Medida, objeto: str) -> Documento:
+def _imagen(escena: Escena, medida: Medida) -> Documento:
     return {
         "fecha": _texto(escena.fecha),
         "escena": escena.id,
-        "objeto": objeto,
         "nubes_recorte": round(medida.nubes, 4),
     }
 
 
 @dataclass
 class Resumen:
-    completas: int = 0
-    a_medias: int = 0
+    publicadas: int = 0
+    sin_cambio: int = 0
+    buscando: int = 0
     sin_antes: int = 0
     nuevas: int = 0
+    retiradas: int = 0
     pendientes: int = 0
 
     def texto(self) -> str:
         return (
-            f"{self.completas} parejas completas, {self.a_medias} a la espera de la imagen "
-            f"posterior, {self.sin_antes} sin imagen anterior despejada, {self.nuevas} imágenes "
-            f"nuevas, {self.pendientes} impactos para la ejecución siguiente"
+            f"{self.publicadas} parejas con cambio publicadas, {self.sin_cambio} sin cambio "
+            f"visible, {self.buscando} buscando aún la imagen posterior con cambio, "
+            f"{self.sin_antes} sin imagen anterior despejada, {self.nuevas} publicadas en esta "
+            f"ejecución, {self.retiradas} imágenes retiradas, {self.pendientes} impactos para la "
+            "ejecución siguiente"
         )
 
 
 Subir = Callable[[str, bytes, str, str], bool]
+Borrar = Callable[[str], bool]
+
+
+def escena_por_id(buscar: Buscador, id_: str) -> Escena | None:
+    hallada = escenas(buscar, {"collections": [COLECCION], "ids": [id_], "limit": 1})
+    return hallada[0] if hallada else None
+
+
+def bandas(lector: Lector, escena: Escena, recorte: Recorte) -> cambio.Bandas:
+    """Una fecha en la rejilla común del recorte: SCL, B8A, B12 y color natural."""
+
+    def leer(url: str) -> npt.NDArray[Any]:
+        return en_rejilla(lector, url, recorte, escena.epsg, cambio.PASO_M)
+
+    return cambio.Bandas(
+        scl=leer(escena.scl)[:, :, 0],
+        b8a=leer(escena.b8a)[:, :, 0],
+        b12=leer(escena.b12)[:, :, 0],
+        rgb=leer(escena.tci)[:, :, :3],
+    )
+
+
+def medir_cambio(
+    lector: Lector, antes: Escena, despues: Escena, recorte: Recorte
+) -> tuple[cambio.Cambio, cambio.Bandas, cambio.Bandas]:
+    a, d = bandas(lector, antes, recorte), bandas(lector, despues, recorte)
+    lado = a.scl.shape[0]
+    return cambio.medir(a, d, (lado / 2, lado / 2)), a, d
+
+
+def reencuadrado(recorte: Recorte, medida: cambio.Cambio) -> Recorte:
+    """El recorte centrado en la mancha, si hace falta (cambio.Cambio.reencuadre)."""
+    nuevo = medida.reencuadre()
+    if nuevo is None:
+        return recorte
+    fila, columna, lado_px = nuevo
+    medio = medida.lado / 2
+    metros_por_grado = 111_320.0
+    lat = recorte.lat + (medio - fila) * cambio.PASO_M / metros_por_grado
+    lon = recorte.lon + (columna - medio) * cambio.PASO_M / (
+        metros_por_grado * math.cos(math.radians(recorte.lat))
+    )
+    lado_m = int(round(lado_px * cambio.PASO_M / 100) * 100)
+    return Recorte(round(lat, 5), round(lon, 5), lado_m)
+
+
+def _objetos(entrada: Documento) -> list[str]:
+    return [
+        str(entrada[lado]["objeto"])
+        for lado in ("antes", "despues")
+        if isinstance(entrada.get(lado), dict) and entrada[lado].get("objeto")
+    ]
 
 
 def procesar(
@@ -409,79 +511,139 @@ def procesar(
     lector: Lector,
     subir: Subir,
     ahora: datetime,
+    borrar: Borrar | None = None,
 ) -> Documento:
-    """Completa lo que falta de la pareja de un impacto y devuelve su entrada de control."""
+    """Completa la pareja de un impacto y devuelve su entrada de control. La imagen de antes es
+    la última despejada anterior al ataque; la de después, la primera despejada posterior en la
+    que se ve un cambio en la zona del impacto (proceso/cambio.py), buscada durante
+    PLAZO_CAMBIO_DIAS. Solo una pareja con cambio se sube al almacén, en la rejilla común (las
+    dos imágenes alineadas) y reencuadrada en la mancha si hace falta; lo publicado antes de
+    una pareja sin cambio se retira."""
     entrada: Documento = dict(control)
     recorte = objetivo.recorte
-    misma = entrada.get("recorte") == {
-        "lat": recorte.lat,
-        "lon": recorte.lon,
-        "lado_m": recorte.lado_m,
-    }
-    if not misma:
+    actual = {"lat": recorte.lat, "lon": recorte.lon, "lado_m": recorte.lado_m}
+    if entrada.get("recorte") != actual:
         entrada = {}
-    entrada["recorte"] = {"lat": recorte.lat, "lon": recorte.lon, "lado_m": recorte.lado_m}
+    entrada["recorte"] = actual
     entrada["foco"] = objetivo.foco
-    for lado in ("antes", "despues"):
-        if entrada.get(lado) is not None:
+    if objetivo.lugar:
+        entrada["lugar"] = objetivo.lugar
+    if entrada.get("cambio") or entrada.get("sin_cambio"):
+        return entrada
+    # Lo publicado sin medir (las primeras parejas) se mide como una escena más de después.
+    retirar = _objetos(entrada)
+    previa = entrada.get("despues")
+    if isinstance(previa, dict):
+        entrada.pop("despues", None)
+        if isinstance(entrada.get("antes"), dict):
+            entrada["antes"].pop("objeto", None)
+    if entrada.get("antes") is None and not entrada.get("antes_buscado"):
+        cuerpo = consulta(
+            recorte.lat,
+            recorte.lon,
+            objetivo.antes_hasta - timedelta(days=DIAS_ANTES),
+            objetivo.antes_hasta,
+            recientes=True,
+        )
+        hallada = primera_despejada(lector, escenas(buscar, cuerpo), recorte)
+        entrada["antes_buscado"] = True
+        if hallada is not None:
+            entrada["antes"] = _imagen(*hallada)
+    antes_doc = entrada.get("antes")
+    if not isinstance(antes_doc, dict):
+        return entrada
+    antes = escena_por_id(buscar, str(antes_doc["escena"]))
+    if antes is None:
+        return entrada
+    limite = objetivo.despues_desde + timedelta(days=PLAZO_CAMBIO_DIAS)
+    desde = objetivo.despues_desde
+    if entrada.get("despues_buscado_hasta"):
+        desde = max(desde, _instante(str(entrada["despues_buscado_hasta"])))
+    revisadas = set(entrada.get("revisadas", []))
+    candidatas: list[Escena] = []
+    if isinstance(previa, dict) and str(previa["escena"]) not in revisadas:
+        escena_previa = escena_por_id(buscar, str(previa["escena"]))
+        if escena_previa is not None:
+            candidatas.append(escena_previa)
+    hasta = min(ahora, limite)
+    if desde < hasta:
+        candidatas += mismo_huso_primero(
+            escenas(buscar, consulta(recorte.lat, recorte.lon, desde, hasta, recientes=False)),
+            antes.id,
+        )
+    for escena in candidatas:
+        if escena.id in revisadas:
             continue
-        if lado == "antes":
-            if entrada.get("antes_buscado"):
-                continue
-            cuerpo = consulta(
-                recorte.lat,
-                recorte.lon,
-                objetivo.antes_hasta - timedelta(days=DIAS_ANTES),
-                objetivo.antes_hasta,
-                recientes=True,
-            )
-        else:
-            desde = objetivo.despues_desde
-            if entrada.get("despues_buscado_hasta"):
-                desde = max(desde, _instante(entrada["despues_buscado_hasta"]))
-            if desde >= ahora:
-                continue
-            cuerpo = consulta(recorte.lat, recorte.lon, desde, ahora, recientes=False)
-        candidatas = escenas(buscar, cuerpo)
-        if lado == "despues" and entrada.get("antes"):
-            candidatas = mismo_huso_primero(candidatas, str(entrada["antes"]["escena"]))
-        hallada = primera_despejada(lector, candidatas, recorte)
-        if lado == "antes":
-            entrada["antes_buscado"] = True
-        elif hallada is None:
-            # Las escenas vistas no se vuelven a mirar; si había más de las que caben en una
-            # búsqueda, se sigue desde la última vista.
-            hasta = candidatas[-1].fecha if len(candidatas) >= CANDIDATAS else ahora
-            entrada["despues_buscado_hasta"] = _texto(hasta)
+        hallada = primera_despejada(lector, [escena], recorte)
         if hallada is None:
             continue
-        escena, medida = hallada
-        rgb = ajustar(leer_banda(lector, escena.tci, recorte, escena.epsg))
-        objeto = f"{PREFIJO}/{objetivo.id}/{lado}-{escena.fecha:%Y%m%d}-{escena.id}.jpg"
-        if subir(objeto, jpeg(rgb), "image/jpeg", CACHE_IMAGEN):
-            entrada[lado] = _imagen(escena, medida, objeto)
+        revisadas.add(escena.id)
+        medida, _, _ = medir_cambio(lector, antes, escena, recorte)
+        entrada["medida"] = {
+            "escena": escena.id,
+            "principal": medida.principal,
+            "dentro": medida.dentro,
+            "fuera": medida.fuera,
+        }
+        if not medida.pasa:
+            continue
+        # Encuadre en la mancha y las dos imágenes en la rejilla común.
+        final = reencuadrado(recorte, medida)
+        if final != recorte:
+            medida, _, _ = medir_cambio(lector, antes, escena, final)
+        a = bandas(lector, antes, final)
+        d = bandas(lector, escena, final)
+        subidas = {}
+        for lado, imagen, bandas_lado in (("antes", antes, a), ("despues", escena, d)):
+            objeto = (
+                f"{PREFIJO}/{objetivo.id}/{lado}-{imagen.fecha:%Y%m%d}-{imagen.id}-"
+                f"{final.lado_m}.jpg"
+            )
+            if not subir(objeto, jpeg(ajustar(bandas_lado.rgb)), "image/jpeg", CACHE_IMAGEN):
+                return entrada
+            subidas[lado] = objeto
+        entrada["antes"] = {**antes_doc, "objeto": subidas["antes"]}
+        entrada["despues"] = {**_imagen(escena, hallada[1]), "objeto": subidas["despues"]}
+        entrada["cambio"] = {
+            "hectareas": medida.zona_hectareas,
+            "principal": medida.principal,
+            "contorno": [list(p) for p in medida.contorno()],
+            "recorte": {"lat": final.lat, "lon": final.lon, "lado_m": final.lado_m},
+        }
+        break
+    entrada["revisadas"] = sorted(revisadas)
+    if not entrada.get("cambio"):
+        ultima = candidatas[-1].fecha if len(candidatas) >= CANDIDATAS else hasta
+        entrada["despues_buscado_hasta"] = _texto(max(desde, ultima))
+        if ahora >= limite:
+            entrada["sin_cambio"] = True
+    if borrar is not None:
+        publicados = set(_objetos(entrada)) if entrada.get("cambio") else set()
+        pendientes = []
+        for objeto in retirar:
+            if objeto not in publicados and not borrar(objeto):
+                pendientes.append(objeto)
+        if pendientes:
+            entrada["retirar"] = pendientes
     return entrada
 
 
 def indice(control: dict[str, Documento], ahora: datetime) -> Documento:
-    """El índice público: solo los impactos con alguna imagen."""
+    """El índice público: solo las parejas en las que se ve un cambio, con su contorno."""
     parejas = {}
     for impacto, entrada in sorted(control.items()):
-        if entrada.get("antes") is None and entrada.get("despues") is None:
+        hecho = entrada.get("cambio")
+        if not hecho or not entrada.get("antes") or not entrada.get("despues"):
             continue
         parejas[impacto] = {
-            "recorte": entrada["recorte"],
-            "antes": entrada.get("antes"),
-            "despues": entrada.get("despues"),
+            "recorte": hecho["recorte"],
+            "antes": entrada["antes"],
+            "despues": entrada["despues"],
+            "cambio": {"hectareas": hecho["hectareas"], "contorno": hecho["contorno"]},
             **({"lugar": entrada["lugar"]} if entrada.get("lugar") else {}),
         }
     anios = sorted(
-        {
-            img["fecha"][:4]
-            for p in parejas.values()
-            for img in (p["antes"], p["despues"])
-            if img is not None
-        }
+        {img["fecha"][:4] for p in parejas.values() for img in (p["antes"], p["despues"])}
     )
     return {
         "generado": ahora.strftime("%Y-%m-%dT%H:%MZ"),
@@ -495,10 +657,12 @@ def indice(control: dict[str, Documento], ahora: datetime) -> Documento:
 
 def resumir(control: dict[str, Documento], resumen: Resumen) -> Resumen:
     for entrada in control.values():
-        if entrada.get("antes") and entrada.get("despues"):
-            resumen.completas += 1
+        if entrada.get("cambio"):
+            resumen.publicadas += 1
+        elif entrada.get("sin_cambio"):
+            resumen.sin_cambio += 1
         elif entrada.get("antes"):
-            resumen.a_medias += 1
+            resumen.buscando += 1
         else:
             resumen.sin_antes += 1
     return resumen
@@ -513,29 +677,35 @@ def actualizar(
     ahora: datetime,
     tope_s: float = TOPE_S,
     reloj: Callable[[], float] = time.monotonic,
+    borrar: Borrar | None = None,
 ) -> Resumen:
-    """Recorre los objetivos (los de foco primero) hasta el tope de tiempo."""
+    """Recorre los objetivos (los de foco primero) hasta el tope de tiempo. Lo que quedó por
+    retirar del almacén se vuelve a intentar."""
     inicio = reloj()
     resumen = Resumen()
     for objetivo in ordenar(objetivos):
         anterior = control.get(objetivo.id, {})
         if objetivo.lugar and anterior and anterior.get("lugar") != objetivo.lugar:
             anterior = control[objetivo.id] = {**anterior, "lugar": objetivo.lugar}
-        if anterior.get("antes") and anterior.get("despues"):
+        if borrar is not None and anterior.get("retirar"):
+            quedan = [o for o in anterior["retirar"] if not borrar(o)]
+            resumen.retiradas += len(anterior["retirar"]) - len(quedan)
+            anterior = control[objetivo.id] = {**anterior, "retirar": quedan}
+        if anterior.get("cambio") or anterior.get("sin_cambio"):
             continue
         if reloj() - inicio > tope_s:
             resumen.pendientes += 1
             continue
         try:
-            entrada = procesar(objetivo, anterior, buscar, lector, subir, ahora)
+            entrada = procesar(objetivo, anterior, buscar, lector, subir, ahora, borrar)
         except (LecturaFallida, cog.CogInvalido) as error:
             registro.warning("%s: %s", objetivo.id, error)
             resumen.pendientes += 1
             continue
-        resumen.nuevas += sum(
-            1 for lado in ("antes", "despues") if entrada.get(lado) and not anterior.get(lado)
-        )
-        control[objetivo.id] = {**entrada, "lugar": objetivo.lugar} if objetivo.lugar else entrada
+        if entrada.get("cambio") and not anterior.get("cambio"):
+            resumen.nuevas += 1
+        resumen.retiradas += len(_objetos(anterior)) - len(entrada.get("retirar", []))
+        control[objetivo.id] = entrada
     return resumir(control, resumen)
 
 
@@ -663,6 +833,22 @@ def subida_al_almacen(entorno: dict[str, str] | os._Environ[str]) -> Subir:
     return subir
 
 
+def borrado_del_almacen(entorno: dict[str, str] | os._Environ[str]) -> Borrar:
+    almacen = almacen_publico.cargar()
+    clave_id = entorno.get(almacen_publico.VARIABLE_ID, "")
+    secreto = entorno.get(almacen_publico.VARIABLE_SECRETO, "")
+
+    def borrar(objeto: str) -> bool:
+        if not clave_id or not secreto:
+            return False
+        correcto, motivo = almacen_publico.borrar(almacen, objeto, clave_id, secreto)
+        if not correcto:
+            registro.warning("%s no retirado: %s", objeto, motivo)
+        return correcto
+
+    return borrar
+
+
 @contextmanager
 def _base(repositorio: str | None, local: Path | None) -> Iterator[Almacen]:
     """La base de la rama estado (o un db.age local), solo para leerla."""
@@ -709,7 +895,14 @@ def principal(argumentos: list[str] | None = None) -> int:
         with _base(args.repositorio, args.base) as almacen:
             objetivos = objetivos_de_base(almacen)
     resumen = actualizar(
-        objetivos, control, buscador_http(lector), lector, subir, ahora, args.tope_min * 60
+        objetivos,
+        control,
+        buscador_http(lector),
+        lector,
+        subir,
+        ahora,
+        args.tope_min * 60,
+        borrar=borrado_del_almacen(os.environ),
     )
     _escribir(ruta_control, control)
     publico = indice(control, ahora)

@@ -3,6 +3,7 @@
 // encima, sin agrupar, con su señal en los grupos), el botón «Con satélite» con su número y su
 // lista, y la ficha con lo de satélite arriba.
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { useState } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { FichaImpacto } from "../src/componentes/FichaImpacto.tsx";
@@ -12,8 +13,13 @@ import {
   loQueTiene,
   olvidarIndiceSatelite,
 } from "../src/componentes/GuerraSatelite.tsx";
-import { puntosConSatelite } from "../src/datos/guerraSatelite.ts";
-import type { CiudadAlumbrado, CiudadSinLuz, IndiceSatelite } from "../src/datos/guerraSatelite.ts";
+import { puntosConSatelite, tiposDe } from "../src/datos/guerraSatelite.ts";
+import type {
+  CiudadAlumbrado,
+  CiudadSinLuz,
+  IndiceSatelite,
+  TipoSatelite,
+} from "../src/datos/guerraSatelite.ts";
 import type { FilaImpacto } from "../src/datos/tipos.ts";
 import { textos } from "../src/i18n/index.ts";
 import {
@@ -57,6 +63,7 @@ const INDICE: IndiceSatelite = {
       antes: imagen("2026-09-20", "antes"),
       despues: imagen("2026-09-30", "despues"),
       lugar: "Euroterminal",
+      cambio: { hectareas: 24.6, contorno: [[0.4, 0.4], [0.6, 0.4], [0.5, 0.6]] },
     },
   },
 };
@@ -120,9 +127,14 @@ describe("puntos con información de satélite", () => {
       ["UA-51|Одеса", false, false, true],
     ]);
     expect(puntos.find((p) => p.clave === "EODI-IG-2026-03486")?.lugar).toBe("Euroterminal");
-    expect(loQueTiene(es, { imagen: true, foco: true, luz: false })).toBe(
+    const conLasDos = puntos.find((p) => p.clave === "EODI-IG-2026-03486");
+    expect(conLasDos === undefined ? "" : loQueTiene(es, { ...conLasDos, foco: true })).toBe(
       "antes y después · foco de calor",
     );
+    expect(puntos.map((p) => tiposDe(p))).toEqual([["oscura"], ["foco"], ["cortinilla"], ["apagon"]]);
+    // Un foco de las últimas 24 horas que coincide con un impacto cuenta en cuanto se confirma.
+    const recientes = puntosConSatelite(impactos, null, null, null, diaDe, new Set(["EODI-IG-2026-03501"]));
+    expect(recientes.map((p) => p.clave)).toEqual(["EODI-IG-2026-03501", "EODI-IG-2026-03500"]);
     // Sin índice de imágenes, los de foco siguen.
     expect(puntosConSatelite(impactos, null, null, null, diaDe).map((p) => p.clave)).toEqual([
       "EODI-IG-2026-03500",
@@ -175,41 +187,61 @@ describe("puntos con información de satélite", () => {
   });
 });
 
-describe("botón «Con satélite» y su lista", () => {
+describe("botón «Con satélite», su leyenda, su filtro y su lista", () => {
   const puntos = puntosConSatelite(
-    [fila("EODI-IG-2026-03486", "2026-09-25", 1, 30.7, 46.51)],
+    [fila("EODI-IG-2026-03486", "2026-09-25", 1, 30.7, 46.51), fila("EODI-IG-2026-03500", "2026-09-28", 1)],
     INDICE,
-    null,
-    null,
+    [ODESA],
+    [SUMY],
     diaDe,
   );
 
-  it("da el número, deja solo esos puntos y abre la lista; una fila lleva a su ficha", () => {
-    const activo = vi.fn();
-    const elegir = vi.fn();
-    const { rerender } = render(
+  function Prueba({ elegir }: { elegir: (clave: string) => void }) {
+    const [activo, setActivo] = useState(false);
+    const [abierta, setAbierta] = useState(false);
+    const [filtro, setFiltro] = useState<TipoSatelite[]>([]);
+    return (
       <BotonSatelite
         t={es}
         idioma="es"
         puntos={puntos}
-        activo={false}
-        onActivo={activo}
-        onElegir={elegir}
-      />,
+        activo={activo}
+        onActivo={setActivo}
+        abierta={abierta}
+        onAbierta={setAbierta}
+        filtro={filtro}
+        onFiltro={setFiltro}
+        onElegir={(p) => elegir(p.clave)}
+      />
     );
-    fireEvent.click(screen.getByRole("button", { name: "Con satélite · 1" }));
-    expect(activo).toHaveBeenCalledWith(true);
-    rerender(
-      <BotonSatelite t={es} idioma="es" puntos={puntos} activo onActivo={activo} onElegir={elegir} />,
-    );
+  }
+
+  it("da la suma real, abre la leyenda de los cuatro tipos y la lista; una fila lleva a su ficha", () => {
+    const elegir = vi.fn();
+    render(<Prueba elegir={elegir} />);
+    fireEvent.click(screen.getByRole("button", { name: "Con satélite · 4" }));
+    for (const tipo of ["cortinilla", "foco", "apagon", "oscura"] as const) {
+      expect(screen.getByText(es.satelite.leyendaTipos[tipo])).toBeTruthy();
+    }
+    // La leyenda se pliega.
+    fireEvent.click(screen.getByRole("button", { name: /Leyenda/ }));
+    expect(screen.queryByText(es.satelite.leyendaTipos.apagon)).toBeNull();
     const fila = screen.getByRole("button", { name: /Euroterminal/ });
     expect(fila.textContent).toContain("25/09/2026 · antes y después · foco de calor");
     fireEvent.click(fila);
-    expect(elegir).toHaveBeenCalledWith(expect.objectContaining({ clave: "EODI-IG-2026-03486" }));
-    // La lista se cierra al elegir y se vuelve a abrir con su flecha.
-    expect(screen.queryByRole("button", { name: /Euroterminal/ })).toBeNull();
-    fireEvent.click(screen.getByRole("button", { name: es.satelite.abrirLista }));
-    expect(screen.getByRole("button", { name: /Euroterminal/ })).toBeTruthy();
+    expect(elegir).toHaveBeenCalledWith("EODI-IG-2026-03486");
+  });
+
+  it("el filtro deja solo apagones y ciudades a oscuras", () => {
+    render(<Prueba elegir={() => undefined} />);
+    fireEvent.click(screen.getByRole("button", { name: "Con satélite · 4" }));
+    fireEvent.click(screen.getByRole("button", { name: /^apagón · 1/ }));
+    fireEvent.click(screen.getByRole("button", { name: /^ciudad a oscuras · 1/ }));
+    const filas = screen.getAllByRole("listitem").filter((li) => li.closest("[aria-label]")?.getAttribute("aria-label") === es.satelite.listaSatelite);
+    expect(filas.map((li) => li.textContent)).toEqual([
+      expect.stringContaining("Суми"),
+      expect.stringContaining("Одеса"),
+    ]);
   });
 });
 
@@ -232,6 +264,15 @@ describe("ficha de un impacto con información de satélite", () => {
     expect(cortinilla).toBeGreaterThan(html.indexOf("</h2>"));
     expect(cortinilla).toBeLessThan(html.indexOf(`>${es.impacto.lugar}<`));
     expect(html.indexOf("data-foco-arriba")).toBeLessThan(html.indexOf(`>${es.impacto.lugar}<`));
+    // El contorno de la zona cambiada, que se oculta con un toque, y sus hectáreas.
+    expect(container.querySelector("[data-contorno-cambio] polygon")?.getAttribute("points")).toBe(
+      "0.4,0.4 0.6,0.4 0.5,0.6",
+    );
+    expect(container.querySelector("[data-zona-cambio]")?.textContent).toBe(
+      "Zona con cambios: 24,6 hectáreas · antes 20/09/2026 · después 30/09/2026",
+    );
+    fireEvent.click(screen.getByRole("button", { name: es.satelite.imagen.ocultarContorno }));
+    expect(container.querySelector("[data-contorno-cambio]")).toBeNull();
   });
 
   it("sin información de satélite, ni hueco ni aviso", async () => {
@@ -243,6 +284,6 @@ describe("ficha de un impacto con información de satélite", () => {
     expect(container.querySelector("[data-cortinilla]")).toBeNull();
     expect(container.querySelector("[data-foco-arriba]")).toBeNull();
     expect(container.textContent).not.toContain(es.satelite.imagen.rotulo);
-    expect(container.textContent).not.toContain(es.satelite.imagen.esperando);
+    expect(container.querySelector("[data-zona-cambio]")).toBeNull();
   });
 });

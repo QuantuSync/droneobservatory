@@ -193,6 +193,47 @@ def subir(
     return False, f"{motivo} tras {hechos} intentos"
 
 
+def borrar(
+    almacen: Almacen,
+    objeto: str,
+    clave_id: str,
+    secreto: str,
+    enviar: Envio = _enviar,
+    ahora: Callable[[], datetime] = lambda: datetime.now(UTC),
+) -> tuple[bool, str]:
+    """Borra un objeto (DELETE firmado). Borrar uno que ya no está también es correcto. Nunca
+    lanza: (correcto, motivo)."""
+    url = almacen.url_s3(objeto)
+    motivo = "sin intentos"
+    for intento in range(2):
+        firmadas = firmar(
+            "DELETE",
+            url,
+            {},
+            hashlib.sha256(b"").hexdigest(),
+            almacen.ubicacion,
+            clave_id,
+            secreto,
+            ahora(),
+        )
+        firmadas.pop("host")
+        peticion = urllib.request.Request(url, method="DELETE", headers=firmadas)
+        try:
+            estado = enviar(peticion, TOPE_INTENTO_S)
+        except urllib.error.HTTPError as error:
+            if error.code == 404:
+                return True, "no estaba"
+            motivo = f"HTTP {error.code}"
+            continue
+        except (OSError, ValueError) as error:
+            motivo = type(error).__name__
+            continue
+        if 200 <= estado < 300:
+            return True, f"borrado en el intento {intento + 1}"
+        motivo = f"HTTP {estado}"
+    return False, motivo
+
+
 def principal(
     argumentos: list[str] | None = None,
     entorno: Mapping[str, str] = os.environ,

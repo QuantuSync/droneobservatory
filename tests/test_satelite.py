@@ -6,7 +6,7 @@ import io
 import json
 import struct
 import zlib
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -15,6 +15,7 @@ import pytest
 from PIL import Image
 
 from esquema import Documento
+from proceso import cambio
 from recogida import cog, satelite
 from recogida.rango import FicheroRemoto, Lector
 
@@ -230,6 +231,8 @@ def _item(id_: str, fecha: str, nubes: float = 10.0) -> Documento:
         "assets": {
             "visual": {"href": f"https://cogs/{id_}/TCI.tif"},
             "scl": {"href": f"https://cogs/{id_}/SCL.tif"},
+            "nir08": {"href": f"https://cogs/{id_}/B8A.tif"},
+            "swir22": {"href": f"https://cogs/{id_}/B12.tif"},
         },
     }
 
@@ -243,6 +246,8 @@ class Archivo:
         self.busquedas: list[Documento] = []
 
     def buscar(self, cuerpo: Documento) -> Documento:
+        if "ids" in cuerpo:
+            return {"features": [i for i in self.items if i["id"] in cuerpo["ids"]]}
         self.busquedas.append(cuerpo)
         desde, hasta = (
             datetime.fromisoformat(x.replace("Z", "+00:00")) for x in cuerpo["datetime"].split("/")
@@ -259,43 +264,67 @@ class Archivo:
         return {"features": elegidos}
 
 
+ANTES = "S2C_36VVL_20250911_1_L2A"
+CON_CAMBIO = "S2C_36VVM_20250926_0_L2A"
+SIN_CAMBIO = "S2B_36VVL_20250921_0_L2A"
+
+
+def _bandas_reales(nombre: str) -> dict[str, cambio.Bandas]:
+    datos = np.load(FIXTURES / f"cambio_{nombre}.npz")
+    return {
+        fecha: cambio.Bandas(
+            scl=datos[f"{fecha}_scl"],
+            b8a=datos[f"{fecha}_b8a"],
+            b12=datos[f"{fecha}_b12"],
+            rgb=datos[f"{fecha}_rgb"],
+        )
+        for fecha in ("antes", "despues")
+    }
+
+
 def _con_bandas(monkeypatch: pytest.MonkeyPatch, archivo: Archivo) -> None:
+    """La SCL de cada escena para las nubes y sus bandas en la rejilla: la escena CON_CAMBIO es
+    el después de una pareja real con quemado (EODI-IG-2025-02593); cualquier otra, su antes
+    (sin cambio)."""
     despejada = _png("scl_despejada.png")
     nublada = _png("scl_nublada.png")
-    tci = _png("tci_despejada.png")
+    reales = _bandas_reales("EODI-IG-2025-02593")
 
     def leer_banda(lector: Lector, url: str, recorte: satelite.Recorte, epsg: int) -> Any:
         escena = url.split("/")[3]
-        if url.endswith("SCL.tif"):
-            return (nublada if escena in archivo.nubladas else despejada)[:, :, None]
-        return tci
+        return (nublada if escena in archivo.nubladas else despejada)[:, :, None]
+
+    def bandas(lector: Lector, escena: satelite.Escena, recorte: satelite.Recorte) -> Any:
+        return reales["despues" if escena.id == CON_CAMBIO else "antes"]
 
     monkeypatch.setattr(satelite, "leer_banda", leer_banda)
+    monkeypatch.setattr(satelite, "bandas", bandas)
 
 
 def _objetivo() -> satelite.Objetivo:
     return satelite.Objetivo(
         id="EODI-IG-2025-02569",
-        recorte=satelite.Recorte(59.49, 32.078, 4000),
+        recorte=satelite.Recorte(59.49, 32.078, 3000),
         antes_hasta=datetime(2025, 9, 13, 17, tzinfo=UTC),
         despues_desde=datetime(2025, 9, 14, 7, tzinfo=UTC),
         foco=True,
+        lugar="Kirishi",
     )
 
 
-def test_pareja_elige_la_ultima_despejada_antes_y_la_primera_despues(
+def test_pareja_con_cambio_se_publica_y_sin_cambio_se_sigue_buscando(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     archivo = Archivo(
         [
             _item("S2B_36VVL_20250901_0_L2A", "2025-09-01T09:20:00Z"),
-            _item("S2C_36VVL_20250911_1_L2A", "2025-09-11T09:14:10Z"),
+            _item(ANTES, "2025-09-11T09:14:10Z"),
             _item("S2A_36VVL_20250913_0_L2A", "2025-09-13T09:20:00Z", nubes=5.0),
             _item("S2A_36VVL_20250916_0_L2A", "2025-09-16T09:20:00Z", nubes=2.0),
-            _item("S2C_36VVM_20251001_0_L2A", "2025-10-01T09:13:57Z", nubes=70.0),
+            # Despejada, pero sin cambio: el humo tapaba aún el daño.
+            _item(SIN_CAMBIO, "2025-09-21T09:20:00Z"),
+            _item(CON_CAMBIO, "2025-09-26T09:13:57Z", nubes=70.0),
         ],
-        # La escena con poca nube en la escena entera tiene el recorte cubierto, y la de mucha
-        # nube lo tiene limpio: decide el recorte.
         nubladas={"S2A_36VVL_20250913_0_L2A", "S2A_36VVL_20250916_0_L2A"},
     )
     _con_bandas(monkeypatch, archivo)
@@ -305,45 +334,72 @@ def test_pareja_elige_la_ultima_despejada_antes_y_la_primera_despues(
         subidos[objeto] = cuerpo
         return True
 
+    # Antes de la escena con cambio: nada que publicar, se sigue buscando.
     entrada = satelite.procesar(
-        _objetivo(), {}, archivo.buscar, Lector(), subir, datetime(2025, 10, 5, tzinfo=UTC)
+        _objetivo(), {}, archivo.buscar, Lector(), subir, datetime(2025, 9, 25, tzinfo=UTC)
     )
-    assert entrada["antes"]["escena"] == "S2C_36VVL_20250911_1_L2A"
-    assert entrada["despues"]["escena"] == "S2C_36VVM_20251001_0_L2A"
+    assert entrada["antes"]["escena"] == ANTES and "objeto" not in entrada["antes"]
+    assert "despues" not in entrada and not entrada.get("sin_cambio")
+    assert entrada["revisadas"] == [SIN_CAMBIO]
+    assert subidos == {}
+    # Con la escena con cambio: la pareja se publica con su contorno.
+    entrada = satelite.procesar(
+        _objetivo(), entrada, archivo.buscar, Lector(), subir, datetime(2025, 10, 5, tzinfo=UTC)
+    )
+    assert entrada["despues"]["escena"] == CON_CAMBIO
+    assert entrada["cambio"]["principal"] >= cambio.UMBRAL_PRINCIPAL_HA
+    assert len(entrada["cambio"]["contorno"]) >= 3
+    lado = entrada["cambio"]["recorte"]["lado_m"]
     assert entrada["antes"]["objeto"] == (
-        "satelite/EODI-IG-2025-02569/antes-20250911-S2C_36VVL_20250911_1_L2A.jpg"
+        f"satelite/EODI-IG-2025-02569/antes-20250911-{ANTES}-{lado}.jpg"
     )
     assert set(subidos) == {entrada["antes"]["objeto"], entrada["despues"]["objeto"]}
     # La imagen de antes nunca es posterior al inicio del ataque.
     assert archivo.busquedas[0]["datetime"].endswith("2025-09-13T17:00:00Z")
+    publico = satelite.indice({"EODI-IG-2025-02569": entrada}, datetime(2025, 10, 5, tzinfo=UTC))
+    pareja = publico["parejas"]["EODI-IG-2025-02569"]
+    assert pareja["cambio"]["hectareas"] > 0 and pareja["lugar"] == "Kirishi"
 
 
-def test_pareja_a_medias_se_completa_con_una_imagen_nueva(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_sin_cambio_en_el_plazo_no_se_publica_y_se_retira(monkeypatch: pytest.MonkeyPatch) -> None:
     archivo = Archivo(
-        [
-            _item("S2C_36VVL_20250911_1_L2A", "2025-09-11T09:14:10Z"),
-            _item("S2A_36VVL_20250916_0_L2A", "2025-09-16T09:20:00Z"),
-        ],
-        nubladas={"S2A_36VVL_20250916_0_L2A"},
+        [_item(ANTES, "2025-09-11T09:14:10Z"), _item(SIN_CAMBIO, "2025-09-21T09:20:00Z")], set()
     )
     _con_bandas(monkeypatch, archivo)
-    ahora = datetime(2025, 9, 20, tzinfo=UTC)
-    entrada = satelite.procesar(_objetivo(), {}, archivo.buscar, Lector(), lambda *a: True, ahora)
-    assert entrada["antes"] is not None and entrada.get("despues") is None
-    assert entrada["despues_buscado_hasta"] == "2025-09-20T00:00:00Z"
-    # Llega una escena despejada: la siguiente ejecución solo mira desde lo ya visto.
-    archivo.items.append(_item("S2C_36VVM_20251001_0_L2A", "2025-10-01T09:13:57Z"))
-    busquedas = len(archivo.busquedas)
+    # Una pareja de las primeras, publicada sin medir.
+    previa = {
+        "recorte": {"lat": 59.49, "lon": 32.078, "lado_m": 3000},
+        "antes": {"escena": ANTES, "fecha": "2025-09-11T09:14:10Z", "objeto": "satelite/x/a.jpg"},
+        "antes_buscado": True,
+        "despues": {
+            "escena": SIN_CAMBIO,
+            "fecha": "2025-09-21T09:20:00Z",
+            "objeto": "satelite/x/d.jpg",
+        },
+    }
+    borrados: list[str] = []
+
+    def borrar(objeto: str) -> bool:
+        borrados.append(objeto)
+        return True
+
     entrada = satelite.procesar(
-        _objetivo(), entrada, archivo.buscar, Lector(), lambda *a: True, ahora + timedelta(days=15)
+        _objetivo(),
+        previa,
+        archivo.buscar,
+        Lector(),
+        lambda *a: True,
+        datetime(2025, 11, 1, tzinfo=UTC),
+        borrar,
     )
-    assert entrada["despues"]["escena"] == "S2C_36VVM_20251001_0_L2A"
-    assert len(archivo.busquedas) == busquedas + 1
-    assert archivo.busquedas[-1]["datetime"].startswith("2025-09-20T00:00:00Z")
+    assert entrada["sin_cambio"] is True and "cambio" not in entrada
+    assert sorted(borrados) == ["satelite/x/a.jpg", "satelite/x/d.jpg"]
+    publico = satelite.indice({"EODI-IG-2025-02569": entrada}, datetime(2025, 11, 1, tzinfo=UTC))
+    assert publico["parejas"] == {}
 
 
 def test_un_recorte_distinto_rehace_la_pareja(monkeypatch: pytest.MonkeyPatch) -> None:
-    archivo = Archivo([_item("S2C_36VVL_20250911_1_L2A", "2025-09-11T09:14:10Z")], set())
+    archivo = Archivo([_item(ANTES, "2025-09-11T09:14:10Z")], set())
     _con_bandas(monkeypatch, archivo)
     previa = {"recorte": {"lat": 1.0, "lon": 1.0, "lado_m": 100}, "antes": {"escena": "vieja"}}
     entrada = satelite.procesar(
@@ -354,7 +410,34 @@ def test_un_recorte_distinto_rehace_la_pareja(monkeypatch: pytest.MonkeyPatch) -
         lambda *a: True,
         datetime(2025, 9, 20, tzinfo=UTC),
     )
-    assert entrada["antes"]["escena"] == "S2C_36VVL_20250911_1_L2A"
+    assert entrada["antes"]["escena"] == ANTES
+
+
+def test_medida_del_cambio_con_parejas_reales() -> None:
+    quemado = _bandas_reales("EODI-IG-2025-02593")
+    medida = cambio.medir(quemado["antes"], quemado["despues"], (150, 150))
+    assert medida.pasa and medida.principal == pytest.approx(16.56, abs=0.5)
+    # La primavera reverdece todo el recorte: cambio de estación, no del ataque.
+    estacion = _bandas_reales("EODI-IG-2025-02693")
+    medida = cambio.medir(estacion["antes"], estacion["despues"], (150, 150))
+    assert not medida.pasa and medida.exceso > 0
+    # Dos fechas iguales: nada.
+    nada = cambio.medir(quemado["antes"], quemado["antes"], (150, 150))
+    assert nada.principal == 0 and not nada.pixeles
+
+
+def test_reencuadre_en_la_mancha() -> None:
+    # Una mancha pequeña en una esquina de un recorte de 3 km.
+    pixeles = tuple((f, c) for f in range(20, 40) for c in range(240, 270))
+    medida = cambio.Cambio(6.0, 0.0, 0.1, 0.0, 1.0, pixeles, 300, principal=6.0)
+    fila, columna, lado = medida.reencuadre() or (0.0, 0.0, 0.0)
+    assert (fila, columna) == (30.0, 255.0) and lado == 150.0
+    nuevo = satelite.reencuadrado(satelite.Recorte(50.0, 30.0, 3000), medida)
+    assert nuevo.lado_m == 1500 and nuevo.lat > 50.0 and nuevo.lon > 30.0
+    # Centrada y grande: se queda como está.
+    centrada = tuple((f, c) for f in range(100, 200) for c in range(100, 200))
+    assert cambio.Cambio(100.0, 0.0, 1.0, 0.0, 1.0, centrada, 300).reencuadre() is None
+    assert len(cambio.envolvente(centrada)) == 4
 
 
 def _impacto(nivel: str = "instalacion", categoria: str = "refineria") -> Documento:
@@ -418,6 +501,12 @@ def test_indice_publico_con_atribucion_de_copernicus() -> None:
             },
             "antes_buscado": True,
             "lugar": "Kirishi refinery",
+            "cambio": {
+                "hectareas": 24.6,
+                "principal": 16.6,
+                "contorno": [[0.4, 0.4], [0.6, 0.4], [0.5, 0.6]],
+                "recorte": {"lat": 59.5, "lon": 32.08, "lado_m": 4000},
+            },
         },
         "EODI-IG-2025-00001": {"recorte": {"lat": 1, "lon": 1, "lado_m": 3000}, "antes": None},
     }
@@ -464,3 +553,37 @@ def test_objetivos_que_deja_la_recogida_horaria(tmp_path: Path) -> None:
     )
     assert satelite.cargar_objetivos(ruta) == [objetivo]
     assert satelite.cargar_objetivos(tmp_path / "otro.json") is None
+
+
+def test_tesela_de_16_bits_con_predictor() -> None:
+    valores = np.array([[[1000], [1200], [900], [65000]]], dtype="<u2")
+    diferencias = np.diff(valores, axis=1, prepend=np.zeros((1, 1, 1), dtype="<u2"))
+    cabecera = cog.Cabecera(
+        ancho=4, alto=1, muestras=1, tesela_ancho=4, tesela_alto=1, compresion=8, predictor=2,
+        offsets=(0,), cuentas=(0,), x0=0.0, y0=0.0, paso_x=20.0, paso_y=20.0, bits=16,
+    )  # fmt: skip
+    tesela = cog.decodificar_tesela(zlib.compress(diferencias.astype("<u2").tobytes()), cabecera)
+    assert tesela.dtype == np.uint16
+    assert tesela[0, :, 0].tolist() == [1000, 1200, 900, 65000]
+
+
+def test_borrar_del_almacen_firmado_y_lo_que_no_esta_vale() -> None:
+    import urllib.error
+
+    from recogida import almacen_publico
+
+    almacen = almacen_publico.cargar()
+    peticiones: list[Any] = []
+
+    def enviar(peticion: Any, tope: float) -> int:
+        peticiones.append(peticion)
+        return 204
+
+    correcto, _ = almacen_publico.borrar(almacen, "satelite/x/a.jpg", "id", "secreto", enviar)
+    assert correcto and peticiones[0].get_method() == "DELETE"
+    assert "Signature=" in peticiones[0].get_header("Authorization")
+
+    def no_esta(peticion: Any, tope: float) -> int:
+        raise urllib.error.HTTPError(peticion.full_url, 404, "no", {}, None)  # type: ignore[arg-type]
+
+    assert almacen_publico.borrar(almacen, "satelite/x/a.jpg", "id", "secreto", no_esta)[0]

@@ -274,8 +274,9 @@ CODIGO_SATELITE = {"Suomi NPP": "N", "NOAA-20": "N20", "NOAA-21": "N21", "Terra"
 def documento(
     elegidos: list[tuple[Foco, str | None]], ahora: datetime, desde: datetime, resumen: Resumen
 ) -> Documento:
-    """El fichero público: por foco [lon, lat, hora UTC «AAAA-MM-DDTHH:MMZ», satélite, impacto
-    con el que coincide o null]."""
+    """El fichero público: los focos que coinciden con un impacto declarado, cada uno [lon, lat,
+    hora UTC «AAAA-MM-DDTHH:MMZ», satélite, impacto]. Los demás (quemas, industria, incendios)
+    no se publican ni se dibujan; `ultimo_foco` es la hora del último foco leído de todos."""
     ordenados = sorted(elegidos, key=lambda par: (par[0].instante, par[0].lat, par[0].lon))
     ultimo = max((f.instante for f, _ in elegidos), default=None)
     return {
@@ -304,6 +305,7 @@ def documento(
                 impacto,
             ]
             for f, impacto in ordenados
+            if impacto is not None
         ],
     }
 

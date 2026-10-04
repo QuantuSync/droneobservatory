@@ -46,6 +46,7 @@ const INDICE = {
         objeto: "satelite/EODI-IG-2026-03486/despues-20260930-S2C_35TQM_20260930_1_L2A.jpg",
         nubes_recorte: 0.001,
       },
+      cambio: { hectareas: 12.5, contorno: [[0.4, 0.4], [0.6, 0.4], [0.5, 0.6]] },
     },
   },
 };

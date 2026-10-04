@@ -74,15 +74,6 @@ function MarcaCorredor() {
   );
 }
 
-function MarcaFocoVivo() {
-  return (
-    <svg aria-hidden="true" width="14" height="10" viewBox="0 0 14 10" data-marca-foco-vivo="">
-      <circle cx="3" cy="5" r="1.7" fill={PALETA.guerraTenue} />
-      <circle cx="10" cy="5" r="3.2" fill={PALETA.guerraClaro} stroke={PALETA.fondo} strokeWidth="1.2" />
-    </svg>
-  );
-}
-
 function MarcaLuz() {
   return (
     <svg aria-hidden="true" width="10" height="10" viewBox="0 0 10 10" data-marca-luz="">
@@ -195,8 +186,8 @@ export function Ayuda({ t, abierta, onCerrar }: Props) {
           </li>
           {(
             [
+              [null, t.satelite.ayudaSubcapas],
               [<MarcaCorredor key="c" />, t.satelite.ayudaCorredores],
-              [<MarcaFocoVivo key="f" />, t.satelite.ayudaFocos],
               [<MarcaLuz key="l" />, t.satelite.ayudaLuz],
               [<MarcaAlumbrado key="a" />, t.satelite.ayudaAlumbrado],
               [<MarcaSatelite key="s" />, t.satelite.ayudaSatelite],
