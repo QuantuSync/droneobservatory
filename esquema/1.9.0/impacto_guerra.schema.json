@@ -32,7 +32,7 @@
         "id": {"x-visibilidad": "publico", "description": "Identificador en el nomenclátor: katotth:…, geonames:… u osm:….", "type": "string", "pattern": "^(katotth|geonames|osm):\\S+$"},
         "nombre": {"x-visibilidad": "publico", "type": "string", "minLength": 1},
         "nombre_latino": {"x-visibilidad": "publico", "type": "string", "minLength": 1},
-        "nivel": {"x-visibilidad": "publico", "enum": ["localidad", "instalacion"]},
+        "nivel": {"x-visibilidad": "publico", "description": "localidad o instalación; comunidad (громада) o distrito cuando el parte solo nombra la unidad: el punto es su centro y el radio abarca sus localidades.", "enum": ["localidad", "instalacion", "comunidad", "distrito"]},
         "categoria": {
           "x-visibilidad": "publico",
           "description": "Tipo de instalación (solo con nivel instalacion).",

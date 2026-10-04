@@ -651,6 +651,13 @@ class Almacen:
                 (enlace, canal, fecha, huella, resultado, _json(documento)),
             )
 
+    def huellas_mensajes_guerra(self, canal: str) -> dict[str, str]:
+        """Enlace → huella de las publicaciones de un canal que ya tienen registro."""
+        filas = self._conexion.execute(
+            "SELECT enlace, huella FROM mensajes_guerra WHERE canal = ?", (canal,)
+        ).fetchall()
+        return {f[0]: f[1] for f in filas}
+
     def mensajes_guerra(self, resultado: str | None = None) -> list[Documento]:
         sql = "SELECT enlace, canal, fecha, huella, resultado, documento FROM mensajes_guerra"
         parametros: tuple[Any, ...] = ()

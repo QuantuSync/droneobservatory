@@ -49,6 +49,8 @@ registro = logging.getLogger("recogida.guerra")
 # nomenclátor tarda unos 15 s en cargarse. Lo que no cabe sigue en la hora siguiente.
 TOPE_S = 240.0
 RELECTURA = timedelta(hours=12)
+# Parte del tope para la segunda pasada (histórico y relectura con una versión nueva).
+TOPE_HISTORICO_S = 150.0
 GRUPOS = ("ova_ua", "estado_mayor_ua", "gobernadores_ru", "rosaviatsia")
 
 
@@ -111,8 +113,8 @@ def quitar_fuente(almacen: Almacen, impacto_id: str, fuente_id: str, ahora: date
     if fuentes == documento["fuentes"]:
         return False
     if not fuentes:
-        retirado = {**documento, "retirado": {"fecha": instante(ahora),
-                                              "motivo": "el mensaje ya no lo dice"}}  # fmt: skip
+        motivo = "el mensaje ya no lo dice (editado, o leído con las reglas de ahora)"
+        retirado = {**documento, "retirado": {"fecha": instante(ahora), "motivo": motivo}}
         almacen.guardar_impacto_guerra(retirado)
         return True
     nuevo = {**documento, "fuentes": fuentes}
@@ -176,65 +178,102 @@ def procesar(
 ) -> Resumen:
     resumen = Resumen()
     ataques = Ataques(almacen.ataques_ucrania())
-    for canal in canales:
-        cursor = almacen.cursor(f"guerra:{canal.id}") or {"ultimo_id": 0}
-        ultimo = int(cursor["ultimo_id"])
-        maximo = ultimo
-        for publicacion in sorted(datos.ultimas(canal.canal).values(), key=lambda p: p["id"]):
-            publicado = _fecha(publicacion["fecha"])
-            if not todo and publicacion["id"] <= ultimo and ahora - publicado > RELECTURA:
-                continue
-            if plazo is not None and plazo.agotado():
+    # Dos pasadas: primero lo nuevo y las últimas horas de todos los canales; después, con lo
+    # que quede del tope (como mucho TOPE_HISTORICO_S), las publicaciones antiguas sin registro
+    # (las que el lector añade al recorrer el histórico hacia atrás, por debajo del cursor) y
+    # las leídas con otra versión del analizador o del nomenclátor. Antes solo las leía un
+    # reproceso a mano: las regiones cuyo histórico terminó después del último reproceso se
+    # quedaban sin leer, y un cambio de reglas no llegaba a lo antiguo. Lo que no cabe sigue
+    # en la hora siguiente.
+    publicaciones = {c.canal: datos.ultimas(c.canal) for c in canales}
+    for historico in (False, True):
+        tope = plazo
+        if historico and plazo is not None:
+            tope = Plazo(max(0.0, min(plazo.restante(), TOPE_HISTORICO_S)))
+        for canal in canales:
+            if tope is not None and tope.agotado():
                 resumen.pendientes = True
                 break
-            maximo = max(maximo, publicacion["id"])
-            enlace = f"https://t.me/{canal.canal}/{publicacion['id']}"
-            huella_mensaje = huella(publicacion["texto"])
-            anterior = almacen.mensaje_guerra(enlace)
-            if anterior is not None and anterior["huella"] == huella_mensaje:
-                continue
-            resumen.mensajes += 1
-            if canal.grupo == "rosaviatsia":
-                anuncio = restricciones.leer(publicacion["texto"], publicado)
-                if anuncio is not None:
-                    resumen.restricciones += restricciones.incorporar(
-                        almacen, nomenclator, ataques, publicacion["id"], publicado,
-                        publicacion.get("responde_a"), anuncio,
-                    )  # fmt: skip
-                almacen.guardar_mensaje_guerra(
-                    enlace, canal.id, publicacion["fecha"], huella_mensaje,
-                    "restriccion" if anuncio else "sin_restriccion", {"id": publicacion["id"]},
-                )  # fmt: skip
-                continue
-            leido = analizar(
-                publicacion["texto"], publicado, nomenclator, regiones_del_canal(canal),
-                raices_regiones(), reivindicacion=canal.grupo == "estado_mayor_ua",
+            _procesar_canal(
+                almacen, ataques, canal, publicaciones[canal.canal], nomenclator, ahora, tope,
+                todo, historico, resumen,
             )  # fmt: skip
-            hecho = impactos_guerra.incorporar(
-                almacen, ataques, canal, publicacion["id"], publicado, leido, ahora
-            )
-            resumen.impactos_nuevos += hecho.nuevos
-            resumen.impactos_actualizados += hecho.actualizados
-            ids = [
-                d["id"]
-                for impacto in leido.impactos
-                for d in almacen.impactos_guerra_en(impacto.lugar.id)
-                if any(f["id"] == f"{canal.canal}-{publicacion['id']}" for f in d["fuentes"])
-                and "fusionado_en" not in d
-            ]  # fmt: skip
-            resultado = registrar(almacen, canal, publicacion, leido, ids, huella_mensaje, ahora)
-            resumen.con_impactos += resultado == "impactos"
-            resumen.para_extractor += resultado == "para_extractor"
-            resumen.motivos[resultado] = resumen.motivos.get(resultado, 0) + 1
-        if maximo > ultimo:
-            almacen.guardar_cursor(f"guerra:{canal.id}", {"ultimo_id": maximo})
-        if resumen.pendientes:
+        if todo:
             break
     enlazados = impactos_guerra.reenlazar(almacen, ataques, ahora)
     registro.info(
         "guerra: reenlazados=%d fusionados=%d", enlazados.reenlazados, enlazados.fusionados
     )
     return resumen
+
+
+def _procesar_canal(
+    almacen: Almacen,
+    ataques: Ataques,
+    canal: Canal,
+    publicaciones: dict[int, Documento],
+    nomenclator: Nomenclator,
+    ahora: datetime,
+    plazo: Plazo | None,
+    todo: bool,
+    historico: bool,
+    resumen: Resumen,
+) -> None:
+    cursor = almacen.cursor(f"guerra:{canal.id}") or {"ultimo_id": 0}
+    ultimo = int(cursor["ultimo_id"])
+    maximo = ultimo
+    registrados = almacen.huellas_mensajes_guerra(canal.id) if historico else {}
+    for publicacion in sorted(publicaciones.values(), key=lambda p: -p["id"]):
+        publicado = _fecha(publicacion["fecha"])
+        enlace = f"https://t.me/{canal.canal}/{publicacion['id']}"
+        reciente = publicacion["id"] > ultimo or ahora - publicado <= RELECTURA
+        if not todo and reciente == historico:
+            continue
+        huella_mensaje = huella(publicacion["texto"])
+        if not todo and historico and registrados.get(enlace) == huella_mensaje:
+            continue
+        if plazo is not None and plazo.agotado():
+            resumen.pendientes = True
+            break
+        maximo = max(maximo, publicacion["id"])
+        anterior = almacen.mensaje_guerra(enlace)
+        if anterior is not None and anterior["huella"] == huella_mensaje:
+            continue
+        resumen.mensajes += 1
+        if canal.grupo == "rosaviatsia":
+            anuncio = restricciones.leer(publicacion["texto"], publicado)
+            if anuncio is not None:
+                resumen.restricciones += restricciones.incorporar(
+                    almacen, nomenclator, ataques, publicacion["id"], publicado,
+                    publicacion.get("responde_a"), anuncio,
+                )  # fmt: skip
+            almacen.guardar_mensaje_guerra(
+                enlace, canal.id, publicacion["fecha"], huella_mensaje,
+                "restriccion" if anuncio else "sin_restriccion", {"id": publicacion["id"]},
+            )  # fmt: skip
+            continue
+        leido = analizar(
+            publicacion["texto"], publicado, nomenclator, regiones_del_canal(canal),
+            raices_regiones(), reivindicacion=canal.grupo == "estado_mayor_ua",
+        )  # fmt: skip
+        hecho = impactos_guerra.incorporar(
+            almacen, ataques, canal, publicacion["id"], publicado, leido, ahora
+        )
+        resumen.impactos_nuevos += hecho.nuevos
+        resumen.impactos_actualizados += hecho.actualizados
+        ids = [
+            d["id"]
+            for impacto in leido.impactos
+            for d in almacen.impactos_guerra_en(impacto.lugar.id)
+            if any(f["id"] == f"{canal.canal}-{publicacion['id']}" for f in d["fuentes"])
+            and "fusionado_en" not in d
+        ]  # fmt: skip
+        resultado = registrar(almacen, canal, publicacion, leido, ids, huella_mensaje, ahora)
+        resumen.con_impactos += resultado == "impactos"
+        resumen.para_extractor += resultado == "para_extractor"
+        resumen.motivos[resultado] = resumen.motivos.get(resultado, 0) + 1
+    if maximo > ultimo:
+        almacen.guardar_cursor(f"guerra:{canal.id}", {"ultimo_id": maximo})
 
 
 # --- Corrección de lo ya guardado (una vez por versión) ----------------------------------------

@@ -288,7 +288,7 @@ export interface ImpactoGuerra {
     id: string;
     nombre: string;
     nombre_latino?: string;
-    nivel: "localidad" | "instalacion";
+    nivel: "localidad" | "instalacion" | "comunidad" | "distrito";
     categoria?: CategoriaInstalacion;
     localidad?: string;
     punto: { lat: number; lon: number };

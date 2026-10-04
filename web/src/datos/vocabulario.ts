@@ -128,7 +128,7 @@ export const CATEGORIAS_INSTALACION = [
   "ferrocarril",
   "industrial",
 ] as const;
-export const NIVELES_LUGAR_GUERRA = ["localidad", "instalacion"] as const;
+export const NIVELES_LUGAR_GUERRA = ["localidad", "instalacion", "comunidad", "distrito"] as const;
 export const TIPOS_IMPACTO = ["impacto", "restos"] as const;
 /** El radio de un lugar de la capa de guerra no pasa de 50 km. */
 export const RADIO_LUGAR_GUERRA_MAX_KM = 50;

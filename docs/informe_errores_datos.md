@@ -102,3 +102,102 @@ víctimas), año en la frase, más de 100 solo con la cifra pegada al verbo, eda
 acumulados y misiles en el mismo mensaje, condolencia dentro de un parte, corrección de lo
 guardado (retira el homenaje con su motivo, corrige la cifra, deja historial, una sola vez) y
 relectura que corrige la cifra.
+
+## Bloque 2. Impactos concentrados en Zaporiyia
+
+### Diagnóstico región por región
+
+Para cada región: si su administración está en `configuracion/canales_guerra.json`, cuántas
+publicaciones con drones guardaba el lector en el servidor (todas con el histórico desde enero de
+2025 completo), cuántas tenían registro en la base (las que llegaron al analizador) y cuántos
+impactos localizados había.
+
+| Región | Canal | Publicaciones guardadas | Con registro en la base | Impactos | Dónde se perdía |
+| --- | --- | ---: | ---: | ---: | --- |
+| Zaporiyia (UA-23) | `zoda_gov_ua` | 2.589 | 2.589 | 5.444 | — (su histórico terminó antes del único reproceso) |
+| Dnipropetrovsk (UA-12) | `adm_dp` | 1.592 | 1.592 | 201 | Localización: nombra comunidades («Марганецькій, Покровській громадам») y distritos («Нікопольщина»), no pueblos |
+| Donetsk (UA-14) | `DonetskaODA` | 1.396 | 1.396 | 92 | La mitad de sus publicaciones con drones son memoria de caídos (bloque 1); el resto, avisos y partes sin arma |
+| Járkov (UA-63) | `kharkivoda`, `synegubov` | 3.472 | 22 | 7 | Recogida horaria: el histórico llegó después del reproceso y nunca se leyó |
+| Jersón (UA-65) | `khersonskaODA` | 4.375 | 34 | 3 | Recogida horaria (igual) |
+| Sumy (UA-59) | `Sumy_news_ODA` | 1.854 | 7 | 0 | Recogida horaria, y localización: solo da comunidades, nunca pueblos |
+| Odesa (UA-51) | `odesaoda` | 462 (desde junio de 2025) | 99 | 12 | Recogida horaria; además el canal casi nunca nombra lugares («на півдні Одещини», «по Одеському району») |
+| Kiev ciudad (UA-30) | `VA_Kyiv` | 1.538 | 37 | 3 | Recogida horaria |
+| Kiev región (UA-32) | `kyivoda` | 3.113 | 220 | 1 | Recogida horaria; la mayoría son avisos de alarma |
+| Poltava (UA-53) | `poltavskaoda` | 1.381 | 62 | 0 | Recogida horaria; publica pocos lugares |
+| Jmelnitski (UA-68) | `khmelnytskaODA` | 311 | 311 | 2 | Publica avisos y daños sin lugar |
+| Mykoláiv (UA-48) | — | — | — | 0 | No había canal: el de 2022 (`mykolaivskaODA`) está hoy en venta |
+| Chernígov (UA-74) | — | — | — | 0 | No había canal |
+
+**Causa principal.** La recogida horaria solo leía las publicaciones con número mayor que su
+cursor o de las últimas 12 horas. El lector (temporizador del minuto 50) recorre el histórico
+hacia atrás, por debajo del cursor, así que todo lo que añadía después no lo leía nadie hasta un
+reproceso a mano. El único se hizo el 1 de octubre, cuando solo Zaporiyia, Dnipró, Donetsk y unas
+pocas más tenían el histórico completo: de 36.443 publicaciones guardadas, 16.137 tenían registro.
+La segunda causa es la localización: Sumy y Dnipró nombran comunidades («громада»), que el
+nomenclátor no resolvía como lugar.
+
+### Cambios
+
+- **Recogida horaria en dos pasadas** (`recogida/guerra.procesar`): primero lo nuevo de todos los
+  canales; después, con lo que quede del tope (como mucho 150 s), las publicaciones sin registro
+  (histórico añadido después) y las leídas con otra versión del analizador o del nomenclátor. Un
+  cambio de reglas llega así solo a todo lo guardado, poco a poco, sin reproceso a mano ni trabajo
+  aparte en el servidor.
+- **Comunidades como lugar** (`Nomenclator.unidades_en`): «Краснопільська громада», «Марганецькій,
+  Покровській та Мирівській громадам», en cualquier caso, con el nivel nuevo `comunidad`: el punto
+  es la localidad que da nombre a la comunidad y el radio abarca sus localidades (como mucho 50 km).
+  Dos comunidades del mismo nombre se deshacen con el distrito del mensaje («Нікопольщина»). Los
+  distritos solo valen si abarcan 50 km o menos (15 de 137): los de 2020 miden 50–105 km de radio y
+  no son un lugar concreto. La localidad que nombra el mensaje gana a su comunidad. Esquema 1.9.0
+  ampliado (`lugar.nivel`) y validación de la web.
+- **Distrito en «-щина»** como pista para los homónimos («в Пушкарях на Новгород-Сіверщині»).
+- **Líneas por lugar con varias armas** («Краснопільська громада: … обстріли БпЛА (3 вибухи), пуски
+  КАБів»): la línea dice que el dron alcanzó ese lugar.
+- **Parte de la frontera de Sumy** («Ситуація на прикордонні», «Протягом дня росіяни…»): es un
+  parte diario, como el de Zaporiyia (se publica y se exporta; no se dibuja).
+- **Nombres compuestos**: «Хутір-Михайлівська громада» no es el pueblo «Хутір».
+- **Canales nuevos**: Chernígov (`chernigivskaODA`, su descripción enlaza cg.gov.ua), Mykoláiv
+  (`mykolaiv_ova`, anunciado el 17 de julio de 2026 por el canal oficial del anterior jefe de la
+  administración como el nuevo canal operativo) y Kursk (`Hinshtein`, enlazado desde el canal del
+  Gobierno de la región, `kurskadm`, con insignia de verificado). El lector baja su histórico desde
+  enero de 2025 en el temporizador del minuto 50, como el de los demás.
+- **Segunda y última tanda del lote del histórico** (`guerra:lote_historico:2`): cuando el histórico
+  de todos los canales y la relectura terminan, lo que el código no resuelve de las regiones
+  recuperadas va al extractor por lotes, dentro del mismo presupuesto único de 5 USD (gastados 0,66
+  en la primera tanda).
+- Versión del analizador `mensajes-guerra/4`.
+
+### Cifras
+
+Lectura con el analizador nuevo de todo lo guardado en el servidor (copia del 4 de octubre a las
+08:41). «Días con parte»: días en que la administración publica un parte de 24 horas.
+
+| Región | Impactos antes | Impactos después | De ellos dibujados (no parte diario) | Días con parte | … con algún impacto localizado |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Zaporiyia | 5.444 | 6.708 | 400 | 617 | 561 (91 %) |
+| Sumy | 0 | 2.999 | 524 | 627 | 534 (85 %) |
+| Jersón | 3 | 2.111 | 2.109 | 552 | 468 (85 %) |
+| Járkov (dos canales) | 7 | 1.816 | 716 | 525 | 358 (68 %) |
+| Dnipropetrovsk | 201 | 627 | 598 | 77 | 44 (57 %) |
+| Kiev ciudad | 3 | 192 | 192 | 8 | 3 |
+| Odesa | 12 | 84 | 84 | 4 | 1 |
+| Donetsk | 92 | 66 | 51 | 15 | 6 |
+| Luhansk | 0 | 78 | 34 | 442 | 41 |
+| Kiev región | 1 | 31 | 31 | 11 | 1 |
+| Poltava | 0 | 26 | 26 | 10 | 0 |
+| Jmelnitski | 2 | 2 | 2 | 1 | 0 |
+
+Zaporiyia pasa de 5.444 de 5.793 impactos rusos localizados (94 %) a 6.708 de 14.823 (45 %). Odesa
+tiene impactos en 74 de los 269 días en que publica algo de drones: su administración casi nunca
+nombra el lugar, por política propia. Mykoláiv y Chernígov empiezan a contar cuando el lector baje su
+histórico (unas horas desde la fusión).
+
+Sentido contrario: los gobernadores rusos con parte diario son Briansk (gobierno regional: 92 días
+con parte, 42 con lugar) y, desde ahora, Kursk. Los demás publican cada ataque por separado.
+
+### Pruebas añadidas
+
+`tests/test_partes_regionales.py`: base de la comunidad en todos sus casos, comunidad como lugar con
+su centro y su alcance, la localidad gana a su comunidad, línea por lugar con varias armas, parte de
+la frontera de Sumy, nombre compuesto, histórico que llega después del cursor y relectura con una
+versión nueva del analizador.

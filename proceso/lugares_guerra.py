@@ -33,6 +33,7 @@ localidad.
 import gzip
 import json
 import math
+import os
 import re
 from collections import defaultdict
 from collections.abc import Iterable
@@ -105,6 +106,19 @@ _HROMADA = re.compile(
     r"(?<![\w'])([^\W\d_]+?)(?:ськ|цьк|зьк|ськ|івськ|инськ)?\w*\s+(?:громад|тг\b|ОТГ)",
     re.IGNORECASE,
 )
+# Comunidades y distritos como lugar: una lista de adjetivos con mayúscula delante de
+# «громада» o «район» («Марганецькій, Покровській та Мирівській громадам», «по Одеському
+# району»), o el distrito en «-щина» («на Нікопольщині»).
+_ADJ_UNIDAD = r"[А-ЯІЇЄҐ][\w'’-]*?(?:ськ|цьк|зьк)\w*"
+_ADJETIVO_UNIDAD = re.compile(_ADJ_UNIDAD)
+_LISTA_UNIDADES = r"(" + _ADJ_UNIDAD + r"(?:\s*(?:,|та|і|й|и)\s*" + _ADJ_UNIDAD + r")*)"
+_LISTA_HROMADAS = re.compile(
+    _LISTA_UNIDADES + r"\s+(?:(?:сільськ|селищн|міськ)\w*\s+)?(?:громад\w*|ТГ\b|ОТГ\b)"
+)
+_LISTA_RAIONES = re.compile(_LISTA_UNIDADES + r"\s+(?:район\w*|р-н\w*)")
+_SHCHYNA = re.compile(r"(?<![\w'’-])[А-ЯІЇЄҐ][\w'’-]+щин(?:а|і|у|ою|и)\b")
+# Un distrito más ancho que esto no es un lugar concreto (los distritos de 2020 son grandes).
+RADIO_MAX_UNIDAD_KM = 50.0
 
 # Tipo de instalación en el texto → categoría del nomenclátor.
 TIPOS_INSTALACION: tuple[tuple[re.Pattern[str], str], ...] = tuple(
@@ -309,6 +323,8 @@ class Nomenclator:
     # Raíz del distrito urbano → (región, id de la ciudad).
     distritos: dict[str, set[tuple[str, str]]] = field(default_factory=lambda: defaultdict(set))
     _ciudades: list[tuple[Lugar, tuple[str, ...]]] = field(default_factory=list)
+    # (tipo, base del nombre) → comunidades o distritos con su centro (se calcula una vez).
+    _unidades: dict[tuple[str, str], list[Lugar]] = field(default_factory=lambda: defaultdict(list))
 
     @classmethod
     def desde_datos(cls, datos: dict[str, Any], comunes: Iterable[str] = ()) -> "Nomenclator":
@@ -384,12 +400,18 @@ class Nomenclator:
 
     # --- Búsqueda --------------------------------------------------------------------
 
-    def localidades_en(self, texto: str, regiones: frozenset[str] | None) -> list[Hallazgo]:
-        """Las localidades que nombra el texto, de las regiones dadas (None: cualquiera)."""
+    def localidades_en(
+        self, texto: str, regiones: frozenset[str] | None, contexto: str | None = None
+    ) -> list[Hallazgo]:
+        """Las localidades que nombra el texto, de las regiones dadas (None: cualquiera). Los
+        distritos y comunidades que deshacen homónimos se toman del texto y de `contexto` (el
+        mensaje entero), también el distrito en «-щина» («в Пушкарях на Новгород-Сіверщині»)."""
         palabras = [(m.start(), m.end(), m.group(0)) for m in _PALABRA.finditer(texto)]
         normales = [normalizar(p) for _, _, p in palabras]
-        raiones = {raiz_administrativa(m.group(0).split()[0]) for m in _RAION.finditer(texto)}
-        hromadas = {raiz_administrativa(m.group(0).split()[0]) for m in _HROMADA.finditer(texto)}
+        pistas = texto if contexto is None else texto + "\n" + contexto
+        raiones = {raiz_administrativa(m.group(0).split()[0]) for m in _RAION.finditer(pistas)}
+        raiones |= {raiz_administrativa(m.group(0)) for m in _SHCHYNA.finditer(pistas)}
+        hromadas = {raiz_administrativa(m.group(0).split()[0]) for m in _HROMADA.finditer(pistas)}
         hallazgos: list[Hallazgo] = self._distritos_en(texto, regiones)
         i = 0
         while i < len(palabras):
@@ -411,6 +433,9 @@ class Nomenclator:
             i += largo
             original = texto[inicio:fin]
             if not original[:1].isupper():
+                continue
+            # Parte de un nombre compuesto que no es este lugar («Хутір-Михайлівська громада»).
+            if texto[fin : fin + 1] == "-" or texto[max(0, inicio - 1) : inicio] == "-":
                 continue
             if _ADMINISTRATIVA.match(texto[fin:]):
                 continue
@@ -505,6 +530,109 @@ class Nomenclator:
         }  # fmt: skip
         return next(iter(ciudades.values())) if len(ciudades) == 1 else None
 
+    # --- Comunidades y distritos ------------------------------------------------------
+
+    def unidades_en(
+        self, texto: str, regiones: frozenset[str] | None, contexto: str | None = None
+    ) -> list[Hallazgo]:
+        """Las comunidades («Марганецькій, Покровській громадам», «Краснопільська громада»)
+        y los distritos rurales («по Одеському району», «Нікопольщина») que nombra el texto,
+        como lugar de nivel comunidad o distrito: su centro y el radio que abarca. Solo en
+        Ucrania (las localidades rusas no traen distrito). Un distrito que abarca más de
+        RADIO_MAX_UNIDAD_KM, o el que lleva el nombre de la capital del óblast («Сумщина»,
+        «Одещина» son el óblast), no sale. `contexto` (el mensaje) da los distritos que
+        deshacen dos comunidades del mismo nombre."""
+        hallazgos: list[Hallazgo] = []
+        # Distritos que nombra el texto: deshacen dos comunidades del mismo nombre.
+        todo = contexto or texto
+        pistas = {base_unidad(a.group(0)) for m in _LISTA_RAIONES.finditer(todo)
+                  for a in _ADJETIVO_UNIDAD.finditer(m.group(1))}  # fmt: skip
+        pistas |= {base_unidad(m.group(0)) for m in _SHCHYNA.finditer(todo)}
+        for patron, tipo in ((_LISTA_HROMADAS, "comunidad"), (_LISTA_RAIONES, "distrito")):
+            for m in patron.finditer(texto):
+                for a in _ADJETIVO_UNIDAD.finditer(m.group(1)):
+                    if tipo == "distrito" and self._es_distrito_urbano(a.group(0), regiones):
+                        continue
+                    lugar = self.unidad(tipo, base_unidad(a.group(0)), regiones, pistas)
+                    inicio = m.start(1) + a.start()
+                    if lugar is not None:
+                        hallazgos.append(Hallazgo(a.group(0), inicio, inicio + len(a.group(0)),
+                                                  lugar))  # fmt: skip
+        for m in _SHCHYNA.finditer(texto):
+            lugar = self.unidad("distrito", base_unidad(m.group(0)), regiones)
+            if lugar is not None and not self._es_capital(lugar, regiones):
+                hallazgos.append(Hallazgo(m.group(0), m.start(), m.end(), lugar))
+        return hallazgos
+
+    def _es_distrito_urbano(self, adjetivo: str, regiones: frozenset[str] | None) -> bool:
+        return any(
+            regiones is None or r in regiones
+            for r, _ in self.distritos.get(raiz_administrativa(adjetivo), set())
+        )
+
+    def _es_capital(self, unidad: Lugar, regiones: frozenset[str] | None) -> bool:
+        """El distrito cuyo centro es la mayor ciudad del óblast: «Сумщина» es el óblast."""
+        ciudades = [
+            c for c in self.localidades.values()
+            if c.region == unidad.region and c.categoria == "ciudad"
+        ]  # fmt: skip
+        mayor = max(ciudades, key=lambda c: (c.radio_km, c.id), default=None)
+        return mayor is not None and unidad.id == f"{mayor.id}:distrito"
+
+    def unidad(
+        self, tipo: str, base: str, regiones: frozenset[str] | None,
+        distritos: set[str] | frozenset[str] = frozenset(),
+    ) -> Lugar | None:  # fmt: skip
+        """La comunidad o el distrito de esa base en las regiones (uno solo), con su centro:
+        la localidad que lleva su nombre («Краснопільська громада» → Краснопілля)."""
+        if len(base) < 3:
+            return None
+        if not self._unidades:
+            self._indexar_unidades()
+        candidatas = [
+            u for u in self._unidades.get((tipo, base), [])
+            if regiones is None or u.region in regiones
+        ]  # fmt: skip
+        if len(candidatas) > 1 and distritos:
+            candidatas = [u for u in candidatas if u.raion and base_unidad(u.raion) in distritos]
+        return candidatas[0] if len(candidatas) == 1 else None
+
+    def _indexar_unidades(self) -> None:
+        grupos: dict[tuple[str, str, str, str], list[Lugar]] = defaultdict(list)
+        for lugar in self.localidades.values():
+            if lugar.pais != "UA":
+                continue
+            if lugar.hromada:
+                grupos[("comunidad", lugar.region, lugar.raion or "", lugar.hromada)].append(lugar)
+            if lugar.raion:
+                grupos[("distrito", lugar.region, "", lugar.raion)].append(lugar)
+        for (tipo, region, _, nombre), miembros in grupos.items():
+            base = base_unidad(nombre)
+            centro = _centro(base, miembros)
+            if centro is None:
+                continue
+            alcance = max(_km(centro, m) + m.radio_km for m in miembros)
+            if alcance > RADIO_MAX_UNIDAD_KM:
+                continue
+            sufijo = "громада" if tipo == "comunidad" else "район"
+            latino = f"{centro.nombre_latino} {'hromada' if tipo == 'comunidad' else 'raion'}"
+            self._unidades[(tipo, base)].append(
+                Lugar(
+                    id=f"{centro.id}:{tipo}",
+                    nombre=f"{nombre} {sufijo}",
+                    nivel=tipo,
+                    pais="UA",
+                    region=region,
+                    lat=centro.lat,
+                    lon=centro.lon,
+                    radio_km=round(max(alcance, centro.radio_km), 1),
+                    categoria=tipo,
+                    nombre_latino=latino if centro.nombre_latino else None,
+                    raion=centro.raion,
+                    hromada=centro.hromada if tipo == "comunidad" else None,
+                )
+            )
+
     def _nombres_ciudades(self) -> list[tuple[Lugar, tuple[str, ...]]]:
         """Las ciudades con sus nombres normalizados de una palabra (se calcula una vez)."""
         if not self._ciudades:
@@ -551,6 +679,36 @@ def raiz_adjetivo(adjetivo: str) -> str:
     """«рязанский» → «рязан»; «саратовського» → «саратов»."""
     normal = normalizar(adjetivo)
     return _FINALES_ADJETIVO.sub("", normal)
+
+
+def base_unidad(nombre: str) -> str:
+    """Base del nombre de una comunidad o un distrito, igual en todos sus casos y en su forma
+    en «-щина»: «Краснопільській» y «Краснопільська» → «краснопіль»; «Нікопольщині» y
+    «Нікопольський» → «нікополь»."""
+    normal = normalizar(nombre).replace(" ", "")
+    return re.sub(r"(?:(?:ськ|цьк|зьк)\w*|щин\w*)$", "", normal)
+
+
+# La vocal del nombre cambia en el adjetivo («Межова» → «Межівська», «Мирове» → «Мирівська»).
+_VOCALES_ALTERNAN = str.maketrans({"і": "о", "е": "о", "а": "о"})
+
+
+def _centro(base: str, miembros: list[Lugar]) -> Lugar | None:
+    """La localidad de la unidad que lleva su nombre: la de prefijo común más largo con la
+    base (al menos la base sin sus dos últimas letras), y entre iguales la de más categoría."""
+    rango = {"ciudad": 2, "asentamiento": 1}
+    mejor: tuple[int, int, float] | None = None
+    elegido = None
+    plegada = base.translate(_VOCALES_ALTERNAN)
+    for m in miembros:
+        nombre = normalizar(m.nombre).replace(" ", "").translate(_VOCALES_ALTERNAN)
+        comun = len(os.path.commonprefix([nombre, plegada]))
+        if comun < max(3, len(base) - 2):
+            continue
+        clave = (comun, rango.get(m.categoria, 0), m.radio_km)
+        if mejor is None or clave > mejor:
+            mejor, elegido = clave, m
+    return elegido
 
 
 def _desambiguar(

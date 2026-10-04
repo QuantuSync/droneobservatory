@@ -924,6 +924,87 @@
         "comprobado": "copia de Wayback del 2026-03-21 (la web bloquea las direcciones extranjeras)",
         "nota": "sin publicaciones desde el 29 de julio de 2026"
       }
+    },
+    {
+      "id": "ova_chernihiv",
+      "canal": "chernigivskaODA",
+      "grupo": "ova_ua",
+      "pais": "UA",
+      "region": "UA-74",
+      "sentido": "RU_UA",
+      "idioma": "uk",
+      "titulo": "Чернігівська ОДА",
+      "insignia": false,
+      "descripcion_enlaza": [
+        "cg.gov.ua"
+      ],
+      "web_oficial": "https://cg.gov.ua/",
+      "web_enlaza": "chernigivskaODA",
+      "web_desde_servidor": false,
+      "fiabilidad": "B",
+      "origen": "oficial",
+      "medio": "Чернігівська ОВА",
+      "institucion": "ova_UA-74",
+      "identificado": {
+        "fecha": "2026-10-04",
+        "pagina": "https://t.me/s/chernigivskaODA",
+        "comprobado": "la descripción del canal dice «Офіційний канал Чернігівської обласної державної адміністрації» y enlaza https://cg.gov.ua/ (la web responde 403 y no tiene copia en el archivo de Internet); figura en la lista de canales oficiales de las administraciones regionales publicada por la Oficina del Presidente (t.me/OP_UA/5798)"
+      }
+    },
+    {
+      "id": "ova_mykolaiv",
+      "canal": "mykolaiv_ova",
+      "grupo": "ova_ua",
+      "pais": "UA",
+      "region": "UA-48",
+      "sentido": "RU_UA",
+      "idioma": "uk",
+      "titulo": "Миколаївська ОВА",
+      "insignia": false,
+      "descripcion_enlaza": [],
+      "web_oficial": "https://www.mk.gov.ua/",
+      "web_enlaza": "mykolaiv_ova",
+      "web_desde_servidor": false,
+      "fiabilidad": "B",
+      "origen": "oficial",
+      "medio": "Миколаївська ОВА",
+      "institucion": "ova_UA-48",
+      "identificado": {
+        "fecha": "2026-10-04",
+        "pagina": "https://t.me/VitaliiKimOfficial/22733",
+        "comprobado": "la web oficial no enlaza ningún canal (tampoco su copia del 2026-10-03 en el archivo de Internet); el canal oficial del anterior jefe de la administración (Vitali Kim, que figuraba en la lista de la Oficina del Presidente) anunció el 17 de julio de 2026 que la información operativa pasa a t.me/mykolaiv_ova, canal del jefe en funciones Heorhii Reshetilov (nombramiento del 16 de julio de 2026)",
+        "nota": "historial desde el 17 de julio de 2026; el usuario mykolaivskaODA de la lista de 2022 está hoy en venta y no se usa"
+      }
+    },
+    {
+      "id": "gob_kursk",
+      "canal": "Hinshtein",
+      "grupo": "gobernadores_ru",
+      "pais": "RU",
+      "region": "RU-KRS",
+      "sentido": "UA_RU",
+      "idioma": "ru",
+      "titulo": "Хинштейн",
+      "insignia": false,
+      "descripcion_enlaza": [],
+      "web_oficial": "https://kursk.ru/",
+      "web_enlaza": "kurskadm",
+      "web_desde_servidor": false,
+      "cadena": [
+        {
+          "canal": "kurskadm",
+          "titulo": "Курская область"
+        }
+      ],
+      "fiabilidad": "C",
+      "origen": "parte",
+      "medio": "Губернатор Курской области",
+      "institucion": "gobierno_RU-KRS",
+      "identificado": {
+        "fecha": "2026-10-04",
+        "pagina": "https://t.me/s/kurskadm",
+        "comprobado": "el canal del Gobierno de la región de Kursk (kurskadm, con insignia de verificado) enlaza en su descripción https://kursk.ru y «Губернатор Курской области Александр Хинштейн https://t.me/Hinshtein»; kursk.ru no abre desde el servidor"
+      }
     }
   ]
 }

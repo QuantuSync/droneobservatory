@@ -27,7 +27,7 @@ from proceso.lugares_guerra import TIPOS_INSTALACION, Hallazgo, Lugar, Nomenclat
 
 MAX_PALABRAS_FRASE = 25
 KYIV = ZoneInfo("Europe/Kyiv")
-VERSION = "mensajes-guerra/3"
+VERSION = "mensajes-guerra/4"
 
 DRON = re.compile(
     r"БпЛА|БПЛА|безпілотн|беспилотн|\bдрон|дронов|дронам|шахед|shahed|герань|гербер|"
@@ -128,6 +128,9 @@ DRON_PROPIO = re.compile(
     r"(?:(?:ударними|далекобійними)\s+(?:БпЛА|дронами|безпілотниками)|дронами|безпілотниками)",
     re.IGNORECASE,
 )
+# Línea de un parte por lugar: «Краснопільська громада: здійснено мінометний обстріл (5
+# вибухів), обстріли БпЛА (3 вибухи)».
+_LINEA_LUGAR = re.compile(r"^[\W\s]*(?P<cabeza>[^:;.!?\n]{3,120}?):\s*(?P<resto>.+)$", re.S)
 # Lugares de donde salen los drones: no son lugares alcanzados.
 LANZAMIENTO = re.compile(r"(?:із|з|с)\s+напрямк|направлени[яй]|із\s+районів|запуск\w*\s+з", re.I)
 # Reivindicación de un ataque propio (Estado Mayor ucraniano): sin estos verbos, la frase no
@@ -334,7 +337,11 @@ _NOCHE = re.compile(
 # ataque concreto; el día es el anterior a la publicación.
 PARTE_DIARIO = re.compile(
     r"(?:упродовж|впродовж|протягом|за\s+минулу|минулої)\s+(?:минулої\s+)?доби|за\s+добу|"
-    r"за\s+(?:минувшие\s+|прошедшие\s+)?сутки|в\s+течение\s+(?:прошедших\s+)?суток",
+    r"за\s+(?:минувшие\s+|прошедшие\s+)?сутки|в\s+течение\s+(?:прошедших\s+)?суток|"
+    # El parte de la frontera de Sumy: «Ситуація на прикордонні станом на 21.00 … Протягом
+    # дня росіяни здійснили 116 обстрілів».
+    r"ситуація\s+на\s+прикордонні|(?:упродовж|впродовж|протягом)\s+дня\s+(?:росіяни|ворог|"
+    r"окупанти|російська)",
     re.IGNORECASE,
 )
 _FRASES = re.compile(r"[^.!?\n;]+[.!?;]?")
@@ -518,7 +525,15 @@ def analizar(
         if armas == frozenset({"dron"}) and not ACUMULADO.search(frase):
             heridos += _victimas_frase(frase, _HERIDOS)
             fallecidos += _victimas_frase(frase, _MUERTOS)
-        if not IMPACTO.search(frase) or AVISO.search(frase):
+        linea = _LINEA_LUGAR.match(frase)
+        if linea and "dron" in armas and DRON.search(linea.group("resto")):
+            # «Краснопільська громада: …, обстріли БпЛА (3 вибухи), пуски КАБів»: la línea dice
+            # que el dron alcanzó los lugares de su cabeza, aunque nombre otras armas.
+            armas = frozenset({"dron"})
+            frase = linea.group("cabeza") + " " + linea.group("resto")
+        if not IMPACTO.search(frase) and not (linea and armas == frozenset({"dron"})):
+            continue
+        if AVISO.search(frase):
             continue
         if DERRIBO.search(frase) and not _danos(frase):
             continue
@@ -536,7 +551,15 @@ def analizar(
             )
             if not ambito:
                 continue
-        hallazgos = nomenclator.localidades_en(frase, ambito)
+        busqueda = linea.group("cabeza") if linea and propias != armas else frase
+        hallazgos = nomenclator.localidades_en(busqueda, ambito, texto)
+        # Comunidades y distritos que nombra la frase, salvo los de una localidad que ya
+        # nombra («По Нікополю і Марганецькій громаді»).
+        localidades = [h.lugar for h in hallazgos if h.lugar is not None]
+        hallazgos += [
+            u for u in nomenclator.unidades_en(busqueda, ambito, texto)
+            if u.lugar is not None and not any(_dentro(x, u.lugar) for x in localidades)
+        ]  # fmt: skip
         instalaciones = _instalaciones(frase, hallazgos, nomenclator, ambito)
         if not hallazgos and not instalaciones:
             continue
@@ -567,7 +590,15 @@ def analizar(
                 h.lugar.id,
                 ImpactoLeido(h.lugar, tipo, cats, frase_breve(frase, h.inicio)),
             )
-    leido.impactos = list(impactos.values())
+    # Una comunidad o un distrito que contiene una localidad alcanzada del mismo mensaje es el
+    # mismo ataque contado dos veces («atacó la comunidad de Kutsurub… en Dmytrivka»).
+    # Igual un distrito que contiene una comunidad o una localidad alcanzada.
+    lugares = [i.lugar for i in impactos.values()]
+    leido.impactos = [
+        i for i in impactos.values()
+        if i.lugar.nivel not in {"comunidad", "distrito"}
+        or not any(_dentro(x, i.lugar) for x in lugares if x.id != i.lugar.id)
+    ]  # fmt: skip
     leido.heridos = max(heridos) if heridos else None
     leido.fallecidos = max(fallecidos) if fallecidos else None
     if len(leido.impactos) == 1:
@@ -587,6 +618,15 @@ def analizar(
         leido.motivo = "sin_lugar"
     leido.prioridad = _prioridad(texto)
     return leido
+
+
+def _dentro(lugar: Lugar, unidad: Lugar) -> bool:
+    """Si la localidad (o la comunidad) está en la comunidad o el distrito."""
+    if lugar.raion != unidad.raion or lugar.nivel == "distrito":
+        return False
+    return unidad.nivel == "distrito" or (
+        lugar.nivel == "localidad" and lugar.hromada == unidad.hromada
+    )
 
 
 def _danos(frase: str) -> bool:

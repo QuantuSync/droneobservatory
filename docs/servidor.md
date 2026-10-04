@@ -886,6 +886,13 @@ horaria vuelve a leer con las reglas de ahora el mensaje de cada fuente de los i
 rehace sus víctimas ([`informe_errores_datos.md`](informe_errores_datos.md)). Tarda unos 30
 segundos y no lanza ningún trabajo aparte.
 
+**Histórico y relectura en la recogida horaria.** Cada hora, después de lo nuevo, la recogida
+lee con lo que quede de su tope (como mucho 150 s) las publicaciones guardadas que aún no tienen
+registro (el histórico que el lector añade hacia atrás) y las leídas con otra versión del
+analizador o del nomenclátor: un cambio de reglas llega solo a todo lo guardado en unas horas
+([`informe_errores_datos.md`](informe_errores_datos.md), bloque 2). El reproceso de abajo solo
+hace falta para tenerlo todo en una pasada.
+
 **Reprocesar todo** (tras cambiar el analizador, el nomenclátor o las palabras corrientes) y,
 con `lote`, enviar ya el lote del histórico sin esperar a que el histórico termine (solo lo
 envía si no se envió antes; lo incorpora la recogida horaria).
