@@ -107,6 +107,8 @@ imágenes iguales. Ahora una pareja solo se publica si en ella se ve el cambio:
 
 **Las 33 parejas.** Ensayo con el código final sobre los 33 objetivos (967 MB leídos). «Mancha principal» es la medida con la primera imagen posterior despejada; «Escenas revisadas», cuántas imágenes posteriores despejadas se midieron dentro de los 15 días. Pasan **7**: las cuatro en las que se veía el daño a simple vista con la primera imagen (00068, 02593, 02600, 03428) y tres en las que lo enseña una imagen posterior (02693, el 2 de junio; 03153, el 26 de marzo; 03412, el 18 de agosto, reencuadrada a 1,8 km). 25 quedan sin cambio y se retiran del almacén; 03486 sigue buscando hasta que se cierre su plazo.
 
+**En el servidor.** Las dos ejecuciones del 4 de octubre con este código (11:44 y 13:44 UTC) dan lo mismo que el ensayo: **7 parejas publicadas** (EODI-IG-2025-00068, 2025-02593, 2025-02600, 2025-02693, 2026-03153, 2026-03412 y 2026-03428), 28 sin cambio (las 25 de la tabla y tres objetivos nuevos, EODI-IG-2025-03155, 2025-03189 y 2026-04117) y 03486 buscando; 33 imágenes retiradas del almacén. Cada una de las siete, abierta en producción, enseña el cambio dentro del contorno: humo y quemado en Brahlov, el parque de tanques de Tuapsé, las quemaduras de Ivano-Frankivsk, Zёrnovo y Zelenograd, la mancha oscura de Pavlogrado y la franja quemada entre las pistas de Saki (reencuadrada a 1,8 km).
+
 | Impacto | Lugar | Primera imagen después | Mancha principal (ha) con ella | Daño visible a ojo | Escenas revisadas | Resultado |
 | --- | --- | --- | --- | --- | --- | --- |
 | EODI-IG-2025-00036 | Нікополь | 2025-04-20 | 0,32 | no | 9 | sin cambio |
@@ -318,6 +320,10 @@ emplazamientos del año y 11 de confianza baja; 225 publicados, 3 de ellos coinc
 impacto declarado. 10,8 kB, 2,3 s y 251 MB (la primera del día, con el resumen anual de
 emplazamientos, 9 s y 377 MB).
 
+Con solo los coincidentes (4 de octubre, 11:42 UTC): ninguno de los focos del día coincide
+con un impacto; el fichero ocupa 364 bytes. Los 18 impactos con foco de «Con satélite»
+vienen del cruce histórico.
+
 ## 5. Corredores de ataque
 
 [`web/src/datos/guerraSatelite.ts`](../web/src/datos/guerraSatelite.ts). Se calculan en la web
@@ -372,6 +378,7 @@ su realce y pulsando junto a él:
 | Escritorio: clic a unos 6 px del arco | 10 fichas de corredor y 12 listas de arcos superpuestos de 23 arcos localizados |
 | Escritorio: clic lejos de los arcos | ficha de la región |
 | Móvil 390×844, toque sobre el arco | 10 fichas de corredor y 9 listas de 23 arcos |
+| Producción, 360×800, 390×844 y 412×915, diez toques sobre arcos con Ucrania acercada | 10 de 10 fichas de corredor en los tres |
 
 A la escala de toda Europa, en un teléfono, los arcos que salen de la misma zona se solapan:
 ahí se abre la lista o el más cercano al dedo, que es lo que pide la regla.
@@ -409,11 +416,38 @@ recogida horaria, que ya tiene la base abierta, deja cada hora los objetivos en
 `datos/satelite/objetivos.json` (los impactos públicos con foco detectado o en una instalación,
 con su recorte y sus fechas) y `eodi-satelite` solo lee ese fichero.
 
-<!-- CON SATELITE -->
+**En producción** (4 de octubre, 14:15 UTC): «Con satélite · 36», 36 puntos distintos:
+
+| Tipo | Puntos |
+| --- | --- |
+| Antes y después con cambio | 7 |
+| Foco de calor que coincide con un impacto | 18 (6 de ellos también con antes y después) |
+| Apagón | 3: Odesa (13/12/2025), Kremenchuk (15/10/2025) y Rivne (17/08/2025; su ficha da también el del 02/12/2024, ataque EODI-UA-2024-0227) |
+| Ciudad a oscuras | 14 |
+
+Fichas abiertas desde la lista: **EODI-IG-2026-03428** (Tuapsé: cortinilla y foco arriba),
+**EODI-IG-2026-03412** (Saki: cortinilla) y **EODI-IG-2026-03427** (Krasnodar: solo el foco, su
+pareja no pasa).
 
 ## 7. Servidor
 
-<!-- SERVIDOR -->
+Tres unidades con su temporizador, su cerrojo y su tope de 1 GB de memoria, en prioridad baja
+(nice 15, E/S en reposo), fuera de los minutos 15 a 40 de la recogida horaria; ninguna toma el
+cerrojo de la recogida ni toca el clon. Consumo medido el 4 de octubre de 2026:
+
+| Unidad | Cuándo | Tope de tiempo | Medido |
+| --- | --- | --- | --- |
+| `eodi-satelite` | 06:43 y 18:43 UTC | no empieza un impacto nuevo pasados 26 minutos | 31 min, 60 MB de memoria, 629 MB leídos en 1777 peticiones (36 objetivos, la ejecución de las 11:44 con el código del cambio visible) |
+| `eodi-luces` | minuto 41 de cada hora | no empieza una noche nueva pasados 22 minutos | 24 min, 474 MB, unos 7,3 GB leídos (20 noches del histórico, 704 pendientes); la anterior, con 29 minutos, pasaba de los 32 minutos de la unidad una hora sí y otra no |
+| `eodi-focos-vivo` | minuto 42 de cada hora | — | 2,4 s y 235 MB; publica 364 bytes |
+
+- **Ajustes de hoy.** La luz nocturna pasa de 29 a 22 minutos (#103) y la búsqueda de imágenes
+  de 30 a 26 (#105): tras su último elemento quedan las ciudades con alumbrado reducido y la
+  subida, o el índice y las imágenes, y las dos terminan antes del minuto 12. Un test comprueba
+  los dos minutos de fin.
+- **Histórico de la luz nocturna.** Unas 20 a 28 noches por hora; con 704 pendientes, termina en
+  unas 30 horas y después solo mide las noches nuevas.
+- **Disco.** 11 GB usados de 75 GB.
 
 ## 8. Web
 
@@ -430,7 +464,8 @@ con su recorte y sus fechas) y `eodi-satelite` solo lee ese fichero.
   24 h»; aun así, `?satelite=luz` y `?satelite=focos` abren «Con satélite» con el filtro de apagones
   y ciudades a oscuras o el de focos. Abrir algo de una subcapa (un corredor, un apagón, una
   ciudad a oscuras) desde una lista o una ficha la enciende, y la línea de focos de «Europa ahora»
-  abre «Con satélite» filtrado por focos.
+  abre «Con satélite» filtrado por focos, sin cambiar el periodo. El enlace se lee de la dirección
+  del navegador al cargar, antes de que la web reescriba la dirección con sus capas (#103).
 - **Las demás capas.** Revisadas Incidentes, Densidad, Presión, GPS y los cierres en directo.
   Encendía algo sola **Presión**: con el periodo en «Todo», al encenderla cambiaba el periodo a los
   últimos 30 días (de #87). Ya no lo hace: la presión se enciende y el periodo sigue el que había.
@@ -441,7 +476,7 @@ con su recorte y sus fechas) y `eodi-satelite` solo lee ese fichero.
 - Metodología (ES y EN): apartado «Guerra por satélite» y las atribuciones de Copernicus
   Sentinel y de NOAA. Ayuda del mapa: las tres marcas nuevas.
 - Comprobado en escritorio y en 360×800, 390×844 y 412×915, en local, en la vista previa del
-  PR y en producción (apartado 9).
+  PR y en producción (apartado 10).
 
 ## 9. Color de la capa de guerra
 
@@ -481,4 +516,47 @@ familia a ΔE 30 o más de los tres estados, el principal a ΔE 75 o más del ro
 deuteranopía y protanopía, contraste 4,5:1 sobre el fondo, y que ninguna capa de la guerra use un
 color de estado.
 
-<!-- PRODUCCION -->
+## 10. Comprobación en producción
+
+4 de octubre de 2026, droneobservatory.eu con #103 y #105, en escritorio (1440×900) y en
+390×844, con un script de Playwright en un navegador real:
+
+| Comprobación | Escritorio | 390×844 |
+| --- | --- | --- |
+| Con Ucrania, solo dos botones de guerra («Corredores» y «Con satélite · 36»), los dos apagados; ni «Focos 24 h» ni «Luz nocturna» | sí | sí |
+| Cada subcapa se enciende y se apaga con su botón | sí | sí |
+| Apagar y encender Ucrania con las dos encendidas: vuelven apagadas | sí | sí |
+| `?guerra=corredores`: Ucrania y Corredores encendidos | sí | sí |
+| `?guerra=corredores,satelite&satelite=foco`, `?satelite=luz`, `?satelite=focos24h`: «Con satélite» con su filtro | sí | sí |
+| Leyenda de los cuatro tipos y filtro con su número (7, 18, 3, 14) | sí | sí |
+| Las 7 fichas con cortinilla: dos imágenes cargadas, contorno y «Zona con cambios» | 7 de 7 | 7 de 7 |
+| Las 18 fichas con foco: foco arriba; sin pareja, sin cortinilla (03427, 00036, 02759 entre ellas) | 18 de 18 | 18 de 18 |
+| Apagones (Odesa, Kremenchuk, Rivne) y dos ciudades a oscuras (Mykolaiv, Sumy): luz arriba | 5 de 5 | 5 de 5 |
+| «Europa ahora» → focos: «Con satélite» filtrado por focos, 18 filas | sí | sí |
+| Corredores: diez toques en 360, 390 y 412 | — | 10 de 10 |
+| Errores de la página | ninguno | ninguno |
+
+### Capturas
+
+En [`capturas/`](capturas/), cada una en `-escritorio.png` y `-390x844.png`:
+
+- Subcapas: `subcapas-inicial` (Ucrania encendida, subcapas apagadas), `subcapas-corredores`,
+  `subcapas-satelite`, `subcapas-satelite-lista` y `subcapas-enlace-corredores`.
+- Cortinilla con su contorno: `satelite-cortinilla-<impacto>` de las siete parejas, y
+  `satelite-filtro-antes-despues` (la lista filtrada).
+- Fichas sin pareja publicada: `satelite-sin-pareja-EODI-IG-2026-03427`, `-2025-00036` y
+  `-2025-02759` (solo el foco).
+- «Con satélite»: `satelite-foco-EODI-IG-2026-03428`, `satelite-apagon-odesa`,
+  `satelite-apagon-rivne`, `satelite-ciudad-a-oscuras-mykolaiv` y `satelite-europa-ahora-focos`.
+- Corredores: `corredores-toque-360x800`, `-390x844` y `-412x915`.
+- La capa de guerra en violeta con las subcapas apagadas: `guerra-ucrania`, `guerra-ver-todo`,
+  `guerra-rusia`, `guerra-ficha-impacto`, `guerra-ficha-region-rusa` y las de
+  [`informe_capa_guerra.md`](informe_capa_guerra.md), rehechas.
+
+## 11. Pull requests
+
+#65 (guerra por satélite y color violeta), #89 (ciudades con alumbrado reducido, corredores
+fáciles de seleccionar, puntos con satélite), #93 (toque en el teléfono), #98 (cortinilla solo con
+cambio visible, «Con satélite» con cuatro tipos, botones retirados, subcapas apagadas), #103
+(enlace con subcapas, tope de la luz nocturna, tabla de las parejas), #105 (tope de la búsqueda de
+imágenes) y #110 (este informe).
