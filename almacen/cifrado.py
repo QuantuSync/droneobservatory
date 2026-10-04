@@ -74,8 +74,16 @@ def descifrar(cifrado: bytes) -> sqlite3.Connection:
         datos = lzma.decompress(datos)
     elif datos[:2] == _GZIP:
         datos = gzip.decompress(datos)
+    # Una base deserializada no puede crecer por encima de 1 GiB (el tope de las bases en
+    # memoria de SQLite, SQLITE_MEMDB_DEFAULT_MAXSIZE): la del 4 de octubre de 2026 llegó y la
+    # recogida de las 15:17 falló con «database or disk is full». Se copia a una base en
+    # memoria normal, que no tiene ese tope, y la deserializada se cierra en seguida.
+    deserializada = sqlite3.connect(":memory:")
+    deserializada.deserialize(datos)
+    del datos
     conexion = sqlite3.connect(":memory:")
-    conexion.deserialize(datos)
+    deserializada.backup(conexion)
+    deserializada.close()
     return conexion
 
 

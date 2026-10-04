@@ -105,8 +105,10 @@ def test_se_comprime_antes_de_cifrar_y_se_leen_las_bases_sin_comprimir(
     antiguo = pyrage.encrypt(crudo, [identidad.to_public()])
     # La de antes del 4 de octubre de 2026, comprimida con gzip.
     con_gzip = pyrage.encrypt(gzip.compress(crudo, 6, mtime=0), [identidad.to_public()])
+    # Mismo contenido (la copia a una base en memoria sin tope reescribe la cabecera).
+    contenido = list(almacen.conexion.iterdump())
     for cifrado in (comprimido, antiguo, con_gzip):
-        assert descifrar(cifrado).serialize() == crudo
+        assert list(descifrar(cifrado).iterdump()) == contenido
     # La de ahora va con xz, que ocupa menos que gzip.
     assert pyrage.decrypt(comprimido, [identidad])[:6] == b"\xfd7zXZ\x00"
     assert len(comprimido) < len(con_gzip)
