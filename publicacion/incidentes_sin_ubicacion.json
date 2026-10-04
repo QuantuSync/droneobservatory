@@ -47825,6 +47825,148 @@
     "en": "Six Russian drones penetrate Moldovan airspace",
     "es": "Seis drones rusos penetran el espacio aéreo de Moldavia"
    }
+  },
+  {
+   "afirmaciones_publicas": [
+    {
+     "campo": "drones.numero",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-04T18:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-47fbfb0f13090548",
+     "medio": "cyprusnews.eu",
+     "valor": {
+      "max": 2,
+      "min": 2
+     }
+    },
+    {
+     "campo": "lugar.pais",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-04T18:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-47fbfb0f13090548",
+     "medio": "cyprusnews.eu",
+     "valor": "GR"
+    },
+    {
+     "campo": "presencia_dron",
+     "cita": "Δύο τουρκικά μη επανδρωμένα αεροσκάφη καταγράφηκαν την Κυριακή 4 Οκτωβρίου στο FIR Αθηνών",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-04T18:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-47fbfb0f13090548",
+     "medio": "cyprusnews.eu",
+     "valor": "confirmada"
+    },
+    {
+     "campo": "respuesta.medidas",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-04T18:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-47fbfb0f13090548",
+     "medio": "cyprusnews.eu",
+     "valor": [
+      "cazas"
+     ]
+    },
+    {
+     "campo": "tiempo.inicio",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-04T18:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-47fbfb0f13090548",
+     "medio": "cyprusnews.eu",
+     "valor": {
+      "precision": "dia",
+      "valor": "2026-10-04T00:00Z"
+     }
+    }
+   ],
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-04T20:17Z"
+    }
+   },
+   "drones": {
+    "numero": {
+     "max": 2,
+     "min": 2
+    }
+   },
+   "estado": {
+    "actual": "notificado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-04T18:30Z"
+      },
+      "fuente_id": "gdelt-47fbfb0f13090548"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://cyprusnews.eu/cnn-gr-ellada/tourkika-mi-epandromena-aeroskafi-paraviasan-xana-ton-elliniko-enaerio-choro",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-04T18:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Δύο τουρκικά μη επανδρωμένα αεροσκάφη καταγράφηκαν την Κυριακή 4 Οκτωβρίου στο FIR Αθηνών",
+     "id": "gdelt-47fbfb0f13090548",
+     "idioma": "el",
+     "medio": "cyprusnews.eu",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-2026-00484",
+   "lugar": {
+    "nivel": "region",
+    "pais": "GR",
+    "region": "Βορειοανατολικό και Κεντρικό Αιγαίο"
+   },
+   "presencia_dron": "confirmada",
+   "respuesta": {
+    "medidas": [
+     "cazas"
+    ]
+   },
+   "tiempo": {
+    "inicio": {
+     "precision": "dia",
+     "valor": "2026-10-04T00:00Z"
+    }
+   },
+   "tipo": "sobrevuelo",
+   "titulo": {
+    "en": "Turkish drones violate Greek airspace over the Aegean",
+    "es": "Drones turcos violan el espacio aéreo griego sobre el Egeo"
+   }
   }
  ]
 }

@@ -67216,6 +67216,21 @@
     "afirmaciones_publicas": [
      {
       "campo": "consecuencias.cierre.minutos",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-10-31T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EDDB-2025-10-31-EODI-2025-00221",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 71,
+       "min": 71
+      }
+     },
+     {
+      "campo": "consecuencias.cierre.minutos",
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
@@ -67261,6 +67276,18 @@
      },
      {
       "campo": "consecuencias.cierre.valor",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-10-31T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EDDB-2025-10-31-EODI-2025-00221",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": "si"
+     },
+     {
+      "campo": "consecuencias.cierre.valor",
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
@@ -67294,6 +67321,21 @@
       "fuente_id": "gdelt-045a956e0b70a919",
       "medio": "nouvelobs.com",
       "valor": "si"
+     },
+     {
+      "campo": "consecuencias.vuelos_desviados",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-10-31T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EDDB-2025-10-31-EODI-2025-00221",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 9,
+       "min": 9
+      }
      },
      {
       "campo": "consecuencias.vuelos_desviados",
@@ -69559,6 +69601,20 @@
       "idioma": "it",
       "medio": "meteoweb.eu",
       "replicas": 0
+     },
+     {
+      "credibilidad": 2,
+      "enlace": "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.10.31-planes-readsb-prod-0",
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-10-31T00:00Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Cierre medido en EDDB: 20:01–21:11 UTC, 71 minutos, 9 desvíos y 2 esperas.",
+      "id": "adsblol-EDDB-2025-10-31-EODI-2025-00221",
+      "idioma": "es",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "replicas": 0
      }
     ],
     "id": "EODI-2025-00221",
@@ -69593,6 +69649,27 @@
     "titulo": {
      "en": "Drone sighting suspends flights at Berlin airport",
      "es": "Avistamiento de drones interrumpe vuelos en el aeropuerto de Berlín"
+    },
+    "trafico_aereo": {
+     "cierre": {
+      "aeropuerto": "EDDB",
+      "difiere_de_declarado": true,
+      "duracion_min": 71,
+      "fin": {
+       "precision": "minuto",
+       "valor": "2025-10-31T21:11Z"
+      },
+      "inicio": {
+       "precision": "minuto",
+       "valor": "2025-10-31T20:01Z"
+      },
+      "resultado": "cierre_medido",
+      "vuelos_desviados": 9,
+      "vuelos_en_espera": 2
+     },
+     "datos": [
+      "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.10.31-planes-readsb-prod-0"
+     ]
     }
    },
    "type": "Feature"
