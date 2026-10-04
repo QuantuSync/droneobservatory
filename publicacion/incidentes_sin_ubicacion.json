@@ -1,6 +1,15 @@
 {
  "incidentes": [
   {
+   "ataque": {
+    "id": "EODI-UA-2024-0174",
+    "jornada": {
+     "desde": "2024-09-26",
+     "hasta": "2024-09-27",
+     "tipo": "noche"
+    },
+    "por": "fuente"
+   },
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
@@ -155,7 +164,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T05:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -332,7 +341,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -608,7 +617,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -794,7 +803,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -945,7 +954,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -1125,7 +1134,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -1364,7 +1373,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -1483,7 +1492,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -2062,7 +2071,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T07:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -2209,7 +2218,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -2366,7 +2375,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -2505,6 +2514,15 @@
      "valor": "sobrevuelo"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2025-0311",
+    "jornada": {
+     "desde": "2025-11-18",
+     "hasta": "2025-11-19",
+     "tipo": "noche"
+    },
+    "por": "fecha"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -2513,7 +2531,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -2731,6 +2749,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2025-0042",
+    "jornada": {
+     "desde": "2025-02-12",
+     "hasta": "2025-02-13",
+     "tipo": "noche"
+    },
+    "por": "fuente"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -2739,7 +2766,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -2984,7 +3011,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -3213,6 +3240,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2025-0032",
+    "jornada": {
+     "desde": "2025-02-02",
+     "hasta": "2025-02-03",
+     "tipo": "noche"
+    },
+    "por": "fecha"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -3221,7 +3257,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -3550,7 +3586,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T07:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -4346,6 +4382,15 @@
      "valor": "interrupcion_aeroportuaria"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2025-0322",
+    "jornada": {
+     "desde": "2025-11-29",
+     "hasta": "2025-11-30",
+     "tipo": "noche"
+    },
+    "por": "fecha"
+   },
    "consecuencias": {
     "cierre": {
      "minutos": {
@@ -4358,7 +4403,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -4548,7 +4593,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -4801,7 +4846,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -5050,7 +5095,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -5239,7 +5284,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -5426,6 +5471,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2025-0244",
+    "jornada": {
+     "desde": "2025-09-12",
+     "hasta": "2025-09-13",
+     "tipo": "noche"
+    },
+    "por": "fuente"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -5434,7 +5488,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -5707,6 +5761,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2025-0317",
+    "jornada": {
+     "desde": "2025-11-24",
+     "hasta": "2025-11-25",
+     "tipo": "noche"
+    },
+    "por": "fecha"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -5715,7 +5778,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -5868,6 +5931,15 @@
      "valor": "sobrevuelo"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2025-0046",
+    "jornada": {
+     "desde": "2025-02-16",
+     "hasta": "2025-02-17",
+     "tipo": "noche"
+    },
+    "por": "fecha"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -5876,7 +5948,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -6240,6 +6312,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2025-0317",
+    "jornada": {
+     "desde": "2025-11-24",
+     "hasta": "2025-11-25",
+     "tipo": "noche"
+    },
+    "por": "fuente"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -6248,7 +6329,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -6589,6 +6670,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2025-0311",
+    "jornada": {
+     "desde": "2025-11-18",
+     "hasta": "2025-11-19",
+     "tipo": "noche"
+    },
+    "por": "fuente"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -6597,7 +6687,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -7092,7 +7182,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -7471,6 +7561,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2025-0241",
+    "jornada": {
+     "desde": "2025-09-09",
+     "hasta": "2025-09-10",
+     "tipo": "noche"
+    },
+    "por": "fuente"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -7479,7 +7578,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -8289,6 +8388,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2025-0207",
+    "jornada": {
+     "desde": "2025-08-05",
+     "hasta": "2025-08-06",
+     "tipo": "noche"
+    },
+    "por": "fuente"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -8297,7 +8405,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -8460,6 +8568,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2025-0244",
+    "jornada": {
+     "desde": "2025-09-12",
+     "hasta": "2025-09-13",
+     "tipo": "noche"
+    },
+    "por": "fuente"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -8468,7 +8585,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -9106,6 +9223,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2025-0233",
+    "jornada": {
+     "desde": "2025-09-01",
+     "hasta": "2025-09-02",
+     "tipo": "noche"
+    },
+    "por": "fecha"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -9114,7 +9240,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -9417,6 +9543,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2025-0311",
+    "jornada": {
+     "desde": "2025-11-18",
+     "hasta": "2025-11-19",
+     "tipo": "noche"
+    },
+    "por": "fuente"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -9425,7 +9560,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -9576,7 +9711,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T04:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -9766,7 +9901,7 @@
    "tipo": "sobrevuelo",
    "titulo": {
     "en": "Unidentified drones fly over Karup military base in Denmark",
-    "es": "Posibles drones no identificados sobrevuelan la base militar de Karup en Dinamarca"
+    "es": "Drones no identificados sobrevuelan la base militar de Karup en Dinamarca"
    }
   },
   {
@@ -9853,6 +9988,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2025-0311",
+    "jornada": {
+     "desde": "2025-11-18",
+     "hasta": "2025-11-19",
+     "tipo": "noche"
+    },
+    "por": "fecha"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -9861,7 +10005,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -10271,6 +10415,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2025-0241",
+    "jornada": {
+     "desde": "2025-09-09",
+     "hasta": "2025-09-10",
+     "tipo": "noche"
+    },
+    "por": "fuente"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -10279,7 +10432,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -11663,6 +11816,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2025-0015",
+    "jornada": {
+     "desde": "2025-01-16",
+     "hasta": "2025-01-17",
+     "tipo": "noche"
+    },
+    "por": "fuente"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -11671,7 +11833,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -11849,6 +12011,15 @@
      "valor": "sobrevuelo"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2025-0317",
+    "jornada": {
+     "desde": "2025-11-24",
+     "hasta": "2025-11-25",
+     "tipo": "noche"
+    },
+    "por": "fuente"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -11857,7 +12028,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -12140,7 +12311,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -12393,6 +12564,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2025-0245",
+    "jornada": {
+     "desde": "2025-09-13",
+     "hasta": "2025-09-14",
+     "tipo": "noche"
+    },
+    "por": "fecha"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -12401,7 +12581,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -12632,7 +12812,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -12857,7 +13037,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -13255,6 +13435,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2025-0241",
+    "jornada": {
+     "desde": "2025-09-09",
+     "hasta": "2025-09-10",
+     "tipo": "noche"
+    },
+    "por": "fuente"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -13263,7 +13452,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -14894,7 +15083,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -15114,7 +15303,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -15304,7 +15493,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -15539,6 +15728,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2025-0321",
+    "jornada": {
+     "desde": "2025-11-28",
+     "hasta": "2025-11-29",
+     "tipo": "noche"
+    },
+    "por": "fecha"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "si"
@@ -15547,7 +15745,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -16212,6 +16410,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2025-0244",
+    "jornada": {
+     "desde": "2025-09-12",
+     "hasta": "2025-09-13",
+     "tipo": "noche"
+    },
+    "por": "fuente"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -16220,7 +16427,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -16634,7 +16841,7 @@
     },
     {
      "campo": "presencia_dron",
-     "cita": "nella tarda serata di ieri per la seconda volta in meno di 24 ore",
+     "cita": "Un drone è stato avvistato sulla base aerea di Kleine Brogel",
      "credibilidad": 3,
      "fecha": {
       "precision": "aproximada",
@@ -16681,7 +16888,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T01:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -16734,7 +16941,7 @@
       "valor": "2025-11-02T09:15Z"
      },
      "fiabilidad": "C",
-     "frase_origen": "nella tarda serata di ieri per la seconda volta in meno di 24 ore",
+     "frase_origen": "Un drone è stato avvistato sulla base aerea di Kleine Brogel",
      "id": "gdelt-72010da5c30eb1c2",
      "idioma": "it",
      "medio": "adnkronos.com",
@@ -16855,6 +17062,15 @@
      "valor": "interrupcion_aeroportuaria"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2025-0320",
+    "jornada": {
+     "desde": "2025-11-27",
+     "hasta": "2025-11-28",
+     "tipo": "noche"
+    },
+    "por": "fecha"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "si"
@@ -16863,7 +17079,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T00:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -16992,7 +17208,7 @@
     "motivo_desmentido": "Maréchaussée royale néerlandaise: «Ces recherches n'avaient permis de retrouver aucun drone.»",
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -17195,6 +17411,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2025-0246",
+    "jornada": {
+     "desde": "2025-09-14",
+     "hasta": "2025-09-15",
+     "tipo": "noche"
+    },
+    "por": "fecha"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -17203,7 +17428,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -17421,7 +17646,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -17589,7 +17814,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -17818,7 +18043,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -18009,6 +18234,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2025-0245",
+    "jornada": {
+     "desde": "2025-09-13",
+     "hasta": "2025-09-14",
+     "tipo": "noche"
+    },
+    "por": "fecha"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -18017,7 +18251,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -18191,7 +18425,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -18362,7 +18596,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -18544,6 +18778,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2025-0320",
+    "jornada": {
+     "desde": "2025-11-27",
+     "hasta": "2025-11-28",
+     "tipo": "noche"
+    },
+    "por": "fecha"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -18552,7 +18795,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T06:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -18615,216 +18858,6 @@
      "id": "gdelt-f62784af49f0c09a",
      "idioma": "ro",
      "medio": "news.yam.md",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://hotnews.ro/doua-drone-rusesti-au-violat-din-nou-spatiul-aerian-al-republicii-moldova-2119038",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2025-11-29T09:30Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "Două drone rusești au violat din nou spațiul aerian al Republicii Moldova",
-     "id": "gdelt-71f4df8829e0930c",
-     "idioma": "ro",
-     "medio": "hotnews.ro",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://ewn.co.za/2025/11/29/moldova-says-briefly-shut-airspace-after-fresh-drone-breach",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2025-11-29T10:00Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "Moldova says briefly shut airspace after fresh drone breach",
-     "id": "gdelt-2b2b569ba9ca5784",
-     "idioma": "en",
-     "medio": "ewn.co.za",
-     "replicas": 2
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://news.yam.md/ro/story/18209456",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2025-11-29T10:00Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "Două drone au traversat nordul R. Moldova. Spațiul aerian, temporar închis",
-     "id": "gdelt-1aa8de5e53158658",
-     "idioma": "ro",
-     "medio": "news.yam.md",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://realitatea.net/stiri/actual/alerta-la-granita-doua-drone-rusesti-au-intrat-ilegal-in-moldova-spatiul-aerian-a-fost-inchis_692abdd5b38a260ff04f9e06",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2025-11-29T11:00Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "Alertă la graniță! Două drone rusești au intrat ilegal în Moldova. Spațiul aerian a fost închis",
-     "id": "gdelt-4a646360439e5014",
-     "idioma": "ro",
-     "medio": "realitatea.net",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://romania-actualitati.ro/stiri/in-lume/doua-drone-au-survolat-spatiul-aerian-al-republicii-moldova-id220020.html",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2025-11-29T12:45Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "Două drone au survolat spațiul aerian al Republicii Moldova",
-     "id": "gdelt-40f6663090db77a7",
-     "idioma": "ro",
-     "medio": "romania-actualitati.ro",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://cp24.com/news/world/2025/11/29/moldova-briefly-shuts-airspace-after-new-drone-breach",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2025-11-29T17:30Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "Airspace in Moldova closed briefly after drone breach",
-     "id": "gdelt-4e3dc223d65bffc8",
-     "idioma": "en",
-     "medio": "cp24.com",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://marketscreener.com/news/moldova-says-russian-drones-entered-its-airspace-again-posing-aviation-threat-ce7d51dbdf8ffe21",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2025-11-29T17:45Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "Moldova says Russian drones entered its airspace again.",
-     "id": "gdelt-5ba694f7405852d6",
-     "idioma": "en",
-     "medio": "marketscreener.com",
-     "replicas": 2
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://bt.dk/udland/moldova-russiske-droner-har-kraenket-vores-luftrum-igen",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2025-11-29T19:15Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "Moldova: Russiske droner har krænket vores luftrum, igen",
-     "id": "gdelt-8c387ef51ecc416a",
-     "idioma": "da",
-     "medio": "bt.dk",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://firstpost.com/world/moldova-closes-airspace-after-russian-drones-cross-border-for-third-time-in-nine-days-ws-e-13955151.html",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2025-11-29T19:45Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "Moldova closes airspace after Russian drones cross border for third time in nine days",
-     "id": "gdelt-e5584163c3eeb32b",
-     "idioma": "en",
-     "medio": "firstpost.com",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://lemonde.fr/en/international/article/2025/11/29/moldova-temporarily-closes-airspace-after-russian-drone-incursion_6747971_4.html",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2025-11-29T20:15Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "Moldova temporarily closes airspace after Russian drone incursion",
-     "id": "gdelt-1ca47478c8db740c",
-     "idioma": "en",
-     "medio": "lemonde.fr",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://yahoo.com/news/articles/moldova-says-russian-drones-violated-195631274.html",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2025-11-29T21:00Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "Moldova says Russian drones violated airspace",
-     "id": "gdelt-e905391bd6cd5cc1",
-     "idioma": "en",
-     "medio": "yahoo.com",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://dr.dk/nyheder/seneste/moldova-siger-russiske-droner-har-kraenket-luftrummet",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2025-11-29T22:00Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "Moldova siger, at russiske droner har krænket luftrummet | Nyheder",
-     "id": "gdelt-52b3333726c4462a",
-     "idioma": "da",
-     "medio": "dr.dk",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://gdnonline.com:443/Details/1369750/Moldova-says-Russian-drones-entered-its-airspace-again,-posing-aviation-threat",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2025-11-29T22:15Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "World News: Moldova says Russian drones entered its airspace again, posing aviation threat",
-     "id": "gdelt-79066051ae1203a1",
-     "idioma": "en",
-     "medio": "gdnonline.com",
-     "replicas": 1
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://athens-times.com/moldova-russian-drones-violate-airspace-for-third-time-in-nine-days",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2025-11-29T23:45Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "Russian Drones Breach Moldova Airspace Again",
-     "id": "gdelt-9de82ce3679fa38a",
-     "idioma": "en",
-     "medio": "athens-times.com",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://gdnonline.com:443/Details/1369810",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2025-11-29T23:45Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "World News: Moldova says drones entered its airspace again",
-     "id": "gdelt-1381904cbc1eb525",
-     "idioma": "en",
-     "medio": "gdnonline.com",
      "replicas": 0
     }
    ],
@@ -18925,7 +18958,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -19062,7 +19095,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -19244,7 +19277,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -19404,7 +19437,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -19721,7 +19754,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -19883,6 +19916,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-0250",
+    "jornada": {
+     "desde": "2026-09-07",
+     "hasta": "2026-09-08",
+     "tipo": "noche"
+    },
+    "por": "fecha"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -19891,7 +19933,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -20062,7 +20104,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -20182,6 +20224,15 @@
      }
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-0204",
+    "jornada": {
+     "desde": "2026-07-27",
+     "hasta": "2026-07-28",
+     "tipo": "noche"
+    },
+    "por": "fecha"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -20190,7 +20241,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -20388,7 +20439,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -20774,7 +20825,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -21013,6 +21064,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-0073",
+    "jornada": {
+     "desde": "2026-03-13",
+     "hasta": "2026-03-14",
+     "tipo": "noche"
+    },
+    "por": "fecha"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -21021,7 +21081,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -21471,6 +21531,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-0090",
+    "jornada": {
+     "desde": "2026-03-30",
+     "hasta": "2026-03-31",
+     "tipo": "noche"
+    },
+    "por": "fecha"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -21479,7 +21548,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -22029,6 +22098,15 @@
      "valor": "interrupcion_aeroportuaria"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-0255",
+    "jornada": {
+     "desde": "2026-09-12",
+     "hasta": "2026-09-12",
+     "tipo": "dia"
+    },
+    "por": "fecha"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "si"
@@ -22037,7 +22115,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -22440,6 +22518,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-0275",
+    "jornada": {
+     "desde": "2026-04-15",
+     "hasta": "2026-04-16",
+     "tipo": "noche"
+    },
+    "por": "fuente"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -22448,7 +22535,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -22737,7 +22824,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T21:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -22976,6 +23063,15 @@
      "valor": "sobrevuelo"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-0073",
+    "jornada": {
+     "desde": "2026-03-13",
+     "hasta": "2026-03-14",
+     "tipo": "noche"
+    },
+    "por": "fecha"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -22984,7 +23080,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -23257,7 +23353,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -23655,6 +23751,15 @@
      }
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-0227",
+    "jornada": {
+     "desde": "2026-08-19",
+     "hasta": "2026-08-20",
+     "tipo": "noche"
+    },
+    "por": "fuente"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -23663,7 +23768,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -24013,7 +24118,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -24281,6 +24386,15 @@
      }
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-0077",
+    "jornada": {
+     "desde": "2026-03-17",
+     "hasta": "2026-03-18",
+     "tipo": "noche"
+    },
+    "por": "fecha"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -24289,7 +24403,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -24558,7 +24672,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -24748,7 +24862,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -24933,6 +25047,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-1005",
+    "jornada": {
+     "desde": "2026-09-27",
+     "hasta": "2026-09-28",
+     "tipo": "noche"
+    },
+    "por": "fecha"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -24941,7 +25064,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -25188,7 +25311,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -25412,6 +25535,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-1009",
+    "jornada": {
+     "desde": "2026-09-28",
+     "hasta": "2026-09-29",
+     "tipo": "noche"
+    },
+    "por": "fecha"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -25420,7 +25552,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -25593,6 +25725,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-1015",
+    "jornada": {
+     "desde": "2026-09-30",
+     "hasta": "2026-09-30",
+     "tipo": "dia"
+    },
+    "por": "fecha"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "si"
@@ -25601,7 +25742,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -25763,6 +25904,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-0268",
+    "jornada": {
+     "desde": "2026-09-23",
+     "hasta": "2026-09-24",
+     "tipo": "noche"
+    },
+    "por": "fuente"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -25771,7 +25921,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T06:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -26240,7 +26390,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -26507,6 +26657,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-0223",
+    "jornada": {
+     "desde": "2026-08-15",
+     "hasta": "2026-08-16",
+     "tipo": "noche"
+    },
+    "por": "fecha"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -26515,7 +26674,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -26732,7 +26891,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -26843,6 +27002,15 @@
      "valor": "interrupcion_aeroportuaria"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-0218",
+    "jornada": {
+     "desde": "2026-08-10",
+     "hasta": "2026-08-11",
+     "tipo": "noche"
+    },
+    "por": "fecha"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -26851,7 +27019,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -27014,7 +27182,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -27379,7 +27547,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -27510,7 +27678,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T21:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -28082,7 +28250,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -28270,7 +28438,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -28383,6 +28551,15 @@
      "valor": "sobrevuelo"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-0144",
+    "jornada": {
+     "desde": "2026-05-28",
+     "hasta": "2026-05-29",
+     "tipo": "noche"
+    },
+    "por": "fecha"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -28391,7 +28568,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -28566,7 +28743,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -28800,6 +28977,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-0261",
+    "jornada": {
+     "desde": "2026-09-16",
+     "hasta": "2026-09-17",
+     "tipo": "noche"
+    },
+    "por": "fuente"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -28808,7 +28994,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -29079,6 +29265,15 @@
      "valor": "sobrevuelo"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-0265",
+    "jornada": {
+     "desde": "2026-09-20",
+     "hasta": "2026-09-21",
+     "tipo": "noche"
+    },
+    "por": "fuente"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -29087,7 +29282,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -29339,6 +29534,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-0271",
+    "jornada": {
+     "desde": "2026-09-25",
+     "hasta": "2026-09-26",
+     "tipo": "noche"
+    },
+    "por": "fecha"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -29347,7 +29551,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T21:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -29548,6 +29752,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-0234",
+    "jornada": {
+     "desde": "2026-08-26",
+     "hasta": "2026-08-27",
+     "tipo": "noche"
+    },
+    "por": "fuente"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -29556,7 +29769,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -29859,7 +30072,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -29958,6 +30171,19 @@
      "fuente_id": "gdelt-4a0fbdc0d82d6b28",
      "medio": "republicain-lorrain.fr",
      "valor": "LV"
+    },
+    {
+     "campo": "presencia_dron",
+     "cita": "un drone étranger abattu par des avions de chasse alliés dans l'espace aérien letton",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-14T05:15Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-86e2146eea48b09b",
+     "medio": "sudouest.fr",
+     "valor": "confirmada"
     },
     {
      "campo": "presencia_dron",
@@ -30064,7 +30290,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -30389,6 +30615,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-0229",
+    "jornada": {
+     "desde": "2026-08-21",
+     "hasta": "2026-08-22",
+     "tipo": "noche"
+    },
+    "por": "fuente"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -30397,7 +30632,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -30676,6 +30911,15 @@
      "valor": "sobrevuelo"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-0167",
+    "jornada": {
+     "desde": "2026-06-20",
+     "hasta": "2026-06-21",
+     "tipo": "noche"
+    },
+    "por": "fecha"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -30684,7 +30928,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T21:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -30794,7 +31038,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -30941,6 +31185,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-0085",
+    "jornada": {
+     "desde": "2026-03-25",
+     "hasta": "2026-03-26",
+     "tipo": "noche"
+    },
+    "por": "fuente"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -30949,7 +31202,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -31174,7 +31427,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -31394,6 +31647,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-0259",
+    "jornada": {
+     "desde": "2026-09-14",
+     "hasta": "2026-09-15",
+     "tipo": "noche"
+    },
+    "por": "fecha"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -31402,7 +31664,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -31615,7 +31877,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -31768,7 +32030,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -31912,6 +32174,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-0201",
+    "jornada": {
+     "desde": "2026-07-24",
+     "hasta": "2026-07-25",
+     "tipo": "noche"
+    },
+    "por": "fuente"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -31920,7 +32191,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -32201,7 +32472,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -32561,7 +32832,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T07:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -32793,6 +33064,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-0250",
+    "jornada": {
+     "desde": "2026-09-07",
+     "hasta": "2026-09-08",
+     "tipo": "noche"
+    },
+    "por": "fecha"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -32801,7 +33081,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -33262,6 +33542,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-0223",
+    "jornada": {
+     "desde": "2026-08-15",
+     "hasta": "2026-08-16",
+     "tipo": "noche"
+    },
+    "por": "fuente"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -33270,7 +33559,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -33489,7 +33778,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -33754,6 +34043,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-0223",
+    "jornada": {
+     "desde": "2026-08-15",
+     "hasta": "2026-08-16",
+     "tipo": "noche"
+    },
+    "por": "fecha"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -33762,7 +34060,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -33983,6 +34281,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-0223",
+    "jornada": {
+     "desde": "2026-08-15",
+     "hasta": "2026-08-16",
+     "tipo": "noche"
+    },
+    "por": "fuente"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -33991,7 +34298,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -34352,6 +34659,15 @@
      "valor": "sobrevuelo"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-1009",
+    "jornada": {
+     "desde": "2026-09-28",
+     "hasta": "2026-09-29",
+     "tipo": "noche"
+    },
+    "por": "fecha"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -34360,7 +34676,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -34527,7 +34843,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -34688,7 +35004,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -34971,7 +35287,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -35082,7 +35398,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -35220,6 +35536,15 @@
      "valor": "sobrevuelo"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-1017",
+    "jornada": {
+     "desde": "2026-09-30",
+     "hasta": "2026-10-01",
+     "tipo": "noche"
+    },
+    "por": "fuente"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -35228,7 +35553,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -35351,7 +35676,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -35670,6 +35995,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-1017",
+    "jornada": {
+     "desde": "2026-09-30",
+     "hasta": "2026-10-01",
+     "tipo": "noche"
+    },
+    "por": "fuente"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -35678,7 +36012,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -35937,6 +36271,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-1019",
+    "jornada": {
+     "desde": "2026-10-01",
+     "hasta": "2026-10-01",
+     "tipo": "dia"
+    },
+    "por": "fecha"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -35945,7 +36288,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -36245,7 +36588,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -36415,7 +36758,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -36611,6 +36954,19 @@
      "valor": "confirmada"
     },
     {
+     "campo": "presencia_dron",
+     "cita": "Die Drohne war bereits Anfang der Woche auf einem Feld in der Nähe des Steinhuder Meeres entdeckt worden.",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-18T06:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-84490bf01c11949e",
+     "medio": "ndr.de",
+     "valor": "confirmada"
+    },
+    {
      "campo": "respuesta.medidas",
      "credibilidad": 3,
      "fecha": {
@@ -36689,7 +37045,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T21:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -36911,7 +37267,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -37097,7 +37453,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -37220,6 +37576,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-0076",
+    "jornada": {
+     "desde": "2026-03-16",
+     "hasta": "2026-03-17",
+     "tipo": "noche"
+    },
+    "por": "fecha"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -37228,7 +37593,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -37441,7 +37806,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -37631,7 +37996,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -37830,7 +38195,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -38013,7 +38378,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -38243,7 +38608,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -38369,6 +38734,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-0221",
+    "jornada": {
+     "desde": "2026-08-13",
+     "hasta": "2026-08-14",
+     "tipo": "noche"
+    },
+    "por": "fuente"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -38377,7 +38751,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -38572,6 +38946,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-0250",
+    "jornada": {
+     "desde": "2026-09-07",
+     "hasta": "2026-09-08",
+     "tipo": "noche"
+    },
+    "por": "fecha"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "si"
@@ -38580,7 +38963,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -38796,7 +39179,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -38991,7 +39374,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -39150,6 +39533,15 @@
      }
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-0218",
+    "jornada": {
+     "desde": "2026-08-10",
+     "hasta": "2026-08-11",
+     "tipo": "noche"
+    },
+    "por": "fecha"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -39158,7 +39550,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -39369,7 +39761,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -39542,7 +39934,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -39702,6 +40094,15 @@
      }
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-0124",
+    "jornada": {
+     "desde": "2026-05-06",
+     "hasta": "2026-05-07",
+     "tipo": "noche"
+    },
+    "por": "fecha"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -39710,7 +40111,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -39893,7 +40294,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -40065,7 +40466,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -40241,6 +40642,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-0201",
+    "jornada": {
+     "desde": "2026-07-24",
+     "hasta": "2026-07-25",
+     "tipo": "noche"
+    },
+    "por": "fecha"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -40249,7 +40659,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -40505,6 +40915,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-0154",
+    "jornada": {
+     "desde": "2026-06-07",
+     "hasta": "2026-06-08",
+     "tipo": "noche"
+    },
+    "por": "fuente"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -40513,7 +40932,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -40738,6 +41157,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-0223",
+    "jornada": {
+     "desde": "2026-08-15",
+     "hasta": "2026-08-16",
+     "tipo": "noche"
+    },
+    "por": "fecha"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -40746,7 +41174,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -40931,7 +41359,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -41103,6 +41531,15 @@
      }
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-0231",
+    "jornada": {
+     "desde": "2026-08-23",
+     "hasta": "2026-08-24",
+     "tipo": "noche"
+    },
+    "por": "fuente"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -41111,7 +41548,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -41310,7 +41747,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -41552,6 +41989,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-0104",
+    "jornada": {
+     "desde": "2026-04-16",
+     "hasta": "2026-04-17",
+     "tipo": "noche"
+    },
+    "por": "fuente"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -41560,7 +42006,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -41834,6 +42280,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-0119",
+    "jornada": {
+     "desde": "2026-05-01",
+     "hasta": "2026-05-02",
+     "tipo": "noche"
+    },
+    "por": "fuente"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -41842,7 +42297,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -42060,7 +42515,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -42236,7 +42691,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -42387,7 +42842,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -42561,7 +43016,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -43013,6 +43468,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-1024",
+    "jornada": {
+     "desde": "2026-10-02",
+     "hasta": "2026-10-03",
+     "tipo": "noche"
+    },
+    "por": "fuente"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -43021,7 +43485,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -43275,6 +43739,20 @@
      "idioma": "ro",
      "medio": "digi24.ro",
      "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://mediafax.ro/externe/mae-de-la-chisinau-anunta-prima-masura-dupa-incursiunile-cu-drone-si-rachete-in-spatiul-aerian-al-republicii-moldova-23818883",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T20:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "MAE de la Chișinău anunță prima măsură după incursiunile cu drone și rachete în spațiul aerian al Republicii Moldova",
+     "id": "gdelt-7c1f51c93d330b06",
+     "idioma": "ro",
+     "medio": "mediafax.ro",
+     "replicas": 0
     }
    ],
    "id": "EODI-2026-00372",
@@ -43370,6 +43848,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-1024",
+    "jornada": {
+     "desde": "2026-10-02",
+     "hasta": "2026-10-03",
+     "tipo": "noche"
+    },
+    "por": "fecha"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -43378,7 +43865,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -43518,6 +44005,15 @@
      "valor": "sobrevuelo"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-1024",
+    "jornada": {
+     "desde": "2026-10-02",
+     "hasta": "2026-10-03",
+     "tipo": "noche"
+    },
+    "por": "fecha"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -43526,7 +44022,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -43628,6 +44124,21 @@
      "credibilidad": 3,
      "fecha": {
       "precision": "aproximada",
+      "valor": "2026-10-03T08:00Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-fc1b83d89eb5bf0a",
+     "medio": "ilfattoquotidiano.it",
+     "valor": {
+      "max": 1,
+      "min": 1
+     }
+    },
+    {
+     "campo": "drones.numero",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
       "valor": "2026-10-03T09:30Z"
      },
      "fiabilidad": "C",
@@ -43643,6 +44154,18 @@
      "credibilidad": 3,
      "fecha": {
       "precision": "aproximada",
+      "valor": "2026-10-03T08:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-f0715351f02b12cf",
+     "medio": "spotandweb.it",
+     "valor": "LT"
+    },
+    {
+     "campo": "lugar.pais",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
       "valor": "2026-10-03T09:30Z"
      },
      "fiabilidad": "C",
@@ -43651,8 +44174,46 @@
      "valor": "LT"
     },
     {
+     "campo": "lugar.pais",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T10:00Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-faeb620ff0072571",
+     "medio": "ilfattonisseno.it",
+     "valor": "LT"
+    },
+    {
      "campo": "presencia_dron",
-     "cita": "Un drone ha violato lo spazio aereo lituano.",
+     "cita": "possibile allarme per incursione aerea",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T08:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-f0715351f02b12cf",
+     "medio": "spotandweb.it",
+     "valor": "no_confirmada"
+    },
+    {
+     "campo": "presencia_dron",
+     "cita": "Le Forze Armate lituane informano: possibile allarme per incursione aerea.",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T08:45Z"
+     },
+     "fiabilidad": "B",
+     "fuente_id": "gdelt-f0715351f02b12cf-declaracion-1",
+     "medio": "Forze Armate lituane (declaración oficial citada en spotandweb.it)",
+     "valor": "confirmada"
+    },
+    {
+     "campo": "presencia_dron",
+     "cita": "E' stato chiuso l'aeroporto.",
      "credibilidad": 3,
      "fecha": {
       "precision": "aproximada",
@@ -43662,6 +44223,46 @@
      "fuente_id": "gdelt-d07eac49e6186bee",
      "medio": "primapress.it",
      "valor": "confirmada"
+    },
+    {
+     "campo": "presencia_dron",
+     "cita": "Allarme per la possibile presenza di un drone nello spazio aereo della Lituania.",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T10:00Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-faeb620ff0072571",
+     "medio": "ilfattonisseno.it",
+     "valor": "no_confirmada"
+    },
+    {
+     "campo": "presencia_dron",
+     "cita": "possibile allarme per incursione aerea. Cercate un luogo sicuro.",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T10:00Z"
+     },
+     "fiabilidad": "B",
+     "fuente_id": "gdelt-faeb620ff0072571-declaracion-1",
+     "medio": "Forze Armate lituane (declaración oficial citada en ilfattonisseno.it)",
+     "valor": "confirmada"
+    },
+    {
+     "campo": "respuesta.medidas",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T08:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-f0715351f02b12cf",
+     "medio": "spotandweb.it",
+     "valor": [
+      "cazas"
+     ]
     },
     {
      "campo": "respuesta.medidas",
@@ -43676,6 +44277,35 @@
      "valor": [
       "cazas"
      ]
+    },
+    {
+     "campo": "respuesta.medidas",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T10:00Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-faeb620ff0072571",
+     "medio": "ilfattonisseno.it",
+     "valor": [
+      "cazas"
+     ]
+    },
+    {
+     "campo": "tiempo.inicio",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T08:00Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-fc1b83d89eb5bf0a",
+     "medio": "ilfattoquotidiano.it",
+     "valor": {
+      "precision": "minuto",
+      "valor": "2026-10-03T06:40Z"
+     }
     },
     {
      "campo": "tiempo.inicio",
@@ -43697,12 +44327,36 @@
      "credibilidad": 3,
      "fecha": {
       "precision": "aproximada",
+      "valor": "2026-10-03T08:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-f0715351f02b12cf",
+     "medio": "spotandweb.it",
+     "valor": "incursion"
+    },
+    {
+     "campo": "tipo",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
       "valor": "2026-10-03T09:30Z"
      },
      "fiabilidad": "C",
      "fuente_id": "gdelt-d07eac49e6186bee",
      "medio": "primapress.it",
      "valor": "interrupcion_aeroportuaria"
+    },
+    {
+     "campo": "tipo",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T10:00Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-faeb620ff0072571",
+     "medio": "ilfattonisseno.it",
+     "valor": "sobrevuelo"
     }
    ],
    "consecuencias": {
@@ -43713,7 +44367,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T00:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -43746,16 +44400,268 @@
    "fuentes": [
     {
      "credibilidad": 3,
+     "enlace": "https://ansa.it/sito/notizie/mondo/europa/2026/10/03/drone-viola-lo-spazio-aereo-lituano-allerta-alla-popolazione_56200a97-785e-4e6d-b43a-d0b4c6b6621e.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T07:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Drone viola lo spazio aereo lituano",
+     "id": "gdelt-128c9f405e59381f",
+     "idioma": "it",
+     "medio": "ansa.it",
+     "replicas": 5
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://zazoom.it/2026-10-03/lituania-drone-viola-lo-spazio-aereo-allerta-alla-popolazione-cercate-un-luogo-sicuro-se-vedete-un-oggetto-sospetto-allontanatevi/19752588",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T08:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Lituania drone viola lo spazio aereo Allerta alla popolazione | Cercate un luogo sicuro se vedete un oggetto sospetto allontanatevi",
+     "id": "gdelt-197d1f9b1dc7f446",
+     "idioma": "it",
+     "medio": "zazoom.it",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://zazoom.it/2026-10-03/drone-viola-lo-spazio-aereo-lituano-lallerta-ai-cittadini-possibile-incursione-aerea-cercate-un-luogo-sicuro/19752609",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T08:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Drone viola lo spazio aereo lituano l'allerta ai cittadini | Possibile incursione aerea Cercate un luogo sicuro",
+     "id": "gdelt-48e4088bd8d70c33",
+     "idioma": "it",
+     "medio": "zazoom.it",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://zazoom.it/2026-10-03/lituania-drone-viola-spazio-aereo-allarme-delle-autorita-cercate-un-luogo-sicuro/19752611",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T08:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Lituania drone viola spazio aereo Allarme delle autorità | Cercate un luogo sicuro",
+     "id": "gdelt-f541de07976c19f5",
+     "idioma": "it",
+     "medio": "zazoom.it",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://ilfattoquotidiano.it/2026/10/03/lituania-drone-viola-spazio-aereo-cercate-luogo-sicuro-rifugi-antiaere/8526307",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T08:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "dopo l'avvistamento di un drone che ha violato lo spazio aereo",
+     "id": "gdelt-fc1b83d89eb5bf0a",
+     "idioma": "it",
+     "medio": "ilfattoquotidiano.it",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://ilsole24ore.com/art/lituania-drone-viola-spazio-aereo-popolazione-allerta-AJ4EejXB",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T08:15Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Lituania, drone viola lo spazio aereo: popolazione in allerta",
+     "id": "gdelt-0cda714f241625fd",
+     "idioma": "it",
+     "medio": "ilsole24ore.com",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://ansa.it/sito/notizie/mondo/europa/2026/10/03/drone-viola-lo-spazio-aereo-lituano-rientrata-lallerta-alla-popolazione_56200a97-785e-4e6d-b43a-d0b4c6b6621e.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T08:15Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Drone viola lo spazio aereo lituano, rientrata l'allerta alla popolazione - Europa",
+     "id": "gdelt-3b47821a653d0a53",
+     "idioma": "it",
+     "medio": "ansa.it",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://zazoom.it/2026-10-03/drone-viola-lo-spazio-aereo-della-lituania-scatta-lallerta/19752735",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T08:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Drone viola lo spazio aereo della Lituania",
+     "id": "gdelt-33802a11335ebab7",
+     "idioma": "it",
+     "medio": "zazoom.it",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://adnkronos.com/internazionale/esteri/drone-invade-spazio-aereo-lituania-jet_58TlFCWhMrTilTOBbPFtDm",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T08:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Drone invade spazio aereo Lituania, si alzano i jet: \"Cercate un luogo sicuro\"",
+     "id": "gdelt-d7449dc93b13986d",
+     "idioma": "it",
+     "medio": "adnkronos.com",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://spotandweb.it/news/924382/lituania-drone-invade-spazio-aereo-popolazione-invitata-a-cercare-luogo-sicuro.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T08:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "possibile allarme per incursione aerea",
+     "id": "gdelt-f0715351f02b12cf",
+     "idioma": "it",
+     "medio": "spotandweb.it",
+     "replicas": 3
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://spotandweb.it/news/924382/lituania-drone-invade-spazio-aereo-popolazione-invitata-a-cercare-luogo-sicuro.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T08:45Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Le Forze Armate lituane informano: possibile allarme per incursione aerea.",
+     "id": "gdelt-f0715351f02b12cf-declaracion-1",
+     "idioma": "it",
+     "medio": "Forze Armate lituane (declaración oficial citada en spotandweb.it)",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://zazoom.it/2026-10-03/possibile-drone-nello-spazio-aereo-della-lituania-jet-in-volo-e-allerta-alla-popolazione/19752785",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T09:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Possibile drone nello spazio aereo della Lituania | jet in volo e allerta alla popolazione",
+     "id": "gdelt-37cb26f9ffa6442f",
+     "idioma": "it",
+     "medio": "zazoom.it",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
      "enlace": "https://primapress.it/lituania-allarme-aereo-per-un-drone-dalla-bielorussia-in-volo-intercettori-nato",
      "fecha": {
       "precision": "aproximada",
       "valor": "2026-10-03T09:30Z"
      },
      "fiabilidad": "C",
-     "frase_origen": "Un drone ha violato lo spazio aereo lituano.",
+     "frase_origen": "E' stato chiuso l'aeroporto.",
      "id": "gdelt-d07eac49e6186bee",
      "idioma": "it",
      "medio": "primapress.it",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://primapress.it/lituania-allarme-aereo-per-un-drone-dalla-bielorussia-in-volo-intercettori-nato",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T09:30Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Allarme per incursione aerea. Cercate un luogo sicuro.",
+     "id": "gdelt-d07eac49e6186bee-declaracion-1",
+     "idioma": "it",
+     "medio": "Forze armate lituane (declaración oficial citada en primapress.it)",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://ilgiornale.it/news/cronaca-internazionale/drone-viola-lo-spazio-aereo-lituano-allerta-alla-popolazione-dopo-unora-allarme-rientrato",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T09:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Drone viola lo spazio aereo lituano, allerta alla popolazione. Dopo un'ora allarme rientrato – il Giornale",
+     "id": "gdelt-9b9b861e9e766334",
+     "idioma": "it",
+     "medio": "ilgiornale.it",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://italpress.com/drone-viola-lo-spazio-aereo-della-lituania-allarme-rientrato",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T10:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Drone viola lo spazio aereo della Lituania, allarme rientrato",
+     "id": "gdelt-77da83f8f172d6c7",
+     "idioma": "it",
+     "medio": "italpress.com",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://livesicilia.it/drone-viola-lo-spazio-aereo-lituano-allerta-alla-popolazione",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T10:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Drone viola lo spazio aereo lituano, popolazione in allerta",
+     "id": "gdelt-8dc0f3883eb0e1cc",
+     "idioma": "it",
+     "medio": "livesicilia.it",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://ilfattonisseno.it/2026/10/lituania-drone-invade-spazio-aereo-popolazione-invitata-a-cercare-luogo-sicuro",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T10:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Allarme per la possibile presenza di un drone nello spazio aereo della Lituania.",
+     "id": "gdelt-faeb620ff0072571",
+     "idioma": "it",
+     "medio": "ilfattonisseno.it",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://ilfattonisseno.it/2026/10/lituania-drone-invade-spazio-aereo-popolazione-invitata-a-cercare-luogo-sicuro",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T10:00Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "possibile allarme per incursione aerea. Cercate un luogo sicuro.",
+     "id": "gdelt-faeb620ff0072571-declaracion-1",
+     "idioma": "it",
+     "medio": "Forze Armate lituane (declaración oficial citada en ilfattonisseno.it)",
      "replicas": 0
     },
     {
@@ -43774,6 +44680,62 @@
     },
     {
      "credibilidad": 3,
+     "enlace": "https://zazoom.it/2026-10-03/mosca-avverte-diplomatici-e-stranieri-lasciate-kiev-colpito-un-altro-ponte-nella-capitale-ucraina-un-drone-viola-lo-spazio-aereo-lituano-la-diretta/19753362",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T11:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Mosca avverte diplomatici e stranieri | Lasciate Kiev colpito un altro ponte nella capitale ucraina Un drone viola lo spazio aereo lituano – La diretta",
+     "id": "gdelt-3f894cb4c00c412b",
+     "idioma": "it",
+     "medio": "zazoom.it",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://wiadomosci.radiozet.pl/swiat/rosyjskie-drony-i-rakiety-wtargnely-w-przestrzen-powietrzna-moldawii",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T12:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Rosyjskie drony i rakiety wtargnęły w przestrzeń powietrzną Mołdawii",
+     "id": "gdelt-ee904955e35bdd34",
+     "idioma": "pl",
+     "medio": "wiadomosci.radiozet.pl",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://lapresse.it/esteri/2026/10/03/lituania-drone-viola-spazio-aereo-allarme-delle-autorita-cercate-un-luogo-sicuro",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T12:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Lituania, drone viola spazio aereo. Allarme delle autorità: \"Cercate un luogo sicuro\"",
+     "id": "gdelt-5fab65229ebd0483",
+     "idioma": "it",
+     "medio": "lapresse.it",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://libertaddigital.com/defensa/2026-10-03/drones-bielorrusos-obligan-a-cerrar-el-espacio-aereo-en-vilna-7469815",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T14:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Drones bielorrusos obligan a cerrar el espacio aéreo en Vilna",
+     "id": "gdelt-cb9e78f4d85a488a",
+     "idioma": "es",
+     "medio": "libertaddigital.com",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
      "enlace": "https://stirileprotv.ro/stiri/international/drone-rusesti-au-incalcat-spatiul-aerian-al-moldovei-in-lituania-avioane-nato-au-fost-ridicate-de-la-sol.html",
      "fecha": {
       "precision": "aproximada",
@@ -43787,17 +44749,17 @@
      "replicas": 0
     },
     {
-     "credibilidad": 1,
-     "enlace": "https://primapress.it/lituania-allarme-aereo-per-un-drone-dalla-bielorussia-in-volo-intercettori-nato",
+     "credibilidad": 3,
+     "enlace": "https://kyivpost.com/post/86058",
      "fecha": {
       "precision": "aproximada",
-      "valor": "2026-10-03T09:30Z"
+      "valor": "2026-10-04T09:15Z"
      },
-     "fiabilidad": "B",
-     "frase_origen": "Allarme per incursione aerea. Cercate un luogo sicuro.",
-     "id": "gdelt-d07eac49e6186bee-declaracion-1",
-     "idioma": "it",
-     "medio": "Forze armate lituane (declaración oficial citada en primapress.it)",
+     "fiabilidad": "C",
+     "frase_origen": "Drones Strike Russian Khanskaya Air Base in Adygea",
+     "id": "gdelt-1b3d5d440b8231a7",
+     "idioma": "en",
+     "medio": "kyivpost.com",
      "replicas": 0
     }
    ],
@@ -43913,7 +44875,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -44034,7 +44996,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -44182,7 +45144,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -44326,7 +45288,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -44932,7 +45894,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -45172,7 +46134,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -45290,7 +46252,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -45469,7 +46431,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -45663,7 +46625,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -45859,7 +46821,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -45986,7 +46948,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -46139,7 +47101,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -46322,7 +47284,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -46500,7 +47462,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -46616,7 +47578,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -46770,6 +47732,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-1024",
+    "jornada": {
+     "desde": "2026-10-02",
+     "hasta": "2026-10-03",
+     "tipo": "noche"
+    },
+    "por": "fecha"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -46778,7 +47749,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -46926,6 +47897,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-1024",
+    "jornada": {
+     "desde": "2026-10-02",
+     "hasta": "2026-10-03",
+     "tipo": "noche"
+    },
+    "por": "fuente"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -46934,7 +47914,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -47022,7 +48002,7 @@
     },
     {
      "campo": "presencia_dron",
-     "cita": "спричинило пожежі та матеріальні збитки",
+     "cita": "несанкціоновані прольоти дронів та ракет",
      "credibilidad": 3,
      "fecha": {
       "precision": "aproximada",
@@ -47061,6 +48041,15 @@
      "valor": "incursion"
     }
    ],
+   "ataque": {
+    "id": "EODI-UA-2026-1024",
+    "jornada": {
+     "desde": "2026-10-02",
+     "hasta": "2026-10-03",
+     "tipo": "noche"
+    },
+    "por": "fecha"
+   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -47069,7 +48058,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T00:17Z"
+     "valor": "2026-10-04T11:17Z"
     }
    },
    "drones": {
@@ -47100,7 +48089,7 @@
       "valor": "2026-10-03T21:30Z"
      },
      "fiabilidad": "C",
-     "frase_origen": "спричинило пожежі та матеріальні збитки",
+     "frase_origen": "несанкціоновані прольоти дронів та ракет",
      "id": "gdelt-6bed516ac852360b",
      "idioma": "uk",
      "medio": "liga.net",
@@ -47137,127 +48126,6 @@
    "titulo": {
     "en": "Six Russian drones penetrate Moldovan airspace",
     "es": "Seis drones rusos penetran el espacio aéreo de Moldavia"
-   }
-  },
-  {
-   "afirmaciones_publicas": [
-    {
-     "campo": "drones.numero",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-04T08:15Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-443fca8821a8c0c1",
-     "medio": "news.yam.md",
-     "valor": {
-      "max": 6,
-      "min": 6
-     }
-    },
-    {
-     "campo": "lugar.pais",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-04T08:15Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-443fca8821a8c0c1",
-     "medio": "news.yam.md",
-     "valor": "MD"
-    },
-    {
-     "campo": "tiempo.inicio",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-04T08:15Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-443fca8821a8c0c1",
-     "medio": "news.yam.md",
-     "valor": {
-      "precision": "dia",
-      "valor": "2026-10-03T00:00Z"
-     }
-    },
-    {
-     "campo": "tipo",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-04T08:15Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-443fca8821a8c0c1",
-     "medio": "news.yam.md",
-     "valor": "incursion"
-    }
-   ],
-   "consecuencias": {
-    "cierre": {
-     "valor": "desconocido"
-    }
-   },
-   "control": {
-    "ultima_actualizacion": {
-     "precision": "minuto",
-     "valor": "2026-10-04T09:17Z"
-    }
-   },
-   "drones": {
-    "numero": {
-     "max": 6,
-     "min": 6
-    }
-   },
-   "estado": {
-    "actual": "notificado",
-    "historial": [
-     {
-      "estado": "notificado",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-10-04T08:15Z"
-      },
-      "fuente_id": "gdelt-443fca8821a8c0c1"
-     }
-    ]
-   },
-   "fuentes": [
-    {
-     "credibilidad": 3,
-     "enlace": "https://news.yam.md/ro/story/71136284",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-04T08:15Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "sâmbătă dimineața",
-     "id": "gdelt-443fca8821a8c0c1",
-     "idioma": "ro",
-     "medio": "news.yam.md",
-     "replicas": 0
-    }
-   ],
-   "id": "EODI-2026-00427",
-   "lugar": {
-    "nivel": "pais",
-    "pais": "MD"
-   },
-   "presencia_dron": "no_confirmada",
-   "tiempo": {
-    "inicio": {
-     "precision": "dia",
-     "valor": "2026-10-03T00:00Z"
-    }
-   },
-   "tipo": "incursion",
-   "titulo": {
-    "en": "Six possible drones and missiles violate Moldova's airspace and explode in the south",
-    "es": "Seis posibles drones y cohetes violan el espacio aéreo de Moldavia y explotan en el sur"
    }
   }
  ]
