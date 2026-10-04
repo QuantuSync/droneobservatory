@@ -1,4 +1,5 @@
 import { afirmacionesDe, rangoDeFuentes, valorLegible } from "../datos/afirmaciones.ts";
+import { atribucionResumida } from "../datos/derivar.ts";
 import { cierre as leerCierre } from "../datos/efecto.ts";
 import type {
   AfirmacionPublica,
@@ -6,7 +7,7 @@ import type {
   PresenciaDron,
   RangoODesconocido,
 } from "../datos/tipos.ts";
-import { esRangoAbierto, fechaHora, instante, numero, pais, rango } from "../i18n/index.ts";
+import { esRangoAbierto, fechaHora, instante, numero, pais, rango, textoAtribuido } from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
 import type { Idioma } from "../sitio.ts";
 import { EstadoConTexto, Historial, ListaFuentes } from "./Fuentes.tsx";
@@ -138,6 +139,8 @@ function tieneCifra(valor: RangoODesconocido | undefined): boolean {
 
 export function FichaIncidente({ t, idioma, incidente }: Props) {
   const { tiempo, lugar, objetivo, drones, consecuencias, respuesta, atribucion } = incidente;
+  // El marcador de un atribuido: su bandera y, si es una persona, el punto.
+  const marcador = atribucionResumida(incidente);
   const titulo = incidente.titulo[idioma];
   const nombre = objetivo?.nombre ?? titulo;
   const vuelos: [RangoODesconocido | undefined, string, string][] = [
@@ -170,7 +173,7 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
   return (
     <article>
       <p className="rotulo flex items-center gap-2">
-        <Simbolo estado={incidente.estado.actual} />
+        <Simbolo estado={incidente.estado.actual} atribucion={marcador} />
         {t.tipo[incidente.tipo]}
       </p>
       <h2 className="text-xl font-semibold tracking-tight mt-1 text-2xl">{nombre}</h2>
@@ -181,7 +184,7 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
         <Fila nombre={t.ficha.estado}>
           {incidente.estado.actual === "atribuido" && atribucion !== undefined ? (
             <span className="inline-flex items-center gap-1.5" data-estado-atribuido="">
-              <Simbolo estado="atribuido" />
+              <Simbolo estado="atribuido" atribucion={marcador} etiqueta={textoAtribuido(t, idioma, marcador)} />
               {t.ficha.confirmadoAtribuido(atribucion.actor, atribucion.autoridad)}
             </span>
           ) : (
@@ -330,6 +333,7 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
         t={t}
         historial={incidente.estado.historial}
         fuentes={incidente.fuentes}
+        atribucion={marcador}
       />
       <p className="mono mt-4 text-xs text-secundario">
         {t.ficha.actualizada}: {fechaHora(incidente.control.ultima_actualizacion.valor)}

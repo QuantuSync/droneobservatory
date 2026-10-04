@@ -261,13 +261,25 @@ export interface Textos {
     instrucciones: string;
     grupo: (n: number) => string;
     pila: (n: number) => string;
-    /** Varias banderas de atribuidos juntas al alejar el mapa. */
-    banderas: (n: number) => string;
+    /** Varios atribuidos juntos en un marcador al alejar el mapa. */
+    atribuidos: (n: number) => string;
     grupoImpactos: (n: number) => string;
     impacto: (parte: boolean, foco: boolean) => string;
   };
   tipo: Record<Tipo, string>;
   estado: Record<Estado, string>;
+  /** Marcador de los atribuidos: texto alternativo y leyenda. */
+  atribucion: {
+    aEstado: (pais: string) => string;
+    aEstadoSinPais: string;
+    aPersonaDe: (gentilicio: string) => string;
+    aPersonaDePais: (pais: string) => string;
+    aPersona: string;
+    leyendaEstado: string;
+    leyendaPersona: string;
+    /** Qué es la bandera: la del país al que la autoridad lo atribuye. */
+    bandera: string;
+  };
   presencia: Record<PresenciaDron, string>;
   precision: Record<Precision, string>;
   categoria: Record<CategoriaObjetivo, string>;

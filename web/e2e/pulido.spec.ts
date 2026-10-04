@@ -22,7 +22,6 @@ const TELEFONOS = [
   { nombre: "412x915", width: 412, height: 915 },
 ];
 const ESCRITORIO = { nombre: "escritorio", width: 1440, height: 900 };
-const ATRIBUIDOS = ["EODI-2026-00015", "EODI-2026-00074", "EODI-2026-00283"];
 /** Una visita anterior lejana: todo lo publicado después cuenta como novedad. */
 const VISITA_ANTIGUA = "2026-09-01T00:00:00.000Z";
 const MS_POR_DIA = 86_400_000;
@@ -194,70 +193,23 @@ for (const tamano of [...TELEFONOS, ESCRITORIO]) {
         await capturar(page, `2-menu-${nombre}`);
       }
       // Las cuatro cifras: el número arriba (o a la izquierda en la cabecera) y el texto después,
-      // con la bandera junto al número.
+      // con el marcador de los atribuidos junto al número.
       const cifras = page.locator("dl[aria-label]").filter({ visible: true }).first();
       const estructura = await cifras.evaluate((dl) =>
         [...dl.children].map((par) => {
           const dd = par.querySelector("dd")?.getBoundingClientRect();
           const dt = par.querySelector("dt")?.getBoundingClientRect();
-          const bandera = par.querySelector("[data-bandera]")?.getBoundingClientRect();
+          const marca = par.querySelector("[data-atribuido]")?.getBoundingClientRect();
           return {
             numeroAntes: dd !== undefined && dt !== undefined && (dd.bottom <= dt.top + 1 || dd.right <= dt.left + 1),
-            banderaEnElNumero:
-              bandera === undefined || (dd !== undefined && bandera.top >= dd.top - 2 && bandera.bottom <= dd.bottom + 2),
+            marcaEnElNumero:
+              marca === undefined || (dd !== undefined && marca.top >= dd.top - 2 && marca.bottom <= dd.bottom + 2),
           };
         }),
       );
       expect(estructura).toHaveLength(4);
-      for (const par of estructura) expect(par).toEqual({ numeroAntes: true, banderaEnElNumero: true });
+      for (const par of estructura) expect(par).toEqual({ numeroAntes: true, marcaEnElNumero: true });
       await capturar(page, `3-cifras-${nombre}`);
-    });
-
-    test(`${nombre}: 4. la bandera de los atribuidos`, async ({ page, context, baseURL }) => {
-      await preparar(context, baseURL);
-      await entrar(page, "/", false);
-      await expect(page.locator(MAPA_LISTO)).toHaveAttribute("data-iconos", /\bbandera\b/);
-      await capturar(page, `4-mapa-${nombre}`);
-      for (const id of ATRIBUIDOS) {
-        await page.goto(`/${id}`);
-        await page.waitForSelector(MAPA_LISTO);
-        const ficha = page.getByRole("complementary", { name: new RegExp(id) });
-        await expect(ficha.locator("[data-bandera]").first()).toBeVisible();
-        await capturar(page, `4-${id}-${nombre}`);
-      }
-    });
-
-    test(`${nombre}: 4. la bandera ampliada, junto a los círculos`, async ({ browser, baseURL }) => {
-      // Densidad 4 para ver el dibujo de cerca: paño rojo relleno, mástil algo más oscuro y un
-      // filo oscuro de 1 px, sin reborde claro.
-      const contexto = await browser.newContext({
-        viewport: { width: tamano.width, height: tamano.height },
-        isMobile: telefono,
-        hasTouch: telefono,
-        deviceScaleFactor: 4,
-        ...(baseURL === undefined ? {} : { baseURL }),
-      });
-      await preparar(contexto, baseURL);
-      const pagina = await contexto.newPage();
-      for (const id of ATRIBUIDOS) {
-        await entrar(pagina, `/${id}`, false);
-        const ficha = pagina.getByRole("complementary", { name: new RegExp(id) });
-        await expect(ficha).toBeVisible();
-        await pagina.waitForTimeout(MS_DE_ASENTAMIENTO);
-        // El mapa deja el incidente en el centro del hueco libre entre la cabecera y la ficha.
-        const cabecera = await pagina.locator("header").filter({ visible: true }).first().boundingBox();
-        const hoja = await ficha.boundingBox();
-        if (cabecera === null || hoja === null) throw new Error("sin medidas");
-        const arriba = cabecera.y + cabecera.height;
-        const x = telefono ? tamano.width / 2 : hoja.x / 2;
-        const y = telefono ? (arriba + hoja.y) / 2 : (arriba + tamano.height) / 2;
-        await pagina.screenshot({
-          path: join(CAPTURAS, `pulido-4-ampliada-${id}-${nombre}.png`),
-          // El pie queda en el centro del hueco y la bandera sube unos 35 px desde él.
-          clip: { x: x - 80, y: y - 85, width: 160, height: 110 },
-        });
-      }
-      await contexto.close();
     });
 
     test(`${nombre}: 5. la leyenda de la presión dice el periodo`, async ({ page, context, baseURL }) => {
@@ -339,24 +291,6 @@ for (const tamano of [...TELEFONOS, ESCRITORIO]) {
         await expect(panel).toContainText(new Intl.NumberFormat("es").format(noche.lanzados ?? 0));
         await capturar(page, `7b-noche-a-noche-${nombreNoche}-${nombre}`);
       }
-    });
-
-    test(`${nombre}: 4c. Chisináu: una bandera con un «2» al alejar y dos al acercar`, async ({ page, context, baseURL }) => {
-      await preparar(context, baseURL);
-      const chisinau = "EODI-2026-00074";
-      await entrar(page, `/${chisinau}`, false);
-      const ficha = page.getByRole("complementary", { name: new RegExp(chisinau) });
-      await expect(ficha).toBeVisible();
-      await page.waitForTimeout(MS_DE_ASENTAMIENTO);
-      await capturar(page, `4c-chisinau-cerca-${nombre}`);
-      // Se cierra la ficha y se aleja con el teclado del mapa hasta el zoom de los grupos.
-      await ficha.getByRole("button", { name: "Cerrar la ficha" }).click();
-      await page.locator(".maplibregl-canvas").focus();
-      for (let i = 0; i < 3; i += 1) {
-        await page.keyboard.press("Minus");
-        await page.waitForTimeout(700);
-      }
-      await capturar(page, `4c-chisinau-lejos-${nombre}`);
     });
 
     test(`${nombre}: 8. «Últimas 24 horas» cuenta 24 horas y coincide con «En directo»`, async ({ page, context, baseURL }) => {

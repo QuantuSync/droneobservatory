@@ -6,7 +6,7 @@ import { numero } from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
 import { movimientoReducido } from "../mapa/animacion.ts";
 import type { Idioma } from "../sitio.ts";
-import { IconoBandera } from "./Simbolo.tsx";
+import { MarcaAtribuido } from "./Simbolo.tsx";
 
 /** Lo que tarda una cifra en contar hacia arriba al cargar. */
 const MS_CUENTA = 900;
@@ -117,7 +117,7 @@ export function Marcador({ t, idioma, cifras, animar, forma = "linea" }: Props) 
         activa={animar}
         forma={forma}
         color="text-atribuido"
-        marca={<IconoBandera lado={forma === "linea" ? 12 : 18} />}
+        marca={<MarcaAtribuido lado={forma === "linea" ? 12 : 18} />}
       />
       <Cifra valor={cifras.paises} rotulo={t.marcador.paises} idioma={idioma} activa={animar} forma={forma} />
     </dl>

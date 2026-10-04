@@ -1,4 +1,4 @@
-// Forma de los ficheros públicos de publicacion/ (esquema 1.9.0, solo campos públicos)
+// Forma de los ficheros públicos de publicacion/ (esquema 1.10.0, solo campos públicos)
 // y de los resúmenes que la web deriva de ellos en el build.
 
 export type Estado = "notificado" | "confirmado" | "atribuido" | "desmentido";
@@ -149,7 +149,7 @@ export interface PropiedadesIncidente {
     fallecidos?: RangoODesconocido;
   };
   respuesta?: { medidas?: Medida[] };
-  atribucion?: { actor: string; autoridad: string; fecha: Instante };
+  atribucion?: Atribucion;
   foco_termico?: FocoTermico;
   trafico_aereo?: TraficoAereo;
   fuentes: Fuente[];
@@ -318,6 +318,27 @@ export interface PublicacionUcrania {
 // ---- Resúmenes derivados ---------------------------------------------------------
 
 /** Lo que el mapa, la línea de tiempo y los contadores necesitan de un incidente. */
+/** A quién atribuye una autoridad un incidente: un Estado o una persona. */
+export type TipoActor = "estado" | "persona";
+
+/**
+ * Atribución de un incidente atribuido. El tipo y el país llegan desde el esquema 1.10.0; el
+ * país es el del Estado o la nacionalidad de la persona, solo si la autoridad la dice.
+ */
+export interface Atribucion {
+  actor: string;
+  autoridad: string;
+  fecha: Instante;
+  tipo?: TipoActor;
+  pais?: string;
+}
+
+/** Lo que el mapa y la lista necesitan de una atribución para dibujar su marcador. */
+export interface AtribucionResumen {
+  tipo: TipoActor | null;
+  pais: string | null;
+}
+
 export interface IncidenteResumen {
   id: string;
   /** Punto y radio de precisión; null si el lugar solo se conoce a nivel de país o región. */
@@ -337,6 +358,8 @@ export interface IncidenteResumen {
   episodio: string | null;
   /** Si tiene un foco térmico detectado por satélite: el mapa le pone su marca. */
   foco: boolean;
+  /** Solo en los atribuidos: el tipo de actor y su país, para su marcador. */
+  atribucion: AtribucionResumen | null;
 }
 
 export interface EpisodioResumen {

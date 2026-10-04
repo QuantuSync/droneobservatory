@@ -83,21 +83,6 @@
   will-change: opacity;
 }
 
-/* Un atribuido late con la silueta de su bandera, sin ningún círculo: un trazo fino sobre
-   su borde. El pie va en el punto (top y left los pone src/mapa/pulsos.ts). */
-.pulso-bandera {
-  position: absolute;
-  overflow: visible;
-  fill: none;
-  stroke: var(--acento);
-  stroke-width: 2;
-  stroke-linejoin: round;
-  stroke-linecap: round;
-  opacity: 0.85;
-  animation: latido 2.4s ease-in-out infinite;
-  will-change: opacity;
-}
-
 @keyframes latido {
   0%,
   100% {
@@ -109,8 +94,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .pulso,
-  .pulso-bandera {
+  .pulso {
     animation: none;
     opacity: 0.85;
   }

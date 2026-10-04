@@ -7,13 +7,15 @@
 // principal (y que para con la pestaña en segundo plano o con movimiento reducido). Aquí
 // solo se decide dónde va cada uno; se recoloca cuando el mapa se mueve.
 
-import { BANDERA, trazadoBandera } from "../paleta.ts";
+import { MARCA_ATRIBUIDO } from "../paleta.ts";
 import { radioDeGrupo } from "./estilo.ts";
 
 /** Radio del contorno que late alrededor de un símbolo suelto. */
 export const RADIO_PULSO = 11;
 /** Separación del anillo de un grupo respecto a su círculo. */
 export const SEPARACION_PULSO_GRUPO = 3;
+/** Radio del anillo que late alrededor del marcador de un atribuido (solo o con otros). */
+export const RADIO_PULSO_ATRIBUIDO = MARCA_ATRIBUIDO.radio + MARCA_ATRIBUIDO.halo + SEPARACION_PULSO_GRUPO;
 
 export interface Pulso {
   /** Identifica el pulso entre recolocaciones: el incidente, la pila o el grupo. */
@@ -21,8 +23,6 @@ export interface Pulso {
   x: number;
   y: number;
   radio: number;
-  /** Un atribuido suelto late con la forma de su bandera, no con un anillo. */
-  forma: "anillo" | "bandera";
 }
 
 /** Lo que devuelve MapLibre de cada símbolo o grupo dibujado, en lo que aquí importa. */
@@ -62,18 +62,17 @@ export function pulsosDe(
     if (!nuevo) continue;
     let pulso: Omit<Pulso, "x" | "y">;
     if (numero(p.atribuido) === 1) {
-      // Una bandera (sola o con otras juntas) late con su silueta, nunca con un anillo.
-      const clave = "cluster_id" in p ? `banderas-${String(p.cluster_id)}` : esGrupo ? `pila-${String(p.ids)}` : String(p.id);
-      pulso = { clave, radio: BANDERA.mastil, forma: "bandera" };
+      // Un atribuido (solo o con otros) late con un anillo alrededor de su marcador.
+      const clave = "cluster_id" in p ? `atribuidos-${String(p.cluster_id)}` : esGrupo ? `pila-${String(p.ids)}` : String(p.id);
+      pulso = { clave, radio: RADIO_PULSO_ATRIBUIDO };
     } else if (esGrupo) {
       const cuenta = "total" in p ? numero(p.total) : numero(p.n);
       pulso = {
         clave: "cluster_id" in p ? `grupo-${String(p.cluster_id)}` : `pila-${String(p.ids)}`,
         radio: radioDeGrupo(cuenta) + SEPARACION_PULSO_GRUPO,
-        forma: "anillo",
       };
     } else {
-      pulso = { clave: String(p.id), radio: RADIO_PULSO, forma: "anillo" };
+      pulso = { clave: String(p.id), radio: RADIO_PULSO };
     }
     if (vistos.has(pulso.clave)) continue;
     const { x, y } = proyectar(lugar[0], lugar[1]);
@@ -96,20 +95,15 @@ export function colocarPulsos(capa: HTMLElement, pulsos: readonly Pulso[]): void
   for (const pulso of pulsos) {
     let sitio = previos.get(pulso.clave);
     previos.delete(pulso.clave);
-    if (sitio !== undefined && sitio.dataset.forma !== pulso.forma) {
-      sitio.remove();
-      sitio = undefined;
-    }
     if (sitio === undefined) {
       sitio = document.createElement("span");
       sitio.dataset.clave = pulso.clave;
-      sitio.dataset.forma = pulso.forma;
       sitio.className = "pulso-sitio";
-      sitio.append(pulso.forma === "bandera" ? banderaQueLate() : document.createElement("span"));
+      sitio.append(document.createElement("span"));
       capa.append(sitio);
     }
     const marca = sitio.firstElementChild;
-    if (marca instanceof HTMLElement && pulso.forma === "anillo") {
+    if (marca instanceof HTMLElement) {
       if (marca.className !== "pulso") marca.className = "pulso";
       const lado = `${2 * pulso.radio}px`;
       marca.style.width = lado;
@@ -119,22 +113,4 @@ export function colocarPulsos(capa: HTMLElement, pulsos: readonly Pulso[]): void
     sitio.style.transform = `translate(${pulso.x.toFixed(1)}px, ${pulso.y.toFixed(1)}px)`;
   }
   for (const sobrante of previos.values()) sobrante.remove();
-}
-
-const SVG = "http://www.w3.org/2000/svg";
-
-/** La silueta de la bandera, del tamaño del icono y con el pie en el punto, que late. */
-function banderaQueLate(): SVGSVGElement {
-  const svg = document.createElementNS(SVG, "svg");
-  svg.setAttribute("class", "pulso-bandera");
-  svg.setAttribute("viewBox", `0 0 ${BANDERA.ancho} ${BANDERA.alto}`);
-  svg.setAttribute("width", String(BANDERA.ancho));
-  svg.setAttribute("height", String(BANDERA.alto));
-  // El pie del mástil, en el punto del sitio.
-  svg.style.left = `${-BANDERA.pie[0]}px`;
-  svg.style.top = `${-BANDERA.pie[1]}px`;
-  const trazo = document.createElementNS(SVG, "path");
-  trazo.setAttribute("d", trazadoBandera(BANDERA));
-  svg.append(trazo);
-  return svg;
 }

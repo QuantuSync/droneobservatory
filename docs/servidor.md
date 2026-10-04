@@ -390,6 +390,20 @@ hasta 10 por hora. El resumen queda en el cursor:
 sudo -u eodi sh -c 'cd /home/eodi/droneobservatory && journalctl -u eodi-recogida -n 400 | grep "criterio de presencia"'
 ```
 
+## Tipo de actor y país de las atribuciones (una vez)
+
+[`recogida/tipo_atribucion.py`](../recogida/tipo_atribucion.py) lo aplica la propia recogida
+horaria, justo después del criterio de presencia, una vez por versión (cursor `tipo_atribucion`):
+clasifica cada atribución guardada (Estado o persona, y su país) leyendo la frase guardada de la
+autoridad que atribuye ([`proceso/atribucion.py`](../proceso/atribucion.py)); si la frase no nombra a
+quien se atribuye, el incidente vuelve al estado anterior. Cada cambio es una versión nueva con su
+motivo en el historial. No lanza ningún trabajo aparte. Informe:
+[`informe_marcador_atribuido.md`](informe_marcador_atribuido.md).
+
+```
+sudo -u eodi sh -c 'cd /home/eodi/droneobservatory && journalctl -u eodi-recogida -n 400 | grep "atribuciones clasificadas"'
+```
+
 ## Detección en directo de cierres
 
 Informe: [`informe_europa_directo.md`](informe_europa_directo.md). Cada minuto, las posiciones en

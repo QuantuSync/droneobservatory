@@ -124,6 +124,7 @@ function incidenteResumen() {
     objetivo: null,
     episodio: null,
     foco: false,
+    atribucion: null,
   };
 }
 

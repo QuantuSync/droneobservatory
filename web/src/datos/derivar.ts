@@ -5,6 +5,8 @@ import { diaDeInstante } from "../tiempo/dias.ts";
 import { lucesDeAtaques, origenesDeAtaques } from "./guerraSatelite.ts";
 import type {
   Ataque,
+  Atribucion,
+  AtribucionResumen,
   ColeccionIncidentes,
   EpisodioResumen,
   Estado,
@@ -52,6 +54,15 @@ function instanteConHora(inicio: Instante): number | null {
   return Number.isNaN(ms) ? null : ms;
 }
 
+/** Tipo de actor y país de un atribuido (null en los demás estados). */
+export function atribucionResumida(p: {
+  estado: { actual: Estado };
+  atribucion?: Atribucion;
+}): AtribucionResumen | null {
+  if (p.estado.actual !== "atribuido") return null;
+  return { tipo: p.atribucion?.tipo ?? null, pais: p.atribucion?.pais ?? null };
+}
+
 export function resumirIncidente(feature: FeatureIncidente): IncidenteResumen {
   const p = feature.properties;
   const [lon, lat] = feature.geometry.coordinates;
@@ -69,6 +80,7 @@ export function resumirIncidente(feature: FeatureIncidente): IncidenteResumen {
     objetivo: p.objetivo?.nombre ?? null,
     episodio: p.episodio ?? null,
     foco: p.foco_termico !== undefined,
+    atribucion: atribucionResumida(p),
   };
 }
 
@@ -87,6 +99,7 @@ export function resumirSinUbicacion(p: PropiedadesSinUbicacion): IncidenteResume
     objetivo: p.objetivo?.nombre ?? null,
     episodio: p.episodio ?? null,
     foco: p.foco_termico !== undefined,
+    atribucion: atribucionResumida(p),
   };
 }
 

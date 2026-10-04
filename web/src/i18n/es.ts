@@ -258,10 +258,11 @@ export const es: Textos = {
     colores:
       "Cada incidente es un círculo relleno del color de su estado: naranja, notificado; " +
       "rojo, confirmado. El desmentido es un círculo gris de borde discontinuo, sin relleno. " +
-      "Un atribuido (un confirmado del que un gobierno ha señalado al responsable) es solo una " +
-      "bandera roja, mayor que un círculo: el pie del mástil marca el lugar. Va siempre por " +
-      "encima de todo y no se agrupa nunca con otros. El tipo de incidente va escrito en la " +
-      "ficha, la lista y los filtros.",
+      "Un atribuido (un confirmado que una autoridad atribuye a un Estado o a una persona) es " +
+      "un círculo algo mayor, con un aro rojo grueso y, dentro, la bandera del país al que se " +
+      "atribuye; atribuido a una persona, lleva además un punto oscuro fijo en el centro. Va " +
+      "siempre por encima de todo y no se agrupa con los círculos. El tipo de incidente va " +
+      "escrito en la ficha, la lista y los filtros.",
     periodo:
       "El botón «Filtros» abre el periodo (todo, las últimas 24 horas, los últimos 7 o 30 " +
       "días, el último año o entre dos fechas) y los filtros de estado, tipo y país. Con un " +
@@ -275,8 +276,7 @@ export const es: Textos = {
       "blanco, las novedades desde tu visita anterior: dentro, «Verlas» las recorre una a una " +
       "y «Descartar» las quita.",
     areas:
-      "Cada incidente ocupa un área: el círculo es el radio en que se sabe que ocurrió (en los " +
-      "atribuidos, el lugar lo marca el pie de la bandera).",
+      "Cada incidente ocupa un área: el círculo es el radio en que se sabe que ocurrió.",
     lineas: "Una línea fina une los incidentes de un mismo episodio: varios objetivos en una noche.",
     numeros:
       "Un círculo con un número dentro junta varios incidentes (el de un solo incidente va " +
@@ -358,7 +358,7 @@ export const es: Textos = {
       "zoom. La lista de incidentes da acceso a las mismas fichas sin usar el mapa.",
     grupo: (n) => (n === 1 ? "1 incidente: acerca para verlo" : `${n} incidentes: acerca para verlos`),
     pila: (n) => `${n} incidentes en este mismo punto: pulsa para elegir uno`,
-    banderas: (n) => `${n} incidentes atribuidos: acerca para separarlos`,
+    atribuidos: (n) => `${n} incidentes atribuidos: acerca para separarlos`,
     grupoImpactos: (n) => `${n} impactos con lugar: acerca para verlos`,
     impacto: (parte, foco) =>
       `Impacto con lugar${parte ? " · reivindicación de parte" : ""}${foco ? " · foco térmico" : ""}`,
@@ -373,6 +373,20 @@ export const es: Textos = {
     confirmado: "Confirmado",
     atribuido: "Atribuido",
     desmentido: "Desmentido",
+  },
+  atribucion: {
+    aEstado: (pais) => `Atribuido a ${pais}`,
+    aEstadoSinPais: "Atribuido a un Estado",
+    aPersonaDe: (gentilicio) => `Atribuido a una persona de nacionalidad ${gentilicio}`,
+    aPersonaDePais: (pais) => `Atribuido a una persona con nacionalidad de ${pais}`,
+    aPersona: "Atribuido a una persona",
+    leyendaEstado: "Atribuido por una autoridad a un Estado",
+    leyendaPersona: "Atribuido por una autoridad a una persona",
+    bandera:
+      "Dentro del aro rojo, la bandera del país al que la autoridad atribuye el incidente (el " +
+      "Estado o la nacionalidad de la persona, si la autoridad la dice); no es una afirmación " +
+      "del observatorio. Sin país, el aro va relleno de rojo. Una persona lleva además un punto " +
+      "oscuro en el centro.",
   },
   presencia: {
     confirmada: "Dron confirmado",
@@ -682,8 +696,17 @@ export const es: Textos = {
                 termino: "Atribuido",
                 marca: { estado: "atribuido" },
                 texto: [
-                  "Un confirmado del que una autoridad señala a un gobierno como responsable: " +
-                    "en el mapa, una bandera roja, más grande que un círculo y por encima de todo, cuyo pie marca el lugar. La ficha lo muestra como " +
+                  "Un confirmado que una autoridad atribuye a un Estado o a una persona. Solo cuenta " +
+                    "si la frase citada de la autoridad nombra a quien se atribuye. En el mapa, un " +
+                    "círculo con un aro rojo grueso, mayor que el de un incidente y por encima de " +
+                    "todo, centrado en el lugar: dentro, la bandera del país al que la autoridad lo " +
+                    "atribuye, el Estado o la nacionalidad de la persona (esta, solo si la autoridad " +
+                    "la dice expresamente; nunca se deduce del nombre, del lugar ni del idioma). Sin " +
+                    "país, o con un país sin bandera en la web, el aro va relleno de rojo. Atribuido " +
+                    "a una persona, lleva además un punto oscuro fijo en el centro. La bandera es la " +
+                    "que da la autoridad, no una afirmación del observatorio. Varios atribuidos " +
+                    "juntos al alejar el mapa son un marcador con su número; si son de países " +
+                    "distintos, va relleno de rojo, sin bandera. La ficha lo muestra como " +
                     "«Confirmado · atribuido a…», con quién atribuye y a quién.",
                 ],
               },

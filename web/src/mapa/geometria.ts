@@ -3,6 +3,7 @@
 
 import type { Feature, FeatureCollection, LineString, Point, Polygon } from "geojson";
 
+import { indiceBandera, varianteConjunta, varianteDe } from "../banderas.ts";
 import { esGrave } from "../datos/derivar.ts";
 import type {
   EpisodioResumen,
@@ -108,6 +109,12 @@ export interface PropiedadesPila {
   novedad: 0 | 1;
   /** 1 si alguno tiene un foco térmico detectado por satélite. */
   foco: 0 | 1;
+  /**
+   * Marcador de los atribuidos del punto (banderas.ts): índice de la bandera común (-1 sin
+   * bandera o de países distintos) y 1 si todos son personas.
+   */
+  bandera: number;
+  persona: 0 | 1;
 }
 
 /**
@@ -131,6 +138,9 @@ export function pilas(
     const primero = ordenados[0];
     if (primero === undefined) continue;
     const cuenta = (estado: Estado) => ordenados.filter((i) => i.estado === estado).length;
+    const marcador = varianteConjunta(
+      ordenados.filter((i) => i.estado === "atribuido").map((i) => varianteDe(i.atribucion)),
+    );
     features.push({
       type: "Feature",
       geometry: { type: "Point", coordinates: [primero.punto.lon, primero.punto.lat] },
@@ -147,6 +157,8 @@ export function pilas(
         reciente: ordenados.some((i) => incidenteEnPeriodo(i, opciones.recientes)) ? 1 : 0,
         novedad: ordenados.some((i) => opciones.novedades.has(i.id)) ? 1 : 0,
         foco: ordenados.some((i) => i.foco) ? 1 : 0,
+        bandera: indiceBandera(marcador.bandera),
+        persona: marcador.persona ? 1 : 0,
       },
     });
   }
@@ -154,12 +166,12 @@ export function pilas(
 }
 
 /**
- * Una bandera por punto con atribuidos: no se juntan con los círculos ni con sus grupos, para
+ * Un marcador por punto con atribuidos: no se juntan con los círculos ni con sus grupos, para
  * que el estado más grave siempre esté a la vista. Varios atribuidos en el mismo punto exacto
- * son una sola bandera con su número (y una lista para elegir); los cercanos los junta la
- * agrupación propia de las banderas al alejar.
+ * son un solo marcador con su número (y una lista para elegir); los cercanos los junta la
+ * agrupación propia de los atribuidos al alejar.
  */
-export function banderas(
+export function atribuidos(
   incidentes: readonly IncidenteResumen[],
   opciones: { recientes: Periodo; novedades: ReadonlySet<string> },
 ): FeatureCollection<Point, PropiedadesPila> {
@@ -169,7 +181,7 @@ export function banderas(
   );
 }
 
-/** Lo que va en círculos y grupos: todo menos los atribuidos, que llevan su bandera. */
+/** Lo que va en círculos y grupos: todo menos los atribuidos, que llevan su marcador. */
 export function sinAtribuidos(incidentes: readonly IncidenteResumen[]): IncidenteResumen[] {
   return incidentes.filter((i) => i.estado !== "atribuido");
 }

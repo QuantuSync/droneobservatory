@@ -5,7 +5,7 @@ import { ATAJOS } from "../estado/atajos.ts";
 import type { Textos } from "../i18n/index.ts";
 import { PALETA } from "../paleta.ts";
 import { MarcaFoco } from "./FocoTermico.tsx";
-import { Simbolo } from "./Simbolo.tsx";
+import { MarcaAtribuido, Simbolo } from "./Simbolo.tsx";
 
 interface Props {
   t: Textos;
@@ -144,13 +144,29 @@ export function Ayuda({ t, abierta, onCerrar }: Props) {
         <section className="sm:col-span-2">
           <p className="text-secundario">{a.colores}</p>
           <ul className="mt-2 flex flex-col gap-1" data-leyenda-estados="">
-            {ESTADOS.map((estado) => (
-              <li key={estado} className="flex items-center gap-2">
-                <Simbolo estado={estado} />
-                {t.estado[estado]}
-              </li>
-            ))}
+            {ESTADOS.flatMap((estado) =>
+              estado === "atribuido"
+                ? [
+                    <li key="atribuido-estado" className="flex items-center gap-2" data-leyenda-atribuido="estado">
+                      <MarcaAtribuido />
+                      {t.atribucion.leyendaEstado}
+                    </li>,
+                    <li key="atribuido-persona" className="flex items-center gap-2" data-leyenda-atribuido="persona">
+                      <MarcaAtribuido variante={{ bandera: null, persona: true }} />
+                      {t.atribucion.leyendaPersona}
+                    </li>,
+                  ]
+                : [
+                    <li key={estado} className="flex items-center gap-2">
+                      <Simbolo estado={estado} />
+                      {t.estado[estado]}
+                    </li>,
+                  ],
+            )}
           </ul>
+          <p className="mt-2 text-secundario" data-leyenda-bandera="">
+            {t.atribucion.bandera}
+          </p>
         </section>
         <ul className="flex flex-col gap-2 text-secundario sm:col-span-2">
           {[a.periodo, a.ahora, a.areas, a.lineas, a.numeros, a.pila, a.pulsos, a.reciente, a.novedad, a.ucrania].map(

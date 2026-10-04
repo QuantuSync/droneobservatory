@@ -165,6 +165,7 @@ function resumenDe(cambios: { pais: string; dia: number; estado?: IncidenteResum
       objetivo: null,
       episodio: null,
       foco: false,
+      atribucion: null,
     }),
   );
 }

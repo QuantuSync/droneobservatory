@@ -171,6 +171,8 @@ CAMPOS_PUBLICOS_INCIDENTE: frozenset[str] = frozenset(
         "atribucion",
         "atribucion.actor",
         "atribucion.autoridad",
+        "atribucion.tipo",
+        "atribucion.pais",
         *_instante("atribucion.fecha"),
         *_fuentes(),
         *_afirmaciones(),

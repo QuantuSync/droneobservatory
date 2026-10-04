@@ -110,7 +110,7 @@ export function Feed({
                     data-id={evento.id}
                     onClick={() => onAbrir(evento.id)}
                   >
-                    <Simbolo estado={evento.estado} className="mt-0.5 shrink-0" />
+                    <Simbolo estado={evento.estado} atribucion={incidente.atribucion} className="mt-0.5 shrink-0" />
                     <span className="min-w-0 flex-1">
                       <span className="flex items-baseline gap-2 text-xs text-secundario">
                         <span className={novedades.has(evento.id) ? "text-acento" : ""}>

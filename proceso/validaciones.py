@@ -11,6 +11,7 @@ from datetime import UTC, date, datetime
 from typing import Any, TypeIs
 
 from esquema import Documento, Esquema, validador
+from proceso import atribucion
 from proceso.credibilidad import FIABILIDAD_INTERNA, Fiabilidad
 from proceso.estados import Capa, Estado, errores_historial
 from proceso.fronteras import dentro_del_pais
@@ -330,6 +331,9 @@ def errores_incidente(documento: Documento, vocabulario_modelos: frozenset[str])
         errores.append(Error("atribucion", "estado atribuido sin atribución"))
     if "atribucion" in documento and not atribuido:
         errores.append(Error("atribucion", "atribución con estado distinto de atribuido"))
+    # Tipo de actor y país, coherentes con la frase de la autoridad que atribuye (la
+    # nacionalidad de una persona, solo si la frase la dice).
+    errores += [Error("atribucion", e) for e in atribucion.errores(documento)]
 
     return errores + errores_tipo(documento)
 

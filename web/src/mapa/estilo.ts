@@ -13,12 +13,11 @@ import type {
 import { OBJETO_TESELAS, urlDelAlmacen } from "../almacenPublico.ts";
 import { OPACIDAD_GNSS } from "../datos/gnss.ts";
 import { ESTADOS } from "../datos/vocabulario.ts";
-import { COLOR_ESTADO, PALETA, TRAZO_DESMENTIDO } from "../paleta.ts";
+import { COLOR_ESTADO, MARCA_ATRIBUIDO, PALETA, TRAZO_DESMENTIDO } from "../paleta.ts";
+import { PREFIJO_ICONO_ATRIBUIDO, SUFIJO_PERSONA } from "../banderas.ts";
 import {
-  DESPLAZAMIENTO_BANDERA,
+  ESCALA_ATRIBUIDO_ELEGIDO,
   ETIQUETA_AVISO,
-  ICONO_BANDERA,
-  ESCALA_BANDERA_ELEGIDA,
   ICONO_OBSTACULO,
   LADO_OBSTACULO,
   RADIO_INCIDENTE,
@@ -35,8 +34,8 @@ export const FUENTE_TIERRA = "tierra";
 export const FUENTE_PAISES = "paises";
 export const FUENTE_PUNTOS = "incidentes";
 export const FUENTE_PUNTOS_SUELTOS = "incidentes-sueltos";
-/** Los atribuidos, cada uno con su bandera: no se agrupan nunca. */
-export const FUENTE_BANDERAS = "banderas";
+/** Los atribuidos, con su propio marcador: nunca entran en los grupos de los círculos. */
+export const FUENTE_ATRIBUIDOS = "atribuidos";
 export const FUENTE_AREAS = "areas";
 export const FUENTE_EPISODIOS = "episodios";
 export const FUENTE_SELECCION = "seleccion";
@@ -63,8 +62,8 @@ export const CAPA_REGION_ELEGIDA = "ucrania-elegida";
 export const CAPA_PAIS = "pais-resaltado";
 export const CAPA_RECIENTES = "recientes";
 export const CAPA_SELECCION = "seleccion";
-export const CAPA_SELECCION_BANDERA = "seleccion-bandera";
-export const CAPA_FOCOS_BANDERA = "focos-termicos-bandera";
+export const CAPA_SELECCION_ATRIBUIDO = "seleccion-atribuido";
+export const CAPA_FOCOS_ATRIBUIDOS = "focos-termicos-atribuidos";
 export const CAPA_EPISODIOS = "episodios";
 export const CAPA_FOCOS = "focos-termicos";
 export const CAPA_FOCOS_UCRANIA = "ucrania-focos-termicos";
@@ -93,8 +92,8 @@ export const CAPA_LUZ_REGIONES_RUSIA = "rusia-luz";
 export const CAPA_LUZ_CIUDADES = "guerra-luz-ciudades";
 export const CAPA_ALUMBRADO = "guerra-alumbrado";
 export const CAPA_ALUMBRADO_PUNTO = "guerra-alumbrado-punto";
-export const CAPA_BANDERAS = "banderas";
-export const CAPA_NUMERO_BANDERAS = "banderas-numero";
+export const CAPA_ATRIBUIDOS = "atribuidos";
+export const CAPA_NUMERO_ATRIBUIDOS = "atribuidos-numero";
 export const CAPA_OBSTACULOS = "obstaculos";
 export const CAPA_OBSTACULOS_IMPACTOS = "guerra-impactos-obstaculos";
 
@@ -102,7 +101,7 @@ export const CAPA_OBSTACULOS_IMPACTOS = "guerra-impactos-obstaculos";
  * corredores van aparte, con su zona sensible (seleccion.ts). */
 export const CAPAS_PULSABLES: readonly string[] = [
   CAPA_DIRECTO,
-  CAPA_BANDERAS,
+  CAPA_ATRIBUIDOS,
   CAPA_INCIDENTES_GRAVES,
   CAPA_INCIDENTES_DISCRETOS,
   CAPA_GRUPOS,
@@ -129,11 +128,11 @@ export const CAPAS_DE_INCIDENTES: readonly string[] = [
   CAPA_INCIDENTES_DISCRETOS,
   CAPA_INCIDENTES_GRAVES,
   CAPA_FOCOS,
-  CAPA_BANDERAS,
-  CAPA_NUMERO_BANDERAS,
-  CAPA_FOCOS_BANDERA,
+  CAPA_ATRIBUIDOS,
+  CAPA_NUMERO_ATRIBUIDOS,
+  CAPA_FOCOS_ATRIBUIDOS,
   CAPA_SELECCION,
-  CAPA_SELECCION_BANDERA,
+  CAPA_SELECCION_ATRIBUIDO,
   CAPA_OBSTACULOS,
 ];
 export const CAPAS_DE_UCRANIA: readonly string[] = [
@@ -251,15 +250,38 @@ const RADIO_GRUPO_IMPACTOS: ExpressionSpecification = [
 ];
 
 /**
- * Banderas de los atribuidos: se juntan solo entre ellas, cuando se pisarían en la pantalla,
- * hasta el zoom 7. Desde el 8 (el de las fichas) cada una va en su punto.
+ * Los atribuidos se juntan solo entre ellos, cuando se pisarían en la pantalla, hasta el zoom
+ * 7. Desde el 8 (el de las fichas) cada uno va en su punto.
  */
-export const ZOOM_MAXIMO_AGRUPADO_BANDERAS = 7;
-const RADIO_DE_AGRUPACION_BANDERAS_PX = 18;
-/** Atribuidos que junta una bandera: los de su grupo o los de su punto exacto. */
-const CUENTA_BANDERAS: ExpressionSpecification = ["coalesce", ["get", "total"], ["get", "n"]];
-/** El número va a la derecha del paño, a su altura, en ems del texto. */
-const POSICION_NUMERO_BANDERA: [number, number] = [2.4, -1.75];
+export const ZOOM_MAXIMO_AGRUPADO_ATRIBUIDOS = 7;
+const RADIO_DE_AGRUPACION_ATRIBUIDOS_PX = 2 * MARCA_ATRIBUIDO.radio;
+/** Atribuidos que junta un marcador: los de su grupo o los de su punto exacto. */
+const CUENTA_ATRIBUIDOS: ExpressionSpecification = ["coalesce", ["get", "total"], ["get", "n"]];
+/** El número va a la derecha del marcador, a su altura, en ems del texto. */
+const POSICION_NUMERO_ATRIBUIDO: [number, number] = [(MARCA_ATRIBUIDO.radio + MARCA_ATRIBUIDO.halo + 3) / 12, 0];
+/** La marca del foco térmico de un atribuido, arriba a la izquierda: a la derecha va el número. */
+const DESPLAZAMIENTO_FOCO_ATRIBUIDO: [number, number] = [-11, -11];
+
+/**
+ * Icono de un atribuido o de varios juntos (banderas.ts): «atribuido-<índice de la bandera>»,
+ * con «-p» si es una persona. Un grupo lleva el índice menor y el mayor de sus banderas: si
+ * coinciden, esa bandera (con punto solo si todos son personas); si no, el marcador liso. Una
+ * bandera que aún no ha cargado se dibuja lisa.
+ */
+const BANDERA_MENOR: ExpressionSpecification = ["coalesce", ["get", "bandera_min"], ["get", "bandera"]];
+const BANDERA_MAYOR: ExpressionSpecification = ["coalesce", ["get", "bandera_max"], ["get", "bandera"]];
+const TODOS_PERSONAS: ExpressionSpecification = ["==", ["coalesce", ["get", "persona_min"], ["get", "persona"]], 1];
+const SUFIJO: ExpressionSpecification = ["case", TODOS_PERSONAS, SUFIJO_PERSONA, ""];
+export const ICONO_ATRIBUIDO: ExpressionSpecification = [
+  "case",
+  ["==", BANDERA_MENOR, BANDERA_MAYOR],
+  [
+    "coalesce",
+    ["image", ["concat", PREFIJO_ICONO_ATRIBUIDO, ["to-string", BANDERA_MENOR], SUFIJO]],
+    ["image", ["concat", PREFIJO_ICONO_ATRIBUIDO, "-1", SUFIJO]],
+  ],
+  ["image", `${PREFIJO_ICONO_ATRIBUIDO}-1`],
+];
 
 /** Hasta este zoom los incidentes cercanos se agrupan con su contador. */
 export const ZOOM_MAXIMO_AGRUPADO = 5;
@@ -424,8 +446,8 @@ const COLOR_POR_ESTADO: ExpressionSpecification = [
 
 /**
  * Color del anillo de un grupo: el del estado más grave que contiene. Rojo si hay algún
- * confirmado; naranja si todos son notificados. Los atribuidos no se agrupan: van con su
- * bandera, siempre a la vista.
+ * confirmado; naranja si todos son notificados. Los atribuidos no entran: van con su propio
+ * marcador, siempre a la vista.
  */
 export const COLOR_DE_GRUPO: ExpressionSpecification = [
   "case",
@@ -437,7 +459,7 @@ export const COLOR_DE_GRUPO: ExpressionSpecification = [
 ];
 
 const ES_DESMENTIDO: ExpressionSpecification = ["==", ["get", "estado"], "desmentido"];
-/** Un atribuido es solo su bandera: sin área ni aro alrededor. */
+/** Un atribuido es solo su marcador: sin área alrededor. */
 export const ES_ATRIBUIDO: ExpressionSpecification = ["==", ["get", "estado"], "atribuido"];
 /**
  * Un solo sistema de marcas: todo lo que junta más de un incidente (un grupo de la
@@ -1006,63 +1028,59 @@ function capasPropias(acento: string): LayerSpecification[] {
         "icon-padding": 1,
       },
     },
-    // Los atribuidos: solo su bandera, más grande que un círculo suelto y por encima de los
-    // círculos y de los grupos. El pie del mástil marca el punto exacto. Los nombres del mapa
-    // también ceden ante ella.
+    // Los atribuidos: su marcador (aro rojo con la bandera dentro), más grande que un círculo
+    // suelto, centrado en el punto y por encima de los círculos y de los grupos. Los nombres
+    // del mapa también ceden ante él.
     {
-      id: CAPA_BANDERAS,
+      id: CAPA_ATRIBUIDOS,
       type: "symbol",
-      source: FUENTE_BANDERAS,
+      source: FUENTE_ATRIBUIDOS,
       layout: {
-        "icon-image": ICONO_BANDERA,
-        "icon-anchor": "bottom-left",
-        "icon-offset": DESPLAZAMIENTO_BANDERA,
+        "icon-image": ICONO_ATRIBUIDO,
         "icon-allow-overlap": true,
         "icon-ignore-placement": false,
       },
     },
-    // Varios atribuidos juntos: la bandera con su número al lado, como el de los grupos.
+    // Varios atribuidos juntos: un marcador con su número al lado, como el de los grupos.
     {
-      id: CAPA_NUMERO_BANDERAS,
+      id: CAPA_NUMERO_ATRIBUIDOS,
       type: "symbol",
-      source: FUENTE_BANDERAS,
-      filter: [">", CUENTA_BANDERAS, 1],
+      source: FUENTE_ATRIBUIDOS,
+      filter: [">", CUENTA_ATRIBUIDOS, 1],
       layout: {
-        "text-field": ["to-string", CUENTA_BANDERAS],
+        "text-field": ["to-string", CUENTA_ATRIBUIDOS],
         "text-font": FUENTE_TIPOGRAFICA_NUMEROS,
         "text-size": TAMANO_NUMERO_GRUPO,
-        "text-offset": POSICION_NUMERO_BANDERA,
+        "text-anchor": "left",
+        "text-offset": POSICION_NUMERO_ATRIBUIDO,
         "text-allow-overlap": true,
         "text-ignore-placement": false,
       },
       paint: { "text-color": PALETA.texto, "text-halo-color": PALETA.panelSolido, "text-halo-width": 2 },
     },
-    // El foco térmico de un atribuido va a la izquierda del mástil: a la derecha está el paño.
+    // El foco térmico de un atribuido, arriba a la izquierda del marcador.
     {
-      id: CAPA_FOCOS_BANDERA,
+      id: CAPA_FOCOS_ATRIBUIDOS,
       type: "circle",
-      source: FUENTE_BANDERAS,
+      source: FUENTE_ATRIBUIDOS,
       filter: ["==", ["get", "foco"], 1],
       paint: {
         "circle-radius": RADIO_MARCA_FOCO,
         "circle-color": PALETA.texto,
         "circle-stroke-color": PALETA.fondo,
         "circle-stroke-width": 1.5,
-        "circle-translate": [-DESPLAZAMIENTO_MARCA_FOCO[0], DESPLAZAMIENTO_MARCA_FOCO[1]],
+        "circle-translate": DESPLAZAMIENTO_FOCO_ATRIBUIDO,
       },
     },
-    // Un atribuido abierto: su bandera, algo más grande, sin aro ni borde. El desplazamiento
-    // se escala con el icono, así que el pie sigue en el punto.
+    // Un atribuido abierto: su marcador, algo más grande, sin aro de selección.
     {
-      id: CAPA_SELECCION_BANDERA,
+      id: CAPA_SELECCION_ATRIBUIDO,
       type: "symbol",
       source: FUENTE_SELECCION,
       filter: ES_ATRIBUIDO,
       layout: {
-        "icon-image": ICONO_BANDERA,
-        "icon-size": ESCALA_BANDERA_ELEGIDA,
-        "icon-anchor": "bottom-left",
-        "icon-offset": DESPLAZAMIENTO_BANDERA,
+        "icon-image": ICONO_ATRIBUIDO,
+        "icon-size": ESCALA_ATRIBUIDO_ELEGIDO,
         "icon-allow-overlap": true,
         "icon-ignore-placement": true,
       },
@@ -1129,17 +1147,20 @@ export function estilo(idioma: Idioma, origen: string, acento: string): StyleSpe
         },
       },
       [FUENTE_PUNTOS_SUELTOS]: { type: "geojson", data: VACIA },
-      [FUENTE_BANDERAS]: {
+      [FUENTE_ATRIBUIDOS]: {
         type: "geojson",
         data: VACIA,
         cluster: true,
-        clusterMaxZoom: ZOOM_MAXIMO_AGRUPADO_BANDERAS,
-        clusterRadius: RADIO_DE_AGRUPACION_BANDERAS_PX,
+        clusterMaxZoom: ZOOM_MAXIMO_AGRUPADO_ATRIBUIDOS,
+        clusterRadius: RADIO_DE_AGRUPACION_ATRIBUIDOS_PX,
         clusterProperties: {
           total: ["+", ["get", "n"]],
           n_novedades: ["+", ["get", "novedad"]],
           atribuido: ["max", ["get", "atribuido"]],
           foco: ["max", ["get", "foco"]],
+          bandera_min: ["min", ["get", "bandera"]],
+          bandera_max: ["max", ["get", "bandera"]],
+          persona_min: ["min", ["get", "persona"]],
         },
       },
       [FUENTE_AREAS]: { type: "geojson", data: VACIA },

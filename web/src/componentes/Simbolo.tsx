@@ -1,37 +1,44 @@
-import type { Estado } from "../datos/tipos.ts";
+import { useId } from "react";
+
+import { urlBandera, varianteDe, VARIANTE_LISA } from "../banderas.ts";
+import type { VarianteAtribuido } from "../banderas.ts";
+import type { AtribucionResumen, Estado } from "../datos/tipos.ts";
 import {
-  BANDERA,
-  COLOR_BANDERA,
+  COLOR_ARO_ATRIBUIDO,
   COLOR_ESTADO,
-  COLOR_MASTIL,
-  CONTORNO_BANDERA,
+  COLOR_FILO_ATRIBUIDO,
   GROSOR_CONTORNO,
-  GROSOR_CONTORNO_BANDERA,
-  GROSOR_MASTIL,
-  GROSOR_PANO,
+  MARCA_ATRIBUIDO,
   PALETA,
+  RADIO_BANDERA,
   TRAZO_DESMENTIDO,
-  trazadoMastil,
-  trazadoPano,
 } from "../paleta.ts";
 
 const LADO = 16;
 const CENTRO = LADO / 2;
 const RADIO = 5.5;
+/** Lado del marcador de un atribuido en las listas, la ficha, la leyenda y los filtros. */
+export const LADO_ATRIBUIDO_TEXTO = 20;
 
 interface Props {
   estado: Estado;
+  /** En un atribuido, a quién se atribuye: decide su bandera y su punto. */
+  atribucion?: AtribucionResumen | null;
+  /** Texto para el lector de pantalla; sin él, el símbolo es decorativo. */
+  etiqueta?: string;
   className?: string;
 }
 
 /**
  * Símbolo de un incidente, igual que en el mapa: un círculo relleno del color del estado
  * (naranja notificado, rojo confirmado), un círculo gris de borde discontinuo el desmentido y
- * solo una bandera roja con su mástil el atribuido. Es decorativo: el estado (y el tipo) van
- * siempre escritos al lado.
+ * el marcador de los atribuidos (aro rojo con la bandera dentro). Es decorativo salvo que
+ * lleve `etiqueta`: el estado (y el tipo) van siempre escritos al lado.
  */
-export function Simbolo({ estado, className }: Props) {
-  if (estado === "atribuido") return <IconoBandera className={className} lado={LADO} />;
+export function Simbolo({ estado, atribucion = null, etiqueta, className }: Props) {
+  if (estado === "atribuido") {
+    return <MarcaAtribuido variante={varianteDe(atribucion)} etiqueta={etiqueta} className={className} />;
+  }
   const color = COLOR_ESTADO[estado];
   const desmentido = estado === "desmentido";
   return (
@@ -58,48 +65,65 @@ export function Simbolo({ estado, className }: Props) {
 }
 
 /**
- * Bandera de los atribuidos, sola: la misma forma que en el mapa (paño rojo relleno, mástil en
- * un rojo algo más oscuro y un filo de 1 px del color del fondo), a `lado` píxeles de alto. Nada más: ni círculo ni forma ni punto en el pie.
+ * El marcador de un atribuido, el mismo dibujo que el del mapa (iconos.ts): filo exterior del
+ * color del fondo, aro rojo grueso, filo oscuro, la bandera recortada en círculo (o relleno
+ * rojo liso) y, si es una persona, el punto oscuro con su aro rojo. A `lado` píxeles.
  */
-export function IconoBandera({
+export function MarcaAtribuido({
+  variante = VARIANTE_LISA,
+  lado = LADO_ATRIBUIDO_TEXTO,
+  etiqueta,
   className,
-  lado = 16,
 }: {
-  className?: string | undefined;
+  variante?: VarianteAtribuido;
   lado?: number;
+  etiqueta?: string | undefined;
+  className?: string | undefined;
 }) {
-  // Recortada a lo que ocupa la bandera, para que a poco tamaño no sobre caja vacía.
-  const margen = GROSOR_CONTORNO_BANDERA + GROSOR_MASTIL;
-  const x = BANDERA.pie[0] - margen;
-  const y = BANDERA.pie[1] - BANDERA.mastil - BANDERA.pano.onda - margen;
-  const ancho = BANDERA.pano.ancho + 2 * margen;
-  const alto = BANDERA.mastil + BANDERA.pano.onda + 2 * margen;
+  const recorte = `bandera-${useId().replace(/[^\w-]/g, "")}`;
+  const m = MARCA_ATRIBUIDO;
+  const total = m.radio + m.halo;
+  const c = total;
+  const accesible = etiqueta === undefined ? { "aria-hidden": true as const } : { role: "img", "aria-label": etiqueta };
   return (
     <svg
-      viewBox={`${x} ${y} ${ancho} ${alto}`}
-      width={Math.round((lado * ancho) / alto)}
+      viewBox={`0 0 ${2 * total} ${2 * total}`}
+      width={lado}
       height={lado}
-      aria-hidden="true"
       focusable="false"
-      className={className}
-      data-bandera=""
+      // Nunca encoge junto a un texto largo: la bandera tiene que verse.
+      className={className === undefined ? "shrink-0" : `shrink-0 ${className}`}
+      data-atribuido={variante.bandera ?? "liso"}
+      data-persona={variante.persona ? "" : undefined}
+      {...accesible}
     >
-      <g strokeLinejoin="round" strokeLinecap="round">
-        <path
-          d={trazadoMastil(BANDERA)}
-          fill="none"
-          stroke={CONTORNO_BANDERA}
-          strokeWidth={GROSOR_MASTIL + 2 * GROSOR_CONTORNO_BANDERA}
-        />
-        <path
-          d={trazadoPano(BANDERA)}
-          fill={CONTORNO_BANDERA}
-          stroke={CONTORNO_BANDERA}
-          strokeWidth={GROSOR_PANO + 2 * GROSOR_CONTORNO_BANDERA}
-        />
-        <path d={trazadoPano(BANDERA)} fill={COLOR_BANDERA} stroke={COLOR_BANDERA} strokeWidth={GROSOR_PANO} />
-        <path d={trazadoMastil(BANDERA)} fill="none" stroke={COLOR_MASTIL} strokeWidth={GROSOR_MASTIL} />
-      </g>
+      <circle cx={c} cy={c} r={total} fill={COLOR_FILO_ATRIBUIDO} />
+      <circle cx={c} cy={c} r={m.radio} fill={COLOR_ARO_ATRIBUIDO} />
+      <circle cx={c} cy={c} r={m.radio - m.aro} fill={COLOR_FILO_ATRIBUIDO} />
+      {variante.bandera === null ? (
+        <circle cx={c} cy={c} r={RADIO_BANDERA} fill={COLOR_ARO_ATRIBUIDO} />
+      ) : (
+        <>
+          <clipPath id={recorte}>
+            <circle cx={c} cy={c} r={RADIO_BANDERA} />
+          </clipPath>
+          <image
+            href={urlBandera(variante.bandera)}
+            x={c - RADIO_BANDERA}
+            y={c - RADIO_BANDERA}
+            width={2 * RADIO_BANDERA}
+            height={2 * RADIO_BANDERA}
+            preserveAspectRatio="xMidYMid slice"
+            clipPath={`url(#${recorte})`}
+          />
+        </>
+      )}
+      {variante.persona && (
+        <>
+          <circle cx={c} cy={c} r={m.punto + m.aroPunto} fill={COLOR_ARO_ATRIBUIDO} />
+          <circle cx={c} cy={c} r={m.punto} fill={COLOR_FILO_ATRIBUIDO} data-punto="" />
+        </>
+      )}
     </svg>
   );
 }

@@ -344,14 +344,17 @@ def incidente_completo() -> Documento:
             "resultado_contramedidas": "desconocido",
         },
         "atribucion": {
-            "actor": "Actor estatal",
+            "actor": "Rusia",
             "autoridad": "Gobierno nacional",
             "fecha": instante("2025-10-03T10:00Z", "hora"),
+            "tipo": "estado",
+            "pais": "RU",
         },
         "fuentes": [
             fuente("F1", "B"),
             {
                 **fuente("F2", "A", es_autoridad=True),
+                "frase_origen": "El Gobierno atribuye a Rusia el cierre del aeropuerto por drones",
                 "metodo": "parser",
                 "documento_oficial": "UKAB-2025022",
                 "campos_respaldados": ["detalle_oficial", "estado"],

@@ -1,9 +1,10 @@
-import type { Instante, RangoODesconocido } from "../datos/tipos.ts";
+import type { AtribucionResumen, Instante, RangoODesconocido } from "../datos/tipos.ts";
 import type { Jornada } from "../datos/ucrania.ts";
 import type { Idioma } from "../sitio.ts";
 import { fechaDeDia } from "../tiempo/dias.ts";
 import { en } from "./en.ts";
 import { es } from "./es.ts";
+import { GENTILICIOS } from "./gentilicios.ts";
 import type { FechaEscrita, Textos } from "./tipos.ts";
 
 const TEXTOS: Record<Idioma, Textos> = { es, en };
@@ -91,6 +92,23 @@ export function pais(codigo: string, idioma: Idioma): string {
   } catch {
     return codigo;
   }
+}
+
+/**
+ * A quién se atribuye un incidente, para el lector de pantalla y el letrero del mapa:
+ * «Atribuido a Rusia», «Atribuido a una persona de nacionalidad rumana», «Atribuido a una
+ * persona». Sin tipo (datos anteriores al esquema 1.10.0), «Atribuido».
+ */
+export function textoAtribuido(t: Textos, idioma: Idioma, atribucion: AtribucionResumen | null): string {
+  const a = t.atribucion;
+  const codigo = atribucion?.pais ?? null;
+  if (atribucion?.tipo === "estado") return codigo === null ? a.aEstadoSinPais : a.aEstado(pais(codigo, idioma));
+  if (atribucion?.tipo === "persona") {
+    if (codigo === null) return a.aPersona;
+    const gentilicio = GENTILICIOS[codigo]?.[idioma];
+    return gentilicio === undefined ? a.aPersonaDePais(pais(codigo, idioma)) : a.aPersonaDe(gentilicio);
+  }
+  return t.estado.atribuido;
 }
 
 /** Nombre de una región de la capa de Ucrania; el código ISO 3166-2 si no está en la tabla. */

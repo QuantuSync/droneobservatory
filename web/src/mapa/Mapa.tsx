@@ -12,6 +12,7 @@ import urlTrabajador from "maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url";
 import { Protocol } from "pmtiles";
 import { useEffect, useRef, useState } from "react";
 
+import { indiceBandera, varianteDe } from "../banderas.ts";
 import type { Capas } from "../componentes/Controles.tsx";
 import { avisosEnMapa } from "../datos/directo.ts";
 import type { Aviso } from "../datos/directo.ts";
@@ -31,9 +32,9 @@ import type {
   FocoRegion,
   IncidenteResumen,
 } from "../datos/tipos.ts";
-import { pais as nombrePais, porcentaje } from "../i18n/index.ts";
+import { pais as nombrePais, porcentaje, textoAtribuido } from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
-import { BANDERA, ESCALA_UCRANIA, acento } from "../paleta.ts";
+import { ESCALA_UCRANIA, acento } from "../paleta.ts";
 import { opacidadDePerdida } from "../datos/guerraSatelite.ts";
 import type { Idioma } from "../sitio.ts";
 import type { Periodo } from "../tiempo/dias.ts";
@@ -57,7 +58,7 @@ import {
   FUENTE_SATELITE,
   OPACIDAD_CORREDOR_SIN_SATELITE,
   CAPAS_PULSABLES,
-  CAPA_BANDERAS,
+  CAPA_ATRIBUIDOS,
   CAPA_DIRECTO,
   CAPA_GNSS,
   CAPAS_DE_LUZ,
@@ -84,7 +85,7 @@ import {
   CAPA_REGION_ELEGIDA,
   CAPA_REGION_ELEGIDA_RUSIA,
   FUENTE_AREAS,
-  FUENTE_BANDERAS,
+  FUENTE_ATRIBUIDOS,
   FUENTE_DIRECTO,
   FUENTE_GNSS,
   FUENTE_IMPACTOS,
@@ -99,7 +100,7 @@ import {
 } from "./estilo.ts";
 import {
   areas,
-  banderas,
+  atribuidos,
   ciudadesSinLuzEnMapa,
   alumbradoEnMapa,
   impactosConSateliteEnMapa,
@@ -110,7 +111,7 @@ import {
   pilas,
   sinAtribuidos,
 } from "./geometria.ts";
-import { registrarIconos } from "./iconos.ts";
+import { registrarBanderas, registrarIconos } from "./iconos.ts";
 import { colocarLetrero, hayRaton } from "./letrero.ts";
 import { anchoZonaArco, distanciaALinea, elegir, ZONA_ARCO_DEDO_PX } from "./seleccion.ts";
 import type { Candidato } from "./seleccion.ts";
@@ -287,7 +288,7 @@ function fuente(mapa: MapaGL, id: string): GeoJSONSource | undefined {
 
 /** Objetivo táctil de una marca del mapa, como el resto de controles en el teléfono. */
 export const OBJETIVO_TACTIL_PX = 44;
-const CAPAS_DE_MARCAS = [CAPA_DIRECTO, CAPA_BANDERAS, CAPA_INCIDENTES_GRAVES, CAPA_INCIDENTES_DISCRETOS, CAPA_GRUPOS];
+const CAPAS_DE_MARCAS = [CAPA_DIRECTO, CAPA_ATRIBUIDOS, CAPA_INCIDENTES_GRAVES, CAPA_INCIDENTES_DISCRETOS, CAPA_GRUPOS];
 
 function punteroGrueso(): boolean {
   return typeof window.matchMedia === "function" && window.matchMedia("(pointer: coarse)").matches;
@@ -318,15 +319,35 @@ function marcaMasCercana(
     if (rasgo.geometry.type !== "Point") continue;
     const [lon, lat] = rasgo.geometry.coordinates as [number, number];
     const p = mapa.project([lon, lat]);
-    // Una bandera se toca por lo que se ve: el centro del paño y el mástil, no solo el pie.
-    const alto = rasgo.layer.id === CAPA_BANDERAS ? BANDERA.mastil / 2 : 0;
-    const d = Math.hypot(p.x - x, p.y - alto - y);
+    const d = Math.hypot(p.x - x, p.y - y);
     if (d < distancia) {
       distancia = d;
       mejor = rasgo;
     }
   }
   return mejor;
+}
+
+/** El punto del incidente abierto, con lo que necesita su marca de selección (un atribuido,
+ *  su marcador: la bandera y si es de una persona). */
+function seleccionDe(elegido: IncidenteResumen | null): GeoJSON.FeatureCollection<GeoJSON.Point> {
+  const punto = elegido?.punto ?? null;
+  if (elegido === null || punto === null) return { type: "FeatureCollection", features: [] };
+  const marcador = varianteDe(elegido.atribucion);
+  return {
+    type: "FeatureCollection",
+    features: [
+      {
+        type: "Feature",
+        geometry: { type: "Point", coordinates: [punto.lon, punto.lat] },
+        properties: {
+          estado: elegido.estado,
+          bandera: indiceBandera(marcador.bandera),
+          persona: marcador.persona ? 1 : 0,
+        },
+      },
+    ],
+  };
 }
 
 function capasActivas(mapa: MapaGL): string[] {
@@ -361,6 +382,8 @@ export default function Mapa(props: PropsMapa) {
   const volar = useRef<((destino: Encuadre) => void) | null>(null);
   const [listo, setListo] = useState(false);
   const [iconos, setIconos] = useState("");
+  // El incidente abierto, para volver a dibujar su marcador cuando llega su bandera.
+  const elegidoActual = useRef<IncidenteResumen | null>(null);
   // Los manejadores del mapa se registran una vez: leen siempre las funciones actuales.
   const manejadores = useRef(props);
   useEffect(() => {
@@ -628,8 +651,8 @@ export default function Mapa(props: PropsMapa) {
       if (rasgo.layer.id === CAPA_GRUPOS) {
         return "point_count" in p ? textos.mapa.grupo(Number(p.total)) : textos.mapa.pila(Number(p.n));
       }
-      if (rasgo.layer.id === CAPA_BANDERAS && ("point_count" in p || Number(p.n) > 1)) {
-        return "point_count" in p ? textos.mapa.banderas(Number(p.total)) : textos.mapa.pila(Number(p.n));
+      if (rasgo.layer.id === CAPA_ATRIBUIDOS && ("point_count" in p || Number(p.n) > 1)) {
+        return "point_count" in p ? textos.mapa.atribuidos(Number(p.total)) : textos.mapa.pila(Number(p.n));
       }
       if (rasgo.layer.id === CAPA_REGIONES || rasgo.layer.id === CAPA_REGIONES_RUSIA) {
         return textos.regiones[String(p.iso)] ?? String(p.iso);
@@ -665,9 +688,11 @@ export default function Mapa(props: PropsMapa) {
       }
       const incidente = porId.get(String(p.id));
       if (incidente === undefined) return null;
-      return `${textos.tipo[incidente.tipo]} · ${textos.estado[incidente.estado]} · ${
-        incidente.titulo[lengua]
-      }`;
+      const estado =
+        incidente.estado === "atribuido"
+          ? textoAtribuido(textos, lengua, incidente.atribucion)
+          : textos.estado[incidente.estado];
+      return `${textos.tipo[incidente.tipo]} · ${estado} · ${incidente.titulo[lengua]}`;
     }
 
     function esconderLetrero() {
@@ -692,15 +717,15 @@ export default function Mapa(props: PropsMapa) {
       }
       const primero = eleccion.valor.rasgo;
       const propiedades = primero.properties;
-      if (primero.layer.id === CAPA_BANDERAS && "point_count" in propiedades) {
+      if (primero.layer.id === CAPA_ATRIBUIDOS && "point_count" in propiedades) {
         // Banderas juntas al alejar: se acerca hasta el zoom en que se separan.
-        const fuenteBanderas = fuente(mapa, FUENTE_BANDERAS);
+        const fuenteBanderas = fuente(mapa, FUENTE_ATRIBUIDOS);
         void fuenteBanderas
           ?.getClusterExpansionZoom(Number(propiedades.cluster_id))
           .then((zoom) =>
             mapa.easeTo({ center: evento.lngLat, zoom, animate: !movimientoReducido() }),
           );
-      } else if ((primero.layer.id === CAPA_GRUPOS || primero.layer.id === CAPA_BANDERAS) && Number(propiedades.n) > 1) {
+      } else if ((primero.layer.id === CAPA_GRUPOS || primero.layer.id === CAPA_ATRIBUIDOS) && Number(propiedades.n) > 1) {
         // Varios incidentes en el mismo punto exacto: se elige cuál abrir.
         manejadores.current.onPila(String(propiedades.ids).split(","));
       } else if (primero.layer.id === CAPA_GRUPOS) {
@@ -791,7 +816,16 @@ export default function Mapa(props: PropsMapa) {
     return trasPintar(() => {
       const opciones = { recientes, novedades };
       fuente(mapa, FUENTE_PUNTOS)?.setData(pilas(sinAtribuidos(incidentes), opciones));
-      fuente(mapa, FUENTE_BANDERAS)?.setData(banderas(incidentes, opciones));
+      const marcadores = atribuidos(incidentes, opciones);
+      fuente(mapa, FUENTE_ATRIBUIDOS)?.setData(marcadores);
+      // Las banderas llegan después: al cargar, los atribuidos se vuelven a dibujar con ella.
+      const paises = incidentes.flatMap((i) => (i.estado === "atribuido" && i.atribucion?.pais ? [i.atribucion.pais] : []));
+      void registrarBanderas(mapa, paises).then((nuevas) => {
+        if (nuevas) {
+          fuente(mapa, FUENTE_ATRIBUIDOS)?.setData(marcadores);
+          fuente(mapa, FUENTE_SELECCION)?.setData(seleccionDe(elegidoActual.current));
+        }
+      });
       fuente(mapa, FUENTE_PUNTOS_SUELTOS)?.setData(pilas(incidentes, opciones));
       fuente(mapa, FUENTE_AREAS)?.setData(areas(incidentes));
       fuente(mapa, FUENTE_EPISODIOS)?.setData(lineasDeEpisodio(episodios, incidentes));
@@ -807,23 +841,11 @@ export default function Mapa(props: PropsMapa) {
   useEffect(() => {
     const mapa = mapaRef.current;
     if (!listo || mapa === null) return;
-    const punto = elegido?.punto ?? null;
-    fuente(mapa, FUENTE_SELECCION)?.setData({
-      type: "FeatureCollection",
-      features:
-        punto === null
-          ? []
-          : [
-              {
-                type: "Feature",
-                geometry: { type: "Point", coordinates: [punto.lon, punto.lat] },
-                properties: { estado: elegido?.estado ?? "notificado" },
-              },
-            ],
-    });
-    // Un atribuido abierto se dibuja solo con su bandera de selección, más grande: la normal
+    elegidoActual.current = elegido;
+    fuente(mapa, FUENTE_SELECCION)?.setData(seleccionDe(elegido));
+    // Un atribuido abierto se dibuja solo con su marcador de selección, más grande: el normal
     // asomaría por debajo.
-    mapa.setFilter(CAPA_BANDERAS, ["!=", ["get", "id"], elegido?.estado === "atribuido" ? elegido.id : ""]);
+    mapa.setFilter(CAPA_ATRIBUIDOS, ["!=", ["get", "id"], elegido?.estado === "atribuido" ? elegido.id : ""]);
   }, [listo, elegido]);
 
   // País de un incidente sin punto, resaltado de forma tenue.
@@ -1007,7 +1029,7 @@ export default function Mapa(props: PropsMapa) {
     const capa = capaPulsos.current;
     if (!listo || mapa === null || capa === null) return undefined;
     const recolocar = () => {
-      const capas = [CAPA_GRUPOS, CAPA_INCIDENTES_GRAVES, CAPA_INCIDENTES_DISCRETOS, CAPA_BANDERAS].filter(
+      const capas = [CAPA_GRUPOS, CAPA_INCIDENTES_GRAVES, CAPA_INCIDENTES_DISCRETOS, CAPA_ATRIBUIDOS].filter(
         (id) => mapa.getLayoutProperty(id, "visibility") !== "none",
       );
       const rasgos = capas.length === 0 ? [] : mapa.queryRenderedFeatures({ layers: capas });

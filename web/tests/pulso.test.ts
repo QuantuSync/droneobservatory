@@ -11,8 +11,14 @@ import {
   estilo,
   radioDeGrupo,
 } from "../src/mapa/estilo.ts";
-import { RADIO_PULSO, SEPARACION_PULSO_GRUPO, colocarPulsos, pulsosDe } from "../src/mapa/pulsos.ts";
-import { BANDERA, trazadoBandera } from "../src/paleta.ts";
+import {
+  RADIO_PULSO,
+  RADIO_PULSO_ATRIBUIDO,
+  SEPARACION_PULSO_GRUPO,
+  colocarPulsos,
+  pulsosDe,
+} from "../src/mapa/pulsos.ts";
+import { MARCA_ATRIBUIDO } from "../src/paleta.ts";
 import type { RasgoDibujado } from "../src/mapa/pulsos.ts";
 
 const css = readFileSync(join(import.meta.dirname, "..", "src", "estilos.css"), "utf8");
@@ -33,7 +39,7 @@ describe("pulso del mapa", () => {
       ],
       proyectar,
     );
-    expect(pulsos).toEqual([{ clave: "C", x: 50, y: 60, radio: RADIO_PULSO, forma: "anillo" }]);
+    expect(pulsos).toEqual([{ clave: "C", x: 50, y: 60, radio: RADIO_PULSO }]);
   });
 
   it("los grupos y las pilas laten si contienen algún incidente nuevo", () => {
@@ -63,12 +69,12 @@ describe("pulso del mapa", () => {
     ).toEqual([]);
   });
 
-  it("varias banderas juntas laten con la silueta de la bandera, no con un anillo", () => {
+  it("varios atribuidos juntos laten con un anillo alrededor de su marcador", () => {
     const pulsos = pulsosDe(
       [punto({ point_count: 2, cluster_id: 7, total: 2, atribuido: 1, n_novedades: 1 })],
       proyectar,
     );
-    expect(pulsos).toEqual([{ clave: "banderas-7", x: 10, y: 20, radio: BANDERA.mastil, forma: "bandera" }]);
+    expect(pulsos).toEqual([{ clave: "atribuidos-7", x: 10, y: 20, radio: RADIO_PULSO_ATRIBUIDO }]);
   });
 
   it("un rasgo repetido en dos teselas da un solo pulso", () => {
@@ -79,31 +85,29 @@ describe("pulso del mapa", () => {
   it("recoloca reutilizando los elementos y quita los que sobran", () => {
     const capa = document.createElement("div");
     colocarPulsos(capa, [
-      { clave: "A", x: 1, y: 2, radio: 11, forma: "anillo" },
-      { clave: "B", x: 3, y: 4, radio: 11, forma: "anillo" },
+      { clave: "A", x: 1, y: 2, radio: 11 },
+      { clave: "B", x: 3, y: 4, radio: 11 },
     ]);
     const primero = capa.children[0];
     expect(capa.querySelectorAll(".pulso")).toHaveLength(2);
-    colocarPulsos(capa, [{ clave: "A", x: 5, y: 6, radio: 11, forma: "anillo" }]);
+    colocarPulsos(capa, [{ clave: "A", x: 5, y: 6, radio: 11 }]);
     expect(capa.children).toHaveLength(1);
     expect(capa.children[0]).toBe(primero);
     expect((capa.children[0] as HTMLElement).style.transform).toBe("translate(5.0px, 6.0px)");
   });
 
-  it("un atribuido nuevo late con la silueta de su bandera, sin ningún círculo", () => {
+  it("un atribuido nuevo late igual que los demás: un anillo por fuera de su marcador", () => {
     const pulsos = pulsosDe([punto({ id: "F", grave: 1, atribuido: 1, novedad: 1 })], proyectar);
-    expect(pulsos).toEqual([{ clave: "F", x: 10, y: 20, radio: BANDERA.mastil, forma: "bandera" }]);
+    expect(pulsos).toEqual([{ clave: "F", x: 10, y: 20, radio: RADIO_PULSO_ATRIBUIDO }]);
+    // El anillo va por fuera del marcador, sin taparlo, con la separación de los grupos.
+    expect(RADIO_PULSO_ATRIBUIDO).toBe(MARCA_ATRIBUIDO.radio + MARCA_ATRIBUIDO.halo + SEPARACION_PULSO_GRUPO);
     const capa = document.createElement("div");
     colocarPulsos(capa, pulsos);
-    expect(capa.querySelector(".pulso")).toBeNull();
-    const silueta = capa.querySelector("svg.pulso-bandera");
-    expect(silueta?.querySelector("path")?.getAttribute("d")).toBe(trazadoBandera(BANDERA));
-    expect(silueta?.querySelectorAll("circle")).toHaveLength(0);
-    // El pie de la silueta cae en el punto: la caja se desplaza lo que va del pie a su esquina.
-    expect((silueta as SVGSVGElement).style.left).toBe(`${-BANDERA.pie[0]}px`);
-    expect((silueta as SVGSVGElement).style.top).toBe(`${-BANDERA.pie[1]}px`);
-    expect(silueta?.getAttribute("viewBox")).toBe(`0 0 ${BANDERA.ancho} ${BANDERA.alto}`);
-    expect(css).toMatch(/\.pulso-bandera \{[^}]*animation: latido/);
+    const anillo = capa.querySelector(".pulso") as HTMLElement | null;
+    expect(anillo?.style.width).toBe(`${2 * RADIO_PULSO_ATRIBUIDO}px`);
+    // Nada de siluetas de bandera.
+    expect(capa.querySelector("svg")).toBeNull();
+    expect(css).not.toContain("pulso-bandera");
     // Si deja de ser nuevo, desaparece.
     colocarPulsos(capa, []);
     expect(capa.children).toHaveLength(0);
@@ -116,7 +120,7 @@ describe("pulso del mapa", () => {
     expect(css).not.toContain("latido-fuerte");
     expect(css).not.toContain("pulso-atribuido");
     const reducido =
-      /@media \(prefers-reduced-motion: reduce\) \{\s*\.pulso,\s*\.pulso-bandera \{([^}]*)\}/.exec(
+      /@media \(prefers-reduced-motion: reduce\) \{\s*\.pulso \{([^}]*)\}/.exec(
         css,
       )?.[1] ?? "";
     expect(reducido).toContain("animation: none");

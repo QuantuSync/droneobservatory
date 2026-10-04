@@ -7,13 +7,14 @@ import * as vocabulario from "../src/datos/vocabulario.ts";
 import { en } from "../src/i18n/en.ts";
 import { es } from "../src/i18n/es.ts";
 import { fecha, fechaHora, instante, numero, pais, rango, region } from "../src/i18n/index.ts";
-import { areas, banderas, circulo, destino, lineasDeEpisodio, pilas, sinAtribuidos } from "../src/mapa/geometria.ts";
+import { areas, atribuidos, circulo, destino, lineasDeEpisodio, pilas, sinAtribuidos } from "../src/mapa/geometria.ts";
 import { ultimas24Horas } from "../src/estado/filtros.ts";
 import { MS_POR_DIA, MS_POR_HORA } from "../src/tiempo/dias.ts";
 import { ACENTO_POR_DEFECTO, COLOR_ESTADO, PALETA, contraste } from "../src/paleta.ts";
 import { analizarRuta, fichaDeId } from "../src/rutas.ts";
 import { NOMBRE, rutaDeFicha, rutaDeIdioma } from "../src/sitio.ts";
 import { resumirIncidente } from "../src/datos/derivar.ts";
+import { indiceBandera } from "../src/banderas.ts";
 import { incidente } from "./ejemplos.ts";
 
 const WEB = join(import.meta.dirname, "..");
@@ -389,7 +390,7 @@ describe("geometría del mapa", () => {
     expect(reciente(inicio + 5 * MS_POR_DIA)).toBe(0);
   });
 
-  it("un atribuido va con su bandera, fuera de las pilas y de los grupos", () => {
+  it("un atribuido va con su marcador, fuera de las pilas y de los grupos", () => {
     const atribuido = resumirIncidente(
       incidente(
         {
@@ -403,17 +404,59 @@ describe("geometría del mapa", () => {
       ),
     );
     const opciones = { recientes: ultimas24Horas(0), novedades: new Set([atribuido.id]) };
-    // En el mismo punto que otro incidente: el otro queda solo y el atribuido lleva su bandera.
+    // En el mismo punto que otro incidente: el otro queda solo y el atribuido lleva su marcador.
     const resto = pilas(sinAtribuidos([munich, atribuido]), opciones);
     expect(resto.features.map((f) => f.properties.ids)).toEqual([munich.id]);
-    const conBandera = banderas([munich, atribuido], opciones);
-    expect(conBandera.features).toHaveLength(1);
-    expect(conBandera.features[0]?.properties).toMatchObject({ id: atribuido.id, n: 1, atribuido: 1, novedad: 1 });
-    // Dos atribuidos en el mismo punto exacto: una bandera con su número y la lista para elegir.
-    const otro = { ...atribuido, id: "EODI-2026-00004" };
-    const juntas = banderas([atribuido, otro, munich], opciones).features;
+    const conMarcador = atribuidos([munich, atribuido], opciones);
+    expect(conMarcador.features).toHaveLength(1);
+    // Sin tipo ni país (datos anteriores al esquema 1.10.0): el marcador liso.
+    expect(conMarcador.features[0]?.properties).toMatchObject({
+      id: atribuido.id,
+      n: 1,
+      atribuido: 1,
+      novedad: 1,
+      bandera: -1,
+      persona: 0,
+    });
+    // Dos atribuidos en el mismo punto exacto: un marcador con su número y la lista para elegir.
+    const ru = { ...atribuido, atribucion: { tipo: "estado" as const, pais: "RU" } };
+    const otro = { ...ru, id: "EODI-2026-00004" };
+    const juntas = atribuidos([ru, otro, munich], opciones).features;
     expect(juntas).toHaveLength(1);
-    expect(juntas[0]?.properties).toMatchObject({ n: 2, ids: "EODI-2026-00004,EODI-2026-00003", atribuido: 1 });
+    expect(juntas[0]?.properties).toMatchObject({
+      n: 2,
+      ids: "EODI-2026-00004,EODI-2026-00003",
+      atribuido: 1,
+      bandera: indiceBandera("RU"),
+      persona: 0,
+    });
+    // De países distintos: el marcador conjunto va liso, sin bandera ni punto.
+    const persona = { ...ru, id: "EODI-2026-00005", atribucion: { tipo: "persona" as const, pais: "RO" } };
+    expect(atribuidos([ru, persona], opciones).features[0]?.properties).toMatchObject({ n: 2, bandera: -1, persona: 0 });
+    // Dos personas del mismo país: su bandera con el punto.
+    const otraPersona = { ...persona, id: "EODI-2026-00006" };
+    expect(atribuidos([persona, otraPersona], opciones).features[0]?.properties).toMatchObject({
+      bandera: indiceBandera("RO"),
+      persona: 1,
+    });
+  });
+
+  it("el resumen de un atribuido lleva el tipo de actor y el país de su atribución", () => {
+    const base = incidente({
+      estado: {
+        actual: "atribuido",
+        historial: [{ estado: "atribuido", fecha: { valor: "2026-01-01T00:00Z", precision: "dia" } }],
+      },
+      atribucion: {
+        actor: "Rusia",
+        autoridad: "Gobierno",
+        fecha: { valor: "2026-01-01T00:00Z", precision: "dia" },
+        tipo: "estado",
+        pais: "RU",
+      },
+    });
+    expect(resumirIncidente(base).atribucion).toEqual({ tipo: "estado", pais: "RU" });
+    expect(resumirIncidente(incidente()).atribucion).toBeNull();
   });
 
   it("la línea de un episodio solo une incidentes visibles y necesita dos", () => {

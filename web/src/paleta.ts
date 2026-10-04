@@ -11,9 +11,9 @@ export const PALETA = {
   texto: "#e8eef6",
   secundario: "#93a0b4",
   // Estados de un incidente: naranja lo notificado, rojo lo confirmado (y lo atribuido, que
-  // es un confirmado con responsable señalado: lleva además una bandera). Se distinguen por
-  // luminancia, no solo por tono, para que se separen también con daltonismo (test en
-  // tests/colores.test.ts).
+  // es un confirmado con responsable señalado: su aro rojo lleva dentro la bandera del país).
+  // Se distinguen por luminancia, no solo por tono, para que se separen también con
+  // daltonismo (test en tests/colores.test.ts).
   notificado: "#ff9a2e",
   confirmado: "#f53a50",
   atribuido: "#f53a50",
@@ -40,72 +40,36 @@ export const COLOR_ESTADO: Record<Estado, string> = {
   desmentido: PALETA.desmentido,
 };
 
-/** Bandera de los atribuidos: el mismo rojo que el confirmado. */
-export const COLOR_BANDERA = PALETA.atribuido;
-
 /**
- * Bandera de los atribuidos (en lugar del círculo de los demás, sin nada debajo): un mástil y
- * un paño relleno que ondea, en una caja de `ancho` × `alto` píxeles del mapa. El pie del
- * mástil está en `pie`, que es el punto del incidente; el mástil sube en vertical y el paño
- * sale hacia la derecha desde arriba. La leyenda, las fichas y el pulso usan la misma forma.
+ * Marcador de los atribuidos, igual en el mapa, la ficha, la lista, la leyenda y los filtros: un
+ * círculo con un aro grueso en el rojo de «confirmado» y, dentro, la bandera del país al que la
+ * autoridad lo atribuye recortada en círculo (relleno rojo liso si no hay país o no hay
+ * bandera), separada del aro por un filo fino y oscuro. Atribuido a una persona: además, un
+ * punto fijo y oscuro en el centro, con un aro rojo fino. Por fuera, un filo del color del
+ * fondo lo separa de los círculos vecinos, como a ellos. Medidas en píxeles, desde el centro:
+ * 23 px de diámetro (24,5 con el filo de fuera), entre el círculo suelto (13 px) y el grupo más
+ * pequeño (25 px).
  */
-export interface FormaBandera {
-  ancho: number;
-  alto: number;
-  pie: readonly [number, number];
-  /** Altura del mástil, desde el pie. */
-  mastil: number;
-  pano: { ancho: number; alto: number; onda: number };
-}
+export const MARCA_ATRIBUIDO = {
+  /** Borde exterior del aro rojo. */
+  radio: 11.5,
+  /** Grosor del aro rojo. */
+  aro: 3,
+  /** Filo oscuro entre el aro y la bandera. */
+  filo: 1,
+  /** Filo del color del fondo por fuera del aro. */
+  halo: 0.75,
+  /** Radio del punto de «persona» y grosor de su aro rojo. */
+  punto: 2.5,
+  aroPunto: 1,
+} as const;
 
-/**
- * La bandera del mapa: 28 px de mástil y un paño de 20 × 13, más grande que un círculo de
- * incidente suelto (13 px de diámetro) para que sea lo primero que se ve.
- */
-export const BANDERA: FormaBandera = {
-  ancho: 30,
-  alto: 36,
-  pie: [5, 33],
-  mastil: 28,
-  pano: { ancho: 20, alto: 13, onda: 2 },
-};
-
-/**
- * Filo de la bandera: fino y del color del fondo del mapa, lo justo para que no se funda con un
- * círculo rojo que tenga al lado. La fuerza la dan el tamaño y el paño relleno, no el borde.
- */
-export const CONTORNO_BANDERA = PALETA.fondo;
-/** Lo que asoma el filo por fuera del rojo: 1 px como mucho. */
-export const GROSOR_CONTORNO_BANDERA = 1;
-/** Grosor del mástil y del trazo rojo que remata el paño. */
-export const GROSOR_MASTIL = 2;
-export const GROSOR_PANO = 1;
-/** El mástil, en un rojo algo más oscuro que el paño. */
-export const COLOR_MASTIL = "#c82a3e";
-
-/** Trazado SVG del mástil. */
-export function trazadoMastil(b: FormaBandera): string {
-  const [x, y] = b.pie;
-  return `M${x} ${y}V${y - b.mastil}`;
-}
-
-/** Trazado SVG del paño: un rectángulo con los bordes de arriba y de abajo ondulados. */
-export function trazadoPano(b: FormaBandera): string {
-  const x = b.pie[0];
-  const arriba = b.pie[1] - b.mastil;
-  const { ancho, alto, onda } = b.pano;
-  const abajo = arriba + alto;
-  const tercio = ancho / 3;
-  return (
-    `M${x} ${arriba}C${x + tercio} ${arriba - onda} ${x + 2 * tercio} ${arriba + onda} ${x + ancho} ${arriba}` +
-    `V${abajo}C${x + 2 * tercio} ${abajo + onda} ${x + tercio} ${abajo - onda} ${x} ${abajo}Z`
-  );
-}
-
-/** Trazado SVG de la bandera entera: mástil y paño. */
-export function trazadoBandera(b: FormaBandera): string {
-  return trazadoMastil(b) + trazadoPano(b);
-}
+/** Radio de la bandera recortada: lo que queda dentro del aro y del filo (15 px de diámetro). */
+export const RADIO_BANDERA = MARCA_ATRIBUIDO.radio - MARCA_ATRIBUIDO.aro - MARCA_ATRIBUIDO.filo;
+/** El aro, el relleno liso y el aro del punto: el rojo de «confirmado». */
+export const COLOR_ARO_ATRIBUIDO = PALETA.atribuido;
+/** El filo entre el aro y la bandera, el de fuera y el punto: el fondo del mapa. */
+export const COLOR_FILO_ATRIBUIDO = PALETA.fondo;
 
 /** Gravedad de cada estado para decidir el color de un grupo: manda el más grave. */
 export const GRAVEDAD: Record<Estado, number> = {

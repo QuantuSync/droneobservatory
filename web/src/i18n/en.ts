@@ -257,10 +257,11 @@ export const en: Textos = {
     colores:
       "Each incident is a circle filled with the colour of its status: orange, reported; red, " +
       "confirmed. A denied incident is a grey circle with a dashed outline and no fill. An " +
-      "attributed incident (a confirmed one whose perpetrator a government has named) is just " +
-      "a red flag, larger than a circle: the foot of the pole marks the place. It is always drawn " +
-      "on top and is never grouped with others. The type of incident is written in the record, " +
-      "the list and the filters.",
+      "attributed incident (a confirmed one that an authority attributes to a State or to a " +
+      "person) is a slightly larger circle with a thick red ring and, inside, the flag of the " +
+      "country it is attributed to; when attributed to a person, it also has a fixed dark dot in " +
+      "the centre. It is always drawn on top and is never grouped with the circles. The type of " +
+      "incident is written in the record, the list and the filters.",
     periodo:
       "The “Filters” button opens the period (everything, the last 24 hours, the last 7 or 30 " +
       "days, the last year or between two dates) and the status, type and country filters. " +
@@ -275,7 +276,7 @@ export const en: Textos = {
       "goes through them one by one and “Dismiss” clears them.",
     areas:
       "Each incident covers an area: the circle is the radius within which it is known to have " +
-      "happened (for attributed incidents, the foot of the flag marks the place).",
+      "happened.",
     lineas: "A thin line joins the incidents of one episode: several targets on the same night.",
     numeros:
       "A circle with a number inside groups several incidents (a single incident is filled " +
@@ -353,7 +354,7 @@ export const en: Textos = {
       "incident list opens the same records without using the map.",
     grupo: (n) => (n === 1 ? "1 incident: zoom in to see it" : `${n} incidents: zoom in to see them`),
     pila: (n) => `${n} incidents at this exact spot: tap to choose one`,
-    banderas: (n) => `${n} attributed incidents: zoom in to separate them`,
+    atribuidos: (n) => `${n} attributed incidents: zoom in to separate them`,
     grupoImpactos: (n) => `${n} places hit: zoom in to see them`,
     impacto: (parte, foco) =>
       `Place hit${parte ? " · claim by a party" : ""}${foco ? " · thermal hotspot" : ""}`,
@@ -368,6 +369,20 @@ export const en: Textos = {
     confirmado: "Confirmed",
     atribuido: "Attributed",
     desmentido: "Denied",
+  },
+  atribucion: {
+    aEstado: (pais) => `Attributed to ${pais}`,
+    aEstadoSinPais: "Attributed to a State",
+    aPersonaDe: (gentilicio) => `Attributed to a person of ${gentilicio} nationality`,
+    aPersonaDePais: (pais) => `Attributed to a person (nationality: ${pais})`,
+    aPersona: "Attributed to a person",
+    leyendaEstado: "Attributed by an authority to a State",
+    leyendaPersona: "Attributed by an authority to a person",
+    bandera:
+      "Inside the red ring, the flag of the country to which the authority attributes the " +
+      "incident (the State, or the person's nationality if the authority states it); it is not " +
+      "a claim by the observatory. With no country, the ring is filled red. A person also has a " +
+      "dark dot in the centre.",
   },
   presencia: {
     confirmada: "Drone confirmed",
@@ -674,10 +689,19 @@ export const en: Textos = {
                 termino: "Attributed",
                 marca: { estado: "atribuido" },
                 texto: [
-                  "A confirmed incident for which an authority names a government as " +
-                    "responsible: on the map, a red flag, larger than a circle and drawn on top of everything, whose foot marks the place. " +
-                    "The record shows it as " +
-                    "“Confirmed · attributed to…”, with who attributes it and to whom.",
+                  "A confirmed incident that an authority attributes to a State or to a person. It " +
+                    "only counts if the authority's quoted statement names who it is attributed to. " +
+                    "On the map, a circle with a thick red ring, larger than an incident's and drawn " +
+                    "on top of everything, centred on the place: inside, the flag of the country the " +
+                    "authority attributes it to, the State or the person's nationality (the latter " +
+                    "only if the authority states it expressly; it is never inferred from the name, " +
+                    "the place or the language). With no country, or a country without a flag on the " +
+                    "site, the ring is filled red. When attributed to a person, it also has a fixed " +
+                    "dark dot in the centre. The flag is the one the authority gives, not a claim by " +
+                    "the observatory. Several attributed incidents together when zooming out are one " +
+                    "marker with its number; if they belong to different countries, it is filled red, " +
+                    "without a flag. The record shows it as “Confirmed · attributed to…”, with who " +
+                    "attributes it and to whom.",
                 ],
               },
               {

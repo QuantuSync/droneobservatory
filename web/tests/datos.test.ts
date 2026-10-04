@@ -129,6 +129,7 @@ describe("resúmenes", () => {
       objetivo: "Flughafen München",
       episodio: null,
       foco: false,
+      atribucion: null,
     });
   });
 
@@ -308,7 +309,7 @@ describe("validación contra el esquema", () => {
 
 describe("listas cerradas iguales a las del esquema", () => {
   type Esquema = Record<string, unknown>;
-  const leer = (nombre: string) => leerJson("esquema", "1.9.0", `${nombre}.schema.json`) as Esquema;
+  const leer = (nombre: string) => leerJson("esquema", "1.10.0", `${nombre}.schema.json`) as Esquema;
   const en = (objeto: unknown, ...claves: string[]): unknown =>
     claves.reduce<unknown>((actual, clave) => (actual as Esquema)[clave], objeto);
 

@@ -84,6 +84,41 @@ Copyright (c) 2026 Bilawal Sidhu
 La interferencia GNSS usa la biblioteca [h3](https://github.com/uber/h3-py) (Uber
 Technologies, Apache-2.0) como dependencia de `requirements.txt`; no se copia su código.
 
+### flag-icons (MIT)
+
+Las banderas del marcador de los incidentes atribuidos (`web/public/banderas/*.svg`) son las
+versiones cuadradas (`flags/1x1`) de [flag-icons](https://github.com/lipis/flag-icons) 7.5.0,
+copiadas en el repositorio (la web no las carga de ningún servidor externo). El único cambio:
+`width="512" height="512"` en la etiqueta `<svg>`, para que todos los navegadores las dibujen
+en el lienzo del mapa. Son 48: los países europeos de `configuracion/paises_europa.json`,
+Rusia, Bielorrusia, Ucrania, Turquía, el Vaticano e Irán, los mismos de
+`configuracion/paises_atribucion.json`. La licencia va también junto a ellas
+(`web/public/banderas/LICENSE.txt`).
+
+```
+The MIT License (MIT)
+
+Copyright (c) 2013 Panayiotis Lipiridis
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of the Software, and to permit persons to whom the Software is furnished to do
+so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+
 ## Datos
 
 | Datos | Licencia y condiciones | Uso |

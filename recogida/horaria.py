@@ -70,6 +70,7 @@ from recogida import (
     mediciones,
     oficiales,
     satelite,
+    tipo_atribucion,
 )
 from recogida.cache import CachePaginas
 from recogida.descarga import Descargador, DescargaFallida
@@ -316,6 +317,12 @@ def principal(argumentos: list[str] | None = None) -> int:
             criterio_presencia.aplicar(almacen, ahora, extractor.modelos_base())
         except Exception as error:
             registro.warning("criterio de presencia sin aplicar: %s", str(error)[:300])
+        # Una vez por versión: tipo de actor y país de las atribuciones guardadas
+        # (recogida/tipo_atribucion.py).
+        try:
+            tipo_atribucion.aplicar(almacen, ahora, modelos(almacen))
+        except Exception as error:
+            registro.warning("tipo de las atribuciones sin aplicar: %s", str(error)[:300])
         # Candidatos de noticias a incidentes. El límite de gasto o una caída temporal del
         # servicio dejan candidatos pendientes sin más; un error que no se arregla solo o
         # una caída larga dejan la ejecución en rojo.

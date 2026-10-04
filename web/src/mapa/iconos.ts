@@ -1,29 +1,25 @@
 // Iconos de los incidentes en el mapa, dibujados en un lienzo, iguales que el componente
 // Simbolo de la leyenda y las fichas: un círculo relleno del color del estado, el desmentido
 // con borde gris discontinuo y sin relleno. El tipo no cambia la forma: va escrito en la
-// ficha, la lista y los filtros. Un atribuido es solo una bandera roja con su mástil y un
-// contorno claro, en su propia capa por encima de todo: el pie del mástil es el punto del
-// incidente (el mapa ancla el icono por ese pie), así que las líneas de los episodios y la
-// selección llegan al pie.
+// ficha, la lista y los filtros. Un atribuido es un círculo con aro rojo grueso y, dentro, la
+// bandera del país al que se atribuye (o relleno rojo liso), con un punto fijo si es una
+// persona, en su propia capa por encima de todo y centrado en el punto del incidente.
 
 import type { Map as Mapa } from "maplibre-gl";
 
 import type { Estado } from "../datos/tipos.ts";
 import { ESTADOS } from "../datos/vocabulario.ts";
+import { BANDERAS, VARIANTE_LISA, nombreIconoAtribuido, urlBandera } from "../banderas.ts";
+import type { VarianteAtribuido } from "../banderas.ts";
 import {
-  BANDERA,
-  COLOR_BANDERA,
+  COLOR_ARO_ATRIBUIDO,
   COLOR_ESTADO,
-  COLOR_MASTIL,
-  CONTORNO_BANDERA,
+  COLOR_FILO_ATRIBUIDO,
   GROSOR_CONTORNO,
-  GROSOR_CONTORNO_BANDERA,
-  GROSOR_MASTIL,
-  GROSOR_PANO,
+  MARCA_ATRIBUIDO,
   PALETA,
+  RADIO_BANDERA,
   TRAZO_DESMENTIDO,
-  trazadoMastil,
-  trazadoPano,
 } from "../paleta.ts";
 import { nombreIcono } from "./geometria.ts";
 
@@ -60,47 +56,109 @@ function dibujar(estado: Exclude<Estado, "atribuido">): ImageData | null {
   return contexto.getImageData(0, 0, lienzo.width, lienzo.height);
 }
 
-/** Nombre del icono de la bandera de un atribuido. */
-export const ICONO_BANDERA = "bandera";
-/** La bandera del incidente abierto: la misma, algo más grande, sin ningún borde. */
-export const ESCALA_BANDERA_ELEGIDA = 1.2;
-/**
- * Dónde va la caja de la bandera respecto al punto: el mapa la ancla por su esquina de abajo a
- * la izquierda y la desplaza para que el pie del mástil caiga en el punto exacto.
- */
-export const DESPLAZAMIENTO_BANDERA: [number, number] = [-BANDERA.pie[0], BANDERA.alto - BANDERA.pie[1]];
+/** Lado del icono de un atribuido (el marcador con su filo exterior) y densidad a la que se
+ *  dibuja: más que los círculos, para que la bandera se lea en pantallas densas. */
+export const LADO_ATRIBUIDO = 26;
+const DENSIDAD_ATRIBUIDO = 3;
+/** El marcador del incidente abierto: el mismo, algo más grande. */
+export const ESCALA_ATRIBUIDO_ELEGIDO = 1.2;
+
+function circuloLleno(contexto: CanvasRenderingContext2D, centro: number, radio: number, color: string): void {
+  contexto.beginPath();
+  contexto.arc(centro, centro, radio, 0, 2 * Math.PI);
+  contexto.closePath();
+  contexto.fillStyle = color;
+  contexto.fill();
+}
 
 /**
- * La bandera: primero el filo oscuro (el trazo de todo, un poco más ancho), encima el paño
- * relleno de rojo y el mástil en un rojo algo más oscuro. El filo asoma 1 px por fuera.
+ * Un atribuido en un lienzo de `lado` píxeles: filo exterior del color del fondo, aro rojo,
+ * filo oscuro, la bandera recortada en círculo y centrada (o relleno rojo liso) y, si es una
+ * persona, el punto oscuro con su aro rojo fino. El mismo dibujo que el SVG de Simbolo.tsx.
  */
-function dibujarBandera(): ImageData | null {
+export function pintarAtribuido(
+  contexto: CanvasRenderingContext2D,
+  lado: number,
+  bandera: CanvasImageSource | null,
+  persona: boolean,
+): void {
+  const c = lado / 2;
+  const m = MARCA_ATRIBUIDO;
+  circuloLleno(contexto, c, m.radio + m.halo, COLOR_FILO_ATRIBUIDO);
+  circuloLleno(contexto, c, m.radio, COLOR_ARO_ATRIBUIDO);
+  circuloLleno(contexto, c, m.radio - m.aro, COLOR_FILO_ATRIBUIDO);
+  if (bandera === null) {
+    circuloLleno(contexto, c, RADIO_BANDERA, COLOR_ARO_ATRIBUIDO);
+  } else {
+    contexto.save();
+    contexto.beginPath();
+    contexto.arc(c, c, RADIO_BANDERA, 0, 2 * Math.PI);
+    contexto.closePath();
+    contexto.clip();
+    contexto.drawImage(bandera, c - RADIO_BANDERA, c - RADIO_BANDERA, 2 * RADIO_BANDERA, 2 * RADIO_BANDERA);
+    contexto.restore();
+  }
+  if (persona) {
+    circuloLleno(contexto, c, m.punto + m.aroPunto, COLOR_ARO_ATRIBUIDO);
+    circuloLleno(contexto, c, m.punto, COLOR_FILO_ATRIBUIDO);
+  }
+}
+
+function dibujarAtribuido(bandera: CanvasImageSource | null, persona: boolean): ImageData | null {
   const lienzo = document.createElement("canvas");
-  lienzo.width = BANDERA.ancho * DENSIDAD;
-  lienzo.height = BANDERA.alto * DENSIDAD;
+  lienzo.width = LADO_ATRIBUIDO * DENSIDAD_ATRIBUIDO;
+  lienzo.height = LADO_ATRIBUIDO * DENSIDAD_ATRIBUIDO;
   const contexto = lienzo.getContext("2d");
   if (contexto === null) return null;
-  contexto.scale(DENSIDAD, DENSIDAD);
-  const mastil = new Path2D(trazadoMastil(BANDERA));
-  const pano = new Path2D(trazadoPano(BANDERA));
-  contexto.lineJoin = "round";
-  contexto.lineCap = "round";
-  contexto.strokeStyle = CONTORNO_BANDERA;
-  contexto.fillStyle = CONTORNO_BANDERA;
-  contexto.lineWidth = GROSOR_MASTIL + 2 * GROSOR_CONTORNO_BANDERA;
-  contexto.stroke(mastil);
-  contexto.lineWidth = GROSOR_PANO + 2 * GROSOR_CONTORNO_BANDERA;
-  contexto.fill(pano);
-  contexto.stroke(pano);
-  contexto.fillStyle = COLOR_BANDERA;
-  contexto.strokeStyle = COLOR_BANDERA;
-  contexto.fill(pano);
-  contexto.lineWidth = GROSOR_PANO;
-  contexto.stroke(pano);
-  contexto.strokeStyle = COLOR_MASTIL;
-  contexto.lineWidth = GROSOR_MASTIL;
-  contexto.stroke(mastil);
+  contexto.scale(DENSIDAD_ATRIBUIDO, DENSIDAD_ATRIBUIDO);
+  pintarAtribuido(contexto, LADO_ATRIBUIDO, bandera, persona);
   return contexto.getImageData(0, 0, lienzo.width, lienzo.height);
+}
+
+function registrarAtribuido(mapa: Mapa, variante: VarianteAtribuido, bandera: CanvasImageSource | null): boolean {
+  const nombre = nombreIconoAtribuido(variante);
+  if (mapa.hasImage(nombre)) return false;
+  const imagen = dibujarAtribuido(bandera, variante.persona);
+  if (imagen === null) return false;
+  mapa.addImage(nombre, imagen, { pixelRatio: DENSIDAD_ATRIBUIDO });
+  return true;
+}
+
+/** Banderas ya pedidas: cada una se carga una vez por página. */
+const cargadas = new Map<string, Promise<HTMLImageElement | null>>();
+
+function cargarBandera(pais: string): Promise<HTMLImageElement | null> {
+  let promesa = cargadas.get(pais);
+  if (promesa === undefined) {
+    const imagen = new Image();
+    imagen.decoding = "async";
+    imagen.src = urlBandera(pais);
+    promesa = imagen.decode().then(
+      () => imagen,
+      () => null,
+    );
+    cargadas.set(pais, promesa);
+  }
+  return promesa;
+}
+
+/**
+ * Registra en el mapa los marcadores con bandera de esos países (con y sin punto). Hasta que
+ * una bandera llega, su marcador se dibuja liso (estilo.ts); devuelve true si ha añadido alguno,
+ * para que el mapa vuelva a dibujar los atribuidos con su bandera. Una bandera que no carga
+ * deja el marcador liso.
+ */
+export async function registrarBanderas(mapa: Mapa, paises: Iterable<string>): Promise<boolean> {
+  const pedidas = [...new Set(paises)].filter((pais) => (BANDERAS as readonly string[]).includes(pais));
+  const imagenes = await Promise.all(pedidas.map(async (pais) => [pais, await cargarBandera(pais)] as const));
+  let nuevas = false;
+  for (const [pais, imagen] of imagenes) {
+    if (imagen === null) continue;
+    for (const persona of [false, true]) {
+      nuevas = registrarAtribuido(mapa, { bandera: pais, persona }, imagen) || nuevas;
+    }
+  }
+  return nuevas;
 }
 
 /**
@@ -176,12 +234,12 @@ function dibujarAviso(estado: EstadoAviso): ImageData | null {
   return contexto.getImageData(0, 0, lienzo.width, lienzo.height);
 }
 
-/** Registra en el mapa un icono por estado y una etiqueta por estado de aviso. */
+/** Registra en el mapa un icono por estado, los atribuidos sin bandera y una etiqueta por
+ *  estado de aviso. */
 export function registrarIconos(mapa: Mapa): void {
-  if (!mapa.hasImage(ICONO_BANDERA)) {
-    const imagen = dibujarBandera();
-    if (imagen !== null) mapa.addImage(ICONO_BANDERA, imagen, { pixelRatio: DENSIDAD });
-  }
+  // Los atribuidos sin bandera (con y sin punto); los de bandera, al cargarla.
+  registrarAtribuido(mapa, VARIANTE_LISA, null);
+  registrarAtribuido(mapa, { bandera: null, persona: true }, null);
   if (!mapa.hasImage(ICONO_OBSTACULO)) mapa.addImage(ICONO_OBSTACULO, dibujarObstaculo());
   for (const estado of ESTADOS) {
     if (estado === "atribuido") continue;

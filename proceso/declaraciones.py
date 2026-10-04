@@ -15,7 +15,8 @@ literal, que tiene que estar en el texto enviado) se registra como fuente
   («posible dron», «objeto no identificado», «se investiga si era un dron»). Cada confirmación
   deja una afirmación de presencia_dron con la fuente que la provoca.
 - sin_drones: presencia_dron descartada. niega_incidente: desmentido.
-- autoria: atribuido, solo si quien atribuye es un gobierno.
+- autoria: atribuido, solo si quien atribuye es un gobierno y su frase nombra a quien se
+  atribuye (un Estado o una persona; proceso/atribucion.py), con su tipo y su país.
 
 Una autoridad habla de su país: una declaración de una autoridad de otro país no
 cambia el incidente (el gobierno letón que dice que en Letonia no entró ningún dron
@@ -30,6 +31,7 @@ from collections.abc import Sequence
 from typing import Any
 
 from esquema import Documento
+from proceso import atribucion
 from proceso.credibilidad import Credibilidad
 from proceso.estados import Estado, TransicionNoPermitida, transitar
 from proceso.noticias import filtro
@@ -219,13 +221,20 @@ def aplicar(
                 )
         elif afirma == "autoria" and declaracion["categoria"] == "gobierno":
             actor = str(declaracion.get("autor", "")).strip()
-            if actor and resultado["estado"]["actual"] == Estado.CONFIRMADO:
+            # Estado o persona y su país, solo si la frase de la autoridad lo sostiene
+            # (proceso/atribucion.py); si no, no hay atribución.
+            clase = atribucion.clasificar(
+                actor, str(declaracion.get("frase", "")), declaracion.get("autor_tipo"),
+                declaracion.get("autor_pais"),
+            )  # fmt: skip
+            if clase is not None and resultado["estado"]["actual"] == Estado.CONFIRMADO:
                 _transitar(resultado, Estado.ATRIBUIDO, origen)
-            if actor and resultado["estado"]["actual"] == Estado.ATRIBUIDO:
+            if clase is not None and resultado["estado"]["actual"] == Estado.ATRIBUIDO:
                 resultado["atribucion"] = {
                     "actor": actor,
                     "autoridad": declaracion["autoridad"],
                     "fecha": origen["fecha"],
+                    **clase,
                 }
     # La frase que nombra drones confirma su presencia si nadie los descartó y el incidente no
     # está desmentido: una autoridad que dice que no pasó nada pesa más que la que lo cuenta.

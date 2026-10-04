@@ -1,5 +1,10 @@
 # Pulido de la web: ocho arreglos vistos en el teléfono
 
+> El 4 de octubre de 2026 la bandera roja con mástil de los atribuidos se sustituyó por un
+> círculo con aro rojo y la bandera del país dentro (`docs/informe_marcador_atribuido.md`).
+> Sus capturas (`pulido-4-*.png` y `pulido-4c-*.png`) se retiraron con ella; las del marcador
+> nuevo son `docs/capturas/atribuido-*.png`.
+
 Fecha: 4 de octubre de 2026. PR #87 (código y pruebas) y PR #88 (este informe y las capturas
 de producción).
 

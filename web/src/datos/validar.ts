@@ -1,4 +1,4 @@
-// Validación de los datos contra el esquema 1.9.0 (campos públicos), escrita a mano para
+// Validación de los datos contra el esquema 1.10.0 (campos públicos), escrita a mano para
 // que no necesite generar código en el navegador. Se usa en el build, sobre los ficheros de
 // publicacion/, y en la web al cargar cada fichero: un fichero que no valida no se pinta.
 
@@ -273,7 +273,10 @@ const CAMPOS_INCIDENTE_OPCIONALES: Record<string, Comprobacion> = {
     },
   ),
   respuesta: objeto({}, { medidas: lista(enumerado(v.MEDIDAS)) }),
-  atribucion: objeto({ actor: cadena(), autoridad: cadena(), fecha: instante }),
+  atribucion: objeto(
+    { actor: cadena(), autoridad: cadena(), fecha: instante },
+    { tipo: enumerado(v.TIPOS_ACTOR), pais: cadena(v.PATRON_PAIS) },
+  ),
   foco_termico: focoTermico,
   trafico_aereo: traficoAereo,
 };
@@ -470,6 +473,9 @@ const resumen = objeto({
       objetivo: nulable(cadena()),
       episodio: nulable(cadena(v.PATRON_ID_EPISODIO)),
       foco: enumerado([true, false]),
+      atribucion: nulable(
+        objeto({ tipo: nulable(enumerado(v.TIPOS_ACTOR)), pais: nulable(cadena(v.PATRON_PAIS)) }),
+      ),
     }),
   ),
   episodios: lista(

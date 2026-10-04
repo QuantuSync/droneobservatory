@@ -104,6 +104,8 @@ ESQUEMA: dict[str, Any] = {
                     "categoria",
                     "afirma",
                     "autor",
+                    "autor_tipo",
+                    "autor_pais",
                     "fuente",
                     "frase",
                 ],
@@ -113,6 +115,8 @@ ESQUEMA: dict[str, Any] = {
                     "categoria": {"enum": list(AUTORIDADES)},
                     "afirma": {"enum": list(AFIRMACIONES)},
                     "autor": {"type": "string"},
+                    "autor_tipo": {"enum": ["estado", "persona", ""]},
+                    "autor_pais": {"type": "string"},
                     "fuente": {"type": "integer"},
                     "frase": {"type": "string"},
                 },
@@ -211,9 +215,15 @@ gobierno, fiscalia o aviacion_civil. afirma: incidente si dice que el incidente 
 ocurrió; drones si afirma \
 expresamente que había drones (los vio ella misma, por radar o por restos); sin_drones si dice \
 que no los hubo; niega_incidente si dice que no pasó nada; autoria si atribuye la autoría (a \
-quién, en autor; vacío en los demás casos). fuente: el número de la fuente. frase: la frase \
-literal de la declaración, de 25 palabras como máximo. Si la autoridad comunica un aviso de \
-dron o actúa por él (cierra, interviene), inclúyela como incidente.
+quién, en autor, tal como lo nombra la frase: «Rusia», un nombre y apellidos; nunca el nombre de \
+la autoridad que habla; vacío en los demás casos). autor_tipo: estado si se atribuye a un Estado \
+(también a su gobierno, su ejército o sus servicios), persona si se atribuye a una persona; vacío \
+si no es ninguno de los dos o no hay autoría. autor_pais: el código ISO del Estado al que se \
+atribuye; para una persona, el de su nacionalidad solo si la frase la dice expresamente («un \
+ciudadano ruso»); nunca la deduzcas del nombre, del lugar del incidente ni del idioma; vacío si \
+no la dice. fuente: el número de la fuente. frase: la frase literal de la declaración, de 25 \
+palabras como máximo; en una autoría, la que nombra a quien se atribuye. Si la autoridad \
+comunica un aviso de dron o actúa por él (cierra, interviene), inclúyela como incidente.
 - titulo_es y titulo_en: un título breve y neutro, en español y en inglés, con lugar y hecho \
 («Drones sobre el aeropuerto de Copenhague obligan a cerrarlo»), sin fecha. Van aparte de los \
 datos y siempre.

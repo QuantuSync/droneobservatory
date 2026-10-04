@@ -1,5 +1,5 @@
 import type { IncidenteResumen } from "../datos/tipos.ts";
-import { fechaDia, pais, region } from "../i18n/index.ts";
+import { fechaDia, pais, region, textoAtribuido } from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
 import { rutaDeFicha } from "../sitio.ts";
 import type { Idioma } from "../sitio.ts";
@@ -36,12 +36,14 @@ export function Lista({ t, idioma, incidentes, regiones, onRegion }: Props) {
               a={rutaDeFicha(incidente.id, idioma)}
               className="flex items-start gap-2 rounded-sm px-1 py-0.5 hover:bg-elevado"
             >
-              <Simbolo estado={incidente.estado} className="mt-0.5 shrink-0" />
+              <Simbolo estado={incidente.estado} atribucion={incidente.atribucion} className="mt-0.5 shrink-0" />
               <span className="min-w-0">
                 <span className="block">{incidente.titulo[idioma]}</span>
                 <span className="mono block text-xs text-secundario">
                   {fechaDia(incidente.dia)} · {pais(incidente.pais, idioma)} ·{" "}
-                  {t.estado[incidente.estado]}
+                  {incidente.estado === "atribuido"
+                    ? textoAtribuido(t, idioma, incidente.atribucion)
+                    : t.estado[incidente.estado]}
                   {incidente.punto === null && (
                     <span className="text-notificado"> · {t.imprecisa.etiqueta}</span>
                   )}
