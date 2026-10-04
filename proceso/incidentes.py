@@ -580,6 +580,10 @@ def destino_de(
     return primero, segundo
 
 
+# Motivo de las fusiones revisadas a mano (recogida/revisados.py).
+PREFIJO_REVISADA = "revisión: "
+
+
 def activo(documento: Documento) -> bool:
     """Ni fundido en otro ni retirado."""
     return "fusionado_en" not in documento and "retirado" not in documento
@@ -647,7 +651,8 @@ def revisar_fusiones(almacen: Almacen, ahora: datetime, modelos: frozenset[str])
     absorbidos que vuelven."""
     vueltos = []
     for fusion in almacen.fusiones():
-        if fusion["revertida"]:
+        # Las revisadas a mano (recogida/revisados.py) no las deshace una regla.
+        if fusion["revertida"] or fusion["motivo"].startswith(PREFIJO_REVISADA):
             continue
         absorbido = almacen.incidente(fusion["absorbido"])
         destino = almacen.incidente(fusion["destino"])

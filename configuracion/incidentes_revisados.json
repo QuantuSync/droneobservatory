@@ -1,0 +1,25 @@
+{
+  "descripcion": "Correcciones revisadas a mano de incidentes concretos, que aplica recogida/revisados.py en la recogida horaria. «unir»: registros del mismo suceso que las reglas de fusión no juntan (noticias que vuelven semanas después, fechadas por su publicación); se funden en el que elige la regla de siempre (proceso/incidentes.destino_de) y la fusión lleva su motivo. «reextraer»: un incidente cuya ficha mezcló dos sucesos; su candidato se vuelve a extraer una vez. Si la ficha nueva vuelve a dar un lugar de «no_lugar» o una fecha anterior a «no_antes_de», el incidente se retira con el motivo: sus noticias siguen en el candidato y el suceso tiene otros registros.",
+  "unir": [
+    {
+      "registros": [
+        "EODI-2026-00391",
+        "EODI-2026-00134",
+        "EODI-2026-00239",
+        "EODI-2026-00129",
+        "EODI-2026-00190",
+        "EODI-2026-00318"
+      ],
+      "motivo": "el mismo suceso: el dron con explosivos del aeropuerto de Leipzig/Halle del 4 de agosto de 2026, junto al avión ucraniano (00134 con el cierre de 100 minutos que dio la policía; 00239, 00129, 00190 y 00318 son noticias de finales de agosto y septiembre sobre la acusación del Gobierno alemán, fechadas por su publicación)"
+    }
+  ],
+  "reextraer": [
+    {
+      "incidente": "EODI-2026-00283",
+      "candidato": "CAND-20260918T1015-loc:2879139-militar",
+      "motivo": "la ficha mezcló dos sucesos: sus tres noticias (18 de septiembre de 2026) son del dron hallado junto a la base aérea de Wunstorf, pero tomó la fecha y el lugar del dron de Leipzig/Halle del 4 de agosto, con el que la Fiscalía Federal estudia si hay relación",
+      "no_lugar": "Leipzig",
+      "no_antes_de": "2026-09-01"
+    }
+  ]
+}

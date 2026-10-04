@@ -71,6 +71,7 @@ from recogida import (
     luces,
     mediciones,
     oficiales,
+    revisados,
     satelite,
     tipo_atribucion,
 )
@@ -392,6 +393,20 @@ def principal(argumentos: list[str] | None = None) -> int:
             registro.info("fusiones deshechas por las reglas de ahora: %d", len(vueltos))
         except Exception as error:
             registro.warning("revisión de fusiones fallida: %s", str(error)[:300])
+        # Correcciones revisadas a mano de incidentes concretos (configuracion/
+        # incidentes_revisados.json): registros que se unen y fichas que se vuelven a extraer.
+        try:
+            registro.info(
+                "registros revisados unidos: %d", revisados.unir(almacen, ahora, modelos(almacen))
+            )
+            from modelo import cliente as servicio
+
+            hechos = revisados.reextraer(
+                almacen, servicio.Cliente(servicio.configuracion()), ahora, modelos(almacen)
+            )
+            registro.info("incidentes revisados vueltos a extraer: %s", hechos)
+        except Exception as error:
+            registro.warning("revisados sin aplicar: %s", str(error)[:300])
         confirmadas, sin_guardar = presencia.revisar(almacen, ahora, modelos(almacen))
         registro.info("presencia del dron confirmada por declaraciones: %d", len(confirmadas))
         if sin_guardar:
