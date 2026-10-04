@@ -14,7 +14,15 @@ import { OBJETO_TESELAS, urlDelAlmacen } from "../almacenPublico.ts";
 import { OPACIDAD_GNSS } from "../datos/gnss.ts";
 import { ESTADOS } from "../datos/vocabulario.ts";
 import { COLOR_ESTADO, PALETA, TRAZO_DESMENTIDO } from "../paleta.ts";
-import { ETIQUETA_AVISO, ICONO_BANDERA_ELEGIDA } from "./iconos.ts";
+import {
+  DESPLAZAMIENTO_BANDERA,
+  ETIQUETA_AVISO,
+  ICONO_BANDERA,
+  ICONO_BANDERA_ELEGIDA,
+  ICONO_OBSTACULO,
+  LADO_OBSTACULO,
+  RADIO_INCIDENTE,
+} from "./iconos.ts";
 import type { Idioma } from "../sitio.ts";
 
 export const URL_TESELAS: string =
@@ -26,6 +34,8 @@ export const FUENTE_TIERRA = "tierra";
 export const FUENTE_PAISES = "paises";
 export const FUENTE_PUNTOS = "incidentes";
 export const FUENTE_PUNTOS_SUELTOS = "incidentes-sueltos";
+/** Los atribuidos, cada uno con su bandera: no se agrupan nunca. */
+export const FUENTE_BANDERAS = "banderas";
 export const FUENTE_AREAS = "areas";
 export const FUENTE_EPISODIOS = "episodios";
 export const FUENTE_SELECCION = "seleccion";
@@ -71,10 +81,14 @@ export const CAPA_LUZ_REGIONES_RUSIA = "rusia-luz";
 export const CAPA_LUZ_CIUDADES = "guerra-luz-ciudades";
 export const CAPA_FOCOS_VIVOS = "guerra-focos-vivos";
 export const CAPA_FOCOS_VIVOS_IMPACTO = "guerra-focos-vivos-impacto";
+export const CAPA_BANDERAS = "banderas";
+export const CAPA_OBSTACULOS = "obstaculos";
+export const CAPA_OBSTACULOS_IMPACTOS = "guerra-impactos-obstaculos";
 
 /** Capas que se pueden pulsar, de la de más arriba a la de más abajo. */
 export const CAPAS_PULSABLES: readonly string[] = [
   CAPA_DIRECTO,
+  CAPA_BANDERAS,
   CAPA_INCIDENTES_GRAVES,
   CAPA_INCIDENTES_DISCRETOS,
   CAPA_GRUPOS,
@@ -101,9 +115,11 @@ export const CAPAS_DE_INCIDENTES: readonly string[] = [
   CAPA_INCIDENTES_DISCRETOS,
   CAPA_INCIDENTES_GRAVES,
   CAPA_FOCOS,
+  CAPA_BANDERAS,
   CAPA_FOCOS_BANDERA,
   CAPA_SELECCION,
   CAPA_SELECCION_BANDERA,
+  CAPA_OBSTACULOS,
 ];
 export const CAPAS_DE_UCRANIA: readonly string[] = [
   CAPA_REGIONES_RUSIA,
@@ -119,6 +135,7 @@ export const CAPAS_DE_UCRANIA: readonly string[] = [
   CAPA_IMPACTOS,
   CAPA_IMPACTOS_FOCO,
   CAPA_IMPACTOS_FOCO_GRUPO,
+  CAPA_OBSTACULOS_IMPACTOS,
 ];
 export const CAPAS_DE_DENSIDAD: readonly string[] = ["densidad"];
 export const CAPAS_DE_PRESION: readonly string[] = [CAPA_PRESION, CAPA_PRESION_LINEA];
@@ -166,6 +183,11 @@ const RADIO_GRUPO_IMPACTOS_MAXIMO = 18;
 const CUENTA_GRUPO_IMPACTOS_MAXIMA = 200;
 export const ZOOM_MAXIMO_AGRUPADO_IMPACTOS = 7;
 const RADIO_DE_AGRUPACION_IMPACTOS_PX = 30;
+const RADIO_GRUPO_IMPACTOS: ExpressionSpecification = [
+  "interpolate", ["linear"], ["get", "point_count"],
+  2, RADIO_GRUPO_IMPACTOS_MINIMO,
+  CUENTA_GRUPO_IMPACTOS_MAXIMA, RADIO_GRUPO_IMPACTOS_MAXIMO,
+];
 
 /** Hasta este zoom los incidentes cercanos se agrupan con su contador. */
 export const ZOOM_MAXIMO_AGRUPADO = 5;
@@ -330,11 +352,12 @@ const COLOR_POR_ESTADO: ExpressionSpecification = [
 
 /**
  * Color del anillo de un grupo: el del estado más grave que contiene. Rojo si hay algún
- * confirmado o atribuido; naranja si todos son notificados.
+ * confirmado; naranja si todos son notificados. Los atribuidos no se agrupan: van con su
+ * bandera, siempre a la vista.
  */
 export const COLOR_DE_GRUPO: ExpressionSpecification = [
   "case",
-  [">", ["+", ["get", "n_atribuidos"], ["get", "n_confirmados"]], 0],
+  [">", ["get", "n_confirmados"], 0],
   COLOR_ESTADO.confirmado,
   [">", ["get", "n_notificados"], 0],
   COLOR_ESTADO.notificado,
@@ -342,7 +365,7 @@ export const COLOR_DE_GRUPO: ExpressionSpecification = [
 ];
 
 const ES_DESMENTIDO: ExpressionSpecification = ["==", ["get", "estado"], "desmentido"];
-/** Un atribuido es solo su bandera: sin área, destello ni aro alrededor. */
+/** Un atribuido es solo su bandera: sin área ni aro alrededor. */
 export const ES_ATRIBUIDO: ExpressionSpecification = ["==", ["get", "estado"], "atribuido"];
 /**
  * Un solo sistema de marcas: todo lo que junta más de un incidente (un grupo de la
@@ -607,7 +630,7 @@ function capasPropias(acento: string): LayerSpecification[] {
       id: CAPA_RECIENTES,
       type: "circle",
       source: FUENTE_PUNTOS,
-      filter: ["all", ["!", ES_GRUPO], ["==", ["get", "reciente"], 1], ["!", ES_ATRIBUIDO]],
+      filter: ["all", ["!", ES_GRUPO], ["==", ["get", "reciente"], 1]],
       paint: {
         "circle-radius": 16,
         "circle-color": COLOR_POR_ESTADO,
@@ -646,33 +669,13 @@ function capasPropias(acento: string): LayerSpecification[] {
       source: FUENTE_PUNTOS,
       // También en una pila (varios incidentes en el mismo punto) que tenga alguno con foco;
       // no en los grupos de los zooms lejanos, que juntan puntos distintos.
-      filter: [
-        "all",
-        ["!", ["has", "point_count"]],
-        ["==", ["get", "foco"], 1],
-        ["any", ES_GRUPO, ["!", ES_ATRIBUIDO]],
-      ],
+      filter: ["all", ["!", ["has", "point_count"]], ["==", ["get", "foco"], 1]],
       paint: {
         "circle-radius": RADIO_MARCA_FOCO,
         "circle-color": PALETA.texto,
         "circle-stroke-color": PALETA.fondo,
         "circle-stroke-width": 1.5,
         "circle-translate": DESPLAZAMIENTO_MARCA_FOCO,
-      },
-    },
-    // En un atribuido suelto, la marca del foco va a la izquierda: a la derecha está el
-    // banderín.
-    {
-      id: CAPA_FOCOS_BANDERA,
-      type: "circle",
-      source: FUENTE_PUNTOS,
-      filter: ["all", ["!", ES_GRUPO], ["==", ["get", "foco"], 1], ES_ATRIBUIDO],
-      paint: {
-        "circle-radius": RADIO_MARCA_FOCO,
-        "circle-color": PALETA.texto,
-        "circle-stroke-color": PALETA.fondo,
-        "circle-stroke-width": 1.5,
-        "circle-translate": [-DESPLAZAMIENTO_MARCA_FOCO[0], DESPLAZAMIENTO_MARCA_FOCO[1]],
       },
     },
     // Ciudades que perdieron luz nocturna: un disco oscuro, más opaco cuanto mayor la pérdida.
@@ -733,11 +736,7 @@ function capasPropias(acento: string): LayerSpecification[] {
       source: FUENTE_IMPACTOS,
       filter: ["has", "point_count"],
       paint: {
-        "circle-radius": [
-          "interpolate", ["linear"], ["get", "point_count"],
-          2, RADIO_GRUPO_IMPACTOS_MINIMO,
-          CUENTA_GRUPO_IMPACTOS_MAXIMA, RADIO_GRUPO_IMPACTOS_MAXIMO,
-        ],
+        "circle-radius": RADIO_GRUPO_IMPACTOS,
         "circle-color": PALETA.elevado,
         "circle-stroke-color": PALETA.guerra,
         "circle-stroke-width": 1.2,
@@ -809,41 +808,6 @@ function capasPropias(acento: string): LayerSpecification[] {
         "circle-stroke-width": 1.5,
       },
     },
-    // Un atribuido abierto: su bandera con un contorno del acento, sin aro.
-    {
-      id: CAPA_SELECCION_BANDERA,
-      type: "symbol",
-      source: FUENTE_SELECCION,
-      filter: ES_ATRIBUIDO,
-      layout: {
-        "icon-image": ICONO_BANDERA_ELEGIDA,
-        "icon-allow-overlap": true,
-        "icon-ignore-placement": true,
-      },
-    },
-    // Avisos de la detección en directo: una etiqueta con el código OACI dentro, borde del
-    // color de su estado y una punta que señala el aeropuerto, levantada sobre el punto para
-    // no tapar el número de un grupo en el mismo sitio. Sin pulso.
-    {
-      id: CAPA_DIRECTO,
-      type: "symbol",
-      source: FUENTE_DIRECTO,
-      layout: {
-        "icon-image": ["concat", "aviso-", ["get", "estado"]],
-        "icon-anchor": "bottom",
-        "icon-offset": [0, -ETIQUETA_AVISO.hueco],
-        "icon-allow-overlap": true,
-        "icon-ignore-placement": true,
-        "text-field": ["get", "oaci"],
-        "text-font": FUENTE_TIPOGRAFICA_NUMEROS,
-        "text-size": TAMANO_TEXTO_AVISO,
-        "text-anchor": "center",
-        "text-offset": [0, -CENTRO_TEXTO_AVISO / TAMANO_TEXTO_AVISO],
-        "text-allow-overlap": true,
-        "text-ignore-placement": true,
-      },
-      paint: { "text-color": PALETA.texto },
-    },
     // El número de un grupo va encima de todo, con un halo del fondo: ni un incidente suelto
     // en un punto muy cercano ni la etiqueta de un aviso lo tapan.
     {
@@ -859,6 +823,109 @@ function capasPropias(acento: string): LayerSpecification[] {
         "text-ignore-placement": true,
       },
       paint: { "text-color": PALETA.texto, "text-halo-color": PALETA.panelSolido, "text-halo-width": 2 },
+    },
+    // Obstáculos invisibles del tamaño de cada círculo: los nombres del mapa (países,
+    // ciudades) ceden ante los marcadores en lugar de quedar partidos bajo ellos. Se colocan
+    // antes que los nombres de la base (van por encima en la pila), siempre a la vista
+    // (allow-overlap) y ocupando su sitio (sin ignore-placement).
+    {
+      id: CAPA_OBSTACULOS,
+      type: "symbol",
+      source: FUENTE_PUNTOS,
+      layout: {
+        "icon-image": ICONO_OBSTACULO,
+        "icon-size": [
+          "/",
+          ["case", ES_GRUPO, ["+", ["*", 2, RADIO_DE_GRUPO], 3], 2 * RADIO_INCIDENTE + 2],
+          LADO_OBSTACULO,
+        ],
+        "icon-allow-overlap": true,
+        "icon-ignore-placement": false,
+        "icon-padding": 1,
+      },
+    },
+    {
+      id: CAPA_OBSTACULOS_IMPACTOS,
+      type: "symbol",
+      source: FUENTE_IMPACTOS,
+      layout: {
+        "icon-image": ICONO_OBSTACULO,
+        "icon-size": [
+          "/",
+          ["case", ["has", "point_count"], ["+", ["*", 2, RADIO_GRUPO_IMPACTOS], 2.4], 2 * RADIO_IMPACTO + 2.4],
+          LADO_OBSTACULO,
+        ],
+        "icon-allow-overlap": true,
+        "icon-ignore-placement": false,
+        "icon-padding": 1,
+      },
+    },
+    // Los atribuidos: solo su bandera, más grande que un círculo suelto y por encima de los
+    // círculos y de los grupos. El pie del mástil marca el punto exacto. Los nombres del mapa
+    // también ceden ante ella.
+    {
+      id: CAPA_BANDERAS,
+      type: "symbol",
+      source: FUENTE_BANDERAS,
+      layout: {
+        "icon-image": ICONO_BANDERA,
+        "icon-anchor": "bottom-left",
+        "icon-offset": DESPLAZAMIENTO_BANDERA,
+        "icon-allow-overlap": true,
+        "icon-ignore-placement": false,
+      },
+    },
+    // El foco térmico de un atribuido va a la izquierda del mástil: a la derecha está el paño.
+    {
+      id: CAPA_FOCOS_BANDERA,
+      type: "circle",
+      source: FUENTE_BANDERAS,
+      filter: ["==", ["get", "foco"], 1],
+      paint: {
+        "circle-radius": RADIO_MARCA_FOCO,
+        "circle-color": PALETA.texto,
+        "circle-stroke-color": PALETA.fondo,
+        "circle-stroke-width": 1.5,
+        "circle-translate": [-DESPLAZAMIENTO_MARCA_FOCO[0], DESPLAZAMIENTO_MARCA_FOCO[1]],
+      },
+    },
+    // Un atribuido abierto: su bandera con un contorno del acento más ancho, sin aro.
+    {
+      id: CAPA_SELECCION_BANDERA,
+      type: "symbol",
+      source: FUENTE_SELECCION,
+      filter: ES_ATRIBUIDO,
+      layout: {
+        "icon-image": ICONO_BANDERA_ELEGIDA,
+        "icon-anchor": "bottom-left",
+        "icon-offset": DESPLAZAMIENTO_BANDERA,
+        "icon-allow-overlap": true,
+        "icon-ignore-placement": true,
+      },
+    },
+    // Avisos de la detección en directo: una etiqueta con el código OACI dentro, borde del
+    // color de su estado y una punta que señala el aeropuerto, levantada sobre el punto para
+    // no tapar el número de un grupo en el mismo sitio. Sin pulso. Va encima de todo: ningún
+    // grupo vecino la pisa, y los nombres del mapa ceden ante ella.
+    {
+      id: CAPA_DIRECTO,
+      type: "symbol",
+      source: FUENTE_DIRECTO,
+      layout: {
+        "icon-image": ["concat", "aviso-", ["get", "estado"]],
+        "icon-anchor": "bottom",
+        "icon-offset": [0, -ETIQUETA_AVISO.hueco],
+        "icon-allow-overlap": true,
+        "icon-ignore-placement": false,
+        "text-field": ["get", "oaci"],
+        "text-font": FUENTE_TIPOGRAFICA_NUMEROS,
+        "text-size": TAMANO_TEXTO_AVISO,
+        "text-anchor": "center",
+        "text-offset": [0, -CENTRO_TEXTO_AVISO / TAMANO_TEXTO_AVISO],
+        "text-allow-overlap": true,
+        "text-ignore-placement": false,
+      },
+      paint: { "text-color": PALETA.texto },
     },
   ];
 }
@@ -892,13 +959,13 @@ export function estilo(idioma: Idioma, origen: string, acento: string): StyleSpe
         clusterRadius: RADIO_DE_AGRUPACION_PX,
         clusterProperties: {
           total: ["+", ["get", "n"]],
-          n_atribuidos: ["+", ["get", "n_atribuidos"]],
           n_confirmados: ["+", ["get", "n_confirmados"]],
           n_notificados: ["+", ["get", "n_notificados"]],
           n_novedades: ["+", ["get", "novedad"]],
         },
       },
       [FUENTE_PUNTOS_SUELTOS]: { type: "geojson", data: VACIA },
+      [FUENTE_BANDERAS]: { type: "geojson", data: VACIA },
       [FUENTE_AREAS]: { type: "geojson", data: VACIA },
       [FUENTE_EPISODIOS]: { type: "geojson", data: VACIA },
       [FUENTE_SELECCION]: { type: "geojson", data: VACIA },

@@ -44,38 +44,61 @@ export const COLOR_ESTADO: Record<Estado, string> = {
 export const COLOR_BANDERA = PALETA.atribuido;
 
 /**
- * Forma de la bandera de los atribuidos (en lugar del círculo de los demás: sin nada debajo), en unidades de una caja de `lado`: el pie del mástil está en `pie`, que es el punto
- * del incidente; el mástil sube en vertical y el banderín sale hacia la derecha desde arriba.
+ * Bandera de los atribuidos (en lugar del círculo de los demás, sin nada debajo): un mástil y
+ * un paño relleno que ondea, en una caja de `ancho` × `alto` píxeles del mapa. El pie del
+ * mástil está en `pie`, que es el punto del incidente; el mástil sube en vertical y el paño
+ * sale hacia la derecha desde arriba. La leyenda, las fichas y el pulso usan la misma forma.
  */
 export interface FormaBandera {
-  lado: number;
+  ancho: number;
+  alto: number;
   pie: readonly [number, number];
-  tope: readonly [number, number];
-  banderin: readonly (readonly [number, number])[];
+  /** Altura del mástil, desde el pie. */
+  mastil: number;
+  pano: { ancho: number; alto: number; onda: number };
 }
 
-/** La bandera en una caja dada, con el pie en `pie` y `alto` de mástil. */
-export function bandera(lado: number, pie: readonly [number, number], alto: number): FormaBandera {
-  const [x, y] = pie;
-  const arriba = y - alto;
-  const ancho = alto * 0.85;
-  const caida = alto * 0.58;
-  return {
-    lado,
-    pie,
-    tope: [x, arriba],
-    banderin: [
-      [x + 0.5, arriba],
-      [x + ancho, arriba + caida / 2],
-      [x + 0.5, arriba + caida],
-    ],
-  };
+/**
+ * La bandera del mapa: 28 px de mástil y un paño de 20 × 13, más grande que un círculo de
+ * incidente suelto (13 px de diámetro) para que sea lo primero que se ve.
+ */
+export const BANDERA: FormaBandera = {
+  ancho: 30,
+  alto: 36,
+  pie: [5, 33],
+  mastil: 28,
+  pano: { ancho: 20, alto: 13, onda: 2 },
+};
+
+/** Contorno claro de la bandera: la separa del fondo oscuro y de los círculos vecinos. */
+export const CONTORNO_BANDERA = PALETA.texto;
+/** Grosor del contorno, por fuera del trazo rojo. */
+export const GROSOR_CONTORNO_BANDERA = 1.5;
+/** Grosor del mástil. */
+export const GROSOR_MASTIL = 2;
+
+/** Trazado SVG del mástil. */
+export function trazadoMastil(b: FormaBandera): string {
+  const [x, y] = b.pie;
+  return `M${x} ${y}V${y - b.mastil}`;
 }
 
-/** Trazado SVG de la bandera: mástil y banderín cerrado. */
+/** Trazado SVG del paño: un rectángulo con los bordes de arriba y de abajo ondulados. */
+export function trazadoPano(b: FormaBandera): string {
+  const x = b.pie[0];
+  const arriba = b.pie[1] - b.mastil;
+  const { ancho, alto, onda } = b.pano;
+  const abajo = arriba + alto;
+  const tercio = ancho / 3;
+  return (
+    `M${x} ${arriba}C${x + tercio} ${arriba - onda} ${x + 2 * tercio} ${arriba + onda} ${x + ancho} ${arriba}` +
+    `V${abajo}C${x + 2 * tercio} ${abajo + onda} ${x + tercio} ${abajo - onda} ${x} ${abajo}Z`
+  );
+}
+
+/** Trazado SVG de la bandera entera: mástil y paño. */
 export function trazadoBandera(b: FormaBandera): string {
-  const [a, c, d] = b.banderin as [readonly [number, number], readonly [number, number], readonly [number, number]];
-  return `M${b.pie[0]} ${b.pie[1]}V${b.tope[1]}M${a[0]} ${a[1]}L${c[0]} ${c[1]}L${d[0]} ${d[1]}Z`;
+  return trazadoMastil(b) + trazadoPano(b);
 }
 
 /** Gravedad de cada estado para decidir el color de un grupo: manda el más grave. */

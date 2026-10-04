@@ -1,12 +1,17 @@
 import type { Estado } from "../datos/tipos.ts";
 import {
+  BANDERA,
   COLOR_BANDERA,
   COLOR_ESTADO,
+  CONTORNO_BANDERA,
   GROSOR_CONTORNO,
+  GROSOR_CONTORNO_BANDERA,
+  GROSOR_MASTIL,
   PALETA,
   TRAZO_DESMENTIDO,
-  bandera,
   trazadoBandera,
+  trazadoMastil,
+  trazadoPano,
 } from "../paleta.ts";
 
 const LADO = 16;
@@ -51,12 +56,9 @@ export function Simbolo({ estado, className }: Props) {
   );
 }
 
-/** La bandera de la leyenda y las fichas: en una caja de 16, con el pie abajo a la izquierda. */
-export const BANDERA_SIMBOLO = bandera(16, [4, 15], 13);
-
 /**
- * Bandera de los atribuidos, sola: mástil y banderín rojos, con un borde fino del color del
- * fondo para que se lea sobre cualquier cosa. Nada más: ni círculo ni forma ni punto en el pie.
+ * Bandera de los atribuidos, sola: la misma forma que en el mapa (mástil y paño rojos con un
+ * contorno claro), a `lado` píxeles de alto. Nada más: ni círculo ni forma ni punto en el pie.
  */
 export function IconoBandera({
   className,
@@ -65,11 +67,16 @@ export function IconoBandera({
   className?: string | undefined;
   lado?: number;
 }) {
-  const trazado = trazadoBandera(BANDERA_SIMBOLO);
+  // Recortada a lo que ocupa la bandera, para que a poco tamaño no sobre caja vacía.
+  const margen = GROSOR_CONTORNO_BANDERA + GROSOR_MASTIL;
+  const x = BANDERA.pie[0] - margen;
+  const y = BANDERA.pie[1] - BANDERA.mastil - BANDERA.pano.onda - margen;
+  const ancho = BANDERA.pano.ancho + 2 * margen;
+  const alto = BANDERA.mastil + BANDERA.pano.onda + 2 * margen;
   return (
     <svg
-      viewBox={`0 0 ${BANDERA_SIMBOLO.lado} ${BANDERA_SIMBOLO.lado}`}
-      width={lado}
+      viewBox={`${x} ${y} ${ancho} ${alto}`}
+      width={Math.round((lado * ancho) / alto)}
       height={lado}
       aria-hidden="true"
       focusable="false"
@@ -77,8 +84,14 @@ export function IconoBandera({
       data-bandera=""
     >
       <g strokeLinejoin="round" strokeLinecap="round">
-        <path d={trazado} fill="none" stroke={PALETA.fondo} strokeWidth={3} />
-        <path d={trazado} fill={COLOR_BANDERA} stroke={COLOR_BANDERA} strokeWidth={1.4} />
+        <path
+          d={trazadoBandera(BANDERA)}
+          fill={CONTORNO_BANDERA}
+          stroke={CONTORNO_BANDERA}
+          strokeWidth={GROSOR_MASTIL + 2 * GROSOR_CONTORNO_BANDERA}
+        />
+        <path d={trazadoPano(BANDERA)} fill={COLOR_BANDERA} stroke={COLOR_BANDERA} strokeWidth={1} />
+        <path d={trazadoMastil(BANDERA)} fill="none" stroke={COLOR_BANDERA} strokeWidth={GROSOR_MASTIL} />
       </g>
     </svg>
   );

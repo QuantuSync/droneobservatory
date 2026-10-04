@@ -1,15 +1,25 @@
-import { fechaDia, numero } from "../i18n/index.ts";
+import { fechaEscrita, numero } from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
 import type { Idioma } from "../sitio.ts";
 
 export type CifraAhora = "cierres" | "incidentes" | "drones" | "focos" | "gnss";
 export const CIFRAS_AHORA: readonly CifraAhora[] = ["cierres", "incidentes", "drones", "focos", "gnss"];
 
+/** Los drones del último parte publicado y lo que cubre. */
+export interface DronesAhora {
+  lanzados: number;
+  /** Días UTC del inicio y del fin del parte: distintos en una noche, iguales en un día. */
+  desde: number;
+  hasta: number;
+  /** El parte tiene más de 36 horas: ya no es «la última noche». */
+  antiguo: boolean;
+}
+
 /** Las cifras del momento; null en la que no ha llegado su fichero. */
 export interface CifrasAhora {
   cierres: number | null;
   incidentes: number | null;
-  drones: { lanzados: number; dia: number } | null;
+  drones: DronesAhora | null;
   focos: number | null;
   /** Zonas con interferencia alta del último día publicado. */
   gnss: { zonas: number; dia: number } | null;
@@ -47,10 +57,26 @@ function claseDe(cifras: CifrasAhora, cifra: CifraAhora): string {
   return "text-texto";
 }
 
-/** Detalle que acompaña al texto: la noche de los drones. */
-function detalle(cifras: CifrasAhora, cifra: CifraAhora): string | null {
-  if (cifra === "drones" && cifras.drones !== null) return fechaDia(cifras.drones.dia);
-  return null;
+/** El texto de cada línea; el de los drones depende de si el parte es de noche y de cuándo. */
+function nombreDe(t: Textos, cifras: CifrasAhora, cifra: CifraAhora): string {
+  const drones = cifras.drones;
+  if (cifra !== "drones" || drones === null) return t.ahora[cifra];
+  if (drones.antiguo) return t.ahora.dronesParte;
+  return drones.desde === drones.hasta ? t.ahora.dronesDia : t.ahora.drones;
+}
+
+/**
+ * Detalle que acompaña al texto: lo que cubre el parte de los drones, escrito sin ambigüedad
+ * («noche del 2 al 3 de octubre»), y «último parte: …» si ya tiene más de 36 horas.
+ */
+function detalle(t: Textos, cifras: CifrasAhora, cifra: CifraAhora): string | null {
+  const drones = cifras.drones;
+  if (cifra !== "drones" || drones === null) return null;
+  const cuando =
+    drones.desde === drones.hasta
+      ? t.tiempo.dia(fechaEscrita(drones.desde))
+      : t.tiempo.noche(fechaEscrita(drones.desde), fechaEscrita(drones.hasta));
+  return drones.antiguo ? t.ahora.ultimoParte(cuando) : cuando;
 }
 
 /**
@@ -67,8 +93,8 @@ export function EuropaAhora({ t, idioma, cifras, onIr }: Props) {
       {CIFRAS_AHORA.map((cifra) => {
         const n = valor(cifras, cifra);
         const texto = n === null ? null : numero(n, idioma);
-        const nombre = t.ahora[cifra];
-        const extra = detalle(cifras, cifra);
+        const nombre = nombreDe(t, cifras, cifra);
+        const extra = detalle(t, cifras, cifra);
         return (
           <li key={cifra}>
             <button

@@ -105,20 +105,6 @@ export function centrosDeFocos(ucrania: ResumenUcrania): Map<string, [number, nu
   return new Map(ucrania.focos.map((f) => [f.region, f.centro]));
 }
 
-/**
- * Drones lanzados contra Ucrania por día de inicio del ataque (el máximo del rango que da
- * el parte). Los tramos ya incluidos en otro parte no se suman.
- */
-export function lanzamientosPorNoche(ucrania: ResumenUcrania): Map<number, number> {
-  const porDia = new Map<number, number>();
-  for (const fila of ucrania.ataques) {
-    const lanzados = fila[4];
-    if (sentidoDeFila(fila) !== "RU_UA" || lanzados === DESCONOCIDO || fila[7] === 0) continue;
-    porDia.set(fila[1], (porDia.get(fila[1]) ?? 0) + lanzados);
-  }
-  return porDia;
-}
-
 /** Primer y último día con ataques; null si no hay ninguno. */
 export function dominioUcrania(ucrania: ResumenUcrania): Periodo | null {
   const primero = ucrania.ataques[0];

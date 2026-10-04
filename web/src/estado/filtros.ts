@@ -1,12 +1,12 @@
 // Filtros y periodo. Van en la dirección (?estado=…&ultimos=7d&tipo=…&pais=…&desde=…&hasta=…)
 // para poder compartir una vista filtrada y para que el botón atrás del navegador deshaga el
-// último cambio; lo que no se entiende se ignora. El periodo es uno de los rápidos (últimas 24
-// horas, 7 días, 30 días o el último año, contados hasta el último día con datos), uno entre
-// dos fechas o, sin nada en la dirección, todo.
+// último cambio; lo que no se entiende se ignora. El periodo es uno de los rápidos (las
+// últimas 24 horas desde este momento; 7 días, 30 días o el último año, contados hasta el
+// último día con datos), uno entre dos fechas o, sin nada en la dirección, todo.
 
 import type { Estado, IncidenteResumen, Tipo } from "../datos/tipos.ts";
 import { ESTADOS, PATRON_PAIS, TIPOS } from "../datos/vocabulario.ts";
-import { diaDeInstante, fechaDeDia } from "../tiempo/dias.ts";
+import { MS_POR_HORA, diaDeFecha, diaDeInstante, fechaDeDia } from "../tiempo/dias.ts";
 import type { Periodo } from "../tiempo/dias.ts";
 
 export type Reciente = "24h" | "7d" | "30d" | "1a";
@@ -41,8 +41,13 @@ const VALOR_GRAVES = "graves";
 const SEPARADOR = ",";
 const PATRON_DIA = /^\d{4}-\d{2}-\d{2}$/;
 const LARGO_DIA = 10;
-/** Días que cubre cada filtro de lo reciente, contando el último día con datos. */
-export const DIAS_RECIENTES: Record<Reciente, number> = { "24h": 1, "7d": 7, "30d": 30, "1a": 365 };
+/**
+ * Días que cubre cada filtro de lo reciente, contando el último. Las 24 horas tocan dos días
+ * (hoy y ayer): dentro de ellos manda la ventana exacta (ver periodoDeSeleccion).
+ */
+export const DIAS_RECIENTES: Record<Reciente, number> = { "24h": 2, "7d": 7, "30d": 30, "1a": 365 };
+/** Lo que mide «Últimas 24 horas». */
+export const MS_ULTIMAS_24H = 24 * MS_POR_HORA;
 export const RECIENTES = Object.keys(DIAS_RECIENTES) as Reciente[];
 
 /** Lo que se ve: todo (por defecto), un periodo rápido o uno entre dos fechas. */
@@ -144,11 +149,30 @@ export function leerSeleccion(busqueda: string): SeleccionPeriodo {
   return periodo === null ? TODO : { clase: "entre", periodo };
 }
 
-/** Los días que cubre una selección, con «hoy» el último día con datos; null es todo. */
-export function periodoDeSeleccion(seleccion: SeleccionPeriodo, hoy: number): Periodo | null {
+/**
+ * Los días que cubre una selección; null es todo. Los periodos de días cuentan hasta «hoy», el
+ * último día con datos. «Últimas 24 horas» cuenta hacia atrás desde `ahora` (un instante): su
+ * ventana va de 24 horas antes hasta ese momento y sus días son el de `ahora` y el anterior.
+ */
+export function periodoDeSeleccion(
+  seleccion: SeleccionPeriodo,
+  hoy: number,
+  ahora: number,
+): Periodo | null {
   if (seleccion.clase === "todo") return null;
   if (seleccion.clase === "entre") return seleccion.periodo;
+  if (seleccion.reciente === "24h") return ultimas24Horas(ahora);
   return { desde: hoy - DIAS_RECIENTES[seleccion.reciente] + 1, hasta: hoy };
+}
+
+/** Las últimas 24 horas desde un instante, con sus dos días (el del instante y el anterior). */
+export function ultimas24Horas(ahora: number): Periodo {
+  const dia = diaDeFecha(new Date(ahora));
+  return {
+    desde: dia - DIAS_RECIENTES["24h"] + 1,
+    hasta: dia,
+    ventana: { desde: ahora - MS_ULTIMAS_24H, hasta: ahora },
+  };
 }
 
 /** La dirección con los filtros y una selección de periodo (una sola de las dos formas). */

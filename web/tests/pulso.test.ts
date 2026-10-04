@@ -11,9 +11,8 @@ import {
   estilo,
   radioDeGrupo,
 } from "../src/mapa/estilo.ts";
-import { BANDERA } from "../src/mapa/iconos.ts";
 import { RADIO_PULSO, SEPARACION_PULSO_GRUPO, colocarPulsos, pulsosDe } from "../src/mapa/pulsos.ts";
-import { trazadoBandera } from "../src/paleta.ts";
+import { BANDERA, trazadoBandera } from "../src/paleta.ts";
 import type { RasgoDibujado } from "../src/mapa/pulsos.ts";
 
 const css = readFileSync(join(import.meta.dirname, "..", "src", "estilos.css"), "utf8");
@@ -85,15 +84,17 @@ describe("pulso del mapa", () => {
 
   it("un atribuido nuevo late con la silueta de su bandera, sin ningún círculo", () => {
     const pulsos = pulsosDe([punto({ id: "F", grave: 1, atribuido: 1, novedad: 1 })], proyectar);
-    expect(pulsos).toEqual([{ clave: "F", x: 10, y: 20, radio: 14, forma: "bandera" }]);
+    expect(pulsos).toEqual([{ clave: "F", x: 10, y: 20, radio: BANDERA.mastil, forma: "bandera" }]);
     const capa = document.createElement("div");
     colocarPulsos(capa, pulsos);
     expect(capa.querySelector(".pulso")).toBeNull();
     const silueta = capa.querySelector("svg.pulso-bandera");
     expect(silueta?.querySelector("path")?.getAttribute("d")).toBe(trazadoBandera(BANDERA));
     expect(silueta?.querySelectorAll("circle")).toHaveLength(0);
-    // El pie de la silueta cae en el punto: la caja de 28 px se desplaza media caja.
-    expect(css).toMatch(/\.pulso-bandera \{[^}]*top: -14px;[^}]*left: -14px;/);
+    // El pie de la silueta cae en el punto: la caja se desplaza lo que va del pie a su esquina.
+    expect((silueta as SVGSVGElement).style.left).toBe(`${-BANDERA.pie[0]}px`);
+    expect((silueta as SVGSVGElement).style.top).toBe(`${-BANDERA.pie[1]}px`);
+    expect(silueta?.getAttribute("viewBox")).toBe(`0 0 ${BANDERA.ancho} ${BANDERA.alto}`);
     expect(css).toMatch(/\.pulso-bandera \{[^}]*animation: latido/);
     // Si deja de ser nuevo, desaparece.
     colocarPulsos(capa, []);

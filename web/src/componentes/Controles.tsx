@@ -43,8 +43,9 @@ const ORDEN_GUERRA: readonly ("corredores" | "focosVivos" | "luz")[] = [
 /**
  * Las capas en un solo control compacto; cada una se enciende y se apaga por separado. Con la
  * capa de Ucrania encendida aparecen al lado las de la guerra por satélite: corredores, focos
- * de calor de 24 horas y luz nocturna. `grande` da a cada opción al menos 44 px de alto, para
- * el dedo.
+ * de calor de 24 horas y luz nocturna. `grande` (el menú del teléfono) da a cada opción al
+ * menos 44 px de alto, para el dedo, y las pone en una rejilla de tres columnas: las cinco
+ * capas caben con holgura desde 360 px.
  */
 export function SelectorDeCapas({
   t,
@@ -57,7 +58,8 @@ export function SelectorDeCapas({
   onCapas: (capas: Capas) => void;
   grande?: boolean;
 }) {
-  const boton = `control text-xs ${grande ? "min-h-11 flex-1 px-3" : "min-h-7 px-2"}`;
+  const boton = `control ${grande ? "min-h-11 px-2 text-sm" : "min-h-7 px-2 text-xs"}`;
+  const rejilla = grande ? "grid grid-cols-3 gap-0.5" : "flex";
   const etiquetas: Record<(typeof ORDEN_GUERRA)[number], string> = {
     corredores: t.satelite.corredores,
     focosVivos: t.satelite.focos,
@@ -68,7 +70,7 @@ export function SelectorDeCapas({
       <div
         role="group"
         aria-label={t.controles.capas}
-        className={`flex rounded-sm border border-linea p-0.5 ${grande ? "flex-wrap" : ""}`}
+        className={`rounded-sm border border-linea p-0.5 ${rejilla}`}
       >
         {ORDEN.map((capa) => (
           <button
@@ -86,7 +88,7 @@ export function SelectorDeCapas({
         <div
           role="group"
           aria-label={t.satelite.capas}
-          className="flex rounded-sm border border-linea/70 p-0.5"
+          className={`rounded-sm border border-linea/70 p-0.5 ${rejilla}`}
           data-capas-guerra=""
         >
           {ORDEN_GUERRA.map((capa) => (

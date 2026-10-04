@@ -1,7 +1,26 @@
 import { LICENCIA_DATOS, LICENCIA_DATOS_URL, NOMBRE, ORIGEN, REPOSITORIO } from "../sitio.ts";
 import { REGIONES_RUSIA_ES } from "./regionesRusia.ts";
-import type { Textos } from "./tipos.ts";
+import type { FechaEscrita, Textos } from "./tipos.ts";
 import { UMBRALES_DIRECTO } from "./umbrales.ts";
+
+const MESES = [
+  "enero",
+  "febrero",
+  "marzo",
+  "abril",
+  "mayo",
+  "junio",
+  "julio",
+  "agosto",
+  "septiembre",
+  "octubre",
+  "noviembre",
+  "diciembre",
+] as const;
+
+function diaMesAnio(f: FechaEscrita): string {
+  return `${f.dia} de ${MESES[f.mes]} de ${f.anio}`;
+}
 
 export const es: Textos = {
   descripcion:
@@ -142,6 +161,9 @@ export const es: Textos = {
     cierres: "cierres de aeropuerto en curso",
     incidentes: "incidentes en 7 días",
     drones: "drones lanzados la última noche",
+    dronesDia: "drones lanzados en el último parte de día",
+    dronesParte: "drones lanzados",
+    ultimoParte: (cuando) => `último parte: ${cuando}`,
     focos: "focos térmicos confirmados en 7 días",
     gnss: "zonas con interferencia GPS hoy",
     sinDato: "sin dato",
@@ -198,7 +220,16 @@ export const es: Textos = {
   },
   presion: {
     etiqueta: "País · presión",
-    leyenda: "Incidentes en el periodo",
+    leyenda: {
+      todo: "Incidentes desde el primer dato",
+      reciente: {
+        "24h": "Incidentes en las últimas 24 horas",
+        "7d": "Incidentes en los últimos 7 días",
+        "30d": "Incidentes en los últimos 30 días",
+        "1a": "Incidentes en el último año",
+      },
+      entre: (intervalo) => `Incidentes ${intervalo}`,
+    },
     menos: "menos",
     mas: "más",
     tendencia: { sube: "sube", baja: "baja", estable: "estable" },
@@ -218,7 +249,8 @@ export const es: Textos = {
     siguiente: "Siguiente",
     anterior: "Anterior",
     descartar: "Descartar",
-    posicion: (i, n) => `${i} de ${n}`,
+    posicion: (i, n) => `Novedad ${i} de ${n}`,
+    recorrido: "Recorrer las novedades",
   },
   ayuda: {
     titulo: "Cómo leer el mapa",
@@ -227,17 +259,21 @@ export const es: Textos = {
       "Cada incidente es un círculo relleno del color de su estado: naranja, notificado; " +
       "rojo, confirmado. El desmentido es un círculo gris de borde discontinuo, sin relleno. " +
       "Un atribuido (un confirmado del que un gobierno ha señalado al responsable) es solo una " +
-      "bandera roja con su mástil: el pie del mástil marca el lugar. El tipo de incidente va " +
-      "escrito en la ficha, la lista y los filtros.",
+      "bandera roja con un contorno claro: el pie del mástil marca el lugar. Va siempre por " +
+      "encima de todo y no se agrupa nunca con otros. El tipo de incidente va escrito en la " +
+      "ficha, la lista y los filtros.",
     periodo:
       "El botón «Filtros» abre el periodo (todo, las últimas 24 horas, los últimos 7 o 30 " +
       "días, el último año o entre dos fechas) y los filtros de estado, tipo y país. Con un " +
       "periodo elegido, el botón lo lleva escrito y su equis vuelve a todo. El mapa, la lista, " +
-      "las cifras y todas las capas muestran ese periodo.",
+      "las cifras, «En directo» y todas las capas muestran ese periodo. «Últimas 24 horas» " +
+      "cuenta desde este momento: entra lo que empezó en las 24 horas anteriores y, si solo se " +
+      "sabe el día, lo de hoy y ayer.",
     ahora:
       "«Europa ahora» abre las cifras del momento; cada una lleva al sitio del mapa que la " +
-      "explica. Un número en el botón cuenta los cierres de aeropuerto en curso y un punto " +
-      "avisa de lo que ha cambiado desde la visita anterior.",
+      "explica. En el botón, un número naranja cuenta los cierres de aeropuerto en curso y uno " +
+      "blanco, las novedades desde tu visita anterior: dentro, «Verlas» las recorre una a una " +
+      "y «Descartar» las quita.",
     areas:
       "Cada incidente ocupa un área: el círculo es el radio en que se sabe que ocurrió (en los " +
       "atribuidos, el lugar lo marca el pie de la bandera).",
@@ -245,8 +281,9 @@ export const es: Textos = {
     numeros:
       "Un círculo con un número dentro junta varios incidentes (el de un solo incidente va " +
       "relleno y sin número): crece con el número, y su anillo " +
-      "es rojo si contiene algún confirmado o atribuido y naranja si todos son notificados. Al " +
-      "acercar el mapa se separan.",
+      "es rojo si contiene algún confirmado y naranja si todos son notificados. Al acercar el " +
+      "mapa se separan. Los nombres del mapa ceden ante los círculos: se ven enteros o no se " +
+      "ven.",
     pila:
       "Si los incidentes están en el mismo punto exacto, al pulsar el círculo eliges cuál abrir.",
     pulsos:
@@ -550,6 +587,15 @@ export const es: Textos = {
   },
   tiempo: {
     periodo: (desde, hasta) => `${desde} – ${hasta}`,
+    intervalo: (a, b) => {
+      if (a.anio !== b.anio) return `del ${diaMesAnio(a)} al ${diaMesAnio(b)}`;
+      if (a.mes !== b.mes) return `del ${a.dia} de ${MESES[a.mes]} al ${diaMesAnio(b)}`;
+      if (a.dia !== b.dia) return `del ${a.dia} al ${diaMesAnio(b)}`;
+      return `del ${diaMesAnio(a)}`;
+    },
+    noche: (a, b) =>
+      a.mes === b.mes ? `noche del ${a.dia} al ${b.dia} de ${MESES[b.mes]}` : `noche del ${a.dia} de ${MESES[a.mes]} al ${b.dia} de ${MESES[b.mes]}`,
+    dia: (f) => `día ${f.dia} de ${MESES[f.mes]}`,
   },
 
   metodologia: {
@@ -636,7 +682,7 @@ export const es: Textos = {
                 marca: { estado: "atribuido" },
                 texto: [
                   "Un confirmado del que una autoridad señala a un gobierno como responsable: " +
-                    "en el mapa, una bandera roja con su mástil, cuyo pie marca el lugar. La ficha lo muestra como " +
+                    "en el mapa, una bandera roja con un contorno claro, por encima de todo, cuyo pie marca el lugar. La ficha lo muestra como " +
                     "«Confirmado · atribuido a…», con quién atribuye y a quién.",
                 ],
               },

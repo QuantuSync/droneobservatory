@@ -160,6 +160,7 @@ function resumenDe(cambios: { pais: string; dia: number; estado?: IncidenteResum
       presencia: null,
       titulo: { es: `Incidente ${i + 1}`, en: `Incident ${i + 1}` },
       dia: c.dia,
+      inicio: null,
       pais: c.pais,
       objetivo: null,
       episodio: null,
@@ -378,10 +379,17 @@ describe("panel «Europa ahora»", () => {
       ucrania: resumirUcrania(ucrania),
       directo: directo([aviso(), aviso({ id: "x", estado: "operacion_reanudada" })]),
       gnssHoy: ficheroGnss("2026-10-02"),
+      ahora: Date.parse("2026-09-30T20:00Z"),
     });
     expect(cifras.cierres).toBe(1);
     expect(cifras.incidentes).toBe(1);
-    expect(cifras.drones).not.toBeNull();
+    // El último parte: la noche del 29 al 30 de septiembre, publicada hace 15 horas.
+    expect(cifras.drones).toEqual({
+      lanzados: 188,
+      desde: dia("2026-09-29"),
+      hasta: dia("2026-09-30"),
+      antiguo: false,
+    });
     expect(cifras.focos).toBe(0);
     const fichero = ficheroGnss("2026-10-02");
     // Las zonas altas del fichero diario, con la misma cuenta que la leyenda de la capa.
@@ -394,7 +402,7 @@ describe("panel «Europa ahora»", () => {
     const cifras: CifrasAhora = {
       cierres: 0,
       incidentes: 9999,
-      drones: { lanzados: 1234, dia: dia("2026-10-02") },
+      drones: { lanzados: 1234, desde: dia("2026-10-02"), hasta: dia("2026-10-03"), antiguo: false },
       focos: 7,
       gnss: { zonas: 0, dia: dia("2026-10-02") },
     };
@@ -421,9 +429,43 @@ describe("panel «Europa ahora»", () => {
     }
   });
 
+  it("los drones dicen la noche sin ambigüedad y, con más de 36 horas, que es el último parte", () => {
+    const fila = (drones: CifrasAhora["drones"], t = es) => {
+      const cifras: CifrasAhora = { cierres: 0, incidentes: 0, drones, focos: 0, gnss: null };
+      const { container } = render(<EuropaAhora t={t} idioma="es" cifras={cifras} onIr={() => undefined} />);
+      const texto = container.querySelector('[data-cifra="drones"] [data-texto]')?.textContent;
+      cleanup();
+      return texto;
+    };
+    const noche = { lanzados: 157, desde: dia("2026-10-02"), hasta: dia("2026-10-03"), antiguo: false };
+    expect(fila(noche)).toBe("drones lanzados la última noche · noche del 2 al 3 de octubre");
+    expect(fila(noche, en)).toBe("drones launched last night · night of 2 to 3 October");
+    expect(fila({ ...noche, antiguo: true })).toBe("drones lanzados · último parte: noche del 2 al 3 de octubre");
+    expect(fila({ ...noche, antiguo: true }, en)).toBe("drones launched · latest report: night of 2 to 3 October");
+    // Una noche que cambia de mes, y un parte de día.
+    expect(fila({ ...noche, desde: dia("2026-09-30"), hasta: dia("2026-10-01") })).toBe(
+      "drones lanzados la última noche · noche del 30 de septiembre al 1 de octubre",
+    );
+    expect(fila({ ...noche, desde: dia("2026-10-01"), hasta: dia("2026-10-01") })).toBe(
+      "drones lanzados en el último parte de día · día 1 de octubre",
+    );
+  });
+
+  it("el parte pasa a «último parte» a las 36 horas de su fin", () => {
+    const ucrania = resumirUcrania(publicacion([ataque()]));
+    const fin = Date.parse("2026-09-30T05:00Z");
+    const hora = 3_600_000;
+    const drones = (ahora: number) =>
+      cifrasAhora({ resumen: null, ucrania, directo: null, gnssHoy: null, ahora }).drones?.antiguo;
+    expect(drones(fin + 36 * hora)).toBe(false);
+    expect(drones(fin + 36 * hora + 60_000)).toBe(true);
+  });
+
   it("sin ficheros, cada cifra sale como «—» y no rompe", () => {
     const vacias: CifrasAhora = { cierres: null, incidentes: null, drones: null, focos: null, gnss: null };
-    expect(cifrasAhora({ resumen: null, ucrania: null, directo: null, gnssHoy: null })).toEqual(vacias);
+    expect(cifrasAhora({ resumen: null, ucrania: null, directo: null, gnssHoy: null, ahora: null })).toEqual(
+      vacias,
+    );
     render(<EuropaAhora t={es} idioma="es" cifras={vacias} onIr={() => undefined} />);
     const botones = screen.getAllByRole("button");
     expect(botones).toHaveLength(5);
@@ -437,7 +479,7 @@ describe("panel «Europa ahora»", () => {
     const cifras: CifrasAhora = {
       cierres: 2,
       incidentes: 14,
-      drones: { lanzados: 120, dia: dia("2026-10-02") },
+      drones: { lanzados: 120, desde: dia("2026-10-02"), hasta: dia("2026-10-03"), antiguo: false },
       focos: 3,
       gnss: { zonas: 4, dia: dia("2026-10-02") },
     };
@@ -502,7 +544,7 @@ describe("aplicación con los ficheros del almacén", () => {
     await waitFor(() => expect(within(mapa).getAllByRole("listitem")).toHaveLength(1));
     // El botón avisa sin abrirse: un número con los cierres en curso.
     const boton = screen.getByRole("button", { name: new RegExp(`^${es.ahora.etiqueta}`) });
-    await waitFor(() => expect(boton.querySelector("[data-indicador=numero]")?.textContent).toBe("1"));
+    await waitFor(() => expect(boton.querySelector("[data-indicador=cierres]")?.textContent).toBe("1"));
     expect(boton.getAttribute("aria-label")).toBe(`${es.ahora.etiqueta} · ${es.ahora.avisoCierres(1)}`);
     await usuario.click(boton);
     const panel = await screen.findByRole("dialog", { name: es.ahora.etiqueta });

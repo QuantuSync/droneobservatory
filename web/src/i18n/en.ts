@@ -1,7 +1,26 @@
 import { LICENCIA_DATOS, LICENCIA_DATOS_URL, NOMBRE, ORIGEN, REPOSITORIO } from "../sitio.ts";
 import { REGIONES_RUSIA_EN } from "./regionesRusia.ts";
-import type { Textos } from "./tipos.ts";
+import type { FechaEscrita, Textos } from "./tipos.ts";
 import { UMBRALES_DIRECTO } from "./umbrales.ts";
+
+const MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+] as const;
+
+function diaMesAnio(f: FechaEscrita): string {
+  return `${f.dia} ${MONTHS[f.mes]} ${f.anio}`;
+}
 
 export const en: Textos = {
   descripcion:
@@ -142,6 +161,9 @@ export const en: Textos = {
     cierres: "airport closures in progress",
     incidentes: "incidents in 7 days",
     drones: "drones launched last night",
+    dronesDia: "drones launched in the latest daytime report",
+    dronesParte: "drones launched",
+    ultimoParte: (cuando) => `latest report: ${cuando}`,
     focos: "confirmed thermal hotspots in 7 days",
     gnss: "GPS interference zones today",
     sinDato: "no figure",
@@ -198,7 +220,16 @@ export const en: Textos = {
   },
   presion: {
     etiqueta: "Country · pressure",
-    leyenda: "Incidents in the period",
+    leyenda: {
+      todo: "Incidents since the first record",
+      reciente: {
+        "24h": "Incidents in the last 24 hours",
+        "7d": "Incidents in the last 7 days",
+        "30d": "Incidents in the last 30 days",
+        "1a": "Incidents in the last year",
+      },
+      entre: (intervalo) => `Incidents ${intervalo}`,
+    },
     menos: "fewer",
     mas: "more",
     tendencia: { sube: "up", baja: "down", estable: "stable" },
@@ -217,7 +248,8 @@ export const en: Textos = {
     siguiente: "Next",
     anterior: "Previous",
     descartar: "Dismiss",
-    posicion: (i, n) => `${i} of ${n}`,
+    posicion: (i, n) => `Update ${i} of ${n}`,
+    recorrido: "Browse the updates",
   },
   ayuda: {
     titulo: "How to read the map",
@@ -226,17 +258,21 @@ export const en: Textos = {
       "Each incident is a circle filled with the colour of its status: orange, reported; red, " +
       "confirmed. A denied incident is a grey circle with a dashed outline and no fill. An " +
       "attributed incident (a confirmed one whose perpetrator a government has named) is just " +
-      "a red flag on its pole: the foot of the pole marks the place. The type of incident is " +
-      "written in the record, the list and the filters.",
+      "a red flag with a light outline: the foot of the pole marks the place. It is always drawn " +
+      "on top and is never grouped with others. The type of incident is written in the record, " +
+      "the list and the filters.",
     periodo:
       "The “Filters” button opens the period (everything, the last 24 hours, the last 7 or 30 " +
       "days, the last year or between two dates) and the status, type and country filters. " +
       "With a period chosen, the button shows it and its cross goes back to everything. The " +
-      "map, the list, the figures and every layer show that period.",
+      "map, the list, the figures, “Live” and every layer show that period. “Last 24 hours” " +
+      "counts back from this moment: it includes what started in the previous 24 hours and, " +
+      "when only the day is known, what happened today and yesterday.",
     ahora:
       "“Europe now” opens the figures of the moment; each one leads to the place on the map " +
-      "that explains it. A number on the button counts the airport closures in progress and " +
-      "a dot flags what has changed since the previous visit.",
+      "that explains it. On the button, an orange number counts the airport closures in " +
+      "progress and a white one the updates since your previous visit: inside, “Show me” " +
+      "goes through them one by one and “Dismiss” clears them.",
     areas:
       "Each incident covers an area: the circle is the radius within which it is known to have " +
       "happened (for attributed incidents, the foot of the flag marks the place).",
@@ -244,8 +280,8 @@ export const en: Textos = {
     numeros:
       "A circle with a number inside groups several incidents (a single incident is filled " +
       "and has no number): it grows with the number, and its ring " +
-      "is red if it holds any confirmed or attributed incident and orange if all are reported. " +
-      "Zoom in and they separate.",
+      "is red if it holds any confirmed incident and orange if all are reported. Zoom in and " +
+      "they separate. Map names give way to the circles: they are shown whole or not at all.",
     pila: "If the incidents share the exact same spot, tap the circle to choose which one to open.",
     pulsos:
       "Only what is new since your last visit pulses (and the circle that holds it): it stops " +
@@ -545,6 +581,15 @@ export const en: Textos = {
   },
   tiempo: {
     periodo: (desde, hasta) => `${desde} – ${hasta}`,
+    intervalo: (a, b) => {
+      if (a.anio !== b.anio) return `from ${diaMesAnio(a)} to ${diaMesAnio(b)}`;
+      if (a.mes !== b.mes) return `from ${a.dia} ${MONTHS[a.mes]} to ${diaMesAnio(b)}`;
+      if (a.dia !== b.dia) return `from ${a.dia} to ${diaMesAnio(b)}`;
+      return `on ${diaMesAnio(a)}`;
+    },
+    noche: (a, b) =>
+      a.mes === b.mes ? `night of ${a.dia} to ${b.dia} ${MONTHS[b.mes]}` : `night of ${a.dia} ${MONTHS[a.mes]} to ${b.dia} ${MONTHS[b.mes]}`,
+    dia: (f) => `day of ${f.dia} ${MONTHS[f.mes]}`,
   },
 
   metodologia: {
@@ -629,7 +674,7 @@ export const en: Textos = {
                 marca: { estado: "atribuido" },
                 texto: [
                   "A confirmed incident for which an authority names a government as " +
-                    "responsible: on the map, a red flag on its pole, whose foot marks the place. " +
+                    "responsible: on the map, a red flag with a light outline, drawn on top of everything, whose foot marks the place. " +
                     "The record shows it as " +
                     "“Confirmed · attributed to…”, with who attributes it and to whom.",
                 ],

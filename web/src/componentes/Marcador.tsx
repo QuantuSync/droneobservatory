@@ -60,22 +60,27 @@ function Cifra({
 }) {
   const mostrada = useCifraAnimada(valor, activa);
   const tono = color ?? "text-texto";
-  // En línea: la cifra y su rótulo uno tras otro, en pequeño. En rejilla: la cifra encima.
+  // Las cuatro cifras con la misma estructura: el número (con su marca al lado, si la lleva)
+  // y el rótulo. En línea, uno tras otro y en pequeño; en rejilla, el número encima.
+  const cifra = (
+    <>
+      {numero(mostrada, idioma)}
+      {marca !== undefined && (
+        <span className="ml-1 inline-flex self-center" data-marca-cifra="">
+          {marca}
+        </span>
+      )}
+    </>
+  );
   return forma === "linea" ? (
     <div className="flex flex-row-reverse items-baseline gap-1">
-      <dt className="inline-flex items-center gap-1 text-xs text-secundario">
-        {marca}
-        {rotulo}
-      </dt>
-      <dd className={`cifra text-sm font-medium ${tono}`}>{numero(mostrada, idioma)}</dd>
+      <dt className="text-xs text-secundario">{rotulo}</dt>
+      <dd className={`cifra inline-flex items-baseline text-sm font-medium ${tono}`}>{cifra}</dd>
     </div>
   ) : (
     <div className="flex flex-col-reverse gap-1">
-      <dt className="inline-flex items-center gap-1 text-xs text-secundario">
-        {marca}
-        {rotulo}
-      </dt>
-      <dd className={`cifra text-2xl font-medium leading-none ${tono}`}>{numero(mostrada, idioma)}</dd>
+      <dt className="text-xs text-secundario">{rotulo}</dt>
+      <dd className={`cifra flex items-baseline text-2xl font-medium leading-none ${tono}`}>{cifra}</dd>
     </div>
   );
 }
@@ -112,7 +117,7 @@ export function Marcador({ t, idioma, cifras, animar, forma = "linea" }: Props) 
         activa={animar}
         forma={forma}
         color="text-atribuido"
-        marca={<IconoBandera lado={12} />}
+        marca={<IconoBandera lado={forma === "linea" ? 12 : 18} />}
       />
       <Cifra valor={cifras.paises} rotulo={t.marcador.paises} idioma={idioma} activa={animar} forma={forma} />
     </dl>

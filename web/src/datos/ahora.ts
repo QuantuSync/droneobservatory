@@ -2,17 +2,18 @@
 // incidentes, el de la capa de guerra, los avisos en directo y la interferencia GPS del último
 // día publicado.
 
-import type { CifrasAhora } from "../componentes/EuropaAhora.tsx";
-import { diaDeInstante } from "../tiempo/dias.ts";
+import type { CifrasAhora, DronesAhora } from "../componentes/EuropaAhora.tsx";
+import { MS_POR_HORA, diaDeInstante } from "../tiempo/dias.ts";
 import { cierresEnCurso } from "./directo.ts";
 import type { Directo } from "./directo.ts";
 import { agregar, zonasAltas } from "./gnss.ts";
 import type { FicheroGnss } from "./gnss.ts";
 import type { Resumen, ResumenUcrania } from "./tipos.ts";
-import { lanzamientosPorNoche } from "./ucrania.ts";
 
 /** Días que cuentan como «últimos 7 días», contando el último día con datos. */
 export const DIAS_SEMANA = 7;
+/** Un parte con más horas que estas desde su fin ya no es «la última noche». */
+export const HORAS_PARTE_RECIENTE = 36;
 
 export interface FuentesAhora {
   resumen: Resumen | null;
@@ -21,18 +22,23 @@ export interface FuentesAhora {
   directo: Directo | null;
   /** Último día de interferencia publicado; null si no ha llegado. */
   gnssHoy: FicheroGnss | null;
+  /** Este momento (ms); null antes de montar, cuando aún no se sabe la hora. */
+  ahora: number | null;
 }
 
-/** La noche más reciente con lanzamientos contra Ucrania y su cifra. */
-export function ultimaNoche(ucrania: ResumenUcrania): { lanzados: number; dia: number } | null {
-  let ultima: { lanzados: number; dia: number } | null = null;
-  for (const [dia, lanzados] of lanzamientosPorNoche(ucrania)) {
-    if (ultima === null || dia > ultima.dia) ultima = { lanzados, dia };
-  }
-  return ultima;
+/** Los drones del último parte publicado, con los días que cubre y si ya tiene más de 36 h. */
+export function dronesDelUltimoParte(ucrania: ResumenUcrania, ahora: number | null): DronesAhora | null {
+  const parte = ucrania.ultimoParte ?? null;
+  if (parte === null) return null;
+  return {
+    lanzados: parte.lanzados,
+    desde: diaDeInstante(parte.inicio),
+    hasta: diaDeInstante(parte.fin),
+    antiguo: ahora !== null && ahora - Date.parse(parte.fin) > HORAS_PARTE_RECIENTE * MS_POR_HORA,
+  };
 }
 
-export function cifrasAhora({ resumen, ucrania, directo, gnssHoy }: FuentesAhora): CifrasAhora {
+export function cifrasAhora({ resumen, ucrania, directo, gnssHoy, ahora }: FuentesAhora): CifrasAhora {
   const hoy = resumen === null ? null : diaDeInstante(resumen.actualizado);
   const desde = hoy === null ? null : hoy - (DIAS_SEMANA - 1);
   const enSemana = (dia: number) => desde !== null && hoy !== null && dia >= desde && dia <= hoy;
@@ -47,7 +53,7 @@ export function cifrasAhora({ resumen, ucrania, directo, gnssHoy }: FuentesAhora
   return {
     cierres: directo === null ? null : cierresEnCurso(directo).length,
     incidentes: resumen === null ? null : resumen.incidentes.filter((i) => enSemana(i.dia)).length,
-    drones: ucrania === null ? null : ultimaNoche(ucrania),
+    drones: ucrania === null ? null : dronesDelUltimoParte(ucrania, ahora),
     focos,
     gnss:
       gnssHoy === null

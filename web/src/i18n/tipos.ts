@@ -18,6 +18,13 @@ import type {
 } from "../datos/tipos.ts";
 import type { EstadoAviso, FuenteDirecto, TipoConfirmacion } from "../datos/directo.ts";
 import type { NivelGnss } from "../datos/gnss.ts";
+
+/** Una fecha por partes, para escribirla en palabras (mes de 0 a 11). */
+export interface FechaEscrita {
+  dia: number;
+  mes: number;
+  anio: number;
+}
 import type { Sentido as SentidoTendencia } from "../datos/presion.ts";
 import type { EstadoFrescura } from "../tiempo/frescura.ts";
 
@@ -133,6 +140,11 @@ export interface Textos {
     cierres: string;
     incidentes: string;
     drones: string;
+    /** Cuando el último parte es de día. */
+    dronesDia: string;
+    /** Cuando el último parte tiene más de 36 horas. */
+    dronesParte: string;
+    ultimoParte: (cuando: string) => string;
     focos: string;
     gnss: string;
     sinDato: string;
@@ -185,7 +197,12 @@ export interface Textos {
   /** Presión por país. */
   presion: {
     etiqueta: string;
-    leyenda: string;
+    /** Lo que cuenta la leyenda, con el periodo dicho en palabras. */
+    leyenda: {
+      todo: string;
+      reciente: Record<"24h" | "7d" | "30d" | "1a", string>;
+      entre: (intervalo: string) => string;
+    };
     menos: string;
     mas: string;
     tendencia: Record<SentidoTendencia, string>;
@@ -205,6 +222,7 @@ export interface Textos {
     anterior: string;
     descartar: string;
     posicion: (i: number, n: number) => string;
+    recorrido: string;
   };
   ayuda: {
     titulo: string;
@@ -390,6 +408,12 @@ export interface Textos {
   };
   tiempo: {
     periodo: (desde: string, hasta: string) => string;
+    /** Intervalo de días en palabras: «del 1 al 30 de noviembre de 2025». */
+    intervalo: (desde: FechaEscrita, hasta: FechaEscrita) => string;
+    /** Una noche de ataques: «noche del 2 al 3 de octubre». */
+    noche: (desde: FechaEscrita, hasta: FechaEscrita) => string;
+    /** Un parte de día: «día 1 de octubre». */
+    dia: (fecha: FechaEscrita) => string;
   };
 
   metodologia: {

@@ -330,6 +330,8 @@ export interface IncidenteResumen {
   titulo: Titulo;
   /** Día UTC del inicio, como días desde 1970-01-01. */
   dia: number;
+  /** Instante del inicio (ms) si se conoce su hora; null si solo se conoce el día. */
+  inicio: number | null;
   pais: string;
   objetivo: string | null;
   episodio: string | null;
@@ -425,6 +427,15 @@ export interface FuenteSentido {
   reivindicacion: boolean;
 }
 
+/** El parte más reciente de los ataques contra Ucrania que da la cifra de drones lanzados. */
+export interface UltimoParte {
+  id: string;
+  lanzados: number;
+  /** Inicio y fin del periodo que cubre el parte (instantes del esquema, UTC). */
+  inicio: string;
+  fin: string;
+}
+
 export interface ResumenUcrania {
   /** Códigos ISO 3166-2 de las regiones (de Ucrania y de Rusia) que aparecen en los ataques. */
   regiones: string[];
@@ -448,6 +459,8 @@ export interface ResumenUcrania {
    * Ucrania más cercano al centro de cada región rusa, [lon, lat].
    */
   fronteraUcrania: Record<string, [number, number]>;
+  /** El último parte publicado con la cifra de drones lanzados contra Ucrania. */
+  ultimoParte?: UltimoParte | null;
 }
 
 /** Pérdida de luz de un ataque reducida a lo que dibuja el mapa y lee la ficha. */

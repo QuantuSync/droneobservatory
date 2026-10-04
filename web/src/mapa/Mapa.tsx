@@ -27,9 +27,10 @@ import type {
 } from "../datos/tipos.ts";
 import { pais as nombrePais, porcentaje } from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
-import { ESCALA_UCRANIA, acento } from "../paleta.ts";
+import { BANDERA, ESCALA_UCRANIA, acento } from "../paleta.ts";
 import { opacidadDePerdida } from "../datos/guerraSatelite.ts";
 import type { Idioma } from "../sitio.ts";
+import type { Periodo } from "../tiempo/dias.ts";
 import { movimientoReducido } from "./animacion.ts";
 import {
   CAPAS_DE_CORREDORES,
@@ -39,6 +40,7 @@ import {
   CAPAS_DE_PRESION,
   CAPAS_DE_UCRANIA,
   CAPAS_PULSABLES,
+  CAPA_BANDERAS,
   CAPA_DIRECTO,
   CAPA_GNSS,
   CAPAS_DE_FOCOS_VIVOS,
@@ -64,6 +66,7 @@ import {
   CAPA_REGION_ELEGIDA,
   CAPA_REGION_ELEGIDA_RUSIA,
   FUENTE_AREAS,
+  FUENTE_BANDERAS,
   FUENTE_DIRECTO,
   FUENTE_GNSS,
   FUENTE_IMPACTOS,
@@ -78,6 +81,7 @@ import {
 } from "./estilo.ts";
 import {
   areas,
+  banderas,
   ciudadesSinLuzEnMapa,
   corredoresEnMapa,
   focosDeRegiones,
@@ -85,6 +89,7 @@ import {
   impactosEnMapa,
   lineasDeEpisodio,
   pilas,
+  sinAtribuidos,
 } from "./geometria.ts";
 import { registrarIconos } from "./iconos.ts";
 import { colocarLetrero, hayRaton } from "./letrero.ts";
@@ -194,8 +199,8 @@ export interface PropsMapa {
   paisResaltado: string | null;
   regionesElegidas: readonly string[];
   novedades: ReadonlySet<string>;
-  /** Último día con datos, para el destello de las últimas 24 horas. */
-  hoy: number;
+  /** Las últimas 24 horas, para el destello de lo reciente (lo mismo que el filtro). */
+  recientes: Periodo;
   encuadre: Encuadre | null;
   /** Lo que tapa el mapa: al volar a una ficha, lo abierto queda en el hueco libre. */
   reserva: Reserva;
@@ -251,7 +256,7 @@ function fuente(mapa: MapaGL, id: string): GeoJSONSource | undefined {
 
 /** Objetivo táctil de una marca del mapa, como el resto de controles en el teléfono. */
 export const OBJETIVO_TACTIL_PX = 44;
-const CAPAS_DE_MARCAS = [CAPA_DIRECTO, CAPA_INCIDENTES_GRAVES, CAPA_INCIDENTES_DISCRETOS, CAPA_GRUPOS];
+const CAPAS_DE_MARCAS = [CAPA_DIRECTO, CAPA_BANDERAS, CAPA_INCIDENTES_GRAVES, CAPA_INCIDENTES_DISCRETOS, CAPA_GRUPOS];
 
 function punteroGrueso(): boolean {
   return typeof window.matchMedia === "function" && window.matchMedia("(pointer: coarse)").matches;
@@ -274,7 +279,9 @@ function marcaMasCercana(mapa: MapaGL, x: number, y: number): MapGeoJSONFeature 
     if (rasgo.geometry.type !== "Point") continue;
     const [lon, lat] = rasgo.geometry.coordinates as [number, number];
     const p = mapa.project([lon, lat]);
-    const d = Math.hypot(p.x - x, p.y - y);
+    // Una bandera se toca por lo que se ve: el centro del paño y el mástil, no solo el pie.
+    const alto = rasgo.layer.id === CAPA_BANDERAS ? BANDERA.mastil / 2 : 0;
+    const d = Math.hypot(p.x - x, p.y - alto - y);
     if (d < distancia) {
       distancia = d;
       mejor = rasgo;
@@ -291,7 +298,7 @@ export default function Mapa(props: PropsMapa) {
   const { t, idioma, incidentes, episodios, capas, intensidad, noche, elegido } = props;
   const { focosUcrania, impactos, gnss, presion, avisos } = props;
   const { corredores, luzRegiones, ciudadesSinLuz, focosVivos } = props;
-  const { paisResaltado, regionesElegidas, novedades, hoy, encuadre, reserva } = props;
+  const { paisResaltado, regionesElegidas, novedades, recientes, encuadre, reserva } = props;
   // El vuelo lee la reserva del momento, pero no se repite porque cambie (al arrastrar una hoja).
   const reservaActual = useRef(reserva);
   reservaActual.current = reserva;
@@ -559,13 +566,14 @@ export default function Mapa(props: PropsMapa) {
     const mapa = mapaRef.current;
     if (!listo || mapa === null) return undefined;
     return trasPintar(() => {
-      const coleccion = pilas(incidentes, { hoy, novedades });
-      fuente(mapa, FUENTE_PUNTOS)?.setData(coleccion);
-      fuente(mapa, FUENTE_PUNTOS_SUELTOS)?.setData(coleccion);
+      const opciones = { recientes, novedades };
+      fuente(mapa, FUENTE_PUNTOS)?.setData(pilas(sinAtribuidos(incidentes), opciones));
+      fuente(mapa, FUENTE_BANDERAS)?.setData(banderas(incidentes, opciones));
+      fuente(mapa, FUENTE_PUNTOS_SUELTOS)?.setData(pilas(incidentes, opciones));
       fuente(mapa, FUENTE_AREAS)?.setData(areas(incidentes));
       fuente(mapa, FUENTE_EPISODIOS)?.setData(lineasDeEpisodio(episodios, incidentes));
     });
-  }, [listo, incidentes, episodios, hoy, novedades]);
+  }, [listo, incidentes, episodios, recientes, novedades]);
 
   // Con una ficha abierta, el letrero de ayuda no se queda encima.
   useEffect(() => {
@@ -736,7 +744,7 @@ export default function Mapa(props: PropsMapa) {
     const capa = capaPulsos.current;
     if (!listo || mapa === null || capa === null) return undefined;
     const recolocar = () => {
-      const capas = [CAPA_GRUPOS, CAPA_INCIDENTES_GRAVES, CAPA_INCIDENTES_DISCRETOS].filter(
+      const capas = [CAPA_GRUPOS, CAPA_INCIDENTES_GRAVES, CAPA_INCIDENTES_DISCRETOS, CAPA_BANDERAS].filter(
         (id) => mapa.getLayoutProperty(id, "visibility") !== "none",
       );
       const rasgos = capas.length === 0 ? [] : mapa.queryRenderedFeatures({ layers: capas });

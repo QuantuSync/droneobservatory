@@ -7,9 +7,8 @@
 // principal (y que para con la pestaña en segundo plano o con movimiento reducido). Aquí
 // solo se decide dónde va cada uno; se recoloca cuando el mapa se mueve.
 
-import { trazadoBandera } from "../paleta.ts";
+import { BANDERA, trazadoBandera } from "../paleta.ts";
 import { radioDeGrupo } from "./estilo.ts";
-import { BANDERA, LADO } from "./iconos.ts";
 
 /** Radio del contorno que late alrededor de un símbolo suelto. */
 export const RADIO_PULSO = 11;
@@ -70,7 +69,7 @@ export function pulsosDe(
         forma: "anillo",
       };
     } else if (numero(p.atribuido) === 1) {
-      pulso = { clave: String(p.id), radio: LADO / 2, forma: "bandera" };
+      pulso = { clave: String(p.id), radio: BANDERA.mastil, forma: "bandera" };
     } else {
       pulso = { clave: String(p.id), radio: RADIO_PULSO, forma: "anillo" };
     }
@@ -126,9 +125,12 @@ const SVG = "http://www.w3.org/2000/svg";
 function banderaQueLate(): SVGSVGElement {
   const svg = document.createElementNS(SVG, "svg");
   svg.setAttribute("class", "pulso-bandera");
-  svg.setAttribute("viewBox", `0 0 ${LADO} ${LADO}`);
-  svg.setAttribute("width", String(LADO));
-  svg.setAttribute("height", String(LADO));
+  svg.setAttribute("viewBox", `0 0 ${BANDERA.ancho} ${BANDERA.alto}`);
+  svg.setAttribute("width", String(BANDERA.ancho));
+  svg.setAttribute("height", String(BANDERA.alto));
+  // El pie del mástil, en el punto del sitio.
+  svg.style.left = `${-BANDERA.pie[0]}px`;
+  svg.style.top = `${-BANDERA.pie[1]}px`;
   const trazo = document.createElementNS(SVG, "path");
   trazo.setAttribute("d", trazadoBandera(BANDERA));
   svg.append(trazo);

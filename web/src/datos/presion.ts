@@ -3,7 +3,7 @@
 // los filtros activos.
 
 import type { Periodo } from "../tiempo/dias.ts";
-import { enPeriodo } from "../tiempo/dias.ts";
+import { incidenteEnPeriodo } from "../tiempo/dias.ts";
 import type { Estado, IncidenteResumen, Tipo } from "./tipos.ts";
 import { ESTADOS, TIPOS } from "./vocabulario.ts";
 
@@ -27,9 +27,16 @@ export interface PresionPais {
 export const DIFERENCIA_ESTABLE = 1;
 export const FRACCION_ESTABLE = 0.1;
 
+/** El periodo inmediatamente anterior de igual duración (las 24 horas anteriores, en su caso). */
 export function periodoAnterior(periodo: Periodo): Periodo {
   const largo = periodo.hasta - periodo.desde + 1;
-  return { desde: periodo.desde - largo, hasta: periodo.desde - 1 };
+  const anterior: Periodo = { desde: periodo.desde - largo, hasta: periodo.desde - 1 };
+  if (periodo.ventana === undefined) return anterior;
+  const duracion = periodo.ventana.hasta - periodo.ventana.desde;
+  return {
+    ...anterior,
+    ventana: { desde: periodo.ventana.desde - duracion, hasta: periodo.ventana.desde - 1 },
+  };
 }
 
 export function sentidoDe(actual: number, anterior: number): Sentido {
@@ -44,7 +51,7 @@ export function sentidoDe(actual: number, anterior: number): Sentido {
 function contar(incidentes: readonly IncidenteResumen[], periodo: Periodo): Map<string, number> {
   const cuenta = new Map<string, number>();
   for (const i of incidentes) {
-    if (enPeriodo(i.dia, periodo)) cuenta.set(i.pais, (cuenta.get(i.pais) ?? 0) + 1);
+    if (incidenteEnPeriodo(i, periodo)) cuenta.set(i.pais, (cuenta.get(i.pais) ?? 0) + 1);
   }
   return cuenta;
 }
@@ -112,7 +119,7 @@ export function cifrasDePais(
 ): CifrasPais {
   const porTipo = Object.fromEntries(TIPOS.map((t) => [t, 0])) as Record<Tipo, number>;
   const porEstado = Object.fromEntries(ESTADOS.map((e) => [e, 0])) as Record<Estado, number>;
-  const lista = incidentes.filter((i) => i.pais === pais && enPeriodo(i.dia, periodo));
+  const lista = incidentes.filter((i) => i.pais === pais && incidenteEnPeriodo(i, periodo));
   for (const i of lista) {
     porTipo[i.tipo] += 1;
     porEstado[i.estado] += 1;

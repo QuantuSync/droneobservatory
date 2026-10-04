@@ -7,11 +7,14 @@ import { afterEach, describe, expect, it } from "vitest";
 import { Ayuda } from "../src/componentes/Ayuda.tsx";
 import { BarraEstado } from "../src/componentes/BarraEstado.tsx";
 import { FichaIncidente } from "../src/componentes/FichaIncidente.tsx";
-import { BANDERA_SIMBOLO, Simbolo } from "../src/componentes/Simbolo.tsx";
+import { Simbolo } from "../src/componentes/Simbolo.tsx";
 import { detalleIncidente } from "../src/datos/derivar.ts";
 import { novedadesQueLaten } from "../src/estado/novedades.ts";
 import { textos } from "../src/i18n/index.ts";
 import {
+  CAPA_BANDERAS,
+  CAPA_FOCOS_BANDERA,
+  CAPA_GRUPOS,
   CAPA_INCIDENTES_GRAVES,
   CAPA_RECIENTES,
   CAPA_SELECCION,
@@ -24,21 +27,35 @@ import {
   TAMANO_TEXTO_AVISO,
   COLOR_DE_GRUPO,
   ES_ATRIBUIDO,
+  FUENTE_BANDERAS,
   estilo,
 } from "../src/mapa/estilo.ts";
 import { OBJETIVO_TACTIL_PX } from "../src/mapa/Mapa.tsx";
 import { nombreIcono } from "../src/mapa/geometria.ts";
 import {
-  BANDERA,
   COLOR_DE_AVISO,
+  DESPLAZAMIENTO_BANDERA,
   ESTADOS_AVISO,
   ETIQUETA_AVISO,
+  ICONO_BANDERA,
   ICONO_BANDERA_ELEGIDA,
+  ICONO_OBSTACULO,
   LADO as LADO_ICONO,
+  RADIO_INCIDENTE,
   nombreIconoAviso,
   registrarIconos,
 } from "../src/mapa/iconos.ts";
-import { COLOR_BANDERA, COLOR_ESTADO, PALETA, contraste, trazadoBandera } from "../src/paleta.ts";
+import {
+  BANDERA,
+  COLOR_BANDERA,
+  COLOR_ESTADO,
+  CONTORNO_BANDERA,
+  PALETA,
+  contraste,
+  trazadoBandera,
+  trazadoMastil,
+  trazadoPano,
+} from "../src/paleta.ts";
 import { incidente } from "./ejemplos.ts";
 
 afterEach(cleanup);
@@ -211,10 +228,11 @@ describe("colores de los estados", () => {
     expect(JSON.stringify(COLOR_DE_GRUPO)).not.toContain(verde);
   });
 
-  it("un grupo es rojo si contiene algún confirmado o atribuido y naranja si todos son notificados", () => {
+  it("un grupo es rojo si contiene algún confirmado y naranja si todos son notificados", () => {
+    // Los atribuidos no entran en los grupos: van siempre con su bandera.
     expect(COLOR_DE_GRUPO).toEqual([
       "case",
-      [">", ["+", ["get", "n_atribuidos"], ["get", "n_confirmados"]], 0],
+      [">", ["get", "n_confirmados"], 0],
       COLOR_ESTADO.confirmado,
       [">", ["get", "n_notificados"], 0],
       COLOR_ESTADO.notificado,
@@ -237,11 +255,15 @@ describe("bandera de los atribuidos", () => {
     const svg = container.querySelector("svg");
     expect(svg?.hasAttribute("data-bandera")).toBe(true);
     expect(svg?.querySelectorAll("circle, rect, ellipse, polygon")).toHaveLength(0);
-    for (const trazo of Array.from(svg?.querySelectorAll("path") ?? [])) {
-      expect(trazo.getAttribute("d")).toBe(trazadoBandera(BANDERA_SIMBOLO));
-    }
-    expect(svg?.innerHTML).toContain(COLOR_BANDERA);
+    // La misma forma que en el mapa: el contorno de toda la bandera, el paño y el mástil.
+    const trazos = Array.from(svg?.querySelectorAll("path") ?? []).map((t) => t.getAttribute("d"));
+    expect(trazos).toEqual([trazadoBandera(BANDERA), trazadoPano(BANDERA), trazadoMastil(BANDERA)]);
+    // Paño relleno del rojo de «confirmado» y contorno claro.
+    const pano = svg?.querySelectorAll("path")[1];
+    expect(pano?.getAttribute("fill")).toBe(COLOR_BANDERA);
+    expect(svg?.querySelectorAll("path")[0]?.getAttribute("stroke")).toBe(CONTORNO_BANDERA);
     expect(COLOR_BANDERA).toBe(COLOR_ESTADO.confirmado);
+    expect(contraste(CONTORNO_BANDERA, PALETA.fondo)).toBeGreaterThan(10);
   });
 
   it("todo lo demás es un círculo: relleno el notificado y el confirmado, discontinuo el desmentido", () => {
@@ -290,6 +312,14 @@ describe("bandera de los atribuidos", () => {
     );
     const original = HTMLCanvasElement.prototype.getContext;
     HTMLCanvasElement.prototype.getContext = (() => contexto) as never;
+    // jsdom no tiene Path2D: uno que guarda su trazado.
+    class Trazado {
+      d: string;
+      constructor(d: string) {
+        this.d = d;
+      }
+    }
+    (globalThis as { Path2D?: unknown }).Path2D = Trazado;
     try {
       const imagenes = new Set<string>();
       const mapa = {
@@ -302,8 +332,10 @@ describe("bandera de los atribuidos", () => {
       registrarIconos(mapa as never, "#ffffff");
       expect([...imagenes].sort()).toEqual(
         [
+          ICONO_BANDERA,
           ICONO_BANDERA_ELEGIDA,
-          ...["atribuido", "confirmado", "desmentido", "notificado"].map(nombreIcono),
+          ICONO_OBSTACULO,
+          ...["confirmado", "desmentido", "notificado"].map(nombreIcono),
           ...ESTADOS_AVISO.map(nombreIconoAviso),
         ].sort(),
       );
@@ -327,14 +359,19 @@ describe("bandera de los atribuidos", () => {
         expect(hecho.includes("fill"), estado).toBe(estado !== "desmentido");
         expect(hecho.includes(`fillStyle=${COLOR_ESTADO[estado as "notificado"]}`), estado).toBe(estado !== "desmentido");
       }
-      for (const nombre of [nombreIcono("atribuido"), ICONO_BANDERA_ELEGIDA]) {
+      // La bandera: sin círculos ni rectángulos; contorno claro y paño relleno de rojo.
+      for (const nombre of [ICONO_BANDERA, ICONO_BANDERA_ELEGIDA]) {
         const hecho = dibujos.get(nombre) ?? [];
         expect(hecho, nombre).not.toContain("arc");
         expect(hecho, nombre).not.toContain("rect");
-        expect(hecho, nombre).toContain("lineTo");
+        expect(hecho, nombre).toContain("fill");
+        expect(hecho, nombre).toContain(`fillStyle=${COLOR_BANDERA}`);
       }
+      expect(dibujos.get(ICONO_BANDERA)).toContain(`strokeStyle=${CONTORNO_BANDERA}`);
+      expect(dibujos.get(ICONO_BANDERA_ELEGIDA)).toContain("strokeStyle=#ffffff");
     } finally {
       HTMLCanvasElement.prototype.getContext = original;
+      delete (globalThis as { Path2D?: unknown }).Path2D;
     }
   });
 
@@ -348,9 +385,11 @@ describe("bandera de los atribuidos", () => {
     expect(disposicion["icon-image"]).toEqual(["concat", "aviso-", ["get", "estado"]]);
     expect(disposicion["text-field"]).toEqual(["get", "oaci"]);
     expect(disposicion["icon-anchor"]).toBe("bottom");
-    // Encima de todo, solo el número de los grupos: el de un grupo vecino tampoco queda tapado.
-    expect(layers.at(-1)?.id).toBe(CAPA_NUMERO_GRUPOS);
-    expect(layers.at(-2)?.id).toBe(CAPA_DIRECTO);
+    // Encima de todo: ni un grupo vecino ni una bandera la pisan, y los nombres del mapa ceden
+    // ante ella (ocupa su sitio al colocarlos).
+    expect(layers.at(-1)?.id).toBe(CAPA_DIRECTO);
+    expect(disposicion["icon-ignore-placement"]).toBe(false);
+    expect(disposicion["text-ignore-placement"]).toBe(false);
     // Geometría, en píxeles sobre el punto del aeropuerto (y hacia arriba es negativo):
     // la punta queda `hueco` píxeles por encima, y el número de un grupo centrado en el
     // mismo punto ocupa como mucho media altura de su letra por encima.
@@ -391,41 +430,56 @@ describe("bandera de los atribuidos", () => {
     expect(simbolos).toHaveLength(4);
   });
 
-  it("en el mapa, el pie del mástil es el punto del incidente: el centro del icono", () => {
-    expect(BANDERA.lado).toBe(LADO_ICONO);
-    expect(BANDERA.pie).toEqual([LADO_ICONO / 2, LADO_ICONO / 2]);
-    // El mástil sube en vertical desde el pie y todo el banderín queda arriba a la derecha.
-    expect(BANDERA.tope[0]).toBe(BANDERA.pie[0]);
-    expect(BANDERA.tope[1]).toBeLessThan(BANDERA.pie[1]);
-    for (const [x, y] of BANDERA.banderin) {
-      expect(x).toBeGreaterThanOrEqual(BANDERA.pie[0]);
-      expect(y).toBeLessThan(BANDERA.pie[1]);
-      expect(x).toBeLessThanOrEqual(LADO_ICONO);
-      expect(y).toBeGreaterThanOrEqual(0);
+  it("en el mapa, el pie del mástil es el punto del incidente y la bandera es más grande que un círculo", () => {
+    const [x, y] = BANDERA.pie;
+    // El mástil sube en vertical desde el pie y el paño queda arriba a la derecha, dentro de
+    // la caja del icono (con sitio para el contorno y la onda).
+    expect(trazadoMastil(BANDERA)).toBe(`M${x} ${y}V${y - BANDERA.mastil}`);
+    const arriba = y - BANDERA.mastil;
+    expect(arriba - BANDERA.pano.onda).toBeGreaterThanOrEqual(2);
+    expect(x + BANDERA.pano.ancho).toBeLessThanOrEqual(BANDERA.ancho - 2);
+    expect(BANDERA.alto - y).toBeGreaterThanOrEqual(2);
+    // Más grande que un círculo de incidente suelto, en alto y en ancho.
+    expect(BANDERA.mastil).toBeGreaterThan(2 * 2 * RADIO_INCIDENTE);
+    expect(BANDERA.pano.ancho).toBeGreaterThan(2 * RADIO_INCIDENTE);
+    expect(BANDERA.pano.alto).toBeGreaterThanOrEqual(2 * RADIO_INCIDENTE);
+    // La capa la ancla por abajo a la izquierda y la desplaza hasta que el pie cae en el punto.
+    const { layers } = estilo("es", "https://droneobservatory.eu", "#f4f7fb");
+    for (const id of [CAPA_BANDERAS, CAPA_SELECCION_BANDERA]) {
+      const disposicion = (layers.find((c) => c.id === id) as { layout: Record<string, unknown> }).layout;
+      expect(disposicion["icon-anchor"], id).toBe("bottom-left");
+      expect(disposicion["icon-offset"], id).toEqual(DESPLAZAMIENTO_BANDERA);
     }
-    // 13 px de mástil y 11 de banderín: tan grande como las formas de los demás (14 px).
-    expect(BANDERA.pie[1] - BANDERA.tope[1]).toBe(13);
-    const ancho = Math.max(...BANDERA.banderin.map((p) => p[0])) - BANDERA.pie[0];
-    expect(ancho).toBeGreaterThanOrEqual(10);
-    // Y en la leyenda y las fichas, el pie abajo a la izquierda.
-    expect(BANDERA_SIMBOLO.pie[0]).toBeLessThan(BANDERA_SIMBOLO.lado / 3);
-    expect(BANDERA_SIMBOLO.pie[1]).toBeGreaterThan((BANDERA_SIMBOLO.lado * 2) / 3);
+    expect(DESPLAZAMIENTO_BANDERA[0] + x).toBe(0);
+    expect(DESPLAZAMIENTO_BANDERA[1] - (BANDERA.alto - y)).toBe(0);
   });
 
-  it("en el mapa, el atribuido no lleva área, destello ni aro de selección; sí su bandera", () => {
-    const { layers } = estilo("es", "https://droneobservatory.eu", "#f4f7fb");
-    const capa = (id: string) => layers.find((c) => c.id === id) as { filter?: unknown };
-    for (const id of ["areas-relleno", "areas-contorno", CAPA_RECIENTES, CAPA_SELECCION]) {
+  it("en el mapa, el atribuido no lleva área ni aro de selección y su bandera va encima de todo", () => {
+    const { layers, sources } = estilo("es", "https://droneobservatory.eu", "#f4f7fb");
+    const capa = (id: string) => layers.find((c) => c.id === id) as { filter?: unknown; source?: string };
+    for (const id of ["areas-relleno", "areas-contorno", CAPA_SELECCION]) {
       expect(JSON.stringify(capa(id).filter), id).toContain(JSON.stringify(["!", ES_ATRIBUIDO]));
     }
     expect(capa(CAPA_SELECCION_BANDERA).filter).toEqual(ES_ATRIBUIDO);
-    // Las capas de incidentes sueltos usan el icono sin cambiar el ancla (el centro = el pie).
-    const graves = layers.find((c) => c.id === CAPA_INCIDENTES_GRAVES) as {
-      layout: Record<string, unknown>;
-    };
-    expect(graves.layout["icon-anchor"]).toBeUndefined();
-    // El grupo sigue siendo rojo si contiene atribuidos.
-    expect(JSON.stringify(COLOR_DE_GRUPO)).toContain("n_atribuidos");
+    // Las banderas tienen su propia fuente, sin agrupar: un atribuido nunca queda dentro de un
+    // grupo. En ella solo está la bandera (y la marca del foco térmico, al lado del mástil):
+    // ningún círculo debajo, detrás ni alrededor.
+    expect(capa(CAPA_BANDERAS).source).toBe(FUENTE_BANDERAS);
+    expect((sources[FUENTE_BANDERAS] as { cluster?: boolean }).cluster).toBeUndefined();
+    const deLaFuente = layers.filter((c) => "source" in c && c.source === FUENTE_BANDERAS).map((c) => c.id);
+    expect(deLaFuente).toEqual([CAPA_BANDERAS, CAPA_FOCOS_BANDERA]);
+    expect(JSON.stringify(capa(CAPA_FOCOS_BANDERA).filter)).toContain("foco");
+    expect(capa(CAPA_RECIENTES).source).not.toBe(FUENTE_BANDERAS);
+    // Por encima de los círculos, de los grupos y de sus números; y los nombres del mapa ceden
+    // ante ella.
+    const orden = layers.map((c) => c.id);
+    for (const debajo of [CAPA_GRUPOS, CAPA_NUMERO_GRUPOS, CAPA_INCIDENTES_GRAVES, CAPA_INCIDENTES_DISCRETOS]) {
+      expect(orden.indexOf(CAPA_BANDERAS), debajo).toBeGreaterThan(orden.indexOf(debajo));
+    }
+    const disposicion = (layers.find((c) => c.id === CAPA_BANDERAS) as { layout: Record<string, unknown> }).layout;
+    expect(disposicion["icon-image"]).toBe(ICONO_BANDERA);
+    expect(disposicion["icon-allow-overlap"]).toBe(true);
+    expect(disposicion["icon-ignore-placement"]).toBe(false);
   });
 
   it("el área pulsable es la de los demás y, con el dedo, de 44 px", () => {

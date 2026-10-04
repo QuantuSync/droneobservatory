@@ -1,6 +1,6 @@
 import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { AvisoNovedades } from "./componentes/AvisoNovedades.tsx";
+import { LineaNovedades, RecorridoNovedades } from "./componentes/Novedades.tsx";
 import { Ayuda } from "./componentes/Ayuda.tsx";
 import { BarraEstado } from "./componentes/BarraEstado.tsx";
 import { BotonAhora, BotonFiltros, Desplegable } from "./componentes/BotonesMapa.tsx";
@@ -47,7 +47,7 @@ import {
   cargarResumenUcrania,
 } from "./datos/carga.ts";
 import type { Carga } from "./datos/carga.ts";
-import { cifrasAhora, ultimaNoche } from "./datos/ahora.ts";
+import { cifrasAhora } from "./datos/ahora.ts";
 import { cargarDirecto, cierresEnCurso, ordenarAvisos } from "./datos/directo.ts";
 import type { Directo } from "./datos/directo.ts";
 import { agregar, cargarFicheroGnss, cargarIndiceGnss, ficherosDelPeriodo, zonasAltas } from "./datos/gnss.ts";
@@ -95,6 +95,7 @@ import {
   leerSeleccion,
   periodoDeSeleccion,
   soloGraves,
+  ultimas24Horas,
 } from "./estado/filtros.ts";
 import type { Filtros as EstadoFiltros, SeleccionPeriodo } from "./estado/filtros.ts";
 import {
@@ -112,7 +113,7 @@ import { useNavegacion } from "./navegacion.tsx";
 import { analizarRuta } from "./rutas.ts";
 import { ORIGEN, rutaDeFicha, rutaDeIdioma } from "./sitio.ts";
 import type { Idioma } from "./sitio.ts";
-import { diaDeInstante, enPeriodo } from "./tiempo/dias.ts";
+import { diaDeInstante, incidenteEnPeriodo } from "./tiempo/dias.ts";
 import type { Periodo } from "./tiempo/dias.ts";
 
 const Mapa = lazy(() => import("./mapa/Mapa.tsx"));
@@ -202,7 +203,7 @@ function acotarPeriodo(periodo: Periodo | null, dominio: Periodo): Periodo {
   if (periodo === null) return dominio;
   const desde = Math.min(Math.max(periodo.desde, dominio.desde), dominio.hasta);
   const hasta = Math.max(Math.min(periodo.hasta, dominio.hasta), desde);
-  return { desde, hasta };
+  return { ...periodo, desde, hasta };
 }
 
 type Centro = { lon: number; lat: number };
@@ -452,6 +453,11 @@ export function App() {
   const datosUcrania = datos(ucrania);
   const ucraniaActiva = capas.ucrania ? datosUcrania : null;
   const hoy = datosResumen === null ? null : diaDeInstante(datosResumen.actualizado);
+  // «Últimas 24 horas» se cuenta desde este momento (el de los datos, antes de montar).
+  const instanteActual =
+    ahora?.getTime() ?? (datosResumen === null ? null : Date.parse(datosResumen.actualizado));
+  const es24Horas = seleccion.clase === "reciente" && seleccion.reciente === "24h";
+  const instanteDelPeriodo = es24Horas ? instanteActual : null;
 
   const dominio = useMemo(
     () => (datosResumen === null ? null : dominioDe(datosResumen, ucraniaActiva)),
@@ -461,8 +467,8 @@ export function App() {
     () =>
       dominio === null || hoy === null
         ? null
-        : acotarPeriodo(periodoDeSeleccion(seleccion, hoy), dominio),
-    [dominio, hoy, seleccion],
+        : acotarPeriodo(periodoDeSeleccion(seleccion, hoy, instanteDelPeriodo ?? 0), dominio),
+    [dominio, hoy, seleccion, instanteDelPeriodo],
   );
   const porId = useMemo(
     () => new Map((datosResumen?.incidentes ?? VACIO).map((i) => [i.id, i])),
@@ -476,7 +482,7 @@ export function App() {
     [datosResumen, filtros, hoy],
   );
   const delPeriodo = useMemo(
-    () => (periodo === null ? VACIO : filtrados.filter((i) => enPeriodo(i.dia, periodo))),
+    () => (periodo === null ? VACIO : filtrados.filter((i) => incidenteEnPeriodo(i, periodo))),
     [filtrados, periodo],
   );
   // Interferencia GPS del periodo: los ficheros diarios (o mensuales) que lo cubren, sumados.
@@ -527,10 +533,16 @@ export function App() {
   );
   const avisos = directo?.avisos ?? VACIO;
 
+  // «En directo» enseña lo mismo que el mapa y la lista: los incidentes del periodo elegido.
   const eventos = useMemo(() => {
-    const visibles = new Set(filtrados.map((i) => i.id));
+    const visibles = new Set(delPeriodo.map((i) => i.id));
     return (datosResumen?.eventos ?? VACIO).filter((evento) => visibles.has(evento.id));
-  }, [datosResumen, filtrados]);
+  }, [datosResumen, delPeriodo]);
+  /** Lo que lleva el destello de lo reciente en el mapa: lo mismo que «Últimas 24 horas». */
+  const recientes = useMemo(
+    () => (instanteActual === null ? null : ultimas24Horas(instanteActual)),
+    [instanteActual],
+  );
   const intensidad = useMemo(
     () =>
       ucraniaActiva === null || periodo === null ? null : ataquesPorRegion(ucraniaActiva, periodo),
@@ -608,6 +620,19 @@ export function App() {
   const elegirSeleccion = useCallback(
     (nueva: SeleccionPeriodo) => cambiarBusqueda(escribirSeleccion(filtros, nueva), true),
     [cambiarBusqueda, filtros],
+  );
+  /**
+   * Cambia las capas. La presión compara el periodo con el anterior de igual duración: con
+   * «Todo» no hay anterior, así que al encenderla con «Todo» el periodo pasa a 30 días.
+   */
+  const cambiarCapas = useCallback(
+    (nuevas: Capas) => {
+      if (nuevas.presion && !capas.presion && seleccion.clase === "todo") {
+        elegirSeleccion({ clase: "reciente", reciente: "30d" });
+      }
+      setCapas(nuevas);
+    },
+    [capas.presion, seleccion, elegirSeleccion],
   );
   const quitarFiltros = useCallback(
     () => cambiarBusqueda(escribirSeleccion(SIN_FILTROS, TODO)),
@@ -752,8 +777,8 @@ export function App() {
     [cerrarFicha],
   );
   const cifrasDelMomento = useMemo(
-    () => cifrasAhora({ resumen: datosResumen, ucrania: datosUcrania, directo, gnssHoy }),
-    [datosResumen, datosUcrania, directo, gnssHoy],
+    () => cifrasAhora({ resumen: datosResumen, ucrania: datosUcrania, directo, gnssHoy, ahora: ahora?.getTime() ?? null }),
+    [datosResumen, datosUcrania, directo, gnssHoy, ahora],
   );
   /** Cada cifra de «Europa ahora» lleva al sitio del mapa que la explica. */
   const irACifra = useCallback(
@@ -774,10 +799,11 @@ export function App() {
           api?.vistaInicial();
           return;
         case "drones": {
-          const noche = datosUcrania === null ? null : ultimaNoche(datosUcrania);
+          // Los ataques van por el día en que empiezan: el del inicio del parte.
+          const parte = cifrasDelMomento.drones;
           setCapas((c) => ({ ...c, ucrania: true }));
-          if (noche !== null) {
-            elegirSeleccion({ clase: "entre", periodo: { desde: noche.dia, hasta: noche.dia } });
+          if (parte !== null) {
+            elegirSeleccion({ clase: "entre", periodo: { desde: parte.desde, hasta: parte.desde } });
           }
           api?.volar("ucrania");
           return;
@@ -797,7 +823,7 @@ export function App() {
           return;
       }
     },
-    [directo, abrirAviso, api, elegirSeleccion, datosUcrania, cifrasDelMomento],
+    [directo, abrirAviso, api, elegirSeleccion, cifrasDelMomento],
   );
 
   const irANovedad = useCallback(
@@ -806,6 +832,7 @@ export function App() {
       if (id === undefined) return;
       setNovedadesVistas(true);
       setRecorrido(posicion);
+      setDesplegado(null);
       abrirIncidente(id);
     },
     [incidentesNuevos, abrirIncidente],
@@ -948,6 +975,11 @@ export function App() {
     [datosResumen],
   );
 
+  // La ficha abierta es una de las novedades que se están recorriendo: lleva su recorrido.
+  const posicionEnRecorrido =
+    recorrido !== null && !novedadesDescartadas && idAbierto !== null && incidentesNuevos[recorrido] === idAbierto
+      ? recorrido
+      : null;
   let ficha: { nombre: string; contenido: React.ReactNode } | null = null;
   if (fichaActiva?.clase === "incidente") {
     ficha = {
@@ -960,6 +992,14 @@ export function App() {
             enlace={ORIGEN + rutaDeFicha(fichaActiva.id, idioma)}
             onCerrar={cerrarFicha}
           />
+          {posicionEnRecorrido !== null && (
+            <RecorridoNovedades
+              t={t}
+              posicion={posicionEnRecorrido}
+              total={incidentesNuevos.length}
+              onIr={irANovedad}
+            />
+          )}
           <div className="overflow-y-auto px-4 py-3">
             <SegunCarga t={t} carga={incidente}>
               {(detalle) => <FichaIncidente t={t} idioma={idioma} incidente={detalle} />}
@@ -1208,11 +1248,23 @@ export function App() {
   );
   const leyendas = (capas.gnss || capas.presion) && (
     <div className="flex flex-col items-start gap-1.5" data-leyendas="">
-      {capas.presion && <LeyendaPresion t={t} />}
+      {capas.presion && <LeyendaPresion t={t} seleccion={seleccion} />}
       {capas.gnss && <LeyendaGnss t={t} estado={estadoGnss} />}
     </div>
   );
-  const europaAhora = <EuropaAhora t={t} idioma={idioma} cifras={cifrasDelMomento} onIr={irACifra} />;
+  const europaAhora = (
+    <>
+      {!novedadesDescartadas && (
+        <LineaNovedades
+          t={t}
+          cuantas={incidentesNuevos.length}
+          onVer={() => irANovedad(0)}
+          onDescartar={() => setNovedadesDescartadas(true)}
+        />
+      )}
+      <EuropaAhora t={t} idioma={idioma} cifras={cifrasDelMomento} onIr={irACifra} />
+    </>
+  );
   const periodoEscrito = textoDeSeleccion(t, seleccion);
   const cierresActivos = cierresEnCurso(directo).length;
   const novedadesPendientes = latentes.size;
@@ -1266,30 +1318,28 @@ export function App() {
       )}
     </div>
   );
+  // «Noche a noche» es una vista (una reproducción), no una capa: en el teléfono va en «Más»,
+  // con «En directo», y con su mismo estilo.
   const botonNoches = (grande: boolean) => (
     <button
       type="button"
-      className={`control text-xs ${grande ? "w-full justify-start" : "min-h-7 px-1.5"}`}
+      className={`control ${grande ? "w-full justify-start text-sm text-texto" : "min-h-7 px-1.5 text-xs"}`}
       aria-pressed={noche !== null}
-      onClick={noche === null ? empezarNoches : detenerNoches}
+      onClick={() => {
+        // En el teléfono, el menú se cierra para que se vea la reproducción.
+        if (grande) setMenu(false);
+        if (noche === null) empezarNoches();
+        else detenerNoches();
+      }}
     >
       {t.guerra.reproducir}
     </button>
   );
-  // Lo que aparece bajo la cabecera, centrado: las novedades, la noche de la guerra y los avisos.
-  const avisosArriba = (
-    <div className="pointer-events-none absolute inset-x-3 top-full z-10 mt-2 flex flex-col items-center gap-2">
-      {!novedadesDescartadas && incidentesNuevos.length > 0 && (
-        <div className="flotante pointer-events-auto px-3 py-1.5">
-          <AvisoNovedades
-            t={t}
-            incidentes={incidentesNuevos}
-            posicion={recorrido}
-            onIr={irANovedad}
-            onDescartar={() => setNovedadesDescartadas(true)}
-          />
-        </div>
-      )}
+  // Lo que aparece bajo los botones del mapa, centrado: la noche de la guerra y los avisos. Va
+  // en la misma columna que los botones, debajo de ellos: nunca se montan.
+  const hayAvisosArriba = nocheActual !== null || avisoDeDatos !== null || mapaFallido;
+  const avisosArriba = hayAvisosArriba && (
+    <div className="pointer-events-none flex flex-col items-center gap-2 self-stretch" data-avisos-arriba="">
       {nocheActual !== null && (
         <div role="status" className="flotante pointer-events-auto flex flex-col items-center gap-1 px-4 py-2 text-center">
           <span className="block text-sm">{t.guerra.noche(fechaDia(nocheActual.dia))}</span>
@@ -1335,7 +1385,7 @@ export function App() {
         {t.saltarAlMapa}
       </a>
       <div id="mapa" tabIndex={-1} className="absolute inset-0 outline-none">
-        {mapaPermitido && !mapaFallido && avisoDeDatos === null && hoy !== null && (
+        {mapaPermitido && !mapaFallido && avisoDeDatos === null && recientes !== null && (
           <Suspense fallback={null}>
             <Mapa
               t={t}
@@ -1359,7 +1409,7 @@ export function App() {
               paisResaltado={paisImpreciso}
               regionesElegidas={regionesElegidas}
               novedades={latentes}
-              hoy={hoy}
+              recientes={recientes}
               encuadre={encuadre}
               reserva={reserva}
               onIncidente={abrirIncidente}
@@ -1392,7 +1442,7 @@ export function App() {
               }
               derecha={
                 <>
-                  <SelectorDeCapas t={t} capas={capas} onCapas={setCapas} />
+                  <SelectorDeCapas t={t} capas={capas} onCapas={cambiarCapas} />
                   {botonNoches(false)}
                   <button
                     type="button"
@@ -1422,14 +1472,16 @@ export function App() {
                 </>
               }
             />
-            {avisosArriba}
           </div>
           <div className="flex min-h-0 flex-1">
             {feedAbierto && (
               <div className="pointer-events-auto w-[22rem] shrink-0 p-3 pr-0">{feed(false)}</div>
             )}
             <div className="relative min-w-0 flex-1">
-              <div className="absolute left-3 top-3 z-20">{botonesMapa(false)}</div>
+              <div className="pointer-events-none absolute inset-x-3 top-3 z-20 flex flex-col items-start gap-2">
+                {botonesMapa(false)}
+                {avisosArriba}
+              </div>
               <div ref={refAbajoEsc} className="absolute inset-x-3 bottom-3 flex flex-col gap-2">
                 <div className="flex items-end justify-between gap-2">
                   <div className="pointer-events-auto">{leyendas}</div>
@@ -1459,10 +1511,12 @@ export function App() {
               menuAbierto={menu}
               onMenu={() => setMenu(true)}
             />
-            {avisosArriba}
           </div>
           <div className="relative min-h-0 flex-1">
-            {!hojaAbierta && <div className="absolute left-2 top-2 z-20">{botonesMapa(true)}</div>}
+            <div className="pointer-events-none absolute inset-x-2 top-2 z-20 flex flex-col items-start gap-2">
+              {!hojaAbierta && botonesMapa(true)}
+              {avisosArriba}
+            </div>
             {/* Con una hoja abierta, lo de abajo queda tapado: no se pinta. */}
             {!hojaAbierta && (
               <div
@@ -1560,13 +1614,13 @@ export function App() {
             />
           </SeccionMenu>
           <SeccionMenu rotulo={t.controles.capas}>
-            <SelectorDeCapas t={t} capas={capas} onCapas={setCapas} grande />
-            {botonNoches(true)}
+            <SelectorDeCapas t={t} capas={capas} onCapas={cambiarCapas} grande />
           </SeccionMenu>
           <SeccionMenu rotulo={t.controles.paneles}>
             <button type="button" className="control w-full justify-start text-sm text-texto" onClick={() => abrirHoja("directo")}>
               {t.controles.feed}
             </button>
+            {botonNoches(true)}
             <button
               type="button"
               className="control w-full justify-start text-sm text-texto"

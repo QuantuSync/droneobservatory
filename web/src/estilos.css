@@ -83,15 +83,14 @@
   will-change: opacity;
 }
 
-/* Un atribuido late con la silueta de su bandera (el pie, en el punto), sin ningún círculo. */
+/* Un atribuido late con la silueta de su bandera, sin ningún círculo: un trazo ancho sobre
+   su contorno claro. El pie va en el punto (top y left los pone src/mapa/pulsos.ts). */
 .pulso-bandera {
   position: absolute;
-  top: -14px;
-  left: -14px;
   overflow: visible;
   fill: none;
   stroke: var(--acento);
-  stroke-width: 2.5;
+  stroke-width: 5;
   stroke-linejoin: round;
   stroke-linecap: round;
   opacity: 0.85;

@@ -124,7 +124,7 @@ test.describe("escritorio", () => {
     // Al entrar está cerrado; el botón avisa con el número de cierres en curso.
     await expect(page.locator("[data-europa-ahora]")).toHaveCount(0);
     const boton = page.getByRole("button", { name: /^Europa ahora/ });
-    await expect(boton.locator("[data-indicador=numero]")).toHaveText("2");
+    await expect(boton.locator("[data-indicador=cierres]")).toHaveText("2");
     await boton.click();
     const panel = page.getByRole("dialog", { name: "Europa ahora" });
     const cierres = panel.locator('[data-cifra="cierres"]');
@@ -255,7 +255,7 @@ test.describe("teléfono", () => {
       await page.goto("/");
       await page.waitForSelector(MAPA_LISTO);
       const boton = page.getByRole("button", { name: /^Europa ahora/ }).filter({ visible: true });
-      await expect(boton.locator("[data-indicador=numero]")).toHaveText("2");
+      await expect(boton.locator("[data-indicador=cierres]")).toHaveText("2");
       await boton.click();
       const panel = page.getByRole("complementary", { name: "Europa ahora" });
       await expect(panel.locator('[data-cifra="cierres"]')).toContainText("2");

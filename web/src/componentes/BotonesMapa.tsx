@@ -1,5 +1,6 @@
 // Botones pequeños sobre el mapa: «Filtros» (con el periodo escrito y una equis cuando no es
-// todo) y «Europa ahora» (con un número o un punto cuando hay algo en curso). Lo que abren es
+// todo) y «Europa ahora» (con el número de cierres en curso, en naranja, y el de novedades
+// desde la última visita, en blanco). Lo que abren es
 // un desplegable en el escritorio y una hoja inferior en el teléfono: nada queda fijo sobre
 // el mapa hasta que se pide.
 
@@ -9,6 +10,9 @@ import type { ReactNode, RefObject } from "react";
 import type { Textos } from "../i18n/index.ts";
 
 const CLASE_BOTON = "control flotante boton-mapa min-h-11 px-3 text-xs text-texto esc:min-h-8 esc:px-2.5";
+/** El número que lleva «Europa ahora»: pequeño, redondo y con el texto del color del fondo. */
+const CLASE_INDICADOR =
+  "mono -ml-0.5 inline-flex min-w-4 items-center justify-center rounded-full px-1 text-[0.65rem] leading-4 text-fondo";
 
 export function BotonFiltros({
   t,
@@ -83,8 +87,12 @@ export function BotonAhora({
   novedades: number;
   referencia?: RefObject<HTMLButtonElement | null> | undefined;
 }) {
-  const aviso =
-    cierres > 0 ? t.ahora.avisoCierres(cierres) : novedades > 0 ? t.ahora.avisoNovedades(novedades) : null;
+  const aviso = [
+    cierres > 0 ? t.ahora.avisoCierres(cierres) : null,
+    novedades > 0 ? t.ahora.avisoNovedades(novedades) : null,
+  ]
+    .filter((parte) => parte !== null)
+    .join(" · ");
   return (
     <button
       ref={referencia}
@@ -92,23 +100,20 @@ export function BotonAhora({
       className={`${CLASE_BOTON} relative`}
       aria-haspopup="dialog"
       aria-expanded={abierto}
-      aria-label={aviso === null ? t.ahora.etiqueta : `${t.ahora.etiqueta} · ${aviso}`}
+      aria-label={aviso === "" ? t.ahora.etiqueta : `${t.ahora.etiqueta} · ${aviso}`}
       data-boton-ahora=""
       onClick={onAbrir}
     >
       {t.ahora.etiqueta}
-      {cierres > 0 ? (
-        <span
-          aria-hidden="true"
-          data-indicador="numero"
-          className="mono ml-1.5 inline-flex min-w-4 items-center justify-center rounded-full bg-notificado px-1 text-[0.65rem] leading-4 text-fondo"
-        >
+      {cierres > 0 && (
+        <span aria-hidden="true" data-indicador="cierres" className={`${CLASE_INDICADOR} bg-notificado`}>
           {cierres}
         </span>
-      ) : (
-        novedades > 0 && (
-          <span aria-hidden="true" data-indicador="punto" className="ml-1.5 size-2 rounded-full bg-acento" />
-        )
+      )}
+      {novedades > 0 && (
+        <span aria-hidden="true" data-indicador="novedades" className={`${CLASE_INDICADOR} bg-acento`}>
+          {novedades}
+        </span>
       )}
     </button>
   );

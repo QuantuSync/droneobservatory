@@ -24,6 +24,7 @@ import {
 } from "../src/datos/validar.ts";
 import { textos } from "../src/i18n/index.ts";
 import { focosDeRegiones, pilas } from "../src/mapa/geometria.ts";
+import { ultimas24Horas } from "../src/estado/filtros.ts";
 import { diaDeInstante } from "../src/tiempo/dias.ts";
 import { ataque, coleccion, estadoSistema, focoTermico, incidente, publicacion } from "./ejemplos.ts";
 
@@ -96,7 +97,7 @@ describe("datos", () => {
 
   it("el mapa marca los incidentes con foco y las regiones en su centro", () => {
     const conFoco = { ...incidenteResumen(), foco: true };
-    expect(pilas([conFoco], { hoy: 0, novedades: new Set() }).features[0]?.properties.foco).toBe(1);
+    expect(pilas([conFoco], { recientes: ultimas24Horas(0), novedades: new Set() }).features[0]?.properties.foco).toBe(1);
     const resumen = resumirUcrania(publicacion([ataqueConFoco()]), centrosDeRegiones(CONTORNOS));
     expect(focosDeRegiones(resumen.focos).features[0]?.geometry.coordinates).toEqual([31, 47]);
   });
@@ -118,6 +119,7 @@ function incidenteResumen() {
     presencia: null,
     titulo: { es: "a", en: "b" },
     dia: 0,
+    inicio: null,
     pais: "RO",
     objetivo: null,
     episodio: null,

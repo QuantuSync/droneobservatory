@@ -205,13 +205,16 @@ describe("selector de periodo", () => {
   const hoy = diaDeInstante("2026-09-30");
 
   it("los periodos rápidos cuentan hasta el último día con datos, y por defecto se ve todo", () => {
+    // «Últimas 24 horas» cuenta desde este momento (tests/periodo.test.tsx): aquí, el mediodía
+    // del último día con datos; toca ese día y el anterior.
+    const ahora = (hoy + 0.5) * 86_400_000;
     expect(leerSeleccion("")).toEqual(TODO);
-    expect(periodoDeSeleccion(TODO, hoy)).toBeNull();
+    expect(periodoDeSeleccion(TODO, hoy, ahora)).toBeNull();
     const dias = (reciente: Reciente) => {
-      const periodo = periodoDeSeleccion({ clase: "reciente", reciente }, hoy);
+      const periodo = periodoDeSeleccion({ clase: "reciente", reciente }, hoy, ahora);
       return periodo === null ? null : [periodo.hasta - hoy, periodo.hasta - periodo.desde + 1];
     };
-    expect(dias("24h")).toEqual([0, 1]);
+    expect(dias("24h")).toEqual([0, 2]);
     expect(dias("7d")).toEqual([0, 7]);
     expect(dias("30d")).toEqual([0, 30]);
     expect(dias("1a")).toEqual([0, 365]);
@@ -707,14 +710,32 @@ describe("aplicación con el diseño nuevo", () => {
 
   it("avisa de lo nuevo desde la visita anterior, y sin almacenamiento no avisa", async () => {
     servir();
+    const usuario = userEvent.setup();
     window.localStorage.setItem("eodi.ultima-visita", "2026-09-01T00:00:00.000Z");
     abrir("/");
-    expect(await screen.findByText(es.novedades.aviso(1))).toBeTruthy();
+    // Sobre el mapa, solo el número en el botón «Europa ahora»: ningún aviso suelto.
+    const boton = await screen.findByRole("button", { name: `${es.ahora.etiqueta} · ${es.ahora.avisoNovedades(1)}` });
+    expect(boton.querySelector("[data-indicador=novedades]")?.textContent).toBe("1");
+    expect(screen.queryByText(es.novedades.aviso(1))).toBeNull();
+    // Dentro, la línea con «Verlas» y «Descartar».
+    await usuario.click(boton);
+    const panel = await screen.findByRole("dialog", { name: es.ahora.etiqueta });
+    expect(within(panel).getByText(es.novedades.aviso(1))).toBeTruthy();
+    await usuario.click(within(panel).getByRole("button", { name: es.novedades.recorrer }));
+    // «Verlas» abre la primera, con su recorrido en la ficha, y el número se apaga.
+    const ficha = await screen.findByRole("complementary", { name: /EODI-/ });
+    expect(within(ficha).getByText(es.novedades.posicion(1, 1))).toBeTruthy();
+    await waitFor(() => expect(boton.querySelector("[data-indicador]")).toBeNull());
+    // «Descartar» quita la línea.
+    await usuario.click(boton);
+    const otraVez = await screen.findByRole("dialog", { name: es.ahora.etiqueta });
+    await usuario.click(within(otraVez).getByRole("button", { name: es.novedades.descartar }));
+    expect(within(otraVez).queryByText(es.novedades.aviso(1))).toBeNull();
     cleanup();
     vi.stubGlobal("localStorage", undefined);
     servir();
     abrir("/");
     await screen.findByTestId("mapa");
-    expect(screen.queryByText(/novedad(es)? desde tu última visita/)).toBeNull();
+    expect(screen.getByRole("button", { name: es.ahora.etiqueta }).querySelector("[data-indicador]")).toBeNull();
   });
 });

@@ -1,6 +1,8 @@
 import { NIVELES_GNSS, OPACIDAD_GNSS } from "../datos/gnss.ts";
 import type { NivelGnss } from "../datos/gnss.ts";
 import { ESCALA_PRESION } from "../datos/presion.ts";
+import type { SeleccionPeriodo } from "../estado/filtros.ts";
+import { fechaEscrita } from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
 import { PALETA } from "../paleta.ts";
 
@@ -49,12 +51,23 @@ export function LeyendaGnss({ t, estado }: { t: Textos; estado: EstadoGnss }) {
   );
 }
 
-export function LeyendaPresion({ t }: { t: Textos }) {
+/** Lo que cuenta la capa de presión, con el periodo en palabras. */
+export function textoLeyendaPresion(t: Textos, seleccion: SeleccionPeriodo): string {
+  const leyenda = t.presion.leyenda;
+  if (seleccion.clase === "todo") return leyenda.todo;
+  if (seleccion.clase === "reciente") return leyenda.reciente[seleccion.reciente];
+  const { desde, hasta } = seleccion.periodo;
+  return leyenda.entre(t.tiempo.intervalo(fechaEscrita(desde), fechaEscrita(hasta)));
+}
+
+export function LeyendaPresion({ t, seleccion }: { t: Textos; seleccion: SeleccionPeriodo }) {
   const p = t.presion;
   return (
     <details open className="flotante w-max max-w-[min(20rem,calc(100vw-2rem))] px-2.5 py-1.5 text-xs" data-leyenda="presion">
       <summary className="cursor-pointer font-medium text-texto">{t.controles.presion}</summary>
-      <p className="text-secundario">{p.leyenda}</p>
+      <p className="text-secundario" data-periodo-leyenda="">
+        {textoLeyendaPresion(t, seleccion)}
+      </p>
       <div className="mt-1 flex items-center gap-1.5 text-secundario">
         <span>{p.menos}</span>
         <span className="flex">

@@ -17,7 +17,6 @@ import {
   ataquesPorRegion,
   cifrasDeRegion,
   dominioUcrania,
-  lanzamientosPorNoche,
   nochesDeGuerra,
 } from "../src/datos/ucrania.ts";
 import {
@@ -125,6 +124,7 @@ describe("resúmenes", () => {
       presencia: "no_confirmada",
       titulo: { es: "Cierre del aeropuerto de Múnich", en: "Munich airport closure" },
       dia: diaDeInstante("2025-10-02"),
+      inicio: Date.parse("2025-10-02T22:18Z"),
       pais: "DE",
       objetivo: "Flughafen München",
       episodio: null,
@@ -240,10 +240,30 @@ describe("capa de Ucrania", () => {
     expect(cifrasDeRegion(ucrania, "UA-99", todo).lista).toEqual([]);
   });
 
-  it("los lanzamientos por noche solo cuentan los partes contra Ucrania que suman", () => {
-    expect(Object.fromEntries(lanzamientosPorNoche(ucrania))).toEqual({
-      [diaDeInstante("2026-09-29")]: 188,
+  it("el último parte es el más reciente contra Ucrania con su cifra, sin sumar partes", () => {
+    // El tramo incluido en otro parte y el ataque contra Rusia no cuentan.
+    expect(ucrania.ultimoParte).toEqual({
+      id: "EODI-UA-2026-1013",
+      lanzados: 188,
+      inicio: "2026-09-29T15:00Z",
+      fin: "2026-09-30T05:00Z",
     });
+    // Un parte de día publicado después pasa a ser el último, con su propia cifra.
+    const conParteDeDia = resumirUcrania(
+      publicacion([
+        ataque(),
+        ataque({
+          id: "EODI-UA-2026-1015",
+          periodo: {
+            inicio: { valor: "2026-09-30T03:30Z", precision: "minuto" },
+            fin: { valor: "2026-09-30T15:30Z", precision: "minuto" },
+          },
+          lanzados: { total: { min: 285, max: 285 } },
+        }),
+      ]),
+    );
+    expect(conParteDeDia.ultimoParte).toMatchObject({ id: "EODI-UA-2026-1015", lanzados: 285 });
+    expect(resumirUcrania(publicacion([])).ultimoParte).toBeNull();
   });
 });
 

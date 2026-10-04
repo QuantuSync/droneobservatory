@@ -7,7 +7,9 @@ import * as vocabulario from "../src/datos/vocabulario.ts";
 import { en } from "../src/i18n/en.ts";
 import { es } from "../src/i18n/es.ts";
 import { fecha, fechaHora, instante, numero, pais, rango, region } from "../src/i18n/index.ts";
-import { areas, circulo, destino, lineasDeEpisodio, pilas } from "../src/mapa/geometria.ts";
+import { areas, banderas, circulo, destino, lineasDeEpisodio, pilas, sinAtribuidos } from "../src/mapa/geometria.ts";
+import { ultimas24Horas } from "../src/estado/filtros.ts";
+import { MS_POR_DIA, MS_POR_HORA } from "../src/tiempo/dias.ts";
 import { ACENTO_POR_DEFECTO, COLOR_ESTADO, PALETA, contraste } from "../src/paleta.ts";
 import { analizarRuta, fichaDeId } from "../src/rutas.ts";
 import { NOMBRE, rutaDeFicha, rutaDeIdioma } from "../src/sitio.ts";
@@ -338,7 +340,7 @@ describe("geometría del mapa", () => {
   });
 
   it("cada punto lleva el icono de su estado, sea del tipo que sea", () => {
-    const opciones = { hoy: 0, novedades: new Set<string>() };
+    const opciones = { recientes: ultimas24Horas(0), novedades: new Set<string>() };
     expect(munich.tipo).not.toBe(diest.tipo);
     expect(pilas([munich, diest], opciones).features.map((f) => f.properties.icono)).toEqual([
       "incidente-notificado",
@@ -364,7 +366,7 @@ describe("geometría del mapa", () => {
         ),
       ),
     ];
-    const coleccion = pilas(mismoSitio, { hoy: 0, novedades: new Set(["EODI-2026-00001"]) });
+    const coleccion = pilas(mismoSitio, { recientes: ultimas24Horas(0), novedades: new Set(["EODI-2026-00001"]) });
     expect(coleccion.features).toHaveLength(1);
     expect(coleccion.features[0]?.properties).toMatchObject({
       id: "EODI-2026-00002",
@@ -378,9 +380,35 @@ describe("geometría del mapa", () => {
     });
   });
 
-  it("marca lo que empezó en las últimas 24 horas", () => {
-    expect(pilas([munich], { hoy: munich.dia, novedades: new Set() }).features[0]?.properties.reciente).toBe(1);
-    expect(pilas([munich], { hoy: munich.dia + 5, novedades: new Set() }).features[0]?.properties.reciente).toBe(0);
+  it("marca lo que empezó en las últimas 24 horas, igual que el filtro", () => {
+    const reciente = (ahora: number) =>
+      pilas([munich], { recientes: ultimas24Horas(ahora), novedades: new Set() }).features[0]?.properties
+        .reciente;
+    const inicio = munich.inicio ?? munich.dia * MS_POR_DIA;
+    expect(reciente(inicio + 2 * MS_POR_HORA)).toBe(1);
+    expect(reciente(inicio + 5 * MS_POR_DIA)).toBe(0);
+  });
+
+  it("un atribuido va con su bandera, fuera de las pilas y de los grupos", () => {
+    const atribuido = resumirIncidente(
+      incidente(
+        {
+          id: "EODI-2026-00003",
+          estado: {
+            actual: "atribuido",
+            historial: [{ estado: "atribuido", fecha: { valor: "2026-01-01T00:00Z", precision: "dia" } }],
+          },
+        },
+        [munich.punto?.lon ?? 0, munich.punto?.lat ?? 0],
+      ),
+    );
+    const opciones = { recientes: ultimas24Horas(0), novedades: new Set([atribuido.id]) };
+    // En el mismo punto que otro incidente: el otro queda solo y el atribuido lleva su bandera.
+    const resto = pilas(sinAtribuidos([munich, atribuido]), opciones);
+    expect(resto.features.map((f) => f.properties.ids)).toEqual([munich.id]);
+    const conBandera = banderas([munich, atribuido], opciones);
+    expect(conBandera.features).toHaveLength(1);
+    expect(conBandera.features[0]?.properties).toMatchObject({ id: atribuido.id, n: 1, atribuido: 1, novedad: 1 });
   });
 
   it("la línea de un episodio solo une incidentes visibles y necesita dos", () => {

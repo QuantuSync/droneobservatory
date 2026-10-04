@@ -107,6 +107,7 @@ export function Feed({
                   <button
                     type="button"
                     className="flex w-full cursor-pointer items-start gap-2 rounded-sm px-2 py-2 text-left hover:bg-elevado"
+                    data-id={evento.id}
                     onClick={() => onAbrir(evento.id)}
                   >
                     <Simbolo estado={evento.estado} className="mt-0.5 shrink-0" />

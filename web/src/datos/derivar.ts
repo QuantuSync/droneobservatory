@@ -12,6 +12,7 @@ import type {
   FilaImpacto,
   FocoRegion,
   FuenteSentido,
+  Instante,
   ImpactoGuerra,
   FeatureIncidente,
   PropiedadesSinUbicacion,
@@ -26,6 +27,7 @@ import type {
   ResumenUcrania,
   Sentido,
   ZonaResumen,
+  UltimoParte,
 } from "./tipos.ts";
 
 /** Marca de una cifra que ninguna fuente da, en las filas numéricas de los ataques. */
@@ -41,6 +43,16 @@ export function esGrave(estado: Estado): boolean {
   return ESTADOS_GRAVES.has(estado);
 }
 
+/**
+ * El instante de un inicio cuya hora se conoce (precisión de minuto o de hora); null si solo
+ * se conoce el día o si la fecha es aproximada (la de publicación de la noticia).
+ */
+function instanteConHora(inicio: Instante): number | null {
+  if (inicio.precision !== "minuto" && inicio.precision !== "hora") return null;
+  const ms = Date.parse(inicio.valor);
+  return Number.isNaN(ms) ? null : ms;
+}
+
 export function resumirIncidente(feature: FeatureIncidente): IncidenteResumen {
   const p = feature.properties;
   const [lon, lat] = feature.geometry.coordinates;
@@ -53,6 +65,7 @@ export function resumirIncidente(feature: FeatureIncidente): IncidenteResumen {
     presencia: p.presencia_dron ?? null,
     titulo: p.titulo,
     dia: diaDeInstante(p.tiempo.inicio.valor),
+    inicio: instanteConHora(p.tiempo.inicio),
     pais: p.lugar.pais,
     objetivo: p.objetivo?.nombre ?? null,
     episodio: p.episodio ?? null,
@@ -70,6 +83,7 @@ export function resumirSinUbicacion(p: PropiedadesSinUbicacion): IncidenteResume
     presencia: p.presencia_dron ?? null,
     titulo: p.titulo,
     dia: diaDeInstante(p.tiempo.inicio.valor),
+    inicio: instanteConHora(p.tiempo.inicio),
     pais: p.lugar.pais,
     objetivo: p.objetivo?.nombre ?? null,
     episodio: p.episodio ?? null,
@@ -396,5 +410,24 @@ export function resumirUcrania(
     origenes: origenesDeAtaques(ucrania, geografia.casar),
     centros: Object.fromEntries(geografia.centros),
     fronteraUcrania: Object.fromEntries(geografia.fronteraUcrania),
+    ultimoParte: ultimoParte(ucrania),
   };
+}
+
+/**
+ * El último parte publicado de ataques contra Ucrania con la cifra de lanzados: el que acaba
+ * más tarde. Cada parte cubre una noche (de las 18:00 a la mañana, hora de Kiev) o un día; no
+ * se suman, y los que ya cuenta otro parte no cuentan.
+ */
+export function ultimoParte(ucrania: PublicacionUcrania): UltimoParte | null {
+  let ultimo: UltimoParte | null = null;
+  for (const ataque of ucrania.ataques) {
+    const total = ataque.lanzados?.total;
+    if (ataque.sentido !== "RU_UA" || total === undefined || total === "desconocido") continue;
+    if (ataque.incluido_en !== undefined || ataque.solapado_con !== undefined) continue;
+    const fin = ataque.periodo.fin.valor;
+    if (ultimo !== null && Date.parse(fin) <= Date.parse(ultimo.fin)) continue;
+    ultimo = { id: ataque.id, lanzados: total.max, inicio: ataque.periodo.inicio.valor, fin };
+  }
+  return ultimo;
 }

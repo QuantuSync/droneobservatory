@@ -14,6 +14,8 @@ import type {
 import { anchoDeCorredor, arco, opacidadDePerdida } from "../datos/guerraSatelite.ts";
 import type { CiudadSinLuz, Corredor, FocoVivo } from "../datos/guerraSatelite.ts";
 import { GRAVEDAD } from "../paleta.ts";
+import { incidenteEnPeriodo } from "../tiempo/dias.ts";
+import type { Periodo } from "../tiempo/dias.ts";
 
 const RADIO_TERRESTRE_KM = 6371.0088;
 /** Lados del polígono que aproxima el círculo: a 50 km de radio el error es inapreciable. */
@@ -93,7 +95,6 @@ export interface PropiedadesPila {
   grave: 0 | 1;
   atribuido: 0 | 1;
   /** Cuántos hay de cada estado, para el color de los grupos al alejar. */
-  n_atribuidos: number;
   n_confirmados: number;
   n_notificados: number;
   /** 1 si alguno empezó en las últimas 24 horas. */
@@ -110,7 +111,7 @@ export interface PropiedadesPila {
  */
 export function pilas(
   incidentes: readonly IncidenteResumen[],
-  opciones: { hoy: number; novedades: ReadonlySet<string> },
+  opciones: { recientes: Periodo; novedades: ReadonlySet<string> },
 ): FeatureCollection<Point, PropiedadesPila> {
   const porPunto = new Map<string, (IncidenteResumen & { punto: { lon: number; lat: number } })[]>();
   for (const incidente of conPunto(incidentes)) {
@@ -136,16 +137,36 @@ export function pilas(
         icono: nombreIcono(primero.estado),
         grave: esGrave(primero.estado) ? 1 : 0,
         atribuido: primero.estado === "atribuido" ? 1 : 0,
-        n_atribuidos: cuenta("atribuido"),
         n_confirmados: cuenta("confirmado"),
         n_notificados: cuenta("notificado"),
-        reciente: ordenados.some((i) => i.dia >= opciones.hoy - 1) ? 1 : 0,
+        reciente: ordenados.some((i) => incidenteEnPeriodo(i, opciones.recientes)) ? 1 : 0,
         novedad: ordenados.some((i) => opciones.novedades.has(i.id)) ? 1 : 0,
         foco: ordenados.some((i) => i.foco) ? 1 : 0,
       },
     });
   }
   return { type: "FeatureCollection", features };
+}
+
+/**
+ * Una bandera por atribuido, cada uno en su punto: no se juntan en pilas ni en grupos, para
+ * que el estado más grave siempre esté a la vista.
+ */
+export function banderas(
+  incidentes: readonly IncidenteResumen[],
+  opciones: { recientes: Periodo; novedades: ReadonlySet<string> },
+): FeatureCollection<Point, PropiedadesPila> {
+  return {
+    type: "FeatureCollection",
+    features: incidentes
+      .filter((i) => i.estado === "atribuido")
+      .flatMap((i) => pilas([i], opciones).features),
+  };
+}
+
+/** Lo que va en círculos y grupos: todo menos los atribuidos, que llevan su bandera. */
+export function sinAtribuidos(incidentes: readonly IncidenteResumen[]): IncidenteResumen[] {
+  return incidentes.filter((i) => i.estado !== "atribuido");
 }
 
 export interface PropiedadesArea {

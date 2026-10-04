@@ -3,7 +3,7 @@ import type { Idioma } from "../sitio.ts";
 import { fechaDeDia } from "../tiempo/dias.ts";
 import { en } from "./en.ts";
 import { es } from "./es.ts";
-import type { Textos } from "./tipos.ts";
+import type { FechaEscrita, Textos } from "./tipos.ts";
 
 const TEXTOS: Record<Idioma, Textos> = { es, en };
 
@@ -22,6 +22,12 @@ export function fecha(f: Date): string {
 
 export function fechaDia(dia: number): string {
   return fecha(fechaDeDia(dia));
+}
+
+/** Un día UTC por partes, para escribirlo en palabras con los textos de cada idioma. */
+export function fechaEscrita(dia: number): FechaEscrita {
+  const f = fechaDeDia(dia);
+  return { dia: f.getUTCDate(), mes: f.getUTCMonth(), anio: f.getUTCFullYear() };
 }
 
 /** Hora UTC como hh:mm. */
@@ -81,4 +87,4 @@ export function region(codigo: string, idioma: Idioma): string {
   return TEXTOS[idioma].regiones[codigo] ?? codigo;
 }
 
-export type { Textos } from "./tipos.ts";
+export type { FechaEscrita, Textos } from "./tipos.ts";

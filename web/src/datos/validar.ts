@@ -465,6 +465,7 @@ const resumen = objeto({
       presencia: nulable(enumerado(v.PRESENCIAS)),
       titulo,
       dia: entero,
+      inicio: nulable(entero),
       pais: cadena(v.PATRON_PAIS),
       objetivo: nulable(cadena()),
       episodio: nulable(cadena(v.PATRON_ID_EPISODIO)),
@@ -558,6 +559,16 @@ const resumenUcrania: Comprobacion = (valor, ruta, errores) => {
     origenes: diccionario(cadena(v.PATRON_ID_ATAQUE), lista(enteroNoNegativo, 1)),
     centros: diccionario(cadena(v.PATRON_REGION), tupla([longitud, latitud])),
     fronteraUcrania: diccionario(cadena(v.PATRON_REGION), tupla([longitud, latitud])),
+  },
+  {
+    ultimoParte: nulable(
+      objeto({
+        id: cadena(v.PATRON_ID_ATAQUE),
+        lanzados: enteroNoNegativo,
+        inicio: cadena(v.PATRON_INSTANTE),
+        fin: cadena(v.PATRON_INSTANTE),
+      }),
+    ),
   })(valor, ruta, errores);
   if (errores.length > 0) return;
   // Cada región de un ataque tiene que existir en la tabla de regiones, y cada origen en la
