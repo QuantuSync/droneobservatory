@@ -16579,6 +16579,21 @@
      "valor": "si"
     },
     {
+     "campo": "drones.numero",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-29T08:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-5bd56246ebb907b5",
+     "medio": "news.yam.md",
+     "valor": {
+      "max": 2,
+      "min": 2
+     }
+    },
+    {
      "campo": "lugar.pais",
      "credibilidad": 3,
      "fecha": {
@@ -16592,7 +16607,7 @@
     },
     {
      "campo": "presencia_dron",
-     "cita": "Spațiul aerian al Republicii Moldova a fost închis temporar noaptea trecută.",
+     "cita": "Spațiul aerian al Republicii Moldova a fost închis temporar noaptea trecută din cauza survolării ilegale cu drone.",
      "credibilidad": 3,
      "fecha": {
       "precision": "aproximada",
@@ -16601,19 +16616,6 @@
      "fiabilidad": "C",
      "fuente_id": "gdelt-cb5b8adc26a02ecb",
      "medio": "stiripesurse.ro",
-     "valor": "no_confirmada"
-    },
-    {
-     "campo": "presencia_dron",
-     "cita": "Spațiul aerian al Republicii Moldova a fost închis temporar noaptea trecută din cauza survolării ilegale cu drone.",
-     "credibilidad": 1,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2025-11-29T08:30Z"
-     },
-     "fiabilidad": "B",
-     "fuente_id": "gdelt-cb5b8adc26a02ecb-declaracion-1",
-     "medio": "Ministerul Apărării al Republicii Moldova (declaración oficial citada en stiripesurse.ro)",
      "valor": "confirmada"
     },
     {
@@ -16641,7 +16643,7 @@
      "fiabilidad": "C",
      "fuente_id": "gdelt-cb5b8adc26a02ecb",
      "medio": "stiripesurse.ro",
-     "valor": "incursion"
+     "valor": "interrupcion_aeroportuaria"
     }
    ],
    "consecuencias": {
@@ -16652,11 +16654,14 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T00:17Z"
     }
    },
    "drones": {
-    "numero": "desconocido"
+    "numero": {
+     "max": 2,
+     "min": 2
+    }
    },
    "estado": {
     "actual": "confirmado",
@@ -16688,7 +16693,7 @@
       "valor": "2025-11-29T08:30Z"
      },
      "fiabilidad": "C",
-     "frase_origen": "Spațiul aerian al Republicii Moldova a fost închis temporar noaptea trecută.",
+     "frase_origen": "Spațiul aerian al Republicii Moldova a fost închis temporar noaptea trecută din cauza survolării ilegale cu drone.",
      "id": "gdelt-cb5b8adc26a02ecb",
      "idioma": "ro",
      "medio": "stiripesurse.ro",
@@ -16702,7 +16707,7 @@
       "valor": "2025-11-29T08:45Z"
      },
      "fiabilidad": "C",
-     "frase_origen": "Ministerul Afacerior Interne a venit cu noi detalii, după ce două drone au survolat spațiul aerian al Republicii Moldova",
+     "frase_origen": "După ce două drone au survolat spațiul aerian al Republicii Moldova.",
      "id": "gdelt-5bd56246ebb907b5",
      "idioma": "ro",
      "medio": "news.yam.md",
@@ -16719,7 +16724,7 @@
      "frase_origen": "Spațiul aerian al Republicii Moldova a fost închis temporar noaptea trecută din cauza survolării ilegale cu drone.",
      "id": "gdelt-cb5b8adc26a02ecb-declaracion-1",
      "idioma": "ro",
-     "medio": "Ministerul Apărării al Republicii Moldova (declaración oficial citada en stiripesurse.ro)",
+     "medio": "Ministerul moldovean al Apărării (declaración oficial citada en stiripesurse.ro)",
      "replicas": 0
     }
    ],
@@ -16737,8 +16742,8 @@
    },
    "tipo": "sobrevuelo",
    "titulo": {
-    "en": "Moldova closes airspace after fresh Russian drone incursion",
-    "es": "Moldavia cierra el espacio aéreo tras nueva incursión de drones rusos"
+    "en": "Moldavian airspace closed due to Russian drones",
+    "es": "Espacio aéreo de Moldavia cerrado por drones rusos"
    }
   },
   {
@@ -18246,6 +18251,379 @@
    "titulo": {
     "en": "Drone found in a forest area in Argeş, Romania",
     "es": "Dron caído en una zona boscosa de Argeş, Rumania"
+   }
+  },
+  {
+   "afirmaciones_publicas": [
+    {
+     "campo": "drones.numero",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-29T09:00Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-23fdda2514dd0fc6",
+     "medio": "adevarul.ro",
+     "valor": {
+      "max": 2,
+      "min": 2
+     }
+    },
+    {
+     "campo": "lugar.localidad",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-29T09:00Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-23fdda2514dd0fc6",
+     "medio": "adevarul.ro",
+     "valor": "nord"
+    },
+    {
+     "campo": "lugar.pais",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-29T09:00Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-23fdda2514dd0fc6",
+     "medio": "adevarul.ro",
+     "valor": "MD"
+    },
+    {
+     "campo": "tiempo.inicio",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-29T09:00Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-23fdda2514dd0fc6",
+     "medio": "adevarul.ro",
+     "valor": {
+      "precision": "dia",
+      "valor": "2025-11-28T00:00Z"
+     }
+    },
+    {
+     "campo": "tipo",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-29T09:00Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-23fdda2514dd0fc6",
+     "medio": "adevarul.ro",
+     "valor": "incursion"
+    }
+   ],
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-04T00:17Z"
+    }
+   },
+   "drones": {
+    "numero": {
+     "max": 2,
+     "min": 2
+    }
+   },
+   "estado": {
+    "actual": "notificado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-29T09:00Z"
+      },
+      "fuente_id": "gdelt-23fdda2514dd0fc6"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://adevarul.ro/stiri-externe/republica-moldova/spatiul-aerian-al-republicii-moldova-incalcat-din-2490713.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-29T09:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Două drone au survolat ilegal, vineri seară, nordul Republicii Moldova.",
+     "id": "gdelt-23fdda2514dd0fc6",
+     "idioma": "ro",
+     "medio": "adevarul.ro",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://news.yam.md/ro/story/18209215",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-29T09:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Autoritățile, în alertă. Spațiul aerian a fost închis, vineri seara, după ce două drone au pătruns în R. Moldova",
+     "id": "gdelt-ca2e54158f5c6f9f",
+     "idioma": "ro",
+     "medio": "news.yam.md",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://news.yam.md/ro/story/18209300",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-29T09:15Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Două drone au survolat Moldova: Spațiul aerian, blocat temporar",
+     "id": "gdelt-f62784af49f0c09a",
+     "idioma": "ro",
+     "medio": "news.yam.md",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://hotnews.ro/doua-drone-rusesti-au-violat-din-nou-spatiul-aerian-al-republicii-moldova-2119038",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-29T09:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Două drone rusești au violat din nou spațiul aerian al Republicii Moldova",
+     "id": "gdelt-71f4df8829e0930c",
+     "idioma": "ro",
+     "medio": "hotnews.ro",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://ewn.co.za/2025/11/29/moldova-says-briefly-shut-airspace-after-fresh-drone-breach",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-29T10:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Moldova says briefly shut airspace after fresh drone breach",
+     "id": "gdelt-2b2b569ba9ca5784",
+     "idioma": "en",
+     "medio": "ewn.co.za",
+     "replicas": 2
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://news.yam.md/ro/story/18209456",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-29T10:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Două drone au traversat nordul R. Moldova. Spațiul aerian, temporar închis",
+     "id": "gdelt-1aa8de5e53158658",
+     "idioma": "ro",
+     "medio": "news.yam.md",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://realitatea.net/stiri/actual/alerta-la-granita-doua-drone-rusesti-au-intrat-ilegal-in-moldova-spatiul-aerian-a-fost-inchis_692abdd5b38a260ff04f9e06",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-29T11:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Alertă la graniță! Două drone rusești au intrat ilegal în Moldova. Spațiul aerian a fost închis",
+     "id": "gdelt-4a646360439e5014",
+     "idioma": "ro",
+     "medio": "realitatea.net",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://romania-actualitati.ro/stiri/in-lume/doua-drone-au-survolat-spatiul-aerian-al-republicii-moldova-id220020.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-29T12:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Două drone au survolat spațiul aerian al Republicii Moldova",
+     "id": "gdelt-40f6663090db77a7",
+     "idioma": "ro",
+     "medio": "romania-actualitati.ro",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://cp24.com/news/world/2025/11/29/moldova-briefly-shuts-airspace-after-new-drone-breach",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-29T17:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Airspace in Moldova closed briefly after drone breach",
+     "id": "gdelt-4e3dc223d65bffc8",
+     "idioma": "en",
+     "medio": "cp24.com",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://marketscreener.com/news/moldova-says-russian-drones-entered-its-airspace-again-posing-aviation-threat-ce7d51dbdf8ffe21",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-29T17:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Moldova says Russian drones entered its airspace again.",
+     "id": "gdelt-5ba694f7405852d6",
+     "idioma": "en",
+     "medio": "marketscreener.com",
+     "replicas": 2
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://bt.dk/udland/moldova-russiske-droner-har-kraenket-vores-luftrum-igen",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-29T19:15Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Moldova: Russiske droner har krænket vores luftrum, igen",
+     "id": "gdelt-8c387ef51ecc416a",
+     "idioma": "da",
+     "medio": "bt.dk",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://firstpost.com/world/moldova-closes-airspace-after-russian-drones-cross-border-for-third-time-in-nine-days-ws-e-13955151.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-29T19:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Moldova closes airspace after Russian drones cross border for third time in nine days",
+     "id": "gdelt-e5584163c3eeb32b",
+     "idioma": "en",
+     "medio": "firstpost.com",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://lemonde.fr/en/international/article/2025/11/29/moldova-temporarily-closes-airspace-after-russian-drone-incursion_6747971_4.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-29T20:15Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Moldova temporarily closes airspace after Russian drone incursion",
+     "id": "gdelt-1ca47478c8db740c",
+     "idioma": "en",
+     "medio": "lemonde.fr",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://yahoo.com/news/articles/moldova-says-russian-drones-violated-195631274.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-29T21:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Moldova says Russian drones violated airspace",
+     "id": "gdelt-e905391bd6cd5cc1",
+     "idioma": "en",
+     "medio": "yahoo.com",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://dr.dk/nyheder/seneste/moldova-siger-russiske-droner-har-kraenket-luftrummet",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-29T22:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Moldova siger, at russiske droner har krænket luftrummet | Nyheder",
+     "id": "gdelt-52b3333726c4462a",
+     "idioma": "da",
+     "medio": "dr.dk",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://gdnonline.com:443/Details/1369750/Moldova-says-Russian-drones-entered-its-airspace-again,-posing-aviation-threat",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-29T22:15Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "World News: Moldova says Russian drones entered its airspace again, posing aviation threat",
+     "id": "gdelt-79066051ae1203a1",
+     "idioma": "en",
+     "medio": "gdnonline.com",
+     "replicas": 1
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://athens-times.com/moldova-russian-drones-violate-airspace-for-third-time-in-nine-days",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-29T23:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Russian Drones Breach Moldova Airspace Again",
+     "id": "gdelt-9de82ce3679fa38a",
+     "idioma": "en",
+     "medio": "athens-times.com",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://gdnonline.com:443/Details/1369810",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-29T23:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "World News: Moldova says drones entered its airspace again",
+     "id": "gdelt-1381904cbc1eb525",
+     "idioma": "en",
+     "medio": "gdnonline.com",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-2025-00407",
+   "lugar": {
+    "localidad": "nord",
+    "nivel": "region",
+    "pais": "MD",
+    "region": "nord"
+   },
+   "presencia_dron": "no_confirmada",
+   "tiempo": {
+    "inicio": {
+     "precision": "dia",
+     "valor": "2025-11-28T00:00Z"
+    }
+   },
+   "tipo": "sobrevuelo",
+   "titulo": {
+    "en": "Russian possible drones breach Moldova's airspace, forcing temporary closure",
+    "es": "Posibles drones rusos violan el espacio aéreo de Moldavia y obligan a cerrar temporalmente la zona"
    }
   },
   {
@@ -43002,11 +43380,11 @@
      "credibilidad": 3,
      "fecha": {
       "precision": "aproximada",
-      "valor": "2026-10-03T08:00Z"
+      "valor": "2026-10-03T09:30Z"
      },
      "fiabilidad": "C",
-     "fuente_id": "gdelt-fc1b83d89eb5bf0a",
-     "medio": "ilfattoquotidiano.it",
+     "fuente_id": "gdelt-d07eac49e6186bee",
+     "medio": "primapress.it",
      "valor": {
       "max": 1,
       "min": 1
@@ -43017,18 +43395,6 @@
      "credibilidad": 3,
      "fecha": {
       "precision": "aproximada",
-      "valor": "2026-10-03T08:45Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-f0715351f02b12cf",
-     "medio": "spotandweb.it",
-     "valor": "LT"
-    },
-    {
-     "campo": "lugar.pais",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
       "valor": "2026-10-03T09:30Z"
      },
      "fiabilidad": "C",
@@ -43037,46 +43403,8 @@
      "valor": "LT"
     },
     {
-     "campo": "lugar.pais",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-03T10:00Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-faeb620ff0072571",
-     "medio": "ilfattonisseno.it",
-     "valor": "LT"
-    },
-    {
      "campo": "presencia_dron",
-     "cita": "possibile allarme per incursione aerea",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-03T08:45Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-f0715351f02b12cf",
-     "medio": "spotandweb.it",
-     "valor": "no_confirmada"
-    },
-    {
-     "campo": "presencia_dron",
-     "cita": "Le Forze Armate lituane informano: possibile allarme per incursione aerea.",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-03T08:45Z"
-     },
-     "fiabilidad": "B",
-     "fuente_id": "gdelt-f0715351f02b12cf-declaracion-1",
-     "medio": "Forze Armate lituane (declaración oficial citada en spotandweb.it)",
-     "valor": "confirmada"
-    },
-    {
-     "campo": "presencia_dron",
-     "cita": "E' stato chiuso l'aeroporto.",
+     "cita": "Un drone ha violato lo spazio aereo lituano.",
      "credibilidad": 3,
      "fecha": {
       "precision": "aproximada",
@@ -43085,60 +43413,7 @@
      "fiabilidad": "C",
      "fuente_id": "gdelt-d07eac49e6186bee",
      "medio": "primapress.it",
-     "valor": "no_confirmada"
-    },
-    {
-     "campo": "presencia_dron",
-     "cita": "Allarme per incursione aerea. Cercate un luogo sicuro.",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-03T09:30Z"
-     },
-     "fiabilidad": "B",
-     "fuente_id": "gdelt-d07eac49e6186bee-declaracion-1",
-     "medio": "Forze armate lituane (declaración oficial citada en primapress.it)",
      "valor": "confirmada"
-    },
-    {
-     "campo": "presencia_dron",
-     "cita": "Allarme per la possibile presenza di un drone nello spazio aereo della Lituania.",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-03T10:00Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-faeb620ff0072571",
-     "medio": "ilfattonisseno.it",
-     "valor": "no_confirmada"
-    },
-    {
-     "campo": "presencia_dron",
-     "cita": "possibile allarme per incursione aerea. Cercate un luogo sicuro.",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-03T10:00Z"
-     },
-     "fiabilidad": "B",
-     "fuente_id": "gdelt-faeb620ff0072571-declaracion-1",
-     "medio": "Forze Armate lituane (declaración oficial citada en ilfattonisseno.it)",
-     "valor": "confirmada"
-    },
-    {
-     "campo": "respuesta.medidas",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-03T08:45Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-f0715351f02b12cf",
-     "medio": "spotandweb.it",
-     "valor": [
-      "cazas"
-     ]
     },
     {
      "campo": "respuesta.medidas",
@@ -43153,35 +43428,6 @@
      "valor": [
       "cazas"
      ]
-    },
-    {
-     "campo": "respuesta.medidas",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-03T10:00Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-faeb620ff0072571",
-     "medio": "ilfattonisseno.it",
-     "valor": [
-      "cazas"
-     ]
-    },
-    {
-     "campo": "tiempo.inicio",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-03T08:00Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-fc1b83d89eb5bf0a",
-     "medio": "ilfattoquotidiano.it",
-     "valor": {
-      "precision": "minuto",
-      "valor": "2026-10-03T06:40Z"
-     }
     },
     {
      "campo": "tiempo.inicio",
@@ -43203,36 +43449,12 @@
      "credibilidad": 3,
      "fecha": {
       "precision": "aproximada",
-      "valor": "2026-10-03T08:45Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-f0715351f02b12cf",
-     "medio": "spotandweb.it",
-     "valor": "incursion"
-    },
-    {
-     "campo": "tipo",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
       "valor": "2026-10-03T09:30Z"
      },
      "fiabilidad": "C",
      "fuente_id": "gdelt-d07eac49e6186bee",
      "medio": "primapress.it",
-     "valor": "incursion"
-    },
-    {
-     "campo": "tipo",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-03T10:00Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-faeb620ff0072571",
-     "medio": "ilfattonisseno.it",
-     "valor": "sobrevuelo"
+     "valor": "interrupcion_aeroportuaria"
     }
    ],
    "consecuencias": {
@@ -43243,11 +43465,14 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-03T20:17Z"
+     "valor": "2026-10-04T00:17Z"
     }
    },
    "drones": {
-    "numero": "desconocido"
+    "numero": {
+     "max": 1,
+     "min": 1
+    }
    },
    "estado": {
     "actual": "confirmado",
@@ -43273,268 +43498,16 @@
    "fuentes": [
     {
      "credibilidad": 3,
-     "enlace": "https://ansa.it/sito/notizie/mondo/europa/2026/10/03/drone-viola-lo-spazio-aereo-lituano-allerta-alla-popolazione_56200a97-785e-4e6d-b43a-d0b4c6b6621e.html",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-03T07:30Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "Drone viola lo spazio aereo lituano",
-     "id": "gdelt-128c9f405e59381f",
-     "idioma": "it",
-     "medio": "ansa.it",
-     "replicas": 5
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://zazoom.it/2026-10-03/lituania-drone-viola-lo-spazio-aereo-allerta-alla-popolazione-cercate-un-luogo-sicuro-se-vedete-un-oggetto-sospetto-allontanatevi/19752588",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-03T08:00Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "Lituania drone viola lo spazio aereo Allerta alla popolazione | Cercate un luogo sicuro se vedete un oggetto sospetto allontanatevi",
-     "id": "gdelt-197d1f9b1dc7f446",
-     "idioma": "it",
-     "medio": "zazoom.it",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://zazoom.it/2026-10-03/drone-viola-lo-spazio-aereo-lituano-lallerta-ai-cittadini-possibile-incursione-aerea-cercate-un-luogo-sicuro/19752609",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-03T08:00Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "Drone viola lo spazio aereo lituano l'allerta ai cittadini | Possibile incursione aerea Cercate un luogo sicuro",
-     "id": "gdelt-48e4088bd8d70c33",
-     "idioma": "it",
-     "medio": "zazoom.it",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://zazoom.it/2026-10-03/lituania-drone-viola-spazio-aereo-allarme-delle-autorita-cercate-un-luogo-sicuro/19752611",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-03T08:00Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "Lituania drone viola spazio aereo Allarme delle autorità | Cercate un luogo sicuro",
-     "id": "gdelt-f541de07976c19f5",
-     "idioma": "it",
-     "medio": "zazoom.it",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://ilfattoquotidiano.it/2026/10/03/lituania-drone-viola-spazio-aereo-cercate-luogo-sicuro-rifugi-antiaere/8526307",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-03T08:00Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "dopo l'avvistamento di un drone che ha violato lo spazio aereo",
-     "id": "gdelt-fc1b83d89eb5bf0a",
-     "idioma": "it",
-     "medio": "ilfattoquotidiano.it",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://ilsole24ore.com/art/lituania-drone-viola-spazio-aereo-popolazione-allerta-AJ4EejXB",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-03T08:15Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "Lituania, drone viola lo spazio aereo: popolazione in allerta",
-     "id": "gdelt-0cda714f241625fd",
-     "idioma": "it",
-     "medio": "ilsole24ore.com",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://ansa.it/sito/notizie/mondo/europa/2026/10/03/drone-viola-lo-spazio-aereo-lituano-rientrata-lallerta-alla-popolazione_56200a97-785e-4e6d-b43a-d0b4c6b6621e.html",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-03T08:15Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "Drone viola lo spazio aereo lituano, rientrata l'allerta alla popolazione - Europa",
-     "id": "gdelt-3b47821a653d0a53",
-     "idioma": "it",
-     "medio": "ansa.it",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://zazoom.it/2026-10-03/drone-viola-lo-spazio-aereo-della-lituania-scatta-lallerta/19752735",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-03T08:30Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "Drone viola lo spazio aereo della Lituania",
-     "id": "gdelt-33802a11335ebab7",
-     "idioma": "it",
-     "medio": "zazoom.it",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://adnkronos.com/internazionale/esteri/drone-invade-spazio-aereo-lituania-jet_58TlFCWhMrTilTOBbPFtDm",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-03T08:45Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "Drone invade spazio aereo Lituania, si alzano i jet: \"Cercate un luogo sicuro\"",
-     "id": "gdelt-d7449dc93b13986d",
-     "idioma": "it",
-     "medio": "adnkronos.com",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://spotandweb.it/news/924382/lituania-drone-invade-spazio-aereo-popolazione-invitata-a-cercare-luogo-sicuro.html",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-03T08:45Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "possibile allarme per incursione aerea",
-     "id": "gdelt-f0715351f02b12cf",
-     "idioma": "it",
-     "medio": "spotandweb.it",
-     "replicas": 3
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://spotandweb.it/news/924382/lituania-drone-invade-spazio-aereo-popolazione-invitata-a-cercare-luogo-sicuro.html",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-03T08:45Z"
-     },
-     "fiabilidad": "B",
-     "frase_origen": "Le Forze Armate lituane informano: possibile allarme per incursione aerea.",
-     "id": "gdelt-f0715351f02b12cf-declaracion-1",
-     "idioma": "it",
-     "medio": "Forze Armate lituane (declaración oficial citada en spotandweb.it)",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://zazoom.it/2026-10-03/possibile-drone-nello-spazio-aereo-della-lituania-jet-in-volo-e-allerta-alla-popolazione/19752785",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-03T09:00Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "Possibile drone nello spazio aereo della Lituania | jet in volo e allerta alla popolazione",
-     "id": "gdelt-37cb26f9ffa6442f",
-     "idioma": "it",
-     "medio": "zazoom.it",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 3,
      "enlace": "https://primapress.it/lituania-allarme-aereo-per-un-drone-dalla-bielorussia-in-volo-intercettori-nato",
      "fecha": {
       "precision": "aproximada",
       "valor": "2026-10-03T09:30Z"
      },
      "fiabilidad": "C",
-     "frase_origen": "E' stato chiuso l'aeroporto.",
+     "frase_origen": "Un drone ha violato lo spazio aereo lituano.",
      "id": "gdelt-d07eac49e6186bee",
      "idioma": "it",
      "medio": "primapress.it",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://primapress.it/lituania-allarme-aereo-per-un-drone-dalla-bielorussia-in-volo-intercettori-nato",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-03T09:30Z"
-     },
-     "fiabilidad": "B",
-     "frase_origen": "Allarme per incursione aerea. Cercate un luogo sicuro.",
-     "id": "gdelt-d07eac49e6186bee-declaracion-1",
-     "idioma": "it",
-     "medio": "Forze armate lituane (declaración oficial citada en primapress.it)",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://ilgiornale.it/news/cronaca-internazionale/drone-viola-lo-spazio-aereo-lituano-allerta-alla-popolazione-dopo-unora-allarme-rientrato",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-03T09:45Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "Drone viola lo spazio aereo lituano, allerta alla popolazione. Dopo un'ora allarme rientrato – il Giornale",
-     "id": "gdelt-9b9b861e9e766334",
-     "idioma": "it",
-     "medio": "ilgiornale.it",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://italpress.com/drone-viola-lo-spazio-aereo-della-lituania-allarme-rientrato",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-03T10:00Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "Drone viola lo spazio aereo della Lituania, allarme rientrato",
-     "id": "gdelt-77da83f8f172d6c7",
-     "idioma": "it",
-     "medio": "italpress.com",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://livesicilia.it/drone-viola-lo-spazio-aereo-lituano-allerta-alla-popolazione",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-03T10:00Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "Drone viola lo spazio aereo lituano, popolazione in allerta",
-     "id": "gdelt-8dc0f3883eb0e1cc",
-     "idioma": "it",
-     "medio": "livesicilia.it",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://ilfattonisseno.it/2026/10/lituania-drone-invade-spazio-aereo-popolazione-invitata-a-cercare-luogo-sicuro",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-03T10:00Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "Allarme per la possibile presenza di un drone nello spazio aereo della Lituania.",
-     "id": "gdelt-faeb620ff0072571",
-     "idioma": "it",
-     "medio": "ilfattonisseno.it",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://ilfattonisseno.it/2026/10/lituania-drone-invade-spazio-aereo-popolazione-invitata-a-cercare-luogo-sicuro",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-03T10:00Z"
-     },
-     "fiabilidad": "B",
-     "frase_origen": "possibile allarme per incursione aerea. Cercate un luogo sicuro.",
-     "id": "gdelt-faeb620ff0072571-declaracion-1",
-     "idioma": "it",
-     "medio": "Forze Armate lituane (declaración oficial citada en ilfattonisseno.it)",
      "replicas": 0
     },
     {
@@ -43545,7 +43518,7 @@
       "valor": "2026-10-03T11:00Z"
      },
      "fiabilidad": "C",
-     "frase_origen": "Incident na istočnom krilu NATO-a, dignuti borbeni avioni zbog sumnjivog drona",
+     "frase_origen": "Letjelica je, kako javlja Reuters, došla iz Bjelorusije.",
      "id": "gdelt-8b3a9694d036d255",
      "idioma": "hr",
      "medio": "oslobodjenje.ba",
@@ -43553,58 +43526,30 @@
     },
     {
      "credibilidad": 3,
-     "enlace": "https://zazoom.it/2026-10-03/mosca-avverte-diplomatici-e-stranieri-lasciate-kiev-colpito-un-altro-ponte-nella-capitale-ucraina-un-drone-viola-lo-spazio-aereo-lituano-la-diretta/19753362",
+     "enlace": "https://stirileprotv.ro/stiri/international/drone-rusesti-au-incalcat-spatiul-aerian-al-moldovei-in-lituania-avioane-nato-au-fost-ridicate-de-la-sol.html",
      "fecha": {
       "precision": "aproximada",
-      "valor": "2026-10-03T11:30Z"
+      "valor": "2026-10-03T21:15Z"
      },
      "fiabilidad": "C",
-     "frase_origen": "Mosca avverte diplomatici e stranieri | Lasciate Kiev colpito un altro ponte nella capitale ucraina Un drone viola lo spazio aereo lituano – La diretta",
-     "id": "gdelt-3f894cb4c00c412b",
+     "frase_origen": "Drone rusești au încălcat spațiul aerian al Moldovei. În Lituania, avioane NATO au fost ridicate de la sol",
+     "id": "gdelt-fe21420c989e4182",
+     "idioma": "ro",
+     "medio": "stirileprotv.ro",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 1,
+     "enlace": "https://primapress.it/lituania-allarme-aereo-per-un-drone-dalla-bielorussia-in-volo-intercettori-nato",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T09:30Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Allarme per incursione aerea. Cercate un luogo sicuro.",
+     "id": "gdelt-d07eac49e6186bee-declaracion-1",
      "idioma": "it",
-     "medio": "zazoom.it",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://wiadomosci.radiozet.pl/swiat/rosyjskie-drony-i-rakiety-wtargnely-w-przestrzen-powietrzna-moldawii",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-03T12:00Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "Rosyjskie drony i rakiety wtargnęły w przestrzeń powietrzną Mołdawii",
-     "id": "gdelt-ee904955e35bdd34",
-     "idioma": "pl",
-     "medio": "wiadomosci.radiozet.pl",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://lapresse.it/esteri/2026/10/03/lituania-drone-viola-spazio-aereo-allarme-delle-autorita-cercate-un-luogo-sicuro",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-03T12:30Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "Lituania, drone viola spazio aereo. Allarme delle autorità: \"Cercate un luogo sicuro\"",
-     "id": "gdelt-5fab65229ebd0483",
-     "idioma": "it",
-     "medio": "lapresse.it",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://libertaddigital.com/defensa/2026-10-03/drones-bielorrusos-obligan-a-cerrar-el-espacio-aereo-en-vilna-7469815",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-10-03T14:30Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "Drones bielorrusos obligan a cerrar el espacio aéreo en Vilna",
-     "id": "gdelt-cb9e78f4d85a488a",
-     "idioma": "es",
-     "medio": "libertaddigital.com",
+     "medio": "Forze armate lituane (declaración oficial citada en primapress.it)",
      "replicas": 0
     }
    ],
@@ -43627,8 +43572,8 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "Drone from Belarus violates Lithuanian airspace; airport closed",
-    "es": "Dron desde Bielorrusia viola el espacio aéreo de Lituania; cierran el aeropuerto"
+    "en": "Drone from Belarus violates Lithuanian airspace and forces closure of Vilnius airport",
+    "es": "Drone desde Bielorrusia viola el espacio aéreo de Lituania y obliga a cerrar el aeropuerto de Vilnius"
    }
   },
   {
@@ -46796,6 +46741,154 @@
    "titulo": {
     "en": "Russian drones breach Moldovan airspace and explode in four districts",
     "es": "Drones rusos violan el espacio aéreo de Moldavia y explotan en cuatro distritos"
+   }
+  },
+  {
+   "afirmaciones_publicas": [
+    {
+     "campo": "drones.numero",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T21:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-6bed516ac852360b",
+     "medio": "liga.net",
+     "valor": {
+      "max": 6,
+      "min": 6
+     }
+    },
+    {
+     "campo": "lugar.pais",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T21:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-6bed516ac852360b",
+     "medio": "liga.net",
+     "valor": "MD"
+    },
+    {
+     "campo": "presencia_dron",
+     "cita": "спричинило пожежі та матеріальні збитки",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T21:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-6bed516ac852360b",
+     "medio": "liga.net",
+     "valor": "confirmada"
+    },
+    {
+     "campo": "tiempo.inicio",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T21:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-6bed516ac852360b",
+     "medio": "liga.net",
+     "valor": {
+      "precision": "dia",
+      "valor": "2026-10-02T00:00Z"
+     }
+    },
+    {
+     "campo": "tipo",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T21:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-6bed516ac852360b",
+     "medio": "liga.net",
+     "valor": "incursion"
+    }
+   ],
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-04T00:17Z"
+    }
+   },
+   "drones": {
+    "numero": {
+     "max": 6,
+     "min": 6
+    }
+   },
+   "estado": {
+    "actual": "notificado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T21:30Z"
+      },
+      "fuente_id": "gdelt-6bed516ac852360b"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://news.liga.net/ua/world/news/moldova-vyklykala-posla-rf-pislia-droniv-a-v-kyshynevi-druhyy-den-pospil-evakuiuvaly-aeroport",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T21:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "спричинило пожежі та матеріальні збитки",
+     "id": "gdelt-6bed516ac852360b",
+     "idioma": "uk",
+     "medio": "liga.net",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://news.liga.net/world/news/moldova-vyzvala-posla-rf-iz-za-dronov-a-v-kishineve-vtoroi-den-podryad-evakuirovali-aeroport",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-03T22:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Дроны в Молдове и эвакуация аэропорта Кишинева – реакция МИД | Новости Украины",
+     "id": "gdelt-cf15742ca5bb49b5",
+     "idioma": "ru",
+     "medio": "liga.net",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-2026-00425",
+   "lugar": {
+    "nivel": "pais",
+    "pais": "MD"
+   },
+   "presencia_dron": "confirmada",
+   "tiempo": {
+    "inicio": {
+     "precision": "dia",
+     "valor": "2026-10-03T00:00Z"
+    }
+   },
+   "tipo": "incursion",
+   "titulo": {
+    "en": "Six Russian drones penetrate Moldovan airspace",
+    "es": "Seis drones rusos penetran el espacio aéreo de Moldavia"
    }
   }
  ]

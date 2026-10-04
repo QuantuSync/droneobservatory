@@ -22098,6 +22098,21 @@
       }
      },
      {
+      "campo": "consecuencias.cierre.minutos",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-09T20:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-bc76e718d1f5cd2d",
+      "medio": "gva.be",
+      "valor": {
+       "max": 30,
+       "min": 30
+      }
+     },
+     {
       "campo": "consecuencias.cierre.valor",
       "credibilidad": 3,
       "fecha": {
@@ -22108,6 +22123,48 @@
       "fuente_id": "gdelt-1dcacb1a1d4c76bd",
       "medio": "brf.be",
       "valor": "si"
+     },
+     {
+      "campo": "consecuencias.cierre.valor",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-09T19:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-1562777601415244",
+      "medio": "nieuwsblad.be",
+      "valor": "si"
+     },
+     {
+      "campo": "drones.numero",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-09T09:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-1dcacb1a1d4c76bd",
+      "medio": "brf.be",
+      "valor": {
+       "max": 1,
+       "min": 1
+      }
+     },
+     {
+      "campo": "drones.numero",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-09T20:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-bc76e718d1f5cd2d",
+      "medio": "gva.be",
+      "valor": {
+       "max": 3,
+       "min": 3
+      }
      },
      {
       "campo": "lugar.pais",
@@ -22122,8 +22179,20 @@
       "valor": "BE"
      },
      {
+      "campo": "lugar.pais",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-09T19:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-1562777601415244",
+      "medio": "nieuwsblad.be",
+      "valor": "BE"
+     },
+     {
       "campo": "presencia_dron",
-      "cita": "Daraufhin wurde der Betrieb eingestellt.",
+      "cita": "Die Drohne wurde gegen 19 Uhr gemeldet.",
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
@@ -22132,19 +22201,19 @@
       "fiabilidad": "C",
       "fuente_id": "gdelt-1dcacb1a1d4c76bd",
       "medio": "brf.be",
-      "valor": "no_confirmada"
+      "valor": "confirmada"
      },
      {
       "campo": "presencia_dron",
-      "cita": "Das teilte die Flugsicherung Skeyes mit.",
-      "credibilidad": 1,
+      "cita": "Vliegverkeer luchthaven Luik opnieuw stilgelegd na melding drone.",
+      "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
-       "valor": "2025-11-09T09:00Z"
+       "valor": "2025-11-09T19:30Z"
       },
-      "fiabilidad": "B",
-      "fuente_id": "gdelt-1dcacb1a1d4c76bd-declaracion-1",
-      "medio": "Skeyes (declaración oficial citada en brf.be)",
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-1562777601415244",
+      "medio": "nieuwsblad.be",
       "valor": "confirmada"
      },
      {
@@ -22178,6 +22247,21 @@
       }
      },
      {
+      "campo": "tiempo.inicio",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-09T19:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-1562777601415244",
+      "medio": "nieuwsblad.be",
+      "valor": {
+       "precision": "minuto",
+       "valor": "2025-11-09T19:30Z"
+      }
+     },
+     {
       "campo": "tipo",
       "credibilidad": 3,
       "fecha": {
@@ -22187,6 +22271,18 @@
       "fiabilidad": "C",
       "fuente_id": "gdelt-1dcacb1a1d4c76bd",
       "medio": "brf.be",
+      "valor": "interrupcion_aeroportuaria"
+     },
+     {
+      "campo": "tipo",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-09T19:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-1562777601415244",
+      "medio": "nieuwsblad.be",
       "valor": "interrupcion_aeroportuaria"
      }
     ],
@@ -22202,11 +22298,14 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-03T20:17Z"
+      "valor": "2026-10-04T00:17Z"
      }
     },
     "drones": {
-     "numero": "desconocido"
+     "numero": {
+      "max": 1,
+      "min": 1
+     }
     },
     "estado": {
      "actual": "confirmado",
@@ -22238,10 +22337,24 @@
        "valor": "2025-11-09T09:00Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "Daraufhin wurde der Betrieb eingestellt.",
+      "frase_origen": "Die Drohne wurde gegen 19 Uhr gemeldet.",
       "id": "gdelt-1dcacb1a1d4c76bd",
       "idioma": "de",
       "medio": "brf.be",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://brf.be/national/2023080",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-09T09:00Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Das teilte die Flugsicherung Skeyes mit. Die Drohne wurde gegen 19 Uhr gemeldet.",
+      "id": "gdelt-1dcacb1a1d4c76bd-declaracion-1",
+      "idioma": "de",
+      "medio": "Skeyes (declaración oficial citada en brf.be)",
       "replicas": 0
      },
      {
@@ -22259,17 +22372,255 @@
       "replicas": 0
      },
      {
-      "credibilidad": 1,
-      "enlace": "https://brf.be/national/2023080",
+      "credibilidad": 3,
+      "enlace": "https://nieuwsblad.be/binnenland/live.-vliegverkeer-luchthaven-luik-opnieuw-stilgelegd-na-melding-drone/102527528.html",
       "fecha": {
        "precision": "aproximada",
-       "valor": "2025-11-09T09:00Z"
+       "valor": "2025-11-09T19:30Z"
       },
-      "fiabilidad": "B",
-      "frase_origen": "Das teilte die Flugsicherung Skeyes mit.",
-      "id": "gdelt-1dcacb1a1d4c76bd-declaracion-1",
-      "idioma": "de",
-      "medio": "Skeyes (declaración oficial citada en brf.be)",
+      "fiabilidad": "C",
+      "frase_origen": "Vliegverkeer luchthaven Luik opnieuw stilgelegd na melding drone.",
+      "id": "gdelt-1562777601415244",
+      "idioma": "nl",
+      "medio": "nieuwsblad.be",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://lalibre.be/belgique/societe/2025/11/09/intrusion-de-drones-dans-lespace-aerien-le-trafic-aerien-a-laeroport-de-liege-interrompu-dimanche-soir-apres-le-signalement-dun-appareil-XKEGLC34IBBSFK5KLPPAVTGC7I",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-09T19:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Intrusion de drones dans l'espace aérien : l'aéroport de Liège paralysé ce dimanche soir après le signalement d'un appareil",
+      "id": "gdelt-7bf43b3a3628c1e3",
+      "idioma": "fr",
+      "medio": "lalibre.be",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://vrt.be/vrtnws/nl/liveblog/vliegverkeer-op-luchthaven-van-luik-stilgelegd-na-melding-drone~1762286776579",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-09T20:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Drones boven België - Vliegverkeer op luchthaven van Luik stilgelegd na melding drone",
+      "id": "gdelt-b5057847e96e4a3e",
+      "idioma": "nl",
+      "medio": "vrt.be",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://gva.be/binnenland/live.-vliegverkeer-luchthaven-luik-opnieuw-half-uur-stilgelegd-wegens-drie-drones/102527588.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-09T20:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Vliegverkeer luchthaven Luik opnieuw half uur stilgelegd wegens drie drones.",
+      "id": "gdelt-bc76e718d1f5cd2d",
+      "idioma": "nl",
+      "medio": "gva.be",
+      "replicas": 2
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://telegraaf.nl/buitenland/vliegverkeer-luchthaven-luik-weer-stilgelegd-om-dronemelding/103838314.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-09T20:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Vliegverkeer luchthaven Luik stilgelegd door dronemelding - Britse hulp onderweg",
+      "id": "gdelt-f373a8fddbb15266",
+      "idioma": "nl",
+      "medio": "telegraaf.nl",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://nieuws.nl/buitenland/vliegverkeer-luchthaven-luik-weer-stilgelegd-om-dronemelding",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-09T20:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Vliegverkeer luchthaven Luik weer stilgelegd om dronemelding",
+      "id": "gdelt-568a7e0ddbe08ee4",
+      "idioma": "nl",
+      "medio": "nieuws.nl",
+      "replicas": 4
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://limburger.nl/grensregio/luik/vliegverkeer-op-luchthaven-luik-weer-stilgelegd-vanwege-dronemelding/103841180.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-09T20:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Vliegverkeer op luchthaven Luik weer stilgelegd vanwege dronemelding",
+      "id": "gdelt-324f18e5bbf99db2",
+      "idioma": "nl",
+      "medio": "limburger.nl",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://zazoom.it/2025-11-09/ucraina-in-100mila-senza-luce-e-gas-nel-kharkiv-per-i-raid-russi-a-liegi-ancora-droni-sugli-aeroporti-voli-bloccati-per-diversi-minuti/18103620",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-09T21:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Ucraina in 100mila senza luce e gas nel Kharkiv per i raid russi | A Liegi ancora droni sugli aeroporti",
+      "id": "gdelt-487584ce59415d84",
+      "idioma": "it",
+      "medio": "zazoom.it",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://rtl.be/actu/regions/liege/survols-de-drones-laeroport-de-liege-de-nouveau-perturbe-pour-le-troisieme-jour/2025-11-09/article/769900",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-09T22:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Survols de drones : l'aéroport de Liège de nouveau perturbé pour le troisième jour consécutif",
+      "id": "gdelt-eb7c1d508e74e1cc",
+      "idioma": "fr",
+      "medio": "rtl.be",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://zazoom.it/2025-11-10/ucraina-allarme-aereo-in-diverse-citta-attacco-con-missili-ipersonici-a-liegi-ancora-droni-sugli-aeroporti-voli-bloccati-per-diversi-minuti/18103947",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-09T23:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Ucraina allarme aereo in diverse città | attacco con missili ipersonici | A Liegi ancora droni sugli aeroporti",
+      "id": "gdelt-fe8e87066d61ed79",
+      "idioma": "it",
+      "medio": "zazoom.it",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://abc.com.py/internacionales/2025/11/10/detectan-drones-en-torno-a-una-central-nuclear-de-belgica-y-sobre-el-aeropuerto-de-lieja",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-10T09:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Detectan drones en torno a una central nuclear de Bélgica y sobre el aeropuerto de Lieja - Mundo",
+      "id": "gdelt-9a58c5c294111fde",
+      "idioma": "es",
+      "medio": "abc.com.py",
+      "replicas": 2
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://larazon.es/internacional/drones-origen-desconocido-sobrevuelan-centra-nuclear-belgica-aeropuerto-lieja_202511106911aa60de224c6cdd443bde.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-10T09:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Drones de origen desconocido sobrevuelan una central nuclear en Bélgica y el aeropuerto de Lieja",
+      "id": "gdelt-a87bce101db0ce01",
+      "idioma": "es",
+      "medio": "larazon.es",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://virgule.lu/international/survols-de-drones-les-aeroports-belges-mis-sous-protection-militaire/103881809.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-10T10:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Survols de drones en Belgique : protection militaire des aéroports Zaventem et Liège",
+      "id": "gdelt-d55dad1e6d25fe47",
+      "idioma": "fr",
+      "medio": "virgule.lu",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://sapo.pt/artigo/drones-avistados-sobre-central-nuclear-belga-e-aeroporto-de-liege-6911ba67f166236ff459fae1",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-10T10:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Drones avistados sobre central nuclear belga e aeroporto de Liège",
+      "id": "gdelt-b308f10651327771",
+      "idioma": "pt",
+      "medio": "sapo.pt",
+      "replicas": 1
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://20minutos.es/internacional/drones-central-nuclear-aeropuerto-lieja-cerrar-espacio_6880495_0.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-10T10:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Alerta en Bruselas por la presencia de drones en torno a una central nuclear y sobre el aeropuerto de Lieja",
+      "id": "gdelt-b63bf90c5a076759",
+      "idioma": "es",
+      "medio": "20minutos.es",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://federalna.ba/dronovi-prekrsili-zonu-zabrane-leta-iznad-nuklearne-elektrane-u-belgiji-obustavljene-operacije-aerodroma-liege-x5psi",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-10T11:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Dronovi prekršili zonu zabrane leta iznad nuklearne elektrane u Belgiji, obustavljene operacije aerodroma Liege",
+      "id": "gdelt-7b24de2536170671",
+      "idioma": "hr",
+      "medio": "federalna.ba",
+      "replicas": 1
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://elpuntavui.cat/punt-divers/article/4-divers/2594065-diversos-drons-sobrevolen-una-central-nuclear-a-prop-d-anvers-i-l-aeroport-de-lieja.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-10T11:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Diversos drons sobrevolen una central nuclear a prop d'Anvers i l'Aeroport de Lieja",
+      "id": "gdelt-eddef5793b920d13",
+      "idioma": "ca",
+      "medio": "elpuntavui.cat",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://infobae.com/america/mundo/2025/11/10/belgica-reporto-otra-incursion-de-drones-la-central-nuclear-de-doel-y-el-aeropuerto-de-lieja-suspendieron-sus-operaciones",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-10T13:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Bélgica reportó otra incursión de drones: la central nuclear de Doel y el aeropuerto de Lieja suspendieron sus operaciones",
+      "id": "gdelt-638da74d8e4c4fbd",
+      "idioma": "es",
+      "medio": "infobae.com",
       "replicas": 0
      }
     ],
@@ -22297,8 +22648,8 @@
     },
     "tipo": "interrupcion_aeroportuaria",
     "titulo": {
-     "en": "Drones over Liège Airport interrupt air traffic",
-     "es": "Drones sobre el aeropuerto de Lieja interrumpen el tráfico aéreo"
+     "en": "Drone forces closure of Liège Airport",
+     "es": "Dron obliga a cerrar el aeropuerto de Lieja"
     }
    },
    "type": "Feature"
@@ -37742,6 +38093,21 @@
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
+       "valor": "2025-11-02T17:15Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-ad5cc6e17e8870dd",
+      "medio": "niedziela.pl",
+      "valor": {
+       "max": 3,
+       "min": 3
+      }
+     },
+     {
+      "campo": "drones.numero",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
        "valor": "2025-11-03T07:30Z"
       },
       "fiabilidad": "C",
@@ -37757,6 +38123,18 @@
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
+       "valor": "2025-11-02T09:15Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-5f8109470d829b8a",
+      "medio": "nieuwsblad.be",
+      "valor": "BE"
+     },
+     {
+      "campo": "lugar.pais",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
        "valor": "2025-11-02T16:30Z"
       },
       "fiabilidad": "C",
@@ -37781,6 +38159,18 @@
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
+       "valor": "2025-11-02T09:15Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-5f8109470d829b8a",
+      "medio": "nieuwsblad.be",
+      "valor": "base_militar"
+     },
+     {
+      "campo": "objetivo.categoria",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
        "valor": "2025-11-02T16:30Z"
       },
       "fiabilidad": "C",
@@ -37799,6 +38189,18 @@
       "fuente_id": "gdelt-6f742e5ae4bad31c",
       "medio": "stirileprotv.ro",
       "valor": "base_militar"
+     },
+     {
+      "campo": "objetivo.nombre",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-02T09:15Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-5f8109470d829b8a",
+      "medio": "nieuwsblad.be",
+      "valor": "Kleine-Brogel"
      },
      {
       "campo": "objetivo.nombre",
@@ -37823,6 +38225,19 @@
       "fuente_id": "gdelt-6f742e5ae4bad31c",
       "medio": "stirileprotv.ro",
       "valor": "Kleine Brogel"
+     },
+     {
+      "campo": "presencia_dron",
+      "cita": "Non si è trattato di un semplice sorvolo, ma di una chiara missione mirata a Kleine-Brogel.",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-02T10:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-63ac4f88d5fedea3",
+      "medio": "ilmessaggero.it",
+      "valor": "confirmada"
      },
      {
       "campo": "presencia_dron",
@@ -37877,6 +38292,21 @@
       "valor": "confirmada"
      },
      {
+      "campo": "respuesta.medidas",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-02T17:15Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-ad5cc6e17e8870dd",
+      "medio": "niedziela.pl",
+      "valor": [
+       "inhibicion",
+       "patrulla"
+      ]
+     },
+     {
       "campo": "tiempo.inicio",
       "credibilidad": 3,
       "fecha": {
@@ -37896,6 +38326,21 @@
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
+       "valor": "2025-11-02T17:15Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-ad5cc6e17e8870dd",
+      "medio": "niedziela.pl",
+      "valor": {
+       "precision": "dia",
+       "valor": "2025-11-01T00:00Z"
+      }
+     },
+     {
+      "campo": "tiempo.inicio",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
        "valor": "2025-11-03T07:30Z"
       },
       "fiabilidad": "C",
@@ -37905,6 +38350,18 @@
        "precision": "dia",
        "valor": "2025-11-01T00:00Z"
       }
+     },
+     {
+      "campo": "tipo",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-02T10:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-63ac4f88d5fedea3",
+      "medio": "ilmessaggero.it",
+      "valor": "sobrevuelo"
      },
      {
       "campo": "tipo",
@@ -37939,7 +38396,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-03T20:17Z"
+      "valor": "2026-10-04T00:17Z"
      }
     },
     "drones": {
@@ -37972,6 +38429,76 @@
     "fuentes": [
      {
       "credibilidad": 3,
+      "enlace": "https://nieuwsblad.be/regio/limburg/peer/opnieuw-drones-boven-luchtmachtbasis-kleine-brogel-gespot-antidronewapen-zonder-succes-ingezet/101732734.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-02T09:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Opnieuw drones boven luchtmachtbasis Kleine-Brogel gespot, antidronewapen zonder succes ingezet.",
+      "id": "gdelt-5f8109470d829b8a",
+      "idioma": "nl",
+      "medio": "nieuwsblad.be",
+      "replicas": 1
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://brf.be/national/2021024",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-02T09:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Wieder Drohnen über Militärbasis Kleine-Brogel aufgetaucht",
+      "id": "gdelt-12ff4f0d4ba60c68",
+      "idioma": "de",
+      "medio": "brf.be",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://ilmessaggero.it:443/mondo/droni_base_militare_belgio_armi_nucleari_stati_uniti_kleine_brogel_guerra_ucraina_russia-9164355.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-02T10:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Non si è trattato di un semplice sorvolo, ma di una chiara missione mirata a Kleine-Brogel.",
+      "id": "gdelt-63ac4f88d5fedea3",
+      "idioma": "it",
+      "medio": "ilmessaggero.it",
+      "replicas": 1
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://viveresanbenedetto.it/altrigiornali/14/168556-2025",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-02T10:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Ancora droni sul Belgio, nuovo avvistamento su una base militare di Kleine Brogel • Vivere San Benedetto notizie per la città e il territorio",
+      "id": "gdelt-47ccf3ab53df414b",
+      "idioma": "it",
+      "medio": "viveresanbenedetto.it",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://zazoom.it/news-notizia/post/899618/2025-11-02-droni-sui-cieli-kleine-brogel-nuovo-sorvolo-sulla-base-militare-belga--09-33",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-02T10:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Droni sui cieli di Kleine Brogel: nuovo sorvolo sulla base militare belga",
+      "id": "gdelt-1467d8e1d47d3e5d",
+      "idioma": "it",
+      "medio": "zazoom.it",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
       "enlace": "https://rtl.be/actu/regions/flandre/trois-drones-suspects-plus-grands-reperes-au-dessus-de-kleine-brogel-le/2025-11-01/article/768977",
       "fecha": {
        "precision": "aproximada",
@@ -37986,6 +38513,90 @@
      },
      {
       "credibilidad": 3,
+      "enlace": "https://t-online.de/nachrichten/ausland/krisen/id_100982444/belgien-wieder-drohnen-ueber-militaerbasis-kleine-brogel-gesichtet.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-02T11:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Belgien: Wieder Drohnen über Militärbasis Kleine-Brogel gesichtet",
+      "id": "gdelt-ebf844ad2692f0aa",
+      "idioma": "de",
+      "medio": "t-online.de",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://welt.de/politik/ausland/article6907302cdf9fa029228f0b33/militaerbasis-kleine-brogel-wieder-drohnen-ueber-von-nato-genutzter-basis-in-belgien-stoersender-blieben-erfolglos.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-02T11:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Militärbasis Kleine-Brogel: Wieder Drohnen über von Nato genutzter Basis in Belgien – Störsender blieben erfolglos",
+      "id": "gdelt-e7be5a3c667a25bf",
+      "idioma": "de",
+      "medio": "welt.de",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://ostbelgiendirekt.be/drohnen-ueber-kleine-brogel-428700",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-02T12:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Erneut Drohnen über Militärflugplatz Kleine-Brogel",
+      "id": "gdelt-d6818548d9f78ee8",
+      "idioma": "de",
+      "medio": "ostbelgiendirekt.be",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://tvn24.pl/swiat/belgia-drony-ponownie-nad-baza-wojskowa-kleine-brogel-minister-obrony-to-nie-byl-zwykly-przelot-st8732205",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-02T14:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Belgia. Drony ponownie nad bazą wojskową Kleine Brogel. Minister obrony: to nie był zwykły przelot",
+      "id": "gdelt-eb427acbc6b0441c",
+      "idioma": "pl",
+      "medio": "tvn24.pl",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://niezalezna.pl/swiat/belgia-nad-baza-wojskowa-kleine-brogel-znow-pojawily-sie-drony/555684",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-02T15:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Belgia: nad bazą wojskową Kleine-Brogel znów pojawiły się drony",
+      "id": "gdelt-7c321f9d351b59b5",
+      "idioma": "pl",
+      "medio": "niezalezna.pl",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://italpress.com/belgio-avvistati-droni-sulla-base-militare-di-kleine-brogel-per-la-seconda-notte-consecutiva",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-02T15:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Belgio, avvistati droni sulla base militare di Kleine-Brogel per la seconda notte consecutiva",
+      "id": "gdelt-ce922f390d2a4a10",
+      "idioma": "it",
+      "medio": "italpress.com",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
       "enlace": "https://rtl.be/actu/regions/flandre/trois-drones-suspects-plus-grands-reperes-au-dessus-de-kleine-brogel-il-ne-sagit/2025-11-01/article/768977",
       "fecha": {
        "precision": "aproximada",
@@ -37996,6 +38607,34 @@
       "id": "gdelt-ff6cba5bbbb63039",
       "idioma": "fr",
       "medio": "rtl.be",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://meteoweb.eu/2025/11/un-drone-avvistato-sulla-base-aerea-di-kleine-brogel-un-elicottero-della-polizia-allinseguimento/1001856211",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-02T15:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Un drone avvistato sulla base aerea di Kleine Brogel: un elicottero della polizia all'inseguimento",
+      "id": "gdelt-648f07127dbf07cf",
+      "idioma": "it",
+      "medio": "meteoweb.eu",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://rp.pl/konflikty-zbrojne/art43275751-drony-nad-baza-wojskowa-w-belgii-misja-ewidentnie-wymierzona-w-kleine-brogel",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-02T16:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Drony zaobserwowane nad bazą wojskową Kleine Brogel w Belgii",
+      "id": "gdelt-159d50b67ef3339f",
+      "idioma": "pl",
+      "medio": "rp.pl",
       "replicas": 0
      },
      {
@@ -38042,6 +38681,76 @@
      },
      {
       "credibilidad": 3,
+      "enlace": "https://niedziela.pl/artykul/117971/Belgia-Nad-baza-wojskowa-Kleine-Brogel-po-raz-kolejny-zauwazono",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-02T17:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Wczoraj wieczorem otrzymaliśmy trzy zgłoszenia o dronach nad Kleine Brogel.",
+      "id": "gdelt-ad5cc6e17e8870dd",
+      "idioma": "pl",
+      "medio": "niedziela.pl",
+      "replicas": 1
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://niedziela.pl/artykul/117971/Belgia-Nad-baza-wojskowa-Kleine-Brogel-po-raz-kolejny-zauwazono",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-02T17:15Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Wczoraj wieczorem otrzymaliśmy trzy zgłoszenia o dronach nad Kleine Brogel, większych i latających na większych wysokościach.",
+      "id": "gdelt-ad5cc6e17e8870dd-declaracion-1",
+      "idioma": "pl",
+      "medio": "Ministerie van Defensie (declaración oficial citada en niedziela.pl)",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://zazoom.it/2025-11-02/ancora-droni-sul-belgio-secondo-avvistamento-in-meno-di-24-ore-sulla-base-militare-di-kleine-brogel-elicottero-della-polizia-si-lancia-allinseguimento/18058904",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-02T17:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Ancora droni sul Belgio | secondo avvistamento in meno di 24 ore sulla base militare di Kleine Brogel Elicottero della polizia si lancia all'inseguimento",
+      "id": "gdelt-2589a63318189bc5",
+      "idioma": "it",
+      "medio": "zazoom.it",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://europa.today.it/attualita/belgio-droni-base-kleine-brogel.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-02T17:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Belgio, droni non identificati sulla base Nato di Kleine-Brogel: \"Potrebbe essere spionaggio russo\"",
+      "id": "gdelt-b26481b525e1a5ba",
+      "idioma": "it",
+      "medio": "europa.today.it",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://ziare.com/baza-nato-belgia/obiectiv-aveau-dronele-survolat-weekend-baza-nato-belgia-1974232",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-02T20:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Belgienii au dezvăluit obiectivul dronelor care au survolat în weekend baza nucleară NATO Kleine Brogel. ''Vin să spioneze avioanele de vânătoare și muniția''",
+      "id": "gdelt-5d9a3a937069d068",
+      "idioma": "ro",
+      "medio": "ziare.com",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
       "enlace": "https://nieuwsblad.be/regio/limburg/peer/alweer-verschillende-drones-gespot-aan-luchtmachtbasis-van-kleine-brogel-politiehelikopter-zet-tevergeefs-achtervolging-in/101875495.html",
       "fecha": {
        "precision": "aproximada",
@@ -38056,6 +38765,20 @@
      },
      {
       "credibilidad": 3,
+      "enlace": "https://lavenir.net/actu/belgique/2025/11/02/des-drones-encore-apercus-pres-de-la-base-militaire-de-kleine-brogel-ce-dimanche-AR3CQUCAVJGTBOAKFWGBRBLU2M",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-02T22:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Des drones encore aperçus près de la base militaire de Kleine-Brogel ce dimanche: il s'agit du 2e incident du genre au même endroit en 2",
+      "id": "gdelt-38c3eb7e257b25da",
+      "idioma": "fr",
+      "medio": "lavenir.net",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
       "enlace": "https://vrt.be/vrtnws/nl/2025/11/02/opnieuw-drones-in-kleine-brogel",
       "fecha": {
        "precision": "aproximada",
@@ -38066,6 +38789,20 @@
       "id": "gdelt-1fb15562e5838e28",
       "idioma": "nl",
       "medio": "vrt.be",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://lalibre.be/dernieres-depeches/2025/11/02/des-drones-a-nouveau-reperes-au-dessus-de-la-base-aerienne-de-kleine-brogel-23WOLBWDEVATDIUD2O64XME7XE",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-02T23:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Des drones à nouveau repérés au-dessus de la base aérienne de Kleine-Brogel",
+      "id": "gdelt-ecedad7e0bdba820",
+      "idioma": "fr",
+      "medio": "lalibre.be",
       "replicas": 0
      },
      {
@@ -38219,6 +38956,12 @@
      "nombre": "Luchtmachtbasis Kleine Brogel"
     },
     "presencia_dron": "confirmada",
+    "respuesta": {
+     "medidas": [
+      "inhibicion",
+      "patrulla"
+     ]
+    },
     "tiempo": {
      "inicio": {
       "precision": "dia",
@@ -67403,6 +68146,70 @@
       "fuente_id": "gdelt-3de261af091e87c7",
       "medio": "sudouest.fr",
       "valor": "FR"
+     },
+     {
+      "campo": "objetivo.categoria",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-13T11:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-3de261af091e87c7",
+      "medio": "sudouest.fr",
+      "valor": "energia"
+     },
+     {
+      "campo": "objetivo.nombre",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-13T11:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-3de261af091e87c7",
+      "medio": "sudouest.fr",
+      "valor": "Eurenco"
+     },
+     {
+      "campo": "presencia_dron",
+      "cita": "qui avait survolé illégalement le site l'avant-veille",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-13T11:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-3de261af091e87c7",
+      "medio": "sudouest.fr",
+      "valor": "confirmada"
+     },
+     {
+      "campo": "tiempo.inicio",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-13T11:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-3de261af091e87c7",
+      "medio": "sudouest.fr",
+      "valor": {
+       "precision": "dia",
+       "valor": "2025-11-10T00:00Z"
+      }
+     },
+     {
+      "campo": "tipo",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-13T11:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-3de261af091e87c7",
+      "medio": "sudouest.fr",
+      "valor": "sobrevuelo"
      }
     ],
     "consecuencias": {
@@ -67413,7 +68220,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-03T20:17Z"
+      "valor": "2026-10-04T00:17Z"
      }
     },
     "drones": {
@@ -67441,7 +68248,7 @@
        "valor": "2025-11-13T11:30Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "C'était un drone du commerce, classique.",
+      "frase_origen": "qui avait survolé illégalement le site l'avant-veille",
       "id": "gdelt-3de261af091e87c7",
       "idioma": "fr",
       "medio": "sudouest.fr",
@@ -67458,7 +68265,7 @@
      "categoria": "otra",
      "nombre": "Bergerac"
     },
-    "presencia_dron": "no_confirmada",
+    "presencia_dron": "confirmada",
     "tiempo": {
      "inicio": {
       "precision": "aproximada",
@@ -67467,8 +68274,8 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Possible drones over Eurenco powder factory in Bergerac",
-     "es": "Posibles drones sobre la fábrica de pólvora Eurenco de Bergerac"
+     "en": "Drone overflight of Eurenco powder plant in Bergerac",
+     "es": "Sobrevuelo de dron sobre la pólvora Eurenco de Bergerac"
     }
    },
    "type": "Feature"
@@ -139593,6 +140400,21 @@
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
+       "valor": "2026-09-13T08:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-b634c68cdf009f37",
+      "medio": "rtbf.be",
+      "valor": {
+       "max": 1,
+       "min": 1
+      }
+     },
+     {
+      "campo": "drones.numero",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
        "valor": "2026-09-13T09:30Z"
       },
       "fiabilidad": "C",
@@ -139602,6 +140424,30 @@
        "max": 1,
        "min": 1
       }
+     },
+     {
+      "campo": "lugar.localidad",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-13T08:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-b634c68cdf009f37",
+      "medio": "rtbf.be",
+      "valor": "Bruxelles"
+     },
+     {
+      "campo": "lugar.pais",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-13T08:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-b634c68cdf009f37",
+      "medio": "rtbf.be",
+      "valor": "BE"
      },
      {
       "campo": "lugar.pais",
@@ -139620,6 +140466,18 @@
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
+       "valor": "2026-09-13T08:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-b634c68cdf009f37",
+      "medio": "rtbf.be",
+      "valor": "aeropuerto"
+     },
+     {
+      "campo": "objetivo.categoria",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
        "valor": "2026-09-13T09:30Z"
       },
       "fiabilidad": "C",
@@ -139632,12 +140490,37 @@
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
+       "valor": "2026-09-13T08:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-b634c68cdf009f37",
+      "medio": "rtbf.be",
+      "valor": "Brussels Airport Zaventem"
+     },
+     {
+      "campo": "objetivo.nombre",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
        "valor": "2026-09-13T09:30Z"
       },
       "fiabilidad": "C",
       "fuente_id": "gdelt-33e66272912bbe6a",
       "medio": "brf.be",
       "valor": "Flughafen Zaventem"
+     },
+     {
+      "campo": "presencia_dron",
+      "cita": "Le contrôleur aérien a constaté, vendredi puis samedi, la présence d'un drone.",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-13T08:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-b634c68cdf009f37",
+      "medio": "rtbf.be",
+      "valor": "confirmada"
      },
      {
       "campo": "presencia_dron",
@@ -139655,7 +140538,7 @@
      {
       "campo": "presencia_dron",
       "cita": "Skeyes hatte die Drohne eigenen Angaben zufolge sowohl mit bloßem Auge als auch über Detektionsgeräte erfasst.",
-      "credibilidad": 1,
+      "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
        "valor": "2026-09-13T09:30Z"
@@ -139664,6 +140547,35 @@
       "fuente_id": "gdelt-33e66272912bbe6a-declaracion-1",
       "medio": "Skeyes (declaración oficial citada en brf.be)",
       "valor": "confirmada"
+     },
+     {
+      "campo": "respuesta.medidas",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-13T08:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-b634c68cdf009f37",
+      "medio": "rtbf.be",
+      "valor": [
+       "patrulla"
+      ]
+     },
+     {
+      "campo": "tiempo.inicio",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-13T08:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-b634c68cdf009f37",
+      "medio": "rtbf.be",
+      "valor": {
+       "precision": "dia",
+       "valor": "2026-09-12T00:00Z"
+      }
      },
      {
       "campo": "tiempo.inicio",
@@ -139679,6 +140591,18 @@
        "precision": "dia",
        "valor": "2026-09-12T00:00Z"
       }
+     },
+     {
+      "campo": "tipo",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-13T08:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-b634c68cdf009f37",
+      "medio": "rtbf.be",
+      "valor": "sobrevuelo"
      },
      {
       "campo": "tipo",
@@ -139702,7 +140626,7 @@
      "motivo_desmentido": "Brussels Airport: «Brussels Airport erklärte hingegen, keine Meldung erhalten zu haben. Der Flugverkehr sei nicht gestört gewesen.»",
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-03T20:17Z"
+      "valor": "2026-10-04T00:17Z"
      }
     },
     "drones": {
@@ -139743,6 +140667,48 @@
     "fuentes": [
      {
       "credibilidad": 3,
+      "enlace": "https://rtbf.be/article/brussels-airport-zaventem-un-drone-detecte-pour-le-deuxieme-soir-consecutif-au-dessus-de-l-aeroport-aucune-perturbation-du-trafic-11784356",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-13T08:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Le contrôleur aérien a constaté, vendredi puis samedi, la présence d'un drone.",
+      "id": "gdelt-b634c68cdf009f37",
+      "idioma": "fr",
+      "medio": "rtbf.be",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://dhnet.be/actu/belgique/2026/09/13/nouvel-incident-de-drone-a-brussels-airport-M53T3JG62JDPBPNHDCLHHPPHXY",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-13T08:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Un drone signalé pour le deuxième soir consécutif à Brussels Airport",
+      "id": "gdelt-318fc41196fead71",
+      "idioma": "fr",
+      "medio": "dhnet.be",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://rtl.be/actu/belgique/societe/nouveau-survol-de-drone-proximite-de-brussels-airport-le-deuxieme-en-deux-jours/2026-09-13/article/800035",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-13T08:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Drone à Brussels Airport : Skeyes signale un nouvel incident",
+      "id": "gdelt-ca0c1a05922b24d4",
+      "idioma": "fr",
+      "medio": "rtl.be",
+      "replicas": 1
+     },
+     {
+      "credibilidad": 3,
       "enlace": "https://brf.be/national/2108502",
       "fecha": {
        "precision": "aproximada",
@@ -139753,6 +140719,34 @@
       "id": "gdelt-33e66272912bbe6a",
       "idioma": "de",
       "medio": "brf.be",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://brf.be/national/2108502",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-13T09:30Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Skeyes hatte die Drohne eigenen Angaben zufolge sowohl mit bloßem Auge als auch über Detektionsgeräte erfasst.",
+      "id": "gdelt-33e66272912bbe6a-declaracion-1",
+      "idioma": "de",
+      "medio": "Skeyes (declaración oficial citada en brf.be)",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://brf.be/national/2108502",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-13T09:30Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Brussels Airport erklärte hingegen, keine Meldung erhalten zu haben. Der Flugverkehr sei nicht gestört gewesen.",
+      "id": "gdelt-33e66272912bbe6a-declaracion-2",
+      "idioma": "de",
+      "medio": "Brussels Airport (declaración oficial citada en brf.be)",
       "replicas": 0
      },
      {
@@ -139768,34 +140762,6 @@
       "idioma": "fr",
       "medio": "rtl.be",
       "replicas": 0
-     },
-     {
-      "credibilidad": 1,
-      "enlace": "https://brf.be/national/2108502",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-09-13T09:30Z"
-      },
-      "fiabilidad": "B",
-      "frase_origen": "Skeyes hatte die Drohne eigenen Angaben zufolge sowohl mit bloßem Auge als auch über Detektionsgeräte erfasst.",
-      "id": "gdelt-33e66272912bbe6a-declaracion-1",
-      "idioma": "de",
-      "medio": "Skeyes (declaración oficial citada en brf.be)",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 1,
-      "enlace": "https://brf.be/national/2108502",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-09-13T09:30Z"
-      },
-      "fiabilidad": "B",
-      "frase_origen": "Brussels Airport erklärte hingegen, keine Meldung erhalten zu haben. Der Flugverkehr sei nicht gestört gewesen.",
-      "id": "gdelt-33e66272912bbe6a-declaracion-2",
-      "idioma": "de",
-      "medio": "Brussels Airport (declaración oficial citada en brf.be)",
-      "replicas": 0
      }
     ],
     "id": "EODI-2026-00293",
@@ -139808,6 +140774,11 @@
      "nombre": "Aeropuerto de Bruxelas-Zaventem"
     },
     "presencia_dron": "confirmada",
+    "respuesta": {
+     "medidas": [
+      "patrulla"
+     ]
+    },
     "tiempo": {
      "inicio": {
       "precision": "dia",
@@ -147420,6 +148391,21 @@
       }
      },
      {
+      "campo": "drones.numero",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T20:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-8cdb477106c1965c",
+      "medio": "azernews.az",
+      "valor": {
+       "max": 6,
+       "min": 6
+      }
+     },
+     {
       "campo": "lugar.pais",
       "credibilidad": 3,
       "fecha": {
@@ -147456,6 +148442,18 @@
       "valor": "MD"
      },
      {
+      "campo": "lugar.pais",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T20:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-8cdb477106c1965c",
+      "medio": "azernews.az",
+      "valor": "MD"
+     },
+     {
       "campo": "presencia_dron",
       "cita": "au provocat un incendiu de vegetație și pagube materiale",
       "credibilidad": 3,
@@ -147479,6 +148477,19 @@
       "fiabilidad": "C",
       "fuente_id": "gdelt-a4506b7dae29e74b",
       "medio": "atitudinea.ro",
+      "valor": "confirmada"
+     },
+     {
+      "campo": "presencia_dron",
+      "cita": "Moldova's Defense Ministry has reported six unauthorized drone flights in the country's airspace.",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T20:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-8cdb477106c1965c",
+      "medio": "azernews.az",
       "valor": "confirmada"
      },
      {
@@ -147557,6 +148568,21 @@
       }
      },
      {
+      "campo": "tiempo.inicio",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T20:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-8cdb477106c1965c",
+      "medio": "azernews.az",
+      "valor": {
+       "precision": "dia",
+       "valor": "2026-10-03T00:00Z"
+      }
+     },
+     {
       "campo": "tipo",
       "credibilidad": 3,
       "fecha": {
@@ -147579,6 +148605,18 @@
       "fuente_id": "gdelt-a4506b7dae29e74b",
       "medio": "atitudinea.ro",
       "valor": "incursion"
+     },
+     {
+      "campo": "tipo",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T20:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-8cdb477106c1965c",
+      "medio": "azernews.az",
+      "valor": "incursion"
      }
     ],
     "consecuencias": {
@@ -147589,7 +148627,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-03T20:17Z"
+      "valor": "2026-10-04T00:17Z"
      }
     },
     "drones": {
@@ -147667,6 +148705,20 @@
       "idioma": "ro",
       "medio": "atitudinea.ro",
       "replicas": 1
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://azernews.az/region/264942.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-03T20:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Moldova's Defense Ministry has reported six unauthorized drone flights in the country's airspace.",
+      "id": "gdelt-8cdb477106c1965c",
+      "idioma": "en",
+      "medio": "azernews.az",
+      "replicas": 0
      }
     ],
     "id": "EODI-2026-00373",
