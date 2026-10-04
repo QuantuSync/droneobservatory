@@ -39,9 +39,8 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from typing import Any
 
-from almacen import remoto
+from almacen import remoto, sitio
 from almacen.base import Almacen, DocumentoInvalido
-from almacen.cifrado import abrir_cifrada
 from esquema import Documento
 from modelo import cliente as servicio
 from modelo import coste
@@ -457,12 +456,12 @@ def principal(argumentos: list[str] | None = None) -> int:
     servicio.cargar_local()
     cliente = servicio.Cliente(servicio.configuracion(), insistencia=servicio.HISTORICO)
     with TemporaryDirectory() as temporal:
-        ruta = Path(temporal) / remoto.FICHERO
-        if not remoto.descargar(ruta, args.repositorio):
+        abierta = sitio.abrir_base(Path(temporal), args.repositorio)
+        if abierta is None:
             registro.error("no hay base en la rama %s", remoto.RAMA)
             return 1
         # Solo se lee: la base la escribe la recogida horaria al incorporar los resultados.
-        almacen = Almacen(abrir_cifrada(ruta))
+        almacen = abierta
         try:
             historico(raiz, almacen, cliente, ahora)
         except TiempoAgotado:

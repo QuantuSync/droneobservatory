@@ -46,7 +46,12 @@ En `/home/eodi`:
     captura del seguimiento en directo;
   - `almacen.env`: las credenciales S3 del almacén público (`ALMACEN_ID` y
     `ALMACEN_SECRETO`), para subir `estado.json`;
-  - `estado.json`: el último estado publicado.
+  - `estado.json`: el último estado publicado;
+  - `base_modo`: el interruptor de la base (`github`, `doble` o `disco`, una palabra; sin el
+    fichero, `github`), apartado «Base de datos».
+- `base/`, con permisos 700 y propiedad de `eodi`: la base de datos en disco (`eodi.sqlite`), la
+  versión que sustituyó el último guardado (`eodi.anterior.sqlite`) y las copias de trabajo de
+  cada sesión (`trabajo/`), apartado «Base de datos».
 - `datos/detalle/`, con permisos 700 y propiedad de `eodi`: lo que descargan las fuentes
   oficiales de detalle (apartado «Fuentes oficiales de detalle»).
 - `datos/guerra/`, con permisos 700 y propiedad de `eodi`: lo que guarda el lector de canales
@@ -100,8 +105,8 @@ de 45 minutos, y el script:
 1. toma un cerrojo (`flock`): si hay otra recogida en marcha, no se lanza;
 2. deja el clon en la última versión de `main` y reinstala las dependencias solo si ha
    cambiado `requirements.txt`;
-3. ejecuta `python -m recogida.horaria`, que descarga la base de la rama `estado`, recoge
-   lo nuevo y vuelve a subirla;
+3. ejecuta `python -m recogida.horaria`, que abre la base (la de la rama `estado` o la del
+   disco, según el interruptor del apartado «Base de datos»), recoge lo nuevo y la guarda;
    Al final, si han pasado 3 horas o más desde la última descarga correcta, descarga de
    NASA FIRMS los dos últimos días de los productos NRT (VIIRS de Suomi NPP, NOAA-20 y
    NOAA-21 y MODIS) y cruza los focos con los impactos ([`recogida/firms.py`](../recogida/firms.py),
@@ -120,6 +125,88 @@ El script se ejecuta desde el clon, así que un cambio suyo en `main` vale desde
 recogida siguiente (bash lo lee entero al empezar: en realidad, desde la otra). Las unidades de systemd y el endurecimiento, en cambio, se instalan:
 si cambian `instalar.sh`, `endurecer.sh` o `configuracion.sh`, hay que volver a ejecutar
 `reconstruir.sh`.
+
+## Base de datos
+
+Informe: [`informe_base_en_hetzner.md`](informe_base_en_hetzner.md). La base es un fichero
+SQLite. Dónde manda y cómo se abre lo decide un solo interruptor, el fichero
+`/home/eodi/.eodi/base_modo` con una palabra ([`almacen/sitio.py`](../almacen/sitio.py)):
+
+| Modo | Qué base manda | Qué más se hace al guardar |
+| --- | --- | --- |
+| `github` (sin el fichero) | La cifrada de la rama `estado` del repositorio de datos, cargada entera en memoria | Nada |
+| `doble` | La de la rama `estado`, igual que en `github` | Copia en el disco (`base/eodi.sqlite`) y copia de seguridad cifrada en el almacén. Si falla, solo un aviso en el diario |
+| `disco` | `base/eodi.sqlite`, abierta desde disco sin cargarla en memoria | Copia de seguridad cifrada en el almacén y, como copia secundaria, la base cifrada en la rama `estado`. Si falla cualquiera de las dos, solo un aviso; la recogida publica igual |
+
+Todo lo que abre la base pasa por ahí: la recogida horaria, el motor de deducción, el barrido del
+catálogo vivo, las imágenes de satélite, el histórico de las fuentes de detalle, la exportación
+semanal, el reproceso de la capa de guerra, las revisiones con el extractor (`revision.sh`,
+`calidad.sh`, `dirigido.sh`) y los históricos de canales y de noticias. Los demás servicios no
+abren la base: intercambian ficheros en `datos/` con la recogida horaria.
+
+**En modo disco.** Cada sesión trabaja sobre una copia propia en `base/trabajo/` (modo WAL, con
+una caché de 256 MB y los ficheros temporales de SQLite al lado, no en `/tmp`, que en este
+servidor está en memoria). Si termina bien, la copia se vuelca entera a `eodi.sqlite.nuevo`, se
+sincroniza en disco y sustituye a `eodi.sqlite` de golpe; la versión sustituida queda como
+`eodi.anterior.sqlite`. Una sesión que falla a medias no deja nada, como cuando no subía la
+base. Si otra sesión guardó la base mientras tanto, la segunda no la pisa: falla con «ha
+cambiado desde que se abrió esta sesión». Las copias de trabajo de procesos que ya no existen se
+borran al abrir la siguiente.
+
+**Copias de seguridad.** Bucket privado `droneobservatory-base` de Hetzner Object Storage
+(`nbg1`, mismas credenciales que el almacén público, `almacen.env`; sin credenciales responde
+403), configurado en [`configuracion/copias_base.json`](../configuracion/copias_base.json)
+([`almacen/copias.py`](../almacen/copias.py)). Cada copia es la base cifrada con la clave age de
+siempre, comprimida con xz: el mismo formato de la rama `estado`. Una por cada guardado en
+`base/horaria/` durante 48 horas, la primera de cada día en `base/diaria/` durante 30 días y la
+primera de cada semana en `base/semanal/` durante un año; cada guardado poda lo caducado (nunca la
+última de cada nivel). Cada objeto lleva su SHA-256, que se comprueba al restaurar. Entra en la
+cuota de 1 TB del precio base del almacén (unos 50 MB por copia).
+
+Órdenes, como `operador`, con [`servidor/base.sh`](../servidor/base.sh) (lleva la clave age y la
+clave de despliegue de datos, como la recogida):
+
+```
+sudo -u eodi bash /home/eodi/droneobservatory/servidor/base.sh estado          # modo, tamaño, copias de trabajo
+sudo -u eodi bash /home/eodi/droneobservatory/servidor/base.sh copias listar   # copias de seguridad
+```
+
+**Cambiar de modo**, siempre justo después de una recogida terminada y nunca entre los minutos
+12 y 40: `echo disco | sudo -u eodi tee /home/eodi/.eodi/base_modo`. Vale desde la sesión
+siguiente; no hay que reiniciar nada. Antes de pasar a `disco`, la base del disco tiene que ser
+igual a la de la rama (lo deja así la escritura doble):
+
+```
+sudo systemd-run --unit=eodi-base-comparar --uid=eodi --gid=eodi -p MemoryMax=1G -p Nice=19 \
+  -p IOSchedulingClass=idle /usr/bin/env bash /home/eodi/droneobservatory/servidor/base.sh comparar
+journalctl -u eodi-base-comparar -n 20                     # "iguales": true
+```
+
+`comparar` descarga la rama y la descifra en `base/trabajo/` sin cargarla entera en memoria; sale
+con 0 si las dos bases tienen el mismo contenido (huella de todas las filas de todas las tablas) y
+con 3 si no. Tarda unos minutos: fuera de los minutos 15 a 40.
+
+**Volver atrás** desde `disco`: `echo github | sudo -u eodi tee /home/eodi/.eodi/base_modo`.
+Si la copia secundaria de la rama está al día (en el diario, «copia secundaria subida a la rama
+estado» en la última recogida), no hace falta nada más. Si no lo está, antes de cambiar el
+interruptor se sube la base del disco a la rama: `sudo -u eodi bash
+/home/eodi/droneobservatory/servidor/base.sh a-github`.
+
+**Restaurar** una copia en una carpeta aparte y comprobarla (la última si no se dice cuál):
+
+```
+sudo -u eodi bash /home/eodi/droneobservatory/servidor/base.sh copias restaurar \
+  --destino /home/eodi/base/trabajo/restaurada.sqlite --huella
+sudo -u eodi bash /home/eodi/droneobservatory/servidor/base.sh huella   # la de la base en uso
+```
+
+Para ponerla en uso con el modo `disco`: parar el temporizador de la recogida, sustituir
+`base/eodi.sqlite` por la restaurada (como `eodi`) y volver a arrancar el temporizador. Con los
+modos `github` o `doble` manda la rama: se sube con `a-github` después de copiarla al disco.
+
+**Emergencia desde GitHub** (`recogida.yml`) con el modo `disco`: el workflow trabaja sobre la
+rama `estado`. Antes, la rama tiene que estar al día (copia secundaria o `base.sh a-github`);
+después, para seguir en disco, `base.sh desde-github` deja en disco lo que dejó el workflow.
 
 ## Exportación semanal
 
@@ -653,8 +740,12 @@ hcloud server delete eodi-recogida
 bash servidor/reconstruir.sh
 ```
 
-Nada de lo que hay en el servidor es irrecuperable: la base vive en la rama `estado` y la
-caché de páginas (`data/cache/`) se vuelve a llenar sola.
+Nada de lo que hay en el servidor es irrecuperable: la base vive en la rama `estado` (en el
+modo `disco`, como copia secundaria) y en las copias de seguridad del almacén (apartado «Base
+de datos»), y la caché de páginas (`data/cache/`) se vuelve a llenar sola. En el modo `disco`,
+antes de borrar el servidor se comprueba que la última copia de seguridad es de la última
+recogida (`base.sh copias listar`) y, en el servidor nuevo, se restaura en
+`/home/eodi/base/eodi.sqlite` antes de crear el interruptor.
 
 ## Estado del sistema para la web
 

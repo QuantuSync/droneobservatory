@@ -26,7 +26,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from almacen import remoto
+from almacen import remoto, sitio
 from almacen.base import Almacen
 from almacen.cifrado import abrir_cifrada, cargar_clave_local, guardar_cifrada
 from esquema import Documento
@@ -385,10 +385,15 @@ def con_base(args: argparse.Namespace, orden: Callable[[Almacen], int]) -> int:
     servicio.cargar_local()
     with TemporaryDirectory() as temporal:
         ruta = Path(temporal) / remoto.FICHERO
-        if args.base is None and not remoto.descargar(ruta, args.repositorio):
+        abierta = (
+            Almacen(abrir_cifrada(args.base))
+            if args.base is not None
+            else sitio.abrir_base(Path(temporal), args.repositorio)
+        )
+        if abierta is None:
             registro.error("no hay base en la rama %s", remoto.RAMA)
             return 1
-        almacen = Almacen(abrir_cifrada(args.base or ruta))
+        almacen = abierta
         salida = orden(almacen)
         if salida != 0:
             # Una orden que se para a medias (una revisión cuyo lote no cabe en el límite)
@@ -397,7 +402,10 @@ def con_base(args: argparse.Namespace, orden: Callable[[Almacen], int]) -> int:
             return salida
         # Primero se guarda la base, con lo que ya está pagado; después se publica, con la
         # hora de este momento (la orden puede haber durado horas).
-        guardar_cifrada(almacen.conexion, ruta)
+        if isinstance(almacen, sitio.AlmacenEnDisco):
+            sitio.guardar_disco(almacen)
+        else:
+            guardar_cifrada(almacen.conexion, ruta)
         if args.base is not None:
             guardar_cifrada(almacen.conexion, args.base)
         publicar(almacen, datetime.now(UTC))
@@ -408,8 +416,7 @@ def con_base(args: argparse.Namespace, orden: Callable[[Almacen], int]) -> int:
             destino.parent.mkdir(parents=True, exist_ok=True)
             guardar_cifrada(almacen.conexion, destino)
         else:
-            remoto.subir(ruta, args.correo, args.repositorio)
-            registro.info("base subida a la rama %s", remoto.RAMA)
+            sitio.guardar_base(almacen, Path(temporal), args.correo, args.repositorio)
     return salida
 
 

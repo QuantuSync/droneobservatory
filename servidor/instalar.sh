@@ -54,6 +54,10 @@ printf '%s\n' "$HOST_GITHUB" > "$HOSTS_CONOCIDOS"
 chown "$USUARIO:$USUARIO" "$HOSTS_CONOCIDOS"
 chmod 600 "$HOSTS_CONOCIDOS"
 
+# --- Base de datos en disco ----------------------------------------------------------
+# El fichero SQLite de la base (almacen/sitio.py): del usuario del observatorio y solo para él.
+install -d -m 700 -o "$USUARIO" -g "$USUARIO" "$BASE_DIRECTORIO" "$BASE_DIRECTORIO/trabajo"
+
 # --- Datos de FIRMS -----------------------------------------------------------------
 # Los CSV diarios de anomalías térmicas: del usuario del observatorio y solo para él.
 install -d -m 700 -o "$USUARIO" -g "$USUARIO" "$(dirname "$FIRMS_DATOS")" "$FIRMS_DATOS"

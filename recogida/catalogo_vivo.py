@@ -1111,7 +1111,7 @@ def principal(argumentos: list[str] | None = None) -> int:
             )
         )
         return 0
-    from almacen import remoto
+    from almacen import remoto, sitio
     from almacen.cifrado import abrir_cifrada
     from modelo import cliente as servicio
     from recogida.plazo import Plazo
@@ -1125,13 +1125,15 @@ def principal(argumentos: list[str] | None = None) -> int:
     descargador = Descargador(agente=AGENTE_EODI, pausa_minima_s=PAUSA_S, plazo=Plazo(TOPE_S))
     ahora = datetime.now(UTC)
     with TemporaryDirectory() as temporal:
-        ruta = args.base
-        if ruta is None:
-            ruta = Path(temporal) / remoto.FICHERO
-            if not remoto.descargar(ruta, args.repositorio or remoto.REPOSITORIO):
-                registro.error("no hay base en la rama %s", remoto.RAMA)
-                return 1
-        almacen = Almacen(abrir_cifrada(ruta))
+        abierta = (
+            Almacen(abrir_cifrada(args.base))
+            if args.base is not None
+            else sitio.abrir_base(Path(temporal), args.repositorio or remoto.REPOSITORIO)
+        )
+        if abierta is None:
+            registro.error("no hay base en la rama %s", remoto.RAMA)
+            return 1
+        almacen = abierta
         barrer(datos, ahora, descargador, almacen, extractor, args.primera, args.solo)
         almacen.cerrar()
     return 0

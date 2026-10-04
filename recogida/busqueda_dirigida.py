@@ -489,17 +489,22 @@ def _pendientes(datos: Path, base: Path | None, repositorio: str | None = None) 
     recogida horaria). Solo lee la base."""
     from tempfile import TemporaryDirectory
 
-    from almacen import remoto
+    from almacen import remoto, sitio
     from almacen.cifrado import abrir_cifrada, cargar_clave_local
 
     cargar_clave_local()
     with TemporaryDirectory() as temporal:
-        ruta = base or Path(temporal) / remoto.FICHERO
-        if base is None and not remoto.descargar(ruta, repositorio or remoto.REPOSITORIO):
+        abierta = (
+            Almacen(abrir_cifrada(base))
+            if base is not None
+            else sitio.abrir_base(Path(temporal), repositorio or remoto.REPOSITORIO)
+        )
+        if abierta is None:
             registro.error("no hay base en la rama %s", remoto.RAMA)
             return 1
-        almacen = Almacen(abrir_cifrada(ruta))
+        almacen = abierta
         registro.info("anomalías por buscar: %d", escribir_pendientes(almacen, datos))
+        almacen.cerrar()
     return 0
 
 

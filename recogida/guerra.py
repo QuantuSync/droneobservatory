@@ -478,6 +478,7 @@ def opciones_base(descripcion: str | None) -> argparse.ArgumentParser:
 def con_base(args: argparse.Namespace) -> Iterator[Almacen]:
     """Abre la base y, al terminar sin error, la guarda: la local con --guardar; la de la rama
     estado, siempre que haya cambiado."""
+    from almacen import sitio
     from almacen.cifrado import abrir_cifrada, cargar_clave_local, guardar_cifrada
 
     if not args.remoto and args.base is None:
@@ -489,18 +490,18 @@ def con_base(args: argparse.Namespace) -> Iterator[Almacen]:
         if args.remoto:
             if not args.correo:
                 raise SystemExit("con --remoto hace falta --correo")
-            ruta = Path(temporal) / remoto.FICHERO
-            if not remoto.descargar(ruta, args.repositorio):
+            abierta = sitio.abrir_base(Path(temporal), args.repositorio)
+            if abierta is None:
                 raise SystemExit("no hay base en la rama estado")
-        almacen = Almacen(abrir_cifrada(ruta))
-        antes = almacen.conexion.serialize()
+            almacen = abierta
+        else:
+            almacen = Almacen(abrir_cifrada(ruta))
+        antes = sitio.marca(almacen)
         yield almacen
-        if almacen.conexion.serialize() == antes:
+        if sitio.sin_cambios(almacen, antes):
             registro.info("base sin cambios")
         elif args.remoto:
-            guardar_cifrada(almacen.conexion, ruta)
-            remoto.subir(ruta, args.correo, args.repositorio)
-            registro.info("base subida a la rama %s", remoto.RAMA)
+            sitio.guardar_base(almacen, Path(temporal), args.correo, args.repositorio)
         elif args.guardar:
             guardar_cifrada(almacen.conexion, ruta)
         almacen.cerrar()

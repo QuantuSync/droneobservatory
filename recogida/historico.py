@@ -26,7 +26,7 @@ from datetime import UTC, date, datetime
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from almacen import remoto
+from almacen import remoto, sitio
 from almacen.base import Almacen
 from almacen.cifrado import abrir_cifrada, cargar_clave_local, guardar_cifrada
 from esquema import Documento
@@ -136,10 +136,11 @@ def informe(
 
 
 def base_de_estado(repositorio: str, temporal: Path) -> Almacen:
-    """La base de la rama estado, o una nueva si la rama aún no existe."""
-    ruta = temporal / remoto.FICHERO
-    if remoto.descargar(ruta, repositorio):
-        return Almacen(abrir_cifrada(ruta))
+    """La base de la rama estado (o del disco, según el modo), o una nueva si la rama aún no
+    existe."""
+    almacen = sitio.abrir_base(temporal, repositorio)
+    if almacen is not None:
+        return almacen
     registro.info("no hay base en la rama %s: se empieza una nueva", remoto.RAMA)
     return Almacen.abrir()
 
@@ -212,8 +213,7 @@ def principal(argumentos: list[str] | None = None) -> int:
         ruta = DIRECTORIO / remoto.FICHERO
         guardar_cifrada(almacen.conexion, ruta)
         if not args.sin_subir:
-            remoto.subir(ruta, args.correo, args.repositorio)
-            registro.info("base subida a la rama %s", remoto.RAMA)
+            sitio.guardar_base(almacen, Path(temporal), args.correo, args.repositorio)
         almacen.cerrar()
     return 0
 

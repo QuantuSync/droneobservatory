@@ -40,9 +40,9 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from almacen import remoto
+from almacen import remoto, sitio
 from almacen.base import Almacen
-from almacen.cifrado import abrir_cifrada, guardar_cifrada
+from almacen.cifrado import abrir_cifrada
 from exportacion.publicar import modelos, publicar
 from proceso import (
     cruces,
@@ -264,14 +264,16 @@ def principal(argumentos: list[str] | None = None) -> int:
     ahora = datetime.now(UTC)
     salida = 0
     with TemporaryDirectory() as temporal:
-        ruta = Path(temporal) / remoto.FICHERO
-        if args.base is not None:
-            ruta.write_bytes(args.base.read_bytes())
-        elif not remoto.descargar(ruta, args.repositorio):
+        abierta = (
+            Almacen(abrir_cifrada(args.base))
+            if args.base is not None
+            else sitio.abrir_base(Path(temporal), args.repositorio)
+        )
+        if abierta is None:
             registro.error("no hay base en la rama %s: ejecuta antes el histórico", remoto.RAMA)
             return 1
-        almacen = Almacen(abrir_cifrada(ruta))
-        antes = almacen.conexion.serialize()
+        almacen = abierta
+        antes = sitio.marca(almacen)
         descargador, cache = Descargador(), CachePaginas()
         estados: dict[str, EstadoFuente] = {}
         for fuente in FUENTES:
@@ -437,10 +439,8 @@ def principal(argumentos: list[str] | None = None) -> int:
         registro.info("ficheros publicados con cambios: %d", len(cambiados))
         if args.ensayo is not None:
             registro.info("ensayo: base sin subir")
-        elif almacen.conexion.serialize() != antes:
-            guardar_cifrada(almacen.conexion, ruta)
-            remoto.subir(ruta, args.correo, args.repositorio)
-            registro.info("base subida a la rama %s", remoto.RAMA)
+        elif not sitio.sin_cambios(almacen, antes):
+            sitio.guardar_base(almacen, Path(temporal), args.correo, args.repositorio)
         else:
             registro.info("base sin cambios")
         almacen.cerrar()

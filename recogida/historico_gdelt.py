@@ -31,9 +31,9 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from typing import Any
 
-from almacen import remoto
+from almacen import remoto, sitio
 from almacen.base import Almacen
-from almacen.cifrado import abrir_cifrada, cifrar_datos, descifrar_datos, guardar_cifrada
+from almacen.cifrado import cifrar_datos, descifrar_datos
 from proceso.noticias import Articulo, filtro, lugares_articulo, nomenclator
 from recogida import gdelt
 from recogida.descarga import Descargador, DescargaFallida
@@ -213,10 +213,11 @@ def cobertura(cabeceras: list[dict[str, Any]]) -> dict[str, Any]:
 def _hasta_por_defecto(repositorio: str) -> datetime:
     """Donde empezó la recogida horaria, según su cursor en la base."""
     with TemporaryDirectory() as temporal:
-        ruta = Path(temporal) / remoto.FICHERO
-        if not remoto.descargar(ruta, repositorio):
+        almacen = sitio.abrir_base(Path(temporal), repositorio)
+        if almacen is None:
             return gdelt.franja_de(datetime.now(UTC))
-        cursor = Almacen(abrir_cifrada(ruta)).cursor(gdelt.FUENTE_ID)
+        cursor = almacen.cursor(gdelt.FUENTE_ID)
+        almacen.cerrar()
     if cursor is None:
         return gdelt.franja_de(datetime.now(UTC))
     return gdelt.franja_de(_leer_fecha(cursor["inicio"]))
@@ -272,17 +273,15 @@ def orden_incorporar(args: argparse.Namespace) -> int:
             len(resumen["fallidas"]),
             len(resumen["cortados"]),
         )
-        ruta = directorio / remoto.FICHERO
-        if not remoto.descargar(ruta, args.repositorio):
+        almacen = sitio.abrir_base(directorio, args.repositorio)
+        if almacen is None:
             registro.error("no hay base en la rama %s", remoto.RAMA)
             return 1
-        almacen = Almacen(abrir_cifrada(ruta))
         recuentos = incorporar(almacen, lotes)
         almacen.guardar_cursor(CURSOR, resumen)
         registro.info("histórico %s", recuentos.resumen())
-        guardar_cifrada(almacen.conexion, ruta)
-        remoto.subir(ruta, args.correo, args.repositorio)
-        registro.info("base subida a la rama %s", remoto.RAMA)
+        sitio.guardar_base(almacen, directorio, args.correo, args.repositorio)
+        almacen.cerrar()
     return 0
 
 

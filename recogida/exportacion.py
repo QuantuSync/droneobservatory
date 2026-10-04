@@ -21,7 +21,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from almacen import cifrado, remoto
+from almacen import cifrado, remoto, sitio
 from almacen.base import Almacen
 from exportacion import semanal
 
@@ -73,13 +73,15 @@ def principal(argumentos: list[str] | None = None, ahora: datetime | None = None
     ahora = ahora or datetime.now(UTC)
     version = args.version or semanal.version_de(ahora)
     with TemporaryDirectory() as temporal:
-        base = args.base
-        if base is None:
-            base = Path(temporal) / remoto.FICHERO
-            if not remoto.descargar(base, args.repositorio):
-                registro.error("no hay base en la rama %s", remoto.RAMA)
-                return 1
-        almacen = Almacen(cifrado.abrir_cifrada(base))
+        abierta = (
+            Almacen(cifrado.abrir_cifrada(args.base))
+            if args.base is not None
+            else sitio.abrir_base(Path(temporal), args.repositorio)
+        )
+        if abierta is None:
+            registro.error("no hay base en la rama %s", remoto.RAMA)
+            return 1
+        almacen = abierta
         destino = args.salida or Path(temporal) / version
         if destino.exists() and any(destino.iterdir()):
             registro.error("la carpeta de salida no está vacía: no se sobrescribe")

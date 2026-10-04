@@ -105,6 +105,13 @@ ESPERA_CERROJO_S=3600
 ESPERA_FUSION_S=10800
 PAUSA_AVISO_S=30
 
+# --- Base de datos en el disco del servidor (almacen/sitio.py) ----------------------
+# El fichero SQLite de la base y las copias de trabajo de cada sesión, solo para el usuario
+# del observatorio. El interruptor del modo (github, doble o disco) es el fichero
+# $SECRETOS/base_modo, con una palabra; sin él, github.
+BASE_DIRECTORIO="${EODI_BASE_DIRECTORIO:-$CASA/base}"
+BASE_INTERRUPTOR="$SECRETOS/base_modo"
+
 # --- Reintentos por sitio (recogida/reintentos.py) ------------------------------------
 # Un fichero por sitio con los reintentos del día: el descargador común deja de reintentar a
 # un sitio que pasa del tope diario. Lo comparten todas las unidades.

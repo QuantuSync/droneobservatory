@@ -441,19 +441,21 @@ def principal(argumentos: list[str] | None = None) -> int:
     calculo.add_argument("--todo", action="store_true", help="recalcula todo")
     args = opciones.parse_args(argumentos)
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
-    from almacen import remoto
+    from almacen import remoto, sitio
     from almacen.cifrado import abrir_cifrada
 
     ahora = datetime.now(UTC)
     datos = directorio_datos()
     with TemporaryDirectory() as temporal:
-        ruta = args.base
-        if ruta is None:
-            ruta = Path(temporal) / remoto.FICHERO
-            if not remoto.descargar(ruta, args.repositorio or remoto.REPOSITORIO):
-                registro.error("no hay base en la rama %s", remoto.RAMA)
-                return 1
-        almacen = Almacen(abrir_cifrada(ruta))
+        abierta = (
+            Almacen(abrir_cifrada(args.base))
+            if args.base is not None
+            else sitio.abrir_base(Path(temporal), args.repositorio or remoto.REPOSITORIO)
+        )
+        if abierta is None:
+            registro.error("no hay base en la rama %s", remoto.RAMA)
+            return 1
+        almacen = abierta
         resumen = calcular(
             almacen,
             datos,

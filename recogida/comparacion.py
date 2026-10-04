@@ -17,7 +17,7 @@ from datetime import date, timedelta
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from almacen import remoto
+from almacen import sitio
 from almacen.base import Almacen
 from almacen.cifrado import abrir_cifrada, cargar_clave_local
 from esquema import Documento
@@ -134,10 +134,14 @@ def principal(argumentos: list[str] | None = None) -> int:
     args = opciones.parse_args(argumentos)
     cargar_clave_local()
     with TemporaryDirectory() as temporal:
-        ruta = args.base or Path(temporal) / remoto.FICHERO
-        if args.base is None and not remoto.descargar(ruta):
+        abierta = (
+            Almacen(abrir_cifrada(args.base))
+            if args.base is not None
+            else sitio.abrir_base(Path(temporal))
+        )
+        if abierta is None:
             return 1
-        almacen = Almacen(abrir_cifrada(ruta))
+        almacen = abierta
         if args.candidatos:
             puntos = [p for c in almacen.candidatos() if (p := de_candidato(c)) is not None]
         else:

@@ -18,9 +18,9 @@ from datetime import timedelta
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from almacen import remoto
+from almacen import remoto, sitio
 from almacen.base import Almacen
-from almacen.cifrado import abrir_cifrada, cargar_clave_local
+from almacen.cifrado import cargar_clave_local
 from recogida import gdelt
 
 # Semilla fija para que la muestra sea reproducible; su valor no importa.
@@ -69,10 +69,11 @@ def principal(argumentos: list[str] | None = None) -> int:
         return 0
     cargar_clave_local()
     with TemporaryDirectory() as temporal:
-        ruta = Path(temporal) / remoto.FICHERO
-        if not remoto.descargar(ruta, remoto.REPOSITORIO):
+        base = sitio.abrir_base(Path(temporal), remoto.REPOSITORIO)
+        if base is None:
             return 1
-        sys.stdout.write(informe(Almacen(abrir_cifrada(ruta))))
+        sys.stdout.write(informe(base))
+        base.cerrar()
     return 0
 
 

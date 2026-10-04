@@ -56,7 +56,7 @@ import numpy as np
 import numpy.typing as npt
 from PIL import Image
 
-from almacen import cifrado, remoto
+from almacen import cifrado, remoto, sitio
 from almacen.base import Almacen
 from esquema import Documento
 from proceso import cambio
@@ -853,16 +853,17 @@ def borrado_del_almacen(entorno: dict[str, str] | os._Environ[str]) -> Borrar:
 def _base(repositorio: str | None, local: Path | None) -> Iterator[Almacen]:
     """La base de la rama estado (o un db.age local), solo para leerla."""
     with TemporaryDirectory() as temporal:
-        ruta = local
-        if ruta is None:
-            ruta = Path(temporal) / "db.age"
-            if not remoto.descargar(ruta, repositorio or remoto.REPOSITORIO):
-                raise SystemExit("no hay base en la rama estado")
-        conexion = cifrado.abrir_cifrada(ruta)
+        almacen = (
+            Almacen(cifrado.abrir_cifrada(local))
+            if local is not None
+            else sitio.abrir_base(Path(temporal), repositorio or remoto.REPOSITORIO)
+        )
+        if almacen is None:
+            raise SystemExit("no hay base en la rama estado")
         try:
-            yield Almacen(conexion)
+            yield almacen
         finally:
-            conexion.close()
+            almacen.cerrar()
 
 
 def principal(argumentos: list[str] | None = None) -> int:
