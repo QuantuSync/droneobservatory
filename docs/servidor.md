@@ -42,6 +42,8 @@ En `/home/eodi`:
   - `exportacion.json`: la última exportación semanal correcta (versión, hora y huella);
   - `deduccion.json`: la última ejecución correcta del motor de deducción;
   - `directo.json`: el último ciclo correcto de la detección en directo y su fuente;
+  - `seguimiento.json`: la última recepción, el último heartbeat y el último hueco largo de la
+    captura del seguimiento en directo;
   - `almacen.env`: las credenciales S3 del almacén público (`ALMACEN_ID` y
     `ALMACEN_SECRETO`), para subir `estado.json`;
   - `estado.json`: el último estado publicado.
@@ -82,6 +84,8 @@ En `/home/eodi`:
 - `datos/directo/`, con permisos 700 y propiedad de `eodi`: el estado de la detección en directo
   de cierres y lo publicado del mapa de interferencia GPS (apartado «Detección en directo de
   cierres»).
+- `datos/seguimiento/`, con permisos 700 y propiedad de `eodi`: el archivo privado de la captura
+  del seguimiento en directo (apartado «Captura del seguimiento en directo»).
 
 Las dos claves de despliegue se generan en el servidor y la privada no sale de él. En
 GitHub figuran en cada repositorio con el título «servidor eodi-recogida».
@@ -463,6 +467,99 @@ sudo systemd-run --unit=eodi-directo-reproduccion --uid=eodi --gid=eodi --nice=1
   --salida /home/eodi/datos/directo/reproduccion.jsonl
 ```
 
+## Captura del seguimiento en directo
+
+Informe: [`informe_captura_seguimiento.md`](informe_captura_seguimiento.md). Escucha y guarda,
+tal como llegan, los datos de seguimiento en directo de amenazas aéreas sobre Ucrania: el flujo
+de [NEPTUN](https://neptun.in.ua/developers), que solo da el estado en vivo y no guarda historia,
+y la vista web del canal de la Fuerza Aérea de Ucrania (t.me/kpszsu), con sus ediciones. Solo
+captura y archiva: no procesa ni publica nada ([`recogida/seguimiento.py`](../recogida/seguimiento.py)).
+
+- **Unidad.** `eodi-seguimiento.service`, siempre en marcha (`Restart=always`, a los 10 s), como
+  `eodi`, con `Nice=15`, E/S en reposo y un tope de memoria de 150 MB (`MemoryMax`). Ejecuta
+  [`servidor/seguimiento.sh`](../servidor/seguimiento.sh), que toma su propio cerrojo
+  (`seguimiento.lock`): nunca toma el de la recogida horaria. Usa el código del clon tal como lo
+  deja la recogida horaria, pero no se reinicia con cada publicación de datos: cada 5 minutos mira
+  la huella de su propio código en el clon (`recogida/seguimiento.py`, `recogida/telegram.py`,
+  `servidor/seguimiento.sh` y `requirements.txt`) y solo si cambia sale y systemd la relanza.
+- **NEPTUN.** Una conexión WebSocket a `wss://neptun.in.ua/api/v1/stream` con la identificación
+  del observatorio (`EODI-bot/1.0 (European Observatory of Drone Incidents;
+  +https://droneobservatory.eu)`). Cada mensaje (snapshot, upsert, remove, heartbeat, alerts o
+  cualquier otro) se guarda entero, sin transformar, con la hora UTC de recepción. Un minuto sin
+  mensajes (el heartbeat llega cada 15 s) es una conexión muerta. Reconecta con espera creciente
+  (2, 4, 8… hasta 300 s; vuelve a 2 tras una conexión de más de un minuto) y, al recibir el
+  primer mensaje tras reconectar, anota el hueco: desde la última recepción hasta esa, con el
+  motivo. Si el corte pasa de 30 s, consulta mientras tanto `/api/v1/threats` y `/api/v1/alerts`
+  como respaldo. Cada dos minutos guarda `/api/v1/messages` si ha cambiado. Ninguna petición REST
+  sale antes de 10 s de la anterior (NEPTUN pide no bajar de 5 s).
+- **Fuerza Aérea.** Cada minuto, la página más reciente de `t.me/s/kpszsu`; guarda el bloque HTML
+  entero de cada publicación nueva o cambiada (versión 0, 1…), con su identificador y su hora. Si
+  faltan publicaciones entre dos lecturas, lee las páginas anteriores (una cada 3 s, hasta 10) y,
+  si no enlaza, lo anota; cada 10 minutos relee además la segunda página para ver las ediciones.
+- **Datos** en `datos/seguimiento/`, con permisos 700: `neptun/AAAA/MM/neptun-AAAA-MM-DDTHH.jsonl`
+  y `kpszsu/AAAA/MM/kpszsu-AAAA-MM-DDTHH.jsonl` (un fichero por hora UTC de recepción, en JSON por
+  líneas, comprimidos a `.jsonl.gz` al cerrarse la hora), `huecos.jsonl` (todos los huecos),
+  `indices/AAAA-MM-DD.json` (mensajes por tipo, amenazas distintas, huecos, tamaño y huella de
+  cada fichero), `copias/AAAA-MM-DD.json` (lo subido a la copia), `kpszsu/vistos.json` (huellas de
+  las últimas publicaciones, para no repetirlas) y `condiciones/` (copias fechadas de las
+  condiciones de NEPTUN). El registro para `estado.json` es `/home/eodi/.eodi/seguimiento.json`.
+  Nada se borra ni se reescribe: una hora que recibe líneas tarde se comprime aparte
+  (`.parte2.jsonl.gz`).
+- **Archivo.** `eodi-seguimiento-archivo.timer` lanza en el minuto 3 de cada hora
+  `eodi-seguimiento-archivo.service` (`Nice=19`, E/S en reposo, 1 GB como mucho), que ejecuta
+  [`servidor/seguimiento_archivo.sh`](../servidor/seguimiento_archivo.sh)
+  ([`recogida/seguimiento_archivo.py`](../recogida/seguimiento_archivo.py)): con su propio cerrojo
+  (uno solo a la vez), espera fuera de los minutos 15 a 40 y a que la recogida horaria no esté en
+  marcha (mira la unidad, sin tocar su cerrojo); comprime las horas cerradas (comprobando que el
+  comprimido devuelve los mismos bytes antes de quitar el original), escribe el índice de cada
+  día terminado y sube cada día terminado a la copia de seguridad.
+- **Copia de seguridad.** Bucket privado `droneobservatory-archivo` de Hetzner Object Storage
+  (`nbg1`, mismo proyecto y mismas credenciales S3 que el almacén público, `almacen.env`; sin
+  política pública: sin credenciales responde 403), prefijo `seguimiento/`, configurado en
+  [`configuracion/archivo_seguimiento.json`](../configuracion/archivo_seguimiento.json). Cada
+  objeto lleva su SHA-256 en `x-amz-meta-sha256`; antes de subir se mira si ya está, y uno con
+  otra huella no se sobrescribe. Entra en la cuota de 1 TB del precio base del almacén.
+- **Vigilancia.** `estado.json` lleva `seguimiento` (`en_marcha` con un heartbeat del flujo en los
+  últimos 10 minutos, `con_respaldo` si solo llegan datos por REST, `parado` si nada; la última
+  recepción, el último heartbeat y el último hueco de más de 10 minutos), que la web acepta sin
+  mostrarlo. El workflow `vigia-recogida` abre la incidencia «La captura del seguimiento en directo
+  no recibe datos» si no estaba en marcha o si ha habido un hueco de más de 10 minutos en las dos
+  últimas horas (también si el servicio estuvo parado: el hueco se anota al volver), y la cierra
+  sola. Como el estado se compone al final de cada recogida horaria y el vigía pasa en el minuto
+  41, el aviso llega como mucho en algo más de una hora.
+
+Órdenes, como `operador`:
+
+```
+systemctl status eodi-seguimiento.service
+journalctl -u eodi-seguimiento.service -n 40        # un resumen cada 10 min, cortes y huecos
+sudo systemctl restart eodi-seguimiento.service     # relanzar (el hueco queda anotado)
+sudo -u eodi cat /home/eodi/.eodi/seguimiento.json
+sudo -u eodi tail -n 5 /home/eodi/datos/seguimiento/huecos.jsonl
+systemctl show eodi-seguimiento.service -p MemoryCurrent -p MemoryPeak
+sudo systemctl start eodi-seguimiento-archivo.service   # compresión, índices y copia ahora
+journalctl -u eodi-seguimiento-archivo.service -n 20
+sudo -u eodi bash /home/eodi/droneobservatory/servidor/seguimiento_archivo.sh resumen
+```
+
+Forzar la copia de un día (también del día en curso: sube las horas ya comprimidas) y restaurar un
+fichero de la copia, comprobando su huella:
+
+```
+sudo -u eodi bash /home/eodi/droneobservatory/servidor/seguimiento_archivo.sh copiar --dia AAAA-MM-DD
+sudo -u eodi bash /home/eodi/droneobservatory/servidor/seguimiento_archivo.sh restaurar \
+  --objeto seguimiento/neptun/AAAA/MM/neptun-AAAA-MM-DDTHH.jsonl.gz --destino /tmp/restaurado.jsonl.gz
+```
+
+Crear el bucket privado (una vez; repetible) y comprobar que sin credenciales no se lee:
+
+```
+sudo -u eodi bash /home/eodi/droneobservatory/servidor/seguimiento_archivo.sh preparar
+```
+
+Leer una hora: `zcat neptun-AAAA-MM-DDTHH.jsonl.gz | head`; cada línea lleva `recibido` y, en
+`crudo`, el mensaje tal como llegó.
+
 ## Guerra por satélite
 
 Informe: [`informe_guerra_satelite.md`](informe_guerra_satelite.md). Tres servicios, cada uno con
@@ -544,7 +641,8 @@ El script:
    fuentes oficiales de detalle, del lector de canales de la capa de guerra, del procesado de
    adsb.lol, de la búsqueda dirigida de noticias, del motor de deducción y del barrido del
    catálogo vivo, de las tres piezas de la guerra por satélite (imágenes, luz nocturna y focos en
-   vivo) y el servicio de detección en directo de cierres.
+   vivo), el servicio de detección en directo de cierres, la captura del seguimiento en directo
+   y el temporizador de su archivo.
 
 Puede repetirse sobre un servidor que ya existe: deja igual lo que ya está y vuelve a
 aplicar la configuración. Para empezar de verdad desde cero se borra antes el servidor:
@@ -584,6 +682,8 @@ correcta (o null si no consta ninguna), del registro que deja la exportación, y
 `ultima_deduccion`: la de la última ejecución correcta del motor de deducción, y `directo`: el
 estado de la detección en directo (`en_marcha`, `con_respaldo` o `parado`, este si no ha
 tenido un ciclo correcto en 10 minutos) con su último ciclo correcto.
+Y `seguimiento`: el estado de la captura del seguimiento en directo (`en_marcha`, `con_respaldo`
+o `parado`), su última recepción, su último heartbeat y su último hueco de más de 10 minutos.
 No lleva ningún contenido. La recogida deja el estado de cada fuente en un fichero
 temporal (`recogida.horaria --estado`). El último estado publicado se guarda en
 `/home/eodi/.eodi/estado.json`, de donde sale la hora de la última recogida correcta.

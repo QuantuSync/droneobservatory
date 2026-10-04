@@ -234,6 +234,26 @@ DIRECTO_MEMORIA="1500M"
 # Último ciclo correcto: lo lee estado.json (fuente directo).
 DIRECTO_REGISTRO="$SECRETOS/directo.json"
 
+# --- Captura del seguimiento en directo (servidor/seguimiento.sh, recogida/seguimiento.py) -----
+# Archivo privado de lo que emiten NEPTUN (flujo WebSocket, respaldo REST y mensajes) y la vista
+# web del canal de la Fuerza Aérea, por horas: fuera del repositorio, de la base y de la web.
+SEGUIMIENTO_DATOS="${EODI_SEGUIMIENTO_DATOS:-$CASA/datos/seguimiento}"
+UNIDAD_SEGUIMIENTO="eodi-seguimiento"
+CERROJO_SEGUIMIENTO="$SECRETOS/seguimiento.lock"
+# Último heartbeat, última recepción y último hueco largo: lo lee estado.json (seguimiento).
+SEGUIMIENTO_REGISTRO="$SECRETOS/seguimiento.json"
+# Siempre en marcha durante la recogida horaria: ligero de verdad. Tope de memoria de 150 MB
+# (usa unos 40) y prioridad baja de CPU y de disco.
+SEGUIMIENTO_MEMORIA="150M"
+SEGUIMIENTO_NICE=15
+# Compresión de las horas cerradas, índice del día y copia de seguridad diaria en el bucket
+# privado (servidor/seguimiento_archivo.sh): en el minuto 3, fuera de los minutos 15 a 40.
+UNIDAD_SEGUIMIENTO_ARCHIVO="eodi-seguimiento-archivo"
+CERROJO_SEGUIMIENTO_ARCHIVO="$SECRETOS/seguimiento_archivo.lock"
+MINUTO_SEGUIMIENTO_ARCHIVO=3
+SEGUIMIENTO_ARCHIVO_TOPE_UNIDAD=40
+SEGUIMIENTO_ARCHIVO_MEMORIA="1G"
+
 # --- Guerra por satélite ----------------------------------------------------------------
 # Tres servicios con su propio temporizador y su propio cerrojo; ninguno toma el de la recogida
 # horaria ni toca el clon. Sus datos, fuera del repositorio y de la base, del usuario del

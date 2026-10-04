@@ -558,6 +558,13 @@ export interface EstadoSistema {
   ultima_deduccion?: string | null;
   /** Servicio de detección en directo de cierres: su estado y su último ciclo correcto. */
   directo?: { estado: EstadoDirecto; ultimo_ciclo_correcto: string | null };
+  /** Captura del seguimiento en directo (archivo privado); la web no lo muestra. */
+  seguimiento?: {
+    estado: EstadoDirecto;
+    ultima_recepcion: string | null;
+    ultimo_latido: string | null;
+    ultimo_hueco_largo: { desde: string; hasta: string } | null;
+  };
 }
 
 export type EstadoDirecto = "en_marcha" | "con_respaldo" | "parado";

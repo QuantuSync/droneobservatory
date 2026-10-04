@@ -1,0 +1,8 @@
+{
+  "descripcion": "Copia de seguridad privada del archivo del seguimiento en directo (recogida/seguimiento_archivo.py): bucket de Hetzner Object Storage sin política pública, en el mismo proyecto y con las mismas credenciales S3 que el almacén público. Nada de aquí se publica.",
+  "proveedor": "Hetzner Object Storage",
+  "ubicacion": "nbg1",
+  "punto_s3": "https://nbg1.your-objectstorage.com",
+  "bucket": "droneobservatory-archivo",
+  "prefijo": "seguimiento/"
+}

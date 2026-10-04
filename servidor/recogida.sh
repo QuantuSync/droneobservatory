@@ -24,7 +24,7 @@ publicar_estado() {
     return 0
   fi
   nuevo="$(mktemp)"
-  if ! "$ESTADO_PYTHON" -m recogida.estado --inicio "$ESTADO_INICIO" --codigo "$codigo"     --parcial "$ESTADO_PARCIAL" --anterior "$ESTADO_ANTERIOR" --salida "$nuevo"     --minuto "$MINUTO_RECOGIDA" --exportacion "$EXPORTACION_REGISTRO"     --deduccion "$DEDUCCION_REGISTRO" --directo "$DIRECTO_REGISTRO"; then
+  if ! "$ESTADO_PYTHON" -m recogida.estado --inicio "$ESTADO_INICIO" --codigo "$codigo"     --parcial "$ESTADO_PARCIAL" --anterior "$ESTADO_ANTERIOR" --salida "$nuevo"     --minuto "$MINUTO_RECOGIDA" --exportacion "$EXPORTACION_REGISTRO"     --deduccion "$DEDUCCION_REGISTRO" --directo "$DIRECTO_REGISTRO" --seguimiento "$SEGUIMIENTO_REGISTRO"; then
     echo "aviso: no se pudo componer estado.json"
     rm -f "$nuevo" "$ESTADO_PARCIAL"
     return 0

@@ -130,3 +130,54 @@ SOFTWARE.
 | [EUROCONTROL](https://www.eurocontrol.int/performance/data/download/csv/) «Airport traffic» | Copia con mención de EUROCONTROL, sin fines comerciales y sin modificarlo | Solo como referencia interna de la cobertura, en el disco del servidor; no se publica ninguna cifra suya |
 | [Copernicus DEM GLO-90](https://dataspace.copernicus.eu/explore-data/data-collections/copernicus-contributing-missions/collections-description/COP-DEM) (archivo público `copernicus-dem-90m` de AWS) | Licencia gratuita de Copernicus para el público general; lo derivado lleva «produced using Copernicus WorldDEM-90 © DLR e.V. 2010-2014 and © Airbus Defence and Space GmbH 2014-2018 provided under COPERNICUS by the European Union and ESA; all rights reserved» | Horizonte de radar del motor de deducción, en el servidor; las teselas no se redistribuyen y el resultado es interno (exportación para AEGIS) |
 | Catálogo de prestaciones de drones (`configuracion/catalogo_drones.json`) | Cifras de fabricantes, inteligencia, análisis técnico y prensa técnica, cada una con su enlace y una frase breve de la fuente como cita | Motor de deducción; las fuentes numeradas en `configuracion/catalogo_fuentes.json` |
+| [NEPTUN](https://neptun.in.ua/) (API abierta: flujo WebSocket `wss://neptun.in.ua/api/v1/stream` y REST `/api/v1/threats`, `/alerts` y `/messages`) | Gratuita, sin clave, solo lectura, uso comercial y no comercial; **obligatorio un enlace visible a NEPTUN junto a los datos**; REST no más de una vez cada 5 s; sin garantías. Condiciones literales abajo | Solo se captura y se archiva, en privado, en el servidor (`recogida/seguimiento.py`). Nada se publica. Pendiente: cuando se publique algo derivado, el enlace visible (ver abajo) |
+
+### NEPTUN: condiciones literales
+
+Copia fechada en [`condiciones_neptun_2026-10-04/`](condiciones_neptun_2026-10-04/). De
+<https://neptun.in.ua/api-terms> («Умови використання API», actualizadas el 9 de julio de 2026),
+puntos 1 a 4 y 6, tal cual:
+
+> 1\. Безкоштовно та відкрито. API надається безкоштовно, без ключів і реєстрації. Дозволено як
+> некомерційне, так і комерційне використання — за умови дотримання цих правил, зокрема
+> атрибуції (п. 3).
+>
+> 2\. Лише читання. Публічні ендпоінти доступні лише для читання (метод GET та підписка на
+> WebSocket). Будь-які спроби запису, модифікації чи доступу до службових/адміністративних
+> маршрутів заборонені.
+>
+> 3\. Обов’язкова атрибуція. Будь-який сервіс, що використовує дані NEPTUN, повинен показувати
+> видиме посилання на NEPTUN (https://neptun.in.ua/) поруч із картою або даними — напр. «Дані:
+> Карта повітряних тривог — NEPTUN». Прибирати, приховувати чи видавати дані за власні
+> заборонено.
+>
+> 4\. Чесне навантаження. Снапшот-ендпоінти кешуються на кілька секунд — опитуйте REST не частіше
+> ніж раз на 5 секунд, а для реального часу використовуйте WebSocket або SDK (одне з’єднання
+> замість постійних запитів). Ми залишаємо за собою право обмежувати чи блокувати джерела
+> аномального навантаження або зловживань, щоб захистити доступність сервісу для всіх.
+>
+> 6\. Без гарантій. API надається «як є», без будь-яких гарантій доступності, повноти чи
+> точності. Ми можемо змінювати, обмежувати чи припиняти роботу ендпоінтів будь-коли.
+
+En español: gratis y abierto, sin claves ni registro, para uso comercial y no comercial si se
+cumplen estas reglas; solo lectura (GET y suscripción al WebSocket); todo servicio que use datos de
+NEPTUN debe mostrar un enlace visible a NEPTUN junto al mapa o los datos (por ejemplo «Дані:
+Карта повітряних тривог — NEPTUN») y no puede quitarlo, ocultarlo ni hacer pasar los datos por
+propios; REST no más de una vez cada 5 segundos y, para tiempo real, el WebSocket; sin garantías.
+El punto 5 pide, si un servicio trata de la seguridad de las personas, decir con claridad que
+NEPTUN no es un sistema oficial de alerta y remitir a las alertas oficiales; el 7, que el nombre, el
+logotipo y la marca NEPTUN no se transmiten con los datos.
+
+Las condiciones no prohíben guardar ni archivar los datos ni piden nada más que lo anterior.
+`robots.txt` del sitio lleva `Disallow: /api/` para todos los agentes: es una indicación para
+los rastreadores que indexan la web; el uso programático del API es el que su página para
+desarrolladores ofrece y regulan las condiciones de arriba, y el observatorio lo hace con su
+identificación, una sola conexión WebSocket y el REST a una petición cada 10 s como mucho.
+
+**Atribución pendiente, con su arreglo.** Hoy no se publica nada derivado de NEPTUN. Cuando se
+publique (por ejemplo, rutas reconstruidas en la web o en los datos abiertos), cada vista y cada
+fichero con esos datos llevará, junto a ellos, el enlace visible
+`<a href="https://neptun.in.ua/">Дані: Карта повітряних тривог — NEPTUN</a>` (con su traducción
+en cada idioma de la web), la nota de que NEPTUN es un agregador y no un sistema oficial de alerta,
+y en los ficheros abiertos un campo `atribucion` con el mismo texto y el enlace. Lo comprueba el
+test que valide esa capa antes de publicarla.

@@ -137,9 +137,9 @@ clave_despliegue "$REPOSITORIO" "$DESPLIEGUE_WEB"
 conectar "$OPERADOR" sudo systemctl enable --now "$UNIDAD.timer" "$UNIDAD_EXPORTACION.timer" \
   "$UNIDAD_DETALLE.timer" "$UNIDAD_GUERRA.timer" "$UNIDAD_TRAFICO.timer" "$UNIDAD_BUSQUEDA.timer" \
   "$UNIDAD_DEDUCCION.timer" "$UNIDAD_CATALOGO.timer" "$UNIDAD_DIRECTO.service" \
-  "$UNIDAD_SATELITE.timer" "$UNIDAD_LUCES.timer" "$UNIDAD_FOCOS_VIVO.timer"
+  "$UNIDAD_SATELITE.timer" "$UNIDAD_LUCES.timer" "$UNIDAD_FOCOS_VIVO.timer"   "$UNIDAD_SEGUIMIENTO.service" "$UNIDAD_SEGUIMIENTO_ARCHIVO.timer"
 conectar "$OPERADOR" systemctl list-timers "$UNIDAD.timer" "$UNIDAD_EXPORTACION.timer" \
   "$UNIDAD_DETALLE.timer" "$UNIDAD_GUERRA.timer" "$UNIDAD_TRAFICO.timer" \
   "$UNIDAD_BUSQUEDA.timer" "$UNIDAD_DEDUCCION.timer" "$UNIDAD_CATALOGO.timer" \
-  "$UNIDAD_SATELITE.timer" "$UNIDAD_LUCES.timer" "$UNIDAD_FOCOS_VIVO.timer" --no-pager
+  "$UNIDAD_SATELITE.timer" "$UNIDAD_LUCES.timer" "$UNIDAD_FOCOS_VIVO.timer"   "$UNIDAD_SEGUIMIENTO_ARCHIVO.timer" --no-pager
 echo "servidor reconstruido: $ip"
