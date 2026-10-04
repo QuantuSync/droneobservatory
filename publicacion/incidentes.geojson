@@ -80787,16 +80787,6 @@
       "valor": "interrupcion_aeroportuaria"
      }
     ],
-    "atribucion": {
-     "actor": "Rusia",
-     "autoridad": "Președintele Maia Sandu",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2025-11-29T20:15Z"
-     },
-     "pais": "RU",
-     "tipo": "estado"
-    },
     "consecuencias": {
      "cierre": {
       "valor": "si"
@@ -80809,7 +80799,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-04T11:17Z"
+      "valor": "2026-10-04T13:17Z"
      }
     },
     "drones": {
@@ -80819,7 +80809,7 @@
      }
     },
     "estado": {
-     "actual": "atribuido",
+     "actual": "confirmado",
      "historial": [
       {
        "estado": "notificado",
@@ -80844,6 +80834,18 @@
         "valor": "2025-11-29T20:15Z"
        },
        "fuente_id": "gdelt-c2dd0c6cda7ff9f1-declaracion-2"
+      },
+      {
+       "estado": "confirmado",
+       "fecha": {
+        "precision": "minuto",
+        "valor": "2026-10-04T13:17Z"
+       },
+       "fuente_id": "gdelt-c2dd0c6cda7ff9f1-declaracion-2",
+       "motivo": {
+        "en": "Attribution withdrawn: the only quote is from a news report saying that the President of Moldova accused Moscow of attempting to destabilise the country, without the President's own words attributing the drones.",
+        "es": "Se retira la atribución: la única cita es de una noticia que cuenta que la presidenta de Moldavia acusó a Moscú de intentar desestabilizar el país, sin palabras literales de la presidenta que atribuyan los drones."
+       }
       }
      ]
     },
@@ -80998,8 +81000,8 @@
     },
     "tipo": "interrupcion_aeroportuaria",
     "titulo": {
-     "en": "Russian drones over Chisinau close airspace and divert flights",
-     "es": "Drones rusos sobre Chisináu cierran el espacio aéreo y desvían vuelos"
+     "en": "Drones over Chisinau close airspace and divert flights",
+     "es": "Drones sobre Chisináu cierran el espacio aéreo y desvían vuelos"
     }
    },
    "type": "Feature"
@@ -103350,7 +103352,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-04T11:17Z"
+      "valor": "2026-10-04T13:17Z"
      }
     },
     "drones": {
@@ -103374,6 +103376,26 @@
         "valor": "2026-09-08T16:00Z"
        },
        "fuente_id": "gdelt-a5fb8882b994ef1b-declaracion-1"
+      },
+      {
+       "estado": "atribuido",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2026-09-08T16:00Z"
+       },
+       "fuente_id": "gdelt-56bd635521648bd4-declaracion-2"
+      },
+      {
+       "estado": "confirmado",
+       "fecha": {
+        "precision": "minuto",
+        "valor": "2026-10-04T13:17Z"
+       },
+       "fuente_id": "gdelt-56bd635521648bd4-declaracion-2",
+       "motivo": {
+        "en": "Attribution withdrawn: the name stored as the perpetrator was that of the prefect making the statement, and his statement only says the drone entered from the Republic of Moldova, without attributing it to anyone.",
+        "es": "Se retira la atribución: el nombre guardado como autor era el del propio prefecto que declara, y su frase solo dice que el dron entró desde la República de Moldavia, sin atribuirlo a nadie."
+       }
       }
      ]
     },
@@ -115671,16 +115693,6 @@
       "valor": "interrupcion_aeroportuaria"
      }
     ],
-    "atribucion": {
-     "actor": "Rusia",
-     "autoridad": "Autoritățile moldave",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-09-10T08:00Z"
-     },
-     "pais": "RU",
-     "tipo": "estado"
-    },
     "consecuencias": {
      "cierre": {
       "valor": "si"
@@ -115697,14 +115709,14 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-04T11:17Z"
+      "valor": "2026-10-04T13:17Z"
      }
     },
     "drones": {
      "numero": "desconocido"
     },
     "estado": {
-     "actual": "atribuido",
+     "actual": "confirmado",
      "historial": [
       {
        "estado": "notificado",
@@ -115729,6 +115741,18 @@
         "valor": "2026-09-10T08:00Z"
        },
        "fuente_id": "gdelt-316b6142e4fd19bf-declaracion-2"
+      },
+      {
+       "estado": "confirmado",
+       "fecha": {
+        "precision": "minuto",
+        "valor": "2026-10-04T13:17Z"
+       },
+       "fuente_id": "gdelt-316b6142e4fd19bf-declaracion-2",
+       "motivo": {
+        "en": "Attribution withdrawn: the only quote is from a news report saying that the Moldovan authorities called the drone “Russian”, without saying which authority or in what words.",
+        "es": "Se retira la atribución: la única cita es de una noticia que cuenta que las autoridades moldavas llamaron «ruso» al dron, sin decir qué autoridad ni con qué palabras."
+       }
       }
      ]
     },
@@ -147085,16 +147109,6 @@
       "valor": "interrupcion_aeroportuaria"
      }
     ],
-    "atribucion": {
-     "actor": "Russland",
-     "autoridad": "Bundesregierung",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-09-18T11:15Z"
-     },
-     "pais": "RU",
-     "tipo": "estado"
-    },
     "consecuencias": {
      "cierre": {
       "valor": "desconocido"
@@ -147103,7 +147117,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-04T11:17Z"
+      "valor": "2026-10-04T13:17Z"
      }
     },
     "drones": {
@@ -147113,7 +147127,7 @@
      }
     },
     "estado": {
-     "actual": "atribuido",
+     "actual": "confirmado",
      "historial": [
       {
        "estado": "notificado",
@@ -147138,6 +147152,18 @@
         "valor": "2026-09-18T11:15Z"
        },
        "fuente_id": "gdelt-fb8614e245db7359-declaracion-1"
+      },
+      {
+       "estado": "confirmado",
+       "fecha": {
+        "precision": "minuto",
+        "valor": "2026-10-04T13:17Z"
+       },
+       "fuente_id": "gdelt-fb8614e245db7359-declaracion-1",
+       "motivo": {
+        "en": "Attribution withdrawn: the authority examines a possible link, it does not assert it. The German Federal Prosecutor examines whether the drone found near the Wunstorf air base is linked to the Leipzig incident; the other quote is only a news report saying the Federal Government “assumed” a Russian attack attempt.",
+        "es": "Se retira la atribución: la autoridad examina una posible relación, no la afirma. La fiscalía federal alemana examina si el dron hallado junto a la base aérea de Wunstorf guarda relación con el incidente de Leipzig; la otra frase solo es una noticia que cuenta que el Gobierno federal «suponía» un intento de atentado ruso."
+       }
       }
      ]
     },
@@ -147214,6 +147240,17 @@
      }
     ],
     "id": "EODI-2026-00283",
+    "investigacion": [
+     {
+      "autoridad": "Bundesanwaltschaft",
+      "cita": "prüft die Bundesanwaltschaft einen möglichen Zusammenhang mit dem Drohnenvorfall am Flughafen Leipzig",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-18T10:15Z"
+      },
+      "fuente_id": "gdelt-8e1cb3f807a7949f-declaracion-2"
+     }
+    ],
     "lugar": {
      "pais": "DE",
      "radio_km": 5.0
@@ -147232,8 +147269,8 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Drone with explosives found at Leipzig/Halle airport",
-     "es": "Dron con explosivos en el aeropuerto de Leipzig/Halle"
+     "en": "Drone found at Leipzig/Halle airport",
+     "es": "Dron en el aeropuerto de Leipzig/Halle"
     }
    },
    "type": "Feature"
