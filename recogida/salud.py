@@ -17,10 +17,17 @@ aún no trae el campo, eso lo cuenta la comprobación de la recogida y aquí no 
 Y la detección en directo de cierres (recogida/directo.py), que publica directo.json cada
 minuto: hay problema si su última publicación tiene más de media hora o si no responde.
 
+Y la captura del seguimiento en directo (recogida/seguimiento.py), por `seguimiento` de
+estado.json: hay problema si no está en marcha (más de 10 minutos sin un heartbeat del flujo de
+NEPTUN cuando se compuso el estado) o si en las dos últimas horas ha habido un hueco de más de 10
+minutos (el servicio lo anota al reconectar, también tras estar parado). Si estado.json no
+responde o aún no trae el campo, aquí no se avisa.
+
 Lo usan el workflow de tests, que lo deja en su resumen, y el workflow vigia-recogida, que
 abre o cierra las incidencias con lo que escribe en su salida (`problema` y `mensaje` de la
 recogida; `problema_exportacion` y `mensaje_exportacion` de la exportación;
-`problema_directo` y `mensaje_directo` de la detección en directo).
+`problema_directo` y `mensaje_directo` de la detección en directo; `problema_seguimiento` y
+`mensaje_seguimiento` de la captura del seguimiento).
 
 Uso: python -m recogida.salud [--url <estado.json>] [--url-directo <directo.json>]
 """
@@ -47,6 +54,10 @@ URL_DIRECTO = _ALMACEN.url_publica(_ALMACEN.objetos["directo"])
 # servicio se ha parado (systemd lo relanza a los 30 s si se cae).
 MAX_SIN_DIRECTO = timedelta(minutes=30)
 TITULO_DIRECTO = "### Detección en directo"
+TITULO_SEGUIMIENTO = "### Captura del seguimiento en directo"
+# Un hueco largo cuenta como problema durante dos horas: lo ve al menos una pasada del vigía
+# (minuto 41) con el estado de la recogida siguiente (hacia el minuto 33).
+HUECO_RECIENTE = timedelta(hours=2)
 # La recogida es horaria: dos horas sin una correcta son dos recogidas seguidas que no lo
 # han sido (o que no se han lanzado).
 MAX_SIN_CORRECTA = timedelta(hours=2)
@@ -157,6 +168,29 @@ def diagnostico_directo(directo: dict[str, Any] | None, ahora: datetime) -> Esta
     return True, f"{frase}."
 
 
+def diagnostico_seguimiento(estado: dict[str, Any] | None, ahora: datetime) -> Estado:
+    """Si la captura del seguimiento recibe el flujo y la frase que lo cuenta."""
+    if estado is None or not isinstance(estado.get("seguimiento"), dict):
+        return True, "estado.json no informa de la captura del seguimiento: no se comprueba."
+    seguimiento: dict[str, Any] = estado["seguimiento"]
+    situacion = seguimiento.get("estado")
+    latido = _instante(seguimiento.get("ultimo_latido"))
+    como = str(situacion).replace("_", " ")
+    frase = f"La captura del seguimiento estaba {como} el {estado.get('fin')}"
+    frase += f"; último heartbeat el {latido:%Y-%m-%d %H:%M} UTC" if latido else "; sin heartbeat"
+    hueco = seguimiento.get("ultimo_hueco_largo")
+    hasta = _instante(hueco.get("hasta")) if isinstance(hueco, dict) else None
+    if situacion != "en_marcha":
+        return False, f"{frase}: más de 10 minutos sin heartbeat del flujo de NEPTUN."
+    if hasta is not None and ahora - hasta <= HUECO_RECIENTE:
+        assert isinstance(hueco, dict)
+        return False, (
+            f"{frase}, pero estuvo sin datos del flujo de {hueco.get('desde')} a "
+            f"{hueco.get('hasta')}: más de 10 minutos."
+        )
+    return True, f"{frase}."
+
+
 def informar(resultado: Estado, titulo: str = TITULO, sufijo: str = "") -> None:
     """La frase en el registro, en el resumen del trabajo y en su salida."""
     al_dia, frase = resultado
@@ -188,6 +222,7 @@ def principal(
     informar(diagnostico_exportacion(estado, momento), TITULO_EXPORTACION, "_exportacion")
     directo = leer_estado(args.url_directo, leer, dormir)
     informar(diagnostico_directo(directo, momento), TITULO_DIRECTO, "_directo")
+    informar(diagnostico_seguimiento(estado, momento), TITULO_SEGUIMIENTO, "_seguimiento")
     return 0
 
 

@@ -664,6 +664,18 @@ const estadoSistema = objeto(
       estado: enumerado(v.ESTADOS_DIRECTO),
       ultimo_ciclo_correcto: nulable(cadena(v.PATRON_INSTANTE)),
     }),
+    // Captura del seguimiento en directo (archivo privado); la web no la muestra.
+    seguimiento: objeto({
+      estado: enumerado(v.ESTADOS_DIRECTO),
+      ultima_recepcion: nulable(cadena(v.PATRON_INSTANTE)),
+      ultimo_latido: nulable(cadena(v.PATRON_INSTANTE)),
+      ultimo_hueco_largo: nulable(
+        objeto({
+          desde: cadena(v.PATRON_INSTANTE),
+          hasta: cadena(v.PATRON_INSTANTE),
+        }),
+      ),
+    }),
   },
 );
 

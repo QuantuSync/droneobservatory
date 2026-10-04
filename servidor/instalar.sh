@@ -451,6 +451,67 @@ unidad_satelite "$UNIDAD_LUCES" "Luz nocturna tras los ataques contra la red el�
 unidad_satelite "$UNIDAD_FOCOS_VIVO" "Focos de calor de las últimas 24 horas (EODI)" \
   focos_vivo.sh "$FOCOS_VIVO_TOPE_UNIDAD" "*-*-* *:$MINUTO_FOCOS_VIVO:00 UTC" \
   "en el minuto $MINUTO_FOCOS_VIVO de cada hora"
+# Captura del seguimiento en directo (servidor/seguimiento.sh): siempre en marcha, con su propio
+# cerrojo, tope de memoria y prioridad baja; solo sale (y systemd la relanza) cuando cambia su
+# código. La compresión, el índice y la copia diaria van aparte, con su temporizador.
+install -d -m 700 -o "$USUARIO" -g "$USUARIO" "$SEGUIMIENTO_DATOS"
+cat > "/etc/systemd/system/$UNIDAD_SEGUIMIENTO.service" <<FIN
+[Unit]
+Description=Captura del seguimiento en directo de amenazas aéreas sobre Ucrania (EODI)
+Wants=network-online.target
+After=network-online.target time-sync.target
+
+[Service]
+Type=simple
+User=$USUARIO
+Group=$USUARIO
+WorkingDirectory=$CLON
+ExecStart=/usr/bin/env bash $CLON/servidor/seguimiento.sh
+SyslogIdentifier=$UNIDAD_SEGUIMIENTO
+Restart=always
+RestartSec=10
+TimeoutStopSec=30
+Nice=$SEGUIMIENTO_NICE
+IOSchedulingClass=idle
+MemoryMax=$SEGUIMIENTO_MEMORIA
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=full
+
+[Install]
+WantedBy=multi-user.target
+FIN
+cat > "/etc/systemd/system/$UNIDAD_SEGUIMIENTO_ARCHIVO.service" <<FIN
+[Unit]
+Description=Compresión, índice y copia diaria del archivo del seguimiento en directo (EODI)
+
+[Service]
+Type=oneshot
+User=$USUARIO
+Group=$USUARIO
+WorkingDirectory=$CLON
+ExecStart=/usr/bin/env bash $CLON/servidor/seguimiento_archivo.sh
+SyslogIdentifier=$UNIDAD_SEGUIMIENTO_ARCHIVO
+TimeoutStartSec=${SEGUIMIENTO_ARCHIVO_TOPE_UNIDAD}min
+Nice=19
+IOSchedulingClass=idle
+MemoryMax=$SEGUIMIENTO_ARCHIVO_MEMORIA
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=full
+FIN
+cat > "/etc/systemd/system/$UNIDAD_SEGUIMIENTO_ARCHIVO.timer" <<FIN
+[Unit]
+Description=Archivo del seguimiento en directo (EODI), en el minuto $MINUTO_SEGUIMIENTO_ARCHIVO de cada hora
+
+[Timer]
+OnCalendar=*-*-* *:0$MINUTO_SEGUIMIENTO_ARCHIVO:00 UTC
+AccuracySec=1s
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+FIN
 systemctl daemon-reload
 
 echo "instalación hecha"

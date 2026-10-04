@@ -104,3 +104,26 @@ jobs:
           elif [ -n "$abierta" ]; then
             gh issue close "$abierta" --comment "La detección en directo vuelve a publicar. $MENSAJE"
           fi
+      # La captura del seguimiento en directo (servidor/seguimiento.sh, siempre en marcha): otra
+      # incidencia si llevaba más de 10 minutos sin heartbeat del flujo de NEPTUN o si ha tenido un
+      # hueco de más de 10 minutos en las dos últimas horas (también si estuvo parada).
+      - name: Abrir o cerrar la incidencia de la captura del seguimiento
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TITULO: La captura del seguimiento en directo no recibe datos
+          PROBLEMA: ${{ steps.salud.outputs.problema_seguimiento }}
+          MENSAJE: ${{ steps.salud.outputs.mensaje_seguimiento }}
+        run: |
+          set -euo pipefail
+          abierta="$(gh issue list --state open --limit 100 --json number,title \
+            --jq 'map(select(.title == env.TITULO)) | .[0].number // empty')"
+          if [ "$PROBLEMA" = "true" ]; then
+            if [ -z "$abierta" ]; then
+              gh issue create --title "$TITULO" --body "$MENSAJE Cómo revisarla y relanzarla: \`docs/servidor.md\`, «Captura del seguimiento en directo». Esta incidencia se cierra sola cuando el servicio lleva dos horas recibiendo sin huecos largos."
+            else
+              echo "la incidencia #$abierta sigue abierta"
+            fi
+          elif [ -n "$abierta" ]; then
+            gh issue close "$abierta" --comment "La captura del seguimiento vuelve a recibir sin huecos largos. $MENSAJE"
+          fi
