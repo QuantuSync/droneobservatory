@@ -42,7 +42,9 @@ const ORDEN_GUERRA: readonly "corredores"[] = ["corredores"];
  * capa de Ucrania encendida aparecen al lado sus subcapas, apagadas hasta que se pulsan:
  * corredores y «Con satélite». `grande` (el menú del teléfono) da a cada opción al
  * menos 44 px de alto, para el dedo, y las pone en una rejilla de tres columnas: las cinco
- * capas caben con holgura desde 360 px.
+ * capas caben con holgura desde 360 px. Ahí las subcapas van debajo, con su rótulo, en una
+ * fila propia de dos botones iguales a los de las capas, y bajo ella `panelGuerra` (la leyenda,
+ * el filtro y la lista de «Con satélite») a todo el ancho.
  */
 export function SelectorDeCapas({
   t,
@@ -50,6 +52,7 @@ export function SelectorDeCapas({
   onCapas,
   grande = false,
   extraGuerra = null,
+  panelGuerra = null,
 }: {
   t: Textos;
   capas: Capas;
@@ -57,6 +60,8 @@ export function SelectorDeCapas({
   grande?: boolean;
   /** Al final del grupo de la guerra (el botón «Con satélite»). */
   extraGuerra?: ReactNode;
+  /** En el teléfono, bajo la fila de las subcapas y a todo el ancho. */
+  panelGuerra?: ReactNode;
 }) {
   const boton = `control ${grande ? "min-h-11 px-2 text-sm" : "min-h-7 px-2 text-xs"}`;
   const rejilla = grande ? "grid grid-cols-3 gap-0.5" : "flex";
@@ -82,18 +87,45 @@ export function SelectorDeCapas({
           </button>
         ))}
       </div>
-      {capas.ucrania && (
+      {capas.ucrania && grande && (
+        <div className="mt-2 flex flex-col gap-1" data-bloque-guerra="">
+          <p className="text-xs text-secundario">{t.satelite.rotuloCapas}</p>
+          <div
+            role="group"
+            aria-label={t.satelite.capas}
+            className="grid grid-cols-2 gap-0.5 rounded-sm border border-linea p-0.5"
+            data-capas-guerra=""
+          >
+            {ORDEN_GUERRA.map((capa) => (
+              <button
+                key={capa}
+                type="button"
+                className={`${boton} whitespace-nowrap`}
+                aria-pressed={capas[capa]}
+                onClick={() => onCapas({ ...capas, [capa]: !capas[capa] })}
+              >
+                {etiquetas[capa]}
+              </button>
+            ))}
+            {extraGuerra}
+          </div>
+          {panelGuerra !== null && (
+            <div className="rounded-sm border border-linea">{panelGuerra}</div>
+          )}
+        </div>
+      )}
+      {capas.ucrania && !grande && (
         <div
           role="group"
           aria-label={t.satelite.capas}
-          className={`rounded-sm border border-linea/70 p-0.5 ${rejilla}`}
+          className="flex rounded-sm border border-linea/70 p-0.5"
           data-capas-guerra=""
         >
           {ORDEN_GUERRA.map((capa) => (
             <button
               key={capa}
               type="button"
-              className={boton}
+              className={`${boton} whitespace-nowrap`}
               aria-pressed={capas[capa]}
               onClick={() => onCapas({ ...capas, [capa]: !capas[capa] })}
             >

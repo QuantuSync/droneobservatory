@@ -485,120 +485,105 @@ export function SignoSatelite({ tipo }: { tipo: TipoSatelite }) {
   );
 }
 
-/**
- * Botón «Con satélite · N» de la capa de guerra: enciende los cuatro tipos de lo que se ve desde
- * el satélite (cortinilla con cambio, foco confirmado, apagón, ciudad a oscuras), cada uno con su
- * signo, y atenúa lo demás de la capa. Con él encendido, su desplegable da la leyenda (plegable),
- * el filtro por tipos y la lista, del más reciente al más antiguo; pulsar una fila lleva al
- * punto y abre su ficha.
- */
-export function BotonSatelite({
-  t,
-  idioma,
-  puntos,
-  activo,
-  onActivo,
-  abierta,
-  onAbierta,
-  filtro,
-  onFiltro,
-  onElegir,
-  grande = false,
-}: {
+interface PropsSatelite {
   t: Textos;
   idioma: Idioma;
   puntos: readonly PuntoSatelite[];
-  activo: boolean;
-  onActivo: (activo: boolean) => void;
+  /** Lista desplegada (en escritorio, el desplegable entero). */
   abierta: boolean;
   onAbierta: (abierta: boolean) => void;
   /** Tipos a los que se limita la lista; vacío, todos. */
   filtro: readonly TipoSatelite[];
   onFiltro: (filtro: TipoSatelite[]) => void;
   onElegir: (punto: PuntoSatelite) => void;
-  grande?: boolean;
-}) {
-  const [leyenda, setLeyenda] = useState(true);
-  const boton = `control text-xs ${grande ? "min-h-11 px-3" : "min-h-7 px-2"}`;
+}
+
+/**
+ * Lo que acompaña a «Con satélite» encendido: la leyenda de los cuatro tipos (plegada al empezar),
+ * el filtro por tipo y la lista, del más reciente al más antiguo; pulsar una fila lleva al punto y
+ * abre su ficha. Todo a lo ancho de donde va: el menú del teléfono o el desplegable del escritorio.
+ * Con `acceso`, la lista se abre y se cierra con su propio botón (el teléfono); sin él, se ve
+ * siempre (el desplegable ya se abre con la flecha).
+ */
+export function PanelSatelite({
+  t,
+  idioma,
+  puntos,
+  abierta,
+  onAbierta,
+  filtro,
+  onFiltro,
+  onElegir,
+  acceso,
+}: PropsSatelite & { acceso: boolean }) {
+  const [leyenda, setLeyenda] = useState(false);
   const textos = t.satelite;
   const visibles =
     filtro.length === 0 ? puntos : puntos.filter((p) => tiposDe(p).some((x) => filtro.includes(x)));
   const cuenta = (tipo: TipoSatelite) => puntos.filter((p) => tiposDe(p).includes(tipo)).length;
+  const conLista = !acceso || abierta;
+  // En el teléfono, 44 px de alto para el dedo; en el desplegable del escritorio, compactos.
+  const alto = acceso ? "min-h-11" : "min-h-7";
   return (
-    <div className={grande ? "w-full" : "relative flex"} data-con-satelite="">
-      <div className="flex">
+    <div className="w-full" data-panel-satelite="">
+      <div className="border-b border-linea px-3 py-2">
         <button
           type="button"
-          className={`${boton} ${grande ? "flex-1" : ""}`}
-          aria-pressed={activo}
-          onClick={() => {
-            onActivo(!activo);
-            onAbierta(!activo);
-          }}
+          className={`rotulo flex w-full items-center justify-between text-left ${alto}`}
+          aria-expanded={leyenda}
+          onClick={() => setLeyenda(!leyenda)}
         >
-          {textos.conSatelite(numero(puntos.length, idioma))}
+          {textos.leyenda} <span aria-hidden="true">{leyenda ? "▴" : "▾"}</span>
         </button>
-        {activo && (
-          <button
-            type="button"
-            className={boton}
-            aria-expanded={abierta}
-            aria-label={abierta ? textos.cerrarLista : textos.abrirLista}
-            onClick={() => onAbierta(!abierta)}
-          >
-            <span aria-hidden="true">{abierta ? "▴" : "▾"}</span>
-          </button>
+        {leyenda && (
+          <ul className="mt-1 flex w-full flex-col gap-1.5 text-xs text-secundario" data-leyenda-satelite="">
+            {TIPOS_SATELITE.map((tipo) => (
+              <li key={tipo} className="flex items-center gap-2">
+                <span className="flex shrink-0">
+                  <SignoSatelite tipo={tipo} />
+                </span>
+                <span>{textos.leyendaTipos[tipo]}</span>
+              </li>
+            ))}
+          </ul>
         )}
       </div>
-      {activo && abierta && (
-        <div
-          className={
-            grande
-              ? "mt-1 max-h-[50vh] overflow-y-auto border-t border-linea"
-              : "flotante absolute right-0 top-full z-40 mt-1 max-h-[70vh] w-80 overflow-y-auto"
-          }
-          data-lista-satelite=""
+      <div role="group" aria-label={textos.filtrar} className="flex flex-wrap gap-1 border-b border-linea px-3 py-2">
+        {TIPOS_SATELITE.map((tipo) => (
+          <button
+            key={tipo}
+            type="button"
+            className={`control gap-1.5 whitespace-nowrap px-2 text-xs ${alto}`}
+            aria-pressed={filtro.includes(tipo)}
+            onClick={() =>
+              onFiltro(
+                filtro.includes(tipo)
+                  ? filtro.filter((x) => x !== tipo)
+                  : TIPOS_SATELITE.filter((x) => x === tipo || filtro.includes(x)),
+              )
+            }
+          >
+            <span className="flex shrink-0">
+              <SignoSatelite tipo={tipo} />
+            </span>
+            {textos.tipos[tipo]} · {numero(cuenta(tipo), idioma)}
+          </button>
+        ))}
+      </div>
+      {acceso && (
+        <button
+          type="button"
+          className="control min-h-11 w-full justify-between whitespace-nowrap px-3 text-sm"
+          aria-expanded={abierta}
+          aria-label={abierta ? textos.cerrarLista : textos.abrirLista}
+          onClick={() => onAbierta(!abierta)}
         >
-          <div className="border-b border-linea px-3 py-2">
-            <button
-              type="button"
-              className="rotulo w-full text-left"
-              aria-expanded={leyenda}
-              onClick={() => setLeyenda(!leyenda)}
-            >
-              {textos.leyenda} <span aria-hidden="true">{leyenda ? "▴" : "▾"}</span>
-            </button>
-            {leyenda && (
-              <ul className="mt-1 text-xs text-secundario" data-leyenda-satelite="">
-                {TIPOS_SATELITE.map((tipo) => (
-                  <li key={tipo} className="flex items-start gap-2 py-0.5">
-                    <SignoSatelite tipo={tipo} />
-                    <span>{textos.leyendaTipos[tipo]}</span>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-          <div role="group" aria-label={textos.filtrar} className="flex flex-wrap gap-1 border-b border-linea px-3 py-2">
-            {TIPOS_SATELITE.map((tipo) => (
-              <button
-                key={tipo}
-                type="button"
-                className="control min-h-7 gap-1 px-2 text-xs"
-                aria-pressed={filtro.includes(tipo)}
-                onClick={() =>
-                  onFiltro(
-                    filtro.includes(tipo)
-                      ? filtro.filter((x) => x !== tipo)
-                      : TIPOS_SATELITE.filter((x) => x === tipo || filtro.includes(x)),
-                  )
-                }
-              >
-                <SignoSatelite tipo={tipo} />
-                {textos.tipos[tipo]} · {numero(cuenta(tipo), idioma)}
-              </button>
-            ))}
-          </div>
+          <span>{textos.verLista(numero(visibles.length, idioma))}</span>
+          <span aria-hidden="true">{abierta ? "▴" : "▾"}</span>
+        </button>
+      )}
+      {conLista && (
+        <div data-lista-satelite="">
           <ul aria-label={textos.listaSatelite}>
             {visibles.map((p) => (
               <li key={`${p.clase}|${p.clave}`} className="border-b border-linea last:border-b-0">
@@ -620,6 +605,72 @@ export function BotonSatelite({
               </li>
             ))}
           </ul>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/**
+ * Botón «Con satélite · N» de la capa de guerra: enciende los cuatro tipos de lo que se ve desde
+ * el satélite (cortinilla con cambio, foco confirmado, apagón, ciudad a oscuras), cada uno con su
+ * signo, y atenúa lo demás de la capa. En escritorio lleva al lado la flecha de su desplegable
+ * (`PanelSatelite`); en el teléfono (`grande`) es solo el botón, del mismo tamaño que los de las
+ * capas, y el panel va debajo, a todo el ancho del menú.
+ */
+export function BotonSatelite({
+  activo,
+  onActivo,
+  grande = false,
+  ...panel
+}: PropsSatelite & {
+  activo: boolean;
+  onActivo: (activo: boolean) => void;
+  grande?: boolean;
+}) {
+  const { t, idioma, puntos, abierta, onAbierta } = panel;
+  const textos = t.satelite;
+  if (grande) {
+    return (
+      <button
+        type="button"
+        className="control min-h-11 whitespace-nowrap px-2 text-sm"
+        aria-pressed={activo}
+        data-con-satelite=""
+        onClick={() => onActivo(!activo)}
+      >
+        {textos.conSatelite(numero(puntos.length, idioma))}
+      </button>
+    );
+  }
+  const boton = "control min-h-7 whitespace-nowrap px-2 text-xs";
+  return (
+    <div className="relative flex" data-con-satelite="">
+      <button
+        type="button"
+        className={boton}
+        aria-pressed={activo}
+        onClick={() => {
+          onActivo(!activo);
+          onAbierta(!activo);
+        }}
+      >
+        {textos.conSatelite(numero(puntos.length, idioma))}
+      </button>
+      {activo && (
+        <button
+          type="button"
+          className={boton}
+          aria-expanded={abierta}
+          aria-label={abierta ? textos.cerrarLista : textos.abrirLista}
+          onClick={() => onAbierta(!abierta)}
+        >
+          <span aria-hidden="true">{abierta ? "▴" : "▾"}</span>
+        </button>
+      )}
+      {activo && abierta && (
+        <div className="flotante absolute right-0 top-full z-40 mt-1 max-h-[70vh] w-80 overflow-y-auto">
+          <PanelSatelite {...panel} acceso={false} />
         </div>
       )}
     </div>

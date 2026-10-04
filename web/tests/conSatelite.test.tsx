@@ -216,16 +216,16 @@ describe("botón «Con satélite», su leyenda, su filtro y su lista", () => {
     );
   }
 
-  it("da la suma real, abre la leyenda de los cuatro tipos y la lista; una fila lleva a su ficha", () => {
+  it("da la suma real, despliega la leyenda de los cuatro tipos y la lista; una fila lleva a su ficha", () => {
     const elegir = vi.fn();
     render(<Prueba elegir={elegir} />);
     fireEvent.click(screen.getByRole("button", { name: "Con satélite · 4" }));
+    // La leyenda empieza plegada y se despliega.
+    expect(screen.queryByText(es.satelite.leyendaTipos.apagon)).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: /Leyenda/ }));
     for (const tipo of ["cortinilla", "foco", "apagon", "oscura"] as const) {
       expect(screen.getByText(es.satelite.leyendaTipos[tipo])).toBeTruthy();
     }
-    // La leyenda se pliega.
-    fireEvent.click(screen.getByRole("button", { name: /Leyenda/ }));
-    expect(screen.queryByText(es.satelite.leyendaTipos.apagon)).toBeNull();
     const fila = screen.getByRole("button", { name: /Euroterminal/ });
     expect(fila.textContent).toContain("25/09/2026 · antes y después · foco de calor");
     fireEvent.click(fila);

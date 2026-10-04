@@ -510,7 +510,8 @@ describe("aplicación", () => {
     const mapa = await screen.findByTestId("mapa");
     await waitFor(() => expect(within(mapa).getAllByRole("listitem")).toHaveLength(2));
     const contadores = screen.getByLabelText(es.marcador.etiqueta);
-    expect(contadores.textContent).toBe("incidentes2confirmados0atribuidos0países2");
+    // Sin ningún atribuido, su cifra no se muestra.
+    expect(contadores.textContent).toBe("incidentes2confirmados0países2");
     expect(document.documentElement.lang).toBe("es");
   });
 

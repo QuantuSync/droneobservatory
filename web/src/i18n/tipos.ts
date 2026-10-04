@@ -544,6 +544,10 @@ export interface TextosSatelite {
   /** El marcador de los puntos con información de satélite y el botón «Con satélite». */
   ayudaSatelite: string;
   conSatelite: (n: string) => string;
+  /** Botón que abre la lista de «Con satélite» en el menú del teléfono, con los puntos que da. */
+  verLista: (n: string) => string;
+  /** Rótulo de la fila de subcapas en el menú del teléfono. */
+  rotuloCapas: string;
   listaSatelite: string;
   abrirLista: string;
   cerrarLista: string;

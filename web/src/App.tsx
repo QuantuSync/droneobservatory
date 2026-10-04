@@ -26,6 +26,7 @@ import { FichaPais } from "./componentes/FichaPais.tsx";
 import { FichaRegion } from "./componentes/FichaRegion.tsx";
 import {
   BotonSatelite,
+  PanelSatelite,
   FichaAlumbrado,
   FichaCorredor,
   FichaLuz,
@@ -1814,6 +1815,21 @@ export function App() {
               onCapas={cambiarCapas}
               grande
               extraGuerra={botonSatelite(true)}
+              panelGuerra={
+                capas.satelite && puntosSatelite !== null ? (
+                  <PanelSatelite
+                    t={t}
+                    idioma={idioma}
+                    puntos={puntosSatelite}
+                    abierta={listaSatelite}
+                    onAbierta={setListaSatelite}
+                    filtro={filtroSatelite}
+                    onFiltro={setFiltroSatelite}
+                    onElegir={elegirSatelite}
+                    acceso
+                  />
+                ) : null
+              }
             />
           </SeccionMenu>
           <SeccionMenu rotulo={t.controles.paneles}>

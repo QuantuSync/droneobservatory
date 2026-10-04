@@ -1468,10 +1468,10 @@ export const en: Textos = {
       oscura: "darkened city",
     },
     leyendaTipos: {
-      cortinilla: "Strike with a before-and-after image in which the change can be seen",
-      foco: "Strike matched by a fire hotspot (including those of the last 24 hours)",
-      apagon: "City that lost night lights after an attack on the power grid",
-      oscura: "City with permanently reduced street lighting",
+      cortinilla: "Before and after with visible change",
+      foco: "Fire hotspot matching a strike",
+      apagon: "City that lost light after an attack",
+      oscura: "City with permanently reduced lighting",
     },
     leyenda: "Legend",
     filtrar: "Filter the list by type",
@@ -1489,6 +1489,8 @@ export const en: Textos = {
       "satellite» turns on the four types (before and after, hotspot, blackout and darkened " +
       "city), dims the rest and opens their legend and their list, which can be filtered by type.",
     conSatelite: (n) => `With satellite · ${n}`,
+    verLista: (n) => `List · ${n}`,
+    rotuloCapas: "Ukraine layer",
     listaSatelite: "Points with satellite information",
     abrirLista: "Open the list of points with satellite information",
     cerrarLista: "Close the list of points with satellite information",

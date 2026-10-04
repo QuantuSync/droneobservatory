@@ -94,12 +94,21 @@ interface Props {
   forma?: Forma;
 }
 
-/** Cifras del periodo elegido (incidentes, confirmados, atribuidos y países), con su rótulo. */
+/**
+ * Cifras del periodo elegido (incidentes, confirmados, atribuidos y países), con su rótulo. Sin
+ * ningún atribuido, esa cifra no se muestra y las otras tres se reparten el sitio (en rejilla,
+ * tres columnas).
+ */
 export function Marcador({ t, idioma, cifras, animar, forma = "linea" }: Props) {
+  const conAtribuidos = cifras.atribuidos > 0;
   return (
     <dl
       aria-label={t.marcador.etiqueta}
-      className={forma === "linea" ? "flex items-baseline gap-2.5" : "grid grid-cols-2 gap-4"}
+      className={
+        forma === "linea"
+          ? "flex items-baseline gap-2.5"
+          : `grid gap-4 ${conAtribuidos ? "grid-cols-2" : "grid-cols-3"}`
+      }
     >
       <Cifra valor={cifras.incidentes} rotulo={t.marcador.incidentes} idioma={idioma} activa={animar} forma={forma} />
       <Cifra
@@ -110,15 +119,17 @@ export function Marcador({ t, idioma, cifras, animar, forma = "linea" }: Props) 
         forma={forma}
         color="text-confirmado"
       />
-      <Cifra
-        valor={cifras.atribuidos}
-        rotulo={t.marcador.atribuidos}
-        idioma={idioma}
-        activa={animar}
-        forma={forma}
-        color="text-atribuido"
-        marca={<MarcaAtribuido lado={forma === "linea" ? 12 : 18} />}
-      />
+      {conAtribuidos && (
+        <Cifra
+          valor={cifras.atribuidos}
+          rotulo={t.marcador.atribuidos}
+          idioma={idioma}
+          activa={animar}
+          forma={forma}
+          color="text-atribuido"
+          marca={<MarcaAtribuido lado={forma === "linea" ? 12 : 18} />}
+        />
+      )}
       <Cifra valor={cifras.paises} rotulo={t.marcador.paises} idioma={idioma} activa={animar} forma={forma} />
     </dl>
   );

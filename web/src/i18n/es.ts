@@ -1479,10 +1479,10 @@ export const es: Textos = {
       oscura: "ciudad a oscuras",
     },
     leyendaTipos: {
-      cortinilla: "Impacto con imagen de antes y después en la que se ve el cambio",
-      foco: "Impacto con un foco de calor que coincide con él (también los de las últimas 24 horas)",
-      apagon: "Ciudad que perdió luz nocturna tras un ataque contra la red eléctrica",
-      oscura: "Ciudad con el alumbrado reducido de forma permanente",
+      cortinilla: "Antes y después con cambio visible",
+      foco: "Foco de calor que coincide con un impacto",
+      apagon: "Ciudad que perdió luz tras un ataque",
+      oscura: "Ciudad con alumbrado reducido permanente",
     },
     leyenda: "Leyenda",
     filtrar: "Filtrar la lista por tipo",
@@ -1500,6 +1500,8 @@ export const es: Textos = {
       "borde claro. «Con satélite» enciende los cuatro tipos (antes y después, foco, apagón y " +
       "ciudad a oscuras), atenúa lo demás y abre su leyenda y su lista, que se filtra por tipo.",
     conSatelite: (n) => `Con satélite · ${n}`,
+    verLista: (n) => `Lista · ${n}`,
+    rotuloCapas: "Capa de Ucrania",
     listaSatelite: "Puntos con información de satélite",
     abrirLista: "Abrir la lista de puntos con satélite",
     cerrarLista: "Cerrar la lista de puntos con satélite",
