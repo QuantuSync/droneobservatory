@@ -402,7 +402,7 @@ const ataque = objeto(
     cruces: lista(
       objeto(
         { pais: cadena(v.PATRON_PAIS), numero: rangoODesconocido },
-        { incidentes: lista(cadena(/^EODI-\d{4}-\d{5}$/)) },
+        { frase: cadena(), incidentes: lista(cadena(/^EODI-\d{4}-\d{5}$/)) },
       ),
     ),
     regiones: lista(regionAtaque),

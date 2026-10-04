@@ -176,6 +176,8 @@ class ParteLeido:
     derribados_por_region: tuple[tuple[str, int], ...] = ()
     # Regiones que el parte solo cita por los misiles del mismo ataque.
     regiones_misiles: tuple[str, ...] = ()
+    # La frase literal del parte que dice cada cruce, por país: es la cita del cruce.
+    frases_cruces: tuple[tuple[str, str], ...] = ()
 
 
 # --- Vocabulario --------------------------------------------------------------
@@ -1126,6 +1128,7 @@ def leer(texto: str, publicado: datetime) -> ParteLeido:
     lugares_i: list[str] = []
     lugares_r: list[str] = []
     cruces: dict[str, Rango] = {}
+    frases_cruces: dict[str, str] = {}
     # (frase, es la del ataque): de la frase del ataque solo cuentan los objetivos.
     para_regiones: list[tuple[str, bool]] = []
     lista = frases(texto)
@@ -1167,7 +1170,9 @@ def leer(texto: str, publicado: datetime) -> ParteLeido:
         lugares_i += regiones_en(_tramo(frase, "влучан", "падін"), voc)
         lugares_r += regiones_en(_tramo(frase, "падін|уламк", None), voc)
         if re.search(_DRON, frase, re.IGNORECASE):
-            cruces |= _cruces(frase, voc)
+            de_la_frase = _cruces(frase, voc)
+            cruces |= de_la_frase
+            frases_cruces |= dict.fromkeys(de_la_frase, frase)
     if not lanz:
         lanz = _lanzados_de_referencia(texto)
     if not zonas_l:
@@ -1219,6 +1224,7 @@ def leer(texto: str, publicado: datetime) -> ParteLeido:
         regiones=tuple(drones),
         regiones_misiles=tuple(c for c in misiles if c not in drones),
         cruces=tuple(sorted(cruces.items())),
+        frases_cruces=tuple(sorted(frases_cruces.items())),
         frase=frase_origen(texto),
     )
 

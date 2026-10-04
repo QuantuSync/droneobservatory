@@ -482,7 +482,9 @@ def ataque_completo() -> Documento:
         "cruces": [
             {"pais": "PL", "numero": {"min": 1, "max": 2}, "incidentes": ["EODI-2025-00001"]}
         ],
-        "cruces_parte": [{"pais": "PL", "numero": {"min": 1, "max": 2}}],
+        "cruces_parte": [
+            {"pais": "PL", "numero": {"min": 1, "max": 2}, "frase": "Два БпЛА полетіли до Польщі."}
+        ],
         "horas_llegada": [instante("2025-10-05T22:10Z")],
         "duracion_oleada_min": 420,
         "proporcion_senuelos": 0.2,

@@ -164,6 +164,14 @@ export function FichaAtaque({ t, idioma, ataque, centros }: Props) {
                     {" "}
                     · {cifra(cruce.numero, idioma) ?? t.ficha.desconocido}
                   </span>
+                  {(cruce.incidentes ?? []).length === 0 && (
+                    <span className="block text-xs text-secundario">
+                      {t.ataque.cruceDeclarado}
+                      {cruce.frase !== undefined && (
+                        <q className="block italic">{cruce.frase}</q>
+                      )}
+                    </span>
+                  )}
                   {(cruce.incidentes ?? []).map((id) => (
                     <span key={id} className="block text-xs">
                       <Enlace a={rutaDeFicha(id, idioma)} className="enlace mono">

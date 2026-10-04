@@ -525,6 +525,7 @@ export const en: Textos = {
     regiones: "Regions affected",
     regionesMisiles: "Regions named only for missiles",
     cruces: "Crossings into other countries",
+    cruceDeclarado: "Declared by Ukraine; no incident from that country",
     incluidoEn: "Figures included in report",
     solapadoCon: "Overlaps with report",
   },

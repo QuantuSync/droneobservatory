@@ -532,6 +532,7 @@ export const es: Textos = {
     regiones: "Regiones afectadas",
     regionesMisiles: "Regiones citadas solo por misiles",
     cruces: "Cruces a otros países",
+    cruceDeclarado: "Declarado por Ucrania; sin incidente del país",
     incluidoEn: "Cifras incluidas en el parte",
     solapadoCon: "Se solapa con el parte",
   },

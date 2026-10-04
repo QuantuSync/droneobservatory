@@ -5,9 +5,8 @@ Eslovaquia o Hungría (incursión o sobrevuelo de drones de un Estado, o cualqui
 fuente lo relaciona con el ataque) se enlaza con el ataque de la Fuerza Aérea de Ucrania (sentido
 RU→UA, sin los tramos ya sumados en otro) cuyo periodo contiene el inicio del incidente:
 
-- **por la fuente** (`por: fuente`): la incursión sale del propio parte del ataque (las altas de
-  `proceso/incursiones.py`) o la fuente la relaciona con el ataque contra Ucrania («durante ataque
-  a Ucrania», «atacul rusesc asupra Ucrainei», «attack on Ukraine»);
+- **por la fuente** (`por: fuente`): la fuente la relaciona con el ataque contra Ucrania («durante
+  ataque a Ucrania», «atacul rusesc asupra Ucrainei», «attack on Ukraine»);
 - **por la fecha** (`por: fecha`): coincide en fecha y la incursión viene de Ucrania: la fuente
   lo dice («din Ucraina», «from Ukraine», «desde Ucrania») o, en Rumanía y Moldavia, que solo
   reciben drones del ataque a través de Ucrania, el dron es de un Estado, entró desde fuera o la
@@ -18,13 +17,18 @@ drones ucranianos (salvo que la fuente los relacione con el ataque) ni lo que no
 con un ataque (globos de contrabando sobre Lituania, drones marinos en Constanza). El enlace va
 en los dos sentidos: el incidente lleva `ataque` (id, noche y por qué) y el ataque lista el
 cruce de su país (`cruces[].incidentes`); si el parte no declaró ese cruce, se añade con el
-número de drones del incidente. Se recalcula entero en cada recogida horaria (después de rehacer
-partes e incidentes) y solo se guarda lo que cambia, con su motivo en el historial.
+número de drones del incidente. Enlazar nunca crea un incidente: un cruce que solo cuenta el parte
+ucraniano queda en el ataque como cruce declarado por Ucrania (proceso/incursiones.py). Se
+recalcula entero en cada recogida horaria (después de rehacer partes e incidentes) y solo se
+guarda lo que cambia, con su motivo en el historial.
 """
 
 import copy
+import json
 import re
 from datetime import UTC, datetime, timedelta
+from functools import cache
+from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 from esquema import Documento
@@ -38,7 +42,6 @@ PAISES = frozenset({"RO", "MD", "PL", "LT", "LV", "EE", "BG", "SK", "HU"})
 # Solo reciben drones del ataque ruso a través de Ucrania.
 VECINOS_DEL_SUR = frozenset({"RO", "MD"})
 TIPOS = frozenset({"incursion", "sobrevuelo"})
-VERSION_INCURSION = "incursion/2"
 _BIELORRUSIA = (
     r"(?:bielorrus\w*|belarus\w*|białoru\w*|bialoru\w*|baltarus\w*|baltkriev\w*|valgeven\w*|"
     r"білорус\w*|беларус\w*|belarús\w*|belorus\w*)"
@@ -94,6 +97,7 @@ MOTIVO = (
     "fuente la relaciona con el ataque o coincide en fecha y viene de Ucrania"
 )
 KYIV_DESFASE = timedelta(hours=3)
+FRASES = Path(__file__).resolve().parent.parent / "configuracion" / "frases_cruces.json"
 
 
 def _leer(valor: str) -> datetime:
@@ -133,9 +137,7 @@ def _ataque_de(
     return min(cerca, key=lambda p: (min(abs(p.inicio - momento), abs(p.fin - momento)), p.id)).id
 
 
-def enlace(
-    incidente: Documento, ataques: Ataques, fuentes_parte: dict[str, str]
-) -> tuple[str, str] | None:
+def enlace(incidente: Documento, ataques: Ataques) -> tuple[str, str] | None:
     """(id del ataque, por qué) si la incursión forma parte de un ataque; si no, None."""
     if "fusionado_en" in incidente or "retirado" in incidente:
         return None
@@ -144,11 +146,6 @@ def enlace(
     textos = _textos(incidente)
     if DESDE_BIELORRUSIA.search(textos) or SIN_ATAQUE.search(textos):
         return None
-    # Alta desde el parte del ataque: su primera fuente es el parte.
-    if incidente.get("control", {}).get("version_extractor") == VERSION_INCURSION:
-        ataque = fuentes_parte.get(incidente["fuentes"][0]["id"])
-        if ataque is not None:
-            return ataque, "fuente"
     pruebas = incidente.get("pruebas", {})
     relacionado = bool(RELACION_ATAQUE.search(textos))
     ruso = bool(DRON_RUSO.search(textos))
@@ -188,13 +185,10 @@ def enlazar(almacen: "Almacen", ahora: datetime, modelos: frozenset[str]) -> dic
     todos = almacen.ataques_ucrania()
     por_id = {a["id"]: a for a in todos}
     ataques = Ataques(todos)
-    fuentes_parte = {
-        f["id"]: a["id"] for a in todos if a["sentido"] == "RU_UA" for f in a["fuentes"]
-    }
     enlaces: dict[str, tuple[str, str]] = {}
     incidentes = almacen.incidentes()
     for incidente in incidentes:
-        hallado = enlace(incidente, ataques, fuentes_parte)
+        hallado = enlace(incidente, ataques)
         if hallado is not None:
             enlaces[incidente["id"]] = hallado
     resumen = {"enlazados": len(enlaces), "incidentes_cambiados": 0, "ataques_cambiados": 0}
@@ -237,13 +231,27 @@ def enlazar(almacen: "Almacen", ahora: datetime, modelos: frozenset[str]) -> dic
     return resumen
 
 
+@cache
+def frases_guardadas(ruta: Path = FRASES) -> dict[str, dict[str, str]]:
+    """La frase de los cruces de los partes guardados antes de que el lector la guardara."""
+    datos: dict[str, dict[str, str]] = json.loads(ruta.read_text(encoding="utf-8"))["frases"]
+    return datos
+
+
 def cruces_del_parte(ataque: Documento) -> list[Documento]:
-    """Los cruces que declaró el parte (`cruces_parte`); en un ataque guardado antes de que
-    existiera ese campo, sus cruces tal cual (aún no tenían incidentes añadidos)."""
+    """Los cruces que declaró el parte (`cruces_parte`), con la frase que los dice; en un ataque
+    guardado antes de que existiera ese campo, sus cruces tal cual (aún no tenían incidentes
+    añadidos)."""
     declarados = ataque.get("cruces_parte")
     if declarados is None:
         declarados = ataque.get("cruces") or []
-    return [dict(c) for c in declarados]
+    frases: dict[str, str] = {}
+    for fuente in ataque.get("fuentes", []):
+        frases |= frases_guardadas().get(fuente["id"], {})
+    return [
+        {**c, "frase": frases[c["pais"]]} if "frase" not in c and c["pais"] in frases else dict(c)
+        for c in declarados
+    ]
 
 
 def cruces_con_incidentes(ataque: Documento, incidentes: list[Documento]) -> list[Documento]:

@@ -105,6 +105,16 @@ def _region(codigo: str, leido: ParteLeido) -> Documento:
     return region
 
 
+def cruces_leidos(leido: ParteLeido) -> list[Documento]:
+    """Los cruces que declara el parte, con la frase que los dice (cruce declarado por
+    Ucrania: proceso/incursiones.py)."""
+    frases = dict(leido.frases_cruces)
+    return [
+        {"pais": pais, "numero": numero, **({"frase": frases[pais]} if pais in frases else {})}
+        for pais, numero in leido.cruces
+    ]
+
+
 def datos_parte(leido: ParteLeido) -> Documento:
     """Campos del ataque que salen del parte."""
     datos: Documento = {
@@ -121,10 +131,10 @@ def datos_parte(leido: ParteLeido) -> Documento:
         "localizaciones_restos": leido.localizaciones_restos,
         "lugares_impacto": list(leido.lugares_impacto),
         "lugares_restos": list(leido.lugares_restos),
-        "cruces": [{"pais": pais, "numero": numero} for pais, numero in leido.cruces],
+        "cruces": cruces_leidos(leido),
         # Los que declara el parte; `cruces` lleva además las incursiones enlazadas
         # (proceso/cruces.py).
-        "cruces_parte": [{"pais": pais, "numero": numero} for pais, numero in leido.cruces],
+        "cruces_parte": cruces_leidos(leido),
         "regiones": [_region(codigo, leido) for codigo in sorted(leido.regiones)],
         "regiones_misiles": sorted(leido.regiones_misiles),
     }

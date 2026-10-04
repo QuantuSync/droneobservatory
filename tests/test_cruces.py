@@ -43,7 +43,7 @@ def _incidente(id_: str, pais: str, titulo: str, inicio: str, **pruebas: bool) -
 
 
 def _enlace(incidente: dict[str, Any]) -> tuple[str, str] | None:
-    return cruces.enlace(incidente, Ataques([NOCHE]), {})
+    return cruces.enlace(incidente, Ataques([NOCHE]))
 
 
 def test_jornada_del_parte_como_la_web() -> None:

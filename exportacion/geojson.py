@@ -18,6 +18,7 @@ from exportacion.proyeccion import (
     proyectar,
     solo_fuentes_publicas,
 )
+from proceso import cita_titular
 from proceso.estados import Capa
 from proceso.focos_termicos import solo_detectado
 from proceso.mediciones import solo_publico
@@ -78,6 +79,11 @@ def publicables(
     for incidente in incidentes:
         # Un incidente fundido en otro sale dentro de aquel; uno retirado no sale.
         if "fusionado_en" in incidente or "retirado" in incidente:
+            continue
+        # Un parte de guerra no es autoridad sobre lo que pasa en otro país: si su cita no
+        # respalda el titular, no se publica (proceso/cita_titular.py).
+        if cita_titular.solo_partes_de_guerra(incidente) and not cita_titular.respalda(incidente):
+            registro.warning("%s no se publica: su cita no respalda el titular", incidente["id"])
             continue
         fuera = errores_ubicacion(incidente)
         if fuera:

@@ -364,6 +364,7 @@ export interface Textos {
     regiones: string;
     regionesMisiles: string;
     cruces: string;
+    cruceDeclarado: string;
     incluidoEn: string;
     solapadoCon: string;
   };

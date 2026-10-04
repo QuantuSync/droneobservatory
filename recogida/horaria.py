@@ -302,9 +302,11 @@ def principal(argumentos: list[str] | None = None) -> int:
             salida, estado_gdelt = SALIDA_AVISO, CON_AVISO
         franja = ultimo_dato(almacen, gdelt.FUENTE_ID, "franja")
         estados[gdelt.FUENTE_ID] = EstadoFuente(estado_gdelt, franja and franja + FRANJA_GDELT)
-        # Cruces a otros países de los partes ucranianos: incursiones notificadas.
+        # Un cruce que cuenta solo el parte ucraniano queda en su ataque, no es un incidente:
+        # se retiran las altas que se hacían con él (proceso/incursiones.py).
         registro.info(
-            "incursiones nuevas: %d", incursiones.registrar(almacen, ahora, modelos(almacen))
+            "incursiones del parte retiradas: %d",
+            incursiones.retirar(almacen, ahora, modelos(almacen)),
         )
         # Confirmaciones oficiales de los incidentes que ya hay. Si no da tiempo a leer
         # todas las fuentes se avisa: lo normal es que sobre más de la mitad del tope.

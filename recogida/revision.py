@@ -127,14 +127,14 @@ def rehacer(almacen: Almacen, ahora: datetime, modelos_base: frozenset[str]) -> 
             almacen.revertir_fusion(fusion["absorbido"])
     rehechos = extraccion.reconstruir(almacen, ahora, modelos_base, rehacer=True)
     vocabulario = extraccion.modelos_validos(almacen, modelos_base)
-    rehechas = incursiones.registrar(almacen, ahora, vocabulario)
+    retiradas = incursiones.retirar(almacen, ahora, vocabulario)
     for incidente in almacen.incidentes():
         if "fusionado_en" in incidente:
             documento = {k: v for k, v in incidente.items() if k != "fusionado_en"}
             almacen.guardar_incidente(documento, ahora, vocabulario)
     resultado = {
         "rehechos": rehechos,
-        "incursiones_rehechas": rehechas,
+        "incursiones_retiradas": retiradas,
         "fusiones": incidentes.fusionar(almacen, ahora, vocabulario, publicados),
         "cambios_episodio": incidentes.agrupar_episodios(almacen, ahora, vocabulario),
     }

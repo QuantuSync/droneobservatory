@@ -90,7 +90,7 @@
     },
     "cruces": {
       "x-visibilidad": "publico",
-      "description": "Drones que cruzan a otro país.",
+      "description": "Drones que cruzan a otro país. Un cruce sin incidentes es un cruce declarado por Ucrania: lo cuenta solo el parte y no es un incidente europeo (proceso/incursiones.py).",
       "type": "array",
       "items": {
         "type": "object",
@@ -99,6 +99,12 @@
         "properties": {
           "pais": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.11.0:comun#/$defs/pais"},
           "numero": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.11.0:comun#/$defs/rango_entero_o_desconocido"},
+          "frase": {
+            "x-visibilidad": "publico",
+            "description": "Frase literal del parte que dice el cruce.",
+            "type": "string",
+            "minLength": 1
+          },
           "incidentes": {
             "x-visibilidad": "publico",
             "description": "Incidentes europeos de ese país que forman parte del ataque (proceso/cruces.py). Un cruce sin número del parte lo añade la incursión, con su número de drones.",
@@ -129,7 +135,8 @@
         "required": ["pais", "numero"],
         "properties": {
           "pais": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.11.0:comun#/$defs/pais"},
-          "numero": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.11.0:comun#/$defs/rango_entero_o_desconocido"}
+          "numero": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.11.0:comun#/$defs/rango_entero_o_desconocido"},
+          "frase": {"x-visibilidad": "interno", "type": "string", "minLength": 1}
         }
       }
     },

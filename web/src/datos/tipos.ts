@@ -240,7 +240,8 @@ export interface Ataque {
   localizaciones_restos?: RangoODesconocido;
   lugares_impacto?: string[];
   lugares_restos?: string[];
-  cruces?: { pais: string; numero: RangoODesconocido; incidentes?: string[] }[];
+  /** Un cruce sin incidentes lo declara solo Ucrania: no es un incidente europeo. */
+  cruces?: { pais: string; numero: RangoODesconocido; frase?: string; incidentes?: string[] }[];
   regiones?: RegionAtaque[];
   regiones_misiles?: string[];
   incluido_en?: string;
