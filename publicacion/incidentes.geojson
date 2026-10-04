@@ -47691,6 +47691,48 @@
    "properties": {
     "afirmaciones_publicas": [
      {
+      "campo": "consecuencias.cierre.minutos",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-10-09T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EGPH-2025-10-09-EODI-2025-00120",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 16,
+       "min": 16
+      }
+     },
+     {
+      "campo": "consecuencias.cierre.valor",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-10-09T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EGPH-2025-10-09-EODI-2025-00120",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": "si"
+     },
+     {
+      "campo": "consecuencias.vuelos_desviados",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-10-09T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EGPH-2025-10-09-EODI-2025-00120",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 0,
+       "min": 0
+      }
+     },
+     {
       "campo": "consecuencias.vuelos_desviados",
       "credibilidad": 3,
       "fecha": {
@@ -47978,6 +48020,20 @@
       "idioma": "en",
       "medio": "Edinburgh Airport (declaración oficial citada en dailystar.co.uk)",
       "replicas": 0
+     },
+     {
+      "credibilidad": 2,
+      "enlace": "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.10.09-planes-readsb-prod-0",
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-10-09T00:00Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Cierre medido en EGPH: 08:46–09:02 UTC, 16 minutos, 0 desvíos y 0 esperas.",
+      "id": "adsblol-EGPH-2025-10-09-EODI-2025-00120",
+      "idioma": "es",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "replicas": 0
      }
     ],
     "id": "EODI-2025-00120",
@@ -48001,6 +48057,27 @@
     "titulo": {
      "en": "Flights delayed at Edinburgh Airport after drone sighting",
      "es": "Retrasos en el aeropuerto de Edimburgo tras avistamiento de dron"
+    },
+    "trafico_aereo": {
+     "cierre": {
+      "aeropuerto": "EGPH",
+      "difiere_de_declarado": false,
+      "duracion_min": 16,
+      "fin": {
+       "precision": "minuto",
+       "valor": "2025-10-09T09:02Z"
+      },
+      "inicio": {
+       "precision": "minuto",
+       "valor": "2025-10-09T08:46Z"
+      },
+      "resultado": "cierre_medido",
+      "vuelos_desviados": 0,
+      "vuelos_en_espera": 0
+     },
+     "datos": [
+      "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.10.09-planes-readsb-prod-0"
+     ]
     }
    },
    "type": "Feature"
@@ -87845,6 +87922,21 @@
     "afirmaciones_publicas": [
      {
       "campo": "consecuencias.cierre.minutos",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-11-06T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EBBR-2025-11-06-EODI-2025-00335",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 36,
+       "min": 36
+      }
+     },
+     {
+      "campo": "consecuencias.cierre.minutos",
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
@@ -87857,6 +87949,18 @@
        "max": 30,
        "min": 30
       }
+     },
+     {
+      "campo": "consecuencias.cierre.valor",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-11-06T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EBBR-2025-11-06-EODI-2025-00335",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": "si"
      },
      {
       "campo": "consecuencias.cierre.valor",
@@ -87881,6 +87985,21 @@
       "fuente_id": "gdelt-c5c4eb4cb5d2ef60",
       "medio": "alo.rs",
       "valor": "si"
+     },
+     {
+      "campo": "consecuencias.vuelos_desviados",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-11-06T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EBBR-2025-11-06-EODI-2025-00335",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 0,
+       "min": 0
+      }
      },
      {
       "campo": "drones.numero",
@@ -88701,6 +88820,20 @@
       "idioma": "fr",
       "medio": "ladepeche.fr",
       "replicas": 0
+     },
+     {
+      "credibilidad": 2,
+      "enlace": "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.11.06-planes-readsb-prod-0",
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-11-06T00:00Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Cierre medido en EBBR: 20:20–20:56 UTC, 36 minutos, 0 desvíos y 4 esperas.",
+      "id": "adsblol-EBBR-2025-11-06-EODI-2025-00335",
+      "idioma": "es",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "replicas": 0
      }
     ],
     "id": "EODI-2025-00335",
@@ -88734,6 +88867,28 @@
     "titulo": {
      "en": "Drone sighting at Brussels Airport with airspace remaining open",
      "es": "Avistamiento de dron en el aeropuerto de Bruselas sin cierre del espacio aéreo"
+    },
+    "trafico_aereo": {
+     "cierre": {
+      "aeropuerto": "EBBR",
+      "difiere_de_declarado": false,
+      "duracion_min": 36,
+      "fin": {
+       "precision": "minuto",
+       "valor": "2025-11-06T20:56Z"
+      },
+      "inicio": {
+       "precision": "minuto",
+       "valor": "2025-11-06T20:20Z"
+      },
+      "resultado": "cierre_medido",
+      "vuelos_desviados": 0,
+      "vuelos_en_espera": 4
+     },
+     "datos": [
+      "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.11.06-planes-readsb-prod-0",
+      "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.11.07-planes-readsb-prod-0"
+     ]
     }
    },
    "type": "Feature"
