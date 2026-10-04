@@ -261,6 +261,18 @@
       "uniqueItems": true,
       "items": {"type": "string", "pattern": "^UKAB-\\d{7}$"}
     },
+    "ataque": {
+      "x-visibilidad": "publico",
+      "description": "Ataque ruso contra Ucrania del que forma parte la incursión (proceso/cruces.py): su id, su noche (o su día) con la regla única de las noches (proceso/ataques.jornada) y por qué se enlaza: la fuente lo relaciona con el ataque («fuente») o coincide en fecha y la incursión viene de Ucrania («fecha»). El ataque lista la incursión en sus cruces.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "jornada", "por"],
+      "properties": {
+        "id": {"x-visibilidad": "publico", "type": "string", "pattern": "^EODI-UA-\\d{4}-\\d{4}$"},
+        "jornada": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.10.0:comun#/$defs/jornada"},
+        "por": {"x-visibilidad": "publico", "enum": ["fuente", "fecha"]}
+      }
+    },
     "foco_termico": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.10.0:comun#/$defs/foco_termico"},
     "trafico_aereo": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.10.0:comun#/$defs/trafico_aereo"},
     "condiciones": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.10.0:comun#/$defs/condiciones"},

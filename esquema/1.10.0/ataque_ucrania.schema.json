@@ -98,7 +98,28 @@
         "required": ["pais", "numero"],
         "properties": {
           "pais": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.10.0:comun#/$defs/pais"},
-          "numero": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.10.0:comun#/$defs/rango_entero_o_desconocido"}
+          "numero": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.10.0:comun#/$defs/rango_entero_o_desconocido"},
+          "incidentes": {
+            "x-visibilidad": "publico",
+            "description": "Incidentes europeos de ese país que forman parte del ataque (proceso/cruces.py). Un cruce sin número del parte lo añade la incursión, con su número de drones.",
+            "type": "array",
+            "uniqueItems": true,
+            "items": {"type": "string", "pattern": "^EODI-\\d{4}-\\d{5}$"}
+          }
+        }
+      }
+    },
+    "cruces_parte": {
+      "x-visibilidad": "interno",
+      "description": "Los cruces que declara el parte, sin las incursiones que añade proceso/cruces.py.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["pais", "numero"],
+        "properties": {
+          "pais": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.10.0:comun#/$defs/pais"},
+          "numero": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.10.0:comun#/$defs/rango_entero_o_desconocido"}
         }
       }
     },

@@ -255,3 +255,58 @@ Las más citadas, ya juntas: Приморсько-Ахтарськ 705 ataques, 
 `tests/test_zonas_lanzamiento.py`: las grafías de los partes (las del encargo y las dobles), lo que
 no es una zona y lo desconocido, que cada nombre normalizado casa con sus zonas del catálogo, y la
 corrección de los ataques guardados con su registro de revisión y su historial.
+
+## Bloque 4. Cruces de frontera sin enlazar
+
+### Causa
+
+Los cruces de un ataque solo salían de lo que declara el parte de la Fuerza Aérea («перетнули
+кордон з Румунією»), y casi nunca lo declara: 6 ataques tenían `cruces`, cinco de ellos hacia
+Bielorrusia. Las incursiones europeas en países fronterizos (262 incidentes vigentes en Rumanía,
+Moldavia, Polonia, Lituania, Letonia, Estonia, Bulgaria, Eslovaquia y Hungría) no sabían de qué
+ataque eran.
+
+### Cambios
+
+- **Enlace en la recogida horaria** (`proceso/cruces.py`, después de rehacer partes e incidentes):
+  una incursión o un sobrevuelo de drones en un país fronterizo se enlaza con el ataque ruso de la
+  Fuerza Aérea (sin los tramos ya sumados en otro) cuyo periodo contiene su inicio, con margen
+  según la precisión de la hora (si solo se sabe el día, la noche que acaba ese día):
+  - **por la fuente**: la incursión sale del propio parte del ataque o la fuente la relaciona con
+    el ataque contra Ucrania («durante ataque a Ucrania», «atacul … asupra Ucrainei»);
+  - **por la fecha**: coincide en fecha y viene de Ucrania: la fuente lo dice («din Ucraina»,
+    «from Ukraine») o, en Rumanía y Moldavia (que solo reciben drones del ataque a través de
+    Ucrania), el dron es de un Estado, entró desde fuera o la fuente dice que es ruso.
+- **Lo que no se enlaza**: lo que viene de Bielorrusia («procedente de Bielorrusia», «from
+  Belarus»), los globos de contrabando, los drones ucranianos (salvo un Shahed mal atribuido), los
+  drones en el puerto de Constanza o en el mar sin una fuente que los relacione con el ataque, y,
+  fuera de Rumanía y Moldavia, lo que el titular no da como dron ruso o venido de Ucrania (las
+  fuentes de esos incidentes mezclan titulares de otros sucesos).
+- **Los dos sentidos**: el incidente lleva `ataque` (id, noche con la regla única de las noches,
+  `proceso/ataques.jornada`, y por qué se enlaza) y el ataque lista los incidentes en el cruce de
+  su país (`cruces[].incidentes`); si el parte no declaró ese cruce, se añade con el número de
+  drones del incidente. Lo que declaró el parte queda en `cruces_parte` (interno), para rehacer los
+  cruces cada hora. Solo se guarda lo que cambia, con su motivo en el historial. Esquema 1.9.0
+  ampliado y lista cerrada de campos públicos.
+- **Web**: la ficha del incidente dice «Parte del ataque ruso contra Ucrania de la noche del X al
+  Y», con el enlace al ataque y el motivo; la del ataque lista sus cruces con el enlace a cada
+  incidente.
+
+### Cifras
+
+| | Antes | Después |
+| --- | ---: | ---: |
+| Ataques con `cruces` | 6 | 77 (72 con incidentes enlazados) |
+| Incursiones europeas enlazadas con su ataque | 0 | 123 |
+| … por la fuente / por la fecha | — | 45 / 78 |
+| … por país | — | Rumanía 66, Moldavia 50, Polonia 4, Lituania 2, Letonia 1 |
+
+Quedan sin enlazar 139 incidentes de esos países: los de Lituania y Letonia que vienen de
+Bielorrusia o son globos, los drones marinos y ucranianos de Constanza, cierres de aeropuertos sin
+relación con un ataque y sucesos de día sin ataque en curso.
+
+### Pruebas añadidas
+
+`tests/test_cruces.py`: la noche de un parte con la misma regla que la web, enlace por la fuente y
+por la fecha, lo que no se enlaza (Bielorrusia, globos, drones ucranianos y marinos, Letonia sin
+dron ruso), los dos sentidos en la base con su historial y sin escrituras repetidas.

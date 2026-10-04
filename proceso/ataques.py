@@ -3,7 +3,7 @@
 import copy
 import hashlib
 from dataclasses import dataclass
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime, timedelta
 from zoneinfo import ZoneInfo
 
 from almacen.base import Almacen
@@ -122,6 +122,9 @@ def datos_parte(leido: ParteLeido) -> Documento:
         "lugares_impacto": list(leido.lugares_impacto),
         "lugares_restos": list(leido.lugares_restos),
         "cruces": [{"pais": pais, "numero": numero} for pais, numero in leido.cruces],
+        # Los que declara el parte; `cruces` lleva además las incursiones enlazadas
+        # (proceso/cruces.py).
+        "cruces_parte": [{"pais": pais, "numero": numero} for pais, numero in leido.cruces],
         "regiones": [_region(codigo, leido) for codigo in sorted(leido.regiones)],
         "regiones_misiles": sorted(leido.regiones_misiles),
     }
@@ -211,3 +214,17 @@ def incorporar(
         documento["control"]["ultima_actualizacion"] = instante(ahora)
         almacen.guardar_ataque_ucrania(documento, ahora)
     return Resultado(documento["id"], nuevo=False, cambiado=cambiado)
+
+
+def jornada(periodo: Documento) -> Documento:
+    """La noche (o el día) a que pertenece un parte: la regla única de los datos y de la web
+    (`jornada` en web/src/datos/ucrania.ts). Noche si el periodo acaba un día UTC después del
+    que empieza («noche del 3 al 4 de octubre»); día si empieza y acaba el mismo día UTC. Un
+    periodo que acaba más de un día después (un error de la fuente o un resumen) cuenta en la
+    noche de su comienzo."""
+    desde = date.fromisoformat(periodo["inicio"]["valor"][:10])
+    fin = date.fromisoformat(periodo["fin"]["valor"][:10])
+    if fin > desde:
+        return {"tipo": "noche", "desde": desde.isoformat(),
+                "hasta": (desde + timedelta(days=1)).isoformat()}  # fmt: skip
+    return {"tipo": "dia", "desde": desde.isoformat(), "hasta": desde.isoformat()}

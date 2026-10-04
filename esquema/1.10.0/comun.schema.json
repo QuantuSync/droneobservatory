@@ -5,6 +5,17 @@
   "description": "Tipos compartidos. La visibilidad efectiva de un campo es la más restrictiva de su cadena: si algún antecesor es interno, el campo es interno.",
   "x-version": "1.10.0",
   "$defs": {
+    "jornada": {
+      "description": "Noche o día a que pertenece un parte, con la regla única de proceso/ataques.jornada (la misma que la web): noche si el periodo acaba un día UTC después del que empieza («noche del 3 al 4 de octubre»: desde el 3, hasta el 4); día si empieza y acaba el mismo día UTC (desde y hasta iguales). Un periodo que acaba más de un día después cuenta en la noche de su comienzo.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tipo", "desde", "hasta"],
+      "properties": {
+        "tipo": {"x-visibilidad": "publico", "enum": ["noche", "dia"]},
+        "desde": {"x-visibilidad": "publico", "$ref": "#/$defs/fecha"},
+        "hasta": {"x-visibilidad": "publico", "$ref": "#/$defs/fecha"}
+      }
+    },
     "perdida_luz": {
       "description": "Pérdida de luz nocturna medida por satélite tras un ataque contra la red eléctrica (proceso/luces.py): brillo de la región (suma de sus ciudades medidas) o de una ciudad en la banda día-noche de VIIRS, con la referencia de las noches anteriores sin nubes y la noche posterior de mayor pérdida. Solo se guarda y se publica cuando la pérdida llega al umbral de la regla. Noches con la fecha de la tarde, en UTC; brillo en nW/(cm²·sr) sobre el fondo.",
       "type": "object",

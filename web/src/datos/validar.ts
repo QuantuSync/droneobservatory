@@ -277,6 +277,15 @@ const CAMPOS_INCIDENTE_OPCIONALES: Record<string, Comprobacion> = {
     { actor: cadena(), autoridad: cadena(), fecha: instante },
     { tipo: enumerado(v.TIPOS_ACTOR), pais: cadena(v.PATRON_PAIS) },
   ),
+  ataque: objeto({
+    id: cadena(/^EODI-UA-\d{4}-\d{4}$/),
+    jornada: objeto({
+      tipo: enumerado(["noche", "dia"] as const),
+      desde: cadena(/^\d{4}-\d{2}-\d{2}$/),
+      hasta: cadena(/^\d{4}-\d{2}-\d{2}$/),
+    }),
+    por: enumerado(["fuente", "fecha"] as const),
+  }),
   foco_termico: focoTermico,
   trafico_aereo: traficoAereo,
 };
@@ -389,7 +398,12 @@ const ataque = objeto(
     localizaciones_restos: rangoODesconocido,
     lugares_impacto: lista(cadena()),
     lugares_restos: lista(cadena()),
-    cruces: lista(objeto({ pais: cadena(v.PATRON_PAIS), numero: rangoODesconocido })),
+    cruces: lista(
+      objeto(
+        { pais: cadena(v.PATRON_PAIS), numero: rangoODesconocido },
+        { incidentes: lista(cadena(/^EODI-\d{4}-\d{5}$/)) },
+      ),
+    ),
     regiones: lista(regionAtaque),
     regiones_misiles: lista(cadena(v.PATRON_REGION)),
     incluido_en: cadena(v.PATRON_ID_ATAQUE),

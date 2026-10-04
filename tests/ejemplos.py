@@ -343,6 +343,11 @@ def incidente_completo() -> Documento:
             "deteccion": ["radar", "piloto"],
             "resultado_contramedidas": "desconocido",
         },
+        "ataque": {
+            "id": "EODI-UA-2025-0244",
+            "jornada": {"tipo": "noche", "desde": "2025-10-01", "hasta": "2025-10-02"},
+            "por": "fecha",
+        },
         "atribucion": {
             "actor": "Rusia",
             "autoridad": "Gobierno nacional",
@@ -474,7 +479,10 @@ def ataque_completo() -> Documento:
         "localizaciones_restos": "desconocido",
         "lugares_impacto": ["Járkov"],
         "lugares_restos": ["Poltava"],
-        "cruces": [{"pais": "PL", "numero": {"min": 1, "max": 2}}],
+        "cruces": [
+            {"pais": "PL", "numero": {"min": 1, "max": 2}, "incidentes": ["EODI-2025-00001"]}
+        ],
+        "cruces_parte": [{"pais": "PL", "numero": {"min": 1, "max": 2}}],
         "horas_llegada": [instante("2025-10-05T22:10Z")],
         "duracion_oleada_min": 420,
         "proporcion_senuelos": 0.2,

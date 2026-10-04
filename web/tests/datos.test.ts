@@ -400,6 +400,11 @@ describe("listas cerradas iguales a las del esquema", () => {
       afirmaciones_publicas: [afirmacion()],
       foco_termico: focoTermico(),
       trafico_aereo: traficoAereo(),
+      ataque: {
+        id: "EODI-UA-2025-0244",
+        jornada: { tipo: "noche", desde: "2025-09-12", hasta: "2025-09-13" },
+        por: "fuente",
+      },
     });
     expect(Object.keys(completo.properties).sort()).toEqual(
       [...new Set([...publicos, ...CAMPOS_ANTICIPADOS])].sort(),

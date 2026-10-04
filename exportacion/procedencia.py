@@ -128,7 +128,7 @@ MEDICIONES = frozenset({"trafico_aereo", "condiciones"})
 # Nodos que se tratan como un solo valor.
 HOJAS = frozenset({
     "estado", "atribucion", "foco_termico", "drones.trayectoria", "consecuencias.danos",
-    "trafico_aereo", "condiciones", "tiempo.origen_inicio",
+    "trafico_aereo", "condiciones", "tiempo.origen_inicio", "ataque",
 })  # fmt: skip
 CLAVES_VALOR = (frozenset({"valor", "precision"}), frozenset({"min", "max"}),
                 frozenset({"lat", "lon"}))  # fmt: skip
@@ -404,6 +404,10 @@ def procedencia_incidente(documento: Documento, fichas: Fichas) -> tuple[Documen
             return valor if valor.fuentes else None
         if ruta == "foco_termico":
             return Valor({MEDIDO}, PARSER)
+        if ruta == "ataque":
+            # Enlace con el ataque de su noche: lo deduce una regla (proceso/cruces.py) de las
+            # fuentes del incidente y del periodo del parte.
+            return Valor({DEDUCIDO}, REGLA)
         if ruta in MEDICIONES:
             # Tráfico aéreo y condiciones medidas: los calcula el código (proceso/mediciones.py)
             # a partir de datos físicos; su regla y su versión van en el propio bloque.

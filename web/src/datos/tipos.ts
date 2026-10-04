@@ -150,6 +150,12 @@ export interface PropiedadesIncidente {
   };
   respuesta?: { medidas?: Medida[] };
   atribucion?: Atribucion;
+  /** Ataque ruso contra Ucrania del que forma parte la incursión (proceso/cruces.py). */
+  ataque?: {
+    id: string;
+    jornada: { tipo: "noche" | "dia"; desde: string; hasta: string };
+    por: "fuente" | "fecha";
+  };
   foco_termico?: FocoTermico;
   trafico_aereo?: TraficoAereo;
   fuentes: Fuente[];
@@ -223,7 +229,7 @@ export interface Ataque {
   localizaciones_restos?: RangoODesconocido;
   lugares_impacto?: string[];
   lugares_restos?: string[];
-  cruces?: { pais: string; numero: RangoODesconocido }[];
+  cruces?: { pais: string; numero: RangoODesconocido; incidentes?: string[] }[];
   regiones?: RegionAtaque[];
   regiones_misiles?: string[];
   incluido_en?: string;

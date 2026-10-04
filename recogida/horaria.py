@@ -45,6 +45,7 @@ from almacen.base import Almacen
 from almacen.cifrado import abrir_cifrada, guardar_cifrada
 from exportacion.publicar import modelos, publicar
 from proceso import (
+    cruces,
     focos_termicos,
     impactos_guerra,
     incidentes,
@@ -389,6 +390,14 @@ def principal(argumentos: list[str] | None = None) -> int:
             registro.warning(
                 "presencia sin guardar en %d incidentes que no validan", len(sin_guardar)
             )
+        # Incursiones en países fronterizos enlazadas con el ataque de su noche, en los dos
+        # sentidos, con incidentes y partes ya rehechos.
+        try:
+            registro.info(
+                "cruces con su ataque: %s", cruces.enlazar(almacen, ahora, modelos(almacen))
+            )
+        except Exception as error:
+            registro.warning("cruces sin enlazar: %s", str(error)[:300])
         if args.estado is not None:
             escribir_parcial(args.estado, estados)
         cambiados = publicar(almacen, ahora)

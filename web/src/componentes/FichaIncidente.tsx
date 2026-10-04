@@ -7,9 +7,21 @@ import type {
   PresenciaDron,
   RangoODesconocido,
 } from "../datos/tipos.ts";
-import { esRangoAbierto, fechaHora, instante, numero, pais, rango, textoAtribuido } from "../i18n/index.ts";
+import {
+  esRangoAbierto,
+  fechaHora,
+  instante,
+  jornadaEscrita,
+  numero,
+  pais,
+  rango,
+  textoAtribuido,
+} from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
+import { Enlace } from "../navegacion.tsx";
+import { rutaDeFicha } from "../sitio.ts";
 import type { Idioma } from "../sitio.ts";
+import { diaDeInstante } from "../tiempo/dias.ts";
 import { EstadoConTexto, Historial, ListaFuentes } from "./Fuentes.tsx";
 import { LineaFoco, ZOOM_VISOR_PUNTO } from "./FocoTermico.tsx";
 import { LineaTrafico } from "./TraficoAereo.tsx";
@@ -298,6 +310,26 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
               {instante(atribucion.fecha)}
             </span>
             <QueDiceCadaFuente t={t} idioma={idioma} afirmaciones={de(CAMPOS_DE_FILA.atribucion)} />
+          </Fila>
+        )}
+        {incidente.ataque !== undefined && (
+          <Fila nombre={t.ficha.parteDelAtaque}>
+            {t.ficha.ataqueDeLa(
+              jornadaEscrita(t, {
+                tipo: incidente.ataque.jornada.tipo,
+                desde: diaDeInstante(`${incidente.ataque.jornada.desde}T00:00Z`),
+                hasta: diaDeInstante(`${incidente.ataque.jornada.hasta}T00:00Z`),
+              }),
+            )}
+            <span className="block text-xs">
+              <Enlace a={rutaDeFicha(incidente.ataque.id, idioma)} className="enlace mono">
+                {incidente.ataque.id}
+              </Enlace>
+              <span className="text-secundario">
+                {" · "}
+                {incidente.ataque.por === "fuente" ? t.ficha.porFuente : t.ficha.porFecha}
+              </span>
+            </span>
           </Fila>
         )}
         {incidente.trafico_aereo !== undefined && (
