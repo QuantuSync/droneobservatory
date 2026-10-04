@@ -77,11 +77,38 @@ MEDIDAS_DE_AUTORIDAD = frozenset(
 )
 
 
+# Las fuentes dan otra causa (globos): el cierre no es por un dron.
+OTRA_CAUSA = re.compile(
+    r"(?<!\w)(?:globos?|balloons?|ballons?|ballone?|αερόστατ\w*|μπαλόνι\w*|balion\w*|"
+    r"balon\w*|baloane|baloanele|ballong\w*|ilmapallo\w*)(?!\w)",
+    re.IGNORECASE,
+)
+
+
+def otra_causa(incidente: Documento) -> bool:
+    """Alguna fuente o el titular dan otra causa que un dron (globos sobre Vilna)."""
+    textos = [str(f.get("frase_origen", "")) for f in incidente["fuentes"]]
+    textos += [str(v) for v in (incidente.get("titulo") or {}).values()]
+    return any(OTRA_CAUSA.search(texto) for texto in textos)
+
+
+def _vuelos(valor: object) -> bool:
+    """Hubo al menos un vuelo (un rango con mínimo mayor que cero)."""
+    return isinstance(valor, dict) and isinstance(valor.get("min"), int) and valor["min"] > 0
+
+
 def actua_la_autoridad(incidente: Documento) -> bool:
-    """Una autoridad actuó por el suceso: cerró el aeropuerto o el espacio aéreo, o intervino."""
-    cierre = (incidente.get("consecuencias", {}).get("cierre") or {}).get("valor")
+    """Una autoridad actuó por el suceso: cerró el aeropuerto o el espacio aéreo, desvió o
+    canceló vuelos (el control aéreo), o intervino."""
+    consecuencias = incidente.get("consecuencias") or {}
+    cierre = (consecuencias.get("cierre") or {}).get("valor")
     medidas = set((incidente.get("respuesta") or {}).get("medidas") or [])
-    return cierre == "si" or bool(medidas & MEDIDAS_DE_AUTORIDAD)
+    return (
+        cierre == "si"
+        or bool(medidas & MEDIDAS_DE_AUTORIDAD)
+        or _vuelos(consecuencias.get("vuelos_desviados"))
+        or _vuelos(consecuencias.get("vuelos_cancelados"))
+    )
 
 
 # La policía acude, detiene, multa o decomisa por un dron: actúa por el dron.
@@ -98,7 +125,10 @@ DETENCION = re.compile(
 
 # La frase cuenta el cierre del aeropuerto o del espacio aéreo («wegen Drohnen gesperrt»).
 CIERRE_EN_FRASE = re.compile(
-    r"(?<!\w)(?:gesperrt|geschlossen|stillgelegt|eingestellt|cerrad\w*|cierr\w*|paraliz\w*|"
+    r"(?<!\w)(?:gesperrt|geschlossen|stillgelegt|eingestellt|lahmgelegt|lahmleg\w*|"
+    r"unterbroch\w*|interrump\w*|interrupted|halted|umgeleitet|desviad\w*|diverted|"
+    r"omdirigere\w*|omdirigert|tussenlanding|zwischenlandung|"
+    r"cerrad\w*|cierr\w*|paraliz\w*|"
     r"closed|closure|shut|lukket|lukke\w*|stengt|stengte|stängd\w*|zamkni\w*|ferm[ée]\w*|"
     r"fermeture|stilgelegd|gesloten|chius\w*|[îi]nchis\w*|paralys\w*|suspendid\w*|"
     r"suspended)(?!\w)",
@@ -112,6 +142,8 @@ def por_actuacion(incidente: Documento) -> Documento | None:
     suceso a un dron. Con el cierre o la medida registrados basta la primera fuente que no lo
     deja abierto, aunque su frase no repita la palabra dron (el incidente es de un dron). None si
     no actuó o si las fuentes que nombran el dron lo dejan abierto."""
+    if otra_causa(incidente):
+        return None
     fuentes: list[Documento] = sorted(
         incidente["fuentes"], key=lambda f: (f["fecha"]["valor"], f["id"])
     )
@@ -305,9 +337,11 @@ MOTIVO_ABIERTO = (
 
 def quitar_por_actuacion(incidente: Documento) -> Documento:
     """Sin la confirmación que solo venía de la actuación (fuente que no es autoridad) cuando
-    todas las autoridades citadas lo dejan abierto. El mismo incidente si no hay nada que
-    quitar."""
-    if not autoridad_lo_deja_abierto(incidente) or documento_oficial_decide(incidente):
+    todas las autoridades citadas lo dejan abierto o las fuentes dan otra causa. El mismo
+    incidente si no hay nada que quitar."""
+    if documento_oficial_decide(incidente) or not (
+        autoridad_lo_deja_abierto(incidente) or otra_causa(incidente)
+    ):
         return incidente
     fuentes = {f["id"]: f for f in incidente["fuentes"]}
     de_regla = [

@@ -143,6 +143,37 @@ def test_el_cierre_por_dron_confirma_aunque_la_frase_no_repita_el_dron() -> None
     luxemburgo["consecuencias"] = {"cierre": {"valor": "desconocido"}}
     luxemburgo["tipo"] = "sobrevuelo"
     assert presencia.aplicar(luxemburgo)["presencia_dron"] == "confirmada"
+    luxemburgo["fuentes"][0]["frase_origen"] = (
+        "Zweimal wurde der Flughafen Luxemburg innerhalb weniger Tage wegen Drohnen lahmgelegt."
+    )
+    assert presencia.aplicar(luxemburgo)["presencia_dron"] == "confirmada"
+
+
+def test_los_vuelos_desviados_por_un_dron_confirman_la_presencia() -> None:
+    # Múnich, 2 de mayo de 2025: el control aéreo desvía vuelos por el dron.
+    documento = lieja(
+        "EODI-2025-00012", "2025-05-02T12:00Z",
+        frase_origen="Eine Drohne wurde im Umfeld des Flughafens gesichtet.",
+    )  # fmt: skip
+    documento["consecuencias"] = {"cierre": {"valor": "desconocido"},
+                                  "vuelos_desviados": {"min": 3, "max": 3}}  # fmt: skip
+    documento["tipo"] = "interrupcion_aeroportuaria"
+    assert presencia.aplicar(documento)["presencia_dron"] == "confirmada"
+    documento["consecuencias"] = {"cierre": {"valor": "desconocido"}}
+    assert presencia.aplicar(documento)["presencia_dron"] == "no_confirmada"
+
+
+def test_un_cierre_por_otra_causa_no_confirma_el_dron() -> None:
+    # Vilna, globos: «Μετά τα drones τα... αερόστατα: Κλειστό το αεροδρόμιο του Βίλνιους».
+    documento = lieja(
+        "EODI-2025-00112", "2025-10-21T19:00Z",
+        frase_origen="Μετά τα drones τα... αερόστατα: Κλειστό το αεροδρόμιο του Βίλνιους",
+    )  # fmt: skip
+    assert presencia.aplicar(documento)["presencia_dron"] == "no_confirmada"
+    documento["fuentes"][0]["frase_origen"] = (
+        "potenziell größerer Drohnen im Luftraum von Luxemburg gesichtet worden"
+    )
+    assert presencia.aplicar(documento)["presencia_dron"] == "no_confirmada"
 
 
 def test_si_la_fuente_lo_deja_abierto_el_cierre_no_confirma() -> None:
