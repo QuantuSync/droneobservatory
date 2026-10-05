@@ -139,6 +139,8 @@ const DURACION_VUELO_MS = 1100;
 /** Caja de Ucrania para encuadrar un ataque o una región. */
 const CAJA_UCRANIA: [number, number, number, number] = [22.1, 44.3, 40.3, 52.4];
 const MARGEN_ENCUADRE_PX = 40;
+/** Lo que queda libre alrededor de un punto asomado: el marcador entero, con aire. */
+const MARGEN_ASOMAR_PX = 32;
 
 /**
  * Deja que el navegador pinte primero la respuesta a un clic (el botón pulsado, el filtro
@@ -166,6 +168,20 @@ function margenes(reserva: Reserva, margen: number) {
 }
 
 export type Encuadre = { lon: number; lat: number; zoom?: number } | "ucrania";
+
+/**
+ * Una petición de mover el mapa, que solo hace quien abre algo (nunca quien lo cierra):
+ * - «ir»: a lo que el usuario no tenía a la vista (una lista, «Europa ahora», «Con satélite», un
+ *   enlace, el recorrido de novedades);
+ * - «asomar»: a lo que acaba de tocar en el mapa, solo lo justo para que la ficha no lo tape, sin
+ *   cambiar el zoom; si ya se ve, nada.
+ * `n` distingue dos peticiones al mismo sitio.
+ */
+export interface Vuelo {
+  encuadre: Encuadre;
+  modo: "ir" | "asomar";
+  n: number;
+}
 
 export interface ApiMapa {
   /** Posición en pantalla (relativa al contenedor del mapa) de una coordenada. */
@@ -224,7 +240,7 @@ export interface PropsMapa {
   novedades: ReadonlySet<string>;
   /** Las últimas 24 horas, para el destello de lo reciente (lo mismo que el filtro). */
   recientes: Periodo;
-  encuadre: Encuadre | null;
+  vuelo: Vuelo | null;
   /** Lo que tapa el mapa: al volar a una ficha, lo abierto queda en el hueco libre. */
   reserva: Reserva;
   onIncidente: (id: string) => void;
@@ -247,6 +263,8 @@ export interface PropsMapa {
   onAlumbrado: (clave: string) => void;
   onListo: (api: ApiMapa) => void;
   onFallo: () => void;
+  /** Un toque en el mapa fuera de todo: cierra lo abierto, sin mover el mapa. */
+  onVacio: () => void;
 }
 
 /**
@@ -370,7 +388,7 @@ export default function Mapa(props: PropsMapa) {
   const { focosUcrania, impactos, gnss, presion, avisos } = props;
   const { corredores, luzRegiones, ciudadesSinLuz, alumbrado, corredorElegido } = props;
   const { puntosSatelite, soloSatelite } = props;
-  const { paisResaltado, regionesElegidas, novedades, recientes, encuadre, reserva } = props;
+  const { paisResaltado, regionesElegidas, novedades, recientes, vuelo, reserva } = props;
   // El vuelo lee la reserva del momento, pero no se repite porque cambie (al arrastrar una hoja).
   const reservaActual = useRef(reserva);
   reservaActual.current = reserva;
@@ -380,10 +398,12 @@ export default function Mapa(props: PropsMapa) {
   const capaPulsos = useRef<HTMLDivElement>(null);
   const mapaRef = useRef<MapaGL | null>(null);
   const volar = useRef<((destino: Encuadre) => void) | null>(null);
+  const asomar = useRef<((destino: Encuadre) => void) | null>(null);
   const [listo, setListo] = useState(false);
   const [iconos, setIconos] = useState("");
   // El incidente abierto, para volver a dibujar su marcador cuando llega su bandera.
   const elegidoActual = useRef<IncidenteResumen | null>(null);
+  const anotar = useRef<(() => void) | null>(null);
   // Los manejadores del mapa se registran una vez: leen siempre las funciones actuales.
   const manejadores = useRef(props);
   useEffect(() => {
@@ -515,7 +535,37 @@ export default function Mapa(props: PropsMapa) {
     }
     volar.current = volarA;
 
+    /** Lo justo para que el punto quede fuera de lo que tapan la cabecera y la ficha: sin zoom. */
+    function asomarA(destino: Encuadre) {
+      if (destino === "ucrania") return;
+      const visible = margenes(reservaActual.current, MARGEN_ASOMAR_PX);
+      const { clientWidth: ancho, clientHeight: alto } = mapa.getContainer();
+      const punto = mapa.project([destino.lon, destino.lat]);
+      const desplazamiento = (valor: number, desde: number, hasta: number) =>
+        desde > hasta ? 0 : valor < desde ? valor - desde : valor > hasta ? valor - hasta : 0;
+      const dx = desplazamiento(punto.x, visible.left, ancho - visible.right);
+      const dy = desplazamiento(punto.y, visible.top, alto - visible.bottom);
+      if (dx === 0 && dy === 0) return;
+      mapa.panBy([dx, dy], { animate: !movimientoReducido(), duration: DURACION_VUELO_MS });
+    }
+    asomar.current = asomarA;
+
+    // El centro, el zoom y dónde queda en pantalla el incidente abierto, a la vista en el
+    // documento al acabar cada movimiento: así se comprueba desde fuera que el mapa no se mueve.
+    const anotarVista = () => {
+      const centro = mapa.getCenter();
+      elemento.dataset.centro = `${centro.lng.toFixed(6)},${centro.lat.toFixed(6)}`;
+      elemento.dataset.zoom = mapa.getZoom().toFixed(4);
+      const punto = elegidoActual.current?.punto ?? null;
+      if (punto === null) return;
+      const enPantalla = mapa.project([punto.lon, punto.lat]);
+      elemento.dataset.elegido = `${Math.round(enPantalla.x)},${Math.round(enPantalla.y)}`;
+    };
+    anotar.current = anotarVista;
+    mapa.on("moveend", anotarVista);
+
     mapa.on("load", () => {
+      anotarVista();
       const delMapaBase = new Set(mapa.listImages());
       registrarIconos(mapa);
       // Con el dedo, la zona sensible de los arcos es más ancha.
@@ -703,7 +753,10 @@ export default function Mapa(props: PropsMapa) {
       // Al abrir una ficha (o tocar el mapa), el letrero desaparece.
       esconderLetrero();
       const eleccion = elegir(candidatos(evento.point));
-      if (eleccion === null) return;
+      if (eleccion === null) {
+        manejadores.current.onVacio();
+        return;
+      }
       if (eleccion.tipo === "varios") {
         // Varios arcos casi a la misma distancia: se elige de una lista.
         manejadores.current.onCorredores(
@@ -842,6 +895,7 @@ export default function Mapa(props: PropsMapa) {
     const mapa = mapaRef.current;
     if (!listo || mapa === null) return;
     elegidoActual.current = elegido;
+    anotar.current?.();
     fuente(mapa, FUENTE_SELECCION)?.setData(seleccionDe(elegido));
     // Un atribuido abierto se dibuja solo con su marcador de selección, más grande: el normal
     // asomaría por debajo.
@@ -1047,12 +1101,13 @@ export default function Mapa(props: PropsMapa) {
     };
   }, [listo]);
 
-  // Vuelo suave al abrir una ficha.
+  // Al abrir algo, según de dónde: ir a ello, o asomarlo si ya estaba a la vista. Cerrar no pide
+  // nada: el mapa se queda donde está.
   useEffect(() => {
     const mapa = mapaRef.current;
-    if (!listo || mapa === null || encuadre === null) return;
-    volar.current?.(encuadre);
-  }, [listo, encuadre]);
+    if (!listo || mapa === null || vuelo === null) return;
+    (vuelo.modo === "ir" ? volar : asomar).current?.(vuelo.encuadre);
+  }, [listo, vuelo]);
 
   return (
     <div className="absolute inset-0">

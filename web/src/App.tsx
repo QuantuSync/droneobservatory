@@ -124,7 +124,7 @@ import {
 } from "./estado/novedades.ts";
 import metaInicial from "./generado/meta.json";
 import { fechaDia, jornadaEscrita, numero, textos } from "./i18n/index.ts";
-import type { ApiMapa, Encuadre, Reserva } from "./mapa/Mapa.tsx";
+import type { ApiMapa, Encuadre, Reserva, Vuelo } from "./mapa/Mapa.tsx";
 import { ZOOM_DE_PAIS } from "./mapa/encuadre.ts";
 import { useNavegacion } from "./navegacion.tsx";
 import { analizarRuta } from "./rutas.ts";
@@ -667,7 +667,11 @@ export function App() {
   // desde un enlace).
   const [filtroSatelite, setFiltroSatelite] = useState<TipoSatelite[]>([]);
   const [listaSatelite, setListaSatelite] = useState(false);
-  const [destinoSatelite, setDestinoSatelite] = useState<Encuadre | null>(null);
+  // Lo único que mueve el mapa por sí solo: abrir algo (src/mapa/Mapa.tsx, Vuelo).
+  const [vuelo, setVuelo] = useState<Vuelo | null>(null);
+  // Lo que se acaba de abrir tocando el mapa («incidente:<id>», «aviso:<id>»): se asoma.
+  const abiertoDesdeMapa = useRef<string | null>(null);
+  const ultimoDestino = useRef<string | null>(null);
   const nocheActual = noche === null ? null : (noches[noche] ?? null);
 
   // Novedades desde la visita anterior: se resaltan y se pueden recorrer.
@@ -788,17 +792,39 @@ export function App() {
 
   const avisoAbierto =
     panelLocal?.clase === "aviso" ? (avisos.find((a) => a.id === panelLocal.id) ?? null) : null;
-  const encuadre = useMemo<Encuadre | null>(() => {
-    if (elegido?.punto) return { lon: elegido.punto.lon, lat: elegido.punto.lat };
-    if (avisoAbierto !== null) return { lon: avisoAbierto.lon, lat: avisoAbierto.lat, zoom: ZOOM_DE_AVISO };
-    if (centroPais !== null) return { ...centroPais, zoom: ZOOM_DE_PAIS };
-    if (fichaActiva?.clase === "ataque") return "ucrania";
-    // Un punto elegido en la lista de «Con satélite».
-    if (destinoSatelite !== null) return destinoSatelite;
+  // Lo abierto que tiene sitio en el mapa, con su clave. Al cerrarlo no hay destino y el mapa no
+  // se mueve: antes, el destino caía en el último punto elegido en «Con satélite» (en el este) y
+  // el mapa volaba allí al cerrar cualquier ficha.
+  const destino = useMemo<{ clave: string; encuadre: Encuadre } | null>(() => {
+    if (elegido?.punto) {
+      return { clave: `incidente:${elegido.id}`, encuadre: { lon: elegido.punto.lon, lat: elegido.punto.lat } };
+    }
+    if (avisoAbierto !== null) {
+      return {
+        clave: `aviso:${avisoAbierto.id}`,
+        encuadre: { lon: avisoAbierto.lon, lat: avisoAbierto.lat, zoom: ZOOM_DE_AVISO },
+      };
+    }
+    if (elegido !== null && centroPais !== null) {
+      return { clave: `incidente:${elegido.id}`, encuadre: { ...centroPais, zoom: ZOOM_DE_PAIS } };
+    }
+    if (fichaActiva?.clase === "ataque") return { clave: `ataque:${fichaActiva.id}`, encuadre: "ucrania" };
     return null;
-    // El vuelo depende del aviso abierto, no de que directo.json se renueve cada minuto.
+    // El destino depende del aviso abierto, no de que directo.json se renueve cada minuto.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [elegido, centroPais, fichaActiva, avisoAbierto?.id, destinoSatelite]);
+  }, [elegido, centroPais, fichaActiva, avisoAbierto?.id]);
+  // Una sola petición por cada cosa que se abre; cerrar no pide nada.
+  useEffect(() => {
+    if (destino === null) {
+      ultimoDestino.current = null;
+      return;
+    }
+    if (destino.clave === ultimoDestino.current) return;
+    ultimoDestino.current = destino.clave;
+    const modo = abiertoDesdeMapa.current === destino.clave ? "asomar" : "ir";
+    abiertoDesdeMapa.current = null;
+    setVuelo((anterior) => ({ encuadre: destino.encuadre, modo, n: (anterior?.n ?? 0) + 1 }));
+  }, [destino]);
 
   const regionesDelAtaque = useMemo(() => {
     const actual = datos(ataque);
@@ -860,6 +886,24 @@ export function App() {
     [navegar, idioma],
   );
   const abrirAviso = useCallback((id: string) => abrirLocal({ clase: "aviso", id }), [abrirLocal]);
+  /** Lo que se abre tocando el mapa: ya está a la vista, solo se asoma. */
+  const abrirIncidenteDesdeMapa = useCallback(
+    (id: string) => {
+      abiertoDesdeMapa.current = `incidente:${id}`;
+      abrirIncidente(id);
+    },
+    [abrirIncidente],
+  );
+  const elegirDeLaPila = useCallback((id: string) => {
+    abiertoDesdeMapa.current = `incidente:${id}`;
+  }, []);
+  const abrirAvisoDesdeMapa = useCallback(
+    (id: string) => {
+      abiertoDesdeMapa.current = `aviso:${id}`;
+      abrirAviso(id);
+    },
+    [abrirAviso],
+  );
   const abrirCelda = useCallback((h3: string) => abrirLocal({ clase: "celda", h3 }), [abrirLocal]);
   const abrirPais = useCallback((iso: string) => abrirLocal({ clase: "pais", iso }), [abrirLocal]);
   // Abrir algo de una subcapa (un corredor, un apagón, una ciudad a oscuras) la enciende.
@@ -892,7 +936,12 @@ export function App() {
   const elegirSatelite = useCallback(
     (punto: PuntoSatelite) => {
       setMenu(false);
-      setDestinoSatelite({ lon: punto.lon, lat: punto.lat, zoom: ZOOM_PUNTO_SATELITE });
+      // Ir a él: se ha elegido en una lista.
+      setVuelo((anterior) => ({
+        encuadre: { lon: punto.lon, lat: punto.lat, zoom: ZOOM_PUNTO_SATELITE },
+        modo: "ir",
+        n: (anterior?.n ?? 0) + 1,
+      }));
       if (punto.clase === "impacto") abrirImpacto(punto.clave);
       else if (punto.clase === "luz") abrirCiudadLuz(punto.clave);
       else abrirAlumbrado(punto.clave);
@@ -1014,6 +1063,10 @@ export function App() {
 
   // Atajos de teclado.
   const hayFicha = fichaActiva !== null || panelLocal !== null;
+  /** Tocar el mapa fuera de todo cierra la ficha abierta; el mapa no se mueve. */
+  const tocarFuera = useCallback(() => {
+    if (hayFicha) cerrarFicha();
+  }, [hayFicha, cerrarFicha]);
   const ejecutar = useCallback(
     (accion: Accion) => {
       switch (accion) {
@@ -1355,7 +1408,7 @@ export function App() {
       contenido: (
         <>
           <CabeceraFicha t={t} etiqueta={t.pila.titulo(pila.length)} onCerrar={cerrarFicha} />
-          <SelectorPila t={t} idioma={idioma} incidentes={pila} />
+          <SelectorPila t={t} idioma={idioma} incidentes={pila} alElegir={elegirDeLaPila} />
         </>
       ),
     };
@@ -1599,13 +1652,13 @@ export function App() {
               regionesElegidas={regionesElegidas}
               novedades={latentes}
               recientes={recientes}
-              encuadre={encuadre}
+              vuelo={vuelo}
               reserva={reserva}
-              onIncidente={abrirIncidente}
+              onIncidente={abrirIncidenteDesdeMapa}
               onPila={abrirPila}
               onRegion={abrirRegion}
               onImpacto={abrirImpacto}
-              onAviso={abrirAviso}
+              onAviso={abrirAvisoDesdeMapa}
               onCelda={abrirCelda}
               onPais={abrirPais}
               onCorredor={abrirCorredor}
@@ -1617,6 +1670,7 @@ export function App() {
               onAlumbrado={abrirAlumbrado}
               onListo={setApi}
               onFallo={fallarMapa}
+              onVacio={tocarFuera}
             />
           </Suspense>
         )}

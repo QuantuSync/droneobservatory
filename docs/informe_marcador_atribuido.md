@@ -634,3 +634,52 @@ atribución: 115», «ficheros publicados con cambios: 3» y la exportación sem
 subir. Incidentes publicados: 498 (319 en el mapa y 179 sin ubicación), frente a los 511 que servía
 producción a esa hora: la diferencia son los 13 registros unidos (8 de Leipzig y 5 de Wunstorf),
 que quedan fundidos con su motivo.
+
+## Al cerrar una ficha, el mapa no se mueve
+
+**El fallo.** Al cerrar una ficha, el mapa se iba lejos, hacia el este. Causa, comprobada en
+producción con el código anterior: el destino del mapa (`encuadre` en `web/src/App.tsx`) se
+calculaba en cada pintura a partir de lo abierto, y el mapa volaba cada vez que cambiaba. Al cerrar
+un incidente, ese cálculo caía en el último punto elegido en la lista de «Con satélite»
+(`destinoSatelite`, que nunca se borraba), y el mapa volaba allí: elegido un foco de la costa de
+Krasnodar, abrir y cerrar el incidente de Diest (Bélgica) dejaba el mapa sobre Krasnodar. Además,
+abrir una ficha tocando su marcador lanzaba siempre un vuelo al punto con un zoom mínimo, aunque el
+marcador ya estuviera a la vista.
+
+**Cómo queda.** El mapa solo se mueve por una petición explícita (`Vuelo` en
+`web/src/mapa/Mapa.tsx`), que hace quien abre algo y nunca quien lo cierra:
+
+- **«ir»**: al abrir desde una lista, desde «Europa ahora», desde «Con satélite», desde un enlace o
+  desde el recorrido de novedades, el mapa va al incidente (como antes);
+- **«asomar»**: al abrir tocando el mapa (un marcador, un aviso en directo, un incidente de un punto
+  con varios), el mapa se desplaza lo justo para que la ficha no tape el marcador, sin cambiar el
+  zoom (`panBy`); si ya se ve, no se mueve nada;
+- cerrar (la equis, Escape, tocar el mapa fuera de todo, arrastrar la hoja) no pide nada. Tocar el
+  mapa fuera de todo no cerraba la ficha; ahora la cierra, sin mover el mapa.
+
+**Las llamadas que mueven el mapa**, una por una:
+
+| Llamada | Cuándo se disparaba | Ahora |
+| --- | --- | --- |
+| `new Map({ bounds: VISTA_INICIAL })` | Primera carga | Igual (único encuadre automático, con el de un enlace) |
+| `flyTo` en `volarA` | Cada vez que cambiaba `encuadre`: al abrir una ficha desde cualquier sitio y **al cerrarla**, si quedaba un destino de «Con satélite» | Solo con una petición «ir» |
+| `fitBounds(CAJA_UCRANIA)` en `volarA` | Al abrir la ficha de un ataque | Solo con una petición «ir» (abrir un ataque) |
+| `panBy` en `asomarA` | No existía | Al abrir tocando el mapa, si la ficha taparía el marcador |
+| `easeTo` del zoom (`api.zoom`) | Botones de más y menos | Igual: lo pide el usuario |
+| `fitBounds(VISTA_INICIAL)` (`api.vistaInicial`) | Cifras de «Europa ahora» (cierres sin aviso, incidentes, focos, GPS) | Igual: es un «ir a» |
+| `volar("ucrania")` | Cifra de drones de «Europa ahora» | Igual: es un «ir a» |
+| `easeTo` al tocar un grupo, un grupo de atribuidos o de impactos | Tocar un grupo para separarlo | Igual: lo pide el usuario y no abre ninguna ficha |
+
+Cambiar de capa, encender o apagar una subcapa o cambiar un filtro no llamaba a ninguna de ellas y
+sigue sin hacerlo. Las fichas de impacto, región, corredor, país, celda, ciudad y apagón, los
+desplegables y el menú del teléfono no movían el mapa al abrirse; al cerrarse tampoco.
+
+**Pruebas** (`web/e2e/mapa-quieto.spec.ts`, en 390 × 844 con tacto y en escritorio): con un
+incidente aislado de Bélgica, se abre por su enlace, se cierra, se guarda el centro y el zoom
+(el mapa los anota en `data-centro` y `data-zoom` al acabar cada movimiento), se abre tocando su
+marcador y se cierra con la equis, tocando fuera, con Escape y, en el teléfono, arrastrando la hoja
+hacia abajo: el centro y el zoom son los de antes (tolerancia de 0,00001° y 0,001 de zoom). Lo
+mismo con la capa «Ucrania» (encenderla tampoco mueve el mapa) y con «Corredores» y «Con
+satélite»; diez fichas seguidas, comprobando después de cada una; y, en escritorio, el caso del
+fallo: elegido un punto de «Con satélite», abrir y cerrar un incidente de Bélgica deja el mapa en
+Bélgica. En local, con los datos de producción: 9 pruebas en verde.

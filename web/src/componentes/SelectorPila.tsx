@@ -11,10 +11,12 @@ interface Props {
   idioma: Idioma;
   /** Incidentes que comparten punto, del más grave al menos. */
   incidentes: readonly IncidenteResumen[];
+  /** Antes de abrir el elegido: la pila sale de un punto del mapa, que ya está a la vista. */
+  alElegir?: (id: string) => void;
 }
 
 /** Varios incidentes en el mismo sitio: se elige cuál abrir. */
-export function SelectorPila({ t, idioma, incidentes }: Props) {
+export function SelectorPila({ t, idioma, incidentes, alElegir }: Props) {
   return (
     <div className="overflow-y-auto px-4 py-3">
       {/* El título ya va en la cabecera del panel: aquí solo para los lectores de pantalla. */}
@@ -24,6 +26,7 @@ export function SelectorPila({ t, idioma, incidentes }: Props) {
           <li key={incidente.id} className="border-b border-linea/70 last:border-b-0">
             <Enlace
               a={rutaDeFicha(incidente.id, idioma)}
+              onClick={() => alElegir?.(incidente.id)}
               className="flex items-start gap-2 rounded-sm px-1 py-2 hover:bg-elevado"
             >
               <Simbolo estado={incidente.estado} atribucion={incidente.atribucion} className="mt-0.5 shrink-0" />
