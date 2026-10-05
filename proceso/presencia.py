@@ -149,23 +149,40 @@ MOTIVO_PISTA = (
 )
 
 
+def _cuenta_cierre_de_pista(texto: str) -> bool:
+    return bool(
+        PISTA.search(texto)
+        and CIERRE_EN_FRASE.search(texto)
+        and declaraciones.habla_de_drones(texto)
+    )
+
+
+def respaldo_cierre_de_pista(incidente: Documento) -> tuple[list[str], bool]:
+    """De dónde sale el cierre de pista: las fuentes cuya frase cuenta que se cerró o se
+    suspendió una pista por un dron, y si lo cuenta el titular (que sale de las noticias). Lo usa
+    también la exportación para dar el origen de `consecuencias.cierre.valor`."""
+    objetivo = (incidente.get("objetivo") or {}).get("categoria")
+    if incidente.get("tipo") != "interrupcion_aeroportuaria" and objetivo != "aeropuerto":
+        return [], False
+    fuentes = [
+        f["id"]
+        for f in incidente.get("fuentes", [])
+        if _cuenta_cierre_de_pista(str(f.get("frase_origen", "")))
+    ]
+    titulo = " ".join(str(v) for v in (incidente.get("titulo") or {}).values())
+    return fuentes, _cuenta_cierre_de_pista(titulo)
+
+
 def cierre_de_pista(incidente: Documento) -> Documento:
     """Una interrupción aeroportuaria (o un suceso en un aeropuerto) sin cierre registrado cuya
     fuente cuenta que se cerró o se suspendió una pista por un dron: el cierre de la pista es un
     cierre (`consecuencias.cierre` «si») y el suceso, una interrupción del aeropuerto. Así cuenta
     como actuación de la autoridad del aeropuerto para la presencia del dron."""
-    objetivo = (incidente.get("objetivo") or {}).get("categoria")
-    if incidente.get("tipo") != "interrupcion_aeroportuaria" and objetivo != "aeropuerto":
-        return incidente
     consecuencias = incidente.get("consecuencias") or {}
     if (consecuencias.get("cierre") or {}).get("valor") not in (None, "desconocido"):
         return incidente
-    textos = [str(f.get("frase_origen", "")) for f in incidente.get("fuentes", [])]
-    textos.append(" ".join(str(v) for v in (incidente.get("titulo") or {}).values()))
-    if not any(
-        PISTA.search(t) and CIERRE_EN_FRASE.search(t) and declaraciones.habla_de_drones(t)
-        for t in textos
-    ):
+    fuentes, titulo = respaldo_cierre_de_pista(incidente)
+    if not fuentes and not titulo:
         return incidente
     cierre = {**(consecuencias.get("cierre") or {}), "valor": "si"}
     # Con el cierre, el suceso es una interrupción del aeropuerto (manda ese tipo).

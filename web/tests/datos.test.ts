@@ -505,6 +505,12 @@ describe("estado del sistema", () => {
     expect(validarEstadoSistema({ ...conExportacion, ultima_exportacion: "ayer" }).ok).toBe(false);
   });
 
+  it("acepta el fallo pendiente de la exportación semanal, solo con hora", () => {
+    const conFallo = { ...estadoSistema(), exportacion_fallida: "2026-10-05T03:48Z" };
+    expect(validarEstadoSistema(conFallo).ok).toBe(true);
+    expect(validarEstadoSistema({ ...conFallo, exportacion_fallida: null }).ok).toBe(false);
+  });
+
   it("acepta la última ejecución del motor de deducción, con hora o null", () => {
     const conMotor = { ...estadoSistema(), ultima_deduccion: "2026-10-02T09:05Z" };
     expect(validarEstadoSistema(conMotor).ok).toBe(true);

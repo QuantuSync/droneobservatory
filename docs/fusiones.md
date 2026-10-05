@@ -29,7 +29,8 @@ git fetch origin
 git switch <rama> && git rebase origin/main
 # c. puerta local y workflow de tests sobre la rama rebasada
 git push --force-with-lease origin <rama>        # y esperar al workflow en verde
-# c2. si el cambio toca la recogida: ensayo de punta a punta sobre una copia de la base real
+# c2. si el cambio toca la recogida: ensayo de punta a punta sobre una copia de la base real,
+#     con la exportación semanal sin subir (en <carpeta>/exportacion)
 python -m recogida.horaria --correo <correo> --base <copia de db.age> --ensayo <carpeta>
 # d. un solo commit con el autor anónimo
 git reset --soft origin/main
@@ -62,8 +63,15 @@ Por qué existe cada paso:
   `almacen/`, `exportacion/`, `esquema/`, `configuracion/`) se ensaya antes de fusionar con
   una recogida completa sobre una copia de la base real de la rama `estado`: `--base` la lee
   de un fichero local y `--ensayo` publica en una carpeta aparte y no sube nada. Sin la clave
-  del extractor en el entorno no gasta. Tiene que terminar con «ficheros publicados» y salida
-  0 o 2 (avisos). El 4 de octubre de 2026 tres recogidas no publicaron (12:17, 15:17 y 16:17)
+  del extractor en el entorno no gasta. Tiene que terminar con «ficheros publicados», con
+  «ensayo: exportación semanal generada sin subir» y salida 0 o 2 (avisos). Desde el 5 de
+  octubre de 2026 el ensayo genera también la exportación semanal para AEGIS sobre la base que
+  deja la propia recogida, sin subir nada (`<carpeta>/exportacion/`); si no valida (un valor
+  sin regla de origen en `exportacion/procedencia.py`) el ensayo sale con 1 y no se fusiona. La
+  exportación del lunes 5 de octubre no se generó por un campo que una regla nueva empezó a
+  rellenar sin origen; con este paso se habría visto antes de fusionar. La CI hace lo mismo con
+  una base de prueba (`python -m tests.base_prueba`, que tiene un ejemplo de cada campo del
+  esquema). El 4 de octubre de 2026 tres recogidas no publicaron (12:17, 15:17 y 16:17)
   por límites y cambios que solo se habían probado por partes: el de 100 MiB de GitHub por
   fichero, el tope de 1 GiB de la base en memoria y una ficha guardada con la hora del reloj,
   que la publicación rechazó como fecha futura.
@@ -101,8 +109,9 @@ Por qué:
 - **Mensaje en español y sin líneas de atribución** al final.
 - **`--delete-branch`.** La rama se borra al fusionar.
 
-Antes de fusionar: la puerta local (`pytest`, `ruff check`, `ruff format --check` y
-`mypy --strict`, comando a comando) y el workflow de tests, en verde.
+Antes de fusionar: la puerta local (`pytest`, `ruff check`, `ruff format --check`,
+`mypy --strict` y la exportación de ensayo `python -m tests.base_prueba --salida <carpeta>`,
+comando a comando) y el workflow de tests, en verde.
 
 Después de fusionar conviene comprobar el autor:
 

@@ -11,6 +11,11 @@ Al diario solo van recuentos y huellas, nunca contenido.
 
 Uso: python -m recogida.exportacion --correo <correo> [--repositorio <url>] [--registro <json>]
     [--base <db.age>] [--salida <carpeta>] [--sin-subir] [--version AAAA.MM.DD]
+     python -m recogida.exportacion --registro <json> --anotar-fallo <código>
+
+Si falla, servidor/exportacion.sh lo anota en el registro (--anotar-fallo): estado.json lo
+publica y el workflow vigia-recogida abre en la hora siguiente la incidencia «La exportación
+semanal no se genera», sin esperar a los 8 días.
 """
 
 import argparse
@@ -20,6 +25,7 @@ import sys
 from datetime import UTC, datetime
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from typing import Any
 
 from almacen import cifrado, remoto, sitio
 from almacen.base import Almacen
@@ -35,7 +41,16 @@ def escribir_registro(ruta: Path, version: str, fin: datetime, huella: str) -> N
     ruta.write_text(json.dumps(datos, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n")
 
 
-def leer_registro(ruta: Path | None) -> dict[str, str] | None:
+def anotar_fallo(ruta: Path, fin: datetime, codigo: int) -> None:
+    """Deja en el registro que la exportación falló (hora y código), sin tocar la última
+    correcta: estado.json lo publica y la vigilancia abre su aviso en la hora siguiente, sin
+    esperar a los 8 días. Una exportación correcta reescribe el registro y lo quita."""
+    datos: dict[str, Any] = dict(leer_registro(ruta) or {})
+    datos["fallo"] = {"fin": fin.strftime(FORMATO_INSTANTE), "codigo": codigo}
+    ruta.write_text(json.dumps(datos, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n")
+
+
+def leer_registro(ruta: Path | None) -> dict[str, Any] | None:
     if ruta is None or not ruta.exists():
         return None
     try:
@@ -61,14 +76,25 @@ def exportar(almacen: Almacen, version: str, ahora: datetime, destino: Path) -> 
 
 def principal(argumentos: list[str] | None = None, ahora: datetime | None = None) -> int:
     opciones = argparse.ArgumentParser(description=__doc__)
-    opciones.add_argument("--correo", required=True, help="correo del autor del commit")
+    opciones.add_argument("--correo", help="correo del autor del commit")
     opciones.add_argument("--repositorio", default=remoto.REPOSITORIO)
     opciones.add_argument("--registro", type=Path, help="última exportación correcta, en JSON")
     opciones.add_argument("--base", type=Path, help="db.age local en vez de la rama estado")
     opciones.add_argument("--salida", type=Path, help="carpeta donde dejar la versión")
     opciones.add_argument("--sin-subir", action="store_true")
     opciones.add_argument("--version", help="AAAA.MM.DD; por defecto, la fecha UTC de hoy")
+    opciones.add_argument(
+        "--anotar-fallo", type=int, metavar="CODIGO",
+        help="solo anota en --registro que la exportación falló con ese código",
+    )  # fmt: skip
     args = opciones.parse_args(argumentos)
+    if args.anotar_fallo is not None:
+        if args.registro is None:
+            opciones.error("--anotar-fallo necesita --registro")
+        anotar_fallo(args.registro, ahora or datetime.now(UTC), args.anotar_fallo)
+        return 0
+    if args.correo is None and not args.sin_subir:
+        opciones.error("falta --correo")
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
     ahora = ahora or datetime.now(UTC)
     version = args.version or semanal.version_de(ahora)

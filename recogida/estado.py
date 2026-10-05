@@ -20,8 +20,11 @@ Formato (versión 1), con los instantes como AAAA-MM-DDThh:mmZ:
 
 ultima_exportacion es la hora en que terminó bien la última exportación semanal para AEGIS
 (recogida/exportacion.py), que la deja escrita en su registro; null si no consta ninguna. Sin
---exportacion el campo no va. ultima_deduccion es la hora de la última ejecución correcta del
-motor de deducción (recogida/deduccion.py), del registro que deja; sin --deduccion no va.
+--exportacion el campo no va. exportacion_fallida (instante) solo va si la última exportación
+semanal falló después de la última correcta: el registro lo anota servidor/exportacion.sh y la
+vigilancia (recogida/salud.py) abre su aviso sin esperar a los 8 días. ultima_deduccion es la
+hora de la última ejecución correcta del motor de deducción (recogida/deduccion.py), del
+registro que deja; sin --deduccion no va.
 directo es el servicio de detección en directo de cierres (recogida/directo.py), de su registro:
 en marcha si tuvo un ciclo correcto en los últimos 10 minutos (con respaldo si fue con la fuente
 de respaldo), parado si no; sin --directo no va.
@@ -156,6 +159,9 @@ def componer(
     }
     if con_exportacion:
         estado["ultima_exportacion"] = (exportacion or {}).get("fin")
+        fallida = exportacion_fallida(exportacion)
+        if fallida is not None:
+            estado["exportacion_fallida"] = fallida
     if con_deduccion:
         estado["ultima_deduccion"] = (deduccion or {}).get("ultima_correcta")
     if con_directo:
@@ -163,6 +169,18 @@ def componer(
     if con_seguimiento:
         estado["seguimiento"] = estado_seguimiento(seguimiento, fin)
     return estado
+
+
+def exportacion_fallida(registro: dict[str, Any] | None) -> str | None:
+    """La hora del último fallo de la exportación semanal si es posterior a la última correcta
+    (servidor/exportacion.sh lo anota en su registro); None si no hay ninguno pendiente."""
+    fallo = (registro or {}).get("fallo")
+    if not isinstance(fallo, dict) or not isinstance(fallo.get("fin"), str):
+        return None
+    correcta = (registro or {}).get("fin")
+    if isinstance(correcta, str) and correcta >= fallo["fin"]:
+        return None
+    return str(fallo["fin"])
 
 
 def estado_directo(registro: dict[str, Any] | None, ahora: datetime) -> dict[str, Any]:

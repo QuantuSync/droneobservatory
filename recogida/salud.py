@@ -11,7 +11,9 @@ responde en tres intentos espaciados. Una recogida fallida o con avisos no es pr
 mientras haya una correcta reciente.
 
 Aparte, la exportación semanal para AEGIS: hay problema si la última correcta
-(ultima_exportacion) tiene más de 8 días o no consta ninguna. Si estado.json no responde o
+(ultima_exportacion) tiene más de 8 días o no consta ninguna, y también en cuanto la última
+ha fallado (exportacion_fallida, posterior a la última correcta): el aviso sale en la primera
+vigilancia tras la recogida siguiente al fallo. Si estado.json no responde o
 aún no trae el campo, eso lo cuenta la comprobación de la recogida y aquí no se avisa.
 
 Y la detección en directo de cierres (recogida/directo.py), que publica directo.json cada
@@ -139,6 +141,17 @@ def diagnostico_exportacion(estado: dict[str, Any] | None, ahora: datetime) -> E
     if estado is None or "ultima_exportacion" not in estado:
         return True, "estado.json no informa de la exportación semanal: no se comprueba."
     ultima = _instante(estado.get("ultima_exportacion"))
+    fallida = _instante(estado.get("exportacion_fallida"))
+    if fallida is not None and (ultima is None or fallida > ultima):
+        correcta = (
+            f"la última correcta, el {ultima:%Y-%m-%d %H:%M} UTC"
+            if ultima
+            else ("no consta ninguna correcta")
+        )
+        return False, (
+            f"La exportación semanal falló el {fallida:%Y-%m-%d %H:%M} UTC; {correcta}. "
+            "El motivo está en el diario de eodi-exportacion.service."
+        )
     if ultima is None:
         return False, "No consta ninguna exportación semanal correcta."
     dias = (ahora - ultima) / DIA

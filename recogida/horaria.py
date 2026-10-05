@@ -250,6 +250,20 @@ def paso_detalle(almacen: Almacen, ahora: datetime) -> dict[str, EstadoFuente]:
     return leidas
 
 
+def ensayo_exportacion(almacen: Almacen, ahora: datetime, destino: Path) -> bool:
+    """Genera la exportación semanal en `destino`, sin subirla (paso c2 de docs/fusiones.md)."""
+    from exportacion import semanal
+    from recogida import exportacion
+
+    try:
+        huella = exportacion.exportar(almacen, semanal.version_de(ahora), ahora, destino)
+    except semanal.ExportacionInvalida as error:
+        registro.error("ensayo: la exportación semanal no valida: %s", error)
+        return False
+    registro.info("ensayo: exportación semanal generada sin subir; manifiesto %s", huella)
+    return True
+
+
 def principal(argumentos: list[str] | None = None) -> int:
     opciones = argparse.ArgumentParser(description=__doc__)
     opciones.add_argument("--correo", required=True, help="correo del autor del commit de estado")
@@ -439,6 +453,10 @@ def principal(argumentos: list[str] | None = None) -> int:
         registro.info("ficheros publicados con cambios: %d", len(cambiados))
         if args.ensayo is not None:
             registro.info("ensayo: base sin subir")
+            # La exportación semanal sobre la base que deja esta recogida, sin subir nada: un
+            # campo nuevo sin regla de origen tiene que fallar aquí, antes de fusionar.
+            if not ensayo_exportacion(almacen, ahora, args.ensayo / "exportacion"):
+                salida = 1
         elif not sitio.sin_cambios(almacen, antes):
             sitio.guardar_base(almacen, Path(temporal), args.correo, args.repositorio)
         else:

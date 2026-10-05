@@ -29,7 +29,7 @@ from typing import Any
 from almacen.base import Almacen
 from esquema import Documento
 from exportacion import mejor_origen
-from proceso import declaraciones, extraccion, fechas
+from proceso import declaraciones, extraccion, fechas, presencia
 from proceso.estados import Estado
 from proceso.validacion_ficha import UMBRAL_CONFIANZA
 
@@ -54,6 +54,7 @@ COBERTURA_MEDIDA = frozenset({"alta", "media"})
 COBERTURA_B = frozenset({"alta"})
 PRECISIONES_B = frozenset({"minuto", "hora"})
 DINAMICA = ("drones.trayectoria", "drones.altura_m", "drones.velocidad_ms")
+CIERRE = "consecuencias.cierre.valor"
 
 
 class SinOrigen(ValueError):
@@ -488,6 +489,20 @@ def procedencia_incidente(documento: Documento, fichas: Fichas) -> tuple[Documen
             return None
         return {"origen": mejor(origen.values()), "metodo": PARSER, "fuentes": sorted(fuentes)}
 
+    def de_cierre_de_pista(ruta: str) -> Documento | None:
+        # El cierre que registra la regla del cierre de pista (proceso/presencia.py): sale de
+        # las fuentes cuya frase cuenta que se cerró una pista por un dron o, si solo lo cuenta
+        # el titular, de las noticias de que sale el titular.
+        if ruta != CIERRE or leer(documento, ruta) != "si":
+            return None
+        ids, titulo = presencia.respaldo_cierre_de_pista(documento)
+        ids = [i for i in ids if i in fuentes]
+        if not ids and titulo:
+            ids = [f for f, o in origen.items() if o == PRENSA]
+        if not ids:
+            return None
+        return {"origen": mejor(origen[f] for f in ids), "metodo": REGLA, "fuentes": sorted(ids)}
+
     def desconocido(ruta: str) -> Documento | None:
         actual = leer(documento, ruta)
         por_defecto = ruta in POR_DEFECTO_DE_REGLA and actual in (False, [])
@@ -510,7 +525,7 @@ def procedencia_incidente(documento: Documento, fichas: Fichas) -> tuple[Documen
     for _ in range(len(pendientes) + 1):
         resueltas = []
         for ruta in pendientes:
-            marca = de_parser(ruta) or desconocido(ruta)
+            marca = de_parser(ruta) or desconocido(ruta) or de_cierre_de_pista(ruta)
             valor = de_regla_(ruta) if marca is None else None
             if marca is not None:
                 procedencia[ruta] = marca
@@ -679,7 +694,12 @@ REGLAS_ATAQUE: dict[str, tuple[str, ...]] = {
     "duracion_oleada_min": ("periodo", "horas_llegada"),
     "incluido_en": ("periodo",),
     "solapado_con": ("periodo",),
+    # Parte de resumen (proceso/periodos.py): lo marca el código por la duración del periodo.
+    "resumen": ("periodo",),
 }
+# Enlace de los cruces con los incidentes europeos (proceso/cruces.py): una regla de las
+# fuentes del incidente y del periodo del parte, como el enlace inverso (incidente.ataque).
+CRUCES_INCIDENTES: Documento = {"origen": DEDUCIDO, "metodo": REGLA, "fuentes": []}
 
 
 def procedencia_ataque(documento: Documento) -> Documento:
@@ -719,6 +739,8 @@ def procedencia_ataque(documento: Documento) -> Documento:
             }  # fmt: skip
     if any("foco_termico" in r for r in documento.get("regiones", [])):
         procedencia["regiones.foco_termico"] = FOCO_TERMICO
+    if any(c.get("incidentes") for c in documento.get("cruces", [])):
+        procedencia["cruces.incidentes"] = dict(CRUCES_INCIDENTES)
     if any(p["origen"] is None for p in procedencia.values()):
         raise SinOrigen(f"{documento['id']}: valor sin origen")
     return dict(sorted(procedencia.items()))

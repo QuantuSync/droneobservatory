@@ -10,7 +10,8 @@
 #    lo actualiza: eso es cosa de la recogida), que descarga la base, genera la versión del
 #    día, la valida, la cifra y la sube a main del repositorio de datos con su etiqueta;
 # 3. si termina bien, deja la versión y la hora en el registro de la exportación, de donde
-#    estado.json saca la última exportación correcta.
+#    estado.json saca la última exportación correcta; si falla, anota allí el fallo, que
+#    estado.json también publica para que la vigilancia avise en la hora siguiente.
 #
 # No escribe en la base ni en el clon, y tiene su propia unidad: si falla, la recogida
 # horaria sigue igual. Al diario solo van recuentos y huellas.
@@ -44,4 +45,17 @@ principal() {
   return "$codigo"
 }
 
-principal "$@"
+codigo=0
+principal "$@" || codigo=$?
+# Un fallo (la versión no valida, el cerrojo no se libera, la subida no sale) queda anotado en el
+# registro: estado.json lo publica en la recogida siguiente y el workflow vigia-recogida abre su
+# incidencia sin esperar a los 8 días.
+if [ "$codigo" -ne 0 ] && [ -n "${CLON:-}" ] && [ -n "${EXPORTACION_REGISTRO:-}" ]; then
+  anotar=(-m recogida.exportacion --registro "$EXPORTACION_REGISTRO" --anotar-fallo "$codigo")
+  if (cd "$CLON" && "$ENTORNO/bin/python" "${anotar[@]}"); then
+    echo "fallo anotado en el registro de la exportación"
+  else
+    echo "aviso: no se pudo anotar el fallo en el registro de la exportación"
+  fi
+fi
+exit "$codigo"

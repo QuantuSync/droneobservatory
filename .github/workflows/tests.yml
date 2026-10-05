@@ -20,6 +20,11 @@ jobs:
       - run: ruff format --check .
       - run: mypy
       - run: pytest
+      # La exportación semanal para AEGIS, en ensayo y sin subir nada, sobre la base de prueba
+      # (tests/base_prueba.py): un campo del esquema sin regla de origen la hace fallar aquí,
+      # antes de fusionar, y no el lunes en el servidor.
+      - name: Exportación semanal de ensayo sobre la base de prueba
+        run: python -m tests.base_prueba --salida "$RUNNER_TEMP/exportacion"
 
   # Puerta de la web: dependencias sin vulnerabilidades altas o críticas, lint, tipos,
   # tests y build (que valida publicacion/ contra el esquema).

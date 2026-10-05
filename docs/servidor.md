@@ -219,7 +219,7 @@ minutos, y el script:
    una recogida en marcha, la exportación empieza cuando termina; mientras exporta, la
    recogida de esa hora no se lanza (tarda menos de un minuto);
 2. ejecuta `python -m recogida.exportacion` con el código del clon tal como lo dejó la última
-   recogida, sin actualizarlo: descarga la base de la rama `estado`, genera la versión del
+   recogida, sin actualizarlo: abre la base (la del disco, en el modo `disco`), genera la versión del
    día (`AAAA.MM.DD`), la valida contra sus esquemas, la cifra con la clave pública de la
    base y la sube a `main` del repositorio de datos como `exportaciones/AAAA.MM.DD/`, con la
    etiqueta `eodi-AAAA.MM.DD`, con la clave de despliegue `despliegue_datos`;
@@ -233,8 +233,12 @@ existe (carpeta o etiqueta) no se sobrescribe: se avisa y se sale sin error. Con
 formato en [`exportacion/semanal.py`](../exportacion/semanal.py) y
 [`docs/informe_exportacion_aegis.md`](informe_exportacion_aegis.md).
 
-Si pasan más de 8 días sin una exportación correcta, el workflow `vigia-recogida` abre la
-incidencia «La exportación semanal no se genera» y la cierra cuando vuelve a haberla.
+Si la exportación falla (no valida, el cerrojo no se libera a tiempo o la subida no sale), el
+script lo anota en `exportacion.json` (`fallo`, con la hora y el código); la recogida siguiente
+lo publica en `estado.json` (`exportacion_fallida`) y el workflow `vigia-recogida` abre en su
+siguiente pasada (minuto 41) la incidencia «La exportación semanal no se genera», sin esperar a
+los 8 días. También la abre si pasan más de 8 días sin una exportación correcta, y la cierra
+cuando vuelve a haberla.
 
 Lanzarla a mano (por ejemplo, tras un fallo), como `operador`:
 

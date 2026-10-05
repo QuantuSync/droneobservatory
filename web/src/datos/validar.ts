@@ -658,6 +658,7 @@ const estadoSistema = objeto(
   // deducción; la web no las muestra.
   {
     ultima_exportacion: nulable(cadena(v.PATRON_INSTANTE)),
+    exportacion_fallida: cadena(v.PATRON_INSTANTE),
     ultima_deduccion: nulable(cadena(v.PATRON_INSTANTE)),
     // Servicio de detección en directo de cierres de aeropuerto.
     directo: objeto({

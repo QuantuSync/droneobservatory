@@ -555,6 +555,8 @@ export interface EstadoSistema {
   fuentes: { id: FuenteDelSistema; estado: EstadoFuente; ultimo_dato: string | null }[];
   /** Fin de la última exportación semanal correcta; null si no consta ninguna. */
   ultima_exportacion?: string | null;
+  /** Hora de un fallo de la exportación semanal posterior a la última correcta; solo entonces. */
+  exportacion_fallida?: string;
   /** Fin de la última ejecución correcta del motor de deducción; null si no consta ninguna. */
   ultima_deduccion?: string | null;
   /** Servicio de detección en directo de cierres: su estado y su último ciclo correcto. */
