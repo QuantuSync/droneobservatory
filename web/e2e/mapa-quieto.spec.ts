@@ -71,6 +71,21 @@ async function asentada(pagina: Page): Promise<Vista> {
   return { lon, lat, zoom: Number(await mapa.getAttribute("data-zoom")) };
 }
 
+/** La vista cuando el mapa ha llegado al incidente (el vuelo empieza un poco después de abrir). */
+async function llegada(pagina: Page, incidente: IncidenteResumen): Promise<Vista> {
+  const punto = incidente.punto;
+  if (punto === null) throw new Error("sin punto");
+  await expect
+    .poll(async () => {
+      const [lon = Number.NaN, lat = Number.NaN] = ((await pagina.locator(MAPA).getAttribute("data-centro")) ?? "")
+        .split(",")
+        .map(Number);
+      return Math.abs(lon - punto.lon) < 1 && Math.abs(lat - punto.lat) < 1;
+    }, { timeout: 20_000 })
+    .toBe(true);
+  return asentada(pagina);
+}
+
 function igual(antes: Vista, despues: Vista, que: string) {
   expect(Math.abs(despues.lon - antes.lon), `${que}: longitud`).toBeLessThan(TOLERANCIA_GRADOS);
   expect(Math.abs(despues.lat - antes.lat), `${que}: latitud`).toBeLessThan(TOLERANCIA_GRADOS);
@@ -127,7 +142,7 @@ for (const tamano of [TELEFONO, ESCRITORIO]) {
           await page.goto(`/${incidente.id}${variante.busqueda}`);
           await page.waitForSelector(MAPA);
           await expect(ficha).toBeVisible();
-          let vista = await asentada(page);
+          let vista = await llegada(page, incidente);
           if (variante.ucrania) {
             // Cambiar de capa no mueve el mapa.
             await page.keyboard.press("2");
@@ -199,7 +214,7 @@ for (const tamano of [TELEFONO, ESCRITORIO]) {
       }, incidente.id);
       const ficha = page.getByRole("complementary", { name: new RegExp(incidente.id) });
       await expect(ficha).toBeVisible();
-      const antes = await asentada(page);
+      const antes = await llegada(page, incidente);
       await ficha.getByRole("button", { name: "Cerrar la ficha" }).click();
       await expect(ficha).toBeHidden();
       igual(antes, await asentada(page), "cerrar después de «Con satélite»");
@@ -212,7 +227,7 @@ for (const tamano of [TELEFONO, ESCRITORIO]) {
       const ficha = page.getByRole("complementary", { name: new RegExp(incidente.id) });
       await page.goto(`/${incidente.id}`);
       await page.waitForSelector(MAPA);
-      await asentada(page);
+      await llegada(page, incidente);
       const marcador = await posicion(page);
       await ficha.getByRole("button", { name: "Cerrar la ficha" }).click();
       const antes = await asentada(page);

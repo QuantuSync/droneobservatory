@@ -135,6 +135,9 @@ for (const tamano of [...TELEFONOS, ESCRITORIO]) {
       await entrar(page, "/");
       // El marcador de los atribuidos está registrado en el mapa (la bandera se le pone al llegar).
       await expect(page.locator(MAPA_LISTO)).toHaveAttribute("data-iconos", /atribuido-/);
+      // La bandera llega unos segundos después del mapa en la primera visita; hasta entonces el
+      // marcador va liso.
+      await page.waitForTimeout(6000);
       await capturar(page, `mapa-${nombre}`);
       // Lejos, los que se pisan son un solo marcador con su número.
       await page.locator(".maplibregl-canvas").focus();

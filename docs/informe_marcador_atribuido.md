@@ -683,3 +683,72 @@ mismo con la capa «Ucrania» (encenderla tampoco mueve el mapa) y con «Corredo
 satélite»; diez fichas seguidas, comprobando después de cada una; y, en escritorio, el caso del
 fallo: elegido un punto de «Con satélite», abrir y cerrar un incidente de Bélgica deja el mapa en
 Bélgica. En local, con los datos de producción: 9 pruebas en verde.
+
+## Comprobación en producción (5 de octubre de 2026)
+
+PR #127 fusionado a las 11:44 UTC (a90c78f) y PR #128 a las 12:45 (efaa0ed), fuera de los minutos
+12 a 40, con la lista de ficheros comprobada antes de cada push.
+
+**Las dos recogidas siguientes.**
+
+| Recogida | Unidos | Declaraciones | Atribuidos | Titulares cambiados | Publicada |
+| --- | ---: | ---: | --- | ---: | --- |
+| 12:17 | 13 | 13 aplicadas | 00134, 00245, 2025-00295, 00211 | 115 | 12:30:51, «ficheros publicados en main» |
+| 13:17 | 0 | 0 aplicadas (ya estaban) | los mismos cuatro | 0 | 13:32:45, «ficheros publicados en main» |
+
+La segunda no vuelve a aplicar nada (las fuentes ya están): la lectura es idempotente, como en el
+ensayo. Incidentes publicados: 511 antes de la primera, 498 después (los 13 registros unidos), y
+498 tras la segunda.
+
+**En droneobservatory.eu**, en 360 × 800, 390 × 844, 412 × 915 y escritorio
+(`web/e2e/atribuciones-oficiales.spec.ts` contra producción, 12 pruebas en verde):
+
+1. Los atribuidos publicados son exactamente los cuatro aplicados: EODI-2026-00134, EODI-2026-00245,
+   EODI-2025-00295 y EODI-2026-00211. Ninguno más.
+2. Cada uno tiene su ficha completa: «Confirmado · atribuido a Rusia, según …» con la autoridad
+   traducida y su original entre paréntesis, la cita literal con su enlace y, en Leipzig y Galați,
+   la investigación en curso. Leipzig, Malmö y Galați llevan su marcador con la bandera rusa en el
+   mapa, por encima de círculos y grupos; EODI-2025-00295 no tiene punto (nivel país) y sale con su
+   marcador en la lista, la ficha y las cifras.
+3. Constanza (EODI-2026-00152), Buzău (EODI-2026-00125), Lituania (EODI-2026-00090) y Wunstorf
+   (EODI-2026-00276, con sus seis registros unidos) no están atribuidos y sus titulares no dicen
+   ninguna nacionalidad ni señalan a nadie; Wunstorf lleva la investigación de la Fiscalía Federal.
+4. La cifra «4 atribuidos» en la cabecera y en el menú del teléfono; «Atribuido» en la leyenda y en
+   el filtro por estado.
+
+Cada captura, mirada una a una: la bandera rusa se reconoce sin acercar en el teléfono; ningún
+texto se corta ni se monta en las fichas; las citas son las literales de las páginas oficiales.
+En la primera visita la bandera llega unos segundos después que el mapa y hasta entonces el
+marcador va liso (rojo); la captura del mapa espera a que llegue.
+
+Capturas en `docs/capturas`:
+
+- `atribuciones-ficha-<id>-<tamaño>.png`: las cuatro fichas en los cuatro tamaños;
+- `atribuciones-mapa-<tamaño>.png` y `atribuciones-mapa-lejos-<tamaño>.png`: el mapa con los
+  marcadores;
+- `atribuciones-{cifras,leyenda,filtros}-<tamaño>.png` y `atribuciones-wunstorf-<tamaño>.png`;
+- `mapa-quieto-<tamaño>-<capa>-<forma de cerrar>-{antes,despues}.png`: Bélgica antes de abrir un
+  incidente y después de cerrarlo, en el teléfono (arrastrando la hoja; con la capa «Ucrania», con
+  Escape) y en escritorio (con la equis; con «Ucrania», tocando fuera; con «Corredores» y «Con
+  satélite», con Escape). Cada pareja es la misma vista.
+
+**El mapa no se mueve al cerrar**, en producción (`web/e2e/mapa-quieto.spec.ts`, 9 pruebas en
+verde en 390 × 844 y escritorio): cerrar de cada forma, con «Ucrania» y con sus subcapas, diez
+fichas seguidas y, en escritorio, el caso del fallo con «Con satélite». Se comprobó también a mano:
+elegido el foco de la costa de Krasnodar en «Con satélite», abrir y cerrar el incidente de Diest
+deja el mapa en Bélgica (centro 5,0617; 51,0004, zoom 9, igual antes y después).
+
+### Pendientes, con su arreglo
+
+- **EODI-2025-00295 sin punto en el mapa** (el suceso abarca tres voivodatos). Arreglo: darle un
+  lugar más preciso con una fuente oficial que lo diga como lugar del suceso.
+- **El número de un grupo vecino queda en parte bajo el marcador de un atribuido** al alejar (en
+  Leipzig, el grupo de otros incidentes del mismo aeropuerto, entre ellos EODI-2026-00058, que es
+  otro suceso). El marcador va por encima de todo a propósito. Arreglo: desplazar el número del
+  grupo al borde del círculo cuando un atribuido lo tapa.
+- **La bandera tarda unos segundos en la primera visita.** Arreglo: precargar las banderas de los
+  atribuidos publicados junto con los iconos del mapa.
+- **Las investigaciones de la fiscalía de Wunstorf y del Gobierno sobre EODI-2025-00305 (Osiny)**:
+  la de Wunstorf solo consta en prensa y Osiny no tiene declaración oficial guardada. Arreglo:
+  cuando la Fiscalía Federal o el Gobierno polaco publiquen una nota, añadir su copia y su entrada a
+  `configuracion/declaraciones_oficiales.json`.
