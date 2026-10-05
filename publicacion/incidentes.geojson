@@ -87399,8 +87399,8 @@
   {
    "geometry": {
     "coordinates": [
-     23.36389,
-     51.5625
+     23.44111,
+     50.705
     ],
     "type": "Point"
    },
@@ -88354,7 +88354,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-05T16:17Z"
+      "valor": "2026-10-05T19:17Z"
      }
     },
     "drones": {
@@ -92144,13 +92144,56 @@
       "idioma": "pl",
       "medio": "Prokuratura Okręgowa w Lublinie",
       "replicas": 0
+     },
+     {
+      "credibilidad": 1,
+      "enlace": "https://www.gov.pl/web/pr-lublin/informacja-dotyczaca-czynnosci-procesowych-prokuratury-w-zwiazku-z-ujawnionymi-dronami-na-terenie-wojewodztwa-lubelskiego-aktualizacja",
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-09-10T00:00Z"
+      },
+      "fiabilidad": "A",
+      "frase_origen": "Cześniki pow. zamojski – oględziny w fazie końcowej – ujawniono co najmniej 32 elementy drona typu Gerbera, nie ujawniono materiałów wybuchowych.",
+      "id": "revisada-309c9e06df19f5a8",
+      "idioma": "pl",
+      "medio": "Prokuratura Regionalna w Lublinie",
+      "replicas": 0
      }
     ],
     "id": "EODI-2025-00295",
     "lugar": {
-     "fuente_punto": "revisada-166c5e73b6b57a9e",
-     "localidad": "Wyryki-Wola",
+     "fuente_punto": "revisada-309c9e06df19f5a8",
+     "historial": [
+      {
+       "anterior": {
+        "fuente_punto": "revisada-166c5e73b6b57a9e",
+        "localidad": "Wyryki-Wola",
+        "punto": {
+         "lat": 51.5625,
+         "lon": 23.36389
+        },
+        "radio_km": 2.0
+       },
+       "fecha": {
+        "precision": "minuto",
+        "valor": "2026-10-05T19:17Z"
+       },
+       "motivo": {
+        "en": "The point moves from Wyryki-Wola to Cześniki. According to the prosecutors, the house in Wyryki-Wola was hit by a missile fired by a Polish fighter jet during the operation against the drones, not by a drone, and damage caused by the defensive response is never the main point. Cześniki is the first place with drone debris named by the Lublin Regional Prosecutor's Office on 10 September 2025. Wyryki-Wola stays among the other places with the prosecutors' statement.",
+        "es": "El punto pasa de Wyryki-Wola a Cześniki. Según la fiscalía, la casa de Wyryki-Wola la alcanzó un misil disparado por un caza polaco durante la operación contra los drones, no un dron, y un daño de la respuesta defensiva nunca es el punto principal. Cześniki es el primer lugar con restos de dron que nombra la Fiscalía Regional de Lublin el 10 de septiembre de 2025. Wyryki-Wola sigue en otros lugares con la frase de la fiscalía."
+       }
+      }
+     ],
+     "localidad": "Cześniki",
      "otros_lugares": [
+      {
+       "fuente": "revisada-166c5e73b6b57a9e",
+       "nombre": "Wyryki-Wola (pow. włodawski)",
+       "punto": {
+        "lat": 51.5625,
+        "lon": 23.36389
+       }
+      },
       {
        "nombre": "Czosnówka (pow. bialski)",
        "punto": {
@@ -92247,13 +92290,6 @@
       },
       {
        "nombre": "entre Radiany y Sewerynów"
-      },
-      {
-       "nombre": "Cześniki (powiat zamojski, gmina Sitno)",
-       "punto": {
-        "lat": 50.705,
-        "lon": 23.44111
-       }
       }
      ],
      "pais": "PL",
