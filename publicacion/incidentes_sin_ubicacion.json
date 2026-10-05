@@ -2693,7 +2693,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -2844,8 +2844,8 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "Two Russian drones crash in Moldova after airspace violation",
-    "es": "Dos drones rusos se estrellan en Moldavia tras violar su espacio aéreo"
+    "en": "Two drones crash in Moldova after airspace violation",
+    "es": "Dos drones se estrellan en Moldavia tras violar su espacio aéreo"
    }
   },
   {
@@ -4330,7 +4330,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -4438,8 +4438,8 @@
    },
    "tipo": "sobrevuelo",
    "titulo": {
-    "en": "Moldova closes airspace after Russian drone overflights",
-    "es": "Cierre del espacio aéreo de Moldavia tras el sobrevuelo de dos drones rusos"
+    "en": "Moldova closes airspace after drone overflights",
+    "es": "Cierre del espacio aéreo de Moldavia tras el sobrevuelo de dos drones"
    }
   },
   {
@@ -4520,7 +4520,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -4652,8 +4652,8 @@
    },
    "tipo": "sobrevuelo",
    "titulo": {
-    "en": "Russian drone with explosives enters Lithuanian airspace",
-    "es": "Dron ruso con explosivos entra en el espacio aéreo de Lituania"
+    "en": "Drone enters Lithuanian airspace",
+    "es": "Dron entra en el espacio aéreo de Lituania"
    }
   },
   {
@@ -5415,7 +5415,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -5600,8 +5600,8 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "Fragments of Russian drones fall on Romanian territory",
-    "es": "Fragmentos de drones rusos caen en territorio rumano"
+    "en": "Fragments of drones fall on Romanian territory",
+    "es": "Fragmentos de drones caen en territorio rumano"
    }
   },
   {
@@ -5705,7 +5705,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -5799,8 +5799,8 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "Russian drones penetrate Romanian airspace during massive attack",
-    "es": "Drones rusos penetran el espacio aéreo de Rumania durante ataque masivo"
+    "en": "Drones penetrate Romanian airspace during massive attack",
+    "es": "Drones penetran el espacio aéreo de Rumania durante ataque masivo"
    }
   },
   {
@@ -6614,7 +6614,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -6960,8 +6960,8 @@
    },
    "tipo": "sobrevuelo",
    "titulo": {
-    "en": "Russian drone penetrates Romanian airspace during attack on Ukraine",
-    "es": "Dron ruso penetra el espacio aéreo de Rumania durante ataque a Ucrania"
+    "en": "Drone penetrates Romanian airspace during attack on Ukraine",
+    "es": "Dron penetra el espacio aéreo de Rumania durante ataque a Ucrania"
    }
   },
   {
@@ -7488,15 +7488,6 @@
      "valor": "incursion"
     }
    ],
-   "ataque": {
-    "id": "EODI-UA-2025-0241",
-    "jornada": {
-     "desde": "2025-09-09",
-     "hasta": "2025-09-10",
-     "tipo": "noche"
-    },
-    "por": "fuente"
-   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -7505,7 +7496,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -8284,8 +8275,8 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "Russian drones shot down over Poland in airspace incursion",
-    "es": "Drones rusos derriban sobre Polonia en incursión aérea"
+    "en": "Drones shot down over Poland in airspace incursion",
+    "es": "Drones derriban sobre Polonia en incursión aérea"
    }
   },
   {
@@ -8315,15 +8306,6 @@
      "valor": "incursion"
     }
    ],
-   "ataque": {
-    "id": "EODI-UA-2025-0207",
-    "jornada": {
-     "desde": "2025-08-05",
-     "hasta": "2025-08-06",
-     "tipo": "noche"
-    },
-    "por": "fuente"
-   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -8332,7 +8314,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -8451,8 +8433,8 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "Russian possible drone found in Lithuania prompts NATO air defense reinforcement request",
-    "es": "Posible dron ruso hallado en Lituania obliga a solicitar refuerzo de defensa aérea a la OTAN"
+    "en": "Possible drone found in Lithuania prompts NATO air defense reinforcement request",
+    "es": "Posible dron hallado en Lituania obliga a solicitar refuerzo de defensa aérea a la OTAN"
    }
   },
   {
@@ -8495,15 +8477,6 @@
      "valor": "incursion"
     }
    ],
-   "ataque": {
-    "id": "EODI-UA-2025-0244",
-    "jornada": {
-     "desde": "2025-09-12",
-     "hasta": "2025-09-13",
-     "tipo": "noche"
-    },
-    "por": "fuente"
-   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -8512,7 +8485,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -9051,8 +9024,8 @@
    },
    "tipo": "sobrevuelo",
    "titulo": {
-    "en": "Russian possible drone breaches Polish airspace during attack on Ukraine",
-    "es": "Posible dron ruso viola el espacio aéreo de Polonia durante ataque a Ucrania"
+    "en": "Possible drone breaches Polish airspace during attack on Ukraine",
+    "es": "Posible dron viola el espacio aéreo de Polonia durante ataque a Ucrania"
    }
   },
   {
@@ -9167,7 +9140,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -9382,8 +9355,8 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "Possible overflight of Russian Shahed drone over Moldova",
-    "es": "Posible sobrevuelo de dron Shahed ruso sobre Moldavia"
+    "en": "Possible overflight of Shahed drone over Moldova",
+    "es": "Posible sobrevuelo de dron Shahed sobre Moldavia"
    }
   },
   {
@@ -9487,7 +9460,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -9586,8 +9559,8 @@
    },
    "tipo": "sobrevuelo",
    "titulo": {
-    "en": "Russian drone detected in Romanian airspace",
-    "es": "Dron ruso detectado en el espacio aéreo de Rumania"
+    "en": "Drone detected in Romanian airspace",
+    "es": "Dron detectado en el espacio aéreo de Rumania"
    }
   },
   {
@@ -10342,14 +10315,15 @@
      "valor": "incursion"
     }
    ],
-   "ataque": {
-    "id": "EODI-UA-2025-0241",
-    "jornada": {
-     "desde": "2025-09-09",
-     "hasta": "2025-09-10",
-     "tipo": "noche"
+   "atribucion": {
+    "actor": "Rosja",
+    "autoridad": "Kancelaria Prezesa Rady Ministrów",
+    "fecha": {
+     "precision": "dia",
+     "valor": "2025-09-10T00:00Z"
     },
-    "por": "fuente"
+    "pais": "RU",
+    "tipo": "estado"
    },
    "consecuencias": {
     "cierre": {
@@ -10359,7 +10333,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -10369,7 +10343,7 @@
     }
    },
    "estado": {
-    "actual": "confirmado",
+    "actual": "atribuido",
     "historial": [
      {
       "estado": "notificado",
@@ -10386,6 +10360,14 @@
        "valor": "2025-09-11T10:45Z"
       },
       "fuente_id": "gdelt-d38b0d162cd64e37-declaracion-1"
+     },
+     {
+      "estado": "atribuido",
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-09-10T00:00Z"
+      },
+      "fuente_id": "oficial-pl-premier-2025-09-10-autoria"
      }
     ]
    },
@@ -11663,6 +11645,48 @@
      "idioma": "de",
      "medio": "mdr.de",
      "replicas": 0
+    },
+    {
+     "credibilidad": 1,
+     "enlace": "https://www.gov.pl/web/premier/Komunikat-MON",
+     "fecha": {
+      "precision": "dia",
+      "valor": "2025-09-10T00:00Z"
+     },
+     "fiabilidad": "A",
+     "frase_origen": "W wyniku dzisiejszego ataku Federacji Rosyjskiej na terytorium Ukrainy doszło do bezprecedensowego w skali naruszenia polskiej przestrzeni powietrznej przez obiekty typu dron.",
+     "id": "oficial-pl-mon-2025-09-10-naruszenie",
+     "idioma": "pl",
+     "medio": "Ministerstwo Obrony Narodowej",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 1,
+     "enlace": "https://www.gov.pl/web/premier/naruszenie-polskiej-przestrzeni-powietrznej-jest-wniosek-o-uruchomienie-art-4-traktatu-polnocnoatlantyckiego",
+     "fecha": {
+      "precision": "dia",
+      "valor": "2025-09-10T00:00Z"
+     },
+     "fiabilidad": "A",
+     "frase_origen": "Po raz pierwszy spora część dronów nadleciała nad Polskę bezpośrednio z Białorusi",
+     "id": "oficial-pl-premier-2025-09-10-bialorus",
+     "idioma": "pl",
+     "medio": "Prezes Rady Ministrów",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 1,
+     "enlace": "https://www.gov.pl/web/premier/premier-doszlo-do-naruszenia-polskiej-przestrzeni-powietrznej---procedury-zadzialaly",
+     "fecha": {
+      "precision": "dia",
+      "valor": "2025-09-10T00:00Z"
+     },
+     "fiabilidad": "A",
+     "frase_origen": "W środę nad ranem polska przestrzeń powietrzna została naruszona przez rosyjskie drony.",
+     "id": "oficial-pl-premier-2025-09-10-autoria",
+     "idioma": "pl",
+     "medio": "Kancelaria Prezesa Rady Ministrów",
+     "replicas": 0
     }
    ],
    "id": "EODI-2025-00295",
@@ -11760,7 +11784,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -11852,8 +11876,8 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "Possible Russian possible drone crash on Romanian coast during attack on Ukraine",
-    "es": "Posible caída de posible dron ruso en la costa rumana durante ataque a Ucrania"
+    "en": "Possible possible drone crash on Romanian coast during attack on Ukraine",
+    "es": "Posible caída de posible dron en la costa rumana durante ataque a Ucrania"
    }
   },
   {
@@ -11955,7 +11979,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -12156,8 +12180,8 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "Russian Shahed drone flies over Moldova and crashes in the north of the country",
-    "es": "Dron Shahed ruso sobrevuela Moldavia y cae en el norte del país"
+    "en": "Shahed drone flies over Moldova and crashes in the north of the country",
+    "es": "Dron Shahed sobrevuela Moldavia y cae en el norte del país"
    }
   },
   {
@@ -12238,7 +12262,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -12403,8 +12427,8 @@
    },
    "tipo": "sobrevuelo",
    "titulo": {
-    "en": "Russian drone crashes in field in eastern Poland",
-    "es": "Dron ruso se estrella en un campo en el este de Polonia"
+    "en": "Drone crashes in field in eastern Poland",
+    "es": "Dron se estrella en un campo en el este de Polonia"
    }
   },
   {
@@ -12508,7 +12532,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -12629,8 +12653,8 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "Russian drone enters Romanian airspace and is intercepted",
-    "es": "Dron ruso entra en el espacio aéreo de Rumanía y es interceptado"
+    "en": "Drone enters Romanian airspace and is intercepted",
+    "es": "Dron entra en el espacio aéreo de Rumanía y es interceptado"
    }
   },
   {
@@ -13362,15 +13386,6 @@
      "valor": "incursion"
     }
    ],
-   "ataque": {
-    "id": "EODI-UA-2025-0241",
-    "jornada": {
-     "desde": "2025-09-09",
-     "hasta": "2025-09-10",
-     "tipo": "noche"
-    },
-    "por": "fuente"
-   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -13379,7 +13394,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -14901,8 +14916,8 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "Russian drones shot down over Polish airspace",
-    "es": "Drones rusos derribados sobre el espacio aéreo de Polonia"
+    "en": "Drones shot down over Polish airspace",
+    "es": "Drones derribados sobre el espacio aéreo de Polonia"
    }
   },
   {
@@ -15010,7 +15025,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -15202,8 +15217,8 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "Russian drones violate Polish airspace and are shot down",
-    "es": "Drones rusos violan el espacio aéreo de Polonia y son derribados"
+    "en": "Drones violate Polish airspace and are shot down",
+    "es": "Drones violan el espacio aéreo de Polonia y son derribados"
    }
   },
   {
@@ -15420,7 +15435,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -15555,8 +15570,8 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "Russian drones violate Polish airspace and are shot down",
-    "es": "Drones rusos violan el espacio aéreo de Polonia y son derribados"
+    "en": "Drones violate Polish airspace and are shot down",
+    "es": "Drones violan el espacio aéreo de Polonia y son derribados"
    }
   },
   {
@@ -16354,7 +16369,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -16733,8 +16748,8 @@
    },
    "tipo": "sobrevuelo",
    "titulo": {
-    "en": "Russian drone breaches Romanian airspace during attack on Ukraine",
-    "es": "Dron ruso viola el espacio aéreo de Rumania durante ataque a Ucrania"
+    "en": "Drone breaches Romanian airspace during attack on Ukraine",
+    "es": "Dron viola el espacio aéreo de Rumania durante ataque a Ucrania"
    }
   },
   {
@@ -17006,7 +17021,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -17094,8 +17109,8 @@
    },
    "tipo": "sobrevuelo",
    "titulo": {
-    "en": "Moldavian airspace closed due to Russian drones",
-    "es": "Espacio aéreo de Moldavia cerrado por drones rusos"
+    "en": "Moldavian airspace closed due to drones",
+    "es": "Espacio aéreo de Moldavia cerrado por drones"
    }
   },
   {
@@ -17355,7 +17370,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -17476,8 +17491,8 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "Russian drone violates Romanian airspace for 50 minutes",
-    "es": "Dron ruso viola el espacio aéreo de Rumania durante 50 minutos"
+    "en": "Drone violates Romanian airspace for 50 minutes",
+    "es": "Dron viola el espacio aéreo de Rumania durante 50 minutos"
    }
   },
   {
@@ -17573,7 +17588,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -17659,8 +17674,8 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "Russian drones shot down after entering Polish airspace",
-    "es": "Drones rusos derribados tras entrar en el espacio aéreo de Polonia"
+    "en": "Drones shot down after entering Polish airspace",
+    "es": "Drones derribados tras entrar en el espacio aéreo de Polonia"
    }
   },
   {
@@ -18178,7 +18193,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -18285,8 +18300,8 @@
    },
    "tipo": "sobrevuelo",
    "titulo": {
-    "en": "Russian drone violates Romanian airspace and crashes",
-    "es": "Dron ruso viola el espacio aéreo de Rumania y se estrella"
+    "en": "Drone violates Romanian airspace and crashes",
+    "es": "Dron viola el espacio aéreo de Rumania y se estrella"
    }
   },
   {
@@ -18352,7 +18367,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -18429,8 +18444,8 @@
    },
    "tipo": "sobrevuelo",
    "titulo": {
-    "en": "Russian drones violate Polish airspace, NATO launches defense operation",
-    "es": "Drones rusos violan el espacio aéreo de Polonia, NATO inicia operación de defensa"
+    "en": "Drones violate Polish airspace, NATO launches defense operation",
+    "es": "Drones violan el espacio aéreo de Polonia, NATO inicia operación de defensa"
    }
   },
   {
@@ -18922,7 +18937,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-05T00:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -19170,8 +19185,8 @@
    },
    "tipo": "sobrevuelo",
    "titulo": {
-    "en": "Two Russian drones breach Moldova's airspace, forcing temporary airport closure",
-    "es": "Dos drones rusos violan el espacio aéreo de Moldavia y obligan a cerrar temporalmente el aeropuerto"
+    "en": "Two drones breach Moldova's airspace, forcing temporary airport closure",
+    "es": "Dos drones violan el espacio aéreo de Moldavia y obligan a cerrar temporalmente el aeropuerto"
    }
   },
   {
@@ -19308,169 +19323,6 @@
    "titulo": {
     "en": "Unauthorised drone seized from restricted zone near Luton Airport",
     "es": "Dron no autorizado capturado en zona restringida cerca del aeropuerto de Luton"
-   }
-  },
-  {
-   "afirmaciones_publicas": [
-    {
-     "campo": "drones.numero",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-09-22T17:15Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-abb6bb830f7cf000",
-     "medio": "wz-net.de",
-     "valor": {
-      "max": 1,
-      "min": 1
-     }
-    },
-    {
-     "campo": "lugar.pais",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-09-22T17:15Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-abb6bb830f7cf000",
-     "medio": "wz-net.de",
-     "valor": "DE"
-    },
-    {
-     "campo": "presencia_dron",
-     "cita": "Ein Privatmensch hatte das abgestürzte Flugobjekt am Montagnachmittag, 14. September, im Wunstorfer Moor entdeckt.",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-09-22T17:15Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-abb6bb830f7cf000",
-     "medio": "wz-net.de",
-     "valor": "confirmada"
-    },
-    {
-     "campo": "tiempo.inicio",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-09-22T17:15Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-abb6bb830f7cf000",
-     "medio": "wz-net.de",
-     "valor": {
-      "precision": "dia",
-      "valor": "2026-09-14T00:00Z"
-     }
-    },
-    {
-     "campo": "tipo",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-09-22T17:15Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-abb6bb830f7cf000",
-     "medio": "wz-net.de",
-     "valor": "sobrevuelo"
-    }
-   ],
-   "consecuencias": {
-    "cierre": {
-     "valor": "desconocido"
-    }
-   },
-   "control": {
-    "ultima_actualizacion": {
-     "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
-    }
-   },
-   "drones": {
-    "numero": {
-     "max": 1,
-     "min": 1
-    }
-   },
-   "estado": {
-    "actual": "notificado",
-    "historial": [
-     {
-      "estado": "notificado",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-09-22T17:15Z"
-      },
-      "fuente_id": "gdelt-abb6bb830f7cf000"
-     }
-    ]
-   },
-   "fuentes": [
-    {
-     "credibilidad": 3,
-     "enlace": "https://wz-net.de/weltweit/politik/fliegerhorst-wunstorf-sprengstoff-abgestuerzter-drohne-entde-id309386.html",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-09-22T17:15Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "Ein Privatmensch hatte das abgestürzte Flugobjekt am Montagnachmittag, 14. September, im Wunstorfer Moor entdeckt.",
-     "id": "gdelt-abb6bb830f7cf000",
-     "idioma": "de",
-     "medio": "wz-net.de",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://tagesspiegel.de/politik/drohnenfund-bei-fliegerhorst-wunstorf-beamte-sollen-bei-ermittlungen-womoglich-sprengstoff-entdeckt-haben-16085546.html",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-09-22T18:00Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "Nach dem versuchten Anschlag mit einer Sprengstoffdrohne am Leipziger Flughafen rückt eine in der vergangenen Woche in Niedersachsen gefundene Drohne in den Fokus.",
-     "id": "gdelt-e6acebb9bc087299",
-     "idioma": "de",
-     "medio": "tagesspiegel.de",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://n-tv.de/politik/Sprengstoff-nahe-Bundeswehr-Flugplatz-Wunstorf-gefunden-id31336407.html",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-09-22T18:30Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "Lag Drohne schon länger dort?: Sprengstoff nahe Bundeswehr-Flugplatz Wunstorf gefunden",
-     "id": "gdelt-0a03ee306298ed0b",
-     "idioma": "de",
-     "medio": "n-tv.de",
-     "replicas": 0
-    }
-   ],
-   "id": "EODI-2026-00023",
-   "lugar": {
-    "nivel": "region",
-    "pais": "DE",
-    "region": "Niedersachsen"
-   },
-   "presencia_dron": "confirmada",
-   "tiempo": {
-    "inicio": {
-     "precision": "dia",
-     "valor": "2026-09-14T00:00Z"
-    }
-   },
-   "tipo": "sobrevuelo",
-   "titulo": {
-    "en": "Drone crashed near Wunstorf air base with possible explosive residue",
-    "es": "Dron caído cerca de la base aérea de Wunstorf con posibles restos de explosivos"
    }
   },
   {
@@ -19730,7 +19582,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -19965,8 +19817,8 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "Turkish drone intercepted near Alexandroupoli airport by Greek fighter jets",
-    "es": "Dron turco interceptado cerca del aeropuerto de Alexandrópolis por cazas griegos"
+    "en": "Drone intercepted near Alexandroupoli airport by Greek fighter jets",
+    "es": "Dron interceptado cerca del aeropuerto de Alexandrópolis por cazas griegos"
    }
   },
   {
@@ -20732,7 +20584,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -21037,8 +20889,8 @@
    },
    "tipo": "sobrevuelo",
    "titulo": {
-    "en": "Ukrainian military drone crashes in Lithuania after going astray",
-    "es": "Dron ucraniano se estrella en Lituania tras desviarse de su objetivo"
+    "en": "Military drone crashes in Lithuania after going astray",
+    "es": "Dron se estrella en Lituania tras desviarse de su objetivo"
    }
   },
   {
@@ -21374,7 +21226,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -21631,8 +21483,8 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "Russian Shahed drone overflies Moldavian airspace",
-    "es": "Dron Shahed ruso sobrevuela el espacio aéreo de Moldavia"
+    "en": "Shahed drone overflies Moldavian airspace",
+    "es": "Dron Shahed sobrevuela el espacio aéreo de Moldavia"
    }
   },
   {
@@ -22828,7 +22680,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -23007,8 +22859,8 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "Russian drone enters Romanian airspace near Tulcea",
-    "es": "Dron ruso entra en el espacio aéreo de Rumania cerca de Tulcea"
+    "en": "Drone enters Romanian airspace near Tulcea",
+    "es": "Dron entra en el espacio aéreo de Rumania cerca de Tulcea"
    }
   },
   {
@@ -23646,7 +23498,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -23941,8 +23793,8 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "Ukrainian drone shot down by NATO jet over Estonia",
-    "es": "Dron ucraniano derribado por caza de la OTAN sobre Estonia"
+    "en": "Drone shot down by NATO jet over Estonia",
+    "es": "Dron derribado por caza de la OTAN sobre Estonia"
    }
   },
   {
@@ -24696,7 +24548,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -24847,8 +24699,8 @@
    },
    "tipo": "sobrevuelo",
    "titulo": {
-    "en": "Russian Shahed drone overflies Moldavian airspace and is destroyed",
-    "es": "Dron ruso Shahed sobrevuela el espacio aéreo de Moldavia y es destruido"
+    "en": "Shahed drone overflies Moldavian airspace and is destroyed",
+    "es": "Dron Shahed sobrevuela el espacio aéreo de Moldavia y es destruido"
    }
   },
   {
@@ -25604,7 +25456,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -25754,8 +25606,8 @@
    },
    "tipo": "sobrevuelo",
    "titulo": {
-    "en": "Drone that exploded in Constanza Port was controlled by Russia",
-    "es": "Dron que explotó en el Puerto de Constanza fue controlado por Rusia"
+    "en": "Drone that exploded in Constanza Port",
+    "es": "Dron que explotó en el Puerto de Constanza"
    }
   },
   {
@@ -26214,7 +26066,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -26574,8 +26426,8 @@
    },
    "tipo": "sobrevuelo",
    "titulo": {
-    "en": "Four Russian drones penetrate Moldavian airspace during attacks on Ukraine",
-    "es": "Cuatro drones rusos penetran el espacio aéreo de Moldavia durante ataques a Ucrania"
+    "en": "Four drones penetrate Moldavian airspace during attacks on Ukraine",
+    "es": "Cuatro drones penetran el espacio aéreo de Moldavia durante ataques a Ucrania"
    }
   },
   {
@@ -26683,7 +26535,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -26862,8 +26714,8 @@
    },
    "tipo": "sobrevuelo",
    "titulo": {
-    "en": "Russian drone destroyed near Neptun Deep platform in the Black Sea",
-    "es": "Dron ruso destruido cerca de la plataforma Neptun Deep en el Mar Negro"
+    "en": "Drone destroyed near Neptun Deep platform in the Black Sea",
+    "es": "Dron destruido cerca de la plataforma Neptun Deep en el Mar Negro"
    }
   },
   {
@@ -28543,7 +28395,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -28665,8 +28517,8 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "Russian drone downed in Lithuanian airspace",
-    "es": "Dron ruso derribado en el espacio aéreo de Lituania"
+    "en": "Drone downed in Lithuanian airspace",
+    "es": "Dron derribado en el espacio aéreo de Lituania"
    }
   },
   {
@@ -30992,7 +30844,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -31047,8 +30899,8 @@
    },
    "tipo": "sobrevuelo",
    "titulo": {
-    "en": "Russian drones near Romania's border trigger alert and fighter jet scramble",
-    "es": "Drones rusos cerca de la frontera de Rumania provocan alerta y despegue de cazas"
+    "en": "Drones near Romania's border trigger alert and fighter jet scramble",
+    "es": "Drones cerca de la frontera de Rumania provocan alerta y despegue de cazas"
    }
   },
   {
@@ -31102,7 +30954,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -31190,8 +31042,8 @@
    },
    "tipo": "sobrevuelo",
    "titulo": {
-    "en": "Ukrainian drone explodes at Port of Constanța",
-    "es": "Dron ucraniano explota en el Puerto de Constanza"
+    "en": "Drone explodes at Port of Constanța",
+    "es": "Dron explota en el Puerto de Constanza"
    }
   },
   {
@@ -31266,7 +31118,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -31385,8 +31237,8 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "Drone crashes in Romania amid Russian attacks on Ukraine",
-    "es": "Dron se estrella en Rumania durante ataques rusos a Ucrania"
+    "en": "Drone crashes in Romania amid attacks on Ukraine",
+    "es": "Dron se estrella en Rumania durante ataques a Ucrania"
    }
   },
   {
@@ -31491,7 +31343,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -31625,8 +31477,8 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "Ukrainian drone enters Bulgarian airspace and explodes near gas pipeline",
-    "es": "Dron ucraniano entra en el espacio aéreo de Bulgaria y explota cerca de un gasoducto"
+    "en": "Drone enters Bulgarian airspace and explodes near gas pipeline",
+    "es": "Dron entra en el espacio aéreo de Bulgaria y explota cerca de un gasoducto"
    }
   },
   {
@@ -31728,7 +31580,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -31859,8 +31711,8 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "Russian Gerbera drone shot down over Lithuania was headed for Ukraine",
-    "es": "Dron ruso Gerbera derribado sobre Lituania se dirigía a Ucrania"
+    "en": "Gerbera drone shot down over Lithuania was headed for Ukraine",
+    "es": "Dron Gerbera derribado sobre Lituania se dirigía a Ucrania"
    }
   },
   {
@@ -32094,7 +31946,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -32149,8 +32001,8 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "Ukrainian drones attack oil depot in Latvia",
-    "es": "Drones ucranianos atacan un depósito petroliero en Letonia"
+    "en": "Drones attack oil depot in Latvia",
+    "es": "Drones atacan un depósito petroliero en Letonia"
    }
   },
   {
@@ -32255,7 +32107,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -32439,8 +32291,8 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "Romania shoots down three Russian drones that violated its airspace",
-    "es": "Rumania derriba tres drones rusos que violaron su espacio aéreo"
+    "en": "Romania shoots down three drones that violated its airspace",
+    "es": "Rumania derriba tres drones que violaron su espacio aéreo"
    }
   },
   {
@@ -32536,7 +32388,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -32804,8 +32656,8 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "NATO fighters shoot down Ukrainian drone over Latvia",
-    "es": "Cazas de la OTAN derriban un dron ucraniano sobre Letonia"
+    "en": "NATO fighters shoot down drone over Latvia",
+    "es": "Cazas de la OTAN derriban un dron sobre Letonia"
    }
   },
   {
@@ -33145,7 +32997,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -33532,8 +33384,8 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "Russian drone incursion into Moldovan airspace",
-    "es": "Dron ruso viola el espacio aéreo de Moldavia"
+    "en": "Drone incursion into Moldovan airspace",
+    "es": "Dron viola el espacio aéreo de Moldavia"
    }
   },
   {
@@ -34740,7 +34592,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -34811,8 +34663,8 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "Frequent Russian drone incursions over Moldova",
-    "es": "Incursiones frecuentes de drones rusos en Moldavia"
+    "en": "Frequent drone incursions over Moldova",
+    "es": "Incursiones frecuentes de drones en Moldavia"
    }
   },
   {
@@ -35068,7 +34920,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -35255,8 +35107,8 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "Ukrainian drones crash in Finland after straying from attacks on Russia",
-    "es": "Drones ucranianos se estrellan en Finlandia tras desviarse de ataques contra Rusia"
+    "en": "Drones crash in Finland after straying from attacks on Russia",
+    "es": "Drones se estrellan en Finlandia tras desviarse de ataques contra Rusia"
    }
   },
   {
@@ -36076,7 +35928,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -36276,8 +36128,8 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "Three Russian drones violate Moldova's airspace and two explode",
-    "es": "Tres drones rusos violan el espacio aéreo de Moldavia y dos explotan"
+    "en": "Three drones violate Moldova's airspace and two explode",
+    "es": "Tres drones violan el espacio aéreo de Moldavia y dos explotan"
    }
   },
   {
@@ -36956,6 +36808,66 @@
   {
    "afirmaciones_publicas": [
     {
+     "campo": "drones.numero",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-15T19:00Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-f6504d7dfe9f66ba",
+     "medio": "wz-net.de",
+     "valor": {
+      "max": 1,
+      "min": 1
+     }
+    },
+    {
+     "campo": "drones.numero",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-22T17:15Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-abb6bb830f7cf000",
+     "medio": "wz-net.de",
+     "valor": {
+      "max": 1,
+      "min": 1
+     }
+    },
+    {
+     "campo": "drones.numero",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-22T18:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-5b15ad2909e55a60",
+     "medio": "gea.de",
+     "valor": {
+      "max": 1,
+      "min": 1
+     }
+    },
+    {
+     "campo": "drones.numero",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-25T10:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-2d8dd0d05eeaee3f",
+     "medio": "wz-net.de",
+     "valor": {
+      "max": 1,
+      "min": 1
+     }
+    },
+    {
      "campo": "lugar.localidad",
      "credibilidad": 3,
      "fecha": {
@@ -36984,12 +36896,96 @@
      "credibilidad": 3,
      "fecha": {
       "precision": "aproximada",
+      "valor": "2026-09-15T19:00Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-f6504d7dfe9f66ba",
+     "medio": "wz-net.de",
+     "valor": "DE"
+    },
+    {
+     "campo": "lugar.pais",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
       "valor": "2026-09-18T06:45Z"
      },
      "fiabilidad": "C",
      "fuente_id": "gdelt-84490bf01c11949e",
      "medio": "ndr.de",
      "valor": "DE"
+    },
+    {
+     "campo": "lugar.pais",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-22T17:15Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-abb6bb830f7cf000",
+     "medio": "wz-net.de",
+     "valor": "DE"
+    },
+    {
+     "campo": "lugar.pais",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-22T18:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-5b15ad2909e55a60",
+     "medio": "gea.de",
+     "valor": "DE"
+    },
+    {
+     "campo": "lugar.pais",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-23T16:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-437be06568139759",
+     "medio": "wz-net.de",
+     "valor": "DE"
+    },
+    {
+     "campo": "lugar.pais",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-25T10:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-2d8dd0d05eeaee3f",
+     "medio": "wz-net.de",
+     "valor": "DE"
+    },
+    {
+     "campo": "objetivo.categoria",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-22T18:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-5b15ad2909e55a60",
+     "medio": "gea.de",
+     "valor": "base_militar"
+    },
+    {
+     "campo": "objetivo.nombre",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-22T18:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-5b15ad2909e55a60",
+     "medio": "gea.de",
+     "valor": "Bundeswehr-Fliegerhorst Wunstorf"
     },
     {
      "campo": "presencia_dron",
@@ -37019,6 +37015,19 @@
     },
     {
      "campo": "presencia_dron",
+     "cita": "Trümmerteile einer mutmaßlich abgestürzten Drohne",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-15T19:00Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-f6504d7dfe9f66ba",
+     "medio": "wz-net.de",
+     "valor": "confirmada"
+    },
+    {
+     "campo": "presencia_dron",
      "cita": "Die Drohne war bereits Anfang der Woche auf einem Feld in der Nähe des Steinhuder Meeres entdeckt worden.",
      "credibilidad": 3,
      "fecha": {
@@ -37028,6 +37037,58 @@
      "fiabilidad": "C",
      "fuente_id": "gdelt-84490bf01c11949e",
      "medio": "ndr.de",
+     "valor": "confirmada"
+    },
+    {
+     "campo": "presencia_dron",
+     "cita": "Ein Privatmensch hatte das abgestürzte Flugobjekt am Montagnachmittag, 14. September, im Wunstorfer Moor entdeckt.",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-22T17:15Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-abb6bb830f7cf000",
+     "medio": "wz-net.de",
+     "valor": "confirmada"
+    },
+    {
+     "campo": "presencia_dron",
+     "cita": "Ermittler gingen davon aus, dass die gefundene Drohne mit Sprengstoff bestückt gewesen sein könnte.",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-22T18:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-5b15ad2909e55a60",
+     "medio": "gea.de",
+     "valor": "confirmada"
+    },
+    {
+     "campo": "presencia_dron",
+     "cita": "Es gebe erste Anzeichen, dass Parallelen zum Anschlagsversuch am Leipziger Flughafen bestehen.",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-23T16:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-437be06568139759",
+     "medio": "wz-net.de",
+     "valor": "confirmada"
+    },
+    {
+     "campo": "presencia_dron",
+     "cita": "möglicherweise mit Sprengstoff bestückt",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-25T10:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-2d8dd0d05eeaee3f",
+     "medio": "wz-net.de",
      "valor": "confirmada"
     },
     {
@@ -37059,6 +37120,20 @@
      ]
     },
     {
+     "campo": "respuesta.medidas",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-23T16:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-437be06568139759",
+     "medio": "wz-net.de",
+     "valor": [
+      "patrulla"
+     ]
+    },
+    {
      "campo": "tiempo.inicio",
      "credibilidad": 3,
      "fecha": {
@@ -37078,6 +37153,21 @@
      "credibilidad": 3,
      "fecha": {
       "precision": "aproximada",
+      "valor": "2026-09-15T19:00Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-f6504d7dfe9f66ba",
+     "medio": "wz-net.de",
+     "valor": {
+      "precision": "minuto",
+      "valor": "2026-09-15T10:00Z"
+     }
+    },
+    {
+     "campo": "tiempo.inicio",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
       "valor": "2026-09-18T06:45Z"
      },
      "fiabilidad": "C",
@@ -37087,6 +37177,48 @@
       "precision": "dia",
       "valor": "2026-09-15T00:00Z"
      }
+    },
+    {
+     "campo": "tiempo.inicio",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-22T17:15Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-abb6bb830f7cf000",
+     "medio": "wz-net.de",
+     "valor": {
+      "precision": "dia",
+      "valor": "2026-09-14T00:00Z"
+     }
+    },
+    {
+     "campo": "tiempo.inicio",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-25T10:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-2d8dd0d05eeaee3f",
+     "medio": "wz-net.de",
+     "valor": {
+      "precision": "dia",
+      "valor": "2026-09-25T00:00Z"
+     }
+    },
+    {
+     "campo": "tipo",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-15T19:00Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-f6504d7dfe9f66ba",
+     "medio": "wz-net.de",
+     "valor": "sobrevuelo"
     },
     {
      "campo": "tipo",
@@ -37099,6 +37231,54 @@
      "fuente_id": "gdelt-84490bf01c11949e",
      "medio": "ndr.de",
      "valor": "sobrevuelo"
+    },
+    {
+     "campo": "tipo",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-22T17:15Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-abb6bb830f7cf000",
+     "medio": "wz-net.de",
+     "valor": "sobrevuelo"
+    },
+    {
+     "campo": "tipo",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-22T18:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-5b15ad2909e55a60",
+     "medio": "gea.de",
+     "valor": "sobrevuelo"
+    },
+    {
+     "campo": "tipo",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-23T16:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-437be06568139759",
+     "medio": "wz-net.de",
+     "valor": "sobrevuelo"
+    },
+    {
+     "campo": "tipo",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-25T10:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-2d8dd0d05eeaee3f",
+     "medio": "wz-net.de",
+     "valor": "sobrevuelo"
     }
    ],
    "consecuencias": {
@@ -37109,14 +37289,14 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
     "numero": "desconocido"
    },
    "estado": {
-    "actual": "notificado",
+    "actual": "confirmado",
     "historial": [
      {
       "estado": "notificado",
@@ -37125,6 +37305,14 @@
        "valor": "2026-09-15T11:30Z"
       },
       "fuente_id": "gdelt-7e35f706499bef3f"
+     },
+     {
+      "estado": "confirmado",
+      "fecha": {
+       "precision": "dia",
+       "valor": "2026-09-18T00:00Z"
+      },
+      "fuente_id": "oficial-de-bundesanwaltschaft-2026-09-18-wunstorf-declaracion-1"
      }
     ]
    },
@@ -37187,6 +37375,34 @@
     },
     {
      "credibilidad": 3,
+     "enlace": "https://wz-net.de/weltweit/panorama/800-meter-bundeswehr-fliegerhorst-unbekannte-drohne-wunstorf-id308687.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-15T19:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Trümmerteile einer mutmaßlich abgestürzten Drohne",
+     "id": "gdelt-f6504d7dfe9f66ba",
+     "idioma": "de",
+     "medio": "wz-net.de",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://wz-net.de/weltweit/panorama/800-meter-bundeswehr-fliegerhorst-unbekannte-drohne-wunstorf-id308687.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-15T19:00Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Das Landeskriminalamt (LKA) teilt auf Anfrage mit, der Drohnenfund sei seit Montagnachmittag bekannt.",
+     "id": "gdelt-f6504d7dfe9f66ba-declaracion-1",
+     "idioma": "de",
+     "medio": "Landeskriminalamt (declaración oficial citada en wz-net.de)",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
      "enlace": "https://ndr.de/nachrichten/niedersachsen/abgestuerzte-drohne-bei-wunstorf-modell-wie-in-leipzig,drohne-466.html",
      "fecha": {
       "precision": "aproximada",
@@ -37226,9 +37442,174 @@
      "idioma": "de",
      "medio": "az-online.de",
      "replicas": 1
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://wz-net.de/weltweit/politik/fliegerhorst-wunstorf-sprengstoff-abgestuerzter-drohne-entde-id309386.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-22T17:15Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Ein Privatmensch hatte das abgestürzte Flugobjekt am Montagnachmittag, 14. September, im Wunstorfer Moor entdeckt.",
+     "id": "gdelt-abb6bb830f7cf000",
+     "idioma": "de",
+     "medio": "wz-net.de",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://tagesspiegel.de/politik/drohnenfund-bei-fliegerhorst-wunstorf-beamte-sollen-bei-ermittlungen-womoglich-sprengstoff-entdeckt-haben-16085546.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-22T18:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Nach dem versuchten Anschlag mit einer Sprengstoffdrohne am Leipziger Flughafen rückt eine in der vergangenen Woche in Niedersachsen gefundene Drohne in den Fokus.",
+     "id": "gdelt-e6acebb9bc087299",
+     "idioma": "de",
+     "medio": "tagesspiegel.de",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://noz.de/deutschland-welt/niedersachsen/artikel/ermittler-finden-verdaechtige-spuren-nach-drohnenfund-in-wunstorf-51480221",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-22T18:15Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Ermittler finden verdächtige Spuren nach Drohnenfund in Wunstorf",
+     "id": "gdelt-e572fc3eb845bda6",
+     "idioma": "de",
+     "medio": "noz.de",
+     "replicas": 1
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://n-tv.de/politik/Sprengstoff-nahe-Bundeswehr-Flugplatz-Wunstorf-gefunden-id31336407.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-22T18:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Lag Drohne schon länger dort?: Sprengstoff nahe Bundeswehr-Flugplatz Wunstorf gefunden",
+     "id": "gdelt-0a03ee306298ed0b",
+     "idioma": "de",
+     "medio": "n-tv.de",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://gea.de/welt/politik_artikel,-verdacht-auf-sprengstoff-spuren-nach-drohnenfund-in-wunstorf-_arid,7169186.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-22T18:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Ermittler gingen davon aus, dass die gefundene Drohne mit Sprengstoff bestückt gewesen sein könnte.",
+     "id": "gdelt-5b15ad2909e55a60",
+     "idioma": "de",
+     "medio": "gea.de",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://pz-news.de/politik_artikel,-Verdacht-auf-Sprengstoff-Spuren-nach-Drohnenfund-in-Wunstorf-_arid,2369763.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-22T19:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Verdacht auf Sprengstoff-Spuren nach Drohnenfund in Wunstorf - Politik",
+     "id": "gdelt-2270d1ae73a82bc7",
+     "idioma": "de",
+     "medio": "pz-news.de",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://wz-net.de/weltweit/politik/drohne-sprengstoff-so-gross-war-risiko-fliegerhorst-wunstorf-id309495.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-23T16:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Es gebe erste Anzeichen, dass Parallelen zum Anschlagsversuch am Leipziger Flughafen bestehen.",
+     "id": "gdelt-437be06568139759",
+     "idioma": "de",
+     "medio": "wz-net.de",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://b92.net/svi-komentari/270128",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-23T20:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Svi komentari - Drone found near German Wunstorf Air Base; Russian sabotage suspected",
+     "id": "gdelt-1713471d072d068e",
+     "idioma": "sr",
+     "medio": "b92.net",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://b92.net/english/world/270128/drone-found-near-german-wunstorf-air-base-russian-sabotage-suspected/vest",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-23T20:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Drone found near German Wunstorf Air Base; Russian sabotage suspected",
+     "id": "gdelt-6f8994724eb06849",
+     "idioma": "sr",
+     "medio": "b92.net",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://wz-net.de/weltweit/politik/drohne-fliegerhorst-wunstorf-experte-vermutet-russland-vorfa-id309646.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-25T10:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "möglicherweise mit Sprengstoff bestückt",
+     "id": "gdelt-2d8dd0d05eeaee3f",
+     "idioma": "de",
+     "medio": "wz-net.de",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 1,
+     "enlace": "https://www.zdfheute.de/politik/deutschland/bundeswehr-fliegerhorst-wunstorf-drohnenfund-bundesanwaltschaft-leipzig-100.html",
+     "fecha": {
+      "precision": "dia",
+      "valor": "2026-09-18T00:00Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Nach dem Fund von Drohnenteilen nahe dem Bundeswehr-Fliegerhorst Wunstorf prüft die Bundesanwaltschaft einen möglichen Zusammenhang mit dem Drohnenvorfall am Flughafen Leipzig.",
+     "id": "oficial-de-bundesanwaltschaft-2026-09-18-wunstorf-declaracion-1",
+     "idioma": "de",
+     "medio": "Bundesanwaltschaft (declaración oficial citada en zdfheute.de)",
+     "replicas": 0
     }
    ],
    "id": "EODI-2026-00276",
+   "investigacion": [
+    {
+     "autoridad": "Bundesanwaltschaft",
+     "cita": "Nach dem Fund von Drohnenteilen nahe dem Bundeswehr-Fliegerhorst Wunstorf prüft die Bundesanwaltschaft einen möglichen Zusammenhang mit dem Drohnenvorfall am Flughafen Leipzig.",
+     "fecha": {
+      "precision": "dia",
+      "valor": "2026-09-18T00:00Z"
+     },
+     "fuente_id": "oficial-de-bundesanwaltschaft-2026-09-18-wunstorf-declaracion-1"
+    }
+   ],
    "lugar": {
     "localidad": "Hannover",
     "nivel": "region",
@@ -38259,7 +38640,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -38345,8 +38726,8 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "NATO fighter shoots down Russian drone over Latvia",
-    "es": "Caza de la OTAN derriba un dron ruso sobre Letonia"
+    "en": "NATO fighter shoots down drone over Latvia",
+    "es": "Caza de la OTAN derriba un dron sobre Letonia"
    }
   },
   {
@@ -39027,7 +39408,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -39149,8 +39530,8 @@
    },
    "tipo": "sobrevuelo",
    "titulo": {
-    "en": "Russian Shahed drone violates airspace of Moldova and Romania and crashes",
-    "es": "Dron ruso Shahed viola el espacio aéreo de Moldavia y Rumania y se estrella"
+    "en": "Shahed drone violates airspace of Moldova and Romania and crashes",
+    "es": "Dron Shahed viola el espacio aéreo de Moldavia y Rumania y se estrella"
    }
   },
   {
@@ -39243,7 +39624,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -39347,184 +39728,8 @@
    },
    "tipo": "sobrevuelo",
    "titulo": {
-    "en": "Ukrainian drone crashes in Bulgaria after invading its airspace",
-    "es": "Dron ucraniano se estrella en Bulgaria tras invadir su espacio aéreo"
-   }
-  },
-  {
-   "afirmaciones_publicas": [
-    {
-     "campo": "drones.numero",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-09-22T18:45Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-5b15ad2909e55a60",
-     "medio": "gea.de",
-     "valor": {
-      "max": 1,
-      "min": 1
-     }
-    },
-    {
-     "campo": "lugar.pais",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-09-22T18:45Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-5b15ad2909e55a60",
-     "medio": "gea.de",
-     "valor": "DE"
-    },
-    {
-     "campo": "objetivo.categoria",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-09-22T18:45Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-5b15ad2909e55a60",
-     "medio": "gea.de",
-     "valor": "base_militar"
-    },
-    {
-     "campo": "objetivo.nombre",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-09-22T18:45Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-5b15ad2909e55a60",
-     "medio": "gea.de",
-     "valor": "Bundeswehr-Fliegerhorst Wunstorf"
-    },
-    {
-     "campo": "presencia_dron",
-     "cita": "Ermittler gingen davon aus, dass die gefundene Drohne mit Sprengstoff bestückt gewesen sein könnte.",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-09-22T18:45Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-5b15ad2909e55a60",
-     "medio": "gea.de",
-     "valor": "confirmada"
-    },
-    {
-     "campo": "tipo",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-09-22T18:45Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-5b15ad2909e55a60",
-     "medio": "gea.de",
-     "valor": "sobrevuelo"
-    }
-   ],
-   "consecuencias": {
-    "cierre": {
-     "valor": "desconocido"
-    }
-   },
-   "control": {
-    "ultima_actualizacion": {
-     "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
-    }
-   },
-   "drones": {
-    "numero": {
-     "max": 1,
-     "min": 1
-    }
-   },
-   "estado": {
-    "actual": "notificado",
-    "historial": [
-     {
-      "estado": "notificado",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-09-22T18:15Z"
-      },
-      "fuente_id": "gdelt-e572fc3eb845bda6"
-     }
-    ]
-   },
-   "fuentes": [
-    {
-     "credibilidad": 3,
-     "enlace": "https://noz.de/deutschland-welt/niedersachsen/artikel/ermittler-finden-verdaechtige-spuren-nach-drohnenfund-in-wunstorf-51480221",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-09-22T18:15Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "Ermittler finden verdächtige Spuren nach Drohnenfund in Wunstorf",
-     "id": "gdelt-e572fc3eb845bda6",
-     "idioma": "de",
-     "medio": "noz.de",
-     "replicas": 1
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://gea.de/welt/politik_artikel,-verdacht-auf-sprengstoff-spuren-nach-drohnenfund-in-wunstorf-_arid,7169186.html",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-09-22T18:45Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "Ermittler gingen davon aus, dass die gefundene Drohne mit Sprengstoff bestückt gewesen sein könnte.",
-     "id": "gdelt-5b15ad2909e55a60",
-     "idioma": "de",
-     "medio": "gea.de",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://pz-news.de/politik_artikel,-Verdacht-auf-Sprengstoff-Spuren-nach-Drohnenfund-in-Wunstorf-_arid,2369763.html",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-09-22T19:30Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "Verdacht auf Sprengstoff-Spuren nach Drohnenfund in Wunstorf - Politik",
-     "id": "gdelt-2270d1ae73a82bc7",
-     "idioma": "de",
-     "medio": "pz-news.de",
-     "replicas": 0
-    }
-   ],
-   "id": "EODI-2026-00297",
-   "lugar": {
-    "nivel": "region",
-    "pais": "DE",
-    "region": "Niedersachsen"
-   },
-   "objetivo": {
-    "categoria": "base_militar",
-    "nombre": "Bundeswehr-Fliegerhorst Wunstorf"
-   },
-   "presencia_dron": "confirmada",
-   "tiempo": {
-    "inicio": {
-     "precision": "aproximada",
-     "valor": "2026-09-22T18:15Z"
-    }
-   },
-   "tipo": "sobrevuelo",
-   "titulo": {
-    "en": "Drone with suspected explosives found near Wunstorf air base",
-    "es": "Dron con posibles explosivos hallado cerca de la base aérea de Wunstorf"
+    "en": "Drone crashes in Bulgaria after invading its airspace",
+    "es": "Dron se estrella en Bulgaria tras invadir su espacio aéreo"
    }
   },
   {
@@ -39825,7 +40030,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -39928,8 +40133,8 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "Ukrainian drones enter Latvian airspace and crash",
-    "es": "Drones ucranianos entran en el espacio aéreo de Letonia y se estrellan"
+    "en": "Drones enter Latvian airspace and crash",
+    "es": "Drones entran en el espacio aéreo de Letonia y se estrellan"
    }
   },
   {
@@ -40175,7 +40380,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -40276,165 +40481,8 @@
    },
    "tipo": "sobrevuelo",
    "titulo": {
-    "en": "Russian drone detected by radar in Romanian airspace near Chilia",
-    "es": "Dron ruso detectado por radar en el espacio aéreo de Rumania cerca de Chilia"
-   }
-  },
-  {
-   "afirmaciones_publicas": [
-    {
-     "campo": "drones.numero",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-09-15T19:00Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-f6504d7dfe9f66ba",
-     "medio": "wz-net.de",
-     "valor": {
-      "max": 1,
-      "min": 1
-     }
-    },
-    {
-     "campo": "lugar.pais",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-09-15T19:00Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-f6504d7dfe9f66ba",
-     "medio": "wz-net.de",
-     "valor": "DE"
-    },
-    {
-     "campo": "presencia_dron",
-     "cita": "Trümmerteile einer mutmaßlich abgestürzten Drohne",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-09-15T19:00Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-f6504d7dfe9f66ba",
-     "medio": "wz-net.de",
-     "valor": "confirmada"
-    },
-    {
-     "campo": "tiempo.inicio",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-09-15T19:00Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-f6504d7dfe9f66ba",
-     "medio": "wz-net.de",
-     "valor": {
-      "precision": "minuto",
-      "valor": "2026-09-15T10:00Z"
-     }
-    },
-    {
-     "campo": "tipo",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-09-15T19:00Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-f6504d7dfe9f66ba",
-     "medio": "wz-net.de",
-     "valor": "sobrevuelo"
-    }
-   ],
-   "consecuencias": {
-    "cierre": {
-     "valor": "desconocido"
-    }
-   },
-   "control": {
-    "ultima_actualizacion": {
-     "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
-    }
-   },
-   "drones": {
-    "numero": {
-     "max": 1,
-     "min": 1
-    }
-   },
-   "estado": {
-    "actual": "confirmado",
-    "historial": [
-     {
-      "estado": "notificado",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-09-15T19:00Z"
-      },
-      "fuente_id": "gdelt-f6504d7dfe9f66ba"
-     },
-     {
-      "estado": "confirmado",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-09-15T19:00Z"
-      },
-      "fuente_id": "gdelt-f6504d7dfe9f66ba-declaracion-1"
-     }
-    ]
-   },
-   "fuentes": [
-    {
-     "credibilidad": 3,
-     "enlace": "https://wz-net.de/weltweit/panorama/800-meter-bundeswehr-fliegerhorst-unbekannte-drohne-wunstorf-id308687.html",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-09-15T19:00Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "Trümmerteile einer mutmaßlich abgestürzten Drohne",
-     "id": "gdelt-f6504d7dfe9f66ba",
-     "idioma": "de",
-     "medio": "wz-net.de",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 1,
-     "enlace": "https://wz-net.de/weltweit/panorama/800-meter-bundeswehr-fliegerhorst-unbekannte-drohne-wunstorf-id308687.html",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-09-15T19:00Z"
-     },
-     "fiabilidad": "B",
-     "frase_origen": "Das Landeskriminalamt (LKA) teilt auf Anfrage mit, der Drohnenfund sei seit Montagnachmittag bekannt.",
-     "id": "gdelt-f6504d7dfe9f66ba-declaracion-1",
-     "idioma": "de",
-     "medio": "Landeskriminalamt (declaración oficial citada en wz-net.de)",
-     "replicas": 0
-    }
-   ],
-   "id": "EODI-2026-00309",
-   "lugar": {
-    "nivel": "region",
-    "pais": "DE",
-    "region": "Niedersachsen"
-   },
-   "presencia_dron": "confirmada",
-   "tiempo": {
-    "inicio": {
-     "precision": "hora",
-     "valor": "2026-09-15T10:00Z"
-    }
-   },
-   "tipo": "sobrevuelo",
-   "titulo": {
-    "en": "Drone crashed near Wunstorf air base",
-    "es": "Dron estrellado cerca de la base aérea de Wunstorf"
+    "en": "Drone detected by radar in Romanian airspace near Chilia",
+    "es": "Dron detectado por radar en el espacio aéreo de Rumania cerca de Chilia"
    }
   },
   {
@@ -40979,15 +41027,6 @@
      "valor": "incursion"
     }
    ],
-   "ataque": {
-    "id": "EODI-UA-2026-0154",
-    "jornada": {
-     "desde": "2026-06-07",
-     "hasta": "2026-06-08",
-     "tipo": "noche"
-    },
-    "por": "fuente"
-   },
    "consecuencias": {
     "cierre": {
      "valor": "desconocido"
@@ -40996,7 +41035,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -41160,8 +41199,8 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "Russian drone shot down by NATO over Latvia's airspace",
-    "es": "Dron ruso derribado por la OTAN en el espacio aéreo de Letonia"
+    "en": "Drone shot down by NATO over Latvia's airspace",
+    "es": "Dron derribado por la OTAN en el espacio aéreo de Letonia"
    }
   },
   {
@@ -41423,7 +41462,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -41518,8 +41557,8 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "Ukrainian drone crashes into power plant in Estonia",
-    "es": "Dron ucraniano se estrella en una central eléctrica de Estonia"
+    "en": "Drone crashes into power plant in Estonia",
+    "es": "Dron se estrella en una central eléctrica de Estonia"
    }
   },
   {
@@ -41811,7 +41850,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -41912,8 +41951,8 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "Ukrainian drones crash in Latvia after entering from Russia",
-    "es": "Drones ucranianos se estrellan en Letonia tras entrar desde Rusia"
+    "en": "Drones crash in Latvia after entering from Russia",
+    "es": "Drones se estrellan en Letonia tras entrar desde Rusia"
    }
   },
   {
@@ -42070,7 +42109,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -42271,8 +42310,8 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "Russian drone violates Romanian airspace during attack on Ukraine",
-    "es": "Dron ruso viola el espacio aéreo de Rumania durante ataque a Ucrania"
+    "en": "Drone violates Romanian airspace during attack on Ukraine",
+    "es": "Dron viola el espacio aéreo de Rumania durante ataque a Ucrania"
    }
   },
   {
@@ -42361,7 +42400,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -42483,8 +42522,8 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "Russian drone violates Romanian airspace at Chilia",
-    "es": "Dron ruso viola el espacio aéreo de Rumania en Chilia"
+    "en": "Drone violates Romanian airspace at Chilia",
+    "es": "Dron viola el espacio aéreo de Rumania en Chilia"
    }
   },
   {
@@ -42579,7 +42618,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -42701,156 +42740,8 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "NATO Fighter Jets Shoot Down Russian Drone Over Latvia",
-    "es": "Cazas de la OTAN derriban un dron ruso sobre Letonia"
-   }
-  },
-  {
-   "afirmaciones_publicas": [
-    {
-     "campo": "drones.numero",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-09-06T13:15Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-58af71e957aab942",
-     "medio": "rhein-zeitung.de",
-     "valor": {
-      "max": 1,
-      "min": 1
-     }
-    },
-    {
-     "campo": "lugar.pais",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-09-06T13:15Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-58af71e957aab942",
-     "medio": "rhein-zeitung.de",
-     "valor": "DE"
-    },
-    {
-     "campo": "tipo",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-09-06T13:15Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-58af71e957aab942",
-     "medio": "rhein-zeitung.de",
-     "valor": "sobrevuelo"
-    }
-   ],
-   "consecuencias": {
-    "cierre": {
-     "valor": "desconocido"
-    }
-   },
-   "control": {
-    "ultima_actualizacion": {
-     "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
-    }
-   },
-   "drones": {
-    "numero": {
-     "max": 1,
-     "min": 1
-    }
-   },
-   "estado": {
-    "actual": "notificado",
-    "historial": [
-     {
-      "estado": "notificado",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-09-06T11:45Z"
-      },
-      "fuente_id": "gdelt-e2a9096b4499919d"
-     }
-    ]
-   },
-   "fuentes": [
-    {
-     "credibilidad": 3,
-     "enlace": "https://taz.de/Nach-Drohnenangriff-in-Leipzig/!6210613",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-09-06T11:45Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "Nach Drohnenangriff in Leipzig: Grünen-Politikerin fordert Prüfung von Atom-Projekt mit Russland",
-     "id": "gdelt-e2a9096b4499919d",
-     "idioma": "de",
-     "medio": "taz.de",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://badische-zeitung.de/drohnenvorfall-leipzig-lawrow-nennt-vorwuerfe-echten-krieg",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-09-06T12:45Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "Drohnenvorfall Leipzig: Lawrow nennt Vorwürfe \"echten Krieg\" - Politik Ausland",
-     "id": "gdelt-38779ed3a421c114",
-     "idioma": "de",
-     "medio": "badische-zeitung.de",
-     "replicas": 1
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://rhein-zeitung.de/deutschland-welt/politik/drohnenvorfall-leipzig-lawrow-nennt-vorwuerfe-echten-krieg_arid-4153019.html",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-09-06T13:15Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "Haben gesagt, dass es eine russische Drohne ist",
-     "id": "gdelt-58af71e957aab942",
-     "idioma": "de",
-     "medio": "rhein-zeitung.de",
-     "replicas": 1
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://gea.de/welt/politik_artikel,-drohnenvorfall-leipzig-lawrow-nennt-vorw%C3%BCrfe-echten-krieg-_arid,7167225.html",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-09-06T13:30Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "Drohnenvorfall Leipzig: Lawrow nennt Vorwürfe «echten Krieg» - Politik-Nachrichten - Reutlinger General-Anzeiger",
-     "id": "gdelt-5b4cc97a028bffee",
-     "idioma": "de",
-     "medio": "gea.de",
-     "replicas": 0
-    }
-   ],
-   "id": "EODI-2026-00353",
-   "lugar": {
-    "nivel": "pais",
-    "pais": "DE"
-   },
-   "presencia_dron": "no_confirmada",
-   "tiempo": {
-    "inicio": {
-     "precision": "aproximada",
-     "valor": "2026-09-06T11:45Z"
-    }
-   },
-   "tipo": "sobrevuelo",
-   "titulo": {
-    "en": "Possible drone found at Leipzig airport sparks diplomatic dispute",
-    "es": "Posible dron encontrado en el aeropuerto de Leipzig genera disputa diplomática"
+    "en": "NATO Fighter Jets Shoot Down Drone Over Latvia",
+    "es": "Cazas de la OTAN derriban un dron sobre Letonia"
    }
   },
   {
@@ -42906,7 +42797,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -43014,156 +42905,8 @@
    },
    "tipo": "sobrevuelo",
    "titulo": {
-    "en": "Turkish drones violate Greek airspace over the Aegean",
-    "es": "Drones turcos violan el espacio aéreo griego sobre el Egeo"
-   }
-  },
-  {
-   "afirmaciones_publicas": [
-    {
-     "campo": "lugar.pais",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-09-23T16:30Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-437be06568139759",
-     "medio": "wz-net.de",
-     "valor": "DE"
-    },
-    {
-     "campo": "presencia_dron",
-     "cita": "Es gebe erste Anzeichen, dass Parallelen zum Anschlagsversuch am Leipziger Flughafen bestehen.",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-09-23T16:30Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-437be06568139759",
-     "medio": "wz-net.de",
-     "valor": "confirmada"
-    },
-    {
-     "campo": "respuesta.medidas",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-09-23T16:30Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-437be06568139759",
-     "medio": "wz-net.de",
-     "valor": [
-      "patrulla"
-     ]
-    },
-    {
-     "campo": "tipo",
-     "credibilidad": 3,
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-09-23T16:30Z"
-     },
-     "fiabilidad": "C",
-     "fuente_id": "gdelt-437be06568139759",
-     "medio": "wz-net.de",
-     "valor": "sobrevuelo"
-    }
-   ],
-   "consecuencias": {
-    "cierre": {
-     "valor": "desconocido"
-    }
-   },
-   "control": {
-    "ultima_actualizacion": {
-     "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
-    }
-   },
-   "drones": {
-    "numero": "desconocido"
-   },
-   "estado": {
-    "actual": "notificado",
-    "historial": [
-     {
-      "estado": "notificado",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-09-23T16:30Z"
-      },
-      "fuente_id": "gdelt-437be06568139759"
-     }
-    ]
-   },
-   "fuentes": [
-    {
-     "credibilidad": 3,
-     "enlace": "https://wz-net.de/weltweit/politik/drohne-sprengstoff-so-gross-war-risiko-fliegerhorst-wunstorf-id309495.html",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-09-23T16:30Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "Es gebe erste Anzeichen, dass Parallelen zum Anschlagsversuch am Leipziger Flughafen bestehen.",
-     "id": "gdelt-437be06568139759",
-     "idioma": "de",
-     "medio": "wz-net.de",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://b92.net/english/world/270128/drone-found-near-german-wunstorf-air-base-russian-sabotage-suspected/vest",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-09-23T20:30Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "Drone found near German Wunstorf Air Base; Russian sabotage suspected",
-     "id": "gdelt-6f8994724eb06849",
-     "idioma": "sr",
-     "medio": "b92.net",
-     "replicas": 0
-    },
-    {
-     "credibilidad": 3,
-     "enlace": "https://b92.net/svi-komentari/270128",
-     "fecha": {
-      "precision": "aproximada",
-      "valor": "2026-09-23T20:30Z"
-     },
-     "fiabilidad": "C",
-     "frase_origen": "Svi komentari - Drone found near German Wunstorf Air Base; Russian sabotage suspected",
-     "id": "gdelt-1713471d072d068e",
-     "idioma": "sr",
-     "medio": "b92.net",
-     "replicas": 0
-    }
-   ],
-   "id": "EODI-2026-00363",
-   "lugar": {
-    "nivel": "pais",
-    "pais": "DE"
-   },
-   "presencia_dron": "confirmada",
-   "respuesta": {
-    "medidas": [
-     "patrulla"
-    ]
-   },
-   "tiempo": {
-    "inicio": {
-     "precision": "aproximada",
-     "valor": "2026-09-23T16:30Z"
-    }
-   },
-   "tipo": "sobrevuelo",
-   "titulo": {
-    "en": "Drone crashed near Wunstorf Air Base in Germany",
-    "es": "Dron estrellado cerca de la base aérea de Wunstorf en Alemania"
+    "en": "Drones violate Greek airspace over the Aegean",
+    "es": "Drones violan el espacio aéreo griego sobre el Egeo"
    }
   },
   {
@@ -43929,7 +43672,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -43981,8 +43724,8 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "Two Russian drones explode over Moldova",
-    "es": "Dos drones rusos explotan en Moldavia"
+    "en": "Two drones explode over Moldova",
+    "es": "Dos drones explotan en Moldavia"
    }
   },
   {
@@ -45060,7 +44803,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -45126,8 +44869,8 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "Ukrainian drone explodes at Port of Constanza",
-    "es": "Dron ucraniano explota en el Puerto de Constanza"
+    "en": "Drone explodes at Port of Constanza",
+    "es": "Dron explota en el Puerto de Constanza"
    }
   },
   {
@@ -45352,7 +45095,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -45891,8 +45634,8 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "Explosion of a Ukrainian possible drone at the Port of Constanza",
-    "es": "Explosión de un posible dron ucraniano en el Puerto de Constanza"
+    "en": "Explosion of a possible drone at the Port of Constanza",
+    "es": "Explosión de un posible dron en el Puerto de Constanza"
    }
   },
   {
@@ -45958,7 +45701,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -46144,8 +45887,8 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "Explosion of a Ukrainian drone in the Port of Constanța",
-    "es": "Explosión de un dron ucraniano en el Puerto de Constanza"
+    "en": "Explosion of a drone in the Port of Constanța",
+    "es": "Explosión de un dron en el Puerto de Constanza"
    }
   },
   {
@@ -46495,7 +46238,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -46622,8 +46365,8 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "Explosion of a Ukrainian drone in Constanța Port",
-    "es": "Explosión de un dron ucraniano en el Puerto de Constanza"
+    "en": "Explosion of a drone in Constanța Port",
+    "es": "Explosión de un dron en el Puerto de Constanza"
    }
   },
   {
@@ -47012,7 +46755,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -47098,8 +46841,8 @@
    },
    "tipo": "sobrevuelo",
    "titulo": {
-    "en": "Ukrainian drone explodes at Port of Constanza",
-    "es": "Dron ucraniano explota en el Puerto de Constanza"
+    "en": "Drone explodes at Port of Constanza",
+    "es": "Dron explota en el Puerto de Constanza"
    }
   },
   {
@@ -47348,7 +47091,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -47474,8 +47217,8 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "Ukrainian naval drone explodes at Port of Constanza",
-    "es": "Dron marino ucraniano explota en el Puerto de Constanza"
+    "en": "Naval drone explodes at Port of Constanza",
+    "es": "Dron marino explota en el Puerto de Constanza"
    }
   },
   {
@@ -47978,7 +47721,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -48031,8 +47774,8 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "Russian drones breach Moldovan airspace and explode in four districts",
-    "es": "Drones rusos violan el espacio aéreo de Moldavia y explotan en cuatro distritos"
+    "en": "Drones breach Moldovan airspace and explode in four districts",
+    "es": "Drones violan el espacio aéreo de Moldavia y explotan en cuatro distritos"
    }
   },
   {
@@ -48122,7 +47865,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -48188,8 +47931,8 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "Six Russian drones penetrate Moldovan airspace",
-    "es": "Seis drones rusos penetran el espacio aéreo de Moldavia"
+    "en": "Six drones penetrate Moldovan airspace",
+    "es": "Seis drones penetran el espacio aéreo de Moldavia"
    }
   },
   {
@@ -48272,7 +48015,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T20:17Z"
+     "valor": "2026-10-05T12:17Z"
     }
    },
    "drones": {
@@ -48330,8 +48073,8 @@
    },
    "tipo": "sobrevuelo",
    "titulo": {
-    "en": "Turkish drones violate Greek airspace over the Aegean",
-    "es": "Drones turcos violan el espacio aéreo griego sobre el Egeo"
+    "en": "Drones violate Greek airspace over the Aegean",
+    "es": "Drones violan el espacio aéreo griego sobre el Egeo"
    }
   }
  ]
