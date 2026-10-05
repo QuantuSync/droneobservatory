@@ -5340,6 +5340,21 @@
     "afirmaciones_publicas": [
      {
       "campo": "consecuencias.cierre.minutos",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-08-11T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EDDF-2025-08-11-EODI-2025-00022",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 24,
+       "min": 24
+      }
+     },
+     {
+      "campo": "consecuencias.cierre.minutos",
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
@@ -5355,6 +5370,18 @@
      },
      {
       "campo": "consecuencias.cierre.valor",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-08-11T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EDDF-2025-08-11-EODI-2025-00022",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": "si"
+     },
+     {
+      "campo": "consecuencias.cierre.valor",
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
@@ -5364,6 +5391,21 @@
       "fuente_id": "gdelt-76e91e03b51c6e8f",
       "medio": "hessenschau.de",
       "valor": "si"
+     },
+     {
+      "campo": "consecuencias.vuelos_desviados",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-08-11T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EDDF-2025-08-11-EODI-2025-00022",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 3,
+       "min": 3
+      }
      },
      {
       "campo": "consecuencias.vuelos_desviados",
@@ -5566,6 +5608,20 @@
       "idioma": "de",
       "medio": "hessenschau.de",
       "replicas": 0
+     },
+     {
+      "credibilidad": 2,
+      "enlace": "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.08.11-planes-readsb-prod-0",
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-08-11T00:00Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Cierre medido en EDDF: 14:36–15:00 UTC, 24 minutos, 3 desvíos y 12 esperas.",
+      "id": "adsblol-EDDF-2025-08-11-EODI-2025-00022",
+      "idioma": "es",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "replicas": 0
      }
     ],
     "id": "EODI-2025-00022",
@@ -5594,6 +5650,27 @@
     "titulo": {
      "en": "Drone forces closure of Frankfurt airport",
      "es": "Dron obliga a cerrar el aeropuerto de Frankfurt"
+    },
+    "trafico_aereo": {
+     "cierre": {
+      "aeropuerto": "EDDF",
+      "difiere_de_declarado": false,
+      "duracion_min": 24,
+      "fin": {
+       "precision": "minuto",
+       "valor": "2025-08-11T15:00Z"
+      },
+      "inicio": {
+       "precision": "minuto",
+       "valor": "2025-08-11T14:36Z"
+      },
+      "resultado": "cierre_medido",
+      "vuelos_desviados": 3,
+      "vuelos_en_espera": 12
+     },
+     "datos": [
+      "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.08.11-planes-readsb-prod-0"
+     ]
     }
    },
    "type": "Feature"
