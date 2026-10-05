@@ -50412,51 +50412,6 @@
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
-       "valor": "2025-11-01T21:00Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-24154be676682261",
-      "medio": "dhnet.be",
-      "valor": {
-       "max": 2,
-       "min": 1
-      }
-     },
-     {
-      "campo": "drones.numero",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-02T16:30Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-49dfb06e4c79c896",
-      "medio": "dw.com",
-      "valor": {
-       "max": 3,
-       "min": 3
-      }
-     },
-     {
-      "campo": "drones.numero",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-02T17:15Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-ad5cc6e17e8870dd",
-      "medio": "niedziela.pl",
-      "valor": {
-       "max": 3,
-       "min": 3
-      }
-     },
-     {
-      "campo": "drones.numero",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
        "valor": "2025-11-03T07:30Z"
       },
       "fiabilidad": "C",
@@ -50468,40 +50423,19 @@
       }
      },
      {
-      "campo": "lugar.pais",
+      "campo": "drones.numero",
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
-       "valor": "2025-11-01T21:00Z"
+       "valor": "2025-11-03T13:30Z"
       },
       "fiabilidad": "C",
-      "fuente_id": "gdelt-24154be676682261",
-      "medio": "dhnet.be",
-      "valor": "BE"
-     },
-     {
-      "campo": "lugar.pais",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-02T09:15Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-5f8109470d829b8a",
-      "medio": "nieuwsblad.be",
-      "valor": "BE"
-     },
-     {
-      "campo": "lugar.pais",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-02T16:30Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-49dfb06e4c79c896",
-      "medio": "dw.com",
-      "valor": "BE"
+      "fuente_id": "gdelt-ecab8d382c1c7c76",
+      "medio": "eunews.it",
+      "valor": {
+       "max": 4,
+       "min": 4
+      }
      },
      {
       "campo": "lugar.pais",
@@ -50516,40 +50450,16 @@
       "valor": "BE"
      },
      {
-      "campo": "objetivo.categoria",
+      "campo": "lugar.pais",
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
-       "valor": "2025-11-01T21:00Z"
+       "valor": "2025-11-03T09:15Z"
       },
       "fiabilidad": "C",
-      "fuente_id": "gdelt-24154be676682261",
-      "medio": "dhnet.be",
-      "valor": "base_militar"
-     },
-     {
-      "campo": "objetivo.categoria",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-02T09:15Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-5f8109470d829b8a",
-      "medio": "nieuwsblad.be",
-      "valor": "base_militar"
-     },
-     {
-      "campo": "objetivo.categoria",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-02T16:30Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-49dfb06e4c79c896",
-      "medio": "dw.com",
-      "valor": "base_militar"
+      "fuente_id": "gdelt-886b4fe1e4b9e43a",
+      "medio": "brf.be",
+      "valor": "BE"
      },
      {
       "campo": "objetivo.categoria",
@@ -50564,43 +50474,44 @@
       "valor": "base_militar"
      },
      {
-      "campo": "objetivo.nombre",
+      "campo": "objetivo.categoria",
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
-       "valor": "2025-11-01T20:45Z"
+       "valor": "2025-11-03T09:15Z"
       },
       "fiabilidad": "C",
-      "fuente_id": "gdelt-d16dd04bb42a50b0",
-      "medio": "nieuwsblad.be",
-      "valor": "Luchtmachtbasis Kleine-Brogel"
+      "fuente_id": "gdelt-886b4fe1e4b9e43a",
+      "medio": "brf.be",
+      "valor": "base_militar"
      },
      {
       "campo": "objetivo.nombre",
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
-       "valor": "2025-11-02T09:15Z"
+       "valor": "2025-11-03T07:30Z"
       },
       "fiabilidad": "C",
-      "fuente_id": "gdelt-5f8109470d829b8a",
-      "medio": "nieuwsblad.be",
+      "fuente_id": "gdelt-6f742e5ae4bad31c",
+      "medio": "stirileprotv.ro",
+      "valor": "Kleine Brogel"
+     },
+     {
+      "campo": "objetivo.nombre",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-03T09:15Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-886b4fe1e4b9e43a",
+      "medio": "brf.be",
       "valor": "Kleine-Brogel"
      },
      {
-      "campo": "objetivo.nombre",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-02T11:00Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-2ca21ca5440a11f8",
-      "medio": "rtl.be",
-      "valor": "Kleine Brogel"
-     },
-     {
-      "campo": "objetivo.nombre",
+      "campo": "presencia_dron",
+      "cita": "Guvernul a primit sâmbătă rapoarte cu privire la drone care zburau deasupra bazei aeriene Kleine Brogel",
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
@@ -50609,212 +50520,52 @@
       "fiabilidad": "C",
       "fuente_id": "gdelt-6f742e5ae4bad31c",
       "medio": "stirileprotv.ro",
-      "valor": "Kleine Brogel"
-     },
-     {
-      "campo": "presencia_dron",
-      "cita": "Le bourgmestre de Peer, Steven Matheï, a confirmé qu'il s'agissait d'au moins un drone.",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-01T21:00Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-24154be676682261",
-      "medio": "dhnet.be",
       "valor": "confirmada"
      },
      {
       "campo": "presencia_dron",
-      "cita": "Non si è trattato di un semplice sorvolo, ma di una chiara missione mirata a Kleine-Brogel.",
+      "cita": "unbekannten Fluggeräten überflogen wurde",
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
-       "valor": "2025-11-02T10:00Z"
+       "valor": "2025-11-03T09:15Z"
       },
       "fiabilidad": "C",
-      "fuente_id": "gdelt-63ac4f88d5fedea3",
-      "medio": "ilmessaggero.it",
+      "fuente_id": "gdelt-886b4fe1e4b9e43a",
+      "medio": "brf.be",
       "valor": "confirmada"
-     },
-     {
-      "campo": "presencia_dron",
-      "cita": "It was not a simple overflight, but a clear command targeting Kleine Brogel",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-02T16:30Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-49dfb06e4c79c896",
-      "medio": "dw.com",
-      "valor": "no_confirmada"
-     },
-     {
-      "campo": "presencia_dron",
-      "cita": "It was not a simple overflight, but a clear command targeting Kleine Brogel. A drone jammer was used",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-02T16:30Z"
-      },
-      "fiabilidad": "B",
-      "fuente_id": "gdelt-49dfb06e4c79c896-declaracion-2",
-      "medio": "Theo Francken (declaración oficial citada en dw.com)",
-      "valor": "confirmada"
-     },
-     {
-      "campo": "presencia_dron",
-      "cita": "Poliţia din Belgia investighează o nouă intruziune a unor drone deasupra unei baze militare aeriene",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-03T07:30Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-6f742e5ae4bad31c",
-      "medio": "stirileprotv.ro",
-      "valor": "no_confirmada"
-     },
-     {
-      "campo": "presencia_dron",
-      "cita": "Poliţia din Belgia investighează o nouă intruziune a unor drone deasupra unei baze militare aeriene",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-03T07:30Z"
-      },
-      "fiabilidad": "B",
-      "fuente_id": "gdelt-6f742e5ae4bad31c-declaracion-1",
-      "medio": "Theo Francken (declaración oficial citada en stirileprotv.ro)",
-      "valor": "confirmada"
-     },
-     {
-      "campo": "respuesta.medidas",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-01T21:00Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-24154be676682261",
-      "medio": "dhnet.be",
-      "valor": [
-       "patrulla"
-      ]
-     },
-     {
-      "campo": "respuesta.medidas",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-02T17:15Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-ad5cc6e17e8870dd",
-      "medio": "niedziela.pl",
-      "valor": [
-       "inhibicion",
-       "patrulla"
-      ]
      },
      {
       "campo": "tiempo.inicio",
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
-       "valor": "2025-11-01T21:00Z"
+       "valor": "2025-11-03T07:30Z"
       },
       "fiabilidad": "C",
-      "fuente_id": "gdelt-24154be676682261",
-      "medio": "dhnet.be",
+      "fuente_id": "gdelt-6f742e5ae4bad31c",
+      "medio": "stirileprotv.ro",
+      "valor": {
+       "precision": "dia",
+       "valor": "2025-11-01T00:00Z"
+      }
+     },
+     {
+      "campo": "tiempo.inicio",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-03T13:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-ecab8d382c1c7c76",
+      "medio": "eunews.it",
       "valor": {
        "precision": "dia",
        "valor": "2025-10-31T00:00Z"
       }
      },
      {
-      "campo": "tiempo.inicio",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-02T16:30Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-49dfb06e4c79c896",
-      "medio": "dw.com",
-      "valor": {
-       "precision": "dia",
-       "valor": "2025-11-01T00:00Z"
-      }
-     },
-     {
-      "campo": "tiempo.inicio",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-02T17:15Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-ad5cc6e17e8870dd",
-      "medio": "niedziela.pl",
-      "valor": {
-       "precision": "dia",
-       "valor": "2025-11-01T00:00Z"
-      }
-     },
-     {
-      "campo": "tiempo.inicio",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-03T07:30Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-6f742e5ae4bad31c",
-      "medio": "stirileprotv.ro",
-      "valor": {
-       "precision": "dia",
-       "valor": "2025-11-01T00:00Z"
-      }
-     },
-     {
-      "campo": "tipo",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-01T21:00Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-24154be676682261",
-      "medio": "dhnet.be",
-      "valor": "sobrevuelo"
-     },
-     {
-      "campo": "tipo",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-02T10:00Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-63ac4f88d5fedea3",
-      "medio": "ilmessaggero.it",
-      "valor": "sobrevuelo"
-     },
-     {
-      "campo": "tipo",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-02T16:30Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-49dfb06e4c79c896",
-      "medio": "dw.com",
-      "valor": "sobrevuelo"
-     },
-     {
       "campo": "tipo",
       "credibilidad": 3,
       "fecha": {
@@ -50824,6 +50575,18 @@
       "fiabilidad": "C",
       "fuente_id": "gdelt-6f742e5ae4bad31c",
       "medio": "stirileprotv.ro",
+      "valor": "sobrevuelo"
+     },
+     {
+      "campo": "tipo",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-03T09:15Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-886b4fe1e4b9e43a",
+      "medio": "brf.be",
       "valor": "sobrevuelo"
      }
     ],
@@ -50835,7 +50598,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-04T11:17Z"
+      "valor": "2026-10-05T00:17Z"
      }
     },
     "drones": {
@@ -50868,461 +50631,13 @@
     "fuentes": [
      {
       "credibilidad": 3,
-      "enlace": "https://nieuwsblad.be/regio/limburg/peer/opnieuw-drone-boven-luchtmachtbasis-kleine-brogel-gespot-politiehelikopter-kon-tijdlang-volgen-maar-speelde-hem-kwijt/101732734.html",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-01T20:45Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Opnieuw drone boven luchtmachtbasis Kleine-Brogel gespot",
-      "id": "gdelt-d16dd04bb42a50b0",
-      "idioma": "nl",
-      "medio": "nieuwsblad.be",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://dhnet.be/actu/belgique/2025/11/01/de-nouveaux-drones-signales-samedi-soir-au-dessus-de-la-base-militaire-de-kleine-brogel-un-helicoptere-de-police-deploye-3ZLHQ2IP5JHDPFPBIBSKAQTQFE",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-01T21:00Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Le bourgmestre de Peer, Steven Matheï, a confirmé qu'il s'agissait d'au moins un drone.",
-      "id": "gdelt-24154be676682261",
-      "idioma": "fr",
-      "medio": "dhnet.be",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://dhnet.be/actu/belgique/2025/11/01/de-nouveaux-drones-signales-samedi-soir-au-dessus-de-la-base-militaire-de-kleine-brogel-un-helicoptere-de-police-deploye-3ZLHQ2IP5JHDPFPBIBSKAQTQFE",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-01T21:00Z"
-      },
-      "fiabilidad": "B",
-      "frase_origen": "Le bourgmestre de Peer, Steven Matheï, a confirmé qu'il s'agissait d'au moins un drone.",
-      "id": "gdelt-24154be676682261-declaracion-1",
-      "idioma": "fr",
-      "medio": "Burgemeester Peer (declaración oficial citada en dhnet.be)",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://dhnet.be/actu/belgique/2025/11/01/de-nouveaux-drones-signales-samedi-soir-au-dessus-de-la-base-militaire-de-kleine-brogel-un-helicoptere-de-police-deploye-3ZLHQ2IP5JHDPFPBIBSKAQTQFE",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-01T21:00Z"
-      },
-      "fiabilidad": "B",
-      "frase_origen": "M. Matheï et le ministre de la Défense, Theo Francken, ont déjà appelé à une vigilance accrue.",
-      "id": "gdelt-24154be676682261-declaracion-2",
-      "idioma": "fr",
-      "medio": "Ministerie van Defensie (declaración oficial citada en dhnet.be)",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://vrt.be/vrtnws/nl/2025/11/01/waarom-is-militaire-basis-van-kleine-brogel-zo-belangrijk",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-01T23:45Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "\"Onbegrijpelijk dat er drones worden gespot in Kleine-Brogel\": waarom is de militaire basis zo belangrijk?",
-      "id": "gdelt-f832b0fde05fbbba",
-      "idioma": "nl",
-      "medio": "vrt.be",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://nieuwsblad.be/regio/limburg/peer/opnieuw-drones-boven-luchtmachtbasis-kleine-brogel-gespot-antidronewapen-zonder-succes-ingezet/101732734.html",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-02T09:15Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Opnieuw drones boven luchtmachtbasis Kleine-Brogel gespot, antidronewapen zonder succes ingezet.",
-      "id": "gdelt-5f8109470d829b8a",
-      "idioma": "nl",
-      "medio": "nieuwsblad.be",
-      "replicas": 1
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://brf.be/national/2021024",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-02T09:30Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Wieder Drohnen über Militärbasis Kleine-Brogel aufgetaucht",
-      "id": "gdelt-12ff4f0d4ba60c68",
-      "idioma": "de",
-      "medio": "brf.be",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://ilmessaggero.it:443/mondo/droni_base_militare_belgio_armi_nucleari_stati_uniti_kleine_brogel_guerra_ucraina_russia-9164355.html",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-02T10:00Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Non si è trattato di un semplice sorvolo, ma di una chiara missione mirata a Kleine-Brogel.",
-      "id": "gdelt-63ac4f88d5fedea3",
-      "idioma": "it",
-      "medio": "ilmessaggero.it",
-      "replicas": 1
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://viveresanbenedetto.it/altrigiornali/14/168556-2025",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-02T10:15Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Ancora droni sul Belgio, nuovo avvistamento su una base militare di Kleine Brogel • Vivere San Benedetto notizie per la città e il territorio",
-      "id": "gdelt-47ccf3ab53df414b",
-      "idioma": "it",
-      "medio": "viveresanbenedetto.it",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://zazoom.it/news-notizia/post/899618/2025-11-02-droni-sui-cieli-kleine-brogel-nuovo-sorvolo-sulla-base-militare-belga--09-33",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-02T10:45Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Droni sui cieli di Kleine Brogel: nuovo sorvolo sulla base militare belga",
-      "id": "gdelt-1467d8e1d47d3e5d",
-      "idioma": "it",
-      "medio": "zazoom.it",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://rtl.be/actu/regions/flandre/trois-drones-suspects-plus-grands-reperes-au-dessus-de-kleine-brogel-le/2025-11-01/article/768977",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-02T11:00Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Trois drones suspects « plus grands » repérés au-dessus de Kleine-Brogel",
-      "id": "gdelt-2ca21ca5440a11f8",
-      "idioma": "fr",
-      "medio": "rtl.be",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://t-online.de/nachrichten/ausland/krisen/id_100982444/belgien-wieder-drohnen-ueber-militaerbasis-kleine-brogel-gesichtet.html",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-02T11:30Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Belgien: Wieder Drohnen über Militärbasis Kleine-Brogel gesichtet",
-      "id": "gdelt-ebf844ad2692f0aa",
-      "idioma": "de",
-      "medio": "t-online.de",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://welt.de/politik/ausland/article6907302cdf9fa029228f0b33/militaerbasis-kleine-brogel-wieder-drohnen-ueber-von-nato-genutzter-basis-in-belgien-stoersender-blieben-erfolglos.html",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-02T11:45Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Militärbasis Kleine-Brogel: Wieder Drohnen über von Nato genutzter Basis in Belgien – Störsender blieben erfolglos",
-      "id": "gdelt-e7be5a3c667a25bf",
-      "idioma": "de",
-      "medio": "welt.de",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://ostbelgiendirekt.be/drohnen-ueber-kleine-brogel-428700",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-02T12:45Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Erneut Drohnen über Militärflugplatz Kleine-Brogel",
-      "id": "gdelt-d6818548d9f78ee8",
-      "idioma": "de",
-      "medio": "ostbelgiendirekt.be",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://tvn24.pl/swiat/belgia-drony-ponownie-nad-baza-wojskowa-kleine-brogel-minister-obrony-to-nie-byl-zwykly-przelot-st8732205",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-02T14:15Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Belgia. Drony ponownie nad bazą wojskową Kleine Brogel. Minister obrony: to nie był zwykły przelot",
-      "id": "gdelt-eb427acbc6b0441c",
-      "idioma": "pl",
-      "medio": "tvn24.pl",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://niezalezna.pl/swiat/belgia-nad-baza-wojskowa-kleine-brogel-znow-pojawily-sie-drony/555684",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-02T15:15Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Belgia: nad bazą wojskową Kleine-Brogel znów pojawiły się drony",
-      "id": "gdelt-7c321f9d351b59b5",
-      "idioma": "pl",
-      "medio": "niezalezna.pl",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://italpress.com/belgio-avvistati-droni-sulla-base-militare-di-kleine-brogel-per-la-seconda-notte-consecutiva",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-02T15:15Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Belgio, avvistati droni sulla base militare di Kleine-Brogel per la seconda notte consecutiva",
-      "id": "gdelt-ce922f390d2a4a10",
-      "idioma": "it",
-      "medio": "italpress.com",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://rtl.be/actu/regions/flandre/trois-drones-suspects-plus-grands-reperes-au-dessus-de-kleine-brogel-il-ne-sagit/2025-11-01/article/768977",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-02T15:30Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Trois drones suspects « plus grands » repérés au-dessus de Kleine-Brogel : « Il ne s'agit pas d'accidents », assure Théo Francken qui soupçonne des",
-      "id": "gdelt-ff6cba5bbbb63039",
-      "idioma": "fr",
-      "medio": "rtl.be",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://meteoweb.eu/2025/11/un-drone-avvistato-sulla-base-aerea-di-kleine-brogel-un-elicottero-della-polizia-allinseguimento/1001856211",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-02T15:45Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Un drone avvistato sulla base aerea di Kleine Brogel: un elicottero della polizia all'inseguimento",
-      "id": "gdelt-648f07127dbf07cf",
-      "idioma": "it",
-      "medio": "meteoweb.eu",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://rp.pl/konflikty-zbrojne/art43275751-drony-nad-baza-wojskowa-w-belgii-misja-ewidentnie-wymierzona-w-kleine-brogel",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-02T16:30Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Drony zaobserwowane nad bazą wojskową Kleine Brogel w Belgii",
-      "id": "gdelt-159d50b67ef3339f",
-      "idioma": "pl",
-      "medio": "rp.pl",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://dw.com/en/belgium-drone-sightings-at-kleine-brogel-airbase/a-74590891",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-02T16:30Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "It was not a simple overflight, but a clear command targeting Kleine Brogel",
-      "id": "gdelt-49dfb06e4c79c896",
-      "idioma": "en",
-      "medio": "dw.com",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://dw.com/en/belgium-drone-sightings-at-kleine-brogel-airbase/a-74590891",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-02T16:30Z"
-      },
-      "fiabilidad": "B",
-      "frase_origen": "Last night, we received 3 reports of drones above Kleine Brogel, of a larger type and flying at higher altitude",
-      "id": "gdelt-49dfb06e4c79c896-declaracion-1",
-      "idioma": "en",
-      "medio": "Theo Francken (declaración oficial citada en dw.com)",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://dw.com/en/belgium-drone-sightings-at-kleine-brogel-airbase/a-74590891",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-02T16:30Z"
-      },
-      "fiabilidad": "B",
-      "frase_origen": "It was not a simple overflight, but a clear command targeting Kleine Brogel. A drone jammer was used",
-      "id": "gdelt-49dfb06e4c79c896-declaracion-2",
-      "idioma": "en",
-      "medio": "Theo Francken (declaración oficial citada en dw.com)",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://niedziela.pl/artykul/117971/Belgia-Nad-baza-wojskowa-Kleine-Brogel-po-raz-kolejny-zauwazono",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-02T17:15Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Wczoraj wieczorem otrzymaliśmy trzy zgłoszenia o dronach nad Kleine Brogel.",
-      "id": "gdelt-ad5cc6e17e8870dd",
-      "idioma": "pl",
-      "medio": "niedziela.pl",
-      "replicas": 1
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://niedziela.pl/artykul/117971/Belgia-Nad-baza-wojskowa-Kleine-Brogel-po-raz-kolejny-zauwazono",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-02T17:15Z"
-      },
-      "fiabilidad": "B",
-      "frase_origen": "Wczoraj wieczorem otrzymaliśmy trzy zgłoszenia o dronach nad Kleine Brogel, większych i latających na większych wysokościach.",
-      "id": "gdelt-ad5cc6e17e8870dd-declaracion-1",
-      "idioma": "pl",
-      "medio": "Ministerie van Defensie (declaración oficial citada en niedziela.pl)",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://zazoom.it/2025-11-02/ancora-droni-sul-belgio-secondo-avvistamento-in-meno-di-24-ore-sulla-base-militare-di-kleine-brogel-elicottero-della-polizia-si-lancia-allinseguimento/18058904",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-02T17:30Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Ancora droni sul Belgio | secondo avvistamento in meno di 24 ore sulla base militare di Kleine Brogel Elicottero della polizia si lancia all'inseguimento",
-      "id": "gdelt-2589a63318189bc5",
-      "idioma": "it",
-      "medio": "zazoom.it",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://europa.today.it/attualita/belgio-droni-base-kleine-brogel.html",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-02T17:45Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Belgio, droni non identificati sulla base Nato di Kleine-Brogel: \"Potrebbe essere spionaggio russo\"",
-      "id": "gdelt-b26481b525e1a5ba",
-      "idioma": "it",
-      "medio": "europa.today.it",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://ziare.com/baza-nato-belgia/obiectiv-aveau-dronele-survolat-weekend-baza-nato-belgia-1974232",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-02T20:30Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Belgienii au dezvăluit obiectivul dronelor care au survolat în weekend baza nucleară NATO Kleine Brogel. ''Vin să spioneze avioanele de vânătoare și muniția''",
-      "id": "gdelt-5d9a3a937069d068",
-      "idioma": "ro",
-      "medio": "ziare.com",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://nieuwsblad.be/regio/limburg/peer/alweer-verschillende-drones-gespot-aan-luchtmachtbasis-van-kleine-brogel-politiehelikopter-zet-tevergeefs-achtervolging-in/101875495.html",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-02T20:30Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Alweer verschillende drones gespot aan luchtmachtbasis van Kleine-Brogel, politiehelikopter zet tevergeefs achtervolging in",
-      "id": "gdelt-7c2f5ea1390ba620",
-      "idioma": "nl",
-      "medio": "nieuwsblad.be",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://lavenir.net/actu/belgique/2025/11/02/des-drones-encore-apercus-pres-de-la-base-militaire-de-kleine-brogel-ce-dimanche-AR3CQUCAVJGTBOAKFWGBRBLU2M",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-02T22:15Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Des drones encore aperçus près de la base militaire de Kleine-Brogel ce dimanche: il s'agit du 2e incident du genre au même endroit en 2",
-      "id": "gdelt-38c3eb7e257b25da",
-      "idioma": "fr",
-      "medio": "lavenir.net",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://vrt.be/vrtnws/nl/2025/11/02/opnieuw-drones-in-kleine-brogel",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-02T23:15Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Alweer drones boven luchtmachtbasis van Kleine-Brogel: politiehelikopter ingezet, maar opnieuw zonder resultaat",
-      "id": "gdelt-1fb15562e5838e28",
-      "idioma": "nl",
-      "medio": "vrt.be",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://lalibre.be/dernieres-depeches/2025/11/02/des-drones-a-nouveau-reperes-au-dessus-de-la-base-aerienne-de-kleine-brogel-23WOLBWDEVATDIUD2O64XME7XE",
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-11-02T23:15Z"
-      },
-      "fiabilidad": "C",
-      "frase_origen": "Des drones à nouveau repérés au-dessus de la base aérienne de Kleine-Brogel",
-      "id": "gdelt-ecedad7e0bdba820",
-      "idioma": "fr",
-      "medio": "lalibre.be",
-      "replicas": 0
-     },
-     {
-      "credibilidad": 3,
       "enlace": "https://stirileprotv.ro/stiri/international/un-nou-incident-cu-drone-in-belgia-deasupra-unei-baze-militare-ministrul-apararii-znu-a-fost-un-simplu-survol.html",
       "fecha": {
        "precision": "aproximada",
        "valor": "2025-11-03T07:30Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "Poliţia din Belgia investighează o nouă intruziune a unor drone deasupra unei baze militare aeriene",
+      "frase_origen": "Guvernul a primit sâmbătă rapoarte cu privire la drone care zburau deasupra bazei aeriene Kleine Brogel",
       "id": "gdelt-6f742e5ae4bad31c",
       "idioma": "ro",
       "medio": "stirileprotv.ro",
@@ -51336,10 +50651,122 @@
        "valor": "2025-11-03T07:30Z"
       },
       "fiabilidad": "B",
-      "frase_origen": "Poliţia din Belgia investighează o nouă intruziune a unor drone deasupra unei baze militare aeriene",
+      "frase_origen": "Guvernul a primit sâmbătă rapoarte cu privire la drone care zburau deasupra bazei aeriene Kleine Brogel",
       "id": "gdelt-6f742e5ae4bad31c-declaracion-1",
       "idioma": "ro",
       "medio": "Theo Francken (declaración oficial citada en stirileprotv.ro)",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://brf.be/national/2021246",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-03T09:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "unbekannten Fluggeräten überflogen wurde",
+      "id": "gdelt-886b4fe1e4b9e43a",
+      "idioma": "de",
+      "medio": "brf.be",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://limburger.nl/regio/weert/nederlandse-politie-speurde-op-verzoek-belgen-mee-naar-drones-boven-militaire-vliegbasis-niet-ver-over-grens-bij-weert/101967445.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-03T13:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Nederlandse politie speurde op verzoek Belgen mee naar drones boven militaire vliegbasis niet ver over grens bij Weert",
+      "id": "gdelt-0141df4515d52250",
+      "idioma": "nl",
+      "medio": "limburger.nl",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://eunews.it/2025/11/03/ancora-droni-nel-cielo-del-belgio-presa-di-mira-la-piu-grande-base-militare-del-paese",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-03T13:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "nella notte tra venerdì (31 ottobre) e sabato",
+      "id": "gdelt-ecab8d382c1c7c76",
+      "idioma": "it",
+      "medio": "eunews.it",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://tvn24.pl/swiat/belgia-drony-nad-baza-wojskowa-kleine-brogel-z-bronia-jadrowa-wladze-to-moglo-byc-szpiegostwo-st8733305",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-03T14:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Belgia. Drony nad bazą wojskową Kleine-Brogel z bronią jądrową. Władze: to mogło być szpiegostwo",
+      "id": "gdelt-b683689fc6c973b3",
+      "idioma": "pl",
+      "medio": "tvn24.pl",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://independent.co.uk/news/world/europe/belgium-air-base-drones-spying-b2857432.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-03T14:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Belgium's Kleine Brogel air base hit by suspected drone 'spying operation'",
+      "id": "gdelt-37b32486d402dd10",
+      "idioma": "en",
+      "medio": "independent.co.uk",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://firstpost.com/world/belgium-defence-minister-suspects-unidentified-spy-drones-near-nato-air-base-13947506.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-03T14:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Belgium Defence suspects unidentified spy drones near Kleine Brogel air base – Firstpost",
+      "id": "gdelt-8da656691d7b1e8b",
+      "idioma": "en",
+      "medio": "firstpost.com",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://lalibre.be/dernieres-depeches/2025/11/03/intrusion-de-drones-dans-lespace-aerien-europeen-drones-suspects-la-base-de-kleine-brogel-mobilise-les-riverains-D4HDIH3QYJHOBLPJHUCRGWIKNI",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-03T19:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Intrusion de drones dans l'espace aérien européen - Drones suspects : la base de Kleine-Brogel mobilise les riverains",
+      "id": "gdelt-057fd32131701424",
+      "idioma": "fr",
+      "medio": "lalibre.be",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://vrt.be/vrtnws/nl/2025/11/03/tips-herkennen-drones-kleine-brogel-peer",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-03T22:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Hoe meld ik een verdachte drone? Luchtmachtbasis Kleine-Brogel geeft tips aan omwonenden",
+      "id": "gdelt-c5a675dcc570be0d",
+      "idioma": "nl",
+      "medio": "vrt.be",
       "replicas": 0
      }
     ],
@@ -51353,11 +50780,6 @@
      "nombre": "Luchtmachtbasis Kleine Brogel"
     },
     "presencia_dron": "confirmada",
-    "respuesta": {
-     "medidas": [
-      "patrulla"
-     ]
-    },
     "tiempo": {
      "inicio": {
       "precision": "dia",
@@ -51366,8 +50788,8 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Drones fly over Kleine Brogel military base in Belgium",
-     "es": "Drones sobrevuelan la base militar de Kleine Brogel en Bélgica"
+     "en": "Drones fly over Kleine Brogel air base in Belgium",
+     "es": "Drones sobrevuelan la base aérea de Kleine Brogel en Bélgica"
     }
    },
    "type": "Feature"
@@ -101812,6 +101234,189 @@
     "titulo": {
      "en": "Liège airport closure due to drone sighting",
      "es": "Cierre del aeropuerto de Lieja por avistamiento de drones"
+    }
+   },
+   "type": "Feature"
+  },
+  {
+   "geometry": {
+    "coordinates": [
+     5.7043,
+     51.65714
+    ],
+    "type": "Point"
+   },
+   "id": "EODI-2025-00438",
+   "properties": {
+    "afirmaciones_publicas": [
+     {
+      "campo": "drones.numero",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-23T11:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-c90ef6ba0946ad20",
+      "medio": "omroepbrabant.nl",
+      "valor": {
+       "max": 10,
+       "min": 2
+      }
+     },
+     {
+      "campo": "lugar.pais",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-23T09:45Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-6cf8f144915e121f",
+      "medio": "firstpost.com",
+      "valor": "NL"
+     },
+     {
+      "campo": "presencia_dron",
+      "cita": "Er is een aantal drones daadwerkelijk over het hek gevlogen in Volkel.",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-23T11:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-c90ef6ba0946ad20",
+      "medio": "omroepbrabant.nl",
+      "valor": "confirmada"
+     },
+     {
+      "campo": "respuesta.medidas",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-23T09:45Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-6cf8f144915e121f",
+      "medio": "firstpost.com",
+      "valor": [
+       "patrulla"
+      ]
+     },
+     {
+      "campo": "tiempo.inicio",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-23T11:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-c90ef6ba0946ad20",
+      "medio": "omroepbrabant.nl",
+      "valor": {
+       "precision": "dia",
+       "valor": "2025-11-23T00:00Z"
+      }
+     },
+     {
+      "campo": "tipo",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-23T11:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-c90ef6ba0946ad20",
+      "medio": "omroepbrabant.nl",
+      "valor": "sobrevuelo"
+     }
+    ],
+    "consecuencias": {
+     "cierre": {
+      "valor": "desconocido"
+     }
+    },
+    "control": {
+     "ultima_actualizacion": {
+      "precision": "minuto",
+      "valor": "2026-10-05T00:17Z"
+     }
+    },
+    "drones": {
+     "numero": {
+      "max": 10,
+      "min": 2
+     }
+    },
+    "estado": {
+     "actual": "notificado",
+     "historial": [
+      {
+       "estado": "notificado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2025-11-23T09:45Z"
+       },
+       "fuente_id": "gdelt-6cf8f144915e121f"
+      }
+     ]
+    },
+    "fuentes": [
+     {
+      "credibilidad": 3,
+      "enlace": "https://firstpost.com/world/another-mystery-drone-sighted-over-the-netherlands-volkel-air-base-dutch-military-opens-fire-at-it-13953253.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-23T09:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Dutch military opens fire at it.",
+      "id": "gdelt-6cf8f144915e121f",
+      "idioma": "en",
+      "medio": "firstpost.com",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://omroepbrabant.nl/nieuws/4794481/weer-drones-bij-vliegbasis-volkel-hoofdkwartier-dag-en-nacht-bezig",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-23T11:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Er is een aantal drones daadwerkelijk over het hek gevlogen in Volkel.",
+      "id": "gdelt-c90ef6ba0946ad20",
+      "idioma": "nl",
+      "medio": "omroepbrabant.nl",
+      "replicas": 0
+     }
+    ],
+    "id": "EODI-2025-00438",
+    "lugar": {
+     "pais": "NL",
+     "radio_km": 5.0
+    },
+    "objetivo": {
+     "categoria": "aeropuerto",
+     "nombre": "Vliegbasis Volkel",
+     "oaci": "EHVK"
+    },
+    "presencia_dron": "confirmada",
+    "respuesta": {
+     "medidas": [
+      "patrulla"
+     ]
+    },
+    "tiempo": {
+     "inicio": {
+      "precision": "dia",
+      "valor": "2025-11-23T00:00Z"
+     }
+    },
+    "tipo": "sobrevuelo",
+    "titulo": {
+     "en": "Drones over Volkel Air Base prompt Dutch military to open fire",
+     "es": "Drones sobre la base aérea de Volkel obligan al ejército holandés a abrir fuego"
     }
    },
    "type": "Feature"

@@ -18666,15 +18666,15 @@
     },
     {
      "campo": "presencia_dron",
-     "cita": "Autoritățile, în alertă. Spațiul aerian a fost închis, vineri seara, după ce două drone au pătruns în R. Moldova",
+     "cita": "Două drone au survolat ilegal, vineri seară, nordul Republicii Moldova.",
      "credibilidad": 3,
      "fecha": {
       "precision": "aproximada",
       "valor": "2025-11-29T09:00Z"
      },
      "fiabilidad": "C",
-     "fuente_id": "gdelt-ca2e54158f5c6f9f",
-     "medio": "news.yam.md",
+     "fuente_id": "gdelt-23fdda2514dd0fc6",
+     "medio": "adevarul.ro",
      "valor": "confirmada"
     },
     {
@@ -18722,7 +18722,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-04T11:17Z"
+     "valor": "2026-10-05T00:17Z"
     }
    },
    "drones": {
@@ -18804,8 +18804,374 @@
    },
    "tipo": "sobrevuelo",
    "titulo": {
-    "en": "Russian drones breach Moldova's airspace, forcing temporary closure",
-    "es": "Drones rusos violan el espacio aéreo de Moldavia y obligan a cerrar temporalmente la zona"
+    "en": "Unidentified drones violate Moldova's airspace",
+    "es": "Drones no identificados violan el espacio aéreo de Moldavia"
+   }
+  },
+  {
+   "afirmaciones_publicas": [
+    {
+     "campo": "consecuencias.cierre.valor",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-29T09:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-71f4df8829e0930c",
+     "medio": "hotnews.ro",
+     "valor": "si"
+    },
+    {
+     "campo": "drones.numero",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-29T09:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-71f4df8829e0930c",
+     "medio": "hotnews.ro",
+     "valor": {
+      "max": 2,
+      "min": 2
+     }
+    },
+    {
+     "campo": "lugar.pais",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-29T09:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-71f4df8829e0930c",
+     "medio": "hotnews.ro",
+     "valor": "MD"
+    },
+    {
+     "campo": "presencia_dron",
+     "cita": "spaţiul aerian, care a fost redeschis ulterior",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-29T09:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-71f4df8829e0930c",
+     "medio": "hotnews.ro",
+     "valor": "confirmada"
+    },
+    {
+     "campo": "tiempo.fin",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-29T09:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-71f4df8829e0930c",
+     "medio": "hotnews.ro",
+     "valor": {
+      "precision": "dia",
+      "valor": "2025-11-28T00:00Z"
+     }
+    },
+    {
+     "campo": "tiempo.inicio",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-29T09:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-71f4df8829e0930c",
+     "medio": "hotnews.ro",
+     "valor": {
+      "precision": "dia",
+      "valor": "2025-11-28T00:00Z"
+     }
+    },
+    {
+     "campo": "tipo",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-29T09:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-71f4df8829e0930c",
+     "medio": "hotnews.ro",
+     "valor": "interrupcion_aeroportuaria"
+    }
+   ],
+   "ataque": {
+    "id": "EODI-UA-2025-0320",
+    "jornada": {
+     "desde": "2025-11-27",
+     "hasta": "2025-11-28",
+     "tipo": "noche"
+    },
+    "por": "fecha"
+   },
+   "consecuencias": {
+    "cierre": {
+     "valor": "si"
+    }
+   },
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-05T00:17Z"
+    }
+   },
+   "drones": {
+    "numero": {
+     "max": 2,
+     "min": 2
+    }
+   },
+   "estado": {
+    "actual": "notificado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-29T09:30Z"
+      },
+      "fuente_id": "gdelt-71f4df8829e0930c"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://hotnews.ro/doua-drone-rusesti-au-violat-din-nou-spatiul-aerian-al-republicii-moldova-2119038",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-29T09:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "spaţiul aerian, care a fost redeschis ulterior",
+     "id": "gdelt-71f4df8829e0930c",
+     "idioma": "ro",
+     "medio": "hotnews.ro",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://ewn.co.za/2025/11/29/moldova-says-briefly-shut-airspace-after-fresh-drone-breach",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-29T10:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Moldova says briefly shut airspace after fresh drone breach",
+     "id": "gdelt-2b2b569ba9ca5784",
+     "idioma": "en",
+     "medio": "ewn.co.za",
+     "replicas": 2
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://news.yam.md/ro/story/18209456",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-29T10:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Două drone au traversat nordul R. Moldova. Spațiul aerian, temporar închis",
+     "id": "gdelt-1aa8de5e53158658",
+     "idioma": "ro",
+     "medio": "news.yam.md",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://realitatea.net/stiri/actual/alerta-la-granita-doua-drone-rusesti-au-intrat-ilegal-in-moldova-spatiul-aerian-a-fost-inchis_692abdd5b38a260ff04f9e06",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-29T11:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Alertă la graniță! Două drone rusești au intrat ilegal în Moldova. Spațiul aerian a fost închis",
+     "id": "gdelt-4a646360439e5014",
+     "idioma": "ro",
+     "medio": "realitatea.net",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://romania-actualitati.ro/stiri/in-lume/doua-drone-au-survolat-spatiul-aerian-al-republicii-moldova-id220020.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-29T12:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Două drone au survolat spațiul aerian al Republicii Moldova",
+     "id": "gdelt-40f6663090db77a7",
+     "idioma": "ro",
+     "medio": "romania-actualitati.ro",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://cp24.com/news/world/2025/11/29/moldova-briefly-shuts-airspace-after-new-drone-breach",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-29T17:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Airspace in Moldova closed briefly after drone breach",
+     "id": "gdelt-4e3dc223d65bffc8",
+     "idioma": "en",
+     "medio": "cp24.com",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://marketscreener.com/news/moldova-says-russian-drones-entered-its-airspace-again-posing-aviation-threat-ce7d51dbdf8ffe21",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-29T17:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Moldova says Russian drones entered its airspace again, posing aviation threat",
+     "id": "gdelt-5ba694f7405852d6",
+     "idioma": "en",
+     "medio": "marketscreener.com",
+     "replicas": 2
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://bt.dk/udland/moldova-russiske-droner-har-kraenket-vores-luftrum-igen",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-29T19:15Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Moldova: Russiske droner har krænket vores luftrum, igen",
+     "id": "gdelt-8c387ef51ecc416a",
+     "idioma": "da",
+     "medio": "bt.dk",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://firstpost.com/world/moldova-closes-airspace-after-russian-drones-cross-border-for-third-time-in-nine-days-ws-e-13955151.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-29T19:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Moldova closes airspace after Russian drones cross border for third time in nine days",
+     "id": "gdelt-e5584163c3eeb32b",
+     "idioma": "en",
+     "medio": "firstpost.com",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://lemonde.fr/en/international/article/2025/11/29/moldova-temporarily-closes-airspace-after-russian-drone-incursion_6747971_4.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-29T20:15Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Moldova temporarily closes airspace after Russian drone incursion",
+     "id": "gdelt-1ca47478c8db740c",
+     "idioma": "en",
+     "medio": "lemonde.fr",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://yahoo.com/news/articles/moldova-says-russian-drones-violated-195631274.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-29T21:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Moldova says Russian drones violated airspace",
+     "id": "gdelt-e905391bd6cd5cc1",
+     "idioma": "en",
+     "medio": "yahoo.com",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://dr.dk/nyheder/seneste/moldova-siger-russiske-droner-har-kraenket-luftrummet",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-29T22:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Moldova siger, at russiske droner har krænket luftrummet | Nyheder",
+     "id": "gdelt-52b3333726c4462a",
+     "idioma": "da",
+     "medio": "dr.dk",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://gdnonline.com:443/Details/1369750/Moldova-says-Russian-drones-entered-its-airspace-again,-posing-aviation-threat",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-29T22:15Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "World News: Moldova says Russian drones entered its airspace again, posing aviation threat",
+     "id": "gdelt-79066051ae1203a1",
+     "idioma": "en",
+     "medio": "gdnonline.com",
+     "replicas": 1
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://athens-times.com/moldova-russian-drones-violate-airspace-for-third-time-in-nine-days",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-29T23:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Russian Drones Breach Moldova Airspace Again",
+     "id": "gdelt-9de82ce3679fa38a",
+     "idioma": "en",
+     "medio": "athens-times.com",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://gdnonline.com:443/Details/1369810",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-29T23:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "World News: Moldova says drones entered its airspace again",
+     "id": "gdelt-1381904cbc1eb525",
+     "idioma": "en",
+     "medio": "gdnonline.com",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-2025-00437",
+   "lugar": {
+    "nivel": "pais",
+    "pais": "MD"
+   },
+   "presencia_dron": "confirmada",
+   "tiempo": {
+    "inicio": {
+     "precision": "dia",
+     "valor": "2025-11-28T00:00Z"
+    }
+   },
+   "tipo": "sobrevuelo",
+   "titulo": {
+    "en": "Two Russian drones breach Moldova's airspace, forcing temporary airport closure",
+    "es": "Dos drones rusos violan el espacio aéreo de Moldavia y obligan a cerrar temporalmente el aeropuerto"
    }
   },
   {
