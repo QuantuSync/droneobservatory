@@ -212,7 +212,10 @@ REGLAS: dict[str, tuple[str, ...]] = {
                      "ficha:objetivo_nombre", NOTICIAS),
     "lugar.punto": _LUGAR, "lugar.radio_km": _LUGAR, "lugar.nivel": _LUGAR,
     "lugar.region": _LUGAR, "lugar.geocodificacion": _LUGAR, "lugar.nuts2": _LUGAR,
-    "lugar.pais": _LUGAR,
+    "lugar.pais": _LUGAR, "lugar.fuente_punto": _LUGAR, "lugar.otros_lugares": _LUGAR,
+    # La localidad corregida a mano (recogida/revisados.py): la que nombran las noticias.
+    "lugar.localidad": ("lugar.suceso", "objetivo.nombre", "ficha:lugar_suceso", "ficha:localidad",
+                        NOTICIAS),
     "objetivo.categoria": ("ficha:objetivo_conocido", "lugar.suceso", NOTICIAS),
     "objetivo.nombre": ("ficha:objetivo_conocido", "lugar.suceso", NOTICIAS),
     "objetivo.oaci": ("objetivo.nombre",), "objetivo.uso": ("objetivo.nombre",),
@@ -414,6 +417,11 @@ def procedencia_incidente(documento: Documento, fichas: Fichas) -> tuple[Documen
             return valor if valor.fuentes else None
         if ruta == "foco_termico":
             return Valor({MEDIDO}, PARSER)
+        punto = documento["lugar"].get("fuente_punto")
+        if ruta.startswith("lugar.") and ruta != "lugar.pais" and punto in fuentes:
+            # El lugar que da una autoridad en su frase (recogida/revisados.py, ubicaciones): el
+            # punto, el radio, el nombre y los demás lugares salen de esa fuente.
+            return Valor({origen[punto]}, REGLA, {punto})
         if ruta == "ataque":
             # Enlace con el ataque de su noche: lo deduce una regla (proceso/cruces.py) de las
             # fuentes del incidente y del periodo del parte.

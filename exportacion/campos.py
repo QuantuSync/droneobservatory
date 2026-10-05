@@ -146,6 +146,14 @@ CAMPOS_PUBLICOS_INCIDENTE: frozenset[str] = frozenset(
         "lugar.radio_km",
         "lugar.pais",
         "lugar.localidad",
+        # El lugar que da una autoridad: la fuente que lo nombra y los demás lugares que cita
+        # (recogida/revisados.py, ubicaciones).
+        "lugar.fuente_punto",
+        "lugar.otros_lugares",
+        "lugar.otros_lugares[].nombre",
+        "lugar.otros_lugares[].punto",
+        "lugar.otros_lugares[].punto.lat",
+        "lugar.otros_lugares[].punto.lon",
         "objetivo",
         "objetivo.categoria",
         "objetivo.nombre",

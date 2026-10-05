@@ -461,6 +461,8 @@ export const es: Textos = {
     presenciaDron: "Presencia de dron",
     fecha: "Fecha",
     lugar: "Lugar",
+    lugarSegun: "Lugar según",
+    otrosLugares: "Otros lugares",
     radio: (km) => `área de ${km} km de radio`,
     drones: "Drones",
     duracion: "Duración",

@@ -18,9 +18,12 @@ como versión nueva del incidente, con la afirmación de presencia_dron y su fue
 queda en el historial. Es idempotente: la recogida horaria la ejecuta en cada pasada.
 """
 
+import json
 import re
 from dataclasses import dataclass
 from datetime import UTC, datetime
+from functools import cache
+from pathlib import Path
 from typing import Any
 
 from almacen.base import Almacen, DocumentoInvalido
@@ -30,6 +33,7 @@ from proceso.estados import Estado
 from proceso.incidentes import activo, id_fuente
 
 TABLA_MOTIVOS = "incidentes_motivos"
+REVISADOS = Path(__file__).resolve().parent.parent / "configuracion" / "incidentes_revisados.json"
 
 
 @dataclass(frozen=True)
@@ -276,6 +280,13 @@ def _candidatos(incidente: Documento, por_id: dict[str, Documento], absorbidos: 
     return resultado
 
 
+@cache
+def presencias_revisadas(ruta: Path = REVISADOS) -> frozenset[str]:
+    """Los incidentes con la presencia del dron revisada a mano."""
+    datos = json.loads(ruta.read_text(encoding="utf-8"))
+    return frozenset(t["incidente"] for t in datos.get("titulares", []) if "presencia" in t)
+
+
 def pendientes(almacen: Almacen) -> list[tuple[Documento, Cambio]]:
     """Los incidentes cuya presencia confirma la regla y aún no la tienen, con el cambio."""
     todos = almacen.incidentes()
@@ -290,6 +301,10 @@ def pendientes(almacen: Almacen) -> list[tuple[Documento, Cambio]]:
             continue
         # Desmentido por una autoridad: la frase de otra que cuenta los drones no lo cambia.
         if incidente["estado"]["actual"] == Estado.DESMENTIDO:
+            continue
+        # Revisada a mano con la cita que la deja abierta (configuracion/incidentes_revisados.json,
+        # recogida/revisados.py): la regla no la vuelve a confirmar.
+        if incidente["id"] in presencias_revisadas():
             continue
         # Lo que dice de la presencia una autoridad en su propio documento (proceso/detalle.py:
         # una investigación cerrada que no pudo demostrar que fueran drones) manda sobre la

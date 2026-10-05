@@ -61,6 +61,23 @@ def con_afirmaciones(incidente: Documento) -> Documento | None:
     return documento
 
 
+def vista_publica(incidente: Documento) -> Documento | None:
+    """Lo que se publica del incidente (con las mismas listas de campos que el mapa o que los
+    incidentes sin punto): sobre esto se comprueba que la cita respalda el titular, igual que
+    la prueba fija lo comprueba sobre los ficheros publicados."""
+    documento = con_afirmaciones(incidente)
+    if documento is None:
+        return None
+    campos = (
+        CAMPOS_PUBLICOS_INCIDENTE
+        if "punto" in documento["lugar"]
+        else CAMPOS_PUBLICOS_SIN_UBICACION
+    )
+    publico: Documento = proyectar(documento, campos)
+    publico["id"] = documento["id"]
+    return publico
+
+
 def sin_ubicacion(incidente: Documento) -> Documento | None:
     documento = con_afirmaciones(incidente)
     if documento is None:
@@ -80,9 +97,11 @@ def publicables(
         # Un incidente fundido en otro sale dentro de aquel; uno retirado no sale.
         if "fusionado_en" in incidente or "retirado" in incidente:
             continue
-        # Un parte de guerra no es autoridad sobre lo que pasa en otro país: si su cita no
-        # respalda el titular, no se publica (proceso/cita_titular.py).
-        if cita_titular.solo_partes_de_guerra(incidente) and not cita_titular.respalda(incidente):
+        # El titular no puede afirmar lo que sus citas publicadas no dicen: si ninguna lo
+        # respalda (y no está revisado y justificado a mano), no se publica hasta que se revise
+        # (proceso/cita_titular.py). Un parte de guerra solo no es autoridad sobre otro país.
+        publico = vista_publica(incidente)
+        if publico is not None and not cita_titular.publicable(publico):
             registro.warning("%s no se publica: su cita no respalda el titular", incidente["id"])
             continue
         fuera = errores_ubicacion(incidente)

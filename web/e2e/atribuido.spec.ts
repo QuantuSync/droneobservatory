@@ -23,8 +23,13 @@ const TELEFONOS = [
 ];
 const ESCRITORIO = { nombre: "escritorio", width: 1440, height: 900 };
 const CHISINAU = "EODI-2026-00074";
-/** Los cuatro atribuidos revisados con la regla estricta el 4 de octubre de 2026. */
-const REVISADOS = ["EODI-2025-00247", "EODI-2026-00015", "EODI-2026-00074", "EODI-2026-00283"];
+/**
+ * Los atribuidos revisados con la regla estricta el 4 de octubre de 2026 que siguen publicados.
+ * Eran cuatro: EODI-2026-00283 se retiró ese mismo día, porque sus noticias eran del dron de
+ * Wunstorf y la ficha tomaba la fecha y el lugar de Leipzig (docs/informe_errores_datos.md), y
+ * ya no está en los datos publicados, así que no se busca.
+ */
+const REVISADOS = ["EODI-2025-00247", "EODI-2026-00015", "EODI-2026-00074"];
 /** Una visita anterior lejana: todo lo publicado después cuenta como novedad y late. */
 const VISITA_ANTIGUA = "2026-09-01T00:00:00.000Z";
 const ES = textos("es");
@@ -116,7 +121,7 @@ for (const tamano of [...TELEFONOS, ESCRITORIO]) {
       }
     });
 
-    test(`${nombre}: los cuatro revisados, con su estado, su historial y sin el nombre del prefecto`, async ({
+    test(`${nombre}: los revisados que siguen publicados, con su estado, su historial y sin el nombre del prefecto`, async ({
       page,
       context,
       baseURL,

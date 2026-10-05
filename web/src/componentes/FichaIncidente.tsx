@@ -203,6 +203,9 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
             ? t.ficha.sinCierre
             : t.ficha.cierreDesconocido;
   const imprecisa = incidente.lon === null ? incidente.lugar : null;
+  // La fuente oficial cuya frase nombra el lugar del punto, si está entre las del incidente.
+  const fuentePunto = lugar.fuente_punto === undefined ? undefined : porFuente.get(lugar.fuente_punto);
+  const otrosLugares = (lugar.otros_lugares ?? []).map((otro) => otro.nombre);
   return (
     <article>
       <p className="rotulo flex items-center gap-2">
@@ -264,6 +267,26 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
           )}
           <QueDiceCadaFuente t={t} idioma={idioma} afirmaciones={de(CAMPOS_DE_FILA.lugar)} />
         </Fila>
+        {fuentePunto !== undefined && (
+          <Fila nombre={t.ficha.lugarSegun}>
+            <span data-lugar-segun="">{fuentePunto.medio}</span>
+            <blockquote lang={fuentePunto.idioma} className="mt-0.5 border-l border-acento pl-2 text-secundario">
+              «{fuentePunto.frase_origen}»
+            </blockquote>
+            <span className="mono block text-xs text-secundario">
+              {instante(fuentePunto.fecha)}
+              {" · "}
+              <EnlaceExterno enlace={fuentePunto.enlace} aviso={t.ficha.enlaceExterno} avisoNoValido={t.ficha.enlaceNoValido}>
+                {t.ficha.verFuente}
+              </EnlaceExterno>
+            </span>
+          </Fila>
+        )}
+        {otrosLugares.length > 0 && (
+          <Fila nombre={t.ficha.otrosLugares}>
+            <span data-otros-lugares="">{otrosLugares.join(", ")}</span>
+          </Fila>
+        )}
         <Fila nombre={t.ficha.drones}>
           <Cifra
             t={t}

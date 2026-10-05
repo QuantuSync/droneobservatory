@@ -296,6 +296,8 @@ def incidente(inicio: str = "2025-09-22T18:30Z", precision: str = "hora") -> dic
     documento["tipo"] = "interrupcion_aeroportuaria"
     documento["objetivo"] = {"categoria": "aeropuerto", "oaci": "EKCH"}
     documento["lugar"] = {"pais": "DK", "punto": {"lat": 55.618, "lon": 12.656}, "radio_km": 3}
+    # La cita nombra el país del aeropuerto (proceso/cita_titular.py).
+    documento["fuentes"][0]["frase_origen"] = "Lufthavnen i Danmark blev lukket efter droner"
     documento["consecuencias"] = {
         "cierre": {"valor": "si"},
         "vuelos_desviados": {"min": 35, "max": 35},

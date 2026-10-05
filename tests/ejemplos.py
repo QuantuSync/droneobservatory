@@ -28,7 +28,7 @@ def fuente(
         "idioma": "da",
         "fiabilidad": fiabilidad,
         "credibilidad": 2,
-        "frase_origen": "Lufthavnen blev lukket efter observation af droner",
+        "frase_origen": "Lufthavnen i Kastrup blev lukket efter observation af droner",
         "replicas": 3,
         "campos_respaldados": ["drones.numero", "consecuencias.cierre"],
         "es_autoridad": es_autoridad,
@@ -430,7 +430,9 @@ def incidente_minimo() -> Documento:
         "titulo": {"es": "Drones sobre una base", "en": "Drones over a base"},
         "tiempo": {"inicio": instante("2025-11-04T18:00Z", "hora")},
         "lugar": {"punto": {"lat": 50.9, "lon": 5.4}, "radio_km": 10, "pais": "BE"},
-        "fuentes": [fuente("F1", "B")],
+        # La cita nombra el país: si no, el titular no tiene respaldo y no se publica
+        # (proceso/cita_titular.py).
+        "fuentes": [{**fuente("F1", "B"), "frase_origen": "Droner over en base i Belgien"}],
         "control": {
             "alta": instante("2025-11-04T19:05Z"),
             "ultima_actualizacion": instante("2025-11-04T19:05Z"),

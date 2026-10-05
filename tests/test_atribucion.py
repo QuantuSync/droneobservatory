@@ -352,9 +352,7 @@ def test_retirar_una_atribucion_solo_vale_con_motivo() -> None:
     }
     estado["historial"].append(paso)
     estado["actual"] = "confirmado"
-    assert errores_historial(estado, fuentes) == [
-        "retirada de la atribución sin motivo: atribuido → confirmado"
-    ]
+    assert errores_historial(estado, fuentes) == ["retirada sin motivo: atribuido → confirmado"]
     paso["motivo"] = {"es": "Se retira la atribución.", "en": "Attribution withdrawn."}
     assert errores_historial(estado, fuentes) == []
 

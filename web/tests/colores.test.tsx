@@ -617,11 +617,14 @@ describe("marcador de los atribuidos", () => {
     expect(numero.layout["text-font"]).toEqual(deGrupo.layout["text-font"]);
     expect(JSON.stringify(capa(CAPA_FOCOS_ATRIBUIDOS).filter)).toContain("foco");
     expect(capa(CAPA_RECIENTES).source).not.toBe(FUENTE_ATRIBUIDOS);
-    // Por encima de los círculos, de los grupos y de sus números; y los nombres del mapa ceden
-    // ante él.
+    // Por encima de los círculos y de los grupos; y los nombres del mapa ceden ante él.
     const orden = layers.map((c) => c.id);
-    for (const debajo of [CAPA_GRUPOS, CAPA_NUMERO_GRUPOS, CAPA_INCIDENTES_GRAVES, CAPA_INCIDENTES_DISCRETOS]) {
+    for (const debajo of [CAPA_GRUPOS, CAPA_INCIDENTES_GRAVES, CAPA_INCIDENTES_DISCRETOS]) {
       expect(orden.indexOf(CAPA_ATRIBUIDOS), debajo).toBeGreaterThan(orden.indexOf(debajo));
+    }
+    // Pero el número de un grupo vecino va por encima de todos sus marcadores: se lee siempre.
+    for (const debajo of [CAPA_ATRIBUIDOS, CAPA_NUMERO_ATRIBUIDOS, CAPA_FOCOS_ATRIBUIDOS, CAPA_SELECCION_ATRIBUIDO]) {
+      expect(orden.indexOf(CAPA_NUMERO_GRUPOS), debajo).toBeGreaterThan(orden.indexOf(debajo));
     }
     const disposicion = (layers.find((c) => c.id === CAPA_ATRIBUIDOS) as { layout: Record<string, unknown> }).layout;
     expect(disposicion["icon-image"]).toEqual(ICONO_ATRIBUIDO);

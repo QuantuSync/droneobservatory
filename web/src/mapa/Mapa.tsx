@@ -111,7 +111,7 @@ import {
   pilas,
   sinAtribuidos,
 } from "./geometria.ts";
-import { registrarBanderas, registrarIconos } from "./iconos.ts";
+import { precargarBanderas, registrarIconos, trasBanderas } from "./iconos.ts";
 import { colocarLetrero, hayRaton } from "./letrero.ts";
 import { anchoZonaArco, distanciaALinea, elegir, ZONA_ARCO_DEDO_PX } from "./seleccion.ts";
 import type { Candidato } from "./seleccion.ts";
@@ -368,6 +368,14 @@ function seleccionDe(elegido: IncidenteResumen | null): GeoJSON.FeatureCollectio
   };
 }
 
+/** El elemento del mapa con el mapa a mano para las pruebas de navegador. */
+type ElementoDelMapa = HTMLDivElement & { mapaDePruebas?: MapaGL };
+
+/** Países de los atribuidos, cuya bandera lleva su marcador. */
+function paisesAtribuidos(incidentes: readonly IncidenteResumen[]): string[] {
+  return incidentes.flatMap((i) => (i.estado === "atribuido" && i.atribucion?.pais ? [i.atribucion.pais] : []));
+}
+
 function capasActivas(mapa: MapaGL): string[] {
   return CAPAS_PULSABLES.filter((id) => mapa.getLayer(id) !== undefined);
 }
@@ -511,6 +519,9 @@ export default function Mapa(props: PropsMapa) {
       return undefined;
     }
     mapaRef.current = mapa;
+    // Con el navegador manejado por las pruebas (navigator.webdriver), el mapa queda a mano en
+    // su elemento: las de e2e/ miden en él dónde se dibuja cada marca.
+    if (navigator.webdriver) (elemento as ElementoDelMapa).mapaDePruebas = mapa;
     mapa.touchZoomRotate.disableRotation();
     mapa.keyboard.disableRotation();
 
@@ -866,24 +877,31 @@ export default function Mapa(props: PropsMapa) {
   useEffect(() => {
     const mapa = mapaRef.current;
     if (!listo || mapa === null) return undefined;
-    return trasPintar(() => {
+    let cancelarBanderas = () => {};
+    const cancelar = trasPintar(() => {
       const opciones = { recientes, novedades };
       fuente(mapa, FUENTE_PUNTOS)?.setData(pilas(sinAtribuidos(incidentes), opciones));
+      // Los atribuidos, solo con sus banderas ya en el mapa: nunca lisos primero y con la
+      // bandera después.
       const marcadores = atribuidos(incidentes, opciones);
-      fuente(mapa, FUENTE_ATRIBUIDOS)?.setData(marcadores);
-      // Las banderas llegan después: al cargar, los atribuidos se vuelven a dibujar con ella.
-      const paises = incidentes.flatMap((i) => (i.estado === "atribuido" && i.atribucion?.pais ? [i.atribucion.pais] : []));
-      void registrarBanderas(mapa, paises).then((nuevas) => {
-        if (nuevas) {
-          fuente(mapa, FUENTE_ATRIBUIDOS)?.setData(marcadores);
-          fuente(mapa, FUENTE_SELECCION)?.setData(seleccionDe(elegidoActual.current));
-        }
+      cancelarBanderas = trasBanderas(mapa, paisesAtribuidos(incidentes), () => {
+        fuente(mapa, FUENTE_ATRIBUIDOS)?.setData(marcadores);
       });
       fuente(mapa, FUENTE_PUNTOS_SUELTOS)?.setData(pilas(incidentes, opciones));
       fuente(mapa, FUENTE_AREAS)?.setData(areas(incidentes));
       fuente(mapa, FUENTE_EPISODIOS)?.setData(lineasDeEpisodio(episodios, incidentes));
     });
+    return () => {
+      cancelar();
+      cancelarBanderas();
+    };
   }, [listo, incidentes, episodios, recientes, novedades]);
+
+  // Las banderas de los atribuidos se piden en cuanto llegan los datos, mientras el mapa
+  // carga: así suelen estar ya cuando se dibujan los atribuidos.
+  useEffect(() => {
+    precargarBanderas(paisesAtribuidos(incidentes));
+  }, [incidentes]);
 
   // Con una ficha abierta, el letrero de ayuda no se queda encima.
   useEffect(() => {
@@ -893,13 +911,16 @@ export default function Mapa(props: PropsMapa) {
   // Anillo del incidente elegido.
   useEffect(() => {
     const mapa = mapaRef.current;
-    if (!listo || mapa === null) return;
+    if (!listo || mapa === null) return undefined;
     elegidoActual.current = elegido;
     anotar.current?.();
-    fuente(mapa, FUENTE_SELECCION)?.setData(seleccionDe(elegido));
-    // Un atribuido abierto se dibuja solo con su marcador de selección, más grande: el normal
-    // asomaría por debajo.
-    mapa.setFilter(CAPA_ATRIBUIDOS, ["!=", ["get", "id"], elegido?.estado === "atribuido" ? elegido.id : ""]);
+    // Un atribuido abierto, también con su bandera ya en el mapa.
+    return trasBanderas(mapa, elegido === null ? [] : paisesAtribuidos([elegido]), () => {
+      fuente(mapa, FUENTE_SELECCION)?.setData(seleccionDe(elegido));
+      // Un atribuido abierto se dibuja solo con su marcador de selección, más grande: el normal
+      // asomaría por debajo.
+      mapa.setFilter(CAPA_ATRIBUIDOS, ["!=", ["get", "id"], elegido?.estado === "atribuido" ? elegido.id : ""]);
+    });
   }, [listo, elegido]);
 
   // País de un incidente sin punto, resaltado de forma tenue.

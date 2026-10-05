@@ -84,7 +84,9 @@ def cierre_de_pista() -> Documento:
         objetivo={"categoria": "aeropuerto", "nombre": "Luchthaven Schiphol", "oaci": "EHAM"},
         titulo={"es": "Posibles drones cierran una pista del aeropuerto de Ámsterdam Schiphol",
                 "en": "Possible drones close runway at Amsterdam Schiphol Airport"},
-        lugar={"punto": {"lat": 52.327, "lon": 4.758}, "radio_km": 5, "pais": "NL"},
+        # Localidad corregida a mano, sin afirmación de la ficha (recogida/revisados.py).
+        lugar={"punto": {"lat": 52.327, "lon": 4.758}, "radio_km": 5, "pais": "NL",
+               "localidad": "Haarlemmermeer"},
     )  # fmt: skip
     documento["fuentes"][0]["frase_origen"] = (
         "Аэропорт Схипхол приостанавливал работу взлетно-посадочной полосы из-за дрона."
@@ -101,6 +103,12 @@ def incursion() -> Documento:
         titulo={"es": "Dron ruso interceptado en Rumanía", "en": "Russian drone over Romania"},
         tiempo={"inicio": ejemplos.instante("2025-10-05T23:00Z", "hora")},
         lugar={"punto": {"lat": 45.17, "lon": 28.8}, "radio_km": 10, "pais": "RO"},
+    )  # fmt: skip
+    # El lugar que da la autoridad, con los demás lugares que nombra (recogida/revisados.py).
+    documento["lugar"].update(
+        geocodificacion="oficial", fuente_punto=documento["fuentes"][0]["id"], localidad="Isaccea",
+        otros_lugares=[{"nombre": "Galați", "punto": {"lat": 45.43, "lon": 28.05}},
+                       {"nombre": "Smârdan"}],
     )  # fmt: skip
     return documento
 

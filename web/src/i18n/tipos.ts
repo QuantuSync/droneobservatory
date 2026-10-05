@@ -300,6 +300,10 @@ export interface Textos {
     presenciaDron: string;
     fecha: string;
     lugar: string;
+    /** Fila con la fuente oficial cuya frase nombra el lugar del punto. */
+    lugarSegun: string;
+    /** Fila con los demás lugares que nombra la autoridad. */
+    otrosLugares: string;
     radio: (km: string) => string;
     drones: string;
     duracion: string;

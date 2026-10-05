@@ -60,7 +60,8 @@
       "required": ["fecha", "motivo"],
       "properties": {
         "fecha": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.11.0:comun#/$defs/instante"},
-        "motivo": {"x-visibilidad": "interno", "type": "string", "minLength": 1}
+        "motivo": {"x-visibilidad": "interno", "type": "string", "minLength": 1},
+        "motivo_en": {"x-visibilidad": "interno", "description": "El motivo en inglés, en las retiradas revisadas a mano (recogida/revisados.py).", "type": "string", "minLength": 1}
       }
     },
     "tiempo": {
@@ -108,7 +109,23 @@
         "nivel": {"x-visibilidad": "publico", "description": "Nivel al que se sabe el lugar del suceso.", "enum": ["instalacion", "localidad", "region", "pais"]},
         "suceso": {"x-visibilidad": "interno", "description": "Nombre del lugar del suceso tal como lo escribe la fuente.", "type": "string", "minLength": 1},
         "geocodificacion": {"x-visibilidad": "interno", "description": "De dónde sale el punto. frase_origen: el lugar del suceso solo se sabía a nivel de región y una sola instalación o localidad de esa región sale en las frases y los titulares de sus fuentes; oficial: el punto y el radio que da una autoridad en su documento (detalle_oficial).", "enum": ["nomenclator", "candidato", "vocabulario", "localidad", "localidad_pequena", "lugar_nuevo", "gkg", "frase_origen", "oficial"]},
-        "nuts2": {"x-visibilidad": "interno", "type": "string", "pattern": "^[A-Z]{2}[A-Z0-9]{2}$"}
+        "nuts2": {"x-visibilidad": "interno", "type": "string", "pattern": "^[A-Z]{2}[A-Z0-9]{2}$"},
+        "fuente_punto": {"x-visibilidad": "publico", "description": "Fuente que da el lugar del suceso cuando el punto lo da una autoridad (geocodificación oficial): su frase lo nombra. La precisión es el nivel y el radio.", "type": "string", "minLength": 1},
+        "otros_lugares": {
+          "x-visibilidad": "publico",
+          "description": "Los demás lugares que nombra la autoridad (restos hallados, daños) cuando el suceso abarca varios; el punto es el del daño más relevante.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["nombre"],
+            "properties": {
+              "nombre": {"x-visibilidad": "publico", "type": "string", "minLength": 1},
+              "punto": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.11.0:comun#/$defs/punto"}
+            }
+          }
+        }
       }
     },
     "objetivo": {

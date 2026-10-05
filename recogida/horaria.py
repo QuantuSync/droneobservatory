@@ -438,6 +438,13 @@ def principal(argumentos: list[str] | None = None) -> int:
             declaraciones_oficiales.titulares(almacen, ahora, modelos(almacen))
         except Exception as error:
             registro.warning("declaraciones oficiales sin aplicar: %s", str(error)[:300])
+        # Revisión del contenido hecha a mano (configuracion/incidentes_revisados.json):
+        # retiradas, citas que respaldan el titular, titulares, presencia y estado con su cita, y
+        # lugares que da la autoridad. Ya aplicada, no cambia nada.
+        try:
+            revisados.corregir(almacen, ahora, modelos(almacen))
+        except Exception as error:
+            registro.warning("revisión del contenido sin aplicar: %s", str(error)[:300])
         confirmadas, sin_guardar = presencia.revisar(almacen, ahora, modelos(almacen))
         registro.info("presencia del dron confirmada por declaraciones: %d", len(confirmadas))
         if sin_guardar:

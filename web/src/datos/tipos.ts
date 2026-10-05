@@ -130,6 +130,20 @@ export interface TraficoAereo {
   datos?: string[];
 }
 
+/** Otro lugar que nombra la autoridad (p. ej. otro pueblo donde cayeron restos). */
+export interface OtroLugar {
+  nombre: string;
+  punto?: { lat: number; lon: number };
+}
+
+/** Lo que el lugar puede añadir, con punto o sin él. */
+export interface LugarAmpliado {
+  /** Id de la fuente oficial cuya frase nombra el lugar donde se pone el punto. */
+  fuente_punto?: string;
+  /** Los demás lugares que nombra la autoridad. */
+  otros_lugares?: OtroLugar[];
+}
+
 /** Precisión con la que se conoce el lugar de un incidente sin punto en el mapa. */
 export type NivelUbicacion = "instalacion" | "localidad" | "region" | "pais";
 
@@ -141,7 +155,7 @@ export interface PropiedadesIncidente {
   episodio?: string;
   presencia_dron?: PresenciaDron;
   tiempo: { inicio: Instante; fin?: Instante; duracion_min?: number };
-  lugar: { radio_km: number; pais: string; localidad?: string };
+  lugar: { radio_km: number; pais: string; localidad?: string } & LugarAmpliado;
   objetivo?: {
     categoria: CategoriaObjetivo;
     nombre?: string;
@@ -192,7 +206,7 @@ export interface ColeccionIncidentes {
  * mismas propiedades que una feature, salvo el lugar: sin radio ni punto.
  */
 export interface PropiedadesSinUbicacion extends Omit<PropiedadesIncidente, "lugar"> {
-  lugar: { pais: string; nivel: NivelUbicacion; region?: string; localidad?: string };
+  lugar: { pais: string; nivel: NivelUbicacion; region?: string; localidad?: string } & LugarAmpliado;
 }
 
 export interface PublicacionSinUbicacion {

@@ -1009,6 +1009,137 @@
         "pagina": "https://t.me/s/kurskadm",
         "comprobado": "el canal del Gobierno de la región de Kursk (kurskadm, con insignia de verificado) enlaza en su descripción https://kursk.ru y «Губернатор Курской области Александр Хинштейн https://t.me/Hinshtein»; kursk.ru no abre desde el servidor"
       }
+    },
+    {
+      "id": "ova_odesa_jefe",
+      "canal": "odeskaODA",
+      "grupo": "ova_ua",
+      "pais": "UA",
+      "region": "UA-51",
+      "sentido": "RU_UA",
+      "idioma": "uk",
+      "titulo": "Одеська ОДА",
+      "insignia": false,
+      "descripcion_enlaza": [],
+      "web_oficial": "https://www.kmu.gov.ua/news/shchob-uniknuti-fejkiv-koristuyemos-oficijnimi-dzherelami",
+      "web_enlaza": null,
+      "web_desde_servidor": false,
+      "fiabilidad": "B",
+      "origen": "oficial",
+      "medio": "Одеська ОВА",
+      "institucion": "ova_UA-51",
+      "identificado": {
+        "fecha": "2026-10-05",
+        "pagina": "https://www.kmu.gov.ua/news/shchob-uniknuti-fejkiv-koristuyemos-oficijnimi-dzherelami",
+        "comprobado": "lista de la Secretaría del Gabinete de Ministros de Ucrania «Щоб уникнути фейків, користуємось офіційними джерелами» (actualizada el 18 de octubre de 2023): «в кожній області створено офіційний телеграм-канал голови облдержадміністрації», con t.me/odeskaODA para la región Одеська; abierta el 2026-10-05 con un navegador real (al acceso automático responde con una página de comprobación anti-robots, también desde el servidor)",
+        "nota": "canal operativo del jefe de la administración (Oleh Kiper), con publicaciones desde 2022; el que enlaza la web oficial (odesaoda) empezó en junio de 2025 y publica menos: los dos son de la misma institución"
+      }
+    },
+    {
+      "id": "ova_volyn",
+      "canal": "volynskaODA",
+      "grupo": "ova_ua",
+      "pais": "UA",
+      "region": "UA-07",
+      "sentido": "RU_UA",
+      "idioma": "uk",
+      "titulo": "Волинська ОДА",
+      "insignia": false,
+      "descripcion_enlaza": [],
+      "web_oficial": "https://www.kmu.gov.ua/news/shchob-uniknuti-fejkiv-koristuyemos-oficijnimi-dzherelami",
+      "web_enlaza": null,
+      "web_desde_servidor": false,
+      "fiabilidad": "B",
+      "origen": "oficial",
+      "medio": "Волинська ОВА",
+      "institucion": "ova_UA-07",
+      "identificado": {
+        "fecha": "2026-10-05",
+        "pagina": "https://www.kmu.gov.ua/news/shchob-uniknuti-fejkiv-koristuyemos-oficijnimi-dzherelami",
+        "comprobado": "lista de la Secretaría del Gabinete de Ministros de Ucrania «Щоб уникнути фейків, користуємось офіційними джерелами» (actualizada el 18 de octubre de 2023): «в кожній області створено офіційний телеграм-канал голови облдержадміністрації», con t.me/volynskaODA para la región Волинська; abierta el 2026-10-05 con un navegador real (al acceso automático responde con una página de comprobación anti-robots, también desde el servidor)",
+        "nota": "la web oficial (voladm.gov.ua) no enlaza ningún canal"
+      }
+    },
+    {
+      "id": "ova_zhytomyr",
+      "canal": "zhytomyrskaODA",
+      "grupo": "ova_ua",
+      "pais": "UA",
+      "region": "UA-18",
+      "sentido": "RU_UA",
+      "idioma": "uk",
+      "titulo": "Житомирської ОВА",
+      "insignia": false,
+      "descripcion_enlaza": [],
+      "web_oficial": "https://www.kmu.gov.ua/news/shchob-uniknuti-fejkiv-koristuyemos-oficijnimi-dzherelami",
+      "web_enlaza": null,
+      "web_desde_servidor": false,
+      "fiabilidad": "B",
+      "origen": "oficial",
+      "medio": "Житомирська ОВА",
+      "institucion": "ova_UA-18",
+      "identificado": {
+        "fecha": "2026-10-05",
+        "pagina": "https://www.kmu.gov.ua/news/shchob-uniknuti-fejkiv-koristuyemos-oficijnimi-dzherelami",
+        "comprobado": "lista de la Secretaría del Gabinete de Ministros de Ucrania «Щоб уникнути фейків, користуємось офіційними джерелами» (actualizada el 18 de octubre de 2023): «в кожній області створено офіційний телеграм-канал голови облдержадміністрації», con t.me/zhytomyrskaODA para la región Житомирська; abierta el 2026-10-05 con un navegador real (al acceso automático responde con una página de comprobación anti-robots, también desde el servidor)",
+        "nota": "la web oficial (zt.gov.ua) enlaza t.me/zt_gov_ua, que es el del consejo regional (Житомирська обласна рада) y no publica partes de ataques"
+      }
+    },
+    {
+      "id": "ova_ternopil",
+      "canal": "ternopilskaODA",
+      "grupo": "ova_ua",
+      "pais": "UA",
+      "region": "UA-61",
+      "sentido": "RU_UA",
+      "idioma": "uk",
+      "titulo": "Тернопільська ОДА",
+      "insignia": false,
+      "descripcion_enlaza": [],
+      "web_oficial": "https://www.kmu.gov.ua/news/shchob-uniknuti-fejkiv-koristuyemos-oficijnimi-dzherelami",
+      "web_enlaza": null,
+      "web_desde_servidor": false,
+      "fiabilidad": "B",
+      "origen": "oficial",
+      "medio": "Тернопільська ОВА",
+      "institucion": "ova_UA-61",
+      "identificado": {
+        "fecha": "2026-10-05",
+        "pagina": "https://www.kmu.gov.ua/news/shchob-uniknuti-fejkiv-koristuyemos-oficijnimi-dzherelami",
+        "comprobado": "lista de la Secretaría del Gabinete de Ministros de Ucrania «Щоб уникнути фейків, користуємось офіційними джерелами» (actualizada el 18 de octubre de 2023): «в кожній області створено офіційний телеграм-канал голови облдержадміністрації», con t.me/ternopilskaODA para la región Тернопільська; abierta el 2026-10-05 con un navegador real (al acceso automático responde con una página de comprobación anti-robots, también desde el servidor)",
+        "nota": "la web oficial (oda.te.gov.ua) no enlaza ningún canal"
+      }
+    },
+    {
+      "id": "mva_odesa",
+      "canal": "odesaMVA",
+      "grupo": "ova_ua",
+      "pais": "UA",
+      "region": "UA-51",
+      "sentido": "RU_UA",
+      "idioma": "uk",
+      "titulo": "Одеська МВА",
+      "insignia": false,
+      "descripcion_enlaza": [],
+      "web_oficial": "https://omr.gov.ua/ua/",
+      "web_enlaza": "odesacityofficial",
+      "web_desde_servidor": false,
+      "cadena": [
+        {
+          "canal": "odesacityofficial",
+          "titulo": "Одеса. Офіційно"
+        }
+      ],
+      "fiabilidad": "B",
+      "origen": "oficial",
+      "medio": "Одеська міська військова адміністрація",
+      "institucion": "mva_odesa",
+      "identificado": {
+        "fecha": "2026-10-05",
+        "pagina": "https://omr.gov.ua/ua/",
+        "comprobado": "la web oficial de la ciudad de Odesa enlaza t.me/odesacityofficial («Одеса. Офіційно»), cuya descripción dice «Офіційний канал начальника Одеської МВА - https://t.me/odesaMVA»; abierta el 2026-10-05 con un navegador real (responde 503 con una comprobación anti-robots al acceso automático)",
+        "nota": "administración militar de la ciudad de Odesa, creada en octubre de 2025 (Serhii Lysak); su región es la del óblast, como la de Kiev ciudad"
+      }
     }
   ]
 }

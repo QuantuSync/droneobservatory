@@ -118,8 +118,10 @@ def test_la_ficha_que_mezcla_dos_sucesos_se_vuelve_a_extraer_una_vez(
 
 def test_la_configuracion_revisada() -> None:
     datos = revisados.cargar()
-    leipzig, wunstorf = datos["unir"]
-    assert "EODI-2026-00391" in leipzig["registros"] and len(leipzig["registros"]) == 16
+    leipzig, wunstorf = datos["unir"][:2]
+    # 00346 se une en la revisión del contenido: era Leipzig con el lugar de Rzeszów.
+    assert "EODI-2026-00391" in leipzig["registros"] and len(leipzig["registros"]) == 17
+    assert "EODI-2026-00346" in leipzig["registros"]
     # Otro suceso en el mismo aeropuerto: no se une.
     assert "EODI-2026-00058" not in leipzig["registros"]
     # Wunstorf, aparte de Leipzig.

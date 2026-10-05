@@ -1081,7 +1081,7 @@
               "fuente_id": {"x-visibilidad": "publico", "type": "string", "minLength": 1},
               "motivo": {
                 "x-visibilidad": "publico",
-                "description": "Por qué cambia el estado cuando lo cambia una corrección y no una fuente: la retirada de una atribución que no se sostiene (proceso/atribucion.retirar). En español y en inglés.",
+                "description": "Por qué cambia el estado cuando lo cambia una corrección y no una fuente: la retirada de una atribución que no se sostiene (proceso/atribucion.retirar) o de una confirmación que la autoridad no daba (recogida/revisados.py). En español y en inglés.",
                 "type": "object",
                 "additionalProperties": false,
                 "required": ["es", "en"],

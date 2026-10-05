@@ -86,7 +86,8 @@ _TIPO_LUGAR = (
 TIPO_LUGAR = re.compile(r"(?:^|[\s(«\"])" + _TIPO_LUGAR + r"\.?\s*$", re.IGNORECASE)
 # La palabra siguiente dice que es una unidad administrativa.
 _ADMINISTRATIVA = re.compile(
-    r"^\s*(?:район|районі|району|районе|районом|районов|районах|районів|громад|тг\b|област|"
+    r"^\s*(?:район|районі|району|районе|районом|районов|районах|районів|громад|тг\b|"
+    r"тергромад|територіальн\w*\s+громад|област|"
     r"обл\b|обл\.|округ|муніципальн|муниципальн|городск\w+ округ|міськ\w+ громад|"
     r"сільськ\w+ громад|селищн\w+ громад)",
     re.IGNORECASE,
@@ -103,7 +104,8 @@ _RAION = re.compile(
     re.IGNORECASE,
 )
 _HROMADA = re.compile(
-    r"(?<![\w'])([^\W\d_]+?)(?:ськ|цьк|зьк|ськ|івськ|инськ)?\w*\s+(?:громад|тг\b|ОТГ)",
+    r"(?<![\w'])([^\W\d_]+?)(?:ськ|цьк|зьк|ськ|івськ|инськ)?\w*\s+"
+    r"(?:громад|тг\b|ОТГ|тергромад|територіальн\w*\s+громад)",
     re.IGNORECASE,
 )
 # Comunidades y distritos como lugar: una lista de adjetivos con mayúscula delante de
@@ -113,7 +115,10 @@ _ADJ_UNIDAD = r"[А-ЯІЇЄҐ][\w'’-]*?(?:ськ|цьк|зьк)\w*"
 _ADJETIVO_UNIDAD = re.compile(_ADJ_UNIDAD)
 _LISTA_UNIDADES = r"(" + _ADJ_UNIDAD + r"(?:\s*(?:,|та|і|й|и)\s*" + _ADJ_UNIDAD + r")*)"
 _LISTA_HROMADAS = re.compile(
-    _LISTA_UNIDADES + r"\s+(?:(?:сільськ|селищн|міськ)\w*\s+)?(?:громад\w*|ТГ\b|ОТГ\b)"
+    _LISTA_UNIDADES
+    + r"\s+(?:(?:сільськ|селищн|міськ)\w*\s+)?"
+    # «Бобрицькій тергромаді», «Канівській територіальній громаді» (Черкащина, Вінниччина).
+    + r"(?:громад\w*|ТГ\b|ОТГ\b|тергромад\w*|територіальн\w*\s+громад\w*)"
 )
 _LISTA_RAIONES = re.compile(_LISTA_UNIDADES + r"\s+(?:район\w*|р-н\w*)")
 _SHCHYNA = re.compile(r"(?<![\w'’-])[А-ЯІЇЄҐ][\w'’-]+щин(?:а|і|у|ою|и)\b")

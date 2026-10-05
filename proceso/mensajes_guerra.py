@@ -27,7 +27,7 @@ from proceso.lugares_guerra import TIPOS_INSTALACION, Hallazgo, Lugar, Nomenclat
 
 MAX_PALABRAS_FRASE = 25
 KYIV = ZoneInfo("Europe/Kyiv")
-VERSION = "mensajes-guerra/4"
+VERSION = "mensajes-guerra/5"
 
 DRON = re.compile(
     r"БпЛА|БПЛА|безпілотн|беспилотн|\bдрон|дронов|дронам|шахед|shahed|герань|гербер|"
@@ -48,15 +48,46 @@ IMPACTO = re.compile(
     r"влуча|влучив|влучил|поціли|пошкодж|зруйн|руйнув|пожеж|загоран|займан|загорів|"
     r"уражен|уразил|ураже|вибух|атакува|вдари|удар\w*\s+по|наслідк|постражда|поранен|"
     r"травмован|загин|загибл|вбит|уламк|падінн|падіння|знеструм|"
-    r"попадан|прил[её]т|поврежд|разруш|пожар|возгоран|загорел|взрыв|детонац|атакова|"
+    # «прильоти», «приліт»: la forma ucraniana de «прилёт» (Волинь, Житомирщина).
+    r"попадан|прил[её]т|прильот|приліт|поврежд|разруш|пожар|возгоран|загорел|взрыв|"
+    r"детонац|атакова|"
     r"атаки\s+БПЛА|атаке\s+БПЛА|ранен|погиб|пострадал|травмир|обломк|падени|сдетонир|"
     r"обесточ|задел|выбит|выбиты",
     re.IGNORECASE,
 )
+# Colectas («Хтось донатить гривнею», «весільний донат на користь наших захисників») y balances
+# de la semana o del mes («Тільки за минулий тиждень армія рф атакувала 32 населені пункти»,
+# «Тижневий дайджест», «Безпекова ситуація в Києві за тиждень»).
+COLECTA = re.compile(
+    r"\bдонат\w*|збір\s+коштів|збираємо\s+(?:кошти|на)|реквізит\w*|monobank|монобанк|"
+    r"сбор\s+средств|допомагали\s+воїнам|підтримували\s+воїнів",
+    re.IGNORECASE,
+)
+BALANCE = re.compile(
+    r"за\s+(?:минулий|цей|останній)\s+(?:тиждень|місяць)|тижнев\w+\s+дайджест|"
+    r"головне\s+за\s+тиждень|за\s+тиждень\s+(?:маємо|повітряна)|ситуація\s+в\s+\w+\s+за\s+тиждень|"
+    r"за\s+місяць\s+зафіксовано|за\s+минулий\s+місяць|итоги\s+(?:недели|месяца)|"
+    r"за\s+(?:прошедшую|минувшую)\s+неделю",
+    re.IGNORECASE,
+)
+INICIO_MENSAJE = 200
+# «Обласний центр»: la capital de la región del canal (Волинь, Тернопільщина, Запоріжжя). Sin
+# las de Donetsk y Luhansk (ocupadas: sus administraciones no llaman así a su sede) ni la de
+# Kiev región (su «центр» es otra unidad, la ciudad de Kiev).
+CENTRO_REGIONAL = re.compile(r"обласн\w*\s+центр\w*", re.IGNORECASE)
+CAPITALES = {
+    "UA-05": "Вінниця", "UA-07": "Луцьк", "UA-12": "Дніпро", "UA-18": "Житомир",
+    "UA-21": "Ужгород", "UA-23": "Запоріжжя", "UA-26": "Івано-Франківськ",
+    "UA-35": "Кропивницький", "UA-46": "Львів", "UA-48": "Миколаїв", "UA-51": "Одеса",
+    "UA-53": "Полтава", "UA-56": "Рівне", "UA-59": "Суми", "UA-61": "Тернопіль",
+    "UA-63": "Харків", "UA-65": "Херсон", "UA-68": "Хмельницький", "UA-71": "Черкаси",
+    "UA-74": "Чернігів", "UA-77": "Чернівці",
+}  # fmt: skip
 DERRIBO = re.compile(r"збит|знищ|подавл|знешкодж|сбит|уничтож|перехвач|подавлен|нейтрализ", re.I)
 RESTOS = re.compile(r"уламк|обломк|падінн|падіння|падени|падение", re.IGNORECASE)
 IMPACTO_DIRECTO = re.compile(
-    r"влуча|влучив|поціли|прям\w+\s+попад|попадан|прил[её]т|удар\w*\s+по|уражен|уразил|"
+    r"влуча|влучив|поціли|прям\w+\s+попад|попадан|прил[её]т|прильот|приліт|удар\w*\s+по|"
+    r"уражен|уразил|"
     r"атакува\w*\s+[А-ЯІЇЄҐ]|атакова\w*\s+[А-ЯЁ]",
     re.IGNORECASE,
 )
@@ -505,6 +536,16 @@ def analizar(
     if HOMENAJE.search(texto):
         leido.motivo = "homenaje"
         return leido
+    # Colectas y balances de la semana o del mes: nombran drones y lugares, pero no cuentan un
+    # ataque nuevo (los ataques del balance ya salieron en su día).
+    # Solo si el mensaje empieza así: un parte del día que, al final, compara con la semana
+    # sigue contando sus ataques.
+    if COLECTA.search(texto[:INICIO_MENSAJE]):
+        leido.motivo = "colecta"
+        return leido
+    if BALANCE.search(texto[:INICIO_MENSAJE]):
+        leido.motivo = "balance"
+        return leido
     if RETROSPECTIVO.search(texto):
         leido.motivo = "retrospectivo"
         return leido
@@ -553,6 +594,7 @@ def analizar(
                 continue
         busqueda = linea.group("cabeza") if linea and propias != armas else frase
         hallazgos = nomenclator.localidades_en(busqueda, ambito, texto)
+        hallazgos += _centro_regional(busqueda, regiones, nomenclator)
         # Comunidades y distritos que nombra la frase, salvo los de una localidad que ya
         # nombra («По Нікополю і Марганецькій громаді»).
         localidades = [h.lugar for h in hallazgos if h.lugar is not None]
@@ -618,6 +660,24 @@ def analizar(
         leido.motivo = "sin_lugar"
     leido.prioridad = _prioridad(texto)
     return leido
+
+
+def _centro_regional(
+    frase: str, regiones: frozenset[str] | None, nomenclator: Nomenclator
+) -> list[Hallazgo]:
+    """«В обласному центрі», «на обласний центр»: la capital de la región del canal. Solo en
+    los canales de una región con capital bajo control ucraniano."""
+    if regiones is None or len(regiones) != 1:
+        return []
+    capital = CAPITALES.get(next(iter(regiones)))
+    m = CENTRO_REGIONAL.search(frase)
+    if capital is None or m is None:
+        return []
+    return [
+        Hallazgo(m.group(0), m.start(), m.end(), h.lugar)
+        for h in nomenclator.localidades_en(capital, regiones)
+        if h.lugar is not None and h.lugar.nivel == "localidad"
+    ][:1]
 
 
 def _dentro(lugar: Lugar, unidad: Lugar) -> bool:

@@ -91,7 +91,7 @@
       "origen": "oficial",
       "enlace": "https://www.interior.gob.es/opencms/es/detalle/articulo/La-Guardia-Civil-implanta-a-nivel-nacional-los-equipos-PEGASO-para-el-control-del-espacio-aereo/",
       "cita": "contarán, entre otros medios, con el Sistema Global Contra Dron (SIGLO-CD) de la Secretaría de Estado de Seguridad. Este sistema ha detectado en la última semana 112 vuelos de RPAS.",
-      "comprobado": {"fecha": "2026-10-04", "estado": 403, "via": "copia del archivo de Internet del 19 de mayo de 2025: interior.gob.es responde 403 al acceso automático; la nota es del 22 de febrero de 2020, no de 2022"}
+      "comprobado": {"fecha": "2026-10-05", "estado": 200, "via": "página original abierta con un navegador real (al acceso automático responde 403): «Este sistema ha detectado en la última semana 112 vuelos de RPAS.»; la nota es del 22 de febrero de 2020, no de 2022"}
     },
     {
       "id": "es-cumbre-granada-2023",

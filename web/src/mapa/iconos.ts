@@ -126,39 +126,82 @@ function registrarAtribuido(mapa: Mapa, variante: VarianteAtribuido, bandera: Ca
 
 /** Banderas ya pedidas: cada una se carga una vez por página. */
 const cargadas = new Map<string, Promise<HTMLImageElement | null>>();
+/** Países cuya bandera no ha cargado ni al reintentar: su marcador va liso desde el principio. */
+const fallidas = new Set<string>();
+const INTENTOS_BANDERA = 3;
+const ESPERA_REINTENTO_MS = 600;
+
+async function descargarBandera(pais: string): Promise<HTMLImageElement | null> {
+  for (let intento = 1; intento <= INTENTOS_BANDERA; intento += 1) {
+    const imagen = new Image();
+    imagen.decoding = "async";
+    imagen.src = urlBandera(pais);
+    try {
+      await imagen.decode();
+      return imagen;
+    } catch {
+      if (intento < INTENTOS_BANDERA) {
+        await new Promise((listo) => setTimeout(listo, ESPERA_REINTENTO_MS * intento));
+      }
+    }
+  }
+  fallidas.add(pais);
+  return null;
+}
 
 function cargarBandera(pais: string): Promise<HTMLImageElement | null> {
   let promesa = cargadas.get(pais);
   if (promesa === undefined) {
-    const imagen = new Image();
-    imagen.decoding = "async";
-    imagen.src = urlBandera(pais);
-    promesa = imagen.decode().then(
-      () => imagen,
-      () => null,
-    );
+    promesa = descargarBandera(pais);
     cargadas.set(pais, promesa);
   }
   return promesa;
 }
 
-/**
- * Registra en el mapa los marcadores con bandera de esos países (con y sin punto). Hasta que
- * una bandera llega, su marcador se dibuja liso (estilo.ts); devuelve true si ha añadido alguno,
- * para que el mapa vuelva a dibujar los atribuidos con su bandera. Una bandera que no carga
- * deja el marcador liso.
- */
-export async function registrarBanderas(mapa: Mapa, paises: Iterable<string>): Promise<boolean> {
-  const pedidas = [...new Set(paises)].filter((pais) => (BANDERAS as readonly string[]).includes(pais));
+function conBandera(paises: Iterable<string>): string[] {
+  return [...new Set(paises)].filter((pais) => (BANDERAS as readonly string[]).includes(pais));
+}
+
+/** Empieza a cargar las banderas de esos países, antes de que el mapa las necesite. */
+export function precargarBanderas(paises: Iterable<string>): void {
+  for (const pais of conBandera(paises)) void cargarBandera(pais);
+}
+
+/** Si el marcador de esos países ya está en el mapa (o su bandera no ha podido cargar). */
+function banderasListas(mapa: Mapa, paises: Iterable<string>): boolean {
+  return conBandera(paises).every(
+    (pais) => fallidas.has(pais) || mapa.hasImage(nombreIconoAtribuido({ bandera: pais, persona: false })),
+  );
+}
+
+/** Registra en el mapa los marcadores con bandera de esos países (con y sin punto). Una
+ *  bandera que no carga ni al reintentar deja el marcador liso. */
+async function registrarBanderas(mapa: Mapa, paises: Iterable<string>): Promise<void> {
+  const pedidas = conBandera(paises);
   const imagenes = await Promise.all(pedidas.map(async (pais) => [pais, await cargarBandera(pais)] as const));
-  let nuevas = false;
   for (const [pais, imagen] of imagenes) {
     if (imagen === null) continue;
-    for (const persona of [false, true]) {
-      nuevas = registrarAtribuido(mapa, { bandera: pais, persona }, imagen) || nuevas;
-    }
+    for (const persona of [false, true]) registrarAtribuido(mapa, { bandera: pais, persona }, imagen);
   }
-  return nuevas;
+}
+
+/**
+ * Hace `tarea` (poner en el mapa los atribuidos de esos países) solo con sus banderas ya en el
+ * mapa: al momento si ya están; si no, en cuanto lleguen. Así un atribuido nunca se dibuja liso
+ * para pasar después a llevar su bandera. Devuelve cómo cancelarlo.
+ */
+export function trasBanderas(mapa: Mapa, paises: readonly string[], tarea: () => void): () => void {
+  if (banderasListas(mapa, paises)) {
+    tarea();
+    return () => {};
+  }
+  let vigente = true;
+  void registrarBanderas(mapa, paises).then(() => {
+    if (vigente) tarea();
+  });
+  return () => {
+    vigente = false;
+  };
 }
 
 /**

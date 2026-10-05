@@ -218,13 +218,26 @@ const longitud = numero(-v.LONGITUD_MAX, v.LONGITUD_MAX);
 const latitud = numero(-v.LATITUD_MAX, v.LATITUD_MAX);
 const radio = numero(v.RADIO_KM_MIN, v.RADIO_KM_MAX);
 
+/**
+ * Lo que el lugar puede añadir, con punto o sin él: la fuente oficial cuya frase nombra el
+ * lugar donde se pone el punto (id de una de las fuentes del incidente) y los demás lugares que
+ * nombra la autoridad, cada uno con su punto si se conoce.
+ */
+const CAMPOS_LUGAR_OPCIONALES: Record<string, Comprobacion> = {
+  fuente_punto: cadena(),
+  otros_lugares: lista(objeto({ nombre: cadena() }, { punto: objeto({ lat: latitud, lon: longitud }) })),
+};
+
 const CAMPOS_INCIDENTE_OBLIGATORIOS: Record<string, Comprobacion> = {
   id: cadena(v.PATRON_ID_INCIDENTE),
   tipo: enumerado(v.TIPOS),
   estado: estadoHistorial,
   titulo,
   tiempo: objeto({ inicio: instante }, { fin: instante, duracion_min: enteroNoNegativo }),
-  lugar: objeto({ radio_km: radio, pais: cadena(v.PATRON_PAIS) }, { localidad: cadena() }),
+  lugar: objeto(
+    { radio_km: radio, pais: cadena(v.PATRON_PAIS) },
+    { localidad: cadena(), ...CAMPOS_LUGAR_OPCIONALES },
+  ),
   fuentes: lista(fuente, 1),
   control,
 };
@@ -232,7 +245,7 @@ const CAMPOS_INCIDENTE_OBLIGATORIOS: Record<string, Comprobacion> = {
 /** Lugar de un incidente sin punto: el país y hasta dónde se conoce, sin radio. */
 const lugarSinUbicacion = objeto(
   { pais: cadena(v.PATRON_PAIS), nivel: enumerado(v.NIVELES_UBICACION) },
-  { region: cadena(), localidad: cadena() },
+  { region: cadena(), localidad: cadena(), ...CAMPOS_LUGAR_OPCIONALES },
 );
 
 const afirmacionPublica = objeto(

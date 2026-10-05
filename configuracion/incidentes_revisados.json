@@ -18,7 +18,8 @@
         "EODI-2026-00231",
         "EODI-2026-00353",
         "EODI-2026-00369",
-        "EODI-2026-00377"
+        "EODI-2026-00377",
+        "EODI-2026-00346"
       ],
       "motivo": "el mismo suceso: el dron con explosivos del aeropuerto de Leipzig/Halle del 4 de agosto de 2026, junto al avión ucraniano (00134 con el cierre de 100 minutos que dio la policía; 00286 y 00364 son noticias del 7 y el 9 de agosto y 00239, 00129, 00190 y 00318 de finales de agosto y septiembre sobre la acusación del Gobierno alemán, fechadas por su publicación); revisados uno por uno el 5 de octubre de 2026: 00071 (12 de agosto, sesión del Landtag una semana después), 00173 (18 de agosto), 00231 y 00353 (6 de septiembre, reacción rusa a la acusación), 00128 (12 de septiembre, pista del GRU), 00150 (26 de septiembre, incidente diplomático), 00377 y 00369 (finales de septiembre y 2 de octubre, investigación de prensa) son noticias tardías del mismo dron, fechadas por su publicación. EODI-2026-00058 no se une: es otro suceso (26 de agosto, un dron que fotografiaba unas obras en Großkugel)"
     },
@@ -32,6 +33,287 @@
         "EODI-2026-00363"
       ],
       "motivo": "el mismo suceso: el dron estrellado que un particular encontró el lunes 14 de septiembre de 2026 en el Wunstorfer Moor, al este del Steinhuder Meer, cerca de la base aérea de Wunstorf (00309 con la declaración del LKA de Baja Sajonia; los demás son noticias del 15 al 25 de septiembre sobre el hallazgo, fechadas por su publicación). Es un suceso distinto del de Leipzig/Halle: la Fiscalía Federal solo examina si hay relación"
+    },
+    {
+      "registros": [
+        "EODI-2025-00142",
+        "EODI-2025-00134"
+      ],
+      "motivo": "Es el mismo suceso que EODI-2025-00142: Airbus A320 recién despegado de Heathrow, mayo de 2025, unos 9.000 pies, objeto blanco triangular a unos 10 m, informe del UK Airprox Board («providence had played a major part»)."
+    },
+    {
+      "registros": [
+        "EODI-2025-00223",
+        "EODI-2025-00149"
+      ],
+      "motivo": "Es el mismo sobrevuelo de drones sobre el cuartel de Marche-en-Famenne (26 y 28 de octubre de 2025) que ya recoge EODI-2025-00223."
+    },
+    {
+      "registros": [
+        "EODI-2025-00164",
+        "EODI-2025-00150"
+      ],
+      "motivo": "No es un suceso nuevo: la nota cuenta que el MoD cerró la investigación de los drones de noviembre de 2024 sobre RAF Lakenheath, Mildenhall y Feltwell, que ya es EODI-2025-00164. La fecha 22-11-2025 es la de la nota."
+    },
+    {
+      "registros": [
+        "EODI-2025-00294",
+        "EODI-2025-00152"
+      ],
+      "motivo": "La nota (12-12-2025) es un análisis de un experto sobre los drones vistos el 1 de diciembre de 2025 a la llegada de Zelenski; es el mismo suceso que EODI-2025-00294."
+    },
+    {
+      "registros": [
+        "EODI-2025-00176",
+        "EODI-2025-00170"
+      ],
+      "motivo": "No es un suceso nuevo: la nota de julio de 2025 cuenta que el VDD cerró la causa penal por los drones de enero (13-01-2025) en el aeropuerto de Riga, que ya están en EODI-2025-00176."
+    },
+    {
+      "registros": [
+        "EODI-2025-00001",
+        "EODI-2025-00202"
+      ],
+      "motivo": "Es el cierre del espacio aéreo de Hannover del viernes 26-12-2025 por la noche (tres horas y media, siete vuelos desviados), ya recogido en EODI-2025-00001; esta nota solo añade el retraso de un trasplante de corazón."
+    },
+    {
+      "registros": [
+        "EODI-2025-00219",
+        "EODI-2025-00256"
+      ],
+      "motivo": "Es el mismo sobrevuelo de la fábrica Eurenco de Bergerac (10-11-2025) que ya es EODI-2025-00219, que tiene la misma nota de sudouest.fr y la declaración de la prefectura de Dordoña."
+    },
+    {
+      "registros": [
+        "EODI-2025-00263",
+        "EODI-2025-00259"
+      ],
+      "motivo": "Son las dos entradas de drones en Rumanía del 25-11-2025 (Tulcea y Gala\u021bi, con Eurofighter y F-16), que ya están en EODI-2025-00263."
+    },
+    {
+      "registros": [
+        "EODI-2025-00316",
+        "EODI-2025-00290"
+      ],
+      "motivo": "Es la entrada del dron en Tulcea (cerca de Periprava y Chilia Veche) el 19-11-2025, que ya es EODI-2025-00316."
+    },
+    {
+      "registros": [
+        "EODI-2025-00221",
+        "EODI-2025-00334"
+      ],
+      "motivo": "Es el cierre del aeropuerto de Berlín-Brandeburgo del 31-10-2025 entre las 20:08 y las 21:58 (hora local), que ya es EODI-2025-00221."
+    },
+    {
+      "registros": [
+        "EODI-2026-00039",
+        "EODI-2026-00056"
+      ],
+      "motivo": "Es el mismo suceso que EODI-2026-00039: el dron agrícola de 32 kg que un agricultor voló junto al aeropuerto de Cuneo-Levaldigi el 2 de mayo. Si no se une, la cita nueva respalda el titular y hay que corregir «Drone agricola»."
+    },
+    {
+      "registros": [
+        "EODI-2026-00146",
+        "EODI-2026-00149"
+      ],
+      "motivo": "Es el mismo suceso que EODI-2026-00146: el vuelo de Iberia a Melilla retrasado por un dron en el lado marroquí de la frontera (La Razón cuenta el mismo hecho). Si no se une, la frase completa respalda el titular; la guardada está cortada."
+    },
+    {
+      "registros": [
+        "EODI-2026-00184",
+        "EODI-2026-00154"
+      ],
+      "motivo": "La nota es una interpelación parlamentaria sobre el suceso del 24 de septiembre: el dron que entró por Boto\u0219ani y cayó cerca de Solca (Suceava). Ese suceso ya está en EODI-2026-00184."
+    },
+    {
+      "registros": [
+        "EODI-2026-00291",
+        "EODI-2026-00161"
+      ],
+      "motivo": "No hubo ataque contra Dhekelia: la nota dice que en Dhekelia todo estaba en calma y que los rumores de una explosión allí no pudieron verificarse. El dron que impactó fue el de RAF Akrotiri pasada la medianoche del 2 de marzo, ya en EODI-2026-00291."
+    },
+    {
+      "registros": [
+        "EODI-2026-00140",
+        "EODI-2026-00174"
+      ],
+      "motivo": "Es el derribo del viernes 14 de agosto de 2026 por cazas aliados sobre Letonia, ya recogido y confirmado en EODI-2026-00140. La cita guardada habla de otra cosa (ataques entre Rusia y Ucrania)."
+    },
+    {
+      "registros": [
+        "EODI-2026-00232",
+        "EODI-2026-00189"
+      ],
+      "motivo": "El dron no fue derribado sobre la base: los F-18 despegaron de Mihail Kogalniceanu y lo derribaron hacia la frontera con Ucrania el 16 de agosto. Es el suceso de EODI-2026-00232 (F-18 español, cerca de Gala\u021bi). La nota del 28 de septiembre es un reportaje."
+    },
+    {
+      "registros": [
+        "EODI-2026-00253",
+        "EODI-2026-00216"
+      ],
+      "motivo": "Es el impacto de dos drones en los depósitos de combustible de R\u0113zekne del 7 de mayo de 2026, ya en EODI-2026-00253. La nota (11-05) trata de la dimisión del ministro de Defensa letón."
+    },
+    {
+      "registros": [
+        "EODI-2026-00230",
+        "EODI-2026-00242"
+      ],
+      "motivo": "Es el mismo suceso de la noche del 12 al 13 de agosto en el norte de Tulcea (cinco drones seguidos, uno entra unos 10 minutos cerca de Pardina, despegan dos F-16) que ya está en EODI-2026-00230. Además el titular dice que el dron se estrelló en el mar y la fuente no lo dice: según el Ministerio el objetivo salió de Rumania hacia Ucrania; el objeto visto en el mar en Costine\u0219ti es otro hecho (EODI-2026-00118) y solo «se supone» parte de un dron."
+    },
+    {
+      "registros": [
+        "EODI-2026-00302",
+        "EODI-2026-00246"
+      ],
+      "motivo": "No es un suceso nuevo: la dimisión del gobierno de Riga (14 de mayo) es la consecuencia política de la caída de dos drones en R\u0113zekne la noche del 7 de mayo, que ya está como EODI-2026-00302 (y también como EODI-2026-00253). EODI-2026-00248 y EODI-2026-00254 son copias de este mismo artículo."
+    },
+    {
+      "registros": [
+        "EODI-2026-00302",
+        "EODI-2026-00253"
+      ],
+      "motivo": "El titular es correcto, pero la cita guardada no nombra R\u0113zekne; la frase del mismo artículo «Divu kaujas dronu ietriek\u0161an\u0101s naftas b\u0101z\u0113 R\u0113zekn\u0113...» sí lo respalda. Es el mismo suceso del 7 de mayo que EODI-2026-00302, por eso se propone unir y llevar esta cita allí."
+    },
+    {
+      "registros": [
+        "EODI-2026-00262",
+        "EODI-2026-00258"
+      ],
+      "motivo": "La cita guardada no nombra Moldavia; la nota original de veridica.md sí («O nou\u0103 dron\u0103 a p\u0103truns în spa\u021biul aerian al R. Moldova»). El objeto de las 20:45 desapareció del radar junto a Br\u0103ne\u0219ti (Orhei), y el dron Geran que explotó en Orhei esa noche ya es EODI-2026-00262. Es un duplicado."
+    },
+    {
+      "registros": [
+        "EODI-2026-00263",
+        "EODI-2026-00264"
+      ],
+      "motivo": "La cita guardada está cortada justo antes de «al R. Moldova»; completa sí nombra Moldavia. Es el mismo hecho (tres drones el miércoles 30 de septiembre, embajador ruso convocado) que EODI-2026-00263, que ya está confirmado."
+    },
+    {
+      "registros": [
+        "EODI-2026-00127",
+        "EODI-2026-00280"
+      ],
+      "motivo": "La cita guardada («Unbekannte Drohnen.») no nombra Luxemburgo y el titular dice «cerrar el espacio aéreo» cuando las fuentes hablan de parar el tráfico del aeropuerto. Es el cierre de la noche del 18 al 19 de septiembre, que ya está como EODI-2026-00127 (también EODI-2026-00115 y EODI-2026-00048)."
+    },
+    {
+      "registros": [
+        "EODI-2026-00108",
+        "EODI-2026-00320"
+      ],
+      "motivo": "La cita guardada no nombra Estonia ni la central; la frase de La Croix sí. Es el impacto en la chimenea de la central eléctrica estonia (Auvere) de marzo, que ya está como EODI-2026-00108 (y EODI-2026-00274)."
+    },
+    {
+      "registros": [
+        "EODI-2026-00064",
+        "EODI-2026-00367"
+      ],
+      "motivo": "Es el cierre del aeropuerto de Sofía del 7 de marzo, que ya está como EODI-2026-00064 (confirmado). Aparte, la comprobación falla por escritura: las citas dicen «\u0412\u0430\u0441\u0438\u043b \u041b\u0435\u0432\u0441\u043a\u0438» y «\u0421\u043e\u0444\u0438\u044f» en cirílico y el titular «Vasil Levski»/«Sofía»."
+    },
+    {
+      "registros": [
+        "EODI-2026-00372",
+        "EODI-2026-00379"
+      ],
+      "motivo": "La cita guardada no nombra Moldavia; la frase de la misma nota sí. Es el ataque del sábado 3 de octubre (cinco aparatos: tres misiles y dos drones), ya recogido en EODI-2026-00372 (también 00421, 00422, 00425, 00373)."
+    },
+    {
+      "registros": [
+        "EODI-2026-00372",
+        "EODI-2026-00381"
+      ],
+      "motivo": "La cita guardada («drone de origine necunoscut\u0103») no nombra Moldavia ni las localidades; la frase nueva sí. Es el mismo ataque del sábado 3 de octubre que EODI-2026-00372 (y 00421, con las mismas localidades)."
+    },
+    {
+      "registros": [
+        "EODI-2026-00384",
+        "EODI-2026-00389"
+      ],
+      "motivo": "La cita guardada («briefly closing its airspace») no nombra Lituania ni el dron; la frase de apertura del mismo artículo sí. Es la alerta del sábado 3 de octubre en Vilna, ya recogida en EODI-2026-00384 (y EODI-2026-00376)."
+    },
+    {
+      "registros": [
+        "EODI-2026-00372",
+        "EODI-2026-00427"
+      ],
+      "motivo": "La cita guardada («sâmb\u0103t\u0103 diminea\u021ba») no nombra nada; la frase completa nombra \u0218tefan-Vod\u0103. La nota del 4 de octubre habla del ataque del sábado 3 de octubre (convocatoria del embajador al día siguiente), ya recogido en EODI-2026-00372."
+    },
+    {
+      "registros": [
+        "EODI-2026-00116",
+        "EODI-2026-00428"
+      ],
+      "motivo": "No hay suceso nuevo: el artículo trata de un nuevo sistema de detección en el aeropuerto BER y da una estadística (28 avistamientos en el primer semestre). El único hecho concreto, el cierre de 45 minutos del 23 de septiembre, ya está como EODI-2026-00116. Si no se quiere unir, retirar como nota estadística."
+    },
+    {
+      "registros": [
+        "EODI-2025-00295",
+        "EODI-2025-00270",
+        "EODI-2025-00311",
+        "EODI-2025-00313",
+        "EODI-2025-00318"
+      ],
+      "motivo": "el mismo suceso: los drones que entraron en Polonia la noche del 9 al 10 de septiembre de 2025 (las fiscalías de Lublin y Cracovia y el Ministerio del Interior nombran los mismos lugares de hallazgo)"
+    },
+    {
+      "registros": [
+        "EODI-2026-00372",
+        "EODI-2026-00421",
+        "EODI-2026-00422",
+        "EODI-2026-00425",
+        "EODI-2026-00373"
+      ],
+      "motivo": "el mismo suceso: los drones y misiles que cruzaron Moldavia el sábado 3 de octubre de 2026 (Ministerio de Defensa de Moldavia)"
+    },
+    {
+      "registros": [
+        "EODI-2026-00179",
+        "EODI-2026-00212",
+        "EODI-2026-00229"
+      ],
+      "motivo": "el mismo suceso: el dron derribado cerca de Pratk\u016bnai (Lituania) el 15 de septiembre de 2026"
+    },
+    {
+      "registros": [
+        "EODI-2026-00209",
+        "EODI-2026-00296"
+      ],
+      "motivo": "el mismo suceso: el dron que cayó junto a Kardam (Bulgaria) el 8 de agosto de 2026"
+    },
+    {
+      "registros": [
+        "EODI-2026-00232",
+        "EODI-2026-00172"
+      ],
+      "motivo": "el mismo suceso: el dron derribado entre B\u0103leni y Cudalbi (Gala\u021bi) el 16 de agosto de 2026"
+    },
+    {
+      "registros": [
+        "EODI-2026-00224",
+        "EODI-2026-00295"
+      ],
+      "motivo": "el mismo suceso: el dron caído junto a Mih\u0103ileni (Moldavia) el 8 de septiembre de 2026"
+    },
+    {
+      "registros": [
+        "EODI-2026-00098",
+        "EODI-2026-00126"
+      ],
+      "motivo": "el mismo suceso: el dron Shahed que cruzó Moldavia el 14 de marzo de 2026"
+    },
+    {
+      "registros": [
+        "EODI-2025-00328",
+        "EODI-2025-00351"
+      ],
+      "motivo": "el mismo suceso: los drones que entraron en Moldavia la noche del 28 al 29 de noviembre de 2025"
+    },
+    {
+      "registros": [
+        "EODI-2025-00306",
+        "EODI-2025-00359",
+        "EODI-2025-00376"
+      ],
+      "motivo": "el mismo suceso: el dron que entró en Rumanía cerca de Pardina el 13 de septiembre de 2025 (Ministerio de Defensa de Rumanía)"
     }
   ],
   "reextraer": [
@@ -41,6 +323,3529 @@
       "motivo": "la ficha mezcló dos sucesos: sus tres noticias (18 de septiembre de 2026) son del dron hallado junto a la base aérea de Wunstorf, pero tomó la fecha y el lugar del dron de Leipzig/Halle del 4 de agosto, con el que la Fiscalía Federal estudia si hay relación",
       "no_lugar": "Leipzig",
       "no_antes_de": "2026-09-01"
+    }
+  ],
+  "retirar": [
+    {
+      "incidente": "EODI-2025-00065",
+      "motivo": {
+        "es": "Es una estadística: la DFS cuenta cinco avistamientos en Dresde en los nueve primeros meses de 2025, sin fecha ni detalle de ningún suceso concreto.",
+        "en": "It is a statistic: DFS counts five sightings at Dresden in the first nine months of 2025, with no date or detail of any specific event."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00114",
+      "motivo": {
+        "es": "Es una nota de opinión: un exministro en un programa de televisión critica al Gobierno y cuenta que cada semana pasa un dron sobre su casa; no describe ningún suceso con fecha.",
+        "en": "It is an opinion piece: a former minister on a TV talk show criticises the government and says a drone flies over his house every week; it describes no dated event."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00143",
+      "motivo": {
+        "es": "La única fuente es una sección «On this Day» del Daily Echo que recuerda un cuasi choque de 2017; no hay ningún suceso en 2025 y la fecha del incidente (17-02-2025) es la de la nota, no la del hecho.",
+        "en": "The only source is a Daily Echo «On this Day» feature recalling a 2017 near miss; there is no 2025 event and the incident date (2025-02-17) is the date of the feature, not of the event."
+      }
+    }
+  ],
+  "citas": [
+    {
+      "incidente": "EODI-2025-00013",
+      "enlace": "https://fremover.no/rykket-ut-til-droneflyvning-har-kontroll-pa-to-personer/s/5-34-2225422",
+      "medio": "fremover.no",
+      "fecha": "2025-09-30",
+      "idioma": "no",
+      "frase": "To turister innbrakt etter mistanke om ulovlig droneflyvning i nærheten av Bardufoss lufthavn.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://fremover.no/rykket-ut-til-droneflyvning-har-kontroll-pa-to-personer/s/5-34-2225422 (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00013",
+      "enlace": "https://fremover.no/rykket-ut-til-droneflyvning-har-kontroll-pa-to-personer/s/5-34-2225422",
+      "medio": "fremover.no",
+      "fecha": "2025-09-30",
+      "idioma": "no",
+      "frase": "De fløy dronen i østenden av Andsvatnet, som er innenfor forbudssonen for droner som eksisterer rundt flyplassen, sier Kileng.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://fremover.no/rykket-ut-til-droneflyvning-har-kontroll-pa-to-personer/s/5-34-2225422 (original)"
+      },
+      "declaracion": {
+        "autoridad": "Troms politidistrikt",
+        "pais": "NO",
+        "categoria": "policia",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00034",
+      "enlace": "https://15min.lt/verslas/naujiena/bendroves/naujienu-belaukiant-policija-pasidalijo-zinia-apie-drona-sutrikdziusi-vilniaus-oro-uosto-darba-663-2510288",
+      "medio": "15min.lt",
+      "fecha": "2025-08-22",
+      "idioma": "lt",
+      "frase": "tre\u010diadienio nakt\u012f d\u0117l min\u0117to drono teko laikinai stabdyti skryd\u017eius Vilniaus oro uoste.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://15min.lt/verslas/naujiena/bendroves/naujienu-belaukiant-policija-pasidalijo-zinia-apie-drona-sutrikdziusi-vilniaus-oro-uosto-darba-663-2510288 (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00034",
+      "enlace": "https://15min.lt/verslas/naujiena/bendroves/naujienu-belaukiant-policija-pasidalijo-zinia-apie-drona-sutrikdziusi-vilniaus-oro-uosto-darba-663-2510288",
+      "medio": "15min.lt",
+      "fecha": "2025-08-22",
+      "idioma": "lt",
+      "frase": "Vilniaus oro uosto tarnybos \u0117m\u0117si papildom\u0173 veiksm\u0173, buvo sustiprintas patruliavimas bei steb\u0117jimas nurodyta kryptimi.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://15min.lt/verslas/naujiena/bendroves/naujienu-belaukiant-policija-pasidalijo-zinia-apie-drona-sutrikdziusi-vilniaus-oro-uosto-darba-663-2510288 (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00058",
+      "enlace": "https://nos.nl/artikel/2584249-gespotte-drone-waardoor-polderbaan-dichtging-was-waarschijnlijk-een-ballon",
+      "medio": "nos.nl",
+      "fecha": "2025-09-27",
+      "idioma": "nl",
+      "frase": "De Polderbaan op Schiphol is vanmiddag zo'n 45 minuten gesloten geweest, nadat piloten en vliegtuigspotters dachten dat ze een drone hadden gezien.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://nos.nl/artikel/2584249-gespotte-drone-waardoor-polderbaan-dichtging-was-waarschijnlijk-een-ballon (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00058",
+      "enlace": "https://nos.nl/artikel/2584249-gespotte-drone-waardoor-polderbaan-dichtging-was-waarschijnlijk-een-ballon",
+      "medio": "nos.nl",
+      "fecha": "2025-09-27",
+      "idioma": "nl",
+      "frase": "Rond 19.00 uur meldde de marechaussee na onderzoek dat het zeer waarschijnlijk geen drone was, omdat er geen is gesignaleerd op radarbeelden.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://nos.nl/artikel/2584249-gespotte-drone-waardoor-polderbaan-dichtging-was-waarschijnlijk-een-ballon (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00059",
+      "enlace": "https://nrk.no/vestfoldogtelemark/floy-drone-i-forbudssonen-til-sandefjord-lufthavn-torp-1.17608598",
+      "medio": "nrk.no",
+      "fecha": "2025-10-12",
+      "idioma": "no",
+      "frase": "En utenlandsk statsborger har innrømmet å ha fløyet ulovlig med drone ved flyplassen i Sandefjord søndag ettermiddag.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://nrk.no/vestfoldogtelemark/floy-drone-i-forbudssonen-til-sandefjord-lufthavn-torp-1.17608598 (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00059",
+      "enlace": "https://nrk.no/vestfoldogtelemark/floy-drone-i-forbudssonen-til-sandefjord-lufthavn-torp-1.17608598",
+      "medio": "nrk.no",
+      "fecha": "2025-10-12",
+      "idioma": "no",
+      "frase": "Han ble ikke pågrepet, men han bor og jobber i nærheten",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://nrk.no/vestfoldogtelemark/floy-drone-i-forbudssonen-til-sandefjord-lufthavn-torp-1.17608598 (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00060",
+      "enlace": "https://respublika.lt/lt/naujienos/lietuva/kitos-lietuvos-zinios/del-galimai-pastebeto-drono-buvo-laikinai-sustabdyta-vilniaus-oro-uosto-veikla",
+      "medio": "respublika.lt",
+      "fecha": "2025-09-25",
+      "idioma": "lt",
+      "frase": "D\u0117l galimai pasteb\u0117to drono buvo laikinai sustabdyta Vilniaus oro uosto veikla, prane\u0161a Lietuvos oro uost\u0173 atstovas Tadas Vasiliauskas.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://respublika.lt/lt/naujienos/lietuva/kitos-lietuvos-zinios/del-galimai-pastebeto-drono-buvo-laikinai-sustabdyta-vilniaus-oro-uosto-veikla (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00060",
+      "enlace": "https://lrt.lt/naujienos/verslas/4/2691790/del-galimo-drono-buvo-sustabdyti-skrydziai-vilniaus-oro-uoste",
+      "medio": "lrt.lt",
+      "fecha": "2025-09-25",
+      "idioma": "lt",
+      "frase": "Negavus patvirtinan\u010di\u0173 duomen\u0173 apie drono skryd\u012f toje vietoje, Vilniaus oro uosto veikla atnaujinta 16.11 val.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://www.lrt.lt/naujienos/verslas/4/2691790/del-galimo-drono-buvo-sustabdyti-skrydziai-vilniaus-oro-uoste (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00088",
+      "enlace": "https://europasur.es/gibraltar/drones-no-autorizados-retrasan-salida-vuelos-aeropuerto_0_2005055419.html",
+      "medio": "europasur.es",
+      "fecha": "2025-10-21",
+      "idioma": "es",
+      "frase": "Dos vuelos comerciales quedaron temporalmente retenidos la noche del lunes en el aeropuerto de Gibraltar tras la detección de drones no autorizados",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://europasur.es/gibraltar/drones-no-autorizados-retrasan-salida-vuelos-aeropuerto_0_2005055419.html (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00091",
+      "enlace": "https://evz.ro/germania-va-sprijini-belgia-in-consolidarea-apararii-anti-drona-dupa-incursiunile-de-la-baza-nucleara-kleine-brogel.html",
+      "medio": "evz.ro",
+      "fecha": "2025-11-07",
+      "idioma": "ro",
+      "frase": "În weekend, baza militar\u0103 belgian\u0103 Kleine-Brogel, unde se afl\u0103 armament nuclear american, a fost survolat\u0103 de trei ori",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://evz.ro/germania-va-sprijini-belgia-in-consolidarea-apararii-anti-drona-dupa-incursiunile-de-la-baza-nucleara-kleine-brogel.html (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00094",
+      "enlace": "https://novosti.rs/planeta/svet/1531794/dronovi-priblizili-aerodromu-nova-uzbuna-zemlji-nato-policija-licu-mesta",
+      "medio": "novosti.rs",
+      "fecha": "2025-10-01",
+      "idioma": "sr",
+      "frase": "POLICIJA je sino\u0107 primila prijave o dronovima koji su se pribli\u017eili aerodromu Bronojsund u Norve\u0161koj toliko da su mogli da ih uo\u010de kontrolori leta,",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://novosti.rs/planeta/svet/1531794/dronovi-priblizili-aerodromu-nova-uzbuna-zemlji-nato-policija-licu-mesta (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00099",
+      "enlace": "https://ve.lt/aktualijos/lietuva/vilniaus-oro-uoste-lektuvo-nusileidima-sutrikde-dronas",
+      "medio": "ve.lt",
+      "fecha": "2025-09-12",
+      "idioma": "lt",
+      "frase": "Vilniuje ketvirtadienio nakt\u012f d\u0117l vir\u0161 oro uosto \u012ftariamai skraid\u017eiusio objekto negal\u0117jus nusileisti l\u0117ktuvui, policija tikina gavusi prane\u0161im\u0105 apie pasteb\u0117t\u0105 dron\u0105.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://ve.lt/aktualijos/lietuva/vilniaus-oro-uoste-lektuvo-nusileidima-sutrikde-dronas (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00099",
+      "enlace": "https://ve.lt/aktualijos/lietuva/vilniaus-oro-uoste-lektuvo-nusileidima-sutrikde-dronas",
+      "medio": "ve.lt",
+      "fecha": "2025-09-12",
+      "idioma": "lt",
+      "frase": "tod\u0117l i\u0161 Talino skird\u0119s \u201eairBaltic\u201c l\u0117ktuvas buvo nukreiptas \u012f Ryg\u0105.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://ve.lt/aktualijos/lietuva/vilniaus-oro-uoste-lektuvo-nusileidima-sutrikde-dronas (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00099",
+      "enlace": "https://ve.lt/aktualijos/lietuva/vilniaus-oro-uoste-lektuvo-nusileidima-sutrikde-dronas",
+      "medio": "ve.lt",
+      "fecha": "2025-09-12",
+      "idioma": "lt",
+      "frase": "Tiesa, pasak policijos, atvykus \u012f prane\u0161\u0117jo nurodyta viet\u0105 ir pasiva\u017ein\u0117jus aplinkin\u0117ms gatv\u0117mis dronas ar drono pilotas nepasteb\u0117ti.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://ve.lt/aktualijos/lietuva/vilniaus-oro-uoste-lektuvo-nusileidima-sutrikde-dronas"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00102",
+      "enlace": "https://15min.lt/verslas/naujiena/bendroves/per-menesi-desimt-dronu-sukeltu-incidentu-vilniaus-oro-uoste-663-2538170",
+      "medio": "15min.lt",
+      "fecha": "2025-10-09",
+      "idioma": "lt",
+      "frase": "Lietuvos oro erdv\u0119 \u0161e\u0161tadienio nakt\u012f pa\u017eeid\u0117 25 meteorologiniai oro balionai, d\u0117l kuri\u0173 laikinai sutriko Vilniaus oro uosto veikla.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://15min.lt/verslas/naujiena/bendroves/per-menesi-desimt-dronu-sukeltu-incidentu-vilniaus-oro-uoste-663-2538170 (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00119",
+      "enlace": "https://europasur.es/gibraltar/vuelo-dron-no-identificado-cerrar-aeropuerto_0_2003168879.html",
+      "medio": "europasur.es",
+      "fecha": "2025-01-19",
+      "idioma": "es",
+      "frase": "La presencia de un dron obligó en la noche del sábado a cerrar por precaución el aeropuerto de Gibraltar por segunda vez en diez días",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://europasur.es/gibraltar/vuelo-dron-no-identificado-cerrar-aeropuerto_0_2003168879.html (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00119",
+      "enlace": "https://europasur.es/gibraltar/vuelo-dron-no-identificado-cerrar-aeropuerto_0_2003168879.html",
+      "medio": "europasur.es",
+      "fecha": "2025-01-19",
+      "idioma": "es",
+      "frase": "había actividad de drones en la zona del aeródromo, lo que impedía que un avión de pasajeros aterrizara en el aeropuerto internacional de Gibraltar",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://europasur.es/gibraltar/vuelo-dron-no-identificado-cerrar-aeropuerto_0_2003168879.html (original)"
+      },
+      "declaracion": {
+        "autoridad": "Royal Gibraltar Police",
+        "pais": "GI",
+        "categoria": "policia",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00127",
+      "enlace": "https://btvnovinite.bg/bulgaria/sobstvenikat-na-drona-blokiral-6-poleta-na-letishte-sofija-vse-oshte-e-neizvesten.html",
+      "medio": "btvnovinite.bg",
+      "fecha": "2025-02-09",
+      "idioma": "bg",
+      "frase": "\u0421\u043e\u0431\u0441\u0442\u0432\u0435\u043d\u0438\u043a\u044a\u0442 \u043d\u0430 \u0434\u0440\u043e\u043d\u0430, \u0431\u043b\u043e\u043a\u0438\u0440\u0430\u043b 6 \u043f\u043e\u043b\u0435\u0442\u0430 \u043d\u0430 \u041b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f, \u0432\u0441\u0435 \u043e\u0449\u0435 \u0435 \u043d\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u0435\u043d",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://web.archive.org/web/20250217175428/https://btvnovinite.bg/bulgaria/sobstvenikat-na-drona-blokiral-6-poleta-na-letishte-sofija-vse-oshte-e-neizvesten.html (archivo; el original responde 403)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00127",
+      "enlace": "https://btvnovinite.bg/bulgaria/sobstvenikat-na-drona-blokiral-6-poleta-na-letishte-sofija-vse-oshte-e-neizvesten.html",
+      "medio": "btvnovinite.bg",
+      "fecha": "2025-02-09",
+      "idioma": "bg",
+      "frase": "\u0412\u0441\u0435 \u043e\u0449\u0435 \u043d\u0435 \u0435 \u0443\u0441\u0442\u0430\u043d\u043e\u0432\u0435\u043d \u0441\u043e\u0431\u0441\u0442\u0432\u0435\u043d\u0438\u043a\u044a\u0442 \u043d\u0430 \u0434\u0440\u043e\u043d\u0430, \u043d\u0430\u0432\u043b\u044f\u0437\u044a\u043b \u0432 \u0437\u043e\u043d\u0430\u0442\u0430 \u043d\u0430 \u041b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f \u043f\u0440\u0435\u0434\u0438 \u0434\u0432\u0430 \u0434\u043d\u0438.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://web.archive.org/web/20250217175428/https://btvnovinite.bg/bulgaria/sobstvenikat-na-drona-blokiral-6-poleta-na-letishte-sofija-vse-oshte-e-neizvesten.html (archivo; el original responde 403)"
+      },
+      "declaracion": {
+        "autoridad": "\u041c\u0438\u043d\u0438\u0441\u0442\u0435\u0440\u0441\u0442\u0432\u043e \u043d\u0430 \u0432\u044a\u0442\u0440\u0435\u0448\u043d\u0438\u0442\u0435 \u0440\u0430\u0431\u043e\u0442\u0438",
+        "pais": "BG",
+        "categoria": "ministerio",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00132",
+      "enlace": "https://abcnyheter.no/nyheter/ulovlig-droneflygning-pa-bergen-lufthavn/1126277",
+      "medio": "abcnyheter.no",
+      "fecha": "2025-07-08",
+      "idioma": "no",
+      "frase": "Ulovlig droneflygning innenfor forbudssonen på Bergen Lufthavn Flesland førte til at én flyavgang måtte holdes tilbake tirsdag kveld.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://abcnyheter.no/nyheter/ulovlig-droneflygning-pa-bergen-lufthavn/1126277 (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00134",
+      "enlace": "https://mirror.co.uk/news/uk-news/heathrow-airport-plane-almost-crashes-35763577",
+      "medio": "mirror.co.uk",
+      "fecha": "2025-08-20",
+      "idioma": "en",
+      "frase": "The Airbus A320 had just taken off from London\u2019s Heathrow Airport and was at 9,000 ft during the near miss in May.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://mirror.co.uk/news/uk-news/heathrow-airport-plane-almost-crashes-35763577 (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00140",
+      "enlace": "https://ba.no/onsker-tips-etter-flere-droneobservasjoner-i-arna/s/5-8-2912603",
+      "medio": "ba.no",
+      "fecha": "2025-02-12",
+      "idioma": "no",
+      "frase": "Politiet har de siste dagene mottatt en rekke tips fra folk i Arna som har observert omfattende droneaktivitet.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://ba.no/onsker-tips-etter-flere-droneobservasjoner-i-arna/s/5-8-2912603 (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00140",
+      "enlace": "https://ba.no/onsker-tips-etter-flere-droneobservasjoner-i-arna/s/5-8-2912603",
+      "medio": "ba.no",
+      "fecha": "2025-02-12",
+      "idioma": "no",
+      "frase": "Politiet var i området en halvtime senere, men observerte ingen droner",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://ba.no/onsker-tips-etter-flere-droneobservasjoner-i-arna/s/5-8-2912603 (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00142",
+      "enlace": "https://standard.co.uk/news/london/drone-flew-at-london-plane-in-terrifying-near-miss-b1244207.html",
+      "medio": "standard.co.uk",
+      "fecha": "2025-08-23",
+      "idioma": "en",
+      "frase": "An airline pilot flying a passenger plane over central London has revealed how his view was partially blocked by a large drone",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://standard.co.uk/news/london/drone-flew-at-london-plane-in-terrifying-near-miss-b1244207.html (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00145",
+      "enlace": "https://op.se/2025-09-29/dronare-vid-sundsvall-timra-airport",
+      "medio": "op.se",
+      "fecha": "2025-09-29",
+      "idioma": "sv",
+      "frase": "Vid 22-tiden på söndagskvällen upptäcktes en drönare vid Sundsvall Timrå Airport.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://www.op.se/nyheter/dronare-vid-sundsvall-timra-airport/ (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00145",
+      "enlace": "https://op.se/2025-09-29/dronare-vid-sundsvall-timra-airport",
+      "medio": "op.se",
+      "fecha": "2025-09-29",
+      "idioma": "sv",
+      "frase": "ett flygplan från Stockholm ha fått cirkulera i nästan 40 minuter utanför kusten i höjd med Gnarp innan det kunde landa på Sundsvall Timrå Airport",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://www.op.se/nyheter/dronare-vid-sundsvall-timra-airport/ (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00145",
+      "enlace": "https://op.se/2025-09-29/dronare-vid-sundsvall-timra-airport",
+      "medio": "op.se",
+      "fecha": "2025-09-29",
+      "idioma": "sv",
+      "frase": "Systemet upptäckte att drönaren lyfte, så vi har varit på platsen och ärendet har tagit tid, säger Eric Rönnholm, befäl vid polisens regionledningscentral.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://www.op.se/nyheter/dronare-vid-sundsvall-timra-airport/ (original)"
+      },
+      "declaracion": {
+        "autoridad": "Polisen",
+        "pais": "SE",
+        "categoria": "policia",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00146",
+      "enlace": "https://abcnyheter.no/nyheter/matte-stenge-rullebanen-pa-bergen-lufthavn-pa-grunn-av-drone/1119807",
+      "medio": "abcnyheter.no",
+      "fecha": "2025-07-02",
+      "idioma": "no",
+      "frase": "Onsdag kveld ble en drone observert like sør for Bergen lufthavn.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://www.abcnyheter.no/nyheter/matte-stenge-rullebanen-pa-bergen-lufthavn-pa-grunn-av-drone/1119807 (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00146",
+      "enlace": "https://abcnyheter.no/nyheter/matte-stenge-rullebanen-pa-bergen-lufthavn-pa-grunn-av-drone/1119807",
+      "medio": "abcnyheter.no",
+      "fecha": "2025-07-02",
+      "idioma": "no",
+      "frase": "Det er 5 kilometer forbudssone for droner rundt flyplassen, og dronen var innenfor sonen",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://www.abcnyheter.no/nyheter/matte-stenge-rullebanen-pa-bergen-lufthavn-pa-grunn-av-drone/1119807 (original)"
+      },
+      "declaracion": {
+        "autoridad": "Vest politidistrikt",
+        "pais": "NO",
+        "categoria": "policia",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00149",
+      "enlace": "https://centrepresseaveyron.fr/2025/10/29/apres-des-vols-de-drones-au-dessus-des-aeroports-de-copenhague-munich-et-dans-la-region-de-la-baltique-la-belgique-touchee-a-son-tour-13021446.php",
+      "medio": "centrepresseaveyron.fr",
+      "fecha": "2025-10-29",
+      "idioma": "fr",
+      "frase": "des gardes de la caserne de Marche-en-Famenne avaient repéré plusieurs drones survolant la base militaire",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://www.centrepresseaveyron.fr/2025/10/29/apres-des-vols-de-drones-au-dessus-des-aeroports-de-copenhague-munich-et-dans-la-region-de-la-baltique-la-belgique-touchee-a-son-tour-13021446.php (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00150",
+      "enlace": "https://eadt.co.uk/news/25641538.investigation-drones-raf-lakenheath-completed",
+      "medio": "eadt.co.uk",
+      "fecha": "2025-11-22",
+      "idioma": "en",
+      "frase": "The Ministry of Defence (MOD) has confirmed its investigation into mystery drone activity over Suffolk air bases has been completed.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://www.eadt.co.uk/news/25641538.investigation-drones-raf-lakenheath-completed/ (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00152",
+      "enlace": "https://newstalk.com/news/dublin-airport-drones-2218403",
+      "medio": "newstalk.com",
+      "fecha": "2025-12-12",
+      "idioma": "en",
+      "frase": "The appearance of drones near Dublin Airport ahead of President Zelenskyy\u2019s arrival",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://www.newstalk.com/news/dublin-airport-drones-2218403 (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00156",
+      "enlace": "https://europasur.es/gibraltar/drones-paralizan-aeropuerto-noche-desviar-avion-militar_0_2005292041.html",
+      "medio": "europasur.es",
+      "fecha": "2025-11-23",
+      "idioma": "es",
+      "frase": "El aeropuerto de Gibraltar ha vuelto a vivir momentos de tensión este fin de semana después de que varios drones irrumpieran en el espacio aéreo",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://www.europasur.es/gibraltar/drones-paralizan-aeropuerto-noche-desviar-avion-militar_0_2005292041.html (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00164",
+      "enlace": "https://edp24.co.uk/news/25065114.raf-lakenheath-drone-activity-prompts-helicopter-near-miss",
+      "medio": "edp24.co.uk",
+      "fecha": "2025-04-05",
+      "idioma": "en",
+      "frase": "The National Police Air Service (NPAS) helicopter took action during a search for drone activity at RAF Lakenheath and RAF Mildenhall",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://www.edp24.co.uk/news/25065114.raf-lakenheath-drone-activity-prompts-helicopter-near-miss/ (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00164",
+      "enlace": "https://theaviationist.com/2025/06/28/npas-helicopter-reports-near-miss-with-f-15/",
+      "medio": "theaviationist.com",
+      "fecha": "2025-06-28",
+      "idioma": "en",
+      "frase": "concluded that the helicopter crew had misidentified the red flashing lights of a fast-moving F-15 as belonging to a drone",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://theaviationist.com/2025/06/28/npas-helicopter-reports-near-miss-with-f-15/ (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00164",
+      "enlace": "https://eadt.co.uk/news/25641538.investigation-drones-raf-lakenheath-completed",
+      "medio": "eadt.co.uk",
+      "fecha": "2025-11-22",
+      "idioma": "en",
+      "frase": "During searches for the unidentified aircraft, a police helicopter mistook an USA fighter jet for a drone, a report found.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://www.eadt.co.uk/news/25641538.investigation-drones-raf-lakenheath-completed/ (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00166",
+      "enlace": "https://nettavisen.no/nyhetsvarsel/droner-over-alta-lufthavn/s/5-95-2283356",
+      "medio": "nettavisen.no",
+      "fecha": "2025-02-12",
+      "idioma": "no",
+      "frase": "politiet at de har rykket ut til Alta lufthavn etter å ha fått melding om en drone som flyr i luftrommet til Alta lufthavn",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://www.nettavisen.no/nyheter/droner-over-alta-lufthavn/s/5-95-2283356 (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00166",
+      "enlace": "https://nettavisen.no/nyhetsvarsel/droner-over-alta-lufthavn/s/5-95-2283356",
+      "medio": "nettavisen.no",
+      "fecha": "2025-02-12",
+      "idioma": "no",
+      "frase": "Politiet fikk også melding om en ny drone i samme luftrom, men har verken funnet den aktuelle dronen eller piloten.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://www.nettavisen.no/nyheter/droner-over-alta-lufthavn/s/5-95-2283356 (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00170",
+      "enlace": "https://delfi.lv/193/politics/120078971/droni-rigas-lidostas-teritorija-vdd-izbeidz-kriminalprocesu",
+      "medio": "delfi.lv",
+      "fecha": "2025-07-05",
+      "idioma": "lv",
+      "frase": "izbeidzis no Valsts policijas p\u0101r\u0146emto krimin\u0101lprocesu par \u0161ogad janv\u0101r\u012b nelikum\u012bgi pilot\u0113tajiem droniem R\u012bgas lidostas teritorij\u0101",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://www.delfi.lv/193/politics/120078971/droni-rigas-lidostas-teritorija-vdd-izbeidz-kriminalprocesu (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00184",
+      "enlace": "https://sueddeutsche.de/politik/drohnen-militaerflughafen-bardufoss-norwegen-li.3318890",
+      "medio": "sueddeutsche.de",
+      "fecha": "2025-09-29",
+      "idioma": "de",
+      "frase": "Die Norwegian-Maschine war auf dem Weg von Oslo nach Bardufoss.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://www.sueddeutsche.de/politik/drohnen-militaerflughafen-bardufoss-norwegen-li.3318890 (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00184",
+      "enlace": "https://salzburg24.at/news/welt/erneute-drohnensichtung-fluege-in-norwegen-umgeleitet-flughafen-bardufoss-gesperrt-art-303628",
+      "medio": "salzburg24.at",
+      "fecha": "2025-09-29",
+      "idioma": "de",
+      "frase": "Ein Flugzeug auf dem Weg von der Hauptstadt Oslo zum Flughafen Bardufoss in der nördlichen Provinz Troms habe am späten Sonntagabend umkehren müssen",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://www.salzburg24.at/news/welt/erneute-drohnensichtung-fluege-in-norwegen-umgeleitet-flughafen-bardufoss-gesperrt-art-303628 (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00184",
+      "enlace": "https://salzburg24.at/news/welt/erneute-drohnensichtung-fluege-in-norwegen-umgeleitet-flughafen-bardufoss-gesperrt-art-303628",
+      "medio": "salzburg24.at",
+      "fecha": "2025-09-29",
+      "idioma": "de",
+      "frase": "Der Flughafen Bardufoss wurde vorübergehend geschlossen.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://www.salzburg24.at/news/welt/erneute-drohnensichtung-fluege-in-norwegen-umgeleitet-flughafen-bardufoss-gesperrt-art-303628 (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00202",
+      "enlace": "https://ndr.de/nachrichten/niedersachsen/hannover_weser-leinegebiet/drohnen-am-flughafen-hannover-herz-transplantation-verzoegert,drohnen-240.html",
+      "medio": "ndr.de",
+      "fecha": "2025-12-30",
+      "idioma": "de",
+      "frase": "Bestätigt ist laut einer Sprecherin der Polizei, dass mindestens vier Drohnen gesichtet wurden.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://www.ndr.de/nachrichten/niedersachsen/hannover_weser-leinegebiet/drohnen-am-flughafen-hannover-gefaehrden-organtransport,drohnen-240.html (original; la URL redirige a esta)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00202",
+      "enlace": "https://ndr.de/nachrichten/niedersachsen/hannover_weser-leinegebiet/drohnen-am-flughafen-hannover-herz-transplantation-verzoegert,drohnen-240.html",
+      "medio": "ndr.de",
+      "fecha": "2025-12-30",
+      "idioma": "de",
+      "frase": "Am Abend des zweiten Weihnachtsfeiertages haben Drohnen den Reiseverkehr am Flughafen Hannover ausgebremst.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://www.ndr.de/nachrichten/niedersachsen/hannover_weser-leinegebiet/drohnen-am-flughafen-hannover-gefaehrden-organtransport,drohnen-240.html (original; la URL redirige a esta)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00259",
+      "enlace": "https://index.hr/vijesti/clanak/dronovi-u-zracnom-prostoru-clanice-natoa-u-jeku-ruskog-napada-dignuti-avioni/2733907.aspx",
+      "medio": "index.hr",
+      "fecha": "2025-11-25",
+      "idioma": "hr",
+      "frase": "dva njema\u010dka zrakoplova Eurofighter Typhoon poslana kako bi presreli dronove u okrugu Tulcea",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://www.index.hr/vijesti/clanak/dronovi-u-zracnom-prostoru-clanice-natoa-u-jeku-ruskog-napada-dignuti-avioni/2733907.aspx (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00290",
+      "enlace": "https://net.hr/danas/svijet/rumunjska-i-poljska-podigle-borbene-avione-nakon-ulaska-drona-u-nato-zracni-prostor-887fc1d4-c527-11f0-8a26-9600040c8f8e",
+      "medio": "net.hr",
+      "fecha": "2025-11-19",
+      "idioma": "hr",
+      "frase": "radar prvi put primijetio signal drona kada je ve\u0107 pre\u0161ao osam kilometara u rumunjskom zra\u010dnom prostoru blizu sela Periprava i Chilia Veche u \u017eupaniji Tulcea",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://net.hr/danas/svijet/rumunjska-i-poljska-podigle-borbene-avione-nakon-ulaska-drona-u-nato-zracni-prostor-887fc1d4-c527-11f0-8a26-9600040c8f8e (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00334",
+      "enlace": "https://vrt.be/vrtnws/nl/2025/10/31/luchthaven-berlijn-plat-door-drones",
+      "medio": "vrt.be",
+      "fecha": "2025-10-31",
+      "idioma": "nl",
+      "frase": "Het vliegverkeer boven de luchthaven van Berlijn-Brandenburg is bijna 2 uur lang stilgelegd, door de aanwezigheid van een drone.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://www.vrt.be/vrtnws/nl/2025/10/31/luchthaven-berlijn-plat-door-drones (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00334",
+      "enlace": "https://vrt.be/vrtnws/nl/2025/10/31/luchthaven-berlijn-plat-door-drones",
+      "medio": "vrt.be",
+      "fecha": "2025-10-31",
+      "idioma": "nl",
+      "frase": "Dat bevestigt een woordvoerder van de luchthaven aan persagentschap AFP.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://www.vrt.be/vrtnws/nl/2025/10/31/luchthaven-berlijn-plat-door-drones (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00346",
+      "enlace": "https://rheinpfalz.de/rheinpfalz-am-sonntag_artikel,-milit%C3%A4rexpertin-ulrike-franke-brauchen-mehr-drohnenabwehr-_arid,5733962.html",
+      "medio": "rheinpfalz.de",
+      "fecha": "2025-01-17",
+      "idioma": "de",
+      "frase": "Ende November, Anfang Dezember sind offenbar Aufklärungsdrohnen in das Sperrgebiet der US Air Base Ramstein eingedrungen",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://www.rheinpfalz.de/rheinpfalz-am-sonntag_artikel,-milit%C3%A4rexpertin-ulrike-franke-brauchen-mehr-drohnenabwehr-_arid,5733962.html (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00363",
+      "enlace": "https://novinite.com/articles/234372/Mystery+Drone+Found+on+Burgas+Beach:+Military+Experts+Investigate",
+      "medio": "novinite.com",
+      "fecha": "2025-09-12",
+      "idioma": "en",
+      "frase": "A drone was discovered washed up on Burgas\u2019 North Beach, in the Solnitske area, earlier on September 12.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://www.novinite.com/articles/234372/Mystery+Drone+Found+on+Burgas+Beach:+Military+Experts+Investigate (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00363",
+      "enlace": "https://ziare.com/bulgaria/drona-misterioasa-descoperita-plaja-burgas-1963968",
+      "medio": "ziare.com",
+      "fecha": "2025-09-12",
+      "idioma": "ro",
+      "frase": "O dron\u0103 a fost descoperit\u0103 aruncat\u0103 de valuri pe plaja de nord a ora\u0219ului bulg\u0103resc Burgas, în zona Solnitske",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://ziare.com/bulgaria/drona-misterioasa-descoperita-plaja-burgas-1963968 (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00363",
+      "enlace": "https://novinite.com/articles/234372/Mystery+Drone+Found+on+Burgas+Beach:+Military+Experts+Investigate",
+      "medio": "novinite.com",
+      "fecha": "2025-09-12",
+      "idioma": "en",
+      "frase": "A specialized team from the Burgas Naval Base conducted a full reconnaissance, confirming that the drone contained no explosives and did not represent a hazard.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://www.novinite.com/articles/234372/Mystery+Drone+Found+on+Burgas+Beach:+Military+Experts+Investigate (original)"
+      },
+      "declaracion": {
+        "autoridad": "\u0412\u043e\u0435\u043d\u043d\u043e\u043c\u043e\u0440\u0441\u043a\u0438 \u0441\u0438\u043b\u0438 (\u0412\u043e\u0435\u043d\u043d\u043e\u043c\u043e\u0440\u0441\u043a\u0430 \u0431\u0430\u0437\u0430 \u0411\u0443\u0440\u0433\u0430\u0441)",
+        "pais": "BG",
+        "categoria": "fuerzas_armadas",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00395",
+      "enlace": "https://atitudinea.ro/drona-ucraineana-detonata-langa-portul-constanta-incidentul-ar-fi-fost-tinut-secret",
+      "medio": "atitudinea.ro",
+      "fecha": "2025-07-29",
+      "idioma": "ro",
+      "frase": "O dron\u0103 ucrainean\u0103, ajuns\u0103 în deriv\u0103 în zona portului Constan\u021ba, a fost neutralizat\u0103 în larg, de scafandrii militari.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://www.atitudinea.ro/drona-ucraineana-detonata-langa-portul-constanta-incidentul-ar-fi-fost-tinut-secret (original, con www; sin www no responde)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00395",
+      "enlace": "https://atitudinea.ro/drona-ucraineana-detonata-langa-portul-constanta-incidentul-ar-fi-fost-tinut-secret",
+      "medio": "atitudinea.ro",
+      "fecha": "2025-07-29",
+      "idioma": "ro",
+      "frase": "Drona a fost detonat\u0103 de c\u0103tre scafandrii militari specializa\u021bi în astfel de ac\u021biuni pentru obiecte explozive.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://www.atitudinea.ro/drona-ucraineana-detonata-langa-portul-constanta-incidentul-ar-fi-fost-tinut-secret (original, con www; sin www no responde)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00399",
+      "enlace": "https://lavozdelanzarote.com/actualidad/sucesos/dron-obliga-paralizar-todos-vuelos-en-aeropuerto-lanzarote_237100_102.html",
+      "medio": "lavozdelanzarote.com",
+      "fecha": "2025-08-14",
+      "idioma": "es",
+      "frase": "La presencia de un dron en la cabecera de la pista 03 del Aeropuerto César Manrique-Lanzarote causó la paralización de todas las operaciones",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://lavozdelanzarote.com/actualidad/sucesos/dron-obliga-paralizar-todos-vuelos-en-aeropuerto-lanzarote_237100_102.html (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00401",
+      "enlace": "https://canarias7.es/economia/dron-cerca-aeropuerto-gran-canaria-provoca-desvio-20250212121932-nt.html",
+      "medio": "canarias7.es",
+      "fecha": "2025-02-12",
+      "idioma": "es",
+      "frase": "El avistamiento de un dron en las inmediaciones del aeropuerto de Gran Canaria provocó la madrugada de este miércoles el desvío de tres vuelos",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://canarias7.es/economia/dron-cerca-aeropuerto-gran-canaria-provoca-desvio-20250212121932-nt.html (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00401",
+      "enlace": "https://canarias7.es/economia/dron-cerca-aeropuerto-gran-canaria-provoca-desvio-20250212121932-nt.html",
+      "medio": "canarias7.es",
+      "fecha": "2025-02-12",
+      "idioma": "es",
+      "frase": "Según han confirmado fuentes de Aena, sobre la 01.00 de la madrugada, se produjo el avistamiento de un dron que sobrevolaba cerca del recinto aeroportuario",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://canarias7.es/economia/dron-cerca-aeropuerto-gran-canaria-provoca-desvio-20250212121932-nt.html (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00401",
+      "enlace": "https://eldiario.es/canariasahora/sucesos/dron-cerca-aeropuerto-gran-canaria-provoca-desvio-vuelos_1_12047456.html",
+      "medio": "eldiario.es",
+      "fecha": "2025-02-12",
+      "idioma": "es",
+      "frase": "El avistamiento de un dron en las inmediaciones del aeropuerto de Gran Canaria provocó la madrugada de este miércoles el desvío de tres vuelos",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://eldiario.es/canariasahora/sucesos/dron-cerca-aeropuerto-gran-canaria-provoca-desvio-vuelos_1_12047456.html (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00001",
+      "enlace": "https://vecernji.hr/vijesti/uhvacen-nijemac-zbog-letova-dronom-kod-splitskog-aerodroma-vise-puta-ulazio-u-zabranjene-zone-1984543",
+      "medio": "vecernji.hr",
+      "fecha": "2026-08-07",
+      "idioma": "hr",
+      "frase": "osumnji\u010denog za nedopu\u0161teno upravljanje dronom u zabranjenim zonama na podru\u010dju Trogira i Ka\u0161tel \u0160tafili\u0107a, uklju\u010duju\u0107i podru\u010dje u blizini Zra\u010dne luke Split",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://vecernji.hr/vijesti/uhvacen-nijemac-zbog-letova-dronom-kod-splitskog-aerodroma-vise-puta-ulazio-u-zabranjene-zone-1984543 (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00011",
+      "enlace": "https://omroepbrabant.nl/nieuws/6002492/drone-in-beslag-genomen-bij-vliegbasis-gilze-rijen",
+      "medio": "omroepbrabant.nl",
+      "fecha": "2026-01-23",
+      "idioma": "nl",
+      "frase": "De politie heeft afgelopen zaterdag een drone in beslag genomen die vloog in de omgeving van Rijen.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://www.omroepbrabant.nl/nieuws/6002492/drone-in-beslag-genomen-bij-vliegbasis-gilze-rijen (original, con www)"
+      },
+      "declaracion": {
+        "autoridad": "Politie",
+        "pais": "NL",
+        "categoria": "policia",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00011",
+      "enlace": "https://omroepbrabant.nl/nieuws/6002492/drone-in-beslag-genomen-bij-vliegbasis-gilze-rijen",
+      "medio": "omroepbrabant.nl",
+      "fecha": "2026-01-23",
+      "idioma": "nl",
+      "frase": "Het gebied waarbinnen de drone vloog, valt binnen de gecontroleerde luchtverkeerszone rondom de vliegbasis Gilze-Rijen.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://www.omroepbrabant.nl/nieuws/6002492/drone-in-beslag-genomen-bij-vliegbasis-gilze-rijen (original, con www)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00013",
+      "enlace": "https://sandnesposten.no/droneflygning-i-forbudssone-skaper-problemer-for-flytrafikken/s/5-105-1400508",
+      "medio": "sandnesposten.no",
+      "fecha": "2026-06-30",
+      "idioma": "no",
+      "frase": "Like over klokken 14 melder politiet at de er ved Stavanger lufthavn, Sola.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://sandnesposten.no/droneflygning-i-forbudssone-skaper-problemer-for-flytrafikken/s/5-105-1400508 (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00013",
+      "enlace": "https://sandnesposten.no/droneflygning-i-forbudssone-skaper-problemer-for-flytrafikken/s/5-105-1400508",
+      "medio": "sandnesposten.no",
+      "fecha": "2026-06-30",
+      "idioma": "no",
+      "frase": "Tirsdag rykker politiet ut på melding om droneflygning i forbundssonen for inn- og utflygning.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://sandnesposten.no/droneflygning-i-forbudssone-skaper-problemer-for-flytrafikken/s/5-105-1400508 (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00032",
+      "enlace": "https://klaipeda.diena.lt/naujienos/vilnius/miesto-pulsas/draudziamoje-zonoje-prie-vilniaus-oro-uosto-skraidintas-dronas-1735654",
+      "medio": "klaipeda.diena.lt",
+      "fecha": "2026-01-02",
+      "idioma": "lt",
+      "frase": "Vie\u0161ojo saugumo tarnyba (VST) sulaik\u0117 prie Tarptautinio Vilniaus oro uosto dron\u0105 skraidinus\u012f asmen\u012f.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://klaipeda.diena.lt/naujienos/vilnius/miesto-pulsas/draudziamoje-zonoje-prie-vilniaus-oro-uosto-skraidintas-dronas-1735654 (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00032",
+      "enlace": "https://klaipeda.diena.lt/naujienos/vilnius/miesto-pulsas/draudziamoje-zonoje-prie-vilniaus-oro-uosto-skraidintas-dronas-1735654",
+      "medio": "klaipeda.diena.lt",
+      "fecha": "2026-01-02",
+      "idioma": "lt",
+      "frase": "sistema \u201eFly Safe\u201c fiksavo bepilot\u012f orlaiv\u012f, skraid\u017eius\u012f draud\u017eiamoje zonoje prie Vilniaus oro uosto",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://klaipeda.diena.lt/naujienos/vilnius/miesto-pulsas/draudziamoje-zonoje-prie-vilniaus-oro-uosto-skraidintas-dronas-1735654 (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00045",
+      "enlace": "https://schwaebische.de/regional/allgaeu/memmingen/zwischenfall-am-flughafen-memmingen-flugbetrieb-eingestellt-4450354",
+      "medio": "schwaebische.de",
+      "fecha": "2026-03-22",
+      "idioma": "de",
+      "frase": "Aufregung am Flughafen Memmingen: Urplötzlich taucht eine Drohne in der Flugverbotszone auf, der Flugbetrieb wird direkt eingestellt, die Polizei macht sich an die Arbeit.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://schwaebische.de/regional/allgaeu/memmingen/zwischenfall-am-flughafen-memmingen-flugbetrieb-eingestellt-4450354 (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00047",
+      "enlace": "https://nrk.no/nordland/turist-floy-drone-rett-ved-svolvaer-lufthavn-i-lofoten-da-et-fly-fra-wideroe-skulle-ta-av-1.17989917",
+      "medio": "nrk.no",
+      "fecha": "2026-08-14",
+      "idioma": "nn",
+      "frase": "Medan Widerøe-piloten gjorde seg klar til å ta av frå Svolvær lufthamn, sende ein eldre turist opp ei drone rett ved rullebana.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://nrk.no/nordland/turist-floy-drone-rett-ved-svolvaer-lufthavn-i-lofoten-da-et-fly-fra-wideroe-skulle-ta-av-1.17989917 (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00047",
+      "enlace": "https://nrk.no/nordland/turist-floy-drone-rett-ved-svolvaer-lufthavn-i-lofoten-da-et-fly-fra-wideroe-skulle-ta-av-1.17989917",
+      "medio": "nrk.no",
+      "fecha": "2026-08-14",
+      "idioma": "nn",
+      "frase": "Ein person flyr ein liten drone like ved Svolvær lufthavn i Lofoten, like før eit Widerøe-fly skal ta av mot Bodø.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://nrk.no/nordland/turist-floy-drone-rett-ved-svolvaer-lufthavn-i-lofoten-da-et-fly-fra-wideroe-skulle-ta-av-1.17989917 (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00056",
+      "enlace": "https://punto-informatico.it/drone-agricolo-bloccato-aeroporto-cuneo",
+      "medio": "punto-informatico.it",
+      "fecha": "2026-05-04",
+      "idioma": "it",
+      "frase": "Un quadricottero da 32 chilogrammi nello spazio aereo vicino allo scalo di Cuneo-Levaldigi, ha costretto alla sospensione dei voli.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://punto-informatico.it/drone-agricolo-bloccato-aeroporto-cuneo (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00083",
+      "enlace": "https://pcwplus.hu/pcwlite/dron-repuloter-lezaras-letartoztatas-magyar-allampolgar-horvatorszag-split-385993.html",
+      "medio": "pcwplus.hu",
+      "fecha": "2026-08-02",
+      "idioma": "hu",
+      "frase": "péntek este drónt észleltek a spliti Szent Jeromos repül\u0151tér futópályáinak közelében, ezért a hatóságok azonnal felfüggesztették a légiforgalmat.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://pcwplus.hu/pcwlite/dron-repuloter-lezaras-letartoztatas-magyar-allampolgar-horvatorszag-split-385993.html (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00083",
+      "enlace": "https://pcwplus.hu/pcwlite/dron-repuloter-lezaras-letartoztatas-magyar-allampolgar-horvatorszag-split-385993.html",
+      "medio": "pcwplus.hu",
+      "fecha": "2026-08-02",
+      "idioma": "hu",
+      "frase": "Az intézkedés ugyan mindössze nagyjából tíz percig tartott",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://pcwplus.hu/pcwlite/dron-repuloter-lezaras-letartoztatas-magyar-allampolgar-horvatorszag-split-385993.html (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00083",
+      "enlace": "https://vecernji.hr/vijesti/uhvacen-nijemac-zbog-letova-dronom-kod-splitskog-aerodroma-vise-puta-ulazio-u-zabranjene-zone-1984543",
+      "medio": "vecernji.hr",
+      "fecha": "2026-08-07",
+      "idioma": "hr",
+      "frase": "Nekoliko dana ranije, zbog leta drona u blizini zra\u010dne luke, bio je prekinut zra\u010dni promet, a policija je uhitila 36-godi\u0161njeg ma\u0111arskog dr\u017eavljanina",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://vecernji.hr/vijesti/uhvacen-nijemac-zbog-letova-dronom-kod-splitskog-aerodroma-vise-puta-ulazio-u-zabranjene-zone-1984543 (original)"
+      },
+      "declaracion": {
+        "autoridad": "Policijska uprava splitsko-dalmatinska",
+        "pais": "HR",
+        "categoria": "policia",
+        "afirma": "incidente"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00149",
+      "enlace": "https://bladna.nl/drone-steekt-grens-toch-krijgt-luchthaven-melilla-last,72967.html",
+      "medio": "bladna.nl",
+      "fecha": "2026-09-26",
+      "idioma": "nl",
+      "frase": "Een Marokkaanse drone die aan de Marokkaanse kant van de grens bleef, heeft toch invloed gehad op een commerciële vlucht naar Melilla.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://bladna.nl/drone-steekt-grens-toch-krijgt-luchthaven-melilla-last,72967.html (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00149",
+      "enlace": "https://bladna.nl/drone-steekt-grens-toch-krijgt-luchthaven-melilla-last,72967.html",
+      "medio": "bladna.nl",
+      "fecha": "2026-09-26",
+      "idioma": "nl",
+      "frase": "De Spaanse regeringsdelegatie in Melilla benadrukt dat de drone het luchtruim van de stad niet was binnengedrongen.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://bladna.nl/drone-steekt-grens-toch-krijgt-luchthaven-melilla-last,72967.html (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00154",
+      "enlace": "https://monitorulsv.ro/deputata-aur-veronica-grosu-ii-cere-premierului-bolojan-sa-spuna-cine-raspunde-pentru-siguranta-romanilor-dupa-incidentele-cu-drone-din-suceava_e07d13",
+      "medio": "monitorulsv.ro",
+      "fecha": "2026-09-28",
+      "idioma": "ro",
+      "frase": "autorit\u0103\u021bile au emis dou\u0103 alerte Ro-Alert în jude\u021bele Boto\u0219ani \u0219i Suceava, dup\u0103 detectarea unei drone în apropierea frontierei cu România",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://monitorulsv.ro/deputata-aur-veronica-grosu-ii-cere-premierului-bolojan-sa-spuna-cine-raspunde-pentru-siguranta-romanilor-dupa-incidentele-cu-drone-din-suceava_e07d13 (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00154",
+      "enlace": "https://monitorulsv.ro/deputata-aur-veronica-grosu-ii-cere-premierului-bolojan-sa-spuna-cine-raspunde-pentru-siguranta-romanilor-dupa-incidentele-cu-drone-din-suceava_e07d13",
+      "medio": "monitorulsv.ro",
+      "fecha": "2026-09-28",
+      "idioma": "ro",
+      "frase": "drona a p\u0103truns în România prin jude\u021bul Boto\u0219ani \u0219i s-a pr\u0103bu\u0219it ulterior în jude\u021bul Suceava, în apropiere de localitatea Solca",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://monitorulsv.ro/deputata-aur-veronica-grosu-ii-cere-premierului-bolojan-sa-spuna-cine-raspunde-pentru-siguranta-romanilor-dupa-incidentele-cu-drone-din-suceava_e07d13 (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00161",
+      "enlace": "https://cyprus-mail.com/2026/03/03/calm-at-dhekelia-bases-after-drone-strike",
+      "medio": "cyprus-mail.com",
+      "fecha": "2026-03-03",
+      "idioma": "en",
+      "frase": "the Cyprus News Agency reported that rumours circulating on social media about an alleged explosion in the Dhekelia area could not be verified.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://cyprus-mail.com/2026/03/03/calm-at-dhekelia-bases-after-drone-strike (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00161",
+      "enlace": "https://cyprus-mail.com/2026/03/03/calm-at-dhekelia-bases-after-drone-strike",
+      "medio": "cyprus-mail.com",
+      "fecha": "2026-03-03",
+      "idioma": "en",
+      "frase": "located within the RAF Akrotiri base area, were closed on Monday as a precaution after the airfield was struck by a drone",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://cyprus-mail.com/2026/03/03/calm-at-dhekelia-bases-after-drone-strike (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00166",
+      "enlace": "https://index.hu/belfold/2026/01/27/dron-legter-rendorseg-vecses-legtersertes-jogsertes",
+      "medio": "index.hu",
+      "fecha": "2026-01-27",
+      "idioma": "hu",
+      "frase": "Az eset Vecsésen történt, ahol egy férfi egy gyártelep épületér\u0151l reptette szabálytalanul drónját.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://index.hu/belfold/2026/01/27/dron-legter-rendorseg-vecses-legtersertes-jogsertes (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00166",
+      "enlace": "https://index.hu/belfold/2026/01/27/dron-legter-rendorseg-vecses-legtersertes-jogsertes",
+      "medio": "index.hu",
+      "fecha": "2026-01-27",
+      "idioma": "hu",
+      "frase": "Mivel az eszköz a Budapest Liszt Ferenc Nemzetközi Repül\u0151tér közvetlen közelében repült, ezzel veszélyeztette a leszálló és induló kereskedelmi járatokat.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://index.hu/belfold/2026/01/27/dron-legter-rendorseg-vecses-legtersertes-jogsertes (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00166",
+      "enlace": "https://blikk.hu/aktualis/belfold/dron-liszt-ferenc-repuloter-keszenleti-rendorseg-budapest/j4kky3r",
+      "medio": "blikk.hu",
+      "fecha": "2026-01-27",
+      "idioma": "hu",
+      "frase": "a Légügyi Hatóság közigazgatási hatósági eljárást indított vele szemben \u2013 számolt be róla a rend\u0151rség.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://blikk.hu/aktualis/belfold/dron-liszt-ferenc-repuloter-keszenleti-rendorseg-budapest/j4kky3r (original)"
+      },
+      "declaracion": {
+        "autoridad": "Rend\u0151rség",
+        "pais": "HU",
+        "categoria": "policia",
+        "afirma": "incidente"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00174",
+      "enlace": "https://kyivpost.com/post/82328",
+      "medio": "kyivpost.com",
+      "fecha": "2026-08-14",
+      "idioma": "en",
+      "frase": "Fighter jets shot down a drone that entered Latvian airspace, the country\u2019s military said Friday.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://kyivpost.com/post/82328 (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00189",
+      "enlace": "https://elpais.com/espana/2026-09-28/espana-afronta-desde-rumania-la-lucha-de-la-otan-contra-los-ataques-de-drones-el-sistema-debe-repensarse-y-actualizarse.html",
+      "medio": "elpais.com",
+      "fecha": "2026-09-28",
+      "idioma": "es",
+      "frase": "El objetivo, un dron ruso que había traspasado a territorio aliado, fue finalmente derribado hacia las cinco de la madrugada.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://web.archive.org/web/2026/https://elpais.com/espana/2026-09-28/espana-afronta-desde-rumania-la-lucha-de-la-otan-contra-los-ataques-de-drones-el-sistema-debe-repensarse-y-actualizarse.html (copia del archivo; el original devuelve 403)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00189",
+      "enlace": "https://elpais.com/espana/2026-09-28/espana-afronta-desde-rumania-la-lucha-de-la-otan-contra-los-ataques-de-drones-el-sistema-debe-repensarse-y-actualizarse.html",
+      "medio": "elpais.com",
+      "fecha": "2026-09-28",
+      "idioma": "es",
+      "frase": "Ese 16 de agosto era la primera vez que la OTAN eliminaba uno de estos dispositivos",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://web.archive.org/web/2026/https://elpais.com/espana/2026-09-28/espana-afronta-desde-rumania-la-lucha-de-la-otan-contra-los-ataques-de-drones-el-sistema-debe-repensarse-y-actualizarse.html (copia del archivo)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00216",
+      "enlace": "https://atitudinea.ro/ministrul-apararii-din-letonia-a-demisionat-dupa-atacul-cu-drone-asupra-unui-depozit-petrolier-riga-si-vilnius-cer-nato-intarirea-apararii-aeriene-audio",
+      "medio": "atitudinea.ro",
+      "fecha": "2026-05-11",
+      "idioma": "ro",
+      "frase": "Ministrul Ap\u0103r\u0103rii din Letonia a demisionat dup\u0103 ce dou\u0103 drone ucrainene au intrat dinspre Rusia \u0219i au lovit instala\u021bii petroliere.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://atitudinea.ro/ministrul-apararii-din-letonia-a-demisionat-dupa-atacul-cu-drone-asupra-unui-depozit-petrolier-riga-si-vilnius-cer-nato-intarirea-apararii-aeriene-audio (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00242",
+      "enlace": "https://slobodna-bosna.ba/vijest/499877/nocna_drama_na_granici_dron_usao_u_zrachni_prostor_nato_chlanice_poletjela_dva_f_16.html",
+      "medio": "slobodna-bosna.ba",
+      "fecha": "2026-08-13",
+      "idioma": "hr",
+      "frase": "Od pet pra\u0107enih dronova, jedan je nakratko u\u0161ao u rumunski zra\u010dni prostor.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://slobodna-bosna.ba/vijest/499877/nocna_drama_na_granici_dron_usao_u_zrachni_prostor_nato_chlanice_poletjela_dva_f_16.html (página original, descargada el 2026-10-05)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00242",
+      "enlace": "https://slobodna-bosna.ba/vijest/499877/nocna_drama_na_granici_dron_usao_u_zrachni_prostor_nato_chlanice_poletjela_dva_f_16.html",
+      "medio": "slobodna-bosna.ba",
+      "fecha": "2026-08-13",
+      "idioma": "hr",
+      "frase": "Zemaljski radari zabilje\u017eili su ulazak jednog zra\u010dnog cilja u nacionalni zra\u010dni prostor, otprilike dva kilometra ju\u017eno od mjesta Pardina.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://slobodna-bosna.ba/vijest/499877/nocna_drama_na_granici_dron_usao_u_zrachni_prostor_nato_chlanice_poletjela_dva_f_16.html (página original, descargada el 2026-10-05)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00246",
+      "enlace": "https://hotnews.ro/prim-ministra-letoniei-a-demisionat-dupa-scandalul-intern-declansat-de-prabusirea-dronelor-ucrainene-pe-teritoriul-statului-baltic-2245438",
+      "medio": "hotnews.ro",
+      "fecha": "2026-05-14",
+      "idioma": "ro",
+      "frase": "Dronele au c\u0103zut în Letonia în urm\u0103 cu o s\u0103pt\u0103mân\u0103, avariind patru rezervoare de petrol goale la o instala\u021bie de depozitare din Rezekne",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://hotnews.ro/prim-ministra-letoniei-a-demisionat-dupa-scandalul-intern-declansat-de-prabusirea-dronelor-ucrainene-pe-teritoriul-statului-baltic-2245438 (página original, descargada el 2026-10-05)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00246",
+      "enlace": "https://lettera43.it/droni-ucraini-dimissioni-premier-lettonia-silina",
+      "medio": "lettera43.it",
+      "fecha": "2026-05-14",
+      "idioma": "it",
+      "frase": "nella notte del 7 maggio, due droni ucraini provenienti dalla Russia si sono schiantati vicino alla città di R\u0113zekne, nella parte orientale del Paese.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://lettera43.it/droni-ucraini-dimissioni-premier-lettonia-silina (página original, descargada el 2026-10-05)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00253",
+      "enlace": "https://ir.lv/politika/droni-nokrit-rezekne-bet-trapa-riga.221442",
+      "medio": "ir.lv",
+      "fecha": "2026-05-13",
+      "idioma": "lv",
+      "frase": "Divu kaujas dronu ietriek\u0161an\u0101s naftas b\u0101z\u0113 R\u0113zekn\u0113 nerad\u012bja civilo katastrofu",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://ir.lv/politika/droni-nokrit-rezekne-bet-trapa-riga.221442 (página original, descargada el 2026-10-05)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00253",
+      "enlace": "https://ir.lv/politika/droni-nokrit-rezekne-bet-trapa-riga.221442",
+      "medio": "ir.lv",
+      "fecha": "2026-05-13",
+      "idioma": "lv",
+      "frase": "Pirms saule bija uzl\u0113kusi, 7. maij\u0101 spo\u017eas spr\u0101dziena liesmas pac\u0113l\u0101s virs koku galiem tikai p\u0101ris kilometrus no Latgales M\u0101ras statujas R\u0113zeknes centr\u0101",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://ir.lv/politika/droni-nokrit-rezekne-bet-trapa-riga.221442 (página original, descargada el 2026-10-05)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00258",
+      "enlace": "https://www.veridica.md/stiri/o-noua-drona-in-spatiul-aerian-al-r-moldova",
+      "medio": "veridica.md",
+      "fecha": "2026-09-30",
+      "idioma": "ro",
+      "frase": "O nou\u0103 dron\u0103 a p\u0103truns în spa\u021biul aerian al R. Moldova, miercuri seara.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://www.veridica.md/stiri/o-noua-drona-in-spatiul-aerian-al-r-moldova (página original, descargada el 2026-10-05)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00258",
+      "enlace": "https://www.veridica.md/stiri/o-noua-drona-in-spatiul-aerian-al-r-moldova",
+      "medio": "veridica.md",
+      "fecha": "2026-09-30",
+      "idioma": "ro",
+      "frase": "Obiectul a disp\u0103rut de pe sistemele de monitorizare în zona loc. Br\u0103ne\u0219ti, Orhei.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://www.veridica.md/stiri/o-noua-drona-in-spatiul-aerian-al-r-moldova (página original, descargada el 2026-10-05)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00258",
+      "enlace": "https://www.veridica.md/stiri/o-noua-drona-in-spatiul-aerian-al-r-moldova",
+      "medio": "veridica.md",
+      "fecha": "2026-09-30",
+      "idioma": "ro",
+      "frase": "La ora 21:07 spa\u021biul aerian zona Centru a fost redeschis.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://www.veridica.md/stiri/o-noua-drona-in-spatiul-aerian-al-r-moldova (página original, descargada el 2026-10-05)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00264",
+      "enlace": "https://news.yam.md/ro/story/69526957",
+      "medio": "news.yam.md (Veridica.md)",
+      "fecha": "2026-10-01",
+      "idioma": "ro",
+      "frase": "MAE convoac\u0103 ambasadorul rus dup\u0103 ce trei drone au înc\u0103lcat spa\u021biul aerian al R. Moldova",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://news.yam.md/ro/story/69526957 (página original, descargada el 2026-10-05)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00264",
+      "enlace": "https://www.veridica.md/stiri/mae-convoaca-ambasadorul-rus-dupa-ce-trei-drone-au-incalcat-spatiul-aerian-al-r-moldova",
+      "medio": "veridica.md",
+      "fecha": "2026-10-01",
+      "idioma": "ro",
+      "frase": "Potrivit autorit\u0103\u021bilor moldovene, dou\u0103 dintre drone au c\u0103zut \u0219i au explodat miercuri pe teritoriul R. Moldova.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://www.veridica.md/stiri/mae-convoaca-ambasadorul-rus-dupa-ce-trei-drone-au-incalcat-spatiul-aerian-al-r-moldova (página original, descargada el 2026-10-05)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00280",
+      "enlace": "https://express.de/koeln/drohnen-alarm-legt-airport-lahm-hunderte-stranden-in-koeln-1377435",
+      "medio": "express.de",
+      "fecha": "2026-09-19",
+      "idioma": "de",
+      "frase": "Unbekannte Drohnen sorgen für Chaos am Flughafen Luxemburg.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://express.de/koeln/drohnen-alarm-legt-airport-lahm-hunderte-stranden-in-koeln-1377435 (página original, descargada el 2026-10-05)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00280",
+      "enlace": "https://express.de/koeln/drohnen-alarm-legt-airport-lahm-hunderte-stranden-in-koeln-1377435",
+      "medio": "express.de",
+      "fecha": "2026-09-19",
+      "idioma": "de",
+      "frase": "Als \u201eVorsichtsmaßnahme\u201c wurde der gesamte Flugverkehr sofort gestoppt.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://express.de/koeln/drohnen-alarm-legt-airport-lahm-hunderte-stranden-in-koeln-1377435 (página original, descargada el 2026-10-05)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00280",
+      "enlace": "https://www.aa.com.tr/en/europe/flights-resume-at-luxembourg-airport-after-drone-activity/4061670",
+      "medio": "aa.com.tr",
+      "fecha": "2026-09-19",
+      "idioma": "en",
+      "frase": "Luxembourg Airport resumed flight operations early Saturday after it was temporarily closed following sightings of unauthorized drones",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://www.aa.com.tr/en/europe/flights-resume-at-luxembourg-airport-after-drone-activity/4061670 (página original, descargada el 2026-10-05)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00280",
+      "enlace": "https://www.aa.com.tr/en/europe/flights-resume-at-luxembourg-airport-after-drone-activity/4061670",
+      "medio": "aa.com.tr",
+      "fecha": "2026-09-19",
+      "idioma": "en",
+      "frase": "Frieden said large drones had been spotted over Luxembourg in recent days, with their presence near the airport overnight from Friday to Saturday",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://www.aa.com.tr/en/europe/flights-resume-at-luxembourg-airport-after-drone-activity/4061670 (página original, descargada el 2026-10-05)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00303",
+      "enlace": "https://merkur.de/lokales/erding/flughafen-muenchen-ort60188/muenchner-flughafen-gesperrt-kapitaen-sichtet-unbekanntes-objekt-94477802.html",
+      "medio": "merkur.de",
+      "fecha": "2026-09-07",
+      "idioma": "de",
+      "frase": "Nach einer \u201everdächtigen Wahrnehmung\u201c sind die beiden Start- und Landebahnen des Münchener Flughafens kurzzeitig gesperrt worden",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://merkur.de/lokales/erding/flughafen-muenchen-ort60188/muenchner-flughafen-gesperrt-kapitaen-sichtet-unbekanntes-objekt-94477802.html (página original, descargada el 2026-10-05)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00303",
+      "enlace": "https://merkur.de/lokales/erding/flughafen-muenchen-ort60188/muenchner-flughafen-gesperrt-kapitaen-sichtet-unbekanntes-objekt-94477802.html",
+      "medio": "merkur.de",
+      "fecha": "2026-09-07",
+      "idioma": "de",
+      "frase": "Daher wolle er auch nicht von einem Drohnenvorfall sprechen.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://merkur.de/lokales/erding/flughafen-muenchen-ort60188/muenchner-flughafen-gesperrt-kapitaen-sichtet-unbekanntes-objekt-94477802.html (página original, descargada el 2026-10-05)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00303",
+      "enlace": "https://merkur.de/lokales/erding/flughafen-muenchen-ort60188/muenchner-flughafen-gesperrt-kapitaen-sichtet-unbekanntes-objekt-94477802.html",
+      "medio": "merkur.de",
+      "fecha": "2026-09-06",
+      "idioma": "de",
+      "frase": "Ob es sich tatsächlich um eine Drohne gehandelt habe, konnte der Polizeisprecher nicht sagen",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://merkur.de/lokales/erding/flughafen-muenchen-ort60188/muenchner-flughafen-gesperrt-kapitaen-sichtet-unbekanntes-objekt-94477802.html (página original, descargada el 2026-10-05)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00320",
+      "enlace": "https://la-croix.com/international/ukraine-russie-jour-1492-point-conflit-ukrainien-poutine-aujourdhui-20260325",
+      "medio": "la-croix.com",
+      "fecha": "2026-03-25",
+      "idioma": "fr",
+      "frase": "Un drone ukrainien visant des cibles en Russie a heurté la cheminée d\u2019une centrale électrique en Estonie mercredi 23 mars",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://la-croix.com/international/ukraine-russie-jour-1492-point-conflit-ukrainien-poutine-aujourdhui-20260325 (página original, descargada el 2026-10-05)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00356",
+      "enlace": "https://inewsgr.com/441/klimakonetai-i-tourkiki-drastiriotita-sto-aigaio-oplismena-F-16-kai-drones-ston-elliniko-enaerio-choro.htm",
+      "medio": "inewsgr.com",
+      "fecha": "2026-09-30",
+      "idioma": "el",
+      "frase": "\u0388\u03be\u03b9 \u03c0\u03b1\u03c1\u03b1\u03b2\u03b9\u03ac\u03c3\u03b5\u03b9\u03c2 \u03c4\u03bf\u03c5 \u03b5\u03bb\u03bb\u03b7\u03bd\u03b9\u03ba\u03bf\u03cd \u03b5\u03b8\u03bd\u03b9\u03ba\u03bf\u03cd \u03b5\u03bd\u03b1\u03ad\u03c1\u03b9\u03bf\u03c5 \u03c7\u03ce\u03c1\u03bf\u03c5 \u03ba\u03b1\u03b9 \u03b5\u03c0\u03c4\u03ac \u03c0\u03b1\u03c1\u03b1\u03b2\u03ac\u03c3\u03b5\u03b9\u03c2 \u03c4\u03c9\u03bd \u03ba\u03b1\u03bd\u03cc\u03bd\u03c9\u03bd \u03b5\u03bd\u03b1\u03ad\u03c1\u03b9\u03b1\u03c2 \u03ba\u03c5\u03ba\u03bb\u03bf\u03c6\u03bf\u03c1\u03af\u03b1\u03c2 \u03c3\u03c4\u03bf FIR \u0391\u03b8\u03b7\u03bd\u03ce\u03bd \u03ba\u03b1\u03c4\u03b1\u03b3\u03c1\u03ac\u03c6\u03b7\u03ba\u03b1\u03bd \u03c3\u03ae\u03bc\u03b5\u03c1\u03b1 \u03c3\u03c4\u03bf \u0391\u03b9\u03b3\u03b1\u03af\u03bf",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://inewsgr.com/441/klimakonetai-i-tourkiki-drastiriotita-sto-aigaio-oplismena-F-16-kai-drones-ston-elliniko-enaerio-choro.htm (página original, descargada el 2026-10-05)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00356",
+      "enlace": "https://newsit.gr/ellada/nees-tourkikes-prokliseis-me-f-16-na-mpainoun-ston-ethniko-enaerio-xoro-drones-ekanan-paravaseis-kai-paraviaseis/4787136",
+      "medio": "newsit.gr",
+      "fecha": "2026-09-30",
+      "idioma": "el",
+      "frase": "\u0395\u03c0\u03af\u03c3\u03b7\u03c2, \u03c4\u03ad\u03c3\u03c3\u03b5\u03c1\u03b1 UAV \u03ad\u03ba\u03b1\u03bd\u03b1\u03bd 5 \u03c0\u03b1\u03c1\u03b1\u03b2\u03ac\u03c3\u03b5\u03b9\u03c2 \u03ba\u03b1\u03b9 \u03bc\u03af\u03b1 \u03c0\u03b1\u03c1\u03b1\u03b2\u03af\u03b1\u03c3\u03b7.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://newsit.gr/ellada/nees-tourkikes-prokliseis-me-f-16-na-mpainoun-ston-ethniko-enaerio-xoro-drones-ekanan-paravaseis-kai-paraviaseis/4787136 (página original, descargada el 2026-10-05)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00367",
+      "enlace": "https://cross.bg/ivandzhikov-indystriya-bili-1792001.html",
+      "medio": "cross.bg",
+      "fecha": "2026-03-08",
+      "idioma": "bg",
+      "frase": "\u0414\u0432\u0430 \u0441\u0438\u0433\u043d\u0430\u043b\u0430 \u0437\u0430 \u043b\u0435\u0442\u044f\u0449\u0438 \u0434\u0440\u043e\u043d\u043e\u0432\u0435 \u0434\u043e\u0432\u0435\u0434\u043e\u0445\u0430 \u0434\u043e \u0432\u0440\u0435\u043c\u0435\u043d\u043d\u043e \u0437\u0430\u0442\u0432\u0430\u0440\u044f\u043d\u0435 \u043d\u0430 \u043b\u0435\u0442\u0438\u0449\u0435 \u201e\u0412\u0430\u0441\u0438\u043b \u041b\u0435\u0432\u0441\u043a\u0438\" - \u0421\u043e\u0444\u0438\u044f, \u043a\u0430\u0442\u043e \u0434\u0432\u0430 \u043f\u043e\u043b\u0435\u0442\u0430 \u0431\u044f\u0445\u0430 \u043e\u0442\u043a\u043b\u043e\u043d\u0435\u043d\u0438 \u043a\u044a\u043c \u0434\u0440\u0443\u0433\u0438 \u0433\u0440\u0430\u0434\u043e\u0432\u0435.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://cross.bg/ivandzhikov-indystriya-bili-1792001.html (página original, descargada el 2026-10-05)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00368",
+      "enlace": "https://quotidianodelsud.it/campania/napoli/cronache/criminalita/2026/10/02/poggioreale-abbattuto-drone-da-10mila-euro-sequestrati-1-kg-di-droga-e-15-smartphone",
+      "medio": "quotidianodelsud.it",
+      "fecha": "2026-10-02",
+      "idioma": "it",
+      "frase": "neutralizzato dai sistemi di difesa della Polizia Penitenziaria nel carcere di Napoli Poggioreale.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://quotidianodelsud.it/campania/napoli/cronache/criminalita/2026/10/02/poggioreale-abbattuto-drone-da-10mila-euro-sequestrati-1-kg-di-droga-e-15-smartphone (página original, descargada el 2026-10-05)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00368",
+      "enlace": "https://quotidianodelsud.it/campania/napoli/cronache/criminalita/2026/10/02/poggioreale-abbattuto-drone-da-10mila-euro-sequestrati-1-kg-di-droga-e-15-smartphone",
+      "medio": "quotidianodelsud.it",
+      "fecha": "2026-10-02",
+      "idioma": "it",
+      "frase": "Poggioreale, abbattuto drone da 10mila euro, sequestrati 1 kg di droga e 15 smartphone",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://quotidianodelsud.it/campania/napoli/cronache/criminalita/2026/10/02/poggioreale-abbattuto-drone-da-10mila-euro-sequestrati-1-kg-di-droga-e-15-smartphone (página original, descargada el 2026-10-05)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00379",
+      "enlace": "https://news.yam.md/ro/story/70615119",
+      "medio": "news.yam.md (Moldova1)",
+      "fecha": "2026-10-03",
+      "idioma": "ro",
+      "frase": "Cele cinci aparate de zbor care au survolat \u0219i explodat în R. Moldova sunt trei rachete \u0219i dou\u0103 drone",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://news.yam.md/ro/story/70615119 (página original, descargada el 2026-10-05)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00381",
+      "enlace": "https://ziuaconstanta.ro/stiri/eveniment/panica-in-moldova-mai-multe-drone-de-origine-necunoscuta-au-survolat-spatiul-aerian-955375.html",
+      "medio": "ziuaconstanta.ro",
+      "fecha": "2026-10-03",
+      "idioma": "ro",
+      "frase": "au survolat sâmb\u0103t\u0103 diminea\u0163\u0103 spa\u0163iul aerian al Republicii Moldova, în proximitatea localit\u0103\u0163ilor Anenii Noi, \u015etefan Vod\u0103, Hînce\u015fti, Tudora \u015fi C\u0103u\u015feni",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://ziuaconstanta.ro/stiri/eveniment/panica-in-moldova-mai-multe-drone-de-origine-necunoscuta-au-survolat-spatiul-aerian-955375.html (página original, descargada el 2026-10-05)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00389",
+      "enlace": "https://londonlovesbusiness.com/lithuania-issues-find-a-safe-place-drone-alert-as-nato-fighter-jets-scrambled",
+      "medio": "londonlovesbusiness.com",
+      "fecha": "2026-10-03",
+      "idioma": "en",
+      "frase": "NATO fighter jets were scrambled over Lithuania after a drone crossed into the country\u2019s airspace from Belarus",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://londonlovesbusiness.com/lithuania-issues-find-a-safe-place-drone-alert-as-nato-fighter-jets-scrambled (página original, descargada el 2026-10-05)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00389",
+      "enlace": "https://londonlovesbusiness.com/lithuania-issues-find-a-safe-place-drone-alert-as-nato-fighter-jets-scrambled",
+      "medio": "londonlovesbusiness.com",
+      "fecha": "2026-10-03",
+      "idioma": "en",
+      "frase": "\u201cBut it couldn\u2019t necessarily have been a drone, because certain parameters said that the speed was slightly lower than usual.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://londonlovesbusiness.com/lithuania-issues-find-a-safe-place-drone-alert-as-nato-fighter-jets-scrambled (página original, descargada el 2026-10-05)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00427",
+      "enlace": "https://news.yam.md/ro/story/71136284",
+      "medio": "news.yam.md (RFI)",
+      "fecha": "2026-10-04",
+      "idioma": "ro",
+      "frase": "dup\u0103 ce \u0219ase drone \u0219i rachete au înc\u0103lcat spa\u021biul aerian al R.Moldova, sâmb\u0103t\u0103 diminea\u021ba, ar unele au explodat în sudul R.Moldova, la \u0218tefan-Vod\u0103",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://news.yam.md/ro/story/71136284 (página original, descargada el 2026-10-05)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00427",
+      "enlace": "https://ziare.com/razboi-ucraina/ambasador-rus-convocat-mae-moldova-2039228",
+      "medio": "ziare.com",
+      "fecha": "2026-10-04",
+      "idioma": "ro",
+      "frase": "Ulterior, Ministerul Ap\u0103r\u0103rii a precizat c\u0103, dintre cele cinci aparate care au explodat la sol, trei erau rachete \u0219i dou\u0103 drone.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://ziare.com/razboi-ucraina/ambasador-rus-convocat-mae-moldova-2039228 (página original, descargada el 2026-10-05)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00428",
+      "enlace": "https://spidersweb.pl/2026/10/lotnisko-berlin-drony-detektor-ber.html",
+      "medio": "spidersweb.pl",
+      "fecha": "2026-10-04",
+      "idioma": "pl",
+      "frase": "Dok\u0142adnie 23 wrze\u015bnia wieczorem przy BER ponownie zauwa\u017cono drona.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://spidersweb.pl/2026/10/lotnisko-berlin-drony-detektor-ber.html (página original, descargada el 2026-10-05)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00428",
+      "enlace": "https://spidersweb.pl/2026/10/lotnisko-berlin-drony-detektor-ber.html",
+      "medio": "spidersweb.pl",
+      "fecha": "2026-10-04",
+      "idioma": "pl",
+      "frase": "Tylko w pierwszej po\u0142owie 2026 r. niemiecka kontrola ruchu lotniczego zarejestrowa\u0142a na BER 28 przypadków zauwa\u017cenia dronów.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://spidersweb.pl/2026/10/lotnisko-berlin-drony-detektor-ber.html (página original, descargada el 2026-10-05)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00484",
+      "enlace": "https://cyprusnews.eu/cnn-gr-ellada/tourkika-mi-epandromena-aeroskafi-paraviasan-xana-ton-elliniko-enaerio-choro",
+      "medio": "cyprusnews.eu",
+      "fecha": "2026-10-04",
+      "idioma": "el",
+      "frase": "\u039f\u03b9 \u03c0\u03b1\u03c1\u03b1\u03b2\u03ac\u03c3\u03b5\u03b9\u03c2 \u03ba\u03b1\u03b9 \u03c0\u03b1\u03c1\u03b1\u03b2\u03b9\u03ac\u03c3\u03b5\u03b9\u03c2 \u03c3\u03b7\u03bc\u03b5\u03b9\u03ce\u03b8\u03b7\u03ba\u03b1\u03bd \u03c3\u03c4\u03bf \u0392\u03bf\u03c1\u03b5\u03b9\u03bf\u03b1\u03bd\u03b1\u03c4\u03bf\u03bb\u03b9\u03ba\u03cc \u03ba\u03b1\u03b9 \u039a\u03b5\u03bd\u03c4\u03c1\u03b9\u03ba\u03cc \u0391\u03b9\u03b3\u03b1\u03af\u03bf.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://cyprusnews.eu/cnn-gr-ellada/tourkika-mi-epandromena-aeroskafi-paraviasan-xana-ton-elliniko-enaerio-choro (página original, descargada el 2026-10-05)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00096",
+      "enlace": "https://dailyrecord.co.uk/news/scottish-news/edinburgh-airport-flights-delayed-after-35861283",
+      "medio": "dailyrecord.co.uk",
+      "fecha": "2025-09-06",
+      "idioma": "en",
+      "frase": "Flights were delayed at Edinburgh Airport on Friday night after an unauthorised drone was spotted within the exclusion zone.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://www.dailyrecord.co.uk/news/scottish-news/edinburgh-airport-flights-delayed-after-35861283"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00096",
+      "enlace": "https://dailyrecord.co.uk/news/scottish-news/edinburgh-airport-flights-delayed-after-35861283",
+      "medio": "dailyrecord.co.uk",
+      "fecha": "2025-09-06",
+      "idioma": "en",
+      "frase": "Flights were held due to the presence of a drone within the exclusion zone, which police investigated.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://www.dailyrecord.co.uk/news/scottish-news/edinburgh-airport-flights-delayed-after-35861283"
+      },
+      "declaracion": {
+        "autoridad": "Edinburgh Airport",
+        "pais": "GB",
+        "categoria": "aeropuerto",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00188",
+      "enlace": "https://heraldscotland.com/news/25282447.edinburgh-airport-flights-delayed-drone-spotted",
+      "medio": "heraldscotland.com",
+      "fecha": "2025-07-02",
+      "idioma": "en",
+      "frase": "Flights arriving at Edinburgh Airport were delayed on Tuesday, after a drone was discovered flying near the airport.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://www.heraldscotland.com/news/25282447.edinburgh-airport-flights-delayed-drone-spotted"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00188",
+      "enlace": "https://heraldscotland.com/news/25282447.edinburgh-airport-flights-delayed-drone-spotted",
+      "medio": "heraldscotland.com",
+      "fecha": "2025-07-02",
+      "idioma": "en",
+      "frase": "Arriving flights were held due to the presence of a drone within the exclusion zone, which police investigated.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://www.heraldscotland.com/news/25282447.edinburgh-airport-flights-delayed-drone-spotted"
+      },
+      "declaracion": {
+        "autoridad": "Edinburgh Airport",
+        "pais": "GB",
+        "categoria": "aeropuerto",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00179",
+      "enlace": "https://www1.wdr.de/nachrichten/rheinland/einsatz-drohne-flughafen-weeze-100.html",
+      "medio": "wdr.de",
+      "fecha": "2025-12-02",
+      "idioma": "de",
+      "frase": "am Montagabend auch einen Einsatz im Bereich des Flughafens Weeze: Ein Bürger hatte gegen 18:30 Uhr die Polizei angerufen",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://www1.wdr.de/nachrichten/rheinland/einsatz-drohne-flughafen-weeze-100.html"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00066",
+      "enlace": "https://irishmirror.ie/news/irish-news/idiot-punters-sparked-security-alert-37686353",
+      "medio": "irishmirror.ie",
+      "fecha": "2026-09-22",
+      "idioma": "en",
+      "frase": "flying drones close to Trump\u2019s Doonbeg golf resort and over Shannon Airport ahead of and during the President\u2019s visit earlier this month.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://www.irishmirror.ie/news/irish-news/idiot-punters-sparked-security-alert-37686353"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00066",
+      "enlace": "https://irishmirror.ie/news/irish-news/idiot-punters-sparked-security-alert-37686353",
+      "medio": "irishmirror.ie",
+      "fecha": "2026-09-22",
+      "idioma": "en",
+      "frase": "gardai were alerted to a drone being flown right over Shannon Airport.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://www.irishmirror.ie/news/irish-news/idiot-punters-sparked-security-alert-37686353"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00176",
+      "enlace": "https://ibtimes.co.uk/drone-near-misses-heathrow-gatwick-aviation-safety-1812566",
+      "medio": "ibtimes.co.uk",
+      "fecha": "2026-08-05",
+      "idioma": "en",
+      "frase": "an Airbus A321 passenger jet experienced a definite risk of collision when an unauthorised drone flew dangerously close during its approach over Marlow.",
+      "comprobada": {
+        "fecha": "2026-10-05",
+        "en": "https://www.ibtimes.co.uk/drone-near-misses-heathrow-gatwick-aviation-safety-1812566"
+      }
+    }
+  ],
+  "titulares": [
+    {
+      "incidente": "EODI-2025-00058",
+      "titulo": {
+        "es": "Posible dron, probablemente un globo, cierra 45 minutos una pista de Schiphol",
+        "en": "Possible drone, probably a balloon, closes a Schiphol runway for 45 minutes"
+      },
+      "presencia": {
+        "valor": "no_confirmada",
+        "cita": "Rond 19.00 uur meldde de marechaussee na onderzoek dat het zeer waarschijnlijk geen drone was, omdat er geen is gesignaleerd op radarbeelden."
+      },
+      "motivo": {
+        "es": "El titular habla de varios drones y da el dron por cierto; la fuente rusa habla de un solo dron avistado y la Marechaussee dijo después que muy probablemente no era un dron sino un globo. Además «\u0421\u0445\u0438\u043f\u0445\u043e\u043b» no casa con Schiphol en la comprobación.",
+        "en": "The headline speaks of several drones and treats the drone as certain; the Russian source mentions a single sighted drone and the Marechaussee later said it was very likely not a drone but a balloon. Also «\u0421\u0445\u0438\u043f\u0445\u043e\u043b» does not match Schiphol in the automatic check."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00059",
+      "titulo": {
+        "es": "La policía para a un hombre que voló un dron en la zona prohibida del aeropuerto de Sandefjord Torp",
+        "en": "Police stop man who flew a drone in the restricted zone of Sandefjord Torp airport"
+      },
+      "motivo": {
+        "es": "El titular dice que fue detenido, pero la policía dice expresamente que no lo detuvo («Han ble ikke pågrepet»); lo paró una patrulla y será denunciado.",
+        "en": "The headline says he was arrested, but police explicitly say he was not («Han ble ikke pågrepet»); a patrol stopped him and he will be reported."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00060",
+      "titulo": {
+        "es": "Posible dron obliga a suspender temporalmente la actividad del aeropuerto de Vilna",
+        "en": "Possible drone forces temporary suspension of Vilnius airport operations"
+      },
+      "presencia": {
+        "valor": "no_confirmada",
+        "cita": "Negavus patvirtinan\u010di\u0173 duomen\u0173 apie drono skryd\u012f toje vietoje, Vilniaus oro uosto veikla atnaujinta 16.11 val."
+      },
+      "motivo": {
+        "es": "Todas las fuentes hablan de un dron «posiblemente avistado» y el gestor de navegación aérea dice que no recibió datos que confirmaran el vuelo; el titular lo da por cierto. Además ninguna cita guardada nombra Vilna.",
+        "en": "All sources speak of a «possibly sighted» drone and the air navigation provider says no data confirmed the flight; the headline treats it as certain. Also no stored quote names Vilnius."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00094",
+      "titulo": {
+        "es": "Drones avistados cerca del aeropuerto de Brønnøysund, en Noruega",
+        "en": "Drones sighted near Brønnøysund airport in Norway"
+      },
+      "lugar": {
+        "pais": "NO",
+        "region": "Nordland",
+        "localidad": "Brønnøysund",
+        "nivel": "localidad"
+      },
+      "motivo": {
+        "es": "Ninguna fuente habla de Geilenkirchen: todas tratan del aeropuerto de Brønnøysund (Noruega) la noche del 30-09-2025. El desvío de un vuelo de Widerøe fue el domingo anterior, otro suceso.",
+        "en": "No source mentions Geilenkirchen: all are about Brønnøysund airport (Norway) on the night of 30-09-2025. The diversion of a Widerøe flight happened the previous Sunday, a different event."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00099",
+      "titulo": {
+        "es": "Objeto volador sospechoso sobre el aeropuerto de Vilna obliga a desviar un vuelo a Riga",
+        "en": "Suspected flying object over Vilnius airport forces flight diversion to Riga"
+      },
+      "presencia": {
+        "valor": "no_confirmada",
+        "cita": "Tiesa, pasak policijos, atvykus \u012f prane\u0161\u0117jo nurodyta viet\u0105 ir pasiva\u017ein\u0117jus aplinkin\u0117ms gatv\u0117mis dronas ar drono pilotas nepasteb\u0117ti."
+      },
+      "motivo": {
+        "es": "La fuente habla de un objeto volador sospechoso sobre el aeropuerto; el dron solo lo comunicó un vecino y la policía no lo encontró. El titular da el dron por cierto.",
+        "en": "The source speaks of a suspected flying object over the airport; the drone was only reported by a resident and police did not find it. The headline treats the drone as certain."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00140",
+      "titulo": {
+        "es": "Vecinos avisan a la policía de varios avistamientos de drones sobre Arna, en Noruega",
+        "en": "Residents report several drone sightings over Arna, Norway, to police"
+      },
+      "presencia": {
+        "valor": "no_confirmada",
+        "cita": "Politiet var i området en halvtime senere, men observerte ingen droner"
+      },
+      "estado": {
+        "valor": "notificado",
+        "cita": "Politiet var i området en halvtime senere, men observerte ingen droner",
+        "motivo": {
+          "es": "La policía acudió y no vio ningún dron: no da el suceso por hecho, solo recibió avisos de vecinos.",
+          "en": "Police went to the area and saw no drones: they do not confirm the event, they only received reports from residents."
+        }
+      },
+      "lugar": {
+        "pais": "NO",
+        "region": "Vestland",
+        "localidad": "Arna",
+        "nivel": "localidad"
+      },
+      "motivo": {
+        "es": "Arna está en Bergen (Noruega), no en Suecia: la fuente es ba.no y habla de la comisaría de Bergen Nord. El país del titular y de lugar.pais (SE) es erróneo.",
+        "en": "Arna is in Bergen (Norway), not Sweden: the source is ba.no and cites Bergen Nord police station. The country in the headline and in lugar.pais (SE) is wrong."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00145",
+      "titulo": {
+        "es": "Dron detectado en el aeropuerto de Sundsvall Timrå obliga a un avión a esperar en vuelo",
+        "en": "Drone detected at Sundsvall Timrå Airport forces a plane into a holding pattern"
+      },
+      "motivo": {
+        "es": "No hubo desvío: según la fuente, el avión de Estocolmo dio vueltas casi 40 minutos frente a la costa y luego aterrizó en Sundsvall Timrå.",
+        "en": "There was no diversion: the source says the Stockholm plane circled for almost 40 minutes off the coast and then landed at Sundsvall Timrå."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00164",
+      "titulo": {
+        "es": "Avistamientos de drones en RAF Lakenheath y Mildenhall movilizan un helicóptero policial",
+        "en": "Drone sightings at RAF Lakenheath and Mildenhall prompt a police helicopter search"
+      },
+      "presencia": {
+        "valor": "no_confirmada",
+        "cita": "concluded that the helicopter crew had misidentified the red flashing lights of a fast-moving F-15 as belonging to a drone"
+      },
+      "motivo": {
+        "es": "El cuasi choque del helicóptero no fue con un dron: el UK Airprox Board (Airprox 2024294) concluyó que la tripulación confundió un F-15 con un dron. Lo que sí respaldan las citas es la búsqueda de drones del 22 al 27 de noviembre de 2024.",
+        "en": "The helicopter near miss was not with a drone: the UK Airprox Board (Airprox 2024294) concluded the crew mistook an F-15 for a drone. What the quotes do support is the drone search of 22-27 November 2024."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00184",
+      "titulo": {
+        "es": "Drones vistos cerca del aeropuerto de Bardufoss obligan a un avión a dar la vuelta y cierran el aeropuerto",
+        "en": "Drones seen near Bardufoss airport force a plane to turn back and close the airport"
+      },
+      "motivo": {
+        "es": "Las fuentes hablan de un solo avión que tuvo que dar la vuelta (no de «vuelos» desviados), de drones vistos «nahe dem Zielflughafen» y no «sobre» él, y salzburg24 los llama «mutmaßlichen» (presuntos).",
+        "en": "The sources mention a single plane that had to turn back (not several diverted flights), drones seen «nahe dem Zielflughafen» rather than «over» it, and salzburg24 calls them «mutmaßlichen» (suspected)."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00011",
+      "titulo": {
+        "es": "La policía incauta un dron que volaba en la zona de control de la base aérea de Gilze-Rijen",
+        "en": "Police seize drone flown in the controlled airspace around Gilze-Rijen air base"
+      },
+      "motivo": {
+        "es": "El dron no estaba en la base: volaba en los alrededores de Rijen, dentro de la zona de control del tráfico aéreo de la base, y la policía lo incautó. La cita guardada no nombra el lugar.",
+        "en": "The drone was not at the base: it was flown around Rijen, inside the base's controlled air traffic zone, and police seized it. The stored quote does not name the place."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00047",
+      "titulo": {
+        "es": "Turista vuela un posible dron junto al aeropuerto de Svolvær antes del despegue de un avión",
+        "en": "Tourist flies possible drone next to Svolvær airport before an aircraft takeoff"
+      },
+      "motivo": {
+        "es": "La nota dice que el dron se elevó mientras el avión se preparaba y «like før» (justo antes) del despegue, no durante. La cita guardada no nombra Svolvær y no es literal.",
+        "en": "The article says the drone went up while the aircraft was getting ready and «like før» (just before) takeoff, not during it. The stored quote does not name Svolvær and is not verbatim."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00083",
+      "titulo": {
+        "es": "Un dron junto a las pistas del aeropuerto de Split obliga a suspender el tráfico aéreo unos diez minutos",
+        "en": "Drone near Split airport runways forces air traffic suspension for about ten minutes"
+      },
+      "motivo": {
+        "es": "La nota no dice que se cerrara la pista ni que el dron estuviera sobre el aeropuerto: dice que se detectó cerca de las pistas y que las autoridades suspendieron el tráfico aéreo unos diez minutos. La cita guardada no nombra Split.",
+        "en": "The article does not say the runway was closed or that the drone was over the airport: it says it was detected near the runways and authorities suspended air traffic for about ten minutes. The stored quote does not name Split."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00166",
+      "titulo": {
+        "es": "Dron volado sin autorización junto al aeropuerto de Budapest",
+        "en": "Drone flown without authorisation next to Budapest airport"
+      },
+      "motivo": {
+        "es": "Las notas dicen que el dron voló desde una nave en Vecsés, muy cerca del aeropuerto Liszt Ferenc, no sobre él. Las citas guardadas no nombran Vecsés ni el aeropuerto.",
+        "en": "The articles say the drone was flown from a factory building in Vecsés, very close to Liszt Ferenc airport, not over it. The stored quotes do not name Vecsés or the airport."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00303",
+      "presencia": {
+        "valor": "no_confirmada",
+        "cita": "Daher wolle er auch nicht von einem Drohnenvorfall sprechen."
+      },
+      "motivo": {
+        "es": "El titular es correcto y prudente, pero ninguna cita guardada nombra el aeropuerto de Múnich; la frase del mismo artículo «...Start- und Landebahnen des Münchener Flughafens kurzzeitig gesperrt...» sí.",
+        "en": "The headline is correct and cautious, but no stored quote names Munich airport; the sentence «...Start- und Landebahnen des Münchener Flughafens kurzzeitig gesperrt...» from the same article does."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00368",
+      "titulo": {
+        "es": "Dron derribado sobre la cárcel de Poggioreale en Nápoles",
+        "en": "Drone shot down over Poggioreale prison in Naples"
+      },
+      "motivo": {
+        "es": "El titular es correcto, pero la cita guardada está cortada justo antes de «carcere di Napoli Poggioreale»; completa nombra la cárcel, y el titular del artículo dice «abbattuto drone».",
+        "en": "The headline is correct, but the stored quote is cut just before 'carcere di Napoli Poggioreale'; in full it names the prison, and the article headline says 'abbattuto drone'."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00179",
+      "presencia": {
+        "valor": "no_confirmada",
+        "cita": "Ein Bürger hatte gegen 18:30 Uhr die Polizei angerufen, weil er eine Drohne in Flughafennähe gesehen haben will."
+      },
+      "motivo": {
+        "es": "La cita guardada no nombra Weeze; la frase completa de la nota sí. Lo cuenta un vecino que «dice haber visto» un dron: la presencia queda sin confirmar.",
+        "en": "The stored quote did not name Weeze; the full sentence does. A resident 'says he saw' a drone: presence stays unconfirmed."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00176",
+      "titulo": {
+        "es": "Dron no autorizado causa riesgo de colisión con un avión que se aproximaba a Heathrow sobre Marlow",
+        "en": "Unauthorised drone causes collision risk with an airliner approaching Heathrow over Marlow"
+      },
+      "motivo": {
+        "es": "El titular decía Londres; la cita dice que fue sobre Marlow (Buckinghamshire), en la aproximación a Heathrow.",
+        "en": "The headline said London; the quote says it was over Marlow (Buckinghamshire), on the approach to Heathrow."
+      }
+    }
+  ],
+  "titular_justificado": [],
+  "ubicaciones": [
+    {
+      "incidente": "EODI-2025-00295",
+      "lugar": {
+        "nombre": "Wyryki-Wola",
+        "nivel": "localidad",
+        "lat": 51.5625,
+        "lon": 23.363889,
+        "radio_km": 2,
+        "region": "Lubelskie"
+      },
+      "fuente": {
+        "incidente": "EODI-2025-00295",
+        "enlace": "https://www.gov.pl/web/po-lublin/umorzenie-sledztwa-w-sprawie-uderzenia-rakiety-wojskowej-w-budynek-w-wyrykach-woli",
+        "medio": "gov.pl",
+        "fecha": "2026-09-10",
+        "idioma": "pl",
+        "frase": "wystrzelona przez pilota my\u015bliwca F-35 \u2013 w sposób niezamierzony uderzy\u0142a w dach budynku mieszkalnego w miejscowo\u015bci Wyryki Wola.",
+        "comprobada": {
+          "fecha": "2026-10-05",
+          "en": "https://www.gov.pl/web/po-lublin/umorzenie-sledztwa-w-sprawie-uderzenia-rakiety-wojskowej-w-budynek-w-wyrykach-woli"
+        },
+        "oficial": true,
+        "declaracion": {
+          "autoridad": "Prokuratura Okr\u0119gowa w Lublinie",
+          "pais": "PL",
+          "categoria": "fiscalia",
+          "afirma": "incidente"
+        }
+      },
+      "motivo": "La fiscalía de Lublin nombra Cze\u015bniki como lugar donde se hallaron restos de un dron Gerbera probablemente derribado. Ninguna autoridad atribuye a un dron daños en edificios, y el único daño grave (la casa de Wyryki-Wola) lo causó un misil polaco, así que el punto principal es el derribo confirmado con restos.",
+      "otros_lugares": [
+        {
+          "nombre": "Czosnówka (pow. bialski)",
+          "lat": 52.01447,
+          "lon": 23.22587
+        },
+        {
+          "nombre": "Wyhalew (pow. parczewski)",
+          "lat": 51.618333,
+          "lon": 23.165833
+        },
+        {
+          "nombre": "Krzywowierzba-Kolonia (pow. parczewski)",
+          "lat": 51.586111,
+          "lon": 23.172778
+        },
+        {
+          "nombre": "Wohy\u0144 (pow. radzy\u0144ski)",
+          "lat": 51.756667,
+          "lon": 22.781944
+        },
+        {
+          "nombre": "Wielki \u0141an (pow. w\u0142odawski)",
+          "lat": 51.482778,
+          "lon": 23.205278
+        },
+        {
+          "nombre": "Zab\u0142ocie-Kolonia / Kolonia Zab\u0142ocie (pow. bialski, gmina Kode\u0144)",
+          "lat": 51.841397,
+          "lon": 23.572138
+        },
+        {
+          "nombre": "Bychawka Trzecia (pow. lubelski)",
+          "lat": 51.071944,
+          "lon": 22.530833
+        },
+        {
+          "nombre": "Mniszków (pow. opoczy\u0144ski, \u0142ódzkie)",
+          "lat": 51.370169,
+          "lon": 20.035589
+        },
+        {
+          "nombre": "Ole\u015bno (pow. elbl\u0105ski, warmi\u0144sko-mazurskie)",
+          "lat": 54.079128,
+          "lon": 19.28654
+        },
+        {
+          "nombre": "Nowe Miasto nad Pilic\u0105 (pow. grójecki, mazowieckie)",
+          "lat": 51.616692,
+          "lon": 20.579617
+        },
+        {
+          "nombre": "Raków (pow. kielecki, \u015bwi\u0119tokrzyskie)",
+          "lat": 50.675044,
+          "lon": 21.042337
+        },
+        {
+          "nombre": "Czy\u017ców (pow. buski, \u015bwi\u0119tokrzyskie)",
+          "lat": 50.48317,
+          "lon": 20.998546
+        },
+        {
+          "nombre": "Sobótka (pow. opatowski, \u015bwi\u0119tokrzyskie)",
+          "lat": 50.795086,
+          "lon": 21.682609
+        },
+        {
+          "nombre": "Smyków (\u015bwi\u0119tokrzyskie)"
+        },
+        {
+          "nombre": "entre Radiany y Sewerynów"
+        },
+        {
+          "nombre": "Cze\u015bniki (powiat zamojski, gmina Sitno)",
+          "lat": 50.705,
+          "lon": 23.441111
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2025-00020",
+      "lugar": {
+        "nombre": "Base aérea de Kleine-Brogel",
+        "nivel": "instalacion",
+        "lat": 51.168,
+        "lon": 5.47,
+        "radio_km": 2,
+        "region": "Limburg"
+      },
+      "fuente": {
+        "incidente": "EODI-2025-00020",
+        "enlace": "https://x.com/FranckenTheo/status/1984615247651446844",
+        "medio": "x.com",
+        "fecha": "2025-11-01",
+        "idioma": "nl",
+        "frase": "Meerdere drones boven Kleine Brogel waargenomen. Detectiesysteem werkt.",
+        "comprobada": {
+          "fecha": "2026-10-05",
+          "en": "https://api.fxtwitter.com/FranckenTheo/status/1984615247651446844 (texto del mensaje; enlazado desde https://nos.nl/l/2588792)"
+        },
+        "oficial": false,
+        "declaracion": {
+          "autoridad": "Theo Francken, ministro de Defensa de Bélgica",
+          "pais": "BE",
+          "categoria": "ministerio",
+          "afirma": "incidente"
+        }
+      },
+      "motivo": "El ministro de Defensa nombra la base de Kleine-Brogel como lugar de los drones de la noche del 31 oct al 1 nov."
+    },
+    {
+      "incidente": "EODI-2025-00059",
+      "lugar": {
+        "nombre": "Aeropuerto de Sandefjord-Torp",
+        "nivel": "instalacion",
+        "lat": 59.1867,
+        "lon": 10.2586,
+        "radio_km": 3,
+        "region": "Vestfold"
+      },
+      "fuente": {
+        "incidente": "EODI-2025-00059",
+        "enlace": "https://www.nrk.no/vestfoldogtelemark/floy-drone-i-forbudssonen-til-sandefjord-lufthavn-torp-1.17608598",
+        "medio": "nrk.no",
+        "fecha": "2025-10-12",
+        "idioma": "no",
+        "frase": "Vi rykket ut etter at vi ble varslet om denne personen. Han hadde stått ved Gjennestad gartnerskole på nordsiden av Torp",
+        "comprobada": {
+          "fecha": "2026-10-05",
+          "en": "https://www.nrk.no/vestfoldogtelemark/floy-drone-i-forbudssonen-til-sandefjord-lufthavn-torp-1.17608598 (original)"
+        },
+        "oficial": false,
+        "declaracion": {
+          "autoridad": "Sørøst politidistrikt",
+          "pais": "NO",
+          "categoria": "policia",
+          "afirma": "incidente"
+        }
+      },
+      "motivo": "La policía sitúa al piloto junto a la escuela de Gjennestad, al norte del aeropuerto de Torp, volando dentro de su zona prohibida.",
+      "otros_lugares": [
+        {
+          "nombre": "Gjennestad gartnerskole (punto de despegue del piloto)",
+          "lat": 59.205,
+          "lon": 10.255
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2025-00109",
+      "lugar": {
+        "nombre": "Aeropuerto de Fráncfort del Meno",
+        "nivel": "instalacion",
+        "lat": 50.0333,
+        "lon": 8.5706,
+        "radio_km": 3,
+        "region": "Hessen"
+      },
+      "fuente": {
+        "incidente": "EODI-2025-00109",
+        "enlace": "https://www.presseportal.de/blaulicht/pm/4970/6130964",
+        "medio": "presseportal.de",
+        "fecha": "2025-10-04",
+        "idioma": "de",
+        "frase": "Am gestrigen Freitagmorgen (03. Oktober 2025) kam es am Frankfurter Flughafen auf Grund eines kurzzeitigen Drohnenflugs zu einem Polizeieinsatz",
+        "comprobada": {
+          "fecha": "2026-10-05",
+          "en": "https://www.presseportal.de/blaulicht/pm/4970/6130964 (original)"
+        },
+        "oficial": true,
+        "declaracion": {
+          "autoridad": "Polizeipräsidium Frankfurt am Main",
+          "pais": "DE",
+          "categoria": "policia",
+          "afirma": "incidente"
+        }
+      },
+      "motivo": "La Policía de Fráncfort sitúa el vuelo del dron dentro de la zona prohibida del aeropuerto de Fráncfort."
+    },
+    {
+      "incidente": "EODI-2025-00204",
+      "lugar": {
+        "nombre": "S\u0103i\u021bi (raionul C\u0103u\u0219eni)",
+        "nivel": "localidad",
+        "lat": 46.4967,
+        "lon": 29.4075,
+        "radio_km": 5,
+        "region": "C\u0103u\u0219eni"
+      },
+      "fuente": {
+        "incidente": "EODI-2025-00204",
+        "enlace": "https://www.puterea.ro/?p=536506",
+        "medio": "puterea.ro",
+        "fecha": "2025-11-19",
+        "idioma": "ro",
+        "frase": "din direc\u021bia localit\u0103\u021bii Lesnaia (Ucraina) spre localitatea S\u0103i\u021bi, raionul \u0218tefan Vod\u0103, la o altitudine de aproximativ 100 m.",
+        "comprobada": {
+          "fecha": "2026-10-05",
+          "en": "https://www.puterea.ro/?p=536506 (original)"
+        },
+        "oficial": false,
+        "declaracion": {
+          "autoridad": "Ministerul Ap\u0103r\u0103rii al Republicii Moldova",
+          "pais": "MD",
+          "categoria": "policia",
+          "afirma": "incidente"
+        }
+      },
+      "motivo": "Defensa y la Policía de Fronteras nombran S\u0103i\u021bi como el pueblo hacia el que voló el dron (03:22\u201303:35, 19 nov) y luego Tocuz y Opaci.",
+      "otros_lugares": [
+        {
+          "nombre": "Tocuz (raionul C\u0103u\u0219eni)",
+          "lat": 46.5239,
+          "lon": 29.2961
+        },
+        {
+          "nombre": "Opaci (raionul C\u0103u\u0219eni)",
+          "lat": 46.5797,
+          "lon": 29.35
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2025-00255",
+      "lugar": {
+        "nombre": "Base aérea de Kleine-Brogel",
+        "nivel": "instalacion",
+        "lat": 51.1683,
+        "lon": 5.47,
+        "radio_km": 2,
+        "region": "Limburg"
+      },
+      "fuente": {
+        "incidente": "EODI-2025-00255",
+        "enlace": "https://x.com/FranckenTheo/status/1984884386089652583",
+        "medio": "x.com",
+        "fecha": "2025-11-02",
+        "idioma": "nl",
+        "frase": "Geen gewone overvlucht maar duidelijke opdracht met Kleine Brogel als onderwerp.",
+        "comprobada": {
+          "fecha": "2026-10-05",
+          "en": "https://api.fxtwitter.com/FranckenTheo/status/1984884386089652583 (texto del mensaje; enlazado desde https://www.vrt.be/vrtnws/nl/2025/11/02/weer-drones-gesignaleerd-boven-luchtmachtbasis-van-kleine-brogel/)"
+        },
+        "oficial": false,
+        "declaracion": {
+          "autoridad": "Theo Francken, ministro de Defensa de Bélgica",
+          "pais": "BE",
+          "categoria": "ministerio",
+          "afirma": "incidente"
+        }
+      },
+      "motivo": "El ministro de Defensa nombra la base de Kleine-Brogel como objetivo de los drones."
+    },
+    {
+      "incidente": "EODI-2025-00259",
+      "lugar": {
+        "nombre": "Puie\u0219ti (distrito de Vaslui)",
+        "nivel": "localidad",
+        "lat": 46.4244,
+        "lon": 27.5378,
+        "radio_km": 3,
+        "region": "Vaslui"
+      },
+      "fuente": {
+        "incidente": "EODI-2025-00259",
+        "enlace": "https://romania.europalibera.org/a/33603982.html",
+        "medio": "romania.europalibera.org",
+        "fecha": "2025-11-25",
+        "idioma": "ro",
+        "frase": "Mai multe fragmente au c\u0103zut în centrul comunei Puie\u0219ti, în curtea unui localnic",
+        "comprobada": {
+          "fecha": "2026-10-05",
+          "en": "https://romania.europalibera.org/a/33603982.html (original)"
+        },
+        "oficial": false,
+        "declaracion": {
+          "autoridad": "Alcalde de Puie\u0219ti, Vasile Cezar Ticu",
+          "pais": "RO",
+          "categoria": "ministerio",
+          "afirma": "incidente"
+        }
+      },
+      "motivo": "La caída del dron (sin explosivo) en el patio de un vecino de Puie\u0219ti es el daño más relevante nombrado por autoridades; el MApN nombra además la entrada hasta Chilia Veche.",
+      "otros_lugares": [
+        {
+          "nombre": "Chilia Veche (distrito de Tulcea)",
+          "lat": 45.4219,
+          "lon": 29.2897
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2025-00263",
+      "lugar": {
+        "nombre": "Puie\u0219ti (distrito de Vaslui)",
+        "nivel": "localidad",
+        "lat": 46.4244,
+        "lon": 27.5378,
+        "radio_km": 3,
+        "region": "Vaslui"
+      },
+      "fuente": {
+        "incidente": "EODI-2025-00263",
+        "enlace": "https://romania.europalibera.org/a/33603982.html",
+        "medio": "romania.europalibera.org",
+        "fecha": "2025-11-25",
+        "idioma": "ro",
+        "frase": "Mai multe fragmente au c\u0103zut în centrul comunei Puie\u0219ti, în curtea unui localnic",
+        "comprobada": {
+          "fecha": "2026-10-05",
+          "en": "https://romania.europalibera.org/a/33603982.html (original)"
+        },
+        "oficial": false,
+        "declaracion": {
+          "autoridad": "Alcalde de Puie\u0219ti, Vasile Cezar Ticu",
+          "pais": "RO",
+          "categoria": "ministerio",
+          "afirma": "incidente"
+        }
+      },
+      "motivo": "Mismo suceso del 25 nov 2025: el dron seguido por los cazas cayó en Puie\u0219ti (Vaslui); el MApN nombra Chilia Veche como zona de la primera entrada.",
+      "otros_lugares": [
+        {
+          "nombre": "Chilia Veche (distrito de Tulcea)",
+          "lat": 45.4219,
+          "lon": 29.2897
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2025-00269",
+      "lugar": {
+        "nombre": "Osiny (powiat \u0142ukowski)",
+        "nivel": "localidad",
+        "lat": 51.8672,
+        "lon": 22.0886,
+        "radio_km": 3,
+        "region": "Lubelskie"
+      },
+      "fuente": {
+        "incidente": "EODI-2025-00269",
+        "enlace": "https://www.gov.pl/web/po-lublin/komunikat-rzecznika-prasowego-z-dn-22082025---zakonczenie-czynnosci-na-miejscu-eksplozji-dronu-w-miejscowosci-osiny-pow-lukowski",
+        "medio": "gov.pl",
+        "fecha": "2025-08-22",
+        "idioma": "pl",
+        "frase": "zako\u0144czyli ogl\u0119dziny oraz zabezpieczanie dowodów i \u015bladów na miejscu eksplozji dronu w miejscowo\u015bci Osiny pow. \u0142ukowskim",
+        "comprobada": {
+          "fecha": "2026-10-05",
+          "en": "https://www.gov.pl/web/po-lublin/komunikat-rzecznika-prasowego-z-dn-22082025---zakonczenie-czynnosci-na-miejscu-eksplozji-dronu-w-miejscowosci-osiny-pow-lukowski (original)"
+        },
+        "oficial": true,
+        "declaracion": {
+          "autoridad": "Prokuratura Okr\u0119gowa w Lublinie",
+          "pais": "PL",
+          "categoria": "fiscalia",
+          "afirma": "incidente"
+        }
+      },
+      "motivo": "La Fiscalía de Lublin sitúa la explosión del dron en el pueblo de Osiny (distrito de \u0141uków)."
+    },
+    {
+      "incidente": "EODI-2025-00290",
+      "lugar": {
+        "nombre": "Chilia Veche (distrito de Tulcea)",
+        "nivel": "localidad",
+        "lat": 45.4219,
+        "lon": 29.2897,
+        "radio_km": 5,
+        "region": "Tulcea"
+      },
+      "fuente": {
+        "incidente": "EODI-2025-00290",
+        "enlace": "https://www.mapn.ro/cpresa/19065_x",
+        "medio": "mapn.ro",
+        "fecha": "2025-11-19",
+        "idioma": "ro",
+        "frase": "a p\u0103truns aproximativ 8 km în spa\u021biul aerian na\u021bional, dinspre Vâlcov c\u0103tre Periprava \u0219i Chilia Veche, unde a disp\u0103rut de pe radar.",
+        "comprobada": {
+          "fecha": "2026-10-05",
+          "en": "https://www.mapn.ro/cpresa/19065_x (original)"
+        },
+        "oficial": true,
+        "declaracion": {
+          "autoridad": "Ministerul Ap\u0103r\u0103rii Na\u021bionale",
+          "pais": "RO",
+          "categoria": "ministerio",
+          "afirma": "incidente"
+        }
+      },
+      "motivo": "El MApN sitúa la penetración de 8 km hacia Periprava y Chilia Veche, donde el dron desapareció del radar; después reapareció hacia Oancea (Gala\u021bi).",
+      "otros_lugares": [
+        {
+          "nombre": "Periprava (distrito de Tulcea)",
+          "lat": 45.3992,
+          "lon": 29.5444
+        },
+        {
+          "nombre": "Oancea (distrito de Gala\u021bi)",
+          "lat": 45.9183,
+          "lon": 28.1119
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2025-00303",
+      "lugar": {
+        "nombre": "Cuhure\u0219tii de Jos (raionul Flore\u0219ti)",
+        "nivel": "localidad",
+        "lat": 47.9283,
+        "lon": 28.5914,
+        "radio_km": 3,
+        "region": "Flore\u0219ti"
+      },
+      "fuente": {
+        "incidente": "EODI-2025-00303",
+        "enlace": "https://adevarul.ro/stiri-externe/republica-moldova/autoritatile-din-republica-moldova-anunta-ca-o-2489552.html",
+        "medio": "adevarul.ro",
+        "fecha": "2025-11-25",
+        "idioma": "ro",
+        "frase": "Acum câteva minute, într-o livad\u01ce din localitatea Cuhure\u015ftii de Jos, raionul Flore\u0219ti, pe casa paznicului a c\u0103zut o dron\u0103.",
+        "comprobada": {
+          "fecha": "2026-10-05",
+          "en": "https://adevarul.ro/stiri-externe/republica-moldova/autoritatile-din-republica-moldova-anunta-ca-o-2489552.html (original)"
+        },
+        "oficial": false,
+        "declaracion": {
+          "autoridad": "Inspectoratul General al Poli\u021biei",
+          "pais": "MD",
+          "categoria": "policia",
+          "afirma": "incidente"
+        }
+      },
+      "motivo": "La Policía nombra Cuhure\u0219tii de Jos (Flore\u0219ti) como el pueblo donde cayó el dron Gerbera sobre la casa del guarda de un huerto."
+    },
+    {
+      "incidente": "EODI-2025-00306",
+      "lugar": {
+        "nombre": "Pardina (distrito de Tulcea)",
+        "nivel": "localidad",
+        "lat": 45.3078,
+        "lon": 28.9567,
+        "radio_km": 5,
+        "region": "Tulcea"
+      },
+      "fuente": {
+        "incidente": "EODI-2025-00306",
+        "enlace": "https://www.mapn.ro/cpresa/18970_x",
+        "medio": "mapn.ro",
+        "fecha": "2025-09-14",
+        "idioma": "ro",
+        "frase": "de la NE de Chilia Veche spre SV de Izmail, \u0219i a p\u0103r\u0103sit spa\u021biul aerian na\u021bional în dreptul localit\u0103\u021bii Pardina",
+        "comprobada": {
+          "fecha": "2026-10-05",
+          "en": "https://www.mapn.ro/cpresa/18970_x (original; también 18969 del 13 sep)"
+        },
+        "oficial": true,
+        "declaracion": {
+          "autoridad": "Ministerul Ap\u0103r\u0103rii Na\u021bionale",
+          "pais": "RO",
+          "categoria": "ministerio",
+          "afirma": "incidente"
+        }
+      },
+      "motivo": "El MApN describe el dron sobre la zona entre Chilia Veche y Pardina y nombra Pardina como punto de salida; es el lugar concreto más preciso.",
+      "otros_lugares": [
+        {
+          "nombre": "Chilia Veche (radar: hasta unos 20 km al SO)",
+          "lat": 45.4219,
+          "lon": 29.2897
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2025-00307",
+      "lugar": {
+        "nombre": "Base aérea de Skrydstrup",
+        "nivel": "instalacion",
+        "lat": 55.2211,
+        "lon": 9.2667,
+        "radio_km": 3,
+        "region": "Syddanmark"
+      },
+      "fuente": {
+        "incidente": "EODI-2025-00307",
+        "enlace": "https://www.forsvaret.dk/en/news/2025/dronesoverdenmark/",
+        "medio": "forsvaret.dk",
+        "fecha": "2025-09-26",
+        "idioma": "en",
+        "frase": "Drones have been observed at several military installations, including at Skrydstrup Air Base and the Jutland Dragoon Regiment.",
+        "comprobada": {
+          "fecha": "2026-10-05",
+          "en": "https://www.forsvaret.dk/en/news/2025/dronesoverdenmark/ (original; la página dice 'Original message from september 25')"
+        },
+        "oficial": true,
+        "declaracion": {
+          "autoridad": "Forsvarskommandoen",
+          "pais": "DK",
+          "categoria": "fuerzas_armadas",
+          "afirma": "incidente"
+        }
+      },
+      "motivo": "El Mando de Defensa danés nombra la base aérea de Skrydstrup y el Regimiento de Dragones de Jutlandia como instalaciones sobrevoladas.",
+      "otros_lugares": [
+        {
+          "nombre": "Regimiento de Dragones de Jutlandia (Dragonkasernen, Holstebro)",
+          "lat": 56.3483,
+          "lon": 8.6004
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2025-00328",
+      "lugar": {
+        "nombre": "V\u0103r\u0103nc\u0103u (Stînga Nistrului)",
+        "nivel": "localidad",
+        "lat": 47.7058,
+        "lon": 29.1192,
+        "radio_km": 5,
+        "region": "Transnistria"
+      },
+      "fuente": {
+        "incidente": "EODI-2025-00328",
+        "enlace": "https://www.protv.md/actualitate/spatiul-aerian-al-republicii-moldova-redeschis-complet-dupa-ce-doua-drone-au-survolat-teritoriul-tarii-noastre-politia-de-frontiera-vine-cu-detalii---2743793.html",
+        "medio": "protv.md",
+        "fecha": "2025-11-29",
+        "idioma": "ro",
+        "frase": "aparatele au p\u0103truns în spa\u021biul aerian moldovenesc pe direc\u021bia Stanislavka (regiunea Odesa) - V\u0103r\u0103nc\u0103u (regiunea transnistrean\u0103), f\u0103r\u0103 a fi detectate pe radar.",
+        "comprobada": {
+          "fecha": "2026-10-05",
+          "en": "https://www.protv.md/actualitate/spatiul-aerian-al-republicii-moldova-redeschis-complet-dupa-ce-doua-drone-au-survolat-teritoriul-tarii-noastre-politia-de-frontiera-vine-cu-detalii---2743793.html (original)"
+        },
+        "oficial": false,
+        "declaracion": {
+          "autoridad": "Poli\u021bia de Frontier\u0103 a Republicii Moldova, con datos del Serviciul Opera\u021biuni Aeriene del Ministerul Ap\u0103r\u0103rii",
+          "pais": "MD",
+          "categoria": "policia",
+          "afirma": "incidente"
+        }
+      },
+      "motivo": "La Policía de Fronteras nombra V\u0103r\u0103nc\u0103u (Transnistria) como lugar de entrada de los dos drones y Ruslanovca (Soroca) como otro punto del trayecto.",
+      "otros_lugares": [
+        {
+          "nombre": "Ruslanovca (raionul Soroca)",
+          "lat": 48.1172,
+          "lon": 28.3725
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2025-00344",
+      "lugar": {
+        "nombre": "Base aérea de Kleine-Brogel",
+        "nivel": "instalacion",
+        "lat": 51.1683,
+        "lon": 5.47,
+        "radio_km": 2,
+        "region": "Limburg"
+      },
+      "fuente": {
+        "incidente": "EODI-2025-00344",
+        "enlace": "https://x.com/FranckenTheo/status/1984884386089652583",
+        "medio": "x.com",
+        "fecha": "2025-11-02",
+        "idioma": "nl",
+        "frase": "Afgelopen nacht drie meldingen van drones boven Kleine Brogel, groter type op grotere hoogte.",
+        "comprobada": {
+          "fecha": "2026-10-05",
+          "en": "https://api.fxtwitter.com/FranckenTheo/status/1984884386089652583 (texto del mensaje)"
+        },
+        "oficial": false,
+        "declaracion": {
+          "autoridad": "Theo Francken, ministro de Defensa de Bélgica",
+          "pais": "BE",
+          "categoria": "ministerio",
+          "afirma": "incidente"
+        }
+      },
+      "motivo": "El ministro de Defensa confirma el nuevo avistamiento de la noche del 1 al 2 nov sobre la base de Kleine-Brogel."
+    },
+    {
+      "incidente": "EODI-2026-00075",
+      "lugar": {
+        "nombre": "Mih\u0103ileni (Mih\u0103ileni Vechi), raionul Rî\u0219cani",
+        "nivel": "localidad",
+        "lat": 48.0406,
+        "lon": 27.6139,
+        "radio_km": 3,
+        "region": "Rî\u0219cani"
+      },
+      "fuente": {
+        "incidente": "EODI-2026-00075",
+        "enlace": "https://www.mapn.ro/cpresa/19394_x",
+        "medio": "mapn.ro",
+        "fecha": "2026-09-08",
+        "idioma": "ro",
+        "frase": "autorit\u0103\u021bile române au fost informate c\u0103 drona s-a pr\u0103bu\u0219it în zona localit\u0103\u021bii Mih\u0103ileni Vechi, Republica Moldova",
+        "comprobada": {
+          "fecha": "2026-10-05",
+          "en": "https://www.mapn.ro/cpresa/19394_x (original); https://www.army.md/ro/comunicate-de-presa/informeaza-11 (original)"
+        },
+        "oficial": true,
+        "declaracion": {
+          "autoridad": "Ministerul Ap\u0103r\u0103rii Na\u021bionale de Rumanía",
+          "pais": "MD",
+          "categoria": "ministerio",
+          "afirma": "incidente"
+        }
+      },
+      "motivo": "Los ministerios de Defensa de Rumanía y Moldavia sitúan la caída del dron en Mih\u0103ileni Vechi (Rî\u0219cani, Moldavia), tras cruzar Rumanía unos 25 minutos."
+    },
+    {
+      "incidente": "EODI-2026-00085",
+      "lugar": {
+        "nombre": "Padina (distrito de Buz\u0103u)",
+        "nivel": "localidad",
+        "lat": 44.833,
+        "lon": 27.117,
+        "radio_km": 5,
+        "region": "Buz\u0103u"
+      },
+      "fuente": {
+        "incidente": "EODI-2026-00085",
+        "enlace": "https://www.mapn.ro/cpresa/19321_x",
+        "medio": "mapn.ro",
+        "fecha": "2026-07-24",
+        "idioma": "ro",
+        "frase": "resturi din dron\u0103 \u0219i din racheta interceptoare au fost identificate în zona Padina, jude\u021bul Buz\u0103u",
+        "comprobada": {
+          "fecha": "2026-10-05",
+          "en": "https://www.mapn.ro/cpresa/19321_x (original)"
+        },
+        "oficial": true,
+        "declaracion": {
+          "autoridad": "Ministerul Ap\u0103r\u0103rii Na\u021bionale",
+          "pais": "RO",
+          "categoria": "ministerio",
+          "afirma": "incidente"
+        }
+      },
+      "motivo": "De los tres derribos (24, 25 y 26 jul), el único con restos hallados en tierra es el de Padina (Buz\u0103u); los otros lugares nombrados van aparte.",
+      "otros_lugares": [
+        {
+          "nombre": "T\u0103taru (distrito de Br\u0103ila), cráter del misil",
+          "lat": 44.8483,
+          "lon": 27.4314
+        },
+        {
+          "nombre": "Unos 10 km al ONO de Sfântu Gheorghe (Tulcea), derribo del 25 jul",
+          "lat": 44.8964,
+          "lon": 29.5919
+        },
+        {
+          "nombre": "Mar Negro, 12 km al NE de Sulina, derribo del 26 jul",
+          "lat": 45.1594,
+          "lon": 29.6528
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2026-00113",
+      "lugar": {
+        "nombre": "Vasilc\u0103u (raionul Soroca)",
+        "nivel": "localidad",
+        "lat": 48.1383,
+        "lon": 28.4214,
+        "radio_km": 5,
+        "region": "Soroca"
+      },
+      "fuente": {
+        "incidente": "EODI-2026-00113",
+        "enlace": "https://www.army.md/ro/comunicate-de-presa/informeaza-12",
+        "medio": "army.md",
+        "fecha": "2026-09-12",
+        "idioma": "ro",
+        "frase": "Drona a survolat spa\u021biul aerian în proximitatea satului Vasilc\u0103u, raionul Soroca.",
+        "comprobada": {
+          "fecha": "2026-10-05",
+          "en": "https://www.army.md/ro/comunicate-de-presa/informeaza-12 (original)"
+        },
+        "oficial": true,
+        "declaracion": {
+          "autoridad": "Ministerul Ap\u0103r\u0103rii al Republicii Moldova",
+          "pais": "MD",
+          "categoria": "ministerio",
+          "afirma": "incidente"
+        }
+      },
+      "motivo": "El Ministerio de Defensa nombra el pueblo de Vasilc\u0103u (Soroca) como lugar por donde sobrevoló el dron tras entrar desde Ucrania.",
+      "otros_lugares": [
+        {
+          "nombre": "B\u0103xani (raionul Soroca), donde desapareció del radar",
+          "lat": 48.1239,
+          "lon": 28.0947
+        },
+        {
+          "nombre": "Cucone\u0219tii Noi (raionul Edine\u021b), donde reapareció a las 16:03",
+          "lat": 47.9889,
+          "lon": 27.2075
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2026-00136",
+      "lugar": {
+        "nombre": "Etulia (UTA G\u0103g\u0103uzia)",
+        "nivel": "localidad",
+        "lat": 45.5392,
+        "lon": 28.4428,
+        "radio_km": 5,
+        "region": "G\u0103g\u0103uzia"
+      },
+      "fuente": {
+        "incidente": "EODI-2026-00136",
+        "enlace": "https://www.army.md/ro/comunicate-de-presa/informeaza-5",
+        "medio": "army.md",
+        "fecha": "2026-08-20",
+        "idioma": "ro",
+        "frase": "a survolat ilegal frontiera de stat din Ucraina, localitatea Cotlovina, reg. Reni în Republica Moldova, pe direc\u021bia satului Etulia, Unitatea Teritorial\u0103 Autonom\u0103 G\u0103g\u0103uzia.",
+        "comprobada": {
+          "fecha": "2026-10-05",
+          "en": "https://www.army.md/ro/comunicate-de-presa/informeaza-5 (original)"
+        },
+        "oficial": true,
+        "declaracion": {
+          "autoridad": "Ministerul Ap\u0103r\u0103rii al Republicii Moldova",
+          "pais": "MD",
+          "categoria": "ministerio",
+          "afirma": "incidente"
+        }
+      },
+      "motivo": "El Ministerio de Defensa sitúa la entrada y la salida del dron en el pueblo de Etulia (Gagauzia)."
+    },
+    {
+      "incidente": "EODI-2026-00140",
+      "lugar": {
+        "nombre": "Rug\u0101ji (municipio de Balvi)",
+        "nivel": "localidad",
+        "lat": 57.0009,
+        "lon": 27.1297,
+        "radio_km": 5,
+        "region": "Balvi"
+      },
+      "fuente": {
+        "incidente": "EODI-2026-00140",
+        "enlace": "https://www.mod.gov.lv/en/news/drone-shot-down-balvi-municipality-was-ukrainian-unmanned-aerial-vehicle",
+        "medio": "mod.gov.lv",
+        "fecha": "2026-08-20",
+        "idioma": "en",
+        "frase": "In the vicinity of Rug\u0101ji, Balvi Municipality, allied fighter jets successfully shot down the unmanned aerial vehicle.",
+        "comprobada": {
+          "fecha": "2026-10-05",
+          "en": "https://www.mod.gov.lv/en/news/drone-shot-down-balvi-municipality-was-ukrainian-unmanned-aerial-vehicle (original); nota del 14 ago: https://www.mod.gov.lv/en/news/foreign-drone-shot-down-allied-fighter-jets-latvian-airspace"
+        },
+        "oficial": true,
+        "declaracion": {
+          "autoridad": "Fuerzas Armadas Nacionales de Letonia",
+          "pais": "LV",
+          "categoria": "fuerzas_armadas",
+          "afirma": "incidente"
+        }
+      },
+      "motivo": "Las Fuerzas Armadas letonas sitúan el derribo cerca de Rug\u0101ji (municipio de Balvi), donde se hallaron los restos."
+    },
+    {
+      "incidente": "EODI-2026-00141",
+      "lugar": {
+        "nombre": "Palanca (puesto fronterizo, raionul \u0218tefan Vod\u0103)",
+        "nivel": "localidad",
+        "lat": 46.4094,
+        "lon": 30.0931,
+        "radio_km": 3,
+        "region": "\u0218tefan Vod\u0103"
+      },
+      "fuente": {
+        "incidente": "EODI-2026-00141",
+        "enlace": "https://zdg.md/stiri/stiri-sociale/o-noua-drona-de-tip-shahed-a-survolat-spatiul-aerian-al-r-moldova-autoritatile-spun-ca-a-fost-distrusa-in-afara-tarii/",
+        "medio": "zdg.md",
+        "fecha": "2026-03-18",
+        "idioma": "ro",
+        "frase": "a survolat, în noaptea de 18 martie, spa\u021biul aerian al R. Moldova, în zona punctului de trecere a frontierei (PTF) Palanca.",
+        "comprobada": {
+          "fecha": "2026-10-05",
+          "en": "https://zdg.md/stiri/stiri-sociale/o-noua-drona-de-tip-shahed-a-survolat-spatiul-aerian-al-r-moldova-autoritatile-spun-ca-a-fost-distrusa-in-afara-tarii/ (original)"
+        },
+        "oficial": false,
+        "declaracion": {
+          "autoridad": "Inspectoratul General al Poli\u021biei de Frontier\u0103",
+          "pais": "MD",
+          "categoria": "policia",
+          "afirma": "incidente"
+        }
+      },
+      "motivo": "La Policía de Fronteras sitúa el sobrevuelo en la zona del paso fronterizo de Palanca."
+    },
+    {
+      "incidente": "EODI-2026-00148",
+      "lugar": {
+        "nombre": "Novocotovsc (segmento transnistrio)",
+        "nivel": "localidad",
+        "lat": 46.7656,
+        "lon": 29.9547,
+        "radio_km": 5
+      },
+      "fuente": {
+        "incidente": "EODI-2026-00148",
+        "enlace": "https://www.army.md/ro/comunicate-de-presa/informeaza-20",
+        "medio": "army.md",
+        "fecha": "2026-09-26",
+        "idioma": "ro",
+        "frase": "traversând frontiera de stat în direc\u021bia localit\u0103\u021bii Novocotovsc, segmentul transnistrean.",
+        "comprobada": {
+          "fecha": "2026-10-05",
+          "en": "https://www.army.md/ro/comunicate-de-presa/informeaza-20 (original)"
+        },
+        "oficial": true,
+        "declaracion": {
+          "autoridad": "Ministerul Ap\u0103r\u0103rii al Republicii Moldova",
+          "pais": "MD",
+          "categoria": "ministerio",
+          "afirma": "incidente"
+        }
+      },
+      "motivo": "El Ministerio de Defensa nombra Novocotovsc como lugar de entrada del dron (11:16, 26 sep) y Pervomaisc como salida.",
+      "otros_lugares": [
+        {
+          "nombre": "Pervomaisc (segmento transnistrio), punto de salida",
+          "lat": 46.73,
+          "lon": 29.96
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2026-00151",
+      "lugar": {
+        "nombre": "Ceatalchioi (distrito de Tulcea)",
+        "nivel": "localidad",
+        "lat": 45.2883,
+        "lon": 28.7936,
+        "radio_km": 5,
+        "region": "Tulcea"
+      },
+      "fuente": {
+        "incidente": "EODI-2026-00151",
+        "enlace": "https://www.mapn.ro/cpresa/19417_x",
+        "medio": "mapn.ro",
+        "fecha": "2026-09-27",
+        "idioma": "ro",
+        "frase": "\u021binta aerian\u0103 a intrat în spa\u021biul aerian al României prin zona Ceatalchioi si a evoluat de-a lungul grani\u021bei",
+        "comprobada": {
+          "fecha": "2026-10-05",
+          "en": "https://www.mapn.ro/cpresa/19417_x (original)"
+        },
+        "oficial": true,
+        "declaracion": {
+          "autoridad": "Ministerul Ap\u0103r\u0103rii Na\u021bionale",
+          "pais": "RO",
+          "categoria": "ministerio",
+          "afirma": "incidente"
+        }
+      },
+      "motivo": "El MApN nombra Ceatalchioi como entrada del dron y Somova como lugar donde desapareció del radar.",
+      "otros_lugares": [
+        {
+          "nombre": "Somova (distrito de Tulcea), donde se perdió la señal",
+          "lat": 45.1919,
+          "lon": 28.6586
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2026-00158",
+      "lugar": {
+        "nombre": "Insula Mare a Br\u0103ilei, frente a Gropeni (distrito de Br\u0103ila)",
+        "nivel": "localidad",
+        "lat": 45.0744,
+        "lon": 27.8828,
+        "radio_km": 5,
+        "region": "Br\u0103ila"
+      },
+      "fuente": {
+        "incidente": "EODI-2026-00158",
+        "enlace": "https://www.mapn.ro/cpresa/19419_x",
+        "medio": "mapn.ro",
+        "fecha": "2026-09-29",
+        "idioma": "ro",
+        "frase": "c\u0103zut pe un teren arabil din Insula Mare a Br\u0103ilei, în dreptul localit\u0103\u021bii Gropeni, jude\u021bul Br\u0103ila.",
+        "comprobada": {
+          "fecha": "2026-10-05",
+          "en": "https://www.mapn.ro/cpresa/19419_x (original); actualización https://www.mapn.ro/cpresa/19420_x (cráter y restos de dron con carga explosiva)"
+        },
+        "oficial": true,
+        "declaracion": {
+          "autoridad": "Ministerul Ap\u0103r\u0103rii Na\u021bionale",
+          "pais": "RO",
+          "categoria": "ministerio",
+          "afirma": "incidente"
+        }
+      },
+      "motivo": "El MApN sitúa los restos y el cráter en un campo de la Insula Mare a Br\u0103ilei, frente a Gropeni."
+    },
+    {
+      "incidente": "EODI-2026-00160",
+      "lugar": {
+        "nombre": "Lunga (raionul Dub\u0103sari)",
+        "nivel": "localidad",
+        "lat": 47.247944,
+        "lon": 29.169512,
+        "radio_km": 5,
+        "region": "Dub\u0103sari"
+      },
+      "fuente": {
+        "incidente": "EODI-2026-00160",
+        "enlace": "https://www.army.md/ro/comunicate-de-presa/informeaza-22",
+        "medio": "army.md",
+        "fecha": "2026-09-30",
+        "idioma": "ro",
+        "frase": "survolarea spa\u021biului aerian na\u021bional, ast\u0103zi, 30 septembrie, la ora 10:26, de c\u0103tre un aparat de zbor f\u0103r\u0103 pilot, loc.Lunga, Dub\u0103sari",
+        "comprobada": {
+          "fecha": "2026-10-05",
+          "en": "https://www.army.md/ro/comunicate-de-presa/informeaza-22"
+        },
+        "oficial": true,
+        "declaracion": {
+          "autoridad": "Ministerul Ap\u0103r\u0103rii / Serviciul Opera\u021bii Aeriene al Armatei Na\u021bionale",
+          "pais": "MD",
+          "categoria": "ministerio",
+          "afirma": "incidente"
+        }
+      },
+      "motivo": "El Ministerio de Defensa moldavo sitúa la detección del dron sobre la localidad de Lunga (Dub\u0103sari); es un sobrevuelo sin caída y el punto es el lugar de detección.",
+      "otros_lugares": [
+        {
+          "nombre": "Arione\u0219ti (r. Dondu\u0219eni)",
+          "lat": 48.369067,
+          "lon": 27.849744
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2026-00179",
+      "lugar": {
+        "nombre": "Pratk\u016bnai (Kai\u0161iadori\u0173 rajonas)",
+        "nivel": "localidad",
+        "lat": 54.773234,
+        "lon": 24.204027,
+        "radio_km": 3,
+        "region": "Kauno apskritis"
+      },
+      "fuente": {
+        "incidente": "EODI-2026-00179",
+        "enlace": "https://kauno.diena.lt/naujienos/kaunas/miesto-pulsas/nkvc-nato-naikintuvai-sunaikino-drona-kauno-apskrityje-perspejimas-del-oro-pavojaus-atsauktas-1774735",
+        "medio": "kauno.diena.lt",
+        "fecha": "2026-09-15",
+        "idioma": "lt",
+        "frase": "Bepilotis numu\u0161tas ties Pratk\u016bn\u0173 kaimu.",
+        "comprobada": {
+          "fecha": "2026-10-05",
+          "en": "https://kauno.diena.lt/naujienos/kaunas/miesto-pulsas/nkvc-nato-naikintuvai-sunaikino-drona-kauno-apskrityje-perspejimas-del-oro-pavojaus-atsauktas-1774735"
+        },
+        "oficial": false,
+        "declaracion": {
+          "autoridad": "NKVC",
+          "pais": "LT",
+          "categoria": "gobierno",
+          "afirma": "incidente"
+        }
+      },
+      "motivo": "El NKVC informó del derribo en el distrito de Kai\u0161iadorys y la nota publicada nombra el pueblo de Pratk\u016bnai como lugar del derribo."
+    },
+    {
+      "incidente": "EODI-2026-00193",
+      "lugar": {
+        "nombre": "Tudora (raionul \u0218tefan Vod\u0103)",
+        "nivel": "localidad",
+        "lat": 46.433351,
+        "lon": 30.042255,
+        "radio_km": 5,
+        "region": "\u0218tefan Vod\u0103"
+      },
+      "fuente": {
+        "incidente": "EODI-2026-00193",
+        "enlace": "https://www.army.md/ro/comunicate-de-presa/informeaza-14",
+        "medio": "army.md",
+        "fecha": "2026-09-17",
+        "idioma": "ro",
+        "frase": "drona a traversat neautorizat frontiera de stat din direc\u021bia localit\u0103\u021bii Biliaivka, Ucraina, spre localitatea Tudora, Republica Moldova",
+        "comprobada": {
+          "fecha": "2026-10-05",
+          "en": "https://www.army.md/ro/comunicate-de-presa/informeaza-14"
+        },
+        "oficial": true,
+        "declaracion": {
+          "autoridad": "Ministerul Ap\u0103r\u0103rii / Serviciul Opera\u021bii Aeriene al Armatei Na\u021bionale",
+          "pais": "MD",
+          "categoria": "ministerio",
+          "afirma": "incidente"
+        }
+      },
+      "motivo": "El Servicio de Operaciones Aéreas nombra Tudora como punto de entrada del dron en Moldavia (sobrevuelo de dos minutos, salida por Palanca).",
+      "otros_lugares": [
+        {
+          "nombre": "Palanca (raionul \u0218tefan Vod\u0103), salida",
+          "lat": 46.40944,
+          "lon": 30.09306
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2026-00209",
+      "lugar": {
+        "nombre": "Kardam (Dobrich), junto al antiguo paso fronterizo GKPP «Kardam»",
+        "nivel": "localidad",
+        "lat": 43.754601,
+        "lon": 28.105717,
+        "radio_km": 3,
+        "region": "Dobrich"
+      },
+      "fuente": {
+        "incidente": "EODI-2026-00209",
+        "enlace": "https://www.bta.bg/bg/videos/38827",
+        "medio": "bta.bg",
+        "fecha": "2026-08-08",
+        "idioma": "bg",
+        "frase": "\u0422\u043e\u0432\u0430 \u0441\u0442\u0430\u0432\u0430 \u0432 \u043d\u0435\u043f\u043e\u0441\u0440\u0435\u0434\u0441\u0442\u0432\u0435\u043d\u0430 \u0431\u043b\u0438\u0437\u043e\u0441\u0442 \u043e\u0442 \u0431\u0438\u0432\u0448\u0438\u044f \u0413\u0440\u0430\u043d\u0438\u0447\u0435\u043d \u043a\u043e\u043d\u0442\u0440\u043e\u043b\u043d\u043e-\u043f\u0440\u043e\u043f\u0443\u0441\u043a\u0430\u0442\u0435\u043b\u0435\u043d \u043f\u0443\u043d\u043a\u0442 (\u0413\u041a\u041f\u041f) \u201e\u041a\u0430\u0440\u0434\u0430\u043c\u201c \u043c\u0435\u0436\u0434\u0443 \u0411\u044a\u043b\u0433\u0430\u0440\u0438\u044f \u0438 \u0420\u0443\u043c\u044a\u043d\u0438\u044f",
+        "comprobada": {
+          "fecha": "2026-10-05",
+          "en": "https://www.bta.bg/bg/videos/38827"
+        },
+        "oficial": false,
+        "declaracion": {
+          "autoridad": "Primer ministro Rumen Radev",
+          "pais": "BG",
+          "categoria": "gobierno",
+          "afirma": "incidente"
+        }
+      },
+      "motivo": "El primer ministro Radev sitúa la explosión junto al antiguo paso fronterizo de Kardam, a 1000 m de la estación de compresión del gasoducto Transbalcánico."
+    },
+    {
+      "incidente": "EODI-2026-00224",
+      "lugar": {
+        "nombre": "Mih\u0103ileni (raionul Rî\u0219cani), extrarradio",
+        "nivel": "localidad",
+        "lat": 48.04086,
+        "lon": 27.616108,
+        "radio_km": 5,
+        "region": "Rî\u0219cani"
+      },
+      "fuente": {
+        "incidente": "EODI-2026-00224",
+        "enlace": "https://www.army.md/ro/comunicate-de-presa/informeaza-11",
+        "medio": "army.md",
+        "fecha": "2026-09-08",
+        "idioma": "ro",
+        "frase": "în extravilanul localit\u0103\u021bii Mih\u0103ileni Vechi, ar fi c\u0103zut un aparat zbur\u0103tor de mici dimensiuni asem\u0103n\u0103tor unei drone",
+        "comprobada": {
+          "fecha": "2026-10-05",
+          "en": "https://www.army.md/ro/comunicate-de-presa/informeaza-11"
+        },
+        "oficial": true,
+        "declaracion": {
+          "autoridad": "Ministerul Ap\u0103r\u0103rii / Serviciul Opera\u021bii Aeriene al Armatei Na\u021bionale",
+          "pais": "MD",
+          "categoria": "ministerio",
+          "afirma": "incidente"
+        }
+      },
+      "motivo": "El Ministerio de Defensa recoge la caída de un aparato parecido a un dron, con incendio, en el extrarradio de «Mih\u0103ileni Vechi» tras el sobrevuelo del Shahed.",
+      "otros_lugares": [
+        {
+          "nombre": "Sturzovca (Glodeni), donde se perdió el dron",
+          "lat": 47.806918,
+          "lon": 27.718399
+        },
+        {
+          "nombre": "B\u0103l\u0103ne\u0219ti (Nisporeni), en la trayectoria",
+          "lat": 47.204975,
+          "lon": 28.065347
+        },
+        {
+          "nombre": "Zagarancea (Ungheni), salida hacia Rumanía",
+          "lat": 47.243652,
+          "lon": 27.767655
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2026-00232",
+      "lugar": {
+        "nombre": "Entre B\u0103leni y Cudalbi (jude\u021bul Gala\u021bi), punto de impacto de los restos",
+        "nivel": "localidad",
+        "lat": 45.79,
+        "lon": 27.7673,
+        "radio_km": 6,
+        "region": "Gala\u021bi"
+      },
+      "fuente": {
+        "incidente": "EODI-2026-00232",
+        "enlace": "https://www.mapn.ro/cpresa/19351_Informatie-de-presa_html",
+        "medio": "mapn.ro",
+        "fecha": "2026-08-16",
+        "idioma": "ro",
+        "frase": "Un posibil punct de impact al resturilor dronei a fost identificat între localit\u0103\u021bile B\u0103leni \u0219i Cudalbi, jude\u021bul Gala\u021bi, într-o zon\u0103 nepopulat\u0103.",
+        "comprobada": {
+          "fecha": "2026-10-05",
+          "en": "https://www.mapn.ro/cpresa/19351_x"
+        },
+        "oficial": true,
+        "declaracion": {
+          "autoridad": "Ministerul Ap\u0103r\u0103rii Na\u021bionale",
+          "pais": "RO",
+          "categoria": "ministerio",
+          "afirma": "incidente"
+        }
+      },
+      "motivo": "El MApN sitúa el impacto de los restos entre B\u0103leni y Cudalbi (Gala\u021bi), y la búsqueda posterior halló allí fragmentos del dron y del misil interceptor.",
+      "otros_lugares": [
+        {
+          "nombre": "B\u0103leni\u2013Cudalbi (zona de búsqueda, fragmentos hallados)",
+          "lat": 45.79,
+          "lon": 27.7673
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2026-00258",
+      "lugar": {
+        "nombre": "Br\u0103ne\u0219ti (raionul Orhei)",
+        "nivel": "localidad",
+        "lat": 47.30416667,
+        "lon": 28.92527778,
+        "radio_km": 4,
+        "region": "Orhei"
+      },
+      "fuente": {
+        "incidente": "EODI-2026-00258",
+        "enlace": "https://www.army.md/ro/comunicate-de-presa/informeaza-23",
+        "medio": "army.md",
+        "fecha": "2026-09-30",
+        "idioma": "ro",
+        "frase": "Obiectul a disp\u0103rut de pe sistemele de monitorizare în zona loc. Br\u0103ne\u0219ti, Orhei.",
+        "comprobada": {
+          "fecha": "2026-10-05",
+          "en": "https://www.army.md/ro/comunicate-de-presa/informeaza-23"
+        },
+        "oficial": true,
+        "declaracion": {
+          "autoridad": "Ministerul Ap\u0103r\u0103rii / Serviciul Opera\u021bii Aeriene al Armatei Na\u021bionale",
+          "pais": "MD",
+          "categoria": "ministerio",
+          "afirma": "incidente"
+        }
+      },
+      "motivo": "El Ministerio de Defensa sitúa el final del vuelo en la zona de Br\u0103ne\u0219ti (Orhei), donde, según la prensa que cita a la policía, el dron cayó y explotó.",
+      "otros_lugares": [
+        {
+          "nombre": "Slobozia Ra\u0219cov (Transnistria), entrada",
+          "lat": 47.953982,
+          "lon": 28.945891
+        },
+        {
+          "nombre": "\u021aipova (raionul Rezina), en la trayectoria",
+          "lat": 47.603308,
+          "lon": 28.980141
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2026-00263",
+      "lugar": {
+        "nombre": "Hîrbov\u0103\u021b (raionul Anenii Noi), extrarradio",
+        "nivel": "localidad",
+        "lat": 46.841056,
+        "lon": 29.359203,
+        "radio_km": 4,
+        "region": "Anenii Noi"
+      },
+      "fuente": {
+        "incidente": "EODI-2026-00263",
+        "enlace": "https://www.army.md/ro/comunicate-de-presa/informeaza-21",
+        "medio": "army.md",
+        "fecha": "2026-09-30",
+        "idioma": "ro",
+        "frase": "de c\u0103tre o dron\u0103, care a c\u0103zut în extravilanul satului Hîrbov\u0103\u021b, raionul Anenii Noi, unde a explodat",
+        "comprobada": {
+          "fecha": "2026-10-05",
+          "en": "https://www.army.md/ro/comunicate-de-presa/informeaza-21"
+        },
+        "oficial": true,
+        "declaracion": {
+          "autoridad": "Ministerul Ap\u0103r\u0103rii / Serviciul Opera\u021bii Aeriene al Armatei Na\u021bionale",
+          "pais": "MD",
+          "categoria": "ministerio",
+          "afirma": "incidente"
+        }
+      },
+      "motivo": "El Ministerio de Defensa nombra Hîrbov\u0103\u021b (Anenii Noi) como el lugar donde cayó y explotó uno de los tres drones del miércoles 30 de septiembre.",
+      "otros_lugares": [
+        {
+          "nombre": "Br\u0103ne\u0219ti (raionul Orhei), segundo dron",
+          "lat": 47.30416667,
+          "lon": 28.92527778
+        },
+        {
+          "nombre": "Lunga (raionul Dub\u0103sari), tercer dron (sobrevuelo)",
+          "lat": 47.247944,
+          "lon": 29.169512
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2026-00268",
+      "lugar": {
+        "nombre": "RAF Akrotiri",
+        "nivel": "instalacion",
+        "lat": 34.59027778,
+        "lon": 32.98777778,
+        "radio_km": 3
+      },
+      "fuente": {
+        "incidente": "EODI-2026-00268",
+        "enlace": "https://questions-statements.parliament.uk/written-questions/detail/2026-03-03/117492",
+        "medio": "questions-statements.parliament.uk",
+        "fecha": "2026-03-30",
+        "idioma": "en",
+        "frase": "The Ministry of Defence can confirm that a drone targeted RAF Akrotiri on 2 March was not launched from Iran.",
+        "comprobada": {
+          "fecha": "2026-10-05",
+          "en": "https://questions-statements-api.parliament.uk/api/writtenquestions/questions?uin=117492"
+        },
+        "oficial": true,
+        "declaracion": {
+          "autoridad": "UK Government",
+          "pais": "CY",
+          "categoria": "ministerio",
+          "afirma": "incidente"
+        }
+      },
+      "motivo": "El Ministerio de Defensa británico confirma que el dron tuvo como objetivo la base RAF Akrotiri."
+    },
+    {
+      "incidente": "EODI-2026-00276",
+      "lugar": {
+        "nombre": "Fliegerhorst Wunstorf (Wunstorfer Moor)",
+        "nivel": "instalacion",
+        "lat": 52.455259,
+        "lon": 9.4282061,
+        "radio_km": 2,
+        "region": "Niedersachsen"
+      },
+      "fuente": {
+        "incidente": "EODI-2026-00276",
+        "enlace": "https://wz-net.de/weltweit/panorama/800-meter-bundeswehr-fliegerhorst-unbekannte-drohne-wunstorf-id308687.html",
+        "medio": "wz-net.de",
+        "fecha": "2026-09-15",
+        "idioma": "de",
+        "frase": "Wie ein Sprecher des Operativen Führungskommandos der Bundeswehr bestätigt, lagen die Drohnentrümmer bloß 800 Meter vom Fliegerhorst entfernt.",
+        "comprobada": {
+          "fecha": "2026-10-05",
+          "en": "https://wz-net.de/weltweit/panorama/800-meter-bundeswehr-fliegerhorst-unbekannte-drohne-wunstorf-id308687.html"
+        },
+        "oficial": false,
+        "declaracion": {
+          "autoridad": "Einsatzführungskommando der Bundeswehr",
+          "pais": "DE",
+          "categoria": "fuerzas_armadas",
+          "afirma": "incidente"
+        }
+      },
+      "motivo": "La Bundeswehr confirma que los restos del dron estaban a 800 m de la base aérea de Wunstorf."
+    },
+    {
+      "incidente": "EODI-2026-00281",
+      "lugar": {
+        "nombre": "Tudora (raionul \u0218tefan Vod\u0103)",
+        "nivel": "localidad",
+        "lat": 46.433351,
+        "lon": 30.042255,
+        "radio_km": 4,
+        "region": "\u0218tefan Vod\u0103"
+      },
+      "fuente": {
+        "incidente": "EODI-2026-00281",
+        "enlace": "https://border.gov.md/informare-45",
+        "medio": "border.gov.md",
+        "fecha": "2026-03-17",
+        "idioma": "ro",
+        "frase": "Cu referire la depistarea unei drone în satul Tudora, raionul \u0218tefan Vod\u0103, la aproximativ 2 km de linia de frontier\u0103",
+        "comprobada": {
+          "fecha": "2026-10-05",
+          "en": "https://border.gov.md/informare-45"
+        },
+        "oficial": true,
+        "declaracion": {
+          "autoridad": "Inspectoratul General al Poli\u021biei de Frontier\u0103",
+          "pais": "MD",
+          "categoria": "policia",
+          "afirma": "incidente"
+        }
+      },
+      "motivo": "La Policía de Fronteras nombra Tudora como el lugar donde se halló el dron, que fue destruido allí en una explosión controlada.",
+      "otros_lugares": [
+        {
+          "nombre": "Crocmaz (raionul \u0218tefan Vod\u0103), dirección de entrada",
+          "lat": 46.450148,
+          "lon": 29.987667
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2026-00285",
+      "lugar": {
+        "nombre": "Mechernich (instalación de la Bundeswehr)",
+        "nivel": "localidad",
+        "lat": 50.590999,
+        "lon": 6.6525479,
+        "radio_km": 5,
+        "region": "Nordrhein-Westfalen"
+      },
+      "fuente": {
+        "incidente": "EODI-2026-00285",
+        "enlace": "https://www.thestar.com.my/news/world/2026/08/08/drones-spotted-above-german-military-base-two-days-after-suspected-drone-attack",
+        "medio": "thestar.com.my",
+        "fecha": "2026-08-08",
+        "idioma": "en",
+        "frase": "the drones were sighted at around 10 p.m. (2000 GMT) on Thursday at the base in Mechernich in the state of North Rhine-Westphalia",
+        "comprobada": {
+          "fecha": "2026-10-05",
+          "en": "https://www.thestar.com.my/news/world/2026/08/08/drones-spotted-above-german-military-base-two-days-after-suspected-drone-attack"
+        },
+        "oficial": false,
+        "declaracion": {
+          "autoridad": "Bundeswehr",
+          "pais": "DE",
+          "categoria": "fuerzas_armadas",
+          "afirma": "incidente"
+        }
+      },
+      "motivo": "Un portavoz de la Bundeswehr sitúa el avistamiento de los dos drones sobre la base de Mechernich (Renania del Norte-Westfalia)."
+    },
+    {
+      "incidente": "EODI-2026-00289",
+      "lugar": {
+        "nombre": "Rug\u0101ji (Balvu novads)",
+        "nivel": "localidad",
+        "lat": 57.003336,
+        "lon": 27.128988,
+        "radio_km": 5,
+        "region": "Balvu novads"
+      },
+      "fuente": {
+        "incidente": "EODI-2026-00289",
+        "enlace": "https://www.mil.lv/lv/zinas/balvu-novada-notriektais-drons-bija-ukrainas-bezpilota-lidaparats",
+        "medio": "mil.lv",
+        "fecha": "2026-08-20",
+        "idioma": "lv",
+        "frase": "14. august\u0101 Balvu novada Rug\u0101ju apk\u0101rtn\u0113 tika notriekts Ukrainas bezpilota lidapar\u0101ts",
+        "comprobada": {
+          "fecha": "2026-10-05",
+          "en": "https://www.mil.lv/lv/zinas/balvu-novada-notriektais-drons-bija-ukrainas-bezpilota-lidaparats"
+        },
+        "oficial": true,
+        "declaracion": {
+          "autoridad": "Nacion\u0101lie bru\u0146otie sp\u0113ki",
+          "pais": "LV",
+          "categoria": "fuerzas_armadas",
+          "afirma": "incidente"
+        }
+      },
+      "motivo": "Las Fuerzas Armadas letonas sitúan el derribo en los alrededores de Rug\u0101ji (Balvu); los restos se hallaron esa misma tarde."
+    },
+    {
+      "incidente": "EODI-2026-00302",
+      "lugar": {
+        "nombre": "R\u0113zekne, depósito de petróleo",
+        "nivel": "localidad",
+        "lat": 56.506281,
+        "lon": 27.330662,
+        "radio_km": 5,
+        "region": "R\u0113zeknes novads"
+      },
+      "fuente": {
+        "incidente": "EODI-2026-00302",
+        "enlace": "https://www.mil.lv/lv/zinas/latvijas-teritorija-nogazusies-divi-bezpilota-lidaparati-kas-ielidojusi-no-krievijas",
+        "medio": "mil.lv",
+        "fecha": "2026-05-08",
+        "idioma": "lv",
+        "frase": "Operat\u012bvie dienesti \u0161aj\u0101 laik\u0101 sa\u0146\u0113ma vair\u0101kus zi\u0146ojumus par iesp\u0113jamu ugunsgr\u0113ku naftas uzglab\u0101\u0161anas objekt\u0101 R\u0113zekn\u0113.",
+        "comprobada": {
+          "fecha": "2026-10-05",
+          "en": "https://www.mil.lv/lv/zinas/latvijas-teritorija-nogazusies-divi-bezpilota-lidaparati-kas-ielidojusi-no-krievijas"
+        },
+        "oficial": true,
+        "declaracion": {
+          "autoridad": "Nacion\u0101lie bru\u0146otie sp\u0113ki / Aizsardz\u012bbas ministrija",
+          "pais": "LV",
+          "categoria": "fuerzas_armadas",
+          "afirma": "incidente"
+        }
+      },
+      "motivo": "La nota oficial sitúa el daño (cuatro depósitos de petróleo dañados, con restos de dron) en una instalación de almacenamiento de petróleo de R\u0113zekne."
+    },
+    {
+      "incidente": "EODI-2026-00325",
+      "lugar": {
+        "nombre": "Vulc\u0103ne\u0219ti (UTA G\u0103g\u0103uzia)",
+        "nivel": "localidad",
+        "lat": 45.6824,
+        "lon": 28.402209,
+        "radio_km": 5,
+        "region": "UTA G\u0103g\u0103uzia"
+      },
+      "fuente": {
+        "incidente": "EODI-2026-00325",
+        "enlace": "https://www.army.md/ro/comunicate-de-presa/informeaza-7",
+        "medio": "army.md",
+        "fecha": "2026-08-24",
+        "idioma": "ro",
+        "frase": "Drona a traversat spa\u021biul aerian la ora 05.55, din direc\u021bia loc. Vinogradovka, reg.Odesa spre ora\u0219ul Vulc\u0103ne\u0219ti, UTAG Republica Moldova",
+        "comprobada": {
+          "fecha": "2026-10-05",
+          "en": "https://www.army.md/ro/comunicate-de-presa/informeaza-7"
+        },
+        "oficial": true,
+        "declaracion": {
+          "autoridad": "Ministerul Ap\u0103r\u0103rii / Serviciul Opera\u021bii Aeriene al Armatei Na\u021bionale",
+          "pais": "MD",
+          "categoria": "ministerio",
+          "afirma": "incidente"
+        }
+      },
+      "motivo": "El Ministerio de Defensa moldavo nombra Vulc\u0103ne\u0219ti como punto de entrada del dron, que salió por Pa\u0219cani (Cahul) hacia Rumanía.",
+      "otros_lugares": [
+        {
+          "nombre": "Ciu\u0219lea (jude\u021bul Vrancea, Rumanía), restos del dron en un patio",
+          "lat": 45.786368,
+          "lon": 27.311496
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2026-00372",
+      "lugar": {
+        "nombre": "Crocmaz (raionul \u0218tefan Vod\u0103), extrarradio",
+        "nivel": "localidad",
+        "lat": 46.450148,
+        "lon": 29.987667,
+        "radio_km": 5,
+        "region": "\u0218tefan Vod\u0103"
+      },
+      "fuente": {
+        "incidente": "EODI-2026-00372",
+        "enlace": "https://www.army.md/ro/comunicate-de-presa/informeaza-24",
+        "medio": "army.md",
+        "fecha": "2026-10-03",
+        "idioma": "ro",
+        "frase": "au fost auzite mai multe explozii, în extravilanele satelor Crocmaz, \u0218tefan Vod\u0103, Delac\u0103u, Puh\u0103ceni, Anenii Noi, Bozieni, Hînce\u0219ti",
+        "comprobada": {
+          "fecha": "2026-10-05",
+          "en": "https://www.army.md/ro/comunicate-de-presa/informeaza-24"
+        },
+        "oficial": true,
+        "declaracion": {
+          "autoridad": "Ministerul Ap\u0103r\u0103rii / Serviciul Opera\u021bii Aeriene al Armatei Na\u021bionale",
+          "pais": "MD",
+          "categoria": "ministerio",
+          "afirma": "incidente"
+        }
+      },
+      "motivo": "El Ministerio de Defensa enumera las explosiones en el extrarradio de varios pueblos; tomo Crocmaz, el primero que nombra y el único con daños materiales según la prensa.",
+      "otros_lugares": [
+        {
+          "nombre": "\u0218tefan Vod\u0103 (explosión en el extrarradio)",
+          "lat": 46.515607,
+          "lon": 29.662113
+        },
+        {
+          "nombre": "Delac\u0103u (explosión en el extrarradio)",
+          "lat": 47.098522,
+          "lon": 29.303398
+        },
+        {
+          "nombre": "Puh\u0103ceni (explosión en el extrarradio)",
+          "lat": 47.088156,
+          "lon": 29.345919
+        },
+        {
+          "nombre": "Anenii Noi (explosión en el extrarradio)",
+          "lat": 46.87758,
+          "lon": 29.232271
+        },
+        {
+          "nombre": "Bozieni (explosión en el extrarradio)",
+          "lat": 46.757987,
+          "lon": 28.639839
+        },
+        {
+          "nombre": "Hînce\u0219ti (explosión en el extrarradio)",
+          "lat": 46.82989,
+          "lon": 28.592606
+        },
+        {
+          "nombre": "Dubovca (explosión en el extrarradio)",
+          "lat": 46.748845,
+          "lon": 28.607344
+        },
+        {
+          "nombre": "Constantinovca (explosión en el extrarradio)",
+          "lat": 46.721578,
+          "lon": 29.111501
+        },
+        {
+          "nombre": "C\u0103u\u0219eni (explosión en el extrarradio)",
+          "lat": 46.649609,
+          "lon": 29.414817
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2026-00381",
+      "lugar": {
+        "nombre": "Crocmaz (raionul \u0218tefan Vod\u0103), extrarradio",
+        "nivel": "localidad",
+        "lat": 46.450148,
+        "lon": 29.987667,
+        "radio_km": 5,
+        "region": "\u0218tefan Vod\u0103"
+      },
+      "fuente": {
+        "incidente": "EODI-2026-00381",
+        "enlace": "https://www.army.md/ro/comunicate-de-presa/informeaza-24",
+        "medio": "army.md",
+        "fecha": "2026-10-03",
+        "idioma": "ro",
+        "frase": "au fost auzite mai multe explozii, în extravilanele satelor Crocmaz, \u0218tefan Vod\u0103, Delac\u0103u, Puh\u0103ceni, Anenii Noi, Bozieni, Hînce\u0219ti",
+        "comprobada": {
+          "fecha": "2026-10-05",
+          "en": "https://www.army.md/ro/comunicate-de-presa/informeaza-24"
+        },
+        "oficial": true,
+        "declaracion": {
+          "autoridad": "Ministerul Ap\u0103r\u0103rii / Serviciul Opera\u021bii Aeriene al Armatei Na\u021bionale",
+          "pais": "MD",
+          "categoria": "ministerio",
+          "afirma": "incidente"
+        }
+      },
+      "motivo": "Es el mismo suceso del 3-10: el Ministerio de Defensa nombra los pueblos con explosiones; Crocmaz es el primero y el que tuvo daños según la prensa.",
+      "otros_lugares": [
+        {
+          "nombre": "\u0218tefan Vod\u0103 (explosión en el extrarradio)",
+          "lat": 46.515607,
+          "lon": 29.662113
+        },
+        {
+          "nombre": "Delac\u0103u (explosión en el extrarradio)",
+          "lat": 47.098522,
+          "lon": 29.303398
+        },
+        {
+          "nombre": "Puh\u0103ceni (explosión en el extrarradio)",
+          "lat": 47.088156,
+          "lon": 29.345919
+        },
+        {
+          "nombre": "Anenii Noi (explosión en el extrarradio)",
+          "lat": 46.87758,
+          "lon": 29.232271
+        },
+        {
+          "nombre": "Bozieni (explosión en el extrarradio)",
+          "lat": 46.757987,
+          "lon": 28.639839
+        },
+        {
+          "nombre": "Hînce\u0219ti (explosión en el extrarradio)",
+          "lat": 46.82989,
+          "lon": 28.592606
+        },
+        {
+          "nombre": "Dubovca (explosión en el extrarradio)",
+          "lat": 46.748845,
+          "lon": 28.607344
+        },
+        {
+          "nombre": "Constantinovca (explosión en el extrarradio)",
+          "lat": 46.721578,
+          "lon": 29.111501
+        },
+        {
+          "nombre": "C\u0103u\u0219eni (explosión en el extrarradio)",
+          "lat": 46.649609,
+          "lon": 29.414817
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2026-00410",
+      "lugar": {
+        "nombre": "Portul Constan\u021ba, Dana 78 (junto a la sede de ARSVOM)",
+        "nivel": "instalacion",
+        "lat": 44.14862,
+        "lon": 28.666315,
+        "radio_km": 2,
+        "region": "Constan\u021ba"
+      },
+      "fuente": {
+        "incidente": "EODI-2026-00410",
+        "enlace": "https://www.mapn.ro/cpresa/19280_Drona-maritima-din-Portul-Constanta-nu-a-produs-victime_html",
+        "medio": "mapn.ro",
+        "fecha": "2026-06-05",
+        "idioma": "ro",
+        "frase": "în Portul Civil Constan\u021ba, în apropiere de sediul Agen\u021biei Române de Salvare a Vie\u021bii Omene\u0219ti pe Mare, s-a autodetonat",
+        "comprobada": {
+          "fecha": "2026-10-05",
+          "en": "https://www.mapn.ro/cpresa/19280_x"
+        },
+        "oficial": true,
+        "declaracion": {
+          "autoridad": "Ministerul Ap\u0103r\u0103rii Na\u021bionale",
+          "pais": "RO",
+          "categoria": "ministerio",
+          "afirma": "incidente"
+        }
+      },
+      "motivo": "El MApN sitúa la autodetonación del dron marítimo en el puerto civil de Constan\u021ba, junto a la sede de ARSVOM (Dana 78).",
+      "otros_lugares": [
+        {
+          "nombre": "Dana 78, portul Constan\u021ba (donde se avistó el dron)",
+          "lat": 44.14862,
+          "lon": 28.666315
+        }
+      ]
     }
   ]
 }

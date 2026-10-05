@@ -266,7 +266,7 @@ const DESPLAZAMIENTO_FOCO_ATRIBUIDO: [number, number] = [-11, -11];
  * Icono de un atribuido o de varios juntos (banderas.ts): «atribuido-<índice de la bandera>»,
  * con «-p» si es una persona. Un grupo lleva el índice menor y el mayor de sus banderas: si
  * coinciden, esa bandera (con punto solo si todos son personas); si no, el marcador liso. Una
- * bandera que aún no ha cargado se dibuja lisa.
+ * bandera que no ha podido cargar se dibuja lisa (el mapa espera a las demás: iconos.ts).
  */
 const BANDERA_MENOR: ExpressionSpecification = ["coalesce", ["get", "bandera_min"], ["get", "bandera"]];
 const BANDERA_MAYOR: ExpressionSpecification = ["coalesce", ["get", "bandera_max"], ["get", "bandera"]];
@@ -976,22 +976,6 @@ function capasPropias(acento: string): LayerSpecification[] {
         "circle-stroke-width": 1.5,
       },
     },
-    // El número de un grupo va encima de todo, con un halo del fondo: ni un incidente suelto
-    // en un punto muy cercano ni la etiqueta de un aviso lo tapan.
-    {
-      id: CAPA_NUMERO_GRUPOS,
-      type: "symbol",
-      source: FUENTE_PUNTOS,
-      filter: ES_GRUPO,
-      layout: {
-        "text-field": ["to-string", CUENTA],
-        "text-font": FUENTE_TIPOGRAFICA_NUMEROS,
-        "text-size": TAMANO_NUMERO_GRUPO,
-        "text-allow-overlap": true,
-        "text-ignore-placement": true,
-      },
-      paint: { "text-color": PALETA.texto, "text-halo-color": PALETA.panelSolido, "text-halo-width": 2 },
-    },
     // Obstáculos invisibles del tamaño de cada círculo: los nombres del mapa (países,
     // ciudades) ceden ante los marcadores en lugar de quedar partidos bajo ellos. Se colocan
     // antes que los nombres de la base (van por encima en la pila), siempre a la vista
@@ -1085,6 +1069,24 @@ function capasPropias(acento: string): LayerSpecification[] {
         // Ocupa su sitio, como el marcador sin abrir: el nombre del lugar no queda partido debajo.
         "icon-ignore-placement": false,
       },
+    },
+    // El número de un grupo va encima de todas las marcas de incidentes, con un halo del fondo:
+    // ni un incidente suelto en un punto muy cercano, ni el marcador de un atribuido vecino (que va por encima de los
+    // círculos), ni la etiqueta de un aviso lo tapan. Así se lee a cualquier zoom sin moverlo
+    // de su círculo ni esconder el marcador: lo que pisa es poco más que unos dígitos.
+    {
+      id: CAPA_NUMERO_GRUPOS,
+      type: "symbol",
+      source: FUENTE_PUNTOS,
+      filter: ES_GRUPO,
+      layout: {
+        "text-field": ["to-string", CUENTA],
+        "text-font": FUENTE_TIPOGRAFICA_NUMEROS,
+        "text-size": TAMANO_NUMERO_GRUPO,
+        "text-allow-overlap": true,
+        "text-ignore-placement": true,
+      },
+      paint: { "text-color": PALETA.texto, "text-halo-color": PALETA.panelSolido, "text-halo-width": 2 },
     },
     // Avisos de la detección en directo: una etiqueta con el código OACI dentro, borde del
     // color de su estado y una punta que señala el aeropuerto, levantada sobre el punto para

@@ -1,0 +1,137 @@
+{
+  "descripcion": "Nombres de lugar del titular y las formas en que los escriben las fuentes en otra lengua o en otra escritura, cuando pasar el cirílico o el griego al alfabeto latino no basta («\u0421\u0445\u0438\u043f\u0445\u043e\u043b» da «shiphol», no «schiphol») o el titular usa el nombre en español («Vilna», «Dresde»). Los usa la comprobación de cita y titular (proceso/cita_titular.py): una cita que escribe una de las formas nombra el lugar. Solo nombres de lugar comprobados en las citas de los incidentes revisados (docs/informe_revision_contenido.md, bloque 1).",
+  "nombres": [
+    {
+      "nombre": "Schiphol",
+      "formas": [
+        "\u0421\u0445\u0438\u043f\u0445\u043e\u043b",
+        "\u0421\u0445\u0438\u043f\u0445\u043e\u043b\u0435"
+      ]
+    },
+    {
+      "nombre": "Leipzig",
+      "formas": [
+        "\u041b\u0435\u0439\u043f\u0446\u0438\u0433",
+        "Lipsk",
+        "Lipsku"
+      ]
+    },
+    {
+      "nombre": "Vilna",
+      "formas": [
+        "Vilnius",
+        "Vilniaus",
+        "Vilniuje",
+        "\u0412\u0438\u043b\u044c\u043d\u044e\u0441",
+        "Wilno"
+      ]
+    },
+    {
+      "nombre": "Dresde",
+      "formas": [
+        "Dresden"
+      ]
+    },
+    {
+      "nombre": "Múnich",
+      "formas": [
+        "München",
+        "Münchener",
+        "Munich",
+        "Monaco di Baviera"
+      ]
+    },
+    {
+      "nombre": "Ámsterdam",
+      "formas": [
+        "Amsterdam"
+      ]
+    },
+    {
+      "nombre": "Bruselas",
+      "formas": [
+        "Brussel",
+        "Bruxelles",
+        "Brussels"
+      ]
+    },
+    {
+      "nombre": "Dublín",
+      "formas": [
+        "Dublin"
+      ]
+    },
+    {
+      "nombre": "Sofía",
+      "formas": [
+        "Sofia",
+        "\u0421\u043e\u0444\u0438\u044f"
+      ]
+    },
+    {
+      "nombre": "Egeo",
+      "formas": [
+        "\u0391\u03b9\u03b3\u03b1\u03af\u03bf",
+        "\u0391\u03b9\u03b3\u03b1\u03af\u03bf\u03c5",
+        "Aegean",
+        "Egée",
+        "Ege"
+      ]
+    },
+    {
+      "nombre": "Luxemburgo",
+      "formas": [
+        "Luxemburg",
+        "Luxembourg"
+      ]
+    },
+    {
+      "nombre": "Constanza",
+      "formas": [
+        "Constan\u021ba",
+        "Constanta",
+        "Konstanza"
+      ]
+    },
+    {
+      "nombre": "Brønnøysund",
+      "formas": [
+        "Bronojsund",
+        "\u0411\u0440\u044c\u043e\u043d\u043e\u0439\u0441\u0443\u043d\u043d"
+      ]
+    },
+    {
+      "nombre": "Riga",
+      "formas": [
+        "R\u012bga",
+        "R\u012bgas",
+        "\u0420\u0438\u0433\u0430"
+      ]
+    },
+    {
+      "nombre": "Varsovia",
+      "formas": [
+        "Warszawa",
+        "Warsaw"
+      ]
+    },
+    {
+      "nombre": "Copenhague",
+      "formas": [
+        "København",
+        "Copenhagen",
+        "Kopenhagen"
+      ]
+    },
+    {
+      "nombre": "Rumania",
+      "formas": [
+        "roumain",
+        "roumaine",
+        "rumänisch",
+        "rumänischen",
+        "românesc"
+      ]
+    }
+  ]
+}

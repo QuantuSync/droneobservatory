@@ -6,17 +6,27 @@ afirmaciones). Si ninguna nombra el lugar, el país o lo propio del hecho que af
 cuenta. Fue el caso de las altas «Drones del ataque ruso contra Ucrania cruzan a Rumanía», cuya
 cita era el arranque del parte ucraniano («У ніч на … противник атакував …»).
 
-`respalda` es la comprobación; `sin_respaldo` la aplica a una lista de incidentes. Hoy deja sin
-publicar los incidentes cuyas fuentes son solo partes de guerra (exportacion/geojson.publicables);
-para el resto se mide y se informa (docs/informe_errores_datos.md).
+`respalda` es la comprobación y `publicable` la barrera: un incidente cuyas citas públicas no
+respaldan el titular no se publica (exportacion/geojson.publicables), salvo que esté revisado a
+mano y justificado en configuracion/incidentes_revisados.json («titular_justificado», con su
+motivo). La comprobación lee las citas en su escritura y también pasadas al alfabeto latino
+(«София» casa con «Sofía») y con los nombres equivalentes de configuracion/nombres_equivalentes.json
+(«Схипхол» es Schiphol), y la prueba fija de la integración continua la pasa por los ficheros
+publicados (tests/test_cita_titular.py; docs/informe_revision_contenido.md, bloque 1).
 """
 
+import json
 import re
+from functools import cache
+from pathlib import Path
 
 from esquema import Documento
 from proceso.fronteras import nombres_del_pais
 from proceso.validacion_ficha import nombrado_en
 
+CONFIGURACION = Path(__file__).resolve().parent.parent / "configuracion"
+EQUIVALENTES = CONFIGURACION / "nombres_equivalentes.json"
+REVISADOS = CONFIGURACION / "incidentes_revisados.json"
 # Partes de guerra: la Fuerza Aérea de Ucrania y el Ministerio de Defensa ruso.
 PARTES_DE_GUERRA = re.compile(r"^(?:kpszsu|mod_russia)-")
 MIN_LETRAS = 4
@@ -28,6 +38,20 @@ GENERICAS = frozenset({
     "militar", "military", "rusia", "russia", "ruso", "rusos", "rusa", "russian", "ucrania",
     "ukraine", "ucraniano", "ukrainian", "shahed", "geran", "gerbera", "europa", "europe",
 })  # fmt: skip
+# Cirílico y griego al alfabeto latino, letra a letra: basta para que un nombre casi siempre
+# empiece igual («София» → «sofija», «Бургас» → «burgas», «Αιγαίο» → «aigaio»). Lo que no casa
+# así va en nombres_equivalentes.json.
+_LATINO = str.maketrans({
+    "а": "a", "б": "b", "в": "v", "г": "g", "ґ": "g", "д": "d", "е": "e", "є": "je", "ё": "e",
+    "ж": "zh", "з": "z", "и": "i", "і": "i", "ї": "ji", "й": "j", "к": "k", "л": "l", "м": "m",
+    "н": "n", "о": "o", "п": "p", "р": "r", "с": "s", "т": "t", "у": "u", "ф": "f", "х": "h",
+    "ц": "c", "ч": "ch", "ш": "sh", "щ": "sht", "ъ": "", "ы": "y", "ь": "", "э": "e", "ю": "ju",
+    "я": "ja", "ј": "j", "љ": "lj", "њ": "nj", "ћ": "c", "ђ": "dj", "џ": "dz",
+    "α": "a", "ά": "a", "β": "v", "γ": "g", "δ": "d", "ε": "e", "έ": "e", "ζ": "z", "η": "i",
+    "ή": "i", "θ": "th", "ι": "i", "ί": "i", "ϊ": "i", "ΐ": "i", "κ": "k", "λ": "l", "μ": "m",
+    "ν": "n", "ξ": "x", "ο": "o", "ό": "o", "π": "p", "ρ": "r", "σ": "s", "ς": "s", "τ": "t",
+    "υ": "y", "ύ": "y", "ϋ": "y", "φ": "f", "χ": "ch", "ψ": "ps", "ω": "o", "ώ": "o",
+})  # fmt: skip
 
 
 def citas(incidente: Documento) -> list[str]:
@@ -36,6 +60,26 @@ def citas(incidente: Documento) -> list[str]:
     resultado += [a.get("cita", "") for a in incidente.get("afirmaciones_publicas", [])]
     resultado += [a.get("frase", "") for a in incidente.get("afirmaciones", [])]
     return [c for c in resultado if c]
+
+
+def latino(texto: str) -> str:
+    """El texto con el cirílico y el griego pasados al alfabeto latino."""
+    return texto.lower().translate(_LATINO)
+
+
+@cache
+def equivalentes(ruta: Path = EQUIVALENTES) -> tuple[tuple[str, tuple[str, ...]], ...]:
+    """Cada nombre con las formas en que lo escriben las fuentes en otra lengua o escritura."""
+    datos = json.loads(ruta.read_text(encoding="utf-8"))
+    return tuple((e["nombre"], tuple(e["formas"])) for e in datos["nombres"])
+
+
+@cache
+def justificados(ruta: Path = REVISADOS) -> dict[str, str]:
+    """Los incidentes revisados a mano cuyo titular es correcto aunque la comprobación no lo
+    vea, con el motivo."""
+    datos = json.loads(ruta.read_text(encoding="utf-8"))
+    return {e["incidente"]: e["motivo"]["es"] for e in datos.get("titular_justificado", [])}
 
 
 def _palabras(nombre: str) -> list[str]:
@@ -63,17 +107,32 @@ def propios_del_titular(incidente: Documento) -> list[str]:
     return propios
 
 
+def _formas(nombres: list[str]) -> list[str]:
+    """Los nombres y sus formas equivalentes en otra lengua o escritura."""
+    resultado = list(nombres)
+    for nombre, formas in equivalentes():
+        if any(nombrado_en(n, nombre) or nombrado_en(nombre, n) for n in nombres):
+            resultado += formas
+    return resultado
+
+
 def respalda(incidente: Documento) -> bool:
     """Alguna cita nombra el país, el lugar o un nombre propio del titular."""
     textos = citas(incidente)
     if not textos:
         return False
-    nombres = [
+    textos += [latino(t) for t in textos if not t.isascii()]
+    nombres = _formas([
         *nombres_del_pais(incidente.get("lugar", {}).get("pais", "")),
         *nombres_del_lugar(incidente),
         *propios_del_titular(incidente),
-    ]
+    ])  # fmt: skip
     return any(nombrado_en(nombre, texto) for nombre in nombres for texto in textos)
+
+
+def publicable(incidente: Documento) -> bool:
+    """Su cita respalda el titular, o está revisado a mano y justificado."""
+    return incidente["id"] in justificados() or respalda(incidente)
 
 
 def solo_partes_de_guerra(incidente: Documento) -> bool:
