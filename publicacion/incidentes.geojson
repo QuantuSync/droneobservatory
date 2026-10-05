@@ -24098,48 +24098,6 @@
    "properties": {
     "afirmaciones_publicas": [
      {
-      "campo": "consecuencias.cierre.minutos",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "dia",
-       "valor": "2025-09-11T00:00Z"
-      },
-      "fiabilidad": "B",
-      "fuente_id": "adsblol-EYVI-2025-09-11-EODI-2025-00099",
-      "medio": "Tráfico aéreo medido (adsb.lol)",
-      "valor": {
-       "max": 82,
-       "min": 82
-      }
-     },
-     {
-      "campo": "consecuencias.cierre.valor",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "dia",
-       "valor": "2025-09-11T00:00Z"
-      },
-      "fiabilidad": "B",
-      "fuente_id": "adsblol-EYVI-2025-09-11-EODI-2025-00099",
-      "medio": "Tráfico aéreo medido (adsb.lol)",
-      "valor": "si"
-     },
-     {
-      "campo": "consecuencias.vuelos_desviados",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "dia",
-       "valor": "2025-09-11T00:00Z"
-      },
-      "fiabilidad": "B",
-      "fuente_id": "adsblol-EYVI-2025-09-11-EODI-2025-00099",
-      "medio": "Tráfico aéreo medido (adsb.lol)",
-      "valor": {
-       "max": 1,
-       "min": 1
-      }
-     },
-     {
       "campo": "consecuencias.vuelos_desviados",
       "credibilidad": 3,
       "fecha": {
@@ -24298,20 +24256,6 @@
       "idioma": "lt",
       "medio": "ve.lt",
       "replicas": 0
-     },
-     {
-      "credibilidad": 3,
-      "enlace": "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.09.11-planes-readsb-prod-0",
-      "fecha": {
-       "precision": "dia",
-       "valor": "2025-09-11T00:00Z"
-      },
-      "fiabilidad": "B",
-      "frase_origen": "Cierre medido en EYVI: 17:48–19:10 UTC, 82 minutos, 1 desvíos y 3 esperas.",
-      "id": "adsblol-EYVI-2025-09-11-EODI-2025-00099",
-      "idioma": "es",
-      "medio": "Tráfico aéreo medido (adsb.lol)",
-      "replicas": 0
      }
     ],
     "id": "EODI-2025-00099",
@@ -24340,27 +24284,6 @@
     "titulo": {
      "en": "Drone over Vilnius airport forces flight diversion",
      "es": "Dron sobre el aeropuerto de Vilna obliga a desviar un vuelo"
-    },
-    "trafico_aereo": {
-     "cierre": {
-      "aeropuerto": "EYVI",
-      "difiere_de_declarado": false,
-      "duracion_min": 82,
-      "fin": {
-       "precision": "minuto",
-       "valor": "2025-09-11T19:10Z"
-      },
-      "inicio": {
-       "precision": "minuto",
-       "valor": "2025-09-11T17:48Z"
-      },
-      "resultado": "cierre_medido",
-      "vuelos_desviados": 1,
-      "vuelos_en_espera": 3
-     },
-     "datos": [
-      "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.09.11-planes-readsb-prod-0"
-     ]
     }
    },
    "type": "Feature"
