@@ -207,7 +207,7 @@ for (const { ancho, alto } of TAMANOS) {
         expect(await objetivosPequenos(page)).toEqual([]);
         expect(await textosCortados(page)).toEqual([]);
         // El incidente queda en el hueco entre la barra y la ficha: ahí se toca su punto.
-        const barra = await page.locator("header").boundingBox();
+        const barra = await page.locator("#root header").boundingBox();
         const hoja = await ficha.boundingBox();
         if (barra === null || hoja === null) throw new Error("sin medidas");
         const punto = { x: viewport.width / 2, y: (barra.y + barra.height + hoja.y) / 2 };

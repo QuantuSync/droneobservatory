@@ -263,7 +263,7 @@ test("en escritorio el letrero nunca se sale de la pantalla y desaparece al abri
   await expect(ficha).toBeVisible();
   await page.waitForTimeout(MS_DE_VUELO);
   // El mapa ha volado al incidente: queda en el centro del hueco libre.
-  const arriba = await page.locator("header").first().boundingBox();
+  const arriba = await page.locator("#root header").first().boundingBox();
   // Arriba, lo que tapa el mapa acaba en la cabecera; abajo, empieza en la fila del zoom.
   const abajo = await page.getByRole("group", { name: "Zoom" }).boundingBox();
   const panel = await ficha.boundingBox();

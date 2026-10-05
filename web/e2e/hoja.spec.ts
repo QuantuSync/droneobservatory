@@ -89,7 +89,7 @@ for (const viewport of TAMANOS) {
       let ficha = page.getByRole("complementary", { name: new RegExp(INCIDENTE) });
       await expect(ficha).toBeVisible();
       await page.waitForTimeout(MS_DE_VUELO);
-      const barra = await caja(page.locator("header"));
+      const barra = await caja(page.locator("#root header"));
       let hoja = await caja(ficha);
       const simbolo = { x: viewport.width / 2, y: (barra.y + barra.height + hoja.y) / 2 };
       await ficha.getByRole("button", { name: "Cerrar la ficha" }).tap();
