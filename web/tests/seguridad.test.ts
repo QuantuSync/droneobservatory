@@ -182,10 +182,11 @@ describe("cabeceras del despliegue", () => {
     expect(csp.get("img-src")).toEqual(["'self'", ORIGEN_ALMACEN]);
   });
 
-  it("los identificadores sin página propia abren la portada de su idioma", () => {
+  it("los ataques, sin página propia, abren la portada de su idioma", () => {
     expect(destinoDeReescritura(vercel, "/EODI-UA-2026-1014")).toBe("/");
-    expect(destinoDeReescritura(vercel, "/EODI-2025-00210")).toBe("/");
     expect(destinoDeReescritura(vercel, "/en/EODI-UA-2026-1014")).toBe("/en");
+    // Un incidente tiene su página; si no existe (retirado, unido o inventado), 404 o redirección.
+    expect(destinoDeReescritura(vercel, "/EODI-2025-00210")).toBeNull();
     expect(destinoDeReescritura(vercel, "/EODI-loquesea")).toBeNull();
     expect(destinoDeReescritura(vercel, "/otra/EODI-2025-00210")).toBeNull();
   });

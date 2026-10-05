@@ -348,10 +348,13 @@ const featureIncidente = objeto({
   properties: propiedadesIncidente,
 });
 
-const coleccion = objeto({
-  type: constante("FeatureCollection"),
-  features: lista(featureIncidente),
-});
+const coleccion = objeto(
+  {
+    type: constante("FeatureCollection"),
+    features: lista(featureIncidente),
+  },
+  { unidos: diccionario(cadena(v.PATRON_ID_INCIDENTE), cadena(v.PATRON_ID_INCIDENTE)) },
+);
 
 const regionAtaque = objeto(
   { region: cadena(v.PATRON_REGION) },

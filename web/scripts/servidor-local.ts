@@ -28,6 +28,7 @@ const TIPOS: Record<string, string> = {
   ".geojson": "application/geo+json; charset=utf-8",
   ".csv": "text/csv; charset=utf-8",
   ".txt": "text/plain; charset=utf-8",
+  ".xml": "application/xml; charset=utf-8",
   ".svg": "image/svg+xml",
   ".png": "image/png",
   ".webp": "image/webp",
@@ -42,6 +43,19 @@ const TIPOS: Record<string, string> = {
 const configuracion = JSON.parse(
   await readFile(join(WEB, "..", "vercel.json"), "utf-8"),
 ) as ConfiguracionDespliegue;
+
+/** Las redirecciones de los incidentes unidos que escribe el build (bulkRedirectsPath). */
+async function leerRedirecciones(): Promise<Map<string, { destino: string; codigo: number }>> {
+  try {
+    const lista = JSON.parse(
+      await readFile(join(WEB, "redirecciones", "unidos.json"), "utf-8"),
+    ) as { source: string; destination: string; statusCode: number }[];
+    return new Map(lista.map((r) => [r.source, { destino: r.destination, codigo: r.statusCode }]));
+  } catch {
+    return new Map();
+  }
+}
+const redirecciones = await leerRedirecciones();
 
 async function esFichero(ruta: string): Promise<boolean> {
   try {
@@ -96,13 +110,23 @@ const servidor = createServer((peticion, respuesta) => {
       await servirTeselas(ruta, peticion.headers.range, respuesta);
       return;
     }
+    // Como en el despliegue, las redirecciones van antes que todo lo demás.
+    const redireccion = redirecciones.get(ruta);
+    if (redireccion !== undefined) {
+      respuesta.writeHead(redireccion.codigo, { Location: redireccion.destino }).end();
+      return;
+    }
     for (const [clave, valor] of cabecerasDe(configuracion, ruta)) {
       respuesta.setHeader(clave, valor);
     }
     const fichero =
       (await resolver(ruta)) ?? (await resolver(destinoDeReescritura(configuracion, ruta) ?? ruta));
     if (fichero === null) {
-      respuesta.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" }).end("404");
+      // La página 404 del sitio, con su código.
+      const noEncontrada = await resolver("/404.html");
+      respuesta.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
+      if (noEncontrada === null) respuesta.end("404");
+      else createReadStream(noEncontrada).pipe(respuesta);
       return;
     }
     respuesta.writeHead(200, {

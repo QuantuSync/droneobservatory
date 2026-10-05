@@ -214,6 +214,8 @@ export interface FeatureIncidente {
 export interface ColeccionIncidentes {
   type: "FeatureCollection";
   features: FeatureIncidente[];
+  /** Identificador unido a otro -> incidente publicado que queda (la web redirige su dirección). */
+  unidos?: Record<string, string>;
 }
 
 /**

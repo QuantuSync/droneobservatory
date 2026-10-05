@@ -36,6 +36,8 @@ export interface Pagina {
   id: string | null;
   titulo: string;
   descripcion: string;
+  /** Dirección en cada idioma, para las páginas que no son la portada ni una ficha. */
+  rutas?: Record<Idioma, string>;
 }
 
 export function paginaDePortada(idioma: Idioma): Pagina {
@@ -54,7 +56,12 @@ export function paginaDeIncidente(idioma: Idioma, id: string, titulo: string): P
 }
 
 function direccion(pagina: Pagina, idioma: Idioma): string {
-  const ruta = pagina.id === null ? rutaDeIdioma(idioma) : rutaDeFicha(pagina.id, idioma);
+  const ruta =
+    pagina.rutas !== undefined
+      ? pagina.rutas[idioma]
+      : pagina.id === null
+        ? rutaDeIdioma(idioma)
+        : rutaDeFicha(pagina.id, idioma);
   return ORIGEN + (ruta === "/" ? "/" : ruta);
 }
 

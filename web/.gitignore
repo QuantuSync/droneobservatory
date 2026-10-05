@@ -1,5 +1,7 @@
 node_modules/
 dist/
+# Redirecciones de los incidentes unidos, generadas en cada build (bulkRedirectsPath)
+redirecciones/
 # Generado en cada build a partir de ../publicacion
 public/datos/
 src/generado/

@@ -2,7 +2,9 @@
 
 Solo se dibujan en el mapa los incidentes con un punto dentro de su país. Los que
 solo se saben a nivel de país o de región van a incidentes_sin_ubicacion.json, con
-su país y su región. Los retirados y los fundidos en otro no salen en ninguno.
+su país y su región. Los retirados y los fundidos en otro no salen en ninguno; el GeoJSON
+lleva además, en «unidos», a qué incidente publicado fue a parar cada identificador fundido
+(la web redirige su dirección a la del que queda).
 """
 
 import logging
@@ -115,11 +117,28 @@ def publicables(
     return resultado
 
 
+def unidos(incidentes: Iterable[Documento], publicados: set[str]) -> dict[str, str]:
+    """Identificador fundido -> incidente publicado en que acaba (siguiendo la cadena de
+    fusiones). Los que acaban en uno retirado o no publicado no salen."""
+    destino = {str(i["id"]): str(i["fusionado_en"]) for i in incidentes if "fusionado_en" in i}
+    resultado = {}
+    for origen in destino:
+        actual, vistos = origen, set()
+        while actual in destino and actual not in vistos:
+            vistos.add(actual)
+            actual = destino[actual]
+        if actual in publicados:
+            resultado[origen] = actual
+    return dict(sorted(resultado.items()))
+
+
 def exportar(
     incidentes: Iterable[Documento], ahora: datetime, vocabulario_modelos: frozenset[str]
 ) -> Documento:
+    incidentes = list(incidentes)
     features = []
-    for incidente in publicables(incidentes, ahora, vocabulario_modelos):
+    validos = publicables(incidentes, ahora, vocabulario_modelos)
+    for incidente in validos:
         if "punto" not in incidente["lugar"]:
             continue
         publicado = feature(incidente)
@@ -129,6 +148,9 @@ def exportar(
         "type": "FeatureCollection",
         "features": sorted(features, key=lambda f: str(f["id"])),
     }
+    fundidos = unidos(incidentes, {str(i["id"]) for i in validos})
+    if fundidos:
+        coleccion["unidos"] = fundidos
     # Segunda barrera: la proyección ya filtra, pero se comprueba el resultado.
     sobrantes = campos_fuera_de_lista(coleccion)
     if sobrantes:

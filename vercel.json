@@ -7,9 +7,10 @@
   "ignoreCommand": "node web/scripts/omitir-build.ts",
   "cleanUrls": true,
   "trailingSlash": false,
+  "bulkRedirectsPath": "web/redirecciones",
   "rewrites": [
-    { "source": "/:id(EODI-(?:UA-)?\\d{4}-\\d{4,5})", "destination": "/" },
-    { "source": "/en/:id(EODI-(?:UA-)?\\d{4}-\\d{4,5})", "destination": "/en" }
+    { "source": "/:id(EODI-UA-\\d{4}-\\d{4})", "destination": "/" },
+    { "source": "/en/:id(EODI-UA-\\d{4}-\\d{4})", "destination": "/en" }
   ],
   "headers": [
     {

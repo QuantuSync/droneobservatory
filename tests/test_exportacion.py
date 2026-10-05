@@ -56,6 +56,27 @@ def test_un_incidente_fundido_en_otro_no_se_publica() -> None:
     fundido["fusionado_en"] = ejemplos.incidente_completo()["id"]
     coleccion = exportar([ejemplos.incidente_completo(), fundido], AHORA, VOCABULARIO_MODELOS)
     assert [f["id"] for f in coleccion["features"]] == [ejemplos.incidente_completo()["id"]]
+    # La dirección del fundido lleva al que queda.
+    assert coleccion["unidos"] == {fundido["id"]: ejemplos.incidente_completo()["id"]}
+
+
+def test_unidos_sigue_la_cadena_y_omite_los_que_no_se_publican() -> None:
+    from exportacion.geojson import unidos
+
+    documentos: list[Documento] = [
+        {"id": "A", "fusionado_en": "B"},
+        {"id": "B", "fusionado_en": "C"},
+        {"id": "C"},
+        {"id": "D", "fusionado_en": "E"},
+        {"id": "E", "retirado": {}},
+        {"id": "F", "fusionado_en": "G"},
+        {"id": "G", "fusionado_en": "F"},
+    ]
+    assert unidos(documentos, {"C"}) == {"A": "C", "B": "C"}
+
+
+def test_sin_fundidos_no_hay_unidos() -> None:
+    assert "unidos" not in exportar_ejemplos()
 
 
 def test_presencia_dron_se_publica() -> None:

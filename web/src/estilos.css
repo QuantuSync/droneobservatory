@@ -272,3 +272,221 @@
   outline: 2px solid var(--acento);
   outline-offset: -2px;
 }
+
+/* Páginas que se leen sin ejecutar código (src/texto/paginas.ts). La portada y cada incidente
+   llevan la aplicación del mapa y, detrás, el mismo contenido en texto. Con el código del
+   navegador activo, el texto no se pinta nunca (esta hoja se carga antes de pintar nada, así que
+   no hay parpadeo); sin él, no se pinta la aplicación, que no puede funcionar, y queda el texto.
+   Un navegador que no conoce «scripting» se queda como antes: el texto queda debajo del mapa, sin
+   desplazamiento posible. Las páginas solo de texto (pagina-texto) se ven siempre. */
+@media (scripting: enabled) {
+  #root ~ .texto-pagina {
+    display: none;
+  }
+}
+
+@media (scripting: none) {
+  #root {
+    display: none;
+  }
+
+  body {
+    overflow: auto;
+  }
+}
+
+body.pagina-texto {
+  overflow: auto;
+}
+
+.texto-pagina {
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: 0 1rem 2rem;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.texto-pagina a {
+  color: var(--color-texto);
+  text-decoration: underline;
+  text-decoration-color: var(--acento);
+  text-underline-offset: 3px;
+}
+
+.texto-pagina a:hover {
+  color: var(--acento);
+}
+
+.texto-saltar {
+  position: absolute;
+  left: -9999px;
+}
+
+.texto-saltar:focus {
+  position: static;
+  display: inline-block;
+  margin-top: 0.5rem;
+}
+
+.texto-cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--color-linea);
+}
+
+.texto-pagina .texto-marca {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.texto-cabecera nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.875rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.texto-cabecera [aria-current="page"] {
+  color: var(--acento);
+}
+
+.texto-idioma {
+  margin-left: auto;
+}
+
+.texto-pagina main {
+  padding-top: 1rem;
+}
+
+.texto-pagina h1 {
+  font-size: 1.625rem;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  margin: 0.5rem 0 0.75rem;
+}
+
+.texto-pagina h2 {
+  font-size: 1.1875rem;
+  font-weight: 600;
+  margin: 1.75rem 0 0.5rem;
+}
+
+.texto-pagina h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 1.25rem 0 0.375rem;
+}
+
+.texto-pagina p {
+  margin: 0.5rem 0;
+}
+
+.texto-pagina ul,
+.texto-pagina ol {
+  margin: 0.5rem 0;
+  padding-left: 1.25rem;
+}
+
+.texto-pagina li {
+  margin: 0.25rem 0;
+}
+
+.texto-pagina ul.texto-enlaces {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.25rem;
+  list-style: none;
+  padding: 0;
+}
+
+.texto-pagina dl {
+  margin: 0.5rem 0;
+}
+
+.texto-pagina dt {
+  color: var(--color-secundario);
+  font-size: 0.8125rem;
+  margin-top: 0.75rem;
+}
+
+.texto-pagina dd {
+  margin: 0.125rem 0 0;
+}
+
+.texto-pagina .texto-cifras {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: 0.5rem 1rem;
+}
+
+.texto-pagina .texto-cifras dd {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.texto-pagina blockquote {
+  margin: 0.375rem 0;
+  padding-left: 0.625rem;
+  border-left: 2px solid var(--acento);
+  color: var(--color-texto);
+}
+
+.texto-nota,
+.texto-fuente,
+.texto-rotulo {
+  display: block;
+  color: var(--color-secundario);
+  font-size: 0.8125rem;
+}
+
+.texto-pagina .mono {
+  font-family: var(--font-mono);
+}
+
+.texto-pagina ol.texto-fuentes > li {
+  margin: 0.75rem 0;
+}
+
+.texto-pagina table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  display: block;
+  overflow-x: auto;
+}
+
+.texto-pagina th,
+.texto-pagina td {
+  text-align: left;
+  padding: 0.3125rem 0.75rem 0.3125rem 0;
+  border-bottom: 1px solid var(--color-linea);
+  vertical-align: top;
+}
+
+.texto-pagina thead th {
+  color: var(--color-secundario);
+  font-weight: 500;
+}
+
+.texto-pagina td:not(:first-child) {
+  font-family: var(--font-mono);
+}
+
+.texto-pie {
+  margin-top: 2.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--color-linea);
+  color: var(--color-secundario);
+  font-size: 0.8125rem;
+}
