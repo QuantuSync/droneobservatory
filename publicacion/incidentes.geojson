@@ -101424,6 +101424,456 @@
   {
    "geometry": {
     "coordinates": [
+     11.78603,
+     48.35372
+    ],
+    "type": "Point"
+   },
+   "id": "EODI-2025-00440",
+   "properties": {
+    "afirmaciones_publicas": [
+     {
+      "campo": "consecuencias.cierre.minutos",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-10-18T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EDDM-2025-10-18-EODI-2025-00440",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 52,
+       "min": 52
+      }
+     },
+     {
+      "campo": "consecuencias.cierre.minutos",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-10-19T10:15Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-cdf12e2370256901",
+      "medio": "yahoo.com",
+      "valor": {
+       "max": 60,
+       "min": 30
+      }
+     },
+     {
+      "campo": "consecuencias.cierre.valor",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-10-18T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EDDM-2025-10-18-EODI-2025-00440",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": "si"
+     },
+     {
+      "campo": "consecuencias.cierre.valor",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-10-19T10:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-15b70b4c09b7c1c7",
+      "medio": "focus-news.net",
+      "valor": "si"
+     },
+     {
+      "campo": "consecuencias.vuelos_desviados",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-10-18T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EDDM-2025-10-18-EODI-2025-00440",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 3,
+       "min": 3
+      }
+     },
+     {
+      "campo": "drones.numero",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-10-19T10:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-15b70b4c09b7c1c7",
+      "medio": "focus-news.net",
+      "valor": {
+       "max": 10,
+       "min": 2
+      }
+     },
+     {
+      "campo": "lugar.pais",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-10-19T10:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-15b70b4c09b7c1c7",
+      "medio": "focus-news.net",
+      "valor": "DE"
+     },
+     {
+      "campo": "objetivo.categoria",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-10-19T10:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-15b70b4c09b7c1c7",
+      "medio": "focus-news.net",
+      "valor": "aeropuerto"
+     },
+     {
+      "campo": "objetivo.nombre",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-10-19T10:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-15b70b4c09b7c1c7",
+      "medio": "focus-news.net",
+      "valor": "Flughafen München"
+     },
+     {
+      "campo": "presencia_dron",
+      "cita": "Контролът на въздушното движение спря полетите за около половин час в събота вечер около 22:00 часа",
+      "credibilidad": 1,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-10-19T10:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "gdelt-15b70b4c09b7c1c7-declaracion-1",
+      "medio": "Bundespolizei (declaración oficial citada en focus-news.net)",
+      "valor": "confirmada"
+     },
+     {
+      "campo": "presencia_dron",
+      "cita": "The sightings occurred around 10 p.m. local time Saturday for roughly 30 minutes",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-10-19T10:15Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-cdf12e2370256901",
+      "medio": "yahoo.com",
+      "valor": "no_confirmada"
+     },
+     {
+      "campo": "tiempo.fin",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-10-19T10:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-15b70b4c09b7c1c7",
+      "medio": "focus-news.net",
+      "valor": {
+       "precision": "minuto",
+       "valor": "2025-10-19T00:00Z"
+      }
+     },
+     {
+      "campo": "tiempo.inicio",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-10-19T10:15Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-cdf12e2370256901",
+      "medio": "yahoo.com",
+      "valor": {
+       "precision": "minuto",
+       "valor": "2025-10-18T20:00Z"
+      }
+     },
+     {
+      "campo": "tipo",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-10-19T10:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-15b70b4c09b7c1c7",
+      "medio": "focus-news.net",
+      "valor": "interrupcion_aeroportuaria"
+     }
+    ],
+    "consecuencias": {
+     "cierre": {
+      "minutos": {
+       "max": 60,
+       "min": 30
+      },
+      "valor": "si"
+     }
+    },
+    "control": {
+     "ultima_actualizacion": {
+      "precision": "minuto",
+      "valor": "2026-10-05T02:17Z"
+     }
+    },
+    "drones": {
+     "numero": {
+      "max": 10,
+      "min": 2
+     }
+    },
+    "estado": {
+     "actual": "confirmado",
+     "historial": [
+      {
+       "estado": "notificado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2025-10-19T10:00Z"
+       },
+       "fuente_id": "gdelt-15b70b4c09b7c1c7"
+      },
+      {
+       "estado": "confirmado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2025-10-19T10:00Z"
+       },
+       "fuente_id": "gdelt-15b70b4c09b7c1c7-declaracion-1"
+      }
+     ]
+    },
+    "fuentes": [
+     {
+      "credibilidad": 3,
+      "enlace": "https://focus-news.net/novini/mejdunarodni/Signal-za-dronove-sprya-poletite-v-Myunhen-2751111",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-10-19T10:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Няколко души са съобщили за подозрителни наблюдения",
+      "id": "gdelt-15b70b4c09b7c1c7",
+      "idioma": "bg",
+      "medio": "focus-news.net",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://blagoevgrad24.bg/novini/mejdunarodni/Signal-za-dronove-sprya-poletite-v-Myunhen-2751112",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-10-19T10:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Сигнал за дронове спря полетите в Мюнхен",
+      "id": "gdelt-5b0e71ce9adc5992",
+      "idioma": "bg",
+      "medio": "blagoevgrad24.bg",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://yahoo.com/news/articles/germanys-munich-airport-temporarily-closed-093244033.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-10-19T10:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "The sightings occurred around 10 p.m. local time Saturday for roughly 30 minutes",
+      "id": "gdelt-cdf12e2370256901",
+      "idioma": "en",
+      "medio": "yahoo.com",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://niagarafallsreview.ca/news/world/europe/germanys-munich-airport-temporarily-closed-following-drone-reports-but-nothing-found/article_fc25bfc3-5200-5305-a0aa-9746dfc7567c.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-10-19T11:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Germany's Munich Airport temporarily closed following drone reports, but nothing found",
+      "id": "gdelt-847a9e85d15fd3b5",
+      "idioma": "en",
+      "medio": "niagarafallsreview.ca",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://the-messenger.com/news/world/article_62e0e1ba-7527-50ce-bd28-9deadd83984e.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-10-19T12:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Germany's Munich Airport temporarily closed following drone reports, but nothing found",
+      "id": "gdelt-187a4ff5b5201066",
+      "idioma": "en",
+      "medio": "the-messenger.com",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://stcatharinesstandard.ca/news/world/europe/germanys-munich-airport-temporarily-closed-following-drone-reports-but-nothing-found/article_0e6301dc-1ae7-5a16-9349-fca523e2a813.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-10-19T13:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Germany's Munich Airport temporarily closed following drone reports, but nothing found",
+      "id": "gdelt-d9eafbc55766d832",
+      "idioma": "en",
+      "medio": "stcatharinesstandard.ca",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://abcnews.go.com/International/wireStory/germanys-munich-airport-temporarily-closed-drone-reports-found-126657285",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-10-19T14:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Germany's Munich Airport temporarily closed following drone reports, but nothing found",
+      "id": "gdelt-66734fa96a3485f8",
+      "idioma": "en",
+      "medio": "go.com",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://natemat.pl/628182,zgloszenia-ws-dronow-przerwano-prace-lotniska-w-monachium",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-10-19T14:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Zgłoszenia ws. dronów. Przerwano pracę lotniska w Monachium",
+      "id": "gdelt-2eb947932aebde60",
+      "idioma": "pl",
+      "medio": "natemat.pl",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 1,
+      "enlace": "https://focus-news.net/novini/mejdunarodni/Signal-za-dronove-sprya-poletite-v-Myunhen-2751111",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-10-19T10:00Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Контролът на въздушното движение спря полетите за около половин час в събота вечер около 22:00 часа",
+      "id": "gdelt-15b70b4c09b7c1c7-declaracion-1",
+      "idioma": "bg",
+      "medio": "Bundespolizei (declaración oficial citada en focus-news.net)",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 1,
+      "enlace": "https://yahoo.com/news/articles/germanys-munich-airport-temporarily-closed-093244033.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-10-19T10:15Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Air traffic was operating normally Sunday morning, the airport said",
+      "id": "gdelt-cdf12e2370256901-declaracion-2",
+      "idioma": "en",
+      "medio": "Munich Airport (declaración oficial citada en yahoo.com)",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 2,
+      "enlace": "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.10.18-planes-readsb-prod-0",
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-10-18T00:00Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Cierre medido en EDDM: 19:49–20:41 UTC, 52 minutos, 3 desvíos y 9 esperas.",
+      "id": "adsblol-EDDM-2025-10-18-EODI-2025-00440",
+      "idioma": "es",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "replicas": 0
+     }
+    ],
+    "id": "EODI-2025-00440",
+    "lugar": {
+     "pais": "DE",
+     "radio_km": 5.0
+    },
+    "objetivo": {
+     "categoria": "aeropuerto",
+     "nombre": "Flughafen München",
+     "oaci": "EDDM"
+    },
+    "presencia_dron": "confirmada",
+    "tiempo": {
+     "duracion_min": 240,
+     "fin": {
+      "precision": "minuto",
+      "valor": "2025-10-19T00:00Z"
+     },
+     "inicio": {
+      "precision": "hora",
+      "valor": "2025-10-18T20:00Z"
+     }
+    },
+    "tipo": "interrupcion_aeroportuaria",
+    "titulo": {
+     "en": "Munich Airport temporarily closed following unverified drone reports",
+     "es": "Cierre temporal del aeropuerto de Múnich por reportes de drones no verificados"
+    },
+    "trafico_aereo": {
+     "cierre": {
+      "aeropuerto": "EDDM",
+      "difiere_de_declarado": false,
+      "duracion_min": 52,
+      "fin": {
+       "precision": "minuto",
+       "valor": "2025-10-18T20:41Z"
+      },
+      "inicio": {
+       "precision": "minuto",
+       "valor": "2025-10-18T19:49Z"
+      },
+      "resultado": "cierre_medido",
+      "vuelos_desviados": 3,
+      "vuelos_en_espera": 9
+     },
+     "datos": [
+      "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.10.18-planes-readsb-prod-0",
+      "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.10.19-planes-readsb-prod-0"
+     ]
+    }
+   },
+   "type": "Feature"
+  },
+  {
+   "geometry": {
+    "coordinates": [
      16.29959,
      43.5397
     ],
