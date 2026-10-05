@@ -214,3 +214,83 @@ def test_la_configuracion_de_la_revision() -> None:
     for ubicacion in datos["ubicaciones"]:
         assert 0.1 <= ubicacion["lugar"]["radio_km"] <= 50
         assert len(ubicacion["fuente"]["frase"].split()) <= 25
+        assert not revisados.punto_de_respuesta_defensiva(ubicacion["fuente"]["frase"])
+        if "cambio" in ubicacion:
+            assert ubicacion["cambio"]["motivo"]["es"] and ubicacion["cambio"]["motivo"]["en"]
+        for otro in ubicacion.get("otros_lugares", []):
+            if "fuente" in otro:
+                assert len(otro["fuente"]["frase"].split()) <= 25
+
+
+MISIL = (
+    "wystrzelona przez pilota myśliwca F-35 – w sposób niezamierzony uderzyła w dach budynku "
+    "mieszkalnego w miejscowości Wyryki Wola."
+)
+
+
+def test_un_dano_de_la_respuesta_defensiva_nunca_es_el_punto() -> None:
+    assert revisados.punto_de_respuesta_defensiva(MISIL)
+    # Con restos del dron en el mismo lugar, el lugar vale (Padina, Rumanía).
+    assert not revisados.punto_de_respuesta_defensiva(
+        "resturi din dronă și din racheta interceptoare au fost identificate în zona Padina"
+    )
+    assert not revisados.punto_de_respuesta_defensiva(
+        "ujawniono co najmniej 32 elementy drona typu Gerbera"
+    )
+
+
+CZESNIKI: dict[str, Any] = {
+    "incidente": "EODI-2025-00295",
+    "lugar": {"nombre": "Cześniki", "nivel": "localidad", "lat": 50.705, "lon": 23.441111,
+              "radio_km": 2, "region": "Lubelskie"},
+    "fuente": {**UBICACION["fuente"], "enlace": "https://www.gov.pl/web/pr-lublin/y",
+               "fecha": "2025-09-10",
+               "frase": "Cześniki – ujawniono co najmniej 32 elementy drona typu Gerbera"},
+    "cambio": {"motivo": {"es": "Un misil polaco, no un dron.",
+                          "en": "A Polish missile, not a drone."}},
+    "otros_lugares": [{"nombre": "Wyryki-Wola", "lat": 51.5625, "lon": 23.363889,
+                       "fuente": {**UBICACION["fuente"], "frase": MISIL}},
+                      {"nombre": "Smyków"}],
+}  # fmt: skip
+
+
+def test_el_punto_se_cambia_solo_con_su_motivo_y_sin_perder_el_anterior(
+    revision: dict[str, Any],
+) -> None:
+    almacen = Almacen.abrir()
+    almacen.guardar_incidente(_polonia(), AHORA, VOCABULARIO_MODELOS)
+    revision["citas"], revision["titulares"] = [], []
+    revision["ubicaciones"] = [UBICACION]
+    revisados.corregir(almacen, AHORA, VOCABULARIO_MODELOS)
+    # Sin «cambio», un punto ya puesto no se toca.
+    sin_motivo = {k: v for k, v in CZESNIKI.items() if k != "cambio"}
+    revision["ubicaciones"] = [sin_motivo]
+    assert revisados.corregir(almacen, AHORA, VOCABULARIO_MODELOS).ubicados == []
+    revision["ubicaciones"] = [CZESNIKI]
+    assert revisados.corregir(almacen, AHORA, VOCABULARIO_MODELOS).ubicados == ["EODI-2025-00295"]
+    documento = almacen.incidente("EODI-2025-00295")
+    assert documento is not None
+    lugar = documento["lugar"]
+    assert lugar["punto"] == {"lat": 50.705, "lon": 23.44111} and lugar["localidad"] == "Cześniki"
+    [paso] = lugar["historial"]
+    assert paso["anterior"]["localidad"] == "Wyryki-Wola"
+    assert paso["anterior"]["punto"] == {"lat": 51.5625, "lon": 23.36389}
+    assert paso["motivo"] == CZESNIKI["cambio"]["motivo"]
+    wyryki = lugar["otros_lugares"][0]
+    fuentes = {f["id"]: f for f in documento["fuentes"]}
+    assert fuentes[wyryki["fuente"]]["frase_origen"] == MISIL
+    assert fuentes[lugar["fuente_punto"]]["frase_origen"].startswith("Cześniki")
+    # La recogida siguiente no repite nada.
+    assert revisados.corregir(almacen, AHORA, VOCABULARIO_MODELOS).ubicados == []
+    assert len(almacen.incidente("EODI-2025-00295")["lugar"]["historial"]) == 1  # type: ignore[index]
+
+
+def test_un_punto_de_la_respuesta_defensiva_no_se_pone(revision: dict[str, Any]) -> None:
+    almacen = Almacen.abrir()
+    almacen.guardar_incidente(_polonia(), AHORA, VOCABULARIO_MODELOS)
+    revision["citas"], revision["titulares"] = [], []
+    misil = copy.deepcopy(UBICACION)
+    misil["fuente"]["frase"] = MISIL
+    revision["ubicaciones"] = [misil]
+    assert revisados.corregir(almacen, AHORA, VOCABULARIO_MODELOS).ubicados == []
+    assert "punto" not in almacen.incidente("EODI-2025-00295")["lugar"]  # type: ignore[index]

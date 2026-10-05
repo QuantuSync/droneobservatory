@@ -108,7 +108,13 @@ def incursion() -> Documento:
     documento["lugar"].update(
         geocodificacion="oficial", fuente_punto=documento["fuentes"][0]["id"], localidad="Isaccea",
         otros_lugares=[{"nombre": "Galați", "punto": {"lat": 45.43, "lon": 28.05}},
-                       {"nombre": "Smârdan"}],
+                       {"nombre": "Smârdan", "fuente": documento["fuentes"][0]["id"]}],
+        # El punto anterior, cambiado por una corrección revisada con su motivo.
+        historial=[{"fecha": ejemplos.instante("2025-10-07T12:00Z", "minuto"),
+                    "anterior": {"localidad": "Smârdan", "punto": {"lat": 45.29, "lon": 28.35},
+                                 "radio_km": 3, "fuente_punto": documento["fuentes"][0]["id"]},
+                    "motivo": {"es": "Daño de la defensa, no del dron.",
+                               "en": "Damage from the defence, not the drone."}}],
     )  # fmt: skip
     return documento
 

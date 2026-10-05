@@ -1,4 +1,4 @@
-// Validación de los datos contra el esquema 1.11.0 (campos públicos), escrita a mano para
+// Validación de los datos contra el esquema 1.12.0 (campos públicos), escrita a mano para
 // que no necesite generar código en el navegador. Se usa en el build, sobre los ficheros de
 // publicacion/, y en la web al cargar cada fichero: un fichero que no valida no se pinta.
 
@@ -225,7 +225,19 @@ const radio = numero(v.RADIO_KM_MIN, v.RADIO_KM_MAX);
  */
 const CAMPOS_LUGAR_OPCIONALES: Record<string, Comprobacion> = {
   fuente_punto: cadena(),
-  otros_lugares: lista(objeto({ nombre: cadena() }, { punto: objeto({ lat: latitud, lon: longitud }) })),
+  otros_lugares: lista(
+    objeto({ nombre: cadena() }, { punto: objeto({ lat: latitud, lon: longitud }), fuente: cadena() }),
+  ),
+  historial: lista(
+    objeto({
+      fecha: instante,
+      anterior: objeto(
+        { punto: objeto({ lat: latitud, lon: longitud }), radio_km: radio },
+        { localidad: cadena(), fuente_punto: cadena() },
+      ),
+      motivo: titulo,
+    }),
+  ),
 };
 
 const CAMPOS_INCIDENTE_OBLIGATORIOS: Record<string, Comprobacion> = {

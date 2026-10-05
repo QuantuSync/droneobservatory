@@ -32,6 +32,7 @@ from proceso.presencia import TABLA_MOTIVOS
 
 registro = logging.getLogger(__name__)
 RUTA = Path(__file__).resolve().parent.parent / "configuracion" / "incidentes_revisados.json"
+RUTA_PUNTO = Path(__file__).resolve().parent.parent / "configuracion" / "punto_principal.json"
 CURSOR = "revisados:"
 
 
@@ -352,18 +353,56 @@ def con_titular(incidente: Documento, revision: Documento, instante: Documento) 
     return resultado
 
 
-def con_lugar(incidente: Documento, revision: Documento) -> Documento | None:
-    """El lugar que da la autoridad: punto, radio y los demás lugares que nombra. None si el
-    incidente ya tiene punto o el punto no cae en su país."""
+@cache
+def _regla_punto() -> dict[str, Any]:
+    datos: dict[str, Any] = json.loads(RUTA_PUNTO.read_text(encoding="utf-8"))
+    return datos
+
+
+def punto_de_respuesta_defensiva(frase: str) -> bool:
+    """La frase que daría el punto habla de un daño de la respuesta defensiva (un misil, el avión
+    que lo dispara) y no del dron: ese lugar nunca es el punto principal
+    (configuracion/punto_principal.json)."""
+    texto = frase.lower()
+    regla = _regla_punto()
+    defensiva = any(t in texto for t in regla["respuesta_defensiva"])
+    return defensiva and not any(t in texto for t in regla["dron"])
+
+
+def con_lugar(incidente: Documento, revision: Documento, instante: Documento) -> Documento | None:
+    """El lugar que da la autoridad: punto, radio y los demás lugares que nombra, cada uno con la
+    fuente que lo explica si la revisión la da. None si el punto no cae en su país, si su frase
+    habla de la respuesta defensiva y no del dron, o si el incidente ya tiene otro punto y la
+    revisión no trae el cambio con su motivo. Con el cambio, el punto anterior queda en
+    lugar.historial con el motivo en español y en inglés."""
     lugar = revision["lugar"]
-    if "punto" in incidente["lugar"] or not dentro_del_pais(
-        incidente["lugar"]["pais"], float(lugar["lat"]), float(lugar["lon"])
-    ):
-        return None
     cita = revision["fuente"]
-    resultado = con_citas(incidente, [cita])
+    if not dentro_del_pais(incidente["lugar"]["pais"], float(lugar["lat"]), float(lugar["lon"])):
+        return None
+    if punto_de_respuesta_defensiva(cita["frase"]):
+        registro.warning(
+            "punto sin poner en %s: la frase habla de la respuesta defensiva, no del dron",
+            incidente["id"],
+        )
+        return None
+    punto = {"lat": round(float(lugar["lat"]), 5), "lon": round(float(lugar["lon"]), 5)}
+    antes = incidente["lugar"]
+    historial = list(antes.get("historial", []))
+    if "punto" in antes and antes["punto"] != punto:
+        cambio = revision.get("cambio")
+        if cambio is None:
+            return None
+        anterior: Documento = {"punto": antes["punto"], "radio_km": antes["radio_km"]}
+        for campo in ("localidad", "fuente_punto"):
+            if campo in antes:
+                anterior[campo] = antes[campo]
+        historial.append(
+            {"fecha": instante, "anterior": anterior, "motivo": dict(cambio["motivo"])}
+        )
+    explicaciones = [o["fuente"] for o in revision.get("otros_lugares", []) if "fuente" in o]
+    resultado = con_citas(incidente, [cita, *explicaciones])
     nuevo = copy.deepcopy(resultado["lugar"])
-    nuevo["punto"] = {"lat": round(float(lugar["lat"]), 5), "lon": round(float(lugar["lon"]), 5)}
+    nuevo["punto"] = punto
     nuevo["radio_km"] = float(lugar["radio_km"])
     nuevo["nivel"] = lugar["nivel"]
     nuevo["localidad"] = lugar["nombre"]
@@ -379,9 +418,13 @@ def con_lugar(incidente: Documento, revision: Documento) -> Documento | None:
                 "lat": round(float(otro["lat"]), 5),
                 "lon": round(float(otro["lon"]), 5),
             }
+        if "fuente" in otro:
+            entrada["fuente"] = fuente_de_cita(otro["fuente"], incidente)["id"]
         otros.append(entrada)
     if otros:
         nuevo["otros_lugares"] = otros
+    if historial:
+        nuevo["historial"] = historial
     resultado["lugar"] = nuevo
     return resultado
 
@@ -453,11 +496,13 @@ def corregir(almacen: Almacen, ahora: datetime, modelos: frozenset[str]) -> Corr
     for id_, revisiones in _por_incidente(almacen, datos.get("ubicaciones", [])).items():
         documento = almacen.incidente(id_)
         assert documento is not None
-        con_punto = con_lugar(documento, revisiones[-1])
+        revision = revisiones[-1]
+        con_punto = con_lugar(documento, revision, _instante(ahora))
+        motivo = revision["cambio"]["motivo"]["es"] if "cambio" in revision else MOTIVO_UBICACION
         if (
             con_punto is not None
             and con_punto != documento
-            and _guardar(almacen, documento, con_punto, ahora, modelos, MOTIVO_UBICACION, hechos)
+            and _guardar(almacen, documento, con_punto, ahora, modelos, motivo, hechos)
         ):
             hechos.ubicados.append(id_)
     registro.info("revisión del contenido: %s", hechos.texto())

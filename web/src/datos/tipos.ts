@@ -1,4 +1,4 @@
-// Forma de los ficheros públicos de publicacion/ (esquema 1.11.0, solo campos públicos)
+// Forma de los ficheros públicos de publicacion/ (esquema 1.12.0, solo campos públicos)
 // y de los resúmenes que la web deriva de ellos en el build.
 
 export type Estado = "notificado" | "confirmado" | "atribuido" | "desmentido";
@@ -134,6 +134,20 @@ export interface TraficoAereo {
 export interface OtroLugar {
   nombre: string;
   punto?: { lat: number; lon: number };
+  /** Id de la fuente cuya frase explica qué hubo en ese lugar (p. ej. un daño de la defensa). */
+  fuente?: string;
+}
+
+/** Punto anterior de un incidente cuando una corrección revisada lo cambia, con su motivo. */
+export interface CambioDeLugar {
+  fecha: Instante;
+  anterior: {
+    localidad?: string;
+    punto: { lat: number; lon: number };
+    radio_km: number;
+    fuente_punto?: string;
+  };
+  motivo: Titulo;
 }
 
 /** Lo que el lugar puede añadir, con punto o sin él. */
@@ -142,6 +156,8 @@ export interface LugarAmpliado {
   fuente_punto?: string;
   /** Los demás lugares que nombra la autoridad. */
   otros_lugares?: OtroLugar[];
+  /** Puntos anteriores, si una corrección cambió el punto. */
+  historial?: CambioDeLugar[];
 }
 
 /** Precisión con la que se conoce el lugar de un incidente sin punto en el mapa. */

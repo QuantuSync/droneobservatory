@@ -213,6 +213,7 @@ REGLAS: dict[str, tuple[str, ...]] = {
     "lugar.punto": _LUGAR, "lugar.radio_km": _LUGAR, "lugar.nivel": _LUGAR,
     "lugar.region": _LUGAR, "lugar.geocodificacion": _LUGAR, "lugar.nuts2": _LUGAR,
     "lugar.pais": _LUGAR, "lugar.fuente_punto": _LUGAR, "lugar.otros_lugares": _LUGAR,
+    "lugar.historial": _LUGAR,
     # La localidad corregida a mano (recogida/revisados.py): la que nombran las noticias.
     "lugar.localidad": ("lugar.suceso", "objetivo.nombre", "ficha:lugar_suceso", "ficha:localidad",
                         NOTICIAS),

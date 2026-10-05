@@ -2186,34 +2186,58 @@
     {
       "incidente": "EODI-2025-00295",
       "lugar": {
-        "nombre": "Wyryki-Wola",
+        "nombre": "Cze\u015bniki",
         "nivel": "localidad",
-        "lat": 51.5625,
-        "lon": 23.363889,
+        "lat": 50.705,
+        "lon": 23.441111,
         "radio_km": 2,
         "region": "Lubelskie"
       },
       "fuente": {
         "incidente": "EODI-2025-00295",
-        "enlace": "https://www.gov.pl/web/po-lublin/umorzenie-sledztwa-w-sprawie-uderzenia-rakiety-wojskowej-w-budynek-w-wyrykach-woli",
+        "enlace": "https://www.gov.pl/web/pr-lublin/informacja-dotyczaca-czynnosci-procesowych-prokuratury-w-zwiazku-z-ujawnionymi-dronami-na-terenie-wojewodztwa-lubelskiego-aktualizacja",
         "medio": "gov.pl",
-        "fecha": "2026-09-10",
+        "fecha": "2025-09-10",
         "idioma": "pl",
-        "frase": "wystrzelona przez pilota my\u015bliwca F-35 \u2013 w sposób niezamierzony uderzy\u0142a w dach budynku mieszkalnego w miejscowo\u015bci Wyryki Wola.",
+        "frase": "Cze\u015bniki pow. zamojski \u2013 ogl\u0119dziny w fazie ko\u0144cowej \u2013 ujawniono co najmniej 32 elementy drona typu Gerbera, nie ujawniono materia\u0142ów wybuchowych.",
         "comprobada": {
           "fecha": "2026-10-05",
-          "en": "https://www.gov.pl/web/po-lublin/umorzenie-sledztwa-w-sprawie-uderzenia-rakiety-wojskowej-w-budynek-w-wyrykach-woli"
+          "en": "https://www.gov.pl/web/pr-lublin/informacja-dotyczaca-czynnosci-procesowych-prokuratury-w-zwiazku-z-ujawnionymi-dronami-na-terenie-wojewodztwa-lubelskiego-aktualizacja"
         },
         "oficial": true,
         "declaracion": {
-          "autoridad": "Prokuratura Okr\u0119gowa w Lublinie",
+          "autoridad": "Prokuratura Regionalna w Lublinie",
           "pais": "PL",
           "categoria": "fiscalia",
           "afirma": "incidente"
         }
       },
-      "motivo": "La fiscalía de Lublin nombra Cze\u015bniki como lugar donde se hallaron restos de un dron Gerbera probablemente derribado. Ninguna autoridad atribuye a un dron daños en edificios, y el único daño grave (la casa de Wyryki-Wola) lo causó un misil polaco, así que el punto principal es el derribo confirmado con restos.",
+      "motivo": "El punto principal es Cze\u015bniki, el primer lugar con restos de dron que nombra la Fiscalía Regional de Lublin en su nota del 10 de septiembre de 2025 (al menos 32 piezas de un dron Gerbera). La casa de Wyryki-Wola la alcanzó, según la fiscalía, un misil disparado por un caza polaco durante la operación contra los drones: va en otros lugares con esa frase.",
       "otros_lugares": [
+        {
+          "nombre": "Wyryki-Wola (pow. w\u0142odawski)",
+          "lat": 51.5625,
+          "lon": 23.363889,
+          "fuente": {
+            "incidente": "EODI-2025-00295",
+            "enlace": "https://www.gov.pl/web/po-lublin/umorzenie-sledztwa-w-sprawie-uderzenia-rakiety-wojskowej-w-budynek-w-wyrykach-woli",
+            "medio": "gov.pl",
+            "fecha": "2026-09-10",
+            "idioma": "pl",
+            "frase": "wystrzelona przez pilota my\u015bliwca F-35 \u2013 w sposób niezamierzony uderzy\u0142a w dach budynku mieszkalnego w miejscowo\u015bci Wyryki Wola.",
+            "comprobada": {
+              "fecha": "2026-10-05",
+              "en": "https://www.gov.pl/web/po-lublin/umorzenie-sledztwa-w-sprawie-uderzenia-rakiety-wojskowej-w-budynek-w-wyrykach-woli"
+            },
+            "oficial": true,
+            "declaracion": {
+              "autoridad": "Prokuratura Okr\u0119gowa w Lublinie",
+              "pais": "PL",
+              "categoria": "fiscalia",
+              "afirma": "incidente"
+            }
+          }
+        },
         {
           "nombre": "Czosnówka (pow. bialski)",
           "lat": 52.01447,
@@ -2284,13 +2308,14 @@
         },
         {
           "nombre": "entre Radiany y Sewerynów"
-        },
-        {
-          "nombre": "Cze\u015bniki (powiat zamojski, gmina Sitno)",
-          "lat": 50.705,
-          "lon": 23.441111
         }
-      ]
+      ],
+      "cambio": {
+        "motivo": {
+          "es": "El punto pasa de Wyryki-Wola a Cze\u015bniki. Según la fiscalía, la casa de Wyryki-Wola la alcanzó un misil disparado por un caza polaco durante la operación contra los drones, no un dron, y un daño de la respuesta defensiva nunca es el punto principal. Cze\u015bniki es el primer lugar con restos de dron que nombra la Fiscalía Regional de Lublin el 10 de septiembre de 2025. Wyryki-Wola sigue en otros lugares con la frase de la fiscalía.",
+          "en": "The point moves from Wyryki-Wola to Cze\u015bniki. According to the prosecutors, the house in Wyryki-Wola was hit by a missile fired by a Polish fighter jet during the operation against the drones, not by a drone, and damage caused by the defensive response is never the main point. Cze\u015bniki is the first place with drone debris named by the Lublin Regional Prosecutor's Office on 10 September 2025. Wyryki-Wola stays among the other places with the prosecutors' statement."
+        }
+      }
     },
     {
       "incidente": "EODI-2025-00020",

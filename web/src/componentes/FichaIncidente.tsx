@@ -205,7 +205,11 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
   const imprecisa = incidente.lon === null ? incidente.lugar : null;
   // La fuente oficial cuya frase nombra el lugar del punto, si está entre las del incidente.
   const fuentePunto = lugar.fuente_punto === undefined ? undefined : porFuente.get(lugar.fuente_punto);
-  const otrosLugares = (lugar.otros_lugares ?? []).map((otro) => otro.nombre);
+  // Los demás lugares; el que lleva fuente se explica con su frase (un daño de la defensa).
+  const otrosLugares = lugar.otros_lugares ?? [];
+  const sinFuente = otrosLugares.filter((otro) => otro.fuente === undefined || !porFuente.has(otro.fuente));
+  const conFuente = otrosLugares.filter((otro) => otro.fuente !== undefined && porFuente.has(otro.fuente));
+  const cambios = lugar.historial ?? [];
   return (
     <article>
       <p className="rotulo flex items-center gap-2">
@@ -284,9 +288,38 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
         )}
         {otrosLugares.length > 0 && (
           <Fila nombre={t.ficha.otrosLugares}>
-            <span data-otros-lugares="">{otrosLugares.join(", ")}</span>
+            {conFuente.map((otro) => {
+              const fuente = porFuente.get(otro.fuente ?? "");
+              return (
+                fuente !== undefined && (
+                  <span key={otro.nombre} className="mb-1.5 block" data-otro-lugar-explicado="">
+                    {otro.nombre}
+                    <blockquote lang={fuente.idioma} className="mt-0.5 border-l border-acento pl-2 text-secundario">
+                      «{fuente.frase_origen}»
+                    </blockquote>
+                    <span className="mono block text-xs text-secundario">
+                      {fuente.medio} · {instante(fuente.fecha)}
+                      {" · "}
+                      <EnlaceExterno enlace={fuente.enlace} aviso={t.ficha.enlaceExterno} avisoNoValido={t.ficha.enlaceNoValido}>
+                        {t.ficha.verFuente}
+                      </EnlaceExterno>
+                    </span>
+                  </span>
+                )
+              );
+            })}
+            {sinFuente.length > 0 && (
+              <span data-otros-lugares="">{sinFuente.map((otro) => otro.nombre).join(", ")}</span>
+            )}
           </Fila>
         )}
+        {cambios.map((cambio) => (
+          <Fila key={cambio.fecha.valor} nombre={t.ficha.puntoAnterior}>
+            <span data-punto-anterior="">{cambio.anterior.localidad ?? ""}</span>
+            <span className="mono block text-xs text-secundario">{instante(cambio.fecha)}</span>
+            <span className="block text-xs text-texto">{cambio.motivo[idioma]}</span>
+          </Fila>
+        ))}
         <Fila nombre={t.ficha.drones}>
           <Cifra
             t={t}

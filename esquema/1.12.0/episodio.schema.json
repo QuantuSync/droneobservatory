@@ -1,16 +1,16 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:eodi:esquema:1.11.0:episodio",
+  "$id": "urn:eodi:esquema:1.12.0:episodio",
   "title": "Episodio",
   "description": "Agrupa los incidentes de varios objetivos en la misma noche.",
-  "x-version": "1.11.0",
+  "x-version": "1.12.0",
   "type": "object",
   "additionalProperties": false,
   "required": ["id", "noche", "incidentes"],
   "properties": {
     "id": {"x-visibilidad": "publico", "type": "string", "pattern": "^EODI-EP-\\d{4}-\\d{4}$"},
-    "titulo": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.11.0:comun#/$defs/titulo"},
-    "noche": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.11.0:comun#/$defs/fecha"},
+    "titulo": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.12.0:comun#/$defs/titulo"},
+    "noche": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.12.0:comun#/$defs/fecha"},
     "incidentes": {
       "x-visibilidad": "publico",
       "type": "array",
@@ -21,7 +21,7 @@
     "deshecho": {
       "x-visibilidad": "interno",
       "description": "Episodio que las reglas ya no forman (nada se borra): sus incidentes no lo llevan.",
-      "$ref": "urn:eodi:esquema:1.11.0:comun#/$defs/instante"
+      "$ref": "urn:eodi:esquema:1.12.0:comun#/$defs/instante"
     }
   }
 }

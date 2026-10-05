@@ -107,3 +107,66 @@ describe("lugar.fuente_punto y lugar.otros_lugares", () => {
     }
   });
 });
+
+// Un lugar que no es el del dron (la casa alcanzada por un misil de la defensa) va entre los otros
+// lugares con la frase de su fuente, y el punto anterior queda con su motivo (lugar.historial).
+describe("lugar.otros_lugares[].fuente y lugar.historial", () => {
+  const MISIL = fuente({
+    id: "revisada-misil",
+    enlace: "https://www.gov.pl/web/po-lublin/umorzenie",
+    medio: "Prokuratura Okręgowa w Lublinie",
+    idioma: "pl",
+    fiabilidad: "A",
+    frase_origen: "uderzyła w dach budynku mieszkalnego w miejscowości Wyryki Wola.",
+  });
+  const HISTORIAL = [
+    {
+      fecha: { valor: "2026-10-05T19:00Z", precision: "minuto" as const },
+      anterior: { localidad: "Wyryki-Wola", punto: { lat: 51.5625, lon: 23.36389 }, radio_km: 2 },
+      motivo: { es: "Un misil de la defensa, no un dron.", en: "A defence missile, not a drone." },
+    },
+  ];
+  function corregido(lugar: Record<string, unknown> = {}) {
+    const base = conLugar();
+    return incidente({
+      fuentes: [...base.properties.fuentes, MISIL],
+      lugar: {
+        ...base.properties.lugar,
+        otros_lugares: [{ nombre: "Wyryki-Wola", punto: { lat: 51.5625, lon: 23.36389 }, fuente: MISIL.id }, ...OTROS],
+        historial: HISTORIAL,
+        ...lugar,
+      },
+    });
+  }
+
+  it("valida y rechaza lo que no cumple", () => {
+    expect(validarColeccion({ type: "FeatureCollection", features: [corregido()] }).ok).toBe(true);
+    for (const malo of [
+      { otros_lugares: [{ nombre: "Wyryki-Wola", fuente: "" }] },
+      { historial: [{ ...HISTORIAL[0], motivo: { es: "solo en español" } }] },
+      { historial: [{ ...HISTORIAL[0], anterior: { localidad: "Wyryki-Wola" } }] },
+    ]) {
+      expect(validarColeccion({ type: "FeatureCollection", features: [corregido(malo)] }).ok).toBe(false);
+    }
+  });
+
+  it("la ficha explica el lugar con su frase y dice el punto anterior con su motivo", () => {
+    for (const [t, idioma, motivo] of [
+      [es, "es", "Un misil de la defensa, no un dron."],
+      [en, "en", "A defence missile, not a drone."],
+    ] as const) {
+      const { container, unmount } = render(
+        <FichaIncidente t={t} idioma={idioma} incidente={detalleIncidente(corregido())} />,
+      );
+      const explicado = container.querySelector("[data-otro-lugar-explicado]");
+      expect(explicado?.textContent).toContain("Wyryki-Wola");
+      expect(explicado?.querySelector("blockquote")?.textContent).toBe(`«${MISIL.frase_origen}»`);
+      expect(explicado?.querySelector(`a[href="${MISIL.enlace}"]`)).not.toBeNull();
+      expect(container.querySelector("[data-otros-lugares]")?.textContent).toBe("Tulcea, Isaccea");
+      const anterior = container.querySelector("[data-punto-anterior]")?.parentElement;
+      expect(anterior?.textContent).toContain("Wyryki-Wola");
+      expect(anterior?.textContent).toContain(motivo);
+      unmount();
+    }
+  });
+});

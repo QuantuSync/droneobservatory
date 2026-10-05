@@ -1,0 +1,16 @@
+{
+  "descripcion": "Regla del punto principal de un incidente (recogida/revisados.py, ubicaciones): el punto es siempre un lugar donde estuvo o cayó el dron (restos hallados, caída, derribo, avistamiento sobre ese lugar). Un daño causado por la respuesta defensiva (un misil o una munición de la defensa, un avión que la dispara) nunca es el punto principal: va en «otros lugares» con la fuente que lo explica. Se comprueba sobre la frase de la autoridad que da el punto: si nombra la respuesta defensiva y no nombra el dron, el punto no se pone. Términos en minúsculas; cuentan como parte de una palabra.",
+  "respuesta_defensiva": [
+    "rakiet", "pocisk", "myśliwc", "f-35", "f-16",
+    "rachet", "rachetă",
+    "missile", "fighter jet",
+    "rakete", "flugkörper",
+    "ракет", "зенітн",
+    "ohjus", "robot", "missil"
+  ],
+  "dron": [
+    "dron", "drone", "drohne", "droon", "drooni",
+    "bezzałog", "bepilot", "bezpilot", "uav", "unmanned",
+    "безпілот", "беспилот", "бпла", "дрон", "шахед", "shahed", "gerber", "geran"
+  ]
+}

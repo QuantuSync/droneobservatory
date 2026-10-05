@@ -459,6 +459,7 @@ export const en: Textos = {
     lugar: "Place",
     lugarSegun: "Location per",
     otrosLugares: "Other places",
+    puntoAnterior: "Previous point",
     radio: (km) => `area of ${km} km radius`,
     drones: "Drones",
     duracion: "Duration",

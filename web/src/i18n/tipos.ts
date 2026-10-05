@@ -304,6 +304,8 @@ export interface Textos {
     lugarSegun: string;
     /** Fila con los demás lugares que nombra la autoridad. */
     otrosLugares: string;
+    /** Fila con el punto anterior cuando una corrección lo cambió, y por qué. */
+    puntoAnterior: string;
     radio: (km: string) => string;
     drones: string;
     duracion: string;

@@ -1,9 +1,9 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:eodi:esquema:1.11.0:configuracion_fuentes",
+  "$id": "urn:eodi:esquema:1.12.0:configuracion_fuentes",
   "title": "Configuración de fuentes",
   "description": "Fiabilidad fija por fuente según el código del Almirantazgo.",
-  "x-version": "1.11.0",
+  "x-version": "1.12.0",
   "type": "object",
   "additionalProperties": false,
   "required": ["version_esquema", "fuentes"],
@@ -24,7 +24,7 @@
             "type": "array",
             "items": {"type": "string", "minLength": 1}
           },
-          "fiabilidad": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.11.0:comun#/$defs/fiabilidad"},
+          "fiabilidad": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.12.0:comun#/$defs/fiabilidad"},
           "es_autoridad": {
             "x-visibilidad": "interno",
             "description": "Autoridad cuya confirmación o desmentido cambia el estado.",
