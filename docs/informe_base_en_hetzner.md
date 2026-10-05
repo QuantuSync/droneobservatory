@@ -1,7 +1,7 @@
 # La base de datos, de GitHub al disco del servidor
 
 Informe del cambio de dónde y cómo se guarda la base de datos del European Observatory of Drone
-Incidents. Código: [`almacen/sitio.py`](../almacen/sitio.py) y
+Incidents. En uso desde el 5 de octubre de 2026 a las 01:42 UTC (modo `disco`). Código: [`almacen/sitio.py`](../almacen/sitio.py) y
 [`almacen/copias.py`](../almacen/copias.py); operación: [`servidor.md`](servidor.md), apartado
 «Base de datos».
 
@@ -140,3 +140,135 @@ Esa publicación desde disco tardó 38 s con 0,73 GB de memoria residente.
 **Copia y restauración del ensayo.** La copia `ensayo/horaria/2026-10-04T175604Z.db.age` se
 restauró en otra carpeta (25 s, 0,2 GB de memoria): 1 109 729 280 bytes, integridad correcta y la
 misma huella de contenido que la base del ensayo (`976db535…4cc1b49`).
+
+Después del ensayo, antes de fusionar, se repitió el ensayo del paso c2 de
+[`fusiones.md`](fusiones.md) con el código ya rebasado sobre `main` (20:40 a 20:52 UTC, base de la
+rama en `a53a9b9`, modo disco, `--ensayo`, 1 GB): código 0, «ficheros publicados con cambios: 3»,
+11 min 35 s, 1 GB de pico y la copia de trabajo borrada al terminar.
+
+## Lo ocurrido en cada fase (horas UTC)
+
+**Espera.** La sesión de corrección de errores de datos terminó el 4 de octubre: su informe final
+con la comprobación en producción se fusionó a las 19:43 (#123), no le quedaba ningún PR abierto
+ni ningún trabajo en el servidor, y la lectura del histórico del canal de Mykoláiv, que empezó con
+su #121, acabó a las 19:50; las recogidas de las 19:17 y las 20:17 terminaron bien, publicaron y
+procesaron todo lo leído (`pendientes=False`). Mientras se esperaba, la recogida de las 16:17 falló
+por una ficha con fecha futura (no por el tamaño); lo arregló esa sesión (#118) y no se intervino.
+
+**Fase B: lo nuevo al lado de lo viejo.**
+
+- 20:55: fusión del código (#122, `42adfa7`), sin interruptor en el servidor. La recogida de las
+  21:17, la primera con el código nuevo en modo `github`, terminó bien en 13 min 32 s (5,0 GB) y
+  publicó; los incidentes de la web se quedaron en 508.
+- 21:40: interruptor en `doble`.
+
+| Recogida | Resultado | Duración | Pico (systemd) | Disco frente a rama (huella del contenido) | Incidentes en la web |
+| --- | --- | --- | --- | --- | ---: |
+| 22:17 | Correcta, publicó | 12 min 59 s | 5,0 GB | Iguales (`522eba59…`) | 508 |
+| 23:17 | Correcta, publicó | 12 min 57 s | 5,1 GB | Iguales (`1c5fed07…`) | 508 |
+| 00:17 | Correcta, publicó (5 incidentes del extractor) | 16 min 49 s | 5,6 GB | Iguales (`cdb1384f…`) | 510 |
+| 01:17 | Correcta, publicó | 14 min 24 s | 5,1 GB | Iguales (`4c6d080f…`) | 510 |
+
+La copia en disco tardó 1 s y la de seguridad 2 s en cada una; la de las 22:17 creó también la
+primera diaria y la primera semanal, y la de las 00:17, las del nuevo día y la nueva semana.
+
+**Fase C: el cambio.** A las 01:42:13, con la recogida de las 01:17 terminada a las 01:31, el
+cerrojo libre y la rama sin cambios desde la comparación, el interruptor pasó a `disco`.
+
+| Recogida | Resultado | Duración | Pico (systemd, con caché) | Memoria anónima máxima | Copia secundaria frente a disco | Incidentes en la web |
+| --- | --- | --- | --- | --- | --- | ---: |
+| 02:17 | Correcta, publicó | 13 min 15 s | 3,7 GB | — | Iguales (`1d8673d5…`) | 511 |
+| 03:17 | Correcta, publicó | 12 min 46 s | 3,3 GB | 0,85 GB (desde las 03:22) | Iguales (`0c0c6008…`) | 511 |
+| 04:17 | Correcta, publicó | 12 min 59 s | 3,3 GB | 0,87 GB | Iguales (`1bac0bc8…`) | 511 |
+| 05:17 | Correcta, publicó | 12 min 53 s | 3,3 GB | 0,84 GB | Iguales (`0b075e9a…`) | 511 |
+
+Guardar la base en disco tarda 1 o 2 s; cifrarla y subir la copia de seguridad, unos 55 s, y la
+copia secundaria a la rama, unos 10 s más. El pico que da systemd incluye la caché de los
+ficheros que se escriben (la copia de trabajo, la base nueva y su versión comprimida, de más de
+1 GB cada una), que el sistema libera cuando necesita memoria; la memoria propia del proceso
+(anónima, medida cada 10 s en el grupo de la unidad) no pasa de 0,9 GB. Con la base en memoria,
+la recogida llegaba a 5,0 a 5,6 GB.
+
+Los lectores también bajan: el motor de deducción, de 2,3 GB a 1,6 GB de pico (01:05 frente a
+02:05, y más rápido: 67 s frente a 77 s); el catálogo vivo, de 1,9 GB (4 de octubre) a 1,2 GB
+(5 de octubre). La exportación semanal de las 03:47 leyó la base del disco, pero no publicó la
+versión 2026.10.05 por un fallo anterior a este cambio (apartado de pendientes).
+
+## Prueba de restauración
+
+El 5 de octubre a las 05:42, la última copia del almacén (`base/horaria/2026-10-05T052842Z.db.age`,
+55,4 MB cifrada) se restauró en una carpeta aparte con `servidor/base.sh copias restaurar
+--huella`: comprobación de su SHA-256, descifrado, integridad de SQLite correcta, 1 190 711 296
+bytes (el mismo tamaño que la base en uso) y la misma huella de contenido que
+`/home/eodi/base/eodi.sqlite`: `0b075e9a5bf7f63f0b01f90278404038ae2341c64687ed7874f9ca206be88f3e`.
+Tardó 29 s con 0,2 GB de memoria.
+
+## Cómo volver atrás
+
+Desde el modo `disco`, con una orden, justo después de una recogida terminada y fuera de los
+minutos 12 a 40:
+
+```
+echo github | sudo -u eodi tee /home/eodi/.eodi/base_modo
+```
+
+La recogida siguiente vuelve a descargar la base de la rama `estado`, que está al día mientras la
+copia secundaria funcione (en el diario de cada recogida: «copia secundaria subida a la rama
+estado»). Si no lo estuviera, antes de cambiar el interruptor:
+`sudo -u eodi bash /home/eodi/droneobservatory/servidor/base.sh a-github`. Si la base del disco
+se hubiera estropeado: restaurar la última copia buena (apartado anterior) o usar
+`/home/eodi/base/eodi.anterior.sqlite`, subirla con `a-github` y cambiar el interruptor. El código
+de antes no hace falta: en el modo `github` hace exactamente lo de antes.
+
+## Lo lanzado en el servidor
+
+Todo con `systemd-run` y retirado al terminar, salvo lo que debe quedar:
+
+- Carpetas `/home/eodi/base` y `/home/eodi/base/trabajo` (quedan) y el interruptor
+  `/home/eodi/.eodi/base_modo`, hoy `disco` (queda).
+- Bucket privado `droneobservatory-base` (queda), con las copias de `base/`; las tres del ensayo
+  (`ensayo/`) se borraron.
+- `eodi-ensayo-base`, `eodi-ensayo-republicar`, `eodi-ensayo-restaurar`, `eodi-ensayo-c2`,
+  `eodi-ensayo-exportacion` (con `--sin-subir`): ensayos con 1 GB, en `/home/eodi/ensayo-base`,
+  borrada después (11 GB).
+- `eodi-base-comparar-22` a `-05` y `eodi-restauracion-real`: comprobaciones de solo lectura con
+  1 GB.
+- `eodi-medir-0317`, `eodi-medir-0417`, `eodi-medir-0517` (y un primer intento fallido,
+  `eodi-medir-recogida`): lectura de la memoria del grupo de la recogida cada 10 s. Sus
+  temporizadores se pararon y el script y sus ficheros se borraron.
+
+No queda nada de esto en marcha: solo las unidades de siempre.
+
+## Pendientes, con su arreglo
+
+- **La exportación semanal no valida desde el 4 de octubre** («valor sin origen: EODI-2025-00058:
+  sin origen en consecuencias.cierre.valor»): el cierre de pista que se guarda desde el commit
+  `5718514` no tiene regla de origen en la exportación. Falla igual con la base leída de la rama
+  en memoria (comprobado el 5 de octubre con la misma base), así que no viene de este cambio, y
+  este encargo no cambia la exportación. Arreglo: añadir el origen de `consecuencias.cierre.valor`
+  en `exportacion/procedencia.py` (como se hizo con otros campos nuevos) y lanzar la exportación a
+  mano (`sudo systemctl start eodi-exportacion.service`). Si no se arregla, el vigía abrirá la
+  incidencia «La exportación semanal no se genera» a los 8 días de la última correcta.
+- **Retirar la base de GitHub** cuando lleve una semana funcionando en disco (desde el 12 de
+  octubre de 2026). Planteado, sin hacer: dejar de subir la copia secundaria (quitar la llamada a
+  `remoto.subir` de `sitio.guardar_base` en modo disco), cambiar el workflow de emergencia
+  `recogida.yml` para que restaure la última copia del almacén en vez de leer la rama (o
+  retirarlo), y el workflow `historico-gdelt` para que su `incorporar` trabaje sobre la base del
+  servidor; después, borrar la rama `estado` con el acuerdo de quien lleva el proyecto, porque es
+  irreversible.
+- **Llevar al almacén de Hetzner los datos publicados cada hora.** Planteado, sin hacer: hoy son
+  commits «Actualiza los datos publicados» en `main` (unos 38 MB por hora; la web los toma al
+  desplegarse). Arreglo propuesto: subirlos al almacén público como `estado.json` (con
+  `recogida/almacen_publico.py`), que la web los lea de allí y dejar de hacer el commit; cambia la
+  web y su CSP, por eso queda para un encargo propio.
+- **Llevar la exportación semanal al almacén.** Planteado, sin hacer: hoy va cifrada a `main` del
+  repositorio de datos con su etiqueta, y AEGIS la importa de allí. Arreglo propuesto: un bucket
+  privado o un prefijo del de copias, con el mismo cifrado y el manifiesto, y cambiar el
+  importador de AEGIS a la vez.
+- **Pico de memoria con caché.** systemd sigue dando unos 3,3 GB de pico por la caché de los
+  ficheros grandes que se escriben al final. No es memoria que falte, pero si se quisiera bajar
+  la cifra: escribir la base nueva y su versión comprimida con `posix_fadvise(DONTNEED)` o poner a
+  la unidad `MemoryHigh` para que el sistema recupere antes esa caché.
+- **`instalar.sh` crea la carpeta de la base** para un servidor nuevo; en el actual se creó a mano
+  el 4 de octubre con los mismos permisos. Se aplica en la próxima `reconstruir.sh`, sin nada más
+  que hacer.

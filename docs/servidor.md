@@ -129,7 +129,7 @@ si cambian `instalar.sh`, `endurecer.sh` o `configuracion.sh`, hay que volver a 
 ## Base de datos
 
 Informe: [`informe_base_en_hetzner.md`](informe_base_en_hetzner.md). La base es un fichero
-SQLite. Dónde manda y cómo se abre lo decide un solo interruptor, el fichero
+SQLite. **Modo en uso: `disco`, desde el 5 de octubre de 2026 a las 01:42 UTC.** Dónde manda y cómo se abre lo decide un solo interruptor, el fichero
 `/home/eodi/.eodi/base_modo` con una palabra ([`almacen/sitio.py`](../almacen/sitio.py)):
 
 | Modo | Qué base manda | Qué más se hace al guardar |
