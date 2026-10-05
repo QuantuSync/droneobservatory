@@ -5358,6 +5358,21 @@
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
+       "valor": "2025-08-11T16:45Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-d28ec47788961e78",
+      "medio": "sueddeutsche.de",
+      "valor": {
+       "max": 30,
+       "min": 30
+      }
+     },
+     {
+      "campo": "consecuencias.cierre.minutos",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
        "valor": "2025-08-11T23:15Z"
       },
       "fiabilidad": "C",
@@ -5378,6 +5393,18 @@
       "fiabilidad": "B",
       "fuente_id": "adsblol-EDDF-2025-08-11-EODI-2025-00022",
       "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": "si"
+     },
+     {
+      "campo": "consecuencias.cierre.valor",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-08-11T16:45Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-d28ec47788961e78",
+      "medio": "sueddeutsche.de",
       "valor": "si"
      },
      {
@@ -5412,6 +5439,21 @@
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
+       "valor": "2025-08-11T16:45Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-d28ec47788961e78",
+      "medio": "sueddeutsche.de",
+      "valor": {
+       "max": 4,
+       "min": 4
+      }
+     },
+     {
+      "campo": "consecuencias.vuelos_desviados",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
        "valor": "2025-08-11T23:15Z"
       },
       "fiabilidad": "C",
@@ -5436,6 +5478,18 @@
        "max": 1,
        "min": 1
       }
+     },
+     {
+      "campo": "lugar.pais",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-08-11T16:45Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-d28ec47788961e78",
+      "medio": "sueddeutsche.de",
+      "valor": "DE"
      },
      {
       "campo": "lugar.pais",
@@ -5475,6 +5529,32 @@
      },
      {
       "campo": "presencia_dron",
+      "cita": "Luftverkehr: Vier Flieger nach Drohnenmeldung in Frankfurt umgeleitet",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-08-11T16:45Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-80e54d9aebe831d6",
+      "medio": "zeit.de",
+      "valor": "confirmada"
+     },
+     {
+      "campo": "presencia_dron",
+      "cita": "Ein Pilot meldet das Flugobjekt, dann greift eine übliche Sicherheitsvorkehrung.",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-08-11T16:45Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-d28ec47788961e78",
+      "medio": "sueddeutsche.de",
+      "valor": "no_confirmada"
+     },
+     {
+      "campo": "presencia_dron",
       "cita": "Der Pilot eines Flugzeuges meldete eine Drohne, die er im Luftraum des Flughafens in Frankfurt entdeckt hatte.",
       "credibilidad": 3,
       "fecha": {
@@ -5504,6 +5584,21 @@
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
+       "valor": "2025-08-11T16:45Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-08c836742aa6cca2",
+      "medio": "welt.de",
+      "valor": {
+       "precision": "minuto",
+       "valor": "2025-08-11T14:30Z"
+      }
+     },
+     {
+      "campo": "tiempo.fin",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
        "valor": "2025-08-11T23:15Z"
       },
       "fiabilidad": "C",
@@ -5512,6 +5607,21 @@
       "valor": {
        "precision": "minuto",
        "valor": "2025-08-11T15:00Z"
+      }
+     },
+     {
+      "campo": "tiempo.inicio",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-08-11T16:45Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-08c836742aa6cca2",
+      "medio": "welt.de",
+      "valor": {
+       "precision": "minuto",
+       "valor": "2025-08-11T14:00Z"
       }
      },
      {
@@ -5528,6 +5638,18 @@
        "precision": "minuto",
        "valor": "2025-08-11T14:30Z"
       }
+     },
+     {
+      "campo": "tipo",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-08-11T16:45Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-d28ec47788961e78",
+      "medio": "sueddeutsche.de",
+      "valor": "interrupcion_aeroportuaria"
      },
      {
       "campo": "tipo",
@@ -5558,7 +5680,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-04T11:17Z"
+      "valor": "2026-10-05T11:17Z"
      }
     },
     "drones": {
@@ -5581,6 +5703,48 @@
      ]
     },
     "fuentes": [
+     {
+      "credibilidad": 3,
+      "enlace": "https://welt.de/regionales/hessen/article689a1897a4a1a521b7dd4236/Vier-Flieger-nach-Drohnenmeldung-in-Frankfurt-umgeleitet.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-08-11T16:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "So sei es auch in diesem Fall am Montagnachmittag geschehen.",
+      "id": "gdelt-08c836742aa6cca2",
+      "idioma": "de",
+      "medio": "welt.de",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://zeit.de/news/2025-08/11/vier-flieger-nach-drohnenmeldung-in-frankfurt-umgeleitet",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-08-11T16:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Luftverkehr: Vier Flieger nach Drohnenmeldung in Frankfurt umgeleitet",
+      "id": "gdelt-80e54d9aebe831d6",
+      "idioma": "de",
+      "medio": "zeit.de",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://sueddeutsche.de/wirtschaft/luftverkehr-vier-flieger-nach-drohnenmeldung-in-frankfurt-umgeleitet-dpa.urn-newsml-dpa-com-20090101-250811-930-900109",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-08-11T16:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Ein Pilot meldet das Flugobjekt, dann greift eine übliche Sicherheitsvorkehrung.",
+      "id": "gdelt-d28ec47788961e78",
+      "idioma": "de",
+      "medio": "sueddeutsche.de",
+      "replicas": 0
+     },
      {
       "credibilidad": 3,
       "enlace": "https://bild.de/regional/frankfurt/frankfurt-drohne-legt-deutschlands-groessten-flughafen-still-689a19f66fbe021a8512fb2f",
