@@ -113,6 +113,14 @@ Antes de fusionar: la puerta local (`pytest`, `ruff check`, `ruff format --check
 `mypy --strict` y la exportación de ensayo `python -m tests.base_prueba --salida <carpeta>`,
 comando a comando) y el workflow de tests, en verde.
 
+**Ensayos y trabajos en el servidor.** Un ensayo del paso c2 lanzado en el servidor, o cualquier
+otro trabajo de una sesión allí, sigue las normas de [`servidor.md`](servidor.md), apartado
+«Trabajos de las sesiones en el servidor»: desde el 5 de octubre de 2026, 3 GB como mucho por
+trabajo y 4 GB entre todos los de las sesiones en marcha, a cualquier hora (también durante la
+recogida), con prioridad baja de procesador y de disco, `OOMScoreAdjust=1000`, uno por sesión y
+sin el cerrojo de la recogida. Las fusiones, en cambio, siguen sin hacerse entre los minutos 12 y
+40 (paso f).
+
 Después de fusionar conviene comprobar el autor:
 
 ```

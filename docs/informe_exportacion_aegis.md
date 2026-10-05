@@ -1,6 +1,6 @@
 # Exportación semanal para AEGIS
 
-Fecha: 1 de octubre de 2026. PR #29 (código) y este (primera versión y comprobaciones); en AEGIS, PR #41.
+Fecha: 1 de octubre de 2026. PR #29 (código) y #34 (primera versión y comprobaciones); en AEGIS, PR #41. Apartado 9 (5 de octubre de 2026): la exportación que no se generó, #125.
 
 Una vez por semana, el servidor de recogida genera una versión interna y completa de la base
 del European Observatory of Drone Incidents, cifrada, que solo puede leer AEGIS, y la sube al
@@ -414,3 +414,107 @@ Sin construir nada; lo que habría que añadir para usar la versión importada e
   blancos en lugar de siete, y separar las cifras ucranianas (`oficial`) de las rusas
   (`parte`), que la procedencia ya distingue. El alcance de AEGIS (detección, no respuesta) se
   mantiene: esto serviría para medir detección y saturación.
+
+## 9. La exportación del 5 de octubre de 2026 no se generó
+
+**Qué pasó.** La exportación del lunes 5 de octubre a las 03:47 UTC terminó con «la versión
+2026.10.05 no valida y no se publica: valor sin origen: EODI-2025-00058: sin origen en
+consecuencias.cierre.valor». La última correcta era la 2026.10.04.
+
+**Causa.** El cambio del cierre de pista (commit `5718514`, corrección de errores de datos del 4
+de octubre) registra como cierre (`consecuencias.cierre.valor` = «si») el de una pista que la
+fuente cuenta cerrada o suspendida por un dron, aunque ninguna ficha del extractor lo diga. Ese
+valor lo pone una regla (`proceso/presencia.cierre_de_pista`), sin afirmación detrás, y la
+exportación no tenía regla de origen para él: no lo podía atribuir a ninguna fuente y, como manda
+el apartado 3, la versión entera no valida. Reproducido sobre una copia de la base real (rama
+`estado`, 5 de octubre, recogida de las 06:17): mismo error. Recorriendo todos los incidentes sin
+parar en el primero, solo ese campo falla, en 5 incidentes: EODI-2025-00058 (Schiphol),
+2025-00203, 2025-00332, 2025-00413 y 2026-00022. No tiene que ver con el paso de la base al
+disco: falla igual con la base cargada en memoria.
+
+**Arreglo** (#125). El valor sale de las fuentes cuya frase cuenta el cierre de la pista por un
+dron (la misma comprobación que hace la regla, que `proceso/presencia.respaldo_cierre_de_pista`
+expone para las dos) y, si solo lo cuenta el titular, de las noticias de que sale el titular; con
+el origen de mayor rango de esas fuentes y método `regla`, como los demás valores que calcula el
+código. En la base real, los 5 salen `prensa` por `regla`, con su fuente (EODI-2025-00413, con
+siete).
+
+**Campos revisados** (los añadidos desde el 1 de octubre, comparando el esquema 1.11.0 de ahora
+con el 1.8.0 de la versión 2026.10.04):
+
+| Campo | Origen en la exportación | Estado |
+| --- | --- | --- |
+| `consecuencias.cierre.valor` por cierre de pista | las fuentes que lo cuentan, `regla` | Sin regla: era la causa. Arreglado |
+| `presencia_dron` con el criterio nuevo (actuación de la autoridad, `presencia/2`) | la fuente de la afirmación de presencia que deja la regla, `regla` | Bien: 110 `oficial_citado`, 102 `prensa` y 1 `oficial` en la versión 2026.10.05 |
+| `atribucion.tipo` y `atribucion.pais` | los del bloque `atribucion` (un solo valor): la fuente del paso a atribuido | Bien. Hoy ningún incidente activo está atribuido (las 4 atribuciones se retiraron el 4 de octubre) |
+| `investigacion` | las declaraciones citadas que la dan, `regla` | Bien; ningún incidente activo la lleva hoy |
+| Cruce declarado por Ucrania (`cruces[].frase`, `cruces_parte`) | el parte, `parser` | Bien |
+| Enlace entre incidente y ataque: `incidente.ataque` | `deducido`, `regla` | Bien (124 incidentes) |
+| Enlace en el otro sentido: `cruces[].incidentes` del ataque | Salía como si lo leyera el parser | Ahora `deducido`, `regla`, como el inverso (72 ataques) |
+| Parte de resumen (`resumen`) | Salía como `parser` | Ahora `regla`, del periodo (hoy ningún parte lo es) |
+| `zonas_lanzamiento` normalizadas y `zonas_lanzamiento_citadas` | el parte, `parser` | Bien |
+| `perdida_luz` del ataque | `medido`, `regla` | Bien |
+| Impactos de guerra: víctimas por fuente (`lecturas[].victimas`), niveles `comunidad` y `distrito` | las fuentes del impacto | Bien |
+| Motivo de un cambio de estado (`estado.historial[].motivo`) | dentro del valor `estado` | Bien |
+| Cifras oficiales de contexto de España (`contexto_pais.jsonl`, de `configuracion/cifras_contexto.json`) | cada cifra con su origen y método `transcripcion` | Bien: 8 cifras de España |
+
+**Para que no se repita.**
+
+- **Base de prueba en la CI.** [`tests/base_prueba.py`](../tests/base_prueba.py) guarda un ejemplo
+  de cada campo del esquema y pasa por las mismas revisiones de la recogida que ponen valores por
+  regla (periodos de los partes, presencia y cierre de pista, cruces con su ataque). El workflow
+  de tests exporta sobre ella en ensayo, sin subir nada (`python -m tests.base_prueba --salida
+  …`, con una clave age de usar y tirar), y
+  [`tests/test_exportacion_completa.py`](../tests/test_exportacion_completa.py) comprueba que la
+  base cubre todo el esquema (un campo nuevo sin ejemplo hace fallar la CI), que ningún valor se
+  queda sin origen y el origen de cada campo de la tabla anterior. Probado en una rama aparte, sin
+  fusionar y ya borrada, quitándole al cierre de pista su regla de origen: la CI falla con «sin
+  origen en consecuencias.cierre.valor» (ejecución 37279815561 del workflow de tests).
+- **En el ensayo antes de fusionar.** `python -m recogida.horaria --base … --ensayo <carpeta>`
+  (paso c2 de [`fusiones.md`](fusiones.md)) genera ahora también la exportación sobre la base que
+  deja la propia recogida, sin subirla (`<carpeta>/exportacion/`), y sale con 1 si no valida. El
+  ensayo del #125, sobre la copia de la base real, terminó con código 0, «ficheros publicados con
+  cambios: 3» y la exportación generada.
+- **Aviso en el momento.** Si la exportación falla, `servidor/exportacion.sh` lo anota en
+  `/home/eodi/.eodi/exportacion.json` (`fallo`: hora y código, sin tocar la última correcta); la
+  recogida siguiente lo publica en `estado.json` (`exportacion_fallida`, solo mientras sea
+  posterior a la última correcta) y el workflow `vigia-recogida` abre en su pasada del minuto 41
+  la incidencia «La exportación semanal no se genera», por el mismo cauce que los demás
+  servicios. El aviso de los 8 días sigue. La web acepta el campo nuevo de `estado.json`
+  (comprobado en producción con el campo añadido a la respuesta: la lee igual).
+
+**Versión 2026.10.05.** Lanzada a mano en el servidor el 5 de octubre a las 08:40 UTC, después de
+la recogida de las 08:17 (la primera con el código del #125, que terminó bien y publicó), con la
+orden de `servidor.md` (`sudo systemctl start eodi-exportacion.service`): 2 min, código 0, 2,4 GB
+de pico con caché (1,2 GB de memoria propia). Subida a `exportaciones/2026.10.05/` con la etiqueta
+`eodi-2026.10.05` (commit `d8bea8d`, autor anónimo).
+
+- Huella del manifiesto: `177c126cd07b4faf1c77e915eed6606fc92e02d0f9fa5bb6f47b461abb209bd1`
+  (la misma en el registro del servidor y en lo descargado).
+- Fecha de corte 2026-10-05T08:28:06Z; esquema 1.11.0, formato 1.4.0, lógica `ficha/5`,
+  vocabulario 1.4.0. 52 ficheros, 160 MB en claro.
+- Descargada con la clave de despliegue de solo lectura «aegis-lectura», como el importador de
+  AEGIS, fuera de los repositorios: las 52 huellas, cifradas y en claro, coinciden y todo se
+  descifra con la clave de lectura. 880 incidentes, 511 activos (los mismos que sirve la web):
+  272 sobrevuelos, 137 incursiones y 102 interrupciones de aeropuerto; 218 confirmados, 287
+  notificados y 6 desmentidos; nivel A 1, B 20, C 209 y D 281. Ningún valor sin origen; de los
+  valores de los activos, 7.407 `prensa`, 1.111 `medido`, 1.077 `oficial_citado`, 789
+  `registro`, 635 `deducido` y 83 `oficial`. 4.614 ataques, 14.012 impactos de guerra y 107.246
+  afirmaciones.
+- Lo descifrado para comprobarlo se leyó en memoria, y las copias descargadas se borraron al
+  terminar.
+
+**Pendiente en AEGIS, con su arreglo** (este encargo no toca el repositorio de AEGIS). El
+importador (`tools/import_eodi.py`) es genérico: comprueba las huellas del manifiesto y descifra
+todos los ficheros que lista, así que importa la 2026.10.05 sin cambios; el vocabulario sigue en
+la 1.4.0, la misma que su copia, y los orígenes de la procedencia ya estaban en él. Lo que todavía
+no usa:
+
+- `contexto_pais.jsonl` (cifras oficiales de contexto por país): llega a
+  `data/droneobservatory/<versión>/`, pero el resumen no lo lee. Arreglo: leerlo junto a
+  `frecuencias.json` para normalizar por país, sin sumarlo nunca a los incidentes.
+- Los campos nuevos del incidente (`ataque`, `investigacion`, `atribucion.tipo` y `.pais`) y del
+  ataque (`cruces[].incidentes`, `cruces_parte`, `resumen`, `perdida_luz`): llegan dentro de los
+  documentos, pero el importador no los resume. Arreglo: contar en el resumen los incidentes
+  enlazados con un ataque y apartar los partes de resumen (`resumen: true`) para no sumarlos con
+  los diarios.

@@ -118,7 +118,8 @@ def test_una_copia_alterada_no_se_restaura(
     cliente.guardar(cifrada, LUNES)
     clave_objeto = "base/horaria/2026-10-05T031700Z.db.age"
     cuerpo, meta = s3.objetos[clave_objeto]
-    s3.objetos[clave_objeto] = (cuerpo[:-1] + b"!", meta)
+    # Cambia de verdad el último byte (sustituirlo por uno fijo no lo cambia si ya era ese).
+    s3.objetos[clave_objeto] = (cuerpo[:-1] + bytes([cuerpo[-1] ^ 1]), meta)
     with pytest.raises(OSError, match="huella"):
         cliente.restaurar(tmp_path / "r.sqlite")
 

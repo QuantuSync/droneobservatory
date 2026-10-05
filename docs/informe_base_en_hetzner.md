@@ -241,14 +241,10 @@ No queda nada de esto en marcha: solo las unidades de siempre.
 
 ## Pendientes, con su arreglo
 
-- **La exportación semanal no valida desde el 4 de octubre** («valor sin origen: EODI-2025-00058:
-  sin origen en consecuencias.cierre.valor»): el cierre de pista que se guarda desde el commit
-  `5718514` no tiene regla de origen en la exportación. Falla igual con la base leída de la rama
-  en memoria (comprobado el 5 de octubre con la misma base), así que no viene de este cambio, y
-  este encargo no cambia la exportación. Arreglo: añadir el origen de `consecuencias.cierre.valor`
-  en `exportacion/procedencia.py` (como se hizo con otros campos nuevos) y lanzar la exportación a
-  mano (`sudo systemctl start eodi-exportacion.service`). Si no se arregla, el vigía abrirá la
-  incidencia «La exportación semanal no se genera» a los 8 días de la última correcta.
+- **La exportación semanal no validaba desde el 4 de octubre**: resuelto el 5 de octubre de 2026
+  (#125). El cierre de pista ya tiene regla de origen y la versión 2026.10.05 se generó a mano a
+  las 08:40 UTC con la base del disco; detalle en
+  [`informe_exportacion_aegis.md`](informe_exportacion_aegis.md), apartado 9.
 - **Retirar la base de GitHub** cuando lleve una semana funcionando en disco (desde el 12 de
   octubre de 2026). Planteado, sin hacer: dejar de subir la copia secundaria (quitar la llamada a
   `remoto.subir` de `sitio.guardar_base` en modo disco), cambiar el workflow de emergencia

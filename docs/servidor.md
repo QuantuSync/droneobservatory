@@ -11,6 +11,7 @@ cero con una sola orden.
 | --- | --- |
 | Servidor | `eodi-recogida`, tipo CX33 (4 núcleos compartidos, 8 GB de memoria, 80 GB de disco), Núremberg (`nbg1`), Ubuntu 26.04 LTS, IPv4 2.28.197.102 |
 | Cortafuegos de Hetzner | `eodi-recogida`: solo entra SSH (TCP 22); lo demás, cerrado |
+| Copias de Hetzner | Imagen diaria del servidor entero, siete guardadas, ventana de 22:00 a 02:00 UTC (desde el 5 de octubre de 2026; apartado «Copias del servidor en Hetzner») |
 | Usuario `eodi` | Ejecuta el observatorio. Sin privilegios, sin contraseña y sin entrada por SSH |
 | Usuario `operador` | Administra: entra por SSH con clave y usa `sudo` |
 | SSH | Solo con clave, sin contraseña y sin root |
@@ -177,14 +178,16 @@ siguiente; no hay que reiniciar nada. Antes de pasar a `disco`, la base del disc
 igual a la de la rama (lo deja así la escritura doble):
 
 ```
-sudo systemd-run --unit=eodi-base-comparar --uid=eodi --gid=eodi -p MemoryMax=1G -p Nice=19 \
-  -p IOSchedulingClass=idle /usr/bin/env bash /home/eodi/droneobservatory/servidor/base.sh comparar
+sudo systemd-run --unit=eodi-base-comparar --uid=eodi --gid=eodi -p MemoryMax=3G -p Nice=19 \
+  -p IOSchedulingClass=idle -p OOMScoreAdjust=1000 \
+  /usr/bin/env bash /home/eodi/droneobservatory/servidor/base.sh comparar
 journalctl -u eodi-base-comparar -n 20                     # "iguales": true
 ```
 
 `comparar` descarga la rama y la descifra en `base/trabajo/` sin cargarla entera en memoria; sale
 con 0 si las dos bases tienen el mismo contenido (huella de todas las filas de todas las tablas) y
-con 3 si no. Tarda unos minutos: fuera de los minutos 15 a 40.
+con 3 si no. Tarda unos minutos; es un trabajo de sesión (apartado «Trabajos de las sesiones en
+el servidor»).
 
 **Volver atrás** desde `disco`: `echo github | sudo -u eodi tee /home/eodi/.eodi/base_modo`.
 Si la copia secundaria de la rama está al día (en el diario, «copia secundaria subida a la rama
@@ -459,7 +462,7 @@ reconstrucción de los incidentes. El informe queda en `/home/eodi/dirigido-info
 
 ```
 sudo systemd-run --unit=eodi-dirigido-lectura --uid=eodi --gid=eodi -p Nice=19 \
-  -p IOSchedulingClass=idle -p MemoryMax=900M \
+  -p IOSchedulingClass=idle -p MemoryMax=900M -p OOMScoreAdjust=1000 \
   --setenv=EODI_BUSQUEDA_DATOS=/home/eodi/datos/busqueda \
   --working-directory=/home/eodi/droneobservatory \
   /home/eodi/droneobservatory/.venv/bin/python -m recogida.barrido_dirigido leer --hilos 2
@@ -549,10 +552,12 @@ sudo -u eodi tail -n 5 /home/eodi/datos/directo/avisos_historial.jsonl
 ```
 
 **Reproducir días pasados** con las trazas guardadas del archivo (para ajustar umbrales; no toca
-nada del servicio):
+nada del servicio). Es un trabajo de sesión: corre a cualquier hora, con las normas del apartado
+«Trabajos de las sesiones en el servidor»:
 
 ```
-sudo systemd-run --unit=eodi-directo-reproduccion --uid=eodi --gid=eodi --nice=10 \
+sudo systemd-run --unit=eodi-directo-reproduccion --uid=eodi --gid=eodi -p MemoryMax=3G \
+  -p Nice=19 -p IOSchedulingClass=idle -p OOMScoreAdjust=1000 \
   --working-directory=/home/eodi/droneobservatory /home/eodi/droneobservatory/.venv/bin/python \
   -m recogida.directo_reproduccion 2025-09-22 --datos /home/eodi/datos/trafico \
   --salida /home/eodi/datos/directo/reproduccion.jsonl
@@ -693,6 +698,86 @@ sudo systemd-run --unit=eodi-satelite-historico --uid=eodi --gid=eodi -p MemoryM
   -p Nice=15 -p IOSchedulingClass=idle /usr/bin/env bash /home/eodi/droneobservatory/servidor/satelite.sh
 ```
 
+## Trabajos de las sesiones en el servidor
+
+Normas para lo que lanza a mano una sesión de trabajo en el servidor: ensayos, reprocesos,
+comparaciones, restauraciones de prueba, históricos lanzados con `systemd-run`, mediciones. No se
+aplican a la recogida horaria ni a los servicios con su propio temporizador, que llevan sus
+límites en sus unidades. En vigor desde el 5 de octubre de 2026 (antes: 1 GB y nunca entre los
+minutos 15 y 40, cuando la base se cargaba entera en memoria y la recogida llegaba a 5 GB).
+
+- **Tope de memoria: 3 GB por trabajo** (`-p MemoryMax=3G`).
+- **Entre todos los trabajos de sesiones en marcha a la vez, 4 GB como mucho.** Antes de lanzar
+  uno se mira qué hay: `systemctl list-units 'eodi-*' --state=running` y la memoria de cada uno
+  (`systemctl show <unidad> -p MemoryCurrent`).
+- **A cualquier hora**, también durante la recogida horaria.
+- **Prioridad baja de procesador y de disco** (`-p Nice=19 -p IOSchedulingClass=idle`) y **el
+  primero en morir si faltara memoria** (`-p OOMScoreAdjust=1000`): en el peor caso medido, el
+  sistema para el trabajo de la sesión, nunca la recogida.
+- **Uno solo por sesión.**
+- **Sin el cerrojo de la recogida** (`/home/eodi/.eodi/recogida.lock`): un trabajo de sesión no lo
+  toma ni lo retiene; si necesita la base sin que cambie, trabaja sobre una copia (en el modo
+  `disco`, la copia de trabajo que hace `almacen/sitio.py`, o una copia restaurada).
+- **Las fusiones**, en cambio, siguen sin hacerse entre los minutos 12 y 40
+  ([`fusiones.md`](fusiones.md)).
+
+Forma de lanzarlo, como `operador`:
+
+```
+sudo systemd-run --unit=eodi-<sesion>-<trabajo> --uid=eodi --gid=eodi \
+  -p MemoryMax=3G -p Nice=19 -p IOSchedulingClass=idle -p OOMScoreAdjust=1000 \
+  --working-directory=/home/eodi/droneobservatory <orden>
+journalctl -u eodi-<sesion>-<trabajo> -n 40                # al terminar, el pico en «memory peak»
+```
+
+**Por qué 3 GB y 4 GB: medidas del 5 de octubre de 2026.** El servidor tiene 7,7 GB y no tiene
+espacio de intercambio.
+
+Pico de cada recogida según systemd (incluye la caché de los ficheros que escribe, que el sistema
+libera cuando hace falta), últimas 12 recogidas:
+
+| Recogidas | Base | Pico (systemd) | Duración |
+| --- | --- | --- | --- |
+| 4 de octubre, 22:17 y 23:17; 5 de octubre, 00:17 y 01:17 | En memoria (modo `doble`) | 5,0 a 5,6 GB | 13 a 17 min |
+| 5 de octubre, 02:17 | En disco, primera | 3,7 GB | 13 min |
+| 5 de octubre, 03:17 a 09:17 (7) | En disco | 3,3 GB | 12 min 46 s a 13 min |
+
+Memoria propia (anónima, sin caché) de cada unidad, medida cada 10 s en su grupo de systemd del
+5 de octubre de 07:32 a 09:31 (recogidas de las 08:17 y 09:17, exportación semanal lanzada a las
+08:40) y, para lo que no corrió en esa ventana, el pico de systemd (con caché, es una cota por
+arriba):
+
+| Unidad | Cuándo corre | Memoria propia máxima | Pico systemd (con caché) |
+| --- | --- | ---: | ---: |
+| `eodi-recogida` | Minuto 17, unos 13 min | 0,82 GB | 3,3 GB |
+| `eodi-exportacion` | Lunes 03:47 (nunca con la recogida: mismo cerrojo) | 1,2 GB | 2,4 GB |
+| `eodi-deduccion` | Minuto 5, 1 a 7 min | 0,54 GB | 1,6 a 2,2 GB |
+| `eodi-catalogo` | 05:23, unos 5 min (coincide con la recogida de las 05:17) | — | 1,2 GB |
+| `eodi-luces` | Minuto 41, hasta 29 min | 0,48 GB | 0,49 a 0,54 GB |
+| `eodi-directo` | Siempre | 0,39 GB | 0,47 GB |
+| `eodi-trafico` | Minuto 40, hasta 50 min (coincide con la recogida) | 0,25 GB | 0,32 GB |
+| `eodi-detalle` | Cada pocas horas, unos 5 min | 0,18 GB | 0,34 GB |
+| `eodi-focos-vivo` | Minuto 42, segundos | — | 0,27 a 0,40 GB |
+| `eodi-busqueda` | Minuto 2, segundos | — | 0,21 GB |
+| `eodi-guerra` | Minuto 50, 2 a 15 min | 0,10 GB | 0,10 GB |
+| `eodi-satelite` | 06:43 y 18:43, 6 min | — | 0,06 GB |
+| `eodi-seguimiento` | Siempre | 0,02 GB | 0,03 GB |
+
+Memoria disponible del sistema (la que el sistema puede dar sin matar nada, `MemAvailable`):
+6,5 GB sin recogida; **5,5 GB como mínimo durante las dos recogidas** (con directo, seguimiento y
+tráfico al lado); 5,1 GB durante la exportación. Es decir, lo que ocupan la recogida y los
+servicios que coinciden con ella llega a 2,2 GB.
+
+El peor caso a diario es la recogida de las 05:17 con el barrido del catálogo al lado (05:23):
+2,2 GB más, como mucho, los 1,2 GB del catálogo (su pico con caché), 3,4 GB. Con eso:
+
+- un trabajo de 3 GB deja **1,3 GB libres** en ese peor caso y 2,5 GB en cualquier otra recogida:
+  el tope de 3 GB cabe;
+- dos trabajos que sumen 4 GB dejan **0,3 GB** en ese peor caso y 1,5 GB en cualquier otra
+  recogida. Cabe, justo, en el peor caso, y solo durante unos 5 minutos al día: por eso los
+  trabajos de sesión llevan `OOMScoreAdjust=1000`, para que, si el catálogo pasara de lo medido,
+  el sistema parara el trabajo de sesión y no la recogida. Las medidas no piden otra cifra.
+
 ## Secretos en local
 
 En `%USERPROFILE%\.eodi\`, fuera de cualquier repositorio:
@@ -750,6 +835,56 @@ de datos»), y la caché de páginas (`data/cache/`) se vuelve a llenar sola. En
 antes de borrar el servidor se comprueba que la última copia de seguridad es de la última
 recogida (`base.sh copias listar`) y, en el servidor nuevo, se restaura en
 `/home/eodi/base/eodi.sqlite` antes de crear el interruptor.
+
+## Copias del servidor en Hetzner
+
+Desde el 5 de octubre de 2026 el servidor tiene activadas las copias de seguridad automáticas de
+Hetzner Cloud («Backups»): una imagen diaria del servidor entero (disco completo: sistema,
+clon, `/home/eodi/base`, `/home/eodi/datos`, secretos de `/home/eodi/.eodi`), con siete huecos;
+la octava sustituye a la más antigua. Cuestan el 20 % del precio del servidor: 1,70 € al mes
+sin IVA (2,05 € con IVA; apartado «Coste mensual en Hetzner»). Las imágenes van ligadas al
+servidor: si se borra el servidor, se borran con él (antes, una se puede convertir en
+instantánea, de pago aparte).
+
+**Ventana.** Hetzner ya no deja elegirla al activarlas: la asigna él. Al servidor le tocó
+**22:00 a 02:00 UTC**, que no coincide con la exportación de los lunes (03:47) ni con el
+reinicio de las actualizaciones automáticas (04:45). Coincide con alguna recogida horaria
+(cualquier ventana de cuatro horas lo hace): la imagen se toma con el servidor en marcha, sin
+pararlo. La base no queda a medias en una imagen: en el modo `disco` se sustituye de golpe con
+un `rename` (apartado «Base de datos»), así que la imagen tiene la anterior o la nueva.
+
+Comprobar que siguen activas y ver las copias hechas:
+
+```
+export HCLOUD_TOKEN="$(tr -d '\r\n' < ~/.eodi/hcloud_token.txt)"
+hcloud server describe eodi-recogida -o format='{{.BackupWindow}}'   # 22-02: activadas
+hcloud image list --type backup
+```
+
+`reconstruir.sh` no las activa: si se recrea el servidor, se vuelven a activar con
+`hcloud server enable-backup eodi-recogida`.
+
+**Restaurar el servidor desde una de esas copias** (borra lo que haya en el disco del servidor
+y deja el de la fecha de la copia; misma IP, mismas claves SSH y de despliegue):
+
+1. Elegir la copia: `hcloud image list --type backup` (identificador y fecha).
+2. Parar la recogida para que no publique a medias:
+   `ssh … operador@2.28.197.102 'sudo systemctl stop eodi-recogida.timer'` (si el servidor
+   responde).
+3. `hcloud server rebuild eodi-recogida --image <identificador>`: Hetzner apaga el servidor,
+   sustituye el disco por la imagen y lo arranca. La clave de host SSH es la de la imagen, así
+   que `servidor_known_hosts` sigue valiendo.
+4. Poner la base al día: la de la imagen puede tener hasta un día. Comparar con la última copia
+   del almacén (`base.sh copias listar` y `base.sh huella`, apartado «Base de datos») y, si la
+   del almacén es posterior, restaurarla en `base/eodi.sqlite` como dice ese apartado.
+5. Volver a arrancar el temporizador (`sudo systemctl start eodi-recogida.timer`) y comprobar
+   que la recogida siguiente termina bien y publica (`journalctl -u eodi-recogida -n 40`).
+
+Para tener a la vez el servidor de antes y el restaurado (por ejemplo, para sacar un fichero),
+se crea otro servidor desde la imagen en vez de reconstruir: `hcloud server create --name
+eodi-restaurado --type cx33 --location nbg1 --image <identificador> --ssh-key eodi-recogida`.
+Es otro servidor de pago, con otra IP: se borra en cuanto deja de hacer falta, y no debe
+arrancar sus temporizadores a la vez que el de verdad (pararlos nada más entrar).
 
 ## Estado del sistema para la web
 
@@ -907,10 +1042,13 @@ el 3 de octubre de 2026, sin IVA; la cuenta factura con un 21 % de IVA.
 | Servidor CX33 (`nbg1`), con 20 TB de tráfico incluidos | 8,49 € | 10,27 € |
 | Dirección IPv4 principal | 0,50 € | 0,61 € |
 | Object Storage (precio base: 1 TB de almacenamiento y 1 TB de salida) | 6,49 € | 7,85 € |
+| Copias del servidor («Backups», 20 % del servidor; desde el 5 de octubre de 2026) | 1,70 € | 2,05 € |
 | DNS | sin coste | sin coste |
-| **Total** | **15,48 €** | **18,73 €** |
+| **Total** | **17,18 €** | **20,78 €** |
 
-Sin copias de seguridad ni instantáneas de pago. Hasta el 3 de octubre de 2026 el servidor
+Las copias del servidor se activaron el 5 de octubre de 2026 (apartado «Copias del servidor en
+Hetzner»); el precio, el 20 % del CX33, es el que da la API de precios ese día. Sin
+instantáneas de pago. Hasta el 3 de octubre de 2026 el servidor
 era un CX23 (2 núcleos, 4 GB, 5,49 € sin IVA): una pasada de revisión murió por falta de
 memoria el 2 de octubre y la recogida horaria sola llega a 3 GB de pico. El cambio a CX33
 se hizo el 3 de octubre a las 07:40 UTC con el servidor apagado: misma IP, mismos datos.

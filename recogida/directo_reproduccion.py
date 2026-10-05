@@ -20,7 +20,7 @@ import json
 import logging
 import sys
 import time
-from collections.abc import Callable, Iterator
+from collections.abc import Iterator
 from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -204,8 +204,6 @@ def reproducir(
     motivos: dict[str, int] = {}
     vistos: dict[str, int] = {}
     while minuto <= ultimo:
-        if minuto % 20 == 0:
-            esperar_turno()
         ahora = float(minuto * directo.PASO_S)
         vivos.anadir(por_minuto.get(minuto, []))
         antes = len(vivos.filas)
@@ -240,31 +238,9 @@ def reproducir(
     return resultado, resumen
 
 
-# La reproducción nunca coincide con la recogida horaria: no trabaja entre los minutos 15 y 40
-# de cada hora ni mientras la recogida esté en marcha (se mira la unidad, sin tocar su cerrojo).
-MINUTOS_PROHIBIDOS = range(15, 40)
-UNIDAD_RECOGIDA = "eodi-recogida.service"
-
-
-def recogida_en_marcha() -> bool:
-    import subprocess
-
-    try:
-        salida = subprocess.run(
-            ["systemctl", "is-active", UNIDAD_RECOGIDA], capture_output=True, text=True, timeout=10
-        )
-    except (OSError, subprocess.SubprocessError):
-        return False
-    return salida.stdout.strip() in ("active", "activating", "deactivating")
-
-
-def esperar_turno(dormir: Callable[[float], None] = time.sleep) -> None:
-    avisado = False
-    while datetime.now(UTC).minute in MINUTOS_PROHIBIDOS or recogida_en_marcha():
-        if not avisado:
-            registro.info("en pausa: es la hora de la recogida horaria")
-            avisado = True
-        dormir(30)
+# La reproducción es un trabajo de sesión: corre a cualquier hora, también durante la recogida
+# horaria, con las normas de docs/servidor.md («Trabajos de las sesiones en el servidor»): tope de
+# memoria, prioridad baja y uno por sesión, que se ponen al lanzarla con systemd-run.
 
 
 def comparar(
@@ -293,7 +269,6 @@ def principal(argumentos: list[str] | None = None) -> int:
     entorno = Entorno(args.datos)
     solo = args.aeropuertos.split(",") if args.aeropuertos else None
     for dia in args.dias:
-        esperar_turno()
         avisos, resumen = reproducir(entorno, dia, solo)
         registro.info(
             "%s",
