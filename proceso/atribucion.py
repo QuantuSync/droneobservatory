@@ -317,6 +317,39 @@ _NACIONALIDAD = {
     ),
     "en": re.compile(r"(?<!\w)(?:Russian|Belarusian|Ukrainian|Iranian)\s+", re.IGNORECASE),
 }
+# Otras nacionalidades, solo pegadas al dron («Dron turco», «Turkish drones»): sueltas son las de
+# un lugar («espacio aéreo griego»), que el titular puede decir.
+_NACIONALIDAD_DEL_DRON = {
+    "es": re.compile(
+        r"(?<!\w)((?:drones|dron|drone)(?:\s+(?:militar(?:es)?|marinos?|kamikaze|Shahed|Gerbera))?)"
+        r"\s+(?:turc[oa]s?|marroqu[ií](?:es)?|chin[oa]s?|norcorean[oa]s?)(?=\W|$)",
+        re.IGNORECASE,
+    ),
+    "en": re.compile(
+        r"(?<!\w)(?:Turkish|Moroccan|Chinese|North Korean)\s+"
+        r"(?=(?:(?:possible|suspected|military|naval|unidentified)\s+)?drones?(?!\w))",
+        re.IGNORECASE,
+    ),
+}
+# Señalar a un autor sin atribución: «controlado por Rusia», «Iranian-backed».
+_ESTADOS_TITULAR = {
+    "es": r"(?:Rusia|Bielorrusia|Ucrania|Ir[aá]n|Turqu[ií]a|Marruecos|China|Mosc[uú]|el Kremlin)",
+    "en": r"(?:Russia|Belarus|Ukraine|Iran|Turkey|Türkiye|Morocco|China|Moscow|the Kremlin)",
+}
+_AUTOR = {
+    "es": re.compile(
+        r"\s+(?:(?:fue|fueron)\s+)?(?:controlad|lanzad|dirigid|operad|respaldad|enviad|pilotad)"
+        rf"(?:[oa]s?)\s+por\s+{_ESTADOS_TITULAR['es']}(?!\w)",
+        re.IGNORECASE,
+    ),
+    "en": re.compile(
+        r"\s+(?:(?:was|were)\s+)?(?:controlled|launched|operated|directed|backed|sent|piloted)"
+        rf"\s+by\s+{_ESTADOS_TITULAR['en']}(?!\w)"
+        r"|(?<!\w)(?:Russian|Belarusian|Ukrainian|Iranian|Turkish|Moroccan|Chinese|Russia|Iran)"
+        r"-(?:backed|controlled|launched|operated)\s+",
+        re.IGNORECASE,
+    ),
+}
 _EXPLOSIVOS = {
     "es": re.compile(
         r"\s+(?:con|cargad[oa]s? (?:de|con)|armad[oa]s? con) explosivos", re.IGNORECASE
@@ -336,19 +369,29 @@ def _mayuscula(texto: str) -> str:
 
 
 def titulo_sin_atribucion(incidente: Documento) -> dict[str, str]:
-    """El titular de un incidente sin atribuir: sin la nacionalidad de los drones y sin
-    explosivos que ninguna autoridad dice."""
+    """El titular de un incidente sin atribuir: sin la nacionalidad de los drones, sin señalar a
+    un autor y sin explosivos que ninguna autoridad dice."""
     autoridad_dice_explosivos = any(
         f.get("es_autoridad") and _AUTORIDAD_EXPLOSIVOS.search(str(f.get("frase_origen", "")))
         for f in incidente.get("fuentes", [])
     )
     titulo: dict[str, str] = dict(incidente["titulo"])
     for idioma, patron in _NACIONALIDAD.items():
-        texto = patron.sub(" " if idioma == "en" else "", titulo[idioma])
+        texto = _AUTOR[idioma].sub(" " if idioma == "en" else "", titulo[idioma])
+        texto = _NACIONALIDAD_DEL_DRON[idioma].sub(r"\1" if idioma == "es" else "", texto)
+        texto = patron.sub(" " if idioma == "en" else "", texto)
         if not autoridad_dice_explosivos:
             texto = _EXPLOSIVOS[idioma].sub(" " if idioma == "en" else "", texto)
         titulo[idioma] = _mayuscula(" ".join(texto.split()))
     return titulo
+
+
+def titulo_segun_atribucion(incidente: Documento) -> dict[str, str]:
+    """El titular que corresponde al estado: el de un atribuido puede decir la nacionalidad y el
+    autor (lo dice la autoridad); el de los demás, no (titulo_sin_atribucion)."""
+    if incidente["estado"]["actual"] == ESTADO_ATRIBUIDO:
+        return dict(incidente["titulo"])
+    return titulo_sin_atribucion(incidente)
 
 
 def retirar(incidente: Documento, motivo: dict[str, str], instante: Documento) -> Documento:

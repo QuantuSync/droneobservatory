@@ -168,6 +168,12 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
   const actor = atribucion === undefined ? "" : actorEscrito(t, idioma, atribucion);
   const autoridad = atribucion === undefined ? "" : nombreDeAutoridad(atribucion.autoridad, idioma);
   const porFuente = new Map(incidente.fuentes.map((f) => [f.id, f]));
+  // La declaración que lo atribuye: la fuente del último paso a «atribuido», con su frase literal.
+  const pasoAtribuido = incidente.estado.historial.findLast((paso) => paso.estado === "atribuido");
+  const fuenteAtribucion =
+    atribucion === undefined || pasoAtribuido?.fuente_id === undefined
+      ? undefined
+      : porFuente.get(pasoAtribuido.fuente_id);
   const titulo = incidente.titulo[idioma];
   const nombre = objetivo?.nombre ?? titulo;
   const vuelos: [RangoODesconocido | undefined, string, string][] = [
@@ -321,8 +327,29 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
         {atribucion !== undefined && (
           <Fila nombre={t.ficha.atribucion}>
             {t.ficha.atribuidoA(actor, autoridad)}
+            {fuenteAtribucion !== undefined && (
+              <blockquote
+                lang={fuenteAtribucion.idioma}
+                className="mt-0.5 border-l border-acento pl-2 text-secundario"
+                data-cita-atribucion=""
+              >
+                «{fuenteAtribucion.frase_origen}»
+              </blockquote>
+            )}
             <span className="mono block text-xs text-secundario">
               {instante(atribucion.fecha)}
+              {fuenteAtribucion !== undefined && (
+                <>
+                  {" · "}
+                  <EnlaceExterno
+                    enlace={fuenteAtribucion.enlace}
+                    aviso={t.ficha.enlaceExterno}
+                    avisoNoValido={t.ficha.enlaceNoValido}
+                  >
+                    {t.ficha.verFuente}
+                  </EnlaceExterno>
+                </>
+              )}
             </span>
             <QueDiceCadaFuente t={t} idioma={idioma} afirmaciones={de(CAMPOS_DE_FILA.atribucion)} />
           </Fila>

@@ -1082,7 +1082,8 @@ function capasPropias(acento: string): LayerSpecification[] {
         "icon-image": ICONO_ATRIBUIDO,
         "icon-size": ESCALA_ATRIBUIDO_ELEGIDO,
         "icon-allow-overlap": true,
-        "icon-ignore-placement": true,
+        // Ocupa su sitio, como el marcador sin abrir: el nombre del lugar no queda partido debajo.
+        "icon-ignore-placement": false,
       },
     },
     // Avisos de la detección en directo: una etiqueta con el código OACI dentro, borde del

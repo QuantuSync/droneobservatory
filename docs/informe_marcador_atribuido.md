@@ -364,3 +364,273 @@ Capturas en `docs/capturas`:
   rehace desde las fichas: no volvería a atribuirlos, pero su historial perdería el paso de la
   retirada. Arreglo: guardar las retiradas en el control del incidente y que la reconstrucción
   las repita.
+
+## Atribuciones aplicadas con la declaración oficial literal (5 de octubre de 2026)
+
+Desde el 4 de octubre no había ningún incidente «atribuido». Se han buscado las declaraciones
+originales de las autorías que se quedaron fuera (tabla de arriba). Cada enlace se ha abierto el 5
+de octubre de 2026, se ha comprobado que la frase está palabra por palabra en la página y se ha
+guardado una copia fechada del texto. Solo entonces se ha aplicado. La regla de atribución no
+cambia: las frases pasan por la extracción, el proceso y la validación de siempre, y una que no
+pasa no entra (dos de las propuestas no pasan, y se dice por qué).
+
+### Cómo entran
+
+- **La copia fechada.** `configuracion/declaraciones_oficiales/<nombre>.json`: enlace, editor,
+  fecha de publicación, fecha de la copia y el texto del cuerpo de la página, un párrafo por línea.
+  Se guarda con los caracteres no ingleses escritos como secuencias `\u` de JSON para que el texto
+  rumano, polaco y sueco no dispare la comprobación de palabras del hook de `pre-push`; leído, es
+  el texto exacto de la página.
+- **La declaración.** `configuracion/declaraciones_oficiales.json`, una entrada por frase, con los
+  mismos campos que da el extractor (`modelo/ficha.py`): autoridad, país de la autoridad,
+  categoría, qué afirma, autor, `autor_tipo`, `autor_pais`, `cita_literal` y la frase.
+- **El lector.** `recogida/declaraciones_oficiales.py`, en cada recogida horaria, después de las
+  uniones revisadas y antes de la revisión de presencia:
+  1. comprueba que la frase está literalmente en la copia (`proceso/declaraciones.validas`, la
+     misma comprobación que la frase del extractor en el texto de la noticia); si no está, no la
+     aplica;
+  2. hace con ella una fuente del incidente: oficial, fiabilidad A, con el enlace a la página, su
+     fecha, su idioma y la frase (`metodo: parser`, porque la comprueba el código y no el
+     extractor). Si solo la cita una noticia, «declaración oficial citada», fiabilidad B;
+  3. la pasa por `proceso/declaraciones.aplicar_fuentes`, que es la misma función que aplica las
+     declaraciones del extractor: confirma, atribuye solo si `proceso/atribucion.evaluar` lo
+     sostiene, y lo que la autoridad investiga va a la ficha como investigación en curso;
+  4. guarda con la validación de siempre (`proceso/validaciones.py`, esquema 1.11.0). El paso a
+     «atribuido» queda en el historial del incidente con su fuente y su fecha, y el cambio en el
+     historial interno de la base con su motivo. La base sigue siendo de solo añadir.
+
+  Una fuente que el incidente ya tiene no se vuelve a aplicar: desde la segunda recogida no cambia
+  nada (comprobado en una copia de la base). Si una reconstrucción rehiciera el incidente, la
+  recogida siguiente la vuelve a aplicar.
+- **La tabla de países** (`configuracion/paises_atribucion.json`) no tenía el nombre de Rusia en
+  sueco («Ryssland», «rysk»), en danés y neerlandés («Rusland») ni el nombre oficial en rumano
+  («Federației Ruse», en genitivo, y su nominativo): las frases de las Fuerzas Armadas de Suecia y del
+  presidente de Rumanía no se podían comprobar. Se añaden como nombres del Estado, que es lo que son;
+  la regla (la frase tiene que nombrar al Estado) no cambia. Se añaden también expresiones de duda
+  y de investigación en sueco (`configuracion/expresiones_duda.json`), que hacen la regla más
+  estricta para las frases en ese idioma.
+
+### Los casos
+
+**A. Leipzig/Halle, 4 de agosto de 2026 · EODI-2026-00134 · atribuido a Rusia.**
+
+- Frase: «Die Bundesregierung weist die Verantwortung für den versuchten Anschlag auf den Flughafen
+  Leipzig/Halle vom 4. August 2026 eindeutig Russland zu.»
+- Traducción: «El Gobierno federal atribuye inequívocamente a Rusia la responsabilidad del intento
+  de atentado contra el aeropuerto de Leipzig/Halle del 4 de agosto de 2026.»
+- Autoridad: Gobierno federal alemán (Bundesregierung), en su página oficial (Oficina de Prensa e
+  Información del Gobierno federal). Lo comunicaron el ministro federal del Interior, Alexander
+  Dobrindt, y el ministro federal de Asuntos Exteriores, Johann Wadephul, el 1 de septiembre.
+- Fecha: 4 de septiembre de 2026 (fecha de la página).
+- Enlace comprobado:
+  <https://www.bundesregierung.de/breg-de/service/fragen-und-anworten/reaktion-angriff-leipzig-2451522>
+- Investigación en curso, del mismo comunicado: «Unabhängig davon sind die strafrechtlichen
+  Ermittlungen und juristischen Verfahren in der Angelegenheit noch nicht abgeschlossen und laufen
+  weiter.» («Con independencia de ello, las investigaciones penales y los procedimientos judiciales
+  sobre el asunto no han concluido y siguen en curso.») Y de la Fiscalía General federal
+  (Generalbundesanwalt), 6 de agosto de 2026: «Die Bundesanwaltschaft hat heute (6. August 2026)
+  wegen der besonderen Bedeutung des Falles das Ermittlungsverfahren zum Drohnenfund am Flughafen
+  Leipzig/Halle von der Generalstaatsanwaltschaft Dresden übernommen.» («La Fiscalía Federal ha
+  asumido hoy, por la especial relevancia del caso, la instrucción sobre el dron hallado en el
+  aeropuerto de Leipzig/Halle, que llevaba la Fiscalía General de Dresde.»)
+  <https://www.generalbundesanwalt.de/SharedDocs/Pressemitteilungen/DE/2026/Pressemitteilung-vom-06-08-2026.html>
+- Los explosivos: el comunicado del Gobierno no habla de explosivos. Sí lo dice la Fiscalía General
+  federal en la misma nota del 6 de agosto: «Hierzu waren an der Drohne professioneller Sprengstoff
+  und ein Zünder angebracht worden.» («Para ello se habían colocado en el dron explosivo profesional
+  y un detonador.») Entra como fuente oficial del incidente; con ella, el titular «Dron con carga
+  explosiva causa cierre del aeropuerto de Leipzig» se sostiene con una cita de autoridad.
+- El acta del Bundestag (Plenarprotokoll 21/93, 10 de septiembre de 2026,
+  <https://dserver.bundestag.de/btp/21/21093.pdf>) recoge al ministro Dobrindt: «Das Benennen der
+  Täter heißt, dass im Fall Leipzig eindeutig eine Zuweisung an Russland möglich und notwendig
+  war.» («Nombrar a los autores significa que en el caso de Leipzig era posible y necesaria una
+  atribución inequívoca a Rusia.») No se usa: «möglich» es una expresión de duda de la regla. La
+  atribución sale del comunicado del Gobierno, que no la tiene.
+- Registros repetidos: se unen en EODI-2026-00134, con la unión revisada de siempre
+  (`configuracion/incidentes_revisados.json`), los ocho registros sueltos del mismo dron que
+  quedaban publicados, revisados uno por uno: 00071 (12 de agosto), 00173 (18 de agosto), 00231 y
+  00353 (6 de septiembre), 00128 (12 de septiembre), 00150 (26 de septiembre), 00377 y 00369
+  (finales de septiembre y 2 de octubre). Todos son noticias tardías del mismo suceso. No se une
+  EODI-2026-00058, que es otro suceso (26 de agosto, un dron que fotografiaba unas obras en
+  Großkugel). Sin esta unión, el mismo suceso salía a la vez atribuido y sin atribuir.
+- Decisión: **atribuido a Rusia** (tipo «estado», país «RU»). La investigación penal abierta va en la
+  ficha como investigación en curso y no quita la atribución política del Gobierno.
+
+**Wunstorf, dron hallado el 14 de septiembre de 2026 · EODI-2026-00276 · sin atribuir.**
+
+- Sus seis registros (00309, 00023, 00145, 00276, 00297 y 00363) son el mismo hallazgo: el dron
+  estrellado que un particular encontró el lunes 14 de septiembre en el Wunstorfer Moor, al este del
+  Steinhuder Meer. Se unen con la regla de siempre, que elige EODI-2026-00276. Queda separado de
+  Leipzig.
+- No hay comunicado de la Fiscalía Federal sobre Wunstorf: su web no tiene ninguno. La
+  investigación consta en prensa (dpa, recogida por ZDFheute el 18 de septiembre de 2026): «Nach dem
+  Fund von Drohnenteilen nahe dem Bundeswehr-Fliegerhorst Wunstorf prüft die Bundesanwaltschaft
+  einen möglichen Zusammenhang mit dem Drohnenvorfall am Flughafen Leipzig.» («Tras el hallazgo de
+  restos de un dron cerca de la base aérea de Wunstorf, la Fiscalía Federal examina una posible
+  relación con el incidente del dron en el aeropuerto de Leipzig.») Entra como «declaración oficial
+  citada en zdfheute.de», sin palabras literales, y va a la ficha como investigación en curso.
+  <https://www.zdfheute.de/politik/deutschland/bundeswehr-fliegerhorst-wunstorf-drohnenfund-bundesanwaltschaft-leipzig-100.html>
+- Decisión: **sin atribuir** (confirmado). Examinar una posible relación no es atribuir.
+
+**B. Øresund, 25 y 26 de febrero de 2026 · EODI-2026-00245 (incluye 00342) · atribuido a Rusia.**
+
+- Frase: «Nu kan Försvarsmakten bekräfta att en rysk drönare har genomfört en olovlig flygning.»
+- Traducción: «Ahora las Fuerzas Armadas pueden confirmar que un dron ruso realizó un vuelo
+  ilícito.»
+- Del mismo comunicado, como fuentes del incidente: «Under besöket av det franska hangarfartyget
+  Charles de Gaulle observerade ett av Försvarsmaktens fartyg att en drönare lyfte från ett ryskt
+  signalspaningsfartyg i Öresund.» («Durante la visita del portaaviones francés Charles de Gaulle,
+  uno de los buques de las Fuerzas Armadas observó que un dron despegaba de un buque ruso de
+  inteligencia de señales en el Øresund»: confirma el incidente) y el nombre del buque, «…som det
+  ryska signalspaningsfartyget Zhigulevsk förflyttade sig i svenskt territorialvatten» («…cuando el
+  buque ruso de inteligencia de señales Zhigulevsk se desplazaba por aguas territoriales suecas»).
+- Autoridad: Fuerzas Armadas de Suecia (Försvarsmakten), comunicado de prensa.
+- Fecha: 27 de febrero de 2026, 19:55 (hora de Suecia).
+- Enlace comprobado:
+  <https://www.forsvarsmakten.se/kontakt/press-och-media/forsvarsmakten-bekraftar-observation-av-rysk/>
+  (la otra dirección, `/aktuellt/nyheter/…-rysk-dronare/`, tiene el mismo texto).
+- Decisión: **atribuido a Rusia**. El incidente estaba «notificado»: la frase del despegue lo
+  confirma y la de la confirmación lo atribuye, cada paso con su fuente.
+
+**C. Polonia, noche del 9 al 10 de septiembre de 2025 · EODI-2025-00295 (incluye 00262) ·
+atribuido a Rusia.**
+
+- Frase: «W środę nad ranem polska przestrzeń powietrzna została naruszona przez rosyjskie drony.»
+- Traducción: «El miércoles de madrugada, el espacio aéreo polaco fue violado por drones rusos.»
+- Autoridad: Cancillería del primer ministro de Polonia (Kancelaria Prezesa Rady Ministrów), en la
+  página del primer ministro Donald Tusk.
+- Fecha: 10 de septiembre de 2025.
+- Enlace comprobado:
+  <https://www.gov.pl/web/premier/premier-doszlo-do-naruszenia-polskiej-przestrzeni-powietrznej---procedury-zadzialaly>
+- Del mismo día, como fuentes del incidente: el comunicado del Ministerio de Defensa Nacional
+  (Ministerstwo Obrony Narodowej, <https://www.gov.pl/web/premier/Komunikat-MON>): «W wyniku
+  dzisiejszego ataku Federacji Rosyjskiej na terytorium Ukrainy doszło do bezprecedensowego w skali
+  naruszenia polskiej przestrzeni powietrznej przez obiekty typu dron.» («Como consecuencia del
+  ataque de hoy de la Federación de Rusia contra el territorio de Ucrania se ha producido una
+  violación sin precedentes del espacio aéreo polaco por objetos de tipo dron.»); y la dirección de
+  entrada, en palabras del primer ministro en el Sejm
+  (<https://www.gov.pl/web/premier/naruszenie-polskiej-przestrzeni-powietrznej-jest-wniosek-o-uruchomienie-art-4-traktatu-polnocnoatlantyckiego>):
+  «Po raz pierwszy spora część dronów nadleciała nad Polskę bezpośrednio z Białorusi» («Por
+  primera vez, una parte considerable de los drones llegó a Polonia directamente desde
+  Bielorrusia»). Bielorrusia es la dirección de entrada, no el autor.
+- No se usa «Fakty wskazują, że odpowiedzialność spada jednoznacznie na Rosję.» («Los hechos
+  indican que la responsabilidad recae inequívocamente en Rusia»,
+  <https://www.gov.pl/web/premier/polska-bedzie-bronic-swojego-terytorium>, 11 de septiembre de
+  2025): «wskazują» («indican») es una expresión de duda de la regla en polaco, como «todo indica».
+  La atribución sale de la otra frase.
+- Los dos registros: EODI-2025-00305 no es de esa noche. Sus nueve fuentes son del 20 de agosto de
+  2025 y hablan del dron que cayó y explotó en un maizal de Osiny (Lublin): «Bei einem in Polen auf
+  einem Maisfeld abgestürzten Flugobjekt handelt es sich nach Angaben der Regierung in Warschau um
+  eine russische Drohne» (az-online.de). Las declaraciones del 10 y el 11 de septiembre no lo
+  cubren.
+- Decisión: **EODI-2025-00295 atribuido a Rusia; EODI-2025-00305 sin atribuir** (su titular deja
+  de decir «ruso»).
+- Pendiente con su arreglo: EODI-2025-00295 no tiene punto en el mapa (el suceso abarca tres
+  voivodatos y su ficha da el país): sale en la lista, la ficha y las cifras con su marcador, no en
+  el mapa. Arreglo: si se quiere en el mapa, darle un lugar más preciso con una fuente oficial que
+  lo diga como lugar del suceso (la ficha no admite un punto que no salga del lugar del suceso).
+
+**D. Galați, noche del 28 al 29 de mayo de 2026 · EODI-2026-00211 (absorbió 00228 y 00345) ·
+atribuido a Rusia.**
+
+- La frase que circulaba en prensa («Întreaga responsabilitate pentru acest incident revine
+  Rusiei») no está en la web de la Presidencia con esas palabras. Está esta, en la declaración de
+  prensa oficial del presidente:
+- Frase: «Declar, cu toată fermitatea, că responsabilitatea integrală pentru acest incident îi
+  aparține Federației Ruse.»
+- Traducción: «Declaro con toda firmeza que la responsabilidad íntegra de este incidente
+  corresponde a la Federación de Rusia.»
+- Autoridad: presidente de Rumanía, Nicușor Dan (Președintele României), en presidency.ro. La
+  web responde a los lectores automáticos con una página de comprobación; se leyó con un navegador
+  real y la copia guarda el texto.
+- Fecha: 29 de mayo de 2026.
+- Enlace comprobado:
+  <https://www.presidency.ro/ro/media/comunicate-de-presa/declaratia-de-presa-a-presedintelui-romaniei-nicusor-dan-in-urma-incidentului-grav-cauzat-de-o-drona-ruseasca-in-galati>
+- Investigación en curso, de la misma declaración: «A fost declanșată o anchetă completă privind
+  împrejurările căderii dronei» («Se ha abierto una investigación completa sobre las circunstancias
+  de la caída del dron»).
+- El incidente: EODI-2026-00228 está fundido en EODI-2026-00211 (el mismo dron sobre el bloque de
+  viviendas). El lector aplica la declaración al que lo absorbió.
+- Decisión: **atribuido a Rusia** (el Estado; no se atribuye a ninguna persona).
+
+**Los que no se atribuyen.**
+
+- **Constanza, 5 de junio de 2026 (EODI-2026-00152).** Según la investigación previa, la
+  Presidencia habla de «evaluări preliminare» y de «ipoteza»: expresiones de duda (y la base no
+  guarda ninguna declaración de autoridad de este registro). Sin atribuir. Su titular decía «Dron que explotó
+  en el Puerto de Constanza fue controlado por Rusia»; queda «Dron que explotó en el Puerto de
+  Constanza». La ficha no dice «ruso» fuera de las citas de las fuentes.
+- **Buzău (EODI-2026-00125).** «Moscova testează intenționat spațiul aerian românesc» no es del
+  Ministerio de Defensa: según la investigación previa, es la opinión de un general retirado en
+  televisión, que la noticia guardada (ziare.com) atribuyó al Ministerio. Sin atribuir.
+- **Lituania (EODI-2026-00090).** Sin declaración oficial localizada. Sin atribuir; su titular
+  inglés deja de decir «Ukrainian».
+- **Dinamarca, aeropuertos de septiembre de 2025.** Las autoridades no atribuyeron a nadie. Sin
+  atribuir.
+
+### Titulares
+
+La regla que se aplicaba a los retirados (`proceso/atribucion.titulo_sin_atribucion`) se aplica
+ahora en cada recogida a todos los titulares de la base (`atribucion.titulo_segun_atribucion`): el
+de un incidente que no está atribuido no dice la nacionalidad del dron ni señala a un autor; el de
+un atribuido puede decirlo. Además de lo que ya quitaba (ruso, bielorruso, ucraniano, iraní y los
+explosivos que ninguna autoridad dice), quita otras nacionalidades pegadas al dron («Dron turco»,
+«Moroccan drone»; sueltas son las de un lugar, como «espacio aéreo griego», y se quedan) y lo que
+señala a un autor («fue controlado por Rusia», «respaldado por Irán», «Iranian-backed»). La
+dirección de entrada («desde Bielorrusia») se queda. Cada cambio se guarda como versión nueva con su
+motivo.
+
+**Cambian 115 titulares** en el ensayo sobre la base de las 10:14 UTC del 5 de octubre (de 511
+incidentes publicados). Ejemplos: «Drones rusos invaden el espacio aéreo de Polonia» queda igual
+(atribuido); «Dron ruso se estrella en un campo en el este de Polonia» → «Dron se estrella en un
+campo en el este de Polonia»; «Drones turcos violan el espacio aéreo griego sobre el Egeo» →
+«Drones violan el espacio aéreo griego sobre el Egeo»; «Ataque con dron respaldado por Irán contra
+la base de Dhekelia» → «Ataque con dron contra la base de Dhekelia».
+
+### Autoridades traducidas
+
+Se añaden a `web/src/i18n/autoridades.ts`, con el original entre paréntesis: el Fiscal General
+federal alemán (Generalbundesanwalt), las Fuerzas Armadas de Suecia (Försvarsmakten), el primer
+ministro de Polonia (Prezes Rady Ministrów), la Cancillería del primer ministro de Polonia
+(Kancelaria Prezesa Rady Ministrów), el Ministerio de Defensa Nacional de Polonia (Ministerstwo
+Obrony Narodowej) y el presidente de Rumanía (Președintele României). El Gobierno federal alemán
+(Bundesregierung) y la Fiscalía federal alemana (Bundesanwaltschaft) ya estaban.
+
+### La web
+
+- La ficha de un atribuido enseña ahora, en la fila «Atribución», la cita literal de la autoridad
+  (con su idioma) y el enlace a la página oficial, además de a quién y según quién.
+- El marcador abierto de un atribuido ocupa su sitio en el mapa como el cerrado: antes, el nombre
+  del lugar quedaba partido debajo («Malmö» asomaba por los lados del marcador).
+- Comprobado con los datos del ensayo en la construcción local, en 360 × 800, 390 × 844,
+  412 × 915 y escritorio (`e2e/atribuciones-oficiales.spec.ts`): los cuatro atribuidos con el
+  marcador de la bandera rusa en la ficha; Leipzig, Malmö y Galați con su marcador en el mapa, por
+  encima de círculos y grupos y reconocible sin acercar en el teléfono; la cifra «4 atribuidos» en
+  la cabecera y en el menú; «Atribuido» en la leyenda y en el filtro. Con los datos reales ningún
+  par de atribuidos se pisa en la pantalla, ni con el mapa en su zoom mínimo: el marcador agrupado
+  con su número no aparece (lo comprueban las pruebas del PR #97).
+
+### La exportación semanal
+
+En el ensayo, la exportación lleva cada atribución con su origen: `procedencia.atribucion =
+{origen: oficial, metodo: parser, fuentes: [la declaración oficial]}`, y la investigación con
+`{origen: oficial, metodo: regla}`. Valida con el esquema.
+
+### Ensayo antes de fusionar
+
+Paso c2 de [`fusiones.md`](fusiones.md), en el servidor, como `eodi`, con `systemd-run` (3 GB,
+prioridad baja, `OOMScoreAdjust=1000`, sin el cerrojo), sobre una copia propia de la base del disco
+en `/home/eodi/ensayo-atrib` (`EODI_BASE_DIRECTORIO`, para no tocar la copia de trabajo de la
+recogida), sin claves del extractor: código 0, «ficheros publicados con cambios: 3», «exportación
+semanal generada sin subir», 13 min 39 s, 2,6 GB de pico. «declaraciones oficiales: 11 aplicadas;
+atribuidos: EODI-2026-00134, EODI-2026-00245, EODI-2025-00295, EODI-2026-00211; frase que no está en
+la copia: 0; sin guardar: 0». Las dos frases y las uniones añadidas después se ensayaron de nuevo
+antes de fusionar (abajo).
+
+Segundo ensayo, con el código final de la rama (c52682e, rebasada sobre `main`), del mismo modo:
+código 0, 13 min 54 s, 2,6 GB de pico, «registros revisados unidos: 13», «declaraciones oficiales:
+13 aplicadas; atribuidos: EODI-2026-00134, EODI-2026-00245, EODI-2025-00295, EODI-2026-00211;
+frase que no está en la copia: 0; sin guardar: 0», «titulares sin nacionalidad ni autor sin
+atribución: 115», «ficheros publicados con cambios: 3» y la exportación semanal generada sin
+subir. Incidentes publicados: 498 (319 en el mapa y 179 sin ubicación), frente a los 511 que servía
+producción a esa hora: la diferencia son los 13 registros unidos (8 de Leipzig y 5 de Wunstorf),
+que quedan fundidos con su motivo.

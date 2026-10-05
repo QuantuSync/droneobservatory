@@ -37,6 +37,24 @@ export const AUTORIDADES: Record<string, Autoridad> = {
     en: "the German Federal Prosecutor's Office",
     original: true,
   },
+  Generalbundesanwalt: {
+    es: "el Fiscal General federal alemán",
+    en: "the German Federal Prosecutor General",
+    original: true,
+  },
+  "F\u00f6rsvarsmakten": { es: "las Fuerzas Armadas de Suecia", en: "the Swedish Armed Forces", original: true },
+  "Prezes Rady Ministr\u00f3w": { es: "el primer ministro de Polonia", en: "the Prime Minister of Poland", original: true },
+  "Kancelaria Prezesa Rady Ministr\u00f3w": {
+    es: "la Cancillería del primer ministro de Polonia",
+    en: "the Chancellery of the Prime Minister of Poland",
+    original: true,
+  },
+  "Ministerstwo Obrony Narodowej": {
+    es: "el Ministerio de Defensa Nacional de Polonia",
+    en: "the Polish Ministry of National Defence",
+    original: true,
+  },
+  "Pre\u0219edintele Rom\u00e2niei": { es: "el presidente de Rumanía", en: "the President of Romania", original: true },
   "Prefectul I\u0061\u0219i": { es: "el prefecto de I\u0061\u0219i", en: "the Prefect of I\u0061\u0219i" },
   "Directorul Aeroportului Interna\u021bional I\u0061\u0219i": {
     es: "el director del Aeropuerto Internacional de I\u0061\u0219i",

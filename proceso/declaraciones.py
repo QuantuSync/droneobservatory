@@ -200,6 +200,33 @@ def aplicar(
         if pais and pais != resultado["lugar"]["pais"]:
             continue
         nuevas.append((declaracion, fuente(declaracion, noticia, numero)))
+    return _aplicar_nuevas(resultado, nuevas, por_enlace)
+
+
+def aplicar_fuentes(
+    incidente: Documento, pares: Sequence[tuple[dict[str, Any], Documento]]
+) -> Documento:
+    """El incidente con declaraciones que llegan ya con su fuente (una página oficial leída
+    directamente, recogida/declaraciones_oficiales.py): las mismas reglas que las declaraciones
+    que encuentra el extractor en las noticias. Una fuente que el incidente ya tiene no se vuelve
+    a aplicar; una autoridad de otro país no cambia el incidente."""
+    resultado = copy.deepcopy(incidente)
+    por_enlace = {f["enlace"]: f for f in resultado["fuentes"]}
+    tiene = {f["id"] for f in resultado["fuentes"]}
+    nuevas = [
+        (declaracion, fuente) for declaracion, fuente in pares
+        if fuente["id"] not in tiene
+        and str(declaracion.get("pais") or resultado["lugar"]["pais"]).strip().upper()
+        == resultado["lugar"]["pais"]
+    ]  # fmt: skip
+    return _aplicar_nuevas(resultado, nuevas, por_enlace)
+
+
+def _aplicar_nuevas(
+    resultado: Documento,
+    nuevas: Sequence[tuple[dict[str, Any], Documento]],
+    por_enlace: dict[str, Documento],
+) -> Documento:
     resultado["fuentes"] = [*resultado["fuentes"], *(f for _, f in nuevas)]
     # Primero lo que confirma y después lo que desmiente o atribuye.
     orden = {"incidente": 0, "drones": 0, "sin_drones": 1, "niega_incidente": 2, "autoria": 3}

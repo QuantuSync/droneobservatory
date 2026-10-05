@@ -10,7 +10,8 @@
     "lt": ["tiria$", "tiriam", "tyrim", "aiskina", "patikrin"],
     "nl": ["onderzo", "onderzoch", "bekijk", "nagaan"],
     "uk": ["розслід", "перевіря", "перевірк", "з'ясову", "досліджу", "слідств"],
-    "ru": ["расслед", "проверя", "проверк", "выясня", "следств", "изуча"]
+    "ru": ["расслед", "проверя", "проверк", "выясня", "следств", "изуча"],
+    "sv": ["utred", "undersok", "granska", "forundersokning", "kontrollera"]
   },
   "duda": {
     "es": ["posible", "posibilidad", "posiblemente", "podria", "puede que", "no descarta", "no se descarta", "sospech", "apunta a", "apuntan a", "todo indica", "indicios", "presunt", "probable", "probablemente", "al parecer", "parece", "supuest", "segun fuentes", "fuentes de seguridad", "fuentes cercanas", "cree que", "creen que", "habria", "seria$", "estaria"],
@@ -22,6 +23,7 @@
     "lt": ["galim", "galejo", "gali buti", "itari", "itaria", "itarim", "neatmeta", "neatmetama", "nurodo", "panasu", "tiketina", "tikriausiai", "spejam", "manoma", "saltiniai", "saltiniu", "greiciausiai", "veikiausiai"],
     "nl": ["mogelijk", "zou$", "zouden$", "kan zijn", "vermoed", "verdacht", "sluit niet uit", "niet uitgesloten", "wijst op", "wijzen op", "alles wijst", "lijkt", "lijken", "waarschijnlijk", "vermeend", "zou zijn", "zouden zijn", "volgens bronnen", "bronnen", "denkt", "denken"],
     "uk": ["можлив", "міг$", "могла$", "могли$", "може бути", "підозр", "не виключ", "вказує", "вказують", "все вказує", "схоже", "ймовірно", "імовірно", "вірогідно", "нібито", "припуска", "за даними джерел", "джерела", "вважа", "очевидно"],
-    "ru": ["возможн", "мог$", "могла$", "могли$", "может быть", "подозр", "не исключ", "указыва", "все указывает", "похоже", "вероятно", "предположительно", "предполага", "якобы", "по данным источников", "источники", "считают", "считается", "очевидно", "судя по"]
+    "ru": ["возможн", "мог$", "могла$", "могли$", "может быть", "подозр", "не исключ", "указыва", "все указывает", "похоже", "вероятно", "предположительно", "предполага", "якобы", "по данным источников", "источники", "считают", "считается", "очевидно", "судя по"],
+    "sv": ["mojlig", "kan ha$", "kunde ha$", "skulle kunna", "misstank", "troligen", "trolig", "sannolik", "formodl", "formodad", "verkar", "tycks", "tyder pa", "pekar pa", "inte uteslut", "utesluter inte", "uppges", "enligt uppgift", "enligt kallor", "kallor", "antas", "eventuell", "pastadd"]
   }
 }

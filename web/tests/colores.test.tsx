@@ -627,6 +627,10 @@ describe("marcador de los atribuidos", () => {
     expect(disposicion["icon-image"]).toEqual(ICONO_ATRIBUIDO);
     expect(disposicion["icon-allow-overlap"]).toBe(true);
     expect(disposicion["icon-ignore-placement"]).toBe(false);
+    // También abierto: el nombre del lugar no queda partido debajo del marcador.
+    const abierto = (layers.find((c) => c.id === CAPA_SELECCION_ATRIBUIDO) as { layout: Record<string, unknown> })
+      .layout;
+    expect(abierto["icon-ignore-placement"]).toBe(false);
   });
 
   it("el área pulsable es la de los demás y, con el dedo, de 44 px", () => {

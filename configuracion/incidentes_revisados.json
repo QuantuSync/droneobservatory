@@ -10,9 +10,28 @@
         "EODI-2026-00190",
         "EODI-2026-00318",
         "EODI-2026-00286",
-        "EODI-2026-00364"
+        "EODI-2026-00364",
+        "EODI-2026-00071",
+        "EODI-2026-00128",
+        "EODI-2026-00150",
+        "EODI-2026-00173",
+        "EODI-2026-00231",
+        "EODI-2026-00353",
+        "EODI-2026-00369",
+        "EODI-2026-00377"
       ],
-      "motivo": "el mismo suceso: el dron con explosivos del aeropuerto de Leipzig/Halle del 4 de agosto de 2026, junto al avión ucraniano (00134 con el cierre de 100 minutos que dio la policía; 00286 y 00364 son noticias del 7 y el 9 de agosto y 00239, 00129, 00190 y 00318 de finales de agosto y septiembre sobre la acusación del Gobierno alemán, fechadas por su publicación)"
+      "motivo": "el mismo suceso: el dron con explosivos del aeropuerto de Leipzig/Halle del 4 de agosto de 2026, junto al avión ucraniano (00134 con el cierre de 100 minutos que dio la policía; 00286 y 00364 son noticias del 7 y el 9 de agosto y 00239, 00129, 00190 y 00318 de finales de agosto y septiembre sobre la acusación del Gobierno alemán, fechadas por su publicación); revisados uno por uno el 5 de octubre de 2026: 00071 (12 de agosto, sesión del Landtag una semana después), 00173 (18 de agosto), 00231 y 00353 (6 de septiembre, reacción rusa a la acusación), 00128 (12 de septiembre, pista del GRU), 00150 (26 de septiembre, incidente diplomático), 00377 y 00369 (finales de septiembre y 2 de octubre, investigación de prensa) son noticias tardías del mismo dron, fechadas por su publicación. EODI-2026-00058 no se une: es otro suceso (26 de agosto, un dron que fotografiaba unas obras en Großkugel)"
+    },
+    {
+      "registros": [
+        "EODI-2026-00309",
+        "EODI-2026-00023",
+        "EODI-2026-00145",
+        "EODI-2026-00276",
+        "EODI-2026-00297",
+        "EODI-2026-00363"
+      ],
+      "motivo": "el mismo suceso: el dron estrellado que un particular encontró el lunes 14 de septiembre de 2026 en el Wunstorfer Moor, al este del Steinhuder Meer, cerca de la base aérea de Wunstorf (00309 con la declaración del LKA de Baja Sajonia; los demás son noticias del 15 al 25 de septiembre sobre el hallazgo, fechadas por su publicación). Es un suceso distinto del de Leipzig/Halle: la Fiscalía Federal solo examina si hay relación"
     }
   ],
   "reextraer": [
