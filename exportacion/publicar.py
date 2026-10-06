@@ -11,6 +11,7 @@ from datetime import datetime
 from pathlib import Path
 
 from almacen.base import Almacen
+from esquema import Documento
 from exportacion.geojson import exportar, exportar_sin_ubicacion
 from exportacion.proyeccion import escribir
 from exportacion.ucrania import exportar_ucrania
@@ -19,6 +20,7 @@ from proceso.configuracion import cargar_vocabulario_modelos
 from proceso.focos_termicos import con_focos
 from proceso.luces import con_luces
 from proceso.mediciones import con_mediciones
+from proceso.tipo_dron import publico as tipo_dron
 
 DIRECTORIO = Path(__file__).resolve().parent.parent / "publicacion"
 UCRANIA = "ucrania.json"
@@ -31,6 +33,15 @@ def modelos(almacen: Almacen) -> frozenset[str]:
     return cargar_vocabulario_modelos() | frozenset(almacen.vocabulario("modelo_dron"))
 
 
+def con_tipo_dron(incidentes: list[Documento], tipos: dict[str, Documento]) -> list[Documento]:
+    """Cada incidente con lo que se publica de su tipo de dron (tabla tipos_dron)."""
+    salida = []
+    for incidente in incidentes:
+        publicado = tipo_dron.bloque(tipos.get(incidente["id"]), incidente)
+        salida.append({**incidente, "tipo_dron": publicado} if publicado else incidente)
+    return salida
+
+
 def publicar(almacen: Almacen, ahora: datetime, directorio: Path = DIRECTORIO) -> list[Path]:
     """Regenera los ficheros y devuelve los que han cambiado."""
     directorio.mkdir(parents=True, exist_ok=True)
@@ -38,6 +49,7 @@ def publicar(almacen: Almacen, ahora: datetime, directorio: Path = DIRECTORIO) -
         almacen.incidentes(), almacen.ataques_ucrania(), almacen.focos_termicos()
     )
     incidentes, ataques = con_mediciones(incidentes, ataques, almacen)
+    incidentes = con_tipo_dron(incidentes, almacen.tipos_dron())
     ataques = con_luces(ataques, almacen.luces_nocturnas())
     vocabulario = modelos(almacen)
     focos = almacen.focos_termicos()

@@ -5,7 +5,7 @@
 // último día con datos), uno entre dos fechas o, sin nada en la dirección, todo.
 
 import type { Estado, IncidenteResumen, Tipo, Zona } from "../datos/tipos.ts";
-import { ESTADOS, PATRON_PAIS, TIPOS, ZONAS } from "../datos/vocabulario.ts";
+import { ESTADOS, GRUPOS_DRON, ORIGENES_TIPO_DRON, PATRON_PAIS, TIPOS, ZONAS } from "../datos/vocabulario.ts";
 import { MS_POR_HORA, diaDeFecha, diaDeInstante, fechaDeDia } from "../tiempo/dias.ts";
 import type { Periodo } from "../tiempo/dias.ts";
 
@@ -22,9 +22,21 @@ export interface Filtros {
   paises: string[];
   /** Solo frontera o solo interior; null es todos (por defecto). */
   zona: Zona | null;
+  /**
+   * Tipo de dron: «autoridad:<grupo>» (identificado por la autoridad) o «deducido:<grupo>»
+   * (compatible con, deducido); vacío es todos.
+   */
+  dron: string[];
 }
 
-export const SIN_FILTROS: Filtros = { estados: [], reciente: null, tipos: [], paises: [], zona: null };
+export const SIN_FILTROS: Filtros = {
+  estados: [],
+  reciente: null,
+  tipos: [],
+  paises: [],
+  zona: null,
+  dron: [],
+};
 
 /** Lo confirmado y lo atribuido: el filtro rápido más usado, con su tecla. */
 export const GRAVES: readonly Estado[] = ["confirmado", "atribuido"];
@@ -36,6 +48,7 @@ const PARAMETRO = {
   tipos: "tipo",
   paises: "pais",
   zona: "zona",
+  dron: "dron",
   desde: "desde",
   hasta: "hasta",
 } as const;
@@ -43,6 +56,8 @@ const PARAMETRO = {
 const VALOR_GRAVES = "graves";
 const SEPARADOR = ",";
 const PATRON_DIA = /^\d{4}-\d{2}-\d{2}$/;
+/** Una clave de tipo de dron: de dónde sale y su grupo. */
+const PATRON_DRON = new RegExp(`^(${ORIGENES_TIPO_DRON.join("|")}):(${GRUPOS_DRON.join("|")})$`);
 const LARGO_DIA = 10;
 /**
  * Días que cubre cada filtro de lo reciente, contando el último. Las 24 horas tocan dos días
@@ -103,6 +118,7 @@ export function leerFiltros(busqueda: string): Filtros {
         .filter((pais) => PATRON_PAIS.test(pais)),
     ),
     zona: ZONAS.find((opcion) => opcion === zona) ?? null,
+    dron: sinRepetir(lista(parametros.get(PARAMETRO.dron)).filter((clave) => PATRON_DRON.test(clave))),
   };
 }
 
@@ -139,11 +155,12 @@ export function escribirBusqueda(filtros: Filtros, periodo: Periodo | null): str
     parametros.set(PARAMETRO.paises, [...filtros.paises].sort().join(SEPARADOR));
   }
   if (filtros.zona !== null) parametros.set(PARAMETRO.zona, filtros.zona);
+  if (filtros.dron.length > 0) parametros.set(PARAMETRO.dron, [...filtros.dron].sort().join(SEPARADOR));
   if (periodo !== null) {
     parametros.set(PARAMETRO.desde, textoDeDia(periodo.desde));
     parametros.set(PARAMETRO.hasta, textoDeDia(periodo.hasta));
   }
-  const texto = parametros.toString().replaceAll("%2C", SEPARADOR);
+  const texto = parametros.toString().replaceAll("%2C", SEPARADOR).replaceAll("%3A", ":");
   return texto.length === 0 ? "" : `?${texto}`;
 }
 
@@ -209,7 +226,11 @@ export function escribirFiltros(filtros: Filtros): string {
  */
 export function cuantosFiltros(filtros: Filtros): number {
   return (
-    filtros.estados.length + filtros.tipos.length + filtros.paises.length + (filtros.zona === null ? 0 : 1)
+    filtros.estados.length +
+    filtros.tipos.length +
+    filtros.paises.length +
+    (filtros.zona === null ? 0 : 1) +
+    filtros.dron.length
   );
 }
 
@@ -217,14 +238,15 @@ export function hayFiltros(filtros: Filtros): boolean {
   return cuantosFiltros(filtros) > 0;
 }
 
-/** Incidentes que pasan los filtros de estado, tipo, país y zona (el periodo va aparte). */
+/** Incidentes que pasan los filtros de estado, tipo, país, zona y tipo de dron (el periodo va aparte). */
 export function filtrar(incidentes: readonly IncidenteResumen[], filtros: Filtros): IncidenteResumen[] {
   return incidentes.filter(
     (i) =>
       (filtros.estados.length === 0 || filtros.estados.includes(i.estado)) &&
       (filtros.tipos.length === 0 || filtros.tipos.includes(i.tipo)) &&
       (filtros.paises.length === 0 || filtros.paises.includes(i.pais)) &&
-      (filtros.zona === null || i.zona === filtros.zona),
+      (filtros.zona === null || i.zona === filtros.zona) &&
+      (filtros.dron.length === 0 || i.dron.some((clave) => filtros.dron.includes(clave))),
   );
 }
 

@@ -30,7 +30,8 @@ import type { Resultado } from "../src/datos/validar.ts";
 import { RUTA_SECURITY_TXT, securityTxt } from "../src/seguridad/securityTxt.ts";
 
 const WEB = join(dirname(fileURLToPath(import.meta.url)), "..");
-const PUBLICACION = join(WEB, "..", "publicacion");
+// EODI_PUBLICACION: otra carpeta con los mismos ficheros (pruebas en local con datos de ensayo).
+const PUBLICACION = process.env.EODI_PUBLICACION ?? join(WEB, "..", "publicacion");
 const CONFIGURACION = join(WEB, "..", "configuracion");
 const PUBLICO = join(WEB, "public");
 const DATOS = join(PUBLICO, "datos");

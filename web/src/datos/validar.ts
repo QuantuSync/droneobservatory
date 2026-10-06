@@ -1,4 +1,4 @@
-// Validación de los datos contra el esquema 1.14.0 (campos públicos), escrita a mano para
+// Validación de los datos contra el esquema 1.15.0 (campos públicos), escrita a mano para
 // que no necesite generar código en el navegador. Se usa en el build, sobre los ficheros de
 // publicacion/, y en la web al cargar cada fichero: un fichero que no valida no se pinta.
 
@@ -274,7 +274,57 @@ const afirmacionPublica = objeto(
   { cita: cadena() },
 );
 
+const probabilidad = numero(0, 1);
+const cifraDron = numero(-1e6, 1e6);
+const datosRazonDron = objeto(
+  {},
+  {
+    rasgo: cadena(),
+    valor: alguna(
+      cadena(),
+      objeto(
+        {},
+        { metros: cifraDron, minutos: cifraDron, kmh: cifraDron, min: cifraDron, max: cifraDron, local: cadena() },
+      ),
+    ),
+    cita: nulable(cadena()),
+    fuente: nulable(cadena()),
+    distancia_km: nulable(cifraDron),
+    mas_de_600_km: enumerado([true, false]),
+    costa_km: nulable(cifraDron),
+    entrada_exterior: enumerado([true, false]),
+    kmh: cifraDron,
+    metros: cifraDron,
+    minutos: cifraDron,
+  },
+);
+const tipoDron = objeto(
+  { version: cadena(/^tipo-dron-\d+\.\d+\.\d+$/) },
+  {
+    identificado: objeto({
+      modelo: cadena(),
+      grupo: enumerado(v.GRUPOS_DRON),
+      cita: cadena(),
+      fuente: cadena(),
+    }),
+    publicado: objeto(
+      {
+        compatible: lista(objeto({ grupo: enumerado(v.GRUPOS_DRON), probabilidad }), 1),
+        otras: probabilidad,
+      },
+      { casos_referencia: enteroNoNegativo },
+    ),
+    razones: lista(
+      objeto(
+        { tipo: enumerado(v.TIPOS_RAZON_DRON), clave: cadena() },
+        { datos: datosRazonDron },
+      ),
+    ),
+  },
+);
+
 const CAMPOS_INCIDENTE_OPCIONALES: Record<string, Comprobacion> = {
+  tipo_dron: tipoDron,
   afirmaciones_publicas: lista(afirmacionPublica),
   episodio: cadena(v.PATRON_ID_EPISODIO),
   presencia_dron: enumerado(v.PRESENCIAS),
@@ -532,6 +582,7 @@ const resumen = objeto({
         objeto({ tipo: nulable(enumerado(v.TIPOS_ACTOR)), pais: nulable(cadena(v.PATRON_PAIS)) }),
       ),
       zona: nulable(enumerado(v.ZONAS)),
+      dron: lista(cadena(/^(autoridad|deducido):[a-z_]+$/)),
     }),
   ),
   episodios: lista(

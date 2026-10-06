@@ -167,6 +167,7 @@ function resumenDe(cambios: { pais: string; dia: number; estado?: IncidenteResum
       foco: false,
       atribucion: null,
       zona: null,
+      dron: [],
     }),
   );
 }

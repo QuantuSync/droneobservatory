@@ -131,6 +131,7 @@ describe("resúmenes", () => {
       foco: false,
       atribucion: null,
       zona: null,
+      dron: [],
     });
   });
 
@@ -310,7 +311,7 @@ describe("validación contra el esquema", () => {
 
 describe("listas cerradas iguales a las del esquema", () => {
   type Esquema = Record<string, unknown>;
-  const leer = (nombre: string) => leerJson("esquema", "1.14.0", `${nombre}.schema.json`) as Esquema;
+  const leer = (nombre: string) => leerJson("esquema", "1.15.0", `${nombre}.schema.json`) as Esquema;
   const en = (objeto: unknown, ...claves: string[]): unknown =>
     claves.reduce<unknown>((actual, clave) => (actual as Esquema)[clave], objeto);
 
@@ -415,6 +416,14 @@ describe("listas cerradas iguales a las del esquema", () => {
         por: "fuente",
       },
       zona: { grupo: "frontera", motivo: "ataque" },
+      tipo_dron: {
+        version: "tipo-dron-1.0.0",
+        publicado: { compatible: [{ grupo: "senuelo", probabilidad: 0.42 }], otras: 0.58, casos_referencia: 24 },
+        razones: [
+          { tipo: "rasgo", clave: "tamano:grande", datos: { rasgo: "tamano", valor: "grande", cita: "large drones", fuente: "f" } },
+          { tipo: "restriccion", clave: "distancia", datos: { distancia_km: 40, mas_de_600_km: false, entrada_exterior: true } },
+        ],
+      },
     });
     expect(Object.keys(completo.properties).sort()).toEqual(
       [...new Set([...publicos, ...CAMPOS_ANTICIPADOS])].sort(),

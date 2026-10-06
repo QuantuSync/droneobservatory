@@ -1,4 +1,4 @@
-// Listas cerradas del esquema 1.14.0 (campos públicos). Un test las compara con los
+// Listas cerradas del esquema 1.15.0 (campos públicos). Un test las compara con los
 // ficheros de esquema/ para que no se separen.
 
 export const TIPOS = ["incursion", "interrupcion_aeroportuaria", "sobrevuelo"] as const;
@@ -42,6 +42,20 @@ export const CLASES_DRON = [
   "ataque_largo_alcance",
   "desconocido",
 ] as const;
+/** Grupos de clases de dron que ve el usuario (configuracion/tipo_dron.json). */
+export const GRUPOS_DRON = [
+  "comercial_pequeno",
+  "multirrotor_grande",
+  "fpv",
+  "ala_fija_pequena",
+  "ala_fija_militar",
+  "largo_alcance_helice",
+  "senuelo",
+  "reaccion",
+] as const;
+/** De dónde sale el tipo de dron de un incidente: lo dice la autoridad o se deduce. */
+export const ORIGENES_TIPO_DRON = ["autoridad", "deducido"] as const;
+export const TIPOS_RAZON_DRON = ["rasgo", "restriccion", "motor"] as const;
 export const CIERRES = ["si", "no", "desconocido"] as const;
 export const NIVELES_DANOS = ["ninguno", "menores", "graves", "desconocido"] as const;
 export const MEDIDAS = [

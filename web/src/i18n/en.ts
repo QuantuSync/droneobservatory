@@ -1,3 +1,4 @@
+import { tipoDronEn } from "./tipoDron.ts";
 import { LICENCIA_DATOS, LICENCIA_DATOS_URL, NOMBRE, ORIGEN, REPOSITORIO } from "../sitio.ts";
 import { REGIONES_RUSIA_EN } from "./regionesRusia.ts";
 import type { FechaEscrita, Textos } from "./tipos.ts";
@@ -23,6 +24,7 @@ function diaMesAnio(f: FechaEscrita): string {
 }
 
 export const en: Textos = {
+  tipoDron: tipoDronEn,
   descripcion:
     "Open map and record of drone incidents in Europe: overflights, incursions and airport " +
     "disruptions, with their sources, status and level of confirmation.",
@@ -1170,6 +1172,69 @@ export const en: Textos = {
                 "selected period. For attacks on Russia, whose report gives shoot-downs by " +
                 "region, the arc starts at the point of the Ukrainian border closest to each " +
                 "region and its figure is those shoot-downs.",
+            ],
+          },
+        ],
+      },
+      {
+        id: "tipo-dron",
+        titulo: "Drone type",
+        bloques: [
+          {
+            parrafo: [
+              "Each incident says which class of drone it may have been only when there is a " +
+                "basis for it. If an authority names the model (for example, the debris of a " +
+                "Gerbera identified by the army), the record says so and where it comes from. " +
+                "Otherwise the observatory deduces it and shows it separately, as “compatible " +
+                "with”, with the probability of each class and the reasons.",
+            ],
+          },
+          {
+            lista: [
+              {
+                termino: "Described features",
+                texto: [
+                  "The sources’ sentences are read for the shape (multirotor, fixed-wing, delta " +
+                    "wing), the sound (propeller, combustion engine, jet), the size, lights, the " +
+                    "number of aircraft, duration, altitude, speed, time and behaviour " +
+                    "(hovering, circling, passing through, in formation). Each feature keeps the " +
+                    "literal sentence and its source. What the text does not say is not assumed.",
+                ],
+              },
+              {
+                termino: "Calculation",
+                texto: [
+                  "It starts from how often each class appears in the cases of the same area " +
+                    "(border or inland) where an authority identified the drone. Each feature " +
+                    "raises or lowers the classes according to what the performance catalogue " +
+                    "says about them, and physical constraints weigh in: the distance to " +
+                    "Ukraine, Russia and Belarus (and to the coast) against each class’s range; " +
+                    "the wind and temperature at that time and place; duration and altitude " +
+                    "against endurance and ceiling; and speed: below 230 km/h, propeller; above " +
+                    "300 km/h, jet; in between it does not decide.",
+                ],
+              },
+              {
+                termino: "Check",
+                texto: [
+                  "The calculation is repeated with each case of known answer held out (debris " +
+                    "and official statements in Romania, Moldova, Poland, Lithuania, Latvia, " +
+                    "Bulgaria and Turkey, and drone encounters classified by the UK Airprox " +
+                    "Board) and compared with always saying the most frequent class. Only " +
+                    "classes with at least 5 checked cases that beat that reference and give " +
+                    "probabilities that hold are published. On 6 October 2026 the propeller " +
+                    "long-range attack drone and the long-range decoy pass, at the border. The " +
+                    "figures for each class are in docs/informe_tipo_y_rutas.md in the repository.",
+                ],
+              },
+              {
+                termino: "No basis",
+                texto: [
+                  "Without features that weigh in or an entry from outside at the border, with " +
+                    "the drone unconfirmed or with a most likely class that has not passed the " +
+                    "check, the row does not appear.",
+                ],
+              },
             ],
           },
         ],

@@ -622,6 +622,10 @@ def generar(almacen: Almacen) -> list[Fichero]:
     deducciones = almacen.deducciones()
     base = [{**d, "deduccion": deducciones[d["id"]]} if d["id"] in deducciones else d
             for d in base]  # fmt: skip
+    # El tipo de dron (tabla tipos_dron): rasgos con su frase, identificado y probabilidades por
+    # clase, cada valor con su regla de origen (procedencia.procedencia_tipo_dron).
+    tipos = almacen.tipos_dron()
+    base = [{**d, "tipo_dron": tipos[d["id"]]} if d["id"] in tipos else d for d in base]
     ataques_base = [{**a, "deduccion": deducciones[a["id"]]} if a["id"] in deducciones else a
                     for a in ataques_base]  # fmt: skip
     episodios = almacen.episodios()

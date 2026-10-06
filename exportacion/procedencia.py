@@ -120,9 +120,10 @@ META_INCIDENTE = frozenset({
     "id", "titulo", "fuentes", "afirmaciones", "afirmaciones_publicas", "control",
     "procedencia", "nivel_detalle", "indicadores", "fusionado_en", "retirado", "episodio",
     "encuentros",
-    "deduccion",
+    "deduccion", "tipo_dron",
 })  # fmt: skip
-# deduccion: lo deducido va aparte, con su propia procedencia (procedencia_deduccion).
+# deduccion: lo deducido va aparte, con su propia procedencia (procedencia_deduccion); tipo_dron,
+# con la suya valor a valor (procedencia_tipo_dron), que falla si un valor no tiene regla.
 META_ATAQUE = frozenset({"id", "fuentes", "afirmaciones", "control", "procedencia", "deduccion"})
 # Bloques de mediciones físicas, con origen medido y método regla.
 MEDICIONES = frozenset({"trafico_aereo", "condiciones"})
@@ -682,6 +683,8 @@ def exportar_incidente(
     documento: Documento, fichas: Fichas, contexto: "mejor_origen.Contexto | None" = None
 ) -> Documento:
     documento, deduccion = _sin_deduccion(documento)
+    tipo_dron = documento.get("tipo_dron")
+    documento = {k: v for k, v in documento.items() if k != "tipo_dron"}
     exportado, procedencia = procedencia_incidente(documento, fichas)
     # Valor a valor, el de mejor origen que hay en la base (medido, oficial, registro).
     mejor_origen.aplicar(exportado, procedencia, contexto or mejor_origen.Contexto(),
@@ -691,7 +694,57 @@ def exportar_incidente(
     # El nivel de detalle no cambia por tener deducción: se calcula sin ella.
     exportado["nivel_detalle"] = nivel_detalle(exportado, procedencia)
     exportado["indicadores"] = indicadores(exportado)
-    return _con_deduccion(exportado, deduccion)
+    return _con_tipo_dron(_con_deduccion(exportado, deduccion), tipo_dron)
+
+
+# --- Tipo de dron (proceso/tipo_dron) -------------------------------------------------
+
+# Lo calculado por la regla del tipo de dron: probabilidades, grupos, razones, lo publicado.
+CLAVES_CALCULADAS_TIPO = frozenset({
+    "version", "version_rasgos", "probabilidades", "grupos", "razones", "con_base", "publicado",
+    "retirado", "evaluado",
+})  # fmt: skip
+ORIGENES_DE_FRASE = frozenset({"medido", "oficial", "oficial_citado", "parte", "prensa"})
+
+
+def procedencia_tipo_dron(tipo: Documento) -> dict[str, Documento]:
+    """Cada valor del tipo de dron con su regla de origen: un rasgo, el origen de la frase que
+    lo describe (descrito por una fuente: prensa; o por una autoridad: oficial u oficial citado);
+    lo identificado, el de la frase oficial que nombra el modelo; las probabilidades y lo demás,
+    calculado (origen deducido, método regla, con su versión). Un valor que no encaja en ninguna
+    regla deja la exportación sin generar."""
+    procedencia: dict[str, Documento] = {}
+    sin_regla = sorted(set(tipo) - CLAVES_CALCULADAS_TIPO - {"rasgos", "identificado"})
+    if sin_regla:
+        raise SinOrigen(f"tipo_dron: sin regla de origen para {', '.join(sin_regla)}")
+    procedencia["tipo_dron"] = {
+        "origen": DEDUCIDO, "metodo": REGLA, "fuentes": [],
+        "regla": {"nombre": "tipo_dron", "version": tipo["version"]},
+    }  # fmt: skip
+    for i, rasgo in enumerate(tipo.get("rasgos", [])):
+        if rasgo.get("origen") not in ORIGENES_DE_FRASE or not rasgo.get("fuente"):
+            raise SinOrigen(f"tipo_dron.rasgos.{i}: sin origen de frase")
+        procedencia[f"tipo_dron.rasgos.{i}"] = {
+            "origen": rasgo["origen"], "metodo": REGLA, "fuentes": [rasgo["fuente"]],
+            "regla": {"nombre": "rasgos_tipo_dron", "version": tipo.get("version_rasgos", "")},
+        }  # fmt: skip
+    identificado = tipo.get("identificado")
+    if identificado is not None:
+        if identificado.get("origen") not in ORIGENES_DE_FRASE - {"prensa", "parte"}:
+            raise SinOrigen("tipo_dron.identificado: sin origen oficial")
+        procedencia["tipo_dron.identificado"] = {
+            "origen": identificado["origen"], "metodo": REGLA,
+            "fuentes": [identificado["fuente"]],
+            "regla": {"nombre": "identificacion_tipo_dron", "version": tipo["version"]},
+        }  # fmt: skip
+    return procedencia
+
+
+def _con_tipo_dron(exportado: Documento, tipo: Documento | None) -> Documento:
+    if tipo is None:
+        return exportado
+    procedencia = {**exportado["procedencia"], **procedencia_tipo_dron(tipo)}
+    return {**exportado, "tipo_dron": tipo, "procedencia": dict(sorted(procedencia.items()))}
 
 
 # --- Capa de Ucrania -----------------------------------------------------------------

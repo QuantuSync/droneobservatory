@@ -131,6 +131,7 @@ function incidente(estado: Estado, zona: Zona | null, pais = "RO"): IncidenteRes
     foco: false,
     atribucion: null,
     zona,
+    dron: [],
   };
 }
 

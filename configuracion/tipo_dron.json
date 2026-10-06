@@ -1,0 +1,206 @@
+{
+  "version": "tipo-dron-1.0.0",
+  "descripcion": "Clase probable del dron de cada incidente (proceso/tipo_dron). Los grupos son las clases que ve el usuario; cada uno junta clases del catálogo (configuracion/catalogo_drones.json). Las verosimilitudes de los rasgos y los factores de las restricciones físicas se fijan aquí de antemano a partir de lo que dice el catálogo de cada clase (forma, propulsión, tamaño, alcance, autonomía, techo, velocidad), no se ajustan con los casos de respuesta conocida: con ellos solo se estima la frecuencia de partida de cada grupo según la zona (frontera o interior), siempre sin el caso que se comprueba.",
+  "grupos": [
+    {
+      "id": "comercial_pequeno",
+      "nombre": {
+        "es": "Multirrotor comercial pequeño o mediano",
+        "en": "Small or medium commercial multirotor"
+      },
+      "clases": [
+        "multirrotor_consumo_sub250",
+        "multirrotor_consumo",
+        "multirrotor_profesional"
+      ]
+    },
+    {
+      "id": "multirrotor_grande",
+      "nombre": {
+        "es": "Multirrotor grande de carga",
+        "en": "Large heavy-lift multirotor"
+      },
+      "clases": [
+        "multirrotor_pesado_carga"
+      ]
+    },
+    {
+      "id": "fpv",
+      "nombre": {
+        "es": "Dron FPV",
+        "en": "FPV drone"
+      },
+      "clases": [
+        "fpv"
+      ]
+    },
+    {
+      "id": "ala_fija_pequena",
+      "nombre": {
+        "es": "Ala fija pequeña o táctica eléctrica",
+        "en": "Small or tactical electric fixed-wing"
+      },
+      "clases": [
+        "aeromodelo_ala_fija_pequeno",
+        "ala_fija_tactica_electrica"
+      ]
+    },
+    {
+      "id": "ala_fija_militar",
+      "nombre": {
+        "es": "Ala fija militar de reconocimiento o munición merodeadora",
+        "en": "Military reconnaissance fixed-wing or loitering munition"
+      },
+      "clases": [
+        "ala_fija_reconocimiento_combustion",
+        "ala_fija_male",
+        "municion_merodeadora"
+      ]
+    },
+    {
+      "id": "largo_alcance_helice",
+      "nombre": {
+        "es": "Dron de ataque de largo alcance de hélice",
+        "en": "Propeller long-range attack drone"
+      },
+      "clases": [
+        "ataque_largo_alcance_piston"
+      ]
+    },
+    {
+      "id": "senuelo",
+      "nombre": {
+        "es": "Señuelo de largo alcance",
+        "en": "Long-range decoy"
+      },
+      "clases": [
+        "senuelo_largo_alcance"
+      ]
+    },
+    {
+      "id": "reaccion",
+      "nombre": {
+        "es": "Dron de ataque a reacción",
+        "en": "Jet-powered attack drone"
+      },
+      "clases": [
+        "ataque_reaccion"
+      ]
+    }
+  ],
+  "clases_lanzadas_desde_fuera": [
+    "ataque_largo_alcance_piston",
+    "senuelo_largo_alcance",
+    "ataque_reaccion",
+    "ala_fija_male",
+    "ala_fija_reconocimiento_combustion",
+    "municion_merodeadora"
+  ],
+  "verosimilitud": {
+    "forma": {
+      "multirrotor": {
+        "tipo_aeronave": {
+          "multirrotor": 1.0,
+          "ala_fija": 0.05,
+          "reaccion": 0.03
+        }
+      },
+      "ala_fija": {
+        "tipo_aeronave": {
+          "multirrotor": 0.08,
+          "ala_fija": 1.0,
+          "reaccion": 0.8
+        }
+      },
+      "ala_delta": {
+        "clases": {
+          "ataque_largo_alcance_piston": 1.0,
+          "senuelo_largo_alcance": 1.0,
+          "ataque_reaccion": 0.8
+        },
+        "resto": 0.1
+      }
+    },
+    "ruido": {
+      "reaccion": {
+        "propulsion": {
+          "reaccion": 1.0,
+          "combustion": 0.05,
+          "electrica": 0.03
+        }
+      },
+      "combustion": {
+        "propulsion": {
+          "reaccion": 0.2,
+          "combustion": 1.0,
+          "electrica": 0.15
+        }
+      },
+      "helice": {
+        "propulsion": {
+          "reaccion": 0.1,
+          "combustion": 1.0,
+          "electrica": 1.0
+        }
+      }
+    },
+    "tamano": {
+      "pequeno": {
+        "tamano": {
+          "pequeno": 1.0,
+          "mediano": 0.5,
+          "grande": 0.15
+        }
+      },
+      "grande": {
+        "tamano": {
+          "pequeno": 0.2,
+          "mediano": 0.6,
+          "grande": 1.0
+        }
+      }
+    },
+    "comportamiento": {
+      "estatico": {
+        "tipo_aeronave": {
+          "multirrotor": 1.0,
+          "ala_fija": 0.2,
+          "reaccion": 0.1
+        }
+      },
+      "merodeo": {
+        "tipo_aeronave": {
+          "multirrotor": 1.0,
+          "ala_fija": 0.7,
+          "reaccion": 0.5
+        }
+      }
+    }
+  },
+  "restricciones": {
+    "distancia_margen": 1.1,
+    "fuera_de_alcance": 0.02,
+    "fuera_de_alcance_con_costa": 0.25,
+    "velocidad_helice_max_kmh": 230,
+    "velocidad_reaccion_min_kmh": 300,
+    "velocidad_contraria": 0.02,
+    "velocidad_margen": 1.2,
+    "altura_margen": 1.1,
+    "por_encima_del_techo": 0.02,
+    "duracion_margen": 1.1,
+    "mas_que_su_autonomia": 0.3,
+    "descarte_del_motor": 0.03,
+    "condicion_del_motor": 0.7
+  },
+  "previa": {
+    "suavizado": 0.5
+  },
+  "publicar": {
+    "minimo_casos_por_grupo": 5,
+    "error_calibracion_maximo": 0.1,
+    "probabilidad_minima_mostrada": 0.1,
+    "mejora_minima_log": 0.05,
+    "remuestreos": 1000,
+    "semilla": 20261006
+  }
+}

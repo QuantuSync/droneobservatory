@@ -1,4 +1,4 @@
-// Forma de los ficheros públicos de publicacion/ (esquema 1.14.0, solo campos públicos)
+// Forma de los ficheros públicos de publicacion/ (esquema 1.15.0, solo campos públicos)
 // y de los resúmenes que la web deriva de ellos en el build.
 
 export type Estado = "notificado" | "confirmado" | "atribuido" | "desmentido";
@@ -90,6 +90,50 @@ export type Medida =
   | "ninguna_conocida";
 
 export type ClaseDron = "multirrotor_pequeno" | "ala_fija" | "ataque_largo_alcance" | "desconocido";
+
+/** Grupo de clases de dron que ve el usuario (configuracion/tipo_dron.json). */
+export type GrupoDron =
+  | "comercial_pequeno"
+  | "multirrotor_grande"
+  | "fpv"
+  | "ala_fija_pequena"
+  | "ala_fija_militar"
+  | "largo_alcance_helice"
+  | "senuelo"
+  | "reaccion";
+export type OrigenTipoDron = "autoridad" | "deducido";
+
+/** Una razón que ha pesado en la clase deducida: un rasgo descrito con su cita, una
+ * restricción física (distancia, velocidad, altura, duración) o una regla del motor. */
+export interface RazonTipoDron {
+  tipo: "rasgo" | "restriccion" | "motor";
+  clave: string;
+  datos?: {
+    rasgo?: string;
+    valor?: string | { metros?: number; minutos?: number; kmh?: number; min?: number; max?: number; local?: string };
+    cita?: string | null;
+    fuente?: string | null;
+    distancia_km?: number | null;
+    mas_de_600_km?: boolean;
+    costa_km?: number | null;
+    entrada_exterior?: boolean;
+    kmh?: number;
+    metros?: number;
+    minutos?: number;
+  };
+}
+
+/** Tipo de dron del incidente: lo que identificó la autoridad, o lo deducido que se publica. */
+export interface TipoDron {
+  version: string;
+  identificado?: { modelo: string; grupo: GrupoDron; cita: string; fuente: string };
+  publicado?: {
+    compatible: { grupo: GrupoDron; probabilidad: number }[];
+    otras: number;
+    casos_referencia?: number;
+  };
+  razones?: RazonTipoDron[];
+}
 
 /** Lo que dice una fuente pública sobre un campo público del incidente. */
 export interface AfirmacionPublica {
@@ -195,6 +239,7 @@ export interface PropiedadesIncidente {
     uso?: "civil" | "militar" | "mixto";
   };
   drones?: { numero?: RangoODesconocido; clase?: ClaseDron; modelo?: string };
+  tipo_dron?: TipoDron;
   consecuencias?: {
     cierre?: { valor: "si" | "no" | "desconocido"; minutos?: RangoODesconocido };
     vuelos_desviados?: RangoODesconocido;
@@ -436,6 +481,11 @@ export interface IncidenteResumen {
   atribucion: AtribucionResumen | null;
   /** Frontera o interior; null en datos publicados antes de que existiera. */
   zona: Zona | null;
+  /**
+   * Tipo de dron para el filtro: «autoridad:<grupo>» si la autoridad lo identificó, o
+   * «deducido:<grupo>» por cada grupo compatible publicado; vacío si no hay base.
+   */
+  dron: string[];
 }
 
 export interface EpisodioResumen {

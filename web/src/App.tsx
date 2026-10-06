@@ -66,6 +66,7 @@ import { agregar, cargarFicheroGnss, cargarIndiceGnss, ficherosDelPeriodo, zonas
 import type { Agregado, FicheroGnss, IndiceGnss } from "./datos/gnss.ts";
 import { cifrasDePais, presionPorPais } from "./datos/presion.ts";
 import { cifras } from "./datos/derivar.ts";
+import { GRUPOS_DRON, ORIGENES_TIPO_DRON } from "./datos/vocabulario.ts";
 import {
   OBJETO_ALUMBRADO,
   OBJETO_FOCOS_VIVOS,
@@ -1253,6 +1254,13 @@ export function App() {
     () => [...new Set((datosResumen?.incidentes ?? VACIO).map((i) => i.pais))],
     [datosResumen],
   );
+  // Tipos de dron con algún incidente, en el orden de los grupos: las opciones del filtro.
+  const dronConIncidentes = useMemo(() => {
+    const presentes = new Set((datosResumen?.incidentes ?? VACIO).flatMap((i) => i.dron));
+    return ORIGENES_TIPO_DRON.flatMap((origen) =>
+      GRUPOS_DRON.map((grupo) => `${origen}:${grupo}`).filter((clave) => presentes.has(clave)),
+    );
+  }, [datosResumen]);
 
   // La ficha abierta es una de las novedades que se están recorriendo: lleva su recorrido.
   const posicionEnRecorrido =
@@ -1526,6 +1534,7 @@ export function App() {
       onSeleccion={elegirSeleccion}
       dominio={dominio}
       paises={paisesConIncidentes}
+      dron={dronConIncidentes}
       onQuitar={quitarFiltros}
     />
   );

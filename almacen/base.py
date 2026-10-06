@@ -23,7 +23,7 @@ TABLAS_CON_HISTORIAL = (
     "encuentros", "estadisticas_oficiales", "documentos_oficiales",
     "impactos_guerra", "restricciones_aeropuertos",
     "trafico_aereo", "condiciones", "anomalias_trafico", "deducciones", "catalogo_vivo",
-    "luces_nocturnas",
+    "luces_nocturnas", "tipos_dron",
 )  # fmt: skip
 # Campos de la fuente que dependen del incidente y no se guardan en la tabla común.
 CAMPOS_FUENTE_POR_ENTIDAD = frozenset({"credibilidad", "campos_respaldados"})
@@ -234,6 +234,13 @@ CREATE INDEX IF NOT EXISTS anomalias_trafico_dia ON anomalias_trafico (dia);
 CREATE TABLE IF NOT EXISTS deducciones (
     id TEXT PRIMARY KEY,
     tipo TEXT NOT NULL,
+    documento TEXT NOT NULL CHECK (json_valid(documento))
+);
+-- Tipo de dron de cada incidente (proceso/tipo_dron): lo que identificó la autoridad, los
+-- rasgos descritos con su cita y la probabilidad de cada clase, con lo que se publica. Lo
+-- calcula la recogida horaria (recogida/tipo_dron.py). Documento con historial.
+CREATE TABLE IF NOT EXISTS tipos_dron (
+    id TEXT PRIMARY KEY,
     documento TEXT NOT NULL CHECK (json_valid(documento))
 );
 -- Catálogo vivo (recogida/catalogo_vivo.py): lo que admite el barrido periódico del catálogo de
@@ -740,6 +747,18 @@ class Almacen:
                 (tipo,),
             )
         filas = self._conexion.execute(sql, parametros).fetchall()
+        return {id_: json.loads(documento) for id_, documento in filas}
+
+    def guardar_tipo_dron(self, incidente_id: str, documento: Documento) -> bool:
+        """Guarda el tipo de dron de un incidente si ha cambiado (el historial guarda el
+        anterior)."""
+        self._validar("tipo_dron", documento)
+        return self._guardar_medicion("tipos_dron", incidente_id, documento, {})
+
+    def tipos_dron(self) -> dict[str, Documento]:
+        filas = self._conexion.execute(
+            "SELECT id, documento FROM tipos_dron ORDER BY id"
+        ).fetchall()
         return {id_: json.loads(documento) for id_, documento in filas}
 
     def guardar_catalogo_vivo(self, id_: str, tipo: str, documento: Documento) -> bool:

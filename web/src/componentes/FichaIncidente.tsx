@@ -29,6 +29,7 @@ import { LineaFoco, ZOOM_VISOR_PUNTO } from "./FocoTermico.tsx";
 import { LineaTrafico } from "./TraficoAereo.tsx";
 import { Fila } from "./Panel.tsx";
 import { Simbolo } from "./Simbolo.tsx";
+import { FilaTipoDron } from "./TipoDron.tsx";
 
 /** Marca que acompaña al texto de la presencia de dron, para no depender del color. */
 const MARCA_PRESENCIA: Record<PresenciaDron, string> = {
@@ -342,6 +343,7 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
           )}
           <QueDiceCadaFuente t={t} idioma={idioma} afirmaciones={de(CAMPOS_DE_FILA.drones)} />
         </Fila>
+        <FilaTipoDron t={t} incidente={incidente} />
         {tiempo.duracion_min !== undefined && (
           <Fila nombre={t.ficha.duracion}>
             <span className="mono">{t.ficha.minutos(numero(tiempo.duracion_min, idioma))}</span>

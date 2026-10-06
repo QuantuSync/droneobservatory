@@ -126,6 +126,7 @@ function incidenteResumen() {
     foco: false,
     atribucion: null,
     zona: null,
+    dron: [],
   };
 }
 

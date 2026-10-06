@@ -49,7 +49,7 @@ def completo() -> Documento:
     """El incidente con todos los campos, con lo que una autoridad investiga."""
     documento = ejemplos.incidente_completo()
     del documento["procedencia"], documento["nivel_detalle"], documento["indicadores"]
-    del documento["deduccion"]  # vive en su tabla
+    del documento["deduccion"], documento["tipo_dron"]  # viven en su tabla
     for fuente in documento["fuentes"]:
         if fuente["id"] == "F2":
             fuente["campos_respaldados"] = RESPALDA_F2
@@ -188,6 +188,7 @@ def base_prueba() -> Almacen:
     almacen.guardar_foco_termico("EODI-UA-2025-0001/UA-63", ejemplos.foco_termico())
     almacen.guardar_deduccion("EODI-2025-00001", "incidente", ejemplos.deduccion_completa())
     almacen.guardar_deduccion("EODI-IG-2025-00001", "impacto", ejemplos.deduccion_completa())
+    almacen.guardar_tipo_dron("EODI-2025-00001", ejemplos.tipo_dron_completo())
     almacen.guardar_condiciones("EODI-2025-00001", ejemplos.condiciones())
     almacen.guardar_restriccion(ejemplos.restriccion())
     almacen.guardar_episodio(ejemplos.episodio(), AHORA)

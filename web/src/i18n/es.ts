@@ -1,3 +1,4 @@
+import { tipoDronEs } from "./tipoDron.ts";
 import { LICENCIA_DATOS, LICENCIA_DATOS_URL, NOMBRE, ORIGEN, REPOSITORIO } from "../sitio.ts";
 import { REGIONES_RUSIA_ES } from "./regionesRusia.ts";
 import type { FechaEscrita, Textos } from "./tipos.ts";
@@ -23,6 +24,7 @@ function diaMesAnio(f: FechaEscrita): string {
 }
 
 export const es: Textos = {
+  tipoDron: tipoDronEs,
   descripcion:
     "Mapa y registro abierto de incidentes con drones en Europa: sobrevuelos, incursiones e " +
     "interrupciones de aeropuertos, con sus fuentes, su estado y su grado de confirmación.",
@@ -1178,6 +1180,71 @@ export const es: Textos = {
                 "drones de esos ataques en el periodo elegido. En los ataques contra Rusia, cuyo " +
                 "parte da los derribos por región, el arco sale del punto de la frontera de " +
                 "Ucrania más cercano a cada región y su cifra son esos derribos.",
+            ],
+          },
+        ],
+      },
+      {
+        id: "tipo-dron",
+        titulo: "Tipo de dron",
+        bloques: [
+          {
+            parrafo: [
+              "Cada incidente dice qué clase de dron pudo ser solo cuando hay base para ello. Si " +
+                "una autoridad nombra el modelo (por ejemplo, los restos de un Gerbera que " +
+                "identifica el ejército), la ficha dice eso y de dónde sale. Si no, el " +
+                "observatorio lo deduce y lo enseña aparte, como «compatible con», con la " +
+                "probabilidad de cada clase y el porqué.",
+            ],
+          },
+          {
+            lista: [
+              {
+                termino: "Rasgos descritos",
+                texto: [
+                  "De las frases de las fuentes se leen la forma (multirrotor, ala fija, ala en " +
+                    "delta), el ruido (hélice, motor de combustión, reacción), el tamaño, las " +
+                    "luces, el número de aparatos, la duración, la altura, la velocidad, la hora " +
+                    "y el comportamiento (quieto, dando vueltas, de paso, en formación). Cada " +
+                    "rasgo guarda la frase literal y su fuente. Lo que el texto no dice no se " +
+                    "supone.",
+                ],
+              },
+              {
+                termino: "Cálculo",
+                texto: [
+                  "Se parte de la frecuencia de cada clase en los casos de la misma zona " +
+                    "(frontera o interior) en que una autoridad identificó el dron. Cada rasgo " +
+                    "sube o baja las clases según lo que dice de ellas el catálogo de " +
+                    "prestaciones, y pesan las restricciones físicas: la distancia a Ucrania, " +
+                    "Rusia y Bielorrusia (y a la costa) frente al alcance de cada clase; el viento " +
+                    "y la temperatura de esa hora y ese lugar; la duración y la altura frente a " +
+                    "su autonomía y su techo; y la velocidad: por debajo de 230 km/h, hélice; por " +
+                    "encima de 300 km/h, reacción; entre medias no decide.",
+                ],
+              },
+              {
+                termino: "Comprobación",
+                texto: [
+                  "El cálculo se repite con cada caso de respuesta conocida apartado (restos y " +
+                    "declaraciones oficiales en Rumanía, Moldavia, Polonia, Lituania, Letonia, " +
+                    "Bulgaria y Turquía, y encuentros con drones clasificados por la UK Airprox " +
+                    "Board) y se compara con decir siempre la clase más frecuente. Solo se " +
+                    "publican las clases que tienen al menos 5 casos comprobados, mejoran a esa " +
+                    "referencia y dan probabilidades que se cumplen. El 6 de octubre de 2026 " +
+                    "pasan el dron de ataque de largo alcance de hélice y el señuelo de largo " +
+                    "alcance, en la frontera. Las cifras de cada clase están en el informe " +
+                    "docs/informe_tipo_y_rutas.md del repositorio.",
+                ],
+              },
+              {
+                termino: "Sin base",
+                texto: [
+                  "Sin rasgos que pesen ni entrada desde fuera en la frontera, con el dron sin " +
+                    "confirmar o con una clase más probable que no ha pasado la comprobación, la " +
+                    "fila no aparece.",
+                ],
+              },
             ],
           },
         ],

@@ -144,6 +144,51 @@ function filaDatos(nombre: string, ...valor: Hijo[]): Html {
   return html(e("dt", null, nombre), e("dd", null, ...valor));
 }
 
+/**
+ * Fila «Tipo de dron», lo mismo que la ficha: lo que identificó la autoridad, con su cita, o la
+ * clase deducida («compatible con») con su probabilidad y sus razones. Sin base, nada.
+ */
+export function filaTipoDron(t: Textos, d: IncidenteDetalle): Html | false {
+  const tipo = d.tipo_dron;
+  if (tipo === undefined) return false;
+  const textos = t.tipoDron;
+  if (tipo.identificado !== undefined) {
+    const fuente = d.fuentes.find((f) => f.id === tipo.identificado?.fuente);
+    return filaDatos(
+      textos.fila,
+      e("span", { "data-tipo-dron": "autoridad" }, textos.identificado(tipo.identificado.modelo)),
+      e("span", { class: "texto-nota" }, textos.grupoDe(textos.grupos[tipo.identificado.grupo])),
+      e("q", { class: "texto-nota" }, tipo.identificado.cita),
+      fuente !== undefined && e("span", { class: "texto-nota" }, t.ficha.valorSegun, " ", fuente.medio),
+    );
+  }
+  const publicado = tipo.publicado;
+  if (publicado === undefined) return false;
+  const otras = Math.round(publicado.otras * 100);
+  const zona = d.zona?.grupo;
+  const razones = [
+    publicado.casos_referencia !== undefined && zona !== undefined
+      ? textos.base(publicado.casos_referencia, textos.zonas[zona])
+      : null,
+    ...(tipo.razones ?? []).map((r) => textos.razon(r)),
+  ].filter((x): x is string => x !== null);
+  return filaDatos(
+    textos.fila,
+    e("span", { "data-tipo-dron": "deducido" }, textos.compatibleCon, ":"),
+    e(
+      "ul",
+      null,
+      publicado.compatible.map((c) =>
+        e("li", null, textos.grupos[c.grupo], " · ", textos.probabilidad(Math.round(c.probabilidad * 100))),
+      ),
+    ),
+    otras > 0 && e("span", { class: "texto-nota" }, textos.otras(otras)),
+    e("span", { class: "texto-nota" }, textos.deducido),
+    razones.length > 0 && e("span", { class: "texto-nota" }, textos.porQue, ":"),
+    razones.length > 0 && e("ul", null, razones.map((r) => e("li", null, r))),
+  );
+}
+
 /** El lugar de un incidente en una línea: localidad, región si no hay punto, país. */
 function lugarEscrito(d: IncidenteDetalle, idioma: Idioma): string {
   const partes: string[] = [];
@@ -439,6 +484,7 @@ function incidente(d: IncidenteDetalle, idioma: Idioma): PaginaTexto {
         cifraDe(idioma, t, d.drones?.numero, de(["drones.numero"])),
         d.drones?.modelo !== undefined && e("span", { class: "texto-nota" }, t.ficha.modelo, ": ", d.drones.modelo),
       ),
+      filaTipoDron(t, d),
       d.tiempo.duracion_min !== undefined && filaDatos(t.ficha.duracion, t.ficha.minutos(numero(d.tiempo.duracion_min, idioma))),
       efectos.length > 0 && filaDatos(t.ficha.efecto, e("ul", null, efectos.map((x) => e("li", null, x)))),
       medidas.length > 0 && filaDatos(t.ficha.respuesta, medidas.map((m) => t.medida[m]).join(" · ")),

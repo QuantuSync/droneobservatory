@@ -9,11 +9,13 @@ import type {
   EstadoDirecto,
   EstadoFuente,
   FuenteDelSistema,
+  GrupoDron,
   Medida,
   MotivoZona,
   NivelUbicacion,
   Precision,
   PresenciaDron,
+  RazonTipoDron,
   ResultadoRecogida,
   Sentido,
   Tipo,
@@ -557,6 +559,29 @@ export interface Textos {
   };
   regiones: Record<string, string>;
   satelite: TextosSatelite;
+  tipoDron: TextosTipoDron;
+}
+
+/** Tipo de dron: lo que identificó la autoridad o la clase deducida con su probabilidad. */
+export interface TextosTipoDron {
+  /** Rótulo de la fila de la ficha y del grupo del filtro. */
+  fila: string;
+  grupos: Record<GrupoDron, string>;
+  /** «Gerbera, según la autoridad»: el modelo tal como lo escribe. */
+  identificado: (modelo: string) => string;
+  grupoDe: (grupo: string) => string;
+  compatibleCon: string;
+  /** «4 de cada 10 (42 %)». */
+  probabilidad: (porcentaje: number) => string;
+  otras: (porcentaje: number) => string;
+  deducido: string;
+  porQue: string;
+  /** Lo que da la frecuencia de partida: casos de la misma zona con el dron identificado. */
+  base: (casos: number, zona: string) => string;
+  zonas: { frontera: string; interior: string };
+  razon: (razon: RazonTipoDron) => string;
+  filtroAutoridad: string;
+  filtroDeducido: string;
 }
 
 /** Guerra por satélite: corredores, focos en vivo, luz nocturna e imágenes de antes y después. */

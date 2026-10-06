@@ -28,6 +28,7 @@ import type {
   Resumen,
   ResumenUcrania,
   Sentido,
+  TipoDron,
   ZonaResumen,
 } from "./tipos.ts";
 
@@ -66,6 +67,16 @@ export function atribucionResumida(p: {
   return { tipo: p.atribucion?.tipo ?? null, pais: p.atribucion?.pais ?? null };
 }
 
+/**
+ * Claves del tipo de dron para el filtro: «autoridad:<grupo>» si la autoridad lo identificó; si
+ * no, «deducido:<grupo>» por cada grupo compatible publicado.
+ */
+export function clavesDron(tipo: TipoDron | undefined): string[] {
+  if (tipo === undefined) return [];
+  if (tipo.identificado !== undefined) return [`autoridad:${tipo.identificado.grupo}`];
+  return (tipo.publicado?.compatible ?? []).map((c) => `deducido:${c.grupo}`);
+}
+
 export function resumirIncidente(feature: FeatureIncidente): IncidenteResumen {
   const p = feature.properties;
   const [lon, lat] = feature.geometry.coordinates;
@@ -85,6 +96,7 @@ export function resumirIncidente(feature: FeatureIncidente): IncidenteResumen {
     foco: p.foco_termico !== undefined,
     atribucion: atribucionResumida(p),
     zona: p.zona?.grupo ?? null,
+    dron: clavesDron(p.tipo_dron),
   };
 }
 
@@ -105,6 +117,7 @@ export function resumirSinUbicacion(p: PropiedadesSinUbicacion): IncidenteResume
     foco: p.foco_termico !== undefined,
     atribucion: atribucionResumida(p),
     zona: p.zona?.grupo ?? null,
+    dron: clavesDron(p.tipo_dron),
   };
 }
 

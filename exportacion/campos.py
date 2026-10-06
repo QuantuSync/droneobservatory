@@ -43,6 +43,31 @@ def _fuentes() -> set[str]:
     }
 
 
+def _tipo_dron(ruta: str) -> set[str]:
+    """Lo identificado por la autoridad o lo deducido que se publica, con sus razones."""
+    datos = f"{ruta}.razones[].datos"
+    return {
+        ruta,
+        f"{ruta}.version",
+        f"{ruta}.identificado",
+        *(f"{ruta}.identificado.{c}" for c in ("modelo", "grupo", "cita", "fuente")),
+        f"{ruta}.publicado",
+        f"{ruta}.publicado.compatible",
+        f"{ruta}.publicado.compatible[].grupo",
+        f"{ruta}.publicado.compatible[].probabilidad",
+        f"{ruta}.publicado.otras",
+        f"{ruta}.publicado.casos_referencia",
+        f"{ruta}.razones",
+        f"{ruta}.razones[].tipo",
+        f"{ruta}.razones[].clave",
+        datos,
+        *(f"{datos}.{c}" for c in ("rasgo", "valor", "cita", "fuente", "distancia_km",
+                                   "mas_de_600_km", "costa_km", "entrada_exterior", "kmh",
+                                   "metros", "minutos")),
+        *(f"{datos}.valor.{c}" for c in ("metros", "minutos", "kmh", "min", "max", "local")),
+    }  # fmt: skip
+
+
 def _control() -> set[str]:
     return {"control", *_instante("control.ultima_actualizacion"), "control.motivo_desmentido"}
 
@@ -210,6 +235,7 @@ CAMPOS_PUBLICOS_INCIDENTE: frozenset[str] = frozenset(
         "atribucion.tipo",
         "atribucion.pais",
         *_instante("atribucion.fecha"),
+        *_tipo_dron("tipo_dron"),
         "investigacion",
         "investigacion[].autoridad",
         "investigacion[].cita",

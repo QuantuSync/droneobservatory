@@ -78,6 +78,7 @@ from recogida import (
     revisados,
     satelite,
     tipo_atribucion,
+    tipo_dron,
 )
 from recogida.cache import CachePaginas
 from recogida.descarga import Descargador, DescargaFallida
@@ -476,6 +477,9 @@ def principal(argumentos: list[str] | None = None) -> int:
             )
         except Exception as error:
             registro.warning("frontera o interior sin calcular: %s", str(error)[:300])
+        # Tipo de dron de cada incidente (proceso/tipo_dron), con la zona ya calculada. Un
+        # fallo no cambia el código de salida: queda lo último guardado.
+        tipo_dron.paso_horario(almacen, ahora)
         if args.estado is not None:
             escribir_parcial(args.estado, estados)
         cambiados = (

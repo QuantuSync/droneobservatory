@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:eodi:esquema:1.15.0:region_ucrania",
+  "title": "Región afectada por un ataque de la capa de Ucrania",
+  "x-version": "1.15.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["region"],
+  "properties": {
+    "region": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.15.0:comun#/$defs/region_iso"},
+    "derribados": {
+      "x-visibilidad": "publico",
+      "description": "Drones que el parte dice derribados sobre esta región, cuando da la cifra de cada una.",
+      "$ref": "urn:eodi:esquema:1.15.0:comun#/$defs/rango_entero_o_desconocido"
+    },
+    "impactos": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.15.0:comun#/$defs/rango_entero_o_desconocido"},
+    "caida_restos": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.15.0:comun#/$defs/rango_entero_o_desconocido"},
+    "categorias_objetivo": {
+      "x-visibilidad": "publico",
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"enum": ["energia", "residencial", "ferrocarril", "puerto", "industrial", "otra"]}
+    },
+    "foco_termico": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.15.0:comun#/$defs/foco_termico"},
+    "heridos": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.15.0:comun#/$defs/rango_entero_o_desconocido"},
+    "fallecidos": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.15.0:comun#/$defs/rango_entero_o_desconocido"}
+  }
+}

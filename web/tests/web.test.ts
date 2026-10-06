@@ -71,6 +71,7 @@ describe("textos en español e inglés", () => {
       "fuentes",
       "focos",
       "satelite",
+      "tipo-dron",
       "trafico",
       "directo",
       "gnss",

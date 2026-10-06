@@ -394,6 +394,7 @@ def incidente_completo() -> Documento:
             "distancia_instalaciones_km": 12.5,
         },
         "deduccion": deduccion_completa(),
+        "tipo_dron": tipo_dron_completo(),
         # Lo añade la exportación semanal; la base no lo guarda.
         "procedencia": {
             "drones.numero": {
@@ -721,6 +722,85 @@ def _evidencia(efecto: str) -> Documento:
         "efecto": efecto,
         "motivo": "prueba",
         "datos": {"distancia_km": 12.0},
+    }
+
+
+def tipo_dron_completo() -> Documento:
+    """Tipo de dron con todos sus campos (lo de la tabla tipos_dron)."""
+    rasgo = {"rasgo": "tamano", "valor": "grande", "cita": "Two large drones were seen",
+             "fuente": "F1", "origen": "prensa"}  # fmt: skip
+    return {
+        "version": "tipo-dron-1.0.0",
+        "version_rasgos": "rasgos-1.0.0",
+        "rasgos": [
+            rasgo,
+            {
+                "rasgo": "altura",
+                "valor": {
+                    "metros": 300.0,
+                    "minutos": 5.0,
+                    "kmh": 150.0,
+                    "min": 1,
+                    "max": 2,
+                    "local": "21:00",
+                },
+                "cita": "at 300 m",
+                "fuente": "F1",
+                "origen": "prensa",
+            },
+        ],
+        "probabilidades": {"senuelo_largo_alcance": 0.6, "multirrotor_consumo": 0.4},
+        "grupos": {"senuelo": 0.6, "comercial_pequeno": 0.4},
+        "razones": [
+            {
+                "tipo": "rasgo",
+                "clave": "tamano:grande",
+                "clases": ["multirrotor_consumo"],
+                "factor": 0.2,
+                "datos": {
+                    **rasgo,
+                    "valor": {
+                        "metros": 3.0,
+                        "minutos": 1.0,
+                        "kmh": 2.0,
+                        "min": 1,
+                        "max": 1,
+                        "local": "21:00",
+                    },
+                },
+            },
+            {
+                "tipo": "restriccion",
+                "clave": "distancia",
+                "clases": ["multirrotor_consumo"],
+                "factor": 0.02,
+                "datos": {
+                    "distancia_km": 40.0,
+                    "mas_de_600_km": False,
+                    "costa_km": None,
+                    "entrada_exterior": True,
+                    "kmh": 1.0,
+                    "metros": 1.0,
+                    "minutos": 1.0,
+                },
+            },
+        ],
+        "con_base": True,
+        "identificado": {
+            "modelo": "Gerbera",
+            "clases": ["senuelo_largo_alcance"],
+            "grupo": "senuelo",
+            "cita": "drona de tip Gerbera",
+            "fuente": "F1",
+            "origen": "oficial",
+        },
+        "publicado": {
+            "compatible": [{"grupo": "senuelo", "probabilidad": 0.6}],
+            "otras": 0.4,
+            "casos_referencia": 24,
+        },
+        "retirado": {"fecha": "2025-10-03T10:05Z", "motivo": {"es": "prueba", "en": "test"}},
+        "evaluado": "2025-10-03T10:05Z",
     }
 
 

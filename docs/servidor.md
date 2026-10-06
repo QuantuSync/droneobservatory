@@ -126,7 +126,12 @@ con el pasado. Las previsiones nuevas quedan en la tabla `previsiones` de la bas
 cambios ni borrados. Si el cálculo falla, queda un aviso en el diario («previsión sin calcular»),
 el fichero anterior no se toca (la web enseña su fecha de cálculo) y la recogida publica igual el
 resto. También clasifica cada incidente como frontera o interior
-([`proceso/zona.py`](../proceso/zona.py)) y guarda solo lo que cambia.
+([`proceso/zona.py`](../proceso/zona.py)) y guarda solo lo que cambia. Después calcula el tipo
+de dron de cada incidente ([`recogida/tipo_dron.py`](../recogida/tipo_dron.py), unos segundos):
+lo que identificó la autoridad, los rasgos descritos y la clase probable con su comprobación
+contra los casos de respuesta conocida; lo guarda en la tabla `tipos_dron` (con historial) solo
+si cambia, y un fallo ahí no cambia el resultado de la recogida
+([`informe_tipo_y_rutas.md`](informe_tipo_y_rutas.md)).
 
 Sale con el código de la recogida: con avisos, la unidad queda como fallida en systemd,
 igual que el workflow quedaba en rojo, y la hora siguiente se lanza igual.
