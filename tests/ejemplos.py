@@ -820,3 +820,24 @@ def perdida_luz(zona: str = "ciudad") -> Documento:
             "punto": {"lat": 49.99232, "lon": 36.23101},
         }
     return documento
+
+
+def previsiones() -> list[Documento]:
+    """Una previsión registrada de cada tipo (proceso/prevision)."""
+    return [
+        {
+            "id": "frontera:RO:2025-11-06", "tipo": "frontera", "pais": "RO",
+            "objetivo": "2025-11-06", "emitida": "2025-11-05T17:17Z", "probabilidad": 0.18,
+            "metodo": "frontera-1.0.0",
+        },
+        {
+            "id": "semana:MD:2025-11-10", "tipo": "semana", "pais": "MD",
+            "objetivo": "2025-11-10", "emitida": "2025-11-08T00:17Z", "esperado": 2.4,
+            "minimo": 0, "maximo": 6, "metodo": "semana-1.0.0",
+        },
+        {
+            "id": "segunda_noche:UA:2025-11-06", "tipo": "segunda_noche", "pais": "UA",
+            "objetivo": "2025-11-06", "emitida": "2025-11-05T09:17Z", "probabilidad": 0.24,
+            "metodo": "segunda-noche-1.0.0",
+        },
+    ]  # fmt: skip

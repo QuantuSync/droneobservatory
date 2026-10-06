@@ -75,6 +75,8 @@ describe("textos en español e inglés", () => {
       "directo",
       "gnss",
       "presion",
+      "frontera",
+      "prevision",
       "licencias",
     ]);
     const texto = JSON.stringify(es.metodologia);

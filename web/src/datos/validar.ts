@@ -1,4 +1,4 @@
-// Validación de los datos contra el esquema 1.13.0 (campos públicos), escrita a mano para
+// Validación de los datos contra el esquema 1.14.0 (campos públicos), escrita a mano para
 // que no necesite generar código en el navegador. Se usa en el build, sobre los ficheros de
 // publicacion/, y en la web al cargar cada fichero: un fichero que no valida no se pinta.
 
@@ -14,6 +14,7 @@ import type {
   ResumenUcrania,
 } from "./tipos.ts";
 import type { AlumbradoReducido, FocosVivos, IndiceSatelite } from "./guerraSatelite.ts";
+import type { Prevision } from "./prevision.ts";
 import * as v from "./vocabulario.ts";
 
 export type Resultado<T> = { ok: true; datos: T } | { ok: false; errores: string[] };
@@ -312,6 +313,10 @@ const CAMPOS_INCIDENTE_OPCIONALES: Record<string, Comprobacion> = {
     }),
     por: enumerado(["fuente", "fecha"] as const),
   }),
+  zona: objeto(
+    { grupo: enumerado(v.ZONAS), motivo: enumerado(v.MOTIVOS_ZONA) },
+    { distancia_km: numero(0, 100000, true) },
+  ),
   foco_termico: focoTermico,
   trafico_aereo: traficoAereo,
 };
@@ -525,6 +530,7 @@ const resumen = objeto({
       atribucion: nulable(
         objeto({ tipo: nulable(enumerado(v.TIPOS_ACTOR)), pais: nulable(cadena(v.PATRON_PAIS)) }),
       ),
+      zona: nulable(enumerado(v.ZONAS)),
     }),
   ),
   episodios: lista(
@@ -823,4 +829,185 @@ const indiceSatelite = objeto({
 /** satelite/parejas.json del almacén público (recogida/satelite.py). */
 export function validarIndiceSatelite(valor: unknown): Resultado<IndiceSatelite> {
   return validar(indiceSatelite, valor);
+}
+
+// --- Previsión y tendencias (publicacion/prevision.json, esquema prevision 1.0.0) -------------
+
+const diaTexto = cadena(/^\d{4}-\d{2}-\d{2}$/);
+const minutoTexto = cadena(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}Z$/);
+const proporcion = numero(0, 1);
+const efecto = enumerado(["sube", "baja", "nada"] as const);
+const grupoPrevision = enumerado(["todo", "frontera", "interior"] as const);
+const paisPrevision = cadena(v.PATRON_PAIS);
+
+const comprobacionFrontera = objeto({
+  pais: paisPrevision,
+  desde: diaTexto,
+  noches: enteroNoNegativo,
+  noches_con_dron: enteroNoNegativo,
+  area_bajo_curva: nulable(proporcion),
+  mejora_sobre_frecuencia: numero(-1000, 1),
+  mejora_sobre_persistencia: numero(-1000, 1),
+  mejora_cota: numero(0, 1000),
+  con_dron_en_riesgo_alto: enteroNoNegativo,
+  tramos: lista(
+    objeto({
+      desde: proporcion,
+      hasta: proporcion,
+      noches: enteroNoNegativo,
+      con_dron: enteroNoNegativo,
+      prevista_media: proporcion,
+    }),
+  ),
+  publicable: constante(true),
+});
+
+const prevision = objeto(
+  {
+    version_esquema: constante("1.0.0"),
+    version: cadena(),
+    calculado: minutoTexto,
+    datos_hasta: diaTexto,
+    metodo: objeto({ es: cadena(), en: cadena() }),
+    frontera: objeto({
+      version: cadena(),
+      noche: objeto({ desde: diaTexto, hasta: diaTexto }),
+      paises: lista(
+        objeto({
+          pais: paisPrevision,
+          probabilidad: proporcion,
+          de_cada_10: numero(0, 10, true),
+          frecuencia_de_siempre: proporcion,
+          factores: objeto({
+            lanzados_anoche: numero(0, 100000),
+            lanzados_tres_noches: numero(0, 100000),
+            noches_desde_crimea: numero(0, 7),
+            incidentes_siete_dias: numero(0, 7),
+          }),
+          efectos: objeto({
+            lanzados_tres_noches: efecto,
+            noches_desde_crimea: efecto,
+            incidentes_siete_dias: efecto,
+          }),
+          comprobacion: comprobacionFrontera,
+          ultimas: lista(objeto({ noche: diaTexto, probabilidad: proporcion, con_dron: enumerado([true, false]) })),
+        }),
+      ),
+    }),
+    semana: objeto({
+      version: cadena(),
+      semana: diaTexto,
+      fijada: enumerado([true, false]),
+      paises: lista(
+        objeto({
+          pais: paisPrevision,
+          esperado: numero(0, 100000),
+          minimo: enteroNoNegativo,
+          maximo: enteroNoNegativo,
+          comprobacion: objeto({
+            pais: paisPrevision,
+            grupo: grupoPrevision,
+            semanas: enteroNoNegativo,
+            mejora_sobre_frecuencia: numero(-1000, 1000),
+            mejora_sobre_persistencia: numero(-1000, 1000),
+            mejora_cota: numero(0, 1000),
+            dentro_del_margen: enteroNoNegativo,
+            publicable: constante(true),
+          }),
+        }),
+      ),
+      marcador: lista(
+        objeto({
+          semana: diaTexto,
+          pais: paisPrevision,
+          esperado: numero(0, 100000),
+          minimo: enteroNoNegativo,
+          maximo: enteroNoNegativo,
+          real: enteroNoNegativo,
+          dentro: enumerado([true, false]),
+          tipo: enumerado(["reconstruida", "en_vivo"] as const),
+        }),
+      ),
+    }),
+    cajas: diccionario(paisPrevision, tupla([longitud, latitud, longitud, latitud])),
+    registro: lista(
+      objeto(
+        {
+          id: cadena(/^(frontera|semana|segunda_noche):[A-Z]{2}:\d{4}-\d{2}-\d{2}$/),
+          tipo: enumerado(["frontera", "semana", "segunda_noche"] as const),
+          pais: paisPrevision,
+          objetivo: diaTexto,
+          emitida: minutoTexto,
+          metodo: cadena(),
+        },
+        {
+          probabilidad: proporcion,
+          esperado: numero(0, 100000),
+          minimo: enteroNoNegativo,
+          maximo: enteroNoNegativo,
+          con_dron: enumerado([true, false]),
+          real: enteroNoNegativo,
+          dentro: enumerado([true, false]),
+          grande: enumerado([true, false]),
+        },
+      ),
+    ),
+  },
+  {
+    segunda_noche: objeto(
+      {
+        comprobacion: (valor, ruta, errores) => {
+          if (!esObjeto(valor)) anotar(errores, ruta, "se esperaba un objeto");
+        },
+      },
+      {
+        aviso: objeto({
+          tras_noche: diaTexto,
+          lanzados: enteroNoNegativo,
+          probabilidad: proporcion,
+          de_cada_10: numero(0, 10, true),
+        }),
+      },
+    ),
+    rachas: objeto({
+      version: cadena(),
+      modo: enumerado(["todo", "por_grupo"] as const),
+      comprobacion: objeto({
+        semanas_en_racha: enteroNoNegativo,
+        incidentes_semana_siguiente: enteroNoNegativo,
+        normal_semana_siguiente: numero(0, 1000000),
+        mejora_sobre_normal: numero(-1000, 1000),
+        mejora_cota: numero(0, 1000),
+        publicable: constante(true),
+      }),
+      activas: lista(
+        objeto({
+          pais: paisPrevision,
+          grupo: grupoPrevision,
+          desde: diaTexto,
+          hasta: diaTexto,
+          semanas: enteroNoNegativo,
+          incidentes: enteroNoNegativo,
+          habitual: numero(0, 1000000),
+          veces: numero(0, 1000000),
+          tendencia: enumerado(["crece", "estable", "se_apaga"] as const),
+        }),
+      ),
+      terminadas: lista(objeto({ pais: paisPrevision, grupo: grupoPrevision, hasta: diaTexto })),
+      graficas: diccionario(
+        paisPrevision,
+        objeto({
+          semanas: lista(diaTexto),
+          incidentes: lista(enteroNoNegativo),
+          normal: numero(0, 1000000),
+          banda: tupla([enteroNoNegativo, enteroNoNegativo]),
+        }),
+      ),
+    }),
+  },
+);
+
+/** publicacion/prevision.json (proceso/prevision). */
+export function validarPrevision(valor: unknown): Resultado<Prevision> {
+  return validar(prevision, valor);
 }

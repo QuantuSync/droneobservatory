@@ -3,7 +3,8 @@ import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } fro
 import { LineaNovedades, RecorridoNovedades } from "./componentes/Novedades.tsx";
 import { Ayuda } from "./componentes/Ayuda.tsx";
 import { BarraEstado } from "./componentes/BarraEstado.tsx";
-import { BotonAhora, BotonFiltros, Desplegable } from "./componentes/BotonesMapa.tsx";
+import { BotonAhora, BotonFiltros, BotonPrevision, Desplegable } from "./componentes/BotonesMapa.tsx";
+import { Prevision } from "./componentes/Prevision.tsx";
 import { BarraMovil, Cabecera } from "./componentes/Cabecera.tsx";
 import {
   Atribuciones,
@@ -34,7 +35,7 @@ import {
   cargarIndiceSatelite,
 } from "./componentes/GuerraSatelite.tsx";
 import { Filtros, textoDeSeleccion } from "./componentes/Filtros.tsx";
-import { LeyendaGnss, LeyendaPresion } from "./componentes/Leyendas.tsx";
+import { LeyendaCorredores, LeyendaGnss, LeyendaPresion } from "./componentes/Leyendas.tsx";
 import type { EstadoGnss } from "./componentes/Leyendas.tsx";
 import { Lista } from "./componentes/Lista.tsx";
 import { Marcador } from "./componentes/Marcador.tsx";
@@ -53,7 +54,10 @@ import {
   cargarIncidente,
   cargarResumen,
   cargarResumenUcrania,
+  cargarPrevision,
 } from "./datos/carga.ts";
+import { diaDeTexto, rachaDe } from "./datos/prevision.ts";
+import type { Prevision as DatosPrevision, Racha } from "./datos/prevision.ts";
 import type { Carga } from "./datos/carga.ts";
 import { cifrasAhora } from "./datos/ahora.ts";
 import { cargarDirecto, cierresEnCurso, ordenarAvisos } from "./datos/directo.ts";
@@ -67,6 +71,7 @@ import {
   OBJETO_FOCOS_VIVOS,
   ciudadesSinLuz as ciudadesSinLuzDe,
   corredoresDelPeriodo,
+  principales,
   lucesDelPeriodo,
   perdidaPorRegion,
   puntosConSatelite,
@@ -184,9 +189,9 @@ const MS_FOCOS_VIVOS = 10 * 60 * 1000;
 /** Regiones que se pueden abrir: las de Ucrania (con lo ocupado) y las de Rusia. */
 const REGION_DE_LA_CAPA = /^(UA|RU)-[A-Z0-9]{1,3}$/;
 /** Hojas del teléfono que no son una ficha: una sola a la vez. */
-type HojaPropia = "filtros" | "ahora" | "directo" | null;
+type HojaPropia = "filtros" | "ahora" | "prevision" | "directo" | null;
 /** Desplegables de los botones sobre el mapa, en el escritorio: uno a la vez. */
-type Desplegado = "filtros" | "ahora" | null;
+type Desplegado = "filtros" | "ahora" | "prevision" | null;
 
 /** Con el teléfono en horizontal apenas hay alto: una hoja a media altura no enseña nada. */
 const ALTO_DE_TELEFONO_APAISADO = 500;
@@ -357,6 +362,7 @@ export function App() {
   const [desplegado, setDesplegado] = useState<Desplegado>(null);
   const botonFiltros = useRef<HTMLButtonElement>(null);
   const botonAhora = useRef<HTMLButtonElement>(null);
+  const botonPrevision = useRef<HTMLButtonElement>(null);
   const [noche, setNoche] = useState<number | null>(null);
   const [nochePausada, setNochePausada] = useState(false);
   const [menu, setMenu] = useState(false);
@@ -407,6 +413,21 @@ export function App() {
     });
     return () => control.abort();
   }, []);
+
+  // La previsión no entra en la primera carga: se pide al abrir «Previsión» o la ficha de un país.
+  const [prevision, setPrevision] = useState<Carga<DatosPrevision>>(CARGANDO);
+  const [pidePrevision, setPidePrevision] = useState(false);
+  // En el teléfono «Previsión» es una pestaña de «Europa ahora»: con un periodo elegido, un
+  // tercer botón no cabe en 360 px y bajaría a otra fila sobre el mapa.
+  const [pestanaAhora, setPestanaAhora] = useState<"ahora" | "prevision">("ahora");
+  useEffect(() => {
+    if (!pidePrevision) return;
+    const control = new AbortController();
+    void cargarPrevision(fetch, control.signal).then((carga) => {
+      if (!control.signal.aborted) setPrevision(carga);
+    });
+    return () => control.abort();
+  }, [pidePrevision]);
 
   // Estado del sistema: si no está publicado o no valida, la barra usa el cambio de datos.
   useEffect(() => {
@@ -622,6 +643,10 @@ export function App() {
         : corredoresDelPeriodo(ucraniaActiva, periodo),
     [ucraniaActiva, periodo],
   );
+  // Con muchos corredores, solo los principales, salvo que se pidan todos.
+  const [todosLosCorredores, setTodosLosCorredores] = useState(false);
+  const corredoresPrincipales = useMemo(() => (corredores === null ? null : principales(corredores)), [corredores]);
+  const corredoresEnMapa = todosLosCorredores ? corredores : corredoresPrincipales;
   const lucesPeriodo = useMemo(
     () => (ucraniaActiva === null || periodo === null ? null : lucesDelPeriodo(ucraniaActiva, periodo)),
     [ucraniaActiva, periodo],
@@ -698,6 +723,17 @@ export function App() {
 
   const contadores = datosResumen === null ? metaInicial : cifras(delPeriodo);
 
+  // La previsión hace falta con su panel abierto o con la ficha de un país (su racha).
+  useEffect(() => {
+    if (
+      hojaPropia === "prevision" ||
+      desplegado === "prevision" ||
+      (hojaPropia === "ahora" && pestanaAhora === "prevision") ||
+      panelLocal?.clase === "pais"
+    ) {
+      setPidePrevision(true);
+    }
+  }, [hojaPropia, desplegado, panelLocal, pestanaAhora]);
   const cambiarFiltros = useCallback(
     (nuevos: EstadoFiltros) =>
       cambiarBusqueda(conSubcapasDe(escribirSeleccion(nuevos, seleccion), busqueda)),
@@ -1036,6 +1072,28 @@ export function App() {
     [directo, abrirAviso, api, elegirSeleccion, cifrasDelMomento],
   );
 
+  const irARacha = useCallback(
+    (racha: Racha) => {
+      setMenu(false);
+      setDesplegado(null);
+      setHojaPropia(null);
+      setCapas((c) => ({ ...c, incidentes: true }));
+      const periodo = { desde: diaDeTexto(racha.desde), hasta: diaDeTexto(racha.hasta) };
+      cambiarBusqueda(
+        conSubcapasDe(
+          escribirSeleccion({ ...filtros, paises: [racha.pais] }, { clase: "entre", periodo }),
+          busqueda,
+        ),
+        true,
+      );
+      const caja = prevision.estado === "listo" ? prevision.datos.cajas[racha.pais] : undefined;
+      if (caja !== undefined) {
+        setVuelo((anterior) => ({ encuadre: { caja }, modo: "ir", n: (anterior?.n ?? 0) + 1 }));
+      }
+    },
+    [cambiarBusqueda, filtros, busqueda, prevision],
+  );
+
   const irANovedad = useCallback(
     (posicion: number) => {
       const id = incidentesNuevos[posicion];
@@ -1051,7 +1109,7 @@ export function App() {
   // En el teléfono, las hojas de los filtros y de «Europa ahora» se cierran tocando fuera
   // (un toque, no un arrastre: se puede mover el mapa con ellas abiertas).
   useEffect(() => {
-    if (!movil || (hojaPropia !== "filtros" && hojaPropia !== "ahora")) return;
+    if (!movil || (hojaPropia !== "filtros" && hojaPropia !== "ahora" && hojaPropia !== "prevision")) return;
     const alTocar = (evento: MouseEvent) => {
       const objetivo = evento.target;
       if (objetivo instanceof Element && objetivo.closest("[data-hoja-propia]") !== null) return;
@@ -1397,6 +1455,8 @@ export function App() {
               presion={presion?.get(panelLocal.iso) ?? null}
               cifras={cifrasDePais(filtrados, panelLocal.iso, periodo)}
               periodo={textoPeriodo}
+              racha={rachaDe(prevision.estado === "listo" ? prevision.datos : null, panelLocal.iso)}
+              sinComparacion={seleccion.clase === "todo"}
             />
           </div>
         </>
@@ -1485,8 +1545,23 @@ export function App() {
       enHoja={enHoja}
     />
   );
-  const leyendas = (capas.gnss || capas.presion) && (
+  const hayCorredoresOcultos =
+    capas.ucrania &&
+    capas.corredores &&
+    corredores !== null &&
+    corredoresPrincipales !== null &&
+    corredores.length > corredoresPrincipales.length;
+  const leyendas = (capas.gnss || capas.presion || hayCorredoresOcultos) && (
     <div className="flex flex-col items-start gap-1.5" data-leyendas="">
+      {hayCorredoresOcultos && corredores !== null && corredoresPrincipales !== null && (
+        <LeyendaCorredores
+          t={t}
+          principales={corredoresPrincipales.length}
+          total={corredores.length}
+          todos={todosLosCorredores}
+          onTodos={() => setTodosLosCorredores((actual) => !actual)}
+        />
+      )}
       {capas.presion && <LeyendaPresion t={t} seleccion={seleccion} />}
       {capas.gnss && <LeyendaGnss t={t} estado={estadoGnss} />}
     </div>
@@ -1504,6 +1579,7 @@ export function App() {
       <EuropaAhora t={t} idioma={idioma} cifras={cifrasDelMomento} onIr={irACifra} />
     </>
   );
+  const previsionEnPantalla = <Prevision t={t} idioma={idioma} carga={prevision} onRacha={irARacha} />;
   const periodoEscrito = textoDeSeleccion(t, seleccion);
   const cierresActivos = cierresEnCurso(directo).length;
   const novedadesPendientes = latentes.size;
@@ -1533,6 +1609,14 @@ export function App() {
         novedades={novedadesPendientes}
         referencia={enTelefono === movil ? botonAhora : undefined}
       />
+      {!enTelefono && (
+        <BotonPrevision
+          t={t}
+          abierto={desplegado === "prevision"}
+          onAbrir={() => setDesplegado((actual) => (actual === "prevision" ? null : "prevision"))}
+          referencia={movil ? undefined : botonPrevision}
+        />
+      )}
       {!enTelefono && desplegado === "filtros" && (
         <Desplegable
           t={t}
@@ -1553,6 +1637,17 @@ export function App() {
           onCerrar={() => setDesplegado(null)}
         >
           {europaAhora}
+        </Desplegable>
+      )}
+      {!enTelefono && desplegado === "prevision" && (
+        <Desplegable
+          t={t}
+          titulo={t.prevision.etiqueta}
+          cerrar={t.prevision.cerrar}
+          boton={botonPrevision}
+          onCerrar={() => setDesplegado(null)}
+        >
+          {previsionEnPantalla}
         </Desplegable>
       )}
     </div>
@@ -1643,7 +1738,7 @@ export function App() {
               gnss={gnssActual?.celdas ?? null}
               presion={presion}
               avisos={avisos}
-              corredores={corredores}
+              corredores={corredoresEnMapa}
               luzRegiones={luzRegiones}
               ciudadesSinLuz={ciudadesSinLuz}
               alumbrado={verAlumbrado ? (alumbrado?.ciudades ?? null) : null}
@@ -1830,7 +1925,43 @@ export function App() {
                     onCerrar={() => setHojaPropia(null)}
                     cerrar={t.ahora.cerrar}
                   />
-                  <div className="min-h-0 flex-1 overflow-y-auto px-3 py-2">{europaAhora}</div>
+                  <div role="tablist" aria-label={t.ahora.etiqueta} className="flex gap-1 px-3 pt-2" data-pestanas-ahora="">
+                    {(["ahora", "prevision"] as const).map((pestana) => (
+                      <button
+                        key={pestana}
+                        type="button"
+                        role="tab"
+                        aria-selected={pestanaAhora === pestana}
+                        className="control min-h-11 flex-1 rounded-sm border border-linea px-3 text-sm"
+                        data-pestana={pestana}
+                        onClick={() => setPestanaAhora(pestana)}
+                      >
+                        {pestana === "ahora" ? t.ahora.etiqueta : t.prevision.etiqueta}
+                      </button>
+                    ))}
+                  </div>
+                  <div role="tabpanel" className="min-h-0 flex-1 overflow-y-auto px-3 py-2">
+                    {pestanaAhora === "ahora" ? europaAhora : previsionEnPantalla}
+                  </div>
+                </HojaInferior>
+              </div>
+            )}
+            {movil && ficha === null && hojaPropia === "prevision" && (
+              <div className="pointer-events-auto" data-hoja-propia="">
+                <HojaInferior
+                  t={t}
+                  nombre={t.prevision.etiqueta}
+                  altura={altura}
+                  onAltura={setAltura}
+                  onCerrar={() => setHojaPropia(null)}
+                >
+                  <CabeceraFicha
+                    t={t}
+                    etiqueta={t.prevision.etiqueta}
+                    onCerrar={() => setHojaPropia(null)}
+                    cerrar={t.prevision.cerrar}
+                  />
+                  <div className="min-h-0 flex-1 overflow-y-auto px-3 py-2">{previsionEnPantalla}</div>
                 </HojaInferior>
               </div>
             )}

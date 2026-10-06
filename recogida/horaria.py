@@ -43,7 +43,7 @@ from tempfile import TemporaryDirectory
 from almacen import remoto, sitio
 from almacen.base import Almacen
 from almacen.cifrado import abrir_cifrada
-from exportacion.publicar import modelos, publicar
+from exportacion.publicar import DIRECTORIO, modelos, publicar
 from proceso import (
     cruces,
     focos_termicos,
@@ -53,6 +53,7 @@ from proceso import (
     periodos,
     presencia,
     solapes,
+    zona,
     zonas_lanzamiento,
 )
 from proceso.ataques import SENTIDO_UA_RU
@@ -72,6 +73,7 @@ from recogida import (
     luces,
     mediciones,
     oficiales,
+    prevision,
     revisados,
     satelite,
     tipo_atribucion,
@@ -459,6 +461,13 @@ def principal(argumentos: list[str] | None = None) -> int:
             )
         except Exception as error:
             registro.warning("cruces sin enlazar: %s", str(error)[:300])
+        # Frontera o interior de cada incidente (proceso/zona.py), con los cruces ya hechos.
+        try:
+            registro.info(
+                "frontera o interior: %s", zona.clasificar_todos(almacen, ahora, modelos(almacen))
+            )
+        except Exception as error:
+            registro.warning("frontera o interior sin calcular: %s", str(error)[:300])
         if args.estado is not None:
             escribir_parcial(args.estado, estados)
         cambiados = (
@@ -467,6 +476,8 @@ def principal(argumentos: list[str] | None = None) -> int:
             else publicar(almacen, ahora, args.ensayo)
         )
         registro.info("ficheros publicados con cambios: %d", len(cambiados))
+        # La previsión, con lo recién publicado; si falla, queda la anterior con su fecha.
+        prevision.paso_horario(almacen, ahora, DIRECTORIO if args.ensayo is None else args.ensayo)
         if args.ensayo is not None:
             registro.info("ensayo: base sin subir")
             # La exportación semanal sobre la base que deja esta recogida, sin subir nada: un

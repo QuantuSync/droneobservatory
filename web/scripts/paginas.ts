@@ -8,11 +8,13 @@
 // vuelve a construir la web y las páginas quedan al día.
 
 import { createHash } from "node:crypto";
+import { existsSync } from "node:fs";
 import { mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { aplicarCabecera } from "../src/cabecera.ts";
+import type { Prevision } from "../src/datos/prevision.ts";
 import type { ColeccionIncidentes, IncidenteDetalle, Resumen, ResumenUcrania } from "../src/datos/tipos.ts";
 import { RUTA_LISTA_BORDE } from "../../api/borde.ts";
 import type { RutasBorde } from "../../api/borde.ts";
@@ -145,7 +147,10 @@ export async function terminarPaginas(carpeta: string): Promise<void> {
       precargarFuentes(await sacarScriptsEnLinea(await readFile(portada(carpeta, idioma), "utf-8")), recursos),
     );
   }
-  const todas = paginas({ resumen, detalles, ucrania });
+  // La previsión, si está publicada (scripts/datos.ts la valida y la copia).
+  const rutaPrevision = join(DATOS, "prevision.json");
+  const prevision = existsSync(rutaPrevision) ? await leerJson<Prevision>(rutaPrevision) : null;
+  const todas = paginas({ resumen, detalles, ucrania, prevision });
   for (const pagina of todas) {
     const plantilla = plantillas.get(pagina.idioma);
     if (plantilla === undefined) throw new Error(`sin portada en ${pagina.idioma}`);

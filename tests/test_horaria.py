@@ -39,6 +39,8 @@ def entorno(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> tuple[str, Canal
     )
     salida = tmp_path / "publicacion"
     monkeypatch.setattr(horaria, "publicar", lambda a, ahora: publicar.publicar(a, ahora, salida))
+    # La previsión, en la misma carpeta (nunca en publicacion/ del repositorio).
+    monkeypatch.setattr(horaria, "DIRECTORIO", salida)
     # FIRMS sin red y sin clave: sus CSV, en una carpeta de la prueba.
     monkeypatch.setenv(firms.VARIABLE_DATOS, str(tmp_path / "firms"))
     monkeypatch.delenv(firms.VARIABLE_CLAVE, raising=False)

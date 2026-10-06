@@ -1,11 +1,11 @@
-// Filtros y periodo. Van en la dirección (?estado=…&ultimos=7d&tipo=…&pais=…&desde=…&hasta=…)
+// Filtros y periodo. Van en la dirección (?estado=…&ultimos=7d&tipo=…&pais=…&zona=…&desde=…&hasta=…)
 // para poder compartir una vista filtrada y para que el botón atrás del navegador deshaga el
 // último cambio; lo que no se entiende se ignora. El periodo es uno de los rápidos (las
 // últimas 24 horas desde este momento; 7 días, 30 días o el último año, contados hasta el
 // último día con datos), uno entre dos fechas o, sin nada en la dirección, todo.
 
-import type { Estado, IncidenteResumen, Tipo } from "../datos/tipos.ts";
-import { ESTADOS, PATRON_PAIS, TIPOS } from "../datos/vocabulario.ts";
+import type { Estado, IncidenteResumen, Tipo, Zona } from "../datos/tipos.ts";
+import { ESTADOS, PATRON_PAIS, TIPOS, ZONAS } from "../datos/vocabulario.ts";
 import { MS_POR_HORA, diaDeFecha, diaDeInstante, fechaDeDia } from "../tiempo/dias.ts";
 import type { Periodo } from "../tiempo/dias.ts";
 
@@ -20,9 +20,11 @@ export interface Filtros {
   tipos: Tipo[];
   /** Países que se muestran (ISO 3166-1); vacío es todos. */
   paises: string[];
+  /** Solo frontera o solo interior; null es todos (por defecto). */
+  zona: Zona | null;
 }
 
-export const SIN_FILTROS: Filtros = { estados: [], reciente: null, tipos: [], paises: [] };
+export const SIN_FILTROS: Filtros = { estados: [], reciente: null, tipos: [], paises: [], zona: null };
 
 /** Lo confirmado y lo atribuido: el filtro rápido más usado, con su tecla. */
 export const GRAVES: readonly Estado[] = ["confirmado", "atribuido"];
@@ -33,6 +35,7 @@ const PARAMETRO = {
   reciente: "ultimos",
   tipos: "tipo",
   paises: "pais",
+  zona: "zona",
   desde: "desde",
   hasta: "hasta",
 } as const;
@@ -79,6 +82,7 @@ export function soloGraves(estados: readonly Estado[]): boolean {
 export function leerFiltros(busqueda: string): Filtros {
   const parametros = new URLSearchParams(busqueda);
   const reciente = parametros.get(PARAMETRO.reciente);
+  const zona = parametros.get(PARAMETRO.zona);
   const estados =
     parametros.get(PARAMETRO.graves) === VALOR_GRAVES
       ? [...GRAVES]
@@ -98,6 +102,7 @@ export function leerFiltros(busqueda: string): Filtros {
         .map((pais) => pais.toUpperCase())
         .filter((pais) => PATRON_PAIS.test(pais)),
     ),
+    zona: ZONAS.find((opcion) => opcion === zona) ?? null,
   };
 }
 
@@ -133,6 +138,7 @@ export function escribirBusqueda(filtros: Filtros, periodo: Periodo | null): str
   if (filtros.paises.length > 0) {
     parametros.set(PARAMETRO.paises, [...filtros.paises].sort().join(SEPARADOR));
   }
+  if (filtros.zona !== null) parametros.set(PARAMETRO.zona, filtros.zona);
   if (periodo !== null) {
     parametros.set(PARAMETRO.desde, textoDeDia(periodo.desde));
     parametros.set(PARAMETRO.hasta, textoDeDia(periodo.hasta));
@@ -197,22 +203,28 @@ export function escribirFiltros(filtros: Filtros): string {
   return escribirBusqueda(filtros, null);
 }
 
-/** Cuántos filtros hay puestos, sin contar el periodo: cada estado, tipo y país por separado. */
+/**
+ * Cuántos filtros hay puestos, sin contar el periodo: cada estado, tipo y país por separado, y
+ * frontera o interior si no son todos.
+ */
 export function cuantosFiltros(filtros: Filtros): number {
-  return filtros.estados.length + filtros.tipos.length + filtros.paises.length;
+  return (
+    filtros.estados.length + filtros.tipos.length + filtros.paises.length + (filtros.zona === null ? 0 : 1)
+  );
 }
 
 export function hayFiltros(filtros: Filtros): boolean {
   return cuantosFiltros(filtros) > 0;
 }
 
-/** Incidentes que pasan los filtros de estado, tipo y país (el periodo va aparte). */
+/** Incidentes que pasan los filtros de estado, tipo, país y zona (el periodo va aparte). */
 export function filtrar(incidentes: readonly IncidenteResumen[], filtros: Filtros): IncidenteResumen[] {
   return incidentes.filter(
     (i) =>
       (filtros.estados.length === 0 || filtros.estados.includes(i.estado)) &&
       (filtros.tipos.length === 0 || filtros.tipos.includes(i.tipo)) &&
-      (filtros.paises.length === 0 || filtros.paises.includes(i.pais)),
+      (filtros.paises.length === 0 || filtros.paises.includes(i.pais)) &&
+      (filtros.zona === null || i.zona === filtros.zona),
   );
 }
 

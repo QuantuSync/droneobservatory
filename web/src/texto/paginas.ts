@@ -19,6 +19,8 @@ import type {
   Resumen,
   ResumenUcrania,
 } from "../datos/tipos.ts";
+import { diaDeTexto, marcadorSemanal, probabilidadLlana } from "../datos/prevision.ts";
+import type { Prevision } from "../datos/prevision.ts";
 import { ataquesPorRegion, cifrasDeRegion, diaDeParte, sentidoDeFila } from "../datos/ucrania.ts";
 import { autoridadEscrita, medioEscrito } from "../i18n/autoridades.ts";
 import { fechaDia, fechaHora, instante, numero, pais, rango, region, textos } from "../i18n/index.ts";
@@ -48,6 +50,8 @@ export interface DatosPaginas {
   /** Ficha completa de cada incidente publicado (con punto o sin él). */
   detalles: ReadonlyMap<string, IncidenteDetalle>;
   ucrania: ResumenUcrania;
+  /** La previsión publicada; null si aún no hay. */
+  prevision?: Prevision | null;
 }
 
 /** Una página: su dirección en cada idioma, sus metadatos y su contenido. */
@@ -75,6 +79,7 @@ export const RUTAS = {
   paises: { es: "/paises", en: "/en/countries" },
   ucrania: { es: "/ucrania", en: "/en/ukraine" },
   metodologia: { es: "/metodologia", en: "/en/methodology" },
+  prevision: { es: "/prevision", en: "/en/forecast" },
   ayuda: { es: "/ayuda", en: "/en/help" },
 } as const satisfies Record<string, Record<Idioma, string>>;
 
@@ -398,6 +403,12 @@ function incidente(d: IncidenteDetalle, idioma: Idioma): PaginaTexto {
           ? e("span", { class: "texto-nota" }, t.ficha.radio(numero(d.lugar.radio_km, idioma)))
           : e("span", { class: "texto-nota" }, t.imprecisa.etiqueta, " · ", t.imprecisa.nivel[d.lugar.nivel]),
       ),
+      d.zona !== undefined &&
+        filaDatos(
+          t.zona.titulo,
+          e("span", { "data-zona": d.zona.grupo }, t.zona.grupo[d.zona.grupo]),
+          e("span", { class: "texto-nota" }, t.zona.motivo(d.zona.motivo, d.zona.distancia_km ?? null)),
+        ),
       d.objetivo !== undefined &&
         filaDatos(tp.incidente.objetivo, d.objetivo.nombre ?? "", d.objetivo.nombre !== undefined && " · ", t.categoria[d.objetivo.categoria], d.objetivo.oaci !== undefined && html(" · ", e("span", { class: "mono" }, d.objetivo.oaci))),
       fuentePunto !== undefined &&
@@ -902,10 +913,115 @@ export function paginas(datos: DatosPaginas): PaginaTexto[] {
     resultado.push(listaDePaises(datos, idioma));
     for (const codigo of codigos) resultado.push(paginaDePais(datos, codigo, idioma));
     resultado.push(guerra(datos, idioma));
+    resultado.push(paginaPrevision(datos, idioma));
     resultado.push(metodologia(datos, idioma));
     resultado.push(ayuda(datos, idioma));
   }
   return resultado;
+}
+
+// ---------------------------------------------------------------------------------------------
+// Previsión y tendencias
+
+function paginaPrevision(datos: DatosPaginas, idioma: Idioma): PaginaTexto {
+  const t = textos(idioma);
+  const tp = textosPagina(idioma);
+  const p = t.prevision;
+  const d = datos.prevision;
+  const partes: Hijo[] = [e("h1", null, tp.prevision.titulo), e("p", null, tp.prevision.intro)];
+  if (d === null || d === undefined) {
+    partes.push(e("p", null, p.noDisponible));
+  } else {
+    const dia = (texto: string) => fechaDia(diaDeTexto(texto));
+    const frontera = d.frontera.paises.map((f) =>
+      e(
+        "section",
+        { "data-frontera": f.pais },
+        e("h3", null, pais(f.pais, idioma)),
+        e("p", null, probabilidadLlana(t, f.probabilidad, f.de_cada_10)),
+        e("p", null, p.frontera.habitual(Math.round(f.frecuencia_de_siempre * 100))),
+        e("p", null, p.frontera.dependeDe),
+        e(
+          "ul",
+          null,
+          e("li", null, p.frontera.lanzados(numero(Math.round(f.factores.lanzados_tres_noches), idioma), numero(f.factores.lanzados_anoche, idioma)), " · ", p.frontera.efectos[f.efectos.lanzados_tres_noches]),
+          e("li", null, p.frontera.crimea(f.factores.noches_desde_crimea), " · ", p.frontera.efectos[f.efectos.noches_desde_crimea]),
+          e("li", null, p.frontera.incidentes(f.factores.incidentes_siete_dias, pais(f.pais, idioma)), " · ", p.frontera.efectos[f.efectos.incidentes_siete_dias]),
+        ),
+        e("p", null, p.frontera.historial(numero(f.comprobacion.noches, idioma), dia(f.comprobacion.desde), f.comprobacion.noches_con_dron, f.comprobacion.con_dron_en_riesgo_alto, Math.round(f.comprobacion.mejora_sobre_frecuencia * 100))),
+        e(
+          "table",
+          null,
+          e("caption", null, p.frontera.verHistorial),
+          e("thead", null, e("tr", null, e("th", null, p.frontera.columnaDijo), e("th", null, p.frontera.columnaNoches), e("th", null, p.frontera.columnaConDron))),
+          e("tbody", null, f.comprobacion.tramos.map((tramo) => e("tr", null, e("td", null, p.frontera.tramo(Math.round(tramo.desde * 100), Math.round(tramo.hasta * 100))), e("td", null, numero(tramo.noches, idioma)), e("td", null, numero(tramo.con_dron, idioma))))),
+        ),
+      ),
+    );
+    partes.push(
+      e(
+        "section",
+        { id: "frontera" },
+        e("h2", null, p.frontera.titulo),
+        e("p", null, p.frontera.noche(dia(d.frontera.noche.desde), dia(d.frontera.noche.hasta))),
+        frontera.length === 0 ? e("p", null, p.frontera.ninguno) : frontera,
+      ),
+    );
+    const aviso = d.segunda_noche?.aviso;
+    if (aviso !== undefined) {
+      partes.push(e("section", { id: "segunda-noche" }, e("h2", null, p.segundaNoche.titulo), e("p", null, p.segundaNoche.aviso(numero(aviso.lanzados, idioma), probabilidadLlana(t, aviso.probabilidad, aviso.de_cada_10)))));
+    }
+    if (d.rachas !== undefined) {
+      const r = d.rachas;
+      partes.push(
+        e(
+          "section",
+          { id: "rachas" },
+          e("h2", null, p.rachas.titulo),
+          r.activas.length === 0
+            ? e("p", null, p.rachas.ninguna)
+            : e("ul", null, r.activas.map((racha) => e("li", { "data-racha": racha.pais }, enlace(rutasDePais(racha.pais)[idioma], pais(racha.pais, idioma)), ": ", p.rachas.linea(dia(racha.desde), racha.incidentes, numero(racha.habitual, idioma), numero(racha.veces, idioma), p.rachas.tendencia[racha.tendencia])))),
+          r.terminadas.length > 0 && e("p", null, p.rachas.terminadas(r.terminadas.map((x) => p.rachas.terminada(pais(x.pais, idioma), dia(x.hasta))).join(", "))),
+          e("p", null, p.rachas.historial(r.comprobacion.semanas_en_racha, r.comprobacion.incidentes_semana_siguiente, numero(r.comprobacion.normal_semana_siguiente, idioma))),
+        ),
+      );
+    }
+    const desde = diaDeTexto(d.semana.semana);
+    const marcador = marcadorSemanal(d);
+    partes.push(
+      e(
+        "section",
+        { id: "semana" },
+        e("h2", null, p.semana.titulo),
+        e("p", null, p.semana.cual(fechaDia(desde), fechaDia(desde + 6)), d.semana.fijada ? "" : ` · ${p.semana.provisional}`),
+        d.semana.paises.length === 0
+          ? e("p", null, p.semana.ninguno)
+          : e("ul", null, d.semana.paises.map((s) => e("li", null, pais(s.pais, idioma), ": ", p.semana.fila(numero(s.esperado, idioma), s.minimo, s.maximo)))),
+        marcador.length > 0 &&
+          e(
+            "table",
+            null,
+            e("caption", null, p.semana.marcador(marcador.filter((f) => f.dentro).length, marcador.length)),
+            e("thead", null, e("tr", null, e("th", null, p.semana.columnaSemana), e("th", null, p.semana.columnaPais), e("th", null, p.semana.columnaPrevisto), e("th", null, p.semana.columnaReal))),
+            e("tbody", null, marcador.map((f) => e("tr", { "data-tipo": f.tipo }, e("td", null, dia(f.semana), f.tipo === "reconstruida" ? " *" : ""), e("td", null, pais(f.pais, idioma)), e("td", null, `${numero(f.esperado, idioma)} (${f.minimo}–${f.maximo})`), e("td", null, `${f.real} ${f.dentro ? "✓" : "✗"}`)))),
+          ),
+        marcador.length > 0 && e("p", null, p.semana.leyendaMarcador),
+      ),
+    );
+    partes.push(
+      e("p", null, d.metodo[idioma], " ", p.calculada(fechaHora(d.calculado)), " ", enlace(`${RUTAS.metodologia[idioma]}#prevision`, tp.prevision.comoSeCalcula)),
+    );
+  }
+  return {
+    idioma,
+    rutas: RUTAS.prevision,
+    titulo: `${tp.prevision.titulo} · ${NOMBRE}`,
+    descripcion: tp.prevision.descripcion,
+    cuerpo: html(partes),
+    estructurados: [],
+    conMapa: false,
+    modificada: d?.calculado.replace("Z", ":00Z") ?? datos.resumen.actualizado,
+  };
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -920,6 +1036,7 @@ export function marco(pagina: PaginaTexto, actualizado: string): Html {
     [RUTAS.incidentes[idioma], tp.nav.incidentes],
     [RUTAS.paises[idioma], tp.nav.paises],
     [RUTAS.ucrania[idioma], tp.nav.ucrania],
+    [RUTAS.prevision[idioma], tp.nav.prevision],
     [RUTAS.metodologia[idioma], tp.nav.metodologia],
     [RUTAS.ayuda[idioma], tp.nav.ayuda],
   ];

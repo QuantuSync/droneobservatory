@@ -115,9 +115,18 @@ de 45 minutos, y el script:
    el resultado de la recogida: queda en el diario («firms no se lee», sin la clave) y en
    `estado.json`, y la siguiente ejecución vuelve a intentarlo;
 4. publica en `main` `publicacion/ucrania.json`, `publicacion/incidentes.geojson` y
-   `publicacion/incidentes_sin_ubicacion.json` si han cambiado, con autor QuantuSync y la
+   `publicacion/incidentes_sin_ubicacion.json` y `publicacion/prevision.json` si han cambiado, con autor QuantuSync y la
    dirección anónima. También cuando la recogida
    termina con avisos (código 2); nunca cuando falla con otro código.
+
+Antes de publicar, la recogida calcula `publicacion/prevision.json` con los ficheros recién
+escritos ([`recogida/prevision.py`](../recogida/prevision.py), unos 10 s): el riesgo de frontera
+de la noche siguiente, las rachas por país y la semana que viene, solo lo que pasa su comprobación
+con el pasado. Las previsiones nuevas quedan en la tabla `previsiones` de la base, que no admite
+cambios ni borrados. Si el cálculo falla, queda un aviso en el diario («previsión sin calcular»),
+el fichero anterior no se toca (la web enseña su fecha de cálculo) y la recogida publica igual el
+resto. También clasifica cada incidente como frontera o interior
+([`proceso/zona.py`](../proceso/zona.py)) y guarda solo lo que cambia.
 
 Sale con el código de la recogida: con avisos, la unidad queda como fallida en systemd,
 igual que el workflow quedaba en rojo, y la hora siguiente se lanza igual.

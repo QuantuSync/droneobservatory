@@ -125,6 +125,7 @@ function incidenteResumen() {
     episodio: null,
     foco: false,
     atribucion: null,
+    zona: null,
   };
 }
 

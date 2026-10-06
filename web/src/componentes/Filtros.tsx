@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import { ESTADOS, TIPOS } from "../datos/vocabulario.ts";
+import { ESTADOS, TIPOS, ZONAS } from "../datos/vocabulario.ts";
 import { RECIENTES, TODO, alternar, hayFiltros } from "../estado/filtros.ts";
 import type { Filtros as EstadoFiltros, Reciente, SeleccionPeriodo } from "../estado/filtros.ts";
 import { fechaDia, pais } from "../i18n/index.ts";
@@ -168,6 +168,20 @@ export function Filtros(props: Props) {
           >
             <Simbolo estado={estado} />
             {t.estado[estado]}
+          </Opcion>
+        ))}
+      </Grupo>
+      <Grupo rotulo={t.filtros.zona}>
+        <Opcion activa={filtros.zona === null} onClick={() => onFiltros({ ...filtros, zona: null })}>
+          {t.filtros.zonas.todas}
+        </Opcion>
+        {ZONAS.map((zona) => (
+          <Opcion
+            key={zona}
+            activa={filtros.zona === zona}
+            onClick={() => onFiltros({ ...filtros, zona: filtros.zona === zona ? null : zona })}
+          >
+            {t.filtros.zonas[zona]}
           </Opcion>
         ))}
       </Grupo>

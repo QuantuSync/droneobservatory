@@ -143,6 +143,7 @@ describe("filtros y periodo en la dirección", () => {
       reciente: "7d" as const,
       tipos: ["sobrevuelo" as const],
       paises: ["DE", "PL"],
+      zona: null,
     };
     const busqueda = escribirFiltros(filtros);
     // Confirmados y atribuidos se escriben como antes, para no romper enlaces compartidos.
@@ -164,6 +165,7 @@ describe("filtros y periodo en la dirección", () => {
       reciente: null,
       tipos: ["incursion"],
       paises: ["DE"],
+      zona: null,
     });
   });
 
@@ -471,6 +473,7 @@ describe("aplicación con el diseño nuevo", () => {
     expect(within(botones).getAllByRole("button").map((b) => b.getAttribute("aria-expanded"))).toEqual([
       "false",
       "false",
+      "false",
     ]);
   });
 
@@ -481,7 +484,7 @@ describe("aplicación con el diseño nuevo", () => {
     await screen.findByTestId("mapa");
     const grupo = await abrirFiltros(usuario);
     const grupos = within(grupo).getAllByRole("group").map((g) => g.querySelector("legend")?.textContent);
-    expect(grupos).toEqual([es.filtros.estado, es.filtros.tipo]);
+    expect(grupos).toEqual([es.filtros.estado, es.filtros.zona, es.filtros.tipo]);
     expect(within(grupo).getByRole("combobox", { name: es.filtros.recientes })).toBeTruthy();
     expect(within(grupo).getByRole("combobox", { name: es.filtros.pais })).toBeTruthy();
     for (const opcion of within(grupo).getAllByRole("button")) {

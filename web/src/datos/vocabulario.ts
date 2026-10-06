@@ -1,8 +1,19 @@
-// Listas cerradas del esquema 1.13.0 (campos públicos). Un test las compara con los
+// Listas cerradas del esquema 1.14.0 (campos públicos). Un test las compara con los
 // ficheros de esquema/ para que no se separen.
 
 export const TIPOS = ["incursion", "interrupcion_aeroportuaria", "sobrevuelo"] as const;
 export const ESTADOS = ["notificado", "confirmado", "atribuido", "desmentido"] as const;
+/** Frontera o interior (proceso/zona.py) y la regla que lo decide. */
+export const ZONAS = ["frontera", "interior"] as const;
+export const MOTIVOS_ZONA = [
+  "ataque",
+  "cerca_de_la_frontera",
+  "costa_mar_negro",
+  "lejos_de_la_frontera",
+  "incursion_en_pais_fronterizo",
+  "pais_dentro_de_la_banda",
+  "sin_lugar",
+] as const;
 /** A quién atribuye una autoridad un incidente (atribucion.tipo). */
 export const TIPOS_ACTOR = ["estado", "persona"] as const;
 export const PRESENCIAS = ["confirmada", "no_confirmada", "descartada"] as const;

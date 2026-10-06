@@ -10,8 +10,10 @@ import type {
   Resumen,
   ResumenUcrania,
 } from "./tipos.ts";
+import type { Prevision } from "./prevision.ts";
 import {
   validarEstadoSistema,
+  validarPrevision,
   validarAtaque,
   validarDetalleIncidente,
   validarImpacto,
@@ -58,6 +60,11 @@ async function cargar<T>(
 
 export function cargarResumen(descargar: Descarga, senal?: AbortSignal): Promise<Carga<Resumen>> {
   return cargar("/datos/resumen.json", validarResumen, descargar, senal);
+}
+
+/** La previsión: se pide al abrir «Previsión» o la ficha de un país, nunca en la primera carga. */
+export function cargarPrevision(descargar: Descarga, senal?: AbortSignal): Promise<Carga<Prevision>> {
+  return cargar("/datos/prevision.json", validarPrevision, descargar, senal);
 }
 
 export function cargarResumenUcrania(

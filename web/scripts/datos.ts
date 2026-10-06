@@ -23,6 +23,7 @@ import type { PublicacionSinUbicacion } from "../src/datos/tipos.ts";
 import {
   validarColeccion,
   validarPublicacionUcrania,
+  validarPrevision,
   validarSinUbicacion,
 } from "../src/datos/validar.ts";
 import type { Resultado } from "../src/datos/validar.ts";
@@ -95,6 +96,12 @@ async function principal(): Promise<void> {
 
   const resumen = resumir(coleccion, ucrania, sinUbicacion);
   await escribir(join(DATOS, "resumen.json"), JSON.stringify(resumen));
+  // La previsión (proceso/prevision), validada: se sirve tal cual y la usan sus páginas de texto.
+  const rutaPrevision = join(PUBLICACION, "prevision.json");
+  if (await existe(rutaPrevision)) {
+    exigir("prevision.json", validarPrevision(await leerJson(rutaPrevision)));
+    await escribir(join(DATOS, "prevision.json"), await readFile(rutaPrevision, "utf-8"));
+  }
   // El foco térmico de una región se marca en su centro: el parte no da el punto.
   const contornos = (await leerJson(
     join(PUBLICO, "mapa", "ucrania-regiones.geojson"),

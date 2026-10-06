@@ -271,6 +271,14 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
           )}
           <QueDiceCadaFuente t={t} idioma={idioma} afirmaciones={de(CAMPOS_DE_FILA.lugar)} />
         </Fila>
+        {incidente.zona !== undefined && (
+          <Fila nombre={t.zona.titulo}>
+            <span data-zona={incidente.zona.grupo}>{t.zona.grupo[incidente.zona.grupo]}</span>
+            <span className="block text-xs text-secundario">
+              {t.zona.motivo(incidente.zona.motivo, incidente.zona.distancia_km ?? null)}
+            </span>
+          </Fila>
+        )}
         {fuentePunto !== undefined && (
           <Fila nombre={t.ficha.lugarSegun}>
             <span data-lugar-segun="">{fuentePunto.medio}</span>

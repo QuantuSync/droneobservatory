@@ -130,6 +130,7 @@ MEDICIONES = frozenset({"trafico_aereo", "condiciones"})
 HOJAS = frozenset({
     "estado", "atribucion", "investigacion", "foco_termico", "drones.trayectoria",
     "consecuencias.danos", "trafico_aereo", "condiciones", "tiempo.origen_inicio", "ataque",
+    "zona",
 })  # fmt: skip
 CLAVES_VALOR = (frozenset({"valor", "precision"}), frozenset({"min", "max"}),
                 frozenset({"lat", "lon"}))  # fmt: skip
@@ -426,6 +427,10 @@ def procedencia_incidente(documento: Documento, fichas: Fichas) -> tuple[Documen
         if ruta == "ataque":
             # Enlace con el ataque de su noche: lo deduce una regla (proceso/cruces.py) de las
             # fuentes del incidente y del periodo del parte.
+            return Valor({DEDUCIDO}, REGLA)
+        if ruta == "zona":
+            # Frontera o interior: lo calcula una regla (proceso/zona.py) con el lugar, el tipo
+            # y el enlace con el ataque.
             return Valor({DEDUCIDO}, REGLA)
         if ruta in MEDICIONES:
             # Tráfico aéreo y condiciones medidas: los calcula el código (proceso/mediciones.py)

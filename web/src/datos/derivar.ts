@@ -84,6 +84,7 @@ export function resumirIncidente(feature: FeatureIncidente): IncidenteResumen {
     episodio: p.episodio ?? null,
     foco: p.foco_termico !== undefined,
     atribucion: atribucionResumida(p),
+    zona: p.zona?.grupo ?? null,
   };
 }
 
@@ -103,6 +104,7 @@ export function resumirSinUbicacion(p: PropiedadesSinUbicacion): IncidenteResume
     episodio: p.episodio ?? null,
     foco: p.foco_termico !== undefined,
     atribucion: atribucionResumida(p),
+    zona: p.zona?.grupo ?? null,
   };
 }
 
@@ -214,11 +216,16 @@ export interface Cifras {
   paises: number;
 }
 
-/** Cifras del marcador: los confirmados y los atribuidos se cuentan por separado. */
+/**
+ * Cifras del marcador. Un atribuido es por fuerza un confirmado (una autoridad, además de
+ * confirmarlo, dice quién es el responsable): los confirmados los incluyen, y los atribuidos son
+ * una parte de ellos. Así cuadran con cualquier filtro («4 confirmados · 4 atribuidos» con el
+ * filtro de atribuidos).
+ */
 export function cifras(incidentes: readonly IncidenteResumen[]): Cifras {
   return {
     incidentes: incidentes.length,
-    confirmados: incidentes.filter((i) => i.estado === "confirmado").length,
+    confirmados: incidentes.filter((i) => i.estado === "confirmado" || i.estado === "atribuido").length,
     atribuidos: incidentes.filter((i) => i.estado === "atribuido").length,
     paises: new Set(incidentes.map((i) => i.pais)).size,
   };

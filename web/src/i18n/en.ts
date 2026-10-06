@@ -136,6 +136,8 @@ export const en: Textos = {
     quitar: "Clear filters",
     recientes: "Period",
     activos: (n) => `${n} active`,
+    zona: "Where",
+    zonas: { todas: "All", frontera: "Border", interior: "Interior" },
   },
   feed: {
     titulo: "Live",
@@ -218,6 +220,98 @@ export const en: Textos = {
     cargando: "Loading interference…",
     letrero: (proporcion) => `GPS interference · ${proporcion} of aircraft`,
   },
+  prevision: {
+    etiqueta: "Forecast",
+    cerrar: "Close the forecast",
+    cargando: "Loading the forecast…",
+    noDisponible: "The forecast is not available right now.",
+    deCada10: (n, porcentaje) => `${n} in 10 nights like this one (${porcentaje}%)`,
+    calculada: (cuando) => `Computed on ${cuando}.`,
+    frontera: {
+      titulo: "Tonight at the border",
+      noche: (desde, hasta) => `Night of ${desde} to ${hasta}: a war drone crossing into or falling in the country`,
+      ninguno: "Today no country has a checked forecast.",
+      habitual: (porcentaje) => `Usual for this country: ${porcentaje} in 100 nights.`,
+      dependeDe: "What it depends on today:",
+      lanzados: (media, anoche) =>
+        `drones launched at Ukraine: ${media} on average over the last three nights (last night, ${anoche})`,
+      crimea: (noches) => `nights with drones launched from Crimea, the southern route: ${noches} of the last 7`,
+      incidentes: (n, pais) => `border incidents in ${pais} in the last 7 days: ${n}`,
+      efectos: { sube: "raises the risk", baja: "lowers it", nada: "does not change it" },
+      historial: (noches, desde, conDron, enAlto, mejora) =>
+        `Checked against ${noches} nights since ${desde}, each using only earlier data: of the ${conDron} nights with a drone, ${enAlto} were among the quarter of nights with the highest risk. It scores ${mejora}% better than the usual frequency.`,
+      verHistorial: "Track record",
+      columnaDijo: "When it said",
+      columnaNoches: "Nights",
+      columnaConDron: "With a drone",
+      tramo: (desde, hasta) => `${desde} to ${hasta}%`,
+      ultimas: "Last nights (reconstructed forecast and whether there was a drone):",
+      conDron: "drone",
+      enVivo: (puntuadas, conDron) => `Live forecasts already scored: ${puntuadas} nights, with a drone on ${conDron}.`,
+    },
+    segundaNoche: {
+      titulo: "Second night",
+      aviso: (lanzados, probabilidad) =>
+        `Last night was a large wave (${lanzados} drones). That tonight is large too: ${probabilidad}.`,
+    },
+    rachas: {
+      titulo: "Streaks by country",
+      ninguna: "No country is above normal right now.",
+      linea: (desde, n, habitual, veces, tendencia) =>
+        `since ${desde}: ${n} incidents against ${habitual} usual (${veces} times) · ${tendencia}`,
+      tendencia: { crece: "growing", estable: "steady", se_apaga: "fading" },
+      ir: (pais) => `Show ${pais} on the map with the streak period`,
+      terminada: (pais, hasta) => `${pais} (until ${hasta})`,
+      terminadas: (lista) => `Back to normal: ${lista}.`,
+      historial: (semanas, siguientes, normal) =>
+        `Checked against ${semanas} streak weeks since July 2025: the following week had ${siguientes} incidents where normal was ${normal}. It counts events, not news: each incident once, on the date it happened.`,
+      enFicha: "Streak",
+    },
+    grafica: {
+      titulo: "Incidents per week and the normal band",
+      resumen: (semanas, incidentes, normal) =>
+        `${incidentes} incidents in the last ${semanas} weeks; normal is ${normal} per week.`,
+      barra: (semana, n) => `Week of ${semana}: ${n}`,
+      banda: (minimo, maximo) => `Grey band: normal, ${minimo} to ${maximo} per week (8 in 10 weeks).`,
+    },
+    semana: {
+      titulo: "Next week",
+      cual: (desde, hasta) => `${desde} to ${hasta}, expected incidents`,
+      provisional: "provisional: fixed on Saturday",
+      ninguno: "No country has a checked weekly forecast.",
+      fila: (esperado, minimo, maximo) => `${esperado} (between ${minimo} and ${maximo}, 8 in 10 weeks)`,
+      marcador: (dentro, total) => `Scoreboard: ${dentro} of ${total} weeks within the margin`,
+      columnaSemana: "Week",
+      columnaPais: "Country",
+      columnaPrevisto: "Forecast",
+      columnaReal: "Actual",
+      leyendaMarcador:
+        "* reconstructed: computed now using only the data available then. The others were made live and cannot be changed.",
+    },
+  },
+  zona: {
+    titulo: "Border or interior",
+    grupo: { frontera: "Border", interior: "Interior" },
+    motivo: (motivo, distancia) => {
+      const km = distancia === null ? "" : `, ${distancia} km from the border with Ukraine, Russia or Belarus`;
+      switch (motivo) {
+        case "ataque":
+          return "linked to that night’s Russian attack on Ukraine";
+        case "cerca_de_la_frontera":
+          return `150 km or less from the border with Ukraine, Russia or Belarus${km}`;
+        case "costa_mar_negro":
+          return `on the Black Sea coast${km}`;
+        case "lejos_de_la_frontera":
+          return `more than 150 km from the border with Ukraine, Russia or Belarus and away from the Black Sea${km}`;
+        case "incursion_en_pais_fronterizo":
+          return "no known place; the drone came from outside into a border country";
+        case "pais_dentro_de_la_banda":
+          return "no known place; the whole country is 150 km or less from the border";
+        case "sin_lugar":
+          return "no known place and no link to an attack";
+      }
+    },
+  },
   presion: {
     etiqueta: "Country · pressure",
     leyenda: {
@@ -235,6 +329,7 @@ export const en: Textos = {
     tendencia: { sube: "up", baja: "down", estable: "stable" },
     frente: (anterior) => `compared with ${anterior} in the previous period of equal length`,
     sinComparacion: "no previous period with data",
+    eligePeriodo: "Choose a period to see the trend",
     incidentes: (n) => (n === 1 ? "1 incident" : `${n} incidents`),
     porTipo: "By type",
     porEstado: "By status",
@@ -1214,6 +1309,86 @@ export const en: Textos = {
         ],
       },
       {
+        id: "frontera",
+        titulo: "Border or interior",
+        bloques: [
+          {
+            parrafo: [
+              "The map shows two different things: war drones crossing or falling near the border with Ukraine, Russia (including Kaliningrad) or Belarus or on the Black Sea coast, and drones over airports, bases and facilities in the interior of Europe. The “Where” filter shows all of them, only border ones or only interior ones; the header figures follow it. Each incident shows its group and the rule that decides it.",
+            ],
+          },
+          {
+            lista: [
+              { termino: "1. Attack", texto: ["If the incident is linked to that night’s Russian attack on Ukraine, it is a border incident."] },
+              {
+                termino: "2. Distance",
+                texto: [
+                  "With a point: border if it is 150 km or less from the land border with Ukraine, Russia or Belarus, or 50 km or less from the Black Sea coast; otherwise interior. The cut comes from the data: of the incidents with a point, those in the band reach 144 km (incursions into Poland, Romania and Lithuania) and the next one is at 191 km (Bucharest airport).",
+                ],
+              },
+              { termino: "3. Named place", texto: ["Without a point, the same distance from the place in the country named by its locality, its region or its headline; a headline placing it in the Black Sea makes it a border incident."] },
+              {
+                termino: "4. No place",
+                texto: [
+                  "Border if the drone came from outside (incursion, entry from abroad or a state drone) into a country bordering Ukraine, Russia or Belarus or with a Black Sea coast, or if the whole country is 150 km or less from that border (Moldova). Otherwise interior.",
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: "prevision",
+        titulo: "Forecast and trends",
+        bloques: [
+          {
+            parrafo: [
+              "The “Forecast” button says what is happening more than usual and what is likely to happen. Only what has passed a check against the past is published: each figure is computed with the data before a date and compared with what happened afterwards, moving forward in time, never using future data. It is compared with two simple references, the country’s usual frequency and “tomorrow same as today”, and published only if it does better than both and the improvement holds when the check is repeated with randomly drawn weeks. What does not pass is not shown. With little data nothing is claimed.",
+            ],
+          },
+          {
+            lista: [
+              {
+                termino: "Tonight at the border",
+                texto: [
+                  "Probability that a war drone crosses into or falls in the country the next night (at least one border incident that night). It is computed before the night, using only what is already known: the drones launched at Ukraine on average over the last three nights (Ukrainian Air Force reports), how many of the last seven nights had drones launched from Crimea and the country’s border incidents in the previous seven days. It is a logistic regression refitted every month. It is said as “2 in 10 nights like this one (20%)”, with the country’s usual rate and whether each factor raises or lowers today’s risk against its usual value. It is shown for each country where it passes the check.",
+                ],
+              },
+              {
+                termino: "Second night",
+                texto: [
+                  "After a large wave over Ukraine (drones launched reach the 90th percentile of the previous 60 nights), the probability that the next night is large too. It is shown only on those nights and only while its check supports it.",
+                ],
+              },
+              {
+                termino: "Streaks by country",
+                texto: [
+                  "A country’s normal is the average of its weeks over the last year without the last four. There is a streak when the last four weeks add up to more than normal gives 1 time in 20 (negative binomial with the country’s own dispersion), with at least 3 incidents on 2 or more different days. It counts events, not news: each incident once, on the date it happened. A country with fewer than 5 incidents in its normal year has no streak. It says since when, how many incidents against the usual and whether it is growing (the last two weeks exceed the two before) or fading. The check: after a streak is flagged, the following week looks more like the streak than like normal.",
+                ],
+              },
+              {
+                termino: "Next week",
+                texto: [
+                  "The expected figure is the average of previous weeks with a weight that halves every four weeks; the margin runs from 10 to 90% of a negative binomial with the country’s dispersion, so 8 in 10 weeks should fall inside. It is published for the countries where it beats the usual frequency and “next week same as this one”.",
+                ],
+              },
+              {
+                termino: "How it is scored",
+                texto: [
+                  "Probabilities with the Brier score (the squared error between the probability and what happened); weekly figures with the logarithm of the probability the method gave to what happened. Each part’s track record says how many nights or weeks it was checked against, how much it beats the reference and, at the border, what happened in each probability band. Forecasts for the weeks before publication are reconstructed as they would have been made then and marked as reconstructed.",
+                ],
+              },
+              {
+                termino: "Live record",
+                texto: [
+                  "Since 6 October 2026 each forecast is stored with its time before the result is known (the border one, at the first update from 17:00 UTC; the weekly one, on Saturday) in a record that admits no changes or deletions, and scored once the result is known (3 days after the night, a week after the week ends). It is in the published file prevision.json and in the data export, with its method and date.",
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      {
         id: "licencias",
         titulo: "Licences and attributions",
         bloques: [
@@ -1386,6 +1561,12 @@ export const en: Textos = {
   satelite: {
     capas: "War layer",
     corredores: "Corridors",
+    principales: {
+      principales: (n, total) => `The ${n} corridors with the most drones, of ${total}; width shows the drones.`,
+      todos: (total) => `All ${total} corridors in the period; width shows the drones.`,
+      verTodos: (total) => `Show all ${total}`,
+      verPrincipales: "Show only the main ones",
+    },
     letreroCorredor: (origen, region, drones) => `${origen} → ${region} · ${drones} drones`,
     letreroAlumbrado: (ciudad) => `${ciudad} · permanently reduced street lighting`,
     letreroCiudad: (ciudad, perdida) => `${ciudad} · ${perdida}% less night light`,

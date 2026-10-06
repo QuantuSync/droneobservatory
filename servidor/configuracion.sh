@@ -48,7 +48,7 @@ AUTOR="QuantuSync"
 CORREO="192205734+QuantuSync@users.noreply.github.com"
 MENSAJE_PUBLICACION="Actualiza los datos publicados"
 PUBLICADOS=(publicacion/ucrania.json publicacion/incidentes.geojson
-  publicacion/incidentes_sin_ubicacion.json)
+  publicacion/incidentes_sin_ubicacion.json publicacion/prevision.json)
 # Código con el que sale la recogida cuando termina con avisos
 # (recogida.horaria.SALIDA_AVISO): la base está subida y se publica igual.
 SALIDA_AVISO=2

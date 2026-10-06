@@ -10,7 +10,16 @@ export interface TextosPagina {
   saltar: string;
   navegacion: string;
   /** Rótulos del menú de las páginas. */
-  nav: { mapa: string; incidentes: string; paises: string; ucrania: string; metodologia: string; ayuda: string };
+  nav: {
+    mapa: string;
+    incidentes: string;
+    paises: string;
+    ucrania: string;
+    prevision: string;
+    metodologia: string;
+    ayuda: string;
+  };
+  prevision: { titulo: string; descripcion: string; intro: string; comoSeCalcula: string };
   otroIdioma: string;
   datosDe: (fecha: string) => string;
   licencia: string;
@@ -108,8 +117,17 @@ const ES: TextosPagina = {
     incidentes: "Incidentes",
     paises: "Países",
     ucrania: "Guerra en Ucrania",
+    prevision: "Previsión",
     metodologia: "Metodología y datos abiertos",
     ayuda: "Ayuda",
+  },
+  prevision: {
+    titulo: "Previsión y tendencias",
+    descripcion:
+      "Riesgo de que un dron de la guerra cruce o caiga esta noche en Rumanía o Moldavia, países por encima de lo normal y la semana que viene, con su historial de aciertos.",
+    intro:
+      "Lo que está pasando más de lo normal y lo que es probable que pase. Solo se publica lo que, comprobado con el pasado, acierta más que la frecuencia de siempre y que «mañana igual que hoy»; cada parte lleva su historial de aciertos.",
+    comoSeCalcula: "Cómo se calcula y cómo se puntúa",
   },
   otroIdioma: "English",
   datosDe: (fecha) => `Datos publicados a ${fecha}`,
@@ -250,8 +268,17 @@ const EN: TextosPagina = {
     incidentes: "Incidents",
     paises: "Countries",
     ucrania: "War in Ukraine",
+    prevision: "Forecast",
     metodologia: "Methodology and open data",
     ayuda: "Help",
+  },
+  prevision: {
+    titulo: "Forecast and trends",
+    descripcion:
+      "Risk that a war drone crosses into or falls in Romania or Moldova tonight, countries above normal and next week, with their track record.",
+    intro:
+      "What is happening more than usual and what is likely to happen. Only what, checked against the past, does better than the usual frequency and than “tomorrow same as today” is published; each part carries its track record.",
+    comoSeCalcula: "How it is computed and scored",
   },
   otroIdioma: "Español",
   datosDe: (fecha) => `Data published at ${fecha}`,

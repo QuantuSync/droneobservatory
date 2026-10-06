@@ -167,7 +167,11 @@ function margenes(reserva: Reserva, margen: number) {
   };
 }
 
-export type Encuadre = { lon: number; lat: number; zoom?: number } | "ucrania";
+/** Un punto (con zoom), Ucrania entera o una caja [oeste, sur, este, norte] (un país). */
+export type Encuadre =
+  | { lon: number; lat: number; zoom?: number }
+  | "ucrania"
+  | { caja: [number, number, number, number] };
 
 /**
  * Una petición de mover el mapa, que solo hace quien abre algo (nunca quien lo cierra):
@@ -535,6 +539,17 @@ export default function Mapa(props: PropsMapa) {
         });
         return;
       }
+      if ("caja" in destino) {
+        const [oeste, sur, este, norte] = destino.caja;
+        mapa.fitBounds(
+          [
+            [oeste, sur],
+            [este, norte],
+          ],
+          { padding: margenes(reservaActual.current, MARGEN_ENCUADRE_PX), animate, duration: DURACION_VUELO_MS },
+        );
+        return;
+      }
       mapa.flyTo({
         center: [destino.lon, destino.lat],
         zoom: destino.zoom ?? Math.max(mapa.getZoom(), ZOOM_DE_FICHA),
@@ -548,7 +563,7 @@ export default function Mapa(props: PropsMapa) {
 
     /** Lo justo para que el punto quede fuera de lo que tapan la cabecera y la ficha: sin zoom. */
     function asomarA(destino: Encuadre) {
-      if (destino === "ucrania") return;
+      if (destino === "ucrania" || "caja" in destino) return;
       const visible = margenes(reservaActual.current, MARGEN_ASOMAR_PX);
       const { clientWidth: ancho, clientHeight: alto } = mapa.getContainer();
       const punto = mapa.project([destino.lon, destino.lat]);

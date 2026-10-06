@@ -10,6 +10,7 @@ import type {
   EstadoFuente,
   FuenteDelSistema,
   Medida,
+  MotivoZona,
   NivelUbicacion,
   Precision,
   PresenciaDron,
@@ -122,6 +123,8 @@ export interface Textos {
     quitar: string;
     recientes: string;
     activos: (n: number) => string;
+    zona: string;
+    zonas: Record<"todas" | "frontera" | "interior", string>;
   };
   feed: {
     titulo: string;
@@ -196,6 +199,72 @@ export interface Textos {
     letrero: (proporcion: string) => string;
   };
   /** Presión por país. */
+  prevision: {
+    etiqueta: string;
+    cerrar: string;
+    cargando: string;
+    noDisponible: string;
+    /** «4 de cada 10 noches como esta (40 %)». */
+    deCada10: (n: number, porcentaje: number) => string;
+    calculada: (cuando: string) => string;
+    frontera: {
+      titulo: string;
+      noche: (desde: string, hasta: string) => string;
+      ninguno: string;
+      habitual: (porcentaje: number) => string;
+      dependeDe: string;
+      lanzados: (media: string, anoche: string) => string;
+      crimea: (noches: number) => string;
+      incidentes: (n: number, pais: string) => string;
+      efectos: Record<"sube" | "baja" | "nada", string>;
+      historial: (noches: string, desde: string, conDron: number, enAlto: number, mejora: number) => string;
+      verHistorial: string;
+      columnaDijo: string;
+      columnaNoches: string;
+      columnaConDron: string;
+      tramo: (desde: number, hasta: number) => string;
+      ultimas: string;
+      conDron: string;
+      enVivo: (puntuadas: number, conDron: number) => string;
+    };
+    segundaNoche: { titulo: string; aviso: (lanzados: string, probabilidad: string) => string };
+    rachas: {
+      titulo: string;
+      ninguna: string;
+      linea: (desde: string, n: number, habitual: string, veces: string, tendencia: string) => string;
+      tendencia: Record<"crece" | "estable" | "se_apaga", string>;
+      ir: (pais: string) => string;
+      terminada: (pais: string, hasta: string) => string;
+      terminadas: (lista: string) => string;
+      historial: (semanas: number, siguientes: number, normal: string) => string;
+      enFicha: string;
+    };
+    grafica: {
+      titulo: string;
+      resumen: (semanas: number, incidentes: number, normal: string) => string;
+      barra: (semana: string, n: number) => string;
+      banda: (minimo: number, maximo: number) => string;
+    };
+    semana: {
+      titulo: string;
+      cual: (desde: string, hasta: string) => string;
+      provisional: string;
+      ninguno: string;
+      fila: (esperado: string, minimo: number, maximo: number) => string;
+      marcador: (dentro: number, total: number) => string;
+      columnaSemana: string;
+      columnaPais: string;
+      columnaPrevisto: string;
+      columnaReal: string;
+      leyendaMarcador: string;
+    };
+  };
+  /** Frontera o interior de un incidente, con la regla que lo decide. */
+  zona: {
+    titulo: string;
+    grupo: Record<"frontera" | "interior", string>;
+    motivo: (motivo: MotivoZona, distancia: number | null) => string;
+  };
   presion: {
     etiqueta: string;
     /** Lo que cuenta la leyenda, con el periodo dicho en palabras. */
@@ -209,6 +278,8 @@ export interface Textos {
     tendencia: Record<SentidoTendencia, string>;
     frente: (anterior: string) => string;
     sinComparacion: string;
+    /** Con todo el periodo no hay periodo anterior con que comparar. */
+    eligePeriodo: string;
     incidentes: (n: number) => string;
     porTipo: string;
     porEstado: string;
@@ -481,6 +552,12 @@ export interface TextosSatelite {
   /** Rótulo del grupo de capas de la guerra. */
   capas: string;
   corredores: string;
+  principales: {
+    principales: (n: number, total: number) => string;
+    todos: (total: number) => string;
+    verTodos: (total: number) => string;
+    verPrincipales: string;
+  };
   letreroCorredor: (origen: string, region: string, drones: string) => string;
   letreroCiudad: (ciudad: string, perdida: string) => string;
   letreroAlumbrado: (ciudad: string) => string;

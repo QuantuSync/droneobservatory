@@ -1,8 +1,24 @@
-// Forma de los ficheros públicos de publicacion/ (esquema 1.13.0, solo campos públicos)
+// Forma de los ficheros públicos de publicacion/ (esquema 1.14.0, solo campos públicos)
 // y de los resúmenes que la web deriva de ellos en el build.
 
 export type Estado = "notificado" | "confirmado" | "atribuido" | "desmentido";
 export type Tipo = "incursion" | "interrupcion_aeroportuaria" | "sobrevuelo";
+/** Frontera (drones de la guerra junto a Ucrania, Rusia, Bielorrusia o el mar Negro) o interior. */
+export type Zona = "frontera" | "interior";
+export type MotivoZona =
+  | "ataque"
+  | "cerca_de_la_frontera"
+  | "costa_mar_negro"
+  | "lejos_de_la_frontera"
+  | "incursion_en_pais_fronterizo"
+  | "pais_dentro_de_la_banda"
+  | "sin_lugar";
+export interface ZonaIncidente {
+  grupo: Zona;
+  motivo: MotivoZona;
+  /** Distancia a la frontera con Ucrania, Rusia o Bielorrusia (km), si hay punto o lugar. */
+  distancia_km?: number;
+}
 export type PresenciaDron = "confirmada" | "no_confirmada" | "descartada";
 export type Precision = "minuto" | "hora" | "dia" | "aproximada";
 export type Fiabilidad = "A" | "B" | "C" | "D" | "E" | "F";
@@ -197,6 +213,8 @@ export interface PropiedadesIncidente {
     jornada: { tipo: "noche" | "dia"; desde: string; hasta: string };
     por: "fuente" | "fecha";
   };
+  /** Frontera o interior, con la regla que lo decide (proceso/zona.py). */
+  zona?: ZonaIncidente;
   foco_termico?: FocoTermico;
   trafico_aereo?: TraficoAereo;
   fuentes: Fuente[];
@@ -414,6 +432,8 @@ export interface IncidenteResumen {
   foco: boolean;
   /** Solo en los atribuidos: el tipo de actor y su país, para su marcador. */
   atribucion: AtribucionResumen | null;
+  /** Frontera o interior; null en datos publicados antes de que existiera. */
+  zona: Zona | null;
 }
 
 export interface EpisodioResumen {

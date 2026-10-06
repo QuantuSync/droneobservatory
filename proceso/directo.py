@@ -49,7 +49,7 @@ from typing import Any
 
 from proceso import aeronaves, metar, trafico, vuelos
 
-VERSION_REGLA = "directo-1.0.0"
+VERSION_REGLA = "directo-1.1.0"
 
 # --- Umbrales (ajustados reproduciendo días reales: docs/informe_europa_directo.md) ------
 PASO_S = 80
@@ -81,6 +81,20 @@ MARGEN_METAR_S = 3600
 DIAS_COBERTURA_ALTA = 3
 FRACCION_DIA_COMPLETO = 0.5
 MOVIMIENTOS_DIA_MINIMOS = 40.0
+# Aeropuertos con un cierre publicado en la web (incidentes.geojson e
+# incidentes_sin_ubicacion.json): se vigilan con cobertura alta o media y 20 movimientos al día o
+# más (docs/informe_prevision.md).
+# La propia señal sigue exigiendo que se vea al menos el 60 % de lo esperado en las tres horas
+# previas, así que un aeropuerto con poca cobertura ese día no da avisos.
+MOVIMIENTOS_DIA_MINIMOS_CON_INCIDENTES = 20.0
+# Receptores caídos: si en la última media hora se han visto cerca del aeropuerto (40 km, por
+# debajo de 10 000 pies) menos de una cuarta parte de las aeronaves que en cada media hora de las
+# dos horas y media anteriores, son los receptores los que han dejado de ver la zona (Antalya, 8
+# de octubre de 2025: de 24 aeronaves por media hora a 1), no un cierre: en un cierre siguen
+# llegando aviones que esperan o se desvían.
+CERCA_VENTANA_S = 1800
+CERCA_FRACCION = 0.25
+CERCA_MINIMAS = 8
 # Un aviso reanudado se publica 12 horas; uno sin reanudar se cierra a las 24 horas.
 PUBLICAR_REANUDADO_S = 12 * 3600
 CADUCIDAD_S = 24 * 3600
@@ -255,12 +269,16 @@ def vigilables(
     candidatos: Iterable[str],
     coberturas: Callable[[str, date], str | None],
     bases: Bases,
+    con_incidentes: Iterable[str] = (),
 ) -> list[str]:
     """Aeropuertos con cobertura alta todos los días completos de su línea base (tres como
     mínimo) y una mediana de 40 movimientos al día o más. Un día de la línea base es incompleto
     si tuvo cobertura alta menos de la mitad de los aeropuertos que la tuvieron el mejor de esos
-    días (el archivo de adsb.lol tiene días a medias): ese día no cuenta para nadie."""
+    días (el archivo de adsb.lol tiene días a medias): ese día no cuenta para nadie. Los que
+    tienen un cierre publicado (`con_incidentes`), con cobertura alta o media y 20 movimientos al
+    día o más."""
     candidatos = list(candidatos)
+    con_incidentes = set(con_incidentes)
     dias = trafico.dias_base(dia)
     altas = {d: sum(1 for o in candidatos if coberturas(o, d) == trafico.ALTA) for d in dias}
     mejor = max(altas.values(), default=0)
@@ -268,10 +286,16 @@ def vigilables(
     resultado = []
     for oaci in candidatos:
         niveles = [n for d in completos if (n := coberturas(oaci, d)) is not None]
-        if len(niveles) < DIAS_COBERTURA_ALTA or any(n != trafico.ALTA for n in niveles):
+        validos = (trafico.ALTA, trafico.MEDIA) if oaci in con_incidentes else (trafico.ALTA,)
+        if len(niveles) < DIAS_COBERTURA_ALTA or any(n not in validos for n in niveles):
             continue
+        minimo = (
+            MOVIMIENTOS_DIA_MINIMOS_CON_INCIDENTES
+            if oaci in con_incidentes
+            else MOVIMIENTOS_DIA_MINIMOS
+        )
         base = bases(oaci, dia)
-        if base is None or sum(base.movimientos) < MOVIMIENTOS_DIA_MINIMOS:
+        if base is None or sum(base.movimientos) < minimo:
             continue
         resultado.append(oaci)
     return sorted(resultado)
@@ -464,6 +488,33 @@ class Vivos:
 
     def movimientos(self, oaci: str) -> list[float]:
         return sorted(self._por_aeropuerto.get(oaci, []))
+
+    def vistas_cerca(self, oaci: str, desde: float, hasta: float) -> int:
+        """Aeronaves distintas vistas entre `desde` y `hasta` a 40 km o menos del aeropuerto, por
+        debajo de 10 000 pies (las que guarda el servicio)."""
+        aeropuerto = self.indice.por_oaci.get(oaci)
+        if aeropuerto is None:
+            return 0
+        vistas = 0
+        for a in self.aeronaves.values():
+            for p in a.puntos:
+                if (
+                    desde <= p.t <= hasta
+                    and vuelos.distancia_km(p.lat, p.lon, aeropuerto.lat, aeropuerto.lon)
+                    <= RADIO_ZONA_KM
+                ):
+                    vistas += 1
+                    break
+        return vistas
+
+    def receptores_caidos(self, oaci: str, ahora: float) -> bool:
+        """Si en la última media hora se han visto cerca menos de la cuarta parte de las aeronaves
+        que en cada media hora de las dos horas y media anteriores (con 8 por media hora antes,
+        como mínimo, para que la comparación diga algo)."""
+        recientes = self.vistas_cerca(oaci, ahora - CERCA_VENTANA_S, ahora)
+        antes = self.vistas_cerca(oaci, ahora - MEMORIA_S, ahora - CERCA_VENTANA_S)
+        por_media_hora = antes / ((MEMORIA_S - CERCA_VENTANA_S) / CERCA_VENTANA_S)
+        return por_media_hora >= CERCA_MINIMAS and recientes < CERCA_FRACCION * por_media_hora
 
     def actividad(self, ahora: float) -> set[str]:
         """Aeropuertos con un despegue o un aterrizaje en curso (ver ACTIVIDAD_S)."""
@@ -706,8 +757,14 @@ class Detector:
             s, motivo = senal(oaci, ahora, movimientos, self.bases, self.umbrales)
             if s is not None and fuente_caida:
                 s, motivo = None, "fuente"
+            if s is not None and vivos.receptores_caidos(oaci, ahora):
+                s, motivo = None, "receptores"
             if s is not None and oaci in vivos.actividad(ahora):
-                s, motivo = None, "actividad_en_curso"
+                # Un despegue o un aterrizaje en curso no da aviso en este ciclo, pero no
+                # reinicia la persistencia de la señal: un movimiento suelto en mitad de un
+                # cierre (Berlín, 23 de septiembre de 2026, a las 18:56) no lo corta.
+                self.motivos[oaci] = "actividad_en_curso"
+                continue
             if s is None:
                 self.senales.pop(oaci, None)
                 self.comienzos.pop(oaci, None)

@@ -51,6 +51,34 @@ export function LeyendaGnss({ t, estado }: { t: Textos; estado: EstadoGnss }) {
   );
 }
 
+/** Con muchos corredores solo se dibujan los principales: lo dice y deja ver todos. */
+export function LeyendaCorredores({
+  t,
+  principales,
+  total,
+  todos,
+  onTodos,
+}: {
+  t: Textos;
+  principales: number;
+  total: number;
+  todos: boolean;
+  onTodos: () => void;
+}) {
+  const c = t.satelite.principales;
+  return (
+    <details open className="flotante w-max max-w-[min(20rem,calc(100vw-2rem))] px-2.5 py-1.5 text-xs" data-leyenda="corredores">
+      <summary className="cursor-pointer font-medium text-texto">{t.satelite.corredores}</summary>
+      <p className="text-secundario" data-corredores-visibles={todos ? total : principales}>
+        {todos ? c.todos(total) : c.principales(principales, total)}
+      </p>
+      <button type="button" className="control mt-1 min-h-11 text-xs underline underline-offset-2 esc:min-h-7" onClick={onTodos}>
+        {todos ? c.verPrincipales : c.verTodos(total)}
+      </button>
+    </details>
+  );
+}
+
 /** Lo que cuenta la capa de presión, con el periodo en palabras. */
 export function textoLeyendaPresion(t: Textos, seleccion: SeleccionPeriodo): string {
   const leyenda = t.presion.leyenda;
@@ -68,6 +96,11 @@ export function LeyendaPresion({ t, seleccion }: { t: Textos; seleccion: Selecci
       <p className="text-secundario" data-periodo-leyenda="">
         {textoLeyendaPresion(t, seleccion)}
       </p>
+      {seleccion.clase === "todo" && (
+        <p className="text-secundario" data-elige-periodo="">
+          {p.eligePeriodo}
+        </p>
+      )}
       <div className="mt-1 flex items-center gap-1.5 text-secundario">
         <span>{p.menos}</span>
         <span className="flex">

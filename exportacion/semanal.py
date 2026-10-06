@@ -24,6 +24,9 @@ age con la misma clave pública que la base:
 - contexto_pais.jsonl: cifras oficiales agregadas de cada país (configuracion/
   cifras_contexto.json), con su origen por valor: contexto, nunca incidentes ni parte de su
   recuento;
+- previsiones.jsonl: las previsiones publicadas (riesgo de frontera de cada noche, incidentes
+  de cada semana, aviso de segunda noche), tal como se registraron antes de conocerse el
+  resultado, con su procedencia: valor calculado, el método (versión) y la fecha;
 - vocabulario.json: la correspondencia con las categorías y clases de AEGIS
   (configuracion/vocabulario_aegis.json);
 - encuentros.jsonl, estadisticas_oficiales.jsonl y documentos_oficiales.jsonl: los registros
@@ -74,7 +77,7 @@ from proceso.luces import con_luces
 from proceso.mediciones import con_mediciones
 from proceso.restricciones import por_ataque
 
-VERSION_FORMATO = "1.4.0"
+VERSION_FORMATO = "1.5.0"
 RAIZ = Path(__file__).resolve().parent.parent
 DIRECTORIO_ESQUEMAS = RAIZ / "esquema" / "exportacion" / VERSION_FORMATO
 VOCABULARIO = RAIZ / "configuracion" / "vocabulario_aegis.json"
@@ -699,6 +702,13 @@ def generar(almacen: Almacen) -> list[Fichero]:
     _comprobar("encuentros.jsonl", encuentros, validador(Esquema.ENCUENTRO))
     _comprobar("estadisticas_oficiales.jsonl", estadisticas, validador(Esquema.ESTADISTICA_OFICIAL))
     _comprobar("documentos_oficiales.jsonl", documentos, validador(Esquema.DOCUMENTO_OFICIAL))
+    # Las previsiones publicadas, tal como se registraron: valor calculado, con su método y la
+    # fecha en que se hizo (proceso/prevision).
+    previsiones = [
+        {**p, "procedencia": {"origen": "calculado", "metodo": p["metodo"], "fecha": p["emitida"]}}
+        for p in almacen.previsiones()
+    ]
+    _comprobar("previsiones.jsonl", previsiones, validador_propio("prevision"))
     # Catálogo de prestaciones, clases con su envolvente, zonas de lanzamiento y fuentes, y el
     # resumen de la validación del motor: AEGIS los usa como límites de movimiento por clase.
     # Con lo que ha admitido el barrido del catálogo vivo (tabla catalogo_vivo).
@@ -759,6 +769,7 @@ def generar(almacen: Almacen) -> list[Fichero]:
         Fichero("guerra_mensajes.jsonl", _jsonl(mensajes), len(mensajes),
                 _propio("mensaje_guerra")),
         Fichero("incidentes.jsonl", _jsonl(incidentes), len(incidentes), _base("incidente")),
+        Fichero("previsiones.jsonl", _jsonl(previsiones), len(previsiones), _propio("prevision")),
         Fichero("restricciones_aeropuertos.jsonl", _jsonl(restricciones), len(restricciones),
                 _base("restriccion_aeropuerto")),
         Fichero("ucrania_ataques.jsonl", _jsonl(ataques), len(ataques),

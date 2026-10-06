@@ -28,6 +28,7 @@ from typing import Any
 from proceso import directo, metar, trafico, vuelos
 from recogida import referencia
 from recogida import trafico as procesado
+from recogida.directo import aeropuertos_con_cierre
 from recogida.mediciones import Metares
 
 registro = logging.getLogger("recogida.directo")
@@ -160,7 +161,7 @@ class Entorno:
 
     def vigilados(self, dia: date) -> list[str]:
         regulares = [a.oaci for a in self.aeropuertos if a.regular]
-        return directo.vigilables(dia, regulares, self.nivel, self.bases)
+        return directo.vigilables(dia, regulares, self.nivel, self.bases, aeropuertos_con_cierre())
 
     def filas(self, ahora: float) -> list[list[Any]]:
         """Esperas, desvíos y aterrizajes del archivo hasta `ahora` (de ese día y el anterior)."""

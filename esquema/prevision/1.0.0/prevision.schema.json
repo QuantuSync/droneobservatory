@@ -1,0 +1,262 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:eodi:prevision:1.0.0:prevision",
+  "title": "Previsión y tendencias publicadas (publicacion/prevision.json)",
+  "description": "Lo que calcula proceso/prevision en cada recogida horaria con los ficheros publicados. Solo lleva lo que ha pasado la comprobación con el pasado (mejora a su referencia); cada parte lleva su historial de aciertos. El registro trae cada previsión tal como se hizo, con la hora, y su resultado cuando ya se conoce.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version_esquema", "version", "calculado", "datos_hasta", "metodo", "frontera", "semana", "cajas", "registro"],
+  "$defs": {
+    "dia": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
+    "minuto": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}Z$"},
+    "pais": {"type": "string", "pattern": "^[A-Z]{2}$"},
+    "texto": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["es", "en"],
+      "properties": {"es": {"type": "string", "minLength": 1}, "en": {"type": "string", "minLength": 1}}
+    },
+    "proporcion": {"type": "number", "minimum": 0, "maximum": 1},
+    "efecto": {"enum": ["sube", "baja", "nada"]}
+  },
+  "properties": {
+    "version_esquema": {"const": "1.0.0"},
+    "version": {"type": "string", "minLength": 1},
+    "calculado": {"$ref": "#/$defs/minuto"},
+    "datos_hasta": {"$ref": "#/$defs/dia"},
+    "metodo": {"$ref": "#/$defs/texto"},
+    "frontera": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version", "noche", "paises"],
+      "properties": {
+        "version": {"type": "string"},
+        "noche": {
+          "type": "object", "additionalProperties": false, "required": ["desde", "hasta"],
+          "properties": {"desde": {"$ref": "#/$defs/dia"}, "hasta": {"$ref": "#/$defs/dia"}}
+        },
+        "paises": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["pais", "probabilidad", "de_cada_10", "frecuencia_de_siempre", "factores", "efectos", "comprobacion", "ultimas"],
+            "properties": {
+              "pais": {"$ref": "#/$defs/pais"},
+              "probabilidad": {"$ref": "#/$defs/proporcion"},
+              "de_cada_10": {"type": "integer", "minimum": 0, "maximum": 10},
+              "frecuencia_de_siempre": {"$ref": "#/$defs/proporcion"},
+              "factores": {
+                "type": "object", "additionalProperties": false,
+                "required": ["lanzados_anoche", "lanzados_tres_noches", "noches_desde_crimea", "incidentes_siete_dias"],
+                "properties": {
+                  "lanzados_anoche": {"type": "number", "minimum": 0},
+                  "lanzados_tres_noches": {"type": "number", "minimum": 0},
+                  "noches_desde_crimea": {"type": "number", "minimum": 0, "maximum": 7},
+                  "incidentes_siete_dias": {"type": "number", "minimum": 0, "maximum": 7}
+                }
+              },
+              "efectos": {
+                "type": "object", "additionalProperties": false,
+                "required": ["lanzados_tres_noches", "noches_desde_crimea", "incidentes_siete_dias"],
+                "properties": {
+                  "lanzados_tres_noches": {"$ref": "#/$defs/efecto"},
+                  "noches_desde_crimea": {"$ref": "#/$defs/efecto"},
+                  "incidentes_siete_dias": {"$ref": "#/$defs/efecto"}
+                }
+              },
+              "comprobacion": {
+                "type": "object", "additionalProperties": false,
+                "required": ["pais", "desde", "noches", "noches_con_dron", "area_bajo_curva", "mejora_sobre_frecuencia", "mejora_sobre_persistencia", "mejora_cota", "con_dron_en_riesgo_alto", "tramos", "publicable"],
+                "properties": {
+                  "pais": {"$ref": "#/$defs/pais"},
+                  "desde": {"$ref": "#/$defs/dia"},
+                  "noches": {"type": "integer", "minimum": 1},
+                  "noches_con_dron": {"type": "integer", "minimum": 0},
+                  "area_bajo_curva": {"type": ["number", "null"]},
+                  "mejora_sobre_frecuencia": {"type": "number"},
+                  "mejora_sobre_persistencia": {"type": "number"},
+                  "mejora_cota": {"type": "number", "exclusiveMinimum": 0},
+                  "con_dron_en_riesgo_alto": {"type": "integer", "minimum": 0},
+                  "tramos": {
+                    "type": "array",
+                    "items": {
+                      "type": "object", "additionalProperties": false,
+                      "required": ["desde", "hasta", "noches", "con_dron", "prevista_media"],
+                      "properties": {
+                        "desde": {"$ref": "#/$defs/proporcion"}, "hasta": {"$ref": "#/$defs/proporcion"},
+                        "noches": {"type": "integer", "minimum": 1}, "con_dron": {"type": "integer", "minimum": 0},
+                        "prevista_media": {"$ref": "#/$defs/proporcion"}
+                      }
+                    }
+                  },
+                  "publicable": {"const": true}
+                }
+              },
+              "ultimas": {
+                "type": "array",
+                "items": {
+                  "type": "object", "additionalProperties": false,
+                  "required": ["noche", "probabilidad", "con_dron"],
+                  "properties": {"noche": {"$ref": "#/$defs/dia"}, "probabilidad": {"$ref": "#/$defs/proporcion"}, "con_dron": {"type": "boolean"}}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "semana": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version", "semana", "fijada", "paises", "marcador"],
+      "properties": {
+        "version": {"type": "string"},
+        "semana": {"$ref": "#/$defs/dia"},
+        "fijada": {"type": "boolean"},
+        "paises": {
+          "type": "array",
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["pais", "esperado", "minimo", "maximo", "comprobacion"],
+            "properties": {
+              "pais": {"$ref": "#/$defs/pais"},
+              "esperado": {"type": "number", "minimum": 0},
+              "minimo": {"type": "integer", "minimum": 0},
+              "maximo": {"type": "integer", "minimum": 0},
+              "comprobacion": {
+                "type": "object", "additionalProperties": false,
+                "required": ["pais", "grupo", "semanas", "mejora_sobre_frecuencia", "mejora_sobre_persistencia", "mejora_cota", "dentro_del_margen", "publicable"],
+                "properties": {
+                  "pais": {"$ref": "#/$defs/pais"},
+                  "grupo": {"enum": ["todo", "frontera", "interior"]},
+                  "semanas": {"type": "integer", "minimum": 1},
+                  "mejora_sobre_frecuencia": {"type": "number"},
+                  "mejora_sobre_persistencia": {"type": "number"},
+                  "mejora_cota": {"type": "number", "exclusiveMinimum": 0},
+                  "dentro_del_margen": {"type": "integer", "minimum": 0},
+                  "publicable": {"const": true}
+                }
+              }
+            }
+          }
+        },
+        "marcador": {
+          "type": "array",
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["semana", "pais", "esperado", "minimo", "maximo", "real", "dentro", "tipo"],
+            "properties": {
+              "semana": {"$ref": "#/$defs/dia"}, "pais": {"$ref": "#/$defs/pais"},
+              "esperado": {"type": "number", "minimum": 0}, "minimo": {"type": "integer", "minimum": 0},
+              "maximo": {"type": "integer", "minimum": 0}, "real": {"type": "integer", "minimum": 0},
+              "dentro": {"type": "boolean"}, "tipo": {"enum": ["reconstruida", "en_vivo"]}
+            }
+          }
+        }
+      }
+    },
+    "segunda_noche": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["comprobacion"],
+      "properties": {
+        "comprobacion": {"type": "object"},
+        "aviso": {
+          "type": "object", "additionalProperties": false,
+          "required": ["tras_noche", "lanzados", "probabilidad", "de_cada_10"],
+          "properties": {
+            "tras_noche": {"$ref": "#/$defs/dia"}, "lanzados": {"type": "integer", "minimum": 0},
+            "probabilidad": {"$ref": "#/$defs/proporcion"}, "de_cada_10": {"type": "integer", "minimum": 0, "maximum": 10}
+          }
+        }
+      }
+    },
+    "rachas": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version", "modo", "comprobacion", "activas", "terminadas", "graficas"],
+      "properties": {
+        "version": {"type": "string"},
+        "modo": {"enum": ["todo", "por_grupo"]},
+        "comprobacion": {
+          "type": "object", "additionalProperties": false,
+          "required": ["semanas_en_racha", "incidentes_semana_siguiente", "normal_semana_siguiente", "mejora_sobre_normal", "mejora_cota", "publicable"],
+          "properties": {
+            "semanas_en_racha": {"type": "integer", "minimum": 1},
+            "incidentes_semana_siguiente": {"type": "integer", "minimum": 0},
+            "normal_semana_siguiente": {"type": "number", "minimum": 0},
+            "mejora_sobre_normal": {"type": "number"},
+            "mejora_cota": {"type": "number", "exclusiveMinimum": 0},
+            "publicable": {"const": true}
+          }
+        },
+        "activas": {
+          "type": "array",
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["pais", "grupo", "desde", "hasta", "semanas", "incidentes", "habitual", "veces", "tendencia"],
+            "properties": {
+              "pais": {"$ref": "#/$defs/pais"}, "grupo": {"enum": ["todo", "frontera", "interior"]},
+              "desde": {"$ref": "#/$defs/dia"}, "hasta": {"$ref": "#/$defs/dia"},
+              "semanas": {"type": "integer", "minimum": 1}, "incidentes": {"type": "integer", "minimum": 0},
+              "habitual": {"type": "number", "minimum": 0}, "veces": {"type": "number", "minimum": 0},
+              "tendencia": {"enum": ["crece", "estable", "se_apaga"]}
+            }
+          }
+        },
+        "terminadas": {
+          "type": "array",
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["pais", "grupo", "hasta"],
+            "properties": {"pais": {"$ref": "#/$defs/pais"}, "grupo": {"enum": ["todo", "frontera", "interior"]}, "hasta": {"$ref": "#/$defs/dia"}}
+          }
+        },
+        "graficas": {
+          "type": "object",
+          "propertyNames": {"pattern": "^[A-Z]{2}$"},
+          "additionalProperties": {
+            "type": "object", "additionalProperties": false,
+            "required": ["semanas", "incidentes", "normal", "banda"],
+            "properties": {
+              "semanas": {"type": "array", "items": {"$ref": "#/$defs/dia"}},
+              "incidentes": {"type": "array", "items": {"type": "integer", "minimum": 0}},
+              "normal": {"type": "number", "minimum": 0},
+              "banda": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "integer", "minimum": 0}}
+            }
+          }
+        }
+      }
+    },
+    "cajas": {
+      "type": "object",
+      "propertyNames": {"pattern": "^[A-Z]{2}$"},
+      "additionalProperties": {"type": "array", "minItems": 4, "maxItems": 4, "items": {"type": "number"}}
+    },
+    "registro": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "tipo", "pais", "objetivo", "emitida", "metodo"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^(frontera|semana|segunda_noche):[A-Z]{2}:\\d{4}-\\d{2}-\\d{2}$"},
+          "tipo": {"enum": ["frontera", "semana", "segunda_noche"]},
+          "pais": {"$ref": "#/$defs/pais"},
+          "objetivo": {"$ref": "#/$defs/dia"},
+          "emitida": {"$ref": "#/$defs/minuto"},
+          "metodo": {"type": "string"},
+          "probabilidad": {"$ref": "#/$defs/proporcion"},
+          "esperado": {"type": "number", "minimum": 0},
+          "minimo": {"type": "integer", "minimum": 0},
+          "maximo": {"type": "integer", "minimum": 0},
+          "con_dron": {"type": "boolean"},
+          "real": {"type": "integer", "minimum": 0},
+          "dentro": {"type": "boolean"},
+          "grande": {"type": "boolean"}
+        }
+      }
+    }
+  }
+}

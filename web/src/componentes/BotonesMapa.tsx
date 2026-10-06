@@ -119,6 +119,33 @@ export function BotonAhora({
   );
 }
 
+/** «Previsión»: lo que es probable que pase y lo que está pasando más de lo normal. */
+export function BotonPrevision({
+  t,
+  abierto,
+  onAbrir,
+  referencia,
+}: {
+  t: Textos;
+  abierto: boolean;
+  onAbrir: () => void;
+  referencia?: RefObject<HTMLButtonElement | null> | undefined;
+}) {
+  return (
+    <button
+      ref={referencia}
+      type="button"
+      className={CLASE_BOTON}
+      aria-haspopup="dialog"
+      aria-expanded={abierto}
+      data-boton-prevision=""
+      onClick={onAbrir}
+    >
+      {t.prevision.etiqueta}
+    </button>
+  );
+}
+
 /**
  * Desplegable bajo un botón (escritorio): se cierra con la equis, con Escape, pulsando fuera o
  * con el mismo botón. Al abrirse lleva el foco dentro; al cerrarse con Escape o la equis, lo

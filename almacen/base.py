@@ -272,6 +272,18 @@ CREATE TABLE IF NOT EXISTS gnss_diaria (
     degradadas INTEGER NOT NULL,
     PRIMARY KEY (dia, celda, version)
 ) WITHOUT ROWID;
+-- Registro de las previsiones publicadas (proceso/prevision): cada una con la hora en que se
+-- hizo, antes de conocerse el resultado. No admite cambios ni borrados: el resultado se calcula
+-- al publicar, al lado de la previsión, sin tocarla.
+CREATE TABLE IF NOT EXISTS previsiones (
+    id TEXT PRIMARY KEY,
+    emitida TEXT NOT NULL,
+    documento TEXT NOT NULL CHECK (json_valid(documento))
+) WITHOUT ROWID;
+CREATE TRIGGER IF NOT EXISTS previsiones_sin_update BEFORE UPDATE ON previsiones
+BEGIN SELECT RAISE(ABORT, 'previsiones: una previsión publicada no cambia'); END;
+CREATE TRIGGER IF NOT EXISTS previsiones_sin_delete BEFORE DELETE ON previsiones
+BEGIN SELECT RAISE(ABORT, 'previsiones: nada se borra'); END;
 CREATE TRIGGER IF NOT EXISTS cobertura_trafico_sin_update BEFORE UPDATE ON cobertura_trafico
 BEGIN SELECT RAISE(ABORT, 'cobertura_trafico: un resultado nuevo es una fila nueva'); END;
 CREATE TRIGGER IF NOT EXISTS cobertura_trafico_sin_delete BEFORE DELETE ON cobertura_trafico
@@ -809,6 +821,25 @@ class Almacen:
                   "indice", "nivel")  # fmt: skip
         filas = self._conexion.execute(sql + " ORDER BY oaci, dia, version", parametros)
         return [dict(zip(claves, f, strict=True)) for f in filas.fetchall()]
+
+    def registrar_previsiones(self, entradas: list[Documento]) -> int:
+        """Añade las previsiones que aún no estaban (una ya registrada no cambia). Devuelve
+        cuántas."""
+        nuevas = 0
+        with self._conexion:
+            for entrada in entradas:
+                cursor = self._conexion.execute(
+                    "INSERT INTO previsiones (id, emitida, documento) VALUES (?, ?, ?) "
+                    "ON CONFLICT DO NOTHING",
+                    (entrada["id"], entrada["emitida"],
+                     json.dumps(entrada, ensure_ascii=False, sort_keys=True)),
+                )  # fmt: skip
+                nuevas += cursor.rowcount
+        return nuevas
+
+    def previsiones(self) -> list[Documento]:
+        filas = self._conexion.execute("SELECT documento FROM previsiones ORDER BY id")
+        return [json.loads(f[0]) for f in filas.fetchall()]
 
     def guardar_gnss_diaria(self, version: str, dia: str, filas: list[tuple[str, int, int]]) -> int:
         nuevas = 0

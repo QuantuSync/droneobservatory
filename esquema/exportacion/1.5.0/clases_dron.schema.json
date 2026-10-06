@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:eodi:exportacion:1.5.0:clases_dron",
+  "title": "Clases de dron del motor de deducción con su envolvente (clases_dron.json)",
+  "description": "Cada clase con sus modelos del catálogo y, por campo numérico, la envolvente: el mínimo de los mínimos y el máximo de los máximos de sus modelos, en la unidad canónica del campo, con sus fuentes. Un extremo null: algún modelo no tiene ese dato (o solo lo da una cota abierta), así que la clase no tiene cota por ese lado; nunca se rellena. debil: alguna cifra sale solo de fuentes de prioridad baja. derivado: entra una referencia genérica derivada de otros modelos. AEGIS lo usa como límites de movimiento por clase.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version_catalogo", "clases"],
+  "properties": {
+    "version_catalogo": {"type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+(\\+vivo\\.\\d+)?$"},
+    "clases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "nombre", "tipo_aeronave", "propulsion", "tamano", "corto_alcance", "clase_esquema", "aegis", "equivalencia_aegis", "modelos", "envolvente"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z0-9_]+$"},
+          "nombre": {"type": "string", "minLength": 1},
+          "tipo_aeronave": {"enum": ["multirrotor", "ala_fija", "vtol", "reaccion"]},
+          "propulsion": {"enum": ["electrica", "combustion", "reaccion"]},
+          "tamano": {"enum": ["pequeno", "mediano", "grande"]},
+          "corto_alcance": {"type": "boolean"},
+          "clase_esquema": {"enum": ["multirrotor_pequeno", "ala_fija", "ataque_largo_alcance", null]},
+          "aegis": {"type": "array", "items": {"enum": ["mini", "phantom", "inspire"]}},
+          "equivalencia_aegis": {"enum": ["exacta", "parcial", "sin_equivalente"]},
+          "modelos": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^[a-z0-9_]+$"}},
+          "envolvente": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["min", "max", "fuentes", "unidad"],
+              "properties": {
+                "min": {"type": ["number", "null"]},
+                "max": {"type": ["number", "null"]},
+                "fuentes": {"type": "array", "items": {"type": "string", "pattern": "^[A-Z]+\\d+$"}},
+                "unidad": {"enum": ["m", "kg", "m/s", "km", "min", "°C", "m2", "°", "m/s2", "n", "s"]},
+                "debil": {"const": true},
+                "derivado": {"const": true}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

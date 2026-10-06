@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import type { GraficaRacha, Racha } from "../datos/prevision.ts";
 import type { CifrasPais, PresionPais } from "../datos/presion.ts";
 import { ESTADOS, TIPOS } from "../datos/vocabulario.ts";
 import { fechaDia, numero, pais } from "../i18n/index.ts";
@@ -8,6 +9,7 @@ import { Enlace } from "../navegacion.tsx";
 import { rutaDeFicha } from "../sitio.ts";
 import type { Idioma } from "../sitio.ts";
 import { Fila } from "./Panel.tsx";
+import { GraficaSemanal, textoRacha } from "./Prevision.tsx";
 import { Simbolo } from "./Simbolo.tsx";
 
 /** Incidentes que se listan antes de pedir «ver más». */
@@ -21,12 +23,21 @@ interface Props {
   cifras: CifrasPais;
   /** Periodo elegido, ya escrito. */
   periodo: string;
+  /** La racha del país (Previsión), si la tiene. */
+  racha?: { racha: Racha; grafica: GraficaRacha | null } | null;
+  /** Con todo el periodo no hay periodo anterior con que comparar. */
+  sinComparacion?: boolean;
 }
 
 /** Texto de la tendencia con su cifra: «sube +4», «baja −2», «estable». */
-export function textoTendencia(t: Textos, presion: PresionPais | null, idioma: Idioma): string {
+export function textoTendencia(
+  t: Textos,
+  presion: PresionPais | null,
+  idioma: Idioma,
+  sinComparacion = false,
+): string {
   const tendencia = presion?.tendencia ?? null;
-  if (tendencia === null) return t.presion.sinComparacion;
+  if (tendencia === null) return sinComparacion ? t.presion.eligePeriodo : t.presion.sinComparacion;
   const { sentido, diferencia } = tendencia;
   if (diferencia === 0) return t.presion.tendencia[sentido];
   const signo = diferencia > 0 ? "+" : "−";
@@ -34,7 +45,7 @@ export function textoTendencia(t: Textos, presion: PresionPais | null, idioma: I
 }
 
 /** Un país en la capa de presión: incidentes del periodo, tendencia, cifras y lista. */
-export function FichaPais({ t, idioma, iso, presion, cifras, periodo }: Props) {
+export function FichaPais({ t, idioma, iso, presion, cifras, periodo, racha = null, sinComparacion = false }: Props) {
   const [todos, setTodos] = useState(false);
   const p = t.presion;
   const total = cifras.lista.length;
@@ -51,13 +62,20 @@ export function FichaPais({ t, idioma, iso, presion, cifras, periodo }: Props) {
         {p.incidentes(total)}
       </p>
       <p className="text-sm" data-tendencia={tendencia?.sentido ?? "sin"}>
-        {textoTendencia(t, presion, idioma)}
+        {textoTendencia(t, presion, idioma, sinComparacion)}
         {tendencia !== null && (
           <span className="block text-xs text-secundario">
             {p.frente(numero(tendencia.anterior, idioma))}
           </span>
         )}
       </p>
+      {racha !== null && (
+        <section className="mt-3 border-t border-linea pt-2" data-racha-pais={iso}>
+          <h3 className="rotulo">{t.prevision.rachas.enFicha}</h3>
+          <p className="text-sm">{textoRacha(t, idioma, racha.racha)}</p>
+          {racha.grafica !== null && <GraficaSemanal t={t} idioma={idioma} grafica={racha.grafica} />}
+        </section>
+      )}
       {total === 0 ? (
         <p className="mt-3 text-secundario">{p.vacia}</p>
       ) : (

@@ -119,6 +119,28 @@ MEMORIA_RECUPERABLE_S = 900
 GUARDAR_VIVOS_S = 600
 
 
+PUBLICACION = Path(__file__).resolve().parent.parent / "publicacion"
+
+
+def aeropuertos_con_cierre(directorio: Path = PUBLICACION) -> set[str]:
+    """Aeropuertos con un incidente publicado de cierre (interrupción del aeropuerto o cierre
+    declarado): se vigilan aunque su cobertura sea media (proceso/directo.vigilables)."""
+    resultado: set[str] = set()
+    for nombre, clave in (("incidentes.geojson", "features"),
+                          ("incidentes_sin_ubicacion.json", "incidentes")):  # fmt: skip
+        documento = leer_json(directorio / nombre) or {}
+        for elemento in documento.get(clave, []):
+            propiedades = elemento.get("properties", elemento)
+            oaci = (propiedades.get("objetivo") or {}).get("oaci")
+            cierre = (propiedades.get("consecuencias") or {}).get("cierre") or {}
+            if oaci and (
+                propiedades.get("tipo") == "interrupcion_aeroportuaria"
+                or cierre.get("valor") == "si"
+            ):
+                resultado.add(str(oaci))
+    return resultado
+
+
 def directorio_datos() -> Path:
     return Path(os.environ.get(VARIABLE_DATOS) or DATOS)
 
@@ -507,7 +529,9 @@ class Servicio:
         self.bases.olvidar_antes(hoy - timedelta(days=1))
         self._niveles = {k: v for k, v in self._niveles.items() if k[1] >= hoy - timedelta(days=35)}
         regulares = [a.oaci for a in self.aeropuertos if a.regular]
-        self.vigilados = directo.vigilables(hoy, regulares, self._nivel, self.bases)
+        self.vigilados = directo.vigilables(
+            hoy, regulares, self._nivel, self.bases, aeropuertos_con_cierre()
+        )
         self.circulos = circulos([self.por_oaci[o] for o in self.vigilados])
         self.dia_vigilados = hoy
         # Las líneas base de hoy y de mañana (una ventana que pasa de medianoche) se calculan

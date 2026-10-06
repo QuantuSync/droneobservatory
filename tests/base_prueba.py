@@ -30,7 +30,7 @@ import pyrage
 from almacen.base import Almacen
 from almacen.cifrado import VARIABLE_CLAVE, guardar_cifrada
 from esquema import Documento
-from proceso import cruces, luces, periodos, presencia
+from proceso import cruces, luces, periodos, presencia, zona
 from tests import ejemplos
 from tests.ejemplos import AHORA, VOCABULARIO_MODELOS
 
@@ -201,6 +201,8 @@ def base_prueba() -> Almacen:
     periodos.revisar(almacen, AHORA)
     presencia.revisar(almacen, AHORA, VOCABULARIO_MODELOS)
     cruces.enlazar(almacen, AHORA, VOCABULARIO_MODELOS)
+    zona.clasificar_todos(almacen, AHORA, VOCABULARIO_MODELOS)
+    almacen.registrar_previsiones(ejemplos.previsiones())
     return almacen
 
 

@@ -57,6 +57,28 @@ RADIO_CASA_KM = 25.0
 ANOMALIA_MINUTOS = 30
 ANOMALIA_PERDIDOS = 8
 ANOMALIA_FRACCION = 0.8
+# Revisión de las candidatas (docs/informe_prevision.md, «Detector de cierres»): comprobada contra
+# los cierres confirmados de la base el 6 de octubre de 2026 (de 47 cierres comprobables, 14
+# detectados antes y 13 después; falsas alarmas de 1.633 a 141 en 342 días).
+# - cobertura del día por debajo de 0,7: los receptores dejaron huecos (Antalya, Berlín);
+COBERTURA_MINIMA_CANDIDATA = 0.7
+# - 10 aeropuertos o más con un hueco a la vez: es la fuente, no los aeropuertos (el archivo de
+#   adsb.lol del 9 de agosto de 2026 no tiene Europa de 12:12 a 18:03);
+SIMULTANEAS_FUENTE = 10
+# - menos de 6 movimientos por hora esperados en el hueco (la madrugada, con la línea base del
+#   mismo día de la semana y la misma hora local): la falta de vuelos no es un cierre;
+RITMO_MINIMO_HORA = 6.0
+# - ni esperas ni desvíos (menos de 2 aeronaves en espera o con su vuelo habitual a otro
+#   aeropuerto): los aviones no fueron a otro sitio; son los receptores, que dejaron de ver la
+#   zona (Antalya), no un cierre. En los 13 cierres detectados hubo 3 o más, salvo uno;
+EVIDENCIA_MINIMA = 2
+# - ese aeropuerto tuvo un hueco así en el 15 % o más de sus 28 días anteriores con cobertura
+#   (al menos 10): para él es lo normal (Basilea-Mulhouse, 90 en 342 días).
+HABITUAL_DIAS = 28
+HABITUAL_DIAS_MINIMOS = 10
+HABITUAL_FRACCION = 0.15
+REVISABLES = frozenset({"candidata", "cobertura_baja", "caida_de_la_fuente", "poco_trafico",
+                        "sin_desvios", "habitual"})  # fmt: skip
 ESTADOS_PRIORITARIOS = frozenset({"confirmado", "atribuido"})
 # Días que hay que esperar a la línea base antes de calcular la cobertura sin ella.
 ESPERA_LINEA_BASE = timedelta(days=7)
@@ -269,6 +291,89 @@ def significativa(interrupcion: trafico.Interrupcion) -> bool:
         and interrupcion.duracion_min >= ANOMALIA_MINUTOS
         and perdidos >= ANOMALIA_PERDIDOS
     )
+
+
+def significativa_doc(documento: Documento) -> bool:
+    """`significativa` sobre una anomalía ya guardada."""
+    perdidos = int(documento.get("llegadas_perdidas", 0) + documento.get("salidas_perdidas", 0))
+    base = float(documento.get("llegadas_base", 0.0) + documento.get("salidas_base", 0.0))
+    casi_parado = base > 0 and perdidos >= ANOMALIA_FRACCION * base
+    duracion = int(documento.get("duracion_min", 0))
+    return bool(
+        (documento.get("precision") == "movimientos" or casi_parado)
+        and duracion >= ANOMALIA_MINUTOS
+        and perdidos >= ANOMALIA_PERDIDOS
+    )
+
+
+def _segundos(texto: str) -> float:
+    return datetime.fromisoformat(texto.replace("Z", "+00:00")).timestamp()
+
+
+def estados_revisados(
+    anomalias: list[Documento], dias_con_cobertura: dict[str, set[str]]
+) -> dict[str, str]:
+    """Estado nuevo de cada anomalía revisable (id «OACI/inicio» -> estado), en este orden:
+    cobertura_baja, caida_de_la_fuente, poco_trafico, sin_desvios, habitual o candidata."""
+    significativas = [a for a in anomalias if significativa_doc(a) and a["estado"] != "menor"]
+    por_dia: dict[str, list[Documento]] = {}
+    con_hueco: dict[str, set[str]] = {}
+    for a in significativas:
+        por_dia.setdefault(a["inicio"][:10], []).append(a)
+        if (a.get("cobertura") or {}).get("nivel") == trafico.ALTA:
+            con_hueco.setdefault(a["oaci"], set()).add(a["inicio"][:10])
+    resultado = {}
+    for a in anomalias:
+        if a["estado"] not in REVISABLES:
+            continue
+        estado = "candidata"
+        inicio, fin = _segundos(a["inicio"]), _segundos(a["fin"])
+        base = a.get("llegadas_base", 0.0) + a.get("salidas_base", 0.0)
+        ritmo = base / max(a.get("duracion_min", 0), 1) * 60
+        dia = date.fromisoformat(a["inicio"][:10])
+        previos = [
+            d for d in dias_con_cobertura.get(a["oaci"], set())
+            if dia - timedelta(days=HABITUAL_DIAS) <= date.fromisoformat(d) < dia
+        ]  # fmt: skip
+        con = sum(1 for d in previos if d in con_hueco.get(a["oaci"], set()))
+        simultaneas = sum(
+            1 for b in por_dia.get(a["inicio"][:10], [])
+            if b["oaci"] != a["oaci"]
+            and _segundos(b["inicio"]) < fin and _segundos(b["fin"]) > inicio
+        )  # fmt: skip
+        if ((a.get("cobertura") or {}).get("indice") or 0) < COBERTURA_MINIMA_CANDIDATA:
+            estado = "cobertura_baja"
+        elif simultaneas >= SIMULTANEAS_FUENTE:
+            estado = "caida_de_la_fuente"
+        elif ritmo < RITMO_MINIMO_HORA:
+            estado = "poco_trafico"
+        elif a.get("esperas", 0) + a.get("desvios", 0) < EVIDENCIA_MINIMA:
+            estado = "sin_desvios"
+        elif len(previos) >= HABITUAL_DIAS_MINIMOS and con / len(previos) >= HABITUAL_FRACCION:
+            estado = "habitual"
+        elif not significativa_doc(a):
+            estado = "menor"
+        resultado[f"{a['oaci']}/{a['inicio']}"] = estado
+    return resultado
+
+
+def revisar_candidatas(almacen: "Almacen", ahora: datetime) -> int:
+    """Vuelve a clasificar las candidatas con la revisión y guarda solo las que cambian."""
+    anomalias = almacen.anomalias()
+    dias: dict[str, set[str]] = {}
+    for fila in almacen.coberturas():
+        if fila["nivel"] in (trafico.ALTA, trafico.MEDIA):
+            dias.setdefault(fila["oaci"], set()).add(fila["dia"])
+    nuevos = estados_revisados(anomalias, dias)
+    cambiadas = 0
+    for anomalia in anomalias:
+        estado = nuevos.get(f"{anomalia['oaci']}/{anomalia['inicio']}")
+        if estado is None or estado == anomalia["estado"]:
+            continue
+        cambiadas += almacen.guardar_anomalia(
+            {**anomalia, "estado": estado, "evaluado": ahora_instante(ahora)}
+        )
+    return cambiadas
 
 
 def anomalias_nuevas(
@@ -719,6 +824,9 @@ def evaluar_trafico(
     # ejecución (el 1 de octubre de 2026, dos ejecuciones seguidas se fueron enteras en ellas
     # sin evaluar ningún incidente); el cursor sigue donde se quedó.
     resumen.anomalias = anomalias_nuevas(almacen, entorno, incidentes, ahora, plazo)
+    # La revisión de las candidatas va siempre (unos segundos, sin descargas): si dependiera del
+    # tope, mientras avanza el histórico no se haría nunca.
+    resumen.anomalias += revisar_candidatas(almacen, ahora)
     return resumen
 
 

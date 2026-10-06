@@ -279,6 +279,23 @@ export function corredoresDelPeriodo(ucrania: ResumenUcrania, periodo: Periodo):
     .sort((a, b) => b.drones - a.drones || a.clave.localeCompare(b.clave));
 }
 
+/** Corredores principales: en cada sentido, los 10 con más drones. */
+export const CORREDORES_PRINCIPALES = 10;
+
+/**
+ * Los corredores principales del periodo. Con periodos largos («Todo») salen cientos de arcos de
+ * cada zona a cada región y el mapa se vuelve una maraña: se dibujan los que llevan la mayor
+ * parte de los drones, y el resto, si se pide.
+ */
+export function principales(corredores: readonly Corredor[]): Corredor[] {
+  const resultado: Corredor[] = [];
+  for (const sentido of ["RU_UA", "UA_RU"] as const) {
+    const propios = corredores.filter((c) => c.sentido === sentido).sort((a, b) => b.drones - a.drones || a.clave.localeCompare(b.clave));
+    resultado.push(...propios.slice(0, CORREDORES_PRINCIPALES));
+  }
+  return resultado;
+}
+
 export const ANCHO_MINIMO_CORREDOR = 0.4;
 export const ANCHO_MAXIMO_CORREDOR = 3;
 

@@ -136,6 +136,8 @@ export const es: Textos = {
     quitar: "Quitar filtros",
     recientes: "Periodo",
     activos: (n) => (n === 1 ? "1 activo" : `${n} activos`),
+    zona: "Dónde",
+    zonas: { todas: "Todos", frontera: "Frontera", interior: "Interior" },
   },
   feed: {
     titulo: "En directo",
@@ -218,6 +220,99 @@ export const es: Textos = {
     cargando: "Cargando la interferencia…",
     letrero: (proporcion) => `Interferencia GPS · ${proporcion} de las aeronaves`,
   },
+  prevision: {
+    etiqueta: "Previsión",
+    cerrar: "Cerrar la previsión",
+    cargando: "Cargando la previsión…",
+    noDisponible: "La previsión no está disponible ahora.",
+    deCada10: (n, porcentaje) => `${n} de cada 10 noches como esta (${porcentaje} %)`,
+    calculada: (cuando) => `Calculada el ${cuando}.`,
+    frontera: {
+      titulo: "Esta noche en la frontera",
+      noche: (desde, hasta) => `Noche del ${desde} al ${hasta}: que un dron de la guerra cruce o caiga en el país`,
+      ninguno: "Hoy ningún país tiene una previsión comprobada.",
+      habitual: (porcentaje) => `Lo habitual en este país: ${porcentaje} de cada 100 noches.`,
+      dependeDe: "De qué depende hoy:",
+      lanzados: (media, anoche) =>
+        `drones lanzados contra Ucrania: ${media} de media en las tres últimas noches (anoche, ${anoche})`,
+      crimea: (noches) => `noches con drones salidos de Crimea, el camino del sur: ${noches} de las últimas 7`,
+      incidentes: (n, pais) => `incidentes de frontera en ${pais} en los últimos 7 días: ${n}`,
+      efectos: { sube: "sube el riesgo", baja: "lo baja", nada: "no lo cambia" },
+      historial: (noches, desde, conDron, enAlto, mejora) =>
+        `Comprobado con ${noches} noches desde el ${desde}, cada una solo con lo anterior: de las ${conDron} noches con dron, ${enAlto} estaban entre la cuarta parte de noches con más riesgo. Acierta un ${mejora} % más que la frecuencia de siempre.`,
+      verHistorial: "Historial de aciertos",
+      columnaDijo: "Cuando dijo",
+      columnaNoches: "Noches",
+      columnaConDron: "Con dron",
+      tramo: (desde, hasta) => `del ${desde} al ${hasta} %`,
+      ultimas: "Últimas noches (previsión reconstruida y si hubo dron):",
+      conDron: "dron",
+      enVivo: (puntuadas, conDron) =>
+        `Previsiones hechas en vivo ya puntuadas: ${puntuadas} noches, con dron en ${conDron}.`,
+    },
+    segundaNoche: {
+      titulo: "Segunda noche",
+      aviso: (lanzados, probabilidad) =>
+        `Anoche fue una oleada grande (${lanzados} drones). Que esta noche también lo sea: ${probabilidad}.`,
+    },
+    rachas: {
+      titulo: "Rachas por país",
+      ninguna: "Ningún país está ahora por encima de lo normal.",
+      linea: (desde, n, habitual, veces, tendencia) =>
+        `desde el ${desde}: ${n} incidentes frente a ${habitual} lo habitual (${veces} veces) · ${tendencia}`,
+      tendencia: { crece: "crece", estable: "se mantiene", se_apaga: "se apaga" },
+      ir: (pais) => `Ver ${pais} en el mapa con el periodo de la racha`,
+      terminada: (pais, hasta) => `${pais} (hasta el ${hasta})`,
+      terminadas: (lista) => `Han vuelto a lo normal: ${lista}.`,
+      historial: (semanas, siguientes, normal) =>
+        `Comprobado con ${semanas} semanas en racha desde julio de 2025: la semana siguiente tuvo ${siguientes} incidentes donde lo normal eran ${normal}. Cuenta sucesos, no noticias: cada incidente una vez, en la fecha del suceso.`,
+      enFicha: "Racha",
+    },
+    grafica: {
+      titulo: "Incidentes por semana y la banda de lo normal",
+      resumen: (semanas, incidentes, normal) =>
+        `${incidentes} incidentes en las últimas ${semanas} semanas; lo normal, ${normal} por semana.`,
+      barra: (semana, n) => `Semana del ${semana}: ${n}`,
+      banda: (minimo, maximo) => `Banda gris: lo normal, de ${minimo} a ${maximo} por semana (8 de cada 10 semanas).`,
+    },
+    semana: {
+      titulo: "La semana que viene",
+      cual: (desde, hasta) => `Del ${desde} al ${hasta}, incidentes esperados`,
+      provisional: "provisional: se fija el sábado",
+      ninguno: "Ningún país tiene una previsión semanal comprobada.",
+      fila: (esperado, minimo, maximo) => `${esperado} (entre ${minimo} y ${maximo}, 8 de cada 10 semanas)`,
+      marcador: (dentro, total) => `Marcador: ${dentro} de ${total} semanas dentro del margen`,
+      columnaSemana: "Semana",
+      columnaPais: "País",
+      columnaPrevisto: "Previsto",
+      columnaReal: "Hubo",
+      leyendaMarcador:
+        "* reconstruida: calculada ahora solo con los datos de entonces. Las demás se hicieron en vivo y no se pueden retocar.",
+    },
+  },
+  zona: {
+    titulo: "Frontera o interior",
+    grupo: { frontera: "Frontera", interior: "Interior" },
+    motivo: (motivo, distancia) => {
+      const km = distancia === null ? "" : `, a ${distancia} km de la frontera con Ucrania, Rusia o Bielorrusia`;
+      switch (motivo) {
+        case "ataque":
+          return "enlazado con el ataque ruso contra Ucrania de esa noche";
+        case "cerca_de_la_frontera":
+          return `a 150 km o menos de la frontera con Ucrania, Rusia o Bielorrusia${km}`;
+        case "costa_mar_negro":
+          return `en la costa del mar Negro${km}`;
+        case "lejos_de_la_frontera":
+          return `a más de 150 km de la frontera con Ucrania, Rusia o Bielorrusia y lejos del mar Negro${km}`;
+        case "incursion_en_pais_fronterizo":
+          return "sin lugar conocido; el dron entró desde fuera en un país fronterizo";
+        case "pais_dentro_de_la_banda":
+          return "sin lugar conocido; todo el país está a 150 km o menos de la frontera";
+        case "sin_lugar":
+          return "sin lugar conocido ni relación con un ataque";
+      }
+    },
+  },
   presion: {
     etiqueta: "País · presión",
     leyenda: {
@@ -235,6 +330,7 @@ export const es: Textos = {
     tendencia: { sube: "sube", baja: "baja", estable: "estable" },
     frente: (anterior) => `frente a ${anterior} en el periodo anterior de igual duración`,
     sinComparacion: "sin periodo anterior con datos",
+    eligePeriodo: "Elige un periodo para ver la tendencia",
     incidentes: (n) => (n === 1 ? "1 incidente" : `${n} incidentes`),
     porTipo: "Por tipo",
     porEstado: "Por estado",
@@ -1225,6 +1321,86 @@ export const es: Textos = {
         ],
       },
       {
+        id: "frontera",
+        titulo: "Frontera o interior",
+        bloques: [
+          {
+            parrafo: [
+              "En el mapa hay dos cosas distintas: drones de la guerra que cruzan o caen cerca de la frontera con Ucrania, Rusia (también Kaliningrado) o Bielorrusia o en la costa del mar Negro, y drones sobre aeropuertos, bases e instalaciones del interior de Europa. El filtro «Dónde» enseña todos, solo los de frontera o solo los de interior; las cifras de la cabecera lo siguen. Cada incidente lleva en su ficha su grupo y la regla que lo decide.",
+            ],
+          },
+          {
+            lista: [
+              { termino: "1. Ataque", texto: ["Si el incidente está enlazado con el ataque ruso contra Ucrania de esa noche, es de frontera."] },
+              {
+                termino: "2. Distancia",
+                texto: [
+                  "Con punto: es de frontera si está a 150 km o menos de la frontera terrestre con Ucrania, Rusia o Bielorrusia, o a 50 km o menos de la costa del mar Negro; si no, de interior. El corte sale de los datos: de los incidentes con punto, los de la banda llegan hasta 144 km (incursiones en Polonia, Rumanía y Lituania) y el siguiente está a 191 km (el aeropuerto de Bucarest).",
+                ],
+              },
+              { termino: "3. Lugar nombrado", texto: ["Sin punto, la misma distancia desde el lugar del país que nombran su localidad, su región o su titular; un titular que lo sitúa en el mar Negro es de frontera."] },
+              {
+                termino: "4. Sin lugar",
+                texto: [
+                  "Es de frontera si el dron entró desde fuera (incursión, entrada desde el exterior o dron de un Estado) en un país con frontera con Ucrania, Rusia o Bielorrusia o con costa en el mar Negro, o si todo el país está a 150 km o menos de esa frontera (Moldavia). Si no, de interior.",
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: "prevision",
+        titulo: "Previsión y tendencias",
+        bloques: [
+          {
+            parrafo: [
+              "El botón «Previsión» dice qué está pasando más de lo normal y qué es probable que pase. Solo se publica lo que ha pasado una comprobación con el pasado: cada número se calcula con los datos anteriores a una fecha y se compara con lo que ocurrió después, avanzando en el tiempo, sin usar nunca datos futuros. Se compara con dos referencias simples, la frecuencia de siempre del país y «mañana igual que hoy», y se publica solo si acierta más que las dos y la mejora se sostiene al repetir la comprobación con semanas tomadas al azar. Lo que no pasa no sale. Con pocos datos no se afirma nada.",
+            ],
+          },
+          {
+            lista: [
+              {
+                termino: "Esta noche en la frontera",
+                texto: [
+                  "Probabilidad de que un dron de la guerra cruce o caiga en el país la noche siguiente (al menos un incidente de frontera esa noche). Se calcula antes de la noche, solo con lo que ya se sabe: los drones lanzados contra Ucrania de media en las tres últimas noches (partes de la Fuerza Aérea de Ucrania), cuántas de las siete últimas noches salieron drones desde Crimea y los incidentes de frontera del país en los siete días anteriores. Es una regresión logística que se reajusta cada mes. Se dice como «2 de cada 10 noches como esta (20 %)», con lo habitual del país y si cada factor sube o baja hoy el riesgo frente a su valor habitual. Sale para cada país en que pasa la comprobación.",
+                ],
+              },
+              {
+                termino: "Segunda noche",
+                texto: [
+                  "Tras una oleada grande sobre Ucrania (los drones lanzados llegan al percentil 90 de las 60 noches anteriores), la probabilidad de que la siguiente también lo sea. Sale solo esas noches y solo mientras su comprobación lo respalde.",
+                ],
+              },
+              {
+                termino: "Rachas por país",
+                texto: [
+                  "Lo normal de un país es la media de sus semanas del último año sin las cuatro últimas. Hay racha cuando las cuatro últimas semanas suman más de lo que lo normal da 1 de cada 20 veces (binomial negativa con la dispersión del propio país), con 3 incidentes como mínimo en 2 días distintos o más. Cuenta sucesos, no noticias: cada incidente una vez, en la fecha del suceso. Un país con menos de 5 incidentes en su año normal no tiene racha. Se dice desde cuándo, cuántos incidentes frente a lo habitual y si crece (las dos últimas semanas superan a las dos anteriores) o se apaga. La comprobación: tras marcar una racha, la semana siguiente se parece más a la racha que a lo normal.",
+                ],
+              },
+              {
+                termino: "La semana que viene",
+                texto: [
+                  "Lo esperado es la media de las semanas anteriores con un peso que se reduce a la mitad cada cuatro semanas; el margen va del 10 al 90 % de una binomial negativa con la dispersión del país, así que 8 de cada 10 semanas deberían caer dentro. Se publica en los países en que mejora a la frecuencia de siempre y a «la semana que viene igual que esta».",
+                ],
+              },
+              {
+                termino: "Cómo se puntúa",
+                texto: [
+                  "Las probabilidades, con la puntuación de Brier (el error al cuadrado entre la probabilidad y lo que pasó); los números semanales, con el logaritmo de la probabilidad que dio el método a lo que pasó. El historial de aciertos de cada parte dice con cuántas noches o semanas se comprobó, cuánto mejora a la referencia y, en la frontera, qué pasó en cada tramo de probabilidad. Las previsiones de las semanas anteriores a su publicación se reconstruyen tal como se habrían hecho entonces y se marcan como reconstruidas.",
+                ],
+              },
+              {
+                termino: "Registro en vivo",
+                texto: [
+                  "Desde el 6 de octubre de 2026 cada previsión queda guardada con su hora antes de conocerse el resultado (la de la frontera, en la primera actualización desde las 17:00 UTC; la semanal, el sábado) en un registro que no admite cambios ni borrados, y se puntúa cuando el resultado ya se conoce (3 días después de la noche, una semana después de acabar la semana). Va en el fichero publicado prevision.json y en la exportación de datos, con su método y su fecha.",
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      {
         id: "licencias",
         titulo: "Licencias y atribuciones",
         bloques: [
@@ -1397,6 +1573,12 @@ export const es: Textos = {
   satelite: {
     capas: "Capa de guerra",
     corredores: "Corredores",
+    principales: {
+      principales: (n, total) => `Los ${n} corredores con más drones, de ${total}; el grosor, según los drones.`,
+      todos: (total) => `Los ${total} corredores del periodo; el grosor, según los drones.`,
+      verTodos: (total) => `Ver los ${total}`,
+      verPrincipales: "Ver solo los principales",
+    },
     letreroCorredor: (origen, region, drones) => `${origen} → ${region} · ${drones} drones`,
     letreroCiudad: (ciudad, perdida) => `${ciudad} · ${perdida} % menos de luz nocturna`,
     letreroAlumbrado: (ciudad) => `${ciudad} · alumbrado reducido de forma permanente`,

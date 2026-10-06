@@ -130,6 +130,7 @@ describe("resúmenes", () => {
       episodio: null,
       foco: false,
       atribucion: null,
+      zona: null,
     });
   });
 
@@ -144,11 +145,11 @@ describe("resúmenes", () => {
     ]);
   });
 
-  it("cuenta los confirmados y los atribuidos por separado", () => {
+  it("los confirmados incluyen a los atribuidos: un atribuido es por fuerza un confirmado", () => {
     expect(meta(resumen, false)).toEqual({
       actualizado: "2026-09-30T12:42Z",
       incidentes: 3,
-      confirmados: 1,
+      confirmados: 2,
       atribuidos: 1,
       paises: 2,
       sinUbicacion: false,
@@ -309,7 +310,7 @@ describe("validación contra el esquema", () => {
 
 describe("listas cerradas iguales a las del esquema", () => {
   type Esquema = Record<string, unknown>;
-  const leer = (nombre: string) => leerJson("esquema", "1.13.0", `${nombre}.schema.json`) as Esquema;
+  const leer = (nombre: string) => leerJson("esquema", "1.14.0", `${nombre}.schema.json`) as Esquema;
   const en = (objeto: unknown, ...claves: string[]): unknown =>
     claves.reduce<unknown>((actual, clave) => (actual as Esquema)[clave], objeto);
 
@@ -413,6 +414,7 @@ describe("listas cerradas iguales a las del esquema", () => {
         jornada: { tipo: "noche", desde: "2025-09-12", hasta: "2025-09-13" },
         por: "fuente",
       },
+      zona: { grupo: "frontera", motivo: "ataque" },
     });
     expect(Object.keys(completo.properties).sort()).toEqual(
       [...new Set([...publicos, ...CAMPOS_ANTICIPADOS])].sort(),

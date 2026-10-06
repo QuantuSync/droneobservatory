@@ -42,6 +42,7 @@ function useCifraAnimada(valor: number, activa: boolean): number {
 export type Forma = "linea" | "rejilla";
 
 function Cifra({
+  clave,
   valor,
   rotulo,
   idioma,
@@ -50,6 +51,8 @@ function Cifra({
   forma,
   marca,
 }: {
+  /** Qué cifra es (para las pruebas: data-contador y data-valor con el número final). */
+  clave: string;
   valor: number;
   rotulo: string;
   idioma: Idioma;
@@ -73,12 +76,12 @@ function Cifra({
     </>
   );
   return forma === "linea" ? (
-    <div className="flex flex-row-reverse items-baseline gap-1">
+    <div className="flex flex-row-reverse items-baseline gap-1" data-contador={clave} data-valor={valor}>
       <dt className="text-xs text-secundario">{rotulo}</dt>
       <dd className={`cifra inline-flex items-baseline text-sm font-medium ${tono}`}>{cifra}</dd>
     </div>
   ) : (
-    <div className="flex flex-col-reverse gap-1">
+    <div className="flex flex-col-reverse gap-1" data-contador={clave} data-valor={valor}>
       <dt className="text-xs text-secundario">{rotulo}</dt>
       <dd className={`cifra flex items-baseline text-2xl font-medium leading-none ${tono}`}>{cifra}</dd>
     </div>
@@ -110,8 +113,9 @@ export function Marcador({ t, idioma, cifras, animar, forma = "linea" }: Props) 
           : `grid gap-4 ${conAtribuidos ? "grid-cols-2" : "grid-cols-3"}`
       }
     >
-      <Cifra valor={cifras.incidentes} rotulo={t.marcador.incidentes} idioma={idioma} activa={animar} forma={forma} />
+      <Cifra clave="incidentes" valor={cifras.incidentes} rotulo={t.marcador.incidentes} idioma={idioma} activa={animar} forma={forma} />
       <Cifra
+        clave="confirmados"
         valor={cifras.confirmados}
         rotulo={t.marcador.confirmados}
         idioma={idioma}
@@ -121,6 +125,7 @@ export function Marcador({ t, idioma, cifras, animar, forma = "linea" }: Props) 
       />
       {conAtribuidos && (
         <Cifra
+          clave="atribuidos"
           valor={cifras.atribuidos}
           rotulo={t.marcador.atribuidos}
           idioma={idioma}
@@ -130,7 +135,7 @@ export function Marcador({ t, idioma, cifras, animar, forma = "linea" }: Props) 
           marca={<MarcaAtribuido lado={forma === "linea" ? 12 : 18} />}
         />
       )}
-      <Cifra valor={cifras.paises} rotulo={t.marcador.paises} idioma={idioma} activa={animar} forma={forma} />
+      <Cifra clave="paises" valor={cifras.paises} rotulo={t.marcador.paises} idioma={idioma} activa={animar} forma={forma} />
     </dl>
   );
 }
