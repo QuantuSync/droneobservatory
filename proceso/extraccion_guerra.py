@@ -62,9 +62,11 @@ VENTANA_HORARIA = timedelta(days=3)
 TOPE_S = 120.0
 # Marca del lote del histórico en la base (tabla de cursores): se envía una sola vez.
 CURSOR_LOTE = "guerra:lote_historico"
-# Segunda y última tanda, con lo que quede del mismo presupuesto: los mensajes de las regiones
-# cuyo histórico se leyó después de la primera (docs/informe_errores_datos.md, bloque 2).
-CURSORES_LOTE = (CURSOR_LOTE, "guerra:lote_historico:2")
+# Segunda tanda, con lo que quede del mismo presupuesto: los mensajes de las regiones cuyo
+# histórico se leyó después de la primera (docs/informe_errores_datos.md, bloque 2). Tercera, igual:
+# el histórico de los canales de Odesa, Volinia, Zhytómyr y Ternópil y los ataques mixtos de
+# misiles y drones que la versión mensajes-guerra/6 sitúa por su distrito (docs/informe_odesa.md).
+CURSORES_LOTE = (CURSOR_LOTE, "guerra:lote_historico:2", "guerra:lote_historico:3")
 
 
 class Servicio(Protocol):
@@ -250,7 +252,7 @@ def procesar_respuesta(
         validacion = validar(lugares, peticion.publicacion["texto"], nomenclator, regiones, raices)
     base = analizar(
         peticion.publicacion["texto"], peticion.fecha, nomenclator, regiones, raices,
-        reivindicacion=peticion.canal.grupo == "estado_mayor_ua",
+        reivindicacion=peticion.canal.grupo == "estado_mayor_ua", ciudad=peticion.canal.ciudad,
     )  # fmt: skip
     leido_parte = base.parte_diario
     leido = MensajeLeido(

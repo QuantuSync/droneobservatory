@@ -1,4 +1,4 @@
-// Listas cerradas del esquema 1.12.0 (campos públicos). Un test las compara con los
+// Listas cerradas del esquema 1.13.0 (campos públicos). Un test las compara con los
 // ficheros de esquema/ para que no se separen.
 
 export const TIPOS = ["incursion", "interrupcion_aeroportuaria", "sobrevuelo"] as const;
@@ -133,4 +133,5 @@ export const CATEGORIAS_INSTALACION = [
 export const NIVELES_LUGAR_GUERRA = ["localidad", "instalacion", "comunidad", "distrito"] as const;
 export const TIPOS_IMPACTO = ["impacto", "restos"] as const;
 /** El radio de un lugar de la capa de guerra no pasa de 50 km. */
-export const RADIO_LUGAR_GUERRA_MAX_KM = 50;
+// Un distrito lleva su radio real (hasta unos 105 km); el esquema admite hasta 150.
+export const RADIO_LUGAR_GUERRA_MAX_KM = 150;

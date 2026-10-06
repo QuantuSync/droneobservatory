@@ -84,6 +84,14 @@ _TIPO_LUGAR = (
     r"станице|ст|город|городе|г|рабочий поселок|рп|пгт|н\.п|нп|населений пункт)"
 )
 TIPO_LUGAR = re.compile(r"(?:^|[\s(«\"])" + _TIPO_LUGAR + r"\.?\s*$", re.IGNORECASE)
+# Un nombre de persona tras su cargo («Голова Одеської ОДА Олег Кіпер»: Олег también es una
+# aldea): el cargo poco antes y un apellido con mayúscula justo después.
+_CARGO = re.compile(
+    r"(?:голова|голови|начальник\w*|очільник\w*|губернатор\w*|заступник\w*|керівник\w*|"
+    r"міністр\w*|президент\w*|глава|главы|мер|мера|мером|мэр\w*)\b[^.!?\n]{0,50}$",
+    re.IGNORECASE,
+)
+_APELLIDO = re.compile(r"^\s+[А-ЯІЇЄҐЁ][а-яіїєґё'’ʼ]+")
 # La palabra siguiente dice que es una unidad administrativa.
 _ADMINISTRATIVA = re.compile(
     r"^\s*(?:район|районі|району|районе|районом|районов|районах|районів|громад|тг\b|"
@@ -122,7 +130,10 @@ _LISTA_HROMADAS = re.compile(
 )
 _LISTA_RAIONES = re.compile(_LISTA_UNIDADES + r"\s+(?:район\w*|р-н\w*)")
 _SHCHYNA = re.compile(r"(?<![\w'’-])[А-ЯІЇЄҐ][\w'’-]+щин(?:а|і|у|ою|и)\b")
-# Un distrito más ancho que esto no es un lugar concreto (los distritos de 2020 son grandes).
+# Una comunidad más ancha que esto no es un lugar concreto. Los distritos no tienen tope: si el
+# mensaje solo nombra el distrito («в Одеському районі», «Ізмаїльський район»), el lugar es el
+# distrito con su radio real (los de 2020 miden de 30 a más de 100 km), con nivel «distrito»
+# para que nadie lo lea como una localidad.
 RADIO_MAX_UNIDAD_KM = 50.0
 
 # Tipo de instalación en el texto → categoría del nomenclátor.
@@ -448,6 +459,8 @@ class Nomenclator:
                 continue
             if forma in self.comunes and not TIPO_LUGAR.search(texto[max(0, inicio - 25) : inicio]):
                 continue
+            if _CARGO.search(texto[max(0, inicio - 60) : inicio]) and _APELLIDO.match(texto[fin:]):
+                continue
             candidatos = sorted((self.lista[x] for x in ids), key=lambda c: c.id)
             if regiones is not None:
                 candidatos = [c for c in candidatos if c.region in regiones]
@@ -524,14 +537,16 @@ class Nomenclator:
         self, adjetivo: str, regiones: frozenset[str] | None
     ) -> Lugar | None:
         """«Рязанский», «Саратовського», «Новокуйбышевский» → la ciudad (una sola en las
-        regiones) cuyo nombre empieza por la raíz del adjetivo."""
+        regiones) cuyo nombre empieza por la raíz del adjetivo. La raíz con el signo blando del
+        adjetivo vale también sin él: «Ізмаїльського» → Ізмаїл."""
         raiz = raiz_adjetivo(adjetivo)
         if len(raiz) < 4:
             return None
+        raices = {raiz, raiz.removesuffix("ь")}
         ciudades = {
             c.id: c for c, nombres in self._nombres_ciudades()
             if (regiones is None or c.region in regiones)
-            and any(n.startswith(raiz) for n in nombres)
+            and any(n.startswith(r) or n == r for n in nombres for r in raices)
         }  # fmt: skip
         return next(iter(ciudades.values())) if len(ciudades) == 1 else None
 
@@ -543,10 +558,10 @@ class Nomenclator:
         """Las comunidades («Марганецькій, Покровській громадам», «Краснопільська громада»)
         y los distritos rurales («по Одеському району», «Нікопольщина») que nombra el texto,
         como lugar de nivel comunidad o distrito: su centro y el radio que abarca. Solo en
-        Ucrania (las localidades rusas no traen distrito). Un distrito que abarca más de
-        RADIO_MAX_UNIDAD_KM, o el que lleva el nombre de la capital del óblast («Сумщина»,
-        «Одещина» son el óblast), no sale. `contexto` (el mensaje) da los distritos que
-        deshacen dos comunidades del mismo nombre."""
+        Ucrania (las localidades rusas no traen distrito). Una comunidad que abarca más de
+        RADIO_MAX_UNIDAD_KM, o el distrito en «-щина» que lleva el nombre de la capital del
+        óblast («Сумщина», «Одещина» son el óblast), no sale. `contexto` (el mensaje) da los
+        distritos que deshacen dos comunidades del mismo nombre."""
         hallazgos: list[Hallazgo] = []
         # Distritos que nombra el texto: deshacen dos comunidades del mismo nombre.
         todo = contexto or texto
@@ -617,7 +632,7 @@ class Nomenclator:
             if centro is None:
                 continue
             alcance = max(_km(centro, m) + m.radio_km for m in miembros)
-            if alcance > RADIO_MAX_UNIDAD_KM:
+            if tipo == "comunidad" and alcance > RADIO_MAX_UNIDAD_KM:
                 continue
             sufijo = "громада" if tipo == "comunidad" else "район"
             latino = f"{centro.nombre_latino} {'hromada' if tipo == 'comunidad' else 'raion'}"

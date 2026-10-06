@@ -297,7 +297,8 @@ export const en: Textos = {
       "Russian regions are muted violet with a dashed outline: their figures are those of the " +
       "Russian Ministry of Defence, a claim by a party to the war.",
     impactos:
-      "A small violet dot is a specific place hit (a town or a facility) according to the regional " +
+      "A small violet dot is a specific place hit (a town or a facility; if the source only names " +
+      "the community or the district, that one, with its radius) according to the regional " +
       "administrations, the Ukrainian General Staff or Russian governors. Filled: official " +
       "source; ring only: claim by a party. Zoomed out, they group with their count. Daily " +
       "front-line reports are in the downloadable data.",
@@ -572,6 +573,10 @@ export const en: Textos = {
     lugar: "Place",
     instalacionEn: (localidad) => `in ${localidad}`,
     radio: (km) => `area of ${km} km radius`,
+    nivel: {
+      comunidad: "the source only names the community, not the town",
+      distrito: "the source only names the district, not the town",
+    },
     tipo: { impacto: "Hit", restos: "Debris of a downed drone fell" },
     objetivo: "Type of target",
     sinObjetivo: "not stated by the source",

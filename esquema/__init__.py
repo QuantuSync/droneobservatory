@@ -11,7 +11,7 @@ from jsonschema import Draft202012Validator
 from referencing import Registry, Resource
 from referencing.jsonschema import DRAFT202012
 
-VERSION = "1.12.0"
+VERSION = "1.13.0"
 DIRECTORIO = Path(__file__).parent / VERSION
 PREFIJO_ID = f"urn:eodi:esquema:{VERSION}:"
 MARCA = "x-visibilidad"

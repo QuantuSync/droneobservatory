@@ -1,5 +1,7 @@
-// Servidor local de web/dist que imita lo que hace el despliegue: aplica las cabeceras y
-// las reescrituras de ../vercel.json y las direcciones sin extensión. Sirve además el
+// Servidor local de web/dist que imita lo que hace el despliegue: aplica las redirecciones, las
+// cabeceras y las reescrituras de ../vercel.json, después de los ficheros como Vercel, lo que
+// decide la función del borde (../api/borde.ts, con la lista /rutas.json del build) y las
+// direcciones sin extensión. Sirve además el
 // recorte de teselas de desarrollo (../data/teselas, fuera de git) con peticiones Range.
 // Sirve para comprobar en un navegador real la política de seguridad antes de desplegar.
 
@@ -10,6 +12,8 @@ import type { ServerResponse } from "node:http";
 import { dirname, extname, join, normalize, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { RUTA_LISTA_BORDE, decidirBorde } from "../../api/borde.ts";
+import type { DecisionBorde, RutasBorde } from "../../api/borde.ts";
 import { cabecerasDe, destinoDeReescritura } from "../src/seguridad/despliegue.ts";
 import type { ConfiguracionDespliegue } from "../src/seguridad/despliegue.ts";
 
@@ -44,18 +48,22 @@ const configuracion = JSON.parse(
   await readFile(join(WEB, "..", "vercel.json"), "utf-8"),
 ) as ConfiguracionDespliegue;
 
-/** Las redirecciones de los incidentes unidos que escribe el build (bulkRedirectsPath). */
-async function leerRedirecciones(): Promise<Map<string, { destino: string; codigo: number }>> {
+/** Las redirecciones de vercel.json, sin patrones (solo rutas exactas). */
+const redirecciones = new Map(
+  (configuracion.redirects ?? []).map((r) => [r.source, { destino: r.destination, codigo: r.permanent ? 308 : 307 }]),
+);
+
+/** La lista del middleware del borde que escribe el build. */
+async function leerBorde(): Promise<RutasBorde> {
   try {
-    const lista = JSON.parse(
-      await readFile(join(WEB, "redirecciones", "unidos.json"), "utf-8"),
-    ) as { source: string; destination: string; statusCode: number }[];
-    return new Map(lista.map((r) => [r.source, { destino: r.destination, codigo: r.statusCode }]));
+    return JSON.parse(await readFile(join(SALIDA, RUTA_LISTA_BORDE.slice(1)), "utf-8")) as RutasBorde;
   } catch {
-    return new Map();
+    return { redirecciones: {}, ataques: [] };
   }
 }
-const redirecciones = await leerRedirecciones();
+const borde = await leerBorde();
+const ataques = new Set(borde.ataques);
+const RUTA_DEL_BORDE = /^\/(?:en\/)?EODI-[A-Za-z0-9-]+$/;
 
 async function esFichero(ruta: string): Promise<boolean> {
   try {
@@ -119,8 +127,18 @@ const servidor = createServer((peticion, respuesta) => {
     for (const [clave, valor] of cabecerasDe(configuracion, ruta)) {
       respuesta.setHeader(clave, valor);
     }
-    const fichero =
-      (await resolver(ruta)) ?? (await resolver(destinoDeReescritura(configuracion, ruta) ?? ruta));
+    // Los ficheros primero; una ficha que no es un fichero va a la función del borde.
+    let fichero = await resolver(ruta);
+    if (fichero === null && RUTA_DEL_BORDE.test(ruta)) {
+      const decision: DecisionBorde = decidirBorde(ruta, borde, ataques);
+      if (decision.tipo === "redirigir") {
+        respuesta.writeHead(308, { Location: decision.destino }).end();
+        return;
+      }
+      fichero = decision.tipo === "portada" ? await resolver(decision.ruta) : null;
+    } else if (fichero === null) {
+      fichero = await resolver(destinoDeReescritura(configuracion, ruta) ?? ruta);
+    }
     if (fichero === null) {
       // La página 404 del sitio, con su código.
       const noEncontrada = await resolver("/404.html");

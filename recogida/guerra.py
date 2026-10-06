@@ -255,6 +255,7 @@ def _procesar_canal(
         leido = analizar(
             publicacion["texto"], publicado, nomenclator, regiones_del_canal(canal),
             raices_regiones(), reivindicacion=canal.grupo == "estado_mayor_ua",
+            ciudad=canal.ciudad,
         )  # fmt: skip
         hecho = impactos_guerra.incorporar(
             almacen, ataques, canal, publicacion["id"], publicado, leido, ahora
@@ -364,6 +365,7 @@ def corregir(
                             publicacion["texto"], _fecha(publicacion["fecha"]), nomenclator,
                             regiones_del_canal(canal), raices_regiones(),
                             reivindicacion=canal.grupo == "estado_mayor_ua",
+                            ciudad=canal.ciudad,
                         )  # fmt: skip
                 leidos[fuente["id"]] = leido
             leido = leidos[fuente["id"]]

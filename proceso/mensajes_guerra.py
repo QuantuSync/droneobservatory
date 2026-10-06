@@ -27,7 +27,7 @@ from proceso.lugares_guerra import TIPOS_INSTALACION, Hallazgo, Lugar, Nomenclat
 
 MAX_PALABRAS_FRASE = 25
 KYIV = ZoneInfo("Europe/Kyiv")
-VERSION = "mensajes-guerra/5"
+VERSION = "mensajes-guerra/6"
 
 DRON = re.compile(
     r"БпЛА|БПЛА|безпілотн|беспилотн|\bдрон|дронов|дронам|шахед|shahed|герань|гербер|"
@@ -44,9 +44,59 @@ OTRA_ARMA = re.compile(
     r"обстрел",
     re.IGNORECASE,
 )
+# «Внаслідок обстрілу», «в результаті обстрілу»: la consecuencia del ataque que el mensaje ya
+# contó, sin nombrar arma. En singular: «внаслідок обстрілів» es el balance de varios ataques
+# (los partes de Járkov), que puede incluir otras armas; y nunca en un parte diario, que suma
+# los ataques de 24 horas. En un mensaje que no nombra más arma que los drones es el ataque con
+# drones («Вночі ворог атакував Одесу ударними БпЛА. Внаслідок обстрілу пошкоджено житлові
+# будинки»); si nombra otra, sigue sin poder atribuirse por código.
+OBSTRIL_CONSECUENCIA = re.compile(
+    r"(?:внаслідок|в\s+результаті|у\s+результаті|через|під\s+час|в\s+результате|в\s+ходе)\s+"
+    r"(?:\w+\s+){0,2}?(?:обстрілу|обстрела)(?![\w'])",
+    re.IGNORECASE,
+)
+# «Атака ударними безпілотниками по Одесі», «атаки БпЛА на Кам'янське»: el ataque con drones
+# sobre un lugar, que cuenta como impacto solo si la misma frase nombra los drones y el mensaje
+# dice que hubo daños, fuego o víctimas («атаки на Нікопольщину», sin arma, no).
+ATAQUE_A_LUGAR = re.compile(
+    r"(?<![\w'])атак\w*\s+(?:\w+\s+){0,3}?(?:на|по)\s+(?-i:[А-ЯІЇЄҐЁ])", re.IGNORECASE
+)
+# En el canal de la administración de una ciudad, «місто», «по місту», «у місті», «в одному з
+# районів міста» es esa ciudad; no si sigue un nombre («місто Чорноморськ»).
+CIUDAD_DEL_CANAL = re.compile(
+    r"(?<![\w'’-])(?:місто|міста|місту|містом|місті|город|города|городу|городом|городе)"
+    r"(?![\w'’-])(?!\s+(?-i:[А-ЯІЇЄҐЁ]))",
+    re.IGNORECASE,
+)
+# Daños negados: «обійшлося без влучань та постраждалих», «без наслідків», «не постраждав».
+_DANO = (
+    r"(?:влучан\w*|влучень|постраждал\w*|постраждав\w*|наслідк\w*|пошкоджен\w*|руйнуван\w*|"
+    r"жертв\w*|загибл\w*|травмован\w*|поранен\w*|попадани\w*|пострадавш\w*|последстви\w*|"
+    r"повреждени\w*|разрушени\w*)"
+)
+NEGACION_DANOS = re.compile(
+    r"(?:\bбез|\bне\s+було|\bне\s+зафіксовано|\bвідсутн\w*|\bне\s+постраждал\w*|"
+    r"\bне\s+постраждав|\bне\s+пострадал\w*|\bне\s+было)\s+(?:\w+\s+){0,1}?"
+    + _DANO
+    + r"(?:\s*(?:,|та|і|й|чи|и|или)\s*"
+    + _DANO
+    + r")*|\bне\s+постраждал\w*|\bне\s+постраждав|\bне\s+пострадал\w*"
+    # «Інформація щодо руйнувань та постраждалих не надходила»: no se sabe de ningún daño.
+    + r"|\b(?:інформаці|информаци)\w*\s+(?:щодо|про|о|об)\s+(?:\w+\s+){0,1}?"
+    + _DANO
+    + r"(?:\s*(?:,|та|і|й|чи|и|или)\s*(?:\w+\s+){0,1}?"
+    + _DANO
+    + r")*\s+(?:наразі\s+|поки\s+що\s+|ще\s+|пока\s+)?(?:не\s+надходил\w*|не\s+поступал\w*)",
+    re.IGNORECASE,
+)
+# «Атакував», «атаковали»: el ataque, sin decir que alcanzara nada. Solo no es un impacto si el
+# mensaje niega los daños. Un golpe («удар», «вдарили», «поцілив») sí dice que alcanzó algo.
+ATAQUE_SIN_DANO = re.compile(r"атакува|атакова|атаки\s+БПЛА|атаке\s+БПЛА", re.IGNORECASE)
+GOLPE = re.compile(r"\bудар(?!н)|вдари|вдарил|поціли|влучил|влучив|\bвпав|\bвпала|\bвпали", re.I)
 IMPACTO = re.compile(
-    r"влуча|влучив|влучил|поціли|пошкодж|зруйн|руйнув|пожеж|загоран|займан|загорів|"
+    r"влуча|влучив|влучил|поціли|пошкодж|ушкодж|зруйн|руйнув|пожеж|загоран|займан|загорів|"
     r"уражен|уразил|ураже|вибух|атакува|вдари|удар\w*\s+по|наслідк|постражда|поранен|"
+    r"зайнявс|зайнялас|зайнялис|"
     r"травмован|загин|загибл|вбит|уламк|падінн|падіння|знеструм|"
     # «прильоти», «приліт»: la forma ucraniana de «прилёт» (Волинь, Житомирщина).
     r"попадан|прил[её]т|прильот|приліт|поврежд|разруш|пожар|возгоран|загорел|взрыв|"
@@ -134,6 +184,7 @@ CONDOLENCIA = re.compile(
 # початку повномасштабного вторгнення поранені понад 2100 людей»).
 ACUMULADO = re.compile(
     r"з\s+початку|від\s+початку|с\s+начала|за\s+(?:весь|увесь)\s+період|за\s+рік|за\s+год\b|"
+    r"цього\s+року|за\s+цей\s+рік|этого\s+года|в\s+этом\s+году|"
     r"за\s+(?:тиждень|місяць|неделю|месяц)",
     re.IGNORECASE,
 )
@@ -182,7 +233,7 @@ CATEGORIAS: tuple[tuple[str, re.Pattern[str]], ...] = tuple(
     (categoria, re.compile(patron, re.IGNORECASE))
     for categoria, patron in (
         ("combustible", r"\bНПЗ\b|нафтопереробн|нефтеперерабат|нафтобаз|нефтебаз|паливн|"
-                        r"топливн|\bПММ\b|\bГСМ\b|\bАЗС\b|нафтов|нефтян|резервуар"),
+                        r"автозаправн|топливн|\bПММ\b|\bГСМ\b|\bАЗС\b|нафтов|нефтян|резервуар"),
         ("energia", r"енергети|энергети|енергооб|энергообъект|підстанц|подстанц|\bТЕС\b|\bТЕЦ\b|"
                     r"\bГЕС\b|\bТЭЦ\b|\bТЭС\b|\bГРЭС\b|електро|электро|газопровод|газорозпод|"
                     r"газов\w+\s+(?:інфраструктур|об)|котельн|знеструм|обесточ|ЛЕП\b|ЛЭП\b"),
@@ -508,11 +559,13 @@ def analizar(
     regiones: frozenset[str] | None,
     raices_regiones: tuple[tuple[str, str], ...] = (),
     reivindicacion: bool = False,
+    ciudad: str | None = None,
 ) -> MensajeLeido:
     """Los impactos con lugar de un mensaje. `regiones`: las del canal (una administración
     regional, un gobernador); None en los canales de todo el país, que toman la región de
     la propia frase (`raices_regiones`). Con `reivindicacion` (Estado Mayor ucraniano), solo
-    cuentan las frases que reivindican un ataque propio («уразили», «уражено»)."""
+    cuentan las frases que reivindican un ataque propio («уразили», «уражено»). `ciudad`: la
+    ciudad del canal de una administración municipal («місто» es esa ciudad)."""
     texto = _texto_limpio(texto)
     leido = MensajeLeido()
     if not DRON.search(DRON_OBJETIVO.sub(" ", texto)) or (
@@ -549,7 +602,19 @@ def analizar(
     if RETROSPECTIVO.search(texto):
         leido.motivo = "retrospectivo"
         return leido
-    armas_mensaje = _armas(DRON_OBJETIVO.sub(" ", texto))
+    sin_objetivo = DRON_OBJETIVO.sub(" ", texto)
+    solo_drones = not leido.parte_diario and _armas(
+        OBSTRIL_CONSECUENCIA.sub(" ", sin_objetivo)
+    ) == frozenset({"dron"})
+    armas_mensaje = _armas(_sin_consecuencia(sin_objetivo, solo_drones))
+    danos_mensaje = _danos(texto)
+    negado = False
+    # «Ворог атакував Одесу… обійшлося без влучань та постраждалих»: un ataque sin daños no es
+    # un impacto.
+    # Solo si lo niega expresamente y no queda ningún otro daño; nunca en un parte diario.
+    sin_danos = (
+        not leido.parte_diario and bool(NEGACION_DANOS.search(texto)) and not _hay_dano(texto)
+    )
     anterior: frozenset[str] = frozenset()
     impactos: dict[str, ImpactoLeido] = {}
     mezclado = False
@@ -557,7 +622,7 @@ def analizar(
     fallecidos: list[int] = []
     for m in _FRASES.finditer(texto):
         frase = m.group(0)[:MAX_LETRAS_FRASE]
-        propias = _armas(DRON_OBJETIVO.sub(" ", frase))
+        propias = _armas(_sin_consecuencia(DRON_OBJETIVO.sub(" ", frase), solo_drones))
         armas = propias or anterior or armas_mensaje
         anterior = armas
         if CONDOLENCIA.search(frase):
@@ -572,9 +637,19 @@ def analizar(
             # que el dron alcanzó los lugares de su cabeza, aunque nombre otras armas.
             armas = frozenset({"dron"})
             frase = linea.group("cabeza") + " " + linea.group("resto")
-        if not IMPACTO.search(frase) and not (linea and armas == frozenset({"dron"})):
+        ataque_a_lugar = (
+            danos_mensaje and propias == frozenset({"dron"}) and bool(ATAQUE_A_LUGAR.search(frase))
+        )
+        if (
+            not IMPACTO.search(frase)
+            and not ataque_a_lugar
+            and not (linea and armas == frozenset({"dron"}))
+        ):
             continue
         if AVISO.search(frase):
+            continue
+        if sin_danos and not linea and not categorias(frase) and not _hay_dano(frase):
+            negado = True
             continue
         if DERRIBO.search(frase) and not _danos(frase):
             continue
@@ -595,6 +670,7 @@ def analizar(
         busqueda = linea.group("cabeza") if linea and propias != armas else frase
         hallazgos = nomenclator.localidades_en(busqueda, ambito, texto)
         hallazgos += _centro_regional(busqueda, regiones, nomenclator)
+        hallazgos += _ciudad_del_canal(busqueda, ciudad, regiones, nomenclator, hallazgos)
         # Comunidades y distritos que nombra la frase, salvo los de una localidad que ya
         # nombra («По Нікополю і Марганецькій громаді»).
         localidades = [h.lugar for h in hallazgos if h.lugar is not None]
@@ -657,7 +733,7 @@ def analizar(
         ]
     leido.para_extractor = mezclado or bool(leido.sin_resolver)
     if not leido.impactos and not leido.para_extractor:
-        leido.motivo = "sin_lugar"
+        leido.motivo = "sin_impacto" if negado else "sin_lugar"
     leido.prioridad = _prioridad(texto)
     return leido
 
@@ -680,6 +756,44 @@ def _centro_regional(
     ][:1]
 
 
+def _ciudad_del_canal(
+    frase: str,
+    ciudad: str | None,
+    regiones: frozenset[str] | None,
+    nomenclator: Nomenclator,
+    hallazgos: list[Hallazgo],
+) -> list[Hallazgo]:
+    """«По місту», «у місті», «в одному з районів міста» en el canal de una administración
+    municipal: la ciudad del canal, si la frase no nombra ya un lugar."""
+    if (
+        ciudad is None
+        or regiones is None
+        or any(h.lugar is not None for h in hallazgos)
+        or ACUMULADO.search(frase)
+    ):
+        return []
+    m = CIUDAD_DEL_CANAL.search(frase)
+    if m is None:
+        return []
+    return [
+        Hallazgo(m.group(0), m.start(), m.end(), h.lugar)
+        for h in nomenclator.localidades_en(ciudad, regiones)
+        if h.lugar is not None and h.lugar.nivel == "localidad"
+    ][:1]
+
+
+def _hay_dano(texto: str) -> bool:
+    """El texto dice que algo se alcanzó o se dañó, sin contar los daños negados ni el verbo
+    «atacar» solo."""
+    resto = ATAQUE_SIN_DANO.sub(" ", NEGACION_DANOS.sub(" ", texto))
+    return bool(IMPACTO.search(resto) or GOLPE.search(resto))
+
+
+def _sin_consecuencia(texto: str, solo_drones: bool) -> str:
+    """Sin «внаслідок обстрілу» si el mensaje no nombra más arma que los drones."""
+    return OBSTRIL_CONSECUENCIA.sub(" ", texto) if solo_drones else texto
+
+
 def _dentro(lugar: Lugar, unidad: Lugar) -> bool:
     """Si la localidad (o la comunidad) está en la comunidad o el distrito."""
     if lugar.raion != unidad.raion or lugar.nivel == "distrito":
@@ -693,7 +807,7 @@ def _danos(frase: str) -> bool:
     """La frase dice algo más que un derribo: daños, fuego o víctimas."""
     return bool(
         re.search(
-            r"пошкодж|зруйн|пожеж|загоран|займан|поранен|загин|загибл|влуча|уламк|"
+            r"пошкодж|ушкодж|зруйн|пожеж|загоран|займан|поранен|загин|загибл|влуча|уламк|"
             r"поврежд|разруш|пожар|возгоран|ранен|погиб|пострадал|попадан|обломк|падени|"
             r"падінн|падіння",
             frase,
@@ -714,7 +828,9 @@ def _instalaciones(
     frase: str, hallazgos: list[Hallazgo], nomenclator: Nomenclator, ambito: frozenset[str]
 ) -> list[Lugar]:
     """Instalaciones que nombra la frase: su tipo con el nombre entre comillas, con la
-    localidad de la frase o con el adjetivo de la localidad («Рязанский НПЗ»)."""
+    localidad de la frase o con el adjetivo de la localidad («Рязанский НПЗ»). Si la instalación
+    no está en el nomenclátor pero el adjetivo dice la ciudad («на території Ізмаїльського
+    порту»), el lugar es esa ciudad."""
     resultado: list[Lugar] = []
     localidades = [h.lugar for h in hallazgos if h.lugar is not None]
     for patron, categoria in TIPOS_INSTALACION:
@@ -722,13 +838,16 @@ def _instalaciones(
             comillas = _COMILLAS.search(frase, m.end(), min(len(frase), m.end() + 60))
             nombre = comillas.group(1) if comillas else None
             cerca = min(localidades, key=lambda loc: 0) if len(localidades) == 1 else None
+            por_adjetivo = None
             if cerca is None:
                 previa = re.findall(r"[^\W\d_]+", frase[max(0, m.start() - 40) : m.start()])
                 if previa:
-                    cerca = nomenclator.localidad_por_adjetivo(previa[-1], ambito)
+                    cerca = por_adjetivo = nomenclator.localidad_por_adjetivo(previa[-1], ambito)
             if cerca is None and nombre:
                 cerca = nomenclator.localidad_por_adjetivo(nombre.split()[0], ambito)
             instalacion = nomenclator.instalacion(categoria, ambito, cerca, nombre)
+            if instalacion is None and por_adjetivo is not None:
+                instalacion = por_adjetivo
             if instalacion is not None and instalacion.id not in {r.id for r in resultado}:
                 resultado.append(instalacion)
     return resultado

@@ -1,7 +1,9 @@
 // Comprobación de lo que entrega la web a quien la pide sin ejecutar código, sobre web/dist
 // recién construido: cada tipo de página trae su contenido en el HTML, las cifras de la portada
 // son las del mapa, cada incidente publicado tiene su página y ninguno retirado o unido la tiene,
-// los datos estructurados y el sitemap son válidos, y no hay apartados ni menciones prohibidas.
+// los datos estructurados y el sitemap son válidos, no hay apartados ni menciones prohibidas, la
+// lista de la función del borde está bien y las redirecciones no pasan del 80 % de la capacidad
+// de Vercel.
 // Se ejecuta en la integración continua después de `npm run build`.
 
 import assert from "node:assert/strict";
@@ -10,6 +12,10 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { escaparHtml } from "../src/cabecera.ts";
+import { RUTA_LISTA_BORDE } from "../../api/borde.ts";
+import type { RutasBorde } from "../../api/borde.ts";
+import { capacidadesAlLimite, usoDeCapacidad } from "../src/seguridad/despliegue.ts";
+import type { ConfiguracionDespliegue } from "../src/seguridad/despliegue.ts";
 import { cifras } from "../src/datos/derivar.ts";
 import type { IncidenteDetalle, Resumen } from "../src/datos/tipos.ts";
 import { fechaHora, numero } from "../src/i18n/index.ts";
@@ -211,17 +217,33 @@ async function principal(): Promise<void> {
   const ficheros = (await readdir(DIST)).filter((f) => /^EODI-\d{4}-\d{5}\.html$/.test(f));
   assert.equal(ficheros.length, publicados.size, "páginas de incidentes que no están publicados");
 
-  // Redirecciones de los unidos: a una página que existe, nunca desde una que existe.
-  const redirecciones = JSON.parse(await leer(join(WEB, "redirecciones", "unidos.json"))) as {
-    source: string;
-    destination: string;
-    statusCode: number;
-  }[];
-  for (const r of redirecciones) {
-    assert.equal(r.statusCode, 308);
-    assert.ok(await existe(join(DIST, ficheroDeRuta(r.destination))), `redirección a ${r.destination}`);
-    assert.ok(!(await existe(join(DIST, ficheroDeRuta(r.source)))), `redirección desde ${r.source}`);
+  // Lista de la función del borde: cada unido redirige a una página que existe y nunca desde
+  // una que existe, en los dos idiomas; los ataques son los publicados.
+  const borde = JSON.parse(await leer(join(DIST, RUTA_LISTA_BORDE.slice(1)))) as RutasBorde;
+  const redirecciones = Object.entries(borde.redirecciones);
+  for (const [origen, destino] of redirecciones) {
+    assert.ok(await existe(join(DIST, ficheroDeRuta(destino))), `redirección a ${destino}`);
+    assert.ok(!(await existe(join(DIST, ficheroDeRuta(origen)))), `redirección desde ${origen}`);
   }
+  for (const id of fuera.filter((x) => Object.hasOwn(coleccion.unidos ?? {}, x))) {
+    if (!publicados.has((coleccion.unidos ?? {})[id] ?? "")) continue;
+    for (const idioma of IDIOMAS) assert.ok(Object.hasOwn(borde.redirecciones, rutaDeFicha(id, idioma)), `${id} sin redirección`);
+  }
+  const ucrania = JSON.parse(await leer(join(DATOS, "ucrania.json"))) as { ataques: { id: string }[] };
+  assert.deepEqual(new Set(borde.ataques), new Set(ucrania.ataques.map((a) => a.id)), "ataques del borde");
+
+  // Capacidad de Vercel: falla aquí, con un mensaje claro, antes de que falle el despliegue.
+  const despliegue = JSON.parse(await leer(join(WEB, "..", "vercel.json"))) as ConfiguracionDespliegue;
+  let masivas = 0;
+  if (despliegue.bulkRedirectsPath !== undefined) {
+    const carpeta = join(WEB, "..", despliegue.bulkRedirectsPath);
+    for (const fichero of await readdir(carpeta)) {
+      masivas += (JSON.parse(await leer(join(carpeta, fichero))) as unknown[]).length;
+    }
+  }
+  const uso = usoDeCapacidad(despliegue, masivas);
+  const alLimite = capacidadesAlLimite(uso);
+  assert.deepEqual(alLimite, [], `capacidad de Vercel al límite:\n${alLimite.join("\n")}`);
 
   // robots.txt, llms.txt y la 404.
   assert.match(await leer(join(DIST, "robots.txt")), /^Sitemap: https:\/\/droneobservatory\.eu\/sitemap\.xml$/m);
@@ -233,7 +255,8 @@ async function principal(): Promise<void> {
 
   console.log(
     `páginas comprobadas: ${comprobadas.length} sin ejecutar código; sitemap con ${direcciones.length} ` +
-      `direcciones; ${fuera.length} retirados o unidos sin página; ${redirecciones.length} redirecciones`,
+      `direcciones; ${fuera.length} retirados o unidos sin página; ${redirecciones.length} redirecciones de ` +
+      `unidos en el borde; ${uso.map((u) => `${u.nombre} ${u.usadas}/${u.capacidad}`).join(", ")}`,
   );
 }
 

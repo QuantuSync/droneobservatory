@@ -119,6 +119,8 @@ class Canal:
     cadena: tuple[tuple[str, str], ...] = ()
     # Anuncio de otro canal oficial con insignia que enlaza este: (canal, número).
     anuncio: tuple[str, int] | None = None
+    # Canal de la administración de una ciudad: «місто» en sus mensajes es esa ciudad.
+    ciudad: str | None = None
 
     @property
     def filtro(self) -> re.Pattern[str]:
@@ -156,6 +158,7 @@ def cargar_canales(ruta: Path = CONFIGURACION) -> list[Canal]:
                     if "anuncio" in c
                     else None
                 ),
+                ciudad=c.get("ciudad"),
             )
         )
     return canales

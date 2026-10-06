@@ -47,6 +47,24 @@ test.describe("sin ejecutar código", () => {
     const respuesta = await page.goto("/EODI-2099-99999");
     expect(respuesta?.status()).toBe(404);
     await expect(page.locator(`${TEXTO} h1`)).toBeVisible();
+    // También un ataque inventado de la capa de Ucrania, en los dos idiomas (función del borde).
+    for (const ruta of ["/EODI-UA-2099-9999", "/en/EODI-UA-2099-9999"]) {
+      expect((await page.request.get(ruta, { maxRedirects: 0 })).status()).toBe(404);
+    }
+  });
+
+  test("un ataque que existe abre la portada y un unido redirige con 308", async ({ page }) => {
+    const borde = (await (await page.request.get("/rutas.json")).json()) as {
+      redirecciones: Record<string, string>;
+      ataques: string[];
+    };
+    const ataque = borde.ataques[0];
+    if (ataque !== undefined) expect((await page.request.get(`/${ataque}`)).status()).toBe(200);
+    for (const [origen, destino] of Object.entries(borde.redirecciones).slice(0, 2)) {
+      const respuesta = await page.request.get(origen, { maxRedirects: 0 });
+      expect(respuesta.status()).toBe(308);
+      expect(respuesta.headers().location).toBe(destino);
+    }
   });
 });
 

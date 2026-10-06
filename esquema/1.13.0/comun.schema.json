@@ -1,9 +1,9 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:eodi:esquema:1.12.0:comun",
+  "$id": "urn:eodi:esquema:1.13.0:comun",
   "title": "Definiciones comunes",
   "description": "Tipos compartidos. La visibilidad efectiva de un campo es la más restrictiva de su cadena: si algún antecesor es interno, el campo es interno.",
-  "x-version": "1.12.0",
+  "x-version": "1.13.0",
   "$defs": {
     "jornada": {
       "description": "Noche o día a que pertenece un parte, con la regla única de proceso/ataques.jornada (la misma que la web): noche si el periodo acaba un día UTC después del que empieza («noche del 3 al 4 de octubre»: desde el 3, hasta el 4); día si empieza y acaba el mismo día UTC (desde y hasta iguales). Un periodo que acaba más de un día después cuenta en la noche de su comienzo.",

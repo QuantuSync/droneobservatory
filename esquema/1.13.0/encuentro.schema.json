@@ -1,9 +1,9 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:eodi:esquema:1.12.0:encuentro",
+  "$id": "urn:eodi:esquema:1.13.0:encuentro",
   "title": "Encuentro con aeronave",
   "description": "Encuentro de un dron, un aeromodelo o un objeto desconocido con una aeronave en vuelo, según el informe de un organismo oficial (UK Airprox Board). Registro interno para AEGIS: no es un incidente público ni crea uno. Si coincide con un incidente (regla de fusión: mismo sitio y misma ventana), lo enlaza y le aporta sus datos. Lo que el informe no dice queda sin poner.",
-  "x-version": "1.12.0",
+  "x-version": "1.13.0",
   "type": "object",
   "additionalProperties": false,
   "required": ["id", "autoridad", "numero", "enlace", "instante", "pais", "objeto", "fuente", "procedencia", "control"],
@@ -13,17 +13,17 @@
     "numero": {"x-visibilidad": "interno", "description": "Número de Airprox tal como lo da la UKAB.", "type": "string", "pattern": "^\\d{7}$"},
     "enlace": {"x-visibilidad": "interno", "description": "Informe en PDF (individual o la hoja consolidada de la reunión).", "type": "string", "pattern": "^https?://\\S+$"},
     "catalogo": {"x-visibilidad": "interno", "description": "Catálogo anual en Excel del que salen los campos fijos.", "type": "string", "pattern": "^https?://\\S+$"},
-    "reunion": {"x-visibilidad": "interno", "description": "Día de la reunión de la UKAB que evaluó el encuentro, si el informe lo da.", "$ref": "urn:eodi:esquema:1.12.0:comun#/$defs/fecha"},
-    "instante": {"x-visibilidad": "interno", "description": "Fecha y hora UTC del encuentro.", "$ref": "urn:eodi:esquema:1.12.0:comun#/$defs/instante"},
+    "reunion": {"x-visibilidad": "interno", "description": "Día de la reunión de la UKAB que evaluó el encuentro, si el informe lo da.", "$ref": "urn:eodi:esquema:1.13.0:comun#/$defs/fecha"},
+    "instante": {"x-visibilidad": "interno", "description": "Fecha y hora UTC del encuentro.", "$ref": "urn:eodi:esquema:1.13.0:comun#/$defs/instante"},
     "luz": {"x-visibilidad": "interno", "description": "Día o noche, tal como lo da el catálogo.", "type": "string", "minLength": 1},
-    "pais": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.12.0:comun#/$defs/pais"},
+    "pais": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.13.0:comun#/$defs/pais"},
     "posicion": {
       "x-visibilidad": "interno",
       "description": "Posición estimada del encuentro. La UKAB advierte que latitud y longitud son estimaciones a partir de la hora notificada y del radar.",
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "punto": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.12.0:comun#/$defs/punto"},
+        "punto": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.13.0:comun#/$defs/punto"},
         "descripcion": {"x-visibilidad": "interno", "description": "Distancia y rumbo a un punto de referencia («5NM E Banbury»).", "type": "string", "minLength": 1}
       }
     },
@@ -72,10 +72,10 @@
         "clasificacion": {"x-visibilidad": "interno", "type": "string", "minLength": 1},
         "categoria_catalogo": {"x-visibilidad": "interno", "type": "string", "minLength": 1},
         "tipo_catalogo": {"x-visibilidad": "interno", "type": "string", "minLength": 1},
-        "opinion_junta": {"x-visibilidad": "interno", "description": "Lo que la junta concluye sobre la naturaleza del objeto, frase literal.", "$ref": "urn:eodi:esquema:1.12.0:comun#/$defs/frase_breve"},
-        "descripcion": {"x-visibilidad": "interno", "description": "Cómo describe el piloto el objeto, frase literal del informe.", "$ref": "urn:eodi:esquema:1.12.0:comun#/$defs/frase_breve"},
+        "opinion_junta": {"x-visibilidad": "interno", "description": "Lo que la junta concluye sobre la naturaleza del objeto, frase literal.", "$ref": "urn:eodi:esquema:1.13.0:comun#/$defs/frase_breve"},
+        "descripcion": {"x-visibilidad": "interno", "description": "Cómo describe el piloto el objeto, frase literal del informe.", "$ref": "urn:eodi:esquema:1.13.0:comun#/$defs/frase_breve"},
         "clase": {"x-visibilidad": "interno", "description": "Por regla de código con las palabras de la descripción (quadcopter, fixed wing...).", "enum": ["multirrotor_pequeno", "ala_fija", "desconocido"]},
-        "altura_m": {"x-visibilidad": "interno", "description": "Altura o altitud del objeto en metros, por regla: la altitud de la aeronave más o menos la separación vertical notificada, con la misma referencia.", "$ref": "urn:eodi:esquema:1.12.0:comun#/$defs/rango_real"}
+        "altura_m": {"x-visibilidad": "interno", "description": "Altura o altitud del objeto en metros, por regla: la altitud de la aeronave más o menos la separación vertical notificada, con la misma referencia.", "$ref": "urn:eodi:esquema:1.13.0:comun#/$defs/rango_real"}
       }
     },
     "separacion": {
@@ -86,8 +86,8 @@
       "required": ["texto"],
       "properties": {
         "texto": {"x-visibilidad": "interno", "type": "string", "minLength": 1},
-        "vertical_m": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.12.0:comun#/$defs/rango_real"},
-        "horizontal_m": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.12.0:comun#/$defs/rango_real"}
+        "vertical_m": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.13.0:comun#/$defs/rango_real"},
+        "horizontal_m": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.13.0:comun#/$defs/rango_real"}
       }
     },
     "riesgo_notificado": {"x-visibilidad": "interno", "description": "Riesgo de colisión que da el piloto (High, Medium, Low, None, NR).", "type": "string", "minLength": 1},
@@ -100,8 +100,8 @@
       "required": ["medio", "fiabilidad", "credibilidad", "licencia"],
       "properties": {
         "medio": {"x-visibilidad": "interno", "type": "string", "minLength": 1},
-        "fiabilidad": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.12.0:comun#/$defs/fiabilidad"},
-        "credibilidad": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.12.0:comun#/$defs/credibilidad"},
+        "fiabilidad": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.13.0:comun#/$defs/fiabilidad"},
+        "credibilidad": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.13.0:comun#/$defs/credibilidad"},
         "licencia": {"x-visibilidad": "interno", "type": "string", "minLength": 1}
       }
     },
@@ -109,7 +109,7 @@
       "x-visibilidad": "interno",
       "description": "Origen y método de cada valor, por ruta.",
       "type": "object",
-      "additionalProperties": {"$ref": "urn:eodi:esquema:1.12.0:comun#/$defs/procedencia"}
+      "additionalProperties": {"$ref": "urn:eodi:esquema:1.13.0:comun#/$defs/procedencia"}
     },
     "control": {
       "x-visibilidad": "interno",
@@ -117,7 +117,7 @@
       "additionalProperties": false,
       "required": ["alta", "lector"],
       "properties": {
-        "alta": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.12.0:comun#/$defs/instante"},
+        "alta": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.13.0:comun#/$defs/instante"},
         "lector": {"x-visibilidad": "interno", "description": "Versión del lector que lo construyó.", "type": "string", "minLength": 1}
       }
     }

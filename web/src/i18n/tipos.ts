@@ -411,6 +411,7 @@ export interface Textos {
     lugar: string;
     instalacionEn: (localidad: string) => string;
     radio: (km: string) => string;
+    nivel: Record<"comunidad" | "distrito", string>;
     tipo: Record<"impacto" | "restos", string>;
     objetivo: string;
     sinObjetivo: string;

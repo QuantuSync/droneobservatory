@@ -182,13 +182,14 @@ describe("cabeceras del despliegue", () => {
     expect(csp.get("img-src")).toEqual(["'self'", ORIGEN_ALMACEN]);
   });
 
-  it("los ataques, sin página propia, abren la portada de su idioma", () => {
-    expect(destinoDeReescritura(vercel, "/EODI-UA-2026-1014")).toBe("/");
-    expect(destinoDeReescritura(vercel, "/en/EODI-UA-2026-1014")).toBe("/en");
-    // Un incidente tiene su página; si no existe (retirado, unido o inventado), 404 o redirección.
-    expect(destinoDeReescritura(vercel, "/EODI-2025-00210")).toBeNull();
-    expect(destinoDeReescritura(vercel, "/EODI-loquesea")).toBeNull();
+  it("las fichas que no son un fichero van a la función del borde, y nada más", () => {
+    // Vercel sirve antes los ficheros: un incidente publicado nunca llega a la reescritura. Lo
+    // demás (un ataque, un unido, uno inventado) lo decide api/borde.ts.
+    expect(destinoDeReescritura(vercel, "/EODI-UA-2026-1014")).toBe("/api/borde?id=:id");
+    expect(destinoDeReescritura(vercel, "/en/EODI-UA-2026-1014")).toBe("/api/borde?id=:id&idioma=en");
+    expect(destinoDeReescritura(vercel, "/EODI-2025-00210")).toBe("/api/borde?id=:id");
     expect(destinoDeReescritura(vercel, "/otra/EODI-2025-00210")).toBeNull();
+    expect(destinoDeReescritura(vercel, "/metodologia")).toBeNull();
   });
 });
 

@@ -501,6 +501,7 @@
     {
       "id": "kmva",
       "canal": "VA_Kyiv",
+      "ciudad": "Київ",
       "grupo": "ova_ua",
       "pais": "UA",
       "region": "UA-30",
@@ -1113,6 +1114,7 @@
     {
       "id": "mva_odesa",
       "canal": "odesaMVA",
+      "ciudad": "Одеса",
       "grupo": "ova_ua",
       "pais": "UA",
       "region": "UA-51",

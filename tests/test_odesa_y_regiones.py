@@ -14,7 +14,7 @@ JARKOV = frozenset({"UA-63"})
 
 def test_version_nueva_del_analizador() -> None:
     # La relectura de la recogida horaria vuelve a leer todo lo guardado con la versión nueva.
-    assert VERSION == "mensajes-guerra/5"
+    assert VERSION == "mensajes-guerra/6"
 
 
 def test_canales_oficiales_que_faltaban() -> None:

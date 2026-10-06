@@ -1,5 +1,6 @@
-// Lectura de las cabeceras y reescrituras de vercel.json. La usan el servidor local, para
-// imitar el despliegue, y los tests que comprueban la política de seguridad.
+// Lectura de las cabeceras, redirecciones y reescrituras de vercel.json. La usan el servidor
+// local, para imitar el despliegue, los tests que comprueban la política de seguridad y la
+// comprobación de capacidad de la integración continua.
 
 export interface Cabecera {
   key: string;
@@ -8,7 +9,46 @@ export interface Cabecera {
 
 export interface ConfiguracionDespliegue {
   headers?: { source: string; headers: Cabecera[] }[];
+  redirects?: { source: string; destination: string; permanent: boolean }[];
   rewrites?: { source: string; destination: string }[];
+  bulkRedirectsPath?: string;
+}
+
+/**
+ * Capacidad de Vercel para este proyecto (plan Pro): 2.048 reglas de enrutado en vercel.json
+ * (cabeceras, redirecciones y reescrituras) y 1.000 redirecciones masivas incluidas
+ * (bulkRedirectsPath). Pasar de ellas hace fallar el despliegue y la web deja de actualizarse.
+ */
+export const CAPACIDAD_RUTAS = 2048;
+export const CAPACIDAD_REDIRECCIONES_MASIVAS = 1000;
+/** La integración continua falla al pasar de esta parte de la capacidad, antes de que falle el despliegue. */
+export const AVISO_CAPACIDAD = 0.8;
+
+export interface UsoCapacidad {
+  nombre: string;
+  usadas: number;
+  capacidad: number;
+}
+
+/** Lo usado de cada capacidad: las reglas de vercel.json y las redirecciones masivas. */
+export function usoDeCapacidad(configuracion: ConfiguracionDespliegue, redireccionesMasivas: number): UsoCapacidad[] {
+  const reglas =
+    (configuracion.headers?.length ?? 0) + (configuracion.redirects?.length ?? 0) + (configuracion.rewrites?.length ?? 0);
+  return [
+    { nombre: "reglas de vercel.json", usadas: reglas, capacidad: CAPACIDAD_RUTAS },
+    { nombre: "redirecciones masivas", usadas: redireccionesMasivas, capacidad: CAPACIDAD_REDIRECCIONES_MASIVAS },
+  ];
+}
+
+/** Las capacidades que pasan del aviso, con un texto claro para la integración continua. */
+export function capacidadesAlLimite(uso: UsoCapacidad[]): string[] {
+  return uso
+    .filter((u) => u.usadas > u.capacidad * AVISO_CAPACIDAD)
+    .map(
+      (u) =>
+        `${u.nombre}: ${u.usadas} de ${u.capacidad} (más del ${AVISO_CAPACIDAD * 100} %); el despliegue fallará ` +
+        `al pasar de ${u.capacidad}: reducirlas o ampliar la capacidad en Vercel antes de fusionar`,
+    );
 }
 
 /**

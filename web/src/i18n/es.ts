@@ -300,7 +300,8 @@ export const es: Textos = {
       "Las regiones rusas van en violeta apagado y con contorno discontinuo: sus cifras son las del " +
       "Ministerio de Defensa ruso, una reivindicación de parte.",
     impactos:
-      "Un punto violeta pequeño es un lugar concreto alcanzado (una localidad o una instalación) " +
+      "Un punto violeta pequeño es un lugar concreto alcanzado (una localidad o una instalación; " +
+      "si la fuente solo nombra la comunidad o el distrito, ese, con su radio) " +
       "según las administraciones regionales, el Estado Mayor ucraniano o los gobernadores " +
       "rusos. Relleno: fuente oficial; solo el aro: reivindicación de parte. Al alejar se " +
       "agrupan con su número. Los partes diarios de la línea del frente van en los datos " +
@@ -579,6 +580,10 @@ export const es: Textos = {
     lugar: "Lugar",
     instalacionEn: (localidad) => `en ${localidad}`,
     radio: (km) => `área de ${km} km de radio`,
+    nivel: {
+      comunidad: "la fuente solo nombra la comunidad, no la localidad",
+      distrito: "la fuente solo nombra el distrito, no la localidad",
+    },
     tipo: { impacto: "Alcanzado", restos: "Caída de restos de un dron derribado" },
     objetivo: "Tipo de objetivo",
     sinObjetivo: "la fuente no lo dice",

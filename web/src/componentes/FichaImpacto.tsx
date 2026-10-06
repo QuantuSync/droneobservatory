@@ -70,6 +70,11 @@ export function FichaImpacto({ t, idioma, impacto }: Props) {
               : null}
           </span>
           <span className="block text-xs text-secundario">{t.impacto.radio(radio)}</span>
+          {(lugar.nivel === "comunidad" || lugar.nivel === "distrito") && (
+            <span className="block text-xs text-secundario" data-nivel-lugar={lugar.nivel}>
+              {t.impacto.nivel[lugar.nivel]}
+            </span>
+          )}
           <span className="block text-xs text-secundario">{t.impacto.tipo[impacto.impacto]}</span>
         </Fila>
         <Fila nombre={t.impacto.objetivo}>

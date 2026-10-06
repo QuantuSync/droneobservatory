@@ -2,8 +2,9 @@
 // línea (la política de seguridad solo admite scripts de este sitio) y escribir todas las
 // páginas con su contenido en texto (src/texto/paginas.ts): la portada y cada incidente con el
 // mapa encima, y las listas, los países, la guerra en Ucrania, la metodología y la ayuda como
-// texto. Además, el sitemap, llms.txt, la página 404 y las redirecciones de los incidentes
-// unidos a otro. Todo sale de los datos publicados: con cada actualización de los datos se
+// texto. Además, el sitemap, llms.txt, la página 404 y la lista que lee la función del borde
+// (../../api/borde.ts): las redirecciones de los incidentes unidos a otro y los ataques que
+// existen. Todo sale de los datos publicados: con cada actualización de los datos se
 // vuelve a construir la web y las páginas quedan al día.
 
 import { createHash } from "node:crypto";
@@ -13,6 +14,8 @@ import { fileURLToPath } from "node:url";
 
 import { aplicarCabecera } from "../src/cabecera.ts";
 import type { ColeccionIncidentes, IncidenteDetalle, Resumen, ResumenUcrania } from "../src/datos/tipos.ts";
+import { RUTA_LISTA_BORDE } from "../../api/borde.ts";
+import type { RutasBorde } from "../../api/borde.ts";
 import { separarScriptsEnLinea } from "../src/seguridad/scripts.ts";
 import { IDIOMAS, rutaDeFicha } from "../src/sitio.ts";
 import type { Idioma } from "../src/sitio.ts";
@@ -24,8 +27,6 @@ import { llmsTxt, noEncontrada, redirecciones, sitemap } from "../src/texto/sali
 const WEB = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SALIDA = join(WEB, "dist");
 const DATOS = join(WEB, "public", "datos");
-/** Fichero de redirecciones que lee el despliegue (bulkRedirectsPath de vercel.json). */
-export const REDIRECCIONES = join(WEB, "redirecciones", "unidos.json");
 const CARPETA_SCRIPTS = "assets";
 const LARGO_DE_HUELLA = 12;
 const RESTO_DE_DATOS_DE_RUTA = "static-loader-data-manifest-";
@@ -127,7 +128,7 @@ async function leerJson<T>(ruta: string): Promise<T> {
   return JSON.parse(await readFile(ruta, "utf-8")) as T;
 }
 
-/** Último paso del build: todas las páginas, el sitemap, llms.txt, la 404 y las redirecciones. */
+/** Último paso del build: todas las páginas, el sitemap, llms.txt, la 404 y la lista del borde. */
 export async function terminarPaginas(carpeta: string): Promise<void> {
   const resumen = await leerJson<Resumen>(join(DATOS, "resumen.json"));
   const ucrania = await leerJson<ResumenUcrania>(join(DATOS, "ucrania-resumen.json"));
@@ -159,11 +160,14 @@ export async function terminarPaginas(carpeta: string): Promise<void> {
   await writeFile(join(carpeta, "sitemap.xml"), sitemap(todas), "utf-8");
   await writeFile(join(carpeta, "llms.txt"), llmsTxt(resumen), "utf-8");
   const publicados = new Set(resumen.incidentes.map((i) => i.id));
-  // /es lleva a la portada española, que está en la raíz. Va siempre: el despliegue rechaza un
-  // fichero de redirecciones vacío, y puede no haber ningún incidente unido.
-  const lista = [{ source: "/es", destination: "/", statusCode: 308 }, ...redirecciones(coleccion.unidos ?? {}, publicados)];
-  await mkdir(dirname(REDIRECCIONES), { recursive: true });
-  await writeFile(REDIRECCIONES, `${JSON.stringify(lista, null, 1)}\n`, "utf-8");
+  // Lo que lee la función del borde: una regla para todos los unidos en los dos idiomas (sin
+  // gastar capacidad de redirecciones de Vercel) y los ataques que existen (los demás, 404).
+  const lista = redirecciones(coleccion.unidos ?? {}, publicados);
+  const borde: RutasBorde = {
+    redirecciones: Object.fromEntries(lista.map((r) => [r.source, r.destination])),
+    ataques: ucrania.ataques.map((a) => a[0]),
+  };
+  await writeFile(join(carpeta, RUTA_LISTA_BORDE.slice(1)), JSON.stringify(borde), "utf-8");
   // Restos del prerenderizado que la web no usa.
   await rm(join(carpeta, ".vite"), { recursive: true, force: true });
   for (const nombre of await readdir(carpeta)) {
@@ -172,6 +176,7 @@ export async function terminarPaginas(carpeta: string): Promise<void> {
   const fichas = resumen.incidentes.length * IDIOMAS.length;
   console.log(
     `páginas: ${todas.length} (${fichas} de incidentes) en ${IDIOMAS.length} idiomas; ` +
-      `${lista.length - 1} redirecciones de incidentes unidos; ejemplo ${rutaDeFicha(resumen.incidentes[0]?.id ?? "", "es")}`,
+      `${lista.length} redirecciones de incidentes unidos y ${borde.ataques.length} ataques en ` +
+      `${RUTA_LISTA_BORDE}; ejemplo ${rutaDeFicha(resumen.incidentes[0]?.id ?? "", "es")}`,
   );
 }
