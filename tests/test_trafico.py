@@ -463,3 +463,34 @@ def test_si_prod_no_se_lee_entero_se_usa_staging(tmp_path: Path) -> None:
 class MetarVacio:
     def contenido(self, url: str, valido: Any) -> bytes:
         return b"station,valid,metar\n"
+
+
+def test_una_traza_enorme_se_salta_sin_cargarla() -> None:
+    # Como la del 25 de marzo de 2026 (21 MB en gzip, 1 GB descomprimida): se lee por bloques
+    # hasta el tope y se salta, anotada aparte de las dañadas; las demás siguen.
+    enorme = gzip.compress(
+        b'{"icao": "0000bb", "trace": [' + b"[0, 50.0, 10.0]," * 50_000 + b"[0]]}"
+    )
+    salida = io.BytesIO()
+    with tarfile.open(fileobj=salida, mode="w") as tar:
+        for nombre, contenido in [
+            (
+                "./traces/aa/trace_full_0000aa.json",
+                gzip.compress(b'{"icao": "0000aa", "trace": []}'),
+            ),
+            ("./traces/bb/trace_full_0000bb.json", enorme),
+            ("./traces/cc/trace_full_0000cc.json", b'{"icao": "0000cc", "trace": []}'),
+        ]:
+            info = tarfile.TarInfo(nombre)
+            info.size = len(contenido)
+            tar.addfile(info, io.BytesIO(contenido))
+    salida.seek(0)
+    ilegibles: list[str] = []
+    grandes: list[str] = []
+    leidos = [d["icao"] for d in adsb.documentos(salida, ilegibles, grandes, tope=100_000)]
+    assert leidos == ["0000aa", "0000cc"]
+    assert grandes == ["./traces/bb/trace_full_0000bb.json"]
+    assert ilegibles == []
+    # Con el tope de verdad (64 MB), la misma traza se lee entera.
+    salida.seek(0)
+    assert [d["icao"] for d in adsb.documentos(salida)] == ["0000aa", "0000bb", "0000cc"]

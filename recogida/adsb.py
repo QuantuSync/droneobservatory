@@ -29,7 +29,6 @@ en pies por minuto, datos de la aeronave (null salvo cuando cambian; con `nic`, 
 alabeo. Hay puntos repetidos con el mismo instante (uno con los datos de la aeronave).
 """
 
-import gzip
 import http.client
 import io
 import json
@@ -41,7 +40,7 @@ import zlib
 from collections.abc import Callable, Iterator
 from dataclasses import dataclass
 from datetime import date
-from typing import Any, BinaryIO
+from typing import IO, Any, BinaryIO
 
 from proceso.vuelos import Traza
 from recogida.descarga import AGENTE_EODI
@@ -55,6 +54,10 @@ MARGEN_STAGING = 1.10
 SUFIJOS_TROZO = tuple(f"a{c}" for c in "abcdefghij")
 TIEMPO_LIMITE_S = 120.0
 BLOQUE = 1 << 20
+# Tope de una traza descomprimida. Las de un día normal no pasan de unos 20 MB (medido el 6 de
+# octubre de 2026 con el día 25 de marzo: de 73.008 ficheros, solo una pasa de 2 MB en gzip).
+# Una traza de 64 MB en JSON son unos 400 MB de objetos de Python.
+TOPE_TRAZA = 64 * 1024 * 1024
 
 # Abre una URL con un método («HEAD» o «GET») desde un byte (petición Range si no es 0).
 Abridor = Callable[..., Any]
@@ -220,10 +223,55 @@ class Encadenado(io.RawIOBase):
         super().close()
 
 
-def documentos(flujo: BinaryIO, ilegibles: list[str] | None = None) -> Iterator[dict[str, Any]]:
+class TrazaDemasiadoGrande(ValueError):
+    pass
+
+
+def _contenido(fichero: IO[bytes], tope: int) -> bytes:
+    """El contenido de una traza, descomprimido por bloques si va en gzip, sin pasar de `tope`
+    bytes: lo que pase es TrazaDemasiadoGrande y nunca llega a estar entero en memoria."""
+    inicio = fichero.read(2)
+    if inicio != b"\x1f\x8b":
+        crudo = inicio + fichero.read(tope + 1 - len(inicio))
+        if len(crudo) > tope:
+            raise TrazaDemasiadoGrande(f"más de {tope} bytes")
+        return crudo
+    descompresor = zlib.decompressobj(16 + zlib.MAX_WBITS)
+    partes: list[bytes] = []
+    total = 0
+    pendiente = inicio
+    while True:
+        bloque = pendiente or fichero.read(BLOQUE)
+        pendiente = b""
+        if not bloque:
+            break
+        while bloque:
+            salida = descompresor.decompress(bloque, tope + 1 - total)
+            total += len(salida)
+            partes.append(salida)
+            if total > tope:
+                raise TrazaDemasiadoGrande(f"más de {tope} bytes descomprimida")
+            bloque = descompresor.unconsumed_tail
+        if descompresor.eof:
+            break
+    if not descompresor.eof:
+        raise EOFError("gzip incompleto")
+    return b"".join(partes)
+
+
+def documentos(
+    flujo: BinaryIO,
+    ilegibles: list[str] | None = None,
+    grandes: list[str] | None = None,
+    tope: int = TOPE_TRAZA,
+) -> Iterator[dict[str, Any]]:
     """Cada traza del tar como el documento JSON de readsb. Una traza que no se puede leer
     (gzip o JSON dañado: pasó con una del 15 de octubre de 2025) se salta y se anota su nombre
-    en `ilegibles`: no tumba el día entero."""
+    en `ilegibles`: no tumba el día entero. Una traza de más de `tope` bytes descomprimida se
+    salta y se anota en `grandes` sin cargarla: la del 25 de marzo de 2026
+    (`trace_full_a6a739.json`, 21 MB en gzip y 1 GB descomprimida) llevaba el proceso a 6,4 GB
+    y el servidor se quedaba sin memoria. Así la memoria no depende del tamaño de una traza ni
+    del de un día: el tar se lee en flujo y cada traza tiene su tope."""
     with tarfile.open(fileobj=flujo, mode="r|") as tar:
         for miembro in tar:
             if not miembro.isfile() or "/traces/" not in f"/{miembro.name.lstrip('./')}":
@@ -231,11 +279,12 @@ def documentos(flujo: BinaryIO, ilegibles: list[str] | None = None) -> Iterator[
             fichero = tar.extractfile(miembro)
             if fichero is None:
                 continue
-            crudo = fichero.read()
             try:
-                if crudo[:2] == b"\x1f\x8b":
-                    crudo = gzip.decompress(crudo)
-                documento = json.loads(crudo)
+                documento = json.loads(_contenido(fichero, tope))
+            except TrazaDemasiadoGrande:
+                if grandes is not None:
+                    grandes.append(miembro.name)
+                continue
             except (OSError, EOFError, ValueError, zlib.error):
                 if ilegibles is not None:
                     ilegibles.append(miembro.name)

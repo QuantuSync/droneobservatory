@@ -392,11 +392,12 @@ def procesar_dia(
     for numero, publicacion in enumerate(candidatas):
         flujo = adsb.Encadenado(publicacion.urls, abrir, publicacion.tamanos)
         ilegibles: list[str] = []
+        grandes: list[str] = []
         try:
             with gzip.open(temporal_trazas, "wt", encoding="utf-8", compresslevel=9) as salida:
                 lector = io.BufferedReader(flujo, buffer_size=adsb.BLOQUE)
                 resultado = procesar_documentos(
-                    adsb.documentos(lector, ilegibles), aeropuertos, zonas, salida
+                    adsb.documentos(lector, ilegibles, grandes), aeropuertos, zonas, salida
                 )
             if flujo.bytes != publicacion.bytes:
                 raise adsb.LecturaIncompleta(
@@ -448,6 +449,8 @@ def procesar_dia(
         "trazas": resultado.trazas,
         "trazas_europa": resultado.trazas_europa,
         "trazas_ilegibles": len(ilegibles),
+        # Trazas saltadas por pasar del tope de tamaño (adsb.TOPE_TRAZA), con su nombre.
+        "trazas_demasiado_grandes": grandes,
         "puntos_europa": resultado.puntos,
         "movimientos": dict(sorted(tipos.items())),
         "militares": len(resultado.militares),

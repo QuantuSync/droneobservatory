@@ -322,3 +322,19 @@ DIARIO_ANTIGUEDAD="90day"
 # incrustada, ::ffff:0:0/96) al elegir a cuál conectarse. 100 es la precedencia más alta
 # de la tabla por defecto.
 PREFERENCIA_IPV4="precedence ::ffff:0:0/96  100"
+
+# --- Topes de memoria de los trabajos programados ------------------------------------------
+# Ningún trabajo del servidor sin tope (MemoryMax): si uno se pasa, systemd lo para a él solo y la
+# máquina no se queda sin memoria. Desde el 6 de octubre de 2026, cuando el tráfico aéreo subió a
+# 6,4 GB con una traza de 1 GB del 25 de marzo de 2026 y el sistema mataba procesos cada hora
+# (docs/informe_odesa.md). Valores: el pico medido por systemd en los cuatro días anteriores
+# (incluye la caché de ficheros, que se libera al llegar al tope) con margen; el servidor tiene
+# 7,7 GB. La prueba tests/test_servidor_topes.py falla si una unidad nueva no lo tiene.
+RECOGIDA_MEMORIA="5G"       # 3,3 GB con la base en disco (5,7 GB cuando iba en memoria)
+DEDUCCION_MEMORIA="4G"      # 3,2 GB
+EXPORTACION_MEMORIA="4G"    # 2,5 GB
+CATALOGO_MEMORIA="3G"       # 2,2 GB
+TRAFICO_MEMORIA="3G"        # 0,8 GB por día; antes del arreglo, 6,4 GB con la traza enorme
+DETALLE_MEMORIA="1500M"     # 0,6 GB
+BUSQUEDA_MEMORIA="1G"       # 0,25 GB
+GUERRA_MEMORIA="1G"         # 0,1 GB
