@@ -3363,6 +3363,35 @@
      }
     },
     "tipo": "interrupcion_aeroportuaria",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [
+      {
+       "clave": "distancia",
+       "datos": {
+        "costa_km": 414.6,
+        "distancia_km": 64.2,
+        "entrada_exterior": true,
+        "mas_de_600_km": false
+       },
+       "tipo": "restriccion"
+      }
+     ],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Lublin airport closure due to drone attack threat",
      "es": "Cierre del aeropuerto de Lublin por amenaza de ataques con drones"
@@ -23406,6 +23435,35 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [
+      {
+       "clave": "distancia",
+       "datos": {
+        "costa_km": 507.8,
+        "distancia_km": 72.1,
+        "entrada_exterior": true,
+        "mas_de_600_km": false
+       },
+       "tipo": "restriccion"
+      }
+     ],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Drones shot down over Polish airspace",
      "es": "Drones derribados sobre el espacio aéreo de Polonia"
@@ -66118,6 +66176,24 @@
      }
     },
     "tipo": "sobrevuelo",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Drone flies over Moldovan airspace; Russia denies its origin",
      "es": "Dron sobrevuela el espacio aéreo de Moldavia; Rusia niega su origen"
@@ -79618,6 +79694,35 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.5
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.08
+     },
+     "razones": [
+      {
+       "clave": "distancia",
+       "datos": {
+        "costa_km": 260.6,
+        "distancia_km": 146.8,
+        "entrada_exterior": true,
+        "mas_de_600_km": false
+       },
+       "tipo": "restriccion"
+      }
+     ],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Drones shot down force closure of Warsaw airport",
      "es": "Drones derribados obligan a cerrar el aeropuerto de Varsovia"
@@ -81963,6 +82068,35 @@
      }
     },
     "tipo": "sobrevuelo",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.5
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.08
+     },
+     "razones": [
+      {
+       "clave": "distancia",
+       "datos": {
+        "costa_km": 184.3,
+        "distancia_km": 112.2,
+        "entrada_exterior": true,
+        "mas_de_600_km": false
+       },
+       "tipo": "restriccion"
+      }
+     ],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Drones penetrate Romanian airspace near Ukraine border",
      "es": "Drones penetran el espacio aéreo de Rumania cerca de la frontera con Ucrania"
@@ -82788,6 +82922,34 @@
      }
     },
     "tipo": "interrupcion_aeroportuaria",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [
+      {
+       "clave": "distancia",
+       "datos": {
+        "distancia_km": 48.2,
+        "entrada_exterior": true,
+        "mas_de_600_km": false
+       },
+       "tipo": "restriccion"
+      }
+     ],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Drones over Chisinau close airspace and divert flights",
      "es": "Drones sobre Chisináu cierran el espacio aéreo y desvían vuelos"
@@ -83680,6 +83842,15 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "identificado": {
+      "cita": "drona care a căzut pe acoperișul unei case din nordul țării este de origine rusească, fiind de tip Gerbera.",
+      "fuente": "gdelt-a669e8e1cea2bb14-declaracion-1",
+      "grupo": "senuelo",
+      "modelo": "Gerbera"
+     },
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Shahed drone crashes in Moldova after overflying airspace",
      "es": "Dron Shahed cae en Moldavia tras sobrevolar el espacio aéreo"
@@ -84288,6 +84459,35 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.5
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.08
+     },
+     "razones": [
+      {
+       "clave": "distancia",
+       "datos": {
+        "costa_km": 189.3,
+        "distancia_km": 105.9,
+        "entrada_exterior": true,
+        "mas_de_600_km": false
+       },
+       "tipo": "restriccion"
+      }
+     ],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Romania scrambles fighter jets after drone incursions near Ukraine border",
      "es": "Rumania despliega cazas tras incursiones de drones cerca de la frontera con Ucrania"
@@ -84534,6 +84734,24 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Armed drone violates Lithuanian airspace and is found in Vilnius",
      "es": "Dron armado viola el espacio aéreo de Lituania y es hallado en Vilnius"
@@ -85188,6 +85406,35 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.5
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.08
+     },
+     "razones": [
+      {
+       "clave": "distancia",
+       "datos": {
+        "costa_km": 330.8,
+        "distancia_km": 86.3,
+        "entrada_exterior": true,
+        "mas_de_600_km": false
+       },
+       "tipo": "restriccion"
+      }
+     ],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Military drone crashes in cornfield in Lublin, Poland",
      "es": "Un dron militar se estrella en un campo de maíz en Lublin, Polonia"
@@ -85940,6 +86187,24 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Drone flies over Moldova in the southern part of the country",
      "es": "Dron sobrevuela Moldavia en el sur del país"
@@ -93157,6 +93422,15 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "identificado": {
+      "cita": "Cześniki pow. zamojski – oględziny w fazie końcowej – ujawniono co najmniej 32 elementy drona typu Gerbera, nie ujawniono materiałów wybuchowych.",
+      "fuente": "revisada-309c9e06df19f5a8",
+      "grupo": "senuelo",
+      "modelo": "Gerbera"
+     },
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Russian drones penetrate Polish airspace",
      "es": "Drones rusos invaden el espacio aéreo de Polonia"
@@ -93613,6 +93887,24 @@
      }
     },
     "tipo": "sobrevuelo",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Drone enters Romanian airspace from Ukraine",
      "es": "Dron entra en el espacio aéreo de Rumania desde Ucrania"
@@ -94733,6 +95025,38 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [
+      {
+       "clave": "duracion",
+       "datos": {
+        "cita": "Un drone russo ha violato lo spazio aereo della Romania per circa 50 minuti prima di rientrare in Ucraina.",
+        "fuente": "gdelt-8343f515ffc94121-declaracion-2",
+        "minutos": 50.0,
+        "rasgo": "duracion",
+        "valor": {
+         "minutos": 50.0
+        }
+       },
+       "tipo": "restriccion"
+      }
+     ],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Drone enters Romanian airspace and is intercepted",
      "es": "Dron entra en el espacio aéreo de Rumanía y es interceptado"
@@ -96009,6 +96333,24 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Drone violates Romanian airspace during attack on Ukraine",
      "es": "Dron viola el espacio aéreo de Rumania durante ataque a Ucrania"
@@ -97288,6 +97630,24 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Two drones penetrate Moldova's airspace from Ukraine",
      "es": "Dos drones penetran el espacio aéreo de Moldavia desde Ucrania"
@@ -109602,6 +109962,35 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [
+      {
+       "clave": "distancia",
+       "datos": {
+        "costa_km": 514.7,
+        "distancia_km": 68.3,
+        "entrada_exterior": true,
+        "mas_de_600_km": false
+       },
+       "tipo": "restriccion"
+      }
+     ],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Drones close Rzeszów airport in Poland",
      "es": "Drones cierran el aeropuerto de Rzeszów en Polonia"
@@ -110049,6 +110438,35 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [
+      {
+       "clave": "distancia",
+       "datos": {
+        "costa_km": 0.3,
+        "distancia_km": 121.2,
+        "entrada_exterior": true,
+        "mas_de_600_km": false
+       },
+       "tipo": "restriccion"
+      }
+     ],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Drone detonated near Constanza Port",
      "es": "Dron detonado cerca del Puerto de Constanza"
@@ -114530,6 +114948,35 @@
      }
     },
     "tipo": "interrupcion_aeroportuaria",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.5
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.08
+     },
+     "razones": [
+      {
+       "clave": "distancia",
+       "datos": {
+        "costa_km": 259.4,
+        "distancia_km": 117.9,
+        "entrada_exterior": true,
+        "mas_de_600_km": false
+       },
+       "tipo": "restriccion"
+      }
+     ],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Iasi International Airport closure due to drone alert",
      "es": "Cierre del Aeropuerto Internacional de Iași por alerta de dron"
@@ -114894,6 +115341,35 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.5
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.08
+     },
+     "razones": [
+      {
+       "clave": "distancia",
+       "datos": {
+        "costa_km": 149.6,
+        "distancia_km": 100.4,
+        "entrada_exterior": true,
+        "mas_de_600_km": false
+       },
+       "tipo": "restriccion"
+      }
+     ],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Three military drones shot down in Romanian airspace",
      "es": "Tres drones militares derribados en el espacio aéreo de Rumania"
@@ -120027,6 +120503,35 @@
      }
     },
     "tipo": "interrupcion_aeroportuaria",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [
+      {
+       "clave": "distancia",
+       "datos": {
+        "costa_km": 10.0,
+        "distancia_km": 113.1,
+        "entrada_exterior": true,
+        "mas_de_600_km": false
+       },
+       "tipo": "restriccion"
+      }
+     ],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Helsinki airport closure due to drone activity",
      "es": "Cierre del aeropuerto de Helsinki por sospecha de actividad de drones"
@@ -122343,6 +122848,24 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Drone over Lithuania closes Vilnius airport and triggers NATO air defense response",
      "es": "Drones sobre Lituania cierran el aeropuerto de Vilnius y activan la defensa aérea de la OTAN"
@@ -126527,6 +127050,24 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "NATO shoots down drone over Lithuania after Vilnius airport closure",
      "es": "Dron derriba NATO sobre Lituania tras cerrar el aeropuerto de Vilnius"
@@ -127833,6 +128374,24 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Drone violates airspace of NATO member Romania",
      "es": "Dron viola el espacio aéreo de Rumania, miembro de la OTAN"
@@ -128082,6 +128641,35 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.5
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.08
+     },
+     "razones": [
+      {
+       "clave": "distancia",
+       "datos": {
+        "costa_km": 128.3,
+        "distancia_km": 110.1,
+        "entrada_exterior": true,
+        "mas_de_600_km": false
+       },
+       "tipo": "restriccion"
+      }
+     ],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Three drones shot down over Borcea air base",
      "es": "Tres drones derribados sobre la base aérea de Borcea"
@@ -129189,6 +129777,35 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.5
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.08
+     },
+     "razones": [
+      {
+       "clave": "distancia",
+       "datos": {
+        "costa_km": 158.6,
+        "distancia_km": 112.6,
+        "entrada_exterior": true,
+        "mas_de_600_km": false
+       },
+       "tipo": "restriccion"
+      }
+     ],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Drone shot down over Buzău after unauthorized entry into Romanian airspace",
      "es": "Dron derribado sobre Buzău tras entrar sin autorización en el espacio aéreo de Rumania"
@@ -130503,6 +131120,24 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Drone shot down by NATO fighters over Galați",
      "es": "Dron derribado por cazas NATO sobre Galați"
@@ -131360,6 +131995,24 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Stray drone hits power plant in Estonia",
      "es": "Dron desviado golpea central eléctrica en Estonia"
@@ -131828,6 +132481,24 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Drone enters Moldavian airspace from Ukraine; temporary closure",
      "es": "Dron entra en el espacio aéreo de Moldavia desde Ucrania; cierre temporal"
@@ -133736,6 +134407,34 @@
      }
     },
     "tipo": "sobrevuelo",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [
+      {
+       "clave": "distancia",
+       "datos": {
+        "distancia_km": 52.5,
+        "entrada_exterior": true,
+        "mas_de_600_km": false
+       },
+       "tipo": "restriccion"
+      }
+     ],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Shahed drone flies over Moldova during attack on Ukraine",
      "es": "Dron Shahed sobrevuela Moldavia durante ataque a Ucrania"
@@ -134261,6 +134960,35 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.5
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.08
+     },
+     "razones": [
+      {
+       "clave": "distancia",
+       "datos": {
+        "costa_km": 128.3,
+        "distancia_km": 110.1,
+        "entrada_exterior": true,
+        "mas_de_600_km": false
+       },
+       "tipo": "restriccion"
+      }
+     ],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Drone shot down over Padina, Romania",
      "es": "Dron derribado sobre Padina, Rumania"
@@ -151746,6 +152474,24 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Shahed drone enters Moldavian airspace from Ukraine",
      "es": "Dron Shahed entra en el espacio aéreo de Moldavia desde Ucrania"
@@ -152313,6 +153059,35 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [
+      {
+       "clave": "distancia",
+       "datos": {
+        "costa_km": 165.2,
+        "distancia_km": 34.2,
+        "entrada_exterior": true,
+        "mas_de_600_km": false
+       },
+       "tipo": "restriccion"
+      }
+     ],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "NATO fighters shoot down drone over Latvia",
      "es": "Cazas de la OTAN derriban un dron sobre Letonia"
@@ -153854,6 +154629,24 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Drone enters Romanian airspace near Ukraine border",
      "es": "Dron entra en el espacio aéreo de Rumania cerca de la frontera con Ucrania"
@@ -154131,6 +154924,24 @@
      }
     },
     "tipo": "sobrevuelo",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Drone detected by military radars north of Isaccea, near Ukraine border",
      "es": "Dron detectado por radares militares al norte de Isaccea, cerca de la frontera con Ucrania"
@@ -154327,6 +155138,35 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [
+      {
+       "clave": "distancia",
+       "datos": {
+        "costa_km": 76.3,
+        "distancia_km": 44.7,
+        "entrada_exterior": true,
+        "mas_de_600_km": false
+       },
+       "tipo": "restriccion"
+      }
+     ],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Drone that penetrated Romanian airspace crashes in a field",
      "es": "Dron que penetró el espacio aéreo rumano se estrella en un campo"
@@ -154570,6 +155410,24 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Drone detected in Moldavian airspace forces closure of northern and central regions",
      "es": "Dron detectado en el espacio aéreo de Moldavia obliga a cerrar el norte y centro del país"
@@ -155299,6 +156157,35 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [
+      {
+       "clave": "distancia",
+       "datos": {
+        "costa_km": 408.1,
+        "distancia_km": 74.2,
+        "entrada_exterior": true,
+        "mas_de_600_km": false
+       },
+       "tipo": "restriccion"
+      }
+     ],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Drone enters Moldova and explodes; airport closures in Poland",
      "es": "Dron entra en Moldavia y explota; cierres en aeropuertos de Polonia"
@@ -155679,6 +156566,15 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "identificado": {
+      "cita": "Un obiect zburător de tip Shahed 138 (Geran 2) a survolat ilegal spațiul aerian al Republicii Moldova",
+      "fuente": "gdelt-7cfc8a46d15a9f56-declaracion-1",
+      "grupo": "largo_alcance_helice",
+      "modelo": "Shahed 138"
+     },
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Shahed drone overflies Moldovan airspace",
      "es": "Dron Shahed sobrevuela el espacio aéreo de Moldavia"
@@ -156934,6 +157830,35 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [
+      {
+       "clave": "distancia",
+       "datos": {
+        "costa_km": 21.5,
+        "distancia_km": 69.4,
+        "entrada_exterior": true,
+        "mas_de_600_km": false
+       },
+       "tipo": "restriccion"
+      }
+     ],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Drones penetrate Finnish airspace and crash",
      "es": "Drones penetran el espacio aéreo de Finlandia y se estrellan"
@@ -157834,6 +158759,24 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Drone crashes in Solca after entering Romanian airspace",
      "es": "Dron se estrella en Solca tras entrar en el espacio aéreo de Rumania"
@@ -158599,6 +159542,24 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Drones violate Moldova's airspace and one crashes near border",
      "es": "Drones violan el espacio aéreo de Moldavia y uno se estrella en la frontera con Ucrania"
@@ -159202,6 +160163,24 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Drone debris falls in Romania following attack on Ukraine",
      "es": "Restos de drones caen en Rumanía tras ataque contra Ucrania"
@@ -160062,6 +161041,24 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Drone that entered Moldavian airspace crashes and explodes",
      "es": "Dron que entró en el espacio aéreo de Moldavia se estrella y explota"
@@ -160563,6 +161560,35 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [
+      {
+       "clave": "distancia",
+       "datos": {
+        "costa_km": 35.4,
+        "distancia_km": 170.3,
+        "entrada_exterior": true,
+        "mas_de_600_km": false
+       },
+       "tipo": "restriccion"
+      }
+     ],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Drone enters Bulgarian airspace and explodes near gas pipeline",
      "es": "Dron entra en el espacio aéreo de Bulgaria y explota cerca de un gasoducto"
@@ -164238,6 +165264,15 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "identificado": {
+      "cita": "the entire payload of the Russian-provenance Geran-2 drone exploded on impact",
+      "fuente": "gdelt-ddcfb9a38d8dafe9-declaracion-2",
+      "grupo": "largo_alcance_helice",
+      "modelo": "Geran-2"
+     },
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Russian drone crashes on residential building in Galați, Romania",
      "es": "Dron ruso cae sobre un bloque de viviendas en Galați, Rumania"
@@ -164732,6 +165767,24 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Drone crashes in Romania after entering its airspace",
      "es": "Dron se estrella en Rumanía tras entrar en su espacio aéreo"
@@ -165234,6 +166287,24 @@
      }
     },
     "tipo": "sobrevuelo",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Drone detected over Moldova closes northern airspace",
      "es": "Dron detectado sobre Moldavia cierra el espacio aéreo del norte"
@@ -166227,6 +167298,44 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.66
+       },
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.24
+       }
+      ],
+      "otras": 0.1
+     },
+     "razones": [
+      {
+       "clave": "tamano:pequeno",
+       "datos": {
+        "cita": "în extravilanul localității Mihăileni Vechi, ar fi căzut un aparat zburător de mici dimensiuni asemănător unei drone",
+        "fuente": "revisada-d2f7b44c6c03b5f4",
+        "rasgo": "tamano",
+        "valor": "pequeno"
+       },
+       "tipo": "rasgo"
+      },
+      {
+       "clave": "distancia",
+       "datos": {
+        "distancia_km": 40.4,
+        "entrada_exterior": true,
+        "mas_de_600_km": false
+       },
+       "tipo": "restriccion"
+      }
+     ],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Drone incursion into Moldovan airspace",
      "es": "Dron viola el espacio aéreo de Moldavia"
@@ -166636,6 +167745,24 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Drone flies over Tulcea and forces F-16 fighter jets to scramble",
      "es": "Dron sobrevuela Tulcea y obliga a despegar cazas F-16"
@@ -167232,6 +168359,35 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [
+      {
+       "clave": "distancia",
+       "datos": {
+        "costa_km": 124.2,
+        "distancia_km": 48.0,
+        "entrada_exterior": true,
+        "mas_de_600_km": false
+       },
+       "tipo": "restriccion"
+      }
+     ],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Drone shot down by Spanish F-18 after entering Romanian airspace near Galați",
      "es": "Dron derribado por un F-18 español tras entrar en el espacio aéreo de Rumania cerca de Galați"
@@ -167722,6 +168878,24 @@
      }
     },
     "tipo": "sobrevuelo",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Drone wreckage found in Tulcea, Romania",
      "es": "Restos de dron encontrados en Tulcea, Rumania"
@@ -168074,6 +169248,24 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Drone violates Moldavian airspace during attacks on Ukraine",
      "es": "Dron viola el espacio aéreo de Moldavia durante ataques a Ucrania"
@@ -169373,6 +170565,24 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Geran drone explodes in Orhei after illegally entering Moldovan airspace",
      "es": "Dron Geran explota en Orhei tras entrar ilegalmente en el espacio aéreo de Moldavia"
@@ -169979,6 +171189,24 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Three drones violate Moldova's airspace and two explode",
      "es": "Tres drones violan el espacio aéreo de Moldavia y dos explotan"
@@ -172087,6 +173315,35 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [
+      {
+       "clave": "distancia",
+       "datos": {
+        "costa_km": 352.4,
+        "distancia_km": 40.9,
+        "entrada_exterior": true,
+        "mas_de_600_km": false
+       },
+       "tipo": "restriccion"
+      }
+     ],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Drone that crossed Ukraine and Moldova crashes in Suceava, Romania",
      "es": "Dron que atravesó Ucrania y Moldavia se estrella en Suceava, Rumania"
@@ -172266,6 +173523,24 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Drone crashed in Plauru, Romania",
      "es": "Dron caído en Plauru, Rumania"
@@ -173368,6 +174643,24 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Military drone crashes in Tulcea after penetrating Romanian airspace",
      "es": "Dron militar se estrella en Tulcea tras penetrar el espacio aéreo rumano"
@@ -173903,6 +175196,35 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [
+      {
+       "clave": "distancia",
+       "datos": {
+        "costa_km": 195.7,
+        "distancia_km": 41.7,
+        "entrada_exterior": true,
+        "mas_de_600_km": false
+       },
+       "tipo": "restriccion"
+      }
+     ],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Drones enter Latvian airspace and crash",
      "es": "Drones entran en el espacio aéreo de Letonia y se estrellan"
@@ -174506,6 +175828,24 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Shahed drone illegally overflies Moldavian airspace",
      "es": "Dron Shahed sobrevuela ilegalmente el espacio aéreo de Moldavia"
@@ -174961,6 +176301,24 @@
      }
     },
     "tipo": "sobrevuelo",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Drone crashes in Tulcea after penetrating Romanian airspace",
      "es": "Dron cae en Tulcea tras penetrar el espacio aéreo de Rumania"
@@ -175432,6 +176790,24 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Drone penetrates Romanian airspace near Tulcea",
      "es": "Dron penetra el espacio aéreo de Rumania cerca de Tulcea"
@@ -175643,6 +177019,24 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Romania shoots down drone that penetrated its airspace",
      "es": "Rumanía derriba un dron que penetró en su espacio aéreo"
@@ -176980,6 +178374,35 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [
+      {
+       "clave": "distancia",
+       "datos": {
+        "costa_km": 0.0,
+        "distancia_km": 35.9,
+        "entrada_exterior": true,
+        "mas_de_600_km": false
+       },
+       "tipo": "restriccion"
+      }
+     ],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Drone shot down in Romanian airspace",
      "es": "Dron derribado en el espacio aéreo de Rumania"
@@ -177416,6 +178839,24 @@
      }
     },
     "tipo": "sobrevuelo",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Drone detected in Romanian airspace prompts F-16 fighters to take off",
      "es": "Dron detectado en el espacio aéreo de Rumania obliga a despegar cazas F-16"
@@ -177825,6 +179266,24 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Drone loaded hits building in Galați",
      "es": "Dron impacta contra un edificio en Galați"
@@ -178087,6 +179546,24 @@
      }
     },
     "tipo": "sobrevuelo",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Drone penetrates Moldavian airspace and crashes near Talmaza",
      "es": "Dron penetra el espacio aéreo de Moldavia y se estrella cerca de Talmaza"
@@ -178322,6 +179799,34 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [
+      {
+       "clave": "distancia",
+       "datos": {
+        "distancia_km": 56.6,
+        "entrada_exterior": true,
+        "mas_de_600_km": false
+       },
+       "tipo": "restriccion"
+      }
+     ],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Drone discovered in Moldova after airspace incursion in March",
      "es": "Dron descubierto en Moldavia tras incursión aérea en marzo"
@@ -178750,6 +180255,35 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.5
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.08
+     },
+     "razones": [
+      {
+       "clave": "distancia",
+       "datos": {
+        "costa_km": 170.1,
+        "distancia_km": 94.1,
+        "entrada_exterior": true,
+        "mas_de_600_km": false
+       },
+       "tipo": "restriccion"
+      }
+     ],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Military drone crashes in a house in Vrancea, Romania",
      "es": "Dron militar se estrella en una casa en Vrancea, Rumania"
@@ -179045,6 +180579,34 @@
      }
     },
     "tipo": "sobrevuelo",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [
+      {
+       "clave": "distancia",
+       "datos": {
+        "distancia_km": 50.1,
+        "entrada_exterior": true,
+        "mas_de_600_km": false
+       },
+       "tipo": "restriccion"
+      }
+     ],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Drone flies over Bălți city in Moldova",
      "es": "Dron sobrevuela la ciudad de Bălți en Moldavia"
@@ -182312,6 +183874,24 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Multiple drones fly over Moldova with explosions in several districts",
      "es": "Múltiples drones sobrevuelan Moldavia con explosiones en varios distritos"
@@ -183714,6 +185294,24 @@
      }
     },
     "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice",
+        "probabilidad": 0.49
+       },
+       {
+        "grupo": "senuelo",
+        "probabilidad": 0.42
+       }
+      ],
+      "otras": 0.09
+     },
+     "razones": [],
+     "version": "tipo-dron-1.0.0"
+    },
     "titulo": {
      "en": "Vilnius airport closure following drone detection",
      "es": "Cierre del aeropuerto de Vilna por detección de dron"
@@ -189376,14 +190974,29 @@
   {
    "geometry": {
     "coordinates": [
-     -7.29979,
-     53.03441
+     -7.3,
+     53.0333
     ],
     "type": "Point"
    },
    "id": "EODI-2026-00490",
    "properties": {
     "afirmaciones_publicas": [
+     {
+      "campo": "drones.numero",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-06T20:15Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-2ca3a6ef05455fff",
+      "medio": "breakingnews.ie",
+      "valor": {
+       "max": 1,
+       "min": 1
+      }
+     },
      {
       "campo": "lugar.localidad",
       "credibilidad": 3,
@@ -189409,32 +191022,8 @@
       "valor": "IE"
      },
      {
-      "campo": "objetivo.categoria",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-10-06T20:15Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-2ca3a6ef05455fff",
-      "medio": "breakingnews.ie",
-      "valor": "gubernamental"
-     },
-     {
-      "campo": "objetivo.nombre",
-      "credibilidad": 3,
-      "fecha": {
-       "precision": "aproximada",
-       "valor": "2026-10-06T20:15Z"
-      },
-      "fiabilidad": "C",
-      "fuente_id": "gdelt-2ca3a6ef05455fff",
-      "medio": "breakingnews.ie",
-      "valor": "Irish Prison Service College"
-     },
-     {
       "campo": "presencia_dron",
-      "cita": "A drone crashed into the Irish Prison Service College in Portlaoise on Tuesday.",
+      "cita": "a drone crashed into the Irish Prison Service College in Portlaoise on Tuesday",
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
@@ -189465,11 +191054,11 @@
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
-       "valor": "2026-10-06T20:15Z"
+       "valor": "2026-10-06T20:45Z"
       },
       "fiabilidad": "C",
-      "fuente_id": "gdelt-2ca3a6ef05455fff",
-      "medio": "breakingnews.ie",
+      "fuente_id": "gdelt-aed85ce97d7519eb",
+      "medio": "irishmirror.ie",
       "valor": "sobrevuelo"
      }
     ],
@@ -189481,11 +191070,14 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-06T21:17Z"
+      "valor": "2026-10-06T22:17Z"
      }
     },
     "drones": {
-     "numero": "desconocido"
+     "numero": {
+      "max": 1,
+      "min": 1
+     }
     },
     "estado": {
      "actual": "notificado",
@@ -189509,10 +191101,38 @@
        "valor": "2026-10-06T20:15Z"
       },
       "fiabilidad": "C",
-      "frase_origen": "A drone crashed into the Irish Prison Service College in Portlaoise on Tuesday.",
+      "frase_origen": "a drone crashed into the Irish Prison Service College in Portlaoise on Tuesday",
       "id": "gdelt-2ca3a6ef05455fff",
       "idioma": "en",
       "medio": "breakingnews.ie",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://irishmirror.ie/news/irish-news/crime/drone-crash-sparks-major-security-37742309",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-06T20:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "The drone, which is suspected to have been carrying contraband intended for the Midlands Prison, crashed on the roof.",
+      "id": "gdelt-aed85ce97d7519eb",
+      "idioma": "en",
+      "medio": "irishmirror.ie",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://rte.ie/news/ireland/2026/1006/1594317-midlands-prison-drone",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-06T21:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Two arrested as drone crashes in prison smuggling attempt",
+      "id": "gdelt-5bbf9ed75c64643b",
+      "idioma": "en",
+      "medio": "rte.ie",
       "replicas": 0
      }
     ],
@@ -189523,8 +191143,8 @@
      "radio_km": 5.0
     },
     "objetivo": {
-     "categoria": "otra",
-     "nombre": "Portlaoise"
+     "categoria": "gubernamental",
+     "nombre": "Irish Prison Service College"
     },
     "presencia_dron": "confirmada",
     "tiempo": {
@@ -189535,8 +191155,8 @@
     },
     "tipo": "sobrevuelo",
     "titulo": {
-     "en": "Drone crashes into prison service college in Portlaoise",
-     "es": "Un dron se estrella contra el colegio del servicio penitenciario en Portlaoise"
+     "en": "Drone crashes into Irish Prison Service College in Portlaoise",
+     "es": "Un dron se estrella en el colegio de la Administración Penitenciaria de Portlaoise"
     },
     "zona": {
      "grupo": "interior",

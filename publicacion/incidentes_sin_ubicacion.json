@@ -8137,6 +8137,38 @@
     }
    },
    "tipo": "sobrevuelo",
+   "tipo_dron": {
+    "publicado": {
+     "casos_referencia": 26,
+     "compatible": [
+      {
+       "grupo": "largo_alcance_helice",
+       "probabilidad": 0.49
+      },
+      {
+       "grupo": "senuelo",
+       "probabilidad": 0.42
+      }
+     ],
+     "otras": 0.09
+    },
+    "razones": [
+     {
+      "clave": "duracion",
+      "datos": {
+       "cita": "Drona de tip Geran a orbitat timp de 50 de minute între Chilia Veche și Ismail",
+       "fuente": "gdelt-7eb17697a2bde7d6",
+       "minutos": 50.0,
+       "rasgo": "duracion",
+       "valor": {
+        "minutos": 50.0
+       }
+      },
+      "tipo": "restriccion"
+     }
+    ],
+    "version": "tipo-dron-1.0.0"
+   },
    "titulo": {
     "en": "Drone breaches Romanian airspace during attack on Ukraine",
     "es": "Dron viola el espacio aéreo de Rumania durante ataque a Ucrania"
@@ -12206,6 +12238,15 @@
     }
    },
    "tipo": "incursion",
+   "tipo_dron": {
+    "identificado": {
+     "cita": "O dronă de tip Shahed a survolat spațiul Republicii Moldova",
+     "fuente": "gdelt-779b1d261d337843-declaracion-1",
+     "grupo": "largo_alcance_helice",
+     "modelo": "Shahed"
+    },
+    "version": "tipo-dron-1.0.0"
+   },
    "titulo": {
     "en": "Shahed drone overflies Moldavian airspace",
     "es": "Dron Shahed sobrevuela el espacio aéreo de Moldavia"
@@ -22343,6 +22384,15 @@
     }
    },
    "tipo": "incursion",
+   "tipo_dron": {
+    "identificado": {
+     "cita": "Două drone UAV, tip Gerbera, au fost distruse în această după-amiază de scafandrii EOD ai Armatei Române",
+     "fuente": "gdelt-08dcc8061df7b5d8-declaracion-1",
+     "grupo": "senuelo",
+     "modelo": "Gerbera"
+    },
+    "version": "tipo-dron-1.0.0"
+   },
    "titulo": {
     "en": "Two Gerbera drones destroyed in Neptun Deep area",
     "es": "Dos drones Gerbera destruidos en la zona de Neptun Deep"
