@@ -189372,6 +189372,178 @@
     }
    },
    "type": "Feature"
+  },
+  {
+   "geometry": {
+    "coordinates": [
+     -7.29979,
+     53.03441
+    ],
+    "type": "Point"
+   },
+   "id": "EODI-2026-00490",
+   "properties": {
+    "afirmaciones_publicas": [
+     {
+      "campo": "lugar.localidad",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-06T20:15Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-2ca3a6ef05455fff",
+      "medio": "breakingnews.ie",
+      "valor": "Portlaoise"
+     },
+     {
+      "campo": "lugar.pais",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-06T20:15Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-2ca3a6ef05455fff",
+      "medio": "breakingnews.ie",
+      "valor": "IE"
+     },
+     {
+      "campo": "objetivo.categoria",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-06T20:15Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-2ca3a6ef05455fff",
+      "medio": "breakingnews.ie",
+      "valor": "gubernamental"
+     },
+     {
+      "campo": "objetivo.nombre",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-06T20:15Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-2ca3a6ef05455fff",
+      "medio": "breakingnews.ie",
+      "valor": "Irish Prison Service College"
+     },
+     {
+      "campo": "presencia_dron",
+      "cita": "A drone crashed into the Irish Prison Service College in Portlaoise on Tuesday.",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-06T20:15Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-2ca3a6ef05455fff",
+      "medio": "breakingnews.ie",
+      "valor": "confirmada"
+     },
+     {
+      "campo": "tiempo.inicio",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-06T20:15Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-2ca3a6ef05455fff",
+      "medio": "breakingnews.ie",
+      "valor": {
+       "precision": "dia",
+       "valor": "2026-10-06T00:00Z"
+      }
+     },
+     {
+      "campo": "tipo",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-06T20:15Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-2ca3a6ef05455fff",
+      "medio": "breakingnews.ie",
+      "valor": "sobrevuelo"
+     }
+    ],
+    "consecuencias": {
+     "cierre": {
+      "valor": "desconocido"
+     }
+    },
+    "control": {
+     "ultima_actualizacion": {
+      "precision": "minuto",
+      "valor": "2026-10-06T21:17Z"
+     }
+    },
+    "drones": {
+     "numero": "desconocido"
+    },
+    "estado": {
+     "actual": "notificado",
+     "historial": [
+      {
+       "estado": "notificado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2026-10-06T20:15Z"
+       },
+       "fuente_id": "gdelt-2ca3a6ef05455fff"
+      }
+     ]
+    },
+    "fuentes": [
+     {
+      "credibilidad": 3,
+      "enlace": "https://breakingnews.ie/news/two-men-arrested-after-drone-crashes-into-prison-service-college-in-portlaoise-1952522.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-06T20:15Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "A drone crashed into the Irish Prison Service College in Portlaoise on Tuesday.",
+      "id": "gdelt-2ca3a6ef05455fff",
+      "idioma": "en",
+      "medio": "breakingnews.ie",
+      "replicas": 0
+     }
+    ],
+    "id": "EODI-2026-00490",
+    "lugar": {
+     "localidad": "Portlaoise",
+     "pais": "IE",
+     "radio_km": 5.0
+    },
+    "objetivo": {
+     "categoria": "otra",
+     "nombre": "Portlaoise"
+    },
+    "presencia_dron": "confirmada",
+    "tiempo": {
+     "inicio": {
+      "precision": "dia",
+      "valor": "2026-10-06T00:00Z"
+     }
+    },
+    "tipo": "sobrevuelo",
+    "titulo": {
+     "en": "Drone crashes into prison service college in Portlaoise",
+     "es": "Un dron se estrella contra el colegio del servicio penitenciario en Portlaoise"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
+    }
+   },
+   "type": "Feature"
   }
  ],
  "type": "FeatureCollection",
