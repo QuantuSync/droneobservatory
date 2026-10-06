@@ -202,9 +202,12 @@ exportación semanal lleva origen «deducido», método «regla».
    filtro de atribuidos la cabecera dice «4 confirmados · 4 atribuidos». Las páginas de texto usan la
    misma cuenta y llms.txt dice «199 confirmados (4 de ellos atribuidos)». Prueba: los contadores
    cuadran con cualquier combinación de estado, zona y país (`web/tests/prevision.test.tsx`).
-2. **Corredores con «Todo».** Con todo el periodo había 331 arcos de cada zona a cada región. Ahora
-   se dibujan los 10 con más drones de cada sentido, con el grosor según los drones y el mismo
-   violeta; una leyenda pequeña lo dice («Los 20 corredores con más drones, de 331») y deja ver todos.
+2. **Corredores con «Todo».** Con todo el periodo había 331 arcos de cada zona a cada región. Se
+   dibujan los 50 con más drones del periodo, sumando los dos sentidos (PR #141; antes, 10 por
+   sentido, y la capa se veía vacía). El grosor (de 0,5 a 4,5 px) y la opacidad (de 0,12 a 0,7)
+   crecen con la raíz de los drones: los principales gruesos y nítidos, los secundarios finos y
+   tenues; los menores debajo y los mayores encima, en el violeta de la capa. Una leyenda pequeña
+   dice siempre cuántos se dibujan de cuántos hay («50 de 331 corredores») y deja ver todos.
 3. **Leyenda de Presión.** Con «Todo» no hay periodo anterior con que comparar: la leyenda dice
    «Elige un periodo para ver la tendencia» («Choose a period to see the trend»), y la ficha del
    país lo mismo en lugar de «sin periodo anterior con datos».
@@ -356,7 +359,7 @@ una las capturas:
 | `prevision-escritorio.png` | El desplegable con Rumanía (4 de cada 10, 40 %) y Moldavia (4 de cada 10, 37 %) |
 | `prevision-racha-*.png` | Tras tocar la racha de Moldavia: el país en el filtro, del 17/08 al 04/10, y el mapa sobre Moldavia |
 | `frontera-filtro-*.png` | Filtro «Dónde» con «Frontera» |
-| `corredores-todo-*.png` | Corredores con «Todo»: los 20 con más drones de 331 y «Ver los 331» |
+| `corredores-todo-*.png` | Corredores con «Todo»: los 50 con más drones de 331 y «Ver los 331» |
 | `prevision-contadores-atribuidos-escritorio.png`, `-390x844.png` | Con el filtro de atribuidos: 4 incidentes · 4 confirmados · 4 atribuidos |
 | `prevision-presion-todo-escritorio.png`, `-390x844.png` | Presión con «Todo»: «Elige un periodo para ver la tendencia» |
 | `prevision-ficha-moldavia-escritorio.png`, `-390x844.png` | Ficha de Moldavia con su racha y la gráfica semanal con la banda de lo normal |
@@ -439,15 +442,14 @@ escriben.
 
 | Ámbito | Lo que se compara | Comprobación (desde septiembre de 2025) | ¿Se publica? |
 | --- | --- | --- | --- |
-| Ucrania, tipo de objetivo | Impactos con objetivo conocido de los 10 canales oficiales que dan impactos en todos los trimestres desde enero de 2025 | 20 cambios marcados; el mes siguiente siguió igual en 16; el nivel reciente da al mes siguiente una probabilidad mucho mayor que el habitual (percentil 10 del remuestreo por encima de cero) | Sí |
+| Ucrania, tipo de objetivo | Impactos con objetivo conocido de los 10 canales oficiales que dan impactos en todos los trimestres desde enero de 2025 | 21 cambios marcados; el mes siguiente siguió igual en 17; el nivel reciente da al mes siguiente una probabilidad mucho mayor que el habitual (percentil 10 del remuestreo por encima de cero) | Sí |
 | Europa, tipo de incidente | Todos los incidentes, cada uno una vez | 12 cambios marcados; los 12 siguieron igual el mes siguiente | Sí |
 | Ucrania, región | Impactos por región | — | No: cada región la cuenta un solo canal (Mykolaiv empieza en julio de 2026, Dnipró deja de nombrar lugares en febrero de 2026), y los partes nacionales dejaron de listar regiones a mitad de 2025 (de 23 de 30 partes con regiones en junio de 2025 a 1-11 desde septiembre). Un cambio regional no se distingue de un cambio de cobertura |
 
 Lo que sale el 6 de octubre (julio a septiembre de 2026 frente a los doce meses anteriores):
 
-- **Ucrania**: combustible 18 % de los impactos con objetivo conocido (42 de 231) frente al 8 %
-  habitual, sube; industria 35 % frente al 27 %, sube; energía 13 % frente al 19 %, baja;
-  residencial 73 % frente al 79 %, baja.
+- **Ucrania**: combustible 18 % de los impactos con objetivo conocido (42 de 234) frente al 7 %
+  habitual, sube; industria 34 % frente al 26 %, sube; energía 13 % frente al 19 %, baja.
 - **Europa**: incursiones 41 % de los incidentes (48 de 117) frente al 21 %, suben;
   interrupciones de aeropuerto 12 % frente al 29 %, bajan.
 
@@ -467,6 +469,32 @@ noches sin una pasada útil del satélite (nubes, órbita), que no se guardan. U
 y por mes con eso diría más de las nubes y del umbral del detector de focos que de quién dice la
 verdad.
 
+### Fusión y producción de la fase 2
+
+- **Ensayo** en el servidor con la rama de la fase 2 sobre una copia de la base real
+  (`/home/eodi/ensayo-prevision.sh mezcla-oleadas`, 3 GB y prioridad baja): código 0, 16 minutos,
+  23 ataques con sus drones a reacción, exportación semanal generada sin subir.
+- **PR #140** fusionado a las 17:44 UTC (`4ddb5fc`), con avance rápido y autor anónimo; 30 ficheros,
+  ninguno de `publicacion/`. **PR #141** (corredores) a las 18:44 (`3435208`), solo web.
+- **Recogidas siguientes**: la de las 18:17 termina con código 0 y publica (la primera con el código
+  de la fase 2); la de las 19:17 publica y termina con avisos (código 2: el tope de 240 s de las fuentes oficiales y la barrera de titulares, los mismos avisos que en las de las 06:17 y las 15:17, anteriores a la fusión). La de las 17:17 registró las dos primeras previsiones de
+  frontera en la tabla `previsiones` (el registro empieza a las 17:00 UTC).
+- **Detector en directo** reiniciado a las 18:32 con el código nuevo: 75 aeropuertos vigilados,
+  sin Antalya.
+- **Reproducción de los días normales con la regla final** (13 días de la lista): ninguna falsa alarma en los 13 (de 78 a 114 aeropuertos vigilados), igual que con la regla anterior.
+- **Web en producción**, en 360×800, 390×844, 412×915 y escritorio, revisadas las capturas una a
+  una: «Qué ha cambiado» dentro de «Previsión» (Ucrania con 3 cambios y Europa con 2); la ficha del
+  ataque EODI-UA-2026-1033 con «De ellos, a reacción: 49»; «Noche a noche» con «Shahed y Geran:
+  desde 49 · a reacción: desde 49 (según los partes)» (el parte dice «137 ударними БпЛА типу Shahed
+  (49 із них – реактивні)»: los reactivos son de tipo Shahed); la página `/ucrania` con la mezcla
+  mes a mes sin ejecutar código.
+- **Corredores en producción** con 7 días (4 corredores), 30 días (45), un año (50 de 216) y «Todo»
+  (50 de 331), de lejos y acercando a Ucrania: los principales se leen sobre los secundarios en las
+  cuatro medidas, sin maraña; se quedan en 50. La capa aparece en 0,4-1,3 s en escritorio tras
+  encenderla y en 1,6-1,9 s en teléfono (contando la apertura del menú), igual que antes. Tocar un
+  corredor abre su ficha y cerrarla no mueve el mapa (`e2e/mapa-quieto.spec.ts` y
+  `e2e/prevision.spec.ts` contra producción: 43 pruebas bien).
+
 ## Pendientes, con su arreglo
 
 - **Factor «ataque en curso».** Arreglo: con 6 meses de captura del seguimiento en directo, añadir
@@ -477,8 +505,6 @@ verdad.
 - **Antalya fuera de la vigilancia de cierres.** Arreglo: guardar la cobertura por receptor (qué
   receptores ven cada círculo cada 10 minutos, que adsb.lol da en sus trazas) y declarar «receptores
   caídos» cuando dejan de informar los que cubren la zona; entonces volver a vigilarla.
-- **Días normales con la regla final de receptores.** Arreglo: reproducir los 13 días normales de
-  la lista con el código fusionado (`/var/tmp/eodi-prev/reproducir6.sh`), una hora.
 - **Lieja de noche.** Arreglo: el pendiente ya anotado en `informe_europa_directo.md` (segunda vía
   de señal con aeronaves en espera y vuelos desviados cuando lo que falta crece despacio).
 - **Chisináu sin cobertura.** Arreglo: un receptor de adsb.lol en Moldavia (lo aporta cualquiera
