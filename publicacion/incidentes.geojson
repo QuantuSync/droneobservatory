@@ -3387,6 +3387,48 @@
    "properties": {
     "afirmaciones_publicas": [
      {
+      "campo": "consecuencias.cierre.minutos",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-05-02T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EDDM-2025-05-02-EODI-2025-00012",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 37,
+       "min": 37
+      }
+     },
+     {
+      "campo": "consecuencias.cierre.valor",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-05-02T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EDDM-2025-05-02-EODI-2025-00012",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": "si"
+     },
+     {
+      "campo": "consecuencias.vuelos_desviados",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-05-02T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EDDM-2025-05-02-EODI-2025-00012",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 20,
+       "min": 20
+      }
+     },
+     {
       "campo": "drones.numero",
       "credibilidad": 3,
       "fecha": {
@@ -3601,6 +3643,20 @@
       "idioma": "de",
       "medio": "augsburger-allgemeine.de",
       "replicas": 0
+     },
+     {
+      "credibilidad": 2,
+      "enlace": "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.05.02-planes-readsb-prod-0",
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-05-02T00:00Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Cierre medido en EDDM: 12:23–13:00 UTC, 37 minutos, 20 desvíos y 5 esperas.",
+      "id": "adsblol-EDDM-2025-05-02-EODI-2025-00012",
+      "idioma": "es",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "replicas": 0
      }
     ],
     "id": "EODI-2025-00012",
@@ -3624,6 +3680,27 @@
     "titulo": {
      "en": "Drone forces interruption of air traffic at Munich Airport",
      "es": "Dron obliga a interrumpir el tráfico aéreo en el aeropuerto de Múnich"
+    },
+    "trafico_aereo": {
+     "cierre": {
+      "aeropuerto": "EDDM",
+      "difiere_de_declarado": false,
+      "duracion_min": 37,
+      "fin": {
+       "precision": "minuto",
+       "valor": "2025-05-02T13:00Z"
+      },
+      "inicio": {
+       "precision": "minuto",
+       "valor": "2025-05-02T12:23Z"
+      },
+      "resultado": "cierre_medido",
+      "vuelos_desviados": 20,
+      "vuelos_en_espera": 5
+     },
+     "datos": [
+      "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.05.02-planes-readsb-prod-0"
+     ]
     },
     "zona": {
      "distancia_km": 892,
@@ -93559,6 +93636,33 @@
    "properties": {
     "afirmaciones_publicas": [
      {
+      "campo": "consecuencias.cierre.minutos",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-04-18T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-ENBR-2025-04-18-EODI-2025-00304",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 67,
+       "min": 67
+      }
+     },
+     {
+      "campo": "consecuencias.cierre.valor",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-04-18T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-ENBR-2025-04-18-EODI-2025-00304",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": "si"
+     },
+     {
       "campo": "consecuencias.cierre.valor",
       "credibilidad": 3,
       "fecha": {
@@ -93569,6 +93673,21 @@
       "fuente_id": "gdelt-f1ced38f52e4989a",
       "medio": "tu.no",
       "valor": "si"
+     },
+     {
+      "campo": "consecuencias.vuelos_desviados",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-04-18T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-ENBR-2025-04-18-EODI-2025-00304",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 1,
+       "min": 1
+      }
      },
      {
       "campo": "lugar.pais",
@@ -93662,6 +93781,20 @@
       "idioma": "no",
       "medio": "tu.no",
       "replicas": 2
+     },
+     {
+      "credibilidad": 2,
+      "enlace": "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.04.18-planes-readsb-prod-0",
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-04-18T00:00Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Cierre medido en ENBR: 17:16–18:23 UTC, 67 minutos, 1 desvíos y 0 esperas.",
+      "id": "adsblol-ENBR-2025-04-18-EODI-2025-00304",
+      "idioma": "es",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "replicas": 0
      }
     ],
     "id": "EODI-2025-00304",
@@ -93685,6 +93818,28 @@
     "titulo": {
      "en": "Bergen airport closed due to illegal drone flying",
      "es": "Cierre del aeropuerto de Bergen por vuelo ilegal de drones"
+    },
+    "trafico_aereo": {
+     "cierre": {
+      "aeropuerto": "ENBR",
+      "difiere_de_declarado": false,
+      "duracion_min": 67,
+      "fin": {
+       "precision": "minuto",
+       "valor": "2025-04-18T18:23Z"
+      },
+      "inicio": {
+       "precision": "minuto",
+       "valor": "2025-04-18T17:16Z"
+      },
+      "resultado": "cierre_medido",
+      "vuelos_desviados": 1,
+      "vuelos_en_espera": 0
+     },
+     "datos": [
+      "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.04.18-planes-readsb-prod-0",
+      "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.04.19-planes-readsb-prod-0"
+     ]
     },
     "zona": {
      "grupo": "interior",
