@@ -293,8 +293,8 @@ export function principales(corredores: readonly Corredor[]): Corredor[] {
     .slice(0, CORREDORES_PRINCIPALES);
 }
 
-export const ANCHO_MINIMO_CORREDOR = 0.5;
-export const ANCHO_MAXIMO_CORREDOR = 4.5;
+export const ANCHO_MINIMO_CORREDOR = 0.25;
+export const ANCHO_MAXIMO_CORREDOR = 2.25;
 export const OPACIDAD_MINIMA_CORREDOR = 0.12;
 export const OPACIDAD_MAXIMA_CORREDOR = 0.7;
 
