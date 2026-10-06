@@ -6196,6 +6196,21 @@
     "afirmaciones_publicas": [
      {
       "campo": "consecuencias.cierre.minutos",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-01-31T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EKCH-2025-01-31-EODI-2025-00030",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 116,
+       "min": 116
+      }
+     },
+     {
+      "campo": "consecuencias.cierre.minutos",
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
@@ -6226,6 +6241,18 @@
      },
      {
       "campo": "consecuencias.cierre.valor",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-01-31T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EKCH-2025-01-31-EODI-2025-00030",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": "si"
+     },
+     {
+      "campo": "consecuencias.cierre.valor",
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
@@ -6247,6 +6274,21 @@
       "fuente_id": "gdelt-0ae8c8002e5928e6",
       "medio": "ekstrabladet.dk",
       "valor": "si"
+     },
+     {
+      "campo": "consecuencias.vuelos_desviados",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-01-31T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EKCH-2025-01-31-EODI-2025-00030",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 8,
+       "min": 8
+      }
      },
      {
       "campo": "consecuencias.vuelos_desviados",
@@ -6807,6 +6849,20 @@
       "idioma": "da",
       "medio": "Niras (declaración oficial citada en dr.dk)",
       "replicas": 0
+     },
+     {
+      "credibilidad": 2,
+      "enlace": "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.01.31-planes-readsb-prod-0",
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-01-31T00:00Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Cierre medido en EKCH: 21:36–23:32 UTC, 116 minutos, 8 desvíos y 2 esperas.",
+      "id": "adsblol-EKCH-2025-01-31-EODI-2025-00030",
+      "idioma": "es",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "replicas": 0
      }
     ],
     "id": "EODI-2025-00030",
@@ -6840,6 +6896,28 @@
     "titulo": {
      "en": "Drones close Copenhagen Airport for two hours",
      "es": "Drones cierran el aeropuerto de Copenhague durante dos horas"
+    },
+    "trafico_aereo": {
+     "cierre": {
+      "aeropuerto": "EKCH",
+      "difiere_de_declarado": false,
+      "duracion_min": 116,
+      "fin": {
+       "precision": "minuto",
+       "valor": "2025-01-31T23:32Z"
+      },
+      "inicio": {
+       "precision": "minuto",
+       "valor": "2025-01-31T21:36Z"
+      },
+      "resultado": "cierre_medido",
+      "vuelos_desviados": 8,
+      "vuelos_en_espera": 2
+     },
+     "datos": [
+      "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.01.31-planes-readsb-prod-0",
+      "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.02.01-planes-readsb-prod-0"
+     ]
     }
    },
    "type": "Feature"
@@ -60586,6 +60664,21 @@
     "afirmaciones_publicas": [
      {
       "campo": "consecuencias.cierre.minutos",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-01-13T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EVRA-2025-01-13-EODI-2025-00176",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 46,
+       "min": 46
+      }
+     },
+     {
+      "campo": "consecuencias.cierre.minutos",
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
@@ -60601,6 +60694,18 @@
      },
      {
       "campo": "consecuencias.cierre.valor",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-01-13T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EVRA-2025-01-13-EODI-2025-00176",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": "si"
+     },
+     {
+      "campo": "consecuencias.cierre.valor",
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
@@ -60610,6 +60715,21 @@
       "fuente_id": "gdelt-d2c7c3c725e9daa7",
       "medio": "nra.lv",
       "valor": "si"
+     },
+     {
+      "campo": "consecuencias.vuelos_desviados",
+      "credibilidad": 2,
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-01-13T00:00Z"
+      },
+      "fiabilidad": "B",
+      "fuente_id": "adsblol-EVRA-2025-01-13-EODI-2025-00176",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "valor": {
+       "max": 1,
+       "min": 1
+      }
      },
      {
       "campo": "consecuencias.vuelos_desviados",
@@ -61252,6 +61372,20 @@
       "idioma": "lv",
       "medio": "delfi.lv",
       "replicas": 0
+     },
+     {
+      "credibilidad": 2,
+      "enlace": "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.01.13-planes-readsb-prod-0",
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-01-13T00:00Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Cierre medido en EVRA: 15:30–16:15 UTC, 46 minutos, 1 desvíos y 2 esperas.",
+      "id": "adsblol-EVRA-2025-01-13-EODI-2025-00176",
+      "idioma": "es",
+      "medio": "Tráfico aéreo medido (adsb.lol)",
+      "replicas": 0
      }
     ],
     "id": "EODI-2025-00176",
@@ -61280,6 +61414,27 @@
     "titulo": {
      "en": "Illegal drones over Riga airport considered for shooting down",
      "es": "Drones ilegales sobre el aeropuerto de Riga considerados para derribo"
+    },
+    "trafico_aereo": {
+     "cierre": {
+      "aeropuerto": "EVRA",
+      "difiere_de_declarado": false,
+      "duracion_min": 46,
+      "fin": {
+       "precision": "minuto",
+       "valor": "2025-01-13T16:15Z"
+      },
+      "inicio": {
+       "precision": "minuto",
+       "valor": "2025-01-13T15:30Z"
+      },
+      "resultado": "cierre_medido",
+      "vuelos_desviados": 1,
+      "vuelos_en_espera": 2
+     },
+     "datos": [
+      "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.01.13-planes-readsb-prod-0"
+     ]
     }
    },
    "type": "Feature"
