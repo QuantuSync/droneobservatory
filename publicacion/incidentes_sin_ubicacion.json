@@ -27848,6 +27848,129 @@
     "en": "Drones violate Greek airspace over the Aegean",
     "es": "Drones violan el espacio aéreo griego sobre el Egeo"
    }
+  },
+  {
+   "afirmaciones_publicas": [
+    {
+     "campo": "lugar.pais",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-06T00:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-b7161b7dc2aff933",
+     "medio": "adevarul.ro",
+     "valor": "RO"
+    },
+    {
+     "campo": "presencia_dron",
+     "cita": "o dronă maritimă ucraineană a explodat în Portul Constanța",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-06T00:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-b7161b7dc2aff933",
+     "medio": "adevarul.ro",
+     "valor": "confirmada"
+    },
+    {
+     "campo": "tipo",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-06T00:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-b7161b7dc2aff933",
+     "medio": "adevarul.ro",
+     "valor": "incursion"
+    }
+   ],
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-06T01:17Z"
+    }
+   },
+   "drones": {
+    "numero": "desconocido"
+   },
+   "estado": {
+    "actual": "confirmado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-06T00:30Z"
+      },
+      "fuente_id": "gdelt-b7161b7dc2aff933"
+     },
+     {
+      "estado": "confirmado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-06T00:30Z"
+      },
+      "fuente_id": "gdelt-b7161b7dc2aff933-declaracion-1"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://adevarul.ro/politica/radu-miruta-despre-raspunsurile-ucrainei-cu-2562036.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-06T00:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "o dronă maritimă ucraineană a explodat în Portul Constanța",
+     "id": "gdelt-b7161b7dc2aff933",
+     "idioma": "ro",
+     "medio": "adevarul.ro",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 1,
+     "enlace": "https://adevarul.ro/politica/radu-miruta-despre-raspunsurile-ucrainei-cu-2562036.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-06T00:30Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "autoritățile ucrainene au transmis majoritatea răspunsurilor solicitate de partea română în urma incidentului",
+     "id": "gdelt-b7161b7dc2aff933-declaracion-1",
+     "idioma": "ro",
+     "medio": "Ministerul Apărării (declaración oficial citada en adevarul.ro)",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-2026-00485",
+   "lugar": {
+    "nivel": "pais",
+    "pais": "RO"
+   },
+   "presencia_dron": "confirmada",
+   "tiempo": {
+    "inicio": {
+     "precision": "aproximada",
+     "valor": "2026-10-06T00:30Z"
+    }
+   },
+   "tipo": "incursion",
+   "titulo": {
+    "en": "Drone explodes at Port of Constanza",
+    "es": "Dron explota en el Puerto de Constanza"
+   }
   }
  ]
 }
