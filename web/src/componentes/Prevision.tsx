@@ -7,7 +7,7 @@ import { useState } from "react";
 import type { ReactNode } from "react";
 
 import type { Carga } from "../datos/carga.ts";
-import { diaDeTexto, enVivo, marcadorSemanal, probabilidadLlana } from "../datos/prevision.ts";
+import { diaDeTexto, enVivo, marcadorSemanal, probabilidadLlana, mesEscrito, textoCambio } from "../datos/prevision.ts";
 import type { FronteraPais, GraficaRacha, Prevision as DatosPrevision, Racha } from "../datos/prevision.ts";
 import { fechaDia, fechaHora, numero, pais } from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
@@ -244,6 +244,26 @@ export function Prevision({ t, idioma, carga, onRacha }: Props) {
               numero(d.rachas.comprobacion.normal_semana_siguiente, idioma),
             )}
           </p>
+        </Seccion>
+      )}
+      {d.cambios !== undefined && d.cambios.ambitos.some((a) => a.cambios.length > 0) && (
+        <Seccion titulo={p.cambios.titulo} id="cambios">
+          <p className="mb-1 text-xs text-secundario">{p.cambios.periodo(mesEscrito(d.cambios.recientes.desde, idioma), mesEscrito(d.cambios.recientes.hasta, idioma))}</p>
+          {d.cambios.ambitos
+            .filter((a) => a.cambios.length > 0)
+            .map((ambito) => (
+              <div key={ambito.ambito} className="mb-1.5" data-cambios={ambito.ambito}>
+                <p className="text-xs text-texto">{p.cambios.ambito[ambito.ambito]}</p>
+                <ul className="list-disc pl-4 text-xs text-secundario">
+                  {ambito.cambios.map((c) => (
+                    <li key={c.clave}>{textoCambio(t, ambito, c)}</li>
+                  ))}
+                </ul>
+                <p className="text-xs text-secundario">
+                  {p.cambios.historial(ambito.comprobacion.casos, ambito.comprobacion.sostenidos)}
+                </p>
+              </div>
+            ))}
         </Seccion>
       )}
       <Seccion titulo={p.semana.titulo} id="semana">

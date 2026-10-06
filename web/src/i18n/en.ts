@@ -274,6 +274,19 @@ export const en: Textos = {
       barra: (semana, n) => `Week of ${semana}: ${n}`,
       banda: (minimo, maximo) => `Grey band: normal, ${minimo} to ${maximo} per week (8 in 10 weeks).`,
     },
+    cambios: {
+      titulo: "What has changed",
+      periodo: (desde, hasta) => `${desde} to ${hasta}, against the previous twelve months. What has not changed is not listed.`,
+      ambito: {
+        ucrania_objetivo: "Ukraine, what is targeted (impacts with a known target, official channels with data throughout)",
+        europa_tipo: "Europe, type of incident",
+      },
+      linea: (clase, reciente, habitual, casos, de, sentido) =>
+        `${clase}: ${reciente}% (${casos} of ${de}), against ${habitual}% usually · ${sentido}`,
+      sentido: { sube: "up", baja: "down" },
+      historial: (casos, sostenidos) =>
+        `Checked since September 2025: of ${casos} changes flagged, the following month went the same way in ${sostenidos}.`,
+    },
     semana: {
       titulo: "Next week",
       cual: (desde, hasta) => `${desde} to ${hasta}, expected incidents`,
@@ -442,6 +455,10 @@ export const en: Textos = {
     detener: "Stop",
     drones: "drones launched against Ukraine",
     sinCifra: "no launch figure",
+    mezcla: (shahed, reactivos) =>
+      [shahed === null ? null : `Shahed and Geran: from ${shahed}`, reactivos === null ? null : `jet-powered: from ${reactivos}`]
+        .filter((parte) => parte !== null)
+        .join(" · ") + " (as the reports state)",
   },
   mapa: {
     etiqueta: "Map of Europe with the incidents of the selected period",
@@ -612,6 +629,7 @@ export const en: Textos = {
     reivindicacion: "Figures from one of the warring parties, with no other source confirming them.",
     periodo: "Period",
     lanzados: "Drones launched",
+    reactivos: "Of them, jet-powered",
     shahed: "Shahed / Geran",
     senuelos: "Gerbera and decoys",
     otros: "Other",
@@ -1370,6 +1388,18 @@ export const en: Textos = {
                 termino: "Next week",
                 texto: [
                   "The expected figure is the average of previous weeks with a weight that halves every four weeks; the margin runs from 10 to 90% of a negative binomial with the country’s dispersion, so 8 in 10 weeks should fall inside. It is published for the countries where it beats the usual frequency and “next week same as this one”.",
+                ],
+              },
+              {
+                termino: "What has changed",
+                texto: [
+                  "The share of each target type among the impacts on Ukraine with a known target (only from the official channels that give impacts in every quarter since January 2025, so that a channel that starts or stops naming places does not change the mix) and the share of each incident type in Europe, over the last three closed months against the previous twelve. Only what has really changed is listed: outside what the usual share gives 1 time in 20, with a difference of 3 points or more. The share is used, not the count, because the count for a month depends on how many sources are read. Check: after a change is flagged, the following month looks more like the recent months than like the usual. Not by region of Ukraine: each region is counted by a single channel, and a regional change cannot be told apart from a change in coverage.",
+                ],
+              },
+              {
+                termino: "Mix of each wave",
+                texto: [
+                  "In the Ukraine layer, each attack’s sheet and “Night by night” say how many of the drones launched were Shahed or Geran and how many were jet-powered when the Ukrainian Air Force report says so; the rest are Gerbera decoys and other types. They are minimums and come only from the official reports. The Ukraine text page has the mix month by month.",
                 ],
               },
               {

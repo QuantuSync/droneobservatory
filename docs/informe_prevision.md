@@ -1,7 +1,7 @@
 # Previsión y tendencias, frontera o interior y arreglos del detector de cierres
 
-European Observatory of Drone Incidents, 6 de octubre de 2026. Las horas son UTC. Fase 1 del
-encargo de previsión y tendencias: PR #138 (fusionado a las 12:43, `d9b6041`) y este informe.
+European Observatory of Drone Incidents, 6 de octubre de 2026. Las horas son UTC. Fases 1 y 2 del
+encargo de previsión y tendencias: PR #138 (fusionado a las 12:43, `d9b6041`), #139 (informe de la fase 1) y el de la fase 2.
 
 **En resumen.**
 
@@ -262,9 +262,13 @@ Cambios ([`proceso/directo.py`](../proceso/directo.py), regla `directo-1.1.0`):
   ENDU, EPLB, LEAL, LEIB, LEMG, LEPA, LEZL, LRIA, LUKK y LXGB. La señal sigue exigiendo ver el 60 %
   de lo esperado en las tres horas previas, así que un aeropuerto con poca cobertura ese día no da
   avisos.
-- **Receptores caídos** (Antalya): si en la última media hora se ven cerca del aeropuerto menos de
-  la cuarta parte de las aeronaves que en cada media hora de las dos horas y media anteriores, no
-  hay aviso.
+- **Receptores caídos**: si en la última media hora se ven cerca del aeropuerto (40 km, por debajo
+  de 10 000 pies) menos de la cuarta parte de las aeronaves que en cada media hora de las dos horas
+  y media anteriores y ningún avión espera cerca desde que empezó el hueco, no hay aviso. En un
+  cierre los que llegan esperan (Múnich, 3 de octubre de 2025); si los receptores caen, no.
+- **Antalya no se vigila** (`FUERA_DE_VIGILANCIA`): el 8 de octubre de 2025 sus receptores dejan de
+  ver la zona con aviones en espera alrededor desde antes, y ninguna de las tres reglas probadas
+  separa eso de un cierre sin perder el de Múnich.
 - **Un despegue suelto** en mitad del cierre (Berlín, 23 de septiembre de 2026, a las 18:56) ya no
   reinicia la persistencia de la señal: ese ciclo no avisa, pero el siguiente sí si la señal sigue.
 
@@ -275,16 +279,18 @@ con el código nuevo, frente a lo que daba el anterior según
 
 | Día | Antes | Después |
 | --- | --- | --- |
-| Antalya, 08/10/2025 (los receptores dejan de ver la zona) | Aviso falso a las 09:30 | Sin aviso (Antalya vigilado) |
+| Múnich, 03/10/2025 (cierre de noche) | Detectado | **Detectado a las 20:05** (comienzo 19:26) |
+| Antalya, 08/10/2025 (los receptores dejan de ver la zona) | Aviso falso a las 09:30 | Aviso falso a las 09:32 con la regla final: **Antalya sale de la vigilancia** |
 | Berlín, 23/09/2026 (cierre de 53 min con un despegue suelto) | No se detecta | **Detectado a las 18:49** (comienzo 18:15) |
 | 04/11/2025: Bruselas, Lieja y Múnich | Bruselas 19:09, Múnich 19:25; Lieja no vigilado | Bruselas 19:09 y Múnich 19:25, igual; **Lieja vigilado**, su cierre no da señal: de noche, con poco tráfico de carga, lo que falta no llega a 0,5 movimientos por minuto |
 | Chisináu, 08/09/2026 | No vigilado (cobertura insuficiente) | Sigue fuera: en el archivo de esos días la cobertura es insuficiente, también para la regla nueva |
 | Copenhague, 22/09/2025 | Detectado a las 18:52 | Detectado a las 18:52, igual |
+| Múnich, 30/05/2026 y 06/09/2026 | — | Detectados a las 07:25 y a las 14:46 |
 
-Los vigilados de esos días pasan de 86 a 90-109 (con los aeropuertos con cierre publicado). La
-reproducción de los 16 días restantes de la lista (días de cierre no detectados y días normales) se
-paró para dejar sitio al ensayo de la fusión (un trabajo de sesión a la vez); queda en los
-pendientes.
+Los vigilados de esos días pasan de 86 a 90-114 (con los aeropuertos con cierre publicado). Los
+16 días restantes de la lista (días de cierre no detectados y días normales) se reprodujeron con la
+regla de receptores solo de aviones bajos: ninguna falsa alarma, y Bruselas 02/06/2026 detectado a
+las 12:49. La regla final solo cambia el caso en que los aviones bajos desaparecen.
 
 ## Registro en vivo y exportación
 
@@ -368,6 +374,99 @@ en la primera carga (se pide al abrir «Previsión» o la ficha de un país). El
 crece 7 KB (unos 2 KB comprimido): las dos secciones nuevas de la metodología, que la portada ya
 llevaba prerenderizada.
 
+## Fase 2
+
+Cada punto pasa la misma regla: solo se publica si, comprobado con el pasado, mejora a su
+referencia. Lo publicado va dentro de «Previsión» o de la capa «Ucrania», sin botones nuevos.
+
+### 2A. El tiempo como predictor: no se publica
+
+**Fuente.** La misma que ya usa el observatorio para las condiciones de cada incidente: la
+Historical Forecast API de Open-Meteo (previsiones archivadas, así que no hay datos que no se
+supieran antes de la noche), sin proveedor nuevo. Series horarias de enero de 2024 a octubre de
+2026 de viento a 10 m, rachas, precipitación, nubosidad y visibilidad en seis zonas de lanzamiento
+(Primorsko-Ajtarsk, Kursk, Oriol, Millerovo, Chauda y Hvardiiske, de
+`configuracion/lugares_meteo_ucrania.json`) y en el destino del sur (Odesa e Izmaíl), resumidas por
+noche (de las 15:00 a las 03:00 UTC).
+
+**Comprobación**, hacia delante como en la fase 1:
+
+| Qué | Sin el tiempo | Con el tiempo | Mejora del tiempo |
+| --- | --- | --- | --- |
+| Noche grande sobre Ucrania (793 noches desde julio de 2024, 113 grandes) | área bajo la curva 0,45 | 0,47 | 0,0 % de Brier (percentil 10 negativo) |
+| Esta noche en la frontera, Rumanía | 10,7 % mejor que la frecuencia | 10,3 % | −0,4 % |
+| Esta noche en la frontera, Moldavia | 13,0 % | 13,2 % | 0,2 % (percentil 10 negativo) |
+
+La correlación entre el tiempo de las zonas de lanzamiento y el tamaño del ataque es nula (viento
+−0,003; rachas 0,009; lluvia 0,05; nubes 0,02), y las noches del 10 % con más viento, más rachas,
+más lluvia o más nubes traen las mismas oleadas (de 118 a 130 drones de media frente a 125-127).
+Con lo que mide la API en superficie, el tiempo no cambia ni cuándo hay una oleada grande ni el
+riesgo en la frontera.
+
+### 2B. Mezcla de cada oleada: publicada (son datos de los partes, no una previsión)
+
+Lo que dicen los partes oficiales de la Fuerza Aérea de Ucrania, leído en todo el canal (copia
+local de 79.071 publicaciones):
+
+- hasta 2024, solo «ударними БпЛА типу Shahed»: no hay señuelos contados aparte;
+- de junio de 2025 a mayo de 2026, a menudo «близько 60 з них – шахеди»: cuántos eran Shahed o
+  Geran; el resto, Gerbera y otros tipos sin cifra;
+- desde mayo de 2026 casi todos nombran drones a reacción, y desde agosto de 2026 algunos dan su
+  cifra («понад 50 із них – реактивні»; 12 partes en septiembre).
+
+El Ministerio de Defensa ruso no da la mezcla. Lo hecho:
+
+- el analizador de partes (`parte-fuerza-aerea/4`) guarda los drones a reacción en
+  `lanzados.reactivos` (esquema 1.14.0) cuando el parte da la cifra; «понад», «близько» y
+  «щонайменше» son un mínimo;
+- como la recogida solo relee los partes de 48 horas, un paso horario (`proceso/mezcla.py`)
+  completa una vez los ataques ya guardados con la frase de su parte: 25 ataques de agosto a
+  octubre de 2026, con su motivo en el historial;
+- en la web, la ficha del ataque lleva la fila «De ellos, a reacción»; «Noche a noche» dice bajo
+  la cifra de la noche «Shahed y Geran: desde 120 · a reacción: desde 50 (según los partes)»
+  cuando algún parte lo dice; y la página de texto `/ucrania` tiene la mezcla mes a mes (partes con
+  cifra de Shahed, Shahed y Geran declarados frente a lo lanzado en esos partes, partes con cifra
+  de reactivos y reactivos declarados).
+
+Son cifras declaradas por una de las partes, sin cálculo propio: no llevan comprobación con el
+pasado porque no prevén nada.
+
+### 2C. Qué se ataca y cuándo: publicado (dentro de «Previsión»)
+
+Se mira la proporción de cada clase en los tres últimos meses cerrados frente a los doce
+anteriores, no el número: el número de un mes depende de cuántas fuentes se leen y de cómo
+escriben.
+
+| Ámbito | Lo que se compara | Comprobación (desde septiembre de 2025) | ¿Se publica? |
+| --- | --- | --- | --- |
+| Ucrania, tipo de objetivo | Impactos con objetivo conocido de los 10 canales oficiales que dan impactos en todos los trimestres desde enero de 2025 | 20 cambios marcados; el mes siguiente siguió igual en 16; el nivel reciente da al mes siguiente una probabilidad mucho mayor que el habitual (percentil 10 del remuestreo por encima de cero) | Sí |
+| Europa, tipo de incidente | Todos los incidentes, cada uno una vez | 12 cambios marcados; los 12 siguieron igual el mes siguiente | Sí |
+| Ucrania, región | Impactos por región | — | No: cada región la cuenta un solo canal (Mykolaiv empieza en julio de 2026, Dnipró deja de nombrar lugares en febrero de 2026), y los partes nacionales dejaron de listar regiones a mitad de 2025 (de 23 de 30 partes con regiones en junio de 2025 a 1-11 desde septiembre). Un cambio regional no se distingue de un cambio de cobertura |
+
+Lo que sale el 6 de octubre (julio a septiembre de 2026 frente a los doce meses anteriores):
+
+- **Ucrania**: combustible 18 % de los impactos con objetivo conocido (42 de 231) frente al 8 %
+  habitual, sube; industria 35 % frente al 27 %, sube; energía 13 % frente al 19 %, baja;
+  residencial 73 % frente al 79 %, baja.
+- **Europa**: incursiones 41 % de los incidentes (48 de 117) frente al 21 %, suben;
+  interrupciones de aeropuerto 12 % frente al 29 %, bajan.
+
+Lo que no ha cambiado no se lista. Cálculo en `proceso/prevision/cambios.py`, fichero
+`prevision.json` (`cambios`), página `/prevision`.
+
+### 2D. Índice de veracidad de los partes: no se publica
+
+Con las evaluaciones de focos térmicos de NASA FIRMS que ya guarda la base (`focos_termicos`):
+1.393 impactos evaluados, de los que 266 no son evaluables (sin lugar preciso) y 1.127 sí; el
+satélite ve el fuego en 31 (18 de los impactos que declara Ucrania, 13 de los que declaran los
+gobernadores rusos). Pero un «no detectado» casi nunca desmiente: la mayoría son daños en
+viviendas sin un fuego que el satélite pueda ver. Contando solo los objetivos que arden de forma
+visible (combustible, energía, industria), quedan **81 casos comprobables en 20 meses** (34 de
+Ucrania y 47 de Rusia), con el fuego visto en 5, y de 1 a 15 por fuente; y aún falta descontar las
+noches sin una pasada útil del satélite (nubes, órbita), que no se guardan. Un marcador por fuente
+y por mes con eso diría más de las nubes y del umbral del detector de focos que de quién dice la
+verdad.
+
 ## Pendientes, con su arreglo
 
 - **Factor «ataque en curso».** Arreglo: con 6 meses de captura del seguimiento en directo, añadir
@@ -375,12 +474,25 @@ llevaba prerenderizada.
 - **Aviso de segunda noche.** Arreglo: el de la tabla de lo no publicado.
 - **Frontera de Lituania y Letonia.** Arreglo: un predictor propio con los ataques ucranianos
   contra el norte de Rusia.
-- **Reproducción de los 16 días restantes** (días de cierre no detectados y días normales) con el
-  código nuevo y el anterior. Arreglo: lanzar en el servidor la misma lista (`/var/tmp/eodi-prev/
-  reproducir.sh`, empezando por el sexto día) cuando no haya otro trabajo de la sesión; unas 4 horas.
+- **Antalya fuera de la vigilancia de cierres.** Arreglo: guardar la cobertura por receptor (qué
+  receptores ven cada círculo cada 10 minutos, que adsb.lol da en sus trazas) y declarar «receptores
+  caídos» cuando dejan de informar los que cubren la zona; entonces volver a vigilarla.
+- **Días normales con la regla final de receptores.** Arreglo: reproducir los 13 días normales de
+  la lista con el código fusionado (`/var/tmp/eodi-prev/reproducir6.sh`), una hora.
 - **Lieja de noche.** Arreglo: el pendiente ya anotado en `informe_europa_directo.md` (segunda vía
   de señal con aeronaves en espera y vuelos desviados cuando lo que falta crece despacio).
 - **Chisináu sin cobertura.** Arreglo: un receptor de adsb.lol en Moldavia (lo aporta cualquiera
   con una antena) o el respaldo adsb.fi para ese círculo; hasta entonces no se puede vigilar.
 - **Cierres declarados muy cortos que el archivo no ve.** Arreglo: casar también los huecos «menor»
   de 15 a 30 minutos cuando un incidente del aeropuerto los nombra, solo para medir su duración.
+- **Índice de veracidad (2D).** Arreglo: guardar para cada impacto evaluable si hubo una pasada
+  útil de VIIRS sin nubes (la máscara de nubes del propio producto o la nubosidad de Open-Meteo a
+  la hora de la pasada), comparar con las imágenes de Sentinel-2 que ya pide la guerra por
+  satélite en los objetivos grandes, y publicar el marcador cuando haya 30 casos comprobables por
+  fuente.
+- **El tiempo como predictor (2A).** Arreglo: probar el viento en altura de vuelo (850 hPa) a lo
+  largo de cada corredor y el engelamiento, que la API ya da, cuando exista el factor «ataque en
+  curso»; con lo de superficie no hay señal.
+- **Tendencias por región de Ucrania (2C).** Arreglo: una fuente regional constante para todas
+  las regiones (por ejemplo, los partes de la mañana de la Fuerza Aérea si vuelven a listar
+  regiones) o normalizar cada región por los mensajes de su canal.

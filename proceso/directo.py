@@ -89,10 +89,14 @@ MOVIMIENTOS_DIA_MINIMOS = 40.0
 MOVIMIENTOS_DIA_MINIMOS_CON_INCIDENTES = 20.0
 # Receptores caídos: si en la última media hora se han visto cerca del aeropuerto (40 km, por
 # debajo de 10 000 pies) menos de una cuarta parte de las aeronaves que en cada media hora de las
-# dos horas y media anteriores, son los receptores los que han dejado de ver la zona (Antalya, 8
-# de octubre de 2025: de 24 aeronaves por media hora a 1), no un cierre: en un cierre siguen
-# llegando aviones que esperan o se desvían.
+# dos horas y media anteriores y ninguna aeronave espera cerca desde que empezó el hueco, son los
+# receptores los que han dejado de ver la zona (Antalya, 8 de octubre de 2025: de 24 aeronaves por
+# media hora a 1, sin ninguna en espera), no un cierre: en un cierre los aviones que llegan esperan
+# o se desvían (Múnich, 3 de octubre de 2025, también pierde casi todos los aviones bajos, pero
+# con aviones en espera). Los vuelos altos de paso no sirven: los ven receptores lejanos aunque los
+# de la zona hayan caído.
 CERCA_VENTANA_S = 1800
+CERCA_TRAMO_S = 600
 CERCA_FRACCION = 0.25
 CERCA_MINIMAS = 8
 # Un aviso reanudado se publica 12 horas; uno sin reanudar se cierra a las 24 horas.
@@ -264,6 +268,12 @@ class Bases:
         return resultado
 
 
+# Aeropuertos que no se vigilan aunque cumplan, con su motivo. Antalya: sus receptores dejan de
+# ver la zona a ratos y, sin aviones en espera que lo distingan de un cierre, da avisos falsos
+# (8 de octubre de 2025).
+FUERA_DE_VIGILANCIA = {"LTAI": "receptores que caen a ratos (avisos falsos)"}
+
+
 def vigilables(
     dia: date,
     candidatos: Iterable[str],
@@ -285,6 +295,8 @@ def vigilables(
     completos = [d for d in dias if mejor and altas[d] >= FRACCION_DIA_COMPLETO * mejor]
     resultado = []
     for oaci in candidatos:
+        if oaci in FUERA_DE_VIGILANCIA:
+            continue
         niveles = [n for d in completos if (n := coberturas(oaci, d)) is not None]
         validos = (trafico.ALTA, trafico.MEDIA) if oaci in con_incidentes else (trafico.ALTA,)
         if len(niveles) < DIAS_COBERTURA_ALTA or any(n not in validos for n in niveles):
@@ -356,6 +368,9 @@ class Vivos:
         self._altas: set[str] = set()
         self._ciclos = 0
         self._actividad: tuple[float, set[str]] = (-1.0, set())
+        # Aeronaves vistas a 40 km o menos de cada aeropuerto, a cualquier altura, por tramos de
+        # 10 minutos: dicen si los receptores siguen viendo la zona.
+        self._cerca: dict[str, dict[int, set[str]]] = {}
 
     def _en_zona(self, p: Posicion) -> bool:
         if not p.suelo and (p.alt is None or p.alt >= TECHO_FT):
@@ -363,7 +378,17 @@ class Vivos:
         return self.zona.cercano(p.lat, p.lon, RADIO_ZONA_KM, solo_regulares=True) is not None
 
     def anadir(self, posiciones: Iterable[Posicion]) -> None:
+        cerca = self._cerca_de()
         for p in posiciones:
+            bajo = p.suelo or (p.alt is not None and p.alt < TECHO_FT)
+            proximo = (
+                self.zona.cercano(p.lat, p.lon, RADIO_ZONA_KM, solo_regulares=True)
+                if bajo
+                else None
+            )
+            if proximo is not None:
+                tramo = int(p.t // CERCA_TRAMO_S)
+                cerca.setdefault(proximo[0].oaci, {}).setdefault(tramo, set()).add(p.icao)
             a = self.aeronaves.get(p.icao)
             if a is None:
                 a = self.aeronaves[p.icao] = _Aeronave(p.icao)
@@ -462,6 +487,10 @@ class Vivos:
                 self.asentados[clave] = [t for t in self.asentados[clave] if t >= limite]
                 if not self.asentados[clave]:
                     del self.asentados[clave]
+            primero = int(limite // CERCA_TRAMO_S)
+            for tramos in self._cerca_de().values():
+                for tramo in [t for t in tramos if t < primero]:
+                    del tramos[tramo]
 
     def _espera(self, a: _Aeronave, ahora: float) -> None:
         puntos = [x for x in a.alto if x[0] >= ahora - ESPERA_DURACION_S]
@@ -489,32 +518,33 @@ class Vivos:
     def movimientos(self, oaci: str) -> list[float]:
         return sorted(self._por_aeropuerto.get(oaci, []))
 
-    def vistas_cerca(self, oaci: str, desde: float, hasta: float) -> int:
-        """Aeronaves distintas vistas entre `desde` y `hasta` a 40 km o menos del aeropuerto, por
-        debajo de 10 000 pies (las que guarda el servicio)."""
-        aeropuerto = self.indice.por_oaci.get(oaci)
-        if aeropuerto is None:
-            return 0
-        vistas = 0
-        for a in self.aeronaves.values():
-            for p in a.puntos:
-                if (
-                    desde <= p.t <= hasta
-                    and vuelos.distancia_km(p.lat, p.lon, aeropuerto.lat, aeropuerto.lon)
-                    <= RADIO_ZONA_KM
-                ):
-                    vistas += 1
-                    break
-        return vistas
+    def _cerca_de(self) -> dict[str, dict[int, set[str]]]:
+        # Unas trazas guardadas por una versión anterior (vivos.pickle) no lo traen.
+        if not hasattr(self, "_cerca"):
+            self._cerca = {}
+        return self._cerca
 
-    def receptores_caidos(self, oaci: str, ahora: float) -> bool:
+    def vistas_cerca(self, oaci: str, desde: float, hasta: float) -> int:
+        """Aeronaves distintas vistas entre `desde` y `hasta` (por tramos de 10 minutos) a 40 km
+        o menos del aeropuerto, en tierra o por debajo de 10 000 pies."""
+        tramos = self._cerca_de().get(oaci, {})
+        vistas: set[str] = set()
+        for tramo in range(int(desde // CERCA_TRAMO_S), int(hasta // CERCA_TRAMO_S)):
+            vistas |= tramos.get(tramo, set())
+        return len(vistas)
+
+    def receptores_caidos(self, oaci: str, ahora: float, desde: float) -> bool:
         """Si en la última media hora se han visto cerca menos de la cuarta parte de las aeronaves
         que en cada media hora de las dos horas y media anteriores (con 8 por media hora antes,
-        como mínimo, para que la comparación diga algo)."""
+        como mínimo, para que la comparación diga algo) y ninguna espera cerca del aeropuerto desde
+        `desde`, el comienzo del hueco: las esperas de antes las hay en cualquier aeropuerto con
+        tráfico (Antalya, 8 de octubre de 2025)."""
         recientes = self.vistas_cerca(oaci, ahora - CERCA_VENTANA_S, ahora)
         antes = self.vistas_cerca(oaci, ahora - MEMORIA_S, ahora - CERCA_VENTANA_S)
         por_media_hora = antes / ((MEMORIA_S - CERCA_VENTANA_S) / CERCA_VENTANA_S)
-        return por_media_hora >= CERCA_MINIMAS and recientes < CERCA_FRACCION * por_media_hora
+        if por_media_hora < CERCA_MINIMAS or recientes >= CERCA_FRACCION * por_media_hora:
+            return False
+        return not any(f[0] == oaci and f[7] >= desde for f in self.esperas)
 
     def actividad(self, ahora: float) -> set[str]:
         """Aeropuertos con un despegue o un aterrizaje en curso (ver ACTIVIDAD_S)."""
@@ -757,7 +787,7 @@ class Detector:
             s, motivo = senal(oaci, ahora, movimientos, self.bases, self.umbrales)
             if s is not None and fuente_caida:
                 s, motivo = None, "fuente"
-            if s is not None and vivos.receptores_caidos(oaci, ahora):
+            if s is not None and vivos.receptores_caidos(oaci, ahora, s.comienzo):
                 s, motivo = None, "receptores"
             if s is not None and oaci in vivos.actividad(ahora):
                 # Un despegue o un aterrizaje en curso no da aviso en este ciclo, pero no

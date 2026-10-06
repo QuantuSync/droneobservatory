@@ -159,6 +159,10 @@ export interface NocheDeGuerra {
   regiones: Map<string, number>;
   /** Drones lanzados contra Ucrania esa noche; null si ningún parte da la cifra. */
   lanzados: number | null;
+  /** De ellos, Shahed y Geran que los partes cuentan aparte (mínimo); null si no lo dicen. */
+  shahed: number | null;
+  /** De ellos, drones a reacción que los partes cuentan aparte (mínimo); null si no lo dicen. */
+  reactivos: number | null;
   /** El fin más tardío de sus partes (ms), para saber cuánto hace. */
   fin: number;
 }
@@ -175,10 +179,19 @@ export function nochesDeGuerra(ucrania: ResumenUcrania): NocheDeGuerra[] {
     if (sentidoDeFila(fila) !== "RU_UA") continue;
     const cual = jornadaDeParte(fila);
     const clave = claveDeJornada(cual);
-    const noche = porJornada.get(clave) ?? { jornada: cual, regiones: new Map(), lanzados: null, fin: fila[9] };
+    const noche = porJornada.get(clave) ?? {
+      jornada: cual,
+      regiones: new Map(),
+      lanzados: null,
+      shahed: null,
+      reactivos: null,
+      fin: fila[9],
+    };
     noche.fin = Math.max(noche.fin, fila[9]);
     const suma = fila[7] === 1;
     if (suma && fila[4] !== DESCONOCIDO) noche.lanzados = (noche.lanzados ?? 0) + fila[4];
+    if (suma && fila[10] > 0) noche.shahed = (noche.shahed ?? 0) + fila[10];
+    if (suma && fila[11] > 0) noche.reactivos = (noche.reactivos ?? 0) + fila[11];
     for (const [indice, , derribadosMax] of fila[8]) {
       const codigo = ucrania.regiones[indice];
       if (codigo === undefined) continue;

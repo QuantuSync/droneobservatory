@@ -19,7 +19,7 @@ import type {
   Resumen,
   ResumenUcrania,
 } from "../datos/tipos.ts";
-import { diaDeTexto, marcadorSemanal, probabilidadLlana } from "../datos/prevision.ts";
+import { diaDeTexto, marcadorSemanal, probabilidadLlana, mesEscrito, textoCambio } from "../datos/prevision.ts";
 import type { Prevision } from "../datos/prevision.ts";
 import { ataquesPorRegion, cifrasDeRegion, diaDeParte, sentidoDeFila } from "../datos/ucrania.ts";
 import { autoridadEscrita, medioEscrito } from "../i18n/autoridades.ts";
@@ -706,6 +706,28 @@ function guerra(datos: DatosPaginas, idioma: Idioma): PaginaTexto {
       sumar(totales.derribadosUaRu, fila[5], fila[6]);
     }
   }
+  // La mezcla de lo lanzado, solo con lo que dicen los partes: los meses en que alguno cuenta
+  // aparte los Shahed («близько 60 з них – шахеди») o los drones a reacción.
+  const mezcla = new Map<string, { partes: number; lanzados: number; shahed: number; conReactivos: number; reactivos: number }>();
+  for (const fila of u.ataques) {
+    if (fila[7] !== 1 || sentidoDeFila(fila) !== "RU_UA") continue;
+    // Una cifra de Shahed propia (no la de los reactivos, que van dentro) y menor que el total:
+    // si el parte dice que todos eran Shahed (hasta 2024), no hay mezcla que contar.
+    const conShahed = fila[10] > 0 && fila[10] > fila[11] && fila[10] < fila[4];
+    if (!conShahed && fila[11] <= 0) continue;
+    const mes = fechaDeDia(diaDeParte(fila)).toISOString().slice(0, 7);
+    const m = mezcla.get(mes) ?? { partes: 0, lanzados: 0, shahed: 0, conReactivos: 0, reactivos: 0 };
+    mezcla.set(mes, m);
+    if (conShahed) {
+      m.partes += 1;
+      m.lanzados += fila[4];
+      m.shahed += fila[10];
+    }
+    if (fila[11] > 0) {
+      m.conReactivos += 1;
+      m.reactivos += fila[11];
+    }
+  }
   const porRegion = [...ataquesPorRegion(u, TODO)]
     .map(([codigo, n]) => ({ codigo, n, derribados: cifrasDeRegion(u, codigo, TODO).derribados }))
     .sort((a, b) => b.n - a.n || a.codigo.localeCompare(b.codigo));
@@ -763,6 +785,31 @@ function guerra(datos: DatosPaginas, idioma: Idioma): PaginaTexto {
           ),
       ),
     ),
+    mezcla.size > 0 && e("h2", null, tp.ucrania.mezcla),
+    mezcla.size > 0 && e("p", null, tp.ucrania.mezclaIntro),
+    mezcla.size > 0 &&
+      e(
+        "table",
+        null,
+        e("thead", null, e("tr", null, e("th", { scope: "col" }, tp.ucrania.mes), e("th", { scope: "col" }, tp.ucrania.partesConShahed), e("th", { scope: "col" }, tp.ucrania.shahedDeclarados), e("th", { scope: "col" }, tp.ucrania.partesConReactivos), e("th", { scope: "col" }, tp.ucrania.reactivosDeclarados))),
+        e(
+          "tbody",
+          null,
+          [...mezcla]
+            .sort(([a], [b]) => b.localeCompare(a))
+            .map(([mes, m]) =>
+              e(
+                "tr",
+                null,
+                e("th", { scope: "row", class: "mono" }, mes),
+                e("td", null, numero(m.partes, idioma)),
+                e("td", null, m.partes === 0 ? "—" : tp.ucrania.deLanzados(numero(m.shahed, idioma), numero(m.lanzados, idioma), Math.round((100 * m.shahed) / m.lanzados))),
+                e("td", null, numero(m.conReactivos, idioma)),
+                e("td", null, m.conReactivos === 0 ? "—" : numero(m.reactivos, idioma)),
+              ),
+            ),
+        ),
+      ),
     e("h2", null, tp.ucrania.corredores),
     e("p", null, tp.ucrania.corredoresIntro),
     e(
@@ -983,6 +1030,25 @@ function paginaPrevision(datos: DatosPaginas, idioma: Idioma): PaginaTexto {
             : e("ul", null, r.activas.map((racha) => e("li", { "data-racha": racha.pais }, enlace(rutasDePais(racha.pais)[idioma], pais(racha.pais, idioma)), ": ", p.rachas.linea(dia(racha.desde), racha.incidentes, numero(racha.habitual, idioma), numero(racha.veces, idioma), p.rachas.tendencia[racha.tendencia])))),
           r.terminadas.length > 0 && e("p", null, p.rachas.terminadas(r.terminadas.map((x) => p.rachas.terminada(pais(x.pais, idioma), dia(x.hasta))).join(", "))),
           e("p", null, p.rachas.historial(r.comprobacion.semanas_en_racha, r.comprobacion.incidentes_semana_siguiente, numero(r.comprobacion.normal_semana_siguiente, idioma))),
+        ),
+      );
+    }
+    if (d.cambios !== undefined && d.cambios.ambitos.some((a) => a.cambios.length > 0)) {
+      partes.push(
+        e(
+          "section",
+          { id: "cambios" },
+          e("h2", null, p.cambios.titulo),
+          e("p", null, p.cambios.periodo(mesEscrito(d.cambios.recientes.desde, idioma), mesEscrito(d.cambios.recientes.hasta, idioma))),
+          d.cambios.ambitos
+            .filter((a) => a.cambios.length > 0)
+            .map((a) =>
+              html(
+                e("h3", null, p.cambios.ambito[a.ambito]),
+                e("ul", null, a.cambios.map((c) => e("li", null, textoCambio(t, a, c)))),
+                e("p", null, p.cambios.historial(a.comprobacion.casos, a.comprobacion.sostenidos)),
+              ),
+            ),
         ),
       );
     }

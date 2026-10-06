@@ -50,6 +50,7 @@ from proceso import (
     impactos_guerra,
     incidentes,
     incursiones,
+    mezcla,
     periodos,
     presencia,
     solapes,
@@ -320,6 +321,13 @@ def principal(argumentos: list[str] | None = None) -> int:
                 registro.info("zonas de lanzamiento normalizadas: %s", zonas)
         except Exception as error:
             registro.warning("zonas de lanzamiento no normalizadas: %s", error)
+        # Drones a reacción que el parte cuenta aparte, en los ataques ya guardados.
+        try:
+            con_reactivos = mezcla.completar_reactivos(almacen, ahora)
+            if con_reactivos:
+                registro.info("ataques con sus drones a reacción: %d", con_reactivos)
+        except Exception as error:
+            registro.warning("drones a reacción sin completar: %s", str(error)[:300])
         estado_gdelt = LEIDA
         try:
             gdelt.ejecutar(almacen, gdelt.descargador(Plazo(gdelt.TOPE_S)), ahora)

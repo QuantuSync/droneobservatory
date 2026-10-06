@@ -245,6 +245,14 @@ export interface Textos {
       barra: (semana: string, n: number) => string;
       banda: (minimo: number, maximo: number) => string;
     };
+    cambios: {
+      titulo: string;
+      periodo: (desde: string, hasta: string) => string;
+      ambito: Record<"ucrania_objetivo" | "europa_tipo", string>;
+      linea: (clase: string, reciente: number, habitual: number, casos: number, de: number, sentido: string) => string;
+      sentido: Record<"sube" | "baja", string>;
+      historial: (casos: number, sostenidos: number) => string;
+    };
     semana: {
       titulo: string;
       cual: (desde: string, hasta: string) => string;
@@ -326,6 +334,8 @@ export interface Textos {
     detener: string;
     drones: string;
     sinCifra: string;
+    /** «de ellos, Shahed: desde 60 · a reacción: desde 50», con lo que digan los partes. */
+    mezcla: (shahed: string | null, reactivos: string | null) => string;
   };
   mapa: {
     etiqueta: string;
@@ -429,6 +439,8 @@ export interface Textos {
     reivindicacion: string;
     periodo: string;
     lanzados: string;
+    /** Drones a reacción que el parte cuenta aparte (dentro de los Shahed y Geran). */
+    reactivos: string;
     shahed: string;
     senuelos: string;
     otros: string;

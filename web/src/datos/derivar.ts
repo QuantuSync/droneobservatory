@@ -264,7 +264,15 @@ function filaAtaque(ataque: Ataque, indiceRegion: Map<string, number>): FilaAtaq
     yaSumado ? 0 : 1,
     regiones,
     Date.parse(ataque.periodo.fin.valor),
+    minimoDeclarado(ataque.lanzados?.shahed_geran),
+    minimoDeclarado(ataque.lanzados?.reactivos),
   ];
+}
+
+/** El mínimo que da el parte de un modelo contado aparte; -1 si no da ninguno (mínimo 0). */
+function minimoDeclarado(rango: RangoODesconocido | undefined): number {
+  if (rango === undefined || rango === "desconocido" || rango.min <= 0) return DESCONOCIDO;
+  return rango.min;
 }
 
 type Anillo = [number, number][];

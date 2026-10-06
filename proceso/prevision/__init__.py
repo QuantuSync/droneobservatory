@@ -21,7 +21,7 @@ se puntúa cuando el resultado ya se conoce:
 from datetime import UTC, date, datetime, timedelta
 
 from esquema import Documento
-from proceso.prevision import frontera, segunda_noche, semanal
+from proceso.prevision import cambios, frontera, segunda_noche, semanal
 from proceso.prevision.datos import Datos
 
 VERSION = "prevision-1.0.0"
@@ -214,4 +214,7 @@ def calcular(
     rachas = _rachas(datos)
     if rachas is not None:
         documento["rachas"] = rachas
+    cambiado = cambios.calcular(datos)
+    if cambiado is not None:
+        documento["cambios"] = cambiado
     return documento, nuevas

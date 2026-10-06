@@ -225,3 +225,28 @@ def test_remuestreo_determinista() -> None:
     a = metodos.mejora_remuestreada([0.1, -0.05, 0.2, 0.0], [1, 1, 2, 3])
     b = metodos.mejora_remuestreada([0.1, -0.05, 0.2, 0.0], [1, 1, 2, 3])
     assert a == b
+
+
+# --- Qué ha cambiado ------------------------------------------------------------------------
+
+
+def test_cambios_comprobados_y_solo_lo_que_cambia(calculado: Calculado) -> None:
+    documento, _ = calculado
+    cambios = documento["cambios"]
+    ambitos = {a["ambito"]: a for a in cambios["ambitos"]}
+    assert set(ambitos) <= {"ucrania_objetivo", "europa_tipo"}
+    for ambito in ambitos.values():
+        c = ambito["comprobacion"]
+        assert c["publicable"] and c["casos"] >= 10 and c["mejora_cota"] > 0
+        for cambio in ambito["cambios"]:
+            assert abs(cambio["reciente"] - cambio["habitual"]) >= 0.02
+            assert (cambio["reciente"] > cambio["habitual"]) == (cambio["sentido"] == "sube")
+
+
+def test_cambios_solo_con_canales_de_cobertura_constante(datos: datos_prevision.Datos) -> None:
+    from proceso.prevision import cambios
+
+    estables = cambios.canales_estables(datos)
+    # Mykolaiv empieza en julio de 2026: un canal así no entra en la mezcla.
+    assert "mykolaiv_ova" not in estables
+    assert "odeskaODA" in estables

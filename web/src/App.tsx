@@ -1685,6 +1685,14 @@ export function App() {
                 {numero(nocheActual.lanzados, idioma)}
               </span>
               <span className="block text-xs text-secundario">{t.guerra.drones}</span>
+              {(nocheActual.shahed !== null || nocheActual.reactivos !== null) && (
+                <span className="block text-xs text-secundario" data-mezcla-noche="">
+                  {t.guerra.mezcla(
+                    nocheActual.shahed === null ? null : numero(nocheActual.shahed, idioma),
+                    nocheActual.reactivos === null ? null : numero(nocheActual.reactivos, idioma),
+                  )}
+                </span>
+              )}
             </>
           )}
           <span className="mt-1 flex gap-1">

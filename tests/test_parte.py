@@ -4,6 +4,7 @@ from datetime import UTC, datetime
 
 import pytest
 
+from recogida import parte
 from recogida.parte import DESCONOCIDO, ParteIlegible, es_parte, frases, leer, zonas
 
 PUBLICADO = datetime(2026, 9, 26, 4, 17, tzinfo=UTC)
@@ -39,6 +40,8 @@ def test_noche_2026_total_con_modelos_en_rango() -> None:
         "shahed_geran": rango(50, 173),
         "gerbera_senuelos": rango(0, 173),
         "otros": rango(0),
+        # «понад 50 із них - реактивні»: al menos 50 a reacción, dentro de los Shahed.
+        "reactivos": rango(50, 173),
     }
     assert leido.derribados == rango(134)
     assert leido.perdidos_guerra_electronica == DESCONOCIDO
@@ -510,3 +513,42 @@ def test_cruces_con_la_cifra_de_su_clausula() -> None:
     leido = leer(texto, datetime(2024, 12, 9, 6, tzinfo=UTC))
     assert dict(leido.cruces) == {"BY": rango(5), "MD": rango(2), "RO": rango(1)}
     assert leido.perdidos_guerra_electronica == rango(45)
+
+
+def test_reactivos_solo_con_cifra() -> None:
+    assert parte.reactivos(
+        "атакував Україну 162 ударними БпЛА (76 із них — реактивні), Гербера"
+    ) == rango(76)
+    assert parte.reactivos("атакував Україні 76 реактивними БпЛА типу Shahed.") == rango(76)
+    # «(в т.ч. реактивними)» dice que los hay, no cuántos.
+    assert parte.reactivos("атакував 212 ударними БпЛА типу Shahed (в т.ч. реактивними)") is None
+    assert (
+        parte.lanzados("атакував 212 ударними БпЛА типу Shahed (в т.ч. реактивними)").get(
+            "reactivos"
+        )
+        is None
+    )
+
+
+def test_completar_reactivos_con_la_frase_guardada() -> None:
+    from datetime import UTC, datetime
+
+    from almacen.base import Almacen
+    from proceso import mezcla
+    from tests import ejemplos
+
+    almacen = Almacen.abrir()
+    ataque = ejemplos.ataque_completo()
+    ataque["lanzados"].pop("reactivos", None)
+    ataque["fuentes"].append({
+        **ataque["fuentes"][0],
+        "id": "kpszsu-81000",
+        "frase_origen": (
+            "противник атакував 100 ударними БпЛА типу Shahed (понад 50 із них - реактивні)"
+        ),
+    })  # fmt: skip
+    almacen.guardar_ataque_ucrania(ataque, datetime(2026, 10, 6, tzinfo=UTC))
+    ahora = datetime(2026, 10, 6, 12, tzinfo=UTC)
+    assert mezcla.completar_reactivos(almacen, ahora) == 1
+    assert almacen.ataques_ucrania()[0]["lanzados"]["reactivos"] == {"min": 50, "max": 100}
+    assert mezcla.completar_reactivos(almacen, ahora) == 0

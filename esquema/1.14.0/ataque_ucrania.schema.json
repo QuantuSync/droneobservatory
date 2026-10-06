@@ -35,6 +35,11 @@
         "shahed_geran": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.14.0:comun#/$defs/rango_entero_o_desconocido"},
         "gerbera_senuelos": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.14.0:comun#/$defs/rango_entero_o_desconocido"},
         "otros": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.14.0:comun#/$defs/rango_entero_o_desconocido"},
+        "reactivos": {
+          "x-visibilidad": "publico",
+          "description": "Drones a reacción (Geran-3) que el parte cuenta aparte («понад 50 із них – реактивні»); están dentro de shahed_geran. Solo cuando el parte da la cifra.",
+          "$ref": "urn:eodi:esquema:1.14.0:comun#/$defs/rango_entero_o_desconocido"
+        },
         "total": {
           "x-visibilidad": "publico",
           "description": "Total declarado. Los partes suelen dar una sola cifra para varios modelos: entonces cada modelo es un rango y el total es la cifra exacta.",

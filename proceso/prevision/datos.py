@@ -47,6 +47,16 @@ class Incidente:
 
 
 @dataclass(frozen=True)
+class Impacto:
+    """Impacto con lugar de la capa de guerra sobre Ucrania (sin los partes diarios de primera
+    línea): su día, sus tipos de objetivo y los canales que lo cuentan."""
+
+    dia: date
+    categorias: tuple[str, ...]
+    canales: tuple[str, ...]
+
+
+@dataclass(frozen=True)
 class Noche:
     """Noche de ataque ruso sobre Ucrania; `fecha` es el día en que acaba."""
 
@@ -63,6 +73,7 @@ class Datos:
     hasta: date
     # Caja (lon mín., lat mín., lon máx., lat máx.) de cada país, para llevar el mapa a él.
     cajas: dict[str, tuple[float, float, float, float]]
+    impactos: tuple[Impacto, ...] = ()
 
 
 def _dia(valor: str) -> date:
@@ -121,6 +132,22 @@ def noches_de_ataque(ataques: Iterable[Documento]) -> dict[date, Noche]:
     return {f: Noche(f, suma[f], crimea[f]) for f in sorted(suma)}
 
 
+def impactos_de_guerra(impactos: Iterable[Documento]) -> tuple[Impacto, ...]:
+    resultado = []
+    for impacto in impactos:
+        if impacto.get("sentido") != "RU_UA" or impacto.get("parte_diario"):
+            continue
+        canales = sorted({f["id"].rsplit("-", 1)[0] for f in impacto.get("fuentes", [])})
+        resultado.append(
+            Impacto(
+                _dia(impacto.get("dia") or impacto["fecha"]["valor"]),
+                tuple(sorted(impacto.get("categorias_objetivo", []))),
+                tuple(canales),
+            )
+        )
+    return tuple(sorted(resultado, key=lambda i: (i.dia, i.categorias, i.canales)))
+
+
 def cajas_de_paises(paises: Iterable[str]) -> dict[str, tuple[float, float, float, float]]:
     """La caja del polígono más grande de cada país (sin territorios lejanos)."""
     from proceso import fronteras
@@ -156,6 +183,7 @@ def desde_publicados(
         noches=noches_de_ataque(ucrania.get("ataques", [])),
         hasta=hasta,
         cajas=cajas_de_paises(i.pais for i in lista),
+        impactos=impactos_de_guerra(ucrania.get("impactos", [])),
     )
 
 
@@ -190,6 +218,9 @@ def compactos(datos: Datos) -> Documento:
             for n in datos.noches.values()
         ],
         "cajas": {p: list(c) for p, c in datos.cajas.items()},
+        "impactos": [
+            [i.dia.isoformat(), list(i.categorias), list(i.canales)] for i in datos.impactos
+        ],
     }
 
 
@@ -203,7 +234,11 @@ def de_compactos(documento: Documento) -> Datos:
         for n in documento["noches"]
     }
     cajas = {p: (c[0], c[1], c[2], c[3]) for p, c in documento["cajas"].items()}
-    return Datos(incidentes, noches, date.fromisoformat(documento["hasta"]), cajas)
+    impactos = tuple(
+        Impacto(date.fromisoformat(i[0]), tuple(i[1]), tuple(i[2]))
+        for i in documento.get("impactos", [])
+    )
+    return Datos(incidentes, noches, date.fromisoformat(documento["hasta"]), cajas, impactos)
 
 
 def leer_compactos(ruta: Path) -> Datos:

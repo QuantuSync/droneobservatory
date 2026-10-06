@@ -19,7 +19,7 @@ from esquema import Documento
 
 KYIV = ZoneInfo("Europe/Kyiv")
 VOCABULARIO = Path(__file__).resolve().parent.parent / "configuracion" / "regiones_ucrania.json"
-VERSION_PARSER = "parte-fuerza-aerea/3"
+VERSION_PARSER = "parte-fuerza-aerea/4"
 MAX_PALABRAS_FRASE = 25
 # Inicio habitual de la noche en los partes que lo declaran ("з 18:00"). Los
 # que no lo declaran reciben esta hora con precisión aproximada.
@@ -660,6 +660,31 @@ def _cifras(frase: str) -> list[re.Match[str]]:
 _SIN_MAXIMO = re.compile(r"(?:понад|більше|щонайменше|більш\s+ніж)\s*$", re.IGNORECASE)
 
 
+# Drones a reacción (Geran-3) que el parte cuenta aparte: «(понад 50 із них - реактивні)»,
+# «(76 із них — реактивні)», «76 реактивними БпЛА». Están dentro de los Shahed y Geran.
+_REACTIVOS = re.compile(
+    r"(понад|близько|щонайменше|майже|до)?\s*" + _NUM
+    + r"\s+(?:(?:із|з)\s+них\s*[-–—:]?\s*)?реактивн",
+    re.IGNORECASE,
+)  # fmt: skip
+
+
+def reactivos(frase: str, total: Rango | None = None) -> Rango | None:
+    """Los drones a reacción que el parte cuenta en la frase de lanzados; None si no da cifra.
+    «Понад», «близько» y «щонайменше» son un mínimo (el máximo, el total); «до», un máximo."""
+    m = _REACTIVOS.search(frase)
+    if m is None:
+        return None
+    n = numero(m[2])
+    maximo = total["max"] if isinstance(total, dict) else None
+    calificativo = (m[1] or "").lower()
+    if calificativo == "до":
+        return {"min": 0, "max": n}
+    if calificativo:
+        return {"min": n, "max": maximo if maximo is not None and maximo >= n else n}
+    return {"min": n, "max": n}
+
+
 def lanzados(frase: str) -> dict[str, Rango]:
     """Lanzados por familia y total a partir de la frase del ataque."""
     total = 0
@@ -706,6 +731,9 @@ def lanzados(frase: str) -> dict[str, Rango]:
         maximo = minimo + sum(n for n, fs in combinados if familia in fs)
         resultado[familia.value] = {"min": max(minimo, min(minimos.get(familia, 0), maximo)),
                                     "max": maximo}  # fmt: skip
+    a_reaccion = reactivos(frase, resultado["total"])
+    if a_reaccion is not None:
+        resultado["reactivos"] = a_reaccion
     return resultado
 
 

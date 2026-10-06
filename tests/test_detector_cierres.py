@@ -107,7 +107,20 @@ def test_receptores_caidos() -> None:
             posiciones.append(directo.Posicion(f"a{k}{n}", t, 36.9, 30.8, 3000.0, False))
     posiciones.append(directo.Posicion("b1", t0 - 600, 36.9, 30.8, 3000.0, False))
     vivos.anadir(posiciones)
-    assert vivos.receptores_caidos("LTAI", t0)
+    assert vivos.receptores_caidos("LTAI", t0, t0 - 1200)
+    # Con un avión en espera cerca es un cierre (los que llegan esperan), no los receptores.
+    vivos.esperas.append(["LTAI", "H", t0 - 900, "e1", None, None, 1, t0 - 600, 36.9, 30.8])
+    assert not vivos.receptores_caidos("LTAI", t0, t0 - 1200)
+    # Una espera de antes del hueco no dice nada.
+    assert vivos.receptores_caidos("LTAI", t0, t0 - 300)
+    vivos.esperas.clear()
     nuevas = [directo.Posicion(f"c{n}", t0 - 300 + n, 36.9, 30.8, 3000.0, False) for n in range(15)]
     vivos.anadir(nuevas)
-    assert not vivos.receptores_caidos("LTAI", t0)
+    assert not vivos.receptores_caidos("LTAI", t0, t0 - 1200)
+
+
+def test_antalya_fuera_de_vigilancia() -> None:
+    vigilados = directo.vigilables(
+        date(2026, 10, 6), ["LTAI", "EDDM"], lambda o, d: trafico.ALTA, base_constante()
+    )
+    assert vigilados == ["EDDM"]

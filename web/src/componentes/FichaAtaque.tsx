@@ -59,6 +59,9 @@ export function FichaAtaque({ t, idioma, ataque, centros }: Props) {
     [t.ataque.shahed, ataque.lanzados?.shahed_geran],
     [t.ataque.senuelos, ataque.lanzados?.gerbera_senuelos],
     [t.ataque.otros, ataque.lanzados?.otros],
+    ...(ataque.lanzados?.reactivos === undefined
+      ? []
+      : [[t.ataque.reactivos, ataque.lanzados.reactivos] as [string, RangoODesconocido]]),
   ];
   const zonas = ataque.zonas_lanzamiento ?? [];
   const cruces = ataque.cruces ?? [];

@@ -92,6 +92,13 @@ export interface TextosPagina {
     region: string;
     ataquesQueLaCitan: string;
     derribadosEnLaRegion: string;
+    mezcla: string;
+    mezclaIntro: string;
+    partesConShahed: string;
+    shahedDeclarados: string;
+    partesConReactivos: string;
+    reactivosDeclarados: string;
+    deLanzados: (shahed: string, lanzados: string, porcentaje: number) => string;
     porMes: string;
     mes: string;
     corredores: string;
@@ -223,6 +230,14 @@ const ES: TextosPagina = {
     region: "Región",
     ataquesQueLaCitan: "Partes que la citan",
     derribadosEnLaRegion: "Derribados en la región",
+    mezcla: "Mezcla de lo lanzado, según los partes",
+    mezclaIntro:
+      "Desde mediados de 2025 la Fuerza Aérea de Ucrania da a veces cuántos de los drones lanzados eran Shahed o Geran («близько 60 з них – шахеди»; el resto, señuelos Gerbera y otros tipos) y, desde 2026, cuántos eran a reacción. Solo los meses en que algún parte lo dice; las cifras son mínimos.",
+    partesConShahed: "Partes con cifra de Shahed",
+    shahedDeclarados: "Shahed y Geran declarados",
+    partesConReactivos: "Partes con cifra de reactivos",
+    reactivosDeclarados: "A reacción declarados",
+    deLanzados: (shahed, lanzados, porcentaje) => `${shahed} de ${lanzados} (${porcentaje} %)`,
     porMes: "Por mes",
     mes: "Mes",
     corredores: "Corredores de ataque",
@@ -373,6 +388,14 @@ const EN: TextosPagina = {
     region: "Region",
     ataquesQueLaCitan: "Reports that name it",
     derribadosEnLaRegion: "Shot down in the region",
+    mezcla: "Mix of what was launched, as the reports state",
+    mezclaIntro:
+      "Since mid-2025 the Ukrainian Air Force sometimes says how many of the drones launched were Shahed or Geran (the rest, Gerbera decoys and other types) and, since 2026, how many were jet-powered. Only months in which a report says so; the figures are minimums.",
+    partesConShahed: "Reports with a Shahed figure",
+    shahedDeclarados: "Shahed and Geran stated",
+    partesConReactivos: "Reports with a jet figure",
+    reactivosDeclarados: "Jet-powered stated",
+    deLanzados: (shahed, lanzados, porcentaje) => `${shahed} of ${lanzados} (${porcentaje}%)`,
     porMes: "By month",
     mes: "Month",
     corredores: "Attack corridors",

@@ -3,6 +3,7 @@
 // previsiones hechas en vivo con su resultado.
 
 import type { Textos } from "../i18n/index.ts";
+import type { Tipo } from "./tipos.ts";
 
 export type Efecto = "sube" | "baja" | "nada";
 export type Tendencia = "crece" | "estable" | "se_apaga";
@@ -144,6 +145,33 @@ export interface Prevision {
   };
   cajas: Record<string, [number, number, number, number]>;
   registro: EntradaRegistro[];
+  cambios?: {
+    version: string;
+    recientes: { desde: string; hasta: string };
+    ambitos: AmbitoCambios[];
+  };
+}
+
+/** Lo que ha cambiado de verdad en un ámbito (tipos de objetivo en Ucrania, tipos en Europa). */
+export interface AmbitoCambios {
+  ambito: "ucrania_objetivo" | "europa_tipo";
+  comprobacion: {
+    casos: number;
+    sostenidos: number;
+    mejora_sobre_habitual: number;
+    mejora_cota: number;
+    publicable: true;
+  };
+  cambios: {
+    clave: string;
+    sentido: "sube" | "baja";
+    reciente: number;
+    habitual: number;
+    casos: number;
+    de: number;
+    casos_habituales: number;
+    de_habituales: number;
+  }[];
 }
 
 /** La racha de un país, si la tiene, con su gráfica. */
@@ -194,4 +222,29 @@ export function probabilidadLlana(t: Textos, p: number, deCada10: number): strin
 /** Días desde el 1 de enero de 1970 de un texto AAAA-MM-DD. */
 export function diaDeTexto(texto: string): number {
   return Math.round(Date.UTC(Number(texto.slice(0, 4)), Number(texto.slice(5, 7)) - 1, Number(texto.slice(8, 10))) / 86400000);
+}
+
+/** El nombre de una clase de un ámbito de «Qué ha cambiado». */
+export function nombreDeClase(t: Textos, ambito: AmbitoCambios["ambito"], clave: string): string {
+  if (ambito === "europa_tipo") return t.tipo[clave as Tipo] ?? clave;
+  return (t.categoriaGuerra as Record<string, string>)[clave] ?? clave;
+}
+
+/** La línea de un cambio: «combustible: 18 % de los impactos, frente al 8 % habitual · sube». */
+export function textoCambio(t: Textos, ambito: AmbitoCambios, cambio: AmbitoCambios["cambios"][number]): string {
+  return t.prevision.cambios.linea(
+    nombreDeClase(t, ambito.ambito, cambio.clave),
+    Math.round(cambio.reciente * 100),
+    Math.round(cambio.habitual * 100),
+    cambio.casos,
+    cambio.de,
+    t.prevision.cambios.sentido[cambio.sentido],
+  );
+}
+
+
+/** «julio de 2026» / «July 2026» a partir de «2026-07». */
+export function mesEscrito(texto: string, idioma: string): string {
+  const fecha = new Date(Date.UTC(Number(texto.slice(0, 4)), Number(texto.slice(5, 7)) - 1, 1));
+  return new Intl.DateTimeFormat(idioma, { month: "long", year: "numeric", timeZone: "UTC" }).format(fecha);
 }

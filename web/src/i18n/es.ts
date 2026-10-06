@@ -275,6 +275,19 @@ export const es: Textos = {
       barra: (semana, n) => `Semana del ${semana}: ${n}`,
       banda: (minimo, maximo) => `Banda gris: lo normal, de ${minimo} a ${maximo} por semana (8 de cada 10 semanas).`,
     },
+    cambios: {
+      titulo: "Qué ha cambiado",
+      periodo: (desde, hasta) => `De ${desde} a ${hasta}, frente a los doce meses anteriores. Lo que no ha cambiado no se lista.`,
+      ambito: {
+        ucrania_objetivo: "Ucrania, a qué se ataca (impactos con objetivo conocido, canales oficiales con datos todo el periodo)",
+        europa_tipo: "Europa, tipo de incidente",
+      },
+      linea: (clase, reciente, habitual, casos, de, sentido) =>
+        `${clase}: ${reciente} % (${casos} de ${de}), frente al ${habitual} % habitual · ${sentido}`,
+      sentido: { sube: "sube", baja: "baja" },
+      historial: (casos, sostenidos) =>
+        `Comprobado desde septiembre de 2025: de ${casos} cambios marcados, el mes siguiente siguió igual en ${sostenidos}.`,
+    },
     semana: {
       titulo: "La semana que viene",
       cual: (desde, hasta) => `Del ${desde} al ${hasta}, incidentes esperados`,
@@ -447,6 +460,10 @@ export const es: Textos = {
     detener: "Detener",
     drones: "drones lanzados contra Ucrania",
     sinCifra: "sin cifra de lanzamientos",
+    mezcla: (shahed, reactivos) =>
+      [shahed === null ? null : `Shahed y Geran: desde ${shahed}`, reactivos === null ? null : `a reacción: desde ${reactivos}`]
+        .filter((parte) => parte !== null)
+        .join(" · ") + " (según los partes)",
   },
   mapa: {
     etiqueta: "Mapa de Europa con los incidentes del periodo elegido",
@@ -620,6 +637,7 @@ export const es: Textos = {
       "Cifras de una de las partes en guerra, sin otra fuente que las confirme.",
     periodo: "Periodo",
     lanzados: "Drones lanzados",
+    reactivos: "De ellos, a reacción",
     shahed: "Shahed / Geran",
     senuelos: "Gerbera y señuelos",
     otros: "Otros",
@@ -1382,6 +1400,18 @@ export const es: Textos = {
                 termino: "La semana que viene",
                 texto: [
                   "Lo esperado es la media de las semanas anteriores con un peso que se reduce a la mitad cada cuatro semanas; el margen va del 10 al 90 % de una binomial negativa con la dispersión del país, así que 8 de cada 10 semanas deberían caer dentro. Se publica en los países en que mejora a la frecuencia de siempre y a «la semana que viene igual que esta».",
+                ],
+              },
+              {
+                termino: "Qué ha cambiado",
+                texto: [
+                  "La proporción de cada tipo de objetivo entre los impactos sobre Ucrania con objetivo conocido (solo de los canales oficiales que dan impactos en todos los trimestres desde enero de 2025, para que un canal que empieza o deja de nombrar lugares no cambie la mezcla) y la de cada tipo de incidente en Europa, en los tres últimos meses cerrados frente a los doce anteriores. Se lista solo lo que ha cambiado de verdad: fuera de lo que lo habitual da 1 de cada 20 veces y con 3 puntos de diferencia o más. Se mira la proporción y no el número porque el número de un mes depende de cuántas fuentes se leen. Comprobación: tras marcar un cambio, el mes siguiente se parece más a lo reciente que a lo habitual. Por región de Ucrania no: cada región la cuenta un solo canal, y un cambio regional no se distingue de un cambio de cobertura.",
+                ],
+              },
+              {
+                termino: "Mezcla de cada oleada",
+                texto: [
+                  "En la capa de Ucrania, la ficha de cada ataque y «Noche a noche» dicen cuántos de los drones lanzados eran Shahed o Geran y cuántos a reacción cuando el parte de la Fuerza Aérea de Ucrania lo dice («близько 60 з них – шахеди», «понад 50 із них – реактивні»); el resto son señuelos Gerbera y otros tipos. Son mínimos y solo de los partes oficiales. La página de texto de Ucrania tiene la mezcla mes a mes.",
                 ],
               },
               {

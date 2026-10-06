@@ -250,6 +250,7 @@ CAMPOS_PUBLICOS_ATAQUE: frozenset[str] = frozenset(
         *_rango("lanzados.shahed_geran"),
         *_rango("lanzados.gerbera_senuelos"),
         *_rango("lanzados.otros"),
+        *_rango("lanzados.reactivos"),
         *_rango("lanzados.total"),
         "zonas_lanzamiento",
         "tipos_dron",

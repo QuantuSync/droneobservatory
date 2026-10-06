@@ -280,6 +280,8 @@ export interface Ataque {
     gerbera_senuelos?: RangoODesconocido;
     otros?: RangoODesconocido;
     total?: RangoODesconocido;
+    /** Drones a reacción que el parte cuenta aparte (dentro de shahed_geran). */
+    reactivos?: RangoODesconocido;
   };
   zonas_lanzamiento?: string[];
   tipos_dron?: ("ala_fija" | "multirrotor")[];
@@ -485,6 +487,10 @@ export type FilaAtaque = [
   regiones: [region: number, derribadosMin: number, derribadosMax: number][],
   /** Fin del periodo que cubre el parte (ms desde 1970): decide su noche (ver jornadaDeParte). */
   fin: number,
+  /** Shahed y Geran que el parte cuenta aparte («близько 60 з них – шахеди»): su mínimo, o -1. */
+  shahedMin: number,
+  /** Drones a reacción que el parte cuenta aparte («понад 50 із них – реактивні»): su mínimo, o -1. */
+  reactivosMin: number,
 ];
 
 /**

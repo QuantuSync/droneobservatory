@@ -468,6 +468,7 @@ def ataque_completo() -> Documento:
         "lanzados": {
             "shahed_geran": {"min": 80, "max": 80},
             "gerbera_senuelos": {"min": 20, "max": 20},
+            "reactivos": {"min": 10, "max": 10},
             "otros": {"min": 0, "max": 0},
             "total": {"min": 100, "max": 100},
         },

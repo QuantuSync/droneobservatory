@@ -421,6 +421,7 @@ const ataque = objeto(
         gerbera_senuelos: rangoODesconocido,
         otros: rangoODesconocido,
         total: rangoODesconocido,
+        reactivos: rangoODesconocido,
       },
     ),
     zonas_lanzamiento: lista(cadena()),
@@ -575,6 +576,8 @@ const resumenUcrania: Comprobacion = (valor, ruta, errores) => {
         bandera,
         lista(tupla([enteroNoNegativo, cifra, cifra])),
         entero,
+        cifra,
+        cifra,
       ]),
     ),
     focos: lista(
@@ -969,6 +972,34 @@ const prevision = objeto(
         }),
       },
     ),
+    cambios: objeto({
+      version: cadena(),
+      recientes: objeto({ desde: cadena(/^\d{4}-\d{2}$/), hasta: cadena(/^\d{4}-\d{2}$/) }),
+      ambitos: lista(
+        objeto({
+          ambito: enumerado(["ucrania_objetivo", "europa_tipo"] as const),
+          comprobacion: objeto({
+            casos: enteroNoNegativo,
+            sostenidos: enteroNoNegativo,
+            mejora_sobre_habitual: numero(-1000, 1000),
+            mejora_cota: numero(0, 1000),
+            publicable: constante(true),
+          }),
+          cambios: lista(
+            objeto({
+              clave: cadena(),
+              sentido: enumerado(["sube", "baja"] as const),
+              reciente: proporcion,
+              habitual: proporcion,
+              casos: enteroNoNegativo,
+              de: enteroNoNegativo,
+              casos_habituales: enteroNoNegativo,
+              de_habituales: enteroNoNegativo,
+            }),
+          ),
+        }),
+      ),
+    }),
     rachas: objeto({
       version: cadena(),
       modo: enumerado(["todo", "por_grupo"] as const),
