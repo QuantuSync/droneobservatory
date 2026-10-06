@@ -182,6 +182,11 @@
    "titulo": {
     "en": "Two tourists detained for flying drone near Bardufoss airport",
     "es": "Dos turistas detenidos por volar dron cerca del aeropuerto de Bardufoss"
+   },
+   "zona": {
+    "distancia_km": 393,
+    "grupo": "interior",
+    "motivo": "lejos_de_la_frontera"
    }
   },
   {
@@ -361,6 +366,10 @@
    "titulo": {
     "en": "Moldavian airspace closed due to foreign drones",
     "es": "Cierre del espacio aéreo de Moldavia por drones extranjeros"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "pais_dentro_de_la_banda"
    }
   },
   {
@@ -494,6 +503,10 @@
    "titulo": {
     "en": "Suspicious flights over Kleine Brogel military base in Belgium",
     "es": "Sobrevuelos sospechosos sobre la base de Kleine Brogel en Bélgica"
+   },
+   "zona": {
+    "grupo": "interior",
+    "motivo": "lejos_de_la_frontera"
    }
   },
   {
@@ -745,6 +758,11 @@
    "titulo": {
     "en": "Drones sighted near Brønnøysund airport in Norway",
     "es": "Drones avistados cerca del aeropuerto de Brønnøysund, en Noruega"
+   },
+   "zona": {
+    "distancia_km": 1201,
+    "grupo": "interior",
+    "motivo": "lejos_de_la_frontera"
    }
   },
   {
@@ -943,6 +961,11 @@
    "titulo": {
     "en": "Weather balloons close Vilnius airport",
     "es": "Globos meteorológicos cierran el aeropuerto de Vilna"
+   },
+   "zona": {
+    "distancia_km": 28,
+    "grupo": "frontera",
+    "motivo": "cerca_de_la_frontera"
    }
   },
   {
@@ -1130,6 +1153,11 @@
    "titulo": {
     "en": "Drone blocks six flights at Sofia airport",
     "es": "Un dron bloquea seis vuelos en el aeropuerto de Sofía"
+   },
+   "zona": {
+    "distancia_km": 503,
+    "grupo": "interior",
+    "motivo": "lejos_de_la_frontera"
    }
   },
   {
@@ -1341,6 +1369,10 @@
    "titulo": {
     "en": "Residents report several possible drone sightings over Arna, Norway, to police",
     "es": "Vecinos avisan a la policía de varios avistamientos de posibles drones sobre Arna, en Noruega"
+   },
+   "zona": {
+    "grupo": "interior",
+    "motivo": "lejos_de_la_frontera"
    }
   },
   {
@@ -1583,6 +1615,10 @@
    "titulo": {
     "en": "Two drones crash in Moldova after airspace violation",
     "es": "Dos drones se estrellan en Moldavia tras violar su espacio aéreo"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "ataque"
    }
   },
   {
@@ -1818,6 +1854,10 @@
    "titulo": {
     "en": "Possible drone flies over Leclerc tank convoy in Mulhouse",
     "es": "Un posible dron sobrevuela un convoy de carros Leclerc en Mulhouse"
+   },
+   "zona": {
+    "grupo": "interior",
+    "motivo": "lejos_de_la_frontera"
    }
   },
   {
@@ -2172,6 +2212,10 @@
    "titulo": {
     "en": "Drone violates Moldova's airspace from Ukraine",
     "es": "Dron viola el espacio aéreo de Moldavia procedente de Ucrania"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "ataque"
    }
   },
   {
@@ -2934,6 +2978,11 @@
    "titulo": {
     "en": "Drones temporarily close Oslo airport",
     "es": "Drones cierran temporalmente el aeropuerto de Oslo"
+   },
+   "zona": {
+    "distancia_km": 753,
+    "grupo": "interior",
+    "motivo": "lejos_de_la_frontera"
    }
   },
   {
@@ -3177,6 +3226,10 @@
    "titulo": {
     "en": "Moldova closes airspace after drone overflights",
     "es": "Cierre del espacio aéreo de Moldavia tras el sobrevuelo de dos drones"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "ataque"
    }
   },
   {
@@ -3391,6 +3444,11 @@
    "titulo": {
     "en": "Drone enters Lithuanian airspace",
     "es": "Dron entra en el espacio aéreo de Lituania"
+   },
+   "zona": {
+    "distancia_km": 69,
+    "grupo": "frontera",
+    "motivo": "cerca_de_la_frontera"
    }
   },
   {
@@ -3635,6 +3693,10 @@
    "titulo": {
     "en": "Drone sighting over Mechelen-Zuid industrial area unconfirmed",
     "es": "Avistamiento de drones sobre la zona industrial de Malinas-Sur sin confirmación"
+   },
+   "zona": {
+    "grupo": "interior",
+    "motivo": "lejos_de_la_frontera"
    }
   },
   {
@@ -3855,6 +3917,10 @@
    "titulo": {
     "en": "Brussels airspace closure due to drone presence",
     "es": "Cierre del espacio aéreo de Bruselas por presencia de drones"
+   },
+   "zona": {
+    "grupo": "interior",
+    "motivo": "lejos_de_la_frontera"
    }
   },
   {
@@ -4128,6 +4194,10 @@
    "titulo": {
     "en": "Fragments of drones fall on Romanian territory",
     "es": "Fragmentos de drones caen en territorio rumano"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "ataque"
    }
   },
   {
@@ -4480,6 +4550,10 @@
    "titulo": {
     "en": "Two drones violate Moldovan airspace",
     "es": "Dos drones violan el espacio aéreo de Moldavia"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "ataque"
    }
   },
   {
@@ -5021,6 +5095,10 @@
    "titulo": {
     "en": "Drone penetrates Romanian airspace during attack on Ukraine",
     "es": "Dron penetra el espacio aéreo de Rumania durante ataque a Ucrania"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "ataque"
    }
   },
   {
@@ -5179,6 +5257,10 @@
    "titulo": {
     "en": "Possible drone found in Lithuania prompts NATO air defense reinforcement request",
     "es": "Posible dron hallado en Lituania obliga a solicitar refuerzo de defensa aérea a la OTAN"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "incursion_en_pais_fronterizo"
    }
   },
   {
@@ -5770,6 +5852,10 @@
    "titulo": {
     "en": "Possible drone breaches Polish airspace during attack on Ukraine",
     "es": "Posible dron viola el espacio aéreo de Polonia durante ataque a Ucrania"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "incursion_en_pais_fronterizo"
    }
   },
   {
@@ -6101,6 +6187,10 @@
    "titulo": {
     "en": "Possible overflight of Shahed drone over Moldova",
     "es": "Posible sobrevuelo de dron Shahed sobre Moldavia"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "ataque"
    }
   },
   {
@@ -6305,6 +6395,10 @@
    "titulo": {
     "en": "Drone detected in Romanian airspace",
     "es": "Dron detectado en el espacio aéreo de Rumania"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "ataque"
    }
   },
   {
@@ -6546,6 +6640,10 @@
    "titulo": {
     "en": "Unidentified drones fly over Karup military base in Denmark",
     "es": "Drones no identificados sobrevuelan la base militar de Karup en Dinamarca"
+   },
+   "zona": {
+    "grupo": "interior",
+    "motivo": "lejos_de_la_frontera"
    }
   },
   {
@@ -6714,6 +6812,10 @@
    "titulo": {
     "en": "Possible possible drone crash on Romanian coast during attack on Ukraine",
     "es": "Posible caída de posible dron en la costa rumana durante ataque a Ucrania"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "ataque"
    }
   },
   {
@@ -6961,6 +7063,10 @@
    "titulo": {
     "en": "Drone crashes in field in eastern Poland",
     "es": "Dron se estrella en un campo en el este de Polonia"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "incursion_en_pais_fronterizo"
    }
   },
   {
@@ -7233,6 +7339,10 @@
    "titulo": {
     "en": "Drones over Danish military targets for two consecutive nights",
     "es": "Drones sobre objetivos militares daneses durante dos noches consecutivas"
+   },
+   "zona": {
+    "grupo": "interior",
+    "motivo": "sin_lugar"
    }
   },
   {
@@ -7367,6 +7477,10 @@
    "titulo": {
     "en": "Drone shot down over military base in Saxony-Anhalt",
     "es": "Dron derribado sobre base militar en Sajonia-Anhalt"
+   },
+   "zona": {
+    "grupo": "interior",
+    "motivo": "lejos_de_la_frontera"
    }
   },
   {
@@ -8026,6 +8140,10 @@
    "titulo": {
     "en": "Drone breaches Romanian airspace during attack on Ukraine",
     "es": "Dron viola el espacio aéreo de Rumania durante ataque a Ucrania"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "ataque"
    }
   },
   {
@@ -8167,6 +8285,10 @@
    "titulo": {
     "en": "Possible drones reported over NATO bases in the Maastricht region",
     "es": "Posibles drones señalados sobre bases de la OTAN en la región de Maastricht"
+   },
+   "zona": {
+    "grupo": "interior",
+    "motivo": "lejos_de_la_frontera"
    }
   },
   {
@@ -8350,6 +8472,10 @@
    "titulo": {
     "en": "Drones shot down after entering Polish airspace",
     "es": "Drones derribados tras entrar en el espacio aéreo de Polonia"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "incursion_en_pais_fronterizo"
    }
   },
   {
@@ -8535,6 +8661,10 @@
    "titulo": {
     "en": "Unregistered drone crashes in school playground in Mechelen",
     "es": "Dron no registrado se estrella en el patio de una escuela en Mechelen"
+   },
+   "zona": {
+    "grupo": "interior",
+    "motivo": "lejos_de_la_frontera"
    }
   },
   {
@@ -8764,6 +8894,10 @@
    "titulo": {
     "en": "Unidentified drones close several Danish airports",
     "es": "Drones no identificados cierran varios aeropuertos de Dinamarca"
+   },
+   "zona": {
+    "grupo": "interior",
+    "motivo": "sin_lugar"
    }
   },
   {
@@ -8908,6 +9042,10 @@
    "titulo": {
     "en": "Drones violate Polish airspace, NATO launches defense operation",
     "es": "Drones violan el espacio aéreo de Polonia, NATO inicia operación de defensa"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "incursion_en_pais_fronterizo"
    }
   },
   {
@@ -9098,6 +9236,10 @@
    "titulo": {
     "en": "Drone found in a forest area in Argeş, Romania",
     "es": "Dron caído en una zona boscosa de Argeş, Rumania"
+   },
+   "zona": {
+    "grupo": "interior",
+    "motivo": "sin_lugar"
    }
   },
   {
@@ -9283,6 +9425,10 @@
    "titulo": {
     "en": "Unidentified drones violate Moldova's airspace",
     "es": "Drones no identificados violan el espacio aéreo de Moldavia"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "ataque"
    }
   },
   {
@@ -9649,6 +9795,10 @@
    "titulo": {
     "en": "Two drones breach Moldova's airspace, forcing temporary airport closure",
     "es": "Dos drones violan el espacio aéreo de Moldavia y obligan a cerrar temporalmente el aeropuerto"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "ataque"
    }
   },
   {
@@ -9785,6 +9935,10 @@
    "titulo": {
     "en": "Unauthorised drone seized from restricted zone near Luton Airport",
     "es": "Dron no autorizado capturado en zona restringida cerca del aeropuerto de Luton"
+   },
+   "zona": {
+    "grupo": "interior",
+    "motivo": "lejos_de_la_frontera"
    }
   },
   {
@@ -9938,6 +10092,10 @@
    "titulo": {
     "en": "Possible drones over Luxembourg airport force air traffic halt",
     "es": "Posibles drones sobre el aeropuerto de Luxemburgo obligan a detener el tráfico aéreo"
+   },
+   "zona": {
+    "grupo": "interior",
+    "motivo": "lejos_de_la_frontera"
    }
   },
   {
@@ -10281,6 +10439,11 @@
    "titulo": {
     "en": "Drone intercepted near Alexandroupoli airport by Greek fighter jets",
     "es": "Dron interceptado cerca del aeropuerto de Alexandrópolis por cazas griegos"
+   },
+   "zona": {
+    "distancia_km": 538,
+    "grupo": "interior",
+    "motivo": "lejos_de_la_frontera"
    }
   },
   {
@@ -10451,6 +10614,11 @@
    "titulo": {
     "en": "Delays at Krakow airport due to possible drone sighting",
     "es": "Retrasos en el aeropuerto de Cracovia por avistamiento de posible dron"
+   },
+   "zona": {
+    "distancia_km": 202,
+    "grupo": "interior",
+    "motivo": "lejos_de_la_frontera"
    }
   },
   {
@@ -10617,6 +10785,10 @@
    "titulo": {
     "en": "Drone enters Romanian airspace from Moldova and crashes",
     "es": "Dron entra en el espacio aéreo de Rumania desde Moldavia y se estrella"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "ataque"
    }
   },
   {
@@ -10821,6 +10993,11 @@
    "titulo": {
     "en": "Drone near Split airport runways forces air traffic suspension for about ten minutes",
     "es": "Un dron junto a las pistas del aeropuerto de Split obliga a suspender el tráfico aéreo unos diez minutos"
+   },
+   "zona": {
+    "distancia_km": 711,
+    "grupo": "interior",
+    "motivo": "lejos_de_la_frontera"
    }
   },
   {
@@ -11208,6 +11385,10 @@
    "titulo": {
     "en": "Military drone crashes in Lithuania after going astray",
     "es": "Dron se estrella en Lituania tras desviarse de su objetivo"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "incursion_en_pais_fronterizo"
    }
   },
   {
@@ -11442,6 +11623,11 @@
    "titulo": {
     "en": "Drone fragments recovered in the Black Sea by Romanian naval forces",
     "es": "Fragmentos de dron recuperados en el Mar Negro por fuerzas navales rumanas"
+   },
+   "zona": {
+    "distancia_km": 117,
+    "grupo": "frontera",
+    "motivo": "cerca_de_la_frontera"
    }
   },
   {
@@ -12023,6 +12209,10 @@
    "titulo": {
     "en": "Shahed drone overflies Moldavian airspace",
     "es": "Dron Shahed sobrevuela el espacio aéreo de Moldavia"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "ataque"
    }
   },
   {
@@ -12683,6 +12873,10 @@
    "titulo": {
     "en": "Shahed drone enters Moldavian airspace from Ukraine",
     "es": "Dron Shahed entra en el espacio aéreo de Moldavia desde Ucrania"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "ataque"
    }
   },
   {
@@ -12979,6 +13173,10 @@
    "titulo": {
     "en": "Drone enters Romanian airspace near Tulcea",
     "es": "Dron entra en el espacio aéreo de Rumania cerca de Tulcea"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "ataque"
    }
   },
   {
@@ -13231,6 +13429,10 @@
    "titulo": {
     "en": "Unidentified drones close Luxembourg airport",
     "es": "Drones no identificados cierran el aeropuerto de Luxemburgo"
+   },
+   "zona": {
+    "grupo": "interior",
+    "motivo": "lejos_de_la_frontera"
    }
   },
   {
@@ -13622,6 +13824,10 @@
    "titulo": {
     "en": "Drone shot down by NATO jet over Estonia",
     "es": "Dron derribado por caza de la OTAN sobre Estonia"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "incursion_en_pais_fronterizo"
    }
   },
   {
@@ -13850,6 +14056,11 @@
    "titulo": {
     "en": "Vilnius airspace closure due to drones from Belarus",
     "es": "Cierre del espacio aéreo de Vilnius por drones procedentes de Bielorrusia"
+   },
+   "zona": {
+    "distancia_km": 28,
+    "grupo": "frontera",
+    "motivo": "cerca_de_la_frontera"
    }
   },
   {
@@ -14082,6 +14293,11 @@
    "titulo": {
     "en": "Drone that exploded in Constanza Port",
     "es": "Dron que explotó en el Puerto de Constanza"
+   },
+   "zona": {
+    "distancia_km": 117,
+    "grupo": "frontera",
+    "motivo": "cerca_de_la_frontera"
    }
   },
   {
@@ -14531,6 +14747,10 @@
    "titulo": {
     "en": "Four drones penetrate Moldavian airspace during attacks on Ukraine",
     "es": "Cuatro drones penetran el espacio aéreo de Moldavia durante ataques a Ucrania"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "ataque"
    }
   },
   {
@@ -14819,6 +15039,10 @@
    "titulo": {
     "en": "Drone destroyed near Neptun Deep platform in the Black Sea",
     "es": "Dron destruido cerca de la plataforma Neptun Deep en el Mar Negro"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "costa_mar_negro"
    }
   },
   {
@@ -14961,6 +15185,10 @@
    "titulo": {
     "en": "Possible drones disrupt flights at Cluj-Napoca airport",
     "es": "Posibles drones perturban vuelos en el aeropuerto de Cluj-Napoca"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "ataque"
    }
   },
   {
@@ -15077,6 +15305,10 @@
    "titulo": {
     "en": "Possible drone forces abandonment of military exercise at Hereford base",
     "es": "Un posible dron obliga a abandonar un ejercicio militar en la base de Hereford"
+   },
+   "zona": {
+    "grupo": "interior",
+    "motivo": "lejos_de_la_frontera"
    }
   },
   {
@@ -15649,6 +15881,11 @@
    "titulo": {
     "en": "NATO fighter jets shoot down drone in Lithuanian airspace",
     "es": "Cazas de la OTAN derriban un dron en el espacio aéreo de Lituania"
+   },
+   "zona": {
+    "distancia_km": 81,
+    "grupo": "frontera",
+    "motivo": "cerca_de_la_frontera"
    }
   },
   {
@@ -15853,6 +16090,10 @@
    "titulo": {
     "en": "Drone downed in Lithuanian airspace",
     "es": "Dron derribado en el espacio aéreo de Lituania"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "incursion_en_pais_fronterizo"
    }
   },
   {
@@ -15973,6 +16214,10 @@
    "titulo": {
     "en": "Lithuania closes airfield over drone suspicion that turned out to be birds",
     "es": "Lituania cierra un aeródromo por sospecha de dron que resultó ser pájaros"
+   },
+   "zona": {
+    "grupo": "interior",
+    "motivo": "sin_lugar"
    }
   },
   {
@@ -16157,6 +16402,10 @@
    "titulo": {
     "en": "Possible drone hits residential building in Romanian city near Ukraine",
     "es": "Posible dron impacta contra un edificio residencial en ciudad rumana cerca de Ucrania"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "ataque"
    }
   },
   {
@@ -16384,6 +16633,10 @@
    "titulo": {
     "en": "Possible drones fly over Moldavian airspace",
     "es": "Posibles drones sobrevuelan el espacio aéreo de Moldavia"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "ataque"
    }
   },
   {
@@ -16632,6 +16885,10 @@
    "titulo": {
     "en": "Drone enters Romanian airspace; Spanish fighter jets deployed",
     "es": "Dron entra en el espacio aéreo de Rumania; cazas españoles desplegados"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "ataque"
    }
   },
   {
@@ -16957,6 +17214,10 @@
    "titulo": {
     "en": "Five drones enter Moldavian airspace from Ukraine, one crashes",
     "es": "Cinco drones entran en el espacio aéreo de Moldavia desde Ucrania, uno se estrella"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "ataque"
    }
   },
   {
@@ -17093,6 +17354,10 @@
    "titulo": {
     "en": "Italian fighter jet shoots down drone in Latvian airspace",
     "es": "Un caza italiano derriba un dron en el espacio aéreo de Letonia"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "incursion_en_pais_fronterizo"
    }
   },
   {
@@ -17495,6 +17760,10 @@
    "titulo": {
     "en": "Drone shot down in Latvian airspace by NATO fighter jets",
     "es": "Dron abatido en el espacio aéreo de Letonia por cazas de la OTAN"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "incursion_en_pais_fronterizo"
    }
   },
   {
@@ -17791,6 +18060,10 @@
    "titulo": {
     "en": "Shahed drone overflies Moldavian airspace from Ukraine",
     "es": "Dron Shahed sobrevuela el espacio aéreo de Moldavia procedente de Ucrania"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "ataque"
    }
   },
   {
@@ -17949,6 +18222,10 @@
    "titulo": {
     "en": "Drones near Romania's border trigger alert and fighter jet scramble",
     "es": "Drones cerca de la frontera de Rumania provocan alerta y despegue de cazas"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "ataque"
    }
   },
   {
@@ -18092,6 +18369,11 @@
    "titulo": {
     "en": "Drone explodes at Port of Constanța",
     "es": "Dron explota en el Puerto de Constanza"
+   },
+   "zona": {
+    "distancia_km": 117,
+    "grupo": "frontera",
+    "motivo": "cerca_de_la_frontera"
    }
   },
   {
@@ -18287,6 +18569,10 @@
    "titulo": {
     "en": "Drone crashes in Romania amid attacks on Ukraine",
     "es": "Dron se estrella en Rumania durante ataques a Ucrania"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "ataque"
    }
   },
   {
@@ -18443,6 +18729,10 @@
    "titulo": {
     "en": "Drone detected in Latvian airspace",
     "es": "Dron detectado en el espacio aéreo de Letonia"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "incursion_en_pais_fronterizo"
    }
   },
   {
@@ -18733,6 +19023,10 @@
    "titulo": {
     "en": "Romania shoots down three drones that violated its airspace",
     "es": "Rumania derriba tres drones que violaron su espacio aéreo"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "ataque"
    }
   },
   {
@@ -19098,6 +19392,10 @@
    "titulo": {
     "en": "NATO fighters shoot down drone over Latvia",
     "es": "Cazas de la OTAN derriban un dron sobre Letonia"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "incursion_en_pais_fronterizo"
    }
   },
   {
@@ -19255,6 +19553,11 @@
    "titulo": {
     "en": "Drone threat halts rail traffic in Latvia",
     "es": "Alerta de drones detiene el tráfico ferroviario en Letonia"
+   },
+   "zona": {
+    "distancia_km": 127,
+    "grupo": "frontera",
+    "motivo": "cerca_de_la_frontera"
    }
   },
   {
@@ -19471,6 +19774,10 @@
    "titulo": {
     "en": "Spanish fighter jet shoots down drone that breached Romanian airspace",
     "es": "Un caza español derriba un dron que violó el espacio aéreo de Rumania"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "ataque"
    }
   },
   {
@@ -19851,6 +20158,10 @@
    "titulo": {
     "en": "NATO fighter shoots down drone over Romania",
     "es": "Caza de la OTAN derriba un dron sobre Rumania"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "ataque"
    }
   },
   {
@@ -19996,6 +20307,10 @@
    "titulo": {
     "en": "Frequent drone incursions over Moldova",
     "es": "Incursiones frecuentes de drones en Moldavia"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "ataque"
    }
   },
   {
@@ -20171,6 +20486,10 @@
    "titulo": {
     "en": "Unidentified drone enters Latvian airspace; NATO deploys fighter jets",
     "es": "Dron no identificado entra en el espacio aéreo de Letonia; NATO despliega cazas"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "incursion_en_pais_fronterizo"
    }
   },
   {
@@ -20440,6 +20759,10 @@
    "titulo": {
     "en": "Drones crash in Finland after straying from attacks on Russia",
     "es": "Drones se estrellan en Finlandia tras desviarse de ataques contra Rusia"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "incursion_en_pais_fronterizo"
    }
   },
   {
@@ -20563,6 +20886,10 @@
    "titulo": {
     "en": "Military drones with explosives violate Latvian airspace",
     "es": "Drones militares con explosivos violan el espacio aéreo de Letonia"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "incursion_en_pais_fronterizo"
    }
   },
   {
@@ -20682,6 +21009,10 @@
    "titulo": {
     "en": "Possible drone sightings over Denmark in 2025",
     "es": "Avistamientos de posibles drones sobre Dinamarca en 2025"
+   },
+   "zona": {
+    "grupo": "interior",
+    "motivo": "sin_lugar"
    }
   },
   {
@@ -20902,6 +21233,11 @@
    "titulo": {
     "en": "Possible drone from Russia impacts power plant in Estonia",
     "es": "Posible dron procedente de Rusia impacta contra central eléctrica en Estonia"
+   },
+   "zona": {
+    "distancia_km": 28,
+    "grupo": "frontera",
+    "motivo": "cerca_de_la_frontera"
    }
   },
   {
@@ -21101,6 +21437,10 @@
    "titulo": {
     "en": "Large possible drone sighting near Dublin Bay",
     "es": "Avistamiento de un posible dron grande cerca de Dublin Bay"
+   },
+   "zona": {
+    "grupo": "interior",
+    "motivo": "lejos_de_la_frontera"
    }
   },
   {
@@ -21278,6 +21618,10 @@
    "titulo": {
     "en": "Two drones crash in Finland",
     "es": "Dos drones se estrellan en Finlandia"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "incursion_en_pais_fronterizo"
    }
   },
   {
@@ -21461,6 +21805,10 @@
    "titulo": {
     "en": "NATO fighter shoots down drone over Latvia",
     "es": "Caza de la OTAN derriba un dron sobre Letonia"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "incursion_en_pais_fronterizo"
    }
   },
   {
@@ -21608,6 +21956,11 @@
    "titulo": {
     "en": "Military drone explodes at Port of Constanza",
     "es": "Dron militar explota en el Puerto de Constanza"
+   },
+   "zona": {
+    "distancia_km": 117,
+    "grupo": "frontera",
+    "motivo": "cerca_de_la_frontera"
    }
   },
   {
@@ -21781,6 +22134,10 @@
    "titulo": {
     "en": "Over 100 drones detected at Romania's border in 96 hours",
     "es": "Más de 100 drones detectados en la frontera de Rumania en 96 horas"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "ataque"
    }
   },
   {
@@ -21989,6 +22346,10 @@
    "titulo": {
     "en": "Two Gerbera drones destroyed in Neptun Deep area",
     "es": "Dos drones Gerbera destruidos en la zona de Neptun Deep"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "ataque"
    }
   },
   {
@@ -22142,6 +22503,10 @@
    "titulo": {
     "en": "Drone shot down over Latvia by NATO fighters from Lithuania",
     "es": "Dron derribo sobre Letonia por cazas NATO desde Lituania"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "incursion_en_pais_fronterizo"
    }
   },
   {
@@ -22337,6 +22702,10 @@
    "titulo": {
     "en": "Drone detected by radar in Romanian airspace near Chilia",
     "es": "Dron detectado por radar en el espacio aéreo de Rumania cerca de Chilia"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "ataque"
    }
   },
   {
@@ -22521,6 +22890,11 @@
    "titulo": {
     "en": "NATO Jets Shoot Down Drone Over Latvia",
     "es": "Cazas de la OTAN derriban un dron sobre Letonia"
+   },
+   "zona": {
+    "distancia_km": 25,
+    "grupo": "frontera",
+    "motivo": "cerca_de_la_frontera"
    }
   },
   {
@@ -22713,6 +23087,10 @@
    "titulo": {
     "en": "Romania shoots down drone in its airspace",
     "es": "Rumania derriba un dron en su espacio aéreo"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "ataque"
    }
   },
   {
@@ -23055,6 +23433,10 @@
    "titulo": {
     "en": "Drone shot down by NATO over Latvia's airspace",
     "es": "Dron derribado por la OTAN en el espacio aéreo de Letonia"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "incursion_en_pais_fronterizo"
    }
   },
   {
@@ -23227,6 +23609,10 @@
    "titulo": {
     "en": "Spanish fighter jets shoot down possible drone violating Romanian airspace",
     "es": "Cazas españoles derriban un posible dron que violaba el espacio aéreo de Rumanía"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "ataque"
    }
   },
   {
@@ -23425,6 +23811,10 @@
    "titulo": {
     "en": "Drones crash in Latvia after entering from Russia",
     "es": "Drones se estrellan en Letonia tras entrar desde Rusia"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "incursion_en_pais_fronterizo"
    }
   },
   {
@@ -23784,6 +24174,10 @@
    "titulo": {
     "en": "Drone violates Romanian airspace during attack on Ukraine",
     "es": "Dron viola el espacio aéreo de Rumania durante ataque a Ucrania"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "ataque"
    }
   },
   {
@@ -23996,6 +24390,10 @@
    "titulo": {
     "en": "Drone violates Romanian airspace at Chilia",
     "es": "Dron viola el espacio aéreo de Rumania en Chilia"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "ataque"
    }
   },
   {
@@ -24214,6 +24612,10 @@
    "titulo": {
     "en": "NATO Fighter Jets Shoot Down Drone Over Latvia",
     "es": "Cazas de la OTAN derriban un dron sobre Letonia"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "incursion_en_pais_fronterizo"
    }
   },
   {
@@ -24407,6 +24809,10 @@
    "titulo": {
     "en": "Drones violate Greek airspace over the Aegean",
     "es": "Drones violan el espacio aéreo griego sobre el Egeo"
+   },
+   "zona": {
+    "grupo": "interior",
+    "motivo": "sin_lugar"
    }
   },
   {
@@ -25208,6 +25614,11 @@
    "titulo": {
     "en": "Drone from Belarus violates Lithuanian airspace and forces closure of Vilnius airport",
     "es": "Drone desde Bielorrusia viola el espacio aéreo de Lituania y obliga a cerrar el aeropuerto de Vilnius"
+   },
+   "zona": {
+    "distancia_km": 28,
+    "grupo": "frontera",
+    "motivo": "cerca_de_la_frontera"
    }
   },
   {
@@ -25341,6 +25752,11 @@
    "titulo": {
     "en": "Drone explodes at Port of Constanza",
     "es": "Dron explota en el Puerto de Constanza"
+   },
+   "zona": {
+    "distancia_km": 117,
+    "grupo": "frontera",
+    "motivo": "cerca_de_la_frontera"
    }
   },
   {
@@ -25525,6 +25941,11 @@
    "titulo": {
     "en": "Drone self-detonates near Constanta Port",
     "es": "Dron se autodestruye cerca del Puerto de Constanza"
+   },
+   "zona": {
+    "distancia_km": 117,
+    "grupo": "frontera",
+    "motivo": "cerca_de_la_frontera"
    }
   },
   {
@@ -26106,6 +26527,11 @@
    "titulo": {
     "en": "Explosion of a possible drone at the Port of Constanza",
     "es": "Explosión de un posible dron en el Puerto de Constanza"
+   },
+   "zona": {
+    "distancia_km": 117,
+    "grupo": "frontera",
+    "motivo": "cerca_de_la_frontera"
    }
   },
   {
@@ -26359,6 +26785,11 @@
    "titulo": {
     "en": "Explosion of a drone in the Port of Constanța",
     "es": "Explosión de un dron en el Puerto de Constanza"
+   },
+   "zona": {
+    "distancia_km": 117,
+    "grupo": "frontera",
+    "motivo": "cerca_de_la_frontera"
    }
   },
   {
@@ -26479,6 +26910,11 @@
    "titulo": {
     "en": "Five possible drones destroyed at Constanza port",
     "es": "Cinco posibles drones destruidos en el puerto de Constanza"
+   },
+   "zona": {
+    "distancia_km": 117,
+    "grupo": "frontera",
+    "motivo": "cerca_de_la_frontera"
    }
   },
   {
@@ -26658,6 +27094,11 @@
    "titulo": {
     "en": "Drone explodes at Port of Constanza",
     "es": "Dron explota en el Puerto de Constanza"
+   },
+   "zona": {
+    "distancia_km": 117,
+    "grupo": "frontera",
+    "motivo": "cerca_de_la_frontera"
    }
   },
   {
@@ -26837,6 +27278,11 @@
    "titulo": {
     "en": "Explosion of a drone in Constanța Port",
     "es": "Explosión de un dron en el Puerto de Constanza"
+   },
+   "zona": {
+    "distancia_km": 117,
+    "grupo": "frontera",
+    "motivo": "cerca_de_la_frontera"
    }
   },
   {
@@ -27048,6 +27494,11 @@
    "titulo": {
     "en": "Drone explosion at Port of Constanța with unconfirmed origin",
     "es": "Explosión de un dron en el Puerto de Constanza sin origen confirmado"
+   },
+   "zona": {
+    "distancia_km": 117,
+    "grupo": "frontera",
+    "motivo": "cerca_de_la_frontera"
    }
   },
   {
@@ -27163,6 +27614,11 @@
    "titulo": {
     "en": "Explosion of a maritime drone at Constanța Port causes severe damage",
     "es": "Explosión de un dron marino en el Puerto de Constanza causa daños graves"
+   },
+   "zona": {
+    "distancia_km": 117,
+    "grupo": "frontera",
+    "motivo": "cerca_de_la_frontera"
    }
   },
   {
@@ -27313,6 +27769,11 @@
    "titulo": {
     "en": "Drone explodes at Port of Constanza",
     "es": "Dron explota en el Puerto de Constanza"
+   },
+   "zona": {
+    "distancia_km": 117,
+    "grupo": "frontera",
+    "motivo": "cerca_de_la_frontera"
    }
   },
   {
@@ -27443,6 +27904,11 @@
    "titulo": {
     "en": "Drone explosion at Port of Constanța",
     "es": "Explosión de dron en el Puerto de Constanza"
+   },
+   "zona": {
+    "distancia_km": 117,
+    "grupo": "frontera",
+    "motivo": "cerca_de_la_frontera"
    }
   },
   {
@@ -27544,6 +28010,11 @@
    "titulo": {
     "en": "Drone explodes at Port of Constanza",
     "es": "Dron explota en el Puerto de Constanza"
+   },
+   "zona": {
+    "distancia_km": 117,
+    "grupo": "frontera",
+    "motivo": "cerca_de_la_frontera"
    }
   },
   {
@@ -27691,6 +28162,11 @@
    "titulo": {
     "en": "Drone exploded at Port of Constanța",
     "es": "Dron explotado en el Puerto de Constanza"
+   },
+   "zona": {
+    "distancia_km": 117,
+    "grupo": "frontera",
+    "motivo": "cerca_de_la_frontera"
    }
   },
   {
@@ -27847,6 +28323,10 @@
    "titulo": {
     "en": "Drones violate Greek airspace over the Aegean",
     "es": "Drones violan el espacio aéreo griego sobre el Egeo"
+   },
+   "zona": {
+    "grupo": "interior",
+    "motivo": "sin_lugar"
    }
   },
   {
@@ -27970,6 +28450,11 @@
    "titulo": {
     "en": "Drone explodes at Port of Constanza",
     "es": "Dron explota en el Puerto de Constanza"
+   },
+   "zona": {
+    "distancia_km": 117,
+    "grupo": "frontera",
+    "motivo": "cerca_de_la_frontera"
    }
   }
  ]

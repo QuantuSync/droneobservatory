@@ -172,6 +172,10 @@
     "titulo": {
      "en": "Drone overflights over Vught Penitentiary",
      "es": "Sobrevuelos de drones sobre la Penitenciaria de Vught"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -757,6 +761,10 @@
     "titulo": {
      "en": "Drones over Hannover airport force flight diversions",
      "es": "Drones sobre el aeropuerto de Hannover obligan a desviar vuelos"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -1198,6 +1206,11 @@
     "titulo": {
      "en": "Drones over Vilnius Airport disrupt operations",
      "es": "Drones sobre el aeropuerto de Vilna interrumpen operaciones"
+    },
+    "zona": {
+     "distancia_km": 26,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -1605,6 +1618,10 @@
     "titulo": {
      "en": "Drones temporarily close Brussels airport",
      "es": "Drones cierran temporalmente el aeropuerto de Bruselas"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -2559,6 +2576,10 @@
     "titulo": {
      "en": "Drone sighted near Bremen airport interrupts air traffic",
      "es": "Dron avistado cerca del aeropuerto de Bremen interrumpe el tráfico aéreo"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -3345,6 +3366,11 @@
     "titulo": {
      "en": "Lublin airport closure due to drone attack threat",
      "es": "Cierre del aeropuerto de Lublin por amenaza de ataques con drones"
+    },
+    "zona": {
+     "distancia_km": 64,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -3598,6 +3624,11 @@
     "titulo": {
      "en": "Drone forces interruption of air traffic at Munich Airport",
      "es": "Dron obliga a interrumpir el tráfico aéreo en el aeropuerto de Múnich"
+    },
+    "zona": {
+     "distancia_km": 892,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -4111,6 +4142,11 @@
     "titulo": {
      "en": "Drone closes airspace at Vilnius airport for half an hour",
      "es": "Dron cierra el espacio aéreo del aeropuerto de Vilna durante media hora"
+    },
+    "zona": {
+     "distancia_km": 26,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -4709,6 +4745,10 @@
     "titulo": {
      "en": "Unidentified drones fly over Karup military base in Denmark",
      "es": "Drones no identificados sobrevuelan la base militar de Karup en Dinamarca"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -4904,6 +4944,10 @@
     "titulo": {
      "en": "Four drones spotted over Schaffen military base",
      "es": "Cuatro drones avistados sobre la base militar de Schaffen"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -5124,6 +5168,10 @@
     "titulo": {
      "en": "Possible drones fly over Beauvechain military base and other locations in Belgium",
      "es": "Posibles drones sobrevuelan la base militar de Beauvechain y otras ubicaciones en Bélgica"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -5311,6 +5359,10 @@
     "titulo": {
      "en": "Possible drone forces flight diversion at Eindhoven Airport",
      "es": "Posible dron obliga a desviar un vuelo en el aeropuerto de Eindhoven"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -5432,6 +5484,10 @@
     "titulo": {
      "en": "Possible drone or UAP sightings over Newmarket near RAF Lakenheath",
      "es": "Avistamientos de posibles drones o UAP sobre Newmarket cerca de RAF Lakenheath"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -5944,6 +6000,10 @@
      "datos": [
       "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.08.11-planes-readsb-prod-0"
      ]
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -6179,6 +6239,10 @@
     "titulo": {
      "en": "Temporary closure of Karlsruhe/Baden-Baden airport due to drone sighting",
      "es": "Cierre temporal del aeropuerto de Karlsruhe/Baden-Baden por avistamiento de dron"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -6918,6 +6982,11 @@
       "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.01.31-planes-readsb-prod-0",
       "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.02.01-planes-readsb-prod-0"
      ]
+    },
+    "zona": {
+     "distancia_km": 456,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -7845,6 +7914,10 @@
     "titulo": {
      "en": "Drones close Hannover airport for 45 minutes",
      "es": "Drones cierran el aeropuerto de Hannover 45 minutos"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -8012,6 +8085,11 @@
     "titulo": {
      "en": "Drone disrupts Vilnius airport with owner unidentified",
      "es": "Dron interrumpe el aeropuerto de Vilna sin que se identifique su propietario"
+    },
+    "zona": {
+     "distancia_km": 26,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -8258,6 +8336,10 @@
     "titulo": {
      "en": "Drones over Volkel air base prompt fighter deployment",
      "es": "Drones sobre la base aérea de Volkel obligan a desplegar cazas"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -8456,6 +8538,11 @@
     "titulo": {
      "en": "Unverified drone threat at Prague Airport",
      "es": "Amenaza de drones no verificada en el aeropuerto de Praga"
+    },
+    "zona": {
+     "distancia_km": 588,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -8686,6 +8773,11 @@
     "titulo": {
      "en": "Temporary closure of Oslo airport airspace due to drone sightings",
      "es": "Cierre temporal del espacio aéreo del aeropuerto de Oslo por avistamientos de drones"
+    },
+    "zona": {
+     "distancia_km": 761,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -11858,6 +11950,11 @@
     "titulo": {
      "en": "Drones observed at Oslo airport force closure",
      "es": "Drones observados en el aeropuerto de Oslo obligan a cerrarlo"
+    },
+    "zona": {
+     "distancia_km": 761,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -12059,6 +12156,11 @@
     "titulo": {
      "en": "Drone near Riga airport disrupts air traffic",
      "es": "Dron cerca del aeropuerto de Riga interrumpe el tráfico aéreo"
+    },
+    "zona": {
+     "distancia_km": 211,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -12286,6 +12388,10 @@
     "titulo": {
      "en": "Drone over Bremen airport forces airspace closure",
      "es": "Dron sobre el aeropuerto de Bremen obliga a cerrar el espacio aéreo"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -12985,6 +13091,11 @@
     "titulo": {
      "en": "Drone detected near Bucharest airport forces suspension of landings",
      "es": "Dron detectado cerca del aeropuerto de Bucarest obliga a suspender aterrizajes"
+    },
+    "zona": {
+     "distancia_km": 194,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -13117,6 +13228,10 @@
     "titulo": {
      "en": "Possible drone sightings divert flights to Frankfurt airport",
      "es": "Avistamientos de posibles drones desvían vuelos hacia el aeropuerto de Fráncfort"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -13666,6 +13781,10 @@
     "titulo": {
      "en": "Drone sightings force Eindhoven Airport shutdown",
      "es": "Avistamientos de drones cierran el aeropuerto de Eindhoven"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -13828,6 +13947,11 @@
     "titulo": {
      "en": "Unauthorized drone in Alta lufthavn airspace",
      "es": "Dron no autorizado en el espacio aéreo de Alta lufthavn"
+    },
+    "zona": {
+     "distancia_km": 226,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -14219,6 +14343,11 @@
     "titulo": {
      "en": "Laser system deployed at Munich Airport against drones",
      "es": "Sistema láser desplegado en el aeropuerto de Múnich contra drones"
+    },
+    "zona": {
+     "distancia_km": 892,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -14365,6 +14494,10 @@
     "titulo": {
      "en": "Possible drone disrupts traffic at Larnaca Airport",
      "es": "Drone interrumpe el tráfico en el aeropuerto de Larnaca"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -14523,6 +14656,10 @@
     "titulo": {
      "en": "Possible drone, probably a balloon, closes a Schiphol runway for 45 minutes",
      "es": "Posible dron, probablemente un globo, cierra 45 minutos una pista de Schiphol"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -14790,6 +14927,11 @@
     "titulo": {
      "en": "Police stop man who flew a drone in the restricted zone of Sandefjord Torp airport",
      "es": "La policía para a un hombre que voló un dron en la zona prohibida del aeropuerto de Sandefjord Torp"
+    },
+    "zona": {
+     "distancia_km": 726,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -15070,6 +15212,11 @@
     "titulo": {
      "en": "Possible drone forces temporary suspension of Vilnius airport operations",
      "es": "Posible dron obliga a suspender temporalmente la actividad del aeropuerto de Vilna"
+    },
+    "zona": {
+     "distancia_km": 26,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -15367,6 +15514,10 @@
     "titulo": {
      "en": "Drones over Erfurt-Weimar airport force one-hour closure",
      "es": "Drones sobre el aeropuerto de Erfurt-Weimar obligan a cerrarlo una hora"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -15549,6 +15700,10 @@
     "titulo": {
      "en": "Drone in Edinburgh Airport exclusion zone causes flight delays",
      "es": "Dron en la zona de exclusión del aeropuerto de Edimburgo causa retrasos"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -16402,6 +16557,10 @@
     "titulo": {
      "en": "Dutch military opens fire at drones over Volkel Air Base",
      "es": "Militares holandeses abren fuego contra drones sobre la Base Aérea de Volkel"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -16608,6 +16767,11 @@
     "titulo": {
      "en": "Drone falls near Varna airport",
      "es": "Dron cae cerca del aeropuerto de Varna"
+    },
+    "zona": {
+     "distancia_km": 232,
+     "grupo": "frontera",
+     "motivo": "costa_mar_negro"
     }
    },
    "type": "Feature"
@@ -17141,6 +17305,11 @@
     "titulo": {
      "en": "Drone observed at Brønnøysund airport forces flight diversion",
      "es": "Dron observado en el aeropuerto de Brønnøysund obliga a desviar un vuelo"
+    },
+    "zona": {
+     "distancia_km": 1201,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -17335,6 +17504,11 @@
     "titulo": {
      "en": "Drone over Oslo Gardermoen runway forces closure of air traffic",
      "es": "Dron sobre la pista de Oslo Gardermoen obliga a cerrar el tráfico aéreo"
+    },
+    "zona": {
+     "distancia_km": 761,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -20511,6 +20685,10 @@
      "datos": [
       "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.11.04-planes-readsb-prod-0"
      ]
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -20795,6 +20973,11 @@
     "titulo": {
      "en": "Drone forces Lithuanian president's aircraft to circle over Vilnius airport",
      "es": "Dron obliga a desviarse al avión del presidente de Lituania en Vilna"
+    },
+    "zona": {
+     "distancia_km": 26,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -21056,6 +21239,11 @@
     "titulo": {
      "en": "Two drone operators detained near Vilnius airport disrupt operations",
      "es": "Dos operadores de drones detenidos cerca del aeropuerto de Vilna interrumpen operaciones"
+    },
+    "zona": {
+     "distancia_km": 26,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -21202,6 +21390,10 @@
     "titulo": {
      "en": "Possible drones reported near Dublin Airport during Zelensky visit",
      "es": "Posibles drones reportados cerca del Aeropuerto de Dublín durante visita de Zelensky"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -21770,6 +21962,10 @@
     "titulo": {
      "en": "Four drones spotted over NATO's Kleine-Brogel air base in Belgium",
      "es": "Cuatro drones sobre la base aérea de Kleine-Brogel de la OTAN en Bélgica"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -21900,6 +22096,11 @@
     "titulo": {
      "en": "Munich Airport closes due to drone threat",
      "es": "Aeropuerto de Múnich cierra por amenaza de drones"
+    },
+    "zona": {
+     "distancia_km": 892,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -22188,6 +22389,10 @@
     "titulo": {
      "en": "F-35 fighters intercept drone over Volkel Air Base",
      "es": "Cazas F-35 interceptan un dron sobre la base aérea de Volkel"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -22365,6 +22570,10 @@
     "titulo": {
      "en": "Unauthorized possible drones fly in Dublin Airport exclusion zone",
      "es": "Posibles drones no autorizados vuelan en la zona de exclusión del aeropuerto de Dublín"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -22743,6 +22952,10 @@
     "titulo": {
      "en": "Possible drone paralyzes Hannover airport for half an hour",
      "es": "Posible dron paraliza el aeropuerto de Hannover durante media hora"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -22926,6 +23139,10 @@
     "titulo": {
      "en": "Unauthorized drones delay flights at Gibraltar Airport",
      "es": "Drones no autorizados retrasan vuelos en el aeropuerto de Gibraltar"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -23115,6 +23332,11 @@
     "titulo": {
      "en": "Drones shot down over Polish airspace",
      "es": "Drones derribados sobre el espacio aéreo de Polonia"
+    },
+    "zona": {
+     "distancia_km": 72,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -23352,6 +23574,10 @@
     "titulo": {
      "en": "Drone forces closure of Liège Airport",
      "es": "Dron obliga a cerrar el aeropuerto de Lieja"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -23518,6 +23744,11 @@
     "titulo": {
      "en": "Aalborg airspace closure due to drone",
      "es": "Cierre del espacio aéreo de Aalborg por sospecha de dron"
+    },
+    "zona": {
+     "distancia_km": 658,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -23728,6 +23959,10 @@
     "titulo": {
      "en": "Delays at Edinburgh Airport after unauthorised drone detected",
      "es": "Retrasos en el aeropuerto de Edimburgo por un dron no autorizado"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -23940,6 +24175,11 @@
     "titulo": {
      "en": "Drones close Copenhagen airspace",
      "es": "Drones cierran el espacio aéreo de Copenhague"
+    },
+    "zona": {
+     "distancia_km": 456,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -24890,6 +25130,10 @@
       "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.10.27-planes-readsb-prod-0",
       "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.10.28-planes-readsb-prod-0"
      ]
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -25134,6 +25378,11 @@
     "titulo": {
      "en": "Suspected flying object over Vilnius airport forces flight diversion to Riga",
      "es": "Objeto volador sospechoso sobre el aeropuerto de Vilna obliga a desviar un vuelo a Riga"
+    },
+    "zona": {
+     "distancia_km": 26,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -25657,6 +25906,11 @@
     "titulo": {
      "en": "Drone spotted near Vilnius airport forces flight suspension",
      "es": "Dron avistado cerca del aeropuerto de Vilna obliga a suspender vuelos"
+    },
+    "zona": {
+     "distancia_km": 26,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -25842,6 +26096,11 @@
     "titulo": {
      "en": "Drone observed over Oslo Gardermoen Airport",
      "es": "Dron observado sobre el aeropuerto de Oslo Gardermoen"
+    },
+    "zona": {
+     "distancia_km": 761,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -26062,6 +26321,11 @@
     "titulo": {
      "en": "Civil drone causes incident at Bucharest Otopeni airport",
      "es": "Dron civil causa incidente en el aeropuerto de Bucarest Otopeni"
+    },
+    "zona": {
+     "distancia_km": 194,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -26269,6 +26533,11 @@
     "titulo": {
      "en": "Private drone forces two flights to divert at Oslo airport",
      "es": "Un dron privado obliga a desviar dos vuelos en el aeropuerto de Oslo"
+    },
+    "zona": {
+     "distancia_km": 761,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -26843,6 +27112,10 @@
     "titulo": {
      "en": "Drone sighting at Frankfurt airport; pilot arrested",
      "es": "Avistamiento de dron en el aeropuerto de Frankfurt; detención del piloto"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -27125,6 +27398,11 @@
     "titulo": {
      "en": "Vilnius airport closure due to suspected balloons",
      "es": "Cierre del aeropuerto de Vilnius por sospecha de globos"
+    },
+    "zona": {
+     "distancia_km": 28,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -27317,6 +27595,10 @@
     "titulo": {
      "en": "Drone in prohibited zone at Bergen Airport prompts police intervention",
      "es": "Un dron en la zona prohibida del aeropuerto de Bergen obliga a intervenir a la policía"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -48687,6 +48969,11 @@
      "datos": [
       "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.10.03-planes-readsb-prod-0"
      ]
+    },
+    "zona": {
+     "distancia_km": 892,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -48923,6 +49210,10 @@
     "titulo": {
      "en": "Unidentified drone forces closure of Gibraltar Airport",
      "es": "Dron no identificado obliga a cerrar el aeropuerto de Gibraltar"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -49326,6 +49617,10 @@
      "datos": [
       "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.10.09-planes-readsb-prod-0"
      ]
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -50681,6 +50976,10 @@
     "titulo": {
      "en": "Drone forces closure of Palma de Mallorca Airport",
      "es": "Dron obliga a cerrar el aeropuerto de Palma de Mallorca"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -50991,6 +51290,11 @@
     "titulo": {
      "en": "Possible drone flies over Sofia airport causing delays",
      "es": "Posible dron sobrevuela el aeropuerto de Sofía y causa retrasos"
+    },
+    "zona": {
+     "distancia_km": 497,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -51640,6 +51944,10 @@
     "titulo": {
      "en": "Three possible drones spotted over Doel nuclear power plant in Belgium",
      "es": "Tres posibles drones avistados sobre la central nuclear de Doel en Bélgica"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -52401,6 +52709,10 @@
     "titulo": {
      "en": "Drones fly over Kleine Brogel air base in Belgium",
      "es": "Drones sobrevuelan la base aérea de Kleine Brogel en Bélgica"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -52642,6 +52954,10 @@
     "titulo": {
      "en": "Flight delayed at Bergen Airport due to unauthorized drone flight",
      "es": "Vuelo retrasado en el aeropuerto de Bergen por un dron no autorizado"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -52874,6 +53190,10 @@
     "titulo": {
      "en": "Near-miss between aircraft and possible drone near Heathrow Airport",
      "es": "Casi colisión entre un avión y un posible dron cerca del aeropuerto de Heathrow"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -53284,6 +53604,10 @@
       "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.11.12-planes-readsb-prod-0",
       "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.11.13-planes-readsb-prod-0"
      ]
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -53401,6 +53725,10 @@
     "titulo": {
      "en": "Surge in unauthorised possible drone activity near Hawarden Airport",
      "es": "Aumento de incursiones no autorizadas de posibles drones cerca del aeropuerto de Hawarden"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -53589,6 +53917,11 @@
     "titulo": {
      "en": "Drone detected at Sundsvall Timrå Airport forces a plane into a holding pattern",
      "es": "Dron detectado en el aeropuerto de Sundsvall Timrå obliga a un avión a esperar en vuelo"
+    },
+    "zona": {
+     "distancia_km": 557,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -53819,6 +54152,10 @@
     "titulo": {
      "en": "Runway closure at Bergen airport due to drone in restricted zone",
      "es": "Cierre de pista en Bergen por un dron en zona prohibida"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -53966,6 +54303,10 @@
     "titulo": {
      "en": "Possible drone nearly collides with Boeing 737 approaching Gatwick",
      "es": "Posible dron casi colisiona con un Boeing 737 en aproximación a Gatwick"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -54379,6 +54720,10 @@
     "titulo": {
      "en": "Man charged for flying drone over Cofrentes nuclear power plant",
      "es": "Denunciado por sobrevolar la central nuclear de Cofrentes con un dron"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -54499,6 +54844,11 @@
     "titulo": {
      "en": "Possible drone incident at Riga airport",
      "es": "Incidente con posible dron en el aeropuerto de Riga"
+    },
+    "zona": {
+     "distancia_km": 211,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -56771,6 +57121,11 @@
       "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.09.22-planes-readsb-prod-0",
       "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.09.23-planes-readsb-prod-0"
      ]
+    },
+    "zona": {
+     "distancia_km": 456,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -56986,6 +57341,10 @@
     "titulo": {
      "en": "Multiple drones disrupt Gibraltar airport and force military aircraft to divert",
      "es": "Varios drones paralizan el aeropuerto de Gibraltar y obligan a desviar un avión militar"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -57653,6 +58012,11 @@
     "titulo": {
      "en": "Possible drone delays six flights at Sofia airport",
      "es": "Un posible dron retrasa seis vuelos en el aeropuerto de Sofía"
+    },
+    "zona": {
+     "distancia_km": 415,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -58079,6 +58443,11 @@
     "titulo": {
      "en": "Civil possible drone observed near Bucharest's Henri Coandă Airport during landing",
      "es": "Posible dron civil observado cerca del Aeropuerto Henri Coandă de Bucarest durante aterrizaje"
+    },
+    "zona": {
+     "distancia_km": 194,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -58877,6 +59246,10 @@
     "titulo": {
      "en": "Drone sighting at Liège Airport interrupts air traffic",
      "es": "Dron avistado en el aeropuerto de Lieja interrumpe el tráfico aéreo"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -59234,6 +59607,10 @@
     "titulo": {
      "en": "Possible drone sightings at RAF Lakenheath and Mildenhall prompt a police helicopter search",
      "es": "Avistamientos de posibles drones en RAF Lakenheath y Mildenhall movilizan un helicóptero policial"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -59466,6 +59843,11 @@
     "titulo": {
      "en": "Drones over Alta airport prompt police intervention",
      "es": "Drones sobre el aeropuerto de Alta obligan a intervenir a la policía"
+    },
+    "zona": {
+     "distancia_km": 226,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -59636,6 +60018,10 @@
     "titulo": {
      "en": "Reports of drones near Keflavík Airport",
      "es": "Reportes de drones cerca del aeropuerto de Keflavík"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -60454,6 +60840,11 @@
     "titulo": {
      "en": "Drones close Aalborg Airport in Denmark after Copenhagen incident",
      "es": "Drones cierran el aeropuerto de Aalborg en Dinamarca tras incidente en Copenhague"
+    },
+    "zona": {
+     "distancia_km": 456,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -60647,6 +61038,10 @@
     "titulo": {
      "en": "Drone over Bremen airport forces airspace closure",
      "es": "Dron sobre el aeropuerto de Bremen obliga a cerrar el espacio aéreo"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -61358,6 +61753,11 @@
     "titulo": {
      "en": "Illegal drones over Riga airport considered for shooting down",
      "es": "Drones ilegales sobre el aeropuerto de Riga considerados para derribo"
+    },
+    "zona": {
+     "distancia_km": 211,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -61585,6 +61985,11 @@
     "titulo": {
      "en": "Drone spotted near Vilnius airport with no impact on operations",
      "es": "Dron avistado cerca del aeropuerto de Vilna sin afectar operaciones"
+    },
+    "zona": {
+     "distancia_km": 26,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -61768,6 +62173,10 @@
     "titulo": {
      "en": "Unconfirmed possible drone sighting at Weeze airport",
      "es": "Avistamiento de posible dron en el aeropuerto de Weeze sin confirmación"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -62117,6 +62526,11 @@
     "titulo": {
      "en": "Suspected drone activity closes airspace at Aalborg Airport",
      "es": "Sospecha de actividad de drones cierra el espacio aéreo del aeropuerto de Aalborg"
+    },
+    "zona": {
+     "distancia_km": 658,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -62368,6 +62782,11 @@
     "titulo": {
      "en": "Drones seen near Bardufoss airport force a plane to turn back and close the airport",
      "es": "Drones vistos cerca del aeropuerto de Bardufoss obligan a un avión a dar la vuelta y cierran el aeropuerto"
+    },
+    "zona": {
+     "distancia_km": 393,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -62674,6 +63093,10 @@
      "datos": [
       "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.07.01-planes-readsb-prod-0"
      ]
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -62844,6 +63267,10 @@
     "titulo": {
      "en": "Drones disrupt air traffic at Hannover airport",
      "es": "Drones perturban el tráfico aéreo en el aeropuerto de Hannover"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -63281,6 +63708,10 @@
     "titulo": {
      "en": "A drone forces flight diversions at Seville airport",
      "es": "Un dron obliga a desviar vuelos en el aeropuerto de Sevilla"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -63412,6 +63843,11 @@
     "titulo": {
      "en": "Possible drone incident at Riga Airport",
      "es": "Incidente con posibles drones en el aeropuerto de Riga"
+    },
+    "zona": {
+     "distancia_km": 211,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -63742,6 +64178,11 @@
     "titulo": {
      "en": "Drones over German military bases in Manching and Neuburg",
      "es": "Drones sobre bases militares alemanas en Manching y Neuburg"
+    },
+    "zona": {
+     "distancia_km": 873,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -64050,6 +64491,11 @@
     "titulo": {
      "en": "Brønnøysund Airport temporarily closes after unknown drone incursion",
      "es": "Cierre temporal del aeropuerto de Brønnøysund por incursión de dron desconocido"
+    },
+    "zona": {
+     "distancia_km": 1201,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -64247,6 +64693,10 @@
     "titulo": {
      "en": "Drone passes close to aircraft departing Heathrow",
      "es": "Dron pasa cerca de un avión en el despegue de Heathrow"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -64432,6 +64882,11 @@
     "titulo": {
      "en": "Unauthorized drone near Vilnius airport detected and operator detained",
      "es": "Dron no autorizado cerca del aeropuerto de Vilna es detectado y su operador detenido"
+    },
+    "zona": {
+     "distancia_km": 26,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -64648,6 +65103,10 @@
     "titulo": {
      "en": "Possible drone spotted above control tower at Gilze-Rijen air base",
      "es": "Posible dron avistado sobre la torre de control de la base aérea de Gilze-Rijen"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -64805,6 +65264,10 @@
     "titulo": {
      "en": "Brief closure of air traffic at Brussels Airport following drone sighting",
      "es": "Cierre breve del tráfico aéreo en el aeropuerto de Bruselas por avistamiento de dron"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -64937,6 +65400,10 @@
     "titulo": {
      "en": "Possible drones over Eindhoven Airport cause closure and chaos",
      "es": "Posibles drones sobre el aeropuerto de Eindhoven causan cierre y caos"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -65282,6 +65749,10 @@
     "titulo": {
      "en": "Runway closure at Amsterdam Airport after drone sighting ruled out",
      "es": "Cierre de pista en el aeropuerto de Ámsterdam por avistamiento de dron descartado"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -65573,6 +66044,10 @@
     "titulo": {
      "en": "Drone flies over Moldovan airspace; Russia denies its origin",
      "es": "Dron sobrevuela el espacio aéreo de Moldavia; Rusia niega su origen"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -65965,6 +66440,10 @@
     "titulo": {
      "en": "Five drones fly over Ile Longue nuclear base in Brest",
      "es": "Cinco drones sobrevuelan la base nuclear de Ile Longue en Brest"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -66835,6 +67314,11 @@
     "titulo": {
      "en": "Drone sighting during landing at Oslo Airport",
      "es": "Avistamiento de dron durante aterrizaje en el aeropuerto de Oslo"
+    },
+    "zona": {
+     "distancia_km": 761,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -67086,6 +67570,11 @@
     "titulo": {
      "en": "Drone neutralized over government buildings in Warsaw",
      "es": "Dron neutralizado sobre edificios gubernamentales en Varsovia"
+    },
+    "zona": {
+     "distancia_km": 147,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -67329,6 +67818,10 @@
     "titulo": {
      "en": "Possible drones over Marche-en-Famenne military base",
      "es": "Posibles drones sobre la base militar de Marche-en-Famenne"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -67840,6 +68333,10 @@
     "titulo": {
      "en": "Drone flies over Eurenco explosives factory in Bergerac",
      "es": "Un dron sobrevuela la fábrica de explosivos Eurenco de Bergerac"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -70504,6 +71001,11 @@
      "datos": [
       "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.10.31-planes-readsb-prod-0"
      ]
+    },
+    "zona": {
+     "distancia_km": 476,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -70933,6 +71435,10 @@
     "titulo": {
      "en": "Multiple drones fly over Marche-en-Famenne military base",
      "es": "Múltiples drones sobrevuelan la base militar de Marche-en-Famenne"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -71268,6 +71774,10 @@
     "titulo": {
      "en": "False drone alarm at NATO base Geilenkirchen",
      "es": "Falsa alarma de dron en la base OTAN de Geilenkirchen"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -72509,6 +73019,11 @@
     "titulo": {
      "en": "Drones close Copenhagen and Oslo airports",
      "es": "Drones cierran los aeropuertos de Copenhague y Oslo"
+    },
+    "zona": {
+     "distancia_km": 753,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -77004,6 +77519,11 @@
     "titulo": {
      "en": "Drones close airspace over Aalborg",
      "es": "Drones cierran el espacio aéreo sobre Aalborg"
+    },
+    "zona": {
+     "distancia_km": 658,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -77994,6 +78514,10 @@
     "titulo": {
      "en": "Brussels and Liege airports closed due to drone sightings",
      "es": "Cierre de los aeropuertos de Bruselas y Lieja por avistamientos de drones"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -78301,6 +78825,10 @@
     "titulo": {
      "en": "Drones fly over Creil military base",
      "es": "Drones sobrevuelan la base militar de Creil"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -79016,6 +79544,11 @@
     "titulo": {
      "en": "Drones shot down force closure of Warsaw airport",
      "es": "Drones derribados obligan a cerrar el aeropuerto de Varsovia"
+    },
+    "zona": {
+     "distancia_km": 147,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -80583,6 +81116,11 @@
     "titulo": {
      "en": "Drone sighted at Gothenburg airport forces airspace closure",
      "es": "Dron avistado en el aeropuerto de Göteborg obliga a cerrar el espacio aéreo"
+    },
+    "zona": {
+     "distancia_km": 565,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -81064,6 +81602,11 @@
     "titulo": {
      "en": "Aalborg airspace closed after unidentified drone sighting",
      "es": "Cierre del espacio aéreo de Aalborg por avistamiento de dron no identificado"
+    },
+    "zona": {
+     "distancia_km": 653,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -81346,6 +81889,10 @@
     "titulo": {
      "en": "Drones penetrate Romanian airspace near Ukraine border",
      "es": "Drones penetran el espacio aéreo de Rumania cerca de la frontera con Ucrania"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -81723,6 +82270,10 @@
     "titulo": {
      "en": "Suspected drone flies over European research center at Ispra",
      "es": "Drone presunto sobrevuela el centro de investigación europeo de Ispra"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -82163,6 +82714,11 @@
     "titulo": {
      "en": "Drones over Chisinau close airspace and divert flights",
      "es": "Drones sobre Chisináu cierran el espacio aéreo y desvían vuelos"
+    },
+    "zona": {
+     "distancia_km": 48,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -83050,6 +83606,10 @@
     "titulo": {
      "en": "Shahed drone crashes in Moldova after overflying airspace",
      "es": "Dron Shahed cae en Moldavia tras sobrevolar el espacio aéreo"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -83654,6 +84214,10 @@
     "titulo": {
      "en": "Romania scrambles fighter jets after drone incursions near Ukraine border",
      "es": "Rumania despliega cazas tras incursiones de drones cerca de la frontera con Ucrania"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -83896,6 +84460,11 @@
     "titulo": {
      "en": "Armed drone violates Lithuanian airspace and is found in Vilnius",
      "es": "Dron armado viola el espacio aéreo de Lituania y es hallado en Vilnius"
+    },
+    "zona": {
+     "distancia_km": 28,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -84220,6 +84789,11 @@
     "titulo": {
      "en": "Unidentified drones over Køge harbour",
      "es": "Drones no identificados sobre el puerto de Køge"
+    },
+    "zona": {
+     "distancia_km": 481,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -84540,6 +85114,11 @@
     "titulo": {
      "en": "Military drone crashes in cornfield in Lublin, Poland",
      "es": "Un dron militar se estrella en un campo de maíz en Lublin, Polonia"
+    },
+    "zona": {
+     "distancia_km": 86,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -84738,6 +85317,11 @@
     "titulo": {
      "en": "Illegal drones disrupt operations at Riga Airport",
      "es": "Drones ilegales interrumpen operaciones en el aeropuerto de Riga"
+    },
+    "zona": {
+     "distancia_km": 211,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -84863,6 +85447,10 @@
     "titulo": {
      "en": "Military drone discovered in a field in Taraclia",
      "es": "Dron militar descubierto en un campo en Taraclia"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -84983,6 +85571,10 @@
     "titulo": {
      "en": "British Airways plane nearly collides with possible drone over London",
      "es": "Avión de British Airways casi colisiona con un posible dron sobre Londres"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -85274,6 +85866,10 @@
     "titulo": {
      "en": "Drone flies over Moldova in the southern part of the country",
      "es": "Dron sobrevuela Moldavia en el sur del país"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -85942,6 +86538,10 @@
     "titulo": {
      "en": "Drones over NATO base in Belgium and German airspace",
      "es": "Drones sobre la base de la OTAN en Bélgica y el espacio aéreo alemán"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -86077,6 +86677,10 @@
     "titulo": {
      "en": "Illegal drone causes near miss at Norwich Airport",
      "es": "Dron ilegal causa casi colisión en el aeropuerto de Norwich"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -86296,6 +86900,10 @@
     "titulo": {
      "en": "Drones near Billund Airport force airspace closure",
      "es": "Drones cerca del aeropuerto de Billund obligan a cerrar el espacio aéreo"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -86536,6 +87144,11 @@
     "titulo": {
      "en": "Drone loaded with drugs shot down at Foggia prison",
      "es": "Dron cargado de droga derribado en la cárcel de Foggia"
+    },
+    "zona": {
+     "distancia_km": 944,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -87547,6 +88160,10 @@
     "titulo": {
      "en": "Drones spotted near Zelenskiy's flight path to Dublin trigger major security alert",
      "es": "Drones detectados cerca de la ruta de vuelo de Zelenskiy en Dublín desencadenan alerta de seguridad"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -92466,6 +93083,11 @@
     "titulo": {
      "en": "Russian drones penetrate Polish airspace",
      "es": "Drones rusos invaden el espacio aéreo de Polonia"
+    },
+    "zona": {
+     "distancia_km": 38,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -92694,6 +93316,10 @@
     "titulo": {
      "en": "Military possible drone falls in Tulcea, Romania, near border",
      "es": "Posible dron militar cae en Tulcea, Rumania, cerca de la frontera con Ucrania"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -92913,6 +93539,10 @@
     "titulo": {
      "en": "Drone enters Romanian airspace from Ukraine",
      "es": "Dron entra en el espacio aéreo de Rumania desde Ucrania"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -93055,6 +93685,10 @@
     "titulo": {
      "en": "Bergen airport closed due to illegal drone flying",
      "es": "Cierre del aeropuerto de Bergen por vuelo ilegal de drones"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -93947,6 +94581,10 @@
     "titulo": {
      "en": "Drone enters Romanian airspace and is intercepted",
      "es": "Dron entra en el espacio aéreo de Rumanía y es interceptado"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -94209,6 +94847,10 @@
     "titulo": {
      "en": "Drone sightings over Danish military bases",
      "es": "Avistamientos de drones sobre bases militares danesas"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -94407,6 +95049,10 @@
     "titulo": {
      "en": "Military Gerbera drone found in a field in Sîngerei, Moldova",
      "es": "Dron militar Gerbera encontrado en un campo en Sîngerei, Moldavia"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -94703,6 +95349,10 @@
     "titulo": {
      "en": "Drones fly over critical infrastructure in Schleswig-Holstein",
      "es": "Drones sobrevuelan infraestructuras críticas en Schleswig-Holstein"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -95207,6 +95857,10 @@
     "titulo": {
      "en": "Drone violates Romanian airspace during attack on Ukraine",
      "es": "Dron viola el espacio aéreo de Rumania durante ataque a Ucrania"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -95417,6 +96071,10 @@
       "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.11.04-planes-readsb-prod-0",
       "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.11.05-planes-readsb-prod-0"
      ]
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -95569,6 +96227,11 @@
     "titulo": {
      "en": "Drone temporarily halts air traffic at Berlin airport",
      "es": "Dron paraliza temporalmente el tráfico aéreo en el aeropuerto de Berlín"
+    },
+    "zona": {
+     "distancia_km": 476,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -95793,6 +96456,11 @@
     "titulo": {
      "en": "Drone seized near Oslo airport",
      "es": "Dron confiscado cerca del aeropuerto de Oslo"
+    },
+    "zona": {
+     "distancia_km": 761,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -96468,6 +97136,10 @@
     "titulo": {
      "en": "Two drones penetrate Moldova's airspace from Ukraine",
      "es": "Dos drones penetran el espacio aéreo de Moldavia desde Ucrania"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -97452,6 +98124,10 @@
       "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.11.06-planes-readsb-prod-0",
       "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.11.07-planes-readsb-prod-0"
      ]
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -104819,6 +105495,11 @@
       "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.10.02-planes-readsb-prod-0",
       "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.10.03-planes-readsb-prod-0"
      ]
+    },
+    "zona": {
+     "distancia_km": 892,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -105212,6 +105893,11 @@
     "titulo": {
      "en": "Drones observed over Ørland air base in Norway",
      "es": "Drones observados sobre la base aérea de Ørland en Noruega"
+    },
+    "zona": {
+     "distancia_km": 1089,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -105517,6 +106203,11 @@
       "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.10.02-planes-readsb-prod-0",
       "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.10.03-planes-readsb-prod-0"
      ]
+    },
+    "zona": {
+     "distancia_km": 892,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -105659,6 +106350,10 @@
     "titulo": {
      "en": "Possible drones penetrate airspace of Ramstein Air Base",
      "es": "Posibles drones penetran en el espacio aéreo de la base aérea de Ramstein"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -106198,6 +106893,11 @@
       "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.10.04-planes-readsb-prod-0",
       "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.10.05-planes-readsb-prod-0"
      ]
+    },
+    "zona": {
+     "distancia_km": 892,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -106384,6 +107084,10 @@
     "titulo": {
      "en": "Drones close Aalborg airport and are sighted near other Danish airports",
      "es": "Drones cierran el aeropuerto de Aalborg y se avistan cerca de otros aeropuertos daneses"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -106662,6 +107366,11 @@
       "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.11.03-planes-readsb-prod-0",
       "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.11.04-planes-readsb-prod-0"
      ]
+    },
+    "zona": {
+     "distancia_km": 892,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -106902,6 +107611,11 @@
     "titulo": {
      "en": "Mystery drone found on Burgas beach",
      "es": "Dron misterioso encontrado en la playa de Burgas"
+    },
+    "zona": {
+     "distancia_km": 318,
+     "grupo": "frontera",
+     "motivo": "costa_mar_negro"
     }
    },
    "type": "Feature"
@@ -107138,6 +107852,10 @@
     "titulo": {
      "en": "Drone forces flight diversions at Fuerteventura airport",
      "es": "Un dron obliga a desviar vuelos en el aeropuerto de Fuerteventura"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -107369,6 +108087,11 @@
     "titulo": {
      "en": "Drone forces two aircraft to divert at Dubrovnik Airport",
      "es": "Dron obliga a desviarse a dos aviones en el aeropuerto de Dubrovnik"
+    },
+    "zona": {
+     "distancia_km": 707,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -107579,6 +108302,10 @@
     "titulo": {
      "en": "Drones near Borcea air base trigger F-16 fighter takeoff",
      "es": "Drones cerca de la base aérea de Borcea provocan el despegue de cazas F-16"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -107834,6 +108561,11 @@
     "titulo": {
      "en": "Drones spotted near Karlskrona naval base",
      "es": "Drones avistados cerca de la base naval de Karlskrona"
+    },
+    "zona": {
+     "distancia_km": 302,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -108226,6 +108958,10 @@
     "titulo": {
      "en": "Drones at Fuerteventura airport force diversion of three flights",
      "es": "Drones en el aeropuerto de Fuerteventura obligan a desviar tres vuelos"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -108422,6 +109158,10 @@
     "titulo": {
      "en": "Drones close airports in Denmark",
      "es": "Drones cierran aeropuertos en Dinamarca"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -108710,6 +109450,11 @@
     "titulo": {
      "en": "Drones close Rzeszów airport in Poland",
      "es": "Drones cierran el aeropuerto de Rzeszów en Polonia"
+    },
+    "zona": {
+     "distancia_km": 68,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -108943,6 +109688,10 @@
     "titulo": {
      "en": "Drone sightings over Husum air base raise espionage suspicions",
      "es": "Avistamientos de drones sobre la base aérea de Husum despiertan sospechas de espionaje"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -109148,6 +109897,11 @@
     "titulo": {
      "en": "Drone detonated near Constanza Port",
      "es": "Dron detonado cerca del Puerto de Constanza"
+    },
+    "zona": {
+     "distancia_km": 121,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -109296,6 +110050,10 @@
     "titulo": {
      "en": "Drone sighting at Fuerteventura airport forces flight diversion",
      "es": "Avistamiento de dron en el aeropuerto de Fuerteventura obliga a desviar un vuelo"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -109469,6 +110227,10 @@
     "titulo": {
      "en": "Possible drone flies over Sevilla I prison in Alcalá de Guadaíra",
      "es": "Posible dron sobrevuela la prisión de Sevilla I en Alcalá de Guadaíra"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -109733,6 +110495,10 @@
     "titulo": {
      "en": "Drone forces closure of Lanzarote Airport",
      "es": "Un dron obliga a paralizar el Aeropuerto de Lanzarote"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -109950,6 +110716,10 @@
     "titulo": {
      "en": "Possible drone causes diversion of three flights at Gran Canaria airport",
      "es": "Un posible dron provoca el desvío de tres vuelos en el aeropuerto de Gran Canaria"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -110104,6 +110874,10 @@
     "titulo": {
      "en": "Possible drones over Tarragona prison",
      "es": "Posibles drones sobre la cárcel de Tarragona"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -110523,6 +111297,10 @@
     "titulo": {
      "en": "Liège airport closure due to drone sighting",
      "es": "Cierre del aeropuerto de Lieja por avistamiento de drones"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -110706,6 +111484,10 @@
     "titulo": {
      "en": "Drones over Volkel Air Base prompt Dutch military to open fire",
      "es": "Drones sobre la base aérea de Volkel obligan al ejército holandés a abrir fuego"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -111156,6 +111938,11 @@
       "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.10.18-planes-readsb-prod-0",
       "https://github.com/adsblol/globe_history_2025/releases/tag/v2025.10.19-planes-readsb-prod-0"
      ]
+    },
+    "zona": {
+     "distancia_km": 892,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -111342,6 +112129,11 @@
     "titulo": {
      "en": "Unauthorized drone detected near Split airport",
      "es": "Dron no autorizado detectado cerca del aeropuerto de Split"
+    },
+    "zona": {
+     "distancia_km": 716,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -111507,6 +112299,10 @@
     "titulo": {
      "en": "Drones over Cyprus force evacuation of Paphos airport",
      "es": "Drones sobre Chipre obligan a evacuar el aeropuerto de Paphos"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -111733,6 +112529,10 @@
     "titulo": {
      "en": "Drones spotted near Gösgen nuclear power plant in Switzerland",
      "es": "Drones avistados cerca de la central nuclear de Gösgen en Suiza"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -111885,6 +112685,10 @@
     "titulo": {
      "en": "RAF Lakenheath drone investigation ends with no suspects",
      "es": "Investigación sobre drones en RAF Lakenheath concluye sin sospechosos"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -112755,6 +113559,11 @@
     "titulo": {
      "en": "Vilnius airport closed after possible drone sighting",
      "es": "Cierre del aeropuerto de Vilnius tras avistamiento de posible dron"
+    },
+    "zona": {
+     "distancia_km": 26,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -112960,6 +113769,10 @@
     "titulo": {
      "en": "Police seize drone flown in the controlled airspace around Gilze-Rijen air base",
      "es": "La policía incauta un dron que volaba en la zona de control de la base aérea de Gilze-Rijen"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -113179,6 +113992,10 @@
     "titulo": {
      "en": "Drone in restricted zone affects air traffic at Stavanger airport",
      "es": "Dron en zona prohibida afecta al tráfico aéreo en el aeropuerto de Stavanger"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -113561,6 +114378,11 @@
     "titulo": {
      "en": "Iasi International Airport closure due to drone alert",
      "es": "Cierre del Aeropuerto Internacional de Iași por alerta de dron"
+    },
+    "zona": {
+     "distancia_km": 118,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -113711,6 +114533,11 @@
     "titulo": {
      "en": "Unauthorized possible drone flies over Palanga airport",
      "es": "Posible dron no autorizado vuela sobre el aeropuerto de Palanga"
+    },
+    "zona": {
+     "distancia_km": 77,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -113915,6 +114742,10 @@
     "titulo": {
      "en": "Three military drones shot down in Romanian airspace",
      "es": "Tres drones militares derribados en el espacio aéreo de Rumania"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -114512,6 +115343,10 @@
     "titulo": {
      "en": "Hannover airport closure due to drone sighting",
      "es": "Cierre del aeropuerto de Hannover por avistamiento de dron"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -114875,6 +115710,10 @@
     "titulo": {
      "en": "Drone sighting causes disruptions at Bremen airport",
      "es": "Avistamiento de dron causa perturbaciones en el aeropuerto de Bremen"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -115333,6 +116172,10 @@
      "datos": [
       "https://github.com/adsblol/globe_history_2026/releases/tag/v2026.06.16-planes-readsb-prod-0"
      ]
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -115547,6 +116390,10 @@
     "titulo": {
      "en": "Drone intercepted near Volkel air base",
      "es": "Dron interceptado cerca de la base aérea de Volkel"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -115766,6 +116613,11 @@
     "titulo": {
      "en": "Drone detected in restricted zone at Vilnius airport",
      "es": "Dron detectado en zona prohibida del aeropuerto de Vilna"
+    },
+    "zona": {
+     "distancia_km": 26,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -115961,6 +116813,10 @@
     "titulo": {
      "en": "Drone forces closure of Charleroi-Brussels-South airport for half an hour",
      "es": "Dron obliga a cerrar el aeropuerto de Charleroi-Bruselas-Sur durante media hora"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -116228,6 +117084,10 @@
     "titulo": {
      "en": "Drone overflies Charleroi airport forcing suspension of operations",
      "es": "Un dron sobrevuela el aeropuerto de Charleroi y obliga a interrumpir las operaciones"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -116627,6 +117487,11 @@
     "titulo": {
      "en": "Runway closure at Oslo Airport following drone observation",
      "es": "Cierre de pista en el aeropuerto de Oslo por observación de dron"
+    },
+    "zona": {
+     "distancia_km": 761,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -116799,6 +117664,11 @@
     "titulo": {
      "en": "Unauthorized drone over Palanga Airport",
      "es": "Dron no autorizado sobre el aeropuerto de Palangas"
+    },
+    "zona": {
+     "distancia_km": 77,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -116947,6 +117817,10 @@
     "titulo": {
      "en": "Closures at Luxembourg Airport due to drone sightings",
      "es": "Cierres en el aeropuerto de Luxemburgo por avistamientos de drones"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -117131,6 +118005,11 @@
     "titulo": {
      "en": "Drone flies over Loviisa nuclear power plant in restricted airspace",
      "es": "Dron sobrevuela la central nuclear de Loviisa en zona prohibida"
+    },
+    "zona": {
+     "distancia_km": 45,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -119018,6 +119897,11 @@
       "https://github.com/adsblol/globe_history_2026/releases/tag/v2026.05.14-planes-readsb-prod-0",
       "https://github.com/adsblol/globe_history_2026/releases/tag/v2026.05.15-planes-readsb-prod-0"
      ]
+    },
+    "zona": {
+     "distancia_km": 113,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -119200,6 +120084,10 @@
     "titulo": {
      "en": "Drone flies over Toulouse-Blagnac airport",
      "es": "Un dron sobrevuela el aeropuerto de Toulouse-Blagnac"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -119417,6 +120305,10 @@
     "titulo": {
      "en": "Drone in prohibited flight zone at Memmingen Airport interrupts operations",
      "es": "Dron en la zona de vuelo prohibido del aeropuerto de Memmingen interrumpe operaciones"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -119595,6 +120487,11 @@
     "titulo": {
      "en": "Tourist flies possible drone next to Svolvær airport before an aircraft takeoff",
      "es": "Turista vuela un posible dron junto al aeropuerto de Svolvær antes del despegue de un avión"
+    },
+    "zona": {
+     "distancia_km": 569,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -119893,6 +120790,10 @@
     "titulo": {
      "en": "Drone forces closure of Memmingen Airport airspace",
      "es": "Dron obliga a cerrar el espacio aéreo del aeropuerto de Memmingen"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -120159,6 +121060,10 @@
     "titulo": {
      "en": "Agricultural drone blocks Cuneo-Levaldigi airport",
      "es": "Drone agricola bloquea el aeropuerto de Cuneo-Levaldigi"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -121286,6 +122191,11 @@
     "titulo": {
      "en": "Drone over Lithuania closes Vilnius airport and triggers NATO air defense response",
      "es": "Drones sobre Lituania cierran el aeropuerto de Vilnius y activan la defensa aérea de la OTAN"
+    },
+    "zona": {
+     "distancia_km": 27,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -121496,6 +122406,11 @@
     "titulo": {
      "en": "Drone causes diversion of two flights at Leipzig/Halle airport",
      "es": "Dron causa desvío de dos vuelos en el aeropuerto de Leipzig/Halle"
+    },
+    "zona": {
+     "distancia_km": 613,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -121655,6 +122570,10 @@
     "titulo": {
      "en": "Possible drones over RAF Lakenheath linked to Kremlin spy ship",
      "es": "Posibles drones sobre la base aérea de RAF Lakenheath vinculados a un buque espía"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -122451,6 +123370,11 @@
     "titulo": {
      "en": "Drone forces temporary closure of Sofia airport airspace",
      "es": "Dron cierra el espacio aéreo del aeropuerto de Sofía"
+    },
+    "zona": {
+     "distancia_km": 415,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -124738,6 +125662,11 @@
      "datos": [
       "https://github.com/adsblol/globe_history_2026/releases/tag/v2026.05.30-planes-readsb-prod-0"
      ]
+    },
+    "zona": {
+     "distancia_km": 892,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -124916,6 +125845,10 @@
     "titulo": {
      "en": "Drones over Shannon Airport during Trump's visit",
      "es": "Drones sobre el aeropuerto de Shannon durante la visita de Trump"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -125151,6 +126084,10 @@
     "titulo": {
      "en": "Drone observed at Bergen airport forces flight diversions",
      "es": "Dron observado en el aeropuerto de Bergen obliga a desviar vuelos"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -125438,6 +126375,11 @@
     "titulo": {
      "en": "NATO shoots down drone over Lithuania after Vilnius airport closure",
      "es": "Dron derriba NATO sobre Lituania tras cerrar el aeropuerto de Vilnius"
+    },
+    "zona": {
+     "distancia_km": 26,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -125917,6 +126859,11 @@
      "datos": [
       "https://github.com/adsblol/globe_history_2026/releases/tag/v2026.09.08-planes-readsb-prod-0"
      ]
+    },
+    "zona": {
+     "distancia_km": 46,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -126205,6 +127152,11 @@
     "titulo": {
      "en": "Possible drones over Sofia Airport cause flight delays",
      "es": "Posibles drones sobre el aeropuerto de Sofía causan retrasos en vuelos"
+    },
+    "zona": {
+     "distancia_km": 415,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -126338,6 +127290,10 @@
     "titulo": {
      "en": "Possible drones over Hannover airport force suspension of landings",
      "es": "Posibles drones sobre el aeropuerto de Hannover obligan a suspender aterrizajes"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -126531,6 +127487,10 @@
     "titulo": {
      "en": "A possible drone flies over Airbus facilities at Toulouse-Blagnac airport",
      "es": "Un posible dron sobrevuela las instalaciones de Airbus en el aeropuerto de Toulouse-Blagnac"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -126721,6 +127681,10 @@
     "titulo": {
      "en": "Drone violates airspace of NATO member Romania",
      "es": "Dron viola el espacio aéreo de Rumania, miembro de la OTAN"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -126966,6 +127930,10 @@
     "titulo": {
      "en": "Three drones shot down over Borcea air base",
      "es": "Tres drones derribados sobre la base aérea de Borcea"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -127214,6 +128182,11 @@
     "titulo": {
      "en": "Amateur drone halts flights at Vilnius airport",
      "es": "Dron civil detiene vuelos en el aeropuerto de Vilna"
+    },
+    "zona": {
+     "distancia_km": 26,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -127561,6 +128534,10 @@
     "titulo": {
      "en": "Drones over Cologne/Bonn airport disrupt air traffic",
      "es": "Drones sobre el aeropuerto de Colonia/Bonn interrumpen el tráfico aéreo"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -128060,6 +129037,10 @@
     "titulo": {
      "en": "Drone shot down over Buzău after unauthorized entry into Romanian airspace",
      "es": "Dron derribado sobre Buzău tras entrar sin autorización en el espacio aéreo de Rumania"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -128410,6 +129391,10 @@
     "titulo": {
      "en": "Drones near Brussels Airport disrupt air traffic",
      "es": "Drones sobre el aeropuerto de Bruselas alteran el tráfico aéreo"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -128968,6 +129953,10 @@
     "titulo": {
      "en": "Drone violates Moldavian airspace, forcing closure of air traffic",
      "es": "Dron viola el espacio aéreo de Moldavia y obliga a cerrar el tráfico aéreo"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -129362,6 +130351,10 @@
     "titulo": {
      "en": "Drone shot down by NATO fighters over Galați",
      "es": "Dron derribado por cazas NATO sobre Galați"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -130215,6 +131208,11 @@
     "titulo": {
      "en": "Stray drone hits power plant in Estonia",
      "es": "Dron desviado golpea central eléctrica en Estonia"
+    },
+    "zona": {
+     "distancia_km": 4,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -130678,6 +131676,10 @@
     "titulo": {
      "en": "Drone enters Moldavian airspace from Ukraine; temporary closure",
      "es": "Dron entra en el espacio aéreo de Moldavia desde Ucrania; cierre temporal"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -131512,6 +132514,11 @@
      "datos": [
       "https://github.com/adsblol/globe_history_2026/releases/tag/v2026.09.23-planes-readsb-prod-0"
      ]
+    },
+    "zona": {
+     "distancia_km": 476,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -131740,6 +132747,11 @@
     "titulo": {
      "en": "Drone fragment found in the sea near Costineşti",
      "es": "Fragmento de dron hallado en el mar cerca de Costineşti"
+    },
+    "zona": {
+     "distancia_km": 142,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -132201,6 +133213,10 @@
     "titulo": {
      "en": "Drone explodes in Galați, Romania rejects NATO Article 4 activation",
      "es": "Dron explota en Galați, Rumania rechaza activar Artículo 4 de la OTAN"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -132568,6 +133584,10 @@
     "titulo": {
      "en": "Shahed drone flies over Moldova during attack on Ukraine",
      "es": "Dron Shahed sobrevuela Moldavia durante ataque a Ucrania"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -133089,6 +134109,10 @@
     "titulo": {
      "en": "Drone shot down over Padina, Romania",
      "es": "Dron derribado sobre Padina, Rumania"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -134527,6 +135551,10 @@
     "titulo": {
      "en": "Unauthorized drones temporarily close Luxembourg airport",
      "es": "Drones no autorizados cierran temporalmente el aeropuerto de Luxemburgo"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -134916,6 +135944,11 @@
     "titulo": {
      "en": "Brief suspension at Berlin airport after drone detection",
      "es": "Suspensión temporal en el aeropuerto de Berlín tras detectar un dron"
+    },
+    "zona": {
+     "distancia_km": 471,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -150156,6 +151189,11 @@
     "titulo": {
      "en": "Drone with explosive charge causes closure of Leipzig airport",
      "es": "Dron con carga explosiva causa cierre del aeropuerto de Leipzig"
+    },
+    "zona": {
+     "distancia_km": 613,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -150556,6 +151594,10 @@
     "titulo": {
      "en": "Shahed drone enters Moldavian airspace from Ukraine",
      "es": "Dron Shahed entra en el espacio aéreo de Moldavia desde Ucrania"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -151119,6 +152161,11 @@
     "titulo": {
      "en": "NATO fighters shoot down drone over Latvia",
      "es": "Cazas de la OTAN derriban un dron sobre Letonia"
+    },
+    "zona": {
+     "distancia_km": 34,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -151552,6 +152599,10 @@
     "titulo": {
      "en": "Two drones spotted over Mechernich military base in Germany",
      "es": "Dos drones sobre la base militar de Mechernich en Alemania"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -151884,6 +152935,10 @@
     "titulo": {
      "en": "A drone causes flight delays to Melilla",
      "es": "Un dron causa retraso en vuelos a Melilla"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -152015,6 +153070,11 @@
     "titulo": {
      "en": "Suspicious object caught in stabilizers at Agigea, possibly a drone",
      "es": "Objeto sospechoso se engancha en estabilizadores en Agigea, posiblemente un dron"
+    },
+    "zona": {
+     "distancia_km": 126,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -152216,6 +153276,11 @@
     "titulo": {
      "en": "Unauthorized drone detected over Moldavian airspace",
      "es": "Dron no autorizado sobrevuela el espacio aéreo de Moldavia"
+    },
+    "zona": {
+     "distancia_km": 0,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -152637,6 +153702,10 @@
     "titulo": {
      "en": "Drone enters Romanian airspace near Ukraine border",
      "es": "Dron entra en el espacio aéreo de Rumania cerca de la frontera con Ucrania"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -152910,6 +153979,10 @@
     "titulo": {
      "en": "Drone detected by military radars north of Isaccea, near Ukraine border",
      "es": "Dron detectado por radares militares al norte de Isaccea, cerca de la frontera con Ucrania"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -153102,6 +154175,10 @@
     "titulo": {
      "en": "Drone that penetrated Romanian airspace crashes in a field",
      "es": "Dron que penetró el espacio aéreo rumano se estrella en un campo"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -153341,6 +154418,10 @@
     "titulo": {
      "en": "Drone detected in Moldavian airspace forces closure of northern and central regions",
      "es": "Dron detectado en el espacio aéreo de Moldavia obliga a cerrar el norte y centro del país"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -153480,6 +154561,10 @@
     "titulo": {
      "en": "Suspected drone sighting causes flight disruptions at London Heathrow Airport",
      "es": "Alerta por posible dron en el aeropuerto de Londres Heathrow causa interrupciones en vuelos"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -153629,6 +154714,10 @@
     "titulo": {
      "en": "Possible drone disrupts operations at Barcelona airport",
      "es": "Un posible dron afecta las operaciones del aeropuerto de Barcelona"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -153874,6 +154963,11 @@
     "titulo": {
      "en": "Drone flown without authorisation next to Budapest airport",
      "es": "Dron volado sin autorización junto al aeropuerto de Budapest"
+    },
+    "zona": {
+     "distancia_km": 241,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -154053,6 +155147,11 @@
     "titulo": {
      "en": "Drone enters Moldova and explodes; airport closures in Poland",
      "es": "Dron entra en Moldavia y explota; cierres en aeropuertos de Polonia"
+    },
+    "zona": {
+     "distancia_km": 74,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -154428,6 +155527,10 @@
     "titulo": {
      "en": "Shahed drone overflies Moldovan airspace",
      "es": "Dron Shahed sobrevuela el espacio aéreo de Moldavia"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -154591,6 +155694,10 @@
     "titulo": {
      "en": "Unauthorised drone causes collision risk with an airliner approaching Heathrow over Marlow",
      "es": "Dron no autorizado causa riesgo de colisión con un avión que se aproximaba a Heathrow sobre Marlow"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -155388,6 +156495,11 @@
     "titulo": {
      "en": "NATO fighters shoot down drone over Lithuania",
      "es": "Cazas de la OTAN derriban un dron sobre Lituania"
+    },
+    "zona": {
+     "distancia_km": 81,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -155670,6 +156782,11 @@
     "titulo": {
      "en": "Drones penetrate Finnish airspace and crash",
      "es": "Drones penetran el espacio aéreo de Finlandia y se estrellan"
+    },
+    "zona": {
+     "distancia_km": 69,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -155982,6 +157099,10 @@
     "titulo": {
      "en": "Recreational drone forces closure of Gran Canaria airport",
      "es": "Un dron recreativo obliga a paralizar el aeropuerto de Gran Canaria"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -156561,6 +157682,10 @@
     "titulo": {
      "en": "Drone crashes in Solca after entering Romanian airspace",
      "es": "Dron se estrella en Solca tras entrar en el espacio aéreo de Rumania"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -156883,6 +158008,10 @@
     "titulo": {
      "en": "Unidentified drone crosses Moldavian airspace",
      "es": "Dron no identificado atraviesa el espacio aéreo de Moldavia"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -157318,6 +158447,10 @@
     "titulo": {
      "en": "Drones violate Moldova's airspace and one crashes near border",
      "es": "Drones violan el espacio aéreo de Moldavia y uno se estrella en la frontera con Ucrania"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -157917,6 +159050,10 @@
     "titulo": {
      "en": "Drone debris falls in Romania following attack on Ukraine",
      "es": "Restos de drones caen en Rumanía tras ataque contra Ucrania"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -158114,6 +159251,10 @@
     "titulo": {
      "en": "Drone nearly collides with Virgin Atlantic aircraft near Heathrow",
      "es": "Dron casi colisiona con avión de Virgin Atlantic cerca de Heathrow"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -158769,6 +159910,10 @@
     "titulo": {
      "en": "Drone that entered Moldavian airspace crashes and explodes",
      "es": "Dron que entró en el espacio aéreo de Moldavia se estrella y explota"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -159266,6 +160411,11 @@
     "titulo": {
      "en": "Drone enters Bulgarian airspace and explodes near gas pipeline",
      "es": "Dron entra en el espacio aéreo de Bulgaria y explota cerca de un gasoducto"
+    },
+    "zona": {
+     "distancia_km": 170,
+     "grupo": "frontera",
+     "motivo": "costa_mar_negro"
     }
    },
    "type": "Feature"
@@ -162936,6 +164086,10 @@
     "titulo": {
      "en": "Russian drone crashes on residential building in Galați, Romania",
      "es": "Dron ruso cae sobre un bloque de viviendas en Galați, Rumania"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -163426,6 +164580,10 @@
     "titulo": {
      "en": "Drone crashes in Romania after entering its airspace",
      "es": "Dron se estrella en Rumanía tras entrar en su espacio aéreo"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -163924,6 +165082,10 @@
     "titulo": {
      "en": "Drone detected over Moldova closes northern airspace",
      "es": "Dron detectado sobre Moldavia cierra el espacio aéreo del norte"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -164112,6 +165274,11 @@
     "titulo": {
      "en": "Unauthorized drone detected in restricted zone of Vilnius airport",
      "es": "Dron no autorizado detectado en la zona restringida del aeropuerto de Vilna"
+    },
+    "zona": {
+     "distancia_km": 26,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -164908,6 +166075,10 @@
     "titulo": {
      "en": "Drone incursion into Moldovan airspace",
      "es": "Dron viola el espacio aéreo de Moldavia"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -165313,6 +166484,10 @@
     "titulo": {
      "en": "Drone flies over Tulcea and forces F-16 fighter jets to scramble",
      "es": "Dron sobrevuela Tulcea y obliga a despegar cazas F-16"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -165905,6 +167080,10 @@
     "titulo": {
      "en": "Drone shot down by Spanish F-18 after entering Romanian airspace near Galați",
      "es": "Dron derribado por un F-18 español tras entrar en el espacio aéreo de Rumania cerca de Galați"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -166201,6 +167380,10 @@
     "titulo": {
      "en": "Private drone interrupts air traffic at Düsseldorf airport",
      "es": "Dron privado interrumpe el tráfico aéreo en el aeropuerto de Düsseldorf"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -166387,6 +167570,10 @@
     "titulo": {
      "en": "Drone wreckage found in Tulcea, Romania",
      "es": "Restos de dron encontrados en Tulcea, Rumania"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -166735,6 +167922,10 @@
     "titulo": {
      "en": "Drone violates Moldavian airspace during attacks on Ukraine",
      "es": "Dron viola el espacio aéreo de Moldavia durante ataques a Ucrania"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -167314,6 +168505,11 @@
     "titulo": {
      "en": "Russian drone approaches Charles de Gaulle aircraft carrier in Malmö",
      "es": "Dron ruso se aproxima al portaaviones Charles de Gaulle en Malmö"
+    },
+    "zona": {
+     "distancia_km": 434,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -167447,6 +168643,11 @@
     "titulo": {
      "en": "Drone fragments found in Volintiri, Moldova",
      "es": "Restos de dron hallados en Volintiri, Moldavia"
+    },
+    "zona": {
+     "distancia_km": 3,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -167606,6 +168807,11 @@
     "titulo": {
      "en": "Amateur possible drones cause restrictions at Munich airport during Oktoberfest",
      "es": "Posibles drones de aficionados causan restricciones en el aeropuerto de Múnich durante el Oktoberfest"
+    },
+    "zona": {
+     "distancia_km": 892,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -168015,6 +169221,10 @@
     "titulo": {
      "en": "Geran drone explodes in Orhei after illegally entering Moldovan airspace",
      "es": "Dron Geran explota en Orhei tras entrar ilegalmente en el espacio aéreo de Moldavia"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -168617,6 +169827,10 @@
     "titulo": {
      "en": "Three drones violate Moldova's airspace and two explode",
      "es": "Tres drones violan el espacio aéreo de Moldavia y dos explotan"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -169383,6 +170597,10 @@
     "titulo": {
      "en": "Drone targeting RAF Akrotiri",
      "es": "Dron contra RAF Akrotiri"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -169596,6 +170814,10 @@
     "titulo": {
      "en": "Drone crashes in Plauru, Tulcea, following attacks on Ukraine",
      "es": "Dron cae en Plauru, Tulcea, tras ataques contra Ucrania"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -170450,6 +171672,10 @@
     "titulo": {
      "en": "Drone parts found near Steinhuder Meer in Germany",
      "es": "Restos de dron hallados cerca del Steinhuder Meer en Alemania"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -170709,6 +171935,10 @@
     "titulo": {
      "en": "Drone that crossed Ukraine and Moldova crashes in Suceava, Romania",
      "es": "Dron que atravesó Ucrania y Moldavia se estrella en Suceava, Rumania"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -170884,6 +172114,10 @@
     "titulo": {
      "en": "Drone crashed in Plauru, Romania",
      "es": "Dron caído en Plauru, Rumania"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -171352,6 +172586,10 @@
     "titulo": {
      "en": "Shahed drone detected in Moldavian airspace",
      "es": "Dron Shahed detectado en el espacio aéreo de Moldavia"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -171761,6 +172999,10 @@
     "titulo": {
      "en": "Drone sighted over Zaventem airport causes temporary closure",
      "es": "Dron avistado sobre el aeropuerto de Zaventem causa cierre temporal"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -171974,6 +173216,10 @@
     "titulo": {
      "en": "Military drone crashes in Tulcea after penetrating Romanian airspace",
      "es": "Dron militar se estrella en Tulcea tras penetrar el espacio aéreo rumano"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -172505,6 +173751,11 @@
     "titulo": {
      "en": "Drones enter Latvian airspace and crash",
      "es": "Drones entran en el espacio aéreo de Letonia y se estrellan"
+    },
+    "zona": {
+     "distancia_km": 42,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -172822,6 +174073,11 @@
      "datos": [
       "https://github.com/adsblol/globe_history_2026/releases/tag/v2026.09.06-planes-readsb-prod-0"
      ]
+    },
+    "zona": {
+     "distancia_km": 892,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -173098,6 +174354,10 @@
     "titulo": {
      "en": "Shahed drone illegally overflies Moldavian airspace",
      "es": "Dron Shahed sobrevuela ilegalmente el espacio aéreo de Moldavia"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -173314,6 +174574,10 @@
     "titulo": {
      "en": "Six unidentified drone overflights over a German military base",
      "es": "Seis sobrevuelos de drones no identificados sobre una base militar alemana"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -173545,6 +174809,10 @@
     "titulo": {
      "en": "Drone crashes in Tulcea after penetrating Romanian airspace",
      "es": "Dron cae en Tulcea tras penetrar el espacio aéreo de Rumania"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -173738,6 +175006,11 @@
     "titulo": {
      "en": "Drone overflies Romanian airspace near Tulcea",
      "es": "Dron sobrevuela el espacio aéreo de Rumania cerca de Tulcea"
+    },
+    "zona": {
+     "distancia_km": 7,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -174007,6 +175280,10 @@
     "titulo": {
      "en": "Drone penetrates Romanian airspace near Tulcea",
      "es": "Dron penetra el espacio aéreo de Rumania cerca de Tulcea"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -174214,6 +175491,10 @@
     "titulo": {
      "en": "Romania shoots down drone that penetrated its airspace",
      "es": "Rumanía derriba un dron que penetró en su espacio aéreo"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -174443,6 +175724,10 @@
     "titulo": {
      "en": "Drone alert briefly interrupts air traffic at Hamburg airport",
      "es": "Alarma de dron interrumpe brevemente el tráfico aéreo en Hamburgo"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -174675,6 +175960,10 @@
     "titulo": {
      "en": "Unidentified drone penetrates Moldova's airspace from Ukraine",
      "es": "Dron no identificado penetra el espacio aéreo de Moldavia procedente de Ucrania"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -174939,6 +176228,10 @@
     "titulo": {
      "en": "Possible drone detected near Tulcea without entering Romanian airspace",
      "es": "Posible dron detectado cerca de Tulcea sin entrar en espacio aéreo rumano"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -175136,6 +176429,10 @@
     "titulo": {
      "en": "Possible drones penetrate Moldovan airspace during Zelenski's transit",
      "es": "Posibles drones penetran el espacio aéreo de Moldavia durante tránsito de Zelenski"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -175531,6 +176828,10 @@
     "titulo": {
      "en": "Drone shot down in Romanian airspace",
      "es": "Dron derribado en el espacio aéreo de Rumania"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -175765,6 +177066,11 @@
     "titulo": {
      "en": "Drones over Copenhagen close area around US embassy",
      "es": "Drones sobre Copenhague cierran área de embajada estadounidense"
+    },
+    "zona": {
+     "distancia_km": 462,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -175958,6 +177264,10 @@
     "titulo": {
      "en": "Drone detected in Romanian airspace prompts F-16 fighters to take off",
      "es": "Dron detectado en el espacio aéreo de Rumania obliga a despegar cazas F-16"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -176178,6 +177488,10 @@
     "titulo": {
      "en": "Unauthorized drone flies over Cherbourg military port",
      "es": "Un dron no autorizado sobrevuela el puerto militar de Cherburgo"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -176359,6 +177673,10 @@
     "titulo": {
      "en": "Drone loaded hits building in Galați",
      "es": "Dron impacta contra un edificio en Galați"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -176617,6 +177935,10 @@
     "titulo": {
      "en": "Drone penetrates Moldavian airspace and crashes near Talmaza",
      "es": "Dron penetra el espacio aéreo de Moldavia y se estrella cerca de Talmaza"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -176848,6 +178170,10 @@
     "titulo": {
      "en": "Drone discovered in Moldova after airspace incursion in March",
      "es": "Dron descubierto en Moldavia tras incursión aérea en marzo"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -177086,6 +178412,11 @@
     "titulo": {
      "en": "Sofia airport closure due to unconfirmed drone signals",
      "es": "Cierre del aeropuerto de Sofía por señales de drones no confirmadas"
+    },
+    "zona": {
+     "distancia_km": 503,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -177267,6 +178598,10 @@
     "titulo": {
      "en": "Military drone crashes in a house in Vrancea, Romania",
      "es": "Dron militar se estrella en una casa en Vrancea, Rumania"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -177558,6 +178893,10 @@
     "titulo": {
      "en": "Drone flies over Bălți city in Moldova",
      "es": "Dron sobrevuela la ciudad de Bălți en Moldavia"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -178213,6 +179552,11 @@
     "titulo": {
      "en": "Explosion of a drone at the Port of Constanza",
      "es": "Explosión de un dron en el Puerto de Constanza"
+    },
+    "zona": {
+     "distancia_km": 121,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -178430,6 +179774,11 @@
     "titulo": {
      "en": "Drone found at coal mine in Poland",
      "es": "Dron hallado en una mina de carbón en Polonia"
+    },
+    "zona": {
+     "distancia_km": 232,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -178674,6 +180023,10 @@
     "titulo": {
      "en": "A drone forces Lanzarote airport to close for 40 minutes",
      "es": "Un dron obliga a cerrar el aeropuerto de Lanzarote durante 40 minutos"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -178907,6 +180260,10 @@
     "titulo": {
      "en": "Drone shot down over Poggioreale prison in Naples",
      "es": "Dron derribado sobre la cárcel de Poggioreale en Nápoles"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -179042,6 +180399,11 @@
     "titulo": {
      "en": "Illegal possible drones cause restrictions at Munich airport",
      "es": "Posibles drones ilegales causan restricciones en el aeropuerto de Múnich"
+    },
+    "zona": {
+     "distancia_km": 892,
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -180798,6 +182160,10 @@
     "titulo": {
      "en": "Multiple drones fly over Moldova with explosions in several districts",
      "es": "Múltiples drones sobrevuelan Moldavia con explosiones en varios distritos"
+    },
+    "zona": {
+     "grupo": "frontera",
+     "motivo": "ataque"
     }
    },
    "type": "Feature"
@@ -182196,6 +183562,11 @@
     "titulo": {
      "en": "Vilnius airport closure following drone detection",
      "es": "Cierre del aeropuerto de Vilna por detección de dron"
+    },
+    "zona": {
+     "distancia_km": 28,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -182367,6 +183738,11 @@
     "titulo": {
      "en": "Drone explodes at Port of Constanza",
      "es": "Dron explota en el Puerto de Constanza"
+    },
+    "zona": {
+     "distancia_km": 121,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -182575,6 +183951,11 @@
     "titulo": {
      "en": "Drone explodes in Constanza Port after penetrating airspace",
      "es": "Dron explota en el Puerto de Constanza tras penetrar el espacio aéreo"
+    },
+    "zona": {
+     "distancia_km": 121,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -182716,6 +184097,10 @@
     "titulo": {
      "en": "Uncontrolled drone forces closure of Gran Canaria airport",
      "es": "Dron fuera de control obliga a cerrar el aeropuerto de Gran Canaria"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -183533,6 +184918,10 @@
     "titulo": {
      "en": "Unidentified drone forces flight diversions at Málaga airport",
      "es": "Dron no identificado obliga a desviar vuelos en el aeropuerto de Málaga"
+    },
+    "zona": {
+     "grupo": "interior",
+     "motivo": "lejos_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -183747,6 +185136,11 @@
     "titulo": {
      "en": "Drone explodes at Port of Constanza",
      "es": "Dron explota en el Puerto de Constanza"
+    },
+    "zona": {
+     "distancia_km": 121,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -187053,6 +188447,11 @@
     "titulo": {
      "en": "Naval drone explodes at Port of Constanza",
      "es": "Dron marino explota en el Puerto de Constanza"
+    },
+    "zona": {
+     "distancia_km": 120,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -187316,6 +188715,11 @@
     "titulo": {
      "en": "Explosion of a maritime drone at Constanța Port affects tourism",
      "es": "Explosión de un dron marítimo en el Puerto de Constanza afecta el turismo"
+    },
+    "zona": {
+     "distancia_km": 121,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -187516,6 +188920,11 @@
     "titulo": {
      "en": "Drone explodes at Port of Constanza",
      "es": "Dron explota en el Puerto de Constanza"
+    },
+    "zona": {
+     "distancia_km": 121,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
@@ -187800,6 +189209,11 @@
     "titulo": {
      "en": "Unauthorized drone detected and neutralized at Port of Constanza",
      "es": "Dron no autorizado detectado y neutralizado en el Puerto de Constanza"
+    },
+    "zona": {
+     "distancia_km": 121,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
     }
    },
    "type": "Feature"
