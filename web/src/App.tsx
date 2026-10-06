@@ -1545,15 +1545,15 @@ export function App() {
       enHoja={enHoja}
     />
   );
-  const hayCorredoresOcultos =
+  const hayCorredores =
     capas.ucrania &&
     capas.corredores &&
     corredores !== null &&
     corredoresPrincipales !== null &&
-    corredores.length > corredoresPrincipales.length;
-  const leyendas = (capas.gnss || capas.presion || hayCorredoresOcultos) && (
+    corredores.length > 0;
+  const leyendas = (capas.gnss || capas.presion || hayCorredores) && (
     <div className="flex flex-col items-start gap-1.5" data-leyendas="">
-      {hayCorredoresOcultos && corredores !== null && corredoresPrincipales !== null && (
+      {hayCorredores && corredores !== null && corredoresPrincipales !== null && (
         <LeyendaCorredores
           t={t}
           principales={corredoresPrincipales.length}

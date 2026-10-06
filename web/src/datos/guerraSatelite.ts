@@ -279,32 +279,41 @@ export function corredoresDelPeriodo(ucrania: ResumenUcrania, periodo: Periodo):
     .sort((a, b) => b.drones - a.drones || a.clave.localeCompare(b.clave));
 }
 
-/** Corredores principales: en cada sentido, los 10 con más drones. */
-export const CORREDORES_PRINCIPALES = 10;
+/** Corredores principales: los 50 con más drones del periodo, sumando los dos sentidos. */
+export const CORREDORES_PRINCIPALES = 50;
 
 /**
- * Los corredores principales del periodo. Con periodos largos («Todo») salen cientos de arcos de
- * cada zona a cada región y el mapa se vuelve una maraña: se dibujan los que llevan la mayor
- * parte de los drones, y el resto, si se pide.
+ * Los corredores principales del periodo, de más a menos drones. Con periodos largos («Todo»)
+ * salen cientos de arcos de cada zona a cada región: se dibujan los 50 que llevan más drones (el
+ * grosor y la opacidad separan los principales de los secundarios), y el resto, si se pide.
  */
 export function principales(corredores: readonly Corredor[]): Corredor[] {
-  const resultado: Corredor[] = [];
-  for (const sentido of ["RU_UA", "UA_RU"] as const) {
-    const propios = corredores.filter((c) => c.sentido === sentido).sort((a, b) => b.drones - a.drones || a.clave.localeCompare(b.clave));
-    resultado.push(...propios.slice(0, CORREDORES_PRINCIPALES));
-  }
-  return resultado;
+  return [...corredores]
+    .sort((a, b) => b.drones - a.drones || a.clave.localeCompare(b.clave))
+    .slice(0, CORREDORES_PRINCIPALES);
 }
 
-export const ANCHO_MINIMO_CORREDOR = 0.4;
-export const ANCHO_MAXIMO_CORREDOR = 3;
+export const ANCHO_MINIMO_CORREDOR = 0.5;
+export const ANCHO_MAXIMO_CORREDOR = 4.5;
+export const OPACIDAD_MINIMA_CORREDOR = 0.12;
+export const OPACIDAD_MAXIMA_CORREDOR = 0.7;
+
+/** Lo que pesa un corredor frente al mayor del periodo, de 0 a 1 (raíz de los drones). */
+function pesoDeCorredor(drones: number, maximo: number): number {
+  if (maximo <= 0 || drones <= 0) return 0;
+  return Math.sqrt(Math.min(1, drones / maximo));
+}
 
 /** Grosor del trazo: crece con la raíz de los drones, del mínimo al máximo del periodo. */
 export function anchoDeCorredor(drones: number, maximo: number): number {
-  if (maximo <= 0 || drones <= 0) return ANCHO_MINIMO_CORREDOR;
-  const fraccion = Math.sqrt(Math.min(1, drones / maximo));
-  const ancho = ANCHO_MINIMO_CORREDOR + (ANCHO_MAXIMO_CORREDOR - ANCHO_MINIMO_CORREDOR) * fraccion;
+  const ancho = ANCHO_MINIMO_CORREDOR + (ANCHO_MAXIMO_CORREDOR - ANCHO_MINIMO_CORREDOR) * pesoDeCorredor(drones, maximo);
   return Math.round(ancho * 100) / 100;
+}
+
+/** Opacidad del trazo: los principales nítidos, los secundarios tenues. */
+export function opacidadDeCorredor(drones: number, maximo: number): number {
+  const opacidad = OPACIDAD_MINIMA_CORREDOR + (OPACIDAD_MAXIMA_CORREDOR - OPACIDAD_MINIMA_CORREDOR) * pesoDeCorredor(drones, maximo);
+  return Math.round(opacidad * 1000) / 1000;
 }
 
 /** Arco suave (curva cuadrática) entre dos puntos, curvado a la izquierda del sentido. */

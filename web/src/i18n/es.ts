@@ -1604,8 +1604,8 @@ export const es: Textos = {
     capas: "Capa de guerra",
     corredores: "Corredores",
     principales: {
-      principales: (n, total) => `Los ${n} corredores con más drones, de ${total}; el grosor, según los drones.`,
-      todos: (total) => `Los ${total} corredores del periodo; el grosor, según los drones.`,
+      principales: (n, total) => `${n} de ${total} corredores, los de más drones; el grosor y la intensidad, según los drones.`,
+      todos: (total) => `Los ${total} corredores del periodo; el grosor y la intensidad, según los drones.`,
       verTodos: (total) => `Ver los ${total}`,
       verPrincipales: "Ver solo los principales",
     },

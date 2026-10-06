@@ -12,7 +12,7 @@ import type {
   FocoRegion,
   IncidenteResumen,
 } from "../datos/tipos.ts";
-import { anchoDeCorredor, arco, opacidadDePerdida } from "../datos/guerraSatelite.ts";
+import { anchoDeCorredor, arco, opacidadDeCorredor, opacidadDePerdida } from "../datos/guerraSatelite.ts";
 import type {
   CiudadAlumbrado,
   CiudadSinLuz,
@@ -296,10 +296,11 @@ export function lineasDeEpisodio(
 export interface PropiedadesCorredor {
   clave: string;
   ancho: number;
+  opacidad: number;
   drones: number;
 }
 
-/** Los corredores del periodo como arcos, con el grosor según sus drones. */
+/** Los corredores del periodo como arcos, con el grosor y la opacidad según sus drones. */
 export function corredoresEnMapa(
   corredores: readonly Corredor[],
 ): FeatureCollection<LineString, PropiedadesCorredor> {
@@ -312,7 +313,12 @@ export function corredoresEnMapa(
       .map((c) => ({
         type: "Feature",
         geometry: { type: "LineString", coordinates: arco(c.desde, c.hasta) },
-        properties: { clave: c.clave, ancho: anchoDeCorredor(c.drones, maximo), drones: c.drones },
+        properties: {
+          clave: c.clave,
+          ancho: anchoDeCorredor(c.drones, maximo),
+          opacidad: opacidadDeCorredor(c.drones, maximo),
+          drones: c.drones,
+        },
       })),
   };
 }

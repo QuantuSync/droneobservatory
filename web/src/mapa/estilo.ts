@@ -170,8 +170,8 @@ export const ATENUADAS_SIN_SATELITE: readonly [
   [CAPA_IMPACTOS_FOCO_GRUPO, "circle-opacity", 0.15],
   [CAPA_FOCOS_UCRANIA, "circle-opacity", 0.15],
 ];
-/** Opacidad de los arcos con «Con satélite». */
-export const OPACIDAD_CORREDOR_SIN_SATELITE = 0.05;
+/** Opacidad de los arcos con «Con satélite»: una fracción de la de cada arco. */
+export const OPACIDAD_CORREDOR_SIN_SATELITE: ExpressionSpecification = ["*", ["get", "opacidad"], 0.25];
 export const CAPAS_DE_DENSIDAD: readonly string[] = ["densidad"];
 export const CAPAS_DE_PRESION: readonly string[] = [CAPA_PRESION, CAPA_PRESION_LINEA];
 export const CAPAS_DE_GNSS: readonly string[] = [CAPA_GNSS, CAPA_GNSS_LINEA];
@@ -223,11 +223,11 @@ export const CAPAS_DE_LUZ: readonly string[] = [
   CAPA_ALUMBRADO_PUNTO,
 ];
 
-/** Corredores: trazo fino, gris y de baja opacidad, por debajo de los impactos. */
+/** Corredores: violeta, por debajo de los impactos; cada arco con la opacidad según sus drones. */
 const COLOR_CORREDOR = PALETA.guerra;
-export const OPACIDAD_CORREDOR = 0.18;
+export const OPACIDAD_CORREDOR: ExpressionSpecification = ["get", "opacidad"];
 /** Opacidad de los demás arcos mientras uno está realzado. */
-export const OPACIDAD_CORREDOR_ATENUADO = 0.08;
+export const OPACIDAD_CORREDOR_ATENUADO: ExpressionSpecification = ["*", ["get", "opacidad"], 0.4];
 /** Radio del aro de realce de un punto de la capa de guerra. */
 export const RADIO_REALCE_PUNTO = 9;
 

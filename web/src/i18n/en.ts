@@ -1592,8 +1592,8 @@ export const en: Textos = {
     capas: "War layer",
     corredores: "Corridors",
     principales: {
-      principales: (n, total) => `The ${n} corridors with the most drones, of ${total}; width shows the drones.`,
-      todos: (total) => `All ${total} corridors in the period; width shows the drones.`,
+      principales: (n, total) => `${n} of ${total} corridors, those with the most drones; width and intensity show the drones.`,
+      todos: (total) => `All ${total} corridors in the period; width and intensity show the drones.`,
       verTodos: (total) => `Show all ${total}`,
       verPrincipales: "Show only the main ones",
     },

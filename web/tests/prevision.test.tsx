@@ -194,13 +194,26 @@ describe("leyendas", () => {
       drones,
       ataques: 1,
     });
-    const muchos = Array.from({ length: 200 }, (_, i) => corredor(i, 1000 - i * 4));
+    const muchos = Array.from({ length: 200 }, (_, i) => ({
+      ...corredor(i, 1000 - i * 4),
+      sentido: i % 3 === 0 ? ("UA_RU" as const) : ("RU_UA" as const),
+    }));
     const elegidos = principales(muchos);
-    expect(elegidos.length).toBe(10);
+    // Los 50 de más drones en total, sumando los dos sentidos.
+    expect(elegidos.length).toBe(50);
     expect(elegidos[0]?.drones).toBe(1000);
+    expect(elegidos[49]?.drones).toBe(1000 - 49 * 4);
+    expect(new Set(elegidos.map((c) => c.sentido)).size).toBe(2);
     const onTodos = vi.fn();
-    render(<LeyendaCorredores t={es} principales={12} total={200} todos={false} onTodos={onTodos} />);
+    render(<LeyendaCorredores t={es} principales={50} total={200} todos={false} onTodos={onTodos} />);
+    expect(screen.getByText(/^50 de 200 corredores/)).toBeTruthy();
     await userEvent.setup().click(screen.getByRole("button", { name: "Ver los 200" }));
     expect(onTodos).toHaveBeenCalled();
+  });
+
+  it("con 50 corredores o menos, la leyenda los cuenta y no ofrece ver todos", () => {
+    render(<LeyendaCorredores t={en} principales={23} total={23} todos={false} onTodos={() => undefined} />);
+    expect(screen.getByText(/^All 23 corridors in the period/)).toBeTruthy();
+    expect(screen.queryByRole("button")).toBeNull();
   });
 });

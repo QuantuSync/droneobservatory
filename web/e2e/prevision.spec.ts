@@ -118,7 +118,7 @@ for (const tamano of TAMANOS) {
       await page.waitForTimeout(2000);
       const leyenda = page.locator("[data-leyenda=corredores]");
       if ((await leyenda.count()) > 0) {
-        await expect(leyenda).toContainText(/con más drones|the most drones/);
+        await expect(leyenda).toContainText(/corredores, los de más drones|corridors, those with the most drones/);
       }
       await page.screenshot({ path: join(CAPTURAS, `corredores-todo-${tamano.nombre}.png`) });
     });

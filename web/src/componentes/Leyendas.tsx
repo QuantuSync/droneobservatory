@@ -51,7 +51,7 @@ export function LeyendaGnss({ t, estado }: { t: Textos; estado: EstadoGnss }) {
   );
 }
 
-/** Con muchos corredores solo se dibujan los principales: lo dice y deja ver todos. */
+/** Cuántos corredores se dibujan de cuántos hay; con más de los principales, deja ver todos. */
 export function LeyendaCorredores({
   t,
   principales,
@@ -66,15 +66,18 @@ export function LeyendaCorredores({
   onTodos: () => void;
 }) {
   const c = t.satelite.principales;
+  const hayOcultos = total > principales;
   return (
     <details open className="flotante w-max max-w-[min(20rem,calc(100vw-2rem))] px-2.5 py-1.5 text-xs" data-leyenda="corredores">
       <summary className="cursor-pointer font-medium text-texto">{t.satelite.corredores}</summary>
-      <p className="text-secundario" data-corredores-visibles={todos ? total : principales}>
-        {todos ? c.todos(total) : c.principales(principales, total)}
+      <p className="text-secundario" data-corredores-visibles={todos || !hayOcultos ? total : principales}>
+        {todos || !hayOcultos ? c.todos(total) : c.principales(principales, total)}
       </p>
-      <button type="button" className="control mt-1 min-h-11 text-xs underline underline-offset-2 esc:min-h-7" onClick={onTodos}>
-        {todos ? c.verPrincipales : c.verTodos(total)}
-      </button>
+      {hayOcultos && (
+        <button type="button" className="control mt-1 min-h-11 text-xs underline underline-offset-2 esc:min-h-7" onClick={onTodos}>
+          {todos ? c.verPrincipales : c.verTodos(total)}
+        </button>
+      )}
     </details>
   );
 }

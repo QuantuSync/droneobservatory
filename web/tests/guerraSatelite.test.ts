@@ -12,6 +12,9 @@ import {
   ANCHO_MAXIMO_CORREDOR,
   ANCHO_MINIMO_CORREDOR,
   anchoDeCorredor,
+  opacidadDeCorredor,
+  OPACIDAD_MAXIMA_CORREDOR,
+  OPACIDAD_MINIMA_CORREDOR,
   arco,
   casarZonas,
   ciudadesSinLuz,
@@ -160,12 +163,17 @@ describe("corredores de ataque", () => {
     expect(anchoDeCorredor(0, 100)).toBe(ANCHO_MINIMO_CORREDOR);
     expect(anchoDeCorredor(100, 100)).toBe(ANCHO_MAXIMO_CORREDOR);
     expect(anchoDeCorredor(25, 100)).toBeGreaterThan(anchoDeCorredor(10, 100));
+    expect(opacidadDeCorredor(0, 100)).toBe(OPACIDAD_MINIMA_CORREDOR);
+    expect(opacidadDeCorredor(100, 100)).toBe(OPACIDAD_MAXIMA_CORREDOR);
+    expect(opacidadDeCorredor(25, 100)).toBeGreaterThan(opacidadDeCorredor(10, 100));
     const resumen = resumirUcrania(publicacion([...rusos, ucraniano]), new Map(), geografia);
     const mapa = corredoresEnMapa(corredoresDelPeriodo(resumen, TODO));
     const anchos = mapa.features.map((f) => f.properties.ancho);
     // Los gruesos al final, encima de los finos.
     expect([...anchos].sort((a, b) => a - b)).toEqual(anchos);
     expect(Math.max(...anchos)).toBe(ANCHO_MAXIMO_CORREDOR);
+    const opacidades = mapa.features.map((f) => f.properties.opacidad);
+    expect([...opacidades].sort((a, b) => a - b)).toEqual(opacidades);
   });
 
   it("el arco va de un extremo al otro, curvado y sin salirse", () => {
