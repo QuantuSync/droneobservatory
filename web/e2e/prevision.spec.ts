@@ -21,8 +21,12 @@ const TAMANOS = [
 async function preparar(contexto: BrowserContext, baseURL: string | undefined) {
   if (baseURL?.includes("localhost") !== true) return;
   await contexto.route(/your-objectstorage\.com|tiles\.droneobservatory\.eu/, async (ruta) => {
-    const respuesta = await ruta.fetch();
-    await ruta.fulfill({ response: respuesta, headers: { ...respuesta.headers(), "access-control-allow-origin": "*" } });
+    try {
+      const respuesta = await ruta.fetch();
+      await ruta.fulfill({ response: respuesta, headers: { ...respuesta.headers(), "access-control-allow-origin": "*" } });
+    } catch {
+      // La prueba ya ha terminado o ha cambiado de página: la petición en vuelo no importa.
+    }
   });
 }
 

@@ -63,7 +63,8 @@ test.describe("sin ejecutar código", () => {
     for (const [origen, destino] of Object.entries(borde.redirecciones).slice(0, 2)) {
       const respuesta = await page.request.get(origen, { maxRedirects: 0 });
       expect(respuesta.status()).toBe(308);
-      expect(respuesta.headers().location).toBe(destino);
+      // Vercel da la dirección absoluta; el servidor local, la relativa.
+      expect(new URL(respuesta.headers().location ?? "", "https://droneobservatory.eu").pathname).toBe(destino);
     }
   });
 });

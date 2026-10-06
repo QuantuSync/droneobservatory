@@ -1,7 +1,7 @@
 # Previsión y tendencias, frontera o interior y arreglos del detector de cierres
 
 European Observatory of Drone Incidents, 6 de octubre de 2026. Las horas son UTC. Fase 1 del
-encargo de previsión y tendencias: PR #138.
+encargo de previsión y tendencias: PR #138 (fusionado a las 12:43, `d9b6041`) y este informe.
 
 **En resumen.**
 
@@ -187,9 +187,11 @@ siguiente está a 191 km (aeropuerto de Bucarest, interior). El corte va en ese 
 Negro, el puerto de Constanza está en la costa y lo siguiente, el aeropuerto de Sofía, a más de 200
 km del mar.
 
-Resultado sobre los 435 publicados: 198 de frontera (100 por el ataque, 79 por distancia, 15
-entradas desde fuera sin lugar en un país fronterizo, 3 en la costa del mar Negro y 1 de Moldavia
-sin lugar) y 237 de interior (223 lejos de la frontera y 14 sin lugar). Cada incidente guarda `zona` con
+Resultado en producción tras la primera recogida con el código nuevo (13:17): de los 435
+publicados, **205 de frontera y 230 de interior**. La recogida guarda el grupo en la base con todos
+los datos del incidente (también si el dron entró desde fuera o es de un Estado, que no se
+publican): por eso son 7 más de frontera que si se calcula solo con lo publicado (198), sobre todo
+sobrevuelos de Polonia, Lituania y Letonia sin lugar que entraron desde fuera. Cada incidente guarda `zona` con
 `grupo`, `motivo` y, si hay punto o lugar, `distancia_km` (esquema 1.14.0); el cambio queda en el
 historial con su motivo. La recogida lo recalcula cada hora y solo guarda lo que cambia. En la
 exportación semanal lleva origen «deducido», método «regla».
@@ -266,7 +268,23 @@ Cambios ([`proceso/directo.py`](../proceso/directo.py), regla `directo-1.1.0`):
 - **Un despegue suelto** en mitad del cierre (Berlín, 23 de septiembre de 2026, a las 18:56) ya no
   reinicia la persistencia de la señal: ese ciclo no avisa, pero el siguiente sí si la señal sigue.
 
-Reproducción con las trazas del archivo: ver «Reproducción en directo» más abajo.
+**Reproducción con las trazas del archivo** (`recogida/directo_reproduccion.py`, en el servidor,
+como trabajo de sesión con 3 GB y prioridad baja; unos 14 minutos por día). Los cinco días clave,
+con el código nuevo, frente a lo que daba el anterior según
+[`informe_europa_directo.md`](informe_europa_directo.md):
+
+| Día | Antes | Después |
+| --- | --- | --- |
+| Antalya, 08/10/2025 (los receptores dejan de ver la zona) | Aviso falso a las 09:30 | Sin aviso (Antalya vigilado) |
+| Berlín, 23/09/2026 (cierre de 53 min con un despegue suelto) | No se detecta | **Detectado a las 18:49** (comienzo 18:15) |
+| 04/11/2025: Bruselas, Lieja y Múnich | Bruselas 19:09, Múnich 19:25; Lieja no vigilado | Bruselas 19:09 y Múnich 19:25, igual; **Lieja vigilado**, su cierre no da señal: de noche, con poco tráfico de carga, lo que falta no llega a 0,5 movimientos por minuto |
+| Chisináu, 08/09/2026 | No vigilado (cobertura insuficiente) | Sigue fuera: en el archivo de esos días la cobertura es insuficiente, también para la regla nueva |
+| Copenhague, 22/09/2025 | Detectado a las 18:52 | Detectado a las 18:52, igual |
+
+Los vigilados de esos días pasan de 86 a 90-109 (con los aeropuertos con cierre publicado). La
+reproducción de los 16 días restantes de la lista (días de cierre no detectados y días normales) se
+paró para dejar sitio al ensayo de la fusión (un trabajo de sesión a la vez); queda en los
+pendientes.
 
 ## Registro en vivo y exportación
 
@@ -296,6 +314,60 @@ Reproducción con las trazas del archivo: ver «Reproducción en directo» más 
   cerrar sin mover el mapa en 360, 390, 412 px y escritorio; tocar una racha; filtro; corredores;
   página de texto sin código), que corre también en la integración continua.
 
+## Ensayo, fusión y producción
+
+**Ensayo** (paso c2 de [`fusiones.md`](fusiones.md)) en el servidor, sobre una copia propia de la
+base del disco y de las carpetas de datos, sin el cerrojo, con 3 GB y prioridad baja: recogida
+completa y exportación semanal sin subir, **código 0** (19 min). Clasificó 436 incidentes
+(205/231), calculó la previsión (frontera RO y MD, semana MD y RO, rachas MD y LT) y la exportación
+1.5.0 validó. Se repitió tras sacar la revisión de candidatas del tope de tiempo del tráfico (en el
+primer ensayo el histórico de anomalías se comía los 150 s y la revisión no llegaba a correr): de
+nuevo código 0, con 1.550 interrupciones revisadas.
+
+**Fusión**: PR #138, a las 12:43, por avance rápido con un solo commit con la dirección anónima, la
+lista de ficheros comprobada (94, de `publicacion/` solo `prevision.json`, nuevo) y la CI en verde
+sobre la rama rebasada (Python, web y las pruebas de navegador nuevas). Incidentes servidos antes y
+después: 435.
+
+**Recogidas siguientes**:
+
+- 13:17: código 0, publicada en `main`; frontera o interior guardado en 436 incidentes, 1.527
+  interrupciones revisadas, previsión calculada. Pico de 4 GB según systemd (con caché; tope 5 GB).
+  `prevision.json` entra en la publicación desde la recogida siguiente: el script lee la lista de
+  ficheros publicados antes de poner el código nuevo en el clon.
+- 14:17: código 0, publicada en `main` a las 14:34, ya con `publicacion/prevision.json` (previsión
+  del servidor: frontera RO y MD, semana MD y RO, rachas MD y LT); frontera o interior sin cambios
+  (0 guardados). Pico de 3,7 GB.
+
+**Producción** (droneobservatory.eu, después del despliegue con los datos de las 13:17): las 21
+pruebas de `e2e/prevision.spec.ts` en verde en 360, 390, 412 px y escritorio (abrir y cerrar sin
+mover el mapa, tocar una racha, filtro, corredores, página de texto sin código), y revisadas una a
+una las capturas:
+
+| Captura | Qué se ve |
+| --- | --- |
+| `prevision-360x800.png`, `prevision-390x844.png`, `prevision-412x915.png` | La pestaña «Previsión» dentro de «Europa ahora» en el teléfono |
+| `prevision-escritorio.png` | El desplegable con Rumanía (4 de cada 10, 40 %) y Moldavia (4 de cada 10, 37 %) |
+| `prevision-racha-*.png` | Tras tocar la racha de Moldavia: el país en el filtro, del 17/08 al 04/10, y el mapa sobre Moldavia |
+| `frontera-filtro-*.png` | Filtro «Dónde» con «Frontera» |
+| `corredores-todo-*.png` | Corredores con «Todo»: los 20 con más drones de 331 y «Ver los 331» |
+| `prevision-contadores-atribuidos-escritorio.png`, `-390x844.png` | Con el filtro de atribuidos: 4 incidentes · 4 confirmados · 4 atribuidos |
+| `prevision-presion-todo-escritorio.png`, `-390x844.png` | Presión con «Todo»: «Elige un periodo para ver la tendencia» |
+| `prevision-ficha-moldavia-escritorio.png`, `-390x844.png` | Ficha de Moldavia con su racha y la gráfica semanal con la banda de lo normal |
+| `prevision-360-antes-de-integrar.png` | Por qué «Previsión» va en una pestaña en el teléfono: con un periodo, el tercer botón bajaba a otra fila |
+
+`/prevision` y `/en/forecast` se leen sin ejecutar código (prueba), con su enlace en el sitemap y en
+llms.txt.
+
+**Primera carga.** En producción, mediana de 7 pasadas (`web/scripts/medir-carga.ts`), antes y
+después: escritorio FCP 300 → 252 ms y mapa listo 2.067 → 2.006 ms; móvil (CPU ×4) FCP 348 → 336 ms
+y mapa listo 2.851 → 2.956 ms. Para separar el ruido de la red, medición intercalada en local con
+las mismas teselas (3 rondas de 5 pasadas, versión anterior y nueva alternadas): móvil, mapa listo
+2.026 → 2.002 ms; escritorio, 962 → 981 ms; FCP sin cambios. **No empeora.** La previsión no entra
+en la primera carga (se pide al abrir «Previsión» o la ficha de un país). El HTML de la portada
+crece 7 KB (unos 2 KB comprimido): las dos secciones nuevas de la metodología, que la portada ya
+llevaba prerenderizada.
+
 ## Pendientes, con su arreglo
 
 - **Factor «ataque en curso».** Arreglo: con 6 meses de captura del seguimiento en directo, añadir
@@ -303,5 +375,12 @@ Reproducción con las trazas del archivo: ver «Reproducción en directo» más 
 - **Aviso de segunda noche.** Arreglo: el de la tabla de lo no publicado.
 - **Frontera de Lituania y Letonia.** Arreglo: un predictor propio con los ataques ucranianos
   contra el norte de Rusia.
+- **Reproducción de los 16 días restantes** (días de cierre no detectados y días normales) con el
+  código nuevo y el anterior. Arreglo: lanzar en el servidor la misma lista (`/var/tmp/eodi-prev/
+  reproducir.sh`, empezando por el sexto día) cuando no haya otro trabajo de la sesión; unas 4 horas.
+- **Lieja de noche.** Arreglo: el pendiente ya anotado en `informe_europa_directo.md` (segunda vía
+  de señal con aeronaves en espera y vuelos desviados cuando lo que falta crece despacio).
+- **Chisináu sin cobertura.** Arreglo: un receptor de adsb.lol en Moldavia (lo aporta cualquiera
+  con una antena) o el respaldo adsb.fi para ese círculo; hasta entonces no se puede vigilar.
 - **Cierres declarados muy cortos que el archivo no ve.** Arreglo: casar también los huecos «menor»
   de 15 a 30 minutos cuando un incidente del aeropuerto los nombra, solo para medir su duración.
