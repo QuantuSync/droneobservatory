@@ -169,7 +169,90 @@
    69.04
   ]
  },
- "calculado": "2026-10-06T17:17Z",
+ "calculado": "2026-10-06T18:17Z",
+ "cambios": {
+  "ambitos": [
+   {
+    "ambito": "ucrania_objetivo",
+    "cambios": [
+     {
+      "casos": 42,
+      "casos_habituales": 41,
+      "clave": "combustible",
+      "de": 234,
+      "de_habituales": 577,
+      "habitual": 0.071,
+      "reciente": 0.179,
+      "sentido": "sube"
+     },
+     {
+      "casos": 30,
+      "casos_habituales": 107,
+      "clave": "energia",
+      "de": 234,
+      "de_habituales": 577,
+      "habitual": 0.185,
+      "reciente": 0.128,
+      "sentido": "baja"
+     },
+     {
+      "casos": 80,
+      "casos_habituales": 150,
+      "clave": "industrial",
+      "de": 234,
+      "de_habituales": 577,
+      "habitual": 0.26,
+      "reciente": 0.342,
+      "sentido": "sube"
+     }
+    ],
+    "comprobacion": {
+     "casos": 21,
+     "mejora_cota": 0.717,
+     "mejora_sobre_habitual": 3.272,
+     "publicable": true,
+     "sostenidos": 17
+    }
+   },
+   {
+    "ambito": "europa_tipo",
+    "cambios": [
+     {
+      "casos": 48,
+      "casos_habituales": 53,
+      "clave": "incursion",
+      "de": 117,
+      "de_habituales": 258,
+      "habitual": 0.205,
+      "reciente": 0.41,
+      "sentido": "sube"
+     },
+     {
+      "casos": 14,
+      "casos_habituales": 75,
+      "clave": "interrupcion_aeroportuaria",
+      "de": 117,
+      "de_habituales": 258,
+      "habitual": 0.291,
+      "reciente": 0.12,
+      "sentido": "baja"
+     }
+    ],
+    "comprobacion": {
+     "casos": 12,
+     "mejora_cota": 2.9265,
+     "mejora_sobre_habitual": 3.866,
+     "publicable": true,
+     "sostenidos": 12
+    }
+   }
+  ],
+  "recientes": {
+   "desde": "2026-07",
+   "hasta": "2026-09"
+  },
+  "version": "cambios-1.0.0"
+ },
  "datos_hasta": "2026-10-06",
  "frontera": {
   "noche": {
