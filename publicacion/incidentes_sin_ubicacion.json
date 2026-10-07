@@ -28722,11 +28722,11 @@
      "credibilidad": 3,
      "fecha": {
       "precision": "aproximada",
-      "valor": "2026-10-06T13:45Z"
+      "valor": "2026-10-06T20:00Z"
      },
      "fiabilidad": "C",
-     "fuente_id": "gdelt-d484313427820b9f",
-     "medio": "bgnes.com",
+     "fuente_id": "gdelt-31a2eaba7e841183",
+     "medio": "insurancebusinessmag.com",
      "valor": "BG"
     },
     {
@@ -28739,11 +28739,10 @@
      "fiabilidad": "C",
      "fuente_id": "gdelt-d484313427820b9f",
      "medio": "bgnes.com",
-     "valor": "puerto"
+     "valor": "otra"
     },
     {
-     "campo": "presencia_dron",
-     "cita": "The drone attack on two commercial ships in Bulgaria's exclusive economic zone.",
+     "campo": "objetivo.nombre",
      "credibilidad": 3,
      "fecha": {
       "precision": "aproximada",
@@ -28752,6 +28751,19 @@
      "fiabilidad": "C",
      "fuente_id": "gdelt-d484313427820b9f",
      "medio": "bgnes.com",
+     "valor": "exclusive economic zone"
+    },
+    {
+     "campo": "presencia_dron",
+     "cita": "Both aerial and sea drones were involved",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-06T20:00Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-31a2eaba7e841183",
+     "medio": "insurancebusinessmag.com",
      "valor": "confirmada"
     },
     {
@@ -28790,7 +28802,7 @@
    "control": {
     "ultima_actualizacion": {
      "precision": "minuto",
-     "valor": "2026-10-06T21:17Z"
+     "valor": "2026-10-07T03:17Z"
     }
    },
    "drones": {
@@ -28800,7 +28812,7 @@
     }
    },
    "estado": {
-    "actual": "notificado",
+    "actual": "confirmado",
     "historial": [
      {
       "estado": "notificado",
@@ -28809,6 +28821,14 @@
        "valor": "2026-10-06T13:45Z"
       },
       "fuente_id": "gdelt-d484313427820b9f"
+     },
+     {
+      "estado": "confirmado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-06T20:00Z"
+      },
+      "fuente_id": "gdelt-31a2eaba7e841183-declaracion-1"
      }
     ]
    },
@@ -28821,7 +28841,7 @@
       "valor": "2026-10-06T13:45Z"
      },
      "fiabilidad": "C",
-     "frase_origen": "The drone attack on two commercial ships in Bulgaria's exclusive economic zone.",
+     "frase_origen": "The drone attack on two commercial ships in Bulgaria's exclusive economic zone",
      "id": "gdelt-d484313427820b9f",
      "idioma": "en",
      "medio": "bgnes.com",
@@ -28835,10 +28855,38 @@
       "valor": "2026-10-06T20:00Z"
      },
      "fiabilidad": "C",
-     "frase_origen": "Both aerial and sea drones were involved, and their origin has not been established.",
+     "frase_origen": "Both aerial and sea drones were involved",
      "id": "gdelt-31a2eaba7e841183",
      "idioma": "en",
      "medio": "insurancebusinessmag.com",
+     "replicas": 1
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://foxnews.com/world/drone-strike-sinks-ship-nato-waters-zelenskyy-warns-looming-massive-strike",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-07T02:15Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Ukrainian President Volodymyr Zelenskyy blamed Russia before warning Moscow was preparing a broader massive strike",
+     "id": "gdelt-08eabf3f42cd915a",
+     "idioma": "en",
+     "medio": "foxnews.com",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 1,
+     "enlace": "https://insurancebusinessmag.com/au/news/marine/ship-sunk-crew-missing-after-drone-strike-inside-nato-members-economic-zone-592513.aspx",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-06T20:00Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "The attacks took place at about 3am local time on Tuesday (6 October), approximately 128 kilometres off the Bulgarian coast near Byala",
+     "id": "gdelt-31a2eaba7e841183-declaracion-1",
+     "idioma": "en",
+     "medio": "Prime Minister Rumen Radev (declaración oficial citada en insurancebusinessmag.com)",
      "replicas": 0
     }
    ],
@@ -28849,7 +28897,8 @@
     "region": "Dobrich"
    },
    "objetivo": {
-    "categoria": "puerto"
+    "categoria": "otra",
+    "nombre": "exclusive economic zone"
    },
    "presencia_dron": "confirmada",
    "tiempo": {
@@ -28858,10 +28907,10 @@
      "valor": "2026-10-06T01:00Z"
     }
    },
-   "tipo": "incursion",
+   "tipo": "sobrevuelo",
    "titulo": {
-    "en": "Drone strikes on two ships in Bulgaria's exclusive economic zone",
-    "es": "Ataques con drones contra dos barcos en la zona económica exclusiva de Bulgaria"
+    "en": "Drones strike two ships in Bulgaria's exclusive economic zone",
+    "es": "Drones atacan dos barcos en la zona económica exclusiva de Bulgaria"
    },
    "zona": {
     "distancia_km": 197,
