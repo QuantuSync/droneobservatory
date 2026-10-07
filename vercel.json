@@ -5,6 +5,7 @@
   "buildCommand": "cd web && npm run build",
   "outputDirectory": "web/dist",
   "ignoreCommand": "node web/scripts/omitir-build.ts",
+  "crons": [{ "path": "/api/vigia", "schedule": "*/10 * * * *" }],
   "cleanUrls": true,
   "trailingSlash": false,
   "redirects": [{ "source": "/es", "destination": "/", "permanent": true }],
