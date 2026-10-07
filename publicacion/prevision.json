@@ -169,7 +169,7 @@
    69.04
   ]
  },
- "calculado": "2026-10-06T23:17Z",
+ "calculado": "2026-10-07T00:17Z",
  "cambios": {
   "ambitos": [
    {
@@ -253,22 +253,22 @@
   },
   "version": "cambios-1.0.0"
  },
- "datos_hasta": "2026-10-06",
+ "datos_hasta": "2026-10-07",
  "frontera": {
   "noche": {
-   "desde": "2026-10-06",
-   "hasta": "2026-10-07"
+   "desde": "2026-10-07",
+   "hasta": "2026-10-08"
   },
   "paises": [
    {
     "comprobacion": {
-     "area_bajo_curva": 0.789,
+     "area_bajo_curva": 0.787,
      "con_dron_en_riesgo_alto": 40,
      "desde": "2025-07-01",
-     "mejora_cota": 0.00632,
-     "mejora_sobre_frecuencia": 0.107,
-     "mejora_sobre_persistencia": 0.073,
-     "noches": 460,
+     "mejora_cota": 0.00624,
+     "mejora_sobre_frecuencia": 0.104,
+     "mejora_sobre_persistencia": 0.07,
+     "noches": 461,
      "noches_con_dron": 56,
      "pais": "RO",
      "publicable": true,
@@ -298,8 +298,8 @@
        "con_dron": 13,
        "desde": 0.2,
        "hasta": 0.4,
-       "noches": 43,
-       "prevista_media": 0.274
+       "noches": 44,
+       "prevista_media": 0.276
       },
       {
        "con_dron": 3,
@@ -310,27 +310,22 @@
       }
      ]
     },
-    "de_cada_10": 4,
+    "de_cada_10": 3,
     "efectos": {
      "incidentes_siete_dias": "sube",
-     "lanzados_tres_noches": "nada",
+     "lanzados_tres_noches": "baja",
      "noches_desde_crimea": "sube"
     },
     "factores": {
      "incidentes_siete_dias": 3.0,
-     "lanzados_anoche": 137.0,
-     "lanzados_tres_noches": 159.0,
-     "noches_desde_crimea": 7.0
+     "lanzados_anoche": 0.0,
+     "lanzados_tres_noches": 114.0,
+     "noches_desde_crimea": 6.0
     },
-    "frecuencia_de_siempre": 0.09,
+    "frecuencia_de_siempre": 0.092,
     "pais": "RO",
-    "probabilidad": 0.4,
+    "probabilidad": 0.319,
     "ultimas": [
-     {
-      "con_dron": false,
-      "noche": "2026-09-04",
-      "probabilidad": 0.074
-     },
      {
       "con_dron": false,
       "noche": "2026-09-05",
@@ -475,18 +470,23 @@
       "con_dron": false,
       "noche": "2026-10-03",
       "probabilidad": 0.39
+     },
+     {
+      "con_dron": false,
+      "noche": "2026-10-04",
+      "probabilidad": 0.383
      }
     ]
    },
    {
     "comprobacion": {
-     "area_bajo_curva": 0.738,
+     "area_bajo_curva": 0.737,
      "con_dron_en_riesgo_alto": 21,
      "desde": "2025-07-01",
-     "mejora_cota": 0.00345,
-     "mejora_sobre_frecuencia": 0.13,
-     "mejora_sobre_persistencia": 0.129,
-     "noches": 460,
+     "mejora_cota": 0.00341,
+     "mejora_sobre_frecuencia": 0.126,
+     "mejora_sobre_persistencia": 0.125,
+     "noches": 461,
      "noches_con_dron": 33,
      "pais": "MD",
      "publicable": true,
@@ -516,32 +516,27 @@
        "con_dron": 9,
        "desde": 0.2,
        "hasta": 0.4,
-       "noches": 18,
-       "prevista_media": 0.272
+       "noches": 19,
+       "prevista_media": 0.276
       }
      ]
     },
-    "de_cada_10": 4,
+    "de_cada_10": 2,
     "efectos": {
      "incidentes_siete_dias": "sube",
      "lanzados_tres_noches": "nada",
      "noches_desde_crimea": "sube"
     },
     "factores": {
-     "incidentes_siete_dias": 3.0,
-     "lanzados_anoche": 137.0,
-     "lanzados_tres_noches": 159.0,
-     "noches_desde_crimea": 7.0
+     "incidentes_siete_dias": 2.0,
+     "lanzados_anoche": 0.0,
+     "lanzados_tres_noches": 114.0,
+     "noches_desde_crimea": 6.0
     },
-    "frecuencia_de_siempre": 0.058,
+    "frecuencia_de_siempre": 0.057,
     "pais": "MD",
-    "probabilidad": 0.367,
+    "probabilidad": 0.179,
     "ultimas": [
-     {
-      "con_dron": false,
-      "noche": "2026-09-04",
-      "probabilidad": 0.034
-     },
      {
       "con_dron": false,
       "noche": "2026-09-05",
@@ -686,6 +681,11 @@
       "con_dron": true,
       "noche": "2026-10-03",
       "probabilidad": 0.356
+     },
+     {
+      "con_dron": false,
+      "noche": "2026-10-04",
+      "probabilidad": 0.36
      }
     ]
    }
