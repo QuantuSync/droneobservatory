@@ -72,24 +72,33 @@ export async function GET(peticion: Request): Promise<Response> {
   }
   const [salud, directo] = await Promise.all([leer("salud.json"), leer("directo.json")]);
   const diagnostico = diagnosticar(salud, directo, Date.now());
-  console.log(JSON.stringify(diagnostico));
-  const token = process.env.EODI_VIGIA_TOKEN;
-  if (diagnostico.problema && token !== undefined && token.length > 0) {
-    const respuesta = await fetch(
-      `https://api.github.com/repos/${REPOSITORIO}/actions/workflows/${WORKFLOW}/dispatches`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/vnd.github+json",
-          "User-Agent": "EODI-vigia",
+  // Una sola línea en el registro con el diagnóstico y lo que pasó al lanzar (nunca el token).
+  const token = (process.env.EODI_VIGIA_TOKEN ?? "").trim();
+  let lanzado: string = diagnostico.problema ? "sin token" : "no hace falta";
+  if (diagnostico.problema && token.length > 0) {
+    try {
+      const respuesta = await fetch(
+        `https://api.github.com/repos/${REPOSITORIO}/actions/workflows/${WORKFLOW}/dispatches`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: "application/vnd.github+json",
+            "X-GitHub-Api-Version": "2022-11-28",
+            "User-Agent": "EODI-vigia",
+          },
+          body: JSON.stringify({ ref: "main" }),
+          signal: AbortSignal.timeout(15_000),
         },
-        body: JSON.stringify({ ref: "main" }),
-      },
-    );
-    console.log(`vigia-recogida lanzado: HTTP ${respuesta.status}`);
+      );
+      lanzado = `HTTP ${respuesta.status}`;
+      if (!respuesta.ok) lanzado += ` ${(await respuesta.text()).slice(0, 200)}`;
+    } catch (error) {
+      lanzado = `error ${String(error).slice(0, 200)}`;
+    }
   }
-  return new Response(JSON.stringify(diagnostico), {
+  console.log(JSON.stringify({ ...diagnostico, lanzado }));
+  return new Response(JSON.stringify({ ...diagnostico, lanzado }), {
     status: 200,
     headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
   });
