@@ -28917,6 +28917,157 @@
     "grupo": "frontera",
     "motivo": "costa_mar_negro"
    }
+  },
+  {
+   "afirmaciones_publicas": [
+    {
+     "campo": "lugar.pais",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-07T06:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-2df2ea809175e1a2",
+     "medio": "news.yam.md",
+     "valor": "MD"
+    },
+    {
+     "campo": "presencia_dron",
+     "cita": "O dronă a survolat neautorizat spațiul aerian al R. Moldova, în contextul atacurilor asupra Ucrainei",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-07T06:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-2df2ea809175e1a2",
+     "medio": "news.yam.md",
+     "valor": "confirmada"
+    },
+    {
+     "campo": "tiempo.inicio",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-07T06:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-2df2ea809175e1a2",
+     "medio": "news.yam.md",
+     "valor": {
+      "precision": "minuto",
+      "valor": "2026-10-07T05:43Z"
+     }
+    },
+    {
+     "campo": "tipo",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-07T06:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-2df2ea809175e1a2",
+     "medio": "news.yam.md",
+     "valor": "sobrevuelo"
+    }
+   ],
+   "ataque": {
+    "id": "EODI-UA-2026-1036",
+    "jornada": {
+     "desde": "2026-10-06",
+     "hasta": "2026-10-07",
+     "tipo": "noche"
+    },
+    "por": "fuente"
+   },
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-07T07:17Z"
+    }
+   },
+   "drones": {
+    "numero": "desconocido"
+   },
+   "estado": {
+    "actual": "confirmado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-07T06:45Z"
+      },
+      "fuente_id": "gdelt-2df2ea809175e1a2"
+     },
+     {
+      "estado": "confirmado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-07T06:45Z"
+      },
+      "fuente_id": "gdelt-2df2ea809175e1a2-declaracion-1"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://news.yam.md/ro/story/72753936",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-07T06:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "O dronă a survolat neautorizat spațiul aerian al R. Moldova, în contextul atacurilor asupra Ucrainei",
+     "id": "gdelt-2df2ea809175e1a2",
+     "idioma": "ro",
+     "medio": "news.yam.md",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 1,
+     "enlace": "https://news.yam.md/ro/story/72753936",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-07T06:45Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Serviciul Operații Aeriene al Armatei Naționale informează despre un zbor neautorizat în spațiul aerian al Republicii Moldova",
+     "id": "gdelt-2df2ea809175e1a2-declaracion-1",
+     "idioma": "ro",
+     "medio": "Serviciul Operații Aeriene al Armatei Naționale (declaración oficial citada en news.yam.md)",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-2026-00492",
+   "lugar": {
+    "nivel": "pais",
+    "pais": "MD"
+   },
+   "presencia_dron": "confirmada",
+   "tiempo": {
+    "inicio": {
+     "precision": "aproximada",
+     "valor": "2026-10-07T05:43Z"
+    }
+   },
+   "tipo": "incursion",
+   "titulo": {
+    "en": "Unauthorized drone flies over Moldavian airspace",
+    "es": "Dron no autorizado sobrevuela el espacio aéreo de Moldavia"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "ataque"
+   }
   }
  ]
 }

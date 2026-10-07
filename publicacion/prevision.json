@@ -169,7 +169,7 @@
    69.04
   ]
  },
- "calculado": "2026-10-07T06:17Z",
+ "calculado": "2026-10-07T07:17Z",
  "cambios": {
   "ambitos": [
    {
@@ -521,21 +521,21 @@
       }
      ]
     },
-    "de_cada_10": 2,
+    "de_cada_10": 4,
     "efectos": {
      "incidentes_siete_dias": "sube",
      "lanzados_tres_noches": "nada",
      "noches_desde_crimea": "sube"
     },
     "factores": {
-     "incidentes_siete_dias": 2.0,
+     "incidentes_siete_dias": 3.0,
      "lanzados_anoche": 130.0,
      "lanzados_tres_noches": 157.3,
      "noches_desde_crimea": 7.0
     },
     "frecuencia_de_siempre": 0.057,
     "pais": "MD",
-    "probabilidad": 0.194,
+    "probabilidad": 0.36,
     "ultimas": [
      {
       "con_dron": false,
