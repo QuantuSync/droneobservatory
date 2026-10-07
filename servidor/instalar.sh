@@ -526,6 +526,40 @@ Persistent=true
 [Install]
 WantedBy=timers.target
 FIN
+# Réplica en otra ubicación (servidor/replica.sh): copias de la base y archivo, a Helsinki.
+cat > "/etc/systemd/system/$UNIDAD_REPLICA.service" <<FIN
+[Unit]
+Description=Segunda copia en otra ubicación de las copias de la base y del archivo (EODI)
+Wants=network-online.target
+After=network-online.target time-sync.target
+
+[Service]
+Type=oneshot
+User=$USUARIO
+Group=$USUARIO
+WorkingDirectory=$CLON
+ExecStart=/usr/bin/env bash $CLON/servidor/replica.sh
+SyslogIdentifier=$UNIDAD_REPLICA
+TimeoutStartSec=${REPLICA_TOPE_UNIDAD}min
+Nice=19
+IOSchedulingClass=idle
+MemoryMax=$REPLICA_MEMORIA
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=full
+FIN
+cat > "/etc/systemd/system/$UNIDAD_REPLICA.timer" <<FIN
+[Unit]
+Description=Segunda copia en otra ubicación (EODI), en el minuto $MINUTO_REPLICA de cada hora
+
+[Timer]
+OnCalendar=*-*-* *:$MINUTO_REPLICA:00 UTC
+AccuracySec=1s
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+FIN
 # Vigilancia (servidor/vigilancia.sh): salud.json cada 5 minutos para el workflow vigia-recogida.
 # Lee el diario de la recogida (grupo systemd-journal) y no toca nada más que su registro.
 cat > "/etc/systemd/system/$UNIDAD_VIGILANCIA.service" <<FIN
@@ -570,6 +604,8 @@ Description=Reinicio tras una actualización de seguridad, cuando no corta nada 
 
 [Service]
 Type=oneshot
+# Como root, sin sesión: configuracion.sh necesita HOME.
+Environment=HOME=/root
 ExecStart=/usr/bin/env bash $CLON/servidor/reinicio.sh
 SyslogIdentifier=$UNIDAD_REINICIO
 TimeoutStartSec=5min

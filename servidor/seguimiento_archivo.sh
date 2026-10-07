@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Archivo del seguimiento en directo (recogida/seguimiento_archivo.py): comprime las horas ya
-# cerradas, escribe el índice de cada día terminado y sube cada día a la copia de seguridad
-# privada. Lo lanza eodi-seguimiento-archivo.timer en el minuto MINUTO_SEGUIMIENTO_ARCHIVO de cada
+# cerradas, escribe el índice de cada día terminado y sube cada hora a la copia de seguridad
+# privada las horas comprimidas y las rutas calculadas. Lo lanza eodi-seguimiento-archivo.timer en el minuto MINUTO_SEGUIMIENTO_ARCHIVO de cada
 # hora; también a mano, con una orden del módulo como argumento:
 #
 #   sudo systemctl start eodi-seguimiento-archivo.service
@@ -30,7 +30,7 @@ principal() {
   else
     echo "aviso: sin $ALMACEN_CREDENCIALES, no se hace la copia de seguridad"
   fi
-  export EODI_SEGUIMIENTO_DATOS="$SEGUIMIENTO_DATOS"
+  export EODI_SEGUIMIENTO_DATOS="$SEGUIMIENTO_DATOS" EODI_RUTAS_DATOS="$RUTAS_DATOS"
   cd "$CLON"
   if [ "$#" -eq 0 ]; then
     set -- ciclo

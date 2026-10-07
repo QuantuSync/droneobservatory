@@ -12,9 +12,15 @@ Lo que deja `recogida/seguimiento.py` en `<datos>/<fuente>/<AAAA>/<MM>/<fuente>-
   vez escrito no se rehace.
 - **Copia de seguridad** en un bucket privado de Hetzner Object Storage
   (`configuracion/archivo_seguimiento.json`; sin política pública: solo se lee con credenciales),
-  una vez al día, con los ficheros del día anterior y su índice. Cada objeto lleva su huella en
-  `x-amz-meta-sha256`; antes de subir se mira si ya está: con la misma huella no se sube, con otra
-  se avisa y no se sobrescribe. Lo copiado queda anotado en `<datos>/copias/<AAAA-MM-DD>.json`.
+  cada hora, con las horas ya comprimidas (también las del día en curso: si el servidor se pierde,
+  se pierde como mucho la hora en curso) y, al terminar el día, su índice. Cada objeto lleva su
+  huella en `x-amz-meta-sha256`; antes de subir se mira si ya está: con la misma huella no se sube,
+  con otra se avisa y no se sobrescribe. Lo copiado queda anotado en
+  `<datos>/copias/<AAAA-MM-DD>.json`.
+- **Rutas calculadas** (`recogida/rutas.py`, la carpeta de EODI_RUTAS_DATOS), en el mismo bucket:
+  la carpeta entera en un tar.gz reproducible, `rutas/ultima.tar.gz` cada vez que cambia (se
+  sustituye: se puede volver a calcular desde el archivo) y la primera de cada día en
+  `rutas/diaria/AAAA-MM-DD.tar.gz`, que no se sobrescribe. Anotado en `<datos>/copias/rutas.json`.
 
 Este trabajo no corre nunca entre los minutos 15 y 40 de la hora ni mientras la recogida horaria
 esté en marcha (se mira la unidad, sin tocar su cerrojo), y solo hay uno a la vez (su propio
@@ -25,21 +31,28 @@ Uso: python -m recogida.seguimiento_archivo ciclo
      python -m recogida.seguimiento_archivo copiar --dia AAAA-MM-DD   (también el día en curso:
          sube las horas ya comprimidas)
      python -m recogida.seguimiento_archivo restaurar --objeto <clave> --destino <fichero>
+     python -m recogida.seguimiento_archivo restaurar-dia --dia AAAA-MM-DD --destino <carpeta>
+     python -m recogida.seguimiento_archivo restaurar-todo [--destino <carpeta>]
+         (un día, o todo el archivo con las rutas, desde la copia, comprobando cada huella; lo que
+         ya está en el destino con la misma huella no se baja, y nada local se sobrescribe)
      python -m recogida.seguimiento_archivo preparar | resumen
 """
 
 import argparse
 import gzip
 import hashlib
+import io
 import json
 import logging
 import os
 import subprocess
 import sys
+import tarfile
 import time
 import urllib.error
 import urllib.parse
 import urllib.request
+import xml.etree.ElementTree as ET
 from collections import Counter
 from collections.abc import Callable, Iterator
 from dataclasses import dataclass
@@ -394,6 +407,42 @@ class Copia:
             raise OSError(f"{objeto}: PUT {respuesta.estado}")
         return "subido"
 
+    def reemplazar(self, objeto: str, cuerpo: bytes, tipo: str) -> None:
+        """Sube aunque ya esté: solo para lo que se puede volver a calcular."""
+        huella = hashlib.sha256(cuerpo).hexdigest()
+        respuesta = self._peticion(
+            "PUT", objeto, cuerpo, {"Content-Type": tipo, "x-amz-meta-sha256": huella}
+        )
+        if not 200 <= respuesta.estado < 300:
+            raise OSError(f"{objeto}: PUT {respuesta.estado}")
+
+    def listar(self, prefijo: str) -> list[str]:
+        """Las claves bajo un prefijo (ListObjectsV2, por páginas)."""
+        claves: list[str] = []
+        continuacion = ""
+        ns = "{http://s3.amazonaws.com/doc/2006-03-01/}"
+        while True:
+            parametros = {"list-type": "2", "prefix": prefijo}
+            if continuacion:
+                parametros["continuation-token"] = continuacion
+            consulta = "&".join(
+                f"{k}={urllib.parse.quote(v, safe='-_.~')}" for k, v in sorted(parametros.items())
+            )
+            url = f"{self.destino.url()}?{consulta}"
+            firmadas = firmar(
+                "GET", url, {}, hashlib.sha256(b"").hexdigest(), self.destino.ubicacion,
+                self.credenciales.clave_id, self.credenciales.secreto, datetime.now(UTC),
+            )  # fmt: skip
+            firmadas.pop("host")
+            respuesta = self._enviar(urllib.request.Request(url, method="GET", headers=firmadas))
+            if respuesta.estado != 200:
+                raise OSError(f"listado {prefijo}: GET {respuesta.estado}")
+            raiz = ET.fromstring(respuesta.cuerpo)
+            claves += [c.findtext(f"{ns}Key", "") for c in raiz.iter(f"{ns}Contents")]
+            if raiz.findtext(f"{ns}IsTruncated", "false") != "true":
+                return claves
+            continuacion = raiz.findtext(f"{ns}NextContinuationToken", "")
+
     def bajar(self, objeto: str) -> tuple[bytes, str | None]:
         respuesta = self._peticion("GET", objeto)
         if respuesta.estado != 200:
@@ -455,24 +504,121 @@ def dia_copiado(datos: Path, dia: date) -> bool:
     return f"indices/{dia.isoformat()}.json" in objetos and all(r in objetos for r in relativos)
 
 
+# --- Rutas calculadas --------------------------------------------------------------------------
+RUTAS_ULTIMA = "rutas/ultima.tar.gz"
+RUTAS_DIARIA = "rutas/diaria/{dia}.tar.gz"
+
+
+def empaquetar_rutas(rutas: Path) -> bytes:
+    """La carpeta de las rutas en un tar.gz reproducible: mismo contenido, mismos bytes."""
+    memoria = io.BytesIO()
+    with (
+        gzip.GzipFile(fileobj=memoria, mode="wb", compresslevel=9, mtime=0) as comprimido,
+        tarfile.open(fileobj=comprimido, mode="w", format=tarfile.PAX_FORMAT) as paquete,
+    ):
+        for ruta in sorted(p for p in rutas.rglob("*") if p.is_file()):
+            if ruta.name.endswith(".tmp"):
+                continue
+            contenido = ruta.read_bytes()
+            info = tarfile.TarInfo(str(ruta.relative_to(rutas)).replace(os.sep, "/"))
+            info.size, info.mtime, info.mode = len(contenido), 0, 0o600
+            paquete.addfile(info, io.BytesIO(contenido))
+    return memoria.getvalue()
+
+
+def copiar_rutas(rutas: Path, datos: Path, ahora: datetime, copia: Copia) -> str:
+    """Sube las rutas si han cambiado desde la última copia, y la primera de cada día."""
+    if not rutas.is_dir():
+        return "sin rutas"
+    anotado_ruta = datos / "copias" / "rutas.json"
+    anotado: dict[str, Any] = {}
+    if anotado_ruta.exists():
+        anotado = json.loads(anotado_ruta.read_text(encoding="utf-8"))
+    cuerpo = empaquetar_rutas(rutas)
+    huella = hashlib.sha256(cuerpo).hexdigest()
+    hechos = []
+    if anotado.get("ultima_sha256") != huella:
+        copia.reemplazar(RUTAS_ULTIMA, cuerpo, "application/gzip")
+        anotado.update(ultima_sha256=huella, ultima=ahora.strftime("%Y-%m-%dT%H:%M:%SZ"))
+        hechos.append("ultima")
+    dia = ahora.date().isoformat()
+    nueva = anotado.get("diaria") != dia
+    if (
+        nueva
+        and copia.subir(RUTAS_DIARIA.format(dia=dia), cuerpo, "application/gzip") != "distinto"
+    ):
+        anotado["diaria"] = dia
+        hechos.append(f"diaria {dia}")
+    anotado_ruta.parent.mkdir(parents=True, exist_ok=True)
+    temporal = anotado_ruta.with_name(anotado_ruta.name + ".tmp")
+    temporal.write_text(json.dumps(anotado, indent=1) + "\n", encoding="utf-8", newline="\n")
+    os.replace(temporal, anotado_ruta)
+    return ", ".join(hechos) or "sin cambios"
+
+
+# --- Restauración ------------------------------------------------------------------------------
+def claves_copia(copia: Copia, prefijo: str) -> list[str]:
+    """Las claves de la copia bajo un prefijo (listado S3 firmado, por páginas)."""
+    return copia.listar(prefijo)
+
+
+def restaurar_claves(copia: Copia, claves: list[str], destino: Path) -> dict[str, int]:
+    """Baja cada clave a `destino` (sin el prefijo de la copia), comprobando su huella."""
+    resultado: Counter[str] = Counter()
+    for clave in claves:
+        relativa = clave.removeprefix(copia.destino.prefijo)
+        ruta = destino / relativa
+        cuerpo, anotada = copia.bajar(clave)
+        calculada = hashlib.sha256(cuerpo).hexdigest()
+        if anotada is not None and anotada != calculada:
+            raise OSError(f"{clave}: la huella no coincide con la anotada")
+        if ruta.exists():
+            resultado["igual" if ruta.read_bytes() == cuerpo else "distinto_local"] += 1
+            continue
+        ruta.parent.mkdir(parents=True, exist_ok=True)
+        temporal = ruta.with_name(ruta.name + ".tmp")
+        temporal.write_bytes(cuerpo)
+        os.replace(temporal, ruta)
+        resultado["bajado"] += 1
+    return dict(resultado)
+
+
+def claves_dia(copia: Copia, dia: date) -> list[str]:
+    """Las horas de un día de las dos fuentes y su índice."""
+    claves = []
+    for fuente in FUENTES:
+        prefijo = f"{copia.destino.prefijo}{fuente}/{dia:%Y}/{dia:%m}/{fuente}-{dia:%Y-%m-%d}T"
+        claves += claves_copia(copia, prefijo)
+    claves += claves_copia(copia, f"{copia.destino.prefijo}indices/{dia.isoformat()}.json")
+    return claves
+
+
 # --- Órdenes ----------------------------------------------------------------------------------
-def ciclo(datos: Path, ahora: datetime, copia: Copia | None) -> dict[str, Any]:
+def ciclo(
+    datos: Path, ahora: datetime, copia: Copia | None, rutas: Path | None = None
+) -> dict[str, Any]:
     comprimidos = comprimir_cerrados(datos, ahora)
     indices: list[str] = []
     copias: dict[str, Any] = {}
     for dia in dias_con_datos(datos):
-        if dia >= ahora.date():
-            continue
-        hecho = escribir_indice(datos, dia)
-        if hecho:
+        # El índice, solo de los días terminados. La copia, cada hora, también de las horas ya
+        # comprimidas del día en curso, y de cada día hasta que esté entero con su índice.
+        if dia < ahora.date() and escribir_indice(datos, dia):
             indices.append(dia.isoformat())
-        if copia is not None and ruta_indice(datos, dia).exists() and not dia_copiado(datos, dia):
+        if copia is not None and not dia_copiado(datos, dia):
             copias[dia.isoformat()] = copiar_dia(datos, dia, copia)
-    return {
+    resultado: dict[str, Any] = {
         "comprimidos": len(comprimidos),
         "indices": indices,
         "copias": copias,
     }
+    if copia is not None and rutas is not None:
+        try:
+            resultado["rutas"] = copiar_rutas(rutas, datos, ahora, copia)
+        except OSError as error:
+            registro.warning("rutas sin copiar: %s", error)
+            resultado["rutas"] = "fallo"
+    return resultado
 
 
 def resumen(datos: Path) -> dict[str, Any]:
@@ -504,6 +650,11 @@ def principal(argumentos: list[str] | None = None) -> int:
     r = sub.add_parser("restaurar")
     r.add_argument("--objeto", required=True)
     r.add_argument("--destino", type=Path, required=True)
+    rd = sub.add_parser("restaurar-dia")
+    rd.add_argument("--dia", type=date.fromisoformat, required=True)
+    rd.add_argument("--destino", type=Path, required=True)
+    rt = sub.add_parser("restaurar-todo")
+    rt.add_argument("--destino", type=Path)
     sub.add_parser("preparar")
     sub.add_parser("resumen")
     args = opciones.parse_args(argumentos)
@@ -514,7 +665,7 @@ def principal(argumentos: list[str] | None = None) -> int:
         return 0
     credenciales = Credenciales.del_entorno()
     copia = Copia(cargar_destino(), credenciales) if credenciales else None
-    if args.orden in ("preparar", "restaurar") and copia is None:
+    if args.orden in ("preparar", "restaurar", "restaurar-dia", "restaurar-todo") and not copia:
         print("faltan las credenciales del almacén", file=sys.stderr)
         return 1
     if args.orden == "preparar":
@@ -536,6 +687,24 @@ def principal(argumentos: list[str] | None = None) -> int:
         args.destino.write_bytes(cuerpo)
         print(f"{len(cuerpo)} bytes, sha256 {calculada}, anotada {huella}")
         return 0 if huella == calculada else 1
+    if args.orden == "restaurar-dia":
+        assert copia is not None
+        claves = claves_dia(copia, args.dia)
+        print(json.dumps({"objetos": len(claves), **restaurar_claves(copia, claves, args.destino)}))
+        return 0
+    if args.orden == "restaurar-todo":
+        assert copia is not None
+        destino = args.destino or datos
+        claves = claves_copia(copia, copia.destino.prefijo)
+        resultado = {"seguimiento": restaurar_claves(copia, claves, destino)}
+        rutas_var = os.environ.get("EODI_RUTAS_DATOS")
+        if rutas_var and claves_copia(copia, RUTAS_ULTIMA):
+            cuerpo, _ = copia.bajar(RUTAS_ULTIMA)
+            with tarfile.open(fileobj=io.BytesIO(cuerpo), mode="r:gz") as paquete:
+                paquete.extractall(Path(rutas_var), filter="data")
+            resultado["rutas"] = {"ultima.tar.gz": 1}
+        print(json.dumps(resultado))
+        return 0
     esperar_turno()
     if copia is None:
         registro.warning("sin credenciales del almacén: no se hace la copia de seguridad")
@@ -547,7 +716,9 @@ def principal(argumentos: list[str] | None = None) -> int:
             return 1
         print(json.dumps(copiar_dia(datos, args.dia, copia)))
         return 0
-    print(json.dumps(ciclo(datos, datetime.now(UTC), copia), ensure_ascii=False))
+    variable_rutas = os.environ.get("EODI_RUTAS_DATOS")
+    rutas = Path(variable_rutas) if variable_rutas else None
+    print(json.dumps(ciclo(datos, datetime.now(UTC), copia, rutas), ensure_ascii=False))
     return 0
 
 

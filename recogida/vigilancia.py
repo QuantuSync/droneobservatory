@@ -14,8 +14,10 @@ Problemas (cada uno con su frase):
   está en marcha;
 - **copia de la base**: la última copia cifrada de la base en el almacén privado tiene más de 2
   horas (solo con la base en el disco: modos `doble` y `disco`);
-- **copia del archivo**: la última copia del archivo del seguimiento tiene más de 26 horas (se
-  copia una vez al día);
+- **copia del archivo**: la última copia del archivo del seguimiento tiene más de 2 horas (se
+  copia cada hora);
+- **réplica**: la última pasada correcta de la segunda copia en otra ubicación (almacen/replica.py)
+  tiene más de 3 horas;
 - **disco**: el disco pasa del 75 % (el aviso llega antes del 80 %).
 
 Avisos (se ven, no son fallo): la última recogida terminó con avisos (código 2) y por qué (las
@@ -57,7 +59,8 @@ SALIDAS_QUE_PUBLICAN = frozenset({0, 2})
 MAX_SIN_PUBLICAR = timedelta(hours=2)
 MAX_SIN_RECIBIR = timedelta(minutes=10)
 MAX_SIN_COPIA = timedelta(hours=2)
-MAX_SIN_COPIA_ARCHIVO = timedelta(hours=26)
+MAX_SIN_COPIA_ARCHIVO = timedelta(hours=2)
+MAX_SIN_REPLICA = timedelta(hours=3)
 DISCO_AVISO_PCT = 75.0
 # Líneas del diario de la recogida que explican un código 2 y las de la barrera de titulares.
 AVISO_TOPE = re.compile(r"tope de \d+ s agotado|no se lee|sin leer: \d+|en rojo", re.I)
@@ -268,6 +271,15 @@ def componer(
             + f": más de {horas:.0f} horas sin copia.",
         })  # fmt: skip
 
+    replica = _instante(_leer_json(secretos / "replica.json").get("ultima"))
+    if replica is None or ahora - replica > MAX_SIN_REPLICA:
+        problemas.append({
+            "id": "replica",
+            "frase": "La última segunda copia en otra ubicación es "
+            + (f"del {replica:%Y-%m-%d %H:%M} UTC" if replica else "desconocida")
+            + ": más de 3 horas sin réplica.",
+        })  # fmt: skip
+
     # Disco.
     uso = shutil.disk_usage(disco)
     porcentaje = round(100 * uso.used / uso.total, 1)
@@ -289,7 +301,12 @@ def componer(
             "ultima_publicacion": _iso(ultima_publicacion),
         },
         "seguimiento": {"unidad": activa, "ultima_recepcion": _iso(recepcion)},
-        "copias": {"modo_base": modo, "base": _iso(base), "archivo": _iso(archivo)},
+        "copias": {
+            "modo_base": modo,
+            "base": _iso(base),
+            "archivo": _iso(archivo),
+            "replica": _iso(replica),
+        },
         "disco": {"usado_pct": porcentaje, "libre_gb": round(uso.free / 1e9, 1)},
         "problemas": problemas,
         "avisos": avisos,

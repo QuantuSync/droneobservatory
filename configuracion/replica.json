@@ -1,0 +1,8 @@
+{
+  "descripcion": "Segunda copia, en otra ubicación de Hetzner, de las copias cifradas de la base (droneobservatory-base) y del archivo del seguimiento con las rutas calculadas (droneobservatory-archivo), las dos en nbg1 (almacen/replica.py). Bucket privado en Helsinki, mismas credenciales S3 del proyecto; lo del archivo va cifrado con la clave pública age de la base. Nada de aquí se publica.",
+  "proveedor": "Hetzner Object Storage",
+  "ubicacion": "hel1",
+  "punto_s3": "https://hel1.your-objectstorage.com",
+  "bucket": "droneobservatory-replica",
+  "destinatario_age": "age1f6dy9c7sr97sftlvz553zaaashxnaqkccuzgmv00242df8vzm3wqv4cp4n"
+}

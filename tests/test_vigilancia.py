@@ -44,6 +44,7 @@ def preparar(tmp_path: Path, recepcion: datetime, copia: datetime) -> tuple[Path
     (secretos / "seguimiento.json").write_text(
         json.dumps({"ultima_recepcion": _iso(recepcion)}), encoding="utf-8"
     )
+    (secretos / "replica.json").write_text(json.dumps({"ultima": _iso(copia)}), encoding="utf-8")
     (datos / "copias" / "2026-10-07.json").write_text(
         json.dumps({"objetos": {"neptun/x.gz": {"copiado": _iso(copia)}}}), encoding="utf-8"
     )
@@ -78,13 +79,20 @@ def test_todo_bien_con_avisos_de_la_recogida_y_titulares_retenidos(tmp_path: Pat
 
 
 def test_cada_problema_tiene_su_frase(tmp_path: Path) -> None:
-    secretos, datos = preparar(tmp_path, AHORA - timedelta(minutes=25), AHORA - timedelta(hours=27))
+    secretos, datos = preparar(tmp_path, AHORA - timedelta(minutes=25), AHORA - timedelta(hours=4))
     sistema = Sistema(1, AHORA - timedelta(hours=3), [], seguimiento="failed")
     salud, _ = vigilancia.componer(
         AHORA, secretos, datos, tmp_path, sistema, lambda: AHORA - timedelta(hours=4)
     )
     ids = {p["id"] for p in salud["problemas"]}
-    assert ids == {"publicacion", "recogida", "seguimiento", "copia_base", "copia_archivo"}
+    assert ids == {
+        "publicacion",
+        "recogida",
+        "seguimiento",
+        "copia_base",
+        "copia_archivo",
+        "replica",
+    }
 
 
 def test_el_disco_avisa_antes_del_80(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

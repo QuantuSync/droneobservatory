@@ -223,12 +223,22 @@ class Copias:
             return respuesta.estado == 200
         raise OSError(f"{objeto}: HEAD {respuesta.estado}")
 
-    def subir(self, objeto: str, cuerpo: bytes) -> None:
+    def subir(self, objeto: str, cuerpo: bytes, metadatos: dict[str, str] | None = None) -> None:
         huella = hashlib.sha256(cuerpo).hexdigest()
         cabeceras = {"Content-Type": "application/octet-stream", "x-amz-meta-sha256": huella}
+        cabeceras.update(metadatos or {})
         respuesta = self._peticion("PUT", objeto, cuerpo, cabeceras)
         if not 200 <= respuesta.estado < 300:
             raise OSError(f"{objeto}: PUT {respuesta.estado}")
+
+    def metadato(self, objeto: str, nombre: str) -> str | None:
+        """Una cabecera del objeto (HEAD), o None si no está."""
+        respuesta = self._peticion("HEAD", objeto)
+        if respuesta.estado == 404:
+            return None
+        if respuesta.estado != 200:
+            raise OSError(f"{objeto}: HEAD {respuesta.estado}")
+        return respuesta.cabeceras.get(nombre.lower())
 
     def bajar(self, objeto: str) -> bytes:
         respuesta = self._peticion("GET", objeto)

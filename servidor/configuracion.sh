@@ -312,6 +312,16 @@ RUTAS_TOPE_UNIDAD=30
 SATELITE_NICE=15
 SATELITE_MEMORIA_MAXIMA="1G"
 
+# --- Réplica en otra ubicación (servidor/replica.sh, almacen/replica.py) -----------------------
+# Las copias de la base y el archivo del seguimiento, a un bucket privado de Helsinki
+# (configuracion/replica.json). En el minuto 47: ya están la copia de la base de la recogida (hacia
+# el minuto 33) y la del archivo (minuto 3); fuera de los minutos 12 a 40.
+UNIDAD_REPLICA="eodi-replica"
+CERROJO_REPLICA="$SECRETOS/replica.lock"
+MINUTO_REPLICA=47
+REPLICA_TOPE_UNIDAD=40
+REPLICA_MEMORIA="1G"
+
 # --- Vigilancia (servidor/vigilancia.sh, recogida/vigilancia.py) ------------------------------
 # salud.json en el almacén público cada 5 minutos, para el workflow vigia-recogida.
 UNIDAD_VIGILANCIA="eodi-vigilancia"
