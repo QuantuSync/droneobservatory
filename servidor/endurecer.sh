@@ -71,7 +71,12 @@ install -d -m 755 /run/sshd
 sshd -t
 # Root deja de tener clave autorizada: aunque cambiara la configuración, no entra.
 rm -f /root/.ssh/authorized_keys
-systemctl reload ssh
+# En una imagen recién creada sshd arranca por socket (ssh.socket) y lee la configuración en cada
+# conexión: solo se recarga si el servicio está en marcha (el simulacro del 7 de octubre de 2026
+# se paró aquí).
+if systemctl is-active --quiet ssh.service; then
+  systemctl reload ssh.service
+fi
 
 # --- Cortafuegos del servidor --------------------------------------------------------
 # Además del cortafuegos de Hetzner (reconstruir.sh): si un día se quitara aquel, este sigue.
