@@ -38,12 +38,15 @@ principal() {
   export EODI_CLAVE_AGE
 
   # Dónde se deja: el mismo interruptor que la publicación de los datos (configuracion.sh).
-  local destinos
-  case "$(modo_publicacion)" in
-    almacen) destinos=almacen ;;
-    doble) destinos=github,almacen ;;
-    *) destinos=github ;;
-  esac
+  # EODI_EXPORTACION_DESTINOS lo fija a mano (ensayos).
+  local destinos="${EODI_EXPORTACION_DESTINOS:-}"
+  if [ -z "$destinos" ]; then
+    case "$(modo_publicacion)" in
+      almacen) destinos=almacen ;;
+      doble) destinos=github,almacen ;;
+      *) destinos=github ;;
+    esac
+  fi
   if [ -r "$ALMACEN_CREDENCIALES" ]; then
     # shellcheck disable=SC1090
     . "$ALMACEN_CREDENCIALES"

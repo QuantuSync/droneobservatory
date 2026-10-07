@@ -13,8 +13,15 @@ Leer una versión: `bajar` descarga la carpeta, comprueba cada fichero contra el
 deja como estaba en el repositorio (exportaciones/AAAA.MM.DD/); se descifra con la identidad age
 de siempre. Credenciales S3: ALMACEN_ID y ALMACEN_SECRETO del entorno o de ~/.eodi/almacen.env.
 
+Espejo para quien la importaba del repositorio de datos: `espejo --repositorio <carpeta>` deja en
+un repositorio git local, con las mismas carpetas (`exportaciones/AAAA.MM.DD/`) y las mismas
+etiquetas (`eodi-AAAA.MM.DD`), cada versión del bucket que aún no tiene. El importador de siempre
+lee ese repositorio local como leía el remoto (su opción de repositorio admite una ruta) y se
+descifra con la misma identidad age.
+
 Uso: python -m almacen.exportaciones preparar | listar
      python -m almacen.exportaciones bajar --version AAAA.MM.DD --destino <carpeta>
+     python -m almacen.exportaciones espejo --repositorio <carpeta git local>
      python -m almacen.exportaciones subir --version AAAA.MM.DD --origen <carpeta>
 """
 
@@ -22,6 +29,8 @@ import argparse
 import hashlib
 import json
 import logging
+import os
+import subprocess
 import sys
 from pathlib import Path
 from typing import Any
@@ -32,6 +41,8 @@ registro = logging.getLogger("exportaciones")
 
 RAIZ = Path(__file__).resolve().parent.parent
 CONFIGURACION = RAIZ / "configuracion" / "exportaciones.json"
+# Otro prefijo del bucket para un ensayo (no lo lee el espejo de siempre ni lo copia la réplica).
+VARIABLE_PREFIJO = "EODI_EXPORTACIONES_PREFIJO"
 MANIFIESTO = "manifiesto.json"
 
 
@@ -46,8 +57,9 @@ class ExportacionIncompleta(RuntimeError):
 def destino(ruta: Path = CONFIGURACION) -> copias.Destino:
     datos = json.loads(ruta.read_text(encoding="utf-8"))
     base = copias.cargar_destino()
+    prefijo = os.environ.get(VARIABLE_PREFIJO) or datos["prefijo"]
     return copias.Destino(
-        datos["ubicacion"], datos["punto_s3"], datos["bucket"], datos["prefijo"], base.retencion
+        datos["ubicacion"], datos["punto_s3"], datos["bucket"], prefijo, base.retencion
     )
 
 
@@ -110,6 +122,46 @@ def bajar(cliente: copias.Copias, version: str, destino_dir: Path) -> dict[str, 
     return {"version": version, "ficheros": len(manifiesto["ficheros"]) + 1}
 
 
+PREFIJO_ETIQUETA = "eodi-"
+AUTOR = ("European Observatory of Drone Incidents", "192205734+QuantuSync@users.noreply.github.com")
+
+
+def _git(argumentos: list[str], directorio: Path) -> str:
+    entorno_autor = {
+        "GIT_AUTHOR_NAME": AUTOR[0], "GIT_AUTHOR_EMAIL": AUTOR[1],
+        "GIT_COMMITTER_NAME": AUTOR[0], "GIT_COMMITTER_EMAIL": AUTOR[1],
+    }  # fmt: skip
+    salida = subprocess.run(
+        ["git", "-c", "core.autocrlf=false", "-c", "core.eol=lf", *argumentos],
+        cwd=directorio, capture_output=True, text=True, check=True,
+        env={**os.environ, **entorno_autor},
+    )  # fmt: skip
+    return salida.stdout
+
+
+def espejo(cliente: copias.Copias, repositorio: Path) -> list[str]:
+    """Las versiones del bucket que faltaban en el repositorio local, ya añadidas y etiquetadas."""
+    if not (repositorio / ".git").exists():
+        repositorio.mkdir(parents=True, exist_ok=True)
+        _git(["init", "--quiet", "--initial-branch", "main"], repositorio)
+        _git(["config", "core.autocrlf", "false"], repositorio)
+    etiquetas = set(_git(["tag", "--list", f"{PREFIJO_ETIQUETA}*"], repositorio).split())
+    nuevas = []
+    for version in versiones(cliente):
+        if f"{PREFIJO_ETIQUETA}{version}" in etiquetas:
+            continue
+        carpeta = repositorio / "exportaciones" / version
+        if carpeta.exists():
+            raise ExportacionExistente(f"{carpeta} ya existe sin su etiqueta: se deja como está")
+        bajar(cliente, version, carpeta)
+        _git(["add", f"exportaciones/{version}"], repositorio)
+        _git(["commit", "--quiet", "-m", f"Exportación {version}"], repositorio)
+        _git(["tag", "--annotate", "-m", f"Exportación {version}",
+              f"{PREFIJO_ETIQUETA}{version}"], repositorio)  # fmt: skip
+        nuevas.append(version)
+    return nuevas
+
+
 def principal(argumentos: list[str] | None = None) -> int:
     opciones = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     sub = opciones.add_subparsers(dest="orden", required=True)
@@ -118,6 +170,8 @@ def principal(argumentos: list[str] | None = None) -> int:
     b = sub.add_parser("bajar")
     b.add_argument("--version", required=True)
     b.add_argument("--destino", type=Path, required=True)
+    e = sub.add_parser("espejo")
+    e.add_argument("--repositorio", type=Path, required=True)
     s = sub.add_parser("subir")
     s.add_argument("--version", required=True)
     s.add_argument("--origen", type=Path, required=True)
@@ -135,6 +189,10 @@ def principal(argumentos: list[str] | None = None) -> int:
     if args.orden == "listar":
         for version in versiones(c):
             sys.stdout.write(version + "\n")
+        return 0
+    if args.orden == "espejo":
+        nuevas = espejo(c, args.repositorio)
+        sys.stdout.write(json.dumps({"nuevas": nuevas}, ensure_ascii=False) + "\n")
         return 0
     if args.orden == "subir":
         resultado = subir(c, args.origen, args.version)

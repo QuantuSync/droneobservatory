@@ -163,3 +163,19 @@ def test_el_interruptor_de_la_copia_secundaria(monkeypatch: pytest.MonkeyPatch) 
     assert sitio.copia_secundaria() == sitio.SIN_SECUNDARIA
     monkeypatch.setenv(sitio.VARIABLE_SECUNDARIA, "cualquier cosa")
     assert sitio.copia_secundaria() == sitio.CON_SECUNDARIA
+
+
+def test_espejo_en_un_repositorio_git_local_con_sus_etiquetas(tmp_path: Path) -> None:
+    import subprocess
+
+    c, _ = cliente(exportaciones.destino())
+    exportaciones.subir(c, version(tmp_path / "v"), "2026.10.12")
+    repositorio = tmp_path / "espejo"
+    assert exportaciones.espejo(c, repositorio) == ["2026.10.12"]
+    assert exportaciones.espejo(c, repositorio) == []
+    etiquetas = subprocess.run(
+        ["git", "tag", "--list"], cwd=repositorio, capture_output=True, text=True, check=True
+    ).stdout.split()
+    assert etiquetas == ["eodi-2026.10.12"]
+    fichero = repositorio / "exportaciones" / "2026.10.12" / "incidentes.jsonl.gz.age"
+    assert fichero.read_bytes() == b"cifrado"
