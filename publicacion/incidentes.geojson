@@ -95013,6 +95013,81 @@
      "radio_km": 5.0
     },
     "presencia_dron": "confirmada",
+    "recorrido": {
+     "cita": "de la NE de Chilia Veche spre SV de Izmail, și a părăsit spațiul aerian național în dreptul localității Pardina",
+     "franja": [
+      [
+       [
+        28.9181,
+        45.2888
+       ],
+       [
+        28.9366,
+        45.2707
+       ],
+       [
+        28.9667,
+        45.2638
+       ],
+       [
+        28.9967,
+        45.2707
+       ],
+       [
+        29.3134,
+        45.3874
+       ],
+       [
+        29.332,
+        45.4055
+       ],
+       [
+        29.332,
+        45.4278
+       ],
+       [
+        29.3134,
+        45.4459
+       ],
+       [
+        29.2833,
+        45.4528
+       ],
+       [
+        29.2532,
+        45.4459
+       ],
+       [
+        28.9366,
+        45.3293
+       ],
+       [
+        28.9181,
+        45.3112
+       ],
+       [
+        28.9181,
+        45.2888
+       ]
+      ]
+     ],
+     "fuente": "revisada-8a432d4bfe93d0f1",
+     "puntos": [
+      {
+       "lat": 45.4167,
+       "lon": 29.2833,
+       "nombre": "Chilia Veche",
+       "radio_km": 4.0
+      },
+      {
+       "lat": 45.3,
+       "lon": 28.9667,
+       "nombre": "Pardina",
+       "radio_km": 4.0
+      }
+     ],
+     "version": "recorridos-1.0.0"
+    },
     "respuesta": {
      "medidas": [
       "cazas"
@@ -97618,6 +97693,81 @@
      "radio_km": 5.0
     },
     "presencia_dron": "confirmada",
+    "recorrido": {
+     "cita": "aparatele au pătruns în spațiul aerian moldovenesc pe direcția Stanislavka (regiunea Odesa) - Vărăncău (regiunea transnistreană), fără a fi detectate pe radar.",
+     "franja": [
+      [
+       [
+        29.067,
+        47.6938
+       ],
+       [
+        29.0864,
+        47.6757
+       ],
+       [
+        29.1178,
+        47.6688
+       ],
+       [
+        29.2055,
+        47.6579
+       ],
+       [
+        29.2368,
+        47.6648
+       ],
+       [
+        29.2562,
+        47.6829
+       ],
+       [
+        29.2562,
+        47.7052
+       ],
+       [
+        29.2368,
+        47.7233
+       ],
+       [
+        29.2055,
+        47.7302
+       ],
+       [
+        29.1178,
+        47.7412
+       ],
+       [
+        29.0864,
+        47.7342
+       ],
+       [
+        29.067,
+        47.7162
+       ],
+       [
+        29.067,
+        47.6938
+       ]
+      ]
+     ],
+     "fuente": "revisada-dcc99ac157fee5e0-declaracion-1",
+     "puntos": [
+      {
+       "lat": 47.6941,
+       "lon": 29.2055,
+       "nombre": "Stanislavka",
+       "radio_km": 4.0
+      },
+      {
+       "lat": 47.705,
+       "lon": 29.1178,
+       "nombre": "Vărăncău",
+       "radio_km": 4.0
+      }
+     ],
+     "version": "recorridos-1.0.0"
+    },
     "respuesta": {
      "medidas": [
       "cierre_espacio_aereo"
@@ -159096,6 +159246,81 @@
      "radio_km": 5.0
     },
     "presencia_dron": "confirmada",
+    "recorrido": {
+     "cita": "drona a traversat neautorizat frontiera de stat din direcția localității Biliaivka, Ucraina, spre localitatea Tudora, Republica Moldova",
+     "franja": [
+      [
+       [
+        29.9953,
+        46.4254
+       ],
+       [
+        30.0143,
+        46.4073
+       ],
+       [
+        30.0449,
+        46.4004
+       ],
+       [
+        30.0756,
+        46.4073
+       ],
+       [
+        30.2428,
+        46.4552
+       ],
+       [
+        30.2617,
+        46.4732
+       ],
+       [
+        30.2617,
+        46.4956
+       ],
+       [
+        30.2428,
+        46.5137
+       ],
+       [
+        30.2121,
+        46.5206
+       ],
+       [
+        30.1814,
+        46.5137
+       ],
+       [
+        30.0143,
+        46.4659
+       ],
+       [
+        29.9953,
+        46.4478
+       ],
+       [
+        29.9953,
+        46.4254
+       ]
+      ]
+     ],
+     "fuente": "revisada-50270198de7b25e4",
+     "puntos": [
+      {
+       "lat": 46.4844,
+       "lon": 30.2121,
+       "nombre": "Biliaivka",
+       "radio_km": 4.0
+      },
+      {
+       "lat": 46.4366,
+       "lon": 30.0449,
+       "nombre": "Tudora",
+       "radio_km": 4.0
+      }
+     ],
+     "version": "recorridos-1.0.0"
+    },
     "tiempo": {
      "inicio": {
       "precision": "dia",
@@ -177499,6 +177724,83 @@
      "radio_km": 5.0
     },
     "presencia_dron": "confirmada",
+    "recorrido": {
+     "cita": "Drona a traversat spațiul aerian la ora 05.55, din direcția loc. Vinogradovka, reg.Odesa spre orașul Vulcănești, UTAG Republica Moldova",
+     "franja": [
+      [
+       [
+        28.3572,
+        45.6737
+       ],
+       [
+        28.3759,
+        45.6557
+       ],
+       [
+        28.4061,
+        45.6487
+       ],
+       [
+        28.4364,
+        45.6557
+       ],
+       [
+        28.563,
+        45.7734
+       ],
+       [
+        28.5817,
+        45.7915
+       ],
+       [
+        28.5817,
+        45.8138
+       ],
+       [
+        28.563,
+        45.8319
+       ],
+       [
+        28.5327,
+        45.8388
+       ],
+       [
+        28.5024,
+        45.8319
+       ],
+       [
+        28.3759,
+        45.7142
+       ],
+       [
+        28.3572,
+        45.6961
+       ],
+       [
+        28.3572,
+        45.6737
+       ]
+      ]
+     ],
+     "fuente": "revisada-f583f5d087244993",
+     "puntos": [
+      {
+       "hora": "05:55",
+       "lat": 45.8026,
+       "lon": 28.5327,
+       "nombre": "Vinogradovka",
+       "radio_km": 4.0
+      },
+      {
+       "hora": "05:55",
+       "lat": 45.6849,
+       "lon": 28.4061,
+       "nombre": "Vulcănești",
+       "radio_km": 4.0
+      }
+     ],
+     "version": "recorridos-1.0.0"
+    },
     "tiempo": {
      "inicio": {
       "precision": "dia",
