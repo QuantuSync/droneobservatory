@@ -3,6 +3,7 @@
 
 import { diaDeInstante } from "../tiempo/dias.ts";
 import { lucesDeAtaques, origenesDeAtaques } from "./guerraSatelite.ts";
+import { DRON_DE_LA_GUERRA } from "./vocabulario.ts";
 import type {
   Ataque,
   Atribucion,
@@ -68,13 +69,18 @@ export function atribucionResumida(p: {
 }
 
 /**
- * Claves del tipo de dron para el filtro: «autoridad:<grupo>» si la autoridad lo identificó; si
- * no, «deducido:<grupo>» por cada grupo compatible publicado.
+ * Claves del tipo de dron para el filtro: «autoridad:<grupo>» si la autoridad lo identificó;
+ * «deducido:guerra» si lo deducido es «compatible con un dron de largo alcance de la guerra»; y
+ * «deducido:<grupo>» del grupo que destaca cuando se enseñan porcentajes.
  */
 export function clavesDron(tipo: TipoDron | undefined): string[] {
   if (tipo === undefined) return [];
   if (tipo.identificado !== undefined) return [`autoridad:${tipo.identificado.grupo}`];
-  return (tipo.publicado?.compatible ?? []).map((c) => `deducido:${c.grupo}`);
+  const publicado = tipo.publicado;
+  if (publicado === undefined) return [];
+  if (publicado.presentacion === "compatible_guerra") return [`deducido:${DRON_DE_LA_GUERRA}`];
+  const primero = publicado.compatible[0];
+  return primero === undefined ? [] : [`deducido:${primero.grupo}`];
 }
 
 export function resumirIncidente(feature: FeatureIncidente): IncidenteResumen {
@@ -97,6 +103,7 @@ export function resumirIncidente(feature: FeatureIncidente): IncidenteResumen {
     atribucion: atribucionResumida(p),
     zona: p.zona?.grupo ?? null,
     dron: clavesDron(p.tipo_dron),
+    ...(p.tipo_dron?.identificado !== undefined && { modeloDron: p.tipo_dron.identificado.modelo }),
   };
 }
 
@@ -118,6 +125,7 @@ export function resumirSinUbicacion(p: PropiedadesSinUbicacion): IncidenteResume
     atribucion: atribucionResumida(p),
     zona: p.zona?.grupo ?? null,
     dron: clavesDron(p.tipo_dron),
+    ...(p.tipo_dron?.identificado !== undefined && { modeloDron: p.tipo_dron.identificado.modelo }),
   };
 }
 

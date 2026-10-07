@@ -204,6 +204,40 @@ export function trasBanderas(mapa: Mapa, paises: readonly string[], tarea: () =>
   };
 }
 
+/** Punta de flecha de una ruta: un triángulo violeta claro que apunta al norte (el mapa la gira
+ *  con el rumbo del final del recorrido), con un filo oscuro para leerse sobre cualquier fondo. */
+export const ICONO_FLECHA_RUTA = "ruta-flecha";
+const LADO_FLECHA = 14;
+
+function dibujarFlechaRuta(): ImageData | null {
+  const lienzo = document.createElement("canvas");
+  lienzo.width = LADO_FLECHA * DENSIDAD;
+  lienzo.height = LADO_FLECHA * DENSIDAD;
+  const contexto = lienzo.getContext("2d");
+  if (contexto === null) return null;
+  contexto.scale(DENSIDAD, DENSIDAD);
+  contexto.beginPath();
+  contexto.moveTo(LADO_FLECHA / 2, 1);
+  contexto.lineTo(LADO_FLECHA - 2, LADO_FLECHA - 2);
+  contexto.lineTo(LADO_FLECHA / 2, LADO_FLECHA - 5);
+  contexto.lineTo(2, LADO_FLECHA - 2);
+  contexto.closePath();
+  contexto.fillStyle = PALETA.guerraClaro;
+  contexto.fill();
+  contexto.lineJoin = "round";
+  contexto.lineWidth = 1;
+  contexto.strokeStyle = PALETA.fondo;
+  contexto.stroke();
+  return contexto.getImageData(0, 0, lienzo.width, lienzo.height);
+}
+
+/** Registra la punta de flecha de las rutas (aparte de los iconos de los incidentes). */
+export function registrarFlechaRuta(mapa: Mapa): void {
+  if (mapa.hasImage(ICONO_FLECHA_RUTA)) return;
+  const flecha = dibujarFlechaRuta();
+  if (flecha !== null) mapa.addImage(ICONO_FLECHA_RUTA, flecha, { pixelRatio: DENSIDAD });
+}
+
 /**
  * Obstáculo invisible del tamaño de cada marca: los nombres del mapa ceden ante él (o se ven
  * enteros o no se ven). El mapa lo escala al diámetro de cada círculo.

@@ -8,8 +8,10 @@
    la de la recta en el conjunto y menor en cada noche, con 2 noches como mínimo.
 2. **Qué se publica de cada noche**, cuando la noche ha terminado (ver `cerrada`): si tiene NEPTUN
    (20 horas o más), las pistas de NEPTUN; si no, la reconstrucción con la Fuerza Aérea, y solo
-   si la comprobación pasa. Cada tramo lleva su franja (el contorno de sus dos zonas con su
-   radio), su grupo, su fuente, los mensajes o la pista de que sale y su precisión.
+   si la comprobación pasa. Cada grupo lleva su recorrido ya unido (proceso/rutas/recorridos.py:
+   una línea continua por rama, suavizada, con su franja de incertidumbre y la punta de flecha
+   en el final), para que la web no tenga que unir nada. Cada tramo lleva su grupo, su fuente,
+   los mensajes o la pista de que sale y su precisión.
 3. **Estadísticas de grupos** de cada noche (tamaño, velocidad, divisiones y uniones) para la
    exportación semanal.
 """
@@ -20,9 +22,9 @@ from collections.abc import Callable, Sequence
 from datetime import datetime, timedelta
 from typing import Any
 
-from proceso.rutas import geometria, neptun, noches, reconstruccion
+from proceso.rutas import geometria, neptun, noches, reconstruccion, recorridos
 
-VERSION = "rutas-publicacion-1.0.0"
+VERSION = "rutas-publicacion-1.1.0"
 HORAS_NEPTUN_MIN = 20
 MARGEN_HORA = timedelta(minutes=45)
 MEJORA_MINIMA = 0.2
@@ -196,14 +198,6 @@ def grupos_de(tramos: list[dict[str, Any]]) -> list[int]:
 
 
 def _publico(t: dict[str, Any], grupo: int, fuente: str) -> dict[str, Any]:
-    geo = geometria.Tramo(
-        t["desde"]["lat"],
-        t["desde"]["lon"],
-        t["desde"]["radio_km"],
-        t["hasta"]["lat"],
-        t["hasta"]["lon"],
-        t["hasta"]["radio_km"],
-    )
     salida: dict[str, Any] = {
         "grupo": grupo,
         "clase": t["clase"],
@@ -211,7 +205,6 @@ def _publico(t: dict[str, Any], grupo: int, fuente: str) -> dict[str, Any]:
         "desde": {k: (round(v, 4) if isinstance(v, float) else v) for k, v in t["desde"].items()},
         "hasta": {k: (round(v, 4) if isinstance(v, float) else v) for k, v in t["hasta"].items()},
         "precision_km": round(max(t["desde"]["radio_km"], t["hasta"]["radio_km"]), 1),
-        "franja": [[x, y] for x, y in geometria.poligono(geo, 10)],
     }
     numero = t.get("numero")
     if isinstance(numero, dict):
@@ -264,21 +257,36 @@ def noche_publica(
     if con_neptun(noche):
         fuente = "neptun"
         tramos = reconstruccion.tramos_neptun(noche)
+        trozos = recorridos.trozos_neptun(noche["neptun"]["pistas"])
+        recorridos.enlazar(trozos)
     elif pasa:
         fuente = "fuerza_aerea"
         tramos = unir_repetidos(
             reconstruccion.tramos_fuerza_aerea(noche, ataque.get("zonas", []), frontera)
         )
+        trozos = recorridos.trozos_fuerza_aerea(tramos)
     else:
         return None
     if not tramos:
         return None
-    grupos = grupos_de(tramos)
+    lista, grupo_de_trozo = recorridos.recorridos(trozos)
+    if fuente == "neptun":
+        por_pista = {t.id: g for t, g in zip(trozos, grupo_de_trozo, strict=True)}
+        grupos = [por_pista.get(t["pista"], 0) for t in tramos]
+    else:
+        grupos = grupo_de_trozo
+    # Un tramo sin trozo (no debería haberlo) va en un grupo propio, después de todos.
+    siguiente = max([0, *grupos]) + 1
+    for i, g in enumerate(grupos):
+        if g == 0:
+            grupos[i], siguiente = siguiente, siguiente + 1
     documento: dict[str, Any] = {
         "version": VERSION,
+        "version_recorridos": recorridos.VERSION,
         "noche": noche["noche"],
         "fuente": fuente,
         "ataques": ataque.get("ataques", []),
+        "recorridos": lista,
         "tramos": [_publico(t, g, fuente) for t, g in zip(tramos, grupos, strict=True)],
         "grupos": estadisticas(tramos, grupos, fuente),
     }
@@ -324,4 +332,5 @@ def resumen_noche(documento: dict[str, Any], ataque: dict[str, Any]) -> dict[str
         "lanzados": ataque.get("lanzados"),
         "tramos": len(documento["tramos"]),
         "grupos": len(documento["grupos"]),
+        "recorridos": len(documento["recorridos"]),
     }

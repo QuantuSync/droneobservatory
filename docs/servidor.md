@@ -681,10 +681,13 @@ tope de 30 minutos), que ejecuta [`servidor/rutas.sh`](../servidor/rutas.sh) con
    seguimiento a `datos/rutas/noches/AAAA-MM-DD.json.gz`, con los avisos de los mensajes de la
    Fuerza Aérea y las pistas de NEPTUN; solo las noches nuevas y las de los tres últimos días;
 2. `python -m recogida.rutas calcular`: la comprobación con NEPTUN (`datos/rutas/comprobacion.json`),
-   las noches terminadas que se publican (`datos/rutas/publicar/`) y las estadísticas de grupos
-   para la exportación semanal; sube al almacén público lo que cambia (`rutas/indice.json`,
-   caché de 5 minutos, y `rutas/noches/AAAA-MM-DD.json`, de una hora) y retira lo que deja de
-   publicarse.
+   las noches terminadas que se publican (`datos/rutas/publicar/`, esquema `esquema/rutas/1.1.0`:
+   cada noche con el recorrido ya unido de cada grupo, de `proceso/rutas/recorridos.py`) y las
+   estadísticas de grupos para la exportación semanal; sube al almacén público lo que cambia
+   (`rutas/indice.json`, caché de 5 minutos, y `rutas/noches/AAAA-MM-DD.json`, de una hora),
+   comprimido con gzip (`Content-Encoding: gzip`: una noche pasa de unos 300 KB a unos 60 KB), y
+   retira lo que deja de publicarse. Un cambio del formato vuelve a subir todas las noches en la
+   primera ejecución (la huella de cada fichero cambia).
 
 La recogida horaria deja cada hora los ataques de cada noche (zonas de lanzamiento, lanzados,
 impactos e incidentes de frontera) en `datos/rutas/ataques.json`, para que el cálculo no cargue la

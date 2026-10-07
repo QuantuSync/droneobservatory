@@ -1,4 +1,4 @@
-import type { NocheRutas, TramoRuta } from "../datos/rutas.ts";
+import type { NocheRutas, RecorridoRuta } from "../datos/rutas.ts";
 import type { Textos } from "../i18n/index.ts";
 import { jornadaEscrita, numero } from "../i18n/index.ts";
 import { Enlace } from "../navegacion.tsx";
@@ -8,8 +8,6 @@ import { diaDeInstante } from "../tiempo/dias.ts";
 import { EnlaceExterno } from "./EnlaceExterno.tsx";
 import { Fila } from "./Panel.tsx";
 
-const CANAL_FUERZA_AEREA = "https://t.me/kpszsu/";
-const MENSAJES_VISIBLES = 6;
 
 function hora(t: string | undefined): string {
   return t === undefined ? "" : `${t.slice(11, 16)} UTC`;
@@ -29,71 +27,64 @@ export function EnlaceNeptun({ t, texto, enlace }: { t: Textos; texto: string; e
   );
 }
 
-/** Ficha de un tramo de ruta: noche, grupo, aparatos, tipo, velocidad, fuente y precisión. */
+function nocheEscrita(t: Textos, noche: string, mayuscula: boolean): string {
+  const dia = diaDeInstante(noche);
+  return jornadaEscrita(t, { tipo: "noche", desde: dia, hasta: dia + 1 }, mayuscula);
+}
+
+/** Ficha del recorrido de un grupo: noche, aparatos, tipo y velocidad si constan, horas, fuente y
+ * precisión. */
 export function FichaRuta({
   t,
   idioma,
   noche,
-  tramo,
+  recorrido,
 }: {
   t: Textos;
   idioma: Idioma;
   noche: NocheRutas;
-  tramo: TramoRuta;
+  recorrido: RecorridoRuta;
 }) {
   const r = t.rutas;
-  const grupo = noche.grupos.find((g) => g.grupo === tramo.grupo);
-  const maximo = grupo?.aparatos_max ?? null;
-  const aparatos = tramo.numero ?? (maximo === null ? null : { min: maximo, max: maximo });
-  const velocidad = tramo.kmh ?? grupo?.kmh_mediana ?? null;
-  const mensajes = tramo.mensajes ?? [];
+  const km = (x: number) => numero(Math.round(x), idioma);
+  const precision =
+    Math.round(recorrido.precision_km.min) === Math.round(recorrido.precision_km.max)
+      ? r.precisionKm(km(recorrido.precision_km.max))
+      : r.precisionEntre(km(recorrido.precision_km.min), km(recorrido.precision_km.max));
   return (
     <article data-ficha-ruta="">
       <p className="text-secundario">{r.fuente[noche.fuente]}</p>
-      <h2 className="text-2xl font-semibold tracking-tight">
-        {jornadaEscrita(
-          t,
-          { tipo: "noche", desde: diaDeInstante(noche.noche), hasta: diaDeInstante(noche.noche) + 1 },
-          true,
-        )}
-      </h2>
+      <h2 className="text-2xl font-semibold tracking-tight">{nocheEscrita(t, noche.noche, true)}</h2>
       <dl className="mt-3">
         <Fila nombre={r.grupo}>
-          <span>{r.grupoNumero(tramo.grupo)}</span>
-          {tramo.division === true && <span className="block text-xs text-secundario">{r.division}</span>}
-          {tramo.union === true && <span className="block text-xs text-secundario">{r.union}</span>}
-          {noche.fuente === "fuerza_aerea" && (
-            <span className="block text-xs text-secundario">{r.sinIdentidad}</span>
-          )}
+          <span>{r.grupoNumero(recorrido.grupo)}</span>
+          {recorrido.division && <span className="block text-xs text-secundario">{r.division}</span>}
+          {recorrido.union && <span className="block text-xs text-secundario">{r.union}</span>}
+          <span className="block text-xs text-secundario">{r.sinIdentidad}</span>
         </Fila>
-        {aparatos !== null && (
+        {recorrido.aparatos !== null && (
           <Fila nombre={r.aparatos}>
-            <span className="mono">
-              {aparatos.min === aparatos.max
-                ? numero(aparatos.max, idioma)
-                : `${numero(aparatos.min, idioma)}–${numero(aparatos.max, idioma)}`}
-            </span>
+            <span className="mono">{numero(recorrido.aparatos, idioma)}</span>
           </Fila>
         )}
         <Fila nombre={r.tipo}>
-          <span>{r.tipos[tramo.tipo]}</span>
+          <span>{r.tipos[recorrido.tipo]}</span>
         </Fila>
-        {velocidad !== null && (
+        {recorrido.kmh !== null && (
           <Fila nombre={r.velocidad}>
-            <span className="mono">{r.kmh(Math.round(velocidad))}</span>
+            <span className="mono">{r.kmh(Math.round(recorrido.kmh))}</span>
           </Fila>
         )}
-        <Fila nombre={r.tramo}>
-          <span>{r.clases[tramo.clase]}</span>
-          <span className="mono block text-xs text-secundario">
-            {[hora(tramo.desde.t), hora(tramo.hasta.t)].filter((x) => x !== "").join(" → ")}
-          </span>
-          {tramo.desde.zona !== undefined && (
-            <span className="block text-xs text-secundario">{tramo.desde.zona}</span>
+        <Fila nombre={r.recorridoGrupo}>
+          <span className="mono">{r.longitud(km(recorrido.longitud_km))}</span>
+          {recorrido.inicio !== null && recorrido.fin !== null && (
+            <span className="mono block text-xs text-secundario">
+              {hora(recorrido.inicio)} → {hora(recorrido.fin)}
+            </span>
           )}
         </Fila>
         <Fila nombre={r.precision}>
-          <span className="mono">{r.precisionKm(numero(Math.round(tramo.precision_km), idioma))}</span>
+          <span className="mono">{precision}</span>
           <span className="block text-xs text-secundario">{r.nota}</span>
         </Fila>
         <Fila nombre={r.origen}>
@@ -103,28 +94,9 @@ export function FichaRuta({
               <EnlaceNeptun t={t} texto={noche.atribucion.texto} enlace={noche.atribucion.enlace} />
             </span>
           )}
-          {tramo.pista !== undefined && (
+          {(recorrido.pistas ?? []).length > 0 && (
             <span className="mono block text-xs text-secundario">
-              {r.pista}: {tramo.pista}
-            </span>
-          )}
-          {mensajes.length > 0 && (
-            <span className="block text-xs text-secundario">
-              {r.mensajes}:{" "}
-              {mensajes.slice(0, MENSAJES_VISIBLES).map((id, i) => (
-                <span key={id}>
-                  {i > 0 && ", "}
-                  <EnlaceExterno
-                    enlace={`${CANAL_FUERZA_AEREA}${id}`}
-                    aviso={t.ficha.enlaceExterno}
-                    avisoNoValido={t.ficha.enlaceNoValido}
-                    className="mono text-acento underline underline-offset-2"
-                  >
-                    {id}
-                  </EnlaceExterno>
-                </span>
-              ))}
-              {mensajes.length > MENSAJES_VISIBLES && ` (+${mensajes.length - MENSAJES_VISIBLES})`}
+              {r.pista}: {(recorrido.pistas ?? []).join(", ")}
             </span>
           )}
         </Fila>
@@ -151,34 +123,45 @@ export function FichaRuta({
   );
 }
 
-/** Leyenda de la subcapa: cuántas noches se dibujan de cuántas, qué es y de dónde sale. */
+/** Leyenda de la subcapa: qué noche se ve, cuántos grupos de cuántos, cómo se lee y de dónde
+ * sale. Cabe entera en la pantalla del teléfono: el texto se parte en líneas, nunca se sale. */
 export function LeyendaRutas({
   t,
-  mostradas,
+  noche,
+  mostrados,
   total,
   conNeptun,
   atribucion,
-  noche,
   cargando,
 }: {
   t: Textos;
-  mostradas: number;
+  noche: string | null;
+  mostrados: number;
   total: number;
   conNeptun: boolean;
   atribucion: { texto: string; enlace: string } | null;
-  noche: boolean;
   cargando: boolean;
 }) {
   const r = t.rutas;
   return (
-    <details open className="flotante w-max max-w-[min(20rem,calc(100vw-2rem))] px-2.5 py-1.5 text-xs" data-leyenda="rutas">
-      <summary className="cursor-pointer font-medium text-texto">{r.subcapa}</summary>
-      <p className="text-secundario" data-rutas-visibles={mostradas} data-rutas-total={total}>
-        {cargando ? r.cargando : noche ? r.leyendaNoche : total === 0 ? r.sinRutas : r.leyenda(mostradas, total)}
+    <details
+      open
+      className="flotante w-80 max-w-full px-2.5 py-1.5 text-xs"
+      data-leyenda="rutas"
+    >
+      <summary className="cursor-pointer font-medium text-texto">
+        {noche === null ? r.subcapa : `${r.subcapa} · ${nocheEscrita(t, noche, false)}`}
+      </summary>
+      <p className="text-secundario" data-rutas-visibles={mostrados} data-rutas-total={total}>
+        {cargando ? r.cargando : noche === null || total === 0 ? r.sinRutas : r.leyenda(mostrados, total)}
       </p>
-      <p className="text-secundario">{r.nota}</p>
+      <p className="flex items-center gap-1.5 text-secundario">
+        <span aria-hidden="true" className="leyenda-ruta" />
+        {r.comoSeLee}
+      </p>
+      <p className="text-secundario">{r.otraNoche}</p>
       {conNeptun && atribucion !== null && (
-        <p>
+        <p className="break-words">
           <EnlaceNeptun t={t} texto={atribucion.texto} enlace={atribucion.enlace} />
         </p>
       )}

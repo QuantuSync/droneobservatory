@@ -8,10 +8,11 @@ interface Props {
 }
 
 /**
- * Fila «Tipo de dron» de la ficha. Si la autoridad identificó el dron, eso y su fuente; si no,
- * «Compatible con» y los grupos comprobados con su probabilidad, separados a la vista de lo que
- * dice una autoridad, y al desplegar por qué (rasgos descritos con su cita y restricciones). Sin
- * base, la fila no aparece.
+ * Fila «Tipo de dron» de la ficha. Si la autoridad identificó el dron, eso y su fuente. Si no, lo
+ * deducido, separado a la vista de lo que dice una autoridad: cuando ningún grupo destaca, una
+ * sola frase («compatible con un dron de largo alcance de la guerra») con sus razones debajo;
+ * cuando uno destaca y eso está comprobado, los grupos con su probabilidad y, al desplegar, por
+ * qué. Sin base o sin ninguna razón, la fila no aparece.
  */
 export function FilaTipoDron({ t, incidente }: Props) {
   const tipo = incidente.tipo_dron;
@@ -36,8 +37,25 @@ export function FilaTipoDron({ t, incidente }: Props) {
     );
   }
   const publicado = tipo.publicado;
-  if (publicado === undefined) return null;
-  const otras = Math.round(publicado.otras * 100);
+  const razones = tipo.razones ?? [];
+  // Sin ninguna razón que enseñar no hay fila.
+  if (publicado === undefined || razones.length === 0) return null;
+  if (publicado.presentacion === "compatible_guerra") {
+    return (
+      <Fila nombre={textos.fila}>
+        <span data-tipo-dron="guerra">{textos.compatibleGuerra}</span>
+        <ul className="text-xs text-secundario">
+          {razones.map((razon, i) => (
+            <li key={i} className="py-0.5" data-razon={razon.clave}>
+              {textos.razon(razon)}
+            </li>
+          ))}
+        </ul>
+        <span className="block text-xs text-secundario">{textos.deducido}</span>
+      </Fila>
+    );
+  }
+  const otras = Math.round((publicado.otras ?? 0) * 100);
   const zona = incidente.zona?.grupo;
   return (
     <Fila nombre={textos.fila}>
@@ -49,7 +67,7 @@ export function FilaTipoDron({ t, incidente }: Props) {
           <li key={c.grupo}>
             {textos.grupos[c.grupo]}{" "}
             <span className="mono text-secundario">
-              {textos.probabilidad(Math.round(c.probabilidad * 100))}
+              {textos.probabilidad(Math.round((c.probabilidad ?? 0) * 100))}
             </span>
           </li>
         ))}
@@ -66,7 +84,7 @@ export function FilaTipoDron({ t, incidente }: Props) {
               {textos.base(publicado.casos_referencia, textos.zonas[zona])}
             </li>
           )}
-          {(tipo.razones ?? []).map((razon, i) => (
+          {razones.map((razon, i) => (
             <li key={i} className="border-t border-linea py-1" data-razon={razon.clave}>
               {textos.razon(razon)}
             </li>

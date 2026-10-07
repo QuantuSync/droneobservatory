@@ -1192,11 +1192,17 @@ export const es: Textos = {
         bloques: [
           {
             parrafo: [
-              "La subcapa «Rutas» de la capa de Ucrania dibuja por dónde pasaron los drones de " +
-                "cada noche, como franjas semitransparentes con su anchura de incertidumbre, nunca " +
-                "como líneas exactas. Se publican cuando el ataque ha terminado: pasadas las 12:00 " +
-                "UTC del día siguiente y dos horas después del último aviso de la noche. Nunca en " +
-                "directo.",
+              "La subcapa «Rutas» de la capa de Ucrania dibuja por dónde entró y hacia dónde fue " +
+                "cada grupo de drones de una noche: una línea por grupo, tenue en el origen, más " +
+                "marcada hacia el final y con una punta de flecha, rodeada de un halo más ancho " +
+                "donde la posición es menos precisa (de 2 a 15 km a cada lado). Se ve una noche " +
+                "cada vez: la última terminada, u otra elegida en «Noche a noche». Se dibujan los " +
+                "40 grupos con más drones y la leyenda dice cuántos de cuántos. Un aviso que solo " +
+                "dice una región entera no se dibuja: solo une el recorrido si hay posiciones " +
+                "precisas antes y después. Dos tramos se unen en un grupo solo si no hay duda de " +
+                "que son el mismo; si un grupo se divide o se une, la línea se bifurca o se junta. " +
+                "Se publican cuando el ataque ha terminado: pasadas las 12:00 UTC del día " +
+                "siguiente y dos horas después del último aviso de la noche. Nunca en directo.",
             ],
           },
           {
@@ -1230,7 +1236,7 @@ export const es: Textos = {
                     "compara con las pistas de NEPTUN y con la línea recta de la zona de lanzamiento " +
                     "a cada impacto de la noche. Las rutas reconstruidas se publican solo si quedan " +
                     "claramente más cerca de NEPTUN que la línea recta (la mediana un 20 % menor o " +
-                    "más, y mejor en cada noche). La leyenda y la ficha de cada tramo dicen de qué " +
+                    "más, y mejor en cada noche). La leyenda y la ficha de cada grupo dicen de qué " +
                     "fuente sale y su precisión.",
                 ],
               },
@@ -1240,7 +1246,7 @@ export const es: Textos = {
                   "En los incidentes de Rumanía, Moldavia y Polonia en que la autoridad nombra los " +
                     "lugares por los que pasó el dron, la ficha dibuja ese recorrido al abrirla, con " +
                     "la frase de la que sale. Cuando una ruta de una noche acaba en un incidente " +
-                    "europeo de esa noche, la ficha del tramo lo enlaza.",
+                    "europeo de esa noche, la ficha del grupo lo enlaza.",
                 ],
               },
             ],
@@ -1256,8 +1262,10 @@ export const es: Textos = {
               "Cada incidente dice qué clase de dron pudo ser solo cuando hay base para ello. Si " +
                 "una autoridad nombra el modelo (por ejemplo, los restos de un Gerbera que " +
                 "identifica el ejército), la ficha dice eso y de dónde sale. Si no, el " +
-                "observatorio lo deduce y lo enseña aparte, como «compatible con», con la " +
-                "probabilidad de cada clase y el porqué.",
+                "observatorio lo deduce y lo enseña aparte, como «compatible con», siempre con " +
+                "el porqué. Cuando lo publicado no distingue entre el dron de ataque de largo " +
+                "alcance y el señuelo, la ficha dice solo «Compatible con un dron de largo " +
+                "alcance de la guerra (de ataque o señuelo)», sin porcentajes.",
             ],
           },
           {
@@ -1296,16 +1304,22 @@ export const es: Textos = {
                     "publican las clases que tienen al menos 5 casos comprobados, mejoran a esa " +
                     "referencia y dan probabilidades que se cumplen. El 6 de octubre de 2026 " +
                     "pasan el dron de ataque de largo alcance de hélice y el señuelo de largo " +
-                    "alcance, en la frontera. Las cifras de cada clase están en el informe " +
-                    "docs/informe_tipo_y_rutas.md del repositorio.",
+                    "alcance, en la frontera. Los porcentajes de cada clase solo se enseñan si " +
+                    "la más probable dobla a la segunda y, en los casos de respuesta conocida en " +
+                    "que el método dijo eso, acertó al menos 8 de cada 10 veces (5 casos como " +
+                    "mínimo). El 7 de octubre de 2026 ningún caso de la frontera pasa: el ataque " +
+                    "y el señuelo no se distinguen, así que no se enseñan porcentajes. Lo que sí " +
+                    "pasa es que fuera uno de los dos: en 22 de 24 casos. Las probabilidades " +
+                    "calculadas siguen en la exportación de datos. Las cifras de cada clase " +
+                    "están en el informe docs/informe_tipo_y_rutas.md del repositorio.",
                 ],
               },
               {
                 termino: "Sin base",
                 texto: [
-                  "Sin rasgos que pesen ni entrada desde fuera en la frontera, con el dron sin " +
-                    "confirmar o con una clase más probable que no ha pasado la comprobación, la " +
-                    "fila no aparece.",
+                  "Sin rasgos que pesen ni entrada desde fuera en la frontera, sin ninguna razón " +
+                    "que enseñar, con el dron sin confirmar o con una clase más probable que no ha " +
+                    "pasado la comprobación, la fila no aparece.",
                 ],
               },
             ],

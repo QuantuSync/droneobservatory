@@ -1,4 +1,4 @@
-"""Esquemas de los ficheros publicados de las rutas (esquema/rutas/1.0.0)."""
+"""Esquemas de los ficheros publicados de las rutas (esquema/rutas/1.1.0)."""
 
 import json
 from functools import cache
@@ -7,7 +7,7 @@ from typing import Any
 
 from jsonschema import Draft202012Validator
 
-DIRECTORIO = Path(__file__).resolve().parent.parent.parent / "esquema" / "rutas" / "1.0.0"
+DIRECTORIO = Path(__file__).resolve().parent.parent.parent / "esquema" / "rutas" / "1.1.0"
 
 
 class RutaInvalida(ValueError):

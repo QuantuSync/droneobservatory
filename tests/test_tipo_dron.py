@@ -204,6 +204,75 @@ def test_un_posible_dron_no_lleva_clase() -> None:
     assert "publicado" not in salida
 
 
+def test_ataque_y_senuelo_no_se_distinguen_y_la_familia_si() -> None:
+    """Con los casos del 6 de octubre de 2026 ninguno de los dos grupos de la frontera dobla al
+    otro en ningún caso: no hay porcentajes. Los dos juntos sí doblan al resto y aciertan."""
+    resumen = comprobacion.resumen(comprobacion.evaluar(catalogo_.cargar(), conocidos()))
+    for grupo in resumen["grupos_publicados"]:
+        assert not resumen["distincion"][grupo]["pasa"], grupo
+    familia = resumen["familia_guerra"]
+    assert familia["pasa"]
+    assert familia["aciertos"] / familia["casos"] >= 0.8
+
+
+def _frontera(salida_de: list[tuple[str, str, str, str | None]]) -> dict[str, object]:
+    catalogo = catalogo_.cargar()
+    k = conocidos()
+    resumen = comprobacion.resumen(comprobacion.evaluar(catalogo, k))
+    documento = {"id": "EODI-2026-99997", "tipo": "incursion", "presencia_dron": "confirmada",
+                 "estado": {"actual": "confirmado"}, "lugar": {"pais": "RO"},
+                 "zona": {"grupo": "frontera"}}  # fmt: skip
+    return calculo.documento_incidente(
+        catalogo, documento, salida_de, None, k, resumen["grupos_publicados"], None, resumen
+    )
+
+
+def test_sin_distincion_se_dice_compatible_con_dron_de_la_guerra() -> None:
+    catalogo = catalogo_.cargar()
+    k = conocidos()
+    resumen = comprobacion.resumen(comprobacion.evaluar(catalogo, k))
+    entrada = modelo.Entrada(
+        zona="frontera", con_punto=True, d_partes_km=8, d_costa_km=200, entrada_exterior=True
+    )
+    resultado = modelo.calcular(catalogo, entrada, [(c.entrada.zona, c.respuesta) for c in k])
+    publicado = calculo.publicable(
+        resultado, resumen["grupos_publicados"], resumen["distincion"], resumen["familia_guerra"]
+    )
+    assert publicado is not None
+    assert publicado["presentacion"] == "compatible_guerra"
+    # Las probabilidades se quedan en la base (y en la exportación).
+    assert {c["grupo"] for c in publicado["compatible"]} == {"largo_alcance_helice", "senuelo"}
+    assert all("probabilidad" in c for c in publicado["compatible"])
+    bloque = publico.bloque(
+        {"version": "tipo-dron-1.1.0", "publicado": publicado, "razones": []},
+        {"fuentes": [{"id": "f", "publica": True, "fiabilidad": "A"}]},
+    )
+    assert bloque is not None
+    assert "otras" not in bloque["publicado"]
+    assert all("probabilidad" not in c for c in bloque["publicado"]["compatible"])
+
+
+def test_sin_razon_no_hay_fila() -> None:
+    salida = _frontera([])
+    # Sin punto ni rasgos no hay ninguna razón: nada que enseñar.
+    assert salida["razones"] == []
+    assert "publicado" not in salida
+
+
+def test_la_entrada_desde_fuera_se_guarda_como_razon() -> None:
+    """Un dron entrado desde fuera cerca de Ucrania: todas las clases llegan, no cambia ninguna
+    probabilidad, pero es la razón de la base y se guarda."""
+    catalogo = catalogo_.cargar()
+    previa = [(k.entrada.zona, k.respuesta) for k in conocidos()]
+    entrada = modelo.Entrada(
+        zona="frontera", con_punto=True, d_partes_km=8, d_costa_km=200, entrada_exterior=True
+    )
+    resultado = modelo.calcular(catalogo, entrada, previa)
+    assert [r.clave for r in resultado.razones] == ["entrada_exterior"]
+    assert resultado.razones[0].detalle["distancia_km"] == 8
+    assert modelo.con_base(entrada, resultado)
+
+
 # --- Publicación y exportación ------------------------------------------------------------------
 
 

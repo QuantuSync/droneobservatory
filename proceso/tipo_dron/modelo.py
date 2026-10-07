@@ -29,6 +29,8 @@ from proceso.deduccion.catalogo import Catalogo
 
 CONFIGURACION = Path(__file__).resolve().parent.parent.parent / "configuracion" / "tipo_dron.json"
 KMH_POR_MS = 3.6
+# Razones que solo dicen dónde está el incidente respecto a la guerra (ver con_base).
+SOLO_DISTANCIA = ("distancia", "entrada_exterior")
 
 
 @cache
@@ -202,17 +204,18 @@ def calcular(
                 factores[c] = float(lim["fuera_de_alcance_con_costa"])
             else:
                 factores[c] = float(lim["fuera_de_alcance"])
-        aplicar(
-            "restriccion",
-            "distancia",
-            factores,
-            {
-                "distancia_km": None if entrada.d_partes_km is None else round(d, 1),
-                "mas_de_600_km": entrada.d_partes_km is None,
-                "costa_km": None if entrada.d_costa_km is None else round(entrada.d_costa_km, 1),
-                "entrada_exterior": entrada.entrada_exterior,
-            },
-        )
+        detalle_d = {
+            "distancia_km": None if entrada.d_partes_km is None else round(d, 1),
+            "mas_de_600_km": entrada.d_partes_km is None,
+            "costa_km": None if entrada.d_costa_km is None else round(entrada.d_costa_km, 1),
+            "entrada_exterior": entrada.entrada_exterior,
+        }
+        antes = len(razones)
+        aplicar("restriccion", "distancia", factores, detalle_d)
+        # Entró desde fuera y todas las clases llegan: no cambia ninguna probabilidad, pero es la
+        # razón de que el incidente tenga base en la frontera (con_base) y se enseña como tal.
+        if len(razones) == antes and entrada.entrada_exterior:
+            razones.append(Razon("restriccion", "entrada_exterior", (), 1.0, detalle_d))
 
     # Velocidad: hélice o reacción, y la máxima de cada clase.
     rasgo_v = _numerico(entrada.rasgos, "velocidad", "kmh")
@@ -303,7 +306,7 @@ def con_base(entrada: Entrada, resultado: Resultado) -> bool:
     if any(r["rasgo"] == "forma" and r["valor"] == "maritimo" for r in entrada.rasgos):
         return False
     if any(
-        r.tipo == "rasgo" or (r.tipo == "restriccion" and r.clave != "distancia")
+        r.tipo == "rasgo" or (r.tipo == "restriccion" and r.clave not in SOLO_DISTANCIA)
         for r in resultado.razones
     ):
         return True

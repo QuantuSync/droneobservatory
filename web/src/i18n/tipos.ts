@@ -566,10 +566,12 @@ export interface Textos {
 /** Rutas de los drones sobre Ucrania y recorrido de las incursiones. */
 export interface TextosRutas {
   subcapa: string;
-  leyenda: (mostradas: number, total: number) => string;
-  leyendaNoche: string;
+  /** «40 de 183 grupos, los de más drones». */
+  leyenda: (mostrados: number, total: number) => string;
   sinRutas: string;
   cargando: string;
+  comoSeLee: string;
+  otraNoche: string;
   nota: string;
   fuente: { neptun: string; fuerza_aerea: string };
   etiqueta: string;
@@ -584,6 +586,9 @@ export interface TextosRutas {
   origen: string;
   precision: string;
   precisionKm: (km: string) => string;
+  precisionEntre: (min: string, max: string) => string;
+  recorridoGrupo: string;
+  longitud: (km: string) => string;
   tramo: string;
   clases: { enlace: string; hacia_destino: string; desde_lanzamiento: string; neptun: string };
   desde: string;
@@ -599,7 +604,7 @@ export interface TextosRutas {
   recorridoNota: string;
 }
 
-/** Tipo de dron: lo que identificó la autoridad o la clase deducida con su probabilidad. */
+/** Tipo de dron: lo que identificó la autoridad o lo deducido («compatible con»). */
 export interface TextosTipoDron {
   /** Rótulo de la fila de la ficha y del grupo del filtro. */
   fila: string;
@@ -608,6 +613,8 @@ export interface TextosTipoDron {
   identificado: (modelo: string) => string;
   grupoDe: (grupo: string) => string;
   compatibleCon: string;
+  /** Lo deducido cuando ningún grupo destaca: una sola frase, sin porcentajes. */
+  compatibleGuerra: string;
   /** «4 de cada 10 (42 %)». */
   probabilidad: (porcentaje: number) => string;
   otras: (porcentaje: number) => string;
@@ -619,6 +626,7 @@ export interface TextosTipoDron {
   razon: (razon: RazonTipoDron) => string;
   filtroAutoridad: string;
   filtroDeducido: string;
+  filtroGuerra: string;
 }
 
 /** Guerra por satélite: corredores, focos en vivo, luz nocturna e imágenes de antes y después. */

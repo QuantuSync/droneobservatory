@@ -1,6 +1,6 @@
 // Textos de las rutas de los drones sobre Ucrania y del recorrido de las incursiones (es y en).
-// Las rutas son franjas con su anchura de incertidumbre, nunca líneas exactas; lo derivado de
-// NEPTUN lleva siempre su enlace.
+// Cada grupo es un recorrido de su origen a su final, con un halo de incertidumbre: nunca una
+// línea exacta. Lo derivado de NEPTUN lleva siempre su enlace.
 
 import type { TextosRutas } from "./tipos.ts";
 
@@ -9,13 +9,14 @@ export const rutasEs: TextosRutas = {
   leyenda: (n, total) =>
     n === total
       ? total === 1
-        ? "Rutas de 1 noche"
-        : `Rutas de ${total} noches`
-      : `Rutas de las ${n} noches con más drones, de ${total} del periodo`,
-  leyendaNoche: "Rutas de esta noche",
-  sinRutas: "Ninguna noche del periodo tiene rutas publicadas.",
+        ? "1 grupo"
+        : `${total} grupos`
+      : `${n} de ${total} grupos, los de más drones`,
+  sinRutas: "Esta noche no tiene rutas publicadas.",
   cargando: "Cargando las rutas…",
-  nota: "Franjas con su anchura de incertidumbre, no líneas exactas.",
+  comoSeLee: "Por dónde entró cada grupo (tenue) y hacia dónde fue (flecha). El halo es la incertidumbre.",
+  otraNoche: "Otra noche: «Noche a noche».",
+  nota: "El halo es la incertidumbre de la posición, no una línea exacta.",
   fuente: {
     neptun: "estimación de NEPTUN a partir de informes (no es un radar)",
     fuerza_aerea: "reconstruida con los mensajes de seguimiento de la Fuerza Aérea de Ucrania",
@@ -31,7 +32,10 @@ export const rutasEs: TextosRutas = {
   kmh: (n) => `${n} km/h`,
   origen: "Fuente",
   precision: "Precisión",
-  precisionKm: (km) => `franja de ${km} km de radio`,
+  precisionKm: (km) => `${km} km a cada lado`,
+  precisionEntre: (min, max) => `de ${min} a ${max} km a cada lado`,
+  recorridoGrupo: "Recorrido",
+  longitud: (km) => `${km} km`,
   tramo: "Tramo",
   clases: {
     enlace: "entre dos mensajes de seguimiento",
@@ -43,7 +47,8 @@ export const rutasEs: TextosRutas = {
   hasta: "Hasta",
   division: "El grupo se divide aquí.",
   union: "Aquí se unen dos grupos.",
-  sinIdentidad: "Los grupos no se identifican por el texto: un tramo enlaza dos avisos, nada más.",
+  sinIdentidad:
+    "Un grupo es lo que se sigue sin dudas: si no se sabe si dos tramos son el mismo grupo, no se unen.",
   mensajes: "Mensajes de la Fuerza Aérea",
   pista: "Pista de NEPTUN",
   incidentes: "Acaba en incidentes de esa noche",
@@ -57,13 +62,14 @@ export const rutasEn: TextosRutas = {
   leyenda: (n, total) =>
     n === total
       ? total === 1
-        ? "Routes of 1 night"
-        : `Routes of ${total} nights`
-      : `Routes of the ${n} nights with the most drones, of ${total} in the period`,
-  leyendaNoche: "Routes of this night",
-  sinRutas: "No night in the period has published routes.",
+        ? "1 group"
+        : `${total} groups`
+      : `${n} of ${total} groups, those with the most drones`,
+  sinRutas: "This night has no published routes.",
   cargando: "Loading the routes…",
-  nota: "Bands with their uncertainty width, not exact lines.",
+  comoSeLee: "Where each group came in (faint) and where it went (arrow). The halo is the uncertainty.",
+  otraNoche: "Another night: “Night by night”.",
+  nota: "The halo is the position uncertainty, not an exact line.",
   fuente: {
     neptun: "NEPTUN estimate from reports (not a radar)",
     fuerza_aerea: "reconstructed from the Ukrainian Air Force tracking messages",
@@ -79,7 +85,10 @@ export const rutasEn: TextosRutas = {
   kmh: (n) => `${n} km/h`,
   origen: "Source",
   precision: "Precision",
-  precisionKm: (km) => `band of ${km} km radius`,
+  precisionKm: (km) => `${km} km either side`,
+  precisionEntre: (min, max) => `${min} to ${max} km either side`,
+  recorridoGrupo: "Route",
+  longitud: (km) => `${km} km`,
   tramo: "Segment",
   clases: {
     enlace: "between two tracking messages",
@@ -91,7 +100,8 @@ export const rutasEn: TextosRutas = {
   hasta: "To",
   division: "The group splits here.",
   union: "Two groups join here.",
-  sinIdentidad: "Groups are not identified from the text: a segment links two reports, nothing more.",
+  sinIdentidad:
+    "A group is what can be followed without doubt: if it is unclear whether two segments are the same group, they are not joined.",
   mensajes: "Air Force messages",
   pista: "NEPTUN track",
   incidentes: "Ends at incidents that night",

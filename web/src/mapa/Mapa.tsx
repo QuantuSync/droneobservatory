@@ -15,6 +15,7 @@ import { useEffect, useRef, useState } from "react";
 import { indiceBandera, varianteDe } from "../banderas.ts";
 import type { Capas } from "../componentes/Controles.tsx";
 import { avisosEnMapa } from "../datos/directo.ts";
+import type { RutasEnMapa } from "../datos/rutas.ts";
 import type { Aviso } from "../datos/directo.ts";
 import { celdasEnMapa } from "../datos/gnss.ts";
 import type { CeldaGnss } from "../datos/gnss.ts";
@@ -73,8 +74,11 @@ import {
   FUENTE_LUZ_CIUDADES,
   FUENTE_ALUMBRADO,
   FUENTE_RUTAS,
+  FUENTE_RUTAS_FLECHAS,
+  FUENTE_RUTAS_FRANJAS,
   FUENTE_RECORRIDO,
   CAPA_RUTAS,
+  CAPA_RUTAS_ZONA,
   CAPA_GRUPOS,
   CAPA_INCIDENTES_DISCRETOS,
   CAPA_INCIDENTES_GRAVES,
@@ -114,7 +118,7 @@ import {
   pilas,
   sinAtribuidos,
 } from "./geometria.ts";
-import { precargarBanderas, registrarIconos, trasBanderas } from "./iconos.ts";
+import { precargarBanderas, registrarFlechaRuta, registrarIconos, trasBanderas } from "./iconos.ts";
 import { colocarLetrero, hayRaton } from "./letrero.ts";
 import { anchoZonaArco, distanciaALinea, elegir, ZONA_ARCO_DEDO_PX } from "./seleccion.ts";
 import type { Candidato } from "./seleccion.ts";
@@ -272,12 +276,18 @@ export interface PropsMapa {
   onFallo: () => void;
   /** Un toque en el mapa fuera de todo: cierra lo abierto, sin mover el mapa. */
   onVacio: () => void;
-  /** Franjas de ruta que se dibujan (las del periodo o las de la noche); null sin rutas. */
-  rutas: GeoJSON.FeatureCollection | null;
+  /** Recorridos de la noche que se dibuja (la última terminada o la de «Noche a noche»); null sin
+   * rutas. Mientras se ven, los impactos y el relleno de las regiones se atenúan. */
+  rutas: RutasEnMapa | null;
   onRuta: (clave: string) => void;
   /** Recorrido de la incursión con la ficha abierta; null si no hay. */
   recorrido: GeoJSON.FeatureCollection | null;
 }
+
+/** Capas de las rutas que se pueden tocar: el halo y la zona sensible de la línea. */
+const CAPAS_DE_RUTA: readonly string[] = [CAPA_RUTAS, CAPA_RUTAS_ZONA];
+/** Parte del relleno de las regiones que queda con las rutas a la vista. */
+const FACTOR_REGIONES_CON_RUTAS = 0.35;
 
 /**
  * Opacidad del relleno de una región según sus ataques, en los escalones de la leyenda. Las
@@ -287,6 +297,7 @@ export interface PropsMapa {
 function opacidadPorRegion(
   todas: ReadonlyMap<string, number>,
   rusas: boolean,
+  factor = 1,
 ): ExpressionSpecification | number {
   const intensidad = new Map(
     [...todas].filter(([codigo]) => codigo.startsWith("RU-") === rusas),
@@ -299,7 +310,7 @@ function opacidadPorRegion(
       ESCALA_UCRANIA.length - 1,
       Math.floor((ataques / tope) * ESCALA_UCRANIA.length),
     );
-    pares.push(codigo, ESCALA_UCRANIA[escalon] ?? 0);
+    pares.push(codigo, (ESCALA_UCRANIA[escalon] ?? 0) * factor);
   }
   return ["match", ["get", "iso"], ...pares, 0] as unknown as ExpressionSpecification;
 }
@@ -408,6 +419,7 @@ export default function Mapa(props: PropsMapa) {
   const { focosUcrania, impactos, gnss, presion, avisos } = props;
   const { corredores, luzRegiones, ciudadesSinLuz, alumbrado, corredorElegido } = props;
   const { puntosSatelite, soloSatelite, rutas, recorrido } = props;
+  const conRutas = (rutas?.mostrados ?? 0) > 0;
   const { paisResaltado, regionesElegidas, novedades, recientes, vuelo, reserva } = props;
   // El vuelo lee la reserva del momento, pero no se repite porque cambie (al arrastrar una hoja).
   const reservaActual = useRef(reserva);
@@ -602,6 +614,7 @@ export default function Mapa(props: PropsMapa) {
       anotarVista();
       const delMapaBase = new Set(mapa.listImages());
       registrarIconos(mapa);
+      registrarFlechaRuta(mapa);
       // Con el dedo, la zona sensible de los arcos es más ancha.
       if (punteroGrueso()) {
         mapa.setPaintProperty(CAPA_CORREDORES_ZONA, "line-width", [
@@ -654,7 +667,7 @@ export default function Mapa(props: PropsMapa) {
       const dedo = punteroGrueso();
       // Dentro de una franja de ruta, el dedo no busca la marca más cercana: la franja es lo
       // que se ha tocado (una marca justo debajo del dedo sigue ganando).
-      const enRuta = lista.some((c) => c.valor.tipo === "rasgo" && c.valor.rasgo.layer.id === CAPA_RUTAS);
+      const enRuta = lista.some((c) => c.valor.tipo === "rasgo" && CAPAS_DE_RUTA.includes(c.valor.rasgo.layer.id));
       if (dedo && !enRuta && !lista.some((c) => c.clase === "marca")) {
         // Con el dedo, el objetivo de cada marca es de 44 px: la más cercana dentro de ese cuadro.
         // Las de la capa de guerra, muy juntas a la escala de Ucrania, el de los arcos (28 px).
@@ -767,7 +780,7 @@ export default function Mapa(props: PropsMapa) {
         const cuenta = manejadores.current.presion?.get(iso)?.incidentes ?? 0;
         return textos.presion.letrero(nombrePais(iso, lengua), cuenta);
       }
-      if (rasgo.layer.id === CAPA_RUTAS) {
+      if (CAPAS_DE_RUTA.includes(rasgo.layer.id)) {
         return textos.rutas.etiqueta;
       }
       if (rasgo.layer.id === CAPA_LUZ_CIUDADES) {
@@ -840,7 +853,7 @@ export default function Mapa(props: PropsMapa) {
         manejadores.current.onImpacto(String(propiedades.id));
       } else if (primero.layer.id === CAPA_DIRECTO) {
         manejadores.current.onAviso(String(propiedades.id));
-      } else if (primero.layer.id === CAPA_RUTAS) {
+      } else if (CAPAS_DE_RUTA.includes(primero.layer.id)) {
         manejadores.current.onRuta(String(propiedades.clave));
       } else if (primero.layer.id === CAPA_GNSS) {
         manejadores.current.onCelda(String(propiedades.h3));
@@ -989,18 +1002,20 @@ export default function Mapa(props: PropsMapa) {
     const mapa = mapaRef.current;
     if (!listo || mapa === null) return;
     const actual = noche ?? intensidad;
+    // Con las rutas a la vista, el relleno se queda en un fondo suave que no compite con ellas.
+    const factor = conRutas ? FACTOR_REGIONES_CON_RUTAS : 1;
     mapa.setPaintProperty(
       CAPA_REGIONES,
       "fill-opacity",
-      actual === null ? 0 : opacidadPorRegion(actual, false),
+      actual === null ? 0 : opacidadPorRegion(actual, false, factor),
     );
     // Durante la reproducción noche a noche (solo ataques contra Ucrania), Rusia se apaga.
     mapa.setPaintProperty(
       CAPA_REGIONES_RUSIA,
       "fill-opacity",
-      noche !== null || intensidad === null ? 0 : opacidadPorRegion(intensidad, true),
+      noche !== null || intensidad === null ? 0 : opacidadPorRegion(intensidad, true, factor),
     );
-  }, [listo, intensidad, noche]);
+  }, [listo, intensidad, noche, conRutas]);
 
   // Impactos con lugar de la capa de guerra.
   useEffect(() => {
@@ -1015,10 +1030,11 @@ export default function Mapa(props: PropsMapa) {
     });
   }, [listo, impactos, puntosSatelite]);
 
-  // «Con satélite»: lo demás de la capa de guerra, atenuado.
+  // «Con satélite», o las rutas a la vista: lo demás de la capa de guerra, atenuado.
   useEffect(() => {
     const mapa = mapaRef.current;
     if (!listo || mapa === null) return;
+    const atenuar = soloSatelite || conRutas;
     for (const [capa, propiedad, atenuado] of ATENUADAS_SIN_SATELITE) {
       if (mapa.getLayer(capa) === undefined) continue;
       const clave = `${capa}|${propiedad}`;
@@ -1028,11 +1044,11 @@ export default function Mapa(props: PropsMapa) {
       mapa.setPaintProperty(
         capa,
         propiedad,
-        soloSatelite ? atenuado : pinturaOriginal.current.get(clave),
+        atenuar ? atenuado : pinturaOriginal.current.get(clave),
       );
     }
     pintarRealceArco();
-  }, [listo, soloSatelite]);
+  }, [listo, soloSatelite, conRutas]);
 
   // Interferencia GPS del periodo.
   useEffect(() => {
@@ -1083,12 +1099,14 @@ export default function Mapa(props: PropsMapa) {
     });
   }, [listo, corredores]);
 
-  // Rutas de los drones: las del periodo, o las de la noche que se reproduce.
+  // Rutas de los drones: los recorridos de la noche que se dibuja.
   useEffect(() => {
     const mapa = mapaRef.current;
     if (!listo || mapa === null) return undefined;
     return trasPintar(() => {
-      fuente(mapa, FUENTE_RUTAS)?.setData(rutas ?? VACIA_REALCE);
+      fuente(mapa, FUENTE_RUTAS)?.setData(rutas?.lineas ?? VACIA_REALCE);
+      fuente(mapa, FUENTE_RUTAS_FRANJAS)?.setData(rutas?.franjas ?? VACIA_REALCE);
+      fuente(mapa, FUENTE_RUTAS_FLECHAS)?.setData(rutas?.flechas ?? VACIA_REALCE);
     });
   }, [listo, rutas]);
 

@@ -1,0 +1,283 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:eodi:exportacion:1.7.0:frecuencias",
+  "title": "Frecuencias de incidentes (frecuencias.json)",
+  "description": "Incidentes activos de la capa general (ni fundidos ni retirados) por categoría de objetivo, país del suceso y mes de inicio, con el sesgo de cobertura declarado.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "criterio",
+    "filas",
+    "totales",
+    "sesgo_cobertura"
+  ],
+  "$defs": {
+    "recuento": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "integer",
+        "minimum": 0
+      }
+    }
+  },
+  "properties": {
+    "criterio": {
+      "type": "string"
+    },
+    "filas": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "categoria",
+          "pais",
+          "mes",
+          "incidentes",
+          "por_estado",
+          "por_tipo",
+          "presencia_confirmada",
+          "por_nivel_detalle"
+        ],
+        "properties": {
+          "categoria": {
+            "type": "string"
+          },
+          "pais": {
+            "type": "string",
+            "pattern": "^[A-Z]{2}$"
+          },
+          "mes": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}$"
+          },
+          "incidentes": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "por_estado": {
+            "$ref": "#/$defs/recuento"
+          },
+          "por_tipo": {
+            "$ref": "#/$defs/recuento"
+          },
+          "presencia_confirmada": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "por_nivel_detalle": {
+            "$ref": "#/$defs/recuento"
+          }
+        }
+      }
+    },
+    "totales": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "incidentes",
+        "por_categoria",
+        "por_pais",
+        "por_mes",
+        "por_nivel_detalle"
+      ],
+      "properties": {
+        "incidentes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "por_categoria": {
+          "$ref": "#/$defs/recuento"
+        },
+        "por_pais": {
+          "$ref": "#/$defs/recuento"
+        },
+        "por_mes": {
+          "$ref": "#/$defs/recuento"
+        },
+        "por_nivel_detalle": {
+          "$ref": "#/$defs/recuento"
+        }
+      }
+    },
+    "sesgo_cobertura": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "correccion",
+        "motivo",
+        "fuentes",
+        "por_pais",
+        "referencias_oficiales"
+      ],
+      "properties": {
+        "correccion": {
+          "enum": [
+            "ninguna"
+          ]
+        },
+        "motivo": {
+          "type": "string"
+        },
+        "fuentes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "cubre",
+              "sesgo"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "cubre": {
+                "type": "string"
+              },
+              "sesgo": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "por_pais": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "pais",
+              "incidentes",
+              "articulos",
+              "dominios_listados",
+              "dominio_nacional",
+              "fuentes_oficiales"
+            ],
+            "properties": {
+              "pais": {
+                "type": "string",
+                "pattern": "^[A-Z]{2}$"
+              },
+              "incidentes": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "articulos": {
+                "description": "Artículos recogidos de medios del país.",
+                "type": "integer",
+                "minimum": 0
+              },
+              "dominios_listados": {
+                "description": "Medios del país con dominio propio en la lista de GDELT.",
+                "type": "integer",
+                "minimum": 0
+              },
+              "dominio_nacional": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "fuentes_oficiales": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "referencias_oficiales": {
+          "description": "Cifras oficiales (estadisticas_oficiales.jsonl) junto a los incidentes que el observatorio tiene en el mismo país, categoría y periodo: con qué medir cuánto recoge la prensa. No corrige nada.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "estadistica",
+              "autoridad",
+              "pais",
+              "categoria",
+              "instalacion",
+              "periodo",
+              "metrica",
+              "cifra",
+              "incidentes_observatorio"
+            ],
+            "properties": {
+              "estadistica": {
+                "type": "string",
+                "pattern": "^EST-[0-9a-f]{16}$"
+              },
+              "autoridad": {
+                "type": "string"
+              },
+              "pais": {
+                "type": "string",
+                "pattern": "^[A-Z]{2}$"
+              },
+              "categoria": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "instalacion": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "periodo": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "inicio",
+                  "fin"
+                ],
+                "properties": {
+                  "inicio": {
+                    "type": "string",
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                  },
+                  "fin": {
+                    "type": "string",
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                  }
+                }
+              },
+              "metrica": {
+                "type": "string"
+              },
+              "cifra": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "min",
+                  "max"
+                ],
+                "properties": {
+                  "min": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "max": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                }
+              },
+              "incidentes_observatorio": {
+                "description": "Incidentes activos del observatorio en ese país, en la categoría (o la instalación, por nombre) si la cifra la da, con inicio dentro del periodo.",
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

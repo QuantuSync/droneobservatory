@@ -21,6 +21,20 @@ def _datos(datos: dict[str, Any], fuentes: set[str]) -> dict[str, Any]:
     return publicos
 
 
+def presentado(publicado: Documento) -> Documento:
+    """Lo deducido tal como se enseña: con «compatible_guerra», los grupos sin porcentajes (las
+    probabilidades se quedan en la base y en la exportación, con su regla de origen)."""
+    if publicado.get("presentacion") != "compatible_guerra":
+        return dict(publicado)
+    salida: Documento = {
+        "presentacion": "compatible_guerra",
+        "compatible": [{"grupo": c["grupo"]} for c in publicado["compatible"]],
+    }
+    if "casos_referencia" in publicado:
+        salida["casos_referencia"] = publicado["casos_referencia"]
+    return salida
+
+
 def bloque(tipo: Documento | None, incidente: Documento) -> Documento | None:
     if not tipo or (tipo.get("retirado") and "publicado" not in tipo):
         return None
@@ -33,7 +47,7 @@ def bloque(tipo: Documento | None, incidente: Documento) -> Documento | None:
     if identificado and identificado.get("fuente") in fuentes:
         salida["identificado"] = {k: identificado[k] for k in ("modelo", "grupo", "cita", "fuente")}
     elif "publicado" in tipo:
-        salida["publicado"] = tipo["publicado"]
+        salida["publicado"] = presentado(tipo["publicado"])
         salida["razones"] = [
             {
                 "tipo": r["tipo"],

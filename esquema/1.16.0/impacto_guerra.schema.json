@@ -1,0 +1,156 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:eodi:esquema:1.16.0:impacto_guerra",
+  "title": "Impacto con lugar de la capa de guerra",
+  "description": "Un lugar concreto (localidad o instalación) que alcanzó un ataque con drones de la capa de guerra, en Ucrania (sentido RU_UA) o en Rusia y el territorio ocupado (UA_RU), según los canales oficiales de las administraciones regionales ucranianas, el Estado Mayor ucraniano y los gobernadores rusos. Se enlaza con el ataque del mismo periodo y con su región; nunca es un incidente europeo. Crimea, Sebastopol y las zonas ocupadas llevan siempre su código ISO 3166-2 de Ucrania.",
+  "x-version": "1.16.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "tipo", "sentido", "region", "lugar", "impacto", "fecha", "credibilidad", "fuentes", "control"],
+  "properties": {
+    "id": {"x-visibilidad": "publico", "type": "string", "pattern": "^EODI-IG-\\d{4}-\\d{5}$"},
+    "tipo": {"x-visibilidad": "publico", "const": "impacto_guerra"},
+    "sentido": {"x-visibilidad": "publico", "enum": ["RU_UA", "UA_RU"]},
+    "ataque": {
+      "x-visibilidad": "publico",
+      "description": "Ataque de la capa de guerra del mismo periodo y sentido. Ausente si ninguno encaja.",
+      "type": "string",
+      "pattern": "^EODI-UA-\\d{4}-\\d{4}$"
+    },
+    "enlace_ataque": {
+      "x-visibilidad": "interno",
+      "description": "Cómo se enlazó con el ataque: la noche que declara el mensaje («у ніч на 22 серпня»), el día anterior que nombra, la noche que menciona sin fecha, el periodo del ataque que contiene la publicación o el que acababa de terminar.",
+      "enum": ["noche_declarada", "dia_declarado", "noche_mencionada", "periodo", "tras_periodo"]
+    },
+    "region": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.16.0:comun#/$defs/region_iso"},
+    "lugar": {
+      "x-visibilidad": "publico",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "nombre", "nivel", "punto", "radio_km"],
+      "properties": {
+        "id": {"x-visibilidad": "publico", "description": "Identificador en el nomenclátor: katotth:…, geonames:… u osm:….", "type": "string", "pattern": "^(katotth|geonames|osm):\\S+$"},
+        "nombre": {"x-visibilidad": "publico", "type": "string", "minLength": 1},
+        "nombre_latino": {"x-visibilidad": "publico", "type": "string", "minLength": 1},
+        "nivel": {"x-visibilidad": "publico", "description": "localidad o instalación; comunidad (громада) o distrito cuando el parte solo nombra la unidad: el punto es su centro y el radio abarca sus localidades.", "enum": ["localidad", "instalacion", "comunidad", "distrito"]},
+        "categoria": {
+          "x-visibilidad": "publico",
+          "description": "Tipo de instalación (solo con nivel instalacion).",
+          "enum": ["refineria", "deposito_combustible", "central", "subestacion", "aerodromo", "puerto", "militar", "ferrocarril", "industrial"]
+        },
+        "localidad": {"x-visibilidad": "publico", "description": "Localidad con que el mensaje nombra la instalación.", "type": "string", "minLength": 1},
+        "punto": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.16.0:comun#/$defs/punto"},
+        "radio_km": {"x-visibilidad": "publico", "description": "Radio del lugar. Hasta 50 km una localidad, una instalación o una comunidad; un distrito (nivel distrito, cuando el mensaje no nombra un lugar más concreto) lleva su radio real, hasta unos 105 km en los distritos de 2020.", "type": "number", "exclusiveMinimum": 0, "maximum": 150}
+      }
+    },
+    "impacto": {
+      "x-visibilidad": "publico",
+      "description": "impacto: el dron alcanzó el lugar; restos: cayeron restos de un dron derribado.",
+      "enum": ["impacto", "restos"]
+    },
+    "categorias_objetivo": {
+      "x-visibilidad": "publico",
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"enum": ["energia", "combustible", "residencial", "ferrocarril", "puerto", "industrial", "aerodromo"]}
+    },
+    "fecha": {
+      "x-visibilidad": "publico",
+      "description": "Publicación del primer mensaje que da el impacto: el impacto fue antes.",
+      "$ref": "urn:eodi:esquema:1.16.0:comun#/$defs/instante"
+    },
+    "dia": {
+      "x-visibilidad": "publico",
+      "description": "Día del ataque cuando el mensaje lo nombra y no es el de su publicación.",
+      "$ref": "urn:eodi:esquema:1.16.0:comun#/$defs/fecha"
+    },
+    "parte_diario": {
+      "x-visibilidad": "publico",
+      "description": "Lo da el parte diario de la administración (las 24 horas anteriores a su publicación, con su día): no se enlaza con un ataque concreto.",
+      "const": true
+    },
+    "heridos": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.16.0:comun#/$defs/rango_entero_o_desconocido"},
+    "fallecidos": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.16.0:comun#/$defs/rango_entero_o_desconocido"},
+    "reivindicacion_de_parte": {
+      "x-visibilidad": "publico",
+      "description": "Solo lo dicen partes en guerra (Estado Mayor ucraniano, gobernadores rusos o autoridades instaladas por Rusia) sin otra fuente independiente ni dato medido que lo confirme.",
+      "const": true
+    },
+    "credibilidad": {
+      "x-visibilidad": "publico",
+      "description": "Credibilidad del impacto con todas sus fuentes y el foco térmico de FIRMS (proceso/impactos_guerra.py).",
+      "$ref": "urn:eodi:esquema:1.16.0:comun#/$defs/credibilidad"
+    },
+    "foco_termico": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.16.0:comun#/$defs/foco_termico"},
+    "fuentes": {
+      "x-visibilidad": "publico",
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "urn:eodi:esquema:1.16.0:fuente"}
+    },
+    "lecturas": {
+      "x-visibilidad": "interno",
+      "description": "Cómo se leyó cada fuente: parser (código y nomenclátor) o extractor, con su confianza y su versión.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["fuente_id", "metodo", "version"],
+        "properties": {
+          "fuente_id": {"x-visibilidad": "interno", "type": "string", "minLength": 1},
+          "metodo": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.16.0:comun#/$defs/metodo"},
+          "version": {"x-visibilidad": "interno", "type": "string", "minLength": 1},
+          "confianza": {"x-visibilidad": "interno", "type": "number", "minimum": 0, "maximum": 1},
+          "victimas": {
+            "x-visibilidad": "interno",
+            "description": "Heridos y fallecidos que da esta fuente para el impacto, leídos frase a frase (un año escrito como fecha no es una cifra; más de 100 solo con la cifra pegada al verbo). El impacto lleva la mayor cifra de sus fuentes. Ausente en lecturas anteriores a esa regla.",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "heridos": {"x-visibilidad": "interno", "type": "integer", "minimum": 0},
+              "fallecidos": {"x-visibilidad": "interno", "type": "integer", "minimum": 0}
+            }
+          }
+        }
+      }
+    },
+    "fusionado_en": {
+      "x-visibilidad": "interno",
+      "description": "Impacto del mismo lugar y el mismo ataque al que se unió este al enlazarse (nada se borra).",
+      "type": "string",
+      "pattern": "^EODI-IG-\\d{4}-\\d{5}$"
+    },
+    "retirado": {
+      "x-visibilidad": "interno",
+      "description": "Ya no lo da ninguna fuente (nada se borra): el mensaje se editó y ya no lo dice, o se volvió a leer con las reglas de ahora y no describe un ataque con dron sobre un lugar (homenaje u obituario de un militar caído, memoria). El motivo lo dice.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fecha", "motivo"],
+      "properties": {
+        "fecha": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.16.0:comun#/$defs/instante"},
+        "motivo": {"x-visibilidad": "interno", "type": "string", "minLength": 1}
+      }
+    },
+    "procedencia": {
+      "x-visibilidad": "interno",
+      "description": "Origen y método de cada valor. Lo calcula la exportación semanal; la base no lo guarda.",
+      "type": "object",
+      "additionalProperties": {"$ref": "urn:eodi:esquema:1.16.0:comun#/$defs/procedencia"}
+    },
+    "deduccion": {
+      "x-visibilidad": "interno",
+      "description": "Clases de dron compatibles, descartadas e indeterminadas según el motor de deducción. Origen deducido; interno. Lo añade la exportación desde la tabla deducciones.",
+      "$ref": "urn:eodi:esquema:1.16.0:comun#/$defs/deduccion"
+    },
+    "control": {
+      "x-visibilidad": "publico",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["alta", "ultima_actualizacion"],
+      "properties": {
+        "alta": {"x-visibilidad": "interno", "$ref": "urn:eodi:esquema:1.16.0:comun#/$defs/instante"},
+        "ultima_actualizacion": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.16.0:comun#/$defs/instante"}
+      }
+    }
+  }
+}

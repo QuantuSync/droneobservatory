@@ -1,4 +1,4 @@
-// Listas cerradas del esquema 1.15.0 (campos públicos). Un test las compara con los
+// Listas cerradas del esquema 1.16.0 (campos públicos). Un test las compara con los
 // ficheros de esquema/ para que no se separen.
 
 export const TIPOS = ["incursion", "interrupcion_aeroportuaria", "sobrevuelo"] as const;
@@ -56,6 +56,10 @@ export const GRUPOS_DRON = [
 /** De dónde sale el tipo de dron de un incidente: lo dice la autoridad o se deduce. */
 export const ORIGENES_TIPO_DRON = ["autoridad", "deducido"] as const;
 export const TIPOS_RAZON_DRON = ["rasgo", "restriccion", "motor"] as const;
+/** Cómo se enseña lo deducido: con porcentajes o como compatible con un dron de la guerra. */
+export const PRESENTACIONES_TIPO_DRON = ["probabilidades", "compatible_guerra"] as const;
+/** Lo deducido sin porcentajes: compatible con un dron de largo alcance de la guerra. */
+export const DRON_DE_LA_GUERRA = "guerra";
 export const CIERRES = ["si", "no", "desconocido"] as const;
 export const NIVELES_DANOS = ["ninguno", "menores", "graves", "desconocido"] as const;
 export const MEDIDAS = [

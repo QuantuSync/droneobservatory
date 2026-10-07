@@ -145,8 +145,9 @@ function filaDatos(nombre: string, ...valor: Hijo[]): Html {
 }
 
 /**
- * Fila «Tipo de dron», lo mismo que la ficha: lo que identificó la autoridad, con su cita, o la
- * clase deducida («compatible con») con su probabilidad y sus razones. Sin base, nada.
+ * Fila «Tipo de dron», lo mismo que la ficha: lo que identificó la autoridad, con su cita, o lo
+ * deducido: «compatible con un dron de largo alcance de la guerra» con sus razones, o, si un
+ * grupo destaca, los grupos con su probabilidad. Sin base o sin razones, nada.
  */
 export function filaTipoDron(t: Textos, d: IncidenteDetalle): Html | false {
   const tipo = d.tipo_dron;
@@ -163,14 +164,23 @@ export function filaTipoDron(t: Textos, d: IncidenteDetalle): Html | false {
     );
   }
   const publicado = tipo.publicado;
-  if (publicado === undefined) return false;
-  const otras = Math.round(publicado.otras * 100);
+  const conRazon = (tipo.razones ?? []).map((r) => textos.razon(r));
+  if (publicado === undefined || conRazon.length === 0) return false;
+  if (publicado.presentacion === "compatible_guerra") {
+    return filaDatos(
+      textos.fila,
+      e("span", { "data-tipo-dron": "guerra" }, textos.compatibleGuerra),
+      e("ul", null, conRazon.map((r) => e("li", null, r))),
+      e("span", { class: "texto-nota" }, textos.deducido),
+    );
+  }
+  const otras = Math.round((publicado.otras ?? 0) * 100);
   const zona = d.zona?.grupo;
   const razones = [
     publicado.casos_referencia !== undefined && zona !== undefined
       ? textos.base(publicado.casos_referencia, textos.zonas[zona])
       : null,
-    ...(tipo.razones ?? []).map((r) => textos.razon(r)),
+    ...conRazon,
   ].filter((x): x is string => x !== null);
   return filaDatos(
     textos.fila,
@@ -179,7 +189,7 @@ export function filaTipoDron(t: Textos, d: IncidenteDetalle): Html | false {
       "ul",
       null,
       publicado.compatible.map((c) =>
-        e("li", null, textos.grupos[c.grupo], " · ", textos.probabilidad(Math.round(c.probabilidad * 100))),
+        e("li", null, textos.grupos[c.grupo], " · ", textos.probabilidad(Math.round((c.probabilidad ?? 0) * 100))),
       ),
     ),
     otras > 0 && e("span", { class: "texto-nota" }, textos.otras(otras)),

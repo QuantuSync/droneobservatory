@@ -1184,10 +1184,17 @@ export const en: Textos = {
         bloques: [
           {
             parrafo: [
-              "The «Routes» sublayer of the Ukraine layer draws where each night's drones went, " +
-                "as semi-transparent bands with their uncertainty width, never as exact lines. " +
-                "They are published once the attack is over: after 12:00 UTC the next day and two " +
-                "hours after the night's last report. Never live.",
+              "The «Routes» sublayer of the Ukraine layer draws where each group of drones came " +
+                "in and where it went on one night: one line per group, faint at its origin, " +
+                "stronger towards its end and with an arrowhead, inside a halo that is wider where " +
+                "the position is less precise (2 to 15 km on each side). One night at a time: the " +
+                "last finished one, or another chosen in “Night by night”. The 40 groups with the " +
+                "most drones are drawn and the legend says how many of how many. A report that " +
+                "only names a whole region is not drawn: it only joins the route if there are " +
+                "precise positions before and after. Two segments are joined into a group only if " +
+                "there is no doubt they are the same; if a group splits or merges, the line forks " +
+                "or joins. They are published once the attack is over: after 12:00 UTC the next " +
+                "day and two hours after the night's last report. Never live.",
             ],
           },
           {
@@ -1220,7 +1227,7 @@ export const en: Textos = {
                     "compared with the NEPTUN tracks and with the straight line from the launch " +
                     "area to each of the night's impacts. Reconstructed routes are published only " +
                     "if they come clearly closer to NEPTUN than the straight line (median at least " +
-                    "20% lower, and better on every night). The legend and each segment's record say " +
+                    "20% lower, and better on every night). The legend and each group's record say " +
                     "which source it comes from and its precision.",
                 ],
               },
@@ -1230,7 +1237,7 @@ export const en: Textos = {
                   "For incidents in Romania, Moldova and Poland where the authority names the " +
                     "places the drone passed, the record draws that route when opened, with the " +
                     "sentence it comes from. When a night's route ends at a European incident of " +
-                    "that night, the segment's record links it.",
+                    "that night, the group's record links it.",
                 ],
               },
             ],
@@ -1247,7 +1254,9 @@ export const en: Textos = {
                 "basis for it. If an authority names the model (for example, the debris of a " +
                 "Gerbera identified by the army), the record says so and where it comes from. " +
                 "Otherwise the observatory deduces it and shows it separately, as “compatible " +
-                "with”, with the probability of each class and the reasons.",
+                "with”, always with the reasons. When what has been published does not tell " +
+                "the long-range attack drone from the decoy, the record only says “Compatible " +
+                "with a long-range drone of the war (attack or decoy)”, without percentages.",
             ],
           },
           {
@@ -1284,16 +1293,22 @@ export const en: Textos = {
                     "Board) and compared with always saying the most frequent class. Only " +
                     "classes with at least 5 checked cases that beat that reference and give " +
                     "probabilities that hold are published. On 6 October 2026 the propeller " +
-                    "long-range attack drone and the long-range decoy pass, at the border. The " +
+                    "long-range attack drone and the long-range decoy pass, at the border. " +
+                    "Percentages for each class are only shown if the most likely one doubles " +
+                    "the second and, in the cases of known answer where the method said so, it " +
+                    "was right at least 8 times in 10 (with 5 cases at least). On 7 October 2026 " +
+                    "no border case passes: attack drone and decoy cannot be told apart, so no " +
+                    "percentages are shown. What does pass is that it was one of the two: in 22 " +
+                    "of 24 cases. The calculated probabilities remain in the data export. The " +
                     "figures for each class are in docs/informe_tipo_y_rutas.md in the repository.",
                 ],
               },
               {
                 termino: "No basis",
                 texto: [
-                  "Without features that weigh in or an entry from outside at the border, with " +
-                    "the drone unconfirmed or with a most likely class that has not passed the " +
-                    "check, the row does not appear.",
+                  "Without features that weigh in or an entry from outside at the border, " +
+                    "without any reason to show, with the drone unconfirmed or with a most likely " +
+                    "class that has not passed the check, the row does not appear.",
                 ],
               },
             ],

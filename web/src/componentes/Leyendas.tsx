@@ -28,7 +28,7 @@ function Muestra({ color, opacidad }: { color: string; opacidad: number }) {
 export function LeyendaGnss({ t, estado }: { t: Textos; estado: EstadoGnss }) {
   const g = t.gnss;
   return (
-    <details open className="flotante w-max max-w-[min(20rem,calc(100vw-2rem))] px-2.5 py-1.5 text-xs" data-leyenda="gnss">
+    <details open className="flotante w-max max-w-[min(20rem,100%)] px-2.5 py-1.5 text-xs" data-leyenda="gnss">
       <summary className="cursor-pointer font-medium text-texto">{g.etiqueta}</summary>
       <p className="text-secundario">{g.leyenda}</p>
       <ul className="mt-1 flex flex-wrap gap-x-3 gap-y-0.5">
@@ -68,7 +68,7 @@ export function LeyendaCorredores({
   const c = t.satelite.principales;
   const hayOcultos = total > principales;
   return (
-    <details open className="flotante w-max max-w-[min(20rem,calc(100vw-2rem))] px-2.5 py-1.5 text-xs" data-leyenda="corredores">
+    <details open className="flotante w-max max-w-[min(20rem,100%)] px-2.5 py-1.5 text-xs" data-leyenda="corredores">
       <summary className="cursor-pointer font-medium text-texto">{t.satelite.corredores}</summary>
       <p className="text-secundario" data-corredores-visibles={todos || !hayOcultos ? total : principales}>
         {todos || !hayOcultos ? c.todos(total) : c.principales(principales, total)}
@@ -94,7 +94,7 @@ export function textoLeyendaPresion(t: Textos, seleccion: SeleccionPeriodo): str
 export function LeyendaPresion({ t, seleccion }: { t: Textos; seleccion: SeleccionPeriodo }) {
   const p = t.presion;
   return (
-    <details open className="flotante w-max max-w-[min(20rem,calc(100vw-2rem))] px-2.5 py-1.5 text-xs" data-leyenda="presion">
+    <details open className="flotante w-max max-w-[min(20rem,100%)] px-2.5 py-1.5 text-xs" data-leyenda="presion">
       <summary className="cursor-pointer font-medium text-texto">{t.controles.presion}</summary>
       <p className="text-secundario" data-periodo-leyenda="">
         {textoLeyendaPresion(t, seleccion)}

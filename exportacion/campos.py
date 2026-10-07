@@ -52,6 +52,7 @@ def _tipo_dron(ruta: str) -> set[str]:
         f"{ruta}.identificado",
         *(f"{ruta}.identificado.{c}" for c in ("modelo", "grupo", "cita", "fuente")),
         f"{ruta}.publicado",
+        f"{ruta}.publicado.presentacion",
         f"{ruta}.publicado.compatible",
         f"{ruta}.publicado.compatible[].grupo",
         f"{ruta}.publicado.compatible[].probabilidad",

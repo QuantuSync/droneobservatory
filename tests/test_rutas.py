@@ -20,6 +20,7 @@ from proceso.rutas import (
     neptun,
     noches,
     reconstruccion,
+    recorridos,
 )
 from recogida import rutas
 
@@ -260,3 +261,113 @@ def test_la_exportacion_lleva_las_rutas_con_su_origen(
     enlace = next(t for t in noches_[0]["tramos"] if t["clase"] == "enlace")
     assert enlace["procedencia"]["extremos"]["origen"] == "oficial"
     assert enlace["procedencia"]["tramo"]["origen"] == "calculado"
+    # El recorrido unido de cada grupo, calculado por su regla, sin lo que es solo de dibujo.
+    unido = noches_[0]["recorridos"][0]
+    assert unido["procedencia"] == {
+        "origen": "calculado",
+        "metodo": recorridos.VERSION,
+        "fuentes": [],
+    }
+    assert "franjas" not in unido and "flechas" not in unido
+
+
+# --- Recorridos unidos por grupo ----------------------------------------------------------------
+
+
+def t(hora: str) -> str:
+    return f"2026-10-05T{hora}:00Z"
+
+
+def pista(id_: str, puntos: list[tuple[str, float, float, float]], **extra: Any) -> dict[str, Any]:
+    return {
+        "id": id_,
+        "tipo": "uav",
+        "titulo": extra.pop("titulo", "БпЛА"),
+        "puntos": [
+            {"t": t, "lat": lat, "lon": lon, "incertidumbre_km": radio, **extra}
+            for t, lat, lon, radio in puntos
+        ],
+    }
+
+
+def test_un_grupo_es_una_linea_desde_que_aparece_hasta_que_desaparece() -> None:
+    """NEPTUN parte el vuelo de un grupo en pistas cortas; si la segunda solo puede seguir a la
+    primera, se unen en una línea, con la flecha al final apuntando hacia donde iba."""
+    a = pista("a", [(t("20:00"), 51.0, 34.0, 4), (t("20:10"), 50.8, 33.7, 4)])
+    b = pista("b", [(t("20:14"), 50.75, 33.6, 4), (t("20:30"), 50.5, 33.2, 4)])
+    trozos = recorridos.trozos_neptun([a, b])
+    recorridos.enlazar(trozos)
+    lista, grupo_de = recorridos.recorridos(trozos)
+    assert len(lista) == 1 and grupo_de == [1, 1]
+    unico = lista[0]
+    assert len(unico["lineas"]) == 1
+    assert unico["lineas"][0][0] == [34.0, 51.0] and unico["lineas"][0][-1] == [33.2, 50.5]
+    assert 200 <= unico["flechas"][0]["rumbo"] <= 250  # hacia el suroeste
+    assert unico["pistas"] == ["a", "b"]
+
+
+def test_si_no_se_sabe_cual_sigue_no_se_une() -> None:
+    a = pista("a", [(t("20:00"), 51.0, 34.0, 4), (t("20:10"), 50.8, 33.7, 4)])
+    b = pista("b", [(t("20:14"), 50.75, 33.6, 4), (t("20:30"), 50.5, 33.2, 4)])
+    c = pista("c", [(t("20:15"), 50.76, 33.62, 4), (t("20:31"), 50.5, 33.3, 4)])
+    trozos = recorridos.trozos_neptun([a, b, c])
+    recorridos.enlazar(trozos)
+    # De un solo aparato salen dos pistas posibles: no se sabe cuál es la suya, no se une ninguna.
+    assert all(not t.sucesores for t in trozos)
+
+
+def test_un_grupo_que_se_divide_se_bifurca() -> None:
+    a = pista("a", [(t("20:00"), 51.0, 34.0, 4), (t("20:10"), 50.8, 33.7, 4)], numero=2)
+    b = pista("b", [(t("20:14"), 50.75, 33.6, 4), (t("20:30"), 50.5, 33.2, 4)])
+    c = pista("c", [(t("20:15"), 50.76, 33.62, 4), (t("20:31"), 50.45, 33.5, 4)])
+    trozos = recorridos.trozos_neptun([a, b, c])
+    recorridos.enlazar(trozos)
+    lista, _ = recorridos.recorridos(trozos)
+    assert len(lista) == 1 and lista[0]["division"] and len(lista[0]["lineas"]) == 2
+
+
+def test_un_aviso_de_region_entera_enlaza_pero_no_se_dibuja() -> None:
+    """Una pista que solo dice la región entera une el recorrido de antes con el de después,
+    pero la línea pasa de largo por ella y la franja nunca es una mancha de media región."""
+    a = pista("a", [(t("20:00"), 51.0, 34.0, 4), (t("20:10"), 50.8, 33.7, 4)])
+    region = pista(
+        "r",
+        [(t("20:12"), 50.6, 33.5, 70), (t("20:25"), 50.4, 33.1, 70)],
+        titulo="БпЛА — по області",
+    )
+    b = pista("b", [(t("20:30"), 50.3, 32.9, 4), (t("20:40"), 50.2, 32.6, 4)])
+    trozos = recorridos.trozos_neptun([a, region, b])
+    recorridos.enlazar(trozos)
+    lista, grupo_de = recorridos.recorridos(trozos)
+    assert grupo_de == [1, 1, 1]
+    linea = lista[0]["lineas"][0]
+    assert [50.6, 33.5] not in [[lat, lon] for lon, lat in linea]
+    assert lista[0]["precision_km"]["max"] <= recorridos.ANCHO_MAX_KM
+    # La franja nunca pasa del ancho máximo a cada lado de la línea.
+    assert geometria.distancia_km(*_mas_lejano(lista[0])) <= recorridos.ANCHO_MAX_KM + 1
+
+
+def _mas_lejano(recorrido: dict[str, Any]) -> tuple[float, float, float, float]:
+    """El punto de la franja más lejos de la línea y el punto de la línea más cercano a él."""
+    linea = recorrido["lineas"][0]
+    peor = (0.0, 0.0, 0.0, 0.0)
+    distancia = -1.0
+    for lon, lat in recorrido["franjas"][0]:
+        cerca = min(linea, key=lambda p: geometria.distancia_km(lat, lon, p[1], p[0]))
+        d = geometria.distancia_km(lat, lon, cerca[1], cerca[0])
+        if d > distancia:
+            distancia, peor = d, (lat, lon, cerca[1], cerca[0])
+    return peor
+
+
+def test_la_noche_publicada_lleva_los_recorridos_ordenados_por_aparatos() -> None:
+    datos = copia()
+    entrada = datos["noches"][0]
+    documento = calculo.noche_publica(entrada["noche"], entrada["ataque"], sin_frontera, True)
+    assert documento is not None
+    lista = documento["recorridos"]
+    assert lista and [r["grupo"] for r in lista] == list(range(1, len(lista) + 1))
+    aparatos = [r["aparatos"] or 1 for r in lista]
+    assert aparatos == sorted(aparatos, reverse=True)
+    assert all(r["longitud_km"] >= recorridos.LONGITUD_MIN_KM for r in lista)
+    assert all("franja" not in t for t in documento["tramos"])

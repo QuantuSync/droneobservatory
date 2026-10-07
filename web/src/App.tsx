@@ -66,15 +66,15 @@ import { agregar, cargarFicheroGnss, cargarIndiceGnss, ficherosDelPeriodo, zonas
 import type { Agregado, FicheroGnss, IndiceGnss } from "./datos/gnss.ts";
 import { cifrasDePais, presionPorPais } from "./datos/presion.ts";
 import { cifras } from "./datos/derivar.ts";
-import { GRUPOS_DRON, ORIGENES_TIPO_DRON } from "./datos/vocabulario.ts";
+import { DRON_DE_LA_GUERRA, GRUPOS_DRON, ORIGENES_TIPO_DRON } from "./datos/vocabulario.ts";
 import {
   cargarIndiceRutas,
   cargarNocheRutas,
   nocheDeDia,
-  nochesDelPeriodo,
   recorridoEnMapa,
   rutasEnMapa,
-  tramoDeClave,
+  nocheQueSeDibuja,
+  recorridoDeClave,
 } from "./datos/rutas.ts";
 import type { IndiceRutas, NocheRutas } from "./datos/rutas.ts";
 import { FichaRuta, LeyendaRutas } from "./componentes/Rutas.tsx";
@@ -712,7 +712,8 @@ export function App() {
   const ultimoDestino = useRef<string | null>(null);
   const nocheActual = noche === null ? null : (noches[noche] ?? null);
   // Rutas de los drones: el índice y las noches se piden solo con la subcapa encendida (o al
-  // reproducir noche a noche), del almacén público. Con un periodo largo, las noches principales.
+  // reproducir noche a noche), del almacén público. Una noche cada vez: la última terminada, o la
+  // que se está mostrando en «Noche a noche».
   const verRutas = capas.ucrania && capas.rutas;
   const [indiceRutas, setIndiceRutas] = useState<IndiceRutas | null>(null);
   const [nochesRutas, setNochesRutas] = useState<ReadonlyMap<string, NocheRutas>>(new Map());
@@ -726,40 +727,30 @@ export function App() {
     return () => control.abort();
   }, [verRutas, nocheActual, indiceRutas]);
   const nocheDeRutas = nocheActual === null ? null : nocheDeDia(nocheActual.jornada.desde);
-  const rutasDelPeriodo = useMemo(
-    () => (indiceRutas === null ? null : nochesDelPeriodo(indiceRutas, periodo)),
-    [indiceRutas, periodo],
-  );
-  const nochesQueDibujar = useMemo(() => {
-    if (indiceRutas === null) return [];
-    if (nocheDeRutas !== null) {
-      return indiceRutas.noches.some((n) => n.noche === nocheDeRutas) ? [nocheDeRutas] : [];
-    }
-    return verRutas ? (rutasDelPeriodo?.mostradas ?? []) : [];
-  }, [indiceRutas, nocheDeRutas, verRutas, rutasDelPeriodo]);
+  const nocheQueDibujar = useMemo(() => {
+    if (indiceRutas === null) return null;
+    if (nocheDeRutas !== null) return nocheQueSeDibuja(indiceRutas, nocheDeRutas);
+    return verRutas ? nocheQueSeDibuja(indiceRutas, null) : null;
+  }, [indiceRutas, nocheDeRutas, verRutas]);
+  // Noches que no se pudieron leer: no se vuelven a pedir en bucle.
+  const nochesFallidas = useRef(new Set<string>());
   useEffect(() => {
-    const faltan = nochesQueDibujar.filter((n) => !nochesRutas.has(n));
-    if (faltan.length === 0) return undefined;
+    const noche = nocheQueDibujar;
+    if (noche === null || nochesRutas.has(noche) || nochesFallidas.current.has(noche)) return undefined;
     const control = new AbortController();
-    setRutasPendientes(faltan.length);
-    void Promise.all(faltan.map((n) => cargarNocheRutas(n, control.signal))).then((cargadas) => {
+    setRutasPendientes(1);
+    void cargarNocheRutas(noche, control.signal).then((cargada) => {
       if (control.signal.aborted) return;
       setRutasPendientes(0);
-      setNochesRutas((actual) => {
-        const nuevo = new Map(actual);
-        for (const noche of cargadas) if (noche !== null) nuevo.set(noche.noche, noche);
-        return nuevo;
-      });
+      if (cargada === null) {
+        nochesFallidas.current.add(noche);
+        return;
+      }
+      setNochesRutas((actual) => new Map(actual).set(cargada.noche, cargada));
     });
     return () => control.abort();
-  }, [nochesQueDibujar, nochesRutas]);
-  const rutasDibujadas = useMemo(() => {
-    const lista = nochesQueDibujar.flatMap((n) => {
-      const cargada = nochesRutas.get(n);
-      return cargada === undefined ? [] : [cargada];
-    });
-    return lista.length === 0 ? null : lista;
-  }, [nochesQueDibujar, nochesRutas]);
+  }, [nocheQueDibujar, nochesRutas]);
+  const rutasDibujadas = nocheQueDibujar === null ? null : (nochesRutas.get(nocheQueDibujar) ?? null);
   const rutasEnElMapa = useMemo(
     () => (rutasDibujadas === null ? null : rutasEnMapa(rutasDibujadas)),
     [rutasDibujadas],
@@ -1332,12 +1323,26 @@ export function App() {
     () => [...new Set((datosResumen?.incidentes ?? VACIO).map((i) => i.pais))],
     [datosResumen],
   );
-  // Tipos de dron con algún incidente, en el orden de los grupos: las opciones del filtro.
+  // Tipos de dron con algún incidente, en el orden de los grupos: las opciones del filtro. Lo
+  // deducido sin porcentajes va en una sola opción, «compatible con dron de la guerra».
   const dronConIncidentes = useMemo(() => {
     const presentes = new Set((datosResumen?.incidentes ?? VACIO).flatMap((i) => i.dron));
     return ORIGENES_TIPO_DRON.flatMap((origen) =>
-      GRUPOS_DRON.map((grupo) => `${origen}:${grupo}`).filter((clave) => presentes.has(clave)),
+      [...(origen === "deducido" ? [DRON_DE_LA_GUERRA] : []), ...GRUPOS_DRON]
+        .map((grupo) => `${origen}:${grupo}`)
+        .filter((clave) => presentes.has(clave)),
     );
+  }, [datosResumen]);
+  // Modelos que nombra la autoridad en cada clase identificada («autoridad:senuelo» → Gerbera).
+  const modelosDron = useMemo(() => {
+    const modelos: Record<string, string[]> = {};
+    for (const i of datosResumen?.incidentes ?? VACIO) {
+      const clave = i.dron[0];
+      if (i.modeloDron === undefined || clave === undefined) continue;
+      const lista = (modelos[clave] ??= []);
+      if (!lista.includes(i.modeloDron)) lista.push(i.modeloDron);
+    }
+    return modelos;
   }, [datosResumen]);
 
   // La ficha abierta es una de las novedades que se están recorriendo: lleva su recorrido.
@@ -1482,7 +1487,7 @@ export function App() {
       };
     }
   } else if (panelLocal?.clase === "ruta") {
-    const elegida = tramoDeClave(nochesRutas, panelLocal.clave);
+    const elegida = recorridoDeClave(nochesRutas, panelLocal.clave);
     if (elegida !== null) {
       ficha = {
         nombre: t.rutas.etiqueta,
@@ -1490,7 +1495,7 @@ export function App() {
           <>
             <CabeceraFicha t={t} etiqueta={t.rutas.etiqueta} onCerrar={cerrarFicha} />
             <div className="overflow-y-auto px-4 py-3">
-              <FichaRuta t={t} idioma={idioma} noche={elegida.noche} tramo={elegida.tramo} />
+              <FichaRuta t={t} idioma={idioma} noche={elegida.noche} recorrido={elegida.recorrido} />
             </div>
           </>
         ),
@@ -1628,6 +1633,7 @@ export function App() {
       dominio={dominio}
       paises={paisesConIncidentes}
       dron={dronConIncidentes}
+      modelosDron={modelosDron}
       onQuitar={quitarFiltros}
     />
   );
@@ -1659,11 +1665,11 @@ export function App() {
       {hayRutas && indiceRutas !== null && (
         <LeyendaRutas
           t={t}
-          mostradas={nocheDeRutas !== null ? nochesQueDibujar.length : (rutasDelPeriodo?.mostradas.length ?? 0)}
-          total={nocheDeRutas !== null ? nochesQueDibujar.length : (rutasDelPeriodo?.total ?? 0)}
-          conNeptun={(rutasDibujadas ?? []).some((n) => n.fuente === "neptun")}
+          noche={nocheQueDibujar}
+          mostrados={rutasEnElMapa?.mostrados ?? 0}
+          total={rutasEnElMapa?.total ?? 0}
+          conNeptun={rutasDibujadas?.fuente === "neptun"}
           atribucion={indiceRutas.atribucion_neptun}
-          noche={nocheDeRutas !== null}
           cargando={rutasPendientes > 0}
         />
       )}
@@ -1995,9 +2001,12 @@ export function App() {
                 ref={refAbajoTel}
                 className="absolute inset-x-0 bottom-0 flex flex-col items-end gap-1 pb-[env(safe-area-inset-bottom)]"
               >
-                <div className="flex w-full items-end justify-between gap-2 px-2">
-                  <div className="pointer-events-auto">{leyendas}</div>
-                  <div className="pointer-events-auto">
+                {/* En el teléfono la leyenda y las atribuciones no caben en una fila: compartiéndola,
+                    la fila era más ancha que la pantalla y, alineada a la derecha, la leyenda se
+                    salía por la izquierda. Van una encima de otra. */}
+                {leyendas !== false && <div className="pointer-events-auto w-full px-2">{leyendas}</div>}
+                <div className="flex w-full justify-end px-2">
+                  <div className="pointer-events-auto max-w-full">
                     <Atribuciones t={t} />
                   </div>
                 </div>

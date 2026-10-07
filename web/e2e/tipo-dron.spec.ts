@@ -1,6 +1,8 @@
 // Tipo de dron en el teléfono (360, 390 y 412 px de ancho) y en escritorio: la fila «Tipo de dron»
-// de un incidente identificado por la autoridad, de uno deducido y de uno sin base; el filtro por
-// clase; cerrar la ficha sin que el mapa se mueva; y la página de texto sin ejecutar código.
+// de un incidente identificado por la autoridad, de uno «compatible con un dron de largo alcance
+// de la guerra» (sin porcentajes, con su razón debajo) y de uno sin fila (SIN_FILA: uno que antes
+// tenía fila sin razones, si lo hay); el filtro por clase; cerrar la ficha sin que el mapa se
+// mueva; y la página de texto sin ejecutar código.
 // Deja capturas en CAPTURAS (por defecto, fuera del repositorio, en ../../eodi-tr-cap). Va contra
 // producción por defecto; con BASE=http://localhost:…, contra el servidor local.
 import { join } from "node:path";
@@ -8,7 +10,7 @@ import { join } from "node:path";
 import { expect, test } from "@playwright/test";
 import type { APIRequestContext, BrowserContext, Page } from "@playwright/test";
 
-const CAPTURAS = process.env.CAPTURAS ?? join(import.meta.dirname, "..", "..", "..", "eodi-tr-cap");
+const CAPTURAS = process.env.CAPTURAS ?? join(import.meta.dirname, "..", "..", "..", "eodi-rl-cap");
 const MAPA = "[data-mapa-listo=true]";
 const TAMANOS = [
   { nombre: "360x800", width: 360, height: 800, movil: true },
@@ -55,8 +57,10 @@ async function elegir(request: APIRequestContext): Promise<Elegidos> {
   };
   const conPunto = resumen.incidentes.filter((i) => i.punto !== null);
   const autoridad = conPunto.find((i) => i.dron.some((c) => c.startsWith("autoridad:")));
-  const deducido = conPunto.find((i) => i.dron.some((c) => c.startsWith("deducido:")));
-  const sinBase = conPunto.find((i) => i.dron.length === 0 && i.presencia === "confirmada");
+  const deducido = conPunto.find((i) => i.dron.includes("deducido:guerra"));
+  const sinBase =
+    conPunto.find((i) => i.id === process.env.SIN_FILA) ??
+    conPunto.find((i) => i.dron.length === 0 && i.presencia === "confirmada");
   if (autoridad === undefined || deducido === undefined || sinBase === undefined) {
     throw new Error("faltan incidentes con tipo de dron en los datos publicados");
   }
@@ -94,14 +98,14 @@ for (const tamano of TAMANOS) {
 
       await page.goto(`/${elegidos.deducido}`);
       await page.locator(MAPA).waitFor();
-      const deducido = page.locator("[data-tipo-dron=deducido]").first();
-      await expect(deducido).toHaveText("Compatible con");
+      const deducido = page.locator("[data-tipo-dron=guerra]").first();
+      await expect(deducido).toHaveText("Compatible con un dron de largo alcance de la guerra (de ataque o señuelo)");
       const fila = deducido.locator("xpath=ancestor::dd[1]");
-      await expect(fila).toContainText(/\d de cada 10 \(\d+ %\)/);
+      // Sin porcentajes y con su razón debajo, a la vista.
+      await expect(fila).not.toContainText(/%|de cada 10/);
+      await expect(fila.locator("[data-razon]").first()).toBeVisible();
       await expect(fila).not.toContainText(/Shahed|Geran|Gerbera/);
-      await fila.getByText("Por qué").click();
-      await expect(fila).toContainText(/casos de (frontera|del interior)/);
-      await fila.getByText("Por qué").scrollIntoViewIfNeeded();
+      await deducido.scrollIntoViewIfNeeded();
       await page.screenshot({ path: join(CAPTURAS, `tipo-deducido-${tamano.nombre}.png`) });
       const antes = await vista(page);
       await cerrarFicha(page);
@@ -125,16 +129,15 @@ for (const tamano of TAMANOS) {
       const filtro = page.locator("[data-filtro-dron]");
       await filtro.scrollIntoViewIfNeeded();
       await expect(filtro).toContainText("Identificado por la autoridad");
-      await expect(filtro).toContainText("Deducido (compatible con)");
-      const [origen] = elegidos.claveDeducida.split(":");
-      const boton = filtro
-        .locator("div", { hasText: origen === "deducido" ? "Deducido (compatible con)" : "Identificado" })
-        .last()
-        .getByRole("button")
-        .first();
+      // Con sus modelos, tal como los escribe la autoridad.
+      await expect(filtro).toContainText(/\(.+\)/);
+      // Lo deducido, en una sola opción: no se ofrecen clases que no se distinguen.
+      await expect(filtro).not.toContainText("Dron de ataque de largo alcance de hélice");
+      const boton = filtro.getByRole("button", { name: "Compatible con dron de largo alcance de la guerra" });
+      expect(elegidos.claveDeducida).toBe("deducido:guerra");
       await boton.click();
       await expect(boton).toHaveAttribute("aria-pressed", "true");
-      await expect(page).toHaveURL(/dron=deducido(:|%3A)/);
+      await expect(page).toHaveURL(/dron=deducido(:|%3A)guerra/);
       await page.screenshot({ path: join(CAPTURAS, `tipo-filtro-${tamano.nombre}.png`) });
       await page.keyboard.press("Escape");
       expect(await vista(page)).toBe(antes);
@@ -145,8 +148,11 @@ for (const tamano of TAMANOS) {
 test("las páginas de texto dicen lo mismo sin ejecutar código", async ({ request }) => {
   const elegidos = await elegir(request);
   const deducido = await (await request.get(`/${elegidos.deducido}`)).text();
-  expect(deducido).toContain('data-tipo-dron="deducido"');
-  expect(deducido).toMatch(/de cada 10 \(\d+ %\)/);
+  expect(deducido).toContain('data-tipo-dron="guerra"');
+  expect(deducido).toContain("Compatible con un dron de largo alcance de la guerra (de ataque o señuelo)");
+  expect(deducido).not.toMatch(/de cada 10 \(\d+ %\)/);
+  const sinFila = await (await request.get(`/${elegidos.sinBase}`)).text();
+  expect(sinFila).not.toContain("data-tipo-dron");
   const identificado = await (await request.get(`/en/${elegidos.autoridad}`)).text();
   expect(identificado).toContain("according to the authority");
   const metodo = await (await request.get("/metodologia")).text();

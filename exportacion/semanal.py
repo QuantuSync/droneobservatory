@@ -27,10 +27,11 @@ age con la misma clave pública que la base:
 - previsiones.jsonl: las previsiones publicadas (riesgo de frontera de cada noche, incidentes
   de cada semana, aviso de segunda noche), tal como se registraron antes de conocerse el
   resultado, con su procedencia: valor calculado, el método (versión) y la fecha;
-- rutas_noches.jsonl y rutas_grupos.jsonl: las franjas de ruta publicadas de cada noche sobre
-  Ucrania y las estadísticas de sus grupos (tamaño, velocidad, divisiones y uniones), cada valor
-  con su regla de origen (los extremos de un enlace de la Fuerza Aérea, oficiales; lo demás,
-  calculado);
+- rutas_noches.jsonl y rutas_grupos.jsonl: las rutas publicadas de cada noche sobre Ucrania
+  (los tramos de partida y, desde el formato 1.7.0, el recorrido unido de cada grupo, sin la
+  franja ni la flecha, que son de dibujo) y las estadísticas de sus grupos (tamaño, velocidad,
+  divisiones y uniones), cada valor con su regla de origen (los extremos de un enlace de la
+  Fuerza Aérea, oficiales; lo demás, calculado);
 - vocabulario.json: la correspondencia con las categorías y clases de AEGIS
   (configuracion/vocabulario_aegis.json);
 - encuentros.jsonl, estadisticas_oficiales.jsonl y documentos_oficiales.jsonl: los registros
@@ -81,7 +82,7 @@ from proceso.luces import con_luces
 from proceso.mediciones import con_mediciones
 from proceso.restricciones import por_ataque
 
-VERSION_FORMATO = "1.6.0"
+VERSION_FORMATO = "1.7.0"
 RAIZ = Path(__file__).resolve().parent.parent
 DIRECTORIO_ESQUEMAS = RAIZ / "esquema" / "exportacion" / VERSION_FORMATO
 VOCABULARIO = RAIZ / "configuracion" / "vocabulario_aegis.json"
@@ -650,6 +651,19 @@ def rutas_exportables() -> tuple[list[Documento], list[Documento]]:
                 }
             sin_franja = {k: v for k, v in tramo.items() if k != "franja"}
             tramos.append({**sin_franja, "procedencia": {"extremos": extremos, "tramo": calculado}})
+        # El recorrido unido de cada grupo: calculado por su regla (proceso/rutas/recorridos.py).
+        unido = {
+            "origen": "calculado",
+            "metodo": str(noche.get("version_recorridos") or metodo),
+            "fuentes": calculado["fuentes"],
+        }
+        recorridos = [
+            {
+                **{k: v for k, v in r.items() if k not in ("franjas", "flechas")},
+                "procedencia": unido,
+            }
+            for r in noche.get("recorridos", [])
+        ]
         noches_.append(
             {
                 "noche": noche["noche"],
@@ -658,6 +672,7 @@ def rutas_exportables() -> tuple[list[Documento], list[Documento]]:
                 **({"atribucion": noche["atribucion"]} if "atribucion" in noche else {}),
                 **({"incidentes": noche["incidentes"]} if "incidentes" in noche else {}),
                 "tramos": tramos,
+                "recorridos": recorridos,
                 "procedencia": calculado,
             }
         )

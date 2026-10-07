@@ -8,10 +8,12 @@ Para cada incidente vigente:
 2. los rasgos descritos en todas sus frases (proceso/tipo_dron/rasgos.py);
 3. la probabilidad de cada clase y de cada grupo (proceso/tipo_dron/modelo.py), con la frecuencia
    de partida de todos los casos de respuesta conocida;
-4. lo que se publica: si no está identificado, hay base (modelo.con_base) y el grupo más probable
-   es uno de los que pasan la comprobación (proceso/tipo_dron/comprobacion.py), los grupos
-   publicados con su probabilidad (los de un 10 % o más) y el resto junto como «otras clases».
-   Sin base, o con el grupo más probable sin comprobar, no se publica nada del incidente.
+4. lo que se publica: si no está identificado, hay base (modelo.con_base), alguna razón que
+   enseñar y el grupo más probable es uno de los que pasan la comprobación
+   (proceso/tipo_dron/comprobacion.py): porcentajes solo si ese grupo destaca de verdad y esa
+   ventaja ha pasado la comprobación; si no, «compatible con un dron de largo alcance de la
+   guerra (de ataque o señuelo)», sin porcentajes (ver publicable). Sin base, sin razones o con
+   el grupo más probable sin comprobar, no se publica nada del incidente.
 
 Un incidente identificado cuenta como caso de respuesta conocida: su clase deducida se calcula
 igual (para la exportación), pero no se publica.
@@ -46,13 +48,45 @@ def _razon(razon: modelo.Razon) -> Documento:
     return documento
 
 
-def publicable(resultado: modelo.Resultado, grupos_publicados: Iterable[str]) -> Documento | None:
-    """Los grupos que se enseñan: el más probable tiene que estar comprobado; se enseñan los
-    comprobados con un 10 % o más y el resto va junto."""
+def publicable(
+    resultado: modelo.Resultado,
+    grupos_publicados: Iterable[str],
+    distincion: dict[str, Any] | None = None,
+    familia: dict[str, Any] | None = None,
+) -> Documento | None:
+    """Lo que se enseña de lo deducido. El grupo más probable tiene que estar comprobado.
+
+    - «probabilidades»: dobla al segundo y esa ventaja ha pasado la comprobación con casos de
+      respuesta conocida (comprobacion.distincion): los grupos comprobados con un 10 % o más y
+      el resto junto;
+    - «compatible_guerra»: si no, y los drones de largo alcance de la guerra (de ataque o
+      señuelo) juntos doblan al resto, comprobado igual (comprobacion.familia_guerra): una sola
+      frase, sin porcentajes;
+    - nada en otro caso.
+
+    Las probabilidades se guardan siempre: la exportación las lleva con su regla de origen."""
     publicados = set(grupos_publicados)
-    minimo = float(modelo.configuracion()["publicar"]["probabilidad_minima_mostrada"])
+    conf = modelo.configuracion()["publicar"]
+    minimo = float(conf["probabilidad_minima_mostrada"])
     orden = resultado.ordenados()
     if not orden or orden[0][0] not in publicados:
+        return None
+    primero, ventaja = comprobacion.ventaja(resultado.por_grupo)
+    grupos_familia = list(conf["familia_guerra"]["grupos"])
+    distingue = ventaja >= float(conf["distincion"]["razon_minima"]) and bool(
+        (distincion or {}).get(primero, {}).get("pasa")
+    )
+    de_la_guerra = (
+        primero in grupos_familia
+        and bool((familia or {}).get("pasa"))
+        and comprobacion.ventaja_familia(resultado.por_grupo, grupos_familia)
+        >= float(conf["familia_guerra"]["razon_minima"])
+    )
+    if distingue:
+        presentacion = "probabilidades"
+    elif de_la_guerra:
+        presentacion = "compatible_guerra"
+    else:
         return None
     compatibles: list[dict[str, Any]] = [
         {"grupo": g, "probabilidad": round(p, 2)}
@@ -60,7 +94,7 @@ def publicable(resultado: modelo.Resultado, grupos_publicados: Iterable[str]) ->
         if g in publicados and p >= minimo
     ]
     otras = round(1.0 - sum(float(c["probabilidad"]) for c in compatibles), 2)
-    return {"compatible": compatibles, "otras": max(otras, 0.0)}
+    return {"presentacion": presentacion, "compatible": compatibles, "otras": max(otras, 0.0)}
 
 
 def documento_incidente(
@@ -71,6 +105,7 @@ def documento_incidente(
     conocidos: list[Conocido],
     grupos_publicados: Iterable[str],
     velocidad_episodio: dict[str, Any] | None = None,
+    resumen: dict[str, Any] | None = None,
 ) -> Documento:
     lista = casos.frases_de(frases)
     entrada = casos.entrada_de_incidente(documento, lista, deduccion)
@@ -114,8 +149,14 @@ def documento_incidente(
     )
     if hallado is not None:
         salida["identificado"] = hallado
-    elif base and confirmado:
-        publicado = publicable(resultado, grupos_publicados)
+    elif base and confirmado and resultado.razones:
+        # Sin ninguna razón que enseñar al desplegar, no se publica nada.
+        publicado = publicable(
+            resultado,
+            grupos_publicados,
+            (resumen or {}).get("distincion"),
+            (resumen or {}).get("familia_guerra"),
+        )
         if publicado is not None:
             # Cuántos casos de respuesta conocida de su zona dan la frecuencia de partida.
             zona = entrada.zona
@@ -147,7 +188,14 @@ def calcular(
             velocidades[id_] = {**v, "fuente": episodio["id"]}
     documentos = {
         d["id"]: documento_incidente(
-            catalogo, d, frases, deduccion, conocidos, publicados, velocidades.get(d["id"])
+            catalogo,
+            d,
+            frases,
+            deduccion,
+            conocidos,
+            publicados,
+            velocidades.get(d["id"]),
+            resumen,
         )
         for d, frases, deduccion in incidentes
     }
@@ -158,6 +206,16 @@ def recuento(documentos: dict[str, Documento]) -> dict[str, int]:
     return {
         "identificados": sum(1 for d in documentos.values() if "identificado" in d),
         "deducidos": sum(1 for d in documentos.values() if "publicado" in d),
+        "compatible_guerra": sum(
+            1
+            for d in documentos.values()
+            if d.get("publicado", {}).get("presentacion") == "compatible_guerra"
+        ),
+        "con_porcentajes": sum(
+            1
+            for d in documentos.values()
+            if d.get("publicado", {}).get("presentacion") == "probabilidades"
+        ),
         "con_base_sin_publicar": sum(
             1
             for d in documentos.values()

@@ -1,17 +1,17 @@
-// Rutas de los drones sobre Ucrania (esquema/rutas/1.0.0): un índice con las noches publicadas y un
+// Rutas de los drones sobre Ucrania (esquema/rutas/1.1.0): un índice con las noches publicadas y un
 // fichero por noche, en el almacén público. Se piden solo al encender la subcapa «Rutas» (o al
-// reproducir la guerra noche a noche): no entran en la primera carga. Con un periodo largo se
-// enseñan solo las noches principales (las de más drones lanzados), y la leyenda dice cuántas de
-// cuántas.
+// reproducir la guerra noche a noche): no entran en la primera carga. Se dibuja una noche cada
+// vez: la última terminada o la de «Noche a noche». Cada grupo llega ya unido en un recorrido
+// (una línea por rama, su franja de incertidumbre y la punta de flecha); se dibujan los
+// principales por número de aparatos y la leyenda dice cuántos de cuántos.
 
 import { urlDelAlmacen } from "../almacenPublico.ts";
-import type { Periodo } from "../tiempo/dias.ts";
-import { diaDeInstante, fechaDeDia } from "../tiempo/dias.ts";
+import { fechaDeDia } from "../tiempo/dias.ts";
 import { validarIndiceRutas, validarNocheRutas } from "./validar.ts";
 
 export const OBJETO_INDICE_RUTAS = "rutas/indice.json";
-/** Noches que se dibujan a la vez como mucho: las de más drones lanzados del periodo. */
-export const NOCHES_PRINCIPALES = 10;
+/** Grupos que se dibujan a la vez como mucho: los de más aparatos de la noche. */
+export const GRUPOS_PRINCIPALES = 40;
 
 export type FuenteRuta = "neptun" | "fuerza_aerea";
 
@@ -30,7 +30,6 @@ export interface TramoRuta {
   desde: ExtremoRuta;
   hasta: ExtremoRuta;
   precision_km: number;
-  franja: [number, number][];
   numero?: { min: number; max: number };
   kmh?: number;
   pista?: string;
@@ -50,6 +49,30 @@ export interface GrupoRuta {
   uniones: number;
 }
 
+/** El recorrido de un grupo en una noche, ya unido (proceso/rutas/recorridos.py). */
+export interface RecorridoRuta {
+  /** Su puesto en la noche: 1 es el de más aparatos. */
+  grupo: number;
+  tipo: "ataque" | "reaccion" | "reconocimiento";
+  aparatos: number | null;
+  kmh: number | null;
+  inicio: string | null;
+  fin: string | null;
+  precision_km: { min: number; max: number };
+  longitud_km: number;
+  trozos: number;
+  division: boolean;
+  union: boolean;
+  confianza?: string;
+  pistas?: string[];
+  /** Una línea por rama, del principio al final, (lon, lat). */
+  lineas: [number, number][][];
+  /** La franja de incertidumbre de cada rama. */
+  franjas: [number, number][][];
+  /** La punta de flecha del final de cada rama. */
+  flechas: { lon: number; lat: number; rumbo: number }[];
+}
+
 export interface Atribucion {
   texto: string;
   enlace: string;
@@ -62,6 +85,8 @@ export interface NocheRutas {
   ataques: string[];
   atribucion?: Atribucion;
   incidentes?: string[];
+  version_recorridos?: string;
+  recorridos?: RecorridoRuta[];
   tramos: TramoRuta[];
   grupos: GrupoRuta[];
 }
@@ -73,6 +98,7 @@ export interface ResumenNocheRutas {
   lanzados: number | null;
   tramos: number;
   grupos: number;
+  recorridos?: number;
 }
 
 export interface IndiceRutas {
@@ -112,49 +138,98 @@ export async function cargarNocheRutas(noche: string, senal?: AbortSignal): Prom
   }
 }
 
-/** Las noches del periodo y las que se dibujan: todas si caben, si no las de más drones. */
-export function nochesDelPeriodo(
-  indice: IndiceRutas,
-  periodo: Periodo | null,
-  maximo: number = NOCHES_PRINCIPALES,
-): { mostradas: string[]; total: number } {
-  const delPeriodo = indice.noches.filter((n) => {
-    if (periodo === null) return true;
-    const dia = diaDeInstante(n.noche);
-    return dia >= periodo.desde - 1 && dia <= periodo.hasta;
-  });
-  const orden = [...delPeriodo].sort(
-    (a, b) => (b.lanzados ?? -1) - (a.lanzados ?? -1) || b.tramos - a.tramos || (a.noche < b.noche ? 1 : -1),
-  );
-  return { mostradas: orden.slice(0, maximo).map((n) => n.noche).sort(), total: delPeriodo.length };
+/**
+ * La noche que se dibuja: la de «Noche a noche» si se está mostrando una (null si esa no tiene
+ * rutas); si no, la última noche terminada con rutas publicadas. Nunca dos a la vez.
+ */
+export function nocheQueSeDibuja(indice: IndiceRutas, elegida: string | null): string | null {
+  if (elegida !== null) return indice.noches.some((n) => n.noche === elegida) ? elegida : null;
+  const fechas = indice.noches.map((n) => n.noche).sort();
+  return fechas.at(-1) ?? null;
 }
 
-/** Clave de un tramo para encontrarlo al tocarlo: su noche y su posición. */
-export function claveTramo(noche: string, indice: number): string {
-  return `${noche}|${indice}`;
+/** Clave de un recorrido para encontrarlo al tocarlo: su noche y su grupo. */
+export function claveRecorrido(noche: string, grupo: number): string {
+  return `${noche}|${grupo}`;
 }
 
-export function tramoDeClave(
+export function recorridoDeClave(
   noches: ReadonlyMap<string, NocheRutas>,
   clave: string,
-): { noche: NocheRutas; tramo: TramoRuta } | null {
-  const [fecha, posicion] = clave.split("|");
+): { noche: NocheRutas; recorrido: RecorridoRuta } | null {
+  const [fecha, grupo] = clave.split("|");
   const noche = noches.get(fecha ?? "");
-  const tramo = noche?.tramos[Number(posicion)];
-  return noche === undefined || tramo === undefined ? null : { noche, tramo };
+  const recorrido = noche?.recorridos?.find((r) => r.grupo === Number(grupo));
+  return noche === undefined || recorrido === undefined ? null : { noche, recorrido };
 }
 
-/** Las franjas de las noches dadas, para el mapa. */
-export function rutasEnMapa(noches: readonly NocheRutas[]): GeoJSON.FeatureCollection<GeoJSON.Polygon> {
+/** Lo que el mapa dibuja de una noche: líneas, franjas y puntas de flecha de los principales. */
+export interface RutasEnMapa {
+  lineas: GeoJSON.FeatureCollection<GeoJSON.LineString>;
+  franjas: GeoJSON.FeatureCollection<GeoJSON.Polygon>;
+  flechas: GeoJSON.FeatureCollection<GeoJSON.Point>;
+  /** Grupos dibujados y grupos con recorrido de la noche. */
+  mostrados: number;
+  total: number;
+}
+
+/** Grosor (px) y opacidad de un recorrido según sus aparatos, del menor al mayor de la noche. */
+export const GROSOR_RUTA = { minimo: 1.4, maximo: 4 } as const;
+export const OPACIDAD_RUTA = { minimo: 0.5, maximo: 1 } as const;
+
+/**
+ * Los principales recorridos de una noche (los de más aparatos; los publicados ya vienen en ese
+ * orden), cada uno con su grosor y su opacidad según el tamaño del grupo y su orden de dibujo:
+ * los menores debajo, los mayores encima.
+ */
+export function rutasEnMapa(noche: NocheRutas, maximo: number = GRUPOS_PRINCIPALES): RutasEnMapa {
+  const todos = noche.recorridos ?? [];
+  const principales = [...todos].sort((a, b) => a.grupo - b.grupo).slice(0, maximo);
+  const tope = Math.max(1, ...principales.map((r) => r.aparatos ?? 1));
+  // Del menor al mayor: el último en la lista se pinta encima.
+  const orden = [...principales].reverse();
+  const propiedades = (r: RecorridoRuta) => {
+    const peso = Math.sqrt((r.aparatos ?? 1) / tope);
+    return {
+      clave: claveRecorrido(noche.noche, r.grupo),
+      ancho: GROSOR_RUTA.minimo + (GROSOR_RUTA.maximo - GROSOR_RUTA.minimo) * peso,
+      opacidad: OPACIDAD_RUTA.minimo + (OPACIDAD_RUTA.maximo - OPACIDAD_RUTA.minimo) * peso,
+      orden: r.aparatos ?? 1,
+    };
+  };
   return {
-    type: "FeatureCollection",
-    features: noches.flatMap((n) =>
-      n.tramos.map((t, i) => ({
-        type: "Feature" as const,
-        geometry: { type: "Polygon" as const, coordinates: [t.franja] },
-        properties: { clave: claveTramo(n.noche, i), fuente: n.fuente, tipo: t.tipo },
-      })),
-    ),
+    lineas: {
+      type: "FeatureCollection",
+      features: orden.flatMap((r) =>
+        r.lineas.map((linea) => ({
+          type: "Feature" as const,
+          geometry: { type: "LineString" as const, coordinates: linea },
+          properties: propiedades(r),
+        })),
+      ),
+    },
+    franjas: {
+      type: "FeatureCollection",
+      features: orden.flatMap((r) =>
+        r.franjas.map((anillo) => ({
+          type: "Feature" as const,
+          geometry: { type: "Polygon" as const, coordinates: [anillo] },
+          properties: propiedades(r),
+        })),
+      ),
+    },
+    flechas: {
+      type: "FeatureCollection",
+      features: orden.flatMap((r) =>
+        r.flechas.map((f) => ({
+          type: "Feature" as const,
+          geometry: { type: "Point" as const, coordinates: [f.lon, f.lat] },
+          properties: { ...propiedades(r), rumbo: f.rumbo },
+        })),
+      ),
+    },
+    mostrados: principales.length,
+    total: todos.length,
   };
 }
 

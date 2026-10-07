@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 
 import type { GrupoDron } from "../datos/tipos.ts";
-import { ESTADOS, ORIGENES_TIPO_DRON, TIPOS, ZONAS } from "../datos/vocabulario.ts";
+import { DRON_DE_LA_GUERRA, ESTADOS, ORIGENES_TIPO_DRON, TIPOS, ZONAS } from "../datos/vocabulario.ts";
 import { RECIENTES, TODO, alternar, hayFiltros } from "../estado/filtros.ts";
 import type { Filtros as EstadoFiltros, Reciente, SeleccionPeriodo } from "../estado/filtros.ts";
 import { fechaDia, pais } from "../i18n/index.ts";
@@ -27,8 +27,24 @@ interface Props {
   paises: readonly string[];
   /** Quita los filtros y el periodo de una vez. */
   onQuitar: () => void;
-  /** Claves de tipo de dron con algún incidente («autoridad:senuelo», «deducido:…»). */
+  /** Claves de tipo de dron con algún incidente («autoridad:senuelo», «deducido:guerra»). */
   dron?: readonly string[];
+  /** Modelos que nombra la autoridad por clave («autoridad:senuelo» → ["Gerbera"]). */
+  modelosDron?: Readonly<Record<string, readonly string[]>>;
+}
+
+/** Rótulo de una opción del filtro de tipo de dron: la clase con los modelos que nombra la
+ * autoridad, o «compatible con dron de la guerra». */
+function etiquetaDron(
+  t: Textos,
+  clave: string,
+  origen: string,
+  modelos: readonly string[] | undefined,
+): string {
+  const grupo = clave.slice(origen.length + 1);
+  if (grupo === DRON_DE_LA_GUERRA) return t.tipoDron.filtroGuerra;
+  const nombre = t.tipoDron.grupos[grupo as GrupoDron];
+  return modelos !== undefined && modelos.length > 0 ? `${nombre} (${modelos.join(", ")})` : nombre;
 }
 
 function Grupo({ rotulo, children }: { rotulo: string; children: ReactNode }) {
@@ -218,7 +234,7 @@ export function Filtros(props: Props) {
                       activa={filtros.dron.includes(clave)}
                       onClick={() => onFiltros({ ...filtros, dron: alternar(filtros.dron, clave) })}
                     >
-                      {t.tipoDron.grupos[clave.slice(origen.length + 1) as GrupoDron]}
+                      {etiquetaDron(t, clave, origen, props.modelosDron?.[clave])}
                     </Opcion>
                   ))}
                 </div>

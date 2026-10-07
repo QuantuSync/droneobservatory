@@ -186,9 +186,27 @@ def frontera_km(lat: float, lon: float) -> float:
 
 
 def subida() -> Subir | None:
-    from recogida import satelite
+    """Subida al almacén público, comprimida (Content-Encoding: gzip): una noche pasa de unos
+    300 KB a unos 60 KB, y la subcapa aparece antes en el teléfono."""
+    from recogida import almacen_publico
 
-    return satelite.subida_al_almacen(os.environ)
+    almacen = almacen_publico.cargar()
+    clave_id = os.environ.get(almacen_publico.VARIABLE_ID, "")
+    secreto = os.environ.get(almacen_publico.VARIABLE_SECRETO, "")
+
+    def subir(objeto: str, cuerpo: bytes, tipo: str, cache: str) -> bool:
+        if not clave_id or not secreto:
+            registro.warning("sin credenciales del almacén: no se sube %s", objeto)
+            return False
+        correcto, motivo = almacen_publico.subir(
+            almacen, objeto, gzip.compress(cuerpo, mtime=0), clave_id, secreto, tipo, cache,
+            codificacion="gzip",
+        )  # fmt: skip
+        if not correcto:
+            registro.warning("%s: %s", objeto, motivo)
+        return correcto
+
+    return subir
 
 
 def _leer_noche(ruta: Path) -> dict[str, Any]:

@@ -5,7 +5,7 @@
 // último día con datos), uno entre dos fechas o, sin nada en la dirección, todo.
 
 import type { Estado, IncidenteResumen, Tipo, Zona } from "../datos/tipos.ts";
-import { ESTADOS, GRUPOS_DRON, ORIGENES_TIPO_DRON, PATRON_PAIS, TIPOS, ZONAS } from "../datos/vocabulario.ts";
+import { DRON_DE_LA_GUERRA, ESTADOS, GRUPOS_DRON, ORIGENES_TIPO_DRON, PATRON_PAIS, TIPOS, ZONAS } from "../datos/vocabulario.ts";
 import { MS_POR_HORA, diaDeFecha, diaDeInstante, fechaDeDia } from "../tiempo/dias.ts";
 import type { Periodo } from "../tiempo/dias.ts";
 
@@ -23,8 +23,9 @@ export interface Filtros {
   /** Solo frontera o solo interior; null es todos (por defecto). */
   zona: Zona | null;
   /**
-   * Tipo de dron: «autoridad:<grupo>» (identificado por la autoridad) o «deducido:<grupo>»
-   * (compatible con, deducido); vacío es todos.
+   * Tipo de dron: «autoridad:<grupo>» (identificado por la autoridad), «deducido:guerra»
+   * (compatible con un dron de largo alcance de la guerra) o «deducido:<grupo>» (un grupo que
+   * destaca); vacío es todos.
    */
   dron: string[];
 }
@@ -56,8 +57,10 @@ const PARAMETRO = {
 const VALOR_GRAVES = "graves";
 const SEPARADOR = ",";
 const PATRON_DIA = /^\d{4}-\d{2}-\d{2}$/;
-/** Una clave de tipo de dron: de dónde sale y su grupo. */
-const PATRON_DRON = new RegExp(`^(${ORIGENES_TIPO_DRON.join("|")}):(${GRUPOS_DRON.join("|")})$`);
+/** Una clave de tipo de dron: de dónde sale y su grupo (o «deducido:guerra»). */
+const PATRON_DRON = new RegExp(
+  `^((${ORIGENES_TIPO_DRON.join("|")}):(${GRUPOS_DRON.join("|")})|deducido:${DRON_DE_LA_GUERRA})$`,
+);
 const LARGO_DIA = 10;
 /**
  * Días que cubre cada filtro de lo reciente, contando el último. Las 24 horas tocan dos días

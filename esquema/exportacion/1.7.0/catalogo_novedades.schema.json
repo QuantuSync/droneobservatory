@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:eodi:exportacion:1.7.0:catalogo_novedades",
+  "title": "Registro de novedades del catálogo vivo, por semana",
+  "description": "Lo que el barrido periódico del catálogo de prestaciones (recogida/catalogo_vivo.py) encontró cada semana: modelos nuevos, cifras nuevas de modelos conocidos y tácticas, con su fuente y su estado. admitida: viene de un fabricante, de inteligencia, de una lista oficial, de una autoridad o de un centro de análisis, o la ha confirmado una segunda fuente de otro sitio; candidata: solo prensa (o datos propios), a la espera de una segunda fuente. version_catalogo: la del catálogo que lleva esta versión (con +vivo.N si incluye lo admitido). sin_clase: modelos registrados cuya clase no se decide por código (no entran en las envolventes).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version_catalogo",
+    "version_vivo",
+    "semanas",
+    "sin_clase"
+  ],
+  "properties": {
+    "version_catalogo": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version_vivo": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "semanas": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "semana",
+          "novedades"
+        ],
+        "properties": {
+          "semana": {
+            "type": "string",
+            "pattern": "^\\d{4}-W\\d{2}$"
+          },
+          "novedades": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "fecha",
+                "semana",
+                "estado",
+                "tipo",
+                "clave",
+                "fuente"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "fecha": {
+                  "type": "string",
+                  "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                },
+                "semana": {
+                  "type": "string",
+                  "pattern": "^\\d{4}-W\\d{2}$"
+                },
+                "estado": {
+                  "enum": [
+                    "admitida",
+                    "candidata"
+                  ]
+                },
+                "tipo": {
+                  "enum": [
+                    "modelo_nuevo",
+                    "cifra_nueva",
+                    "tactica"
+                  ]
+                },
+                "clave": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "fuente": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "id",
+                    "tipo",
+                    "url",
+                    "titulo"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "tipo": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "url": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "titulo": {
+                      "type": "string"
+                    },
+                    "fecha": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  }
+                },
+                "confirmada_por": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "sin_clase": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  }
+}

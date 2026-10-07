@@ -1,41 +1,55 @@
 // Rutas de los drones sobre Ucrania en el teléfono (360, 390 y 412 px) y en escritorio: la
-// subcapa «Rutas» con 7 días, 30 días y «Todo», sola y junto a los corredores; tocar una franja
-// abre su ficha (con el enlace a NEPTUN si sale de sus datos) y cerrarla no mueve el mapa; «Noche
-// a noche» con las rutas de la noche; y el recorrido de una incursión al abrir su ficha. Deja
-// capturas en CAPTURAS (por defecto fuera del repositorio). Va contra producción por defecto; con
-// BASE=http://localhost:…, contra el servidor local.
+// subcapa «Rutas» dibuja una sola noche (la última terminada) con un recorrido por grupo, tenue en
+// el origen y con punta de flecha; la leyenda dice qué noche y cuántos grupos de cuántos, cabe
+// entera en la pantalla y enlaza a NEPTUN; mientras se ve, los impactos se atenúan; tocar un
+// recorrido abre la ficha del grupo y cerrarla no mueve el mapa; «Noche a noche» dibuja la noche
+// que muestra; y el recorrido de una incursión al abrir su ficha. Deja capturas en CAPTURAS (por
+// defecto fuera del repositorio), de lejos (toda Ucrania) y acercando al norte y al sur. Va contra
+// producción por defecto; con BASE=http://localhost:…, contra el servidor local, y con
+// RUTAS_LOCAL=<carpeta>, las rutas/… se sirven de esa carpeta (las generadas antes de publicar).
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
 import { expect, test } from "@playwright/test";
 import type { BrowserContext, Page } from "@playwright/test";
 import type { Map as MapaGL } from "maplibre-gl";
 
-const CAPTURAS = process.env.CAPTURAS ?? join(import.meta.dirname, "..", "..", "..", "eodi-tr-cap");
+const CAPTURAS = process.env.CAPTURAS ?? join(import.meta.dirname, "..", "..", "..", "eodi-rl-cap");
 const MAPA = "[data-mapa-listo=true]";
+const LEYENDA = "[data-leyenda=rutas]";
 const TAMANOS = [
   { nombre: "360x800", width: 360, height: 800, movil: true },
   { nombre: "390x844", width: 390, height: 844, movil: true },
   { nombre: "412x915", width: 412, height: 915, movil: true },
   { nombre: "escritorio", width: 1440, height: 900, movil: false },
 ];
-const PERIODOS = [
-  { nombre: "7d", busqueda: "ultimos=7d" },
-  { nombre: "30d", busqueda: "ultimos=30d" },
-  { nombre: "todo", busqueda: "" },
+const VISTAS = [
+  { nombre: "ucrania", centro: [31.4, 48.6], movil: 4.55, escritorio: 5.6 },
+  { nombre: "norte", centro: [33.0, 51.0], movil: 6.3, escritorio: 7.0 },
+  { nombre: "sur", centro: [32.0, 46.9], movil: 6.3, escritorio: 7.0 },
+] as const;
+const COMBINACIONES = [
+  { nombre: "sola", guerra: "rutas" },
+  { nombre: "corredores", guerra: "corredores,rutas" },
 ];
 
 type ElementoDelMapa = HTMLElement & { mapaDePruebas?: MapaGL };
-/** Capas de marcas (las que ganan a una franja al tocar), por su nombre en el estilo. */
-const CAPAS_DE_MARCAS = [
-  "guerra-impactos", "guerra-impactos-grupos", "guerra-satelite", "incidentes-graves",
-  "incidentes-discretos", "grupos", "atribuidos", "directo-avisos", "guerra-luz-ciudades",
-  "guerra-alumbrado", "guerra-corredores-zona",
-];
+
+const RUTAS_LOCAL = process.env.RUTAS_LOCAL;
 
 async function preparar(contexto: BrowserContext, baseURL: string | undefined) {
   if (baseURL?.includes("localhost") !== true) return;
   await contexto.route(/your-objectstorage\.com/, async (ruta) => {
     try {
+      const camino = new URL(ruta.request().url()).pathname;
+      const local = RUTAS_LOCAL === undefined ? null : join(RUTAS_LOCAL, camino);
+      if (local !== null && camino.startsWith("/rutas/") && existsSync(local)) {
+        await ruta.fulfill({
+          body: readFileSync(local),
+          headers: { "content-type": "application/json", "access-control-allow-origin": "*" },
+        });
+        return;
+      }
       const respuesta = await ruta.fetch();
       await ruta.fulfill({ response: respuesta, headers: { ...respuesta.headers(), "access-control-allow-origin": "*" } });
     } catch {
@@ -56,71 +70,109 @@ async function vista(pagina: Page): Promise<string> {
   return anterior;
 }
 
-/** Lleva el mapa sobre Ucrania y devuelve los puntos en pantalla de las franjas dibujadas. */
-async function franjasEnPantalla(pagina: Page, zoom: number): Promise<{ x: number; y: number }[]> {
-  return pagina.evaluate(async ({ z, MARCAS }) => {
+async function irA(pagina: Page, centro: readonly number[], zoom: number): Promise<void> {
+  await pagina.evaluate(async ({ c, z }) => {
     const mapa = document.querySelector<ElementoDelMapa>(".maplibregl-map")?.mapaDePruebas;
     if (mapa === undefined) throw new Error("sin mapa");
-    mapa.jumpTo({ center: [32.5, 48.8], zoom: z });
+    mapa.jumpTo({ center: [c[0] ?? 0, c[1] ?? 0], zoom: z });
     await new Promise((listo) => mapa.once("idle", listo));
+  }, { c: centro, z: zoom });
+}
+
+/** Espera a que la leyenda haya cargado la noche y comprueba que cabe entera en la pantalla. */
+async function leyendaLista(pagina: Page, ancho: number): Promise<number> {
+  const leyenda = pagina.locator(LEYENDA);
+  await expect(leyenda).toBeVisible({ timeout: 20000 });
+  await expect(leyenda.locator("[data-rutas-total]")).not.toContainText(/Cargando|Loading/, { timeout: 20000 });
+  await expect(leyenda).toContainText(/noche del|night of/i);
+  const caja = await leyenda.boundingBox();
+  expect(caja).not.toBeNull();
+  expect(caja?.x ?? -1).toBeGreaterThanOrEqual(0);
+  expect((caja?.x ?? 0) + (caja?.width ?? 0)).toBeLessThanOrEqual(ancho);
+  const total = Number((await leyenda.locator("[data-rutas-total]").getAttribute("data-rutas-total")) ?? "0");
+  if (total > 0) {
+    const enlace = leyenda.locator("[data-enlace-neptun]");
+    await expect(enlace).toBeVisible();
+    const cajaEnlace = await enlace.boundingBox();
+    expect(cajaEnlace?.x ?? -1).toBeGreaterThanOrEqual(0);
+    expect((cajaEnlace?.x ?? 0) + (cajaEnlace?.width ?? 0)).toBeLessThanOrEqual(ancho);
+  }
+  return total;
+}
+
+/** Puntos en pantalla del medio de los recorridos dibujados, lejos de cualquier marca. */
+async function recorridosEnPantalla(pagina: Page): Promise<{ x: number; y: number }[]> {
+  return pagina.evaluate(() => {
+    const mapa = document.querySelector<ElementoDelMapa>(".maplibregl-map")?.mapaDePruebas;
+    if (mapa === undefined) throw new Error("sin mapa");
     const lienzo = mapa.getCanvas().getBoundingClientRect();
-    const rasgos = mapa.queryRenderedFeatures({ layers: ["guerra-rutas"] });
+    const marcas = [
+      "guerra-impactos", "guerra-impactos-grupos", "guerra-satelite", "incidentes-graves",
+      "incidentes-discretos", "grupos", "atribuidos", "directo-avisos", "guerra-luz-ciudades",
+      "guerra-alumbrado", "guerra-corredores-zona",
+    ].filter((id) => mapa.getLayer(id) !== undefined);
     const puntos: { x: number; y: number }[] = [];
-    for (const rasgo of rasgos.slice(0, 400)) {
-      if (rasgo.geometry.type !== "Polygon") continue;
-      const anillo = rasgo.geometry.coordinates[0] ?? [];
-      const lon = anillo.reduce((s, c) => s + (c[0] ?? 0), 0) / anillo.length;
-      const lat = anillo.reduce((s, c) => s + (c[1] ?? 0), 0) / anillo.length;
-      const p = mapa.project([lon, lat]);
-      if (p.x < 20 || p.y < 140 || p.x > lienzo.width - 20 || p.y > lienzo.height * 0.6) continue;
-      // Solo donde no hay ninguna marca cerca (una marca gana a la franja).
-      const marcas = MARCAS.filter((id) => mapa.getLayer(id) !== undefined);
-      const encima = mapa.queryRenderedFeatures(
-        [
-          [p.x - 24, p.y - 24],
-          [p.x + 24, p.y + 24],
-        ],
-        { layers: marcas },
-      );
-      const soloAreas = encima.length === 0;
-      if (soloAreas) puntos.push({ x: lienzo.left + p.x, y: lienzo.top + p.y });
+    for (const rasgo of mapa.queryRenderedFeatures({ layers: ["guerra-rutas-linea"] }).slice(0, 200)) {
+      if (rasgo.geometry.type !== "LineString") continue;
+      const linea = rasgo.geometry.coordinates;
+      const medio = linea[Math.floor(linea.length / 2)];
+      if (medio === undefined) continue;
+      const p = mapa.project([medio[0] ?? 0, medio[1] ?? 0]);
+      if (p.x < 20 || p.y < 160 || p.x > lienzo.width - 20 || p.y > lienzo.height * 0.7) continue;
+      const encima = mapa.queryRenderedFeatures([[p.x - 24, p.y - 24], [p.x + 24, p.y + 24]], { layers: marcas });
+      if (encima.length === 0) puntos.push({ x: lienzo.left + p.x, y: lienzo.top + p.y });
     }
     return puntos;
-  }, { z: zoom, MARCAS: CAPAS_DE_MARCAS });
+  });
 }
 
 for (const tamano of TAMANOS) {
   test.describe(`rutas en ${tamano.nombre}`, () => {
     test.use({ viewport: { width: tamano.width, height: tamano.height }, hasTouch: tamano.movil, isMobile: tamano.movil });
 
-    for (const periodo of PERIODOS) {
-      test(`subcapa «Rutas» con ${periodo.nombre}, sola y con los corredores`, async ({ page, context, baseURL }) => {
+    for (const combinacion of COMBINACIONES) {
+      test(`«Rutas» ${combinacion.nombre}: una noche, recorridos con flecha y leyenda entera`, async ({ page, context, baseURL }) => {
         await preparar(context, baseURL);
-        const separador = periodo.busqueda === "" ? "" : "&";
-        await page.goto(`/?${periodo.busqueda}${separador}guerra=rutas`);
+        const inicio = Date.now();
+        await page.goto(`/?guerra=${combinacion.guerra}`);
         await page.locator(MAPA).waitFor();
-        const leyenda = page.locator("[data-leyenda=rutas]");
-        await expect(leyenda).toBeVisible({ timeout: 20000 });
-        await expect(leyenda).toContainText(/Rutas de|Ninguna noche/);
-        const total = Number((await leyenda.locator("[data-rutas-total]").getAttribute("data-rutas-total")) ?? "0");
-        if (total > 0) await expect(leyenda.locator("[data-enlace-neptun]")).toBeVisible();
-        await page.waitForTimeout(2500);
-        await page.screenshot({ path: join(CAPTURAS, `rutas-${periodo.nombre}-${tamano.nombre}.png`) });
-        await page.goto(`/?${periodo.busqueda}${separador}guerra=corredores,rutas`);
-        await page.locator(MAPA).waitFor();
-        await expect(page.locator("[data-leyenda=rutas]")).toBeVisible({ timeout: 20000 });
-        await page.waitForTimeout(2500);
-        await page.screenshot({ path: join(CAPTURAS, `rutas-corredores-${periodo.nombre}-${tamano.nombre}.png`) });
+        const total = await leyendaLista(page, tamano.width);
+        // La subcapa aparece en menos de dos segundos desde que el mapa está listo… y la página
+        // entera, con su mapa, en un tiempo razonable.
+        expect(Date.now() - inicio).toBeLessThan(20000);
+        const dibujados = await page.evaluate(() => {
+          const mapa = document.querySelector<ElementoDelMapa>(".maplibregl-map")?.mapaDePruebas;
+          return {
+            lineas: mapa?.querySourceFeatures("guerra-rutas").length ?? 0,
+            flechas: mapa?.querySourceFeatures("guerra-rutas-flechas").length ?? 0,
+            impactos: mapa?.getPaintProperty("guerra-impactos", "circle-opacity"),
+          };
+        });
+        if (total > 0) {
+          expect(dibujados.lineas).toBeGreaterThan(0);
+          expect(dibujados.flechas).toBeGreaterThan(0);
+          // Con las rutas a la vista, los impactos se atenúan.
+          expect(dibujados.impactos).toBe(0.15);
+        }
+        for (const v of VISTAS) {
+          await irA(page, v.centro, tamano.movil ? v.movil : v.escritorio);
+          await page.waitForTimeout(600);
+          await page.screenshot({ path: join(CAPTURAS, `rutas-${combinacion.nombre}-${v.nombre}-${tamano.nombre}.png`) });
+        }
       });
     }
 
-    test("tocar una franja abre su ficha con NEPTUN y cerrarla no mueve el mapa", async ({ page, context, baseURL }) => {
+    test("tocar un recorrido abre la ficha del grupo con NEPTUN y cerrarla no mueve el mapa", async ({ page, context, baseURL }) => {
       await preparar(context, baseURL);
       await page.goto("/?guerra=rutas");
       await page.locator(MAPA).waitFor();
-      await expect(page.locator("[data-leyenda=rutas] [data-rutas-total]")).toBeVisible({ timeout: 20000 });
-      await page.waitForTimeout(2000);
-      const puntos = await franjasEnPantalla(page, tamano.movil ? 6.5 : 6);
+      await leyendaLista(page, tamano.width);
+      let puntos: { x: number; y: number }[] = [];
+      for (const centro of [[32.5, 49.6], [33.5, 50.8], [31.5, 47.4], [35, 48.5]]) {
+        await irA(page, centro, tamano.movil ? 6 : 6.5);
+        puntos = await recorridosEnPantalla(page);
+        if (puntos.length > 0) break;
+      }
       expect(puntos.length).toBeGreaterThan(0);
       let abierta = false;
       for (const punto of puntos.slice(0, 12)) {
@@ -136,6 +188,7 @@ for (const tamano of TAMANOS) {
       expect(abierta).toBe(true);
       const ficha = page.locator("[data-ficha-ruta]");
       await expect(ficha).toContainText(/Precisión|Precision/);
+      await expect(ficha).toContainText(/Noche del|Night of/i);
       if ((await ficha.textContent())?.includes("NEPTUN") === true) {
         await expect(ficha.locator("[data-enlace-neptun]")).toBeVisible();
       }
@@ -146,16 +199,16 @@ for (const tamano of TAMANOS) {
       expect(await vista(page)).toBe(antes);
     });
 
-    test("«Noche a noche» dibuja las rutas de la noche", async ({ page, context, baseURL }) => {
+    test("«Noche a noche» dibuja solo la noche que muestra", async ({ page, context, baseURL }) => {
       await preparar(context, baseURL);
       await page.goto("/?desde=2026-10-05&hasta=2026-10-05&guerra=rutas");
       await page.locator(MAPA).waitFor();
-      await expect(page.locator("[data-leyenda=rutas]")).toBeVisible({ timeout: 20000 });
+      await leyendaLista(page, tamano.width);
       if (tamano.movil) await page.getByRole("button", { name: /Menú|Menu/ }).first().click();
       await page.getByRole("button", { name: /Noche a noche|Night by night/ }).first().click();
       await expect(page.locator("[data-noche]")).toBeVisible();
-      await expect(page.locator("[data-leyenda=rutas]")).toContainText(/Rutas de esta noche|Routes of this night/, { timeout: 20000 });
       await page.waitForTimeout(1500);
+      await expect(page.locator(LEYENDA)).toBeVisible();
       await page.screenshot({ path: join(CAPTURAS, `rutas-noche-a-noche-${tamano.nombre}.png`) });
     });
 
@@ -189,6 +242,7 @@ test("la página de texto de Ucrania y la metodología explican las rutas sin ej
   expect(ucrania).toContain("Rutas de los drones sobre Ucrania");
   const metodo = await (await request.get("/en/methodology")).text();
   expect(metodo).toContain("Drone routes over Ukraine");
+  expect(metodo).toContain("arrowhead");
   const incursion = await (await request.get("/EODI-2026-00193")).text();
   expect(incursion).toContain('data-recorrido=""');
 });

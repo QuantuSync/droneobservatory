@@ -1,0 +1,461 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:eodi:exportacion:1.7.0:vocabulario",
+  "title": "Vocabulario del observatorio y de AEGIS (vocabulario.json)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "descripcion",
+    "aegis",
+    "categorias_objetivo",
+    "clases_dron",
+    "clases_deduccion",
+    "origenes",
+    "metodos",
+    "niveles_detalle",
+    "metricas_estadistica",
+    "indicadores",
+    "origenes_inicio"
+  ],
+  "$defs": {
+    "entrada": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "aegis",
+        "equivalencia",
+        "nota"
+      ],
+      "properties": {
+        "aegis": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "equivalencia": {
+          "enum": [
+            "exacta",
+            "parcial",
+            "sin_equivalente"
+          ]
+        },
+        "nota": {
+          "type": "string"
+        }
+      },
+      "if": {
+        "properties": {
+          "equivalencia": {
+            "const": "sin_equivalente"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "aegis": {
+            "maxItems": 0
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "aegis": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    "origen": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "campo",
+        "origen",
+        "valores"
+      ],
+      "properties": {
+        "campo": {
+          "type": "string"
+        },
+        "origen": {
+          "type": "string"
+        },
+        "valores": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "entrada_clase_deduccion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "aegis",
+        "equivalencia",
+        "nota",
+        "clase_esquema"
+      ],
+      "properties": {
+        "aegis": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "equivalencia": {
+          "enum": [
+            "exacta",
+            "parcial",
+            "sin_equivalente"
+          ]
+        },
+        "nota": {
+          "type": "string"
+        },
+        "clase_esquema": {
+          "enum": [
+            "multirrotor_pequeno",
+            "ala_fija",
+            "ataque_largo_alcance",
+            null
+          ]
+        }
+      },
+      "if": {
+        "properties": {
+          "equivalencia": {
+            "const": "sin_equivalente"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "aegis": {
+            "maxItems": 0
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "aegis": {
+            "minItems": 1
+          }
+        }
+      }
+    }
+  },
+  "properties": {
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "descripcion": {
+      "type": "string"
+    },
+    "aegis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repositorio",
+        "commit",
+        "emplazamientos",
+        "clases_dron"
+      ],
+      "properties": {
+        "repositorio": {
+          "type": "string"
+        },
+        "commit": {
+          "type": "string"
+        },
+        "emplazamientos": {
+          "$ref": "#/$defs/origen"
+        },
+        "clases_dron": {
+          "$ref": "#/$defs/origen"
+        }
+      }
+    },
+    "categorias_objetivo": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/entrada"
+      }
+    },
+    "clases_dron": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/entrada"
+      }
+    },
+    "clases_deduccion": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[a-z0-9_]+$"
+      },
+      "additionalProperties": {
+        "allOf": [
+          {
+            "$ref": "#/$defs/entrada_clase_deduccion"
+          }
+        ]
+      }
+    },
+    "origenes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "medido",
+        "oficial",
+        "registro",
+        "oficial_citado",
+        "parte",
+        "prensa",
+        "deducido"
+      ],
+      "properties": {
+        "medido": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "rango",
+            "descripcion"
+          ],
+          "properties": {
+            "rango": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "descripcion": {
+              "type": "string"
+            }
+          }
+        },
+        "oficial": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "rango",
+            "descripcion"
+          ],
+          "properties": {
+            "rango": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "descripcion": {
+              "type": "string"
+            }
+          }
+        },
+        "registro": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "rango",
+            "descripcion"
+          ],
+          "properties": {
+            "rango": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "descripcion": {
+              "type": "string"
+            }
+          }
+        },
+        "oficial_citado": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "rango",
+            "descripcion"
+          ],
+          "properties": {
+            "rango": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "descripcion": {
+              "type": "string"
+            }
+          }
+        },
+        "parte": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "rango",
+            "descripcion"
+          ],
+          "properties": {
+            "rango": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "descripcion": {
+              "type": "string"
+            }
+          }
+        },
+        "prensa": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "rango",
+            "descripcion"
+          ],
+          "properties": {
+            "rango": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "descripcion": {
+              "type": "string"
+            }
+          }
+        },
+        "deducido": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "rango",
+            "descripcion"
+          ],
+          "properties": {
+            "rango": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "descripcion": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "metodos": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "parser",
+        "extractor",
+        "regla"
+      ],
+      "properties": {
+        "parser": {
+          "type": "string"
+        },
+        "extractor": {
+          "type": "string"
+        },
+        "regla": {
+          "type": "string"
+        }
+      }
+    },
+    "niveles_detalle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "properties": {
+        "A": {
+          "type": "string"
+        },
+        "B": {
+          "type": "string"
+        },
+        "C": {
+          "type": "string"
+        },
+        "D": {
+          "type": "string"
+        }
+      }
+    },
+    "metricas_estadistica": {
+      "description": "Qué cuenta cada métrica de las estadísticas oficiales (estadisticas_oficiales.jsonl).",
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "indicadores": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "tiene_cierre_medido",
+        "tiene_condiciones_medidas",
+        "tiene_respuesta_militar_observada",
+        "tiene_interferencia_gnss_medida",
+        "tiene_foco_termico",
+        "tiene_confirmacion_oficial_directa",
+        "fecha_del_suceso_verificada"
+      ],
+      "properties": {
+        "tiene_cierre_medido": {
+          "type": "string"
+        },
+        "tiene_condiciones_medidas": {
+          "type": "string"
+        },
+        "tiene_respuesta_militar_observada": {
+          "type": "string"
+        },
+        "tiene_interferencia_gnss_medida": {
+          "type": "string"
+        },
+        "tiene_foco_termico": {
+          "type": "string"
+        },
+        "tiene_confirmacion_oficial_directa": {
+          "type": "string"
+        },
+        "fecha_del_suceso_verificada": {
+          "type": "string"
+        }
+      }
+    },
+    "origenes_inicio": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "explicita",
+        "relativa",
+        "oficial",
+        "parte",
+        "publicacion"
+      ],
+      "properties": {
+        "explicita": {
+          "type": "string"
+        },
+        "relativa": {
+          "type": "string"
+        },
+        "oficial": {
+          "type": "string"
+        },
+        "parte": {
+          "type": "string"
+        },
+        "publicacion": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

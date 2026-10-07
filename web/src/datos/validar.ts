@@ -1,4 +1,4 @@
-// Validación de los datos contra el esquema 1.15.0 (campos públicos), escrita a mano para
+// Validación de los datos contra el esquema 1.16.0 (campos públicos), escrita a mano para
 // que no necesite generar código en el navegador. Se usa en el build, sobre los ficheros de
 // publicacion/, y en la web al cargar cada fichero: un fichero que no valida no se pinta.
 
@@ -309,11 +309,12 @@ const tipoDron = objeto(
       fuente: cadena(),
     }),
     publicado: objeto(
+      { compatible: lista(objeto({ grupo: enumerado(v.GRUPOS_DRON) }, { probabilidad }), 1) },
       {
-        compatible: lista(objeto({ grupo: enumerado(v.GRUPOS_DRON), probabilidad }), 1),
+        presentacion: enumerado(v.PRESENTACIONES_TIPO_DRON),
         otras: probabilidad,
+        casos_referencia: enteroNoNegativo,
       },
-      { casos_referencia: enteroNoNegativo },
     ),
     razones: lista(
       objeto(
@@ -578,28 +579,32 @@ const publicacionUcrania = objeto({ ataques: lista(ataque) }, { impactos: lista(
 const resumen = objeto({
   actualizado: cadena(v.PATRON_INSTANTE),
   incidentes: lista(
-    objeto({
-      id: cadena(v.PATRON_ID_INCIDENTE),
-      punto: nulable(objeto({ lon: longitud, lat: latitud, radio_km: radio })),
-      imprecisa: nulable(
-        objeto({ nivel: enumerado(v.NIVELES_UBICACION), region: nulable(cadena()) }),
-      ),
-      tipo: enumerado(v.TIPOS),
-      estado: enumerado(v.ESTADOS),
-      presencia: nulable(enumerado(v.PRESENCIAS)),
-      titulo,
-      dia: entero,
-      inicio: nulable(entero),
-      pais: cadena(v.PATRON_PAIS),
-      objetivo: nulable(cadena()),
-      episodio: nulable(cadena(v.PATRON_ID_EPISODIO)),
-      foco: enumerado([true, false]),
-      atribucion: nulable(
-        objeto({ tipo: nulable(enumerado(v.TIPOS_ACTOR)), pais: nulable(cadena(v.PATRON_PAIS)) }),
-      ),
-      zona: nulable(enumerado(v.ZONAS)),
-      dron: lista(cadena(/^(autoridad|deducido):[a-z_]+$/)),
-    }),
+    objeto(
+      {
+        id: cadena(v.PATRON_ID_INCIDENTE),
+        punto: nulable(objeto({ lon: longitud, lat: latitud, radio_km: radio })),
+        imprecisa: nulable(
+          objeto({ nivel: enumerado(v.NIVELES_UBICACION), region: nulable(cadena()) }),
+        ),
+        tipo: enumerado(v.TIPOS),
+        estado: enumerado(v.ESTADOS),
+        presencia: nulable(enumerado(v.PRESENCIAS)),
+        titulo,
+        dia: entero,
+        inicio: nulable(entero),
+        pais: cadena(v.PATRON_PAIS),
+        objetivo: nulable(cadena()),
+        episodio: nulable(cadena(v.PATRON_ID_EPISODIO)),
+        foco: enumerado([true, false]),
+        atribucion: nulable(
+          objeto({ tipo: nulable(enumerado(v.TIPOS_ACTOR)), pais: nulable(cadena(v.PATRON_PAIS)) }),
+        ),
+        zona: nulable(enumerado(v.ZONAS)),
+        dron: lista(cadena(/^(autoridad|deducido):[a-z_]+$/)),
+      },
+      // El modelo que nombra la autoridad, para el filtro.
+      { modeloDron: cadena() },
+    ),
   ),
   episodios: lista(
     objeto({
@@ -1110,7 +1115,7 @@ export function validarPrevision(valor: unknown): Resultado<Prevision> {
   return validar(prevision, valor);
 }
 
-// --- Rutas de los drones sobre Ucrania (esquema/rutas/1.0.0), del almacén público ---------------
+// --- Rutas de los drones sobre Ucrania (esquema/rutas/1.1.0), del almacén público ---------------
 
 const extremoRuta = objeto(
   { lat: latitud, lon: longitud, radio_km: numero(0, 10000) },
@@ -1126,9 +1131,10 @@ const tramoRuta = objeto(
     desde: extremoRuta,
     hasta: extremoRuta,
     precision_km: numero(0, 10000),
-    franja: lista(tupla([longitud, latitud]), 4),
   },
   {
+    // Solo en los ficheros de la versión 1.0.0, que la web ya no dibuja.
+    franja: lista(tupla([longitud, latitud]), 4),
     numero: objeto({ min: enteroNoNegativo, max: enteroNoNegativo }),
     kmh: numero(0, 5000),
     pista: cadena(),
@@ -1147,6 +1153,27 @@ const grupoRuta = objeto({
   divisiones: enteroNoNegativo,
   uniones: enteroNoNegativo,
 });
+const instanteRuta = nulable(cadena(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/));
+const coordenada = tupla([longitud, latitud]);
+const recorridoRuta = objeto(
+  {
+    grupo: numero(1, Number.MAX_SAFE_INTEGER, true),
+    tipo: enumerado(["ataque", "reaccion", "reconocimiento"] as const),
+    aparatos: nulable(enteroNoNegativo),
+    kmh: nulable(numero(0, 5000)),
+    inicio: instanteRuta,
+    fin: instanteRuta,
+    precision_km: objeto({ min: numero(0, 10000), max: numero(0, 10000) }),
+    longitud_km: numero(0, 100000),
+    trozos: numero(1, Number.MAX_SAFE_INTEGER, true),
+    division: enumerado([true, false]),
+    union: enumerado([true, false]),
+    lineas: lista(lista(coordenada, 2), 1),
+    franjas: lista(lista(coordenada, 4), 1),
+    flechas: lista(objeto({ lon: longitud, lat: latitud, rumbo: numero(0, 360) }), 1),
+  },
+  { confianza: cadena(), pistas: lista(cadena()) },
+);
 const nocheRutas = objeto(
   {
     version: cadena(/^rutas-publicacion-\d+\.\d+\.\d+$/),
@@ -1156,7 +1183,13 @@ const nocheRutas = objeto(
     tramos: lista(tramoRuta, 1),
     grupos: lista(grupoRuta),
   },
-  { atribucion: atribucionNeptun, incidentes: lista(cadena(v.PATRON_ID_INCIDENTE)) },
+  {
+    atribucion: atribucionNeptun,
+    incidentes: lista(cadena(v.PATRON_ID_INCIDENTE)),
+    // Desde la 1.1.0: los recorridos unidos por grupo (sin ellos la noche no se dibuja).
+    version_recorridos: cadena(/^recorridos-\d+\.\d+\.\d+$/),
+    recorridos: lista(recorridoRuta),
+  },
 );
 const indiceRutas = objeto({
   version: cadena(/^rutas-publicacion-\d+\.\d+\.\d+$/),
@@ -1170,14 +1203,17 @@ const indiceRutas = objeto({
   }),
   noches_con_mensajes: enteroNoNegativo,
   noches: lista(
-    objeto({
-      noche: cadena(/^\d{4}-\d{2}-\d{2}$/),
-      fuente: fuenteRuta,
-      ataques: lista(cadena()),
-      lanzados: nulable(enteroNoNegativo),
-      tramos: numero(1, Number.MAX_SAFE_INTEGER, true),
-      grupos: numero(1, Number.MAX_SAFE_INTEGER, true),
-    }),
+    objeto(
+      {
+        noche: cadena(/^\d{4}-\d{2}-\d{2}$/),
+        fuente: fuenteRuta,
+        ataques: lista(cadena()),
+        lanzados: nulable(enteroNoNegativo),
+        tramos: numero(1, Number.MAX_SAFE_INTEGER, true),
+        grupos: numero(1, Number.MAX_SAFE_INTEGER, true),
+      },
+      { recorridos: enteroNoNegativo },
+    ),
   ),
   atribucion_neptun: objeto({ texto: cadena(), enlace: cadena() }),
 });

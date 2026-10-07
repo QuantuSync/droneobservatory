@@ -26,10 +26,12 @@ registro = logging.getLogger(__name__)
 CURSOR = "tipo_dron"
 TOPE_S = 120
 MOTIVO_RETIRADA = {
-    "es": "El tipo deducido deja de publicarse: con los datos de ahora no hay base o su grupo "
-    "ya no pasa la comprobación con casos de respuesta conocida.",
-    "en": "The deduced type is no longer published: with current data there is no basis or "
-    "its group no longer passes the check against cases with a known answer.",
+    "es": "El tipo deducido deja de publicarse: con los datos de ahora no hay base, no hay "
+    "ninguna razón que enseñar o lo que distingue ya no pasa la comprobación con casos de "
+    "respuesta conocida.",
+    "en": "The deduced type is no longer published: with current data there is no basis, no "
+    "reason to show or what it distinguishes no longer passes the check against cases with a "
+    "known answer.",
 }
 
 

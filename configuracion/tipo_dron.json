@@ -1,5 +1,5 @@
 {
-  "version": "tipo-dron-1.0.0",
+  "version": "tipo-dron-1.1.0",
   "descripcion": "Clase probable del dron de cada incidente (proceso/tipo_dron). Los grupos son las clases que ve el usuario; cada uno junta clases del catálogo (configuracion/catalogo_drones.json). Las verosimilitudes de los rasgos y los factores de las restricciones físicas se fijan aquí de antemano a partir de lo que dice el catálogo de cada clase (forma, propulsión, tamaño, alcance, autonomía, techo, velocidad), no se ajustan con los casos de respuesta conocida: con ellos solo se estima la frecuencia de partida de cada grupo según la zona (frontera o interior), siempre sin el caso que se comprueba.",
   "grupos": [
     {
@@ -199,6 +199,19 @@
     "minimo_casos_por_grupo": 5,
     "error_calibracion_maximo": 0.1,
     "probabilidad_minima_mostrada": 0.1,
+    "distincion": {
+      "descripcion": "Cuándo se enseñan porcentajes por grupo: el grupo más probable dobla al segundo (razon_minima) y, en los casos de respuesta conocida en que el método dijo ese grupo con esa ventaja, hay al menos minimo_casos y acertó en acierto_minimo o más. Si no, no se enseñan porcentajes.",
+      "razon_minima": 2.0,
+      "minimo_casos": 5,
+      "acierto_minimo": 0.8
+    },
+    "familia_guerra": {
+      "descripcion": "Cuándo se dice «compatible con un dron de largo alcance de la guerra (de ataque o señuelo)»: los dos grupos juntos doblan al resto (razon_minima) y, en los casos de respuesta conocida en que el método lo dijo así, hay al menos minimo_casos y la respuesta era uno de los dos en acierto_minimo o más.",
+      "grupos": ["largo_alcance_helice", "senuelo"],
+      "razon_minima": 2.0,
+      "minimo_casos": 5,
+      "acierto_minimo": 0.8
+    },
     "mejora_minima_log": 0.05,
     "remuestreos": 1000,
     "semilla": 20261006

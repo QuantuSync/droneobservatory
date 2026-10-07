@@ -1,6 +1,7 @@
 // Textos del tipo de dron (es y en): la fila de la ficha, el filtro y las razones de lo
-// deducido. Lo deducido se dice siempre como «compatible con» y con su probabilidad; el modelo
-// solo sale cuando lo nombra la autoridad.
+// deducido. Lo deducido se dice siempre como «compatible con»: con porcentajes solo si un grupo
+// destaca de verdad; si no, «compatible con un dron de largo alcance de la guerra». El modelo solo
+// sale cuando lo nombra la autoridad.
 
 import type { RazonTipoDron } from "../datos/tipos.ts";
 import type { TextosTipoDron } from "./tipos.ts";
@@ -43,6 +44,9 @@ const RASGOS_EN: Record<string, string> = {
 function razonEs(r: RazonTipoDron): string {
   const d = r.datos ?? {};
   if (r.tipo === "rasgo") return `${RASGOS_ES[r.clave] ?? r.clave}${cita(r, "es")}`;
+  if (r.clave === "entrada_exterior") {
+    return `Entró desde fuera, a ${redondo(d.distancia_km ?? 0, "es")} km de Ucrania, Rusia o Bielorrusia: dentro del alcance de los drones de largo alcance que se lanzan en la guerra`;
+  }
   if (r.clave === "distancia") {
     const lejos = d.mas_de_600_km
       ? "a más de 600 km de Ucrania, Rusia y Bielorrusia"
@@ -68,6 +72,9 @@ function razonEs(r: RazonTipoDron): string {
 function razonEn(r: RazonTipoDron): string {
   const d = r.datos ?? {};
   if (r.tipo === "rasgo") return `${RASGOS_EN[r.clave] ?? r.clave}${cita(r, "en")}`;
+  if (r.clave === "entrada_exterior") {
+    return `It entered from outside, ${redondo(d.distancia_km ?? 0, "en")} km from Ukraine, Russia or Belarus: within the range of the long-range drones launched in the war`;
+  }
   if (r.clave === "distancia") {
     const lejos = d.mas_de_600_km
       ? "more than 600 km from Ukraine, Russia and Belarus"
@@ -105,6 +112,7 @@ export const tipoDronEs: TextosTipoDron = {
   identificado: (modelo) => `${modelo}, según la autoridad`,
   grupoDe: (grupo) => `Clase: ${grupo.toLowerCase()}`,
   compatibleCon: "Compatible con",
+  compatibleGuerra: "Compatible con un dron de largo alcance de la guerra (de ataque o señuelo)",
   probabilidad: (p) => `${Math.round(p / 10)} de cada 10 (${p} %)`,
   otras: (p) => `Otras clases: ${p} %`,
   deducido: "Deducido por el observatorio a partir de lo publicado; ninguna autoridad ha dicho qué dron era.",
@@ -114,7 +122,8 @@ export const tipoDronEs: TextosTipoDron = {
   zonas: { frontera: "de frontera", interior: "del interior" },
   razon: razonEs,
   filtroAutoridad: "Identificado por la autoridad",
-  filtroDeducido: "Deducido (compatible con)",
+  filtroDeducido: "Deducido por el observatorio",
+  filtroGuerra: "Compatible con dron de largo alcance de la guerra",
 };
 
 export const tipoDronEn: TextosTipoDron = {
@@ -132,6 +141,7 @@ export const tipoDronEn: TextosTipoDron = {
   identificado: (modelo) => `${modelo}, according to the authority`,
   grupoDe: (grupo) => `Class: ${grupo.toLowerCase()}`,
   compatibleCon: "Compatible with",
+  compatibleGuerra: "Compatible with a long-range drone of the war (attack or decoy)",
   probabilidad: (p) => `${Math.round(p / 10)} in 10 (${p}%)`,
   otras: (p) => `Other classes: ${p}%`,
   deducido: "Deduced by the observatory from what has been published; no authority has said which drone it was.",
@@ -141,5 +151,6 @@ export const tipoDronEn: TextosTipoDron = {
   zonas: { frontera: "border", interior: "inland" },
   razon: razonEn,
   filtroAutoridad: "Identified by the authority",
-  filtroDeducido: "Deduced (compatible with)",
+  filtroDeducido: "Deduced by the observatory",
+  filtroGuerra: "Compatible with a long-range drone of the war",
 };

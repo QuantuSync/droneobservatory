@@ -24,7 +24,7 @@ en [droneobservatory.eu](https://droneobservatory.eu), en español e inglés.
 
 | Carpeta | Contenido |
 | --- | --- |
-| `esquema/` | JSON Schema versionados (1.15.0; `esquema/exportacion/` para la exportación semanal), con marca de visibilidad por campo |
+| `esquema/` | JSON Schema versionados (1.16.0; `esquema/exportacion/` para la exportación semanal), con marca de visibilidad por campo |
 | `configuracion/` | Fuentes con su fiabilidad, vocabularios de modelos de dron y de regiones, nomenclátor de lugares europeos, cajas de coordenadas de los países, vocabulario de noticias, medios europeos de GDELT y la lista de referencia de 2025 |
 | `proceso/` | Validaciones, máquina de estados, regla de credibilidad, ataques, tramos solapados, noticias (filtro, réplicas y agrupación), extracción, validación de fichas, incidentes, fusión y episodios; y el motor de deducción por descarte físico (`proceso/deduccion/`, catálogo de prestaciones en `configuracion/catalogo_drones.json`, [`docs/informe_deduccion.md`](docs/informe_deduccion.md)) |
 | `modelo/` | Extractor: cliente HTTP del servicio (configurado por secretos), ficha con salida obligada por esquema, coste y límites, lectura de las primeras frases |

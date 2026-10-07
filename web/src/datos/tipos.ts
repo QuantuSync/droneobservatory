@@ -1,4 +1,4 @@
-// Forma de los ficheros públicos de publicacion/ (esquema 1.15.0, solo campos públicos)
+// Forma de los ficheros públicos de publicacion/ (esquema 1.16.0, solo campos públicos)
 // y de los resúmenes que la web deriva de ellos en el build.
 
 import type { Recorrido } from "./rutas.ts";
@@ -104,6 +104,7 @@ export type GrupoDron =
   | "senuelo"
   | "reaccion";
 export type OrigenTipoDron = "autoridad" | "deducido";
+export type PresentacionTipoDron = "probabilidades" | "compatible_guerra";
 
 /** Una razón que ha pesado en la clase deducida: un rasgo descrito con su cita, una
  * restricción física (distancia, velocidad, altura, duración) o una regla del motor. */
@@ -130,8 +131,13 @@ export interface TipoDron {
   version: string;
   identificado?: { modelo: string; grupo: GrupoDron; cita: string; fuente: string };
   publicado?: {
-    compatible: { grupo: GrupoDron; probabilidad: number }[];
-    otras: number;
+    /**
+     * Cómo se enseña: «probabilidades» (un grupo destaca y esa ventaja pasó la comprobación) o
+     * «compatible_guerra» (una sola frase, sin porcentajes: los grupos van sin probabilidad).
+     */
+    presentacion?: PresentacionTipoDron;
+    compatible: { grupo: GrupoDron; probabilidad?: number }[];
+    otras?: number;
     casos_referencia?: number;
   };
   razones?: RazonTipoDron[];
@@ -486,10 +492,13 @@ export interface IncidenteResumen {
   /** Frontera o interior; null en datos publicados antes de que existiera. */
   zona: Zona | null;
   /**
-   * Tipo de dron para el filtro: «autoridad:<grupo>» si la autoridad lo identificó, o
-   * «deducido:<grupo>» por cada grupo compatible publicado; vacío si no hay base.
+   * Tipo de dron para el filtro: «autoridad:<grupo>» si la autoridad lo identificó,
+   * «deducido:guerra» si es compatible con un dron de largo alcance de la guerra o
+   * «deducido:<grupo>» si un grupo destaca; vacío si no hay base.
    */
   dron: string[];
+  /** Modelo que nombra la autoridad, para el filtro («Gerbera»). */
+  modeloDron?: string;
 }
 
 export interface EpisodioResumen {

@@ -18,6 +18,7 @@ import { PREFIJO_ICONO_ATRIBUIDO, SUFIJO_PERSONA } from "../banderas.ts";
 import {
   ESCALA_ATRIBUIDO_ELEGIDO,
   ETIQUETA_AVISO,
+  ICONO_FLECHA_RUTA,
   ICONO_OBSTACULO,
   LADO_OBSTACULO,
   RADIO_INCIDENTE,
@@ -53,6 +54,8 @@ export const FUENTE_REALCE_PUNTO = "guerra-realce-punto";
 export const FUENTE_LUZ_CIUDADES = "guerra-luz-ciudades";
 export const FUENTE_ALUMBRADO = "guerra-alumbrado";
 export const FUENTE_RUTAS = "guerra-rutas";
+export const FUENTE_RUTAS_FRANJAS = "guerra-rutas-franjas";
+export const FUENTE_RUTAS_FLECHAS = "guerra-rutas-flechas";
 export const FUENTE_RECORRIDO = "recorrido";
 
 export const CAPA_GRUPOS = "grupos";
@@ -84,9 +87,13 @@ export const CAPA_CORREDORES = "guerra-corredores";
 /** Zona sensible de los arcos: la misma geometría, ancha e invisible. */
 export const CAPA_CORREDORES_ZONA = "guerra-corredores-zona";
 export const CAPA_REALCE_ARCO = "guerra-realce-arco";
-/** Rutas de los drones sobre Ucrania: franjas semitransparentes con un borde fino. */
+/** Rutas de los drones sobre Ucrania: el halo de incertidumbre de cada recorrido (se puede
+ * pulsar), su línea (tenue en el origen, marcada hacia el final), la zona sensible de la línea y
+ * la punta de flecha. */
 export const CAPA_RUTAS = "guerra-rutas";
 export const CAPA_RUTAS_LINEA = "guerra-rutas-linea";
+export const CAPA_RUTAS_ZONA = "guerra-rutas-zona";
+export const CAPA_RUTAS_FLECHA = "guerra-rutas-flecha";
 /** Recorrido de una incursión según la autoridad, con la ficha del incidente abierta. */
 export const CAPA_RECORRIDO = "recorrido";
 export const CAPA_RECORRIDO_LINEA = "recorrido-linea";
@@ -122,6 +129,7 @@ export const CAPAS_PULSABLES: readonly string[] = [
   CAPA_REGIONES_RUSIA,
   CAPA_GNSS,
   CAPA_PRESION,
+  CAPA_RUTAS_ZONA,
   CAPA_RUTAS,
 ];
 
@@ -219,6 +227,7 @@ export const CAPAS_DE_PUNTOS_AL_TOQUE: readonly string[] = CAPAS_DE_PUNTOS_DE_GU
 );
 /** Áreas: solo reciben el clic si no hay ninguna marca ni ningún arco. */
 export const CAPAS_DE_AREAS: readonly string[] = [
+  CAPA_RUTAS_ZONA,
   CAPA_RUTAS,
   CAPA_REGIONES,
   CAPA_REGIONES_RUSIA,
@@ -238,8 +247,26 @@ const COLOR_CORREDOR = PALETA.guerra;
 export const OPACIDAD_CORREDOR: ExpressionSpecification = ["get", "opacidad"];
 /** Opacidad de los demás arcos mientras uno está realzado. */
 export const OPACIDAD_CORREDOR_ATENUADO: ExpressionSpecification = ["*", ["get", "opacidad"], 0.4];
-/** Opacidad de cada franja de ruta: con muchas superpuestas el violeta se acumula sin tapar. */
-export const OPACIDAD_RUTA = 0.07;
+/** Rutas: violeta claro, para que destaquen sobre las regiones y los corredores (violeta). */
+const COLOR_RUTA = PALETA.guerraClaro;
+/** Halo de incertidumbre: muy suave de lejos, para que se lea el mapa de debajo, y algo más al
+ * acercar, cuando se ve su anchura. */
+export const OPACIDAD_HALO_RUTA: ExpressionSpecification = ["interpolate", ["linear"], ["zoom"], 4, 0.05, 7, 0.11];
+/** La línea de cada recorrido, de su principio (casi transparente) a su final (opaca). */
+const GRADIENTE_RUTA: ExpressionSpecification = [
+  "interpolate", ["linear"], ["line-progress"],
+  0, "rgba(203, 188, 255, 0.08)",
+  0.35, "rgba(203, 188, 255, 0.45)",
+  1, "rgba(203, 188, 255, 1)",
+];
+/** Grosor de la línea: el de su grupo, algo más fino de lejos y más grueso de cerca. */
+const GROSOR_RUTA: ExpressionSpecification = [
+  "interpolate", ["linear"], ["zoom"],
+  4, ["*", ["get", "ancho"], 0.75],
+  8, ["*", ["get", "ancho"], 1.25],
+];
+/** Zona sensible de las líneas de ruta, en píxeles. */
+export const ZONA_RUTA_PX = 16;
 /** Radio del aro de realce de un punto de la capa de guerra. */
 export const RADIO_REALCE_PUNTO = 9;
 
@@ -629,19 +656,48 @@ function capasPropias(acento: string): LayerSpecification[] {
       filter: ["in", ["get", "iso"], ["literal", []]],
       paint: { "line-color": acento, "line-width": 1.2 },
     },
-    // Rutas: franjas violetas muy transparentes, por debajo de los corredores (que se leen
-    // encima) y de los impactos.
+    // Rutas: el halo de incertidumbre, la línea de cada recorrido con su degradado del origen al
+    // final y la punta de flecha. Los grupos menores debajo y los mayores encima. Por debajo de
+    // los corredores y de los impactos (que se atenúan mientras se ven las rutas).
     {
       id: CAPA_RUTAS,
       type: "fill",
-      source: FUENTE_RUTAS,
-      paint: { "fill-color": PALETA.guerra, "fill-opacity": OPACIDAD_RUTA },
+      source: FUENTE_RUTAS_FRANJAS,
+      layout: { "fill-sort-key": ["get", "orden"] },
+      paint: { "fill-color": COLOR_RUTA, "fill-opacity": OPACIDAD_HALO_RUTA },
     },
     {
       id: CAPA_RUTAS_LINEA,
       type: "line",
       source: FUENTE_RUTAS,
-      paint: { "line-color": PALETA.guerraClaro, "line-opacity": 0.35, "line-width": 0.5 },
+      layout: { "line-cap": "round", "line-join": "round", "line-sort-key": ["get", "orden"] },
+      paint: {
+        "line-gradient": GRADIENTE_RUTA,
+        "line-opacity": ["get", "opacidad"],
+        "line-width": GROSOR_RUTA,
+      },
+    },
+    {
+      id: CAPA_RUTAS_ZONA,
+      type: "line",
+      source: FUENTE_RUTAS,
+      layout: { "line-cap": "round", "line-join": "round" },
+      paint: { "line-color": COLOR_RUTA, "line-opacity": 0, "line-width": ZONA_RUTA_PX },
+    },
+    {
+      id: CAPA_RUTAS_FLECHA,
+      type: "symbol",
+      source: FUENTE_RUTAS_FLECHAS,
+      layout: {
+        "icon-image": ICONO_FLECHA_RUTA,
+        "icon-rotate": ["get", "rumbo"],
+        "icon-rotation-alignment": "map",
+        "icon-allow-overlap": true,
+        "icon-ignore-placement": true,
+        "icon-size": ["interpolate", ["linear"], ["get", "ancho"], 1, 0.7, 4, 1.15],
+        "symbol-sort-key": ["get", "orden"],
+      },
+      paint: { "icon-opacity": ["get", "opacidad"] },
     },
     // Recorrido de una incursión según la autoridad (con su ficha abierta).
     {
@@ -1220,7 +1276,9 @@ export function estilo(idioma: Idioma, origen: string, acento: string): StyleSpe
       [FUENTE_SATELITE]: { type: "geojson", data: VACIA },
       [FUENTE_REALCE_PUNTO]: { type: "geojson", data: VACIA },
       [FUENTE_ALUMBRADO]: { type: "geojson", data: VACIA },
-      [FUENTE_RUTAS]: { type: "geojson", data: VACIA },
+      [FUENTE_RUTAS]: { type: "geojson", data: VACIA, lineMetrics: true },
+      [FUENTE_RUTAS_FRANJAS]: { type: "geojson", data: VACIA },
+      [FUENTE_RUTAS_FLECHAS]: { type: "geojson", data: VACIA },
       [FUENTE_RECORRIDO]: { type: "geojson", data: VACIA },
       [FUENTE_IMPACTOS]: {
         type: "geojson",

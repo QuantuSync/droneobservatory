@@ -210,6 +210,7 @@ def resumen(evaluados: list[Evaluado], solo_con_base: bool = True) -> dict[str, 
             "error_calibracion": round(error, 3),
             "publica": publica,
         }
+    publicados = sorted(g for g, d in grupos.items() if d["publica"])
     procedencias = Counter(e.caso.fuente_respuesta for e in lista)
     pares = list(zip(lista, metodo, referencia, strict=True))
     por_procedencia = {
@@ -230,12 +231,69 @@ def resumen(evaluados: list[Evaluado], solo_con_base: bool = True) -> dict[str, 
         "mejora_log_p10": round(p10, 4) if not math.isnan(p10) else None,
         "pasa": pasa,
         "grupos": grupos,
-        "grupos_publicados": sorted(g for g, d in grupos.items() if d["publica"]),
+        "grupos_publicados": publicados,
+        "distincion": distincion(lista, publicados),
+        "familia_guerra": familia_guerra(lista),
         "por_procedencia": por_procedencia,
         "calibracion": _calibracion([(m["p_primero"], m["acierto"]) for m in metodo]),
         "calibracion_referencia": _calibracion(
             [(r["p_primero"], r["acierto"]) for r in referencia]
         ),
+    }
+
+
+def ventaja(probabilidades: dict[str, float]) -> tuple[str, float]:
+    """El grupo más probable y cuántas veces la probabilidad del segundo."""
+    orden = sorted(probabilidades.items(), key=lambda x: (-x[1], x[0]))
+    segundo = orden[1][1] if len(orden) > 1 else 0.0
+    return orden[0][0], orden[0][1] / max(segundo, EPSILON)
+
+
+def ventaja_familia(probabilidades: dict[str, float], familia: Sequence[str]) -> float:
+    """Cuántas veces la probabilidad de los grupos de la familia juntos la del resto."""
+    dentro = sum(probabilidades.get(g, 0.0) for g in familia)
+    return dentro / max(1.0 - dentro, EPSILON)
+
+
+def _pasa(casos: int, aciertos: int, conf: dict[str, Any]) -> bool:
+    return casos >= int(conf["minimo_casos"]) and aciertos / casos >= float(conf["acierto_minimo"])
+
+
+def distincion(evaluados: Sequence[Evaluado], publicados: Sequence[str]) -> dict[str, Any]:
+    """Por grupo publicado: en los casos de respuesta conocida en que el método dijo ese grupo
+    con la ventaja mínima sobre el segundo (configuracion/tipo_dron.json, doblarlo), cuántos hay
+    y cuántos acertó. Solo un grupo que pasa enseña porcentajes."""
+    conf = modelo.configuracion()["publicar"]["distincion"]
+    salida: dict[str, Any] = {}
+    for g in publicados:
+        dichos = [
+            e
+            for e in evaluados
+            if ventaja(e.metodo)[0] == g and ventaja(e.metodo)[1] >= float(conf["razon_minima"])
+        ]
+        aciertos = sum(1 for e in dichos if g in e.caso.grupos)
+        salida[g] = {
+            "casos": len(dichos),
+            "aciertos": aciertos,
+            "pasa": _pasa(len(dichos), aciertos, conf),
+        }
+    return salida
+
+
+def familia_guerra(evaluados: Sequence[Evaluado]) -> dict[str, Any]:
+    """En los casos de respuesta conocida en que los drones de largo alcance de la guerra (de
+    ataque o señuelo) juntos doblaban al resto, cuántos hay y en cuántos era uno de ellos."""
+    conf = modelo.configuracion()["publicar"]["familia_guerra"]
+    familia = list(conf["grupos"])
+    dichos = [
+        e for e in evaluados if ventaja_familia(e.metodo, familia) >= float(conf["razon_minima"])
+    ]
+    aciertos = sum(1 for e in dichos if e.caso.grupos & set(familia))
+    return {
+        "grupos": familia,
+        "casos": len(dichos),
+        "aciertos": aciertos,
+        "pasa": _pasa(len(dichos), aciertos, conf),
     }
 
 
