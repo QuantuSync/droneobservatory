@@ -169,7 +169,7 @@
    69.04
   ]
  },
- "calculado": "2026-10-07T16:17Z",
+ "calculado": "2026-10-07T17:17Z",
  "cambios": {
   "ambitos": [
    {
@@ -889,6 +889,24 @@
    "objetivo": "2026-10-07",
    "pais": "RO",
    "probabilidad": 0.4,
+   "tipo": "frontera"
+  },
+  {
+   "emitida": "2026-10-07T17:17Z",
+   "id": "frontera:MD:2026-10-08",
+   "metodo": "frontera-1.0.0",
+   "objetivo": "2026-10-08",
+   "pais": "MD",
+   "probabilidad": 0.36,
+   "tipo": "frontera"
+  },
+  {
+   "emitida": "2026-10-07T17:17Z",
+   "id": "frontera:RO:2026-10-08",
+   "metodo": "frontera-1.0.0",
+   "objetivo": "2026-10-08",
+   "pais": "RO",
+   "probabilidad": 0.407,
    "tipo": "frontera"
   }
  ],
