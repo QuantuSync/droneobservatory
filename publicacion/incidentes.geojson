@@ -191581,6 +191581,21 @@
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
+       "valor": "2026-10-07T07:45Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-a89f0d2894c4c845",
+      "medio": "kclr96fm.com",
+      "valor": {
+       "max": 1,
+       "min": 1
+      }
+     },
+     {
+      "campo": "drones.numero",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
        "valor": "2026-10-07T10:15Z"
       },
       "fiabilidad": "C",
@@ -191608,6 +191623,18 @@
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
+       "valor": "2026-10-07T07:45Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-a89f0d2894c4c845",
+      "medio": "kclr96fm.com",
+      "valor": "Portlaoise"
+     },
+     {
+      "campo": "lugar.localidad",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
        "valor": "2026-10-07T10:15Z"
       },
       "fiabilidad": "C",
@@ -191632,6 +191659,18 @@
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
+       "valor": "2026-10-07T07:45Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-a89f0d2894c4c845",
+      "medio": "kclr96fm.com",
+      "valor": "IE"
+     },
+     {
+      "campo": "lugar.pais",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
        "valor": "2026-10-07T10:15Z"
       },
       "fiabilidad": "C",
@@ -191644,12 +191683,36 @@
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
+       "valor": "2026-10-07T07:45Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-a89f0d2894c4c845",
+      "medio": "kclr96fm.com",
+      "valor": "otra"
+     },
+     {
+      "campo": "objetivo.categoria",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
        "valor": "2026-10-07T10:15Z"
       },
       "fiabilidad": "C",
       "fuente_id": "gdelt-85349c98dbda9642",
       "medio": "irishmirror.ie",
       "valor": "otra"
+     },
+     {
+      "campo": "objetivo.nombre",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-07T07:45Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-a89f0d2894c4c845",
+      "medio": "kclr96fm.com",
+      "valor": "Portlaoise Prison"
      },
      {
       "campo": "objetivo.nombre",
@@ -191736,6 +191799,18 @@
       "credibilidad": 3,
       "fecha": {
        "precision": "aproximada",
+       "valor": "2026-10-07T07:45Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-a89f0d2894c4c845",
+      "medio": "kclr96fm.com",
+      "valor": "sobrevuelo"
+     },
+     {
+      "campo": "tipo",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
        "valor": "2026-10-07T10:15Z"
       },
       "fiabilidad": "C",
@@ -191752,7 +191827,7 @@
     "control": {
      "ultima_actualizacion": {
       "precision": "minuto",
-      "valor": "2026-10-07T11:17Z"
+      "valor": "2026-10-07T13:17Z"
      }
     },
     "drones": {
@@ -191819,6 +191894,20 @@
      },
      {
       "credibilidad": 3,
+      "enlace": "https://kclr96fm.com/two-men-arrested-after-drone-carrying-suspected-drugs-and-devices-intercepted-close-to-portlaoise-prison",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-07T07:45Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "A drone was intercepted close to Portlaoise Prison yesterday.",
+      "id": "gdelt-a89f0d2894c4c845",
+      "idioma": "en",
+      "medio": "kclr96fm.com",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
       "enlace": "https://irishmirror.ie/news/irish-news/man-due-court-following-drone-37743362",
       "fecha": {
        "precision": "aproximada",
@@ -191829,6 +191918,20 @@
       "id": "gdelt-85349c98dbda9642",
       "idioma": "en",
       "medio": "irishmirror.ie",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://laois-nationalist.ie/news/man-to-appear-in-court-after-garda%C3%AD-seize-drone-suspected-drugs-and-mobile-phones-near-portlaoise-p_arid-20330776.html",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-07T13:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "yesterday afternoon, Tuesday 6 October 2026",
+      "id": "gdelt-0c1f9aec79483dea",
+      "idioma": "en",
+      "medio": "laois-nationalist.ie",
       "replicas": 0
      }
     ],
@@ -192164,6 +192267,7 @@
   "EODI-2026-00426": "EODI-2026-00293",
   "EODI-2026-00427": "EODI-2026-00372",
   "EODI-2026-00428": "EODI-2026-00116",
-  "EODI-2026-00493": "EODI-2026-00490"
+  "EODI-2026-00493": "EODI-2026-00490",
+  "EODI-2026-00494": "EODI-2026-00490"
  }
 }
