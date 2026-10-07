@@ -169,7 +169,7 @@
    69.04
   ]
  },
- "calculado": "2026-10-07T05:17Z",
+ "calculado": "2026-10-07T06:17Z",
  "cambios": {
   "ambitos": [
    {
@@ -310,21 +310,21 @@
       }
      ]
     },
-    "de_cada_10": 3,
+    "de_cada_10": 4,
     "efectos": {
      "incidentes_siete_dias": "sube",
-     "lanzados_tres_noches": "baja",
+     "lanzados_tres_noches": "nada",
      "noches_desde_crimea": "sube"
     },
     "factores": {
      "incidentes_siete_dias": 3.0,
-     "lanzados_anoche": 0.0,
-     "lanzados_tres_noches": 114.0,
-     "noches_desde_crimea": 6.0
+     "lanzados_anoche": 130.0,
+     "lanzados_tres_noches": 157.3,
+     "noches_desde_crimea": 7.0
     },
     "frecuencia_de_siempre": 0.092,
     "pais": "RO",
-    "probabilidad": 0.319,
+    "probabilidad": 0.407,
     "ultimas": [
      {
       "con_dron": false,
@@ -529,13 +529,13 @@
     },
     "factores": {
      "incidentes_siete_dias": 2.0,
-     "lanzados_anoche": 0.0,
-     "lanzados_tres_noches": 114.0,
-     "noches_desde_crimea": 6.0
+     "lanzados_anoche": 130.0,
+     "lanzados_tres_noches": 157.3,
+     "noches_desde_crimea": 7.0
     },
     "frecuencia_de_siempre": 0.057,
     "pais": "MD",
-    "probabilidad": 0.179,
+    "probabilidad": 0.194,
     "ultimas": [
      {
       "con_dron": false,
