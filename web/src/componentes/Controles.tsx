@@ -16,6 +16,8 @@ export interface Capas {
   corredores: boolean;
   /** «Con satélite»: cortinillas con cambio, focos confirmados, apagones y ciudades a oscuras. */
   satelite: boolean;
+  /** Rutas de los drones: franjas por noche, que se descargan al encenderla. */
+  rutas: boolean;
 }
 
 export const CAPAS_INICIALES: Capas = {
@@ -26,6 +28,7 @@ export const CAPAS_INICIALES: Capas = {
   gnss: false,
   corredores: false,
   satelite: false,
+  rutas: false,
 };
 
 const ORDEN: readonly ("incidentes" | "ucrania" | "densidad" | "presion" | "gnss")[] = [
@@ -35,7 +38,7 @@ const ORDEN: readonly ("incidentes" | "ucrania" | "densidad" | "presion" | "gnss
   "presion",
   "gnss",
 ];
-const ORDEN_GUERRA: readonly "corredores"[] = ["corredores"];
+const ORDEN_GUERRA: readonly ("corredores" | "rutas")[] = ["corredores", "rutas"];
 
 /**
  * Las capas en un solo control compacto; cada una se enciende y se apaga por separado. Con la
@@ -67,6 +70,7 @@ export function SelectorDeCapas({
   const rejilla = grande ? "grid grid-cols-3 gap-0.5" : "flex";
   const etiquetas: Record<(typeof ORDEN_GUERRA)[number], string> = {
     corredores: t.satelite.corredores,
+    rutas: t.rutas.subcapa,
   };
   return (
     <div className={`flex gap-1 ${grande ? "flex-col" : "items-center"}`}>
@@ -93,7 +97,7 @@ export function SelectorDeCapas({
           <div
             role="group"
             aria-label={t.satelite.capas}
-            className="grid grid-cols-2 gap-0.5 rounded-sm border border-linea p-0.5"
+            className="grid grid-cols-3 gap-0.5 rounded-sm border border-linea p-0.5"
             data-capas-guerra=""
           >
             {ORDEN_GUERRA.map((capa) => (

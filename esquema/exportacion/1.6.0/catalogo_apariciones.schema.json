@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:eodi:exportacion:1.5.0:catalogo_apariciones",
+  "$id": "urn:eodi:exportacion:1.6.0:catalogo_apariciones",
   "title": "Modelos que nombran los datos propios",
   "description": "Qué modelos del catálogo nombran los incidentes en Europa, los partes de la capa de guerra y los encuentros de la UK Airprox Board, y con qué frecuencia: por país, por mes y por origen. Lo calcula el barrido del catálogo vivo con los datos de su fecha.",
   "type": "object",

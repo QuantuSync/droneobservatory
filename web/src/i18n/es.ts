@@ -1,3 +1,4 @@
+import { rutasEs } from "./rutas.ts";
 import { tipoDronEs } from "./tipoDron.ts";
 import { LICENCIA_DATOS, LICENCIA_DATOS_URL, NOMBRE, ORIGEN, REPOSITORIO } from "../sitio.ts";
 import { REGIONES_RUSIA_ES } from "./regionesRusia.ts";
@@ -25,6 +26,7 @@ function diaMesAnio(f: FechaEscrita): string {
 
 export const es: Textos = {
   tipoDron: tipoDronEs,
+  rutas: rutasEs,
   descripcion:
     "Mapa y registro abierto de incidentes con drones en Europa: sobrevuelos, incursiones e " +
     "interrupciones de aeropuertos, con sus fuentes, su estado y su grado de confirmación.",
@@ -1180,6 +1182,67 @@ export const es: Textos = {
                 "drones de esos ataques en el periodo elegido. En los ataques contra Rusia, cuyo " +
                 "parte da los derribos por región, el arco sale del punto de la frontera de " +
                 "Ucrania más cercano a cada región y su cifra son esos derribos.",
+            ],
+          },
+        ],
+      },
+      {
+        id: "rutas",
+        titulo: "Rutas de los drones sobre Ucrania",
+        bloques: [
+          {
+            parrafo: [
+              "La subcapa «Rutas» de la capa de Ucrania dibuja por dónde pasaron los drones de " +
+                "cada noche, como franjas semitransparentes con su anchura de incertidumbre, nunca " +
+                "como líneas exactas. Se publican cuando el ataque ha terminado: pasadas las 12:00 " +
+                "UTC del día siguiente y dos horas después del último aviso de la noche. Nunca en " +
+                "directo.",
+            ],
+          },
+          {
+            lista: [
+              {
+                termino: "Con NEPTUN",
+                texto: [
+                  "Desde el 4 de octubre de 2026 el observatorio guarda el flujo de ",
+                  { texto: "NEPTUN", enlace: "https://neptun.in.ua/" },
+                  ", que estima la posición, el rumbo, la velocidad y el número de cada amenaza a " +
+                    "partir de informes (no es un radar). Las noches con ese archivo casi completo " +
+                    "usan sus pistas, con el radio de incertidumbre que da NEPTUN y su enlace visible.",
+                ],
+              },
+              {
+                termino: "Con la Fuerza Aérea de Ucrania",
+                texto: [
+                  "Para el resto de noches, desde 2023, se reconstruye la ruta con los mensajes de " +
+                    "seguimiento de la Fuerza Aérea («БпЛА на півночі Сумщини, курс…»): cada " +
+                    "mensaje da una zona (una localidad, una parte de una región, una región o el " +
+                    "mar) y a veces un rumbo o un destino; dos mensajes se enlazan si el dron pudo " +
+                    "volar de una zona a la otra en ese tiempo y en esa dirección. Un grupo no se " +
+                    "identifica por el texto: puede dividirse, unirse o no saberse. Cada tramo " +
+                    "guarda de qué mensajes sale.",
+                ],
+              },
+              {
+                termino: "Comprobación",
+                texto: [
+                  "En las noches con NEPTUN, la ruta reconstruida solo con la Fuerza Aérea se " +
+                    "compara con las pistas de NEPTUN y con la línea recta de la zona de lanzamiento " +
+                    "a cada impacto de la noche. Las rutas reconstruidas se publican solo si quedan " +
+                    "claramente más cerca de NEPTUN que la línea recta (la mediana un 20 % menor o " +
+                    "más, y mejor en cada noche). La leyenda y la ficha de cada tramo dicen de qué " +
+                    "fuente sale y su precisión.",
+                ],
+              },
+              {
+                termino: "Incursiones",
+                texto: [
+                  "En los incidentes de Rumanía, Moldavia y Polonia en que la autoridad nombra los " +
+                    "lugares por los que pasó el dron, la ficha dibuja ese recorrido al abrirla, con " +
+                    "la frase de la que sale. Cuando una ruta de una noche acaba en un incidente " +
+                    "europeo de esa noche, la ficha del tramo lo enlaza.",
+                ],
+              },
             ],
           },
         ],

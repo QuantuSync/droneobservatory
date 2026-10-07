@@ -485,6 +485,13 @@ function incidente(d: IncidenteDetalle, idioma: Idioma): PaginaTexto {
         d.drones?.modelo !== undefined && e("span", { class: "texto-nota" }, t.ficha.modelo, ": ", d.drones.modelo),
       ),
       filaTipoDron(t, d),
+      d.recorrido !== undefined &&
+        filaDatos(
+          t.rutas.recorrido,
+          e("span", { "data-recorrido": "" }, d.recorrido.puntos.map((p) => (p.hora === undefined ? p.nombre : `${p.nombre} (${p.hora})`)).join(" → ")),
+          e("q", { class: "texto-nota" }, d.recorrido.cita),
+          e("span", { class: "texto-nota" }, t.rutas.recorridoNota),
+        ),
       d.tiempo.duracion_min !== undefined && filaDatos(t.ficha.duracion, t.ficha.minutos(numero(d.tiempo.duracion_min, idioma))),
       efectos.length > 0 && filaDatos(t.ficha.efecto, e("ul", null, efectos.map((x) => e("li", null, x)))),
       medidas.length > 0 && filaDatos(t.ficha.respuesta, medidas.map((m) => t.medida[m]).join(" · ")),
@@ -780,6 +787,7 @@ function guerra(datos: DatosPaginas, idioma: Idioma): PaginaTexto {
   const corredores = corredoresDelPeriodo(u, TODO).sort((a, b) => b.drones - a.drones || a.clave.localeCompare(b.clave));
   const ayuda = t.ayuda;
   const satelite = t.metodologia.secciones.find((s) => s.id === "satelite");
+  const seccionRutas = t.metodologia.secciones.find((s) => s.id === "rutas");
   const fuentesPartes = (["RU_UA", "UA_RU"] as const).map((s) => [s, u.fuentes[s]] as const);
   const cuerpo = html(
     e("h1", null, tp.ucrania.titulo),
@@ -880,6 +888,7 @@ function guerra(datos: DatosPaginas, idioma: Idioma): PaginaTexto {
       ),
     ),
     satelite !== undefined && html(e("h3", null, satelite.titulo), satelite.bloques.map(bloque)),
+    seccionRutas !== undefined && html(e("h3", null, seccionRutas.titulo), seccionRutas.bloques.map(bloque)),
     e("p", null, enlace(RUTAS.metodologia[idioma], tp.metodologia.titulo)),
   );
   return {

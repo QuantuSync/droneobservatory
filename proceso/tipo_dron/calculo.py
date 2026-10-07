@@ -22,6 +22,7 @@ from typing import Any
 
 from esquema import Documento
 from proceso.deduccion.catalogo import Catalogo
+from proceso.rutas import incursiones
 from proceso.tipo_dron import casos, comprobacion, identificacion, modelo, rasgos
 from proceso.tipo_dron.casos import Conocido
 
@@ -69,9 +70,28 @@ def documento_incidente(
     deduccion: Documento | None,
     conocidos: list[Conocido],
     grupos_publicados: Iterable[str],
+    velocidad_episodio: dict[str, Any] | None = None,
 ) -> Documento:
     lista = casos.frases_de(frases)
     entrada = casos.entrada_de_incidente(documento, lista, deduccion)
+    # Recorrido que da la autoridad (incursiones en Rumanía, Moldavia y Polonia) y velocidad
+    # necesaria entre avistamientos encadenados: una restricción más si decide algo.
+    recorrido = incursiones.recorrido(documento, frases)
+    velocidades = [velocidad_episodio] if velocidad_episodio else []
+    if recorrido is not None:
+        de_recorrido = incursiones.velocidad(recorrido["puntos"])
+        if de_recorrido is not None:
+            recorrido["velocidad"] = de_recorrido
+            velocidades.append({**de_recorrido, "fuente": recorrido["fuente"]})
+    for v in velocidades:
+        if v.get("decide") == "reaccion":
+            entrada.rasgos.append({
+                "rasgo": rasgos.VELOCIDAD,
+                "valor": {"kmh": float(v["min_kmh"])},
+                "cita": f"{v['distancia_km']} km en {v['minutos']} min",
+                "fuente": str(v.get("fuente") or v.get("desde") or v.get("hasta")),
+                "origen": "deducido",
+            })  # fmt: skip
     hallado = identificacion.identificado(lista)
     previa = [(k.entrada.zona, k.respuesta) for k in conocidos if k.id != documento["id"]]
     resultado = modelo.calcular(catalogo, entrada, previa)
@@ -85,6 +105,8 @@ def documento_incidente(
         "razones": [_razon(r) for r in resultado.razones],
         "con_base": base,
     }
+    if recorrido is not None:
+        salida["recorrido"] = recorrido
     # Solo se dice qué dron pudo ser cuando el dron está confirmado y el incidente no está
     # desmentido: de un «posible dron» que luego no lo era no se publica ninguna clase.
     confirmado = documento.get("presencia_dron") == "confirmada" and (
@@ -108,6 +130,7 @@ def calcular(
     catalogo: Catalogo,
     incidentes: list[tuple[Documento, list[tuple[str, str, str, str | None]], Documento | None]],
     encuentros: Iterable[Documento],
+    episodios: Iterable[Documento] = (),
 ) -> tuple[dict[str, Documento], dict[str, Any]]:
     """Documento de cada incidente y resumen de la comprobación."""
     de_base = casos.de_la_base(incidentes)
@@ -116,8 +139,16 @@ def calcular(
     resumen = comprobacion.resumen(evaluados)
     resumen["casos"] = comprobacion.tabla_de_casos(evaluados)
     publicados = resumen["grupos_publicados"] if resumen["pasa"] else []
+    por_id = {d["id"]: d for d, _, _ in incidentes}
+    velocidades: dict[str, Any] = {}
+    for episodio in episodios:
+        miembros = [por_id[i] for i in episodio.get("incidentes", []) if i in por_id]
+        for id_, v in incursiones.velocidades_de_episodio(miembros).items():
+            velocidades[id_] = {**v, "fuente": episodio["id"]}
     documentos = {
-        d["id"]: documento_incidente(catalogo, d, frases, deduccion, conocidos, publicados)
+        d["id"]: documento_incidente(
+            catalogo, d, frases, deduccion, conocidos, publicados, velocidades.get(d["id"])
+        )
         for d, frases, deduccion in incidentes
     }
     return documentos, resumen

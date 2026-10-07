@@ -670,6 +670,48 @@ sudo -u eodi bash /home/eodi/droneobservatory/servidor/seguimiento_archivo.sh pr
 Leer una hora: `zcat neptun-AAAA-MM-DDTHH.jsonl.gz | head`; cada línea lleva `recibido` y, en
 `crudo`, el mensaje tal como llegó.
 
+## Rutas de los drones sobre Ucrania
+
+Informe: [`informe_tipo_y_rutas.md`](informe_tipo_y_rutas.md). `eodi-rutas.timer` lanza
+`eodi-rutas.service` en el minuto 8 de cada hora (`Nice=15`, E/S en reposo, 1 GB como mucho,
+tope de 30 minutos), que ejecuta [`servidor/rutas.sh`](../servidor/rutas.sh) con su propio cerrojo
+(`rutas.lock`; nunca el de la recogida):
+
+1. `python -m recogida.rutas estructurar`: cada noche (de 12:00 a 12:00 UTC) del archivo del
+   seguimiento a `datos/rutas/noches/AAAA-MM-DD.json.gz`, con los avisos de los mensajes de la
+   Fuerza Aérea y las pistas de NEPTUN; solo las noches nuevas y las de los tres últimos días;
+2. `python -m recogida.rutas calcular`: la comprobación con NEPTUN (`datos/rutas/comprobacion.json`),
+   las noches terminadas que se publican (`datos/rutas/publicar/`) y las estadísticas de grupos
+   para la exportación semanal; sube al almacén público lo que cambia (`rutas/indice.json`,
+   caché de 5 minutos, y `rutas/noches/AAAA-MM-DD.json`, de una hora) y retira lo que deja de
+   publicarse.
+
+La recogida horaria deja cada hora los ataques de cada noche (zonas de lanzamiento, lanzados,
+impactos e incidentes de frontera) en `datos/rutas/ataques.json`, para que el cálculo no cargue la
+base. No toca la base ni el clon.
+
+**Histórico del canal.** Los mensajes de la Fuerza Aérea anteriores al 4 de octubre de 2026 están
+en `datos/seguimiento/kpszsu/historico/kpszsu-historico-AAAA-MM.jsonl.gz`, sacados de las páginas
+que ya estaban descargadas (sin volver a pedir nada), y en la copia privada
+(`droneobservatory-archivo`, mismo prefijo). Para añadir más páginas de la caché del servidor:
+
+```
+sudo -u eodi sh -c 'cd /home/eodi/droneobservatory && . /home/eodi/.eodi/almacen.env && \
+  export ALMACEN_ID ALMACEN_SECRETO EODI_SEGUIMIENTO_DATOS=/home/eodi/datos/seguimiento && \
+  .venv/bin/python -m recogida.rutas importar-historico --cache data/cache/kpszsu'
+```
+
+Un mes que ya está no se reescribe: lo que falta va a un fichero `.parteN`.
+
+Órdenes, como `operador`:
+
+```
+systemctl list-timers eodi-rutas.timer
+journalctl -u eodi-rutas.service -n 20
+sudo systemctl start eodi-rutas.service
+sudo -u eodi cat /home/eodi/datos/rutas/comprobacion.json | head -c 2000
+```
+
 ## Guerra por satélite
 
 Informe: [`informe_guerra_satelite.md`](informe_guerra_satelite.md). Tres servicios, cada uno con

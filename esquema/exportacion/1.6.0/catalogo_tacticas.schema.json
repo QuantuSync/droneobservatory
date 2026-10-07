@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:eodi:exportacion:1.5.0:catalogo_tacticas",
+  "$id": "urn:eodi:exportacion:1.6.0:catalogo_tacticas",
   "title": "Tácticas y maniobras observadas",
   "description": "Registro estructurado de tácticas con drones (alturas de vuelo, rutas, señuelos, enjambres, nodrizas, control por fibra óptica, vuelo a ras de suelo) que leen el barrido del catálogo vivo y los partes de la capa de guerra: tipo, modelos y países que nombra, primera y última vez, veces y hasta tres frases de ejemplo con su fuente. estado: admitida si alguna fuente es directa (autoridad, inteligencia, análisis) o la confirman dos sitios; candidata si solo la dice la prensa.",
   "type": "object",

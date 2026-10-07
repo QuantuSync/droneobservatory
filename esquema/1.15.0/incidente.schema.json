@@ -418,6 +418,7 @@
       "description": "Lo calcula la exportación semanal (regla en comun#/$defs/indicadores); la base no lo guarda.",
       "$ref": "urn:eodi:esquema:1.15.0:comun#/$defs/indicadores"
     },
+    "recorrido": {"x-visibilidad": "publico", "description": "Recorrido de la incursión según la autoridad. Lo añade la publicación desde la tabla tipos_dron.", "$ref": "urn:eodi:esquema:1.15.0:comun#/$defs/recorrido"},
     "tipo_dron": {"x-visibilidad": "publico", "description": "Tipo de dron: identificado por la autoridad o deducido con su probabilidad. Lo añade la publicación desde la tabla tipos_dron (en la web, solo lo identificado y lo publicado).", "$ref": "urn:eodi:esquema:1.15.0:comun#/$defs/tipo_dron"},
     "deduccion": {
       "x-visibilidad": "interno",

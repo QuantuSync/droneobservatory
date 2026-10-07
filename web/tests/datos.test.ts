@@ -416,6 +416,16 @@ describe("listas cerradas iguales a las del esquema", () => {
         por: "fuente",
       },
       zona: { grupo: "frontera", motivo: "ataque" },
+      recorrido: {
+        version: "recorridos-1.0.0",
+        fuente: "gdelt-0000000000000001",
+        cita: "din direcția localității Biliaivka spre localitatea Tudora",
+        puntos: [
+          { nombre: "Biliaivka", lat: 46.48, lon: 30.21, radio_km: 4, hora: "05:55" },
+          { nombre: "Tudora", lat: 46.44, lon: 30.04, radio_km: 4 },
+        ],
+        franja: [[[30.2, 46.4], [30.3, 46.5], [30.0, 46.5], [30.2, 46.4]]],
+      },
       tipo_dron: {
         version: "tipo-dron-1.0.0",
         publicado: { compatible: [{ grupo: "senuelo", probabilidad: 0.42 }], otras: 0.58, casos_referencia: 24 },

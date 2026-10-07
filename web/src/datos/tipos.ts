@@ -1,6 +1,8 @@
 // Forma de los ficheros públicos de publicacion/ (esquema 1.15.0, solo campos públicos)
 // y de los resúmenes que la web deriva de ellos en el build.
 
+import type { Recorrido } from "./rutas.ts";
+
 export type Estado = "notificado" | "confirmado" | "atribuido" | "desmentido";
 export type Tipo = "incursion" | "interrupcion_aeroportuaria" | "sobrevuelo";
 /** Frontera (drones de la guerra junto a Ucrania, Rusia, Bielorrusia o el mar Negro) o interior. */
@@ -240,6 +242,8 @@ export interface PropiedadesIncidente {
   };
   drones?: { numero?: RangoODesconocido; clase?: ClaseDron; modelo?: string };
   tipo_dron?: TipoDron;
+  /** Recorrido de la incursión según la autoridad (Rumanía, Moldavia, Polonia). */
+  recorrido?: Recorrido;
   consecuencias?: {
     cierre?: { valor: "si" | "no" | "desconocido"; minutos?: RangoODesconocido };
     vuelos_desviados?: RangoODesconocido;

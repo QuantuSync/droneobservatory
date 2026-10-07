@@ -463,6 +463,8 @@ unidad_satelite "$UNIDAD_LUCES" "Luz nocturna tras los ataques contra la red el�
 unidad_satelite "$UNIDAD_FOCOS_VIVO" "Focos de calor de las últimas 24 horas (EODI)" \
   focos_vivo.sh "$FOCOS_VIVO_TOPE_UNIDAD" "*-*-* *:$MINUTO_FOCOS_VIVO:00 UTC" \
   "en el minuto $MINUTO_FOCOS_VIVO de cada hora"
+install -d -m 700 -o "$USUARIO" -g "$USUARIO" "$RUTAS_DATOS"
+unidad_satelite "$UNIDAD_RUTAS" "Rutas de los drones sobre Ucrania (EODI)"   rutas.sh "$RUTAS_TOPE_UNIDAD" "*-*-* *:0$MINUTO_RUTAS:00 UTC"   "en el minuto $MINUTO_RUTAS de cada hora"
 # Captura del seguimiento en directo (servidor/seguimiento.sh): siempre en marcha, con su propio
 # cerrojo, tope de memoria y prioridad baja; solo sale (y systemd la relanza) cuando cambia su
 # código. La compresión, el índice y la copia diaria van aparte, con su temporizador.

@@ -68,6 +68,17 @@ import { cifrasDePais, presionPorPais } from "./datos/presion.ts";
 import { cifras } from "./datos/derivar.ts";
 import { GRUPOS_DRON, ORIGENES_TIPO_DRON } from "./datos/vocabulario.ts";
 import {
+  cargarIndiceRutas,
+  cargarNocheRutas,
+  nocheDeDia,
+  nochesDelPeriodo,
+  recorridoEnMapa,
+  rutasEnMapa,
+  tramoDeClave,
+} from "./datos/rutas.ts";
+import type { IndiceRutas, NocheRutas } from "./datos/rutas.ts";
+import { FichaRuta, LeyendaRutas } from "./componentes/Rutas.tsx";
+import {
   OBJETO_ALUMBRADO,
   OBJETO_FOCOS_VIVOS,
   ciudadesSinLuz as ciudadesSinLuzDe,
@@ -173,6 +184,7 @@ type PanelLocal =
   | { clase: "corredores"; claves: string[] }
   | { clase: "luz"; clave: string }
   | { clase: "alumbrado"; clave: string }
+  | { clase: "ruta"; clave: string }
   | null;
 
 /** La búsqueda `nueva` con las subcapas que dice `actual` (los filtros no las pisan). */
@@ -699,6 +711,59 @@ export function App() {
   const abiertoDesdeMapa = useRef<string | null>(null);
   const ultimoDestino = useRef<string | null>(null);
   const nocheActual = noche === null ? null : (noches[noche] ?? null);
+  // Rutas de los drones: el índice y las noches se piden solo con la subcapa encendida (o al
+  // reproducir noche a noche), del almacén público. Con un periodo largo, las noches principales.
+  const verRutas = capas.ucrania && capas.rutas;
+  const [indiceRutas, setIndiceRutas] = useState<IndiceRutas | null>(null);
+  const [nochesRutas, setNochesRutas] = useState<ReadonlyMap<string, NocheRutas>>(new Map());
+  const [rutasPendientes, setRutasPendientes] = useState(0);
+  useEffect(() => {
+    if ((!verRutas && nocheActual === null) || indiceRutas !== null) return undefined;
+    const control = new AbortController();
+    void cargarIndiceRutas(control.signal).then((indice) => {
+      if (indice !== null && !control.signal.aborted) setIndiceRutas(indice);
+    });
+    return () => control.abort();
+  }, [verRutas, nocheActual, indiceRutas]);
+  const nocheDeRutas = nocheActual === null ? null : nocheDeDia(nocheActual.jornada.desde);
+  const rutasDelPeriodo = useMemo(
+    () => (indiceRutas === null ? null : nochesDelPeriodo(indiceRutas, periodo)),
+    [indiceRutas, periodo],
+  );
+  const nochesQueDibujar = useMemo(() => {
+    if (indiceRutas === null) return [];
+    if (nocheDeRutas !== null) {
+      return indiceRutas.noches.some((n) => n.noche === nocheDeRutas) ? [nocheDeRutas] : [];
+    }
+    return verRutas ? (rutasDelPeriodo?.mostradas ?? []) : [];
+  }, [indiceRutas, nocheDeRutas, verRutas, rutasDelPeriodo]);
+  useEffect(() => {
+    const faltan = nochesQueDibujar.filter((n) => !nochesRutas.has(n));
+    if (faltan.length === 0) return undefined;
+    const control = new AbortController();
+    setRutasPendientes(faltan.length);
+    void Promise.all(faltan.map((n) => cargarNocheRutas(n, control.signal))).then((cargadas) => {
+      if (control.signal.aborted) return;
+      setRutasPendientes(0);
+      setNochesRutas((actual) => {
+        const nuevo = new Map(actual);
+        for (const noche of cargadas) if (noche !== null) nuevo.set(noche.noche, noche);
+        return nuevo;
+      });
+    });
+    return () => control.abort();
+  }, [nochesQueDibujar, nochesRutas]);
+  const rutasDibujadas = useMemo(() => {
+    const lista = nochesQueDibujar.flatMap((n) => {
+      const cargada = nochesRutas.get(n);
+      return cargada === undefined ? [] : [cargada];
+    });
+    return lista.length === 0 ? null : lista;
+  }, [nochesQueDibujar, nochesRutas]);
+  const rutasEnElMapa = useMemo(
+    () => (rutasDibujadas === null ? null : rutasEnMapa(rutasDibujadas)),
+    [rutasDibujadas],
+  );
 
   // Novedades desde la visita anterior: se resaltan y se pueden recorrer.
   const eventosNuevos = useMemo(
@@ -752,7 +817,7 @@ export function App() {
   // Cambia las capas. Ninguna capa enciende nada por su cuenta: al apagar la de Ucrania, sus
   // subcapas se apagan y al volver a encenderla salen apagadas.
   const cambiarCapas = useCallback((nuevas: Capas) => {
-    setCapas(nuevas.ucrania ? nuevas : { ...nuevas, corredores: false, satelite: false });
+    setCapas(nuevas.ucrania ? nuevas : { ...nuevas, corredores: false, satelite: false, rutas: false });
   }, []);
   // Un enlace con subcapas encendidas las abre encendidas (y con la capa de Ucrania). Se leen de
   // la dirección del navegador al montar: la búsqueda de la navegación llega vacía en la primera
@@ -767,6 +832,7 @@ export function App() {
       ucrania: true,
       corredores: delEnlace.corredores,
       satelite: delEnlace.satelite,
+      rutas: delEnlace.rutas,
     }));
     setFiltroSatelite(delEnlace.filtro);
     if (delEnlace.filtro.length > 0) setListaSatelite(true);
@@ -777,10 +843,11 @@ export function App() {
     const nueva = conSubcapas(busqueda, {
       corredores: capas.ucrania && capas.corredores,
       satelite: capas.ucrania && capas.satelite,
+      rutas: capas.ucrania && capas.rutas,
       filtro: filtroSatelite,
     });
     if (nueva !== busqueda) cambiarBusqueda(nueva);
-  }, [capas.ucrania, capas.corredores, capas.satelite, filtroSatelite, busqueda, cambiarBusqueda]);
+  }, [capas.ucrania, capas.corredores, capas.satelite, capas.rutas, filtroSatelite, busqueda, cambiarBusqueda]);
   const quitarFiltros = useCallback(
     () => cambiarBusqueda(conSubcapasDe(escribirSeleccion(SIN_FILTROS, TODO), busqueda)),
     [cambiarBusqueda, busqueda],
@@ -808,6 +875,13 @@ export function App() {
 
   const fichaActiva = montado ? fichaDeRuta : null;
   const idAbierto = fichaActiva?.clase === "incidente" ? fichaActiva.id : null;
+  const recorridoAbierto = useMemo(
+    () =>
+      idAbierto !== null && incidente.estado === "listo" && incidente.datos.id === idAbierto
+        ? recorridoEnMapa(incidente.datos.recorrido)
+        : null,
+    [idAbierto, incidente],
+  );
   useEffect(() => {
     if (idAbierto !== null) setAbiertos((previos) => new Set([...previos, idAbierto]));
   }, [idAbierto]);
@@ -949,6 +1023,10 @@ export function App() {
       setCapas((c) => ({ ...c, ucrania: true, corredores: true }));
       abrirLocal({ clase: "corredor", clave });
     },
+    [abrirLocal],
+  );
+  const abrirRuta = useCallback(
+    (clave: string) => abrirLocal({ clase: "ruta", clave }),
     [abrirLocal],
   );
   const abrirCiudadLuz = useCallback(
@@ -1146,7 +1224,7 @@ export function App() {
         case "capaUcrania":
           setCapas((c) =>
             c.ucrania
-              ? { ...c, ucrania: false, corredores: false, satelite: false }
+              ? { ...c, ucrania: false, corredores: false, satelite: false, rutas: false }
               : { ...c, ucrania: true },
           );
           return;
@@ -1403,6 +1481,21 @@ export function App() {
         ),
       };
     }
+  } else if (panelLocal?.clase === "ruta") {
+    const elegida = tramoDeClave(nochesRutas, panelLocal.clave);
+    if (elegida !== null) {
+      ficha = {
+        nombre: t.rutas.etiqueta,
+        contenido: (
+          <>
+            <CabeceraFicha t={t} etiqueta={t.rutas.etiqueta} onCerrar={cerrarFicha} />
+            <div className="overflow-y-auto px-4 py-3">
+              <FichaRuta t={t} idioma={idioma} noche={elegida.noche} tramo={elegida.tramo} />
+            </div>
+          </>
+        ),
+      };
+    }
   } else if (panelLocal?.clase === "luz" && ciudadesSinLuz !== null) {
     const ciudad = ciudadesSinLuz.find((c) => `${c.region}|${c.nombre}` === panelLocal.clave);
     if (ciudad !== undefined) {
@@ -1560,8 +1653,20 @@ export function App() {
     corredores !== null &&
     corredoresPrincipales !== null &&
     corredores.length > 0;
-  const leyendas = (capas.gnss || capas.presion || hayCorredores) && (
+  const hayRutas = (verRutas && indiceRutas !== null) || (nocheActual !== null && rutasDibujadas !== null);
+  const leyendas = (capas.gnss || capas.presion || hayCorredores || hayRutas) && (
     <div className="flex flex-col items-start gap-1.5" data-leyendas="">
+      {hayRutas && indiceRutas !== null && (
+        <LeyendaRutas
+          t={t}
+          mostradas={nocheDeRutas !== null ? nochesQueDibujar.length : (rutasDelPeriodo?.mostradas.length ?? 0)}
+          total={nocheDeRutas !== null ? nochesQueDibujar.length : (rutasDelPeriodo?.total ?? 0)}
+          conNeptun={(rutasDibujadas ?? []).some((n) => n.fuente === "neptun")}
+          atribucion={indiceRutas.atribucion_neptun}
+          noche={nocheDeRutas !== null}
+          cargando={rutasPendientes > 0}
+        />
+      )}
       {hayCorredores && corredores !== null && corredoresPrincipales !== null && (
         <LeyendaCorredores
           t={t}
@@ -1774,6 +1879,9 @@ export function App() {
               onCelda={abrirCelda}
               onPais={abrirPais}
               onCorredor={abrirCorredor}
+              rutas={rutasEnElMapa}
+              onRuta={abrirRuta}
+              recorrido={recorridoAbierto}
               onCorredores={abrirCorredores}
               corredorElegido={panelLocal?.clase === "corredor" ? panelLocal.clave : null}
               puntosSatelite={puntosSatelite}

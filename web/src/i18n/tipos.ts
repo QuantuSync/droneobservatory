@@ -560,6 +560,43 @@ export interface Textos {
   regiones: Record<string, string>;
   satelite: TextosSatelite;
   tipoDron: TextosTipoDron;
+  rutas: TextosRutas;
+}
+
+/** Rutas de los drones sobre Ucrania y recorrido de las incursiones. */
+export interface TextosRutas {
+  subcapa: string;
+  leyenda: (mostradas: number, total: number) => string;
+  leyendaNoche: string;
+  sinRutas: string;
+  cargando: string;
+  nota: string;
+  fuente: { neptun: string; fuerza_aerea: string };
+  etiqueta: string;
+  noche: string;
+  grupo: string;
+  grupoNumero: (n: number) => string;
+  aparatos: string;
+  tipo: string;
+  tipos: { ataque: string; reaccion: string; reconocimiento: string };
+  velocidad: string;
+  kmh: (n: number) => string;
+  origen: string;
+  precision: string;
+  precisionKm: (km: string) => string;
+  tramo: string;
+  clases: { enlace: string; hacia_destino: string; desde_lanzamiento: string; neptun: string };
+  desde: string;
+  hasta: string;
+  division: string;
+  union: string;
+  sinIdentidad: string;
+  mensajes: string;
+  pista: string;
+  incidentes: string;
+  ataque: string;
+  recorrido: string;
+  recorridoNota: string;
 }
 
 /** Tipo de dron: lo que identificó la autoridad o la clase deducida con su probabilidad. */

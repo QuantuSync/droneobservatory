@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:eodi:exportacion:1.6.0:ruta_noche",
+  "title": "Rutas de una noche",
+  "description": "Las franjas de ruta publicadas de una noche sobre Ucrania (proceso/rutas): con NEPTUN, sus pistas; sin NEPTUN, la reconstrucción con los mensajes de seguimiento de la Fuerza Aérea de Ucrania, si pasa la comprobación. Cada tramo con su regla de origen: los extremos de un enlace de la Fuerza Aérea salen de sus mensajes (oficial); el enlace, la franja y lo de NEPTUN son calculados por una regla, con su versión.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["noche", "fuente", "ataques", "tramos", "procedencia"],
+  "properties": {
+    "noche": {"type": "string", "format": "date"},
+    "fuente": {"enum": ["neptun", "fuerza_aerea"]},
+    "ataques": {"type": "array", "items": {"type": "string"}},
+    "atribucion": {"type": "object"},
+    "incidentes": {"type": "array", "items": {"type": "string"}},
+    "tramos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["grupo", "clase", "tipo", "desde", "hasta", "precision_km", "procedencia"],
+        "properties": {
+          "grupo": {"type": "integer"},
+          "clase": {"enum": ["enlace", "hacia_destino", "desde_lanzamiento", "neptun"]},
+          "tipo": {"enum": ["ataque", "reaccion", "reconocimiento"]},
+          "desde": {"type": "object"},
+          "hasta": {"type": "object"},
+          "precision_km": {"type": "number"},
+          "numero": {"type": "object"},
+          "kmh": {"type": "number"},
+          "pista": {"type": "string"},
+          "confianza": {"type": "string"},
+          "mensajes": {"type": "array", "items": {"type": "integer"}},
+          "division": {"type": "boolean"},
+          "union": {"type": "boolean"},
+          "procedencia": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["extremos", "tramo"],
+            "properties": {
+              "extremos": {"$ref": "#/$defs/origen"},
+              "tramo": {"$ref": "#/$defs/origen"}
+            }
+          }
+        }
+      }
+    },
+    "procedencia": {"$ref": "#/$defs/origen"}
+  },
+  "$defs": {
+    "origen": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["origen", "metodo", "fuentes"],
+      "properties": {
+        "origen": {"enum": ["oficial", "calculado"]},
+        "metodo": {"type": "string", "minLength": 1},
+        "fuentes": {"type": "array", "items": {"type": "string"}}
+      }
+    }
+  }
+}

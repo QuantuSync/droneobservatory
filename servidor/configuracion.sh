@@ -298,6 +298,15 @@ CERROJO_FOCOS_VIVO="$SECRETOS/focos_vivo.lock"
 FOCOS_VIVO_REGISTRO="$SECRETOS/focos_vivo.json"
 MINUTO_FOCOS_VIVO=42
 FOCOS_VIVO_TOPE_UNIDAD=20
+# Rutas de los drones sobre Ucrania (servidor/rutas.sh, recogida/rutas.py): cada hora en el
+# minuto 8, tras el motor de deducción; estructura las noches nuevas del archivo del seguimiento,
+# calcula las rutas publicables y las sube al almacén público. No empieza una noche nueva pasados
+# 25 minutos y acaba antes del minuto 40.
+RUTAS_DATOS="${EODI_RUTAS_DATOS:-$CASA/datos/rutas}"
+UNIDAD_RUTAS="eodi-rutas"
+CERROJO_RUTAS="$SECRETOS/rutas.lock"
+MINUTO_RUTAS=8
+RUTAS_TOPE_UNIDAD=30
 # Prioridad baja de CPU y de disco para los tres, y un tope de memoria: la recogida horaria va
 # siempre por delante, y si una pieza pasara de su tope la para systemd a ella sola.
 SATELITE_NICE=15

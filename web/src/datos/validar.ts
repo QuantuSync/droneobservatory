@@ -15,6 +15,7 @@ import type {
 } from "./tipos.ts";
 import type { AlumbradoReducido, FocosVivos, IndiceSatelite } from "./guerraSatelite.ts";
 import type { Prevision } from "./prevision.ts";
+import type { IndiceRutas, NocheRutas } from "./rutas.ts";
 import * as v from "./vocabulario.ts";
 
 export type Resultado<T> = { ok: true; datos: T } | { ok: false; errores: string[] };
@@ -323,8 +324,23 @@ const tipoDron = objeto(
   },
 );
 
+const recorrido = objeto({
+  version: cadena(/^recorridos-\d+\.\d+\.\d+$/),
+  fuente: cadena(),
+  cita: cadena(),
+  puntos: lista(
+    objeto(
+      { nombre: cadena(), lat: latitud, lon: longitud, radio_km: numero(0, 1000) },
+      { hora: cadena(/^\d{2}:\d{2}$/) },
+    ),
+    2,
+  ),
+  franja: lista(lista(tupla([longitud, latitud]), 4), 1),
+});
+
 const CAMPOS_INCIDENTE_OPCIONALES: Record<string, Comprobacion> = {
   tipo_dron: tipoDron,
+  recorrido,
   afirmaciones_publicas: lista(afirmacionPublica),
   episodio: cadena(v.PATRON_ID_EPISODIO),
   presencia_dron: enumerado(v.PRESENCIAS),
@@ -1092,4 +1108,86 @@ const prevision = objeto(
 /** publicacion/prevision.json (proceso/prevision). */
 export function validarPrevision(valor: unknown): Resultado<Prevision> {
   return validar(prevision, valor);
+}
+
+// --- Rutas de los drones sobre Ucrania (esquema/rutas/1.0.0), del almacén público ---------------
+
+const extremoRuta = objeto(
+  { lat: latitud, lon: longitud, radio_km: numero(0, 10000) },
+  { t: cadena(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?Z$/), zona: cadena() },
+);
+const fuenteRuta = enumerado(["neptun", "fuerza_aerea"] as const);
+const atribucionNeptun = objeto({ texto: cadena(), enlace: cadena(/^https:\/\/neptun\.in\.ua\/$/) });
+const tramoRuta = objeto(
+  {
+    grupo: numero(1, Number.MAX_SAFE_INTEGER, true),
+    clase: enumerado(["enlace", "hacia_destino", "desde_lanzamiento", "neptun"] as const),
+    tipo: enumerado(["ataque", "reaccion", "reconocimiento"] as const),
+    desde: extremoRuta,
+    hasta: extremoRuta,
+    precision_km: numero(0, 10000),
+    franja: lista(tupla([longitud, latitud]), 4),
+  },
+  {
+    numero: objeto({ min: enteroNoNegativo, max: enteroNoNegativo }),
+    kmh: numero(0, 5000),
+    pista: cadena(),
+    confianza: cadena(),
+    mensajes: lista(enteroNoNegativo),
+    division: enumerado([true, false]),
+    union: enumerado([true, false]),
+  },
+);
+const grupoRuta = objeto({
+  grupo: numero(1, Number.MAX_SAFE_INTEGER, true),
+  fuente: fuenteRuta,
+  tramos: numero(1, Number.MAX_SAFE_INTEGER, true),
+  aparatos_max: nulable(enteroNoNegativo),
+  kmh_mediana: nulable(numero(0, 5000)),
+  divisiones: enteroNoNegativo,
+  uniones: enteroNoNegativo,
+});
+const nocheRutas = objeto(
+  {
+    version: cadena(/^rutas-publicacion-\d+\.\d+\.\d+$/),
+    noche: cadena(/^\d{4}-\d{2}-\d{2}$/),
+    fuente: fuenteRuta,
+    ataques: lista(cadena(/^EODI-UA-\d{4}-\d{4}$/)),
+    tramos: lista(tramoRuta, 1),
+    grupos: lista(grupoRuta),
+  },
+  { atribucion: atribucionNeptun, incidentes: lista(cadena(v.PATRON_ID_INCIDENTE)) },
+);
+const indiceRutas = objeto({
+  version: cadena(/^rutas-publicacion-\d+\.\d+\.\d+$/),
+  generado: cadena(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}Z$/),
+  comprobacion: objeto({
+    pasa: enumerado([true, false]),
+    mediana_reconstruccion_km: nulable(numero(0, 100000)),
+    mediana_recta_km: nulable(numero(0, 100000)),
+    puntos: enteroNoNegativo,
+    criterio: cadena(),
+  }),
+  noches_con_mensajes: enteroNoNegativo,
+  noches: lista(
+    objeto({
+      noche: cadena(/^\d{4}-\d{2}-\d{2}$/),
+      fuente: fuenteRuta,
+      ataques: lista(cadena()),
+      lanzados: nulable(enteroNoNegativo),
+      tramos: numero(1, Number.MAX_SAFE_INTEGER, true),
+      grupos: numero(1, Number.MAX_SAFE_INTEGER, true),
+    }),
+  ),
+  atribucion_neptun: objeto({ texto: cadena(), enlace: cadena() }),
+});
+
+/** rutas/indice.json del almacén público (recogida/rutas.py). */
+export function validarIndiceRutas(valor: unknown): Resultado<IndiceRutas> {
+  return validar(indiceRutas, valor);
+}
+
+/** rutas/noches/AAAA-MM-DD.json del almacén público. */
+export function validarNocheRutas(valor: unknown): Resultado<NocheRutas> {
+  return validar(nocheRutas, valor);
 }

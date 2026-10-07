@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:eodi:exportacion:1.5.0:deduccion_validacion",
+  "$id": "urn:eodi:exportacion:1.6.0:deduccion_validacion",
   "title": "Resumen de la validación del motor de deducción (deduccion_validacion.json)",
   "description": "Métricas de la última ejecución correcta del motor de deducción (recogida/deduccion.py): casos de modelo conocido (configuracion/validacion_deduccion.json) con aciertos (la clase real queda compatible), fallos graves (la clase real queda descartada) e indeterminados; coherencia con los encuentros de la UK Airprox Board; y poder de descarte por tipo de caso (en cuántos se descarta al menos una clase y cuántas quedan compatibles de media). Vacío ({}) si el motor aún no ha dejado ninguna.",
   "type": "object",

@@ -65,7 +65,9 @@ def _con_retirada(nuevo: Documento, anterior: Documento | None, ahora: datetime)
 def actualizar(almacen: Almacen, ahora: datetime) -> dict[str, Any]:
     inicio = time.monotonic()
     catalogo = catalogo_.cargar_vivo(almacen.catalogo_vivo("catalogo").get("catalogo"))
-    documentos, resumen = calculo.calcular(catalogo, entradas(almacen), almacen.encuentros())
+    documentos, resumen = calculo.calcular(
+        catalogo, entradas(almacen), almacen.encuentros(), almacen.episodios()
+    )
     anteriores = almacen.tipos_dron()
     guardados = 0
     for id_, documento in sorted(documentos.items()):

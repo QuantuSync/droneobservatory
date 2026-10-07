@@ -120,7 +120,7 @@ META_INCIDENTE = frozenset({
     "id", "titulo", "fuentes", "afirmaciones", "afirmaciones_publicas", "control",
     "procedencia", "nivel_detalle", "indicadores", "fusionado_en", "retirado", "episodio",
     "encuentros",
-    "deduccion", "tipo_dron",
+    "deduccion", "tipo_dron", "recorrido",
 })  # fmt: skip
 # deduccion: lo deducido va aparte, con su propia procedencia (procedencia_deduccion); tipo_dron,
 # con la suya valor a valor (procedencia_tipo_dron), que falla si un valor no tiene regla.
@@ -704,6 +704,8 @@ CLAVES_CALCULADAS_TIPO = frozenset({
     "version", "version_rasgos", "probabilidades", "grupos", "razones", "con_base", "publicado",
     "retirado", "evaluado",
 })  # fmt: skip
+# Un rasgo calculado (la velocidad necesaria entre avistamientos) es deducido, con su regla.
+ORIGEN_RASGO_CALCULADO = "deducido"
 ORIGENES_DE_FRASE = frozenset({"medido", "oficial", "oficial_citado", "parte", "prensa"})
 
 
@@ -714,7 +716,7 @@ def procedencia_tipo_dron(tipo: Documento) -> dict[str, Documento]:
     calculado (origen deducido, método regla, con su versión). Un valor que no encaja en ninguna
     regla deja la exportación sin generar."""
     procedencia: dict[str, Documento] = {}
-    sin_regla = sorted(set(tipo) - CLAVES_CALCULADAS_TIPO - {"rasgos", "identificado"})
+    sin_regla = sorted(set(tipo) - CLAVES_CALCULADAS_TIPO - {"rasgos", "identificado", "recorrido"})
     if sin_regla:
         raise SinOrigen(f"tipo_dron: sin regla de origen para {', '.join(sin_regla)}")
     procedencia["tipo_dron"] = {
@@ -722,11 +724,24 @@ def procedencia_tipo_dron(tipo: Documento) -> dict[str, Documento]:
         "regla": {"nombre": "tipo_dron", "version": tipo["version"]},
     }  # fmt: skip
     for i, rasgo in enumerate(tipo.get("rasgos", [])):
+        if rasgo.get("origen") == ORIGEN_RASGO_CALCULADO and rasgo.get("fuente"):
+            procedencia[f"tipo_dron.rasgos.{i}"] = {
+                "origen": DEDUCIDO, "metodo": REGLA, "fuentes": [rasgo["fuente"]],
+                "regla": {"nombre": "velocidad_entre_avistamientos", "version": tipo["version"]},
+            }  # fmt: skip
+            continue
         if rasgo.get("origen") not in ORIGENES_DE_FRASE or not rasgo.get("fuente"):
             raise SinOrigen(f"tipo_dron.rasgos.{i}: sin origen de frase")
         procedencia[f"tipo_dron.rasgos.{i}"] = {
             "origen": rasgo["origen"], "metodo": REGLA, "fuentes": [rasgo["fuente"]],
             "regla": {"nombre": "rasgos_tipo_dron", "version": tipo.get("version_rasgos", "")},
+        }  # fmt: skip
+    recorrido = tipo.get("recorrido")
+    if recorrido is not None:
+        procedencia["tipo_dron.recorrido"] = {
+            "origen": OFICIAL_CITADO if "-declaracion-" in recorrido["fuente"] else OFICIAL,
+            "metodo": REGLA, "fuentes": [recorrido["fuente"]],
+            "regla": {"nombre": "recorrido_incursion", "version": recorrido["version"]},
         }  # fmt: skip
     identificado = tipo.get("identificado")
     if identificado is not None:

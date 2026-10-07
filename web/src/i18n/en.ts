@@ -1,3 +1,4 @@
+import { rutasEn } from "./rutas.ts";
 import { tipoDronEn } from "./tipoDron.ts";
 import { LICENCIA_DATOS, LICENCIA_DATOS_URL, NOMBRE, ORIGEN, REPOSITORIO } from "../sitio.ts";
 import { REGIONES_RUSIA_EN } from "./regionesRusia.ts";
@@ -25,6 +26,7 @@ function diaMesAnio(f: FechaEscrita): string {
 
 export const en: Textos = {
   tipoDron: tipoDronEn,
+  rutas: rutasEn,
   descripcion:
     "Open map and record of drone incidents in Europe: overflights, incursions and airport " +
     "disruptions, with their sources, status and level of confirmation.",
@@ -1172,6 +1174,65 @@ export const en: Textos = {
                 "selected period. For attacks on Russia, whose report gives shoot-downs by " +
                 "region, the arc starts at the point of the Ukrainian border closest to each " +
                 "region and its figure is those shoot-downs.",
+            ],
+          },
+        ],
+      },
+      {
+        id: "rutas",
+        titulo: "Drone routes over Ukraine",
+        bloques: [
+          {
+            parrafo: [
+              "The «Routes» sublayer of the Ukraine layer draws where each night's drones went, " +
+                "as semi-transparent bands with their uncertainty width, never as exact lines. " +
+                "They are published once the attack is over: after 12:00 UTC the next day and two " +
+                "hours after the night's last report. Never live.",
+            ],
+          },
+          {
+            lista: [
+              {
+                termino: "With NEPTUN",
+                texto: [
+                  "Since 4 October 2026 the observatory keeps the stream of ",
+                  { texto: "NEPTUN", enlace: "https://neptun.in.ua/" },
+                  ", which estimates the position, heading, speed and number of each threat from " +
+                    "reports (it is not a radar). Nights with that archive almost complete use its " +
+                    "tracks, with the uncertainty radius NEPTUN gives and its visible link.",
+                ],
+              },
+              {
+                termino: "With the Ukrainian Air Force",
+                texto: [
+                  "For the other nights, since 2023, the route is reconstructed from the Air Force " +
+                    "tracking messages: each message gives an area (a town, part of a region, a " +
+                    "region or the sea) and sometimes a heading or a destination; two messages are " +
+                    "linked if the drone could fly from one area to the other in that time and in " +
+                    "that direction. A group is not identified from the text: it may split, merge " +
+                    "or be unknown. Each segment keeps the messages it comes from.",
+                ],
+              },
+              {
+                termino: "Check",
+                texto: [
+                  "On the nights with NEPTUN, the route reconstructed only from the Air Force is " +
+                    "compared with the NEPTUN tracks and with the straight line from the launch " +
+                    "area to each of the night's impacts. Reconstructed routes are published only " +
+                    "if they come clearly closer to NEPTUN than the straight line (median at least " +
+                    "20% lower, and better on every night). The legend and each segment's record say " +
+                    "which source it comes from and its precision.",
+                ],
+              },
+              {
+                termino: "Incursions",
+                texto: [
+                  "For incidents in Romania, Moldova and Poland where the authority names the " +
+                    "places the drone passed, the record draws that route when opened, with the " +
+                    "sentence it comes from. When a night's route ends at a European incident of " +
+                    "that night, the segment's record links it.",
+                ],
+              },
             ],
           },
         ],

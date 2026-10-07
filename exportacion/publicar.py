@@ -37,8 +37,13 @@ def con_tipo_dron(incidentes: list[Documento], tipos: dict[str, Documento]) -> l
     """Cada incidente con lo que se publica de su tipo de dron (tabla tipos_dron)."""
     salida = []
     for incidente in incidentes:
-        publicado = tipo_dron.bloque(tipos.get(incidente["id"]), incidente)
-        salida.append({**incidente, "tipo_dron": publicado} if publicado else incidente)
+        tipo = tipos.get(incidente["id"])
+        publicado = tipo_dron.bloque(tipo, incidente)
+        nuevo = {**incidente, "tipo_dron": publicado} if publicado else dict(incidente)
+        recorrido = tipo_dron.recorrido_publico(tipo, incidente)
+        if recorrido is not None:
+            nuevo["recorrido"] = recorrido
+        salida.append(nuevo)
     return salida
 
 

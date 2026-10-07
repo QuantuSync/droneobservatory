@@ -72,6 +72,9 @@ import {
   FUENTE_REALCE_PUNTO,
   FUENTE_LUZ_CIUDADES,
   FUENTE_ALUMBRADO,
+  FUENTE_RUTAS,
+  FUENTE_RECORRIDO,
+  CAPA_RUTAS,
   CAPA_GRUPOS,
   CAPA_INCIDENTES_DISCRETOS,
   CAPA_INCIDENTES_GRAVES,
@@ -269,6 +272,11 @@ export interface PropsMapa {
   onFallo: () => void;
   /** Un toque en el mapa fuera de todo: cierra lo abierto, sin mover el mapa. */
   onVacio: () => void;
+  /** Franjas de ruta que se dibujan (las del periodo o las de la noche); null sin rutas. */
+  rutas: GeoJSON.FeatureCollection | null;
+  onRuta: (clave: string) => void;
+  /** Recorrido de la incursión con la ficha abierta; null si no hay. */
+  recorrido: GeoJSON.FeatureCollection | null;
 }
 
 /**
@@ -399,7 +407,7 @@ export default function Mapa(props: PropsMapa) {
   const { t, idioma, incidentes, episodios, capas, intensidad, noche, elegido } = props;
   const { focosUcrania, impactos, gnss, presion, avisos } = props;
   const { corredores, luzRegiones, ciudadesSinLuz, alumbrado, corredorElegido } = props;
-  const { puntosSatelite, soloSatelite } = props;
+  const { puntosSatelite, soloSatelite, rutas, recorrido } = props;
   const { paisResaltado, regionesElegidas, novedades, recientes, vuelo, reserva } = props;
   // El vuelo lee la reserva del momento, pero no se repite porque cambie (al arrastrar una hoja).
   const reservaActual = useRef(reserva);
@@ -644,7 +652,10 @@ export default function Mapa(props: PropsMapa) {
           valor: { tipo: "rasgo", rasgo },
         }));
       const dedo = punteroGrueso();
-      if (dedo && !lista.some((c) => c.clase === "marca")) {
+      // Dentro de una franja de ruta, el dedo no busca la marca más cercana: la franja es lo
+      // que se ha tocado (una marca justo debajo del dedo sigue ganando).
+      const enRuta = lista.some((c) => c.valor.tipo === "rasgo" && c.valor.rasgo.layer.id === CAPA_RUTAS);
+      if (dedo && !enRuta && !lista.some((c) => c.clase === "marca")) {
         // Con el dedo, el objetivo de cada marca es de 44 px: la más cercana dentro de ese cuadro.
         // Las de la capa de guerra, muy juntas a la escala de Ucrania, el de los arcos (28 px).
         const cercana =
@@ -756,6 +767,9 @@ export default function Mapa(props: PropsMapa) {
         const cuenta = manejadores.current.presion?.get(iso)?.incidentes ?? 0;
         return textos.presion.letrero(nombrePais(iso, lengua), cuenta);
       }
+      if (rasgo.layer.id === CAPA_RUTAS) {
+        return textos.rutas.etiqueta;
+      }
       if (rasgo.layer.id === CAPA_LUZ_CIUDADES) {
         return textos.satelite.letreroCiudad(String(p.nombre), String(p.perdida));
       }
@@ -826,6 +840,8 @@ export default function Mapa(props: PropsMapa) {
         manejadores.current.onImpacto(String(propiedades.id));
       } else if (primero.layer.id === CAPA_DIRECTO) {
         manejadores.current.onAviso(String(propiedades.id));
+      } else if (primero.layer.id === CAPA_RUTAS) {
+        manejadores.current.onRuta(String(propiedades.clave));
       } else if (primero.layer.id === CAPA_GNSS) {
         manejadores.current.onCelda(String(propiedades.h3));
       } else if (primero.layer.id === CAPA_PRESION) {
@@ -1066,6 +1082,23 @@ export default function Mapa(props: PropsMapa) {
       pintarRealceArco();
     });
   }, [listo, corredores]);
+
+  // Rutas de los drones: las del periodo, o las de la noche que se reproduce.
+  useEffect(() => {
+    const mapa = mapaRef.current;
+    if (!listo || mapa === null) return undefined;
+    return trasPintar(() => {
+      fuente(mapa, FUENTE_RUTAS)?.setData(rutas ?? VACIA_REALCE);
+    });
+  }, [listo, rutas]);
+
+  // Recorrido de la incursión abierta: se dibuja al abrir su ficha y se quita al cerrarla, sin
+  // mover el mapa.
+  useEffect(() => {
+    const mapa = mapaRef.current;
+    if (!listo || mapa === null) return;
+    fuente(mapa, FUENTE_RECORRIDO)?.setData(recorrido ?? VACIA_REALCE);
+  }, [listo, recorrido]);
 
   // El arco del corredor con la ficha abierta sigue realzado.
   useEffect(() => {

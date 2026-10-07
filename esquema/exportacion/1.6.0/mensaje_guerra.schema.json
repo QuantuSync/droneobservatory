@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:eodi:exportacion:1.5.0:mensaje_guerra",
+  "$id": "urn:eodi:exportacion:1.6.0:mensaje_guerra",
   "title": "Mensaje leído de un canal de la capa de guerra (una línea de guerra_mensajes.jsonl)",
   "description": "Registro de cada mensaje que el lector de canales guardó y la recogida analizó, sin su texto. resultado: impactos (dio impactos con lugar), para_extractor (el código no pudo atribuir los lugares a un arma o resolverlos; lo que hizo el extractor va en extraido), restriccion / sin_restriccion (Rosaviatsia) o el motivo por el que no dio ninguno: sin_dron, aviso (alarma), sin_impacto (sin daños) o sin_lugar.",
   "type": "object",

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:eodi:exportacion:1.5.0:contexto_pais",
+  "$id": "urn:eodi:exportacion:1.6.0:contexto_pais",
   "title": "Cifra oficial de contexto de un país",
   "description": "Una cifra agregada oficial de un país (configuracion/cifras_contexto.json): contexto, nunca un incidente ni parte del recuento de incidentes. Lleva su origen por valor.",
   "type": "object",

@@ -76,6 +76,7 @@ from recogida import (
     oficiales,
     prevision,
     revisados,
+    rutas,
     satelite,
     tipo_atribucion,
     tipo_dron,
@@ -480,6 +481,9 @@ def principal(argumentos: list[str] | None = None) -> int:
         # Tipo de dron de cada incidente (proceso/tipo_dron), con la zona ya calculada. Un
         # fallo no cambia el código de salida: queda lo último guardado.
         tipo_dron.paso_horario(almacen, ahora)
+        # Los ataques de cada noche para el cálculo de las rutas (su propio temporizador): un
+        # fallo no cambia el código de salida.
+        rutas.paso_horario(almacen)
         if args.estado is not None:
             escribir_parcial(args.estado, estados)
         cambiados = (

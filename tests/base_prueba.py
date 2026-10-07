@@ -49,7 +49,7 @@ def completo() -> Documento:
     """El incidente con todos los campos, con lo que una autoridad investiga."""
     documento = ejemplos.incidente_completo()
     del documento["procedencia"], documento["nivel_detalle"], documento["indicadores"]
-    del documento["deduccion"], documento["tipo_dron"]  # viven en su tabla
+    del documento["deduccion"], documento["tipo_dron"], documento["recorrido"]  # en su tabla
     for fuente in documento["fuentes"]:
         if fuente["id"] == "F2":
             fuente["campos_respaldados"] = RESPALDA_F2

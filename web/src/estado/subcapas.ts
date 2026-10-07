@@ -1,4 +1,4 @@
-// Subcapas de la capa de guerra en la dirección: «Corredores» y «Con satélite» encendidos (y el
+// Subcapas de la capa de guerra en la dirección: «Corredores», «Rutas» y «Con satélite» (y el
 // filtro de la lista de «Con satélite»). Así un enlace compartido las abre como estaban. Las
 // subcapas no se encienden solas: sin nada en la dirección, apagadas.
 
@@ -11,11 +11,12 @@ export const PARAMETRO_SATELITE = "satelite";
 export interface Subcapas {
   corredores: boolean;
   satelite: boolean;
+  rutas: boolean;
   /** Tipos a los que se limita la lista de «Con satélite»; vacío, todos. */
   filtro: TipoSatelite[];
 }
 
-export const SIN_SUBCAPAS: Subcapas = { corredores: false, satelite: false, filtro: [] };
+export const SIN_SUBCAPAS: Subcapas = { corredores: false, satelite: false, rutas: false, filtro: [] };
 
 /** Nombres que se aceptan en `satelite=` para cada tipo (los de las capas retiradas incluidos:
  * «luz» y «focos» llevaban a lo que ahora es «Con satélite» con ese filtro). */
@@ -43,6 +44,7 @@ export function leerSubcapas(busqueda: string): Subcapas | null {
   return {
     corredores: guerra.includes("corredores"),
     satelite: guerra.includes("satelite") || satelite !== null,
+    rutas: guerra.includes("rutas"),
     filtro: TIPOS_SATELITE.filter((tipo) => filtro.includes(tipo)),
   };
 }
@@ -55,6 +57,7 @@ export function conSubcapas(busqueda: string, subcapas: Subcapas): string {
   const encendidas = [
     ...(subcapas.corredores ? ["corredores"] : []),
     ...(subcapas.satelite ? ["satelite"] : []),
+    ...(subcapas.rutas ? ["rutas"] : []),
   ];
   if (encendidas.length > 0) parametros.set(PARAMETRO_GUERRA, encendidas.join(","));
   if (subcapas.satelite && subcapas.filtro.length > 0) {

@@ -27,6 +27,10 @@ age con la misma clave pública que la base:
 - previsiones.jsonl: las previsiones publicadas (riesgo de frontera de cada noche, incidentes
   de cada semana, aviso de segunda noche), tal como se registraron antes de conocerse el
   resultado, con su procedencia: valor calculado, el método (versión) y la fecha;
+- rutas_noches.jsonl y rutas_grupos.jsonl: las franjas de ruta publicadas de cada noche sobre
+  Ucrania y las estadísticas de sus grupos (tamaño, velocidad, divisiones y uniones), cada valor
+  con su regla de origen (los extremos de un enlace de la Fuerza Aérea, oficiales; lo demás,
+  calculado);
 - vocabulario.json: la correspondencia con las categorías y clases de AEGIS
   (configuracion/vocabulario_aegis.json);
 - encuentros.jsonl, estadisticas_oficiales.jsonl y documentos_oficiales.jsonl: los registros
@@ -77,7 +81,7 @@ from proceso.luces import con_luces
 from proceso.mediciones import con_mediciones
 from proceso.restricciones import por_ataque
 
-VERSION_FORMATO = "1.5.0"
+VERSION_FORMATO = "1.6.0"
 RAIZ = Path(__file__).resolve().parent.parent
 DIRECTORIO_ESQUEMAS = RAIZ / "esquema" / "exportacion" / VERSION_FORMATO
 VOCABULARIO = RAIZ / "configuracion" / "vocabulario_aegis.json"
@@ -609,6 +613,65 @@ def contextos_mejor_origen(
     return contextos
 
 
+def rutas_exportables() -> tuple[list[Documento], list[Documento]]:
+    """Las noches con rutas publicadas y sus grupos, con la regla de origen de cada valor."""
+    from recogida import rutas
+
+    carpeta = rutas.datos_rutas() / "publicar" / "noches"
+    noches_: list[Documento] = []
+    grupos: list[Documento] = []
+    for ruta in sorted(carpeta.glob("*.json")) if carpeta.exists() else []:
+        noche = json.loads(ruta.read_text(encoding="utf-8"))
+        metodo = str(noche["version"])
+        calculado = {
+            "origen": "calculado",
+            "metodo": metodo,
+            "fuentes": ["neptun.in.ua"] if noche["fuente"] == "neptun" else [],
+        }
+        tramos = []
+        for tramo in noche["tramos"]:
+            if noche["fuente"] == "neptun":
+                extremos = {
+                    "origen": "calculado",
+                    "metodo": "neptun",
+                    "fuentes": [f"neptun:{tramo['pista']}"],
+                }
+            elif tramo["clase"] == "enlace":
+                extremos = {
+                    "origen": "oficial",
+                    "metodo": "parser",
+                    "fuentes": [f"kpszsu:{m}" for m in tramo.get("mensajes", [])],
+                }
+            else:
+                extremos = {
+                    "origen": "calculado",
+                    "metodo": metodo,
+                    "fuentes": [f"kpszsu:{m}" for m in tramo.get("mensajes", [])],
+                }
+            sin_franja = {k: v for k, v in tramo.items() if k != "franja"}
+            tramos.append({**sin_franja, "procedencia": {"extremos": extremos, "tramo": calculado}})
+        noches_.append(
+            {
+                "noche": noche["noche"],
+                "fuente": noche["fuente"],
+                "ataques": noche["ataques"],
+                **({"atribucion": noche["atribucion"]} if "atribucion" in noche else {}),
+                **({"incidentes": noche["incidentes"]} if "incidentes" in noche else {}),
+                "tramos": tramos,
+                "procedencia": calculado,
+            }
+        )
+        for grupo in noche["grupos"]:
+            grupos.append(
+                {
+                    "noche": noche["noche"],
+                    **grupo,
+                    "procedencia": {**calculado, "origen": "calculado"},
+                }
+            )
+    return noches_, grupos
+
+
 def generar(almacen: Almacen) -> list[Fichero]:
     """Los ficheros de una versión, en claro y ya validados."""
     # El foco térmico de FIRMS vive en su propia tabla: aquí va completo, con lo interno.
@@ -713,6 +776,11 @@ def generar(almacen: Almacen) -> list[Fichero]:
         for p in almacen.previsiones()
     ]
     _comprobar("previsiones.jsonl", previsiones, validador_propio("prevision"))
+    # Las rutas publicadas y las estadísticas de sus grupos (proceso/rutas), de los ficheros que
+    # deja su servicio; sin ellos, ninguna.
+    rutas_noches, rutas_grupos = rutas_exportables()
+    _comprobar("rutas_noches.jsonl", rutas_noches, validador_propio("ruta_noche"))
+    _comprobar("rutas_grupos.jsonl", rutas_grupos, validador_propio("ruta_grupo"))
     # Catálogo de prestaciones, clases con su envolvente, zonas de lanzamiento y fuentes, y el
     # resumen de la validación del motor: AEGIS los usa como límites de movimiento por clase.
     # Con lo que ha admitido el barrido del catálogo vivo (tabla catalogo_vivo).
@@ -774,6 +842,10 @@ def generar(almacen: Almacen) -> list[Fichero]:
                 _propio("mensaje_guerra")),
         Fichero("incidentes.jsonl", _jsonl(incidentes), len(incidentes), _base("incidente")),
         Fichero("previsiones.jsonl", _jsonl(previsiones), len(previsiones), _propio("prevision")),
+        Fichero("rutas_noches.jsonl", _jsonl(rutas_noches), len(rutas_noches),
+                _propio("ruta_noche")),
+        Fichero("rutas_grupos.jsonl", _jsonl(rutas_grupos), len(rutas_grupos),
+                _propio("ruta_grupo")),
         Fichero("restricciones_aeropuertos.jsonl", _jsonl(restricciones), len(restricciones),
                 _base("restriccion_aeropuerto")),
         Fichero("ucrania_ataques.jsonl", _jsonl(ataques), len(ataques),

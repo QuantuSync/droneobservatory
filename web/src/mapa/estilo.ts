@@ -52,6 +52,8 @@ export const FUENTE_SATELITE = "guerra-satelite";
 export const FUENTE_REALCE_PUNTO = "guerra-realce-punto";
 export const FUENTE_LUZ_CIUDADES = "guerra-luz-ciudades";
 export const FUENTE_ALUMBRADO = "guerra-alumbrado";
+export const FUENTE_RUTAS = "guerra-rutas";
+export const FUENTE_RECORRIDO = "recorrido";
 
 export const CAPA_GRUPOS = "grupos";
 export const CAPA_NUMERO_GRUPOS = "grupos-numero";
@@ -82,6 +84,12 @@ export const CAPA_CORREDORES = "guerra-corredores";
 /** Zona sensible de los arcos: la misma geometría, ancha e invisible. */
 export const CAPA_CORREDORES_ZONA = "guerra-corredores-zona";
 export const CAPA_REALCE_ARCO = "guerra-realce-arco";
+/** Rutas de los drones sobre Ucrania: franjas semitransparentes con un borde fino. */
+export const CAPA_RUTAS = "guerra-rutas";
+export const CAPA_RUTAS_LINEA = "guerra-rutas-linea";
+/** Recorrido de una incursión según la autoridad, con la ficha del incidente abierta. */
+export const CAPA_RECORRIDO = "recorrido";
+export const CAPA_RECORRIDO_LINEA = "recorrido-linea";
 /** Impactos con información de satélite: más grandes, con aro (doble si hay imagen). */
 export const CAPA_SATELITE = "guerra-satelite";
 export const CAPA_SATELITE_ARO = "guerra-satelite-aro";
@@ -114,6 +122,7 @@ export const CAPAS_PULSABLES: readonly string[] = [
   CAPA_REGIONES_RUSIA,
   CAPA_GNSS,
   CAPA_PRESION,
+  CAPA_RUTAS,
 ];
 
 /** Capas propias de cada capa del selector. */
@@ -210,6 +219,7 @@ export const CAPAS_DE_PUNTOS_AL_TOQUE: readonly string[] = CAPAS_DE_PUNTOS_DE_GU
 );
 /** Áreas: solo reciben el clic si no hay ninguna marca ni ningún arco. */
 export const CAPAS_DE_AREAS: readonly string[] = [
+  CAPA_RUTAS,
   CAPA_REGIONES,
   CAPA_REGIONES_RUSIA,
   CAPA_GNSS,
@@ -228,6 +238,8 @@ const COLOR_CORREDOR = PALETA.guerra;
 export const OPACIDAD_CORREDOR: ExpressionSpecification = ["get", "opacidad"];
 /** Opacidad de los demás arcos mientras uno está realzado. */
 export const OPACIDAD_CORREDOR_ATENUADO: ExpressionSpecification = ["*", ["get", "opacidad"], 0.4];
+/** Opacidad de cada franja de ruta: con muchas superpuestas el violeta se acumula sin tapar. */
+export const OPACIDAD_RUTA = 0.07;
 /** Radio del aro de realce de un punto de la capa de guerra. */
 export const RADIO_REALCE_PUNTO = 9;
 
@@ -616,6 +628,33 @@ function capasPropias(acento: string): LayerSpecification[] {
       source: FUENTE_REGIONES,
       filter: ["in", ["get", "iso"], ["literal", []]],
       paint: { "line-color": acento, "line-width": 1.2 },
+    },
+    // Rutas: franjas violetas muy transparentes, por debajo de los corredores (que se leen
+    // encima) y de los impactos.
+    {
+      id: CAPA_RUTAS,
+      type: "fill",
+      source: FUENTE_RUTAS,
+      paint: { "fill-color": PALETA.guerra, "fill-opacity": OPACIDAD_RUTA },
+    },
+    {
+      id: CAPA_RUTAS_LINEA,
+      type: "line",
+      source: FUENTE_RUTAS,
+      paint: { "line-color": PALETA.guerraClaro, "line-opacity": 0.35, "line-width": 0.5 },
+    },
+    // Recorrido de una incursión según la autoridad (con su ficha abierta).
+    {
+      id: CAPA_RECORRIDO,
+      type: "fill",
+      source: FUENTE_RECORRIDO,
+      paint: { "fill-color": PALETA.guerra, "fill-opacity": 0.25 },
+    },
+    {
+      id: CAPA_RECORRIDO_LINEA,
+      type: "line",
+      source: FUENTE_RECORRIDO,
+      paint: { "line-color": PALETA.guerraClaro, "line-opacity": 0.9, "line-width": 1.2 },
     },
     // Corredores de ataque: arcos sin animación, por debajo de impactos y focos.
     {
@@ -1181,6 +1220,8 @@ export function estilo(idioma: Idioma, origen: string, acento: string): StyleSpe
       [FUENTE_SATELITE]: { type: "geojson", data: VACIA },
       [FUENTE_REALCE_PUNTO]: { type: "geojson", data: VACIA },
       [FUENTE_ALUMBRADO]: { type: "geojson", data: VACIA },
+      [FUENTE_RUTAS]: { type: "geojson", data: VACIA },
+      [FUENTE_RECORRIDO]: { type: "geojson", data: VACIA },
       [FUENTE_IMPACTOS]: {
         type: "geojson",
         data: VACIA,

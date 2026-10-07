@@ -76,3 +76,25 @@ export function FilaTipoDron({ t, incidente }: Props) {
     </Fila>
   );
 }
+
+/** Fila «Recorrido según la autoridad»: los lugares en orden, con su hora si la da, y la frase. El
+ * recorrido se dibuja en el mapa mientras la ficha está abierta. */
+export function FilaRecorrido({ t, incidente }: Props) {
+  const recorrido = incidente.recorrido;
+  if (recorrido === undefined) return null;
+  const fuente = incidente.fuentes.find((f) => f.id === recorrido.fuente);
+  return (
+    <Fila nombre={t.rutas.recorrido}>
+      <span data-recorrido="">
+        {recorrido.puntos.map((p) => (p.hora === undefined ? p.nombre : `${p.nombre} (${p.hora})`)).join(" → ")}
+      </span>
+      <q className="block text-xs text-secundario">{recorrido.cita}</q>
+      {fuente !== undefined && (
+        <span className="block text-xs text-secundario">
+          {t.ficha.valorSegun} {fuente.medio}
+        </span>
+      )}
+      <span className="block text-xs text-secundario">{t.rutas.recorridoNota}</span>
+    </Fila>
+  );
+}

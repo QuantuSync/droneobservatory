@@ -395,6 +395,7 @@ def incidente_completo() -> Documento:
         },
         "deduccion": deduccion_completa(),
         "tipo_dron": tipo_dron_completo(),
+        "recorrido": recorrido(),
         # Lo añade la exportación semanal; la base no lo guarda.
         "procedencia": {
             "drones.numero": {
@@ -725,6 +726,21 @@ def _evidencia(efecto: str) -> Documento:
     }
 
 
+def recorrido() -> Documento:
+    """Recorrido de una incursión según la autoridad."""
+    return {
+        "version": "recorridos-1.0.0",
+        "fuente": "F1",
+        "cita": "din direcția localității Biliaivka spre localitatea Tudora",
+        "puntos": [
+            {"nombre": "Biliaivka", "lat": 46.48, "lon": 30.21, "radio_km": 4.0, "hora": "05:55"},
+            {"nombre": "Tudora", "lat": 46.44, "lon": 30.04, "radio_km": 4.0},
+        ],
+        "franja": [[[30.2, 46.4], [30.3, 46.5], [30.0, 46.5], [30.2, 46.4]]],
+        "velocidad": {"min_kmh": 10, "max_kmh": 20, "decide": None},
+    }
+
+
 def tipo_dron_completo() -> Documento:
     """Tipo de dron con todos sus campos (lo de la tabla tipos_dron)."""
     rasgo = {"rasgo": "tamano", "valor": "grande", "cita": "Two large drones were seen",
@@ -801,6 +817,7 @@ def tipo_dron_completo() -> Documento:
         },
         "retirado": {"fecha": "2025-10-03T10:05Z", "motivo": {"es": "prueba", "en": "test"}},
         "evaluado": "2025-10-03T10:05Z",
+        "recorrido": recorrido(),
     }
 
 

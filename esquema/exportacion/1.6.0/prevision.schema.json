@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:eodi:exportacion:1.5.0:prevision",
+  "$id": "urn:eodi:exportacion:1.6.0:prevision",
   "title": "Previsión registrada",
   "description": "Una previsión publicada del observatorio (proceso/prevision), tal como se registró en la tabla previsiones antes de conocerse el resultado: riesgo de frontera de una noche, incidentes de una semana o aviso de segunda noche. Valor calculado: su procedencia da el método (versión) y la fecha en que se hizo. No cambia nunca; el resultado, cuando se conoce, se calcula con los incidentes y los partes.",
   "type": "object",

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:eodi:exportacion:1.5.0:clases_dron",
+  "$id": "urn:eodi:exportacion:1.6.0:clases_dron",
   "title": "Clases de dron del motor de deducción con su envolvente (clases_dron.json)",
   "description": "Cada clase con sus modelos del catálogo y, por campo numérico, la envolvente: el mínimo de los mínimos y el máximo de los máximos de sus modelos, en la unidad canónica del campo, con sus fuentes. Un extremo null: algún modelo no tiene ese dato (o solo lo da una cota abierta), así que la clase no tiene cota por ese lado; nunca se rellena. debil: alguna cifra sale solo de fuentes de prioridad baja. derivado: entra una referencia genérica derivada de otros modelos. AEGIS lo usa como límites de movimiento por clase.",
   "type": "object",

@@ -45,3 +45,17 @@ def bloque(tipo: Documento | None, incidente: Documento) -> Documento | None:
     else:
         return None
     return salida
+
+
+def recorrido_publico(tipo: Documento | None, incidente: Documento) -> Documento | None:
+    """El recorrido de la incursión según la autoridad, si su fuente es pública."""
+    if not tipo or "recorrido" not in tipo:
+        return None
+    from exportacion.proyeccion import fuente_publica
+    from proceso.estados import Capa
+
+    recorrido = tipo["recorrido"]
+    publicas = {f["id"] for f in incidente.get("fuentes", []) if fuente_publica(f, Capa.GENERAL)}
+    if recorrido["fuente"] not in publicas:
+        return None
+    return {k: v for k, v in recorrido.items() if k != "velocidad"}

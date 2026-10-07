@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:eodi:exportacion:1.5.0:vocabulario",
+  "$id": "urn:eodi:exportacion:1.6.0:vocabulario",
   "title": "Vocabulario del observatorio y de AEGIS (vocabulario.json)",
   "type": "object",
   "additionalProperties": false,
