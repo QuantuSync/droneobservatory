@@ -1254,6 +1254,20 @@ export const es: Textos = {
         ],
       },
       {
+        id: "recorridos",
+        titulo: "Recorrido de las incursiones",
+        bloques: [
+          {
+            parrafo: [
+              "En los incidentes de Rumanía, Moldavia y Polonia en que la autoridad nombra los " +
+                "lugares por los que pasó el dron, la ficha dibuja ese recorrido al abrirla, con " +
+                "la frase de la que sale: los lugares en orden, situados con el nomenclátor, y una " +
+                "franja que une cada dos.",
+            ],
+          },
+        ],
+      },
+      {
         id: "tipo-dron",
         titulo: "Tipo de dron",
         bloques: [

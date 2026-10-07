@@ -1245,6 +1245,20 @@ export const en: Textos = {
         ],
       },
       {
+        id: "recorridos",
+        titulo: "Route of the incursions",
+        bloques: [
+          {
+            parrafo: [
+              "For incidents in Romania, Moldova and Poland where the authority names the places " +
+                "the drone passed, the record draws that route when opened, with the sentence it " +
+                "comes from: the places in order, located with the gazetteer, and a band joining " +
+                "each pair.",
+            ],
+          },
+        ],
+      },
+      {
         id: "tipo-dron",
         titulo: "Drone type",
         bloques: [

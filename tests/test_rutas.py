@@ -371,3 +371,39 @@ def test_la_noche_publicada_lleva_los_recorridos_ordenados_por_aparatos() -> Non
     assert aparatos == sorted(aparatos, reverse=True)
     assert all(r["longitud_km"] >= recorridos.LONGITUD_MIN_KM for r in lista)
     assert all("franja" not in t for t in documento["tramos"])
+
+
+def test_apagadas_en_la_web_no_se_suben_y_se_retiran(tmp_path: Path) -> None:
+    """Con el interruptor apagado se calculan y se guardan, pero no se suben: lo subido antes se
+    retira del almacén público. Al encenderlo se vuelve a subir todo."""
+    noches_ = tmp_path / "publicar" / "noches"
+    noches_.mkdir(parents=True)
+    (noches_ / "2026-10-05.json").write_text("{}", encoding="utf-8")
+    (tmp_path / "publicar" / "indice.json").write_text("{}", encoding="utf-8")
+    (tmp_path / rutas.SUBIDOS).write_text(
+        json.dumps({"rutas/indice.json": "a", "rutas/noches/2026-10-05.json": "b"}),
+        encoding="utf-8",
+    )
+    subidos: list[str] = []
+    borrados: list[str] = []
+
+    def subir(objeto: str, cuerpo: bytes, tipo: str, cache: str) -> bool:
+        subidos.append(objeto)
+        return True
+
+    def borrar(objeto: str) -> bool:
+        borrados.append(objeto)
+        return True
+
+    assert rutas._subir_cambios(tmp_path, subir, borrar, publicar=False) == 0
+    assert subidos == [] and sorted(borrados) == [
+        "rutas/indice.json",
+        "rutas/noches/2026-10-05.json",
+    ]
+    assert (noches_ / "2026-10-05.json").exists()
+    assert rutas._subir_cambios(tmp_path, subir, borrar, publicar=True) == 2
+    assert sorted(subidos) == ["rutas/indice.json", "rutas/noches/2026-10-05.json"]
+
+
+def test_el_interruptor_de_la_web_esta_apagado() -> None:
+    assert rutas.en_la_web() is False

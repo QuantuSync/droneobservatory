@@ -292,11 +292,25 @@ def retirada() -> Callable[[str], bool] | None:
     return satelite.borrado_del_almacen(os.environ)
 
 
+AJUSTE_WEB = Path(__file__).resolve().parent.parent / "configuracion" / "rutas_en_la_web.json"
+
+
+def en_la_web() -> bool:
+    """El interruptor de las rutas en la web (configuracion/rutas_en_la_web.json): apagado, las
+    rutas se calculan y se guardan igual, pero no se publican en el almacén público."""
+    return bool(json.loads(AJUSTE_WEB.read_text(encoding="utf-8"))["mostrar"])
+
+
 def _subir_cambios(
-    salida: Path, subir: Subir | None, borrar: Callable[[str], bool] | None = None
+    salida: Path,
+    subir: Subir | None,
+    borrar: Callable[[str], bool] | None = None,
+    publicar: bool | None = None,
 ) -> int:
     """Sube al almacén lo que ha cambiado desde la última subida (por su huella) y retira lo que
-    ya no se publica."""
+    ya no se publica. Con las rutas apagadas en la web no sube nada y retira del almacén público
+    todo lo subido antes (las noches siguen en datos/rutas/publicar); al encenderlas, como el
+    registro de subidas queda vacío, se vuelve a subir todo."""
     import hashlib
 
     registro_subidos = salida / SUBIDOS
@@ -305,6 +319,14 @@ def _subir_cambios(
         if registro_subidos.exists()
         else {}
     )
+    if not (en_la_web() if publicar is None else publicar):
+        for objeto in sorted(previos):
+            if borrar is not None and borrar(objeto):
+                del previos[objeto]
+        registro_subidos.write_text(_texto(previos), encoding="utf-8")
+        if previos:
+            registro.warning("rutas apagadas en la web: sin retirar %s", ", ".join(previos))
+        return 0
     if subir is None:
         return 0
     ficheros = sorted((salida / "publicar" / "noches").glob("*.json"))

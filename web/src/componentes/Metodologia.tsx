@@ -4,6 +4,7 @@ import { fechaHora } from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
 import type { Bloque, Marca, Trozo } from "../i18n/tipos.ts";
 import { DESCARGAS, LICENCIA_DATOS, LICENCIA_DATOS_URL, NOMBRE } from "../sitio.ts";
+import { seccionesDeMetodologia } from "../rutasEnLaWeb.ts";
 import { EnlaceExterno } from "./EnlaceExterno.tsx";
 import { Simbolo } from "./Simbolo.tsx";
 
@@ -194,7 +195,7 @@ export function Metodologia({ t, abierta, actualizado, sinUbicacion, onCerrar }:
           </button>
         </div>
         <div className="flex-1 overflow-y-auto px-5 pb-8 pt-2">
-          {t.metodologia.secciones.map((seccion) => (
+          {seccionesDeMetodologia(t).map((seccion) => (
             <section key={seccion.id} className="mt-6" aria-labelledby={`metodologia-${seccion.id}`}>
               <h3 id={`metodologia-${seccion.id}`} className="text-lg font-semibold tracking-tight">
                 {seccion.titulo}

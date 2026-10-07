@@ -145,6 +145,7 @@ import type { ApiMapa, Encuadre, Reserva, Vuelo } from "./mapa/Mapa.tsx";
 import { ZOOM_DE_PAIS } from "./mapa/encuadre.ts";
 import { useNavegacion } from "./navegacion.tsx";
 import { analizarRuta } from "./rutas.ts";
+import { RUTAS_EN_LA_WEB } from "./rutasEnLaWeb.ts";
 import { ORIGEN, rutaDeFicha, rutaDeIdioma } from "./sitio.ts";
 import type { Idioma } from "./sitio.ts";
 import { diaDeInstante, enPeriodo, incidenteEnPeriodo } from "./tiempo/dias.ts";
@@ -714,12 +715,13 @@ export function App() {
   // Rutas de los drones: el índice y las noches se piden solo con la subcapa encendida (o al
   // reproducir noche a noche), del almacén público. Una noche cada vez: la última terminada, o la
   // que se está mostrando en «Noche a noche».
-  const verRutas = capas.ucrania && capas.rutas;
+  const verRutas = RUTAS_EN_LA_WEB && capas.ucrania && capas.rutas;
   const [indiceRutas, setIndiceRutas] = useState<IndiceRutas | null>(null);
   const [nochesRutas, setNochesRutas] = useState<ReadonlyMap<string, NocheRutas>>(new Map());
   const [rutasPendientes, setRutasPendientes] = useState(0);
   useEffect(() => {
-    if ((!verRutas && nocheActual === null) || indiceRutas !== null) return undefined;
+    // Con el interruptor apagado no se pide ningún fichero de rutas, tampoco en «Noche a noche».
+    if (!RUTAS_EN_LA_WEB || (!verRutas && nocheActual === null) || indiceRutas !== null) return undefined;
     const control = new AbortController();
     void cargarIndiceRutas(control.signal).then((indice) => {
       if (indice !== null && !control.signal.aborted) setIndiceRutas(indice);
@@ -823,7 +825,7 @@ export function App() {
       ucrania: true,
       corredores: delEnlace.corredores,
       satelite: delEnlace.satelite,
-      rutas: delEnlace.rutas,
+      rutas: RUTAS_EN_LA_WEB && delEnlace.rutas,
     }));
     setFiltroSatelite(delEnlace.filtro);
     if (delEnlace.filtro.length > 0) setListaSatelite(true);

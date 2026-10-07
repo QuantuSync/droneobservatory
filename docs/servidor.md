@@ -687,7 +687,11 @@ tope de 30 minutos), que ejecuta [`servidor/rutas.sh`](../servidor/rutas.sh) con
    (`rutas/indice.json`, caché de 5 minutos, y `rutas/noches/AAAA-MM-DD.json`, de una hora),
    comprimido con gzip (`Content-Encoding: gzip`: una noche pasa de unos 300 KB a unos 60 KB), y
    retira lo que deja de publicarse. Un cambio del formato vuelve a subir todas las noches en la
-   primera ejecución (la huella de cada fichero cambia).
+   primera ejecución (la huella de cada fichero cambia). Con el interruptor de la web apagado
+   (`configuracion/rutas_en_la_web.json`, `"mostrar": false`, desde el 7 de octubre de 2026) no
+   sube nada y retira del almacén público lo subido antes; las noches se siguen calculando y
+   guardando en `datos/rutas/publicar/` y la exportación semanal las sigue llevando. Al ponerlo a
+   `true` y fusionar, la primera ejecución tras la recogida siguiente vuelve a subirlo todo.
 
 La recogida horaria deja cada hora los ataques de cada noche (zonas de lanzamiento, lanzados,
 impactos e incidentes de frontera) en `datos/rutas/ataques.json`, para que el cálculo no cargue la

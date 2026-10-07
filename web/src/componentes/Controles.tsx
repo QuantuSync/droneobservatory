@@ -5,6 +5,7 @@ import { Enlace } from "../navegacion.tsx";
 import { IDIOMAS } from "../sitio.ts";
 import type { Idioma } from "../sitio.ts";
 import { EnlaceExterno } from "./EnlaceExterno.tsx";
+import { RUTAS_EN_LA_WEB } from "../rutasEnLaWeb.ts";
 
 export interface Capas {
   incidentes: boolean;
@@ -38,7 +39,8 @@ const ORDEN: readonly ("incidentes" | "ucrania" | "densidad" | "presion" | "gnss
   "presion",
   "gnss",
 ];
-const ORDEN_GUERRA: readonly ("corredores" | "rutas")[] = ["corredores", "rutas"];
+// «Rutas» solo con su interruptor encendido (rutasEnLaWeb.ts).
+const ORDEN_GUERRA: readonly ("corredores" | "rutas")[] = RUTAS_EN_LA_WEB ? ["corredores", "rutas"] : ["corredores"];
 
 /**
  * Las capas en un solo control compacto; cada una se enciende y se apaga por separado. Con la

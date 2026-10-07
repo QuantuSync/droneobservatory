@@ -1,0 +1,4 @@
+{
+  "descripcion": "Interruptor de las rutas de los drones sobre Ucrania en la web. Con «mostrar» en false la web no ofrece la subcapa «Rutas», no pide ningún fichero de rutas y no las describe; el servidor las sigue capturando, calculando y guardando, y la exportación semanal las sigue llevando, pero no las publica en el almacén público y retira de él las que hubiera. Para volver a enseñarlas basta con poner true y desplegar: la web las enseña y la siguiente ejecución de las rutas en el servidor (minuto 8) las vuelve a subir. Lo lee web/src/rutasEnLaWeb.ts y recogida/rutas.py. Los recorridos oficiales de las incursiones no dependen de él.",
+  "mostrar": false
+}

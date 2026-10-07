@@ -14,6 +14,11 @@ import { expect, test } from "@playwright/test";
 import type { BrowserContext, Page } from "@playwright/test";
 import type { Map as MapaGL } from "maplibre-gl";
 
+import ajuste from "../../configuracion/rutas_en_la_web.json" with { type: "json" };
+
+/** Con las rutas apagadas en la web, sus pruebas se saltan (las comprueba rutas-apagadas.spec.ts). */
+const SIN_RUTAS = !ajuste.mostrar;
+
 const CAPTURAS = process.env.CAPTURAS ?? join(import.meta.dirname, "..", "..", "..", "eodi-rl-cap");
 const MAPA = "[data-mapa-listo=true]";
 const LEYENDA = "[data-leyenda=rutas]";
@@ -132,6 +137,7 @@ for (const tamano of TAMANOS) {
 
     for (const combinacion of COMBINACIONES) {
       test(`«Rutas» ${combinacion.nombre}: una noche, recorridos con flecha y leyenda entera`, async ({ page, context, baseURL }) => {
+        test.skip(SIN_RUTAS, "rutas apagadas en la web");
         await preparar(context, baseURL);
         const inicio = Date.now();
         await page.goto(`/?guerra=${combinacion.guerra}`);
@@ -163,6 +169,7 @@ for (const tamano of TAMANOS) {
     }
 
     test("tocar un recorrido abre la ficha del grupo con NEPTUN y cerrarla no mueve el mapa", async ({ page, context, baseURL }) => {
+        test.skip(SIN_RUTAS, "rutas apagadas en la web");
       await preparar(context, baseURL);
       await page.goto("/?guerra=rutas");
       await page.locator(MAPA).waitFor();
@@ -200,6 +207,7 @@ for (const tamano of TAMANOS) {
     });
 
     test("«Noche a noche» dibuja solo la noche que muestra", async ({ page, context, baseURL }) => {
+        test.skip(SIN_RUTAS, "rutas apagadas en la web");
       await preparar(context, baseURL);
       await page.goto("/?desde=2026-10-05&hasta=2026-10-05&guerra=rutas");
       await page.locator(MAPA).waitFor();
@@ -238,11 +246,15 @@ for (const tamano of TAMANOS) {
 }
 
 test("la página de texto de Ucrania y la metodología explican las rutas sin ejecutar código", async ({ request }) => {
+  test.skip(SIN_RUTAS, "rutas apagadas en la web");
   const ucrania = await (await request.get("/ucrania")).text();
   expect(ucrania).toContain("Rutas de los drones sobre Ucrania");
   const metodo = await (await request.get("/en/methodology")).text();
   expect(metodo).toContain("Drone routes over Ukraine");
   expect(metodo).toContain("arrowhead");
+});
+
+test("la página de texto de una incursión lleva su recorrido sin ejecutar código", async ({ request }) => {
   const incursion = await (await request.get("/EODI-2026-00193")).text();
   expect(incursion).toContain('data-recorrido=""');
 });

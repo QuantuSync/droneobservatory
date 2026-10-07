@@ -43,6 +43,7 @@ import { e, html, jsonLd } from "./html.ts";
 import type { Hijo, Html } from "./html.ts";
 import { textosPagina } from "./textos.ts";
 import type { TextosPagina } from "./textos.ts";
+import { RUTAS_EN_LA_WEB, seccionesDeMetodologia } from "../rutasEnLaWeb.ts";
 
 /** Datos de los que salen todas las páginas: los mismos ficheros que lee el mapa. */
 export interface DatosPaginas {
@@ -797,7 +798,7 @@ function guerra(datos: DatosPaginas, idioma: Idioma): PaginaTexto {
   const corredores = corredoresDelPeriodo(u, TODO).sort((a, b) => b.drones - a.drones || a.clave.localeCompare(b.clave));
   const ayuda = t.ayuda;
   const satelite = t.metodologia.secciones.find((s) => s.id === "satelite");
-  const seccionRutas = t.metodologia.secciones.find((s) => s.id === "rutas");
+  const seccionRutas = RUTAS_EN_LA_WEB ? t.metodologia.secciones.find((s) => s.id === "rutas") : undefined;
   const fuentesPartes = (["RU_UA", "UA_RU"] as const).map((s) => [s, u.fuentes[s]] as const);
   const cuerpo = html(
     e("h1", null, tp.ucrania.titulo),
@@ -930,8 +931,8 @@ function metodologia(datos: DatosPaginas, idioma: Idioma): PaginaTexto {
   ];
   const cuerpo = html(
     e("h1", null, tp.metodologia.titulo),
-    e("nav", { "aria-label": tp.metodologia.indice }, e("ul", { class: "texto-enlaces" }, t.metodologia.secciones.map((s) => e("li", null, enlace(`#${s.id}`, s.titulo))), e("li", null, enlace("#datos-abiertos", d.titulo)))),
-    t.metodologia.secciones.map((s) => e("section", { id: s.id }, e("h2", null, s.titulo), s.bloques.map(bloque))),
+    e("nav", { "aria-label": tp.metodologia.indice }, e("ul", { class: "texto-enlaces" }, seccionesDeMetodologia(t).map((s) => e("li", null, enlace(`#${s.id}`, s.titulo))), e("li", null, enlace("#datos-abiertos", d.titulo)))),
+    seccionesDeMetodologia(t).map((s) => e("section", { id: s.id }, e("h2", null, s.titulo), s.bloques.map(bloque))),
     e(
       "section",
       { id: "datos-abiertos" },

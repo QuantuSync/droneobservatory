@@ -382,3 +382,9 @@ recorrido de varias.
    pierde a muchos grupos y abre pistas nuevas lejos. Arreglo: unir también con los mensajes de la
    Fuerza Aérea de la misma noche cuando un mensaje sitúe al grupo entre dos pistas, con la misma
    regla de no inventar identidades.
+
+## 7 de octubre de 2026: rutas apagadas en la web
+
+- Las rutas sobre Ucrania dejan de enseñarse en la web: sin subcapa «Rutas», sin ficheros de rutas en el almacén público y sin describirlas en la metodología ni en la página de Ucrania; el recorrido oficial de las incursiones sigue a la vista.
+- El servidor las sigue capturando, calculando y guardando cada hora (`datos/rutas/publicar/`), con su comprobación, y la exportación semanal las sigue llevando con su regla de origen.
+- Para volver a encenderlas: poner `"mostrar": true` en `configuracion/rutas_en_la_web.json` y fusionar; la web las enseña al desplegarse y el trabajo de rutas del minuto 8 siguiente a la recogida las vuelve a subir al almacén público.

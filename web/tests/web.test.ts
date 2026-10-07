@@ -72,6 +72,7 @@ describe("textos en español e inglés", () => {
       "focos",
       "satelite",
       "rutas",
+      "recorridos",
       "tipo-dron",
       "trafico",
       "directo",
