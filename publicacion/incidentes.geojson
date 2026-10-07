@@ -191963,6 +191963,539 @@
     }
    },
    "type": "Feature"
+  },
+  {
+   "geometry": {
+    "coordinates": [
+     29.9617,
+     46.73253
+    ],
+    "type": "Point"
+   },
+   "id": "EODI-2026-00496",
+   "properties": {
+    "afirmaciones_publicas": [
+     {
+      "campo": "lugar.localidad",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-07T18:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-57540c76ad50eece",
+      "medio": "news.yam.md",
+      "valor": "Pervomaisc"
+     },
+     {
+      "campo": "lugar.pais",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-07T18:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-57540c76ad50eece",
+      "medio": "news.yam.md",
+      "valor": "MD"
+     },
+     {
+      "campo": "presencia_dron",
+      "cita": "Un zbor neautorizat a fost detectat în spațiul aerian al Republicii Moldova",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-07T18:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-57540c76ad50eece",
+      "medio": "news.yam.md",
+      "valor": "confirmada"
+     },
+     {
+      "campo": "tiempo.inicio",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-07T18:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-57540c76ad50eece",
+      "medio": "news.yam.md",
+      "valor": {
+       "precision": "minuto",
+       "valor": "2026-10-07T17:04Z"
+      }
+     },
+     {
+      "campo": "tipo",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-07T18:30Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-57540c76ad50eece",
+      "medio": "news.yam.md",
+      "valor": "incursion"
+     }
+    ],
+    "consecuencias": {
+     "cierre": {
+      "valor": "desconocido"
+     }
+    },
+    "control": {
+     "ultima_actualizacion": {
+      "precision": "minuto",
+      "valor": "2026-10-07T20:17Z"
+     }
+    },
+    "drones": {
+     "numero": "desconocido"
+    },
+    "estado": {
+     "actual": "confirmado",
+     "historial": [
+      {
+       "estado": "notificado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2026-10-07T18:30Z"
+       },
+       "fuente_id": "gdelt-57540c76ad50eece"
+      },
+      {
+       "estado": "confirmado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2026-10-07T18:30Z"
+       },
+       "fuente_id": "gdelt-57540c76ad50eece-declaracion-1"
+      }
+     ]
+    },
+    "fuentes": [
+     {
+      "credibilidad": 3,
+      "enlace": "https://news.yam.md/ro/story/73085923",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-07T18:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Un zbor neautorizat a fost detectat în spațiul aerian al Republicii Moldova",
+      "id": "gdelt-57540c76ad50eece",
+      "idioma": "ro",
+      "medio": "news.yam.md",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 3,
+      "enlace": "https://news.yam.md/ro/story/73086183",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-07T18:30Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "O nouă dronă a survolat neautorizat spațiul aerian al Republicii Moldova, în zona transnistreană",
+      "id": "gdelt-2a328cf794f0ce6f",
+      "idioma": "ro",
+      "medio": "news.yam.md",
+      "replicas": 0
+     },
+     {
+      "credibilidad": 1,
+      "enlace": "https://news.yam.md/ro/story/73085923",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-07T18:30Z"
+      },
+      "fiabilidad": "B",
+      "frase_origen": "Un zbor neautorizat a fost detectat în spațiul aerian al Republicii Moldova, în această seară",
+      "id": "gdelt-57540c76ad50eece-declaracion-1",
+      "idioma": "ro",
+      "medio": "Ministerul Apărării (declaración oficial citada en news.yam.md)",
+      "replicas": 0
+     }
+    ],
+    "id": "EODI-2026-00496",
+    "lugar": {
+     "localidad": "Pervomaisc",
+     "pais": "MD",
+     "radio_km": 3.0
+    },
+    "objetivo": {
+     "categoria": "otra",
+     "nombre": "Pervomaisc"
+    },
+    "presencia_dron": "confirmada",
+    "tiempo": {
+     "inicio": {
+      "precision": "minuto",
+      "valor": "2026-10-07T17:04Z"
+     }
+    },
+    "tipo": "incursion",
+    "tipo_dron": {
+     "publicado": {
+      "casos_referencia": 26,
+      "compatible": [
+       {
+        "grupo": "largo_alcance_helice"
+       },
+       {
+        "grupo": "senuelo"
+       }
+      ],
+      "presentacion": "compatible_guerra"
+     },
+     "razones": [
+      {
+       "clave": "entrada_exterior",
+       "datos": {
+        "distancia_km": 0.0,
+        "entrada_exterior": true,
+        "mas_de_600_km": false
+       },
+       "tipo": "restriccion"
+      }
+     ],
+     "version": "tipo-dron-1.1.0"
+    },
+    "titulo": {
+     "en": "Unauthorized drone detected in Moldavian airspace",
+     "es": "Dron no autorizado detectado en el espacio aéreo de Moldavia"
+    },
+    "zona": {
+     "distancia_km": 0,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
+    }
+   },
+   "type": "Feature"
+  },
+  {
+   "geometry": {
+    "coordinates": [
+     22.71659,
+     51.23856
+    ],
+    "type": "Point"
+   },
+   "id": "EODI-2026-00497",
+   "properties": {
+    "afirmaciones_publicas": [
+     {
+      "campo": "lugar.pais",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-07T19:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-0809873f1423c16e",
+      "medio": "bankingnews.gr",
+      "valor": "PL"
+     },
+     {
+      "campo": "objetivo.categoria",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-07T19:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-0809873f1423c16e",
+      "medio": "bankingnews.gr",
+      "valor": "aeropuerto"
+     },
+     {
+      "campo": "objetivo.nombre",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-07T19:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-0809873f1423c16e",
+      "medio": "bankingnews.gr",
+      "valor": "Port Lotniczy Lublin"
+     },
+     {
+      "campo": "presencia_dron",
+      "cita": "Συναγερμός στην Πολωνία - Έκλεισαν τα νατοϊκά αεροδρόμια Lublin και Rzeszów μετά από εκτόξευση ρωσικού drone.",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-07T19:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-0809873f1423c16e",
+      "medio": "bankingnews.gr",
+      "valor": "confirmada"
+     },
+     {
+      "campo": "tiempo.inicio",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-07T19:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-0809873f1423c16e",
+      "medio": "bankingnews.gr",
+      "valor": {
+       "precision": "dia",
+       "valor": "2026-10-07T00:00Z"
+      }
+     },
+     {
+      "campo": "tipo",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-07T19:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-0809873f1423c16e",
+      "medio": "bankingnews.gr",
+      "valor": "interrupcion_aeroportuaria"
+     }
+    ],
+    "consecuencias": {
+     "cierre": {
+      "valor": "desconocido"
+     }
+    },
+    "control": {
+     "ultima_actualizacion": {
+      "precision": "minuto",
+      "valor": "2026-10-07T20:17Z"
+     }
+    },
+    "drones": {
+     "numero": "desconocido"
+    },
+    "estado": {
+     "actual": "notificado",
+     "historial": [
+      {
+       "estado": "notificado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2026-10-07T19:00Z"
+       },
+       "fuente_id": "gdelt-0809873f1423c16e"
+      }
+     ]
+    },
+    "fuentes": [
+     {
+      "credibilidad": 3,
+      "enlace": "https://bankingnews.gr/diethni/articles/903887/synagermos-stin-polonia-ekleisan-ta-natoika-aerodromia-lublin-kai-rzeszow-meta-apo-ektoksefsi-rosikoy-drone",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-07T19:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Συναγερμός στην Πολωνία - Έκλεισαν τα νατοϊκά αεροδρόμια Lublin και Rzeszów μετά από εκτόξευση ρωσικού drone.",
+      "id": "gdelt-0809873f1423c16e",
+      "idioma": "el",
+      "medio": "bankingnews.gr",
+      "replicas": 0
+     }
+    ],
+    "id": "EODI-2026-00497",
+    "lugar": {
+     "pais": "PL",
+     "radio_km": 5.0
+    },
+    "objetivo": {
+     "categoria": "aeropuerto",
+     "nombre": "Port Lotniczy Lublin",
+     "oaci": "EPLB"
+    },
+    "presencia_dron": "confirmada",
+    "tiempo": {
+     "inicio": {
+      "precision": "aproximada",
+      "valor": "2026-10-07T19:00Z"
+     }
+    },
+    "tipo": "sobrevuelo",
+    "titulo": {
+     "en": "Closure of Lublin and Rzeszów airports following drone launch",
+     "es": "Cierre de los aeropuertos de Lublin y Rzeszów tras lanzamiento de dron"
+    },
+    "zona": {
+     "distancia_km": 64,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
+    }
+   },
+   "type": "Feature"
+  },
+  {
+   "geometry": {
+    "coordinates": [
+     22.0201,
+     50.11154
+    ],
+    "type": "Point"
+   },
+   "id": "EODI-2026-00498",
+   "properties": {
+    "afirmaciones_publicas": [
+     {
+      "campo": "lugar.pais",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-07T19:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-0809873f1423c16e",
+      "medio": "bankingnews.gr",
+      "valor": "PL"
+     },
+     {
+      "campo": "objetivo.categoria",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-07T19:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-0809873f1423c16e",
+      "medio": "bankingnews.gr",
+      "valor": "aeropuerto"
+     },
+     {
+      "campo": "objetivo.nombre",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-07T19:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-0809873f1423c16e",
+      "medio": "bankingnews.gr",
+      "valor": "Port lotniczy Rzeszów-Jasionka im. Rodziny Ulmów"
+     },
+     {
+      "campo": "presencia_dron",
+      "cita": "Συναγερμός στην Πολωνία - Έκλεισαν τα νατοϊκά αεροδρόμια Lublin και Rzeszów μετά από εκτόξευση ρωσικού drone.",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-07T19:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-0809873f1423c16e",
+      "medio": "bankingnews.gr",
+      "valor": "confirmada"
+     },
+     {
+      "campo": "tiempo.inicio",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-07T19:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-0809873f1423c16e",
+      "medio": "bankingnews.gr",
+      "valor": {
+       "precision": "dia",
+       "valor": "2026-10-07T00:00Z"
+      }
+     },
+     {
+      "campo": "tipo",
+      "credibilidad": 3,
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-07T19:00Z"
+      },
+      "fiabilidad": "C",
+      "fuente_id": "gdelt-0809873f1423c16e",
+      "medio": "bankingnews.gr",
+      "valor": "interrupcion_aeroportuaria"
+     }
+    ],
+    "consecuencias": {
+     "cierre": {
+      "valor": "desconocido"
+     }
+    },
+    "control": {
+     "ultima_actualizacion": {
+      "precision": "minuto",
+      "valor": "2026-10-07T20:17Z"
+     }
+    },
+    "drones": {
+     "numero": "desconocido"
+    },
+    "estado": {
+     "actual": "notificado",
+     "historial": [
+      {
+       "estado": "notificado",
+       "fecha": {
+        "precision": "aproximada",
+        "valor": "2026-10-07T19:00Z"
+       },
+       "fuente_id": "gdelt-0809873f1423c16e"
+      }
+     ]
+    },
+    "fuentes": [
+     {
+      "credibilidad": 3,
+      "enlace": "https://bankingnews.gr/diethni/articles/903887/synagermos-stin-polonia-ekleisan-ta-natoika-aerodromia-lublin-kai-rzeszow-meta-apo-ektoksefsi-rosikoy-drone",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-07T19:00Z"
+      },
+      "fiabilidad": "C",
+      "frase_origen": "Συναγερμός στην Πολωνία - Έκλεισαν τα νατοϊκά αεροδρόμια Lublin και Rzeszów μετά από εκτόξευση ρωσικού drone.",
+      "id": "gdelt-0809873f1423c16e",
+      "idioma": "el",
+      "medio": "bankingnews.gr",
+      "replicas": 0
+     }
+    ],
+    "id": "EODI-2026-00498",
+    "lugar": {
+     "pais": "PL",
+     "radio_km": 5.0
+    },
+    "objetivo": {
+     "categoria": "aeropuerto",
+     "nombre": "Port lotniczy Rzeszów-Jasionka im. Rodziny Ulmów",
+     "oaci": "EPRZ"
+    },
+    "presencia_dron": "confirmada",
+    "tiempo": {
+     "inicio": {
+      "precision": "aproximada",
+      "valor": "2026-10-07T19:00Z"
+     }
+    },
+    "tipo": "sobrevuelo",
+    "titulo": {
+     "en": "Closure of Rzeszów and Lublin airports following drone launch",
+     "es": "Cierre de los aeropuertos de Rzeszów y Lublin tras lanzamiento de dron"
+    },
+    "zona": {
+     "distancia_km": 72,
+     "grupo": "frontera",
+     "motivo": "cerca_de_la_frontera"
+    }
+   },
+   "type": "Feature"
   }
  ],
  "type": "FeatureCollection",
