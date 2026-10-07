@@ -148,8 +148,10 @@ def test_solo_disco_comprueba_la_copia_y_la_segunda_copia(
         copias.Copias, "restaurar", lambda self, destino, objeto: {"tamano": 1, "objeto": objeto}
     )
     correcto, hecho = solo_disco.comprobar(origen, segunda, tmp_path, AHORA)
-    assert not correcto and "no está en la segunda copia" in hecho[-1]
-    segunda.subir(clave, b"copia")
+    assert not correcto and "segunda copia no tiene" in hecho[-1]
+    # Basta una copia reciente en Helsinki, aunque aún no sea la de la última recogida.
+    anterior = f"base/horaria/{AHORA - timedelta(minutes=90):%Y-%m-%dT%H%M%SZ}.db.age"
+    segunda.subir(anterior, b"copia")
     correcto, hecho = solo_disco.comprobar(origen, segunda, tmp_path, AHORA)
     assert correcto, hecho
     # Una copia de hace más de 2 horas no vale.

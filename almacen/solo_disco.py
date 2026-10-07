@@ -8,7 +8,9 @@ antes de cambiar nada comprueba:
 
 1. que la última copia cifrada del almacén privado tiene menos de 2 horas, se baja, su huella
    coincide, se descifra y la base restaurada pasa la comprobación de integridad de SQLite;
-2. que esa misma copia está también en la segunda copia de Helsinki (almacen/replica.py).
+2. que la segunda copia de Helsinki (almacen/replica.py) tiene una copia horaria de la base de
+   menos de 3 horas (la réplica pasa en el minuto 47: la copia de la última recogida puede no
+   haber llegado aún).
 
 Si todo va bien, escribe `no` en el interruptor de la copia secundaria
 (`/home/eodi/.eodi/base_secundaria`), que vale desde la recogida siguiente. Si algo falla, no cambia
@@ -37,6 +39,7 @@ from almacen import copias, replica, sitio
 registro = logging.getLogger("solo_disco")
 
 MAX_ANTIGUEDAD = timedelta(hours=2)
+MAX_ANTIGUEDAD_REPLICA = timedelta(hours=3)
 PRUEBA = "prueba-solo-disco.sqlite"
 
 
@@ -63,10 +66,10 @@ def comprobar(
         return False, [f"la última copia no se restaura: {error}"]
     finally:
         destino.unlink(missing_ok=True)
-    en_replica = replica.PREFIJO_BASE + objeto.clave.removeprefix(origen.destino.prefijo)
-    if segunda.metadato(en_replica, "x-amz-meta-sha256") is None:
-        return False, [*hecho, f"{en_replica} no está en la segunda copia"]
-    hecho.append(f"{en_replica} está en la segunda copia")
+    en_replica = [c for c in segunda.copias() if c[0] == copias.HORARIA]
+    if not en_replica or ahora - en_replica[-1][1] > MAX_ANTIGUEDAD_REPLICA:
+        return False, [*hecho, "la segunda copia no tiene una copia de la base de menos de 3 horas"]
+    hecho.append(f"la segunda copia tiene {en_replica[-1][2].clave}")
     return True, hecho
 
 

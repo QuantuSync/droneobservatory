@@ -622,7 +622,7 @@ ProtectSystem=full
 FIN
 cat > "/etc/systemd/system/$UNIDAD_PRUEBA_RESTAURACION.timer" <<FIN
 [Unit]
-Description=Prueba de restauración semanal de la base (EODI), los martes a las 10:45 UTC
+Description=Prueba de restauración semanal de la base (EODI), los martes a las 10:55 UTC
 
 [Timer]
 OnCalendar=$CALENDARIO_PRUEBA_RESTAURACION

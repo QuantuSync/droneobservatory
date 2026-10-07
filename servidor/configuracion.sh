@@ -142,9 +142,9 @@ CALENDARIO_BASE_SOLO_DISCO="2026-10-13 10:00:00 UTC"
 BASE_SOLO_DISCO_MEMORIA="2G"
 
 # Prueba de restauración semanal (servidor/prueba_restauracion.sh): la última copia de la base, del
-# almacén y de Helsinki. Los martes a las 10:45 UTC, de día y lejos de la recogida.
+# almacén y de Helsinki. Los martes a las 10:55 UTC, de día, tras la réplica del minuto 47.
 UNIDAD_PRUEBA_RESTAURACION="eodi-prueba-restauracion"
-CALENDARIO_PRUEBA_RESTAURACION="Tue *-*-* 10:45:00 UTC"
+CALENDARIO_PRUEBA_RESTAURACION="Tue *-*-* 10:55:00 UTC"
 PRUEBA_RESTAURACION_MEMORIA="2G"
 
 # --- Reintentos por sitio (recogida/reintentos.py) ------------------------------------
