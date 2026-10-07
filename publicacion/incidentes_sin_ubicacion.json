@@ -29066,6 +29066,154 @@
     "grupo": "frontera",
     "motivo": "ataque"
    }
+  },
+  {
+   "afirmaciones_publicas": [
+    {
+     "campo": "drones.numero",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-07T17:15Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-c5fe5a5304ec274a",
+     "medio": "newsit.gr",
+     "valor": {
+      "max": 3,
+      "min": 3
+     }
+    },
+    {
+     "campo": "presencia_dron",
+     "cita": "Τα τουρκικά drones αναγνωρίστηκαν και αναχαιτίστηκαν σύμφωνα με τους διεθνείς κανόνες",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-07T17:15Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-c5fe5a5304ec274a",
+     "medio": "newsit.gr",
+     "valor": "confirmada"
+    },
+    {
+     "campo": "respuesta.medidas",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-07T17:15Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-c5fe5a5304ec274a",
+     "medio": "newsit.gr",
+     "valor": [
+      "patrulla"
+     ]
+    },
+    {
+     "campo": "tiempo.inicio",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-07T17:15Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-c5fe5a5304ec274a",
+     "medio": "newsit.gr",
+     "valor": {
+      "precision": "dia",
+      "valor": "2026-10-07T00:00Z"
+     }
+    }
+   ],
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-07T19:17Z"
+    }
+   },
+   "drones": {
+    "numero": {
+     "max": 3,
+     "min": 3
+    }
+   },
+   "estado": {
+    "actual": "notificado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-07T17:15Z"
+      },
+      "fuente_id": "gdelt-c5fe5a5304ec274a"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://newsit.gr/ellada/aigaio-tesseris-paraviaseis-apo-tria-tourkika-drones-ston-ethniko-enaerio-xoro/4793053",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-07T17:15Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Τα τουρκικά drones αναγνωρίστηκαν και αναχαιτίστηκαν σύμφωνα με τους διεθνείς κανόνες",
+     "id": "gdelt-c5fe5a5304ec274a",
+     "idioma": "el",
+     "medio": "newsit.gr",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 1,
+     "enlace": "https://newsit.gr/ellada/aigaio-tesseris-paraviaseis-apo-tria-tourkika-drones-ston-ethniko-enaerio-xoro/4793053",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-07T17:15Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "τα drones της Τουρκίας πέταξαν σε βορειοανατολικό, κεντρικό και νοτιοανατολικό Αιγαίο",
+     "id": "gdelt-c5fe5a5304ec274a-declaracion-1",
+     "idioma": "el",
+     "medio": "ΓΕΕΘΑ (declaración oficial citada en newsit.gr)",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-2026-00495",
+   "lugar": {
+    "nivel": "region",
+    "pais": "GR",
+    "region": "Αιγαίο"
+   },
+   "presencia_dron": "confirmada",
+   "respuesta": {
+    "medidas": [
+     "patrulla"
+    ]
+   },
+   "tiempo": {
+    "inicio": {
+     "precision": "dia",
+     "valor": "2026-10-07T00:00Z"
+    }
+   },
+   "tipo": "sobrevuelo",
+   "titulo": {
+    "en": "Drones violate Greek airspace in the Aegean",
+    "es": "Drones violan el espacio aéreo griego en el Egeo"
+   },
+   "zona": {
+    "grupo": "interior",
+    "motivo": "sin_lugar"
+   }
   }
  ]
 }
