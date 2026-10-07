@@ -39,6 +39,11 @@ describe("decisión de omitir el build", () => {
     expect(decidir("aad9162", sinCambios, { destino: "preview", rama: "web-diseno" })).toBe(OMITIR);
   });
 
+  it("el mismo commit del despliegue anterior (el gancho de la publicación) construye", () => {
+    expect(decidir("aad9162", git({ "cat-file": 0, "merge-base": 0, diff: 0 }))).toBe(CONSTRUIR);
+    expect(decidir("aad9162", git({ "cat-file": 0, "merge-base": 1, diff: 0 }))).toBe(OMITIR);
+  });
+
   it("cualquier otro error construye", () => {
     expect(decidir("aad9162", git({ "cat-file": 0, diff: 128 }))).toBe(CONSTRUIR);
     expect(decidir("aad9162", git({ "cat-file": null }))).toBe(CONSTRUIR);

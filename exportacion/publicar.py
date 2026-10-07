@@ -7,6 +7,7 @@ El foco térmico de cada impacto (proceso/focos_termicos.py) y las mediciones de
 (proceso/luces.py) viven en sus propias tablas y se añaden aquí a su incidente, a su región o a
 su ataque antes de exportar."""
 
+import os
 from datetime import datetime
 from pathlib import Path
 
@@ -22,7 +23,12 @@ from proceso.luces import con_luces
 from proceso.mediciones import con_mediciones
 from proceso.tipo_dron import publico as tipo_dron
 
-DIRECTORIO = Path(__file__).resolve().parent.parent / "publicacion"
+# En el servidor, una carpeta fuera del clon (servidor/configuracion.sh): la publicación ya no vive
+# en el repositorio. Sin la variable, la carpeta publicacion/ del repositorio.
+VARIABLE_DIRECTORIO = "EODI_PUBLICACION_DIRECTORIO"
+DIRECTORIO = Path(
+    os.environ.get(VARIABLE_DIRECTORIO) or Path(__file__).resolve().parent.parent / "publicacion"
+)
 UCRANIA = "ucrania.json"
 INCIDENTES = "incidentes.geojson"
 SIN_UBICACION = "incidentes_sin_ubicacion.json"

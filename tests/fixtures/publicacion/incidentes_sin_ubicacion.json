@@ -1,0 +1,3381 @@
+{
+ "incidentes": [
+  {
+   "afirmaciones_publicas": [
+    {
+     "campo": "drones.numero",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-09-30T10:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-72db4664304302c9",
+     "medio": "fremover.no",
+     "valor": {
+      "max": 1,
+      "min": 1
+     }
+    },
+    {
+     "campo": "lugar.pais",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-09-30T10:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-72db4664304302c9",
+     "medio": "fremover.no",
+     "valor": "NO"
+    },
+    {
+     "campo": "presencia_dron",
+     "cita": "To turister innbrakt etter mistanke om ulovlig droneflyvning.",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-09-30T10:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-72db4664304302c9",
+     "medio": "fremover.no",
+     "valor": "no_confirmada"
+    },
+    {
+     "campo": "presencia_dron",
+     "cita": "To turister innbrakt etter mistanke om ulovlig droneflyvning.",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-09-30T10:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-72db4664304302c9",
+     "medio": "fremover.no",
+     "valor": "confirmada"
+    },
+    {
+     "campo": "tiempo.inicio",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-09-30T10:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-72db4664304302c9",
+     "medio": "fremover.no",
+     "valor": {
+      "precision": "minuto",
+      "valor": "2025-09-30T09:30Z"
+     }
+    },
+    {
+     "campo": "tipo",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-09-30T10:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-72db4664304302c9",
+     "medio": "fremover.no",
+     "valor": "sobrevuelo"
+    }
+   ],
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-05T16:17Z"
+    }
+   },
+   "drones": {
+    "numero": {
+     "max": 1,
+     "min": 1
+    }
+   },
+   "estado": {
+    "actual": "confirmado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-09-30T10:45Z"
+      },
+      "fuente_id": "gdelt-72db4664304302c9"
+     },
+     {
+      "estado": "confirmado",
+      "fecha": {
+       "precision": "dia",
+       "valor": "2025-09-30T00:00Z"
+      },
+      "fuente_id": "revisada-f7c370480ba4d9f0-declaracion-1"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://fremover.no/rykket-ut-til-droneflyvning-har-kontroll-pa-to-personer/s/5-34-2225422",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-09-30T10:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "To turister innbrakt etter mistanke om ulovlig droneflyvning.",
+     "id": "gdelt-72db4664304302c9",
+     "idioma": "no",
+     "medio": "fremover.no",
+     "replicas": 1
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://fremover.no/rykket-ut-til-droneflyvning-har-kontroll-pa-to-personer/s/5-34-2225422",
+     "fecha": {
+      "precision": "dia",
+      "valor": "2025-09-30T00:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "To turister innbrakt etter mistanke om ulovlig droneflyvning i n\u00e6rheten av Bardufoss lufthavn.",
+     "id": "revisada-f82c39b7ffcfbabb",
+     "idioma": "no",
+     "medio": "fremover.no",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 1,
+     "enlace": "https://fremover.no/rykket-ut-til-droneflyvning-har-kontroll-pa-to-personer/s/5-34-2225422",
+     "fecha": {
+      "precision": "dia",
+      "valor": "2025-09-30T00:00Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "De fl\u00f8y dronen i \u00f8stenden av Andsvatnet, som er innenfor forbudssonen for droner som eksisterer rundt flyplassen, sier Kileng.",
+     "id": "revisada-f7c370480ba4d9f0-declaracion-1",
+     "idioma": "no",
+     "medio": "Troms politidistrikt (declaraci\u00f3n oficial citada en fremover.no)",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-2025-00013",
+   "lugar": {
+    "nivel": "region",
+    "pais": "NO",
+    "region": "Troms og Finnmark"
+   },
+   "presencia_dron": "confirmada",
+   "tiempo": {
+    "inicio": {
+     "precision": "hora",
+     "valor": "2025-09-30T09:30Z"
+    }
+   },
+   "tipo": "sobrevuelo",
+   "titulo": {
+    "en": "Two tourists detained for flying drone near Bardufoss airport",
+    "es": "Dos turistas detenidos por volar dron cerca del aeropuerto de Bardufoss"
+   },
+   "zona": {
+    "distancia_km": 393,
+    "grupo": "interior",
+    "motivo": "lejos_de_la_frontera"
+   }
+  },
+  {
+   "afirmaciones_publicas": [
+    {
+     "campo": "drones.numero",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-12T10:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-e331226be856309a",
+     "medio": "europe1.fr",
+     "valor": {
+      "max": 1,
+      "min": 1
+     }
+    },
+    {
+     "campo": "objetivo.categoria",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-12T10:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-e331226be856309a",
+     "medio": "europe1.fr",
+     "valor": "otra"
+    },
+    {
+     "campo": "objetivo.nombre",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-12T10:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-e331226be856309a",
+     "medio": "europe1.fr",
+     "valor": "gare de triage de Mulhouse"
+    },
+    {
+     "campo": "presencia_dron",
+     "cita": "un drone a effectu\u00e9 plusieurs vols dans la nuit de mardi \u00e0 mercredi",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-12T10:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-e331226be856309a",
+     "medio": "europe1.fr",
+     "valor": "no_confirmada"
+    },
+    {
+     "campo": "tiempo.inicio",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-12T12:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-7f13ec8d6d33266d",
+     "medio": "dna.fr",
+     "valor": {
+      "precision": "minuto",
+      "valor": "2025-11-11T22:45Z"
+     }
+    },
+    {
+     "campo": "tipo",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-12T10:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-e331226be856309a",
+     "medio": "europe1.fr",
+     "valor": "sobrevuelo"
+    }
+   ],
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-04T11:17Z"
+    }
+   },
+   "drones": {
+    "numero": {
+     "max": 1,
+     "min": 1
+    }
+   },
+   "estado": {
+    "actual": "notificado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-11-12T10:45Z"
+      },
+      "fuente_id": "gdelt-e331226be856309a"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://europe1.fr/societe/info-europe-1-mulhouse-un-convoi-de-chars-leclerc-survole-par-un-drone-870996",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-12T10:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "un drone a effectu\u00e9 plusieurs vols dans la nuit de mardi \u00e0 mercredi",
+     "id": "gdelt-e331226be856309a",
+     "idioma": "fr",
+     "medio": "europe1.fr",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://leparisien.fr/faits-divers/mulhouse-un-convoi-de-chars-de-combat-leclerc-survole-par-un-drone-12-11-2025-ABQ62MW2PVBSLOSUB4SXDWWOXQ.php",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-12T10:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Mulhouse : un convoi de chars de combat Leclerc survol\u00e9 par un drone",
+     "id": "gdelt-ab548957dfff4b6d",
+     "idioma": "fr",
+     "medio": "leparisien.fr",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://dna.fr/faits-divers-justice/2025/11/12/un-drone-survole-le-commissariat-et-un-convoi-ferroviaire-de-chars-leclerc-en-pleine-nuit",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-12T12:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "un drone a survol\u00e9, mardi 11 novembre vers 23 h 30, le commissariat central de la ville et la gare de triage",
+     "id": "gdelt-7f13ec8d6d33266d",
+     "idioma": "fr",
+     "medio": "dna.fr",
+     "replicas": 1
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://bienpublic.com/defense-guerre-conflit/2025/11/12/mulhouse-un-drone-survole-un-convoi-ferroviaire-classe-secret-de-chars-leclerc",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-12T13:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Haut-Rhin. Mulhouse : un drone survole un convoi ferroviaire class\u00e9 secret de chars Leclerc",
+     "id": "gdelt-379ee8ce8e94e8cf",
+     "idioma": "fr",
+     "medio": "bienpublic.com",
+     "replicas": 6
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://20minutes.fr/societe/4185210-20251112-mulhouse-convoi-chars-leclerc-survole-drone-enquete-ouverte",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-12T16:15Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Mulhouse : Un convoi de chars Leclerc survol\u00e9 par un drone, une enqu\u00eate ouverte",
+     "id": "gdelt-244e3bac6051fdc4",
+     "idioma": "fr",
+     "medio": "20minutes.fr",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://tf1info.fr/justice-faits-divers/mulhouse-un-drone-survole-un-convoi-de-chars-leclerc-le-pilote-recherche-2406240.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-12T16:15Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Mulhouse : un drone survole un convoi de chars Leclerc, le pilote recherch\u00e9",
+     "id": "gdelt-4e9f609883401b1d",
+     "idioma": "fr",
+     "medio": "tf1info.fr",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://sudouest.fr/societe/defense/mulhouse-une-enquete-ouverte-apres-le-survol-d-un-convoi-de-chars-leclerc-par-un-drone-26698017.php",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-11-12T18:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Mulhouse : une enqu\u00eate ouverte apr\u00e8s le survol d'un convoi de chars Leclerc par un drone",
+     "id": "gdelt-b49a7c6127f53ac4",
+     "idioma": "fr",
+     "medio": "sudouest.fr",
+     "replicas": 1
+    }
+   ],
+   "id": "EODI-2025-00218",
+   "lugar": {
+    "nivel": "localidad",
+    "pais": "FR",
+    "region": "Haut-Rhin"
+   },
+   "objetivo": {
+    "categoria": "otra",
+    "nombre": "gare de triage de Mulhouse"
+   },
+   "presencia_dron": "no_confirmada",
+   "tiempo": {
+    "inicio": {
+     "precision": "hora",
+     "valor": "2025-11-11T22:45Z"
+    }
+   },
+   "tipo": "sobrevuelo",
+   "titulo": {
+    "en": "Possible drone flies over Leclerc tank convoy in Mulhouse",
+    "es": "Un posible dron sobrevuela un convoy de carros Leclerc en Mulhouse"
+   },
+   "zona": {
+    "grupo": "interior",
+    "motivo": "lejos_de_la_frontera"
+   }
+  },
+  {
+   "afirmaciones_publicas": [
+    {
+     "campo": "drones.numero",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-02-16T21:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-8b50184ebffe5abf",
+     "medio": "news.yam.md",
+     "valor": {
+      "max": 2,
+      "min": 2
+     }
+    },
+    {
+     "campo": "lugar.pais",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-02-16T21:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-8b50184ebffe5abf",
+     "medio": "news.yam.md",
+     "valor": "MD"
+    },
+    {
+     "campo": "presencia_dron",
+     "cita": "Dronele au fost depistate \u00een spa\u021biul aerian din sudul Republicii Moldova.",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-02-16T22:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-369632bd340fc7c7",
+     "medio": "moldpres.md",
+     "valor": "confirmada"
+    },
+    {
+     "campo": "tipo",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-02-16T22:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-369632bd340fc7c7",
+     "medio": "moldpres.md",
+     "valor": "sobrevuelo"
+    }
+   ],
+   "ataque": {
+    "id": "EODI-UA-2025-0046",
+    "jornada": {
+     "desde": "2025-02-16",
+     "hasta": "2025-02-17",
+     "tipo": "noche"
+    },
+    "por": "fecha"
+   },
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-04T11:17Z"
+    }
+   },
+   "drones": {
+    "numero": {
+     "max": 2,
+     "min": 2
+    }
+   },
+   "estado": {
+    "actual": "notificado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-02-16T21:45Z"
+      },
+      "fuente_id": "gdelt-8b50184ebffe5abf"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://news.yam.md/ro/story/16410552",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-02-16T21:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Dou\u0103 drone au \u00eenc\u0103lcat spa\u021biul aerian al R. Moldova.",
+     "id": "gdelt-8b50184ebffe5abf",
+     "idioma": "ro",
+     "medio": "news.yam.md",
+     "replicas": 2
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://moldpres.md/rom/societate/spatiul-aerian-al-r-moldova-din-nou-survolat-doua-drone-identificate-pe-directia-sud",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-02-16T22:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Dronele au fost depistate \u00een spa\u021biul aerian din sudul Republicii Moldova.",
+     "id": "gdelt-369632bd340fc7c7",
+     "idioma": "ro",
+     "medio": "moldpres.md",
+     "replicas": 1
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://news.yam.md/ro/story/16410572",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-02-16T22:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Dou\u0103 drone au \u00eenc\u0103lcat spa\u021biul aerian al Republicii Moldova \u00een regiunea de sud a \u021b\u0103rii",
+     "id": "gdelt-209f22c2b8265035",
+     "idioma": "ro",
+     "medio": "news.yam.md",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://news.yam.md/ro/story/16410641",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-02-16T22:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Dou\u0103 drone au \u00eenc\u0103lcat spa\u021biul aerian al Republicii Moldova \u00een sudul \u021b\u0103rii",
+     "id": "gdelt-51fab54d22275b1f",
+     "idioma": "ro",
+     "medio": "news.yam.md",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://protv.md/actualitate/ultima-ora-doua-drone-au-survolat-spa%C8%9Biul-aerian-al-republicii-moldova-in-timpul-unui-atac-masiv-al-rusiei-in-regiunea-odesa---2714228.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-02-16T23:15Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Ultima or\u0103. Dou\u0103 drone au survolat spa\u021biul aerian al Republicii Moldova, \u00een timpul unui atac masiv al Rusiei \u00een regiunea Odesa",
+     "id": "gdelt-3f4f1a9072f88984",
+     "idioma": "ro",
+     "medio": "protv.md",
+     "replicas": 1
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://hindustantimes.com/world-news/moldova-says-two-more-drones-violated-its-airspace-101739747777893.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-02-16T23:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Russian drones deployed in the nearly three-year-old war pitting Moscow against Kyiv.",
+     "id": "gdelt-607b5102671cf28b",
+     "idioma": "en",
+     "medio": "hindustantimes.com",
+     "replicas": 3
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://news.yam.md/ro/story/16410768",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-02-17T00:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Dou\u0103 drone au survolat spa\u021biul aerian al Republicii Moldova, la diferen\u021b\u0103 de c\u00e2teva minute",
+     "id": "gdelt-82e82d485a5a54df",
+     "idioma": "ro",
+     "medio": "news.yam.md",
+     "replicas": 5
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://evz.ro/doua-drone-au-survolat-spatiul-aerian-al-republicii-moldova-autoritatile-in-alerta.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-02-17T06:15Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Dou\u0103 drone au survolat spa\u021biul aerian al Republicii Moldova",
+     "id": "gdelt-4526dbd8d8e17b06",
+     "idioma": "ro",
+     "medio": "evz.ro",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://news.yam.md/ro/story/16411282",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-02-17T06:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Alte dou\u0103 drone au survolat asear\u0103 spa\u021biul aerian al Republicii Moldova",
+     "id": "gdelt-dc474cf997fb4288",
+     "idioma": "ro",
+     "medio": "news.yam.md",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://news.yam.md/ro/story/16411392",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-02-17T06:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Dou\u0103 drone au survolat spa\u021biul aerian al R. Moldova \u00een timpul unui atac rusesc asupra Odesei",
+     "id": "gdelt-f30ab77ce1a01d93",
+     "idioma": "ro",
+     "medio": "news.yam.md",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://news.yam.md/ro/story/16411393",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-02-17T06:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Alerte succesive: Noi drone au fost detectate \u00een spa\u021biul aerian al Republicii Moldova",
+     "id": "gdelt-134de5f48b74981c",
+     "idioma": "ro",
+     "medio": "news.yam.md",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://news.yam.md/ro/story/16411909",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-02-17T08:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Dou\u0103 drone au survolat spa\u021biul aerian al R. Moldova",
+     "id": "gdelt-e5cedb526b31dac5",
+     "idioma": "ro",
+     "medio": "news.yam.md",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://adevarul.ro/stiri-externe/republica-moldova/doua-drone-au-incalcat-spatiul-aerian-al-rep-2422470.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-02-17T08:15Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Dou\u0103 drone au \u00eenc\u0103lcat spa\u021biul aerian al Rep. Moldova \u00een timpul atacului masiv al Rusiei asupra regiunii Odesa",
+     "id": "gdelt-9b8331a9bddaf59e",
+     "idioma": "ro",
+     "medio": "adevarul.ro",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://news.yam.md/ro/story/16412387",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-02-17T09:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Reac\u021bia MAE dup\u0103 ce dou\u0103 drone au \u00eenc\u0103lcat spa\u021biul aerian al Republicii Moldova",
+     "id": "gdelt-d4f3022f85845452",
+     "idioma": "ro",
+     "medio": "news.yam.md",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://antena3.ro/externe/rusii-au-incalcat-iar-cu-drone-spatiul-aerian-al-r-moldova-la-patru-zile-dupa-ce-ambasadorul-rus-a-fost-convocat-din-acelasi-motiv-736572.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-02-17T09:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Ru\u0219ii au \u00eenc\u0103lcat iar cu drone spa\u021biul aerian al R. Moldova, la patru zile dup\u0103 ce ambasadorul rus a fost convocat din acela\u0219i motiv",
+     "id": "gdelt-3aad61e66ea93fde",
+     "idioma": "ro",
+     "medio": "antena3.ro",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://news.yam.md/ro/story/16413509",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-02-17T10:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "MAE condamn\u0103 ferm Incursiunea dronelor ruse\u0219ti \u00een spa\u021biul aerian al R. Moldova: Amenin\u021bare de securitate \u0219i \u00eenc\u0103lcare a suveranit\u0103\u021bii",
+     "id": "gdelt-9a9f5a44d3fe6045",
+     "idioma": "ro",
+     "medio": "news.yam.md",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://jurnaltv.md/news/46f8a17c075f3832/alte-doua-drone-au-survolat-neautorizat-spatiul-aerian-al-republicii-moldova-in-partea-de-sud.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-02-17T16:15Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Alte dou\u0103 drone au survolat neautorizat spa\u021biul aerian al Republicii Moldova, \u00een partea de sud",
+     "id": "gdelt-c708a04f287b2731",
+     "idioma": "ro",
+     "medio": "jurnaltv.md",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-2025-00260",
+   "lugar": {
+    "nivel": "pais",
+    "pais": "MD"
+   },
+   "presencia_dron": "confirmada",
+   "tiempo": {
+    "inicio": {
+     "precision": "aproximada",
+     "valor": "2025-02-16T21:45Z"
+    }
+   },
+   "tipo": "sobrevuelo",
+   "titulo": {
+    "en": "Two drones violate Moldovan airspace",
+    "es": "Dos drones violan el espacio a\u00e9reo de Moldavia"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "ataque"
+   }
+  },
+  {
+   "afirmaciones_publicas": [
+    {
+     "campo": "drones.numero",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-08-20T15:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-976c0ef1ddc05350",
+     "medio": "az-online.de",
+     "valor": {
+      "max": 1,
+      "min": 1
+     }
+    },
+    {
+     "campo": "lugar.pais",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-08-20T15:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-976c0ef1ddc05350",
+     "medio": "az-online.de",
+     "valor": "PL"
+    },
+    {
+     "campo": "presencia_dron",
+     "cita": "Bei einem in Polen auf einem Maisfeld abgest\u00fcrzten Flugobjekt handelt es sich nach Angaben der Regierung in Warschau um eine russische Drohne.",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-08-20T15:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-976c0ef1ddc05350",
+     "medio": "az-online.de",
+     "valor": "confirmada"
+    },
+    {
+     "campo": "tiempo.inicio",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-08-20T15:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-976c0ef1ddc05350",
+     "medio": "az-online.de",
+     "valor": {
+      "precision": "dia",
+      "valor": "2025-08-20T00:00Z"
+     }
+    },
+    {
+     "campo": "tipo",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-08-20T15:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-976c0ef1ddc05350",
+     "medio": "az-online.de",
+     "valor": "incursion"
+    }
+   ],
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-05T12:17Z"
+    }
+   },
+   "drones": {
+    "numero": {
+     "max": 1,
+     "min": 1
+    }
+   },
+   "estado": {
+    "actual": "notificado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-08-20T15:30Z"
+      },
+      "fuente_id": "gdelt-976c0ef1ddc05350"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://az-online.de/politik/warschau-in-polen-abgestuerzte-drohne-stammt-aus-russland-zr-93892348.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-08-20T15:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Bei einem in Polen auf einem Maisfeld abgest\u00fcrzten Flugobjekt handelt es sich nach Angaben der Regierung in Warschau um eine russische Drohne.",
+     "id": "gdelt-976c0ef1ddc05350",
+     "idioma": "de",
+     "medio": "az-online.de",
+     "replicas": 46
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://boyens-medien.de/artikelansicht/warschau-in-polen-abgestuerzte-drohne-stammt-aus-russland-1755702064.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-08-20T16:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Boyens Medien - Warschau: In Polen abgest\u00fcrzte Drohne stammt aus Russland",
+     "id": "gdelt-16e9ae7d04502702",
+     "idioma": "de",
+     "medio": "boyens-medien.de",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://deutschlandfunk.de/in-polen-abgestuerzte-drohne-stammt-laut-warschau-aus-russland-verteidigungsminister-spricht-von-rus-100.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-08-20T16:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Osiny - In Polen abgest\u00fcrzte Drohne stammt laut Warschau aus Russland - Verteidigungsminister spricht von \"russischer Provokation\"",
+     "id": "gdelt-d58ad2cbc5a0a661",
+     "idioma": "de",
+     "medio": "deutschlandfunk.de",
+     "replicas": 1
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://finanzen.net/nachricht/aktien/roundup-2-warschau-in-polen-abgestuerzte-drohne-stammt-aus-russland-14747830",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-08-20T17:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "ROUNDUP 2/Warschau: In Polen abgest\u00fcrzte Drohne stammt aus Russland",
+     "id": "gdelt-98c7b45ac866320c",
+     "idioma": "de",
+     "medio": "finanzen.net",
+     "replicas": 1
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://aktiencheck.de/analysen/Artikel-ROUNDUP_3_Warschau_Polen_abgestuerzte_Drohne_stammt_aus_Russland-18932969",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-08-20T17:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "ROUNDUP 3/Warschau: In Polen abgest\u00fcrzte Drohne stammt aus Russland ()",
+     "id": "gdelt-6f482c387217d83f",
+     "idioma": "de",
+     "medio": "aktiencheck.de",
+     "replicas": 3
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://meduza.io/en/news/2025/08/20/russian-drone-crashed-and-exploded-on-polish-territory-warsaw-says",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-08-20T18:15Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Russian drone crashed and exploded on Polish territory, Warsaw says \u2014 Meduza",
+     "id": "gdelt-737079e20572b9d9",
+     "idioma": "en",
+     "medio": "meduza.io",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://finanzen.net/nachricht/aktien/roundup-4-warschau-in-polen-abgestuerzte-drohne-stammt-aus-russland-14748015",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-08-20T18:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "ROUNDUP 4/Warschau: In Polen abgest\u00fcrzte Drohne stammt aus Russland",
+     "id": "gdelt-015891afc4fabe6d",
+     "idioma": "de",
+     "medio": "finanzen.net",
+     "replicas": 1
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://yahoo.com/news/articles/warsaw-drone-crashed-eastern-poland-182921841.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-08-20T19:15Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Warsaw: Drone that crashed in eastern Poland of Russian origin",
+     "id": "gdelt-87e8e924149b640a",
+     "idioma": "en",
+     "medio": "yahoo.com",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 1,
+     "enlace": "https://az-online.de/politik/warschau-in-polen-abgestuerzte-drohne-stammt-aus-russland-zr-93892348.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-08-20T15:30Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Polens Regierung spricht von einer russischen Provokation.",
+     "id": "gdelt-976c0ef1ddc05350-declaracion-1",
+     "idioma": "de",
+     "medio": "Polens Regierung (declaraci\u00f3n oficial citada en az-online.de)",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-2025-00305",
+   "lugar": {
+    "nivel": "region",
+    "pais": "PL",
+    "region": "Ostpolen"
+   },
+   "presencia_dron": "confirmada",
+   "tiempo": {
+    "inicio": {
+     "precision": "aproximada",
+     "valor": "2025-08-20T15:30Z"
+    }
+   },
+   "tipo": "sobrevuelo",
+   "titulo": {
+    "en": "Drone crashes in field in eastern Poland",
+    "es": "Dron se estrella en un campo en el este de Polonia"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "incursion_en_pais_fronterizo"
+   }
+  },
+  {
+   "afirmaciones_publicas": [
+    {
+     "campo": "lugar.pais",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-09-12T16:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-242ce1c5b46c693a",
+     "medio": "telegrafi.com",
+     "valor": "PL"
+    },
+    {
+     "campo": "presencia_dron",
+     "cita": "shkeljen e hap\u00ebsir\u00ebs ajrore polake nga dron\u00eb rus\u00eb",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-09-12T18:15Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-61c937f9a87dc0ac",
+     "medio": "top-channel.tv",
+     "valor": "confirmada"
+    },
+    {
+     "campo": "tiempo.inicio",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-09-12T16:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-242ce1c5b46c693a",
+     "medio": "telegrafi.com",
+     "valor": {
+      "precision": "dia",
+      "valor": "2025-09-08T00:00Z"
+     }
+    },
+    {
+     "campo": "tipo",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-09-12T18:15Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-61c937f9a87dc0ac",
+     "medio": "top-channel.tv",
+     "valor": "incursion"
+    }
+   ],
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-05T12:17Z"
+    }
+   },
+   "drones": {
+    "numero": "desconocido"
+   },
+   "estado": {
+    "actual": "notificado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2025-09-12T16:30Z"
+      },
+      "fuente_id": "gdelt-242ce1c5b46c693a"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://telegrafi.com/nato-nis-operacionin-roja-lindore-pas-futjes-se-droneve-rus-ne-poloni",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-09-12T16:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "dron\u00ebve rus\u00eb n\u00eb hap\u00ebsir\u00ebn ajrore polake",
+     "id": "gdelt-242ce1c5b46c693a",
+     "idioma": "sq",
+     "medio": "telegrafi.com",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://top-channel.tv/2025/09/12/nato-nis-operacionin-e-ri-roja-lindore-pas-shkeljes-se-hapesires-ajrore-te-polonise-nga-dronet-ruse",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-09-12T18:15Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "shkeljen e hap\u00ebsir\u00ebs ajrore polake nga dron\u00eb rus\u00eb",
+     "id": "gdelt-61c937f9a87dc0ac",
+     "idioma": "sq",
+     "medio": "top-channel.tv",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://rtv21.tv/nato-nis-operacionin-roja-lindore-ne-pergjigje-te-nderhyrjeve-me-drone-ruse",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2025-09-12T22:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "NATO nis operacionin 'Roja Lindore' n\u00eb p\u00ebrgjigje t\u00eb nd\u00ebrhyrjeve me dron\u00eb rus\u00eb",
+     "id": "gdelt-edaa3ce2b43b9662",
+     "idioma": "sq",
+     "medio": "rtv21.tv",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-2025-00379",
+   "lugar": {
+    "nivel": "pais",
+    "pais": "PL"
+   },
+   "presencia_dron": "confirmada",
+   "tiempo": {
+    "inicio": {
+     "precision": "dia",
+     "valor": "2025-09-12T00:00Z"
+    }
+   },
+   "tipo": "sobrevuelo",
+   "titulo": {
+    "en": "Drones violate Polish airspace, NATO launches defense operation",
+    "es": "Drones violan el espacio a\u00e9reo de Polonia, NATO inicia operaci\u00f3n de defensa"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "incursion_en_pais_fronterizo"
+   }
+  },
+  {
+   "afirmaciones_publicas": [
+    {
+     "campo": "drones.numero",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-08T19:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-2678548dc2262261",
+     "medio": "bankier.pl",
+     "valor": {
+      "max": 1,
+      "min": 1
+     }
+    },
+    {
+     "campo": "lugar.pais",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-08T19:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-2678548dc2262261",
+     "medio": "bankier.pl",
+     "valor": "RO"
+    },
+    {
+     "campo": "presencia_dron",
+     "cita": "bezza\u0142ogowiec wlecia\u0142 w rumu\u0144sk\u0105 przestrze\u0144 powietrzn\u0105 z terytorium Mo\u0142dawii",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-08T19:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-2678548dc2262261",
+     "medio": "bankier.pl",
+     "valor": "confirmada"
+    },
+    {
+     "campo": "tiempo.inicio",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-08T19:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-2678548dc2262261",
+     "medio": "bankier.pl",
+     "valor": {
+      "precision": "dia",
+      "valor": "2026-09-08T00:00Z"
+     }
+    },
+    {
+     "campo": "tipo",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-08T19:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-2678548dc2262261",
+     "medio": "bankier.pl",
+     "valor": "incursion"
+    }
+   ],
+   "ataque": {
+    "id": "EODI-UA-2026-0250",
+    "jornada": {
+     "desde": "2026-09-07",
+     "hasta": "2026-09-08",
+     "tipo": "noche"
+    },
+    "por": "fecha"
+   },
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-04T11:17Z"
+    }
+   },
+   "drones": {
+    "numero": {
+     "max": 1,
+     "min": 1
+    }
+   },
+   "estado": {
+    "actual": "confirmado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-08T19:30Z"
+      },
+      "fuente_id": "gdelt-2678548dc2262261"
+     },
+     {
+      "estado": "confirmado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-08T19:30Z"
+      },
+      "fuente_id": "gdelt-2678548dc2262261-declaracion-1"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://bankier.pl/wiadomosc/Tajemniczy-dron-nad-Rumunia-Mysliwce-NATO-poderwane-do-lotu-lotnisko-sparalizowane-9193968.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-08T19:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "bezza\u0142ogowiec wlecia\u0142 w rumu\u0144sk\u0105 przestrze\u0144 powietrzn\u0105 z terytorium Mo\u0142dawii",
+     "id": "gdelt-2678548dc2262261",
+     "idioma": "pl",
+     "medio": "bankier.pl",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 1,
+     "enlace": "https://bankier.pl/wiadomosc/Tajemniczy-dron-nad-Rumunia-Mysliwce-NATO-poderwane-do-lotu-lotnisko-sparalizowane-9193968.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-08T19:30Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "bezza\u0142ogowiec wlecia\u0142 w rumu\u0144sk\u0105 przestrze\u0144 powietrzn\u0105 z terytorium Mo\u0142dawii i pozostawa\u0142 w niej przez oko\u0142o 30 minut",
+     "id": "gdelt-2678548dc2262261-declaracion-1",
+     "idioma": "pl",
+     "medio": "Rumu\u0144ski resort obrony (declaraci\u00f3n oficial citada en bankier.pl)",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-2026-00075",
+   "lugar": {
+    "nivel": "localidad",
+    "pais": "RO",
+    "region": "Riscani"
+   },
+   "presencia_dron": "confirmada",
+   "tiempo": {
+    "inicio": {
+     "precision": "dia",
+     "valor": "2026-09-08T00:00Z"
+    }
+   },
+   "tipo": "incursion",
+   "titulo": {
+    "en": "Drone enters Romanian airspace from Moldova and crashes",
+    "es": "Dron entra en el espacio a\u00e9reo de Rumania desde Moldavia y se estrella"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "ataque"
+   }
+  },
+  {
+   "afirmaciones_publicas": [
+    {
+     "campo": "drones.numero",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-05-19T18:00Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-3458aeb14ff6a33d",
+     "medio": "yasstribune.com.au",
+     "valor": {
+      "max": 1,
+      "min": 1
+     }
+    },
+    {
+     "campo": "lugar.pais",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-05-19T18:00Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-3458aeb14ff6a33d",
+     "medio": "yasstribune.com.au",
+     "valor": "EE"
+    },
+    {
+     "campo": "presencia_dron",
+     "cita": "Ukraine has blamed Russia for steering one of its drones into Estonian airspace.",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-05-19T18:00Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-3458aeb14ff6a33d",
+     "medio": "yasstribune.com.au",
+     "valor": "confirmada"
+    },
+    {
+     "campo": "respuesta.medidas",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-05-19T18:00Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-3458aeb14ff6a33d",
+     "medio": "yasstribune.com.au",
+     "valor": [
+      "cazas"
+     ]
+    },
+    {
+     "campo": "tiempo.inicio",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-05-19T18:00Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-3458aeb14ff6a33d",
+     "medio": "yasstribune.com.au",
+     "valor": {
+      "precision": "dia",
+      "valor": "2026-05-19T00:00Z"
+     }
+    },
+    {
+     "campo": "tipo",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-05-19T18:00Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-3458aeb14ff6a33d",
+     "medio": "yasstribune.com.au",
+     "valor": "incursion"
+    }
+   ],
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-05T12:17Z"
+    }
+   },
+   "drones": {
+    "numero": {
+     "max": 1,
+     "min": 1
+    }
+   },
+   "estado": {
+    "actual": "notificado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-05-19T08:00Z"
+      },
+      "fuente_id": "gdelt-bc4855efb9c605c3"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://padovanews.it/2026/05/19/ucraina-russia-sotto-accusa-minori-addestrati-a-usare-droni-militari",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-05-19T08:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Russia accused of training minors to use military drones in Ukraine \u2013 Padovanews",
+     "id": "gdelt-bc4855efb9c605c3",
+     "idioma": "it",
+     "medio": "padovanews.it",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://kreiszeitung.de/politik/kiew-tote-an-ukraine-krieg-selenskyj-ordnet-vergeltung-fuer-zr-94307364.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-05-19T11:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Ukraine-Krieg: Neue Drohnenangriffe auf russische Regionen \u2013 Moskau warnt vor Krieg mit NATO",
+     "id": "gdelt-6b0ef309b06457b0",
+     "idioma": "de",
+     "medio": "kreiszeitung.de",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://t-online.de/nachrichten/ukraine/id_101258756/ukraine-krieg-nato-kampfjet-schiesst-offenbar-ukrainische-drohne-ab.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-05-19T11:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Ukraine-Krieg: Nato-Kampfjet schie\u00dft offenbar ukrainische Drohne ab",
+     "id": "gdelt-9f7fcafc7e360131",
+     "idioma": "de",
+     "medio": "t-online.de",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://g1.globo.com/mundo/noticia/2026/05/19/jatos-da-otan-derrubam-drone-na-estonia-e-russia-acusa-ucrania.ghtml",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-05-19T12:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Drone militar invade c\u00e9us da Est\u00f4nia e \u00e9 derrubado por ca\u00e7as da Otan; governo local acusa Ucr\u00e2nia",
+     "id": "gdelt-065d87f67b5b6d38",
+     "idioma": "pt",
+     "medio": "globo.com",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://krone.at/4147572",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-05-19T12:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Offenbar aus Ukraine - NATO-Jets schie\u00dfen Drohne \u00fcber Estland ab",
+     "id": "gdelt-c50f29541b71a394",
+     "idioma": "de",
+     "medio": "krone.at",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://veja.abril.com.br/mundo/caca-da-otan-derruba-drone-na-estonia-apos-ucrania-intensificar-ataques-a-russia",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-05-19T12:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Ca\u00e7a da Otan derruba drone na Est\u00f4nia ap\u00f3s Ucr\u00e2nia intensificar ataques \u00e0 R\u00fassia",
+     "id": "gdelt-b3df633eb50c519c",
+     "idioma": "pt",
+     "medio": "abril.com.br",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://soester-anzeiger.de/politik/kiew-tote-an-ukraine-krieg-selenskyj-ordnet-vergeltung-fuer-zr-94307364.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-05-19T13:15Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Ukraine-Krieg: NATO-Kampfjets schie\u00dfen Drohne \u00fcber Estland ab \u2013 kam sie aus der Ukraine?",
+     "id": "gdelt-5a30c69c0eac50cb",
+     "idioma": "de",
+     "medio": "soester-anzeiger.de",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://bild.de/politik/ausland-und-internationales/russland-droht-nato-land-lettland-mit-vergeltung-wegen-ukraine-drohnen-6a0c2beedc590e458816289d",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-05-19T14:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Russland droht Nato-Land Lettland mit Vergeltung wegen Ukraine-Drohnen",
+     "id": "gdelt-25e026ff1bd991ef",
+     "idioma": "de",
+     "medio": "bild.de",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://bild.de/politik/ausland-und-internationales/luftalarm-im-baltikum-ploetzlich-schiessen-nato-jets-ukraine-drohnen-ab-6a0c5607dc590e4588162c79",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-05-19T15:15Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Luftalarm im Baltikum: Pl\u00f6tzlich schie\u00dfen Nato-Jets Ukraine-Drohnen ab!",
+     "id": "gdelt-24946755cd51bd55",
+     "idioma": "de",
+     "medio": "bild.de",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://independent.co.uk/news/world/europe/ukraine-russia-drones-oil-refineries-brovdi-b2979409.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-05-19T15:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "How Ukraine's new drone tactics are causing chaos for the Russian army",
+     "id": "gdelt-c80de1c4985172ff",
+     "idioma": "en",
+     "medio": "independent.co.uk",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://rtp.pt/noticias/guerra-na-ucrania/ameca-a-nato-russia-acusa-ucrania-de-planear-lancar-drones-a-partir-de-paises-do-baltico_n1742262",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-05-19T16:15Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Amea\u00e7a \u00e0 NATO. R\u00fassia acusa Ucr\u00e2nia de planear lan\u00e7ar drones a partir de pa\u00edses do B\u00e1ltico",
+     "id": "gdelt-4b67794b6e8328f4",
+     "idioma": "pt",
+     "medio": "rtp.pt",
+     "replicas": 1
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://20minutes.fr/monde/ukraine/4224267-20260519-guerre-ukraine-russie-mobilise-forces-nucleaires-otan-abat-drone-ukrainien-egare",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-05-19T18:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Guerre en Ukraine : La Russie mobilise ses forces nucl\u00e9aires, l'Otan abat un drone ukrainien \u00e9gar\u00e9",
+     "id": "gdelt-375c4996c0436503",
+     "idioma": "fr",
+     "medio": "20minutes.fr",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://yasstribune.com.au/story/9250029/ukraine-drone-shot-down-by-nato-jet-over-estonia",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-05-19T18:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Ukraine has blamed Russia for steering one of its drones into Estonian airspace.",
+     "id": "gdelt-3458aeb14ff6a33d",
+     "idioma": "en",
+     "medio": "yasstribune.com.au",
+     "replicas": 6
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://deutschlandfunk.de/nato-jets-schiessen-mutmasslich-aus-der-ukraine-stammende-drohne-ab-102.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-05-19T18:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "\u00dcber Estland - NATO-Jets schie\u00dfen mutma\u00dflich aus der Ukraine stammende Drohne ab",
+     "id": "gdelt-227770df01189747",
+     "idioma": "de",
+     "medio": "deutschlandfunk.de",
+     "replicas": 1
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://ynetnews.com/article/rjezcx9jzl",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-05-19T20:15Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Russia warns NATO will not shield Baltic states if Ukraine launches drones from their",
+     "id": "gdelt-1dce7ee4f3839647",
+     "idioma": "en",
+     "medio": "ynetnews.com",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://lindependant.fr/2026/05/20/guerre-en-ukraine-un-drone-ukrainien-abattu-dans-le-ciel-de-lestonie-par-des-chasseurs-de-lotan-pour-proteger-les-populations-civiles-13379732.php",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-05-20T08:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Guerre en Ukraine : Un drone ukrainien abattu dans le ciel de l'Estonie par des chasseurs de l'OTAN \"pour prot\u00e9ger les populations civiles\"",
+     "id": "gdelt-d6aa175a06c1a9e7",
+     "idioma": "fr",
+     "medio": "lindependant.fr",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://az-online.de/politik/russland-droht-nato-land-lettland-mit-vergeltung-fuer-ukraine-drohnen-auf-moskau-zr-94314806.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-05-20T10:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Russland droht NATO-Land mit Vergeltung f\u00fcr Ukraine-Drohnen",
+     "id": "gdelt-82e4c6ebeb4b8246",
+     "idioma": "de",
+     "medio": "az-online.de",
+     "replicas": 14
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://cbc.ca/news/world/lithuania-ukraine-russia-war-drone-incident-9.7205544",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-05-20T12:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "NATO jets scrambled, Lithuanian leaders moved to safe location after Ukraine war drone detected",
+     "id": "gdelt-cd6bb6052787dc97",
+     "idioma": "en",
+     "medio": "cbc.ca",
+     "replicas": 1
+    }
+   ],
+   "id": "EODI-2026-00130",
+   "lugar": {
+    "nivel": "pais",
+    "pais": "EE"
+   },
+   "presencia_dron": "confirmada",
+   "respuesta": {
+    "medidas": [
+     "cazas"
+    ]
+   },
+   "tiempo": {
+    "inicio": {
+     "precision": "aproximada",
+     "valor": "2026-05-19T18:00Z"
+    }
+   },
+   "tipo": "incursion",
+   "titulo": {
+    "en": "Drone shot down by NATO jet over Estonia",
+    "es": "Dron derribado por caza de la OTAN sobre Estonia"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "incursion_en_pais_fronterizo"
+   }
+  },
+  {
+   "afirmaciones_publicas": [
+    {
+     "campo": "drones.numero",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-05-21T14:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-e32458e42d4d8bb6",
+     "medio": "bild.de",
+     "valor": {
+      "max": 1,
+      "min": 1
+     }
+    },
+    {
+     "campo": "lugar.pais",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-05-21T05:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-c196f321c5825f78",
+     "medio": "ladepeche.fr",
+     "valor": "LT"
+    },
+    {
+     "campo": "presencia_dron",
+     "cita": "La d\u00e9couverte d'un drone russe dans l'espace a\u00e9rien lituanien ce mercredi 20 mai.",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-05-21T05:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-c196f321c5825f78",
+     "medio": "ladepeche.fr",
+     "valor": "confirmada"
+    },
+    {
+     "campo": "tiempo.inicio",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-05-21T05:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-c196f321c5825f78",
+     "medio": "ladepeche.fr",
+     "valor": {
+      "precision": "dia",
+      "valor": "2026-05-20T00:00Z"
+     }
+    },
+    {
+     "campo": "tipo",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-05-21T05:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-c196f321c5825f78",
+     "medio": "ladepeche.fr",
+     "valor": "incursion"
+    }
+   ],
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-05T12:17Z"
+    }
+   },
+   "drones": {
+    "numero": {
+     "max": 1,
+     "min": 1
+    }
+   },
+   "estado": {
+    "actual": "notificado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-05-21T05:30Z"
+      },
+      "fuente_id": "gdelt-c196f321c5825f78"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://ladepeche.fr/2026/05/21/entretien-guerre-en-ukraine-drone-ecrase-en-lituanie-les-russes-testent-regulierement-les-defenses-de-lotan-rappelle-guillaume-ancel-13380248.php",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-05-21T05:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "La d\u00e9couverte d'un drone russe dans l'espace a\u00e9rien lituanien ce mercredi 20 mai.",
+     "id": "gdelt-c196f321c5825f78",
+     "idioma": "fr",
+     "medio": "ladepeche.fr",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://voiceofvienna.org/ukraine-apologizes-after-nato-intercepts-drone-in-baltic-airspace",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-05-21T08:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Ukraine Apologizes After NATO Intercepts Drone in Baltic Airspace",
+     "id": "gdelt-8afdccbba3ba2adf",
+     "idioma": "en",
+     "medio": "voiceofvienna.org",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://bild.de/politik/ausland-und-internationales/krieg-in-der-ukraine-kampfjets-der-nato-steigen-wegen-drohne-ueber-lettland-auf-6a0ed1553b7096456ac7e31e",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-05-21T14:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Um 11:50 Uhr best\u00e4tigte das lettische Milit\u00e4r, dass mindestens eine Drohne in den Luftraum des Landes eingedrungen sei.",
+     "id": "gdelt-e32458e42d4d8bb6",
+     "idioma": "de",
+     "medio": "bild.de",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://weltwoche.ch/daily/drohnen-alarm-im-baltikum-nato-territorium-wird-kriegsgebiet-der-ukraine-konflikt-droht-zu-eskalieren",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-05-21T14:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Drohnen-Alarm im Baltikum: Nato-Territorium wird Kriegsgebiet \u2013 der Ukraine-Konflikt droht zu eskalieren",
+     "id": "gdelt-5941a2e7350f79e5",
+     "idioma": "de",
+     "medio": "weltwoche.ch",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://t-online.de/nachrichten/ukraine/id_101258756/ukraine-krieg-drohne-verletzt-nato-luftraum-kampfjets-steigen-auf.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-05-21T17:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Ukraine-Krieg: Drohne verletzt Nato-Luftraum \u2013 Kampfjets steigen auf",
+     "id": "gdelt-0655a74ee2b40ea3",
+     "idioma": "de",
+     "medio": "t-online.de",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://sputnikglobe.com/20260522/swedish-prime-minister-says-nato-should-help-ukraine-direct-its-drones-1124169211.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-05-22T05:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Swedish Prime Minister Says NATO Should Help Ukraine 'Direct' Its Drones",
+     "id": "gdelt-4507f5997d8a3593",
+     "idioma": "en",
+     "medio": "sputnikglobe.com",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-2026-00185",
+   "lugar": {
+    "nivel": "pais",
+    "pais": "LT"
+   },
+   "presencia_dron": "confirmada",
+   "tiempo": {
+    "inicio": {
+     "precision": "dia",
+     "valor": "2026-05-20T00:00Z"
+    }
+   },
+   "tipo": "incursion",
+   "titulo": {
+    "en": "Drone downed in Lithuanian airspace",
+    "es": "Dron derribado en el espacio a\u00e9reo de Lituania"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "incursion_en_pais_fronterizo"
+   }
+  },
+  {
+   "afirmaciones_publicas": [
+    {
+     "campo": "drones.modelo",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-22T10:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-269e66d6481a08c5",
+     "medio": "mediafax.ro",
+     "valor": "Shahed 138"
+    },
+    {
+     "campo": "drones.numero",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-22T06:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-6e228027b6442493",
+     "medio": "protv.md",
+     "valor": {
+      "max": 1,
+      "min": 1
+     }
+    },
+    {
+     "campo": "lugar.pais",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-22T06:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-6e228027b6442493",
+     "medio": "protv.md",
+     "valor": "MD"
+    },
+    {
+     "campo": "presencia_dron",
+     "cita": "Potrivit Ministerului Ap\u0103r\u0103rii de la Chi\u0219in\u0103u, drona a fost detectat\u0103 la ora 04:07.",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-22T10:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-269e66d6481a08c5",
+     "medio": "mediafax.ro",
+     "valor": "confirmada"
+    },
+    {
+     "campo": "tiempo.inicio",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-22T10:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-269e66d6481a08c5",
+     "medio": "mediafax.ro",
+     "valor": {
+      "precision": "minuto",
+      "valor": "2026-08-22T02:00Z"
+     }
+    },
+    {
+     "campo": "tipo",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-22T06:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-6e228027b6442493",
+     "medio": "protv.md",
+     "valor": "incursion"
+    }
+   ],
+   "ataque": {
+    "id": "EODI-UA-2026-0229",
+    "jornada": {
+     "desde": "2026-08-21",
+     "hasta": "2026-08-22",
+     "tipo": "noche"
+    },
+    "por": "fuente"
+   },
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-04T11:17Z"
+    }
+   },
+   "drones": {
+    "modelo": "Shahed 138",
+    "numero": {
+     "max": 1,
+     "min": 1
+    }
+   },
+   "estado": {
+    "actual": "notificado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-08-22T06:45Z"
+      },
+      "fuente_id": "gdelt-6e228027b6442493"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://protv.md/actualitate/o-alta-drona-militara-a-survolat-spatiul-aerian-al-republicii-moldova-dupa-atacurile-rusesti-asupra-ucrainei-detaliile-ministerului-apararii---2765619.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-22T06:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "O nou\u0103 dron\u0103 de tip Shahed a survolat \u00een aceast\u0103 diminea\u021b\u0103 spa\u021biul aerian al Republicii Moldova.",
+     "id": "gdelt-6e228027b6442493",
+     "idioma": "ro",
+     "medio": "protv.md",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://news.yam.md/ro/story/56583124",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-22T07:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "BREAKING NEWS: O dron\u0103, preliminar de tip Shahed, a traversat neautorizat spa\u021biul aerian al Republicii Moldova",
+     "id": "gdelt-a1537f636c19fce7",
+     "idioma": "ro",
+     "medio": "news.yam.md",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://news.yam.md/ro/story/56584002",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-22T07:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Dron\u0103 Shahed, detectat\u0103 \u00een spa\u021biul aerian al R. Moldova. A survolat \u021bara timp de 17 minute",
+     "id": "gdelt-393ef1f6858fe11a",
+     "idioma": "ro",
+     "medio": "news.yam.md",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://news.yam.md/ro/story/56584051",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-22T07:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "O nou\u0103 dron\u0103, preliminar de tip Shahed 138, a traversat spa\u021biul aerian al Republicii Moldova",
+     "id": "gdelt-cdd49662d6a1f583",
+     "idioma": "ro",
+     "medio": "news.yam.md",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://news.yam.md/ro/story/56588363",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-22T07:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "O dron\u0103 a survolat spa\u021biul aerian al R. Moldova din direc\u021bia Ucrainei \u00een diminea\u021ba zilei de s\u00e2mb\u0103t\u0103.",
+     "id": "gdelt-deeecce01200f681",
+     "idioma": "ro",
+     "medio": "news.yam.md",
+     "replicas": 1
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://news.yam.md/ro/story/56590664",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-22T07:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "ALERT\u0102 AERIAN\u0102 // O dron\u0103 de atac ruseasc\u0103 a survolat spa\u021biul aerian al Republicii Moldova timp de 17 minute",
+     "id": "gdelt-454ce1f219009dbe",
+     "idioma": "ro",
+     "medio": "news.yam.md",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://news.yam.md/ro/story/56590715",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-22T07:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Dron\u0103 de tip Shahed, depistat\u0103 \u00een aceast\u0103 diminea\u0163\u0103 \u00een spa\u021biul aerian al Republicii Moldova",
+     "id": "gdelt-f4f42a1b52e345be",
+     "idioma": "ro",
+     "medio": "news.yam.md",
+     "replicas": 1
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://news.yam.md/ro/story/56612642",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-22T08:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "O nou\u0103 dron\u0103 de tip Shahed a intrat \u00een spa\u021biul aerian al Republicii Moldova",
+     "id": "gdelt-8cb32692ec07fa61",
+     "idioma": "ro",
+     "medio": "news.yam.md",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://news.yam.md/ro/story/56634736",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-22T10:15Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "O dron\u0103 de tip Shahed ar fi traversat ilegal spa\u021biul aerian al Republicii Moldova \u00een timpul atacurilor ruse\u0219ti asupra Ucrainei",
+     "id": "gdelt-f47b1ba46ad65f90",
+     "idioma": "ro",
+     "medio": "news.yam.md",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://mediafax.ro/externe/o-drona-a-survolat-spatiul-aerian-al-republicii-moldova-a-intrat-dinspre-ucraina-23794359",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-22T10:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Potrivit Ministerului Ap\u0103r\u0103rii de la Chi\u0219in\u0103u, drona a fost detectat\u0103 la ora 04:07.",
+     "id": "gdelt-269e66d6481a08c5",
+     "idioma": "ro",
+     "medio": "mediafax.ro",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://jurnalul.ro/stiri/externe/drona-shahed-survol-spatiul-aerian-republica-moldova-1042226.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-22T12:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "O dron\u0103 Shahed a survolat spa\u021biul aerian al Republicii Moldova",
+     "id": "gdelt-8949e0911c8138b9",
+     "idioma": "ro",
+     "medio": "jurnalul.ro",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-2026-00205",
+   "lugar": {
+    "nivel": "pais",
+    "pais": "MD"
+   },
+   "presencia_dron": "confirmada",
+   "tiempo": {
+    "inicio": {
+     "precision": "minuto",
+     "valor": "2026-08-22T02:00Z"
+    }
+   },
+   "tipo": "sobrevuelo",
+   "titulo": {
+    "en": "Shahed drone overflies Moldavian airspace from Ukraine",
+    "es": "Dron Shahed sobrevuela el espacio a\u00e9reo de Moldavia procedente de Ucrania"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "ataque"
+   }
+  },
+  {
+   "afirmaciones_publicas": [
+    {
+     "campo": "lugar.pais",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-16T06:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-3bfaed08d2d1dd26",
+     "medio": "deccanchronicle.com",
+     "valor": "RO"
+    },
+    {
+     "campo": "presencia_dron",
+     "cita": "a drone that breached its airspace near the border with Ukraine and Moldova",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-16T06:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-3bfaed08d2d1dd26",
+     "medio": "deccanchronicle.com",
+     "valor": "confirmada"
+    },
+    {
+     "campo": "respuesta.medidas",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-16T06:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-3bfaed08d2d1dd26",
+     "medio": "deccanchronicle.com",
+     "valor": [
+      "cazas",
+      "derribo"
+     ]
+    },
+    {
+     "campo": "tiempo.inicio",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-16T06:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-3bfaed08d2d1dd26",
+     "medio": "deccanchronicle.com",
+     "valor": {
+      "precision": "dia",
+      "valor": "2026-08-15T00:00Z"
+     }
+    },
+    {
+     "campo": "tipo",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-16T06:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-3bfaed08d2d1dd26",
+     "medio": "deccanchronicle.com",
+     "valor": "incursion"
+    }
+   ],
+   "ataque": {
+    "id": "EODI-UA-2026-0223",
+    "jornada": {
+     "desde": "2026-08-15",
+     "hasta": "2026-08-16",
+     "tipo": "noche"
+    },
+    "por": "fuente"
+   },
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-04T11:17Z"
+    }
+   },
+   "drones": {
+    "numero": "desconocido"
+   },
+   "estado": {
+    "actual": "notificado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-08-16T06:45Z"
+      },
+      "fuente_id": "gdelt-3bfaed08d2d1dd26"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://deccanchronicle.com/world/europe/spanish-f-18-shoots-down-drone-in-romanian-airspace-near-ukraine-1979547",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-16T06:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "a drone that breached its airspace near the border with Ukraine and Moldova",
+     "id": "gdelt-3bfaed08d2d1dd26",
+     "idioma": "en",
+     "medio": "deccanchronicle.com",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://sudouest.fr/international/europe/ukraine/guerre-en-ukraine-un-drone-etranger-abattu-dans-le-ciel-roumain-par-un-avion-de-combat-espagnol-30273687.php",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-16T09:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Guerre en Ukraine : un drone \u00e9tranger abattu dans le ciel roumain par un avion de combat espagnol",
+     "id": "gdelt-5fef6e0f700f9495",
+     "idioma": "fr",
+     "medio": "sudouest.fr",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://ladepeche.fr/2026/08/16/guerre-en-ukraine-kiev-a-lance-une-attaque-massive-de-600-drones-sur-moscou-un-tiers-des-aeronefs-abattus-selon-le-maire-de-la-capitale-russe-13510873.php",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-16T09:15Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Guerre en Ukraine : Kiev a lanc\u00e9 une attaque massive de 600 drones sur Moscou, un tiers des a\u00e9ronefs abattus selon le maire de la",
+     "id": "gdelt-82b03f8aa9e63afc",
+     "idioma": "fr",
+     "medio": "ladepeche.fr",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://n-tv.de/politik/11-48-Russland-will-ueber-800-ukrainische-Drohnen-in-einer-Nacht-abgeschossen-haben-id30859357.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-16T10:15Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Ukraine-Krieg im Liveticker: +++ 11:48 Russland will \u00fcber 800 ukrainische Drohnen in einer Nacht abgeschossen haben +++",
+     "id": "gdelt-f1c8856c35a73d08",
+     "idioma": "de",
+     "medio": "n-tv.de",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://leparisien.fr/defense/guerre-en-ukraine-un-drone-survolant-lespace-aerien-en-roumanie-abattu-par-un-avion-de-combat-espagnol-16-08-2026-QBXTJAN6QFAV7ASU23CKSOHATM.php",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-16T16:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Guerre en Ukraine : un drone survolant l'espace a\u00e9rien en Roumanie abattu par un avion de combat espagnol",
+     "id": "gdelt-9458a49b68329e8f",
+     "idioma": "fr",
+     "medio": "leparisien.fr",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://deutschlandfunk.de/mindestens-16-tote-nach-gegenseitigen-drohnenangriffen-in-ukraine-und-russland-kampfdrohne-ueber-rum-100.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-16T22:15Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Krieg - Mindestens 16 Tote nach gegenseitigen Drohnenangriffen in Ukraine und Russland - Kampfdrohne \u00fcber Rum\u00e4nien abgeschossen",
+     "id": "gdelt-c743342f29cbaf65",
+     "idioma": "de",
+     "medio": "deutschlandfunk.de",
+     "replicas": 1
+    }
+   ],
+   "id": "EODI-2026-00225",
+   "lugar": {
+    "nivel": "pais",
+    "pais": "RO"
+   },
+   "presencia_dron": "confirmada",
+   "respuesta": {
+    "medidas": [
+     "cazas",
+     "derribo"
+    ]
+   },
+   "tiempo": {
+    "inicio": {
+     "precision": "dia",
+     "valor": "2026-08-16T00:00Z"
+    }
+   },
+   "tipo": "incursion",
+   "titulo": {
+    "en": "Spanish fighter jet shoots down drone that breached Romanian airspace",
+    "es": "Un caza espa\u00f1ol derriba un dron que viol\u00f3 el espacio a\u00e9reo de Rumania"
+   },
+   "zona": {
+    "grupo": "frontera",
+    "motivo": "ataque"
+   }
+  },
+  {
+   "afirmaciones_publicas": [
+    {
+     "campo": "drones.numero",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-09T11:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-417400cfb5a5d6b6",
+     "medio": "newstalk.com",
+     "valor": {
+      "max": 1,
+      "min": 1
+     }
+    },
+    {
+     "campo": "lugar.pais",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-09T09:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-1b5202738536d388",
+     "medio": "breakingnews.ie",
+     "valor": "IE"
+    },
+    {
+     "campo": "presencia_dron",
+     "cita": "It will also seek to rule out the possibility a drone was being flown as part of US security preparations.",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-09T10:15Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-242bb21d1e850e3b",
+     "medio": "irishtimes.com",
+     "valor": "no_confirmada"
+    },
+    {
+     "campo": "tiempo.inicio",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-09T11:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-417400cfb5a5d6b6",
+     "medio": "newstalk.com",
+     "valor": {
+      "precision": "minuto",
+      "valor": "2026-09-08T17:00Z"
+     }
+    },
+    {
+     "campo": "tipo",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-09T11:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-417400cfb5a5d6b6",
+     "medio": "newstalk.com",
+     "valor": "sobrevuelo"
+    }
+   ],
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-04T11:17Z"
+    }
+   },
+   "drones": {
+    "numero": {
+     "max": 1,
+     "min": 1
+    }
+   },
+   "estado": {
+    "actual": "confirmado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-09T09:30Z"
+      },
+      "fuente_id": "gdelt-1b5202738536d388"
+     },
+     {
+      "estado": "confirmado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-09T09:30Z"
+      },
+      "fuente_id": "gdelt-1b5202738536d388-declaracion-1"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://breakingnews.ie/ireland/gardai-investigating-alleged-sighting-of-large-drone-close-to-dublin-bay-1948364.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-09T09:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Garda\u00ed investigating alleged sighting of large drone close to Dublin Bay.",
+     "id": "gdelt-1b5202738536d388",
+     "idioma": "en",
+     "medio": "breakingnews.ie",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://irishtimes.com/ireland/2026/09/09/gardai-investigating-sighting-of-large-drone-close-to-dublin-bay",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-09T10:15Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "It will also seek to rule out the possibility a drone was being flown as part of US security preparations.",
+     "id": "gdelt-242bb21d1e850e3b",
+     "idioma": "en",
+     "medio": "irishtimes.com",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://newstalk.com/podcasts/highlights-from-newstalk-breakfast/large-drone-spotted-close-to-dublin-bay",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-09T11:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "An Aer Lingus pilot has reported seeing a large drone close to Dublin Bay.",
+     "id": "gdelt-417400cfb5a5d6b6",
+     "idioma": "en",
+     "medio": "newstalk.com",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://nova.ie/gardai-investigating-report-of-large-black-drone-spotted-near-dublin-bay",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-09T14:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Garda\u00ed Investigating Report Of 'Large Black Drone' Spotted Near Dublin Bay",
+     "id": "gdelt-51393358f3501359",
+     "idioma": "en",
+     "medio": "nova.ie",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 1,
+     "enlace": "https://breakingnews.ie/ireland/gardai-investigating-alleged-sighting-of-large-drone-close-to-dublin-bay-1948364.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-09T09:30Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "Garda\u00ed investigating alleged sighting of large drone close to Dublin Bay.",
+     "id": "gdelt-1b5202738536d388-declaracion-1",
+     "idioma": "en",
+     "medio": "Garda\u00ed (declaraci\u00f3n oficial citada en breakingnews.ie)",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-2026-00278",
+   "lugar": {
+    "nivel": "region",
+    "pais": "IE",
+    "region": "Dublin Bay"
+   },
+   "presencia_dron": "no_confirmada",
+   "tiempo": {
+    "inicio": {
+     "precision": "hora",
+     "valor": "2026-09-08T17:00Z"
+    }
+   },
+   "tipo": "sobrevuelo",
+   "titulo": {
+    "en": "Large possible drone sighting near Dublin Bay",
+    "es": "Avistamiento de un posible dron grande cerca de Dublin Bay"
+   },
+   "zona": {
+    "grupo": "interior",
+    "motivo": "lejos_de_la_frontera"
+   }
+  },
+  {
+   "afirmaciones_publicas": [
+    {
+     "campo": "drones.numero",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-14T16:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-811a98e42914cfe6",
+     "medio": "zerohedge.com",
+     "valor": {
+      "max": 1,
+      "min": 1
+     }
+    },
+    {
+     "campo": "lugar.pais",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-14T14:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-cbcd8b64fc294b1c",
+     "medio": "livemint.com",
+     "valor": "LV"
+    },
+    {
+     "campo": "presencia_dron",
+     "cita": "NATO fighter jets have successfully shot down a foreign unmanned aerial vehicle that had entered Latvia.",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-14T16:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-811a98e42914cfe6",
+     "medio": "zerohedge.com",
+     "valor": "confirmada"
+    },
+    {
+     "campo": "respuesta.medidas",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-14T14:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-cbcd8b64fc294b1c",
+     "medio": "livemint.com",
+     "valor": [
+      "cazas",
+      "derribo"
+     ]
+    },
+    {
+     "campo": "tiempo.inicio",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-14T14:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-cbcd8b64fc294b1c",
+     "medio": "livemint.com",
+     "valor": {
+      "precision": "dia",
+      "valor": "2026-08-14T00:00Z"
+     }
+    },
+    {
+     "campo": "tipo",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-14T16:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-811a98e42914cfe6",
+     "medio": "zerohedge.com",
+     "valor": "incursion"
+    }
+   ],
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-04T11:17Z"
+    }
+   },
+   "drones": {
+    "numero": {
+     "max": 1,
+     "min": 1
+    }
+   },
+   "estado": {
+    "actual": "notificado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-08-14T14:30Z"
+      },
+      "fuente_id": "gdelt-cbcd8b64fc294b1c"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://livemint.com/global/nato-jet-downs-drone-as-concerns-grow-over-russia-threat-11786709104741.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-14T14:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "a foreign drone that entered Latvian airspace early Friday",
+     "id": "gdelt-cbcd8b64fc294b1c",
+     "idioma": "en",
+     "medio": "livemint.com",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://zerohedge.com/geopolitical/nato-jets-shoot-down-drone-over-latvia-which-blames-russian-electromagnetic-warfare",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-14T16:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "NATO fighter jets have successfully shot down a foreign unmanned aerial vehicle that had entered Latvia.",
+     "id": "gdelt-811a98e42914cfe6",
+     "idioma": "en",
+     "medio": "zerohedge.com",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://politicalwire.com/2026/08/14/nato-jet-downs-foreign-drone-over-latavia",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-08-14T18:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "NATO Jet Downs Foreign Drone Over Latvia",
+     "id": "gdelt-95827ca4c6867e53",
+     "idioma": "en",
+     "medio": "politicalwire.com",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-2026-00310",
+   "lugar": {
+    "nivel": "region",
+    "pais": "LV",
+    "region": "Balvi"
+   },
+   "presencia_dron": "confirmada",
+   "respuesta": {
+    "medidas": [
+     "cazas",
+     "derribo"
+    ]
+   },
+   "tiempo": {
+    "inicio": {
+     "precision": "dia",
+     "valor": "2026-08-14T00:00Z"
+    }
+   },
+   "tipo": "sobrevuelo",
+   "titulo": {
+    "en": "NATO Jets Shoot Down Drone Over Latvia",
+    "es": "Cazas de la OTAN derriban un dron sobre Letonia"
+   },
+   "zona": {
+    "distancia_km": 25,
+    "grupo": "frontera",
+    "motivo": "cerca_de_la_frontera"
+   }
+  },
+  {
+   "afirmaciones_publicas": [
+    {
+     "campo": "drones.numero",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-30T16:45Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-62c9a4ff879f1f92",
+     "medio": "inewsgr.com",
+     "valor": {
+      "max": 4,
+      "min": 4
+     }
+    },
+    {
+     "campo": "presencia_dron",
+     "cita": "\u03a3\u03cd\u03bc\u03c6\u03c9\u03bd\u03b1 \u03bc\u03b5 \u03c4\u03b1 \u03c3\u03c4\u03bf\u03b9\u03c7\u03b5\u03af\u03b1 \u03c4\u03bf\u03c5 \u0393\u0395\u0395\u0398\u0391, \u03c3\u03c4\u03b7\u03bd \u03c0\u03b5\u03c1\u03b9\u03bf\u03c7\u03ae \u03ba\u03b9\u03bd\u03ae\u03b8\u03b7\u03ba\u03b1\u03bd \u03ad\u03bd\u03b1\u03c2 \u03c3\u03c7\u03b7\u03bc\u03b1\u03c4\u03b9\u03c3\u03bc\u03cc\u03c2 \u03b4\u03cd\u03bf F-16 \u03ba\u03b1\u03b9 \u03c0\u03ad\u03bd\u03c4\u03b5 \u03bc\u03b5\u03bc\u03bf\u03bd\u03c9\u03bc\u03ad\u03bd\u03b1 \u03b1\u03b5\u03c1\u03bf\u03c3\u03ba\u03ac\u03c6\u03b7.",
+     "credibilidad": 1,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-30T16:45Z"
+     },
+     "fiabilidad": "B",
+     "fuente_id": "gdelt-62c9a4ff879f1f92-declaracion-1",
+     "medio": "\u0393\u0395\u0395\u0398\u0391 (declaraci\u00f3n oficial citada en inewsgr.com)",
+     "valor": "confirmada"
+    },
+    {
+     "campo": "respuesta.medidas",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-30T17:15Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-c086eccd3cfae42e",
+     "medio": "onalert.gr",
+     "valor": [
+      "patrulla"
+     ]
+    }
+   ],
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-05T16:17Z"
+    }
+   },
+   "drones": {
+    "numero": {
+     "max": 4,
+     "min": 4
+    }
+   },
+   "estado": {
+    "actual": "confirmado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-30T16:45Z"
+      },
+      "fuente_id": "gdelt-62c9a4ff879f1f92"
+     },
+     {
+      "estado": "confirmado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-09-30T16:45Z"
+      },
+      "fuente_id": "gdelt-62c9a4ff879f1f92-declaracion-1"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://inewsgr.com/441/klimakonetai-i-tourkiki-drastiriotita-sto-aigaio-oplismena-F-16-kai-drones-ston-elliniko-enaerio-choro.htm",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-30T16:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "\u03a4\u03ad\u03c3\u03c3\u03b5\u03c1\u03b1 \u03bc\u03b7 \u03b5\u03c0\u03b1\u03bd\u03b4\u03c1\u03c9\u03bc\u03ad\u03bd\u03b1 \u03b1\u03b5\u03c1\u03bf\u03c3\u03ba\u03ac\u03c6\u03b7 (UAV).",
+     "id": "gdelt-62c9a4ff879f1f92",
+     "idioma": "el",
+     "medio": "inewsgr.com",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://newsit.gr/ellada/nees-tourkikes-prokliseis-me-f-16-na-mpainoun-ston-ethniko-enaerio-xoro-drones-ekanan-paravaseis-kai-paraviaseis/4787136",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-30T16:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "\u039d\u03ad\u03b5\u03c2 \u03c4\u03bf\u03c5\u03c1\u03ba\u03b9\u03ba\u03ad\u03c2 \u03c0\u03c1\u03bf\u03ba\u03bb\u03ae\u03c3\u03b5\u03b9\u03c2 \u03bc\u03b5 F-16 \u03bd\u03b1 \u03bc\u03c0\u03b1\u03af\u03bd\u03bf\u03c5\u03bd \u03c3\u03c4\u03bf\u03bd \u03b5\u03b8\u03bd\u03b9\u03ba\u03cc \u03b5\u03bd\u03b1\u03ad\u03c1\u03b9\u03bf \u03c7\u03ce\u03c1\u03bf - Drones \u03ad\u03ba\u03b1\u03bd\u03b1\u03bd \u03c0\u03b1\u03c1\u03b1\u03b2\u03ac\u03c3\u03b5\u03b9\u03c2 \u03ba\u03b1\u03b9 \u03c0\u03b1\u03c1\u03b1\u03b2\u03b9\u03ac\u03c3\u03b5\u03b9\u03c2",
+     "id": "gdelt-f740e996e2430aed",
+     "idioma": "el",
+     "medio": "newsit.gr",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://onalert.gr/ellinotourkika/oplismena-tourkika-f-16-paraviasan-ton-ethniko-enaerio-xoro-paravaseis-kai-paraviaseis-apo-drones-kai-atr-72/823075",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-30T17:15Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "\u03a4\u03b1 \u03c4\u03bf\u03c5\u03c1\u03ba\u03b9\u03ba\u03ac \u03b1\u03b5\u03c1\u03bf\u03c3\u03ba\u03ac\u03c6\u03b7 \u03b1\u03bd\u03b1\u03b3\u03bd\u03c9\u03c1\u03af\u03c3\u03c4\u03b7\u03ba\u03b1\u03bd \u03ba\u03b1\u03b9 \u03b1\u03bd\u03b1\u03c7\u03b1\u03b9\u03c4\u03af\u03c3\u03c4\u03b7\u03ba\u03b1\u03bd \u03c3\u03cd\u03bc\u03c6\u03c9\u03bd\u03b1 \u03bc\u03b5 \u03c4\u03bf\u03c5\u03c2 \u03b4\u03b9\u03b5\u03b8\u03bd\u03b5\u03af\u03c2 \u03ba\u03b1\u03bd\u03cc\u03bd\u03b5\u03c2.",
+     "id": "gdelt-c086eccd3cfae42e",
+     "idioma": "el",
+     "medio": "onalert.gr",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 1,
+     "enlace": "https://inewsgr.com/441/klimakonetai-i-tourkiki-drastiriotita-sto-aigaio-oplismena-F-16-kai-drones-ston-elliniko-enaerio-choro.htm",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-09-30T16:45Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "\u03a3\u03cd\u03bc\u03c6\u03c9\u03bd\u03b1 \u03bc\u03b5 \u03c4\u03b1 \u03c3\u03c4\u03bf\u03b9\u03c7\u03b5\u03af\u03b1 \u03c4\u03bf\u03c5 \u0393\u0395\u0395\u0398\u0391, \u03c3\u03c4\u03b7\u03bd \u03c0\u03b5\u03c1\u03b9\u03bf\u03c7\u03ae \u03ba\u03b9\u03bd\u03ae\u03b8\u03b7\u03ba\u03b1\u03bd \u03ad\u03bd\u03b1\u03c2 \u03c3\u03c7\u03b7\u03bc\u03b1\u03c4\u03b9\u03c3\u03bc\u03cc\u03c2 \u03b4\u03cd\u03bf F-16 \u03ba\u03b1\u03b9 \u03c0\u03ad\u03bd\u03c4\u03b5 \u03bc\u03b5\u03bc\u03bf\u03bd\u03c9\u03bc\u03ad\u03bd\u03b1 \u03b1\u03b5\u03c1\u03bf\u03c3\u03ba\u03ac\u03c6\u03b7.",
+     "id": "gdelt-62c9a4ff879f1f92-declaracion-1",
+     "idioma": "el",
+     "medio": "\u0393\u0395\u0395\u0398\u0391 (declaraci\u00f3n oficial citada en inewsgr.com)",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://inewsgr.com/441/klimakonetai-i-tourkiki-drastiriotita-sto-aigaio-oplismena-F-16-kai-drones-ston-elliniko-enaerio-choro.htm",
+     "fecha": {
+      "precision": "dia",
+      "valor": "2026-09-30T00:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "\u0388\u03be\u03b9 \u03c0\u03b1\u03c1\u03b1\u03b2\u03b9\u03ac\u03c3\u03b5\u03b9\u03c2 \u03c4\u03bf\u03c5 \u03b5\u03bb\u03bb\u03b7\u03bd\u03b9\u03ba\u03bf\u03cd \u03b5\u03b8\u03bd\u03b9\u03ba\u03bf\u03cd \u03b5\u03bd\u03b1\u03ad\u03c1\u03b9\u03bf\u03c5 \u03c7\u03ce\u03c1\u03bf\u03c5 \u03ba\u03b1\u03b9 \u03b5\u03c0\u03c4\u03ac \u03c0\u03b1\u03c1\u03b1\u03b2\u03ac\u03c3\u03b5\u03b9\u03c2 \u03c4\u03c9\u03bd \u03ba\u03b1\u03bd\u03cc\u03bd\u03c9\u03bd \u03b5\u03bd\u03b1\u03ad\u03c1\u03b9\u03b1\u03c2 \u03ba\u03c5\u03ba\u03bb\u03bf\u03c6\u03bf\u03c1\u03af\u03b1\u03c2 \u03c3\u03c4\u03bf FIR \u0391\u03b8\u03b7\u03bd\u03ce\u03bd \u03ba\u03b1\u03c4\u03b1\u03b3\u03c1\u03ac\u03c6\u03b7\u03ba\u03b1\u03bd \u03c3\u03ae\u03bc\u03b5\u03c1\u03b1 \u03c3\u03c4\u03bf \u0391\u03b9\u03b3\u03b1\u03af\u03bf",
+     "id": "revisada-89fb9b68779f3f22",
+     "idioma": "el",
+     "medio": "inewsgr.com",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://newsit.gr/ellada/nees-tourkikes-prokliseis-me-f-16-na-mpainoun-ston-ethniko-enaerio-xoro-drones-ekanan-paravaseis-kai-paraviaseis/4787136",
+     "fecha": {
+      "precision": "dia",
+      "valor": "2026-09-30T00:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "\u0395\u03c0\u03af\u03c3\u03b7\u03c2, \u03c4\u03ad\u03c3\u03c3\u03b5\u03c1\u03b1 UAV \u03ad\u03ba\u03b1\u03bd\u03b1\u03bd 5 \u03c0\u03b1\u03c1\u03b1\u03b2\u03ac\u03c3\u03b5\u03b9\u03c2 \u03ba\u03b1\u03b9 \u03bc\u03af\u03b1 \u03c0\u03b1\u03c1\u03b1\u03b2\u03af\u03b1\u03c3\u03b7.",
+     "id": "revisada-33345b5b5e4014d4",
+     "idioma": "el",
+     "medio": "newsit.gr",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-2026-00356",
+   "lugar": {
+    "nivel": "region",
+    "pais": "GR",
+    "region": "\u0391\u03b9\u03b3\u03b1\u03af\u03bf"
+   },
+   "presencia_dron": "confirmada",
+   "respuesta": {
+    "medidas": [
+     "patrulla"
+    ]
+   },
+   "tiempo": {
+    "inicio": {
+     "precision": "aproximada",
+     "valor": "2026-09-30T16:45Z"
+    }
+   },
+   "tipo": "sobrevuelo",
+   "titulo": {
+    "en": "Drones violate Greek airspace over the Aegean",
+    "es": "Drones violan el espacio a\u00e9reo griego sobre el Egeo"
+   },
+   "zona": {
+    "grupo": "interior",
+    "motivo": "sin_lugar"
+   }
+  },
+  {
+   "afirmaciones_publicas": [
+    {
+     "campo": "lugar.pais",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-06-12T09:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-fad8fbc60703a189",
+     "medio": "stiripesurse.ro",
+     "valor": "RO"
+    },
+    {
+     "campo": "presencia_dron",
+     "cita": "explozia unei drone maritime ucrainene \u00een Portul Constan\u021ba, produs\u0103 pe 5 iunie 2026",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-06-12T09:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-fad8fbc60703a189",
+     "medio": "stiripesurse.ro",
+     "valor": "confirmada"
+    },
+    {
+     "campo": "tipo",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-06-12T09:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-fad8fbc60703a189",
+     "medio": "stiripesurse.ro",
+     "valor": "sobrevuelo"
+    }
+   ],
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-05T12:17Z"
+    }
+   },
+   "drones": {
+    "numero": "desconocido"
+   },
+   "estado": {
+    "actual": "confirmado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-06-11T19:00Z"
+      },
+      "fuente_id": "gdelt-7bf6c719629e66c9"
+     },
+     {
+      "estado": "confirmado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-06-11T19:00Z"
+      },
+      "fuente_id": "gdelt-7bf6c719629e66c9-declaracion-1"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://realitatea.net/stiri/politica/decizia-ministrului-apararii-dupa-explozia-dronei-din-portul-constanta-ucraina-trebuie-sa-vina-sa-ne-prezinte-intreaga-desfasurare-a-situatiei-o5mxfe",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-06-11T19:00Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "drona maritim\u0103 care a explodat \u00een Portul Constan\u021ba",
+     "id": "gdelt-7bf6c719629e66c9",
+     "idioma": "ro",
+     "medio": "realitatea.net",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://realitatea.net/stiri/politica/europarlamentarii-aur-ecr-solicita-comisiei-europene-explicatii-privind-incidentul-dronei-ucrainene-din-portul-constanta-rrstki",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-06-12T09:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Realitatea.NET | Europarlamentarii AUR / ECR solicit\u0103 Comisiei Europene explica\u021bii privind incidentul dronei ucrainene din Portul Constan\u021ba",
+     "id": "gdelt-3221644b87355487",
+     "idioma": "ro",
+     "medio": "realitatea.net",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://stiripesurse.ro/europarlamentari-aur-cer-interventia-comisiei-europene-dupa-explozia-dronei-ucrainene-din-portul-constanta-ucraina-sa-explice-pe-deplin-circumstantele-incidentului_3894400",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-06-12T09:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "explozia unei drone maritime ucrainene \u00een Portul Constan\u021ba, produs\u0103 pe 5 iunie 2026",
+     "id": "gdelt-fad8fbc60703a189",
+     "idioma": "ro",
+     "medio": "stiripesurse.ro",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 3,
+     "enlace": "https://amosnews.ro/europarlamentarii-aur-ecr-solicita-comisiei-europene-explicatii-privind-incidentul-dronei-ucrainene-din-portul-constanta",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-06-12T10:45Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "Europarlamentarii AUR / ECR solicit\u0103 Comisiei Europene explica\u021bii privind incidentul dronei ucrainene din Portul Constan\u021ba -",
+     "id": "gdelt-3820b6fa129391df",
+     "idioma": "ro",
+     "medio": "amosnews.ro",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 1,
+     "enlace": "https://realitatea.net/stiri/politica/decizia-ministrului-apararii-dupa-explozia-dronei-din-portul-constanta-ucraina-trebuie-sa-vina-sa-ne-prezinte-intreaga-desfasurare-a-situatiei-o5mxfe",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-06-11T19:00Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "drona maritim\u0103 care a explodat \u00een Portul Constan\u021ba",
+     "id": "gdelt-7bf6c719629e66c9-declaracion-1",
+     "idioma": "ro",
+     "medio": "Ministerul Ap\u0103r\u0103rii (declaraci\u00f3n oficial citada en realitatea.net)",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 1,
+     "enlace": "https://stiripesurse.ro/europarlamentari-aur-cer-interventia-comisiei-europene-dupa-explozia-dronei-ucrainene-din-portul-constanta-ucraina-sa-explice-pe-deplin-circumstantele-incidentului_3894400",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-06-12T09:30Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "explozia unei drone maritime ucrainene \u00een Portul Constan\u021ba, produs\u0103 pe 5 iunie 2026",
+     "id": "gdelt-fad8fbc60703a189-declaracion-2",
+     "idioma": "ro",
+     "medio": "Europarlamentarii AUR/ECR (declaraci\u00f3n oficial citada en stiripesurse.ro)",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-2026-00403",
+   "lugar": {
+    "nivel": "pais",
+    "pais": "RO"
+   },
+   "presencia_dron": "confirmada",
+   "tiempo": {
+    "inicio": {
+     "precision": "aproximada",
+     "valor": "2026-06-11T19:00Z"
+    }
+   },
+   "tipo": "incursion",
+   "titulo": {
+    "en": "Explosion of a drone in Constan\u021ba Port",
+    "es": "Explosi\u00f3n de un dron en el Puerto de Constanza"
+   },
+   "zona": {
+    "distancia_km": 117,
+    "grupo": "frontera",
+    "motivo": "cerca_de_la_frontera"
+   }
+  },
+  {
+   "afirmaciones_publicas": [
+    {
+     "campo": "lugar.pais",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-06T00:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-b7161b7dc2aff933",
+     "medio": "adevarul.ro",
+     "valor": "RO"
+    },
+    {
+     "campo": "presencia_dron",
+     "cita": "o dron\u0103 maritim\u0103 ucrainean\u0103 a explodat \u00een Portul Constan\u021ba",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-06T00:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-b7161b7dc2aff933",
+     "medio": "adevarul.ro",
+     "valor": "confirmada"
+    },
+    {
+     "campo": "tipo",
+     "credibilidad": 3,
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-06T00:30Z"
+     },
+     "fiabilidad": "C",
+     "fuente_id": "gdelt-b7161b7dc2aff933",
+     "medio": "adevarul.ro",
+     "valor": "incursion"
+    }
+   ],
+   "consecuencias": {
+    "cierre": {
+     "valor": "desconocido"
+    }
+   },
+   "control": {
+    "ultima_actualizacion": {
+     "precision": "minuto",
+     "valor": "2026-10-06T01:17Z"
+    }
+   },
+   "drones": {
+    "numero": "desconocido"
+   },
+   "estado": {
+    "actual": "confirmado",
+    "historial": [
+     {
+      "estado": "notificado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-06T00:30Z"
+      },
+      "fuente_id": "gdelt-b7161b7dc2aff933"
+     },
+     {
+      "estado": "confirmado",
+      "fecha": {
+       "precision": "aproximada",
+       "valor": "2026-10-06T00:30Z"
+      },
+      "fuente_id": "gdelt-b7161b7dc2aff933-declaracion-1"
+     }
+    ]
+   },
+   "fuentes": [
+    {
+     "credibilidad": 3,
+     "enlace": "https://adevarul.ro/politica/radu-miruta-despre-raspunsurile-ucrainei-cu-2562036.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-06T00:30Z"
+     },
+     "fiabilidad": "C",
+     "frase_origen": "o dron\u0103 maritim\u0103 ucrainean\u0103 a explodat \u00een Portul Constan\u021ba",
+     "id": "gdelt-b7161b7dc2aff933",
+     "idioma": "ro",
+     "medio": "adevarul.ro",
+     "replicas": 0
+    },
+    {
+     "credibilidad": 1,
+     "enlace": "https://adevarul.ro/politica/radu-miruta-despre-raspunsurile-ucrainei-cu-2562036.html",
+     "fecha": {
+      "precision": "aproximada",
+      "valor": "2026-10-06T00:30Z"
+     },
+     "fiabilidad": "B",
+     "frase_origen": "autorit\u0103\u021bile ucrainene au transmis majoritatea r\u0103spunsurilor solicitate de partea rom\u00e2n\u0103 \u00een urma incidentului",
+     "id": "gdelt-b7161b7dc2aff933-declaracion-1",
+     "idioma": "ro",
+     "medio": "Ministerul Ap\u0103r\u0103rii (declaraci\u00f3n oficial citada en adevarul.ro)",
+     "replicas": 0
+    }
+   ],
+   "id": "EODI-2026-00485",
+   "lugar": {
+    "nivel": "pais",
+    "pais": "RO"
+   },
+   "presencia_dron": "confirmada",
+   "tiempo": {
+    "inicio": {
+     "precision": "aproximada",
+     "valor": "2026-10-06T00:30Z"
+    }
+   },
+   "tipo": "incursion",
+   "titulo": {
+    "en": "Drone explodes at Port of Constanza",
+    "es": "Dron explota en el Puerto de Constanza"
+   },
+   "zona": {
+    "distancia_km": 117,
+    "grupo": "frontera",
+    "motivo": "cerca_de_la_frontera"
+   }
+  }
+ ]
+}

@@ -18,7 +18,11 @@ Problemas (cada uno con su frase):
   copia cada hora);
 - **réplica**: la última pasada correcta de la segunda copia en otra ubicación (almacen/replica.py)
   tiene más de 3 horas;
-- **disco**: el disco pasa del 75 % (el aviso llega antes del 80 %).
+- **disco**: el disco pasa del 75 % (el aviso llega antes del 80 %);
+- **prueba de restauración**: la prueba semanal de restauración de la base falló o no hay una
+  correcta en 8 días;
+- **paso a solo disco**: el paso de la base a solo disco (almacen/solo_disco.py) no se hizo porque
+  falló una de sus comprobaciones.
 
 Avisos (se ven, no son fallo): la última recogida terminó con avisos (código 2) y por qué (las
 líneas de aviso de su diario: fuentes sin leer, tope de tiempo agotado), y cuántos incidentes
@@ -278,6 +282,23 @@ def componer(
             "frase": "La última segunda copia en otra ubicación es "
             + (f"del {replica:%Y-%m-%d %H:%M} UTC" if replica else "desconocida")
             + ": más de 3 horas sin réplica.",
+        })  # fmt: skip
+
+    prueba = _leer_json(secretos / "prueba_restauracion.json")
+    hecha = _instante(prueba.get("fecha"))
+    if prueba and (not prueba.get("correcto") or (hecha and ahora - hecha > timedelta(days=8))):
+        problemas.append({
+            "id": "prueba_restauracion",
+            "frase": f"La prueba de restauración de la base del {prueba.get('fecha')} "
+            + ("falló" if not prueba.get("correcto") else "tiene más de 8 días") + ".",
+        })  # fmt: skip
+    solo_disco = _leer_json(secretos / "base_solo_disco.json")
+    if solo_disco and not solo_disco.get("correcto"):
+        motivos = solo_disco.get("comprobaciones") or ["sin comprobaciones"]
+        problemas.append({
+            "id": "base_solo_disco",
+            "frase": f"El paso de la base a solo disco del {solo_disco.get('fecha')} no se hizo: "
+            f"{motivos[-1]}. La copia secundaria en GitHub sigue.",
         })  # fmt: skip
 
     # Disco.

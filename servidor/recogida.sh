@@ -3,8 +3,11 @@
 #
 # 1. deja el clon en la última versión de main;
 # 2. ejecuta recogida.horaria, que descarga la base, recoge lo nuevo y la vuelve a subir;
-# 3. publica en main los ficheros de la web si han cambiado, también cuando la recogida
-#    termina con avisos (código 2) y nunca cuando falla con otro código;
+# 3. publica los ficheros de la web, también cuando la recogida termina con avisos (código 2) y
+#    nunca cuando falla con otro código: según el interruptor de la publicación
+#    (configuracion.sh, modo_publicacion), en main si han cambiado (github), en el almacén
+#    público (almacen, y la web se reconstruye con el gancho de Vercel) o en los dos (doble,
+#    comprobando después que el almacén es idéntico byte a byte a lo publicado en main);
 # 4. al salir, siempre, sube estado.json al almacén público (recogida/estado.py y
 #    recogida/almacen_publico.py): la web lo lee sin que haya commit ni reconstrucción. Si
 #    eso falla, queda como aviso y la recogida no cambia de resultado.
@@ -45,6 +48,23 @@ publicar_estado() {
   return 0
 }
 
+# Sube los ficheros publicados al almacén público (recogida/publicacion.py) y, en el modo
+# almacen, pide a Vercel que reconstruya la web. Con las credenciales en el entorno.
+publicar_en_almacen() {
+  local modo="$1" gancho=()
+  [ -r "$ALMACEN_CREDENCIALES" ] || return 1
+  if [ "$modo" = almacen ]; then
+    gancho=(--gancho "$VERCEL_GANCHO")
+  fi
+  (
+    # shellcheck disable=SC1090
+    . "$ALMACEN_CREDENCIALES"
+    export ALMACEN_ID ALMACEN_SECRETO
+    "$ESTADO_PYTHON" -m recogida.publicacion subir --carpeta "$PUBLICACION_DATOS" \
+      --registro "$PUBLICACION_REGISTRO" "${gancho[@]}"
+  )
+}
+
 # Todo dentro de una función: el script se lee entero antes de empezar, y actualizar el
 # clon a mitad de ejecución no cambia lo que se está ejecutando.
 principal() {
@@ -60,6 +80,7 @@ principal() {
     return 0
   fi
 
+  install -d -m 700 "$PUBLICACION_DATOS"
   local ssh_base="ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$HOSTS_CONOCIDOS"
   local python="$ENTORNO/bin/python"
   local instalados="$ENTORNO/requisitos.sha256"
@@ -108,13 +129,41 @@ principal() {
     return "$codigo"
   fi
 
-  git add "${PUBLICADOS[@]}"
-  if git diff --cached --quiet; then
-    echo "ficheros publicados sin cambios"
-  else
-    git -c user.name="$AUTOR" -c user.email="$CORREO" commit --quiet -m "$MENSAJE_PUBLICACION"
-    GIT_SSH_COMMAND="$ssh_base -i $DESPLIEGUE_WEB" git push --quiet origin "HEAD:$RAMA"
-    echo "ficheros publicados en $RAMA"
+  local modo_pub fichero
+  modo_pub="$(modo_publicacion)"
+  echo "publicación en modo $modo_pub"
+  if [ "$modo_pub" != github ]; then
+    # Antes que el commit: la reconstrucción que este lanza ya encuentra el almacén al día.
+    if publicar_en_almacen "$modo_pub"; then
+      echo "ficheros publicados en el almacén"
+    else
+      echo "aviso: los ficheros no se publicaron en el almacén"
+      if [ "$modo_pub" = almacen ] && [ "$codigo" -eq 0 ]; then
+        codigo=1
+      fi
+    fi
+  fi
+  if [ "$modo_pub" != almacen ]; then
+    for fichero in "${PUBLICADOS[@]}"; do
+      if [ -f "$PUBLICACION_DATOS/$(basename "$fichero")" ]; then
+        cp "$PUBLICACION_DATOS/$(basename "$fichero")" "$fichero"
+      fi
+    done
+    git add "${PUBLICADOS[@]}"
+    if git diff --cached --quiet; then
+      echo "ficheros publicados sin cambios"
+    else
+      git -c user.name="$AUTOR" -c user.email="$CORREO" commit --quiet -m "$MENSAJE_PUBLICACION"
+      GIT_SSH_COMMAND="$ssh_base -i $DESPLIEGUE_WEB" git push --quiet origin "HEAD:$RAMA"
+      echo "ficheros publicados en $RAMA"
+    fi
+    if [ "$modo_pub" = doble ]; then
+      if "$python" -m recogida.publicacion comparar --carpeta "$CLON/publicacion"; then
+        echo "publicación doble: el almacén es idéntico a $RAMA"
+      else
+        echo "aviso: publicación doble: el almacén no es idéntico a $RAMA"
+      fi
+    fi
   fi
   if [ "$codigo" -eq "$SALIDA_AVISO" ]; then
     echo "la recogida terminó con avisos (código $SALIDA_AVISO): están más arriba en el diario"

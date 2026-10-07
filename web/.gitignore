@@ -14,3 +14,5 @@ playwright-report/
 public/.well-known/security.txt
 # Caché de la comprobación de tipos
 *.tsbuildinfo
+# Datos publicados bajados del almacén en cada build (scripts/publicacion.ts)
+.publicacion/

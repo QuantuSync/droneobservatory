@@ -37,10 +37,24 @@ principal() {
   EODI_CLAVE_AGE="$(cat "$CLAVE_AGE")"
   export EODI_CLAVE_AGE
 
+  # Dónde se deja: el mismo interruptor que la publicación de los datos (configuracion.sh).
+  local destinos
+  case "$(modo_publicacion)" in
+    almacen) destinos=almacen ;;
+    doble) destinos=github,almacen ;;
+    *) destinos=github ;;
+  esac
+  if [ -r "$ALMACEN_CREDENCIALES" ]; then
+    # shellcheck disable=SC1090
+    . "$ALMACEN_CREDENCIALES"
+    export ALMACEN_ID ALMACEN_SECRETO
+  fi
+  echo "exportación hacia: $destinos"
+
   cd "$CLON"
   GIT_SSH_COMMAND="$ssh_base -i $DESPLIEGUE_DATOS" \
     "$python" -m recogida.exportacion --correo "$CORREO" --repositorio "$URL_DATOS" \
-    --registro "$EXPORTACION_REGISTRO" || codigo=$?
+    --registro "$EXPORTACION_REGISTRO" --destinos "$destinos" || codigo=$?
   echo "exportación terminada con código $codigo"
   return "$codigo"
 }

@@ -1,0 +1,8 @@
+{
+  "descripcion": "Exportación semanal cifrada (almacen/exportaciones.py, recogida/exportacion.py): cada versión en exportaciones/AAAA.MM.DD/ de un bucket privado de Hetzner Object Storage, en el mismo proyecto y con las mismas credenciales S3 que el almacén público. Sin política pública: sin credenciales responde 403. Los ficheros van cifrados con age y el manifiesto en claro.",
+  "proveedor": "Hetzner Object Storage",
+  "ubicacion": "nbg1",
+  "punto_s3": "https://nbg1.your-objectstorage.com",
+  "bucket": "droneobservatory-exportaciones",
+  "prefijo": "exportaciones/"
+}

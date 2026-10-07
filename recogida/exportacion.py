@@ -9,8 +9,14 @@ estado.json saca la última exportación correcta.
 
 Al diario solo van recuentos y huellas, nunca contenido.
 
+Destinos (--destinos, separados por comas): `github` (la carpeta y la etiqueta en el repositorio de
+datos, como hasta ahora) y `almacen` (exportaciones/<versión>/ del bucket privado de Hetzner,
+almacen/exportaciones.py). servidor/exportacion.sh los elige con el interruptor de la publicación:
+github, los dos (doble) o solo el almacén.
+
 Uso: python -m recogida.exportacion --correo <correo> [--repositorio <url>] [--registro <json>]
     [--base <db.age>] [--salida <carpeta>] [--sin-subir] [--version AAAA.MM.DD]
+    [--destinos github,almacen]
      python -m recogida.exportacion --registro <json> --anotar-fallo <código>
 
 Si falla, servidor/exportacion.sh lo anota en el registro (--anotar-fallo): estado.json lo
@@ -83,6 +89,7 @@ def principal(argumentos: list[str] | None = None, ahora: datetime | None = None
     opciones.add_argument("--salida", type=Path, help="carpeta donde dejar la versión")
     opciones.add_argument("--sin-subir", action="store_true")
     opciones.add_argument("--version", help="AAAA.MM.DD; por defecto, la fecha UTC de hoy")
+    opciones.add_argument("--destinos", default="github", help="github, almacen o los dos")
     opciones.add_argument(
         "--anotar-fallo", type=int, metavar="CODIGO",
         help="solo anota en --registro que la exportación falló con ese código",
@@ -93,7 +100,10 @@ def principal(argumentos: list[str] | None = None, ahora: datetime | None = None
             opciones.error("--anotar-fallo necesita --registro")
         anotar_fallo(args.registro, ahora or datetime.now(UTC), args.anotar_fallo)
         return 0
-    if args.correo is None and not args.sin_subir:
+    destinos = {d.strip() for d in args.destinos.split(",") if d.strip()}
+    if not destinos or destinos - {"github", "almacen"}:
+        opciones.error(f"destinos desconocidos: {args.destinos}")
+    if args.correo is None and not args.sin_subir and "github" in destinos:
         opciones.error("falta --correo")
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
     ahora = ahora or datetime.now(UTC)
@@ -120,13 +130,28 @@ def principal(argumentos: list[str] | None = None, ahora: datetime | None = None
         finally:
             almacen.cerrar()
         registro.info("versión %s generada; manifiesto %s", version, huella)
-        if not args.sin_subir:
+        existentes = 0
+        if not args.sin_subir and "almacen" in destinos:
+            from almacen import exportaciones
+
+            try:
+                subida = exportaciones.subir(exportaciones.cliente(), destino, version)
+            except exportaciones.ExportacionExistente as error:
+                registro.warning("no se sobrescribe: %s", error)
+                existentes += 1
+            else:
+                registro.info("versión %s en el almacén privado: %s", version, subida["prefijo"])
+        if not args.sin_subir and "github" in destinos:
             try:
                 remoto.subir_exportacion(destino, version, args.correo, args.repositorio)
             except remoto.ExportacionExistente as error:
                 registro.warning("no se sobrescribe: %s", error)
-                return 0
-            registro.info("versión %s subida con la etiqueta %s", version, remoto.etiqueta(version))
+                existentes += 1
+            else:
+                etiqueta = remoto.etiqueta(version)
+                registro.info("versión %s subida con la etiqueta %s", version, etiqueta)
+        if existentes and existentes == len(destinos):
+            return 0
         if args.registro is not None:
             escribir_registro(args.registro, version, datetime.now(UTC), huella)
     return 0

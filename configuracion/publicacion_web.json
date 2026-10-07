@@ -1,0 +1,4 @@
+{
+  "descripcion": "De dónde lee la web, al construirse, los datos publicados (web/scripts/publicacion.ts): «github», la carpeta publicacion/ del repositorio; «almacen», el almacén público (configuracion/almacen_publico.json, prefijo publicacion/), donde los deja la recogida horaria. Cambiarlo es un commit; la recogida tiene su propio interruptor en el servidor (servidor/configuracion.sh).",
+  "origen": "github"
+}

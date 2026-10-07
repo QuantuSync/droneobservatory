@@ -189,7 +189,8 @@ def test_puntua_sin_tocar_la_prevision(datos: datos_prevision.Datos) -> None:
 def test_paso_horario_escribe_y_registra(tmp_path: Path, datos: datos_prevision.Datos) -> None:
     for nombre in ("incidentes.geojson", "incidentes_sin_ubicacion.json", "ucrania.json"):
         (tmp_path / nombre).write_text(
-            (RAIZ / "publicacion" / nombre).read_text(encoding="utf-8"), encoding="utf-8"
+            (RAIZ / "tests" / "fixtures" / "publicacion" / nombre).read_text(encoding="utf-8"),
+            encoding="utf-8",
         )
     almacen = Almacen.abrir()
     assert paso.calcular(almacen, AHORA, tmp_path)

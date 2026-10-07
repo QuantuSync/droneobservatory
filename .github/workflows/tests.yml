@@ -27,9 +27,12 @@ jobs:
         run: python -m tests.base_prueba --salida "$RUNNER_TEMP/exportacion"
 
   # Puerta de la web: dependencias sin vulnerabilidades altas o críticas, lint, tipos,
-  # tests y build (que valida publicacion/ contra el esquema).
+  # tests y build (que valida los datos contra el esquema), con los datos publicados de ejemplo
+  # (tests/fixtures/publicacion): un fallo aquí es del código, no de los datos del día.
   web:
     runs-on: ubuntu-latest
+    env:
+      EODI_PUBLICACION: ${{ github.workspace }}/tests/fixtures/publicacion
     defaults:
       run:
         working-directory: web
@@ -56,6 +59,36 @@ jobs:
           npm run servir > "$RUNNER_TEMP/servir.log" 2>&1 &
           for i in $(seq 30); do curl -sf -o /dev/null http://localhost:4173/ && break; sleep 1; done
           BASE=http://localhost:4173 CAPTURAS=$RUNNER_TEMP/capturas npx playwright test e2e/paginas-texto.spec.ts e2e/prevision.spec.ts --project=escritorio
+
+  # Los datos publicados de verdad, de donde los lee la web al construirse
+  # (configuracion/publicacion_web.json: el repositorio o el almacén público): la barrera de
+  # titulares y la validación de la web sobre ellos. Si el almacén no responde, falla: es lo mismo
+  # que haría el build de producción.
+  datos-publicados:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.13"
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - run: pip install -r requirements-desarrollo.txt
+      - run: npm ci
+        working-directory: web
+      - name: Bajar los datos publicados
+        working-directory: web
+        run: echo "EODI_PUBLICACION=$(node scripts/publicacion.ts | tail -n 1)" >> "$GITHUB_ENV"
+      - name: Barrera de titulares sobre los datos publicados
+        run: pytest -q tests/test_cita_titular.py
+      - name: La web valida los datos publicados
+        working-directory: web
+        run: |
+          node scripts/datos.ts
+          npx vitest run tests/datos.test.ts tests/jornadas.test.ts tests/prevision.test.tsx
 
   # La recogida la lanza cada hora un servidor propio, que al final de cada una publica
   # estado.json en el almacén público. Este trabajo señala en su resumen si la última

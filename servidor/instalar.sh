@@ -58,6 +58,10 @@ chmod 600 "$HOSTS_CONOCIDOS"
 # El fichero SQLite de la base (almacen/sitio.py): del usuario del observatorio y solo para él.
 install -d -m 700 -o "$USUARIO" -g "$USUARIO" "$BASE_DIRECTORIO" "$BASE_DIRECTORIO/trabajo"
 
+# --- Datos publicados -----------------------------------------------------------------
+# Lo que la recogida publica, antes de subirlo al almacén o al repositorio (servidor/recogida.sh).
+install -d -m 700 -o "$USUARIO" -g "$USUARIO" "$(dirname "$PUBLICACION_DATOS")" "$PUBLICACION_DATOS"
+
 # --- Datos de FIRMS -----------------------------------------------------------------
 # Los CSV diarios de anomalías térmicas: del usuario del observatorio y solo para él.
 install -d -m 700 -o "$USUARIO" -g "$USUARIO" "$(dirname "$FIRMS_DATOS")" "$FIRMS_DATOS"
@@ -497,7 +501,7 @@ WantedBy=multi-user.target
 FIN
 cat > "/etc/systemd/system/$UNIDAD_SEGUIMIENTO_ARCHIVO.service" <<FIN
 [Unit]
-Description=Compresión, índice y copia diaria del archivo del seguimiento en directo (EODI)
+Description=Compresión, índice y copia horaria del archivo del seguimiento en directo (EODI)
 
 [Service]
 Type=oneshot
@@ -554,6 +558,74 @@ Description=Segunda copia en otra ubicación (EODI), en el minuto $MINUTO_REPLIC
 
 [Timer]
 OnCalendar=*-*-* *:$MINUTO_REPLICA:00 UTC
+AccuracySec=1s
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+FIN
+# Paso de la base a solo disco (servidor/base_solo_disco.sh), una sola vez y con comprobaciones.
+cat > "/etc/systemd/system/$UNIDAD_BASE_SOLO_DISCO.service" <<FIN
+[Unit]
+Description=Paso de la base a solo disco, sin copia secundaria en GitHub (EODI)
+Wants=network-online.target
+After=network-online.target time-sync.target
+
+[Service]
+Type=oneshot
+User=$USUARIO
+Group=$USUARIO
+WorkingDirectory=$CLON
+ExecStart=/usr/bin/env bash $CLON/servidor/base_solo_disco.sh
+SyslogIdentifier=$UNIDAD_BASE_SOLO_DISCO
+TimeoutStartSec=90min
+Nice=19
+IOSchedulingClass=idle
+MemoryMax=$BASE_SOLO_DISCO_MEMORIA
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=full
+FIN
+cat > "/etc/systemd/system/$UNIDAD_BASE_SOLO_DISCO.timer" <<FIN
+[Unit]
+Description=Paso de la base a solo disco (EODI), el $CALENDARIO_BASE_SOLO_DISCO
+
+[Timer]
+OnCalendar=$CALENDARIO_BASE_SOLO_DISCO
+AccuracySec=1s
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+FIN
+# Prueba de restauración semanal (servidor/prueba_restauracion.sh).
+cat > "/etc/systemd/system/$UNIDAD_PRUEBA_RESTAURACION.service" <<FIN
+[Unit]
+Description=Prueba de restauración semanal de la base (EODI)
+Wants=network-online.target
+After=network-online.target time-sync.target
+
+[Service]
+Type=oneshot
+User=$USUARIO
+Group=$USUARIO
+WorkingDirectory=$CLON
+ExecStart=/usr/bin/env bash $CLON/servidor/prueba_restauracion.sh
+SyslogIdentifier=$UNIDAD_PRUEBA_RESTAURACION
+TimeoutStartSec=30min
+Nice=19
+IOSchedulingClass=idle
+MemoryMax=$PRUEBA_RESTAURACION_MEMORIA
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=full
+FIN
+cat > "/etc/systemd/system/$UNIDAD_PRUEBA_RESTAURACION.timer" <<FIN
+[Unit]
+Description=Prueba de restauración semanal de la base (EODI), los martes a las 10:45 UTC
+
+[Timer]
+OnCalendar=$CALENDARIO_PRUEBA_RESTAURACION
 AccuracySec=1s
 Persistent=true
 

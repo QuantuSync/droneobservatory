@@ -1,5 +1,5 @@
 import { readFileSync } from "node:fs";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 
 import { describe, expect, it } from "vitest";
 
@@ -247,10 +247,14 @@ describe("capa de Ucrania", () => {
 
 describe("validación contra el esquema", () => {
   it("los ficheros publicados validan", () => {
-    expect(validarColeccion(leerJson("publicacion", "incidentes.geojson"))).toMatchObject({
+    // Los de verdad, con EODI_PUBLICACION (trabajo «datos-publicados»); si no, los de ejemplo.
+    const carpeta = process.env.EODI_PUBLICACION ?? join(RAIZ, "tests", "fixtures", "publicacion");
+    const leer = (nombre: string): unknown =>
+      JSON.parse(readFileSync(resolve(carpeta, nombre), "utf-8")) as unknown;
+    expect(validarColeccion(leer("incidentes.geojson"))).toMatchObject({
       ok: true,
     });
-    expect(validarPublicacionUcrania(leerJson("publicacion", "ucrania.json"))).toMatchObject({
+    expect(validarPublicacionUcrania(leer("ucrania.json"))).toMatchObject({
       ok: true,
     });
   });
@@ -419,7 +423,7 @@ describe("listas cerradas iguales a las del esquema", () => {
       recorrido: {
         version: "recorridos-1.0.0",
         fuente: "gdelt-0000000000000001",
-        cita: "din direcția localității Biliaivka spre localitatea Tudora",
+        cita: "din direc\u021bia localit\u0103\u021bii Biliaivka spre localitatea Tudora",
         puntos: [
           { nombre: "Biliaivka", lat: 46.48, lon: 30.21, radio_km: 4, hora: "05:55" },
           { nombre: "Tudora", lat: 46.44, lon: 30.04, radio_km: 4 },

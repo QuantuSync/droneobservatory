@@ -21,6 +21,8 @@ export const RUTAS_QUE_DESPLIEGAN: readonly string[] = [
   "api",
   // La dirección del almacén público (teselas y estado.json) la lee la web en el build.
   "configuracion/almacen_publico.json",
+  // De dónde lee el build los datos publicados (repositorio o almacén).
+  "configuracion/publicacion_web.json",
 ];
 /** Rama de la que salen los despliegues de producción normales. */
 export const RAMA_DE_PRODUCCION = "main";
@@ -57,6 +59,10 @@ export function decidir(
   if (previo === undefined || previo.trim().length === 0) return CONSTRUIR;
   try {
     if (git(["cat-file", "-e", `${previo.trim()}^{commit}`]) !== 0) return CONSTRUIR;
+    // El mismo commit que el despliegue anterior (o uno anterior a él) solo llega así cuando se
+    // pide a propósito: el gancho de despliegue que lanza la recogida tras publicar los datos en el
+    // almacén, o un nuevo despliegue a mano. Siempre se construye.
+    if (git(["merge-base", "--is-ancestor", "HEAD", previo.trim()]) === 0) return CONSTRUIR;
     const diferencias = git(["diff", "--quiet", previo.trim(), "HEAD", "--", ...RUTAS_QUE_DESPLIEGAN]);
     return diferencias === DIFF_SIN_CAMBIOS ? OMITIR : CONSTRUIR;
   } catch {

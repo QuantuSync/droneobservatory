@@ -119,7 +119,11 @@ MEMORIA_RECUPERABLE_S = 900
 GUARDAR_VIVOS_S = 600
 
 
-PUBLICACION = Path(__file__).resolve().parent.parent / "publicacion"
+# La carpeta de los datos publicados (exportacion/publicar.py: en el servidor, fuera del clon).
+PUBLICACION = Path(
+    os.environ.get("EODI_PUBLICACION_DIRECTORIO")
+    or Path(__file__).resolve().parent.parent / "publicacion"
+)
 
 
 def aeropuertos_con_cierre(directorio: Path = PUBLICACION) -> set[str]:

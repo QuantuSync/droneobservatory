@@ -152,6 +152,7 @@ def subir(
     reloj: Callable[[], float] = time.monotonic,
     ahora: Callable[[], datetime] = lambda: datetime.now(UTC),
     codificacion: str | None = None,
+    metadatos: Mapping[str, str] | None = None,
 ) -> tuple[bool, str]:
     """Sube un objeto con reintentos de espera creciente. Nunca lanza: (correcto, motivo)."""
     url = almacen.url_s3(objeto)
@@ -161,6 +162,7 @@ def subir(
         cabeceras["Cache-Control"] = cache
     if codificacion:
         cabeceras["Content-Encoding"] = codificacion
+    cabeceras.update(metadatos or {})
     inicio = reloj()
     espera = ESPERA_INICIAL_S
     motivo, hechos = "sin intentos", 0

@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 // Previsión y tendencias, el filtro frontera/interior y los contadores con cualquier filtro.
 import { readFileSync } from "node:fs";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 
 import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -26,7 +26,8 @@ const en = textos("en");
 const RAIZ = join(__dirname, "..", "..");
 
 function publicada(): DatosPrevision {
-  const valor: unknown = JSON.parse(readFileSync(join(RAIZ, "publicacion", "prevision.json"), "utf-8"));
+  const carpeta = process.env.EODI_PUBLICACION ?? join(RAIZ, "tests", "fixtures", "publicacion");
+  const valor: unknown = JSON.parse(readFileSync(resolve(carpeta, "prevision.json"), "utf-8"));
   const resultado = validarPrevision(valor);
   if (!resultado.ok) throw new Error(resultado.errores.join("; "));
   return resultado.datos;

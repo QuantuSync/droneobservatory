@@ -2,7 +2,7 @@
 // tests/fixtures/jornadas.json los comprueba también proceso/ataques.jornada, y la que trae cada
 // ataque publicado tiene que ser la que calcula la web.
 import { existsSync, readFileSync } from "node:fs";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
 import type { Ataque } from "../src/datos/tipos.ts";
@@ -34,7 +34,8 @@ describe("una sola regla para la noche de un parte", () => {
   });
 
   it("la noche que publican los datos es la que calcula la web", () => {
-    const ruta = join(raiz, "publicacion", "ucrania.json");
+    const carpeta = process.env.EODI_PUBLICACION ?? join(raiz, "tests", "fixtures", "publicacion");
+    const ruta = resolve(carpeta, "ucrania.json");
     if (!existsSync(ruta)) return;
     const { ataques } = JSON.parse(readFileSync(ruta, "utf-8")) as { ataques: Ataque[] };
     for (const ataque of ataques) {

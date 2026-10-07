@@ -44,6 +44,11 @@ if [ "$2" = recogida.estado ]; then
   printf '{"codigo": %s}' "$codigo" > "$salida"
   exit 0
 fi
+if [ "$2" = recogida.publicacion ]; then
+  printf '%s\n' "$*" >> "$PRUEBA_PUBLICACION_ARGS"
+  [ "$3" = comparar ] && exit "${PRUEBA_COMPARAR_CODIGO:-0}"
+  exit "${PRUEBA_PUBLICACION_CODIGO:-0}"
+fi
 if [ "$2" = recogida.almacen_publico ]; then
   printf '%s\\n' "$*" > "$PRUEBA_SUBIDA_ARGS"
   printf '%s:%s\\n' "$ALMACEN_ID" "$ALMACEN_SECRETO" > "$PRUEBA_SUBIDA_ENTORNO"
@@ -52,7 +57,7 @@ fi
 printf '%s\\n' "$*" "$EODI_CLAVE_AGE" "$EODI_EXTRACTOR_CABECERAS" "$GIT_SSH_COMMAND" \\
   "${EODI_DETALLE_DATOS:-}" > "$PRUEBA_VISTO"
 if [ -n "$PRUEBA_CAMBIO" ]; then
-  printf '%s' "$PRUEBA_CAMBIO" > publicacion/ucrania.json
+  printf '%s' "$PRUEBA_CAMBIO" > "$EODI_PUBLICACION_DIRECTORIO/ucrania.json"
 fi
 exit "$PRUEBA_CODIGO"
 """
@@ -84,11 +89,20 @@ class Servidor:
     instalaciones: Path
 
     def recoger(
-        self, codigo: int = 0, cambio: str = "", codigo_subida: int = 0
+        self,
+        codigo: int = 0,
+        cambio: str = "",
+        codigo_subida: int = 0,
+        codigo_publicacion: int = 0,
+        codigo_comparar: int = 0,
     ) -> subprocess.CompletedProcess[str]:
         bin_ = self.secretos.parent / "bin"
         entorno = {
             **os.environ,
+            "EODI_PUBLICACION_DATOS": str(self.secretos.parent / "publicados"),
+            "PRUEBA_PUBLICACION_ARGS": str(bin_ / "publicacion.args"),
+            "PRUEBA_PUBLICACION_CODIGO": str(codigo_publicacion),
+            "PRUEBA_COMPARAR_CODIGO": str(codigo_comparar),
             "PATH": f"{bin_}:{os.environ['PATH']}",
             "PRUEBA_SUBIDA_ARGS": str(bin_ / "subida.args"),
             "PRUEBA_SUBIDA_ENTORNO": str(bin_ / "subida.entorno"),
@@ -458,3 +472,57 @@ def test_el_lector_de_canales_no_se_lanza_si_hay_otro(servidor: Servidor) -> Non
     assert resultado.returncode == 0
     assert "otro lector de canales en marcha" in resultado.stdout
     assert not servidor.visto.exists()
+
+
+# --- Interruptor de la publicación (github, doble o almacen) ---------------------------------
+def publicaciones(servidor: Servidor) -> list[str]:
+    ruta = servidor.secretos.parent / "bin" / "publicacion.args"
+    return ruta.read_text(encoding="utf-8").splitlines() if ruta.exists() else []
+
+
+def test_en_modo_github_no_toca_el_almacen(servidor: Servidor) -> None:
+    (servidor.secretos / "almacen.env").write_text(ALMACEN, encoding="utf-8")
+    resultado = servidor.recoger(cambio='{"ataques": 7}')
+    assert resultado.returncode == 0, resultado.stderr
+    assert "publicación en modo github" in resultado.stdout
+    assert publicaciones(servidor) == []
+    assert servidor.publicado() == '{"ataques": 7}'
+
+
+def test_en_modo_doble_publica_en_los_dos_y_compara(servidor: Servidor) -> None:
+    (servidor.secretos / "almacen.env").write_text(ALMACEN, encoding="utf-8")
+    (servidor.secretos / "publicacion_modo").write_text("doble\n", encoding="utf-8")
+    antes = servidor.commits()
+    resultado = servidor.recoger(cambio='{"ataques": 8}')
+    assert resultado.returncode == 0, resultado.stderr
+    assert servidor.commits() == antes + 1
+    assert servidor.publicado() == '{"ataques": 8}'
+    subida, comparacion = publicaciones(servidor)
+    assert subida.startswith("-m recogida.publicacion subir --carpeta ")
+    # En el modo doble la web se reconstruye con el commit: sin gancho.
+    assert "--gancho" not in subida
+    assert comparacion == f"-m recogida.publicacion comparar --carpeta {servidor.clon}/publicacion"
+    assert "el almacén es idéntico" in resultado.stdout
+    distinto = servidor.recoger(cambio='{"ataques": 9}', codigo_comparar=3)
+    assert distinto.returncode == 0
+    assert "aviso: publicación doble: el almacén no es idéntico" in distinto.stdout
+
+
+def test_en_modo_almacen_no_hay_commit_y_se_pide_la_reconstruccion(servidor: Servidor) -> None:
+    (servidor.secretos / "almacen.env").write_text(ALMACEN, encoding="utf-8")
+    (servidor.secretos / "publicacion_modo").write_text("almacen", encoding="utf-8")
+    antes = servidor.commits()
+    resultado = servidor.recoger(cambio='{"ataques": 10}')
+    assert resultado.returncode == 0, resultado.stderr
+    assert servidor.commits() == antes
+    (subida,) = publicaciones(servidor)
+    assert f"--gancho {servidor.secretos}/vercel_gancho" in subida
+    # Si la subida falla, la recogida no cuenta como correcta.
+    fallida = servidor.recoger(cambio='{"ataques": 11}', codigo_publicacion=1)
+    assert fallida.returncode == 1
+    assert "los ficheros no se publicaron en el almacén" in fallida.stdout
+    # Volver a doble es un solo cambio: la recogida siguiente vuelve a hacer el commit.
+    (servidor.secretos / "publicacion_modo").write_text("doble", encoding="utf-8")
+    assert servidor.recoger(cambio='{"ataques": 12}').returncode == 0
+    assert servidor.commits() == antes + 1
+    assert servidor.publicado() == '{"ataques": 12}'

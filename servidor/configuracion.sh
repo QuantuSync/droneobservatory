@@ -49,6 +49,29 @@ CORREO="192205734+QuantuSync@users.noreply.github.com"
 MENSAJE_PUBLICACION="Actualiza los datos publicados"
 PUBLICADOS=(publicacion/ucrania.json publicacion/incidentes.geojson
   publicacion/incidentes_sin_ubicacion.json publicacion/prevision.json)
+# --- Dónde se publican los datos (servidor/recogida.sh, recogida/publicacion.py) -----------
+# La recogida escribe los ficheros públicos en una carpeta del servidor, fuera del clon; de ahí van
+# al repositorio (commit «Actualiza los datos publicados»), al almacén público o a los dos, según
+# el interruptor PUBLICACION_INTERRUPTOR (una palabra: github, doble o almacen; sin el fichero,
+# github). Vale desde la recogida siguiente. La exportación semanal sigue el mismo interruptor.
+PUBLICACION_DATOS="${EODI_PUBLICACION_DATOS:-$CASA/datos/publicacion}"
+export EODI_PUBLICACION_DIRECTORIO="$PUBLICACION_DATOS"
+PUBLICACION_INTERRUPTOR="$SECRETOS/publicacion_modo"
+# Lo último subido al almacén (manifiesto, hora e instantánea del día).
+PUBLICACION_REGISTRO="$SECRETOS/publicacion.json"
+# Gancho de despliegue de Vercel (una dirección secreta): reconstruye la web tras publicar.
+VERCEL_GANCHO="$SECRETOS/vercel_gancho"
+
+# El modo de la publicación: github, doble o almacen. Cualquier otra cosa cuenta como github.
+modo_publicacion() {
+  local modo
+  modo="$(tr -d ' \r\n' < "$PUBLICACION_INTERRUPTOR" 2>/dev/null || true)"
+  case "$modo" in
+    doble | almacen) echo "$modo" ;;
+    *) echo github ;;
+  esac
+}
+
 # Código con el que sale la recogida cuando termina con avisos
 # (recogida.horaria.SALIDA_AVISO): la base está subida y se publica igual.
 SALIDA_AVISO=2
@@ -111,6 +134,18 @@ PAUSA_AVISO_S=30
 # $SECRETOS/base_modo, con una palabra; sin él, github.
 BASE_DIRECTORIO="${EODI_BASE_DIRECTORIO:-$CASA/base}"
 BASE_INTERRUPTOR="$SECRETOS/base_modo"
+
+# Paso a solo disco (servidor/base_solo_disco.sh, almacen/solo_disco.py): deja de subirse la copia
+# secundaria de la base a la rama estado, tras comprobar las copias. Una sola vez.
+UNIDAD_BASE_SOLO_DISCO="eodi-base-solo-disco"
+CALENDARIO_BASE_SOLO_DISCO="2026-10-13 10:00:00 UTC"
+BASE_SOLO_DISCO_MEMORIA="2G"
+
+# Prueba de restauración semanal (servidor/prueba_restauracion.sh): la última copia de la base, del
+# almacén y de Helsinki. Los martes a las 10:45 UTC, de día y lejos de la recogida.
+UNIDAD_PRUEBA_RESTAURACION="eodi-prueba-restauracion"
+CALENDARIO_PRUEBA_RESTAURACION="Tue *-*-* 10:45:00 UTC"
+PRUEBA_RESTAURACION_MEMORIA="2G"
 
 # --- Reintentos por sitio (recogida/reintentos.py) ------------------------------------
 # Un fichero por sitio con los reintentos del día: el descargador común deja de reintentar a

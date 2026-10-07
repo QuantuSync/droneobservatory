@@ -90,6 +90,30 @@ def modo() -> str:
     return valor
 
 
+# Copia secundaria de la base en la rama estado (solo en el modo disco): `github` (sin el fichero,
+# lo de siempre) o `no`, desde que la base vive solo en el disco y en las copias del almacén
+# (almacen/solo_disco.py, 13 de octubre de 2026).
+FICHERO_SECUNDARIA = casa() / ".eodi" / "base_secundaria"
+VARIABLE_SECUNDARIA = "EODI_BASE_SECUNDARIA"
+CON_SECUNDARIA, SIN_SECUNDARIA = "github", "no"
+
+
+def copia_secundaria() -> str:
+    valor = os.environ.get(VARIABLE_SECUNDARIA, "").strip()
+    if not valor:
+        try:
+            valor = FICHERO_SECUNDARIA.read_text(encoding="utf-8").strip()
+        except FileNotFoundError:
+            valor = CON_SECUNDARIA
+    return SIN_SECUNDARIA if valor == SIN_SECUNDARIA else CON_SECUNDARIA
+
+
+def fijar_copia_secundaria(valor: str) -> None:
+    temporal = FICHERO_SECUNDARIA.with_name(FICHERO_SECUNDARIA.name + ".tmp")
+    temporal.write_text(valor + "\n", encoding="utf-8")
+    os.replace(temporal, FICHERO_SECUNDARIA)
+
+
 def directorio() -> Path:
     return Path(os.environ.get(VARIABLE_DIRECTORIO) or DIRECTORIO)
 
@@ -305,6 +329,9 @@ def guardar_base(
                 registro.info("copia de seguridad: %s", copias.guardar(cifrada, ahora))
             except Exception as error:
                 registro.warning("aviso: copia de seguridad no guardada: %s", str(error)[:300])
+            if copia_secundaria() == SIN_SECUNDARIA:
+                registro.info("base solo en disco: sin copia secundaria en la rama %s", remoto.RAMA)
+                return
             try:
                 remoto.subir(cifrada, correo, repositorio)
                 registro.info("copia secundaria subida a la rama %s", remoto.RAMA)

@@ -1,4 +1,5 @@
-// Prepara los datos de la web a partir de ../publicacion: valida los dos ficheros públicos
+// Prepara los datos de la web a partir de los datos publicados (scripts/publicacion.ts: la carpeta
+// publicacion/ del repositorio o el almacén público): valida los ficheros públicos
 // contra el esquema, los copia como descargas, genera sus versiones CSV, los resúmenes que
 // carga la web, una ficha por incidente y por ataque, y security.txt. Si un fichero no
 // valida, el build falla y la versión anterior de la web sigue publicada.
@@ -28,10 +29,9 @@ import {
 } from "../src/datos/validar.ts";
 import type { Resultado } from "../src/datos/validar.ts";
 import { RUTA_SECURITY_TXT, securityTxt } from "../src/seguridad/securityTxt.ts";
+import { carpetaPublicacion } from "./publicacion.ts";
 
 const WEB = join(dirname(fileURLToPath(import.meta.url)), "..");
-// EODI_PUBLICACION: otra carpeta con los mismos ficheros (pruebas en local con datos de ensayo).
-const PUBLICACION = process.env.EODI_PUBLICACION ?? join(WEB, "..", "publicacion");
 const CONFIGURACION = join(WEB, "..", "configuracion");
 const PUBLICO = join(WEB, "public");
 const DATOS = join(PUBLICO, "datos");
@@ -63,6 +63,8 @@ async function escribir(ruta: string, contenido: string): Promise<void> {
 }
 
 async function principal(): Promise<void> {
+  // EODI_PUBLICACION: otra carpeta con los mismos ficheros (pruebas en local con datos de ensayo).
+  const PUBLICACION = await carpetaPublicacion(join(WEB, ".."), WEB);
   const rutaIncidentes = join(PUBLICACION, "incidentes.geojson");
   const rutaUcrania = join(PUBLICACION, "ucrania.json");
   const coleccion = exigir("incidentes.geojson", validarColeccion(await leerJson(rutaIncidentes)));

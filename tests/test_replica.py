@@ -163,3 +163,16 @@ def test_restaurar_un_dia_entero_identico(tmp_path: Path) -> None:
     for original in [*sorted(datos.rglob("*.jsonl.gz")), datos / "indices" / "2026-10-06.json"]:
         copia_local = destino / original.relative_to(datos)
         assert copia_local.read_bytes() == original.read_bytes()
+
+
+def test_la_exportacion_semanal_tambien_va_a_la_replica(
+    almacenes: tuple[copias.Copias, copias.Copias, copias.Copias, S3Falso],
+) -> None:
+    from almacen import exportaciones
+
+    base, archivo, destino, s3 = almacenes
+    origen, _ = cliente(exportaciones.destino())
+    origen.subir("exportaciones/2026.10.12/manifiesto.json", b"{}")
+    hechos = replica.replicar(base, archivo, destino, DESTINATARIO, AHORA, origen)
+    assert hechos["exportaciones"] == 1
+    assert s3.objetos["exportaciones/2026.10.12/manifiesto.json"][0] == b"{}"

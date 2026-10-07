@@ -13,6 +13,8 @@ proyecto, para que un problema de una ubicación no se lleve las dos:
   archivo está en claro en su bucket privado). Lleva la huella del cifrado en `x-amz-meta-sha256`
   y la del original en `x-amz-meta-sha256-claro`. No se sobrescribe nada, salvo
   `rutas/ultima.tar.gz`, que se sustituye cuando cambia.
+- `exportaciones/…`: la exportación semanal del bucket privado (almacen/exportaciones.py), que ya
+  va cifrada, tal cual. No se sobrescribe ni se borra.
 
 Para cifrar basta la clave pública (`destinatario_age` de la configuración): esta unidad no
 necesita la identidad. Para restaurar sí (EODI_CLAVE_AGE o ~/.eodi/clave_age.txt).
@@ -46,6 +48,7 @@ CONFIGURACION = RAIZ / "configuracion" / "replica.json"
 CONFIGURACION_ARCHIVO = RAIZ / "configuracion" / "archivo_seguimiento.json"
 PREFIJO_BASE = "base/"
 PREFIJO_ARCHIVO = "archivo/"
+PREFIJO_EXPORTACIONES = "exportaciones/"
 SUFIJO_CIFRADO = ".age"
 # Lo único del archivo que cambia de contenido con la misma clave (se puede volver a calcular).
 SUSTITUIBLES = frozenset({"rutas/ultima.tar.gz"})
@@ -84,9 +87,16 @@ def replicar(
     replica: copias.Copias,
     destinatario: str,
     ahora: datetime,
+    origen_exportaciones: copias.Copias | None = None,
 ) -> dict[str, Any]:
     """Una pasada: lo que falta en la réplica se sube; después se poda su parte base/."""
-    hechos: dict[str, Any] = {"base": 0, "archivo": 0, "sustituidos": 0, "podados": []}
+    hechos: dict[str, Any] = {
+        "base": 0,
+        "archivo": 0,
+        "sustituidos": 0,
+        "exportaciones": 0,
+        "podados": [],
+    }
     en_replica = {o.clave for o in replica.listar("")}
 
     for objeto in origen_base.listar(origen_base.destino.prefijo):
@@ -107,6 +117,15 @@ def replicar(
             continue
         replica.subir(clave, cifrar(claro, destinatario), {META_CLARO: huella})
         hechos["sustituidos" if clave in en_replica else "archivo"] += 1
+
+    if origen_exportaciones is not None:
+        prefijo = origen_exportaciones.destino.prefijo
+        for objeto in origen_exportaciones.listar(prefijo):
+            clave = PREFIJO_EXPORTACIONES + objeto.clave.removeprefix(prefijo)
+            if clave in en_replica:
+                continue
+            replica.subir(clave, origen_exportaciones.bajar(objeto.clave))
+            hechos["exportaciones"] += 1
 
     hechos["podados"] = replica.podar(ahora)
     return hechos
@@ -179,9 +198,13 @@ def principal(
     momento = ahora()
     origen_base = copias.Copias(copias.cargar_destino(), credenciales)
     origen_archivo = copias.Copias(destino_archivo(), credenciales)
+    from almacen import exportaciones
+
+    origen_exportaciones = copias.Copias(exportaciones.destino(), credenciales)
     hechos = replicar(
-        origen_base, origen_archivo, replica, configuracion["destinatario_age"], momento
-    )
+        origen_base, origen_archivo, replica, configuracion["destinatario_age"], momento,
+        origen_exportaciones,
+    )  # fmt: skip
     registro.info("réplica: %s", json.dumps(hechos, ensure_ascii=False))
     registro_ruta = Path(os.environ.get("EODI_SECRETOS") or casa() / ".eodi") / "replica.json"
     anotar(registro_ruta, hechos, momento)
