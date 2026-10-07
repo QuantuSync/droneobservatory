@@ -1,28 +1,41 @@
 name: vigia-recogida
 
-# Aviso si el servidor deja de recoger. Cada hora lee estado.json, que el servidor publica en
-# el almacén público al final de cada recogida (recogida/salud.py): si la última
-# recogida correcta tiene más de dos horas, o si el fichero no responde en tres intentos
-# espaciados, abre una incidencia en este repositorio (una sola mientras dure el problema)
-# y la cierra cuando se recupera. Una recogida que no trae nada nuevo sigue siendo correcta:
-# la fecha de la rama estado, que antes se miraba, no avanzaba y daba avisos falsos.
+# Vigilancia del observatorio desde fuera del servidor. Cada 10 minutos lee lo que el servidor
+# publica en el almacén público (recogida/salud.py):
 #
-# En el minuto 41: lejos de las horas en punto, cuando GitHub más retrasa las ejecuciones
-# programadas, y cuando la recogida del minuto 17 ya ha terminado. GitHub puede lanzarla
-# tarde o saltarse alguna: el aviso llega tarde, pero llega.
+# - salud.json (recogida/vigilancia.py, cada 5 minutos): si no llega o tiene más de 20 minutos,
+#   el servidor no da señales; si trae un problema (datos sin publicar en 2 horas, recogida
+#   fallida, captura del seguimiento parada más de 10 minutos, copia de la base o del archivo sin
+#   hacer, disco por encima del 75 %), es un problema. Sus avisos (recogida con avisos, titulares
+#   retenidos) se enseñan en el resumen sin ser fallo;
+# - estado.json (al final de cada recogida): última recogida correcta, exportación semanal y
+#   captura del seguimiento;
+# - directo.json: la detección en directo de cierres.
 #
-# Con el mismo estado.json vigila la exportación semanal para AEGIS: si la última correcta
-# tiene más de 8 días, abre otra incidencia («La exportación semanal no se genera»).
+# Cada problema abre su incidencia (una sola mientras dure) y la cierra al arreglarse. Además el
+# trabajo FALLA cuando hay un problema y en esa pasada se abre una incidencia nueva, y después una
+# vez por hora (pasada de los minutos 0 a 9) mientras siga: GitHub manda al dueño el correo de
+# «Run failed» de cada fallo. Así el aviso llega en unos 10 minutos y no cada 10 minutos.
+#
+# GitHub puede lanzar tarde o saltarse alguna ejecución programada: el aviso llega tarde, pero
+# llega. Y desactiva las programaciones de un repositorio público sin actividad en 60 días: una
+# vez al día este trabajo vuelve a activar su propio workflow por la API.
 
 on:
   schedule:
-    - cron: "41 * * * *"
+    - cron: "*/10 * * * *"
   workflow_dispatch:
+    inputs:
+      prueba:
+        description: "Alarma de prueba: hace como si salud.json trajera un problema"
+        type: boolean
+        default: false
 
-# Leer el código para comprobar el estado y abrir o cerrar incidencias; nada más.
+# Leer el código, abrir o cerrar incidencias y reactivar este workflow; nada más.
 permissions:
   contents: read
   issues: write
+  actions: write
 
 concurrency:
   group: vigia-recogida
@@ -31,99 +44,101 @@ concurrency:
 jobs:
   vigia:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.13"
-      - name: Última recogida correcta según estado.json
+      - name: Salud del servidor, de la recogida, de la exportación y de los servicios en directo
         id: salud
-        run: python -m recogida.salud
-      - name: Abrir o cerrar la incidencia
+        env:
+          PRUEBA: ${{ inputs.prueba }}
+        run: |
+          set -euo pipefail
+          python -m recogida.salud
+          if [ "${PRUEBA:-false}" = "true" ]; then
+            {
+              echo "problema_servidor=true"
+              echo "mensaje_servidor=Alarma de prueba lanzada a mano: no hay ningún problema real."
+            } >> "$GITHUB_OUTPUT"
+          fi
+      - name: Incidencias
+        id: incidencias
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
-          TITULO: La recogida horaria no actualiza la base
-          PROBLEMA: ${{ steps.salud.outputs.problema }}
-          MENSAJE: ${{ steps.salud.outputs.mensaje }}
+          PRUEBA: ${{ inputs.prueba }}
+          P_RECOGIDA: ${{ steps.salud.outputs.problema }}
+          M_RECOGIDA: ${{ steps.salud.outputs.mensaje }}
+          P_EXPORTACION: ${{ steps.salud.outputs.problema_exportacion }}
+          M_EXPORTACION: ${{ steps.salud.outputs.mensaje_exportacion }}
+          P_DIRECTO: ${{ steps.salud.outputs.problema_directo }}
+          M_DIRECTO: ${{ steps.salud.outputs.mensaje_directo }}
+          P_SEGUIMIENTO: ${{ steps.salud.outputs.problema_seguimiento }}
+          M_SEGUIMIENTO: ${{ steps.salud.outputs.mensaje_seguimiento }}
+          P_SERVIDOR: ${{ steps.salud.outputs.problema_servidor }}
+          M_SERVIDOR: ${{ steps.salud.outputs.mensaje_servidor }}
         run: |
           set -euo pipefail
-          abierta="$(gh issue list --state open --limit 100 --json number,title \
-            --jq 'map(select(.title == env.TITULO)) | .[0].number // empty')"
-          if [ "$PROBLEMA" = "true" ]; then
-            if [ -z "$abierta" ]; then
-              gh issue create --title "$TITULO" --body "$MENSAJE Cómo revisarlo y reconstruirlo: \`docs/servidor.md\`. Esta incidencia se cierra sola cuando la recogida vuelve a terminar bien."
-            else
-              echo "la incidencia #$abierta sigue abierta"
+          nuevas=0
+          problemas=0
+          # incidencia <título> <problema> <mensaje> <dónde mirar> <frase de cierre>
+          incidencia() {
+            local titulo="$1" problema="$2" mensaje="$3" donde="$4" cierre="$5" abierta
+            abierta="$(gh issue list --state open --limit 100 --json number,title \
+              --jq "map(select(.title == \"$titulo\")) | .[0].number // empty")"
+            if [ "$problema" = "true" ]; then
+              problemas=$((problemas + 1))
+              echo "::error::$titulo: $mensaje"
+              if [ -z "$abierta" ]; then
+                gh issue create --title "$titulo" \
+                  --body "$mensaje Qué hacer: \`docs/operacion.md\` ($donde). Esta incidencia se cierra sola cuando se arregla."
+                nuevas=$((nuevas + 1))
+              else
+                echo "la incidencia #$abierta sigue abierta"
+              fi
+            elif [ -n "$abierta" ]; then
+              gh issue close "$abierta" --comment "$cierre $mensaje"
             fi
-          elif [ -n "$abierta" ]; then
-            gh issue close "$abierta" --comment "La recogida vuelve a terminar bien. $MENSAJE"
+          }
+          incidencia "La recogida horaria no actualiza la base" "$P_RECOGIDA" "$M_RECOGIDA" \
+            "si la recogida falla" "La recogida vuelve a terminar bien."
+          incidencia "La exportación semanal no se genera" "$P_EXPORTACION" "$M_EXPORTACION" \
+            "exportación semanal" "Vuelve a haber una exportación correcta."
+          incidencia "La detección en directo no se actualiza" "$P_DIRECTO" "$M_DIRECTO" \
+            "detección en directo" "La detección en directo vuelve a publicar."
+          incidencia "La captura del seguimiento en directo no recibe datos" "$P_SEGUIMIENTO" \
+            "$M_SEGUIMIENTO" "si la captura del seguimiento se para" \
+            "La captura del seguimiento vuelve a recibir sin huecos largos."
+          titulo_servidor="El servidor del observatorio necesita atención"
+          if [ "${PRUEBA:-false}" = "true" ]; then
+            titulo_servidor="Alarma de prueba de la vigilancia"
           fi
-      # La exportación semanal para AEGIS (servidor/exportacion.sh, los lunes a las 03:47 UTC):
-      # otra incidencia si la última correcta tiene más de 8 días o no consta ninguna.
-      - name: Abrir o cerrar la incidencia de la exportación
+          incidencia "$titulo_servidor" "$P_SERVIDOR" "$M_SERVIDOR" \
+            "cómo ver si todo va bien" "El servidor vuelve a estar bien."
+          echo "nuevas=$nuevas" >> "$GITHUB_OUTPUT"
+          echo "problemas=$problemas" >> "$GITHUB_OUTPUT"
+      # Una vez al día, la pasada de las 06:00 a 06:09: GitHub desactiva las programaciones de un
+      # repositorio sin actividad en 60 días, y desde que los datos no van al repositorio puede
+      # pasar semanas sin commits.
+      - name: Mantener activa la programación
+        if: github.event_name == 'schedule'
         env:
           GH_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }}
-          TITULO: La exportación semanal no se genera
-          PROBLEMA: ${{ steps.salud.outputs.problema_exportacion }}
-          MENSAJE: ${{ steps.salud.outputs.mensaje_exportacion }}
         run: |
-          set -euo pipefail
-          abierta="$(gh issue list --state open --limit 100 --json number,title \
-            --jq 'map(select(.title == env.TITULO)) | .[0].number // empty')"
-          if [ "$PROBLEMA" = "true" ]; then
-            if [ -z "$abierta" ]; then
-              gh issue create --title "$TITULO" --body "$MENSAJE Cómo revisarla y lanzarla a mano: \`docs/servidor.md\`, «Exportación semanal». Esta incidencia se cierra sola cuando vuelve a haber una exportación correcta."
-            else
-              echo "la incidencia #$abierta sigue abierta"
-            fi
-          elif [ -n "$abierta" ]; then
-            gh issue close "$abierta" --comment "Vuelve a haber una exportación correcta. $MENSAJE"
+          if [ "$(date -u +%H%M | cut -c1-3)" = "060" ]; then
+            gh api -X PUT "repos/${{ github.repository }}/actions/workflows/vigia-recogida.yml/enable"
+            echo "programación reactivada"
           fi
-      # La detección en directo de cierres (servidor/directo.sh, siempre en marcha): otra
-      # incidencia si directo.json lleva más de media hora sin publicarse o no responde.
-      - name: Abrir o cerrar la incidencia de la detección en directo
+      - name: Avisar al dueño
         env:
-          GH_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }}
-          TITULO: La detección en directo no se actualiza
-          PROBLEMA: ${{ steps.salud.outputs.problema_directo }}
-          MENSAJE: ${{ steps.salud.outputs.mensaje_directo }}
+          NUEVAS: ${{ steps.incidencias.outputs.nuevas }}
+          PROBLEMAS: ${{ steps.incidencias.outputs.problemas }}
         run: |
-          set -euo pipefail
-          abierta="$(gh issue list --state open --limit 100 --json number,title \
-            --jq 'map(select(.title == env.TITULO)) | .[0].number // empty')"
-          if [ "$PROBLEMA" = "true" ]; then
-            if [ -z "$abierta" ]; then
-              gh issue create --title "$TITULO" --body "$MENSAJE Cómo revisarla y relanzarla: \`docs/servidor.md\`, «Detección en directo de cierres». Esta incidencia se cierra sola cuando el servicio vuelve a publicar."
-            else
-              echo "la incidencia #$abierta sigue abierta"
-            fi
-          elif [ -n "$abierta" ]; then
-            gh issue close "$abierta" --comment "La detección en directo vuelve a publicar. $MENSAJE"
+          minuto="$(date -u +%M)"
+          if [ "$PROBLEMAS" -gt 0 ] && { [ "$NUEVAS" -gt 0 ] || [ "${minuto#0}" -lt 10 ]; }; then
+            echo "::error::$PROBLEMAS problemas (incidencias nuevas: $NUEVAS). Detalle en las incidencias abiertas del repositorio."
+            exit 1
           fi
-      # La captura del seguimiento en directo (servidor/seguimiento.sh, siempre en marcha): otra
-      # incidencia si llevaba más de 10 minutos sin heartbeat del flujo de NEPTUN o si ha tenido un
-      # hueco de más de 10 minutos en las dos últimas horas (también si estuvo parada).
-      - name: Abrir o cerrar la incidencia de la captura del seguimiento
-        env:
-          GH_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }}
-          TITULO: La captura del seguimiento en directo no recibe datos
-          PROBLEMA: ${{ steps.salud.outputs.problema_seguimiento }}
-          MENSAJE: ${{ steps.salud.outputs.mensaje_seguimiento }}
-        run: |
-          set -euo pipefail
-          abierta="$(gh issue list --state open --limit 100 --json number,title \
-            --jq 'map(select(.title == env.TITULO)) | .[0].number // empty')"
-          if [ "$PROBLEMA" = "true" ]; then
-            if [ -z "$abierta" ]; then
-              gh issue create --title "$TITULO" --body "$MENSAJE Cómo revisarla y relanzarla: \`docs/servidor.md\`, «Captura del seguimiento en directo». Esta incidencia se cierra sola cuando el servicio lleva dos horas recibiendo sin huecos largos."
-            else
-              echo "la incidencia #$abierta sigue abierta"
-            fi
-          elif [ -n "$abierta" ]; then
-            gh issue close "$abierta" --comment "La captura del seguimiento vuelve a recibir sin huecos largos. $MENSAJE"
-          fi
+          echo "sin aviso al dueño: problemas $PROBLEMAS, incidencias nuevas $NUEVAS"

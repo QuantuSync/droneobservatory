@@ -90,7 +90,11 @@ def test_la_salida_del_trabajo_dice_si_hay_problema(
         "generado": (AHORA - hace).strftime("%Y-%m-%dT%H:%MZ"),
         "fuente": "adsb_lol",
     }
-    bucket = Bucket(publicado(estado(hace)), publicado(directo))
+    servidor: dict[str, object] = {
+        "generado": (AHORA - hace).strftime("%Y-%m-%dT%H:%MZ"),
+        "problemas": [],
+    }
+    bucket = Bucket(publicado(estado(hace)), publicado(directo), publicado(servidor))
     assert salud.principal([], AHORA, bucket.leer, bucket.dormir) == 0
     lineas = salida.read_text(encoding="utf-8").splitlines()
     assert lineas[0] == f"problema={problema}"
@@ -100,3 +104,40 @@ def test_la_salida_del_trabajo_dice_si_hay_problema(
     assert lineas[5].startswith("mensaje_directo=La detección en directo publicó")
     assert salud.TITULO in resumen.read_text(encoding="utf-8")
     assert salud.TITULO_DIRECTO in resumen.read_text(encoding="utf-8")
+
+
+def salud_servidor(
+    hace: timedelta, problemas: tuple[str, ...] = (), avisos: tuple[str, ...] = ()
+) -> dict[str, object]:
+    return {
+        "generado": (AHORA - hace).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "disco": {"usado_pct": 30.0},
+        "problemas": [{"id": "x", "frase": f} for f in problemas],
+        "avisos": [{"id": "y", "frase": f} for f in avisos],
+    }
+
+
+def test_servidor_sin_problemas_y_con_avisos_no_es_problema() -> None:
+    al_dia, frase, avisos = salud.diagnostico_servidor(
+        salud_servidor(timedelta(minutes=4), avisos=("La última recogida terminó con avisos.",)),
+        AHORA,
+    )
+    assert al_dia
+    assert "sin problemas" in frase
+    assert "con avisos" in avisos
+
+
+def test_servidor_con_un_problema_es_problema() -> None:
+    al_dia, frase, _ = salud.diagnostico_servidor(
+        salud_servidor(timedelta(minutes=4), ("El disco está al 81 %.",)), AHORA
+    )
+    assert not al_dia
+    assert "81 %" in frase
+
+
+@pytest.mark.parametrize("hace", [timedelta(minutes=21), None])
+def test_servidor_callado_o_ausente_es_problema(hace: timedelta | None) -> None:
+    documento = salud_servidor(hace) if hace else None
+    al_dia, frase, _ = salud.diagnostico_servidor(documento, AHORA)
+    assert not al_dia
+    assert "no da señales" in frase or "no responde" in frase

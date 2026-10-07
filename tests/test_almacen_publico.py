@@ -33,6 +33,7 @@ def test_la_configuracion_da_el_almacen_de_hetzner(almacen: Almacen) -> None:
         "teselas": "europa-z14.pmtiles",
         "directo": "directo.json",
         "gnss": "gnss",
+        "salud": "salud.json",
     }
 
 

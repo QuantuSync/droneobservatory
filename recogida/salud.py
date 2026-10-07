@@ -31,7 +31,14 @@ recogida; `problema_exportacion` y `mensaje_exportacion` de la exportación;
 `problema_directo` y `mensaje_directo` de la detección en directo; `problema_seguimiento` y
 `mensaje_seguimiento` de la captura del seguimiento).
 
+Y el servidor entero, por salud.json (recogida/vigilancia.py, cada 5 minutos): hay problema si
+no responde o tiene más de 20 minutos (el servidor no da señales) o si trae algún problema
+(publicación, recogida fallida, captura del seguimiento, copias, disco). Sus avisos (recogida con
+avisos, titulares retenidos) se enseñan en el resumen sin ser problema (`problema_servidor`,
+`mensaje_servidor` y `avisos_servidor`).
+
 Uso: python -m recogida.salud [--url <estado.json>] [--url-directo <directo.json>]
+                              [--url-salud <salud.json>]
 """
 
 import argparse
@@ -52,6 +59,10 @@ from recogida.descarga import AGENTE_EODI
 _ALMACEN = almacen_publico.cargar()
 URL = _ALMACEN.url_publica(_ALMACEN.objetos["estado"])
 URL_DIRECTO = _ALMACEN.url_publica(_ALMACEN.objetos["directo"])
+URL_SALUD = _ALMACEN.url_publica(_ALMACEN.objetos["salud"])
+# salud.json se sube cada 5 minutos: 20 minutos sin él son cuatro pasadas perdidas.
+MAX_SIN_SALUD = timedelta(minutes=20)
+TITULO_SERVIDOR = "### Servidor"
 # La detección en directo publica directo.json cada minuto: media hora sin publicar es que el
 # servicio se ha parado (systemd lo relanza a los 30 s si se cae).
 MAX_SIN_DIRECTO = timedelta(minutes=30)
@@ -204,6 +215,26 @@ def diagnostico_seguimiento(estado: dict[str, Any] | None, ahora: datetime) -> E
     return True, f"{frase}."
 
 
+def diagnostico_servidor(salud: dict[str, Any] | None, ahora: datetime) -> tuple[bool, str, str]:
+    """Si el servidor está bien según salud.json, la frase y sus avisos (que no son problema)."""
+    if salud is None:
+        return False, f"salud.json no responde tras {INTENTOS} intentos espaciados.", ""
+    generado = _instante(salud.get("generado"))
+    avisos = " ".join(str(a.get("frase")) for a in salud.get("avisos", []) if isinstance(a, dict))
+    if generado is None or ahora - generado > MAX_SIN_SALUD:
+        cuando = f"el {generado:%Y-%m-%d %H:%M} UTC" if generado else "sin hora"
+        return False, f"El servidor no da señales: su último salud.json es de {cuando}.", avisos
+    problemas = [str(p.get("frase")) for p in salud.get("problemas", []) if isinstance(p, dict)]
+    disco = salud.get("disco", {})
+    frase = (
+        f"Servidor comprobado el {generado:%Y-%m-%d %H:%M} UTC "
+        f"(disco al {disco.get('usado_pct')} %)"
+    )
+    if problemas:
+        return False, f"{frase}: " + " ".join(problemas), avisos
+    return True, f"{frase}: sin problemas.", avisos
+
+
 def informar(resultado: Estado, titulo: str = TITULO, sufijo: str = "") -> None:
     """La frase en el registro, en el resumen del trabajo y en su salida."""
     al_dia, frase = resultado
@@ -228,6 +259,7 @@ def principal(
     opciones = argparse.ArgumentParser(description=__doc__)
     opciones.add_argument("--url", default=URL)
     opciones.add_argument("--url-directo", default=URL_DIRECTO)
+    opciones.add_argument("--url-salud", default=URL_SALUD)
     args = opciones.parse_args(argumentos)
     estado = leer_estado(args.url, leer, dormir)
     momento = ahora or datetime.now(UTC)
@@ -236,6 +268,19 @@ def principal(
     directo = leer_estado(args.url_directo, leer, dormir)
     informar(diagnostico_directo(directo, momento), TITULO_DIRECTO, "_directo")
     informar(diagnostico_seguimiento(estado, momento), TITULO_SEGUIMIENTO, "_seguimiento")
+    al_dia, frase, avisos = diagnostico_servidor(leer_estado(args.url_salud, leer, dormir), momento)
+    informar((al_dia, frase), TITULO_SERVIDOR, "_servidor")
+    if avisos:
+        # Se ven en el registro y en el resumen, pero no cuentan como problema.
+        print(f"::notice::{avisos}")
+        resumen = os.environ.get(VARIABLE_RESUMEN)
+        if resumen:
+            with Path(resumen).open("a", encoding="utf-8") as fichero:
+                fichero.write(f"\nℹ️ Avisos: {avisos}\n")
+    salida = os.environ.get(VARIABLE_SALIDA)
+    if salida:
+        with Path(salida).open("a", encoding="utf-8") as fichero:
+            fichero.write(f"avisos_servidor={avisos}\n")
     return 0
 
 

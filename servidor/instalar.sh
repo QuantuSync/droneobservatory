@@ -526,6 +526,66 @@ Persistent=true
 [Install]
 WantedBy=timers.target
 FIN
+# Vigilancia (servidor/vigilancia.sh): salud.json cada 5 minutos para el workflow vigia-recogida.
+# Lee el diario de la recogida (grupo systemd-journal) y no toca nada más que su registro.
+cat > "/etc/systemd/system/$UNIDAD_VIGILANCIA.service" <<FIN
+[Unit]
+Description=Salud del servidor para la vigilancia externa (EODI)
+Wants=network-online.target
+After=network-online.target time-sync.target
+
+[Service]
+Type=oneshot
+User=$USUARIO
+Group=$USUARIO
+SupplementaryGroups=systemd-journal
+WorkingDirectory=$CLON
+ExecStart=/usr/bin/env bash $CLON/servidor/vigilancia.sh
+SyslogIdentifier=$UNIDAD_VIGILANCIA
+TimeoutStartSec=${TOPE_VIGILANCIA_MINUTOS}min
+Nice=10
+IOSchedulingClass=idle
+MemoryMax=$VIGILANCIA_MEMORIA
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=full
+FIN
+cat > "/etc/systemd/system/$UNIDAD_VIGILANCIA.timer" <<FIN
+[Unit]
+Description=Salud del servidor para la vigilancia externa (EODI), cada 5 minutos
+
+[Timer]
+OnCalendar=$CALENDARIO_VIGILANCIA
+AccuracySec=1s
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+FIN
+# Reinicio tras una actualización de seguridad (servidor/reinicio.sh), como root, solo cuando no
+# corta nada.
+cat > "/etc/systemd/system/$UNIDAD_REINICIO.service" <<FIN
+[Unit]
+Description=Reinicio tras una actualización de seguridad, cuando no corta nada (EODI)
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/env bash $CLON/servidor/reinicio.sh
+SyslogIdentifier=$UNIDAD_REINICIO
+TimeoutStartSec=5min
+MemoryMax=$REINICIO_MEMORIA
+FIN
+cat > "/etc/systemd/system/$UNIDAD_REINICIO.timer" <<FIN
+[Unit]
+Description=Reinicio tras una actualización de seguridad (EODI), cada 5 minutos de día
+
+[Timer]
+OnCalendar=$CALENDARIO_REINICIO
+AccuracySec=1s
+
+[Install]
+WantedBy=timers.target
+FIN
 systemctl daemon-reload
 
 echo "instalación hecha"

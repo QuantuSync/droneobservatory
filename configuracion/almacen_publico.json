@@ -9,7 +9,8 @@
     "estado": "estado.json",
     "teselas": "europa-z14.pmtiles",
     "directo": "directo.json",
-    "gnss": "gnss"
+    "gnss": "gnss",
+    "salud": "salud.json"
   },
   "huellas_sha256": {
     "europa-z14.pmtiles": "393c9a0da1ef1c55c2338b61eeabaa840b3e96011a1ad5cc9c38ff6cc8a11c98"

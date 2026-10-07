@@ -88,7 +88,7 @@ LOCAL_ALMACEN="$LOCAL_SECRETOS/almacen.env"
 # --- Exportación semanal para AEGIS (servidor/exportacion.sh) ----------------------------
 UNIDAD_EXPORTACION="eodi-exportacion"
 # Los lunes a las 03:47 UTC: a mitad de camino entre la recogida de las 03:17 y la de las
-# 04:17, de madrugada en Europa y antes del reinicio de seguridad de las 04:45.
+# 04:17, de madrugada en Europa. Los reinicios tras una actualización van de día (eodi-reinicio).
 CALENDARIO_EXPORTACION="Mon *-*-* 03:47:00 UTC"
 # Espera por el cerrojo (como mucho los 45 minutos de una recogida) más la exportación, que
 # tarda un par de minutos.
@@ -139,8 +139,8 @@ FIRMS_FALLOS_MAXIMOS=6
 # listas renderizadas y resultados de lotes), fuera del repositorio y de la base.
 DETALLE_DATOS="${EODI_DETALLE_DATOS:-$CASA/datos/detalle}"
 UNIDAD_DETALLE="eodi-detalle"
-# Cada 3 horas en el minuto 52: lejos de la recogida horaria (17), del tráfico aéreo (40), de
-# la exportación (03:47) y del reinicio de seguridad (04:45).
+# Cada 3 horas en el minuto 52: lejos de la recogida horaria (17), del tráfico aéreo (40) y de
+# la exportación (03:47).
 CALENDARIO_DETALLE="*-*-* 02/3:52:00 UTC"
 # Una recogida normal pide unas decenas de páginas (unos minutos con las pausas) y renderiza
 # tres listas; el tope cubre una fuente lenta sin que llegue la siguiente.
@@ -216,7 +216,7 @@ DEDUCCION_REGISTRO="$SECRETOS/deduccion.json"
 # recogida horaria lo guarda en la base.
 CATALOGO_DATOS="${EODI_CATALOGO_DATOS:-$CASA/datos/catalogo}"
 UNIDAD_CATALOGO="eodi-catalogo"
-# Una vez al día a las 05:23 UTC: tras el reinicio de seguridad (04:45) y lejos de la recogida
+# Una vez al día a las 05:23 UTC: lejos de la recogida
 # (17), del tráfico aéreo (40), del lector de canales (50) y del motor de deducción (05). Lee
 # War&Sanctions y los datos propios cada día y el resto de fuentes una vez a la semana.
 CALENDARIO_CATALOGO="*-*-* 05:23:00 UTC"
@@ -312,15 +312,29 @@ RUTAS_TOPE_UNIDAD=30
 SATELITE_NICE=15
 SATELITE_MEMORIA_MAXIMA="1G"
 
+# --- Vigilancia (servidor/vigilancia.sh, recogida/vigilancia.py) ------------------------------
+# salud.json en el almacén público cada 5 minutos, para el workflow vigia-recogida.
+UNIDAD_VIGILANCIA="eodi-vigilancia"
+CALENDARIO_VIGILANCIA="*-*-* *:00/5:30 UTC"
+VIGILANCIA_MEMORIA="300M"
+TOPE_VIGILANCIA_MINUTOS=4
+
+# --- Reinicio tras las actualizaciones (servidor/reinicio.sh, recogida/reinicio.py) ------------
+# Las actualizaciones de seguridad no reinician solas (Automatic-Reboot "false" en endurecer.sh):
+# si una lo pide, eodi-reinicio reinicia cuando no corta nada (fuera de los minutos 12 a 40, sin
+# trabajos en marcha, sin ataque en curso según NEPTUN). Se mira cada 5 minutos de 07:00 a 15:55
+# UTC, de día en Ucrania, cuando hay menos ataques de largo alcance.
+UNIDAD_REINICIO="eodi-reinicio"
+CALENDARIO_REINICIO="*-*-* 07..15:00/5:00 UTC"
+REINICIO_MEMORIA="300M"
+
 # --- Endurecimiento ------------------------------------------------------------------
-# Reinicio tras una actualización de seguridad que lo pida: de madrugada y a los 28
-# minutos del lanzamiento de las 04:17, cuando hasta la recogida más lenta ha terminado.
-HORA_REINICIO="04:45"
 # Intentos fallidos de entrada por SSH antes de vetar una dirección, en qué ventana y
-# cuánto dura el veto.
+# cuánto dura el veto. Cada veto repetido de la misma dirección dura el doble, hasta una semana.
 VETO_INTENTOS=5
 VETO_VENTANA="10m"
 VETO_DURACION="1h"
+VETO_MAXIMO="1w"
 # Diario de systemd: tope de disco y de antigüedad. Una recogida deja unas decenas de
 # líneas, así que el tope de antigüedad llega mucho antes que el de disco.
 DIARIO_MAXIMO="200M"
