@@ -8142,15 +8142,13 @@
      "casos_referencia": 26,
      "compatible": [
       {
-       "grupo": "largo_alcance_helice",
-       "probabilidad": 0.49
+       "grupo": "largo_alcance_helice"
       },
       {
-       "grupo": "senuelo",
-       "probabilidad": 0.42
+       "grupo": "senuelo"
       }
      ],
-     "otras": 0.09
+     "presentacion": "compatible_guerra"
     },
     "razones": [
      {
@@ -8167,7 +8165,7 @@
       "tipo": "restriccion"
      }
     ],
-    "version": "tipo-dron-1.0.0"
+    "version": "tipo-dron-1.1.0"
    },
    "titulo": {
     "en": "Drone breaches Romanian airspace during attack on Ukraine",
@@ -12245,7 +12243,7 @@
      "grupo": "largo_alcance_helice",
      "modelo": "Shahed"
     },
-    "version": "tipo-dron-1.0.0"
+    "version": "tipo-dron-1.1.0"
    },
    "titulo": {
     "en": "Shahed drone overflies Moldavian airspace",
@@ -22391,7 +22389,7 @@
      "grupo": "senuelo",
      "modelo": "Gerbera"
     },
-    "version": "tipo-dron-1.0.0"
+    "version": "tipo-dron-1.1.0"
    },
    "titulo": {
     "en": "Two Gerbera drones destroyed in Neptun Deep area",
