@@ -132,7 +132,8 @@ for (const tamano of TAMANOS) {
       // Con sus modelos, tal como los escribe la autoridad.
       await expect(filtro).toContainText(/\(.+\)/);
       // Lo deducido, en una sola opción: no se ofrecen clases que no se distinguen.
-      await expect(filtro).not.toContainText("Dron de ataque de largo alcance de hélice");
+      const deducidos = filtro.locator("div", { hasText: "Deducido por el observatorio" }).last();
+      await expect(deducidos.getByRole("button")).toHaveCount(1);
       const boton = filtro.getByRole("button", { name: "Compatible con dron de largo alcance de la guerra" });
       expect(elegidos.claveDeducida).toBe("deducido:guerra");
       await boton.click();

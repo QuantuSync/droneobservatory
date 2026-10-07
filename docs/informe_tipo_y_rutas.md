@@ -247,3 +247,138 @@ pueden hacer varias clases.
    4 recorridos. Arreglo: añadir esas formas al nomenclátor con su región.
 5. **Día 5 de octubre en el informe de la captura del seguimiento**: el día está en el archivo pero
    no en su índice. Arreglo: regenerar el índice del informe de la captura.
+
+## 7 de octubre de 2026: rutas legibles y tipo de dron sin falsa precisión
+
+PR #147, fusionado el 7 de octubre a las 08:03 UTC (`b451023`). Dos arreglos sobre lo publicado
+la noche anterior, sin funciones nuevas.
+
+### Tipo de dron
+
+**Qué se veía.** De los 69 incidentes con tipo deducido, 68 decían casi lo mismo («dron de ataque
+de largo alcance de hélice, 49 %; señuelo, 42 %»); 38 no enseñaban ninguna razón al desplegar y 28
+solo la distancia a la frontera. Dos porcentajes casi iguales no distinguen nada.
+
+**Por qué 38 no tenían razón.** La razón existía y no se guardaba: esos incidentes tienen base
+porque el dron entró desde fuera en la zona de frontera, pero a esa distancia llegan todas las
+clases, la distancia no cambia ninguna probabilidad y el cálculo solo guardaba las razones que
+cambian algo. Ahora se guarda como razón propia («Entró desde fuera, a 3 km de Ucrania, Rusia o
+Bielorrusia: dentro del alcance de los drones de largo alcance que se lanzan en la guerra»). Los
+38 la tienen; ninguno se queda sin fila por esto.
+
+**Qué se ha cambiado.**
+
+- Comprobación nueva con los casos de respuesta conocida (`proceso/tipo_dron/comprobacion.py`):
+  - *distinción*: en cuántos casos el método dijo un grupo doblando al segundo y en cuántos
+    acertó. Para enseñar porcentajes hacen falta 5 casos y un 80 % de aciertos. Con los casos de
+    hoy, en la frontera ninguno dobla al otro (como mucho, 1,3 veces): **no pasa**, y no se enseñan
+    porcentajes en ningún incidente;
+  - *familia de la guerra*: en cuántos casos el ataque de largo alcance y el señuelo juntos doblaban
+    al resto y en cuántos era uno de los dos: **22 de 24 (92 %)**, pasa.
+- Cuando no hay distinción, la fila dice una sola cosa, «Compatible con un dron de largo alcance de
+  la guerra (de ataque o señuelo)» («Compatible with a long-range drone of the war (attack or
+  decoy)»), con sus razones debajo, a la vista. Sin razón no hay fila.
+- Los 6 identificados por la autoridad no cambian.
+- Filtro «Tipo de dron»: «Identificado por la autoridad», con los modelos que nombra («Dron de
+  ataque de largo alcance de hélice (Shahed, Shahed 138, Geran-2)», «Señuelo de largo alcance
+  (Gerbera)»), y «Deducido por el observatorio» con una sola opción, «Compatible con dron de largo
+  alcance de la guerra» (`?dron=deducido:guerra`).
+- Páginas de texto y metodología dicen lo mismo. La exportación conserva las probabilidades
+  calculadas con su regla de origen y añade cómo se presentan (`publicado.presentacion`). Esquema de
+  datos 1.16.0, método `tipo-dron-1.1.0`, exportación 1.7.0.
+
+**Cifras en producción** (recogida de las 08:17 del 7 de octubre, 441 incidentes evaluados):
+
+| | Incidentes |
+|---|---|
+| Identificado por la autoridad | 6 |
+| «Compatible con un dron de largo alcance de la guerra» | 69 |
+| Con porcentajes | 0 |
+| Sin fila | 366 (348 sin base y 18 con base cuyo grupo más probable no pasa la comprobación) |
+
+### Rutas
+
+**Qué se veía.** Al encender «Rutas»: cientos de cápsulas cortas sueltas (329 tramos en una noche),
+polígonos de ocho lados de región entera, todo semitransparente y superpuesto, dos noches a la vez
+y mezclado con los círculos de impactos. La leyenda, en algunos teléfonos, salía cortada por la
+izquierda.
+
+![Antes, escritorio](capturas/rutas-antes-escritorio.png)
+![Antes, 390×844](capturas/rutas-antes-390x844.png)
+
+**Qué se ha cambiado.**
+
+- **Un grupo, una línea** (`proceso/rutas/recorridos.py`). NEPTUN parte el vuelo de un grupo en
+  pistas cortas (la mitad dura menos de 8 minutos). Dos pistas se unen si la segunda empieza entre
+  10 minutos antes y 30 minutos después de que la primera llegue a su último punto, cabe a 250 km/h
+  y va en la misma dirección (60° como mucho), y solo si es la única que puede seguir a la primera
+  y la primera la única que puede precederla. Si un grupo con varios aparatos se divide o se une,
+  la línea se bifurca o se junta; cualquier otra duda deja las pistas sin unir. Cada recorrido va
+  suavizado, de su principio a su final.
+- **Dirección**: la línea es casi transparente en el origen, más marcada hacia el final y termina
+  en una punta de flecha.
+- **Sin manchas de región**: un punto con 45 km o más de incertidumbre, o un aviso «por región»,
+  no se dibuja; solo une el recorrido si hay puntos precisos antes y después.
+- **Incertidumbre**: un halo alrededor de la línea, de 2 a 15 km a cada lado según la precisión de
+  cada punto, muy suave de lejos.
+- **Una noche cada vez**: la última terminada, u otra en «Noche a noche». La leyenda dice qué noche.
+- **Sin maraña**: solo tienen recorrido los grupos que se desplazan 20 km o más; se dibujan los 40
+  con más aparatos (a igualdad, los más largos), con grosor y opacidad según el tamaño y los mayores
+  encima. La leyenda dice «40 de 155 grupos, los de más drones».
+- **Convivencia**: con «Rutas» a la vista, los impactos se atenúan y el relleno de las regiones
+  baja a un tercio; las rutas van en violeta claro con flecha, distintas de los arcos de los
+  corredores.
+- **Leyenda entera**: en el teléfono la leyenda compartía fila con las atribuciones; la fila era
+  más ancha que la pantalla y, alineada a la derecha, la leyenda se salía por la izquierda (en
+  Chromium la fila desbordaba por la derecha y lo que se cortaba eran las atribuciones). Ahora van
+  una encima de otra; vale para todas las leyendas de la capa (rutas, corredores, presión, GPS). Se
+  comprobó de 320 a 1440 px de ancho, con letra al 125 %, en los dos idiomas, con corredores y con
+  «Noche a noche».
+- **Ficha del grupo** al tocar la línea o su halo: noche, grupo, aparatos, tipo y velocidad cuando
+  constan, longitud y horas, precisión, fuente con su enlace a NEPTUN y las pistas. Cerrarla no
+  mueve el mapa.
+- **Fichero de cada noche** (esquema de rutas 1.1.0): lleva los recorridos ya unidos (líneas, halo
+  y flecha); los tramos siguen como datos de partida, sin franja. Se sube comprimido: una noche pasa
+  de unos 310 KB a 60 KB. La exportación semanal (1.7.0) lleva también los recorridos, con su regla
+  de origen (`recorridos-1.0.0`, calculado). Las dos noches publicadas se regeneraron a las 08:34;
+  la del 6 al 7 de octubre se publicará sola cuando termine (a partir de las 14:00 UTC).
+
+![Después, escritorio](capturas/rutas-despues-escritorio.png)
+![Después, 390×844](capturas/rutas-despues-390x844.png)
+
+**Cifras**: noche del 4 al 5 de octubre, 507 pistas de NEPTUN y 155 grupos con recorrido; noche del
+5 al 6, 527 pistas y 155 grupos. Con las uniones, una pista de cada cinco forma parte de un
+recorrido de varias.
+
+### Comprobaciones
+
+- Puerta local (pytest, ruff, mypy, base de prueba de la exportación) y CI en verde; pruebas nuevas
+  de recorridos (unión, duda, división, región entera, orden) y del tipo de dron (distinción,
+  familia, razón guardada, sin razón no hay fila).
+- Ensayo de la recogida y de la exportación semanal sobre una copia de la base real en el servidor:
+  código 0; después, la exportación de las rutas ya calculadas valida.
+- Recogidas de las 08:17 y las 09:17 tras fusionar: correctas (código 0) y publicadas, con picos de
+  4,7 GB (con caché). Las rutas del minuto 8 de las 09:00 terminaron con código 0. Incidentes
+  publicados: 439 antes y después.
+- Navegador, en producción, en 360×800, 390×844, 412×915 y escritorio (30 pruebas, todas bien):
+  rutas solas y con corredores, de lejos y acercando al norte y al sur; ficha de un grupo y su
+  cierre; «Noche a noche»; recorrido de una incursión; un incidente identificado, uno «compatible
+  con» con su razón y uno sin fila; el filtro; y las páginas de texto sin ejecutar código.
+- Rendimiento en un teléfono emulado (CPU 4 veces más lenta, red 4G): las rutas están dibujadas
+  entre 0,38 y 0,55 s después de que el mapa esté listo; al mover el mapa, los mismos cuadros por
+  segundo con rutas que sin ellas (19–20 en esta máquina). Primera carga: las rutas no se piden en
+  ella; el código crece 2,7 KB comprimidos en total (HTML, aplicación, mapa y estilos).
+
+### Pendiente, con su arreglo
+
+1. **Porcentajes**: con los casos conocidos de hoy, ningún rasgo descrito separa el ataque de largo
+   alcance del señuelo, así que no se enseñan porcentajes en ningún incidente. Arreglo: sumar casos
+   de respuesta conocida con rasgos (velocidad, ruido, tamaño) de las declaraciones oficiales; la
+   comprobación de distinción publica los porcentajes sola cuando pase.
+2. **Un incidente que antes tuviera fila sin razones y ahora no la tenga**: no lo hay, porque los 38
+   tenían su razón sin guardar. La prueba de navegador comprueba la ausencia de fila con un
+   incidente sin base. Arreglo: ninguno de código.
+3. **Recorridos cortos**: aun unidos, la mitad de los recorridos mide 40 km o menos, porque NEPTUN
+   pierde a muchos grupos y abre pistas nuevas lejos. Arreglo: unir también con los mensajes de la
+   Fuerza Aérea de la misma noche cuando un mensaje sitúe al grupo entre dos pistas, con la misma
+   regla de no inventar identidades.
