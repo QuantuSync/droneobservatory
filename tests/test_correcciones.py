@@ -205,3 +205,10 @@ def test_lee_una_base_de_verdad() -> None:
 
 def registro_fecha(almacen: Almacen) -> str:
     return str(almacen.historial("EODI-2026-00001")[0]["fecha"])
+
+
+def test_la_union_de_una_nota_posterior_tiene_su_motivo() -> None:
+    from proceso import incidentes
+
+    motivo = correcciones.Motivos().de(incidentes.MOTIVO_NOTA_POSTERIOR)
+    assert motivo is not None and motivo[0]["en"].startswith("It is a later report")

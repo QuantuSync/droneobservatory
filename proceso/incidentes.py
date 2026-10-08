@@ -58,6 +58,10 @@ MAX_DURACION = timedelta(days=2)
 MAX_MOTIVO = 300
 # Hasta las 06:00 locales, una hora es aún de la noche que empezó la víspera.
 MADRUGADA = timedelta(hours=6)
+# Una nota que vuelve sobre un suceso ya pasado: la primera de sus noticias sale al menos estos días
+# después del día del suceso que escribe (nota_posterior).
+DIAS_NOTA_POSTERIOR = 2
+MOTIVO_NOTA_POSTERIOR = "nota posterior sobre un suceso ya registrado: mismo país, tipo y día"
 FIABILIDAD_NOTICIAS = "C"
 # «Varios objetivos»: dos o más.
 MIN_OBJETIVOS_EPISODIO = 2
@@ -477,6 +481,41 @@ def encajan(a: Documento, b: Documento) -> bool:
     )
 
 
+def nota_posterior(documento: Documento) -> bool:
+    """Vuelve sobre un suceso pasado: el día lo escribe una fuente (no es el de la publicación) y
+    la primera noticia sale días después («el archivo de la investigación de los drones del 9 al
+    10 de septiembre», publicado un año más tarde)."""
+    if not fecha_verificada(documento) or documento["tiempo"]["inicio"]["precision"] == APROXIMADA:
+        return False
+    suceso = _leer_instante(documento["tiempo"]["inicio"]).date()
+    publicada = datetime.strptime(primera_noticia(documento)[:10], "%Y-%m-%d").date()
+    return (publicada - suceso).days >= DIAS_NOTA_POSTERIOR
+
+
+def mismo_suceso_posterior(registrado: Documento, nota: Documento) -> bool:
+    """`nota` es una nota posterior (nota_posterior) que cuenta el suceso de `registrado`: el mismo
+    país y el mismo tipo, el mismo día (misma_ventana), y la nota no da un sitio distinto: o no
+    tiene punto (solo el país o la región, y entonces la misma región si las dos la dicen) o su
+    punto es el mismo sitio. La duda la resuelve quien llama: solo se une si hay un candidato."""
+    if not nota_posterior(nota) or nota_posterior(registrado):
+        return False
+    if registrado["lugar"]["pais"] != nota["lugar"]["pais"] or registrado["tipo"] != nota["tipo"]:
+        return False
+    if con_punto(nota):
+        if not con_punto(registrado) or not mismo_sitio(registrado, nota):
+            return False
+    else:
+        regiones = [normalizar(str(d["lugar"].get("region", ""))) for d in (registrado, nota)]
+        if all(regiones) and regiones[0] != regiones[1]:
+            return False
+    if cierres_de_noches_distintas(registrado, nota):
+        return False
+    primero, segundo = sorted(
+        (registrado, nota), key=lambda d: (d["tiempo"]["inicio"]["valor"], d["id"])
+    )
+    return misma_ventana(primero, segundo)
+
+
 def todos_encajan(documentos: list[Documento]) -> bool:
     """Cada par de la lista encaja (mismo sitio y misma ventana)."""
     return all(encajan(a, b) for n, a in enumerate(documentos) for b in documentos[n + 1 :])
@@ -627,6 +666,15 @@ def fusionar(
             # Si los anteriores encajan también entre sí, son un mismo suceso partido (noticias
             # del mismo cierre fechadas en días seguidos): no hay duda, va al primero.
             anteriores = anteriores[:1]
+        motivo = "mismo sitio y misma ventana"
+        if not anteriores and nota_posterior(incidente):
+            # Una nota que vuelve semanas o meses después sobre un suceso ya registrado: se une a
+            # él si es el único de ese país, tipo y día (si hay dos, no se sabe a cuál).
+            anteriores = [
+                otro for otro in vivos.values()
+                if otro["id"] != incidente["id"] and mismo_suceso_posterior(otro, incidente)
+            ]  # fmt: skip
+            motivo = MOTIVO_NOTA_POSTERIOR
         if len(anteriores) != 1:
             continue
         destino, absorbido = destino_de(anteriores[0], incidente, publicados)
@@ -636,8 +684,7 @@ def fusionar(
         almacen.guardar_incidente(nuevo, ahora, modelos)
         almacen.guardar_incidente(fundido, ahora, modelos)
         almacen.registrar_fusion(
-            _instante(ahora, "minuto")["valor"], absorbido["id"], destino["id"],
-            "mismo sitio y misma ventana", aportadas,
+            _instante(ahora, "minuto")["valor"], absorbido["id"], destino["id"], motivo, aportadas,
         )  # fmt: skip
         vivos[destino["id"]] = nuevo
         del vivos[absorbido["id"]]

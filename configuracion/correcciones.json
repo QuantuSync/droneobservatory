@@ -45,6 +45,11 @@
       "en": "It was the same event as another incident already published (same place and same time window): it is joined to it."
     },
     {
+      "patron": "nota posterior sobre un suceso ya registrado: mismo país, tipo y día",
+      "es": "Es una nota posterior sobre un suceso ya registrado (mismo país, mismo tipo y mismo día escrito por la fuente): se une a él.",
+      "en": "It is a later report about an event already recorded (same country, same type and same day written by the source): it is joined to it."
+    },
+    {
       "patron": "ficha no publicable con las reglas actuales",
       "es": "Retirado al volver a comprobar la ficha: con las reglas de ahora no se puede publicar.",
       "en": "Withdrawn when the record was checked again: under the current rules it cannot be published."
