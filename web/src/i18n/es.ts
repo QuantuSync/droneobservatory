@@ -1722,6 +1722,25 @@ export const es: Textos = {
         `${NOMBRE} (EODI). Incidentes con drones en Europa, versión del ${fecha}. ` +
         `${ORIGEN}. Licencia ${LICENCIA_DATOS}.`,
     },
+    versiones: {
+      titulo: "Versiones citables",
+      intro:
+        "El día 1 de cada mes se congela una versión de los datos abiertos: los mismos ficheros, con su fecha y su huella, en una dirección que no cambia. Una versión publicada nunca se modifica ni se borra: sirve para citar exactamente los datos que se usaron.",
+      ninguna: "La primera versión citable se publica en cuanto se genere.",
+      linea: (version, fecha, incidentes) => `Versión ${version}, congelada el ${fecha}, con ${incidentes} incidentes`,
+      citaTitulo: "Cómo citar esta versión",
+      copiar: "Copiar la cita",
+      copiada: "Cita copiada",
+      tituloVersion: (version) => `Datos abiertos, versión ${version}`,
+      descripcionVersion: (version) => `Versión ${version} de los datos abiertos del ${NOMBRE}: ficheros congelados con su huella SHA-256, su licencia y cómo citarla.`,
+      congelada: (fecha, datos, incidentes) => `Congelada el ${fecha} con los datos publicados el ${datos}: ${incidentes} incidentes.`,
+      fija: "Esta versión no cambia ni se borra. Cada fichero lleva su huella SHA-256: si el fichero que tienes da la misma huella, es exactamente el de esta versión.",
+      fichero: "Fichero",
+      bytes: "Bytes",
+      huella: "SHA-256",
+      comoComprobar: "Para comprobar un fichero: sha256sum <fichero> (Linux), shasum -a 256 <fichero> (macOS) o certutil -hashfile <fichero> SHA256 (Windows).",
+      todas: "Todas las versiones",
+    },
     sobre: "Sobre el observatorio",
   },
   compartir: {

@@ -15,6 +15,7 @@ import type {
 } from "./tipos.ts";
 import type { AlumbradoReducido, FocosVivos, IndiceSatelite } from "./guerraSatelite.ts";
 import type { RegistroCorrecciones } from "./correcciones.ts";
+import type { IndiceVersiones } from "./versiones.ts";
 import type { Prevision } from "./prevision.ts";
 import type { IndiceRutas, NocheRutas } from "./rutas.ts";
 import * as v from "./vocabulario.ts";
@@ -1271,4 +1272,27 @@ const registroCorrecciones = objeto({
 
 export function validarCorrecciones(valor: unknown): Resultado<RegistroCorrecciones> {
   return validar(registroCorrecciones, valor);
+}
+
+// --- Versiones citables de los datos abiertos (recogida/versiones.py) -----------------------
+
+const textoBilingue = objeto({ es: cadena(), en: cadena() });
+const versionDatos = objeto({
+  version: cadena(/^\d{4}-\d{2}$/),
+  nombre: cadena(),
+  fecha: cadena(v.PATRON_INSTANTE),
+  datos_actualizados: nulable(cadena(v.PATRON_INSTANTE)),
+  incidentes: enteroNoNegativo,
+  direccion: cadena(/^https:\/\/droneobservatory\.eu\/datos\/versiones\/\d{4}-\d{2}\/$/),
+  licencia: objeto({ nombre: cadena(), url: cadena(/^https:\/\//), titular: cadena(), alcance: textoBilingue }),
+  cita: textoBilingue,
+  ficheros: diccionario(
+    cadena(/^[a-z_]+\.(?:geojson|json|csv)$/),
+    objeto({ bytes: enteroNoNegativo, sha256: cadena(/^[0-9a-f]{64}$/) }),
+  ),
+});
+const indiceVersiones = objeto({ versiones: lista(versionDatos) });
+
+export function validarVersiones(valor: unknown): Resultado<IndiceVersiones> {
+  return validar(indiceVersiones, valor);
 }

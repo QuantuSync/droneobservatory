@@ -176,3 +176,29 @@ def test_la_exportacion_semanal_tambien_va_a_la_replica(
     hechos = replica.replicar(base, archivo, destino, DESTINATARIO, AHORA, origen)
     assert hechos["exportaciones"] == 1
     assert s3.objetos["exportaciones/2026.10.12/manifiesto.json"][0] == b"{}"
+
+
+def test_replica_las_versiones_publicadas_sin_tocar_las_a_medias(
+    almacenes: tuple[copias.Copias, copias.Copias, copias.Copias, S3Falso],
+) -> None:
+    base, archivo, destino, s3 = almacenes
+    publico, _ = cliente(
+        copias.Destino(
+            "nbg1", "https://nbg1.your-objectstorage.com", "droneobservatory-almacen", "", {}
+        )
+    )
+    publico.subir("versiones/2026-10/incidentes.csv", b"id\n1\n")
+    publico.subir("versiones/2026-10/metadatos.json", b"{}")
+    publico.subir("versiones/2026-11/incidentes.csv", b"a medias")
+    publico.subir("estado.json", b"{}")
+    hechos = replica.replicar(base, archivo, destino, DESTINATARIO, AHORA, None, publico)
+    assert hechos["versiones"] == 2
+    assert sorted(c for c in s3.objetos if c.startswith("versiones/")) == [
+        "versiones/2026-10/incidentes.csv",
+        "versiones/2026-10/metadatos.json",
+    ]
+    # Ya están: no se vuelven a subir.
+    assert (
+        replica.replicar(base, archivo, destino, DESTINATARIO, AHORA, None, publico)["versiones"]
+        == 0
+    )
