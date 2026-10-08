@@ -352,8 +352,13 @@ const AGUA = PALETA.fondo;
 const VIA = "#172131";
 const VIA_PRINCIPAL = "#223047";
 const FRONTERA = "#34445d";
+// Los nombres llegan a 4,5 a 1 contra la tierra, sus matices y el agua (WCAG 2.1 AA; prueba en
+// tests/contrasteMapa.test.ts). El tenue era #556277 (3,1 a 1) hasta el 9 de octubre de 2026.
 const ROTULO = "#7d8aa0";
-const ROTULO_TENUE = "#556277";
+const ROTULO_TENUE = "#727f95";
+
+/** Las superficies sobre las que se pintan los nombres del mapa de fondo. */
+export const SUPERFICIES_BASE: readonly string[] = [TIERRA, TIERRA_MATIZ, AGUA];
 
 const SABOR: Flavor = {
   background: AGUA,
@@ -471,6 +476,13 @@ export function capasBase(idioma: Idioma): LayerSpecification[] {
     .map((capa) =>
       capa.type === "symbol" && CAPAS_DE_LUGARES.has(capa.id)
         ? { ...capa, layout: { ...capa.layout, "text-field": nombre(idioma) } }
+        : capa,
+    )
+    .map((capa) =>
+      // Los nombres sin color de halo propio (países, mares) llevan el de la tierra: así no
+      // pierden contraste donde cruzan una frontera o una carretera.
+      capa.type === "symbol" && capa.paint !== undefined && !("text-halo-color" in capa.paint) && "text-color" in capa.paint
+        ? { ...capa, paint: { ...capa.paint, "text-halo-color": TIERRA } }
         : capa,
     );
 }

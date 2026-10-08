@@ -44,21 +44,14 @@ export function cuerpoVersion(version: VersionDatos, idioma: Idioma, rutaMetodol
     e("h1", null, v.tituloVersion(version.version)),
     e("p", null, v.congelada(dia(version.fecha), dia(version.datos_actualizados), numero(version.incidentes, idioma))),
     e("p", null, v.fija),
+    // Una lista y no una tabla: en el teléfono, la huella (64 letras) no deja sitio a tres columnas.
     e(
-      "table",
-      null,
-      e("thead", null, e("tr", null, e("th", null, v.fichero), e("th", null, v.bytes), e("th", null, v.huella))),
-      e(
-        "tbody",
-        null,
-        Object.entries(version.ficheros).map(([nombre, f]) =>
-          e(
-            "tr",
-            null,
-            e("td", null, e("a", { href: rutaDeFicheroDeVersion(version.version, nombre), download: true }, nombre)),
-            e("td", { class: "mono" }, numero(f.bytes, idioma)),
-            e("td", { class: "mono texto-huella" }, f.sha256),
-          ),
+      "dl",
+      { class: "texto-ficheros" },
+      Object.entries(version.ficheros).map(([nombre, f]) =>
+        html(
+          e("dt", null, e("a", { href: rutaDeFicheroDeVersion(version.version, nombre), download: true }, nombre), " · ", numero(f.bytes, idioma), " ", v.bytes.toLowerCase()),
+          e("dd", { class: "mono texto-huella" }, v.huella, ": ", f.sha256),
         ),
       ),
     ),

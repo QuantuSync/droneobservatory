@@ -475,7 +475,10 @@ export const es: Textos = {
     etiqueta: "Mapa de Europa con los incidentes del periodo elegido",
     instrucciones:
       "Con el foco en el mapa, las flechas lo desplazan y las teclas más y menos cambian el " +
-      "zoom. La lista de incidentes da acceso a las mismas fichas sin usar el mapa.",
+      "zoom. Después del mapa, el tabulador recorre los incidentes a la vista, del más reciente al " +
+      "más antiguo: cada uno se señala en el mapa e Intro abre su ficha. La lista de incidentes da " +
+      "acceso a las mismas fichas sin usar el mapa.",
+    aLaVista: (n) => (n === 1 ? "1 incidente a la vista en el mapa" : `${n} incidentes a la vista en el mapa`),
     grupo: (n) => (n === 1 ? "1 incidente: acerca para verlo" : `${n} incidentes: acerca para verlos`),
     pila: (n) => `${n} incidentes en este mismo punto: pulsa para elegir uno`,
     atribuidos: (n) => `${n} incidentes atribuidos: acerca para separarlos`,

@@ -346,6 +346,8 @@ export interface Textos {
   mapa: {
     etiqueta: string;
     instrucciones: string;
+    /** La lista de los incidentes a la vista para el teclado y el lector de pantalla. */
+    aLaVista: (n: number) => string;
     grupo: (n: number) => string;
     pila: (n: number) => string;
     /** Varios atribuidos juntos en un marcador al alejar el mapa. */
