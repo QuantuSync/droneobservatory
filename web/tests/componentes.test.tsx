@@ -214,16 +214,27 @@ describe("ficha de un incidente", () => {
     expect(screen.getByText("Cierre de 30–45 min")).toBeTruthy();
   });
 
-  it("un incidente sin punto dice que su ubicación es imprecisa", () => {
+  it("un incidente sin punto dice que su lugar es aproximado y de dónde sale", () => {
     const { lugar: _lugar, ...resto } = incidente().properties;
     const sinPunto = detalleSinUbicacion({
       ...resto,
       lugar: { pais: "PL", nivel: "region", region: "Lublin" },
     });
     render(<FichaIncidente t={es} idioma="es" incidente={sinPunto} />);
-    expect(screen.getByText("ubicación imprecisa · solo la región", { exact: false })).toBeTruthy();
+    // Lublin no está en la tabla de regiones: el marcador queda en el centro del país.
+    expect(screen.getByText("Lugar aproximado: país")).toBeTruthy();
+    expect(screen.getByText(/La fuente solo nombra el país\. El marcador está en el centro de Polonia/)).toBeTruthy();
     expect(screen.getByText("Lublin, Polonia", { exact: false })).toBeTruthy();
     expect(screen.queryByText(/km de radio/)).toBeNull();
+    cleanup();
+    const enMar = detalleSinUbicacion({
+      ...resto,
+      titulo: { es: "Drones atacan dos barcos frente a Bulgaria", en: "Drones strike two ships off Bulgaria" },
+      lugar: { pais: "BG", nivel: "region", region: "Dobrich" },
+    });
+    render(<FichaIncidente t={en} idioma="en" incidente={enMar} />);
+    expect(screen.getByText("Approximate location: sea")).toBeTruthy();
+    expect(screen.getByText(/The source places the event at sea \(Dobrich\)/)).toBeTruthy();
   });
 
   it("sale en inglés con el nombre del país traducido", () => {

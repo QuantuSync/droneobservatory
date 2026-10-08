@@ -152,6 +152,7 @@ function incidente(estado: Estado, zona: Zona | null, pais = "RO"): IncidenteRes
     id: `EODI-2026-${Math.random().toString().slice(2, 7)}`,
     punto: null,
     imprecisa: null,
+    aproximado: null,
     tipo: "sobrevuelo",
     estado,
     presencia: null,

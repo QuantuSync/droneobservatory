@@ -114,6 +114,7 @@ function incidenteResumen() {
     id: "EODI-2026-00200",
     punto: { lon: 28.05, lat: 45.43, radio_km: 10 },
     imprecisa: null,
+    aproximado: null,
     tipo: "incursion" as const,
     estado: "confirmado" as const,
     presencia: null,

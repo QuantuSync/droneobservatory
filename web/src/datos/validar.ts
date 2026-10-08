@@ -395,6 +395,14 @@ const incidenteSinUbicacion = objeto(
   CAMPOS_INCIDENTE_OPCIONALES,
 );
 
+/** Dónde se dibuja el marcador de un incidente con lugar aproximado (datos/lugarAproximado.ts). */
+const lugarAproximadoValido = objeto({
+  lon: longitud,
+  lat: latitud,
+  nivel: enumerado(["pais", "region", "mar"] as const),
+  nombre: nulable(cadena()),
+});
+
 const detalleIncidente = alguna(
   objeto(
     { ...CAMPOS_INCIDENTE_OBLIGATORIOS, lon: longitud, lat: latitud },
@@ -407,7 +415,7 @@ const detalleIncidente = alguna(
       lon: constante(null),
       lat: constante(null),
     },
-    CAMPOS_INCIDENTE_OPCIONALES,
+    { ...CAMPOS_INCIDENTE_OPCIONALES, aproximado: nulable(lugarAproximadoValido) },
   ),
 );
 
@@ -586,6 +594,7 @@ const resumen = objeto({
         imprecisa: nulable(
           objeto({ nivel: enumerado(v.NIVELES_UBICACION), region: nulable(cadena()) }),
         ),
+        aproximado: nulable(lugarAproximadoValido),
         tipo: enumerado(v.TIPOS),
         estado: enumerado(v.ESTADOS),
         presencia: nulable(enumerado(v.PRESENCIAS)),

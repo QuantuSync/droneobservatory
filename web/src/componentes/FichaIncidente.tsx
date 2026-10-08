@@ -29,6 +29,7 @@ import { LineaFoco, ZOOM_VISOR_PUNTO } from "./FocoTermico.tsx";
 import { LineaTrafico } from "./TraficoAereo.tsx";
 import { Fila } from "./Panel.tsx";
 import { Simbolo } from "./Simbolo.tsx";
+import { textoAproximado } from "../datos/lugarAproximado.ts";
 import { FilaRecorrido, FilaTipoDron } from "./TipoDron.tsx";
 
 /** Marca que acompaña al texto de la presencia de dron, para no depender del color. */
@@ -204,6 +205,7 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
             ? t.ficha.sinCierre
             : t.ficha.cierreDesconocido;
   const imprecisa = incidente.lon === null ? incidente.lugar : null;
+  const aproximado = incidente.lon === null ? (incidente.aproximado ?? null) : null;
   // La fuente oficial cuya frase nombra el lugar del punto, si está entre las del incidente.
   const fuentePunto = lugar.fuente_punto === undefined ? undefined : porFuente.get(lugar.fuente_punto);
   // Los demás lugares; el que lleva fuente se explica con su frase (un daño de la defensa).
@@ -214,7 +216,7 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
   return (
     <article>
       <p className="rotulo flex items-center gap-2">
-        <Simbolo estado={incidente.estado.actual} atribucion={marcador} />
+        <Simbolo estado={incidente.estado.actual} atribucion={marcador} aproximado={incidente.lon === null} />
         {t.tipo[incidente.tipo]}
       </p>
       <h2 className="text-xl font-semibold tracking-tight mt-1 text-2xl">{nombre}</h2>
@@ -265,8 +267,19 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
             </span>
           ) : (
             imprecisa !== null && (
-              <span className="block text-xs text-notificado">
-                {t.imprecisa.etiqueta} · {t.imprecisa.nivel[imprecisa.nivel]}
+              <span className="block text-xs" data-lugar-aproximado={aproximado?.nivel ?? ""}>
+                {aproximado !== null ? (
+                  <>
+                    <span className="text-notificado">{textoAproximado(t, idioma, aproximado, lugar.pais).nivel}</span>
+                    <span className="block text-secundario">
+                      {textoAproximado(t, idioma, aproximado, lugar.pais).deDonde}
+                    </span>
+                  </>
+                ) : (
+                  <span className="text-notificado">
+                    {t.imprecisa.etiqueta} · {t.imprecisa.nivel[imprecisa.nivel]}
+                  </span>
+                )}
               </span>
             )
           )}

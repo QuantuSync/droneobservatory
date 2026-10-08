@@ -138,6 +138,10 @@ export interface Textos {
     nuevoYa: (estado: string) => string;
     paso: (estado: string) => string;
     vacio: string;
+    /** Cuándo lo registró el observatorio: «registrado hace 3 h». */
+    registrado: (hace: string) => string;
+    /** Cuándo ocurrió el suceso: «ocurrió el 06/10/2026». */
+    ocurrio: (dia: string) => string;
   };
   relativo: (minutos: number, fecha: string) => string;
   /** Panel «Europa ahora»: las cifras del momento, cada una con su sitio en el mapa. */
@@ -301,6 +305,8 @@ export interface Textos {
     cerrar: string;
     colores: string;
     areas: string;
+    /** El marcador de lugar aproximado. */
+    aproximado: string;
     lineas: string;
     numeros: string;
     pila: string;
@@ -318,7 +324,15 @@ export interface Textos {
     acciones: Record<Accion, string>;
   };
   pila: { titulo: (n: number) => string };
-  imprecisa: { etiqueta: string; nivel: Record<NivelUbicacion, string> };
+  imprecisa: {
+    etiqueta: string;
+    nivel: Record<NivelUbicacion, string>;
+    /** «Lugar aproximado: región»: el nivel del marcador de lugar aproximado. */
+    aproximado: (nivel: string) => string;
+    niveles: Record<"pais" | "region" | "mar", string>;
+    /** De dónde sale el marcador: qué nombra la fuente y dónde se ha puesto. */
+    deDonde: (nivel: "pais" | "region" | "mar", zona: string) => string;
+  };
   guerra: {
     reproducir: string;
     pausar: string;

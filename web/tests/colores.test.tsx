@@ -470,7 +470,8 @@ describe("marcador de los atribuidos", () => {
           "atribuido--1",
           "atribuido--1-p",
           ICONO_OBSTACULO,
-          ...["confirmado", "desmentido", "notificado"].map(nombreIcono),
+          ...["confirmado", "desmentido", "notificado"].map((estado) => nombreIcono(estado)),
+          ...["confirmado", "desmentido", "notificado"].map((estado) => nombreIcono(estado, true)),
           ...ESTADOS_AVISO.map(nombreIconoAviso),
         ].sort(),
       );
@@ -569,8 +570,10 @@ describe("marcador de los atribuidos", () => {
       expect(leyenda?.querySelectorAll("image")).toHaveLength(0);
       // La bandera es la del país al que la autoridad lo atribuye, no una afirmación propia.
       expect(document.querySelector("[data-leyenda-bandera]")?.textContent).toBe(t.atribucion.bandera);
-      // Ningún otro símbolo de incidente en la ayuda: nada de formas por tipo.
-      expect(document.querySelectorAll("svg[data-circulo], svg[data-atribuido]")).toHaveLength(5);
+      // Ningún otro símbolo de incidente en la ayuda: nada de formas por tipo. Los dos de más
+      // son los del lugar aproximado (notificado y confirmado), con su texto.
+      expect(document.querySelectorAll("svg[data-circulo], svg[data-atribuido]")).toHaveLength(7);
+      expect(document.querySelectorAll("[data-leyenda-aproximado] svg[data-aproximado]")).toHaveLength(2);
       cleanup();
     }
   });
