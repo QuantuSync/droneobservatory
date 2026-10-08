@@ -1711,7 +1711,7 @@ export const es: Textos = {
         "actualización.",
       incidentes: "Incidentes",
       ucrania: "Ataques de la capa de Ucrania",
-      sinUbicacion: "Incidentes con lugar aproximado (sin punto exacto)",
+      sinUbicacion: "Incidentes con lugar aproximado",
       version: (fecha) => `Versión del ${fecha}`,
       licencia: "Licencia",
       licenciaTexto:

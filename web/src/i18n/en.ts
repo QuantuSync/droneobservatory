@@ -1696,7 +1696,7 @@ export const en: Textos = {
         "every update.",
       incidentes: "Incidents",
       ucrania: "Attacks in the Ukraine layer",
-      sinUbicacion: "Incidents with an approximate location (no exact point)",
+      sinUbicacion: "Incidents with an approximate location",
       version: (fecha) => `Version of ${fecha}`,
       licencia: "Licence",
       licenciaTexto:
