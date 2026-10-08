@@ -6,6 +6,7 @@
 // de dónde sale. No es un dato de la fuente: el punto solo sirve para que el incidente se vea.
 
 import { pais } from "../i18n/index.ts";
+import { nombreDeLugar } from "../i18n/nombresLugar.ts";
 import type { Textos } from "../i18n/index.ts";
 
 /** Hasta dónde se conoce el lugar de un incidente con marcador aproximado. */
@@ -156,7 +157,8 @@ export function lugarAproximado(
 /** La zona del marcador en palabras: el país, la región tal como la da la fuente o el mar. */
 export function zonaEscrita(aproximado: LugarAproximado, codigoPais: string, idioma: "es" | "en"): string {
   if (aproximado.nivel === "pais") return pais(codigoPais, idioma);
-  if (aproximado.nombre !== null) return aproximado.nombre;
+  const nombre = aproximado.nombre === null ? null : nombreDeLugar(aproximado.nombre, idioma);
+  if (nombre !== null) return nombre;
   return marDelPais(codigoPais, idioma) ?? pais(codigoPais, idioma);
 }
 
