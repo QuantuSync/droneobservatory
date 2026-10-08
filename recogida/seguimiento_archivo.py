@@ -1,6 +1,8 @@
 """Archivo del seguimiento en directo: compresión, índice diario y copia de seguridad privada.
 
-Lo que deja `recogida/seguimiento.py` en `<datos>/<fuente>/<AAAA>/<MM>/<fuente>-<día>T<HH>.jsonl`:
+Lo que dejan `recogida/seguimiento.py` (NEPTUN y la Fuerza Aérea) y `recogida/alertas.py` (las
+alertas de alerts.in.ua, en crudo y en tabla) en
+`<datos>/<fuente>/<AAAA>/<MM>/<fuente>-<día>T<HH>.jsonl`:
 
 - **Compresión.** Cada fichero de una hora ya cerrada (la hora acabó hace más de 2 minutos) se
   comprime a `.jsonl.gz` junto a él; se comprueba que el comprimido devuelve exactamente los mismos
@@ -60,6 +62,8 @@ from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+from recogida.alertas import CRUDO as ALERTAS
+from recogida.alertas import TABLA as ALERTAS_TABLA
 from recogida.almacen_publico import VARIABLE_ID, VARIABLE_SECRETO, firmar
 from recogida.seguimiento import KPSZSU, NEPTUN, directorio_datos
 
@@ -67,7 +71,7 @@ registro = logging.getLogger("seguimiento_archivo")
 
 RAIZ = Path(__file__).resolve().parent.parent
 CONFIGURACION = RAIZ / "configuracion" / "archivo_seguimiento.json"
-FUENTES = (NEPTUN, KPSZSU)
+FUENTES = (NEPTUN, KPSZSU, ALERTAS, ALERTAS_TABLA)
 MARGEN_CIERRE = timedelta(minutes=2)
 MINUTOS_PROHIBIDOS = range(15, 40)
 UNIDAD_RECOGIDA = "eodi-recogida.service"
@@ -216,6 +220,8 @@ def componer_indice(datos: Path, dia: date) -> dict[str, Any]:
     ficheros: list[dict[str, Any]] = []
     kpszsu_ids: set[int] = set()
     kpszsu_versiones = 0
+    alertas_ids: set[str] = set()
+    alertas_cambios: Counter[str] = Counter()
     for fuente in FUENTES:
         for ruta in ficheros_dia(datos, fuente, dia):
             lineas = 0
@@ -230,6 +236,12 @@ def componer_indice(datos: Path, dia: date) -> dict[str, Any]:
                     continue
                 via = str(linea.get("via"))
                 por_via[f"{fuente}:{via}"] += 1
+                if fuente == ALERTAS:
+                    continue
+                if fuente == ALERTAS_TABLA:
+                    alertas_ids.add(str(linea.get("id")))
+                    alertas_cambios[str(linea.get("cambio"))] += 1
+                    continue
                 if fuente == KPSZSU:
                     kpszsu_ids.add(int(linea["id"]))
                     kpszsu_versiones += 1 if int(linea.get("version", 0)) > 0 else 0
@@ -257,6 +269,10 @@ def componer_indice(datos: Path, dia: date) -> dict[str, Any]:
         "eventos": dict(sorted(eventos.items())),
         "huecos": huecos,
         "kpszsu": {"publicaciones_distintas": len(kpszsu_ids), "ediciones": kpszsu_versiones},
+        "alertas": {
+            "alertas_distintas": len(alertas_ids),
+            "versiones": dict(sorted(alertas_cambios.items())),
+        },
         "bytes": sum(f["bytes"] for f in ficheros),
         "ficheros": ficheros,
     }
@@ -584,7 +600,7 @@ def restaurar_claves(copia: Copia, claves: list[str], destino: Path) -> dict[str
 
 
 def claves_dia(copia: Copia, dia: date) -> list[str]:
-    """Las horas de un día de las dos fuentes y su índice."""
+    """Las horas de un día de todas las fuentes y su índice."""
     claves = []
     for fuente in FUENTES:
         prefijo = f"{copia.destino.prefijo}{fuente}/{dia:%Y}/{dia:%m}/{fuente}-{dia:%Y-%m-%d}T"

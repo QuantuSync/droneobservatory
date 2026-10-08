@@ -732,6 +732,82 @@ sudo -u eodi bash /home/eodi/droneobservatory/servidor/seguimiento_archivo.sh pr
 Leer una hora: `zcat neptun-AAAA-MM-DDTHH.jsonl.gz | head`; cada línea lleva `recibido` y, en
 `crudo`, el mensaje tal como llegó.
 
+## Alertas aéreas de Ucrania de alerts.in.ua
+
+Informe: [`informe_alertas.md`](informe_alertas.md). Archiva las alertas aéreas que declaran las
+autoridades de cada región de Ucrania, tal como las reparte [alerts.in.ua](https://alerts.in.ua/)
+(servicio voluntario ucraniano; documentación de la API en <https://devs.alerts.in.ua/>): zona
+(región, distrito, municipio o ciudad), inicio y fin, tipo, nivel (amarillo o rojo) y, en las
+activas, la lista de amenazas con su tipo, su hora y el mensaje oficial del que sale. La API solo da
+el último mes de histórico: lo que no se archiva se pierde. Solo consulta y guarda: no procesa ni
+publica nada ([`recogida/alertas.py`](../recogida/alertas.py)). Atribución en cada dato:
+«alerts.in.ua»; en cualquier uso futuro, «alerta declarada por las autoridades ucranianas, recogida
+por alerts.in.ua».
+
+- **Unidad.** `eodi-alertas.service`, siempre en marcha (`Restart=always`, a los 30 s), como
+  `eodi`, con `Nice=15`, E/S en reposo y un tope de memoria de 300 MB (`MemoryMax`). Ejecuta
+  [`servidor/alertas.sh`](../servidor/alertas.sh), que toma su propio cerrojo (`alertas.lock`),
+  nunca el de la recogida horaria. Como la captura del seguimiento, cada 5 minutos mira la huella
+  de su propio código en el clon (`recogida/alertas.py`, `recogida/seguimiento.py` y
+  `servidor/alertas.sh`) y solo si cambia sale y systemd la relanza.
+- **Token.** `/home/eodi/.eodi/alerts_in_ua_token`, permisos 600, del usuario `eodi`; va en la
+  cabecera `Authorization` y nunca en una dirección, en el diario ni en el archivo. Lo lleva
+  `reconstruir.sh` desde `%USERPROFILE%\.eodi\alerts_in_ua_token.txt`. Todas las consultas
+  salen del servidor.
+- **Consultas y límites.** Las alertas activas (`/v1/alerts/active.json`) cada minuto; el
+  histórico del último mes de las 27 regiones (`/v1/regions/<uid>/alerts/month_ago.json`), una
+  región por minuto, en el primer arranque y después una vez al día, para rellenar los huecos de
+  la captura y traer la hora de fin oficial de cada alerta. Ninguna consulta sale antes de 20 s de
+  la anterior: como mucho 3 por minuto (la API admite 8 a 10, y 2 por minuto el histórico). Todas
+  con `If-Modified-Since` (la `Last-Modified` anterior de esa misma dirección): un 304 no descarga
+  nada. Un fallo de red o un 5xx espera 1, 2, 4… hasta 15 minutos; un 429 para todo 5 minutos; un
+  401 o 403 se anota para la vigilancia y se reintenta cada 10 minutos.
+- **Datos** en `datos/seguimiento/`, junto al seguimiento en directo, con permisos 700:
+  `alertas/AAAA/MM/alertas-AAAA-MM-DDTHH.jsonl` (cada respuesta que cambia, entera, tal cual, con
+  la hora UTC de recepción, la dirección, la región y el código HTTP; y los eventos de arranque,
+  parada y error) y `alertas_tabla/AAAA/MM/alertas_tabla-AAAA-MM-DDTHH.jsonl` (la tabla de alertas,
+  una línea por versión: la primera vez que se ve una alerta, cada cambio de lo que da cada vía y
+  su salida de las activas; nunca se reescribe una versión). `alertas_tabla/estado.json` guarda
+  lo último visto de cada alerta (40 días) para no repetir; si falta, se rehace con la tabla. Las
+  horas de la API vienen en UTC (`Z`); cada línea de la tabla lleva además `utc` con las horas
+  normalizadas y en `alerta` el valor original. El registro para la vigilancia es
+  `/home/eodi/.eodi/alertas.json`.
+- **Archivo y copias.** Las mismas que el seguimiento en directo (apartado anterior):
+  `eodi-seguimiento-archivo` comprime las horas cerradas, las anota en el índice diario
+  (`alertas` en `indices/AAAA-MM-DD.json`: alertas distintas y versiones por tipo de cambio) y
+  las sube cada hora al bucket privado `droneobservatory-archivo` (prefijo
+  `seguimiento/alertas/` y `seguimiento/alertas_tabla/`); la réplica las lleva cifradas a Helsinki
+  (`archivo/seguimiento/alertas…`). La restauración de un día (`restaurar-dia`) y de todo
+  (`restaurar-todo`) las incluye.
+- **Vigilancia.** `salud.json` lleva `alertas` (unidad y última respuesta correcta). Es un problema
+  que la API no haya dado una respuesta correcta (200, o 304 sin cambios) en 15 minutos o que la
+  unidad no esté en marcha, y aparte que responda 401 o 403 (token no válido o IP bloqueada). Lo
+  avisa `vigia-recogida` con la incidencia «El servidor del observatorio necesita atención».
+
+Órdenes, como `operador`:
+
+```
+systemctl status eodi-alertas.service
+journalctl -u eodi-alertas.service -n 40             # un resumen cada 10 min y cada error
+sudo systemctl restart eodi-alertas.service
+sudo -u eodi cat /home/eodi/.eodi/alertas.json
+systemctl show eodi-alertas.service -p MemoryCurrent -p MemoryPeak
+```
+
+Rehacer la tabla desde el archivo en crudo (añade solo lo que no esté; repetible), como trabajo de
+sesión y con la unidad parada, para que no escriban dos a la vez:
+
+```
+sudo systemctl stop eodi-alertas.service
+sudo systemd-run --unit=eodi-alertas-tabla --uid=eodi --gid=eodi -p MemoryMax=3G -p Nice=19 \
+  -p IOSchedulingClass=idle -p OOMScoreAdjust=1000 --working-directory=/home/eodi/droneobservatory \
+  --setenv=EODI_SEGUIMIENTO_DATOS=/home/eodi/datos/seguimiento \
+  /home/eodi/droneobservatory/.venv/bin/python -m recogida.alertas tabla-desde-crudo
+sudo systemctl start eodi-alertas.service
+```
+
+Leer una hora: `zcat alertas_tabla-AAAA-MM-DDTHH.jsonl.gz | head`.
+
 ## Rutas de los drones sobre Ucrania
 
 Informe: [`informe_tipo_y_rutas.md`](informe_tipo_y_rutas.md). `eodi-rutas.timer` lanza
@@ -916,6 +992,7 @@ En `%USERPROFILE%\.eodi\`, fuera de cualquier repositorio:
 | `extractor.env` | Variables del extractor (`EODI_EXTRACTOR_*`) |
 | `firms_map_key.txt` | Clave de la API de NASA FIRMS (32 caracteres); `reconstruir.sh` la añade como `EODI_FIRMS_MAP_KEY` al `extractor.env` del servidor. También es el secreto `EODI_FIRMS_MAP_KEY` del repositorio, para la recogida de emergencia |
 | `almacen.env` | Credenciales S3 del almacén público de Hetzner (`ALMACEN_ID=…` y `ALMACEN_SECRETO=…`, una por línea); las llevan al servidor `reconstruir.sh` y `preparar_almacen.sh` |
+| `alerts_in_ua_token.txt` | Token de la API de alerts.in.ua (secreto); `reconstruir.sh` lo deja en el servidor como `alerts_in_ua_token` (600) para `eodi-alertas` |
 | `cloudflare_token.txt` | Token de la API de Cloudflare. Ya no se usa: el DNS está en Hetzner desde el 3 de octubre de 2026. Se borra al cerrar la cuenta de Cloudflare |
 | `r2_estado.env` | Credenciales S3 del bucket R2 anterior (`eodi-teselas`); ya no responden (401). En el servidor se borraron |
 
@@ -1461,8 +1538,9 @@ Desde el 7 de octubre de 2026 (`recogida/vigilancia.py`, `recogida/salud.py`,
   y no escribe más que `vigilancia.json`. Los identificadores de los incidentes que retiene la
   barrera de titulares solo van a su diario (`journalctl -u eodi-vigilancia`).
 - **Problemas**: datos sin publicar en 2 horas, recogida con un código distinto de 0 y 2, captura
-  del seguimiento sin recibir en 10 minutos o con la unidad parada, copia de la base o del archivo
-  con más de 2 horas, segunda copia con más de 3 horas, disco al 75 % o más, prueba de restauración
+  del seguimiento sin recibir en 10 minutos o con la unidad parada, archivo de alertas de
+  alerts.in.ua sin respuesta correcta de la API en 15 minutos, con la unidad parada o con la API
+  respondiendo 401 o 403, copia de la base o del archivo con más de 2 horas, segunda copia con más de 3 horas, disco al 75 % o más, prueba de restauración
   fallida o con más de 8 días, paso a solo disco fallido.
 - **Avisos** (se ven, no son fallo): recogida con avisos (código 2) y por qué, y cuántos incidentes
   retiene la barrera de titulares.

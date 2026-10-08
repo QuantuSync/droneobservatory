@@ -12,6 +12,11 @@ Problemas (cada uno con su frase):
 - **recogida**: la última recogida terminó con un código distinto de 0 y 2;
 - **seguimiento**: la captura del seguimiento no ha recibido nada en 10 minutos o su unidad no
   está en marcha;
+- **alertas**: el archivo de alertas de alerts.in.ua (recogida/alertas.py) no ha tenido una
+  respuesta correcta de la API (200, o 304 sin cambios) en 15 minutos, o su unidad no está en
+  marcha;
+- **alertas_autorizacion**: la API de alerts.in.ua responde 401 o 403 (token no válido o IP
+  bloqueada);
 - **copia de la base**: la última copia cifrada de la base en el almacén privado tiene más de 2
   horas (solo con la base en el disco: modos `doble` y `disco`);
 - **copia del archivo**: la última copia del archivo del seguimiento tiene más de 2 horas (se
@@ -59,9 +64,12 @@ OBJETO = "salud.json"
 CACHE = "public, max-age=60"
 UNIDAD_RECOGIDA = "eodi-recogida.service"
 UNIDAD_SEGUIMIENTO = "eodi-seguimiento.service"
+UNIDAD_ALERTAS = "eodi-alertas.service"
 SALIDAS_QUE_PUBLICAN = frozenset({0, 2})
 MAX_SIN_PUBLICAR = timedelta(hours=2)
 MAX_SIN_RECIBIR = timedelta(minutes=10)
+# Las activas se consultan cada minuto: 15 minutos sin respuesta correcta son 15 consultas.
+MAX_SIN_ALERTAS = timedelta(minutes=15)
 MAX_SIN_COPIA = timedelta(hours=2)
 MAX_SIN_COPIA_ARCHIVO = timedelta(hours=2)
 MAX_SIN_REPLICA = timedelta(hours=3)
@@ -250,6 +258,26 @@ def componer(
             + ": más de 10 minutos sin datos.",
         })  # fmt: skip
 
+    # Archivo de alertas de alerts.in.ua.
+    alertas = _leer_json(secretos / "alertas.json")
+    respuesta = _instante(alertas.get("ultima_respuesta"))
+    activa_alertas = unidad(UNIDAD_ALERTAS, ejecutar)["activa"]
+    if activa_alertas != "active" or respuesta is None or ahora - respuesta > MAX_SIN_ALERTAS:
+        problemas.append({
+            "id": "alertas",
+            "frase": "El archivo de alertas de alerts.in.ua está "
+            f"«{activa_alertas or 'desconocida'}» y tuvo respuesta de la API por última vez "
+            + (f"el {respuesta:%Y-%m-%d %H:%M} UTC" if respuesta else "sin constar")
+            + ": más de 15 minutos sin datos nuevos.",
+        })  # fmt: skip
+    autorizacion = alertas.get("error_autorizacion")
+    if isinstance(autorizacion, dict):
+        problemas.append({
+            "id": "alertas_autorizacion",
+            "frase": f"La API de alerts.in.ua respondió {autorizacion.get('http')} el "
+            f"{autorizacion.get('momento')}: el token no vale o la IP está bloqueada.",
+        })  # fmt: skip
+
     # Copias de seguridad.
     modo = modo_base(secretos)
     base: datetime | None = None
@@ -322,6 +350,7 @@ def componer(
             "ultima_publicacion": _iso(ultima_publicacion),
         },
         "seguimiento": {"unidad": activa, "ultima_recepcion": _iso(recepcion)},
+        "alertas": {"unidad": activa_alertas, "ultima_respuesta": _iso(respuesta)},
         "copias": {
             "modo_base": modo,
             "base": _iso(base),

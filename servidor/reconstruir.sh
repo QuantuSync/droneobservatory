@@ -117,6 +117,12 @@ if [ -s "$LOCAL_ALMACEN" ]; then
 else
   echo "aviso: sin $LOCAL_ALMACEN, la recogida no publicará estado.json" >&2
 fi
+# Token de la API de alerts.in.ua para el archivo de alertas (servidor/alertas.sh).
+if [ -s "$LOCAL_ALERTAS_TOKEN" ]; then
+  dejar_secreto "$LOCAL_ALERTAS_TOKEN" "$ALERTAS_TOKEN"
+else
+  echo "aviso: sin $LOCAL_ALERTAS_TOKEN, no se archivan las alertas de alerts.in.ua" >&2
+fi
 
 # --- Claves de despliegue ------------------------------------------------------------
 # Las privadas se generan en el servidor y no salen de él; aquí solo llega la pública.
@@ -139,7 +145,7 @@ clave_despliegue "$REPOSITORIO_DATOS" "$DESPLIEGUE_DATOS"
 conectar "$OPERADOR" sudo systemctl enable --now "$UNIDAD.timer" "$UNIDAD_EXPORTACION.timer" \
   "$UNIDAD_DETALLE.timer" "$UNIDAD_GUERRA.timer" "$UNIDAD_TRAFICO.timer" "$UNIDAD_BUSQUEDA.timer" \
   "$UNIDAD_DEDUCCION.timer" "$UNIDAD_CATALOGO.timer" "$UNIDAD_DIRECTO.service" \
-  "$UNIDAD_SATELITE.timer" "$UNIDAD_LUCES.timer" "$UNIDAD_FOCOS_VIVO.timer"   "$UNIDAD_SEGUIMIENTO.service" "$UNIDAD_SEGUIMIENTO_ARCHIVO.timer"   "$UNIDAD_RUTAS.timer"   "$UNIDAD_VIGILANCIA.timer" "$UNIDAD_REINICIO.timer" "$UNIDAD_REPLICA.timer" \
+  "$UNIDAD_SATELITE.timer" "$UNIDAD_LUCES.timer" "$UNIDAD_FOCOS_VIVO.timer"   "$UNIDAD_SEGUIMIENTO.service" "$UNIDAD_ALERTAS.service" "$UNIDAD_SEGUIMIENTO_ARCHIVO.timer"   "$UNIDAD_RUTAS.timer"   "$UNIDAD_VIGILANCIA.timer" "$UNIDAD_REINICIO.timer" "$UNIDAD_REPLICA.timer" \
   "$UNIDAD_PRUEBA_RESTAURACION.timer" "$UNIDAD_BASE_SOLO_DISCO.timer"
 conectar "$OPERADOR" systemctl list-timers "$UNIDAD.timer" "$UNIDAD_EXPORTACION.timer" \
   "$UNIDAD_DETALLE.timer" "$UNIDAD_GUERRA.timer" "$UNIDAD_TRAFICO.timer" \
