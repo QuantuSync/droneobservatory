@@ -321,6 +321,15 @@ las 17:34: `exportacion.sh` completo con la base real, hacia un prefijo de ensay
 s, misma huella del manifiesto (10bd83a8…), descifrada con la clave age de siempre; los 59 objetos
 de ensayo se borraron. El lunes, con el interruptor en `almacen`, irá solo al bucket privado.
 
+**Un fallo tras retirar la carpeta, y su arreglo.** El 8 de octubre a las 02:32 el gancho de la
+recogida pidió reconstruir la web y el paso de «build ignorado» lo omitió: entre medias había
+entrado en `main` el PR de documentación (#163), que no despliega, y la regla «mismo commit que el
+despliegue anterior» ya no se cumplía. La web se quedó una hora con los datos de las 01:17. Lo vio
+la comprobación de producción, no la vigilancia. Arreglo (PR #164): con los datos en el almacén,
+producción se construye siempre; y el disparador de Vercel avisa si los datos de la web van más de
+100 minutos por detrás de la última publicación. Comprobado: a las 02:52 la web estaba con los
+datos de las 02:17 y la recogida de las 03:17 llegó a la web por el gancho, sin omitirse.
+
 **Fusiones**: PR #153 (código, en `github`), #154 (comprobaciones de copias), #155 (espejo y
 ensayo de la exportación), #158 (la web lee del almacén), #160 (`publicacion/` fuera), cada uno con
 su ensayo de recogida y exportación cuando tocaba la recogida o los datos.
