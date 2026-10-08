@@ -314,6 +314,13 @@
         "EODI-2025-00376"
       ],
       "motivo": "el mismo suceso: el dron que entró en Rumanía cerca de Pardina el 13 de septiembre de 2025 (Ministerio de Defensa de Rumanía)"
+    },
+    {
+      "registros": [
+        "EODI-2025-00295",
+        "EODI-2025-00442"
+      ],
+      "motivo": "el mismo suceso: los drones que entraron en Polonia la noche del 9 al 10 de septiembre de 2025 (00442 es la nota de bankier.pl del 8 de octubre de 2026 sobre el archivo de la investigación de la Fiscalía Regional de Lublin, fechada por su publicación)"
     }
   ],
   "reextraer": [
@@ -345,6 +352,13 @@
       "motivo": {
         "es": "La única fuente es una sección «On this Day» del Daily Echo que recuerda un cuasi choque de 2017; no hay ningún suceso en 2025 y la fecha del incidente (17-02-2025) es la de la nota, no la del hecho.",
         "en": "The only source is a Daily Echo «On this Day» feature recalling a 2017 near miss; there is no 2025 event and the incident date (2025-02-17) is the date of the feature, not of the event."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00486",
+      "motivo": {
+        "es": "No es un suceso con dron: las fuentes (wn.com y Daily Mail, 6-7 de octubre de 2026) cuentan un supuesto plan para atacar con drones la base de Fairford y la retirada preventiva de los bombarderos estadounidenses; ningún dron se vio ni voló.",
+        "en": "Not a drone event: the sources (wn.com and Daily Mail, 6-7 October 2026) report an alleged plan to attack the Fairford base with drones and the precautionary withdrawal of the US bombers; no drone was seen or flown."
       }
     }
   ],
@@ -1950,6 +1964,30 @@
         "fecha": "2026-10-05",
         "en": "https://www.ibtimes.co.uk/drone-near-misses-heathrow-gatwick-aviation-safety-1812566"
       }
+    },
+    {
+      "incidente": "EODI-2026-00487",
+      "enlace": "https://sandnesposten.no/politiet-rykker-ut-etter-droneflyging/s/5-105-1454726",
+      "medio": "sandnesposten.no",
+      "fecha": "2026-10-06",
+      "idioma": "no",
+      "frase": "\u2013 Dronen befinner seg nærmere enn fem kilometer fra Stavanger lufthavn og kan påvirke flytrafikken, sier operasjonsleder Dag Steinkopf i Sør-Vest politidistrikt.",
+      "comprobada": {
+        "fecha": "2026-10-08",
+        "en": "https://sandnesposten.no/politiet-rykker-ut-etter-droneflyging/s/5-105-1454726"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00487",
+      "enlace": "https://sandnesposten.no/politiet-rykker-ut-etter-droneflyging/s/5-105-1454726",
+      "medio": "sandnesposten.no",
+      "fecha": "2026-10-06",
+      "idioma": "no",
+      "frase": "\u2013 Dronepiloten har flydd to ulike droner innenfor forbudssonen. Politiet har tatt beslag i begge dronene.",
+      "comprobada": {
+        "fecha": "2026-10-08",
+        "en": "https://sandnesposten.no/politiet-rykker-ut-etter-droneflyging/s/5-105-1454726"
+      }
     }
   ],
   "titulares": [
@@ -2178,6 +2216,17 @@
       "motivo": {
         "es": "El titular decía Londres; la cita dice que fue sobre Marlow (Buckinghamshire), en la aproximación a Heathrow.",
         "en": "The headline said London; the quote says it was over Marlow (Buckinghamshire), on the approach to Heathrow."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00487",
+      "titulo": {
+        "es": "La policía incauta dos drones que volaban a menos de 5 km del aeropuerto de Stavanger",
+        "en": "Police seize two drones flown less than 5 km from Stavanger airport"
+      },
+      "motivo": {
+        "es": "El titular decía que los drones incautaban los aparatos y su cita era solo el nombre del lugar (Sandnes idrettspark); la policía de Sør-Vest dice que el dron estaba a menos de 5 km del aeropuerto de Stavanger y que incautó los dos drones del piloto.",
+        "en": "The headline said the drones seized the devices and its quote was only the place name (Sandnes idrettspark); Sør-Vest police say the drone was less than 5 km from Stavanger airport and that they seized the pilot's two drones."
       }
     }
   ],

@@ -3,6 +3,7 @@ informe_revision_contenido.md): retiradas, citas, titulares con su presencia y s
 lugar que da la autoridad. Todo con su motivo y sin repetir nada en la recogida siguiente."""
 
 import copy
+import re
 from typing import Any
 
 import pytest
@@ -204,7 +205,9 @@ def test_la_configuracion_de_la_revision() -> None:
     datos = revisados.cargar()
     for cita in datos["citas"]:
         assert len(cita["frase"].split()) <= 25
-        assert cita["comprobada"]["fecha"] == "2026-10-05"
+        # Comprobada a mano: la revisión del 5 de octubre de 2026 y las siguientes.
+        fecha = cita["comprobada"]["fecha"]
+        assert re.fullmatch(r"\d{4}-\d{2}-\d{2}", fecha) and fecha >= "2026-10-05"
     for retirada in datos["retirar"]:
         assert retirada["motivo"]["es"] and retirada["motivo"]["en"]
     for revision in datos["titulares"]:
