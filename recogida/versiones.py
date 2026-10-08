@@ -43,7 +43,7 @@ from typing import Any
 
 from almacen import copias
 from almacen.sitio import casa
-from recogida import almacen_publico
+from recogida import almacen_publico, licencia
 from recogida.descarga import AGENTE_EODI
 
 registro = logging.getLogger("versiones")
@@ -153,25 +153,24 @@ def generar(
         return {"version": version, "hecho": "ya_publicada"}
     resumen, ficheros = bajar_version(leer, conf, dormir)
     comprobar_ficheros(ficheros)
-    licencia = conf["licencia"]
+    cabeceras_licencia = licencia.cabeceras()
     descripcion: dict[str, Any] = {}
     etiquetas: dict[str, str] = {}
     for nombre, datos in ficheros.items():
         almacen.subir(
             carpeta + nombre, datos,
             {"Content-Type": conf["ficheros"][nombre], "Cache-Control": conf["cache"],
-             "x-amz-meta-licencia": licencia["nombre"], "x-amz-meta-licencia-url": licencia["url"],
-             "x-amz-meta-version": version},
+             "x-amz-meta-version": version, **cabeceras_licencia},
         )  # fmt: skip
         descripcion[nombre] = {"bytes": len(datos), "sha256": huella(datos)}
     metadatos = {
         "version": version,
-        "nombre": f"{licencia['titular']}, datos abiertos, versión {version}",
+        "nombre": f"{licencia.cargar()['titular']}, datos abiertos, versión {version}",
         "fecha": ahora.astimezone(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "datos_actualizados": resumen.get("actualizado"),
         "incidentes": len(resumen.get("incidentes", [])),
         "direccion": f"{conf['direccion']}{version}/",
-        "licencia": licencia,
+        "licencia": licencia.de_version(),
         "cita": cita(version, conf),
         "ficheros": descripcion,
     }
@@ -180,8 +179,7 @@ def generar(
     almacen.subir(
         carpeta + METADATOS, cuerpo,
         {"Content-Type": "application/json", "Cache-Control": conf["cache"],
-         "x-amz-meta-licencia": licencia["nombre"], "x-amz-meta-licencia-url": licencia["url"],
-         "x-amz-meta-version": version},
+         "x-amz-meta-version": version, **cabeceras_licencia},
     )  # fmt: skip
     for nombre in [*ficheros, METADATOS]:
         etiqueta = almacen.metadato(carpeta + nombre, "etag")

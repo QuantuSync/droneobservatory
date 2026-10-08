@@ -19,8 +19,12 @@ interruptor de la publicación (`/home/eodi/.eodi/publicacion_modo`, servidor/re
 - si algo ha cambiado, pide a Vercel que reconstruya la web con el gancho de despliegue
   (`/home/eodi/.eodi/vercel_gancho`, una dirección secreta).
 
+Cada fichero sube con la licencia de los datos dentro (recogida/licencia.py): el miembro
+`licencia` al principio del JSON, como los que se descargan de la web, y `x-amz-meta-licencia` en
+los metadatos del objeto. La huella del manifiesto es la de lo subido.
+
 `comparar` comprueba que lo que sirve el almacén es idéntico, byte a byte, a una carpeta (la de
-publicacion/ del clon en el modo `doble`, tras el commit).
+publicacion/ del clon en el modo `doble`, tras el commit) con su licencia.
 
 Uso: python -m recogida.publicacion subir --carpeta <dir> [--gancho <fichero>] [--registro <json>]
      python -m recogida.publicacion comparar --carpeta <dir>
@@ -41,7 +45,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from recogida import almacen_publico
+from recogida import almacen_publico, licencia
 from recogida.descarga import AGENTE_EODI
 
 registro = logging.getLogger("publicacion")
@@ -83,12 +87,18 @@ def escribir_registro(ruta: Path, datos: dict[str, Any]) -> None:
     os.replace(temporal, ruta)
 
 
+def publicable(carpeta: Path, nombre: str) -> bytes:
+    """Lo que se sube de un fichero: el JSON de la carpeta con su licencia dentro
+    (recogida/licencia.py), como los que se descargan de la web."""
+    return licencia.con_licencia((carpeta / nombre).read_bytes())
+
+
 def manifiesto(carpeta: Path, ahora: datetime) -> dict[str, Any]:
     ficheros = {}
     for nombre in FICHEROS:
         ruta = carpeta / nombre
         if ruta.exists():
-            datos = ruta.read_bytes()
+            datos = publicable(carpeta, nombre)
             ficheros[nombre] = {"bytes": len(datos), "sha256": huella(datos)}
     return {
         "version": 1,
@@ -118,11 +128,11 @@ def subir(
     for nombre, datos in nuevo["ficheros"].items():
         if anteriores.get(nombre, {}).get("sha256") == datos["sha256"]:
             continue
-        cuerpo = gzip.compress((carpeta / nombre).read_bytes(), compresslevel=9, mtime=0)
+        cuerpo = gzip.compress(publicable(carpeta, nombre), compresslevel=9, mtime=0)
         correcto, motivo = enviar(
             almacen, PREFIJO + nombre, cuerpo, clave_id, secreto,
             TIPOS[Path(nombre).suffix], CACHE, codificacion="gzip",
-            metadatos={"x-amz-meta-sha256": datos["sha256"]},
+            metadatos={"x-amz-meta-sha256": datos["sha256"], **licencia.cabeceras()},
         )  # fmt: skip
         registro.info("%s: %s", nombre, motivo)
         if not correcto:
@@ -143,10 +153,10 @@ def subir(
         destino = f"{PREFIJO}{HISTORIAL}/{dia}/"
         todo = True
         for nombre in nuevo["ficheros"]:
-            cuerpo = gzip.compress((carpeta / nombre).read_bytes(), compresslevel=9, mtime=0)
+            cuerpo = gzip.compress(publicable(carpeta, nombre), compresslevel=9, mtime=0)
             correcto, motivo = enviar(
                 almacen, f"{destino}{nombre}.gz", cuerpo, clave_id, secreto,
-                "application/gzip", CACHE_HISTORIAL,
+                "application/gzip", CACHE_HISTORIAL, metadatos=licencia.cabeceras(),
             )  # fmt: skip
             todo = todo and correcto
         correcto, _ = enviar(
@@ -212,7 +222,7 @@ def comparar(
         except (OSError, ValueError) as error:
             distintos.append(f"{nombre} (no se lee: {type(error).__name__})")
             continue
-        if remoto != local.read_bytes():
+        if remoto != publicable(carpeta, nombre):
             distintos.append(nombre)
     return distintos
 

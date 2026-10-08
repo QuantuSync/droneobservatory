@@ -1549,7 +1549,7 @@ informe, un periodista o un organismo pueda citar exactamente los datos que usó
   por cada fichero, su huella y su etiqueta (ETag) de cuando se publicó; el día 1, además, baja
   todo y recalcula las huellas. Lo prueban `tests/test_versiones.py` y `web/tests/versiones.test.ts`.
 - **Generación.** `eodi-versiones.timer`, cada día a las 02:35 UTC (`servidor/versiones.sh`,
-  `MemoryMax=400M`, `Nice=15`): genera la del mes si falta y comprueba todas. Baja los ficheros de
+  `MemoryMax=1G` (pico medido al generar la primera: 597 MB), `Nice=15`): genera la del mes si falta y comprueba todas. Baja los ficheros de
   la web dentro de una misma versión de los datos (`resumen.json` antes y después). No toma ningún
   cerrojo ni abre la base. Lo hecho queda en `/home/eodi/.eodi/versiones.json`.
 - **Vigilancia.** Problema «versiones» en `salud.json` si pasadas las 06:00 UTC del día 1 no está
@@ -1647,8 +1647,11 @@ Desde el 7 de octubre de 2026 la recogida escribe los ficheros públicos en `dat
 | `doble` | Sube al almacén público y hace el commit; después comprueba que el almacén es idéntico byte a byte a lo publicado en `main` («publicación doble: el almacén es idéntico a main» en el diario) |
 | `almacen` | Solo el almacén, y pide a Vercel que reconstruya la web con el gancho de despliegue |
 
-En el almacén (`recogida/publicacion.py`): `publicacion/<fichero>` con gzip (`Content-Encoding`)
-y su huella en `x-amz-meta-sha256`, `publicacion/manifiesto.json` al final (la web lo lee primero
+En el almacén (`recogida/publicacion.py`): `publicacion/<fichero>` con gzip (`Content-Encoding`),
+con la licencia de los datos dentro (desde el 9 de octubre de 2026: miembro `licencia` al principio
+del JSON, como en las descargas de la web, y `x-amz-meta-licencia` en el objeto; texto en
+[`configuracion/licencia_datos.json`](../configuracion/licencia_datos.json)) y su huella (la de lo
+subido) en `x-amz-meta-sha256`, `publicacion/manifiesto.json` al final (la web lo lee primero
 y comprueba cada fichero con él) y, la primera publicación de cada día, una instantánea fechada en
 `publicacion/historial/AAAA-MM-DD/` que no se sobrescribe. La web lee de donde diga
 `configuracion/publicacion_web.json` (`github` o `almacen`); si el almacén no responde al
