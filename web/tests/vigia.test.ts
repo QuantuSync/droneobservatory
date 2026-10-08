@@ -31,6 +31,14 @@ describe("disparador de la vigilancia", () => {
     expect(diagnosticar({ generado: hace(4), problemas: [] }, { generado: hace(45) }, AHORA).problema).toBe(true);
   });
 
+  it("la web atrasada respecto a la última publicación avisa", () => {
+    const salud = { generado: hace(4), problemas: [], recogida: { ultima_publicacion: hace(10) } };
+    expect(diagnosticar(salud, { generado: hace(1) }, AHORA, { actualizado: hace(26) }).problema).toBe(false);
+    expect(diagnosticar(salud, { generado: hace(1) }, AHORA, { actualizado: hace(140) }).motivos).toEqual([
+      "la web no se actualiza (sus datos van más de 100 minutos por detrás de la última publicación)",
+    ]);
+  });
+
   it("sin el secreto de la tarea programada no hace nada", async () => {
     const respuesta = await GET(new Request("https://x/api/vigia"));
     expect(respuesta.status).toBe(401);

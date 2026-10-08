@@ -9,6 +9,8 @@
 // Uso (desde la raíz del repositorio): node web/scripts/omitir-build.ts
 
 import { spawnSync } from "node:child_process";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 export const OMITIR = 0;
@@ -32,6 +34,8 @@ export interface Entorno {
   destino?: string | undefined;
   /** VERCEL_GIT_COMMIT_REF: la rama del commit. */
   rama?: string | undefined;
+  /** Si la web lee los datos del almacén (configuracion/publicacion_web.json). */
+  datosDelAlmacen?: boolean | undefined;
 }
 
 /** Salida de git diff --quiet: 0 sin cambios, 1 con cambios, otra cosa es un error. */
@@ -56,6 +60,11 @@ export function decidir(
   if (entorno.destino === "production" && entorno.rama !== undefined && entorno.rama !== RAMA_DE_PRODUCCION) {
     return CONSTRUIR;
   }
+  // Con los datos en el almacén, producción se construye siempre: la recogida pide la
+  // reconstrucción con el gancho de despliegue tras publicar, y el commit de main no dice si los
+  // datos han cambiado. El 8 de octubre de 2026 un gancho llegó tras un commit solo de documentación
+  // y se omitió: la web se quedó con los datos de la hora anterior.
+  if (entorno.datosDelAlmacen === true && entorno.destino === "production") return CONSTRUIR;
   if (previo === undefined || previo.trim().length === 0) return CONSTRUIR;
   try {
     if (git(["cat-file", "-e", `${previo.trim()}^{commit}`]) !== 0) return CONSTRUIR;
@@ -70,10 +79,21 @@ export function decidir(
   }
 }
 
+/** Si configuracion/publicacion_web.json dice que la web lee los datos del almacén. */
+export function leeDelAlmacen(raiz: string): boolean {
+  try {
+    const texto = readFileSync(join(raiz, "configuracion", "publicacion_web.json"), "utf-8");
+    return (JSON.parse(texto) as { origen?: string }).origen === "almacen";
+  } catch {
+    return false;
+  }
+}
+
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const salida = decidir(process.env.VERCEL_GIT_PREVIOUS_SHA, gitReal(process.cwd()), {
     destino: process.env.VERCEL_ENV,
     rama: process.env.VERCEL_GIT_COMMIT_REF,
+    datosDelAlmacen: leeDelAlmacen(process.cwd()),
   });
   console.log(salida === OMITIR ? "sin cambios en la web ni en los datos: se omite" : "se construye");
   process.exit(salida);
