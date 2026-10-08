@@ -127,8 +127,8 @@ de 45 minutos, y el script:
    [`proceso/focos_termicos.py`](../proceso/focos_termicos.py)). Un fallo de FIRMS no cambia
    el resultado de la recogida: queda en el diario («firms no se lee», sin la clave) y en
    `estado.json`, y la siguiente ejecución vuelve a intentarlo;
-4. publica `ucrania.json`, `incidentes.geojson`, `incidentes_sin_ubicacion.json` y
-   `prevision.json` según el interruptor de la publicación (apartado «Datos publicados»): en el
+4. publica `ucrania.json`, `incidentes.geojson`, `incidentes_sin_ubicacion.json`,
+   `prevision.json` y `correcciones.json` (el registro público de correcciones) según el interruptor de la publicación (apartado «Datos publicados»): en el
    almacén público, en `main` (commit «Actualiza los datos publicados», con autor QuantuSync y la
    dirección anónima) o en los dos. También cuando la recogida termina con avisos (código 2);
    nunca cuando falla con otro código.
@@ -1608,6 +1608,21 @@ web no cambian. La exportación semanal sigue el mismo interruptor.
 
 Cambiar de modo, justo después de una recogida y fuera de los minutos 12 a 40:
 `echo almacen | sudo -u eodi tee /home/eodi/.eodi/publicacion_modo` (o `doble`, o `github`).
+
+**Registro de correcciones** (`correcciones.json`, desde el 9 de octubre de 2026,
+[`exportacion/correcciones.py`](../exportacion/correcciones.py)). Cada recogida lo rehace entero,
+en un par de segundos, con lo que la base ya guarda: los cambios anotados con su motivo en el
+historial (`incidentes_motivos`), las retiradas y las uniones que siguen en pie, solo de incidentes
+que ya se habían publicado y solo si cambian el titular, el estado, el lugar, la atribución, la
+presencia del dron, la unión o la retirada. El motivo va en los dos idiomas: el de las revisiones a
+mano sale de `configuracion/incidentes_revisados.json` (`motivo`/`motivo_en`) y de
+`configuracion/atribuciones_revisadas.json`; el de las reglas, de
+[`configuracion/correcciones.json`](../configuracion/correcciones.json). Un motivo nuevo que no
+esté en ninguna sale con una frase general y deja en el diario «correcciones: N motivos sin
+traducir»: se añade su regla a `configuracion/correcciones.json`. Una corrección hecha a raíz del
+aviso de un lector se marca con `"aviso": true` en su entrada de `incidentes_revisados.json` (o en
+`a_raiz_de_un_aviso` de `correcciones.json`), nunca con datos de quien avisó. La web lo publica en
+`/correcciones/registro` y `/en/corrections/log`, y cada ficha corregida enlaza a su entrada.
 
 ## Ensayos
 

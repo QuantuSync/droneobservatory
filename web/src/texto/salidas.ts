@@ -9,7 +9,7 @@ import { DESCARGAS, IDIOMAS, LICENCIA_DATOS, LICENCIA_DATOS_URL, NOMBRE, ORIGEN,
 import { e, html } from "./html.ts";
 import { direccionCompleta, RUTAS } from "./paginas.ts";
 import type { PaginaTexto } from "./paginas.ts";
-import { PAGINAS_SERVICIO, RUTAS_SERVICIO, textoServicio } from "./servicio.ts";
+import { enlacesSobre } from "./servicio.ts";
 import { textosPagina } from "./textos.ts";
 
 /** sitemap.xml con todas las páginas, su versión en el otro idioma y su última modificación. */
@@ -89,9 +89,7 @@ export function llmsTxt(resumen: Resumen): string {
       `- [${tp.prevision.titulo}](${direccionCompleta(RUTAS.prevision[idioma])})`,
       `- [${tp.metodologia.titulo}](${direccionCompleta(RUTAS.metodologia[idioma])})`,
       `- [${tp.ayuda.titulo}](${direccionCompleta(RUTAS.ayuda[idioma])})`,
-      ...PAGINAS_SERVICIO.map(
-        (pagina) => `- [${textoServicio(pagina, idioma).titulo}](${direccionCompleta(RUTAS_SERVICIO[pagina][idioma])})`,
-      ),
+      ...enlacesSobre(idioma).map((s) => `- [${s.titulo}](${direccionCompleta(s.ruta)})`),
     ].join("\n");
   };
   const estados = (idioma: "es" | "en") => {

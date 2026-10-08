@@ -7,6 +7,7 @@
 import type { Seccion } from "../i18n/tipos.ts";
 import { LICENCIA_DATOS, LICENCIA_DATOS_URL, NOMBRE, REPOSITORIO } from "../sitio.ts";
 import type { Idioma } from "../sitio.ts";
+import { RUTAS_REGISTRO, textosRegistro } from "./correcciones.ts";
 
 export const RESPONSABLE = "Lucas Alaniz Pintos";
 export const CONTACTO = "lucasalanizpintos@gmail.com";
@@ -256,6 +257,19 @@ const ES: Record<PaginaServicio, TextoServicio> = {
               "Si ves un error, escribe a ",
               { texto: CONTACTO, enlace: CORREO },
               " con el identificador del incidente (por ejemplo, EODI-2026-00123, el que aparece en su ficha) y, si puedes, la fuente que lo corrige. Se revisa con las fuentes; lo que se corrige queda anotado en la ficha con su motivo y lo que se retira queda marcado con su motivo, nunca se borra.",
+            ],
+          },
+        ],
+      },
+      {
+        id: "registro",
+        titulo: "Qué se ha corregido",
+        bloques: [
+          {
+            parrafo: [
+              "Cada corrección hecha, con su fecha, el incidente, lo que cambió y el motivo, está en el ",
+              { texto: "registro de correcciones", enlace: RUTAS_REGISTRO.es },
+              ". Cuando una corrección viene del aviso de un lector, se dice, sin ningún dato de quien avisó.",
             ],
           },
         ],
@@ -527,6 +541,19 @@ const EN: Record<PaginaServicio, TextoServicio> = {
           },
         ],
       },
+      {
+        id: "registro",
+        titulo: "What has been corrected",
+        bloques: [
+          {
+            parrafo: [
+              "Every correction made, with its date, the incident, what changed and the reason, is in the ",
+              { texto: "corrections log", enlace: RUTAS_REGISTRO.en },
+              ". When a correction comes from a reader's report, it says so, with no details of who reported it.",
+            ],
+          },
+        ],
+      },
     ],
   },
   accesibilidad: {
@@ -601,4 +628,19 @@ const EN: Record<PaginaServicio, TextoServicio> = {
 
 export function textoServicio(pagina: PaginaServicio, idioma: Idioma): TextoServicio {
   return (idioma === "en" ? EN : ES)[pagina];
+}
+
+/**
+ * Los enlaces de «Sobre el observatorio»: las páginas de servicio y, tras «Correcciones», el
+ * registro de correcciones. Los usan la metodología (web y texto), el pie de las páginas de texto
+ * y llms.txt.
+ */
+export function enlacesSobre(idioma: Idioma): { ruta: string; texto: string; titulo: string }[] {
+  return PAGINAS_SERVICIO.flatMap((pagina) => {
+    const texto = textoServicio(pagina, idioma);
+    const propia = { ruta: RUTAS_SERVICIO[pagina][idioma], texto: texto.enlace, titulo: texto.titulo };
+    if (pagina !== "correcciones") return [propia];
+    const r = textosRegistro(idioma);
+    return [propia, { ruta: RUTAS_REGISTRO[idioma], texto: r.enlace, titulo: r.titulo }];
+  });
 }

@@ -629,6 +629,7 @@ export const en: Textos = {
     historial: "Status history",
     fuenteNoPublica: "source not public",
     actualizada: "Record updated",
+    corregidoEl: (dia) => `Corrected on ${dia}`,
   },
   ataque: {
     etiqueta: "Attack · Ukraine layer",

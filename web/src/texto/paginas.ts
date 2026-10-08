@@ -42,7 +42,9 @@ import type { Idioma } from "../sitio.ts";
 import { fechaDeDia } from "../tiempo/dias.ts";
 import { e, html, jsonLd } from "./html.ts";
 import type { Hijo, Html } from "./html.ts";
-import { BORRAR_VISITA, PAGINAS_SERVICIO, RUTAS_SERVICIO, SCRIPT_BORRAR_VISITA, textoServicio } from "./servicio.ts";
+import { BORRAR_VISITA, enlacesSobre, PAGINAS_SERVICIO, RUTAS_SERVICIO, SCRIPT_BORRAR_VISITA, textoServicio } from "./servicio.ts";
+import { cuerpoRegistro, diaDeCorreccion, enlaceACorreccion, RUTAS_REGISTRO, textosRegistro } from "./correcciones.ts";
+import type { RegistroCorrecciones } from "../datos/correcciones.ts";
 import type { PaginaServicio } from "./servicio.ts";
 import { textosPagina } from "./textos.ts";
 import type { TextosPagina } from "./textos.ts";
@@ -56,6 +58,8 @@ export interface DatosPaginas {
   ucrania: ResumenUcrania;
   /** La previsión publicada; null si aún no hay. */
   prevision?: Prevision | null;
+  /** El registro de correcciones publicado; null si aún no hay. */
+  correcciones?: RegistroCorrecciones | null;
 }
 
 /** Una página: su dirección en cada idioma, sus metadatos y su contenido. */
@@ -584,6 +588,8 @@ function incidente(d: IncidenteDetalle, idioma: Idioma): PaginaTexto {
       ),
     ),
     e("p", { class: "texto-nota mono" }, t.ficha.actualizada, ": ", fechaHora(d.control.ultima_actualizacion.valor)),
+    d.corregido !== undefined &&
+      e("p", { class: "texto-nota mono", "data-corregido": "" }, enlace(enlaceACorreccion(d.id, idioma), t.ficha.corregidoEl(diaDeCorreccion(d.corregido)))),
     e(
       "p",
       null,
@@ -959,7 +965,7 @@ function metodologia(datos: DatosPaginas, idioma: Idioma): PaginaTexto {
       "section",
       { id: "sobre" },
       e("h2", null, t.metodologia.sobre),
-      e("ul", { class: "texto-enlaces" }, PAGINAS_SERVICIO.map((p) => e("li", null, enlace(RUTAS_SERVICIO[p][idioma], textoServicio(p, idioma).enlace)))),
+      e("ul", { class: "texto-enlaces" }, enlacesSobre(idioma).map((s) => e("li", null, enlace(s.ruta, s.texto)))),
     ),
   );
   const descripcion = tp.metodologia.descripcion;
@@ -1047,6 +1053,7 @@ export function paginas(datos: DatosPaginas): PaginaTexto[] {
     resultado.push(metodologia(datos, idioma));
     resultado.push(ayuda(datos, idioma));
     for (const pagina of PAGINAS_SERVICIO) resultado.push(paginaServicio(pagina, idioma));
+    resultado.push(paginaRegistro(datos, idioma));
   }
   return resultado;
 }
@@ -1092,6 +1099,22 @@ export function paginaServicio(pagina: PaginaServicio, idioma: Idioma): PaginaTe
     conMapa: false,
     modificada: REVISION_SERVICIO,
     ...(conBoton ? { scripts: [SCRIPT_BORRAR_VISITA] } : {}),
+  };
+}
+
+/** El registro de correcciones (src/texto/correcciones.ts). */
+export function paginaRegistro(datos: DatosPaginas, idioma: Idioma): PaginaTexto {
+  const t = textosRegistro(idioma);
+  const registro = datos.correcciones ?? null;
+  return {
+    idioma,
+    rutas: RUTAS_REGISTRO,
+    titulo: `${t.titulo} · ${NOMBRE}`,
+    descripcion: t.descripcion,
+    cuerpo: cuerpoRegistro(registro, idioma, new Set(datos.detalles.keys())),
+    estructurados: [],
+    conMapa: false,
+    modificada: registro?.actualizado?.replace("Z", ":00Z") ?? REVISION_SERVICIO,
   };
 }
 
@@ -1230,7 +1253,7 @@ export function marco(pagina: PaginaTexto, actualizado: string): Html {
       e(
         "nav",
         { "aria-label": textosPagina(idioma).sobre },
-        e("ul", { class: "texto-enlaces" }, PAGINAS_SERVICIO.map((p) => e("li", null, e("a", { href: RUTAS_SERVICIO[p][idioma], "aria-current": RUTAS_SERVICIO[p][idioma] === pagina.rutas[idioma] ? "page" : null }, textoServicio(p, idioma).enlace)))),
+        e("ul", { class: "texto-enlaces" }, enlacesSobre(idioma).map((s) => e("li", null, e("a", { href: s.ruta, "aria-current": s.ruta === pagina.rutas[idioma] ? "page" : null }, s.texto)))),
       ),
     ),
   );

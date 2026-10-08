@@ -20,6 +20,7 @@ export const FICHEROS_PUBLICADOS = [
   "incidentes_sin_ubicacion.json",
   "ucrania.json",
   "prevision.json",
+  "correcciones.json",
 ] as const;
 export const PREFIJO = "publicacion/";
 export const MANIFIESTO = "manifiesto.json";
