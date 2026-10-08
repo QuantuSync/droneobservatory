@@ -27,7 +27,10 @@ Problemas (cada uno con su frase):
 - **prueba de restauración**: la prueba semanal de restauración de la base falló o no hay una
   correcta en 8 días;
 - **paso a solo disco**: el paso de la base a solo disco (almacen/solo_disco.py) no se hizo porque
-  falló una de sus comprobaciones.
+  falló una de sus comprobaciones;
+- **versiones**: la versión citable del mes de los datos abiertos no se ha generado el día 1
+  (pasadas las 06:00 UTC), una versión publicada ha cambiado o falta, o no se comprueban desde
+  hace 2 días (recogida/versiones.py).
 
 Avisos (se ven, no son fallo): la última recogida terminó con avisos (código 2) y por qué (las
 líneas de aviso de su diario: fuentes sin leer, tope de tiempo agotado), y cuántos incidentes
@@ -55,7 +58,7 @@ from pathlib import Path
 from typing import Any
 
 from almacen.sitio import casa
-from recogida import almacen_publico
+from recogida import almacen_publico, versiones
 
 registro = logging.getLogger("vigilancia")
 
@@ -320,6 +323,11 @@ def componer(
             "frase": f"La prueba de restauración de la base del {prueba.get('fecha')} "
             + ("falló" if not prueba.get("correcto") else "tiene más de 8 días") + ".",
         })  # fmt: skip
+    # Versiones citables de los datos abiertos (recogida/versiones.py).
+    for frase in versiones.problemas_para_vigilancia(
+        _leer_json(secretos / "versiones.json"), ahora
+    ):
+        problemas.append({"id": "versiones", "frase": frase})
     solo_disco = _leer_json(secretos / "base_solo_disco.json")
     if solo_disco and not solo_disco.get("correcto"):
         motivos = solo_disco.get("comprobaciones") or ["sin comprobaciones"]

@@ -11,7 +11,11 @@
   "redirects": [{ "source": "/es", "destination": "/", "permanent": true }],
   "rewrites": [
     { "source": "/:id(EODI-[A-Za-z0-9-]+)", "destination": "/api/borde?id=:id" },
-    { "source": "/en/:id(EODI-[A-Za-z0-9-]+)", "destination": "/api/borde?id=:id&idioma=en" }
+    { "source": "/en/:id(EODI-[A-Za-z0-9-]+)", "destination": "/api/borde?id=:id&idioma=en" },
+    {
+      "source": "/datos/versiones/:version([0-9]{4}-[0-9]{2})/:fichero([a-z_]+[.][a-z]+)",
+      "destination": "https://droneobservatory-almacen.nbg1.your-objectstorage.com/versiones/:version/:fichero"
+    }
   ],
   "headers": [
     {

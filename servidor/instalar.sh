@@ -697,6 +697,41 @@ Persistent=true
 [Install]
 WantedBy=timers.target
 FIN
+# Versiones citables de los datos abiertos (servidor/versiones.sh): la del mes el día 1 y la
+# comprobación de las publicadas cada día.
+cat > "/etc/systemd/system/$UNIDAD_VERSIONES.service" <<FIN
+[Unit]
+Description=Versiones citables de los datos abiertos (EODI)
+Wants=network-online.target
+After=network-online.target time-sync.target
+
+[Service]
+Type=oneshot
+User=$USUARIO
+Group=$USUARIO
+WorkingDirectory=$CLON
+ExecStart=/usr/bin/env bash $CLON/servidor/versiones.sh
+SyslogIdentifier=$UNIDAD_VERSIONES
+TimeoutStartSec=${TOPE_VERSIONES_MINUTOS}min
+Nice=15
+IOSchedulingClass=idle
+MemoryMax=$VERSIONES_MEMORIA
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=full
+FIN
+cat > "/etc/systemd/system/$UNIDAD_VERSIONES.timer" <<FIN
+[Unit]
+Description=Versiones citables de los datos abiertos (EODI), cada día a las 02:35 UTC
+
+[Timer]
+OnCalendar=$CALENDARIO_VERSIONES
+AccuracySec=1s
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+FIN
 # Reinicio tras una actualización de seguridad (servidor/reinicio.sh), como root, solo cuando no
 # corta nada.
 cat > "/etc/systemd/system/$UNIDAD_REINICIO.service" <<FIN

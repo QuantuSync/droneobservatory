@@ -1525,6 +1525,54 @@ pull request y la deja en su resumen, sin hacer fallar los tests.
   RSS o deja de vetar esas direcciones. Las confirmaciones oficiales de Finlandia quedan en
   las declaraciones que cita la prensa.
 
+## Versiones citables de los datos abiertos
+
+Desde el 9 de octubre de 2026 ([`recogida/versiones.py`](../recogida/versiones.py),
+[`configuracion/versiones_datos.json`](../configuracion/versiones_datos.json)). Para que un
+informe, un periodista o un organismo pueda citar exactamente los datos que usó.
+
+- **Qué es una versión.** El día 1 de cada mes, los mismos ficheros que se descargan de la web
+  (`incidentes.geojson`, `incidentes.csv`, `incidentes_sin_ubicacion.json`, `ucrania.json` y
+  `ucrania.csv`, tal cual los sirve `/datos/`, con la licencia dentro de los JSON), congelados en
+  el almacén público bajo `versiones/AAAA-MM/`, cada uno con su huella SHA-256 y la licencia en sus
+  metadatos (`x-amz-meta-licencia`), y un `metadatos.json` con la fecha, la hora de los datos, el
+  número de incidentes, la huella y el tamaño de cada fichero, la licencia (CC BY 4.0) y la cita en
+  los dos idiomas. El índice de todas está en `versiones/indice.json`.
+- **Dirección permanente.** `droneobservatory.eu/datos/versiones/AAAA-MM/` (página de texto con
+  los ficheros, sus huellas, la licencia y la cita; en inglés `/en/data/versions/AAAA-MM`). Los
+  ficheros, en `droneobservatory.eu/datos/versiones/AAAA-MM/<fichero>`: `vercel.json` los reescribe
+  hacia el almacén. «Metodología y datos abiertos» las lista con la cita lista para copiar.
+- **Nunca cambia ni se borra.** Una versión está publicada cuando está su `metadatos.json` (se
+  sube el último). El programa no toca una publicada (si ya está, no sube nada; un intento a medias
+  sin `metadatos.json` se repite entero) y no tiene ninguna orden de borrar. Cada día
+  `comprobar` mira cada versión del índice: la huella de `metadatos.json` contra la del índice y,
+  por cada fichero, su huella y su etiqueta (ETag) de cuando se publicó; el día 1, además, baja
+  todo y recalcula las huellas. Lo prueban `tests/test_versiones.py` y `web/tests/versiones.test.ts`.
+- **Generación.** `eodi-versiones.timer`, cada día a las 02:35 UTC (`servidor/versiones.sh`,
+  `MemoryMax=400M`, `Nice=15`): genera la del mes si falta y comprueba todas. Baja los ficheros de
+  la web dentro de una misma versión de los datos (`resumen.json` antes y después). No toma ningún
+  cerrojo ni abre la base. Lo hecho queda en `/home/eodi/.eodi/versiones.json`.
+- **Vigilancia.** Problema «versiones» en `salud.json` si pasadas las 06:00 UTC del día 1 no está
+  la del mes, si una publicada ha cambiado o falta, o si no se comprueban desde hace 2 días.
+- **Copias.** La segunda copia de Helsinki (`eodi-replica`) lleva también `versiones/` (solo las
+  publicadas, sin sobrescribir ni borrar nada).
+
+Órdenes, como `operador`:
+
+```
+sudo systemctl start eodi-versiones.service        # la del mes si falta, y la comprobación
+journalctl -u eodi-versiones.service -n 20
+sudo -u eodi cat /home/eodi/.eodi/versiones.json
+sudo -u eodi bash /home/eodi/droneobservatory/servidor/versiones.sh comprobar --completa
+```
+
+**Identificador DOI (pendiente).** No se hace ahora porque exige una cuenta en un servicio
+externo de identificadores. Lo que haría falta: una cuenta en un servicio que asigne DOI a
+conjuntos de datos, un prefijo, y
+por cada versión depositar sus metadatos (título, autor, fecha, licencia, dirección permanente de
+la versión y huellas); `metadatos.json` ya tiene todo lo necesario. Después, añadir el DOI a la
+cita.
+
 ## Vigilancia
 
 Desde el 7 de octubre de 2026 (`recogida/vigilancia.py`, `recogida/salud.py`,
@@ -1541,7 +1589,8 @@ Desde el 7 de octubre de 2026 (`recogida/vigilancia.py`, `recogida/salud.py`,
   del seguimiento sin recibir en 10 minutos o con la unidad parada, archivo de alertas de
   alerts.in.ua sin respuesta correcta de la API en 15 minutos, con la unidad parada o con la API
   respondiendo 401 o 403, copia de la base o del archivo con más de 2 horas, segunda copia con más de 3 horas, disco al 75 % o más, prueba de restauración
-  fallida o con más de 8 días, paso a solo disco fallido.
+  fallida o con más de 8 días, paso a solo disco fallido, versión citable del mes sin generar o
+  una publicada que cambia (apartado «Versiones citables de los datos abiertos»).
 - **Avisos** (se ven, no son fallo): recogida con avisos (código 2) y por qué, y cuántos incidentes
   retiene la barrera de titulares.
 - **En GitHub**, `vigia-recogida` pasa cada 10 minutos: abre una incidencia por problema (y la

@@ -45,6 +45,9 @@ import type { Hijo, Html } from "./html.ts";
 import { BORRAR_VISITA, enlacesSobre, PAGINAS_SERVICIO, RUTAS_SERVICIO, SCRIPT_BORRAR_VISITA, textoServicio } from "./servicio.ts";
 import { cuerpoRegistro, diaDeCorreccion, enlaceACorreccion, RUTAS_REGISTRO, textosRegistro } from "./correcciones.ts";
 import type { RegistroCorrecciones } from "../datos/correcciones.ts";
+import { rutasDeVersion } from "../datos/versiones.ts";
+import type { VersionDatos } from "../datos/versiones.ts";
+import { cuerpoVersion, seccionVersiones } from "./versiones.ts";
 import type { PaginaServicio } from "./servicio.ts";
 import { textosPagina } from "./textos.ts";
 import type { TextosPagina } from "./textos.ts";
@@ -60,6 +63,8 @@ export interface DatosPaginas {
   prevision?: Prevision | null;
   /** El registro de correcciones publicado; null si aún no hay. */
   correcciones?: RegistroCorrecciones | null;
+  /** Las versiones citables de los datos abiertos, de la más nueva a la más vieja. */
+  versiones?: readonly VersionDatos[];
 }
 
 /** Una página: su dirección en cada idioma, sus metadatos y su contenido. */
@@ -960,6 +965,7 @@ function metodologia(datos: DatosPaginas, idioma: Idioma): PaginaTexto {
       e("p", { "data-licencia-texto": "" }, d.licenciaTexto),
       e("h3", null, d.citaTitulo),
       e("blockquote", null, d.cita(version)),
+      seccionVersiones(datos.versiones ?? [], idioma),
     ),
     e(
       "section",
@@ -1054,6 +1060,7 @@ export function paginas(datos: DatosPaginas): PaginaTexto[] {
     resultado.push(ayuda(datos, idioma));
     for (const pagina of PAGINAS_SERVICIO) resultado.push(paginaServicio(pagina, idioma));
     resultado.push(paginaRegistro(datos, idioma));
+    for (const v of datos.versiones ?? []) resultado.push(paginaVersion(v, idioma));
   }
   return resultado;
 }
@@ -1099,6 +1106,21 @@ export function paginaServicio(pagina: PaginaServicio, idioma: Idioma): PaginaTe
     conMapa: false,
     modificada: REVISION_SERVICIO,
     ...(conBoton ? { scripts: [SCRIPT_BORRAR_VISITA] } : {}),
+  };
+}
+
+/** Una versión citable de los datos abiertos (src/texto/versiones.ts). No cambia nunca. */
+export function paginaVersion(version: VersionDatos, idioma: Idioma): PaginaTexto {
+  const v = textos(idioma).metodologia.versiones;
+  return {
+    idioma,
+    rutas: rutasDeVersion(version.version),
+    titulo: `${v.tituloVersion(version.version)} · ${NOMBRE}`,
+    descripcion: v.descripcionVersion(version.version),
+    cuerpo: cuerpoVersion(version, idioma, RUTAS.metodologia[idioma]),
+    estructurados: [],
+    conMapa: false,
+    modificada: version.fecha,
   };
 }
 

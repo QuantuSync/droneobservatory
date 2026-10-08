@@ -1707,6 +1707,25 @@ export const en: Textos = {
         `${NOMBRE} (EODI). Drone incidents in Europe, version of ${fecha}. ` +
         `${ORIGEN}. Licence ${LICENCIA_DATOS}.`,
     },
+    versiones: {
+      titulo: "Citable versions",
+      intro:
+        "On the 1st of every month a version of the open data is frozen: the same files, with their date and fingerprint, at an address that does not change. A published version is never modified or deleted: it is there to cite exactly the data that was used.",
+      ninguna: "The first citable version will be published as soon as it is generated.",
+      linea: (version, fecha, incidentes) => `Version ${version}, frozen on ${fecha}, with ${incidentes} incidents`,
+      citaTitulo: "How to cite this version",
+      copiar: "Copy the citation",
+      copiada: "Citation copied",
+      tituloVersion: (version) => `Open data, version ${version}`,
+      descripcionVersion: (version) => `Version ${version} of the open data of the ${NOMBRE}: frozen files with their SHA-256 fingerprint, their licence and how to cite it.`,
+      congelada: (fecha, datos, incidentes) => `Frozen on ${fecha} with the data published on ${datos}: ${incidentes} incidents.`,
+      fija: "This version does not change and is not deleted. Each file carries its SHA-256 fingerprint: if the file you have gives the same fingerprint, it is exactly the one in this version.",
+      fichero: "File",
+      bytes: "Bytes",
+      huella: "SHA-256",
+      comoComprobar: "To check a file: sha256sum <file> (Linux), shasum -a 256 <file> (macOS) or certutil -hashfile <file> SHA256 (Windows).",
+      todas: "All versions",
+    },
     sobre: "About the observatory",
   },
   compartir: {

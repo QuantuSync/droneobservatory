@@ -46,10 +46,13 @@ class S3Falso:
         if clave not in self.objetos:
             return Respuesta(404, {}, b"")
         cuerpo, meta = self.objetos[clave]
+        # La etiqueta cambia con cada subida, aunque el contenido sea el mismo (como un ETag
+        # de subida en partes): así se ve si un objeto se ha vuelto a subir.
+        etiqueta = {"etag": f'"{hashlib.md5(cuerpo + str(id(meta)).encode()).hexdigest()}"'}
         if metodo == "HEAD":
-            return Respuesta(200, dict(meta), b"")
+            return Respuesta(200, {**meta, **etiqueta}, b"")
         if metodo == "GET":
-            return Respuesta(200, dict(meta), cuerpo)
+            return Respuesta(200, {**meta, **etiqueta}, cuerpo)
         if metodo == "DELETE":
             del self.objetos[clave]
             return Respuesta(204, {}, b"")

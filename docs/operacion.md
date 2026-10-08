@@ -32,7 +32,9 @@ distinto de 0 y 2, captura del seguimiento sin recibir nada en 10 minutos, archi
 respuesta correcta de la API en 15 minutos o con la API respondiendo 401 o 403, copia de la base o del
 archivo con más de 2 horas, segunda copia con más de 3 horas, disco por encima del 75 %, servidor
 sin dar señales (salud.json con más de 20 minutos), exportación semanal fallida o con más de 8
-días, detección en directo parada más de media hora, paso de la base a solo disco fallido.
+días, detección en directo parada más de media hora, paso de la base a solo disco fallido,
+versión citable de los datos del mes sin generar (pasadas las 06:00 UTC del día 1) o una
+publicada que ha cambiado.
 
 Avisos que se ven pero no son fallo: la recogida terminó con avisos (código 2: por ejemplo, el
 tope de 240 s de las fuentes oficiales) y los incidentes que retiene la barrera de titulares. Se
@@ -78,6 +80,19 @@ despliegue) y con cada fusión en `main`.
    construcción falló porque el almacén no respondía, la web anterior sigue publicada y la
    siguiente recogida lo vuelve a pedir. Para pedirlo a mano, en el servidor:
    `sudo -u eodi sh -c 'curl -s -X POST "$(cat /home/eodi/.eodi/vercel_gancho)"'`.
+
+## Si la versión citable del mes no se genera
+
+```
+journalctl -u eodi-versiones.service -n 40
+sudo -u eodi cat /home/eodi/.eodi/versiones.json        # «fallo» y «problemas»
+sudo systemctl start eodi-versiones.service              # otra vez: genera la que falte
+```
+
+Si falló porque la web no respondía o los datos cambiaban mientras se bajaban, basta con lanzarla
+otra vez. Una versión publicada no se toca nunca: si la comprobación dice que una ha cambiado o
+falta, se restaura desde la segunda copia de Helsinki (`servidor/replica.sh listar | grep
+versiones/`), con los mismos ficheros y las huellas de su `metadatos.json`.
 
 ## Si la captura del seguimiento se para
 

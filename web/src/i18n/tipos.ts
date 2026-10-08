@@ -557,6 +557,27 @@ export interface Textos {
       citaTitulo: string;
       cita: (fecha: string) => string;
     };
+    /** Versiones citables de los datos abiertos (datos/versiones.ts): una fija cada mes. */
+    versiones: {
+      titulo: string;
+      intro: string;
+      ninguna: string;
+      /** Una versión en la lista: su nombre, cuándo se congeló y cuántos incidentes tiene. */
+      linea: (version: string, fecha: string, incidentes: string) => string;
+      citaTitulo: string;
+      copiar: string;
+      copiada: string;
+      /** Página de una versión. */
+      tituloVersion: (version: string) => string;
+      descripcionVersion: (version: string) => string;
+      congelada: (fecha: string, datos: string, incidentes: string) => string;
+      fija: string;
+      fichero: string;
+      bytes: string;
+      huella: string;
+      comoComprobar: string;
+      todas: string;
+    };
     /** Enlaces a las páginas de servicio público (aviso legal, privacidad…). */
     sobre: string;
   };

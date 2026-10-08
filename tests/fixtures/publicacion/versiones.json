@@ -1,0 +1,47 @@
+{
+ "versiones": [
+  {
+   "version": "2026-10",
+   "nombre": "European Observatory of Drone Incidents, datos abiertos, versi\u00f3n 2026-10",
+   "fecha": "2026-10-08T21:30:00Z",
+   "datos_actualizados": "2026-10-08T21:17Z",
+   "incidentes": 446,
+   "direccion": "https://droneobservatory.eu/datos/versiones/2026-10/",
+   "licencia": {
+    "nombre": "CC BY 4.0",
+    "url": "https://creativecommons.org/licenses/by/4.0/",
+    "titular": "European Observatory of Drone Incidents",
+    "alcance": {
+     "es": "La compilaci\u00f3n del observatorio (los incidentes, sus estados, sus clasificaciones y sus cifras) se publica con la licencia CC BY 4.0: se puede copiar, transformar y reutilizar, tambi\u00e9n con fines comerciales, citando la fuente. Las frases citadas siguen siendo de sus autores y se usan como cita, con su fuente y su enlace. El bloque de tr\u00e1fico a\u00e9reo medido (trafico_aereo) deriva del archivo de adsb.lol y se ofrece con su licencia, ODbL 1.0.",
+     "en": "The observatory's compilation (the incidents, their statuses, their classifications and their figures) is published under the CC BY 4.0 licence: it may be copied, transformed and reused, including for commercial purposes, with attribution. Quoted sentences remain their authors' and are used as quotations, with their source and link. The measured air traffic block (trafico_aereo) is derived from the adsb.lol archive and is offered under its licence, ODbL 1.0."
+    }
+   },
+   "cita": {
+    "es": "European Observatory of Drone Incidents (2026). Datos abiertos, versi\u00f3n 2026-10. droneobservatory.eu/datos/versiones/2026-10/. Licencia CC BY 4.0.",
+    "en": "European Observatory of Drone Incidents (2026). Open data, version 2026-10. droneobservatory.eu/datos/versiones/2026-10/. Licence CC BY 4.0."
+   },
+   "ficheros": {
+    "incidentes.geojson": {
+     "bytes": 1000,
+     "sha256": "a23a6bf0248c546326c61d6766fce30756324ec8f38b43b55bc569845d9a0938"
+    },
+    "incidentes.csv": {
+     "bytes": 1001,
+     "sha256": "9633ef2476dbffa1fb2d4513f507305d9a8130549e65a137a9f6ce0a9bc3d9d1"
+    },
+    "incidentes_sin_ubicacion.json": {
+     "bytes": 1002,
+     "sha256": "c52492bd4a5aca081259b1003f4b99afba06d983c3b406131920b6e830526fc4"
+    },
+    "ucrania.json": {
+     "bytes": 1003,
+     "sha256": "d200f8015454df16b7cd5d02f55bc328c4db10f1f58930f6912430b790a0c083"
+    },
+    "ucrania.csv": {
+     "bytes": 1004,
+     "sha256": "02560a774cc68b494ae750ca4b252c2b6bd4e9c98eb1a22ffae4aed519872299"
+    }
+   }
+  }
+ ]
+}

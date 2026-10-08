@@ -29,10 +29,11 @@ import {
   validarCorrecciones,
   validarPrevision,
   validarSinUbicacion,
+  validarVersiones,
 } from "../src/datos/validar.ts";
 import type { Resultado } from "../src/datos/validar.ts";
 import { RUTA_SECURITY_TXT, securityTxt } from "../src/seguridad/securityTxt.ts";
-import { carpetaPublicacion } from "./publicacion.ts";
+import { carpetaPublicacion, leerVersiones } from "./publicacion.ts";
 
 const WEB = join(dirname(fileURLToPath(import.meta.url)), "..");
 const CONFIGURACION = join(WEB, "..", "configuracion");
@@ -113,6 +114,9 @@ async function principal(): Promise<void> {
   }
 
   await escribir(join(DATOS, "resumen.json"), JSON.stringify(resumen));
+  // Las versiones citables (recogida/versiones.py): las listan la metodología y sus páginas.
+  const versiones = exigir("versiones citables", validarVersiones(await leerVersiones(join(WEB, ".."))));
+  await escribir(join(DATOS, "versiones.json"), JSON.stringify(versiones));
   if (correcciones !== null) {
     await escribir(join(DATOS, "correcciones.json"), await publicado(rutaCorrecciones));
   }
@@ -177,6 +181,7 @@ async function principal(): Promise<void> {
     `datos: ${coleccion.features.length} incidentes en el mapa, ` +
       `${sinUbicacion?.incidentes.length ?? 0} con ubicación imprecisa y ` +
       `${ucrania.ataques.length} ataques, ${ucrania.impactos?.length ?? 0} impactos con lugar, ` +
+      `${versiones.versiones.length} versiones citables, ` +
       `actualizados a ${resumen.actualizado}`,
   );
 }

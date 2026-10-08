@@ -111,6 +111,58 @@ export async function carpetaPublicacion(raiz: string, web: string): Promise<str
   return destino;
 }
 
+/** Pide un objeto del almacén: null si no está (el almacén responde 403 a lo que no existe). */
+export type LeerSiExiste = (url: string) => Promise<Uint8Array | null>;
+
+async function leerSiExisteHttp(url: string): Promise<Uint8Array | null> {
+  const respuesta = await fetch(url, {
+    headers: { "Cache-Control": "no-cache", "User-Agent": "EODI-web-build" },
+    signal: AbortSignal.timeout(60_000),
+  });
+  if (respuesta.status === 403 || respuesta.status === 404) return null;
+  if (!respuesta.ok) throw new Error(`${url}: HTTP ${respuesta.status}`);
+  return new Uint8Array(await respuesta.arrayBuffer());
+}
+
+/**
+ * Las versiones citables de los datos abiertos (recogida/versiones.py): el índice del almacén y
+ * el metadatos.json de cada versión, comprobado con la huella del índice. Sin índice todavía, una
+ * lista vacía; si el almacén falla o algo no cuadra, el build falla (y sigue la web anterior).
+ * Con EODI_PUBLICACION, el fichero versiones.json de esa carpeta (pruebas), si está.
+ */
+export async function leerVersiones(raiz: string, leer: LeerSiExiste = leerSiExisteHttp): Promise<unknown> {
+  const local = process.env.EODI_PUBLICACION;
+  if (local !== undefined && local.length > 0) {
+    try {
+      return JSON.parse(await readFile(join(local, "versiones.json"), "utf-8")) as unknown;
+    } catch {
+      return { versiones: [] };
+    }
+  }
+  const almacen = JSON.parse(
+    await readFile(join(raiz, "configuracion", "almacen_publico.json"), "utf-8"),
+  ) as { publico: string };
+  const conf = JSON.parse(
+    await readFile(join(raiz, "configuracion", "versiones_datos.json"), "utf-8"),
+  ) as { prefijo: string; indice: string };
+  const base = almacen.publico.replace(/\/$/, "");
+  const indice = await leer(`${base}/${conf.indice}`);
+  if (indice === null) return { versiones: [] };
+  const entradas = (JSON.parse(new TextDecoder().decode(indice)) as {
+    versiones: { version: string; metadatos_sha256: string }[];
+  }).versiones;
+  const versiones: unknown[] = [];
+  for (const entrada of entradas) {
+    const datos = await leer(`${base}/${conf.prefijo}${entrada.version}/metadatos.json`);
+    if (datos === null) throw new Error(`versión ${entrada.version}: falta su metadatos.json`);
+    if (sha256(datos) !== entrada.metadatos_sha256) {
+      throw new Error(`versión ${entrada.version}: metadatos.json no coincide con el índice`);
+    }
+    versiones.push(JSON.parse(new TextDecoder().decode(datos)));
+  }
+  return { versiones };
+}
+
 // Uso: node scripts/publicacion.ts — escribe la carpeta con los datos publicados de verdad (los
 // baja si la web los lee del almacén). Lo usa el trabajo «datos-publicados» de la integración
 // continua.

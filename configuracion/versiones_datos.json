@@ -1,0 +1,31 @@
+{
+  "descripcion": "Versiones citables de los datos abiertos (recogida/versiones.py): el día 1 de cada mes se congelan en el almacén público, bajo «prefijo», los mismos ficheros que se descargan de la web («origen» + /datos/<fichero>), con su huella SHA-256 y un fichero de metadatos (licencia, cómo citarla, número de incidentes). La web las sirve en «direccion»<versión>/ (vercel.json reescribe los ficheros hacia el almacén). Una versión publicada nunca cambia ni se borra: el programa no sobrescribe ninguna y la comprobación diaria avisa si algo cambia o falta.",
+  "origen": "https://droneobservatory.eu",
+  "prefijo": "versiones/",
+  "indice": "versiones/indice.json",
+  "direccion": "https://droneobservatory.eu/datos/versiones/",
+  "ficheros": {
+    "incidentes.geojson": "application/geo+json",
+    "incidentes.csv": "text/csv; charset=utf-8",
+    "incidentes_sin_ubicacion.json": "application/json",
+    "ucrania.json": "application/json",
+    "ucrania.csv": "text/csv; charset=utf-8"
+  },
+  "resumen": "resumen.json",
+  "cache": "public, max-age=31536000, immutable",
+  "dia": 1,
+  "hora_limite_utc": 6,
+  "licencia": {
+    "nombre": "CC BY 4.0",
+    "url": "https://creativecommons.org/licenses/by/4.0/",
+    "titular": "European Observatory of Drone Incidents",
+    "alcance": {
+      "es": "La compilación del observatorio (los incidentes, sus estados, sus clasificaciones y sus cifras) se publica con la licencia CC BY 4.0: se puede copiar, transformar y reutilizar, también con fines comerciales, citando la fuente. Las frases citadas siguen siendo de sus autores y se usan como cita, con su fuente y su enlace. El bloque de tráfico aéreo medido (trafico_aereo) deriva del archivo de adsb.lol y se ofrece con su licencia, ODbL 1.0.",
+      "en": "The observatory's compilation (the incidents, their statuses, their classifications and their figures) is published under the CC BY 4.0 licence: it may be copied, transformed and reused, including for commercial purposes, with attribution. Quoted sentences remain their authors' and are used as quotations, with their source and link. The measured air traffic block (trafico_aereo) is derived from the adsb.lol archive and is offered under its licence, ODbL 1.0."
+    }
+  },
+  "cita": {
+    "es": "European Observatory of Drone Incidents ({anio}). Datos abiertos, versión {version}. droneobservatory.eu/datos/versiones/{version}/. Licencia CC BY 4.0.",
+    "en": "European Observatory of Drone Incidents ({anio}). Open data, version {version}. droneobservatory.eu/datos/versiones/{version}/. Licence CC BY 4.0."
+  }
+}
