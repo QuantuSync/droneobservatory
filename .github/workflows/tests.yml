@@ -7,7 +7,56 @@ on:
 permissions:
   contents: read
 
+# Un push nuevo a la misma rama cancela la ejecución anterior de ese mismo evento: menos cola en
+# los ejecutores de GitHub (el 5 de octubre de 2026 una cola de 15 minutos dejó trabajos sin máquina).
+concurrency:
+  group: tests-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
+  # Lo que ya pasó una vez (PR #84 y #87): un PR que, al fusionarse, borra o devuelve a una versión
+  # anterior ficheros que no toca a propósito. Falla si el PR, tal como está, deshace en main algo
+  # que su rama no ha cambiado (está desfasado: hay que rebasarlo), o si borra ficheros de docs/,
+  # esquema/, configuracion/ o tests/fixtures/ sin decirlo en su descripción con una línea
+  # «Borra a propósito: <ruta>» por fichero.
+  ficheros-del-pr:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - name: El PR solo cambia lo que cambia a propósito
+        env:
+          BASE: origin/${{ github.event.pull_request.base.ref }}
+          DESCRIPCION: ${{ github.event.pull_request.body }}
+        run: |
+          set -euo pipefail
+          git fetch --quiet origin "${BASE#origin/}"
+          comun="$(git merge-base "$BASE" HEAD)"
+          git diff --name-only "$comun" HEAD | sort > propios.txt
+          git diff --name-only "$BASE" HEAD | sort > netos.txt
+          fallo=0
+          revertidos="$(comm -13 propios.txt netos.txt)"
+          if [ -n "$revertidos" ]; then
+            echo "::error::El PR deshace en main cambios que su rama no hace (rebase sobre main):"
+            printf '  %s\n' $revertidos
+            fallo=1
+          fi
+          while IFS= read -r borrado; do
+            case "$borrado" in
+              docs/* | esquema/* | configuracion/* | tests/fixtures/*)
+                if ! printf '%s\n' "$DESCRIPCION" | grep -qxF "Borra a propósito: $borrado"; then
+                  echo "::error::El PR borra $borrado sin decirlo en su descripción («Borra a propósito: $borrado»)"
+                  fallo=1
+                fi
+                ;;
+            esac
+          done < <(git diff --name-only --diff-filter=D "$comun" HEAD)
+          [ "$fallo" -eq 0 ] && echo "el PR solo cambia lo que cambia a propósito ($(wc -l < propios.txt) ficheros)"
+          exit "$fallo"
+
   tests:
     runs-on: ubuntu-latest
     steps:

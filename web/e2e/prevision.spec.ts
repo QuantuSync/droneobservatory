@@ -54,6 +54,11 @@ async function abrirPrevision(pagina: Page, movil: boolean) {
 
 for (const tamano of TAMANOS) {
   test.describe(`previsión en ${tamano.nombre}`, () => {
+    // Las teselas se piden al almacén de verdad: una petición aún en vuelo al terminar la prueba
+    // no es un fallo de la web (así fallaron sin motivo dos ejecuciones del 6 de octubre de 2026).
+    test.afterEach(async ({ context }) => {
+      await context.unrouteAll({ behavior: "ignoreErrors" });
+    });
     test.use({ viewport: { width: tamano.width, height: tamano.height }, hasTouch: tamano.movil, isMobile: tamano.movil });
 
     test("se abre, enseña lo comprobado y se cierra sin mover el mapa", async ({ page, context, baseURL }) => {
