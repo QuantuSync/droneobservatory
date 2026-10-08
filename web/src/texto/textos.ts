@@ -131,9 +131,9 @@ const ES: TextosPagina = {
   prevision: {
     titulo: "Previsión y tendencias",
     descripcion:
-      "Riesgo de que un dron de la guerra cruce o caiga esta noche en Rumanía o Moldavia, países por encima de lo normal y la semana que viene, con su historial de aciertos.",
+      "Riesgo de que un dron de la guerra cruce o caiga esta noche en Rumanía o Moldavia, países por encima de lo normal y qué ha cambiado, con cómo se comprueba.",
     intro:
-      "Lo que está pasando más de lo normal y lo que es probable que pase. Solo se publica lo que, comprobado con el pasado, acierta más que la frecuencia de siempre y que «mañana igual que hoy»; cada parte lleva su historial de aciertos.",
+      "Lo que está pasando más de lo normal y lo que es probable que pase. Solo se publica lo que, comprobado con el pasado, acierta más que la frecuencia de siempre y que «mañana igual que hoy»; cada parte dice cómo se comprueba.",
     comoSeCalcula: "Cómo se calcula y cómo se puntúa",
   },
   otroIdioma: "English",
@@ -290,9 +290,9 @@ const EN: TextosPagina = {
   prevision: {
     titulo: "Forecast and trends",
     descripcion:
-      "Risk that a war drone crosses into or falls in Romania or Moldova tonight, countries above normal and next week, with their track record.",
+      "Risk that a war drone crosses into or falls in Romania or Moldova tonight, countries above normal and what has changed, with how it is checked.",
     intro:
-      "What is happening more than usual and what is likely to happen. Only what, checked against the past, does better than the usual frequency and than “tomorrow same as today” is published; each part carries its track record.",
+      "What is happening more than usual and what is likely to happen. Only what, checked against the past, does better than the usual frequency and than “tomorrow same as today” is published; each part says how it is checked.",
     comoSeCalcula: "How it is computed and scored",
   },
   otroIdioma: "Español",

@@ -241,9 +241,10 @@ export const en: Textos = {
         `drones launched at Ukraine: ${media} on average over the last three nights (last night, ${anoche})`,
       crimea: (noches) => `nights with drones launched from Crimea, the southern route: ${noches} of the last 7`,
       incidentes: (n, pais) => `border incidents in ${pais} in the last 7 days: ${n}`,
-      efectos: { sube: "raises the risk", baja: "lowers it", nada: "does not change it" },
-      historial: (noches, desde, conDron, enAlto, mejora) =>
-        `Checked against ${noches} nights since ${desde}, each using only earlier data: of the ${conDron} nights with a drone, ${enAlto} were among the quarter of nights with the highest risk. It scores ${mejora}% better than the usual frequency.`,
+      efectos: { sube: "raises the risk", baja: "lowers the risk" },
+      sinCambios: "Today none of the measured factors raises or lowers the risk.",
+      historial: (noches, desde, conDron, porcentaje, enAlto) =>
+        `Checked against ${noches} nights since ${desde}, each using only earlier data. There was a drone on ${conDron} (${porcentaje} in 100, the usual). Of the ${conDron} nights with a drone, ${enAlto} were among the quarter of nights with the highest risk.`,
       verHistorial: "Track record",
       columnaDijo: "When it said",
       columnaNoches: "Nights",
@@ -265,8 +266,6 @@ export const en: Textos = {
         `since ${desde}: ${n} incidents against ${habitual} usual (${veces} times) · ${tendencia}`,
       tendencia: { crece: "growing", estable: "steady", se_apaga: "fading" },
       ir: (pais) => `Show ${pais} on the map with the streak period`,
-      terminada: (pais, hasta) => `${pais} (until ${hasta})`,
-      terminadas: (lista) => `Back to normal: ${lista}.`,
       historial: (semanas, siguientes, normal) =>
         `Checked against ${semanas} streak weeks since July 2025: the following week had ${siguientes} incidents where normal was ${normal}. It counts events, not news: each incident once, on the date it happened.`,
       enFicha: "Streak",
@@ -291,20 +290,7 @@ export const en: Textos = {
       historial: (casos, sostenidos) =>
         `Checked since September 2025: of ${casos} changes flagged, the following month went the same way in ${sostenidos}.`,
     },
-    semana: {
-      titulo: "Next week",
-      cual: (desde, hasta) => `${desde} to ${hasta}, expected incidents`,
-      provisional: "provisional: fixed on Saturday",
-      ninguno: "No country has a checked weekly forecast.",
-      fila: (esperado, minimo, maximo) => `${esperado} (between ${minimo} and ${maximo}, 8 in 10 weeks)`,
-      marcador: (dentro, total) => `Scoreboard: ${dentro} of ${total} weeks within the margin`,
-      columnaSemana: "Week",
-      columnaPais: "Country",
-      columnaPrevisto: "Forecast",
-      columnaReal: "Actual",
-      leyendaMarcador:
-        "* reconstructed: computed now using only the data available then. The others were made live and cannot be changed.",
-    },
+    comoSeComprueba: "How it is checked",
   },
   zona: {
     titulo: "Border or interior",
@@ -1524,7 +1510,7 @@ export const en: Textos = {
               {
                 termino: "Tonight at the border",
                 texto: [
-                  "Probability that a war drone crosses into or falls in the country the next night (at least one border incident that night). It is computed before the night, using only what is already known: the drones launched at Ukraine on average over the last three nights (Ukrainian Air Force reports), how many of the last seven nights had drones launched from Crimea and the country’s border incidents in the previous seven days. It is a logistic regression refitted every month. It is said as “2 in 10 nights like this one (20%)”, with the country’s usual rate and whether each factor raises or lowers today’s risk against its usual value. It is shown for each country where it passes the check.",
+                  "Probability that a war drone crosses into or falls in the country the next night (at least one border incident that night). It is computed before the night, using only what is already known: the drones launched at Ukraine on average over the last three nights (Ukrainian Air Force reports), how many of the last seven nights had drones launched from Crimea and the country’s border incidents in the previous seven days. It is a logistic regression refitted every month. It is said as “2 in 10 nights like this one (20%)”, with the country’s usual rate (nights with a drone among the nights checked, the same figure as in the check) and the factors that raise or lower today’s risk against their usual value; those that do not change it are not listed. The check says how many of the nights with a drone were among the quarter of nights with the highest risk, and is folded under “How it is checked”. It is shown for each country where it passes the check.",
                 ],
               },
               {
@@ -1537,12 +1523,6 @@ export const en: Textos = {
                 termino: "Streaks by country",
                 texto: [
                   "A country’s normal is the average of its weeks over the last year without the last four. There is a streak when the last four weeks add up to more than normal gives 1 time in 20 (negative binomial with the country’s own dispersion), with at least 3 incidents on 2 or more different days. It counts events, not news: each incident once, on the date it happened. A country with fewer than 5 incidents in its normal year has no streak. It says since when, how many incidents against the usual and whether it is growing (the last two weeks exceed the two before) or fading. The check: after a streak is flagged, the following week looks more like the streak than like normal.",
-                ],
-              },
-              {
-                termino: "Next week",
-                texto: [
-                  "The expected figure is the average of previous weeks with a weight that halves every four weeks; the margin runs from 10 to 90% of a negative binomial with the country’s dispersion, so 8 in 10 weeks should fall inside. It is published for the countries where it beats the usual frequency and “next week same as this one”.",
                 ],
               },
               {
@@ -1560,13 +1540,13 @@ export const en: Textos = {
               {
                 termino: "How it is scored",
                 texto: [
-                  "Probabilities with the Brier score (the squared error between the probability and what happened); weekly figures with the logarithm of the probability the method gave to what happened. Each part’s track record says how many nights or weeks it was checked against, how much it beats the reference and, at the border, what happened in each probability band. Forecasts for the weeks before publication are reconstructed as they would have been made then and marked as reconstructed.",
+                  "Probabilities with the Brier score (the squared error between the probability and what happened). In each part, “How it is checked” says how many nights or weeks it was checked against and, at the border, what happened in each probability band. Forecasts for the nights before publication are reconstructed as they would have been made then.",
                 ],
               },
               {
                 termino: "Live record",
                 texto: [
-                  "Since 6 October 2026 each forecast is stored with its time before the result is known (the border one, at the first update from 17:00 UTC; the weekly one, on Saturday) in a record that admits no changes or deletions, and scored once the result is known (3 days after the night, a week after the week ends). It is in the published file prevision.json and in the data export, with its method and date.",
+                  "Since 6 October 2026 each forecast is stored with its time before the result is known (the border one, at the first update from 17:00 UTC) in a record that admits no changes or deletions, and scored once the result is known (3 days after the night). It is in the published file prevision.json and in the data export, with its method and date.",
                 ],
               },
             ],

@@ -241,9 +241,10 @@ export const es: Textos = {
         `drones lanzados contra Ucrania: ${media} de media en las tres últimas noches (anoche, ${anoche})`,
       crimea: (noches) => `noches con drones salidos de Crimea, el camino del sur: ${noches} de las últimas 7`,
       incidentes: (n, pais) => `incidentes de frontera en ${pais} en los últimos 7 días: ${n}`,
-      efectos: { sube: "sube el riesgo", baja: "lo baja", nada: "no lo cambia" },
-      historial: (noches, desde, conDron, enAlto, mejora) =>
-        `Comprobado con ${noches} noches desde el ${desde}, cada una solo con lo anterior: de las ${conDron} noches con dron, ${enAlto} estaban entre la cuarta parte de noches con más riesgo. Acierta un ${mejora} % más que la frecuencia de siempre.`,
+      efectos: { sube: "sube el riesgo", baja: "baja el riesgo" },
+      sinCambios: "Hoy ninguno de los factores medidos sube ni baja el riesgo.",
+      historial: (noches, desde, conDron, porcentaje, enAlto) =>
+        `Comprobado con ${noches} noches desde el ${desde}, cada una solo con lo anterior. Hubo dron en ${conDron} (${porcentaje} de cada 100, lo habitual). De las ${conDron} noches con dron, ${enAlto} estaban entre la cuarta parte de noches con más riesgo.`,
       verHistorial: "Historial de aciertos",
       columnaDijo: "Cuando dijo",
       columnaNoches: "Noches",
@@ -266,8 +267,6 @@ export const es: Textos = {
         `desde el ${desde}: ${n} incidentes frente a ${habitual} lo habitual (${veces} veces) · ${tendencia}`,
       tendencia: { crece: "crece", estable: "se mantiene", se_apaga: "se apaga" },
       ir: (pais) => `Ver ${pais} en el mapa con el periodo de la racha`,
-      terminada: (pais, hasta) => `${pais} (hasta el ${hasta})`,
-      terminadas: (lista) => `Han vuelto a lo normal: ${lista}.`,
       historial: (semanas, siguientes, normal) =>
         `Comprobado con ${semanas} semanas en racha desde julio de 2025: la semana siguiente tuvo ${siguientes} incidentes donde lo normal eran ${normal}. Cuenta sucesos, no noticias: cada incidente una vez, en la fecha del suceso.`,
       enFicha: "Racha",
@@ -292,20 +291,7 @@ export const es: Textos = {
       historial: (casos, sostenidos) =>
         `Comprobado desde septiembre de 2025: de ${casos} cambios marcados, el mes siguiente siguió igual en ${sostenidos}.`,
     },
-    semana: {
-      titulo: "La semana que viene",
-      cual: (desde, hasta) => `Del ${desde} al ${hasta}, incidentes esperados`,
-      provisional: "provisional: se fija el sábado",
-      ninguno: "Ningún país tiene una previsión semanal comprobada.",
-      fila: (esperado, minimo, maximo) => `${esperado} (entre ${minimo} y ${maximo}, 8 de cada 10 semanas)`,
-      marcador: (dentro, total) => `Marcador: ${dentro} de ${total} semanas dentro del margen`,
-      columnaSemana: "Semana",
-      columnaPais: "País",
-      columnaPrevisto: "Previsto",
-      columnaReal: "Hubo",
-      leyendaMarcador:
-        "* reconstruida: calculada ahora solo con los datos de entonces. Las demás se hicieron en vivo y no se pueden retocar.",
-    },
+    comoSeComprueba: "Cómo se comprueba",
   },
   zona: {
     titulo: "Frontera o interior",
@@ -1539,7 +1525,7 @@ export const es: Textos = {
               {
                 termino: "Esta noche en la frontera",
                 texto: [
-                  "Probabilidad de que un dron de la guerra cruce o caiga en el país la noche siguiente (al menos un incidente de frontera esa noche). Se calcula antes de la noche, solo con lo que ya se sabe: los drones lanzados contra Ucrania de media en las tres últimas noches (partes de la Fuerza Aérea de Ucrania), cuántas de las siete últimas noches salieron drones desde Crimea y los incidentes de frontera del país en los siete días anteriores. Es una regresión logística que se reajusta cada mes. Se dice como «2 de cada 10 noches como esta (20 %)», con lo habitual del país y si cada factor sube o baja hoy el riesgo frente a su valor habitual. Sale para cada país en que pasa la comprobación.",
+                  "Probabilidad de que un dron de la guerra cruce o caiga en el país la noche siguiente (al menos un incidente de frontera esa noche). Se calcula antes de la noche, solo con lo que ya se sabe: los drones lanzados contra Ucrania de media en las tres últimas noches (partes de la Fuerza Aérea de Ucrania), cuántas de las siete últimas noches salieron drones desde Crimea y los incidentes de frontera del país en los siete días anteriores. Es una regresión logística que se reajusta cada mes. Se dice como «2 de cada 10 noches como esta (20 %)», con lo habitual del país (las noches con dron entre las noches comprobadas, la misma cifra de la comprobación) y los factores que hoy suben o bajan el riesgo frente a su valor habitual; los que no lo cambian no se listan. La comprobación dice cuántas de las noches con dron estaban entre la cuarta parte de noches con más riesgo, y va plegada bajo «Cómo se comprueba». Sale para cada país en que pasa la comprobación.",
                 ],
               },
               {
@@ -1552,12 +1538,6 @@ export const es: Textos = {
                 termino: "Rachas por país",
                 texto: [
                   "Lo normal de un país es la media de sus semanas del último año sin las cuatro últimas. Hay racha cuando las cuatro últimas semanas suman más de lo que lo normal da 1 de cada 20 veces (binomial negativa con la dispersión del propio país), con 3 incidentes como mínimo en 2 días distintos o más. Cuenta sucesos, no noticias: cada incidente una vez, en la fecha del suceso. Un país con menos de 5 incidentes en su año normal no tiene racha. Se dice desde cuándo, cuántos incidentes frente a lo habitual y si crece (las dos últimas semanas superan a las dos anteriores) o se apaga. La comprobación: tras marcar una racha, la semana siguiente se parece más a la racha que a lo normal.",
-                ],
-              },
-              {
-                termino: "La semana que viene",
-                texto: [
-                  "Lo esperado es la media de las semanas anteriores con un peso que se reduce a la mitad cada cuatro semanas; el margen va del 10 al 90 % de una binomial negativa con la dispersión del país, así que 8 de cada 10 semanas deberían caer dentro. Se publica en los países en que mejora a la frecuencia de siempre y a «la semana que viene igual que esta».",
                 ],
               },
               {
@@ -1575,13 +1555,13 @@ export const es: Textos = {
               {
                 termino: "Cómo se puntúa",
                 texto: [
-                  "Las probabilidades, con la puntuación de Brier (el error al cuadrado entre la probabilidad y lo que pasó); los números semanales, con el logaritmo de la probabilidad que dio el método a lo que pasó. El historial de aciertos de cada parte dice con cuántas noches o semanas se comprobó, cuánto mejora a la referencia y, en la frontera, qué pasó en cada tramo de probabilidad. Las previsiones de las semanas anteriores a su publicación se reconstruyen tal como se habrían hecho entonces y se marcan como reconstruidas.",
+                  "Las probabilidades, con la puntuación de Brier (el error al cuadrado entre la probabilidad y lo que pasó). «Cómo se comprueba», en cada parte, dice con cuántas noches o semanas se comprobó y, en la frontera, qué pasó en cada tramo de probabilidad. Las previsiones de las noches anteriores a su publicación se reconstruyen tal como se habrían hecho entonces.",
                 ],
               },
               {
                 termino: "Registro en vivo",
                 texto: [
-                  "Desde el 6 de octubre de 2026 cada previsión queda guardada con su hora antes de conocerse el resultado (la de la frontera, en la primera actualización desde las 17:00 UTC; la semanal, el sábado) en un registro que no admite cambios ni borrados, y se puntúa cuando el resultado ya se conoce (3 días después de la noche, una semana después de acabar la semana). Va en el fichero publicado prevision.json y en la exportación de datos, con su método y su fecha.",
+                  "Desde el 6 de octubre de 2026 cada previsión queda guardada con su hora antes de conocerse el resultado (la de la frontera, en la primera actualización desde las 17:00 UTC) en un registro que no admite cambios ni borrados, y se puntúa cuando el resultado ya se conoce (3 días después de la noche). Va en el fichero publicado prevision.json y en la exportación de datos, con su método y su fecha.",
                 ],
               },
             ],

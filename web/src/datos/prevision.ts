@@ -2,7 +2,9 @@
 // la comprobación con el pasado, cada parte con su historial de aciertos, y el registro de las
 // previsiones hechas en vivo con su resultado.
 
+import { numero, pais } from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
+import type { Idioma } from "../sitio.ts";
 import type { Tipo } from "./tipos.ts";
 
 export type Efecto = "sube" | "baja" | "nada";
@@ -212,6 +214,41 @@ export function marcadorSemanal(prevision: Prevision): FilaMarcador[] {
     if (!filas.some((f) => `${f.pais}:${f.semana}` === clave)) filas.push(fila);
   }
   return filas.sort((a, b) => b.semana.localeCompare(a.semana) || a.pais.localeCompare(b.pais));
+}
+
+/**
+ * Lo habitual de un país, en noches de cada 100: las noches con dron entre las noches de la
+ * comprobación. Es la misma cifra con la que se compara la previsión, para que las dos cuadren.
+ */
+export function habitualDe(c: ComprobacionFrontera): number {
+  return c.noches === 0 ? 0 : Math.round((c.noches_con_dron / c.noches) * 100);
+}
+
+export type FactorFrontera = keyof FronteraPais["efectos"];
+export const FACTORES_FRONTERA: readonly FactorFrontera[] = [
+  "lanzados_tres_noches",
+  "noches_desde_crimea",
+  "incidentes_siete_dias",
+];
+
+/** Los factores que hoy suben o bajan el riesgo; los que no lo cambian no se listan. */
+export function factoresQueCuentan(p: FronteraPais): { factor: FactorFrontera; efecto: "sube" | "baja" }[] {
+  return FACTORES_FRONTERA.flatMap((factor) => {
+    const efecto = p.efectos[factor];
+    return efecto === "nada" ? [] : [{ factor, efecto }];
+  });
+}
+
+/** La línea de un factor que cuenta hoy: su valor y si sube o baja el riesgo. */
+export function textoFactor(t: Textos, idioma: Idioma, p: FronteraPais, factor: FactorFrontera, efecto: "sube" | "baja"): string {
+  const f = t.prevision.frontera;
+  const valor =
+    factor === "lanzados_tres_noches"
+      ? f.lanzados(numero(Math.round(p.factores.lanzados_tres_noches), idioma), numero(p.factores.lanzados_anoche, idioma))
+      : factor === "noches_desde_crimea"
+        ? f.crimea(p.factores.noches_desde_crimea)
+        : f.incidentes(p.factores.incidentes_siete_dias, pais(p.pais, idioma));
+  return `${valor} · ${f.efectos[efecto]}`;
 }
 
 /** Probabilidad en palabras y con su número: «4 de cada 10 noches como esta (40 %)». */

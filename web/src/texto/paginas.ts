@@ -19,7 +19,7 @@ import type {
   Resumen,
   ResumenUcrania,
 } from "../datos/tipos.ts";
-import { diaDeTexto, marcadorSemanal, probabilidadLlana, mesEscrito, textoCambio } from "../datos/prevision.ts";
+import { diaDeTexto, factoresQueCuentan, habitualDe, probabilidadLlana, mesEscrito, textoCambio, textoFactor } from "../datos/prevision.ts";
 import type { Prevision } from "../datos/prevision.ts";
 import { ataquesPorRegion, cifrasDeRegion, diaDeParte, sentidoDeFila } from "../datos/ucrania.ts";
 import { autoridadEscrita, medioEscrito } from "../i18n/autoridades.ts";
@@ -1046,28 +1046,29 @@ function paginaPrevision(datos: DatosPaginas, idioma: Idioma): PaginaTexto {
     partes.push(e("p", null, p.noDisponible));
   } else {
     const dia = (texto: string) => fechaDia(diaDeTexto(texto));
+    const comoSeComprueba = (...hijos: Hijo[]) => e("details", null, e("summary", null, p.comoSeComprueba), ...hijos);
     const frontera = d.frontera.paises.map((f) =>
       e(
         "section",
         { "data-frontera": f.pais },
         e("h3", null, pais(f.pais, idioma)),
         e("p", null, probabilidadLlana(t, f.probabilidad, f.de_cada_10)),
-        e("p", null, p.frontera.habitual(Math.round(f.frecuencia_de_siempre * 100))),
-        e("p", null, p.frontera.dependeDe),
-        e(
-          "ul",
-          null,
-          e("li", null, p.frontera.lanzados(numero(Math.round(f.factores.lanzados_tres_noches), idioma), numero(f.factores.lanzados_anoche, idioma)), " · ", p.frontera.efectos[f.efectos.lanzados_tres_noches]),
-          e("li", null, p.frontera.crimea(f.factores.noches_desde_crimea), " · ", p.frontera.efectos[f.efectos.noches_desde_crimea]),
-          e("li", null, p.frontera.incidentes(f.factores.incidentes_siete_dias, pais(f.pais, idioma)), " · ", p.frontera.efectos[f.efectos.incidentes_siete_dias]),
-        ),
-        e("p", null, p.frontera.historial(numero(f.comprobacion.noches, idioma), dia(f.comprobacion.desde), f.comprobacion.noches_con_dron, f.comprobacion.con_dron_en_riesgo_alto, Math.round(f.comprobacion.mejora_sobre_frecuencia * 100))),
-        e(
-          "table",
-          null,
-          e("caption", null, p.frontera.verHistorial),
-          e("thead", null, e("tr", null, e("th", null, p.frontera.columnaDijo), e("th", null, p.frontera.columnaNoches), e("th", null, p.frontera.columnaConDron))),
-          e("tbody", null, f.comprobacion.tramos.map((tramo) => e("tr", null, e("td", null, p.frontera.tramo(Math.round(tramo.desde * 100), Math.round(tramo.hasta * 100))), e("td", null, numero(tramo.noches, idioma)), e("td", null, numero(tramo.con_dron, idioma))))),
+        e("p", null, p.frontera.habitual(habitualDe(f.comprobacion))),
+        factoresQueCuentan(f).length === 0
+          ? e("p", null, p.frontera.sinCambios)
+          : html(
+              e("p", null, p.frontera.dependeDe),
+              e("ul", null, factoresQueCuentan(f).map(({ factor, efecto }) => e("li", null, textoFactor(t, idioma, f, factor, efecto)))),
+            ),
+        comoSeComprueba(
+          e("p", null, p.frontera.historial(numero(f.comprobacion.noches, idioma), dia(f.comprobacion.desde), f.comprobacion.noches_con_dron, habitualDe(f.comprobacion), f.comprobacion.con_dron_en_riesgo_alto)),
+          e(
+            "table",
+            null,
+            e("caption", null, p.frontera.verHistorial),
+            e("thead", null, e("tr", null, e("th", null, p.frontera.columnaDijo), e("th", null, p.frontera.columnaNoches), e("th", null, p.frontera.columnaConDron))),
+            e("tbody", null, f.comprobacion.tramos.map((tramo) => e("tr", null, e("td", null, p.frontera.tramo(Math.round(tramo.desde * 100), Math.round(tramo.hasta * 100))), e("td", null, numero(tramo.noches, idioma)), e("td", null, numero(tramo.con_dron, idioma))))),
+          ),
         ),
       ),
     );
@@ -1094,8 +1095,7 @@ function paginaPrevision(datos: DatosPaginas, idioma: Idioma): PaginaTexto {
           r.activas.length === 0
             ? e("p", null, p.rachas.ninguna)
             : e("ul", null, r.activas.map((racha) => e("li", { "data-racha": racha.pais }, enlace(rutasDePais(racha.pais)[idioma], pais(racha.pais, idioma)), ": ", p.rachas.linea(dia(racha.desde), racha.incidentes, numero(racha.habitual, idioma), numero(racha.veces, idioma), p.rachas.tendencia[racha.tendencia])))),
-          r.terminadas.length > 0 && e("p", null, p.rachas.terminadas(r.terminadas.map((x) => p.rachas.terminada(pais(x.pais, idioma), dia(x.hasta))).join(", "))),
-          e("p", null, p.rachas.historial(r.comprobacion.semanas_en_racha, r.comprobacion.incidentes_semana_siguiente, numero(r.comprobacion.normal_semana_siguiente, idioma))),
+          comoSeComprueba(e("p", null, p.rachas.historial(r.comprobacion.semanas_en_racha, r.comprobacion.incidentes_semana_siguiente, numero(r.comprobacion.normal_semana_siguiente, idioma)))),
         ),
       );
     }
@@ -1112,34 +1112,12 @@ function paginaPrevision(datos: DatosPaginas, idioma: Idioma): PaginaTexto {
               html(
                 e("h3", null, p.cambios.ambito[a.ambito]),
                 e("ul", null, a.cambios.map((c) => e("li", null, textoCambio(t, a, c)))),
-                e("p", null, p.cambios.historial(a.comprobacion.casos, a.comprobacion.sostenidos)),
+                comoSeComprueba(e("p", null, p.cambios.historial(a.comprobacion.casos, a.comprobacion.sostenidos))),
               ),
             ),
         ),
       );
     }
-    const desde = diaDeTexto(d.semana.semana);
-    const marcador = marcadorSemanal(d);
-    partes.push(
-      e(
-        "section",
-        { id: "semana" },
-        e("h2", null, p.semana.titulo),
-        e("p", null, p.semana.cual(fechaDia(desde), fechaDia(desde + 6)), d.semana.fijada ? "" : ` · ${p.semana.provisional}`),
-        d.semana.paises.length === 0
-          ? e("p", null, p.semana.ninguno)
-          : e("ul", null, d.semana.paises.map((s) => e("li", null, pais(s.pais, idioma), ": ", p.semana.fila(numero(s.esperado, idioma), s.minimo, s.maximo)))),
-        marcador.length > 0 &&
-          e(
-            "table",
-            null,
-            e("caption", null, p.semana.marcador(marcador.filter((f) => f.dentro).length, marcador.length)),
-            e("thead", null, e("tr", null, e("th", null, p.semana.columnaSemana), e("th", null, p.semana.columnaPais), e("th", null, p.semana.columnaPrevisto), e("th", null, p.semana.columnaReal))),
-            e("tbody", null, marcador.map((f) => e("tr", { "data-tipo": f.tipo }, e("td", null, dia(f.semana), f.tipo === "reconstruida" ? " *" : ""), e("td", null, pais(f.pais, idioma)), e("td", null, `${numero(f.esperado, idioma)} (${f.minimo}–${f.maximo})`), e("td", null, `${f.real} ${f.dentro ? "✓" : "✗"}`)))),
-          ),
-        marcador.length > 0 && e("p", null, p.semana.leyendaMarcador),
-      ),
-    );
     partes.push(
       e("p", null, d.metodo[idioma], " ", p.calculada(fechaHora(d.calculado)), " ", enlace(`${RUTAS.metodologia[idioma]}#prevision`, tp.prevision.comoSeCalcula)),
     );

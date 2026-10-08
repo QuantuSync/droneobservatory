@@ -95,6 +95,38 @@ describe("panel «Previsión»", () => {
     expect(document.querySelector('[data-prevision-seccion="segunda-noche"]')).toBeNull();
   });
 
+  it("sin la semana que viene, sin factores que no cambian nada y con lo comprobado plegado", () => {
+    const d = publicada();
+    const conRachaTerminada = structuredClone(d);
+    conRachaTerminada.rachas?.terminadas.push({ pais: "LV", grupo: "todo", hasta: "2026-09-06" });
+    const primero = conRachaTerminada.frontera.paises[0];
+    if (primero !== undefined) primero.efectos = { lanzados_tres_noches: "nada", noches_desde_crimea: "sube", incidentes_siete_dias: "baja" };
+    for (const [t, idioma] of [[es, "es"], [en, "en"]] as const) {
+      render(<Prevision t={t} idioma={idioma} carga={{ estado: "listo", datos: conRachaTerminada }} onRacha={() => {}} />);
+      const texto = document.querySelector("[data-prevision]")?.textContent ?? "";
+      expect(document.querySelector('[data-prevision-seccion="semana"]')).toBeNull();
+      expect(texto).not.toMatch(/La semana que viene|Next week|Han vuelto a lo normal|Back to normal/);
+      expect(texto).not.toMatch(/no lo cambia|does not change it|Acierta un|It scores/);
+      for (const p of conRachaTerminada.frontera.paises) {
+        const caja = document.querySelector(`[data-frontera="${p.pais}"]`);
+        // Una sola cifra de lo habitual: la de la comprobación.
+        const habitual = Math.round((p.comprobacion.noches_con_dron / p.comprobacion.noches) * 100);
+        expect(caja?.querySelector("[data-habitual]")?.getAttribute("data-habitual")).toBe(String(habitual));
+        expect(caja?.querySelector("[data-historial-frontera]")?.textContent).toContain(`${habitual} `);
+        const efectos = [...(caja?.querySelectorAll("[data-efecto]") ?? [])].map((li) => li.getAttribute("data-efecto"));
+        expect(efectos).not.toContain("nada");
+      }
+      // Los párrafos de la comprobación, plegados.
+      const plegados = [...document.querySelectorAll("[data-como-se-comprueba]")];
+      expect(plegados.length).toBeGreaterThan(0);
+      for (const d of plegados) expect((d as HTMLDetailsElement).open).toBe(false);
+      for (const p of document.querySelectorAll("[data-historial-frontera], [data-historial-rachas]")) {
+        expect(p.closest("[data-como-se-comprueba]")).not.toBeNull();
+      }
+      cleanup();
+    }
+  });
+
   it("tocar una racha la pide con su país y su periodo", async () => {
     const d = publicada();
     const racha = d.rachas?.activas[0];
