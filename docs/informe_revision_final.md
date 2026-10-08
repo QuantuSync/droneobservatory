@@ -14,7 +14,7 @@ minutos 12 a 40.
 | #175 | 5 | Páginas de servicio público y licencia | 14:46 |
 | #176 | 6 | Zoom del lugar aproximado | 14:50 |
 | #177 | 6 | Etiqueta de la descarga de lugar aproximado | 14:58 |
-| #178 | 5 y 3 | Este informe, botón «Borrar mi última visita» y unión de EODI-2025-00443 | 16:00 aprox. |
+| #178 | 5 y 3 | Este informe, botón «Borrar mi última visita» y unión de EODI-2025-00443 | 16:41 |
 
 ## Bloque 1. «Previsión», más limpia (#171)
 
@@ -239,8 +239,12 @@ con cada aeropuerto cerrado.
   264 ms de primera pintura y 2068 ms hasta el mapa listo, móvil 324 ms y 2907 ms; después (15:05)
   escritorio 268 ms y 2070 ms, móvil 328 ms y 2933 ms. Igual, dentro del ruido; el HTML de la portada
   pasa de 85,4 a 87,8 KB por el pie con los enlaces nuevos.
-- **Recogidas tras las fusiones**: 15:17, código 0, publicó 444 incidentes (aviso de la barrera por EODI-2025-00443, arreglado en #178).
-- **Vigilancia**: sin problemas abiertos en `salud.json` a las 15:38 UTC.
+- **Recogidas tras las fusiones**:
+  - tras #173: 15:17, código 0, publicó 444 incidentes; 16:17, código 0, publicó 445. Las dos con
+    el aviso de la barrera por EODI-2025-00443, que se arregló en #178;
+  - tras #178: 17:17, código 0, publicó 445, «registros revisados unidos: 1» y ningún aviso;
+    18:17, código 0, publicó 446 y ningún aviso.
+- **Vigilancia**: `salud.json` a las 18:35 UTC sin problemas ni avisos, y ninguna incidencia abierta en el repositorio.
 
 ## Pendientes, con su arreglo
 
