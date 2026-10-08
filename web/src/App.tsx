@@ -161,8 +161,9 @@ const MS_ENTRE_ESTADOS = 300_000;
 const MS_ENTRE_DIRECTOS = 60_000;
 /** Zoom al que vuela el mapa al abrir un aviso de aeropuerto. */
 const ZOOM_DE_AVISO = 9;
-/** Zoom al abrir un incidente con lugar aproximado: el país entero, la región o el mar. */
-const ZOOM_APROXIMADO = { pais: ZOOM_DE_PAIS, region: 6.5, mar: 6 } as const;
+/** Zoom al abrir un incidente con lugar aproximado: por encima del de los grupos (5), para que su
+ *  marcador se vea suelto y no dentro de un grupo, con la zona alrededor. */
+const ZOOM_APROXIMADO = { pais: 6, region: 6.5, mar: 6 } as const;
 /** Ritmo de la reproducción de la guerra: una noche en cada paso. */
 const MS_POR_NOCHE = 420;
 /** Espera máxima antes de cargar el mapa si el navegador no queda libre antes. */
@@ -906,7 +907,7 @@ export function App() {
       return { clave: `incidente:${elegido.id}`, encuadre: { lon: elegido.punto.lon, lat: elegido.punto.lat } };
     }
     if (elegido?.aproximado) {
-      // Lugar aproximado: se ve la zona entera que nombra la fuente, no un sitio concreto.
+      // Lugar aproximado: su marcador suelto, con la zona que nombra la fuente alrededor.
       const { lon, lat, nivel } = elegido.aproximado;
       return { clave: `incidente:${elegido.id}`, encuadre: { lon, lat, zoom: ZOOM_APROXIMADO[nivel] } };
     }
