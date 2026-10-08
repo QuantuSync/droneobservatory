@@ -153,6 +153,8 @@ export const en: Textos = {
     nuevoYa: (estado) => `New, already ${estado.toLowerCase()}`,
     paso: (estado) => `Now ${estado.toLowerCase()}`,
     vacio: "Nothing to show with these filters.",
+    registrado: (hace) => `registered ${hace}`,
+    ocurrio: (dia) => `happened on ${dia}`,
   },
   relativo: (minutos, fecha) => {
     if (minutos < 1) return "just now";
@@ -372,6 +374,8 @@ export const en: Textos = {
       "that explains it. On the button, an orange number counts the airport closures in " +
       "progress and a white one the updates since your previous visit: inside, “Show me” " +
       "goes through them one by one and “Dismiss” clears them.",
+    aproximado:
+      "Hollow ring with a dot in the centre: approximate location. The source only names the country, the region or the sea, and the marker is at the centre of that area, not at the site of the event. Its colour is that of its status.",
     areas:
       "Each incident covers an area: the circle is the radius within which it is known to have " +
       "happened.",
@@ -430,7 +434,19 @@ export const en: Textos = {
   },
   pila: { titulo: (n) => `${n} incidents at this spot` },
   imprecisa: {
-    etiqueta: "imprecise location",
+    etiqueta: "approximate location",
+    aproximado: (nivel) => `Approximate location: ${nivel}`,
+    niveles: { pais: "country", region: "region", mar: "sea" },
+    deDonde: (nivel, zona) => {
+      switch (nivel) {
+        case "pais":
+          return `The source only names the country. The marker is at the centre of ${zona}, not at the site of the event.`;
+        case "region":
+          return `The source names the region (${zona}), not a place that can be located. The marker is at the centre of the region.`;
+        case "mar":
+          return `The source places the event at sea (${zona}). The marker is at sea off the coast, not at the exact site.`;
+      }
+    },
     nivel: {
       instalacion: "site not located",
       localidad: "town not located",
@@ -754,7 +770,10 @@ export const en: Textos = {
           {
             parrafo: [
               "Each incident is placed as an area, a point with a radius, because the exact " +
-                "position is almost never known. Every piece of data keeps who says it: for " +
+                "position is almost never known. If the source only names the country, the " +
+                "region or the sea, the incident is drawn with its own approximate-location " +
+                "marker (a hollow ring with a dot) at the centre of that area, and its record " +
+                "says the level and where it comes from. Every piece of data keeps who says it: for " +
                 "each source we store the fact, a short source sentence in its own language " +
                 "and the link, never the full text.",
             ],
@@ -1677,7 +1696,7 @@ export const en: Textos = {
         "every update.",
       incidentes: "Incidents",
       ucrania: "Attacks in the Ukraine layer",
-      sinUbicacion: "Incidents with an imprecise location",
+      sinUbicacion: "Incidents with an approximate location (no exact point)",
       version: (fecha) => `Version of ${fecha}`,
       licencia: "Licence",
       citaTitulo: "Recommended citation",

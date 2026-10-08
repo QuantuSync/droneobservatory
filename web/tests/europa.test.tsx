@@ -155,6 +155,7 @@ function resumenDe(cambios: { pais: string; dia: number; estado?: IncidenteResum
       id: `EODI-2026-${String(i + 1).padStart(5, "0")}`,
       punto: null,
       imprecisa: null,
+      aproximado: null,
       tipo: "sobrevuelo",
       estado: c.estado ?? "notificado",
       presencia: null,

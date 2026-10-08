@@ -119,6 +119,7 @@ describe("resúmenes", () => {
       id: "EODI-2025-00210",
       punto: { lon: 11.7861, lat: 48.3536, radio_km: 5 },
       imprecisa: null,
+      aproximado: null,
       tipo: "interrupcion_aeroportuaria",
       estado: "notificado",
       presencia: "no_confirmada",

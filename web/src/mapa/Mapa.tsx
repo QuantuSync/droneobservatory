@@ -116,6 +116,7 @@ import {
   impactosEnMapa,
   lineasDeEpisodio,
   pilas,
+  puntoEnMapa,
   sinAtribuidos,
 } from "./geometria.ts";
 import { precargarBanderas, registrarFlechaRuta, registrarIconos, trasBanderas } from "./iconos.ts";
@@ -372,7 +373,7 @@ function marcaMasCercana(
 /** El punto del incidente abierto, con lo que necesita su marca de selección (un atribuido,
  *  su marcador: la bandera y si es de una persona). */
 function seleccionDe(elegido: IncidenteResumen | null): GeoJSON.FeatureCollection<GeoJSON.Point> {
-  const punto = elegido?.punto ?? null;
+  const punto = elegido === null ? null : puntoEnMapa(elegido);
   if (elegido === null || punto === null) return { type: "FeatureCollection", features: [] };
   const marcador = varianteDe(elegido.atribucion);
   return {
@@ -602,7 +603,8 @@ export default function Mapa(props: PropsMapa) {
       const centro = mapa.getCenter();
       elemento.dataset.centro = `${centro.lng.toFixed(6)},${centro.lat.toFixed(6)}`;
       elemento.dataset.zoom = mapa.getZoom().toFixed(4);
-      const punto = elegidoActual.current?.punto ?? null;
+      const actual = elegidoActual.current;
+      const punto = actual === null ? null : puntoEnMapa(actual);
       if (punto === null) return;
       const enPantalla = mapa.project([punto.lon, punto.lat]);
       elemento.dataset.elegido = `${Math.round(enPantalla.x)},${Math.round(enPantalla.y)}`;

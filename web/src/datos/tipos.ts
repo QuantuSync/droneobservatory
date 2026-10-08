@@ -1,6 +1,7 @@
 // Forma de los ficheros públicos de publicacion/ (esquema 1.16.0, solo campos públicos)
 // y de los resúmenes que la web deriva de ellos en el build.
 
+import type { LugarAproximado } from "./lugarAproximado.ts";
 import type { Recorrido } from "./rutas.ts";
 
 export type Estado = "notificado" | "confirmado" | "atribuido" | "desmentido";
@@ -474,6 +475,11 @@ export interface IncidenteResumen {
   punto: { lon: number; lat: number; radio_km: number } | null;
   /** Para los incidentes sin punto, hasta dónde se conoce el lugar. */
   imprecisa: { nivel: NivelUbicacion; region: string | null } | null;
+  /**
+   * Para los incidentes sin punto, dónde se dibuja su marcador de lugar aproximado: el centro del
+   * país, de la región o del mar que nombra la fuente (datos/lugarAproximado.ts). null con punto.
+   */
+  aproximado: LugarAproximado | null;
   tipo: Tipo;
   estado: Estado;
   presencia: PresenciaDron | null;
@@ -529,7 +535,7 @@ export interface Resumen {
 /** Ficha completa: con punto, o sin él y con el lugar hasta donde se conoce. */
 export type IncidenteDetalle =
   | (PropiedadesIncidente & { lon: number; lat: number })
-  | (PropiedadesSinUbicacion & { lon: null; lat: null });
+  | (PropiedadesSinUbicacion & { lon: null; lat: null; aproximado?: LugarAproximado | null });
 
 /**
  * Ataque de la capa de Ucrania reducido a una fila:

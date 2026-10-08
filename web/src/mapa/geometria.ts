@@ -69,9 +69,17 @@ export function circulo(lon: number, lat: number, radioKm: number): Polygon {
   return { type: "Polygon", coordinates: [anillo] };
 }
 
-/** Nombre del icono de un estado: el tipo no cambia el símbolo. */
-export function nombreIcono(estado: string): string {
-  return `incidente-${estado}`;
+/** Nombre del icono de un estado: el tipo no cambia el símbolo; el lugar aproximado, sí. */
+export function nombreIcono(estado: string, aproximado = false): string {
+  return aproximado ? `incidente-${estado}-aproximado` : `incidente-${estado}`;
+}
+
+/**
+ * Dónde se dibuja un incidente: su punto o, si la fuente solo nombra el país, la región o el
+ * mar, el centro aproximado de esa zona (datos/lugarAproximado.ts). null si no hay ninguno.
+ */
+export function puntoEnMapa(incidente: IncidenteResumen): { lon: number; lat: number } | null {
+  return incidente.punto ?? incidente.aproximado;
 }
 
 /** Los incidentes con punto, que son los únicos que se dibujan. */
@@ -97,6 +105,8 @@ export interface PropiedadesPila {
   n: number;
   estado: Estado;
   icono: string;
+  /** 1 si el lugar del representante es aproximado (el país, la región o el mar). */
+  aproximado: 0 | 1;
   /** 1 si el representante está confirmado o atribuido: se dibuja encima y late. */
   grave: 0 | 1;
   atribuido: 0 | 1;
@@ -125,16 +135,18 @@ export function pilas(
   incidentes: readonly IncidenteResumen[],
   opciones: { recientes: Periodo; novedades: ReadonlySet<string> },
 ): FeatureCollection<Point, PropiedadesPila> {
-  const porPunto = new Map<string, (IncidenteResumen & { punto: { lon: number; lat: number } })[]>();
-  for (const incidente of conPunto(incidentes)) {
-    const clave = `${incidente.punto.lon.toFixed(DECIMALES_PUNTO)},${incidente.punto.lat.toFixed(DECIMALES_PUNTO)}`;
-    const grupo = porPunto.get(clave) ?? [];
-    grupo.push(incidente);
+  const porPunto = new Map<string, { lon: number; lat: number; incidentes: IncidenteResumen[] }>();
+  for (const incidente of incidentes) {
+    const punto = puntoEnMapa(incidente);
+    if (punto === null) continue;
+    const clave = `${punto.lon.toFixed(DECIMALES_PUNTO)},${punto.lat.toFixed(DECIMALES_PUNTO)}`;
+    const grupo = porPunto.get(clave) ?? { lon: punto.lon, lat: punto.lat, incidentes: [] };
+    grupo.incidentes.push(incidente);
     porPunto.set(clave, grupo);
   }
   const features: Feature<Point, PropiedadesPila>[] = [];
   for (const grupo of porPunto.values()) {
-    const ordenados = grupo.slice().sort(ordenPorGravedad);
+    const ordenados = grupo.incidentes.slice().sort(ordenPorGravedad);
     const primero = ordenados[0];
     if (primero === undefined) continue;
     const cuenta = (estado: Estado) => ordenados.filter((i) => i.estado === estado).length;
@@ -143,13 +155,14 @@ export function pilas(
     );
     features.push({
       type: "Feature",
-      geometry: { type: "Point", coordinates: [primero.punto.lon, primero.punto.lat] },
+      geometry: { type: "Point", coordinates: [grupo.lon, grupo.lat] },
       properties: {
         id: primero.id,
         ids: ordenados.map((i) => i.id).join(","),
         n: ordenados.length,
         estado: primero.estado,
-        icono: nombreIcono(primero.estado),
+        icono: nombreIcono(primero.estado, primero.punto === null),
+        aproximado: primero.punto === null ? 1 : 0,
         grave: esGrave(primero.estado) ? 1 : 0,
         atribuido: primero.estado === "atribuido" ? 1 : 0,
         n_confirmados: cuenta("confirmado"),

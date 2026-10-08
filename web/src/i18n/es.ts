@@ -153,6 +153,8 @@ export const es: Textos = {
     nuevoYa: (estado) => `Nuevo, ya ${estado.toLowerCase()}`,
     paso: (estado) => `Pasa a ${estado.toLowerCase()}`,
     vacio: "Nada que mostrar con estos filtros.",
+    registrado: (hace) => `registrado ${hace}`,
+    ocurrio: (dia) => `ocurrió el ${dia}`,
   },
   relativo: (minutos, fecha) => {
     if (minutos < 1) return "ahora mismo";
@@ -374,6 +376,8 @@ export const es: Textos = {
       "explica. En el botón, un número naranja cuenta los cierres de aeropuerto en curso y uno " +
       "blanco, las novedades desde tu visita anterior: dentro, «Verlas» las recorre una a una " +
       "y «Descartar» las quita.",
+    aproximado:
+      "Aro hueco con un punto en el centro: lugar aproximado. La fuente solo nombra el país, la región o el mar, y el marcador está en el centro de esa zona, no en el sitio del suceso. Su color es el de su estado.",
     areas:
       "Cada incidente ocupa un área: el círculo es el radio en que se sabe que ocurrió.",
     lineas: "Una línea fina une los incidentes de un mismo episodio: varios objetivos en una noche.",
@@ -435,7 +439,19 @@ export const es: Textos = {
   },
   pila: { titulo: (n) => `${n} incidentes en este punto` },
   imprecisa: {
-    etiqueta: "ubicación imprecisa",
+    etiqueta: "lugar aproximado",
+    aproximado: (nivel) => `Lugar aproximado: ${nivel}`,
+    niveles: { pais: "país", region: "región", mar: "mar" },
+    deDonde: (nivel, zona) => {
+      switch (nivel) {
+        case "pais":
+          return `La fuente solo nombra el país. El marcador está en el centro de ${zona}, no en el sitio del suceso.`;
+        case "region":
+          return `La fuente nombra la región (${zona}), no un sitio que se pueda situar. El marcador está en el centro de la región.`;
+        case "mar":
+          return `La fuente sitúa el suceso en el mar (${zona}). El marcador está en el mar frente a la costa, no en el sitio exacto.`;
+      }
+    },
     nivel: {
       instalacion: "instalación sin situar",
       localidad: "localidad sin situar",
@@ -762,7 +778,10 @@ export const es: Textos = {
           {
             parrafo: [
               "Cada incidente se sitúa como un área, un punto con su radio, porque casi " +
-                "nunca se conoce la posición exacta. Cada dato conserva quién lo dice: de " +
+                "nunca se conoce la posición exacta. Si la fuente solo nombra el país, la región o " +
+                "el mar, el incidente se dibuja con un marcador propio de lugar aproximado (un aro " +
+                "hueco con un punto) en el centro de esa zona, y su ficha dice el nivel y de dónde " +
+                "sale. Cada dato conserva quién lo dice: de " +
                 "cada fuente se guarda el hecho, una frase breve de origen en su idioma y el " +
                 "enlace, nunca el texto completo.",
             ],
@@ -1692,7 +1711,7 @@ export const es: Textos = {
         "actualización.",
       incidentes: "Incidentes",
       ucrania: "Ataques de la capa de Ucrania",
-      sinUbicacion: "Incidentes con ubicación imprecisa",
+      sinUbicacion: "Incidentes con lugar aproximado (sin punto exacto)",
       version: (fecha) => `Versión del ${fecha}`,
       licencia: "Licencia",
       citaTitulo: "Cita recomendada",

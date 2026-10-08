@@ -3,6 +3,7 @@
 
 import { diaDeInstante } from "../tiempo/dias.ts";
 import { lucesDeAtaques, origenesDeAtaques } from "./guerraSatelite.ts";
+import { lugarAproximado } from "./lugarAproximado.ts";
 import { DRON_DE_LA_GUERRA } from "./vocabulario.ts";
 import type {
   Ataque,
@@ -90,6 +91,7 @@ export function resumirIncidente(feature: FeatureIncidente): IncidenteResumen {
     id: p.id,
     punto: { lon, lat, radio_km: p.lugar.radio_km },
     imprecisa: null,
+    aproximado: null,
     tipo: p.tipo,
     estado: p.estado.actual,
     presencia: p.presencia_dron ?? null,
@@ -112,6 +114,7 @@ export function resumirSinUbicacion(p: PropiedadesSinUbicacion): IncidenteResume
     id: p.id,
     punto: null,
     imprecisa: { nivel: p.lugar.nivel, region: p.lugar.region ?? null },
+    aproximado: lugarAproximado(p.lugar, p.titulo),
     tipo: p.tipo,
     estado: p.estado.actual,
     presencia: p.presencia_dron ?? null,
@@ -135,7 +138,7 @@ export function detalleIncidente(feature: FeatureIncidente): IncidenteDetalle {
 }
 
 export function detalleSinUbicacion(p: PropiedadesSinUbicacion): IncidenteDetalle {
-  return { ...p, lon: null, lat: null };
+  return { ...p, lon: null, lat: null, aproximado: lugarAproximado(p.lugar, p.titulo) };
 }
 
 /**

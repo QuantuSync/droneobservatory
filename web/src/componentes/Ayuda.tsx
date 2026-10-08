@@ -167,6 +167,13 @@ export function Ayuda({ t, abierta, onCerrar }: Props) {
           <p className="mt-2 text-secundario" data-leyenda-bandera="">
             {t.atribucion.bandera}
           </p>
+          <p className="mt-2 flex items-start gap-2 text-secundario" data-leyenda-aproximado="">
+            <span className="flex shrink-0 gap-0.5 pt-0.5">
+              <Simbolo estado="notificado" aproximado />
+              <Simbolo estado="confirmado" aproximado />
+            </span>
+            {a.aproximado}
+          </p>
         </section>
         <ul className="flex flex-col gap-2 text-secundario sm:col-span-2">
           {[a.periodo, a.ahora, a.areas, a.lineas, a.numeros, a.pila, a.pulsos, a.reciente, a.novedad, a.ucrania].map(

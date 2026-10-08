@@ -84,6 +84,13 @@ export const GROSOR_CONTORNO = 1.2;
 /** El desmentido no lleva relleno: solo contorno discontinuo. */
 export const TRAZO_DESMENTIDO: readonly [number, number] = [3, 2];
 
+/**
+ * Marcador de un incidente con lugar aproximado (la fuente solo nombra el país, la región o el
+ * mar): un aro hueco del color de su estado con un punto en el centro, sin relleno. Se distingue
+ * del círculo relleno (lugar conocido) y del gris discontinuo de «desmentido».
+ */
+export const MARCA_APROXIMADA = { radio: 6, grosor: 2, punto: 1.6 } as const;
+
 /** Opacidades del relleno de las regiones de Ucrania, de menos a más ataques. */
 export const ESCALA_UCRANIA: readonly number[] = [0.12, 0.27, 0.42, 0.57, 0.72];
 

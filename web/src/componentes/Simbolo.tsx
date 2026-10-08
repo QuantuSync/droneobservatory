@@ -8,6 +8,7 @@ import {
   COLOR_ESTADO,
   COLOR_FILO_ATRIBUIDO,
   GROSOR_CONTORNO,
+  MARCA_APROXIMADA,
   MARCA_ATRIBUIDO,
   PALETA,
   RADIO_BANDERA,
@@ -27,6 +28,8 @@ interface Props {
   /** Texto para el lector de pantalla; sin él, el símbolo es decorativo. */
   etiqueta?: string;
   className?: string;
+  /** Lugar aproximado: el aro hueco con un punto, como en el mapa. */
+  aproximado?: boolean;
 }
 
 /**
@@ -35,11 +38,29 @@ interface Props {
  * el marcador de los atribuidos (aro rojo con la bandera dentro). Es decorativo salvo que
  * lleve `etiqueta`: el estado (y el tipo) van siempre escritos al lado.
  */
-export function Simbolo({ estado, atribucion = null, etiqueta, className }: Props) {
+export function Simbolo({ estado, atribucion = null, etiqueta, className, aproximado = false }: Props) {
   if (estado === "atribuido") {
     return <MarcaAtribuido variante={varianteDe(atribucion)} etiqueta={etiqueta} className={className} />;
   }
   const color = COLOR_ESTADO[estado];
+  if (aproximado) {
+    const m = MARCA_APROXIMADA;
+    return (
+      <svg
+        viewBox={`0 0 ${LADO} ${LADO}`}
+        width={LADO}
+        height={LADO}
+        aria-hidden="true"
+        focusable="false"
+        className={className}
+        data-circulo={estado}
+        data-aproximado=""
+      >
+        <circle cx={CENTRO} cy={CENTRO} r={m.radio} fill="none" stroke={color} strokeWidth={m.grosor} />
+        <circle cx={CENTRO} cy={CENTRO} r={m.punto} fill={color} />
+      </svg>
+    );
+  }
   const desmentido = estado === "desmentido";
   return (
     <svg

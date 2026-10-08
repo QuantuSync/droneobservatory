@@ -2,7 +2,7 @@ import { useRef } from "react";
 import type { ReactNode } from "react";
 
 import type { EventoResumen, IncidenteResumen } from "../datos/tipos.ts";
-import { fecha as fechaCorta } from "../i18n/index.ts";
+import { fechaDia, fecha as fechaCorta } from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
 import type { Idioma } from "../sitio.ts";
 import { Simbolo } from "./Simbolo.tsx";
@@ -110,7 +110,12 @@ export function Feed({
                     data-id={evento.id}
                     onClick={() => onAbrir(evento.id)}
                   >
-                    <Simbolo estado={evento.estado} atribucion={incidente.atribucion} className="mt-0.5 shrink-0" />
+                    <Simbolo
+                      estado={evento.estado}
+                      atribucion={incidente.atribucion}
+                      aproximado={incidente.punto === null}
+                      className="mt-0.5 shrink-0"
+                    />
                     <span className="min-w-0 flex-1">
                       <span className="flex items-baseline gap-2 text-xs text-secundario">
                         <span className={novedades.has(evento.id) ? "text-acento" : ""}>
@@ -121,12 +126,15 @@ export function Feed({
                             : t.feed.paso(t.estado[evento.estado])}
                         </span>
                         {ahora !== null && (
-                          <time dateTime={evento.fecha} className="ml-auto shrink-0">
-                            {haceCuanto(t, evento.fecha, ahora)}
+                          <time dateTime={evento.fecha} className="ml-auto shrink-0" data-registrado="">
+                            {t.feed.registrado(haceCuanto(t, evento.fecha, ahora))}
                           </time>
                         )}
                       </span>
                       <span className="block leading-snug">{incidente.titulo[idioma]}</span>
+                      <span className="block text-xs text-secundario" data-ocurrio="">
+                        {t.feed.ocurrio(fechaDia(incidente.dia))}
+                      </span>
                     </span>
                   </button>
                 </li>

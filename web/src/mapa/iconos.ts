@@ -16,6 +16,7 @@ import {
   COLOR_ESTADO,
   COLOR_FILO_ATRIBUIDO,
   GROSOR_CONTORNO,
+  MARCA_APROXIMADA,
   MARCA_ATRIBUIDO,
   PALETA,
   RADIO_BANDERA,
@@ -53,6 +54,34 @@ function dibujar(estado: Exclude<Estado, "atribuido">): ImageData | null {
   }
   contexto.lineWidth = GROSOR_CONTORNO;
   contexto.stroke();
+  return contexto.getImageData(0, 0, lienzo.width, lienzo.height);
+}
+
+/**
+ * Un incidente con lugar aproximado: aro hueco del color de su estado, con un filo del color del
+ * fondo por dentro y por fuera para leerse sobre cualquier cosa, y un punto en el centro.
+ */
+function dibujarAproximado(estado: Exclude<Estado, "atribuido">): ImageData | null {
+  const lienzo = document.createElement("canvas");
+  lienzo.width = LADO * DENSIDAD;
+  lienzo.height = LADO * DENSIDAD;
+  const contexto = lienzo.getContext("2d");
+  if (contexto === null) return null;
+  contexto.scale(DENSIDAD, DENSIDAD);
+  const m = MARCA_APROXIMADA;
+  const color = COLOR_ESTADO[estado];
+  contexto.beginPath();
+  contexto.arc(CENTRO, CENTRO, m.radio, 0, 2 * Math.PI);
+  contexto.strokeStyle = PALETA.fondo;
+  contexto.lineWidth = m.grosor + 2;
+  contexto.stroke();
+  contexto.strokeStyle = color;
+  contexto.lineWidth = m.grosor;
+  contexto.stroke();
+  contexto.beginPath();
+  contexto.arc(CENTRO, CENTRO, m.punto, 0, 2 * Math.PI);
+  contexto.fillStyle = color;
+  contexto.fill();
   return contexto.getImageData(0, 0, lienzo.width, lienzo.height);
 }
 
@@ -321,9 +350,15 @@ export function registrarIconos(mapa: Mapa): void {
   for (const estado of ESTADOS) {
     if (estado === "atribuido") continue;
     const nombre = nombreIcono(estado);
-    if (mapa.hasImage(nombre)) continue;
-    const imagen = dibujar(estado);
-    if (imagen !== null) mapa.addImage(nombre, imagen, { pixelRatio: DENSIDAD });
+    if (!mapa.hasImage(nombre)) {
+      const imagen = dibujar(estado);
+      if (imagen !== null) mapa.addImage(nombre, imagen, { pixelRatio: DENSIDAD });
+    }
+    const aproximado = nombreIcono(estado, true);
+    if (!mapa.hasImage(aproximado)) {
+      const imagen = dibujarAproximado(estado);
+      if (imagen !== null) mapa.addImage(aproximado, imagen, { pixelRatio: DENSIDAD });
+    }
   }
   for (const estado of ESTADOS_AVISO) {
     const nombre = nombreIconoAviso(estado);

@@ -37,6 +37,7 @@ import {
   rutaDeFicha,
   rutaDeIdioma,
 } from "../sitio.ts";
+import { textoAproximado } from "../datos/lugarAproximado.ts";
 import type { Idioma } from "../sitio.ts";
 import { fechaDeDia } from "../tiempo/dias.ts";
 import { e, html, jsonLd } from "./html.ts";
@@ -457,7 +458,12 @@ function incidente(d: IncidenteDetalle, idioma: Idioma): PaginaTexto {
         lugar,
         d.lon !== null
           ? e("span", { class: "texto-nota" }, t.ficha.radio(numero(d.lugar.radio_km, idioma)))
-          : e("span", { class: "texto-nota" }, t.imprecisa.etiqueta, " · ", t.imprecisa.nivel[d.lugar.nivel]),
+          : d.aproximado !== undefined && d.aproximado !== null
+            ? html(
+                e("span", { class: "texto-nota", "data-lugar-aproximado": d.aproximado.nivel }, textoAproximado(t, idioma, d.aproximado, d.lugar.pais).nivel),
+                e("span", { class: "texto-nota" }, textoAproximado(t, idioma, d.aproximado, d.lugar.pais).deDonde),
+              )
+            : e("span", { class: "texto-nota" }, t.imprecisa.etiqueta, " · ", t.imprecisa.nivel[d.lugar.nivel]),
       ),
       d.zona !== undefined &&
         filaDatos(
@@ -988,7 +994,7 @@ function ayuda(datos: DatosPaginas, idioma: Idioma): PaginaTexto {
   const t = textos(idioma);
   const tp = textosPagina(idioma);
   const a = t.ayuda;
-  const parrafos = [a.colores, a.periodo, a.ahora, a.areas, a.lineas, a.numeros, a.pila, a.pulsos, a.reciente, a.novedad, a.ucrania, a.rusia, a.impactos, a.foco, a.directo];
+  const parrafos = [a.colores, a.aproximado, a.periodo, a.ahora, a.areas, a.lineas, a.numeros, a.pila, a.pulsos, a.reciente, a.novedad, a.ucrania, a.rusia, a.impactos, a.foco, a.directo];
   return {
     idioma,
     rutas: RUTAS.ayuda,
