@@ -2196,6 +2196,7 @@ export function App() {
 
       <Metodologia
         t={t}
+        idioma={idioma}
         abierta={metodologia}
         actualizado={actualizado}
         sinUbicacion={metaInicial.sinUbicacion}

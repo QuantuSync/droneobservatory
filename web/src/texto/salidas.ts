@@ -4,11 +4,12 @@
 import { escaparHtml } from "../cabecera.ts";
 import { cifras } from "../datos/derivar.ts";
 import type { Resumen } from "../datos/tipos.ts";
-import { fechaHora } from "../i18n/index.ts";
+import { fechaHora, textos } from "../i18n/index.ts";
 import { DESCARGAS, IDIOMAS, LICENCIA_DATOS, LICENCIA_DATOS_URL, NOMBRE, ORIGEN, rutaDeFicha, rutaDeIdioma } from "../sitio.ts";
 import { e, html } from "./html.ts";
 import { direccionCompleta, RUTAS } from "./paginas.ts";
 import type { PaginaTexto } from "./paginas.ts";
+import { PAGINAS_SERVICIO, RUTAS_SERVICIO, textoServicio } from "./servicio.ts";
 import { textosPagina } from "./textos.ts";
 
 /** sitemap.xml con todas las páginas, su versión en el otro idioma y su última modificación. */
@@ -88,6 +89,9 @@ export function llmsTxt(resumen: Resumen): string {
       `- [${tp.prevision.titulo}](${direccionCompleta(RUTAS.prevision[idioma])})`,
       `- [${tp.metodologia.titulo}](${direccionCompleta(RUTAS.metodologia[idioma])})`,
       `- [${tp.ayuda.titulo}](${direccionCompleta(RUTAS.ayuda[idioma])})`,
+      ...PAGINAS_SERVICIO.map(
+        (pagina) => `- [${textoServicio(pagina, idioma).titulo}](${direccionCompleta(RUTAS_SERVICIO[pagina][idioma])})`,
+      ),
     ].join("\n");
   };
   const estados = (idioma: "es" | "en") => {
@@ -122,11 +126,13 @@ export function llmsTxt(resumen: Resumen): string {
     "",
     "## Open data",
     "",
-    `Licence: ${LICENCIA_DATOS} (${LICENCIA_DATOS_URL}). Rebuilt on every data update.`,
+    `Licence: ${LICENCIA_DATOS} (${LICENCIA_DATOS_URL}) for the observatory's compilation (incidents, statuses, classifications and figures). Rebuilt on every data update. Quoted sentences remain their authors' and are used as quotations, with their source; the measured air traffic block (trafico_aereo) derives from adsb.lol and is offered under ODbL 1.0.`,
+    "",
+    `How to cite: ${textos("en").metodologia.descargas.cita(fecha)}`,
     "",
     `- [Incidents, GeoJSON](${ORIGEN}${DESCARGAS.incidentesGeojson})`,
     `- [Incidents, CSV](${ORIGEN}${DESCARGAS.incidentesCsv})`,
-    `- [Incidents with imprecise location, JSON](${ORIGEN}${DESCARGAS.sinUbicacionJson})`,
+    `- [Incidents with an approximate location (no exact point), JSON](${ORIGEN}${DESCARGAS.sinUbicacionJson})`,
     `- [Ukraine layer attacks, JSON](${ORIGEN}${DESCARGAS.ucraniaJson})`,
     `- [Ukraine layer attacks, CSV](${ORIGEN}${DESCARGAS.ucraniaCsv})`,
     `- [Sitemap](${ORIGEN}/sitemap.xml)`,
@@ -149,7 +155,9 @@ export function llmsTxt(resumen: Resumen): string {
     "",
     enlaces("es"),
     "",
-    `Datos abiertos con licencia ${LICENCIA_DATOS}: ${ORIGEN}${RUTAS.metodologia.es}#datos-abiertos`,
+    `Datos abiertos con licencia ${LICENCIA_DATOS} (${LICENCIA_DATOS_URL}) para la compilación del observatorio (incidentes, estados, clasificaciones y cifras): ${ORIGEN}${RUTAS.metodologia.es}#datos-abiertos. Las frases citadas siguen siendo de sus autores; el tráfico aéreo medido (trafico_aereo) se ofrece con ODbL 1.0.`,
+    "",
+    `Cómo citar: ${textos("es").metodologia.descargas.cita(fecha)}`,
     "",
   ].join("\n");
 }

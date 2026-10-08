@@ -9,6 +9,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { csvAtaques, csvIncidentes } from "../src/datos/csv.ts";
+import { conLicencia } from "../src/datos/licencia.ts";
 import {
   centrosDeRegiones,
   detalleIncidente,
@@ -80,24 +81,23 @@ async function principal(): Promise<void> {
 
   await rm(DATOS, { recursive: true, force: true });
 
-  // Descargas: los ficheros publicados tal cual y sus versiones CSV.
-  await escribir(join(DATOS, "incidentes.geojson"), await readFile(rutaIncidentes, "utf-8"));
-  await escribir(join(DATOS, "ucrania.json"), await readFile(rutaUcrania, "utf-8"));
+  const resumen = resumir(coleccion, ucrania, sinUbicacion);
+  // Descargas: los ficheros publicados, con su licencia como primer miembro (datos/licencia.ts),
+  // y sus versiones CSV, cuya licencia va en la cabecera HTTP de /datos (vercel.json).
+  const publicado = async (ruta: string) => conLicencia(await readFile(ruta, "utf-8"), resumen.actualizado);
+  await escribir(join(DATOS, "incidentes.geojson"), await publicado(rutaIncidentes));
+  await escribir(join(DATOS, "ucrania.json"), await publicado(rutaUcrania));
   await escribir(join(DATOS, "incidentes.csv"), csvIncidentes(coleccion));
   await escribir(join(DATOS, "ucrania.csv"), csvAtaques(ucrania));
 
   if (sinUbicacion !== null) {
-    await escribir(
-      join(DATOS, "incidentes_sin_ubicacion.json"),
-      await readFile(rutaSinUbicacion, "utf-8"),
-    );
+    await escribir(join(DATOS, "incidentes_sin_ubicacion.json"), await publicado(rutaSinUbicacion));
     for (const incidente of sinUbicacion.incidentes) {
       const detalle = JSON.stringify(detalleSinUbicacion(incidente));
       await escribir(join(DATOS, "incidentes", `${incidente.id}.json`), detalle);
     }
   }
 
-  const resumen = resumir(coleccion, ucrania, sinUbicacion);
   await escribir(join(DATOS, "resumen.json"), JSON.stringify(resumen));
   // La previsión (proceso/prevision), validada: se sirve tal cual y la usan sus páginas de texto.
   const rutaPrevision = join(PUBLICACION, "prevision.json");

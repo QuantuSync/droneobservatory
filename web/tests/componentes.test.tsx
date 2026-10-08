@@ -426,6 +426,7 @@ describe("metodología", () => {
     const { container } = render(
       <Metodologia
         t={es}
+        idioma="es"
         abierta
         actualizado="2026-09-30T12:42Z"
         sinUbicacion={false}
@@ -450,7 +451,7 @@ describe("metodología", () => {
 
   it("todos sus enlaces externos se abren aparte y sin referencia", () => {
     const { container } = render(
-      <Metodologia t={en} abierta actualizado={null} sinUbicacion onCerrar={() => undefined} />,
+      <Metodologia t={en} idioma="en" abierta actualizado={null} sinUbicacion onCerrar={() => undefined} />,
     );
     const externos = [...container.querySelectorAll('a[href^="http"]')];
     expect(externos.length).toBeGreaterThan(5);
