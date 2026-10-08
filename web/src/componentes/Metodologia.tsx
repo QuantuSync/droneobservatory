@@ -6,7 +6,7 @@ import type { Bloque, Marca, Trozo } from "../i18n/tipos.ts";
 import { DESCARGAS, LICENCIA_DATOS, LICENCIA_DATOS_URL, NOMBRE } from "../sitio.ts";
 import type { Idioma } from "../sitio.ts";
 import { seccionesDeMetodologia } from "../rutasEnLaWeb.ts";
-import { PAGINAS_SERVICIO, RUTAS_SERVICIO, textoServicio } from "../texto/servicio.ts";
+import { enlacesSobre } from "../texto/servicio.ts";
 import { EnlaceExterno } from "./EnlaceExterno.tsx";
 import { Simbolo } from "./Simbolo.tsx";
 
@@ -155,10 +155,10 @@ function Sobre({ t, idioma }: { t: Textos; idioma: Idioma }) {
         {t.metodologia.sobre}
       </h3>
       <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
-        {PAGINAS_SERVICIO.map((pagina) => (
-          <li key={pagina}>
-            <a className="inline-flex min-h-11 items-center underline underline-offset-2 esc:min-h-7" href={RUTAS_SERVICIO[pagina][idioma]}>
-              {textoServicio(pagina, idioma).enlace}
+        {enlacesSobre(idioma).map((s) => (
+          <li key={s.ruta}>
+            <a className="inline-flex min-h-11 items-center underline underline-offset-2 esc:min-h-7" href={s.ruta}>
+              {s.texto}
             </a>
           </li>
         ))}

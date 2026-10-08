@@ -8,6 +8,7 @@ import { access, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { ultimasCorrecciones } from "../src/datos/correcciones.ts";
 import { csvAtaques, csvIncidentes } from "../src/datos/csv.ts";
 import { conLicencia } from "../src/datos/licencia.ts";
 import {
@@ -25,6 +26,7 @@ import type { PublicacionSinUbicacion } from "../src/datos/tipos.ts";
 import {
   validarColeccion,
   validarPublicacionUcrania,
+  validarCorrecciones,
   validarPrevision,
   validarSinUbicacion,
 } from "../src/datos/validar.ts";
@@ -79,6 +81,18 @@ async function principal(): Promise<void> {
       )
     : null;
 
+  // El registro de correcciones (exportacion/correcciones.py), que puede no existir todavía: de
+  // él salen su página de texto y la línea «Corregido el…» de cada ficha.
+  const rutaCorrecciones = join(PUBLICACION, "correcciones.json");
+  const correcciones = (await existe(rutaCorrecciones))
+    ? exigir("correcciones.json", validarCorrecciones(await leerJson(rutaCorrecciones)))
+    : null;
+  const corregidos = correcciones === null ? new Map<string, string>() : ultimasCorrecciones(correcciones);
+  const conCorreccion = <T extends object>(detalle: T, id: string): T => {
+    const fecha = corregidos.get(id);
+    return fecha === undefined ? detalle : { ...detalle, corregido: fecha };
+  };
+
   await rm(DATOS, { recursive: true, force: true });
 
   const resumen = resumir(coleccion, ucrania, sinUbicacion);
@@ -93,12 +107,15 @@ async function principal(): Promise<void> {
   if (sinUbicacion !== null) {
     await escribir(join(DATOS, "incidentes_sin_ubicacion.json"), await publicado(rutaSinUbicacion));
     for (const incidente of sinUbicacion.incidentes) {
-      const detalle = JSON.stringify(detalleSinUbicacion(incidente));
+      const detalle = JSON.stringify(conCorreccion(detalleSinUbicacion(incidente), incidente.id));
       await escribir(join(DATOS, "incidentes", `${incidente.id}.json`), detalle);
     }
   }
 
   await escribir(join(DATOS, "resumen.json"), JSON.stringify(resumen));
+  if (correcciones !== null) {
+    await escribir(join(DATOS, "correcciones.json"), await publicado(rutaCorrecciones));
+  }
   // La previsión (proceso/prevision), validada: se sirve tal cual y la usan sus páginas de texto.
   const rutaPrevision = join(PUBLICACION, "prevision.json");
   if (await existe(rutaPrevision)) {
@@ -141,7 +158,7 @@ async function principal(): Promise<void> {
   });
   await escribir(join(DATOS, "ucrania-resumen.json"), JSON.stringify(resumenUcrania));
   for (const feature of coleccion.features) {
-    const detalle = JSON.stringify(detalleIncidente(feature));
+    const detalle = JSON.stringify(conCorreccion(detalleIncidente(feature), feature.id));
     await escribir(join(DATOS, "incidentes", `${feature.id}.json`), detalle);
   }
   for (const ataque of ucrania.ataques) {

@@ -439,6 +439,8 @@ export interface Textos {
     historial: string;
     fuenteNoPublica: string;
     actualizada: string;
+    /** Enlace a su entrada del registro de correcciones. */
+    corregidoEl: (dia: string) => string;
   };
   ataque: {
     etiqueta: string;

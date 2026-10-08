@@ -44,6 +44,7 @@ def publicados(carpeta: Path, ucrania: str = '{"ataques": []}') -> Path:
     (carpeta / "incidentes.geojson").write_text('{"features": []}', encoding="utf-8")
     (carpeta / "ucrania.json").write_text(ucrania, encoding="utf-8")
     (carpeta / "prevision.json").write_text("{}", encoding="utf-8")
+    (carpeta / "correcciones.json").write_text("{}", encoding="utf-8")
     return carpeta
 
 
@@ -54,7 +55,7 @@ def test_sube_lo_cambiado_el_manifiesto_al_final_y_la_instantanea_del_dia(tmp_pa
         carpeta, AHORA, "id", "s", {}, almacen_publico.cargar(), almacen
     )
     assert correcto and cambiado
-    assert list(almacen.objetos)[3] == "publicacion/manifiesto.json"
+    assert list(almacen.objetos)[4] == "publicacion/manifiesto.json"
     cuerpo, kw = almacen.objetos["publicacion/ucrania.json"]
     assert gzip.decompress(cuerpo) == b'{"ataques": []}'
     assert kw["metadatos"]["x-amz-meta-sha256"] == hashlib.sha256(b'{"ataques": []}').hexdigest()

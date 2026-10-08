@@ -636,6 +636,7 @@ export const es: Textos = {
     historial: "Historial de estados",
     fuenteNoPublica: "fuente no pública",
     actualizada: "Ficha actualizada",
+    corregidoEl: (dia) => `Corregido el ${dia}`,
   },
   ataque: {
     etiqueta: "Ataque · capa de Ucrania",

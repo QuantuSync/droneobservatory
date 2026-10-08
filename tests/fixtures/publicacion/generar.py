@@ -16,6 +16,7 @@ AQUI = Path(__file__).resolve().parent
 INCIDENTES_CADA = 8
 SIN_UBICACION_CADA = 8
 DIAS_UCRANIA = 60
+CORRECCIONES = 20
 
 
 # Lo que el gancho previo al push del repositorio no admite en ficheros versionados, aunque sea
@@ -76,6 +77,21 @@ def principal(origen: Path) -> None:
 
     prevision = json.loads((origen / "prevision.json").read_text(encoding="utf-8"))
     escribir("prevision.json", prevision)
+    correcciones(origen, ids)
+
+
+def correcciones(origen: Path, ids: set[str]) -> None:
+    """Las correcciones de los incidentes de ejemplo y unas pocas más (retiradas y uniones)."""
+    registro = json.loads((origen / "correcciones.json").read_text(encoding="utf-8"))
+    entradas = [e for e in registro["correcciones"] if admitido(e)]
+    propias = [e for e in entradas if e["enlace"] in ids]
+    otras = [e for e in entradas if e["enlace"] not in ids]
+    registro["correcciones"] = sorted(
+        propias[:CORRECCIONES] + otras[:CORRECCIONES],
+        key=lambda e: (e["fecha"], e["incidente"]),
+        reverse=True,
+    )
+    escribir("correcciones.json", registro)
 
 
 if __name__ == "__main__":
