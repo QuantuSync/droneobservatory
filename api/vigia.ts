@@ -72,6 +72,11 @@ export function diagnosticar(
   return { problema: motivos.length > 0, motivos };
 }
 
+/** La llamada de los minutos 0 a 9 de cada hora (la tarea programada pasa cada 10 minutos). */
+export function horaria(ahora: Date): boolean {
+  return ahora.getUTCMinutes() < 10;
+}
+
 async function leer(objeto: string, base: string = ALMACEN): Promise<unknown> {
   try {
     const respuesta = await fetch(`${base}/${objeto}`, {
@@ -97,8 +102,12 @@ export async function GET(peticion: Request): Promise<Response> {
   const diagnostico = diagnosticar(salud, directo, Date.now(), web);
   // Una sola línea en el registro con el diagnóstico y lo que pasó al lanzar (nunca el token).
   const token = (process.env.EODI_VIGIA_TOKEN ?? "").trim();
-  let lanzado: string = diagnostico.problema ? "sin token" : "no hace falta";
-  if (diagnostico.problema && token.length > 0) {
+  // Con un problema, siempre; sin él, una vez por hora (la llamada de los minutos 0 a 9), para que
+  // el vigía cierre las incidencias ya arregladas: GitHub se salta casi todas sus ejecuciones
+  // programadas.
+  const lanzar = diagnostico.problema || horaria(new Date());
+  let lanzado: string = lanzar ? "sin token" : "no hace falta";
+  if (lanzar && token.length > 0) {
     try {
       const respuesta = await fetch(
         `https://api.github.com/repos/${REPOSITORIO}/actions/workflows/${WORKFLOW}/dispatches`,

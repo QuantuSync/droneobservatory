@@ -4,7 +4,7 @@ import { join } from "node:path";
 
 import { describe, expect, it } from "vitest";
 
-import { ALMACEN, diagnosticar, GET } from "../../api/vigia.ts";
+import { ALMACEN, diagnosticar, GET, horaria } from "../../api/vigia.ts";
 
 const AHORA = Date.parse("2026-10-07T18:00:00Z");
 const hace = (min: number) => new Date(AHORA - min * 60_000).toISOString();
@@ -37,6 +37,11 @@ describe("disparador de la vigilancia", () => {
     expect(diagnosticar(salud, { generado: hace(1) }, AHORA, { actualizado: hace(140) }).motivos).toEqual([
       "la web no se actualiza (sus datos van más de 100 minutos por detrás de la última publicación)",
     ]);
+  });
+
+  it("sin problema lanza el vigía una vez por hora, para que cierre las incidencias", () => {
+    expect(horaria(new Date("2026-10-08T07:00:50Z"))).toBe(true);
+    expect(horaria(new Date("2026-10-08T07:10:50Z"))).toBe(false);
   });
 
   it("sin el secreto de la tarea programada no hace nada", async () => {
