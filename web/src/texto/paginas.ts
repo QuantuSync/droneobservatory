@@ -38,6 +38,7 @@ import {
   rutaDeIdioma,
 } from "../sitio.ts";
 import { textoAproximado } from "../datos/lugarAproximado.ts";
+import { nombreDeLugar } from "../i18n/nombresLugar.ts";
 import type { Idioma } from "../sitio.ts";
 import { fechaDeDia } from "../tiempo/dias.ts";
 import { e, html, jsonLd } from "./html.ts";
@@ -217,14 +218,16 @@ export function filaTipoDron(t: Textos, d: IncidenteDetalle): Html | false {
 /** El lugar de un incidente en una línea: localidad, región si no hay punto, país. */
 function lugarEscrito(d: IncidenteDetalle, idioma: Idioma): string {
   const partes: string[] = [];
-  if (d.lugar.localidad !== undefined) partes.push(d.lugar.localidad);
-  if (d.lon === null && d.lugar.region !== undefined) partes.push(d.lugar.region);
+  const localidad = d.lugar.localidad === undefined ? null : nombreDeLugar(d.lugar.localidad, idioma);
+  const regionEscrita = d.lon === null && d.lugar.region !== undefined ? nombreDeLugar(d.lugar.region, idioma) : null;
+  if (localidad !== null) partes.push(localidad);
+  if (regionEscrita !== null) partes.push(regionEscrita);
   partes.push(pais(d.lugar.pais, idioma));
   return partes.join(", ");
 }
 
 function lugarResumido(i: IncidenteResumen, idioma: Idioma): string {
-  return [i.objetivo, pais(i.pais, idioma)].filter((p): p is string => p !== null).join(", ");
+  return [i.objetivo === null ? null : nombreDeLugar(i.objetivo, idioma), pais(i.pais, idioma)].filter((p): p is string => p !== null).join(", ");
 }
 
 /** Una entrada de lista: fecha, titular enlazado, estado y lugar. */
@@ -485,7 +488,7 @@ function incidente(d: IncidenteDetalle, idioma: Idioma): PaginaTexto {
           e("span", { class: "texto-nota" }, t.zona.motivo(d.zona.motivo, d.zona.distancia_km ?? null)),
         ),
       d.objetivo !== undefined &&
-        filaDatos(tp.incidente.objetivo, d.objetivo.nombre ?? "", d.objetivo.nombre !== undefined && " · ", t.categoria[d.objetivo.categoria], d.objetivo.oaci !== undefined && html(" · ", e("span", { class: "mono" }, d.objetivo.oaci))),
+        filaDatos(tp.incidente.objetivo, (d.objetivo.nombre === undefined ? null : nombreDeLugar(d.objetivo.nombre, idioma)) ?? "", d.objetivo.nombre !== undefined && nombreDeLugar(d.objetivo.nombre, idioma) !== null && " · ", t.categoria[d.objetivo.categoria], d.objetivo.oaci !== undefined && html(" · ", e("span", { class: "mono" }, d.objetivo.oaci))),
       fuentePunto !== undefined &&
         filaDatos(t.ficha.lugarSegun, e("span", { "data-lugar-segun": "" }, autoridadEscrita(fuentePunto.medio, idioma)), citaConFuente(t, idioma, fuentePunto)),
       otros.length > 0 &&
@@ -496,14 +499,14 @@ function incidente(d: IncidenteDetalle, idioma: Idioma): PaginaTexto {
             { "data-otros-lugares": "" },
             otros.map((otro) => {
               const fuente = otro.fuente === undefined ? undefined : porFuente.get(otro.fuente);
-              return e("li", null, otro.nombre, fuente !== undefined && citaConFuente(t, idioma, fuente));
+              return e("li", null, nombreDeLugar(otro.nombre, idioma) ?? otro.nombre, fuente !== undefined && citaConFuente(t, idioma, fuente));
             }),
           ),
         ),
       (d.lugar.historial ?? []).map((cambio) =>
         filaDatos(
           t.ficha.puntoAnterior,
-          e("span", { "data-punto-anterior": "" }, cambio.anterior.localidad ?? ""),
+          e("span", { "data-punto-anterior": "" }, cambio.anterior.localidad === undefined ? "" : (nombreDeLugar(cambio.anterior.localidad, idioma) ?? "")),
           " · ",
           e("span", { class: "mono" }, instante(cambio.fecha)),
           e("span", { class: "texto-nota" }, cambio.motivo[idioma]),

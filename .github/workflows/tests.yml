@@ -137,7 +137,7 @@ jobs:
         working-directory: web
         run: |
           node scripts/datos.ts
-          npx vitest run tests/datos.test.ts tests/jornadas.test.ts tests/prevision.test.tsx tests/aproximados.test.ts
+          npx vitest run tests/datos.test.ts tests/jornadas.test.ts tests/prevision.test.tsx tests/aproximados.test.ts tests/nombresLugar.test.ts
 
   # La recogida la lanza cada hora un servidor propio, que al final de cada una publica
   # estado.json en el almacén público. Este trabajo señala en su resumen si la última
