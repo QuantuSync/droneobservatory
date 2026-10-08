@@ -44,6 +44,13 @@ describe("decisión de omitir el build", () => {
     expect(decidir("aad9162", git({ "cat-file": 0, "merge-base": 1, diff: 0 }))).toBe(OMITIR);
   });
 
+  it("con los datos en el almacén, producción se construye siempre (el gancho de la recogida)", () => {
+    const sinCambios = git({ "cat-file": 0, "merge-base": 1, diff: 0 });
+    expect(decidir("aad9162", sinCambios, { destino: "production", rama: "main", datosDelAlmacen: true })).toBe(CONSTRUIR);
+    expect(decidir("aad9162", sinCambios, { destino: "preview", rama: "x", datosDelAlmacen: true })).toBe(OMITIR);
+    expect(decidir("aad9162", sinCambios, { destino: "production", rama: "main", datosDelAlmacen: false })).toBe(OMITIR);
+  });
+
   it("cualquier otro error construye", () => {
     expect(decidir("aad9162", git({ "cat-file": 0, diff: 128 }))).toBe(CONSTRUIR);
     expect(decidir("aad9162", git({ "cat-file": null }))).toBe(CONSTRUIR);

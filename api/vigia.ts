@@ -23,6 +23,13 @@ export const WORKFLOW = "vigia-recogida.yml";
 export const MAX_SIN_SALUD_MS = 20 * 60_000;
 /** directo.json se sube cada minuto: media hora sin él es que la detección se ha parado. */
 export const MAX_SIN_DIRECTO_MS = 30 * 60_000;
+/**
+ * La web se reconstruye tras cada publicación. Sus datos llevan la hora de inicio de la recogida
+ * (unos 16 minutos antes de publicar): más de 100 minutos por detrás de la última publicación son
+ * al menos dos reconstrucciones perdidas.
+ */
+export const MAX_WEB_ATRASADA_MS = 100 * 60_000;
+export const WEB = "https://droneobservatory.eu";
 
 export interface Diagnostico {
   problema: boolean;
@@ -36,7 +43,12 @@ function instante(valor: unknown): number | null {
 }
 
 /** Si hay que avisar, con lo que publica el servidor (null: el fichero no se pudo leer). */
-export function diagnosticar(salud: unknown, directo: unknown, ahora: number): Diagnostico {
+export function diagnosticar(
+  salud: unknown,
+  directo: unknown,
+  ahora: number,
+  web: unknown = undefined,
+): Diagnostico {
   const motivos: string[] = [];
   const s = (salud ?? null) as { generado?: unknown; problemas?: { id?: unknown }[] } | null;
   const generado = instante(s?.generado);
@@ -44,6 +56,13 @@ export function diagnosticar(salud: unknown, directo: unknown, ahora: number): D
     motivos.push("el servidor no da señales (salud.json ausente o con más de 20 minutos)");
   } else {
     for (const p of s.problemas ?? []) motivos.push(`problema: ${String(p.id)}`);
+  }
+  const publicada = instante(
+    (s as { recogida?: { ultima_publicacion?: unknown } } | null)?.recogida?.ultima_publicacion,
+  );
+  const enLaWeb = instante((web as { actualizado?: unknown } | null | undefined)?.actualizado);
+  if (web !== undefined && publicada !== null && (enLaWeb === null || publicada - enLaWeb > MAX_WEB_ATRASADA_MS)) {
+    motivos.push("la web no se actualiza (sus datos van más de 100 minutos por detrás de la última publicación)");
   }
   const d = (directo ?? null) as { generado?: unknown } | null;
   const ultimo = instante(d?.generado);
@@ -53,9 +72,9 @@ export function diagnosticar(salud: unknown, directo: unknown, ahora: number): D
   return { problema: motivos.length > 0, motivos };
 }
 
-async function leer(objeto: string): Promise<unknown> {
+async function leer(objeto: string, base: string = ALMACEN): Promise<unknown> {
   try {
-    const respuesta = await fetch(`${ALMACEN}/${objeto}`, {
+    const respuesta = await fetch(`${base}/${objeto}`, {
       headers: { "Cache-Control": "no-cache" },
       signal: AbortSignal.timeout(15_000),
     });
@@ -70,8 +89,12 @@ export async function GET(peticion: Request): Promise<Response> {
   if (secreto === undefined || peticion.headers.get("authorization") !== `Bearer ${secreto}`) {
     return new Response("no", { status: 401 });
   }
-  const [salud, directo] = await Promise.all([leer("salud.json"), leer("directo.json")]);
-  const diagnostico = diagnosticar(salud, directo, Date.now());
+  const [salud, directo, web] = await Promise.all([
+    leer("salud.json"),
+    leer("directo.json"),
+    leer("datos/resumen.json", WEB),
+  ]);
+  const diagnostico = diagnosticar(salud, directo, Date.now(), web);
   // Una sola línea en el registro con el diagnóstico y lo que pasó al lanzar (nunca el token).
   const token = (process.env.EODI_VIGIA_TOKEN ?? "").trim();
   let lanzado: string = diagnostico.problema ? "sin token" : "no hace falta";
