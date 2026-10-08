@@ -31,7 +31,7 @@ en [droneobservatory.eu](https://droneobservatory.eu), en español e inglés.
 | `almacen/` | Base de datos SQLite con historial, cifrado con age y rama `estado` del repositorio de datos |
 | `exportacion/` | `incidentes.geojson`, `incidentes_sin_ubicacion.json` y `ucrania.json` para la web, cada uno con su lista cerrada de campos; y la exportación semanal interna y cifrada para AEGIS, con el origen de cada dato y el nivel de detalle de cada incidente ([`docs/informe_exportacion_aegis.md`](docs/informe_exportacion_aegis.md)) |
 | `recogida/` | Descarga educada, caché, fuentes de partes (Fuerza Aérea y Ministerio de Defensa ruso), GDELT, anomalías térmicas de NASA FIRMS, tráfico aéreo de adsb.lol, detección en directo de cierres de aeropuerto con las posiciones en tiempo real y mapa diario de interferencia GPS ([`docs/informe_europa_directo.md`](docs/informe_europa_directo.md)), meteorología de Open-Meteo y METAR, ejecución horaria, histórico y auditoría de cobertura |
-| `publicacion/` | Ficheros públicos generados: `ucrania.json`, `incidentes.geojson` (incidentes con punto, para el mapa) `incidentes_sin_ubicacion.json` (incidentes cuyo lugar solo se sabe a nivel de país o de región) y `prevision.json` (previsión y tendencias, con su historial de aciertos y el registro de las previsiones hechas en vivo; `proceso/prevision`, esquema en `esquema/prevision/`) |
+| `publicacion/` | Solo una nota: desde el 8 de octubre de 2026 los ficheros públicos (`ucrania.json`, `incidentes.geojson`, `incidentes_sin_ubicacion.json` y `prevision.json`) ya no están en el repositorio sino en el almacén público, y se descargan de la web ([`publicacion/LEEME.md`](publicacion/LEEME.md)) |
 | `web/` | Web pública de una sola pantalla: mapa, fichas, línea de tiempo, metodología y datos abiertos ([`web/README.md`](web/README.md)) |
 | `tests/` | Tests |
 
@@ -61,7 +61,7 @@ guarda en el repositorio.
   minuto 17, el servidor de recogida ([`docs/servidor.md`](docs/servidor.md)); el
   workflow `recogida` queda para lanzarla a mano en una emergencia. Descarga `db.age` de la rama `estado`,
   recoge lo nuevo desde el cursor de cada fuente (con relectura de las últimas
-  48 horas) y de GDELT, regenera `publicacion/` y sube la base si ha cambiado.
+  48 horas) y de GDELT, regenera los ficheros públicos y guarda la base si ha cambiado.
 - `python -m recogida.historico --fuente <id> --correo <correo> [--solo-cache]`:
   histórico de una fuente de partes, en local y reanudable, incorporado a la
   base de la rama `estado`, con la auditoría de cobertura por días. Las páginas
@@ -81,8 +81,10 @@ guarda en el repositorio.
 
 `vercel.json` define el build (`cd web && npm run build`), las cabeceras de
 seguridad y las direcciones propias de cada incidente y ataque. Cada push a `main`
-que cambia `web/`, `publicacion/` o `vercel.json` se despliega con la integración
-de Vercel con GitHub, también los commits de datos de la recogida. Detalle en
+que cambia `web/`, `api/` o `vercel.json` se despliega con la integración de Vercel
+con GitHub, y la recogida pide una reconstrucción con un gancho de despliegue cada
+vez que publica datos nuevos en el almacén (el build los lee de allí:
+`configuracion/publicacion_web.json`). Detalle en
 [`web/README.md`](web/README.md) y [`docs/informe_web.md`](docs/informe_web.md).
 
 Decisiones, valores y cobertura en [`docs/informe_recogida.md`](docs/informe_recogida.md),
