@@ -117,7 +117,9 @@ export function paginaSoloTexto(plantilla: string, pagina: PaginaTexto, actualiz
     .slice(0, finCabecera)
     .replace(/<script\b[^>]*\bsrc="[^"]*"[^>]*><\/script>/g, "")
     .replace(/<link rel="modulepreload"[^>]*>/g, "");
-  return `${cabecera}</head>\n  <body class="pagina-texto">${bloqueDeTexto(pagina, actualizado)}</body>\n</html>\n`;
+  // Solo los scripts propios que pide la página (el botón de privacidad), nunca la aplicación.
+  const scripts = (pagina.scripts ?? []).map((ruta) => `<script src="${ruta}" defer></script>`).join("");
+  return `${cabecera}${scripts}</head>\n  <body class="pagina-texto">${bloqueDeTexto(pagina, actualizado)}</body>\n</html>\n`;
 }
 
 async function escribirPagina(carpeta: string, ruta: string, contenido: string): Promise<void> {

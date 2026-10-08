@@ -31,6 +31,32 @@ export const RUTAS_SERVICIO: Record<PaginaServicio, Record<Idioma, string>> = {
   accesibilidad: { es: "/accesibilidad", en: "/en/accessibility" },
 };
 
+/** El botón de la página de privacidad que borra la fecha de la última visita. */
+export interface TextoBorrarVisita {
+  boton: string;
+  hecho: string;
+  fallo: string;
+  sinCodigo: string;
+}
+
+export const BORRAR_VISITA: Record<Idioma, TextoBorrarVisita> = {
+  es: {
+    boton: "Borrar mi última visita",
+    hecho: "Hecho: se ha borrado la fecha de tu última visita de este navegador.",
+    fallo: "Este navegador no deja borrar el dato desde la página: bórralo en la configuración del navegador (datos del sitio).",
+    sinCodigo: "Para borrarla sin el botón, borra los datos de droneobservatory.eu en la configuración de tu navegador.",
+  },
+  en: {
+    boton: "Delete my last visit",
+    hecho: "Done: the date of your last visit has been deleted from this browser.",
+    fallo: "This browser does not let the page delete it: delete it in your browser settings (site data).",
+    sinCodigo: "To delete it without the button, clear the data for droneobservatory.eu in your browser settings.",
+  },
+};
+
+/** El script del botón (web/public), servido desde la propia web. */
+export const SCRIPT_BORRAR_VISITA = "/borrar-visita.js";
+
 export interface TextoServicio {
   titulo: string;
   /** El nombre corto del enlace (pie y metodología). */
@@ -117,7 +143,16 @@ const ES: Record<PaginaServicio, TextoServicio> = {
         bloques: [
           {
             parrafo: [
-              "Un solo dato, en el almacenamiento local del navegador: la fecha de tu última visita (clave «eodi.ultima-visita»), para señalar lo nuevo desde entonces. No sale de tu equipo ni se envía a ningún sitio. Se borra al borrar los datos del sitio en el navegador; en una ventana privada, el navegador lo borra al cerrarla.",
+              "Un solo dato, en el almacenamiento local de tu navegador, con la clave «eodi.ultima-visita»: la fecha y la hora de tu última visita al mapa.",
+            ],
+          },
+          {
+            lista: [
+              { termino: "Para qué sirve", texto: ["Para marcar en el mapa los incidentes nuevos o que han cambiado desde tu visita anterior y contar las novedades en «Europa ahora»."] },
+              { termino: "Dónde está", texto: ["Solo en tu navegador. No se envía a ningún servidor del observatorio ni a terceros."] },
+              { termino: "Qué dice de ti", texto: ["Nada: es solo una fecha. No identifica a nadie ni sirve para seguir a nadie, y no es una cookie."] },
+              { termino: "Cuánto dura", texto: ["Cada visita al mapa la sustituye por la fecha de esa visita. Dura hasta que la borres con el botón de abajo o borres los datos del sitio en tu navegador; en una ventana privada, el navegador la borra al cerrarla."] },
+              { termino: "Sin ella", texto: ["La web funciona igual. En la primera visita, o después de borrarla, no se marca nada como nuevo: las novedades empiezan a contar desde esa visita."] },
             ],
           },
         ],
@@ -375,7 +410,16 @@ const EN: Record<PaginaServicio, TextoServicio> = {
         bloques: [
           {
             parrafo: [
-              "A single item, in the browser’s local storage: the date of your last visit (key “eodi.ultima-visita”), to highlight what is new since then. It never leaves your device and is not sent anywhere. It is deleted when you clear the site’s data in your browser; in a private window, the browser deletes it when the window is closed.",
+              "A single item, in your browser’s local storage, under the key “eodi.ultima-visita”: the date and time of your last visit to the map.",
+            ],
+          },
+          {
+            lista: [
+              { termino: "What it is for", texto: ["To mark on the map the incidents that are new or have changed since your previous visit and to count the updates in “Europe now”."] },
+              { termino: "Where it is", texto: ["Only in your browser. It is not sent to any server of the observatory or to third parties."] },
+              { termino: "What it says about you", texto: ["Nothing: it is just a date. It does not identify anyone or track anyone, and it is not a cookie."] },
+              { termino: "How long it lasts", texto: ["Each visit to the map replaces it with the date of that visit. It lasts until you delete it with the button below or clear the site’s data in your browser; in a private window, the browser deletes it when the window is closed."] },
+              { termino: "Without it", texto: ["The site works the same. On your first visit, or after deleting it, nothing is marked as new: updates start counting from that visit."] },
             ],
           },
         ],
