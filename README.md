@@ -58,8 +58,8 @@ guarda en el repositorio.
 ## Recogida
 
 - `python -m recogida.horaria --correo <correo>`: lo que ejecuta cada hora, en el
-  minuto 17, el servidor de recogida ([`docs/servidor.md`](docs/servidor.md)); el
-  workflow `recogida` queda para lanzarla a mano en una emergencia. Descarga `db.age` de la rama `estado`,
+  minuto 17, el servidor de recogida ([`docs/servidor.md`](docs/servidor.md); qué hacer si
+  falla, en [`docs/operacion.md`](docs/operacion.md)). Abre la base (en el servidor, la del disco),
   recoge lo nuevo desde el cursor de cada fuente (con relectura de las últimas
   48 horas) y de GDELT, regenera los ficheros públicos y guarda la base si ha cambiado.
 - `python -m recogida.historico --fuente <id> --correo <correo> [--solo-cache]`:
@@ -68,9 +68,6 @@ guarda en el repositorio.
   en bruto quedan en `data/cache/`, fuera de git.
 - `python -m recogida.lugares_osm`: regenera el nomenclátor de lugares desde
   OpenStreetMap; se ejecuta a mano y el resultado se revisa.
-- Workflow `historico-gdelt`: histórico de noticias desde los ficheros GKG,
-  repartido en hasta 20 trabajos; los parciales van cifrados a la rama
-  `historico-gdelt` del repositorio de datos y un trabajo final los incorpora.
 - `python -m recogida.extractor estimar | lote`: coste previsto del histórico
   con una muestra de llamadas, y extracción del histórico por lotes dentro del
   límite de gasto.

@@ -11,11 +11,12 @@ cero con una sola orden.
 | --- | --- |
 | Servidor | `eodi-recogida`, tipo CX33 (4 núcleos compartidos, 8 GB de memoria, 80 GB de disco), Núremberg (`nbg1`), Ubuntu 26.04 LTS, IPv4 2.28.197.102 |
 | Cortafuegos de Hetzner | `eodi-recogida`: solo entra SSH (TCP 22); lo demás, cerrado |
+| Cortafuegos del servidor | nftables, tabla `inet eodi` (`/etc/nftables.conf`, de `endurecer.sh`): solo entra SSH, lo que responde a una conexión abierta, el ICMP imprescindible y DHCP; nada se reenvía. Se carga solo al arrancar |
 | Copias de Hetzner | Imagen diaria del servidor entero, siete guardadas, ventana de 22:00 a 02:00 UTC (desde el 5 de octubre de 2026; apartado «Copias del servidor en Hetzner») |
 | Usuario `eodi` | Ejecuta el observatorio. Sin privilegios, sin contraseña y sin entrada por SSH |
 | Usuario `operador` | Administra: entra por SSH con clave y usa `sudo` |
-| SSH | Solo con clave, sin contraseña y sin root |
-| Además | fail2ban, actualizaciones de seguridad automáticas con reinicio a las 04:45 si hace falta, zona horaria UTC, hora sincronizada, diario de systemd con tope de tamaño y de antigüedad |
+| SSH | Solo con clave, sin contraseña y sin root; 3 intentos por conexión, 30 s para entrar, sin reenvíos (X11, TCP, agente, túneles) |
+| Además | fail2ban (5 intentos en 10 min: veto de 1 h que se dobla con cada reincidencia, hasta una semana), actualizaciones de seguridad automáticas **sin reinicio automático** (apartado «Reinicio tras las actualizaciones»), zona horaria UTC, hora sincronizada, diario de systemd con tope de tamaño y de antigüedad |
 | needrestart | No reinicia las unidades `eodi-*` tras una actualización (`/etc/needrestart/conf.d/50-eodi.conf`): son trabajos con temporizador y reiniciarlos corta su trabajo |
 
 Dos particularidades:
@@ -49,7 +50,16 @@ En `/home/eodi`:
     `ALMACEN_SECRETO`), para subir `estado.json`;
   - `estado.json`: el último estado publicado;
   - `base_modo`: el interruptor de la base (`github`, `doble` o `disco`, una palabra; sin el
-    fichero, `github`), apartado «Base de datos».
+    fichero, `github`), apartado «Base de datos»;
+  - `base_secundaria`: el interruptor de la copia secundaria de la base en la rama `estado`
+    (`github` o `no`; sin el fichero, `github`), y `base_solo_disco.json`, lo que hizo el paso a
+    solo disco del 13 de octubre de 2026 (apartado «Base de datos»);
+  - `publicacion_modo`: el interruptor de la publicación de los datos (`github`, `doble` o
+    `almacen`; sin el fichero, `github`), `publicacion.json` (lo último subido al almacén) y
+    `vercel_gancho` (la dirección secreta del gancho de despliegue de Vercel), apartado «Datos
+    publicados»;
+  - `vigilancia.json`, `replica.json` y `prueba_restauracion.json`: los registros de la
+    vigilancia, de la segunda copia y de la prueba de restauración semanal.
 - `base/`, con permisos 700 y propiedad de `eodi`: la base de datos en disco (`eodi.sqlite`), la
   versión que sustituyó el último guardado (`eodi.anterior.sqlite`) y las copias de trabajo de
   cada sesión (`trabajo/`), apartado «Base de datos».
@@ -92,6 +102,9 @@ En `/home/eodi`:
   cierres»).
 - `datos/seguimiento/`, con permisos 700 y propiedad de `eodi`: el archivo privado de la captura
   del seguimiento en directo (apartado «Captura del seguimiento en directo»).
+- `datos/publicacion/`, con permisos 700 y propiedad de `eodi`: los ficheros públicos que escribe
+  cada recogida, antes de subirlos al almacén o al repositorio (apartado «Datos publicados»). La
+  detección en directo los lee de aquí.
 
 Las dos claves de despliegue se generan en el servidor y la privada no sale de él. En
 GitHub figuran en cada repositorio con el título «servidor eodi-recogida».
@@ -114,10 +127,11 @@ de 45 minutos, y el script:
    [`proceso/focos_termicos.py`](../proceso/focos_termicos.py)). Un fallo de FIRMS no cambia
    el resultado de la recogida: queda en el diario («firms no se lee», sin la clave) y en
    `estado.json`, y la siguiente ejecución vuelve a intentarlo;
-4. publica en `main` `publicacion/ucrania.json`, `publicacion/incidentes.geojson` y
-   `publicacion/incidentes_sin_ubicacion.json` y `publicacion/prevision.json` si han cambiado, con autor QuantuSync y la
-   dirección anónima. También cuando la recogida
-   termina con avisos (código 2); nunca cuando falla con otro código.
+4. publica `ucrania.json`, `incidentes.geojson`, `incidentes_sin_ubicacion.json` y
+   `prevision.json` según el interruptor de la publicación (apartado «Datos publicados»): en el
+   almacén público, en `main` (commit «Actualiza los datos publicados», con autor QuantuSync y la
+   dirección anónima) o en los dos. También cuando la recogida termina con avisos (código 2);
+   nunca cuando falla con otro código.
 
 Antes de publicar, la recogida calcula `publicacion/prevision.json` con los ficheros recién
 escritos ([`recogida/prevision.py`](../recogida/prevision.py), unos 10 s): el riesgo de frontera
@@ -221,9 +235,24 @@ Para ponerla en uso con el modo `disco`: parar el temporizador de la recogida, s
 `base/eodi.sqlite` por la restaurada (como `eodi`) y volver a arrancar el temporizador. Con los
 modos `github` o `doble` manda la rama: se sube con `a-github` después de copiarla al disco.
 
-**Emergencia desde GitHub** (`recogida.yml`) con el modo `disco`: el workflow trabaja sobre la
-rama `estado`. Antes, la rama tiene que estar al día (copia secundaria o `base.sh a-github`);
-después, para seguir en disco, `base.sh desde-github` deja en disco lo que dejó el workflow.
+**Paso a solo disco (13 de octubre de 2026).** La copia secundaria en la rama `estado` se
+mantiene hasta el 12 de octubre. El temporizador de un solo uso `eodi-base-solo-disco` (martes 13 a
+las 10:00 UTC; `servidor/base_solo_disco.sh`, `almacen/solo_disco.py`) espera fuera de los minutos
+12 a 40 y a que no haya recogida, comprueba que la última copia cifrada del almacén tiene menos de
+2 horas, se baja, su huella coincide, se descifra y está íntegra, y que la segunda copia de
+Helsinki tiene una copia horaria de menos de 3 horas. Solo entonces escribe `no` en
+`/home/eodi/.eodi/base_secundaria`, que vale desde la recogida siguiente («base solo en disco: sin
+copia secundaria» en el diario). Si algo falla, no cambia nada y la vigilancia avisa del problema.
+Lo que hizo queda en `base_solo_disco.json`. Ensayo sin cambiar nada (hecho el 7 de octubre de
+2026, correcto): `sudo -u eodi bash /home/eodi/droneobservatory/servidor/base_solo_disco.sh
+--ensayo`. Volver atrás: `echo github | sudo -u eodi tee /home/eodi/.eodi/base_secundaria` y, para
+poner la rama al día en el acto, `base.sh a-github`.
+
+**Prueba de restauración semanal.** `eodi-prueba-restauracion` (martes 10:55 UTC,
+`servidor/prueba_restauracion.sh`) restaura en una carpeta aparte la última copia horaria que ya
+está en los dos sitios, comprueba su huella y su integridad, comprueba que la de Helsinki es
+idéntica y lo deja en `prueba_restauracion.json` (unos 25 s). Si falla, o si pasan 8 días sin una
+correcta, la vigilancia avisa.
 
 ## Exportación semanal
 
@@ -239,7 +268,11 @@ minutos, y el script:
    recogida, sin actualizarlo: abre la base (la del disco, en el modo `disco`), genera la versión del
    día (`AAAA.MM.DD`), la valida contra sus esquemas, la cifra con la clave pública de la
    base y la sube a `main` del repositorio de datos como `exportaciones/AAAA.MM.DD/`, con la
-   etiqueta `eodi-AAAA.MM.DD`, con la clave de despliegue `despliegue_datos`;
+   etiqueta `eodi-AAAA.MM.DD`, con la clave de despliegue `despliegue_datos`, o al bucket privado
+   `droneobservatory-exportaciones` (`exportaciones/AAAA.MM.DD/`, `almacen/exportaciones.py`), o a
+   los dos, según el interruptor de la publicación (`almacen`: solo el bucket; `doble`: los dos;
+   `github`: solo el repositorio). En el bucket, cada fichero lleva su huella, el manifiesto se
+   sube el último y una versión que ya está no se sobrescribe;
 3. si termina bien, deja la versión, la hora y la huella del manifiesto en
    `/home/eodi/.eodi/exportacion.json`, de donde `estado.json` saca `ultima_exportacion`
    en la recogida siguiente.
@@ -256,6 +289,21 @@ lo publica en `estado.json` (`exportacion_fallida`) y el workflow `vigia-recogid
 siguiente pasada (minuto 41) la incidencia «La exportación semanal no se genera», sin esperar a
 los 8 días. También la abre si pasan más de 8 días sin una exportación correcta, y la cierra
 cuando vuelve a haberla.
+
+**Leerla del bucket.** Con las credenciales del almacén (`ALMACEN_ID` y `ALMACEN_SECRETO`, o
+`%USERPROFILE%\.eodi\almacen.env`), desde un clon del repositorio:
+
+```
+python -m almacen.exportaciones listar
+python -m almacen.exportaciones bajar --version AAAA.MM.DD --destino <carpeta>
+python -m almacen.exportaciones espejo --repositorio <carpeta git local>
+```
+
+`bajar` deja la carpeta de la versión comprobada fichero a fichero con su manifiesto; `espejo`
+deja cada versión nueva en un repositorio git local con las mismas carpetas y etiquetas que tenía
+el repositorio de datos, de modo que un importador que leía ese repositorio lee la ruta local igual.
+Se descifra con la misma identidad age de la base. Ensayada entera el 7 de octubre de 2026:
+`exportacion.sh` en 130 s, espejo e importación en 2 s, misma huella del manifiesto.
 
 Lanzarla a mano (por ejemplo, tras un fallo), como `operador`:
 
@@ -622,7 +670,11 @@ captura y archiva: no procesa ni publica nada ([`recogida/seguimiento.py`](../re
   (uno solo a la vez), espera fuera de los minutos 15 a 40 y a que la recogida horaria no esté en
   marcha (mira la unidad, sin tocar su cerrojo); comprime las horas cerradas (comprobando que el
   comprimido devuelve los mismos bytes antes de quitar el original), escribe el índice de cada
-  día terminado y sube cada día terminado a la copia de seguridad.
+  día terminado y sube **cada hora** a la copia de seguridad las horas ya comprimidas, también las
+  del día en curso (desde el 7 de octubre de 2026; antes, una vez al día): si el servidor se
+  perdiera, se perdería como mucho la hora en curso. Sube también las rutas calculadas
+  (`datos/rutas/`) como un tar.gz reproducible: `rutas/ultima.tar.gz` cuando cambia y la primera
+  de cada día en `rutas/diaria/AAAA-MM-DD.tar.gz`.
 - **Copia de seguridad.** Bucket privado `droneobservatory-archivo` de Hetzner Object Storage
   (`nbg1`, mismo proyecto y mismas credenciales S3 que el almacén público, `almacen.env`; sin
   política pública: sin credenciales responde 403), prefijo `seguimiento/`, configurado en
@@ -659,6 +711,16 @@ fichero de la copia, comprobando su huella:
 sudo -u eodi bash /home/eodi/droneobservatory/servidor/seguimiento_archivo.sh copiar --dia AAAA-MM-DD
 sudo -u eodi bash /home/eodi/droneobservatory/servidor/seguimiento_archivo.sh restaurar \
   --objeto seguimiento/neptun/AAAA/MM/neptun-AAAA-MM-DDTHH.jsonl.gz --destino /tmp/restaurado.jsonl.gz
+```
+
+Restaurar un día entero o todo el archivo (con las rutas), comprobando cada huella y sin
+sobrescribir nada local; el 6 de octubre de 2026 entero (49 ficheros, 4,4 MB) bajó en 17 s
+idéntico byte a byte:
+
+```
+sudo -u eodi bash /home/eodi/droneobservatory/servidor/seguimiento_archivo.sh restaurar-dia \
+  --dia AAAA-MM-DD --destino /home/eodi/base/trabajo/dia
+sudo -u eodi bash /home/eodi/droneobservatory/servidor/seguimiento_archivo.sh restaurar-todo
 ```
 
 Crear el bucket privado (una vez; repetible) y comprobar que sin credenciales no se lee:
@@ -1336,21 +1398,23 @@ que ese fichero existe (como mucho tres horas): se crea con `touch` cuando la ra
 fusionada, y así la recogida horaria no vuelve a publicar con el código anterior mientras
 tanto.
 
-## Emergencia: recogida desde GitHub
+## Si el servidor desaparece
 
-El workflow `recogida` sigue en el repositorio, solo con lanzamiento a mano, y conserva sus
-secretos. Si el servidor no está disponible:
-
-```
-gh workflow run recogida.yml --ref main
-```
-
-Si el servidor sigue encendido, antes hay que parar su temporizador: dos recogidas a la
-vez se pisarían la rama `estado`.
+La recogida de emergencia desde GitHub (workflow `recogida.yml`) se retiró en octubre de 2026:
+trabajaba sobre la base de la rama `estado`, que ya no manda, y publicaba con commits en `main`,
+que está protegida. Si el servidor desaparece se levanta otro con `reconstruir.sh` (apartado
+«Reconstruir desde cero») y se restauran la base y el archivo; los pasos, en
+[`operacion.md`](operacion.md). El simulacro completo, en un servidor temporal y sin tocar el de
+verdad, es `bash servidor/simulacro.sh`: el 7 de octubre de 2026 tardó 17 minutos (servidor nuevo
+1 min, `endurecer.sh` 1 min, `instalar.sh` 1,5 min, base 27 s, archivo 13 s, recogida completa en
+ensayo 13 min) y costó unos céntimos.
 
 ## Cómo se ve si la recogida se para
 
-El workflow `vigia-recogida` se lanza cada hora en el minuto 41 y lee
+Desde el 7 de octubre de 2026 la vigilancia es más amplia: apartado «Vigilancia». Lo que sigue
+es la comprobación de la recogida, que sigue dentro de ella.
+
+El workflow `vigia-recogida` se lanza cada 10 minutos y lee
 `estado.json` en el almacén público ([`recogida/salud.py`](../recogida/salud.py), que toma
 la dirección de `configuracion/almacen_publico.json`).
 Si la última recogida correcta tiene más de 2 horas, o si el fichero no responde en tres
@@ -1383,3 +1447,100 @@ pull request y la deja en su resumen, sin hacer fallar los tests.
   piden. Sigue en `fuentes_oficiales_candidatas.json` por si el ministerio publica un canal
   RSS o deja de vetar esas direcciones. Las confirmaciones oficiales de Finlandia quedan en
   las declaraciones que cita la prensa.
+
+## Vigilancia
+
+Desde el 7 de octubre de 2026 (`recogida/vigilancia.py`, `recogida/salud.py`,
+`.github/workflows/vigia-recogida.yml`):
+
+- **En el servidor**, `eodi-vigilancia.timer` compone cada 5 minutos `salud.json` y lo sube al
+  almacén público (<https://droneobservatory-almacen.nbg1.your-objectstorage.com/salud.json>, caché
+  de un minuto). Sin contenido: última publicación y última recogida (código y avisos), captura del
+  seguimiento (unidad y última recepción), copias (base, archivo, segunda copia), disco,
+  `problemas` y `avisos`. Lee el diario de la recogida con el grupo `systemd-journal` de su unidad
+  y no escribe más que `vigilancia.json`. Los identificadores de los incidentes que retiene la
+  barrera de titulares solo van a su diario (`journalctl -u eodi-vigilancia`).
+- **Problemas**: datos sin publicar en 2 horas, recogida con un código distinto de 0 y 2, captura
+  del seguimiento sin recibir en 10 minutos o con la unidad parada, copia de la base o del archivo
+  con más de 2 horas, segunda copia con más de 3 horas, disco al 75 % o más, prueba de restauración
+  fallida o con más de 8 días, paso a solo disco fallido.
+- **Avisos** (se ven, no son fallo): recogida con avisos (código 2) y por qué, y cuántos incidentes
+  retiene la barrera de titulares.
+- **En GitHub**, `vigia-recogida` pasa cada 10 minutos: abre una incidencia por problema (y la
+  cierra al arreglarse) y falla al aparecer uno nuevo y después una vez por hora mientras siga, con
+  lo que GitHub manda al dueño el correo «Run failed». Si `salud.json` no llega o tiene más de 20
+  minutos, es que el servidor no da señales. Una vez al día reactiva su propia programación.
+- **Alarma de prueba**: `gh workflow run vigia-recogida.yml -f prueba=true` (abre «Alarma de prueba
+  de la vigilancia» y falla). Hecha el 7 de octubre de 2026 (incidencia #151).
+
+## Reinicio tras las actualizaciones
+
+Las actualizaciones de seguridad automáticas ya no reinician a las 04:45: a hora fija podían cortar
+un ataque en curso (lo que NEPTUN emite con el servidor apagado se pierde) o un trabajo largo. Si
+una actualización pide reiniciar (`/run/reboot-required`), `eodi-reinicio.timer` (cada 5 minutos
+de 07:00 a 15:55 UTC, como root: `servidor/reinicio.sh`, `recogida/reinicio.py`) reinicia solo si,
+a la vez, no es entre los minutos 12 y 40, no hay ninguna unidad del observatorio con temporizador
+en marcha y no hay un ataque en curso según el último estado del flujo de NEPTUN (ningún misil ni
+balístico activo y como mucho 20 drones; si la captura no ha recibido nada en 10 minutos, no se
+reinicia). Reinicio controlado del 7 de octubre de 2026: todo en marcha a los 16 s y 28 s de hueco
+en NEPTUN.
+
+```
+journalctl -u eodi-reinicio -n 20
+sudo -u eodi sh -c 'cd /home/eodi/droneobservatory && EODI_SEGUIMIENTO_DATOS=/home/eodi/datos/seguimiento .venv/bin/python -m recogida.reinicio'
+```
+
+## Segunda copia en Helsinki
+
+`eodi-replica.timer` (minuto 47, `servidor/replica.sh`, `almacen/replica.py`) lleva a un bucket
+privado de Helsinki, `droneobservatory-replica` (`hel1`, configuracion/replica.json), las copias
+cifradas de la base (tal cual: `base/…`), el archivo del seguimiento con las rutas (cifrado con la
+clave pública age: `archivo/<clave>.age`) y la exportación semanal (`exportaciones/…`). Aplica por
+su cuenta la retención de la base y nunca borra porque falte en el origen. No necesita la identidad
+age para cifrar. La primera pasada (7 de octubre de 2026) llevó 54 copias de la base y 211 objetos
+del archivo en 4,7 minutos, con 130 MB de memoria. No cuesta más: el precio base del almacenamiento
+de objetos de Hetzner es por cuenta, y todo cabe en el terabyte incluido.
+
+```
+sudo -u eodi bash /home/eodi/droneobservatory/servidor/replica.sh listar | tail
+sudo -u eodi bash /home/eodi/droneobservatory/servidor/replica.sh restaurar \
+  --objeto archivo/seguimiento/neptun/AAAA/MM/neptun-AAAA-MM-DDTHH.jsonl.gz.age \
+  --destino /home/eodi/base/trabajo/hora.jsonl.gz
+```
+
+## Datos publicados
+
+Desde el 7 de octubre de 2026 la recogida escribe los ficheros públicos en `datos/publicacion/`
+(variable `EODI_PUBLICACION_DIRECTORIO`, de `configuracion.sh`) y los publica según
+`/home/eodi/.eodi/publicacion_modo`:
+
+| Modo | Qué hace |
+| --- | --- |
+| `github` (sin el fichero) | Commit «Actualiza los datos publicados» en `main`, como antes |
+| `doble` | Sube al almacén público y hace el commit; después comprueba que el almacén es idéntico byte a byte a lo publicado en `main` («publicación doble: el almacén es idéntico a main» en el diario) |
+| `almacen` | Solo el almacén, y pide a Vercel que reconstruya la web con el gancho de despliegue |
+
+En el almacén (`recogida/publicacion.py`): `publicacion/<fichero>` con gzip (`Content-Encoding`)
+y su huella en `x-amz-meta-sha256`, `publicacion/manifiesto.json` al final (la web lo lee primero
+y comprueba cada fichero con él) y, la primera publicación de cada día, una instantánea fechada en
+`publicacion/historial/AAAA-MM-DD/` que no se sobrescribe. La web lee de donde diga
+`configuracion/publicacion_web.json` (`github` o `almacen`); si el almacén no responde al
+construir, el build falla y sigue la versión anterior. Las direcciones públicas `/datos/…` de la
+web no cambian. La exportación semanal sigue el mismo interruptor.
+
+Cambiar de modo, justo después de una recogida y fuera de los minutos 12 a 40:
+`echo almacen | sudo -u eodi tee /home/eodi/.eodi/publicacion_modo` (o `doble`, o `github`).
+
+## Ensayos
+
+`servidor/ensayo.sh <rama>` es el paso c2 de [`fusiones.md`](fusiones.md): recogida completa con
+el código de una rama sobre copias propias de la base y de los datos, sin subir nada; con
+`ENSAYO_EXPORTACION=1`, también la exportación semanal entera. Unos 19 minutos y 3 GB (la caché de
+la copia de la base), con las normas de los trabajos de sesión:
+
+```
+sudo systemd-run --unit=eodi-ensayo --uid=eodi --gid=eodi -p MemoryMax=3G -p Nice=19 \
+  -p IOSchedulingClass=idle -p OOMScoreAdjust=1000 --setenv=ENSAYO_EXPORTACION=1 \
+  /usr/bin/env bash /home/eodi/droneobservatory/servidor/ensayo.sh <rama>
+journalctl -u eodi-ensayo -n 5                     # «ensayo terminado con código 0»
+```
