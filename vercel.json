@@ -44,7 +44,10 @@
     },
     {
       "source": "/datos/(.*)",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=300, must-revalidate" }]
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=300, must-revalidate" },
+        { "key": "Link", "value": "<https://creativecommons.org/licenses/by/4.0/>; rel=\"license\"" }
+      ]
     }
   ]
 }

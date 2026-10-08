@@ -550,9 +550,13 @@ export interface Textos {
       sinUbicacion: string;
       version: (fecha: string) => string;
       licencia: string;
+      /** Qué cubre la licencia y qué no: la compilación, las citas, el tráfico aéreo. */
+      licenciaTexto: string;
       citaTitulo: string;
       cita: (fecha: string) => string;
     };
+    /** Enlaces a las páginas de servicio público (aviso legal, privacidad…). */
+    sobre: string;
   };
   compartir: {
     titulo: string;

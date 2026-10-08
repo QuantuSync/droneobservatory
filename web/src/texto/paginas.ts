@@ -42,6 +42,8 @@ import type { Idioma } from "../sitio.ts";
 import { fechaDeDia } from "../tiempo/dias.ts";
 import { e, html, jsonLd } from "./html.ts";
 import type { Hijo, Html } from "./html.ts";
+import { PAGINAS_SERVICIO, RUTAS_SERVICIO, textoServicio } from "./servicio.ts";
+import type { PaginaServicio } from "./servicio.ts";
 import { textosPagina } from "./textos.ts";
 import type { TextosPagina } from "./textos.ts";
 import { RUTAS_EN_LA_WEB, seccionesDeMetodologia } from "../rutasEnLaWeb.ts";
@@ -937,7 +939,7 @@ function metodologia(datos: DatosPaginas, idioma: Idioma): PaginaTexto {
   ];
   const cuerpo = html(
     e("h1", null, tp.metodologia.titulo),
-    e("nav", { "aria-label": tp.metodologia.indice }, e("ul", { class: "texto-enlaces" }, seccionesDeMetodologia(t).map((s) => e("li", null, enlace(`#${s.id}`, s.titulo))), e("li", null, enlace("#datos-abiertos", d.titulo)))),
+    e("nav", { "aria-label": tp.metodologia.indice }, e("ul", { class: "texto-enlaces" }, seccionesDeMetodologia(t).map((s) => e("li", null, enlace(`#${s.id}`, s.titulo))), e("li", null, enlace("#datos-abiertos", d.titulo)), e("li", null, enlace("#sobre", t.metodologia.sobre)))),
     seccionesDeMetodologia(t).map((s) => e("section", { id: s.id }, e("h2", null, s.titulo), s.bloques.map(bloque))),
     e(
       "section",
@@ -947,8 +949,15 @@ function metodologia(datos: DatosPaginas, idioma: Idioma): PaginaTexto {
       e("ul", null, descargas.map(([nombre, ruta, formato]) => e("li", null, nombre, ": ", e("a", { href: ruta, download: true }, formato)))),
       e("p", { class: "mono" }, d.version(version)),
       e("p", null, d.licencia, ": ", externo(LICENCIA_DATOS_URL, LICENCIA_DATOS)),
+      e("p", { "data-licencia-texto": "" }, d.licenciaTexto),
       e("h3", null, d.citaTitulo),
       e("blockquote", null, d.cita(version)),
+    ),
+    e(
+      "section",
+      { id: "sobre" },
+      e("h2", null, t.metodologia.sobre),
+      e("ul", { class: "texto-enlaces" }, PAGINAS_SERVICIO.map((p) => e("li", null, enlace(RUTAS_SERVICIO[p][idioma], textoServicio(p, idioma).enlace)))),
     ),
   );
   const descripcion = tp.metodologia.descripcion;
@@ -1035,8 +1044,32 @@ export function paginas(datos: DatosPaginas): PaginaTexto[] {
     resultado.push(paginaPrevision(datos, idioma));
     resultado.push(metodologia(datos, idioma));
     resultado.push(ayuda(datos, idioma));
+    for (const pagina of PAGINAS_SERVICIO) resultado.push(paginaServicio(pagina, idioma));
   }
   return resultado;
+}
+
+// ---------------------------------------------------------------------------------------------
+// Servicio público: aviso legal, privacidad, independencia, correcciones y accesibilidad
+
+/** Fecha de la última revisión de las páginas de servicio, para el sitemap. */
+const REVISION_SERVICIO = "2026-10-08T00:00:00Z";
+
+function paginaServicio(pagina: PaginaServicio, idioma: Idioma): PaginaTexto {
+  const texto = textoServicio(pagina, idioma);
+  return {
+    idioma,
+    rutas: RUTAS_SERVICIO[pagina],
+    titulo: `${texto.titulo} · ${NOMBRE}`,
+    descripcion: texto.descripcion,
+    cuerpo: html(
+      e("h1", null, texto.titulo),
+      texto.secciones.map((s) => e("section", { id: s.id }, e("h2", null, s.titulo), s.bloques.map(bloque))),
+    ),
+    estructurados: [],
+    conMapa: false,
+    modificada: REVISION_SERVICIO,
+  };
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -1171,6 +1204,11 @@ export function marco(pagina: PaginaTexto, actualizado: string): Html {
       { class: "texto-pie" },
       e("p", { class: "mono", "data-datos-de": "" }, tp.datosDe(fechaHora(actualizado))),
       e("p", null, tp.licencia, " ", externo(LICENCIA_DATOS_URL, LICENCIA_DATOS), " · ", externo(REPOSITORIO, tp.codigo)),
+      e(
+        "nav",
+        { "aria-label": textosPagina(idioma).sobre },
+        e("ul", { class: "texto-enlaces" }, PAGINAS_SERVICIO.map((p) => e("li", null, e("a", { href: RUTAS_SERVICIO[p][idioma], "aria-current": RUTAS_SERVICIO[p][idioma] === pagina.rutas[idioma] ? "page" : null }, textoServicio(p, idioma).enlace)))),
+      ),
     ),
   );
 }

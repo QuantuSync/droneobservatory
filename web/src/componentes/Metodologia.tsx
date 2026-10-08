@@ -4,12 +4,15 @@ import { fechaHora } from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
 import type { Bloque, Marca, Trozo } from "../i18n/tipos.ts";
 import { DESCARGAS, LICENCIA_DATOS, LICENCIA_DATOS_URL, NOMBRE } from "../sitio.ts";
+import type { Idioma } from "../sitio.ts";
 import { seccionesDeMetodologia } from "../rutasEnLaWeb.ts";
+import { PAGINAS_SERVICIO, RUTAS_SERVICIO, textoServicio } from "../texto/servicio.ts";
 import { EnlaceExterno } from "./EnlaceExterno.tsx";
 import { Simbolo } from "./Simbolo.tsx";
 
 interface Props {
   t: Textos;
+  idioma: Idioma;
   abierta: boolean;
   /** Fecha de la versión de los datos; null si no se han cargado. */
   actualizado: string | null;
@@ -130,6 +133,9 @@ function Descargas({
           {LICENCIA_DATOS}
         </EnlaceExterno>
       </p>
+      <p className="mt-1 text-xs text-secundario" data-licencia-texto="">
+        {d.licenciaTexto}
+      </p>
       {version !== null && (
         <>
           <p className="rotulo mt-3">{d.citaTitulo}</p>
@@ -140,11 +146,32 @@ function Descargas({
   );
 }
 
+/** Las páginas de servicio público: aviso legal, privacidad, independencia, correcciones y
+ *  accesibilidad. Son páginas de texto aparte, en el idioma de la web. */
+function Sobre({ t, idioma }: { t: Textos; idioma: Idioma }) {
+  return (
+    <section className="mt-6" aria-labelledby="metodologia-sobre" data-sobre="">
+      <h3 id="metodologia-sobre" className="text-lg font-semibold tracking-tight">
+        {t.metodologia.sobre}
+      </h3>
+      <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
+        {PAGINAS_SERVICIO.map((pagina) => (
+          <li key={pagina}>
+            <a className="inline-flex min-h-11 items-center underline underline-offset-2 esc:min-h-7" href={RUTAS_SERVICIO[pagina][idioma]}>
+              {textoServicio(pagina, idioma).enlace}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
 /**
  * Metodología: panel que se abre desde la cabecera en todas las resoluciones, sin salir de
  * la pantalla. Es un diálogo modal nativo: retiene el foco y se cierra con Escape.
  */
-export function Metodologia({ t, abierta, actualizado, sinUbicacion, onCerrar }: Props) {
+export function Metodologia({ t, idioma, abierta, actualizado, sinUbicacion, onCerrar }: Props) {
   const dialogo = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -206,6 +233,7 @@ export function Metodologia({ t, abierta, actualizado, sinUbicacion, onCerrar }:
             </section>
           ))}
           <Descargas t={t} actualizado={actualizado} sinUbicacion={sinUbicacion} />
+          <Sobre t={t} idioma={idioma} />
         </div>
       </div>
     </dialog>

@@ -21,6 +21,7 @@ export interface TextosPagina {
   };
   prevision: { titulo: string; descripcion: string; intro: string; comoSeCalcula: string };
   otroIdioma: string;
+  sobre: string;
   datosDe: (fecha: string) => string;
   licencia: string;
   codigo: string;
@@ -137,6 +138,7 @@ const ES: TextosPagina = {
     comoSeCalcula: "Cómo se calcula y cómo se puntúa",
   },
   otroIdioma: "English",
+  sobre: "Sobre el observatorio",
   datosDe: (fecha) => `Datos publicados a ${fecha}`,
   licencia: "Datos con licencia",
   codigo: "Código abierto",
@@ -296,6 +298,7 @@ const EN: TextosPagina = {
     comoSeCalcula: "How it is computed and scored",
   },
   otroIdioma: "Español",
+  sobre: "About the observatory",
   datosDe: (fecha) => `Data published at ${fecha}`,
   licencia: "Data licence",
   codigo: "Open source",
