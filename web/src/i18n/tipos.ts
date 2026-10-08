@@ -213,13 +213,16 @@ export interface Textos {
       titulo: string;
       noche: (desde: string, hasta: string) => string;
       ninguno: string;
+      /** Lo habitual: la misma cifra que la comprobación (noches con dron entre noches comprobadas). */
       habitual: (porcentaje: number) => string;
       dependeDe: string;
       lanzados: (media: string, anoche: string) => string;
       crimea: (noches: number) => string;
       incidentes: (n: number, pais: string) => string;
-      efectos: Record<"sube" | "baja" | "nada", string>;
-      historial: (noches: string, desde: string, conDron: number, enAlto: number, mejora: number) => string;
+      efectos: Record<"sube" | "baja", string>;
+      /** Ningún factor sube ni baja hoy el riesgo. */
+      sinCambios: string;
+      historial: (noches: string, desde: string, conDron: number, porcentaje: number, enAlto: number) => string;
       verHistorial: string;
       columnaDijo: string;
       columnaNoches: string;
@@ -236,8 +239,6 @@ export interface Textos {
       linea: (desde: string, n: number, habitual: string, veces: string, tendencia: string) => string;
       tendencia: Record<"crece" | "estable" | "se_apaga", string>;
       ir: (pais: string) => string;
-      terminada: (pais: string, hasta: string) => string;
-      terminadas: (lista: string) => string;
       historial: (semanas: number, siguientes: number, normal: string) => string;
       enFicha: string;
     };
@@ -255,19 +256,8 @@ export interface Textos {
       sentido: Record<"sube" | "baja", string>;
       historial: (casos: number, sostenidos: number) => string;
     };
-    semana: {
-      titulo: string;
-      cual: (desde: string, hasta: string) => string;
-      provisional: string;
-      ninguno: string;
-      fila: (esperado: string, minimo: number, maximo: number) => string;
-      marcador: (dentro: number, total: number) => string;
-      columnaSemana: string;
-      columnaPais: string;
-      columnaPrevisto: string;
-      columnaReal: string;
-      leyendaMarcador: string;
-    };
+    /** El desplegable que guarda los párrafos de la comprobación. */
+    comoSeComprueba: string;
   };
   /** Frontera o interior de un incidente, con la regla que lo decide. */
   zona: {

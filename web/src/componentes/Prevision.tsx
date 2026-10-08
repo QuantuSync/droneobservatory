@@ -1,13 +1,21 @@
 // «Previsión»: lo que está pasando más de lo normal y lo que es probable que pase, con números
 // comprobados con el pasado. De arriba abajo: esta noche en la frontera, el aviso de segunda
-// noche (solo cuando toca), las rachas por país y la semana que viene con su marcador. Cada
-// parte lleva a la vista su historial de aciertos.
+// noche (solo cuando toca), las rachas por país y qué ha cambiado. A la vista, solo el número y
+// sus razones; cómo se comprobó cada parte va plegado en «Cómo se comprueba».
 
-import { useState } from "react";
 import type { ReactNode } from "react";
 
 import type { Carga } from "../datos/carga.ts";
-import { diaDeTexto, enVivo, marcadorSemanal, probabilidadLlana, mesEscrito, textoCambio } from "../datos/prevision.ts";
+import {
+  diaDeTexto,
+  enVivo,
+  factoresQueCuentan,
+  habitualDe,
+  probabilidadLlana,
+  mesEscrito,
+  textoCambio,
+  textoFactor,
+} from "../datos/prevision.ts";
 import type { FronteraPais, GraficaRacha, Prevision as DatosPrevision, Racha } from "../datos/prevision.ts";
 import { fechaDia, fechaHora, numero, pais } from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
@@ -30,80 +38,85 @@ function Seccion({ titulo, children, id }: { titulo: string; children: ReactNode
   );
 }
 
+/** «Cómo se comprueba»: los párrafos de la comprobación, plegados hasta que se tocan. */
+export function ComoSeComprueba({ t, children }: { t: Textos; children: ReactNode }) {
+  return (
+    <details className="mt-1 text-xs text-secundario" data-como-se-comprueba="">
+      <summary className="control min-h-11 cursor-pointer underline underline-offset-2 esc:min-h-7">
+        {t.prevision.comoSeComprueba}
+      </summary>
+      <div className="mt-1 flex flex-col gap-1">{children}</div>
+    </details>
+  );
+}
+
 function Frontera({ t, idioma, p }: { t: Textos; idioma: Idioma; p: FronteraPais }) {
-  const [abierto, setAbierto] = useState(false);
   const f = t.prevision.frontera;
   const c = p.comprobacion;
   const nombre = pais(p.pais, idioma);
   const vivas = p.ultimas;
+  const factores = factoresQueCuentan(p);
   return (
     <div className="mb-2.5" data-frontera={p.pais}>
       <p className="text-sm text-texto">
         <span className="font-medium">{nombre}</span>:{" "}
         <span data-probabilidad={p.probabilidad}>{probabilidadLlana(t, p.probabilidad, p.de_cada_10)}</span>
       </p>
-      <p className="text-xs text-secundario">{f.habitual(Math.round(p.frecuencia_de_siempre * 100))}</p>
-      <p className="mt-1 text-xs text-secundario">{f.dependeDe}</p>
-      <ul className="list-disc pl-4 text-xs text-secundario">
-        <li>
-          {f.lanzados(numero(Math.round(p.factores.lanzados_tres_noches), idioma), numero(p.factores.lanzados_anoche, idioma))}{" "}
-          · {f.efectos[p.efectos.lanzados_tres_noches]}
-        </li>
-        <li>
-          {f.crimea(p.factores.noches_desde_crimea)} · {f.efectos[p.efectos.noches_desde_crimea]}
-        </li>
-        <li>
-          {f.incidentes(p.factores.incidentes_siete_dias, nombre)} · {f.efectos[p.efectos.incidentes_siete_dias]}
-        </li>
-      </ul>
-      <p className="mt-1 text-xs text-texto" data-historial-frontera="">
-        {f.historial(
-          numero(c.noches, idioma),
-          fechaDia(diaDeTexto(c.desde)),
-          c.noches_con_dron,
-          c.con_dron_en_riesgo_alto,
-          Math.round(c.mejora_sobre_frecuencia * 100),
-        )}
+      <p className="text-xs text-secundario" data-habitual={habitualDe(c)}>
+        {f.habitual(habitualDe(c))}
       </p>
-      <button
-        type="button"
-        className="control mt-1 min-h-11 text-xs underline underline-offset-2 esc:min-h-7"
-        aria-expanded={abierto}
-        onClick={() => setAbierto(!abierto)}
-      >
-        {f.verHistorial}
-      </button>
-      {abierto && (
-        <div className="mt-1 text-xs text-secundario">
-          <table className="w-full">
-            <caption className="sr-only">{f.verHistorial}</caption>
-            <thead>
-              <tr>
-                <th className="text-left font-normal">{f.columnaDijo}</th>
-                <th className="text-right font-normal">{f.columnaNoches}</th>
-                <th className="text-right font-normal">{f.columnaConDron}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {c.tramos.map((tramo) => (
-                <tr key={tramo.desde}>
-                  <td>{f.tramo(Math.round(tramo.desde * 100), Math.round(tramo.hasta * 100))}</td>
-                  <td className="mono text-right">{numero(tramo.noches, idioma)}</td>
-                  <td className="mono text-right">{numero(tramo.con_dron, idioma)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <p className="mt-1">{f.ultimas}</p>
-          <ul className="mono flex flex-wrap gap-x-2">
-            {vivas.slice(-14).map((n) => (
-              <li key={n.noche}>
-                {fechaDia(diaDeTexto(n.noche))}: {Math.round(n.probabilidad * 100)} %{n.con_dron ? ` · ${f.conDron}` : ""}
+      {factores.length === 0 ? (
+        <p className="mt-1 text-xs text-secundario">{f.sinCambios}</p>
+      ) : (
+        <>
+          <p className="mt-1 text-xs text-secundario">{f.dependeDe}</p>
+          <ul className="list-disc pl-4 text-xs text-secundario" data-factores="">
+            {factores.map(({ factor, efecto }) => (
+              <li key={factor} data-efecto={efecto}>
+                {textoFactor(t, idioma, p, factor, efecto)}
               </li>
             ))}
           </ul>
-        </div>
+        </>
       )}
+      <ComoSeComprueba t={t}>
+        <p data-historial-frontera="">
+          {f.historial(
+            numero(c.noches, idioma),
+            fechaDia(diaDeTexto(c.desde)),
+            c.noches_con_dron,
+            habitualDe(c),
+            c.con_dron_en_riesgo_alto,
+          )}
+        </p>
+        <table className="w-full">
+          <caption className="sr-only">{f.verHistorial}</caption>
+          <thead>
+            <tr>
+              <th className="text-left font-normal">{f.columnaDijo}</th>
+              <th className="text-right font-normal">{f.columnaNoches}</th>
+              <th className="text-right font-normal">{f.columnaConDron}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {c.tramos.map((tramo) => (
+              <tr key={tramo.desde}>
+                <td>{f.tramo(Math.round(tramo.desde * 100), Math.round(tramo.hasta * 100))}</td>
+                <td className="mono text-right">{numero(tramo.noches, idioma)}</td>
+                <td className="mono text-right">{numero(tramo.con_dron, idioma)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <p>{f.ultimas}</p>
+        <ul className="mono flex flex-wrap gap-x-2">
+          {vivas.slice(-14).map((n) => (
+            <li key={n.noche}>
+              {fechaDia(diaDeTexto(n.noche))}: {Math.round(n.probabilidad * 100)} %{n.con_dron ? ` · ${f.conDron}` : ""}
+            </li>
+          ))}
+        </ul>
+      </ComoSeComprueba>
     </div>
   );
 }
@@ -178,10 +191,7 @@ export function Prevision({ t, idioma, carga, onRacha }: Props) {
   if (carga.estado === "cargando") return <p className="text-xs text-secundario">{p.cargando}</p>;
   if (carga.estado !== "listo") return <p className="text-xs text-secundario">{p.noDisponible}</p>;
   const d = carga.datos;
-  const marcador = marcadorSemanal(d);
-  const dentro = marcador.filter((f) => f.dentro).length;
   const vivas = enVivo(d, "frontera").filter((e) => e.con_dron !== undefined);
-  const semanaDesde = diaDeTexto(d.semana.semana);
   const aviso = d.segunda_noche?.aviso;
   return (
     <div className="flex flex-col gap-3 text-sm" data-prevision="">
@@ -195,9 +205,11 @@ export function Prevision({ t, idioma, carga, onRacha }: Props) {
           d.frontera.paises.map((pf) => <Frontera key={pf.pais} t={t} idioma={idioma} p={pf} />)
         )}
         {vivas.length > 0 && (
-          <p className="text-xs text-secundario" data-en-vivo-frontera="">
-            {p.frontera.enVivo(vivas.length, vivas.filter((e) => e.con_dron === true).length)}
-          </p>
+          <ComoSeComprueba t={t}>
+            <p data-en-vivo-frontera="">
+              {p.frontera.enVivo(vivas.length, vivas.filter((e) => e.con_dron === true).length)}
+            </p>
+          </ComoSeComprueba>
         )}
       </Seccion>
       {aviso !== undefined && (
@@ -229,21 +241,15 @@ export function Prevision({ t, idioma, carga, onRacha }: Props) {
               ))}
             </ul>
           )}
-          {d.rachas.terminadas.length > 0 && (
-            <p className="mt-1.5 text-xs text-secundario" data-rachas-terminadas="">
-              {p.rachas.terminadas(
-                d.rachas.terminadas.map((r) => p.rachas.terminada(pais(r.pais, idioma), fechaDia(diaDeTexto(r.hasta))))
-                  .join(", "),
+          <ComoSeComprueba t={t}>
+            <p data-historial-rachas="">
+              {p.rachas.historial(
+                d.rachas.comprobacion.semanas_en_racha,
+                d.rachas.comprobacion.incidentes_semana_siguiente,
+                numero(d.rachas.comprobacion.normal_semana_siguiente, idioma),
               )}
             </p>
-          )}
-          <p className="mt-1.5 text-xs text-secundario" data-historial-rachas="">
-            {p.rachas.historial(
-              d.rachas.comprobacion.semanas_en_racha,
-              d.rachas.comprobacion.incidentes_semana_siguiente,
-              numero(d.rachas.comprobacion.normal_semana_siguiente, idioma),
-            )}
-          </p>
+          </ComoSeComprueba>
         </Seccion>
       )}
       {d.cambios !== undefined && d.cambios.ambitos.some((a) => a.cambios.length > 0) && (
@@ -259,65 +265,13 @@ export function Prevision({ t, idioma, carga, onRacha }: Props) {
                     <li key={c.clave}>{textoCambio(t, ambito, c)}</li>
                   ))}
                 </ul>
-                <p className="text-xs text-secundario">
-                  {p.cambios.historial(ambito.comprobacion.casos, ambito.comprobacion.sostenidos)}
-                </p>
+                <ComoSeComprueba t={t}>
+                  <p>{p.cambios.historial(ambito.comprobacion.casos, ambito.comprobacion.sostenidos)}</p>
+                </ComoSeComprueba>
               </div>
             ))}
         </Seccion>
       )}
-      <Seccion titulo={p.semana.titulo} id="semana">
-        <p className="mb-1 text-xs text-secundario">
-          {p.semana.cual(fechaDia(semanaDesde), fechaDia(semanaDesde + 6))}
-          {d.semana.fijada ? "" : ` · ${p.semana.provisional}`}
-        </p>
-        {d.semana.paises.length === 0 ? (
-          <p className="text-xs text-secundario">{p.semana.ninguno}</p>
-        ) : (
-          <ul className="text-sm">
-            {d.semana.paises.map((s) => (
-              <li key={s.pais} data-semana-pais={s.pais}>
-                {pais(s.pais, idioma)}: {p.semana.fila(numero(s.esperado, idioma), s.minimo, s.maximo)}
-              </li>
-            ))}
-          </ul>
-        )}
-        {marcador.length > 0 && (
-          <details className="mt-1.5 text-xs">
-            <summary className="control min-h-11 cursor-pointer text-secundario esc:min-h-7" data-marcador="">
-              {p.semana.marcador(dentro, marcador.length)}
-            </summary>
-            <table className="mt-1 w-full text-secundario">
-              <thead>
-                <tr>
-                  <th className="text-left font-normal">{p.semana.columnaSemana}</th>
-                  <th className="text-left font-normal">{p.semana.columnaPais}</th>
-                  <th className="text-right font-normal">{p.semana.columnaPrevisto}</th>
-                  <th className="text-right font-normal">{p.semana.columnaReal}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {marcador.map((f) => (
-                  <tr key={`${f.pais}-${f.semana}`} data-tipo={f.tipo}>
-                    <td className="mono">
-                      {fechaDia(diaDeTexto(f.semana))}
-                      {f.tipo === "reconstruida" ? " *" : ""}
-                    </td>
-                    <td>{f.pais}</td>
-                    <td className="mono text-right">
-                      {numero(f.esperado, idioma)} ({f.minimo}–{f.maximo})
-                    </td>
-                    <td className="mono text-right text-texto">
-                      {f.real} {f.dentro ? "✓" : "✗"}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <p className="mt-1 text-secundario">{p.semana.leyendaMarcador}</p>
-          </details>
-        )}
-      </Seccion>
       <p className="border-t border-linea pt-2 text-xs text-secundario">
         {d.metodo[idioma]} {p.calculada(fechaHora(d.calculado))}
       </p>
