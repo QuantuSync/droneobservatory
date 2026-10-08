@@ -47,11 +47,15 @@ def test_chisinau_2026_la_noticia_cuenta_que_las_autoridades_lo_llamaron_ruso() 
     assert decision.clase is None and decision.motivo is Motivo.NO_LITERAL
 
 
+# Un nombre inventado con el papel del prefecto que el extractor guardó como autor.
+PREFECTO = "Ion Prefect-Exemplu"
+
+
 def test_aeropuerto_rumano_el_autor_guardado_es_el_propio_prefecto() -> None:
     frase = "The drone entered Romanian territory from the Republic of Moldova"
-    assert atribucion.clasificar("Constantin Dolachi-Pelin", frase) is None
+    assert atribucion.clasificar(PREFECTO, frase) is None
     # Aunque la frase fuese literal: no nombra a nadie como autor y no hay detención.
-    decision = evaluar("Constantin Dolachi-Pelin", frase, "persona", "RO", **LITERAL)
+    decision = evaluar(PREFECTO, frase, "persona", "RO", **LITERAL)
     assert decision.clase is None and decision.motivo is Motivo.PERSONA
 
 
@@ -433,7 +437,7 @@ def test_la_correccion_usa_el_motivo_revisado_y_deja_la_investigacion() -> None:
 def test_la_correccion_devuelve_el_paso_que_la_primera_version_borro() -> None:
     almacen = Almacen.abrir()
     frase = "The drone entered Romanian territory from the Republic of Moldova"
-    antes = _guardado("Constantin Dolachi-Pelin", frase, "EODI-2026-00015")
+    antes = _guardado(PREFECTO, frase, "EODI-2026-00015")
     _guardar_sin_validar(almacen, antes)
     # La primera versión dejó el incidente confirmado, sin el paso a atribuido.
     borrado = copy.deepcopy(antes)
@@ -449,4 +453,4 @@ def test_la_correccion_devuelve_el_paso_que_la_primera_version_borro() -> None:
     retirada = nuevo["estado"]["historial"][-1]["motivo"]
     assert retirada == tipo_atribucion.revisadas()["EODI-2026-00015"]
     # El nombre del prefecto no queda como autor en ningún sitio del incidente.
-    assert "Dolachi" not in json.dumps(nuevo, ensure_ascii=False)
+    assert PREFECTO not in json.dumps(nuevo, ensure_ascii=False)
