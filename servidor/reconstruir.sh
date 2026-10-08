@@ -131,7 +131,9 @@ clave_despliegue() {
     | gh repo deploy-key add - --repo "$repositorio" --title "$TITULO_DESPLIEGUE" --allow-write
 }
 clave_despliegue "$REPOSITORIO_DATOS" "$DESPLIEGUE_DATOS"
-clave_despliegue "$REPOSITORIO" "$DESPLIEGUE_WEB"
+# La clave del repositorio público ya no se da de alta: desde el 7 de octubre de 2026 el servidor
+# publica los datos en el almacén y no escribe en GitHub (main está protegida). Para volver a la
+# publicación en el repositorio (modo github o doble), docs/operacion.md.
 
 # --- Temporizador --------------------------------------------------------------------
 conectar "$OPERADOR" sudo systemctl enable --now "$UNIDAD.timer" "$UNIDAD_EXPORTACION.timer" \

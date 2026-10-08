@@ -18,36 +18,40 @@ email address (mergePullRequest)` y no fusiona nada: así falló el 30 de septie
 2026 con los PR 9, 10 y 11. Con la opción activada, además, GitHub usa la dirección anónima por
 defecto en todo lo que la cuenta hace desde la web.
 
-**Mientras la cuenta no tenga esa opción**, el mismo resultado se consigue sin la API de
-merge, con los commits firmados por la configuración local del clon (la dirección
-anónima, sin `--global`), siguiendo estos pasos en este orden:
+**Desde el 8 de octubre de 2026 la rama `main` está protegida** con la regla de repositorio
+«main protegida» (*Settings* → *Rules*; informe_blindaje.md, fase 4): nada entra sin PR ni sin
+las comprobaciones en verde (`tests`, `web`, `datos-publicados` y `ficheros-del-pr`), con la rama
+al día con `main`; sin empujes forzados, sin borrarla, con historial lineal. Solo una clave de
+despliegue puede saltársela (la del servidor, si se vuelve a publicar en el repositorio); hoy no
+hay ninguna con escritura. Ya no se publica con un push a `main`: se fusiona el PR con «rebase», que pone en
+`main` el commit único de la rama tal cual, con su autor (la dirección anónima). Mientras la cuenta
+no tenga la opción de correo privado, el squash con `--author-email` sigue sin servir y este es el
+camino:
 
 ```
 # a. traer main justo antes de fusionar
 git fetch origin
-# b. rebase sobre main; en un conflicto en publicacion/ gana siempre main
+# b. rebase sobre main
 git switch <rama> && git rebase origin/main
-# c. puerta local y workflow de tests sobre la rama rebasada
-git push --force-with-lease origin <rama>        # y esperar al workflow en verde
-# c2. si el cambio toca la recogida: ensayo de punta a punta sobre una copia de la base real,
-#     con la exportación semanal sin subir (en <carpeta>/exportacion)
-python -m recogida.horaria --correo <correo> --base <copia de db.age> --ensayo <carpeta>
+# c. si el cambio toca la recogida o los datos: ensayo de punta a punta en el servidor, con la
+#    exportación semanal (servidor/ensayo.sh, con ENSAYO_EXPORTACION=1; docs/servidor.md, «Ensayos»)
 # d. un solo commit con el autor anónimo
 git reset --soft origin/main
 git commit -F <fichero con el mensaje>            # título «… (#<número>)» y el porqué
 # e. comprobación obligatoria antes de publicar
 git diff --name-only origin/main HEAD             # solo lo que el PR cambia a propósito
-# f. avance rápido, nunca forzado sobre main
+# f. subir la rama y esperar las comprobaciones (obligatorias para fusionar)
 git push --force-with-lease origin <rama>
-git push origin <rama>:main
-git push origin --delete <rama>
-# g. el número de incidentes publicados no baja
+gh pr checks <número> --watch
+# g. fusionar con rebase: el commit único entra en main con su autor
+gh pr merge <número> --rebase --delete-branch
+# h. el número de incidentes publicados no baja
 ```
 
 Por qué existe cada paso:
 
-- **a y b. Fetch y rebase justo antes.** El servidor de recogida publica cada hora en `main`
-  un commit «Actualiza los datos publicados» (`publicacion/ucrania.json`,
+- **a y b. Fetch y rebase justo antes.** Hasta el 8 de octubre de 2026 el servidor de recogida
+  publicaba cada hora en `main` un commit «Actualiza los datos publicados» (`publicacion/ucrania.json`,
   `publicacion/incidentes.geojson` y `publicacion/incidentes_sin_ubicacion.json`). El commit
   único del paso d lleva el árbol de la rama: si la rama no tiene esos commits, el commit
   único deshace los datos que entraron en `main` mientras la rama vivía. Al fusionar el PR
@@ -56,10 +60,10 @@ Por qué existe cada paso:
   siempre con la versión de `main` (en un rebase, `main` es «ours»:
   `git checkout --ours publicacion/<fichero>` y `git rebase --continue`), salvo que el PR
   cambie a propósito esos ficheros.
-- **c. Tests sobre lo rebasado.** Lo que se fusiona es la rama ya rebasada, no la que pasó
+- **f. Tests sobre lo rebasado.** Lo que se fusiona es la rama ya rebasada, no la que pasó
   los tests antes: los datos nuevos de `main` también tienen que validar (la build de la web
   valida `publicacion/` contra el esquema).
-- **c2. Ensayo de la recogida.** Todo cambio que toque la recogida (`recogida/`, `proceso/`,
+- **c. Ensayo de la recogida.** Todo cambio que toque la recogida (`recogida/`, `proceso/`,
   `almacen/`, `exportacion/`, `esquema/`, `configuracion/`) se ensaya antes de fusionar con
   una recogida completa sobre una copia de la base real de la rama `estado`: `--base` la lee
   de un fichero local y `--ensayo` publica en una carpeta aparte y no sube nada. Sin la clave
@@ -81,16 +85,18 @@ Por qué existe cada paso:
   que salen en `git log --name-only --grep="Actualiza los datos publicados" origin/main`. Si
   aparece alguna que el PR no toca a propósito, se aborta, no se publica y se vuelve al paso
   a.
-- **f. Solo avance rápido.** Si `main` avanza entre la comprobación y el push (la recogida
-  publica en el minuto 17 de cada hora más unos minutos), `git push origin <rama>:main` falla:
-  se vuelve al paso a. Nunca se fuerza un push sobre `main`. Para no chocar, no se fusiona
-  entre el minuto 12 y el 40 de la hora: desde el 1 de octubre de 2026 (capa de guerra con
-  lugar, tráfico aéreo medido) la recogida tarda unos 12 minutos y publica hacia el minuto
-  29, y más tras un cambio que la haga reprocesar.
-- **g. Comprobar producción.** Después del push, el número de incidentes que sirve
+- **f y g. Comprobaciones y rebase.** La protección exige que las comprobaciones pasen sobre la
+  rama al día con `main`; si `main` avanza, GitHub pide rebasar y se vuelve al paso a. La
+  comprobación `ficheros-del-pr` falla si el PR deshace en `main` algo que su rama no cambia (lo
+  que pasó con los PR #84 y #87) o si borra ficheros de `docs/`, `esquema/`, `configuracion/` o
+  `tests/fixtures/` sin una línea «Borra a propósito: <ruta>» en su descripción. Nunca se fuerza
+  un push sobre `main` (la protección tampoco lo deja). No se fusiona entre el minuto 12 y el 40
+  de la hora: es cuando corre la recogida, que reinicia la detección en directo y lee el código
+  del clon al empezar.
+- **h. Comprobar producción.** Después de fusionar, el número de incidentes que sirve
   droneobservatory.eu (la lista `incidentes` de `/datos/resumen.json`) no puede haber bajado
-  respecto al de antes de fusionar; si baja, se restauran los ficheros de datos desde el
-  último commit «Actualiza los datos publicados» del servidor.
+  respecto al de antes; si baja, se revierte el PR con otro PR. Los datos publicados ya no están
+  en el repositorio: el almacén guarda una instantánea de cada día (`publicacion/historial/`).
 
 En `main` queda un commit por pull request con autor anónimo, igual que con el squash.
 Las diferencias: los commits atómicos de la rama se sustituyen por ese único commit
@@ -113,7 +119,7 @@ Antes de fusionar: la puerta local (`pytest`, `ruff check`, `ruff format --check
 `mypy --strict` y la exportación de ensayo `python -m tests.base_prueba --salida <carpeta>`,
 comando a comando) y el workflow de tests, en verde.
 
-**Ensayos y trabajos en el servidor.** Un ensayo del paso c2 lanzado en el servidor, o cualquier
+**Ensayos y trabajos en el servidor.** Un ensayo del paso c lanzado en el servidor, o cualquier
 otro trabajo de una sesión allí, sigue las normas de [`servidor.md`](servidor.md), apartado
 «Trabajos de las sesiones en el servidor»: desde el 5 de octubre de 2026, 3 GB como mucho por
 trabajo y 4 GB entre todos los de las sesiones en marcha, a cualquier hora (también durante la
