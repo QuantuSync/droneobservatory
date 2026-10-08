@@ -300,8 +300,9 @@ const ES: Record<PaginaServicio, TextoServicio> = {
         bloques: [
           {
             lista: [
-              { termino: "Contraste", texto: ["Los colores de los textos, de los estados y de la capa de guerra tienen un contraste de 4,5 a 1 o más, comprobado en cada cambio; los estados se distinguen también por luminancia, para el daltonismo."] },
+              { termino: "Contraste", texto: ["Los colores de los textos, de los estados y de la capa de guerra tienen un contraste de 4,5 a 1 o más, comprobado en cada cambio; los estados se distinguen también por luminancia, para el daltonismo. Los nombres de lugares del mapa de fondo, medidos capa a capa, llegan a 4,5 a 1 contra su halo y contra la tierra y el agua (antes, los más tenues se quedaban en 3,1 a 1)."] },
               { termino: "Teclado", texto: ["Todo se maneja con el teclado: un enlace para saltar al mapa, el foco siempre visible, Escape cierra cada panel y devuelve el foco al botón que lo abrió, y el mapa se mueve con las flechas y se acerca con más y menos."] },
+              { termino: "Marcadores del mapa", texto: ["Después del mapa, el tabulador recorre los incidentes a la vista, del más reciente al más antiguo: el lector de pantalla anuncia su título, su estado y su fecha, el enfocado se señala en el mapa con un aro y su letrero, e Intro abre su ficha. Con el ratón o el dedo, el mapa se usa como siempre."] },
               { termino: "Lectores de pantalla", texto: ["Cada botón y cada control llevan su nombre; los paneles se anuncian con su título; las gráficas llevan un resumen en texto."] },
               { termino: "Textos alternativos", texto: ["Las imágenes de satélite dicen qué son y su fecha, y la superficie cambiada va escrita; los adornos se marcan como tales."] },
               { termino: "Sin el mapa", texto: ["La lista de incidentes y las páginas de texto (todas las fichas, los países, la guerra en Ucrania, la previsión, la metodología y la ayuda) dan lo mismo que el mapa y se leen sin ejecutar código."] },
@@ -318,12 +319,8 @@ const ES: Record<PaginaServicio, TextoServicio> = {
           {
             lista: [
               {
-                termino: "Marcadores del mapa",
-                texto: ["Los incidentes del mapa no se recorren uno a uno con el teclado ni los anuncia el lector de pantalla; hoy se llega a ellos por la lista de incidentes, que da las mismas fichas. Arreglo: que el foco recorra los marcadores visibles y cada uno se anuncie con su título y su estado. Fecha prevista: 31 de diciembre de 2026."],
-              },
-              {
-                termino: "Nombres del mapa base",
-                texto: ["El contraste de los nombres de lugares del mapa de fondo no se ha medido uno a uno. Arreglo: medirlo con cada estilo del mapa y ajustar los que no lleguen a 4,5 a 1. Fecha prevista: 30 de noviembre de 2026."],
+                termino: "Capa de la guerra en Ucrania",
+                texto: ["Las regiones, los impactos y las celdas de interferencia de GPS del mapa no se recorren uno a uno con el teclado (los corredores sí); sus datos están en la página de texto de la guerra en Ucrania. Arreglo: recorrerlos con el tabulador como los incidentes. Fecha prevista: 31 de diciembre de 2026."],
               },
             ],
           },
@@ -580,8 +577,9 @@ const EN: Record<PaginaServicio, TextoServicio> = {
         bloques: [
           {
             lista: [
-              { termino: "Contrast", texto: ["Text, status and war-layer colours have a contrast of 4.5 to 1 or more, checked on every change; statuses also differ in luminance, for colour blindness."] },
+              { termino: "Contrast", texto: ["Text, status and war-layer colours have a contrast of 4.5 to 1 or more, checked on every change; statuses also differ in luminance, for colour blindness. Place names on the background map, measured layer by layer, reach 4.5 to 1 against their halo and against land and water (the faintest used to be 3.1 to 1)."] },
               { termino: "Keyboard", texto: ["Everything works with the keyboard: a link to skip to the map, focus always visible, Escape closes each panel and returns focus to the button that opened it, and the map moves with the arrow keys and zooms with plus and minus."] },
+              { termino: "Map markers", texto: ["After the map, the Tab key goes through the incidents in view, most recent first: screen readers announce their title, status and date, the focused one is marked on the map with a ring and its label, and Enter opens its record. With a mouse or a finger, the map works as always."] },
               { termino: "Screen readers", texto: ["Every button and control has its name; panels are announced with their title; charts carry a text summary."] },
               { termino: "Text alternatives", texto: ["Satellite images say what they are and their date, and the changed area is written out; decorations are marked as such."] },
               { termino: "Without the map", texto: ["The incident list and the text pages (every record, the countries, the war in Ukraine, the forecast, the methodology and the help) give the same as the map and can be read without running code."] },
@@ -598,12 +596,8 @@ const EN: Record<PaginaServicio, TextoServicio> = {
           {
             lista: [
               {
-                termino: "Map markers",
-                texto: ["The incidents on the map cannot be stepped through one by one with the keyboard and are not announced by screen readers; today they are reached through the incident list, which gives the same records. Fix: let focus move through the visible markers and announce each with its title and status. Planned date: 31 December 2026."],
-              },
-              {
-                termino: "Base map names",
-                texto: ["The contrast of place names on the background map has not been measured one by one. Fix: measure it in each map style and adjust those below 4.5 to 1. Planned date: 30 November 2026."],
+                termino: "War in Ukraine layer",
+                texto: ["The regions, impacts and GPS interference cells on the map cannot be stepped through one by one with the keyboard (the corridors can); their data is on the text page about the war in Ukraine. Fix: step through them with the Tab key like the incidents. Planned date: 31 December 2026."],
               },
             ],
           },

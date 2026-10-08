@@ -469,8 +469,11 @@ export const en: Textos = {
   mapa: {
     etiqueta: "Map of Europe with the incidents of the selected period",
     instrucciones:
-      "With focus on the map, the arrow keys pan and the plus and minus keys zoom. The " +
-      "incident list opens the same records without using the map.",
+      "With focus on the map, the arrow keys pan and the plus and minus keys zoom. After the " +
+      "map, the Tab key goes through the incidents in view, most recent first: each one is " +
+      "marked on the map and Enter opens its record. The incident list opens the same records " +
+      "without using the map.",
+    aLaVista: (n) => (n === 1 ? "1 incident in view on the map" : `${n} incidents in view on the map`),
     grupo: (n) => (n === 1 ? "1 incident: zoom in to see it" : `${n} incidents: zoom in to see them`),
     pila: (n) => `${n} incidents at this exact spot: tap to choose one`,
     atribuidos: (n) => `${n} attributed incidents: zoom in to separate them`,

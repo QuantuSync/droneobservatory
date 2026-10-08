@@ -33,7 +33,7 @@ import type {
   FocoRegion,
   IncidenteResumen,
 } from "../datos/tipos.ts";
-import { pais as nombrePais, porcentaje, textoAtribuido } from "../i18n/index.ts";
+import { fechaDia, pais as nombrePais, porcentaje, textoAtribuido } from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
 import { ESCALA_UCRANIA, acento } from "../paleta.ts";
 import { opacidadDePerdida } from "../datos/guerraSatelite.ts";
@@ -285,6 +285,14 @@ export interface PropsMapa {
   recorrido: GeoJSON.FeatureCollection | null;
 }
 
+/** Radio del aro que señala en el mapa el incidente enfocado con el teclado. */
+const RADIO_ARO_PX = 14;
+
+/** Lo que anuncia el lector de pantalla de un incidente del mapa: título, estado y fecha. */
+export function textoDeIncidente(t: Textos, idioma: Idioma, i: IncidenteResumen): string {
+  return `${i.titulo[idioma]} · ${t.estado[i.estado]} · ${fechaDia(i.dia)}`;
+}
+
 /** Capas de las rutas que se pueden tocar: el halo y la zona sensible de la línea. */
 const CAPAS_DE_RUTA: readonly string[] = [CAPA_RUTAS, CAPA_RUTAS_ZONA];
 /** Parte del relleno de las regiones que queda con las rutas a la vista. */
@@ -417,6 +425,8 @@ const VACIA_REALCE: GeoJSON.FeatureCollection = { type: "FeatureCollection", fea
 
 export default function Mapa(props: PropsMapa) {
   const { t, idioma, incidentes, episodios, capas, intensidad, noche, elegido } = props;
+  const [aLaVista, setALaVista] = useState<readonly IncidenteResumen[]>([]);
+  const aroTeclado = useRef<HTMLDivElement>(null);
   const { focosUcrania, impactos, gnss, presion, avisos } = props;
   const { corredores, luzRegiones, ciudadesSinLuz, alumbrado, corredorElegido } = props;
   const { puntosSatelite, soloSatelite, rutas, recorrido } = props;
@@ -503,6 +513,32 @@ export default function Mapa(props: PropsMapa) {
       { ancho: mapa.getContainer().clientWidth, alto: mapa.getContainer().clientHeight },
     );
     caja.style.transform = `translate(${x}px, ${y}px)`;
+  }
+
+  /** Dónde se dibuja un incidente: su punto o el de su lugar aproximado. */
+  function posicionDe(i: IncidenteResumen): [number, number] | null {
+    if (i.punto !== null) return [i.punto.lon, i.punto.lat];
+    if (i.aproximado !== null) return [i.aproximado.lon, i.aproximado.lat];
+    return null;
+  }
+
+  /**
+   * Con el teclado: el incidente del botón enfocado, con un aro y su letrero junto a su marcador
+   * (lo que se ve al pasar el ratón). Sin ratón ni dedo: el mapa no se mueve.
+   */
+  function enfocarIncidente(i: IncidenteResumen | null) {
+    const mapa = mapaRef.current;
+    const aro = aroTeclado.current;
+    const posicion = i === null ? null : posicionDe(i);
+    if (mapa === null || aro === null || i === null || posicion === null) {
+      if (aro !== null) aro.hidden = true;
+      ponerLetrero(null, { x: 0, y: 0 });
+      return;
+    }
+    const punto = mapa.project(posicion);
+    aro.hidden = false;
+    aro.style.transform = `translate(${punto.x - RADIO_ARO_PX}px, ${punto.y - RADIO_ARO_PX}px)`;
+    ponerLetrero(textoDeIncidente(t, idioma, i), punto);
   }
 
   /** Con el teclado: el arco del botón enfocado, realzado y con su letrero en su punto medio. */
@@ -1190,6 +1226,32 @@ export default function Mapa(props: PropsMapa) {
     };
   }, [listo]);
 
+  // Los incidentes a la vista, para recorrerlos con el teclado: se rehacen cuando el mapa termina
+  // de moverse o cambian los filtros.
+  useEffect(() => {
+    const mapa = mapaRef.current;
+    if (!listo || mapa === null || !capas.incidentes) {
+      setALaVista([]);
+      return undefined;
+    }
+    const actualizar = () => {
+      const limites = mapa.getBounds();
+      setALaVista(
+        incidentes
+          .filter((i) => {
+            const posicion = posicionDe(i);
+            return posicion !== null && limites.contains(posicion);
+          })
+          .sort((a, b) => b.dia - a.dia || (b.inicio ?? 0) - (a.inicio ?? 0) || b.id.localeCompare(a.id)),
+      );
+    };
+    actualizar();
+    mapa.on("moveend", actualizar);
+    return () => {
+      mapa.off("moveend", actualizar);
+    };
+  }, [listo, incidentes, capas.incidentes]);
+
   // Al abrir algo, según de dónde: ir a ello, o asomarlo si ya estaba a la vista. Cerrar no pide
   // nada: el mapa se queda donde está.
   useEffect(() => {
@@ -1211,6 +1273,33 @@ export default function Mapa(props: PropsMapa) {
         {/* El recorte a dos líneas va dentro: con el relleno de la caja asomaría la tercera. */}
         <span ref={textoLetrero} className="line-clamp-2" />
       </div>
+      <div
+        ref={aroTeclado}
+        hidden
+        aria-hidden="true"
+        data-aro-teclado=""
+        className="pointer-events-none absolute left-0 top-0 z-20 rounded-full border-2 border-acento"
+        style={{ width: RADIO_ARO_PX * 2, height: RADIO_ARO_PX * 2 }}
+      />
+      {/* Los incidentes a la vista, uno a uno con el tabulador (del más reciente al más antiguo): el
+          lector de pantalla anuncia título, estado y fecha, el enfocado se señala en el mapa con un
+          aro y su letrero, e Intro abre su ficha. Con el ratón o el dedo no se ve nada de esto. */}
+      {listo && aLaVista.length > 0 && (
+        <ul className="sr-only" aria-label={t.mapa.aLaVista(aLaVista.length)} data-incidentes-teclado="">
+          {aLaVista.map((i) => (
+            <li key={i.id}>
+              <button
+                type="button"
+                onFocus={() => enfocarIncidente(i)}
+                onBlur={() => enfocarIncidente(null)}
+                onClick={() => props.onIncidente(i.id)}
+              >
+                {textoDeIncidente(t, idioma, i)}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
       {/* Los corredores, uno a uno con el tabulador: el enfocado se realza en el mapa con su
           letrero, e Intro abre su ficha. */}
       {listo && capas.ucrania && capas.corredores && corredores !== null && corredores.length > 0 && (

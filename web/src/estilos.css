@@ -484,6 +484,13 @@ body.pagina-texto {
   color: var(--color-texto);
 }
 
+/* Versión citable: la huella de cada fichero, partida donde haga falta en el teléfono. */
+.texto-pagina .texto-huella {
+  overflow-wrap: anywhere;
+  font-size: 0.8125rem;
+  margin: 0 0 0.75rem;
+}
+
 /* Registro de correcciones: una entrada tras otra, separadas por una línea. */
 .texto-pagina .texto-correccion {
   margin-top: 1rem;
