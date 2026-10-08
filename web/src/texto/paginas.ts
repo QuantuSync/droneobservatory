@@ -42,7 +42,7 @@ import type { Idioma } from "../sitio.ts";
 import { fechaDeDia } from "../tiempo/dias.ts";
 import { e, html, jsonLd } from "./html.ts";
 import type { Hijo, Html } from "./html.ts";
-import { PAGINAS_SERVICIO, RUTAS_SERVICIO, textoServicio } from "./servicio.ts";
+import { BORRAR_VISITA, PAGINAS_SERVICIO, RUTAS_SERVICIO, SCRIPT_BORRAR_VISITA, textoServicio } from "./servicio.ts";
 import type { PaginaServicio } from "./servicio.ts";
 import { textosPagina } from "./textos.ts";
 import type { TextosPagina } from "./textos.ts";
@@ -73,6 +73,8 @@ export interface PaginaTexto {
   conMapa: boolean;
   /** Última modificación de lo que dice la página (instante ISO), para el sitemap. */
   modificada: string;
+  /** Scripts de este sitio que necesita una página solo de texto (el botón de privacidad). */
+  scripts?: readonly string[];
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -1055,8 +1057,26 @@ export function paginas(datos: DatosPaginas): PaginaTexto[] {
 /** Fecha de la última revisión de las páginas de servicio, para el sitemap. */
 const REVISION_SERVICIO = "2026-10-08T00:00:00Z";
 
-function paginaServicio(pagina: PaginaServicio, idioma: Idioma): PaginaTexto {
+/**
+ * El botón que borra la fecha de la última visita, en la página de privacidad: oculto hasta que
+ * su script (SCRIPT_BORRAR_VISITA) lo enseña; sin código, la explicación de cómo hacerlo.
+ */
+function borrarVisita(idioma: Idioma): Html {
+  const b = BORRAR_VISITA[idioma];
+  return html(
+    e(
+      "p",
+      null,
+      e("button", { type: "button", class: "texto-boton", hidden: true, "data-borrar-visita": "", "data-hecho": b.hecho, "data-fallo": b.fallo }, b.boton),
+    ),
+    e("p", { role: "status", "aria-live": "polite", "data-borrar-visita-estado": "" }),
+    e("noscript", null, e("p", null, b.sinCodigo)),
+  );
+}
+
+export function paginaServicio(pagina: PaginaServicio, idioma: Idioma): PaginaTexto {
   const texto = textoServicio(pagina, idioma);
+  const conBoton = pagina === "privacidad";
   return {
     idioma,
     rutas: RUTAS_SERVICIO[pagina],
@@ -1064,11 +1084,14 @@ function paginaServicio(pagina: PaginaServicio, idioma: Idioma): PaginaTexto {
     descripcion: texto.descripcion,
     cuerpo: html(
       e("h1", null, texto.titulo),
-      texto.secciones.map((s) => e("section", { id: s.id }, e("h2", null, s.titulo), s.bloques.map(bloque))),
+      texto.secciones.map((s) =>
+        e("section", { id: s.id }, e("h2", null, s.titulo), s.bloques.map(bloque), conBoton && s.id === "navegador" && borrarVisita(idioma)),
+      ),
     ),
     estructurados: [],
     conMapa: false,
     modificada: REVISION_SERVICIO,
+    ...(conBoton ? { scripts: [SCRIPT_BORRAR_VISITA] } : {}),
   };
 }
 

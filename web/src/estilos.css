@@ -341,6 +341,26 @@ body.pagina-texto {
   color: var(--acento);
 }
 
+.texto-pagina .texto-boton {
+  min-height: 2.75rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--color-linea);
+  border-radius: 0.25rem;
+  background: var(--color-elevado);
+  color: var(--color-texto);
+  font: inherit;
+  cursor: pointer;
+}
+
+.texto-pagina .texto-boton:hover {
+  border-color: var(--acento);
+}
+
+.texto-pagina .texto-boton:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 2px;
+}
+
 .texto-saltar {
   position: absolute;
   left: -9999px;

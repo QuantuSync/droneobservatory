@@ -321,6 +321,13 @@
         "EODI-2025-00442"
       ],
       "motivo": "el mismo suceso: los drones que entraron en Polonia la noche del 9 al 10 de septiembre de 2025 (00442 es la nota de bankier.pl del 8 de octubre de 2026 sobre el archivo de la investigación de la Fiscalía Regional de Lublin, fechada por su publicación)"
+    },
+    {
+      "registros": [
+        "EODI-2025-00295",
+        "EODI-2025-00443"
+      ],
+      "motivo": "el mismo suceso: los drones que entraron en Polonia la noche del 9 al 10 de septiembre de 2025 (00443 es la nota de dziennikwschodni.pl del 8 de octubre de 2026 sobre el archivo de la investigación de la Fiscalía Regional de Lublin, como 00442)"
     }
   ],
   "reextraer": [
