@@ -28,7 +28,8 @@ hace menos de 10 minutos, todo va bien.
 - la incidencia se cierra sola cuando se arregla.
 
 Problemas que avisan: datos publicados con más de 2 horas, recogida que termina con un código
-distinto de 0 y 2, captura del seguimiento sin recibir nada en 10 minutos, copia de la base o del
+distinto de 0 y 2, captura del seguimiento sin recibir nada en 10 minutos, archivo de alertas de alerts.in.ua sin
+respuesta correcta de la API en 15 minutos o con la API respondiendo 401 o 403, copia de la base o del
 archivo con más de 2 horas, segunda copia con más de 3 horas, disco por encima del 75 %, servidor
 sin dar señales (salud.json con más de 20 minutos), exportación semanal fallida o con más de 8
 días, detección en directo parada más de media hora, paso de la base a solo disco fallido.
@@ -89,6 +90,24 @@ sudo systemctl restart eodi-seguimiento.service      # el hueco queda anotado
 Lo que NEPTUN emite mientras el servicio está parado se pierde: relanzarlo cuanto antes. El
 archivo ya guardado está a salvo: sube cada hora a la copia privada y a la segunda copia.
 
+## Si el archivo de alertas se para
+
+```
+systemctl status eodi-alertas.service
+journalctl -u eodi-alertas.service -n 40
+sudo -u eodi cat /home/eodi/.eodi/alertas.json         # última respuesta, último error
+sudo systemctl restart eodi-alertas.service
+```
+
+- **401 o 403** (`error_autorizacion` en `alertas.json`): el token ya no vale o la IP del servidor
+  está bloqueada. Pedir un token nuevo en <https://devs.alerts.in.ua/>, dejarlo en
+  `%USERPROFILE%\.eodi\alerts_in_ua_token.txt` y en el servidor:
+  `tr -d '\r\n' < ~/.eodi/alerts_in_ua_token.txt | ssh … 'sudo -u eodi sh -c "umask 077; cat > /home/eodi/.eodi/alerts_in_ua_token"'`
+  y reiniciar la unidad.
+- **Otro fallo**: el servicio reintenta solo con esperas crecientes. Lo que no se vea de las
+  activas mientras esté parado lo rellena el histórico del día siguiente (el último mes), salvo la
+  lista de amenazas, que solo dan las activas.
+
 ## Si el disco se llena
 
 El aviso llega al 75 %. Ver qué ocupa: `sudo du -sh /home/eodi/* /home/eodi/datos/* | sort -h`.
@@ -145,6 +164,8 @@ Crea el servidor, lo endurece, lo instala, lleva las credenciales y activa los t
 2. poner los interruptores como estaban: `echo disco | sudo -u eodi tee /home/eodi/.eodi/base_modo`,
    `echo almacen | sudo -u eodi tee /home/eodi/.eodi/publicacion_modo` y
    `echo no | sudo -u eodi tee /home/eodi/.eodi/base_secundaria` (desde el 13 de octubre de 2026);
+   el archivo de alertas sigue solo: `restaurar-todo` ya trae sus ficheros y, con
+   `alertas_tabla/estado.json` sin restaurar, el servicio lo rehace con la tabla;
 3. dejar el gancho de despliegue de Vercel en `/home/eodi/.eodi/vercel_gancho` (lo da el panel de
    Vercel, *Settings* → *Git* → *Deploy Hooks*, o su API) con permisos 600;
 4. activar las copias de Hetzner: `hcloud server enable-backup eodi-recogida`;

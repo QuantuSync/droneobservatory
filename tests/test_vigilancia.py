@@ -21,14 +21,24 @@ def _iso(momento: datetime) -> str:
 class Sistema:
     """Responde a systemctl show y a journalctl como lo haría el servidor."""
 
-    def __init__(self, codigo: int, fin: datetime, diario: list[str], seguimiento: str = "active"):
+    def __init__(
+        self,
+        codigo: int,
+        fin: datetime,
+        diario: list[str],
+        seguimiento: str = "active",
+        alertas: str = "active",
+    ):
         self.codigo, self.fin, self.diario, self.seguimiento = codigo, fin, diario, seguimiento
+        self.alertas = alertas
 
     def __call__(self, orden: Sequence[str]) -> str:
         if orden[0] == "journalctl":
             return "\n".join(self.diario)
         if orden[2] == vigilancia.UNIDAD_SEGUIMIENTO:
             return f"ActiveState={self.seguimiento}\n"
+        if orden[2] == vigilancia.UNIDAD_ALERTAS:
+            return f"ActiveState={self.alertas}\n"
         inicio = int((self.fin - timedelta(minutes=15)).timestamp())
         return (
             f"ActiveState=failed\nExecMainStatus={self.codigo}\n"
@@ -45,6 +55,9 @@ def preparar(tmp_path: Path, recepcion: datetime, copia: datetime) -> tuple[Path
         json.dumps({"ultima_recepcion": _iso(recepcion)}), encoding="utf-8"
     )
     (secretos / "replica.json").write_text(json.dumps({"ultima": _iso(copia)}), encoding="utf-8")
+    (secretos / "alertas.json").write_text(
+        json.dumps({"ultima_respuesta": _iso(recepcion)}), encoding="utf-8"
+    )
     (datos / "copias" / "2026-10-07.json").write_text(
         json.dumps({"objetos": {"neptun/x.gz": {"copiado": _iso(copia)}}}), encoding="utf-8"
     )
@@ -80,7 +93,10 @@ def test_todo_bien_con_avisos_de_la_recogida_y_titulares_retenidos(tmp_path: Pat
 
 def test_cada_problema_tiene_su_frase(tmp_path: Path) -> None:
     secretos, datos = preparar(tmp_path, AHORA - timedelta(minutes=25), AHORA - timedelta(hours=4))
-    sistema = Sistema(1, AHORA - timedelta(hours=3), [], seguimiento="failed")
+    sistema = Sistema(1, AHORA - timedelta(hours=3), [], seguimiento="failed", alertas="failed")
+    (secretos / "alertas.json").write_text(
+        json.dumps({"error_autorizacion": {"momento": _iso(AHORA), "http": 401}}), encoding="utf-8"
+    )
     salud, _ = vigilancia.componer(
         AHORA, secretos, datos, tmp_path, sistema, lambda: AHORA - timedelta(hours=4)
     )
@@ -89,6 +105,8 @@ def test_cada_problema_tiene_su_frase(tmp_path: Path) -> None:
         "publicacion",
         "recogida",
         "seguimiento",
+        "alertas",
+        "alertas_autorizacion",
         "copia_base",
         "copia_archivo",
         "replica",
@@ -107,6 +125,23 @@ def test_el_disco_avisa_antes_del_80(tmp_path: Path, monkeypatch: pytest.MonkeyP
         lambda: AHORA,
     )  # fmt: skip
     assert [p["id"] for p in salud["problemas"]] == ["disco"]
+
+
+@pytest.mark.parametrize(("minutos", "problema"), [(14, False), (16, True)])
+def test_alertas_sin_respuesta_mas_de_15_minutos(
+    tmp_path: Path, minutos: int, problema: bool
+) -> None:
+    secretos, datos = preparar(tmp_path, AHORA, AHORA)
+    (secretos / "alertas.json").write_text(
+        json.dumps({"ultima_respuesta": _iso(AHORA - timedelta(minutes=minutos))}), encoding="utf-8"
+    )
+    salud, _ = vigilancia.componer(
+        AHORA, secretos, datos, tmp_path, Sistema(0, AHORA - timedelta(minutes=10), []),
+        lambda: AHORA,
+    )  # fmt: skip
+    ids = [p["id"] for p in salud["problemas"] if p["id"] != "disco"]
+    assert ids == (["alertas"] if problema else [])
+    assert salud["alertas"]["unidad"] == "active"
 
 
 # --- Reinicio ---------------------------------------------------------------------------------

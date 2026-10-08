@@ -530,6 +530,35 @@ Persistent=true
 [Install]
 WantedBy=timers.target
 FIN
+# Alertas aéreas de Ucrania de alerts.in.ua (servidor/alertas.sh): siempre en marcha, con su
+# propio cerrojo, tope de memoria y prioridad baja; solo sale (y systemd la relanza) cuando cambia
+# su código. Lo archivado lo comprime y copia el archivo del seguimiento.
+cat > "/etc/systemd/system/$UNIDAD_ALERTAS.service" <<FIN
+[Unit]
+Description=Archivo de las alertas aéreas de Ucrania de alerts.in.ua (EODI)
+Wants=network-online.target
+After=network-online.target time-sync.target
+
+[Service]
+Type=simple
+User=$USUARIO
+Group=$USUARIO
+WorkingDirectory=$CLON
+ExecStart=/usr/bin/env bash $CLON/servidor/alertas.sh
+SyslogIdentifier=$UNIDAD_ALERTAS
+Restart=always
+RestartSec=30
+TimeoutStopSec=30
+Nice=$ALERTAS_NICE
+IOSchedulingClass=idle
+MemoryMax=$ALERTAS_MEMORIA
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=full
+
+[Install]
+WantedBy=multi-user.target
+FIN
 # Réplica en otra ubicación (servidor/replica.sh): copias de la base y archivo, a Helsinki.
 cat > "/etc/systemd/system/$UNIDAD_REPLICA.service" <<FIN
 [Unit]

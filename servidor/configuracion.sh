@@ -296,6 +296,20 @@ MINUTO_SEGUIMIENTO_ARCHIVO=3
 SEGUIMIENTO_ARCHIVO_TOPE_UNIDAD=40
 SEGUIMIENTO_ARCHIVO_MEMORIA="1G"
 
+# --- Alertas aéreas de Ucrania de alerts.in.ua (servidor/alertas.sh, recogida/alertas.py) ------
+# Activas cada minuto e histórico del último mes una vez al día, en crudo y en tabla, en la misma
+# carpeta que el seguimiento (alertas/ y alertas_tabla/): las comprime, indexa y copia el archivo
+# del seguimiento. El token de la API, solo legible por el usuario del servicio.
+UNIDAD_ALERTAS="eodi-alertas"
+CERROJO_ALERTAS="$SECRETOS/alertas.lock"
+ALERTAS_TOKEN="$SECRETOS/alerts_in_ua_token"
+LOCAL_ALERTAS_TOKEN="$LOCAL_SECRETOS/alerts_in_ua_token.txt"
+# Última respuesta, último cambio, último error de autorización: lo mira la vigilancia.
+ALERTAS_REGISTRO="$SECRETOS/alertas.json"
+# Una respuesta del histórico de una región es de 0,2 a 1 MB y la tabla recuerda 40 días de alertas.
+ALERTAS_MEMORIA="300M"
+ALERTAS_NICE=15
+
 # --- Guerra por satélite ----------------------------------------------------------------
 # Tres servicios con su propio temporizador y su propio cerrojo; ninguno toma el de la recogida
 # horaria ni toca el clon. Sus datos, fuera del repositorio y de la base, del usuario del
