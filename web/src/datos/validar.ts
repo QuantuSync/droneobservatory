@@ -421,7 +421,17 @@ const detalleIncidente = alguna(
   ),
 );
 
-const publicacionSinUbicacion = objeto({ incidentes: lista(incidenteSinUbicacion) });
+/** La licencia que llevan dentro los ficheros del almacén (recogida/licencia.py). */
+const licenciaPublicada = objeto({
+  nombre: cadena(),
+  url: cadena(/^https:\/\//),
+  titular: cadena(),
+  fuente: cadena(/^https:\/\//),
+  alcance: objeto({ es: cadena(), en: cadena() }),
+  cita: objeto({ es: cadena(), en: cadena() }),
+});
+
+const publicacionSinUbicacion = objeto({ incidentes: lista(incidenteSinUbicacion) }, { licencia: licenciaPublicada });
 
 const featureIncidente = objeto({
   type: constante("Feature"),
@@ -435,7 +445,7 @@ const coleccion = objeto(
     type: constante("FeatureCollection"),
     features: lista(featureIncidente),
   },
-  { unidos: diccionario(cadena(v.PATRON_ID_INCIDENTE), cadena(v.PATRON_ID_INCIDENTE)) },
+  { unidos: diccionario(cadena(v.PATRON_ID_INCIDENTE), cadena(v.PATRON_ID_INCIDENTE)), licencia: licenciaPublicada },
 );
 
 const regionAtaque = objeto(
@@ -584,7 +594,7 @@ const impactoGuerra = objeto(
   },
 );
 
-const publicacionUcrania = objeto({ ataques: lista(ataque) }, { impactos: lista(impactoGuerra) });
+const publicacionUcrania = objeto({ ataques: lista(ataque) }, { impactos: lista(impactoGuerra), licencia: licenciaPublicada });
 
 const resumen = objeto({
   actualizado: cadena(v.PATRON_INSTANTE),
@@ -1118,6 +1128,7 @@ const prevision = objeto(
         }),
       ),
     }),
+    licencia: licenciaPublicada,
   },
 );
 
@@ -1268,7 +1279,7 @@ const registroCorrecciones = objeto({
       { titulo, a_raiz_de_un_aviso: constante(true) },
     ),
   ),
-});
+}, { licencia: licenciaPublicada });
 
 export function validarCorrecciones(valor: unknown): Resultado<RegistroCorrecciones> {
   return validar(registroCorrecciones, valor);

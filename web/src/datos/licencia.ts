@@ -34,6 +34,9 @@ export function metadatosLicencia(actualizado: string): MetadatosLicencia {
  * GeoJSON, un miembro ajeno permitido por el estándar). El resto del contenido no cambia.
  */
 export function conLicencia(texto: string, actualizado: string): string {
+  // Los ficheros del almacén ya traen la licencia (recogida/licencia.py): la de la descarga, con
+  // la fecha de la versión en la cita, la sustituye.
   const datos = JSON.parse(texto) as Record<string, unknown>;
+  delete datos.licencia;
   return JSON.stringify({ licencia: metadatosLicencia(actualizado), ...datos });
 }

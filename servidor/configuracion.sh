@@ -375,10 +375,11 @@ REPLICA_MEMORIA="1G"
 # --- Versiones citables de los datos abiertos (servidor/versiones.sh, recogida/versiones.py) ----
 # Cada día a las 02:35 UTC: el día 1 congela la versión del mes en el almacén público (si falta)
 # y siempre comprueba que las publicadas no han cambiado. Fuera de los minutos 12 a 40, sin la base
-# ni el cerrojo de la recogida: solo lee la web y escribe en versiones/ del almacén.
+# ni el cerrojo de la recogida: solo lee la web y escribe en versiones/ del almacén. Pico medido al
+# generar la primera (8 de octubre de 2026): 597 MB (lee ucrania.json, unos 27 MB, para comprobarlo).
 UNIDAD_VERSIONES="eodi-versiones"
 CALENDARIO_VERSIONES="*-*-* 02:35:00 UTC"
-VERSIONES_MEMORIA="400M"
+VERSIONES_MEMORIA="1G"
 TOPE_VERSIONES_MINUTOS=20
 
 # --- Vigilancia (servidor/vigilancia.sh, recogida/vigilancia.py) ------------------------------

@@ -57,8 +57,15 @@ def test_sube_lo_cambiado_el_manifiesto_al_final_y_la_instantanea_del_dia(tmp_pa
     assert correcto and cambiado
     assert list(almacen.objetos)[4] == "publicacion/manifiesto.json"
     cuerpo, kw = almacen.objetos["publicacion/ucrania.json"]
-    assert gzip.decompress(cuerpo) == b'{"ataques": []}'
-    assert kw["metadatos"]["x-amz-meta-sha256"] == hashlib.sha256(b'{"ataques": []}').hexdigest()
+    subido = gzip.decompress(cuerpo)
+    # Con la licencia dentro, como primer miembro, y en los metadatos del objeto.
+    documento = json.loads(subido)
+    assert list(documento) == ["licencia", "ataques"] and documento["ataques"] == []
+    assert documento["licencia"]["nombre"] == "CC BY 4.0"
+    assert documento["licencia"]["cita"]["en"].startswith("European Observatory of Drone Incidents")
+    assert kw["metadatos"]["x-amz-meta-licencia"] == "CC BY 4.0"
+    assert kw["metadatos"]["x-amz-meta-sha256"] == hashlib.sha256(subido).hexdigest()
+    assert registro["ficheros"]["ucrania.json"]["sha256"] == hashlib.sha256(subido).hexdigest()
     assert "publicacion/historial/2026-10-07/ucrania.json.gz" in almacen.objetos
     assert registro["historial"] == "2026-10-07"
     # Lo que sirve el almacén es idéntico a la carpeta.
