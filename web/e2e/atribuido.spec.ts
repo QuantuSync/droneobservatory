@@ -142,8 +142,11 @@ for (const tamano of [...TELEFONOS, ESCRITORIO]) {
           await expect(ficha.locator("[data-estado-atribuido]")).toHaveCount(0);
           await expect(ficha.locator("[data-motivo-historial]").last()).toContainText("Se retira la atribución");
         }
-        // El nombre del prefecto no aparece como autor en ningún sitio.
-        expect(await ficha.textContent()).not.toContain("Dolachi");
+        // Ninguna persona queda como autor en la ficha de un incidente retirado.
+        if (resumen.estado !== "atribuido") {
+          const detalle = (await (await page.request.get(`/datos/incidentes/${id}.json`)).json()) as Record<string, unknown>;
+          expect(detalle["atribucion"]).toBeUndefined();
+        }
         await capturar(page, `revisado-${id}-${nombre}`);
       }
       // La cifra de atribuidos coincide con los que quedan.
@@ -152,10 +155,6 @@ for (const tamano of [...TELEFONOS, ESCRITORIO]) {
       if (telefono) await page.getByRole("banner").getByRole("button", { name: "Menú" }).click();
       const cifra = page.locator("[data-marca-cifra]").filter({ visible: true }).first().locator("xpath=..");
       await expect(cifra).toHaveText(new RegExp(`^${atribuidosAhora}`));
-      // Ni en los datos publicados.
-      for (const ruta of ["/datos/resumen.json", "/datos/incidentes.geojson"]) {
-        expect(await (await page.request.get(ruta)).text()).not.toContain("Dolachi");
-      }
     });
 
     test(`${nombre}: ampliada de cada atribuido, junto a los círculos`, async ({ browser, baseURL }) => {

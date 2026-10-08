@@ -110,9 +110,8 @@ declaraciones oficiales que recogió el extractor) en su idioma original.
 - Cita (stiripesurse.ro, en inglés): «The drone entered Romanian territory from the Republic of
   Moldova» → «El dron entró en territorio rumano desde la República de Moldavia».
 - Autoridad: el prefecto del distrito de Iasi (representante del Gobierno rumano en el distrito).
-- A quién atribuye: a nadie. El «autor» guardado, Constantin Dolachi-Pelin, **es el propio
-  prefecto de Iasi** ([InfoCons](https://infocons.ro/institutia-prefectului-judetul-iasi-si-prefectul-constantin-dolachi-pelin-infocons-te-informeaza/)):
-  el extractor puso como autor del incidente el nombre de la autoridad que hacía la declaración.
+- A quién atribuye: a nadie. El «autor» guardado **es el propio prefecto de Iasi** (lo dice la
+  propia institución del prefecto): el extractor puso como autor del incidente el nombre de la autoridad que hacía la declaración.
   Era el fallo más grave posible.
 - Decisión: **retirada**. Queda confirmado (la dirección del aeropuerto confirma la suspensión
   de los vuelos).
@@ -313,7 +312,7 @@ anterior al PR #106 no leen la base nueva hasta actualizarse.
   subida a la rama `estado`, ficheros publicados en `main`.
 - En droneobservatory.eu, con los datos de las 13:17: 592 incidentes servidos (516 antes; no
   bajan), **0 atribuidos**, y EODI-2025-00247, EODI-2026-00015, EODI-2026-00074 y EODI-2026-00283
-  en «confirmado». «Dolachi» no aparece en `resumen.json`, `incidentes.geojson`, `incidentes.csv`
+  en «confirmado». El nombre del prefecto no aparece en `resumen.json`, `incidentes.geojson`, `incidentes.csv`
   ni en el JSON de la ficha de EODI-2026-00015. La ficha de EODI-2026-00283 lleva el titular
   «Dron en el aeropuerto de Leipzig/Halle», el motivo de la retirada en el historial y la
   investigación de la fiscalía federal.
