@@ -88,6 +88,22 @@ export const descargarConReintentos: typeof fetch = async (entrada, opciones) =>
   }
 };
 
+/** Evento con el que la web pide a public/arranque.js que recargue la página (o avise). */
+export const EVENTO_FALLO_ARRANQUE = "eodi:fallo-arranque";
+
+/**
+ * Carga un trozo de código bajo demanda (el mapa). Si no llega, no se reintenta aquí: el navegador
+ * recuerda el fallo de un módulo mientras dure la página. Se avisa a public/arranque.js, que
+ * recarga la página con espera creciente o enseña el error con «Reintentar», y mientras tanto el
+ * resto de la web sigue a la vista.
+ */
+export function importarOAvisar<T>(importar: () => Promise<T>): Promise<T> {
+  return importar().catch(() => {
+    globalThis.dispatchEvent?.(new Event(EVENTO_FALLO_ARRANQUE));
+    return new Promise<T>(() => undefined);
+  });
+}
+
 /** Prefijo de las direcciones que MapLibre pide (mapa/reintentos.ts) con reintentos («reintenta://https://…»). */
 export const PROTOCOLO_REINTENTOS = "reintenta";
 
