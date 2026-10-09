@@ -1232,7 +1232,7 @@ gestiona con la API de Hetzner Cloud y el mismo token del proyecto (`hcloud_toke
 | TTL | 3600 s (1 hora) |
 | DNSSEC | No. El registro .eu no tiene registro DS del dominio |
 | Protección | La zona no se puede borrar sin quitar antes la protección |
-| Registrador | Arsys: allí se cambian los servidores de nombres |
+| Registrador | Arsys: allí se cambian los servidores de nombres. Caduca el 27 de septiembre de 2027, con renovación automática (comprobado por el dueño el 9 de octubre de 2026); antes de esa fecha, que el método de pago de Arsys siga vigente |
 
 Órdenes:
 
