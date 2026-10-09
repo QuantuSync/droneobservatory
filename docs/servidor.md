@@ -1527,7 +1527,7 @@ pull request y la deja en su resumen, sin hacer fallar los tests.
 
 ## Versiones citables de los datos abiertos
 
-Desde el 9 de octubre de 2026 ([`recogida/versiones.py`](../recogida/versiones.py),
+Desde el 8 de octubre de 2026 ([`recogida/versiones.py`](../recogida/versiones.py),
 [`configuracion/versiones_datos.json`](../configuracion/versiones_datos.json)). Para que un
 informe, un periodista o un organismo pueda citar exactamente los datos que usó.
 
@@ -1661,7 +1661,7 @@ web no cambian. La exportación semanal sigue el mismo interruptor.
 Cambiar de modo, justo después de una recogida y fuera de los minutos 12 a 40:
 `echo almacen | sudo -u eodi tee /home/eodi/.eodi/publicacion_modo` (o `doble`, o `github`).
 
-**Registro de correcciones** (`correcciones.json`, desde el 9 de octubre de 2026,
+**Registro de correcciones** (`correcciones.json`, desde el 8 de octubre de 2026,
 [`exportacion/correcciones.py`](../exportacion/correcciones.py)). Cada recogida lo rehace entero,
 en un par de segundos, con lo que la base ya guarda: los cambios anotados con su motivo en el
 historial (`incidentes_motivos`), las retiradas y las uniones que siguen en pie, solo de incidentes
