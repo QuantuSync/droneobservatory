@@ -223,7 +223,7 @@ def test_publicar_solo_informa_de_lo_que_cambia(tmp_path: Path) -> None:
     ahora = datetime(2026, 9, 28, tzinfo=UTC)
     primera = publicar.publicar(almacen, ahora, tmp_path)
     assert sorted(p.name for p in primera) == [
-        publicar.CORRECCIONES, publicar.INCIDENTES, publicar.SIN_UBICACION, publicar.UCRANIA,
+        publicar.INCIDENTES, publicar.SIN_UBICACION, publicar.UCRANIA,
     ]  # fmt: skip
     assert publicar.publicar(almacen, ahora, tmp_path) == []
     assert b"\r\n" not in (tmp_path / publicar.UCRANIA).read_bytes()

@@ -44,8 +44,6 @@ import { fechaDeDia } from "../tiempo/dias.ts";
 import { e, html, jsonLd } from "./html.ts";
 import type { Hijo, Html } from "./html.ts";
 import { BORRAR_VISITA, enlacesSobre, PAGINAS_SERVICIO, RUTAS_SERVICIO, SCRIPT_BORRAR_VISITA, textoServicio } from "./servicio.ts";
-import { cuerpoRegistro, diaDeCorreccion, enlaceACorreccion, RUTAS_REGISTRO, textosRegistro } from "./correcciones.ts";
-import type { RegistroCorrecciones } from "../datos/correcciones.ts";
 import { rutasDeVersion } from "../datos/versiones.ts";
 import type { VersionDatos } from "../datos/versiones.ts";
 import { cuerpoVersion, seccionVersiones } from "./versiones.ts";
@@ -62,8 +60,6 @@ export interface DatosPaginas {
   ucrania: ResumenUcrania;
   /** La previsión publicada; null si aún no hay. */
   prevision?: Prevision | null;
-  /** El registro de correcciones publicado; null si aún no hay. */
-  correcciones?: RegistroCorrecciones | null;
   /** Las versiones citables de los datos abiertos, de la más nueva a la más vieja. */
   versiones?: readonly VersionDatos[];
 }
@@ -596,8 +592,6 @@ function incidente(d: IncidenteDetalle, idioma: Idioma): PaginaTexto {
       ),
     ),
     e("p", { class: "texto-nota mono" }, t.ficha.actualizada, ": ", fechaHora(d.control.ultima_actualizacion.valor)),
-    d.corregido !== undefined &&
-      e("p", { class: "texto-nota mono", "data-corregido": "" }, enlace(enlaceACorreccion(d.id, idioma), t.ficha.corregidoEl(diaDeCorreccion(d.corregido)))),
     e(
       "p",
       null,
@@ -1062,14 +1056,13 @@ export function paginas(datos: DatosPaginas): PaginaTexto[] {
     resultado.push(metodologia(datos, idioma));
     resultado.push(ayuda(datos, idioma));
     for (const pagina of PAGINAS_SERVICIO) resultado.push(paginaServicio(pagina, idioma));
-    resultado.push(paginaRegistro(datos, idioma));
     for (const v of datos.versiones ?? []) resultado.push(paginaVersion(v, idioma));
   }
   return resultado;
 }
 
 // ---------------------------------------------------------------------------------------------
-// Servicio público: aviso legal, privacidad, independencia, correcciones y accesibilidad
+// Servicio público: aviso legal, privacidad, independencia y accesibilidad
 
 /** Fecha de la última revisión de las páginas de servicio, para el sitemap. */
 const REVISION_SERVICIO = "2026-10-08T00:00:00Z";
@@ -1124,22 +1117,6 @@ export function paginaVersion(version: VersionDatos, idioma: Idioma): PaginaText
     estructurados: [],
     conMapa: false,
     modificada: version.fecha,
-  };
-}
-
-/** El registro de correcciones (src/texto/correcciones.ts). */
-export function paginaRegistro(datos: DatosPaginas, idioma: Idioma): PaginaTexto {
-  const t = textosRegistro(idioma);
-  const registro = datos.correcciones ?? null;
-  return {
-    idioma,
-    rutas: RUTAS_REGISTRO,
-    titulo: `${t.titulo} · ${NOMBRE}`,
-    descripcion: t.descripcion,
-    cuerpo: cuerpoRegistro(registro, idioma, new Set(datos.detalles.keys())),
-    estructurados: [],
-    conMapa: false,
-    modificada: registro?.actualizado?.replace("Z", ":00Z") ?? REVISION_SERVICIO,
   };
 }
 

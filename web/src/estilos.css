@@ -491,13 +491,6 @@ body.pagina-texto {
   margin: 0 0 0.75rem;
 }
 
-/* Registro de correcciones: una entrada tras otra, separadas por una línea. */
-.texto-pagina .texto-correccion {
-  margin-top: 1rem;
-  padding-top: 0.75rem;
-  border-top: 1px solid var(--color-linea);
-}
-
 .texto-nota,
 .texto-fuente,
 .texto-rotulo {

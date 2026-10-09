@@ -1,5 +1,5 @@
 // Páginas de servicio público, en los dos idiomas: aviso legal, privacidad, independencia y
-// financiación, correcciones y accesibilidad. Son páginas de texto (src/texto/paginas.ts), sin el
+// financiación, y accesibilidad. Son páginas de texto (src/texto/paginas.ts), sin el
 // mapa; se enlazan desde «Metodología y datos abiertos» y desde el pie de las páginas de texto.
 // Lo que dicen de los datos de los visitantes está comprobado en el código y en la configuración
 // (vercel.json, src/estado/novedades.ts): si cambia algo de eso, cambia esta página.
@@ -7,7 +7,6 @@
 import type { Seccion } from "../i18n/tipos.ts";
 import { LICENCIA_DATOS, LICENCIA_DATOS_URL, NOMBRE, REPOSITORIO } from "../sitio.ts";
 import type { Idioma } from "../sitio.ts";
-import { RUTAS_REGISTRO, textosRegistro } from "./correcciones.ts";
 
 export const RESPONSABLE = "Lucas Alaniz Pintos";
 export const CONTACTO = "lucasalanizpintos@gmail.com";
@@ -15,12 +14,11 @@ const CORREO = `mailto:${CONTACTO}`;
 /** Fecha de la última revisión de estas páginas (y de la de accesibilidad). */
 export const REVISADAS = { es: "8 de octubre de 2026", en: "8 October 2026" } as const;
 
-export type PaginaServicio = "avisoLegal" | "privacidad" | "independencia" | "correcciones" | "accesibilidad";
+export type PaginaServicio = "avisoLegal" | "privacidad" | "independencia" | "accesibilidad";
 export const PAGINAS_SERVICIO: readonly PaginaServicio[] = [
   "avisoLegal",
   "privacidad",
   "independencia",
-  "correcciones",
   "accesibilidad",
 ];
 
@@ -28,7 +26,6 @@ export const RUTAS_SERVICIO: Record<PaginaServicio, Record<Idioma, string>> = {
   avisoLegal: { es: "/aviso-legal", en: "/en/legal-notice" },
   privacidad: { es: "/privacidad", en: "/en/privacy" },
   independencia: { es: "/independencia", en: "/en/independence" },
-  correcciones: { es: "/correcciones", en: "/en/corrections" },
   accesibilidad: { es: "/accesibilidad", en: "/en/accessibility" },
 };
 
@@ -113,9 +110,9 @@ const ES: Record<PaginaServicio, TextoServicio> = {
           },
           {
             parrafo: [
-              "La información se ofrece tal cual, con su fuente y su fecha. Cada dato dice quién lo afirma y en qué estado está; puede cambiar cuando las autoridades o la prensa publiquen algo nuevo. Si ves un error, ",
-              { texto: "la página de correcciones", enlace: "/correcciones" },
-              " dice cómo señalarlo.",
+              "La información se ofrece tal cual, con su fuente y su fecha. Cada dato dice quién lo afirma y en qué estado está; puede cambiar cuando las autoridades o la prensa publiquen algo nuevo. Si ves un error, escribe a ",
+              { texto: CONTACTO, enlace: CORREO },
+              " con el identificador del incidente (por ejemplo, EODI-2026-00123, el que aparece en su ficha) y, si puedes, la fuente que lo corrige.",
             ],
           },
         ],
@@ -243,39 +240,6 @@ const ES: Record<PaginaServicio, TextoServicio> = {
       },
     ],
   },
-  correcciones: {
-    titulo: "Correcciones",
-    enlace: "Correcciones",
-    descripcion: `Cómo señalar un error en el ${NOMBRE}.`,
-    secciones: [
-      {
-        id: "como",
-        titulo: "Cómo señalar un error",
-        bloques: [
-          {
-            parrafo: [
-              "Si ves un error, escribe a ",
-              { texto: CONTACTO, enlace: CORREO },
-              " con el identificador del incidente (por ejemplo, EODI-2026-00123, el que aparece en su ficha) y, si puedes, la fuente que lo corrige. Se revisa con las fuentes; lo que se corrige queda anotado en la ficha con su motivo y lo que se retira queda marcado con su motivo, nunca se borra.",
-            ],
-          },
-        ],
-      },
-      {
-        id: "registro",
-        titulo: "Qué se ha corregido",
-        bloques: [
-          {
-            parrafo: [
-              "Cada corrección hecha, con su fecha, el incidente, lo que cambió y el motivo, está en el ",
-              { texto: "registro de correcciones", enlace: RUTAS_REGISTRO.es },
-              ". Cuando una corrección viene del aviso de un lector, se dice, sin ningún dato de quien avisó.",
-            ],
-          },
-        ],
-      },
-    ],
-  },
   accesibilidad: {
     titulo: "Declaración de accesibilidad",
     enlace: "Accesibilidad",
@@ -390,9 +354,9 @@ const EN: Record<PaginaServicio, TextoServicio> = {
           },
           {
             parrafo: [
-              "The information is provided as is, with its source and its date. Each piece of data says who states it and what status it has; it may change when the authorities or the press publish something new. If you see a mistake, ",
-              { texto: "the corrections page", enlace: "/en/corrections" },
-              " says how to report it.",
+              "The information is provided as is, with its source and its date. Each piece of data says who states it and what status it has; it may change when the authorities or the press publish something new. If you see a mistake, write to ",
+              { texto: CONTACTO, enlace: CORREO },
+              " with the incident identifier (for example, EODI-2026-00123, the one shown in its record) and, if you can, the source that corrects it.",
             ],
           },
         ],
@@ -520,39 +484,6 @@ const EN: Record<PaginaServicio, TextoServicio> = {
       },
     ],
   },
-  correcciones: {
-    titulo: "Corrections",
-    enlace: "Corrections",
-    descripcion: `How to report a mistake in the ${NOMBRE}.`,
-    secciones: [
-      {
-        id: "como",
-        titulo: "How to report a mistake",
-        bloques: [
-          {
-            parrafo: [
-              "If you see a mistake, write to ",
-              { texto: CONTACTO, enlace: CORREO },
-              " with the incident identifier (for example, EODI-2026-00123, the one shown in its record) and, if you can, the source that corrects it. It is checked against the sources; what is corrected is recorded in the incident record with its reason and what is withdrawn is marked with its reason, never deleted.",
-            ],
-          },
-        ],
-      },
-      {
-        id: "registro",
-        titulo: "What has been corrected",
-        bloques: [
-          {
-            parrafo: [
-              "Every correction made, with its date, the incident, what changed and the reason, is in the ",
-              { texto: "corrections log", enlace: RUTAS_REGISTRO.en },
-              ". When a correction comes from a reader's report, it says so, with no details of who reported it.",
-            ],
-          },
-        ],
-      },
-    ],
-  },
   accesibilidad: {
     titulo: "Accessibility statement",
     enlace: "Accessibility",
@@ -625,16 +556,12 @@ export function textoServicio(pagina: PaginaServicio, idioma: Idioma): TextoServ
 }
 
 /**
- * Los enlaces de «Sobre el observatorio»: las páginas de servicio y, tras «Correcciones», el
- * registro de correcciones. Los usan la metodología (web y texto), el pie de las páginas de texto
- * y llms.txt.
+ * Los enlaces de «Sobre el observatorio»: las páginas de servicio. Los usan la metodología (web y
+ * texto), el pie de las páginas de texto y llms.txt.
  */
 export function enlacesSobre(idioma: Idioma): { ruta: string; texto: string; titulo: string }[] {
-  return PAGINAS_SERVICIO.flatMap((pagina) => {
+  return PAGINAS_SERVICIO.map((pagina) => {
     const texto = textoServicio(pagina, idioma);
-    const propia = { ruta: RUTAS_SERVICIO[pagina][idioma], texto: texto.enlace, titulo: texto.titulo };
-    if (pagina !== "correcciones") return [propia];
-    const r = textosRegistro(idioma);
-    return [propia, { ruta: RUTAS_REGISTRO[idioma], texto: r.enlace, titulo: r.titulo }];
+    return { ruta: RUTAS_SERVICIO[pagina][idioma], texto: texto.enlace, titulo: texto.titulo };
   });
 }

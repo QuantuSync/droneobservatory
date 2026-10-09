@@ -48,8 +48,7 @@ AUTOR="QuantuSync"
 CORREO="192205734+QuantuSync@users.noreply.github.com"
 MENSAJE_PUBLICACION="Actualiza los datos publicados"
 PUBLICADOS=(publicacion/ucrania.json publicacion/incidentes.geojson
-  publicacion/incidentes_sin_ubicacion.json publicacion/prevision.json
-  publicacion/correcciones.json)
+  publicacion/incidentes_sin_ubicacion.json publicacion/prevision.json)
 # --- Dónde se publican los datos (servidor/recogida.sh, recogida/publicacion.py) -----------
 # La recogida escribe los ficheros públicos en una carpeta del servidor, fuera del clon; de ahí van
 # al repositorio (commit «Actualiza los datos publicados»), al almacén público o a los dos, según

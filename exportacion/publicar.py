@@ -1,7 +1,6 @@
 """Escribe los ficheros públicos a partir de la base: ucrania.json, incidentes.geojson (los
-incidentes con punto, para el mapa), incidentes_sin_ubicacion.json (los que solo se saben a
-nivel de país o de región) y correcciones.json (el registro público de correcciones,
-exportacion/correcciones.py).
+incidentes con punto, para el mapa) e incidentes_sin_ubicacion.json (los que solo se saben a
+nivel de país o de región).
 
 El foco térmico de cada impacto (proceso/focos_termicos.py) y las mediciones de cada incidente
 (tráfico aéreo y condiciones, proceso/mediciones.py) y la pérdida de luz nocturna de cada ataque
@@ -14,7 +13,6 @@ from pathlib import Path
 
 from almacen.base import Almacen
 from esquema import Documento
-from exportacion import correcciones
 from exportacion.geojson import exportar, exportar_sin_ubicacion
 from exportacion.proyeccion import escribir
 from exportacion.ucrania import exportar_ucrania
@@ -34,7 +32,6 @@ DIRECTORIO = Path(
 UCRANIA = "ucrania.json"
 INCIDENTES = "incidentes.geojson"
 SIN_UBICACION = "incidentes_sin_ubicacion.json"
-CORRECCIONES = correcciones.FICHERO
 
 
 def modelos(almacen: Almacen) -> frozenset[str]:
@@ -77,7 +74,6 @@ def publicar(almacen: Almacen, ahora: datetime, directorio: Path = DIRECTORIO) -
         UCRANIA: exportar_ucrania(ataques, ahora, impactos),
         INCIDENTES: exportar(incidentes, ahora, vocabulario),
         SIN_UBICACION: exportar_sin_ubicacion(incidentes, ahora, vocabulario),
-        CORRECCIONES: correcciones.construir(almacen, ahora),
     }
     cambiados = []
     for nombre, documento in documentos.items():

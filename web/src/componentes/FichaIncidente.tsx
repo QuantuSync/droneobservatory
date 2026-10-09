@@ -10,7 +10,6 @@ import type {
 } from "../datos/tipos.ts";
 import {
   esRangoAbierto,
-  fecha,
   fechaHora,
   instante,
   jornadaEscrita,
@@ -33,7 +32,6 @@ import { Simbolo } from "./Simbolo.tsx";
 import { textoAproximado } from "../datos/lugarAproximado.ts";
 import { FilaRecorrido, FilaTipoDron } from "./TipoDron.tsx";
 import { nombreDeLugar } from "../i18n/nombresLugar.ts";
-import { enlaceACorreccion } from "../datos/correcciones.ts";
 
 /** Marca que acompaña al texto de la presencia de dron, para no depender del color. */
 const MARCA_PRESENCIA: Record<PresenciaDron, string> = {
@@ -530,13 +528,6 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
       <p className="mono mt-4 text-xs text-secundario">
         {t.ficha.actualizada}: {fechaHora(incidente.control.ultima_actualizacion.valor)}
       </p>
-      {incidente.corregido !== undefined && (
-        <p className="mono mt-1 text-xs text-secundario" data-corregido="">
-          <a className="underline underline-offset-2" href={enlaceACorreccion(incidente.id, idioma)}>
-            {t.ficha.corregidoEl(fecha(new Date(incidente.corregido)))}
-          </a>
-        </p>
-      )}
     </article>
   );
 }

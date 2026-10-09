@@ -1,8 +1,7 @@
 """Datos publicados en el almacén público, en vez de en el repositorio.
 
 La recogida horaria escribe los ficheros públicos (exportacion/publicar.py: incidentes.geojson,
-incidentes_sin_ubicacion.json, ucrania.json, prevision.json y correcciones.json) en una carpeta
-del servidor. Con el
+incidentes_sin_ubicacion.json, ucrania.json y prevision.json) en una carpeta del servidor. Con el
 interruptor de la publicación (`/home/eodi/.eodi/publicacion_modo`, servidor/recogida.sh) en
 `doble` o en `almacen`, este módulo los sube al almacén público
 (configuracion/almacen_publico.json, prefijo `publicacion/`):
@@ -58,7 +57,6 @@ FICHEROS = (
     "incidentes_sin_ubicacion.json",
     "ucrania.json",
     "prevision.json",
-    "correcciones.json",
 )
 TIPOS = {".geojson": "application/geo+json", ".json": "application/json"}
 CACHE = "public, max-age=60"

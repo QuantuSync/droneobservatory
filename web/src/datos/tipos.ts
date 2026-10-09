@@ -533,13 +533,9 @@ export interface Resumen {
 
 /** Ficha completa de un incidente: sus propiedades públicas más el punto. */
 /** Ficha completa: con punto, o sin él y con el lugar hasta donde se conoce. */
-export type IncidenteDetalle = (
+export type IncidenteDetalle =
   | (PropiedadesIncidente & { lon: number; lat: number })
-  | (PropiedadesSinUbicacion & { lon: null; lat: null; aproximado?: LugarAproximado | null })
-) & {
-  /** Fecha de su corrección más reciente en el registro de correcciones (datos/correcciones.ts). */
-  corregido?: string;
-};
+  | (PropiedadesSinUbicacion & { lon: null; lat: null; aproximado?: LugarAproximado | null });
 
 /**
  * Ataque de la capa de Ucrania reducido a una fila:

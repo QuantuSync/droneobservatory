@@ -14,7 +14,6 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { aplicarCabecera } from "../src/cabecera.ts";
-import type { RegistroCorrecciones } from "../src/datos/correcciones.ts";
 import type { IndiceVersiones } from "../src/datos/versiones.ts";
 import type { Prevision } from "../src/datos/prevision.ts";
 import type { ColeccionIncidentes, IncidenteDetalle, Resumen, ResumenUcrania } from "../src/datos/tipos.ts";
@@ -154,11 +153,8 @@ export async function terminarPaginas(carpeta: string): Promise<void> {
   // La previsión, si está publicada (scripts/datos.ts la valida y la copia).
   const rutaPrevision = join(DATOS, "prevision.json");
   const prevision = existsSync(rutaPrevision) ? await leerJson<Prevision>(rutaPrevision) : null;
-  // El registro de correcciones, si está publicado (scripts/datos.ts lo valida y lo copia).
-  const rutaCorrecciones = join(DATOS, "correcciones.json");
-  const correcciones = existsSync(rutaCorrecciones) ? await leerJson<RegistroCorrecciones>(rutaCorrecciones) : null;
   const versiones = (await leerJson<IndiceVersiones>(join(DATOS, "versiones.json"))).versiones;
-  const todas = paginas({ resumen, detalles, ucrania, prevision, correcciones, versiones });
+  const todas = paginas({ resumen, detalles, ucrania, prevision, versiones });
   for (const pagina of todas) {
     const plantilla = plantillas.get(pagina.idioma);
     if (plantilla === undefined) throw new Error(`sin portada en ${pagina.idioma}`);

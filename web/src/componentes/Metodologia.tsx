@@ -218,7 +218,7 @@ function Versiones({ t, idioma, abierta }: { t: Textos; idioma: Idioma; abierta:
   );
 }
 
-/** Las páginas de servicio público: aviso legal, privacidad, independencia, correcciones y
+/** Las páginas de servicio público: aviso legal, privacidad, independencia y
  *  accesibilidad. Son páginas de texto aparte, en el idioma de la web. */
 function Sobre({ t, idioma }: { t: Textos; idioma: Idioma }) {
   return (
