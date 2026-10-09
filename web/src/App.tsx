@@ -59,7 +59,7 @@ import {
 import { diaDeTexto, rachaDe } from "./datos/prevision.ts";
 import type { Prevision as DatosPrevision, Racha } from "./datos/prevision.ts";
 import type { Carga } from "./datos/carga.ts";
-import { descargarConReintentos } from "./datos/reintentos.ts";
+import { descargarConReintentos, importarOAvisar } from "./datos/reintentos.ts";
 import { cifrasAhora } from "./datos/ahora.ts";
 import { cargarDirecto, cierresEnCurso, ordenarAvisos } from "./datos/directo.ts";
 import type { Directo } from "./datos/directo.ts";
@@ -151,7 +151,7 @@ import type { Idioma } from "./sitio.ts";
 import { diaDeInstante, enPeriodo, incidenteEnPeriodo } from "./tiempo/dias.ts";
 import type { Periodo } from "./tiempo/dias.ts";
 
-const Mapa = lazy(() => import("./mapa/Mapa.tsx"));
+const Mapa = lazy(() => importarOAvisar(() => import("./mapa/Mapa.tsx")));
 
 /** Cada cuánto se vuelve a calcular la antigüedad de los datos. */
 const MS_ENTRE_COMPROBACIONES = 60_000;

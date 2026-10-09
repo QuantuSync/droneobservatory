@@ -285,6 +285,30 @@
   }
 }
 
+/* Aviso de public/arranque.js cuando el código de la web no llega ni tras reintentar. */
+.aviso-arranque {
+  position: fixed;
+  inset: 1rem 1rem auto;
+  z-index: 100;
+  max-width: 32rem;
+  margin: 0 auto;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--color-linea);
+  border-radius: 0.5rem;
+  background: var(--color-panel-solido);
+  color: var(--color-texto);
+}
+
+.aviso-arranque button {
+  margin-top: 0.5rem;
+  padding: 0.375rem 0.75rem;
+  border: 1px solid var(--color-linea);
+  border-radius: 0.375rem;
+  background: var(--color-elevado);
+  color: var(--color-texto);
+  cursor: pointer;
+}
+
 /* El lienzo del mapa hereda el fondo para que no parpadee al cargar. */
 .maplibregl-map {
   font-family: var(--font-texto);

@@ -14,7 +14,7 @@ import { Prevision } from "../src/componentes/Prevision.tsx";
 import { cargarPrevision, cargarResumen, URL_PREVISION_ALMACEN } from "../src/datos/carga.ts";
 import { resumir } from "../src/datos/derivar.ts";
 import type { Prevision as DatosPrevision } from "../src/datos/prevision.ts";
-import { descargarConReintentos } from "../src/datos/reintentos.ts";
+import { descargarConReintentos, EVENTO_FALLO_ARRANQUE, importarOAvisar } from "../src/datos/reintentos.ts";
 import { tolerarCamposNuevos, validarPrevision } from "../src/datos/validar.ts";
 import { textos } from "../src/i18n/index.ts";
 import { incidente, coleccion } from "./ejemplos.ts";
@@ -86,6 +86,24 @@ describe("reintentos", () => {
       expect(globalThis.fetch).toHaveBeenCalledTimes(3);
     } finally {
       globalThis.fetch = original;
+    }
+  });
+});
+
+describe("código del mapa", () => {
+  it("si no llega, avisa al arranque (que recarga la página) y se queda esperando", async () => {
+    const avisos = vi.fn();
+    globalThis.addEventListener(EVENTO_FALLO_ARRANQUE, avisos);
+    try {
+      await expect(importarOAvisar(() => Promise.resolve("mapa"))).resolves.toBe("mapa");
+      expect(avisos).not.toHaveBeenCalled();
+      const resuelto = vi.fn();
+      void importarOAvisar(() => Promise.reject(new TypeError("Failed to fetch dynamically imported module"))).then(resuelto, resuelto);
+      await new Promise((r) => setTimeout(r, 0));
+      expect(avisos).toHaveBeenCalledOnce();
+      expect(resuelto).not.toHaveBeenCalled();
+    } finally {
+      globalThis.removeEventListener(EVENTO_FALLO_ARRANQUE, avisos);
     }
   });
 });

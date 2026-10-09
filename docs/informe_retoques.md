@@ -266,3 +266,98 @@ correcciones si unió algo ya publicado.
    de `versiones/` se podría sobrescribir a mano. Arreglo, si se quiere un candado más: un bucket
    aparte para las versiones con bloqueo de objetos (Object Lock en modo de cumplimiento), que se
    tendría que crear vacío y no admite volver atrás.
+
+## 9 de octubre de 2026: tres arreglos (#187, #188 y #189)
+
+### Fuera el registro de correcciones (#187)
+
+Se retira la página «Registro de correcciones» / «Corrections log» en los dos idiomas, con su
+página de texto, y todos los enlaces a ella (página de correcciones, metodología, pie de las
+páginas de texto, `sitemap.xml` y `llms.txt`). Las fichas y sus páginas de texto ya no tienen la
+línea «Corregido el». Deja de generarse y de publicarse `correcciones.json`
+(`exportacion/correcciones.py`, su configuración y sus pruebas, fuera; el fichero, retirado del
+almacén público). La página «Correcciones» se queda solo con la frase de a qué correo escribir, así
+que esa frase pasa al aviso legal y la página también se retira. `/correcciones`,
+`/correcciones/registro`, `/en/corrections`, `/en/corrections/log` y `/datos/correcciones.json`
+dan un 404 real. La base no se toca: el historial de cada incidente sigue en ella; solo deja de
+publicarse en la web. El punto 3 de los pendientes de arriba ya no aplica en su última frase: la
+unión no sale en ningún registro público.
+
+### Fuera el filtro de tipo de dron (#188)
+
+«Filtros» ya no tiene el grupo de tipo de dron, en los dos idiomas, y la dirección ya no lleva
+`?dron=`: un enlace antiguo con ese parámetro abre la web normal, sin filtro. La fila «Tipo de
+dron» de las fichas sigue igual: los 6 incidentes identificados por la autoridad (EODI-2025-00261,
+2025-00295, 2026-00098, 2026-00171, 2026-00211 y 2026-00300) con su modelo y su cita, y los 70
+«Compatible con un dron de largo alcance de la guerra», con su razón; comprobado en las fichas y en
+las páginas de texto en español e inglés. El campo `dron` sigue en `resumen.json` para que una
+pestaña abierta con la versión anterior lo siga leyendo.
+
+### «Previsión» siempre carga (#189)
+
+**Causa del fallo de las 07:50 (hora de Madrid).** La pestaña que falló estaba abierta desde las
+22:50 del 8 de octubre con la versión de la web anterior a #183. Desde la recogida de las 04:17,
+`prevision.json` lleva dentro su licencia (#183), y aquella versión validaba los datos de forma
+cerrada: cualquier campo que no conociera invalidaba el fichero. Pruebas: las métricas de Vercel
+muestran la petición de `prevision.json` a las 07:49:43 servida con 200 (sin error del servidor,
+sin despliegue en ese momento y sin pasar por el almacén); el validador de esa versión, ejecutado
+contra el fichero publicado, da «.licencia: campo desconocido»; y al recargar la página a las 07:50
+y a las 07:55, con el código nuevo, cargó.
+
+**Qué cambia.**
+- En el navegador, un campo nuevo en los datos ya no invalida un fichero; lo que falta o está mal,
+  sí. En el build, la validación sigue cerrada.
+- Cada descarga bajo demanda reintenta hasta cinco veces, con esperas de 0,5, 1, 2 y 4 segundos,
+  ante errores del servidor, cortes de la red o un fichero que llega a medias, y sin la caché del
+  navegador desde el segundo intento. Lo que no existe (404) no se reintenta. Vale para la
+  previsión, las capas del mapa (teselas, fronteras, datos y tipografías), las fichas, «Europa
+  ahora», «Noche a noche», las rutas, la guerra por satélite y la metodología.
+- Si la previsión de la web no llega, se pide la copia del almacén público. Si tampoco, se enseña
+  la última que hubo, con la fecha en que se calculó y «Reintentar».
+- Un error que llega a verse dice qué ha pasado (sin respuesta o una versión nueva de la web) y
+  tiene «Reintentar», en los dos idiomas.
+- En el servidor, cada fichero se escribe en un temporal y se renombra (`escribir_atomico`), así
+  que nadie puede leer un fichero a medio escribir. El índice de las rutas solo se sube si se
+  subieron todas sus noches. El almacén ya subía el manifiesto el último.
+- Prueba en el navegador (`web/e2e/prevision-reintentos.spec.ts`, en la integración continua): el
+  fichero de la previsión falla dos veces (un 503 y un corte de la conexión) y la previsión se ve
+  sin ningún error; si no responde nunca, sale el error y «Reintentar» la trae cuando vuelve.
+
+**Segunda causa, vista al comprobar durante una publicación (#190).** Cada recogida con cambios
+pide a Vercel una reconstrucción, y en cada una cambia el nombre del código de la página (07:40
+`app-CHK-PXVt.js`, 08:33 `app-cCKpW1Qr.js`, 09:33 `app-CS4QoUl5.js`). El despliegue de las 09:33
+quedó listo a las 09:34:02; a las 09:34:05 una ventana nueva recibió ya la página nueva, y la
+petición de su código llegó aún al despliegue anterior (dpl_13b1…, el de las 08:33), que no lo
+tiene: 404, según las métricas de Vercel (la única respuesta fallida entre las 09:33 y las 09:36).
+La página se quedaba con la cabecera y sin mapa, sin aviso y sin poder abrir «Previsión». Arreglo:
+`web/public/arranque.js`, un fichero sin huella (el mismo en todos los despliegues) que se carga
+antes que el código. Si el código o el estilo no llegan, una hoja de estilo se vuelve a pedir sin
+la caché del navegador y un módulo hace recargar la página, con esperas de 0,5, 1, 2 y 4 segundos
+(el navegador recuerda el fallo de un módulo mientras dure la página: volver a pedirlo no
+basta). Lo mismo si no llega el código del mapa, que se pide aparte. Tras la cuarta espera lo
+dice, en el idioma de la página, con «Reintentar». Prueba en el navegador
+(`web/e2e/arranque-reintentos.spec.ts`, en la integración continua): el código de la página falla
+dos veces (un 404 y un corte) y el del mapa una, y la web arranca sola y abre «Previsión»; si no
+llega nunca, recarga cuatro veces, avisa y «Reintentar» la trae.
+
+### Comprobación
+
+- **Antes de fusionar**: #187 y #189, ensayo completo de recogida y exportación sobre una copia de
+  la base real, con código 0; las cuatro PR, con las comprobaciones en verde; #190 no toca la recogida ni los datos.
+- **Recogidas tras las fusiones**: la de las 07:17 (tras #187 y #188) y la de las 08:17 (tras
+  #189) terminaron bien y publicaron `ucrania.json`, `prevision.json` y el manifiesto, ya sin
+  `correcciones.json`. La de las 09:17 terminó bien y publicó (`incidentes.geojson`, `ucrania.json`,
+  `prevision.json` y el manifiesto).
+- **En producción**, en una ventana limpia, a 390×844 y en escritorio (y el tipo de dron también a
+  360×800 y 412×915), revisando las capturas una a una:
+  - ninguna mención ni enlace al registro, ni «Corregido el», en la portada, las fichas y las
+    páginas de texto en los dos idiomas; las cinco direcciones antiguas dan 404, y el aviso legal
+    tiene la frase del correo;
+  - «Filtros» sin tipo de dron, también desde un enlace con `?dron=`; la ficha de EODI-2026-00211
+    (Geran-2, según la autoridad, con su cita) y la de un «Compatible con…» (con su razón);
+  - «Previsión» abrió bien 10 veces seguidas en cada tamaño, cada vez en una ventana nueva. Durante
+    la publicación de las 09:17, en rondas seguidas de 10 y 10 de las 09:17 a las 09:35, abrió
+    bien 475 veces; una vez, a las 09:34:05, la web no arrancó: es la segunda causa, arriba,
+    arreglada en #190;
+  - la prueba de fallos pasajeros, contra producción, pasó en los dos tamaños.
+- **Incidentes publicados**: 442 antes y después.
