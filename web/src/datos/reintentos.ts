@@ -4,6 +4,11 @@
 // error. Del segundo intento en adelante se pide sin la caché del navegador, por si guardaba una
 // respuesta mala. Lo que de verdad no existe (404, o 403 del almacén, que es como responde a un
 // objeto que no está) no se reintenta.
+//
+// Lo que viene del almacén (/almacen/…, almacenPublico.ts) tiene además otro camino: si la web no lo
+// sirve a tiempo o falla, los intentos siguientes van a la copia pública de reserva de Helsinki.
+
+import { reservaDe } from "../almacenPublico.ts";
 
 /** Esperas entre intentos: cinco intentos en unos 7,5 segundos. */
 export const ESPERAS_MS: readonly number[] = [500, 1000, 2000, 4000];
@@ -54,6 +59,33 @@ export function esAborto(error: unknown, senal?: AbortSignal | null): boolean {
   return senal?.aborted === true || (error instanceof DOMException && error.name === "AbortError");
 }
 
+/**
+ * Lo que se espera a las cabeceras de un objeto del almacén servido por la web antes de pedirlo a la
+ * reserva directamente: más que lo que puede tardar la propia función en probar el principal (3 s)
+ * y después la reserva (10 s), api/almacen.ts.
+ */
+export const TOPE_ALMACEN_MS = 15_000;
+
+/** Como fetch, pero si las cabeceras no llegan en `topeMs` se corta (y cuenta como fallo). */
+async function pedirConTope(entrada: RequestInfo | URL, opciones: RequestInit, topeMs: number): Promise<Response> {
+  const control = new AbortController();
+  const senal = opciones.signal;
+  const alAbortar = () => {
+    control.abort(senal?.reason);
+  };
+  if (senal?.aborted === true) control.abort(senal.reason);
+  senal?.addEventListener("abort", alAbortar, { once: true });
+  const tope = setTimeout(() => {
+    control.abort(new DOMException("sin respuesta a tiempo", "TimeoutError"));
+  }, topeMs);
+  try {
+    return await fetch(entrada, { ...opciones, signal: control.signal });
+  } finally {
+    clearTimeout(tope);
+    senal?.removeEventListener("abort", alAbortar);
+  }
+}
+
 /** Las opciones del intento `n`: desde el segundo, sin la caché del navegador. */
 export function opcionesDelIntento(opciones: RequestInit | undefined, n: number): RequestInit {
   return n === 0 ? (opciones ?? {}) : { ...opciones, cache: "no-cache" };
@@ -67,10 +99,15 @@ export function opcionesDelIntento(opciones: RequestInit | undefined, n: number)
 export const descargarConReintentos: typeof fetch = async (entrada, opciones) => {
   const senal = opciones?.signal ?? null;
   const pausas = esperas;
+  const reserva = typeof entrada === "string" ? reservaDe(entrada) : null;
+  let actual: RequestInfo | URL = entrada;
   for (let n = 0; ; n += 1) {
     const ultimo = n >= pausas.length;
     try {
-      const respuesta = await fetch(entrada, opcionesDelIntento(opciones, n));
+      const respuesta =
+        reserva === null || actual === reserva
+          ? await fetch(actual, opcionesDelIntento(opciones, n))
+          : await pedirConTope(actual, opcionesDelIntento(opciones, n), TOPE_ALMACEN_MS);
       if (ultimo || !esPasajero(respuesta)) {
         // Se lee aquí, dentro del intento: un cuerpo cortado cuenta como fallo de la red.
         const sinCuerpo = respuesta.status === 204 || respuesta.status === 205 || respuesta.status === 304;
@@ -84,6 +121,7 @@ export const descargarConReintentos: typeof fetch = async (entrada, opciones) =>
     } catch (error) {
       if (ultimo || esAborto(error, senal)) throw error;
     }
+    if (reserva !== null) actual = reserva;
     await esperar(pausas[n] ?? 0, senal);
   }
 };

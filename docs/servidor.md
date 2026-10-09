@@ -1145,7 +1145,7 @@ de Cloudflare desde el 2 de octubre de 2026 (informe en
 | Dirección pública | <https://droneobservatory-almacen.nbg1.your-objectstorage.com> |
 | Objetos | `europa-z14.pmtiles` (24 570 229 564 bytes, SHA-256 `393c9a0d…11c98`, `Cache-Control: public, max-age=3600`) y `estado.json` |
 | CORS | `https://droneobservatory.eu` y `https://www.droneobservatory.eu`; GET y HEAD; cabecera `Range`; expone `ETag`, `Content-Range`, `Content-Length` y `Accept-Ranges` |
-| Quién lo lee | La web (teselas y estado), los workflows `vigia-recogida` y `tests` (estado) |
+| Quién lo lee | La función `api/almacen.ts` de la web (todo lo que pide el navegador, con caché), el build (datos publicados), los workflows `vigia-recogida` y `tests` (estado) y `eodi-reserva` (la copia de Helsinki) |
 | Quién escribe | La recogida horaria (`estado.json`) y `preparar_almacen.sh` (bucket y teselas) |
 
 **Preparación**, con una orden desde Git Bash en la raíz del clon (repetible):
@@ -1181,9 +1181,29 @@ el coste es el precio base mientras la salida no pase de 1 TB al mes (unas 200 0
 con unos 5 MB de teselas cada una); cada TB de salida más, 1 € sin IVA. La factura real se ve
 en la consola de Hetzner, en *Billing*, a final de mes.
 
-**Cambiar las teselas**: se sube el fichero nuevo con otro nombre, se cambian
-`objetos.teselas` y `huellas_sha256` en la configuración, se despliega la web y después se
-borra el objeto anterior.
+**Cambiar las teselas**: se sube el fichero nuevo con otro nombre a los dos almacenes (el
+principal y la reserva, `preparar_almacen.py --reserva --desde-principal`), se cambian
+`objetos.teselas` y `huellas_sha256` en la configuración y `OBJETO_TESELAS` en `api/almacen.ts`,
+se despliega la web y después se borra el objeto anterior.
+
+**Por dónde lo lee la web (desde el 9 de octubre de 2026).** El navegador ya no pide al almacén:
+pide `/almacen/<objeto>` a la propia web, y la función `api/almacen.ts` (en `fra1`, junto a
+Núremberg) lo trae del almacén con la caché de Vercel delante. El mapa de fondo va por trozos
+(`/almacen/europa-z14.pmtiles?o=<desde>&l=<largo>`, respondidos con 200 para que la caché los
+guarde: la de Vercel no guarda respuestas a peticiones con Range). Cuánto guarda la caché cada
+cosa: el mapa de fondo un año, `directo.json`, `estado.json` y `salud.json` 30 s, `publicacion/`
+60 s, las capas 5 minutos y las versiones un día; todo con `stale-if-error` de 7 días. Medidas y
+razones: [`informe_robustez.md`](informe_robustez.md).
+
+**Copia pública de reserva.** Bucket `droneobservatory-reserva` en Helsinki (`hel1`), público
+como el principal y con el mismo CORS (bloque `reserva` de la configuración). Lo tiene al día
+`eodi-reserva` (`servidor/reserva.sh`, `almacen/reserva.py`) cada 2 minutos y la recogida tras
+publicar: copia lo nuevo o cambiado con sus mismas cabeceras y el manifiesto el último; borra lo
+retirado solo si el listado del principal salió entero (nunca `versiones/` ni el historial). El
+mapa de fondo se subió una vez con `preparar_almacen.py --reserva --desde-principal`. Si Núremberg
+no responde, la función de la web sirve desde aquí; cómo comprobarla y qué hacer si cae el
+principal: [`operacion.md`](operacion.md). Coste: 0 € (el precio base es por cuenta; ocupa otros
+24,6 GB del terabyte incluido).
 
 ## Dónde está cada cosa
 

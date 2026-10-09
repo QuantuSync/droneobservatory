@@ -136,6 +136,13 @@ principal() {
     # Antes que el commit: la reconstrucción que este lanza ya encuentra el almacén al día.
     if publicar_en_almacen "$modo_pub"; then
       echo "ficheros publicados en el almacén"
+      # La copia de reserva de Helsinki, ya (también la lleva su temporizador cada 2 minutos), con
+      # tope: un PUT colgado de Helsinki no retrasa la recogida (lo termina la pasada siguiente).
+      if timeout 90 bash "$aqui/reserva.sh"; then
+        echo "copia de reserva al día"
+      else
+        echo "aviso: la copia de reserva no quedó al día (la reintenta su temporizador)"
+      fi
     else
       echo "aviso: los ficheros no se publicaron en el almacén"
       if [ "$modo_pub" = almacen ] && [ "$codigo" -eq 0 ]; then

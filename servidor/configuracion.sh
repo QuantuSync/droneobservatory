@@ -371,6 +371,16 @@ MINUTO_REPLICA=47
 REPLICA_TOPE_UNIDAD=40
 REPLICA_MEMORIA="1G"
 
+# --- Copia pública de reserva del almacén de la web (servidor/reserva.sh, almacen/reserva.py) ----
+# Lo nuevo o cambiado del almacén público de Núremberg, a otro bucket público en Helsinki
+# (bloque «reserva» de configuracion/almacen_publico.json), cada 2 minutos y tras cada publicación.
+# Ligera: dos listados y los pocos objetos que cambian (pico medido por debajo de 100 MB).
+UNIDAD_RESERVA="eodi-reserva"
+CERROJO_RESERVA="$SECRETOS/reserva.lock"
+CALENDARIO_RESERVA="*-*-* *:00/2:30 UTC"
+RESERVA_TOPE_UNIDAD=10
+RESERVA_MEMORIA="400M"
+
 # --- Versiones citables de los datos abiertos (servidor/versiones.sh, recogida/versiones.py) ----
 # Cada día a las 02:35 UTC: el día 1 congela la versión del mes en el almacén público (si falta)
 # y siempre comprueba que las publicadas no han cambiado. Fuera de los minutos 12 a 40, sin la base

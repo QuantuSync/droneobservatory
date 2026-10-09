@@ -23,6 +23,8 @@ Problemas (cada uno con su frase):
   copia cada hora);
 - **réplica**: la última pasada correcta de la segunda copia en otra ubicación (almacen/replica.py)
   tiene más de 3 horas;
+- **reserva**: la copia pública de reserva del almacén de la web, en Helsinki (almacen/reserva.py),
+  lleva más de 30 minutos sin estar al día;
 - **disco**: el disco pasa del 75 % (el aviso llega antes del 80 %);
 - **prueba de restauración**: la prueba semanal de restauración de la base falló o no hay una
   correcta en 8 días;
@@ -57,6 +59,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+from almacen import reserva
 from almacen.sitio import casa
 from recogida import almacen_publico, versiones
 
@@ -315,6 +318,12 @@ def componer(
             + ": más de 3 horas sin réplica.",
         })  # fmt: skip
 
+    # Copia pública de reserva del almacén de la web, en Helsinki (almacen/reserva.py).
+    estado_reserva = _leer_json(secretos / reserva.ESTADO)
+    frase_reserva = reserva.problema_para_vigilancia(estado_reserva, ahora)
+    if frase_reserva is not None:
+        problemas.append({"id": "reserva", "frase": frase_reserva})
+
     prueba = _leer_json(secretos / "prueba_restauracion.json")
     hecha = _instante(prueba.get("fecha"))
     if prueba and (not prueba.get("correcto") or (hecha and ahora - hecha > timedelta(days=8))):
@@ -364,6 +373,7 @@ def componer(
             "base": _iso(base),
             "archivo": _iso(archivo),
             "replica": _iso(replica),
+            "reserva_web": estado_reserva.get("ultima_al_dia"),
         },
         "disco": {"usado_pct": porcentaje, "libre_gb": round(uso.free / 1e9, 1)},
         "problemas": problemas,

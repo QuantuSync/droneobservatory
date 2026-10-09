@@ -6,18 +6,23 @@ Pasos, todos repetibles (lo que ya está bien se deja como está):
 2. lo deja de lectura pública (política del bucket: solo s3:GetObject para todos);
 3. le pone el CORS de la configuración (orígenes de la web, GET y HEAD, cabecera Range);
 4. copia el fichero de teselas, por partes de 128 MiB y sin pasar por el disco: desde un
-   fichero local (--fichero) o desde el bucket R2 anterior por su API S3 (--desde-r2, con
-   R2_ID, R2_SECRETO y R2_CUENTA en el entorno). Comprueba mientras sube la huella SHA-256
+   fichero local (--fichero), desde el bucket R2 anterior por su API S3 (--desde-r2, con
+   R2_ID, R2_SECRETO y R2_CUENTA en el entorno) o, para la reserva, desde el almacén
+   principal por su dirección pública (--desde-principal). Comprueba mientras sube la huella SHA-256
    anotada en la configuración (huellas_sha256) y, si no coincide, aborta la subida sin
    dejar nada a medias;
 5. comprueba por la dirección pública: tamaño, respuesta 206 a una petición Range con la
    cabecera de PMTiles, CORS para cada origen y que estado.json, si ya está, responde.
 
+Con --reserva hace lo mismo con la copia pública de reserva (bloque «reserva» de la
+configuración: otro bucket, en otra ubicación, con el mismo CORS). Los demás objetos de la
+reserva los copia y los tiene al día almacen/reserva.py.
+
 Las credenciales del almacén van en el entorno (ALMACEN_ID y ALMACEN_SECRETO). Necesita
 boto3 (servidor/requisitos_almacen.txt); no es una dependencia de la recogida.
 
-Uso: python servidor/preparar_almacen.py (--fichero <ruta> | --desde-r2)
-         [--configuracion configuracion/almacen_publico.json] [--solo-comprobar]
+Uso: python servidor/preparar_almacen.py (--fichero <ruta> | --desde-r2 | --desde-principal)
+         [--reserva] [--configuracion configuracion/almacen_publico.json] [--solo-comprobar]
 Lo lanza servidor/preparar_almacen.sh, que deja antes las credenciales en el servidor.
 """
 
@@ -26,6 +31,7 @@ import hashlib
 import json
 import os
 import sys
+import time
 import urllib.error
 import urllib.request
 from collections.abc import Iterator
@@ -109,6 +115,13 @@ def preparar_bucket(s3: Any, configuracion: dict[str, Any]) -> None:
                 CreateBucketConfiguration={"LocationConstraint": configuracion["ubicacion"]},
             )
         print(f"bucket {bucket}: creado en {configuracion['ubicacion']}")
+        # Un bucket recién creado tarda unos segundos en aceptar su política (NoSuchBucket).
+        for _ in range(30):
+            try:
+                s3.head_bucket(Bucket=bucket)
+                break
+            except ClientError:
+                time.sleep(2)
     s3.put_bucket_policy(Bucket=bucket, Policy=politica_publica(bucket))
     print("lectura pública: política aplicada")
     s3.put_bucket_cors(Bucket=bucket, CORSConfiguration=reglas_cors(configuracion["cors"]))
@@ -129,6 +142,37 @@ def partes_de_r2(r2: Any, objeto: str, tamano: int) -> Iterator[bytes]:
         if len(bloque) != fin - inicio + 1:
             raise RuntimeError(f"R2 devolvió {len(bloque)} bytes para {inicio}-{fin}")
         yield bloque
+
+
+def partes_del_principal(url: str, tamano: int) -> Iterator[bytes]:
+    """El fichero del almacén principal por partes, con peticiones Range a su dirección pública."""
+    for inicio in range(0, tamano, PARTE):
+        fin = min(inicio + PARTE, tamano) - 1
+        for intento in range(5):
+            try:
+                peticion = urllib.request.Request(
+                    url, headers={"User-Agent": AGENTE, "Range": f"bytes={inicio}-{fin}"}
+                )
+                with urllib.request.urlopen(peticion, timeout=120) as respuesta:
+                    bloque: bytes = respuesta.read()
+                if len(bloque) == fin - inicio + 1:
+                    break
+            except OSError:
+                if intento == 4:
+                    raise
+        else:
+            raise RuntimeError(f"el principal devolvió {len(bloque)} bytes para {inicio}-{fin}")
+        yield bloque
+
+
+def de_la_reserva(configuracion: dict[str, Any]) -> dict[str, Any]:
+    """La configuración de la reserva: la del principal con su bucket, ubicación y dirección."""
+    reserva = configuracion["reserva"]
+    return {
+        **configuracion,
+        **{c: reserva[c] for c in ("ubicacion", "punto_s3", "bucket", "publico")},
+        "principal": configuracion["publico"],
+    }
 
 
 def ya_copiado(s3: Any, bucket: str, objeto: str, tamano: int, huella: str) -> bool:
@@ -217,14 +261,26 @@ def principal(argumentos: list[str] | None = None) -> int:
     origen = opciones.add_mutually_exclusive_group()
     origen.add_argument("--fichero", type=Path)
     origen.add_argument("--desde-r2", action="store_true")
+    origen.add_argument("--desde-principal", action="store_true")
+    opciones.add_argument("--reserva", action="store_true", help="la copia de reserva")
+    opciones.add_argument(
+        "--forzar",
+        action="store_true",
+        help="sube las teselas aunque ya estén con la misma huella (una subida nueva queda en "
+        "otro sitio del almacén: arregla un trozo que se lee lento)",
+    )
     opciones.add_argument("--configuracion", type=Path, default=CONFIGURACION)
     opciones.add_argument("--solo-comprobar", action="store_true")
     args = opciones.parse_args(argumentos)
     configuracion = json.loads(args.configuracion.read_text(encoding="utf-8"))
+    if args.reserva:
+        configuracion = de_la_reserva(configuracion)
+    elif args.desde_principal:
+        opciones.error("--desde-principal solo vale con --reserva")
     tamano: int | None = None
     if not args.solo_comprobar:
-        if args.fichero is None and not args.desde_r2:
-            opciones.error("hace falta --fichero o --desde-r2")
+        if args.fichero is None and not args.desde_r2 and not args.desde_principal:
+            opciones.error("hace falta --fichero, --desde-r2 o --desde-principal")
         s3 = cliente(
             configuracion["punto_s3"],
             configuracion["ubicacion"],
@@ -237,6 +293,14 @@ def principal(argumentos: list[str] | None = None) -> int:
         if args.fichero is not None:
             tamano = args.fichero.stat().st_size
             partes = partes_de_fichero(args.fichero)
+        elif args.desde_principal:
+            url = f"{configuracion['principal'].rstrip('/')}/{objeto}"
+            codigo, cabeceras, _ = pedir(url, {}, "HEAD")
+            if codigo != 200:
+                print(f"el principal no responde: HEAD {codigo}")
+                return 1
+            tamano = int({k.lower(): v for k, v in cabeceras.items()}["content-length"])
+            partes = partes_del_principal(url, tamano)
         else:
             r2 = cliente(
                 f"https://{os.environ['R2_CUENTA']}.r2.cloudflarestorage.com",
@@ -246,7 +310,7 @@ def principal(argumentos: list[str] | None = None) -> int:
             )
             tamano = int(r2.head_object(Bucket=R2_BUCKET, Key=objeto)["ContentLength"])
             partes = partes_de_r2(r2, objeto, tamano)
-        if ya_copiado(s3, configuracion["bucket"], objeto, tamano, huella):
+        if not args.forzar and ya_copiado(s3, configuracion["bucket"], objeto, tamano, huella):
             print(f"{objeto}: ya está copiado con la misma huella")
         else:
             copiar(s3, configuracion["bucket"], objeto, partes, tamano, huella)

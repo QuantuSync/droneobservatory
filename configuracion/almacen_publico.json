@@ -1,10 +1,18 @@
 {
-  "descripcion": "Almacén público de la web (Hetzner Object Storage, compatible con S3): teselas del mapa de fondo y estado.json de la recogida. Lo leen recogida/almacen_publico.py (subida desde el servidor), recogida/salud.py (vigilancia), servidor/preparar_almacen.py (bucket, permisos, CORS y teselas) y la web (web/src/almacenPublico.ts). El origen público también está en la política de seguridad de contenido de vercel.json; un test comprueba que coinciden.",
+  "descripcion": "Almacén público de la web (Hetzner Object Storage, compatible con S3): teselas del mapa de fondo, estado.json y los demás ficheros que pide la web. Lo leen recogida/almacen_publico.py (subida desde el servidor), recogida/salud.py (vigilancia), servidor/preparar_almacen.py (bucket, permisos, CORS y teselas), almacen/reserva.py (copia de reserva) y la web (web/src/almacenPublico.ts y api/almacen.ts). La web no lo pide directamente: lo sirve la función api/almacen.ts por /almacen/…, con la caché de Vercel delante y la reserva de Helsinki si el principal no responde. Los orígenes públicos están también en api/almacen.ts y en la política de seguridad de contenido de vercel.json; un test comprueba que coinciden.",
   "proveedor": "Hetzner Object Storage",
   "ubicacion": "nbg1",
   "punto_s3": "https://nbg1.your-objectstorage.com",
   "bucket": "droneobservatory-almacen",
   "publico": "https://droneobservatory-almacen.nbg1.your-objectstorage.com",
+  "en_la_web": "/almacen",
+  "reserva": {
+    "descripcion": "Copia pública de reserva en otra ubicación (Helsinki), con los mismos objetos y cabeceras; la mantiene al día almacen/reserva.py desde el servidor.",
+    "ubicacion": "hel1",
+    "punto_s3": "https://hel1.your-objectstorage.com",
+    "bucket": "droneobservatory-reserva",
+    "publico": "https://droneobservatory-reserva.hel1.your-objectstorage.com"
+  },
   "objetos": {
     "estado": "estado.json",
     "teselas": "europa-z14.pmtiles",

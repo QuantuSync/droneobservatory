@@ -56,9 +56,9 @@ describe("versiones citables", () => {
     expect(seccionVersiones([], "en").valor).toContain("first citable version");
   });
 
-  it("vercel.json lleva los ficheros al almacén y deja las páginas a la web", () => {
+  it("vercel.json lleva los ficheros al almacén (por la función, con la reserva) y deja las páginas a la web", () => {
     expect(destinoDeReescritura(vercel, "/datos/versiones/2026-10/incidentes.geojson")).toBe(
-      "https://droneobservatory-almacen.nbg1.your-objectstorage.com/versiones/:version/:fichero",
+      "/api/almacen?objeto=versiones/:version/:fichero",
     );
     expect(destinoDeReescritura(vercel, "/datos/versiones/2026-10/ucrania.csv")).not.toBeNull();
     expect(destinoDeReescritura(vercel, "/datos/versiones/2026-10")).toBeNull();
