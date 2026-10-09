@@ -14,7 +14,6 @@ import type {
   ResumenUcrania,
 } from "./tipos.ts";
 import type { AlumbradoReducido, FocosVivos, IndiceSatelite } from "./guerraSatelite.ts";
-import type { RegistroCorrecciones } from "./correcciones.ts";
 import type { IndiceVersiones } from "./versiones.ts";
 import type { Prevision } from "./prevision.ts";
 import type { IndiceRutas, NocheRutas } from "./rutas.ts";
@@ -408,7 +407,7 @@ const lugarAproximadoValido = objeto({
 const detalleIncidente = alguna(
   objeto(
     { ...CAMPOS_INCIDENTE_OBLIGATORIOS, lon: longitud, lat: latitud },
-    { ...CAMPOS_INCIDENTE_OPCIONALES, corregido: cadena(v.PATRON_INSTANTE) },
+    CAMPOS_INCIDENTE_OPCIONALES,
   ),
   objeto(
     {
@@ -417,7 +416,7 @@ const detalleIncidente = alguna(
       lon: constante(null),
       lat: constante(null),
     },
-    { ...CAMPOS_INCIDENTE_OPCIONALES, aproximado: nulable(lugarAproximadoValido), corregido: cadena(v.PATRON_INSTANTE) },
+    { ...CAMPOS_INCIDENTE_OPCIONALES, aproximado: nulable(lugarAproximadoValido) },
   ),
 );
 
@@ -1248,41 +1247,6 @@ export function validarIndiceRutas(valor: unknown): Resultado<IndiceRutas> {
 /** rutas/noches/AAAA-MM-DD.json del almacén público. */
 export function validarNocheRutas(valor: unknown): Resultado<NocheRutas> {
   return validar(nocheRutas, valor);
-}
-
-// --- Registro de correcciones (exportacion/correcciones.py), del almacén público -------------
-
-const idIncidente = cadena(/^EODI-\d{4}-\d{5}$/);
-const lugarCorregido = nulable(objeto({ pais: nulable(cadena()) }, { nombre: cadena() }));
-const cambioCorregido = alguna(
-  objeto({ campo: constante("titulo"), antes: nulable(titulo), despues: nulable(titulo) }),
-  objeto({ campo: constante("estado"), antes: nulable(enumerado(v.ESTADOS)), despues: nulable(enumerado(v.ESTADOS)) }),
-  objeto({ campo: constante("presencia_dron"), antes: nulable(enumerado(v.PRESENCIAS)), despues: nulable(enumerado(v.PRESENCIAS)) }),
-  objeto({ campo: constante("lugar"), antes: lugarCorregido, despues: lugarCorregido }),
-  objeto({ campo: constante("atribucion"), retirada: enumerado([true, false]) }),
-  objeto({ campo: constante("union"), destino: idIncidente }),
-  objeto({ campo: constante("retirada") }),
-);
-const registroCorrecciones = objeto({
-  version: constante(1),
-  actualizado: nulable(cadena(v.PATRON_INSTANTE)),
-  correcciones: lista(
-    objeto(
-      {
-        fecha: cadena(v.PATRON_INSTANTE),
-        incidente: idIncidente,
-        enlace: nulable(idIncidente),
-        cambios: lista(cambioCorregido, 1),
-        motivo: titulo,
-        revision: enumerado(["a_mano", "regla"] as const),
-      },
-      { titulo, a_raiz_de_un_aviso: constante(true) },
-    ),
-  ),
-}, { licencia: licenciaPublicada });
-
-export function validarCorrecciones(valor: unknown): Resultado<RegistroCorrecciones> {
-  return validar(registroCorrecciones, valor);
 }
 
 // --- Versiones citables de los datos abiertos (recogida/versiones.py) -----------------------

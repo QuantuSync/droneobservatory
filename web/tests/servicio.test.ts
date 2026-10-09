@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-// Páginas de servicio público (aviso legal, privacidad, independencia, correcciones y
+// Páginas de servicio público (aviso legal, privacidad, independencia y
 // accesibilidad), la licencia dentro de los ficheros descargables y en llms.txt.
 
 import { readFileSync } from "node:fs";
@@ -42,12 +42,12 @@ describe("páginas de servicio público", () => {
     }
   });
 
-  it("el aviso legal da el responsable y el contacto; correcciones y privacidad, el correo", () => {
+  it("el aviso legal da el responsable, el contacto y a qué correo señalar un error; privacidad, el correo", () => {
     for (const idioma of ["es", "en"] as const) {
       const aviso = todoElTexto("avisoLegal", idioma);
       expect(aviso).toContain(RESPONSABLE);
       expect(aviso).toContain(CONTACTO);
-      expect(todoElTexto("correcciones", idioma)).toContain(CONTACTO);
+      expect(aviso).toContain(idioma === "es" ? "Si ves un error, escribe a " : "If you see a mistake, write to ");
       expect(todoElTexto("privacidad", idioma)).toContain("eodi.ultima-visita");
     }
   });

@@ -1322,32 +1322,6 @@ class Almacen:
                 (tabla, entidad_id, _json(anterior), _json({**nuevo, "motivo": motivo})),
             )
 
-    def motivos_anotados(self, tabla: str) -> list[Documento]:
-        """Los cambios anotados con su motivo en una tabla del historial (anotar_motivo), en el
-        orden en que se hicieron."""
-        filas = self._conexion.execute(
-            "SELECT entidad_id, anterior, nuevo, fecha FROM historial WHERE tabla = ? ORDER BY id",
-            (tabla,),
-        ).fetchall()
-        return [
-            {"entidad_id": e, "anterior": json.loads(a) if a is not None else {},
-             "nuevo": json.loads(n), "fecha": f}
-            for e, a, n, f in filas
-        ]  # fmt: skip
-
-    def versiones_activas(self) -> dict[str, list[str]]:
-        """Por incidente, las fechas de las versiones guardadas en que no estaba retirado ni
-        fundido en otro (sin cargar los documentos en Python)."""
-        filas = self._conexion.execute(
-            "SELECT entidad_id, fecha FROM historial WHERE tabla = 'incidentes' "
-            "AND json_type(nuevo, '$.retirado') IS NULL "
-            "AND json_type(nuevo, '$.fusionado_en') IS NULL ORDER BY id"
-        ).fetchall()
-        resultado: dict[str, list[str]] = {}
-        for entidad_id, fecha in filas:
-            resultado.setdefault(str(entidad_id), []).append(str(fecha))
-        return resultado
-
     def historial(self, entidad_id: str) -> list[Documento]:
         filas = self._conexion.execute(
             "SELECT tabla, operacion, anterior, nuevo, fecha FROM historial "
