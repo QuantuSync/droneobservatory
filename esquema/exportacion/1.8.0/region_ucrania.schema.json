@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:eodi:exportacion:1.8.0:region_ucrania",
+  "title": "Región de un ataque (una línea de ucrania_regiones.jsonl)",
+  "description": "El ataque al que pertenece y el documento de la región, que valida además contra esquema/eodi/region_ucrania.schema.json. procedencia: origen y método de los datos de la región (los del campo regiones del ataque) y, si la región trae foco_termico, el suyo (medido).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "ataque_id",
+    "region",
+    "procedencia"
+  ],
+  "properties": {
+    "ataque_id": {
+      "type": "string",
+      "pattern": "^EODI-UA-\\d{4}-\\d{4}$"
+    },
+    "region": {
+      "type": "object"
+    },
+    "procedencia": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "origen",
+        "metodo",
+        "fuentes"
+      ],
+      "properties": {
+        "origen": {
+          "enum": [
+            "medido",
+            "oficial",
+            "registro",
+            "oficial_citado",
+            "parte",
+            "prensa",
+            "deducido"
+          ]
+        },
+        "metodo": {
+          "enum": [
+            "parser",
+            "extractor",
+            "regla"
+          ]
+        },
+        "fuentes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "foco_termico": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "origen",
+            "metodo",
+            "fuentes"
+          ],
+          "properties": {
+            "origen": {
+              "const": "medido"
+            },
+            "metodo": {
+              "const": "parser"
+            },
+            "fuentes": {
+              "type": "array",
+              "maxItems": 0
+            }
+          }
+        }
+      }
+    }
+  }
+}

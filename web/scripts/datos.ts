@@ -107,7 +107,8 @@ async function principal(): Promise<void> {
   const rutaPrevision = join(PUBLICACION, "prevision.json");
   if (await existe(rutaPrevision)) {
     exigir("prevision.json", validarPrevision(await leerJson(rutaPrevision)));
-    await escribir(join(DATOS, "prevision.json"), await readFile(rutaPrevision, "utf-8"));
+    // Con su licencia y sus créditos, como las demás descargas.
+    await escribir(join(DATOS, "prevision.json"), await publicado(rutaPrevision));
   }
   // El foco térmico de una región se marca en su centro: el parte no da el punto.
   const contornos = (await leerJson(

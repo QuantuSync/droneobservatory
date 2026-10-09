@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:eodi:exportacion:1.8.0:prevision",
+  "title": "Previsión registrada",
+  "description": "Una previsión publicada del observatorio (proceso/prevision), tal como se registró en la tabla previsiones antes de conocerse el resultado: riesgo de frontera de una noche, incidentes de una semana o aviso de segunda noche. Valor calculado: su procedencia da el método (versión) y la fecha en que se hizo. No cambia nunca; el resultado, cuando se conoce, se calcula con los incidentes y los partes.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "tipo", "pais", "objetivo", "emitida", "metodo", "procedencia"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^(frontera|semana|segunda_noche):[A-Z]{2}:\\d{4}-\\d{2}-\\d{2}$"},
+    "tipo": {"enum": ["frontera", "semana", "segunda_noche"]},
+    "pais": {"type": "string", "pattern": "^[A-Z]{2}$"},
+    "objetivo": {"type": "string", "format": "date", "description": "Noche (día en que acaba) o semana (su lunes) prevista."},
+    "emitida": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}Z$"},
+    "metodo": {"type": "string", "minLength": 1},
+    "probabilidad": {"type": "number", "minimum": 0, "maximum": 1},
+    "esperado": {"type": "number", "minimum": 0},
+    "minimo": {"type": "integer", "minimum": 0},
+    "maximo": {"type": "integer", "minimum": 0},
+    "procedencia": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["origen", "metodo", "fecha"],
+      "properties": {
+        "origen": {"const": "calculado"},
+        "metodo": {"type": "string", "minLength": 1},
+        "fecha": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}Z$"}
+      }
+    }
+  }
+}

@@ -1,6 +1,6 @@
 import { rutasEn } from "./rutas.ts";
 import { tipoDronEn } from "./tipoDron.ts";
-import { LICENCIA_DATOS, LICENCIA_DATOS_URL, NOMBRE, ORIGEN, REPOSITORIO } from "../sitio.ts";
+import { LICENCIA_DATOS, LICENCIA_DATOS_URL, NOMBRE, REPOSITORIO, citaRecomendada } from "../sitio.ts";
 import { REGIONES_RUSIA_EN } from "./regionesRusia.ts";
 import type { FechaEscrita, Textos } from "./tipos.ts";
 import { UMBRALES_DIRECTO } from "./umbrales.ts";
@@ -1708,9 +1708,9 @@ export const en: Textos = {
       licenciaTexto:
         `The observatory’s compilation (the incidents, their statuses, their classifications and their figures) is published under the ${LICENCIA_DATOS} licence: it can be copied, transformed and reused, also for commercial purposes, citing the source as shown below. Quoted sentences remain their authors’ and are used as quotations, with their source and link. The measured air traffic block (trafico_aereo) derives from the adsb.lol archive and is offered under its licence, ODbL 1.0.`,
       citaTitulo: "Recommended citation",
-      cita: (fecha) =>
-        `${NOMBRE} (EODI). Drone incidents in Europe, version of ${fecha}. ` +
-        `${ORIGEN}. Licence ${LICENCIA_DATOS}.`,
+      cita: (version) => citaRecomendada(version, "en"),
+      autoriaTitulo: "Authorship",
+      contacto: "Contact",
     },
     versiones: {
       titulo: "Citable versions",

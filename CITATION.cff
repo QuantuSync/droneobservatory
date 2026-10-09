@@ -1,0 +1,32 @@
+# Cómo citar el observatorio (Citation File Format). Los mismos créditos van dentro de cada fichero
+# de datos publicado (configuracion/licencia_datos.json). / How to cite the observatory.
+cff-version: 1.2.0
+message: >-
+  Si usas estos datos, cítalos así / If you use this data, please cite it as below:
+  Alaniz Pintos, L. (2026). European Observatory of Drone Incidents. Versión / Version 2026-10.
+  https://droneobservatory.eu. Licencia / Licence CC BY 4.0.
+type: dataset
+title: European Observatory of Drone Incidents
+abbreviation: EODI
+authors:
+  - family-names: Alaniz Pintos
+    given-names: Lucas
+    name-suffix: PhD
+    orcid: "https://orcid.org/0009-0008-5179-2534"
+    email: lucasalanizpintos@gmail.com
+version: "2026-10"
+date-released: "2026-10-01"
+license: CC-BY-4.0
+url: "https://droneobservatory.eu"
+repository-code: "https://github.com/QuantuSync/droneobservatory"
+repository-artifact: "https://droneobservatory.eu/datos/versiones/2026-10"
+abstract: >-
+  Public register of drone incidents in Europe, each with its sources and its level of
+  confirmation, and of drone attacks on Ukraine according to official reports. The data
+  (incidents, statuses, classifications and figures) are published under CC BY 4.0; the code is
+  under Apache-2.0. Monthly citable versions: https://droneobservatory.eu/metodologia#versiones.
+keywords:
+  - drones
+  - Europe
+  - incidents
+  - open data

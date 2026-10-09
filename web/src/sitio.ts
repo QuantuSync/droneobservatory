@@ -25,6 +25,49 @@ export const DESCARGAS = {
 export const LICENCIA_DATOS = "CC BY 4.0";
 export const LICENCIA_DATOS_URL = "https://creativecommons.org/licenses/by/4.0/";
 
+// Créditos del autor: los mismos que configuracion/licencia_datos.json, que los mete en cada
+// fichero publicado (tests/creditos.test.ts comprueba que coinciden).
+export const AUTOR_NOMBRE = "Lucas Alaniz Pintos";
+/** Cómo firma el autor en cada idioma. */
+export const AUTOR_FIRMA: Record<Idioma, string> = {
+  es: "Dr. Lucas Alaniz Pintos",
+  en: "Lucas Alaniz Pintos, PhD",
+};
+/** La línea de autoría, en cada idioma. */
+export const AUTOR_LINEA: Record<Idioma, string> = {
+  es: `Autor: ${AUTOR_FIRMA.es}`,
+  en: `Author: ${AUTOR_FIRMA.en}`,
+};
+export const ORCID = "0009-0008-5179-2534";
+export const ORCID_URL = `https://orcid.org/${ORCID}`;
+export const CORREO_AUTOR = "lucasalanizpintos@gmail.com";
+
+/** La versión (AAAA-MM, en UTC) que se cita para unos datos actualizados en `instante`. */
+export function versionDeDatos(instante: string): string {
+  return new Date(instante).toISOString().slice(0, 7);
+}
+
+/** La cita recomendada de la versión AAAA-MM. */
+export function citaRecomendada(version: string, idioma: Idioma): string {
+  const anio = version.slice(0, 4);
+  return idioma === "en"
+    ? `Alaniz Pintos, L. (${anio}). ${NOMBRE}. Version ${version}. ${ORIGEN}. Licence ${LICENCIA_DATOS}.`
+    : `Alaniz Pintos, L. (${anio}). ${NOMBRE}. Versión ${version}. ${ORIGEN}. Licencia ${LICENCIA_DATOS}.`;
+}
+
+/** El autor como persona de schema.org, con su ORCID. */
+export function autorEstructurado(): Record<string, unknown> {
+  return {
+    "@type": "Person",
+    "@id": ORCID_URL,
+    name: AUTOR_NOMBRE,
+    honorificPrefix: "Dr.",
+    identifier: { "@type": "PropertyValue", propertyID: "ORCID", value: ORCID },
+    sameAs: [ORCID_URL],
+    url: ORCID_URL,
+  };
+}
+
 /** Imagen de la vista previa al compartir (logo, nombre y mapa), una por idioma. */
 export const IMAGEN_COMPARTIR: Record<Idioma, string> = {
   es: "/compartir.png",

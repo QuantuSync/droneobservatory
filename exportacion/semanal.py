@@ -48,6 +48,10 @@ age con la misma clave pública que la base:
   de visibilidad de cada campo: un campo interno nuevo entra en la exportación sin tocar
   este código, porque se exportan los documentos enteros.
 
+El manifiesto lleva además, desde el formato 1.8.0, los créditos de los datos (`creditos`): el
+autor con su ORCID, la licencia, la cita recomendada y la dirección (recogida/licencia.py), para
+que viajen con los datos cuando se integran en otro sistema.
+
 La salida es determinista: el mismo contenido de la base da los mismos ficheros en claro,
 byte a byte (orden estable de registros y de claves, sin la hora de la exportación). El
 cifrado no lo es (age usa una clave efímera), por eso el manifiesto da las dos huellas.
@@ -81,8 +85,9 @@ from proceso.focos_termicos import con_focos
 from proceso.luces import con_luces
 from proceso.mediciones import con_mediciones
 from proceso.restricciones import por_ataque
+from recogida import licencia
 
-VERSION_FORMATO = "1.7.0"
+VERSION_FORMATO = "1.8.0"
 RAIZ = Path(__file__).resolve().parent.parent
 DIRECTORIO_ESQUEMAS = RAIZ / "esquema" / "exportacion" / VERSION_FORMATO
 VOCABULARIO = RAIZ / "configuracion" / "vocabulario_aegis.json"
@@ -926,6 +931,8 @@ def empaquetar(
             "extension": EXTENSION,
         },
         "ficheros": entradas,
+        # Desde el formato 1.8.0: autor, licencia, cita y dirección viajan con los datos.
+        "creditos": licencia.creditos(licencia.version_actual(generada)),
     }
     _comprobar(MANIFIESTO, [manifiesto], validador_propio("manifiesto"))
     salida[MANIFIESTO] = _json(manifiesto)

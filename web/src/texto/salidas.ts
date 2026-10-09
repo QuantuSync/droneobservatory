@@ -5,7 +5,7 @@ import { escaparHtml } from "../cabecera.ts";
 import { cifras } from "../datos/derivar.ts";
 import type { Resumen } from "../datos/tipos.ts";
 import { fechaHora, textos } from "../i18n/index.ts";
-import { DESCARGAS, IDIOMAS, LICENCIA_DATOS, LICENCIA_DATOS_URL, NOMBRE, ORIGEN, rutaDeFicha, rutaDeIdioma } from "../sitio.ts";
+import { AUTOR_LINEA, CORREO_AUTOR, DESCARGAS, IDIOMAS, LICENCIA_DATOS, LICENCIA_DATOS_URL, NOMBRE, ORCID_URL, ORIGEN, rutaDeFicha, rutaDeIdioma, versionDeDatos } from "../sitio.ts";
 import { e, html } from "./html.ts";
 import { direccionCompleta, RUTAS } from "./paginas.ts";
 import type { PaginaTexto } from "./paginas.ts";
@@ -103,10 +103,13 @@ export function llmsTxt(resumen: Resumen): string {
       .join("\n");
   };
   const fecha = fechaHora(resumen.actualizado);
+  const version = versionDeDatos(resumen.actualizado);
   return [
     `# ${NOMBRE}`,
     "",
     `> ${en.portada.descripcion}`,
+    "",
+    `${AUTOR_LINEA.en} (ORCID ${ORCID_URL}). Contact: ${CORREO_AUTOR}.`,
     "",
     en.portada.que.join(" "),
     "",
@@ -126,7 +129,7 @@ export function llmsTxt(resumen: Resumen): string {
     "",
     `Licence: ${LICENCIA_DATOS} (${LICENCIA_DATOS_URL}) for the observatory's compilation (incidents, statuses, classifications and figures). Rebuilt on every data update. Quoted sentences remain their authors' and are used as quotations, with their source; the measured air traffic block (trafico_aereo) derives from adsb.lol and is offered under ODbL 1.0.`,
     "",
-    `How to cite: ${textos("en").metodologia.descargas.cita(fecha)}`,
+    `How to cite: ${textos("en").metodologia.descargas.cita(version)}`,
     "",
     `- [Incidents, GeoJSON](${ORIGEN}${DESCARGAS.incidentesGeojson})`,
     `- [Incidents, CSV](${ORIGEN}${DESCARGAS.incidentesCsv})`,
@@ -138,6 +141,8 @@ export function llmsTxt(resumen: Resumen): string {
     "## En español",
     "",
     `> ${es.portada.descripcion}`,
+    "",
+    `${AUTOR_LINEA.es} (ORCID ${ORCID_URL}). Contacto: ${CORREO_AUTOR}.`,
     "",
     es.portada.que.join(" "),
     "",
@@ -155,7 +160,7 @@ export function llmsTxt(resumen: Resumen): string {
     "",
     `Datos abiertos con licencia ${LICENCIA_DATOS} (${LICENCIA_DATOS_URL}) para la compilación del observatorio (incidentes, estados, clasificaciones y cifras): ${ORIGEN}${RUTAS.metodologia.es}#datos-abiertos. Las frases citadas siguen siendo de sus autores; el tráfico aéreo medido (trafico_aereo) se ofrece con ODbL 1.0.`,
     "",
-    `Cómo citar: ${textos("es").metodologia.descargas.cita(fecha)}`,
+    `Cómo citar: ${textos("es").metodologia.descargas.cita(version)}`,
     "",
   ].join("\n");
 }

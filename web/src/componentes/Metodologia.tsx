@@ -7,10 +7,11 @@ import type { VersionDatos } from "../datos/versiones.ts";
 import { fecha, fechaHora, numero } from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
 import type { Bloque, Marca, Trozo } from "../i18n/tipos.ts";
-import { DESCARGAS, LICENCIA_DATOS, LICENCIA_DATOS_URL, NOMBRE } from "../sitio.ts";
+import { DESCARGAS, LICENCIA_DATOS, LICENCIA_DATOS_URL, NOMBRE, versionDeDatos } from "../sitio.ts";
 import type { Idioma } from "../sitio.ts";
 import { seccionesDeMetodologia } from "../rutasEnLaWeb.ts";
 import { enlacesSobre } from "../texto/servicio.ts";
+import { Autoria } from "./Autoria.tsx";
 import { EnlaceExterno } from "./EnlaceExterno.tsx";
 import { Simbolo } from "./Simbolo.tsx";
 
@@ -87,10 +88,12 @@ function Descarga({ ruta, formato }: { ruta: string; formato: string }) {
 
 function Descargas({
   t,
+  idioma,
   actualizado,
   sinUbicacion,
 }: {
   t: Textos;
+  idioma: Idioma;
   actualizado: string | null;
   sinUbicacion: boolean;
 }) {
@@ -140,10 +143,14 @@ function Descargas({
       <p className="mt-1 text-xs text-secundario" data-licencia-texto="">
         {d.licenciaTexto}
       </p>
-      {version !== null && (
+      <p className="rotulo mt-3">{d.autoriaTitulo}</p>
+      <Autoria t={t} idioma={idioma} />
+      {actualizado !== null && (
         <>
           <p className="rotulo mt-3">{d.citaTitulo}</p>
-          <p className="mt-1 border-l border-acento pl-2 text-secundario">{d.cita(version)}</p>
+          <p className="mt-1 border-l border-acento pl-2 text-secundario" data-cita-recomendada="">
+            {d.cita(versionDeDatos(actualizado))}
+          </p>
         </>
       )}
     </section>
@@ -305,7 +312,7 @@ export function Metodologia({ t, idioma, abierta, actualizado, sinUbicacion, onC
               ))}
             </section>
           ))}
-          <Descargas t={t} actualizado={actualizado} sinUbicacion={sinUbicacion} />
+          <Descargas t={t} idioma={idioma} actualizado={actualizado} sinUbicacion={sinUbicacion} />
           <Versiones t={t} idioma={idioma} abierta={abierta} />
           <Sobre t={t} idioma={idioma} />
         </div>

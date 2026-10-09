@@ -1,6 +1,6 @@
 import { rutasEs } from "./rutas.ts";
 import { tipoDronEs } from "./tipoDron.ts";
-import { LICENCIA_DATOS, LICENCIA_DATOS_URL, NOMBRE, ORIGEN, REPOSITORIO } from "../sitio.ts";
+import { LICENCIA_DATOS, LICENCIA_DATOS_URL, NOMBRE, REPOSITORIO, citaRecomendada } from "../sitio.ts";
 import { REGIONES_RUSIA_ES } from "./regionesRusia.ts";
 import type { FechaEscrita, Textos } from "./tipos.ts";
 import { UMBRALES_DIRECTO } from "./umbrales.ts";
@@ -1724,9 +1724,9 @@ export const es: Textos = {
       licenciaTexto:
         `La compilación del observatorio (los incidentes, sus estados, sus clasificaciones y sus cifras) se publica con la licencia ${LICENCIA_DATOS}: se puede copiar, transformar y reutilizar, también con fines comerciales, citando la fuente como se indica abajo. Las frases citadas siguen siendo de sus autores y se usan como cita, con su fuente y su enlace. El bloque de tráfico aéreo medido (trafico_aereo) deriva del archivo de adsb.lol y se ofrece con su licencia, ODbL 1.0.`,
       citaTitulo: "Cita recomendada",
-      cita: (fecha) =>
-        `${NOMBRE} (EODI). Incidentes con drones en Europa, versión del ${fecha}. ` +
-        `${ORIGEN}. Licencia ${LICENCIA_DATOS}.`,
+      cita: (version) => citaRecomendada(version, "es"),
+      autoriaTitulo: "Autoría",
+      contacto: "Contacto",
     },
     versiones: {
       titulo: "Versiones citables",

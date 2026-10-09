@@ -1,14 +1,32 @@
-// Licencia de los datos abiertos dentro de cada fichero JSON descargable (/datos): qué licencia
-// tiene la compilación, qué queda fuera y cómo se cita. Los CSV no tienen dónde llevarla: la dan
-// la cabecera HTTP «Link: rel="license"» de /datos (vercel.json) y la página de datos abiertos.
+// Licencia y créditos de los datos abiertos dentro de cada fichero JSON descargable (/datos): qué
+// licencia tiene la compilación, qué queda fuera, quién es el autor (con su ORCID), cómo se cita y
+// su dirección, para que viajen con los datos cuando alguien los integra en otro sistema. Los CSV no
+// tienen dónde llevarlos: los dan las cabeceras HTTP «Link» de /datos (vercel.json) y la página
+// de datos abiertos.
 
-import { fechaHora, textos } from "../i18n/index.ts";
-import { LICENCIA_DATOS, LICENCIA_DATOS_URL, NOMBRE, ORIGEN } from "../sitio.ts";
+import { textos } from "../i18n/index.ts";
+import { AUTOR_FIRMA, AUTOR_NOMBRE, CORREO_AUTOR, LICENCIA_DATOS, LICENCIA_DATOS_URL, NOMBRE, ORCID_URL, ORIGEN, citaRecomendada, versionDeDatos } from "../sitio.ts";
+
+/** El autor, como lo llevan los ficheros (recogida/licencia.py). */
+export interface AutorDatos {
+  nombre: string;
+  firma: { es: string; en: string };
+  orcid: string;
+  correo: string;
+}
+
+export const AUTOR_DATOS: AutorDatos = {
+  nombre: AUTOR_NOMBRE,
+  firma: { es: AUTOR_FIRMA.es, en: AUTOR_FIRMA.en },
+  orcid: ORCID_URL,
+  correo: CORREO_AUTOR,
+};
 
 export interface MetadatosLicencia {
   nombre: string;
   url: string;
   titular: string;
+  autor: AutorDatos;
   fuente: string;
   alcance: { es: string; en: string };
   cita: { es: string; en: string };
@@ -16,16 +34,17 @@ export interface MetadatosLicencia {
 
 /** La licencia de los datos publicados a `actualizado` (instante ISO de la versión). */
 export function metadatosLicencia(actualizado: string): MetadatosLicencia {
-  const version = fechaHora(actualizado);
+  const version = versionDeDatos(actualizado);
   const es = textos("es").metodologia.descargas;
   const en = textos("en").metodologia.descargas;
   return {
     nombre: LICENCIA_DATOS,
     url: LICENCIA_DATOS_URL,
     titular: NOMBRE,
+    autor: AUTOR_DATOS,
     fuente: `${ORIGEN}/`,
     alcance: { es: es.licenciaTexto, en: en.licenciaTexto },
-    cita: { es: es.cita(version), en: en.cita(version) },
+    cita: { es: citaRecomendada(version, "es"), en: citaRecomendada(version, "en") },
   };
 }
 

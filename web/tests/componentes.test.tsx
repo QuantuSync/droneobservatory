@@ -442,9 +442,14 @@ describe("metodología", () => {
     ]);
     expect(container.textContent).toContain("Versión del 30/09/2026 · 12:42 UTC");
     expect(container.textContent).toContain(
-      "European Observatory of Drone Incidents (EODI). Incidentes con drones en Europa, " +
-        "versión del 30/09/2026 · 12:42 UTC. https://droneobservatory.eu. Licencia CC BY 4.0.",
+      "Alaniz Pintos, L. (2026). European Observatory of Drone Incidents. Versión 2026-09. " +
+        "https://droneobservatory.eu. Licencia CC BY 4.0.",
     );
+    // Los créditos del autor, con su ORCID enlazado y el correo de contacto.
+    expect(container.querySelector("[data-autor]")?.textContent).toBe("Autor: Dr. Lucas Alaniz Pintos");
+    const orcid = [...container.querySelectorAll("a")].find((a) => a.textContent?.includes("0009-0008-5179-2534"));
+    expect(orcid?.getAttribute("href")).toBe("https://orcid.org/0009-0008-5179-2534");
+    expect(container.querySelector('a[href="mailto:lucasalanizpintos@gmail.com"]')).not.toBeNull();
     const licencia = [...container.querySelectorAll("a")].find((a) => a.textContent?.includes("CC BY 4.0"));
     expect(licencia?.getAttribute("href")).toBe("https://creativecommons.org/licenses/by/4.0/");
   });

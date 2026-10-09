@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:eodi:exportacion:1.8.0:ruta_grupo",
+  "title": "Estadísticas de un grupo de una noche",
+  "description": "Un grupo de tramos de ruta de una noche (los que se tocan por sus extremos; en NEPTUN, una pista): tramos, aparatos si constan, velocidad mediana si consta, divisiones y uniones. Valor calculado por la regla de las rutas, con su versión.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["noche", "grupo", "fuente", "tramos", "aparatos_max", "kmh_mediana", "divisiones", "uniones", "procedencia"],
+  "properties": {
+    "noche": {"type": "string", "format": "date"},
+    "grupo": {"type": "integer", "minimum": 1},
+    "fuente": {"enum": ["neptun", "fuerza_aerea"]},
+    "tramos": {"type": "integer", "minimum": 1},
+    "aparatos_max": {"type": ["integer", "null"]},
+    "kmh_mediana": {"type": ["number", "null"]},
+    "divisiones": {"type": "integer", "minimum": 0},
+    "uniones": {"type": "integer", "minimum": 0},
+    "procedencia": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["origen", "metodo", "fuentes"],
+      "properties": {
+        "origen": {"const": "calculado"},
+        "metodo": {"type": "string", "minLength": 1},
+        "fuentes": {"type": "array", "items": {"type": "string"}}
+      }
+    }
+  }
+}

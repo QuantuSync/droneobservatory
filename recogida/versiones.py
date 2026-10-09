@@ -2,9 +2,10 @@
 
 El día 1 de cada mes se congela una versión de los datos abiertos: los mismos ficheros que se
 descargan de la web (/datos/incidentes.geojson, .csv…), tal cual, en el almacén público bajo
-`versiones/AAAA-MM/`, con su huella SHA-256, la licencia en los metadatos de cada objeto
-(`x-amz-meta-licencia`) y un `metadatos.json` con la fecha, la huella y el tamaño de cada fichero,
-la licencia, cómo citarla y el número de incidentes. La web la sirve en
+`versiones/AAAA-MM/`, con su huella SHA-256, la licencia y el autor en los metadatos de cada
+objeto (`x-amz-meta-licencia`, `x-amz-meta-autor`, `x-amz-meta-orcid`) y un `metadatos.json` con
+la fecha, la huella y el tamaño de cada fichero, el autor con su ORCID, la licencia, cómo citarla
+y el número de incidentes. La web la sirve en
 droneobservatory.eu/datos/versiones/AAAA-MM/ (vercel.json reescribe los ficheros hacia el
 almacén) y la lista en «Metodología y datos abiertos» (`versiones/indice.json`).
 
@@ -95,10 +96,9 @@ def toca(momento: datetime, conf: dict[str, Any] | None = None) -> bool:
     return momento.day > dia or (momento.day == dia and momento.hour >= conf["hora_limite_utc"])
 
 
-def cita(version: str, conf: dict[str, Any] | None = None) -> dict[str, str]:
-    conf = conf or configuracion()
-    anio = version[:4]
-    return {i: conf["cita"][i].format(anio=anio, version=version) for i in ("es", "en")}
+def cita(version: str) -> dict[str, str]:
+    """La cita recomendada de la versión (configuracion/licencia_datos.json)."""
+    return licencia.cita(version)
 
 
 def cliente() -> copias.Copias:
@@ -170,8 +170,9 @@ def generar(
         "datos_actualizados": resumen.get("actualizado"),
         "incidentes": len(resumen.get("incidentes", [])),
         "direccion": f"{conf['direccion']}{version}/",
+        "autor": licencia.autor(),
         "licencia": licencia.de_version(),
-        "cita": cita(version, conf),
+        "cita": cita(version),
         "ficheros": descripcion,
     }
     cuerpo = (json.dumps(metadatos, ensure_ascii=False, indent=1) + "\n").encode("utf-8")

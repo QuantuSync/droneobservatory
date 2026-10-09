@@ -85,10 +85,12 @@ def escribir_registro(ruta: Path, datos: dict[str, Any]) -> None:
     os.replace(temporal, ruta)
 
 
-def publicable(carpeta: Path, nombre: str) -> bytes:
-    """Lo que se sube de un fichero: el JSON de la carpeta con su licencia dentro
-    (recogida/licencia.py), como los que se descargan de la web."""
-    return licencia.con_licencia((carpeta / nombre).read_bytes())
+def publicable(carpeta: Path, nombre: str, ahora: datetime) -> bytes:
+    """Lo que se sube de un fichero: el JSON de la carpeta con su licencia y sus créditos dentro
+    (recogida/licencia.py), como los que se descargan de la web; la cita, con la versión del mes
+    de `ahora`."""
+    version = licencia.version_actual(ahora)
+    return licencia.con_licencia((carpeta / nombre).read_bytes(), version)
 
 
 def manifiesto(carpeta: Path, ahora: datetime) -> dict[str, Any]:
@@ -96,7 +98,7 @@ def manifiesto(carpeta: Path, ahora: datetime) -> dict[str, Any]:
     for nombre in FICHEROS:
         ruta = carpeta / nombre
         if ruta.exists():
-            datos = publicable(carpeta, nombre)
+            datos = publicable(carpeta, nombre, ahora)
             ficheros[nombre] = {"bytes": len(datos), "sha256": huella(datos)}
     return {
         "version": 1,
@@ -126,7 +128,7 @@ def subir(
     for nombre, datos in nuevo["ficheros"].items():
         if anteriores.get(nombre, {}).get("sha256") == datos["sha256"]:
             continue
-        cuerpo = gzip.compress(publicable(carpeta, nombre), compresslevel=9, mtime=0)
+        cuerpo = gzip.compress(publicable(carpeta, nombre, ahora), compresslevel=9, mtime=0)
         correcto, motivo = enviar(
             almacen, PREFIJO + nombre, cuerpo, clave_id, secreto,
             TIPOS[Path(nombre).suffix], CACHE, codificacion="gzip",
@@ -151,7 +153,7 @@ def subir(
         destino = f"{PREFIJO}{HISTORIAL}/{dia}/"
         todo = True
         for nombre in nuevo["ficheros"]:
-            cuerpo = gzip.compress(publicable(carpeta, nombre), compresslevel=9, mtime=0)
+            cuerpo = gzip.compress(publicable(carpeta, nombre, ahora), compresslevel=9, mtime=0)
             correcto, motivo = enviar(
                 almacen, f"{destino}{nombre}.gz", cuerpo, clave_id, secreto,
                 "application/gzip", CACHE_HISTORIAL, metadatos=licencia.cabeceras(),
@@ -220,7 +222,7 @@ def comparar(
         except (OSError, ValueError) as error:
             distintos.append(f"{nombre} (no se lee: {type(error).__name__})")
             continue
-        if remoto != publicable(carpeta, nombre):
+        if remoto != publicable(carpeta, nombre, datetime.now(UTC)):
             distintos.append(nombre)
     return distintos
 

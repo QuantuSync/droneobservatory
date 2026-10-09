@@ -27,15 +27,21 @@ import { fechaDia, fechaHora, instante, numero, pais, rango, region, textos } fr
 import type { Textos } from "../i18n/index.ts";
 import type { Bloque, Trozo } from "../i18n/tipos.ts";
 import {
+  AUTOR_LINEA,
+  CORREO_AUTOR,
   DESCARGAS,
   IDIOMAS,
   LICENCIA_DATOS,
   LICENCIA_DATOS_URL,
   NOMBRE,
+  ORCID,
+  ORCID_URL,
   ORIGEN,
   REPOSITORIO,
+  autorEstructurado,
   rutaDeFicha,
   rutaDeIdioma,
+  versionDeDatos,
 } from "../sitio.ts";
 import { textoAproximado } from "../datos/lugarAproximado.ts";
 import { nombreDeLugar } from "../i18n/nombresLugar.ts";
@@ -132,6 +138,31 @@ function enlace(ruta: string, ...hijos: Hijo[]): Html {
 
 function externo(url: string, ...hijos: Hijo[]): Html {
   return e("a", { href: url, rel: "noopener", hreflang: null }, ...hijos);
+}
+
+/** La autoría en una línea: el autor, su ORCID enlazado y el correo de contacto. */
+export function lineaAutoria(idioma: Idioma): Html {
+  const d = textos(idioma).metodologia.descargas;
+  return html(
+    e("span", { "data-autor": "" }, AUTOR_LINEA[idioma]),
+    " · ORCID ",
+    e("a", { href: ORCID_URL, rel: "author noopener", hreflang: null, "data-orcid": "" }, ORCID),
+    " · ",
+    d.contacto,
+    ": ",
+    e("a", { href: `mailto:${CORREO_AUTOR}` }, CORREO_AUTOR),
+  );
+}
+
+/** Autoría y cita recomendada de los datos de `actualizado` (metodología y ayuda). */
+function autoriaYCita(idioma: Idioma, actualizado: string, nivel: "h2" | "h3"): Html {
+  const d = textos(idioma).metodologia.descargas;
+  return html(
+    e(nivel, null, d.autoriaTitulo),
+    e("p", { "data-autoria": "" }, lineaAutoria(idioma)),
+    e(nivel, null, d.citaTitulo),
+    e("blockquote", { "data-cita-recomendada": "" }, d.cita(versionDeDatos(actualizado))),
+  );
 }
 
 function trozos(lista: readonly Trozo[]): Html {
@@ -265,6 +296,9 @@ function sitioEstructurado(idioma: Idioma): unknown {
     alternateName: "EODI",
     url: direccionCompleta(PORTADA[idioma]),
     inLanguage: idioma,
+    author: autorEstructurado(),
+    creator: autorEstructurado(),
+    copyrightHolder: autorEstructurado(),
   };
 }
 
@@ -960,8 +994,7 @@ function metodologia(datos: DatosPaginas, idioma: Idioma): PaginaTexto {
       e("p", { class: "mono" }, d.version(version)),
       e("p", null, d.licencia, ": ", externo(LICENCIA_DATOS_URL, LICENCIA_DATOS)),
       e("p", { "data-licencia-texto": "" }, d.licenciaTexto),
-      e("h3", null, d.citaTitulo),
-      e("blockquote", null, d.cita(version)),
+      autoriaYCita(idioma, datos.resumen.actualizado, "h3"),
       seccionVersiones(datos.versiones ?? [], idioma),
     ),
     e(
@@ -1003,7 +1036,10 @@ function conjuntoDeDatos(datos: DatosPaginas, idioma: Idioma): unknown {
     inLanguage: idioma,
     license: LICENCIA_DATOS_URL,
     isAccessibleForFree: true,
-    creator: { "@type": "Organization", name: NOMBRE, url: `${ORIGEN}/` },
+    creator: autorEstructurado(),
+    author: autorEstructurado(),
+    copyrightHolder: autorEstructurado(),
+    citation: textos(idioma).metodologia.descargas.cita(versionDeDatos(datos.resumen.actualizado)),
     dateModified: datos.resumen.actualizado,
     spatialCoverage: { "@type": "Place", name: "Europe" },
     distribution: formatos.map(([ruta, tipo]) => ({ "@type": "DataDownload", contentUrl: ORIGEN + ruta, encodingFormat: tipo })),
@@ -1025,6 +1061,7 @@ function ayuda(datos: DatosPaginas, idioma: Idioma): PaginaTexto {
       parrafos.map((p) => e("p", null, p)),
       e("h2", null, a.atajos),
       e("ul", null, Object.values(a.acciones).map((accion) => e("li", null, accion))),
+      autoriaYCita(idioma, datos.resumen.actualizado, "h2"),
     ),
     estructurados: [],
     conMapa: false,
@@ -1065,7 +1102,7 @@ export function paginas(datos: DatosPaginas): PaginaTexto[] {
 // Servicio público: aviso legal, privacidad, independencia y accesibilidad
 
 /** Fecha de la última revisión de las páginas de servicio, para el sitemap. */
-const REVISION_SERVICIO = "2026-10-08T00:00:00Z";
+const REVISION_SERVICIO = "2026-10-09T00:00:00Z";
 
 /**
  * El botón que borra la fecha de la última visita, en la página de privacidad: oculto hasta que
@@ -1252,6 +1289,7 @@ export function marco(pagina: PaginaTexto, actualizado: string): Html {
       { class: "texto-pie" },
       e("p", { class: "mono", "data-datos-de": "" }, tp.datosDe(fechaHora(actualizado))),
       e("p", null, tp.licencia, " ", externo(LICENCIA_DATOS_URL, LICENCIA_DATOS), " · ", externo(REPOSITORIO, tp.codigo)),
+      e("p", { "data-autoria-pie": "" }, lineaAutoria(idioma)),
       e(
         "nav",
         { "aria-label": textosPagina(idioma).sobre },

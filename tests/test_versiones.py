@@ -69,12 +69,22 @@ def test_publica_la_version_del_mes_con_huellas_licencia_y_cita(
     assert metadatos["licencia"]["nombre"] == "CC BY 4.0"
     assert metadatos["direccion"] == "https://droneobservatory.eu/datos/versiones/2026-10/"
     assert metadatos["cita"]["es"] == (
-        "European Observatory of Drone Incidents (2026). Datos abiertos, versión 2026-10. "
-        "droneobservatory.eu/datos/versiones/2026-10/. Licencia CC BY 4.0."
+        "Alaniz Pintos, L. (2026). European Observatory of Drone Incidents. Versión 2026-10. "
+        "https://droneobservatory.eu. Licencia CC BY 4.0."
     )
-    assert metadatos["cita"]["en"].startswith(
-        "European Observatory of Drone Incidents (2026). Open"
+    assert metadatos["cita"]["en"] == (
+        "Alaniz Pintos, L. (2026). European Observatory of Drone Incidents. Version 2026-10. "
+        "https://droneobservatory.eu. Licence CC BY 4.0."
     )
+    # Los créditos viajan con la versión: autor con su ORCID, en el JSON y en cada objeto.
+    assert metadatos["autor"]["nombre"] == "Lucas Alaniz Pintos"
+    assert metadatos["autor"]["orcid"] == "https://orcid.org/0009-0008-5179-2534"
+    assert metadatos["autor"]["firma"] == {
+        "es": "Dr. Lucas Alaniz Pintos",
+        "en": "Lucas Alaniz Pintos, PhD",
+    }
+    assert meta["x-amz-meta-autor"] == "Lucas Alaniz Pintos"
+    assert meta["x-amz-meta-orcid"] == "https://orcid.org/0009-0008-5179-2534"
     for nombre, descrito in metadatos["ficheros"].items():
         cuerpo = s3.objetos[f"versiones/2026-10/{nombre}"][0]
         assert descrito == {"bytes": len(cuerpo), "sha256": hashlib.sha256(cuerpo).hexdigest()}

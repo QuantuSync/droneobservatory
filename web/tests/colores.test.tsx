@@ -560,7 +560,7 @@ describe("marcador de los atribuidos", () => {
       [es, ["Notificado", "Confirmado", "Atribuido por una autoridad a un Estado", "Atribuido por una autoridad a una persona", "Desmentido"]],
       [en, ["Reported", "Confirmed", "Attributed by an authority to a State", "Attributed by an authority to a person", "Denied"]],
     ] as const) {
-      render(<Ayuda t={t} abierta={false} onCerrar={() => undefined} />);
+      render(<Ayuda t={t} idioma={t === es ? "es" : "en"} abierta={false} onCerrar={() => undefined} />);
       const leyenda = document.querySelector("[data-leyenda-estados]");
       const entradas = Array.from(leyenda?.querySelectorAll("li") ?? []);
       expect(entradas.map((li) => li.textContent)).toEqual(textosLeyenda);
