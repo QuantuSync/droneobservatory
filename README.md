@@ -1,6 +1,10 @@
-# Observatorio Europeo de Incidentes con Drones (EODI)
+# European Observatory of Drone Incidents (EODI)
 
-*European Observatory of Drone Incidents* · [droneobservatory.eu](https://droneobservatory.eu)
+[droneobservatory.eu](https://droneobservatory.eu)
+
+**Autor:** Dr. Lucas Alaniz Pintos · **Author:** Lucas Alaniz Pintos, PhD ·
+ORCID [0009-0008-5179-2534](https://orcid.org/0009-0008-5179-2534) ·
+[lucasalanizpintos@gmail.com](mailto:lucasalanizpintos@gmail.com)
 
 Registra cada incidente con drones en Europa, incluida la guerra entre Ucrania
 y Rusia en los dos sentidos, para una web pública de una sola pantalla con el mapa de Europa y para un conjunto de
@@ -88,6 +92,24 @@ Decisiones, valores y cobertura en [`docs/informe_recogida.md`](docs/informe_rec
 [`docs/informe_gdelt_mindef.md`](docs/informe_gdelt_mindef.md),
 [`docs/informe_gkg_partes.md`](docs/informe_gkg_partes.md) y
 [`docs/informe_extractor_europa.md`](docs/informe_extractor_europa.md).
+
+## Autoría y cita / Authorship and citation
+
+- Autor: Dr. Lucas Alaniz Pintos. Author: Lucas Alaniz Pintos, PhD.
+- ORCID: [0009-0008-5179-2534](https://orcid.org/0009-0008-5179-2534).
+- Contacto / Contact: [lucasalanizpintos@gmail.com](mailto:lucasalanizpintos@gmail.com).
+- Cita recomendada (AAAA-MM: la versión de los datos usados):
+  «Alaniz Pintos, L. (2026). European Observatory of Drone Incidents. Versión AAAA-MM.
+  https://droneobservatory.eu. Licencia CC BY 4.0.»
+- Recommended citation (YYYY-MM: the version of the data used):
+  “Alaniz Pintos, L. (2026). European Observatory of Drone Incidents. Version YYYY-MM.
+  https://droneobservatory.eu. Licence CC BY 4.0.”
+- Versión vigente / Current version: 2026-10 ([`CITATION.cff`](CITATION.cff)). Las versiones
+  mensuales citables están en <https://droneobservatory.eu/metodologia#versiones>.
+- Los mismos créditos (autor, ORCID, licencia, cita y dirección) van dentro de cada fichero de
+  datos publicado (miembro `licencia`), en el `metadatos.json` de cada versión mensual desde la
+  2026-11 y en el manifiesto de la exportación semanal (`creditos`, formato 1.8.0); la fuente es
+  `configuracion/licencia_datos.json`. The same credits travel inside every published data file.
 
 ## Licencia
 

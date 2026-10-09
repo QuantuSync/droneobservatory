@@ -30,9 +30,17 @@ describe("licencia dentro de los ficheros del almacén", () => {
 
   it("la descarga lleva una sola licencia, la de la web, la primera", () => {
     const texto = conLicencia(JSON.stringify(conLaDelAlmacen("ucrania.json")), "2026-10-08T12:17Z");
-    const datos = JSON.parse(texto) as Record<string, { cita: { es: string } }>;
+    const datos = JSON.parse(texto) as Record<string, { cita: { es: string; en: string }; autor: { orcid: string; firma: { en: string } }; fuente: string }>;
     expect(Object.keys(datos)[0]).toBe("licencia");
-    expect(datos.licencia?.cita.es).toContain("08/10/2026");
+    expect(datos.licencia?.cita.es).toBe(
+      "Alaniz Pintos, L. (2026). European Observatory of Drone Incidents. Versión 2026-10. https://droneobservatory.eu. Licencia CC BY 4.0.",
+    );
+    expect(datos.licencia?.cita.en).toBe(
+      "Alaniz Pintos, L. (2026). European Observatory of Drone Incidents. Version 2026-10. https://droneobservatory.eu. Licence CC BY 4.0.",
+    );
+    expect(datos.licencia?.autor.orcid).toBe("https://orcid.org/0009-0008-5179-2534");
+    expect(datos.licencia?.autor.firma.en).toBe("Lucas Alaniz Pintos, PhD");
+    expect(datos.licencia?.fuente).toBe("https://droneobservatory.eu/");
     expect(texto.match(/"licencia"/g)).toHaveLength(1);
   });
 });

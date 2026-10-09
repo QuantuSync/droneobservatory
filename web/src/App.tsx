@@ -2234,7 +2234,7 @@ export function App() {
         sinUbicacion={metaInicial.sinUbicacion}
         onCerrar={() => setMetodologia(false)}
       />
-      <Ayuda t={t} abierta={ayuda} onCerrar={() => setAyuda(false)} />
+      <Ayuda t={t} idioma={idioma} abierta={ayuda} onCerrar={() => setAyuda(false)} />
     </div>
   );
 }

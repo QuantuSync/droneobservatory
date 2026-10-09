@@ -289,6 +289,13 @@ def test_el_manifiesto_da_las_huellas_en_claro_y_cifradas(
         assert len(claro) == entrada["bytes"]
     # Todo cifrado salvo el manifiesto.
     assert all(n.endswith(".gz.age") for n in contenido if n != semanal.MANIFIESTO)
+    # Los créditos viajan con los datos (formato 1.8.0): autor con ORCID, licencia, cita, dirección.
+    creditos = manifiesto["creditos"]
+    assert manifiesto["version_formato"] == "1.8.0"
+    assert creditos["autor"]["orcid"] == "https://orcid.org/0009-0008-5179-2534"
+    assert creditos["licencia"]["nombre"] == "CC BY 4.0"
+    assert creditos["direccion"] == "https://droneobservatory.eu/"
+    assert creditos["cita"]["es"].startswith("Alaniz Pintos, L. (")
 
 
 def git(*argumentos: str, directorio: Path) -> str:

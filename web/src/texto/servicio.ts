@@ -5,11 +5,16 @@
 // (vercel.json, src/estado/novedades.ts): si cambia algo de eso, cambia esta página.
 
 import type { Seccion } from "../i18n/tipos.ts";
-import { LICENCIA_DATOS, LICENCIA_DATOS_URL, NOMBRE, REPOSITORIO } from "../sitio.ts";
+import { AUTOR_FIRMA, AUTOR_NOMBRE, CORREO_AUTOR, LICENCIA_DATOS, LICENCIA_DATOS_URL, NOMBRE, ORCID, ORCID_URL, REPOSITORIO } from "../sitio.ts";
 import type { Idioma } from "../sitio.ts";
 
-export const RESPONSABLE = "Lucas Alaniz Pintos";
-export const CONTACTO = "lucasalanizpintos@gmail.com";
+export const RESPONSABLE = AUTOR_NOMBRE;
+export const CONTACTO = CORREO_AUTOR;
+/** La cita recomendada, con la versión por rellenar (la da cada versión de los datos). */
+const CITA_PLANTILLA = {
+  es: `Alaniz Pintos, L. (2026). ${NOMBRE}. Versión AAAA-MM. https://droneobservatory.eu. Licencia ${LICENCIA_DATOS}.`,
+  en: `Alaniz Pintos, L. (2026). ${NOMBRE}. Version YYYY-MM. https://droneobservatory.eu. Licence ${LICENCIA_DATOS}.`,
+} as const;
 const CORREO = `mailto:${CONTACTO}`;
 /** Fecha de la última revisión de estas páginas (y de la de accesibilidad). */
 export const REVISADAS = { es: "8 de octubre de 2026", en: "8 October 2026" } as const;
@@ -76,6 +81,8 @@ const ES: Record<PaginaServicio, TextoServicio> = {
           {
             lista: [
               { termino: "Responsable", texto: [`${RESPONSABLE}, como persona física.`] },
+              { termino: "Autor", texto: [AUTOR_FIRMA.es] },
+              { termino: "ORCID", texto: [{ texto: ORCID, enlace: ORCID_URL }] },
               { termino: "Contacto", texto: [{ texto: CONTACTO, enlace: CORREO }] },
               { termino: "Sitio", texto: [`${NOMBRE} (droneobservatory.eu).`] },
             ],
@@ -107,6 +114,9 @@ const ES: Record<PaginaServicio, TextoServicio> = {
               { texto: "Apache-2.0", enlace: `${REPOSITORIO}/blob/main/LICENSE` },
               ").",
             ],
+          },
+          {
+            lista: [{ termino: "Cita recomendada", texto: [CITA_PLANTILLA.es, " (AAAA-MM: la versión de los datos usados)."] }],
           },
           {
             parrafo: [
@@ -209,6 +219,14 @@ const ES: Record<PaginaServicio, TextoServicio> = {
           {
             parrafo: [
               `El ${NOMBRE} lo hace ${RESPONSABLE}, a título personal. Es un proyecto independiente: no depende de ningún gobierno, partido, empresa ni organismo, y nadie revisa ni aprueba lo que se publica antes de publicarlo.`,
+            ],
+          },
+          {
+            lista: [
+              { termino: "Autor", texto: [AUTOR_FIRMA.es] },
+              { termino: "ORCID", texto: [{ texto: ORCID, enlace: ORCID_URL }] },
+              { termino: "Contacto", texto: [{ texto: CONTACTO, enlace: CORREO }] },
+              { termino: "Cita recomendada", texto: [CITA_PLANTILLA.es, " (AAAA-MM: la versión de los datos usados)."] },
             ],
           },
         ],
@@ -320,6 +338,8 @@ const EN: Record<PaginaServicio, TextoServicio> = {
           {
             lista: [
               { termino: "Responsible", texto: [`${RESPONSABLE}, as a private individual.`] },
+              { termino: "Author", texto: [AUTOR_FIRMA.en] },
+              { termino: "ORCID", texto: [{ texto: ORCID, enlace: ORCID_URL }] },
               { termino: "Contact", texto: [{ texto: CONTACTO, enlace: CORREO }] },
               { termino: "Site", texto: [`${NOMBRE} (droneobservatory.eu).`] },
             ],
@@ -351,6 +371,9 @@ const EN: Record<PaginaServicio, TextoServicio> = {
               { texto: "Apache-2.0", enlace: `${REPOSITORIO}/blob/main/LICENSE` },
               ").",
             ],
+          },
+          {
+            lista: [{ termino: "Recommended citation", texto: [CITA_PLANTILLA.en, " (YYYY-MM: the version of the data used)."] }],
           },
           {
             parrafo: [
@@ -453,6 +476,14 @@ const EN: Record<PaginaServicio, TextoServicio> = {
           {
             parrafo: [
               `The ${NOMBRE} is made by ${RESPONSABLE}, in a personal capacity. It is an independent project: it does not depend on any government, party, company or body, and nobody reviews or approves what is published before it is published.`,
+            ],
+          },
+          {
+            lista: [
+              { termino: "Author", texto: [AUTOR_FIRMA.en] },
+              { termino: "ORCID", texto: [{ texto: ORCID, enlace: ORCID_URL }] },
+              { termino: "Contact", texto: [{ texto: CONTACTO, enlace: CORREO }] },
+              { termino: "Recommended citation", texto: [CITA_PLANTILLA.en, " (YYYY-MM: the version of the data used)."] },
             ],
           },
         ],

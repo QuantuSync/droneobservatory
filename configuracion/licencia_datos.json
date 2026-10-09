@@ -1,15 +1,24 @@
 {
-  "descripcion": "Licencia de los datos abiertos del observatorio, la misma que dicen la web (web/src/sitio.ts, web/src/datos/licencia.ts) y la página de datos abiertos. La llevan dentro, como miembro «licencia» al principio y en los metadatos del objeto (x-amz-meta-licencia), los ficheros públicos del almacén (recogida/publicacion.py) y las versiones citables (recogida/versiones.py).",
+  "descripcion": "Licencia y créditos de los datos abiertos del observatorio, los mismos que dicen la web (web/src/sitio.ts, web/src/datos/licencia.ts; un test comprueba que coinciden) y la página de datos abiertos. La llevan dentro, como miembro «licencia» al principio y en los metadatos del objeto (x-amz-meta-licencia, x-amz-meta-autor, x-amz-meta-orcid), los ficheros públicos del almacén (recogida/publicacion.py), las versiones citables (recogida/versiones.py) y la exportación semanal (exportacion/semanal.py, «creditos» del manifiesto). En «cita», {anio} y {version} (AAAA-MM) se rellenan con la versión de los datos.",
   "nombre": "CC BY 4.0",
   "url": "https://creativecommons.org/licenses/by/4.0/",
   "titular": "European Observatory of Drone Incidents",
+  "autor": {
+    "nombre": "Lucas Alaniz Pintos",
+    "firma": {
+      "es": "Dr. Lucas Alaniz Pintos",
+      "en": "Lucas Alaniz Pintos, PhD"
+    },
+    "orcid": "https://orcid.org/0009-0008-5179-2534",
+    "correo": "lucasalanizpintos@gmail.com"
+  },
   "alcance": {
     "es": "La compilación del observatorio (los incidentes, sus estados, sus clasificaciones y sus cifras) se publica con la licencia CC BY 4.0: se puede copiar, transformar y reutilizar, también con fines comerciales, citando la fuente. Las frases citadas siguen siendo de sus autores y se usan como cita, con su fuente y su enlace. El bloque de tráfico aéreo medido (trafico_aereo) deriva del archivo de adsb.lol y se ofrece con su licencia, ODbL 1.0.",
     "en": "The observatory's compilation (the incidents, their statuses, their classifications and their figures) is published under the CC BY 4.0 licence: it may be copied, transformed and reused, including for commercial purposes, with attribution. Quoted sentences remain their authors' and are used as quotations, with their source and link. The measured air traffic block (trafico_aereo) is derived from the adsb.lol archive and is offered under its licence, ODbL 1.0."
   },
   "fuente": "https://droneobservatory.eu/",
   "cita": {
-    "es": "European Observatory of Drone Incidents (EODI). Incidentes con drones en Europa. https://droneobservatory.eu. Licencia CC BY 4.0.",
-    "en": "European Observatory of Drone Incidents (EODI). Drone incidents in Europe. https://droneobservatory.eu. Licence CC BY 4.0."
+    "es": "Alaniz Pintos, L. ({anio}). European Observatory of Drone Incidents. Versión {version}. https://droneobservatory.eu. Licencia CC BY 4.0.",
+    "en": "Alaniz Pintos, L. ({anio}). European Observatory of Drone Incidents. Version {version}. https://droneobservatory.eu. Licence CC BY 4.0."
   }
 }

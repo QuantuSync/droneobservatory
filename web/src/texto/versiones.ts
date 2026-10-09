@@ -60,6 +60,14 @@ export function cuerpoVersion(version: VersionDatos, idioma: Idioma, rutaMetodol
     e("p", null, e("a", { href: version.licencia.url, rel: "license noopener" }, version.licencia.nombre), ". ", version.licencia.alcance[idioma]),
     e("h2", null, v.citaTitulo),
     e("blockquote", { "data-cita-version": version.version }, version.cita[idioma]),
+    version.autor !== undefined &&
+      e(
+        "p",
+        { "data-autoria": "" },
+        `${idioma === "es" ? "Autor" : "Author"}: ${version.autor.firma[idioma]}`,
+        " · ORCID ",
+        e("a", { href: version.autor.orcid, rel: "author noopener", hreflang: null }, version.autor.orcid.replace("https://orcid.org/", "")),
+      ),
     e("p", null, e("a", { href: `${rutaMetodologia}#versiones` }, v.todas)),
   );
 }

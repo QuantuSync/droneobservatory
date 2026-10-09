@@ -52,12 +52,20 @@
       "source": "/datos/(.*)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=300, must-revalidate" },
-        { "key": "Link", "value": "<https://creativecommons.org/licenses/by/4.0/>; rel=\"license\"" }
+        {
+          "key": "Link",
+          "value": "<https://creativecommons.org/licenses/by/4.0/>; rel=\"license\", <https://orcid.org/0009-0008-5179-2534>; rel=\"author\""
+        }
       ]
     },
     {
       "source": "/almacen/(.*)",
-      "headers": [{ "key": "Link", "value": "<https://creativecommons.org/licenses/by/4.0/>; rel=\"license\"" }]
+      "headers": [
+        {
+          "key": "Link",
+          "value": "<https://creativecommons.org/licenses/by/4.0/>; rel=\"license\", <https://orcid.org/0009-0008-5179-2534>; rel=\"author\""
+        }
+      ]
     }
   ]
 }

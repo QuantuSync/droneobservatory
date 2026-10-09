@@ -1,5 +1,5 @@
 {
-  "descripcion": "Versiones citables de los datos abiertos (recogida/versiones.py): el día 1 de cada mes se congelan en el almacén público, bajo «prefijo», los mismos ficheros que se descargan de la web («origen» + /datos/<fichero>), con su huella SHA-256 y un fichero de metadatos (la licencia de configuracion/licencia_datos.json, cómo citarla, número de incidentes). La web las sirve en «direccion»<versión>/ (vercel.json reescribe los ficheros hacia el almacén). Una versión publicada nunca cambia ni se borra: el programa no sobrescribe ninguna y la comprobación diaria avisa si algo cambia o falta.",
+  "descripcion": "Versiones citables de los datos abiertos (recogida/versiones.py): el día 1 de cada mes se congelan en el almacén público, bajo «prefijo», los mismos ficheros que se descargan de la web («origen» + /datos/<fichero>), con su huella SHA-256 y un fichero de metadatos (la licencia de configuracion/licencia_datos.json, sus créditos y cómo citarla (la cita y el autor, de configuracion/licencia_datos.json), número de incidentes). La web las sirve en «direccion»<versión>/ (vercel.json reescribe los ficheros hacia el almacén). Una versión publicada nunca cambia ni se borra: el programa no sobrescribe ninguna y la comprobación diaria avisa si algo cambia o falta.",
   "origen": "https://droneobservatory.eu",
   "prefijo": "versiones/",
   "indice": "versiones/indice.json",
@@ -14,9 +14,5 @@
   "resumen": "resumen.json",
   "cache": "public, max-age=31536000, immutable",
   "dia": 1,
-  "hora_limite_utc": 6,
-  "cita": {
-    "es": "European Observatory of Drone Incidents ({anio}). Datos abiertos, versión {version}. droneobservatory.eu/datos/versiones/{version}/. Licencia CC BY 4.0.",
-    "en": "European Observatory of Drone Incidents ({anio}). Open data, version {version}. droneobservatory.eu/datos/versiones/{version}/. Licence CC BY 4.0."
-  }
+  "hora_limite_utc": 6
 }

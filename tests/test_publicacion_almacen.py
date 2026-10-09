@@ -61,8 +61,13 @@ def test_sube_lo_cambiado_el_manifiesto_al_final_y_la_instantanea_del_dia(tmp_pa
     documento = json.loads(subido)
     assert list(documento) == ["licencia", "ataques"] and documento["ataques"] == []
     assert documento["licencia"]["nombre"] == "CC BY 4.0"
-    assert documento["licencia"]["cita"]["en"].startswith("European Observatory of Drone Incidents")
+    assert documento["licencia"]["cita"]["en"].startswith(
+        "Alaniz Pintos, L. (2026). European Observatory of Drone Incidents. Version 2026-"
+    )
+    assert documento["licencia"]["autor"]["orcid"] == "https://orcid.org/0009-0008-5179-2534"
+    assert documento["licencia"]["fuente"] == "https://droneobservatory.eu/"
     assert kw["metadatos"]["x-amz-meta-licencia"] == "CC BY 4.0"
+    assert kw["metadatos"]["x-amz-meta-autor"] == "Lucas Alaniz Pintos"
     assert kw["metadatos"]["x-amz-meta-sha256"] == hashlib.sha256(subido).hexdigest()
     assert registro["ficheros"]["ucrania.json"]["sha256"] == hashlib.sha256(subido).hexdigest()
     assert "publicacion/historial/2026-10-07/ucrania.json.gz" in almacen.objetos

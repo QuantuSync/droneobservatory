@@ -4,11 +4,14 @@ import { ESTADOS } from "../datos/vocabulario.ts";
 import { ATAJOS } from "../estado/atajos.ts";
 import type { Textos } from "../i18n/index.ts";
 import { PALETA } from "../paleta.ts";
+import type { Idioma } from "../sitio.ts";
+import { Autoria } from "./Autoria.tsx";
 import { MarcaFoco } from "./FocoTermico.tsx";
 import { MarcaAtribuido, Simbolo } from "./Simbolo.tsx";
 
 interface Props {
   t: Textos;
+  idioma: Idioma;
   abierta: boolean;
   onCerrar: () => void;
 }
@@ -109,7 +112,7 @@ function tecla(nombre: string): string {
  * Ayuda (tecla ?): qué significa cada forma, color, área, línea y número del mapa, y los
  * atajos de teclado. Sustituye a la leyenda fija. Es un diálogo modal nativo.
  */
-export function Ayuda({ t, abierta, onCerrar }: Props) {
+export function Ayuda({ t, idioma, abierta, onCerrar }: Props) {
   const dialogo = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -234,6 +237,12 @@ export function Ayuda({ t, abierta, onCerrar }: Props) {
               </div>
             ))}
           </dl>
+        </section>
+        <section className="sm:col-span-2" aria-labelledby="ayuda-autoria">
+          <h3 id="ayuda-autoria" className="font-medium">
+            {t.metodologia.descargas.autoriaTitulo}
+          </h3>
+          <Autoria t={t} idioma={idioma} />
         </section>
       </div>
     </dialog>

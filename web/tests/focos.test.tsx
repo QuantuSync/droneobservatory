@@ -187,7 +187,7 @@ describe("fichas", () => {
   });
 
   it("la ayuda explica la marca", () => {
-    render(<Ayuda t={es} abierta={false} onCerrar={() => undefined} />);
+    render(<Ayuda t={es} idioma="es" abierta={false} onCerrar={() => undefined} />);
     expect(screen.getByText(/foco térmico detectado por satélite \(NASA FIRMS\)/)).toBeTruthy();
     expect(document.querySelector("[data-marca-foco]")).not.toBeNull();
   });

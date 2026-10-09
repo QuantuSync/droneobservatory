@@ -563,7 +563,11 @@ export interface Textos {
       /** Qué cubre la licencia y qué no: la compilación, las citas, el tráfico aéreo. */
       licenciaTexto: string;
       citaTitulo: string;
-      cita: (fecha: string) => string;
+      /** La cita recomendada de la versión AAAA-MM de los datos. */
+      cita: (version: string) => string;
+      /** Créditos: quién es el autor, su ORCID y cómo contactar. */
+      autoriaTitulo: string;
+      contacto: string;
     };
     /** Versiones citables de los datos abiertos (datos/versiones.ts): una fija cada mes. */
     versiones: {
