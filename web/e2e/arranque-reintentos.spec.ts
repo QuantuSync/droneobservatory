@@ -84,8 +84,9 @@ for (const tamano of TAMANOS) {
       await preparar(context, baseURL);
       let caido = true;
       let cargas = 0;
-      page.on("load", () => {
-        cargas += 1;
+      // Las peticiones de la página, no sus «load»: una recarga puede llegar antes de que termine.
+      page.on("request", (peticion) => {
+        if (peticion.isNavigationRequest() && peticion.frame() === page.mainFrame()) cargas += 1;
       });
       await page.route(CODIGO, async (ruta: Route) => {
         if (caido) await ruta.fulfill({ status: 404, body: "" });

@@ -358,6 +358,10 @@ llega nunca, recarga cuatro veces, avisa y «Reintentar» la trae.
   - «Previsión» abrió bien 10 veces seguidas en cada tamaño, cada vez en una ventana nueva. Durante
     la publicación de las 09:17, en rondas seguidas de 10 y 10 de las 09:17 a las 09:35, abrió
     bien 475 veces; una vez, a las 09:34:05, la web no arrancó: es la segunda causa, arriba,
-    arreglada en #190;
+    arreglada en #190. Con #190 en producción, durante la publicación de las 10:17 (que terminó
+    bien y publicó), «Previsión» abrió bien 400 veces en rondas de 10:17 a 10:31, y 186 ventanas
+    nuevas seguidas, de 10:31 a 10:37, cubrieron el cambio de despliegue: todas arrancaron y
+    abrieron «Previsión». Una, a las 10:34:12, cayó justo en el cambio (404 en el código y en el
+    estado de la página): se recargó sola y abrió con el despliegue nuevo;
   - la prueba de fallos pasajeros, contra producción, pasó en los dos tamaños.
 - **Incidentes publicados**: 442 antes y después.
