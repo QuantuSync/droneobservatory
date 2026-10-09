@@ -70,7 +70,7 @@ export function atribucionResumida(p: {
 }
 
 /**
- * Claves del tipo de dron para el filtro: «autoridad:<grupo>» si la autoridad lo identificó;
+ * Claves del tipo de dron en el resumen: «autoridad:<grupo>» si la autoridad lo identificó;
  * «deducido:guerra» si lo deducido es «compatible con un dron de largo alcance de la guerra»; y
  * «deducido:<grupo>» del grupo que destaca cuando se enseñan porcentajes.
  */

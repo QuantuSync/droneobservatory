@@ -655,9 +655,6 @@ export interface TextosTipoDron {
   base: (casos: number, zona: string) => string;
   zonas: { frontera: string; interior: string };
   razon: (razon: RazonTipoDron) => string;
-  filtroAutoridad: string;
-  filtroDeducido: string;
-  filtroGuerra: string;
 }
 
 /** Guerra por satélite: corredores, focos en vivo, luz nocturna e imágenes de antes y después. */

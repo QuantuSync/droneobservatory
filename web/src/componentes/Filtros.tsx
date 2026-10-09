@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
 
-import type { GrupoDron } from "../datos/tipos.ts";
-import { DRON_DE_LA_GUERRA, ESTADOS, ORIGENES_TIPO_DRON, TIPOS, ZONAS } from "../datos/vocabulario.ts";
+import { ESTADOS, TIPOS, ZONAS } from "../datos/vocabulario.ts";
 import { RECIENTES, TODO, alternar, hayFiltros } from "../estado/filtros.ts";
 import type { Filtros as EstadoFiltros, Reciente, SeleccionPeriodo } from "../estado/filtros.ts";
 import { fechaDia, pais } from "../i18n/index.ts";
@@ -27,24 +26,6 @@ interface Props {
   paises: readonly string[];
   /** Quita los filtros y el periodo de una vez. */
   onQuitar: () => void;
-  /** Claves de tipo de dron con algún incidente («autoridad:senuelo», «deducido:guerra»). */
-  dron?: readonly string[];
-  /** Modelos que nombra la autoridad por clave («autoridad:senuelo» → ["Gerbera"]). */
-  modelosDron?: Readonly<Record<string, readonly string[]>>;
-}
-
-/** Rótulo de una opción del filtro de tipo de dron: la clase con los modelos que nombra la
- * autoridad, o «compatible con dron de la guerra». */
-function etiquetaDron(
-  t: Textos,
-  clave: string,
-  origen: string,
-  modelos: readonly string[] | undefined,
-): string {
-  const grupo = clave.slice(origen.length + 1);
-  if (grupo === DRON_DE_LA_GUERRA) return t.tipoDron.filtroGuerra;
-  const nombre = t.tipoDron.grupos[grupo as GrupoDron];
-  return modelos !== undefined && modelos.length > 0 ? `${nombre} (${modelos.join(", ")})` : nombre;
 }
 
 function Grupo({ rotulo, children }: { rotulo: string; children: ReactNode }) {
@@ -100,7 +81,6 @@ export function textoDeSeleccion(t: Textos, seleccion: SeleccionPeriodo): string
  */
 export function Filtros(props: Props) {
   const { t, idioma, filtros, onFiltros, seleccion, onSeleccion, dominio, paises, onQuitar } = props;
-  const dron = props.dron ?? [];
   const ordenados = [...paises].sort((a, b) => pais(a, idioma).localeCompare(pais(b, idioma), idioma));
   const elegido = filtros.paises[0] ?? "";
   const clave = claveDe(seleccion);
@@ -216,33 +196,6 @@ export function Filtros(props: Props) {
           </Opcion>
         ))}
       </Grupo>
-      {dron.length > 0 && (
-        <fieldset className="flex flex-col gap-1.5" data-filtro-dron="">
-          <legend className="mb-1.5 text-xs text-secundario">{t.tipoDron.fila}</legend>
-          {ORIGENES_TIPO_DRON.map((origen) => {
-            const claves = dron.filter((clave) => clave.startsWith(`${origen}:`));
-            if (claves.length === 0) return null;
-            return (
-              <div key={origen} className="flex flex-col gap-1">
-                <span className="text-xs text-secundario">
-                  {origen === "autoridad" ? t.tipoDron.filtroAutoridad : t.tipoDron.filtroDeducido}
-                </span>
-                <div className="flex flex-wrap items-center gap-1">
-                  {claves.map((clave) => (
-                    <Opcion
-                      key={clave}
-                      activa={filtros.dron.includes(clave)}
-                      onClick={() => onFiltros({ ...filtros, dron: alternar(filtros.dron, clave) })}
-                    >
-                      {etiquetaDron(t, clave, origen, props.modelosDron?.[clave])}
-                    </Opcion>
-                  ))}
-                </div>
-              </div>
-            );
-          })}
-        </fieldset>
-      )}
       <label className="flex flex-col gap-1.5 text-xs">
         <span className="text-secundario">{t.filtros.pais}</span>
         <select

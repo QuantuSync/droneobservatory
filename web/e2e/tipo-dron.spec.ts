@@ -1,8 +1,8 @@
 // Tipo de dron en el teléfono (360, 390 y 412 px de ancho) y en escritorio: la fila «Tipo de dron»
 // de un incidente identificado por la autoridad, de uno «compatible con un dron de largo alcance
 // de la guerra» (sin porcentajes, con su razón debajo) y de uno sin fila (SIN_FILA: uno que antes
-// tenía fila sin razones, si lo hay); el filtro por clase; cerrar la ficha sin que el mapa se
-// mueva; y la página de texto sin ejecutar código.
+// tenía fila sin razones, si lo hay); que «Filtros» no lo ofrece; cerrar la ficha sin que el
+// mapa se mueva; y la página de texto sin ejecutar código.
 // Deja capturas en CAPTURAS (por defecto, fuera del repositorio, en ../../eodi-tr-cap). Va contra
 // producción por defecto; con BASE=http://localhost:…, contra el servidor local.
 import { join } from "node:path";
@@ -47,7 +47,6 @@ interface Elegidos {
   autoridad: string;
   deducido: string;
   sinBase: string;
-  claveDeducida: string;
 }
 
 /** Un incidente de cada clase, sacados del resumen publicado (con punto, para el mapa). */
@@ -68,7 +67,6 @@ async function elegir(request: APIRequestContext): Promise<Elegidos> {
     autoridad: autoridad.id,
     deducido: deducido.id,
     sinBase: sinBase.id,
-    claveDeducida: deducido.dron[0] ?? "",
   };
 }
 
@@ -119,29 +117,16 @@ for (const tamano of TAMANOS) {
       await page.screenshot({ path: join(CAPTURAS, `tipo-sin-base-${tamano.nombre}.png`) });
     });
 
-    test("el filtro por clase separa lo identificado de lo deducido", async ({ page, context, baseURL, request }) => {
+    test("«Filtros» no tiene tipo de dron y un enlace antiguo con ?dron= abre sin filtro", async ({ page, context, baseURL }) => {
       await preparar(context, baseURL);
-      const elegidos = await elegir(request);
-      await page.goto("/");
+      await page.goto("/?dron=deducido:guerra");
       await page.locator(MAPA).waitFor();
-      const antes = await vista(page);
       await page.locator("[data-botones-mapa] [data-boton-filtros] button").first().click();
-      const filtro = page.locator("[data-filtro-dron]");
-      await filtro.scrollIntoViewIfNeeded();
-      await expect(filtro).toContainText("Identificado por la autoridad");
-      // Con sus modelos, tal como los escribe la autoridad.
-      await expect(filtro).toContainText(/\(.+\)/);
-      // Lo deducido, en una sola opción: no se ofrecen clases que no se distinguen.
-      const deducidos = filtro.locator("div", { hasText: "Deducido por el observatorio" }).last();
-      await expect(deducidos.getByRole("button")).toHaveCount(1);
-      const boton = filtro.getByRole("button", { name: "Compatible con dron de largo alcance de la guerra" });
-      expect(elegidos.claveDeducida).toBe("deducido:guerra");
-      await boton.click();
-      await expect(boton).toHaveAttribute("aria-pressed", "true");
-      await expect(page).toHaveURL(/dron=deducido(:|%3A)guerra/);
-      await page.screenshot({ path: join(CAPTURAS, `tipo-filtro-${tamano.nombre}.png`) });
-      await page.keyboard.press("Escape");
-      expect(await vista(page)).toBe(antes);
+      await expect(page.locator("[data-filtro-dron]")).toHaveCount(0);
+      await expect(page.getByText(/Identificado por la autoridad|Deducido por el observatorio/)).toHaveCount(0);
+      // Sin ningún filtro puesto: no aparece «Quitar filtros».
+      await expect(page.getByRole("button", { name: /Quitar filtros/ })).toHaveCount(0);
+      await page.screenshot({ path: join(CAPTURAS, `tipo-sin-filtro-${tamano.nombre}.png`) });
     });
   });
 }

@@ -498,12 +498,13 @@ export interface IncidenteResumen {
   /** Frontera o interior; null en datos publicados antes de que existiera. */
   zona: Zona | null;
   /**
-   * Tipo de dron para el filtro: «autoridad:<grupo>» si la autoridad lo identificó,
+   * Tipo de dron (ya no es un filtro: sigue en el resumen para que una pestaña abierta con una
+   * versión anterior de la web lo siga validando): «autoridad:<grupo>» si la autoridad lo identificó,
    * «deducido:guerra» si es compatible con un dron de largo alcance de la guerra o
    * «deducido:<grupo>» si un grupo destaca; vacío si no hay base.
    */
   dron: string[];
-  /** Modelo que nombra la autoridad, para el filtro («Gerbera»). */
+  /** Modelo que nombra la autoridad («Gerbera»); en el resumen por la misma razón. */
   modeloDron?: string;
 }
 
