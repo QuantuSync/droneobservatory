@@ -1,4 +1,4 @@
-// Textos del tipo de dron (es y en): la fila de la ficha, el filtro y las razones de lo
+// Textos del tipo de dron (es y en): la fila de la ficha y las razones de lo
 // deducido. Lo deducido se dice siempre como «compatible con»: con porcentajes solo si un grupo
 // destaca de verdad; si no, «compatible con un dron de largo alcance de la guerra». El modelo solo
 // sale cuando lo nombra la autoridad.
@@ -121,9 +121,6 @@ export const tipoDronEs: TextosTipoDron = {
     `Punto de partida: la frecuencia de cada clase en ${casos} casos ${zona} en que una autoridad identificó el dron.`,
   zonas: { frontera: "de frontera", interior: "del interior" },
   razon: razonEs,
-  filtroAutoridad: "Identificado por la autoridad",
-  filtroDeducido: "Deducido por el observatorio",
-  filtroGuerra: "Compatible con dron de largo alcance de la guerra",
 };
 
 export const tipoDronEn: TextosTipoDron = {
@@ -150,7 +147,4 @@ export const tipoDronEn: TextosTipoDron = {
     `Starting point: how often each class appears in ${casos} ${zona} cases where an authority identified the drone.`,
   zonas: { frontera: "border", interior: "inland" },
   razon: razonEn,
-  filtroAutoridad: "Identified by the authority",
-  filtroDeducido: "Deduced by the observatory",
-  filtroGuerra: "Compatible with a long-range drone of the war",
 };

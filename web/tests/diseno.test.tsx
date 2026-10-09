@@ -144,7 +144,6 @@ describe("filtros y periodo en la dirección", () => {
       tipos: ["sobrevuelo" as const],
       paises: ["DE", "PL"],
       zona: null,
-      dron: [],
     };
     const busqueda = escribirFiltros(filtros);
     // Confirmados y atribuidos se escriben como antes, para no romper enlaces compartidos.
@@ -167,7 +166,6 @@ describe("filtros y periodo en la dirección", () => {
       tipos: ["incursion"],
       paises: ["DE"],
       zona: null,
-      dron: [],
     });
   });
 

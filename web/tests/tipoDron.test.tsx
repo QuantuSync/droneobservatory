@@ -1,14 +1,14 @@
 // @vitest-environment jsdom
 // Tipo de dron: la fila de la ficha (identificado por la autoridad o deducido, y nada sin base),
-// el filtro por clase y la misma fila en la página de texto.
+// que no es un filtro y la misma fila en la página de texto.
 
 import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 
 import { FichaIncidente } from "../src/componentes/FichaIncidente.tsx";
 import { Filtros } from "../src/componentes/Filtros.tsx";
-import { clavesDron, detalleIncidente, resumir, resumirIncidente } from "../src/datos/derivar.ts";
+import { detalleIncidente, resumir, resumirIncidente } from "../src/datos/derivar.ts";
 import type { TipoDron } from "../src/datos/tipos.ts";
 import { validarColeccion, validarResumen } from "../src/datos/validar.ts";
 import { SIN_FILTROS, TODO, escribirFiltros, filtrar, leerFiltros } from "../src/estado/filtros.ts";
@@ -130,47 +130,30 @@ describe("tipo de dron", () => {
     expect(document.body.textContent).not.toContain("Drone type");
   });
 
-  it("el filtro separa lo identificado de lo compatible con dron de la guerra y va en la dirección", async () => {
+  it("no es un filtro: «Filtros» no lo ofrece y un enlace antiguo con ?dron= abre la web sin filtro", () => {
+    expect(leerFiltros("?dron=autoridad:senuelo,deducido:guerra")).toEqual(SIN_FILTROS);
+    expect(escribirFiltros(leerFiltros("?dron=deducido:guerra"))).toBe("");
     const guerra = resumirIncidente(con(GUERRA));
     const identificado = { ...resumirIncidente(con(IDENTIFICADO)), id: "EODI-2025-00211" };
-    const sin = { ...resumirIncidente(con(undefined)), id: "EODI-2025-00212" };
-    expect(clavesDron(GUERRA)).toEqual(["deducido:guerra"]);
-    // Con porcentajes, solo el grupo que destaca.
-    expect(clavesDron(DEDUCIDO)).toEqual(["deducido:largo_alcance_helice"]);
-    expect(identificado.dron).toEqual(["autoridad:senuelo"]);
-    expect(identificado.modeloDron).toBe("Gerbera");
-    const todos = [guerra, identificado, sin];
-    expect(filtrar(todos, { ...SIN_FILTROS, dron: ["autoridad:senuelo"] }).map((i) => i.id)).toEqual([
-      "EODI-2025-00211",
-    ]);
-    expect(filtrar(todos, { ...SIN_FILTROS, dron: ["deducido:guerra"] })).toHaveLength(1);
-    const busqueda = escribirFiltros({ ...SIN_FILTROS, dron: ["deducido:guerra", "autoridad:senuelo"] });
-    expect(busqueda).toBe("?dron=autoridad:senuelo,deducido:guerra");
-    expect(leerFiltros(`${busqueda},deducido:otra,cosa`).dron).toEqual(["autoridad:senuelo", "deducido:guerra"]);
-
-    const onFiltros = vi.fn();
-    render(
-      <Filtros
-        t={es}
-        idioma="es"
-        filtros={SIN_FILTROS}
-        onFiltros={onFiltros}
-        seleccion={TODO}
-        onSeleccion={() => undefined}
-        dominio={null}
-        paises={["RO"]}
-        onQuitar={() => undefined}
-        dron={["autoridad:senuelo", "deducido:guerra"]}
-        modelosDron={{ "autoridad:senuelo": ["Gerbera"] }}
-      />,
-    );
-    const filtro = document.querySelector("[data-filtro-dron]")?.textContent ?? "";
-    expect(filtro).toContain("Identificado por la autoridad");
-    expect(filtro).toContain("Compatible con dron de largo alcance de la guerra");
-    // No se ofrecen clases que no se distinguen.
-    expect(filtro).not.toContain("Dron de ataque de largo alcance de hélice");
-    await userEvent.setup().click(screen.getByRole("button", { name: "Señuelo de largo alcance (Gerbera)" }));
-    expect(onFiltros).toHaveBeenCalledWith({ ...SIN_FILTROS, dron: ["autoridad:senuelo"] });
+    expect(filtrar([guerra, identificado], leerFiltros("?dron=autoridad:senuelo"))).toHaveLength(2);
+    for (const t of [es, en]) {
+      render(
+        <Filtros
+          t={t}
+          idioma={t === es ? "es" : "en"}
+          filtros={SIN_FILTROS}
+          onFiltros={() => undefined}
+          seleccion={TODO}
+          onSeleccion={() => undefined}
+          dominio={null}
+          paises={["RO"]}
+          onQuitar={() => undefined}
+        />,
+      );
+      expect(document.querySelector("[data-filtro-dron]")).toBeNull();
+      expect(document.body.textContent).not.toContain(t.tipoDron.fila);
+      cleanup();
+    }
   });
 
   it("la página de texto dice lo mismo que la ficha", () => {

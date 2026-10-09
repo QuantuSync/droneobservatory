@@ -66,7 +66,6 @@ import { agregar, cargarFicheroGnss, cargarIndiceGnss, ficherosDelPeriodo, zonas
 import type { Agregado, FicheroGnss, IndiceGnss } from "./datos/gnss.ts";
 import { cifrasDePais, presionPorPais } from "./datos/presion.ts";
 import { cifras } from "./datos/derivar.ts";
-import { DRON_DE_LA_GUERRA, GRUPOS_DRON, ORIGENES_TIPO_DRON } from "./datos/vocabulario.ts";
 import {
   cargarIndiceRutas,
   cargarNocheRutas,
@@ -1333,27 +1332,6 @@ export function App() {
     () => [...new Set((datosResumen?.incidentes ?? VACIO).map((i) => i.pais))],
     [datosResumen],
   );
-  // Tipos de dron con algún incidente, en el orden de los grupos: las opciones del filtro. Lo
-  // deducido sin porcentajes va en una sola opción, «compatible con dron de la guerra».
-  const dronConIncidentes = useMemo(() => {
-    const presentes = new Set((datosResumen?.incidentes ?? VACIO).flatMap((i) => i.dron));
-    return ORIGENES_TIPO_DRON.flatMap((origen) =>
-      [...(origen === "deducido" ? [DRON_DE_LA_GUERRA] : []), ...GRUPOS_DRON]
-        .map((grupo) => `${origen}:${grupo}`)
-        .filter((clave) => presentes.has(clave)),
-    );
-  }, [datosResumen]);
-  // Modelos que nombra la autoridad en cada clase identificada («autoridad:senuelo» → Gerbera).
-  const modelosDron = useMemo(() => {
-    const modelos: Record<string, string[]> = {};
-    for (const i of datosResumen?.incidentes ?? VACIO) {
-      const clave = i.dron[0];
-      if (i.modeloDron === undefined || clave === undefined) continue;
-      const lista = (modelos[clave] ??= []);
-      if (!lista.includes(i.modeloDron)) lista.push(i.modeloDron);
-    }
-    return modelos;
-  }, [datosResumen]);
 
   // La ficha abierta es una de las novedades que se están recorriendo: lleva su recorrido.
   const posicionEnRecorrido =
@@ -1642,8 +1620,6 @@ export function App() {
       onSeleccion={elegirSeleccion}
       dominio={dominio}
       paises={paisesConIncidentes}
-      dron={dronConIncidentes}
-      modelosDron={modelosDron}
       onQuitar={quitarFiltros}
     />
   );
