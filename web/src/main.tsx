@@ -4,6 +4,7 @@ import { ViteReactSSG } from "vite-react-ssg/single-page";
 
 import { App } from "./App.tsx";
 import "./estilos.css";
+import { tolerarCamposNuevos } from "./datos/validar.ts";
 import { ProveedorDeRuta } from "./navegacion.tsx";
 import { IDIOMAS, rutaDeIdioma } from "./sitio.ts";
 
@@ -11,6 +12,9 @@ import { IDIOMAS, rutaDeIdioma } from "./sitio.ts";
 // la ficha abierta (/EODI-…). Se prerenderizan las dos portadas; las páginas de cada
 // incidente salen de ellas al final del build.
 let rutaDelPrerenderizado = "/";
+
+// En el navegador, un campo nuevo en los datos no invalida un fichero (datos/validar.ts).
+tolerarCamposNuevos();
 
 function Raiz() {
   const enNavegador = typeof window !== "undefined";

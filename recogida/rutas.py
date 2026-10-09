@@ -28,6 +28,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+from exportacion.proyeccion import escribir_atomico
 from proceso.rutas import noches
 from recogida import seguimiento
 
@@ -251,7 +252,7 @@ def calcular(salida: Path, ahora: datetime, subir: Subir | None) -> dict[str, An
         if documento is None:
             continue
         esquema.validar("noche", documento)
-        (publicar / f"{noche['noche']}.json").write_text(_texto(documento), encoding="utf-8")
+        escribir_atomico(publicar / f"{noche['noche']}.json", _texto(documento))
         indice.append(calculo.resumen_noche(documento, ataque))
         for grupo in documento["grupos"]:
             estadisticas.append({"noche": noche["noche"], **grupo})
@@ -273,7 +274,7 @@ def calcular(salida: Path, ahora: datetime, subir: Subir | None) -> dict[str, An
         "atribucion_neptun": dict(neptun.ATRIBUCION),
     }
     esquema.validar("indice", documento_indice)
-    (salida / "publicar" / "indice.json").write_text(_texto(documento_indice), encoding="utf-8")
+    escribir_atomico(salida / "publicar" / "indice.json", _texto(documento_indice))
     (salida / ESTADISTICAS).write_text(
         "".join(_texto(e) + "\n" for e in estadisticas), encoding="utf-8"
     )
@@ -332,7 +333,13 @@ def _subir_cambios(
     ficheros = sorted((salida / "publicar" / "noches").glob("*.json"))
     ficheros.append(salida / "publicar" / "indice.json")
     hechos = 0
+    # El índice sube el último y solo si han subido todas sus noches: la web nunca lee un índice
+    # que nombra una noche que todavía no está en el almacén.
+    noches_bien = True
     for fichero in ficheros:
+        if fichero.name == "indice.json" and not noches_bien:
+            registro.warning("rutas: índice sin subir (falló una noche); se repite en la siguiente")
+            continue
         cuerpo = fichero.read_bytes()
         huella = hashlib.sha256(cuerpo).hexdigest()
         objeto = (
@@ -346,6 +353,8 @@ def _subir_cambios(
         if subir(objeto, cuerpo, "application/json", cache):
             previos[objeto] = huella
             hechos += 1
+        else:
+            noches_bien = False
     vigentes = {
         f"{PREFIJO}/noches/{f.name}" for f in (salida / "publicar" / "noches").glob("*.json")
     } | {f"{PREFIJO}/indice.json"}

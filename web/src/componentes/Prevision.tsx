@@ -20,11 +20,16 @@ import type { FronteraPais, GraficaRacha, Prevision as DatosPrevision, Racha } f
 import { fechaDia, fechaHora, numero, pais } from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
 import type { Idioma } from "../sitio.ts";
+import { ErrorDeCarga, recargarPagina } from "./Panel.tsx";
 
 interface Props {
   t: Textos;
   idioma: Idioma;
   carga: Carga<DatosPrevision>;
+  /** La última previsión que llegó bien en esta visita: se enseña, con su fecha, si la nueva no llega. */
+  anterior?: DatosPrevision | null;
+  /** Vuelve a pedir la previsión. */
+  onReintentar?: () => void;
   /** Lleva el mapa al país con el periodo de la racha en los filtros. */
   onRacha: (racha: Racha) => void;
 }
@@ -186,11 +191,46 @@ export function textoRacha(t: Textos, idioma: Idioma, r: Racha): string {
   );
 }
 
-export function Prevision({ t, idioma, carga, onRacha }: Props) {
+export function Prevision({ t, idioma, carga, anterior = null, onReintentar = () => undefined, onRacha }: Props) {
   const p = t.prevision;
-  if (carga.estado === "cargando") return <p className="text-xs text-secundario">{p.cargando}</p>;
-  if (carga.estado !== "listo") return <p className="text-xs text-secundario">{p.noDisponible}</p>;
-  const d = carga.datos;
+  const d = carga.estado === "listo" ? carga.datos : anterior;
+  if (d === null) {
+    if (carga.estado === "cargando") return <p className="text-xs text-secundario">{p.cargando}</p>;
+    if (carga.estado === "listo") return null;
+    return (
+      <ErrorDeCarga
+        t={t}
+        className="text-sm"
+        mensaje={carga.estado === "no_encontrado" ? p.noPublicada : p.noDisponible}
+        estado={carga.estado}
+        onReintentar={onReintentar}
+      />
+    );
+  }
+  // La nueva no ha llegado: la última que hay, con su fecha, y la opción de volver a pedirla.
+  const deAntes = carga.estado !== "listo" && carga.estado !== "cargando";
+  return (
+    <div className="flex flex-col gap-3">
+      {deAntes && (
+        <div className="flex flex-col items-start gap-2 text-xs text-secundario" role="status" data-prevision-anterior="">
+          <p>{p.anterior(fechaHora(d.calculado))}</p>
+          <button
+            type="button"
+            className="control min-h-11 rounded border border-linea px-3 text-texto esc:min-h-8"
+            onClick={carga.estado === "no_valido" ? recargarPagina : onReintentar}
+            data-reintentar=""
+          >
+            {t.avisos.reintentar}
+          </button>
+        </div>
+      )}
+      <ContenidoPrevision t={t} idioma={idioma} d={d} onRacha={onRacha} />
+    </div>
+  );
+}
+
+function ContenidoPrevision({ t, idioma, d, onRacha }: { t: Textos; idioma: Idioma; d: DatosPrevision; onRacha: (racha: Racha) => void }) {
+  const p = t.prevision;
   const vivas = enVivo(d, "frontera").filter((e) => e.con_dron !== undefined);
   const aviso = d.segunda_noche?.aviso;
   return (

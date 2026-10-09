@@ -105,14 +105,15 @@ export const es: Textos = {
   },
   avisos: {
     cargando: "Cargando los datos…",
-    datosNoValidos:
-      "Los datos publicados no cumplen el esquema y no se muestran. Se volverán a mostrar " +
-      "cuando la próxima actualización los corrija.",
-    datosNoDisponibles: "No se han podido cargar los datos. Vuelve a intentarlo más tarde.",
+    datosNoValidos: "No se han podido leer los datos.",
+    datosNoDisponibles: "No se han podido cargar los datos.",
     fichaNoEncontrada: "No hay ningún registro con este identificador.",
-    fichaNoValida: "Esta ficha no cumple el esquema y no se muestra.",
+    fichaNoDisponible: "No se ha podido cargar esta ficha.",
     mapaNoDisponible:
       "El mapa no se puede dibujar en este navegador. La lista de incidentes sigue disponible.",
+    sinRespuesta: "Se ha pedido varias veces sin respuesta. Comprueba la conexión y pulsa «Reintentar».",
+    webNueva: "La web se ha actualizado desde que abriste esta página: pulsa «Reintentar» para cargar la versión nueva.",
+    reintentar: "Reintentar",
   },
   filtros: {
     titulo: "Filtros",
@@ -230,7 +231,10 @@ export const es: Textos = {
     etiqueta: "Previsión",
     cerrar: "Cerrar la previsión",
     cargando: "Cargando la previsión…",
-    noDisponible: "La previsión no está disponible ahora.",
+    noDisponible: "No se ha podido cargar la previsión.",
+    noPublicada: "Todavía no hay ninguna previsión publicada.",
+    anterior: (cuando) =>
+      `No se ha podido traer una previsión más reciente. Esta es la última que hay, calculada el ${cuando}.`,
     deCada10: (n, porcentaje) => `${n} de cada 10 noches como esta (${porcentaje} %)`,
     calculada: (cuando) => `Calculada el ${cuando}.`,
     frontera: {

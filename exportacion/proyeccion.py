@@ -2,6 +2,7 @@
 
 import copy
 import json
+import os
 from collections.abc import Iterator
 from pathlib import Path
 from typing import Any
@@ -73,6 +74,18 @@ def solo_fuentes_publicas(documento: Documento, capa: Capa) -> Documento | None:
     return copia
 
 
+def escribir_atomico(ruta: Path, texto: str) -> None:
+    """Escribe `texto` en `ruta` de una vez: primero en un fichero temporal de la misma carpeta y
+    luego lo pone en su sitio con un cambio de nombre, que es atómico. Quien lee el fichero (la
+    subida al almacén, otro proceso) ve el anterior o el nuevo entero, nunca uno a medias."""
+    temporal = ruta.with_name(f".{ruta.name}.{os.getpid()}.tmp")
+    try:
+        temporal.write_text(texto, encoding="utf-8", newline="\n")
+        os.replace(temporal, ruta)
+    finally:
+        temporal.unlink(missing_ok=True)
+
+
 def escribir(documento: Documento, ruta: Path) -> None:
     texto = json.dumps(documento, ensure_ascii=False, sort_keys=True, indent=1)
-    ruta.write_text(texto + "\n", encoding="utf-8", newline="\n")
+    escribir_atomico(ruta, texto + "\n")

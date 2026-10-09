@@ -21,6 +21,7 @@ import {
   validarResumenUcrania,
 } from "./validar.ts";
 import type { Resultado } from "./validar.ts";
+import { esAborto, esPasajero, esperar, esperasEnVigor, opcionesDelIntento } from "./reintentos.ts";
 
 export type Carga<T> =
   | { estado: "cargando" }
@@ -36,35 +37,70 @@ const NO_ENCONTRADO = 404;
 type Validador<T> = (valor: unknown) => Resultado<T>;
 export type Descarga = typeof fetch;
 
+/** Un intento: su resultado y si vale la pena volver a intentarlo. */
+async function intentar<T>(
+  ruta: string,
+  validar: Validador<T>,
+  descargar: Descarga,
+  opciones: RequestInit,
+): Promise<{ carga: Carga<T>; otraVez: boolean }> {
+  let contenido: unknown;
+  try {
+    const respuesta = await descargar(ruta, opciones);
+    if (respuesta.status === NO_ENCONTRADO) return { carga: { estado: "no_encontrado" }, otraVez: false };
+    if (!respuesta.ok) return { carga: { estado: "no_disponible" }, otraVez: esPasajero(respuesta) };
+    contenido = await respuesta.json();
+  } catch (error) {
+    // Sin red, una respuesta cortada o que no es JSON (una página de comprobación del
+    // alojamiento, por ejemplo): se vuelve a pedir, salvo que se haya abortado a propósito.
+    return { carga: { estado: "no_disponible" }, otraVez: !esAborto(error, opciones.signal) };
+  }
+  const resultado = validar(contenido);
+  return resultado.ok
+    ? { carga: { estado: "listo", datos: resultado.datos }, otraVez: false }
+    : // Puede ser una copia vieja en una caché: se pide otra vez sin ella.
+      { carga: { estado: "no_valido", errores: resultado.errores }, otraVez: true };
+}
+
+/**
+ * Pide un fichero y lo valida, con reintentos (datos/reintentos.ts): un fallo pasajero, una
+ * respuesta cortada o que no valida se vuelven a pedir, con espera creciente y sin la caché del
+ * navegador, antes de dar el error.
+ */
 async function cargar<T>(
   ruta: string,
   validar: Validador<T>,
   descargar: Descarga,
   senal?: AbortSignal,
 ): Promise<Carga<T>> {
-  let contenido: unknown;
-  try {
-    const respuesta = await descargar(ruta, senal === undefined ? {} : { signal: senal });
-    if (respuesta.status === NO_ENCONTRADO) return { estado: "no_encontrado" };
-    if (!respuesta.ok) return { estado: "no_disponible" };
-    contenido = await respuesta.json();
-  } catch {
-    // Sin red, o una respuesta que no es JSON (una ruta desconocida devuelve HTML).
-    return { estado: "no_disponible" };
+  const pausas = esperasEnVigor();
+  for (let n = 0; ; n += 1) {
+    const { carga, otraVez } = await intentar(ruta, validar, descargar, opcionesDelIntento(senal === undefined ? {} : { signal: senal }, n));
+    if (!otraVez || n >= pausas.length || senal?.aborted === true) return carga;
+    try {
+      await esperar(pausas[n] ?? 0, senal);
+    } catch {
+      return carga;
+    }
   }
-  const resultado = validar(contenido);
-  return resultado.ok
-    ? { estado: "listo", datos: resultado.datos }
-    : { estado: "no_valido", errores: resultado.errores };
 }
 
 export function cargarResumen(descargar: Descarga, senal?: AbortSignal): Promise<Carga<Resumen>> {
   return cargar("/datos/resumen.json", validarResumen, descargar, senal);
 }
 
-/** La previsión: se pide al abrir «Previsión» o la ficha de un país, nunca en la primera carga. */
-export function cargarPrevision(descargar: Descarga, senal?: AbortSignal): Promise<Carga<Prevision>> {
-  return cargar("/datos/prevision.json", validarPrevision, descargar, senal);
+/** La copia de la previsión que sube la recogida al almacén público (recogida/publicacion.py). */
+export const URL_PREVISION_ALMACEN: string = urlDelAlmacen("publicacion/prevision.json");
+
+/**
+ * La previsión: se pide al abrir «Previsión» o la ficha de un país, nunca en la primera carga.
+ * Si la de la web no llega tras sus reintentos, se pide la copia del almacén público.
+ */
+export async function cargarPrevision(descargar: Descarga, senal?: AbortSignal): Promise<Carga<Prevision>> {
+  const web = await cargar("/datos/prevision.json", validarPrevision, descargar, senal);
+  if (web.estado === "listo" || senal?.aborted === true) return web;
+  const almacen = await cargar(URL_PREVISION_ALMACEN, validarPrevision, descargar, senal);
+  return almacen.estado === "listo" ? almacen : web;
 }
 
 export function cargarResumenUcrania(

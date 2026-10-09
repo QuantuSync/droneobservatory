@@ -105,14 +105,15 @@ export const en: Textos = {
   },
   avisos: {
     cargando: "Loading data…",
-    datosNoValidos:
-      "The published data does not match the schema and is not shown. It will be shown " +
-      "again once the next update fixes it.",
-    datosNoDisponibles: "The data could not be loaded. Please try again later.",
+    datosNoValidos: "The data could not be read.",
+    datosNoDisponibles: "The data could not be loaded.",
     fichaNoEncontrada: "There is no record with this identifier.",
-    fichaNoValida: "This record does not match the schema and is not shown.",
+    fichaNoDisponible: "This record could not be loaded.",
     mapaNoDisponible:
       "The map cannot be drawn in this browser. The incident list is still available.",
+    sinRespuesta: "It was requested several times without an answer. Check your connection and press “Retry”.",
+    webNueva: "The site has been updated since you opened this page: press “Retry” to load the new version.",
+    reintentar: "Retry",
   },
   filtros: {
     titulo: "Filters",
@@ -230,7 +231,9 @@ export const en: Textos = {
     etiqueta: "Forecast",
     cerrar: "Close the forecast",
     cargando: "Loading the forecast…",
-    noDisponible: "The forecast is not available right now.",
+    noDisponible: "The forecast could not be loaded.",
+    noPublicada: "No forecast has been published yet.",
+    anterior: (cuando) => `A more recent forecast could not be fetched. This is the latest one available, computed on ${cuando}.`,
     deCada10: (n, porcentaje) => `${n} in 10 nights like this one (${porcentaje}%)`,
     calculada: (cuando) => `Computed on ${cuando}.`,
     frontera: {

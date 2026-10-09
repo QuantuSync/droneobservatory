@@ -103,8 +103,13 @@ export interface Textos {
     datosNoValidos: string;
     datosNoDisponibles: string;
     fichaNoEncontrada: string;
-    fichaNoValida: string;
+    fichaNoDisponible: string;
     mapaNoDisponible: string;
+    /** Por qué no ha llegado, tras varios intentos sin respuesta. */
+    sinRespuesta: string;
+    /** Por qué no valida: la web abierta es más vieja que los datos. */
+    webNueva: string;
+    reintentar: string;
   };
   filtros: {
     periodos: Record<"todo" | "24h" | "7d" | "30d" | "1a" | "entre", string>;
@@ -210,6 +215,9 @@ export interface Textos {
     cerrar: string;
     cargando: string;
     noDisponible: string;
+    noPublicada: string;
+    /** La última previsión que hay, cuando no llega una más reciente. */
+    anterior: (cuando: string) => string;
     /** «4 de cada 10 noches como esta (40 %)». */
     deCada10: (n: number, porcentaje: number) => string;
     calculada: (cuando: string) => string;

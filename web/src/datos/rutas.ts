@@ -5,6 +5,7 @@
 // (una línea por rama, su franja de incertidumbre y la punta de flecha); se dibujan los
 // principales por número de aparatos y la leyenda dice cuántos de cuántos.
 
+import { descargarConReintentos } from "./reintentos.ts";
 import { urlDelAlmacen } from "../almacenPublico.ts";
 import { fechaDeDia } from "../tiempo/dias.ts";
 import { validarIndiceRutas, validarNocheRutas } from "./validar.ts";
@@ -118,7 +119,7 @@ export interface IndiceRutas {
 
 export async function cargarIndiceRutas(senal?: AbortSignal): Promise<IndiceRutas | null> {
   try {
-    const respuesta = await fetch(urlDelAlmacen(OBJETO_INDICE_RUTAS), { signal: senal ?? null });
+    const respuesta = await descargarConReintentos(urlDelAlmacen(OBJETO_INDICE_RUTAS), { signal: senal ?? null });
     if (!respuesta.ok) return null;
     const resultado = validarIndiceRutas(await respuesta.json());
     return resultado.ok ? resultado.datos : null;
@@ -129,7 +130,7 @@ export async function cargarIndiceRutas(senal?: AbortSignal): Promise<IndiceRuta
 
 export async function cargarNocheRutas(noche: string, senal?: AbortSignal): Promise<NocheRutas | null> {
   try {
-    const respuesta = await fetch(urlDelAlmacen(`rutas/noches/${noche}.json`), { signal: senal ?? null });
+    const respuesta = await descargarConReintentos(urlDelAlmacen(`rutas/noches/${noche}.json`), { signal: senal ?? null });
     if (!respuesta.ok) return null;
     const resultado = validarNocheRutas(await respuesta.json());
     return resultado.ok ? resultado.datos : null;

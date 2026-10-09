@@ -41,7 +41,7 @@ import { Lista } from "./componentes/Lista.tsx";
 import { Marcador } from "./componentes/Marcador.tsx";
 import { MenuMovil, SeccionMenu } from "./componentes/MenuMovil.tsx";
 import { Metodologia } from "./componentes/Metodologia.tsx";
-import { CabeceraFicha, SegunCarga } from "./componentes/Panel.tsx";
+import { CabeceraFicha, ErrorDeCarga, SegunCarga } from "./componentes/Panel.tsx";
 import { ALTURAS, HojaInferior, PanelLateral } from "./componentes/Paneles.tsx";
 import type { Altura } from "./componentes/Paneles.tsx";
 import { SelectorPila } from "./componentes/SelectorPila.tsx";
@@ -59,6 +59,7 @@ import {
 import { diaDeTexto, rachaDe } from "./datos/prevision.ts";
 import type { Prevision as DatosPrevision, Racha } from "./datos/prevision.ts";
 import type { Carga } from "./datos/carga.ts";
+import { descargarConReintentos } from "./datos/reintentos.ts";
 import { cifrasAhora } from "./datos/ahora.ts";
 import { cargarDirecto, cierresEnCurso, ordenarAvisos } from "./datos/directo.ts";
 import type { Directo } from "./datos/directo.ts";
@@ -167,6 +168,8 @@ const ZOOM_APROXIMADO = { pais: 6, region: 6.5, mar: 6 } as const;
 const MS_POR_NOCHE = 420;
 /** Espera máxima antes de cargar el mapa si el navegador no queda libre antes. */
 const MS_ESPERA_MAXIMA_DEL_MAPA = 1500;
+/** Una previsión cargada hace más de esto se vuelve a pedir al abrir otra vez «Previsión». */
+const MS_PREVISION_VIGENTE = 15 * 60 * 1000;
 /**
  * Disposición de teléfono: menos de 768 px de ancho, o un teléfono en horizontal. Es la misma
  * condición que la variante «tel» de estilos.css.
@@ -266,7 +269,7 @@ function useCentrosDePais(activo: boolean): ReadonlyMap<string, Centro> | null {
   useEffect(() => {
     if (!activo || centros !== null) return undefined;
     const control = new AbortController();
-    fetch("/mapa/paises.geojson", { signal: control.signal })
+    descargarConReintentos("/mapa/paises.geojson", { signal: control.signal })
       .then(
         (respuesta) =>
           respuesta.json() as Promise<{ features: { properties: Record<string, unknown> }[] }>,
@@ -323,6 +326,7 @@ export function App() {
   const [panelLocal, setPanelLocal] = useState<PanelLocal>(null);
   const [impacto, setImpacto] = useState<Carga<ImpactoGuerra>>(CARGANDO);
   const idImpacto = panelLocal?.clase === "impacto" ? panelLocal.id : null;
+  const [intentoImpacto, setIntentoImpacto] = useState(0);
   useEffect(() => {
     if (idImpacto === null) return undefined;
     const control = new AbortController();
@@ -331,7 +335,7 @@ export function App() {
       if (!control.signal.aborted) setImpacto(carga);
     });
     return () => control.abort();
-  }, [idImpacto]);
+  }, [idImpacto, intentoImpacto]);
   // Focos de calor de las últimas 24 horas que coinciden con un impacto (del almacén público):
   // cuentan en «Con satélite» como impactos con foco en cuanto se confirman.
   const [focosVivos, setFocosVivos] = useState<FocosVivos | null>(null);
@@ -340,7 +344,7 @@ export function App() {
     if (!verFocosVivos) return undefined;
     const control = new AbortController();
     const pedir = () => {
-      void fetch(urlDelAlmacen(OBJETO_FOCOS_VIVOS), { signal: control.signal, cache: "no-cache" })
+      void descargarConReintentos(urlDelAlmacen(OBJETO_FOCOS_VIVOS), { signal: control.signal, cache: "no-cache" })
         .then(async (respuesta) => {
           if (!respuesta.ok) return;
           const resultado = validarFocosVivos(await respuesta.json());
@@ -362,7 +366,7 @@ export function App() {
   useEffect(() => {
     if (!verAlumbrado || alumbrado !== null) return undefined;
     const control = new AbortController();
-    void fetch(urlDelAlmacen(OBJETO_ALUMBRADO), { signal: control.signal })
+    void descargarConReintentos(urlDelAlmacen(OBJETO_ALUMBRADO), { signal: control.signal })
       .then(async (respuesta) => {
         if (!respuesta.ok) return;
         const resultado = validarAlumbrado(await respuesta.json());
@@ -419,31 +423,58 @@ export function App() {
     };
   }, []);
 
+  // «Reintentar» del aviso de datos: vuelve a pedir el resumen y la capa de Ucrania.
+  const [intentoDatos, setIntentoDatos] = useState(0);
   useEffect(() => {
     const control = new AbortController();
+    if (intentoDatos > 0) {
+      setResumen((actual) => (actual.estado === "listo" ? actual : CARGANDO));
+      setUcrania((actual) => (actual.estado === "listo" ? actual : CARGANDO));
+    }
     void cargarResumen(fetch, control.signal).then((carga) => {
-      if (!control.signal.aborted) setResumen(carga);
+      if (!control.signal.aborted) setResumen((actual) => (carga.estado !== "listo" && actual.estado === "listo" ? actual : carga));
     });
     void cargarResumenUcrania(fetch, control.signal).then((carga) => {
-      if (!control.signal.aborted) setUcrania(carga);
+      if (!control.signal.aborted) setUcrania((actual) => (carga.estado !== "listo" && actual.estado === "listo" ? actual : carga));
     });
     return () => control.abort();
-  }, []);
+  }, [intentoDatos]);
 
   // La previsión no entra en la primera carga: se pide al abrir «Previsión» o la ficha de un país.
+  // Se vuelve a pedir con «Reintentar» o al abrirla otra vez si es de hace más de un rato; si la
+  // nueva no llega, se enseña la última que llegó bien, con su fecha (componentes/Prevision.tsx).
   const [prevision, setPrevision] = useState<Carga<DatosPrevision>>(CARGANDO);
-  const [pidePrevision, setPidePrevision] = useState(false);
+  const [ultimaPrevision, setUltimaPrevision] = useState<DatosPrevision | null>(null);
+  const [pedidoPrevision, setPedidoPrevision] = useState(0);
+  const estadoPrevision = useRef<{ hora: number | null; cargando: boolean }>({ hora: null, cargando: false });
+  const pedirPrevision = useCallback((forzar = false) => {
+    const { hora, cargando } = estadoPrevision.current;
+    if (cargando) return;
+    if (!forzar && hora !== null && Date.now() - hora < MS_PREVISION_VIGENTE) return;
+    estadoPrevision.current = { hora, cargando: true };
+    setPedidoPrevision((n) => n + 1);
+  }, []);
+  const reintentarPrevision = useCallback(() => pedirPrevision(true), [pedirPrevision]);
   // En el teléfono «Previsión» es una pestaña de «Europa ahora»: con un periodo elegido, un
   // tercer botón no cabe en 360 px y bajaría a otra fila sobre el mapa.
   const [pestanaAhora, setPestanaAhora] = useState<"ahora" | "prevision">("ahora");
   useEffect(() => {
-    if (!pidePrevision) return;
+    if (pedidoPrevision === 0) return;
     const control = new AbortController();
+    setPrevision(CARGANDO);
     void cargarPrevision(fetch, control.signal).then((carga) => {
-      if (!control.signal.aborted) setPrevision(carga);
+      if (control.signal.aborted) return;
+      setPrevision(carga);
+      const hora = carga.estado === "listo" ? Date.now() : estadoPrevision.current.hora;
+      estadoPrevision.current = { hora, cargando: false };
+      if (carga.estado === "listo") setUltimaPrevision(carga.datos);
     });
-    return () => control.abort();
-  }, [pidePrevision]);
+    return () => {
+      control.abort();
+      estadoPrevision.current = { ...estadoPrevision.current, cargando: false };
+    };
+  }, [pedidoPrevision]);
+  const datosPrevision = prevision.estado === "listo" ? prevision.datos : ultimaPrevision;
 
   // Estado del sistema: si no está publicado o no valida, la barra usa el cambio de datos.
   useEffect(() => {
@@ -466,7 +497,7 @@ export function App() {
     const control = new AbortController();
     const pedir = () => {
       if (document.visibilityState === "hidden") return;
-      void cargarDirecto(fetch, control.signal).then((carga) => {
+      void cargarDirecto(descargarConReintentos, control.signal).then((carga) => {
         if (control.signal.aborted) return;
         if (carga.estado === "listo") setDirecto(carga.datos);
         else if (carga.estado !== "no_disponible") setDirecto(null);
@@ -486,7 +517,7 @@ export function App() {
   const pedirGnss = useCallback((objeto: string): Promise<FicheroGnss | null> => {
     const guardado = ficherosGnss.current.get(objeto);
     if (guardado !== undefined) return guardado;
-    const promesa = cargarFicheroGnss(objeto, fetch).then((carga) =>
+    const promesa = cargarFicheroGnss(objeto, descargarConReintentos).then((carga) =>
       carga.estado === "listo" ? carga.datos : null,
     );
     ficherosGnss.current.set(objeto, promesa);
@@ -494,7 +525,7 @@ export function App() {
   }, []);
   useEffect(() => {
     const control = new AbortController();
-    void cargarIndiceGnss(fetch, control.signal).then((carga) => {
+    void cargarIndiceGnss(descargarConReintentos, control.signal).then((carga) => {
       if (control.signal.aborted) return;
       if (carga.estado !== "listo") {
         // Sin índice no hay ningún periodo con datos.
@@ -511,7 +542,8 @@ export function App() {
     return () => control.abort();
   }, [pedirGnss]);
 
-  // Ficha de la ruta: se carga y se valida su fichero.
+  // Ficha de la ruta: se carga y se valida su fichero; «Reintentar» la vuelve a pedir.
+  const [intentoFicha, setIntentoFicha] = useState(0);
   useEffect(() => {
     if (idFicha === null || claseFicha === null) return undefined;
     const control = new AbortController();
@@ -529,7 +561,7 @@ export function App() {
       });
     }
     return () => control.abort();
-  }, [idFicha, claseFicha]);
+  }, [idFicha, claseFicha, intentoFicha]);
 
   const datosResumen = datos(resumen);
   const datosUcrania = datos(ucrania);
@@ -792,9 +824,9 @@ export function App() {
       (hojaPropia === "ahora" && pestanaAhora === "prevision") ||
       panelLocal?.clase === "pais"
     ) {
-      setPidePrevision(true);
+      pedirPrevision();
     }
-  }, [hojaPropia, desplegado, panelLocal, pestanaAhora]);
+  }, [hojaPropia, desplegado, panelLocal, pestanaAhora, pedirPrevision]);
   const cambiarFiltros = useCallback(
     (nuevos: EstadoFiltros) =>
       cambiarBusqueda(conSubcapasDe(escribirSeleccion(nuevos, seleccion), busqueda)),
@@ -1165,12 +1197,12 @@ export function App() {
         ),
         true,
       );
-      const caja = prevision.estado === "listo" ? prevision.datos.cajas[racha.pais] : undefined;
+      const caja = datosPrevision?.cajas[racha.pais];
       if (caja !== undefined) {
         setVuelo((anterior) => ({ encuadre: { caja }, modo: "ir", n: (anterior?.n ?? 0) + 1 }));
       }
     },
-    [cambiarBusqueda, filtros, busqueda, prevision],
+    [cambiarBusqueda, filtros, busqueda, datosPrevision],
   );
 
   const irANovedad = useCallback(
@@ -1314,15 +1346,17 @@ export function App() {
 
   const actualizado =
     datosResumen?.actualizado ?? (resumen.estado === "cargando" ? metaInicial.actualizado : null);
-  const avisoDeDatos =
+  const estadoDeDatos =
     resumen.estado === "no_valido" || (capas.ucrania && ucrania.estado === "no_valido")
-      ? t.avisos.datosNoValidos
+      ? "no_valido"
       : resumen.estado === "no_disponible" ||
           resumen.estado === "no_encontrado" ||
           (capas.ucrania &&
             (ucrania.estado === "no_disponible" || ucrania.estado === "no_encontrado"))
-        ? t.avisos.datosNoDisponibles
+        ? "no_disponible"
         : null;
+  const avisoDeDatos =
+    estadoDeDatos === "no_valido" ? t.avisos.datosNoValidos : estadoDeDatos === null ? null : t.avisos.datosNoDisponibles;
   const textoPeriodo =
     periodo === null ? "" : t.tiempo.periodo(fechaDia(periodo.desde), fechaDia(periodo.hasta));
   const otro: Idioma = idioma === "es" ? "en" : "es";
@@ -1359,7 +1393,7 @@ export function App() {
             />
           )}
           <div className="overflow-y-auto px-4 py-3">
-            <SegunCarga t={t} carga={incidente}>
+            <SegunCarga t={t} carga={incidente} onReintentar={() => setIntentoFicha((n) => n + 1)}>
               {(detalle) => <FichaIncidente t={t} idioma={idioma} incidente={detalle} />}
             </SegunCarga>
           </div>
@@ -1378,7 +1412,7 @@ export function App() {
             onCerrar={cerrarFicha}
           />
           <div className="overflow-y-auto px-4 py-3">
-            <SegunCarga t={t} carga={ataque}>
+            <SegunCarga t={t} carga={ataque} onReintentar={() => setIntentoFicha((n) => n + 1)}>
               {(detalle) => (
                 <FichaAtaque
                   t={t}
@@ -1425,7 +1459,7 @@ export function App() {
         <>
           <CabeceraFicha t={t} etiqueta={t.impacto.etiqueta} onCerrar={cerrarFicha} />
           <div className="overflow-y-auto px-4 py-3">
-            <SegunCarga t={t} carga={impacto}>
+            <SegunCarga t={t} carga={impacto} onReintentar={() => setIntentoImpacto((n) => n + 1)}>
               {(detalle) => <FichaImpacto t={t} idioma={idioma} impacto={detalle} />}
             </SegunCarga>
           </div>
@@ -1549,7 +1583,7 @@ export function App() {
               presion={presion?.get(panelLocal.iso) ?? null}
               cifras={cifrasDePais(filtrados, panelLocal.iso, periodo)}
               periodo={textoPeriodo}
-              racha={rachaDe(prevision.estado === "listo" ? prevision.datos : null, panelLocal.iso)}
+              racha={rachaDe(datosPrevision, panelLocal.iso)}
               sinComparacion={seleccion.clase === "todo"}
             />
           </div>
@@ -1685,7 +1719,16 @@ export function App() {
       <EuropaAhora t={t} idioma={idioma} cifras={cifrasDelMomento} onIr={irACifra} />
     </>
   );
-  const previsionEnPantalla = <Prevision t={t} idioma={idioma} carga={prevision} onRacha={irARacha} />;
+  const previsionEnPantalla = (
+    <Prevision
+      t={t}
+      idioma={idioma}
+      carga={prevision}
+      anterior={ultimaPrevision}
+      onReintentar={reintentarPrevision}
+      onRacha={irARacha}
+    />
+  );
   const periodoEscrito = textoDeSeleccion(t, seleccion);
   const cierresActivos = cierresEnCurso(directo).length;
   const novedadesPendientes = latentes.size;
@@ -1818,11 +1861,23 @@ export function App() {
           </span>
         </div>
       )}
-      {(avisoDeDatos !== null || mapaFallido) && (
-        <p role="alert" className="flotante pointer-events-auto flex max-w-md items-center gap-2 p-4">
+      {estadoDeDatos !== null && avisoDeDatos !== null ? (
+        <div className="flotante pointer-events-auto flex max-w-md items-start gap-2 p-4">
           <Simbolo estado="confirmado" />
-          {avisoDeDatos ?? t.avisos.mapaNoDisponible}
-        </p>
+          <ErrorDeCarga
+            t={t}
+            mensaje={avisoDeDatos}
+            estado={estadoDeDatos}
+            onReintentar={() => setIntentoDatos((n) => n + 1)}
+          />
+        </div>
+      ) : (
+        mapaFallido && (
+          <p role="alert" className="flotante pointer-events-auto flex max-w-md items-center gap-2 p-4">
+            <Simbolo estado="confirmado" />
+            {t.avisos.mapaNoDisponible}
+          </p>
+        )
       )}
     </div>
   );

@@ -26,6 +26,19 @@ const MAX_ERRORES = 20;
 
 type Comprobacion = (valor: unknown, ruta: string, errores: string[]) => void;
 
+/**
+ * En el navegador, un campo que esta versión de la web no conoce no invalida el fichero: se
+ * ignora. Así, una pestaña abierta antes de que los datos ganen un campo nuevo los sigue leyendo
+ * (el 9 de octubre de 2026 una pestaña abierta la víspera no pudo abrir «Previsión» porque el
+ * fichero traía su licencia dentro). El build y las pruebas validan cerrado: un campo que no está
+ * en el esquema de la web lo para ahí (scripts/datos.ts).
+ */
+let toleraCamposNuevos = false;
+
+export function tolerarCamposNuevos(si = true): void {
+  toleraCamposNuevos = si;
+}
+
 function anotar(errores: string[], ruta: string, mensaje: string): void {
   if (errores.length < MAX_ERRORES) errores.push(`${ruta || "raíz"}: ${mensaje}`);
 }
@@ -78,7 +91,10 @@ function lista(elemento: Comprobacion, minimo = 0): Comprobacion {
   };
 }
 
-/** Objeto cerrado: faltar un campo obligatorio o traer uno desconocido es un error. */
+/**
+ * Objeto cerrado: faltar un campo obligatorio o traer uno desconocido es un error (uno
+ * desconocido, no en el navegador: tolerarCamposNuevos).
+ */
 function objeto(
   obligatorios: Record<string, Comprobacion>,
   opcionales: Record<string, Comprobacion> = {},
@@ -95,8 +111,8 @@ function objeto(
     for (const [clave, hijo] of Object.entries(valor)) {
       if (clave in obligatorios) continue;
       const comprobar = opcionales[clave];
-      if (comprobar === undefined) anotar(errores, `${ruta}.${clave}`, "campo desconocido");
-      else comprobar(hijo, `${ruta}.${clave}`, errores);
+      if (comprobar !== undefined) comprobar(hijo, `${ruta}.${clave}`, errores);
+      else if (!toleraCamposNuevos) anotar(errores, `${ruta}.${clave}`, "campo desconocido");
     }
   };
 }
