@@ -563,7 +563,10 @@ describe("aplicación", () => {
     const detalle = { ...detalleIncidente(incidentes.features[1]!), tipo: "otro" };
     servir({ ...buenos, "/datos/incidentes/EODI-2026-00007.json": detalle });
     abrir("/EODI-2026-00007");
-    expect((await screen.findByText(es.avisos.fichaNoValida)).getAttribute("role")).toBe("alert");
+    const aviso = await screen.findByRole("alert");
+    expect(aviso.textContent).toContain(es.avisos.fichaNoDisponible);
+    expect(aviso.textContent).toContain(es.avisos.webNueva);
+    expect(within(aviso).getByRole("button", { name: es.avisos.reintentar })).toBeTruthy();
     expect(screen.queryByText("Cierre del aeropuerto de Vilna")).toBeNull();
   });
 

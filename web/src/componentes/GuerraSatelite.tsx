@@ -1,6 +1,7 @@
 // Fichas y piezas de la guerra por satélite: imágenes de antes y después de un impacto, pérdida
 // de luz nocturna de una región o una ciudad y corredores de ataque.
 
+import { descargarConReintentos } from "../datos/reintentos.ts";
 import { useEffect, useRef, useState } from "react";
 import type { KeyboardEvent, PointerEvent } from "react";
 
@@ -37,7 +38,7 @@ function dia(valor: string): string {
 let indice: Promise<IndiceSatelite | null> | null = null;
 
 /** El índice de parejas, pedido una sola vez por visita; si falla, se vuelve a pedir la próxima. */
-export function cargarIndiceSatelite(descargar: typeof fetch = fetch): Promise<IndiceSatelite | null> {
+export function cargarIndiceSatelite(descargar: typeof fetch = descargarConReintentos): Promise<IndiceSatelite | null> {
   const pedido =
     indice ??
     descargar(urlDelAlmacen(OBJETO_PAREJAS))

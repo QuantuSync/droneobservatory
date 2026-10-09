@@ -23,6 +23,7 @@ import {
   LADO_OBSTACULO,
   RADIO_INCIDENTE,
 } from "./iconos.ts";
+import { conReintentos } from "../datos/reintentos.ts";
 import { ZONA_ARCO_RATON_PX } from "./seleccion.ts";
 import type { Idioma } from "../sitio.ts";
 
@@ -1237,12 +1238,12 @@ export function estilo(idioma: Idioma, origen: string, acento: string): StyleSpe
   };
   return {
     version: 8,
-    glyphs: `${origen}/mapa/fuentes/{fontstack}/{range}.pbf`,
+    glyphs: conReintentos(`${origen}/mapa/fuentes/{fontstack}/{range}.pbf`),
     sprite: `${origen}/mapa/sprites/dark`,
     sources: {
       [FUENTE_BASE]: { type: "vector", url: `pmtiles://${URL_TESELAS}` },
-      [FUENTE_TIERRA]: { type: "geojson", data: `${origen}/mapa/tierra.geojson` },
-      [FUENTE_PAISES]: { type: "geojson", data: `${origen}/mapa/paises.geojson` },
+      [FUENTE_TIERRA]: { type: "geojson", data: conReintentos(`${origen}/mapa/tierra.geojson`) },
+      [FUENTE_PAISES]: { type: "geojson", data: conReintentos(`${origen}/mapa/paises.geojson`) },
       [FUENTE_PUNTOS]: {
         type: "geojson",
         data: VACIA,
@@ -1276,10 +1277,10 @@ export function estilo(idioma: Idioma, origen: string, acento: string): StyleSpe
       [FUENTE_AREAS]: { type: "geojson", data: VACIA },
       [FUENTE_EPISODIOS]: { type: "geojson", data: VACIA },
       [FUENTE_SELECCION]: { type: "geojson", data: VACIA },
-      [FUENTE_REGIONES]: { type: "geojson", data: `${origen}/mapa/ucrania-regiones.geojson` },
-      [FUENTE_CONTORNO]: { type: "geojson", data: `${origen}/mapa/ucrania-contorno.geojson` },
+      [FUENTE_REGIONES]: { type: "geojson", data: conReintentos(`${origen}/mapa/ucrania-regiones.geojson`) },
+      [FUENTE_CONTORNO]: { type: "geojson", data: conReintentos(`${origen}/mapa/ucrania-contorno.geojson`) },
       [FUENTE_FOCOS_UCRANIA]: { type: "geojson", data: VACIA },
-      [FUENTE_REGIONES_RUSIA]: { type: "geojson", data: `${origen}/mapa/rusia-regiones.geojson` },
+      [FUENTE_REGIONES_RUSIA]: { type: "geojson", data: conReintentos(`${origen}/mapa/rusia-regiones.geojson`) },
       [FUENTE_GNSS]: { type: "geojson", data: VACIA },
       [FUENTE_DIRECTO]: { type: "geojson", data: VACIA },
       [FUENTE_CORREDORES]: { type: "geojson", data: VACIA },

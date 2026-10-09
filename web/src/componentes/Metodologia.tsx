@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
+import { descargarConReintentos } from "../datos/reintentos.ts";
 import { validarVersiones } from "../datos/validar.ts";
 import { RUTA_INDICE_VERSIONES, rutasDeVersion } from "../datos/versiones.ts";
 import type { VersionDatos } from "../datos/versiones.ts";
@@ -161,7 +162,7 @@ function Versiones({ t, idioma, abierta }: { t: Textos; idioma: Idioma; abierta:
   useEffect(() => {
     if (!abierta || versiones !== null) return;
     const control = new AbortController();
-    fetch(RUTA_INDICE_VERSIONES, { signal: control.signal })
+    descargarConReintentos(RUTA_INDICE_VERSIONES, { signal: control.signal })
       .then((r) => (r.ok ? r.json() : null))
       .then((datos: unknown) => {
         const resultado = validarVersiones(datos);

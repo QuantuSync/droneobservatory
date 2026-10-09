@@ -1,4 +1,4 @@
-import { Map as MapaGL, addProtocol, setWorkerUrl } from "maplibre-gl";
+import { Map as MapaGL, setWorkerUrl } from "maplibre-gl";
 import type {
   DataDrivenPropertyValueSpecification,
   ExpressionSpecification,
@@ -9,9 +9,9 @@ import type {
 import "maplibre-gl/dist/maplibre-gl.css";
 // El trabajador de MapLibre se sirve desde este mismo sitio, empaquetado con el resto.
 import urlTrabajador from "maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url";
-import { Protocol } from "pmtiles";
 import { useEffect, useRef, useState } from "react";
 
+import { registrarProtocolos } from "./reintentos.ts";
 import { indiceBandera, varianteDe } from "../banderas.ts";
 import type { Capas } from "../componentes/Controles.tsx";
 import { avisosEnMapa } from "../datos/directo.ts";
@@ -101,6 +101,7 @@ import {
   FUENTE_PUNTOS,
   FUENTE_PUNTOS_SUELTOS,
   FUENTE_SELECCION,
+  URL_TESELAS,
   ZOOM_MAXIMO_AGRUPADO,
   capasBase,
   estilo,
@@ -127,7 +128,7 @@ import { letreroDeCorredor } from "../componentes/GuerraSatelite.tsx";
 import { colocarPulsos, pulsosDe } from "./pulsos.ts";
 
 setWorkerUrl(urlTrabajador);
-addProtocol("pmtiles", new Protocol().tile);
+registrarProtocolos(URL_TESELAS);
 
 /** Vista inicial: Europa entera, de Portugal a los Urales y de Creta al cabo Norte. */
 const VISTA_INICIAL: [number, number, number, number] = [-11, 35, 41, 69];
@@ -648,6 +649,9 @@ export default function Mapa(props: PropsMapa) {
     anotar.current = anotarVista;
     mapa.on("moveend", anotarVista);
 
+    // Una fuente que falla después de sus reintentos (mapa/reintentos.ts) queda dada por cargada,
+    // pero MapLibre no vuelve a pintar por eso y el mapa no llegaría a estar listo: se le pide.
+    mapa.on("error", () => mapa.triggerRepaint());
     mapa.on("load", () => {
       anotarVista();
       const delMapaBase = new Set(mapa.listImages());

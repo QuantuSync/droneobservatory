@@ -1130,7 +1130,7 @@ function paginaPrevision(datos: DatosPaginas, idioma: Idioma): PaginaTexto {
   const d = datos.prevision;
   const partes: Hijo[] = [e("h1", null, tp.prevision.titulo), e("p", null, tp.prevision.intro)];
   if (d === null || d === undefined) {
-    partes.push(e("p", null, p.noDisponible));
+    partes.push(e("p", null, p.noPublicada));
   } else {
     const dia = (texto: string) => fechaDia(diaDeTexto(texto));
     const comoSeComprueba = (...hijos: Hijo[]) => e("details", null, e("summary", null, p.comoSeComprueba), ...hijos);

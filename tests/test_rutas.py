@@ -407,3 +407,27 @@ def test_apagadas_en_la_web_no_se_suben_y_se_retiran(tmp_path: Path) -> None:
 
 def test_el_interruptor_de_la_web_esta_apagado() -> None:
     assert rutas.en_la_web() is False
+
+
+def test_el_indice_solo_sube_si_han_subido_todas_sus_noches(tmp_path: Path) -> None:
+    """Si falla la subida de una noche, el índice no se sube: la web nunca lee un índice que nombra
+    una noche que no está en el almacén. En la siguiente pasada sube lo que faltaba y el índice."""
+    noches_ = tmp_path / "publicar" / "noches"
+    noches_.mkdir(parents=True)
+    (noches_ / "2026-10-05.json").write_text('{"a": 1}', encoding="utf-8")
+    (noches_ / "2026-10-06.json").write_text('{"b": 2}', encoding="utf-8")
+    (tmp_path / "publicar" / "indice.json").write_text('{"i": 1}', encoding="utf-8")
+    subidos: list[str] = []
+    falla = {"rutas/noches/2026-10-06.json"}
+
+    def subir(objeto: str, cuerpo: bytes, tipo: str, cache: str) -> bool:
+        if objeto in falla:
+            return False
+        subidos.append(objeto)
+        return True
+
+    assert rutas._subir_cambios(tmp_path, subir, None, publicar=True) == 1
+    assert subidos == ["rutas/noches/2026-10-05.json"]
+    falla.clear()
+    assert rutas._subir_cambios(tmp_path, subir, None, publicar=True) == 2
+    assert subidos[1:] == ["rutas/noches/2026-10-06.json", "rutas/indice.json"]

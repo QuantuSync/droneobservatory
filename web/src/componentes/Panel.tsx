@@ -64,14 +64,58 @@ export function CabeceraFicha({ t, etiqueta, enlace, onCerrar, cerrar }: PropsCa
   );
 }
 
+/** Recarga la página: lo que hace «Reintentar» cuando la web abierta es más vieja que los datos. */
+export function recargarPagina(): void {
+  window.location.reload();
+}
+
+interface PropsErrorDeCarga {
+  t: Textos;
+  /** Qué no se ha podido cargar («No se ha podido cargar la previsión.»). */
+  mensaje: string;
+  /** Lo que salió del último intento. */
+  estado: "no_disponible" | "no_valido" | "no_encontrado";
+  /** Vuelve a pedirlo (no hace falta si el estado es «no_valido»: entonces se recarga la página). */
+  onReintentar: () => void;
+  className?: string;
+}
+
+/**
+ * El error de una carga que no ha salido tras todos sus reintentos (datos/reintentos.ts): qué no
+ * se ha podido cargar, por qué y un botón «Reintentar». Si el fichero no valida tras pedirlo de
+ * nuevo, lo normal es que la web abierta sea más vieja que los datos: «Reintentar» recarga la
+ * página para traer la versión nueva.
+ */
+export function ErrorDeCarga({ t, mensaje, estado, onReintentar, className }: PropsErrorDeCarga) {
+  const motivo = estado === "no_valido" ? t.avisos.webNueva : estado === "no_disponible" ? t.avisos.sinRespuesta : null;
+  return (
+    <div role="alert" className={`flex flex-col items-start gap-2 ${className ?? ""}`} data-error-carga={estado}>
+      <p>
+        {mensaje}
+        {motivo !== null && <span className="block text-xs text-secundario">{motivo}</span>}
+      </p>
+      <button
+        type="button"
+        className="control min-h-11 rounded border border-linea px-3 esc:min-h-8"
+        onClick={estado === "no_valido" ? recargarPagina : onReintentar}
+        data-reintentar=""
+      >
+        {t.avisos.reintentar}
+      </button>
+    </div>
+  );
+}
+
 interface PropsEstadoCarga<T> {
   t: Textos;
   carga: Carga<T>;
   children: (datos: T) => ReactNode;
+  /** Vuelve a pedir el fichero de la ficha. */
+  onReintentar: () => void;
 }
 
-/** Contenido de una ficha que depende de un fichero: si no valida, se dice y no se pinta. */
-export function SegunCarga<T>({ t, carga, children }: PropsEstadoCarga<T>) {
+/** Contenido de una ficha que depende de un fichero: si no llega o no valida, se dice y no se pinta. */
+export function SegunCarga<T>({ t, carga, children, onReintentar }: PropsEstadoCarga<T>) {
   switch (carga.estado) {
     case "listo":
       return <>{children(carga.datos)}</>;
@@ -80,9 +124,8 @@ export function SegunCarga<T>({ t, carga, children }: PropsEstadoCarga<T>) {
     case "no_encontrado":
       return <p role="alert">{t.avisos.fichaNoEncontrada}</p>;
     case "no_valido":
-      return <p role="alert">{t.avisos.fichaNoValida}</p>;
     case "no_disponible":
-      return <p role="alert">{t.avisos.datosNoDisponibles}</p>;
+      return <ErrorDeCarga t={t} mensaje={t.avisos.fichaNoDisponible} estado={carga.estado} onReintentar={onReintentar} />;
   }
 }
 
