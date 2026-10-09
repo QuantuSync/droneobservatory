@@ -30,7 +30,8 @@ hace menos de 10 minutos, todo va bien.
 Problemas que avisan: datos publicados con más de 2 horas, recogida que termina con un código
 distinto de 0 y 2, captura del seguimiento sin recibir nada en 10 minutos, archivo de alertas de alerts.in.ua sin
 respuesta correcta de la API en 15 minutos o con la API respondiendo 401 o 403, copia de la base o del
-archivo con más de 2 horas, segunda copia con más de 3 horas, disco por encima del 75 %, servidor
+archivo con más de 2 horas, segunda copia con más de 3 horas, copia pública de reserva de Helsinki
+sin estar al día más de 30 minutos, disco por encima del 75 %, servidor
 sin dar señales (salud.json con más de 20 minutos), exportación semanal fallida o con más de 8
 días, detección en directo parada más de media hora, paso de la base a solo disco fallido,
 versión citable de los datos del mes sin generar (pasadas las 06:00 UTC del día 1) o una
@@ -66,6 +67,96 @@ df -h /
 3. Si es un fallo del código tras una fusión: volver al commit anterior de `main` con un PR que
    lo revierta (nunca un push forzado) y comprobar las dos recogidas siguientes.
 4. Si la base no abre: apartado «Si hay que restaurar la base».
+
+## Si cae el almacén principal
+
+El almacén público de Núremberg (`droneobservatory-almacen`) guarda el mapa de fondo, los datos
+publicados y las capas que pide la web. Desde el 9 de octubre de 2026 tiene una copia pública de
+reserva en Helsinki (`droneobservatory-reserva`), con los mismos objetos y cabeceras, que el
+servidor pone al día cada 2 minutos y tras cada publicación (`eodi-reserva`, `almacen/reserva.py`).
+
+**Qué pasa solo, sin hacer nada:**
+
+- La web no pide al almacén directamente: lo pide a su dominio (`/almacen/…`) y lo sirve la función
+  `api/almacen.ts` con la caché de Vercel delante. Si Núremberg no contesta en 3 segundos o da un
+  error, la función lo pide a Helsinki y durante un minuto ya no prueba Núremberg. Lo que ya está en
+  la caché se sigue sirviendo aunque fallen los dos (hasta 7 días).
+- Si la propia función fallara, el navegador pide a Helsinki directamente (a los 15 segundos sin
+  respuesta o con el primer error).
+- El build de la web baja los datos de Helsinki si Núremberg no responde.
+- La recogida sigue, pero no puede publicar (sube a Núremberg): la web se queda con los últimos
+  datos publicados y la barra de arriba dice de cuándo son. Al volver Núremberg, la recogida
+  siguiente publica y la reserva se pone al día sola.
+- La vigilancia avisa: `salud.json` (que está en Núremberg) deja de responder y llega el correo
+  «Run failed: vigia-recogida» con la incidencia.
+
+**Cómo saber si es el almacén:**
+
+```
+curl -s -o /dev/null -w "%{http_code} %{time_total}s " https://droneobservatory-almacen.nbg1.your-objectstorage.com/estado.json
+curl -s -o /dev/null -w "%{http_code} %{time_total}s " https://droneobservatory-reserva.hel1.your-objectstorage.com/estado.json
+curl -sI https://droneobservatory.eu/almacen/estado.json | grep -i "x-almacen\|x-vercel-cache"
+```
+
+`x-almacen: reserva` dice que la web ya está sirviendo desde Helsinki. El estado del servicio de
+Hetzner está en <https://status.hetzner.com/>.
+
+**Si la caída dura horas** y hace falta que los datos nuevos lleguen a la web: cambiar los papeles,
+con un PR (y su ensayo) que intercambie en `configuracion/almacen_publico.json` el bloque principal
+(`ubicacion`, `punto_s3`, `bucket`, `publico`) con el de `reserva`, y en `api/almacen.ts` el orden
+de `ORIGENES` (un test comprueba que coinciden). La recogida publica entonces en Helsinki, la web lo
+pide primero allí y la copia de reserva va de Helsinki a Núremberg. Al volver Núremberg, se deshace
+con otro PR igual. Nunca a mano en el servidor: la copia de reserva copiaría en sentido contrario.
+
+## Si cae Vercel
+
+Vercel sirve la web entera: las páginas, los datos de `/datos/…`, la función del almacén y la
+tarea programada de la vigilancia. Si Vercel cae, `droneobservatory.eu` no carga y no hay nada que
+hacer de nuestro lado; el estado del servicio está en <https://www.vercel-status.com/>.
+
+- La recogida sigue cada hora y publica en el almacén; la vigilancia del servidor también. Cuando
+  Vercel vuelve, el gancho de la recogida siguiente reconstruye la web con los datos al día (o,
+  para no esperar, en el servidor:
+  `sudo -u eodi sh -c 'curl -s -X POST "$(cat /home/eodi/.eodi/vercel_gancho)"'`).
+- Mientras tanto, los datos siguen a mano en las direcciones públicas de los dos almacenes, para
+  quien los integre en otro sistema: `…/publicacion/manifiesto.json`, `…/publicacion/incidentes.geojson`,
+  `…/publicacion/ucrania.json`, `…/publicacion/prevision.json` y las versiones mensuales en
+  `…/versiones/AAAA-MM/`, con `…` = `https://droneobservatory-almacen.nbg1.your-objectstorage.com` o
+  `https://droneobservatory-reserva.hel1.your-objectstorage.com`.
+- El aviso de la vigilancia depende en parte de Vercel (la tarea que lanza el workflow): con Vercel
+  caído, el aviso llega cuando GitHub ejecute su programación, o al mirar `salud.json`.
+
+## Cómo comprobar la copia de Helsinki
+
+**Sin entrar en ningún sitio**: los dos manifiestos tienen que ser iguales (como mucho, 2 minutos
+de diferencia tras una publicación):
+
+```
+for a in droneobservatory-almacen.nbg1 droneobservatory-reserva.hel1; do
+  curl -s https://$a.your-objectstorage.com/publicacion/manifiesto.json | sha256sum
+done
+```
+
+`salud.json` dice en `copias.reserva_web` la última vez que la reserva estaba entera y al día;
+si pasa de 30 minutos, la vigilancia abre la incidencia «reserva».
+
+**En el servidor**:
+
+```
+systemctl list-timers eodi-reserva.timer
+journalctl -u eodi-reserva -n 20                       # «copiados N, borrados N, pendientes 0…»
+sudo -u eodi cat /home/eodi/.eodi/reserva.json        # última pasada, última vez al día, pendientes
+sudo -u eodi bash /home/eodi/droneobservatory/servidor/reserva.sh comprobar   # compara sin copiar
+sudo systemctl start eodi-reserva.service             # una pasada ya
+```
+
+**El mapa de fondo** (24,6 GB) no lo copia la pasada de cada 2 minutos: se sube una vez con
+`servidor/preparar_almacen.py --reserva --desde-principal` (como trabajo de sesión, unos 50
+minutos), que comprueba la huella SHA-256 mientras sube. La pasada solo comprueba que está con el
+mismo tamaño y, si falta, lo dice en `grandes_pendientes`. Si un día se cambia el mapa de fondo
+(otro nombre en `objetos.teselas`), hay que subirlo a los dos almacenes antes de fusionar el cambio.
+
+**Prueba de que la web aguanta sin el principal**: informe_robustez.md, «Prueba de caída».
 
 ## Si la web no se actualiza
 

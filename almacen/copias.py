@@ -132,6 +132,7 @@ def enviar_http(peticion: urllib.request.Request) -> Respuesta:
 class Objeto:
     clave: str
     tamano: int
+    etag: str = ""
 
 
 def nivel_y_momento(clave: str, prefijo: str) -> tuple[str, datetime] | None:
@@ -249,6 +250,10 @@ class Copias:
             raise OSError(f"{objeto}: la huella no coincide con la guardada")
         return respuesta.cuerpo
 
+    def leer(self, objeto: str) -> Respuesta:
+        """El objeto tal cual está guardado, con sus cabeceras (sin comprobar nada)."""
+        return self._peticion("GET", objeto)
+
     def borrar(self, objeto: str) -> None:
         respuesta = self._peticion("DELETE", objeto)
         if respuesta.estado not in (200, 204, 404):
@@ -269,7 +274,9 @@ class Copias:
             raiz = ET.fromstring(respuesta.cuerpo)
             for contenido in raiz.iter(f"{NS}Contents"):
                 yield Objeto(
-                    contenido.findtext(f"{NS}Key", ""), int(contenido.findtext(f"{NS}Size", "0"))
+                    contenido.findtext(f"{NS}Key", ""),
+                    int(contenido.findtext(f"{NS}Size", "0")),
+                    contenido.findtext(f"{NS}ETag", "").strip('"'),
                 )
             if raiz.findtext(f"{NS}IsTruncated", "false") != "true":
                 return

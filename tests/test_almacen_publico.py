@@ -47,9 +47,14 @@ def test_la_vigilancia_lee_el_estado_del_almacen(almacen: Almacen) -> None:
     assert almacen.url_publica("estado.json") == salud.URL
 
 
-def test_la_politica_de_contenido_admite_el_almacen_y_nada_de_cloudflare(
+def test_la_politica_de_contenido_admite_la_reserva_y_nada_de_cloudflare(
     almacen: Almacen,
 ) -> None:
+    # La web pide el almacén a su propio dominio (/almacen/…, api/almacen.ts); directamente, solo
+    # la copia de reserva de Helsinki, si la web no lo sirve.
+    reserva = json.loads((RAIZ / "configuracion" / "almacen_publico.json").read_text("utf-8"))[
+        "reserva"
+    ]["publico"]
     vercel = json.loads((RAIZ / "vercel.json").read_text(encoding="utf-8"))
     politicas = [
         cabecera["value"]
@@ -60,7 +65,8 @@ def test_la_politica_de_contenido_admite_el_almacen_y_nada_de_cloudflare(
     assert politicas
     for politica in politicas:
         directivas = {d.split()[0]: d.split()[1:] for d in politica.split(";") if d.strip()}
-        assert directivas["connect-src"] == ["'self'", almacen.publico]
+        assert directivas["connect-src"] == ["'self'", reserva]
+        assert almacen.publico not in politica
         assert "tiles.droneobservatory.eu" not in politica
 
 

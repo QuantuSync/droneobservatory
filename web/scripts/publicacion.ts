@@ -6,6 +6,8 @@
 //   fichero, y cada uno se comprueba con la huella SHA-256 del manifiesto: si el almacén no
 //   responde o algo no cuadra (por ejemplo, una recogida a medio subir), se reintenta y, al final,
 //   el build falla y en producción sigue la versión anterior. Nunca se construye una web vacía.
+//   Si el almacén principal no responde, cada intento prueba también la copia pública de reserva
+//   de Helsinki (bloque «reserva», almacen/reserva.py), con los mismos ficheros y el mismo manifiesto.
 //
 // EODI_PUBLICACION, si está, manda sobre todo: una carpeta local con los mismos ficheros (pruebas
 // y desarrollo con datos de ejemplo).
@@ -51,17 +53,30 @@ function esManifiesto(valor: unknown): valor is Manifiesto {
   return typeof ficheros === "object" && ficheros !== null;
 }
 
+interface ConfiguracionAlmacen {
+  publico: string;
+  reserva?: { publico: string };
+}
+
+/** Las direcciones del almacén: la del principal y, si la hay, la de la reserva. */
+export function basesDelAlmacen(almacen: ConfiguracionAlmacen): string[] {
+  const bases = [almacen.publico, almacen.reserva?.publico].filter((b): b is string => b !== undefined);
+  return bases.map((b) => b.replace(/\/$/, ""));
+}
+
 /** Baja los ficheros del almacén a `destino`, comprobados con el manifiesto. */
 export async function descargar(
-  base: string,
+  bases: string | readonly string[],
   destino: string,
   leer: Leer = leerHttp,
   intentos = 3,
   esperaMs = 10_000,
 ): Promise<Manifiesto> {
   let ultimoError: unknown = null;
-  for (let intento = 0; intento < intentos; intento++) {
-    if (intento > 0) await new Promise((hecho) => setTimeout(hecho, esperaMs));
+  const lista = typeof bases === "string" ? [bases] : bases;
+  for (let n = 0; n < intentos * lista.length; n++) {
+    const base = lista[n % lista.length] ?? "";
+    if (n > 0 && n % lista.length === 0) await new Promise((hecho) => setTimeout(hecho, esperaMs));
     try {
       const crudo = await leer(`${base}/${PREFIJO}${MANIFIESTO}`);
       const manifiesto: unknown = JSON.parse(new TextDecoder().decode(crudo));
@@ -81,7 +96,7 @@ export async function descargar(
       return manifiesto;
     } catch (error) {
       ultimoError = error;
-      console.warn(`publicación del almacén, intento ${intento + 1}: ${String(error)}`);
+      console.warn(`publicación del almacén (${base}), intento ${Math.floor(n / lista.length) + 1}: ${String(error)}`);
     }
   }
   throw new Error(
@@ -103,9 +118,9 @@ export async function carpetaPublicacion(raiz: string, web: string): Promise<str
   }
   const almacen = JSON.parse(
     await readFile(join(raiz, "configuracion", "almacen_publico.json"), "utf-8"),
-  ) as { publico: string };
+  ) as ConfiguracionAlmacen;
   const destino = join(web, ".publicacion");
-  const manifiesto = await descargar(almacen.publico.replace(/\/$/, ""), destino);
+  const manifiesto = await descargar(basesDelAlmacen(almacen), destino);
   console.log(`datos publicados del almacén, generados el ${manifiesto.generado}`);
   return destino;
 }
@@ -140,12 +155,23 @@ export async function leerVersiones(raiz: string, leer: LeerSiExiste = leerSiExi
   }
   const almacen = JSON.parse(
     await readFile(join(raiz, "configuracion", "almacen_publico.json"), "utf-8"),
-  ) as { publico: string };
+  ) as ConfiguracionAlmacen;
   const conf = JSON.parse(
     await readFile(join(raiz, "configuracion", "versiones_datos.json"), "utf-8"),
   ) as { prefijo: string; indice: string };
-  const base = almacen.publico.replace(/\/$/, "");
-  const indice = await leer(`${base}/${conf.indice}`);
+  // El principal y, si no responde, la reserva (las versiones no cambian una vez publicadas).
+  const [principal, ...otras] = basesDelAlmacen(almacen);
+  let base = principal ?? "";
+  let indice: Uint8Array | null;
+  try {
+    indice = await leer(`${base}/${conf.indice}`);
+  } catch (error) {
+    const reserva = otras[0];
+    if (reserva === undefined) throw error;
+    console.warn(`versiones del almacén principal: ${String(error)}; se leen de la reserva`);
+    base = reserva;
+    indice = await leer(`${base}/${conf.indice}`);
+  }
   if (indice === null) return { versiones: [] };
   const entradas = (JSON.parse(new TextDecoder().decode(indice)) as {
     versiones: { version: string; metadatos_sha256: string }[];

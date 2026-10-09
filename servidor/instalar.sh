@@ -593,6 +593,39 @@ Persistent=true
 [Install]
 WantedBy=timers.target
 FIN
+# Copia pública de reserva del almacén de la web (servidor/reserva.sh), en Helsinki.
+cat > "/etc/systemd/system/$UNIDAD_RESERVA.service" <<FIN
+[Unit]
+Description=Copia pública de reserva del almacén de la web, en otra ubicación (EODI)
+Wants=network-online.target
+After=network-online.target time-sync.target
+
+[Service]
+Type=oneshot
+User=$USUARIO
+Group=$USUARIO
+WorkingDirectory=$CLON
+ExecStart=/usr/bin/env bash $CLON/servidor/reserva.sh
+SyslogIdentifier=$UNIDAD_RESERVA
+TimeoutStartSec=${RESERVA_TOPE_UNIDAD}min
+Nice=10
+IOSchedulingClass=idle
+MemoryMax=$RESERVA_MEMORIA
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=full
+FIN
+cat > "/etc/systemd/system/$UNIDAD_RESERVA.timer" <<FIN
+[Unit]
+Description=Copia pública de reserva del almacén de la web (EODI), cada 2 minutos
+
+[Timer]
+OnCalendar=$CALENDARIO_RESERVA
+AccuracySec=1s
+
+[Install]
+WantedBy=timers.target
+FIN
 # Paso de la base a solo disco (servidor/base_solo_disco.sh), una sola vez y con comprobaciones.
 cat > "/etc/systemd/system/$UNIDAD_BASE_SOLO_DISCO.service" <<FIN
 [Unit]

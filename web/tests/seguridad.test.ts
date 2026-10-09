@@ -20,7 +20,7 @@ import type { ConfiguracionDespliegue } from "../src/seguridad/despliegue.ts";
 import { enlaceSeguro } from "../src/seguridad/enlaces.ts";
 import { contarScriptsEnLinea, separarScriptsEnLinea } from "../src/seguridad/scripts.ts";
 import { RUTA_SECURITY_TXT, securityTxt } from "../src/seguridad/securityTxt.ts";
-import { ORIGEN_ALMACEN } from "../src/almacenPublico.ts";
+import { ORIGEN_ALMACEN, ORIGEN_RESERVA } from "../src/almacenPublico.ts";
 import { CONTACTO_SEGURIDAD, ORIGEN } from "../src/sitio.ts";
 import { CARGAS_MALICIOSAS } from "./ejemplos.ts";
 
@@ -153,18 +153,22 @@ describe("cabeceras del despliegue", () => {
     expect(cabeceras.has("Content-Security-Policy")).toBe(true);
   });
 
-  it("la política de contenido solo admite este sitio y el almacén público", () => {
+  const politica = () => cabecerasDe(vercel, "/").get("Content-Security-Policy") ?? "";
+
+  it("la política de contenido solo admite este sitio y la copia de reserva del almacén", () => {
     const csp = directivasCsp(cabecerasDe(vercel, "/").get("Content-Security-Policy") ?? "");
     expect(csp.get("default-src")).toEqual(["'self'"]);
     expect(csp.get("script-src")).toEqual(["'self'"]);
     expect(csp.get("style-src")).toEqual(["'self'"]);
     expect(csp.get("font-src")).toEqual(["'self'"]);
-    expect(csp.get("connect-src")).toEqual(["'self'", ORIGEN_ALMACEN]);
-    expect(ORIGEN_ALMACEN).toBe("https://droneobservatory-almacen.nbg1.your-objectstorage.com");
+    // El almacén se sirve por la web (/almacen/…, api/almacen.ts); la reserva de Helsinki se pide
+    // directamente solo si la web no lo sirve.
+    expect(csp.get("connect-src")).toEqual(["'self'", ORIGEN_RESERVA]);
+    expect(ORIGEN_RESERVA).toBe("https://droneobservatory-reserva.hel1.your-objectstorage.com");
+    expect(politica()).not.toContain(ORIGEN_ALMACEN);
     // Nada se sirve ya desde Cloudflare.
-    const politica = cabecerasDe(vercel, "/").get("Content-Security-Policy") ?? "";
-    expect(politica).not.toContain("tiles.droneobservatory.eu");
-    expect(politica).not.toMatch(/cloudflare|r2\.dev/);
+    expect(politica()).not.toContain("tiles.droneobservatory.eu");
+    expect(politica()).not.toMatch(/cloudflare|r2\.dev/);
     expect(csp.get("object-src")).toEqual(["'none'"]);
     expect(csp.get("base-uri")).toEqual(["'self'"]);
     expect(csp.get("form-action")).toEqual(["'none'"]);
@@ -175,11 +179,11 @@ describe("cabeceras del despliegue", () => {
       expect(origenes).not.toContain("*");
     }
     // Ni scripts ni trabajadores ni imágenes salen de blob: o de data:. Las imágenes de
-    // satélite de antes y después vienen del almacén público.
+    // satélite de antes y después vienen del almacén, servido por la propia web.
     for (const directiva of ["script-src", "worker-src", "child-src"]) {
       expect(csp.get(directiva)).toEqual(["'self'"]);
     }
-    expect(csp.get("img-src")).toEqual(["'self'", ORIGEN_ALMACEN]);
+    expect(csp.get("img-src")).toEqual(["'self'"]);
   });
 
   it("las fichas que no son un fichero van a la función del borde, y nada más", () => {

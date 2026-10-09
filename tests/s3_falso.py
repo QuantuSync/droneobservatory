@@ -14,6 +14,8 @@ class S3Falso:
         self.por_pagina = por_pagina
         self.existe_bucket = False
         self.objetos: dict[str, tuple[bytes, dict[str, str]]] = {}
+        # Tipo, caché y compresión de cada objeto, como los guarda S3 (almacen/reserva.py).
+        self.cabeceras: dict[str, dict[str, str]] = {}
         self.peticiones: list[tuple[str, str]] = []
         self.fallos_pendientes = 0
 
@@ -42,6 +44,11 @@ class S3Falso:
             assert cabeceras["x-amz-content-sha256"] == hashlib.sha256(cuerpo).hexdigest()
             meta = {k: v for k, v in cabeceras.items() if k.startswith("x-amz-meta-")}
             self.objetos[clave] = (cuerpo, meta)
+            self.cabeceras[clave] = {
+                k: v
+                for k, v in cabeceras.items()
+                if k in ("content-type", "cache-control", "content-encoding")
+            }
             return Respuesta(200, {}, b"")
         if clave not in self.objetos:
             return Respuesta(404, {}, b"")
@@ -52,9 +59,10 @@ class S3Falso:
         if metodo == "HEAD":
             return Respuesta(200, {**meta, **etiqueta}, b"")
         if metodo == "GET":
-            return Respuesta(200, {**meta, **etiqueta}, cuerpo)
+            return Respuesta(200, {**self.cabeceras.get(clave, {}), **meta, **etiqueta}, cuerpo)
         if metodo == "DELETE":
             del self.objetos[clave]
+            self.cabeceras.pop(clave, None)
             return Respuesta(204, {}, b"")
         raise AssertionError(metodo)
 
@@ -71,7 +79,9 @@ class S3Falso:
         pagina = claves[desde : desde + self.por_pagina]
         truncada = desde + self.por_pagina < len(claves)
         contenidos = "".join(
-            f"<Contents><Key>{escape(c)}</Key><Size>{len(self.objetos[c][0])}</Size></Contents>"
+            f"<Contents><Key>{escape(c)}</Key><Size>{len(self.objetos[c][0])}</Size>"
+            # En el listado, el ETag de una subida de una vez: el MD5 del contenido.
+            f'<ETag>"{hashlib.md5(self.objetos[c][0]).hexdigest()}"</ETag></Contents>'
             for c in pagina
         )
         siguiente = (
