@@ -39,7 +39,7 @@ reprodujo después por separado antes de darlo por bueno o por ruido.
 | 4 | `e2e/web.spec.ts` no cargaba | Pruebas | Medio | Desde el #193, `urlDelAlmacen` lee `import.meta.env`, que no existe fuera de Vite (Playwright corre en Node) | Arreglado, #204 |
 | 5 | `e2e/web.spec.ts`, cuatro pruebas desfasadas | Pruebas | Leve | Los confirmados del marcador incluyen ya los atribuidos; la ficha de región se llama «Región · capa de Ucrania: …»; hay dos botones «Járkov» desde la lista para el teclado (#197); `estado.json` se pedía sin la clave de la vista previa | Arreglado, #204 (25 de 25 en producción) |
 | 6 | Al salir de la página del mapa a mitad de carga, WebKit da por fallidas las peticiones en curso («access control checks») y la del mapa de fondo prueba la reserva de Helsinki | WebKit (iPhone, Safari) | Leve | WebKit no marca como aborto las peticiones que corta la navegación; `FuenteAlmacen` lo toma por un fallo de la web. No se ve nada: la página ya se ha ido | Pendiente: solo ruido en la consola de WebKit, sin efecto para quien usa la web |
-| 7 | Pruebas antiguas que fallaban en producción: pulso de las novedades (`europa.spec.ts`), «si no responde nunca» de la previsión (`prevision-reintentos.spec.ts`) y la leyenda de la presión (`pulido.spec.ts`), 10 casos | Pruebas | Leve | Desfasadas respecto a lo decidido: el aviso de novedades va dentro de «Europa ahora» (#87); la copia de la previsión se pide por `/almacen/…` (#193) y la prueba solo cortaba la dirección antigua, así que nunca fallaba; encender «Presión» ya no cambia el periodo (#98) | Arreglado, PR de este informe |
+| 7 | Pruebas antiguas que fallaban en producción: pulso de las novedades (`europa.spec.ts`), «si no responde nunca» de la previsión (`prevision-reintentos.spec.ts`) y la leyenda de la presión (`pulido.spec.ts`), 10 casos | Pruebas | Leve | Desfasadas respecto a lo decidido: el aviso de novedades va dentro de «Europa ahora» (#87); la copia de la previsión se pide por `/almacen/…` (#193) y la prueba solo cortaba la dirección antigua, así que nunca fallaba; encender «Presión» ya no cambia el periodo (#98) | Arreglado, #205 |
 
 Lo que parecía un fallo y no lo era (comprobado por separado):
 
@@ -100,7 +100,7 @@ npx playwright test e2e/recorridos.spec.ts --project=android --project=iphone --
 
 ## Estado de la suite
 
-Contra producción, tras fusionar el #204 (y con los arreglos de pruebas de este informe):
+Contra producción, tras fusionar el #204 (y con los arreglos de pruebas del #205):
 
 | Suite | Pruebas | Pasan | Omitidas por dispositivo | Fallan | Navegadores |
 |---|---|---|---|---|---|
