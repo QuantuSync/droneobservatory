@@ -52,7 +52,7 @@ import type { Hijo, Html } from "./html.ts";
 import { paginaAvisos } from "./avisos.ts";
 import { RUTAS_AVISOS, TEXTO_AVISOS } from "../avisos.ts";
 import { BORRAR_VISITA, enlacesSobre, PAGINAS_SERVICIO, RUTAS_SERVICIO, SCRIPT_BORRAR_VISITA, textoServicio } from "./servicio.ts";
-import { rutasDeVersion } from "../datos/versiones.ts";
+import { rutaDeFicheroDeVersion, rutasDeVersion } from "../datos/versiones.ts";
 import type { VersionDatos } from "../datos/versiones.ts";
 import { cuerpoVersion, seccionVersiones } from "./versiones.ts";
 import type { PaginaServicio } from "./servicio.ts";
@@ -1075,8 +1075,25 @@ function ayuda(datos: DatosPaginas, idioma: Idioma): PaginaTexto {
 // ---------------------------------------------------------------------------------------------
 // Todas
 
+/** Datos estructurados de una página que no trae otros: qué página es y de qué sitio. */
+function paginaWeb(pagina: PaginaTexto): unknown {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: pagina.titulo.replace(` · ${NOMBRE}`, ""),
+    description: pagina.descripcion,
+    url: direccionCompleta(pagina.rutas[pagina.idioma]),
+    inLanguage: pagina.idioma,
+    isPartOf: { "@type": "WebSite", name: NOMBRE, url: direccionCompleta(PORTADA[pagina.idioma]) },
+  };
+}
+
 /** Todas las páginas, en los dos idiomas. */
 export function paginas(datos: DatosPaginas): PaginaTexto[] {
+  return todasLasPaginas(datos).map((p) => (p.estructurados.length > 0 ? p : { ...p, estructurados: [paginaWeb(p)] }));
+}
+
+function todasLasPaginas(datos: DatosPaginas): PaginaTexto[] {
   const resultado: PaginaTexto[] = [];
   const anios = aniosDe(datos.resumen.incidentes).map(([anio]) => anio);
   const codigos = [...new Set(datos.resumen.incidentes.map((i) => i.pais))].sort();
@@ -1146,6 +1163,30 @@ export function paginaServicio(pagina: PaginaServicio, idioma: Idioma): PaginaTe
   };
 }
 
+/** La versión citable como conjunto de datos (schema.org Dataset), con sus ficheros congelados. */
+function versionEstructurada(version: VersionDatos, idioma: Idioma): unknown {
+  const v = textos(idioma).metodologia.versiones;
+  return {
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    name: `${NOMBRE} · ${version.version}`,
+    description: v.descripcionVersion(version.version),
+    url: direccionCompleta(rutasDeVersion(version.version)[idioma]),
+    version: version.version,
+    inLanguage: idioma,
+    license: version.licencia.url,
+    isAccessibleForFree: true,
+    creator: autorEstructurado(),
+    datePublished: version.fecha,
+    citation: version.cita[idioma],
+    isPartOf: { "@type": "Dataset", name: NOMBRE, url: direccionCompleta(RUTAS.metodologia[idioma]) },
+    spatialCoverage: { "@type": "Place", name: "Europe" },
+    distribution: Object.keys(version.ficheros)
+      .sort()
+      .map((fichero) => ({ "@type": "DataDownload", name: fichero, contentUrl: ORIGEN + rutaDeFicheroDeVersion(version.version, fichero) })),
+  };
+}
+
 /** Una versión citable de los datos abiertos (src/texto/versiones.ts). No cambia nunca. */
 export function paginaVersion(version: VersionDatos, idioma: Idioma): PaginaTexto {
   const v = textos(idioma).metodologia.versiones;
@@ -1155,7 +1196,7 @@ export function paginaVersion(version: VersionDatos, idioma: Idioma): PaginaText
     titulo: `${v.tituloVersion(version.version)} · ${NOMBRE}`,
     descripcion: v.descripcionVersion(version.version),
     cuerpo: cuerpoVersion(version, idioma, RUTAS.metodologia[idioma]),
-    estructurados: [],
+    estructurados: [versionEstructurada(version, idioma)],
     conMapa: false,
     modificada: version.fecha,
   };

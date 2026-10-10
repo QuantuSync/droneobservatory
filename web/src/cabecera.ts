@@ -8,6 +8,7 @@ import {
   IMAGEN_COMPARTIR,
   IMAGEN_COMPARTIR_ALTO,
   IMAGEN_COMPARTIR_ANCHO,
+  IDIOMA_POR_DEFECTO,
   NOMBRE,
   ORIGEN,
   rutaDeFicha,
@@ -38,6 +39,8 @@ export interface Pagina {
   descripcion: string;
   /** Dirección en cada idioma, para las páginas que no son la portada ni una ficha. */
   rutas?: Record<Idioma, string>;
+  /** Datos que la página con el mapa pide nada más arrancar: se piden ya desde la cabecera. */
+  precargas?: readonly string[];
 }
 
 export function paginaDePortada(idioma: Idioma): Pagina {
@@ -73,9 +76,17 @@ export function etiquetasDeCabecera(pagina: Pagina): string {
   const descripcion = escaparHtml(pagina.descripcion);
   const url = escaparHtml(direccion(pagina, pagina.idioma));
   const imagen = escaparHtml(ORIGEN + IMAGEN_COMPARTIR[pagina.idioma]);
-  const alternativas = IDIOMAS.map(
-    (idioma) =>
-      `<link rel="alternate" hreflang="${idioma}" href="${escaparHtml(direccion(pagina, idioma))}">`,
+  const alternativas = [
+    ...IDIOMAS.map(
+      (idioma) =>
+        `<link rel="alternate" hreflang="${idioma}" href="${escaparHtml(direccion(pagina, idioma))}">`,
+    ),
+    // Para quien no lee ninguno de los dos idiomas: la versión por defecto, la española.
+    `<link rel="alternate" hreflang="x-default" href="${escaparHtml(direccion(pagina, IDIOMA_POR_DEFECTO))}">`,
+  ];
+  // Mismo modo que el fetch() de la web (mismo origen, sin credenciales ajenas): la precarga se usa.
+  const precargas = (pagina.precargas ?? []).map(
+    (ruta) => `<link rel="preload" href="${escaparHtml(ruta)}" as="fetch" crossorigin>`,
   );
   return [
     `<title>${titulo}</title>`,
@@ -97,6 +108,7 @@ export function etiquetasDeCabecera(pagina: Pagina): string {
     `<meta name="twitter:description" content="${descripcion}">`,
     `<meta name="twitter:image" content="${imagen}">`,
     `<meta name="twitter:image:alt" content="${escaparHtml(t.compartir.altImagen)}">`,
+    ...precargas,
   ].join("\n    ");
 }
 

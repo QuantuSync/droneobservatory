@@ -1,0 +1,38 @@
+/* Aspecto de /sitemap.xml en el navegador (la enlaza el propio sitemap): una dirección por línea
+   con su fecha. Sin ella, Chrome lo enseña como texto corrido, porque los enlaces a la otra versión
+   van en el espacio de nombres de XHTML y entonces no usa su visor de XML. Los buscadores no la
+   leen. */
+urlset {
+  display: block;
+  max-width: 64rem;
+  margin: 1.5rem auto;
+  padding: 0 1rem;
+  color: #111;
+  background: #fff;
+  font: 14px/1.5 system-ui, sans-serif;
+}
+
+urlset::before {
+  content: "European Observatory of Drone Incidents · sitemap.xml";
+  display: block;
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+url {
+  display: block;
+  padding: 0.375rem 0;
+  border-bottom: 1px solid #ddd;
+}
+
+loc {
+  display: block;
+  overflow-wrap: anywhere;
+}
+
+lastmod {
+  display: block;
+  color: #555;
+  font-size: 0.8125rem;
+}

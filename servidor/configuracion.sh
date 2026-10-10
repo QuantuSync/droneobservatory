@@ -415,6 +415,12 @@ LOCAL_NTFY_LUCAS="$LOCAL_SECRETOS/ntfy_lucas.txt"
 AVISOS_DATOS="${EODI_AVISOS_DATOS:-$CASA/datos/avisos}"
 TOPE_AVISOS_SEGUNDOS=120
 
+# --- IndexNow (recogida/indexnow.py, docs/posicionamiento.md) ----------------------------------
+# Al final de cada recogida que publica bien, avisa a Bing y a los buscadores que usan IndexNow de
+# las páginas de incidentes nuevas o cambiadas; lo enviado queda en $INDEXNOW_DATOS/indexnow.json.
+INDEXNOW_DATOS="${EODI_INDEXNOW_DATOS:-$CASA/datos/indexnow}"
+TOPE_INDEXNOW_SEGUNDOS=60
+
 # --- Reinicio tras las actualizaciones (servidor/reinicio.sh, recogida/reinicio.py) ------------
 # Las actualizaciones de seguridad no reinician solas (Automatic-Reboot "false" en endurecer.sh):
 # si una lo pide, eodi-reinicio reinicia cuando no corta nada (fuera de los minutos 12 a 40, sin

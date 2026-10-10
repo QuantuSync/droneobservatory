@@ -82,13 +82,20 @@ export function ficheroDeRuta(ruta: string): string {
   return `${ruta.slice(1)}.html`;
 }
 
+/**
+ * La cabecera de una página. Las que llevan el mapa piden nada más arrancar el resumen y, la de
+ * un incidente, su ficha: se precargan desde la cabecera, en paralelo con el código, en vez de
+ * esperar a que el código los pida.
+ */
 function cabeceraDe(pagina: PaginaTexto) {
+  const ficha = /^\/(?:en\/)?(EODI-\d{4}-\d{5})$/.exec(pagina.rutas[pagina.idioma])?.[1];
   return {
     idioma: pagina.idioma,
     id: null,
     titulo: pagina.titulo,
     descripcion: pagina.descripcion,
     rutas: pagina.rutas,
+    precargas: pagina.conMapa ? ["/datos/resumen.json", ...(ficha === undefined ? [] : [`/datos/incidentes/${ficha}.json`])] : [],
   };
 }
 

@@ -84,6 +84,11 @@ function comprobarEstructurados(html: string, ruta: string): void {
       }
     } else if (tipo === "WebSite") {
       assert.equal(d["name"], NOMBRE);
+    } else if (tipo === "WebPage") {
+      for (const campo of ["name", "description", "url", "inLanguage"]) {
+        assert.ok(d[campo] !== undefined && d[campo] !== "", `${ruta}: WebPage sin ${campo}`);
+      }
+      assert.equal((d["isPartOf"] as Record<string, unknown>)["name"], NOMBRE, `${ruta}: WebPage sin su sitio`);
     } else {
       assert.fail(`${ruta}: tipo de datos estructurados inesperado ${String(tipo)}`);
     }
@@ -180,12 +185,17 @@ async function principal(): Promise<void> {
 
   // Sitemap: válido, con todas las páginas publicadas y ninguna que no exista.
   const sitemap = await leer(join(DIST, "sitemap.xml"));
-  assert.match(sitemap, /^<\?xml version="1\.0" encoding="UTF-8"\?>\n<urlset /);
+  assert.match(
+    sitemap,
+    /^<\?xml version="1\.0" encoding="UTF-8"\?>\n<\?xml-stylesheet type="text\/css" href="\/sitemap\.css"\?>\n<urlset /,
+  );
+  assert.ok(await existe(join(DIST, "sitemap.css")), "sin la hoja de estilo del sitemap");
   assert.equal((sitemap.match(/<url>/g) ?? []).length, (sitemap.match(/<\/url>/g) ?? []).length);
   const direcciones = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1] ?? "");
   assert.equal(new Set(direcciones).size, direcciones.length, "direcciones repetidas en el sitemap");
   for (const lastmod of sitemap.matchAll(/<lastmod>([^<]+)<\/lastmod>/g)) {
-    assert.match(lastmod[1] ?? "", /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?Z$/);
+    // W3C Datetime completo, como pide el esquema de los sitemaps: con segundos, o solo el día.
+    assert.match(lastmod[1] ?? "", /^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}Z)?$/);
   }
   for (const direccion of direcciones) {
     const ruta = direccion.slice("https://droneobservatory.eu".length) || "/";
