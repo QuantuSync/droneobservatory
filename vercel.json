@@ -66,6 +66,10 @@
           "value": "<https://creativecommons.org/licenses/by/4.0/>; rel=\"license\", <https://orcid.org/0009-0008-5179-2534>; rel=\"author\""
         }
       ]
+    },
+    {
+      "source": "/sitemap.xml",
+      "headers": [{ "key": "Content-Type", "value": "application/xml; charset=utf-8" }]
     }
   ]
 }

@@ -10,6 +10,8 @@ ntfy.droneobservatory.eu {
 	header {
 		Strict-Transport-Security "max-age=31536000"
 		X-Content-Type-Options "nosniff"
+		# Que los buscadores no indexen el servidor de avisos: no compite con la web.
+		X-Robots-Tag "noindex, nofollow"
 		-Server
 	}
 	reverse_proxy 127.0.0.1:2586 {

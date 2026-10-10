@@ -79,6 +79,16 @@ PY
       --datos "$raiz/datos/avisos" || cavi=$?
     echo "avisos de ensayo terminados con código $cavi"
     [ "$cavi" -eq 0 ] || codigo=1
+    # IndexNow en ensayo, sobre una copia de lo ya enviado: dice cuántas direcciones enviaría.
+    install -d -m 700 "$raiz/datos/indexnow"
+    if [ -f "$INDEXNOW_DATOS/indexnow.json" ]; then
+      cp -a "$INDEXNOW_DATOS/indexnow.json" "$raiz/datos/indexnow/"
+    fi
+    local cidx=0
+    PYTHONPATH="$raiz/codigo" "$ENTORNO/bin/python" -m recogida.indexnow ensayo \
+      --datos "$raiz/datos/indexnow" || cidx=$?
+    echo "indexnow de ensayo terminado con código $cidx"
+    [ "$cidx" -eq 0 ] || codigo=1
   fi
   if [ "${ENSAYO_EXPORTACION:-0}" = "1" ] && { [ "$codigo" -eq 0 ] || [ "$codigo" -eq 2 ]; }; then
     local cexp=0

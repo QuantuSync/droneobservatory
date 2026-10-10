@@ -6,7 +6,7 @@ import { describe, expect, it } from "vitest";
 import { e, html, jsonLd } from "../src/texto/html.ts";
 import { RUTAS, rutasDePais } from "../src/texto/paginas.ts";
 import type { PaginaTexto } from "../src/texto/paginas.ts";
-import { redirecciones, sitemap } from "../src/texto/salidas.ts";
+import { fechaSitemap, redirecciones, sitemap } from "../src/texto/salidas.ts";
 import { textosPagina } from "../src/texto/textos.ts";
 import { textos } from "../src/i18n/index.ts";
 
@@ -46,8 +46,20 @@ describe("páginas de texto", () => {
       modificada: "2026-10-05T17:17Z",
     };
     const xml = sitemap([pagina]);
-    expect(xml).toContain("<loc>https://droneobservatory.eu/paises/pl</loc><lastmod>2026-10-05T17:17Z</lastmod>");
+    // Con segundos, como pide el esquema de los sitemaps, y con la versión por defecto.
+    expect(xml).toContain("<loc>https://droneobservatory.eu/paises/pl</loc><lastmod>2026-10-05T17:17:00Z</lastmod>");
     expect(xml).toContain('hreflang="en" href="https://droneobservatory.eu/en/countries/pl"');
+    expect(xml).toContain('hreflang="x-default" href="https://droneobservatory.eu/paises/pl"');
+    expect(sitemap([{ ...pagina, modificada: "" }])).not.toContain("<lastmod>");
+  });
+
+  it("las fechas del sitemap siguen el formato W3C Datetime", () => {
+    expect(fechaSitemap("2026-10-05")).toBe("2026-10-05");
+    expect(fechaSitemap("2026-10-05T17:17Z")).toBe("2026-10-05T17:17:00Z");
+    expect(fechaSitemap("2026-10-09T00:00:00Z")).toBe("2026-10-09T00:00:00Z");
+    expect(fechaSitemap("2026-10-01T03:00:12.345Z")).toBe("2026-10-01T03:00:12Z");
+    expect(fechaSitemap("")).toBeNull();
+    expect(fechaSitemap("ayer")).toBeNull();
   });
 
   it("cada página tiene su dirección en los dos idiomas", () => {

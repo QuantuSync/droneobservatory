@@ -5,27 +5,50 @@ import { escaparHtml } from "../cabecera.ts";
 import { cifras } from "../datos/derivar.ts";
 import type { Resumen } from "../datos/tipos.ts";
 import { fechaHora, textos } from "../i18n/index.ts";
-import { AUTOR_LINEA, CORREO_AUTOR, DESCARGAS, IDIOMAS, LICENCIA_DATOS, LICENCIA_DATOS_URL, NOMBRE, ORCID_URL, ORIGEN, rutaDeFicha, rutaDeIdioma, versionDeDatos } from "../sitio.ts";
+import { AUTOR_LINEA, CORREO_AUTOR, DESCARGAS, IDIOMA_POR_DEFECTO, IDIOMAS, LICENCIA_DATOS, LICENCIA_DATOS_URL, NOMBRE, ORCID_URL, ORIGEN, rutaDeFicha, rutaDeIdioma, versionDeDatos } from "../sitio.ts";
+import { RUTAS_AVISOS, SERVIDOR_AVISOS, TEXTO_AVISOS, canales } from "../avisos.ts";
 import { e, html } from "./html.ts";
 import { direccionCompleta, RUTAS } from "./paginas.ts";
 import type { PaginaTexto } from "./paginas.ts";
 import { enlacesSobre } from "./servicio.ts";
 import { textosPagina } from "./textos.ts";
 
-/** sitemap.xml con todas las páginas, su versión en el otro idioma y su última modificación. */
+/**
+ * La fecha de modificación como la pide el esquema de los sitemaps (W3C Datetime: un día, o día y
+ * hora con segundos y zona). Los datos traen a veces la hora sin segundos («2026-10-10T07:17Z»),
+ * que el esquema no admite. null si no hay fecha o no se entiende.
+ */
+export function fechaSitemap(valor: string): string | null {
+  if (/^\d{4}-\d{2}-\d{2}$/.test(valor)) return valor;
+  const conSegundos = valor.replace(/^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2})(Z|[+-]\d{2}:\d{2})$/, "$1:00$2");
+  const instante = Date.parse(conSegundos);
+  if (valor === "" || Number.isNaN(instante)) return null;
+  return new Date(instante).toISOString().replace(/\.\d{3}Z$/, "Z");
+}
+
+/**
+ * sitemap.xml con todas las páginas, su versión en cada idioma (y la de por defecto, x-default) y
+ * su última modificación, con la hoja de estilo que lo hace legible en el navegador.
+ */
 export function sitemap(paginas: readonly PaginaTexto[]): string {
   const entradas = paginas.map((p) => {
-    const alternativas = IDIOMAS.map(
-      (idioma) =>
-        `<xhtml:link rel="alternate" hreflang="${idioma}" href="${escaparHtml(direccionCompleta(p.rutas[idioma]))}"/>`,
-    ).join("");
+    const alternativas = [
+      ...IDIOMAS.map((idioma) => [idioma, p.rutas[idioma]] as const),
+      ["x-default", p.rutas[IDIOMA_POR_DEFECTO]] as const,
+    ]
+      .map(([idioma, ruta]) => `<xhtml:link rel="alternate" hreflang="${idioma}" href="${escaparHtml(direccionCompleta(ruta))}"/>`)
+      .join("");
+    const fecha = fechaSitemap(p.modificada);
     return (
       `<url><loc>${escaparHtml(direccionCompleta(p.rutas[p.idioma]))}</loc>` +
-      `<lastmod>${escaparHtml(p.modificada)}</lastmod>${alternativas}</url>`
+      `${fecha === null ? "" : `<lastmod>${fecha}</lastmod>`}${alternativas}</url>`
     );
   });
   return (
     `<?xml version="1.0" encoding="UTF-8"?>\n` +
+    // Para que se lea en el navegador (los buscadores no la usan): sin ella, Chrome lo pinta como
+    // texto corrido, porque los enlaces xhtml:link le quitan su visor de XML.
+    `<?xml-stylesheet type="text/css" href="/sitemap.css"?>\n` +
     `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n` +
     `${entradas.join("\n")}\n</urlset>\n`
   );
@@ -125,6 +148,10 @@ export function llmsTxt(resumen: Resumen): string {
     "",
     enlaces("en"),
     "",
+    "## Alerts",
+    "",
+    `${TEXTO_AVISOS.en.recibir} With the ntfy app (Android, iPhone) or the browser, from ${SERVIDOR_AVISOS}: channel ${canales("en")[0]?.tema ?? ""} for all of Europe and drones-<country> for each country. How to subscribe: ${direccionCompleta(RUTAS_AVISOS.en)}`,
+    "",
     "## Open data",
     "",
     `Licence: ${LICENCIA_DATOS} (${LICENCIA_DATOS_URL}) for the observatory's compilation (incidents, statuses, classifications and figures). Rebuilt on every data update. Quoted sentences remain their authors' and are used as quotations, with their source; the measured air traffic block (trafico_aereo) derives from adsb.lol and is offered under ODbL 1.0.`,
@@ -136,6 +163,7 @@ export function llmsTxt(resumen: Resumen): string {
     `- [Incidents with an approximate location (no exact point), JSON](${ORIGEN}${DESCARGAS.sinUbicacionJson})`,
     `- [Ukraine layer attacks, JSON](${ORIGEN}${DESCARGAS.ucraniaJson})`,
     `- [Ukraine layer attacks, CSV](${ORIGEN}${DESCARGAS.ucraniaCsv})`,
+    `- [Methodology, open data and citable monthly versions](${direccionCompleta(RUTAS.metodologia.en)}#datos-abiertos)`,
     `- [Sitemap](${ORIGEN}/sitemap.xml)`,
     "",
     "## En español",
@@ -157,6 +185,10 @@ export function llmsTxt(resumen: Resumen): string {
     "### Páginas",
     "",
     enlaces("es"),
+    "",
+    "### Avisos",
+    "",
+    `${TEXTO_AVISOS.es.recibir} Con la aplicación gratuita ntfy (Android, iPhone) o en el navegador, desde ${SERVIDOR_AVISOS}: canal ${canales("es")[0]?.tema ?? ""} para toda Europa y drones-<país en inglés> para cada país. Cómo suscribirse: ${direccionCompleta(RUTAS_AVISOS.es)}`,
     "",
     `Datos abiertos con licencia ${LICENCIA_DATOS} (${LICENCIA_DATOS_URL}) para la compilación del observatorio (incidentes, estados, clasificaciones y cifras): ${ORIGEN}${RUTAS.metodologia.es}#datos-abiertos. Las frases citadas siguen siendo de sus autores; el tráfico aéreo medido (trafico_aereo) se ofrece con ODbL 1.0.`,
     "",

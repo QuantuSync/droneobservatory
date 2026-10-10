@@ -153,6 +153,15 @@ principal() {
       else
         echo "aviso: no se enviaron todos los avisos de ntfy (se reintentan en la siguiente recogida)"
       fi
+      # IndexNow (recogida/indexnow.py, docs/posicionamiento.md): las páginas de incidentes nuevas
+      # o cambiadas que ya están en la web, para Bing y los buscadores que lo usan. Un fallo no
+      # cambia el código de la recogida: lo que no salió se envía en la siguiente.
+      if timeout "$TOPE_INDEXNOW_SEGUNDOS" "$python" -m recogida.indexnow enviar \
+        --datos "$INDEXNOW_DATOS"; then
+        echo "indexnow al día"
+      else
+        echo "aviso: IndexNow sin enviar del todo (se reintenta en la siguiente recogida)"
+      fi
     else
       echo "aviso: los ficheros no se publicaron en el almacén"
       if [ "$modo_pub" = almacen ] && [ "$codigo" -eq 0 ]; then

@@ -1,0 +1,7 @@
+{
+  "_descripcion": "IndexNow (docs/posicionamiento.md): avisa a Bing y a los demás buscadores que lo usan de las páginas de incidentes nuevas o cambiadas al final de cada recogida que publica bien (recogida/indexnow.py). La clave es pública por diseño: la web la sirve en /<clave>.txt (web/public).",
+  "clave": "834d45ef4d132635166abb6e509ed40e",
+  "sitio": "https://droneobservatory.eu",
+  "punto": "https://api.indexnow.org/indexnow",
+  "lote": 1000
+}

@@ -53,6 +53,8 @@ def test_caddy_solo_lets_encrypt_y_al_ntfy_local() -> None:
     assert "ntfy.droneobservatory.eu {" in caddy
     assert "cert_issuer acme" in caddy
     assert "reverse_proxy 127.0.0.1:2586" in caddy
+    # El servidor de avisos no se indexa (docs/posicionamiento.md).
+    assert 'X-Robots-Tag "noindex, nofollow"' in caddy
 
 
 def test_topes_de_memoria_y_puertos() -> None:
