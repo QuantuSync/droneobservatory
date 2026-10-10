@@ -59,6 +59,13 @@ los rastreadores verificados. No había nada que ajustar. Comprobado con peticio
 - Un incidente nuevo entra en el sitemap cuando Vercel ha reconstruido la web, unos minutos después
   de publicar: se avisa en la recogida siguiente.
 - El ensayo de la recogida (`servidor/ensayo.sh`) dice cuántas direcciones enviaría, sin enviar.
+- Envío inicial: 10 de octubre de 2026, 17:35 UTC, 974 direcciones, respuesta 200. El primer
+  intento, un minuto antes, recibió 403 («clave no válida»): IndexNow tarda un poco en dar por
+  buena una clave nueva. No hace falta hacer nada: lo que no sale se reintenta en la recogida
+  siguiente. El primer cambio de `recogida.sh` corre una recogida después de fusionar (bash lee
+  el script antes de poner el clon al día), así que el envío inicial se lanzó a mano con
+  `sudo -u eodi bash -c "cd /home/eodi/droneobservatory && .venv/bin/python -m recogida.indexnow
+  enviar --datos /home/eodi/datos/indexnow"`.
 
 ### Cada tipo de página
 
@@ -148,4 +155,24 @@ eodi-recogida | grep -i indexnow`).
 
 ## Medidas
 
-Ver la tabla en el PR del posicionamiento y la sección siguiente, rellenada al terminar.
+Lighthouse 13.5 en este equipo (Chrome sin ventana, móvil simulado con la limitación de CPU y red
+de Lighthouse, y escritorio), contra producción, el 10 de octubre de 2026 antes y después del PR
+#202. Página de incidente: `/EODI-2026-00500`.
+
+| Página | Rendimiento | LCP | TBT | Accesibilidad · Buenas prácticas · SEO |
+| --- | --- | --- | --- | --- |
+| Portada, móvil | 73 → 71 | 2,1 s → 2,4 s | 1 260 → 1 240 ms | 100 · 100 · 100 |
+| Portada, escritorio | 100 → 99 | 0,5 s → 0,5 s | 20 → 100 ms | 100 · 100 · 100 |
+| Incidente, móvil | **52 → 71** | **6,2 s → 2,8 s** | 1 220 → 1 150 ms | 100 · 100 · 100 |
+| Incidente, escritorio | 99 → 99 | 0,9 s → 0,7 s | 0 → 20 ms | 100 · 100 · 100 |
+
+La ficha del incidente se pintaba tarde porque su JSON se pedía después de cargar el código; con la
+precarga llega en paralelo. Las diferencias de la portada y del escritorio están dentro de lo que
+varía Lighthouse de una pasada a otra. El TBT del móvil (unos 1,2 s) es el arranque del mapa
+(MapLibre) y queda como estaba.
+
+Validador de schema.org (https://validator.schema.org) sobre la portada (es, en), un incidente, la
+metodología, una versión de los datos, `/avisos` y una lista por año: 0 errores y 0 avisos.
+
+Sitemap contra `sitemap.xsd` (`herramientas/validar_sitemap.py`): antes, errores en todos los
+`lastmod` y sin `x-default`; después, 974 direcciones sin errores.
