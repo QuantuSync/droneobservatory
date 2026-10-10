@@ -3,7 +3,8 @@
 // Ucrania, sin resultados (el mapa no se mueve y se avisa) y sin filtros. Cerrar con la equis o
 // con Escape no mueve el mapa; tras aplicar, el foco vuelve a «Filtros»; el panel tiene una sola
 // barra de desplazamiento. Deja capturas en docs/capturas/filtros (CAPTURAS para otra carpeta).
-// Va contra producción por defecto; con BASE=http://localhost:4173, contra el servidor local.
+// Va contra producción por defecto; con BASE=http://localhost:4173, contra el servidor local; con
+// BASE=<vista previa> y BYPASS=<clave>, contra una vista previa protegida.
 import { join } from "node:path";
 
 import { expect, test } from "@playwright/test";
@@ -70,6 +71,8 @@ for (const tamano of TAMANOS) {
       viewport: { width: tamano.width, height: tamano.height },
       hasTouch: tamano.tactil,
       ...(baseURL === undefined ? {} : { baseURL }),
+      // Vista previa protegida: la clave de acceso de Vercel en BYPASS.
+      ...(process.env.BYPASS === undefined ? {} : { extraHTTPHeaders: { "x-vercel-protection-bypass": process.env.BYPASS } }),
     });
     await preparar(contexto, baseURL);
     const pagina = await contexto.newPage();
@@ -119,6 +122,9 @@ for (const tamano of TAMANOS) {
     await abrir(pagina);
     await pagina.locator("[data-filtros]:visible select").last().selectOption(pais);
     await expect(pagina.locator("[data-filtros]:visible select").last()).toHaveAttribute("data-activo", "");
+    await expect
+      .poll(() => pagina.locator("[data-filtros]:visible select").last().evaluate((e) => getComputedStyle(e).color))
+      .toBe("rgb(6, 10, 18)");
     if (tamano.nombre === "360x800") await pagina.screenshot({ path: join(CAPTURAS, `despues-panel-${tamano.nombre}.png`) });
     // Con el teclado: Tab hasta «Aplicar» y Espacio.
     await pagina.locator("[data-aplicar]:visible").focus();

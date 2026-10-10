@@ -114,13 +114,15 @@ export function Filtros(props: Props) {
   }
 
   const campo = "control min-h-11 rounded-sm border border-linea px-2 text-xs text-texto esc:min-h-8";
+  // Un desplegable con valor va en claro (estilos.css): sin el color de texto claro del campo.
+  const campoActivo = (activo: boolean) => (activo ? campo.replace(" text-texto", "") : campo);
   return (
     <div role="group" aria-label={t.filtros.titulo} className="flex flex-col gap-4" data-filtros="">
       <div className="flex flex-col gap-1.5">
         <label className="flex flex-col gap-1.5 text-xs">
           <span className="text-secundario">{t.filtros.recientes}</span>
           <select
-            className={`${campo} w-full`}
+            className={`${campoActivo(clave !== "todo")} w-full`}
             value={clave}
             data-activo={clave !== "todo" ? "" : undefined}
             data-periodo=""
@@ -200,7 +202,7 @@ export function Filtros(props: Props) {
       <label className="flex flex-col gap-1.5 text-xs">
         <span className="text-secundario">{t.filtros.pais}</span>
         <select
-          className={`${campo} w-full`}
+          className={`${campoActivo(elegido !== "")} w-full`}
           value={elegido}
           data-activo={elegido !== "" ? "" : undefined}
           onChange={(evento) =>
