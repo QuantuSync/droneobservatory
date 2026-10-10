@@ -32,11 +32,11 @@ describe("selección en los filtros", () => {
   const css = readFileSync(join(raiz, "estilos.css"), "utf-8");
   const color = (nombre: string) => css.match(new RegExp(`${nombre}:\\s*(#[0-9a-f]{6})`, "i"))?.[1] ?? "";
 
-  it("lo elegido va en claro con texto oscuro, para pulsados y desplegables con valor", () => {
-    const inicio = css.indexOf('[data-filtros] .control[aria-pressed="true"],');
+  it("lo elegido va en claro con texto oscuro, para pulsados y desplegables con valor (regla común)", () => {
+    const inicio = css.indexOf('.control:is([aria-pressed="true"]');
     expect(inicio).toBeGreaterThan(-1);
     const bloque = css.slice(inicio, css.indexOf("}", inicio));
-    expect(bloque).toContain("[data-filtros] .control[data-activo]");
+    expect(bloque).toContain("[data-activo]");
     expect(bloque).toContain("color: var(--color-fondo)");
     expect(bloque).toContain("background-color: var(--acento)");
   });
@@ -106,5 +106,38 @@ describe("caja de lo que queda a la vista", () => {
     });
     const [lon, lat] = MEDIA_REGION_GRADOS;
     expect(caja).toEqual([30.5 - lon, 50.4 - lat, 30.5 + lon, 50.4 + lat]);
+  });
+
+  it("de la capa de Ucrania, las regiones rusas lejanas no entran en el encuadre (sí las fronterizas y Crimea)", () => {
+    const caja = cajaDeLoVisible({
+      ...nada,
+      ucrania: {
+        intensidad: new Map([
+          ["UA-43", 3],
+          ["RU-BRY", 4],
+          ["RU-ROS", 1],
+          ["RU-BA", 6],
+          ["RU-MOW", 2],
+        ]),
+        centros: { "UA-43": [34.2, 45.3], "RU-BRY": [33.4, 52.9], "RU-ROS": [41.2, 47.7], "RU-BA": [56.5, 54.2], "RU-MOW": [37.6, 55.75] },
+        impactos: [
+          ["i", 1, 0, 36.2, 49.9, 0, 0, 0, "UA-63"],
+          ["j", 1, 1, 55.9, 54.7, 0, 0, 0, "RU-BA"],
+        ],
+        corredores: [{ desde: [32.9, 54.3], hasta: [30.5, 50.4] } as never],
+      },
+    });
+    const [lon, lat] = MEDIA_REGION_GRADOS;
+    expect(caja).toEqual([30.5, 45.3 - lat, 41.2 + lon, 52.9 + lat]);
+  });
+
+  it("con incidentes de Europa a la vista, el encuadre los sigue incluyendo", () => {
+    const caja = cajaDeLoVisible({
+      incidentes: [incidente(4.5, 51)],
+      ucrania: { intensidad: new Map([["RU-BA", 6], ["UA-30", 1]]), centros: { "RU-BA": [56.5, 54.2], "UA-30": [30.5, 50.4] }, impactos: [], corredores: null },
+      gnss: null,
+    });
+    const [lon, lat] = MEDIA_REGION_GRADOS;
+    expect(caja).toEqual([4.5, 50.4 - lat, 30.5 + lon, 50.4 + lat]);
   });
 });
