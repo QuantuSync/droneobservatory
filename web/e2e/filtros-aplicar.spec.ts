@@ -125,7 +125,7 @@ for (const tamano of TAMANOS) {
     await expect
       .poll(() => pagina.locator("[data-filtros]:visible select").last().evaluate((e) => getComputedStyle(e).color))
       .toBe("rgb(6, 10, 18)");
-    if (tamano.nombre === "360x800") await pagina.screenshot({ path: join(CAPTURAS, `despues-panel-${tamano.nombre}.png`) });
+    if (tamano.nombre === "360x800") await pagina.screenshot({ path: join(CAPTURAS, `despues-panel-pais-${tamano.nombre}.png`) });
     // Con el teclado: Tab hasta «Aplicar» y Espacio.
     await pagina.locator("[data-aplicar]:visible").focus();
     await pagina.keyboard.press("Space");
