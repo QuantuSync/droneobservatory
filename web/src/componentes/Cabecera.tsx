@@ -38,7 +38,8 @@ export function Cabecera({ t, centro, derecha }: Props) {
         </h1>
       </div>
       <div className="flex flex-1 items-center justify-center gap-3">{centro}</div>
-      <div className="flex shrink-0 items-center gap-0.5">{derecha}</div>
+      {/* Si no cabe en la línea (tableta), lo de la derecha pasa a la siguiente sin cortarse. */}
+      <div className="flex max-w-full shrink-0 flex-wrap items-center gap-x-0.5 gap-y-1">{derecha}</div>
     </header>
   );
 }
