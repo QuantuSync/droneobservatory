@@ -1,4 +1,5 @@
 import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { RefObject } from "react";
 
 import { LineaNovedades, RecorridoNovedades } from "./componentes/Novedades.tsx";
 import { Ayuda } from "./componentes/Ayuda.tsx";
@@ -396,6 +397,7 @@ export function App() {
   const refListaUcrania = useRef<HTMLButtonElement>(null);
   const botonAvisos = useRef<HTMLButtonElement>(null);
   const botonAvisosMovil = useRef<HTMLButtonElement>(null);
+  const botonMenu = useRef<HTMLButtonElement>(null);
   const [noche, setNoche] = useState<number | null>(null);
   const [nochePausada, setNochePausada] = useState(false);
   const [menu, setMenu] = useState(false);
@@ -892,16 +894,17 @@ export function App() {
     () => cambiarBusqueda(conSubcapasDe(escribirSeleccion(SIN_FILTROS, TODO), busqueda)),
     [cambiarBusqueda, busqueda],
   );
-  // «Aplicar» en los filtros: la única vez que cerrar algo mueve el mapa. Los filtros ya están
-  // puestos; cierra el panel, encuadra lo que queda a la vista en las capas encendidas y devuelve
-  // el foco al botón «Filtros». Si no queda nada, el mapa no se mueve y se avisa.
-  const [avisoFiltros, setAvisoFiltros] = useState<{ n: number } | null>(null);
+  // «Aplicar» (en los filtros, en el menú del teléfono y en la hoja de Ucrania): la única vez que
+  // cerrar algo mueve el mapa. Lo elegido ya está puesto; cierra el panel, encuadra lo que queda a
+  // la vista en las capas encendidas y devuelve el foco al botón que abrió el panel. Si no queda
+  // nada, el mapa no se mueve y se avisa (con las capas apagadas, que no hay nada a la vista).
+  const [avisoFiltros, setAvisoFiltros] = useState<{ n: number; capas: boolean } | null>(null);
   useEffect(() => {
     if (avisoFiltros === null) return undefined;
     const temporizador = window.setTimeout(() => setAvisoFiltros(null), MS_AVISO_FILTROS);
     return () => window.clearTimeout(temporizador);
   }, [avisoFiltros]);
-  const aplicarFiltros = useCallback(() => {
+  const aplicarEncuadre = useCallback((boton: RefObject<HTMLButtonElement | null>) => {
     const caja = cajaDeLoVisible({
       incidentes: capas.incidentes || capas.densidad || capas.presion ? delPeriodo : null,
       ucrania:
@@ -917,7 +920,9 @@ export function App() {
     });
     setHojaPropia(null);
     setDesplegado(null);
-    if (caja === null) setAvisoFiltros((anterior) => ({ n: (anterior?.n ?? 0) + 1 }));
+    setMenu(false);
+    const algunaCapa = capas.incidentes || capas.densidad || capas.presion || capas.ucrania || capas.gnss;
+    if (caja === null) setAvisoFiltros((anterior) => ({ n: (anterior?.n ?? 0) + 1, capas: !algunaCapa }));
     else {
       setAvisoFiltros(null);
       setVuelo((anterior) => ({
@@ -926,8 +931,10 @@ export function App() {
         n: (anterior?.n ?? 0) + 1,
       }));
     }
-    window.requestAnimationFrame(() => botonFiltros.current?.focus({ preventScroll: true }));
+    window.requestAnimationFrame(() => boton.current?.focus({ preventScroll: true }));
   }, [capas, delPeriodo, ucraniaActiva, intensidad, impactos, corredoresEnMapa, gnssActual]);
+  const aplicarFiltros = useCallback(() => aplicarEncuadre(botonFiltros), [aplicarEncuadre]);
+  const aplicarMenu = useCallback(() => aplicarEncuadre(botonMenu), [aplicarEncuadre]);
 
   // Reproducción de la guerra noche a noche: se puede pausar, reanudar y detener. Al llegar a
   // la última noche se queda en ella, en pausa; reanudar desde ahí vuelve a empezar.
@@ -2039,7 +2046,7 @@ export function App() {
       {/* Lo lee el lector de pantalla por la región de estado de la raíz. */}
       {avisoFiltros !== null && (
         <p aria-hidden="true" data-sin-resultados="" className="flotante px-4 py-2 text-center text-sm text-texto">
-          {t.filtros.sinResultados}
+          {avisoFiltros.capas ? t.filtros.nadaALaVista : t.filtros.sinResultados}
         </p>
       )}
       {nocheActual !== null && (
@@ -2166,7 +2173,7 @@ export function App() {
           {fichaCerrada === 0 ? "" : `${t.capaUcrania.fichaCerrada}${"\u200b".repeat(fichaCerrada % 2)}`}
         </p>
         <p className="sr-only" aria-live="polite" data-aviso-filtros="">
-          {avisoFiltros === null ? "" : t.filtros.sinResultados}
+          {avisoFiltros === null ? "" : avisoFiltros.capas ? t.filtros.nadaALaVista : t.filtros.sinResultados}
         </p>
       </div>
 
@@ -2279,6 +2286,7 @@ export function App() {
               estado={estadoDatos(true)}
               menuAbierto={menu}
               onMenu={() => setMenu(true)}
+              referenciaMenu={botonMenu}
               avisos={
                 <BotonAvisos
                   idioma={idioma}
@@ -2440,6 +2448,9 @@ export function App() {
                     cerrar={t.feed.cerrar}
                   />
                   <div className="min-h-0 flex-1 overflow-y-auto">{listaUcrania(true)}</div>
+                  <div className="shrink-0 border-t border-linea px-4 py-2">
+                    <BotonAplicar t={t} onAplicar={aplicarMenu} />
+                  </div>
                 </HojaInferior>
               </div>
             )}
@@ -2461,7 +2472,7 @@ export function App() {
       )}
 
       {movil && (
-        <MenuMovil t={t} abierto={menu} onCerrar={() => setMenu(false)}>
+        <MenuMovil t={t} abierto={menu} onCerrar={() => setMenu(false)} pie={<BotonAplicar t={t} onAplicar={aplicarMenu} />}>
           <SeccionMenu rotulo={t.marcador.etiqueta}>
             <Marcador
               t={t}

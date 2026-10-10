@@ -141,6 +141,7 @@ export const en: Textos = {
     quitar: "Clear filters",
     aplicar: "Apply",
     sinResultados: "No results with these filters",
+    nadaALaVista: "Nothing to show: turn on a layer",
     recientes: "Period",
     activos: (n) => `${n} active`,
     zona: "Where",
