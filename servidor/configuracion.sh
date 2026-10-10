@@ -398,6 +398,23 @@ CALENDARIO_VIGILANCIA="*-*-* *:00/5:30 UTC"
 VIGILANCIA_MEMORIA="300M"
 TOPE_VIGILANCIA_MINUTOS=4
 
+# --- Avisos públicos con ntfy (servidor/ntfy.sh, recogida/avisos.py, docs/avisos.md) -----------
+# Servidor ntfy propio en https://ntfy.droneobservatory.eu, con Caddy delante para el HTTPS. Al
+# final de cada recogida que publica bien, recogida/avisos.py envía los avisos nuevos con el token
+# del usuario «observatorio» y anota lo enviado en $AVISOS_DATOS.
+NTFY_DOMINIO="ntfy.droneobservatory.eu"
+NTFY_ESCUCHA="127.0.0.1:2586"
+NTFY_REPOSITORIO_APT="https://archive.ntfy.sh/apt"
+NTFY_CLAVE_APT="https://archive.ntfy.sh/apt/keyring.gpg"
+NTFY_HUELLA_APT="55BA774A6F5EE67431E4B6B7CFDB962D4F1EC4AF"
+NTFY_MEMORIA="300M"
+CADDY_MEMORIA="300M"
+NTFY_TOKEN="$SECRETOS/ntfy_observatorio"
+# Contraseña del usuario «lucas» (solo en el equipo del dueño; la usa reconstruir.sh).
+LOCAL_NTFY_LUCAS="$LOCAL_SECRETOS/ntfy_lucas.txt"
+AVISOS_DATOS="${EODI_AVISOS_DATOS:-$CASA/datos/avisos}"
+TOPE_AVISOS_SEGUNDOS=120
+
 # --- Reinicio tras las actualizaciones (servidor/reinicio.sh, recogida/reinicio.py) ------------
 # Las actualizaciones de seguridad no reinician solas (Automatic-Reboot "false" en endurecer.sh):
 # si una lo pide, eodi-reinicio reinicia cuando no corta nada (fuera de los minutos 12 a 40, sin

@@ -1,0 +1,19 @@
+# Caddy delante de ntfy (servidor/ntfy.sh lo copia a /etc/caddy/Caddyfile): HTTPS con un
+# certificado de Let's Encrypt que Caddy pide y renueva solo, y el puerto 80 que redirige a 443.
+{
+	# Solo Let's Encrypt: el registro CAA del dominio no admite otras autoridades.
+	cert_issuer acme
+}
+
+ntfy.droneobservatory.eu {
+	encode gzip
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options "nosniff"
+		-Server
+	}
+	reverse_proxy 127.0.0.1:2586 {
+		# Las suscripciones del navegador y de las aplicaciones son conexiones abiertas.
+		flush_interval -1
+	}
+}

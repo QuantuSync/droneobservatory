@@ -204,3 +204,26 @@ def test_ni_en_la_hora_de_la_recogida_ni_con_trabajos_ni_sin_neptun(tmp_path: Pa
     assert "trafico" in reinicio.decidir(AHORA, datos, lambda: ["eodi-trafico.service"])[1]
     viejo = flujo(tmp_path / "otro", [{"type": "heartbeat"}], AHORA - timedelta(hours=2))
     assert "NEPTUN" in reinicio.decidir(AHORA, viejo, lambda: [])[1]
+
+
+def test_ntfy_sin_responder_y_avisos_que_fallan_dos_recogidas(tmp_path: Path) -> None:
+    secretos, datos = preparar(
+        tmp_path, AHORA - timedelta(seconds=20), AHORA - timedelta(minutes=47)
+    )
+    sistema = Sistema(0, AHORA - timedelta(minutes=17), [])
+    copia = lambda: AHORA - timedelta(minutes=18)  # noqa: E731
+    # Sin el token de ntfy (otro servidor, o antes de instalarlo), no se mira.
+    salud, _ = vigilancia.componer(AHORA, secretos, datos, tmp_path, sistema, copia, lambda: False)
+    assert salud["problemas"] == []
+    (secretos / "ntfy_observatorio").write_text("tk_x", encoding="utf-8")
+    (secretos / "avisos.json").write_text(json.dumps({"fallos_seguidos": 1}), encoding="utf-8")
+    salud, _ = vigilancia.componer(AHORA, secretos, datos, tmp_path, sistema, copia, lambda: True)
+    assert salud["problemas"] == []
+    (secretos / "avisos.json").write_text(
+        json.dumps({"fallos_seguidos": 2, "error": "URLError: sin red"}), encoding="utf-8"
+    )
+    salud, _ = vigilancia.componer(AHORA, secretos, datos, tmp_path, sistema, copia, lambda: False)
+    assert {p["id"] for p in salud["problemas"]} == {"ntfy", "avisos"}
+    assert "2 recogidas seguidas" in next(
+        p["frase"] for p in salud["problemas"] if p["id"] == "avisos"
+    )

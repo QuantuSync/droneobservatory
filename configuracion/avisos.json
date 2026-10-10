@@ -1,0 +1,308 @@
+{
+  "_descripcion": "Canal público de avisos con ntfy (docs/avisos.md): servidor, tema general y un tema por país cubierto (configuracion/paises_europa.json), con su nombre en español y en inglés, su zona horaria y si es de la OTAN. Lo leen recogida/avisos.py, servidor/ntfy.sh y la web.",
+  "servidor": "https://ntfy.droneobservatory.eu",
+  "sitio": "https://droneobservatory.eu",
+  "icono": "https://droneobservatory.eu/marca/aviso-256.png",
+  "general": {
+    "tema": "general",
+    "es": "General",
+    "en": "General"
+  },
+  "ventana_horas": 72,
+  "paises": {
+    "AD": {
+      "tema": "andorra",
+      "es": "Andorra",
+      "en": "Andorra",
+      "zona_horaria": "Europe/Andorra",
+      "otan": false
+    },
+    "AL": {
+      "tema": "albania",
+      "es": "Albania",
+      "en": "Albania",
+      "zona_horaria": "Europe/Tirane",
+      "otan": true
+    },
+    "AT": {
+      "tema": "austria",
+      "es": "Austria",
+      "en": "Austria",
+      "zona_horaria": "Europe/Vienna",
+      "otan": false
+    },
+    "BA": {
+      "tema": "bosnia-and-herzegovina",
+      "es": "Bosnia y Herzegovina",
+      "en": "Bosnia and Herzegovina",
+      "zona_horaria": "Europe/Sarajevo",
+      "otan": false
+    },
+    "BE": {
+      "tema": "belgium",
+      "es": "Bélgica",
+      "en": "Belgium",
+      "zona_horaria": "Europe/Brussels",
+      "otan": true
+    },
+    "BG": {
+      "tema": "bulgaria",
+      "es": "Bulgaria",
+      "en": "Bulgaria",
+      "zona_horaria": "Europe/Sofia",
+      "otan": true
+    },
+    "CH": {
+      "tema": "switzerland",
+      "es": "Suiza",
+      "en": "Switzerland",
+      "zona_horaria": "Europe/Zurich",
+      "otan": false
+    },
+    "CY": {
+      "tema": "cyprus",
+      "es": "Chipre",
+      "en": "Cyprus",
+      "zona_horaria": "Asia/Nicosia",
+      "otan": false
+    },
+    "CZ": {
+      "tema": "czechia",
+      "es": "Chequia",
+      "en": "Czechia",
+      "zona_horaria": "Europe/Prague",
+      "otan": true
+    },
+    "DE": {
+      "tema": "germany",
+      "es": "Alemania",
+      "en": "Germany",
+      "zona_horaria": "Europe/Berlin",
+      "otan": true
+    },
+    "DK": {
+      "tema": "denmark",
+      "es": "Dinamarca",
+      "en": "Denmark",
+      "zona_horaria": "Europe/Copenhagen",
+      "otan": true
+    },
+    "EE": {
+      "tema": "estonia",
+      "es": "Estonia",
+      "en": "Estonia",
+      "zona_horaria": "Europe/Tallinn",
+      "otan": true
+    },
+    "ES": {
+      "tema": "spain",
+      "es": "España",
+      "en": "Spain",
+      "zona_horaria": "Europe/Madrid",
+      "otan": true
+    },
+    "FI": {
+      "tema": "finland",
+      "es": "Finlandia",
+      "en": "Finland",
+      "zona_horaria": "Europe/Helsinki",
+      "otan": true
+    },
+    "FR": {
+      "tema": "france",
+      "es": "Francia",
+      "en": "France",
+      "zona_horaria": "Europe/Paris",
+      "otan": true
+    },
+    "GB": {
+      "tema": "united-kingdom",
+      "es": "Reino Unido",
+      "en": "United Kingdom",
+      "zona_horaria": "Europe/London",
+      "otan": true
+    },
+    "GR": {
+      "tema": "greece",
+      "es": "Grecia",
+      "en": "Greece",
+      "zona_horaria": "Europe/Athens",
+      "otan": true
+    },
+    "HR": {
+      "tema": "croatia",
+      "es": "Croacia",
+      "en": "Croatia",
+      "zona_horaria": "Europe/Zagreb",
+      "otan": true
+    },
+    "HU": {
+      "tema": "hungary",
+      "es": "Hungría",
+      "en": "Hungary",
+      "zona_horaria": "Europe/Budapest",
+      "otan": true
+    },
+    "IE": {
+      "tema": "ireland",
+      "es": "Irlanda",
+      "en": "Ireland",
+      "zona_horaria": "Europe/Dublin",
+      "otan": false
+    },
+    "IS": {
+      "tema": "iceland",
+      "es": "Islandia",
+      "en": "Iceland",
+      "zona_horaria": "Atlantic/Reykjavik",
+      "otan": true
+    },
+    "IT": {
+      "tema": "italy",
+      "es": "Italia",
+      "en": "Italy",
+      "zona_horaria": "Europe/Rome",
+      "otan": true
+    },
+    "LI": {
+      "tema": "liechtenstein",
+      "es": "Liechtenstein",
+      "en": "Liechtenstein",
+      "zona_horaria": "Europe/Vaduz",
+      "otan": false
+    },
+    "LT": {
+      "tema": "lithuania",
+      "es": "Lituania",
+      "en": "Lithuania",
+      "zona_horaria": "Europe/Vilnius",
+      "otan": true
+    },
+    "LU": {
+      "tema": "luxembourg",
+      "es": "Luxemburgo",
+      "en": "Luxembourg",
+      "zona_horaria": "Europe/Luxembourg",
+      "otan": true
+    },
+    "LV": {
+      "tema": "latvia",
+      "es": "Letonia",
+      "en": "Latvia",
+      "zona_horaria": "Europe/Riga",
+      "otan": true
+    },
+    "MC": {
+      "tema": "monaco",
+      "es": "Mónaco",
+      "en": "Monaco",
+      "zona_horaria": "Europe/Monaco",
+      "otan": false
+    },
+    "MD": {
+      "tema": "moldova",
+      "es": "Moldavia",
+      "en": "Moldova",
+      "zona_horaria": "Europe/Chisinau",
+      "otan": false
+    },
+    "ME": {
+      "tema": "montenegro",
+      "es": "Montenegro",
+      "en": "Montenegro",
+      "zona_horaria": "Europe/Podgorica",
+      "otan": true
+    },
+    "MK": {
+      "tema": "north-macedonia",
+      "es": "Macedonia del Norte",
+      "en": "North Macedonia",
+      "zona_horaria": "Europe/Skopje",
+      "otan": true
+    },
+    "MT": {
+      "tema": "malta",
+      "es": "Malta",
+      "en": "Malta",
+      "zona_horaria": "Europe/Malta",
+      "otan": false
+    },
+    "NL": {
+      "tema": "netherlands",
+      "es": "Países Bajos",
+      "en": "Netherlands",
+      "zona_horaria": "Europe/Amsterdam",
+      "otan": true
+    },
+    "NO": {
+      "tema": "norway",
+      "es": "Noruega",
+      "en": "Norway",
+      "zona_horaria": "Europe/Oslo",
+      "otan": true
+    },
+    "PL": {
+      "tema": "poland",
+      "es": "Polonia",
+      "en": "Poland",
+      "zona_horaria": "Europe/Warsaw",
+      "otan": true
+    },
+    "PT": {
+      "tema": "portugal",
+      "es": "Portugal",
+      "en": "Portugal",
+      "zona_horaria": "Europe/Lisbon",
+      "otan": true
+    },
+    "RO": {
+      "tema": "romania",
+      "es": "Rumanía",
+      "en": "Romania",
+      "zona_horaria": "Europe/Bucharest",
+      "otan": true
+    },
+    "RS": {
+      "tema": "serbia",
+      "es": "Serbia",
+      "en": "Serbia",
+      "zona_horaria": "Europe/Belgrade",
+      "otan": false
+    },
+    "SE": {
+      "tema": "sweden",
+      "es": "Suecia",
+      "en": "Sweden",
+      "zona_horaria": "Europe/Stockholm",
+      "otan": true
+    },
+    "SI": {
+      "tema": "slovenia",
+      "es": "Eslovenia",
+      "en": "Slovenia",
+      "zona_horaria": "Europe/Ljubljana",
+      "otan": true
+    },
+    "SK": {
+      "tema": "slovakia",
+      "es": "Eslovaquia",
+      "en": "Slovakia",
+      "zona_horaria": "Europe/Bratislava",
+      "otan": true
+    },
+    "SM": {
+      "tema": "san-marino",
+      "es": "San Marino",
+      "en": "San Marino",
+      "zona_horaria": "Europe/San_Marino",
+      "otan": false
+    },
+    "XK": {
+      "tema": "kosovo",
+      "es": "Kosovo",
+      "en": "Kosovo",
+      "zona_horaria": "Europe/Belgrade",
+      "otan": false
+    }
+  }
+}
