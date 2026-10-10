@@ -40,6 +40,7 @@ export function PanelLateral({ nombre, children }: PropsLateral) {
       ref={panel}
       tabIndex={-1}
       aria-label={nombre}
+      data-ficha=""
       className="superficie flex h-full w-[26rem] flex-col border-l outline-none"
     >
       {children}
@@ -55,6 +56,8 @@ interface PropsHoja {
   /** Cerrar la hoja: con la X o arrastrándola hacia abajo por debajo de la altura asomada. */
   onCerrar: () => void;
   children: ReactNode;
+  /** Lleva una ficha (no los filtros, «Europa ahora» o una lista): al cerrarla vuelve el foco. */
+  esFicha?: boolean;
 }
 
 /** Lo que se mueve el dedo antes de que cuente como arrastre y no como toque. */
@@ -95,7 +98,7 @@ function desplazable(desde: EventTarget | null, hoja: HTMLElement): HTMLElement 
  *   el contenido ya está arriba del todo.
  * - Los gestos que empiezan en la hoja no llegan al mapa.
  */
-export function HojaInferior({ t, nombre, altura, onAltura, onCerrar, children }: PropsHoja) {
+export function HojaInferior({ t, nombre, altura, onAltura, onCerrar, children, esFicha = false }: PropsHoja) {
   const hoja = useRef<HTMLElement>(null);
   const gesto = useRef<Gesto | null>(null);
   // Un arrastre termina con un clic: ese clic no debe pulsar nada más (ni la X).
@@ -236,6 +239,7 @@ export function HojaInferior({ t, nombre, altura, onAltura, onCerrar, children }
       ref={hoja}
       tabIndex={-1}
       aria-label={nombre}
+      data-ficha={esFicha ? "" : undefined}
       data-altura={altura}
       onPointerDown={alApretar}
       onPointerMove={alArrastrar}

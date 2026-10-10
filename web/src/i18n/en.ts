@@ -187,6 +187,33 @@ export const en: Textos = {
   desplegable: {
     escape: "Press Escape to close.",
   },
+  capaUcrania: {
+    regionesALaVista: (n) =>
+      n === 1 ? "1 region with attacks in view (Ukraine layer)" : `${n} regions with attacks in view (Ukraine layer)`,
+    region: (nombre, ataques) => `${nombre} · ${ataques} ${ataques === "1" ? "attack" : "attacks"} in the period`,
+    impactosALaVista: (mostrados, total) =>
+      mostrados === total
+        ? `${total} ${total === 1 ? "place hit" : "places hit"} in view, most recent first`
+        : `The ${mostrados} most recent places hit of the ${total} in view: zoom in or use the layer list to see others`,
+    impacto: (region, fecha, parte, foco) =>
+      `Place hit · ${region} · ${fecha}${parte ? " · claim by a party" : ""}${foco ? " · thermal hotspot" : ""}`,
+    celdasALaVista: (mostradas, total) =>
+      mostradas === total
+        ? `${total} GPS interference ${total === 1 ? "cell" : "cells"} in view, most affected first`
+        : `The ${mostradas} most affected GPS interference cells of the ${total} in view`,
+    ciudadesALaVista: (n) => (n === 1 ? "1 city with night-light data in view" : `${n} cities with night-light data in view`),
+    boton: "List",
+    abrir: "Ukraine layer list",
+    titulo: "Ukraine layer as a list",
+    explicacion: "The same as the map for the selected period. Choosing an item opens its record and takes the map to it.",
+    regionesUcrania: (n) => `Regions of Ukraine with attacks · ${n}`,
+    regionesRusia: (n) => `Regions of Russia with attacks · ${n}`,
+    impactos: (mostrados, total) =>
+      mostrados === total ? `Places hit · ${total}` : `Latest places hit · ${mostrados} of ${total}`,
+    corredores: (n) => `Corridors · ${n}`,
+    vacia: "Nothing to show for the selected period.",
+    fichaCerrada: "Record closed",
+  },
   directo: {
     etiqueta: "Airport · live detection",
     estado: {
@@ -477,7 +504,9 @@ export const en: Textos = {
       "With focus on the map, the arrow keys pan and the plus and minus keys zoom. After the " +
       "map, the Tab key goes through the incidents in view, most recent first: each one is " +
       "marked on the map and Enter opens its record. The incident list opens the same records " +
-      "without using the map.",
+      "without using the map. With the Ukraine layer on, before the incidents Tab goes through its " +
+      "regions with attacks, its places hit and everything else that has a record, in the same way, " +
+      "and the layer's «List» button gives the whole layer as a list.",
     aLaVista: (n) => (n === 1 ? "1 incident in view on the map" : `${n} incidents in view on the map`),
     grupo: (n) => (n === 1 ? "1 incident: zoom in to see it" : `${n} incidents: zoom in to see them`),
     pila: (n) => `${n} incidents at this exact spot: tap to choose one`,
@@ -1849,6 +1878,10 @@ export const en: Textos = {
       nubes: (pct) => `${pct}% cloud over the crop`,
       producto: (lado) => `Sentinel-2 L2A, natural colour, 10 m per pixel, ${lado} km crop`,
       alt: (momento, fecha) => `Satellite image ${momento} the attack, ${fecha}`,
+      descripcion: (lado, antes, despues, hectareas) =>
+        `Two natural-colour satellite images of the same ${lado} km crop, one from ${antes} and one from ${despues}, ` +
+        `overlaid with a slider. The area that changed between them, ${hectareas} hectares, is outlined.`,
+      posicion: (despues) => `${100 - despues}% of the before image and ${despues}% of the after image in view`,
       zonaCambio: (hectareas, antes, despues) =>
         `Area with changes: ${hectareas} hectares · before ${antes} · after ${despues}`,
       ocultarContorno: "Hide outline",

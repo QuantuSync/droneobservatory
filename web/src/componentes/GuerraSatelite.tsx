@@ -71,9 +71,12 @@ const PASO_TECLADO = 5;
 export function Cortinilla({
   t,
   pareja,
+  descripcion,
 }: {
   t: Textos;
   pareja: ParejaSatelite;
+  /** Lo esencial de la pareja para el lector de pantalla (recorte, fechas, zona con cambios). */
+  descripcion?: string;
 }) {
   const [posicion, setPosicion] = useState(CORTINILLA_INICIAL);
   const [contorno, setContorno] = useState(true);
@@ -97,6 +100,7 @@ export function Cortinilla({
   const { antes, despues } = pareja;
   return (
     <figure className="mt-1" data-cortinilla="">
+      {descripcion !== undefined && <figcaption className="sr-only">{descripcion}</figcaption>}
       <div
         ref={caja}
         className="relative aspect-square w-full touch-none select-none overflow-hidden rounded-sm border border-linea bg-elevado"
@@ -177,6 +181,7 @@ export function Cortinilla({
         step={PASO_TECLADO}
         value={posicion}
         aria-label={t.satelite.imagen.deslizador}
+        aria-valuetext={t.satelite.imagen.posicion(100 - posicion)}
         className="mt-2 w-full accent-[var(--acento)]"
         onChange={(evento) => setPosicion(Number(evento.target.value))}
         onKeyDown={teclado}
@@ -210,7 +215,11 @@ export function ImagenesSatelite({ t, idioma, id }: { t: Textos; idioma: Idioma;
     <section className="mt-3" data-imagenes-satelite="">
       <h3 className="rotulo">{t.satelite.imagen.rotulo}</h3>
       <div>
-        <Cortinilla t={t} pareja={pareja} />
+        <Cortinilla
+          t={t}
+          pareja={pareja}
+          descripcion={t.satelite.imagen.descripcion(lado, dia(antes.fecha), dia(despues.fecha), hectareas)}
+        />
         <span className="block text-sm" data-zona-cambio="">
           {t.satelite.imagen.zonaCambio(hectareas, dia(antes.fecha), dia(despues.fecha))}
         </span>

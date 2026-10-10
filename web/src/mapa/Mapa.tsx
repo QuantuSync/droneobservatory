@@ -33,11 +33,13 @@ import type {
   FocoRegion,
   IncidenteResumen,
 } from "../datos/tipos.ts";
-import { fechaDia, pais as nombrePais, porcentaje, textoAtribuido } from "../i18n/index.ts";
+import { fechaDia, numero, pais as nombrePais, porcentaje, region as nombreRegion, textoAtribuido } from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
 import { ESCALA_UCRANIA, acento } from "../paleta.ts";
 import { opacidadDePerdida } from "../datos/guerraSatelite.ts";
 import type { Idioma } from "../sitio.ts";
+import { NADA_A_LA_VISTA, ucraniaALaVista } from "./tecladoUcrania.ts";
+import type { UcraniaALaVista } from "./tecladoUcrania.ts";
 import type { Periodo } from "../tiempo/dias.ts";
 import { movimientoReducido } from "./animacion.ts";
 import {
@@ -288,6 +290,8 @@ export interface PropsMapa {
   onRuta: (clave: string) => void;
   /** Recorrido de la incursión con la ficha abierta; null si no hay. */
   recorrido: GeoJSON.FeatureCollection | null;
+  /** [lon, lat] del centro de cada región de Ucrania y de Rusia; null sin la capa. */
+  centrosRegiones: Readonly<Record<string, [number, number]>> | null;
 }
 
 /** Radio del aro que señala en el mapa el incidente enfocado con el teclado. */
@@ -431,6 +435,7 @@ const VACIA_REALCE: GeoJSON.FeatureCollection = { type: "FeatureCollection", fea
 export default function Mapa(props: PropsMapa) {
   const { t, idioma, incidentes, episodios, capas, intensidad, noche, elegido } = props;
   const [aLaVista, setALaVista] = useState<readonly IncidenteResumen[]>([]);
+  const [ucraniaVista, setUcraniaVista] = useState<UcraniaALaVista>(NADA_A_LA_VISTA);
   const aroTeclado = useRef<HTMLDivElement>(null);
   const { focosUcrania, impactos, gnss, presion, avisos } = props;
   const { corredores, luzRegiones, ciudadesSinLuz, alumbrado, corredorElegido } = props;
@@ -544,6 +549,24 @@ export default function Mapa(props: PropsMapa) {
     aro.hidden = false;
     aro.style.transform = `translate(${punto.x - RADIO_ARO_PX}px, ${punto.y - RADIO_ARO_PX}px)`;
     ponerLetrero(textoDeIncidente(t, idioma, i), punto);
+  }
+
+  /**
+   * Con el teclado: un elemento de la capa de Ucrania (región, impacto, celda de GPS, ciudad), con
+   * el aro en su sitio y su letrero, como los incidentes. Sin ratón ni dedo: el mapa no se mueve.
+   */
+  function enfocarPunto(elemento: { lon: number; lat: number; texto: string } | null) {
+    const mapa = mapaRef.current;
+    const aro = aroTeclado.current;
+    if (mapa === null || aro === null || elemento === null) {
+      if (aro !== null) aro.hidden = true;
+      ponerLetrero(null, { x: 0, y: 0 });
+      return;
+    }
+    const punto = mapa.project([elemento.lon, elemento.lat]);
+    aro.hidden = false;
+    aro.style.transform = `translate(${punto.x - RADIO_ARO_PX}px, ${punto.y - RADIO_ARO_PX}px)`;
+    ponerLetrero(elemento.texto, punto);
   }
 
   /** Con el teclado: el arco del botón enfocado, realzado y con su letrero en su punto medio. */
@@ -1265,6 +1288,41 @@ export default function Mapa(props: PropsMapa) {
     };
   }, [listo, incidentes, capas.incidentes]);
 
+  // Lo que se ve de la capa de Ucrania (y de la de GPS), para recorrerlo con el teclado como los
+  // incidentes: se rehace cuando el mapa termina de moverse o cambian el periodo o las capas.
+  const { centrosRegiones } = props;
+  useEffect(() => {
+    const mapa = mapaRef.current;
+    if (!listo || mapa === null || (!capas.ucrania && !capas.gnss)) {
+      setUcraniaVista(NADA_A_LA_VISTA);
+      return undefined;
+    }
+    const actualizar = () => {
+      const limites = mapa.getBounds();
+      setUcraniaVista(
+        ucraniaALaVista(
+          {
+            ucrania: capas.ucrania,
+            satelite: capas.ucrania && capas.satelite,
+            gnss: capas.gnss,
+            intensidad,
+            centros: centrosRegiones,
+            impactos,
+            celdas: gnss,
+            ciudadesSinLuz,
+            alumbrado,
+          },
+          (lon, lat) => limites.contains([lon, lat]),
+        ),
+      );
+    };
+    actualizar();
+    mapa.on("moveend", actualizar);
+    return () => {
+      mapa.off("moveend", actualizar);
+    };
+  }, [listo, capas.ucrania, capas.satelite, capas.gnss, intensidad, centrosRegiones, impactos, gnss, ciudadesSinLuz, alumbrado]);
+
   // Al abrir algo, según de dónde: ir a ello, o asomarlo si ya estaba a la vista. Cerrar no pide
   // nada: el mapa se queda donde está.
   useEffect(() => {
@@ -1294,6 +1352,102 @@ export default function Mapa(props: PropsMapa) {
         className="pointer-events-none absolute left-0 top-0 z-20 rounded-full border-2 border-acento"
         style={{ width: RADIO_ARO_PX * 2, height: RADIO_ARO_PX * 2 }}
       />
+      {/* La capa de Ucrania, igual que los incidentes y antes que ellos (quien la enciende va a
+          ella): sus regiones con ataques (de la más atacada a la menos), sus impactos más
+          recientes y, con «Con satélite», sus ciudades; y las celdas de GPS. El enfocado se
+          señala con el aro y su letrero, e Intro abre su ficha. */}
+      {listo && ucraniaVista.regiones.length > 0 && (
+        <ul className="sr-only" aria-label={t.capaUcrania.regionesALaVista(ucraniaVista.regiones.length)} data-regiones-teclado="">
+          {ucraniaVista.regiones.map((r) => {
+            const texto = t.capaUcrania.region(nombreRegion(r.clave, idioma), numero(r.ataques, idioma));
+            return (
+              <li key={r.clave}>
+                <button
+                  type="button"
+                  onFocus={() => enfocarPunto({ ...r, texto })}
+                  onBlur={() => enfocarPunto(null)}
+                  onClick={() => props.onRegion(r.clave)}
+                >
+                  {texto}
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+      {listo && ucraniaVista.impactos.length > 0 && (
+        <ul
+          className="sr-only"
+          aria-label={t.capaUcrania.impactosALaVista(ucraniaVista.impactos.length, ucraniaVista.totalImpactos)}
+          data-impactos-teclado=""
+        >
+          {ucraniaVista.impactos.map((i) => {
+            const texto = t.capaUcrania.impacto(
+              nombreRegion(i.fila[8], idioma),
+              fechaDia(i.fila[1]),
+              i.fila[6] === 1,
+              i.fila[5] === 1,
+            );
+            return (
+              <li key={i.clave}>
+                <button
+                  type="button"
+                  onFocus={() => enfocarPunto({ ...i, texto })}
+                  onBlur={() => enfocarPunto(null)}
+                  onClick={() => props.onImpacto(i.clave)}
+                >
+                  {texto}
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+      {listo && ucraniaVista.ciudades.length > 0 && (
+        <ul className="sr-only" aria-label={t.capaUcrania.ciudadesALaVista(ucraniaVista.ciudades.length)} data-ciudades-teclado="">
+          {ucraniaVista.ciudades.map((c) => {
+            const texto =
+              c.clase === "luz"
+                ? t.satelite.letreroCiudad(c.nombre, String(c.perdida))
+                : t.satelite.letreroAlumbrado(c.nombre);
+            return (
+              <li key={`${c.clase}|${c.clave}`}>
+                <button
+                  type="button"
+                  onFocus={() => enfocarPunto({ ...c, texto })}
+                  onBlur={() => enfocarPunto(null)}
+                  onClick={() => (c.clase === "luz" ? props.onCiudadLuz(c.clave) : props.onAlumbrado(c.clave))}
+                >
+                  {texto}
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+      {listo && ucraniaVista.celdas.length > 0 && (
+        <ul
+          className="sr-only"
+          aria-label={t.capaUcrania.celdasALaVista(ucraniaVista.celdas.length, ucraniaVista.totalCeldas)}
+          data-celdas-teclado=""
+        >
+          {ucraniaVista.celdas.map((c) => {
+            const texto = t.gnss.letrero(porcentaje(c.celda.proporcion, idioma));
+            return (
+              <li key={c.clave}>
+                <button
+                  type="button"
+                  onFocus={() => enfocarPunto({ ...c, texto })}
+                  onBlur={() => enfocarPunto(null)}
+                  onClick={() => props.onCelda(c.clave)}
+                >
+                  {texto}
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      )}
       {/* Los incidentes a la vista, uno a uno con el tabulador (del más reciente al más antiguo): el
           lector de pantalla anuncia título, estado y fecha, el enfocado se señala en el mapa con un
           aro y su letrero, e Intro abre su ficha. Con el ratón o el dedo no se ve nada de esto. */}
