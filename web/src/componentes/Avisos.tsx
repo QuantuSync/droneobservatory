@@ -1,7 +1,19 @@
-import type { RefObject } from "react";
+import { useId, useMemo, useState } from "react";
+import type { ReactNode, RefObject } from "react";
 
-import { RUTAS_AVISOS, TEXTO_AVISOS, TIENDAS, canales, enlaceAndroid, enlaceWeb, rutaQr } from "../avisos.ts";
-import type { Canal } from "../avisos.ts";
+import {
+  RUTAS_AVISOS,
+  SERVIDOR_AVISOS,
+  TEXTO_AVISOS,
+  TIENDAS,
+  canales,
+  dispositivoActual,
+  enlaceAndroid,
+  enlaceWeb,
+  filtrarCanales,
+  rutaQr,
+} from "../avisos.ts";
+import type { Dispositivo, TextoAvisos } from "../avisos.ts";
 import type { Idioma } from "../sitio.ts";
 
 /** Campana sencilla, del color del texto: acompaña al rótulo «Avisos» en la cabecera. */
@@ -64,95 +76,183 @@ export function BotonAvisos({
 }
 
 const ENLACE = "text-texto underline decoration-secundario underline-offset-2 hover:decoration-acento";
-const BOTON =
-  "control min-h-11 w-full justify-center rounded-sm border border-linea px-3 text-center text-sm text-texto esc:min-h-9";
+const CAMPO = "control min-h-11 w-full rounded-sm border border-linea px-2 text-sm text-texto esc:min-h-9";
+/** El botón «Suscribirme»: grande y con el estilo de la acción principal («Aplicar»). */
+const BOTON_GRANDE = "control control-principal min-h-12 min-w-0 flex-1 rounded-sm px-4 text-center text-base esc:text-base";
+const BOTON_COPIAR = "control min-h-11 shrink-0 rounded-sm border border-linea px-2 text-xs text-texto esc:min-h-8";
 
-function CanalAvisos({ canal, idioma }: { canal: Canal; idioma: Idioma }) {
-  const t = TEXTO_AVISOS[idioma];
+/** Un paso, con su número a la vista; la lista ordenada ya lo anuncia al lector de pantalla. */
+function Paso({ numero, titulo, children }: { numero: number; titulo: string; children: ReactNode }) {
   return (
-    <details className="group border-b border-linea last:border-b-0" open={canal.general} data-canal={canal.tema}>
-      <summary className="flex min-h-11 cursor-pointer list-none items-center gap-2 py-2 text-sm text-texto esc:min-h-9 [&::-webkit-details-marker]:hidden">
-        <span aria-hidden="true" className="w-3 text-xs text-secundario transition-transform group-open:rotate-90">
-          ▸
+    <li className="flex flex-col gap-2">
+      <h3 className="flex items-center gap-2 text-sm font-semibold text-texto">
+        <span
+          aria-hidden="true"
+          className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-linea text-xs"
+        >
+          {numero}
         </span>
-        <span className="mr-auto">{canal.general ? t.general : canal.nombre}</span>
-        <span className="mono text-xs text-secundario">{canal.tema}</span>
-      </summary>
-      <div className="flex flex-col gap-3 pb-3 text-xs text-secundario">
-        <section aria-label={`${t.android} · ${canal.nombre}`} className="flex flex-col gap-1.5">
-          <h4 className="rotulo">{t.android}</h4>
-          <a className={BOTON} href={enlaceAndroid(canal)}>
-            {t.suscribirAndroid}
-          </a>
-          <p>
-            {t.sinAplicacion}{" "}
-            <a className={ENLACE} href={TIENDAS.googlePlay} rel="noopener" target="_blank">
-              Google Play
-            </a>{" "}
-            ·{" "}
-            <a className={ENLACE} href={TIENDAS.fdroid} rel="noopener" target="_blank">
-              F-Droid
-            </a>
-            .
+        {titulo}
+      </h3>
+      {children}
+    </li>
+  );
+}
+
+/** Un dato para copiar (el servidor o el canal), con su botón. */
+function Copiable({
+  texto,
+  rotulo,
+  t,
+  onCopiado,
+}: {
+  texto: string;
+  rotulo: string;
+  t: TextoAvisos;
+  onCopiado: (texto: string) => void;
+}) {
+  return (
+    <div className="flex items-center gap-2">
+      <code className="mono min-w-0 flex-1 break-all rounded-sm border border-linea px-2 py-1 text-xs text-texto">{texto}</code>
+      <button
+        type="button"
+        className={BOTON_COPIAR}
+        aria-label={rotulo}
+        onClick={() => {
+          void navigator.clipboard?.writeText(texto).then(
+            () => onCopiado(texto),
+            () => undefined,
+          );
+        }}
+      >
+        {t.copiar}
+      </button>
+    </div>
+  );
+}
+
+/**
+ * El panel «Avisos» del mapa, en tres pasos y nada más: qué recibirás; qué quieres recibir (un
+ * selector con «Toda Europa» por defecto y los países por orden alfabético, con buscador); y
+ * suscríbete, con un solo botón y las instrucciones del dispositivo que se está usando. El código
+ * QR del canal sale solo en el ordenador, para llevarlo al móvil. Al pie, «Más ayuda» lleva a la
+ * página de texto. Nada de esto mueve el mapa.
+ */
+export function Avisos({ idioma, dispositivo }: { idioma: Idioma; dispositivo?: Dispositivo }) {
+  const t = TEXTO_AVISOS[idioma];
+  const [equipo] = useState<Dispositivo>(() => dispositivo ?? dispositivoActual());
+  const lista = useMemo(() => canales(idioma), [idioma]);
+  const [busqueda, setBusqueda] = useState("");
+  const [tema, setTema] = useState(lista[0]?.tema ?? "");
+  const [copiado, setCopiado] = useState<string | null>(null);
+  const idBuscar = useId();
+  const idCanal = useId();
+  const idResultado = useId();
+
+  const elegido = lista.find((c) => c.tema === tema) ?? lista[0];
+  if (elegido === undefined) return null;
+  const visibles = filtrarCanales(lista, busqueda);
+  // Lo elegido sigue en el selector aunque la búsqueda no lo encuentre, para que no mienta.
+  const opciones = visibles.some((c) => c.tema === elegido.tema) ? visibles : [elegido, ...visibles];
+  const pasos = t.pasos[equipo](elegido.tema);
+  const destino = equipo === "android" ? enlaceAndroid(elegido) : equipo === "iphone" ? TIENDAS.appStore : enlaceWeb(elegido);
+
+  return (
+    <div className="flex flex-col gap-4 text-sm" data-panel-avisos="" data-dispositivo={equipo}>
+      <ol className="flex flex-col gap-5">
+        <Paso numero={1} titulo={t.pasoRecibir}>
+          <p className="text-sm text-texto">{t.recibir}</p>
+        </Paso>
+
+        <Paso numero={2} titulo={t.pasoElegir}>
+          <label htmlFor={idBuscar} className="text-xs text-secundario">
+            {t.buscar}
+          </label>
+          <input
+            id={idBuscar}
+            type="search"
+            className={CAMPO}
+            value={busqueda}
+            autoComplete="off"
+            spellCheck={false}
+            aria-controls={idCanal}
+            aria-describedby={idResultado}
+            data-buscar-canal=""
+            onChange={(evento) => {
+              const texto = evento.target.value;
+              setBusqueda(texto);
+              const hallados = filtrarCanales(lista, texto);
+              const primero = hallados[0];
+              if (primero !== undefined && !hallados.some((c) => c.tema === tema)) setTema(primero.tema);
+            }}
+          />
+          <label htmlFor={idCanal} className="text-xs text-secundario">
+            {t.canal}
+          </label>
+          <select
+            id={idCanal}
+            className={CAMPO}
+            value={elegido.tema}
+            data-activo=""
+            data-canal-elegido=""
+            onChange={(evento) => setTema(evento.target.value)}
+          >
+            {opciones.map((c) => (
+              <option key={c.tema} value={c.tema} className="bg-panel-solido text-texto">
+                {c.nombre}
+              </option>
+            ))}
+          </select>
+          <p id={idResultado} role="status" className="text-xs text-secundario">
+            {visibles.length === 0 ? t.sinResultados : ""}
           </p>
-        </section>
-        <section aria-label={`${t.iphone} · ${canal.nombre}`} className="flex flex-col gap-1.5">
-          <h4 className="rotulo">{t.iphone}</h4>
-          <a className={ENLACE} href={TIENDAS.appStore} rel="noopener" target="_blank">
-            {t.instalarIphone}
-          </a>
-          <ol className="list-decimal pl-5">
-            {t.pasosIphone(canal.tema).map((paso) => (
+        </Paso>
+
+        <Paso numero={3} titulo={t.pasoSuscribir}>
+          <div className="flex items-center gap-3">
+            <a
+              className={BOTON_GRANDE}
+              href={destino}
+              data-suscribirme=""
+              {...(equipo === "android" ? {} : { rel: "noopener", target: "_blank" })}
+            >
+              {t.suscribirme}
+            </a>
+            {equipo === "ordenador" && (
+              <figure className="flex shrink-0 flex-col items-center gap-1" data-qr-avisos="">
+                <img src={rutaQr(elegido)} alt={t.qr(elegido.nombre)} width={112} height={112} className="rounded-sm" />
+                <figcaption className="max-w-28 text-center text-xs text-secundario">{t.escanear}</figcaption>
+              </figure>
+            )}
+          </div>
+          <ol className="flex list-decimal flex-col gap-1 pl-5 text-xs text-texto">
+            {pasos.map((paso) => (
               <li key={paso} className="break-words">
                 {paso}
               </li>
             ))}
           </ol>
-        </section>
-        <section aria-label={`${t.ordenador} · ${canal.nombre}`} className="flex flex-col gap-1.5">
-          <h4 className="rotulo">{t.ordenador}</h4>
-          <a className={BOTON} href={enlaceWeb(canal)} rel="noopener" target="_blank">
-            {t.abrirNavegador}
-          </a>
-          <p>{t.notaNavegador}</p>
-        </section>
-        <figure className="flex flex-col items-center gap-1">
-          <img src={rutaQr(canal)} alt={t.qr(canal.nombre)} width={144} height={144} loading="lazy" className="rounded-sm" />
-          <figcaption className="mono text-[0.6875rem]">{enlaceWeb(canal).replace("https://", "")}</figcaption>
-        </figure>
-      </div>
-    </details>
-  );
-}
-
-/**
- * Lo que dice la página «Avisos», en el panel del mapa: qué se avisa, sin cuenta, y cada canal
- * (el general abierto; los países plegados) con sus botones para Android, iPhone y el ordenador y
- * su código QR. Abrir o cerrar un canal no mueve el mapa. Al pie, la página completa.
- */
-export function Avisos({ idioma }: { idioma: Idioma }) {
-  const t = TEXTO_AVISOS[idioma];
-  return (
-    <div className="flex flex-col gap-3 text-sm" data-panel-avisos="">
-      <p className="text-xs text-secundario">{t.sinCuenta}</p>
-      <section className="flex flex-col gap-1">
-        <h3 className="rotulo">{t.queSeAvisa}</h3>
-        <ul className="list-disc pl-4 text-xs text-texto">
-          {t.avisa.map((a) => (
-            <li key={a}>{a}</li>
-          ))}
-        </ul>
-        <p className="text-xs text-secundario">{t.queNo}</p>
-      </section>
-      <section className="flex flex-col">
-        <h3 className="rotulo mb-1">{t.canales}</h3>
-        {canales(idioma).map((canal) => (
-          <CanalAvisos key={canal.tema} canal={canal} idioma={idioma} />
-        ))}
-      </section>
+          {equipo === "iphone" && (
+            <div className="flex flex-col gap-2">
+              <Copiable texto={SERVIDOR_AVISOS} rotulo={t.copiarServidor} t={t} onCopiado={setCopiado} />
+              <Copiable texto={elegido.tema} rotulo={t.copiarCanal} t={t} onCopiado={setCopiado} />
+            </div>
+          )}
+          {equipo === "android" && (
+            <p className="text-xs">
+              <a className={ENLACE} href={TIENDAS.googlePlay} rel="noopener" target="_blank">
+                {t.sinAplicacion}
+              </a>
+            </p>
+          )}
+          <p role="status" className="text-xs text-secundario">
+            {copiado !== null ? `${t.copiado}: ${copiado}` : ""}
+          </p>
+        </Paso>
+      </ol>
       <p className="text-xs">
         <a className={ENLACE} href={RUTAS_AVISOS[idioma]}>
-          {t.paginaCompleta}
+          {t.masAyuda}
         </a>
       </p>
     </div>

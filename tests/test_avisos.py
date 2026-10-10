@@ -106,7 +106,7 @@ def test_formato_del_aviso() -> None:
     doc = incidente()
     aviso = avisos.clasificar(doc, CONFIG, AHORA)
     assert aviso is not None
-    cuerpo = avisos.mensaje(aviso, doc, CONFIG, "slovakia")
+    cuerpo = avisos.mensaje(aviso, doc, CONFIG, "drones-slovakia")
     assert cuerpo["title"] == "ESLOVAQUIA · Incursión confirmada"
     es, vacia, en = cuerpo["message"].split("\n")
     assert vacia == ""
@@ -138,7 +138,7 @@ def test_sin_hora_precisa_y_texto_sin_signos_de_markdown() -> None:
     )
     aviso = avisos.clasificar(doc, CONFIG, AHORA)
     assert aviso is not None
-    cuerpo = avisos.mensaje(aviso, doc, CONFIG, "general")
+    cuerpo = avisos.mensaje(aviso, doc, CONFIG, "drones-europe")
     assert (
         "(hora no precisada)" in cuerpo["message"] and "(time not specified)" in cuerpo["message"]
     )
@@ -175,7 +175,7 @@ def test_primera_pasada_anota_y_no_envia_y_despues_un_solo_aviso(tmp_path: Path)
     segunda = avisos.pasar(
         set(internos), internos, enviados, CONFIG, AHORA, lambda c: enviados_a.append(c["topic"])
     )
-    assert segunda.enviados == 2 and enviados_a == ["general", "slovakia"]
+    assert segunda.enviados == 2 and enviados_a == ["drones-europe", "drones-slovakia"]
 
     # Una actualización (otro estado, otro titular) no vuelve a avisar.
     internos[nuevo["id"]] = incidente(
@@ -200,7 +200,7 @@ def test_si_falla_se_reintenta_sin_duplicar(tmp_path: Path) -> None:
     temas: list[str] = []
 
     def falla_el_pais(cuerpo: dict[str, Any]) -> None:
-        if cuerpo["topic"] != "general":
+        if cuerpo["topic"] != "drones-europe":
             raise OSError("sin conexión")
         temas.append(cuerpo["topic"])
 
@@ -217,10 +217,34 @@ def test_si_falla_se_reintenta_sin_duplicar(tmp_path: Path) -> None:
     reintento = avisos.pasar(
         {doc["id"]}, {doc["id"]: doc}, enviados, CONFIG, AHORA, lambda c: temas.append(c["topic"])
     )
-    assert reintento.enviados == 1 and temas == ["general", "slovakia"]
+    assert reintento.enviados == 1 and temas == ["drones-europe", "drones-slovakia"]
     estado = avisos.guardar_estado(tmp_path / "avisos.json", reintento, AHORA)
     assert estado["fallos_seguidos"] == 0
     enviados.cerrar()
+
+
+def test_lo_avisado_con_el_tema_anterior_no_se_repite(tmp_path: Path) -> None:
+    """general y slovakia pasaron a drones-europe y drones-slovakia: lo ya enviado con el nombre
+    de antes cuenta como enviado al nuevo."""
+    enviados = avisos.Enviados(tmp_path / "avisos.sqlite", CONFIG["temas_anteriores"])
+    avisos.pasar(set(), {}, enviados, CONFIG, AHORA, lambda c: None)
+    doc = incidente()
+    enviados.anotar(doc["id"], "general", AHORA)
+    enviados.anotar(doc["id"], "slovakia", AHORA)
+    temas: list[str] = []
+    pasada = avisos.pasar(
+        {doc["id"]}, {doc["id"]: doc}, enviados, CONFIG, AHORA, lambda c: temas.append(c["topic"])
+    )
+    assert pasada.enviados == 0 and temas == []
+    assert enviados.temas(doc["id"]) == {"drones-europe", "drones-slovakia"}
+    enviados.cerrar()
+
+
+def test_temas_anteriores_llevan_a_los_nuevos() -> None:
+    anteriores = CONFIG["temas_anteriores"]
+    assert anteriores["general"] == "drones-europe"
+    assert sorted(anteriores.values()) == sorted(avisos.temas_publicos(CONFIG))
+    assert not set(anteriores) & set(avisos.temas_publicos(CONFIG))
 
 
 def test_ensayo_no_envia_ni_anota(tmp_path: Path) -> None:
@@ -247,15 +271,16 @@ def test_un_canal_por_pais_cubierto_y_nombres_validos() -> None:
     )["cajas"]
     assert sorted(CONFIG["paises"]) == sorted(cubiertos)
     temas = avisos.temas_publicos(CONFIG)
-    assert temas[0] == "general" and len(set(temas)) == len(temas)
+    assert temas[0] == "drones-europe" and len(set(temas)) == len(temas)
     for tema in temas:
         assert tema == tema.lower() and all(c.isalnum() or c == "-" for c in tema)
+        assert tema.startswith("drones-")
     for clave in ("SK", "PL", "RO", "MD", "LT", "LV", "EE", "DE", "DK", "CZ", "HU", "GB"):
         assert CONFIG["paises"][clave]["tema"] in temas
-    assert CONFIG["paises"]["GB"]["tema"] == "united-kingdom"
+    assert CONFIG["paises"]["GB"]["tema"] == "drones-united-kingdom"
 
 
-@pytest.mark.parametrize("tema", ["general", "slovakia"])
+@pytest.mark.parametrize("tema", ["drones-europe", "drones-slovakia", "general", "slovakia"])
 def test_ejemplo_nunca_a_un_tema_publico(tema: str, tmp_path: Path) -> None:
     token = tmp_path / "token"
     token.write_text("tk_x", encoding="utf-8")

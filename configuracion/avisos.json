@@ -1,304 +1,349 @@
 {
-  "_descripcion": "Canal público de avisos con ntfy (docs/avisos.md): servidor, tema general y un tema por país cubierto (configuracion/paises_europa.json), con su nombre en español y en inglés, su zona horaria y si es de la OTAN. Lo leen recogida/avisos.py, servidor/ntfy.sh y la web.",
+  "_descripcion": "Canal público de avisos con ntfy (docs/avisos.md): servidor, tema de toda Europa (drones-europe) y un tema por país cubierto (drones-<país en inglés>, de configuracion/paises_europa.json), con su nombre en español y en inglés, su zona horaria y si es de la OTAN. Los temas de antes (general y el país sin prefijo) están en temas_anteriores: el envío pasa a los nuevos lo ya avisado y el servidor les quita la lectura. Lo leen recogida/avisos.py, servidor/ntfy.sh y la web.",
   "servidor": "https://ntfy.droneobservatory.eu",
   "sitio": "https://droneobservatory.eu",
   "icono": "https://droneobservatory.eu/marca/aviso-256.png",
   "general": {
-    "tema": "general",
-    "es": "General",
-    "en": "General"
+    "tema": "drones-europe",
+    "es": "Toda Europa",
+    "en": "All of Europe"
+  },
+  "temas_anteriores": {
+    "general": "drones-europe",
+    "andorra": "drones-andorra",
+    "albania": "drones-albania",
+    "austria": "drones-austria",
+    "bosnia-and-herzegovina": "drones-bosnia-and-herzegovina",
+    "belgium": "drones-belgium",
+    "bulgaria": "drones-bulgaria",
+    "switzerland": "drones-switzerland",
+    "cyprus": "drones-cyprus",
+    "czechia": "drones-czechia",
+    "germany": "drones-germany",
+    "denmark": "drones-denmark",
+    "estonia": "drones-estonia",
+    "spain": "drones-spain",
+    "finland": "drones-finland",
+    "france": "drones-france",
+    "united-kingdom": "drones-united-kingdom",
+    "greece": "drones-greece",
+    "croatia": "drones-croatia",
+    "hungary": "drones-hungary",
+    "ireland": "drones-ireland",
+    "iceland": "drones-iceland",
+    "italy": "drones-italy",
+    "liechtenstein": "drones-liechtenstein",
+    "lithuania": "drones-lithuania",
+    "luxembourg": "drones-luxembourg",
+    "latvia": "drones-latvia",
+    "monaco": "drones-monaco",
+    "moldova": "drones-moldova",
+    "montenegro": "drones-montenegro",
+    "north-macedonia": "drones-north-macedonia",
+    "malta": "drones-malta",
+    "netherlands": "drones-netherlands",
+    "norway": "drones-norway",
+    "poland": "drones-poland",
+    "portugal": "drones-portugal",
+    "romania": "drones-romania",
+    "serbia": "drones-serbia",
+    "sweden": "drones-sweden",
+    "slovenia": "drones-slovenia",
+    "slovakia": "drones-slovakia",
+    "san-marino": "drones-san-marino",
+    "kosovo": "drones-kosovo"
   },
   "ventana_horas": 72,
   "paises": {
     "AD": {
-      "tema": "andorra",
+      "tema": "drones-andorra",
       "es": "Andorra",
       "en": "Andorra",
       "zona_horaria": "Europe/Andorra",
       "otan": false
     },
     "AL": {
-      "tema": "albania",
+      "tema": "drones-albania",
       "es": "Albania",
       "en": "Albania",
       "zona_horaria": "Europe/Tirane",
       "otan": true
     },
     "AT": {
-      "tema": "austria",
+      "tema": "drones-austria",
       "es": "Austria",
       "en": "Austria",
       "zona_horaria": "Europe/Vienna",
       "otan": false
     },
     "BA": {
-      "tema": "bosnia-and-herzegovina",
+      "tema": "drones-bosnia-and-herzegovina",
       "es": "Bosnia y Herzegovina",
       "en": "Bosnia and Herzegovina",
       "zona_horaria": "Europe/Sarajevo",
       "otan": false
     },
     "BE": {
-      "tema": "belgium",
+      "tema": "drones-belgium",
       "es": "Bélgica",
       "en": "Belgium",
       "zona_horaria": "Europe/Brussels",
       "otan": true
     },
     "BG": {
-      "tema": "bulgaria",
+      "tema": "drones-bulgaria",
       "es": "Bulgaria",
       "en": "Bulgaria",
       "zona_horaria": "Europe/Sofia",
       "otan": true
     },
     "CH": {
-      "tema": "switzerland",
+      "tema": "drones-switzerland",
       "es": "Suiza",
       "en": "Switzerland",
       "zona_horaria": "Europe/Zurich",
       "otan": false
     },
     "CY": {
-      "tema": "cyprus",
+      "tema": "drones-cyprus",
       "es": "Chipre",
       "en": "Cyprus",
       "zona_horaria": "Asia/Nicosia",
       "otan": false
     },
     "CZ": {
-      "tema": "czechia",
+      "tema": "drones-czechia",
       "es": "Chequia",
       "en": "Czechia",
       "zona_horaria": "Europe/Prague",
       "otan": true
     },
     "DE": {
-      "tema": "germany",
+      "tema": "drones-germany",
       "es": "Alemania",
       "en": "Germany",
       "zona_horaria": "Europe/Berlin",
       "otan": true
     },
     "DK": {
-      "tema": "denmark",
+      "tema": "drones-denmark",
       "es": "Dinamarca",
       "en": "Denmark",
       "zona_horaria": "Europe/Copenhagen",
       "otan": true
     },
     "EE": {
-      "tema": "estonia",
+      "tema": "drones-estonia",
       "es": "Estonia",
       "en": "Estonia",
       "zona_horaria": "Europe/Tallinn",
       "otan": true
     },
     "ES": {
-      "tema": "spain",
+      "tema": "drones-spain",
       "es": "España",
       "en": "Spain",
       "zona_horaria": "Europe/Madrid",
       "otan": true
     },
     "FI": {
-      "tema": "finland",
+      "tema": "drones-finland",
       "es": "Finlandia",
       "en": "Finland",
       "zona_horaria": "Europe/Helsinki",
       "otan": true
     },
     "FR": {
-      "tema": "france",
+      "tema": "drones-france",
       "es": "Francia",
       "en": "France",
       "zona_horaria": "Europe/Paris",
       "otan": true
     },
     "GB": {
-      "tema": "united-kingdom",
+      "tema": "drones-united-kingdom",
       "es": "Reino Unido",
       "en": "United Kingdom",
       "zona_horaria": "Europe/London",
       "otan": true
     },
     "GR": {
-      "tema": "greece",
+      "tema": "drones-greece",
       "es": "Grecia",
       "en": "Greece",
       "zona_horaria": "Europe/Athens",
       "otan": true
     },
     "HR": {
-      "tema": "croatia",
+      "tema": "drones-croatia",
       "es": "Croacia",
       "en": "Croatia",
       "zona_horaria": "Europe/Zagreb",
       "otan": true
     },
     "HU": {
-      "tema": "hungary",
+      "tema": "drones-hungary",
       "es": "Hungría",
       "en": "Hungary",
       "zona_horaria": "Europe/Budapest",
       "otan": true
     },
     "IE": {
-      "tema": "ireland",
+      "tema": "drones-ireland",
       "es": "Irlanda",
       "en": "Ireland",
       "zona_horaria": "Europe/Dublin",
       "otan": false
     },
     "IS": {
-      "tema": "iceland",
+      "tema": "drones-iceland",
       "es": "Islandia",
       "en": "Iceland",
       "zona_horaria": "Atlantic/Reykjavik",
       "otan": true
     },
     "IT": {
-      "tema": "italy",
+      "tema": "drones-italy",
       "es": "Italia",
       "en": "Italy",
       "zona_horaria": "Europe/Rome",
       "otan": true
     },
     "LI": {
-      "tema": "liechtenstein",
+      "tema": "drones-liechtenstein",
       "es": "Liechtenstein",
       "en": "Liechtenstein",
       "zona_horaria": "Europe/Vaduz",
       "otan": false
     },
     "LT": {
-      "tema": "lithuania",
+      "tema": "drones-lithuania",
       "es": "Lituania",
       "en": "Lithuania",
       "zona_horaria": "Europe/Vilnius",
       "otan": true
     },
     "LU": {
-      "tema": "luxembourg",
+      "tema": "drones-luxembourg",
       "es": "Luxemburgo",
       "en": "Luxembourg",
       "zona_horaria": "Europe/Luxembourg",
       "otan": true
     },
     "LV": {
-      "tema": "latvia",
+      "tema": "drones-latvia",
       "es": "Letonia",
       "en": "Latvia",
       "zona_horaria": "Europe/Riga",
       "otan": true
     },
     "MC": {
-      "tema": "monaco",
+      "tema": "drones-monaco",
       "es": "Mónaco",
       "en": "Monaco",
       "zona_horaria": "Europe/Monaco",
       "otan": false
     },
     "MD": {
-      "tema": "moldova",
+      "tema": "drones-moldova",
       "es": "Moldavia",
       "en": "Moldova",
       "zona_horaria": "Europe/Chisinau",
       "otan": false
     },
     "ME": {
-      "tema": "montenegro",
+      "tema": "drones-montenegro",
       "es": "Montenegro",
       "en": "Montenegro",
       "zona_horaria": "Europe/Podgorica",
       "otan": true
     },
     "MK": {
-      "tema": "north-macedonia",
+      "tema": "drones-north-macedonia",
       "es": "Macedonia del Norte",
       "en": "North Macedonia",
       "zona_horaria": "Europe/Skopje",
       "otan": true
     },
     "MT": {
-      "tema": "malta",
+      "tema": "drones-malta",
       "es": "Malta",
       "en": "Malta",
       "zona_horaria": "Europe/Malta",
       "otan": false
     },
     "NL": {
-      "tema": "netherlands",
+      "tema": "drones-netherlands",
       "es": "Países Bajos",
       "en": "Netherlands",
       "zona_horaria": "Europe/Amsterdam",
       "otan": true
     },
     "NO": {
-      "tema": "norway",
+      "tema": "drones-norway",
       "es": "Noruega",
       "en": "Norway",
       "zona_horaria": "Europe/Oslo",
       "otan": true
     },
     "PL": {
-      "tema": "poland",
+      "tema": "drones-poland",
       "es": "Polonia",
       "en": "Poland",
       "zona_horaria": "Europe/Warsaw",
       "otan": true
     },
     "PT": {
-      "tema": "portugal",
+      "tema": "drones-portugal",
       "es": "Portugal",
       "en": "Portugal",
       "zona_horaria": "Europe/Lisbon",
       "otan": true
     },
     "RO": {
-      "tema": "romania",
+      "tema": "drones-romania",
       "es": "Rumanía",
       "en": "Romania",
       "zona_horaria": "Europe/Bucharest",
       "otan": true
     },
     "RS": {
-      "tema": "serbia",
+      "tema": "drones-serbia",
       "es": "Serbia",
       "en": "Serbia",
       "zona_horaria": "Europe/Belgrade",
       "otan": false
     },
     "SE": {
-      "tema": "sweden",
+      "tema": "drones-sweden",
       "es": "Suecia",
       "en": "Sweden",
       "zona_horaria": "Europe/Stockholm",
       "otan": true
     },
     "SI": {
-      "tema": "slovenia",
+      "tema": "drones-slovenia",
       "es": "Eslovenia",
       "en": "Slovenia",
       "zona_horaria": "Europe/Ljubljana",
       "otan": true
     },
     "SK": {
-      "tema": "slovakia",
+      "tema": "drones-slovakia",
       "es": "Eslovaquia",
       "en": "Slovakia",
       "zona_horaria": "Europe/Bratislava",
       "otan": true
     },
     "SM": {
-      "tema": "san-marino",
+      "tema": "drones-san-marino",
       "es": "San Marino",
       "en": "San Marino",
       "zona_horaria": "Europe/San_Marino",
       "otan": false
     },
     "XK": {
-      "tema": "kosovo",
+      "tema": "drones-kosovo",
       "es": "Kosovo",
       "en": "Kosovo",
       "zona_horaria": "Europe/Belgrade",

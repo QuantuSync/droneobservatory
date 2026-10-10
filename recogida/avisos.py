@@ -1,8 +1,8 @@
 """Avisos públicos con ntfy (docs/avisos.md).
 
 Al final de cada recogida horaria que publica bien (servidor/recogida.sh), se envía un aviso por
-cada incidente nuevo de Europa que lo merece al tema general y al de su país, en el servidor ntfy
-propio (configuracion/avisos.json). Se avisa, y nada más:
+cada incidente nuevo de Europa que lo merece al tema de toda Europa (drones-europe) y al de su
+país, en el servidor ntfy propio (configuracion/avisos.json). Se avisa, y nada más:
 
 - de un incidente de Europa confirmado o atribuido, o notificado con una fuente oficial
   (autoridad, ministerio, gestor aeroportuario o de navegación aérea: origen OFICIAL en
@@ -326,9 +326,12 @@ def documentos(base: Path, ids: Iterable[str]) -> dict[str, Documento]:
 
 
 class Enviados:
-    """Lo ya avisado, por incidente y tema, en una base propia (no toca la del observatorio)."""
+    """Lo ya avisado, por incidente y tema, en una base propia (no toca la del observatorio).
+    Lo anotado con el nombre anterior de un tema (`temas_anteriores` de la configuración: general,
+    slovakia...) cuenta como enviado al tema que lo sustituye, para no repetir avisos."""
 
-    def __init__(self, ruta: Path) -> None:
+    def __init__(self, ruta: Path, anteriores: dict[str, str] | None = None) -> None:
+        self._anteriores = dict(anteriores or {})
         ruta.parent.mkdir(parents=True, exist_ok=True)
         self._conexion = sqlite3.connect(ruta)
         self._conexion.executescript(
@@ -362,7 +365,8 @@ class Enviados:
 
     def temas(self, id_: str) -> set[str]:
         return {
-            r[0] for r in self._conexion.execute("SELECT tema FROM avisos WHERE id = ?", (id_,))
+            self._anteriores.get(r[0], r[0])
+            for r in self._conexion.execute("SELECT tema FROM avisos WHERE id = ?", (id_,))
         }
 
     def iniciales(self) -> set[str]:
@@ -498,7 +502,7 @@ def principal(argumentos: list[str] | None = None, ahora: datetime | None = None
     config = configuracion()
 
     if args.orden == "ejemplo":
-        if args.tema in temas_publicos(config):
+        if args.tema in temas_publicos(config) or args.tema in config.get("temas_anteriores", {}):
             registro.error("los ejemplos van a un tema de pruebas, nunca a uno público")
             return 1
         incidente = documentos(args.base, [args.id]).get(args.id)
@@ -523,7 +527,7 @@ def principal(argumentos: list[str] | None = None, ahora: datetime | None = None
 
     publicados = ids_publicados(args.publicacion)
     internos = documentos(args.base, publicados)
-    enviados = Enviados(args.datos / BASE_AVISOS)
+    enviados = Enviados(args.datos / BASE_AVISOS, config.get("temas_anteriores"))
     try:
         if args.orden == "ensayo":
             pasada = pasar(publicados, internos, enviados, config, ahora, None)
