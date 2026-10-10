@@ -143,6 +143,16 @@ principal() {
       else
         echo "aviso: la copia de reserva no quedó al día (la reintenta su temporizador)"
       fi
+      # Avisos públicos de ntfy (recogida/avisos.py, docs/avisos.md): solo tras publicar bien,
+      # para que el enlace del aviso funcione. Un fallo no cambia el código de la recogida: lo
+      # que no salió se reintenta en la siguiente, sin repetir lo enviado.
+      if timeout "$TOPE_AVISOS_SEGUNDOS" "$python" -m recogida.avisos enviar \
+        --publicacion "$PUBLICACION_DATOS" --base "$BASE_DIRECTORIO/eodi.sqlite" \
+        --datos "$AVISOS_DATOS" --estado "$SECRETOS/avisos.json" --token "$NTFY_TOKEN"; then
+        echo "avisos de ntfy al día"
+      else
+        echo "aviso: no se enviaron todos los avisos de ntfy (se reintentan en la siguiente recogida)"
+      fi
     else
       echo "aviso: los ficheros no se publicaron en el almacén"
       if [ "$modo_pub" = almacen ] && [ "$codigo" -eq 0 ]; then

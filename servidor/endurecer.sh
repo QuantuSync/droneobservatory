@@ -5,7 +5,8 @@
 # - usuario «eodi» sin privilegios para el observatorio y «operador» con sudo para
 #   administrar;
 # - SSH solo con clave, sin contraseña, sin root y sin reenvíos;
-# - cortafuegos del propio servidor (nftables): solo entra SSH, además del de Hetzner;
+# - cortafuegos del propio servidor (nftables): solo entran SSH, HTTP y HTTPS, además del de
+#   Hetzner;
 # - fail2ban con vetos crecientes, actualizaciones de seguridad automáticas sin reinicio
 #   automático (lo hace eodi-reinicio cuando no corta nada), zona horaria UTC, hora
 #   sincronizada y diario con rotación.
@@ -80,8 +81,9 @@ fi
 
 # --- Cortafuegos del servidor --------------------------------------------------------
 # Además del cortafuegos de Hetzner (reconstruir.sh): si un día se quitara aquel, este sigue.
-# Entra solo SSH, lo que responde a una conexión ya abierta y el ICMP que hace falta (IPv6 no
-# funciona sin él); sale todo. Tabla propia: no toca la de fail2ban.
+# Entra SSH, HTTP y HTTPS (ntfy, servidor/ntfy.sh), lo que responde a una conexión ya abierta
+# y el ICMP que hace falta (IPv6 no funciona sin él); sale todo. Tabla propia: no toca la de
+# fail2ban.
 cat > /etc/nftables.conf <<FIN
 #!/usr/sbin/nft -f
 # Cortafuegos del servidor de recogida (servidor/endurecer.sh)
@@ -98,6 +100,7 @@ table inet eodi {
     udp sport 67 udp dport 68 accept
     udp sport 547 udp dport 546 accept
     tcp dport $PUERTO_SSH ct state new accept
+    tcp dport { 80, 443 } ct state new accept
   }
   chain reenvio {
     type filter hook forward priority filter; policy drop;

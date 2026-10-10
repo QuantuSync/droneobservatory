@@ -66,6 +66,20 @@ PY
   PYTHONPATH="$raiz/codigo" "$ENTORNO/bin/python" -m recogida.horaria --correo "$CORREO" \
     --ensayo "$raiz/salida" || codigo=$?
   echo "recogida de ensayo terminada con código $codigo"
+  # Avisos de ntfy en ensayo, sobre una copia de lo ya avisado: dice cuántos se enviarían, sin
+  # enviar ni anotar nada (sin incidentes nuevos, 0).
+  if [ "$codigo" -eq 0 ] || [ "$codigo" -eq 2 ]; then
+    install -d -m 700 "$raiz/datos/avisos"
+    if [ -f "$AVISOS_DATOS/avisos.sqlite" ]; then
+      cp -a "$AVISOS_DATOS/avisos.sqlite" "$raiz/datos/avisos/"
+    fi
+    local cavi=0
+    PYTHONPATH="$raiz/codigo" "$ENTORNO/bin/python" -m recogida.avisos ensayo \
+      --publicacion "$raiz/salida" --base "$raiz/base/eodi.sqlite" \
+      --datos "$raiz/datos/avisos" || cavi=$?
+    echo "avisos de ensayo terminados con código $cavi"
+    [ "$cavi" -eq 0 ] || codigo=1
+  fi
   if [ "${ENSAYO_EXPORTACION:-0}" = "1" ] && { [ "$codigo" -eq 0 ] || [ "$codigo" -eq 2 ]; }; then
     local cexp=0
     PYTHONPATH="$raiz/codigo" "$ENTORNO/bin/python" -m recogida.exportacion --sin-subir \

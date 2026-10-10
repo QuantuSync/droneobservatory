@@ -29,12 +29,17 @@ fi
 if ! hcloud ssh-key describe "$CLAVE_SSH_NOMBRE" >/dev/null 2>&1; then
   hcloud ssh-key create --name "$CLAVE_SSH_NOMBRE" --public-key-from-file "$LOCAL_CLAVE_SSH.pub"
 fi
-# Solo SSH entrante. Lo que no tiene regla, incluido el ping, queda cerrado.
+# Solo SSH, HTTP y HTTPS entrantes (estos dos, para ntfy: servidor/ntfy.sh). Lo que no tiene
+# regla, incluido el ping, queda cerrado.
 if ! hcloud firewall describe "$CORTAFUEGOS_NOMBRE" >/dev/null 2>&1; then
   hcloud firewall create --name "$CORTAFUEGOS_NOMBRE"
   hcloud firewall add-rule "$CORTAFUEGOS_NOMBRE" --direction in --protocol tcp \
     --port "$PUERTO_SSH" --source-ips 0.0.0.0/0 --source-ips ::/0 \
     --description "SSH"
+  hcloud firewall add-rule "$CORTAFUEGOS_NOMBRE" --direction in --protocol tcp \
+    --port 80 --source-ips 0.0.0.0/0 --source-ips ::/0 --description "HTTP (ntfy, certificado)"
+  hcloud firewall add-rule "$CORTAFUEGOS_NOMBRE" --direction in --protocol tcp \
+    --port 443 --source-ips 0.0.0.0/0 --source-ips ::/0 --description "HTTPS (ntfy)"
 fi
 if ! hcloud server describe "$SERVIDOR_NOMBRE" >/dev/null 2>&1; then
   hcloud server create --name "$SERVIDOR_NOMBRE" --type "$SERVIDOR_TIPO" \
@@ -122,6 +127,16 @@ if [ -s "$LOCAL_ALERTAS_TOKEN" ]; then
   dejar_secreto "$LOCAL_ALERTAS_TOKEN" "$ALERTAS_TOKEN"
 else
   echo "aviso: sin $LOCAL_ALERTAS_TOKEN, no se archivan las alertas de alerts.in.ua" >&2
+fi
+# Servidor ntfy de los avisos públicos (servidor/ntfy.sh), desde el clon que deja instalar.sh, con
+# la contraseña de «lucas» por la entrada estándar. Sin ella, ntfy queda sin ese usuario. Si la IP
+# del servidor cambia, hay que poner la nueva en los registros A y AAAA de ntfy (docs/avisos.md).
+if [ -s "$LOCAL_NTFY_LUCAS" ]; then
+  tr -d '\r\n' < "$LOCAL_NTFY_LUCAS" \
+    | conectar "$OPERADOR" sudo bash "$CLON/servidor/ntfy.sh" --clave-lucas
+else
+  echo "aviso: sin $LOCAL_NTFY_LUCAS, ntfy queda sin el usuario lucas" >&2
+  conectar "$OPERADOR" sudo bash "$CLON/servidor/ntfy.sh" < /dev/null
 fi
 
 # --- Claves de despliegue ------------------------------------------------------------

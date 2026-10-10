@@ -30,6 +30,10 @@ Problemas (cada uno con su frase):
   correcta en 8 días;
 - **paso a solo disco**: el paso de la base a solo disco (almacen/solo_disco.py) no se hizo porque
   falló una de sus comprobaciones;
+- **ntfy**: el servidor de los avisos públicos (https://ntfy.droneobservatory.eu) no responde a
+  /v1/health (dos intentos), en el servidor que los tiene (con el token de «observatorio»);
+- **avisos**: el envío de los avisos de ntfy (recogida/avisos.py) ha fallado dos recogidas
+  seguidas;
 - **versiones**: la versión citable del mes de los datos abiertos no se ha generado el día 1
   (pasadas las 06:00 UTC), una versión publicada ha cambiado o falta, o no se comprueban desde
   hace 2 días (recogida/versiones.py).
@@ -54,6 +58,8 @@ import re
 import shutil
 import subprocess
 import sys
+import time
+import urllib.request
 from collections.abc import Callable, Sequence
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -62,6 +68,7 @@ from typing import Any
 from almacen import reserva
 from almacen.sitio import casa
 from recogida import almacen_publico, versiones
+from recogida import avisos as avisos_ntfy
 
 registro = logging.getLogger("vigilancia")
 
@@ -84,7 +91,24 @@ DISCO_AVISO_PCT = 75.0
 AVISO_TOPE = re.compile(r"tope de \d+ s agotado|no se lee|sin leer: \d+|en rojo", re.I)
 RETENIDO = re.compile(r"(EODI-\d{4}-\d{5}) no se publica: su cita no respalda el titular")
 
+URL_SALUD_NTFY = "https://ntfy.droneobservatory.eu/v1/health"
+TOKEN_NTFY = "ntfy_observatorio"
+
 Ejecutar = Callable[[Sequence[str]], str]
+
+
+def ntfy_responde(intentos: int = 2, espera_s: float = 5) -> bool:
+    """Si el servidor ntfy de los avisos dice que está sano; un fallo suelto no cuenta."""
+    for intento in range(intentos):
+        try:
+            with urllib.request.urlopen(URL_SALUD_NTFY, timeout=10) as respuesta:
+                if json.loads(respuesta.read().decode("utf-8")).get("healthy") is True:
+                    return True
+        except (OSError, ValueError):
+            pass
+        if intento + 1 < intentos:
+            time.sleep(espera_s)
+    return False
 
 
 def _ejecutar(orden: Sequence[str]) -> str:
@@ -197,6 +221,7 @@ def componer(
     disco: Path,
     ejecutar: Ejecutar = _ejecutar,
     copia_base: Callable[[], datetime | None] = ultima_copia_base,
+    salud_ntfy: Callable[[], bool] = ntfy_responde,
 ) -> tuple[dict[str, Any], list[str]]:
     """salud.json y las líneas de detalle para el diario (con los identificadores)."""
     detalle: list[str] = []
@@ -323,6 +348,19 @@ def componer(
     frase_reserva = reserva.problema_para_vigilancia(estado_reserva, ahora)
     if frase_reserva is not None:
         problemas.append({"id": "reserva", "frase": frase_reserva})
+
+    # Avisos públicos de ntfy (recogida/avisos.py), solo en el servidor que los envía.
+    if (secretos / TOKEN_NTFY).exists():
+        if not salud_ntfy():
+            problemas.append({
+                "id": "ntfy",
+                "frase": "El servidor de avisos ntfy no responde (/v1/health).",
+            })  # fmt: skip
+        frase_avisos = avisos_ntfy.problema_para_vigilancia(
+            _leer_json(secretos / avisos_ntfy.ESTADO)
+        )
+        if frase_avisos is not None:
+            problemas.append({"id": "avisos", "frase": frase_avisos})
 
     prueba = _leer_json(secretos / "prueba_restauracion.json")
     hecha = _instante(prueba.get("fecha"))

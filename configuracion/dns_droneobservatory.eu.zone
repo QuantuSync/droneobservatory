@@ -15,6 +15,12 @@ www          IN CNAME 60d65e86c6f6416c.vercel-dns-016.com.
 @            IN CAA   0 issue "letsencrypt.org"
 @            IN CAA   0 issue "pki.goog"
 
+; Avisos públicos: servidor ntfy en eodi-recogida (docs/avisos.md). Creados con
+; `hcloud zone rrset create`, no con import-zonefile: la zona real tiene además un TXT de
+; verificación de Google que no está en este fichero.
+ntfy         IN A     2.28.197.102
+ntfy         IN AAAA  2a01:4f8:1c1e:bafa::1
+
 ; Correo del dominio en Arsys.
 @            IN MX    10 mx.serviciodecorreo.es.
 @            IN TXT   "v=spf1 include:_spf.serviciodecorreo.es ~all"

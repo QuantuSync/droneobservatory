@@ -1,0 +1,40 @@
+# Configuración del servidor ntfy de los avisos públicos (servidor/ntfy.sh la copia a
+# /etc/ntfy/server.yml). Sin secretos: las claves de las notificaciones del navegador van en
+# /etc/ntfy/webpush.env, solo en el servidor. Explicación en docs/avisos.md.
+
+base-url: "https://ntfy.droneobservatory.eu"
+# Solo en local: delante está Caddy, que pone el HTTPS con el certificado de Let's Encrypt.
+listen-http: "127.0.0.1:2586"
+behind-proxy: true
+
+# Usuarios y permisos: por defecto nadie lee ni publica. Los temas públicos se abren a la
+# lectura de todos y a la escritura de «observatorio» y «lucas» (servidor/ntfy.sh).
+auth-file: "/var/lib/ntfy/user.db"
+auth-default-access: "deny-all"
+enable-signup: false
+enable-login: true
+enable-reservations: false
+
+# Los últimos avisos quedan 24 horas, para que quien se suscribe los vea.
+cache-file: "/var/cache/ntfy/cache.db"
+cache-duration: "24h"
+
+# Sin adjuntos: no hay attachment-cache-dir, así que el servidor los rechaza.
+
+# iPhone: ntfy.sh solo recibe una señal de «hay un mensaje nuevo» (el identificador y la huella
+# del tema), sin el contenido, para que el aviso llegue al momento.
+upstream-base-url: "https://ntfy.sh"
+
+# Notificaciones del navegador (Web Push): las claves llegan por el entorno (webpush.env).
+web-push-file: "/var/cache/ntfy/webpush.db"
+web-push-email-address: "lucasalanizpintos@gmail.com"
+
+# Límites por visitante contra abusos.
+visitor-subscription-limit: 60
+visitor-request-limit-burst: 60
+visitor-request-limit-replenish: "5s"
+visitor-message-daily-limit: 200
+visitor-email-limit-burst: 0
+visitor-email-limit-replenish: "24h"
+
+log-level: "info"
