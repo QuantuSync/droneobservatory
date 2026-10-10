@@ -288,6 +288,8 @@ test.describe("pulso de las novedades", () => {
     await page.reload();
     await page.waitForSelector(MAPA_LISTO);
     await page.waitForTimeout(MS_DE_ASENTAMIENTO);
+    // Desde el #87 el aviso va dentro de «Europa ahora»; el botón lleva la cuenta.
+    await page.locator("[data-boton-ahora]:visible").first().click();
     const aviso = page.getByRole("status").filter({ hasText: /novedad/ });
     await expect(aviso).toBeVisible();
     expect(await page.locator(".pulso").count()).toBeGreaterThan(0);
