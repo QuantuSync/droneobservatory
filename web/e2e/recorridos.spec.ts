@@ -248,11 +248,12 @@ test.describe("teléfono: abrir la hoja, subirla con el dedo, desplazar y entonc
     await persona.tocar(pagina.locator("[data-boton-avisos]:visible").first());
     const panel = pagina.locator("[data-panel-avisos]:visible");
     await expect(panel).toBeVisible();
-    await subirHoja(persona);
-    await persona.desplazar(panel, 300);
     await persona.tocar(panel.locator("[data-buscar-canal]"));
     await pagina.keyboard.type("pol", { delay: 80 });
     await expect(panel.locator("[data-canal-elegido]")).toHaveValue("drones-poland");
+    // Como lo hizo quien encontró el fallo: subir la hoja, desplazar y el primer toque es
+    // «Suscribirme».
+    await subirHoja(persona);
     await persona.desplazar(panel, 300);
     await anotarClics(pagina);
 
@@ -277,6 +278,33 @@ test.describe("teléfono: abrir la hoja, subirla con el dedo, desplazar y entonc
     }
     await pagina.keyboard.press("Escape");
     await expect(panel).toHaveCount(0);
+    expect(errores).toEqual([]);
+  });
+
+  test("Europa ahora y Previsión: pestaña y plegables al primer toque tras subir la hoja", async ({
+    page: pagina,
+    context: contexto,
+    browserName,
+  }) => {
+    const errores = await abrir(contexto, pagina);
+    const persona = await Persona.en(pagina, contexto, true, browserName === "chromium");
+    await persona.tocar(pagina.locator("[data-boton-ahora]:visible").first());
+    const pestanas = pagina.locator("[data-pestanas-ahora]");
+    await expect(pestanas).toBeVisible();
+    await subirHoja(persona);
+    const prevision = pestanas.getByRole("tab", { name: "Previsión" });
+    await persona.tocar(prevision);
+    await expect(prevision, "la pestaña cambia al primer toque").toHaveAttribute("aria-selected", "true");
+    const panel = pagina.locator("[data-prevision]:visible");
+    await expect(panel).toBeVisible({ timeout: 15_000 });
+    await persona.desplazar(panel, 300);
+    const plegable = panel.locator("summary:visible").first();
+    await persona.tocar(plegable);
+    await expect.poll(() => plegable.evaluate((e) => (e.parentElement as HTMLDetailsElement).open)).toBe(true);
+    await persona.tocar(pestanas.getByRole("tab", { name: "Europa ahora" }));
+    await expect(pestanas.getByRole("tab", { name: "Europa ahora" })).toHaveAttribute("aria-selected", "true");
+    await pagina.keyboard.press("Escape");
+    await expect(pestanas).toHaveCount(0);
     expect(errores).toEqual([]);
   });
 
