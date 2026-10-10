@@ -218,11 +218,15 @@ for (const tamano of [...TELEFONOS, ESCRITORIO]) {
       if (telefono) await page.getByRole("banner").getByRole("button", { name: "Menú" }).click();
       await page.getByRole("button", { name: "Presión", exact: true }).filter({ visible: true }).click();
       if (telefono) await page.getByRole("button", { name: "Cerrar el menú" }).click();
-      await expect(page).toHaveURL(/\?ultimos=30d$/);
+      // Desde el #98 encender la presión no cambia el periodo: con «Todo», la leyenda lo dice y pide
+      // elegir uno para ver la tendencia.
+      await expect(page).not.toHaveURL(/ultimos=/);
       await expect(page.locator("[data-periodo-leyenda]").filter({ visible: true })).toHaveText(
-        "Incidentes en los últimos 30 días",
+        "Incidentes desde el primer dato",
       );
-      await expect(page.locator("[data-periodo-escrito]").filter({ visible: true })).toContainText("Últimos 30 días");
+      await expect(page.locator("[data-elige-periodo]").filter({ visible: true })).toHaveText(
+        "Elige un periodo para ver la tendencia",
+      );
       await capturar(page, `5-presion-${nombre}`);
     });
 

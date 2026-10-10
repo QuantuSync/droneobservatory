@@ -8,7 +8,9 @@ import type { BrowserContext, Page } from "@playwright/test";
 
 const MAPA = "[data-mapa-listo=true]";
 const PREVISION_WEB = "**/datos/prevision.json";
-const PREVISION_ALMACEN = /your-objectstorage\.com\/publicacion\/prevision\.json/;
+// La copia del almacén se pide por la propia web (/almacen/…, api/almacen.ts) desde el #193; en
+// local (VITE_ALMACEN), directamente al almacén.
+const PREVISION_ALMACEN = /(\/almacen|your-objectstorage\.com)\/publicacion\/prevision\.json/;
 const TAMANOS = [
   { nombre: "390x844", width: 390, height: 844, movil: true },
   { nombre: "escritorio", width: 1440, height: 900, movil: false },
