@@ -186,6 +186,8 @@ export function Desplegable({
     };
     const alTeclear = (evento: KeyboardEvent) => {
       if (evento.key !== "Escape") return;
+      // Con el foco en una ficha abierta desde el desplegable, Escape cierra antes la ficha.
+      if ((document.activeElement?.closest("[data-ficha]") ?? null) !== null) return;
       evento.preventDefault();
       evento.stopPropagation();
       cerrarRef.current();

@@ -176,6 +176,29 @@ export interface Textos {
   desplegable: {
     escape: string;
   };
+  /**
+   * La capa de Ucrania sin ratón: las listas de teclado de después del mapa (lo que está a la
+   * vista) y la lista de la capa, agrupada, dentro de su panel.
+   */
+  capaUcrania: {
+    regionesALaVista: (n: number) => string;
+    region: (nombre: string, ataques: string) => string;
+    impactosALaVista: (mostrados: number, total: number) => string;
+    impacto: (region: string, fecha: string, parte: boolean, foco: boolean) => string;
+    celdasALaVista: (mostradas: number, total: number) => string;
+    ciudadesALaVista: (n: number) => string;
+    boton: string;
+    abrir: string;
+    titulo: string;
+    explicacion: string;
+    regionesUcrania: (n: number) => string;
+    regionesRusia: (n: number) => string;
+    impactos: (mostrados: number, total: number) => string;
+    corredores: (n: number) => string;
+    vacia: string;
+    /** Lo que anuncia el lector de pantalla al cerrarse una ficha. */
+    fichaCerrada: string;
+  };
   /** Detección en directo de cierres de aeropuerto. */
   directo: {
     etiqueta: string;
@@ -739,6 +762,10 @@ export interface TextosSatelite {
     nubes: (pct: string) => string;
     producto: (lado: string) => string;
     alt: (momento: string, fecha: string) => string;
+    /** Lo esencial de la pareja, para el lector de pantalla: recorte, fechas y zona con cambios. */
+    descripcion: (lado: string, antes: string, despues: string, hectareas: string) => string;
+    /** Valor del deslizador, leído: cuánto se ve de cada imagen. */
+    posicion: (despues: number) => string;
     /** «Zona con cambios: N hectáreas», con las fechas de las dos imágenes. */
     zonaCambio: (hectareas: string, antes: string, despues: string) => string;
     ocultarContorno: string;

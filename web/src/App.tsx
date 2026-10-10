@@ -35,6 +35,7 @@ import {
   cargarIndiceSatelite,
 } from "./componentes/GuerraSatelite.tsx";
 import { BotonAplicar, Filtros, textoDeSeleccion } from "./componentes/Filtros.tsx";
+import { ListaUcrania } from "./componentes/ListaUcrania.tsx";
 import { LeyendaCorredores, LeyendaGnss, LeyendaPresion } from "./componentes/Leyendas.tsx";
 import type { EstadoGnss } from "./componentes/Leyendas.tsx";
 import { Lista } from "./componentes/Lista.tsx";
@@ -90,6 +91,7 @@ import {
 } from "./datos/guerraSatelite.ts";
 import type {
   AlumbradoReducido,
+  Corredor,
   FocosVivos,
   IndiceSatelite,
   PuntoSatelite,
@@ -101,6 +103,7 @@ import { urlDelAlmacen } from "./almacenPublico.ts";
 import type {
   Ataque,
   EstadoSistema,
+  FilaImpacto,
   ImpactoGuerra,
   IncidenteDetalle,
   IncidenteResumen,
@@ -140,9 +143,10 @@ import {
   registrarVisita,
 } from "./estado/novedades.ts";
 import metaInicial from "./generado/meta.json";
-import { fechaDia, jornadaEscrita, numero, textos } from "./i18n/index.ts";
+import { fechaDia, jornadaEscrita, numero, region as nombreRegion, textos } from "./i18n/index.ts";
 import type { ApiMapa, Encuadre, Reserva, Vuelo } from "./mapa/Mapa.tsx";
-import { cajaDeLoVisible } from "./mapa/cajaVisible.ts";
+import { MEDIA_REGION_GRADOS, cajaDeLoVisible } from "./mapa/cajaVisible.ts";
+import type { Caja } from "./mapa/cajaVisible.ts";
 import { ZOOM_DE_PAIS, ZOOM_MAXIMO_AL_APLICAR } from "./mapa/encuadre.ts";
 import { useNavegacion } from "./navegacion.tsx";
 import { analizarRuta } from "./rutas.ts";
@@ -212,9 +216,9 @@ const REGION_DE_LA_CAPA = /^(UA|RU)-[A-Z0-9]{1,3}$/;
 /** Lo que dura a la vista el aviso «Ningún resultado con estos filtros». */
 const MS_AVISO_FILTROS = 3500;
 
-type HojaPropia = "filtros" | "ahora" | "prevision" | "directo" | null;
+type HojaPropia = "filtros" | "ahora" | "prevision" | "directo" | "ucrania" | null;
 /** Desplegables de los botones sobre el mapa, en el escritorio: uno a la vez. */
-type Desplegado = "filtros" | "ahora" | "prevision" | null;
+type Desplegado = "filtros" | "ahora" | "prevision" | "ucrania" | null;
 
 /** Con el teléfono en horizontal apenas hay alto: una hoja a media altura no enseña nada. */
 const ALTO_DE_TELEFONO_APAISADO = 500;
@@ -387,6 +391,7 @@ export function App() {
   const botonFiltros = useRef<HTMLButtonElement>(null);
   const botonAhora = useRef<HTMLButtonElement>(null);
   const botonPrevision = useRef<HTMLButtonElement>(null);
+  const refListaUcrania = useRef<HTMLButtonElement>(null);
   const [noche, setNoche] = useState<number | null>(null);
   const [nochePausada, setNochePausada] = useState(false);
   const [menu, setMenu] = useState(false);
@@ -1170,6 +1175,45 @@ export function App() {
     },
     [cerrarFicha],
   );
+  // La lista de la capa de Ucrania: elegir una fila abre su ficha y lleva el mapa a ella (lo pide
+  // quien elige). En el teléfono la lista va en una hoja que se cierra al abrir la ficha; al cerrar
+  // la ficha, la lista vuelve a abrirse (volverALista) para seguir donde se estaba.
+  const volverALista = useRef(false);
+  const irACaja = useCallback((caja: Caja) => {
+    setVuelo((anterior) => ({
+      encuadre: { caja, zoomMaximo: ZOOM_MAXIMO_AL_APLICAR },
+      modo: "ir",
+      n: (anterior?.n ?? 0) + 1,
+    }));
+  }, []);
+  const elegirRegionDeLista = useCallback(
+    (codigo: string) => {
+      volverALista.current = movil;
+      abrirRegion(codigo);
+      const centro = datosUcrania?.centros[codigo];
+      if (centro === undefined) return;
+      const [mLon, mLat] = MEDIA_REGION_GRADOS;
+      irACaja([centro[0] - mLon, centro[1] - mLat, centro[0] + mLon, centro[1] + mLat]);
+    },
+    [movil, abrirRegion, datosUcrania, irACaja],
+  );
+  const elegirImpactoDeLista = useCallback(
+    (fila: FilaImpacto) => {
+      volverALista.current = movil;
+      abrirImpacto(fila[0]);
+      setVuelo((anterior) => ({ encuadre: { lon: fila[3], lat: fila[4] }, modo: "ir", n: (anterior?.n ?? 0) + 1 }));
+    },
+    [movil, abrirImpacto],
+  );
+  const elegirCorredorDeLista = useCallback(
+    (corredor: Corredor) => {
+      volverALista.current = movil;
+      abrirCorredor(corredor.clave);
+      const [a, b] = [corredor.desde, corredor.hasta];
+      irACaja([Math.min(a[0], b[0]), Math.min(a[1], b[1]), Math.max(a[0], b[0]), Math.max(a[1], b[1])]);
+    },
+    [movil, abrirCorredor, irACaja],
+  );
   const cifrasDelMomento = useMemo(
     () => cifrasAhora({ resumen: datosResumen, ucrania: datosUcrania, directo, gnssHoy, ahora: ahora?.getTime() ?? null }),
     [datosResumen, datosUcrania, directo, gnssHoy, ahora],
@@ -1260,7 +1304,12 @@ export function App() {
   // En el teléfono, las hojas de los filtros y de «Europa ahora» se cierran tocando fuera
   // (un toque, no un arrastre: se puede mover el mapa con ellas abiertas).
   useEffect(() => {
-    if (!movil || (hojaPropia !== "filtros" && hojaPropia !== "ahora" && hojaPropia !== "prevision")) return;
+    if (
+      !movil ||
+      (hojaPropia !== "filtros" && hojaPropia !== "ahora" && hojaPropia !== "prevision" && hojaPropia !== "ucrania")
+    ) {
+      return;
+    }
     const alTocar = (evento: MouseEvent) => {
       const objetivo = evento.target;
       if (objetivo instanceof Element && objetivo.closest("[data-hoja-propia]") !== null) return;
@@ -1284,7 +1333,10 @@ export function App() {
           return;
         case "cerrar":
           // Primero lo abierto: desplegable, ficha, hoja, directo; y la reproducción de noches.
-          if (desplegado !== null) setDesplegado(null);
+          // Con el foco en una ficha (abierta desde un desplegable que sigue abierto, como la lista
+          // de la capa de Ucrania), primero la ficha.
+          if (hayFicha && (document.activeElement?.closest("[data-ficha]") ?? null) !== null) cerrarFicha();
+          else if (desplegado !== null) setDesplegado(null);
           else if (hayFicha) cerrarFicha();
           else if (hojaPropia !== null) setHojaPropia(null);
           else if (feedAbierto) setFeedAbierto(false);
@@ -1468,7 +1520,7 @@ export function App() {
     };
   } else if (panelLocal?.clase === "region" && datosUcrania !== null && periodo !== null) {
     ficha = {
-      nombre: `${t.region.etiqueta} ${panelLocal.codigo}`,
+      nombre: `${t.region.etiqueta}: ${nombreRegion(panelLocal.codigo, idioma)}`,
       contenido: (
         <>
           <CabeceraFicha t={t} etiqueta={t.region.etiqueta} onCerrar={cerrarFicha} />
@@ -1493,8 +1545,13 @@ export function App() {
       ),
     };
   } else if (panelLocal?.clase === "impacto") {
+    const idImpacto = panelLocal.id;
+    const filaImpacto = datosUcrania?.impactos.find((f) => f[0] === idImpacto);
     ficha = {
-      nombre: `${t.impacto.etiqueta} ${panelLocal.id}`,
+      nombre:
+        filaImpacto === undefined
+          ? `${t.impacto.etiqueta} ${panelLocal.id}`
+          : `${t.impacto.etiqueta}: ${nombreRegion(filaImpacto[8], idioma)}, ${fechaDia(filaImpacto[1])}`,
       contenido: (
         <>
           <CabeceraFicha t={t} etiqueta={t.impacto.etiqueta} onCerrar={cerrarFicha} />
@@ -1643,6 +1700,47 @@ export function App() {
   }
 
 
+  // Al cerrar una ficha, el foco vuelve a donde estaba al abrirla (el botón de una lista de
+  // teclado, la lista de la capa...) y el lector de pantalla anuncia que se ha cerrado. Si el foco
+  // ya está en otro sitio (se tocó el mapa), se deja donde está.
+  const nombreFicha = ficha?.nombre ?? null;
+  const fichaAnterior = useRef<string | null>(null);
+  const focoAlAbrir = useRef<HTMLElement | null>(null);
+  const ultimoFoco = useRef<HTMLElement | null>(null);
+  const [fichaCerrada, setFichaCerrada] = useState(0);
+  useEffect(() => {
+    const alEnfocar = (evento: FocusEvent) => {
+      const objetivo = evento.target;
+      if (objetivo instanceof HTMLElement && objetivo.closest("[data-ficha]") === null) ultimoFoco.current = objetivo;
+    };
+    document.addEventListener("focusin", alEnfocar);
+    return () => document.removeEventListener("focusin", alEnfocar);
+  }, []);
+  useEffect(() => {
+    const antes = fichaAnterior.current;
+    fichaAnterior.current = nombreFicha;
+    if (antes === null && nombreFicha !== null) {
+      focoAlAbrir.current = ultimoFoco.current;
+      return;
+    }
+    if (antes === null || nombreFicha !== null) return;
+    setFichaCerrada((n) => n + 1);
+    if (volverALista.current) {
+      volverALista.current = false;
+      if (movil && capas.ucrania) {
+        setAltura(alturaInicial());
+        setHojaPropia("ucrania");
+        return;
+      }
+    }
+    const activo = document.activeElement;
+    if (activo !== null && activo !== document.body) return;
+    const destino = focoAlAbrir.current;
+    (destino?.isConnected === true ? destino : document.getElementById("mapa"))?.focus({ preventScroll: true });
+    // Solo al cambiar lo abierto.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [nombreFicha]);
+
   const lista = (
     <Lista
       t={t}
@@ -1772,6 +1870,59 @@ export function App() {
   const periodoEscrito = textoDeSeleccion(t, seleccion);
   const cierresActivos = cierresEnCurso(directo).length;
   const novedadesPendientes = latentes.size;
+  /** La capa de Ucrania en lista: en el desplegable de escritorio o en la hoja del teléfono. */
+  const listaUcrania = (grande: boolean) => (
+    <ListaUcrania
+      t={t}
+      idioma={idioma}
+      intensidad={intensidad}
+      impactos={impactos}
+      corredores={capas.corredores ? corredoresEnMapa : null}
+      onRegion={elegirRegionDeLista}
+      onImpacto={elegirImpactoDeLista}
+      onCorredor={elegirCorredorDeLista}
+      grande={grande}
+    />
+  );
+  /** «Lista», junto a «Con satélite»: abre la capa de Ucrania en lista. */
+  const botonListaUcrania = (grande: boolean) =>
+    grande ? (
+      <button
+        type="button"
+        className="control min-h-11 whitespace-nowrap px-2 text-sm"
+        aria-haspopup="dialog"
+        aria-label={t.capaUcrania.abrir}
+        data-boton-lista-ucrania=""
+        onClick={() => abrirHoja("ucrania")}
+      >
+        {t.capaUcrania.boton}
+      </button>
+    ) : (
+      <div className="relative flex">
+        <button
+          ref={refListaUcrania}
+          type="button"
+          className="control min-h-7 whitespace-nowrap px-2 text-xs"
+          aria-expanded={desplegado === "ucrania"}
+          aria-label={t.capaUcrania.abrir}
+          data-boton-lista-ucrania=""
+          onClick={() => setDesplegado((actual) => (actual === "ucrania" ? null : "ucrania"))}
+        >
+          {t.capaUcrania.boton}
+        </button>
+        {desplegado === "ucrania" && (
+          <Desplegable
+            t={t}
+            titulo={t.capaUcrania.titulo}
+            cerrar={t.feed.cerrar}
+            boton={refListaUcrania}
+            onCerrar={() => setDesplegado(null)}
+          >
+            {listaUcrania(false)}
+          </Desplegable>
+        )}
+      </div>
+    );
   /** Los botones pequeños sobre el mapa: filtros y «Europa ahora». */
   const botonesMapa = (enTelefono: boolean) => (
     <div className="pointer-events-auto relative flex flex-wrap items-start gap-1.5" data-botones-mapa="">
@@ -1976,6 +2127,7 @@ export function App() {
               rutas={rutasEnElMapa}
               onRuta={abrirRuta}
               recorrido={recorridoAbierto}
+              centrosRegiones={ucraniaActiva?.centros ?? null}
               onCorredores={abrirCorredores}
               corredorElegido={panelLocal?.clase === "corredor" ? panelLocal.clave : null}
               puntosSatelite={puntosSatelite}
@@ -1989,6 +2141,9 @@ export function App() {
           </Suspense>
         )}
         <p className="sr-only">{t.mapa.instrucciones}</p>
+        <p className="sr-only" aria-live="polite" data-ficha-cerrada="">
+          {fichaCerrada === 0 ? "" : `${t.capaUcrania.fichaCerrada}${"\u200b".repeat(fichaCerrada % 2)}`}
+        </p>
         <p className="sr-only" aria-live="polite" data-aviso-filtros="">
           {avisoFiltros === null ? "" : t.filtros.sinResultados}
         </p>
@@ -2011,7 +2166,12 @@ export function App() {
                     t={t}
                     capas={capas}
                     onCapas={cambiarCapas}
-                    extraGuerra={botonSatelite(false)}
+                    extraGuerra={
+                      <>
+                        {botonSatelite(false)}
+                        {botonListaUcrania(false)}
+                      </>
+                    }
                   />
                   {botonNoches(false)}
                   <button
@@ -2111,6 +2271,7 @@ export function App() {
                   altura={altura}
                   onAltura={setAltura}
                   onCerrar={cerrarFicha}
+                  esFicha
                 >
                   {ficha.contenido}
                 </HojaInferior>
@@ -2193,6 +2354,25 @@ export function App() {
                 </HojaInferior>
               </div>
             )}
+            {movil && ficha === null && hojaPropia === "ucrania" && capas.ucrania && (
+              <div className="pointer-events-auto" data-hoja-propia="">
+                <HojaInferior
+                  t={t}
+                  nombre={t.capaUcrania.titulo}
+                  altura={altura}
+                  onAltura={setAltura}
+                  onCerrar={() => setHojaPropia(null)}
+                >
+                  <CabeceraFicha
+                    t={t}
+                    etiqueta={t.capaUcrania.titulo}
+                    onCerrar={() => setHojaPropia(null)}
+                    cerrar={t.feed.cerrar}
+                  />
+                  <div className="min-h-0 flex-1 overflow-y-auto">{listaUcrania(true)}</div>
+                </HojaInferior>
+              </div>
+            )}
             {movil && ficha === null && hojaPropia === "directo" && (
               <div className="pointer-events-auto">
                 <HojaInferior
@@ -2227,7 +2407,12 @@ export function App() {
               capas={capas}
               onCapas={cambiarCapas}
               grande
-              extraGuerra={botonSatelite(true)}
+              extraGuerra={
+                <>
+                  {botonSatelite(true)}
+                  {botonListaUcrania(true)}
+                </>
+              }
               panelGuerra={
                 capas.satelite && puntosSatelite !== null ? (
                   <PanelSatelite

@@ -187,6 +187,33 @@ export const es: Textos = {
   desplegable: {
     escape: "Se cierra con Escape.",
   },
+  capaUcrania: {
+    regionesALaVista: (n) =>
+      n === 1 ? "1 región con ataques a la vista (capa de Ucrania)" : `${n} regiones con ataques a la vista (capa de Ucrania)`,
+    region: (nombre, ataques) => `${nombre} · ${ataques} ${ataques === "1" ? "ataque" : "ataques"} en el periodo`,
+    impactosALaVista: (mostrados, total) =>
+      mostrados === total
+        ? `${total} ${total === 1 ? "impacto con lugar" : "impactos con lugar"} a la vista, del más reciente al más antiguo`
+        : `Los ${mostrados} impactos con lugar más recientes de los ${total} a la vista: acerca el mapa o usa la lista de la capa para ver otros`,
+    impacto: (region, fecha, parte, foco) =>
+      `Impacto con lugar · ${region} · ${fecha}${parte ? " · reivindicación de parte" : ""}${foco ? " · foco térmico" : ""}`,
+    celdasALaVista: (mostradas, total) =>
+      mostradas === total
+        ? `${total} ${total === 1 ? "celda" : "celdas"} de interferencia GPS a la vista, de la más afectada a la menos`
+        : `Las ${mostradas} celdas de interferencia GPS más afectadas de las ${total} a la vista`,
+    ciudadesALaVista: (n) => (n === 1 ? "1 ciudad con datos de luz nocturna a la vista" : `${n} ciudades con datos de luz nocturna a la vista`),
+    boton: "Lista",
+    abrir: "Lista de la capa de Ucrania",
+    titulo: "Capa de Ucrania en lista",
+    explicacion: "Lo mismo que el mapa en el periodo elegido. Al elegir algo se abre su ficha y el mapa va a ello.",
+    regionesUcrania: (n) => `Regiones de Ucrania con ataques · ${n}`,
+    regionesRusia: (n) => `Regiones de Rusia con ataques · ${n}`,
+    impactos: (mostrados, total) =>
+      mostrados === total ? `Impactos con lugar · ${total}` : `Últimos impactos con lugar · ${mostrados} de ${total}`,
+    corredores: (n) => `Corredores · ${n}`,
+    vacia: "Nada que mostrar en el periodo elegido.",
+    fichaCerrada: "Ficha cerrada",
+  },
   directo: {
     etiqueta: "Aeropuerto · detección en directo",
     estado: {
@@ -483,7 +510,9 @@ export const es: Textos = {
       "Con el foco en el mapa, las flechas lo desplazan y las teclas más y menos cambian el " +
       "zoom. Después del mapa, el tabulador recorre los incidentes a la vista, del más reciente al " +
       "más antiguo: cada uno se señala en el mapa e Intro abre su ficha. La lista de incidentes da " +
-      "acceso a las mismas fichas sin usar el mapa.",
+      "acceso a las mismas fichas sin usar el mapa. Con la capa de Ucrania encendida, antes de los " +
+      "incidentes el tabulador recorre sus regiones con ataques, sus impactos y lo demás que tenga " +
+      "ficha, de la misma forma, y el botón «Lista» de la capa la da entera en lista.",
     aLaVista: (n) => (n === 1 ? "1 incidente a la vista en el mapa" : `${n} incidentes a la vista en el mapa`),
     grupo: (n) => (n === 1 ? "1 incidente: acerca para verlo" : `${n} incidentes: acerca para verlos`),
     pila: (n) => `${n} incidentes en este mismo punto: pulsa para elegir uno`,
@@ -1865,6 +1894,10 @@ export const es: Textos = {
       nubes: (pct) => `${pct} % de nubes en el recorte`,
       producto: (lado) => `Sentinel-2 L2A, color natural, 10 m por píxel, recorte de ${lado} km`,
       alt: (momento, fecha) => `Imagen de satélite ${momento} del ataque, ${fecha}`,
+      descripcion: (lado, antes, despues, hectareas) =>
+        `Dos imágenes de satélite en color natural del mismo recorte de ${lado} km, una del ${antes} y otra del ${despues}, ` +
+        `superpuestas con un deslizador. La zona que cambió entre las dos, ${hectareas} hectáreas, va marcada con un contorno.`,
+      posicion: (despues) => `${100 - despues} % de la imagen de antes y ${despues} % de la de después a la vista`,
       zonaCambio: (hectareas, antes, despues) =>
         `Zona con cambios: ${hectareas} hectáreas · antes ${antes} · después ${despues}`,
       ocultarContorno: "Ocultar contorno",
