@@ -141,6 +141,7 @@ export const es: Textos = {
     quitar: "Quitar filtros",
     aplicar: "Aplicar",
     sinResultados: "Ningún resultado con estos filtros",
+    nadaALaVista: "Nada a la vista: enciende alguna capa",
     recientes: "Periodo",
     activos: (n) => (n === 1 ? "1 activo" : `${n} activos`),
     zona: "Dónde",

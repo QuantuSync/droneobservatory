@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { ReactNode, RefObject } from "react";
 
 import type { Textos } from "../i18n/index.ts";
 import { NOMBRE } from "../sitio.ts";
@@ -54,12 +54,15 @@ export function BarraMovil({
   menuAbierto,
   onMenu,
   avisos,
+  referenciaMenu,
 }: {
   t: Textos;
   estado: ReactNode;
   menuAbierto: boolean;
   onMenu: () => void;
   avisos?: ReactNode;
+  /** El botón del menú, para devolverle el foco tras «Aplicar». */
+  referenciaMenu?: RefObject<HTMLButtonElement | null>;
 }) {
   return (
     <header aria-label={t.cabecera.etiqueta} className="superficie border-b pt-[env(safe-area-inset-top)]">
@@ -73,11 +76,13 @@ export function BarraMovil({
         <div className="ml-auto min-w-0">{estado}</div>
         {avisos}
         <button
+          ref={referenciaMenu}
           type="button"
           className="control min-h-11 min-w-11 text-sm text-texto"
           aria-haspopup="dialog"
           aria-expanded={menuAbierto}
           onClick={onMenu}
+          data-boton-menu=""
         >
           {t.cabecera.menu}
         </button>

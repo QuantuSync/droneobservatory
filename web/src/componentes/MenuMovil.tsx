@@ -8,6 +8,8 @@ interface Props {
   abierto: boolean;
   onCerrar: () => void;
   children: ReactNode;
+  /** Lo que va fijo abajo, a todo el ancho, fuera de lo que se desplaza («Aplicar»). */
+  pie?: ReactNode;
 }
 
 /** Una sección del menú, con su rótulo. */
@@ -23,9 +25,10 @@ export function SeccionMenu({ rotulo, children }: { rotulo: string; children: Re
 /**
  * Menú del teléfono: una hoja a pantalla completa con las cifras, las capas, los filtros, el
  * directo, la ayuda, la metodología y el idioma. Es un diálogo modal nativo (Escape lo cierra)
- * y respeta las zonas seguras de la pantalla.
+ * y respeta las zonas seguras de la pantalla. Al pie, fijo, «Aplicar»: cierra el menú y encuadra
+ * lo que se ve con las capas elegidas (el mismo botón que en los filtros).
  */
-export function MenuMovil({ t, abierto, onCerrar, children }: Props) {
+export function MenuMovil({ t, abierto, onCerrar, children, pie }: Props) {
   const dialogo = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -56,6 +59,11 @@ export function MenuMovil({ t, abierto, onCerrar, children }: Props) {
         </button>
       </div>
       {children}
+      {pie !== undefined && (
+        <div className="sticky bottom-0 z-10 border-t border-linea bg-panel-solido px-4 py-2" data-pie-menu="">
+          {pie}
+        </div>
+      )}
     </dialog>
   );
 }
