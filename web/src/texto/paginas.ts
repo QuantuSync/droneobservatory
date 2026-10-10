@@ -49,6 +49,8 @@ import type { Idioma } from "../sitio.ts";
 import { fechaDeDia } from "../tiempo/dias.ts";
 import { e, html, jsonLd } from "./html.ts";
 import type { Hijo, Html } from "./html.ts";
+import { paginaAvisos } from "./avisos.ts";
+import { RUTAS_AVISOS, TEXTO_AVISOS } from "../avisos.ts";
 import { BORRAR_VISITA, enlacesSobre, PAGINAS_SERVICIO, RUTAS_SERVICIO, SCRIPT_BORRAR_VISITA, textoServicio } from "./servicio.ts";
 import { rutasDeVersion } from "../datos/versiones.ts";
 import type { VersionDatos } from "../datos/versiones.ts";
@@ -1059,6 +1061,7 @@ function ayuda(datos: DatosPaginas, idioma: Idioma): PaginaTexto {
     cuerpo: html(
       e("h1", null, tp.ayuda.titulo),
       parrafos.map((p) => e("p", null, p)),
+      e("p", null, enlace(RUTAS_AVISOS[idioma], TEXTO_AVISOS[idioma].titulo), ": ", TEXTO_AVISOS[idioma].descripcion),
       e("h2", null, a.atajos),
       e("ul", null, Object.values(a.acciones).map((accion) => e("li", null, accion))),
       autoriaYCita(idioma, datos.resumen.actualizado, "h2"),
@@ -1092,6 +1095,7 @@ export function paginas(datos: DatosPaginas): PaginaTexto[] {
     resultado.push(paginaPrevision(datos, idioma));
     resultado.push(metodologia(datos, idioma));
     resultado.push(ayuda(datos, idioma));
+    resultado.push({ ...paginaAvisos(idioma), estructurados: [], conMapa: false });
     for (const pagina of PAGINAS_SERVICIO) resultado.push(paginaServicio(pagina, idioma));
     for (const v of datos.versiones ?? []) resultado.push(paginaVersion(v, idioma));
   }

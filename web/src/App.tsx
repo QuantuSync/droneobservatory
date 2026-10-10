@@ -3,6 +3,7 @@ import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } fro
 import { LineaNovedades, RecorridoNovedades } from "./componentes/Novedades.tsx";
 import { Ayuda } from "./componentes/Ayuda.tsx";
 import { BarraEstado } from "./componentes/BarraEstado.tsx";
+import { Avisos, BotonAvisos } from "./componentes/Avisos.tsx";
 import { BotonAhora, BotonFiltros, BotonPrevision, Desplegable } from "./componentes/BotonesMapa.tsx";
 import { Prevision } from "./componentes/Prevision.tsx";
 import { BarraMovil, Cabecera } from "./componentes/Cabecera.tsx";
@@ -43,6 +44,7 @@ import { Marcador } from "./componentes/Marcador.tsx";
 import { MenuMovil, SeccionMenu } from "./componentes/MenuMovil.tsx";
 import { Metodologia } from "./componentes/Metodologia.tsx";
 import { CabeceraFicha, ErrorDeCarga, SegunCarga } from "./componentes/Panel.tsx";
+import { TEXTO_AVISOS } from "./avisos.ts";
 import { ALTURAS, HojaInferior, PanelLateral } from "./componentes/Paneles.tsx";
 import type { Altura } from "./componentes/Paneles.tsx";
 import { SelectorPila } from "./componentes/SelectorPila.tsx";
@@ -216,9 +218,9 @@ const REGION_DE_LA_CAPA = /^(UA|RU)-[A-Z0-9]{1,3}$/;
 /** Lo que dura a la vista el aviso «Ningún resultado con estos filtros». */
 const MS_AVISO_FILTROS = 3500;
 
-type HojaPropia = "filtros" | "ahora" | "prevision" | "directo" | "ucrania" | null;
+type HojaPropia = "filtros" | "ahora" | "prevision" | "directo" | "ucrania" | "avisos" | null;
 /** Desplegables de los botones sobre el mapa, en el escritorio: uno a la vez. */
-type Desplegado = "filtros" | "ahora" | "prevision" | "ucrania" | null;
+type Desplegado = "filtros" | "ahora" | "prevision" | "ucrania" | "avisos" | null;
 
 /** Con el teléfono en horizontal apenas hay alto: una hoja a media altura no enseña nada. */
 const ALTO_DE_TELEFONO_APAISADO = 500;
@@ -392,6 +394,8 @@ export function App() {
   const botonAhora = useRef<HTMLButtonElement>(null);
   const botonPrevision = useRef<HTMLButtonElement>(null);
   const refListaUcrania = useRef<HTMLButtonElement>(null);
+  const botonAvisos = useRef<HTMLButtonElement>(null);
+  const botonAvisosMovil = useRef<HTMLButtonElement>(null);
   const [noche, setNoche] = useState<number | null>(null);
   const [nochePausada, setNochePausada] = useState(false);
   const [menu, setMenu] = useState(false);
@@ -1306,7 +1310,11 @@ export function App() {
   useEffect(() => {
     if (
       !movil ||
-      (hojaPropia !== "filtros" && hojaPropia !== "ahora" && hojaPropia !== "prevision" && hojaPropia !== "ucrania")
+      (hojaPropia !== "filtros" &&
+        hojaPropia !== "ahora" &&
+        hojaPropia !== "prevision" &&
+        hojaPropia !== "ucrania" &&
+        hojaPropia !== "avisos")
     ) {
       return;
     }
@@ -1318,6 +1326,19 @@ export function App() {
     document.addEventListener("click", alTocar, true);
     return () => document.removeEventListener("click", alTocar, true);
   }, [movil, hojaPropia]);
+
+  // Al cerrar la hoja de los avisos en el teléfono, el foco vuelve a su botón de la cabecera (si no
+  // se ha ido a otro sitio, como el mapa tocado).
+  const hojaAnterior = useRef<HojaPropia>(null);
+  useEffect(() => {
+    const antes = hojaAnterior.current;
+    hojaAnterior.current = hojaPropia;
+    if (antes !== "avisos" || hojaPropia !== null) return;
+    const activo = document.activeElement;
+    if (activo === null || activo === document.body || !activo.isConnected) {
+      botonAvisosMovil.current?.focus({ preventScroll: true });
+    }
+  }, [hojaPropia]);
 
   // Atajos de teclado.
   const hayFicha = fichaActiva !== null || panelLocal !== null;
@@ -2162,6 +2183,25 @@ export function App() {
               }
               derecha={
                 <>
+                  <div className="relative mr-1.5 flex">
+                    <BotonAvisos
+                      idioma={idioma}
+                      abierto={desplegado === "avisos"}
+                      onAbrir={() => setDesplegado((actual) => (actual === "avisos" ? null : "avisos"))}
+                      referencia={botonAvisos}
+                    />
+                    {desplegado === "avisos" && (
+                      <Desplegable
+                        t={t}
+                        titulo={TEXTO_AVISOS[idioma].titulo}
+                        cerrar={TEXTO_AVISOS[idioma].cerrar}
+                        boton={botonAvisos}
+                        onCerrar={() => setDesplegado(null)}
+                      >
+                        <Avisos idioma={idioma} />
+                      </Desplegable>
+                    )}
+                  </div>
                   <SelectorDeCapas
                     t={t}
                     capas={capas}
@@ -2239,6 +2279,15 @@ export function App() {
               estado={estadoDatos(true)}
               menuAbierto={menu}
               onMenu={() => setMenu(true)}
+              avisos={
+                <BotonAvisos
+                  idioma={idioma}
+                  abierto={hojaPropia === "avisos"}
+                  onAbrir={() => abrirHoja("avisos")}
+                  referencia={botonAvisosMovil}
+                  grande
+                />
+              }
             />
           </div>
           <div className="relative min-h-0 flex-1">
@@ -2295,6 +2344,27 @@ export function App() {
                   <div className="min-h-0 flex-1 overflow-y-auto px-4 py-3">{filtrosDeLaPantalla}</div>
                   <div className="shrink-0 border-t border-linea px-4 py-2">
                     <BotonAplicar t={t} onAplicar={aplicarFiltros} />
+                  </div>
+                </HojaInferior>
+              </div>
+            )}
+            {movil && ficha === null && hojaPropia === "avisos" && (
+              <div className="pointer-events-auto" data-hoja-propia="">
+                <HojaInferior
+                  t={t}
+                  nombre={TEXTO_AVISOS[idioma].titulo}
+                  altura={altura}
+                  onAltura={setAltura}
+                  onCerrar={() => setHojaPropia(null)}
+                >
+                  <CabeceraFicha
+                    t={t}
+                    etiqueta={TEXTO_AVISOS[idioma].titulo}
+                    onCerrar={() => setHojaPropia(null)}
+                    cerrar={TEXTO_AVISOS[idioma].cerrar}
+                  />
+                  <div className="min-h-0 flex-1 overflow-y-auto px-4 py-3">
+                    <Avisos idioma={idioma} />
                   </div>
                 </HojaInferior>
               </div>

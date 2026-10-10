@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 
+import { RUTAS_AVISOS, TEXTO_AVISOS } from "../avisos.ts";
 import { ESTADOS } from "../datos/vocabulario.ts";
 import { ATAJOS } from "../estado/atajos.ts";
 import type { Textos } from "../i18n/index.ts";
@@ -178,6 +179,12 @@ export function Ayuda({ t, idioma, abierta, onCerrar }: Props) {
             {a.aproximado}
           </p>
         </section>
+        <p className="text-secundario sm:col-span-2" data-ayuda-avisos="">
+          <a className="text-texto underline decoration-secundario underline-offset-2" href={RUTAS_AVISOS[idioma]}>
+            {TEXTO_AVISOS[idioma].titulo}
+          </a>
+          : {TEXTO_AVISOS[idioma].descripcion}
+        </p>
         <ul className="flex flex-col gap-2 text-secundario sm:col-span-2">
           {[a.periodo, a.ahora, a.areas, a.lineas, a.numeros, a.pila, a.pulsos, a.reciente, a.novedad, a.ucrania].map(
             (texto) => (

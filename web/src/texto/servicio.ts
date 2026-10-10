@@ -4,6 +4,7 @@
 // Lo que dicen de los datos de los visitantes está comprobado en el código y en la configuración
 // (vercel.json, src/estado/novedades.ts): si cambia algo de eso, cambia esta página.
 
+import { RUTAS_AVISOS, TEXTO_AVISOS } from "../avisos.ts";
 import type { Seccion } from "../i18n/tipos.ts";
 import { AUTOR_FIRMA, AUTOR_NOMBRE, CORREO_AUTOR, LICENCIA_DATOS, LICENCIA_DATOS_URL, NOMBRE, ORCID, ORCID_URL, REPOSITORIO } from "../sitio.ts";
 import type { Idioma } from "../sitio.ts";
@@ -577,12 +578,16 @@ export function textoServicio(pagina: PaginaServicio, idioma: Idioma): TextoServ
 }
 
 /**
- * Los enlaces de «Sobre el observatorio»: las páginas de servicio. Los usan la metodología (web y
- * texto), el pie de las páginas de texto y llms.txt.
+ * Los enlaces de «Sobre el observatorio»: los avisos y las páginas de servicio. Los usan la
+ * metodología (web y texto), el pie de las páginas de texto y llms.txt.
  */
 export function enlacesSobre(idioma: Idioma): { ruta: string; texto: string; titulo: string }[] {
-  return PAGINAS_SERVICIO.map((pagina) => {
-    const texto = textoServicio(pagina, idioma);
-    return { ruta: RUTAS_SERVICIO[pagina][idioma], texto: texto.enlace, titulo: texto.titulo };
-  });
+  const avisos = TEXTO_AVISOS[idioma];
+  return [
+    { ruta: RUTAS_AVISOS[idioma], texto: avisos.enlace, titulo: avisos.titulo },
+    ...PAGINAS_SERVICIO.map((pagina) => {
+      const texto = textoServicio(pagina, idioma);
+      return { ruta: RUTAS_SERVICIO[pagina][idioma], texto: texto.enlace, titulo: texto.titulo };
+    }),
+  ];
 }

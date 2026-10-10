@@ -641,10 +641,12 @@ describe("aplicación con el diseño nuevo", () => {
     abrir("/");
     await screen.findByTestId("mapa");
     const barra = await screen.findByRole("banner", { name: es.cabecera.etiqueta });
-    // Solo el logo, «EODI», el estado y el menú; sobre el mapa, dos botones pequeños de 44 px.
+    // Solo el logo, «EODI», el estado, «Avisos» (a la vista, fuera del menú) y el menú; sobre el
+    // mapa, dos botones pequeños de 44 px.
     await waitFor(() =>
       expect(within(barra).getAllByRole("button").map((b) => b.textContent)).toEqual([
         expect.stringMatching(/hace/),
+        "Avisos",
         es.cabecera.menu,
       ]),
     );
