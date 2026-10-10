@@ -97,6 +97,27 @@ async function tocar(pagina: Page, telefono: boolean, x: number, y: number) {
   else await pagina.mouse.click(x, y);
 }
 
+/**
+ * Un punto del mapa (relativo a su caja) desde la altura dada hacia abajo, a la izquierda, sin
+ * ninguna marca de la web (lo que no es del mapa de fondo ni un área) en el cuadro de 44 px del dedo.
+ */
+async function puntoVacio(pagina: Page, desde: number): Promise<{ x: number; y: number }> {
+  const punto = await pagina.evaluate((y0) => {
+    const mapa = document.querySelector<HTMLElement & { mapaDePruebas?: { queryRenderedFeatures: (caja: [[number, number], [number, number]]) => { source: string; layer: { type: string } }[] } }>(".maplibregl-map")?.mapaDePruebas;
+    if (mapa === undefined) return null;
+    for (let y = y0; y < y0 + 300; y += 12) {
+      for (let x = 24; x < 200; x += 12) {
+        const rasgos = mapa.queryRenderedFeatures([[x - 22, y - 22], [x + 22, y + 22]]);
+        // Las áreas (países, regiones, tierra) no son marcas: tocarlas con una ficha abierta la cierra.
+        if (rasgos.every((r) => r.source === "protomaps" || r.layer.type === "fill")) return { x, y };
+      }
+    }
+    return null;
+  }, desde);
+  if (punto === null) throw new Error("ningún punto vacío bajo la cabecera");
+  return punto;
+}
+
 /** Dónde queda en la pantalla el incidente abierto. */
 async function posicion(pagina: Page): Promise<{ x: number; y: number }> {
   const mapa = pagina.locator(MAPA);
@@ -165,11 +186,14 @@ for (const tamano of [TELEFONO, ESCRITORIO]) {
           } else if (metodo === "escape") {
             await page.keyboard.press("Escape");
           } else if (metodo === "fuera") {
-            // Un punto del mapa sin nada, a la izquierda, bajo los botones de la cabecera.
+            // Un punto del mapa sin nada, bajo los botones de la cabecera: sin ninguna marca de la
+            // web en el cuadro de 44 px que cubre el dedo (si no, el toque abre esa marca, como
+            // pasaba con un incidente de Malinas junto al punto fijo de antes).
             const caja = await page.locator(MAPA).boundingBox();
             const cabecera = await page.locator("header").filter({ visible: true }).first().boundingBox();
             if (caja === null || cabecera === null) throw new Error("sin medidas");
-            await tocar(page, telefono, caja.x + 24, cabecera.y + cabecera.height + 70);
+            const vacio = await puntoVacio(page, cabecera.y + cabecera.height + 70 - caja.y);
+            await tocar(page, telefono, caja.x + vacio.x, caja.y + vacio.y);
           } else {
             // Arrastrar la hoja por su asa hasta abajo.
             const caja = await ficha.boundingBox();
