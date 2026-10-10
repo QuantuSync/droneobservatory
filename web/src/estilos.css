@@ -230,9 +230,7 @@
     color: var(--color-secundario);
     background-color: transparent;
     cursor: pointer;
-    transition:
-      background-color 120ms,
-      color 120ms;
+    /* Sin transición de color: el cambio de estado se ve al momento del toque. */
     /* En el teléfono, todo control mide al menos 44 × 44 px, para el dedo, aunque lleve una
        altura propia más pequeña pensada para el escritorio. */
     @variant tel {
@@ -246,32 +244,13 @@
     background-color: var(--color-panel-solido);
     box-shadow: var(--shadow-panel);
   }
-  .control:hover {
-    color: var(--color-texto);
-    background-color: var(--color-elevado);
-  }
-  .control[aria-pressed="true"],
-  .control[aria-checked="true"],
-  .control[aria-expanded="true"],
-  .control[aria-selected="true"] {
-    color: var(--acento);
-    background-color: var(--color-elevado);
-    box-shadow: inset 0 0 0 1px var(--color-linea);
-  }
-  /* En el panel de filtros, lo elegido va en claro con el texto oscuro (y lo demás como siempre,
-     oscuro con el texto claro): se distingue de un vistazo, también a pleno sol. */
-  [data-filtros] .control[aria-pressed="true"],
-  [data-filtros] .control[data-activo] {
-    color: var(--color-fondo);
-    background-color: var(--acento);
-    border-color: var(--acento);
-    box-shadow: none;
-    font-weight: 600;
-  }
-  [data-filtros] .control[aria-pressed="true"]:hover,
-  [data-filtros] .control[data-activo]:hover {
-    color: var(--color-fondo);
-    background-color: var(--color-texto);
+  /* El paso del ratón solo donde hay ratón: en una pantalla táctil, el «hover» se queda pegado al
+     control tocado hasta el siguiente toque y tapaba su estado (seleccionado o no). */
+  @media (hover: hover) {
+    .control:hover {
+      color: var(--color-texto);
+      background-color: var(--color-elevado);
+    }
   }
   .control:disabled {
     cursor: default;
@@ -283,8 +262,10 @@
     background-color: var(--acento);
     font-weight: 600;
   }
-  .control-principal:hover {
-    background-color: var(--color-texto);
+  @media (hover: hover) {
+    .control-principal:hover {
+      background-color: var(--color-texto);
+    }
   }
 
   .enlace {
@@ -308,6 +289,37 @@
     font-family: var(--font-mono);
     font-size: 0.75rem;
     text-align: center;
+  }
+}
+
+/* Lo seleccionado, en toda la web (capas, botones de la cabecera, subcapas, pestañas, filtros,
+   desplegables con valor, lo desplegado): en claro con el texto oscuro, y lo demás como siempre,
+   oscuro con el texto claro. Se distingue de un vistazo, también a pleno sol (3:1 entre los dos
+   estados y 4,5:1 del texto, comprobado en tests/seleccion-comun.test.ts). El estado lo anuncia
+   el atributo ARIA que lo pinta. Va fuera de las capas para que ninguna utilidad de color del
+   componente (text-texto...) lo tape. */
+.control:is([aria-pressed="true"], [aria-checked="true"], [aria-selected="true"], [aria-expanded="true"], [data-activo]),
+details[open] > summary.control,
+button[aria-pressed="true"] {
+  color: var(--color-fondo);
+  background-color: var(--acento);
+  border-color: var(--acento);
+  box-shadow: none;
+}
+:is(
+    .control:is([aria-pressed="true"], [aria-checked="true"], [aria-selected="true"], [aria-expanded="true"], [data-activo]),
+    details[open] > summary.control,
+    button[aria-pressed="true"]
+  )
+  :where(.text-texto, .text-secundario, .text-acento) {
+  color: inherit;
+}
+@media (hover: hover) {
+  .control:is([aria-pressed="true"], [aria-checked="true"], [aria-selected="true"], [aria-expanded="true"], [data-activo]):hover,
+  details[open] > summary.control:hover,
+  button[aria-pressed="true"]:hover {
+    color: var(--color-fondo);
+    background-color: var(--color-texto);
   }
 }
 
