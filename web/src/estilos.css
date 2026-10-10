@@ -140,6 +140,17 @@
     color: inherit;
   }
 
+  /* Cada contenedor con desplazamiento de un panel es el bloque contenedor de lo que lleva
+     dentro con posición absoluta (los textos solo para lectores de pantalla, sr-only). Si no,
+     esos textos se colocan respecto al diálogo o al panel de fuera, escapan del recorte y le
+     dan una altura de miles de píxeles vacíos con una segunda barra. Va en la capa base para
+     que un desplegable que además es «absolute» lo siga siendo. El desplazamiento no pasa al
+     mapa ni a la página al llegar al final. */
+  :where(.overflow-y-auto, .overflow-auto) {
+    position: relative;
+    overscroll-behavior: contain;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     *,
     ::before,
