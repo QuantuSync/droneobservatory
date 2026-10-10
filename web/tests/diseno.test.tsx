@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { App } from "../src/App.tsx";
 import { Feed, haceCuanto } from "../src/componentes/Feed.tsx";
-import { HojaInferior, alturaMasCercana, siguienteAltura } from "../src/componentes/Paneles.tsx";
+import { HojaInferior, MARGEN_CLIC_DE_ARRASTRE_MS, alturaMasCercana, esClicDeArrastre, siguienteAltura } from "../src/componentes/Paneles.tsx";
 import type { Altura } from "../src/componentes/Paneles.tsx";
 import { detalleIncidente, resumir, resumirIncidente, resumirUcrania } from "../src/datos/derivar.ts";
 import type { EventoResumen } from "../src/datos/tipos.ts";
@@ -77,6 +77,58 @@ describe("hoja inferior del teléfono", () => {
     fireEvent.pointerUp(boton, { pointerId: 2, clientY: 300 });
     fireEvent.click(boton);
     expect(onCerrar).toHaveBeenCalledOnce();
+  });
+
+  it("tras subir la hoja con el dedo, el primer toque en un control pulsa (no queda nada pendiente)", () => {
+    const onPulsar = vi.fn();
+    const onAltura = vi.fn();
+    render(
+      <HojaInferior t={es} nombre="Filtros" altura="media" onAltura={onAltura} onCerrar={() => undefined}>
+        <button type="button" onClick={onPulsar}>
+          Drones
+        </button>
+      </HojaInferior>,
+    );
+    const asa = screen.getByRole("button", { name: /^Hoja / });
+    // Arrastre táctil del asa hacia arriba: con el dedo no llega ningún clic al soltar.
+    fireEvent.pointerDown(asa, { pointerId: 7, pointerType: "touch", clientY: 500 });
+    fireEvent.pointerMove(asa, { pointerId: 7, pointerType: "touch", clientY: 300 });
+    fireEvent.pointerUp(asa, { pointerId: 7, pointerType: "touch", clientY: 200 });
+    expect(onAltura).toHaveBeenCalledOnce();
+    fireEvent.click(screen.getByRole("button", { name: "Drones" }));
+    expect(onPulsar).toHaveBeenCalledOnce();
+  });
+
+  it("el clic que cierra un arrastre con ratón no pulsa nada; el siguiente sí", () => {
+    const onPulsar = vi.fn();
+    render(
+      <HojaInferior t={es} nombre="Ficha" altura="media" onAltura={() => undefined} onCerrar={() => undefined}>
+        <div data-arrastre="">
+          <button type="button" onClick={onPulsar}>
+            Cerrar
+          </button>
+        </div>
+      </HojaInferior>,
+    );
+    const boton = screen.getByRole("button", { name: "Cerrar" });
+    fireEvent.pointerDown(boton, { pointerId: 1, pointerType: "mouse", clientY: 500 });
+    fireEvent.pointerMove(boton, { pointerId: 1, pointerType: "mouse", clientY: 300 });
+    fireEvent.pointerUp(boton, { pointerId: 1, pointerType: "mouse", clientY: 300 });
+    fireEvent.click(boton);
+    expect(onPulsar).not.toHaveBeenCalled();
+    fireEvent.click(boton);
+    expect(onPulsar).toHaveBeenCalledOnce();
+  });
+
+  it("solo se descarta el clic del mismo puntero y dentro del margen", () => {
+    const pendiente = { puntero: 1, hasta: 1000 };
+    expect(esClicDeArrastre(pendiente, 1, 1000)).toBe(true);
+    expect(esClicDeArrastre(pendiente, undefined, 900)).toBe(true);
+    expect(esClicDeArrastre(pendiente, 2, 900)).toBe(false);
+    expect(esClicDeArrastre(pendiente, -1, 900)).toBe(false);
+    expect(esClicDeArrastre(pendiente, 1, 1000 + 1)).toBe(false);
+    expect(esClicDeArrastre(null, 1, 0)).toBe(false);
+    expect(MARGEN_CLIC_DE_ARRASTRE_MS).toBeLessThanOrEqual(400);
   });
 
   it("un toque en el asa cambia de altura y nunca cierra la hoja", () => {

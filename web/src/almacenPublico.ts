@@ -16,10 +16,12 @@ export const ORIGEN_RESERVA: string = new URL(almacen.reserva.publico).origin;
 
 /**
  * Dirección de un objeto del almacén. En desarrollo, VITE_ALMACEN puede apuntar a una copia
- * servida por el servidor local (scripts/servidor-local.ts).
+ * servida por el servidor local (scripts/servidor-local.ts). Fuera de Vite (las pruebas de
+ * navegador, que corren en Node) no hay import.meta.env: va la ruta de la web.
  */
 export function urlDelAlmacen(objeto: string): string {
-  const local = import.meta.env.VITE_ALMACEN as string | undefined;
+  const entorno = import.meta.env as ImportMetaEnv | undefined;
+  const local = entorno?.VITE_ALMACEN as string | undefined;
   return `${local ?? RUTA_ALMACEN}/${objeto}`;
 }
 

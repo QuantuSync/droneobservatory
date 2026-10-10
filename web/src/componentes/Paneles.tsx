@@ -68,6 +68,24 @@ const PROYECCION_MS = 250;
 const VENTANA_VELOCIDAD_MS = 100;
 /** Por debajo de esta parte de la altura asomada, al soltar, la hoja se cierra. */
 const FRACCION_DE_CIERRE = 0.6;
+/** Margen tras soltar un arrastre con ratón en el que llega su clic, que no debe pulsar nada. */
+export const MARGEN_CLIC_DE_ARRASTRE_MS = 350;
+
+/** El clic que puede llegar al soltar un arrastre con ratón: de qué puntero y hasta cuándo. */
+export interface ClicDeArrastre {
+  puntero: number;
+  hasta: number;
+}
+
+/**
+ * Si un clic es el que cierra un arrastre con ratón y hay que descartarlo: del mismo puntero
+ * (cuando el navegador lo dice) y dentro del margen. Con el dedo no llega ningún clic al soltar un
+ * arrastre, así que un toque nunca se descarta por un arrastre anterior.
+ */
+export function esClicDeArrastre(pendiente: ClicDeArrastre | null, puntero: number | undefined, ahora: number): boolean {
+  if (pendiente === null || ahora > pendiente.hasta) return false;
+  return puntero === undefined || puntero === pendiente.puntero;
+}
 
 interface Gesto {
   inicioY: number;
@@ -101,8 +119,9 @@ function desplazable(desde: EventTarget | null, hoja: HTMLElement): HTMLElement 
 export function HojaInferior({ t, nombre, altura, onAltura, onCerrar, children, esFicha = false }: PropsHoja) {
   const hoja = useRef<HTMLElement>(null);
   const gesto = useRef<Gesto | null>(null);
-  // Un arrastre termina con un clic: ese clic no debe pulsar nada más (ni la X).
-  const anularClic = useRef(false);
+  // Un arrastre con ratón termina con un clic: ese clic no debe pulsar nada más (ni la X). Solo
+  // ese, y solo si llega enseguida: con el dedo no hay tal clic y nada queda pendiente.
+  const clicDeArrastre = useRef<ClicDeArrastre | null>(null);
   const puntero = useRef<number | null>(null);
   const manejadores = useRef({ onAltura, onCerrar, altura });
   manejadores.current = { onAltura, onCerrar, altura };
@@ -178,7 +197,6 @@ export function HojaInferior({ t, nombre, altura, onAltura, onCerrar, children, 
     const actual = gesto.current;
     const elemento = hoja.current;
     if (actual === null || elemento === null) return;
-    anularClic.current = true;
     const alto = elemento.getBoundingClientRect().height;
     const primera = actual.muestras[0];
     const ultima = actual.muestras[actual.muestras.length - 1];
@@ -195,6 +213,7 @@ export function HojaInferior({ t, nombre, altura, onAltura, onCerrar, children, 
 
   // El asa y la cabecera se arrastran con eventos de puntero (dedo o ratón).
   function alApretar(evento: PointerEvent<HTMLElement>) {
+    clicDeArrastre.current = null;
     if (!esZonaDeArrastre(evento.target)) return;
     gesto.current = nuevoGesto(evento.clientY);
     puntero.current = evento.pointerId;
@@ -214,7 +233,12 @@ export function HojaInferior({ t, nombre, altura, onAltura, onCerrar, children, 
   function alSoltar(evento: PointerEvent<HTMLElement>) {
     if (puntero.current !== evento.pointerId) return;
     puntero.current = null;
-    if (gesto.current?.arrastrando === true) soltar();
+    if (gesto.current?.arrastrando === true) {
+      if (evento.pointerType !== "touch") {
+        clicDeArrastre.current = { puntero: evento.pointerId, hasta: performance.now() + MARGEN_CLIC_DE_ARRASTRE_MS };
+      }
+      soltar();
+    }
     gesto.current = null;
   }
 
@@ -246,8 +270,11 @@ export function HojaInferior({ t, nombre, altura, onAltura, onCerrar, children, 
       onPointerUp={alSoltar}
       onPointerCancel={alSoltar}
       onClickCapture={(evento) => {
-        if (!anularClic.current) return;
-        anularClic.current = false;
+        const pendiente = clicDeArrastre.current;
+        clicDeArrastre.current = null;
+        // El clic es un PointerEvent en los navegadores actuales; si no, basta el margen.
+        const id = "pointerId" in evento.nativeEvent ? Number(evento.nativeEvent.pointerId) : undefined;
+        if (!esClicDeArrastre(pendiente, id, performance.now())) return;
         evento.preventDefault();
         evento.stopPropagation();
       }}
