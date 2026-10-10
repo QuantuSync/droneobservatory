@@ -43,17 +43,22 @@ export function Cabecera({ t, centro, derecha }: Props) {
   );
 }
 
-/** Barra compacta del teléfono: logo y «EODI», el estado y el botón del menú. Nada más. */
+/**
+ * Barra compacta del teléfono: logo y «EODI», el estado, el botón «Avisos» (a la vista, fuera del
+ * menú) y el botón del menú. Nada más.
+ */
 export function BarraMovil({
   t,
   estado,
   menuAbierto,
   onMenu,
+  avisos,
 }: {
   t: Textos;
   estado: ReactNode;
   menuAbierto: boolean;
   onMenu: () => void;
+  avisos?: ReactNode;
 }) {
   return (
     <header aria-label={t.cabecera.etiqueta} className="superficie border-b pt-[env(safe-area-inset-top)]">
@@ -64,7 +69,8 @@ export function BarraMovil({
           <span aria-hidden="true">EODI</span>
           <span className="sr-only">{NOMBRE}</span>
         </h1>
-        <div className="ml-auto">{estado}</div>
+        <div className="ml-auto min-w-0">{estado}</div>
+        {avisos}
         <button
           type="button"
           className="control min-h-11 min-w-11 text-sm text-texto"

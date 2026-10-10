@@ -423,6 +423,51 @@ body.pagina-texto {
   outline-offset: 2px;
 }
 
+.texto-pagina a.texto-boton {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+/* Página «Avisos»: cada canal plegable (el general, abierto) con sus botones y su código QR. */
+.texto-pagina .texto-canal {
+  border-top: 1px solid var(--color-linea);
+  padding: 0.25rem 0;
+}
+
+.texto-pagina .texto-canal summary {
+  min-height: 2.75rem;
+  padding: 0.5rem 0;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.texto-pagina .texto-canal summary .mono {
+  color: var(--color-secundario);
+  font-weight: 400;
+}
+
+.texto-pagina .texto-canal-cuerpo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0 2rem;
+}
+
+.texto-pagina .texto-canal-cuerpo > div {
+  flex: 1 1 18rem;
+}
+
+.texto-pagina .texto-qr {
+  margin: 1rem 0;
+  text-align: center;
+}
+
+.texto-pagina .texto-qr img {
+  display: block;
+  border-radius: 0.25rem;
+}
+
 .texto-saltar {
   position: absolute;
   left: -9999px;

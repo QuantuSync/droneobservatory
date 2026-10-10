@@ -26,6 +26,7 @@ import { e, html } from "../src/texto/html.ts";
 import { jsonLd, marco, paginas } from "../src/texto/paginas.ts";
 import type { PaginaTexto } from "../src/texto/paginas.ts";
 import { llmsTxt, noEncontrada, redirecciones, sitemap } from "../src/texto/salidas.ts";
+import { escribirQrAvisos } from "./qr-avisos.ts";
 
 const WEB = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SALIDA = join(WEB, "dist");
@@ -168,6 +169,8 @@ export async function terminarPaginas(carpeta: string): Promise<void> {
   await writeFile(join(carpeta, "404.html"), paginaSoloTexto(plantillaEs, noEncontrada(), resumen.actualizado), "utf-8");
   await writeFile(join(carpeta, "sitemap.xml"), sitemap(todas), "utf-8");
   await writeFile(join(carpeta, "llms.txt"), llmsTxt(resumen), "utf-8");
+  // Los códigos QR de los canales de avisos (página «Avisos» y panel del mapa).
+  await escribirQrAvisos(carpeta);
   const publicados = new Set(resumen.incidentes.map((i) => i.id));
   // Lo que lee la función del borde: una regla para todos los unidos en los dos idiomas (sin
   // gastar capacidad de redirecciones de Vercel) y los ataques que existen (los demás, 404).

@@ -23,6 +23,8 @@ export const RUTAS_QUE_DESPLIEGAN: readonly string[] = [
   "api",
   // La dirección del almacén público (teselas y estado.json) la lee la web en el build.
   "configuracion/almacen_publico.json",
+  // Los canales de avisos (página «Avisos», panel del mapa y sus códigos QR).
+  "configuracion/avisos.json",
   // De dónde lee el build los datos publicados (repositorio o almacén).
   "configuracion/publicacion_web.json",
 ];

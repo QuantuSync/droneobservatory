@@ -56,6 +56,8 @@ TAMANOS_ICO = (16, 32, 48)
 TAMANOS_LOGO = (96, 192, 384, 640)
 TAMANOS_ICONO = (192, 512)
 LADO_APPLE = 180
+# Icono de los avisos de ntfy (recogida/avisos.py): 256 px, el logo completo sobre fondo.
+LADO_AVISO = 256
 # Los iconos adaptables se recortan hasta un círculo del 80 % del lado.
 ZONA_SEGURA = 0.8
 # El logo completo sobre fondo ocupa este tanto del icono.
@@ -220,6 +222,9 @@ def principal(fuente: Path) -> None:
 
     sobre_fondo(logo, LADO_APPLE, OCUPACION_ICONO).save(
         PUBLICO / "apple-touch-icon.png", optimize=True
+    )
+    sobre_fondo(logo, LADO_AVISO, OCUPACION_ICONO).save(
+        PUBLICO / "marca" / f"aviso-{LADO_AVISO}.png", optimize=True
     )
     for n in TAMANOS_ICONO:
         sobre_fondo(logo, n, OCUPACION_ICONO).save(
