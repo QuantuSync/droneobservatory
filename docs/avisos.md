@@ -2,9 +2,32 @@
 
 Cualquiera recibe en el móvil o en el ordenador un aviso cuando hay un suceso importante con drones
 en Europa, sin cuenta: con la aplicación ntfy (Android o iPhone) o en el navegador, desde el
-servidor propio del observatorio, **https://ntfy.droneobservatory.eu**. Hay un canal general y uno
-por país cubierto. La página pública es `/avisos` (`/en/alerts`), y el botón «Avisos» de la
-cabecera del mapa abre un panel con lo mismo.
+servidor propio del observatorio, **https://ntfy.droneobservatory.eu**. Hay un canal de toda
+Europa, `drones-europe`, y uno por país cubierto, `drones-<país en inglés>` (`drones-slovakia`,
+`drones-poland`, `drones-united-kingdom`...): el nombre se entiende solo en la aplicación. La página
+pública es `/avisos` (`/en/alerts`), y el botón «Avisos» de la cabecera del mapa abre un panel con
+lo mismo.
+
+## El panel «Avisos» y la página
+
+El panel de la cabecera tiene tres pasos y nada más (`web/src/componentes/Avisos.tsx`):
+
+1. **Qué recibirás**, en dos líneas.
+2. **Qué quieres recibir**: un selector con «Toda Europa» por defecto y los países por orden
+   alfabético, con un buscador que no distingue tildes ni mayúsculas.
+3. **Suscríbete**: la web mira si es Android, iPhone (o iPad) u ordenador y enseña un solo botón,
+   «Suscribirme», con las instrucciones de ese dispositivo, como mucho tres pasos:
+   - Android: el botón abre la aplicación ntfy ya suscrita (`ntfy://ntfy.droneobservatory.eu/<canal>`),
+     y debajo un enlace pequeño a Google Play.
+   - iPhone: la documentación de ntfy solo describe los enlaces `ntfy://` en Android, así que el
+     botón lleva a la App Store y los pasos traen el servidor y el canal con su botón «Copiar».
+   - Ordenador: el botón abre el canal en el navegador, donde se permiten las notificaciones, y al
+     lado sale un solo código QR del canal elegido, «Escanéalo con tu móvil». En el móvil nunca
+     sale el QR.
+
+Al pie, «Más ayuda» lleva a la página de texto, que sigue el mismo orden: los tres pasos, la
+explicación detallada de cada dispositivo, qué se avisa y, al final, todos los canales con su
+código QR (para poder imprimirla).
 
 ## Cómo funciona
 
@@ -15,7 +38,7 @@ cabecera del mapa abre un panel con lo mismo.
 2. `recogida/avisos.py` lee qué incidentes están publicados (`incidentes.geojson` e
    `incidentes_sin_ubicacion.json` en `/home/eodi/datos/publicacion`) y su documento interno en la
    base, solo leyendo (`/home/eodi/base/eodi.sqlite`).
-3. Decide cuáles merecen aviso (apartado «Qué se avisa») y publica cada aviso en el tema `general`
+3. Decide cuáles merecen aviso (apartado «Qué se avisa») y publica cada aviso en el tema `drones-europe`
    y en el de su país, en JSON, con el token del usuario `observatorio`.
 4. Anota lo enviado, por incidente y tema, en una base propia:
    `/home/eodi/datos/avisos/avisos.sqlite`, con las tablas `avisos` y `activacion`. La base del
@@ -79,6 +102,7 @@ Sin emoticonos ni etiquetas. En Markdown (`"markdown": true`), que en texto plan
 | Lo ya avisado | `/home/eodi/datos/avisos/avisos.sqlite` |
 | Estado para la vigilancia | `/home/eodi/.eodi/avisos.json` |
 | Contraseña de `lucas` | Solo en el equipo de Lucas: `%USERPROFILE%\.eodi\ntfy_lucas.txt` |
+| Avisos manuales | `C:\dev\avisos\enviar-aviso.ps1` y el acceso directo «Enviar aviso» del escritorio; copia sin credenciales en `herramientas/enviar-aviso.ps1` |
 | Envío | `recogida/avisos.py` |
 | Página y panel | `web/src/avisos.ts`, `web/src/texto/avisos.ts`, `web/src/componentes/Avisos.tsx`; los QR, `web/scripts/qr-avisos.ts` en el build |
 
@@ -108,7 +132,7 @@ cerrado.
 
 ## Cómo añadir un canal
 
-1. Añadir el país a `configuracion/avisos.json` (`tema` en inglés, minúsculas y guiones, nombres
+1. Añadir el país a `configuracion/avisos.json` (`tema` `drones-` y el país en inglés, minúsculas y guiones, nombres
    `es` y `en`, `zona_horaria`, `otan`). Debe estar también en `configuracion/paises_europa.json`:
    lo comprueba `tests/test_avisos.py`.
 2. Fusionar. La web vuelve a construirse con el canal, su QR y su sitio en la página.
@@ -118,17 +142,41 @@ cerrado.
 
 ## Cómo envía Lucas un aviso manual
 
-**Desde la aplicación o el navegador** (lo más sencillo):
+**Con el acceso directo «Enviar aviso» del escritorio** (lo más sencillo). Ejecuta
+`C:\dev\avisos\enviar-aviso.ps1`, que está fuera del repositorio; la copia versionada, sin ninguna
+credencial, es `herramientas/enviar-aviso.ps1`. Junto al script va `avisos.json`, la lista de
+canales (copia de `configuracion/avisos.json`; si se añade un país, copiarla de nuevo), y el icono
+`aviso.ico`.
+
+1. Doble clic en «Enviar aviso».
+2. Contestar lo que pregunta: el país (Intro para «Toda Europa», o el número o el nombre del país),
+   el título corto, el texto en español, el texto en inglés y si es una incursión en un país de la
+   OTAN o en Moldavia (`s`: prioridad 4; `n`: prioridad 3).
+3. Revisar la vista previa y escribir `s` para enviar (cualquier otra cosa no envía nada).
+
+Sale a `drones-europe` y, si se eligió país, también a su canal. El título lleva el formato de los
+automáticos (`ESLOVAQUIA · Qué pasa`, o `EUROPA · Qué pasa` si es para toda Europa); el mensaje,
+en Markdown, el texto en español, el inglés y el enlace a droneobservatory.eu; al tocarlo se abre
+la web; el icono es el logo del observatorio. La contraseña de `lucas` se lee de
+`%USERPROFILE%\.eodi\ntfy_lucas.txt` y no se muestra nunca.
+
+Para probarlo sin tocar los canales públicos: dar permiso temporal a `lucas` en un tema de pruebas
+(`sudo -u ntfy ntfy access lucas prueba-xxxx read-write`), ejecutar
+`powershell -ExecutionPolicy Bypass -File C:\dev\avisos\enviar-aviso.ps1 -Prueba prueba-xxxx` y
+quitar el permiso (`sudo -u ntfy ntfy access --reset lucas prueba-xxxx`). Con `-Prueba` se niega a
+enviar a un canal público. Probado así el 10 de octubre de 2026.
+
+**Desde la aplicación o el navegador**:
 
 1. Abrir https://ntfy.droneobservatory.eu (o la app ntfy) e iniciar sesión con el usuario `lucas`
    y la contraseña de `ntfy_lucas.txt`. En el navegador: «Iniciar sesión», arriba a la derecha. En
    Android: Ajustes → Gestionar usuarios → Añadir usuario, con el servidor
    `https://ntfy.droneobservatory.eu`. En iPhone: en Settings, el apartado de usuarios, con el
    mismo servidor.
-2. Abrir el tema (`general`, y después el del país) y escribir el mensaje. En el navegador, la
-   flecha junto a «Escriba un mensaje aquí» abre el formulario completo: título, prioridad,
+2. Abrir el tema (`drones-europe`, y después el del país) y escribir el mensaje. En el navegador,
+   la flecha junto a «Escriba un mensaje aquí» abre el formulario completo: título, prioridad,
    Markdown y enlace al pulsar.
-3. Enviar el mismo aviso al tema `general` y al del país.
+3. Enviar el mismo aviso a `drones-europe` y al canal del país.
 
 **Plantilla** (mismo formato que los automáticos):
 
@@ -154,8 +202,17 @@ printf 'user = "lucas:%s"\n' "$(cat ~/.eodi/ntfy_lucas.txt)" | curl -K - \
   -H "Title: =?UTF-8?B?$(printf 'POLONIA · Comunicado' | base64 -w0)?=" \
   -H "Markdown: yes" -H "Priority: 3" -H "Click: https://droneobservatory.eu" \
   -H "Icon: https://droneobservatory.eu/marca/aviso-256.png" \
-  --data-binary @aviso.txt https://ntfy.droneobservatory.eu/general
+  --data-binary @aviso.txt https://ntfy.droneobservatory.eu/drones-europe
 ```
+
+## Cambio de nombre de los canales (10 de octubre de 2026)
+
+Los canales `general` y `<país>` pasaron a `drones-europe` y `drones-<país>`. Lo anotado en
+`avisos.sqlite` con el nombre anterior cuenta como enviado al nuevo (`temas_anteriores` de
+`configuracion/avisos.json`), así que ningún aviso se repite. Se publicó una vez en `general` un
+aviso en español e inglés con el canal nuevo y el enlace a la página de avisos, y después
+`servidor/ntfy.sh` rehízo los permisos solo con los temas nuevos: los antiguos ya no se pueden leer.
+Quien siguiera suscrito a `general` debe suscribirse a `drones-europe`.
 
 ## Qué hacer si falla
 

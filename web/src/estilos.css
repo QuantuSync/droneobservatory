@@ -429,43 +429,65 @@ body.pagina-texto {
   text-decoration: none;
 }
 
-/* Página «Avisos»: cada canal plegable (el general, abierto) con sus botones y su código QR. */
-.texto-pagina .texto-canal {
-  border-top: 1px solid var(--color-linea);
-  padding: 0.25rem 0;
+/* Página «Avisos»: los tres pasos numerados, los botones de cada dispositivo y la lista de
+   canales en cuadrícula, cada uno con su código QR (se puede imprimir). */
+.texto-pagina .texto-pasos {
+  padding-left: 1.5rem;
 }
 
-.texto-pagina .texto-canal summary {
-  min-height: 2.75rem;
-  padding: 0.5rem 0;
-  cursor: pointer;
-  font-weight: 600;
+.texto-pagina .texto-pasos > li::marker {
+  font-weight: 700;
 }
 
-.texto-pagina .texto-canal summary .mono {
-  color: var(--color-secundario);
-  font-weight: 400;
+.texto-pagina .texto-pasos h2 {
+  margin-top: 1rem;
 }
 
-.texto-pagina .texto-canal-cuerpo {
+.texto-pagina .texto-botones {
   display: flex;
   flex-wrap: wrap;
-  align-items: flex-start;
-  gap: 0 2rem;
+  gap: 0.5rem;
+  padding: 0;
+  list-style: none;
 }
 
-.texto-pagina .texto-canal-cuerpo > div {
-  flex: 1 1 18rem;
+.texto-pagina .texto-canales {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+  gap: 1rem;
+  padding: 0;
+  list-style: none;
 }
 
-.texto-pagina .texto-qr {
-  margin: 1rem 0;
-  text-align: center;
-}
-
-.texto-pagina .texto-qr img {
-  display: block;
+.texto-pagina .texto-canal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.75rem;
+  border: 1px solid var(--color-linea);
   border-radius: 0.25rem;
+  text-align: center;
+  break-inside: avoid;
+}
+
+.texto-pagina .texto-canal h3 {
+  margin: 0;
+}
+
+.texto-pagina .texto-canal .mono {
+  margin: 0.25rem 0 0.5rem;
+  color: var(--color-secundario);
+}
+
+.texto-pagina .texto-canal img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.25rem;
+}
+
+.texto-pagina .texto-canal-enlaces {
+  margin: 0.5rem 0 0;
 }
 
 .texto-saltar {
