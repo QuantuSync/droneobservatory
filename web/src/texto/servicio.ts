@@ -17,7 +17,7 @@ const CITA_PLANTILLA = {
 } as const;
 const CORREO = `mailto:${CONTACTO}`;
 /** Fecha de la última revisión de estas páginas (y de la de accesibilidad). */
-export const REVISADAS = { es: "8 de octubre de 2026", en: "8 October 2026" } as const;
+export const REVISADAS = { es: "10 de octubre de 2026", en: "10 October 2026" } as const;
 
 export type PaginaServicio = "avisoLegal" | "privacidad" | "independencia" | "accesibilidad";
 export const PAGINAS_SERVICIO: readonly PaginaServicio[] = [
@@ -299,12 +299,7 @@ const ES: Record<PaginaServicio, TextoServicio> = {
         titulo: "Lo que queda pendiente",
         bloques: [
           {
-            lista: [
-              {
-                termino: "Capa de la guerra en Ucrania",
-                texto: ["Las regiones, los impactos y las celdas de interferencia de GPS del mapa no se recorren uno a uno con el teclado (los corredores sí); sus datos están en la página de texto de la guerra en Ucrania. Arreglo: recorrerlos con el tabulador como los incidentes. Fecha prevista: 31 de diciembre de 2026."],
-              },
-            ],
+            parrafo: ["Nada pendiente a fecha de esta revisión."],
           },
         ],
       },
@@ -556,12 +551,7 @@ const EN: Record<PaginaServicio, TextoServicio> = {
         titulo: "What is pending",
         bloques: [
           {
-            lista: [
-              {
-                termino: "War in Ukraine layer",
-                texto: ["The regions, impacts and GPS interference cells on the map cannot be stepped through one by one with the keyboard (the corridors can); their data is on the text page about the war in Ukraine. Fix: step through them with the Tab key like the incidents. Planned date: 31 December 2026."],
-              },
-            ],
+            parrafo: ["Nothing pending as of this review."],
           },
         ],
       },

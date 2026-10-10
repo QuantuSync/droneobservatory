@@ -71,6 +71,20 @@ describe("imágenes de antes y después", () => {
     expect(screen.getAllByText(/30\/09\/2026/).length).toBeGreaterThan(0);
   });
 
+  it("dice lo esencial al lector de pantalla: recorte, fechas, zona con cambios y cuánto se ve", async () => {
+    await cargarIndiceSatelite(descarga(INDICE));
+    render(<ImagenesSatelite t={es} idioma="es" id="EODI-IG-2026-03486" />);
+    await waitFor(() => expect(screen.getByText(INDICE.atribucion)).toBeTruthy());
+    const figura = screen.getByRole("figure");
+    expect(figura.querySelector("figcaption")?.textContent).toBe(
+      "Dos imágenes de satélite en color natural del mismo recorte de 4 km, una del 20/09/2026 y otra del " +
+        "30/09/2026, superpuestas con un deslizador. La zona que cambió entre las dos, 12,5 hectáreas, va marcada con un contorno.",
+    );
+    const deslizador = screen.getByRole("slider", { name: es.satelite.imagen.deslizador });
+    fireEvent.change(deslizador, { target: { value: "20" } });
+    expect(deslizador.getAttribute("aria-valuetext")).toBe("20 % de la imagen de antes y 80 % de la de después a la vista");
+  });
+
   it("sin pareja no pinta nada, y con el índice roto tampoco", async () => {
     await cargarIndiceSatelite(descarga(INDICE));
     const { container } = render(<ImagenesSatelite t={es} idioma="es" id="EODI-IG-2026-00001" />);

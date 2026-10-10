@@ -98,6 +98,7 @@ for (const tamano of TAMANOS) {
     expect(region).toMatch(/ataques? en el periodo/);
     await expect(pagina.locator("[data-aro-teclado]")).toBeVisible();
     await expect(pagina.locator("[data-letrero]")).toBeVisible();
+    await pagina.screenshot({ path: join(CAPTURAS, `despues-teclado-${tamano.nombre}.png`) });
     await pagina.keyboard.press("Enter");
     const ficha = pagina.locator("[data-ficha]:visible");
     await expect(ficha).toHaveAttribute("aria-label", new RegExp(region.split(" · ")[0] ?? ""));
@@ -129,6 +130,7 @@ for (const tamano of TAMANOS) {
     await expect(lista).toBeVisible();
     await expect(lista.locator("summary").first()).toHaveText(/Regiones de Ucrania con ataques · \d+/);
     await pagina.screenshot({ path: join(CAPTURAS, `despues-lista-${tamano.nombre}.png`) });
+    expect(await axe(pagina, "despues-lista-abierta", tamano.nombre)).toEqual([]);
     const primera = lista.locator("details[open] button").first();
     const nombre = (await primera.textContent()) ?? "";
     await primera.focus();
@@ -145,7 +147,7 @@ for (const tamano of TAMANOS) {
     else expect(await pagina.evaluate(() => document.activeElement?.textContent)).toBe(nombre);
     await pagina.keyboard.press("Escape");
     await expect(pagina.locator("[data-lista-ucrania]:visible")).toHaveCount(0);
-    await axe(pagina, "despues-lista-cerrada", tamano.nombre);
+    expect(await axe(pagina, "despues-lista-cerrada", tamano.nombre)).toEqual([]);
     await contexto.close();
   });
 }
