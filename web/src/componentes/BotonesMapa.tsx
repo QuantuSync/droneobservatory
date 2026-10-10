@@ -149,7 +149,7 @@ export function BotonPrevision({
 /**
  * Desplegable bajo un botón (escritorio): se cierra con la equis, con Escape, pulsando fuera o
  * con el mismo botón. Al abrirse lleva el foco dentro; al cerrarse con Escape o la equis, lo
- * devuelve al botón.
+ * devuelve al botón. Con `pie`, este queda abajo, siempre a la vista, y lo de encima se desplaza.
  */
 export function Desplegable({
   t,
@@ -158,6 +158,7 @@ export function Desplegable({
   boton,
   children,
   cerrar,
+  pie,
 }: {
   t: Textos;
   titulo: string;
@@ -167,6 +168,8 @@ export function Desplegable({
   children: ReactNode;
   /** Texto de la equis. */
   cerrar: string;
+  /** Lo que va fijo al pie, fuera de lo que se desplaza («Aplicar» en los filtros). */
+  pie?: ReactNode;
 }) {
   const caja = useRef<HTMLDivElement>(null);
   const idTitulo = useId();
@@ -203,26 +206,29 @@ export function Desplegable({
       aria-labelledby={idTitulo}
       tabIndex={-1}
       data-desplegable=""
-      className="flotante absolute left-0 top-full z-30 mt-1.5 max-h-[70vh] w-[22rem] overflow-y-auto p-3 outline-none"
+      className="flotante absolute left-0 top-full z-30 mt-1.5 flex max-h-[70vh] w-[22rem] flex-col outline-none"
     >
-      <div className="mb-2 flex items-center justify-between gap-2">
-        <h2 id={idTitulo} className="rotulo">
-          {titulo}
-        </h2>
-        <button
-          type="button"
-          className="control px-2 text-xs"
-          aria-label={cerrar}
-          onClick={() => {
-            onCerrar();
-            boton.current?.focus();
-          }}
-        >
-          <span aria-hidden="true">✕</span>
-        </button>
+      <div className="min-h-0 flex-1 overflow-y-auto p-3">
+        <div className="mb-2 flex items-center justify-between gap-2">
+          <h2 id={idTitulo} className="rotulo">
+            {titulo}
+          </h2>
+          <button
+            type="button"
+            className="control px-2 text-xs"
+            aria-label={cerrar}
+            onClick={() => {
+              onCerrar();
+              boton.current?.focus();
+            }}
+          >
+            <span aria-hidden="true">✕</span>
+          </button>
+        </div>
+        {children}
+        <span className="sr-only">{t.desplegable.escape}</span>
       </div>
-      {children}
-      <span className="sr-only">{t.desplegable.escape}</span>
+      {pie !== undefined && <div className="shrink-0 border-t border-linea p-3">{pie}</div>}
     </div>
   );
 }
