@@ -34,7 +34,7 @@ import {
   ListaCorredores,
   cargarIndiceSatelite,
 } from "./componentes/GuerraSatelite.tsx";
-import { Filtros, textoDeSeleccion } from "./componentes/Filtros.tsx";
+import { BotonAplicar, Filtros, textoDeSeleccion } from "./componentes/Filtros.tsx";
 import { LeyendaCorredores, LeyendaGnss, LeyendaPresion } from "./componentes/Leyendas.tsx";
 import type { EstadoGnss } from "./componentes/Leyendas.tsx";
 import { Lista } from "./componentes/Lista.tsx";
@@ -142,7 +142,8 @@ import {
 import metaInicial from "./generado/meta.json";
 import { fechaDia, jornadaEscrita, numero, textos } from "./i18n/index.ts";
 import type { ApiMapa, Encuadre, Reserva, Vuelo } from "./mapa/Mapa.tsx";
-import { ZOOM_DE_PAIS } from "./mapa/encuadre.ts";
+import { cajaDeLoVisible } from "./mapa/cajaVisible.ts";
+import { ZOOM_DE_PAIS, ZOOM_MAXIMO_AL_APLICAR } from "./mapa/encuadre.ts";
 import { useNavegacion } from "./navegacion.tsx";
 import { analizarRuta } from "./rutas.ts";
 import { RUTAS_EN_LA_WEB } from "./rutasEnLaWeb.ts";
@@ -208,6 +209,9 @@ const MS_FOCOS_VIVOS = 10 * 60 * 1000;
 /** Regiones que se pueden abrir: las de Ucrania (con lo ocupado) y las de Rusia. */
 const REGION_DE_LA_CAPA = /^(UA|RU)-[A-Z0-9]{1,3}$/;
 /** Hojas del teléfono que no son una ficha: una sola a la vez. */
+/** Lo que dura a la vista el aviso «Ningún resultado con estos filtros». */
+const MS_AVISO_FILTROS = 3500;
+
 type HojaPropia = "filtros" | "ahora" | "prevision" | "directo" | null;
 /** Desplegables de los botones sobre el mapa, en el escritorio: uno a la vez. */
 type Desplegado = "filtros" | "ahora" | "prevision" | null;
@@ -879,6 +883,42 @@ export function App() {
     () => cambiarBusqueda(conSubcapasDe(escribirSeleccion(SIN_FILTROS, TODO), busqueda)),
     [cambiarBusqueda, busqueda],
   );
+  // «Aplicar» en los filtros: la única vez que cerrar algo mueve el mapa. Los filtros ya están
+  // puestos; cierra el panel, encuadra lo que queda a la vista en las capas encendidas y devuelve
+  // el foco al botón «Filtros». Si no queda nada, el mapa no se mueve y se avisa.
+  const [avisoFiltros, setAvisoFiltros] = useState<{ n: number } | null>(null);
+  useEffect(() => {
+    if (avisoFiltros === null) return undefined;
+    const temporizador = window.setTimeout(() => setAvisoFiltros(null), MS_AVISO_FILTROS);
+    return () => window.clearTimeout(temporizador);
+  }, [avisoFiltros]);
+  const aplicarFiltros = useCallback(() => {
+    const caja = cajaDeLoVisible({
+      incidentes: capas.incidentes || capas.densidad || capas.presion ? delPeriodo : null,
+      ucrania:
+        ucraniaActiva === null
+          ? null
+          : {
+              intensidad,
+              centros: ucraniaActiva.centros,
+              impactos,
+              corredores: capas.corredores ? corredoresEnMapa : null,
+            },
+      gnss: capas.gnss ? (gnssActual?.celdas ?? null) : null,
+    });
+    setHojaPropia(null);
+    setDesplegado(null);
+    if (caja === null) setAvisoFiltros((anterior) => ({ n: (anterior?.n ?? 0) + 1 }));
+    else {
+      setAvisoFiltros(null);
+      setVuelo((anterior) => ({
+        encuadre: { caja, zoomMaximo: ZOOM_MAXIMO_AL_APLICAR },
+        modo: "ir",
+        n: (anterior?.n ?? 0) + 1,
+      }));
+    }
+    window.requestAnimationFrame(() => botonFiltros.current?.focus({ preventScroll: true }));
+  }, [capas, delPeriodo, ucraniaActiva, intensidad, impactos, corredoresEnMapa, gnssActual]);
 
   // Reproducción de la guerra noche a noche: se puede pausar, reanudar y detener. Al llegar a
   // la última noche se queda en ella, en pausa; reanudar desde ahí vuelve a empezar.
@@ -1773,6 +1813,7 @@ export function App() {
           cerrar={t.filtros.cerrar}
           boton={botonFiltros}
           onCerrar={() => setDesplegado(null)}
+          pie={<BotonAplicar t={t} onAplicar={aplicarFiltros} />}
         >
           {filtrosDeLaPantalla}
         </Desplegable>
@@ -1820,9 +1861,15 @@ export function App() {
   );
   // Lo que aparece bajo los botones del mapa, centrado: la noche de la guerra y los avisos. Va
   // en la misma columna que los botones, debajo de ellos: nunca se montan.
-  const hayAvisosArriba = nocheActual !== null || avisoDeDatos !== null || mapaFallido;
+  const hayAvisosArriba = nocheActual !== null || avisoDeDatos !== null || mapaFallido || avisoFiltros !== null;
   const avisosArriba = hayAvisosArriba && (
     <div className="pointer-events-none flex flex-col items-center gap-2 self-stretch" data-avisos-arriba="">
+      {/* Lo lee el lector de pantalla por la región de estado de la raíz. */}
+      {avisoFiltros !== null && (
+        <p aria-hidden="true" data-sin-resultados="" className="flotante px-4 py-2 text-center text-sm text-texto">
+          {t.filtros.sinResultados}
+        </p>
+      )}
       {nocheActual !== null && (
         <div role="status" data-noche="" className="flotante pointer-events-auto flex flex-col items-center gap-1 px-4 py-2 text-center">
           <span className="block text-sm">{jornadaEscrita(t, nocheActual.jornada, true)}</span>
@@ -1942,6 +1989,9 @@ export function App() {
           </Suspense>
         )}
         <p className="sr-only">{t.mapa.instrucciones}</p>
+        <p className="sr-only" aria-live="polite" data-aviso-filtros="">
+          {avisoFiltros === null ? "" : t.filtros.sinResultados}
+        </p>
       </div>
 
       {verEscritorio && (
@@ -2082,6 +2132,9 @@ export function App() {
                     cerrar={t.filtros.cerrar}
                   />
                   <div className="min-h-0 flex-1 overflow-y-auto px-4 py-3">{filtrosDeLaPantalla}</div>
+                  <div className="shrink-0 border-t border-linea px-4 py-2">
+                    <BotonAplicar t={t} onAplicar={aplicarFiltros} />
+                  </div>
                 </HojaInferior>
               </div>
             )}

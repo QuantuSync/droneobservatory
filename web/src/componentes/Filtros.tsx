@@ -122,11 +122,12 @@ export function Filtros(props: Props) {
           <select
             className={`${campo} w-full`}
             value={clave}
+            data-activo={clave !== "todo" ? "" : undefined}
             data-periodo=""
             onChange={(evento) => elegirClave(evento.target.value as ClavePeriodo)}
           >
             {CLAVES_PERIODO.map((opcion) => (
-              <option key={opcion} value={opcion} className="bg-panel-solido">
+              <option key={opcion} value={opcion} className="bg-panel-solido text-texto">
                 {t.filtros.periodos[opcion]}
               </option>
             ))}
@@ -201,6 +202,7 @@ export function Filtros(props: Props) {
         <select
           className={`${campo} w-full`}
           value={elegido}
+          data-activo={elegido !== "" ? "" : undefined}
           onChange={(evento) =>
             onFiltros({
               ...filtros,
@@ -208,11 +210,11 @@ export function Filtros(props: Props) {
             })
           }
         >
-          <option value="" className="bg-panel-solido">
+          <option value="" className="bg-panel-solido text-texto">
             {t.filtros.todosLosPaises}
           </option>
           {ordenados.map((codigo) => (
-            <option key={codigo} value={codigo} className="bg-panel-solido">
+            <option key={codigo} value={codigo} className="bg-panel-solido text-texto">
               {pais(codigo, idioma)}
             </option>
           ))}
@@ -228,5 +230,23 @@ export function Filtros(props: Props) {
         </button>
       )}
     </div>
+  );
+}
+
+/**
+ * «Aplicar», al pie del panel de filtros y fuera de lo que se desplaza: los filtros ya se aplican
+ * mientras se eligen; el botón cierra el panel y encuadra lo que queda a la vista. Sin cifras: los
+ * filtros también cambian otras capas (la de Ucrania) y un número solo de incidentes confundiría.
+ */
+export function BotonAplicar({ t, onAplicar }: { t: Textos; onAplicar: () => void }) {
+  return (
+    <button
+      type="button"
+      className="control control-principal min-h-11 w-full rounded-sm px-4 text-sm esc:min-h-9"
+      onClick={onAplicar}
+      data-aplicar=""
+    >
+      {t.filtros.aplicar}
+    </button>
   );
 }

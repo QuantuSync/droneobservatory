@@ -139,6 +139,8 @@ export const es: Textos = {
     todosLosPaises: "Todos los países",
     estado: "Estado",
     quitar: "Quitar filtros",
+    aplicar: "Aplicar",
+    sinResultados: "Ningún resultado con estos filtros",
     recientes: "Periodo",
     activos: (n) => (n === 1 ? "1 activo" : `${n} activos`),
     zona: "Dónde",

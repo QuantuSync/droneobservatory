@@ -176,11 +176,15 @@ function margenes(reserva: Reserva, margen: number) {
   };
 }
 
-/** Un punto (con zoom), Ucrania entera o una caja [oeste, sur, este, norte] (un país). */
+/**
+ * Un punto (con zoom), Ucrania entera o una caja [oeste, sur, este, norte] (un país, o lo que
+ * queda a la vista al aplicar los filtros, con un tope de zoom para que un solo resultado no
+ * quede ampliado al máximo).
+ */
 export type Encuadre =
   | { lon: number; lat: number; zoom?: number }
   | "ucrania"
-  | { caja: [number, number, number, number] };
+  | { caja: [number, number, number, number]; zoomMaximo?: number };
 
 /**
  * Una petición de mover el mapa, que solo hace quien abre algo (nunca quien lo cierra):
@@ -604,7 +608,12 @@ export default function Mapa(props: PropsMapa) {
             [oeste, sur],
             [este, norte],
           ],
-          { padding: margenes(reservaActual.current, MARGEN_ENCUADRE_PX), animate, duration: DURACION_VUELO_MS },
+          {
+            padding: margenes(reservaActual.current, MARGEN_ENCUADRE_PX),
+            animate,
+            duration: DURACION_VUELO_MS,
+            ...(destino.zoomMaximo === undefined ? {} : { maxZoom: destino.zoomMaximo }),
+          },
         );
         return;
       }

@@ -128,6 +128,10 @@ export interface Textos {
     todosLosPaises: string;
     estado: string;
     quitar: string;
+    /** Botón al pie del panel: confirma, cierra y encuadra lo que queda a la vista. */
+    aplicar: string;
+    /** Aviso al aplicar cuando no queda nada a la vista. */
+    sinResultados: string;
     recientes: string;
     activos: (n: number) => string;
     zona: string;

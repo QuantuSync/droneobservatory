@@ -139,6 +139,8 @@ export const en: Textos = {
     todosLosPaises: "All countries",
     estado: "Status",
     quitar: "Clear filters",
+    aplicar: "Apply",
+    sinResultados: "No results with these filters",
     recientes: "Period",
     activos: (n) => `${n} active`,
     zona: "Where",

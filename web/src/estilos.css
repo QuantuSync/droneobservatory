@@ -258,6 +258,21 @@
     background-color: var(--color-elevado);
     box-shadow: inset 0 0 0 1px var(--color-linea);
   }
+  /* En el panel de filtros, lo elegido va en claro con el texto oscuro (y lo demás como siempre,
+     oscuro con el texto claro): se distingue de un vistazo, también a pleno sol. */
+  [data-filtros] .control[aria-pressed="true"],
+  [data-filtros] .control[data-activo] {
+    color: var(--color-fondo);
+    background-color: var(--acento);
+    border-color: var(--acento);
+    box-shadow: none;
+    font-weight: 600;
+  }
+  [data-filtros] .control[aria-pressed="true"]:hover,
+  [data-filtros] .control[data-activo]:hover {
+    color: var(--color-fondo);
+    background-color: var(--color-texto);
+  }
   .control:disabled {
     cursor: default;
     color: var(--color-secundario);
