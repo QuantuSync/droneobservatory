@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import type { KeyboardEvent, PointerEvent, ReactNode } from "react";
+import type { KeyboardEvent, PointerEvent as EventoDePuntero, ReactNode } from "react";
 
 import type { Textos } from "../i18n/index.ts";
 
@@ -87,6 +87,18 @@ export function esClicDeArrastre(pendiente: ClicDeArrastre | null, puntero: numb
   return puntero === undefined || puntero === pendiente.puntero;
 }
 
+// El clic que puede llegar tras el último arrastre con ratón de la hoja (solo hay una a la vez).
+// Va fuera del componente porque también lo mira quien cierra la hoja al tocar fuera: si el ratón
+// se suelta más allá de la hoja, su clic cae fuera de ella.
+let clicPendiente: ClicDeArrastre | null = null;
+
+/** Si un clic es el que cierra un arrastre con ratón de la hoja (sin darlo por visto). */
+export function esClicTrasArrastre(evento: MouseEvent): boolean {
+  // El clic es un PointerEvent en los navegadores actuales; si no, basta el margen.
+  const puntero = "pointerId" in evento ? Number(evento.pointerId) : undefined;
+  return esClicDeArrastre(clicPendiente, puntero, performance.now());
+}
+
 interface Gesto {
   inicioY: number;
   altoInicial: number;
@@ -119,9 +131,6 @@ function desplazable(desde: EventTarget | null, hoja: HTMLElement): HTMLElement 
 export function HojaInferior({ t, nombre, altura, onAltura, onCerrar, children, esFicha = false }: PropsHoja) {
   const hoja = useRef<HTMLElement>(null);
   const gesto = useRef<Gesto | null>(null);
-  // Un arrastre con ratón termina con un clic: ese clic no debe pulsar nada más (ni la X). Solo
-  // ese, y solo si llega enseguida: con el dedo no hay tal clic y nada queda pendiente.
-  const clicDeArrastre = useRef<ClicDeArrastre | null>(null);
   const puntero = useRef<number | null>(null);
   const manejadores = useRef({ onAltura, onCerrar, altura });
   manejadores.current = { onAltura, onCerrar, altura };
@@ -175,6 +184,21 @@ export function HojaInferior({ t, nombre, altura, onAltura, onCerrar, children, 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // El asa y la cabecera se arrastran con eventos de puntero (dedo o ratón). El movimiento y el
+  // final se siguen en toda la ventana: con ratón, el primer movimiento ya puede caer fuera del asa.
+  useEffect(() => {
+    window.addEventListener("pointermove", alArrastrar);
+    window.addEventListener("pointerup", alSoltar);
+    window.addEventListener("pointercancel", alSoltar);
+    return () => {
+      window.removeEventListener("pointermove", alArrastrar);
+      window.removeEventListener("pointerup", alSoltar);
+      window.removeEventListener("pointercancel", alSoltar);
+    };
+    // Las funciones del gesto solo leen referencias: basta con instalarlas una vez.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   /** Alto del hueco de la hoja: el del bloque posicionado que la contiene (el de sus %). */
   function hueco(): number {
     const contenedor = hoja.current?.offsetParent;
@@ -211,14 +235,13 @@ export function HojaInferior({ t, nombre, altura, onAltura, onCerrar, children, 
     else manejadores.current.onAltura(alturaMasCercana(proyectada));
   }
 
-  // El asa y la cabecera se arrastran con eventos de puntero (dedo o ratón).
-  function alApretar(evento: PointerEvent<HTMLElement>) {
-    clicDeArrastre.current = null;
+  function alApretar(evento: EventoDePuntero<HTMLElement>) {
+    clicPendiente = null;
     if (!esZonaDeArrastre(evento.target)) return;
     gesto.current = nuevoGesto(evento.clientY);
     puntero.current = evento.pointerId;
   }
-  function alArrastrar(evento: PointerEvent<HTMLElement>) {
+  function alArrastrar(evento: PointerEvent) {
     const actual = gesto.current;
     if (actual === null || puntero.current !== evento.pointerId) return;
     if (!actual.arrastrando) {
@@ -226,16 +249,19 @@ export function HojaInferior({ t, nombre, altura, onAltura, onCerrar, children, 
       actual.arrastrando = true;
       // El puntero se captura solo cuando ya es un arrastre: así el arrastre sigue aunque el
       // dedo salga del asa, y un toque sin moverse sigue pulsando el botón de debajo (la X).
-      evento.currentTarget.setPointerCapture?.(evento.pointerId);
+      hoja.current?.setPointerCapture?.(evento.pointerId);
     }
     seguir(evento.clientY);
   }
-  function alSoltar(evento: PointerEvent<HTMLElement>) {
+  function alSoltar(evento: PointerEvent) {
     if (puntero.current !== evento.pointerId) return;
     puntero.current = null;
     if (gesto.current?.arrastrando === true) {
       if (evento.pointerType !== "touch") {
-        clicDeArrastre.current = { puntero: evento.pointerId, hasta: performance.now() + MARGEN_CLIC_DE_ARRASTRE_MS };
+        // Un arrastre con ratón termina con un clic: ese clic no debe pulsar nada (ni la X, ni
+        // cerrar la hoja si cae fuera). Solo ese, y solo si llega enseguida: con el dedo no hay
+        // tal clic y nada queda pendiente.
+        clicPendiente = { puntero: evento.pointerId, hasta: performance.now() + MARGEN_CLIC_DE_ARRASTRE_MS };
       }
       soltar();
     }
@@ -266,15 +292,10 @@ export function HojaInferior({ t, nombre, altura, onAltura, onCerrar, children, 
       data-ficha={esFicha ? "" : undefined}
       data-altura={altura}
       onPointerDown={alApretar}
-      onPointerMove={alArrastrar}
-      onPointerUp={alSoltar}
-      onPointerCancel={alSoltar}
       onClickCapture={(evento) => {
-        const pendiente = clicDeArrastre.current;
-        clicDeArrastre.current = null;
-        // El clic es un PointerEvent en los navegadores actuales; si no, basta el margen.
-        const id = "pointerId" in evento.nativeEvent ? Number(evento.nativeEvent.pointerId) : undefined;
-        if (!esClicDeArrastre(pendiente, id, performance.now())) return;
+        const descartar = esClicTrasArrastre(evento.nativeEvent);
+        clicPendiente = null;
+        if (!descartar) return;
         evento.preventDefault();
         evento.stopPropagation();
       }}

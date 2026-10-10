@@ -5,7 +5,14 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { App } from "../src/App.tsx";
 import { Feed, haceCuanto } from "../src/componentes/Feed.tsx";
-import { HojaInferior, MARGEN_CLIC_DE_ARRASTRE_MS, alturaMasCercana, esClicDeArrastre, siguienteAltura } from "../src/componentes/Paneles.tsx";
+import {
+  HojaInferior,
+  MARGEN_CLIC_DE_ARRASTRE_MS,
+  alturaMasCercana,
+  esClicDeArrastre,
+  esClicTrasArrastre,
+  siguienteAltura,
+} from "../src/componentes/Paneles.tsx";
 import type { Altura } from "../src/componentes/Paneles.tsx";
 import { detalleIncidente, resumir, resumirIncidente, resumirUcrania } from "../src/datos/derivar.ts";
 import type { EventoResumen } from "../src/datos/tipos.ts";
@@ -118,6 +125,26 @@ describe("hoja inferior del teléfono", () => {
     expect(onPulsar).not.toHaveBeenCalled();
     fireEvent.click(boton);
     expect(onPulsar).toHaveBeenCalledOnce();
+  });
+
+  it("con ratón, el arrastre sigue aunque el primer movimiento salga del asa, y su clic no es un toque fuera", () => {
+    const onAltura = vi.fn();
+    render(
+      <HojaInferior t={es} nombre="Filtros" altura="media" onAltura={onAltura} onCerrar={() => undefined}>
+        <p>contenido</p>
+      </HojaInferior>,
+    );
+    const asa = screen.getByRole("button", { name: /^Hoja / });
+    fireEvent.pointerDown(asa, { pointerId: 1, pointerType: "mouse", clientY: 500 });
+    // Fuera de la hoja, sobre el mapa.
+    fireEvent.pointerMove(document.body, { pointerId: 1, pointerType: "mouse", clientY: 300 });
+    fireEvent.pointerUp(document.body, { pointerId: 1, pointerType: "mouse", clientY: 300 });
+    expect(onAltura).toHaveBeenCalledOnce();
+    expect(esClicTrasArrastre(new MouseEvent("click"))).toBe(true);
+    // Un nuevo apretón olvida el clic pendiente.
+    fireEvent.pointerDown(asa, { pointerId: 1, pointerType: "mouse", clientY: 500 });
+    fireEvent.pointerUp(asa, { pointerId: 1, pointerType: "mouse", clientY: 500 });
+    expect(esClicTrasArrastre(new MouseEvent("click"))).toBe(false);
   });
 
   it("solo se descarta el clic del mismo puntero y dentro del margen", () => {

@@ -46,7 +46,7 @@ import { MenuMovil, SeccionMenu } from "./componentes/MenuMovil.tsx";
 import { Metodologia } from "./componentes/Metodologia.tsx";
 import { CabeceraFicha, ErrorDeCarga, SegunCarga } from "./componentes/Panel.tsx";
 import { TEXTO_AVISOS } from "./avisos.ts";
-import { ALTURAS, HojaInferior, PanelLateral } from "./componentes/Paneles.tsx";
+import { ALTURAS, HojaInferior, PanelLateral, esClicTrasArrastre } from "./componentes/Paneles.tsx";
 import type { Altura } from "./componentes/Paneles.tsx";
 import { SelectorPila } from "./componentes/SelectorPila.tsx";
 import { Simbolo } from "./componentes/Simbolo.tsx";
@@ -1326,6 +1326,8 @@ export function App() {
       return;
     }
     const alTocar = (evento: MouseEvent) => {
+      // El clic que cierra un arrastre de la hoja con ratón no es un toque fuera.
+      if (esClicTrasArrastre(evento)) return;
       const objetivo = evento.target;
       if (objetivo instanceof Element && objetivo.closest("[data-hoja-propia]") !== null) return;
       setHojaPropia(null);
