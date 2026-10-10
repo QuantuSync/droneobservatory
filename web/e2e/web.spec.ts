@@ -149,7 +149,8 @@ test("carga el mapa sin errores ni violaciones de la política de contenido", as
   const cuenta = (estado: string) => estados.filter((e) => e === estado).length;
   const marcador = page.getByLabel("Cifras del periodo elegido");
   await expect(marcador).toContainText(`incidentes${numero(estados.length)}`);
-  await expect(marcador).toContainText(`confirmados${numero(cuenta("confirmado"))}`);
+  // Los confirmados incluyen los atribuidos (cifras en src/datos/derivar.ts).
+  await expect(marcador).toContainText(`confirmados${numero(cuenta("confirmado") + cuenta("atribuido"))}`);
   await expect(marcador).toContainText(`atribuidos${numero(cuenta("atribuido"))}`);
   const resumen = await datos<Resumen>(page, "/datos/resumen.json");
   expect(resumen.incidentes.filter((i) => i.punto !== null)).toHaveLength(mapa.features.length);
@@ -162,9 +163,12 @@ test("carga el mapa sin errores ni violaciones de la política de contenido", as
   // Contra el sitio publicado, la antigüedad se mide desde estado.json y su detalle lista
   // cada fuente.
   if (baseURL !== undefined && !baseURL.includes("localhost")) {
-    const estado = await page.request.get(ESTADO_PUBLICADO);
-    if (estado.ok()) {
-      const sistema = (await estado.json()) as { fuentes: unknown[] };
+    // Desde la página, para que lleve el acceso de la vista previa como el resto de peticiones.
+    const sistema = await page.evaluate(async (url) => {
+      const respuesta = await fetch(url);
+      return respuesta.ok ? ((await respuesta.json()) as { fuentes: unknown[] }) : null;
+    }, ESTADO_PUBLICADO);
+    if (sistema !== null) {
       await expect(barra).toHaveAttribute("data-fuente-frescura", "recogida");
       await barra.getByRole("button").click();
       await expect(barra.locator("li")).toHaveCount(sistema.fuentes.length);
@@ -200,8 +204,9 @@ test("cambia de capas y reproduce la guerra noche a noche", async ({ page }, inf
   await menu(page, info.project.name);
   await page.getByRole("button", { name: "En directo", exact: true }).click();
   await page.getByRole("tab", { name: "Lista" }).click();
-  await page.getByRole("button", { name: "Járkov" }).click();
-  await expect(page.getByRole("complementary", { name: /UA-63/ })).toContainText(
+  // El de la lista del panel; el otro «Járkov · N ataques» es el de la lista para el teclado.
+  await page.getByRole("button", { name: "Járkov", exact: true }).click();
+  await expect(page.getByRole("complementary", { name: /Región.*Járkov/ })).toContainText(
     "Ataques en el periodo",
   );
   expect(problemas).toEqual([]);
