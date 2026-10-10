@@ -214,6 +214,22 @@ sudo systemctl restart eodi-alertas.service
   activas mientras esté parado lo rellena el histórico del día siguiente (el último mes), salvo la
   lista de amenazas, que solo dan las activas.
 
+## Si los avisos de ntfy fallan
+
+La vigilancia avisa con el problema `ntfy` (https://ntfy.droneobservatory.eu/v1/health no
+responde) o `avisos` (el envío ha fallado dos recogidas seguidas). Lo que no salió se reintenta
+solo en la recogida siguiente, sin duplicar lo ya enviado.
+
+1. `systemctl status ntfy caddy`; `journalctl -u ntfy -u caddy -n 50`; si hace falta,
+   `sudo systemctl restart ntfy caddy`.
+2. `cat /home/eodi/.eodi/avisos.json` y la línea «avisos:» de `journalctl -u eodi-recogida`.
+   Un 401 o 403 es el token de `observatorio`: borrar `/home/eodi/.eodi/ntfy_observatorio` y
+   ejecutar `sudo bash /home/eodi/droneobservatory/servidor/ntfy.sh`, que crea otro.
+3. Certificado: Caddy lo renueva solo; necesita 80 y 443 abiertos y el registro A de `ntfy`.
+
+Todo lo demás (qué se avisa, los dos usuarios, cómo añadir un canal y cómo enviar un aviso a
+mano) está en [avisos.md](avisos.md).
+
 ## Si el disco se llena
 
 El aviso llega al 75 %. Ver qué ocupa: `sudo du -sh /home/eodi/* /home/eodi/datos/* | sort -h`.

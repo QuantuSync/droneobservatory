@@ -10,8 +10,9 @@ cero con una sola orden.
 | | |
 | --- | --- |
 | Servidor | `eodi-recogida`, tipo CX33 (4 núcleos compartidos, 8 GB de memoria, 80 GB de disco), Núremberg (`nbg1`), Ubuntu 26.04 LTS, IPv4 2.28.197.102 |
-| Cortafuegos de Hetzner | `eodi-recogida`: solo entra SSH (TCP 22); lo demás, cerrado |
-| Cortafuegos del servidor | nftables, tabla `inet eodi` (`/etc/nftables.conf`, de `endurecer.sh`): solo entra SSH, lo que responde a una conexión abierta, el ICMP imprescindible y DHCP; nada se reenvía. Se carga solo al arrancar |
+| Cortafuegos de Hetzner | `eodi-recogida` (11710690): solo entran SSH (TCP 22), HTTP (80) y HTTPS (443, ntfy); lo demás, cerrado |
+| Cortafuegos del servidor | nftables, tabla `inet eodi` (`/etc/nftables.conf`, de `endurecer.sh`): solo entran SSH, HTTP y HTTPS (estos dos, para ntfy), lo que responde a una conexión abierta, el ICMP imprescindible y DHCP; nada se reenvía. Se carga solo al arrancar |
+| Avisos públicos | ntfy 2.29 (repositorio oficial `archive.ntfy.sh`) en `127.0.0.1:2586` y Caddy delante con HTTPS de Let's Encrypt, en https://ntfy.droneobservatory.eu; topes de 300M; `servidor/ntfy.sh` y [avisos.md](avisos.md) |
 | Copias de Hetzner | Imagen diaria del servidor entero, siete guardadas, ventana de 22:00 a 02:00 UTC (desde el 5 de octubre de 2026; apartado «Copias del servidor en Hetzner») |
 | Usuario `eodi` | Ejecuta el observatorio. Sin privilegios, sin contraseña y sin entrada por SSH |
 | Usuario `operador` | Administra: entra por SSH con clave y usa `sudo` |
@@ -49,6 +50,9 @@ En `/home/eodi`:
   - `almacen.env`: las credenciales S3 del almacén público (`ALMACEN_ID` y
     `ALMACEN_SECRETO`), para subir `estado.json`;
   - `estado.json`: el último estado publicado;
+  - `ntfy_observatorio`: el token del usuario `observatorio` de ntfy, con el que la recogida
+    envía los avisos públicos, y `avisos.json`, el resultado del último envío para la
+    vigilancia ([avisos.md](avisos.md));
   - `base_modo`: el interruptor de la base (`github`, `doble` o `disco`, una palabra; sin el
     fichero, `github`), apartado «Base de datos»;
   - `base_secundaria`: el interruptor de la copia secundaria de la base en la rama `estado`
@@ -993,6 +997,7 @@ En `%USERPROFILE%\.eodi\`, fuera de cualquier repositorio:
 | `firms_map_key.txt` | Clave de la API de NASA FIRMS (32 caracteres); `reconstruir.sh` la añade como `EODI_FIRMS_MAP_KEY` al `extractor.env` del servidor. También es el secreto `EODI_FIRMS_MAP_KEY` del repositorio, para la recogida de emergencia |
 | `almacen.env` | Credenciales S3 del almacén público de Hetzner (`ALMACEN_ID=…` y `ALMACEN_SECRETO=…`, una por línea); las llevan al servidor `reconstruir.sh` y `preparar_almacen.sh` |
 | `alerts_in_ua_token.txt` | Token de la API de alerts.in.ua (secreto); `reconstruir.sh` lo deja en el servidor como `alerts_in_ua_token` (600) para `eodi-alertas` |
+| `ntfy_lucas.txt` | Contraseña del usuario `lucas` de ntfy (avisos manuales; solo la contraseña, sin salto de línea al final). Solo aquí: `reconstruir.sh` la pasa por la entrada estándar a `servidor/ntfy.sh`, que la guarda cifrada en la base de usuarios de ntfy ([avisos.md](avisos.md)) |
 | `cloudflare_token.txt` | Token de la API de Cloudflare. Ya no se usa: el DNS está en Hetzner desde el 3 de octubre de 2026. Se borra al cerrar la cuenta de Cloudflare |
 | `r2_estado.env` | Credenciales S3 del bucket R2 anterior (`eodi-teselas`); ya no responden (401). En el servidor se borraron |
 
@@ -1228,7 +1233,7 @@ gestiona con la API de Hetzner Cloud y el mismo token del proyecto (`hcloud_toke
 | | |
 | --- | --- |
 | Servidores de nombres | `hydrogen.ns.hetzner.com` (213.133.100.98), `oxygen.ns.hetzner.com` (88.198.229.192), `helium.ns.hetzner.de` (193.47.99.5) |
-| Registros | [`configuracion/dns_droneobservatory.eu.zone`](../configuracion/dns_droneobservatory.eu.zone): web en Vercel (ápex A y `www` CNAME), CAA y correo de Arsys (MX, SPF, `autodiscover`, `autoconfig`, `webmail`) |
+| Registros | [`configuracion/dns_droneobservatory.eu.zone`](../configuracion/dns_droneobservatory.eu.zone): web en Vercel (ápex A y `www` CNAME), CAA, correo de Arsys (MX, SPF, `autodiscover`, `autoconfig`, `webmail`) y `ntfy` (A y AAAA del servidor, para los avisos: [avisos.md](avisos.md)). La zona real tiene además un TXT `google-site-verification` que no está en el fichero: no usar `import-zonefile` sobre la zona existente |
 | TTL | 3600 s (1 hora) |
 | DNSSEC | No. El registro .eu no tiene registro DS del dominio |
 | Protección | La zona no se puede borrar sin quitar antes la protección |
