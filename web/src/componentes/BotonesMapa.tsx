@@ -208,7 +208,7 @@ export function Desplegable({
       aria-labelledby={idTitulo}
       tabIndex={-1}
       data-desplegable=""
-      className="flotante absolute left-0 top-full z-30 mt-1.5 flex max-h-[70vh] w-[22rem] flex-col outline-none"
+      className="flotante absolute left-0 top-full z-30 mt-1.5 flex tactil:mt-2 max-h-[70vh] w-[22rem] flex-col outline-none"
     >
       <div className="min-h-0 flex-1 overflow-y-auto p-3">
         <div className="mb-2 flex items-center justify-between gap-2">

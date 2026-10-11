@@ -7,6 +7,9 @@
 // Playwright, así que allí la hoja se arrastra con el puntero del motor y se toca con su pantalla
 // táctil, dejando la pausa de una persona entre una cosa y otra.
 //
+// Además, en táctil (Android, iPhone y tableta), que ningún control visible baje de 44 × 44 px de zona
+// táctil, y que «Suscribirme» en Android sea intent:// en Chrome y ntfy:// en Firefox.
+//
 // Proyectos android, iphone, tableta, escritorio-chromium y escritorio-webkit (playwright.config.ts).
 // Va contra producción por defecto; con BASE y BYPASS (o VERCEL_BYPASS), contra una vista previa.
 import { expect, test } from "@playwright/test";
@@ -125,12 +128,12 @@ function vigilar(pagina: Page): string[] {
   const errores: string[] = [];
   pagina.on("console", (mensaje) => {
     // Chromium sin la aplicación ntfy instalada avisa de que no puede abrir su enlace.
-    if (mensaje.type() === "error" && !/ntfy:/.test(mensaje.text())) errores.push(`consola: ${mensaje.text()}`);
+    if (mensaje.type() === "error" && !/ntfy:|intent:/.test(mensaje.text())) errores.push(`consola: ${mensaje.text()}`);
   });
   pagina.on("pageerror", (error) => errores.push(`excepción: ${error.message}`));
   pagina.on("requestfailed", (peticion) => {
     const motivo = peticion.failure()?.errorText ?? "";
-    if (peticion.url().startsWith("ntfy:") || /ABORTED|cancelled/i.test(motivo)) return;
+    if (/^(ntfy|intent):/.test(peticion.url()) || /ABORTED|cancelled/i.test(motivo)) return;
     errores.push(`petición: ${peticion.url()} ${motivo}`);
   });
   return errores;
@@ -155,7 +158,7 @@ async function anotarClics(pagina: Page) {
       const enlace = evento.target instanceof Element ? evento.target.closest("a") : null;
       ventana.__clics.push({ href: enlace?.href ?? null, anulado: evento.defaultPrevented });
       // El enlace de la aplicación no lleva a ninguna parte en el navegador de pruebas.
-      if (enlace?.href.startsWith("ntfy:") === true) evento.preventDefault();
+      if (enlace !== null && /^(ntfy|intent):/.test(enlace.href)) evento.preventDefault();
     });
   });
 }
@@ -193,6 +196,12 @@ async function conmutarDosVeces(persona: Persona, control: Locator) {
   await expect(control, "el primer toque cambia el control").toHaveAttribute("aria-pressed", despues);
   await persona.tocar(control);
   await expect(control).toHaveAttribute("aria-pressed", antes ?? "false");
+}
+
+/** El enlace intent:// de «Suscribirme» en Chrome para Android: ntfy o, sin ella, Google Play. */
+function intent(canal: string, nombre: string): string {
+  const tienda = encodeURIComponent("https://play.google.com/store/apps/details?id=io.heckel.ntfy");
+  return `intent://ntfy.droneobservatory.eu/${canal}?display=${nombre}#Intent;scheme=ntfy;package=io.heckel.ntfy;S.browser_fallback_url=${tienda};end`;
 }
 
 if (CLAVE !== undefined) test.use({ extraHTTPHeaders: { "x-vercel-protection-bypass": CLAVE } });
@@ -265,7 +274,7 @@ test.describe("teléfono: abrir la hoja, subirla con el dedo, desplazar y entonc
     expect(clic, "el toque llega a «Suscribirme»").toBeDefined();
     expect(clic?.anulado, "nadie anula el toque").toBe(false);
     if (android) {
-      expect(clic?.href).toBe("ntfy://ntfy.droneobservatory.eu/drones-poland?display=EODI+%C2%B7+Polonia");
+      expect(clic?.href).toBe(intent("drones-poland", "EODI+%C2%B7+Polonia"));
     } else {
       expect(clic?.href).toContain("apps.apple.com");
       await (await nueva)?.close();
@@ -367,7 +376,7 @@ test.describe("tableta y escritorio", () => {
         const suscribirme = panel.locator("[data-suscribirme]");
         if (tableta) {
           // Una tableta Android abre la aplicación, igual que el teléfono.
-          await expect(suscribirme).toHaveAttribute("href", /^ntfy:\/\/ntfy\.droneobservatory\.eu\/drones-france\?display=/);
+          await expect(suscribirme).toHaveAttribute("href", intent("drones-france", "EODI+%C2%B7+Francia"));
           await anotarClics(pagina);
           await persona.tocar(suscribirme);
           expect((await ultimoClic(pagina))?.anulado).toBe(false);
@@ -460,4 +469,258 @@ test("mapa: tocar un incidente abre su ficha y cerrarla no mueve el mapa", async
   await expect(pagina.locator("aside[data-ficha]:visible")).toHaveCount(0);
   expect(await vista(pagina), "cerrar la ficha no mueve el mapa").toBe(abierta);
   expect(errores).toEqual([]);
+});
+
+// ---------------------------------------------------------------------------------------------
+// Zonas táctiles de 44 × 44 px: la que recibe el toque de cada control, medida como la mide el
+// dedo, preguntando al navegador qué hay en cada punto (elementFromPoint) desde el centro del
+// control hacia los cuatro lados. Cuenta lo que se agranda sin verse (capa transparente o
+// relleno) y descuenta lo que pisa otro control o el borde de la pantalla, así que dos zonas
+// vecinas que se solapan no pasan. Los enlaces dentro de un texto solo necesitan 44 px de alto.
+interface Pequeno {
+  control: string;
+  ancho: number;
+  alto: number;
+}
+
+function medirZonas(minimo: number): Pequeno[] {
+  const SELECTOR =
+    "a[href], button, summary, input:not([type=hidden]), select, textarea, [role=tab], [role=button], [role=checkbox], [role=switch], [role=link]";
+  const fuera = (c: DOMRect) => c.bottom < 0 || c.top > innerHeight || c.right < 0 || c.left > innerWidth;
+  const propio = (el: Element, h: Element | null) => {
+    if (h === null) return false;
+    if (el.contains(h)) return true;
+    const etiquetas = (el as HTMLInputElement).labels as NodeListOf<HTMLLabelElement> | null | undefined;
+    if (etiquetas !== undefined && etiquetas !== null && [...etiquetas].some((l) => l.contains(h))) return true;
+    return h.closest("label")?.control === el;
+  };
+  const esquinas = (c: DOMRect): [number, number][] => [
+    [c.left + 2, c.top + 2],
+    [c.right - 2, c.top + 2],
+    [c.left + 2, c.bottom - 2],
+    [c.right - 2, c.bottom - 2],
+  ];
+  const pequenos: Pequeno[] = [];
+  for (const el of document.querySelectorAll(SELECTOR)) {
+    const estilo = getComputedStyle(el);
+    if (estilo.visibility === "hidden" || estilo.display === "none") continue;
+    if (el.closest("[inert], [aria-hidden=true]") !== null) continue;
+    let caja: DOMRect = el.getClientRects()[0] ?? el.getBoundingClientRect();
+    // Los textos solo para lectores de pantalla (1 px) no se tocan.
+    if (caja.width < 4 || caja.height < 4) continue;
+    if (fuera(caja) || !esquinas(caja).every(([x, y]) => propio(el, document.elementFromPoint(x, y)))) {
+      el.scrollIntoView({ block: "center", inline: "nearest" });
+      caja = el.getClientRects()[0] ?? el.getBoundingClientRect();
+      if (fuera(caja)) continue;
+    }
+    const cx = Math.min(Math.max(caja.left + caja.width / 2, 1), innerWidth - 1);
+    const cy = Math.min(Math.max(caja.top + caja.height / 2, 1), innerHeight - 1);
+    // Tapado por otra cosa (un panel abierto encima): no se puede tocar.
+    if (!propio(el, document.elementFromPoint(cx, cy))) continue;
+    const tramo = (dx: number, dy: number) => {
+      let n = 0;
+      for (; n < 60; n += 1) {
+        const x = cx + dx * (n + 1);
+        const y = cy + dy * (n + 1);
+        if (x < 0 || y < 0 || x >= innerWidth || y >= innerHeight) break;
+        if (!propio(el, document.elementFromPoint(x, y))) break;
+      }
+      return n;
+    };
+    const ancho = tramo(-1, 0) + tramo(1, 0) + 1;
+    const alto = tramo(0, -1) + tramo(0, 1) + 1;
+    const enLinea = el.tagName === "A" && estilo.display === "inline";
+    if (alto < minimo || (!enLinea && ancho < minimo)) {
+      const nombre = (el.getAttribute("aria-label") ?? el.textContent ?? "").trim().replace(/\s+/g, " ").slice(0, 60);
+      pequenos.push({ control: `${el.tagName.toLowerCase()} «${nombre}»`, ancho, alto });
+    }
+  }
+  return pequenos;
+}
+
+const PAGINAS_DE_TEXTO = [
+  "/metodologia",
+  "/ayuda",
+  "/avisos",
+  "/privacidad",
+  "/aviso-legal",
+  "/independencia",
+  "/accesibilidad",
+  "/incidentes",
+  "/paises",
+  "/prevision",
+  "/ucrania",
+  "/en/alerts",
+  "/no-existe",
+];
+
+test.describe("zonas táctiles de 44 × 44 px", () => {
+  test.beforeEach(({ browserName }, info) => {
+    void browserName;
+    test.skip(!["android", "iphone", "tableta"].includes(info.project.name), "solo en táctil");
+  });
+
+  test("pantalla principal, cada panel u hoja y la ficha", async ({ page: pagina, context: contexto, browserName }, info) => {
+    test.setTimeout(240_000);
+    const telefono = info.project.name !== "tableta";
+    const errores = await abrir(contexto, pagina);
+    const persona = await Persona.en(pagina, contexto, true, browserName === "chromium");
+    const medidas: Record<string, Pequeno[]> = {};
+    const medir = async (donde: string) => {
+      medidas[donde] = await pagina.evaluate(medirZonas, 44);
+    };
+    const hoja = pagina.locator("aside[data-altura]");
+    const abrirPanel = async (boton: Locator, dentro: Locator) => {
+      await persona.tocar(boton);
+      await expect(dentro).toBeVisible({ timeout: 15_000 });
+      if (telefono && (await hoja.count()) > 0) await subirHoja(persona);
+    };
+    const cerrar = async (dentro: Locator) => {
+      await pagina.keyboard.press("Escape");
+      await expect(dentro).toHaveCount(0);
+    };
+
+    await medir("pantalla principal");
+
+    const filtros = pagina.locator("[data-filtros]:visible");
+    await abrirPanel(pagina.locator("[data-boton-filtros] button:visible").first(), filtros);
+    await medir("Filtros");
+    await cerrar(filtros);
+
+    const avisos = pagina.locator("[data-panel-avisos]:visible");
+    await abrirPanel(pagina.locator("[data-boton-avisos]:visible").first(), avisos);
+    await medir("Avisos");
+    await cerrar(avisos);
+
+    const prevision = pagina.locator("[data-prevision]:visible");
+    if (telefono) {
+      const ahora = pagina.locator("[data-pestanas-ahora]:visible");
+      await abrirPanel(pagina.locator("[data-boton-ahora]:visible").first(), ahora);
+      await medir("Europa ahora");
+      await persona.tocar(ahora.getByRole("tab", { name: "Previsión" }));
+      await expect(prevision).toBeVisible({ timeout: 15_000 });
+      await medir("Previsión");
+      await cerrar(ahora);
+    } else {
+      const desplegable = pagina.locator("[data-desplegable]:visible");
+      await abrirPanel(pagina.locator("[data-boton-ahora]:visible").first(), desplegable);
+      await medir("Europa ahora");
+      await cerrar(desplegable);
+      await abrirPanel(pagina.locator("[data-boton-prevision]:visible").first(), prevision);
+      await medir("Previsión");
+      await cerrar(desplegable);
+    }
+
+    // La capa de Ucrania y su lista (en el teléfono, desde el menú, donde está «Lista»).
+    const lista = pagina.locator("[data-boton-lista-ucrania]:visible").first();
+    if (telefono) {
+      await persona.tocar(pagina.locator("[data-boton-menu]:visible").first());
+      const menu = pagina.locator("dialog[open]");
+      await expect(menu).toBeVisible();
+      await medir("Menú");
+      const ucrania = menu.locator("button[aria-pressed]:visible").filter({ hasText: /^Ucrania/ }).first();
+      if ((await ucrania.getAttribute("aria-pressed")) !== "true") await persona.tocar(ucrania);
+      await expect(lista).toBeVisible({ timeout: 30_000 });
+      await medir("Menú con la capa de Ucrania");
+    } else {
+      const ucrania = pagina.locator("header button[aria-pressed]:visible").filter({ hasText: /^Ucrania/ }).first();
+      if ((await ucrania.getAttribute("aria-pressed")) !== "true") await persona.tocar(ucrania);
+      await expect(lista).toBeVisible({ timeout: 30_000 });
+      await medir("capa de Ucrania");
+    }
+    await persona.tocar(lista);
+    await pagina.waitForTimeout(800);
+    if (telefono && (await hoja.count()) > 0) await subirHoja(persona);
+    await pagina.evaluate(() => {
+      for (const d of document.querySelectorAll("details")) d.open = true;
+    });
+    await medir("lista de Ucrania");
+    await pagina.keyboard.press("Escape");
+
+    // La ficha de un incidente, con sus plegables «Qué dice la fuente» cerrados y abiertos.
+    await pagina.goto("/EODI-2025-00440", { waitUntil: "domcontentloaded" });
+    await expect(pagina.locator("[data-ficha]:visible").first()).toBeVisible({ timeout: 60_000 });
+    await pagina.waitForTimeout(1500);
+    if (telefono && (await hoja.count()) > 0) await subirHoja(persona);
+    await medir("ficha");
+    await pagina.evaluate(() => {
+      for (const d of document.querySelectorAll("[data-ficha] details")) (d as HTMLDetailsElement).open = true;
+    });
+    await medir("ficha con los plegables abiertos");
+
+    const pequenos = Object.entries(medidas).flatMap(([donde, lista]) => lista.map((p) => `${donde}: ${p.control} ${p.ancho}×${p.alto} px`));
+    expect(pequenos, "controles con menos de 44 × 44 px de zona táctil").toEqual([]);
+    expect(errores).toEqual([]);
+  });
+
+  test("páginas de texto", async ({ page: pagina }) => {
+    test.setTimeout(180_000);
+    const pequenos: string[] = [];
+    for (const ruta of PAGINAS_DE_TEXTO) {
+      await pagina.goto(ruta, { waitUntil: "domcontentloaded" });
+      await pagina.waitForTimeout(800);
+      await pagina.evaluate(() => {
+        for (const d of document.querySelectorAll("details")) d.open = true;
+      });
+      for (const p of await pagina.evaluate(medirZonas, 44)) pequenos.push(`${ruta}: ${p.control} ${p.ancho}×${p.alto} px`);
+    }
+    expect(pequenos, "controles con menos de 44 × 44 px de zona táctil").toEqual([]);
+  });
+});
+
+// ---------------------------------------------------------------------------------------------
+test.describe("«Suscribirme» en Android sin la aplicación", () => {
+  test.beforeEach(({ browserName }, info) => {
+    void browserName;
+    test.skip(info.project.name !== "android", "solo en el Android");
+  });
+
+  const FIREFOX = "Mozilla/5.0 (Android 14; Mobile; rv:143.0) Gecko/143.0 Firefox/143.0";
+
+  test("Chrome: intent:// con Google Play que cambia con el canal; Firefox: ntfy://", async ({
+    page: pagina,
+    context: contexto,
+    browser,
+    browserName,
+  }, info) => {
+    const errores = await abrir(contexto, pagina);
+    const persona = await Persona.en(pagina, contexto, true, browserName === "chromium");
+    await persona.tocar(pagina.locator("[data-boton-avisos]:visible").first());
+    const panel = pagina.locator("[data-panel-avisos]:visible");
+    await expect(panel).toBeVisible();
+    const suscribirme = panel.locator("[data-suscribirme]");
+    // Un enlace de verdad, sin código que redirija.
+    await expect(suscribirme).toHaveJSProperty("tagName", "A");
+    await expect(suscribirme).toHaveAttribute("href", intent("drones-europe", "EODI+%C2%B7+Toda+Europa"));
+    await panel.locator("[data-canal-elegido]").selectOption("drones-france");
+    await expect(suscribirme).toHaveAttribute("href", intent("drones-france", "EODI+%C2%B7+Francia"));
+    await panel.locator("[data-canal-elegido]").selectOption("drones-poland");
+    await expect(suscribirme).toHaveAttribute("href", intent("drones-poland", "EODI+%C2%B7+Polonia"));
+    // El enlace pequeño a Google Play sigue ahí.
+    await expect(panel.getByRole("link", { name: /¿No tienes la aplicación\?/ })).toHaveAttribute("href", /play\.google\.com/);
+    expect(errores).toEqual([]);
+
+    // Firefox para Android no abre intent://: sigue con ntfy://.
+    const uso = info.project.use;
+    const firefox = await browser.newContext({
+      viewport: uso.viewport ?? null,
+      isMobile: true,
+      hasTouch: true,
+      userAgent: FIREFOX,
+      ...(uso.deviceScaleFactor === undefined ? {} : { deviceScaleFactor: uso.deviceScaleFactor }),
+      ...(uso.baseURL === undefined ? {} : { baseURL: uso.baseURL }),
+      ...(CLAVE === undefined ? {} : { extraHTTPHeaders: { "x-vercel-protection-bypass": CLAVE } }),
+    });
+    const otra = await firefox.newPage();
+    const erroresFirefox = await abrir(firefox, otra);
+    await otra.locator("[data-boton-avisos]:visible").first().tap();
+    const panelFirefox = otra.locator("[data-panel-avisos]:visible");
+    await expect(panelFirefox).toBeVisible();
+    const suscribirmeFirefox = panelFirefox.locator("[data-suscribirme]");
+    await expect(suscribirmeFirefox).toHaveAttribute("href", "ntfy://ntfy.droneobservatory.eu/drones-europe?display=EODI+%C2%B7+Toda+Europa");
+    await panelFirefox.locator("[data-canal-elegido]").selectOption("drones-france");
+    await expect(suscribirmeFirefox).toHaveAttribute("href", "ntfy://ntfy.droneobservatory.eu/drones-france?display=EODI+%C2%B7+Francia");
+    expect(erroresFirefox).toEqual([]);
+    await firefox.close();
+  });
 });

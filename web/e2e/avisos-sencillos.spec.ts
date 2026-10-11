@@ -68,7 +68,8 @@ for (const caso of CASOS) {
     // El QR, solo en el ordenador.
     await expect(panel.locator("[data-qr-avisos]")).toHaveCount(caso.equipo === "ordenador" ? 1 : 0);
     const destino = await panel.locator("[data-suscribirme]").getAttribute("href");
-    if (caso.equipo === "android") expect(destino).toMatch(/^ntfy:\/\/ntfy\.droneobservatory\.eu\/drones-europe/);
+    // Chrome en Android: intent://, que lleva a Google Play si falta la aplicación.
+    if (caso.equipo === "android") expect(destino).toMatch(/^intent:\/\/ntfy\.droneobservatory\.eu\/drones-europe\?display=.*#Intent;scheme=ntfy;package=io\.heckel\.ntfy;/);
     if (caso.equipo === "iphone") expect(destino).toContain("apps.apple.com");
     if (caso.equipo === "ordenador") expect(destino).toBe("https://ntfy.droneobservatory.eu/drones-europe");
     // Una sola barra de desplazamiento.

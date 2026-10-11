@@ -12,8 +12,11 @@ import {
   TEXTO_AVISOS,
   TIENDAS,
   canales,
+  admiteIntent,
   dispositivoDe,
   enlaceAndroid,
+  enlaceAndroidPara,
+  enlaceIntent,
   enlaceWeb,
   filtrarCanales,
   rutaQr,
@@ -57,6 +60,28 @@ describe("canales de avisos", () => {
     expect(enlaceAndroid(eslovaquia)).toBe("ntfy://ntfy.droneobservatory.eu/drones-slovakia?display=EODI+%C2%B7+Eslovaquia");
     expect(enlaceWeb(eslovaquia)).toBe("https://ntfy.droneobservatory.eu/drones-slovakia");
     expect(rutaQr(eslovaquia)).toBe("/avisos/qr/drones-slovakia.svg");
+  });
+
+  it("en Android con Chrome y los basados en Chromium, intent:// con Google Play si falta la aplicación; Firefox, ntfy://", () => {
+    const europa = canales("es")[0];
+    if (europa === undefined) throw new Error("sin canales");
+    const intent =
+      "intent://ntfy.droneobservatory.eu/drones-europe?display=EODI+%C2%B7+Toda+Europa#Intent;scheme=ntfy;package=io.heckel.ntfy;" +
+      "S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dio.heckel.ntfy;end";
+    expect(enlaceIntent(europa)).toBe(intent);
+    const chrome = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Mobile Safari/537.36";
+    const samsung =
+      "Mozilla/5.0 (Linux; Android 14; SM-S921B) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/27.0 Chrome/125.0.0.0 Mobile Safari/537.36";
+    const edge = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Mobile Safari/537.36 EdgA/141.0.0.0";
+    const firefox = "Mozilla/5.0 (Android 14; Mobile; rv:143.0) Gecko/143.0 Firefox/143.0";
+    const vistaWeb = "Mozilla/5.0 (Linux; Android 14; Pixel 8; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/141.0.0.0 Mobile Safari/537.36";
+    const iphone = "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/141.0 Mobile/15E148 Safari/604.1";
+    for (const agente of [chrome, samsung, edge]) {
+      expect(admiteIntent(agente)).toBe(true);
+      expect(enlaceAndroidPara(europa, agente)).toBe(intent);
+    }
+    for (const agente of [firefox, vistaWeb, iphone]) expect(admiteIntent(agente)).toBe(false);
+    expect(enlaceAndroidPara(europa, firefox)).toBe(enlaceAndroid(europa));
   });
 
   it("el buscador no distingue tildes ni mayúsculas", () => {
