@@ -394,6 +394,8 @@ test("los filtros quedan en la dirección y el feed abre fichas", async ({ page 
   await expect(page).toHaveURL(/\/EODI-\d{4}-\d{5}\?solo=graves$/);
   // La dirección filtrada se puede compartir: al abrirla, el filtro sigue puesto.
   await page.goto("/?solo=graves");
+  // Como al principio: el botón no responde hasta que la página ha arrancado.
+  await page.waitForSelector(MAPA_LISTO);
   ({ grupo: filtros, cerrar } = await abrirFiltros(page));
   await expect(filtros.getByRole("button", { name: "Confirmado" })).toHaveAttribute(
     "aria-pressed",
