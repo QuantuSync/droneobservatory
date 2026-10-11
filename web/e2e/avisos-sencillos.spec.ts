@@ -1,6 +1,6 @@
-// Panel «Avisos» en tres pasos, en 360 × 800, 768 × 1024, 1366 × 768 y 1920 × 1080: un solo botón
-// «Suscribirme» con las instrucciones del dispositivo (Android, iPhone u ordenador), el QR solo en
-// el ordenador, «Toda Europa» por defecto y el buscador de países. Abrir y cerrar no mueve el
+// Panel «Avisos» en tres pasos, en 360 × 800, 768 × 1024, 1366 × 768 y 1920 × 1080: en el ordenador
+// un solo botón «Suscribirme» y el QR; en el teléfono, «Suscríbete» en dos pasos numerados
+// (instalar ntfy y suscribirse al canal), con las instrucciones del dispositivo; «Toda Europa» por defecto y el buscador de países. Abrir y cerrar no mueve el
 // mapa; Escape cierra y devuelve el foco al botón; una sola barra de desplazamiento; lo elegido,
 // en claro. Deja capturas en docs/capturas/avisos-sencillos (CAPTURAS para otra carpeta). Va
 // contra producción por defecto; con BASE=<vista previa> y BYPASS=<clave>, contra una vista previa.
@@ -59,19 +59,23 @@ for (const caso of CASOS) {
     await expect(panel).toBeVisible();
     await expect(panel).toHaveAttribute("data-dispositivo", caso.equipo);
     await expect(panel.locator(":scope > ol > li")).toHaveCount(3);
-    await expect(panel.locator("[data-suscribirme]")).toHaveCount(1);
-    await expect(panel.locator("[data-suscribirme]")).toHaveText("Suscribirme");
+    await expect(panel.locator("[data-suscribirme]")).toHaveCount(caso.equipo === "iphone" ? 0 : 1);
+    await expect(panel.locator("[data-instalar]")).toHaveCount(caso.equipo === "ordenador" ? 0 : 1);
+    if (caso.equipo === "ordenador") await expect(panel.locator("[data-suscribirme]")).toHaveText("Suscribirme");
+    else await expect(panel.locator("[data-instalar]")).toHaveText("1. Instala la aplicación ntfy");
     // Toda Europa por defecto, en claro con el texto oscuro.
     const selector = panel.locator("[data-canal-elegido]");
     await expect(selector).toHaveValue("drones-europe");
     await expect.poll(() => selector.evaluate((e) => getComputedStyle(e).color)).toBe("rgb(6, 10, 18)");
     // El QR, solo en el ordenador.
     await expect(panel.locator("[data-qr-avisos]")).toHaveCount(caso.equipo === "ordenador" ? 1 : 0);
-    const destino = await panel.locator("[data-suscribirme]").getAttribute("href");
-    // Chrome en Android: intent://, que lleva a Google Play si falta la aplicación.
-    if (caso.equipo === "android") expect(destino).toMatch(/^intent:\/\/ntfy\.droneobservatory\.eu\/drones-europe\?display=.*#Intent;scheme=ntfy;package=io\.heckel\.ntfy;/);
-    if (caso.equipo === "iphone") expect(destino).toContain("apps.apple.com");
-    if (caso.equipo === "ordenador") expect(destino).toBe("https://ntfy.droneobservatory.eu/drones-europe");
+    // Android: 1 a Google Play y 2 a la aplicación con ntfy://; iPhone: 1 a la App Store.
+    if (caso.equipo === "android") {
+      await expect(panel.locator("[data-instalar]")).toHaveAttribute("href", /play\.google\.com/);
+      await expect(panel.locator("[data-suscribirme]")).toHaveAttribute("href", /^ntfy:\/\/ntfy\.droneobservatory\.eu\/drones-europe\?display=/);
+    }
+    if (caso.equipo === "iphone") await expect(panel.locator("[data-instalar]")).toHaveAttribute("href", /apps\.apple\.com/);
+    if (caso.equipo === "ordenador") await expect(panel.locator("[data-suscribirme]")).toHaveAttribute("href", "https://ntfy.droneobservatory.eu/drones-europe");
     // Una sola barra de desplazamiento.
     const desplazables = await panel.evaluate((p) => {
       const lista: string[] = [];
@@ -91,7 +95,7 @@ for (const caso of CASOS) {
     if (caso.equipo === "iphone") await expect(panel.locator("code").last()).toHaveText("drones-poland");
     else await expect(panel.locator("[data-suscribirme]")).toHaveAttribute("href", /drones-poland/);
     if (caso.equipo === "ordenador") await expect(panel.locator("[data-qr-avisos] img")).toHaveAttribute("src", "/avisos/qr/drones-poland.svg");
-    await panel.locator("[data-suscribirme]").scrollIntoViewIfNeeded();
+    await panel.locator(caso.equipo === "ordenador" ? "[data-suscribirme]" : "[data-paso-telefono='2']").scrollIntoViewIfNeeded();
     await pagina.screenshot({ path: join(CAPTURAS, `panel-polonia-${caso.nombre}.png`) });
 
     // Con el teclado hasta el selector; Escape cierra, devuelve el foco y no mueve el mapa.

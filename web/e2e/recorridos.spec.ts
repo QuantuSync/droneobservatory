@@ -8,7 +8,9 @@
 // táctil, dejando la pausa de una persona entre una cosa y otra.
 //
 // Además, en táctil (Android, iPhone y tableta), que ningún control visible baje de 44 × 44 px de zona
-// táctil, y que «Suscribirme» en Android sea intent:// en Chrome y ntfy:// en Firefox.
+// táctil; que en el teléfono «Suscríbete» vaya en dos pasos numerados (1, instalar ntfy; 2,
+// suscribirse al canal, en Android con ntfy://), que el ordenador siga igual y que el canal elegido
+// se recuerde al recargar y se borre con «Borrar mi última visita».
 //
 // Proyectos android, iphone, tableta, escritorio-chromium y escritorio-webkit (playwright.config.ts).
 // Va contra producción por defecto; con BASE y BYPASS (o VERCEL_BYPASS), contra una vista previa.
@@ -198,11 +200,13 @@ async function conmutarDosVeces(persona: Persona, control: Locator) {
   await expect(control).toHaveAttribute("aria-pressed", antes ?? "false");
 }
 
-/** El enlace intent:// de «Suscribirme» en Chrome para Android: ntfy o, sin ella, Google Play. */
-function intent(canal: string, nombre: string): string {
-  const tienda = encodeURIComponent("https://play.google.com/store/apps/details?id=io.heckel.ntfy");
-  return `intent://ntfy.droneobservatory.eu/${canal}?display=${nombre}#Intent;scheme=ntfy;package=io.heckel.ntfy;S.browser_fallback_url=${tienda};end`;
+/** El enlace ntfy:// del paso 2 en Android: abre la aplicación ya suscrita al canal. */
+function ntfy(canal: string, nombre: string): string {
+  return `ntfy://ntfy.droneobservatory.eu/${canal}?display=${nombre}`;
 }
+
+const GOOGLE_PLAY = "https://play.google.com/store/apps/details?id=io.heckel.ntfy";
+const APP_STORE = "https://apps.apple.com/app/ntfy/id1625396347";
 
 if (CLAVE !== undefined) test.use({ extraHTTPHeaders: { "x-vercel-protection-bypass": CLAVE } });
 
@@ -251,7 +255,7 @@ test.describe("teléfono: abrir la hoja, subirla con el dedo, desplazar y entonc
     expect(errores).toEqual([]);
   });
 
-  test("Avisos: subir la hoja, buscar un país y «Suscribirme» al primer toque", async ({ page: pagina, context: contexto, browserName }, info) => {
+  test("Avisos: subir la hoja, buscar un país y el paso 2 (o el 1 en el iPhone) al primer toque", async ({ page: pagina, context: contexto, browserName }, info) => {
     const errores = await abrir(contexto, pagina);
     const persona = await Persona.en(pagina, contexto, true, browserName === "chromium");
     await persona.tocar(pagina.locator("[data-boton-avisos]:visible").first());
@@ -260,21 +264,21 @@ test.describe("teléfono: abrir la hoja, subirla con el dedo, desplazar y entonc
     await persona.tocar(panel.locator("[data-buscar-canal]"));
     await pagina.keyboard.type("pol", { delay: 80 });
     await expect(panel.locator("[data-canal-elegido]")).toHaveValue("drones-poland");
-    // Como lo hizo quien encontró el fallo: subir la hoja, desplazar y el primer toque es
-    // «Suscribirme».
+    // Como lo hizo quien encontró el fallo: subir la hoja, desplazar y el primer toque es el
+    // botón del paso 2 (en el iPhone, el 1, el único enlace).
     await subirHoja(persona);
     await persona.desplazar(panel, 300);
     await anotarClics(pagina);
 
-    const suscribirme = panel.locator("[data-suscribirme]");
     const android = info.project.name === "android";
+    const boton = panel.locator(android ? "[data-suscribirme]" : "[data-instalar]");
     const nueva = android ? null : contexto.waitForEvent("page", { timeout: 5000 });
-    await persona.tocar(suscribirme);
+    await persona.tocar(boton);
     const clic = await ultimoClic(pagina);
-    expect(clic, "el toque llega a «Suscribirme»").toBeDefined();
+    expect(clic, "el toque llega al botón").toBeDefined();
     expect(clic?.anulado, "nadie anula el toque").toBe(false);
     if (android) {
-      expect(clic?.href).toBe(intent("drones-poland", "EODI+%C2%B7+Polonia"));
+      expect(clic?.href).toBe(ntfy("drones-poland", "EODI+%C2%B7+Polonia"));
     } else {
       expect(clic?.href).toContain("apps.apple.com");
       await (await nueva)?.close();
@@ -375,12 +379,16 @@ test.describe("tableta y escritorio", () => {
         await panel.locator("[data-canal-elegido]").selectOption("drones-france");
         const suscribirme = panel.locator("[data-suscribirme]");
         if (tableta) {
-          // Una tableta Android abre la aplicación, igual que el teléfono.
-          await expect(suscribirme).toHaveAttribute("href", intent("drones-france", "EODI+%C2%B7+Francia"));
+          // Una tableta Android va en dos pasos y abre la aplicación, igual que el teléfono.
+          await expect(panel.locator("[data-instalar]")).toHaveAttribute("href", GOOGLE_PLAY);
+          await expect(suscribirme).toHaveAttribute("href", ntfy("drones-france", "EODI+%C2%B7+Francia"));
           await anotarClics(pagina);
           await persona.tocar(suscribirme);
           expect((await ultimoClic(pagina))?.anulado).toBe(false);
         } else {
+          // En el ordenador no cambia nada: un solo botón al navegador y el QR, sin los dos pasos.
+          await expect(suscribirme).toHaveText("Suscribirme");
+          await expect(panel.locator("[data-instalar], [data-paso-telefono]")).toHaveCount(0);
           await expect(suscribirme).toHaveAttribute("href", "https://ntfy.droneobservatory.eu/drones-france");
           const qr = panel.locator("[data-qr-avisos] img");
           await expect(qr).toHaveAttribute("src", "/avisos/qr/drones-france.svg");
@@ -672,18 +680,15 @@ test.describe("zonas táctiles de 44 × 44 px", () => {
 });
 
 // ---------------------------------------------------------------------------------------------
-test.describe("«Suscribirme» en Android sin la aplicación", () => {
+test.describe("«Suscríbete» en dos pasos en el teléfono", () => {
   test.beforeEach(({ browserName }, info) => {
     void browserName;
-    test.skip(info.project.name !== "android", "solo en el Android");
+    test.skip(!TELEFONOS.includes(info.project.name), "solo en el Android y el iPhone");
   });
 
-  const FIREFOX = "Mozilla/5.0 (Android 14; Mobile; rv:143.0) Gecko/143.0 Firefox/143.0";
-
-  test("Chrome: intent:// con Google Play que cambia con el canal; Firefox: ntfy://", async ({
+  test("1, instalar ntfy; 2, suscribirse al canal, uno debajo del otro y con su nota", async ({
     page: pagina,
     context: contexto,
-    browser,
     browserName,
   }, info) => {
     const errores = await abrir(contexto, pagina);
@@ -691,39 +696,89 @@ test.describe("«Suscribirme» en Android sin la aplicación", () => {
     await persona.tocar(pagina.locator("[data-boton-avisos]:visible").first());
     const panel = pagina.locator("[data-panel-avisos]:visible");
     await expect(panel).toBeVisible();
-    const suscribirme = panel.locator("[data-suscribirme]");
-    // Un enlace de verdad, sin código que redirija.
-    await expect(suscribirme).toHaveJSProperty("tagName", "A");
-    await expect(suscribirme).toHaveAttribute("href", intent("drones-europe", "EODI+%C2%B7+Toda+Europa"));
-    await panel.locator("[data-canal-elegido]").selectOption("drones-france");
-    await expect(suscribirme).toHaveAttribute("href", intent("drones-france", "EODI+%C2%B7+Francia"));
-    await panel.locator("[data-canal-elegido]").selectOption("drones-poland");
-    await expect(suscribirme).toHaveAttribute("href", intent("drones-poland", "EODI+%C2%B7+Polonia"));
-    // El enlace pequeño a Google Play sigue ahí.
-    await expect(panel.getByRole("link", { name: /¿No tienes la aplicación\?/ })).toHaveAttribute("href", /play\.google\.com/);
-    expect(errores).toEqual([]);
+    const uno = panel.locator("[data-paso-telefono='1']");
+    const dos = panel.locator("[data-paso-telefono='2']");
+    const instalar = uno.locator("[data-instalar]");
+    await expect(instalar).toHaveText("1. Instala la aplicación ntfy");
+    await expect(uno).toContainText("Gratis. Si ya la tienes, pasa al paso 2.");
+    await expect(panel.getByText(/¿No tienes la aplicación\?/)).toHaveCount(0);
+    await expect(panel.locator("[data-qr-avisos]")).toHaveCount(0);
+    await dos.scrollIntoViewIfNeeded();
+    const cajaUno = await uno.boundingBox();
+    const cajaDos = await dos.boundingBox();
+    expect(cajaUno !== null && cajaDos !== null && cajaUno.y + cajaUno.height <= cajaDos.y, "el 1 va encima del 2").toBe(true);
 
-    // Firefox para Android no abre intent://: sigue con ntfy://.
-    const uso = info.project.use;
-    const firefox = await browser.newContext({
-      viewport: uso.viewport ?? null,
-      isMobile: true,
-      hasTouch: true,
-      userAgent: FIREFOX,
-      ...(uso.deviceScaleFactor === undefined ? {} : { deviceScaleFactor: uso.deviceScaleFactor }),
-      ...(uso.baseURL === undefined ? {} : { baseURL: uso.baseURL }),
-      ...(CLAVE === undefined ? {} : { extraHTTPHeaders: { "x-vercel-protection-bypass": CLAVE } }),
-    });
-    const otra = await firefox.newPage();
-    const erroresFirefox = await abrir(firefox, otra);
-    await otra.locator("[data-boton-avisos]:visible").first().tap();
-    const panelFirefox = otra.locator("[data-panel-avisos]:visible");
-    await expect(panelFirefox).toBeVisible();
-    const suscribirmeFirefox = panelFirefox.locator("[data-suscribirme]");
-    await expect(suscribirmeFirefox).toHaveAttribute("href", "ntfy://ntfy.droneobservatory.eu/drones-europe?display=EODI+%C2%B7+Toda+Europa");
-    await panelFirefox.locator("[data-canal-elegido]").selectOption("drones-france");
-    await expect(suscribirmeFirefox).toHaveAttribute("href", "ntfy://ntfy.droneobservatory.eu/drones-france?display=EODI+%C2%B7+Francia");
-    expect(erroresFirefox).toEqual([]);
-    await firefox.close();
+    if (info.project.name === "android") {
+      await expect(instalar).toHaveAttribute("href", GOOGLE_PLAY);
+      const suscribirme = dos.locator("[data-suscribirme]");
+      await expect(suscribirme).toHaveText("2. Suscríbete al canal");
+      await expect(dos).toContainText("Si acabas de instalarla, vuelve aquí y toca este botón.");
+      // Un enlace de verdad, sin código que redirija, y con el canal elegido.
+      await expect(suscribirme).toHaveJSProperty("tagName", "A");
+      await expect(suscribirme).toHaveAttribute("href", ntfy("drones-europe", "EODI+%C2%B7+Toda+Europa"));
+      await panel.locator("[data-canal-elegido]").selectOption("drones-france");
+      await expect(suscribirme).toHaveAttribute("href", ntfy("drones-france", "EODI+%C2%B7+Francia"));
+      await panel.locator("[data-canal-elegido]").selectOption("drones-poland");
+      await expect(suscribirme).toHaveAttribute("href", ntfy("drones-poland", "EODI+%C2%B7+Polonia"));
+      // Los dos, el mismo botón: mismo estilo, mismo alto y ancho, y al menos 44 px.
+      const medida = (l: Locator) =>
+        l.evaluate((a) => {
+          const r = a.getBoundingClientRect();
+          return { clase: a.className, alto: Math.round(r.height), ancho: Math.round(r.width) };
+        });
+      const m1 = await medida(instalar);
+      const m2 = await medida(suscribirme);
+      expect(m2).toEqual(m1);
+      expect(m1.alto).toBeGreaterThanOrEqual(44);
+    } else {
+      await expect(instalar).toHaveAttribute("href", APP_STORE);
+      await expect(dos.getByRole("heading", { name: "2. Suscríbete al canal" })).toBeVisible();
+      await expect(dos).toContainText("Si acabas de instalarla, vuelve aquí.");
+      await expect(dos.getByRole("button", { name: "Copiar el servidor" })).toBeVisible();
+      await expect(dos.getByRole("button", { name: "Copiar el canal" })).toBeVisible();
+      await panel.locator("[data-canal-elegido]").selectOption("drones-france");
+      await expect(dos.locator("code").last()).toHaveText("drones-france");
+    }
+    expect(errores).toEqual([]);
+  });
+});
+
+// ---------------------------------------------------------------------------------------------
+test.describe("el canal elegido se recuerda", () => {
+  test.beforeEach(({ browserName }, info) => {
+    void browserName;
+    test.skip(!["android", "iphone", "escritorio-chromium"].includes(info.project.name), "un teléfono de cada y el escritorio");
+  });
+
+  test("al recargar sale elegido y «Borrar mi última visita» lo borra", async ({ page: pagina, context: contexto }) => {
+    const errores = await abrir(contexto, pagina);
+    const abrirAvisos = async () => {
+      await pagina.locator("[data-boton-avisos]:visible").first().click();
+      const panel = pagina.locator("[data-panel-avisos]:visible");
+      await expect(panel).toBeVisible();
+      return panel;
+    };
+    let panel = await abrirAvisos();
+    await expect(panel.locator("[data-canal-elegido]")).toHaveValue("drones-europe");
+    await panel.locator("[data-canal-elegido]").selectOption("drones-france");
+    expect(await pagina.evaluate(() => window.localStorage.getItem("eodi.avisos.canal"))).toBe("drones-france");
+
+    await pagina.reload({ waitUntil: "domcontentloaded" });
+    await expect(pagina.locator(MAPA)).toBeAttached({ timeout: 60_000 });
+    panel = await abrirAvisos();
+    await expect(panel.locator("[data-canal-elegido]")).toHaveValue("drones-france");
+
+    await pagina.goto("/privacidad", { waitUntil: "load" });
+    const borrar = pagina.locator("[data-borrar-visita]");
+    await expect(borrar).toBeVisible();
+    await borrar.click();
+    await expect(pagina.locator("[data-borrar-visita-estado]")).toContainText("canal de avisos");
+    expect(await pagina.evaluate(() => window.localStorage.getItem("eodi.avisos.canal"))).toBeNull();
+
+    await pagina.goto("/", { waitUntil: "domcontentloaded" });
+    await expect(pagina.locator(MAPA)).toBeAttached({ timeout: 60_000 });
+    panel = await abrirAvisos();
+    await expect(panel.locator("[data-canal-elegido]")).toHaveValue("drones-europe");
+    expect(errores).toEqual([]);
   });
 });

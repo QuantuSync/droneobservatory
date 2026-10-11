@@ -1,8 +1,9 @@
 // La página de texto «Avisos» (/avisos, /en/alerts), con la misma lógica que el panel del mapa
 // (componentes/Avisos.tsx): primero los tres pasos (qué recibirás, qué quieres recibir y
-// suscríbete), después la explicación por dispositivo y al final la lista de canales, cada uno
-// con su código QR para poder imprimirla. Funciona sin ejecutar código. Los textos y los enlaces
-// son los de src/avisos.ts.
+// suscríbete, en el teléfono en dos pasos: instalar ntfy y suscribirse al canal), después la
+// explicación por dispositivo y al final la lista de canales, cada uno con su código QR para poder
+// imprimirla. Funciona sin ejecutar código: en Android, el paso 2 es el enlace ntfy://. Los textos
+// y los enlaces son los de src/avisos.ts.
 
 import { RUTAS_AVISOS, TEXTO_AVISOS, TIENDAS, canales, enlaceAndroid, enlaceWeb, rutaQr } from "../avisos.ts";
 import type { Canal, Dispositivo } from "../avisos.ts";
@@ -12,7 +13,7 @@ import { e, html } from "./html.ts";
 import type { Html } from "./html.ts";
 
 /** Fecha de la última revisión de la página, para el sitemap. */
-const REVISION_AVISOS = "2026-10-10T00:00:00Z";
+const REVISION_AVISOS = "2026-10-11T00:00:00Z";
 /** Lado del código QR en la página, en píxeles. */
 export const LADO_QR = 144;
 
@@ -20,6 +21,27 @@ const DISPOSITIVOS: readonly Dispositivo[] = ["android", "iphone", "ordenador"];
 
 function externo(url: string, texto: string): Html {
   return e("a", { href: url, rel: "noopener" }, texto);
+}
+
+/** Un paso del teléfono: su botón (o su título, si no hay enlace) y la nota en pequeño debajo. */
+function pasoTelefono(principal: Html, nota: string, ...resto: Html[]): Html {
+  return e("li", null, principal, e("p", { class: "texto-nota" }, nota), ...resto);
+}
+
+/** «Suscríbete» en Android y en iPhone: 1, instalar ntfy; 2, suscribirse al canal. */
+function dosPasos(idioma: Idioma, europa: Canal, d: "android" | "iphone"): Html {
+  const t = TEXTO_AVISOS[idioma];
+  const tienda = d === "android" ? TIENDAS.googlePlay : TIENDAS.appStore;
+  const instalar = pasoTelefono(e("a", { class: "texto-boton", href: tienda, rel: "noopener" }, t.instalar), t.instalarNota);
+  const suscribir =
+    d === "android"
+      ? pasoTelefono(e("a", { class: "texto-boton", href: enlaceAndroid(europa) }, t.suscribirCanal), t.suscribirCanalNota.android)
+      : pasoTelefono(
+          e("p", { class: "texto-paso-titulo" }, t.suscribirCanal),
+          t.suscribirCanalNota.iphone,
+          e("ol", null, t.pasos.iphone(europa.tema).map((paso) => e("li", null, paso))),
+        );
+  return html(e("h3", null, t.nombreDispositivo[d]), e("ol", { class: "texto-dos-pasos" }, instalar, suscribir));
 }
 
 /** Los tres pasos, para el canal de toda Europa; el de un país, en la lista del final. */
@@ -48,11 +70,12 @@ function pasos(idioma: Idioma, europa: Canal): Html {
       "li",
       null,
       e("h2", null, t.pasoSuscribir),
+      dosPasos(idioma, europa, "android"),
+      dosPasos(idioma, europa, "iphone"),
+      e("h3", null, n.ordenador),
       e(
         "ul",
         { class: "texto-botones" },
-        e("li", null, e("a", { class: "texto-boton", href: enlaceAndroid(europa) }, `${t.suscribirme} · ${n.android}`)),
-        e("li", null, e("a", { class: "texto-boton", href: TIENDAS.appStore, rel: "noopener" }, `${t.suscribirme} · ${n.iphone}`)),
         e("li", null, e("a", { class: "texto-boton", href: enlaceWeb(europa), rel: "noopener" }, `${t.suscribirme} · ${n.ordenador}`)),
       ),
     ),

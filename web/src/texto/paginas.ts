@@ -1123,7 +1123,7 @@ function todasLasPaginas(datos: DatosPaginas): PaginaTexto[] {
 // Servicio público: aviso legal, privacidad, independencia y accesibilidad
 
 /** Fecha de la última revisión de las páginas de servicio, para el sitemap. */
-const REVISION_SERVICIO = "2026-10-09T00:00:00Z";
+const REVISION_SERVICIO = "2026-10-11T00:00:00Z";
 
 /**
  * El botón que borra la fecha de la última visita, en la página de privacidad: oculto hasta que
