@@ -148,9 +148,15 @@ timedatectl set-ntp true
 install -d /etc/systemd/journald.conf.d
 cat > /etc/systemd/journald.conf.d/eodi.conf <<FIN
 [Journal]
+Storage=persistent
+SplitMode=none
 SystemMaxUse=$DIARIO_MAXIMO
 MaxRetentionSec=$DIARIO_ANTIGUEDAD
 FIN
+install -d -m 2755 -g systemd-journal /var/log/journal
 systemctl restart systemd-journald
+# El gestor de usuario del operador sigue en marcha entre sesiones: sin esto, cada entrada por ssh
+# lo arranca y lo para, con unas 10 000 líneas al día en el diario.
+loginctl enable-linger operador
 
 echo "endurecimiento hecho"

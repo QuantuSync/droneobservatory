@@ -17,7 +17,7 @@ cero con una sola orden.
 | Usuario `eodi` | Ejecuta el observatorio. Sin privilegios, sin contraseña y sin entrada por SSH |
 | Usuario `operador` | Administra: entra por SSH con clave y usa `sudo` |
 | SSH | Solo con clave, sin contraseña y sin root; 3 intentos por conexión, 30 s para entrar, sin reenvíos (X11, TCP, agente, túneles) |
-| Además | fail2ban (5 intentos en 10 min: veto de 1 h que se dobla con cada reincidencia, hasta una semana), actualizaciones de seguridad automáticas **sin reinicio automático** (apartado «Reinicio tras las actualizaciones»), zona horaria UTC, hora sincronizada, diario de systemd con tope de tamaño y de antigüedad |
+| Además | fail2ban (5 intentos en 10 min: veto de 1 h que se dobla con cada reincidencia, hasta una semana), actualizaciones de seguridad automáticas **sin reinicio automático** (apartado «Reinicio tras las actualizaciones»), zona horaria UTC, hora sincronizada, diario de systemd persistente con 30 días y 1 GB como mucho (apartado «Diario») |
 | needrestart | No reinicia las unidades `eodi-*` tras una actualización (`/etc/needrestart/conf.d/50-eodi.conf`): son trabajos con temporizador y reiniciarlos corta su trabajo |
 
 Dos particularidades:
@@ -1685,6 +1685,30 @@ web no cambian. La exportación semanal sigue el mismo interruptor.
 
 Cambiar de modo, justo después de una recogida y fuera de los minutos 12 a 40:
 `echo almacen | sudo -u eodi tee /home/eodi/.eodi/publicacion_modo` (o `doble`, o `github`).
+
+## Diario
+
+El diario de systemd guarda 30 días de todas las unidades, también el detalle de la recogida y del
+extractor hora a hora, con 1 GB como mucho (`DIARIO_MAXIMO` y `DIARIO_ANTIGUEDAD` en
+`servidor/configuracion.sh`; lo pone `servidor/endurecer.sh` en
+`/etc/systemd/journald.conf.d/eodi.conf`):
+
+- `Storage=persistent`: en `/var/log/journal`, sobrevive a los reinicios;
+- `SplitMode=none`: un solo diario para todos los usuarios. Con un fichero por usuario (lo de
+  serie) y el tope anterior de 200 MB, al llegar al tope journald borraba primero los archivos del
+  usuario `eodi`, donde va lo que escriben sus programas: el 11 de octubre de 2026 del detalle de la
+  recogida solo quedaban las tres últimas horas, y las líneas de systemd (arranque y fin) de días
+  atrás. La vigilancia lee el diario con el grupo `systemd-journal`; el operador también;
+- el gestor de usuario del operador sigue en marcha entre sesiones (`loginctl enable-linger
+  operador`): sin eso cada entrada por ssh lo arranca y lo para, y eran dos tercios del diario.
+
+Medido el 11 de octubre de 2026: unos 30 MB al día, así que 30 días caben de sobra en el tope.
+
+```
+sudo journalctl --disk-usage
+sudo journalctl -u eodi-recogida --since "2026-10-12 08:00" --until "2026-10-12 09:00"
+sudo journalctl -u eodi-recogida -o short-iso | cut -c1-13 | uniq -c | tail   # líneas por hora
+```
 
 ## Ensayos
 
