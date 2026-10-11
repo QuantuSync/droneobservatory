@@ -64,6 +64,11 @@ código QR (para poder imprimirla).
   ataque de la capa de guerra (`ataque`) o con `pruebas.entrada_exterior`. Va con prioridad alta.
 - Solo los sucesos de las **últimas 72 horas** (`ventana_horas`). Un incidente antiguo que llega
   tarde al registro (un histórico, una nota atrasada) no es un aviso.
+- **Avisos con retraso.** Los incidentes que la barrera de titulares retuvo sin publicar desde el 9
+  de octubre de 2026 (`configuracion/avisos_con_retraso.json`) se avisan al publicarse si lo habrían
+  merecido al publicarse a tiempo: las 72 horas se cuentan hasta su alta en la base, no hasta
+  ahora. El texto termina con «Aviso con retraso por un fallo de publicación. / Delayed alert due
+  to a publishing fault.». El resto de reglas no cambia: una sola vez, fuente oficial y prioridad.
 - La capa de guerra de Ucrania y Rusia **no avisa**: sus ataques no son incidentes de Europa.
 
 Volumen esperado, medido sobre los datos reales del 10 de octubre de 2026: 32 avisos en 30 días

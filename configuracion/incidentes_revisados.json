@@ -371,6 +371,14 @@
       ],
       "motivo": "el mismo suceso: los drones que entraron en Polonia la noche del 9 al 10 de septiembre de 2025 (00443 es la nota de dziennikwschodni.pl del 8 de octubre de 2026 sobre el archivo de la investigación de la Fiscalía Regional de Lublin, como 00442)",
       "motivo_en": "the same event: the drones that entered Poland on the night of 9 to 10 September 2025 (00443 is the dziennikwschodni.pl article of 8 October 2026 about the closing of the investigation by the Lublin Regional Prosecutor's Office, like 00442)"
+    },
+    {
+      "registros": [
+        "EODI-2026-00489",
+        "EODI-2026-00505"
+      ],
+      "motivo": "el mismo suceso: el ataque con drones a dos buques mercantes en la zona económica exclusiva de Bulgaria, frente a Byala, la madrugada del 6 de octubre de 2026 (00505 son notas del 9 de octubre de fakti.bg y burgas24.bg que vuelven sobre él, fechadas por su publicación)",
+      "motivo_en": "the same event: the drone attack on two merchant ships in Bulgaria's exclusive economic zone, off Byala, in the early hours of 6 October 2026 (00505 are 9 October articles from fakti.bg and burgas24.bg that return to it, dated by their publication)"
     }
   ],
   "reextraer": [
@@ -410,6 +418,13 @@
       "motivo": {
         "es": "No es un suceso con dron: las fuentes (wn.com y Daily Mail, 6-7 de octubre de 2026) cuentan un supuesto plan para atacar con drones la base de Fairford y la retirada preventiva de los bombarderos estadounidenses; ningún dron se vio ni voló.",
         "en": "Not a drone event: the sources (wn.com and Daily Mail, 6-7 October 2026) report an alleged plan to attack the Fairford base with drones and the precautionary withdrawal of the US bombers; no drone was seen or flown."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00508",
+      "motivo": {
+        "es": "Registro repetido del dron que explotó en el distrito de Anenii Noi (Moldavia) la noche del 10 al 11 de octubre de 2026, que es EODI-2026-00509; la ficha le puso Rumanía como país. No se une porque la regla de unir dejaría este registro, con el país mal puesto.",
+        "en": "Duplicate record of the drone that exploded in Anenii Noi district (Moldova) on the night of 10 to 11 October 2026, which is EODI-2026-00509; the record gave Romania as the country. Not merged because the merge rule would keep this record, with the wrong country."
       }
     }
   ],
@@ -2038,6 +2053,30 @@
       "comprobada": {
         "fecha": "2026-10-08",
         "en": "https://sandnesposten.no/politiet-rykker-ut-etter-droneflyging/s/5-105-1454726"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00507",
+      "enlace": "https://nrk.no/nordland/tok-fem-ulovlige-droner-ved-leknes-lufthavn-_-avslorte-ulovlige-sjaforer-i-samme-sleng-1.18050915",
+      "medio": "nrk.no",
+      "fecha": "2026-10-09",
+      "idioma": "no",
+      "frase": "Tok fem ulovlige droner ved Leknes lufthavn \u2013 avslørte ulovlige sjåfører i samme sleng",
+      "comprobada": {
+        "fecha": "2026-10-11",
+        "en": "titular del artículo guardado en la base (tabla articulos)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00509",
+      "enlace": "https://moldpres.md/rom/societate/o-drona-a-survolat-neautorizat-spatiul-aerian-national-si-a-explodat-in-raionul-anenii-noi",
+      "medio": "moldpres.md",
+      "fecha": "2026-10-11",
+      "idioma": "ro",
+      "frase": "O dron\u0103 a survolat neautorizat spa\u021biul aerian na\u021bional \u0219i a explodat în raionul Anenii Noi",
+      "comprobada": {
+        "fecha": "2026-10-11",
+        "en": "titular del artículo guardado en la base (tabla articulos)"
       }
     }
   ],
