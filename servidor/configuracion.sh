@@ -414,6 +414,35 @@ NTFY_TOKEN="$SECRETOS/ntfy_observatorio"
 LOCAL_NTFY_LUCAS="$LOCAL_SECRETOS/ntfy_lucas.txt"
 AVISOS_DATOS="${EODI_AVISOS_DATOS:-$CASA/datos/avisos}"
 TOPE_AVISOS_SEGUNDOS=120
+# Métricas internas de ntfy (suscriptores conectados), solo en local: no pasan por Caddy.
+NTFY_METRICAS="127.0.0.1:9095"
+
+# --- Visitas y resumen diario (servidor/visitas.sh, recogida/visitas.py, docs/visitas.md) -------
+# Contador de visitas propio: GoatCounter (binario único con SQLite) en $GOATCOUNTER_ESCUCHA,
+# detrás del mismo Caddy que ntfy, en https://stats.droneobservatory.eu. Versión estable oficial
+# de GitHub, comprobada por la huella SHA-256 que publica la propia versión.
+GOATCOUNTER_VERSION="v2.7.0"
+GOATCOUNTER_SHA256="98d221cb9c8ef2bf76d8daa9cca647839f8d8b0bb5bc7400ff9337c5da834511"
+GOATCOUNTER_URL="https://github.com/arp242/goatcounter/releases/download/$GOATCOUNTER_VERSION/goatcounter-$GOATCOUNTER_VERSION-linux-amd64.gz"
+GOATCOUNTER_BINARIO="/usr/local/bin/goatcounter"
+GOATCOUNTER_USUARIO="goatcounter"
+GOATCOUNTER_DATOS="/var/lib/goatcounter"
+GOATCOUNTER_BASE="$GOATCOUNTER_DATOS/goatcounter.sqlite3"
+GOATCOUNTER_ESCUCHA="127.0.0.1:8081"
+GOATCOUNTER_DOMINIO="stats.droneobservatory.eu"
+GOATCOUNTER_MEMORIA="300M"
+# El único usuario del panel (administrador); su contraseña solo está en el equipo del dueño.
+GOATCOUNTER_CORREO="lucasalanizpintos@gmail.com"
+LOCAL_GOATCOUNTER_LUCAS="$LOCAL_SECRETOS/goatcounter_lucas.txt"
+# Resumen diario privado (tema de ntfy solo para «lucas») y copia de la base de visitas: cada 5
+# minutos se toma una muestra de los suscriptores de ntfy; una vez por hora, la copia de la base de
+# GoatCounter; a partir de las 08:00 de Madrid, el resumen del día anterior si no ha salido.
+UNIDAD_VISITAS="eodi-visitas"
+CALENDARIO_VISITAS="*-*-* *:00/5:20 UTC"
+VISITAS_MEMORIA="300M"
+TOPE_VISITAS_MINUTOS=4
+VISITAS_DATOS="${EODI_VISITAS_DATOS:-$CASA/datos/visitas}"
+TEMA_RESUMEN="lucas-resumen"
 
 # --- IndexNow (recogida/indexnow.py, docs/posicionamiento.md) ----------------------------------
 # Al final de cada recogida que publica bien, avisa a Bing y a los buscadores que usan IndexNow de

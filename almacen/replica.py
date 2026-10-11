@@ -11,8 +11,9 @@ proyecto, para que un problema de una ubicación no se lleve las dos:
   el origen: si el origen se vaciara, la réplica sigue entera.
 - `archivo/<clave>.age`: cada objeto del archivo cifrado con la clave pública age de la base (el
   archivo está en claro en su bucket privado). Lleva la huella del cifrado en `x-amz-meta-sha256`
-  y la del original en `x-amz-meta-sha256-claro`. No se sobrescribe nada, salvo
-  `rutas/ultima.tar.gz`, que se sustituye cuando cambia.
+  y la del original en `x-amz-meta-sha256-claro`. Entran también las copias de la base de visitas
+  (`visitas/…`, recogida/visitas.py). No se sobrescribe nada, salvo `rutas/ultima.tar.gz` y
+  `visitas/ultima.sqlite.gz`, que se sustituyen cuando cambian.
 - `exportaciones/…`: la exportación semanal del bucket privado (almacen/exportaciones.py), que ya
   va cifrada, tal cual. No se sobrescribe ni se borra.
 - `versiones/…`: las versiones citables de los datos abiertos del almacén público
@@ -55,8 +56,10 @@ PREFIJO_ARCHIVO = "archivo/"
 PREFIJO_EXPORTACIONES = "exportaciones/"
 PREFIJO_VERSIONES = "versiones/"
 SUFIJO_CIFRADO = ".age"
-# Lo único del archivo que cambia de contenido con la misma clave (se puede volver a calcular).
-SUSTITUIBLES = frozenset({"rutas/ultima.tar.gz"})
+# Lo único del archivo que cambia de contenido con la misma clave: las rutas (se pueden volver a
+# calcular) y la última copia de la base de visitas (recogida/visitas.py; cada día queda además una
+# que no cambia).
+SUSTITUIBLES = frozenset({"rutas/ultima.tar.gz", "visitas/ultima.sqlite.gz"})
 META_CLARO = "x-amz-meta-sha256-claro"
 
 

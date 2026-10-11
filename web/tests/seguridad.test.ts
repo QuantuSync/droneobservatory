@@ -155,15 +155,16 @@ describe("cabeceras del despliegue", () => {
 
   const politica = () => cabecerasDe(vercel, "/").get("Content-Security-Policy") ?? "";
 
-  it("la política de contenido solo admite este sitio y la copia de reserva del almacén", () => {
+  it("la política de contenido solo admite este sitio, la copia de reserva del almacén y el contador de visitas", () => {
     const csp = directivasCsp(cabecerasDe(vercel, "/").get("Content-Security-Policy") ?? "");
     expect(csp.get("default-src")).toEqual(["'self'"]);
     expect(csp.get("script-src")).toEqual(["'self'"]);
     expect(csp.get("style-src")).toEqual(["'self'"]);
     expect(csp.get("font-src")).toEqual(["'self'"]);
     // El almacén se sirve por la web (/almacen/…, api/almacen.ts); la reserva de Helsinki se pide
-    // directamente solo si la web no lo sirve.
-    expect(csp.get("connect-src")).toEqual(["'self'", ORIGEN_RESERVA]);
+    // directamente solo si la web no lo sirve. El contador de visitas propio (public/visitas.js)
+    // envía a stats.droneobservatory.eu; su script se sirve desde este sitio.
+    expect(csp.get("connect-src")).toEqual(["'self'", ORIGEN_RESERVA, "https://stats.droneobservatory.eu"]);
     expect(ORIGEN_RESERVA).toBe("https://droneobservatory-reserva.hel1.your-objectstorage.com");
     expect(politica()).not.toContain(ORIGEN_ALMACEN);
     // Nada se sirve ya desde Cloudflare.

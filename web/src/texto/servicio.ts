@@ -133,7 +133,7 @@ const ES: Record<PaginaServicio, TextoServicio> = {
   privacidad: {
     titulo: "Privacidad",
     enlace: "Privacidad",
-    descripcion: `Qué datos de los visitantes recoge el ${NOMBRE}: ninguna cookie propia, ninguna analítica, ninguna publicidad.`,
+    descripcion: `Qué datos de los visitantes recoge el ${NOMBRE}: ninguna cookie propia, ninguna publicidad y visitas contadas de forma anónima.`,
     secciones: [
       {
         id: "resumen",
@@ -141,7 +141,7 @@ const ES: Record<PaginaServicio, TextoServicio> = {
         bloques: [
           {
             parrafo: [
-              "El observatorio no usa cookies propias, ni analítica, ni publicidad, ni herramientas de terceros que sigan a los visitantes. No hay cuentas ni formularios. Las letras, las banderas y el mapa se sirven desde la propia web y desde su almacén de datos, no desde otros sitios.",
+              "El observatorio no usa cookies propias, ni publicidad, ni herramientas de terceros que sigan a los visitantes. Cuenta las visitas de forma anónima, sin cookies y sin guardar direcciones IP, con un contador propio en su servidor de la Unión Europea (Alemania): las páginas vistas, la web de procedencia, el país y el tipo de dispositivo, nunca quién eres. No hay cuentas ni formularios. Las letras, las banderas y el mapa se sirven desde la propia web y desde su almacén de datos, no desde otros sitios.",
             ],
           },
         ],
@@ -386,7 +386,7 @@ const EN: Record<PaginaServicio, TextoServicio> = {
   privacidad: {
     titulo: "Privacy",
     enlace: "Privacy",
-    descripcion: `What visitor data the ${NOMBRE} collects: no cookies of its own, no analytics, no advertising.`,
+    descripcion: `What visitor data the ${NOMBRE} collects: no cookies of its own, no advertising, and visits counted anonymously.`,
     secciones: [
       {
         id: "resumen",
@@ -394,7 +394,7 @@ const EN: Record<PaginaServicio, TextoServicio> = {
         bloques: [
           {
             parrafo: [
-              "The observatory uses no cookies of its own, no analytics, no advertising and no third-party tools that follow visitors. There are no accounts and no forms. Fonts, flags and the map are served from the site itself and from its data store, not from other sites.",
+              "The observatory uses no cookies of its own, no advertising and no third-party tools that follow visitors. It counts visits anonymously, without cookies and without storing IP addresses, with its own counter on its own server in the European Union (Germany): pages viewed, referring site, country and type of device, never who you are. There are no accounts and no forms. Fonts, flags and the map are served from the site itself and from its data store, not from other sites.",
             ],
           },
         ],

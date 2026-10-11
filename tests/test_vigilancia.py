@@ -217,13 +217,57 @@ def test_ntfy_sin_responder_y_avisos_que_fallan_dos_recogidas(tmp_path: Path) ->
     assert salud["problemas"] == []
     (secretos / "ntfy_observatorio").write_text("tk_x", encoding="utf-8")
     (secretos / "avisos.json").write_text(json.dumps({"fallos_seguidos": 1}), encoding="utf-8")
-    salud, _ = vigilancia.componer(AHORA, secretos, datos, tmp_path, sistema, copia, lambda: True)
+    visitas_al_dia(secretos)
+    salud, _ = vigilancia.componer(
+        AHORA, secretos, datos, tmp_path, sistema, copia, lambda: True, lambda: True, list
+    )
     assert salud["problemas"] == []
     (secretos / "avisos.json").write_text(
         json.dumps({"fallos_seguidos": 2, "error": "URLError: sin red"}), encoding="utf-8"
     )
-    salud, _ = vigilancia.componer(AHORA, secretos, datos, tmp_path, sistema, copia, lambda: False)
+    salud, _ = vigilancia.componer(
+        AHORA, secretos, datos, tmp_path, sistema, copia, lambda: False, lambda: True, list
+    )
     assert {p["id"] for p in salud["problemas"]} == {"ntfy", "avisos"}
     assert "2 recogidas seguidas" in next(
         p["frase"] for p in salud["problemas"] if p["id"] == "avisos"
     )
+
+
+def visitas_al_dia(secretos: Path) -> None:
+    (secretos / "visitas.json").write_text(
+        json.dumps({
+            "resumen": {"dia": "2026-10-06", "enviado": "2026-10-07T06:00:20Z"},
+            "copia": {"ultima": _iso(AHORA - timedelta(minutes=30))},
+        }),
+        encoding="utf-8",
+    )  # fmt: skip
+
+
+def test_contador_de_visitas_resumen_y_su_copia(tmp_path: Path) -> None:
+    secretos, datos = preparar(
+        tmp_path, AHORA - timedelta(seconds=20), AHORA - timedelta(minutes=47)
+    )
+    sistema = Sistema(0, AHORA - timedelta(minutes=17), [])
+    copia = lambda: AHORA - timedelta(minutes=18)  # noqa: E731
+    (secretos / "ntfy_observatorio").write_text("tk_x", encoding="utf-8")
+    visitas_al_dia(secretos)
+    salud, _ = vigilancia.componer(
+        AHORA, secretos, datos, tmp_path, sistema, copia, lambda: True, lambda: False,
+        lambda: ["el panel de visitas se abre sin usuario (HTTP 200)"],
+    )  # fmt: skip
+    assert [p["id"] for p in salud["problemas"]] == ["goatcounter", "visitas_privadas"]
+    # El resumen del día anterior sin enviar a las 16:50 de Madrid y la copia de hace 4 horas.
+    (secretos / "visitas.json").write_text(
+        json.dumps({
+            "resumen": {"dia": "2026-10-05", "error": "URLError: sin red"},
+            "copia": {"ultima": _iso(AHORA - timedelta(hours=4))},
+        }),
+        encoding="utf-8",
+    )  # fmt: skip
+    salud, _ = vigilancia.componer(
+        AHORA, secretos, datos, tmp_path, sistema, copia, lambda: True, lambda: True, list
+    )
+    problemas = {p["id"]: p["frase"] for p in salud["problemas"]}
+    assert set(problemas) == {"resumen", "copia_visitas"}
+    assert "2026-10-06" in problemas["resumen"] and "sin red" in problemas["resumen"]
