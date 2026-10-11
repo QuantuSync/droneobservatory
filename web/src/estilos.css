@@ -725,7 +725,7 @@ body.pagina-texto {
     position: relative;
     z-index: 1;
   }
-  .texto-pagina :is(p, li):has(> a) {
+  .texto-pagina :is(p, :not(ul.texto-enlaces, .texto-cabecera nav ul) > li):has(> a) {
     margin-block: calc(2.75rem - 1lh);
   }
   /* Un párrafo con varios enlaces puede tenerlos en líneas seguidas, uno encima de otro: allí las
@@ -738,6 +738,9 @@ body.pagina-texto {
     padding-block: calc((2.75rem - 1lh) / 2);
   }
   .texto-pagina :is(ul.texto-enlaces, .texto-cabecera nav ul) {
+    row-gap: calc(2.75rem - 1lh);
+  }
+  .texto-cabecera {
     row-gap: 1.25rem;
   }
   .texto-pagina :is(.texto-cabecera nav, .texto-pie, ul.texto-enlaces) a {
