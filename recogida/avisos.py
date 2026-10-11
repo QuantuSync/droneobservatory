@@ -19,6 +19,12 @@ lleva a su página) cuyo suceso cae en las últimas `ventana_horas` (72): un inc
 llega tarde al registro no es un aviso. Sin base de avisos (la primera vez), todos los publicados
 se anotan como ya avisados y no se envía nada: los avisos empiezan desde ese momento.
 
+Avisos con retraso: un incidente que la barrera de titulares retuvo sin publicar
+(configuracion/avisos_con_retraso.json) se avisa al publicarse si lo habría merecido al publicarse
+a tiempo: la ventana se mide desde su alta en la base, no desde ahora. Su texto termina con la
+nota «Aviso con retraso por un fallo de publicación» en los dos idiomas. Las demás reglas no
+cambian (una sola vez por incidente, fuente oficial, prioridad).
+
 Si un envío falla, se reintenta en la recogida siguiente: lo que salió bien queda anotado por
 tema y no se repite. El resultado de cada pasada queda en $SECRETOS/avisos.json, que lee la
 vigilancia (dos recogidas seguidas con fallo de envío, problema «avisos»).
@@ -45,6 +51,7 @@ registro = logging.getLogger("avisos")
 
 RAIZ = Path(__file__).resolve().parent.parent
 CONFIGURACION = RAIZ / "configuracion" / "avisos.json"
+CON_RETRASO = RAIZ / "configuracion" / "avisos_con_retraso.json"
 BASE_AVISOS = "avisos.sqlite"
 ESTADO = "avisos.json"
 FICHEROS_PUBLICADOS = ("incidentes.geojson", "incidentes_sin_ubicacion.json")
@@ -96,11 +103,19 @@ ESTADO_EN = {
 MESES_EN = ("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
 PRIORIDAD_ALTA, PRIORIDAD_NORMAL = 4, 3
 ETIQUETA_MAPA = "Ver en el mapa / View on map"
+NOTA_RETRASO = {
+    "es": "Aviso con retraso por un fallo de publicación",
+    "en": "Delayed alert due to a publishing fault",
+}
 
 
 # --- Configuración ---------------------------------------------------------------------------
-def configuracion(ruta: Path = CONFIGURACION) -> Documento:
+def configuracion(ruta: Path = CONFIGURACION, retraso: Path = CON_RETRASO) -> Documento:
+    """La configuración de los avisos, con los incidentes que se avisan con retraso en
+    «con_retraso» (fichero aparte: la web importa avisos.json entero)."""
     datos: Documento = json.loads(ruta.read_text(encoding="utf-8"))
+    if retraso.exists():
+        datos["con_retraso"] = json.loads(retraso.read_text(encoding="utf-8"))
     return datos
 
 
@@ -117,6 +132,7 @@ class Aviso:
     estado: str  # confirmado | atribuido | notificado
     prioridad: int
     guerra: bool
+    retraso: bool = False
 
 
 def _instante(valor: str | None) -> datetime | None:
@@ -137,6 +153,20 @@ def momento_del_suceso(incidente: Documento) -> datetime | None:
     fechas = [_instante((f.get("fecha") or {}).get("valor")) for f in incidente.get("fuentes", [])]
     validas = [f for f in fechas if f is not None]
     return min(validas) if validas else None
+
+
+def alta_retenida(incidente: Documento, config: Documento) -> datetime | None:
+    """Cuándo habría salido el aviso del incidente retenido por la barrera de titulares (su alta
+    en la base), o None si no está en la lista de los que se avisan con retraso o entró en la
+    base antes de la fecha desde la que vale la lista."""
+    retraso = config.get("con_retraso") or {}
+    if str(incidente.get("id")) not in retraso.get("incidentes", {}):
+        return None
+    alta = _instante(((incidente.get("control") or {}).get("alta") or {}).get("valor"))
+    desde = _instante(retraso.get("desde"))
+    if alta is None or desde is None or alta < desde:
+        return None
+    return alta
 
 
 def _origen(fuente: Documento) -> str:
@@ -167,7 +197,10 @@ def clasificar(incidente: Documento, config: Documento, ahora: datetime) -> Avis
     if estado == "notificado" and not con_fuente_oficial(incidente):
         return None
     suceso = momento_del_suceso(incidente)
-    if suceso is None or ahora - suceso > timedelta(hours=config["ventana_horas"]):
+    # Un retenido por la barrera se mide desde cuando se habría publicado.
+    alta = alta_retenida(incidente, config)
+    referencia = alta if alta is not None else ahora
+    if suceso is None or referencia - suceso > timedelta(hours=config["ventana_horas"]):
         return None
     tipo = incidente.get("tipo")
     cierre = ((incidente.get("consecuencias") or {}).get("cierre") or {}).get("valor")
@@ -181,14 +214,15 @@ def clasificar(incidente: Documento, config: Documento, ahora: datetime) -> Avis
         clase = "suspension"
     else:
         clase = "sobrevuelo"
-    alta = clase == "incursion" and guerra and (datos_pais["otan"] or pais == "MD")
+    alta_prioridad = clase == "incursion" and guerra and (datos_pais["otan"] or pais == "MD")
     return Aviso(
         id=str(incidente["id"]),
         pais=str(pais),
         clase=clase,
         estado=str(estado),
-        prioridad=PRIORIDAD_ALTA if alta else PRIORIDAD_NORMAL,
+        prioridad=PRIORIDAD_ALTA if alta_prioridad else PRIORIDAD_NORMAL,
         guerra=guerra,
+        retraso=alta is not None,
     )
 
 
@@ -253,11 +287,15 @@ def mensaje(aviso: Aviso, incidente: Documento, config: Documento, tema: str) ->
         f"{titulo_en}. {que_en}. **{_lugar(incidente, pais['en'])}**, {cuando_en}. "
         f"Status: **{ESTADO_EN[aviso.estado]}**. Source: {fuente}."
     )
+    texto = f"{linea_es}\n\n{linea_en}"
+    if aviso.retraso:
+        nota = (config.get("con_retraso") or {}).get("nota") or NOTA_RETRASO
+        texto += f"\n\n{nota['es']}. / {nota['en']}."
     enlace = f"{config['sitio']}/{aviso.id}"
     return {
         "topic": tema,
         "title": titulo_es,
-        "message": f"{linea_es}\n\n{linea_en}",
+        "message": texto,
         "markdown": True,
         "priority": aviso.prioridad,
         "click": enlace,
@@ -422,7 +460,13 @@ def pasar(
                 continue
             cuerpo = mensaje(aviso, incidente, config, tema)
             if enviar is None:
-                registro.info("ensayo: %s a %s: %s", id_, tema, cuerpo["title"])
+                registro.info(
+                    "ensayo: %s a %s: %s%s",
+                    id_,
+                    tema,
+                    cuerpo["title"],
+                    " (con retraso)" if aviso.retraso else "",
+                )
                 pasada.enviados += 1
                 continue
             try:
@@ -434,7 +478,13 @@ def pasar(
                 continue
             enviados.anotar(id_, tema, ahora)
             pasada.enviados += 1
-            registro.info("aviso de %s enviado a %s (prioridad %d)", id_, tema, aviso.prioridad)
+            registro.info(
+                "aviso de %s enviado a %s (prioridad %d%s)",
+                id_,
+                tema,
+                aviso.prioridad,
+                ", con retraso" if aviso.retraso else "",
+            )
     return pasada
 
 

@@ -2,6 +2,7 @@
 cada incidente se avisa una sola vez y que la primera pasada no envía nada."""
 
 import json
+import re
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -298,3 +299,73 @@ def test_ejemplo_nunca_a_un_tema_publico(tema: str, tmp_path: Path) -> None:
         ]
     )
     assert codigo == 1
+
+
+# --- Avisos con retraso (retenidos por la barrera de titulares) -------------------------------
+RETRASO = {
+    **CONFIG,
+    "con_retraso": {
+        "desde": "2026-10-09T00:00:00Z",
+        "nota": avisos.NOTA_RETRASO,
+        "incidentes": {"EODI-2026-00500": "retenido por la barrera"},
+    },
+}
+DIAS_DESPUES = AHORA + timedelta(days=5)
+
+
+def retenido(alta: str = "2026-10-10T09:17Z", **cambios: Any) -> dict[str, Any]:
+    return incidente(control={"alta": {"valor": alta, "precision": "minuto"}}, **cambios)
+
+
+def test_retenido_por_la_barrera_se_avisa_aunque_pasen_72_horas() -> None:
+    aviso = avisos.clasificar(retenido(), RETRASO, DIAS_DESPUES)
+    assert aviso is not None and aviso.retraso and aviso.prioridad == 4
+    cuerpo = avisos.mensaje(aviso, retenido(), RETRASO, "drones-slovakia")
+    assert cuerpo["message"].endswith(
+        "\n\nAviso con retraso por un fallo de publicación. / "
+        "Delayed alert due to a publishing fault."
+    )
+    # Sin la lista, el mismo incidente ya no se avisa: es antiguo.
+    assert avisos.clasificar(retenido(), CONFIG, DIAS_DESPUES) is None
+
+
+def test_con_retraso_solo_si_lo_habria_merecido_a_tiempo_y_desde_el_9_de_octubre() -> None:
+    # Dado de alta 4 días después del suceso: tampoco a tiempo habría avisado.
+    assert avisos.clasificar(retenido("2026-10-14T09:17Z"), RETRASO, DIAS_DESPUES) is None
+    # Dado de alta antes del 9 de octubre: la lista no vale para él.
+    viejo = retenido(
+        "2026-10-08T09:17Z",
+        tiempo={"inicio": {"valor": "2026-10-08T08:04Z", "precision": "minuto"}},
+    )
+    assert avisos.clasificar(viejo, RETRASO, DIAS_DESPUES) is None
+    # Las demás reglas siguen: una noticia de prensa notificada no avisa.
+    prensa = retenido(estado={"actual": "notificado", "historial": []}, fuentes=[fuente()])
+    assert avisos.clasificar(prensa, RETRASO, DIAS_DESPUES) is None
+    # Otro incidente fuera de la lista no se avisa con retraso.
+    otro = retenido(id="EODI-2026-00501")
+    assert avisos.clasificar(otro, RETRASO, DIAS_DESPUES) is None
+
+
+def test_con_retraso_una_sola_vez(tmp_path: Path) -> None:
+    enviados = avisos.Enviados(tmp_path / "avisos.sqlite")
+    avisos.pasar(set(), {}, enviados, RETRASO, AHORA, lambda c: None)
+    doc = retenido()
+    mensajes: list[str] = []
+    for hora in range(3):
+        avisos.pasar(
+            {doc["id"]},
+            {doc["id"]: doc},
+            enviados,
+            RETRASO,
+            DIAS_DESPUES + timedelta(hours=hora),
+            lambda c: mensajes.append(c["message"]),
+        )
+    assert len(mensajes) == 2 and all("Delayed alert" in m for m in mensajes)
+    enviados.cerrar()
+
+
+def test_la_lista_de_avisos_con_retraso() -> None:
+    lista = avisos.configuracion()["con_retraso"]
+    assert lista["desde"] == "2026-10-09T00:00:00Z"
+    assert lista["nota"] == avisos.NOTA_RETRASO
+    assert all(re.fullmatch(r"EODI-2026-\d{5}", i) for i in lista["incidentes"])
