@@ -517,18 +517,21 @@ function medirZonas(minimo: number): Pequeno[] {
     const cy = Math.min(Math.max(caja.top + caja.height / 2, 1), innerHeight - 1);
     // Tapado por otra cosa (un panel abierto encima): no se puede tocar.
     if (!propio(el, document.elementFromPoint(cx, cy))) continue;
-    const tramo = (dx: number, dy: number) => {
-      let n = 0;
-      for (; n < 60; n += 1) {
-        const x = cx + dx * (n + 1);
-        const y = cy + dy * (n + 1);
-        if (x < 0 || y < 0 || x >= innerWidth || y >= innerHeight) break;
-        if (!propio(el, document.elementFromPoint(x, y))) break;
-      }
-      return n;
+    // Hasta dónde sigue siendo del control en cada dirección: de píxel en píxel y el último
+    // afinado a cuartos de píxel, para que el redondeo no quite ni dé un píxel.
+    const dentro = (d: number, dx: number, dy: number) => {
+      const x = cx + dx * d;
+      const y = cy + dy * d;
+      return x >= 0 && y >= 0 && x < innerWidth && y < innerHeight && propio(el, document.elementFromPoint(x, y));
     };
-    const ancho = tramo(-1, 0) + tramo(1, 0) + 1;
-    const alto = tramo(0, -1) + tramo(0, 1) + 1;
+    const tramo = (dx: number, dy: number) => {
+      let d = 0;
+      while (d < 60 && dentro(d + 1, dx, dy)) d += 1;
+      while (d < 60 && dentro(d + 0.25, dx, dy)) d += 0.25;
+      return d + 0.25;
+    };
+    const ancho = Math.round(tramo(-1, 0) + tramo(1, 0));
+    const alto = Math.round(tramo(0, -1) + tramo(0, 1));
     const enLinea = el.tagName === "A" && estilo.display === "inline";
     if (alto < minimo || (!enLinea && ancho < minimo)) {
       const nombre = (el.getAttribute("aria-label") ?? el.textContent ?? "").trim().replace(/\s+/g, " ").slice(0, 60);
