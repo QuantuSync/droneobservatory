@@ -8,6 +8,7 @@ import { runInNewContext } from "node:vm";
 
 import { describe, expect, it } from "vitest";
 
+import { CLAVE_CANAL } from "../src/avisos.ts";
 import { conLicencia, metadatosLicencia } from "../src/datos/licencia.ts";
 import { CLAVE_VISITA, registrarVisita } from "../src/estado/novedades.ts";
 import type { Resumen } from "../src/datos/tipos.ts";
@@ -49,6 +50,7 @@ describe("páginas de servicio público", () => {
       expect(aviso).toContain(CONTACTO);
       expect(aviso).toContain(idioma === "es" ? "Si ves un error, escribe a " : "If you see a mistake, write to ");
       expect(todoElTexto("privacidad", idioma)).toContain("eodi.ultima-visita");
+      expect(todoElTexto("privacidad", idioma)).toContain(CLAVE_CANAL);
     }
   });
 
@@ -135,6 +137,7 @@ describe("«Borrar mi última visita» en la página de privacidad", () => {
 
   it("el script borra la misma clave que guarda la web y dice que se ha borrado", () => {
     expect(SCRIPT).toContain(`"${CLAVE_VISITA}"`);
+    expect(SCRIPT).toContain(`"${CLAVE_CANAL}"`);
     const boton = document.createElement("button");
     boton.hidden = true;
     boton.dataset.borrarVisita = "";
@@ -145,12 +148,14 @@ describe("«Borrar mi última visita» en la página de privacidad", () => {
     document.body.append(boton, estado);
     const ventana = window;
     ventana.localStorage.setItem(CLAVE_VISITA, "2026-10-01T10:00:00.000Z");
+    ventana.localStorage.setItem(CLAVE_CANAL, "drones-poland");
     ventana.localStorage.setItem("otra", "1");
     // El script tal cual, con el documento y el almacenamiento de la prueba.
     runInNewContext(SCRIPT, { window: ventana, document, HTMLButtonElement });
     expect(boton.hidden).toBe(false);
     boton.click();
     expect(ventana.localStorage.getItem(CLAVE_VISITA)).toBeNull();
+    expect(ventana.localStorage.getItem(CLAVE_CANAL)).toBeNull();
     expect(ventana.localStorage.getItem("otra")).toBe("1");
     expect(estado.textContent).toBe("borrada");
     // Después de borrarla, la siguiente visita es como la primera: nada se marca como nuevo.

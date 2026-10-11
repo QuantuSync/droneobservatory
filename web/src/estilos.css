@@ -453,6 +453,33 @@ body.pagina-texto {
   list-style: none;
 }
 
+/* En el teléfono, los dos pasos de «Suscríbete»: el botón (o el título) y su nota debajo. */
+.texto-pagina .texto-dos-pasos {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 0;
+  list-style: none;
+}
+
+.texto-pagina .texto-dos-pasos > li > :first-child {
+  margin: 0;
+}
+
+.texto-pagina .texto-dos-pasos ol {
+  list-style: decimal;
+}
+
+.texto-pagina .texto-paso-titulo {
+  font-weight: 700;
+}
+
+.texto-pagina .texto-nota {
+  margin: 0.25rem 0 0;
+  color: var(--color-secundario);
+  font-size: 0.875rem;
+}
+
 .texto-pagina .texto-canales {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
@@ -725,7 +752,7 @@ body.pagina-texto {
     position: relative;
     z-index: 1;
   }
-  .texto-pagina :is(p, :not(ul.texto-enlaces, .texto-cabecera nav ul) > li):has(> a) {
+  .texto-pagina :is(p, :not(ul.texto-enlaces, .texto-cabecera nav ul, ol.texto-dos-pasos) > li):has(> a) {
     margin-block: calc(2.75rem - 1lh);
   }
   /* Un párrafo con varios enlaces puede tenerlos en líneas seguidas, uno encima de otro: allí las

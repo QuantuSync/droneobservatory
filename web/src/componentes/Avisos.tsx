@@ -6,11 +6,13 @@ import {
   SERVIDOR_AVISOS,
   TEXTO_AVISOS,
   TIENDAS,
+  canalGuardado,
   canales,
   dispositivoActual,
-  enlaceAndroidPara,
+  enlaceAndroid,
   enlaceWeb,
   filtrarCanales,
+  guardarCanal,
   rutaQr,
 } from "../avisos.ts";
 import type { Dispositivo, TextoAvisos } from "../avisos.ts";
@@ -79,6 +81,9 @@ const ENLACE = "enlace-texto text-texto underline decoration-secundario underlin
 const CAMPO = "control min-h-11 w-full rounded-sm border border-linea px-2 text-sm text-texto esc:min-h-9";
 /** El botón «Suscribirme»: grande y con el estilo de la acción principal («Aplicar»). */
 const BOTON_GRANDE = "control control-principal min-h-12 min-w-0 flex-1 rounded-sm px-4 text-center text-base esc:text-base";
+/** Los dos pasos del teléfono (instalar y suscribirse): el mismo botón, a todo el ancho. */
+const BOTON_PASO = "control control-principal min-h-12 w-full rounded-sm px-4 text-center text-base esc:text-base";
+const NOTA = "text-xs text-secundario";
 const BOTON_COPIAR = "control min-h-11 shrink-0 rounded-sm border border-linea px-2 text-xs text-texto esc:min-h-8";
 
 /** Un paso, con su número a la vista; la lista ordenada ya lo anuncia al lector de pantalla. */
@@ -131,21 +136,37 @@ function Copiable({
   );
 }
 
+/** Un paso numerado del teléfono: su botón (o su título) y, debajo, la nota en pequeño. */
+function PasoTelefono({ numero, children }: { numero: 1 | 2; children: ReactNode }) {
+  return (
+    <div className="flex flex-col gap-1.5" data-paso-telefono={numero}>
+      {children}
+    </div>
+  );
+}
+
 /**
  * El panel «Avisos» del mapa, en tres pasos y nada más: qué recibirás; qué quieres recibir (un
- * selector con «Toda Europa» por defecto y los países por orden alfabético, con buscador); y
- * suscríbete, con un solo botón y las instrucciones del dispositivo que se está usando. El código
- * QR del canal sale solo en el ordenador, para llevarlo al móvil. Al pie, «Más ayuda» lleva a la
- * página de texto. Nada de esto mueve el mapa.
+ * selector con «Toda Europa» por defecto, o el último canal elegido en este navegador, y los
+ * países por orden alfabético, con buscador); y suscríbete, con las instrucciones del dispositivo
+ * que se está usando. En el teléfono, dos pasos numerados (instalar ntfy y suscribirse al canal),
+ * porque la web no sabe si la aplicación está instalada. El código QR del canal sale solo en el
+ * ordenador, para llevarlo al móvil. Al pie, «Más ayuda» lleva a la página de texto. Nada de esto
+ * mueve el mapa.
  */
 export function Avisos({ idioma, dispositivo }: { idioma: Idioma; dispositivo?: Dispositivo }) {
   const t = TEXTO_AVISOS[idioma];
   const [equipo] = useState<Dispositivo>(() => dispositivo ?? dispositivoActual());
-  // En Android, intent:// donde el navegador lo admite (lleva a Google Play sin la aplicación).
-  const [agente] = useState(() => (typeof navigator === "undefined" ? "" : navigator.userAgent));
   const lista = useMemo(() => canales(idioma), [idioma]);
   const [busqueda, setBusqueda] = useState("");
-  const [tema, setTema] = useState(lista[0]?.tema ?? "");
+  const [tema, setTema] = useState(() => {
+    const guardado = canalGuardado();
+    return lista.find((c) => c.tema === guardado)?.tema ?? lista[0]?.tema ?? "";
+  });
+  const elegir = (nuevo: string) => {
+    setTema(nuevo);
+    guardarCanal(nuevo);
+  };
   const [copiado, setCopiado] = useState<string | null>(null);
   const idBuscar = useId();
   const idCanal = useId();
@@ -157,7 +178,15 @@ export function Avisos({ idioma, dispositivo }: { idioma: Idioma; dispositivo?: 
   // Lo elegido sigue en el selector aunque la búsqueda no lo encuentre, para que no mienta.
   const opciones = visibles.some((c) => c.tema === elegido.tema) ? visibles : [elegido, ...visibles];
   const pasos = t.pasos[equipo](elegido.tema);
-  const destino = equipo === "android" ? enlaceAndroidPara(elegido, agente) : equipo === "iphone" ? TIENDAS.appStore : enlaceWeb(elegido);
+  const instrucciones = (
+    <ol className="flex list-decimal flex-col gap-1 pl-5 text-xs text-texto">
+      {pasos.map((paso) => (
+        <li key={paso} className="break-words">
+          {paso}
+        </li>
+      ))}
+    </ol>
+  );
 
   return (
     <div className="flex flex-col gap-4 text-sm" data-panel-avisos="" data-dispositivo={equipo}>
@@ -185,7 +214,7 @@ export function Avisos({ idioma, dispositivo }: { idioma: Idioma; dispositivo?: 
               setBusqueda(texto);
               const hallados = filtrarCanales(lista, texto);
               const primero = hallados[0];
-              if (primero !== undefined && !hallados.some((c) => c.tema === tema)) setTema(primero.tema);
+              if (primero !== undefined && !hallados.some((c) => c.tema === tema)) elegir(primero.tema);
             }}
           />
           <label htmlFor={idCanal} className="text-xs text-secundario">
@@ -197,7 +226,7 @@ export function Avisos({ idioma, dispositivo }: { idioma: Idioma; dispositivo?: 
             value={elegido.tema}
             data-activo=""
             data-canal-elegido=""
-            onChange={(evento) => setTema(evento.target.value)}
+            onChange={(evento) => elegir(evento.target.value)}
           >
             {opciones.map((c) => (
               <option key={c.tema} value={c.tema} className="bg-panel-solido text-texto">
@@ -211,41 +240,55 @@ export function Avisos({ idioma, dispositivo }: { idioma: Idioma; dispositivo?: 
         </Paso>
 
         <Paso numero={3} titulo={t.pasoSuscribir}>
-          <div className="flex items-center gap-3">
-            <a
-              className={BOTON_GRANDE}
-              href={destino}
-              data-suscribirme=""
-              {...(equipo === "android" ? {} : { rel: "noopener", target: "_blank" })}
-            >
-              {t.suscribirme}
-            </a>
-            {equipo === "ordenador" && (
-              <figure className="flex shrink-0 flex-col items-center gap-1" data-qr-avisos="">
-                <img src={rutaQr(elegido)} alt={t.qr(elegido.nombre)} width={112} height={112} className="rounded-sm" />
-                <figcaption className="max-w-28 text-center text-xs text-secundario">{t.escanear}</figcaption>
-              </figure>
-            )}
-          </div>
-          <ol className="flex list-decimal flex-col gap-1 pl-5 text-xs text-texto">
-            {pasos.map((paso) => (
-              <li key={paso} className="break-words">
-                {paso}
-              </li>
-            ))}
-          </ol>
-          {equipo === "iphone" && (
-            <div className="flex flex-col gap-2">
-              <Copiable texto={SERVIDOR_AVISOS} rotulo={t.copiarServidor} t={t} onCopiado={setCopiado} />
-              <Copiable texto={elegido.tema} rotulo={t.copiarCanal} t={t} onCopiado={setCopiado} />
+          {equipo === "ordenador" ? (
+            <>
+              <div className="flex items-center gap-3">
+                <a className={BOTON_GRANDE} href={enlaceWeb(elegido)} data-suscribirme="" rel="noopener" target="_blank">
+                  {t.suscribirme}
+                </a>
+                <figure className="flex shrink-0 flex-col items-center gap-1" data-qr-avisos="">
+                  <img src={rutaQr(elegido)} alt={t.qr(elegido.nombre)} width={112} height={112} className="rounded-sm" />
+                  <figcaption className="max-w-28 text-center text-xs text-secundario">{t.escanear}</figcaption>
+                </figure>
+              </div>
+              {instrucciones}
+            </>
+          ) : (
+            <div className="flex flex-col gap-4">
+              <PasoTelefono numero={1}>
+                <a
+                  className={BOTON_PASO}
+                  href={equipo === "android" ? TIENDAS.googlePlay : TIENDAS.appStore}
+                  rel="noopener"
+                  target="_blank"
+                  data-instalar=""
+                >
+                  {t.instalar}
+                </a>
+                <p className={NOTA}>{t.instalarNota}</p>
+              </PasoTelefono>
+              <PasoTelefono numero={2}>
+                {equipo === "android" ? (
+                  <>
+                    <a className={BOTON_PASO} href={enlaceAndroid(elegido)} data-suscribirme="">
+                      {t.suscribirCanal}
+                    </a>
+                    <p className={NOTA}>{t.suscribirCanalNota.android}</p>
+                    <p className="text-xs text-texto">{pasos.join(" ")}</p>
+                  </>
+                ) : (
+                  <>
+                    <h4 className="text-sm font-semibold text-texto">{t.suscribirCanal}</h4>
+                    <p className={NOTA}>{t.suscribirCanalNota.iphone}</p>
+                    {instrucciones}
+                    <div className="flex flex-col gap-2">
+                      <Copiable texto={SERVIDOR_AVISOS} rotulo={t.copiarServidor} t={t} onCopiado={setCopiado} />
+                      <Copiable texto={elegido.tema} rotulo={t.copiarCanal} t={t} onCopiado={setCopiado} />
+                    </div>
+                  </>
+                )}
+              </PasoTelefono>
             </div>
-          )}
-          {equipo === "android" && (
-            <p className="text-xs">
-              <a className={ENLACE} href={TIENDAS.googlePlay} rel="noopener" target="_blank">
-                {t.sinAplicacion}
-              </a>
-            </p>
           )}
           <p role="status" className="text-xs text-secundario">
             {copiado !== null ? `${t.copiado}: ${copiado}` : ""}

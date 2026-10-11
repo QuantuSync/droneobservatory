@@ -5,10 +5,12 @@
 // imágenes estáticas en el build (scripts/paginas.ts), en /avisos/qr/<canal>.svg.
 //
 // Todo va en tres pasos: qué recibirás, qué quieres recibir (toda Europa o un país) y suscríbete,
-// con un solo botón y las instrucciones del dispositivo que se está usando (Android, iPhone u
-// ordenador). La aplicación ntfy solo admite los enlaces ntfy:// en Android (su documentación de
-// suscripción desde el teléfono los describe solo ahí): en iPhone, App Store y tres pasos con la
-// dirección del servidor y el nombre del canal para copiar.
+// con las instrucciones del dispositivo que se está usando (Android, iPhone u ordenador). En el
+// teléfono, «Suscríbete» va siempre en dos pasos numerados: instalar ntfy y suscribirse al canal.
+// La web no puede saber si la aplicación está instalada, y al instalarla desde la tienda Android
+// pierde el enlace del canal: hay que volver y tocar el paso 2. La aplicación ntfy solo admite los
+// enlaces ntfy:// en Android (su documentación de suscripción desde el teléfono los describe solo
+// ahí): en iPhone, la dirección del servidor y el nombre del canal para copiar.
 
 import configuracion from "../../configuracion/avisos.json" with { type: "json" };
 import type { Idioma } from "./sitio.ts";
@@ -48,33 +50,29 @@ export function enlaceAndroid(canal: Canal): string {
   return `ntfy://${HOST_AVISOS}/${canal.tema}?display=${encodeURIComponent(nombre).replace(/%20/g, "+")}`;
 }
 
-/** La aplicación de Android de ntfy, en Google Play y en los enlaces intent://. */
-export const PAQUETE_ANDROID = "io.heckel.ntfy";
-
 /**
- * El mismo enlace en la forma intent:// de Android (developer.chrome.com/docs/android/intents):
- * con ntfy instalada, el navegador abre la aplicación suscrita al canal, igual que con ntfy://;
- * sin ella, lleva a ntfy en Google Play (S.browser_fallback_url) en vez de no hacer nada.
+ * El último canal elegido en el panel, guardado solo en el almacenamiento local del navegador (como
+ * la última visita): al volver a la web, «Avisos» se abre con ese canal. Lo borra también el botón
+ * «Borrar mi última visita» de la página de privacidad (public/borrar-visita.js).
  */
-export function enlaceIntent(canal: Canal): string {
-  const ntfy = enlaceAndroid(canal);
-  const resto = ntfy.slice("ntfy://".length);
-  const tienda = encodeURIComponent(TIENDAS.googlePlay);
-  return `intent://${resto}#Intent;scheme=ntfy;package=${PAQUETE_ANDROID};S.browser_fallback_url=${tienda};end`;
+export const CLAVE_CANAL = "eodi.avisos.canal";
+
+/** El canal guardado, o null si no hay o el navegador no deja leerlo. */
+export function canalGuardado(): string | null {
+  try {
+    return window.localStorage.getItem(CLAVE_CANAL);
+  } catch {
+    return null;
+  }
 }
 
-/**
- * Si el navegador de Android abre los enlaces intent://: Chrome y los basados en Chromium (Edge,
- * Samsung Internet, Opera...), que llevan «Chrome/» en el agente. Firefox no: sigue con ntfy://.
- * Tampoco las vistas web dentro de otras aplicaciones («; wv)»).
- */
-export function admiteIntent(agente: string): boolean {
-  return /android/i.test(agente) && /Chrome\//.test(agente) && !/Firefox\/|; wv\)/.test(agente);
-}
-
-/** El enlace de «Suscribirme» en Android para el navegador de quien mira la página. */
-export function enlaceAndroidPara(canal: Canal, agente: string): string {
-  return admiteIntent(agente) ? enlaceIntent(canal) : enlaceAndroid(canal);
+/** Guarda el canal elegido; si el navegador no deja, no pasa nada. */
+export function guardarCanal(tema: string): void {
+  try {
+    window.localStorage.setItem(CLAVE_CANAL, tema);
+  } catch {
+    // Modo privado o almacenamiento bloqueado: el panel vuelve a empezar por toda Europa.
+  }
 }
 
 /** El canal en el navegador (la aplicación web de ntfy), donde se activan las notificaciones. */
@@ -132,10 +130,15 @@ export interface TextoAvisos {
   sinResultados: string;
   /** Paso 3. */
   pasoSuscribir: string;
+  /** El botón del ordenador. */
   suscribirme: string;
+  /** En el teléfono, dos pasos numerados: 1, instalar ntfy; 2, suscribirse al canal. */
+  instalar: string;
+  instalarNota: string;
+  suscribirCanal: string;
+  suscribirCanalNota: Record<"android" | "iphone", string>;
   /** Instrucciones de cada dispositivo para el canal elegido (como mucho tres pasos). */
   pasos: Record<Dispositivo, (canal: string) => string[]>;
-  sinAplicacion: string;
   copiarServidor: string;
   copiarCanal: string;
   copiar: string;
@@ -176,14 +179,17 @@ export const TEXTO_AVISOS: Record<Idioma, TextoAvisos> = {
     sinResultados: "Ningún país coincide con la búsqueda.",
     pasoSuscribir: "Suscríbete",
     suscribirme: "Suscribirme",
+    instalar: "1. Instala la aplicación ntfy",
+    instalarNota: "Gratis. Si ya la tienes, pasa al paso 2.",
+    suscribirCanal: "2. Suscríbete al canal",
+    suscribirCanalNota: {
+      android: "Si acabas de instalarla, vuelve aquí y toca este botón.",
+      iphone: "Si acabas de instalarla, vuelve aquí.",
+    },
     pasos: {
-      android: () => [
-        "Toca «Suscribirme»: se abre la aplicación ntfy con el canal.",
-        "Si la aplicación lo pregunta, confirma con «Subscribe».",
-      ],
+      android: () => ["Se abre ntfy con el canal. Si lo pregunta, confirma con «Subscribe»."],
       iphone: (canal) => [
-        "Toca «Suscribirme» e instala ntfy (o ábrela si ya la tienes).",
-        `En ntfy toca «+», activa «Use another server» y pega el servidor: ${SERVIDOR_AVISOS}`,
+        `Abre ntfy, toca «+», activa «Use another server» y pega el servidor: ${SERVIDOR_AVISOS}`,
         `En «Topic name» pega el canal, ${canal}, y toca «Subscribe».`,
       ],
       ordenador: () => [
@@ -191,7 +197,6 @@ export const TEXTO_AVISOS: Record<Idioma, TextoAvisos> = {
         "Permite las notificaciones cuando el navegador lo pregunte.",
       ],
     },
-    sinAplicacion: "¿No tienes la aplicación? Google Play",
     copiarServidor: "Copiar el servidor",
     copiarCanal: "Copiar el canal",
     copiar: "Copiar",
@@ -202,13 +207,13 @@ export const TEXTO_AVISOS: Record<Idioma, TextoAvisos> = {
     detalle: "Paso a paso en cada dispositivo",
     detalleDispositivo: {
       android: [
-        "Instala la aplicación gratuita ntfy desde Google Play o F-Droid.",
-        "Toca el botón «Suscribirme» del canal que quieras: la aplicación se abre con el canal ya puesto. Si lo pregunta, confirma con «Subscribe».",
+        "Instala la aplicación gratuita ntfy desde Google Play o F-Droid. Si ya la tienes, pasa al paso 2.",
+        "Toca «2. Suscríbete al canal» (o el enlace «Android» del canal que quieras): la aplicación se abre con el canal ya puesto. Si acabas de instalarla, vuelve aquí y toca el botón otra vez: al instalarla, Android no la suscribe sola. Si lo pregunta, confirma con «Subscribe».",
         "Si el botón no abre la aplicación, añádelo a mano: en ntfy toca «+», escribe el nombre del canal, activa «Use another server», escribe el servidor https://ntfy.droneobservatory.eu y toca «Subscribe».",
       ],
       iphone: [
-        "Instala la aplicación gratuita ntfy desde la App Store.",
-        "Ábrela, toca «+», activa «Use another server» y escribe el servidor: https://ntfy.droneobservatory.eu",
+        "Instala la aplicación gratuita ntfy desde la App Store. Si ya la tienes, pasa al paso 2.",
+        "Si acabas de instalarla, vuelve aquí. Abre ntfy, toca «+», activa «Use another server» y escribe el servidor: https://ntfy.droneobservatory.eu",
         "En «Topic name» escribe el nombre del canal (por ejemplo, drones-europe) y toca «Subscribe». Permite las notificaciones cuando el iPhone lo pregunte.",
       ],
       ordenador: [
@@ -248,14 +253,17 @@ export const TEXTO_AVISOS: Record<Idioma, TextoAvisos> = {
     sinResultados: "No country matches the search.",
     pasoSuscribir: "Subscribe",
     suscribirme: "Subscribe",
+    instalar: "1. Install the ntfy app",
+    instalarNota: "Free. If you already have it, go to step 2.",
+    suscribirCanal: "2. Subscribe to the channel",
+    suscribirCanalNota: {
+      android: "If you have just installed it, come back here and tap this button.",
+      iphone: "If you have just installed it, come back here.",
+    },
     pasos: {
-      android: () => [
-        "Tap “Subscribe”: the ntfy app opens with the channel.",
-        "If the app asks, confirm with “Subscribe”.",
-      ],
+      android: () => ["ntfy opens with the channel. If it asks, confirm with “Subscribe”."],
       iphone: (canal) => [
-        "Tap “Subscribe” and install ntfy (or open it if you have it).",
-        `In ntfy tap “+”, turn on “Use another server” and paste the server: ${SERVIDOR_AVISOS}`,
+        `Open ntfy, tap “+”, turn on “Use another server” and paste the server: ${SERVIDOR_AVISOS}`,
         `In “Topic name” paste the channel, ${canal}, and tap “Subscribe”.`,
       ],
       ordenador: () => [
@@ -263,7 +271,6 @@ export const TEXTO_AVISOS: Record<Idioma, TextoAvisos> = {
         "Allow notifications when the browser asks.",
       ],
     },
-    sinAplicacion: "No app yet? Google Play",
     copiarServidor: "Copy the server",
     copiarCanal: "Copy the channel",
     copiar: "Copy",
@@ -274,13 +281,13 @@ export const TEXTO_AVISOS: Record<Idioma, TextoAvisos> = {
     detalle: "Step by step on each device",
     detalleDispositivo: {
       android: [
-        "Install the free ntfy app from Google Play or F-Droid.",
-        "Tap the “Subscribe” button of the channel you want: the app opens with the channel filled in. If it asks, confirm with “Subscribe”.",
+        "Install the free ntfy app from Google Play or F-Droid. If you already have it, go to step 2.",
+        "Tap “2. Subscribe to the channel” (or the “Android” link of the channel you want): the app opens with the channel filled in. If you have just installed it, come back here and tap the button again: Android does not subscribe it on its own after installing. If it asks, confirm with “Subscribe”.",
         "If the button does not open the app, add it by hand: in ntfy tap “+”, type the channel name, turn on “Use another server”, type the server https://ntfy.droneobservatory.eu and tap “Subscribe”.",
       ],
       iphone: [
-        "Install the free ntfy app from the App Store.",
-        "Open it, tap “+”, turn on “Use another server” and type the server: https://ntfy.droneobservatory.eu",
+        "Install the free ntfy app from the App Store. If you already have it, go to step 2.",
+        "If you have just installed it, come back here. Open ntfy, tap “+”, turn on “Use another server” and type the server: https://ntfy.droneobservatory.eu",
         "In “Topic name” type the channel name (for example, drones-europe) and tap “Subscribe”. Allow notifications when the iPhone asks.",
       ],
       ordenador: [

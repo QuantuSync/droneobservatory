@@ -1,22 +1,21 @@
 // @vitest-environment jsdom
 // Canal público de avisos (src/avisos.ts): los canales en orden, el enlace que abre la aplicación
 // de Android ya suscrita, la página de texto enlazada desde el pie, el mapa del sitio y llms.txt,
-// los códigos QR del build y el panel del mapa en tres pasos, con un solo botón por dispositivo.
+// los códigos QR del build y el panel del mapa en tres pasos: en el teléfono, «Suscríbete» en dos
+// pasos numerados (instalar ntfy y suscribirse al canal); el canal elegido se recuerda.
 
 import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 
 import {
+  CLAVE_CANAL,
   RUTAS_AVISOS,
   SERVIDOR_AVISOS,
   TEXTO_AVISOS,
   TIENDAS,
   canales,
-  admiteIntent,
   dispositivoDe,
   enlaceAndroid,
-  enlaceAndroidPara,
-  enlaceIntent,
   enlaceWeb,
   filtrarCanales,
   rutaQr,
@@ -28,7 +27,10 @@ import { llmsTxt, sitemap } from "../src/texto/salidas.ts";
 import { enlacesSobre } from "../src/texto/servicio.ts";
 import { svgQr } from "../scripts/qr-avisos.ts";
 
-afterEach(cleanup);
+afterEach(() => {
+  cleanup();
+  window.localStorage.clear();
+});
 
 const RESUMEN: Resumen = { actualizado: "2026-10-10T12:17Z", incidentes: [], episodios: [], eventos: [] };
 
@@ -60,28 +62,6 @@ describe("canales de avisos", () => {
     expect(enlaceAndroid(eslovaquia)).toBe("ntfy://ntfy.droneobservatory.eu/drones-slovakia?display=EODI+%C2%B7+Eslovaquia");
     expect(enlaceWeb(eslovaquia)).toBe("https://ntfy.droneobservatory.eu/drones-slovakia");
     expect(rutaQr(eslovaquia)).toBe("/avisos/qr/drones-slovakia.svg");
-  });
-
-  it("en Android con Chrome y los basados en Chromium, intent:// con Google Play si falta la aplicación; Firefox, ntfy://", () => {
-    const europa = canales("es")[0];
-    if (europa === undefined) throw new Error("sin canales");
-    const intent =
-      "intent://ntfy.droneobservatory.eu/drones-europe?display=EODI+%C2%B7+Toda+Europa#Intent;scheme=ntfy;package=io.heckel.ntfy;" +
-      "S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dio.heckel.ntfy;end";
-    expect(enlaceIntent(europa)).toBe(intent);
-    const chrome = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Mobile Safari/537.36";
-    const samsung =
-      "Mozilla/5.0 (Linux; Android 14; SM-S921B) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/27.0 Chrome/125.0.0.0 Mobile Safari/537.36";
-    const edge = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Mobile Safari/537.36 EdgA/141.0.0.0";
-    const firefox = "Mozilla/5.0 (Android 14; Mobile; rv:143.0) Gecko/143.0 Firefox/143.0";
-    const vistaWeb = "Mozilla/5.0 (Linux; Android 14; Pixel 8; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/141.0.0.0 Mobile Safari/537.36";
-    const iphone = "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/141.0 Mobile/15E148 Safari/604.1";
-    for (const agente of [chrome, samsung, edge]) {
-      expect(admiteIntent(agente)).toBe(true);
-      expect(enlaceAndroidPara(europa, agente)).toBe(intent);
-    }
-    for (const agente of [firefox, vistaWeb, iphone]) expect(admiteIntent(agente)).toBe(false);
-    expect(enlaceAndroidPara(europa, firefox)).toBe(enlaceAndroid(europa));
   });
 
   it("el buscador no distingue tildes ni mayúsculas", () => {
@@ -133,6 +113,21 @@ describe("página «Avisos»", () => {
       expect(cuerpo).toContain("play.google.com");
       expect(cuerpo).toContain("f-droid.org");
       expect(cuerpo).toContain("apps.apple.com");
+      // En el teléfono, dos pasos: instalar ntfy y suscribirse (en Android, con ntfy://), con la
+      // frase de volver tras instalar.
+      const paso3 = cuerpo.slice(pasos, dispositivos);
+      expect(paso3.match(/class="texto-dos-pasos"/g)).toHaveLength(2);
+      expect(paso3.split(t.instalar)).toHaveLength(3);
+      expect(paso3.split(t.instalarNota)).toHaveLength(3);
+      expect(paso3.split(t.suscribirCanal)).toHaveLength(3);
+      expect(paso3).toContain(t.suscribirCanalNota.android);
+      expect(paso3).toContain(t.suscribirCanalNota.iphone);
+      expect(paso3).toContain(`href="${TIENDAS.googlePlay}"`);
+      expect(paso3).toContain(`href="${TIENDAS.appStore}"`);
+      const europa = canales(idioma)[0];
+      if (europa === undefined) throw new Error("sin canales");
+      expect(paso3.indexOf(t.instalar)).toBeLessThan(paso3.indexOf(enlaceAndroid(europa).replace(/&/g, "&amp;")));
+      expect(paso3).not.toContain("intent:");
       expect(cuerpo).not.toMatch(/<script/);
       expect(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u.test(cuerpo)).toBe(false);
     }
@@ -190,25 +185,54 @@ describe("panel «Avisos» del mapa", () => {
     );
   });
 
-  it("en Android, el botón abre la aplicación ya suscrita, enlace pequeño a Google Play y sin QR", () => {
+  it("en Android, dos botones en orden: 1 a Google Play y 2 a la aplicación ya suscrita con ntfy://, sin QR", () => {
     render(<Avisos idioma="en" dispositivo="android" />);
     const p = panel();
-    const boton = within(p).getByRole("link", { name: "Subscribe" });
-    expect(boton.getAttribute("href")).toMatch(/^ntfy:\/\/ntfy\.droneobservatory\.eu\/drones-europe\?display=/);
-    expect(within(p).getByRole("link", { name: TEXTO_AVISOS.en.sinAplicacion }).getAttribute("href")).toBe(TIENDAS.googlePlay);
+    const t = TEXTO_AVISOS.en;
+    const enlaces = within(p.querySelector(":scope > ol > li:nth-child(3)") as HTMLElement).getAllByRole("link");
+    expect(enlaces.map((a) => a.textContent)).toEqual(["1. Install the ntfy app", "2. Subscribe to the channel"]);
+    expect(enlaces[0]?.getAttribute("href")).toBe(TIENDAS.googlePlay);
+    expect(enlaces[1]?.getAttribute("href")).toBe("ntfy://ntfy.droneobservatory.eu/drones-europe?display=EODI+%C2%B7+All+of+Europe");
+    expect(enlaces[0]?.className).toBe(enlaces[1]?.className);
+    expect(within(p).getByText(t.instalarNota)).toBeTruthy();
+    expect(within(p).getByText(t.suscribirCanalNota.android)).toBeTruthy();
+    expect(within(p).queryByText(/No app yet/)).toBeNull();
     expect(p.querySelector("img")).toBeNull();
-    expect(p.querySelectorAll(":scope > ol > li:nth-child(3) ol > li").length).toBeLessThanOrEqual(3);
+    fireEvent.change(within(p).getByRole("combobox", { name: "Channel" }), { target: { value: "drones-france" } });
+    expect(within(p).getByRole("link", { name: t.suscribirCanal }).getAttribute("href")).toBe(
+      "ntfy://ntfy.droneobservatory.eu/drones-france?display=EODI+%C2%B7+France",
+    );
     expect(within(p).getByRole("link", { name: "More help" }).getAttribute("href")).toBe("/en/alerts");
   });
 
-  it("en iPhone, App Store y tres pasos con el servidor y el canal para copiar, sin QR", () => {
+  it("en iPhone, 1 a la App Store y 2 con los pasos y el servidor y el canal para copiar, sin QR", () => {
     render(<Avisos idioma="es" dispositivo="iphone" />);
     const p = panel();
-    expect(within(p).getByRole("link", { name: "Suscribirme" }).getAttribute("href")).toBe(TIENDAS.appStore);
-    expect(p.querySelectorAll(":scope > ol > li:nth-child(3) ol > li")).toHaveLength(3);
-    expect(within(p).getByRole("button", { name: "Copiar el servidor" })).toBeTruthy();
-    expect(within(p).getByRole("button", { name: "Copiar el canal" })).toBeTruthy();
-    expect(within(p).getByText("drones-europe", { selector: "code" })).toBeTruthy();
+    const t = TEXTO_AVISOS.es;
+    expect(within(p).getByRole("link", { name: "1. Instala la aplicación ntfy" }).getAttribute("href")).toBe(TIENDAS.appStore);
+    expect(within(p).getByText("Gratis. Si ya la tienes, pasa al paso 2.")).toBeTruthy();
+    const segundo = p.querySelector("[data-paso-telefono='2']") as HTMLElement;
+    expect(within(segundo).getByRole("heading", { name: "2. Suscríbete al canal" })).toBeTruthy();
+    expect(within(segundo).getByText("Si acabas de instalarla, vuelve aquí.")).toBeTruthy();
+    expect(segundo.querySelectorAll("ol > li")).toHaveLength(t.pasos.iphone("drones-europe").length);
+    expect(within(segundo).getByRole("button", { name: "Copiar el servidor" })).toBeTruthy();
+    expect(within(segundo).getByRole("button", { name: "Copiar el canal" })).toBeTruthy();
+    expect(within(segundo).getByText("drones-europe", { selector: "code" })).toBeTruthy();
     expect(p.querySelector("img")).toBeNull();
+  });
+
+  it("recuerda el último canal elegido en este navegador y no guarda nada sin elegir", () => {
+    const { unmount } = render(<Avisos idioma="es" dispositivo="android" />);
+    expect(window.localStorage.getItem(CLAVE_CANAL)).toBeNull();
+    fireEvent.change(within(panel()).getByRole("combobox", { name: "Canal" }), { target: { value: "drones-poland" } });
+    expect(window.localStorage.getItem(CLAVE_CANAL)).toBe("drones-poland");
+    unmount();
+    render(<Avisos idioma="en" dispositivo="ordenador" />);
+    expect((within(panel()).getByRole("combobox", { name: "Channel" }) as HTMLSelectElement).value).toBe("drones-poland");
+    cleanup();
+    // Un canal que ya no existe no rompe nada: toda Europa.
+    window.localStorage.setItem(CLAVE_CANAL, "drones-atlantida");
+    render(<Avisos idioma="es" dispositivo="iphone" />);
+    expect((within(panel()).getByRole("combobox", { name: "Canal" }) as HTMLSelectElement).value).toBe("drones-europe");
   });
 });
