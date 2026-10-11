@@ -23,6 +23,11 @@ function hoy(): string {
   return new Date().toISOString().slice(0, 10);
 }
 
+/** El día anterior a hoy (UTC). */
+function ayer(): string {
+  return new Date(Date.now() - 86_400_000).toISOString().slice(0, 10);
+}
+
 async function servirAlmacen(pagina: Page) {
   const avisos = [
     aviso(),
@@ -47,8 +52,13 @@ async function servirAlmacen(pagina: Page) {
   });
   // Las direcciones del almacén salen de configuracion/almacen_publico.json; aquí basta su final.
   await pagina.route("**/directo.json", (ruta) => ruta.fulfill(json(directo(avisos))));
-  await pagina.route("**/gnss/indice.json", (ruta) => ruta.fulfill(json(indiceGnss([hoy()]))));
-  await pagina.route("**/gnss/dia/*.json", (ruta) => ruta.fulfill(json(ficheroGnss(hoy()))));
+  // El «hoy» de la web es el último día de los datos publicados, que de madrugada (UTC) aún es
+  // el de ayer: la interferencia GPS se sirve para los dos días, cada fichero con el suyo.
+  await pagina.route("**/gnss/indice.json", (ruta) => ruta.fulfill(json(indiceGnss([ayer(), hoy()]))));
+  await pagina.route("**/gnss/dia/*.json", (ruta) => {
+    const dia = /(\d{4}-\d{2}-\d{2})\.json$/.exec(ruta.request().url())?.[1] ?? hoy();
+    return ruta.fulfill(json(ficheroGnss(dia)));
+  });
 }
 
 /** Alfa del primer fondo pintado del elemento o de sus antepasados: 1 si el mapa no se ve a través. */
