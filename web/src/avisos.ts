@@ -48,6 +48,35 @@ export function enlaceAndroid(canal: Canal): string {
   return `ntfy://${HOST_AVISOS}/${canal.tema}?display=${encodeURIComponent(nombre).replace(/%20/g, "+")}`;
 }
 
+/** La aplicación de Android de ntfy, en Google Play y en los enlaces intent://. */
+export const PAQUETE_ANDROID = "io.heckel.ntfy";
+
+/**
+ * El mismo enlace en la forma intent:// de Android (developer.chrome.com/docs/android/intents):
+ * con ntfy instalada, el navegador abre la aplicación suscrita al canal, igual que con ntfy://;
+ * sin ella, lleva a ntfy en Google Play (S.browser_fallback_url) en vez de no hacer nada.
+ */
+export function enlaceIntent(canal: Canal): string {
+  const ntfy = enlaceAndroid(canal);
+  const resto = ntfy.slice("ntfy://".length);
+  const tienda = encodeURIComponent(TIENDAS.googlePlay);
+  return `intent://${resto}#Intent;scheme=ntfy;package=${PAQUETE_ANDROID};S.browser_fallback_url=${tienda};end`;
+}
+
+/**
+ * Si el navegador de Android abre los enlaces intent://: Chrome y los basados en Chromium (Edge,
+ * Samsung Internet, Opera...), que llevan «Chrome/» en el agente. Firefox no: sigue con ntfy://.
+ * Tampoco las vistas web dentro de otras aplicaciones («; wv)»).
+ */
+export function admiteIntent(agente: string): boolean {
+  return /android/i.test(agente) && /Chrome\//.test(agente) && !/Firefox\/|; wv\)/.test(agente);
+}
+
+/** El enlace de «Suscribirme» en Android para el navegador de quien mira la página. */
+export function enlaceAndroidPara(canal: Canal, agente: string): string {
+  return admiteIntent(agente) ? enlaceIntent(canal) : enlaceAndroid(canal);
+}
+
 /** El canal en el navegador (la aplicación web de ntfy), donde se activan las notificaciones. */
 export function enlaceWeb(canal: Canal): string {
   return `${SERVIDOR_AVISOS}/${canal.tema}`;

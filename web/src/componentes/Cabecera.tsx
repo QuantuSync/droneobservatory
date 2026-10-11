@@ -27,7 +27,7 @@ export function Cabecera({ t, centro, derecha }: Props) {
   return (
     <header
       aria-label={t.cabecera.etiqueta}
-      className="superficie flex min-h-11 flex-wrap items-center gap-x-3 gap-y-1 border-b px-3 py-1 max-[1439px]:[&_.control]:text-[0.6875rem] max-[1439px]:[&_dt]:text-[0.6875rem]"
+      className="superficie flex min-h-11 flex-wrap items-center gap-x-3 gap-y-1 tactil:gap-y-4 border-b px-3 py-1 tactil:pb-2 tactil:pt-2.5 max-[1439px]:[&_.control]:text-[0.6875rem] max-[1439px]:[&_dt]:text-[0.6875rem]"
     >
       <div className="flex shrink-0 items-center gap-2">
         <LogoPequeno lado={24} />
@@ -39,7 +39,7 @@ export function Cabecera({ t, centro, derecha }: Props) {
       </div>
       <div className="flex flex-1 items-center justify-center gap-3">{centro}</div>
       {/* Si no cabe en la línea (tableta), lo de la derecha pasa a la siguiente sin cortarse. */}
-      <div className="flex max-w-full shrink-0 flex-wrap items-center gap-x-0.5 gap-y-1">{derecha}</div>
+      <div className="flex max-w-full shrink-0 flex-wrap items-center gap-x-0.5 gap-y-1 tactil:gap-y-4">{derecha}</div>
     </header>
   );
 }

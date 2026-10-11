@@ -157,7 +157,7 @@ export function SelectorDeIdioma({
   rutaOtroIdioma: string;
   grande?: boolean;
 }) {
-  const medida = grande ? "min-h-11 min-w-11" : "min-h-7 min-w-7";
+  const medida = grande ? "min-h-11 min-w-11" : "min-h-7 min-w-7 tactil:min-w-11";
   return (
     <nav aria-label={t.controles.idioma} className="flex items-center text-xs">
       {IDIOMAS.map((codigo, i) => (
@@ -231,7 +231,7 @@ export function Atribuciones({ t }: { t: Textos }) {
       enlace={direccion}
       aviso={t.ficha.enlaceExterno}
       avisoNoValido={t.ficha.enlaceNoValido}
-      className="tel:-my-4 tel:inline-block tel:py-4"
+      className="tel:-my-4 tel:inline-block tel:py-4 tactil:-my-4 tactil:inline-block tactil:py-4"
     >
       {texto}
     </EnlaceExterno>

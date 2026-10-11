@@ -2264,7 +2264,9 @@ export function App() {
               <div ref={refAbajoEsc} className="absolute inset-x-3 bottom-3 flex flex-col gap-2">
                 <div className="flex items-end justify-between gap-2">
                   <div className="pointer-events-auto">{leyendas}</div>
-                  <div className="pointer-events-auto flex items-end gap-2">
+                  {/* Con el dedo, si el zoom no cabe junto a las atribuciones (tableta con la ficha
+                      abierta), pasa encima de ellas en vez de quedar bajo la ficha. */}
+                  <div className="pointer-events-auto flex items-end justify-end gap-2 tactil:flex-wrap-reverse tactil:gap-y-4">
                     <Atribuciones t={t} />
                     <Zoom t={t} onZoom={(paso) => api?.zoom(paso)} />
                   </div>

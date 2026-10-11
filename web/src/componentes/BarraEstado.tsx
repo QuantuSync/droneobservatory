@@ -248,7 +248,7 @@ export function BarraEstado({
       </button>
       {abierta && (
         <div
-          className={`flotante absolute top-full z-40 mt-1 w-80 max-w-[calc(100vw-1.5rem)] p-3 ${
+          className={`flotante absolute top-full z-40 mt-1 tactil:mt-2 w-80 max-w-[calc(100vw-1.5rem)] p-3 ${
             alinear === "derecha" ? "right-0" : "left-0"
           }`}
         >

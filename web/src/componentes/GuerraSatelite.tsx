@@ -679,7 +679,7 @@ export function BotonSatelite({
         </button>
       )}
       {activo && abierta && (
-        <div className="flotante absolute right-0 top-full z-40 mt-1 max-h-[70vh] w-80 overflow-y-auto">
+        <div className="flotante absolute right-0 top-full z-40 mt-1 tactil:mt-2 max-h-[70vh] w-80 overflow-y-auto">
           <PanelSatelite {...panel} acceso={false} />
         </div>
       )}

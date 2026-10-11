@@ -8,7 +8,7 @@ import {
   TIENDAS,
   canales,
   dispositivoActual,
-  enlaceAndroid,
+  enlaceAndroidPara,
   enlaceWeb,
   filtrarCanales,
   rutaQr,
@@ -75,7 +75,7 @@ export function BotonAvisos({
   );
 }
 
-const ENLACE = "text-texto underline decoration-secundario underline-offset-2 hover:decoration-acento";
+const ENLACE = "enlace-texto text-texto underline decoration-secundario underline-offset-2 hover:decoration-acento";
 const CAMPO = "control min-h-11 w-full rounded-sm border border-linea px-2 text-sm text-texto esc:min-h-9";
 /** El botón «Suscribirme»: grande y con el estilo de la acción principal («Aplicar»). */
 const BOTON_GRANDE = "control control-principal min-h-12 min-w-0 flex-1 rounded-sm px-4 text-center text-base esc:text-base";
@@ -141,6 +141,8 @@ function Copiable({
 export function Avisos({ idioma, dispositivo }: { idioma: Idioma; dispositivo?: Dispositivo }) {
   const t = TEXTO_AVISOS[idioma];
   const [equipo] = useState<Dispositivo>(() => dispositivo ?? dispositivoActual());
+  // En Android, intent:// donde el navegador lo admite (lleva a Google Play sin la aplicación).
+  const [agente] = useState(() => (typeof navigator === "undefined" ? "" : navigator.userAgent));
   const lista = useMemo(() => canales(idioma), [idioma]);
   const [busqueda, setBusqueda] = useState("");
   const [tema, setTema] = useState(lista[0]?.tema ?? "");
@@ -155,7 +157,7 @@ export function Avisos({ idioma, dispositivo }: { idioma: Idioma; dispositivo?: 
   // Lo elegido sigue en el selector aunque la búsqueda no lo encuentre, para que no mienta.
   const opciones = visibles.some((c) => c.tema === elegido.tema) ? visibles : [elegido, ...visibles];
   const pasos = t.pasos[equipo](elegido.tema);
-  const destino = equipo === "android" ? enlaceAndroid(elegido) : equipo === "iphone" ? TIENDAS.appStore : enlaceWeb(elegido);
+  const destino = equipo === "android" ? enlaceAndroidPara(elegido, agente) : equipo === "iphone" ? TIENDAS.appStore : enlaceWeb(elegido);
 
   return (
     <div className="flex flex-col gap-4 text-sm" data-panel-avisos="" data-dispositivo={equipo}>
