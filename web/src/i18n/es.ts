@@ -820,7 +820,8 @@ export const es: Textos = {
                 "nunca se conoce la posición exacta. Si la fuente solo nombra el país, la región o " +
                 "el mar, el incidente se dibuja con un marcador propio de lugar aproximado (un aro " +
                 "hueco con un punto) en el centro de esa zona, y su ficha dice el nivel y de dónde " +
-                "sale. Cada dato conserva quién lo dice: de " +
+                "sale. Si la fuente no permite situar un incidente con precisión, se publica a " +
+                "nivel de país con ubicación aproximada. Cada dato conserva quién lo dice: de " +
                 "cada fuente se guarda el hecho, una frase breve de origen en su idioma y el " +
                 "enlace, nunca el texto completo.",
             ],

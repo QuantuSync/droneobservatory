@@ -36,7 +36,14 @@ Problemas (cada uno con su frase):
   seguidas;
 - **versiones**: la versión citable del mes de los datos abiertos no se ha generado el día 1
   (pasadas las 06:00 UTC), una versión publicada ha cambiado o falta, o no se comprueban desde
-  hace 2 días (recogida/versiones.py).
+  hace 2 días (recogida/versiones.py);
+- **barrera_resoluciones**: la barrera de titulares ha resuelto sola (a nivel de país o descartado
+  como no verificable, recogida/barrera.py) más de 3 incidentes en 24 horas: señal de que el
+  extractor elige mal las citas. Cada resolución por separado no es un problema;
+- **barrera_atascada**: un incidente sigue retenido por la barrera más de 8 horas (la resolución
+  automática tenía que haberlo despachado a las 6): la revisión de la barrera está fallando;
+- **mapa_parado**: hay incidentes de Europa con punto dados de alta después del último cambio de
+  incidentes.geojson y ese cambio tiene más de 24 horas: lo nuevo no llega al mapa.
 
 Avisos (se ven, no son fallo): la última recogida terminó con avisos (código 2) y por qué (las
 líneas de aviso de su diario: fuentes sin leer, tope de tiempo agotado), y cuántos incidentes
@@ -86,6 +93,12 @@ MAX_SIN_ALERTAS = timedelta(minutes=15)
 MAX_SIN_COPIA = timedelta(hours=2)
 MAX_SIN_COPIA_ARCHIVO = timedelta(hours=2)
 MAX_SIN_REPLICA = timedelta(hours=3)
+# Barrera de titulares (recogida/barrera.py): resoluciones automáticas en un día, retención que
+# la resolución tenía que haber despachado y mapa sin cambiar con incidentes nuevos.
+MAX_RESOLUCIONES_DIA = 3
+MAX_RETENIDO = timedelta(hours=8)
+MAX_MAPA_SIN_CAMBIAR = timedelta(hours=24)
+BARRERA = "barrera.json"
 DISCO_AVISO_PCT = 75.0
 # Líneas del diario de la recogida que explican un código 2 y las de la barrera de titulares.
 AVISO_TOPE = re.compile(r"tope de \d+ s agotado|no se lee|sin leer: \d+|en rojo", re.I)
@@ -187,6 +200,52 @@ def avisos_del_diario(lineas: Sequence[str]) -> tuple[list[str], list[str]]:
     return avisos, retenidos
 
 
+def problemas_de_la_barrera(estado: dict[str, Any], ahora: datetime) -> list[dict[str, str]]:
+    """Los problemas de la barrera de titulares en su estado (barrera.json), sin identificadores
+    (salud.json es público)."""
+    problemas: list[dict[str, str]] = []
+    if not estado:
+        return problemas
+    dia = [
+        r for r in estado.get("resoluciones", [])
+        if (cuando := _instante(r.get("fecha"))) is not None and ahora - cuando <= timedelta(days=1)
+    ]  # fmt: skip
+    if len(dia) > MAX_RESOLUCIONES_DIA:
+        a_pais = sum(1 for r in dia if r.get("resultado") == "pais")
+        problemas.append({
+            "id": "barrera_resoluciones",
+            "frase": f"La barrera de titulares ha resuelto sola {len(dia)} incidentes en 24 horas "
+            f"({a_pais} a nivel de país, {len(dia) - a_pais} descartados como no verificables): "
+            "el extractor puede estar eligiendo mal las citas.",
+        })  # fmt: skip
+    atascados = [
+        desde for desde in estado.get("retenidos", {}).values()
+        if (momento := _instante(desde)) is not None and ahora - momento > MAX_RETENIDO
+    ]  # fmt: skip
+    if atascados:
+        problemas.append({
+            "id": "barrera_atascada",
+            "frase": f"{len(atascados)} incidentes siguen retenidos por la barrera de titulares "
+            f"desde hace más de 8 horas (el más antiguo, desde el {min(atascados)}): la "
+            "resolución automática no se está aplicando.",
+        })  # fmt: skip
+    cambio = _instante(estado.get("mapa_cambiado"))
+    alta = _instante(estado.get("ultima_alta_con_punto"))
+    if (
+        cambio is not None
+        and alta is not None
+        and alta > cambio
+        and ahora - cambio > MAX_MAPA_SIN_CAMBIAR
+    ):
+        problemas.append({
+            "id": "mapa_parado",
+            "frase": f"incidentes.geojson no cambia desde el {cambio:%Y-%m-%d %H:%M} UTC y hay "
+            f"incidentes nuevos con punto en la base (el último, del {alta:%Y-%m-%d %H:%M} "
+            "UTC): lo nuevo no llega al mapa.",
+        })  # fmt: skip
+    return problemas
+
+
 def ultima_copia_base() -> datetime | None:
     """La hora de la copia cifrada más reciente de la base en el almacén privado."""
     from almacen import copias
@@ -275,6 +334,10 @@ def componer(
             "respaldan el titular (detalle en el diario de eodi-vigilancia).",
         })  # fmt: skip
         detalle.append("retenidos por la barrera de titulares: " + ", ".join(retenidos))
+    estado_barrera = _leer_json(secretos / BARRERA)
+    problemas += problemas_de_la_barrera(estado_barrera, ahora)
+    for id_, desde in estado_barrera.get("retenidos", {}).items():
+        detalle.append(f"barrera: {id_} retenido desde {desde}")
 
     # Captura del seguimiento.
     seguimiento = _leer_json(secretos / "seguimiento.json")

@@ -35,7 +35,9 @@ sin estar al día más de 30 minutos, disco por encima del 75 %, servidor
 sin dar señales (salud.json con más de 20 minutos), exportación semanal fallida o con más de 8
 días, detección en directo parada más de media hora, paso de la base a solo disco fallido,
 versión citable de los datos del mes sin generar (pasadas las 06:00 UTC del día 1) o una
-publicada que ha cambiado.
+publicada que ha cambiado, la barrera de titulares que resuelve sola más de 3 incidentes en un día
+o que deja uno retenido más de 8 horas, e `incidentes.geojson` sin cambiar en 24 horas con
+incidentes nuevos con punto en la base (apartado «Si la barrera de titulares retiene incidentes»).
 
 Avisos que se ven pero no son fallo: la recogida terminó con avisos (código 2: por ejemplo, el
 tope de 240 s de las fuentes oficiales) y los incidentes que retiene la barrera de titulares. Se
@@ -56,6 +58,37 @@ journalctl -u eodi-recogida -n 40               # la última recogida
 sudo systemctl start eodi-vigilancia.service && journalctl -u eodi-vigilancia -n 10
 df -h /
 ```
+
+## Si la barrera de titulares retiene incidentes
+
+La barrera (`proceso/cita_titular.py`) no publica un incidente si ningún texto de sus fuentes
+respalda el titular. Cuentan las citas guardadas y el titular del propio artículo fuente tal como
+está en la base; nunca un texto del extractor ni el titular de otro artículo. La primera frase del
+artículo no cuenta porque la base no guarda el texto de los artículos. Nada espera a una revisión
+a mano (`recogida/barrera.py`, en cada recogida antes de publicar):
+
+- si el titular del artículo fuente nombra el lugar o el país, se guarda como cita del incidente
+  (una fuente `titular-…` del mismo artículo) y se publica;
+- lo que siga retenido 6 horas se resuelve solo. Si algún texto de sus fuentes nombra el país o una
+  de sus regiones, se publica a nivel de país con ubicación aproximada: sin punto ni nombre de la
+  instalación, con el marcador de lugar aproximado de la web y un titular sin el lugar concreto.
+  Si ninguno nombra ni el país, se retira como no verificable, con el motivo;
+- las resoluciones quedan en el cursor `barrera_titulares` de la base (registro interno de
+  descartes, con su motivo y desde cuándo estaba retenido) y en el historial del incidente.
+
+La vigilancia lee `/home/eodi/.eodi/barrera.json`, que escribe la recogida, y avisa por correo solo
+si algo va mal: más de 3 resoluciones en 24 horas (`barrera_resoluciones`: el extractor elige mal
+las citas), un retenido de más de 8 horas (`barrera_atascada`: la resolución no se aplica) o el mapa
+parado (`mapa_parado`: `incidentes.geojson` sin cambiar en 24 horas con incidentes nuevos con punto
+en la base). Los identificadores, en el diario: `journalctl -u eodi-vigilancia -n 20`.
+
+```
+sudo cat /home/eodi/.eodi/barrera.json                 # retenidos, resoluciones y mapa
+journalctl -u eodi-recogida -n 400 | grep -E 'barrera|no se publica'
+```
+
+Para corregir uno a mano (otra cita, unir, retirar), `configuracion/incidentes_revisados.json`
+sigue valiendo y se aplica antes de la barrera.
 
 ## Si la recogida falla
 
