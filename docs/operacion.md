@@ -37,7 +37,10 @@ días, detección en directo parada más de media hora, paso de la base a solo d
 versión citable de los datos del mes sin generar (pasadas las 06:00 UTC del día 1) o una
 publicada que ha cambiado, la barrera de titulares que resuelve sola más de 3 incidentes en un día
 o que deja uno retenido más de 8 horas, e `incidentes.geojson` sin cambiar en 24 horas con
-incidentes nuevos con punto en la base (apartado «Si la barrera de titulares retiene incidentes»).
+incidentes nuevos con punto en la base (apartado «Si la barrera de titulares retiene incidentes»),
+el contador de visitas sin responder, el resumen diario sin enviar a las 09:00 de Madrid, la copia
+de la base de visitas con más de 3 horas y el panel de visitas o el tema privado del resumen
+abiertos sin usuario (apartado «Si el contador de visitas o el resumen diario fallan»).
 
 Avisos que se ven pero no son fallo: la recogida terminó con avisos (código 2: por ejemplo, el
 tope de 240 s de las fuentes oficiales) y los incidentes que retiene la barrera de titulares. Se
@@ -263,6 +266,25 @@ solo en la recogida siguiente, sin duplicar lo ya enviado.
 Todo lo demás (qué se avisa, los dos usuarios, cómo añadir un canal y cómo enviar un aviso a
 mano) está en [avisos.md](avisos.md).
 
+## Si el contador de visitas o el resumen diario fallan
+
+El contador (GoatCounter, https://stats.droneobservatory.eu) y el resumen diario privado de las
+08:00 de Madrid están explicados en [visitas.md](visitas.md). Si el contador cae, la web sigue igual
+y solo se pierden las visitas de ese rato.
+
+```
+systemctl status goatcounter caddy eodi-visitas.timer
+journalctl -u goatcounter -n 40
+journalctl -u eodi-visitas -n 40                     # muestras, copia y «resumen del … enviado»
+sudo cat /home/eodi/.eodi/visitas.json               # resumen.error, copia.error
+sudo systemctl restart goatcounter                   # las sesiones abiertas se borran al parar
+sudo -u eodi bash /home/eodi/droneobservatory/servidor/visitas_resumen.sh comprobar
+```
+
+El resumen se reintenta solo cada 5 minutos. Un 401 o 403 al enviarlo son los permisos de
+`observatorio` en `lucas-resumen`: `sudo bash /home/eodi/droneobservatory/servidor/ntfy.sh` los
+rehace. Restaurar la base de visitas desde su copia: [visitas.md](visitas.md), «Copias».
+
 ## Si el disco se llena
 
 El aviso llega al 75 %. Ver qué ocupa: `sudo du -sh /home/eodi/* /home/eodi/datos/* | sort -h`.
@@ -315,7 +337,8 @@ bash servidor/reconstruir.sh
 Crea el servidor, lo endurece, lo instala, lleva las credenciales y activa los temporizadores. Después:
 
 1. restaurar la base (apartado anterior, con el temporizador parado) y el archivo del seguimiento:
-   `sudo -u eodi bash /home/eodi/droneobservatory/servidor/seguimiento_archivo.sh restaurar-todo`;
+   `sudo -u eodi bash /home/eodi/droneobservatory/servidor/seguimiento_archivo.sh restaurar-todo`,
+   y la base de visitas ([visitas.md](visitas.md), «Copias»);
 2. poner los interruptores como estaban: `echo disco | sudo -u eodi tee /home/eodi/.eodi/base_modo`,
    `echo almacen | sudo -u eodi tee /home/eodi/.eodi/publicacion_modo` y
    `echo no | sudo -u eodi tee /home/eodi/.eodi/base_secundaria` (desde el 13 de octubre de 2026);

@@ -138,6 +138,17 @@ else
   echo "aviso: sin $LOCAL_NTFY_LUCAS, ntfy queda sin el usuario lucas" >&2
   conectar "$OPERADOR" sudo bash "$CLON/servidor/ntfy.sh" < /dev/null
 fi
+# Contador de visitas y resumen diario (servidor/visitas.sh, docs/visitas.md), detrás del Caddy de
+# ntfy, con la contraseña del panel por la entrada estándar. Sin ella, GoatCounter queda sin sitio
+# ni usuario hasta que se repita con el fichero. La base de visitas se restaura después
+# (docs/visitas.md).
+if [ -s "$LOCAL_GOATCOUNTER_LUCAS" ]; then
+  tr -d '\r\n' < "$LOCAL_GOATCOUNTER_LUCAS" \
+    | conectar "$OPERADOR" sudo bash "$CLON/servidor/visitas.sh" --clave-lucas
+else
+  echo "aviso: sin $LOCAL_GOATCOUNTER_LUCAS, el contador de visitas queda sin sitio ni usuario" >&2
+  conectar "$OPERADOR" sudo bash "$CLON/servidor/visitas.sh" < /dev/null
+fi
 
 # --- Claves de despliegue ------------------------------------------------------------
 # Las privadas se generan en el servidor y no salen de él; aquí solo llega la pública.

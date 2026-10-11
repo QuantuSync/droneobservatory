@@ -9,7 +9,9 @@
 # - los temas públicos de configuracion/avisos.json: lectura para todos, escritura solo para
 #   «observatorio» (los avisos automáticos, con su token en $NTFY_TOKEN) y «lucas»;
 # - «lucas» solo si llega su contraseña por la entrada estándar (--clave-lucas): reconstruir.sh
-#   la lee de %USERPROFILE%\.eodi\ntfy_lucas.txt.
+#   la lee de %USERPROFILE%\.eodi\ntfy_lucas.txt;
+# - el tema privado del resumen diario ($TEMA_RESUMEN): lectura solo para «lucas», escritura solo
+#   para «observatorio»; las métricas internas, solo en local ($NTFY_METRICAS).
 set -euo pipefail
 
 aqui="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -133,6 +135,12 @@ while IFS= read -r tema; do
     como_ntfy access lucas "$tema" read-write >/dev/null
   fi
 done <<< "$temas"
+# Resumen diario privado (recogida/visitas.py, docs/visitas.md): solo lo lee «lucas» y solo publica
+# «observatorio»; nadie más lo ve (auth-default-access: deny-all).
+como_ntfy access observatorio "$TEMA_RESUMEN" write-only >/dev/null
+if [ "$lucas_existe" -gt 0 ]; then
+  como_ntfy access lucas "$TEMA_RESUMEN" read-only >/dev/null
+fi
 
 # Token de «observatorio» para recogida/avisos.py, solo si no hay uno.
 if [ ! -s "$NTFY_TOKEN" ]; then

@@ -133,7 +133,11 @@ Nadie más puede escribir. Ningún tema admite publicación anónima.
 | `lucas` | Avisos manuales, correcciones y comunicados | Lectura y escritura en los temas públicos; rol `user`, sin administración | Contraseña larga en `%USERPROFILE%\.eodi\ntfy_lucas.txt`, solo ahí |
 
 Todo el mundo (`everyone`) tiene solo lectura en los temas públicos. Cualquier otro tema queda
-cerrado.
+cerrado. El tema privado `lucas-resumen` (resumen diario de las visitas y del sistema,
+[visitas.md](visitas.md)) solo lo lee `lucas` y solo publica en él `observatorio`.
+
+Las métricas internas de ntfy (`enable-metrics`, suscriptores conectados) escuchan solo en
+`127.0.0.1:9095`, fuera de Caddy: no se publican. Las lee el resumen diario.
 
 ## Cómo añadir un canal
 

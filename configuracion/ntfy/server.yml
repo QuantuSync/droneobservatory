@@ -37,4 +37,9 @@ visitor-message-daily-limit: 200
 visitor-email-limit-burst: 0
 visitor-email-limit-replenish: "24h"
 
+# Métricas internas (suscriptores conectados, para el resumen diario de recogida/visitas.py): solo
+# en local, en otro puerto que Caddy no publica.
+enable-metrics: true
+metrics-listen-http: "127.0.0.1:9095"
+
 log-level: "info"

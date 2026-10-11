@@ -4,6 +4,8 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import type { AnchorHTMLAttributes, MouseEvent, ReactNode } from "react";
 
+import { contarVista } from "./visitas";
+
 interface Navegacion {
   ruta: string;
   busqueda: string;
@@ -55,6 +57,7 @@ export function ProveedorDeRuta({ inicial, busquedaInicial = "", children }: Pro
       const destino = `${nueva}${busqueda}`;
       if (destino !== `${window.location.pathname}${window.location.search}`) {
         window.history.pushState(null, "", destino);
+        contarVista();
       }
       setRuta(nueva);
     },

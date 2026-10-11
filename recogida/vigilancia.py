@@ -34,6 +34,13 @@ Problemas (cada uno con su frase):
   /v1/health (dos intentos), en el servidor que los tiene (con el token de «observatorio»);
 - **avisos**: el envío de los avisos de ntfy (recogida/avisos.py) ha fallado dos recogidas
   seguidas;
+- **goatcounter**: el contador de visitas (https://stats.droneobservatory.eu) no responde a /status
+  (dos intentos), en el servidor que lo tiene;
+- **resumen**: el resumen diario privado del día anterior (recogida/visitas.py) no ha salido a las
+  09:00 de Madrid;
+- **copia_visitas**: la última copia de la base de visitas tiene más de 3 horas;
+- **visitas_privadas**: el panel de visitas, su API o el tema privado del resumen responden sin
+  usuario;
 - **versiones**: la versión citable del mes de los datos abiertos no se ha generado el día 1
   (pasadas las 06:00 UTC), una versión publicada ha cambiado o falta, o no se comprueban desde
   hace 2 días (recogida/versiones.py);
@@ -74,7 +81,7 @@ from typing import Any
 
 from almacen import reserva
 from almacen.sitio import casa
-from recogida import almacen_publico, versiones
+from recogida import almacen_publico, versiones, visitas
 from recogida import avisos as avisos_ntfy
 
 registro = logging.getLogger("vigilancia")
@@ -281,6 +288,8 @@ def componer(
     ejecutar: Ejecutar = _ejecutar,
     copia_base: Callable[[], datetime | None] = ultima_copia_base,
     salud_ntfy: Callable[[], bool] = ntfy_responde,
+    salud_goatcounter: Callable[[], bool] = visitas.goatcounter_responde,
+    privacidad: Callable[[], list[str]] = visitas.fallos_de_privacidad,
 ) -> tuple[dict[str, Any], list[str]]:
     """salud.json y las líneas de detalle para el diario (con los identificadores)."""
     detalle: list[str] = []
@@ -424,6 +433,19 @@ def componer(
         )
         if frase_avisos is not None:
             problemas.append({"id": "avisos", "frase": frase_avisos})
+        # Contador de visitas y resumen diario (recogida/visitas.py), en el mismo servidor.
+        if not salud_goatcounter():
+            problemas.append({
+                "id": "goatcounter",
+                "frase": "El contador de visitas (GoatCounter) no responde (/status).",
+            })  # fmt: skip
+        problemas += visitas.problemas_para_vigilancia(_leer_json(secretos / visitas.ESTADO), ahora)
+        abiertos = privacidad()
+        if abiertos:
+            problemas.append({
+                "id": "visitas_privadas",
+                "frase": "Lo privado ha quedado abierto: " + "; ".join(abiertos) + ".",
+            })  # fmt: skip
 
     prueba = _leer_json(secretos / "prueba_restauracion.json")
     hecha = _instante(prueba.get("fecha"))

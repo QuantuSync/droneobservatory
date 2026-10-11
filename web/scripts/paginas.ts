@@ -118,6 +118,9 @@ export function paginaConMapa(plantilla: string, pagina: PaginaTexto, actualizad
   return documento.replace("</body>", `${bloqueDeTexto(pagina, actualizado)}</body>`);
 }
 
+/** El contador de visitas propio (public/visitas.js), en todas las páginas. */
+export const CONTADOR_DE_VISITAS = "/visitas.js";
+
 /** Página solo de texto: la misma cabecera y la misma hoja de estilos, sin la aplicación. */
 export function paginaSoloTexto(plantilla: string, pagina: PaginaTexto, actualizado: string): string {
   const conCabecera = conDatosEstructurados(aplicarCabecera(plantilla, cabeceraDe(pagina)), pagina);
@@ -126,8 +129,11 @@ export function paginaSoloTexto(plantilla: string, pagina: PaginaTexto, actualiz
     .slice(0, finCabecera)
     .replace(/<script\b[^>]*\bsrc="[^"]*"[^>]*><\/script>/g, "")
     .replace(/<link rel="modulepreload"[^>]*>/g, "");
-  // Solo los scripts propios que pide la página (el botón de privacidad), nunca la aplicación.
-  const scripts = (pagina.scripts ?? []).map((ruta) => `<script src="${ruta}" defer></script>`).join("");
+  // Solo los scripts propios: el contador de visitas (docs/visitas.md) y los que pide la página
+  // (el botón de privacidad), nunca la aplicación.
+  const scripts = [CONTADOR_DE_VISITAS, ...(pagina.scripts ?? [])]
+    .map((ruta) => `<script src="${ruta}" defer></script>`)
+    .join("");
   return `${cabecera}${scripts}</head>\n  <body class="pagina-texto">${bloqueDeTexto(pagina, actualizado)}</body>\n</html>\n`;
 }
 

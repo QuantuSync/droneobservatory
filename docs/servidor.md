@@ -10,9 +10,10 @@ cero con una sola orden.
 | | |
 | --- | --- |
 | Servidor | `eodi-recogida`, tipo CX33 (4 núcleos compartidos, 8 GB de memoria, 80 GB de disco), Núremberg (`nbg1`), Ubuntu 26.04 LTS, IPv4 2.28.197.102 |
-| Cortafuegos de Hetzner | `eodi-recogida` (11710690): solo entran SSH (TCP 22), HTTP (80) y HTTPS (443, ntfy); lo demás, cerrado |
+| Cortafuegos de Hetzner | `eodi-recogida` (11710690): solo entran SSH (TCP 22), HTTP (80) y HTTPS (443, ntfy y el contador de visitas); lo demás, cerrado |
 | Cortafuegos del servidor | nftables, tabla `inet eodi` (`/etc/nftables.conf`, de `endurecer.sh`): solo entran SSH, HTTP y HTTPS (estos dos, para ntfy), lo que responde a una conexión abierta, el ICMP imprescindible y DHCP; nada se reenvía. Se carga solo al arrancar |
-| Avisos públicos | ntfy 2.29 (repositorio oficial `archive.ntfy.sh`) en `127.0.0.1:2586` y Caddy delante con HTTPS de Let's Encrypt, en https://ntfy.droneobservatory.eu; topes de 300M; `servidor/ntfy.sh` y [avisos.md](avisos.md) |
+| Avisos públicos | ntfy 2.29 (repositorio oficial `archive.ntfy.sh`) en `127.0.0.1:2586` y Caddy delante con HTTPS de Let's Encrypt, en https://ntfy.droneobservatory.eu; topes de 300M; métricas internas solo en `127.0.0.1:9095`; `servidor/ntfy.sh` y [avisos.md](avisos.md) |
+| Contador de visitas | GoatCounter 2.7.0 (binario oficial comprobado por su huella, con SQLite) en `127.0.0.1:8081`, usuario `goatcounter`, base en `/var/lib/goatcounter`, detrás del mismo Caddy en https://stats.droneobservatory.eu (panel privado); tope de 300M; resumen diario privado por ntfy (`eodi-visitas`); `servidor/visitas.sh` y [visitas.md](visitas.md) |
 | Copias de Hetzner | Imagen diaria del servidor entero, siete guardadas, ventana de 22:00 a 02:00 UTC (desde el 5 de octubre de 2026; apartado «Copias del servidor en Hetzner») |
 | Usuario `eodi` | Ejecuta el observatorio. Sin privilegios, sin contraseña y sin entrada por SSH |
 | Usuario `operador` | Administra: entra por SSH con clave y usa `sudo` |
@@ -63,7 +64,9 @@ En `/home/eodi`:
     `vercel_gancho` (la dirección secreta del gancho de despliegue de Vercel), apartado «Datos
     publicados»;
   - `vigilancia.json`, `replica.json` y `prueba_restauracion.json`: los registros de la
-    vigilancia, de la segunda copia y de la prueba de restauración semanal.
+    vigilancia, de la segunda copia y de la prueba de restauración semanal;
+  - `visitas.json`: el último resumen diario enviado (o su error) y la última copia de la base de
+    visitas ([visitas.md](visitas.md)).
 - `base/`, con permisos 700 y propiedad de `eodi`: la base de datos en disco (`eodi.sqlite`), la
   versión que sustituyó el último guardado (`eodi.anterior.sqlite`) y las copias de trabajo de
   cada sesión (`trabajo/`), apartado «Base de datos».
@@ -106,6 +109,11 @@ En `/home/eodi`:
   cierres»).
 - `datos/seguimiento/`, con permisos 700 y propiedad de `eodi`: el archivo privado de la captura
   del seguimiento en directo (apartado «Captura del seguimiento en directo»).
+- `datos/visitas/`, con permisos 700 y propiedad de `eodi`: las muestras de suscriptores de ntfy
+  (`muestras_ntfy.jsonl`, 40 días), el recuento por canal de las notificaciones del navegador
+  (`ntfy_navegador.json`) y cuándo apareció cada incidente en la web (`publicados.json`), para el
+  resumen diario ([visitas.md](visitas.md)). La base del contador de visitas está fuera de
+  `/home/eodi`, en `/var/lib/goatcounter` (usuario `goatcounter`; `eodi` la lee por el grupo).
 - `datos/publicacion/`, con permisos 700 y propiedad de `eodi`: los ficheros públicos que escribe
   cada recogida, antes de subirlos al almacén o al repositorio (apartado «Datos publicados»). La
   detección en directo los lee de aquí.
@@ -997,6 +1005,7 @@ En `%USERPROFILE%\.eodi\`, fuera de cualquier repositorio:
 | `firms_map_key.txt` | Clave de la API de NASA FIRMS (32 caracteres); `reconstruir.sh` la añade como `EODI_FIRMS_MAP_KEY` al `extractor.env` del servidor. También es el secreto `EODI_FIRMS_MAP_KEY` del repositorio, para la recogida de emergencia |
 | `almacen.env` | Credenciales S3 del almacén público de Hetzner (`ALMACEN_ID=…` y `ALMACEN_SECRETO=…`, una por línea); las llevan al servidor `reconstruir.sh` y `preparar_almacen.sh` |
 | `alerts_in_ua_token.txt` | Token de la API de alerts.in.ua (secreto); `reconstruir.sh` lo deja en el servidor como `alerts_in_ua_token` (600) para `eodi-alertas` |
+| `goatcounter_lucas.txt` | Contraseña del usuario administrador (`lucasalanizpintos@gmail.com`) del panel de visitas https://stats.droneobservatory.eu (solo la contraseña, sin salto de línea al final; creada el 11 de octubre de 2026). Solo aquí: `reconstruir.sh` la pasa por la entrada estándar a `servidor/visitas.sh`, que la deja cifrada en la base de GoatCounter ([visitas.md](visitas.md)) |
 | `ntfy_lucas.txt` | Contraseña del usuario `lucas` de ntfy (avisos manuales; solo la contraseña, sin salto de línea al final). Solo aquí: `reconstruir.sh` la pasa por la entrada estándar a `servidor/ntfy.sh`, que la guarda cifrada en la base de usuarios de ntfy ([avisos.md](avisos.md)) |
 | `cloudflare_token.txt` | Token de la API de Cloudflare. Ya no se usa: el DNS está en Hetzner desde el 3 de octubre de 2026. Se borra al cerrar la cuenta de Cloudflare |
 | `r2_estado.env` | Credenciales S3 del bucket R2 anterior (`eodi-teselas`); ya no responden (401). En el servidor se borraron |
@@ -1025,7 +1034,10 @@ El script:
    adsb.lol, de la búsqueda dirigida de noticias, del motor de deducción y del barrido del
    catálogo vivo, de las tres piezas de la guerra por satélite (imágenes, luz nocturna y focos en
    vivo), el servicio de detección en directo de cierres, la captura del seguimiento en directo
-   y el temporizador de su archivo.
+   y el temporizador de su archivo;
+6. instala ntfy (`ntfy.sh`) y, detrás del mismo Caddy, el contador de visitas con su resumen diario
+   (`visitas.sh`, con la contraseña de `goatcounter_lucas.txt`). La base de visitas se restaura
+   después desde su copia ([visitas.md](visitas.md), «Copias»).
 
 Puede repetirse sobre un servidor que ya existe: deja igual lo que ya está y vuelve a
 aplicar la configuración. Para empezar de verdad desde cero se borra antes el servidor:
@@ -1233,7 +1245,7 @@ gestiona con la API de Hetzner Cloud y el mismo token del proyecto (`hcloud_toke
 | | |
 | --- | --- |
 | Servidores de nombres | `hydrogen.ns.hetzner.com` (213.133.100.98), `oxygen.ns.hetzner.com` (88.198.229.192), `helium.ns.hetzner.de` (193.47.99.5) |
-| Registros | [`configuracion/dns_droneobservatory.eu.zone`](../configuracion/dns_droneobservatory.eu.zone): web en Vercel (ápex A y `www` CNAME), CAA, correo de Arsys (MX, SPF, `autodiscover`, `autoconfig`, `webmail`) y `ntfy` (A y AAAA del servidor, para los avisos: [avisos.md](avisos.md)). La zona real tiene además un TXT `google-site-verification` que no está en el fichero: no usar `import-zonefile` sobre la zona existente |
+| Registros | [`configuracion/dns_droneobservatory.eu.zone`](../configuracion/dns_droneobservatory.eu.zone): web en Vercel (ápex A y `www` CNAME), CAA, correo de Arsys (MX, SPF, `autodiscover`, `autoconfig`, `webmail`) y `ntfy` y `stats` (A y AAAA del servidor, para los avisos y el contador de visitas: [avisos.md](avisos.md) y [visitas.md](visitas.md)), creados uno a uno con `hcloud zone rrset create`. La zona real tiene además un TXT `google-site-verification` que no está en el fichero: no usar `import-zonefile` sobre la zona existente |
 | TTL | 3600 s (1 hora) |
 | DNSSEC | No. El registro .eu no tiene registro DS del dominio |
 | Protección | La zona no se puede borrar sin quitar antes la protección |
@@ -1615,7 +1627,10 @@ Desde el 7 de octubre de 2026 (`recogida/vigilancia.py`, `recogida/salud.py`,
   alerts.in.ua sin respuesta correcta de la API en 15 minutos, con la unidad parada o con la API
   respondiendo 401 o 403, copia de la base o del archivo con más de 2 horas, segunda copia con más de 3 horas, disco al 75 % o más, prueba de restauración
   fallida o con más de 8 días, paso a solo disco fallido, versión citable del mes sin generar o
-  una publicada que cambia (apartado «Versiones citables de los datos abiertos»).
+  una publicada que cambia (apartado «Versiones citables de los datos abiertos»), y los del contador
+  de visitas: GoatCounter sin responder (`goatcounter`), resumen diario sin enviar a las 09:00 de
+  Madrid (`resumen`), copia de la base de visitas con más de 3 horas (`copia_visitas`) y panel o
+  tema privado abiertos sin usuario (`visitas_privadas`) ([visitas.md](visitas.md)).
 - **Avisos** (se ven, no son fallo): recogida con avisos (código 2) y por qué, y cuántos incidentes
   retiene la barrera de titulares.
 - **En GitHub**, `vigia-recogida` pasa cada 10 minutos: abre una incidencia por problema (y la
@@ -1646,8 +1661,9 @@ sudo -u eodi sh -c 'cd /home/eodi/droneobservatory && EODI_SEGUIMIENTO_DATOS=/ho
 
 `eodi-replica.timer` (minuto 47, `servidor/replica.sh`, `almacen/replica.py`) lleva a un bucket
 privado de Helsinki, `droneobservatory-replica` (`hel1`, configuracion/replica.json), las copias
-cifradas de la base (tal cual: `base/…`), el archivo del seguimiento con las rutas (cifrado con la
-clave pública age: `archivo/<clave>.age`) y la exportación semanal (`exportaciones/…`). Aplica por
+cifradas de la base (tal cual: `base/…`), el archivo del seguimiento con las rutas y las copias de la
+base de visitas (cifrado con la clave pública age: `archivo/<clave>.age`) y la exportación semanal
+(`exportaciones/…`). Aplica por
 su cuenta la retención de la base y nunca borra porque falte en el origen. No necesita la identidad
 age para cifrar. La primera pasada (7 de octubre de 2026) llevó 54 copias de la base y 211 objetos
 del archivo en 4,7 minutos, con 130 MB de memoria. No cuesta más: el precio base del almacenamiento

@@ -21,6 +21,11 @@ www          IN CNAME 60d65e86c6f6416c.vercel-dns-016.com.
 ntfy         IN A     2.28.197.102
 ntfy         IN AAAA  2a01:4f8:1c1e:bafa::1
 
+; Contador de visitas: GoatCounter en eodi-recogida (docs/visitas.md). Creados uno a uno con
+; `hcloud zone rrset create` el 11 de octubre de 2026, igual que los de ntfy.
+stats        IN A     2.28.197.102
+stats        IN AAAA  2a01:4f8:1c1e:bafa::1
+
 ; Correo del dominio en Arsys.
 @            IN MX    10 mx.serviciodecorreo.es.
 @            IN TXT   "v=spf1 include:_spf.serviciodecorreo.es ~all"
