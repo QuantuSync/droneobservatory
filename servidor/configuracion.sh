@@ -437,10 +437,12 @@ VETO_INTENTOS=5
 VETO_VENTANA="10m"
 VETO_DURACION="1h"
 VETO_MAXIMO="1w"
-# Diario de systemd: tope de disco y de antigüedad. Una recogida deja unas decenas de
-# líneas, así que el tope de antigüedad llega mucho antes que el de disco.
-DIARIO_MAXIMO="200M"
-DIARIO_ANTIGUEDAD="90day"
+# Diario de systemd: persistente, en un solo fichero para todos los usuarios, 30 días y 1 GB
+# como mucho (unos 30 MB al día medidos el 11 de octubre de 2026). Con un fichero por usuario
+# (lo de serie) y 200 MB, al llegar al tope journald borraba antes los archivos del usuario eodi:
+# del detalle de la recogida y del extractor solo quedaban las dos o tres últimas horas.
+DIARIO_MAXIMO="1G"
+DIARIO_ANTIGUEDAD="30day"
 
 # --- Red -----------------------------------------------------------------------------
 # Línea de /etc/gai.conf que da preferencia a las direcciones IPv4 (las IPv6 con IPv4
