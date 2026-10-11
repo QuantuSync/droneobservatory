@@ -153,7 +153,8 @@ escritos tal cual aparecen aquí, en español y sin acentos, aunque la fuente es
 idioma.
 - fuente: el número de la fuente de la que sale (1, 2 o 3).
 - frase: la frase de esa fuente que lo dice, copiada literalmente en su idioma, de 25 palabras \
-como máximo.
+como máximo. En es_incidente, si la fuente nombra el lugar o el país del suceso, elige una frase \
+que lo nombre: es la cita que se publica con el titular.
 - confianza: de 0 a 1, cuánto apoya la frase ese valor. Usa 0.9 o más solo si la frase lo dice \
 expresamente; 0.5 a 0.8 si se deduce con claridad; menos de 0.5 si es una suposición.
 

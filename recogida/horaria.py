@@ -60,6 +60,7 @@ from proceso import (
 from proceso.ataques import SENTIDO_UA_RU
 from proceso.extraccion import Parada
 from recogida import (
+    barrera,
     busqueda_dirigida,
     catalogo_vivo,
     criterio_presencia,
@@ -275,6 +276,9 @@ def principal(argumentos: list[str] | None = None) -> int:
     opciones.add_argument("--correo", required=True, help="correo del autor del commit de estado")
     opciones.add_argument("--repositorio", default=remoto.REPOSITORIO)
     opciones.add_argument("--estado", type=Path, help="estado de cada fuente, en JSON")
+    opciones.add_argument(
+        "--barrera", type=Path, help="estado de la barrera de titulares para la vigilancia"
+    )
     # Ensayo de punta a punta antes de fusionar un cambio de la recogida (docs/fusiones.md):
     # sobre una copia local de la base, publica en una carpeta aparte y no sube nada.
     opciones.add_argument("--base", type=Path, help="db.age local en vez de la rama estado")
@@ -484,6 +488,10 @@ def principal(argumentos: list[str] | None = None) -> int:
         # Los ataques de cada noche para el cálculo de las rutas (su propio temporizador): un
         # fallo no cambia el código de salida.
         rutas.paso_horario(almacen)
+        # Barrera de titulares (recogida/barrera.py): el titular del artículo fuente como cita y
+        # lo retenido 6 horas, resuelto a nivel de país o descartado. No cambia el código de
+        # salida si falla.
+        revision_barrera = barrera.paso_horario(almacen, ahora, modelos(almacen))
         if args.estado is not None:
             escribir_parcial(args.estado, estados)
         cambiados = (
@@ -492,6 +500,15 @@ def principal(argumentos: list[str] | None = None) -> int:
             else publicar(almacen, ahora, args.ensayo)
         )
         registro.info("ficheros publicados con cambios: %d", len(cambiados))
+        destino_barrera = args.barrera if args.ensayo is None else args.ensayo / "barrera.json"
+        if destino_barrera is not None:
+            barrera.escribir_estado(
+                destino_barrera,
+                revision_barrera,
+                cambiados,
+                DIRECTORIO if args.ensayo is None else args.ensayo,
+                ahora,
+            )
         # La previsión, con lo recién publicado; si falla, queda la anterior con su fecha.
         prevision.paso_horario(almacen, ahora, DIRECTORIO if args.ensayo is None else args.ensayo)
         if args.ensayo is not None:

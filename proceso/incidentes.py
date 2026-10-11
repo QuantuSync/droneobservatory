@@ -33,9 +33,10 @@ from typing import Any
 
 from almacen.base import Almacen
 from esquema import Documento
-from proceso import fechas
+from proceso import cita_titular, fechas
 from proceso.credibilidad import Declaracion, Fiabilidad, Postura, credibilidad
 from proceso.estados import Estado, nuevo_estado
+from proceso.fronteras import nombres_del_pais
 from proceso.noticias import filtro, normalizar
 from proceso.ubicacion import Ubicacion
 from proceso.validacion_ficha import Validada, leer_fecha
@@ -103,16 +104,48 @@ def credibilidad_noticias(n: int) -> int:
     return int(credibilidad(declaraciones))
 
 
+def nombres_del_suceso(ficha: Validada) -> list[str]:
+    """El país y el lugar del suceso según la ficha: lo que la cita tiene que nombrar."""
+    suceso = ficha.valor("lugar_suceso")
+    lugar = {
+        "suceso": suceso.get("nombre") if isinstance(suceso, dict) else None,
+        "localidad": ficha.valor("localidad"),
+        "region": suceso.get("region") if isinstance(suceso, dict) else None,
+    }
+    return [
+        *nombres_del_pais(ficha.pais or ""),
+        *cita_titular.nombres_del_lugar({"lugar": lugar}),
+    ]
+
+
+def cita_con_lugar(frases: list[str], titular: str, nombres: list[str], medio: str = "") -> str:
+    """La cita de una fuente, comprobada: la primera de sus frases que nombra el lugar o el país
+    del suceso; si ninguna lo nombra y el titular del artículo sí, el titular (tal como está
+    guardado, sin el nombre del medio); si tampoco, la primera frase, como antes. Así la cita
+    respalda el titular del incidente (proceso/cita_titular.py) siempre que la fuente lo permite."""
+    for frase in frases:
+        if cita_titular.nombra([frase], nombres):
+            return frase
+    limpio = cita_titular.titular_limpio(titular, medio)
+    if limpio and cita_titular.nombra([limpio], nombres):
+        return limpio
+    return frases[0] if frases else titular
+
+
 def fuentes_incidente(
     articulos: list[Documento], enviadas: list[str], ficha: Validada
 ) -> list[Documento]:
-    """Una fuente por artículo con idioma conocido; las enviadas llevan sus campos y frase."""
+    """Una fuente por artículo con idioma conocido; las enviadas llevan sus campos y frase. La
+    frase de cada fuente es la que nombra el lugar o el país del suceso (cita_con_lugar), con la
+    de es_incidente delante."""
     por_fuente: dict[str, list[str]] = defaultdict(list)
-    frases: dict[str, str] = {}
-    for nombre, campo in ficha.campos.items():
+    frases: dict[str, list[str]] = defaultdict(list)
+    for nombre, campo in sorted(ficha.campos.items(), key=lambda c: c[0] != "es_incidente"):
         url = enviadas[campo["fuente"] - 1]
         por_fuente[url].append(nombre)
-        frases.setdefault(url, campo["frase"])
+        if campo.get("frase"):
+            frases[url].append(campo["frase"])
+    nombres = nombres_del_suceso(ficha)
     utiles = [a for a in articulos if a.get("idioma")]
     nivel = credibilidad_noticias(len(utiles))
     resultado = []
@@ -126,7 +159,9 @@ def fuentes_incidente(
             "idioma": articulo["idioma"],
             "fiabilidad": FIABILIDAD_NOTICIAS,
             "credibilidad": nivel,
-            "frase_origen": _frase(frases.get(url) or str(articulo["titular"])),
+            "frase_origen": _frase(
+                cita_con_lugar(frases[url], str(articulo["titular"]), nombres, articulo["medio"])
+            ),
             "replicas": articulo.get("replicas", 0),
             "es_autoridad": False,
             "interna_fuera_de_ucrania": False,

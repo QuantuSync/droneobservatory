@@ -811,7 +811,9 @@ export const en: Textos = {
                 "position is almost never known. If the source only names the country, the " +
                 "region or the sea, the incident is drawn with its own approximate-location " +
                 "marker (a hollow ring with a dot) at the centre of that area, and its record " +
-                "says the level and where it comes from. Every piece of data keeps who says it: for " +
+                "says the level and where it comes from. If the source does not allow an " +
+                "incident to be placed precisely, it is published at country level with an " +
+                "approximate location. Every piece of data keeps who says it: for " +
                 "each source we store the fact, a short source sentence in its own language " +
                 "and the link, never the full text.",
             ],

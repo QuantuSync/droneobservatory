@@ -122,7 +122,7 @@ principal() {
 
   GIT_SSH_COMMAND="$ssh_base -i $DESPLIEGUE_DATOS" \
     "$python" -m recogida.horaria --correo "$CORREO" --repositorio "$URL_DATOS" \
-    --estado "$ESTADO_PARCIAL" || codigo=$?
+    --estado "$ESTADO_PARCIAL" --barrera "$SECRETOS/barrera.json" || codigo=$?
   # Un aviso no frena la publicación. Con cualquier otro código de error no se publica.
   if [ "$codigo" -ne 0 ] && [ "$codigo" -ne "$SALIDA_AVISO" ]; then
     echo "la recogida falló con código $codigo: no se publica"

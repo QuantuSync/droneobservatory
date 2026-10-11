@@ -13,6 +13,15 @@ motivo). La comprobación lee las citas en su escritura y también pasadas al al
 («София» casa con «Sofía») y con los nombres equivalentes de configuracion/nombres_equivalentes.json
 («Схипхол» es Schiphol), y la prueba fija de la integración continua la pasa por los ficheros
 publicados (tests/test_cita_titular.py; docs/informe_revision_contenido.md, bloque 1).
+
+Desde el 11 de octubre de 2026 también respalda el titular el titular del propio artículo de una
+de sus fuentes, tal como está guardado en la base (tabla `articulos`): nunca un texto del
+extractor ni el titular de un artículo que no es fuente del incidente. La recogida horaria lo
+guarda entonces como cita del incidente (recogida/barrera.py), y la ficha muestra la frase que
+respalda el titular. La primera frase del artículo no cuenta: la base no guarda el texto de los
+artículos. Lo que siga retenido 6 horas se resuelve solo (recogida/barrera.py): a nivel de país
+si algún texto de sus fuentes respalda el país, o descartado como no verificable si ninguno lo
+hace.
 """
 
 import json
@@ -22,11 +31,18 @@ from pathlib import Path
 
 from esquema import Documento
 from proceso.fronteras import nombres_del_pais
+from proceso.noticias import normalizar
 from proceso.validacion_ficha import nombrado_en
 
 CONFIGURACION = Path(__file__).resolve().parent.parent / "configuracion"
 EQUIVALENTES = CONFIGURACION / "nombres_equivalentes.json"
 REVISADOS = CONFIGURACION / "incidentes_revisados.json"
+REGIONES = CONFIGURACION / "regiones_localidades.json"
+# El final que añaden las páginas a sus titulares («… ᐉ Новини от Fakti.bg - България»,
+# «… | Diario X»): no es del titular. Tras un guion solo si nombra al medio («… - NRK»): «Tok fem
+# ulovlige droner ved Leknes lufthavn – avslørte ulovlige sjåfører» es un titular entero.
+_SUFIJO_PAGINA = re.compile(r"\s+(?:ᐉ|\|)\s.*$")
+_SUFIJO_GUION = re.compile(r"\s+[-–—]\s+([^-–—]{2,40})$")
 # Partes de guerra: la Fuerza Aérea de Ucrania y el Ministerio de Defensa ruso.
 PARTES_DE_GUERRA = re.compile(r"^(?:kpszsu|mod_russia)-")
 MIN_LETRAS = 4
@@ -82,6 +98,26 @@ def justificados(ruta: Path = REVISADOS) -> dict[str, str]:
     return {e["incidente"]: e["motivo"]["es"] for e in datos.get("titular_justificado", [])}
 
 
+@cache
+def regiones_del_pais(ruta: Path = REGIONES) -> dict[str, tuple[str, ...]]:
+    """Los nombres normalizados de las regiones de primer nivel de cada país (GeoNames)."""
+    datos = json.loads(ruta.read_text(encoding="utf-8"))
+    resultado: dict[str, list[str]] = {}
+    for region in datos["regiones"].values():
+        resultado.setdefault(region["pais"], []).extend(region["nombres"])
+    return {pais: tuple(dict.fromkeys(nombres)) for pais, nombres in resultado.items()}
+
+
+def titular_limpio(titular: str, medio: str = "") -> str:
+    """El titular del artículo sin el nombre del medio que le añade la página."""
+    limpio = _SUFIJO_PAGINA.sub("", " ".join(titular.split()))
+    nombre = medio.lower().removeprefix("www.").split(".")[0]
+    final = _SUFIJO_GUION.search(limpio)
+    if final and len(nombre) >= 2 and nombre in final[1].lower().replace(" ", ""):
+        limpio = limpio[: final.start()]
+    return limpio
+
+
 def _palabras(nombre: str) -> list[str]:
     return [p for p in re.findall(r"[^\W\d_]+", nombre) if len(p) >= MIN_LETRAS]
 
@@ -116,18 +152,69 @@ def _formas(nombres: list[str]) -> list[str]:
     return resultado
 
 
-def respalda(incidente: Documento) -> bool:
-    """Alguna cita nombra el país, el lugar o un nombre propio del titular."""
-    textos = citas(incidente)
+def _con_latino(textos: list[str]) -> list[str]:
+    return [*textos, *(latino(t) for t in textos if not t.isascii())]
+
+
+def nombra(textos: list[str], nombres: list[str]) -> bool:
+    """Algún texto nombra alguno de los nombres (o una de sus formas en otra lengua)."""
+    escritos = _con_latino([t for t in textos if t])
+    formas = _formas(nombres)
+    return any(nombrado_en(nombre, texto) for nombre in formas for texto in escritos)
+
+
+def nombra_region(textos: list[str], pais: str) -> bool:
+    """Algún texto nombra una región de primer nivel del país, con las palabras enteras: sin
+    declinación, porque un nombre corto casaría con otra palabra («Ruse», provincia búlgara,
+    con «руски»)."""
+    escritos = [f" {normalizar(t)} " for t in _con_latino([t for t in textos if t])]
+    return any(
+        f" {region} " in texto
+        for region in regiones_del_pais().get(pais, ())
+        if len(region) >= MIN_LETRAS
+        for texto in escritos
+    )
+
+
+def nombra_el_pais(textos: list[str], pais: str) -> bool:
+    """Algún texto nombra el país o una de sus regiones: lo sitúa en ese país."""
+    return bool(pais) and (
+        nombra(textos, list(nombres_del_pais(pais))) or nombra_region(textos, pais)
+    )
+
+
+def respalda(incidente: Documento, otros: list[str] | None = None) -> bool:
+    """Alguna cita (u otro texto de sus fuentes, como el titular del artículo) nombra el país,
+    el lugar o un nombre propio del titular. Si el incidente solo se sitúa en su país, también
+    vale una región del país: el titular no afirma más."""
+    textos = [*citas(incidente), *(otros or [])]
     if not textos:
         return False
-    textos += [latino(t) for t in textos if not t.isascii()]
-    nombres = _formas([
-        *nombres_del_pais(incidente.get("lugar", {}).get("pais", "")),
-        *nombres_del_lugar(incidente),
-        *propios_del_titular(incidente),
-    ])  # fmt: skip
-    return any(nombrado_en(nombre, texto) for nombre in nombres for texto in textos)
+    lugar = incidente.get("lugar", {})
+    pais = lugar.get("pais", "")
+    nombres = [*nombres_del_pais(pais), *nombres_del_lugar(incidente),
+               *propios_del_titular(incidente)]  # fmt: skip
+    return nombra(textos, nombres) or (lugar.get("nivel") == "pais" and nombra_region(textos, pais))
+
+
+def titular_que_respalda(incidente: Documento, titulares: dict[str, str]) -> tuple[str, str] | None:
+    """(enlace, titular) del primer artículo fuente del incidente cuyo titular respalda el del
+    incidente. `titulares`: enlace -> titular guardado en la base; solo cuentan los de sus
+    propias fuentes públicas, nunca los de otro artículo."""
+    propias = {f["enlace"]: f.get("medio", "") for f in incidente.get("fuentes", [])
+               if f.get("enlace")}  # fmt: skip
+    for enlace, medio in propias.items():
+        titular = titular_limpio(titulares.get(enlace, ""), medio)
+        if titular and respalda({**incidente, "fuentes": [], "afirmaciones_publicas": [],
+                                 "afirmaciones": []}, [titular]):  # fmt: skip
+            return enlace, titular
+    return None
+
+
+def respalda_el_pais(incidente: Documento, otros: list[str]) -> bool:
+    """Algún texto de sus fuentes (citas o titulares de sus artículos) nombra el país del
+    suceso o una de sus regiones, aunque no nombre el lugar concreto."""
+    return nombra_el_pais([*citas(incidente), *otros], incidente.get("lugar", {}).get("pais", ""))
 
 
 def publicable(incidente: Documento) -> bool:
