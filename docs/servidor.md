@@ -317,6 +317,12 @@ el repositorio de datos, de modo que un importador que leía ese repositorio lee
 Se descifra con la misma identidad age de la base. Ensayada entera el 7 de octubre de 2026:
 `exportacion.sh` en 130 s, espejo e importación en 2 s, misma huella del manifiesto.
 
+Desde el formato 1.9.0 (12 de octubre de 2026) la exportación lee también lo que dejan otros
+servicios fuera de la base: el archivo del seguimiento (`EODI_SEGUIMIENTO_DATOS`), las rutas
+(`EODI_RUTAS_DATOS`) y la previsión publicada (`EODI_PUBLICACION_DATOS`); `exportacion.sh` les
+pasa las carpetas de `configuracion.sh`. Qué lleva cada fichero, cómo se lee y la credencial de
+solo lectura de AEGIS: [`exportacion_aegis.md`](exportacion_aegis.md).
+
 Lanzarla a mano (por ejemplo, tras un fallo), como `operador`:
 
 ```
@@ -324,6 +330,10 @@ sudo systemctl start eodi-exportacion.service
 journalctl -u eodi-exportacion.service -n 40
 systemctl list-timers eodi-exportacion.timer
 ```
+
+Una segunda versión el mismo día (la del día ya existe y no se sobrescribe) lleva un sufijo
+`.N`; se lanza como trabajo de sesión con la orden de la unidad y `--version AAAA.MM.DD.N`
+(`EODI_EXPORTACION_VERSION` en `exportacion.sh`).
 
 ## Tráfico aéreo de adsb.lol y condiciones medidas
 

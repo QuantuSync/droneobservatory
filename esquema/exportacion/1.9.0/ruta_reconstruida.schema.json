@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:eodi:exportacion:1.9.0:ruta_reconstruida",
+  "title": "Ruta reconstruida de una noche con la Fuerza Aérea",
+  "description": "La reconstrucción de las rutas de una noche cerrada con los mensajes de seguimiento de la Fuerza Aérea de Ucrania (proceso/rutas/reconstruccion.py y recorridos.py), se publique o no en la web. Deducido por regla, con su versión. Incertidumbre: precision_km de cada tramo (el radio mayor de sus dos zonas) y, en validacion, el error medido contra las pistas de NEPTUN y contra la línea recta; con validacion.pasa false, la reconstrucción no mejora a la recta. Desde el formato 1.9.0.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "noche",
+    "fuente",
+    "publicada",
+    "ataques",
+    "tramos",
+    "recorridos",
+    "grupos",
+    "incertidumbre",
+    "procedencia",
+    "validacion"
+  ],
+  "properties": {
+    "noche": {
+      "type": "string",
+      "format": "date"
+    },
+    "fuente": {
+      "const": "fuerza_aerea"
+    },
+    "publicada": {
+      "type": "boolean"
+    },
+    "ataques": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "tramos": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "grupo",
+          "clase",
+          "tipo",
+          "desde",
+          "hasta",
+          "precision_km"
+        ],
+        "properties": {
+          "precision_km": {
+            "type": "number",
+            "minimum": 0
+          }
+        }
+      }
+    },
+    "recorridos": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "grupos": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "incertidumbre": {
+      "type": "string",
+      "minLength": 1
+    },
+    "procedencia": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "origen",
+        "metodo"
+      ],
+      "properties": {
+        "origen": {
+          "const": "deducido"
+        },
+        "metodo": {
+          "type": "string",
+          "minLength": 1
+        },
+        "regla": {
+          "type": "string"
+        },
+        "fuentes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "nota": {
+          "type": "string"
+        },
+        "fecha": {
+          "type": "string"
+        },
+        "estimacion": {
+          "type": "boolean"
+        },
+        "radar": {
+          "type": "boolean"
+        }
+      }
+    },
+    "validacion": {
+      "type": "object",
+      "required": [
+        "disponible"
+      ],
+      "properties": {
+        "disponible": {
+          "type": "boolean"
+        },
+        "pasa": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}
