@@ -809,6 +809,17 @@ export const es: Textos = {
           },
           {
             parrafo: [
+              "Cubre todo el suelo europeo, también fuera del continente: Canarias, Ceuta, " +
+                "Melilla y los peñones (España); Azores y Madeira (Portugal); Guadalupe, " +
+                "Martinica, la Guayana Francesa, Reunión, Mayotte y San Martín (Francia); " +
+                "Gibraltar y las bases de Akrotiri y Dhekelia en Chipre (Reino Unido); " +
+                "Groenlandia (Dinamarca) y Svalbard (Noruega). Cada territorio cuenta como el país " +
+                "del que depende. El mapa se abre en Europa: lo de ultramar se ve al alejar o al " +
+                "filtrar por país.",
+            ],
+          },
+          {
+            parrafo: [
               "Solo drones. No se registran globos, misiles, aviones tripulados, punteros " +
                 "láser ni interferencias de señal sin dron, y tampoco los vuelos autorizados " +
                 "o los accidentes de drones propios en maniobras.",

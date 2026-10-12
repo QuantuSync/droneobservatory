@@ -800,6 +800,17 @@ export const en: Textos = {
           },
           {
             parrafo: [
+              "It covers all European soil, also outside the continent: the Canary Islands, " +
+                "Ceuta, Melilla and the peñones (Spain); the Azores and Madeira (Portugal); " +
+                "Guadeloupe, Martinique, French Guiana, Réunion, Mayotte and Saint Martin " +
+                "(France); Gibraltar and the Akrotiri and Dhekelia bases in Cyprus (United " +
+                "Kingdom); Greenland (Denmark) and Svalbard (Norway). Each territory counts as the " +
+                "country it belongs to. The map opens on Europe: overseas incidents show when you " +
+                "zoom out or filter by country.",
+            ],
+          },
+          {
+            parrafo: [
               "Drones only. Balloons, missiles, crewed aircraft, laser pointers and signal " +
                 "interference without a drone are not recorded, and neither are authorised " +
                 "flights or accidents involving a force's own drones during exercises.",

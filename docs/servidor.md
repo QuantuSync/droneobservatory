@@ -187,6 +187,26 @@ recogida siguiente (bash lo lee entero al empezar: en realidad, desde la otra). 
 si cambian `instalar.sh`, `endurecer.sh` o `configuracion.sh`, hay que volver a ejecutar
 `reconstruir.sh`.
 
+## Suelo europeo fuera del continente
+
+Desde el 12 de octubre de 2026 el observatorio cubre todo el suelo europeo
+([`configuracion/territorios.json`](../configuracion/territorios.json),
+[`proceso/territorios.py`](../proceso/territorios.py)): Canarias, Ceuta, Melilla y los peñones
+(ES), Azores y Madeira (PT), Guadalupe, Martinica, la Guayana Francesa, Reunión, Mayotte y San
+Martín (FR), Gibraltar y las bases de Akrotiri y Dhekelia (GB), Groenlandia (DK) y Svalbard (NO).
+Cada territorio cuenta como su país: GDELT los lee con su país (`medios_europa.json`), el
+nomenclátor tiene sus aeropuertos, bases y localidades con su región, las fronteras los meten en su
+país, la ficha lee un código de territorio («GI», «RE», «GL»…) como su país, un lugar británico
+dentro de Chipre vale con Reino Unido, y la hora local es la del territorio. Los incidentes ya
+guardados con el país de antes los corrige cada recogida (`recogida/suelo_europeo.py`, con su
+motivo en el historial). Los avisos van al canal de su país y a drones-europe. El mapa se abre en
+Europa; sus límites llegan a la Guayana, Reunión y Mayotte.
+
+**Artículos dirigidos.** Las fuentes de un incidente que no trajo GDELT se apuntan en
+`configuracion/articulos_dirigidos.json` (apartado «La recogida horaria»). Así entraron el 12 de
+octubre de 2026 el cierre de Lublin y Rzeszów del día 10 (EODI-2026-00511) y Roissy y Le Bourget
+del día 11 (EODI-2026-00510).
+
 ## Base de datos
 
 Informe: [`informe_base_en_hetzner.md`](informe_base_en_hetzner.md). La base es un fichero
