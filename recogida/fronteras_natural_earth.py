@@ -6,7 +6,9 @@ del polígono del país del incidente (`proceso/fronteras.py`). Se guardan:
 - los polígonos de cada país de la recogida, con las unidades que Natural Earth
   separa y que el observatorio cuenta dentro del país (Åland en Finlandia, las
   Feroe en Dinamarca, Jersey, Guernsey y Man en el Reino Unido, el norte de Chipre
-  y las bases británicas en Chipre);
+  en Chipre) y los territorios fuera del continente que son suelo europeo de su país
+  (Gibraltar y las bases británicas de Chipre en el Reino Unido, Groenlandia en
+  Dinamarca, la parte francesa de San Martín en Francia), sin Clipperton;
 - los polígonos de los demás países cuya caja toca Europa, para saber si un punto
   que no cae en su país está en el mar o en tierra de otro;
 - los nombres de todos los países del mundo en los idiomas de Natural Earth, para
@@ -49,9 +51,27 @@ UNIDADES_DE = {
     "IM": "GB",
     "Northern Cyprus": "CY",
     "Cyprus No Mans Area": "CY",
-    "Dhekelia Sovereign Base Area": "CY",
-    "Akrotiri Sovereign Base Area": "CY",
 }
+# Territorios fuera del continente que Natural Earth separa y que son suelo europeo de su
+# país: Gibraltar y las bases soberanas de Akrotiri y Dhekelia (Reino Unido), Groenlandia
+# (Dinamarca) y la parte francesa de San Martín. Los departamentos de ultramar franceses,
+# Svalbard, Canarias, Ceuta, Melilla, Azores y Madeira ya van dentro de su país. Sus
+# nombres cuentan como nombres de su país (nombres_por_pais).
+TERRITORIOS = {
+    "GI": "GB",
+    "Dhekelia Sovereign Base Area": "GB",
+    "Akrotiri Sovereign Base Area": "GB",
+    "GL": "DK",
+    "MF": "FR",
+}
+# Territorios que nombran un sitio, no una extensión grande: sus nombres no se bloquean
+# como nombres de país («Gibraltar» y «Akrotiri» son también la ciudad y el pueblo).
+# «Greenland» o «Saint-Martin» siguen sin situar nada, como el nombre de un país.
+NOMBRES_QUE_SITUAN = frozenset(
+    {"GI", "Dhekelia Sovereign Base Area", "Akrotiri Sovereign Base Area"}
+)
+# Partes de un país que quedan fuera del observatorio: Clipperton, en el Pacífico.
+FUERA = frozenset({"Clipperton Island"})
 SIN_CODIGO = "-99"
 # Nombre del país en un idioma: NAME_DE, NAME_ZHT. El vietnamita escribe los nombres con
 # sílabas sueltas de dos o tres letras que son palabras corrientes en otros idiomas y
@@ -95,12 +115,16 @@ def generar(coleccion: dict[str, Any], paises: set[str]) -> dict[str, Any]:
     de_cada: dict[str, set[str]] = {p: set() for p in propios}
     for feature in coleccion["features"]:
         propiedades = feature["properties"]
-        todos |= nombres(propiedades)
-        codigo = UNIDADES_DE.get(_codigo(propiedades), _codigo(propiedades))
+        propio = _codigo(propiedades)
+        if propio not in NOMBRES_QUE_SITUAN:
+            todos |= nombres(propiedades)
+        if propiedades.get("ADMIN") in FUERA:
+            continue
+        codigo = UNIDADES_DE.get(propio) or TERRITORIOS.get(propio) or propio
         poligonos = _poligonos(feature["geometry"])
         if codigo in propios:
             propios[codigo] += poligonos
-            if codigo == _codigo(propiedades):
+            if codigo == propio or propio in TERRITORIOS:
                 de_cada[codigo] |= nombres(propiedades)
             continue
         cerca = [p for p in poligonos if _toca_europa(p)]
@@ -134,7 +158,7 @@ def principal(argumentos: list[str] | None = None) -> int:
         texto = args.desde.read_text(encoding="utf-8")
     else:
         texto = Descargador(agente=AGENTE_EODI).texto(FUENTE, lambda t: t.startswith("{"))
-    # Los de la recogida de noticias y los del nomenclátor (Gibraltar tiene su aeropuerto).
+    # Los de la recogida de noticias y los del nomenclátor.
     paises = set(cajas_paises()) | set(configuracion()["paises"].values())
     paises |= {sitio.pais for sitio in nomenclator().lugares.values()}
     datos = generar(json.loads(texto), paises)
