@@ -75,6 +75,10 @@ npx mapshaper ne_50m_land.geojson -clip bbox=-80,10,110,85 -simplify 25% keep-sh
   -clean -dissolve -o precision=0.01 tierra.geojson
 ```
 
+Desde octubre de 2026 `tierra.geojson` lleva además, como último elemento, la tierra de
+`ne_50m_land` entre 25° S y 10° N (longitud −80 a 110), recortada y simplificada (0,04°): la Guayana
+Francesa, Reunión y Mayotte, que son suelo europeo (configuracion/territorios.json).
+
 ## Seguridad
 
 - Ningún texto de las fuentes se inserta como HTML: el lint prohíbe
