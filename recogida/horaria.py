@@ -68,6 +68,7 @@ from proceso import (
 from proceso.ataques import SENTIDO_UA_RU
 from proceso.extraccion import Parada
 from recogida import (
+    articulos_dirigidos,
     barrera,
     busqueda_dirigida,
     catalogo_vivo,
@@ -411,6 +412,11 @@ def principal(argumentos: list[str] | None = None) -> int:
             estados["oficiales"] = EstadoFuente(
                 CON_AVISO if avisos_oficiales else LEIDA, confirmaciones.ultima
             )
+        # Fuentes apuntadas a mano para incidentes que no trajo GDELT: entran como artículos de
+        # su lugar y el extractor las lleva delante (recogida/articulos_dirigidos.py).
+        dirigidos = paso("artículos dirigidos", articulos_dirigidos.paso_horario, almacen, ahora)
+        if dirigidos:
+            registro.info("artículos dirigidos incorporados: %d", dirigidos)
         # Una vez por versión: criterio de presencia, titulares y un incidente por noche de
         # cierre en lo ya guardado (recogida/criterio_presencia.py), antes del extractor para
         # que extraiga en esta pasada los candidatos que se separan.

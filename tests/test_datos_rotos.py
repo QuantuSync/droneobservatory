@@ -341,3 +341,21 @@ def test_goatcounter_caido_el_resumen_sale_igual(tmp_path: Path) -> None:
 def test_ficha_valida_tras_los_fallos() -> None:
     """La ficha de ejemplo sigue siendo la del servicio (si cambia, estas pruebas no prueban)."""
     assert ficha.leer_respuesta(respuesta(ficha_ejemplo()))
+
+
+# --- Artículos dirigidos ----------------------------------------------------------------------
+def test_un_articulo_dirigido_entra_una_vez_y_va_delante(almacen: Almacen, tmp_path: Path) -> None:
+    from recogida import articulos_dirigidos
+
+    ruta = tmp_path / "dirigidos.json"
+    articulo_ = {
+        "url": "https://medio.dk/nyhed/dirigida", "medio": "medio.dk",
+        "fecha": "2025-09-23T05:00:00Z", "idioma": "da", "pais": "DK", "titular": TITULAR,
+        "lugar": "EKCH",
+    }  # fmt: skip
+    roto = {**articulo_, "url": "https://medio.dk/sin-lugar", "lugar": "NO-EXISTE"}
+    ruta.write_text(json.dumps({"articulos": [articulo_, roto]}), encoding="utf-8")
+    assert articulos_dirigidos.paso_horario(almacen, AHORA, ruta) == 1
+    assert articulos_dirigidos.paso_horario(almacen, AHORA, ruta) == 0
+    (candidato,) = articulos_dirigidos.candidatos(almacen)
+    assert extractor.prioritarios(almacen)[0]["id"] == candidato
