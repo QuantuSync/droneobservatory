@@ -1,0 +1,25 @@
+{
+ "descripcion": "Fuentes de incidentes que no trajo GDELT, apuntadas a mano para que entren por el flujo normal (recogida/articulos_dirigidos.py): artículo del lugar, candidato, extractor, validación, barrera y publicación. Cada una con su dirección, medio, fecha de publicación (UTC), idioma, país del medio, titular literal y el lugar del nomenclátor donde ocurre. El estado lo dan solo las fuentes oficiales; nada se atribuye por deducción.",
+ "articulos": [
+  {
+   "url": "https://www.rmf24.pl/regiony/news-polskie-mysliwce-w-gorze-rosjanie-ponownie-zaatakowali-ukrai,nIdn,1021327",
+   "medio": "rmf24.pl",
+   "fecha": "2026-10-10T16:55:00Z",
+   "idioma": "pl",
+   "pais": "PL",
+   "titular": "Polskie myśliwce w górze. Rosjanie ponownie zaatakowali Ukrainę",
+   "lugar": "EPRZ",
+   "motivo": "10 oct 2026: la PAŻP informó de que los aeropuertos de Lublin y Rzeszów suspendieron las operaciones por la actividad de la aviación militar durante el ataque ruso contra el oeste de Ucrania; el Mando Operativo dice que no hubo violación del espacio aéreo. No llegó por GDELT."
+  },
+  {
+   "url": "https://www.ouest-france.fr/societe/faits-divers/info-ouest-france-roissy-puis-le-bourget-deux-drones-ont-survole-les-abords-de-ces-aeroports-parisiens-dimanche-53ec5120-c63f-11f1-92e9-819eb738846b",
+   "medio": "ouest-france.fr",
+   "fecha": "2026-10-12T08:00:00Z",
+   "idioma": "fr",
+   "pais": "FR",
+   "titular": "Info Ouest-France. Roissy puis Le Bourget : deux drones ont survolé les abords de ces aéroports parisiens dimanche",
+   "lugar": "LFPG",
+   "motivo": "11 oct 2026: exclusiva de Ouest-France sobre dos drones cerca de Roissy-Charles-de-Gaulle y Le Bourget; sin confirmación oficial encontrada (notificado por la prensa como mucho). No llegó por GDELT."
+  }
+ ]
+}
