@@ -141,9 +141,12 @@ const ZOOM_MAXIMO = 16;
 /**
  * Límites del desplazamiento. Son mucho más anchos que Europa porque MapLibre no deja ver
  * nada fuera de ellos: en una pantalla ancha, unos límites ajustados obligarían a acercar
- * el mapa hasta cortar el continente por arriba y por abajo.
+ * el mapa hasta cortar el continente por arriba y por abajo. Llegan al suelo europeo de fuera del
+ * continente (configuracion/territorios.json): la Guayana Francesa por el oeste y el sur, Reunión
+ * y Mayotte por el sur y el este, Groenlandia y Svalbard por el norte. La vista inicial sigue
+ * siendo Europa: los puntos de ultramar se ven al alejar o al filtrar por país.
  */
-const LIMITES: [number, number, number, number] = [-75, 12, 105, 83];
+const LIMITES: [number, number, number, number] = [-80, -25, 110, 85];
 /** Zoom al que vuela el mapa al abrir la ficha de un incidente, si estaba más lejos. */
 const ZOOM_DE_FICHA = 8;
 const DURACION_VUELO_MS = 1100;

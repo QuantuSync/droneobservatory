@@ -287,9 +287,11 @@ def construir(
     primera = fuentes[0]
     # El día del suceso, comprobado con la frase que lo dice (proceso/fechas.py): si la frase
     # no escribe el día, la fecha es la de publicación, aproximada, y así se declara.
+    punto = ubicacion.sitio
     resolucion = fechas.inicio_de_ficha(
-        ficha.campos, enviadas, articulos, candidato["inicio"], ubicacion.pais
-    )
+        ficha.campos, enviadas, articulos, candidato["inicio"], ubicacion.pais,
+        punto.lat if punto else None, punto.lon if punto else None,
+    )  # fmt: skip
     inicio = _instante(resolucion.valor, resolucion.precision)
     tiempo: Documento = {"inicio": inicio, "origen_inicio": origen_inicio(resolucion, enviadas,
                                                                           ficha)}  # fmt: skip
