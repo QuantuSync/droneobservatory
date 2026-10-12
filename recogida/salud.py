@@ -6,24 +6,26 @@ la última recogida correcta. Esa hora avanza con cada recogida correcta, traiga
 nuevos; la fecha de la rama estado, en cambio, no avanza cuando la base no cambia, y daba
 avisos falsos.
 
-Hay problema si la última recogida correcta tiene más de dos horas o si el fichero no
-responde en tres intentos espaciados. Una recogida fallida o con avisos no es problema
-mientras haya una correcta reciente.
+Hay problema si la última recogida que publicó (correcta o con avisos: `ultima_publicacion`,
+o `ultima_correcta` en un estado antiguo) tiene más de tres horas o si el fichero no responde en
+tres intentos espaciados. Una recogida fallida no es problema mientras otra haya publicado hace
+poco: systemd la repite sola a los 10 y a los 25 minutos.
 
 Aparte, la exportación semanal para AEGIS: hay problema si la última correcta
-(ultima_exportacion) tiene más de 8 días o no consta ninguna, y también en cuanto la última
-ha fallado (exportacion_fallida, posterior a la última correcta): el aviso sale en la primera
-vigilancia tras la recogida siguiente al fallo. Si estado.json no responde o
-aún no trae el campo, eso lo cuenta la comprobación de la recogida y aquí no se avisa.
+(ultima_exportacion) tiene más de 8 días o no consta ninguna, y también cuando la última ha
+fallado (exportacion_fallida, posterior a la última correcta) y han pasado 4 horas sin que sus
+reintentos (servidor/reintentos.sh: 3 intentos, 20 minutos entre ellos) la arreglen. Si
+estado.json no responde o aún no trae el campo, eso lo cuenta la comprobación de la recogida y aquí
+no se avisa.
 
 Y la detección en directo de cierres (recogida/directo.py), que publica directo.json cada
 minuto: hay problema si su última publicación tiene más de media hora o si no responde.
 
 Y la captura del seguimiento en directo (recogida/seguimiento.py), por `seguimiento` de
 estado.json: hay problema si no está en marcha (más de 10 minutos sin un heartbeat del flujo de
-NEPTUN cuando se compuso el estado) o si en las dos últimas horas ha habido un hueco de más de 10
-minutos (el servicio lo anota al reconectar, también tras estar parado). Si estado.json no
-responde o aún no trae el campo, aquí no se avisa.
+NEPTUN cuando se compuso el estado). Un hueco de más de 10 minutos en las dos últimas horas que ya
+se ha recuperado (el servicio lo anota al reconectar) se arregló solo: se cuenta en la frase y no es
+problema. Si estado.json no responde o aún no trae el campo, aquí no se avisa.
 
 Lo usan el workflow de tests, que lo deja en su resumen, y el workflow vigia-recogida, que
 abre o cierra las incidencias con lo que escribe en su salida (`problema` y `mensaje` de la
@@ -71,11 +73,14 @@ TITULO_SEGUIMIENTO = "### Captura del seguimiento en directo"
 # Un hueco largo cuenta como problema durante dos horas: lo ve al menos una pasada del vigía
 # (minuto 41) con el estado de la recogida siguiente (hacia el minuto 33).
 HUECO_RECIENTE = timedelta(hours=2)
-# La recogida es horaria: dos horas sin una correcta son dos recogidas seguidas que no lo
-# han sido (o que no se han lanzado).
-MAX_SIN_CORRECTA = timedelta(hours=2)
+# La recogida es horaria y cada una se reintenta dos veces: tres horas sin publicar son tres
+# recogidas seguidas que no lo han conseguido ni con sus reintentos (o que no se han lanzado).
+MAX_SIN_CORRECTA = timedelta(hours=3)
 # La exportación es semanal: ocho días dan un día de margen sobre el lunes siguiente.
 MAX_SIN_EXPORTACION = timedelta(days=8)
+# Una exportación fallida se reintenta sola dos veces (hasta 90 minutos cada una): cuatro horas
+# después de fallar, ya no se ha arreglado sola.
+ESPERA_EXPORTACION = timedelta(hours=4)
 DIA = timedelta(days=1)
 HORA = timedelta(hours=1)
 # Tres intentos con un minuto entre ellos: un fallo de red o del bucket de unos segundos no
@@ -134,13 +139,13 @@ def diagnostico(estado: dict[str, Any] | None, ahora: datetime) -> Estado:
     """Si la recogida está al día y la frase que lo cuenta."""
     if estado is None:
         return False, f"estado.json no responde tras {INTENTOS} intentos espaciados."
-    ultima = _instante(estado.get("ultima_correcta"))
+    ultima = _instante(estado.get("ultima_publicacion") or estado.get("ultima_correcta"))
     ultima_frase = f"La última recogida ({estado.get('resultado')}) terminó el {estado.get('fin')}"
     if ultima is None:
-        return False, f"{ultima_frase} y no consta ninguna recogida correcta."
+        return False, f"{ultima_frase} y no consta ninguna recogida que publicara."
     horas = (ahora - ultima) / HORA
     frase = (
-        f"{ultima_frase}; la última correcta, el {ultima:%Y-%m-%d %H:%M} UTC, hace {horas:.1f} h"
+        f"{ultima_frase}; la última que publicó, el {ultima:%Y-%m-%d %H:%M} UTC, hace {horas:.1f} h"
     )
     if ahora - ultima > MAX_SIN_CORRECTA:
         return False, f"{frase}: más de {MAX_SIN_CORRECTA / HORA:.0f} h."
@@ -153,6 +158,15 @@ def diagnostico_exportacion(estado: dict[str, Any] | None, ahora: datetime) -> E
         return True, "estado.json no informa de la exportación semanal: no se comprueba."
     ultima = _instante(estado.get("ultima_exportacion"))
     fallida = _instante(estado.get("exportacion_fallida"))
+    if (
+        fallida is not None
+        and (ultima is None or fallida > ultima)
+        and ahora - fallida < ESPERA_EXPORTACION
+    ):
+        return True, (
+            f"La exportación semanal falló el {fallida:%Y-%m-%d %H:%M} UTC y se está reintentando "
+            "sola."
+        )
     if fallida is not None and (ultima is None or fallida > ultima):
         correcta = (
             f"la última correcta, el {ultima:%Y-%m-%d %H:%M} UTC"
@@ -208,9 +222,9 @@ def diagnostico_seguimiento(estado: dict[str, Any] | None, ahora: datetime) -> E
         return False, f"{frase}: más de 10 minutos sin heartbeat del flujo de NEPTUN."
     if hasta is not None and ahora - hasta <= HUECO_RECIENTE:
         assert isinstance(hueco, dict)
-        return False, (
-            f"{frase}, pero estuvo sin datos del flujo de {hueco.get('desde')} a "
-            f"{hueco.get('hasta')}: más de 10 minutos."
+        return True, (
+            f"{frase}; estuvo sin datos del flujo de {hueco.get('desde')} a {hueco.get('hasta')} "
+            "y se recuperó solo."
         )
     return True, f"{frase}."
 

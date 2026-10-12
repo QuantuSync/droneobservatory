@@ -464,6 +464,15 @@ def lugar(id_: str, nom: Nomenclator) -> Lugar:
     return Lugar(id_, GKG, nombre, float(lat), float(lon), RADIO_GKG_KM[tipo], pais, (), ())
 
 
+def lugar_conocido(id_: str, nom: Nomenclator) -> Lugar | None:
+    """Como `lugar`, o None si el nomenclátor ya no lo tiene (salió en una versión anterior) o el
+    identificador del GKG está mal formado: un lugar así no tumba la agrupación de los demás."""
+    try:
+        return lugar(id_, nom)
+    except (KeyError, ValueError):
+        return None
+
+
 def lugares_articulo(
     titular: str, nom: Nomenclator, filtro_: "Filtro", gkg: tuple[str, ...] = ()
 ) -> tuple[str, ...]:
@@ -519,7 +528,7 @@ def agrupar(
     suceso: por eso la precisión es de día."""
     resultado = agrupacion or Agrupacion()
     for articulo in sorted(articulos, key=lambda a: (a.fecha, a.url)):
-        sitios = [lugar(id_, nom) for id_ in articulo.lugares]
+        sitios = [s for id_ in articulo.lugares if (s := lugar_conocido(id_, nom)) is not None]
         # Varias instalaciones de un mismo país en un titular («drones over Esbjerg, Sønderborg
         # and Skrydstrup») son varios objetivos de una misma noche: el artículo va a cada uno.
         # Varios lugares de otra clase, o de varios países, serían una agrupación dudosa.

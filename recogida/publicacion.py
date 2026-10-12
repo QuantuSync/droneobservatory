@@ -25,7 +25,13 @@ los metadatos del objeto. La huella del manifiesto es la de lo subido.
 `comparar` comprueba que lo que sirve el almacén es idéntico, byte a byte, a una carpeta (la de
 publicacion/ del clon en el modo `doble`, tras el commit) con su licencia.
 
+Con `--reserva`, sube a la copia pública de reserva de Helsinki en vez de al principal: lo hace
+servidor/recogida.sh cuando el principal de Núremberg no acepta la publicación, para que la web
+(que sirve desde la reserva si el principal no responde) tenga lo nuevo igualmente. Lleva su
+propio registro: cuando el principal vuelve, la recogida siguiente le sube lo que ha cambiado.
+
 Uso: python -m recogida.publicacion subir --carpeta <dir> [--gancho <fichero>] [--registro <json>]
+         [--reserva]
      python -m recogida.publicacion comparar --carpeta <dir>
 """
 
@@ -234,6 +240,7 @@ def principal(argumentos: list[str] | None = None) -> int:
     s.add_argument("--carpeta", type=Path, required=True)
     s.add_argument("--registro", type=Path)
     s.add_argument("--gancho", type=Path)
+    s.add_argument("--reserva", action="store_true", help="a la copia de reserva de Helsinki")
     c = sub.add_parser("comparar")
     c.add_argument("--carpeta", type=Path, required=True)
     args = opciones.parse_args(argumentos)
@@ -251,7 +258,10 @@ def principal(argumentos: list[str] | None = None) -> int:
         registro.error("sin credenciales del almacén: no se publica en el almacén")
         return 1
     anterior = leer_registro(args.registro)
-    correcto, nuevo, cambiado = subir(args.carpeta, datetime.now(UTC), clave_id, secreto, anterior)
+    destino = almacen_publico.cargar_reserva() if args.reserva else almacen_publico.cargar()
+    correcto, nuevo, cambiado = subir(
+        args.carpeta, datetime.now(UTC), clave_id, secreto, anterior, destino
+    )
     if not correcto:
         registro.error("publicación en el almacén incompleta: la web no cambia")
         return 1

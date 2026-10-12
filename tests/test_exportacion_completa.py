@@ -208,10 +208,15 @@ def test_estado_json_publica_el_fallo_solo_si_es_posterior_a_la_ultima_correcta(
     assert "exportacion_fallida" not in estado.componer(fin, fin, 0, None, None, 17, {}, True)
 
 
-def test_la_vigilancia_avisa_del_fallo_sin_esperar_a_los_8_dias() -> None:
-    ahora = datetime(2026, 10, 5, 4, 41, tzinfo=UTC)
+def test_la_vigilancia_avisa_del_fallo_tras_sus_reintentos_sin_esperar_a_los_8_dias() -> None:
     publicado = {"ultima_exportacion": "2026-10-04T03:42Z",
                  "exportacion_fallida": "2026-10-05T03:48Z"}  # fmt: skip
+    # Recién fallada se está reintentando sola: aún no es problema.
+    al_dia, frase = salud.diagnostico_exportacion(
+        publicado, datetime(2026, 10, 5, 4, 41, tzinfo=UTC)
+    )
+    assert al_dia and "reintentando" in frase
+    ahora = datetime(2026, 10, 5, 7, 50, tzinfo=UTC)
     al_dia, frase = salud.diagnostico_exportacion(publicado, ahora)
     assert not al_dia and "falló el 2026-10-05 03:48 UTC" in frase
     resuelto = {**publicado, "ultima_exportacion": "2026-10-05T09:00Z"}

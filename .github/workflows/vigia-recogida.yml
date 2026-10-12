@@ -4,18 +4,20 @@ name: vigia-recogida
 # publica en el almacén público (recogida/salud.py):
 #
 # - salud.json (recogida/vigilancia.py, cada 5 minutos): si no llega o tiene más de 20 minutos,
-#   el servidor no da señales; si trae un problema (datos sin publicar en 2 horas, recogida
-#   fallida, captura del seguimiento parada más de 10 minutos, copia de la base o del archivo sin
-#   hacer, disco por encima del 75 %), es un problema. Sus avisos (recogida con avisos, titulares
-#   retenidos) se enseñan en el resumen sin ser fallo;
-# - estado.json (al final de cada recogida): última recogida correcta, exportación semanal y
-#   captura del seguimiento;
+#   el servidor no da señales; si trae un problema, es un problema. El servidor solo los pone ahí
+#   cuando no se han arreglado solos (3 recogidas seguidas fallidas tras sus reintentos, más de 3
+#   horas sin publicar, o un fallo que sigue igual tras los reintentos de su unidad). Sus avisos
+#   (en observación, recogida con avisos, titulares retenidos) se enseñan en el resumen sin ser
+#   fallo;
+# - estado.json (al final de cada recogida): última recogida que publicó (más de 3 horas es
+#   problema), exportación semanal (tras sus reintentos) y captura del seguimiento;
 # - directo.json: la detección en directo de cierres.
 #
-# Cada problema abre su incidencia (una sola mientras dure) y la cierra al arreglarse. Además el
-# trabajo FALLA cuando hay un problema y en esa pasada se abre una incidencia nueva, y después una
-# vez por hora (pasada de los minutos 0 a 9) mientras siga: GitHub manda al dueño el correo de
-# «Run failed» de cada fallo. Así el aviso llega en unos 10 minutos y no cada 10 minutos.
+# Cada problema abre su incidencia (una sola mientras dure) y la cierra al arreglarse: GitHub manda
+# al dueño el correo de la incidencia nueva. El trabajo NO falla por un problema del observatorio
+# (así no llegan correos de «Run failed» además de la incidencia); solo falla si el propio vigía no
+# puede hacer su trabajo, y eso sí conviene que llegue. Lo que se arregló solo va al resumen diario
+# privado (recogida/visitas.py, sección SISTEMA), sin correo.
 #
 # GitHub puede lanzar tarde o saltarse alguna ejecución programada: el aviso llega tarde, pero
 # llega. Y desactiva las programaciones de un repositorio público sin actividad en 60 días: una
@@ -119,6 +121,7 @@ jobs:
             "cómo ver si todo va bien" "El servidor vuelve a estar bien."
           echo "nuevas=$nuevas" >> "$GITHUB_OUTPUT"
           echo "problemas=$problemas" >> "$GITHUB_OUTPUT"
+          echo "problemas: $problemas, incidencias nuevas: $nuevas (el aviso al dueño es la incidencia)"
       # Una vez al día, la pasada de las 06:00 a 06:09: GitHub desactiva las programaciones de un
       # repositorio sin actividad en 60 días, y desde que los datos no van al repositorio puede
       # pasar semanas sin commits.
@@ -131,14 +134,3 @@ jobs:
             gh api -X PUT "repos/${{ github.repository }}/actions/workflows/vigia-recogida.yml/enable"
             echo "programación reactivada"
           fi
-      - name: Avisar al dueño
-        env:
-          NUEVAS: ${{ steps.incidencias.outputs.nuevas }}
-          PROBLEMAS: ${{ steps.incidencias.outputs.problemas }}
-        run: |
-          minuto="$(date -u +%M)"
-          if [ "$PROBLEMAS" -gt 0 ] && { [ "$NUEVAS" -gt 0 ] || [ "${minuto#0}" -lt 10 ]; }; then
-            echo "::error::$PROBLEMAS problemas (incidencias nuevas: $NUEVAS). Detalle en las incidencias abiertas del repositorio."
-            exit 1
-          fi
-          echo "sin aviso al dueño: problemas $PROBLEMAS, incidencias nuevas $NUEVAS"

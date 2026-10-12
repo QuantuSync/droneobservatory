@@ -50,6 +50,7 @@ def test_estado_de_una_recogida_correcta() -> None:
         "fin": "2026-09-30T18:24Z",
         "resultado": "correcta",
         "ultima_correcta": "2026-09-30T18:24Z",
+        "ultima_publicacion": "2026-09-30T18:24Z",
         "siguiente": "2026-09-30T19:17Z",
         "fuentes": [
             {"id": "fuerza_aerea_ua", "estado": "leida", "ultimo_dato": "2026-09-30T05:01Z"},

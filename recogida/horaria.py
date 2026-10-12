@@ -29,6 +29,12 @@ el servicio de luces (`recogida/luces.py`).
 Con --estado, deja escrito cómo fue cada fuente y la fecha de su último dato, para el
 estado del sistema que publica el servidor (`recogida/estado.py`).
 
+Cada paso va aislado (`Pasos`): si uno falla por algo inesperado, queda en el registro con su
+traza, la recogida sigue con los demás, guarda la base, publica y termina con código 2. Solo
+termina con código 1 cuando no se puede publicar nada: sin base, sin poder generar ningún fichero
+publicado o sin poder guardar la base. Entonces systemd la repite sola a los 10 y a los 25
+minutos (docs/servidor.md, «Reintentos»).
+
 Uso: python -m recogida.horaria --correo <correo del autor> [--repositorio <url>]
     [--estado <json>]
 """
@@ -36,9 +42,11 @@ Uso: python -m recogida.horaria --correo <correo del autor> [--repositorio <url>
 import argparse
 import logging
 import sys
+from collections.abc import Callable
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from typing import Any, TypeVar
 
 from almacen import remoto, sitio
 from almacen.base import Almacen
@@ -92,6 +100,7 @@ from recogida.parte import vocabulario
 from recogida.plazo import Plazo, TiempoAgotado
 
 registro = logging.getLogger("recogida")
+T = TypeVar("T")
 
 # Código de salida cuando la ejecución termina con avisos (una fuente que no pudo leerse,
 # un error del extractor): lo demás se lee, la base se sube y el workflow publica, pero
@@ -104,6 +113,29 @@ NO_LEIDA_PARTE = (
 )  # fmt: skip
 # Una franja de GDELT dura 15 minutos: su último dato es el final de la última leída.
 FRANJA_GDELT = timedelta(minutes=15)
+# Lo que aporta al estado un paso de varias fuentes que falla entero.
+SIN_ESTADOS: dict[str, EstadoFuente] = {}
+
+
+class Pasos:
+    """Ejecuta cada paso aislado: un fallo inesperado queda en el registro con su traza, se
+    anota y la recogida sigue con los demás."""
+
+    def __init__(self) -> None:
+        self.fallidos: list[str] = []
+
+    def __call__(self, nombre: str, funcion: Callable[..., T], *args: Any) -> T | None:
+        try:
+            return funcion(*args)
+        except Exception:
+            registro.exception("paso fallido (%s): la recogida sigue con los demás", nombre)
+            self.fallidos.append(nombre)
+            return None
+
+    def o(self, defecto: T, nombre: str, funcion: Callable[..., T], *args: Any) -> T:
+        """Como llamar al paso, con lo que vale si falla."""
+        resultado = self(nombre, funcion, *args)
+        return defecto if resultado is None else resultado
 
 
 def ultimo_dato(almacen: Almacen, cursor: str, campo: str) -> datetime | None:
@@ -298,6 +330,7 @@ def principal(argumentos: list[str] | None = None) -> int:
             return 1
         almacen = abierta
         antes = sitio.marca(almacen)
+        paso = Pasos()
         descargador, cache = Descargador(), CachePaginas()
         estados: dict[str, EstadoFuente] = {}
         for fuente in FUENTES:
@@ -309,7 +342,12 @@ def principal(argumentos: list[str] | None = None) -> int:
             except NO_LEIDA_PARTE as error:
                 registro.warning("%s no se lee: %s", fuente.id, error)
                 salida, leida = SALIDA_AVISO, NO_LEIDA
-            estados[fuente.id] = EstadoFuente(leida, ultimo_dato(almacen, fuente.id, "fecha"))
+            except Exception:
+                registro.exception("%s no se lee: fallo inesperado", fuente.id)
+                salida, leida = SALIDA_AVISO, NO_LEIDA
+            estados[fuente.id] = EstadoFuente(
+                leida, paso(f"cursor de {fuente.id}", ultimo_dato, almacen, fuente.id, "fecha")
+            )
         # Periodos de los partes comprobados y partes de resumen marcados (no se suman).
         try:
             registro.info("periodos de los partes: %s", periodos.revisar(almacen, ahora))
@@ -317,7 +355,8 @@ def principal(argumentos: list[str] | None = None) -> int:
             registro.warning("periodos de los partes sin revisar: %s", str(error)[:300])
         # Los tramos del ministerio que ya cubre un total, o que se solapan, no se suman.
         registro.info(
-            "tramos con enlace cambiado: %d", solapes.enlazar(almacen, SENTIDO_UA_RU, ahora)
+            "tramos con enlace cambiado: %s",
+            paso("tramos solapados", solapes.enlazar, almacen, SENTIDO_UA_RU, ahora),
         )
         # Zonas de lanzamiento con su nombre normalizado (una vez por versión de la tabla) y
         # registro de los nombres que no reconoce.
@@ -340,25 +379,38 @@ def principal(argumentos: list[str] | None = None) -> int:
         except gdelt.GdeltNoDisponible as error:
             registro.warning("gdelt no se lee: %s", error)
             salida, estado_gdelt = SALIDA_AVISO, CON_AVISO
-        franja = ultimo_dato(almacen, gdelt.FUENTE_ID, "franja")
+        except Exception:
+            # Un fichero corrupto o un fallo inesperado: la franja se reintenta en la siguiente.
+            registro.exception("gdelt no se lee: fallo inesperado")
+            salida, estado_gdelt = SALIDA_AVISO, NO_LEIDA
+        franja = paso("cursor de gdelt", ultimo_dato, almacen, gdelt.FUENTE_ID, "franja")
         estados[gdelt.FUENTE_ID] = EstadoFuente(estado_gdelt, franja and franja + FRANJA_GDELT)
         # Un cruce que cuenta solo el parte ucraniano queda en su ataque, no es un incidente:
         # se retiran las altas que se hacían con él (proceso/incursiones.py).
         registro.info(
-            "incursiones del parte retiradas: %d",
-            incursiones.retirar(almacen, ahora, modelos(almacen)),
+            "incursiones del parte retiradas: %s",
+            paso(
+                "incursiones del parte",
+                lambda: incursiones.retirar(almacen, ahora, modelos(almacen)),
+            ),
         )
         # Confirmaciones oficiales de los incidentes que ya hay. Si no da tiempo a leer
         # todas las fuentes se avisa: lo normal es que sobre más de la mitad del tope.
-        confirmaciones = oficiales.ejecutar(
-            almacen, ahora, modelos(almacen), plazo=Plazo(oficiales.TOPE_S)
+        confirmaciones = paso(
+            "confirmaciones oficiales",
+            lambda: oficiales.ejecutar(
+                almacen, ahora, modelos(almacen), plazo=Plazo(oficiales.TOPE_S)
+            ),
         )
-        if confirmaciones.sin_leer:
-            salida = SALIDA_AVISO
-        avisos_oficiales = confirmaciones.sin_leer or confirmaciones.bloqueadas
-        estados["oficiales"] = EstadoFuente(
-            CON_AVISO if avisos_oficiales else LEIDA, confirmaciones.ultima
-        )
+        if confirmaciones is None:
+            estados["oficiales"] = EstadoFuente(NO_LEIDA, None)
+        else:
+            if confirmaciones.sin_leer:
+                salida = SALIDA_AVISO
+            avisos_oficiales = confirmaciones.sin_leer or confirmaciones.bloqueadas
+            estados["oficiales"] = EstadoFuente(
+                CON_AVISO if avisos_oficiales else LEIDA, confirmaciones.ultima
+            )
         # Una vez por versión: criterio de presencia, titulares y un incidente por noche de
         # cierre en lo ya guardado (recogida/criterio_presencia.py), antes del extractor para
         # que extraiga en esta pasada los candidatos que se separan.
@@ -394,15 +446,19 @@ def principal(argumentos: list[str] | None = None) -> int:
                 else NO_LEIDA if resultado.parada is Parada.ERROR
                 else CON_AVISO
             )  # fmt: skip
-        estados["extractor"] = EstadoFuente(estado_extractor, ultima_llamada(almacen))
+        estados["extractor"] = EstadoFuente(
+            estado_extractor, paso("última llamada", ultima_llamada, almacen)
+        )
         # Fuentes oficiales de detalle: lo que dejó en disco su temporizador entra en la base y
         # se cruza con los incidentes; lo nuevo se extrae con lo que deje del límite diario el
         # extractor de noticias. Como FIRMS, no cambia el código de salida.
-        estados.update(paso_detalle(almacen, ahora))
+        estados.update(paso.o(SIN_ESTADOS, "fuentes de detalle", paso_detalle, almacen, ahora))
         # Capa de guerra con lugar: no cambia el código de salida.
-        estados.update(paso_guerra(almacen, ahora))
+        estados.update(paso.o(SIN_ESTADOS, "capa de guerra", paso_guerra, almacen, ahora))
         # Anomalías térmicas: no cambian el código de salida.
-        estados[firms.FUENTE_ID] = paso_firms(almacen, ahora)
+        estados[firms.FUENTE_ID] = paso.o(
+            EstadoFuente(NO_LEIDA), "firms", paso_firms, almacen, ahora
+        )
         try:
             registro.info(
                 "credibilidad de impactos de guerra con foco: %d cambiados",
@@ -411,26 +467,34 @@ def principal(argumentos: list[str] | None = None) -> int:
         except Exception as error:
             registro.warning("credibilidad con focos fallida: %s", error)
         # Tráfico aéreo y condiciones medidas: tampoco cambian el código de salida.
-        estados[mediciones.FUENTE_TRAFICO] = mediciones.paso_trafico(almacen, ahora)
-        estados[mediciones.FUENTE_CONDICIONES] = mediciones.paso_condiciones(almacen, ahora)
+        estados[mediciones.FUENTE_TRAFICO] = paso.o(
+            EstadoFuente(NO_LEIDA), "tráfico aéreo", mediciones.paso_trafico, almacen, ahora
+        )
+        estados[mediciones.FUENTE_CONDICIONES] = paso.o(
+            EstadoFuente(NO_LEIDA),
+            "condiciones medidas",
+            mediciones.paso_condiciones,
+            almacen,
+            ahora,
+        )
         # Búsqueda dirigida: lo que halló su temporizador para los cierres medidos sin
         # incidente entra como artículos; y la lista de lo que falta buscar, al día.
-        paso_busqueda(almacen, ahora)
+        paso("búsqueda dirigida", paso_busqueda, almacen, ahora)
         # Avisos de la detección en directo: los que recoge un incidente de la base pasan a
         # confirmados (recogida/directo_horaria.py). No cambia el código de salida.
-        paso_directo(almacen, ahora)
+        paso("detección en directo", paso_directo, almacen, ahora)
         # Lo que dejó calculado el motor de deducción (su propio temporizador): no cambia el
         # código de salida si falla.
-        deduccion.paso_horario(almacen)
+        paso("deducción", deduccion.paso_horario, almacen)
         # Lo que dejó el barrido del catálogo vivo (su propio temporizador): tampoco cambia el
         # código de salida si falla.
-        catalogo_vivo.paso_horario(almacen)
+        paso("catálogo vivo", catalogo_vivo.paso_horario, almacen)
         # Pérdidas de luz nocturna que dejó medidas su temporizador: tampoco cambian el código
         # de salida si falla.
-        luces.paso_horario(almacen)
+        paso("luces", luces.paso_horario, almacen)
         # Los objetivos de las imágenes de satélite, para su temporizador (que así no carga la
         # base): tampoco cambian el código de salida si falla.
-        satelite.paso_horario(almacen)
+        paso("satélite", satelite.paso_horario, almacen)
         # Presencia del dron que confirman las declaraciones oficiales ya guardadas: la regla
         # se amplió y lo anterior se revisa en cada pasada; ya aplicada, no cambia nada.
         # Fusiones que las reglas de ahora ya no hacen (dos cierres de noches distintas, un cierre
@@ -469,12 +533,16 @@ def principal(argumentos: list[str] | None = None) -> int:
             revisados.corregir(almacen, ahora, modelos(almacen))
         except Exception as error:
             registro.warning("revisión del contenido sin aplicar: %s", str(error)[:300])
-        confirmadas, sin_guardar = presencia.revisar(almacen, ahora, modelos(almacen))
-        registro.info("presencia del dron confirmada por declaraciones: %d", len(confirmadas))
-        if sin_guardar:
-            registro.warning(
-                "presencia sin guardar en %d incidentes que no validan", len(sin_guardar)
-            )
+        revisada = paso(
+            "presencia del dron", lambda: presencia.revisar(almacen, ahora, modelos(almacen))
+        )
+        if revisada is not None:
+            confirmadas, sin_guardar = revisada
+            registro.info("presencia del dron confirmada por declaraciones: %d", len(confirmadas))
+            if sin_guardar:
+                registro.warning(
+                    "presencia sin guardar en %d incidentes que no validan", len(sin_guardar)
+                )
         # Incursiones en países fronterizos enlazadas con el ataque de su noche, en los dos
         # sentidos, con incidentes y partes ya rehechos.
         try:
@@ -492,33 +560,43 @@ def principal(argumentos: list[str] | None = None) -> int:
             registro.warning("frontera o interior sin calcular: %s", str(error)[:300])
         # Tipo de dron de cada incidente (proceso/tipo_dron), con la zona ya calculada. Un
         # fallo no cambia el código de salida: queda lo último guardado.
-        tipo_dron.paso_horario(almacen, ahora)
+        paso("tipo de dron", tipo_dron.paso_horario, almacen, ahora)
         # Los ataques de cada noche para el cálculo de las rutas (su propio temporizador): un
         # fallo no cambia el código de salida.
-        rutas.paso_horario(almacen)
+        paso("rutas", rutas.paso_horario, almacen)
         # Barrera de titulares (recogida/barrera.py): el titular del artículo fuente como cita y
         # lo retenido 6 horas, resuelto a nivel de país o descartado. No cambia el código de
         # salida si falla.
-        revision_barrera = barrera.paso_horario(almacen, ahora, modelos(almacen))
-        if args.estado is not None:
-            escribir_parcial(args.estado, estados)
-        cambiados = (
-            publicar(almacen, ahora)
-            if args.ensayo is None
-            else publicar(almacen, ahora, args.ensayo)
+        revision_barrera = paso(
+            "barrera de titulares", barrera.paso_horario, almacen, ahora, modelos(almacen)
         )
-        registro.info("ficheros publicados con cambios: %d", len(cambiados))
-        destino_barrera = args.barrera if args.ensayo is None else args.ensayo / "barrera.json"
-        if destino_barrera is not None:
-            barrera.escribir_estado(
-                destino_barrera,
-                revision_barrera,
-                cambiados,
-                DIRECTORIO if args.ensayo is None else args.ensayo,
-                ahora,
+        if args.estado is not None:
+            paso("estado de las fuentes", escribir_parcial, args.estado, estados)
+        # Sin ningún fichero publicado no hay nada que publicar: entonces, y solo entonces, la
+        # recogida termina con código 1 (después de guardar lo recogido) y systemd la repite.
+        directorio = DIRECTORIO if args.ensayo is None else args.ensayo
+        sin_generar: list[str] = []
+        try:
+            cambiados = (
+                publicar(almacen, ahora, fallidos=sin_generar)
+                if args.ensayo is None
+                else publicar(almacen, ahora, args.ensayo, fallidos=sin_generar)
             )
-        # La previsión, con lo recién publicado; si falla, queda la anterior con su fecha.
-        prevision.paso_horario(almacen, ahora, DIRECTORIO if args.ensayo is None else args.ensayo)
+            if sin_generar:
+                paso.fallidos.append("ficheros publicados: " + "; ".join(sin_generar))
+        except Exception:
+            registro.exception("no se pudo generar ningún fichero publicado: no se publica")
+            cambiados = None
+        if cambiados is not None:
+            registro.info("ficheros publicados con cambios: %d", len(cambiados))
+            destino_barrera = args.barrera if args.ensayo is None else args.ensayo / "barrera.json"
+            if destino_barrera is not None:
+                paso(
+                    "estado de la barrera", barrera.escribir_estado, destino_barrera,
+                    revision_barrera, cambiados, directorio, ahora,
+                )  # fmt: skip
+            # La previsión, con lo recién publicado; si falla, queda la anterior con su fecha.
+            paso("previsión", prevision.paso_horario, almacen, ahora, directorio)
         if args.ensayo is not None:
             registro.info("ensayo: base sin subir")
             # La exportación semanal sobre la base que deja esta recogida, sin subir nada: un
@@ -530,6 +608,14 @@ def principal(argumentos: list[str] | None = None) -> int:
         else:
             registro.info("base sin cambios")
         almacen.cerrar()
+    if paso.fallidos:
+        registro.warning(
+            "pasos fallidos en esta recogida (sin leer: %d): %s",
+            len(paso.fallidos), ", ".join(paso.fallidos),
+        )  # fmt: skip
+        salida = salida or SALIDA_AVISO
+    if cambiados is None:
+        return 1
     return salida
 
 

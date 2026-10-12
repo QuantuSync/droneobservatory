@@ -14,6 +14,12 @@ from recogida import reinicio, vigilancia
 AHORA = datetime(2026, 10, 7, 14, 50, tzinfo=UTC)
 
 
+@pytest.fixture(autouse=True)
+def sin_gracia(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Las pruebas de cada problema lo ven en su primera pasada; las de la espera la ponen."""
+    monkeypatch.setattr(vigilancia, "GRACIA", timedelta(0))
+
+
 def _iso(momento: datetime) -> str:
     return momento.strftime("%Y-%m-%dT%H:%M:%SZ")
 
@@ -28,9 +34,10 @@ class Sistema:
         diario: list[str],
         seguimiento: str = "active",
         alertas: str = "active",
+        recogida: str = "failed",
     ):
         self.codigo, self.fin, self.diario, self.seguimiento = codigo, fin, diario, seguimiento
-        self.alertas = alertas
+        self.alertas, self.recogida = alertas, recogida
 
     def __call__(self, orden: Sequence[str]) -> str:
         if orden[0] == "journalctl":
@@ -41,7 +48,7 @@ class Sistema:
             return f"ActiveState={self.alertas}\n"
         inicio = int((self.fin - timedelta(minutes=15)).timestamp())
         return (
-            f"ActiveState=failed\nExecMainStatus={self.codigo}\n"
+            f"ActiveState={self.recogida}\nExecMainStatus={self.codigo}\n"
             f"ExecMainStartTimestamp=@{inicio}\nExecMainExitTimestamp=@{int(self.fin.timestamp())}\n"
         )
 
@@ -103,6 +110,11 @@ def test_cada_problema_tiene_su_frase(tmp_path: Path) -> None:
     )
     (secretos / "versiones.json").write_text(
         json.dumps({"publicadas": [], "fallo": "2026-10-01T02:35:00Z sin red"}), encoding="utf-8"
+    )
+    # Dos recogidas anteriores también fallidas: con esta son tres seguidas.
+    anteriores = [{"fin": _iso(AHORA - timedelta(hours=h)), "codigo": 1} for h in (5, 4)]
+    (secretos / "vigilancia.json").write_text(
+        json.dumps({"recogidas": anteriores}), encoding="utf-8"
     )
     salud, _ = vigilancia.componer(
         AHORA, secretos, datos, tmp_path, sistema, lambda: AHORA - timedelta(hours=4)
@@ -271,3 +283,86 @@ def test_contador_de_visitas_resumen_y_su_copia(tmp_path: Path) -> None:
     problemas = {p["id"]: p["frase"] for p in salud["problemas"]}
     assert set(problemas) == {"resumen", "copia_visitas"}
     assert "2026-10-06" in problemas["resumen"] and "sin red" in problemas["resumen"]
+
+
+# --- Que se cura sola -------------------------------------------------------------------------
+def test_una_o_dos_recogidas_fallidas_son_aviso_y_la_tercera_problema(tmp_path: Path) -> None:
+    secretos, datos = preparar(tmp_path, AHORA, AHORA - timedelta(minutes=30))
+    copia = lambda: AHORA - timedelta(minutes=18)  # noqa: E731
+    for horas, esperado in ((2, "aviso"), (1, "aviso"), (0, "problema")):
+        fin = AHORA - timedelta(hours=horas, minutes=1)
+        salud, _ = vigilancia.componer(
+            fin + timedelta(minutes=1), secretos, datos, tmp_path, Sistema(1, fin, []), copia
+        )
+        ids = {p["id"] for p in salud["problemas"]}
+        avisos = {a["id"] for a in salud["avisos"]}
+        if esperado == "aviso":
+            assert "recogida" not in ids and "recogida_fallida" in avisos
+        else:
+            assert "recogida" in ids
+    # La siguiente publica: se acabó el problema y queda como resuelto para el resumen.
+    fin = AHORA + timedelta(hours=1)
+    salud, _ = vigilancia.componer(
+        fin + timedelta(minutes=1), secretos, datos, tmp_path, Sistema(0, fin, []), copia
+    )
+    assert "recogida" not in {p["id"] for p in salud["problemas"]}
+    memoria = json.loads((secretos / "vigilancia.json").read_text(encoding="utf-8"))
+    resueltos = {r["id"]: r for r in memoria["resueltos"]}
+    assert set(resueltos) == {"recogida", "publicacion"}
+    assert resueltos["recogida"]["incidencia"] is True
+
+
+def test_una_recogida_en_marcha_no_se_juzga(tmp_path: Path) -> None:
+    secretos, datos = preparar(tmp_path, AHORA, AHORA - timedelta(minutes=30))
+    copia = lambda: AHORA - timedelta(minutes=18)  # noqa: E731
+    anteriores = [{"fin": _iso(AHORA - timedelta(hours=h)), "codigo": 1} for h in (3, 2, 1)]
+    (secretos / "vigilancia.json").write_text(
+        json.dumps({"recogidas": anteriores, "ultima_publicacion": _iso(AHORA)}), encoding="utf-8"
+    )
+    # La unidad en marcha dice código 0 (systemd lo pone a cero al arrancar): no cierra nada.
+    en_marcha = Sistema(0, AHORA - timedelta(hours=1), [], recogida="activating")
+    salud, _ = vigilancia.componer(AHORA, secretos, datos, tmp_path, en_marcha, copia)
+    assert "recogida" in {p["id"] for p in salud["problemas"]}
+    assert salud["recogida"]["en_marcha"] is True
+
+
+def test_un_fallo_suelto_queda_en_observacion_y_luego_en_resueltos(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(vigilancia, "GRACIA", timedelta(minutes=30))
+    secretos, datos = preparar(tmp_path, AHORA, AHORA)
+    sistema = Sistema(0, AHORA - timedelta(minutes=10), [], alertas="failed")
+    copia = lambda: AHORA  # noqa: E731
+    salud, _ = vigilancia.componer(AHORA, secretos, datos, tmp_path, sistema, copia)
+    assert "alertas" not in {p["id"] for p in salud["problemas"]}
+    assert "observacion_alertas" in {a["id"] for a in salud["avisos"]}
+    # Sigue igual a los 30 minutos: ahora sí es problema.
+    despues = AHORA + timedelta(minutes=31)
+    salud, _ = vigilancia.componer(despues, secretos, datos, tmp_path, sistema, copia)
+    assert "alertas" in {p["id"] for p in salud["problemas"]}
+    # Se arregla: sale de los problemas y queda en resueltos con la incidencia que tuvo.
+    (secretos / "alertas.json").write_text(
+        json.dumps({"ultima_respuesta": _iso(despues)}), encoding="utf-8"
+    )
+    bien = Sistema(0, despues, [])
+    salud, _ = vigilancia.componer(despues, secretos, datos, tmp_path, bien, copia)
+    assert "alertas" not in {p["id"] for p in salud["problemas"]}
+    memoria = json.loads((secretos / "vigilancia.json").read_text(encoding="utf-8"))
+    assert [(r["id"], r["incidencia"]) for r in memoria["resueltos"]] == [("alertas", True)]
+
+
+def test_un_fallo_que_se_arregla_antes_de_la_espera_no_llega_a_incidencia(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(vigilancia, "GRACIA", timedelta(minutes=30))
+    secretos, datos = preparar(tmp_path, AHORA, AHORA)
+    copia = lambda: AHORA  # noqa: E731
+    mal = Sistema(0, AHORA - timedelta(minutes=10), [], seguimiento="failed")
+    vigilancia.componer(AHORA, secretos, datos, tmp_path, mal, copia)
+    bien = Sistema(0, AHORA - timedelta(minutes=10), [])
+    salud, _ = vigilancia.componer(
+        AHORA + timedelta(minutes=5), secretos, datos, tmp_path, bien, copia
+    )
+    assert salud["problemas"] == []
+    memoria = json.loads((secretos / "vigilancia.json").read_text(encoding="utf-8"))
+    assert [(r["id"], r["incidencia"]) for r in memoria["resueltos"]] == [("seguimiento", False)]

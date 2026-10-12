@@ -791,6 +791,8 @@ AccuracySec=1s
 [Install]
 WantedBy=timers.target
 FIN
+# Reintentos de todas las unidades y temporizadores persistentes (servidor/reintentos.sh).
+bash "$CLON/servidor/reintentos.sh"
 systemctl daemon-reload
 
 echo "instalación hecha"

@@ -47,6 +47,9 @@ fi
 if [ "$2" = recogida.publicacion ]; then
   printf '%s\n' "$*" >> "$PRUEBA_PUBLICACION_ARGS"
   [ "$3" = comparar ] && exit "${PRUEBA_COMPARAR_CODIGO:-0}"
+  case "$*" in
+    *--reserva*) exit "${PRUEBA_RESERVA_CODIGO:-${PRUEBA_PUBLICACION_CODIGO:-0}}" ;;
+  esac
   exit "${PRUEBA_PUBLICACION_CODIGO:-0}"
 fi
 if [ "$2" = recogida.almacen_publico ]; then
@@ -95,10 +98,14 @@ class Servidor:
         codigo_subida: int = 0,
         codigo_publicacion: int = 0,
         codigo_comparar: int = 0,
+        codigo_reserva: int | None = None,
     ) -> subprocess.CompletedProcess[str]:
         bin_ = self.secretos.parent / "bin"
         entorno = {
             **os.environ,
+            "PRUEBA_RESERVA_CODIGO": str(
+                codigo_publicacion if codigo_reserva is None else codigo_reserva
+            ),
             "EODI_PUBLICACION_DATOS": str(self.secretos.parent / "publicados"),
             "PRUEBA_PUBLICACION_ARGS": str(bin_ / "publicacion.args"),
             "PRUEBA_PUBLICACION_CODIGO": str(codigo_publicacion),
@@ -526,3 +533,15 @@ def test_en_modo_almacen_no_hay_commit_y_se_pide_la_reconstruccion(servidor: Ser
     assert servidor.recoger(cambio='{"ataques": 12}').returncode == 0
     assert servidor.commits() == antes + 1
     assert servidor.publicado() == '{"ataques": 12}'
+
+
+def test_con_el_principal_caido_publica_en_la_reserva_de_helsinki(servidor: Servidor) -> None:
+    (servidor.secretos / "almacen.env").write_text(ALMACEN, encoding="utf-8")
+    (servidor.secretos / "publicacion_modo").write_text("almacen", encoding="utf-8")
+    resultado = servidor.recoger(cambio='{"ataques": 13}', codigo_publicacion=1, codigo_reserva=0)
+    # Publicada en la reserva: con aviso (2), sin reintento.
+    assert resultado.returncode == SALIDA_AVISO, resultado.stdout
+    assert "publicados en la reserva de Helsinki" in resultado.stdout
+    principal, reserva = publicaciones(servidor)
+    assert "--reserva" not in principal
+    assert f"--registro {servidor.secretos}/publicacion_reserva.json --reserva" in reserva

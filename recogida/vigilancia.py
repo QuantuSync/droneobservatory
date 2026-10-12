@@ -6,10 +6,26 @@ público como `salud.json`. Lo lee el workflow vigia-recogida cada 10 minutos
 (recogida/salud.py): si el fichero deja de llegar, es que el servidor no está; si llega con un
 problema, el workflow falla y el dueño recibe el correo de GitHub.
 
+El observatorio se cura solo: cada servicio se reintenta (servidor/reintentos.sh) y la recogida
+se repite a los 10 y a los 25 minutos si falla. Por eso un problema solo pasa a `problemas` (y el
+vigía abre su incidencia, que llega por correo) cuando no se ha arreglado solo:
+
+- la recogida, cuando las 3 últimas recogidas terminadas (cada una tras sus reintentos) han
+  fallado; mientras una recogida está en marcha (o esperando su reintento) no se juzga: vale lo
+  que dijeron las terminadas;
+- la publicación, con más de 3 horas sin publicar;
+- los demás, cuando siguen igual tras GRACIA (30 minutos, varios reintentos de su unidad), salvo
+  los que no se arreglan solos por mucho que se espere (SIN_GRACIA).
+
+Mientras tanto van en `avisos` como «en observación». Lo que estuvo y se fue queda en el registro
+(`resueltos`, 8 días) para la sección SISTEMA del resumen diario privado (recogida/visitas.py), sin
+correo.
+
 Problemas (cada uno con su frase):
 
-- **publicación**: la última recogida que publicó (código 0 o 2) terminó hace más de 2 horas;
-- **recogida**: la última recogida terminó con un código distinto de 0 y 2;
+- **publicación**: la última recogida que publicó (código 0 o 2) terminó hace más de 3 horas;
+- **recogida**: las 3 últimas recogidas terminadas (tras sus reintentos) fallaron con un código
+  distinto de 0 y 2;
 - **seguimiento**: la captura del seguimiento no ha recibido nada en 10 minutos o su unidad no
   está en marcha;
 - **alertas**: el archivo de alertas de alerts.in.ua (recogida/alertas.py) no ha tenido una
@@ -52,7 +68,8 @@ Problemas (cada uno con su frase):
 - **mapa_parado**: hay incidentes de Europa con punto dados de alta después del último cambio de
   incidentes.geojson y ese cambio tiene más de 24 horas: lo nuevo no llega al mapa.
 
-Avisos (se ven, no son fallo): la última recogida terminó con avisos (código 2) y por qué (las
+Avisos (se ven, no son fallo): los problemas en observación, la última recogida falló pero aún no
+van 3 seguidas, la última recogida terminó con avisos (código 2) y por qué (las
 líneas de aviso de su diario: fuentes sin leer, tope de tiempo agotado), y cuántos incidentes
 retiene la barrera de titulares (proceso/cita_titular.py). El fichero es público: no lleva
 identificadores de incidentes sin publicar ni ningún contenido, solo horas, recuentos y frases
@@ -93,7 +110,18 @@ UNIDAD_RECOGIDA = "eodi-recogida.service"
 UNIDAD_SEGUIMIENTO = "eodi-seguimiento.service"
 UNIDAD_ALERTAS = "eodi-alertas.service"
 SALIDAS_QUE_PUBLICAN = frozenset({0, 2})
-MAX_SIN_PUBLICAR = timedelta(hours=2)
+MAX_SIN_PUBLICAR = timedelta(hours=3)
+# Recogidas terminadas (cada una tras sus reintentos) que tienen que fallar seguidas.
+MAX_RECOGIDAS_FALLIDAS = 3
+RECOGIDAS_ANOTADAS = 24
+# Tiempo que un problema tiene que seguir igual para no ser un fallo suelto que se arregla solo.
+GRACIA = timedelta(minutes=30)
+# Los que no se arreglan solos esperando, o que ya llevan su propia espera (publicación, recogida).
+SIN_GRACIA = frozenset({
+    "publicacion", "recogida", "visitas_privadas", "prueba_restauracion", "base_solo_disco",
+    "versiones", "barrera_resoluciones", "barrera_atascada", "mapa_parado",
+})  # fmt: skip
+DIAS_RESUELTOS = timedelta(days=8)
 MAX_SIN_RECIBIR = timedelta(minutes=10)
 # Las activas se consultan cada minuto: 15 minutos sin respuesta correcta son 15 consultas.
 MAX_SIN_ALERTAS = timedelta(minutes=15)
@@ -108,7 +136,9 @@ MAX_MAPA_SIN_CAMBIAR = timedelta(hours=24)
 BARRERA = "barrera.json"
 DISCO_AVISO_PCT = 75.0
 # Líneas del diario de la recogida que explican un código 2 y las de la barrera de titulares.
-AVISO_TOPE = re.compile(r"tope de \d+ s agotado|no se lee|sin leer: \d+|en rojo", re.I)
+AVISO_TOPE = re.compile(
+    r"tope de \d+ s agotado|no se lee|sin leer: \d+|en rojo|paso fallido|apartado|retirado", re.I
+)
 RETENIDO = re.compile(r"(EODI-\d{4}-\d{5}) no se publica: su cita no respalda el titular")
 
 URL_SALUD_NTFY = "https://ntfy.droneobservatory.eu/v1/health"
@@ -320,9 +350,13 @@ def componer(
             + ": más de 2 horas sin publicar.",
         })  # fmt: skip
     codigo = recogida["codigo"]
-    en_marcha = recogida["activa"] in ("activating", "active", "deactivating")
+    # En marcha o esperando su reintento («activating»): no se juzga, vale lo de las terminadas.
+    en_marcha = recogida["activa"] in ("activating", "active", "deactivating", "reloading")
     retenidos: list[str] = []
+    terminadas = [r for r in memoria.get("recogidas", []) if isinstance(r, dict)]
     if recogida["inicio"] is not None and recogida["fin"] is not None and not en_marcha:
+        if not terminadas or terminadas[-1].get("fin") != _iso(recogida["fin"]):
+            terminadas.append({"fin": _iso(recogida["fin"]), "codigo": codigo})
         lineas = diario_recogida(recogida["inicio"], ejecutar)
         frases, retenidos = avisos_del_diario(lineas)
         if codigo == 2:
@@ -331,11 +365,26 @@ def componer(
                 "frase": "La última recogida terminó con avisos (código 2): "
                 + ("; ".join(frases) if frases else "ver su diario") + ".",
             })  # fmt: skip
-        elif codigo not in (0, None):
-            problemas.append({
-                "id": "recogida",
-                "frase": f"La última recogida falló con el código {codigo} y no publicó.",
-            })  # fmt: skip
+    terminadas = terminadas[-RECOGIDAS_ANOTADAS:]
+    memoria["recogidas"] = terminadas
+    fallidas = 0
+    for anotada in reversed(terminadas):
+        if anotada.get("codigo") in SALIDAS_QUE_PUBLICAN:
+            break
+        fallidas += 1
+    if fallidas >= MAX_RECOGIDAS_FALLIDAS:
+        problemas.append({
+            "id": "recogida",
+            "frase": f"Las últimas {fallidas} recogidas fallaron, cada una tras sus reintentos "
+            f"(la última con el código {terminadas[-1].get('codigo')}), y no publicaron.",
+        })  # fmt: skip
+    elif fallidas:
+        avisos.append({
+            "id": "recogida_fallida",
+            "frase": f"La última recogida falló con el código {terminadas[-1].get('codigo')} tras "
+            f"sus reintentos ({fallidas} seguidas; incidencia a partir de "
+            f"{MAX_RECOGIDAS_FALLIDAS}).",
+        })  # fmt: skip
     if retenidos:
         avisos.append({
             "id": "titulares_retenidos",
@@ -480,6 +529,8 @@ def componer(
         })  # fmt: skip
 
     memoria["ultima_publicacion"] = _iso(ultima_publicacion)
+    problemas, observacion = persistentes(problemas, memoria, ahora)
+    avisos = observacion + avisos
     salud: dict[str, Any] = {
         "version": VERSION,
         "generado": _iso(ahora),
@@ -504,6 +555,50 @@ def componer(
     }
     _escribir(registro_ruta, memoria)
     return salud, detalle
+
+
+def persistentes(
+    problemas: list[dict[str, str]], memoria: dict[str, Any], ahora: datetime
+) -> tuple[list[dict[str, str]], list[dict[str, str]]]:
+    """Los problemas que no se han arreglado solos y los que siguen en observación (avisos).
+
+    Anota en `memoria` desde cuándo está abierto cada uno y, al irse, lo pasa a `resueltos` (con
+    si llegó a ser incidencia), para el resumen diario.
+    """
+    abiertos: dict[str, Any] = {
+        k: v for k, v in (memoria.get("abiertos") or {}).items() if isinstance(v, dict)
+    }
+    resueltos = [
+        r for r in memoria.get("resueltos", [])
+        if isinstance(r, dict)
+        and (hasta := _instante(r.get("hasta"))) is not None and ahora - hasta <= DIAS_RESUELTOS
+    ]  # fmt: skip
+    vistos: set[str] = set()
+    firmes: list[dict[str, str]] = []
+    observacion: list[dict[str, str]] = []
+    for problema in problemas:
+        id_ = problema["id"]
+        vistos.add(id_)
+        entrada = abiertos.setdefault(id_, {"desde": _iso(ahora), "incidencia": False})
+        entrada["frase"] = problema["frase"]
+        desde = _instante(entrada.get("desde")) or ahora
+        if id_ in SIN_GRACIA or ahora - desde >= GRACIA:
+            entrada["incidencia"] = True
+            firmes.append(problema)
+        else:
+            observacion.append({
+                "id": f"observacion_{id_}",
+                "frase": "En observación, se reintenta solo: " + problema["frase"],
+            })  # fmt: skip
+    for id_ in [i for i in abiertos if i not in vistos]:
+        entrada = abiertos.pop(id_)
+        resueltos.append({
+            "id": id_, "frase": entrada.get("frase", ""), "desde": entrada.get("desde"),
+            "hasta": _iso(ahora), "incidencia": bool(entrada.get("incidencia")),
+        })  # fmt: skip
+    memoria["abiertos"] = abiertos
+    memoria["resueltos"] = resueltos
+    return firmes, observacion
 
 
 def _escribir(ruta: Path, datos: dict[str, Any]) -> None:

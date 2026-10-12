@@ -51,17 +51,21 @@ publicar_estado() {
 # Sube los ficheros publicados al almacén público (recogida/publicacion.py) y, en el modo
 # almacen, pide a Vercel que reconstruya la web. Con las credenciales en el entorno.
 publicar_en_almacen() {
-  local modo="$1" gancho=()
+  local modo="$1" gancho=() destino=(--registro "$PUBLICACION_REGISTRO")
   [ -r "$ALMACEN_CREDENCIALES" ] || return 1
   if [ "$modo" = almacen ]; then
     gancho=(--gancho "$VERCEL_GANCHO")
+  fi
+  # Con «reserva», a la copia de Helsinki, con su propio registro.
+  if [ "${2:-}" = reserva ]; then
+    destino=(--registro "$PUBLICACION_REGISTRO_RESERVA" --reserva)
   fi
   (
     # shellcheck disable=SC1090
     . "$ALMACEN_CREDENCIALES"
     export ALMACEN_ID ALMACEN_SECRETO
     "$ESTADO_PYTHON" -m recogida.publicacion subir --carpeta "$PUBLICACION_DATOS" \
-      --registro "$PUBLICACION_REGISTRO" "${gancho[@]}"
+      "${destino[@]}" "${gancho[@]}"
   )
 }
 
@@ -164,7 +168,14 @@ principal() {
       fi
     else
       echo "aviso: los ficheros no se publicaron en el almacén"
-      if [ "$modo_pub" = almacen ] && [ "$codigo" -eq 0 ]; then
+      # El principal de Núremberg no los acepta: van directos a la reserva de Helsinki, de la que
+      # la web tira cuando el principal no responde. Si tampoco, la recogida falla (código 1) y
+      # systemd la repite sola.
+      if publicar_en_almacen "$modo_pub" reserva; then
+        echo "aviso: ficheros publicados en la reserva de Helsinki (el principal no responde)"
+        [ "$codigo" -eq 0 ] && codigo="$SALIDA_AVISO"
+      elif [ "$modo_pub" = almacen ]; then
+        echo "tampoco se publicaron en la reserva de Helsinki"
         codigo=1
       fi
     fi

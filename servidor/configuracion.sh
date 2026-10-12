@@ -59,6 +59,8 @@ export EODI_PUBLICACION_DIRECTORIO="$PUBLICACION_DATOS"
 PUBLICACION_INTERRUPTOR="$SECRETOS/publicacion_modo"
 # Lo último subido al almacén (manifiesto, hora e instantánea del día).
 PUBLICACION_REGISTRO="$SECRETOS/publicacion.json"
+# Lo subido a la reserva de Helsinki cuando el principal no acepta la publicación.
+PUBLICACION_REGISTRO_RESERVA="$SECRETOS/publicacion_reserva.json"
 # Gancho de despliegue de Vercel (una dirección secreta): reconstruye la web tras publicar.
 VERCEL_GANCHO="$SECRETOS/vercel_gancho"
 
