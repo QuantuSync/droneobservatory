@@ -45,6 +45,7 @@ from proceso.noticias import (
     normalizar,
     plegar,
 )
+from proceso.territorios import soberanos_dentro
 from proceso.validacion_ficha import (
     MIN_LETRAS_PALABRA,
     Validada,
@@ -308,7 +309,23 @@ def ubicar(ficha: Validada, pistas: Pistas, nom: Nomenclator) -> Ubicacion:
         return Ubicacion(pais, nivel, nombre=nombre, region=region,
                          motivo=f"solo se sabe a nivel de {nivel}")  # fmt: skip
     fuera: list[str] = []
+    # Un lugar de otro país con suelo dentro de este (RAF Akrotiri, británica, en Chipre) vale
+    # con el país del lugar si su punto cae en ese suelo (configuracion/territorios.json).
+    soberanos = soberanos_dentro(pais)
     for buscado, nivel_buscado in _intentos(ficha):
+        for soberano in soberanos:
+            for origen, sitio in _hallados(
+                ficha, soberano, buscado, nivel_buscado, pistas, nom, None
+            ):
+                if (
+                    sitio.pais == soberano
+                    and sitio.radio_km <= RADIO_MAX_KM
+                    and dentro_del_pais(soberano, sitio.lat, sitio.lon)
+                    and not dentro_del_pais(pais, sitio.lat, sitio.lon)
+                ):
+                    return Ubicacion(
+                        soberano, nivel_buscado, sitio, origen, nombre or buscado, region
+                    )
         for origen, sitio in _hallados(ficha, pais, buscado, nivel_buscado, pistas, nom, region):
             if sitio.pais != pais or sitio.radio_km > RADIO_MAX_KM:
                 continue

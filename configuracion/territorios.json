@@ -1,0 +1,42 @@
+{
+  "descripcion": "Suelo europeo fuera del continente (decisión del 12 de octubre de 2026): cada territorio cuenta como parte del país del que depende, con su región, y sus avisos van a ese país y a drones-europe. «padres»: códigos de territorio (ISO 3166 y los que usa la prensa o el extractor) que se leen como el país padre en la ficha (modelo/ficha.py). «soberanias»: países cuyo suelo contiene territorio de otro (las bases soberanas británicas de Akrotiri y Dhekelia, en Chipre): un lugar del otro país hallado dentro de su polígono vale con el país del lugar (proceso/ubicacion.py). «zonas»: la hora local de cada territorio, por caja de coordenadas [oeste, sur, este, norte], que manda sobre la del país (proceso/fechas.py). Fuera quedan el Pacífico francés, el Caribe neerlandés, las Malvinas y las Feroe.",
+  "padres": {
+    "IC": "ES",
+    "EA": "ES",
+    "XC": "ES",
+    "XM": "ES",
+    "GI": "GB",
+    "XD": "GB",
+    "XA": "GB",
+    "GL": "DK",
+    "SJ": "NO",
+    "GP": "FR",
+    "MQ": "FR",
+    "GF": "FR",
+    "RE": "FR",
+    "YT": "FR",
+    "MF": "FR",
+    "AX": "FI"
+  },
+  "soberanias": {
+    "CY": ["GB"]
+  },
+  "zonas": [
+    {"territorio": "Canarias", "pais": "ES", "zona": "Atlantic/Canary", "caja": [-18.5, 27.4, -13.2, 29.6]},
+    {"territorio": "Azores", "pais": "PT", "zona": "Atlantic/Azores", "caja": [-31.6, 36.7, -24.6, 40.1]},
+    {"territorio": "Madeira", "pais": "PT", "zona": "Atlantic/Madeira", "caja": [-17.6, 29.9, -15.8, 33.2]},
+    {"territorio": "Guadalupe", "pais": "FR", "zona": "America/Guadeloupe", "caja": [-62.0, 15.8, -60.9, 16.6]},
+    {"territorio": "Martinica", "pais": "FR", "zona": "America/Martinique", "caja": [-61.3, 14.3, -60.7, 14.95]},
+    {"territorio": "San Martín", "pais": "FR", "zona": "America/Marigot", "caja": [-63.2, 18.0, -62.95, 18.13]},
+    {"territorio": "Guayana Francesa", "pais": "FR", "zona": "America/Cayenne", "caja": [-54.7, 2.0, -51.5, 6.0]},
+    {"territorio": "Reunión", "pais": "FR", "zona": "Indian/Reunion", "caja": [55.1, -21.5, 55.9, -20.8]},
+    {"territorio": "Mayotte", "pais": "FR", "zona": "Indian/Mayotte", "caja": [44.9, -13.1, 45.4, -12.6]},
+    {"territorio": "Akrotiri", "pais": "GB", "zona": "Asia/Nicosia", "caja": [32.75, 34.53, 33.1, 34.72]},
+    {"territorio": "Dhekelia", "pais": "GB", "zona": "Asia/Nicosia", "caja": [33.6, 34.93, 33.95, 35.13]},
+    {"territorio": "Gibraltar", "pais": "GB", "zona": "Europe/Gibraltar", "caja": [-5.39, 36.1, -5.33, 36.16]},
+    {"territorio": "Groenlandia (Pituffik)", "pais": "DK", "zona": "America/Thule", "caja": [-72.0, 75.5, -64.0, 77.8]},
+    {"territorio": "Groenlandia (Ittoqqortoormiit)", "pais": "DK", "zona": "America/Scoresbysund", "caja": [-24.0, 70.0, -20.0, 71.5]},
+    {"territorio": "Groenlandia", "pais": "DK", "zona": "America/Nuuk", "caja": [-74.0, 59.0, -10.0, 84.0]},
+    {"territorio": "Svalbard", "pais": "NO", "zona": "Arctic/Longyearbyen", "caja": [10.0, 74.0, 35.0, 81.0]}
+  ]
+}

@@ -25,6 +25,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from proceso.noticias import sin_acentos
+from proceso.territorios import pais_padre
 
 VERSION = "ficha/5"
 # Una ficha con todos los datos ocupa unos 900 tokens; 1500 dejan margen sin pagar de más.
@@ -394,6 +395,9 @@ def interpretar(campo: str, texto: str) -> Any:
         if any(e not in LISTAS[campo] for e in elementos):
             raise ValorIlegible("elemento fuera de la lista")
         return sorted(set(elementos))
+    if campo == "pais":
+        # Un territorio de fuera del continente cuenta como su país (territorios.json).
+        return pais_padre(limpio)
     if campo == "lugar_suceso":
         return _lugar_suceso(limpio)
     if campo == "lugar_nuevo":
@@ -405,7 +409,7 @@ def interpretar(campo: str, texto: str) -> Any:
         if categoria not in CATEGORIAS:
             raise ValorIlegible("categoría fuera de la lista")
         try:
-            return {"nombre": nombre, "categoria": categoria, "pais": pais,
+            return {"nombre": nombre, "categoria": categoria, "pais": pais_padre(pais),
                     "lat": float(lat), "lon": float(lon)}  # fmt: skip
         except ValueError as error:
             raise ValorIlegible("coordenadas no numéricas") from error
@@ -436,7 +440,7 @@ def _lugar_suceso(texto: str) -> dict[str, str]:
         raise ValorIlegible("lugar del suceso sin sus partes")
     nombre, nivel, pais, region = partes
     nivel = de_la_lista(_clave(sin_acentos(nivel)), NIVELES)
-    return {"nombre": nombre, "nivel": nivel, "pais": pais.upper(), "region": region}
+    return {"nombre": nombre, "nivel": nivel, "pais": pais_padre(pais.upper()), "region": region}
 
 
 def leer_respuesta(respuesta: dict[str, Any]) -> dict[str, Any]:

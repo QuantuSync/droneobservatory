@@ -104,7 +104,15 @@ def lexicos() -> dict[str, Lexico]:
     return resultado
 
 
-def zona(pais: str | None) -> ZoneInfo | None:
+def zona(pais: str | None, lat: float | None = None, lon: float | None = None) -> ZoneInfo | None:
+    """La hora local del suceso: la del territorio en que cae el punto (Canarias, las Azores,
+    los departamentos franceses de ultramar, Groenlandia: configuracion/territorios.json) o, si
+    no, la del país."""
+    from proceso.territorios import zona_del_punto
+
+    propia = zona_del_punto(lat, lon)
+    if propia is not None:
+        return propia
     nombre = configuracion()["zonas"].get(pais or "")
     return ZoneInfo(nombre) if nombre else None
 
@@ -390,6 +398,8 @@ def inicio_de_ficha(
     articulos: list[dict[str, Any]],
     inicio_candidato: str,
     pais_suceso: str | None,
+    lat: float | None = None,
+    lon: float | None = None,
 ) -> Resolucion:
     """El inicio del incidente que sale de su ficha validada, comprobado con su frase.
 
@@ -397,7 +407,7 @@ def inicio_de_ficha(
     inicio en la ficha, la fecha es la del primer artículo: la de publicación, aproximada.
     """
     por_url = {a["url"]: a for a in articulos}
-    zona_suceso = zona(pais_suceso) or ZoneInfo("UTC")
+    zona_suceso = zona(pais_suceso, lat, lon) or ZoneInfo("UTC")
     inicio = campos.get("inicio")
     fuente = inicio.get("fuente") if inicio else None
     if inicio is None or not isinstance(fuente, int) or not 1 <= fuente <= len(enviadas):
