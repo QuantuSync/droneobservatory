@@ -16,8 +16,16 @@ AHORA = datetime(2026, 10, 7, 14, 50, tzinfo=UTC)
 
 @pytest.fixture(autouse=True)
 def sin_gracia(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Las pruebas de cada problema lo ven en su primera pasada; las de la espera la ponen."""
+    """Las pruebas de cada problema lo ven en su primera pasada; las de la espera la ponen. Sin
+    red: los certificados, al día."""
     monkeypatch.setattr(vigilancia, "GRACIA", timedelta(0))
+    monkeypatch.setattr(vigilancia, "dias_de_certificado", lambda _host: 60.0)
+
+
+def test_un_certificado_sin_renovar_es_problema() -> None:
+    assert vigilancia.certificados_que_caducan(lambda h: 60.0) == []
+    caducan = vigilancia.certificados_que_caducan(lambda h: 10.0 if h.startswith("stats") else 60.0)
+    assert caducan == ["stats.droneobservatory.eu (10 días)"]
 
 
 def _iso(momento: datetime) -> str:

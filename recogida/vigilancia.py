@@ -50,6 +50,9 @@ Problemas (cada uno con su frase):
   /v1/health (dos intentos), en el servidor que los tiene (con el token de «observatorio»);
 - **avisos**: el envío de los avisos de ntfy (recogida/avisos.py) ha fallado dos recogidas
   seguidas;
+- **certificados**: el certificado de https://ntfy.droneobservatory.eu o de
+  https://stats.droneobservatory.eu caduca en menos de 14 días (Caddy los renueva solo a los 30:
+  si llega a 14, la renovación está fallando), en el servidor que los tiene;
 - **goatcounter**: el contador de visitas (https://stats.droneobservatory.eu) no responde a /status
   (dos intentos), en el servidor que lo tiene;
 - **resumen**: el resumen diario privado del día anterior (recogida/visitas.py) no ha salido a las
@@ -142,6 +145,9 @@ AVISO_TOPE = re.compile(
 RETENIDO = re.compile(r"(EODI-\d{4}-\d{5}) no se publica: su cita no respalda el titular")
 
 URL_SALUD_NTFY = "https://ntfy.droneobservatory.eu/v1/health"
+# Certificados que renueva Caddy en este servidor y días que tienen que quedar como mínimo.
+CERTIFICADOS = ("ntfy.droneobservatory.eu", "stats.droneobservatory.eu")
+MIN_DIAS_CERTIFICADO = 14
 TOKEN_NTFY = "ntfy_observatorio"
 
 Ejecutar = Callable[[Sequence[str]], str]
@@ -159,6 +165,35 @@ def ntfy_responde(intentos: int = 2, espera_s: float = 5) -> bool:
         if intento + 1 < intentos:
             time.sleep(espera_s)
     return False
+
+
+def dias_de_certificado(host: str) -> float | None:
+    """Días que le quedan al certificado del servidor, o None si no responde."""
+    import socket
+    import ssl
+
+    try:
+        contexto = ssl.create_default_context()
+        with (
+            socket.create_connection((host, 443), timeout=10) as conexion,
+            contexto.wrap_socket(conexion, server_hostname=host) as segura,
+        ):
+            caduca = (segura.getpeercert() or {})["notAfter"]
+    except (OSError, ssl.SSLError, KeyError):
+        return None
+    return (ssl.cert_time_to_seconds(str(caduca)) - time.time()) / 86400
+
+
+def certificados_que_caducan(
+    dias: Callable[[str], float | None] = dias_de_certificado,
+) -> list[str]:
+    """Los certificados de CERTIFICADOS a menos de MIN_DIAS_CERTIFICADO días (o caducados)."""
+    fallos = []
+    for host in CERTIFICADOS:
+        quedan = dias(host)
+        if quedan is not None and quedan < MIN_DIAS_CERTIFICADO:
+            fallos.append(f"{host} ({quedan:.0f} días)")
+    return fallos
 
 
 def _ejecutar(orden: Sequence[str]) -> str:
@@ -320,6 +355,7 @@ def componer(
     salud_ntfy: Callable[[], bool] = ntfy_responde,
     salud_goatcounter: Callable[[], bool] = visitas.goatcounter_responde,
     privacidad: Callable[[], list[str]] = visitas.fallos_de_privacidad,
+    certificados: Callable[[], list[str]] = certificados_que_caducan,
 ) -> tuple[dict[str, Any], list[str]]:
     """salud.json y las líneas de detalle para el diario (con los identificadores)."""
     detalle: list[str] = []
@@ -489,6 +525,13 @@ def componer(
                 "frase": "El contador de visitas (GoatCounter) no responde (/status).",
             })  # fmt: skip
         problemas += visitas.problemas_para_vigilancia(_leer_json(secretos / visitas.ESTADO), ahora)
+        caducan = certificados()
+        if caducan:
+            problemas.append({
+                "id": "certificados",
+                "frase": "Certificados que Caddy no ha renovado y caducan pronto: "
+                + ", ".join(caducan) + ".",
+            })  # fmt: skip
         abiertos = privacidad()
         if abiertos:
             problemas.append({

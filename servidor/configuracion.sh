@@ -490,7 +490,8 @@ PREFERENCIA_IPV4="precedence ::ffff:0:0/96  100"
 # 7,7 GB. La prueba tests/test_servidor_topes.py falla si una unidad nueva no lo tiene.
 RECOGIDA_MEMORIA="5G"       # 3,3 GB con la base en disco (5,7 GB cuando iba en memoria)
 DEDUCCION_MEMORIA="4G"      # 3,2 GB
-EXPORTACION_MEMORIA="4G"    # 2,5 GB
+EXPORTACION_MEMORIA="4G"    # 3,4 GB con caché (1,6 GB de proceso) hasta el 12 oct 2026; 1,05 GB de proceso desde entonces
+EXPORTACION_MEMORIA_ALTA="2500M"
 CATALOGO_MEMORIA="3G"       # 2,2 GB
 TRAFICO_MEMORIA="3G"        # 0,8 GB por día; antes del arreglo, 6,4 GB con la traza enorme
 DETALLE_MEMORIA="1500M"     # 0,6 GB

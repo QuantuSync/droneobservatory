@@ -169,6 +169,9 @@ WorkingDirectory=$CLON
 ExecStart=/usr/bin/env bash $CLON/servidor/exportacion.sh
 SyslogIdentifier=$UNIDAD_EXPORTACION
 TimeoutStartSec=${TOPE_EXPORTACION_MINUTOS}min
+# Por encima de MemoryHigh el núcleo libera antes la caché de disco de la base (no la memoria
+# del proceso, que desde octubre de 2026 no pasa de 1,1 GB: los ficheros salen de uno en uno).
+MemoryHigh=$EXPORTACION_MEMORIA_ALTA
 MemoryMax=$EXPORTACION_MEMORIA
 NoNewPrivileges=yes
 PrivateTmp=yes
