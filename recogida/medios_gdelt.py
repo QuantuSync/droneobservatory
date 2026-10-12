@@ -2,7 +2,9 @@
 
 Los ficheros GKG no dicen de qué país es el medio, que la API DOC sí daba. GDELT
 publica una lista de dominios con el país de cada medio (códigos FIPS 10-4); de
-ella salen los medios de los 42 países europeos de la recogida. El fichero
+ella salen los medios de los 42 países europeos de la recogida y de los territorios
+de ultramar y fuera del continente que forman parte de su suelo, cada uno con el
+país del que depende (TERRITORIOS). El fichero
 generado solo guarda los dominios cuyo país no se deduce del dominio de primer
 nivel («.de» → DE), porque el resto se resuelve por el sufijo.
 
@@ -30,6 +32,32 @@ DESTINO = Path(__file__).resolve().parent.parent / "configuracion" / "medios_eur
 TLD_DISTINTO = {"GB": "uk"}
 # Kosovo no tiene dominio de primer nivel propio.
 SIN_TLD = frozenset({"XK"})
+# Territorios fuera del continente que cuentan como suelo de su país: nombre en la lista
+# de GDELT (o None si no sale), código FIPS 10-4, dominio de primer nivel (o None) y país
+# del que dependen. Canarias, Ceuta, Melilla y los peñones salen en GDELT como España
+# (SP), y Azores y Madeira como Portugal (PO), sin código propio.
+TERRITORIOS: tuple[tuple[str | None, str, str | None, str], ...] = (
+    ("Gibraltar", "GI", "gi", "GB"),
+    (None, "AX", None, "GB"),  # Akrotiri
+    (None, "DX", None, "GB"),  # Dhekelia
+    ("Greenland", "GL", "gl", "DK"),
+    ("Svalbard", "SV", "sj", "NO"),
+    ("Guadeloupe", "GP", "gp", "FR"),
+    ("Martinique", "MB", "mq", "FR"),
+    ("French Guiana", "FG", "gf", "FR"),
+    ("Reunion", "RE", "re", "FR"),
+    ("Mayotte", "MF", "yt", "FR"),
+    (None, "RN", "mf", "FR"),  # San Martín (parte francesa)
+)
+# Medios con el país mal puesto en la lista de GDELT (o fuera de Europa en ella) que son
+# de un territorio europeo: France-Antilles Guadeloupe sale como Alemania, Sermitsiaq
+# (Groenlandia) como Antigua y Barbuda, y otros dos como Estados Unidos y Madagascar.
+CORRECCIONES = {
+    "guadeloupe.franceantilles.fr": "FR",
+    "inforeunion.net": "FR",
+    "latribunadecanarias.com": "ES",
+    "sermitsiaq.ag": "DK",
+}
 # Dominios que no son medios de noticias y cuyo nombre choca con la comprobación de
 # términos del repositorio, por su huella SHA-256 para no escribir el nombre.
 OMITIDOS = frozenset({"aa6ed15892107524ad6ae00b3a3c38c1caa20d46b08268b57791c84aa69e2a4e"})
@@ -44,7 +72,10 @@ def tld(iso: str) -> str | None:
 
 
 def tabla(texto: str, paises: dict[str, str]) -> dict[str, Any]:
-    fips: dict[str, str] = {}
+    paises = paises | {clave_pais(n): iso for n, _, _, iso in TERRITORIOS if n}
+    tlds = {t: iso for iso in sorted(set(paises.values())) if (t := tld(iso))}
+    tlds |= {t: iso for _, _, t, iso in TERRITORIOS if t}
+    fips: dict[str, str] = {f: iso for _, f, _, iso in TERRITORIOS}
     dominios: dict[str, str] = {}
     for linea in texto.splitlines():
         partes = linea.split("\t")
@@ -52,21 +83,20 @@ def tabla(texto: str, paises: dict[str, str]) -> dict[str, Any]:
             continue
         dominio, codigo_fips, nombre = partes[0].strip().lower(), partes[1], partes[2]
         iso = paises.get(clave_pais(nombre))
-        if iso is None:
-            continue
-        fips[codigo_fips] = iso
-        sufijo = tld(iso)
+        if iso is not None:
+            fips[codigo_fips] = iso
+        iso = CORRECCIONES.get(dominio, iso)
         omitido = hashlib.sha256(dominio.encode()).hexdigest() in OMITIDOS
-        if omitido or (sufijo and dominio.endswith("." + sufijo)):
+        if iso is None or omitido or tlds.get(dominio.rsplit(".", 1)[-1]) == iso:
             continue
         dominios[dominio] = iso
-    tlds = {t: iso for iso in sorted(set(paises.values())) if (t := tld(iso))}
     return {
         "descripcion": (
             "Medios europeos para los ficheros GKG de GDELT. fips: país de GDELT (FIPS 10-4) a "
-            "ISO 3166-1, para los lugares de cada artículo. tld: dominio de primer nivel de cada "
-            "país. dominios: medios cuyo país no se deduce del dominio de primer nivel, sacados "
-            f"de la lista de dominios por país de GDELT ({LISTA})."
+            "ISO 3166-1, para los lugares de cada artículo; los territorios de ultramar y fuera "
+            "del continente cuentan como su país. tld: dominio de primer nivel de cada país y "
+            "de sus territorios. dominios: medios cuyo país no se deduce del dominio de primer "
+            f"nivel, sacados de la lista de dominios por país de GDELT ({LISTA})."
         ),
         "fips": dict(sorted(fips.items())),
         "tld": dict(sorted(tlds.items())),
