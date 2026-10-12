@@ -148,6 +148,18 @@ def impactos_de_guerra(impactos: Iterable[Documento]) -> tuple[Impacto, ...]:
     return tuple(sorted(resultado, key=lambda i: (i.dia, i.categorias, i.canales)))
 
 
+# Caja de la Europa continental con sus islas cercanas (lon mínima, lat mínima, lon máxima,
+# lat máxima): deja fuera Groenlandia, Svalbard, Canarias y el ultramar.
+CAJA_EUROPA = (-32.0, 34.0, 45.0, 72.0)
+
+
+def _en_europa(poligono: Any) -> bool:
+    lon_min, lat_min, lon_max, lat_max = CAJA_EUROPA
+    lon = float(poligono.caja[0] + poligono.caja[2]) / 2
+    lat = float(poligono.caja[1] + poligono.caja[3]) / 2
+    return lon_min <= lon <= lon_max and lat_min <= lat <= lat_max
+
+
 def cajas_de_paises(paises: Iterable[str]) -> dict[str, tuple[float, float, float, float]]:
     """La caja del polígono más grande de cada país (sin territorios lejanos)."""
     from proceso import fronteras
@@ -155,7 +167,11 @@ def cajas_de_paises(paises: Iterable[str]) -> dict[str, tuple[float, float, floa
     datos = fronteras.fronteras()
     resultado = {}
     for pais in sorted(set(paises)):
-        poligonos = datos.paises.get(pais, ())
+        # Groenlandia es el polígono más grande de Dinamarca: solo cuentan los que tienen el
+        # centro en Europa.
+        poligonos = [p for p in datos.paises.get(pais, ()) if _en_europa(p)] or list(
+            datos.paises.get(pais, ())
+        )
         if not poligonos:
             continue
         mayor = max(poligonos, key=lambda p: (p.caja[2] - p.caja[0]) * (p.caja[3] - p.caja[1]))

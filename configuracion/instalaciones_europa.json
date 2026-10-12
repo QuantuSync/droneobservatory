@@ -9165,24 +9165,6 @@
 "radio_km": 5.0,
 "pais": "ES"
 },
-"aeropuerto:relation/10652810": {
-"tipo": "aeropuerto",
-"nombre": "Aeropuerto de Melilla",
-"alias": [
-"Aeropuerto de Melilla",
-"Melilla Airport",
-"مطار مليلية",
-"Aéroport de Melilla",
-"Aerodrom Melilja",
-"梅利利亚机场"
-],
-"ciudades": [],
-"lat": 35.28015,
-"lon": -2.95645,
-"radio_km": 5.0,
-"pais": "ES",
-"oaci": "GEML"
-},
 "aeropuerto:relation/10889233": {
 "tipo": "aeropuerto",
 "nombre": "Aeródromo de Navianos de Valverde «El Raso»",
@@ -9282,26 +9264,6 @@
 "radio_km": 5.0,
 "pais": "SE",
 "oaci": "ESGS"
-},
-"aeropuerto:relation/13560111": {
-"tipo": "aeropuerto",
-"nombre": "Aeroporto João Paulo II",
-"alias": [
-"Aeroporto João Paulo II",
-"Ponta Delgada São Miguel Island",
-"Flughafen Johannes Paul II.",
-"João Paulo II Airport",
-"Aeropuerto Juan Pablo II",
-"São João Paulo II, o Magno",
-"Q989",
-"pt:Papa João Paulo II"
-],
-"ciudades": [],
-"lat": 37.74315,
-"lon": -25.69823,
-"radio_km": 5.0,
-"pais": "PT",
-"oaci": "LPPD"
 },
 "aeropuerto:relation/13757539": {
 "tipo": "aeropuerto",
@@ -9511,24 +9473,6 @@
 "pais": "NO",
 "oaci": "ENHS"
 },
-"aeropuerto:relation/16836930": {
-"tipo": "aeropuerto",
-"nombre": "Aeropuerto de Gran Canaria",
-"alias": [
-"Aeropuerto de Gran Canaria",
-"مطار كناريا الكبرى",
-"Flughafen Gran Canaria",
-"Gran Canaria Airport",
-"Aeroporto di Gran Canaria",
-"Аэропорт Гран-Канария"
-],
-"ciudades": [],
-"lat": 27.92938,
-"lon": -15.38639,
-"radio_km": 5.0,
-"pais": "ES",
-"oaci": "GCLP"
-},
 "aeropuerto:relation/17040093": {
 "tipo": "aeropuerto",
 "nombre": "Aavahelukan lentokenttä",
@@ -9584,34 +9528,6 @@
 "pais": "AT",
 "oaci": "LOGO"
 },
-"aeropuerto:relation/17833456": {
-"tipo": "aeropuerto",
-"nombre": "Aeroporto Internacional das Lajes",
-"alias": [
-"Aeroporto Internacional das Lajes",
-"Lajes International Airport"
-],
-"ciudades": [],
-"lat": 38.75543,
-"lon": -27.08786,
-"radio_km": 5.0,
-"pais": "PT",
-"oaci": "LPLA"
-},
-"aeropuerto:relation/17835242": {
-"tipo": "aeropuerto",
-"nombre": "Aeródromo da Ilha Graciosa",
-"alias": [
-"Aeródromo da Ilha Graciosa",
-"Graciosa Airport"
-],
-"ciudades": [],
-"lat": 39.09192,
-"lon": -28.03004,
-"radio_km": 5.0,
-"pais": "PT",
-"oaci": "LPGR"
-},
 "aeropuerto:relation/17835735": {
 "tipo": "aeropuerto",
 "nombre": "Cyprus Gliding Club",
@@ -9623,48 +9539,6 @@
 "lon": 33.1857,
 "radio_km": 5.0,
 "pais": "CY"
-},
-"aeropuerto:relation/17836265": {
-"tipo": "aeropuerto",
-"nombre": "Aeródromo da Ilha de São Jorge",
-"alias": [
-"Aeródromo da Ilha de São Jorge",
-"Aeródromo de São Jorge",
-"São Jorge Airport"
-],
-"ciudades": [],
-"lat": 38.66499,
-"lon": -28.17447,
-"radio_km": 5.0,
-"pais": "PT",
-"oaci": "LPSJ"
-},
-"aeropuerto:relation/17852650": {
-"tipo": "aeropuerto",
-"nombre": "Aeroporto da Ilha do Pico",
-"alias": [
-"Aeroporto da Ilha do Pico"
-],
-"ciudades": [],
-"lat": 38.55381,
-"lon": -28.44289,
-"radio_km": 5.0,
-"pais": "PT",
-"oaci": "LPPI"
-},
-"aeropuerto:relation/17880347": {
-"tipo": "aeropuerto",
-"nombre": "Aeroporto das Flores",
-"alias": [
-"Aeroporto das Flores",
-"Flores Airport"
-],
-"ciudades": [],
-"lat": 39.45559,
-"lon": -31.13144,
-"radio_km": 5.0,
-"pais": "PT",
-"oaci": "LPFL"
 },
 "aeropuerto:relation/17893166": {
 "tipo": "aeropuerto",
@@ -9962,23 +9836,6 @@
 "radio_km": 5.0,
 "pais": "CH",
 "oaci": "LSTZ"
-},
-"aeropuerto:relation/6785242": {
-"tipo": "aeropuerto",
-"nombre": "Aeroporto do Porto Santo",
-"alias": [
-"Aeroporto do Porto Santo",
-"Flughafen Porto Santo",
-"Porto Santo Airport",
-"Aeropuerto de Porto Santo",
-"Aéroport de Porto Santo"
-],
-"ciudades": [],
-"lat": 33.07364,
-"lon": -16.3506,
-"radio_km": 5.0,
-"pais": "PT",
-"oaci": "LPPS"
 },
 "aeropuerto:relation/7046761": {
 "tipo": "aeropuerto",
@@ -11144,24 +11001,6 @@
 "pais": "PL",
 "oaci": "EPKB"
 },
-"aeropuerto:way/1202427023": {
-"tipo": "aeropuerto",
-"nombre": "Aeroporto da Horta",
-"alias": [
-"Aeroporto da Horta",
-"Flughafen Horta",
-"Horta Airport",
-"Aeropuerto de Horta",
-"Aéroport de Horta",
-"Aeroporto di Horta"
-],
-"ciudades": [],
-"lat": 38.52039,
-"lon": -28.71611,
-"radio_km": 5.0,
-"pais": "PT",
-"oaci": "LPHR"
-},
 "aeropuerto:way/1205190015": {
 "tipo": "aeropuerto",
 "nombre": "Letališče Lesce",
@@ -12049,25 +11888,6 @@
 "radio_km": 5.0,
 "pais": "BA"
 },
-"aeropuerto:way/133790788": {
-"tipo": "aeropuerto",
-"nombre": "Aeroporto Internacional da Madeira - Cristiano Ronaldo",
-"alias": [
-"Aeroporto Internacional da Madeira - Cristiano Ronaldo",
-"Madeira International Airport",
-"Cristiano Ronaldo Madeira International Airport",
-"Madeira International Airport Cristiano Ronaldo",
-"Internationaler Flughafen Madeira - Cristiano Ronaldo",
-"Cristiano Ronaldo Airport",
-"Aeroporto internazionale di Madeira \"Cristiano Ronaldo\""
-],
-"ciudades": [],
-"lat": 32.69884,
-"lon": -16.77368,
-"radio_km": 5.0,
-"pais": "PT",
-"oaci": "LPMA"
-},
 "aeropuerto:way/133847865": {
 "tipo": "aeropuerto",
 "nombre": "Lotnisko Kamień Śląski",
@@ -12172,38 +11992,6 @@
 "radio_km": 5.0,
 "pais": "ES",
 "oaci": "LEWG"
-},
-"aeropuerto:way/136308420": {
-"tipo": "aeropuerto",
-"nombre": "Juancho E. Yrausquin Airport",
-"alias": [
-"Juancho E. Yrausquin Airport",
-"Saba Airport",
-"Аеродром „Хуанчо Е. Ираускин“"
-],
-"ciudades": [],
-"lat": 17.64521,
-"lon": -63.22102,
-"radio_km": 5.0,
-"pais": "NL",
-"oaci": "TNCS"
-},
-"aeropuerto:way/136320348": {
-"tipo": "aeropuerto",
-"nombre": "Princess Juliana International Airport",
-"alias": [
-"Princess Juliana International Airport",
-"Aéroport international Princesse-Juliana",
-"프린센스 줄리아나 국제공항",
-"Internationale luchthaven Princes Juliana",
-"Международный аэропорт Принцессы Юлианы"
-],
-"ciudades": [],
-"lat": 18.04097,
-"lon": -63.10846,
-"radio_km": 5.0,
-"pais": "NL",
-"oaci": "TNCM"
 },
 "aeropuerto:way/1366768892": {
 "tipo": "aeropuerto",
@@ -14650,28 +14438,6 @@
 "pais": "PL",
 "oaci": "EPPI"
 },
-"aeropuerto:way/230256029": {
-"tipo": "aeropuerto",
-"nombre": "Aeropuerto César Manrique Lanzarote",
-"alias": [
-"Aeropuerto César Manrique Lanzarote",
-"Lanzarote Airport",
-"مطار لانزاروت",
-"Flughafen Lanzarote",
-"Aéroport de Lanzarote",
-"Aeroporto di Lanzarote",
-"Aeropuerto de Lanzarote",
-"Port lotniczy Lanzarote",
-"Lanzarote Havalimanı",
-"兰萨罗特机场"
-],
-"ciudades": [],
-"lat": 28.9456,
-"lon": -13.60748,
-"radio_km": 5.0,
-"pais": "ES",
-"oaci": "GCRR"
-},
 "aeropuerto:way/230867595": {
 "tipo": "aeropuerto",
 "nombre": "Селскостопанско летище",
@@ -15463,20 +15229,6 @@
 "radio_km": 5.0,
 "pais": "BG"
 },
-"aeropuerto:way/25928727": {
-"tipo": "aeropuerto",
-"nombre": "F. D. Roosevelt Airport",
-"alias": [
-"F. D. Roosevelt Airport",
-"Аеродром „Ф.Д. Рузвелт“"
-],
-"ciudades": [],
-"lat": 17.49598,
-"lon": -62.98002,
-"radio_km": 5.0,
-"pais": "NL",
-"oaci": "TNCE"
-},
 "aeropuerto:way/260271325": {
 "tipo": "aeropuerto",
 "nombre": "Kumlinge flygfält",
@@ -15904,23 +15656,6 @@
 "pais": "NL",
 "oaci": "EHDR"
 },
-"aeropuerto:way/287416311": {
-"tipo": "aeropuerto",
-"nombre": "Curaçao International Airport",
-"alias": [
-"Curaçao International Airport",
-"Hato International Airport",
-"Міжнародны аэрапорт Кюрасаа",
-"Internationaler Flughafen Curaçao",
-"Airport International di Korsou"
-],
-"ciudades": [],
-"lat": 12.18906,
-"lon": -68.95871,
-"radio_km": 5.0,
-"pais": "NL",
-"oaci": "TNCC"
-},
 "aeropuerto:way/287496493": {
 "tipo": "aeropuerto",
 "nombre": "Bovec",
@@ -16206,20 +15941,6 @@
 "radio_km": 5.0,
 "pais": "ES",
 "oaci": "LERN"
-},
-"aeropuerto:way/296775627": {
-"tipo": "aeropuerto",
-"nombre": "Aérodromo da Ilha do Corvo",
-"alias": [
-"Aérodromo da Ilha do Corvo",
-"Corvo Airport"
-],
-"ciudades": [],
-"lat": 39.67133,
-"lon": -31.11669,
-"radio_km": 5.0,
-"pais": "PT",
-"oaci": "LPCR"
 },
 "aeropuerto:way/297206031": {
 "tipo": "aeropuerto",
@@ -17228,22 +16949,6 @@
 "radio_km": 5.0,
 "pais": "SK"
 },
-"aeropuerto:way/356298515": {
-"tipo": "aeropuerto",
-"nombre": "Bonaire International Airport",
-"alias": [
-"Bonaire International Airport",
-"Flamingo Airport",
-"Flamingo Luchthaven",
-"Меѓународен аеродром Бонер"
-],
-"ciudades": [],
-"lat": 12.13108,
-"lon": -68.2645,
-"radio_km": 5.0,
-"pais": "NL",
-"oaci": "TNCB"
-},
 "aeropuerto:way/356387446": {
 "tipo": "aeropuerto",
 "nombre": "Aeródromo El Carrascal",
@@ -17321,30 +17026,6 @@
 "radio_km": 5.0,
 "pais": "ES",
 "oaci": "LEDB"
-},
-"aeropuerto:way/358229675": {
-"tipo": "aeropuerto",
-"nombre": "Svalbard lufthavn",
-"alias": [
-"Svalbard lufthavn",
-"Svalbard lufthavn, Longyear",
-"Flughafen Longyearbyen",
-"Svalbard Airport, Longyear",
-"Aéroport de Longyearbyen",
-"Svalbardo oro uostas, Longyear",
-"Flughafen Svalbard",
-"Svalbard Airport",
-"Aeropuerto de Svalbard",
-"Aéroport de Svalbard",
-"Svalbardo oro uostas",
-"Аэропорт Свальбард"
-],
-"ciudades": [],
-"lat": 78.2462,
-"lon": 15.46327,
-"radio_km": 5.0,
-"pais": "NO",
-"oaci": "ENSB"
 },
 "aeropuerto:way/361312779": {
 "tipo": "aeropuerto",
@@ -17736,43 +17417,6 @@
 "radio_km": 5.0,
 "pais": "NO",
 "oaci": "ENFG"
-},
-"aeropuerto:way/384872975": {
-"tipo": "aeropuerto",
-"nombre": "Aeropuerto de La Gomera",
-"alias": [
-"Aeropuerto de La Gomera",
-"Flughafen La Gomera",
-"La Gomera Airport",
-"Aérodrome de La Gomera",
-"Port lotniczy La Gomera"
-],
-"ciudades": [],
-"lat": 28.03051,
-"lon": -17.21444,
-"radio_km": 5.0,
-"pais": "ES",
-"oaci": "GCGM"
-},
-"aeropuerto:way/384875110": {
-"tipo": "aeropuerto",
-"nombre": "Aeropuerto de Fuerteventura",
-"alias": [
-"Aeropuerto de Fuerteventura",
-"مطار فويرتيفنتورا",
-"Flughafen Fuerteventura",
-"Fuerteventura Airport",
-"Aéroport de Fuerteventura",
-"Aeroporto di Fuerteventura",
-"Port lotniczy Fuerteventura",
-"富埃特文图拉机场"
-],
-"ciudades": [],
-"lat": 28.44733,
-"lon": -13.8659,
-"radio_km": 5.0,
-"pais": "ES",
-"oaci": "GCFV"
 },
 "aeropuerto:way/384902666": {
 "tipo": "aeropuerto",
@@ -18403,21 +18047,6 @@
 "radio_km": 5.0,
 "pais": "PL"
 },
-"aeropuerto:way/440678817": {
-"tipo": "aeropuerto",
-"nombre": "Aeroporto de Santa Maria",
-"alias": [
-"Aeroporto de Santa Maria",
-"Airport Santa Maria",
-"Aeropuerto de Santa María"
-],
-"ciudades": [],
-"lat": 36.97189,
-"lon": -25.16847,
-"radio_km": 5.0,
-"pais": "PT",
-"oaci": "LPAZ"
-},
 "aeropuerto:way/440708218": {
 "tipo": "aeropuerto",
 "nombre": "Aerodromo de Torremocha",
@@ -18893,48 +18522,6 @@
 "lon": -7.76363,
 "radio_km": 5.0,
 "pais": "PT"
-},
-"aeropuerto:way/482903476": {
-"tipo": "aeropuerto",
-"nombre": "Aeropuerto de Tenerife Sur - Reina Sofia",
-"alias": [
-"Aeropuerto de Tenerife Sur - Reina Sofia",
-"Tenerife Syd Lufthavn",
-"Flughafen Teneriffa Süd",
-"Tenerife South Airport",
-"Teneriffan eteläinen lentoasema",
-"Aéroport de Tenerife-Sud",
-"Aeroporto di Tenerife-Sud",
-"Aeropuerto de Tenerife Sur",
-"Port lotniczy Aeropuerto de Tenerife Sur",
-"Аэропорт Тенерифе-Южный",
-"Teneriffas södra flygplats",
-"Tenerife Güney Havalimanı"
-],
-"ciudades": [],
-"lat": 28.04613,
-"lon": -16.57416,
-"radio_km": 5.0,
-"pais": "ES",
-"oaci": "GCTS"
-},
-"aeropuerto:way/484424072": {
-"tipo": "aeropuerto",
-"nombre": "Aeropuerto de Tenerife Norte - Los Rodeos",
-"alias": [
-"Aeropuerto de Tenerife Norte - Los Rodeos",
-"Flughafen Teneriffa Nord",
-"Tenerife North Airport",
-"Teneriffan pohjoinen lentoasema",
-"Аэропорт Тенерифе-Северный",
-"Teneriffas norra flygplats"
-],
-"ciudades": [],
-"lat": 28.48294,
-"lon": -16.34296,
-"radio_km": 5.0,
-"pais": "ES",
-"oaci": "GCXO"
 },
 "aeropuerto:way/485825089": {
 "tipo": "aeropuerto",
@@ -19636,22 +19223,6 @@
 "lon": 16.99868,
 "radio_km": 5.0,
 "pais": "CZ"
-},
-"aeropuerto:way/52323651": {
-"tipo": "aeropuerto",
-"nombre": "Aeropuerto de El Hierro",
-"alias": [
-"Aeropuerto de El Hierro",
-"Flughafen El Hierro",
-"El Hierro Airport",
-"Aérodrome d'El Hierro"
-],
-"ciudades": [],
-"lat": 27.81445,
-"lon": -17.88725,
-"radio_km": 5.0,
-"pais": "ES",
-"oaci": "GCHI"
 },
 "aeropuerto:way/525619538": {
 "tipo": "aeropuerto",
@@ -21076,18 +20647,6 @@
 "radio_km": 5.0,
 "pais": "PL",
 "oaci": "EPSS"
-},
-"aeropuerto:way/724498110": {
-"tipo": "aeropuerto",
-"nombre": "Mini Air Strip",
-"alias": [
-"Mini Air Strip"
-],
-"ciudades": [],
-"lat": 12.17009,
-"lon": -68.8548,
-"radio_km": 5.0,
-"pais": "NL"
 },
 "aeropuerto:way/724675031": {
 "tipo": "aeropuerto",
@@ -22615,25 +22174,6 @@
 "pais": "BE",
 "oaci": "EBZU"
 },
-"aeropuerto:way/95712335": {
-"tipo": "aeropuerto",
-"nombre": "Aeropuerto de La Palma",
-"alias": [
-"Aeropuerto de La Palma",
-"Flughafen La Palma",
-"La Palma Airport",
-"Aéroport de La Palma",
-"Port lotniczy La Palma",
-"Ла-Пальма (аэропорт)",
-"拉帕尔马机场"
-],
-"ciudades": [],
-"lat": 28.62669,
-"lon": -17.75523,
-"radio_km": 5.0,
-"pais": "ES",
-"oaci": "GCLA"
-},
 "aeropuerto:way/958514186": {
 "tipo": "aeropuerto",
 "nombre": "Letiště Třebihošť",
@@ -22799,23 +22339,6 @@
 "radio_km": 5.0,
 "pais": "PL",
 "oaci": "EPGY"
-},
-"aeropuerto:way/97834000": {
-"tipo": "aeropuerto",
-"nombre": "Aeropuerto Internacional Reina Beatrix",
-"alias": [
-"Aeropuerto Internacional Reina Beatrix",
-"Queen Beatrix International Airport",
-"Меѓународен аеродром „Кралица Беатриса“",
-"Internationale luchthaven Koningin Beatrix",
-"Международный аэропорт имени королевы Беатрикс"
-],
-"ciudades": [],
-"lat": 12.50206,
-"lon": -70.0155,
-"radio_km": 5.0,
-"pais": "NL",
-"oaci": "TNCA"
 },
 "aeropuerto:way/980556354": {
 "tipo": "aeropuerto",
@@ -23207,20 +22730,6 @@
 "lon": 25.83305,
 "radio_km": 5.0,
 "pais": "FI"
-},
-"base:node/1118731515": {
-"tipo": "base",
-"nombre": "Base Aérea de Gando",
-"alias": [
-"Base Aérea de Gando",
-"Gando Air Base"
-],
-"ciudades": [],
-"lat": 27.93404,
-"lon": -15.37912,
-"radio_km": 5.0,
-"pais": "ES",
-"oaci": "GCLP"
 },
 "base:node/11338097115": {
 "tipo": "base",
@@ -25931,32 +25440,6 @@
 "lon": 6.89582,
 "radio_km": 5.0,
 "pais": "CH"
-},
-"base:relation/9527802": {
-"tipo": "base",
-"nombre": "Suffisant",
-"alias": [
-"Suffisant",
-"Suffisant Marinebasis"
-],
-"ciudades": [],
-"lat": 12.15033,
-"lon": -68.91647,
-"radio_km": 5.0,
-"pais": "NL"
-},
-"base:relation/9530003": {
-"tipo": "base",
-"nombre": "Parera",
-"alias": [
-"Parera",
-"Marinebasis Parera"
-],
-"ciudades": [],
-"lat": 12.11286,
-"lon": -68.92119,
-"radio_km": 5.0,
-"pais": "NL"
 },
 "base:relation/9544014": {
 "tipo": "base",
@@ -35741,18 +35224,6 @@
 "radio_km": 5.0,
 "pais": "NL"
 },
-"base:way/463189636": {
-"tipo": "base",
-"nombre": "Marinierskazerne Savaneta",
-"alias": [
-"Marinierskazerne Savaneta"
-],
-"ciudades": [],
-"lat": 12.44359,
-"lon": -69.93622,
-"radio_km": 5.0,
-"pais": "NL"
-},
 "base:way/463509579": {
 "tipo": "base",
 "nombre": "Lasketiir",
@@ -39353,18 +38824,6 @@
 "radio_km": 5.0,
 "pais": "AT"
 },
-"base:way/966100407": {
-"tipo": "base",
-"nombre": "Aeródromo de Manobra 3",
-"alias": [
-"Aeródromo de Manobra 3"
-],
-"ciudades": [],
-"lat": 33.08395,
-"lon": -16.35386,
-"radio_km": 5.0,
-"pais": "PT"
-},
 "base:way/966386488": {
 "tipo": "base",
 "nombre": "Regimento de Infantaria n.º 1 - Destacamento de Tavira",
@@ -42891,18 +42350,6 @@
 "lon": 7.59,
 "radio_km": 2.0,
 "pais": "CH"
-},
-"energia:relation/5263515": {
-"tipo": "energia",
-"nombre": "Balashi Water- En Energiebedrijf Aruba NV (WEB) Water & Power Station",
-"alias": [
-"Balashi Water- En Energiebedrijf Aruba NV (WEB) Water & Power Station"
-],
-"ciudades": [],
-"lat": 12.47539,
-"lon": -69.98044,
-"radio_km": 2.0,
-"pais": "NL"
 },
 "energia:relation/5575110": {
 "tipo": "energia",
@@ -48784,18 +48231,6 @@
 "radio_km": 2.0,
 "pais": "CZ"
 },
-"energia:way/1138435502": {
-"tipo": "energia",
-"nombre": "Dokweg Power Plant",
-"alias": [
-"Dokweg Power Plant"
-],
-"ciudades": [],
-"lat": 12.12546,
-"lon": -68.91172,
-"radio_km": 2.0,
-"pais": "NL"
-},
 "energia:way/1138914100": {
 "tipo": "energia",
 "nombre": "UPM Kymi Mill (Kuusankoski PVO) Power Station",
@@ -52355,18 +51790,6 @@
 "lon": -5.81161,
 "radio_km": 2.0,
 "pais": "ES"
-},
-"energia:way/1203033732": {
-"tipo": "energia",
-"nombre": "RECIP power plant",
-"alias": [
-"RECIP power plant"
-],
-"ciudades": [],
-"lat": 12.47596,
-"lon": -69.98231,
-"radio_km": 2.0,
-"pais": "NL"
 },
 "energia:way/1203911099": {
 "tipo": "energia",
@@ -77180,18 +76603,6 @@
 "lon": 6.21934,
 "radio_km": 2.0,
 "pais": "NO"
-},
-"energia:way/329649983": {
-"tipo": "energia",
-"nombre": "Bonaire Hybrid Power Plant",
-"alias": [
-"Bonaire Hybrid Power Plant"
-],
-"ciudades": [],
-"lat": 12.22289,
-"lon": -68.36545,
-"radio_km": 2.0,
-"pais": "NL"
 },
 "energia:way/329899099": {
 "tipo": "energia",
@@ -110505,18 +109916,6 @@
 "radio_km": 1.0,
 "pais": "ES"
 },
-"estadio:relation/4193483": {
-"tipo": "estadio",
-"nombre": "Rifstadion",
-"alias": [
-"Rifstadion"
-],
-"ciudades": [],
-"lat": 12.10654,
-"lon": -68.94012,
-"radio_km": 1.0,
-"pais": "NL"
-},
 "estadio:relation/4195950": {
 "tipo": "estadio",
 "nombre": "Camp Nou de Banyoles",
@@ -120466,18 +119865,6 @@
 "radio_km": 1.0,
 "pais": "SK"
 },
-"estadio:way/1380115827": {
-"tipo": "estadio",
-"nombre": "SUBT",
-"alias": [
-"SUBT"
-],
-"ciudades": [],
-"lat": 12.10007,
-"lon": -68.90658,
-"radio_km": 1.0,
-"pais": "NL"
-},
 "estadio:way/1381472534": {
 "tipo": "estadio",
 "nombre": "Estadio Municipal Les Fontetes",
@@ -123213,18 +122600,6 @@
 "lon": 18.48569,
 "radio_km": 1.0,
 "pais": "PL"
-},
-"estadio:way/1535142948": {
-"tipo": "estadio",
-"nombre": "Stadion Antonio Trenidat",
-"alias": [
-"Stadion Antonio Trenidat"
-],
-"ciudades": [],
-"lat": 12.23177,
-"lon": -68.3298,
-"radio_km": 1.0,
-"pais": "NL"
 },
 "estadio:way/153525598": {
 "tipo": "estadio",
@@ -152838,18 +152213,6 @@
 "lon": -8.64244,
 "radio_km": 1.0,
 "pais": "PT"
-},
-"estadio:way/696020924": {
-"tipo": "estadio",
-"nombre": "Stadion Ergilio Hato",
-"alias": [
-"Stadion Ergilio Hato"
-],
-"ciudades": [],
-"lat": 12.15279,
-"lon": -68.88765,
-"radio_km": 1.0,
-"pais": "NL"
 },
 "estadio:way/696456521": {
 "tipo": "estadio",
@@ -201682,18 +201045,6 @@
 "lon": 7.81825,
 "radio_km": 2.0,
 "pais": "NO"
-},
-"presa:way/884422904": {
-"tipo": "presa",
-"nombre": "Dam di Awa Marga",
-"alias": [
-"Dam di Awa Marga"
-],
-"ciudades": [],
-"lat": 12.47165,
-"lon": -69.93696,
-"radio_km": 2.0,
-"pais": "NL"
 },
 "presa:way/885069441": {
 "tipo": "presa",

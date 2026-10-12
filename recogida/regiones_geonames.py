@@ -25,7 +25,16 @@ from typing import Any
 
 from proceso.noticias import normalizar
 from recogida.descarga import AGENTE_EODI, Descargador
-from recogida.localidades_geonames import C_ID, C_PAIS
+from recogida.localidades_geonames import (
+    BASE_ESTE,
+    BASE_OESTE,
+    C_ID,
+    C_LON,
+    C_PAIS,
+    REGIONES_TERRITORIO,
+    pais_padre,
+    region_territorio,
+)
 from recogida.localidades_geonames import DESTINO as LOCALIDADES
 from recogida.localidades_geonames import FUENTE as CIUDADES
 
@@ -46,18 +55,30 @@ def generar(ciudades: str, regiones: str, ids: set[str]) -> dict[str, Any]:
             codigo, nombre, ascii_, numero = partes[:4]
             numeros[codigo] = numero
             regiones_[numero] = {
-                "pais": codigo.split(".")[0],
+                "pais": pais_padre(codigo.split(".")[0]),
                 "nombres": sorted({normalizar(nombre), normalizar(ascii_)}),
             }
+    # Los territorios de fuera del continente son una región de su país, entera (siempre
+    # están, aunque solo tengan localidades pequeñas).
+    territorios: set[str] = set()
+    for clave, (numero, nombres) in [*REGIONES_TERRITORIO.items(), ("GB", BASE_OESTE),
+                                     ("GB", BASE_ESTE)]:  # fmt: skip
+        anterior = regiones_.get(numero, {}).get("nombres", [])
+        regiones_[numero] = {
+            "pais": pais_padre(clave.split(".")[0]),
+            "nombres": sorted({*anterior, *(normalizar(n) for n in nombres)}),
+        }
+        territorios.add(numero)
     de_localidad: dict[str, str] = {}
     for linea in ciudades.splitlines():
         c = linea.split("\t")
         if len(c) <= C_REGION or c[C_ID] not in ids:
             continue
-        numero_region = numeros.get(f"{c[C_PAIS]}.{c[C_REGION]}")
+        territorio = region_territorio(c[C_PAIS], c[C_REGION], float(c[C_LON]))
+        numero_region = territorio[0] if territorio else numeros.get(f"{c[C_PAIS]}.{c[C_REGION]}")
         if numero_region is not None:
             de_localidad[PREFIJO + c[C_ID]] = numero_region
-    usadas = set(de_localidad.values())
+    usadas = set(de_localidad.values()) | territorios
     return {
         "version_esquema": "1.0.0",
         "descripcion": (
