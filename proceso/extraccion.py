@@ -20,6 +20,12 @@ Cada llamada anota sus tokens y su coste; los límites de gasto son duros.
 
 Las llamadas directas se paran en el límite de gasto y en el primer error del
 servicio: lo que no se llama queda pendiente para la ejecución siguiente.
+
+Un candidato que falla por sí solo (una excepción al prepararlo o al procesar su respuesta,
+una respuesta del servicio que no se entiende) se aparta: se anota en el cursor
+`candidatos_apartados` con su motivo y los demás de la hora siguen. Tras fallar en tres
+recogidas distintas se retira con su motivo y no vuelve a intentarse. Los que no tienen ningún
+artículo en un idioma reconocido también se anotan ahí y no se llaman mientras sigan así.
 """
 
 import contextlib
@@ -91,6 +97,10 @@ MAX_LETRAS_MOTIVO = 500
 # Fuentes oficiales que confirman un incidente (recogida/oficiales.py): se conservan al
 # rehacerlo, porque sus notas solo se leen mientras siguen en la portada del organismo.
 FIABILIDAD_OFICIAL = "A"
+# Candidatos que fallan por sí solos (cursor de la base): fallos por recogida y retirada.
+APARTADOS = "candidatos_apartados"
+MAX_FALLOS_CANDIDATO = 3
+SIN_IDIOMA = "sin artículos en un idioma reconocido"
 
 
 class Servicio(Protocol):
@@ -127,6 +137,66 @@ class Peticion:
             + len(ficha.contenido("", self.fuentes))
             + len(str(ficha.ESQUEMA))
         )
+
+
+# --- Candidatos apartados -----------------------------------------------------------
+
+
+def apartados(almacen: Almacen) -> dict[str, Any]:
+    documento = almacen.cursor(APARTADOS) or {}
+    return documento if isinstance(documento, dict) else {}
+
+
+def retirados(almacen: Almacen) -> set[str]:
+    """Candidatos que no se vuelven a intentar: retirados tras sus fallos."""
+    return {id_ for id_, d in apartados(almacen).items() if d.get("retirado")}
+
+
+def anotar_fallo(almacen: Almacen, candidato_id: str, motivo: str, ahora: datetime) -> bool:
+    """Anota que el candidato falló en esta recogida. True si con este queda retirado.
+
+    Varios fallos en la misma recogida cuentan como uno: se retira tras fallar en
+    MAX_FALLOS_CANDIDATO recogidas distintas.
+    """
+    documento = apartados(almacen)
+    entrada = documento.setdefault(candidato_id, {"fallos": []})
+    entrada.setdefault("fallos", [])
+    fecha = _fecha(ahora)
+    if any(f.get("fecha") == fecha for f in entrada["fallos"]):
+        return False
+    entrada["fallos"].append({"fecha": fecha, "motivo": motivo[:MAX_LETRAS_MOTIVO]})
+    retirado = len(entrada["fallos"]) >= MAX_FALLOS_CANDIDATO and not entrada.get("retirado")
+    if retirado:
+        entrada["retirado"] = fecha
+        entrada["motivo"] = (
+            f"retirado tras fallar en {len(entrada['fallos'])} recogidas distintas; el último: "
+            + motivo[:MAX_LETRAS_MOTIVO]
+        )
+        registro.warning("candidato %s retirado: %s", candidato_id, entrada["motivo"])
+    else:
+        registro.warning(
+            "candidato %s apartado en esta recogida (fallo %d de %d): %s",
+            candidato_id, len(entrada["fallos"]), MAX_FALLOS_CANDIDATO, motivo[:300],
+        )  # fmt: skip
+    almacen.guardar_cursor(APARTADOS, documento)
+    return retirado
+
+
+def anotar_sin_idioma(almacen: Almacen, ids: list[str], ahora: datetime) -> None:
+    """Candidatos sin ningún artículo en un idioma reconocido: no se llaman mientras sigan así
+    (si les llega uno, vuelven solos)."""
+    documento = apartados(almacen)
+    nuevos = [i for i in ids if not documento.get(i, {}).get("sin_idioma")]
+    if not nuevos:
+        return
+    for id_ in nuevos:
+        entrada = documento.setdefault(id_, {"fallos": []})
+        entrada.update({"sin_idioma": _fecha(ahora), "motivo": SIN_IDIOMA})
+    almacen.guardar_cursor(APARTADOS, documento)
+
+
+def con_idioma(almacen: Almacen, candidato: Documento) -> bool:
+    return any(a.get("idioma") for a in _articulos(almacen, candidato))
 
 
 def descripcion_objetivo(objetivo: Objetivo) -> str:
@@ -759,6 +829,8 @@ class Extraidas:
 
     # Por cada llamada hecha, el incidente que dio de alta o actualizó, o None.
     incidentes: list[str | None] = field(default_factory=list)
+    # Candidatos apartados por un fallo propio en esta tanda.
+    apartados: list[str] = field(default_factory=list)
     parada: Parada | None = None
     motivo: str = ""
 
@@ -784,6 +856,7 @@ def extraer(
     """
     hechas = Extraidas()
     for peticion in peticiones:
+        candidato_id = peticion.candidato["id"]
         gastado = almacen.gastado(
             modo.value, coste.dia(ahora) if modo is coste.Modo.HORARIO else None
         )
@@ -801,9 +874,25 @@ def extraer(
             return hechas.parar(Parada.SERVICIO_CAIDO, error)
         except LlamadaFallida as error:
             return hechas.parar(Parada.ERROR, error)
-        hechas.incidentes.append(
-            procesar_respuesta(almacen, peticion, respuesta, ahora, modo, False, modelos_base)
-        )
+        except Exception as error:
+            # Una respuesta que el cliente no sabe leer: se aparta este candidato y se para como
+            # con una caída (insistir con los demás solo gastaría). Los apartados van los últimos
+            # en la recogida siguiente, así que uno solo no frena a los demás.
+            motivo = f"respuesta del servicio ilegible: {error!r}"
+            anotar_fallo(almacen, candidato_id, motivo, ahora)
+            hechas.apartados.append(candidato_id)
+            return hechas.parar(Parada.SERVICIO_CAIDO, error)
+        try:
+            incidente = procesar_respuesta(
+                almacen, peticion, respuesta, ahora, modo, False, modelos_base
+            )
+        except Exception as error:
+            # El fallo es de este candidato (sus datos o su ficha): se aparta y los demás siguen.
+            registro.exception("candidato %s: fallo al procesar su respuesta", candidato_id)
+            anotar_fallo(almacen, candidato_id, f"fallo al procesar la respuesta: {error!r}", ahora)
+            hechas.apartados.append(candidato_id)
+            incidente = None
+        hechas.incidentes.append(incidente)
     return hechas
 
 
@@ -870,9 +959,17 @@ def procesar_lote(
             fallidas += 1
             continue
         mensaje = resultado["result"]["message"]
-        incidente = procesar_respuesta(
-            almacen, peticion, mensaje, ahora(), modo, True, modelos_base
-        )
+        momento = ahora()
+        try:
+            incidente = procesar_respuesta(
+                almacen, peticion, mensaje, momento, modo, True, modelos_base
+            )
+        except Exception as error:
+            registro.exception("candidato %s: fallo al procesar su respuesta", peticion.id_lote)
+            motivo = f"fallo al procesar la respuesta: {error!r}"
+            anotar_fallo(almacen, peticion.candidato["id"], motivo, momento)
+            fallidas += 1
+            continue
         procesadas += 1
         publicadas += incidente is not None
     return {"enviadas": procesadas + fallidas, "publicadas": publicadas, "fallidas": fallidas}

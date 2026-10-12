@@ -28,6 +28,7 @@ import argparse
 import json
 import logging
 import sys
+from collections.abc import Iterator
 from datetime import UTC, datetime
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -67,17 +68,20 @@ def leer_registro(ruta: Path | None) -> dict[str, Any] | None:
 
 
 def exportar(almacen: Almacen, version: str, ahora: datetime, destino: Path) -> str:
-    """Escribe la versión en `destino` y devuelve la huella del manifiesto."""
-    ficheros = semanal.generar(almacen)
-    contenido = semanal.empaquetar(
-        ficheros, version, almacen.ultimo_cambio() or ahora.strftime(semanal.FORMATO_INSTANTE),
-        ahora, cifrado.destinatario(),
+    """Escribe la versión en `destino` y devuelve la huella del manifiesto. Los ficheros se
+    generan, cifran y escriben de uno en uno (semanal.exportar_a_disco): en memoria solo hay uno."""
+
+    def con_registro() -> Iterator[semanal.Fichero]:
+        for fichero in semanal.generar_por_partes(almacen):
+            if not fichero.nombre.startswith("esquema/"):
+                registro.info("%s: %d registros", fichero.nombre, fichero.registros)
+            yield fichero
+
+    return semanal.exportar_a_disco(
+        con_registro(), version,
+        almacen.ultimo_cambio() or ahora.strftime(semanal.FORMATO_INSTANTE), ahora,
+        cifrado.destinatario(), destino,
     )  # fmt: skip
-    semanal.escribir(contenido, destino)
-    for fichero in ficheros:
-        if not fichero.nombre.startswith("esquema/"):
-            registro.info("%s: %d registros", fichero.nombre, fichero.registros)
-    return semanal.sha256(contenido[semanal.MANIFIESTO])
 
 
 def principal(argumentos: list[str] | None = None, ahora: datetime | None = None) -> int:

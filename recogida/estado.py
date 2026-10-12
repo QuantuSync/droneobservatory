@@ -9,7 +9,8 @@ reconstruye cada hora. Solo lleva horas y estados, ningún contenido.
 Formato (versión 1), con los instantes como AAAA-MM-DDThh:mmZ:
 
     {"version": 1, "inicio", "fin", "resultado": correcta | con_avisos | fallida,
-     "ultima_correcta": instante o null, "siguiente",
+     "ultima_correcta": instante o null, "ultima_publicacion": instante o null (la última
+     que publicó, correcta o con avisos), "siguiente",
      "fuentes": [{"id", "estado": leida | con_aviso | no_leida, "ultimo_dato": instante o null}],
      "ultima_exportacion": instante o null, "ultima_deduccion": instante o null,
      "directo": {"estado": en_marcha | con_respaldo | parado, "ultimo_ciclo_correcto": instante
@@ -148,12 +149,19 @@ def componer(
 ) -> dict[str, Any]:
     fallo = resultado(codigo)
     ultima = instante(fin) if fallo == CORRECTA else (anterior or {}).get("ultima_correcta")
+    # La última que publicó: también las que terminan con avisos (código 2).
+    publico = (
+        instante(fin)
+        if fallo != FALLIDA
+        else (anterior or {}).get("ultima_publicacion") or (anterior or {}).get("ultima_correcta")
+    )
     estado: dict[str, Any] = {
         "version": VERSION,
         "inicio": instante(inicio),
         "fin": instante(fin),
         "resultado": fallo,
         "ultima_correcta": ultima,
+        "ultima_publicacion": publico,
         "siguiente": instante(siguiente(fin, minuto)),
         "fuentes": _fuentes(parcial, anterior),
     }

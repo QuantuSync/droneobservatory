@@ -5,9 +5,15 @@ nivel de país o de región).
 El foco térmico de cada impacto (proceso/focos_termicos.py) y las mediciones de cada incidente
 (tráfico aéreo y condiciones, proceso/mediciones.py) y la pérdida de luz nocturna de cada ataque
 (proceso/luces.py) viven en sus propias tablas y se añaden aquí a su incidente, a su región o a
-su ataque antes de exportar."""
+su ataque antes de exportar.
 
+Cada fichero se genera por separado: si uno falla, queda el que ya había, los demás se publican
+y el fallo queda en el registro (y en `fallidos`, si se pasa). Solo si no se puede generar ninguno
+sale el error."""
+
+import logging
 import os
+from collections.abc import Callable
 from datetime import datetime
 from pathlib import Path
 
@@ -33,6 +39,8 @@ UCRANIA = "ucrania.json"
 INCIDENTES = "incidentes.geojson"
 SIN_UBICACION = "incidentes_sin_ubicacion.json"
 
+registro = logging.getLogger(__name__)
+
 
 def modelos(almacen: Almacen) -> frozenset[str]:
     """El vocabulario de modelos de la configuración más el que ha crecido con el uso."""
@@ -53,7 +61,16 @@ def con_tipo_dron(incidentes: list[Documento], tipos: dict[str, Documento]) -> l
     return salida
 
 
-def publicar(almacen: Almacen, ahora: datetime, directorio: Path = DIRECTORIO) -> list[Path]:
+class NadaPublicado(RuntimeError):
+    """No se pudo generar ninguno de los ficheros publicados."""
+
+
+def publicar(
+    almacen: Almacen,
+    ahora: datetime,
+    directorio: Path = DIRECTORIO,
+    fallidos: list[str] | None = None,
+) -> list[Path]:
     """Regenera los ficheros y devuelve los que han cambiado."""
     directorio.mkdir(parents=True, exist_ok=True)
     incidentes, ataques = con_focos(
@@ -70,16 +87,27 @@ def publicar(almacen: Almacen, ahora: datetime, directorio: Path = DIRECTORIO) -
         else d
         for d in almacen.impactos_guerra()
     ]
-    documentos = {
-        UCRANIA: exportar_ucrania(ataques, ahora, impactos),
-        INCIDENTES: exportar(incidentes, ahora, vocabulario),
-        SIN_UBICACION: exportar_sin_ubicacion(incidentes, ahora, vocabulario),
+    documentos: dict[str, Callable[[], Documento]] = {
+        UCRANIA: lambda: exportar_ucrania(ataques, ahora, impactos),
+        INCIDENTES: lambda: exportar(incidentes, ahora, vocabulario),
+        SIN_UBICACION: lambda: exportar_sin_ubicacion(incidentes, ahora, vocabulario),
     }
     cambiados = []
-    for nombre, documento in documentos.items():
+    errores: list[str] = []
+    for nombre, generar in documentos.items():
         ruta = directorio / nombre
         anterior = ruta.read_bytes() if ruta.exists() else None
-        escribir(documento, ruta)
+        try:
+            escribir(generar(), ruta)
+        except Exception as error:
+            # Queda el fichero que ya había (escribir lo sustituye de una vez): los demás siguen.
+            registro.exception("%s sin generar: queda el anterior", nombre)
+            errores.append(f"{nombre}: {error!r}")
+            continue
         if ruta.read_bytes() != anterior:
             cambiados.append(ruta)
+    if fallidos is not None:
+        fallidos.extend(errores)
+    if len(errores) == len(documentos):
+        raise NadaPublicado("; ".join(errores))
     return cambiados

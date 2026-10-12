@@ -47,17 +47,24 @@ def test_estado_reciente_no_es_problema() -> None:
 
 
 def test_estado_antiguo_es_problema() -> None:
-    al_dia, frase = salud.diagnostico(estado(timedelta(hours=3)), AHORA)
+    al_dia, frase = salud.diagnostico(estado(timedelta(hours=3, minutes=5)), AHORA)
     assert not al_dia
-    assert "más de 2 h" in frase
+    assert "más de 3 h" in frase
+
+
+def test_una_recogida_con_avisos_reciente_cuenta_como_publicada() -> None:
+    documento = estado(timedelta(hours=5), "con_avisos")
+    documento["ultima_publicacion"] = (AHORA - timedelta(minutes=40)).strftime("%Y-%m-%dT%H:%MZ")
+    assert salud.diagnostico(documento, AHORA)[0]
 
 
 def test_una_recogida_fallida_con_una_correcta_reciente_no_es_problema() -> None:
     assert salud.diagnostico(estado(timedelta(hours=1), "fallida"), AHORA)[0]
 
 
-def test_recogidas_fallidas_durante_mas_de_dos_horas_son_problema() -> None:
-    assert not salud.diagnostico(estado(timedelta(hours=2, minutes=5), "fallida"), AHORA)[0]
+def test_recogidas_fallidas_durante_mas_de_tres_horas_son_problema() -> None:
+    assert salud.diagnostico(estado(timedelta(hours=2, minutes=55), "fallida"), AHORA)[0]
+    assert not salud.diagnostico(estado(timedelta(hours=3, minutes=5), "fallida"), AHORA)[0]
     assert not salud.diagnostico(estado(None, "fallida"), AHORA)[0]
 
 

@@ -84,36 +84,76 @@ class Resultado:
         )
 
 
+def utilizables(almacen: Almacen, candidatos: list[Documento]) -> list[Documento]:
+    """Sin los retirados tras sus fallos ni los que siguen sin artículos en un idioma
+    reconocido; los que fallaron alguna vez, los últimos (uno que falla no frena a los demás)."""
+    apartados = extraccion.apartados(almacen)
+    elegidos = []
+    for candidato in candidatos:
+        entrada = apartados.get(candidato["id"], {})
+        if entrada.get("retirado"):
+            continue
+        if entrada.get("sin_idioma") and not extraccion.con_idioma(almacen, candidato):
+            continue
+        elegidos.append(candidato)
+    return sorted(elegidos, key=lambda c: bool(apartados.get(c["id"], {}).get("fallos")))
+
+
 def pendientes(almacen: Almacen, desde: datetime | None = None) -> list[Documento]:
     candidatos = almacen.candidatos()
     if desde is not None:
         corte = desde.strftime("%Y-%m-%dT%H:%M:%SZ")
         candidatos = [c for c in candidatos if c["ultimo"] >= corte]
-    return [c for c in candidatos if extraccion.necesita_extraccion(almacen, c)]
+    return utilizables(
+        almacen, [c for c in candidatos if extraccion.necesita_extraccion(almacen, c)]
+    )
 
 
 def preparar_todas(
-    almacen: Almacen, candidatos: list[Documento], descargador: Callable[[], Descargador]
+    almacen: Almacen,
+    candidatos: list[Documento],
+    descargador: Callable[[], Descargador],
+    ahora: datetime | None = None,
 ) -> list[extraccion.Peticion]:
     """Peticiones con las páginas descargadas en paralelo; el orden se conserva.
 
-    La base solo se lee en este hilo: los demás solo descargan.
+    La base solo se lee en este hilo: los demás solo descargan. Un candidato que no se puede
+    preparar se aparta (con `ahora`, queda anotado) y los demás siguen.
     """
-    sin_texto = [extraccion.preparar(almacen, c, None) for c in candidatos]
+    momento = ahora or datetime.now(UTC)
+    sin_texto = []
+    for candidato in candidatos:
+        try:
+            sin_texto.append(extraccion.preparar(almacen, candidato, None))
+        except TiempoAgotado:
+            raise
+        except Exception as error:
+            registro.exception("candidato %s: no se puede preparar", candidato["id"])
+            extraccion.anotar_fallo(
+                almacen, candidato["id"], f"no se puede preparar: {error!r}", momento
+            )
     # Un candidato sin ningún artículo en un idioma conocido (un medio de fuera de Europa
     # que GDELT sitúa en una ciudad europea) no tiene fuentes que mandar: no se llama. Con
     # una ficha sin artículos no hay fecha del primero y el paso entero se caía.
     vacias = [p.candidato["id"] for p in sin_texto if not p.enviadas]
     if vacias:
         registro.info("candidatos sin artículos en un idioma conocido: %s", ", ".join(vacias))
+        extraccion.anotar_sin_idioma(almacen, vacias, momento)
     sin_texto = [p for p in sin_texto if p.enviadas]
 
     def con_texto(peticion: extraccion.Peticion) -> extraccion.Peticion:
         propio = descargador()
-        fuentes = [
-            replace(f, texto=paginas.leer(propio, url))
-            for f, url in zip(peticion.fuentes, peticion.enviadas, strict=True)
-        ]
+        fuentes = []
+        for f, url in zip(peticion.fuentes, peticion.enviadas, strict=True):
+            try:
+                texto = paginas.leer(propio, url)
+            except TiempoAgotado:
+                raise
+            except Exception as error:
+                # Sin la página, el titular basta para esa fuente.
+                registro.warning("página sin leer (%s): %r", url, error)
+                texto = ""
+            fuentes.append(replace(f, texto=texto))
         return replace(peticion, fuentes=fuentes)
 
     with ThreadPoolExecutor(HILOS) as hilos:
@@ -246,14 +286,16 @@ def horaria(
     # diario de gasto corta la ejecución donde toque.
     nuevos = pendientes(almacen, ahora - VENTANA_HORARIA)
     vistos = {c["id"] for c in nuevos}
+    retirados = extraccion.retirados(almacen)
     historicos = sorted(
         (c for c in almacen.candidatos()
-         if c["id"] not in vistos and extraccion.desactualizado(almacen, c)),
+         if c["id"] not in vistos and c["id"] not in retirados
+         and extraccion.desactualizado(almacen, c)),
         key=lambda c: c["ultimo"], reverse=True,
     )[:MAX_REPROCESO_POR_HORA]  # fmt: skip
     # Con lo que queda del cupo de reproceso, los nunca extraídos con varios medios.
     vistos |= {c["id"] for c in historicos}
-    historicos += [c for c in prioritarios(almacen) if c["id"] not in vistos][
+    historicos += utilizables(almacen, [c for c in prioritarios(almacen) if c["id"] not in vistos])[
         : MAX_REPROCESO_POR_HORA - len(historicos)
     ]
     if almacen.gastado(coste.Modo.HORARIO.value, coste.dia(ahora)) >= (
@@ -262,7 +304,7 @@ def horaria(
         historicos = []
     candidatos = [*nuevos, *historicos]
     try:
-        peticiones = preparar_todas(almacen, candidatos, lambda: Descargador(plazo=plazo))
+        peticiones = preparar_todas(almacen, candidatos, lambda: Descargador(plazo=plazo), ahora)
     except TiempoAgotado as error:
         # Sin el texto de las páginas no se llama: solo con titulares la ficha sale peor.
         extraidas = extraccion.Extraidas().parar(extraccion.Parada.TIEMPO, error)

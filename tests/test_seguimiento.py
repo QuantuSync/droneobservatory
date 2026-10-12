@@ -463,7 +463,7 @@ def test_estado_del_seguimiento() -> None:
     assert "seguimiento" not in estado.componer(ahora, ahora, 0, None, None, 17)
 
 
-def test_el_vigia_avisa_si_para_o_si_hubo_un_hueco_largo() -> None:
+def test_el_vigia_avisa_si_para_y_un_hueco_recuperado_solo_se_cuenta() -> None:
     ahora = datetime(2026, 10, 4, 12, 41, tzinfo=UTC)
     base: dict[str, Any] = {
         "fin": "2026-10-04T12:33Z",
@@ -476,7 +476,7 @@ def test_el_vigia_avisa_si_para_o_si_hubo_un_hueco_largo() -> None:
     hueco = {"desde": "2026-10-04T11:50Z", "hasta": "2026-10-04T12:05Z"}
     reciente = {**base, "seguimiento": {**base["seguimiento"], "ultimo_hueco_largo": hueco}}
     al_dia, frase = salud.diagnostico_seguimiento(reciente, ahora)
-    assert al_dia is False and "11:50" in frase
+    assert al_dia is True and "11:50" in frase and "se recuperó solo" in frase
     antiguo = {"desde": "2026-10-04T08:00Z", "hasta": "2026-10-04T08:15Z"}
     viejo = {**base, "seguimiento": {**base["seguimiento"], "ultimo_hueco_largo": antiguo}}
     assert salud.diagnostico_seguimiento(viejo, ahora)[0] is True

@@ -79,6 +79,8 @@ URL_ESTADO_GOATCOUNTER = "https://stats.droneobservatory.eu/status"
 URL_METRICAS = "http://127.0.0.1:9095/metrics"
 URL_SALUD = "https://droneobservatory-almacen.nbg1.your-objectstorage.com/salud.json"
 UNIDAD_RECOGIDA = "eodi-recogida.service"
+# Registro de la vigilancia (recogida/vigilancia.py): lo que se arregló solo.
+VIGILANCIA = "vigilancia.json"
 ESTADO = "visitas.json"
 MUESTRAS = "muestras_ntfy.jsonl"
 NAVEGADOR = "ntfy_navegador.json"
@@ -489,7 +491,14 @@ def avisos_del_dia(ruta: Path, dia: date) -> tuple[int, int]:
 
 # --- Estado del sistema -----------------------------------------------------------------------
 def _ejecutar(orden: Sequence[str]) -> str:
-    salida = subprocess.run(list(orden), capture_output=True, text=True, timeout=60, check=False)
+    """La salida de la orden; si no se puede ejecutar (o tarda), vacía: el resumen sale igual."""
+    try:
+        salida = subprocess.run(
+            list(orden), capture_output=True, text=True, timeout=60, check=False
+        )
+    except (OSError, subprocess.SubprocessError) as error:
+        registro.warning("%s sin ejecutar: %s", orden[0], error)
+        return ""
     return salida.stdout
 
 
@@ -503,6 +512,16 @@ def recogidas_del_dia(dia: date, ejecutar: Ejecutar = _ejecutar) -> tuple[int, i
         ]
     )  # fmt: skip
     return contar_recogidas(texto.splitlines())
+
+
+def diario_del_dia(dia: date, ejecutar: Ejecutar = _ejecutar) -> list[str]:
+    inicio, fin = limites_del_dia(dia)
+    return ejecutar(
+        [
+            "journalctl", "-u", UNIDAD_RECOGIDA, "--since", f"@{int(inicio.timestamp())}",
+            "--until", f"@{int(fin.timestamp())}", "-o", "cat", "--no-pager",
+        ]
+    ).splitlines()  # fmt: skip
 
 
 def contar_recogidas(lineas: Iterable[str]) -> tuple[int, int, int]:
@@ -520,6 +539,50 @@ def contar_recogidas(lineas: Iterable[str]) -> tuple[int, int, int]:
         elif f"{UNIDAD_RECOGIDA}: Failed with result 'timeout'" in linea:
             fallidas += 1
     return correctas, con_avisos, fallidas
+
+
+def reintentos_del_dia(dia: date, ejecutar: Ejecutar = _ejecutar) -> dict[str, int]:
+    """Reintentos que systemd hizo solo ese día, por unidad (servidor/reintentos.sh)."""
+    inicio, fin = limites_del_dia(dia)
+    texto = ejecutar(
+        [
+            "journalctl", "-u", "eodi-*", "-u", "goatcounter.service", "-u", "ntfy.service",
+            "-u", "caddy.service", "--since", f"@{int(inicio.timestamp())}",
+            "--until", f"@{int(fin.timestamp())}", "-o", "cat", "--no-pager",
+        ]
+    )  # fmt: skip
+    return contar_reintentos(texto.splitlines())
+
+
+def contar_reintentos(lineas: Iterable[str]) -> dict[str, int]:
+    cuenta: dict[str, int] = {}
+    for linea in lineas:
+        if m := re.search(r"([\w.@-]+)\.service: Scheduled restart job", linea):
+            cuenta[m[1]] = cuenta.get(m[1], 0) + 1
+    return dict(sorted(cuenta.items()))
+
+
+def candidatos_del_dia(lineas: Iterable[str]) -> tuple[int, int]:
+    """Candidatos que el extractor apartó por un fallo propio y los que retiró, en el diario."""
+    apartados = retirados = 0
+    for linea in lineas:
+        if re.search(r"candidato \S+ apartado en esta recogida", linea):
+            apartados += 1
+        elif re.search(r"candidato \S+ retirado:", linea):
+            retirados += 1
+    return apartados, retirados
+
+
+def resueltos_del_dia(vigilancia_json: Path, dia: date) -> list[tuple[str, bool]]:
+    """Lo que la vigilancia vio y se fue ese día (recogida/vigilancia.py, `resueltos`): la frase y
+    si llegó a abrir incidencia."""
+    inicio, fin = limites_del_dia(dia)
+    resueltos = []
+    for r in _leer_json(vigilancia_json).get("resueltos", []):
+        hasta = _instante(r.get("hasta")) if isinstance(r, dict) else None
+        if hasta is not None and inicio <= hasta < fin:
+            resueltos.append((str(r.get("frase") or r.get("id")), bool(r.get("incidencia"))))
+    return resueltos
 
 
 def problemas_abiertos(url: str = URL_SALUD) -> list[str] | None:
@@ -544,6 +607,11 @@ class Datos:
     avisos: tuple[int, int]
     recogidas: tuple[int, int, int]
     problemas: list[str] | None
+    # Lo que se arregló solo ese día: reintentos de systemd por unidad, lo que la vigilancia vio y
+    # se fue (frase, si abrió incidencia) y los candidatos apartados y retirados por el extractor.
+    reintentos: dict[str, int] = field(default_factory=dict)
+    resueltos: list[tuple[str, bool]] = field(default_factory=list)
+    candidatos: tuple[int, int] = (0, 0)
 
 
 DIAS_SEMANA = ("lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo")
@@ -638,6 +706,26 @@ def texto_resumen(d: Datos) -> str:
         f"  Recogidas: {correctas + con_avisos} correctas ({con_avisos} con avisos), "
         f"{fallidas} fallidas",
     ]
+    if d.reintentos:
+        total = sum(d.reintentos.values())
+        detalle = ", ".join(f"{u.removeprefix('eodi-')} {n}" for u, n in d.reintentos.items())
+        lineas.append(f"  Reintentos automáticos: {total} ({detalle})")
+    else:
+        lineas.append("  Reintentos automáticos: ninguno")
+    apartados, retirados = d.candidatos
+    if apartados or retirados:
+        lineas.append(
+            f"  Candidatos apartados por un fallo propio: {apartados}; retirados tras 3 fallos: "
+            f"{retirados}"
+        )
+    if d.resueltos:
+        solos = [f for f, incidencia in d.resueltos if not incidencia]
+        cerradas = [f for f, incidencia in d.resueltos if incidencia]
+        lineas.append(f"  Se arreglaron solos, sin incidencia: {len(solos)}")
+        lineas += [f"  - {f[:160]}" for f in solos[:LIMITE]]
+        if cerradas:
+            lineas.append(f"  Con incidencia, ya cerrada: {len(cerradas)}")
+            lineas += [f"  - {f[:160]}" for f in cerradas[:LIMITE]]
     if d.problemas is None:
         lineas.append("  Vigilancia: no se pudo leer salud.json")
     elif d.problemas:
@@ -669,6 +757,7 @@ def reunir(
     ahora: datetime,
     ejecutar: Ejecutar = _ejecutar,
     salud: Callable[[], list[str] | None] = problemas_abiertos,
+    secretos: Path | None = None,
 ) -> Datos:
     """Todo lo que lleva el resumen del día; lo que no se puede leer sale como «no se pudo»."""
     visitas = anterior = media7 = None
@@ -708,6 +797,9 @@ def reunir(
         avisos=enviados,
         recogidas=recogidas_del_dia(dia, ejecutar),
         problemas=salud(),
+        reintentos=reintentos_del_dia(dia, ejecutar),
+        resueltos=resueltos_del_dia(secretos / VIGILANCIA, dia) if secretos else [],
+        candidatos=candidatos_del_dia(diario_del_dia(dia, ejecutar)),
     )
 
 
@@ -846,7 +938,7 @@ def pasada(
         try:
             datos = reunir(
                 dia, rutas.goatcounter, rutas.datos, rutas.publicacion, rutas.base,
-                rutas.avisos, ahora, ejecutar, salud,
+                rutas.avisos, ahora, ejecutar, salud, rutas.secretos,
             )  # fmt: skip
             enviar_con_reintentos(enviar, mensaje(datos, TEMA_RESUMEN))
         except (urllib.error.URLError, OSError, ValueError, sqlite3.Error) as error:
@@ -1015,7 +1107,7 @@ def principal(argumentos: list[str] | None = None) -> int:
         return 0
     datos = reunir(
         args.dia, rutas.goatcounter, rutas.datos, rutas.publicacion, rutas.base, rutas.avisos,
-        ahora,
+        ahora, secretos=rutas.secretos,
     )  # fmt: skip
     if args.ensayo:
         sys.stdout.write(f"{TITULO}\n\n{texto_resumen(datos)}\n")

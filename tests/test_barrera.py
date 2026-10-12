@@ -315,7 +315,7 @@ def test_vigilancia_mapa_parado_con_incidentes_nuevos() -> None:
 
 
 def test_vigilancia_lo_pone_en_salud_json_como_problema(tmp_path: Path) -> None:
-    """El problema llega a salud.json: el workflow vigia-recogida falla y llega el correo."""
+    """El problema llega a salud.json: el workflow vigia-recogida abre su incidencia."""
     from tests import test_vigilancia as tv
 
     hace = tv.AHORA - timedelta(seconds=20)

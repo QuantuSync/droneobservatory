@@ -70,7 +70,7 @@ import gzip
 import hashlib
 import json
 from collections import Counter, defaultdict
-from collections.abc import Callable, Iterable
+from collections.abc import Callable, Iterable, Iterator
 from dataclasses import dataclass
 from datetime import datetime
 from functools import cache
@@ -730,6 +730,14 @@ def rutas_exportables() -> tuple[list[Documento], list[Documento]]:
 
 def generar(almacen: Almacen) -> list[Fichero]:
     """Los ficheros de una versión, en claro y ya validados."""
+    return list(generar_por_partes(almacen))
+
+
+def generar_por_partes(almacen: Almacen) -> Iterator[Fichero]:
+    """Los ficheros de una versión, en claro y ya validados, de uno en uno: cada lista grande se
+    suelta en cuanto su fichero sale, y quien los escribe en disco (`exportar_a_disco`) no tiene
+    nunca más de uno en memoria. La exportación del 12 de octubre de 2026 llegó a 3,4 GB de los 4
+    de su unidad con todos a la vez."""
     # El foco térmico de FIRMS vive en su propia tabla: aquí va completo, con lo interno.
     focos = almacen.focos_termicos()
     base, ataques_base = con_focos(almacen.incidentes(), almacen.ataques_ucrania(), focos)
@@ -755,15 +763,6 @@ def generar(almacen: Almacen) -> list[Fichero]:
         ataques = [origenes.exportar_ataque(a) for a in ataques_base]
     except origenes.SinOrigen as error:
         raise ExportacionInvalida(f"valor sin origen: {error}") from error
-    guerra = [
-        origenes.exportar_impacto(
-            {**d, **({"foco_termico": focos[d["id"]]} if d["id"] in focos else {}),
-             **({"deduccion": deducciones[d["id"]]} if d["id"] in deducciones else {})}
-        )
-        for d in almacen.impactos_guerra()
-    ]  # fmt: skip
-    restricciones = [origenes.exportar_restriccion(r) for r in almacen.restricciones()]
-    mensajes = [{k: v for k, v in m.items() if k != "huella"} for m in almacen.mensajes_guerra()]
     # Restricciones de aeropuertos de cada ataque UA_RU: cuántos aeropuertos y cuántas horas.
     restringidos = por_ataque(almacen.restricciones())
     ataques = [
@@ -773,7 +772,28 @@ def generar(almacen: Almacen) -> list[Fichero]:
         if a["id"] in restringidos else a
         for a in ataques
     ]  # fmt: skip
+    # Las afirmaciones primero: si alguna no tiene origen, no sale ningún fichero.
+    lista_afirmaciones = afirmaciones(
+        almacen, base, ataques_base + almacen.impactos_guerra(), fichas
+    )
+    sin_origen = [a for a in lista_afirmaciones if not a.get("origen") or not a.get("metodo")]
+    if sin_origen:
+        raise ExportacionInvalida(f"afirmaciones.jsonl: {len(sin_origen)} sin origen")
+    _comprobar("afirmaciones.jsonl", lista_afirmaciones, validador_propio("afirmacion"))
+    yield Fichero("afirmaciones.jsonl", _jsonl(lista_afirmaciones), len(lista_afirmaciones),
+                  _propio("afirmacion"))  # fmt: skip
+    del lista_afirmaciones, sin_origen
+
+    _comprobar("incidentes.jsonl", incidentes, validador(Esquema.INCIDENTE))
+    yield Fichero("incidentes.jsonl", _jsonl(incidentes), len(incidentes), _base("incidente"))
+    _comprobar("episodios.jsonl", episodios, validador(Esquema.EPISODIO))
+    yield Fichero("episodios.jsonl", _jsonl(episodios), len(episodios), _base("episodio"))
+    del episodios
+
     por_ataque_procedencia = {a["id"]: a["procedencia"] for a in ataques}
+    _comprobar("ucrania_ataques.jsonl", ataques, validador(Esquema.ATAQUE_UCRANIA))
+    yield Fichero("ucrania_ataques.jsonl", _jsonl(ataques), len(ataques), _base("ataque_ucrania"))
+    del ataques, ataques_base
     regiones = [
         {
             "ataque_id": a,
@@ -787,44 +807,72 @@ def generar(almacen: Almacen) -> list[Fichero]:
             for a, r in almacen.todas_las_regiones_ucrania()
         )
     ]
-    lista_afirmaciones = afirmaciones(
-        almacen, base, ataques_base + almacen.impactos_guerra(), fichas
-    )
-    lista_descartes = descartes(almacen, base)
-    encuentros = almacen.encuentros()
-    estadisticas = almacen.estadisticas_oficiales()
-    documentos = almacen.documentos_oficiales()
-    datos_frecuencias = frecuencias(almacen, incidentes, estadisticas)
-    cifras_contexto = [{k: v for k, v in c.items() if k != "origen"} for c in contexto_pais()]
-    datos_vocabulario = vocabulario()
-    entradas_vocabulario = sum(
-        len(datos_vocabulario[c]) for c in ("categorias_objetivo", "clases_dron")
-    )
-    sin_origen = [a for a in lista_afirmaciones if not a.get("origen") or not a.get("metodo")]
-    if sin_origen:
-        raise ExportacionInvalida(f"afirmaciones.jsonl: {len(sin_origen)} sin origen")
-
-    _comprobar("incidentes.jsonl", incidentes, validador(Esquema.INCIDENTE))
-    _comprobar("episodios.jsonl", episodios, validador(Esquema.EPISODIO))
-    _comprobar("ucrania_ataques.jsonl", ataques, validador(Esquema.ATAQUE_UCRANIA))
     _comprobar("ucrania_regiones.jsonl", regiones, validador_propio("region_ucrania"))
     _comprobar(
         "ucrania_regiones.jsonl", (r["region"] for r in regiones),
         validador(Esquema.REGION_UCRANIA),
     )  # fmt: skip
+    yield Fichero("ucrania_regiones.jsonl", _jsonl(regiones), len(regiones),
+                  _propio("region_ucrania"))  # fmt: skip
+    del regiones, por_ataque_procedencia
+
+    guerra = [
+        origenes.exportar_impacto(
+            {**d, **({"foco_termico": focos[d["id"]]} if d["id"] in focos else {}),
+             **({"deduccion": deducciones[d["id"]]} if d["id"] in deducciones else {})}
+        )
+        for d in almacen.impactos_guerra()
+    ]  # fmt: skip
     _comprobar("guerra_impactos.jsonl", guerra, validador(Esquema.IMPACTO_GUERRA))
+    yield Fichero("guerra_impactos.jsonl", _jsonl(guerra), len(guerra), _base("impacto_guerra"))
+    del guerra
+    restricciones = [origenes.exportar_restriccion(r) for r in almacen.restricciones()]
     _comprobar(
         "restricciones_aeropuertos.jsonl", restricciones, validador(Esquema.RESTRICCION_AEROPUERTO)
     )
+    yield Fichero("restricciones_aeropuertos.jsonl", _jsonl(restricciones), len(restricciones),
+                  _base("restriccion_aeropuerto"))  # fmt: skip
+    del restricciones
+    mensajes = [{k: v for k, v in m.items() if k != "huella"} for m in almacen.mensajes_guerra()]
     _comprobar("guerra_mensajes.jsonl", mensajes, validador_propio("mensaje_guerra"))
-    _comprobar("afirmaciones.jsonl", lista_afirmaciones, validador_propio("afirmacion"))
+    yield Fichero("guerra_mensajes.jsonl", _jsonl(mensajes), len(mensajes),
+                  _propio("mensaje_guerra"))  # fmt: skip
+    del mensajes
+
+    lista_descartes = descartes(almacen, base)
     _comprobar("descartes.jsonl", lista_descartes, validador_propio("descarte"))
-    _comprobar("frecuencias.json", [datos_frecuencias], validador_propio("frecuencias"))
-    _comprobar("contexto_pais.jsonl", cifras_contexto, validador_propio("contexto_pais"))
-    _comprobar("vocabulario.json", [datos_vocabulario], validador_propio("vocabulario"))
+    yield Fichero("descartes.jsonl", _jsonl(lista_descartes), len(lista_descartes),
+                  _propio("descarte"))  # fmt: skip
+    del lista_descartes
+    encuentros = almacen.encuentros()
     _comprobar("encuentros.jsonl", encuentros, validador(Esquema.ENCUENTRO))
+    yield Fichero("encuentros.jsonl", _jsonl(encuentros), len(encuentros), _base("encuentro"))
+    del encuentros
+    estadisticas = almacen.estadisticas_oficiales()
     _comprobar("estadisticas_oficiales.jsonl", estadisticas, validador(Esquema.ESTADISTICA_OFICIAL))
+    datos_frecuencias = frecuencias(almacen, incidentes, estadisticas)
+    _comprobar("frecuencias.json", [datos_frecuencias], validador_propio("frecuencias"))
+    yield Fichero("estadisticas_oficiales.jsonl", _jsonl(estadisticas), len(estadisticas),
+                  _base("estadistica_oficial"))  # fmt: skip
+    yield Fichero("frecuencias.json", _json(datos_frecuencias), len(datos_frecuencias["filas"]),
+                  _propio("frecuencias"))  # fmt: skip
+    del estadisticas, datos_frecuencias, incidentes
+    documentos = almacen.documentos_oficiales()
     _comprobar("documentos_oficiales.jsonl", documentos, validador(Esquema.DOCUMENTO_OFICIAL))
+    yield Fichero("documentos_oficiales.jsonl", _jsonl(documentos), len(documentos),
+                  _base("documento_oficial"))  # fmt: skip
+    del documentos
+    cifras_contexto = [{k: v for k, v in c.items() if k != "origen"} for c in contexto_pais()]
+    _comprobar("contexto_pais.jsonl", cifras_contexto, validador_propio("contexto_pais"))
+    yield Fichero("contexto_pais.jsonl", _jsonl(cifras_contexto), len(cifras_contexto),
+                  _propio("contexto_pais"))  # fmt: skip
+    datos_vocabulario = vocabulario()
+    entradas_vocabulario = sum(
+        len(datos_vocabulario[c]) for c in ("categorias_objetivo", "clases_dron")
+    )
+    _comprobar("vocabulario.json", [datos_vocabulario], validador_propio("vocabulario"))
+    yield Fichero("vocabulario.json", _json(datos_vocabulario), entradas_vocabulario,
+                  _propio("vocabulario"))  # fmt: skip
     # Las previsiones publicadas, tal como se registraron: valor calculado, con su método y la
     # fecha en que se hizo (proceso/prevision).
     previsiones = [
@@ -832,11 +880,18 @@ def generar(almacen: Almacen) -> list[Fichero]:
         for p in almacen.previsiones()
     ]
     _comprobar("previsiones.jsonl", previsiones, validador_propio("prevision"))
+    yield Fichero("previsiones.jsonl", _jsonl(previsiones), len(previsiones), _propio("prevision"))
+    del previsiones
     # Las rutas publicadas y las estadísticas de sus grupos (proceso/rutas), de los ficheros que
     # deja su servicio; sin ellos, ninguna.
     rutas_noches, rutas_grupos = rutas_exportables()
     _comprobar("rutas_noches.jsonl", rutas_noches, validador_propio("ruta_noche"))
     _comprobar("rutas_grupos.jsonl", rutas_grupos, validador_propio("ruta_grupo"))
+    yield Fichero("rutas_noches.jsonl", _jsonl(rutas_noches), len(rutas_noches),
+                  _propio("ruta_noche"))  # fmt: skip
+    yield Fichero("rutas_grupos.jsonl", _jsonl(rutas_grupos), len(rutas_grupos),
+                  _propio("ruta_grupo"))  # fmt: skip
+    del rutas_noches, rutas_grupos
     # Catálogo de prestaciones, clases con su envolvente, zonas de lanzamiento y fuentes, y el
     # resumen de la validación del motor: AEGIS los usa como límites de movimiento por clase.
     # Con lo que ha admitido el barrido del catálogo vivo (tabla catalogo_vivo).
@@ -857,40 +912,7 @@ def generar(almacen: Almacen) -> list[Fichero]:
     _comprobar("clases_dron.json", [datos_clases], validador_propio("clases_dron"))
     _comprobar("deduccion_validacion.json", [datos_validacion],
                validador_propio("deduccion_validacion"))  # fmt: skip
-
-    # Desde el formato 1.9.0, lo que vive fuera de la base (exportacion/seguimiento.py).
-    from recogida import rutas as servicio_rutas
-    from recogida import seguimiento as servicio_seguimiento
-
-    carpeta_rutas = servicio_rutas.datos_rutas()
-    corte = datetime.fromisoformat(
-        (almacen.ultimo_cambio() or "1970-01-01T00:00:00Z").replace("Z", "+00:00")
-    )
-    mensajes_fa = seguimiento.fuerza_aerea(carpeta_rutas)
-    pistas_neptun = seguimiento.neptun_pistas(servicio_seguimiento.directorio_datos())
-    reconstruidas = seguimiento.rutas_reconstruidas(carpeta_rutas, corte)
-    cierres = seguimiento.cierres_medidos(almacen)
-    datos_prevision = seguimiento.prevision_validacion(seguimiento.datos_publicacion())
-    datos_tipo = seguimiento.tipo_dron_validacion(almacen)
-    datos_barrera = seguimiento.barrera_titulares(almacen, base)
-    _comprobar("fuerza_aerea_seguimiento.jsonl", mensajes_fa,
-               validador_propio("fuerza_aerea_mensaje"))  # fmt: skip
-    _comprobar("neptun_pistas.jsonl", pistas_neptun, validador_propio("neptun_pista"))
-    _comprobar("rutas_reconstruidas.jsonl", reconstruidas, validador_propio("ruta_reconstruida"))
-    _comprobar("cierres_medidos.jsonl", cierres, validador_propio("cierre_medido"))
-    _comprobar("cierres_medidos.jsonl", (c["anomalia"] for c in cierres),
-               validador_definicion("anomalia_trafico"))  # fmt: skip
-    _comprobar("prevision_validacion.json", [datos_prevision],
-               validador_propio("prevision_validacion"))  # fmt: skip
-    if datos_prevision["documento"] is not None:
-        _comprobar("prevision_validacion.json", [datos_prevision["documento"]],
-                   Draft202012Validator(_leer_json(ESQUEMA_PREVISION)))  # fmt: skip
-    _comprobar("tipo_dron_validacion.json", [datos_tipo], validador_propio("tipo_dron_validacion"))
-    _comprobar("barrera_titulares.json", [datos_barrera], validador_propio("barrera_titulares"))
-
-    datos = [
-        Fichero("afirmaciones.jsonl", _jsonl(lista_afirmaciones), len(lista_afirmaciones),
-                _propio("afirmacion")),
+    yield from (
         Fichero("catalogo_drones.json", _json(ficheros_catalogo["catalogo_drones.json"]),
                 len(ficheros_catalogo["catalogo_drones.json"]["modelos"]),
                 _catalogo("catalogo_drones")),
@@ -911,50 +933,55 @@ def generar(almacen: Almacen) -> list[Fichero]:
         Fichero("zonas_lanzamiento.json", _json(ficheros_catalogo["zonas_lanzamiento.json"]),
                 len(ficheros_catalogo["zonas_lanzamiento.json"]["zonas"]),
                 _catalogo("zonas_lanzamiento")),
-        Fichero("contexto_pais.jsonl", _jsonl(cifras_contexto), len(cifras_contexto),
-                _propio("contexto_pais")),
-        Fichero("descartes.jsonl", _jsonl(lista_descartes), len(lista_descartes),
-                _propio("descarte")),
-        Fichero("documentos_oficiales.jsonl", _jsonl(documentos), len(documentos),
-                _base("documento_oficial")),
-        Fichero("encuentros.jsonl", _jsonl(encuentros), len(encuentros), _base("encuentro")),
-        Fichero("episodios.jsonl", _jsonl(episodios), len(episodios), _base("episodio")),
-        Fichero("estadisticas_oficiales.jsonl", _jsonl(estadisticas), len(estadisticas),
-                _base("estadistica_oficial")),
-        Fichero("frecuencias.json", _json(datos_frecuencias), len(datos_frecuencias["filas"]),
-                _propio("frecuencias")),
-        Fichero("guerra_impactos.jsonl", _jsonl(guerra), len(guerra), _base("impacto_guerra")),
-        Fichero("guerra_mensajes.jsonl", _jsonl(mensajes), len(mensajes),
-                _propio("mensaje_guerra")),
-        Fichero("incidentes.jsonl", _jsonl(incidentes), len(incidentes), _base("incidente")),
-        Fichero("previsiones.jsonl", _jsonl(previsiones), len(previsiones), _propio("prevision")),
-        Fichero("rutas_noches.jsonl", _jsonl(rutas_noches), len(rutas_noches),
-                _propio("ruta_noche")),
-        Fichero("rutas_grupos.jsonl", _jsonl(rutas_grupos), len(rutas_grupos),
-                _propio("ruta_grupo")),
-        Fichero("restricciones_aeropuertos.jsonl", _jsonl(restricciones), len(restricciones),
-                _base("restriccion_aeropuerto")),
-        Fichero("ucrania_ataques.jsonl", _jsonl(ataques), len(ataques),
-                _base("ataque_ucrania")),
-        Fichero("ucrania_regiones.jsonl", _jsonl(regiones), len(regiones),
-                _propio("region_ucrania")),
-        Fichero("vocabulario.json", _json(datos_vocabulario), entradas_vocabulario,
-                _propio("vocabulario")),
-        Fichero("fuerza_aerea_seguimiento.jsonl", _jsonl(mensajes_fa), len(mensajes_fa),
-                _propio("fuerza_aerea_mensaje")),
-        Fichero("neptun_pistas.jsonl", _jsonl(pistas_neptun), len(pistas_neptun),
-                _propio("neptun_pista")),
-        Fichero("rutas_reconstruidas.jsonl", _jsonl(reconstruidas), len(reconstruidas),
-                _propio("ruta_reconstruida")),
-        Fichero("cierres_medidos.jsonl", _jsonl(cierres), len(cierres), _propio("cierre_medido")),
-        Fichero("prevision_validacion.json", _json(datos_prevision),
-                int(datos_prevision["disponible"]), _propio("prevision_validacion")),
-        Fichero("tipo_dron_validacion.json", _json(datos_tipo), int(datos_tipo["disponible"]),
-                _propio("tipo_dron_validacion")),
-        Fichero("barrera_titulares.json", _json(datos_barrera), len(datos_barrera["veredictos"]),
-                _propio("barrera_titulares")),
-    ]  # fmt: skip
-    return datos + _esquemas()
+    )  # fmt: skip
+
+    # Desde el formato 1.9.0, lo que vive fuera de la base (exportacion/seguimiento.py).
+    from recogida import rutas as servicio_rutas
+    from recogida import seguimiento as servicio_seguimiento
+
+    carpeta_rutas = servicio_rutas.datos_rutas()
+    corte = datetime.fromisoformat(
+        (almacen.ultimo_cambio() or "1970-01-01T00:00:00Z").replace("Z", "+00:00")
+    )
+    mensajes_fa = seguimiento.fuerza_aerea(carpeta_rutas)
+    _comprobar("fuerza_aerea_seguimiento.jsonl", mensajes_fa,
+               validador_propio("fuerza_aerea_mensaje"))  # fmt: skip
+    yield Fichero("fuerza_aerea_seguimiento.jsonl", _jsonl(mensajes_fa), len(mensajes_fa),
+                  _propio("fuerza_aerea_mensaje"))  # fmt: skip
+    del mensajes_fa
+    pistas_neptun = seguimiento.neptun_pistas(servicio_seguimiento.directorio_datos())
+    _comprobar("neptun_pistas.jsonl", pistas_neptun, validador_propio("neptun_pista"))
+    yield Fichero("neptun_pistas.jsonl", _jsonl(pistas_neptun), len(pistas_neptun),
+                  _propio("neptun_pista"))  # fmt: skip
+    del pistas_neptun
+    reconstruidas = seguimiento.rutas_reconstruidas(carpeta_rutas, corte)
+    _comprobar("rutas_reconstruidas.jsonl", reconstruidas, validador_propio("ruta_reconstruida"))
+    yield Fichero("rutas_reconstruidas.jsonl", _jsonl(reconstruidas), len(reconstruidas),
+                  _propio("ruta_reconstruida"))  # fmt: skip
+    del reconstruidas
+    cierres = seguimiento.cierres_medidos(almacen)
+    _comprobar("cierres_medidos.jsonl", cierres, validador_propio("cierre_medido"))
+    _comprobar("cierres_medidos.jsonl", (c["anomalia"] for c in cierres),
+               validador_definicion("anomalia_trafico"))  # fmt: skip
+    yield Fichero("cierres_medidos.jsonl", _jsonl(cierres), len(cierres), _propio("cierre_medido"))
+    del cierres
+    datos_prevision = seguimiento.prevision_validacion(seguimiento.datos_publicacion())
+    _comprobar("prevision_validacion.json", [datos_prevision],
+               validador_propio("prevision_validacion"))  # fmt: skip
+    if datos_prevision["documento"] is not None:
+        _comprobar("prevision_validacion.json", [datos_prevision["documento"]],
+                   Draft202012Validator(_leer_json(ESQUEMA_PREVISION)))  # fmt: skip
+    yield Fichero("prevision_validacion.json", _json(datos_prevision),
+                  int(datos_prevision["disponible"]), _propio("prevision_validacion"))  # fmt: skip
+    datos_tipo = seguimiento.tipo_dron_validacion(almacen)
+    _comprobar("tipo_dron_validacion.json", [datos_tipo], validador_propio("tipo_dron_validacion"))
+    yield Fichero("tipo_dron_validacion.json", _json(datos_tipo), int(datos_tipo["disponible"]),
+                  _propio("tipo_dron_validacion"))  # fmt: skip
+    datos_barrera = seguimiento.barrera_titulares(almacen, base)
+    _comprobar("barrera_titulares.json", [datos_barrera], validador_propio("barrera_titulares"))
+    yield Fichero("barrera_titulares.json", _json(datos_barrera), len(datos_barrera["veredictos"]),
+                  _propio("barrera_titulares"))  # fmt: skip
+    yield from _esquemas()
 
 
 # --- Versión cifrada -------------------------------------------------------------------
@@ -976,13 +1003,53 @@ def empaquetar(
     cifrar: Cifrador | None = None,
 ) -> dict[str, bytes]:
     """Ruta dentro de la versión → contenido: cada fichero cifrado y el manifiesto en claro."""
+    salida: dict[str, bytes] = {}
+    _empaquetar(
+        sorted(ficheros, key=lambda f: f.nombre), version, fecha_corte, generada, destinatario,
+        salida.__setitem__, cifrar,
+    )  # fmt: skip
+    return salida
+
+
+def exportar_a_disco(
+    ficheros: Iterable[Fichero],
+    version: str,
+    fecha_corte: str,
+    generada: datetime,
+    destinatario: str,
+    directorio: Path,
+    cifrar: Cifrador | None = None,
+) -> str:
+    """Como empaquetar y escribir, de fichero en fichero: cada uno se cifra y se escribe en cuanto
+    sale y se suelta. El manifiesto, al final, con las entradas por orden de nombre (igual que
+    empaquetar). Devuelve la huella del manifiesto."""
+
+    def guardar(nombre: str, datos: bytes) -> None:
+        ruta = directorio / nombre
+        ruta.parent.mkdir(parents=True, exist_ok=True)
+        ruta.write_bytes(datos)
+
+    return sha256(
+        _empaquetar(ficheros, version, fecha_corte, generada, destinatario, guardar, cifrar)
+    )
+
+
+def _empaquetar(
+    ficheros: Iterable[Fichero],
+    version: str,
+    fecha_corte: str,
+    generada: datetime,
+    destinatario: str,
+    guardar: Callable[[str, bytes], None],
+    cifrar: Cifrador | None = None,
+) -> bytes:
+    """Cifra y guarda cada fichero y, al final, el manifiesto; devuelve el manifiesto."""
     receptor = pyrage.x25519.Recipient.from_str(destinatario)
     cifrar = cifrar or (lambda datos: pyrage.encrypt(datos, [receptor]))
-    salida: dict[str, bytes] = {}
     entradas = []
-    for fichero in sorted(ficheros, key=lambda f: f.nombre):
+    for fichero in ficheros:
         cifrado = cifrar(gzip.compress(fichero.contenido, NIVEL_COMPRESION, mtime=0))
-        salida[fichero.nombre + EXTENSION] = cifrado
+        guardar(fichero.nombre + EXTENSION, cifrado)
         entradas.append({
             "nombre": fichero.nombre,
             "esquema": fichero.esquema or "https://json-schema.org/draft/2020-12/schema",
@@ -995,6 +1062,8 @@ def empaquetar(
                 "sha256": sha256(cifrado),
             },
         })  # fmt: skip
+        del fichero, cifrado
+    entradas.sort(key=lambda e: str(e["nombre"]))
     manifiesto = {
         "version": version,
         "fecha_corte": fecha_corte,
@@ -1017,8 +1086,9 @@ def empaquetar(
         "excluidos": [dict(seguimiento.ATRIBUCION_ALERTAS_EXCLUIDA)],
     }
     _comprobar(MANIFIESTO, [manifiesto], validador_propio("manifiesto"))
-    salida[MANIFIESTO] = _json(manifiesto)
-    return salida
+    texto = _json(manifiesto)
+    guardar(MANIFIESTO, texto)
+    return texto
 
 
 def escribir(contenido: dict[str, bytes], directorio: Path) -> None:

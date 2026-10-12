@@ -121,7 +121,7 @@ def test_el_barrido_dirigido_busca_sin_cerrojo_e_incorpora_con_el_de_la_recogida
 
 def test_la_recogida_horaria_incorpora_el_catalogo_vivo() -> None:
     horaria = (RAIZ / "recogida" / "horaria.py").read_text(encoding="utf-8")
-    assert "catalogo_vivo.paso_horario(almacen)" in horaria
+    assert "catalogo_vivo.paso_horario, almacen)" in horaria
 
 
 def test_los_articulos_de_la_base_que_nombran_un_lugar_buscado() -> None:

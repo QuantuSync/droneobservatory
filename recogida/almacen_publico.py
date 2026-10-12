@@ -79,6 +79,17 @@ def cargar(ruta: Path = CONFIGURACION) -> Almacen:
     )
 
 
+def cargar_reserva(ruta: Path = CONFIGURACION) -> Almacen:
+    """La copia pública de reserva (bloque «reserva»), con los mismos objetos que el principal."""
+    datos: dict[str, Any] = json.loads(ruta.read_text(encoding="utf-8"))
+    reserva = {**datos["reserva"], "objetos": datos.get("objetos", {})}
+    temporal = {k: reserva[k] for k in ("ubicacion", "punto_s3", "bucket", "publico")}
+    for campo, valor in temporal.items():
+        if not isinstance(valor, str) or not valor:
+            raise ValueError(f"{ruta.name}: falta reserva.{campo}")
+    return Almacen(**temporal, objetos=dict(reserva["objetos"]))
+
+
 def _hmac(clave: bytes, texto: str) -> bytes:
     return hmac.new(clave, texto.encode("utf-8"), hashlib.sha256).digest()
 

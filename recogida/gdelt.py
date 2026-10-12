@@ -45,6 +45,7 @@ from proceso.noticias import (
     filtro,
     id_gkg,
     lugar,
+    lugar_conocido,
     lugares_articulo,
     nomenclator,
     titular_normalizado,
@@ -413,11 +414,21 @@ def incorporar(
         titulares.append((a.fecha, a.url, normal))
         nuevos.append(a)
     recuentos.nuevos = len(nuevos)
+    # Un artículo sin idioma reconocido (un medio de fuera de Europa que GDELT sitúa en una
+    # ciudad europea) se guarda, pero no abre candidato ni entra en uno: el extractor no puede
+    # mandarlo como fuente. El 12 de octubre de 2026 uno en panyabí abrió solo un candidato en
+    # Milán que tumbó la recogida.
+    nuevos = [a for a in nuevos if a.idioma]
     if not nuevos:
         return recuentos
     desde = _fecha(nuevos[0].fecha - timedelta(hours=12))
     sucesos = sucesos_de_candidatos(almacen)
-    previos = [_candidato(d, nom, sucesos) for d in almacen.candidatos_desde(desde)]
+    # Un candidato cuyo lugar ya no está en el nomenclátor no recibe artículos nuevos.
+    previos = [
+        _candidato(d, nom, sucesos)
+        for d in almacen.candidatos_desde(desde)
+        if lugar_conocido(d["lugar"], nom) is not None
+    ]
     conocidos = {c.id for c in previos}
     agrupacion = agrupar(nuevos, filtro_, nom, Agrupacion(candidatos=previos))
     for candidato in agrupacion.candidatos:

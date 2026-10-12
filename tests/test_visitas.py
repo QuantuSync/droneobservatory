@@ -1,6 +1,7 @@
 """Visitas y resumen diario (recogida/visitas.py), sin red ni systemd: una base de GoatCounter de
 prueba con su esquema, ntfy y el almacén sustituidos."""
 
+import dataclasses
 import gzip
 import json
 import re
@@ -357,3 +358,45 @@ def test_fallos_de_privacidad() -> None:
     # Un panel que se abre sin usuario es un fallo; uno que no responde, no (es otro problema).
     abierto = visitas.fallos_de_privacidad(lambda url: 200 if url == visitas.PANEL else 0)
     assert abierto == ["el panel de visitas se abre sin usuario (HTTP 200)"]
+
+
+def test_el_sistema_cuenta_lo_que_se_arreglo_solo(goatcounter: Path, tmp_path: Path) -> None:
+    diario = [
+        "eodi-recogida.service: Scheduled restart job, restart counter is at 1.",
+        "eodi-recogida.service: Scheduled restart job, restart counter is at 2.",
+        "eodi-reserva.service: Scheduled restart job, restart counter is at 1.",
+        "WARNING proceso.extraccion: candidato CAND-1 apartado en esta recogida (fallo 1 de 3): x",
+        "WARNING proceso.extraccion: candidato CAND-2 retirado: retirado tras fallar en 3",
+    ]
+    assert visitas.contar_reintentos(diario) == {"eodi-recogida": 2, "eodi-reserva": 1}
+    assert visitas.candidatos_del_dia(diario) == (1, 1)
+    secretos = tmp_path / "secretos"
+    secretos.mkdir()
+    (secretos / visitas.VIGILANCIA).write_text(
+        json.dumps({
+            "resueltos": [
+                {"id": "alertas", "frase": "El archivo de alertas está parado.",
+                 "hasta": "2026-10-11T10:00:00Z", "incidencia": False},
+                {"id": "recogida", "frase": "Las últimas 3 recogidas fallaron.",
+                 "hasta": "2026-10-11T12:00:00Z", "incidencia": True},
+                {"id": "disco", "frase": "Del día antes.", "hasta": "2026-10-09T12:00:00Z"},
+            ]
+        }),
+        encoding="utf-8",
+    )  # fmt: skip
+    resueltos = visitas.resueltos_del_dia(secretos / visitas.VIGILANCIA, date(2026, 10, 11))
+    assert resueltos == [
+        ("El archivo de alertas está parado.", False),
+        ("Las últimas 3 recogidas fallaron.", True),
+    ]
+    datos = dataclasses.replace(
+        _datos(goatcounter, tmp_path),
+        reintentos={"eodi-recogida": 2, "eodi-reserva": 1},
+        resueltos=resueltos,
+        candidatos=(1, 1),
+    )
+    texto = visitas.texto_resumen(datos)
+    assert "Reintentos automáticos: 3 (recogida 2, reserva 1)" in texto
+    assert "Candidatos apartados por un fallo propio: 1; retirados tras 3 fallos: 1" in texto
+    assert "Se arreglaron solos, sin incidencia: 1\n  - El archivo de alertas está parado." in texto
+    assert "Con incidencia, ya cerrada: 1" in texto
