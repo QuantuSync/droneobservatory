@@ -986,6 +986,30 @@
 "pais": "SE",
 "oaci": "ESVM"
 },
+"aeropuerto:node/1042041254": {
+"tipo": "aeropuerto",
+"nombre": "Gisp Ice Landing Strip",
+"alias": [
+"Gisp Ice Landing Strip"
+],
+"ciudades": [],
+"lat": 72.56667,
+"lon": -38.46667,
+"radio_km": 5.0,
+"pais": "DK"
+},
+"aeropuerto:node/1042041264": {
+"tipo": "aeropuerto",
+"nombre": "North Grip Ice Landingstrip",
+"alias": [
+"North Grip Ice Landingstrip"
+],
+"ciudades": [],
+"lat": 75.1,
+"lon": -42.31667,
+"radio_km": 5.0,
+"pais": "DK"
+},
 "aeropuerto:node/1042046401": {
 "tipo": "aeropuerto",
 "nombre": "Kalvacha Airfield",
@@ -2348,6 +2372,18 @@
 "radio_km": 5.0,
 "pais": "SE"
 },
+"aeropuerto:node/12714895695": {
+"tipo": "aeropuerto",
+"nombre": "aérodrome de Chalvet",
+"alias": [
+"aérodrome de Chalvet"
+],
+"ciudades": [],
+"lat": 14.84047,
+"lon": -61.10632,
+"radio_km": 5.0,
+"pais": "FR"
+},
 "aeropuerto:node/12730578871": {
 "tipo": "aeropuerto",
 "nombre": "Dejguny",
@@ -3533,6 +3569,18 @@
 "lon": 16.72406,
 "radio_km": 5.0,
 "pais": "PL"
+},
+"aeropuerto:node/3579051678": {
+"tipo": "aeropuerto",
+"nombre": "Base ULM hydravion",
+"alias": [
+"Base ULM hydravion"
+],
+"ciudades": [],
+"lat": 16.20947,
+"lon": -61.50843,
+"radio_km": 5.0,
+"pais": "FR"
 },
 "aeropuerto:node/3579497500": {
 "tipo": "aeropuerto",
@@ -6788,6 +6836,18 @@
 "radio_km": 5.0,
 "pais": "PL"
 },
+"aeropuerto:node/5246015877": {
+"tipo": "aeropuerto",
+"nombre": "Aerodrome de Dorlin",
+"alias": [
+"Aerodrome de Dorlin"
+],
+"ciudades": [],
+"lat": 3.74133,
+"lon": -53.53546,
+"radio_km": 5.0,
+"pais": "FR"
+},
 "aeropuerto:node/5258042595": {
 "tipo": "aeropuerto",
 "nombre": "El Rinconcillo de Guadalupe",
@@ -8979,6 +9039,30 @@
 "radio_km": 5.0,
 "pais": "SK"
 },
+"aeropuerto:node/9244272841": {
+"tipo": "aeropuerto",
+"nombre": "Summit Ice Landingstrip",
+"alias": [
+"Summit Ice Landingstrip"
+],
+"ciudades": [],
+"lat": 72.58119,
+"lon": -38.46569,
+"radio_km": 5.0,
+"pais": "DK"
+},
+"aeropuerto:node/9276610333": {
+"tipo": "aeropuerto",
+"nombre": "Base ULM hydravion",
+"alias": [
+"Base ULM hydravion"
+],
+"ciudades": [],
+"lat": 16.33516,
+"lon": -61.70044,
+"radio_km": 5.0,
+"pais": "FR"
+},
 "aeropuerto:node/9297765958": {
 "tipo": "aeropuerto",
 "nombre": "Rawicz Airstrip",
@@ -10640,6 +10724,18 @@
 "pais": "RS",
 "oaci": "LYKI"
 },
+"aeropuerto:way/1116552923": {
+"tipo": "aeropuerto",
+"nombre": "Sødalen Landing Strip",
+"alias": [
+"Sødalen Landing Strip"
+],
+"ciudades": [],
+"lat": 68.16746,
+"lon": -31.51529,
+"radio_km": 5.0,
+"pais": "DK"
+},
 "aeropuerto:way/111844967": {
 "tipo": "aeropuerto",
 "nombre": "Venlo Eindhoven Zweefvliegclub",
@@ -10725,6 +10821,19 @@
 "radio_km": 5.0,
 "pais": "SK",
 "oaci": "LZDN"
+},
+"aeropuerto:way/1123966427": {
+"tipo": "aeropuerto",
+"nombre": "Piste Club Modelisme Réunion (CMR)",
+"alias": [
+"Piste Club Modelisme Réunion (CMR)",
+"Réunion Modeling Club R/C Airfield"
+],
+"ciudades": [],
+"lat": -20.98027,
+"lon": 55.30708,
+"radio_km": 5.0,
+"pais": "FR"
 },
 "aeropuerto:way/1126346636": {
 "tipo": "aeropuerto",
@@ -12059,6 +12168,19 @@
 "pais": "CH",
 "oaci": "LSGL"
 },
+"aeropuerto:way/1377633948": {
+"tipo": "aeropuerto",
+"nombre": "Aérodrome de Grand Café",
+"alias": [
+"Aérodrome de Grand Café",
+"altisurface de Grand Café"
+],
+"ciudades": [],
+"lat": 16.07983,
+"lon": -61.59232,
+"radio_km": 5.0,
+"pais": "FR"
+},
 "aeropuerto:way/138627734": {
 "tipo": "aeropuerto",
 "nombre": "Bojná",
@@ -12449,6 +12571,18 @@
 "radio_km": 5.0,
 "pais": "ES",
 "oaci": "LEBF"
+},
+"aeropuerto:way/1475076025": {
+"tipo": "aeropuerto",
+"nombre": "Camp Tuto Airport",
+"alias": [
+"Camp Tuto Airport"
+],
+"ciudades": [],
+"lat": 76.42914,
+"lon": -68.33593,
+"radio_km": 5.0,
+"pais": "DK"
 },
 "aeropuerto:way/148319931": {
 "tipo": "aeropuerto",
@@ -13501,6 +13635,18 @@
 "radio_km": 5.0,
 "pais": "PT",
 "oaci": "LPMI"
+},
+"aeropuerto:way/170523455": {
+"tipo": "aeropuerto",
+"nombre": "Base ULM de Dapani",
+"alias": [
+"Base ULM de Dapani"
+],
+"ciudades": [],
+"lat": -12.97116,
+"lon": 45.15878,
+"radio_km": 5.0,
+"pais": "FR"
 },
 "aeropuerto:way/171010429": {
 "tipo": "aeropuerto",
@@ -17471,6 +17617,18 @@
 "pais": "CH",
 "oaci": "LSTS"
 },
+"aeropuerto:way/385474946": {
+"tipo": "aeropuerto",
+"nombre": "Aérodrome de Mana",
+"alias": [
+"Aérodrome de Mana"
+],
+"ciudades": [],
+"lat": 5.66449,
+"lon": -53.76509,
+"radio_km": 5.0,
+"pais": "FR"
+},
 "aeropuerto:way/385490521": {
 "tipo": "aeropuerto",
 "nombre": "Fur Flyveplads",
@@ -17535,6 +17693,19 @@
 "lon": 14.65022,
 "radio_km": 5.0,
 "pais": "CZ"
+},
+"aeropuerto:way/391472443": {
+"tipo": "aeropuerto",
+"nombre": "Aérodrome de Ouanary",
+"alias": [
+"Aérodrome de Ouanary",
+"Ouanary Airport"
+],
+"ciudades": [],
+"lat": 4.2109,
+"lon": -51.66676,
+"radio_km": 5.0,
+"pais": "FR"
 },
 "aeropuerto:way/393380077": {
 "tipo": "aeropuerto",
@@ -18315,6 +18486,31 @@
 "radio_km": 5.0,
 "pais": "DK",
 "oaci": "EKRO"
+},
+"aeropuerto:way/453423391": {
+"tipo": "aeropuerto",
+"nombre": "Aérodrome de Camopi",
+"alias": [
+"Aérodrome de Camopi"
+],
+"ciudades": [],
+"lat": 3.17258,
+"lon": -52.33601,
+"radio_km": 5.0,
+"pais": "FR",
+"oaci": "SOOC"
+},
+"aeropuerto:way/455056839": {
+"tipo": "aeropuerto",
+"nombre": "Base ULM de Cambaie",
+"alias": [
+"Base ULM de Cambaie"
+],
+"ciudades": [],
+"lat": -20.9629,
+"lon": 55.2818,
+"radio_km": 5.0,
+"pais": "FR"
 },
 "aeropuerto:way/457658470": {
 "tipo": "aeropuerto",
@@ -19104,6 +19300,18 @@
 "radio_km": 5.0,
 "pais": "FI",
 "oaci": "EFIK"
+},
+"aeropuerto:way/511352465": {
+"tipo": "aeropuerto",
+"nombre": "Sinnamary Airport",
+"alias": [
+"Sinnamary Airport"
+],
+"ciudades": [],
+"lat": 5.37362,
+"lon": -52.94539,
+"radio_km": 5.0,
+"pais": "FR"
 },
 "aeropuerto:way/512965537": {
 "tipo": "aeropuerto",
@@ -22948,6 +23156,18 @@
 "radio_km": 5.0,
 "pais": "EE"
 },
+"base:node/13318437889": {
+"tipo": "base",
+"nombre": "Defence High Frequency Communications Service Episkopi",
+"alias": [
+"Defence High Frequency Communications Service Episkopi"
+],
+"ciudades": [],
+"lat": 34.67749,
+"lon": 32.85973,
+"radio_km": 5.0,
+"pais": "GB"
+},
 "base:node/13588227253": {
 "tipo": "base",
 "nombre": "Schietterrein Witten",
@@ -22996,6 +23216,18 @@
 "radio_km": 5.0,
 "pais": "AT"
 },
+"base:node/13734390084": {
+"tipo": "base",
+"nombre": "Loran Station Frederiksdal",
+"alias": [
+"Loran Station Frederiksdal"
+],
+"ciudades": [],
+"lat": 59.98707,
+"lon": -44.65679,
+"radio_km": 5.0,
+"pais": "DK"
+},
 "base:node/13977612471": {
 "tipo": "base",
 "nombre": "Koninklijke Marechaussee Brigade Zeeland-West Brabant",
@@ -23007,6 +23239,19 @@
 "lon": 3.68093,
 "radio_km": 5.0,
 "pais": "NL"
+},
+"base:node/14144993470": {
+"tipo": "base",
+"nombre": "Pituffik",
+"alias": [
+"Pituffik",
+"Pituffik Space Base"
+],
+"ciudades": [],
+"lat": 76.52898,
+"lon": -68.70246,
+"radio_km": 5.0,
+"pais": "DK"
 },
 "base:node/1706140736": {
 "tipo": "base",
@@ -23226,6 +23471,19 @@
 "radio_km": 5.0,
 "pais": "CH"
 },
+"base:node/3675849967": {
+"tipo": "base",
+"nombre": "2ème Régiment parachustiste d'infanterie de marine",
+"alias": [
+"2ème Régiment parachustiste d'infanterie de marine",
+"2ème RPIMA"
+],
+"ciudades": [],
+"lat": -21.31288,
+"lon": 55.43323,
+"radio_km": 5.0,
+"pais": "FR"
+},
 "base:node/3730616070": {
 "tipo": "base",
 "nombre": "Place d'armes de Bière",
@@ -23419,6 +23677,18 @@
 "lon": 19.85345,
 "radio_km": 5.0,
 "pais": "AL"
+},
+"base:node/4514121685": {
+"tipo": "base",
+"nombre": "Caserne Lambert",
+"alias": [
+"Caserne Lambert"
+],
+"ciudades": [],
+"lat": -20.87875,
+"lon": 55.44111,
+"radio_km": 5.0,
+"pais": "FR"
 },
 "base:node/4696820549": {
 "tipo": "base",
@@ -24878,6 +25148,18 @@
 "radio_km": 5.0,
 "pais": "DK"
 },
+"base:relation/15744783": {
+"tipo": "base",
+"nombre": "Caserne de Gendarmerie",
+"alias": [
+"Caserne de Gendarmerie"
+],
+"ciudades": [],
+"lat": 3.63783,
+"lon": -54.02941,
+"radio_km": 5.0,
+"pais": "FR"
+},
 "base:relation/15764471": {
 "tipo": "base",
 "nombre": "Luitenant-kolonel Tonnetkazerne",
@@ -25031,6 +25313,18 @@
 "lon": 5.76141,
 "radio_km": 5.0,
 "pais": "NL"
+},
+"base:relation/19932262": {
+"tipo": "base",
+"nombre": "Régiment du Service Militaire Adapté de la Réunion",
+"alias": [
+"Régiment du Service Militaire Adapté de la Réunion"
+],
+"ciudades": [],
+"lat": -21.20298,
+"lon": 55.57151,
+"radio_km": 5.0,
+"pais": "FR"
 },
 "base:relation/20523975": {
 "tipo": "base",
@@ -25414,6 +25708,35 @@
 "ciudades": [],
 "lat": 56.14333,
 "lon": 10.14681,
+"radio_km": 5.0,
+"pais": "DK"
+},
+"base:relation/8514695": {
+"tipo": "base",
+"nombre": "Pituffik Space Base",
+"alias": [
+"Pituffik Space Base",
+"Pituffik SB",
+"Bon egorel Pituffik",
+"Base espacial de Pituffik",
+"Vesmírná základna Pituffik",
+"پایگاه فضایی پیتوفیک",
+"Pituffikin avaruustukikohta",
+"Base spatiale de Pituffik",
+"בסיס החלל פיטופיק",
+"Pituffik-geimherstöðin",
+"ピツフィク宇宙軍基地",
+"Pituffik",
+"피투피크 우주기지",
+"Pitufikas Kosmosa spēku bāze",
+"Base Espacial de Pituffik",
+"Космическая база Питуффик",
+"Космічна база Пітуффік",
+"皮圖菲克太空基地"
+],
+"ciudades": [],
+"lat": 76.45013,
+"lon": -68.3602,
 "radio_km": 5.0,
 "pais": "DK"
 },
@@ -26703,6 +27026,18 @@
 "radio_km": 5.0,
 "pais": "PL"
 },
+"base:way/1163969519": {
+"tipo": "base",
+"nombre": "Caserne de Gendarmerie",
+"alias": [
+"Caserne de Gendarmerie"
+],
+"ciudades": [],
+"lat": 3.63774,
+"lon": -54.02841,
+"radio_km": 5.0,
+"pais": "FR"
+},
 "base:way/116411588": {
 "tipo": "base",
 "nombre": "Strzelnica garnizonowa",
@@ -27081,6 +27416,18 @@
 "radio_km": 5.0,
 "pais": "ES"
 },
+"base:way/1210320140": {
+"tipo": "base",
+"nombre": "Camp Lunier",
+"alias": [
+"Camp Lunier"
+],
+"ciudades": [],
+"lat": 3.64771,
+"lon": -54.0248,
+"radio_km": 5.0,
+"pais": "FR"
+},
 "base:way/121088542": {
 "tipo": "base",
 "nombre": "Skladišče Drulovka",
@@ -27142,6 +27489,19 @@
 "radio_km": 5.0,
 "pais": "NL"
 },
+"base:way/1212348600": {
+"tipo": "base",
+"nombre": "Centre d'Entrainement en Forêt Equatoriale",
+"alias": [
+"Centre d'Entrainement en Forêt Equatoriale",
+"CEFE"
+],
+"ciudades": [],
+"lat": 4.28312,
+"lon": -52.15764,
+"radio_km": 5.0,
+"pais": "FR"
+},
 "base:way/121258527": {
 "tipo": "base",
 "nombre": "Stand de tir 300m",
@@ -27177,6 +27537,19 @@
 "lon": 15.58743,
 "radio_km": 5.0,
 "pais": "SE"
+},
+"base:way/1223301042": {
+"tipo": "base",
+"nombre": "Légion Étrangère",
+"alias": [
+"Légion Étrangère",
+"Légionarios"
+],
+"ciudades": [],
+"lat": 3.88862,
+"lon": -51.80619,
+"radio_km": 5.0,
+"pais": "FR"
 },
 "base:way/1227532067": {
 "tipo": "base",
@@ -28524,6 +28897,18 @@
 "radio_km": 5.0,
 "pais": "NL"
 },
+"base:way/1455258795": {
+"tipo": "base",
+"nombre": "Alexander Barracks",
+"alias": [
+"Alexander Barracks"
+],
+"ciudades": [],
+"lat": 34.98205,
+"lon": 33.72057,
+"radio_km": 5.0,
+"pais": "GB"
+},
 "base:way/1463526442": {
 "tipo": "base",
 "nombre": "Osie strzeleckie",
@@ -28586,6 +28971,18 @@
 "lon": 26.87397,
 "radio_km": 5.0,
 "pais": "RO"
+},
+"base:way/1473761771": {
+"tipo": "base",
+"nombre": "Small Arms Range",
+"alias": [
+"Small Arms Range"
+],
+"ciudades": [],
+"lat": 34.58736,
+"lon": 32.97499,
+"radio_km": 5.0,
+"pais": "GB"
 },
 "base:way/1473841121": {
 "tipo": "base",
@@ -29413,6 +29810,19 @@
 "lon": -0.99275,
 "radio_km": 5.0,
 "pais": "ES"
+},
+"base:way/167273220": {
+"tipo": "base",
+"nombre": "His Majesty's Naval Base Gibraltar",
+"alias": [
+"His Majesty's Naval Base Gibraltar",
+"HM Naval Base Gibraltar"
+],
+"ciudades": [],
+"lat": 36.13204,
+"lon": -5.35489,
+"radio_km": 5.0,
+"pais": "GB"
 },
 "base:way/167318605": {
 "tipo": "base",
@@ -34238,6 +34648,18 @@
 "radio_km": 5.0,
 "pais": "ES"
 },
+"base:way/4062140": {
+"tipo": "base",
+"nombre": "Dhekelia Station",
+"alias": [
+"Dhekelia Station"
+],
+"ciudades": [],
+"lat": 34.99291,
+"lon": 33.73093,
+"radio_km": 5.0,
+"pais": "GB"
+},
 "base:way/40653109": {
 "tipo": "base",
 "nombre": "Lagerhalle",
@@ -35684,6 +36106,18 @@
 "radio_km": 5.0,
 "pais": "PL"
 },
+"base:way/521475092": {
+"tipo": "base",
+"nombre": "Quartier des Détenus, sur l'île du Diable",
+"alias": [
+"Quartier des Détenus, sur l'île du Diable"
+],
+"ciudades": [],
+"lat": 5.2925,
+"lon": -52.58408,
+"radio_km": 5.0,
+"pais": "FR"
+},
 "base:way/524724130": {
 "tipo": "base",
 "nombre": "Jansa-Kaserne",
@@ -36014,6 +36448,18 @@
 "lon": 19.11135,
 "radio_km": 5.0,
 "pais": "BA"
+},
+"base:way/55988493": {
+"tipo": "base",
+"nombre": "Quartier Forget - Légion Étrangère",
+"alias": [
+"Quartier Forget - Légion Étrangère"
+],
+"ciudades": [],
+"lat": 5.17127,
+"lon": -52.64696,
+"radio_km": 5.0,
+"pais": "FR"
 },
 "base:way/560146207": {
 "tipo": "base",
@@ -36733,6 +37179,18 @@
 "radio_km": 5.0,
 "pais": "NL"
 },
+"base:way/662378236": {
+"tipo": "base",
+"nombre": "Base navale",
+"alias": [
+"Base navale"
+],
+"ciudades": [],
+"lat": -20.9334,
+"lon": 55.28874,
+"radio_km": 5.0,
+"pais": "FR"
+},
 "base:way/666665142": {
 "tipo": "base",
 "nombre": "carreira de tiro",
@@ -37172,6 +37630,18 @@
 "radio_km": 5.0,
 "pais": "ES"
 },
+"base:way/734895584": {
+"tipo": "base",
+"nombre": "Camp de la Légion",
+"alias": [
+"Camp de la Légion"
+],
+"ciudades": [],
+"lat": 3.17097,
+"lon": -52.33302,
+"radio_km": 5.0,
+"pais": "FR"
+},
 "base:way/736482905": {
 "tipo": "base",
 "nombre": "teren dawnej strzelnicy sportowej (LKS Gniezno)",
@@ -37315,6 +37785,18 @@
 "lon": 25.0169,
 "radio_km": 5.0,
 "pais": "FI"
+},
+"base:way/753370997": {
+"tipo": "base",
+"nombre": "Camp de la Légion Étrangère",
+"alias": [
+"Camp de la Légion Étrangère"
+],
+"ciudades": [],
+"lat": 5.27955,
+"lon": -52.58367,
+"radio_km": 5.0,
+"pais": "FR"
 },
 "base:way/75615863": {
 "tipo": "base",
@@ -38596,6 +39078,18 @@
 "radio_km": 5.0,
 "pais": "NL"
 },
+"base:way/939556302": {
+"tipo": "base",
+"nombre": "Bygning 3 - Fuppebolig",
+"alias": [
+"Bygning 3 - Fuppebolig"
+],
+"ciudades": [],
+"lat": 81.6018,
+"lon": -16.66242,
+"radio_km": 5.0,
+"pais": "DK"
+},
 "base:way/942696353": {
 "tipo": "base",
 "nombre": "Towarzystwo Sportowe Temida",
@@ -39490,6 +39984,19 @@
 "lon": -17.76069,
 "radio_km": 2.0,
 "pais": "ES"
+},
+"energia:node/14144987336": {
+"tipo": "energia",
+"nombre": "Utoqqarmiut Kangerluarsunnguat",
+"alias": [
+"Utoqqarmiut Kangerluarsunnguat",
+"Buksefjorden"
+],
+"ciudades": [],
+"lat": 63.92099,
+"lon": -50.89464,
+"radio_km": 2.0,
+"pais": "DK"
 },
 "energia:node/1585227430": {
 "tipo": "energia",
@@ -40615,6 +41122,18 @@
 "lon": 23.16847,
 "radio_km": 2.0,
 "pais": "PL"
+},
+"energia:relation/12589291": {
+"tipo": "energia",
+"nombre": "Centrale Electrique de Fond Laillet-Bellefontaine",
+"alias": [
+"Centrale Electrique de Fond Laillet-Bellefontaine"
+],
+"ciudades": [],
+"lat": 14.66899,
+"lon": -61.15582,
+"radio_km": 2.0,
+"pais": "FR"
 },
 "energia:relation/12617640": {
 "tipo": "energia",
@@ -42363,6 +42882,18 @@
 "radio_km": 2.0,
 "pais": "CZ"
 },
+"energia:relation/5835484": {
+"tipo": "energia",
+"nombre": "Centrale géothermique de Bouillante",
+"alias": [
+"Centrale géothermique de Bouillante"
+],
+"ciudades": [],
+"lat": 16.12548,
+"lon": -61.7682,
+"radio_km": 2.0,
+"pais": "FR"
+},
 "energia:relation/6040821": {
 "tipo": "energia",
 "nombre": "Karlshamnsverket",
@@ -42404,6 +42935,18 @@
 "lon": 7.73176,
 "radio_km": 2.0,
 "pais": "CH"
+},
+"energia:relation/6496966": {
+"tipo": "energia",
+"nombre": "Centrale Thermique de Longoni",
+"alias": [
+"Centrale Thermique de Longoni"
+],
+"ciudades": [],
+"lat": -12.73151,
+"lon": 45.16948,
+"radio_km": 2.0,
+"pais": "FR"
 },
 "energia:relation/6615602": {
 "tipo": "energia",
@@ -47662,6 +48205,18 @@
 "radio_km": 2.0,
 "pais": "PL"
 },
+"energia:way/1127502706": {
+"tipo": "energia",
+"nombre": "Biomasse Énergie de Montsinéry (BEM)",
+"alias": [
+"Biomasse Énergie de Montsinéry (BEM)"
+],
+"ciudades": [],
+"lat": 4.94802,
+"lon": -52.49961,
+"radio_km": 2.0,
+"pais": "FR"
+},
 "energia:way/1127584182": {
 "tipo": "energia",
 "nombre": "Stora Enso Imatran Kaukopää Power Station",
@@ -51434,6 +51989,19 @@
 "radio_km": 2.0,
 "pais": "DK"
 },
+"energia:way/1190847478": {
+"tipo": "energia",
+"nombre": "Sisimiut vandkraftværk",
+"alias": [
+"Sisimiut vandkraftværk",
+"Sisimiut Hydro Power Plant"
+],
+"ciudades": [],
+"lat": 67.11076,
+"lon": -53.36627,
+"radio_km": 2.0,
+"pais": "DK"
+},
 "energia:way/1190873432": {
 "tipo": "energia",
 "nombre": "Central Hidráulica de Cucayo",
@@ -52584,6 +53152,18 @@
 "lon": -2.00908,
 "radio_km": 2.0,
 "pais": "ES"
+},
+"energia:way/121291197": {
+"tipo": "energia",
+"nombre": "Centrale thermique de Kourou - Turbine à combustion",
+"alias": [
+"Centrale thermique de Kourou - Turbine à combustion"
+],
+"ciudades": [],
+"lat": 5.16301,
+"lon": -52.67011,
+"radio_km": 2.0,
+"pais": "FR"
 },
 "energia:way/1212966434": {
 "tipo": "energia",
@@ -55844,6 +56424,18 @@
 "radio_km": 2.0,
 "pais": "NO"
 },
+"energia:way/1273389130": {
+"tipo": "energia",
+"nombre": "Centrale Biogaz des Maringouins",
+"alias": [
+"Centrale Biogaz des Maringouins"
+],
+"ciudades": [],
+"lat": 4.90308,
+"lon": -52.31238,
+"radio_km": 2.0,
+"pais": "FR"
+},
 "energia:way/1274391724": {
 "tipo": "energia",
 "nombre": "Hezenbergerstuw",
@@ -56631,6 +57223,19 @@
 "lon": 5.60774,
 "radio_km": 2.0,
 "pais": "NO"
+},
+"energia:way/1301125541": {
+"tipo": "energia",
+"nombre": "Paakitsumi imermit nukissiorfik",
+"alias": [
+"Paakitsumi imermit nukissiorfik",
+"Paakitsoq Vandkraftværk"
+],
+"ciudades": [],
+"lat": 69.47984,
+"lon": -50.29833,
+"radio_km": 2.0,
+"pais": "DK"
 },
 "energia:way/130136704": {
 "tipo": "energia",
@@ -59546,6 +60151,18 @@
 "radio_km": 2.0,
 "pais": "AL"
 },
+"energia:way/1383295579": {
+"tipo": "energia",
+"nombre": "Centrale biomasse de Saut Maripa",
+"alias": [
+"Centrale biomasse de Saut Maripa"
+],
+"ciudades": [],
+"lat": 3.89099,
+"lon": -51.82108,
+"radio_km": 2.0,
+"pais": "FR"
+},
 "energia:way/1383509368": {
 "tipo": "energia",
 "nombre": "Teplárna Sviadnov",
@@ -61436,6 +62053,20 @@
 "radio_km": 2.0,
 "pais": "CH"
 },
+"energia:way/144091917": {
+"tipo": "energia",
+"nombre": "Buksefjorden Vandkraftværk",
+"alias": [
+"Buksefjorden Vandkraftværk",
+"Buksefjordsværket",
+"Buksefjord Hydroelectric Power Plant"
+],
+"ciudades": [],
+"lat": 63.92125,
+"lon": -50.89069,
+"radio_km": 2.0,
+"pais": "DK"
+},
 "energia:way/1441649490": {
 "tipo": "energia",
 "nombre": "Central de Armazenamento de Energia",
@@ -61623,6 +62254,22 @@
 "lon": -1.74042,
 "radio_km": 2.0,
 "pais": "ES"
+},
+"energia:way/1449437643": {
+"tipo": "energia",
+"nombre": "Kangaamiut Innaallagissiorfiat (elværk)",
+"alias": [
+"Kangaamiut Innaallagissiorfiat (elværk)",
+"Kangaamiut Elektricitetiliorfiat",
+"Kangaamiut Elværkiat",
+"Kangaamiut Elværk",
+"Kangaamiut Innaallagissiorfiat"
+],
+"ciudades": [],
+"lat": 65.82588,
+"lon": -53.34516,
+"radio_km": 2.0,
+"pais": "DK"
 },
 "energia:way/145025308": {
 "tipo": "energia",
@@ -67692,6 +68339,18 @@
 "radio_km": 2.0,
 "pais": "CZ"
 },
+"energia:way/188986908": {
+"tipo": "energia",
+"nombre": "Kangerlussuaq Kraftværk",
+"alias": [
+"Kangerlussuaq Kraftværk"
+],
+"ciudades": [],
+"lat": 67.02061,
+"lon": -50.69289,
+"radio_km": 2.0,
+"pais": "DK"
+},
 "energia:way/189027517": {
 "tipo": "energia",
 "nombre": "MVE Jez Žampach",
@@ -68075,6 +68734,22 @@
 "radio_km": 2.0,
 "pais": "CZ"
 },
+"energia:way/193188010": {
+"tipo": "energia",
+"nombre": "Maniitsup Innaallagissiorfia Sillimmat (reserve-elværk)",
+"alias": [
+"Maniitsup Innaallagissiorfia Sillimmat (reserve-elværk)",
+"Maniitsup Elektricitetiliorfia Sillimmat",
+"Maniitsup Elværkia Sillimmat",
+"Maniitsoq Elværk",
+"Maniitsup Innaallagissiorfia Sillimmat"
+],
+"ciudades": [],
+"lat": 65.41521,
+"lon": -52.89956,
+"radio_km": 2.0,
+"pais": "DK"
+},
 "energia:way/193457573": {
 "tipo": "energia",
 "nombre": "Elektrociepłownia Nowa Sarzyna",
@@ -68086,6 +68761,30 @@
 "lon": 22.32384,
 "radio_km": 2.0,
 "pais": "PL"
+},
+"energia:way/193463023": {
+"tipo": "energia",
+"nombre": "Aasiaat Reserve-elværk",
+"alias": [
+"Aasiaat Reserve-elværk"
+],
+"ciudades": [],
+"lat": 68.71002,
+"lon": -52.87117,
+"radio_km": 2.0,
+"pais": "DK"
+},
+"energia:way/193463035": {
+"tipo": "energia",
+"nombre": "Nukissiorfiit",
+"alias": [
+"Nukissiorfiit"
+],
+"ciudades": [],
+"lat": 68.71021,
+"lon": -52.86994,
+"radio_km": 2.0,
+"pais": "DK"
 },
 "energia:way/19371922": {
 "tipo": "energia",
@@ -72608,6 +73307,18 @@
 "radio_km": 2.0,
 "pais": "ES"
 },
+"energia:way/265215917": {
+"tipo": "energia",
+"nombre": "Centrale Thermique des Badamiers",
+"alias": [
+"Centrale Thermique des Badamiers"
+],
+"ciudades": [],
+"lat": -12.76655,
+"lon": 45.28183,
+"radio_km": 2.0,
+"pais": "FR"
+},
 "energia:way/265660236": {
 "tipo": "energia",
 "nombre": "Central tèrmica de Cicle Combinat Plana del Vent",
@@ -74630,6 +75341,78 @@
 "radio_km": 2.0,
 "pais": "CH"
 },
+"energia:way/296592206": {
+"tipo": "energia",
+"nombre": "Centrale",
+"alias": [
+"Centrale"
+],
+"ciudades": [],
+"lat": 5.13469,
+"lon": -52.71818,
+"radio_km": 2.0,
+"pais": "FR"
+},
+"energia:way/296592255": {
+"tipo": "energia",
+"nombre": "Centrale",
+"alias": [
+"Centrale"
+],
+"ciudades": [],
+"lat": 5.13491,
+"lon": -52.71821,
+"radio_km": 2.0,
+"pais": "FR"
+},
+"energia:way/296592415": {
+"tipo": "energia",
+"nombre": "Centrale",
+"alias": [
+"Centrale"
+],
+"ciudades": [],
+"lat": 5.1348,
+"lon": -52.7183,
+"radio_km": 2.0,
+"pais": "FR"
+},
+"energia:way/296592533": {
+"tipo": "energia",
+"nombre": "Centrale",
+"alias": [
+"Centrale"
+],
+"ciudades": [],
+"lat": 5.13489,
+"lon": -52.71841,
+"radio_km": 2.0,
+"pais": "FR"
+},
+"energia:way/296592659": {
+"tipo": "energia",
+"nombre": "Centrale",
+"alias": [
+"Centrale"
+],
+"ciudades": [],
+"lat": 5.13447,
+"lon": -52.71847,
+"radio_km": 2.0,
+"pais": "FR"
+},
+"energia:way/296592693": {
+"tipo": "energia",
+"nombre": "Centrale",
+"alias": [
+"Centrale"
+],
+"ciudades": [],
+"lat": 5.13489,
+"lon": -52.71823,
+"radio_km": 2.0,
+"pais": "FR"
+},
 "energia:way/296734897": {
 "tipo": "energia",
 "nombre": "Central hidroelèctrica de Montfullà",
@@ -74641,6 +75424,19 @@
 "lon": 2.76816,
 "radio_km": 2.0,
 "pais": "ES"
+},
+"energia:way/296962814": {
+"tipo": "energia",
+"nombre": "Centrale thermique du Gol",
+"alias": [
+"Centrale thermique du Gol",
+"Le Gol Coal Power Plant"
+],
+"ciudades": [],
+"lat": -21.27965,
+"lon": 55.39708,
+"radio_km": 2.0,
+"pais": "FR"
 },
 "energia:way/297013281": {
 "tipo": "energia",
@@ -74665,6 +75461,18 @@
 "lon": -1.88544,
 "radio_km": 2.0,
 "pais": "ES"
+},
+"energia:way/297771555": {
+"tipo": "energia",
+"nombre": "Centrale hydroélectrique de Langevin",
+"alias": [
+"Centrale hydroélectrique de Langevin"
+],
+"ciudades": [],
+"lat": -21.35799,
+"lon": 55.64745,
+"radio_km": 2.0,
+"pais": "FR"
 },
 "energia:way/297773009": {
 "tipo": "energia",
@@ -74750,6 +75558,19 @@
 "lon": 24.19311,
 "radio_km": 2.0,
 "pais": "BG"
+},
+"energia:way/300445193": {
+"tipo": "energia",
+"nombre": "Qorlortorsuaq vandkraftværk",
+"alias": [
+"Qorlortorsuaq vandkraftværk",
+"Qorlortorsuaq hydropower plant"
+],
+"ciudades": [],
+"lat": 60.77639,
+"lon": -45.23614,
+"radio_km": 2.0,
+"pais": "DK"
 },
 "energia:way/300527094": {
 "tipo": "energia",
@@ -77175,6 +77996,20 @@
 "radio_km": 2.0,
 "pais": "MK"
 },
+"energia:way/344172856": {
+"tipo": "energia",
+"nombre": "Tasiilaq Vandkraftvæbrk",
+"alias": [
+"Tasiilaq Vandkraftvæbrk",
+"Hydro powerhouse \"Præstefjeld\"",
+"Tasiilaq hydropower plant"
+],
+"ciudades": [],
+"lat": 65.62812,
+"lon": -37.66841,
+"radio_km": 2.0,
+"pais": "DK"
+},
 "energia:way/344305551": {
 "tipo": "energia",
 "nombre": "Langdalselva kraftverk",
@@ -77239,6 +78074,18 @@
 "lon": 20.39152,
 "radio_km": 2.0,
 "pais": "RS"
+},
+"energia:way/345084824": {
+"tipo": "energia",
+"nombre": "Centrale hydroélectrique de Petit Saut",
+"alias": [
+"Centrale hydroélectrique de Petit Saut"
+],
+"ciudades": [],
+"lat": 5.06325,
+"lon": -53.04636,
+"radio_km": 2.0,
+"pais": "FR"
 },
 "energia:way/346649368": {
 "tipo": "energia",
@@ -77337,6 +78184,18 @@
 "lon": 23.47647,
 "radio_km": 2.0,
 "pais": "RO"
+},
+"energia:way/352174483": {
+"tipo": "energia",
+"nombre": "Power Plant",
+"alias": [
+"Power Plant"
+],
+"ciudades": [],
+"lat": 65.62264,
+"lon": -37.68725,
+"radio_km": 2.0,
+"pais": "DK"
 },
 "energia:way/35222596": {
 "tipo": "energia",
@@ -80095,6 +80954,18 @@
 "radio_km": 2.0,
 "pais": "CZ"
 },
+"energia:way/398372827": {
+"tipo": "energia",
+"nombre": "Centrale thermique Pointe des Carrières",
+"alias": [
+"Centrale thermique Pointe des Carrières"
+],
+"ciudades": [],
+"lat": 14.5976,
+"lon": -61.05794,
+"radio_km": 2.0,
+"pais": "FR"
+},
 "energia:way/39863439": {
 "tipo": "energia",
 "nombre": "Broby Kraftstationen",
@@ -80191,6 +81062,18 @@
 "lon": 14.45703,
 "radio_km": 2.0,
 "pais": "AT"
+},
+"energia:way/400682273": {
+"tipo": "energia",
+"nombre": "Centrale hybride de Kaw",
+"alias": [
+"Centrale hybride de Kaw"
+],
+"ciudades": [],
+"lat": 4.48538,
+"lon": -52.03548,
+"radio_km": 2.0,
+"pais": "FR"
 },
 "energia:way/400683934": {
 "tipo": "energia",
@@ -80570,6 +81453,30 @@
 "radio_km": 2.0,
 "pais": "AT"
 },
+"energia:way/406188825": {
+"tipo": "energia",
+"nombre": "Gamle elværk",
+"alias": [
+"Gamle elværk"
+],
+"ciudades": [],
+"lat": 69.22101,
+"lon": -51.10134,
+"radio_km": 2.0,
+"pais": "DK"
+},
+"energia:way/406208047": {
+"tipo": "energia",
+"nombre": "Ilulissat Kraftvarmeværk",
+"alias": [
+"Ilulissat Kraftvarmeværk"
+],
+"ciudades": [],
+"lat": 69.21299,
+"lon": -51.12977,
+"radio_km": 2.0,
+"pais": "DK"
+},
 "energia:way/406218985": {
 "tipo": "energia",
 "nombre": "Zentrale Safien",
@@ -80654,6 +81561,18 @@
 "lon": 27.40564,
 "radio_km": 2.0,
 "pais": "BG"
+},
+"energia:way/41210828": {
+"tipo": "energia",
+"nombre": "Centrale électrique Pointe Jarry",
+"alias": [
+"Centrale électrique Pointe Jarry"
+],
+"ciudades": [],
+"lat": 16.23207,
+"lon": -61.55412,
+"radio_km": 2.0,
+"pais": "FR"
 },
 "energia:way/412959310": {
 "tipo": "energia",
@@ -81158,6 +82077,19 @@
 "lon": 26.86505,
 "radio_km": 2.0,
 "pais": "FI"
+},
+"energia:way/424492785": {
+"tipo": "energia",
+"nombre": "Centrale thermique de Dégrad des Cannes",
+"alias": [
+"Centrale thermique de Dégrad des Cannes",
+"Degrad des Cannes Power Plant"
+],
+"ciudades": [],
+"lat": 4.86305,
+"lon": -52.27545,
+"radio_km": 2.0,
+"pais": "FR"
 },
 "energia:way/424699615": {
 "tipo": "energia",
@@ -82281,6 +83213,18 @@
 "radio_km": 2.0,
 "pais": "EE"
 },
+"energia:way/454577189": {
+"tipo": "energia",
+"nombre": "Centrale hydroélectrique du Bras de la Plaine",
+"alias": [
+"Centrale hydroélectrique du Bras de la Plaine"
+],
+"ciudades": [],
+"lat": -21.28277,
+"lon": 55.4628,
+"radio_km": 2.0,
+"pais": "FR"
+},
 "energia:way/454765395": {
 "tipo": "energia",
 "nombre": "Planta de Biomasa de Sangüesa",
@@ -82656,6 +83600,18 @@
 "lon": -1.80512,
 "radio_km": 2.0,
 "pais": "ES"
+},
+"energia:way/467490677": {
+"tipo": "energia",
+"nombre": "Centrale thermique de la baie de la Possession",
+"alias": [
+"Centrale thermique de la baie de la Possession"
+],
+"ciudades": [],
+"lat": -20.92999,
+"lon": 55.32817,
+"radio_km": 2.0,
+"pais": "FR"
 },
 "energia:way/467595201": {
 "tipo": "energia",
@@ -84600,6 +85556,18 @@
 "radio_km": 2.0,
 "pais": "SE"
 },
+"energia:way/522679510": {
+"tipo": "energia",
+"nombre": "Centrale électrique de Galisbay",
+"alias": [
+"Centrale électrique de Galisbay"
+],
+"ciudades": [],
+"lat": 18.07726,
+"lon": -63.08002,
+"radio_km": 2.0,
+"pais": "FR"
+},
 "energia:way/522951599": {
 "tipo": "energia",
 "nombre": "Heizwerk Hotel Gradonna",
@@ -84952,6 +85920,18 @@
 "lon": -3.18568,
 "radio_km": 2.0,
 "pais": "ES"
+},
+"energia:way/539930830": {
+"tipo": "energia",
+"nombre": "Centrale hydroélectrique de Saut Maman Valentin",
+"alias": [
+"Centrale hydroélectrique de Saut Maman Valentin"
+],
+"ciudades": [],
+"lat": 5.33271,
+"lon": -53.65985,
+"radio_km": 2.0,
+"pais": "FR"
 },
 "energia:way/54075221": {
 "tipo": "energia",
@@ -89606,6 +90586,18 @@
 "radio_km": 2.0,
 "pais": "NO"
 },
+"energia:way/617397401": {
+"tipo": "energia",
+"nombre": "Centrale hydroélectrique de Bras des Lianes",
+"alias": [
+"Centrale hydroélectrique de Bras des Lianes"
+],
+"ciudades": [],
+"lat": -21.02487,
+"lon": 55.61217,
+"radio_km": 2.0,
+"pais": "FR"
+},
 "energia:way/617459541": {
 "tipo": "energia",
 "nombre": "Svorkmo kraftverk",
@@ -90779,6 +91771,19 @@
 "radio_km": 2.0,
 "pais": "FI"
 },
+"energia:way/653358827": {
+"tipo": "energia",
+"nombre": "Gaschet",
+"alias": [
+"Gaschet",
+"Gachèt"
+],
+"ciudades": [],
+"lat": 16.41191,
+"lon": -61.49331,
+"radio_km": 2.0,
+"pais": "FR"
+},
 "energia:way/653891796": {
 "tipo": "energia",
 "nombre": "Regulerkraftanlæg Kratholm",
@@ -91285,6 +92290,18 @@
 "lon": -3.79546,
 "radio_km": 2.0,
 "pais": "ES"
+},
+"energia:way/66514213": {
+"tipo": "energia",
+"nombre": "Centrale EDF",
+"alias": [
+"Centrale EDF"
+],
+"ciudades": [],
+"lat": 16.30343,
+"lon": -61.07728,
+"radio_km": 2.0,
+"pais": "FR"
 },
 "energia:way/665821185": {
 "tipo": "energia",
@@ -93194,6 +94211,18 @@
 "radio_km": 2.0,
 "pais": "CH"
 },
+"energia:way/706247601": {
+"tipo": "energia",
+"nombre": "Centrale de Saint-Pierre",
+"alias": [
+"Centrale de Saint-Pierre"
+],
+"ciudades": [],
+"lat": -21.31758,
+"lon": 55.45117,
+"radio_km": 2.0,
+"pais": "FR"
+},
 "energia:way/706263069": {
 "tipo": "energia",
 "nombre": "Cazangerie",
@@ -93207,6 +94236,56 @@
 "lon": 27.75238,
 "radio_km": 2.0,
 "pais": "MD"
+},
+"energia:way/706818307": {
+"tipo": "energia",
+"nombre": "Centrale du Moule",
+"alias": [
+"Centrale du Moule",
+"Centrale Albioma",
+"Le Moule Power Plant"
+],
+"ciudades": [],
+"lat": 16.30474,
+"lon": -61.32637,
+"radio_km": 2.0,
+"pais": "FR"
+},
+"energia:way/706821351": {
+"tipo": "energia",
+"nombre": "Centrale de Bois-Rouge",
+"alias": [
+"Centrale de Bois-Rouge"
+],
+"ciudades": [],
+"lat": -20.9142,
+"lon": 55.63501,
+"radio_km": 2.0,
+"pais": "FR"
+},
+"energia:way/706825492": {
+"tipo": "energia",
+"nombre": "Centrale du Galion",
+"alias": [
+"Centrale du Galion"
+],
+"ciudades": [],
+"lat": 14.71737,
+"lon": -60.94566,
+"radio_km": 2.0,
+"pais": "FR"
+},
+"energia:way/708153480": {
+"tipo": "energia",
+"nombre": "Centrale électrique Jarry Sud",
+"alias": [
+"Centrale électrique Jarry Sud"
+],
+"ciudades": [],
+"lat": 16.23322,
+"lon": -61.55529,
+"radio_km": 2.0,
+"pais": "FR"
 },
 "energia:way/709000257": {
 "tipo": "energia",
@@ -93478,6 +94557,19 @@
 "lon": 13.79391,
 "radio_km": 2.0,
 "pais": "SE"
+},
+"energia:way/718019336": {
+"tipo": "energia",
+"nombre": "Centrale thermique du Port-Est",
+"alias": [
+"Centrale thermique du Port-Est",
+"Port-Est Power Plant"
+],
+"ciudades": [],
+"lat": -20.93013,
+"lon": 55.32773,
+"radio_km": 2.0,
+"pais": "FR"
 },
 "energia:way/718080055": {
 "tipo": "energia",
@@ -94417,6 +95509,18 @@
 "radio_km": 2.0,
 "pais": "AT"
 },
+"energia:way/741153592": {
+"tipo": "energia",
+"nombre": "UIOM de Fort-de-france",
+"alias": [
+"UIOM de Fort-de-france"
+],
+"ciudades": [],
+"lat": 14.61044,
+"lon": -61.04146,
+"radio_km": 2.0,
+"pais": "FR"
+},
 "energia:way/741343914": {
 "tipo": "energia",
 "nombre": "Kavernenkrafthaus Limberg II",
@@ -95084,6 +96188,18 @@
 "lon": 4.82976,
 "radio_km": 2.0,
 "pais": "NL"
+},
+"energia:way/764328581": {
+"tipo": "energia",
+"nombre": "Centrale hydroélectrique de Takamaka",
+"alias": [
+"Centrale hydroélectrique de Takamaka"
+],
+"ciudades": [],
+"lat": -21.0938,
+"lon": 55.62094,
+"radio_km": 2.0,
+"pais": "FR"
 },
 "energia:way/765341433": {
 "tipo": "energia",
@@ -96771,7 +97887,7 @@
 "lat": 34.98059,
 "lon": 33.74573,
 "radio_km": 2.0,
-"pais": "CY"
+"pais": "GB"
 },
 "energia:way/828152690": {
 "tipo": "energia",
@@ -97728,6 +98844,18 @@
 "lon": -3.50556,
 "radio_km": 2.0,
 "pais": "ES"
+},
+"energia:way/85025631": {
+"tipo": "energia",
+"nombre": "Centrale hydroélectrique de Sainte-Rose",
+"alias": [
+"Centrale hydroélectrique de Sainte-Rose"
+],
+"ciudades": [],
+"lat": -21.12636,
+"lon": 55.78771,
+"radio_km": 2.0,
+"pais": "FR"
 },
 "energia:way/850827950": {
 "tipo": "energia",
@@ -105133,6 +106261,18 @@
 "radio_km": 1.0,
 "pais": "BG"
 },
+"estadio:node/11433163912": {
+"tipo": "estadio",
+"nombre": "City Stade",
+"alias": [
+"City Stade"
+],
+"ciudades": [],
+"lat": 4.93706,
+"lon": -52.30428,
+"radio_km": 1.0,
+"pais": "FR"
+},
 "estadio:node/11822181017": {
 "tipo": "estadio",
 "nombre": "Stadion Sedlovina",
@@ -105915,6 +107055,18 @@
 "lon": 21.58351,
 "radio_km": 1.0,
 "pais": "PL"
+},
+"estadio:node/2558196560": {
+"tipo": "estadio",
+"nombre": "Stade Klébert Picard",
+"alias": [
+"Stade Klébert Picard"
+],
+"ciudades": [],
+"lat": -21.27244,
+"lon": 55.52189,
+"radio_km": 1.0,
+"pais": "FR"
 },
 "estadio:node/2568049147": {
 "tipo": "estadio",
@@ -107243,6 +108395,18 @@
 "radio_km": 1.0,
 "pais": "AT"
 },
+"estadio:node/9784069600": {
+"tipo": "estadio",
+"nombre": "Stade de Zévallos",
+"alias": [
+"Stade de Zévallos"
+],
+"ciudades": [],
+"lat": 16.3054,
+"lon": -61.30088,
+"radio_km": 1.0,
+"pais": "FR"
+},
 "estadio:node/982346115": {
 "tipo": "estadio",
 "nombre": "Polideportivo",
@@ -107254,6 +108418,18 @@
 "lon": -4.86149,
 "radio_km": 1.0,
 "pais": "ES"
+},
+"estadio:node/9835736603": {
+"tipo": "estadio",
+"nombre": "Stade Sergent",
+"alias": [
+"Stade Sergent"
+],
+"ciudades": [],
+"lat": 16.32017,
+"lon": -61.34267,
+"radio_km": 1.0,
+"pais": "FR"
 },
 "estadio:relation/10213367": {
 "tipo": "estadio",
@@ -109676,6 +110852,19 @@
 "lon": 25.63436,
 "radio_km": 1.0,
 "pais": "FI"
+},
+"estadio:relation/3672997": {
+"tipo": "estadio",
+"nombre": "Stade Georges Chaumet",
+"alias": [
+"Stade Georges Chaumet",
+"Stade de Baduel"
+],
+"ciudades": [],
+"lat": 4.93342,
+"lon": -52.31189,
+"radio_km": 1.0,
+"pais": "FR"
 },
 "estadio:relation/3808019": {
 "tipo": "estadio",
@@ -112393,6 +113582,18 @@
 "radio_km": 1.0,
 "pais": "PL"
 },
+"estadio:way/1023896095": {
+"tipo": "estadio",
+"nombre": "Stade Baby Larivière",
+"alias": [
+"Stade Baby Larivière"
+],
+"ciudades": [],
+"lat": -20.95682,
+"lon": 55.64835,
+"radio_km": 1.0,
+"pais": "FR"
+},
 "estadio:way/102445686": {
 "tipo": "estadio",
 "nombre": "Boisko Komunalne \"Zagrzęba\"",
@@ -112648,7 +113849,7 @@
 "lat": 35.02081,
 "lon": 33.82826,
 "radio_km": 1.0,
-"pais": "CY"
+"pais": "GB"
 },
 "estadio:way/103430790": {
 "tipo": "estadio",
@@ -112674,7 +113875,7 @@
 "lat": 35.04912,
 "lon": 33.77335,
 "radio_km": 1.0,
-"pais": "CY"
+"pais": "GB"
 },
 "estadio:way/103530874": {
 "tipo": "estadio",
@@ -113597,6 +114798,18 @@
 "radio_km": 1.0,
 "pais": "PL"
 },
+"estadio:way/107578772": {
+"tipo": "estadio",
+"nombre": "Stade",
+"alias": [
+"Stade"
+],
+"ciudades": [],
+"lat": 14.73719,
+"lon": -60.96618,
+"radio_km": 1.0,
+"pais": "FR"
+},
 "estadio:way/107680289": {
 "tipo": "estadio",
 "nombre": "Estádio Cidade de Barcelos",
@@ -113887,6 +115100,18 @@
 "radio_km": 1.0,
 "pais": "SK"
 },
+"estadio:way/109267617": {
+"tipo": "estadio",
+"nombre": "Stade Municipal",
+"alias": [
+"Stade Municipal"
+],
+"ciudades": [],
+"lat": 14.48393,
+"lon": -60.90966,
+"radio_km": 1.0,
+"pais": "FR"
+},
 "estadio:way/109352289": {
 "tipo": "estadio",
 "nombre": "Hokejbalový stadion",
@@ -114054,6 +115279,42 @@
 "lon": -3.32893,
 "radio_km": 1.0,
 "pais": "ES"
+},
+"estadio:way/110299647": {
+"tipo": "estadio",
+"nombre": "Stade Paul Pierre-Charles",
+"alias": [
+"Stade Paul Pierre-Charles"
+],
+"ciudades": [],
+"lat": 14.75286,
+"lon": -61.17932,
+"radio_km": 1.0,
+"pais": "FR"
+},
+"estadio:way/110314408": {
+"tipo": "estadio",
+"nombre": "Stade Municipal",
+"alias": [
+"Stade Municipal"
+],
+"ciudades": [],
+"lat": 14.86943,
+"lon": -61.17601,
+"radio_km": 1.0,
+"pais": "FR"
+},
+"estadio:way/110314422": {
+"tipo": "estadio",
+"nombre": "Stade Municipal",
+"alias": [
+"Stade Municipal"
+],
+"ciudades": [],
+"lat": 14.87454,
+"lon": -61.13652,
+"radio_km": 1.0,
+"pais": "FR"
 },
 "estadio:way/1103504729": {
 "tipo": "estadio",
@@ -116460,6 +117721,18 @@
 "lon": -4.8479,
 "radio_km": 1.0,
 "pais": "ES"
+},
+"estadio:way/1212729370": {
+"tipo": "estadio",
+"nombre": "Stade Aristide Maugée",
+"alias": [
+"Stade Aristide Maugée"
+],
+"ciudades": [],
+"lat": 14.71056,
+"lon": -60.99916,
+"radio_km": 1.0,
+"pais": "FR"
 },
 "estadio:way/1213749373": {
 "tipo": "estadio",
@@ -119740,6 +121013,18 @@
 "radio_km": 1.0,
 "pais": "MD"
 },
+"estadio:way/136702625": {
+"tipo": "estadio",
+"nombre": "Stade des Canots",
+"alias": [
+"Stade des Canots"
+],
+"ciudades": [],
+"lat": -21.24839,
+"lon": 55.36268,
+"radio_km": 1.0,
+"pais": "FR"
+},
 "estadio:way/136775572": {
 "tipo": "estadio",
 "nombre": "Estádio Municipal Doutor Alves Vieira",
@@ -119828,6 +121113,19 @@
 "lon": 21.94937,
 "radio_km": 1.0,
 "pais": "RS"
+},
+"estadio:way/1374966139": {
+"tipo": "estadio",
+"nombre": "Στάδιο \"Δασάκι\"",
+"alias": [
+"Στάδιο \"Δασάκι\"",
+"Dasaki Stadium"
+],
+"ciudades": [],
+"lat": 35.03407,
+"lon": 33.76493,
+"radio_km": 1.0,
+"pais": "GB"
 },
 "estadio:way/1376510281": {
 "tipo": "estadio",
@@ -120812,6 +122110,18 @@
 "radio_km": 1.0,
 "pais": "PT"
 },
+"estadio:way/1433372852": {
+"tipo": "estadio",
+"nombre": "Stade Municipal",
+"alias": [
+"Stade Municipal"
+],
+"ciudades": [],
+"lat": 16.33136,
+"lon": -61.69493,
+"radio_km": 1.0,
+"pais": "FR"
+},
 "estadio:way/1435539019": {
 "tipo": "estadio",
 "nombre": "Limassol Municipality Stadium Anagennis (Agios Antonios)",
@@ -121423,6 +122733,18 @@
 "lon": -5.48646,
 "radio_km": 1.0,
 "pais": "ES"
+},
+"estadio:way/147213130": {
+"tipo": "estadio",
+"nombre": "Stade",
+"alias": [
+"Stade"
+],
+"ciudades": [],
+"lat": 5.66997,
+"lon": -53.78354,
+"radio_km": 1.0,
+"pais": "FR"
 },
 "estadio:way/1472932756": {
 "tipo": "estadio",
@@ -124280,6 +125602,18 @@
 "radio_km": 1.0,
 "pais": "CZ"
 },
+"estadio:way/165340113": {
+"tipo": "estadio",
+"nombre": "Stade Régional d'Athlétisme Gabi Folio",
+"alias": [
+"Stade Régional d'Athlétisme Gabi Folio"
+],
+"ciudades": [],
+"lat": -21.3469,
+"lon": 55.5584,
+"radio_km": 1.0,
+"pais": "FR"
+},
 "estadio:way/165407640": {
 "tipo": "estadio",
 "nombre": "Camp de Futbol \"La Corona\"",
@@ -125807,6 +127141,18 @@
 "radio_km": 1.0,
 "pais": "PL"
 },
+"estadio:way/175604029": {
+"tipo": "estadio",
+"nombre": "Stade Youri-Gagarine",
+"alias": [
+"Stade Youri-Gagarine"
+],
+"ciudades": [],
+"lat": -20.93395,
+"lon": 55.33178,
+"radio_km": 1.0,
+"pais": "FR"
+},
 "estadio:way/175710279": {
 "tipo": "estadio",
 "nombre": "Градски стадион",
@@ -126166,6 +127512,18 @@
 "radio_km": 1.0,
 "pais": "RO"
 },
+"estadio:way/178237242": {
+"tipo": "estadio",
+"nombre": "Stade Municipal Fiesque Duchesne",
+"alias": [
+"Stade Municipal Fiesque Duchesne"
+],
+"ciudades": [],
+"lat": 16.26386,
+"lon": -61.58996,
+"radio_km": 1.0,
+"pais": "FR"
+},
 "estadio:way/178326697": {
 "tipo": "estadio",
 "nombre": "Estadio Municipal Los Silos",
@@ -126250,6 +127608,18 @@
 "lon": -9.30401,
 "radio_km": 1.0,
 "pais": "PT"
+},
+"estadio:way/179425781": {
+"tipo": "estadio",
+"nombre": "Stade Louis Achille",
+"alias": [
+"Stade Louis Achille"
+],
+"ciudades": [],
+"lat": 14.60279,
+"lon": -61.0842,
+"radio_km": 1.0,
+"pais": "FR"
 },
 "estadio:way/179747915": {
 "tipo": "estadio",
@@ -127430,6 +128800,18 @@
 "radio_km": 1.0,
 "pais": "PT"
 },
+"estadio:way/188764233": {
+"tipo": "estadio",
+"nombre": "Stade Nelson Mandela",
+"alias": [
+"Stade Nelson Mandela"
+],
+"ciudades": [],
+"lat": -20.90299,
+"lon": 55.52106,
+"radio_km": 1.0,
+"pais": "FR"
+},
 "estadio:way/188800415": {
 "tipo": "estadio",
 "nombre": "Tana Bru ishockeybane",
@@ -128542,6 +129924,19 @@
 "lon": 20.82248,
 "radio_km": 1.0,
 "pais": "XK"
+},
+"estadio:way/199538589": {
+"tipo": "estadio",
+"nombre": "Κοινοτικό Στάδιο Ξυλοτύμπου",
+"alias": [
+"Κοινοτικό Στάδιο Ξυλοτύμπου",
+"Xylotympou Stadium"
+],
+"ciudades": [],
+"lat": 35.00743,
+"lon": 33.75486,
+"radio_km": 1.0,
+"pais": "GB"
 },
 "estadio:way/199597256": {
 "tipo": "estadio",
@@ -131534,6 +132929,18 @@
 "radio_km": 1.0,
 "pais": "BE"
 },
+"estadio:way/23352430": {
+"tipo": "estadio",
+"nombre": "Stade Félix Éboué",
+"alias": [
+"Stade Félix Éboué"
+],
+"ciudades": [],
+"lat": 15.99324,
+"lon": -61.72092,
+"radio_km": 1.0,
+"pais": "FR"
+},
 "estadio:way/233539429": {
 "tipo": "estadio",
 "nombre": "Plaza de Toros de Cadalso de los Vidrios",
@@ -131546,6 +132953,30 @@
 "lon": -4.43777,
 "radio_km": 1.0,
 "pais": "ES"
+},
+"estadio:way/23366764": {
+"tipo": "estadio",
+"nombre": "Stade de Vieux-Habitants",
+"alias": [
+"Stade de Vieux-Habitants"
+],
+"ciudades": [],
+"lat": 16.06149,
+"lon": -61.76317,
+"radio_km": 1.0,
+"pais": "FR"
+},
+"estadio:way/23366777": {
+"tipo": "estadio",
+"nombre": "Stade de Rivière des Pères",
+"alias": [
+"Stade de Rivière des Pères"
+],
+"ciudades": [],
+"lat": 16.00548,
+"lon": -61.74075,
+"radio_km": 1.0,
+"pais": "FR"
 },
 "estadio:way/233706310": {
 "tipo": "estadio",
@@ -135317,6 +136748,18 @@
 "radio_km": 1.0,
 "pais": "ES"
 },
+"estadio:way/27262721": {
+"tipo": "estadio",
+"nombre": "Stade Roger ZAMI",
+"alias": [
+"Stade Roger ZAMI"
+],
+"ciudades": [],
+"lat": 16.21002,
+"lon": -61.50243,
+"radio_km": 1.0,
+"pais": "FR"
+},
 "estadio:way/27263829": {
 "tipo": "estadio",
 "nombre": "Estadi Mallorca Son Moix",
@@ -135381,6 +136824,18 @@
 "radio_km": 1.0,
 "pais": "BG"
 },
+"estadio:way/27290917": {
+"tipo": "estadio",
+"nombre": "Stade Municipal des Abymes René-Serge Nabajoth",
+"alias": [
+"Stade Municipal des Abymes René-Serge Nabajoth"
+],
+"ciudades": [],
+"lat": 16.26873,
+"lon": -61.50812,
+"radio_km": 1.0,
+"pais": "FR"
+},
 "estadio:way/27298226": {
 "tipo": "estadio",
 "nombre": "Gradski stadion SRC Slavija",
@@ -135406,6 +136861,20 @@
 "lon": -3.01105,
 "radio_km": 1.0,
 "pais": "ES"
+},
+"estadio:way/27341884": {
+"tipo": "estadio",
+"nombre": "Vélodrome Amédée Detraux",
+"alias": [
+"Vélodrome Amédée Detraux",
+"Vélodrome de Gourde Liane",
+"Vélodwom"
+],
+"ciudades": [],
+"lat": 16.24941,
+"lon": -61.59397,
+"radio_km": 1.0,
+"pais": "FR"
 },
 "estadio:way/273450355": {
 "tipo": "estadio",
@@ -135745,6 +137214,18 @@
 "lon": -3.83921,
 "radio_km": 1.0,
 "pais": "ES"
+},
+"estadio:way/278004515": {
+"tipo": "estadio",
+"nombre": "Paulo Brabant",
+"alias": [
+"Paulo Brabant"
+],
+"ciudades": [],
+"lat": -21.23451,
+"lon": 55.34072,
+"radio_km": 1.0,
+"pais": "FR"
 },
 "estadio:way/27802908": {
 "tipo": "estadio",
@@ -136703,6 +138184,19 @@
 "radio_km": 1.0,
 "pais": "RO"
 },
+"estadio:way/291220504": {
+"tipo": "estadio",
+"nombre": "Stade Jean-Ivoula",
+"alias": [
+"Stade Jean-Ivoula",
+"Stade de l'Est"
+],
+"ciudades": [],
+"lat": -20.89503,
+"lon": 55.50146,
+"radio_km": 1.0,
+"pais": "FR"
+},
 "estadio:way/291670985": {
 "tipo": "estadio",
 "nombre": "Stadionul Copceac",
@@ -136929,6 +138423,19 @@
 "lon": -2.43717,
 "radio_km": 1.0,
 "pais": "ES"
+},
+"estadio:way/293634910": {
+"tipo": "estadio",
+"nombre": "Ensemble Sportif Valkanaërs",
+"alias": [
+"Ensemble Sportif Valkanaërs",
+"Stade de Gourbeyre"
+],
+"ciudades": [],
+"lat": 15.99174,
+"lon": -61.68871,
+"radio_km": 1.0,
+"pais": "FR"
 },
 "estadio:way/29365489": {
 "tipo": "estadio",
@@ -137785,6 +139292,18 @@
 "lon": -2.26338,
 "radio_km": 1.0,
 "pais": "ES"
+},
+"estadio:way/30388899": {
+"tipo": "estadio",
+"nombre": "Stade Sabiani",
+"alias": [
+"Stade Sabiani"
+],
+"ciudades": [],
+"lat": -20.99256,
+"lon": 55.28675,
+"radio_km": 1.0,
+"pais": "FR"
 },
 "estadio:way/303940103": {
 "tipo": "estadio",
@@ -139686,6 +141205,18 @@
 "radio_km": 1.0,
 "pais": "RS"
 },
+"estadio:way/33218968": {
+"tipo": "estadio",
+"nombre": "Stade de la Redoute",
+"alias": [
+"Stade de la Redoute"
+],
+"ciudades": [],
+"lat": -20.8844,
+"lon": 55.44241,
+"radio_km": 1.0,
+"pais": "FR"
+},
 "estadio:way/332418159": {
 "tipo": "estadio",
 "nombre": "Estádio Municipal de Portalegre",
@@ -140578,6 +142109,18 @@
 "lon": 17.88094,
 "radio_km": 1.0,
 "pais": "SK"
+},
+"estadio:way/349583355": {
+"tipo": "estadio",
+"nombre": "stade Émile Labiny",
+"alias": [
+"stade Émile Labiny"
+],
+"ciudades": [],
+"lat": 15.99303,
+"lon": -61.72693,
+"radio_km": 1.0,
+"pais": "FR"
 },
 "estadio:way/350125609": {
 "tipo": "estadio",
@@ -141523,6 +143066,18 @@
 "radio_km": 1.0,
 "pais": "CZ"
 },
+"estadio:way/368311818": {
+"tipo": "estadio",
+"nombre": "Stade d'Apatou",
+"alias": [
+"Stade d'Apatou"
+],
+"ciudades": [],
+"lat": 5.15133,
+"lon": -54.34031,
+"radio_km": 1.0,
+"pais": "FR"
+},
 "estadio:way/368536972": {
 "tipo": "estadio",
 "nombre": "Štadión Banka",
@@ -141874,6 +143429,19 @@
 "lon": 10.56863,
 "radio_km": 1.0,
 "pais": "DK"
+},
+"estadio:way/37612537": {
+"tipo": "estadio",
+"nombre": "Palais Régional Omnisport Georges Théolade",
+"alias": [
+"Palais Régional Omnisport Georges Théolade",
+"PROGT"
+],
+"ciudades": [],
+"lat": 4.87164,
+"lon": -52.33827,
+"radio_km": 1.0,
+"pais": "FR"
 },
 "estadio:way/376176822": {
 "tipo": "estadio",
@@ -143507,6 +145075,18 @@
 "radio_km": 1.0,
 "pais": "PL"
 },
+"estadio:way/41218326": {
+"tipo": "estadio",
+"nombre": "Stade Municipal",
+"alias": [
+"Stade Municipal"
+],
+"ciudades": [],
+"lat": 16.41784,
+"lon": -61.52768,
+"radio_km": 1.0,
+"pais": "FR"
+},
 "estadio:way/41281289": {
 "tipo": "estadio",
 "nombre": "Stadion Żużlowy im. Zbigniewa Podleckiego",
@@ -143581,6 +145161,19 @@
 "radio_km": 1.0,
 "pais": "PL"
 },
+"estadio:way/41455536": {
+"tipo": "estadio",
+"nombre": "Stade Pierre Monnerville",
+"alias": [
+"Stade Pierre Monnerville",
+"Stade de Morne-à-l'eau"
+],
+"ciudades": [],
+"lat": 16.33322,
+"lon": -61.45653,
+"radio_km": 1.0,
+"pais": "FR"
+},
 "estadio:way/414787316": {
 "tipo": "estadio",
 "nombre": "Pabellón",
@@ -143616,6 +145209,18 @@
 "lon": 15.91582,
 "radio_km": 1.0,
 "pais": "AT"
+},
+"estadio:way/41556628": {
+"tipo": "estadio",
+"nombre": "Stade Municipal Jean Naffer",
+"alias": [
+"Stade Municipal Jean Naffer"
+],
+"ciudades": [],
+"lat": 16.1957,
+"lon": -61.59216,
+"radio_km": 1.0,
+"pais": "FR"
 },
 "estadio:way/416190969": {
 "tipo": "estadio",
@@ -143797,6 +145402,18 @@
 "lon": 10.91982,
 "radio_km": 1.0,
 "pais": "NO"
+},
+"estadio:way/41974746": {
+"tipo": "estadio",
+"nombre": "Stade Marius Trésor",
+"alias": [
+"Stade Marius Trésor"
+],
+"ciudades": [],
+"lat": 16.22785,
+"lon": -61.37971,
+"radio_km": 1.0,
+"pais": "FR"
 },
 "estadio:way/41984192": {
 "tipo": "estadio",
@@ -144066,6 +145683,18 @@
 "lon": 26.90361,
 "radio_km": 1.0,
 "pais": "RO"
+},
+"estadio:way/42443805": {
+"tipo": "estadio",
+"nombre": "Stade Omer Kromwel",
+"alias": [
+"Stade Omer Kromwel"
+],
+"ciudades": [],
+"lat": 14.64357,
+"lon": -61.1369,
+"radio_km": 1.0,
+"pais": "FR"
 },
 "estadio:way/42453496": {
 "tipo": "estadio",
@@ -144523,6 +146152,18 @@
 "radio_km": 1.0,
 "pais": "SE"
 },
+"estadio:way/43446107": {
+"tipo": "estadio",
+"nombre": "Stade Municipal",
+"alias": [
+"Stade Municipal"
+],
+"ciudades": [],
+"lat": 16.33213,
+"lon": -61.69439,
+"radio_km": 1.0,
+"pais": "FR"
+},
 "estadio:way/43475578": {
 "tipo": "estadio",
 "nombre": "Stadion Miejski w Rumi",
@@ -144927,6 +146568,18 @@
 "radio_km": 1.0,
 "pais": "PT"
 },
+"estadio:way/44326567": {
+"tipo": "estadio",
+"nombre": "Complexe sportif Cyrano Arendel",
+"alias": [
+"Complexe sportif Cyrano Arendel"
+],
+"ciudades": [],
+"lat": 16.38402,
+"lon": -61.48628,
+"radio_km": 1.0,
+"pais": "FR"
+},
 "estadio:way/443387299": {
 "tipo": "estadio",
 "nombre": "Pavilhão Equestre",
@@ -144963,6 +146616,18 @@
 "lon": 24.38809,
 "radio_km": 1.0,
 "pais": "RO"
+},
+"estadio:way/444068476": {
+"tipo": "estadio",
+"nombre": "Stade",
+"alias": [
+"Stade"
+],
+"ciudades": [],
+"lat": 4.31447,
+"lon": -52.13069,
+"radio_km": 1.0,
+"pais": "FR"
 },
 "estadio:way/444125704": {
 "tipo": "estadio",
@@ -145892,6 +147557,18 @@
 "radio_km": 1.0,
 "pais": "RO"
 },
+"estadio:way/46521216": {
+"tipo": "estadio",
+"nombre": "Stade du Centenaire",
+"alias": [
+"Stade du Centenaire"
+],
+"ciudades": [],
+"lat": -21.26997,
+"lon": 55.37323,
+"radio_km": 1.0,
+"pais": "FR"
+},
 "estadio:way/465909904": {
 "tipo": "estadio",
 "nombre": "Stadion Miejski",
@@ -146340,6 +148017,18 @@
 "lon": 8.58375,
 "radio_km": 1.0,
 "pais": "CH"
+},
+"estadio:way/482494251": {
+"tipo": "estadio",
+"nombre": "Stade Municipal du Vauclin",
+"alias": [
+"Stade Municipal du Vauclin"
+],
+"ciudades": [],
+"lat": 14.54312,
+"lon": -60.8519,
+"radio_km": 1.0,
+"pais": "FR"
 },
 "estadio:way/482698293": {
 "tipo": "estadio",
@@ -147280,6 +148969,18 @@
 "radio_km": 1.0,
 "pais": "EE"
 },
+"estadio:way/50810083": {
+"tipo": "estadio",
+"nombre": "Stade Georges Spitz",
+"alias": [
+"Stade Georges Spitz"
+],
+"ciudades": [],
+"lat": 14.67336,
+"lon": -60.94214,
+"radio_km": 1.0,
+"pais": "FR"
+},
 "estadio:way/50812901": {
 "tipo": "estadio",
 "nombre": "Kuressaare Jalgpallistaadion",
@@ -147517,6 +149218,18 @@
 "radio_km": 1.0,
 "pais": "CZ"
 },
+"estadio:way/517026112": {
+"tipo": "estadio",
+"nombre": "Stade Omnisport",
+"alias": [
+"Stade Omnisport"
+],
+"ciudades": [],
+"lat": 5.3742,
+"lon": -52.94887,
+"radio_km": 1.0,
+"pais": "FR"
+},
 "estadio:way/51767169": {
 "tipo": "estadio",
 "nombre": "Malmö Motorstadion",
@@ -147564,6 +149277,18 @@
 "lon": 15.99182,
 "radio_km": 1.0,
 "pais": "CZ"
+},
+"estadio:way/51878859": {
+"tipo": "estadio",
+"nombre": "Stade Municipal Georges Gratiant",
+"alias": [
+"Stade Municipal Georges Gratiant"
+],
+"ciudades": [],
+"lat": 14.6206,
+"lon": -60.9869,
+"radio_km": 1.0,
+"pais": "FR"
 },
 "estadio:way/518868004": {
 "tipo": "estadio",
@@ -147878,6 +149603,18 @@
 "lon": -2.07123,
 "radio_km": 1.0,
 "pais": "ES"
+},
+"estadio:way/530120080": {
+"tipo": "estadio",
+"nombre": "Stade de Trénelle",
+"alias": [
+"Stade de Trénelle"
+],
+"ciudades": [],
+"lat": 14.52553,
+"lon": -60.97253,
+"radio_km": 1.0,
+"pais": "FR"
 },
 "estadio:way/530237787": {
 "tipo": "estadio",
@@ -150367,6 +152104,18 @@
 "radio_km": 1.0,
 "pais": "PL"
 },
+"estadio:way/616025213": {
+"tipo": "estadio",
+"nombre": "Stade Raymond Cresson",
+"alias": [
+"Stade Raymond Cresson"
+],
+"ciudades": [],
+"lat": 4.93528,
+"lon": -52.2957,
+"radio_km": 1.0,
+"pais": "FR"
+},
 "estadio:way/616253154": {
 "tipo": "estadio",
 "nombre": "Ontime Butarque",
@@ -150714,6 +152463,18 @@
 "radio_km": 1.0,
 "pais": "BA"
 },
+"estadio:way/631696767": {
+"tipo": "estadio",
+"nombre": "Stade de Montsinéry",
+"alias": [
+"Stade de Montsinéry"
+],
+"ciudades": [],
+"lat": 4.89426,
+"lon": -52.49376,
+"radio_km": 1.0,
+"pais": "FR"
+},
 "estadio:way/632267684": {
 "tipo": "estadio",
 "nombre": "Plaza de Toros",
@@ -150906,6 +152667,18 @@
 "lon": -4.73721,
 "radio_km": 1.0,
 "pais": "ES"
+},
+"estadio:way/646626915": {
+"tipo": "estadio",
+"nombre": "Stade des Callebassiers",
+"alias": [
+"Stade des Callebassiers"
+],
+"ciudades": [],
+"lat": 16.32483,
+"lon": -61.35477,
+"radio_km": 1.0,
+"pais": "FR"
 },
 "estadio:way/647471937": {
 "tipo": "estadio",
@@ -151235,6 +153008,18 @@
 "lon": -8.03573,
 "radio_km": 1.0,
 "pais": "PT"
+},
+"estadio:way/657907197": {
+"tipo": "estadio",
+"nombre": "Stade municipal de Baillif",
+"alias": [
+"Stade municipal de Baillif"
+],
+"ciudades": [],
+"lat": 16.0162,
+"lon": -61.74519,
+"radio_km": 1.0,
+"pais": "FR"
 },
 "estadio:way/658168374": {
 "tipo": "estadio",
@@ -151808,6 +153593,18 @@
 "lon": -3.41535,
 "radio_km": 1.0,
 "pais": "ES"
+},
+"estadio:way/677908882": {
+"tipo": "estadio",
+"nombre": "Stade Jacques Bally",
+"alias": [
+"Stade Jacques Bally"
+],
+"ciudades": [],
+"lat": 14.70136,
+"lon": -61.17665,
+"radio_km": 1.0,
+"pais": "FR"
 },
 "estadio:way/678498215": {
 "tipo": "estadio",
@@ -152726,6 +154523,18 @@
 "radio_km": 1.0,
 "pais": "CZ"
 },
+"estadio:way/71664336": {
+"tipo": "estadio",
+"nombre": "Stade Bois-Chaudat",
+"alias": [
+"Stade Bois-Chaudat"
+],
+"ciudades": [],
+"lat": 5.16193,
+"lon": -52.64572,
+"radio_km": 1.0,
+"pais": "FR"
+},
 "estadio:way/71901647": {
 "tipo": "estadio",
 "nombre": "Pabellón Municipal Pedro Delgado Robledo",
@@ -153075,6 +154884,18 @@
 "lon": -28.52595,
 "radio_km": 1.0,
 "pais": "PT"
+},
+"estadio:way/741153606": {
+"tipo": "estadio",
+"nombre": "Stade Pierre Aliker",
+"alias": [
+"Stade Pierre Aliker"
+],
+"ciudades": [],
+"lat": 14.60334,
+"lon": -61.04621,
+"radio_km": 1.0,
+"pais": "FR"
 },
 "estadio:way/741575966": {
 "tipo": "estadio",
@@ -153480,6 +155301,30 @@
 "lon": 19.67676,
 "radio_km": 1.0,
 "pais": "RS"
+},
+"estadio:way/77010128": {
+"tipo": "estadio",
+"nombre": "Happey Valley",
+"alias": [
+"Happey Valley"
+],
+"ciudades": [],
+"lat": 34.67087,
+"lon": 32.82122,
+"radio_km": 1.0,
+"pais": "GB"
+},
+"estadio:way/77027092": {
+"tipo": "estadio",
+"nombre": "Stade Juluis Bénard",
+"alias": [
+"Stade Juluis Bénard"
+],
+"ciudades": [],
+"lat": -20.98244,
+"lon": 55.29013,
+"radio_km": 1.0,
+"pais": "FR"
 },
 "estadio:way/77104377": {
 "tipo": "estadio",
@@ -154157,6 +156002,30 @@
 "radio_km": 1.0,
 "pais": "ES"
 },
+"estadio:way/802602691": {
+"tipo": "estadio",
+"nombre": "Stade Michel Volnay",
+"alias": [
+"Stade Michel Volnay"
+],
+"ciudades": [],
+"lat": -21.33867,
+"lon": 55.46806,
+"radio_km": 1.0,
+"pais": "FR"
+},
+"estadio:way/802605603": {
+"tipo": "estadio",
+"nombre": "Stade Municipal Docteur Edmard Lama",
+"alias": [
+"Stade Municipal Docteur Edmard Lama"
+],
+"ciudades": [],
+"lat": 4.88311,
+"lon": -52.28602,
+"radio_km": 1.0,
+"pais": "FR"
+},
 "estadio:way/802697692": {
 "tipo": "estadio",
 "nombre": "Спартак",
@@ -154180,6 +156049,43 @@
 "lon": -8.75974,
 "radio_km": 1.0,
 "pais": "ES"
+},
+"estadio:way/803131128": {
+"tipo": "estadio",
+"nombre": "Stade Daniel Sinaï",
+"alias": [
+"Stade Daniel Sinaï"
+],
+"ciudades": [],
+"lat": 4.84719,
+"lon": -52.32994,
+"radio_km": 1.0,
+"pais": "FR"
+},
+"estadio:way/803132653": {
+"tipo": "estadio",
+"nombre": "Stade Ludovic Viadere",
+"alias": [
+"Stade Ludovic Viadere",
+"Ludovic Viadere Stadium"
+],
+"ciudades": [],
+"lat": -21.26802,
+"lon": 55.43798,
+"radio_km": 1.0,
+"pais": "FR"
+},
+"estadio:way/803132656": {
+"tipo": "estadio",
+"nombre": "Stade Nelson Mandéla",
+"alias": [
+"Stade Nelson Mandéla"
+],
+"ciudades": [],
+"lat": -20.90297,
+"lon": 55.52098,
+"radio_km": 1.0,
+"pais": "FR"
 },
 "estadio:way/80445184": {
 "tipo": "estadio",
@@ -154714,6 +156620,18 @@
 "radio_km": 1.0,
 "pais": "CZ"
 },
+"estadio:way/82485571": {
+"tipo": "estadio",
+"nombre": "Stade Municipal de Capesterre-Belle-Eau",
+"alias": [
+"Stade Municipal de Capesterre-Belle-Eau"
+],
+"ciudades": [],
+"lat": 16.04899,
+"lon": -61.56189,
+"radio_km": 1.0,
+"pais": "FR"
+},
 "estadio:way/82487730": {
 "tipo": "estadio",
 "nombre": "Vejle Atletikstadion",
@@ -154725,6 +156643,18 @@
 "lon": 9.55914,
 "radio_km": 1.0,
 "pais": "DK"
+},
+"estadio:way/826437519": {
+"tipo": "estadio",
+"nombre": "Stade André Kabile",
+"alias": [
+"Stade André Kabile"
+],
+"ciudades": [],
+"lat": 14.5593,
+"lon": -60.93892,
+"radio_km": 1.0,
+"pais": "FR"
 },
 "estadio:way/82843924": {
 "tipo": "estadio",
@@ -155182,6 +157112,18 @@
 "lon": 22.26601,
 "radio_km": 1.0,
 "pais": "FI"
+},
+"estadio:way/845217270": {
+"tipo": "estadio",
+"nombre": "Stade Lilian Thuram",
+"alias": [
+"Stade Lilian Thuram"
+],
+"ciudades": [],
+"lat": 16.46667,
+"lon": -61.51019,
+"radio_km": 1.0,
+"pais": "FR"
 },
 "estadio:way/845996469": {
 "tipo": "estadio",
@@ -157137,6 +159079,18 @@
 "radio_km": 1.0,
 "pais": "AT"
 },
+"estadio:way/923694926": {
+"tipo": "estadio",
+"nombre": "Stade Nicholas Calaber",
+"alias": [
+"Stade Nicholas Calaber"
+],
+"ciudades": [],
+"lat": 14.6659,
+"lon": -61.15963,
+"radio_km": 1.0,
+"pais": "FR"
+},
 "estadio:way/923891668": {
 "tipo": "estadio",
 "nombre": "Stadion Trešnjica",
@@ -157601,6 +159555,18 @@
 "lon": 10.3497,
 "radio_km": 1.0,
 "pais": "DK"
+},
+"estadio:way/949669120": {
+"tipo": "estadio",
+"nombre": "Europa Sports Park",
+"alias": [
+"Europa Sports Park"
+],
+"ciudades": [],
+"lat": 36.1105,
+"lon": -5.34684,
+"radio_km": 1.0,
+"pais": "GB"
 },
 "estadio:way/949763520": {
 "tipo": "estadio",
@@ -158282,6 +160248,18 @@
 "lon": 7.12677,
 "radio_km": 1.0,
 "pais": "CH"
+},
+"estadio:way/985265905": {
+"tipo": "estadio",
+"nombre": "Stade Pierre Antonius",
+"alias": [
+"Stade Pierre Antonius"
+],
+"ciudades": [],
+"lat": 16.25165,
+"lon": -61.54272,
+"radio_km": 1.0,
+"pais": "FR"
 },
 "estadio:way/98620966": {
 "tipo": "estadio",
@@ -159324,6 +161302,19 @@
 "pais": "BE",
 "oaci": "EBSW"
 },
+"helipuerto:way/195300891": {
+"tipo": "helipuerto",
+"nombre": "Arsuk Heliport",
+"alias": [
+"Arsuk Heliport"
+],
+"ciudades": [],
+"lat": 61.17686,
+"lon": -48.41977,
+"radio_km": 1.0,
+"pais": "DK",
+"oaci": "BGAR"
+},
 "helipuerto:way/202530074": {
 "tipo": "helipuerto",
 "nombre": "Heliporto de Cee",
@@ -159622,6 +161613,22 @@
 "lon": 9.65982,
 "radio_km": 1.0,
 "pais": "AT"
+},
+"helipuerto:way/414489265": {
+"tipo": "helipuerto",
+"nombre": "Mittarfik Narsarsuaq",
+"alias": [
+"Mittarfik Narsarsuaq",
+"Narsarsuaq Lufthavn",
+"Flughafen Narsarsuaq",
+"Narsarsuaq Airport"
+],
+"ciudades": [],
+"lat": 61.16042,
+"lon": -45.42507,
+"radio_km": 1.0,
+"pais": "DK",
+"oaci": "BGBW"
 },
 "helipuerto:way/437004850": {
 "tipo": "helipuerto",
@@ -161162,6 +163169,30 @@
 "lon": -5.97262,
 "radio_km": 2.0,
 "pais": "ES"
+},
+"presa:node/2132147389": {
+"tipo": "presa",
+"nombre": "Prise d'eau des Orgues",
+"alias": [
+"Prise d'eau des Orgues"
+],
+"ciudades": [],
+"lat": -21.17515,
+"lon": 55.72202,
+"radio_km": 2.0,
+"pais": "FR"
+},
+"presa:node/2134670827": {
+"tipo": "presa",
+"nombre": "Captage Bras Cabot",
+"alias": [
+"Captage Bras Cabot"
+],
+"ciudades": [],
+"lat": -21.10289,
+"lon": 55.60075,
+"radio_km": 2.0,
+"pais": "FR"
 },
 "presa:node/2378418138": {
 "tipo": "presa",
@@ -162788,6 +164819,18 @@
 "lon": 10.30831,
 "radio_km": 2.0,
 "pais": "NO"
+},
+"presa:node/9236339985": {
+"tipo": "presa",
+"nombre": "Barrage de Schoelcher",
+"alias": [
+"Barrage de Schoelcher"
+],
+"ciudades": [],
+"lat": 16.06299,
+"lon": -61.75231,
+"radio_km": 2.0,
+"pais": "FR"
 },
 "presa:node/9250120823": {
 "tipo": "presa",
@@ -166351,6 +168394,18 @@
 "lon": -7.59581,
 "radio_km": 2.0,
 "pais": "PT"
+},
+"presa:way/1000273439": {
+"tipo": "presa",
+"nombre": "Barrage du Grand Bassin",
+"alias": [
+"Barrage du Grand Bassin"
+],
+"ciudades": [],
+"lat": 15.96055,
+"lon": -61.24998,
+"radio_km": 2.0,
+"pais": "FR"
 },
 "presa:way/1000348103": {
 "tipo": "presa",
@@ -178666,6 +180721,18 @@
 "radio_km": 2.0,
 "pais": "ES"
 },
+"presa:way/1443806192": {
+"tipo": "presa",
+"nombre": "Barrage de Moreau",
+"alias": [
+"Barrage de Moreau"
+],
+"ciudades": [],
+"lat": 16.11995,
+"lon": -61.61525,
+"radio_km": 2.0,
+"pais": "FR"
+},
 "presa:way/1444557555": {
 "tipo": "presa",
 "nombre": "Barragem de Pedroselo",
@@ -184561,6 +186628,19 @@
 "radio_km": 2.0,
 "pais": "ES"
 },
+"presa:way/202941178": {
+"tipo": "presa",
+"nombre": "Barrage des Hirondelles",
+"alias": [
+"Barrage des Hirondelles",
+"Barrage de Takamaka 2"
+],
+"ciudades": [],
+"lat": -21.10166,
+"lon": 55.58489,
+"radio_km": 2.0,
+"pais": "FR"
+},
 "presa:way/203111873": {
 "tipo": "presa",
 "nombre": "Φράγμα Άχνας",
@@ -187125,6 +189205,19 @@
 "lon": 21.06094,
 "radio_km": 2.0,
 "pais": "SE"
+},
+"presa:way/266919198": {
+"tipo": "presa",
+"nombre": "Barrage Gingembre",
+"alias": [
+"Barrage Gingembre",
+"Barrage de Takamaka 1"
+],
+"ciudades": [],
+"lat": -21.09412,
+"lon": 55.61169,
+"radio_km": 2.0,
+"pais": "FR"
 },
 "presa:way/268069036": {
 "tipo": "presa",
@@ -190141,6 +192234,20 @@
 "radio_km": 2.0,
 "pais": "SE"
 },
+"presa:way/34316117": {
+"tipo": "presa",
+"nombre": "Barrage de Petit Saut",
+"alias": [
+"Barrage de Petit Saut",
+"Petit-Saut-Staudamm",
+"Petit-Saut Dam"
+],
+"ciudades": [],
+"lat": 5.0621,
+"lon": -53.04791,
+"radio_km": 2.0,
+"pais": "FR"
+},
 "presa:way/343212317": {
 "tipo": "presa",
 "nombre": "Hdrocentrală Robești",
@@ -190338,6 +192445,18 @@
 "radio_km": 2.0,
 "pais": "BE"
 },
+"presa:way/352176668": {
+"tipo": "presa",
+"nombre": "hydro intake gate \"Præstefjeld\"",
+"alias": [
+"hydro intake gate \"Præstefjeld\""
+],
+"ciudades": [],
+"lat": 65.62538,
+"lon": -37.74295,
+"radio_km": 2.0,
+"pais": "DK"
+},
 "presa:way/352638348": {
 "tipo": "presa",
 "nombre": "Kraftwerk Thurnsdorf",
@@ -190433,6 +192552,18 @@
 "lon": 22.47433,
 "radio_km": 2.0,
 "pais": "RO"
+},
+"presa:way/354708019": {
+"tipo": "presa",
+"nombre": "Qorlortorsuaq Dam",
+"alias": [
+"Qorlortorsuaq Dam"
+],
+"ciudades": [],
+"lat": 60.77947,
+"lon": -45.2409,
+"radio_km": 2.0,
+"pais": "DK"
 },
 "presa:way/355417591": {
 "tipo": "presa",
@@ -190725,6 +192856,19 @@
 "lon": -3.98463,
 "radio_km": 2.0,
 "pais": "ES"
+},
+"presa:way/364207764": {
+"tipo": "presa",
+"nombre": "Barrage de Gaschet",
+"alias": [
+"Barrage de Gaschet",
+"Baraj Gachèt"
+],
+"ciudades": [],
+"lat": 16.41289,
+"lon": -61.49255,
+"radio_km": 2.0,
+"pais": "FR"
 },
 "presa:way/365093185": {
 "tipo": "presa",
@@ -192822,6 +194966,19 @@
 "radio_km": 2.0,
 "pais": "SE"
 },
+"presa:way/442926770": {
+"tipo": "presa",
+"nombre": "Prise des Galets",
+"alias": [
+"Prise des Galets",
+"Captage Rivière des Galets"
+],
+"ciudades": [],
+"lat": -21.02104,
+"lon": 55.40388,
+"radio_km": 2.0,
+"pais": "FR"
+},
 "presa:way/443966326": {
 "tipo": "presa",
 "nombre": "Presa del Embalse de Santomera",
@@ -193662,6 +195819,18 @@
 "lon": -16.75746,
 "radio_km": 2.0,
 "pais": "ES"
+},
+"presa:way/486377582": {
+"tipo": "presa",
+"nombre": "Barrage de l'Étaye",
+"alias": [
+"Barrage de l'Étaye"
+],
+"ciudades": [],
+"lat": 16.30612,
+"lon": -61.32033,
+"radio_km": 2.0,
+"pais": "FR"
 },
 "presa:way/486634434": {
 "tipo": "presa",
@@ -195235,6 +197404,18 @@
 "radio_km": 2.0,
 "pais": "ES"
 },
+"presa:way/532418666": {
+"tipo": "presa",
+"nombre": "Barrage Bras Patience",
+"alias": [
+"Barrage Bras Patience"
+],
+"ciudades": [],
+"lat": -21.08966,
+"lon": 55.61087,
+"radio_km": 2.0,
+"pais": "FR"
+},
 "presa:way/532580033": {
 "tipo": "presa",
 "nombre": "Barragem das Olgas",
@@ -195997,6 +198178,18 @@
 "lon": -8.15135,
 "radio_km": 2.0,
 "pais": "PT"
+},
+"presa:way/546435149": {
+"tipo": "presa",
+"nombre": "Barrage de la Manzo",
+"alias": [
+"Barrage de la Manzo"
+],
+"ciudades": [],
+"lat": 14.58918,
+"lon": -60.93673,
+"radio_km": 2.0,
+"pais": "FR"
 },
 "presa:way/547910155": {
 "tipo": "presa",
@@ -197865,6 +200058,19 @@
 "lon": 14.66508,
 "radio_km": 2.0,
 "pais": "SE"
+},
+"presa:way/653958707": {
+"tipo": "presa",
+"nombre": "Barrage Dumanoir",
+"alias": [
+"Barrage Dumanoir",
+"Baraj Dimànwa"
+],
+"ciudades": [],
+"lat": 16.04085,
+"lon": -61.60473,
+"radio_km": 2.0,
+"pais": "FR"
 },
 "presa:way/655112518": {
 "tipo": "presa",
@@ -204665,7 +206871,7 @@
 "lat": 34.65236,
 "lon": 33.01766,
 "radio_km": 3.0,
-"pais": "CY"
+"pais": "GB"
 },
 "puerto:relation/3881070": {
 "tipo": "puerto",
@@ -206810,6 +209016,18 @@
 "radio_km": 3.0,
 "pais": "SE"
 },
+"puerto:way/170822559": {
+"tipo": "puerto",
+"nombre": "Port de Longoni",
+"alias": [
+"Port de Longoni"
+],
+"ciudades": [],
+"lat": -12.72341,
+"lon": 45.16678,
+"radio_km": 3.0,
+"pais": "FR"
+},
 "puerto:way/174646348": {
 "tipo": "puerto",
 "nombre": "Lagmannsholmen",
@@ -206883,6 +209101,18 @@
 "lon": 27.79909,
 "radio_km": 3.0,
 "pais": "BG"
+},
+"puerto:way/199354539": {
+"tipo": "puerto",
+"nombre": "Port Réunion Ouest",
+"alias": [
+"Port Réunion Ouest"
+],
+"ciudades": [],
+"lat": -20.9355,
+"lon": 55.28601,
+"radio_km": 3.0,
+"pais": "FR"
 },
 "puerto:way/20288842": {
 "tipo": "puerto",
@@ -207358,6 +209588,19 @@
 "radio_km": 3.0,
 "pais": "FI"
 },
+"puerto:way/335301246": {
+"tipo": "puerto",
+"nombre": "Nanortalik havn",
+"alias": [
+"Nanortalik havn",
+"Port of Nanortalik"
+],
+"ciudades": [],
+"lat": 60.14029,
+"lon": -45.23691,
+"radio_km": 3.0,
+"pais": "DK"
+},
 "puerto:way/336727330": {
 "tipo": "puerto",
 "nombre": "Hamina-Kotka Haminan satama",
@@ -207419,6 +209662,18 @@
 "lon": 28.45291,
 "radio_km": 3.0,
 "pais": "RO"
+},
+"puerto:way/36863479": {
+"tipo": "puerto",
+"nombre": "Port Réunion Est",
+"alias": [
+"Port Réunion Est"
+],
+"ciudades": [],
+"lat": -20.93159,
+"lon": 55.31983,
+"radio_km": 3.0,
+"pais": "FR"
 },
 "puerto:way/376648236": {
 "tipo": "puerto",
