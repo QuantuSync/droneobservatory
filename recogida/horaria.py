@@ -88,6 +88,7 @@ from recogida import (
     revisados,
     rutas,
     satelite,
+    suelo_europeo,
     tipo_atribucion,
     tipo_dron,
 )
@@ -332,6 +333,14 @@ def principal(argumentos: list[str] | None = None) -> int:
         almacen = abierta
         antes = sitio.marca(almacen)
         paso = Pasos()
+        # Suelo europeo fuera del continente: los incidentes guardados con el país de antes
+        # (Gibraltar «GI», las bases británicas de Chipre en «CY») pasan a su país. Lo primero,
+        # antes de que otro paso vuelva a guardar uno de ellos.
+        corregidos = paso(
+            "suelo europeo", suelo_europeo.paso_horario, almacen, ahora, modelos(almacen)
+        )
+        if corregidos:
+            registro.info("incidentes con el país del suelo europeo corregido: %d", corregidos)
         descargador, cache = Descargador(), CachePaginas()
         estados: dict[str, EstadoFuente] = {}
         for fuente in FUENTES:

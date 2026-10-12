@@ -34,6 +34,7 @@ from typing import Any
 from proceso import fechas
 from proceso.fronteras import dentro_del_pais, nombres_del_pais, paises
 from proceso.noticias import normalizar
+from proceso.territorios import pais_padre
 
 DIRECTORIO = Path(__file__).resolve().parent.parent / "configuracion"
 MAX_PALABRAS_FRASE = 25
@@ -145,10 +146,11 @@ class Validada:
 
     @property
     def pais(self) -> str | None:
-        """El país del suceso: el de la ficha o, si no lo da, el de su lugar."""
+        """El país del suceso: el de la ficha o, si no lo da, el de su lugar. Un territorio de
+        fuera del continente guardado con su código de antes («GI»), como su país."""
         suceso = self.valor("lugar_suceso")
         pais = self.valor("pais") or (suceso["pais"] if suceso else None)
-        return str(pais) if pais else None
+        return pais_padre(str(pais)) if pais else None
 
     def valor(self, campo: str) -> Any:
         return self.campos[campo]["valor"] if campo in self.campos else None
