@@ -877,3 +877,35 @@ def test_valores_de_lista_con_otra_escritura() -> None:
         ficha.interpretar("lugar_nuevo", "Base X; Base militar; RO; 45.1; 26.8")["categoria"]
         == "base_militar"
     )
+
+
+def test_un_candidato_sin_articulos_en_idioma_conocido_no_se_manda_ni_frena_a_los_demas(
+    almacen: Almacen, monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture
+) -> None:
+    """Recogida del 12 oct 2026, 18:17: un artículo en panyabí que GDELT sitúa en Milán abrió
+    un candidato solo; la petición salía sin fuentes y min() de sus fechas tumbaba el paso."""
+    for nombre, valor in {
+        "EODI_EXTRACTOR_CLAVE": "k", "EODI_EXTRACTOR_URL": "u", "EODI_EXTRACTOR_URL_LOTES": "l",
+        "EODI_EXTRACTOR_MODELO": "m", "EODI_EXTRACTOR_CABECERAS": '{"c": "{clave}"}',
+    }.items():  # fmt: skip
+        monkeypatch.setenv(nombre, valor)
+    monkeypatch.setattr(extractor, "Descargador", lambda **_: None)
+    monkeypatch.setattr(paginas, "leer", lambda _d, _u: TEXTO)
+    caplog.set_level(logging.INFO, logger="recogida")
+    bueno = candidato_con_articulos(almacen, horas=2)
+    sin_idioma = [
+        dataclasses.replace(articulo(90 + i, f"{TITULAR} {i}", 3 - i), idioma=None, pais=None)
+        for i in range(2)
+    ]
+    almacen.guardar_candidato({**bueno, "id": "CAND-sin-idioma", "articulos": []})
+    for a in sin_idioma:
+        almacen.guardar_articulo(gdelt.documento_articulo(a))
+        almacen.asignar_candidato(a.url, "CAND-sin-idioma")
+    vacio = {**bueno, "id": "CAND-sin-idioma", "articulos": [a.url for a in sin_idioma]}
+    monkeypatch.setattr(extractor, "pendientes", lambda _a, _desde=None: [vacio, bueno])
+    resultado, servicio = paso_horario(almacen, [bien()])
+    # Solo se llama por el candidato con fuentes; el otro queda pendiente, sin rojo.
+    assert len(servicio.pedidas) == 1
+    assert (resultado.candidatos, resultado.llamadas, resultado.pendientes) == (2, 1, 1)
+    assert not resultado.en_rojo
+    assert "CAND-sin-idioma" in caplog.text
