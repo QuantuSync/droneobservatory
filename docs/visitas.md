@@ -183,8 +183,17 @@ INCIDENTES NUEVOS PUBLICADOS: 2
 
 SISTEMA
   Recogidas: 24 correctas (1 con avisos), 0 fallidas
+  Reintentos automáticos: 3 (recogida 2, reserva 1)
+  Candidatos apartados por un fallo propio: 1; retirados tras 3 fallos: 0
+  Se arreglaron solos, sin incidencia: 1
+  - El archivo de alertas de alerts.in.ua está «activating» y tuvo respuesta de la API ...
   Vigilancia: ningún problema abierto
 ```
+
+Desde el 12 de octubre de 2026 la sección SISTEMA cuenta lo que se arregló solo, sin correo: los
+reintentos que hizo systemd ese día por unidad (servidor/reintentos.sh), los candidatos que el
+extractor apartó o retiró, y lo que la vigilancia vio y desapareció (`resueltos` de
+`~/.eodi/vigilancia.json`), con aparte lo que llegó a abrir incidencia.
 
 **Suscribirse en la aplicación ntfy** (una vez, en el móvil de Lucas):
 

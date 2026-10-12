@@ -18,17 +18,21 @@ la última publicación, la captura del seguimiento, las copias (base, archivo y
 Helsinki), el disco, los `problemas` y los `avisos`. Si `problemas` está vacío y `generado` es de
 hace menos de 10 minutos, todo va bien.
 
-**Los avisos llegan solos.** El workflow `vigia-recogida` lee ese fichero cada 10 minutos (y
-`estado.json` y `directo.json`). Si hay un problema:
+**Se arregla solo y avisa solo si no puede.** Cada servicio se reintenta solo y la recogida
+fallida se repite a los 10 y a los 25 minutos ([servidor.md](servidor.md), «Reintentos»). El
+workflow `vigia-recogida` lee ese fichero cada 10 minutos (y `estado.json` y `directo.json`). Si
+hay un problema que no se ha arreglado solo:
 
 - abre una incidencia en el repositorio con el problema y dónde mirar (GitHub manda el aviso por
-  correo a quien vigila el repositorio);
-- el propio trabajo falla, y GitHub manda al dueño el correo «Run failed: vigia-recogida»: al
-  aparecer el problema y después una vez por hora mientras siga;
+  correo a quien vigila el repositorio); desde el 12 de octubre de 2026 ya no llega además el
+  correo «Run failed: vigia-recogida»;
 - la incidencia se cierra sola cuando se arregla.
 
-Problemas que avisan: datos publicados con más de 2 horas, recogida que termina con un código
-distinto de 0 y 2, captura del seguimiento sin recibir nada en 10 minutos, archivo de alertas de alerts.in.ua sin
+Lo que se arregló solo (reintentos, fallos sueltos que desaparecen en menos de 30 minutos) no
+manda correo: sale en la sección SISTEMA del resumen diario privado ([visitas.md](visitas.md)).
+
+Problemas que avisan: datos publicados con más de 3 horas, 3 recogidas seguidas que terminan, tras
+sus reintentos, con un código distinto de 0 y 2, captura del seguimiento sin recibir nada en 10 minutos, archivo de alertas de alerts.in.ua sin
 respuesta correcta de la API en 15 minutos o con la API respondiendo 401 o 403, copia de la base o del
 archivo con más de 2 horas, segunda copia con más de 3 horas, copia pública de reserva de Helsinki
 sin estar al día más de 30 minutos, disco por encima del 75 %, servidor
@@ -123,8 +127,10 @@ servidor pone al día cada 2 minutos y tras cada publicación (`eodi-reserva`, `
 - La recogida sigue, pero no puede publicar (sube a Núremberg): la web se queda con los últimos
   datos publicados y la barra de arriba dice de cuándo son. Al volver Núremberg, la recogida
   siguiente publica y la reserva se pone al día sola.
-- La vigilancia avisa: `salud.json` (que está en Núremberg) deja de responder y llega el correo
-  «Run failed: vigia-recogida» con la incidencia.
+- Desde el 12 de octubre de 2026, si Núremberg no acepta la publicación, la recogida la sube
+  directamente a la reserva de Helsinki: la web sigue con datos al día.
+- La vigilancia avisa: `salud.json` (que está en Núremberg) deja de responder y se abre la
+  incidencia, que llega por correo.
 
 **Cómo saber si es el almacén:**
 
