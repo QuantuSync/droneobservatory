@@ -533,7 +533,10 @@ test("todas las rutas llevan las cabeceras de seguridad", async ({ page }) => {
   expect(texto).toMatch(/Expires: \d{4}-\d{2}-\d{2}T/);
 });
 
-test("el mapa solo habla con este sitio y con el almacén público", async ({ page }) => {
+// El contador de visitas propio (docs/visitas.md), en producción.
+const ORIGEN_VISITAS = "https://stats.droneobservatory.eu";
+
+test("el mapa solo habla con este sitio, el almacén y el contador de visitas", async ({ page }) => {
   const origenes = new Set<string>();
   page.on("request", (peticion) => origenes.add(new URL(peticion.url()).origin));
   await page.goto("/");
@@ -541,7 +544,7 @@ test("el mapa solo habla con este sitio y con el almacén público", async ({ pa
   await page.waitForTimeout(MS_DE_ASENTAMIENTO);
   const propio = new URL(page.url()).origin;
   const ajenos = [...origenes].filter(
-    (origen) => origen !== propio && origen !== ORIGEN_ALMACEN,
+    (origen) => origen !== propio && origen !== ORIGEN_ALMACEN && origen !== ORIGEN_VISITAS,
   );
   expect(ajenos).toEqual([]);
 });
