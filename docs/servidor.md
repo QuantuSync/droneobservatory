@@ -162,6 +162,26 @@ si cambia, y un fallo ahí no cambia el resultado de la recogida
 Sale con el código de la recogida: con avisos, la unidad queda como fallida en systemd,
 igual que el workflow quedaba en rojo, y la hora siguiente se lanza igual.
 
+**Se cura sola** (desde el 12 de octubre de 2026, tras la caída de las 18:17 por un solo
+candidato):
+
+- cada paso de `recogida.horaria` va aislado (`Pasos`): un fallo inesperado queda en el diario con
+  su traza («paso fallido (…)»), la recogida sigue con los demás, guarda la base y publica con
+  código 2. Solo sale con 1 si no puede generar ningún fichero publicado (cada uno se genera por
+  separado: si falla uno, queda el anterior) o guardar la base;
+- un candidato que falla por sí solo se aparta y los demás de la hora siguen; tras fallar en 3
+  recogidas distintas se retira con su motivo (cursor `candidatos_apartados` de la base). Un
+  artículo sin idioma reconocido no abre candidato;
+- con código 1, systemd la repite sola a los 10 y a los 25 minutos (apartado «Reintentos»);
+- si el almacén de Núremberg no acepta la publicación, los ficheros van directos a la reserva de
+  Helsinki (`--reserva`, registro propio en `~/.eodi/publicacion_reserva.json`), de la que la web
+  tira cuando el principal no responde: código 2 y sin reintento;
+- **artículos dirigidos** ([`configuracion/articulos_dirigidos.json`](../configuracion/articulos_dirigidos.json),
+  [`recogida/articulos_dirigidos.py`](../recogida/articulos_dirigidos.py)): para un incidente que
+  no trajo GDELT se apuntan sus fuentes (dirección, medio, fecha, idioma, país del medio, titular
+  literal y lugar del nomenclátor); entran una vez como artículos de su lugar, el extractor las
+  lleva delante y lo demás es el flujo de siempre. El estado lo dan solo las fuentes oficiales.
+
 El script se ejecuta desde el clon, así que un cambio suyo en `main` vale desde la
 recogida siguiente (bash lo lee entero al empezar: en realidad, desde la otra). Las unidades de systemd y el endurecimiento, en cambio, se instalan:
 si cambian `instalar.sh`, `endurecer.sh` o `configuracion.sh`, hay que volver a ejecutar
@@ -271,7 +291,8 @@ correcta, la vigilancia avisa.
 `eodi-exportacion.timer` lanza `eodi-exportacion.service` los lunes a las 03:47 UTC (si el
 servidor estaba apagado a esa hora, al arrancar). La unidad ejecuta
 [`servidor/exportacion.sh`](../servidor/exportacion.sh) como `eodi`, con un tope de 90
-minutos, y el script:
+minutos (si falla, se reintenta sola dos veces, a los 20 minutos: apartado «Reintentos»), y el
+script:
 
 1. espera, como mucho una hora, al cerrojo de la recogida horaria (el mismo `flock`): si hay
    una recogida en marcha, la exportación empieza cuando termina; mientras exporta, la
@@ -334,6 +355,12 @@ systemctl list-timers eodi-exportacion.timer
 Una segunda versión el mismo día (la del día ya existe y no se sobrescribe) lleva un sufijo
 `.N`; se lanza como trabajo de sesión con la orden de la unidad y `--version AAAA.MM.DD.N`
 (`EODI_EXPORTACION_VERSION` en `exportacion.sh`).
+
+**Memoria.** Desde el 12 de octubre de 2026 los ficheros se generan, se cifran y se escriben de
+uno en uno (`semanal.generar_por_partes` y `semanal.exportar_a_disco`): el pico del proceso bajó
+de 1,6 a 1,05 GB, medido en el servidor sobre una copia de la base, con los 72 ficheros idénticos
+(misma huella de cada uno). Los 3,4 GB que daba systemd eran sobre todo caché de disco de la base;
+`MemoryHigh=2500M` hace que el núcleo la libere antes, con `MemoryMax=4G` de techo.
 
 ## Tráfico aéreo de adsb.lol y condiciones medidas
 
@@ -1308,6 +1335,28 @@ Al cambiar de tipo Hetzner amplió también el disco a 80 GB, que no se puede re
 volver a un CX23 hay que recrear el servidor con `reconstruir.sh` (con `SERVIDOR_TIPO="cx23"`
 en `configuracion.sh`) y copiar antes `/home/eodi/datos`.
 
+## Reintentos
+
+Todas las unidades del servidor se reintentan solas
+([`servidor/reintentos.sh`](../servidor/reintentos.sh), que llama `instalar.sh`; complementos
+`/etc/systemd/system/<unidad>.d/reintentos.conf`): `Restart=on-failure` con su espera y un tope de
+arranques en una ventana (la tabla del script), y `Persistent=true` en todos los temporizadores.
+La recogida solo se repite con código 1 o si systemd la corta (no con el 2, que publica), a los 10
+minutos y otra vez 15 después, dos veces por hora como mucho; mientras espera el reintento la
+unidad está «activating» y el temporizador de la hora siguiente no lanza otra. Los servicios que
+no paran (directo, seguimiento, alertas, GoatCounter, ntfy) ya llevaban `Restart=always`; Caddy,
+el del paquete, no tenía ninguno. El paso a solo disco no se toca.
+
+Comprobado en el servidor (systemd 259) el 12 de octubre de 2026 con una unidad de prueba: cuando
+un servicio agota su tope («Start request repeated too quickly») el temporizador sigue vivo y lo
+vuelve a lanzar a su hora, y el contador de reintentos vuelve a cero con cada arranque del
+temporizador. Como el tope cuenta todos los arranques, en las unidades frecuentes es más alto que
+los arranques normales de su ventana.
+
+Para aplicarlo en un servidor ya instalado: `sudo bash /home/eodi/droneobservatory/servidor/reintentos.sh`.
+Cada reintento queda en el diario («Scheduled restart job») y el resumen diario privado los cuenta
+en su sección SISTEMA.
+
 ## Reintentos por fuente
 
 Dentro de una ejecución, el descargador común
@@ -1632,7 +1681,16 @@ Desde el 7 de octubre de 2026 (`recogida/vigilancia.py`, `recogida/salud.py`,
   `problemas` y `avisos`. Lee el diario de la recogida con el grupo `systemd-journal` de su unidad
   y no escribe más que `vigilancia.json`. Los identificadores de los incidentes que retiene la
   barrera de titulares solo van a su diario (`journalctl -u eodi-vigilancia`).
-- **Problemas**: datos sin publicar en 2 horas, recogida con un código distinto de 0 y 2, captura
+- **Solo lo que no se arregla solo** (desde el 12 de octubre de 2026): la recogida es problema
+  cuando las 3 últimas terminadas (cada una tras sus reintentos) han fallado, y no se juzga
+  mientras una está en marcha o esperando su reintento (systemd pone su código a 0 al arrancar:
+  así se cerró #213 a las 19:21 con la de las 19:17 aún en marcha); la publicación, con más de 3
+  horas sin publicar; los demás, cuando siguen igual 30 minutos (varios reintentos de su unidad),
+  salvo los que esperando no se arreglan (privacidad de las visitas, prueba de restauración, paso a
+  solo disco, versiones, barrera). Mientras tanto van en `avisos` como «en observación». Lo que
+  estuvo y se fue queda en `vigilancia.json` (`resueltos`, 8 días, con si llegó a incidencia) y sale
+  en la sección SISTEMA del resumen diario de las 08:00 de Madrid, sin correo.
+- **Problemas**: datos sin publicar en 3 horas, 3 recogidas seguidas con un código distinto de 0 y 2, captura
   del seguimiento sin recibir en 10 minutos o con la unidad parada, archivo de alertas de
   alerts.in.ua sin respuesta correcta de la API en 15 minutos, con la unidad parada o con la API
   respondiendo 401 o 403, copia de la base o del archivo con más de 2 horas, segunda copia con más de 3 horas, disco al 75 % o más, prueba de restauración
@@ -1640,15 +1698,19 @@ Desde el 7 de octubre de 2026 (`recogida/vigilancia.py`, `recogida/salud.py`,
   una publicada que cambia (apartado «Versiones citables de los datos abiertos»), y los del contador
   de visitas: GoatCounter sin responder (`goatcounter`), resumen diario sin enviar a las 09:00 de
   Madrid (`resumen`), copia de la base de visitas con más de 3 horas (`copia_visitas`) y panel o
-  tema privado abiertos sin usuario (`visitas_privadas`) ([visitas.md](visitas.md)).
+  tema privado abiertos sin usuario (`visitas_privadas`) ([visitas.md](visitas.md)), y los
+  certificados de ntfy y stats a menos de 14 días de caducar (Caddy los renueva a los 30:
+  `certificados`).
 - **Avisos** (se ven, no son fallo): recogida con avisos (código 2) y por qué, y cuántos incidentes
   retiene la barrera de titulares.
 - **En GitHub**, `vigia-recogida` pasa cada 10 minutos: abre una incidencia por problema (y la
-  cierra al arreglarse) y falla al aparecer uno nuevo y después una vez por hora mientras siga, con
-  lo que GitHub manda al dueño el correo «Run failed». Si `salud.json` no llega o tiene más de 20
-  minutos, es que el servidor no da señales. Una vez al día reactiva su propia programación.
+  cierra al arreglarse); el correo al dueño es el de la incidencia nueva. Desde el 12 de octubre de
+  2026 el trabajo ya no falla a propósito (llegaban correos de «vigia failed» además de la
+  incidencia): solo falla si el propio vigía no puede hacer su trabajo. Si `salud.json` no llega o
+  tiene más de 20 minutos, es que el servidor no da señales. Una vez al día reactiva su propia
+  programación.
 - **Alarma de prueba**: `gh workflow run vigia-recogida.yml -f prueba=true` (abre «Alarma de prueba
-  de la vigilancia» y falla). Hecha el 7 de octubre de 2026 (incidencia #151).
+  de la vigilancia»). Hecha el 7 de octubre de 2026 (incidencia #151).
 
 ## Reinicio tras las actualizaciones
 
