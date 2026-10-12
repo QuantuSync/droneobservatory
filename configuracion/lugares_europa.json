@@ -3,6 +3,309 @@
  "descripcion": "Lugares europeos para agrupar noticias: aeropuertos con código OACI, aeródromos militares y centrales nucleares, con coordenadas, radio del objetivo y los nombres con que los citan las noticias. «ciudades» solo casan si el titular nombra además el tipo de lugar. Crece a mano con el uso.",
  "licencia": "Datos © colaboradores de OpenStreetMap, ODbL 1.0: https://www.openstreetmap.org/copyright",
  "lugares": {
+  "BGAA": {
+   "tipo": "aeropuerto",
+   "nombre": "Mittarfik Aasiaat",
+   "alias": [
+    "Mittarfik Aasiaat",
+    "Aasiaat Airport",
+    "Aeroporto de Aasiaat",
+    "Aasiaat Lufthavn"
+   ],
+   "ciudades": [
+    "Aasiaat",
+    "Mittarfik Aasiaat"
+   ],
+   "lat": 68.7219,
+   "lon": -52.78437,
+   "radio_km": 5.0,
+   "oaci": "BGAA",
+   "pais": "DK"
+  },
+  "BGCO": {
+   "tipo": "aeropuerto",
+   "nombre": "Mittarfik Nerlerit Inaat",
+   "alias": [
+    "Mittarfik Nerlerit Inaat",
+    "Neerlerit Inaat Airport",
+    "Aeroporto Nerlerit Inaat",
+    "Constable Pynt Lufthavn"
+   ],
+   "ciudades": [
+    "Neerlerit Inaat",
+    "Inaat",
+    "Mittarfik Nerlerit Inaat"
+   ],
+   "lat": 70.74142,
+   "lon": -22.64859,
+   "radio_km": 5.0,
+   "oaci": "BGCO",
+   "pais": "DK"
+  },
+  "BGGH": {
+   "tipo": "aeropuerto",
+   "nombre": "Mittarfik Nuuk",
+   "alias": [
+    "Mittarfik Nuuk",
+    "Nuuk Airport",
+    "Aéroport de Nuuk",
+    "Aeropuerto Internacional Nuuk",
+    "Port lotniczy Nuuk",
+    "Aeroporto de Nuuk",
+    "Nuuk Lufthavn",
+    "Аеропорт Нуук",
+    "Nuuk International Airport"
+   ],
+   "ciudades": [
+    "Nuuk"
+   ],
+   "lat": 64.19077,
+   "lon": -51.67996,
+   "radio_km": 5.0,
+   "oaci": "BGGH",
+   "pais": "DK"
+  },
+  "BGJN": {
+   "tipo": "aeropuerto",
+   "nombre": "Mittarfik Ilulissat",
+   "alias": [
+    "Mittarfik Ilulissat",
+    "Ilulissat Airport",
+    "Aeroporto de Ilulissat",
+    "Ilulissat Lufthavn"
+   ],
+   "ciudades": [
+    "Ilulissat",
+    "Mittarfik Ilulissat"
+   ],
+   "lat": 69.24321,
+   "lon": -51.05895,
+   "radio_km": 5.0,
+   "oaci": "BGJN",
+   "pais": "DK"
+  },
+  "BGKK": {
+   "tipo": "aeropuerto",
+   "nombre": "Mittarfik Kulusuk",
+   "alias": [
+    "Mittarfik Kulusuk",
+    "Kulusuk Airport",
+    "Aeropuerto de Kulusuk",
+    "Aeroporto de Kulusuk",
+    "Kulusuk Lufthavn"
+   ],
+   "ciudades": [
+    "Kulusuk"
+   ],
+   "lat": 65.57349,
+   "lon": -37.12341,
+   "radio_km": 5.0,
+   "oaci": "BGKK",
+   "pais": "DK"
+  },
+  "BGMQ": {
+   "tipo": "aeropuerto",
+   "nombre": "Mittarfik Maniitsoq",
+   "alias": [
+    "Mittarfik Maniitsoq",
+    "Maniitsoq Airport",
+    "Aeroporto de Maniitsoq",
+    "Maniitsoq Lufthavn"
+   ],
+   "ciudades": [
+    "Maniitsoq",
+    "Mittarfik Maniitsoq"
+   ],
+   "lat": 65.41308,
+   "lon": -52.94096,
+   "radio_km": 5.0,
+   "oaci": "BGMQ",
+   "pais": "DK"
+  },
+  "BGMV": {
+   "tipo": "base",
+   "nombre": "Mestersvig Station",
+   "alias": [
+    "Mestersvig Station"
+   ],
+   "ciudades": [
+    "Mestersvig"
+   ],
+   "lat": 72.23583,
+   "lon": -23.93226,
+   "radio_km": 5.0,
+   "oaci": "BGMV",
+   "pais": "DK"
+  },
+  "BGNO": {
+   "tipo": "base",
+   "nombre": "Station Nord",
+   "alias": [
+    "Station Nord"
+   ],
+   "ciudades": [
+    "Station Nord"
+   ],
+   "lat": 81.60152,
+   "lon": -16.6674,
+   "radio_km": 5.0,
+   "oaci": "BGNO",
+   "pais": "DK"
+  },
+  "BGPT": {
+   "tipo": "aeropuerto",
+   "nombre": "Mittarfik Paamiut",
+   "alias": [
+    "Mittarfik Paamiut",
+    "Paamiut Airport",
+    "Aeroporto de Paamiut",
+    "Paamiut Lufthavn"
+   ],
+   "ciudades": [
+    "Paamiut",
+    "Mittarfik Paamiut"
+   ],
+   "lat": 62.01467,
+   "lon": -49.67089,
+   "radio_km": 5.0,
+   "oaci": "BGPT",
+   "pais": "DK"
+  },
+  "BGQO": {
+   "tipo": "aeropuerto",
+   "nombre": "Mittarfik Qaqortoq",
+   "alias": [
+    "Mittarfik Qaqortoq",
+    "Qaqortoq Airport",
+    "Qaqortoq Lufthavn"
+   ],
+   "ciudades": [
+    "Qaqortoq",
+    "Mittarfik Qaqortoq"
+   ],
+   "lat": 60.76495,
+   "lon": -46.07459,
+   "radio_km": 5.0,
+   "oaci": "BGQO",
+   "pais": "DK"
+  },
+  "BGQQ": {
+   "tipo": "aeropuerto",
+   "nombre": "Mittarfik Qaanaaq",
+   "alias": [
+    "Mittarfik Qaanaaq",
+    "Qaanaaq Airport",
+    "Aeroporto de Qaanaaq",
+    "Каанаак"
+   ],
+   "ciudades": [
+    "Qaanaaq",
+    "Mittarfik Qaanaaq"
+   ],
+   "lat": 77.48834,
+   "lon": -69.38874,
+   "radio_km": 5.0,
+   "oaci": "BGQQ",
+   "pais": "DK"
+  },
+  "BGSF": {
+   "tipo": "aeropuerto",
+   "nombre": "Mittarfik Kangerlussuaq",
+   "alias": [
+    "Mittarfik Kangerlussuaq",
+    "Kangerlussuaq Airport",
+    "Søndre Strømfjord Lufthavn",
+    "Sondrestrom Air Base"
+   ],
+   "ciudades": [
+    "Kangerlussuaq"
+   ],
+   "lat": 67.01154,
+   "lon": -50.71613,
+   "radio_km": 5.0,
+   "oaci": "BGSF",
+   "pais": "DK"
+  },
+  "BGSS": {
+   "tipo": "aeropuerto",
+   "nombre": "Mittarfik Sisimiut",
+   "alias": [
+    "Mittarfik Sisimiut",
+    "Sisimiut Airport"
+   ],
+   "ciudades": [
+    "Sisimiut",
+    "Mittarfik Sisimiut"
+   ],
+   "lat": 66.95089,
+   "lon": -53.72917,
+   "radio_km": 5.0,
+   "oaci": "BGSS",
+   "pais": "DK"
+  },
+  "BGTL": {
+   "tipo": "base",
+   "nombre": "Pituffik Space Base",
+   "alias": [
+    "Pituffik Space Base",
+    "Pituffik SB",
+    "Base spatiale de Pituffik",
+    "Base espacial de Pituffik",
+    "Base Espacial de Pituffik",
+    "Pituffik Űrbázis",
+    "Thule Air Base",
+    "Thule Airbase",
+    "Base aérienne de Thulé",
+    "Pituffik"
+   ],
+   "ciudades": [
+    "Pituffik",
+    "Thule"
+   ],
+   "lat": 76.52971,
+   "lon": -68.72334,
+   "radio_km": 5.0,
+   "oaci": "BGTL",
+   "pais": "DK"
+  },
+  "BGUK": {
+   "tipo": "aeropuerto",
+   "nombre": "Mittarfik Upernavik",
+   "alias": [
+    "Mittarfik Upernavik",
+    "Upernavik Airport",
+    "Aeroporto de Upernavik",
+    "Upernavik Lufthavn"
+   ],
+   "ciudades": [
+    "Upernavik",
+    "Mittarfik Upernavik"
+   ],
+   "lat": 72.79011,
+   "lon": -56.1309,
+   "radio_km": 5.0,
+   "oaci": "BGUK",
+   "pais": "DK"
+  },
+  "BGUQ": {
+   "tipo": "aeropuerto",
+   "nombre": "Mittarfik Qaarsut",
+   "alias": [
+    "Mittarfik Qaarsut",
+    "Qaarsut Airport",
+    "Aeroporto de Qaarsut",
+    "Qaarsut Lufthavn"
+   ],
+   "ciudades": [
+    "Qaarsut",
+    "Mittarfik Qaarsut"
+   ],
+   "lat": 70.73434,
+   "lon": -52.69741,
+   "radio_km": 5.0,
+   "oaci": "BGUQ",
+   "pais": "DK"
+  },
   "BIAR": {
    "tipo": "aeropuerto",
    "nombre": "Akureyrarflugvöllur",
@@ -6534,6 +6837,51 @@
    "oaci": "ENRY",
    "pais": "NO"
   },
+  "ENSA": {
+   "tipo": "aeropuerto",
+   "nombre": "Svea flyplass",
+   "alias": [
+    "Svea flyplass",
+    "Svea Airport"
+   ],
+   "ciudades": [
+    "Svea"
+   ],
+   "lat": 77.89658,
+   "lon": 16.72116,
+   "radio_km": 5.0,
+   "oaci": "ENSA",
+   "pais": "NO"
+  },
+  "ENSB": {
+   "tipo": "aeropuerto",
+   "nombre": "Svalbard lufthavn",
+   "alias": [
+    "Svalbard lufthavn",
+    "Svalbard lufthavn, Longyearbyen",
+    "Svalbard Airport",
+    "Flughafen Svalbard",
+    "Aéroport du Svalbard",
+    "Aeropuerto del Svalbard",
+    "Svalbardo oro uostas",
+    "Аэропорт Свальбард",
+    "Longyearbyen lufthavn",
+    "Longyearbyen Airport",
+    "Flughafen Longyearbyen",
+    "Aéroport de Longyearbyen",
+    "Aeropuerto de Longyearbyen"
+   ],
+   "ciudades": [
+    "Longyearbyen",
+    "Longyear",
+    "Svalbard"
+   ],
+   "lat": 78.2462,
+   "lon": 15.46327,
+   "radio_km": 5.0,
+   "oaci": "ENSB",
+   "pais": "NO"
+  },
   "ENSD": {
    "tipo": "aeropuerto",
    "nombre": "Sandane lufthamn, Anda",
@@ -9078,6 +9426,258 @@
    "oaci": "EYVI",
    "pais": "LT"
   },
+  "FMCZ": {
+   "tipo": "aeropuerto",
+   "nombre": "Aéroport International Marcel Henry",
+   "alias": [
+    "Aéroport International Marcel Henry",
+    "Marcel Henry International Airport",
+    "Aéroport de Dzaoudzi",
+    "Aéroport de Mayotte",
+    "Dzaoudzi Pamandzi Airport"
+   ],
+   "ciudades": [
+    "Marcel Henry",
+    "Dzaoudzi",
+    "Pamandzi",
+    "Mayotte"
+   ],
+   "lat": -12.80912,
+   "lon": 45.28197,
+   "radio_km": 5.0,
+   "oaci": "FMCZ",
+   "pais": "FR"
+  },
+  "FMEE": {
+   "tipo": "aeropuerto",
+   "nombre": "Aéroport de la Réunion Roland-Garros",
+   "alias": [
+    "Aéroport de la Réunion Roland-Garros",
+    "Roland Garros Airport",
+    "Port lotniczy Reunion",
+    "Aéroport Roland-Garros",
+    "Aéroport Roland Garros",
+    "Aéroport de Gillot",
+    "Aéroport de Saint-Denis"
+   ],
+   "ciudades": [
+    "Roland Garros",
+    "Roland-Garros",
+    "Gillot"
+   ],
+   "lat": -20.89011,
+   "lon": 55.5196,
+   "radio_km": 5.0,
+   "oaci": "FMEE",
+   "pais": "FR"
+  },
+  "FMEP": {
+   "tipo": "aeropuerto",
+   "nombre": "Aéroport de Saint-Pierre - Pierrefonds",
+   "alias": [
+    "Aéroport de Saint-Pierre - Pierrefonds",
+    "Pierrefonds Airport",
+    "Aeroporto Pierrefonds"
+   ],
+   "ciudades": [
+    "Pierrefonds"
+   ],
+   "lat": -21.31877,
+   "lon": 55.42313,
+   "radio_km": 5.0,
+   "oaci": "FMEP",
+   "pais": "FR"
+  },
+  "GCFV": {
+   "tipo": "aeropuerto",
+   "nombre": "Aeropuerto de Fuerteventura",
+   "alias": [
+    "Aeropuerto de Fuerteventura",
+    "Fuerteventura Airport",
+    "Flughafen Fuerteventura",
+    "Aéroport de Fuerteventura",
+    "Aeroporto di Fuerteventura",
+    "Port lotniczy Fuerteventura"
+   ],
+   "ciudades": [
+    "Fuerteventura"
+   ],
+   "lat": 28.44733,
+   "lon": -13.8659,
+   "radio_km": 5.0,
+   "oaci": "GCFV",
+   "pais": "ES"
+  },
+  "GCGM": {
+   "tipo": "aeropuerto",
+   "nombre": "Aeropuerto de La Gomera",
+   "alias": [
+    "Aeropuerto de La Gomera",
+    "La Gomera Airport",
+    "Flughafen La Gomera",
+    "Aérodrome de La Gomera",
+    "Port lotniczy La Gomera"
+   ],
+   "ciudades": [
+    "La Gomera",
+    "Gomera"
+   ],
+   "lat": 28.03051,
+   "lon": -17.21444,
+   "radio_km": 5.0,
+   "oaci": "GCGM",
+   "pais": "ES"
+  },
+  "GCHI": {
+   "tipo": "aeropuerto",
+   "nombre": "Aeropuerto de El Hierro",
+   "alias": [
+    "Aeropuerto de El Hierro",
+    "El Hierro Airport",
+    "Flughafen El Hierro",
+    "Aérodrome d'El Hierro"
+   ],
+   "ciudades": [
+    "El Hierro",
+    "Hierro"
+   ],
+   "lat": 27.81445,
+   "lon": -17.88725,
+   "radio_km": 5.0,
+   "oaci": "GCHI",
+   "pais": "ES"
+  },
+  "GCLA": {
+   "tipo": "aeropuerto",
+   "nombre": "Aeropuerto de La Palma",
+   "alias": [
+    "Aeropuerto de La Palma",
+    "La Palma Airport",
+    "Flughafen La Palma",
+    "Aéroport de La Palma",
+    "Port lotniczy La Palma",
+    "Ла-Пальма (аэропорт)"
+   ],
+   "ciudades": [
+    "La Palma"
+   ],
+   "lat": 28.62669,
+   "lon": -17.75523,
+   "radio_km": 5.0,
+   "oaci": "GCLA",
+   "pais": "ES"
+  },
+  "GCLP": {
+   "tipo": "aeropuerto",
+   "nombre": "Base Aérea de Gando",
+   "alias": [
+    "Base Aérea de Gando",
+    "Gando Air Base",
+    "Aeropuerto de Gran Canaria",
+    "Gran Canaria Airport",
+    "Flughafen Gran Canaria",
+    "Aéroport de Gran Canaria",
+    "Aeroporto di Gran Canaria",
+    "Aeropuerto de Gando"
+   ],
+   "ciudades": [
+    "Gran Canaria",
+    "Gando"
+   ],
+   "lat": 27.93404,
+   "lon": -15.37912,
+   "radio_km": 5.0,
+   "oaci": "GCLP",
+   "pais": "ES"
+  },
+  "GCRR": {
+   "tipo": "aeropuerto",
+   "nombre": "Aeropuerto César Manrique Lanzarote",
+   "alias": [
+    "Aeropuerto César Manrique Lanzarote",
+    "Lanzarote Airport",
+    "Flughafen Lanzarote",
+    "Aéroport de Lanzarote",
+    "Aeroporto di Lanzarote",
+    "Port lotniczy Lanzarote",
+    "Aeropuerto de Lanzarote"
+   ],
+   "ciudades": [
+    "Lanzarote",
+    "César Manrique"
+   ],
+   "lat": 28.9456,
+   "lon": -13.60748,
+   "radio_km": 5.0,
+   "oaci": "GCRR",
+   "pais": "ES"
+  },
+  "GCTS": {
+   "tipo": "aeropuerto",
+   "nombre": "Aeropuerto de Tenerife Sur - Reina Sofia",
+   "alias": [
+    "Aeropuerto de Tenerife Sur - Reina Sofia",
+    "Tenerife South Airport",
+    "Flughafen Teneriffa Süd",
+    "Aéroport de Tenerife-Sud",
+    "Aeroporto di Tenerife-Sud",
+    "Port lotniczy Aeropuerto de Tenerife Sur",
+    "Aeropuerto de Tenerife Sur",
+    "Teneriffas södra flygplats",
+    "Tenerife Syd Lufthavn",
+    "Teneriffan eteläinen lentoasema",
+    "Аэропорт Тенерифе-Южный"
+   ],
+   "ciudades": [
+    "Tenerife Sur",
+    "Tenerife South",
+    "Reina Sofía"
+   ],
+   "lat": 28.04613,
+   "lon": -16.57416,
+   "radio_km": 5.0,
+   "oaci": "GCTS",
+   "pais": "ES"
+  },
+  "GCXO": {
+   "tipo": "aeropuerto",
+   "nombre": "Aeropuerto de Tenerife Norte - Los Rodeos",
+   "alias": [
+    "Aeropuerto de Tenerife Norte - Los Rodeos",
+    "Tenerife North Airport",
+    "Flughafen Teneriffa Nord",
+    "Teneriffas norra flygplats",
+    "Teneriffan pohjoinen lentoasema",
+    "Аэропорт Тенерифе-Северный"
+   ],
+   "ciudades": [
+    "Tenerife Norte",
+    "Tenerife North",
+    "Los Rodeos"
+   ],
+   "lat": 28.48294,
+   "lon": -16.34296,
+   "radio_km": 5.0,
+   "oaci": "GCXO",
+   "pais": "ES"
+  },
+  "GEML": {
+   "tipo": "aeropuerto",
+   "nombre": "Aeropuerto de Melilla",
+   "alias": [
+    "Aeropuerto de Melilla",
+    "Melilla Airport",
+    "Aéroport de Melilla"
+   ],
+   "ciudades": [
+    "Melilla"
+   ],
+   "lat": 35.28015,
+   "lon": -2.95645,
+   "radio_km": 5.0,
+   "oaci": "GEML",
+   "pais": "ES"
+  },
   "LAGJ": {
    "tipo": "base",
    "nombre": "Baza Ajrore Gjadër",
@@ -9497,32 +10097,37 @@
    "nombre": "Royal Air Force Akrotiri",
    "alias": [
     "Royal Air Force Akrotiri",
-    "Αεροπορική Βάση Ακρωτηρίου"
+    "Αεροπορική Βάση Ακρωτηρίου",
+    "RAF Akrotiri",
+    "Akrotiri Air Base",
+    "Base aérea de Akrotiri",
+    "Base aérea de Akrotiri"
    ],
    "ciudades": [
-    "Royal Force Akrotiri",
     "Akrotiri"
    ],
    "lat": 34.5803,
    "lon": 32.98417,
    "radio_km": 5.0,
    "oaci": "LCRA",
-   "pais": "CY"
+   "pais": "GB"
   },
   "LCRE": {
    "tipo": "base",
    "nombre": "Kingsfield Airfield",
    "alias": [
-    "Kingsfield Airfield"
+    "Kingsfield Airfield",
+    "Kingsfield Air Base"
    ],
    "ciudades": [
-    "Kingsfield"
+    "Kingsfield",
+    "Dhekelia"
    ],
    "lat": 35.01375,
    "lon": 33.71707,
    "radio_km": 5.0,
    "oaci": "LCRE",
-   "pais": "CY"
+   "pais": "GB"
   },
   "LDDU": {
    "tipo": "aeropuerto",
@@ -16083,6 +16688,23 @@
    "oaci": "LPAV",
    "pais": "PT"
   },
+  "LPAZ": {
+   "tipo": "aeropuerto",
+   "nombre": "Aeroporto de Santa Maria",
+   "alias": [
+    "Aeroporto de Santa Maria",
+    "Airport Santa Maria",
+    "Aeropuerto de Santa María"
+   ],
+   "ciudades": [
+    "Santa Maria"
+   ],
+   "lat": 36.97189,
+   "lon": -25.16847,
+   "radio_km": 5.0,
+   "oaci": "LPAZ",
+   "pais": "PT"
+  },
   "LPBG": {
    "tipo": "aeropuerto",
    "nombre": "Aeródromo Municipal de Bragança",
@@ -16114,6 +16736,22 @@
    "oaci": "LPBJ",
    "pais": "PT"
   },
+  "LPCR": {
+   "tipo": "aeropuerto",
+   "nombre": "Aérodromo da Ilha do Corvo",
+   "alias": [
+    "Aérodromo da Ilha do Corvo",
+    "Corvo Airport"
+   ],
+   "ciudades": [
+    "Corvo"
+   ],
+   "lat": 39.67133,
+   "lon": -31.11669,
+   "radio_km": 5.0,
+   "oaci": "LPCR",
+   "pais": "PT"
+  },
   "LPCS": {
    "tipo": "aeropuerto",
    "nombre": "Aeródromo Municipal de Cascais",
@@ -16129,6 +16767,22 @@
    "lon": -9.35559,
    "radio_km": 5.0,
    "oaci": "LPCS",
+   "pais": "PT"
+  },
+  "LPFL": {
+   "tipo": "aeropuerto",
+   "nombre": "Aeroporto das Flores",
+   "alias": [
+    "Aeroporto das Flores",
+    "Flores Airport"
+   ],
+   "ciudades": [
+    "Flores"
+   ],
+   "lat": 39.45559,
+   "lon": -31.13144,
+   "radio_km": 5.0,
+   "oaci": "LPFL",
    "pais": "PT"
   },
   "LPFR": {
@@ -16154,6 +16808,88 @@
    "lon": -7.97058,
    "radio_km": 5.0,
    "oaci": "LPFR",
+   "pais": "PT"
+  },
+  "LPGR": {
+   "tipo": "aeropuerto",
+   "nombre": "Aeródromo da Ilha Graciosa",
+   "alias": [
+    "Aeródromo da Ilha Graciosa",
+    "Graciosa Airport"
+   ],
+   "ciudades": [
+    "Graciosa"
+   ],
+   "lat": 39.09192,
+   "lon": -28.03004,
+   "radio_km": 5.0,
+   "oaci": "LPGR",
+   "pais": "PT"
+  },
+  "LPHR": {
+   "tipo": "aeropuerto",
+   "nombre": "Aeroporto da Horta",
+   "alias": [
+    "Aeroporto da Horta",
+    "Horta Airport",
+    "Flughafen Horta",
+    "Aéroport de Horta",
+    "Aeropuerto de Horta",
+    "Aeroporto di Horta"
+   ],
+   "ciudades": [
+    "Horta",
+    "Faial"
+   ],
+   "lat": 38.52039,
+   "lon": -28.71611,
+   "radio_km": 5.0,
+   "oaci": "LPHR",
+   "pais": "PT"
+  },
+  "LPLA": {
+   "tipo": "aeropuerto",
+   "nombre": "Aeroporto Internacional das Lajes",
+   "alias": [
+    "Aeroporto Internacional das Lajes",
+    "Lajes International Airport",
+    "Base Aérea das Lajes",
+    "Base Aérea N.º 4",
+    "Lajes Field",
+    "Lajes Air Base"
+   ],
+   "ciudades": [
+    "Lajes",
+    "Terceira"
+   ],
+   "lat": 38.75543,
+   "lon": -27.08786,
+   "radio_km": 5.0,
+   "oaci": "LPLA",
+   "pais": "PT"
+  },
+  "LPMA": {
+   "tipo": "aeropuerto",
+   "nombre": "Aeroporto Internacional da Madeira - Cristiano Ronaldo",
+   "alias": [
+    "Aeroporto Internacional da Madeira - Cristiano Ronaldo",
+    "Madeira International Airport",
+    "Cristiano Ronaldo Airport",
+    "Internationaler Flughafen Madeira - Cristiano Ronaldo",
+    "Aeroporto internazionale di Madeira \"Cristiano Ronaldo\"",
+    "Aeroporto do Funchal",
+    "Funchal Airport",
+    "Aeropuerto de Madeira"
+   ],
+   "ciudades": [
+    "Madeira",
+    "Funchal",
+    "Cristiano Ronaldo"
+   ],
+   "lat": 32.69884,
+   "lon": -16.77368,
+   "radio_km": 5.0,
+   "oaci": "LPMA",
    "pais": "PT"
   },
   "LPMR": {
@@ -16234,6 +16970,44 @@
    "oaci": "LPOV",
    "pais": "PT"
   },
+  "LPPD": {
+   "tipo": "aeropuerto",
+   "nombre": "Aeroporto João Paulo II",
+   "alias": [
+    "Aeroporto João Paulo II",
+    "João Paulo II Airport",
+    "Flughafen Johannes Paul II.",
+    "Aeropuerto Juan Pablo II",
+    "Aeroporto de Ponta Delgada",
+    "Ponta Delgada Airport",
+    "Aeropuerto de Ponta Delgada"
+   ],
+   "ciudades": [
+    "Ponta Delgada",
+    "João Paulo II"
+   ],
+   "lat": 37.74315,
+   "lon": -25.69823,
+   "radio_km": 5.0,
+   "oaci": "LPPD",
+   "pais": "PT"
+  },
+  "LPPI": {
+   "tipo": "aeropuerto",
+   "nombre": "Aeroporto da Ilha do Pico",
+   "alias": [
+    "Aeroporto da Ilha do Pico",
+    "Pico Airport"
+   ],
+   "ciudades": [
+    "Pico"
+   ],
+   "lat": 38.55381,
+   "lon": -28.44289,
+   "radio_km": 5.0,
+   "oaci": "LPPI",
+   "pais": "PT"
+  },
   "LPPM": {
    "tipo": "aeropuerto",
    "nombre": "Aeródromo Municipal de Portimão",
@@ -16268,6 +17042,25 @@
    "oaci": "LPPR",
    "pais": "PT"
   },
+  "LPPS": {
+   "tipo": "aeropuerto",
+   "nombre": "Aeroporto do Porto Santo",
+   "alias": [
+    "Aeroporto do Porto Santo",
+    "Porto Santo Airport",
+    "Flughafen Porto Santo",
+    "Aéroport de Porto Santo",
+    "Aeropuerto de Porto Santo"
+   ],
+   "ciudades": [
+    "Porto Santo"
+   ],
+   "lat": 33.07364,
+   "lon": -16.3506,
+   "radio_km": 5.0,
+   "oaci": "LPPS",
+   "pais": "PT"
+  },
   "LPPT": {
    "tipo": "aeropuerto",
    "nombre": "Aeroporto Humberto Delgado",
@@ -16291,6 +17084,23 @@
    "lon": -9.13601,
    "radio_km": 5.0,
    "oaci": "LPPT",
+   "pais": "PT"
+  },
+  "LPSJ": {
+   "tipo": "aeropuerto",
+   "nombre": "Aeródromo da Ilha de São Jorge",
+   "alias": [
+    "Aeródromo da Ilha de São Jorge",
+    "Aeródromo de São Jorge",
+    "São Jorge Airport"
+   ],
+   "ciudades": [
+    "São Jorge"
+   ],
+   "lat": 38.66499,
+   "lon": -28.17447,
+   "radio_km": 5.0,
+   "oaci": "LPSJ",
    "pais": "PT"
   },
   "LPTN": {
@@ -17186,17 +17996,22 @@
    "alias": [
     "Royal Air Force Gibraltar",
     "North Front Airport",
-    "RAF Gibraltar"
+    "RAF Gibraltar",
+    "Gibraltar Airport",
+    "Gibraltar International Airport",
+    "Aeropuerto de Gibraltar",
+    "Flughafen Gibraltar",
+    "Aéroport de Gibraltar",
+    "Aéroport de Gibraltar"
    ],
    "ciudades": [
-    "Royal Force Gibraltar",
     "Gibraltar"
    ],
    "lat": 36.15122,
    "lon": -5.34932,
    "radio_km": 5.0,
    "oaci": "LXGB",
-   "pais": "GI"
+   "pais": "GB"
   },
   "LYBE": {
    "tipo": "aeropuerto",
@@ -17501,6 +18316,293 @@
    "oaci": "LZZI",
    "pais": "SK"
   },
+  "SOCA": {
+   "tipo": "aeropuerto",
+   "nombre": "Aéroport de Cayenne - Félix Éboué",
+   "alias": [
+    "Aéroport de Cayenne - Félix Éboué",
+    "Cayenne - Félix Éboué Airport",
+    "Aéroport de Cayenne",
+    "Aéroport de Cayenne-Rochambeau"
+   ],
+   "ciudades": [
+    "Cayenne",
+    "Félix Éboué",
+    "Rochambeau",
+    "Matoury"
+   ],
+   "lat": 4.82061,
+   "lon": -52.36185,
+   "radio_km": 5.0,
+   "oaci": "SOCA",
+   "pais": "FR"
+  },
+  "SOGS": {
+   "tipo": "aeropuerto",
+   "nombre": "Aéroport de Grand-Santi",
+   "alias": [
+    "Aéroport de Grand-Santi",
+    "Grand-Santi Airport"
+   ],
+   "ciudades": [
+    "Grand-Santi"
+   ],
+   "lat": 4.28457,
+   "lon": -54.37748,
+   "radio_km": 5.0,
+   "oaci": "SOGS",
+   "pais": "FR"
+  },
+  "SOOA": {
+   "tipo": "aeropuerto",
+   "nombre": "Aérodrome de Maripasoula",
+   "alias": [
+    "Aérodrome de Maripasoula"
+   ],
+   "ciudades": [
+    "Aérodrome Maripasoula",
+    "Maripasoula"
+   ],
+   "lat": 3.656,
+   "lon": -54.03933,
+   "radio_km": 5.0,
+   "oaci": "SOOA",
+   "pais": "FR"
+  },
+  "SOOG": {
+   "tipo": "aeropuerto",
+   "nombre": "Saint-Georges-de-l'Oyapock Airport",
+   "alias": [
+    "Saint-Georges-de-l'Oyapock Airport"
+   ],
+   "ciudades": [
+    "Saint-Georges-de-l'Oyapock",
+    "Oyapock"
+   ],
+   "lat": 3.89759,
+   "lon": -51.80401,
+   "radio_km": 5.0,
+   "oaci": "SOOG",
+   "pais": "FR"
+  },
+  "SOOK": {
+   "tipo": "aeropuerto",
+   "nombre": "Aéroport de Kourou",
+   "alias": [
+    "Aéroport de Kourou",
+    "Aérodrome de Kourou",
+    "Kourou Airport"
+   ],
+   "ciudades": [
+    "Kourou"
+   ],
+   "lat": 5.17582,
+   "lon": -52.69424,
+   "radio_km": 5.0,
+   "oaci": "SOOK",
+   "pais": "FR"
+  },
+  "SOOM": {
+   "tipo": "aeropuerto",
+   "nombre": "Aérodrome de Saint-Laurent-du-Maroni",
+   "alias": [
+    "Aérodrome de Saint-Laurent-du-Maroni",
+    "Saint-Laurent-du-Maroni Airport"
+   ],
+   "ciudades": [
+    "Saint-Laurent-du-Maroni"
+   ],
+   "lat": 5.48299,
+   "lon": -54.03447,
+   "radio_km": 5.0,
+   "oaci": "SOOM",
+   "pais": "FR"
+  },
+  "SOOR": {
+   "tipo": "aeropuerto",
+   "nombre": "Aéroport de Régina",
+   "alias": [
+    "Aéroport de Régina",
+    "Regina Airport"
+   ],
+   "ciudades": [
+    "Regina",
+    "Régina"
+   ],
+   "lat": 4.31338,
+   "lon": -52.13275,
+   "radio_km": 5.0,
+   "oaci": "SOOR",
+   "pais": "FR"
+  },
+  "SOOS": {
+   "tipo": "aeropuerto",
+   "nombre": "Aéroport de Saül",
+   "alias": [
+    "Aéroport de Saül",
+    "Saül Airport"
+   ],
+   "ciudades": [
+    "Saül"
+   ],
+   "lat": 3.61499,
+   "lon": -53.20332,
+   "radio_km": 5.0,
+   "oaci": "SOOS",
+   "pais": "FR"
+  },
+  "TFFA": {
+   "tipo": "aeropuerto",
+   "nombre": "Aérodrome de Desirade",
+   "alias": [
+    "Aérodrome de Desirade",
+    "Aérodrome des Sables",
+    "Desirade Airport"
+   ],
+   "ciudades": [
+    "Désirade",
+    "La Désirade"
+   ],
+   "lat": 16.29721,
+   "lon": -61.08441,
+   "radio_km": 5.0,
+   "oaci": "TFFA",
+   "pais": "FR"
+  },
+  "TFFB": {
+   "tipo": "aeropuerto",
+   "nombre": "Aérodrome de Basse-Terre-Baillif",
+   "alias": [
+    "Aérodrome de Basse-Terre-Baillif",
+    "Baillif Airport"
+   ],
+   "ciudades": [
+    "Baillif",
+    "Basse-Terre"
+   ],
+   "lat": 16.01419,
+   "lon": -61.74322,
+   "radio_km": 5.0,
+   "oaci": "TFFB",
+   "pais": "FR"
+  },
+  "TFFC": {
+   "tipo": "aeropuerto",
+   "nombre": "Aérodrome de Saint-François",
+   "alias": [
+    "Aérodrome de Saint-François",
+    "Saint François air field"
+   ],
+   "ciudades": [
+    "Saint-François"
+   ],
+   "lat": 16.25798,
+   "lon": -61.26356,
+   "radio_km": 5.0,
+   "oaci": "TFFC",
+   "pais": "FR"
+  },
+  "TFFF": {
+   "tipo": "aeropuerto",
+   "nombre": "Aéroport International Martinique Aimé Césaire",
+   "alias": [
+    "Aéroport International Martinique Aimé Césaire",
+    "Martinique Aimé Césaire International Airport",
+    "Internationaler Flughafen Martinique Aimé Césaire",
+    "Aéroport de Fort-de-France",
+    "Aéroport du Lamentin"
+   ],
+   "ciudades": [
+    "Martinique",
+    "Aimé Césaire",
+    "Le Lamentin",
+    "Fort-de-France"
+   ],
+   "lat": 14.59069,
+   "lon": -61.00508,
+   "radio_km": 5.0,
+   "oaci": "TFFF",
+   "pais": "FR"
+  },
+  "TFFG": {
+   "tipo": "aeropuerto",
+   "nombre": "Aéroport Saint-Martin-Grand-Case",
+   "alias": [
+    "Aéroport Saint-Martin-Grand-Case",
+    "L'Espérance Airport",
+    "Grand-Case Airport"
+   ],
+   "ciudades": [
+    "Grand-Case",
+    "Grand Case",
+    "Saint-Martin"
+   ],
+   "lat": 18.10005,
+   "lon": -63.04709,
+   "radio_km": 5.0,
+   "oaci": "TFFG",
+   "pais": "FR"
+  },
+  "TFFM": {
+   "tipo": "aeropuerto",
+   "nombre": "Aérodrome de Marie-Galante",
+   "alias": [
+    "Aérodrome de Marie-Galante",
+    "Aérodrome les Basses",
+    "Les Basses Airport"
+   ],
+   "ciudades": [
+    "Marie-Galante"
+   ],
+   "lat": 15.86934,
+   "lon": -61.26993,
+   "radio_km": 5.0,
+   "oaci": "TFFM",
+   "pais": "FR"
+  },
+  "TFFR": {
+   "tipo": "aeropuerto",
+   "nombre": "Aéroport Guadeloupe - Maryse Condé",
+   "alias": [
+    "Aéroport Guadeloupe - Maryse Condé",
+    "Pointe-à-Pitre International Airport",
+    "Flughafen Pointe-à-Pitre",
+    "Aéroport Guadeloupe - Pôle Caraïbes",
+    "Aeropuerto Internacional de Pointe-à-Pitre",
+    "Aeroporto Internazionale di Pointe-à-Pitre",
+    "Aéroport de Pointe-à-Pitre",
+    "Aéroport Pôle Caraïbes"
+   ],
+   "ciudades": [
+    "Pointe-à-Pitre",
+    "Guadeloupe",
+    "Maryse Condé",
+    "Le Raizet"
+   ],
+   "lat": 16.26577,
+   "lon": -61.53141,
+   "radio_km": 5.0,
+   "oaci": "TFFR",
+   "pais": "FR"
+  },
+  "TFFS": {
+   "tipo": "aeropuerto",
+   "nombre": "Aéroport de Terre de Haut, Les Saintes",
+   "alias": [
+    "Aéroport de Terre de Haut, Les Saintes",
+    "Aérodrome de Terre de Haut",
+    "Les Saintes Airport"
+   ],
+   "ciudades": [
+    "Les Saintes",
+    "Terre-de-Haut"
+   ],
+   "lat": 15.86453,
+   "lon": -61.58037,
+   "radio_km": 5.0,
+   "oaci": "TFFS",
+   "pais": "FR"
+  },
   "aeropuerto:way/1529333685": {
    "tipo": "aeropuerto",
    "nombre": "Aéroport de Sion",
@@ -17710,6 +18812,29 @@
    "lon": -0.81242,
    "radio_km": 5.0,
    "pais": "ES"
+  },
+  "base:relation/8090912": {
+   "tipo": "base",
+   "nombre": "Centre Spatial Guyanais",
+   "alias": [
+    "Centre Spatial Guyanais",
+    "Guiana Space Centre",
+    "Guiana Space Center",
+    "Centre spatial de Kourou",
+    "Base spatiale de Kourou",
+    "Kourou Spaceport",
+    "Centro Espacial Guayanés",
+    "Centro Espacial de Kourou",
+    "Weltraumbahnhof Kourou",
+    "Raumfahrtzentrum Guayana"
+   ],
+   "ciudades": [
+    "Kourou"
+   ],
+   "lat": 5.21238,
+   "lon": -52.77388,
+   "radio_km": 10.0,
+   "pais": "FR"
   },
   "base:way/124532650": {
    "tipo": "base",
@@ -18265,6 +19390,23 @@
    "radio_km": 5.0,
    "pais": "GR"
   },
+  "base:way/64787419": {
+   "tipo": "base",
+   "nombre": "Mittarfik Ikkatteq",
+   "alias": [
+    "Mittarfik Ikkatteq",
+    "Bluie East Two",
+    "Ikateq"
+   ],
+   "ciudades": [
+    "Ikkatteq",
+    "Ikateq"
+   ],
+   "lat": 65.94232,
+   "lon": -36.67604,
+   "radio_km": 5.0,
+   "pais": "DK"
+  },
   "base:way/699225132": {
    "tipo": "base",
    "nombre": "Former RAF Station Melton Mowbray",
@@ -18309,6 +19451,22 @@
    "radio_km": 5.0,
    "pais": "SE"
   },
+  "base:way/784937893": {
+   "tipo": "base",
+   "nombre": "Base aérienne 367 Capitaine François Massé",
+   "alias": [
+    "Base aérienne 367 Capitaine François Massé",
+    "BA 367"
+   ],
+   "ciudades": [
+    "Rochambeau",
+    "BA 367"
+   ],
+   "lat": 4.81729,
+   "lon": -52.37542,
+   "radio_km": 5.0,
+   "pais": "FR"
+  },
   "base:way/82850335": {
    "tipo": "base",
    "nombre": "Dhekelia Airfield",
@@ -18321,7 +19479,7 @@
    "lat": 34.99414,
    "lon": 33.74916,
    "radio_km": 5.0,
-   "pais": "CY"
+   "pais": "GB"
   },
   "base:way/837170048": {
    "tipo": "base",
@@ -18384,6 +19542,21 @@
    "lon": 13.14022,
    "radio_km": 5.0,
    "pais": "DE"
+  },
+  "base:way/966100407": {
+   "tipo": "base",
+   "nombre": "Aeródromo de Manobra 3",
+   "alias": [
+    "Aeródromo de Manobra 3"
+   ],
+   "ciudades": [
+    "Aeródromo Manobra",
+    "Manobra"
+   ],
+   "lat": 33.08395,
+   "lon": -16.35386,
+   "radio_km": 5.0,
+   "pais": "PT"
   },
   "base:way/998100426": {
    "tipo": "base",

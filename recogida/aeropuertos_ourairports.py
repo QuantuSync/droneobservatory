@@ -30,6 +30,9 @@ DESTINO = Path(__file__).resolve().parent.parent / "configuracion" / "aeropuerto
 TIPOS = frozenset({"large_airport", "medium_airport"})
 PAISES_FUERA_DE_EU = frozenset({"TR", "CY"})
 EXCLUIDOS = frozenset({"RU", "BY"})
+# Territorios que el observatorio cuenta como suelo de su país: Gibraltar y la base de
+# Akrotiri (que OurAirports pone en Chipre) son del Reino Unido.
+PAIS_PADRE = {"GI": "GB", "LCRA": "GB"}
 OACI = re.compile(r"^[A-Z]{4}$")
 PIES_A_M = 0.3048
 
@@ -89,8 +92,9 @@ def generar(aeropuertos: str, pistas: str) -> list[dict[str, Any]]:
         por_ref.setdefault(fila["airport_ref"], []).extend(_umbrales(fila))
     resultado = []
     for fila in csv.DictReader(io.StringIO(aeropuertos)):
-        pais = fila["iso_country"]
-        europeo = fila["continent"] == "EU" or pais in PAISES_FUERA_DE_EU
+        pais = PAIS_PADRE.get(fila["ident"]) or PAIS_PADRE.get(fila["iso_country"])
+        pais = pais or fila["iso_country"]
+        europeo = fila["continent"] == "EU" or fila["iso_country"] in PAISES_FUERA_DE_EU
         if fila["type"] not in TIPOS or not europeo or pais in EXCLUIDOS:
             continue
         oaci = fila["icao_code"] or fila["ident"]
