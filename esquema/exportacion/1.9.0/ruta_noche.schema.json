@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:eodi:exportacion:1.8.0:ruta_noche",
+  "$id": "urn:eodi:exportacion:1.9.0:ruta_noche",
   "title": "Rutas de una noche",
   "description": "Las franjas de ruta publicadas de una noche sobre Ucrania (proceso/rutas): con NEPTUN, sus pistas; sin NEPTUN, la reconstrucción con los mensajes de seguimiento de la Fuerza Aérea de Ucrania, si pasa la comprobación. Cada tramo con su regla de origen: los extremos de un enlace de la Fuerza Aérea salen de sus mensajes (oficial); el enlace, la franja y lo de NEPTUN son calculados por una regla, con su versión. Desde el formato 1.7.0, el recorrido unido de cada grupo (proceso/rutas/recorridos.py: una línea por rama, de su principio a su final, sin los avisos de región entera), calculado por su regla con su versión.",
   "type": "object",

@@ -36,6 +36,10 @@ principal() {
 
   EODI_CLAVE_AGE="$(cat "$CLAVE_AGE")"
   export EODI_CLAVE_AGE
+  # Desde el formato 1.9.0 la exportación lee también lo que dejan otros servicios fuera de la
+  # base (exportacion/seguimiento.py): el archivo del seguimiento, las rutas y la previsión.
+  export EODI_SEGUIMIENTO_DATOS="$SEGUIMIENTO_DATOS" EODI_RUTAS_DATOS="$RUTAS_DATOS" \
+    EODI_PUBLICACION_DATOS="$PUBLICACION_DATOS"
 
   # Dónde se deja: el mismo interruptor que la publicación de los datos (configuracion.sh).
   # EODI_EXPORTACION_DESTINOS lo fija a mano (ensayos).
@@ -54,10 +58,17 @@ principal() {
   fi
   echo "exportación hacia: $destinos"
 
+  # Una segunda versión del mismo día, a mano: EODI_EXPORTACION_VERSION=AAAA.MM.DD.N.
+  local version=()
+  if [ -n "${EODI_EXPORTACION_VERSION:-}" ]; then
+    version=(--version "$EODI_EXPORTACION_VERSION")
+    echo "versión pedida: $EODI_EXPORTACION_VERSION"
+  fi
+
   cd "$CLON"
   GIT_SSH_COMMAND="$ssh_base -i $DESPLIEGUE_DATOS" \
     "$python" -m recogida.exportacion --correo "$CORREO" --repositorio "$URL_DATOS" \
-    --registro "$EXPORTACION_REGISTRO" --destinos "$destinos" || codigo=$?
+    --registro "$EXPORTACION_REGISTRO" --destinos "$destinos" "${version[@]}" || codigo=$?
   echo "exportación terminada con código $codigo"
   return "$codigo"
 }

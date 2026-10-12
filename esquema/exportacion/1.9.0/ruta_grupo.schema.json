@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:eodi:exportacion:1.8.0:ruta_grupo",
+  "$id": "urn:eodi:exportacion:1.9.0:ruta_grupo",
   "title": "Estadísticas de un grupo de una noche",
   "description": "Un grupo de tramos de ruta de una noche (los que se tocan por sus extremos; en NEPTUN, una pista): tramos, aparatos si constan, velocidad mediana si consta, divisiones y uniones. Valor calculado por la regla de las rutas, con su versión.",
   "type": "object",

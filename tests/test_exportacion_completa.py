@@ -270,3 +270,34 @@ def test_el_ensayo_de_la_recogida_genera_la_exportacion_sin_subir(
     monkeypatch.setattr(origenes, "REGLAS", {})
     otro = tmp_path / "otro" / "exportacion"
     assert not horaria.ensayo_exportacion(almacen, base_prueba.EXPORTACION, otro)
+
+
+@pytest.mark.skipif(sys.platform == "win32", reason="script del servidor, solo en Linux")
+def test_el_script_del_servidor_pasa_la_version_pedida_a_mano(tmp_path: Path) -> None:
+    """Con EODI_EXPORTACION_VERSION (una segunda versión del mismo día), exportacion.sh la pasa
+    con --version, y las carpetas de los servicios que lee desde el formato 1.9.0."""
+    clon = tmp_path / "clon"
+    (clon / "recogida").mkdir(parents=True)
+    (clon / ".venv" / "bin").mkdir(parents=True)
+    (clon / "recogida" / "__init__.py").write_text("", encoding="utf-8")
+    (clon / "recogida" / "exportacion.py").write_text(
+        "import os\nimport sys\n"
+        "print('argumentos:', ' '.join(sys.argv[1:]))\n"
+        "print('rutas:', os.environ.get('EODI_RUTAS_DATOS', ''))\n",
+        encoding="utf-8",
+    )
+    (clon / ".venv" / "bin" / "python").symlink_to(sys.executable)
+    secretos = tmp_path / "secretos"
+    secretos.mkdir()
+    (secretos / "clave_age.txt").write_text("x", encoding="utf-8")
+    raiz = Path(__file__).resolve().parent.parent
+    entorno = {**os.environ, "EODI_CLON": str(clon), "EODI_SECRETOS": str(secretos),
+               "EODI_CASA": str(tmp_path), "EODI_EXPORTACION_VERSION": "2026.10.12.1",
+               "PYTHONPATH": str(clon)}  # fmt: skip
+    resultado = subprocess.run(
+        ["bash", str(raiz / "servidor" / "exportacion.sh")], env=entorno, capture_output=True,
+        text=True, check=False,
+    )  # fmt: skip
+    assert resultado.returncode == 0, resultado.stdout + resultado.stderr
+    assert "--version 2026.10.12.1" in resultado.stdout
+    assert f"rutas: {tmp_path}/datos/rutas" in resultado.stdout

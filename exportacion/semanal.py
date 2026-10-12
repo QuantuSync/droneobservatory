@@ -44,6 +44,14 @@ age con la misma clave pública que la base:
   límites de movimiento por clase que usa AEGIS); deduccion_validacion.json: el resumen de la
   validación del motor. Lo deducido de cada incidente, ataque e impacto va en su bloque
   deduccion (origen deducido, interno);
+- desde el formato 1.9.0 (exportacion/seguimiento.py): fuerza_aerea_seguimiento.jsonl (los
+  mensajes de seguimiento de la Fuerza Aérea de Ucrania con sus zonas y direcciones),
+  neptun_pistas.jsonl (las pistas archivadas de NEPTUN, estimaciones y no radar, con su
+  atribución), rutas_reconstruidas.jsonl (la reconstrucción de todas las noches, se publique o no,
+  con su incertidumbre medida), cierres_medidos.jsonl (todas las interrupciones medidas de los
+  aeropuertos), prevision_validacion.json, tipo_dron_validacion.json y barrera_titulares.json; y
+  en el manifiesto, los datos de terceros con su atribución (`terceros`) y lo que no se exporta
+  con su motivo (`excluidos`: las alertas de alerts.in.ua);
 - esquema/: el JSON Schema de cada fichero. Los de la base (esquema/eodi/) llevan la marca
   de visibilidad de cada campo: un campo interno nuevo entra en la exportación sin tocar
   este código, porque se exportan los documentos enteros.
@@ -74,8 +82,8 @@ from jsonschema import Draft202012Validator
 
 import esquema
 from almacen.base import Almacen
-from esquema import Documento, Esquema, validador
-from exportacion import mejor_origen
+from esquema import Documento, Esquema, validador, validador_definicion
+from exportacion import mejor_origen, seguimiento
 from exportacion import procedencia as origenes
 from modelo import ficha
 from proceso import incidentes as reglas
@@ -87,13 +95,41 @@ from proceso.mediciones import con_mediciones
 from proceso.restricciones import por_ataque
 from recogida import licencia
 
-VERSION_FORMATO = "1.8.0"
+VERSION_FORMATO = "1.9.0"
 RAIZ = Path(__file__).resolve().parent.parent
 DIRECTORIO_ESQUEMAS = RAIZ / "esquema" / "exportacion" / VERSION_FORMATO
 VOCABULARIO = RAIZ / "configuracion" / "vocabulario_aegis.json"
 CIFRAS_CONTEXTO = RAIZ / "configuracion" / "cifras_contexto.json"
 MEDIOS = RAIZ / "configuracion" / "medios_europa.json"
 OFICIALES = RAIZ / "configuracion" / "fuentes_oficiales.json"
+ESQUEMA_PREVISION = RAIZ / "esquema" / "prevision" / "1.0.0" / "prevision.schema.json"
+# Desde el formato 1.9.0: los datos de terceros que viajan en la versión, con su atribución.
+TERCEROS = (
+    {
+        "fuente": "NEPTUN (neptun.in.ua)",
+        "ficheros": ["neptun_pistas.jsonl", "rutas_noches.jsonl", "rutas_grupos.jsonl"],
+        "atribucion": "Дані: Карта повітряних тривог — NEPTUN",
+        "enlace": "https://neptun.in.ua/",
+        "condiciones": "https://neptun.in.ua/api-terms (9 de julio de 2026; copia en "
+        "docs/condiciones_neptun_2026-10-04): enlace visible a NEPTUN junto a los datos, sin "
+        "presentarlos como propios; NEPTUN no sustituye a las alertas oficiales.",
+    },
+    {
+        "fuente": "adsb.lol",
+        "ficheros": ["cierres_medidos.jsonl", "incidentes.jsonl"],
+        "atribucion": "Tráfico aéreo: adsb.lol, ODbL 1.0",
+        "enlace": "https://adsb.lol/",
+        "condiciones": "Open Database License 1.0: atribución y compartir igual las bases "
+        "derivadas.",
+    },
+    {
+        "fuente": "Open-Meteo",
+        "ficheros": ["incidentes.jsonl", "ucrania_ataques.jsonl"],
+        "atribucion": "Weather data by Open-Meteo.com",
+        "enlace": "https://open-meteo.com/",
+        "condiciones": "CC BY 4.0.",
+    },
+)
 MANIFIESTO = "manifiesto.json"
 # Cada fichero se comprime antes de cifrar (gzip sin fecha: el mismo contenido da los mismos
 # bytes): el texto se reduce a una fracción y el repositorio de datos crece por semanas.
@@ -822,6 +858,36 @@ def generar(almacen: Almacen) -> list[Fichero]:
     _comprobar("deduccion_validacion.json", [datos_validacion],
                validador_propio("deduccion_validacion"))  # fmt: skip
 
+    # Desde el formato 1.9.0, lo que vive fuera de la base (exportacion/seguimiento.py).
+    from recogida import rutas as servicio_rutas
+    from recogida import seguimiento as servicio_seguimiento
+
+    carpeta_rutas = servicio_rutas.datos_rutas()
+    corte = datetime.fromisoformat(
+        (almacen.ultimo_cambio() or "1970-01-01T00:00:00Z").replace("Z", "+00:00")
+    )
+    mensajes_fa = seguimiento.fuerza_aerea(carpeta_rutas)
+    pistas_neptun = seguimiento.neptun_pistas(servicio_seguimiento.directorio_datos())
+    reconstruidas = seguimiento.rutas_reconstruidas(carpeta_rutas, corte)
+    cierres = seguimiento.cierres_medidos(almacen)
+    datos_prevision = seguimiento.prevision_validacion(seguimiento.datos_publicacion())
+    datos_tipo = seguimiento.tipo_dron_validacion(almacen)
+    datos_barrera = seguimiento.barrera_titulares(almacen, base)
+    _comprobar("fuerza_aerea_seguimiento.jsonl", mensajes_fa,
+               validador_propio("fuerza_aerea_mensaje"))  # fmt: skip
+    _comprobar("neptun_pistas.jsonl", pistas_neptun, validador_propio("neptun_pista"))
+    _comprobar("rutas_reconstruidas.jsonl", reconstruidas, validador_propio("ruta_reconstruida"))
+    _comprobar("cierres_medidos.jsonl", cierres, validador_propio("cierre_medido"))
+    _comprobar("cierres_medidos.jsonl", (c["anomalia"] for c in cierres),
+               validador_definicion("anomalia_trafico"))  # fmt: skip
+    _comprobar("prevision_validacion.json", [datos_prevision],
+               validador_propio("prevision_validacion"))  # fmt: skip
+    if datos_prevision["documento"] is not None:
+        _comprobar("prevision_validacion.json", [datos_prevision["documento"]],
+                   Draft202012Validator(_leer_json(ESQUEMA_PREVISION)))  # fmt: skip
+    _comprobar("tipo_dron_validacion.json", [datos_tipo], validador_propio("tipo_dron_validacion"))
+    _comprobar("barrera_titulares.json", [datos_barrera], validador_propio("barrera_titulares"))
+
     datos = [
         Fichero("afirmaciones.jsonl", _jsonl(lista_afirmaciones), len(lista_afirmaciones),
                 _propio("afirmacion")),
@@ -874,6 +940,19 @@ def generar(almacen: Almacen) -> list[Fichero]:
                 _propio("region_ucrania")),
         Fichero("vocabulario.json", _json(datos_vocabulario), entradas_vocabulario,
                 _propio("vocabulario")),
+        Fichero("fuerza_aerea_seguimiento.jsonl", _jsonl(mensajes_fa), len(mensajes_fa),
+                _propio("fuerza_aerea_mensaje")),
+        Fichero("neptun_pistas.jsonl", _jsonl(pistas_neptun), len(pistas_neptun),
+                _propio("neptun_pista")),
+        Fichero("rutas_reconstruidas.jsonl", _jsonl(reconstruidas), len(reconstruidas),
+                _propio("ruta_reconstruida")),
+        Fichero("cierres_medidos.jsonl", _jsonl(cierres), len(cierres), _propio("cierre_medido")),
+        Fichero("prevision_validacion.json", _json(datos_prevision),
+                int(datos_prevision["disponible"]), _propio("prevision_validacion")),
+        Fichero("tipo_dron_validacion.json", _json(datos_tipo), int(datos_tipo["disponible"]),
+                _propio("tipo_dron_validacion")),
+        Fichero("barrera_titulares.json", _json(datos_barrera), len(datos_barrera["veredictos"]),
+                _propio("barrera_titulares")),
     ]  # fmt: skip
     return datos + _esquemas()
 
@@ -933,6 +1012,9 @@ def empaquetar(
         "ficheros": entradas,
         # Desde el formato 1.8.0: autor, licencia, cita y dirección viajan con los datos.
         "creditos": licencia.creditos(licencia.version_actual(generada)),
+        # Desde el formato 1.9.0: terceros con su atribución y lo que no se exporta.
+        "terceros": [dict(t) for t in TERCEROS],
+        "excluidos": [dict(seguimiento.ATRIBUCION_ALERTAS_EXCLUIDA)],
     }
     _comprobar(MANIFIESTO, [manifiesto], validador_propio("manifiesto"))
     salida[MANIFIESTO] = _json(manifiesto)
