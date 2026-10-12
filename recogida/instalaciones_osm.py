@@ -2,7 +2,8 @@
 
 Además de los aeropuertos con OACI, bases aéreas y centrales nucleares del
 nomenclátor inicial (`lugares_osm.py`), las instalaciones de todas las
-categorías del esquema, país a país: aeródromos y helipuertos, bases e
+categorías del esquema, país a país (y los territorios de fuera del continente,
+con su país: TERRITORIOS): aeródromos y helipuertos, bases e
 instalaciones militares, puertos, centrales eléctricas, subestaciones de alta
 tensión, presas y estadios, con coordenadas y los nombres en todos los idiomas
 que traiga OpenStreetMap. Datos © colaboradores de OpenStreetMap, ODbL.
@@ -48,8 +49,30 @@ RADIO_KM = {
 TENSIONES = "220000|225000|275000|300000|330000|380000|400000|500000|750000"
 # Las centrales solares y eólicas son miles de parques sin interés como objetivo.
 SIN_FUENTES = "solar|wind"
+# Área de un país: su frontera de nivel 2 en OpenStreetMap.
+AREA_PAIS = 'area["ISO3166-1"="{iso}"][admin_level=2]'
+# Territorios fuera del continente que cuentan como suelo de su país, con el país del que
+# dependen y su área en OpenStreetMap. Las bases británicas de Chipre (Akrotiri y Dhekelia)
+# no tienen código ISO: van por su relación (3263728). Svalbard sale también en el área de
+# Noruega; las instalaciones repetidas se quedan una vez.
+TERRITORIOS = {
+    "GP": ("FR", 'area["ISO3166-1"="GP"]'),
+    "MQ": ("FR", 'area["ISO3166-1"="MQ"]'),
+    "GF": ("FR", 'area["ISO3166-1"="GF"]'),
+    "RE": ("FR", 'area["ISO3166-1"="RE"]'),
+    "YT": ("FR", 'area["ISO3166-1"="YT"]'),
+    "MF": ("FR", 'area["ISO3166-1"="MF"]'),
+    "GL": ("DK", 'area["ISO3166-1"="GL"]'),
+    "GI": ("GB", 'area["ISO3166-1"="GI"]'),
+    "SJ": ("NO", 'area["ISO3166-1"="SJ"]'),
+    "bases-chipre": ("GB", "area(id:3603263728)"),
+}
+# El área de los Países Bajos lleva el Caribe neerlandés (y la de OpenStreetMap, el
+# aeropuerto de Sint Maarten), que el observatorio no cubre: se dejan fuera las
+# instalaciones neerlandesas al oeste de esta longitud.
+LON_MIN_NL = -30.0
 CONSULTA = (
-    'area["ISO3166-1"="{iso}"][admin_level=2]->.a;('
+    "{area}->.a;("
     'nwr["aeroway"="aerodrome"]["name"](area.a);'
     'nwr["aeroway"="heliport"]["name"](area.a);'
     'nwr["military"~"^(base|airfield|naval_base|barracks|range)$"]["name"](area.a);'
@@ -157,12 +180,18 @@ def lugar(elemento: dict[str, Any], iso: str) -> tuple[str, dict[str, Any]] | No
 def generar(por_pais: dict[str, dict[str, Any]], existentes: set[str]) -> dict[str, Any]:
     """Instalaciones sin repetir las del nomenclátor inicial (por su OACI o su elemento)."""
     lugares: dict[str, str] = {}
-    for iso, datos in sorted(por_pais.items()):
+    # Los territorios primero: una instalación de las bases británicas de Chipre sale también
+    # en el área de Chipre, y es del Reino Unido.
+    orden = sorted(por_pais.items(), key=lambda par: (par[0] not in TERRITORIOS, par[0]))
+    for zona, datos in orden:
+        iso = TERRITORIOS[zona][0] if zona in TERRITORIOS else zona
         for elemento in datos.get("elements", []):
             resultado = lugar(elemento, iso)
             if resultado is None:
                 continue
             clave, entrada = resultado
+            if iso == "NL" and entrada["lon"] < LON_MIN_NL:
+                continue
             # El nomenclátor inicial identifica sus lugares por OACI o por «tipo:elemento».
             elemento = clave.split(":", 1)[1]
             repetido = entrada.get("oaci") in existentes or any(
@@ -175,7 +204,8 @@ def generar(por_pais: dict[str, dict[str, Any]], existentes: set[str]) -> dict[s
     return {
         "version_esquema": "1.0.0",
         "descripcion": (
-            "Instalaciones europeas de las categorías del esquema, por país: aeródromos, "
+            "Instalaciones europeas de las categorías del esquema, por país (con sus "
+            "territorios de fuera del continente): aeródromos, "
             "helipuertos, bases militares, puertos, centrales, subestaciones de 220 kV o más, "
             "presas y estadios, con coordenadas, radio del objetivo y sus nombres en todos los "
             "idiomas de OpenStreetMap. Completa lugares_europa.json sin repetir sus lugares."
@@ -186,8 +216,14 @@ def generar(por_pais: dict[str, dict[str, Any]], existentes: set[str]) -> dict[s
     }
 
 
+def area(iso: str) -> str:
+    """El área de OpenStreetMap de un país o de un territorio."""
+    return TERRITORIOS[iso][1] if iso in TERRITORIOS else AREA_PAIS.format(iso=iso)
+
+
 def descargar(descargador: Descargador, paises: list[str], directorio: Path) -> None:
-    """Una consulta por país; guarda cada respuesta para poder repetir sin consultar."""
+    """Una consulta por país o territorio; guarda cada respuesta para poder repetir sin
+    consultar."""
     directorio.mkdir(parents=True, exist_ok=True)
     for i, iso in enumerate(paises):
         ruta = directorio / f"{iso}.json"
@@ -197,7 +233,7 @@ def descargar(descargador: Descargador, paises: list[str], directorio: Path) -> 
         en_curso.write_text("", encoding="utf-8")
         if i:
             time.sleep(PAUSA_OVERPASS_S)
-        consulta = f"[out:json][timeout:600];{CONSULTA.format(iso=iso)}out center tags;"
+        consulta = f"[out:json][timeout:600];{CONSULTA.format(area=area(iso))}out center tags;"
         try:
             texto = descargador.texto(
                 f"{OVERPASS}?data={quote(consulta, safe='')}", lambda t: t.lstrip()[:1] == "{"
@@ -220,7 +256,7 @@ def principal(argumentos: list[str] | None = None) -> int:
     # los países al revés y cada uno salta los que ya estén guardados.
     opciones.add_argument("--inverso", action="store_true", help="recorre los países al revés")
     args = opciones.parse_args(argumentos)
-    paises = sorted(set(configuracion()["paises"].values()))
+    paises = sorted(set(configuracion()["paises"].values())) + list(TERRITORIOS)
     if not args.sin_descargar:
         # Una consulta por país puede tardar minutos en el servidor: 10 minutos de límite.
         descargador = Descargador(
