@@ -67,7 +67,10 @@ from recogida.localidades_geonames import (
     DECIMALES,
     MAX_LETRAS,
     MIN_LETRAS,
+    TERRITORIOS,
+    pais_padre,
     palabras_vocabulario,
+    region_territorio,
 )
 from recogida.localidades_geonames import DESTINO as LOCALIDADES
 
@@ -144,7 +147,7 @@ def generar(
             motivo = next((m for m, nombres in excluir.items() if normal in nombres), None)
             if motivo is None and es_nombre_de_pais(normal):
                 motivo = "pais"
-            if motivo is None and normal in corrientes.get(c[C_PAIS], set()):
+            if motivo is None and normal in corrientes.get(pais_padre(c[C_PAIS]), set()):
                 motivo = "palabra_corriente"
             if motivo is not None:
                 recuentos[motivo] += 1
@@ -152,10 +155,12 @@ def generar(
             validos.append(normal)
             recuentos["compartido_con_grande"] += normal in alias_grandes
         if validos:
+            territorio = region_territorio(c[C_PAIS], c[C_REGION], float(c[C_LON]))
             localidades[f"loc:{c[C_ID]}"] = [
-                c[C_NOMBRE], c[C_PAIS], round(float(c[C_LAT]), DECIMALES),
+                c[C_NOMBRE], pais_padre(c[C_PAIS]), round(float(c[C_LAT]), DECIMALES),
                 round(float(c[C_LON]), DECIMALES),
-                numeros_region.get(f"{c[C_PAIS]}.{c[C_REGION]}"), validos,
+                territorio[0] if territorio else numeros_region.get(f"{c[C_PAIS]}.{c[C_REGION]}"),
+                validos,
             ]  # fmt: skip
     # Nombres de varias localidades pequeñas de un mismo país: solo se resuelven con la región.
     por_pais: collections.Counter[tuple[str, str]] = collections.Counter(
@@ -190,7 +195,10 @@ def principal(argumentos: list[str] | None = None) -> int:
     opciones.add_argument("--ciudades", type=Path, required=True, help="cities15000.zip")
     opciones.add_argument("--base", type=Path, required=True, help="base cifrada local")
     args = opciones.parse_args(argumentos)
+    # Los países de la recogida y los territorios de fuera del continente que GeoNames trata
+    # como países (Guadalupe, Groenlandia...), que van con el país del que dependen.
     propios = set(paises())
+    propios |= {t for t, padre in TERRITORIOS.items() if padre in propios}
     cargar_clave_local()
     almacen = Almacen(abrir_cifrada(args.base))
     titulares = [(a.get("pais"), str(a["titular"])) for a in almacen.articulos()]
