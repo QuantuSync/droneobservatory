@@ -130,6 +130,24 @@ def test_el_extractor_solo_deja_la_ejecucion_en_rojo_cuando_lo_pide(
     assert len(base_remota(repositorio, tmp_path).ataques_ucrania()) == 3
 
 
+def test_un_fallo_inesperado_del_extractor_es_un_aviso_y_se_publica(
+    entorno: tuple[str, CanalFalso, Path], tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Recogida del 12 oct 2026, 18:17: un ValueError del extractor terminaba con código 1 y
+    no se publicaba nada de lo recogido."""
+    repositorio, _, salida_publicacion = entorno
+
+    def roto(almacen: Almacen, ahora: datetime, **_: object) -> extractor.Resultado:
+        raise ValueError("min() iterable argument is empty")
+
+    monkeypatch.setattr(extractor, "horaria", roto)
+    subir_base(repositorio, tmp_path, ultimo_id=1)
+    salida = horaria.principal(["--correo", "a@b.org", "--repositorio", repositorio])
+    assert salida == horaria.SALIDA_AVISO
+    assert len(base_remota(repositorio, tmp_path).ataques_ucrania()) == 3
+    assert (salida_publicacion / publicar.UCRANIA).exists()
+
+
 def test_una_fuente_que_agota_su_tope_es_un_aviso_y_no_frena_a_las_demas(
     entorno: tuple[str, CanalFalso, Path], tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

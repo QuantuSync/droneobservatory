@@ -375,17 +375,25 @@ def principal(argumentos: list[str] | None = None) -> int:
         # Candidatos de noticias a incidentes. El límite de gasto o una caída temporal del
         # servicio dejan candidatos pendientes sin más; un error que no se arregla solo o
         # una caída larga dejan la ejecución en rojo.
-        resultado = extractor.horaria(almacen, ahora, plazo=Plazo(extractor.TOPE_S))
-        registro.info("extractor %s", resultado.resumen())
-        if resultado.en_rojo:
+        # Un fallo inesperado del paso deja los candidatos pendientes y la ejecución con
+        # aviso, pero no impide publicar lo demás.
+        try:
+            resultado = extractor.horaria(almacen, ahora, plazo=Plazo(extractor.TOPE_S))
+        except Exception:
+            registro.exception("extractor fallido: los candidatos quedan pendientes")
             salida = SALIDA_AVISO
-        # Error que no se arregla solo: no leída. Límite de gasto, caída o falta de tiempo: los
-        # candidatos esperan, con aviso.
-        estado_extractor = (
-            LEIDA if resultado.parada is None
-            else NO_LEIDA if resultado.parada is Parada.ERROR
-            else CON_AVISO
-        )  # fmt: skip
+            estado_extractor = NO_LEIDA
+        else:
+            registro.info("extractor %s", resultado.resumen())
+            if resultado.en_rojo:
+                salida = SALIDA_AVISO
+            # Error que no se arregla solo: no leída. Límite de gasto, caída o falta de tiempo:
+            # los candidatos esperan, con aviso.
+            estado_extractor = (
+                LEIDA if resultado.parada is None
+                else NO_LEIDA if resultado.parada is Parada.ERROR
+                else CON_AVISO
+            )  # fmt: skip
         estados["extractor"] = EstadoFuente(estado_extractor, ultima_llamada(almacen))
         # Fuentes oficiales de detalle: lo que dejó en disco su temporizador entra en la base y
         # se cruza con los incidentes; lo nuevo se extrae con lo que deje del límite diario el

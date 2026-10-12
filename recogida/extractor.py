@@ -100,6 +100,13 @@ def preparar_todas(
     La base solo se lee en este hilo: los demás solo descargan.
     """
     sin_texto = [extraccion.preparar(almacen, c, None) for c in candidatos]
+    # Un candidato sin ningún artículo en un idioma conocido (un medio de fuera de Europa
+    # que GDELT sitúa en una ciudad europea) no tiene fuentes que mandar: no se llama. Con
+    # una ficha sin artículos no hay fecha del primero y el paso entero se caía.
+    vacias = [p.candidato["id"] for p in sin_texto if not p.enviadas]
+    if vacias:
+        registro.info("candidatos sin artículos en un idioma conocido: %s", ", ".join(vacias))
+    sin_texto = [p for p in sin_texto if p.enviadas]
 
     def con_texto(peticion: extraccion.Peticion) -> extraccion.Peticion:
         propio = descargador()
