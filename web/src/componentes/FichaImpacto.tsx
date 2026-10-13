@@ -122,7 +122,7 @@ export function FichaImpacto({ t, idioma, impacto }: Props) {
           <span className="ml-2">{t.impacto.credibilidadTexto[impacto.credibilidad]}</span>
         </Fila>
       </dl>
-      <ListaFuentes t={t} fuentes={impacto.fuentes} />
+      <ListaFuentes t={t} fuentes={impacto.fuentes} idioma={idioma} />
     </article>
   );
 }

@@ -1,6 +1,7 @@
 // Fichas y piezas de la guerra por satélite: imágenes de antes y después de un impacto, pérdida
 // de luz nocturna de una región o una ciudad y corredores de ataque.
 
+import { nombreDeGuerra } from "../datos/nombres.ts";
 import { descargarConReintentos } from "../datos/reintentos.ts";
 import { useEffect, useRef, useState } from "react";
 import type { KeyboardEvent, PointerEvent } from "react";
@@ -290,7 +291,7 @@ export function FichaLuz({
   return (
     <article data-ficha-luz="">
       <h2 className="text-2xl font-semibold tracking-tight">
-        <span lang={ciudad.region.startsWith("UA-") ? "uk" : "ru"}>{ciudad.nombre}</span>
+        {nombreDeGuerra(ciudad.nombre, idioma) ?? region(ciudad.region, idioma)}
       </h2>
       <p className="mono mt-1 text-xs text-secundario">
         {region(ciudad.region, idioma)} · {periodo}
@@ -326,7 +327,7 @@ export function FichaAlumbrado({
     <article data-ficha-alumbrado="">
       <p className="text-secundario">{textos.titulo}</p>
       <h2 className="text-2xl font-semibold tracking-tight">
-        <span lang={ciudad.region.startsWith("UA-") ? "uk" : "ru"}>{ciudad.ciudad.nombre}</span>
+        {nombreDeGuerra(ciudad.ciudad.nombre, idioma) ?? region(ciudad.region, idioma)}
       </h2>
       <p className="mono mt-1 text-xs text-secundario">{region(ciudad.region, idioma)}</p>
       <dl className="mt-3">
@@ -606,7 +607,7 @@ export function PanelSatelite({
                   }}
                 >
                   <span className="block text-texto">
-                    {p.lugar === null ? region(p.region, idioma) : p.lugar}
+                    {(p.lugar === null ? null : nombreDeGuerra(p.lugar, idioma)) ?? region(p.region, idioma)}
                   </span>
                   <span className="mono block text-xs text-secundario">
                     {fechaDia(p.dia)} · {loQueTiene(t, p)}

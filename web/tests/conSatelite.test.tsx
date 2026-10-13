@@ -239,8 +239,8 @@ describe("botón «Con satélite», su leyenda, su filtro y su lista", () => {
     fireEvent.click(screen.getByRole("button", { name: /^ciudad a oscuras · 1/ }));
     const filas = screen.getAllByRole("listitem").filter((li) => li.closest("[aria-label]")?.getAttribute("aria-label") === es.satelite.listaSatelite);
     expect(filas.map((li) => li.textContent)).toEqual([
-      expect.stringContaining("Суми"),
-      expect.stringContaining("Одеса"),
+      expect.stringContaining("Sumy"),
+      expect.stringContaining("Odesa"),
     ]);
   });
 });
