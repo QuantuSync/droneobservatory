@@ -249,7 +249,15 @@ class WikidataFalso:
         if self.fallar:
             raise TimeoutError("sin respuesta")
         if "wbsearchentities" in peticion.full_url:
-            return {"search": [{"id": "Q1"}, {"id": "Q2"}]}
+            # Solo vale lo que se llama exactamente así: Q3 es otra cosa con el mismo comienzo.
+            texto = "Novo Selo Inventado" if "Novo" in peticion.full_url else "Aldea Inventada"
+            return {
+                "search": [
+                    {"id": "Q1", "match": {"type": "label", "text": texto}},
+                    {"id": "Q3", "match": {"type": "label", "text": f"{texto} University"}},
+                    {"id": "Q2", "match": {"type": "alias", "text": texto}},
+                ]
+            }
         return {
             "entities": {
                 "Q1": {
