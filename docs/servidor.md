@@ -38,7 +38,8 @@ En `/home/eodi`:
   - `clave_age.txt`: la identidad age de la base;
   - `extractor.env`: las variables del extractor, una por línea, y la clave de NASA FIRMS
     (`EODI_FIRMS_MAP_KEY`);
-  - `despliegue_datos`: clave de despliegue con escritura solo en `droneobservatory-datos`
+  - `despliegue_datos`: clave que tenía escritura en `droneobservatory-datos`; desde el 13 de
+    octubre de 2026 el repositorio está archivado y la clave ya no está dada de alta en él
     (la usan la recogida, para la rama `estado`, y la exportación semanal, para `main`);
   - `despliegue_web`: clave de despliegue con escritura solo en `droneobservatory`, para
     publicar los ficheros de la web;
@@ -297,8 +298,14 @@ Helsinki tiene una copia horaria de menos de 3 horas. Solo entonces escribe `no`
 copia secundaria» en el diario). Si algo falla, no cambia nada y la vigilancia avisa del problema.
 Lo que hizo queda en `base_solo_disco.json`. Ensayo sin cambiar nada (hecho el 7 de octubre de
 2026, correcto): `sudo -u eodi bash /home/eodi/droneobservatory/servidor/base_solo_disco.sh
---ensayo`. Volver atrás: `echo github | sudo -u eodi tee /home/eodi/.eodi/base_secundaria` y, para
-poner la rama al día en el acto, `base.sh a-github`.
+--ensayo`. Hecho el 13 de octubre de 2026 a las 10:00:07 UTC, correcto (copia horaria de las
+09:32 restaurada e íntegra, segunda copia en Helsinki); la recogida de las 10:17 terminó con código 0
+y «base solo en disco: sin copia secundaria». Ese mismo día el repositorio `droneobservatory-datos`
+se archivó y se quitaron sus dos claves de despliegue (la del servidor y la de AEGIS): `a-github`,
+`desde-github` y el modo `github` o `doble` de la base ya no funcionan. Sin el fichero
+`base_secundaria`, la copia secundaria queda apagada (`almacen/sitio.py`). Volver atrás exigiría
+desarchivar el repositorio, dar de alta una clave de despliegue con escritura y escribir `github`
+en `base_secundaria`.
 
 **Prueba de restauración semanal.** `eodi-prueba-restauracion` (martes 10:55 UTC,
 `servidor/prueba_restauracion.sh`) restaura en una carpeta aparte la última copia horaria que ya

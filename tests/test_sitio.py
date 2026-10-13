@@ -215,6 +215,9 @@ def test_horaria_en_disco_guarda_en_disco_y_deja_las_dos_copias(
 ) -> None:
     repositorio, _, salida = entorno
     disco(monkeypatch)
+    # La copia secundaria en la rama solo con «github» (sin el fichero, apagada desde que el
+    # repositorio de datos está archivado).
+    monkeypatch.setenv(sitio.VARIABLE_SECUNDARIA, sitio.CON_SECUNDARIA)
     base_en_disco(raiz, cursor=1)
     assert horaria.principal(["--correo", "a@b.org", "--repositorio", repositorio]) == 0
     assert cursor_en_disco(raiz) == {"ultimo_id": 7, "fecha": "2026-09-23T05:07:00+00:00"}

@@ -170,11 +170,19 @@ def test_solo_disco_comprueba_la_copia_y_la_segunda_copia(
     assert not solo_disco.comprobar(origen, segunda, tmp_path, AHORA + timedelta(hours=3))[0]
 
 
-def test_el_interruptor_de_la_copia_secundaria(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_el_interruptor_de_la_copia_secundaria(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
     monkeypatch.setenv(sitio.VARIABLE_SECUNDARIA, "no")
     assert sitio.copia_secundaria() == sitio.SIN_SECUNDARIA
-    monkeypatch.setenv(sitio.VARIABLE_SECUNDARIA, "cualquier cosa")
+    monkeypatch.setenv(sitio.VARIABLE_SECUNDARIA, "github")
     assert sitio.copia_secundaria() == sitio.CON_SECUNDARIA
+    # Con el repositorio de datos archivado, lo desconocido y la falta del fichero son «no».
+    monkeypatch.setenv(sitio.VARIABLE_SECUNDARIA, "cualquier cosa")
+    assert sitio.copia_secundaria() == sitio.SIN_SECUNDARIA
+    monkeypatch.delenv(sitio.VARIABLE_SECUNDARIA)
+    monkeypatch.setattr(sitio, "FICHERO_SECUNDARIA", tmp_path / "no-existe")
+    assert sitio.copia_secundaria() == sitio.SIN_SECUNDARIA
 
 
 def test_espejo_en_un_repositorio_git_local_con_sus_etiquetas(tmp_path: Path) -> None:

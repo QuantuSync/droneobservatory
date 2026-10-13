@@ -151,18 +151,9 @@ else
 fi
 
 # --- Claves de despliegue ------------------------------------------------------------
-# Las privadas se generan en el servidor y no salen de él; aquí solo llega la pública.
-# Cada una da escritura en un único repositorio.
-clave_despliegue() {
-  local repositorio="$1" fichero="$2" id
-  for id in $(gh repo deploy-key list --repo "$repositorio" --json id,title \
-    --jq ".[] | select(.title == \"$TITULO_DESPLIEGUE\") | .id"); do
-    gh repo deploy-key delete "$id" --repo "$repositorio"
-  done
-  conectar "$OPERADOR" sudo cat "$fichero.pub" \
-    | gh repo deploy-key add - --repo "$repositorio" --title "$TITULO_DESPLIEGUE" --allow-write
-}
-clave_despliegue "$REPOSITORIO_DATOS" "$DESPLIEGUE_DATOS"
+# Ninguna. Desde el 13 de octubre de 2026 la base vive solo en el disco y en las copias del almacén
+# (paso a solo disco) y el repositorio de datos (REPOSITORIO_DATOS) está archivado, de solo
+# lectura y sin claves de despliegue.
 # La clave del repositorio público ya no se da de alta: desde el 7 de octubre de 2026 el servidor
 # publica los datos en el almacén y no escribe en GitHub (main está protegida). Para volver a la
 # publicación en el repositorio (modo github o doble), docs/operacion.md.
