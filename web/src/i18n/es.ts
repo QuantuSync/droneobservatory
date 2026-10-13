@@ -825,6 +825,9 @@ export const es: Textos = {
             ],
           },
           {
+            parrafo: ["Las fronteras y los nombres del mapa siguen la posición de la Unión Europea."],
+          },
+          {
             parrafo: [
               "Solo drones. No se registran globos, misiles, aviones tripulados, punteros " +
                 "láser ni interferencias de señal sin dron, y tampoco los vuelos autorizados " +

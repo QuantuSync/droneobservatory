@@ -24,6 +24,7 @@ import {
   RADIO_INCIDENTE,
 } from "./iconos.ts";
 import { conReintentos } from "../datos/reintentos.ts";
+import { conCriterioUe } from "./criterioUe.ts";
 import { ZONA_ARCO_RATON_PX } from "./seleccion.ts";
 import type { Idioma } from "../sitio.ts";
 
@@ -474,6 +475,8 @@ function nombre(idioma: Idioma): ExpressionSpecification {
 export function capasBase(idioma: Idioma): LayerSpecification[] {
   return layers(FUENTE_BASE, SABOR, { lang: idioma })
     .filter((capa) => !CAPAS_DESCARTADAS.has(capa.id))
+    // Fronteras y nombres según la posición de la Unión Europea (criterioUe.ts).
+    .map((capa) => conCriterioUe(capa))
     .map((capa) =>
       capa.type === "symbol" && CAPAS_DE_LUGARES.has(capa.id)
         ? { ...capa, layout: { ...capa.layout, "text-field": nombre(idioma) } }

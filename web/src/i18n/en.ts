@@ -816,6 +816,9 @@ export const en: Textos = {
             ],
           },
           {
+            parrafo: ["Map borders and names follow the position of the European Union."],
+          },
+          {
             parrafo: [
               "Drones only. Balloons, missiles, crewed aircraft, laser pointers and signal " +
                 "interference without a drone are not recorded, and neither are authorised " +
