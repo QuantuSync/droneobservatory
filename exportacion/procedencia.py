@@ -120,8 +120,10 @@ META_INCIDENTE = frozenset({
     "id", "titulo", "fuentes", "afirmaciones", "afirmaciones_publicas", "control",
     "procedencia", "nivel_detalle", "indicadores", "fusionado_en", "retirado", "episodio",
     "encuentros",
-    "deduccion", "tipo_dron", "recorrido", "nombres",
+    "deduccion", "tipo_dron", "recorrido", "nombres", "relacionados",
 })  # fmt: skip
+# relacionados: enlaces entre las fichas en que se separó un incidente que juntaba sucesos
+# distintos (recogida/revisados.separar); no son datos del suceso.
 # nombres: los nombres de lugar de cada versión de la web, que solo añade la publicación
 # (proceso/nombres_lugar.py); no están en la base ni en la exportación.
 # deduccion: lo deducido va aparte, con su propia procedencia (procedencia_deduccion); tipo_dron,

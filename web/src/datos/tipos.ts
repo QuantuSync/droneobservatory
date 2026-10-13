@@ -1,4 +1,4 @@
-// Forma de los ficheros públicos de publicacion/ (esquema 1.17.0, solo campos públicos)
+// Forma de los ficheros públicos de publicacion/ (esquema 1.18.0, solo campos públicos)
 // y de los resúmenes que la web deriva de ellos en el build.
 
 import type { LugarAproximado } from "./lugarAproximado.ts";
@@ -292,6 +292,9 @@ export interface PropiedadesIncidente {
   };
   /** Frontera o interior, con la regla que lo decide (proceso/zona.py). */
   zona?: ZonaIncidente;
+  /** Las otras fichas en que se separó un incidente que juntaba sucesos distintos
+   * (recogida/revisados.separar), con la nota del motivo en cada idioma. */
+  relacionados?: SucesoRelacionado[];
   foco_termico?: FocoTermico;
   trafico_aereo?: TraficoAereo;
   fuentes: Fuente[];
@@ -488,6 +491,13 @@ export interface Atribucion {
 export interface AtribucionResumen {
   tipo: TipoActor | null;
   pais: string | null;
+}
+
+/** Otra ficha de un incidente que juntaba sucesos distintos (esquema 1.18.0). */
+export interface SucesoRelacionado {
+  id: string;
+  separado_de: string;
+  nota: { es: string; en: string };
 }
 
 export interface IncidenteResumen {

@@ -295,12 +295,28 @@ def _leer_localidades(ruta: Path) -> dict[str, Lugar]:
 
 
 @cache
+def no_son_lugares(ruta: Path = DIRECTORIO / "no_son_lugares.json") -> frozenset[str]:
+    """Palabras que nunca nombran un lugar en un titular (configuracion/no_son_lugares.json),
+    normalizadas: «NATO» no es la base de Geilenkirchen ni «Caccia» (cazas) un pueblo de Malta."""
+    datos = json.loads(ruta.read_text(encoding="utf-8"))
+    return frozenset(
+        normalizar(p) for clave in ("organizaciones", "paises", "palabras") for p in datos[clave]
+    )
+
+
+def nombra_lugar(normal: str) -> bool:
+    """El nombre normalizado puede nombrar un lugar: no es un país ni una palabra de la lista."""
+    return not es_nombre_de_pais(normal) and normal not in no_son_lugares()
+
+
+@cache
 def nomenclator(
     ruta: Path = DIRECTORIO / "lugares_europa.json",
     instalaciones: Path = DIRECTORIO / "instalaciones_europa.json",
     localidades: Path = DIRECTORIO / "localidades_europa.json",
 ) -> Nomenclator:
-    """Instalaciones del nomenclátor inicial y del ampliado, y localidades."""
+    """Instalaciones del nomenclátor inicial y del ampliado, y localidades. Sin los nombres que
+    no nombran un lugar (nombra_lugar)."""
     lugares = {**_leer_lugares(instalaciones), **_leer_lugares(ruta)}
     pueblos = _leer_localidades(localidades)
     cue = {
@@ -322,7 +338,7 @@ def nomenclator(
         for a in sitio.alias
         if propio(normalizar(a))
         and len(normalizar(a).split()) <= MAX_PALABRAS_ALIAS
-        and not es_nombre_de_pais(normalizar(a))
+        and nombra_lugar(normalizar(a))
     ]
     # Una «ciudad» que es una palabra de tipo de lugar («militar», «wojskowa») no nombra nada:
     # casaría con cualquier titular que hable de militares.
@@ -333,7 +349,9 @@ def nomenclator(
         for c in sitio.ciudades
         # El nomenclátor está en forma descompuesta: se compara también sin acentos.
         if not any(p.search(c) or p.search(normalizar(c)) for p in cue.values())
+        and nombra_lugar(normalizar(c))
         for forma in (normalizar(c), *sorted(variantes(normalizar(c), sitio.pais)))
+        if nombra_lugar(forma)
     ]
     nombres_pueblos = [
         (normalizar(a), sitio.id)
@@ -341,7 +359,7 @@ def nomenclator(
         for a in sitio.alias
         if len(normalizar(a)) >= MIN_LETRAS_ALIAS
         and len(normalizar(a).split()) <= MAX_PALABRAS_ALIAS
-        and not es_nombre_de_pais(normalizar(a))
+        and nombra_lugar(normalizar(a))
     ]
     return Nomenclator(
         {**pueblos, **lugares}, _indice(alias), _indice(ciudades), _indice(nombres_pueblos), cue

@@ -93,9 +93,9 @@ La tarea de AEGIS de los lunes a las 07:00 hora local va bien después de la exp
 
 Cada fichero lleva su esquema en `esquema/` dentro de la versión:
 
-- **`esquema/eodi/`:** los de la base, versión 1.17.0, con la marca de visibilidad de cada
+- **`esquema/eodi/`:** los de la base, versión 1.18.0, con la marca de visibilidad de cada
   campo.
-- **`esquema/exportacion/`:** los propios, formato 1.10.0.
+- **`esquema/exportacion/`:** los propios, formato 1.11.0.
 - **`esquema/catalogo/`:** los del catálogo.
 
 El manifiesto da también:
@@ -188,9 +188,28 @@ entonces:
     no los lleva. Los da `recogida/archivo_web.py` (servicio `eodi-archivo`) y son los mismos
     que se ven en la web;
   - ningún fichero nuevo ni quitado; las demás formas, iguales.
+- **Formato 1.11.0 (desde el 13 de octubre de 2026), esquema de la base 1.18.0:**
+  - un incidente que juntaba sucesos distintos se ha separado (`docs/sucesos_mezclados.md`). El
+    primero de EODI-2026-00072 es el cierre del aeropuerto de Vilna del 13 de septiembre de 2026
+    y el otro, el derribo de la noche del 14 al 15. Cada parte es una ficha con su identificador;
+    la que ya existía para el mismo suceso se queda y la otra lleva `fusionado_en`, como
+    cualquier fusión. EODI-2026-00072 sigue en `incidentes.jsonl` con `fusionado_en`:
+    EODI-2026-00007, el cierre;
+  - campo opcional `relacionados` en el incidente: una lista de `{id, separado_de, nota: {es,
+    en}}` con las otras fichas en que se separó el incidente `separado_de`. Es un enlace entre
+    fichas, no un dato del suceso, y por eso no lleva procedencia (como `fusionado_en`);
+  - las fronteras de los polígonos siguen la posición de la Unión Europea: un punto de Crimea o
+    de Sebastopol es Ucrania (antes, Rusia, como en Natural Earth). No cambia ningún incidente
+    de la recogida, que no cubre Ucrania ni Rusia; cambian las distancias a Rusia del motor de
+    deducción para los puntos cercanos a Crimea;
+  - ningún fichero nuevo ni quitado; las demás formas, iguales.
+
+  El importador de AEGIS (`tools/import_eodi.py`) importa solo los incidentes activos (sin
+  `fusionado_en` ni `retirado`) e ignora los campos que no usa: la separación entra sola, sin
+  cambiar nada, y el campo nuevo no le estorba.
 
 Todos los cambios son compatibles. Ningún fichero de antes cambia de forma (en 1.10.0 solo se
-añaden dos campos opcionales a las fuentes), y los seis que lee AEGIS hoy son iguales: `incidentes`, `encuentros`, `clases_dron`, `catalogo_drones`,
+añaden dos campos opcionales a las fuentes, y en 1.11.0 uno al incidente), y los seis que lee AEGIS hoy son iguales: `incidentes`, `encuentros`, `clases_dron`, `catalogo_drones`,
 `catalogo_fuentes` y `vocabulario`. Por eso el número principal no sube.
 
 ## 7. Lo que no se exporta y por qué

@@ -100,7 +100,7 @@ from proceso.restricciones import por_ataque
 from recogida import licencia
 from recogida.archivo_web import con_copias_archivadas
 
-VERSION_FORMATO = "1.10.0"
+VERSION_FORMATO = "1.11.0"
 RAIZ = Path(__file__).resolve().parent.parent
 DIRECTORIO_ESQUEMAS = RAIZ / "esquema" / "exportacion" / VERSION_FORMATO
 VOCABULARIO = RAIZ / "configuracion" / "vocabulario_aegis.json"

@@ -1,5 +1,5 @@
 {
-  "descripcion": "Correcciones revisadas a mano de incidentes concretos, que aplica recogida/revisados.py en la recogida horaria. «unir»: registros del mismo suceso que las reglas de fusión no juntan (noticias que vuelven semanas después, fechadas por su publicación); se funden en el que elige la regla de siempre (proceso/incidentes.destino_de) y la fusión lleva su motivo. «reextraer»: un incidente cuya ficha mezcló dos sucesos; su candidato se vuelve a extraer una vez. Si la ficha nueva vuelve a dar un lugar de «no_lugar» o una fecha anterior a «no_antes_de», el incidente se retira con el motivo: sus noticias siguen en el candidato y el suceso tiene otros registros.",
+  "descripcion": "Correcciones revisadas a mano de incidentes concretos, que aplica recogida/revisados.py en la recogida horaria. «unir»: registros del mismo suceso que las reglas de fusión no juntan (noticias que vuelven semanas después, fechadas por su publicación); se funden en el que elige la regla de siempre (proceso/incidentes.destino_de) y la fusión lleva su motivo. «reextraer»: un incidente cuya ficha mezcló dos sucesos; su candidato se vuelve a extraer una vez. Si la ficha nueva vuelve a dar un lugar de «no_lugar» o una fecha anterior a «no_antes_de», el incidente se retira con el motivo: sus noticias siguen en el candidato y el suceso tiene otros registros. «separar»: un incidente que juntaba sucesos distintos (docs/sucesos_mezclados.md); cada fuente va al suceso del que habla (a los dos si cuenta los dos), el identificador se queda con el más temprano, los demás reciben uno nuevo por el camino normal de altas, lo que no es un suceso sale sin formar otro, la parte que ya tenía ficha se une a ella («coincide_con») y las fichas que quedan se enlazan como sucesos relacionados.",
   "unir": [
     {
       "registros": [
@@ -4016,6 +4016,2292 @@
           "nombre": "Dana 78, portul Constan\u021ba (donde se avistó el dron)",
           "lat": 44.14862,
           "lon": 28.666315
+        }
+      ]
+    }
+  ],
+  "separar": [
+    {
+      "incidente": "EODI-2025-00066",
+      "motivo": {
+        "es": "junta los disparos contra drones en Volkel del 21 de noviembre con el cierre de Eindhoven del 22 y nuevos drones sobre Volkel la noche del 22 al 23",
+        "en": "merges the shots fired at drones over Volkel on 21 November with the Eindhoven airport closure on 22 November and new drones over Volkel on the night of 22-23 November"
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2025-11-21T18:00Z",
+          "pais": "NL",
+          "descripcion": "Drones sobre la base aérea de Volkel y disparos de Defensa, viernes 21 de noviembre de 2025 entre las 19 y las 21 h",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-1948ee741e66a225",
+            "gdelt-90e29542d8f64b30",
+            "gdelt-d9752ccb4ee0ef25",
+            "gdelt-2146df3d3191f897",
+            "gdelt-543e48527c0f64d4",
+            "gdelt-543e48527c0f64d4-declaracion-1",
+            "gdelt-ca7733455304b27e",
+            "gdelt-9e53c298cbcaf3c6",
+            "gdelt-7ed651cf08fff36e",
+            "gdelt-32d9da76af0d28b0",
+            "gdelt-cf4d0fca7c8705d1",
+            "gdelt-cf4d0fca7c8705d1-declaracion-1",
+            "gdelt-5ac760cf7c8dd317",
+            "gdelt-9cd845f61b869a5c",
+            "gdelt-a9ec6ceafb98b579",
+            "gdelt-b0295ea6e385290f",
+            "gdelt-08f0f99ecb214f62",
+            "gdelt-74329d7aa1e3e468",
+            "gdelt-de14940ee975d717",
+            "gdelt-25f7abd3e15beacb",
+            "gdelt-22b7be70d18326ef",
+            "gdelt-7c37c5a09b237ba0",
+            "gdelt-7c37c5a09b237ba0-declaracion-1",
+            "gdelt-4c4da2c7729d4aaf",
+            "gdelt-08c92b4f8c66714f"
+          ]
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2025-11-22",
+          "pais": "NL",
+          "descripcion": "Nuevos drones sobre la base de Volkel, ahuyentados, noche del sábado 22 al domingo 23 de noviembre de 2025",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-1624b4011192c0de",
+            "gdelt-361390c7917fa0e8",
+            "gdelt-a41c964e06535487",
+            "gdelt-cb411ede0a9694fd",
+            "gdelt-7c37c5a09b237ba0",
+            "gdelt-7c37c5a09b237ba0-declaracion-1"
+          ]
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2025-00080",
+      "motivo": {
+        "es": "Junta los avistamientos sobre Kleine-Brogel de noches distintas (domingo 2, lunes 3 y martes 4 de noviembre) y los cierres de los aeropuertos de Bruselas y Lieja del 4 de noviembre",
+        "en": "Merged drone sightings over Kleine-Brogel on different nights (Sunday 2, Monday 3 and Tuesday 4 November) with the Brussels and Liège airport closures of 4 November"
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2025-11-02",
+          "pais": "BE",
+          "descripcion": "Cuatro drones sobre la base de Kleine-Brogel la noche del domingo 2 de noviembre de 2025, con la reacción del Gobierno (orden de derribo)",
+          "coincide_con": null,
+          "fuentes": [
+            "revisada-8bce52be46d5bcab-declaracion-1",
+            "gdelt-380466e47a5476b8",
+            "gdelt-380466e47a5476b8-declaracion-1",
+            "gdelt-380466e47a5476b8-declaracion-2",
+            "gdelt-b177c1ba8a995728",
+            "gdelt-6e1251606127cbdf",
+            "gdelt-8a0abb9960b2df98",
+            "gdelt-2e4cd6ddeaccb7d5",
+            "gdelt-75b0fbcbd17ecd16"
+          ]
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2025-11-03",
+          "pais": "BE",
+          "descripcion": "Nuevo sobrevuelo de Kleine-Brogel la noche del lunes 3 de noviembre de 2025 («ieri sera» en un artículo del 4)",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-9eae80514141a32d",
+            "gdelt-9eae80514141a32d-declaracion-1",
+            "gdelt-75b0fbcbd17ecd16"
+          ]
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2025-11-04",
+          "pais": "BE",
+          "descripcion": "Seis drones vistos por vecinos sobre Kleine-Brogel el martes 4 de noviembre de 2025",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-cdf30f63c46a0828",
+            "gdelt-7ef8b1247efbc856",
+            "gdelt-4f7277940ca2bdd5",
+            "gdelt-75b0fbcbd17ecd16"
+          ]
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2025-00131",
+      "motivo": {
+        "es": "Junta sobrevuelos de Kleine-Brogel de noches distintas: del viernes 31 oct al sábado 1 nov, del sábado al domingo 2 nov y del domingo al lunes 3 nov",
+        "en": "Merged overflights of Kleine-Brogel on different nights: 31 Oct-1 Nov, 1-2 Nov and 2-3 Nov"
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2025-10-31",
+          "pais": "BE",
+          "descripcion": "Uno a tres drones sobre la base de Kleine-Brogel la noche del viernes 31 de octubre al sábado 1 de noviembre de 2025",
+          "coincide_con": null,
+          "fuentes": [
+            "revisada-2b328db2e9772b79-declaracion-1",
+            "gdelt-4e0b0a142d0d4e1d",
+            "gdelt-4e0b0a142d0d4e1d-declaracion-1",
+            "gdelt-e79d5d39ccb0365a",
+            "gdelt-0a610d1f5f68504c",
+            "gdelt-0a610d1f5f68504c-declaracion-2",
+            "gdelt-8f36a5e5a00ae293",
+            "gdelt-d0d993e8f081fc21",
+            "gdelt-f579257b03dff524",
+            "gdelt-6f742e5ae4bad31c",
+            "gdelt-6f742e5ae4bad31c-declaracion-1",
+            "gdelt-0141df4515d52250",
+            "gdelt-ecab8d382c1c7c76",
+            "gdelt-b683689fc6c973b3",
+            "gdelt-37b32486d402dd10",
+            "gdelt-8da656691d7b1e8b",
+            "gdelt-057fd32131701424",
+            "gdelt-c5a675dcc570be0d"
+          ]
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2025-11-01",
+          "pais": "BE",
+          "descripcion": "Tres nuevos avisos de drones mayores sobre Kleine-Brogel la noche del sábado 1 al domingo 2 de noviembre de 2025",
+          "coincide_con": null,
+          "fuentes": [
+            "revisada-70b99f28fd3f45ab-declaracion-1",
+            "gdelt-710e06a17f44919d",
+            "gdelt-72010da5c30eb1c2",
+            "gdelt-72010da5c30eb1c2-declaracion-1"
+          ]
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2025-11-02",
+          "pais": "BE",
+          "descripcion": "Nuevos drones sobre Kleine-Brogel la noche del domingo 2 al lunes 3 de noviembre de 2025",
+          "coincide_con": "EODI-2025-00080",
+          "fuentes": [
+            "gdelt-886b4fe1e4b9e43a"
+          ]
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2025-00154",
+      "motivo": {
+        "es": "Junta el cierre del aeropuerto de Copenhague del 22 sep con un ataque de drones contra Moscú, drones vistos en Malmö el 23 sep y drones cerca de otros aeropuertos daneses la noche del 24 al 25 sep",
+        "en": "Merged the Copenhagen airport closure of 22 Sep with a drone attack on Moscow, drone sightings in Malmö on 23 Sep and drones near other Danish airports on the night of 24-25 Sep"
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2025-09-22",
+          "pais": "DK",
+          "descripcion": "Cierre del aeropuerto de Copenhague por drones la noche del lunes 22 de septiembre de 2025, con la investigación y las reacciones posteriores",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-9e0a0524f60e569b",
+            "gdelt-9e0a0524f60e569b-declaracion-1",
+            "gdelt-c27e6370d88a98dd",
+            "gdelt-f038bb89dff3df34",
+            "gdelt-563700920a656a29",
+            "gdelt-ec50f087e5297cd7",
+            "gdelt-934c45cfda4f283b",
+            "gdelt-3d7ebc776ad67c2e",
+            "gdelt-ea6180093e0fde72",
+            "gdelt-92076e0bd21bd5a9",
+            "gdelt-468beff98da25c44",
+            "gdelt-468beff98da25c44-declaracion-2",
+            "gdelt-af29c688784d418b",
+            "gdelt-ebdb44917dec7895",
+            "gdelt-b8c954d180d551ef",
+            "gdelt-173629cd8c26fede",
+            "gdelt-b5ebff096a79b6c2",
+            "gdelt-8cda3e89684d499a",
+            "gdelt-08147b8186b0ff1d",
+            "gdelt-43a09a408be869cd",
+            "gdelt-76e5a0244d71feac",
+            "gdelt-df77dc8745d0ce63",
+            "gdelt-36b6a2a29b6bc102",
+            "gdelt-36b6a2a29b6bc102-declaracion-1",
+            "gdelt-d0bf5b8940a2606e",
+            "gdelt-2d33a09ff1c2b2e5",
+            "gdelt-d3347330ff1ec373",
+            "gdelt-c3fd314cfffd8761",
+            "gdelt-ad57ad0cd91ac9ce",
+            "gdelt-5285dea1e1f8c404",
+            "gdelt-75919b99bfe7138e",
+            "gdelt-8b277df5f0f90f9d",
+            "gdelt-ce28fb9b3b306099",
+            "gdelt-5c734b581b693211",
+            "gdelt-6d91b3c34d0b99f7",
+            "gdelt-c0fed25298944188",
+            "gdelt-5db387bb1c257014",
+            "gdelt-16a092753c7d852f",
+            "gdelt-65f11382e7615943",
+            "gdelt-992f101ddc4d6112",
+            "gdelt-c1ce59d898774fe0",
+            "gdelt-c1bbeb0714ac65a7",
+            "gdelt-f1baa05ce1a1d23a",
+            "gdelt-ded81927e7384530",
+            "gdelt-815681379f7f9f5c",
+            "gdelt-84eb9794337b71d1",
+            "gdelt-84eb9794337b71d1-declaracion-1",
+            "detalle-c164c43ddf12cd41",
+            "gdelt-498ee4a0b956cc7b",
+            "gdelt-dae75c09d92499f0",
+            "gdelt-1fa4e4ae3e5278fd",
+            "detalle-d5bf7ff3b226254a",
+            "gdelt-5da40eca51c25995",
+            "gdelt-d86db234e6b4dcbc",
+            "gdelt-c3900a03bd9503d2",
+            "gdelt-cc4d3fe45111bb3f",
+            "gdelt-00afd34fab7f219b",
+            "gdelt-15e44f8416c67793",
+            "gdelt-5f82cac42112e365",
+            "gdelt-5f82cac42112e365-declaracion-2"
+          ]
+        },
+        {
+          "es_suceso": false,
+          "fecha": "2025-09-22",
+          "pais": "RU",
+          "descripcion": "Ataque de drones contra Moscú y caos en su aeropuerto (Rusia), noche del 22 al 23 de septiembre de 2025",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-e72ced80dc9ea825"
+          ]
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2025-09-23",
+          "pais": "SE",
+          "descripcion": "Avisos de drones en Malmö (Suecia) el 23 de septiembre de 2025",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-d086b13331f43b59",
+            "gdelt-c2666ce441967a8d"
+          ]
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2025-09-24",
+          "pais": "DK",
+          "descripcion": "Drones cerca de aeropuertos daneses (Aalborg y otros) la noche del miércoles 24 al jueves 25 de septiembre de 2025",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-5f82cac42112e365",
+            "gdelt-5f82cac42112e365-declaracion-2",
+            "gdelt-d0b841f03da27874",
+            "gdelt-d0b841f03da27874-declaracion-3"
+          ]
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2025-00172",
+      "motivo": {
+        "es": "Juntaba el cierre de Copenhague del 22 de septiembre de 2025 con el cierre de Aalborg y los drones en otros aeropuertos daneses de la noche del 24 al 25, y una mención al cierre de Oslo.",
+        "en": "It merged the Copenhagen closure of 22 September 2025 with the Aalborg closure and drones at other Danish airports on the night of 24-25 September, plus a mention of the Oslo closure."
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2025-09-22",
+          "pais": "DK",
+          "descripcion": "Cierre del aeropuerto de Copenhague por drones, noche del lunes 22 al martes 23 de septiembre de 2025, y su investigación",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-df362faeae3c29ec",
+            "gdelt-1bbff20d1997feb8",
+            "gdelt-6d40e91331cd9a9c",
+            "gdelt-f40dad2a8f7636aa",
+            "gdelt-0769a84290fdb77b",
+            "gdelt-a12fa6ed9ab12c1e",
+            "gdelt-d5508b143249e867",
+            "gdelt-a8aba62b308f4af5",
+            "gdelt-861dd343ae97aa15",
+            "gdelt-88a12146498e9902",
+            "gdelt-3e6b30b0733b90a9",
+            "gdelt-d9194b2e662cadb7",
+            "gdelt-3201783bcaded099",
+            "gdelt-62d43ac964d30a37",
+            "gdelt-55d5bf3ea1f65c7d"
+          ]
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2025-09-24",
+          "pais": "DK",
+          "descripcion": "Cierre del aeropuerto de Aalborg y drones junto a otros aeropuertos y bases de Dinamarca, noche del miércoles 24 al jueves 25 de septiembre de 2025",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-101cb64e03293cbb",
+            "gdelt-fbd5c5ec0cc156ad",
+            "gdelt-82ed6df3b35bc3dc",
+            "gdelt-7b83283521ada127",
+            "gdelt-e5f738ee10ad22e9",
+            "gdelt-35068b5abf39f72a",
+            "gdelt-5ffe4d5c67141a45",
+            "gdelt-8e3fad94eb71cdf6",
+            "gdelt-ec4713ddb46e7fe8",
+            "gdelt-25aae325406da655",
+            "gdelt-205e74f53a5bcbe3",
+            "gdelt-c64283b7c05ca261",
+            "gdelt-48080f9f71066c38",
+            "gdelt-f43e4833933d79c4",
+            "gdelt-861b54e1f62a8425",
+            "gdelt-585d56631a6e56de"
+          ]
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2025-00233",
+      "motivo": {
+        "es": "Junta la incursión de drones rusos y el cierre del aeropuerto de Varsovia del 10 sep con el dron que sobrevoló edificios del Gobierno en Varsovia el 15 sep (operador ucraniano expulsado)",
+        "en": "Merged the Russian drone incursion and Warsaw airport closure of 10 Sep with the drone flown over government buildings in Warsaw on 15 Sep by a Ukrainian operator"
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2025-09-10",
+          "pais": "PL",
+          "descripcion": "Incursión de drones rusos derribados y cierre del aeropuerto Chopin de Varsovia, noche del 9 al 10 de septiembre de 2025",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-cab83d065b03e7fd",
+            "gdelt-23724d359b923954",
+            "gdelt-67892d7d5edf7041",
+            "gdelt-9c2ebd5ec82d7ce0",
+            "gdelt-57112b96b741d147",
+            "gdelt-6652d6357260d6e1",
+            "gdelt-0a02a31e2c3b3662",
+            "gdelt-e27f92ebd8409498",
+            "gdelt-55a8bc48a47a2bdb",
+            "gdelt-af58753fbfc984d0",
+            "gdelt-7aab8f6796070739",
+            "gdelt-6be1681019405b28",
+            "gdelt-f33b15201af526a0",
+            "gdelt-654fab74471161dc",
+            "gdelt-b00655b995579715",
+            "gdelt-0ae82756f97fc49c",
+            "gdelt-223f89381f6f5c20",
+            "gdelt-732f84163ff95f5f",
+            "gdelt-9463110ea0a63f42",
+            "gdelt-a605a9da7816d4c0",
+            "gdelt-36312d44bb93ae78",
+            "gdelt-89b17fa4e53e584b",
+            "gdelt-fd7e27b28f140983",
+            "gdelt-f574fdbc4dd923aa",
+            "gdelt-7ee52f225d552ce1",
+            "gdelt-cd12d2f3539352db"
+          ]
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2025-09-15",
+          "pais": "PL",
+          "descripcion": "Dron sobre edificios del Gobierno en Varsovia el lunes 15 de septiembre de 2025, pilotado por un ucraniano al que se expulsa",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-7dd69cedbdf45763",
+            "gdelt-a5fc6afeb5d6f6fd",
+            "gdelt-28a0252dd614047c",
+            "gdelt-e9e01f88cbc019da"
+          ]
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2025-00261",
+      "motivo": {
+        "es": "junta el dron Gerbera caído sobre una casa en Cuhure\u0219tii de Jos (norte) con el Shahed que cruza el sur de Moldavia hacia Rumanía",
+        "en": "merges the Gerbera drone that fell on a house in Cuhure\u0219tii de Jos (north) with the Shahed that crossed southern Moldova into Romania"
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2025-11-25",
+          "pais": "MD",
+          "descripcion": "Dron ruso tipo Gerbera cae sobre la casa del guarda de un huerto en Cuhure\u0219tii de Jos (Flore\u0219ti, norte de Moldavia), mañana del 25 de noviembre de 2025",
+          "coincide_con": null,
+          "fuentes": [
+            "revisada-09dfafa6b182dc31-declaracion-1",
+            "gdelt-63e0f8d520f1fc18",
+            "gdelt-5ad76873edcbcf02",
+            "gdelt-a0afa7c01e9000bc",
+            "gdelt-1a1be34c72392478",
+            "gdelt-b56e969e21617330",
+            "gdelt-2949ebe5633cb93c",
+            "gdelt-962358c146ec656f",
+            "gdelt-962358c146ec656f-declaracion-2",
+            "gdelt-a669e8e1cea2bb14",
+            "gdelt-a669e8e1cea2bb14-declaracion-1",
+            "gdelt-853c63a7eafe3297",
+            "gdelt-4a920b6585bb1ee5",
+            "gdelt-6dac1e1b13910e60",
+            "gdelt-3f99a015694e725e",
+            "gdelt-23b07503c0f70101",
+            "gdelt-ee16795d2f76090e",
+            "gdelt-4d77879cee224867",
+            "gdelt-df000e489a188a5d",
+            "gdelt-97aae5ca88e97b6b",
+            "gdelt-1a631045c4ad88a6",
+            "gdelt-56979ee5f7766fe8",
+            "gdelt-85abba0fa18d27d1",
+            "gdelt-656fc548df49e55f",
+            "gdelt-3d9034185a3af4c8",
+            "gdelt-3d9034185a3af4c8-declaracion-1",
+            "gdelt-3d9034185a3af4c8-declaracion-2",
+            "gdelt-fc45500ed6439eaa"
+          ]
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2025-11-25",
+          "pais": "MD",
+          "descripcion": "Dron Shahed cruza el sur de Moldavia y entra en Rumanía (Ro-Alert, F-16), madrugada del 25 de noviembre de 2025",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-0b31e204f2adeaa9",
+            "gdelt-a12fc4923cd71500",
+            "gdelt-a2e6fa98f312b606",
+            "gdelt-e1058799d63d2588",
+            "gdelt-e1058799d63d2588-declaracion-1",
+            "gdelt-f36cf5bd23d90e83",
+            "gdelt-4fa6fd1a332aef0e",
+            "gdelt-09bf308f7ee07cb0",
+            "gdelt-135bf462dd3ff641",
+            "gdelt-f0550122459065db",
+            "gdelt-1a1be34c72392478",
+            "gdelt-b56e969e21617330",
+            "gdelt-2949ebe5633cb93c",
+            "gdelt-962358c146ec656f",
+            "gdelt-962358c146ec656f-declaracion-2",
+            "gdelt-a669e8e1cea2bb14",
+            "gdelt-a669e8e1cea2bb14-declaracion-1",
+            "gdelt-853c63a7eafe3297",
+            "gdelt-4a920b6585bb1ee5",
+            "gdelt-6dac1e1b13910e60",
+            "gdelt-3f99a015694e725e",
+            "gdelt-23b07503c0f70101",
+            "gdelt-ee16795d2f76090e",
+            "gdelt-4d77879cee224867",
+            "gdelt-df000e489a188a5d",
+            "gdelt-97aae5ca88e97b6b",
+            "gdelt-1a631045c4ad88a6",
+            "gdelt-56979ee5f7766fe8",
+            "gdelt-85abba0fa18d27d1",
+            "gdelt-656fc548df49e55f",
+            "gdelt-3d9034185a3af4c8",
+            "gdelt-3d9034185a3af4c8-declaracion-1",
+            "gdelt-3d9034185a3af4c8-declaracion-2",
+            "gdelt-fc45500ed6439eaa"
+          ]
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2025-00268",
+      "motivo": {
+        "es": "Junta el dron que entró en el espacio aéreo de Rumanía el 19 nov con el sobrevuelo de Moldavia de esa noche (otra ficha) y un reportaje sobre civiles ucranianos cazando drones",
+        "en": "Merged the drone that entered Romanian airspace on 19 Nov with that night's overflight of Moldova (another entry) and a report on Ukrainian civilians hunting drones"
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2025-11-19",
+          "pais": "RO",
+          "descripcion": "Dron ruso que penetra unos 8 km en el espacio aéreo de Rumanía durante el ataque a Ucrania, mañana del 19 de noviembre de 2025; despegan cazas",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-177dd8a6454995cf",
+            "gdelt-3c9136c669bce98a",
+            "gdelt-95b8debc07309318",
+            "gdelt-95b8debc07309318-declaracion-1",
+            "gdelt-8d0b1cfccffe80cf",
+            "gdelt-88341f32ac8b0f16",
+            "gdelt-1b870d22a0bb1533",
+            "gdelt-f9bda1940c756329",
+            "gdelt-b3da5e8485b5927b"
+          ]
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2025-11-19",
+          "pais": "MD",
+          "descripcion": "Dron que sobrevuela el sur de Moldavia (de Lesnaia hacia S\u0103i\u021bi) la noche del 18 al 19 de noviembre de 2025; Chisináu convoca al embajador ruso",
+          "coincide_con": "EODI-2025-00204",
+          "fuentes": [
+            "gdelt-177dd8a6454995cf",
+            "gdelt-3c9136c669bce98a",
+            "gdelt-95b8debc07309318",
+            "gdelt-95b8debc07309318-declaracion-1",
+            "gdelt-cc63d2fc935d9ac4",
+            "gdelt-43218a53b0f8a227",
+            "gdelt-4602da2c9cd04ac3",
+            "gdelt-9c47dd6cf9fb5b8f",
+            "gdelt-3f241fce94eaa05b",
+            "gdelt-7328049dd86b7a4f",
+            "gdelt-0174b3d4a7d03452",
+            "gdelt-7f7e5c136e8d8d67",
+            "gdelt-e1b48e232ec2729f",
+            "gdelt-b95cd961d3e46d09",
+            "gdelt-58b6871dfe5e353a",
+            "gdelt-b626714017a026b2"
+          ]
+        },
+        {
+          "es_suceso": false,
+          "fecha": "2025-11-20",
+          "pais": "UA",
+          "descripcion": "Reportaje sobre la integración de civiles en la caza de drones rusos en Ucrania (20 nov 2025), sin suceso en Europa",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-8fc9d88e751965fc"
+          ]
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2025-00273",
+      "motivo": {
+        "es": "Junta el dron ruso hallado en Lituania con noticias de la guerra en Ucrania (ataque en Lugansk, británico muerto por un dron)",
+        "en": "Mixes the Russian drone found in Lithuania with Ukraine war news (strike in Luhansk, Briton killed by a drone)"
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2025-08-05",
+          "pais": "LT",
+          "descripcion": "Dron ruso con explosivos hallado en Lituania; Vilna pide refuerzo de defensa aérea a la OTAN, principios de agosto de 2025",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-5a48a0487a02477c",
+            "gdelt-a640529fe41e6a2f",
+            "gdelt-e386083902600014",
+            "gdelt-0787f3a047e42bc5"
+          ]
+        },
+        {
+          "es_suceso": false,
+          "fecha": "2025-08-06",
+          "pais": "UA",
+          "descripcion": "Ataque con drones atribuido a Ucrania en Lugansk con al menos dos muertos (parte de guerra)",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-950a86b18baf804a"
+          ]
+        },
+        {
+          "es_suceso": false,
+          "fecha": "2025-08-06",
+          "pais": "UA",
+          "descripcion": "Británico muerto por un dron ruso en Ucrania (noticia de guerra)",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-a9421c4b287fbe5f"
+          ]
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2025-00274",
+      "motivo": {
+        "es": "Juntaba reacciones a la incursión en Polonia del 9-10 de septiembre, el despegue preventivo de aviones polacos del 13 y el dron que entró en Rumanía el 13.",
+        "en": "Merged reactions to the 9-10 September incursion into Poland, Poland's precautionary scramble on the 13th and the drone that entered Romania on the 13th."
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2025-09-10",
+          "pais": "PL",
+          "descripcion": "Incursión de drones rusos en Polonia la noche del 9 al 10 de septiembre de 2025 (reacciones internacionales)",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-18231b8f24cc133d",
+            "gdelt-a23cb0770d5c8933"
+          ]
+        },
+        {
+          "es_suceso": false,
+          "fecha": "2025-09-13",
+          "pais": "PL",
+          "descripcion": "Polonia hace despegar aviones de forma preventiva por ataques rusos en zonas vecinas de Ucrania, 13 de septiembre de 2025; sin dron en Polonia",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-08fceddb97b6191d",
+            "gdelt-de45586b6fc00c0c",
+            "gdelt-98b909083d713cce",
+            "gdelt-2568ccfac2e42fec"
+          ]
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2025-09-13",
+          "pais": "RO",
+          "descripcion": "Dron ruso viola el espacio aéreo de Rumanía en Tulcea durante un ataque contra Ucrania y lo siguen cazas F-16, sábado 13 de septiembre de 2025",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-e022552238c18803",
+            "gdelt-427cef1c49534a69",
+            "gdelt-9e436712fff30ea1",
+            "gdelt-4771ac12fe7e1256",
+            "gdelt-046ae7c15ac21a70",
+            "gdelt-c8497810e5dbf4fe",
+            "gdelt-5e291567c9de1150",
+            "gdelt-05e1f453b9dbd561",
+            "gdelt-faaf517fb67a7347",
+            "gdelt-14cb094908aef811",
+            "gdelt-5848828120cb31a6",
+            "gdelt-42b094f6f4a077ad",
+            "gdelt-157b5083a2202f19",
+            "gdelt-0a185102696c8730",
+            "gdelt-72ed24f605d6fa93",
+            "gdelt-ae2b161db2d8de4f",
+            "gdelt-00021f1a61bb010d",
+            "gdelt-6422afb108f3342e",
+            "gdelt-78d4cc52d2e2ba4e",
+            "gdelt-7a195f2383462c6e",
+            "gdelt-7a987a5ba579e9a7",
+            "gdelt-c71e639fbea8148f",
+            "gdelt-18f6fdc0dbd20063",
+            "gdelt-134c4222f4f52ea7",
+            "gdelt-0b54e67c593d39ca",
+            "gdelt-3ea799b8bad64b55",
+            "gdelt-d86f663c13269da4",
+            "gdelt-855b466db84dc219",
+            "gdelt-a8292f5c0e589ca4",
+            "gdelt-83e3a0b77d7d2644"
+          ]
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2025-00284",
+      "motivo": {
+        "es": "Junta el dron ruso en el cielo rumano del 19 nov con noticias de la guerra en Ucrania sobre otros ataques (Járkov, ataque ucraniano en Rusia)",
+        "en": "Merged the Russian drone in Romanian skies on 19 Nov with Ukraine war news about other attacks (Kharkiv, a Ukrainian strike in Russia)"
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2025-11-19",
+          "pais": "RO",
+          "descripcion": "Dron ruso detectado en el espacio aéreo de Rumanía, 19 de noviembre de 2025",
+          "coincide_con": "EODI-2025-00268",
+          "fuentes": [
+            "gdelt-1b1be044c406e8ce"
+          ]
+        },
+        {
+          "es_suceso": false,
+          "fecha": "2025-11-18",
+          "pais": "RU",
+          "descripcion": "Estado de emergencia regional en Rusia tras un ataque con drones ucranianos, 18 de noviembre de 2025",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-32684b0fda853b8d"
+          ]
+        },
+        {
+          "es_suceso": false,
+          "fecha": "2025-11-19",
+          "pais": "UA",
+          "descripcion": "Ataque con drones contra Járkov (Ucrania) con decenas de heridos, noche del 18 al 19 de noviembre de 2025",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-67148b3a1cd35990",
+            "gdelt-faf29024e910963f"
+          ]
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2025-00287",
+      "motivo": {
+        "es": "Juntaba los drones sobre el campamento de Elsenborn con el cierre del aeropuerto de Múnich y un artículo sobre el petrolero Boracay",
+        "en": "It merged the drones over Elsenborn camp with the Munich Airport closure and an article on the Boracay tanker"
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2025-10-02",
+          "pais": "BE",
+          "descripcion": "Unos 15 drones sobre el campamento militar de Elsenborn, noche del jueves 2 al viernes 3 de octubre de 2025",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-a14c0cdfd882ef40",
+            "gdelt-a14c0cdfd882ef40-declaracion-2",
+            "gdelt-2d77650c0bfa9675",
+            "gdelt-c2990caea2253876",
+            "gdelt-c2990caea2253876-declaracion-1",
+            "gdelt-4da556952684165e",
+            "gdelt-c3661b7407180d69",
+            "gdelt-7075c068393e6c05",
+            "gdelt-cdb329f4cb6d07f6",
+            "gdelt-4d40835b7b98410e",
+            "gdelt-4c36eae41854f02a",
+            "gdelt-4c36eae41854f02a-declaracion-1",
+            "gdelt-b094779fc3109a90",
+            "gdelt-8e7a25181ab6fc11",
+            "gdelt-8e7a25181ab6fc11-declaracion-1"
+          ]
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2025-10-02",
+          "pais": "DE",
+          "descripcion": "Cierre del aeropuerto de Múnich por drones, noche del jueves 2 de octubre de 2025",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-8d549d0b3ea33844",
+            "gdelt-c3661b7407180d69"
+          ]
+        },
+        {
+          "es_suceso": false,
+          "fecha": "2025-10-03",
+          "pais": "FR",
+          "descripcion": "Artículo sobre el petrolero Boracay, apresado por Francia y vinculado a los drones de Dinamarca (no es un suceso con drones)",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-717fb5dca89163f2"
+          ]
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2025-00306",
+      "motivo": {
+        "es": "Junta la incursión del dron ruso en Tulcea (13 sep 2025) con el dron derribado sobre el barrio gubernamental de Varsovia (15 sep)",
+        "en": "Mixes the Russian drone incursion over Tulcea (13 Sep 2025) with the drone downed over Warsaw's government district (15 Sep)"
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2025-09-13",
+          "pais": "RO",
+          "descripcion": "Dron ruso en el espacio aéreo de Rumanía (norte de Tulcea), F-16 en el aire y RO-Alert, 13 sep 2025",
+          "coincide_con": "EODI-2025-00337",
+          "fuentes": [
+            "gdelt-0f6394ffa0b6206b",
+            "gdelt-2f7637d6eb1440fa",
+            "gdelt-9e399bf364c1e6cf",
+            "gdelt-9e399bf364c1e6cf-declaracion-1",
+            "gdelt-df5852591b6c6287",
+            "gdelt-df5852591b6c6287-declaracion-1",
+            "gdelt-f9fe0ceb13eb1ce9",
+            "gdelt-014e4b5b3c62734d",
+            "gdelt-014e4b5b3c62734d-declaracion-1",
+            "gdelt-0e085a1e4ced8a95",
+            "gdelt-b97a0b1389b22754",
+            "gdelt-b97a0b1389b22754-declaracion-2",
+            "gdelt-d727423a1aad9bee",
+            "gdelt-d727423a1aad9bee-declaracion-1",
+            "gdelt-088fbc84e3288c3c",
+            "gdelt-6c20c5d81280372a",
+            "gdelt-015dbb8c9818d174",
+            "gdelt-449486e563d9b854",
+            "revisada-8a432d4bfe93d0f1",
+            "gdelt-9d96829f50336472",
+            "gdelt-8343f515ffc94121",
+            "gdelt-8343f515ffc94121-declaracion-2",
+            "gdelt-f2bbe5f784d80b6e",
+            "gdelt-f2bbe5f784d80b6e-declaracion-1",
+            "gdelt-8d8c3cae3358072d",
+            "gdelt-5e8b953961095283",
+            "gdelt-5e8b953961095283-declaracion-1",
+            "gdelt-cc22977d10adc2a1",
+            "gdelt-d5dc7f4d11909a38",
+            "gdelt-4e9aecc9c4b44108",
+            "gdelt-36da46417ac8a933",
+            "gdelt-983deb00af7eecf3",
+            "gdelt-7198bbee31cee9c5",
+            "gdelt-dcc9e8642f71ec72"
+          ]
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2025-09-15",
+          "pais": "PL",
+          "descripcion": "Dron derribado sobre el barrio gubernamental de Varsovia, 15 sep 2025",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-d698f88775c6ea6a"
+          ]
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2025-00307",
+      "motivo": {
+        "es": "Juntaba los drones sobre Skrydstrup y el Regimiento de Dragones de Jutlandia (noche del 25 al 26 de septiembre de 2025) con los nuevos drones sobre bases danesas de la noche del 27 al 28.",
+        "en": "It merged the drones over Skrydstrup and the Jutland Dragoon Regiment (night of 25-26 September 2025) with the new drones over Danish bases on the night of 27-28 September."
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2025-09-25",
+          "pais": "DK",
+          "descripcion": "Drones sobre la base aérea de Skrydstrup y el Regimiento de Dragones de Jutlandia, noche del jueves 25 al viernes 26 de septiembre de 2025",
+          "coincide_con": null,
+          "fuentes": [
+            "revisada-612aeed33a039a30",
+            "gdelt-d68793d2c4d60ef0-declaracion-1"
+          ]
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2025-09-27",
+          "pais": "DK",
+          "descripcion": "Nuevos drones sobre varias instalaciones militares danesas, noche del sábado 27 al domingo 28 de septiembre de 2025",
+          "coincide_con": "EODI-2025-00309",
+          "fuentes": [
+            "gdelt-d68793d2c4d60ef0",
+            "gdelt-6a06f76e1423b663",
+            "gdelt-6a06f76e1423b663-declaracion-2",
+            "gdelt-853ecc7b624b8bc1"
+          ]
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2025-00316",
+      "motivo": {
+        "es": "Juntaba la incursión de un dron en Tulcea (Rumanía) del 19 de noviembre de 2025 con el dron que sobrevoló Moldavia ese día y con un parte del ataque ruso sobre Ucrania.",
+        "en": "It merged a drone incursion into Tulcea (Romania) on 19 November 2025 with the drone that flew over Moldova that day and a report on the Russian attack on Ukraine."
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2025-11-19",
+          "pais": "RO",
+          "descripcion": "Dron entra en el espacio aéreo de Rumanía entre Periprava y Chilia Veche (Tulcea), madrugada del 19 de noviembre de 2025",
+          "coincide_con": null,
+          "fuentes": [
+            "revisada-d2ac5a09d4f8ca19",
+            "gdelt-81c8cb6ba057f282",
+            "gdelt-81c8cb6ba057f282-declaracion-2",
+            "gdelt-cad2a3a610d34568",
+            "gdelt-01fa42e0b09fe734",
+            "gdelt-bc4be1b70dca239b",
+            "gdelt-9fb44dc0e87b5d64",
+            "gdelt-ac213089b48774dc",
+            "gdelt-ac213089b48774dc-declaracion-1",
+            "gdelt-096f206b088c50df",
+            "gdelt-d9f76504cf6581f2",
+            "gdelt-afa041cf9dcaceee",
+            "gdelt-1d06cb8cf4842265",
+            "gdelt-1d06cb8cf4842265-declaracion-1",
+            "gdelt-e3929a2a0f1e9597",
+            "gdelt-7c5338459de9018f"
+          ]
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2025-11-19",
+          "pais": "MD",
+          "descripcion": "Dron ruso sobrevuela el sur de Moldavia (\u0218tefan Vod\u0103), 19 de noviembre de 2025",
+          "coincide_con": "EODI-2025-00285",
+          "fuentes": [
+            "gdelt-d98337ee90c5f534"
+          ]
+        },
+        {
+          "es_suceso": false,
+          "fecha": "2025-11-18",
+          "pais": "UA",
+          "descripcion": "Parte del ataque ruso sobre Ucrania con 101 drones derribados",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-0cae5a87c9cf2f34"
+          ]
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2025-00322",
+      "motivo": {
+        "es": "Juntaba desvíos a Colonia/Bonn causados por un avistamiento en Bruselas y por otro en Hannover, en días distintos; no hubo dron en Colonia/Bonn.",
+        "en": "Merged diversions to Cologne/Bonn caused by a sighting at Brussels and another at Hanover on different days; there was no drone at Cologne/Bonn."
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2025-11-04",
+          "pais": "BE",
+          "descripcion": "Avistamiento de drones en el aeropuerto de Bruselas; vuelos desviados a Colonia/Bonn, noche del 4 de noviembre de 2025",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-fc8931ef5b891421"
+          ]
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2025-11-05",
+          "pais": "DE",
+          "descripcion": "Avistamiento de dron en el aeropuerto de Hannover; un avión desviado a Colonia/Bonn, 5 de noviembre de 2025 (aprox.)",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-e37ab1f6348042bb"
+          ]
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2025-00328",
+      "motivo": {
+        "es": "Juntaba los dos drones que cruzaron Moldavia la noche del 28 de noviembre con una declaración francesa anterior sobre otras incursiones",
+        "en": "It merged the two drones that crossed Moldova on the night of 28 November with an earlier French statement on other incursions"
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2025-11-28",
+          "pais": "MD",
+          "descripcion": "Dos drones cruzan el norte de Moldavia (Stanislavka-V\u0103r\u0103nc\u0103u) y obligan a cerrar el espacio aéreo, noche del 28 al 29 de noviembre de 2025",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-16e45606f0e4ec5f",
+            "gdelt-92a4c04aa30ced40",
+            "gdelt-94cdffbbd83fdf1c",
+            "gdelt-6d971433ad1c0912",
+            "gdelt-9e06a520d78b009d",
+            "gdelt-9d0424a645982ad2",
+            "revisada-dcc99ac157fee5e0-declaracion-1",
+            "gdelt-c929264f9bf71e57",
+            "gdelt-c929264f9bf71e57-declaracion-1",
+            "gdelt-1cd6d039615f77aa",
+            "gdelt-02a5e654e67e2969",
+            "gdelt-449cd74c8164df9e",
+            "gdelt-ad329783a0c18332",
+            "gdelt-c3233b9edb2340e3",
+            "gdelt-9a012acd4705b593",
+            "gdelt-79f0ced3c3d6919e",
+            "gdelt-3897bd67ed4850fb",
+            "gdelt-8077255bc431cdfc",
+            "gdelt-963f0087513e6165",
+            "gdelt-e59f52ea338913b2",
+            "gdelt-0d512f1d423a5862",
+            "gdelt-0d8e597b42ac83aa",
+            "gdelt-14ebc4fba6a83bc0",
+            "gdelt-77c46ac171d1ac6f",
+            "gdelt-0ec14ca815a8c51b",
+            "gdelt-cb5b8adc26a02ecb",
+            "gdelt-cb5b8adc26a02ecb-declaracion-1",
+            "gdelt-5bd56246ebb907b5"
+          ]
+        },
+        {
+          "es_suceso": false,
+          "fecha": "2025-11-28",
+          "pais": "FR",
+          "descripcion": "Declaración del Ministerio de Exteriores francés sobre incursiones anteriores en Rumanía y Moldavia, publicada antes del suceso",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-ef20b343f62a0c53"
+          ]
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2025-00335",
+      "motivo": {
+        "es": "Juntaba el dron del aeropuerto de Bruselas del 6 de noviembre con la noticia de los vuelos ilegales de drones de la policía de Bruselas",
+        "en": "It merged the Brussels Airport drone of 6 November with the story about the Brussels police flying drones illegally"
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2025-11-06T20:20Z",
+          "pais": "BE",
+          "descripcion": "Dron en el aeropuerto de Bruselas con interrupción breve del tráfico, jueves 6 de noviembre de 2025 hacia las 21:20 hora local",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-8453baf8c1d4265d",
+            "gdelt-ef669854c50c57ab",
+            "gdelt-167d05727c516ccf",
+            "gdelt-0172cbe471961686",
+            "gdelt-42455bb044cacb76",
+            "gdelt-42455bb044cacb76-declaracion-1",
+            "gdelt-f27b80b5b6c130d7",
+            "gdelt-83a0391bc98665e2",
+            "gdelt-93d9f9158a8dbcbe",
+            "gdelt-a2afefcd6907bd0a",
+            "gdelt-bc078de43139b583",
+            "gdelt-05f188b162c2a118",
+            "gdelt-541646e1a44b0a7e",
+            "gdelt-542b9b7e42182d13",
+            "gdelt-940b7450ec68a6b8",
+            "gdelt-df90339f8dbe9d9f",
+            "gdelt-2ee691074713e591",
+            "gdelt-3a46d893386fa057",
+            "gdelt-7cf9d2cf88a70084",
+            "gdelt-ff07d3634dbbcd43",
+            "gdelt-84bd9e9fd766f44e",
+            "gdelt-1c68af45cf327a1f",
+            "gdelt-3bc61f88f661b423",
+            "gdelt-f72057f495af1ecf",
+            "gdelt-ce648a68de7c38de",
+            "gdelt-38bfba12c2517403",
+            "gdelt-06158433673e2484",
+            "gdelt-7a411d9393f9a29e",
+            "gdelt-3c28eb00b7010e25",
+            "gdelt-4c2cf9c2ac897deb",
+            "gdelt-8ea2cb8df67652a2",
+            "gdelt-3c51e706a3220178",
+            "gdelt-c5c4eb4cb5d2ef60",
+            "gdelt-2daaf8b7b8105ef8"
+          ]
+        },
+        {
+          "es_suceso": false,
+          "fecha": "2025-11-07",
+          "pais": "BE",
+          "descripcion": "Noticia de que la policía de Bruselas hizo más de cien vuelos de drones sin autorización (no es una intrusión)",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-42459e4798cc565d",
+            "gdelt-d6294cb16684cd86",
+            "gdelt-45972f1b5ad28f06",
+            "gdelt-a589df220f7154f1"
+          ]
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2025-00349",
+      "motivo": {
+        "es": "Juntaba el cierre del aeropuerto de Aalborg con los avistamientos de drones en Esbjerg, Sønderborg y Skrydstrup.",
+        "en": "Merged the Aalborg airport closure with drone sightings near Esbjerg, Sønderborg and Skrydstrup."
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2025-09-24",
+          "pais": "DK",
+          "descripcion": "Cierre del aeropuerto de Aalborg por drones, noche del 24 al 25 de septiembre de 2025",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-e2f9d621a837c143"
+          ]
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2025-09-24",
+          "pais": "DK",
+          "descripcion": "Drones observados cerca de los aeródromos de Esbjerg y Sønderborg y de la base de Skrydstrup, noche del 24 al 25 de septiembre de 2025",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-e2f9d621a837c143",
+            "gdelt-818083d5c010df49",
+            "gdelt-818083d5c010df49-declaracion-1"
+          ]
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2026-00072",
+      "motivo": {
+        "es": "juntaba dos sucesos distintos: el cierre del aeropuerto de Vilna del domingo 13 de septiembre de 2026 por un posible dron que resultó ser una bandada de pájaros (sot.com.al, humanevents.com) y el derribo de un dron llegado de Bielorrusia por cazas de la OTAN la noche del 14 al 15 cerca de Pratk\u016bnai (delo.si, klix.ba)",
+        "en": "it merged two different events: the closure of Vilnius airport on Sunday 13 September 2026 over a possible drone that turned out to be a flock of birds (sot.com.al, humanevents.com) and the shoot-down by NATO fighters of a drone that came from Belarus on the night of 14 to 15 September near Pratk\u016bnai (delo.si, klix.ba)"
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2026-09-13",
+          "pais": "LT",
+          "descripcion": "Cierre temporal del aeropuerto de Vilna por un posible dron, luego atribuido a pájaros; domingo 13 de septiembre de 2026",
+          "coincide_con": "EODI-2026-00007",
+          "fuentes": [
+            "gdelt-6c91f3d8c07ad7fa",
+            "gdelt-cafe5ba5a861a635"
+          ],
+          "lugar": "EYVI"
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2026-09-14",
+          "pais": "LT",
+          "descripcion": "Cazas de la OTAN derriban un dron llegado de Bielorrusia sobre Lituania, poco después de la medianoche local del 14 al 15 de septiembre de 2026",
+          "coincide_con": "EODI-2026-00179",
+          "fuentes": [
+            "gdelt-62ff19c3546a70d2",
+            "gdelt-62ff19c3546a70d2-declaracion-1",
+            "gdelt-62ff19c3546a70d2-declaracion-2",
+            "gdelt-c2e4d410a67ab90c"
+          ]
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2026-00090",
+      "motivo": {
+        "es": "Junta el dron ucraniano estrellado en Lituania (23 mar 2026) con el ataque de drones sobre Leningrado y los drones caídos en Estonia y Letonia el 25 mar",
+        "en": "Mixes the Ukrainian drone that crashed in Lithuania (23 Mar 2026) with the drone attack on the Leningrad region and the drones that fell in Estonia and Latvia on 25 Mar"
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2026-03-23",
+          "pais": "LT",
+          "descripcion": "Dron militar ucraniano desviado se estrella en un lago helado del sureste de Lituania, 23 mar 2026",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-3b44d36526c351cf",
+            "gdelt-ad1e557511a276cc",
+            "gdelt-ad1e557511a276cc-declaracion-1",
+            "gdelt-07c734b3ecafe804",
+            "gdelt-ef5ff6293e799e48",
+            "gdelt-872bf1bbc4742ea5",
+            "gdelt-1bd6b4fc9764b001",
+            "gdelt-86ef0e615e779d07"
+          ]
+        },
+        {
+          "es_suceso": false,
+          "fecha": "2026-03-25",
+          "pais": "RU",
+          "descripcion": "Rusia dice haber derribado casi 400 drones ucranianos sobre la región de Leningrado; puerto de Ust-Luga alcanzado (parte de guerra)",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-eb9b6154583ec7dd",
+            "gdelt-43fc25262593009f",
+            "gdelt-1bec43eb194df032",
+            "gdelt-092f5cbc282412ad",
+            "gdelt-3101caf6586fe9a6",
+            "gdelt-6a33069f510fefa9"
+          ]
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2026-03-25",
+          "pais": "EE",
+          "descripcion": "Dron procedente de Rusia cae en Estonia y daña parte de una central eléctrica, 25 mar 2026",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-36dce3185af171da",
+            "gdelt-05d8df074941b568",
+            "gdelt-77a55a8204f29eec",
+            "gdelt-3dcdcab5c284e188",
+            "gdelt-86ef0e615e779d07"
+          ]
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2026-03-25",
+          "pais": "LV",
+          "descripcion": "Dron procedente de Rusia entra en Letonia y se estrella, 25 mar 2026",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-aa8fb0358c8c0dc3",
+            "gdelt-05d8df074941b568",
+            "gdelt-77a55a8204f29eec",
+            "gdelt-3dcdcab5c284e188",
+            "gdelt-86ef0e615e779d07"
+          ]
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2026-00094",
+      "motivo": {
+        "es": "Junta el dron que interrumpió Brussels Airport el viernes 11 sep 2026 con un nuevo avistamiento la noche del 12 sep",
+        "en": "Mixes the drone that disrupted Brussels Airport on Friday 11 Sep 2026 with a new sighting on the night of 12 Sep"
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2026-09-11T20:00Z",
+          "pais": "BE",
+          "descripcion": "Dron interrumpe media hora el tráfico de Brussels Airport, viernes 11 sep 2026 por la noche",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-d034ef2c434e2260",
+            "gdelt-69e50ea5bc1872f1",
+            "gdelt-d7f9ebe6d5124b3d",
+            "gdelt-5d6146104e9de4b1",
+            "gdelt-46586582e4921be6",
+            "gdelt-8bc7803a6e5835b6",
+            "gdelt-fa6f02d734d27c28",
+            "gdelt-be86008665375fc3",
+            "gdelt-e9f0fe25506f415a",
+            "gdelt-de354c42db82c776",
+            "gdelt-de354c42db82c776-declaracion-1"
+          ]
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2026-09-12",
+          "pais": "BE",
+          "descripcion": "Segundo avistamiento de dron junto a Brussels Airport, noche del sábado 12 sep 2026",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-0ceea3108039ea74",
+            "gdelt-c6edf408dea4408a",
+            "gdelt-8bc7803a6e5835b6",
+            "gdelt-de354c42db82c776",
+            "gdelt-de354c42db82c776-declaracion-1",
+            "gdelt-fa6f02d734d27c28"
+          ]
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2026-00108",
+      "motivo": {
+        "es": "Junta el impacto en la central de Auvere (Estonia) con los drones caídos en Letonia, el ataque ucraniano a un puerto ruso y un concurso antidrones de Brave1 y la OTAN",
+        "en": "Merged the strike on the Auvere power plant (Estonia) with drones crashing in Latvia, a Ukrainian attack on a Russian port and a Brave1/NATO counter-drone competition"
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2026-03-25",
+          "pais": "EE",
+          "descripcion": "Dron desviado que impacta en la chimenea de la central eléctrica de Auvere (Estonia), madrugada del 25 de marzo de 2026",
+          "coincide_con": "EODI-2026-00274",
+          "fuentes": [
+            "revisada-41b577c5bdb28f2d",
+            "gdelt-5f3e0c1159c17225",
+            "gdelt-aabf66cbf7b58aa3",
+            "gdelt-de96f36b458110c2",
+            "gdelt-8a97062c06a94cb2",
+            "gdelt-a875127c3a77c9cd",
+            "gdelt-24eecb46e9361f8c",
+            "gdelt-504f121a3e25c395",
+            "gdelt-bc099d05dd94e241",
+            "gdelt-ec6a22262f00a847",
+            "gdelt-8910eff472187482",
+            "gdelt-99b33a29c3b899b0",
+            "gdelt-f7e7fea5eb92aa3e",
+            "gdelt-ca07e5214540d643",
+            "gdelt-fa578b3b1356f09f",
+            "gdelt-8d9947670b1038dc",
+            "gdelt-805fad33e2a84efe",
+            "gdelt-770e228fd94d9cff",
+            "gdelt-aa89586aed5f6485",
+            "gdelt-dd34d0ec8d013181",
+            "gdelt-74e45346a9565c7b",
+            "gdelt-7ed6f6eb62ff8f43",
+            "gdelt-4d645122e7ea26c2",
+            "gdelt-5d01b3967f8e63cb",
+            "gdelt-d6bc823c1350ace8",
+            "gdelt-62568e72bfbb8c05",
+            "gdelt-ec35bc5212aadfad",
+            "gdelt-39366f1ac32d7914",
+            "gdelt-d5c8957fa9752ba7",
+            "gdelt-aec221beb8f83eb4",
+            "gdelt-ae54deffbb224158",
+            "gdelt-d6ee02a98e353637",
+            "gdelt-6373719c70c49588",
+            "gdelt-1dbf024e8f1d569d",
+            "gdelt-8abd622d101d5f3e",
+            "gdelt-e20716a8e8728b25"
+          ]
+        },
+        {
+          "es_suceso": false,
+          "fecha": "2026-03-25",
+          "pais": "RU",
+          "descripcion": "Ataque ucraniano con cientos de drones contra un puerto ruso del Báltico, 24-25 de marzo de 2026",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-a83d911426388366",
+            "gdelt-bf185ae0d65313b5",
+            "gdelt-0f6ab54d03a796da",
+            "gdelt-e20716a8e8728b25"
+          ]
+        },
+        {
+          "es_suceso": false,
+          "fecha": "2026-03-25",
+          "pais": "UA",
+          "descripcion": "Concurso de Brave1 y la OTAN de 10 millones de euros para tecnología antidrones (25 mar 2026), sin suceso",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-d36c8ad3e1c648fd"
+          ]
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2026-00112",
+      "motivo": {
+        "es": "Junta dos drones Shahed distintos: uno que cruzó el norte de Moldavia la noche del 30 mar y otro que sobrevoló Transnistria la mañana del 31 mar",
+        "en": "Merged two different Shahed drones: one crossing northern Moldova on the night of 30 Mar and another flying over Transnistria on the morning of 31 Mar"
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2026-03-30",
+          "pais": "MD",
+          "descripcion": "Dron Shahed que cruza el norte de Moldavia a 1.700 m la noche del lunes 30 de marzo de 2026 (detectado a las 21:29), con la condena del MAE",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-1b341f1a75dd9509",
+            "gdelt-55fb1bc7f5523a45",
+            "gdelt-63eae15828100f6a",
+            "gdelt-cd938ae3df4d5c80",
+            "gdelt-dc384b7d61aae6bd",
+            "gdelt-f81b6c59d2ba510d",
+            "gdelt-f81b6c59d2ba510d-declaracion-1",
+            "gdelt-fa5368a648f1aaf6",
+            "gdelt-e5d33c05c583cfdc",
+            "gdelt-a8aab1f3c890e008",
+            "gdelt-a8aab1f3c890e008-declaracion-2",
+            "gdelt-e7727d43eb9dec38",
+            "gdelt-d67fb261ab62b380",
+            "gdelt-a6112394d7e3df6a",
+            "gdelt-506c728327a5e265",
+            "gdelt-85b398a460be57b0",
+            "gdelt-f43290c5e27075f2",
+            "gdelt-888cde98b8eb7059",
+            "gdelt-ea33a0453fc7b4ab"
+          ]
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2026-03-31",
+          "pais": "MD",
+          "descripcion": "Segundo dron Shahed que sobrevuela la región de Transnistria (cerca del depósito de Cobasna) a unos 500 m la mañana del martes 31 de marzo de 2026",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-bd6d194bf5e5c8a1",
+            "gdelt-53f51ec64a6fe29d",
+            "gdelt-6854f6bfa11a1ea0",
+            "gdelt-918ea5983fbc3ee6",
+            "gdelt-9ea063b18f165395",
+            "gdelt-aec52c05ce991330",
+            "gdelt-b96b218dfcc7fd0c",
+            "gdelt-f3ac9eb74618ff72",
+            "gdelt-a1d07be993399ae5",
+            "gdelt-eb2f7964bfe11d81",
+            "gdelt-506c728327a5e265",
+            "gdelt-85b398a460be57b0",
+            "gdelt-f43290c5e27075f2",
+            "gdelt-888cde98b8eb7059",
+            "gdelt-ea33a0453fc7b4ab"
+          ]
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2026-00130",
+      "motivo": {
+        "es": "junta el derribo de un dron sobre Estonia del 19 de mayo con la alerta por dron en Lituania del 20 de mayo y noticias de la guerra sin suceso",
+        "en": "merges the drone shot down over Estonia on 19 May with the drone alert in Lithuania on 20 May and war news without any incident"
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2026-05-19",
+          "pais": "EE",
+          "descripcion": "Cazas de la OTAN derriban un dron (presuntamente ucraniano) sobre Estonia, 19 de mayo de 2026",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-9f7fcafc7e360131",
+            "gdelt-065d87f67b5b6d38",
+            "gdelt-c50f29541b71a394",
+            "gdelt-b3df633eb50c519c",
+            "gdelt-5a30c69c0eac50cb",
+            "gdelt-24946755cd51bd55",
+            "gdelt-375c4996c0436503",
+            "gdelt-3458aeb14ff6a33d",
+            "gdelt-227770df01189747",
+            "gdelt-d6aa175a06c1a9e7"
+          ]
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2026-05-20",
+          "pais": "LT",
+          "descripcion": "Dron detectado en Lituania; los dirigentes lituanos son llevados a un lugar seguro, 20 de mayo de 2026",
+          "coincide_con": "EODI-2026-00185",
+          "fuentes": [
+            "gdelt-cd6bb6052787dc97"
+          ]
+        },
+        {
+          "es_suceso": false,
+          "fecha": "2026-05-19",
+          "pais": null,
+          "descripcion": "Noticias de la guerra sin suceso en Europa: menores entrenados por Rusia, tácticas de drones ucranianos, amenazas rusas a Letonia y a los bálticos",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-bc4855efb9c605c3",
+            "gdelt-6b0ef309b06457b0",
+            "gdelt-25e026ff1bd991ef",
+            "gdelt-c80de1c4985172ff",
+            "gdelt-4b67794b6e8328f4",
+            "gdelt-1dce7ee4f3839647",
+            "gdelt-82e4c6ebeb4b8246"
+          ]
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2026-00168",
+      "motivo": {
+        "es": "El título juntaba un dron que entra en Moldavia y explota (sin fuente) con los cierres de Lublin y Rzeszów; una fuente era solo la compra del sistema Merops.",
+        "en": "The title merged a drone entering Moldova and exploding (no source) with the Lublin and Rzeszów closures; one source was only about buying the Merops system."
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2026-09-30",
+          "pais": "PL",
+          "descripcion": "Cierre temporal de los aeropuertos de Lublin y Rzeszów durante el ataque ruso masivo sobre Ucrania, 30 de septiembre de 2026",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-b63c0582a42c054e"
+          ]
+        },
+        {
+          "es_suceso": false,
+          "fecha": "2026-09-30",
+          "pais": "DE",
+          "descripcion": "Compra del sistema antidrones estadounidense Merops por varios países de la OTAN (sin suceso)",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-ff132f3e91151602"
+          ]
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2026-00180",
+      "motivo": {
+        "es": "Juntaba los dos drones caídos cerca de Kouvola (Finlandia) el 29 de marzo de 2026 con los drones desviados que entraron en Estonia el 31 de marzo.",
+        "en": "It merged the two drones that crashed near Kouvola (Finland) on 29 March 2026 with the stray drones that entered Estonia on 31 March."
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2026-03-29",
+          "pais": "FI",
+          "descripcion": "Dos drones, probablemente ucranianos, violan el espacio aéreo de Finlandia y caen cerca de Kouvola, domingo 29 de marzo de 2026",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-aaad132aa1b32ba3",
+            "gdelt-98f27d9db508fc4c",
+            "gdelt-20d2dc50a52efbb9",
+            "gdelt-4030aa6d332c312f",
+            "gdelt-4030aa6d332c312f-declaracion-1",
+            "gdelt-a88fabafbf04f9a5",
+            "gdelt-4de7e53b0e8f6db5",
+            "gdelt-debdf4fe78cf14da",
+            "gdelt-2ea3f5ed78323cc0",
+            "gdelt-9fc94cf14750cbef"
+          ]
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2026-03-31",
+          "pais": "EE",
+          "descripcion": "Drones desviados de Ucrania entran en Estonia y aparecen restos en un campo del sureste, 31 de marzo de 2026",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-a919f7cf80dd13f4",
+            "gdelt-caf1cefac7f710ed",
+            "gdelt-5c6a3b23d9632104"
+          ]
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2026-00182",
+      "motivo": {
+        "es": "Juntaba el derribo del dron sobre Lituania con el ataque ruso a un tren en Ucrania y un dron pescado en el Báltico frente a Polonia",
+        "en": "It merged the drone shot down over Lithuania with the Russian drone strike on a train in Ukraine and a drone fished out of the Baltic off Poland"
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2026-09-14T21:20Z",
+          "pais": "LT",
+          "descripcion": "Cazas de la OTAN derriban un dron cerca de Pratk\u016bnai (Kaunas), hacia las 00:20 hora local del 15 de septiembre de 2026",
+          "coincide_con": "EODI-2026-00179",
+          "fuentes": [
+            "gdelt-1f6132613119e491",
+            "gdelt-59032f70780dd964",
+            "gdelt-652963f269b723bf",
+            "gdelt-d530b2882a4641b7",
+            "gdelt-867cb083151411ce",
+            "gdelt-a44f280efd7630f0",
+            "gdelt-caaac39fc4e5bef8",
+            "gdelt-20a3af6f92b8754f",
+            "gdelt-fb5ea84cd6b98406",
+            "gdelt-0478a06482f2d37d",
+            "gdelt-6edf659a4cf8fce1",
+            "gdelt-ac0dfa0c38eb3029",
+            "gdelt-c19981af946a22fd",
+            "gdelt-dcfc1d9ee03e4901",
+            "gdelt-3ff4e5be6db45937",
+            "gdelt-c48b886ea377c4eb",
+            "gdelt-405988430c462105",
+            "gdelt-e1783e1db2109c0d",
+            "gdelt-6d282a9ed85095e8",
+            "gdelt-082f96d4fd805003",
+            "gdelt-74b46346e1dcf3cc",
+            "gdelt-87f3089dea6aec0e"
+          ]
+        },
+        {
+          "es_suceso": false,
+          "fecha": "2026-09-13",
+          "pais": "UA",
+          "descripcion": "Ataque ruso con drones contra un tren en Ucrania cerca de la frontera polaca y reacción de la OTAN (guerra en Ucrania)",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-1f89a7fc5969ba97",
+            "gdelt-dbd31183baca3b5b",
+            "gdelt-52ff823b78e2e09c",
+            "gdelt-a2949b398bfa863a",
+            "gdelt-b29a704a7bd61cb0",
+            "gdelt-ac47c77196c8900a",
+            "gdelt-0e3d6af1a7ec4fa1",
+            "gdelt-de64c78c6bea8200",
+            "gdelt-afd7a723c2b013d0",
+            "gdelt-c48b886ea377c4eb",
+            "gdelt-405988430c462105",
+            "gdelt-e1783e1db2109c0d"
+          ]
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2026-09-14",
+          "pais": "PL",
+          "descripcion": "Dron militar probablemente ruso recuperado del mar Báltico frente a Polonia (fecha de la noticia; el hallazgo no se data)",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-0995aefae5fbc3dc"
+          ]
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2026-00185",
+      "motivo": {
+        "es": "junta el dron caído en Lituania el 20 de mayo con el derribo sobre Estonia del 19, el dron en Letonia del 21 y una declaración política",
+        "en": "merges the drone that crashed in Lithuania on 20 May with the shoot-down over Estonia on 19 May, the drone in Latvia on 21 May and a political statement"
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2026-05-20",
+          "pais": "LT",
+          "descripcion": "Dron ruso estrellado en el espacio aéreo de Lituania, miércoles 20 de mayo de 2026",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-c196f321c5825f78"
+          ]
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2026-05-19",
+          "pais": "EE",
+          "descripcion": "La OTAN intercepta un dron en el Báltico y Ucrania pide disculpas (derribo sobre Estonia del 19 de mayo de 2026)",
+          "coincide_con": "EODI-2026-00130",
+          "fuentes": [
+            "gdelt-8afdccbba3ba2adf"
+          ]
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2026-05-21T08:50Z",
+          "pais": "LV",
+          "descripcion": "Dron en el espacio aéreo de Letonia, despegan cazas de la OTAN, jueves 21 de mayo de 2026 hacia las 11:50",
+          "coincide_con": "EODI-2026-00215",
+          "fuentes": [
+            "gdelt-e32458e42d4d8bb6",
+            "gdelt-5941a2e7350f79e5",
+            "gdelt-0655a74ee2b40ea3"
+          ]
+        },
+        {
+          "es_suceso": false,
+          "fecha": "2026-05-22",
+          "pais": null,
+          "descripcion": "Declaración del primer ministro sueco sobre ayudar a Ucrania a dirigir sus drones, 22 de mayo de 2026 (sin suceso)",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-4507f5997d8a3593"
+          ]
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2026-00195",
+      "motivo": {
+        "es": "Junta el dron que entró en Rumanía cerca de Chilia Veche la noche del 26 al 27 sep con un dron militar pescado por unos amigos y un ataque hutí contra Riad",
+        "en": "Merged the drone that entered Romania near Chilia Veche on the night of 26-27 Sep with a military drone fished out of the sea by friends and a Houthi attack on Riyadh"
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2026-09-26",
+          "pais": "RO",
+          "descripcion": "Dron que entra en el espacio aéreo rumano cerca de Chilia Veche (Tulcea) la noche del 26 al 27 de septiembre de 2026; despegan F-18 españoles",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-46a2b8a659122293",
+            "gdelt-caafc7d4dfb338ae",
+            "gdelt-35c08960318d3dc1"
+          ]
+        },
+        {
+          "es_suceso": false,
+          "fecha": null,
+          "pais": null,
+          "descripcion": "Dron militar pescado en el mar por unos amigos en barco; no constan lugar ni fecha y no consta que sea en Europa",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-ebf99af061e68ac9"
+          ]
+        },
+        {
+          "es_suceso": false,
+          "fecha": "2026-09-27",
+          "pais": "SA",
+          "descripcion": "Ataque con drones de la milicia hutí contra Riad (Arabia Saudí), 27 de septiembre de 2026",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-cfb9586b8548e65c"
+          ]
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2026-00203",
+      "motivo": {
+        "es": "junta el dron que explota junto a Hîrbov\u0103\u021b al amanecer con un segundo dron que cruza Transnistria hasta Arione\u0219ti y provoca el cierre del espacio aéreo",
+        "en": "merges the drone that exploded near Hîrbov\u0103\u021b at dawn with a second drone that crossed Transnistria to Arione\u0219ti and caused the airspace closure"
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2026-09-30T02:43Z",
+          "pais": "MD",
+          "descripcion": "Dron sobrevuela Bender y explota al estrellarse junto a Hîrbov\u0103\u021b (Anenii Noi), miércoles 30 de septiembre de 2026 hacia las 05:43",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-510b5643ca99465d",
+            "gdelt-510b5643ca99465d-declaracion-1",
+            "gdelt-7bc171648e59e360",
+            "gdelt-7ef4eb3ab878f1c6",
+            "gdelt-c0830413dcda909d",
+            "gdelt-f4c8ea34d689add7",
+            "gdelt-f4c8ea34d689add7-declaracion-1",
+            "gdelt-04fd8bd3fdd19894",
+            "gdelt-6082519ba46f4f8a",
+            "gdelt-f02ee1b780ce6056",
+            "gdelt-ffc0792ca3d4eac1",
+            "gdelt-14a40c1f2268cf54",
+            "gdelt-fa5308a5ed4ef012",
+            "gdelt-2dda7fc4f26abcdb",
+            "gdelt-393b208eb1e71458",
+            "gdelt-98e33bab46adfbf8",
+            "gdelt-f3a3237af9cf0543",
+            "gdelt-333606b264508aab",
+            "gdelt-98df82d0a0f8c627"
+          ]
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2026-09-30",
+          "pais": "MD",
+          "descripcion": "Segundo dron entra por la región transnistria y sale cerca de Arione\u0219ti; cierre del espacio aéreo del norte y centro de Moldavia, mañana del 30 de septiembre de 2026",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-a03e75ec0ee12aec",
+            "gdelt-e002ce797193c8e4",
+            "gdelt-70c807607b996b29",
+            "gdelt-f02ee1b780ce6056",
+            "gdelt-ffc0792ca3d4eac1",
+            "gdelt-14a40c1f2268cf54",
+            "gdelt-fa5308a5ed4ef012",
+            "gdelt-2dda7fc4f26abcdb",
+            "gdelt-393b208eb1e71458",
+            "gdelt-98e33bab46adfbf8",
+            "gdelt-f3a3237af9cf0543",
+            "gdelt-333606b264508aab",
+            "gdelt-98df82d0a0f8c627"
+          ]
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2026-00204",
+      "motivo": {
+        "es": "Juntaba el derribo del dron sobre Letonia con un dron estrellado en Rumanía y artículos de la guerra en Ucrania",
+        "en": "It merged the drone shot down over Latvia with a drone crash in Romania and articles on the war in Ukraine"
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2026-08-14",
+          "pais": "LV",
+          "descripcion": "Cazas de la OTAN derriban un dron en el espacio aéreo de Letonia, mañana del viernes 14 de agosto de 2026",
+          "coincide_con": "EODI-2026-00219",
+          "fuentes": [
+            "gdelt-86e2146eea48b09b",
+            "gdelt-aec35ded14dce1f1",
+            "gdelt-d4306fb832bec55d",
+            "gdelt-773084776ba4b73c",
+            "gdelt-4a0fbdc0d82d6b28",
+            "gdelt-e5bd8c2cf7789626",
+            "gdelt-b55682c5bc768ff0",
+            "gdelt-cc2a9527c918eac4",
+            "gdelt-3b1b749f07598711",
+            "gdelt-da12d9d512a92437",
+            "gdelt-19ada7315afb70de"
+          ]
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2026-08-14",
+          "pais": "RO",
+          "descripcion": "Dron estrellado en Rumanía cerca de la frontera con Ucrania, 14 de agosto de 2026",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-c49d75960acfbdf6"
+          ]
+        },
+        {
+          "es_suceso": false,
+          "fecha": "2026-08-14",
+          "pais": "UA",
+          "descripcion": "Artículos sobre la guerra en Ucrania sin suceso en Europa (tanques de EE. UU. frente a drones ucranianos; opinión sobre los drones Geran)",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-c5c55225a9bd7f78",
+            "gdelt-4774b8880384707e"
+          ]
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2026-00217",
+      "motivo": {
+        "es": "Junta los derribos rumanos de drones de varios días de finales de julio con noticias sin suceso (producción de drones en EE. UU., Ucrania como aliado, jefe del Ejército checo)",
+        "en": "Merged Romanian drone shoot-downs on several days in late July with news without an incident (US drone production, Ukraine as an ally, Czech army chief)"
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2026-07-26",
+          "pais": "RO",
+          "descripcion": "Rumanía derriba drones rusos que violaron su espacio aéreo en días seguidos de finales de julio de 2026 (el tercero, el domingo 26 de julio)",
+          "coincide_con": "EODI-2026-00316",
+          "fuentes": [
+            "gdelt-c5ebb7cbe6d215c0",
+            "gdelt-e3ae0ad28d427d0b",
+            "gdelt-8860bfc5e7dfba35"
+          ]
+        },
+        {
+          "es_suceso": false,
+          "fecha": "2026-07-27",
+          "pais": "US",
+          "descripcion": "El Ejército de EE. UU. va por detrás de Ucrania en la producción de drones (27-28 jul 2026), sin suceso",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-14e2754bcc8fc60c",
+            "gdelt-8f29db68fc7f7a68",
+            "gdelt-0204ba85c46fe4fb",
+            "gdelt-abdbda2f5246f8b3",
+            "gdelt-c401c7c5ba9800c3"
+          ]
+        },
+        {
+          "es_suceso": false,
+          "fecha": "2026-07-27",
+          "pais": null,
+          "descripcion": "Ucrania como aliado que ofrece drones e inteligencia a la OTAN (27 jul 2026), sin suceso",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-18ae29ef8604efad"
+          ]
+        },
+        {
+          "es_suceso": false,
+          "fecha": "2026-07-28",
+          "pais": "CZ",
+          "descripcion": "El jefe del Ejército checo quiere aprender de Ucrania en defensa antiaérea y antidrones (28 jul 2026), sin suceso",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-1402bacf7549f194"
+          ]
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2026-00218",
+      "motivo": {
+        "es": "Junta el dron estrellado en Tulcea (20 ago 2026) con el dron derribado sobre Letonia el 14 ago",
+        "en": "Mixes the drone that crashed in Tulcea (20 Aug 2026) with the drone shot down over Latvia on 14 Aug"
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2026-08-20",
+          "pais": "RO",
+          "descripcion": "Dron entra en Rumanía y se estrella en zona deshabitada de Tulcea, madrugada del 20 ago 2026",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-fd05e71640dfd771",
+            "gdelt-fd05e71640dfd771-declaracion-1",
+            "gdelt-9bd2ca4452bcb0f6",
+            "gdelt-183a68e11b5faaf0",
+            "gdelt-184dfc08b5912c65",
+            "gdelt-625f03ab094cb38c",
+            "gdelt-430be34afd86c6c9",
+            "gdelt-e1f115513ee6396b",
+            "gdelt-d6c457914effb0d2",
+            "gdelt-e9c11e6d357e6884",
+            "gdelt-edba6a7797894084",
+            "gdelt-0f4ce1ecfc998078"
+          ]
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2026-08-14",
+          "pais": "LV",
+          "descripcion": "Dron derribado por cazas de la OTAN sobre Letonia el 14 ago 2026, de origen ucraniano según Riga",
+          "coincide_con": "EODI-2026-00310",
+          "fuentes": [
+            "gdelt-3c3f74fabcd42166",
+            "gdelt-d33d51c8d92956fb",
+            "gdelt-265a8e26cb32d102",
+            "gdelt-d5fd5a6304eee732",
+            "gdelt-ad5dd3973622e9f2"
+          ]
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2026-00220",
+      "motivo": {
+        "es": "Juntaba la alerta por drones que paró los trenes en Letonia con una acusación política rusa sin suceso",
+        "en": "It merged the drone alert that halted trains in Latvia with a Russian political accusation with no incident"
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2026-05-19",
+          "pais": "LV",
+          "descripcion": "Alerta por amenaza de drones que detiene el tráfico ferroviario en el norte de Letonia, martes 19 de mayo de 2026",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-7d5326f77d03dfb3"
+          ]
+        },
+        {
+          "es_suceso": false,
+          "fecha": "2026-05-19",
+          "pais": "LV",
+          "descripcion": "Rusia afirma que Ucrania quiere lanzar drones desde Letonia y responde Riga (declaración política)",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-1d25c1ffeb7f530e"
+          ]
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2026-00224",
+      "motivo": {
+        "es": "Mezclaba el dron Shahed que cruzó Moldavia el 8 de septiembre con artículos sobre el plan de Ucrania de legalizar la pornografía para financiar drones.",
+        "en": "Mixed the Shahed drone that crossed Moldova on 8 September with articles on Ukraine's plan to legalise pornography to fund drones."
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2026-09-08T13:20Z",
+          "pais": "MD",
+          "descripcion": "Dron Shahed entra en Moldavia desde Ucrania, pasa por Rumanía y cae en Mih\u0103ileni (Rî\u0219cani); se cierra el espacio aéreo y se retrasa el avión de Zelenski; 8 de septiembre de 2026",
+          "coincide_con": null,
+          "fuentes": [
+            "revisada-d2f7b44c6c03b5f4",
+            "gdelt-0805ff813ec4b47d",
+            "gdelt-b941b8d1424eaa9f",
+            "gdelt-334c25e0d2ecb2dc",
+            "gdelt-49696aedafcaa9aa",
+            "gdelt-1136ed6e10d9a0da",
+            "gdelt-1608e75d0f23a2fb",
+            "gdelt-2083d5912e36d5e9",
+            "gdelt-6979766956694fc2",
+            "gdelt-8697a5f2bdfa76c2",
+            "gdelt-e54345fd3fe2889c",
+            "gdelt-e54345fd3fe2889c-declaracion-1",
+            "gdelt-19aac8837d185892",
+            "gdelt-efc01c1163c4a1b7",
+            "gdelt-d8d87e0ef3837acc",
+            "gdelt-d8d87e0ef3837acc-declaracion-1",
+            "gdelt-7e0630336dd21857",
+            "gdelt-7e0630336dd21857-declaracion-1",
+            "gdelt-9a99184f16b2436e",
+            "gdelt-f140f594b1f44005",
+            "gdelt-32517dd08f31c6d5",
+            "gdelt-85b24cfc4634cd7b",
+            "gdelt-ef2736f63e6b080b",
+            "gdelt-80d903ca062e1eb0",
+            "gdelt-62618427bb276bfc",
+            "gdelt-fa8f4bb27f39adfa",
+            "gdelt-b1fc31a114332ef1",
+            "gdelt-2978fed2455981bb"
+          ]
+        },
+        {
+          "es_suceso": false,
+          "fecha": "2026-09-09",
+          "pais": "UA",
+          "descripcion": "Noticia ajena: Kiev proyecta legalizar la pornografía para financiar su ejército y comprar drones",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-a1e1d55d9f712e15",
+            "gdelt-be00e99ebfd0e8e8"
+          ]
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2026-00225",
+      "motivo": {
+        "es": "Juntaba el derribo de un dron en Rumanía por un F-18 español (16 de agosto de 2026) con artículos del ataque ucraniano con cientos de drones sobre Moscú.",
+        "en": "It merged the downing of a drone over Romania by a Spanish F-18 (16 August 2026) with articles on the Ukrainian attack with hundreds of drones on Moscow."
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2026-08-16",
+          "pais": "RO",
+          "descripcion": "Un F-18 español derriba un dron en el espacio aéreo rumano cerca de Ucrania y Moldavia, 16 de agosto de 2026",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-3bfaed08d2d1dd26",
+            "gdelt-5fef6e0f700f9495",
+            "gdelt-9458a49b68329e8f",
+            "gdelt-c743342f29cbaf65"
+          ]
+        },
+        {
+          "es_suceso": false,
+          "fecha": "2026-08-16",
+          "pais": "RU",
+          "descripcion": "Ataque ucraniano con 600-800 drones sobre Moscú y Rusia, noche del 15 al 16 de agosto de 2026",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-82b03f8aa9e63afc",
+            "gdelt-f1c8856c35a73d08",
+            "gdelt-c743342f29cbaf65"
+          ]
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2026-00234",
+      "motivo": {
+        "es": "Además del derribo sobre Gala\u021bi del 16 de agosto, metía ataques entre Rusia y Ucrania, un informe sobre bases rusas de drones y el plan de muro antidrones de la OTAN.",
+        "en": "Besides the 16 August shoot-down over Gala\u021bi, it included Russia-Ukraine strikes, a report on Russian drone bases and NATO's drone-wall plan."
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2026-08-16T01:44Z",
+          "pais": "RO",
+          "descripcion": "Cazas F-18 españoles de la OTAN derriban un dron al norte de Gala\u021bi, madrugada del domingo 16 de agosto de 2026",
+          "coincide_con": "EODI-2026-00106",
+          "fuentes": [
+            "gdelt-27cb7fedc365c786",
+            "gdelt-a9b767a2181a8603",
+            "gdelt-dd8beb89a5078937",
+            "gdelt-12e7dc2e76affb8a",
+            "gdelt-9d497a08824859be",
+            "gdelt-0edc0b0f5dc14585",
+            "gdelt-76360e31e2b792c2",
+            "gdelt-a1711a6674740079",
+            "gdelt-20eb838687c27323",
+            "gdelt-57ab4a7dfee9ea38",
+            "gdelt-75221710150dc312",
+            "gdelt-19b22add22aa11a7"
+          ]
+        },
+        {
+          "es_suceso": false,
+          "fecha": "2026-08-16",
+          "pais": "UA",
+          "descripcion": "Ataques rusos contra Ucrania y ataque ucraniano masivo con drones contra Moscú, 16 de agosto de 2026",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-fdf99623b82cbff5",
+            "gdelt-c48bcdc63c833caa",
+            "gdelt-5c4cc6f29c33d14f",
+            "gdelt-12e7dc2e76affb8a",
+            "gdelt-57ab4a7dfee9ea38",
+            "gdelt-75221710150dc312",
+            "gdelt-19b22add22aa11a7"
+          ]
+        },
+        {
+          "es_suceso": false,
+          "fecha": "2026-08-17",
+          "pais": "RU",
+          "descripcion": "Informe por satélite sobre nuevas bases rusas de drones cerca de Ucrania y Bielorrusia",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-4300400798a66c77",
+            "gdelt-6d40ec68ab11a449",
+            "gdelt-b071273f552dfaf2"
+          ]
+        },
+        {
+          "es_suceso": false,
+          "fecha": "2026-08-17",
+          "pais": "DE",
+          "descripcion": "Plan de la OTAN de un muro antidrones con inteligencia artificial en el flanco este; sin suceso",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-c6d7dab4d34783de"
+          ]
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2026-00237",
+      "motivo": {
+        "es": "Junta los drones ucranianos caídos en Finlandia (29 mar 2026) con una disculpa por drones en los países bálticos y una noticia sobre la defensa antiaérea de Ucrania",
+        "en": "Mixes the Ukrainian drones that crashed in Finland (29 Mar 2026) with an apology over drones in the Baltic states and a story about Ukraine's air defence"
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2026-03-29",
+          "pais": "FI",
+          "descripcion": "Drones ucranianos desviados se estrellan en el sureste de Finlandia, fin de semana del 28-29 mar 2026",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-a48621fe2292613a",
+            "gdelt-a48621fe2292613a-declaracion-1",
+            "gdelt-282e5f6ab54983f7",
+            "gdelt-04987cacf0a206c4",
+            "gdelt-527b728a2d4c0cfc",
+            "gdelt-b14599bb1ef6ced9",
+            "gdelt-b7cc12d070329ec5",
+            "gdelt-1826298dbb6a787c"
+          ]
+        },
+        {
+          "es_suceso": false,
+          "fecha": "2026-03-30",
+          "pais": "LT",
+          "descripcion": "Ucrania lamenta los drones caídos en los países bálticos, según Lituania (declaración sobre sucesos anteriores)",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-e583db18aebb3316"
+          ]
+        },
+        {
+          "es_suceso": false,
+          "fecha": "2026-03-30",
+          "pais": "UA",
+          "descripcion": "Empresas privadas participan en la defensa antiaérea de Ucrania (otra noticia)",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-c365597b48af839d"
+          ]
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2026-00268",
+      "motivo": {
+        "es": "Junta el dron que alcanzó RAF Akrotiri (noche del 1 al 2 mar 2026) con drones iraníes derribados por el Reino Unido en Oriente Medio",
+        "en": "Mixes the drone that struck RAF Akrotiri (night of 1-2 Mar 2026) with Iranian drones downed by the UK in the Middle East"
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2026-03-01T22:00Z",
+          "pais": "CY",
+          "descripcion": "Dron tipo Shahed alcanza la pista de RAF Akrotiri (Chipre) hacia medianoche del 1 al 2 mar 2026; dos más interceptados el 2 mar",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-51339fe171a8ed46",
+            "gdelt-9c830d0c50c54ae4",
+            "gdelt-b97ba1a9a400540c",
+            "gdelt-0e752f57ded3c58a",
+            "gdelt-0544506df773613a",
+            "gdelt-966701c1efec9996",
+            "gdelt-64616934ea4c0b1d",
+            "gdelt-475d1e7bcc7791ab",
+            "gdelt-136587f31ad885eb",
+            "revisada-c573b81d1d05aaca",
+            "revisada-ea3c64ea62c65d43",
+            "gdelt-2d49099e0bd224c6",
+            "gdelt-6335f68c9869d028",
+            "gdelt-6335f68c9869d028-declaracion-1",
+            "detalle-da7f56b1bed0e513",
+            "detalle-80807759e91faffb",
+            "detalle-e97ca7f30b7561a7",
+            "revisada-c9fa4e0be6e190e4"
+          ]
+        },
+        {
+          "es_suceso": false,
+          "fecha": "2026-03-01",
+          "pais": null,
+          "descripcion": "El Reino Unido derriba drones enviados por Irán en Oriente Medio (fuera de Europa)",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-c70c6bf184048322"
+          ]
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2026-00281",
+      "motivo": {
+        "es": "Junta el Shahed visto en Tudora (\u0218tefan Vod\u0103) el 17 mar 2026 con otro dron que cruzó la noche del 18 mar junto al paso de Palanca",
+        "en": "Mixes the Shahed seen at Tudora (\u0218tefan Vod\u0103) on 17 Mar 2026 with another drone that crossed near the Palanca checkpoint on the night of 18 Mar"
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2026-03-17",
+          "pais": "MD",
+          "descripcion": "Dron tipo Shahed observado por la policía de fronteras en Tudora (\u0218tefan Vod\u0103), 17 mar 2026",
+          "coincide_con": null,
+          "fuentes": [
+            "revisada-c1a10d9a33cf62c9",
+            "gdelt-b44414bb861595d2",
+            "gdelt-b44414bb861595d2-declaracion-1",
+            "gdelt-0ea8ef289a487408",
+            "gdelt-273849811ccf8537",
+            "gdelt-273849811ccf8537-declaracion-2",
+            "gdelt-2392c13833a4feab"
+          ]
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2026-03-18T00:14Z",
+          "pais": "MD",
+          "descripcion": "Nuevo dron Shahed sobrevuela Moldavia junto al paso fronterizo de Palanca, noche del 18 mar 2026 (02:14-02:25 hora local), destruido fuera del país",
+          "coincide_con": null,
+          "fuentes": [
+            "revisada-4f59106588c5a9d6-declaracion-1",
+            "gdelt-568590c4bdd78c98",
+            "gdelt-4a8ffe92d2916fa6",
+            "gdelt-4a8ffe92d2916fa6-declaracion-1",
+            "gdelt-4a8ffe92d2916fa6-declaracion-2",
+            "gdelt-1a6bd6bc93520dae",
+            "gdelt-af63102283257446",
+            "gdelt-d03bf048622794a4"
+          ]
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2026-00327",
+      "motivo": {
+        "es": "Junta la alerta del 27 feb 2026 (el dron no entró en Rumanía) con una incursión breve en el espacio aéreo rumano anunciada el 26 feb",
+        "en": "Mixes the 27 Feb 2026 alert (the drone did not enter Romania) with a brief incursion into Romanian airspace reported on 26 Feb"
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2026-02-27",
+          "pais": "RO",
+          "descripcion": "Dron en espacio aéreo ucraniano hacia el norte de Tulcea, sin entrar en Rumanía; alerta de 06:57 a 07:47, 27 feb 2026",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-e83feb1de19f8273",
+            "gdelt-cae8c03e9764f7f5",
+            "gdelt-cae8c03e9764f7f5-declaracion-1",
+            "gdelt-134f8222244060d9"
+          ]
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2026-02-26",
+          "pais": "RO",
+          "descripcion": "Dron ruso entra brevemente en el espacio aéreo rumano, cazas en el aire y RO-Alert en Tulcea, 26 feb 2026",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-72c2c855a9ba3970"
+          ]
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2026-00384",
+      "motivo": {
+        "es": "Junto al dron de Bielorrusia sobre Lituania del 3 de octubre, metía drones y misiles rusos en Moldavia ese día y un ataque contra una base aérea en Rusia.",
+        "en": "Alongside the drone from Belarus over Lithuania on 3 October, it included Russian drones and missiles over Moldova that day and a strike on an air base in Russia."
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2026-10-03",
+          "pais": "LT",
+          "descripcion": "Dron procedente de Bielorrusia viola el espacio aéreo de Lituania; alerta a la población, cazas de la OTAN y cierre del aeropuerto de Vilna; 3 de octubre de 2026",
+          "coincide_con": null,
+          "fuentes": [
+            "revisada-a217065540dfce69",
+            "revisada-f8e50ddefaf71539",
+            "gdelt-128c9f405e59381f",
+            "gdelt-197d1f9b1dc7f446",
+            "gdelt-48e4088bd8d70c33",
+            "gdelt-f541de07976c19f5",
+            "gdelt-fc1b83d89eb5bf0a",
+            "gdelt-0cda714f241625fd",
+            "gdelt-3b47821a653d0a53",
+            "gdelt-33802a11335ebab7",
+            "gdelt-d7449dc93b13986d",
+            "gdelt-f0715351f02b12cf",
+            "gdelt-f0715351f02b12cf-declaracion-1",
+            "gdelt-37cb26f9ffa6442f",
+            "gdelt-d07eac49e6186bee",
+            "gdelt-d07eac49e6186bee-declaracion-1",
+            "gdelt-9b9b861e9e766334",
+            "gdelt-77da83f8f172d6c7",
+            "gdelt-8dc0f3883eb0e1cc",
+            "gdelt-faeb620ff0072571",
+            "gdelt-faeb620ff0072571-declaracion-1",
+            "gdelt-a103fac336005bb1",
+            "gdelt-8b3a9694d036d255",
+            "gdelt-3f894cb4c00c412b",
+            "gdelt-5fab65229ebd0483",
+            "gdelt-cb9e78f4d85a488a",
+            "gdelt-fe21420c989e4182"
+          ]
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2026-10-03",
+          "pais": "MD",
+          "descripcion": "Drones y misiles rusos entran en el espacio aéreo de Moldavia durante un ataque contra Ucrania, 3 de octubre de 2026",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-ee904955e35bdd34",
+            "gdelt-fe21420c989e4182"
+          ]
+        },
+        {
+          "es_suceso": false,
+          "fecha": "2026-10-03",
+          "pais": "RU",
+          "descripcion": "Ataque con drones contra la base aérea rusa de Jánskaya (Adiguea, Rusia)",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-1b3d5d440b8231a7"
+          ]
         }
       ]
     }

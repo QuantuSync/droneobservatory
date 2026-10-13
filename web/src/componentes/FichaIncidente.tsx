@@ -495,6 +495,16 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
             </span>
           </Fila>
         )}
+        {(incidente.relacionados ?? []).map((relacionado) => (
+          <Fila key={relacionado.id} nombre={t.ficha.sucesoRelacionado}>
+            <span data-suceso-relacionado={relacionado.id}>
+              <Enlace a={rutaDeFicha(relacionado.id, idioma)} className="enlace mono">
+                {relacionado.id}
+              </Enlace>
+              <span className="block text-xs text-secundario">{relacionado.nota[idioma]}</span>
+            </span>
+          </Fila>
+        ))}
         {incidente.trafico_aereo !== undefined && (
           <LineaTrafico
             t={t}

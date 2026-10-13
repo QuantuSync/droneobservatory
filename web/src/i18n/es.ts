@@ -630,6 +630,7 @@ export const es: Textos = {
     respuesta: "Respuesta",
     atribucion: "Atribución",
     parteDelAtaque: "Parte del ataque",
+    sucesoRelacionado: "Suceso relacionado",
     ataqueDeLa: (jornada) => `Parte del ataque ruso contra Ucrania de la ${jornada}`,
     porFuente: "la fuente lo relaciona con el ataque",
     porFecha: "coincide en fecha y viene de Ucrania",
