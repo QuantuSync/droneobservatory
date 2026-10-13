@@ -82,15 +82,34 @@ function ruta(id: string, idioma: "es" | "en"): string {
 function vigilar(pagina: Page): string[] {
   const errores: string[] = [];
   pagina.on("console", (m) => {
-    if (m.type() === "error" && !/ntfy:|intent:/.test(m.text())) errores.push(`consola: ${m.text()}`);
+    // Chromium avisa (no es un error de la web) cuando el dedo de la prueba arrastra sobre un
+    // contenido que aún se desplaza; WebKit rechaza el estilo que mete Playwright para la captura.
+    if (m.type() !== "error" || /ntfy:|intent:|Ignored attempt to cancel a touchmove/.test(m.text())) return;
+    errores.push(`consola: ${m.text()}`);
   });
-  pagina.on("pageerror", (e) => errores.push(`excepción: ${e.message}`));
+  pagina.on("pageerror", (e) => {
+    // WebKit corta las lecturas de teselas en curso al cambiar de página (no es de la web).
+    if (/access control checks/.test(e.message)) return;
+    errores.push(`excepción: ${e.message}`);
+  });
   pagina.on("requestfailed", (p) => {
     const motivo = p.failure()?.errorText ?? "";
     if (/ABORTED|cancelled|access control checks/i.test(motivo)) return;
     errores.push(`petición: ${p.url()} ${motivo}`);
   });
   return errores;
+}
+
+/**
+ * Una captura. En WebKit, Playwright mete un estilo en la página para hacerla y la política de
+ * seguridad de la web lo rechaza con un error de consola: ese error es de la captura, no de la web.
+ */
+async function capturar(pagina: Page, errores: string[], ruta: string) {
+  const antes = errores.length;
+  await pagina.screenshot({ path: ruta, caret: "initial" });
+  await pagina.waitForTimeout(200);
+  const despues = errores.splice(antes).filter((e) => !/Refused to apply a stylesheet/.test(e));
+  errores.push(...despues);
 }
 
 /** El dedo: toques y arrastres táctiles de bajo nivel en Chromium, la pantalla táctil en WebKit. */
@@ -183,6 +202,11 @@ async function enlacesInternos(pagina: Page): Promise<string[]> {
 
 const PROYECTOS = ["android", "iphone", "tableta", "escritorio-chromium", "escritorio-webkit"];
 
+// Con ANCHO y ALTO, en otra pantalla (360 × 800 en el Android, por ejemplo).
+if (process.env.ANCHO !== undefined && process.env.ALTO !== undefined) {
+  test.use({ viewport: { width: Number(process.env.ANCHO), height: Number(process.env.ALTO) } });
+}
+
 test.describe("nombres de lugar y fichas, como una persona", () => {
   test.beforeEach(({ browserName }, info) => {
     void browserName;
@@ -211,7 +235,7 @@ test.describe("nombres de lugar y fichas, como una persona", () => {
           expect(OTRO_ALFABETO.test(texto), `${caso.id} «${nombre}»: ${texto}`).toBe(false);
         }
         expect(await enlacesInternos(pagina), `${caso.id} enlaces internos`).toEqual([]);
-        await pagina.screenshot({ path: join(CAPTURAS, `${caso.id}-${idioma}-${info.project.name}.png`) });
+        await capturar(pagina, errores, join(CAPTURAS, `${caso.id}-${idioma}-${info.project.name}.png`));
       }
       // Un impacto de la capa de guerra en Ucrania: se abre tocando su punto en el mapa.
       await pagina.goto(idioma === "en" ? "/en" : "/", { waitUntil: "domcontentloaded" });
@@ -258,7 +282,7 @@ test.describe("nombres de lugar y fichas, como una persona", () => {
         return c.textContent ?? "";
       });
       expect(OTRO_ALFABETO.test(texto), `impacto: ${texto.slice(0, 200)}`).toBe(false);
-      await pagina.screenshot({ path: join(CAPTURAS, `ucrania-${idioma}-${info.project.name}.png`) });
+      await capturar(pagina, errores, join(CAPTURAS, `ucrania-${idioma}-${info.project.name}.png`));
       expect(errores).toEqual([]);
     });
   }
