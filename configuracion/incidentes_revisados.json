@@ -4022,6 +4022,40 @@
   ],
   "separar": [
     {
+      "incidente": "EODI-2026-00072",
+      "motivo": {
+        "es": "juntaba dos sucesos distintos: el cierre del aeropuerto de Vilna del domingo 13 de septiembre de 2026 por un posible dron que resultó ser una bandada de pájaros (sot.com.al, humanevents.com) y el derribo de un dron llegado de Bielorrusia por cazas de la OTAN la noche del 14 al 15 cerca de Pratk\u016bnai (delo.si, klix.ba)",
+        "en": "it merged two different events: the closure of Vilnius airport on Sunday 13 September 2026 over a possible drone that turned out to be a flock of birds (sot.com.al, humanevents.com) and the shoot-down by NATO fighters of a drone that came from Belarus on the night of 14 to 15 September near Pratk\u016bnai (delo.si, klix.ba)"
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2026-09-13",
+          "pais": "LT",
+          "descripcion": "Cierre temporal del aeropuerto de Vilna por un posible dron, luego atribuido a pájaros; domingo 13 de septiembre de 2026",
+          "coincide_con": "EODI-2026-00007",
+          "fuentes": [
+            "gdelt-6c91f3d8c07ad7fa",
+            "gdelt-cafe5ba5a861a635"
+          ],
+          "lugar": "EYVI"
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2026-09-14",
+          "pais": "LT",
+          "descripcion": "Cazas de la OTAN derriban un dron llegado de Bielorrusia sobre Lituania, poco después de la medianoche local del 14 al 15 de septiembre de 2026",
+          "coincide_con": "EODI-2026-00179",
+          "fuentes": [
+            "gdelt-62ff19c3546a70d2",
+            "gdelt-62ff19c3546a70d2-declaracion-1",
+            "gdelt-62ff19c3546a70d2-declaracion-2",
+            "gdelt-c2e4d410a67ab90c"
+          ]
+        }
+      ]
+    },
+    {
       "incidente": "EODI-2025-00066",
       "motivo": {
         "es": "junta los disparos contra drones en Volkel del 21 de noviembre con el cierre de Eindhoven del 22 y nuevos drones sobre Volkel la noche del 22 al 23",
@@ -5102,40 +5136,6 @@
             "gdelt-e2f9d621a837c143",
             "gdelt-818083d5c010df49",
             "gdelt-818083d5c010df49-declaracion-1"
-          ]
-        }
-      ]
-    },
-    {
-      "incidente": "EODI-2026-00072",
-      "motivo": {
-        "es": "juntaba dos sucesos distintos: el cierre del aeropuerto de Vilna del domingo 13 de septiembre de 2026 por un posible dron que resultó ser una bandada de pájaros (sot.com.al, humanevents.com) y el derribo de un dron llegado de Bielorrusia por cazas de la OTAN la noche del 14 al 15 cerca de Pratk\u016bnai (delo.si, klix.ba)",
-        "en": "it merged two different events: the closure of Vilnius airport on Sunday 13 September 2026 over a possible drone that turned out to be a flock of birds (sot.com.al, humanevents.com) and the shoot-down by NATO fighters of a drone that came from Belarus on the night of 14 to 15 September near Pratk\u016bnai (delo.si, klix.ba)"
-      },
-      "partes": [
-        {
-          "es_suceso": true,
-          "fecha": "2026-09-13",
-          "pais": "LT",
-          "descripcion": "Cierre temporal del aeropuerto de Vilna por un posible dron, luego atribuido a pájaros; domingo 13 de septiembre de 2026",
-          "coincide_con": "EODI-2026-00007",
-          "fuentes": [
-            "gdelt-6c91f3d8c07ad7fa",
-            "gdelt-cafe5ba5a861a635"
-          ],
-          "lugar": "EYVI"
-        },
-        {
-          "es_suceso": true,
-          "fecha": "2026-09-14",
-          "pais": "LT",
-          "descripcion": "Cazas de la OTAN derriban un dron llegado de Bielorrusia sobre Lituania, poco después de la medianoche local del 14 al 15 de septiembre de 2026",
-          "coincide_con": "EODI-2026-00179",
-          "fuentes": [
-            "gdelt-62ff19c3546a70d2",
-            "gdelt-62ff19c3546a70d2-declaracion-1",
-            "gdelt-62ff19c3546a70d2-declaracion-2",
-            "gdelt-c2e4d410a67ab90c"
           ]
         }
       ]

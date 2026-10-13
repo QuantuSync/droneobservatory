@@ -262,6 +262,13 @@ CAMPOS_PUBLICOS_INCIDENTE: frozenset[str] = frozenset(
         # Los nombres de lugar como los escribe cada versión de la web (proceso/nombres_lugar.py).
         "nombres",
         *_nombres(),
+        # Las otras fichas de un incidente que juntaba sucesos distintos (recogida/revisados.py).
+        "relacionados",
+        "relacionados[].id",
+        "relacionados[].separado_de",
+        "relacionados[].nota",
+        "relacionados[].nota.es",
+        "relacionados[].nota.en",
         "investigacion",
         "investigacion[].autoridad",
         "investigacion[].cita",
