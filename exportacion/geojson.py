@@ -20,7 +20,7 @@ from exportacion.proyeccion import (
     proyectar,
     solo_fuentes_publicas,
 )
-from proceso import cita_titular
+from proceso import cita_titular, nombres_lugar
 from proceso.estados import Capa
 from proceso.focos_termicos import solo_detectado
 from proceso.mediciones import solo_publico
@@ -35,11 +35,44 @@ def campos_fuera_de_lista(coleccion: Documento) -> list[str]:
     )
 
 
+def con_nombres(documento: Documento) -> Documento:
+    """El documento con los nombres de lugar de cada versión de la web (`nombres`) y el titular
+    escrito con ellos (proceso/nombres_lugar.py). Lo que aun así la revisión da por mal escrito
+    no se publica: la ficha cae entonces en lo seguro (el titular, la localidad o el país)."""
+    documento["titulo"] = nombres_lugar.titulo_corregido(documento)
+    nombres = nombres_lugar.nombres_publicos(documento)
+    pais = documento["lugar"].get("pais")
+    for campo in ("objetivo", "region", "localidad"):
+        valor = nombres.get(campo)
+        if valor is not None and any(
+            nombres_lugar.problemas_texto(valor[i], i, pais) for i in nombres_lugar.IDIOMAS
+        ):
+            registro.warning("%s: nombre sin publicar (%s): %s", documento.get("id"), campo, valor)
+            del nombres[campo]
+    for lista in ("otros", "anteriores"):
+        nombres_lista = nombres.get(lista) or []
+        for i, valor in enumerate(nombres_lista):
+            if valor is not None and any(
+                nombres_lugar.problemas_texto(valor[j], j, pais) for j in nombres_lugar.IDIOMAS
+            ):
+                registro.warning(
+                    "%s: nombre sin publicar (%s): %s", documento.get("id"), lista, valor
+                )
+                nombres_lista[i] = None
+    if "localidad" not in nombres:
+        nombres["lugar"] = nombres_lugar.lugar_con_pais(None, documento)
+    documento["nombres"] = nombres
+    for problema in nombres_lugar.problemas(documento):
+        registro.warning("%s: %s", documento.get("id"), problema)
+    return documento
+
+
 def feature(incidente: Documento) -> Documento | None:
     """Feature pública del incidente, o None si ninguna de sus fuentes es pública."""
     documento = con_afirmaciones(incidente)
     if documento is None:
         return None
+    con_nombres(documento)
     punto = documento["lugar"].pop("punto")
     return {
         "type": "Feature",
@@ -85,6 +118,7 @@ def sin_ubicacion(incidente: Documento) -> Documento | None:
     if documento is None:
         return None
     documento["lugar"].setdefault("nivel", "pais")
+    con_nombres(documento)
     proyectado: Documento = proyectar(documento, CAMPOS_PUBLICOS_SIN_UBICACION)
     return proyectado
 

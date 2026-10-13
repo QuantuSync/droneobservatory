@@ -47,6 +47,8 @@ from pathlib import Path
 from typing import Any
 from zoneinfo import ZoneInfo
 
+from proceso import nombres_lugar
+
 registro = logging.getLogger("avisos")
 
 RAIZ = Path(__file__).resolve().parent.parent
@@ -244,10 +246,9 @@ def _fuente(incidente: Documento) -> str:
     return _limpio(str(elegida.get("medio") or "sin fuente nombrada").split(" (")[0])
 
 
-def _lugar(incidente: Documento, nombre_pais: str) -> str:
-    lugar = incidente.get("lugar") or {}
-    sitio = lugar.get("localidad") or lugar.get("region")
-    return f"{_limpio(str(sitio))} ({nombre_pais})" if sitio else nombre_pais
+def _lugar(incidente: Documento, idioma: str) -> str:
+    """El lugar como lo dice la ficha en ese idioma (proceso/nombres_lugar.py): «Pafos, Chipre»."""
+    return _limpio(nombres_lugar.nombres_publicos(incidente)["lugar"][idioma])
 
 
 def _cuando(incidente: Documento, zona: str) -> tuple[str, str]:
@@ -274,17 +275,17 @@ def mensaje(aviso: Aviso, incidente: Documento, config: Documento, tema: str) ->
     clave = (aviso.clase, aviso.estado)
     titulo_es = f"{pais['es'].upper()} · {FRASE_ES[clave]}"
     titulo_en = f"{pais['en'].upper()} · {FRASE_EN[clave]}"
-    titular = incidente.get("titulo") or {}
+    titular = nombres_lugar.titulo_corregido(incidente)
     que_es = _limpio(str(titular.get("es") or FRASE_ES[clave]))
     que_en = _limpio(str(titular.get("en") or FRASE_EN[clave]))
     cuando_es, cuando_en = _cuando(incidente, pais["zona_horaria"])
     fuente = _fuente(incidente)
     linea_es = (
-        f"{que_es}. **{_lugar(incidente, pais['es'])}**, {cuando_es}. "
+        f"{que_es}. **{_lugar(incidente, 'es')}**, {cuando_es}. "
         f"Estado: **{ESTADO_ES[aviso.estado]}**. Fuente: {fuente}."
     )
     linea_en = (
-        f"{titulo_en}. {que_en}. **{_lugar(incidente, pais['en'])}**, {cuando_en}. "
+        f"{titulo_en}. {que_en}. **{_lugar(incidente, 'en')}**, {cuando_en}. "
         f"Status: **{ESTADO_EN[aviso.estado]}**. Source: {fuente}."
     )
     texto = f"{linea_es}\n\n{linea_en}"

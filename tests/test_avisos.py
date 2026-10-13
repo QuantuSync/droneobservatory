@@ -114,7 +114,8 @@ def test_formato_del_aviso() -> None:
     assert en.startswith("SLOVAKIA · Confirmed incursion")
     # Hora local de Eslovaquia (verano, UTC+2) y UTC; lugar y estado en negrita; fuente oficial.
     assert "10/10/2026, 10:04 hora local (08:04 UTC)" in es
-    assert "**Michalovce (Eslovaquia)**" in es and "**confirmado**" in es
+    assert "**Michalovce, Eslovaquia**" in es and "**confirmado**" in es
+    assert "**Michalovce, Slovakia**" in en
     assert "Ministerstvo obrany SR" in es
     assert "10 Oct 2026, 10:04 local time (08:04 UTC)" in en and "**confirmed**" in en
     assert cuerpo["markdown"] is True and cuerpo["priority"] == 4

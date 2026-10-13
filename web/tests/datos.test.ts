@@ -427,6 +427,15 @@ describe("listas cerradas iguales a las del esquema", () => {
         por: "fuente",
       },
       zona: { grupo: "frontera", motivo: "ataque" },
+      nombres: {
+        lugar: { es: "RAF Akrotiri (base británica), Chipre", en: "RAF Akrotiri (British base), Cyprus" },
+        localidad: { es: "RAF Akrotiri", en: "RAF Akrotiri" },
+        objetivo: { es: "Aeropuerto de Pafos", en: "Paphos International Airport" },
+        region: { es: "Mar Egeo", en: "Aegean Sea" },
+        otros: [null, { es: "Pafos", en: "Paphos" }],
+        anteriores: [{ es: "Lárnaca", en: "Larnaca" }],
+        pais_geografico: "CY",
+      },
       recorrido: {
         version: "recorridos-1.0.0",
         fuente: "gdelt-0000000000000001",

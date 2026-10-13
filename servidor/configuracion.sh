@@ -170,6 +170,12 @@ ARCHIVO_MEMORIA="400M"
 ARCHIVO_DATOS="${EODI_ARCHIVO_DATOS:-$CASA/datos/archivo}"
 export EODI_ARCHIVO_DATOS="$ARCHIVO_DATOS"
 
+# --- Nombres de lugar (proceso/nombres_lugar.py, recogida/nombres_wikidata.py) ----------------
+# Los nombres de lugar que no están en las tablas de configuracion/ se buscan en Wikidata cada
+# hora, antes de publicar, y se guardan aquí (fuera del clon). Los leen la publicación y los
+# avisos de ntfy. Sin el fichero se publica igual: con el nombre local o el país.
+export EODI_NOMBRES_CACHE="${EODI_NOMBRES_CACHE:-$CASA/datos/nombres_lugar.json}"
+
 # --- Anomalías térmicas de NASA FIRMS (recogida/firms.py) ------------------------------
 # CSV diarios comprimidos, fuera del repositorio y de la base: la base se sube cifrada cada
 # hora y no debe crecer con los focos agrícolas.

@@ -1,0 +1,2198 @@
+{
+  "descripcion": "Nombres de lugar de la web revisados a mano (proceso/nombres_lugar.py): mandan sobre los generados de Wikidata (nombres_lugar_wikidata.json.gz) y sobre la caché horaria. En la versión española, la forma española habitual; en la inglesa, la inglesa; sin forma propia, el nombre local en alfabeto latino como lo escribe la prensa. «textos»: el texto tal como lo guarda la ficha (localidad, región, otro lugar u objetivo) → cómo se escribe (null: no se enseña). «aeropuertos»: por código OACI, corrige lo generado. «localidades»: las que faltan en lo generado. «territorios»: suelo con país en los datos distinto del geográfico, por caja de coordenadas o por nombre. «flanco_este»: países donde tiene sentido «Frontera o interior». «palabras_ajenas»: las que delatan un nombre en otro idioma (revisión de lo visible).",
+  "flanco_este": [
+    "BG",
+    "BY",
+    "EE",
+    "FI",
+    "HU",
+    "LT",
+    "LV",
+    "MD",
+    "NO",
+    "PL",
+    "RO",
+    "RU",
+    "SK",
+    "UA"
+  ],
+  "paises": {
+    "AD": {
+      "es": "Andorra",
+      "en": "Andorra"
+    },
+    "AL": {
+      "es": "Albania",
+      "en": "Albania"
+    },
+    "AT": {
+      "es": "Austria",
+      "en": "Austria"
+    },
+    "BA": {
+      "es": "Bosnia y Herzegovina",
+      "en": "Bosnia and Herzegovina"
+    },
+    "BE": {
+      "es": "Bélgica",
+      "en": "Belgium",
+      "formas": [
+        "België",
+        "Belgique",
+        "Belgien"
+      ]
+    },
+    "BG": {
+      "es": "Bulgaria",
+      "en": "Bulgaria",
+      "formas": [
+        "Bulgarien"
+      ]
+    },
+    "CH": {
+      "es": "Suiza",
+      "en": "Switzerland"
+    },
+    "CY": {
+      "es": "Chipre",
+      "en": "Cyprus",
+      "formas": [
+        "Zypern"
+      ]
+    },
+    "CZ": {
+      "es": "Chequia",
+      "en": "Czechia",
+      "formas": [
+        "Česko",
+        "Tschechien"
+      ]
+    },
+    "DE": {
+      "es": "Alemania",
+      "en": "Germany",
+      "formas": [
+        "Deutschland"
+      ]
+    },
+    "DK": {
+      "es": "Dinamarca",
+      "en": "Denmark",
+      "formas": [
+        "Danmark",
+        "Dänemark"
+      ]
+    },
+    "EE": {
+      "es": "Estonia",
+      "en": "Estonia",
+      "formas": [
+        "Eesti",
+        "Estland"
+      ]
+    },
+    "ES": {
+      "es": "España",
+      "en": "Spain",
+      "formas": [
+        "Spanien"
+      ]
+    },
+    "FI": {
+      "es": "Finlandia",
+      "en": "Finland",
+      "formas": [
+        "Suomi",
+        "Finnland"
+      ]
+    },
+    "FR": {
+      "es": "Francia",
+      "en": "France",
+      "formas": [
+        "Frankreich"
+      ]
+    },
+    "GB": {
+      "es": "Reino Unido",
+      "en": "United Kingdom"
+    },
+    "GR": {
+      "es": "Grecia",
+      "en": "Greece",
+      "formas": [
+        "Griechenland"
+      ]
+    },
+    "HR": {
+      "es": "Croacia",
+      "en": "Croatia",
+      "formas": [
+        "Hrvatska",
+        "Kroatien"
+      ]
+    },
+    "HU": {
+      "es": "Hungría",
+      "en": "Hungary",
+      "formas": [
+        "Magyarország",
+        "Ungarn"
+      ]
+    },
+    "IE": {
+      "es": "Irlanda",
+      "en": "Ireland"
+    },
+    "IS": {
+      "es": "Islandia",
+      "en": "Iceland"
+    },
+    "IT": {
+      "es": "Italia",
+      "en": "Italy",
+      "formas": [
+        "Italien"
+      ]
+    },
+    "LI": {
+      "es": "Liechtenstein",
+      "en": "Liechtenstein"
+    },
+    "LT": {
+      "es": "Lituania",
+      "en": "Lithuania",
+      "formas": [
+        "Lietuva",
+        "Litauen"
+      ]
+    },
+    "LU": {
+      "es": "Luxemburgo",
+      "en": "Luxembourg"
+    },
+    "LV": {
+      "es": "Letonia",
+      "en": "Latvia",
+      "formas": [
+        "Latvija",
+        "Lettland"
+      ]
+    },
+    "MC": {
+      "es": "Mónaco",
+      "en": "Monaco"
+    },
+    "MD": {
+      "es": "Moldavia",
+      "en": "Moldova",
+      "formas": [
+        "Moldau"
+      ],
+      "validas_en": [
+        "Moldavia"
+      ]
+    },
+    "ME": {
+      "es": "Montenegro",
+      "en": "Montenegro"
+    },
+    "MK": {
+      "es": "Macedonia del Norte",
+      "en": "North Macedonia"
+    },
+    "MT": {
+      "es": "Malta",
+      "en": "Malta"
+    },
+    "NL": {
+      "es": "Países Bajos",
+      "en": "Netherlands",
+      "formas": [
+        "Nederland",
+        "Niederlande"
+      ]
+    },
+    "NO": {
+      "es": "Noruega",
+      "en": "Norway",
+      "formas": [
+        "Norge",
+        "Norwegen"
+      ]
+    },
+    "PL": {
+      "es": "Polonia",
+      "en": "Poland",
+      "formas": [
+        "Polska",
+        "Polen"
+      ]
+    },
+    "PT": {
+      "es": "Portugal",
+      "en": "Portugal"
+    },
+    "RO": {
+      "es": "Rumanía",
+      "en": "Romania",
+      "formas": [
+        "România",
+        "Romînia"
+      ]
+    },
+    "RS": {
+      "es": "Serbia",
+      "en": "Serbia"
+    },
+    "SE": {
+      "es": "Suecia",
+      "en": "Sweden",
+      "formas": [
+        "Sverige",
+        "Schweden"
+      ]
+    },
+    "SI": {
+      "es": "Eslovenia",
+      "en": "Slovenia"
+    },
+    "SK": {
+      "es": "Eslovaquia",
+      "en": "Slovakia",
+      "formas": [
+        "Slovensko",
+        "Slowakei"
+      ]
+    },
+    "SM": {
+      "es": "San Marino",
+      "en": "San Marino"
+    },
+    "XK": {
+      "es": "Kosovo",
+      "en": "Kosovo"
+    },
+    "RU": {
+      "es": "Rusia",
+      "en": "Russia",
+      "formas": [
+        "Russland",
+        "Rosja"
+      ]
+    },
+    "UA": {
+      "es": "Ucrania",
+      "en": "Ukraine",
+      "formas": [
+        "Ukraina"
+      ]
+    },
+    "BY": {
+      "es": "Bielorrusia",
+      "en": "Belarus"
+    },
+    "TR": {
+      "es": "Turquía",
+      "en": "Turkey"
+    },
+    "GE": {
+      "es": "Georgia",
+      "en": "Georgia"
+    },
+    "VA": {
+      "es": "Ciudad del Vaticano",
+      "en": "Vatican City"
+    }
+  },
+  "territorios": {
+    "XA": {
+      "es": "Akrotiri",
+      "en": "Akrotiri",
+      "pais": "GB",
+      "geografico": "CY",
+      "forma": "base",
+      "etiqueta": {
+        "es": "base británica",
+        "en": "British base"
+      },
+      "caja": [
+        32.75,
+        34.53,
+        33.1,
+        34.72
+      ],
+      "formas": [
+        "Akrotiri",
+        "RAF Akrotiri",
+        "Episkopi"
+      ]
+    },
+    "XD": {
+      "es": "Dhekelia",
+      "en": "Dhekelia",
+      "pais": "GB",
+      "geografico": "CY",
+      "forma": "base",
+      "etiqueta": {
+        "es": "base británica",
+        "en": "British base"
+      },
+      "caja": [
+        33.6,
+        34.93,
+        33.95,
+        35.13
+      ],
+      "formas": [
+        "Dhekelia",
+        "Ayios Nikolaos"
+      ]
+    },
+    "GI": {
+      "es": "Gibraltar",
+      "en": "Gibraltar",
+      "pais": "GB",
+      "forma": "dependencia",
+      "caja": [
+        -5.39,
+        36.1,
+        -5.33,
+        36.16
+      ],
+      "formas": [
+        "Gibraltar"
+      ]
+    },
+    "GL": {
+      "es": "Groenlandia",
+      "en": "Greenland",
+      "pais": "DK",
+      "forma": "dependencia",
+      "caja": [
+        -74.0,
+        59.0,
+        -10.0,
+        84.0
+      ],
+      "formas": [
+        "Groenlandia",
+        "Greenland",
+        "Grønland",
+        "Kalaallit Nunaat",
+        "Pituffik",
+        "Nuuk",
+        "Thule"
+      ]
+    },
+    "SJ": {
+      "es": "Svalbard",
+      "en": "Svalbard",
+      "pais": "NO",
+      "forma": "dependencia",
+      "caja": [
+        10.0,
+        74.0,
+        35.0,
+        81.0
+      ],
+      "formas": [
+        "Svalbard",
+        "Longyearbyen",
+        "Spitsbergen"
+      ]
+    },
+    "RE": {
+      "es": "Reunión",
+      "en": "Réunion",
+      "pais": "FR",
+      "forma": "dependencia",
+      "caja": [
+        55.1,
+        -21.5,
+        55.9,
+        -20.8
+      ],
+      "formas": [
+        "Reunión",
+        "Réunion",
+        "La Réunion",
+        "Saint-Denis de La Réunion"
+      ]
+    },
+    "YT": {
+      "es": "Mayotte",
+      "en": "Mayotte",
+      "pais": "FR",
+      "forma": "dependencia",
+      "caja": [
+        44.9,
+        -13.1,
+        45.4,
+        -12.6
+      ],
+      "formas": [
+        "Mayotte",
+        "Mamoudzou"
+      ]
+    },
+    "GP": {
+      "es": "Guadalupe",
+      "en": "Guadeloupe",
+      "pais": "FR",
+      "forma": "dependencia",
+      "caja": [
+        -62.0,
+        15.8,
+        -60.9,
+        16.6
+      ],
+      "formas": [
+        "Guadalupe",
+        "Guadeloupe",
+        "Pointe-à-Pitre"
+      ]
+    },
+    "MQ": {
+      "es": "Martinica",
+      "en": "Martinique",
+      "pais": "FR",
+      "forma": "dependencia",
+      "caja": [
+        -61.3,
+        14.3,
+        -60.7,
+        14.95
+      ],
+      "formas": [
+        "Martinica",
+        "Martinique",
+        "Fort-de-France"
+      ]
+    },
+    "GF": {
+      "es": "Guayana Francesa",
+      "en": "French Guiana",
+      "pais": "FR",
+      "forma": "dependencia",
+      "caja": [
+        -54.7,
+        2.0,
+        -51.5,
+        6.0
+      ],
+      "formas": [
+        "Guayana Francesa",
+        "French Guiana",
+        "Guyane",
+        "Cayenne",
+        "Kourou"
+      ]
+    },
+    "MF": {
+      "es": "San Martín",
+      "en": "Saint Martin",
+      "pais": "FR",
+      "forma": "dependencia",
+      "caja": [
+        -63.2,
+        18.0,
+        -62.95,
+        18.13
+      ],
+      "formas": [
+        "Saint-Martin",
+        "Saint Martin",
+        "San Martín"
+      ]
+    }
+  },
+  "mares": [
+    {
+      "es": "Mar Negro",
+      "en": "Black Sea",
+      "formas": [
+        "Mar Negro",
+        "mar Negro",
+        "Black Sea",
+        "Marea Neagră",
+        "Marea Neagra",
+        "Schwarzes Meer",
+        "Morze Czarne",
+        "Mustameri",
+        "Черно море",
+        "Чорне море",
+        "Черное море",
+        "Μαύρη Θάλασσα"
+      ]
+    },
+    {
+      "es": "Mar Báltico",
+      "en": "Baltic Sea",
+      "formas": [
+        "Mar Báltico",
+        "mar Báltico",
+        "Baltic Sea",
+        "Baltic",
+        "Ostsee",
+        "Morze Bałtyckie",
+        "Östersjön",
+        "Itämeri",
+        "Läänemeri",
+        "Baltijas jūra",
+        "Baltijos jūra",
+        "Østersøen"
+      ]
+    },
+    {
+      "es": "Mar Egeo",
+      "en": "Aegean Sea",
+      "formas": [
+        "Mar Egeo",
+        "Egeo",
+        "Aegean",
+        "Aegean Sea",
+        "Αιγαίο",
+        "Αιγαίο Πέλαγος",
+        "Ege Denizi"
+      ]
+    },
+    {
+      "es": "Mar del Norte",
+      "en": "North Sea",
+      "formas": [
+        "Mar del Norte",
+        "North Sea",
+        "Nordsee",
+        "Noordzee",
+        "Nordsøen",
+        "Nordsjøen"
+      ]
+    },
+    {
+      "es": "Mar Mediterráneo",
+      "en": "Mediterranean Sea",
+      "formas": [
+        "Mar Mediterráneo",
+        "Mediterráneo",
+        "Mediterranean",
+        "Mediterranean Sea"
+      ]
+    }
+  ],
+  "instalaciones": [
+    {
+      "patron": "^(?:Flughafen|Flugplatz|Verkehrsflughafen|Luchthaven|Aéroport(?: international)?(?: de| du| d’| d')?|Aeroporto(?: [Ii]nternazionale)?(?: di| de)?|Aeroportul(?: Internațional| Internaţional| International)?|Aeroport(?: de| d’| d')?|Aeropuerto(?: [Ii]nternacional)?(?: de)?|Letiště|Letisko|Port [Ll]otniczy|Lotnisko|Zračna luka|Aerodrom|Lufthavn)\\s+(?P<x>.+)$",
+      "plantilla": {
+        "es": "Aeropuerto de {x}",
+        "en": "{x} Airport"
+      }
+    },
+    {
+      "patron": "^(?P<x>.+?)\\s+(?:(?:International\\s+)?Airport|Airfield|[Ll]ufthavn|[Ff]lygplats|lentoasema|lidosta|(?:tarptautinis\\s+)?oro uostas|repülőtér|[Ff]lughafen)$",
+      "plantilla": {
+        "es": "Aeropuerto de {x}",
+        "en": "{x} Airport"
+      }
+    },
+    {
+      "patron": "^(?:Fliegerhorst|Vliegbasis|Luchtmachtbasis|Flyvestation|Flystasjon|Base aérienne(?: \\d+)?|Baza(?: \\d+)? Aerian[ăa]|Base [Aa]érea(?: de)?|Base militare(?: di)?|Base aerea(?: di)?)\\s+(?P<x>.+)$",
+      "plantilla": {
+        "es": "Base aérea de {x}",
+        "en": "{x} Air Base"
+      }
+    },
+    {
+      "patron": "^(?P<x>.+?)\\s+(?:Air Base|Airbase|Air Station|[Ff]lystasjon|[Ff]lyplass)$",
+      "plantilla": {
+        "es": "Base aérea de {x}",
+        "en": "{x} Air Base"
+      }
+    },
+    {
+      "patron": "^(?:Kernkraftwerk|Centrale nucléaire(?: de| du)?|Central [Nn]uclear(?: de)?|Kerncentrale|Jaderná elektrárna)\\s+(?P<x>.+)$",
+      "plantilla": {
+        "es": "Central nuclear de {x}",
+        "en": "{x} Nuclear Power Plant"
+      }
+    },
+    {
+      "patron": "^(?P<x>.+?)\\s+(?:[Nn]uclear [Pp]ower [Pp]lant|[Nn]uclear [Pp]ower [Ss]tation|ydinvoimalaitos|kärnkraftverk|atomerőmű|[Kk]ernkraftwerk)$",
+      "plantilla": {
+        "es": "Central nuclear de {x}",
+        "en": "{x} Nuclear Power Plant"
+      }
+    },
+    {
+      "patron": "^(?:Portul|Port of|Puerto de|Port de|Porto di|Hafen|Port)\\s+(?P<x>.+)$",
+      "plantilla": {
+        "es": "Puerto de {x}",
+        "en": "Port of {x}"
+      }
+    },
+    {
+      "patron": "^(?P<x>.+?)\\s+(?:[Hh]avn|[Hh]amn|[Ss]atama|[Hh]afen)$",
+      "plantilla": {
+        "es": "Puerto de {x}",
+        "en": "Port of {x}"
+      }
+    }
+  ],
+  "palabras_ajenas": {
+    "tercer_idioma": [
+      "Flughafen",
+      "Flugplatz",
+      "Fliegerhorst",
+      "Luchthaven",
+      "Vliegbasis",
+      "Vliegveld",
+      "Luchtmachtbasis",
+      "Lufthavn",
+      "lufthavn",
+      "Flyvestation",
+      "Flystasjon",
+      "flystasjon",
+      "Flygplats",
+      "flygplats",
+      "lentoasema",
+      "ydinvoimalaitos",
+      "Kernkraftwerk",
+      "Kraftwerk",
+      "Hafen",
+      "Aéroport",
+      "aéroport",
+      "Base aérienne",
+      "Aeroporto",
+      "Aeroportul",
+      "Aeroport",
+      "Portul",
+      "portul",
+      "Baza",
+      "Aeriană",
+      "raionul",
+      "raionului",
+      "județul",
+      "judeţul",
+      "pow.",
+      "powiat",
+      "gmina",
+      "województwo",
+      "Port Lotniczy",
+      "Port lotniczy",
+      "Lotnisko",
+      "Letiště",
+      "Letisko",
+      "Zračna luka",
+      "oro uostas",
+      "lidosta",
+      "Repülőtér",
+      "repülőtér",
+      "kaia",
+      "rajonas",
+      "rajons",
+      "novads",
+      "Mustanmeren",
+      "rannikko",
+      "Ostpolen",
+      "Dunăre",
+      "Marea Neagră",
+      "Insula",
+      "satul",
+      "comuna",
+      "municipiul",
+      "Nistrului",
+      "UTA",
+      "Gemeinde",
+      "Landkreis",
+      "Kreis",
+      "Bezirk",
+      "Stadt",
+      "nord",
+      "sud",
+      "Militärflugplatz",
+      "Militärstützpunkt",
+      "Kaserne",
+      "Truppenübungsplatz",
+      "Vojenské",
+      "letiště",
+      "Bundeswehr",
+      "Marinestützpunkt",
+      "Fliegerhorst",
+      "Prefettura",
+      "Maréchaussée"
+    ],
+    "ingles": [
+      "Airport",
+      "Airfield",
+      "Air Base",
+      "Airbase",
+      "Air Station",
+      "Naval Air Station",
+      "International",
+      "Power Plant",
+      "Power Station",
+      "Port of",
+      "Black Sea",
+      "Baltic Sea",
+      "North Sea",
+      "coast",
+      "northern",
+      "southern",
+      "eastern",
+      "western",
+      "north-east",
+      "north-west",
+      "south-east",
+      "south-west",
+      "between",
+      "near",
+      "District",
+      "district",
+      "County",
+      "Municipality",
+      "Region",
+      "Bay",
+      "British base",
+      "drone",
+      "Drone",
+      "the"
+    ],
+    "espanol": [
+      "Aeropuerto",
+      "aeropuerto",
+      "Base aérea",
+      "base aérea",
+      "Central nuclear",
+      "central nuclear",
+      "Puerto de Constanța",
+      "Mar Negro",
+      "mar Negro",
+      "entre",
+      "junto",
+      "cerca de",
+      "distrito",
+      "municipio",
+      "provincia",
+      "región",
+      "explosión",
+      "extrarradio",
+      "frente a",
+      "punto de",
+      "zona de",
+      "restos",
+      "segmento",
+      "sede",
+      "depósito",
+      "derribo",
+      "donde",
+      "hacia",
+      "salida",
+      "tercer",
+      "segundo",
+      "unos",
+      "base británica",
+      "dron",
+      "Dron",
+      "sudeste",
+      "nordeste",
+      "noroeste",
+      "suroeste",
+      "este de",
+      "norte de",
+      "sur de",
+      "oeste de"
+    ]
+  },
+  "formas_ajenas": {
+    "es": {
+      "Drone": "Dron",
+      "drone": "dron",
+      "Dublin Bay": "la bahía de Dublín",
+      "agricola": "agrícola"
+    },
+    "en": {
+      "Dron": "Drone",
+      "dron": "drone"
+    }
+  },
+  "aeropuertos": {
+    "EKKA": {
+      "aeropuerto": {
+        "es": "Aeropuerto de Karup",
+        "en": "Karup Airport"
+      },
+      "ciudad": {
+        "es": "Karup",
+        "en": "Karup"
+      }
+    },
+    "EDLV": {
+      "aeropuerto": {
+        "es": "Aeropuerto de Weeze",
+        "en": "Weeze Airport"
+      },
+      "ciudad": {
+        "es": "Weeze",
+        "en": "Weeze"
+      }
+    },
+    "ENDU": {
+      "aeropuerto": {
+        "es": "Aeropuerto de Bardufoss",
+        "en": "Bardufoss Airport"
+      },
+      "ciudad": {
+        "es": "Bardufoss",
+        "en": "Bardufoss"
+      }
+    },
+    "EINN": {
+      "aeropuerto": {
+        "es": "Aeropuerto de Shannon",
+        "en": "Shannon Airport"
+      },
+      "ciudad": {
+        "es": "Shannon",
+        "en": "Shannon"
+      }
+    },
+    "EGNR": {
+      "aeropuerto": {
+        "es": "Aeropuerto de Hawarden",
+        "en": "Hawarden Airport"
+      },
+      "ciudad": {
+        "es": "Hawarden",
+        "en": "Hawarden"
+      }
+    },
+    "LEZL": {
+      "aeropuerto": {
+        "es": "Aeropuerto de Sevilla",
+        "en": "Seville Airport"
+      },
+      "ciudad": {
+        "es": "Sevilla",
+        "en": "Seville"
+      }
+    },
+    "LEMG": {
+      "aeropuerto": {
+        "es": "Aeropuerto de Málaga",
+        "en": "Málaga Airport"
+      },
+      "ciudad": {
+        "es": "Málaga",
+        "en": "Málaga"
+      }
+    },
+    "LFBO": {
+      "aeropuerto": {
+        "es": "Aeropuerto de Toulouse-Blagnac",
+        "en": "Toulouse–Blagnac Airport"
+      },
+      "ciudad": {
+        "es": "Toulouse",
+        "en": "Toulouse"
+      }
+    },
+    "LDSP": {
+      "aeropuerto": {
+        "es": "Aeropuerto de Split",
+        "en": "Split Airport"
+      },
+      "ciudad": {
+        "es": "Split",
+        "en": "Split"
+      }
+    },
+    "EGLC": {
+      "aeropuerto": {
+        "es": "Aeropuerto de Londres-City",
+        "en": "London City Airport"
+      },
+      "ciudad": {
+        "es": "Londres",
+        "en": "London"
+      }
+    },
+    "ESNN": {
+      "aeropuerto": {
+        "es": "Aeropuerto de Sundsvall-Timrå",
+        "en": "Sundsvall–Timrå Airport"
+      },
+      "ciudad": {
+        "es": "Sundsvall",
+        "en": "Sundsvall"
+      }
+    },
+    "EDSB": {
+      "aeropuerto": {
+        "es": "Aeropuerto de Karlsruhe/Baden-Baden",
+        "en": "Karlsruhe/Baden-Baden Airport"
+      },
+      "ciudad": {
+        "es": "Karlsruhe",
+        "en": "Karlsruhe"
+      }
+    },
+    "EGUL": {
+      "ciudad": {
+        "es": "Lakenheath",
+        "en": "Lakenheath"
+      }
+    },
+    "LXGB": {
+      "base": {
+        "es": "RAF Gibraltar",
+        "en": "RAF Gibraltar"
+      }
+    },
+    "EBCI": {
+      "aeropuerto": {
+        "es": "Aeropuerto de Charleroi",
+        "en": "Brussels South Charleroi Airport"
+      },
+      "ciudad": {
+        "es": "Charleroi",
+        "en": "Charleroi"
+      }
+    },
+    "EHVK": {
+      "base": {
+        "es": "Base aérea de Volkel",
+        "en": "Volkel Air Base"
+      },
+      "ciudad": {
+        "es": "Volkel",
+        "en": "Volkel"
+      }
+    },
+    "BIKF": {
+      "base": {
+        "es": "Base aérea de Keflavík",
+        "en": "Keflavík Air Base"
+      }
+    }
+  },
+  "localidades": [
+    {
+      "pais": "DE",
+      "es": "Múnich",
+      "en": "Munich",
+      "formas": [
+        "München",
+        "Muenchen",
+        "Monaco di Baviera"
+      ]
+    },
+    {
+      "pais": "DE",
+      "es": "Colonia",
+      "en": "Cologne",
+      "formas": [
+        "Köln",
+        "Koeln"
+      ]
+    },
+    {
+      "pais": "DE",
+      "es": "Fráncfort",
+      "en": "Frankfurt",
+      "formas": [
+        "Frankfurt am Main",
+        "Fráncfort del Meno",
+        "Francfort",
+        "Francoforte"
+      ]
+    },
+    {
+      "pais": "DE",
+      "es": "Hamburgo",
+      "en": "Hamburg",
+      "formas": [
+        "Hamburgo"
+      ]
+    },
+    {
+      "pais": "DE",
+      "es": "Berlín",
+      "en": "Berlin",
+      "formas": []
+    },
+    {
+      "pais": "DE",
+      "es": "Dresde",
+      "en": "Dresden",
+      "formas": []
+    },
+    {
+      "pais": "DE",
+      "es": "Hannover",
+      "en": "Hanover",
+      "formas": [
+        "Hannover",
+        "Hanóver"
+      ]
+    },
+    {
+      "pais": "DE",
+      "es": "Núremberg",
+      "en": "Nuremberg",
+      "formas": [
+        "Nürnberg",
+        "Nuremberga"
+      ]
+    },
+    {
+      "pais": "DE",
+      "es": "Aquisgrán",
+      "en": "Aachen",
+      "formas": [
+        "Aix-la-Chapelle"
+      ]
+    },
+    {
+      "pais": "DE",
+      "es": "Maguncia",
+      "en": "Mainz",
+      "formas": [
+        "Mayence"
+      ]
+    },
+    {
+      "pais": "DE",
+      "es": "Tréveris",
+      "en": "Trier",
+      "formas": [
+        "Trèves"
+      ]
+    },
+    {
+      "pais": "DE",
+      "es": "Ratisbona",
+      "en": "Regensburg",
+      "formas": []
+    },
+    {
+      "pais": "DE",
+      "es": "Coblenza",
+      "en": "Koblenz",
+      "formas": []
+    },
+    {
+      "pais": "DE",
+      "es": "Brunswick",
+      "en": "Brunswick",
+      "formas": [
+        "Braunschweig"
+      ]
+    },
+    {
+      "pais": "DE",
+      "es": "Düsseldorf",
+      "en": "Düsseldorf",
+      "formas": [
+        "Dusseldorf"
+      ]
+    },
+    {
+      "pais": "DE",
+      "es": "Stuttgart",
+      "en": "Stuttgart",
+      "formas": []
+    },
+    {
+      "pais": "DE",
+      "es": "Leipzig",
+      "en": "Leipzig",
+      "formas": [
+        "Lipsia"
+      ]
+    },
+    {
+      "pais": "DE",
+      "es": "Bremen",
+      "en": "Bremen",
+      "formas": [
+        "Brema"
+      ]
+    },
+    {
+      "pais": "AT",
+      "es": "Viena",
+      "en": "Vienna",
+      "formas": [
+        "Wien",
+        "Vienne"
+      ]
+    },
+    {
+      "pais": "AT",
+      "es": "Salzburgo",
+      "en": "Salzburg",
+      "formas": []
+    },
+    {
+      "pais": "BE",
+      "es": "Bruselas",
+      "en": "Brussels",
+      "formas": [
+        "Bruxelles",
+        "Brussel",
+        "Brüssel",
+        "Bruxelas",
+        "Bruxelles-Capitale"
+      ]
+    },
+    {
+      "pais": "BE",
+      "es": "Amberes",
+      "en": "Antwerp",
+      "formas": [
+        "Antwerpen",
+        "Anvers"
+      ]
+    },
+    {
+      "pais": "BE",
+      "es": "Lieja",
+      "en": "Liège",
+      "formas": [
+        "Liege",
+        "Luik",
+        "Lüttich"
+      ]
+    },
+    {
+      "pais": "BE",
+      "es": "Gante",
+      "en": "Ghent",
+      "formas": [
+        "Gent",
+        "Gand"
+      ]
+    },
+    {
+      "pais": "BE",
+      "es": "Brujas",
+      "en": "Bruges",
+      "formas": [
+        "Brugge"
+      ]
+    },
+    {
+      "pais": "BE",
+      "es": "Lovaina",
+      "en": "Leuven",
+      "formas": [
+        "Louvain"
+      ]
+    },
+    {
+      "pais": "BE",
+      "es": "Malinas",
+      "en": "Mechelen",
+      "formas": [
+        "Malines"
+      ]
+    },
+    {
+      "pais": "NL",
+      "es": "Ámsterdam",
+      "en": "Amsterdam",
+      "formas": []
+    },
+    {
+      "pais": "NL",
+      "es": "La Haya",
+      "en": "The Hague",
+      "formas": [
+        "Den Haag",
+        "'s-Gravenhage",
+        "La Haye"
+      ]
+    },
+    {
+      "pais": "NL",
+      "es": "Róterdam",
+      "en": "Rotterdam",
+      "formas": []
+    },
+    {
+      "pais": "DK",
+      "es": "Copenhague",
+      "en": "Copenhagen",
+      "formas": [
+        "København",
+        "Kopenhagen",
+        "Copenaghen",
+        "Kopenhaga"
+      ]
+    },
+    {
+      "pais": "SE",
+      "es": "Estocolmo",
+      "en": "Stockholm",
+      "formas": []
+    },
+    {
+      "pais": "SE",
+      "es": "Gotemburgo",
+      "en": "Gothenburg",
+      "formas": [
+        "Göteborg",
+        "Goteborg"
+      ]
+    },
+    {
+      "pais": "SE",
+      "es": "Upsala",
+      "en": "Uppsala",
+      "formas": []
+    },
+    {
+      "pais": "PL",
+      "es": "Varsovia",
+      "en": "Warsaw",
+      "formas": [
+        "Warszawa",
+        "Warschau",
+        "Varsavia",
+        "Varșovia"
+      ]
+    },
+    {
+      "pais": "PL",
+      "es": "Cracovia",
+      "en": "Kraków",
+      "formas": [
+        "Krakow",
+        "Krakau",
+        "Cracovie"
+      ]
+    },
+    {
+      "pais": "PL",
+      "es": "Rzeszów",
+      "en": "Rzeszów",
+      "formas": [
+        "Rzeszow",
+        "Resovia"
+      ]
+    },
+    {
+      "pais": "PL",
+      "es": "Gdansk",
+      "en": "Gdańsk",
+      "formas": [
+        "Danzig",
+        "Gdańsk"
+      ]
+    },
+    {
+      "pais": "PL",
+      "es": "Poznan",
+      "en": "Poznań",
+      "formas": [
+        "Posen",
+        "Poznań"
+      ]
+    },
+    {
+      "pais": "PL",
+      "es": "Lodz",
+      "en": "Łódź",
+      "formas": [
+        "Łódź",
+        "Lodsch"
+      ]
+    },
+    {
+      "pais": "PL",
+      "es": "Breslavia",
+      "en": "Wrocław",
+      "formas": [
+        "Wroclaw",
+        "Breslau"
+      ]
+    },
+    {
+      "pais": "LT",
+      "es": "Vilna",
+      "en": "Vilnius",
+      "formas": [
+        "Wilno",
+        "Wilna"
+      ]
+    },
+    {
+      "pais": "LT",
+      "es": "Kaunas",
+      "en": "Kaunas",
+      "formas": [
+        "Kowno"
+      ]
+    },
+    {
+      "pais": "LV",
+      "es": "Riga",
+      "en": "Riga",
+      "formas": [
+        "Rīga"
+      ]
+    },
+    {
+      "pais": "EE",
+      "es": "Tallin",
+      "en": "Tallinn",
+      "formas": [
+        "Reval"
+      ]
+    },
+    {
+      "pais": "RO",
+      "es": "Bucarest",
+      "en": "Bucharest",
+      "formas": [
+        "București",
+        "Bucureşti",
+        "Bucuresti",
+        "Bukarest"
+      ]
+    },
+    {
+      "pais": "RO",
+      "es": "Constanza",
+      "en": "Constanța",
+      "formas": [
+        "Constanţa",
+        "Constanta",
+        "Konstanza"
+      ]
+    },
+    {
+      "pais": "RO",
+      "es": "Galați",
+      "en": "Galați",
+      "formas": [
+        "Galaţi",
+        "Galati",
+        "Galatz"
+      ]
+    },
+    {
+      "pais": "RO",
+      "es": "Timișoara",
+      "en": "Timișoara",
+      "formas": [
+        "Timişoara",
+        "Timisoara"
+      ]
+    },
+    {
+      "pais": "MD",
+      "es": "Chisináu",
+      "en": "Chișinău",
+      "formas": [
+        "Chişinău",
+        "Chisinau",
+        "Kishinev"
+      ]
+    },
+    {
+      "pais": "MD",
+      "es": "Tiraspol",
+      "en": "Tiraspol",
+      "formas": []
+    },
+    {
+      "pais": "MD",
+      "es": "Bălți",
+      "en": "Bălți",
+      "formas": [
+        "Bălţi",
+        "Balti"
+      ]
+    },
+    {
+      "pais": "BG",
+      "es": "Sofía",
+      "en": "Sofia",
+      "formas": [
+        "София"
+      ]
+    },
+    {
+      "pais": "BG",
+      "es": "Varna",
+      "en": "Varna",
+      "formas": [
+        "Варна"
+      ]
+    },
+    {
+      "pais": "BG",
+      "es": "Burgas",
+      "en": "Burgas",
+      "formas": [
+        "Бургас"
+      ]
+    },
+    {
+      "pais": "BG",
+      "es": "Plovdiv",
+      "en": "Plovdiv",
+      "formas": [
+        "Пловдив"
+      ]
+    },
+    {
+      "pais": "GR",
+      "es": "Atenas",
+      "en": "Athens",
+      "formas": [
+        "Athina",
+        "Athína",
+        "Αθήνα"
+      ]
+    },
+    {
+      "pais": "GR",
+      "es": "Salónica",
+      "en": "Thessaloniki",
+      "formas": [
+        "Tesalónica",
+        "Thessaloníki",
+        "Θεσσαλονίκη"
+      ]
+    },
+    {
+      "pais": "GR",
+      "es": "El Pireo",
+      "en": "Piraeus",
+      "formas": [
+        "Pireo",
+        "Peiraias",
+        "Πειραιάς"
+      ]
+    },
+    {
+      "pais": "GR",
+      "es": "Alejandrópolis",
+      "en": "Alexandroupolis",
+      "formas": [
+        "Alexandroupoli",
+        "Αλεξανδρούπολη"
+      ]
+    },
+    {
+      "pais": "CY",
+      "es": "Nicosia",
+      "en": "Nicosia",
+      "formas": [
+        "Lefkosia",
+        "Λευκωσία"
+      ]
+    },
+    {
+      "pais": "CY",
+      "es": "Lárnaca",
+      "en": "Larnaca",
+      "formas": [
+        "Larnaka",
+        "Λάρνακα"
+      ]
+    },
+    {
+      "pais": "CY",
+      "es": "Pafos",
+      "en": "Paphos",
+      "formas": [
+        "Páfos",
+        "Πάφος"
+      ]
+    },
+    {
+      "pais": "CY",
+      "es": "Limasol",
+      "en": "Limassol",
+      "formas": [
+        "Lemesos",
+        "Λεμεσός"
+      ]
+    },
+    {
+      "pais": "GB",
+      "es": "Londres",
+      "en": "London",
+      "formas": []
+    },
+    {
+      "pais": "GB",
+      "es": "Edimburgo",
+      "en": "Edinburgh",
+      "formas": []
+    },
+    {
+      "pais": "IE",
+      "es": "Dublín",
+      "en": "Dublin",
+      "formas": [
+        "Baile Átha Cliath"
+      ]
+    },
+    {
+      "pais": "FR",
+      "es": "París",
+      "en": "Paris",
+      "formas": [
+        "Parigi"
+      ]
+    },
+    {
+      "pais": "FR",
+      "es": "Marsella",
+      "en": "Marseille",
+      "formas": [
+        "Marseilles"
+      ]
+    },
+    {
+      "pais": "FR",
+      "es": "Burdeos",
+      "en": "Bordeaux",
+      "formas": []
+    },
+    {
+      "pais": "FR",
+      "es": "Niza",
+      "en": "Nice",
+      "formas": [
+        "Nizza"
+      ]
+    },
+    {
+      "pais": "FR",
+      "es": "Estrasburgo",
+      "en": "Strasbourg",
+      "formas": [
+        "Straßburg"
+      ]
+    },
+    {
+      "pais": "FR",
+      "es": "Cherburgo",
+      "en": "Cherbourg",
+      "formas": [
+        "Cherbourg-en-Cotentin"
+      ]
+    },
+    {
+      "pais": "IT",
+      "es": "Roma",
+      "en": "Rome",
+      "formas": []
+    },
+    {
+      "pais": "IT",
+      "es": "Milán",
+      "en": "Milan",
+      "formas": [
+        "Milano",
+        "Mailand"
+      ]
+    },
+    {
+      "pais": "IT",
+      "es": "Nápoles",
+      "en": "Naples",
+      "formas": [
+        "Napoli",
+        "Neapel"
+      ]
+    },
+    {
+      "pais": "IT",
+      "es": "Turín",
+      "en": "Turin",
+      "formas": [
+        "Torino"
+      ]
+    },
+    {
+      "pais": "IT",
+      "es": "Florencia",
+      "en": "Florence",
+      "formas": [
+        "Firenze"
+      ]
+    },
+    {
+      "pais": "IT",
+      "es": "Venecia",
+      "en": "Venice",
+      "formas": [
+        "Venezia"
+      ]
+    },
+    {
+      "pais": "IT",
+      "es": "Génova",
+      "en": "Genoa",
+      "formas": [
+        "Genova"
+      ]
+    },
+    {
+      "pais": "IT",
+      "es": "Bolonia",
+      "en": "Bologna",
+      "formas": []
+    },
+    {
+      "pais": "PT",
+      "es": "Lisboa",
+      "en": "Lisbon",
+      "formas": [
+        "Lissabon"
+      ]
+    },
+    {
+      "pais": "PT",
+      "es": "Oporto",
+      "en": "Porto",
+      "formas": []
+    },
+    {
+      "pais": "ES",
+      "es": "Sevilla",
+      "en": "Seville",
+      "formas": []
+    },
+    {
+      "pais": "ES",
+      "es": "La Coruña",
+      "en": "A Coruña",
+      "formas": [
+        "A Coruña",
+        "Coruña"
+      ]
+    },
+    {
+      "pais": "CZ",
+      "es": "Praga",
+      "en": "Prague",
+      "formas": [
+        "Praha",
+        "Prag"
+      ]
+    },
+    {
+      "pais": "HU",
+      "es": "Budapest",
+      "en": "Budapest",
+      "formas": []
+    },
+    {
+      "pais": "RS",
+      "es": "Belgrado",
+      "en": "Belgrade",
+      "formas": [
+        "Beograd",
+        "Београд"
+      ]
+    },
+    {
+      "pais": "CH",
+      "es": "Zúrich",
+      "en": "Zurich",
+      "formas": [
+        "Zürich"
+      ]
+    },
+    {
+      "pais": "CH",
+      "es": "Ginebra",
+      "en": "Geneva",
+      "formas": [
+        "Genève",
+        "Genf"
+      ]
+    },
+    {
+      "pais": "CH",
+      "es": "Berna",
+      "en": "Bern",
+      "formas": [
+        "Berne"
+      ]
+    },
+    {
+      "pais": "CH",
+      "es": "Basilea",
+      "en": "Basel",
+      "formas": [
+        "Bâle"
+      ]
+    },
+    {
+      "pais": "CH",
+      "es": "Lausana",
+      "en": "Lausanne",
+      "formas": []
+    },
+    {
+      "pais": "LU",
+      "es": "Luxemburgo",
+      "en": "Luxembourg",
+      "formas": [
+        "Lëtzebuerg"
+      ]
+    },
+    {
+      "pais": "UA",
+      "es": "Kiev",
+      "en": "Kyiv",
+      "formas": [
+        "Kyiv",
+        "Kiev",
+        "Kijów",
+        "Kiew",
+        "Київ",
+        "Киев"
+      ]
+    },
+    {
+      "pais": "UA",
+      "es": "Járkov",
+      "en": "Kharkiv",
+      "formas": [
+        "Charków",
+        "Kharkov",
+        "Харків",
+        "Харьков"
+      ]
+    },
+    {
+      "pais": "UA",
+      "es": "Odesa",
+      "en": "Odesa",
+      "formas": [
+        "Odessa",
+        "Odesa",
+        "Одеса",
+        "Одесса"
+      ]
+    },
+    {
+      "pais": "UA",
+      "es": "Leópolis",
+      "en": "Lviv",
+      "formas": [
+        "Lwów",
+        "Lemberg",
+        "Львів"
+      ]
+    },
+    {
+      "pais": "UA",
+      "es": "Dnipró",
+      "en": "Dnipro",
+      "formas": [
+        "Dnipro",
+        "Дніпро"
+      ]
+    },
+    {
+      "pais": "UA",
+      "es": "Zaporiyia",
+      "en": "Zaporizhzhia",
+      "formas": [
+        "Zaporoże",
+        "Запоріжжя"
+      ]
+    },
+    {
+      "pais": "UA",
+      "es": "Jersón",
+      "en": "Kherson",
+      "formas": [
+        "Chersoń",
+        "Херсон"
+      ]
+    },
+    {
+      "pais": "UA",
+      "es": "Mikoláiv",
+      "en": "Mykolaiv",
+      "formas": [
+        "Mikołajów",
+        "Миколаїв"
+      ]
+    },
+    {
+      "pais": "UA",
+      "es": "Izmaíl",
+      "en": "Izmail",
+      "formas": [
+        "Izmajil",
+        "Ізмаїл"
+      ]
+    },
+    {
+      "pais": "UA",
+      "es": "Reni",
+      "en": "Reni",
+      "formas": [
+        "Рені"
+      ]
+    },
+    {
+      "pais": "RU",
+      "es": "Moscú",
+      "en": "Moscow",
+      "formas": [
+        "Moskwa",
+        "Moskau",
+        "Moscova",
+        "Москва"
+      ]
+    },
+    {
+      "pais": "RU",
+      "es": "San Petersburgo",
+      "en": "Saint Petersburg",
+      "formas": [
+        "Sankt-Peterburg",
+        "St. Petersburg",
+        "Санкт-Петербург"
+      ]
+    },
+    {
+      "pais": "RU",
+      "es": "Kaliningrado",
+      "en": "Kaliningrad",
+      "formas": [
+        "Królewiec",
+        "Калининград"
+      ]
+    },
+    {
+      "pais": "BY",
+      "es": "Minsk",
+      "en": "Minsk",
+      "formas": [
+        "Мінск",
+        "Минск"
+      ]
+    },
+    {
+      "pais": "BY",
+      "es": "Grodno",
+      "en": "Hrodna",
+      "formas": [
+        "Grodno",
+        "Гродна"
+      ]
+    },
+    {
+      "pais": "BY",
+      "es": "Gómel",
+      "en": "Gomel",
+      "formas": [
+        "Homel",
+        "Гомель"
+      ]
+    },
+    {
+      "pais": "NO",
+      "es": "Oslo",
+      "en": "Oslo",
+      "formas": []
+    },
+    {
+      "pais": "ES",
+      "es": "Palma",
+      "en": "Palma",
+      "formas": []
+    },
+    {
+      "pais": "DE",
+      "es": "Erfurt",
+      "en": "Erfurt",
+      "formas": [
+        "Érfurt"
+      ]
+    },
+    {
+      "pais": "GB",
+      "es": "Bexhill-on-Sea",
+      "en": "Bexhill-on-Sea",
+      "formas": [
+        "Bexhill on Sea",
+        "Bexhill"
+      ]
+    },
+    {
+      "pais": "IE",
+      "es": "Portlaoise",
+      "en": "Portlaoise",
+      "formas": [
+        "Port Laoise"
+      ]
+    },
+    {
+      "pais": "FI",
+      "es": "Loviisa",
+      "en": "Loviisa",
+      "formas": [
+        "Lovisa"
+      ]
+    },
+    {
+      "pais": "ES",
+      "es": "Alicante",
+      "en": "Alicante",
+      "formas": []
+    },
+    {
+      "pais": "FI",
+      "es": "Helsinki",
+      "en": "Helsinki",
+      "formas": [
+        "Helsingfors"
+      ]
+    },
+    {
+      "pais": "HR",
+      "es": "Zagreb",
+      "en": "Zagreb",
+      "formas": [
+        "Zagabria"
+      ]
+    }
+  ],
+  "textos": {
+    "exclusive economic zone": {
+      "es": "Zona económica exclusiva",
+      "en": "Exclusive economic zone"
+    },
+    "gare de triage de Mulhouse": {
+      "es": "Estación de clasificación de Mulhouse",
+      "en": "Mulhouse marshalling yard",
+      "sitio": {
+        "es": "Mulhouse",
+        "en": "Mulhouse"
+      }
+    },
+    "Nato-kaia": {
+      "es": "Muelle de la OTAN",
+      "en": "NATO quay"
+    },
+    "southeastern Lithuania": {
+      "es": "Sudeste de Lituania",
+      "en": "South-eastern Lithuania"
+    },
+    "eastern Latvia": {
+      "es": "Este de Letonia",
+      "en": "Eastern Latvia"
+    },
+    "northern Latvia": {
+      "es": "Norte de Letonia",
+      "en": "Northern Latvia"
+    },
+    "southeast": {
+      "es": "Sudeste",
+      "en": "South-east"
+    },
+    "Васил Левски": {
+      "es": "Aeropuerto de Sofía",
+      "en": "Sofia Airport",
+      "sitio": {
+        "es": "Sofía",
+        "en": "Sofia"
+      }
+    },
+    "Αιγαίο": {
+      "es": "Mar Egeo",
+      "en": "Aegean Sea"
+    },
+    "Βορειοανατολικό και Κεντρικό Αιγαίο": {
+      "es": "Egeo nororiental y central",
+      "en": "North-eastern and central Aegean"
+    },
+    "Mustanmeren-rannikko": {
+      "es": "Costa del mar Negro",
+      "en": "Black Sea coast"
+    },
+    "Dunăre și Marea Neagră": {
+      "es": "Danubio y mar Negro",
+      "en": "Danube and Black Sea"
+    },
+    "Romanian coast": {
+      "es": "Costa rumana",
+      "en": "Romanian coast"
+    },
+    "Ostpolen": {
+      "es": "Este de Polonia",
+      "en": "Eastern Poland"
+    },
+    "Dublin Bay": {
+      "es": "Bahía de Dublín",
+      "en": "Dublin Bay"
+    },
+    "Sachsen-Anhalt": {
+      "es": "Sajonia-Anhalt",
+      "en": "Saxony-Anhalt"
+    },
+    "Nordjylland": {
+      "es": "Jutlandia Septentrional",
+      "en": "North Jutland"
+    },
+    "Splitsko-dalmatinska": {
+      "es": "Split-Dalmacia",
+      "en": "Split-Dalmatia"
+    },
+    "Troms og Finnmark": {
+      "es": "Troms y Finnmark",
+      "en": "Troms og Finnmark"
+    },
+    "Insula Mare a Brăilei, frente a Gropeni (distrito de Brăila)": {
+      "es": "Isla Grande de Brăila",
+      "en": "Great Island of Brăila"
+    },
+    "Dana 78, portul Constanța (donde se avistó el dron)": {
+      "es": "Muelle 78 del puerto de Constanza",
+      "en": "Berth 78, Port of Constanța"
+    },
+    "Portul Constanța, Dana 78 (junto a la sede de ARSVOM)": {
+      "es": "Constanza",
+      "en": "Constanța"
+    },
+    "Irish Prison Service College": {
+      "es": "Escuela del Servicio Penitenciario de Irlanda",
+      "en": "Irish Prison Service College",
+      "sitio": {
+        "es": "Portlaoise",
+        "en": "Portlaoise"
+      }
+    },
+    "Aeropuerto de Bruxelas-Zaventem": {
+      "es": "Aeropuerto de Bruselas",
+      "en": "Brussels Airport",
+      "sitio": {
+        "es": "Bruselas",
+        "en": "Brussels"
+      }
+    },
+    "Aeropuerto de Luxemburgo Findel": {
+      "es": "Aeropuerto de Luxemburgo",
+      "en": "Luxembourg Airport",
+      "sitio": {
+        "es": "Luxemburgo",
+        "en": "Luxembourg"
+      }
+    },
+    "Aeropuerto César Manrique Lanzarote": {
+      "es": "Aeropuerto de Lanzarote",
+      "en": "Lanzarote Airport",
+      "sitio": {
+        "es": "Lanzarote",
+        "en": "Lanzarote"
+      }
+    },
+    "Central Eléctrica de Auvere": {
+      "es": "Central eléctrica de Auvere",
+      "en": "Auvere Power Plant",
+      "sitio": {
+        "es": "Auvere",
+        "en": "Auvere"
+      }
+    },
+    "Loviisan ydinvoimalaitos": {
+      "es": "Central nuclear de Loviisa",
+      "en": "Loviisa Nuclear Power Plant",
+      "sitio": {
+        "es": "Loviisa",
+        "en": "Loviisa"
+      }
+    },
+    "Baza 86 Aeriană „Locotenent aviator Gheorghe Mociorniță” Borcea": {
+      "es": "Base aérea 86 de Borcea",
+      "en": "86th Air Base Borcea",
+      "sitio": {
+        "es": "Borcea",
+        "en": "Borcea"
+      }
+    },
+    "Baza Aeriană Boboc, Buzău": {
+      "es": "Base aérea de Boboc",
+      "en": "Boboc Air Base",
+      "sitio": {
+        "es": "Boboc",
+        "en": "Boboc"
+      }
+    },
+    "Flyvestation Aalborg": {
+      "es": "Base aérea de Aalborg",
+      "en": "Aalborg Air Base",
+      "sitio": {
+        "es": "Aalborg",
+        "en": "Aalborg"
+      }
+    },
+    "Royal Air Force Gibraltar": {
+      "es": "RAF Gibraltar",
+      "en": "RAF Gibraltar",
+      "sitio": {
+        "es": "Gibraltar",
+        "en": "Gibraltar"
+      }
+    },
+    "Naval Air Station Keflavik": {
+      "es": "Base aérea de Keflavík",
+      "en": "Keflavík Air Base",
+      "sitio": {
+        "es": "Keflavík",
+        "en": "Keflavík"
+      }
+    },
+    "Diest Schaffen Airfield": {
+      "es": "Aeródromo de Schaffen-Diest",
+      "en": "Diest-Schaffen Airfield",
+      "sitio": {
+        "es": "Diest",
+        "en": "Diest"
+      }
+    },
+    "Midtjylland Karup Airport": {
+      "es": "Aeropuerto de Karup",
+      "en": "Karup Airport",
+      "sitio": {
+        "es": "Karup",
+        "en": "Karup"
+      }
+    },
+    "Aeropuerto de Sandefjord-Torp": {
+      "es": "Sandefjord",
+      "en": "Sandefjord"
+    },
+    "Aeropuerto de Fráncfort del Meno": {
+      "es": "Fráncfort",
+      "en": "Frankfurt"
+    },
+    "Base aérea de Skrydstrup": {
+      "es": "Skrydstrup",
+      "en": "Skrydstrup"
+    },
+    "Sandefjord lufthavn Torp": {
+      "es": "Aeropuerto de Sandefjord-Torp",
+      "en": "Sandefjord Airport, Torp"
+    },
+    "Regimiento de Dragones de Jutlandia (Dragonkasernen, Holstebro)": {
+      "es": "Cuartel de los Dragones de Jutlandia, Holstebro",
+      "en": "Jutland Dragoons barracks, Holstebro"
+    }
+  }
+}
