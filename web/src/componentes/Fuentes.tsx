@@ -5,7 +5,7 @@ import { autoridadEscrita, medioEscrito } from "../i18n/autoridades.ts";
 import { instante } from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
 import type { Idioma } from "../sitio.ts";
-import { EnlaceExterno } from "./EnlaceExterno.tsx";
+import { EnlaceFuente } from "./EnlaceFuente.tsx";
 import { Simbolo } from "./Simbolo.tsx";
 
 /** Fuentes que se muestran antes de pedir «ver más»: algunos incidentes tienen cientos. */
@@ -46,14 +46,11 @@ function FichaFuente({ t, fuente, idioma }: { t: Textos; fuente: FuenteImpacto; 
   return (
     <li className="border-b border-linea py-2">
       <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-        <EnlaceExterno
-          enlace={fuente.enlace}
-          aviso={t.ficha.enlaceExterno}
-          avisoNoValido={t.ficha.enlaceNoValido}
-          className="font-medium"
-        >
-          {nombreDeFuente(t, fuente.medio, idioma)}
-        </EnlaceExterno>
+        <span>
+          <EnlaceFuente t={t} fuente={fuente} className="font-medium">
+            {nombreDeFuente(t, fuente.medio, idioma)}
+          </EnlaceFuente>
+        </span>
         <span className="mono rounded-sm border border-linea px-1 text-xs text-acento">
           <span className="sr-only">{t.ficha.codigo(codigo)}</span>
           <span aria-hidden="true" title={t.ficha.codigo(codigo)}>

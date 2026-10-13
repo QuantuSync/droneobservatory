@@ -40,6 +40,10 @@ def _fuentes() -> set[str]:
         "fuentes[].credibilidad",
         "fuentes[].frase_origen",
         "fuentes[].replicas",
+        "fuentes[].copia_archivada",
+        "fuentes[].copia_archivada.enlace",
+        "fuentes[].copia_archivada.fecha",
+        "fuentes[].enlace_caido",
     }
 
 

@@ -23,7 +23,7 @@ import { Enlace } from "../navegacion.tsx";
 import { rutaDeFicha } from "../sitio.ts";
 import type { Idioma } from "../sitio.ts";
 import { diaDeInstante } from "../tiempo/dias.ts";
-import { EnlaceExterno } from "./EnlaceExterno.tsx";
+import { EnlaceFuente } from "./EnlaceFuente.tsx";
 import { EstadoConTexto, Historial, ListaFuentes, nombreDeAutoridad } from "./Fuentes.tsx";
 import { LineaFoco, ZOOM_VISOR_PUNTO } from "./FocoTermico.tsx";
 import { LineaTrafico } from "./TraficoAereo.tsx";
@@ -305,9 +305,9 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
             <span className="mono block text-xs text-secundario">
               {instante(fuentePunto.fecha)}
               {" · "}
-              <EnlaceExterno enlace={fuentePunto.enlace} aviso={t.ficha.enlaceExterno} avisoNoValido={t.ficha.enlaceNoValido}>
+              <EnlaceFuente t={t} fuente={fuentePunto}>
                 {t.ficha.verFuente}
-              </EnlaceExterno>
+              </EnlaceFuente>
             </span>
           </Fila>
         )}
@@ -325,9 +325,9 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
                     <span className="mono block text-xs text-secundario">
                       {fuente.medio} · {instante(fuente.fecha)}
                       {" · "}
-                      <EnlaceExterno enlace={fuente.enlace} aviso={t.ficha.enlaceExterno} avisoNoValido={t.ficha.enlaceNoValido}>
+                      <EnlaceFuente t={t} fuente={fuente}>
                         {t.ficha.verFuente}
-                      </EnlaceExterno>
+                      </EnlaceFuente>
                     </span>
                   </span>
                 )
@@ -424,13 +424,9 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
               {fuenteAtribucion !== undefined && (
                 <>
                   {" · "}
-                  <EnlaceExterno
-                    enlace={fuenteAtribucion.enlace}
-                    aviso={t.ficha.enlaceExterno}
-                    avisoNoValido={t.ficha.enlaceNoValido}
-                  >
+                  <EnlaceFuente t={t} fuente={fuenteAtribucion}>
                     {t.ficha.verFuente}
-                  </EnlaceExterno>
+                  </EnlaceFuente>
                 </>
               )}
             </span>
@@ -453,13 +449,9 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
                       {fuente !== undefined && (
                         <>
                           {" · "}
-                          <EnlaceExterno
-                            enlace={fuente.enlace}
-                            aviso={t.ficha.enlaceExterno}
-                            avisoNoValido={t.ficha.enlaceNoValido}
-                          >
+                          <EnlaceFuente t={t} fuente={fuente}>
                             {t.ficha.verFuente}
-                          </EnlaceExterno>
+                          </EnlaceFuente>
                         </>
                       )}
                     </span>

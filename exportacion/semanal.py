@@ -56,6 +56,10 @@ age con la misma clave pública que la base:
   de visibilidad de cada campo: un campo interno nuevo entra en la exportación sin tocar
   este código, porque se exportan los documentos enteros.
 
+Desde el formato 1.10.0, cada fuente de incidentes.jsonl lleva también su copia en Internet Archive
+(`copia_archivada`: enlace y fecha de la copia) y, si el original ya no lleva al artículo,
+`enlace_caido` (recogida/archivo_web.py); son campos opcionales del esquema de la base 1.17.0.
+
 El manifiesto lleva además, desde el formato 1.8.0, los créditos de los datos (`creditos`): el
 autor con su ORCID, la licencia, la cita recomendada y la dirección (recogida/licencia.py), para
 que viajen con los datos cuando se integran en otro sistema.
@@ -94,8 +98,9 @@ from proceso.luces import con_luces
 from proceso.mediciones import con_mediciones
 from proceso.restricciones import por_ataque
 from recogida import licencia
+from recogida.archivo_web import con_copias_archivadas
 
-VERSION_FORMATO = "1.9.0"
+VERSION_FORMATO = "1.10.0"
 RAIZ = Path(__file__).resolve().parent.parent
 DIRECTORIO_ESQUEMAS = RAIZ / "esquema" / "exportacion" / VERSION_FORMATO
 VOCABULARIO = RAIZ / "configuracion" / "vocabulario_aegis.json"
@@ -753,6 +758,9 @@ def generar_por_partes(almacen: Almacen) -> Iterator[Fichero]:
     # clase, cada valor con su regla de origen (procedencia.procedencia_tipo_dron).
     tipos = almacen.tipos_dron()
     base = [{**d, "tipo_dron": tipos[d["id"]]} if d["id"] in tipos else d for d in base]
+    # Desde el formato 1.10.0: la copia en Internet Archive de cada fuente y la marca de enlace
+    # caído (tabla copias_archivadas, recogida/archivo_web.py), como en la web.
+    base = con_copias_archivadas(base, almacen.copias_archivadas())
     ataques_base = [{**a, "deduccion": deducciones[a["id"]]} if a["id"] in deducciones else a
                     for a in ataques_base]  # fmt: skip
     episodios = almacen.episodios()

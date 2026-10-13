@@ -117,6 +117,9 @@ MAX_SIN_PUBLICAR = timedelta(hours=3)
 # Recogidas terminadas (cada una tras sus reintentos) que tienen que fallar seguidas.
 MAX_RECOGIDAS_FALLIDAS = 3
 RECOGIDAS_ANOTADAS = 24
+# Memoria propia de la recogida (sin la caché de ficheros, que llega al tope sin ser un problema),
+# medida por servidor/recogida.sh en memoria_recogida.json: problema desde este tanto del tope.
+UMBRAL_MEMORIA = 0.8
 # Tiempo que un problema tiene que seguir igual para no ser un fallo suelto que se arregla solo.
 GRACIA = timedelta(minutes=30)
 # Los que no se arreglan solos esperando, o que ya llevan su propia espera (publicación, recogida).
@@ -344,6 +347,22 @@ def modo_base(secretos: Path) -> str:
         return "github"
 
 
+def problemas_de_memoria(medida: dict[str, Any]) -> list[dict[str, str]]:
+    """La memoria propia de la última recogida cerca de su tope. Solo la propia: el pico de
+    systemd cuenta la caché de ficheros, que el núcleo suelta al llegar al tope."""
+    pico, tope = medida.get("pico_bytes"), medida.get("tope_bytes")
+    if not isinstance(pico, int) or not isinstance(tope, int) or tope <= 0:
+        return []
+    if pico < UMBRAL_MEMORIA * tope:
+        return []
+    gb = 1024**3
+    return [{
+        "id": "memoria_recogida",
+        "frase": f"La recogida usó {pico / gb:.1f} GB de memoria propia, sin contar la caché de "
+        f"ficheros: el {100 * pico / tope:.0f} % de su tope de {tope / gb:.1f} GB.",
+    }]  # fmt: skip
+
+
 # --- Composición --------------------------------------------------------------------------
 def componer(
     ahora: datetime,
@@ -421,6 +440,7 @@ def componer(
             f"sus reintentos ({fallidas} seguidas; incidencia a partir de "
             f"{MAX_RECOGIDAS_FALLIDAS}).",
         })  # fmt: skip
+    problemas += problemas_de_memoria(_leer_json(secretos / "memoria_recogida.json"))
     if retenidos:
         avisos.append({
             "id": "titulares_retenidos",

@@ -1,4 +1,4 @@
-# Exportación semanal para AEGIS: dónde está y cómo se lee (formato 1.9.0)
+# Exportación semanal para AEGIS: dónde está y cómo se lee (formato 1.10.0)
 
 Guía para la sesión que actualice AEGIS. Fecha: 12 de octubre de 2026 (PR #212).
 
@@ -90,9 +90,9 @@ La tarea de AEGIS de los lunes a las 07:00 hora local va bien después de la exp
 
 Cada fichero lleva su esquema en `esquema/` dentro de la versión:
 
-- **`esquema/eodi/`:** los de la base, versión 1.16.0, con la marca de visibilidad de cada
+- **`esquema/eodi/`:** los de la base, versión 1.17.0, con la marca de visibilidad de cada
   campo.
-- **`esquema/exportacion/`:** los propios, formato 1.9.0.
+- **`esquema/exportacion/`:** los propios, formato 1.10.0.
 - **`esquema/catalogo/`:** los del catálogo.
 
 El manifiesto da también:
@@ -172,13 +172,22 @@ entonces:
   - `creditos` en el manifiesto (1.8.0);
   - esquema de la base 1.16.0, con `tipo_dron`, `trafico_aereo.interferencia_gnss` y lugares de
     distrito.
-- **Formato 1.9.0 (esta guía):**
+- **Formato 1.9.0:**
   - los siete ficheros marcados como nuevos en el apartado 5;
   - `terceros` y `excluidos` en el manifiesto;
   - el sufijo `.N` en el nombre de la versión.
+- **Formato 1.10.0 (esta guía, desde el 13 de octubre de 2026), esquema de la base 1.17.0:**
+  - cada fuente de `incidentes.jsonl` puede llevar `copia_archivada` (`enlace` a la copia en
+    Internet Archive, la más cercana a la fecha de la fuente, y `fecha` de esa copia en UTC) y
+    `enlace_caido: true` cuando el original ya no lleva al artículo (falló dos veces seguidas con
+    al menos una hora entre medias: 404 o 410, error del servidor, dominio que ya no existe, sin
+    respuesta o redirección a la portada). Los dos son campos opcionales: una fuente sin copia
+    no los lleva. Los da `recogida/archivo_web.py` (servicio `eodi-archivo`) y son los mismos
+    que se ven en la web;
+  - ningún fichero nuevo ni quitado; las demás formas, iguales.
 
-Todos los cambios son compatibles. Ningún fichero de antes cambia de forma, y los seis que lee
-AEGIS hoy son iguales: `incidentes`, `encuentros`, `clases_dron`, `catalogo_drones`,
+Todos los cambios son compatibles. Ningún fichero de antes cambia de forma (en 1.10.0 solo se
+añaden dos campos opcionales a las fuentes), y los seis que lee AEGIS hoy son iguales: `incidentes`, `encuentros`, `clases_dron`, `catalogo_drones`,
 `catalogo_fuentes` y `vocabulario`. Por eso el número principal no sube.
 
 ## 7. Lo que no se exporta y por qué

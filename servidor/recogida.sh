@@ -48,6 +48,42 @@ publicar_estado() {
   return 0
 }
 
+# Memoria propia de recogida.horaria: lo que no es caché de ficheros (anon y shmem del memory.stat
+# de su grupo de control), muestreada cada 5 s. El pico que da systemd incluye la caché de la base
+# y de los datos que lee, que llega al tope sin ser un problema (el núcleo la suelta al llegar); la
+# vigilancia mira este (MEMORIA_RECOGIDA, docs/servidor.md, «Memoria de la recogida»).
+muestrear_memoria() {
+  local stat pico=0 actual
+  stat="/sys/fs/cgroup$(cut -d: -f3- /proc/self/cgroup | head -n 1)/memory.stat"
+  [ -r "$stat" ] || return 0
+  while :; do
+    actual="$(awk '$1 == "anon" || $1 == "shmem" { s += $2 } END { print s + 0 }' "$stat")"
+    if [ "$actual" -gt "$pico" ]; then
+      pico="$actual"
+      echo "$pico" > "$MEMORIA_MUESTRA"
+    fi
+    sleep 5
+  done
+}
+
+# Deja el pico de memoria propia en MEMORIA_RECOGIDA (JSON) y en el diario. Nunca falla.
+anotar_memoria() {
+  local pico tope grupo
+  set +e
+  pico="$(cat "$MEMORIA_MUESTRA" 2>/dev/null)"
+  grupo="/sys/fs/cgroup$(cut -d: -f3- /proc/self/cgroup | head -n 1)"
+  tope="$(cat "$grupo/memory.max" 2>/dev/null)"
+  rm -f "$MEMORIA_MUESTRA"
+  [ -n "$pico" ] || return 0
+  case "$tope" in
+    "" | max) tope=0 ;;
+  esac
+  printf '{"fin": "%s", "pico_bytes": %s, "tope_bytes": %s}\n' \
+    "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$pico" "$tope" > "$MEMORIA_RECOGIDA"
+  echo "memoria propia de la recogida (sin la caché de ficheros): pico de $((pico / 1048576)) MB de un tope de $((tope / 1048576)) MB"
+  set -e
+}
+
 # Sube los ficheros publicados al almacén público (recogida/publicacion.py) y, en el modo
 # almacen, pide a Vercel que reconstruya la web. Con las credenciales en el entorno.
 publicar_en_almacen() {
@@ -124,9 +160,15 @@ principal() {
   # (recogida/mediciones.py).
   export EODI_TRAFICO_DATOS="$TRAFICO_DATOS" EODI_METEO_DATOS="$METEO_DATOS"
 
+  MEMORIA_MUESTRA="$(mktemp)"
+  muestrear_memoria &
+  local muestreo=$!
   GIT_SSH_COMMAND="$ssh_base -i $DESPLIEGUE_DATOS" \
     "$python" -m recogida.horaria --correo "$CORREO" --repositorio "$URL_DATOS" \
     --estado "$ESTADO_PARCIAL" --barrera "$SECRETOS/barrera.json" || codigo=$?
+  kill "$muestreo" 2>/dev/null || true
+  wait "$muestreo" 2>/dev/null || true
+  anotar_memoria
   # Un aviso no frena la publicación. Con cualquier otro código de error no se publica.
   if [ "$codigo" -ne 0 ] && [ "$codigo" -ne "$SALIDA_AVISO" ]; then
     echo "la recogida falló con código $codigo: no se publica"

@@ -316,7 +316,7 @@ describe("validación contra el esquema", () => {
 
 describe("listas cerradas iguales a las del esquema", () => {
   type Esquema = Record<string, unknown>;
-  const leer = (nombre: string) => leerJson("esquema", "1.16.0", `${nombre}.schema.json`) as Esquema;
+  const leer = (nombre: string) => leerJson("esquema", "1.17.0", `${nombre}.schema.json`) as Esquema;
   const en = (objeto: unknown, ...claves: string[]): unknown =>
     claves.reduce<unknown>((actual, clave) => (actual as Esquema)[clave], objeto);
 
@@ -382,6 +382,12 @@ describe("listas cerradas iguales a las del esquema", () => {
     ["país", vocabulario.PATRON_PAIS, en(comun, "$defs", "pais", "pattern")],
     ["región", vocabulario.PATRON_REGION, en(comun, "$defs", "region_iso", "pattern")],
     ["idioma", vocabulario.PATRON_IDIOMA, en(comun, "$defs", "idioma", "pattern")],
+    [
+      "copia archivada",
+      vocabulario.PATRON_COPIA_ARCHIVADA,
+      en(leer("fuente"), p, "copia_archivada", p, "enlace", "pattern"),
+    ],
+    ["fecha de la copia", vocabulario.PATRON_INSTANTE_UTC, en(leer("fuente"), p, "copia_archivada", p, "fecha", "pattern")],
   ])("patrón de %s", (_nombre, propio, delEsquema) => {
     expect(propio.source).toBe(new RegExp(delEsquema as string).source);
   });

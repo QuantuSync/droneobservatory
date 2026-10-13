@@ -374,3 +374,14 @@ def test_un_fallo_que_se_arregla_antes_de_la_espera_no_llega_a_incidencia(
     assert salud["problemas"] == []
     memoria = json.loads((secretos / "vigilancia.json").read_text(encoding="utf-8"))
     assert [(r["id"], r["incidencia"]) for r in memoria["resueltos"]] == [("seguimiento", False)]
+
+
+def test_memoria_solo_avisa_por_la_propia() -> None:
+    # La caché de ficheros no cuenta: servidor/recogida.sh mide solo anon y shmem.
+    gb = 1024**3
+    assert vigilancia.problemas_de_memoria({"pico_bytes": 1 * gb, "tope_bytes": 5 * gb}) == []
+    assert vigilancia.problemas_de_memoria({}) == []
+    assert vigilancia.problemas_de_memoria({"pico_bytes": 4 * gb, "tope_bytes": 0}) == []
+    [problema] = vigilancia.problemas_de_memoria({"pico_bytes": 4 * gb, "tope_bytes": 5 * gb})
+    assert problema["id"] == "memoria_recogida"
+    assert "80 %" in problema["frase"]

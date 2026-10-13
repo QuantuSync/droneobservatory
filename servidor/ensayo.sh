@@ -43,7 +43,7 @@ PY
   # Los datos pequeños se copian; los grandes que la recogida solo lee, con enlaces a sus
   # carpetas (los ficheros sueltos de su raíz, que sí escribe, se copian).
   local d f
-  for d in busqueda catalogo detalle directo firms focos_vivo guerra luces meteo reintentos \
+  for d in archivo busqueda catalogo detalle directo firms focos_vivo guerra luces meteo reintentos \
     satelite rutas; do
     if [ -d "$CASA/datos/$d" ]; then cp -a "$CASA/datos/$d" "$raiz/datos/$d"; fi
   done
@@ -58,7 +58,7 @@ PY
 
   EODI_CLAVE_AGE="$(cat "$CLAVE_AGE")"
   export EODI_CLAVE_AGE EODI_BASE_MODO=disco EODI_BASE_DIRECTORIO="$raiz/base"
-  for d in busqueda catalogo deduccion detalle directo firms focos_vivo guerra luces meteo \
+  for d in archivo busqueda catalogo deduccion detalle directo firms focos_vivo guerra luces meteo \
     reintentos rutas satelite seguimiento trafico; do
     export "EODI_${d^^}_DATOS=$raiz/datos/$d"
   done

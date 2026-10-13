@@ -61,6 +61,7 @@ install -d -m 700 -o "$USUARIO" -g "$USUARIO" "$BASE_DIRECTORIO" "$BASE_DIRECTOR
 # --- Datos publicados -----------------------------------------------------------------
 # Lo que la recogida publica, antes de subirlo al almacén o al repositorio (servidor/recogida.sh).
 install -d -m 700 -o "$USUARIO" -g "$USUARIO" "$(dirname "$PUBLICACION_DATOS")" "$PUBLICACION_DATOS"
+install -d -m 700 -o "$USUARIO" -g "$USUARIO" "$ARCHIVO_DATOS"
 
 # --- Datos de FIRMS -----------------------------------------------------------------
 # Los CSV diarios de anomalías térmicas: del usuario del observatorio y solo para él.
@@ -137,6 +138,9 @@ ExecStart=/usr/bin/env bash $CLON/servidor/recogida.sh
 SyslogIdentifier=$UNIDAD
 # Tope de la ejecución entera: pasado ese tiempo systemd la corta.
 TimeoutStartSec=${TOPE_MINUTOS}min
+# Por encima de MemoryHigh el núcleo suelta antes la caché de ficheros de la base y de los datos
+# (la memoria propia de la recogida no pasó de 1,8 GB, medida el 13 de octubre de 2026).
+MemoryHigh=$RECOGIDA_MEMORIA_ALTA
 MemoryMax=$RECOGIDA_MEMORIA
 NoNewPrivileges=yes
 PrivateTmp=yes
@@ -527,6 +531,41 @@ Description=Archivo del seguimiento en directo (EODI), en el minuto $MINUTO_SEGU
 
 [Timer]
 OnCalendar=*-*-* *:0$MINUTO_SEGUIMIENTO_ARCHIVO:00 UTC
+AccuracySec=1s
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+FIN
+# Copias archivadas de las fuentes (servidor/archivo.sh): cada hora, una ronda acotada con su
+# propio cerrojo, prioridad baja y tope de memoria. No toca la base ni el cerrojo de la recogida.
+cat > "/etc/systemd/system/$UNIDAD_ARCHIVO.service" <<FIN
+[Unit]
+Description=Copias archivadas y enlaces caídos de las fuentes (EODI)
+Wants=network-online.target
+After=network-online.target time-sync.target
+
+[Service]
+Type=oneshot
+User=$USUARIO
+Group=$USUARIO
+WorkingDirectory=$CLON
+ExecStart=/usr/bin/env bash $CLON/servidor/archivo.sh
+SyslogIdentifier=$UNIDAD_ARCHIVO
+TimeoutStartSec=${ARCHIVO_TOPE_UNIDAD}min
+Nice=19
+IOSchedulingClass=idle
+MemoryMax=$ARCHIVO_MEMORIA
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=full
+FIN
+cat > "/etc/systemd/system/$UNIDAD_ARCHIVO.timer" <<FIN
+[Unit]
+Description=Copias archivadas de las fuentes (EODI), en el minuto $MINUTO_ARCHIVO de cada hora
+
+[Timer]
+OnCalendar=*-*-* *:$MINUTO_ARCHIVO:00 UTC
 AccuracySec=1s
 Persistent=true
 

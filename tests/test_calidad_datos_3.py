@@ -798,8 +798,13 @@ def test_el_vocabulario_describe_cada_indicador_y_cada_origen_del_inicio() -> No
     from exportacion import semanal
 
     vocabulario = semanal.vocabulario()
+
     # 1.2.0 o posteriores (el motor de deducción subió los dos a 1.3.0).
-    assert vocabulario["version"] >= "1.2.0" and semanal.VERSION_FORMATO >= "1.2.0"
+    def numeros(version: str) -> tuple[int, ...]:
+        return tuple(int(x) for x in version.split("."))
+
+    assert numeros(vocabulario["version"]) >= (1, 2, 0)
+    assert numeros(semanal.VERSION_FORMATO) >= (1, 2, 0)
     assert set(vocabulario["indicadores"]) == set(exportar(de_prensa())["indicadores"])
     assert set(vocabulario["origenes_inicio"]) == {
         "explicita", "relativa", "oficial", "parte", "publicacion",
