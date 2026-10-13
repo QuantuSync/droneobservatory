@@ -20,7 +20,7 @@ from exportacion.proyeccion import (
     proyectar,
     solo_fuentes_publicas,
 )
-from proceso import cita_titular, nombres_lugar
+from proceso import cita_titular, coherencia, nombres_lugar
 from proceso.estados import Capa
 from proceso.focos_termicos import solo_detectado
 from proceso.mediciones import solo_publico
@@ -72,7 +72,7 @@ def feature(incidente: Documento) -> Documento | None:
     documento = con_afirmaciones(incidente)
     if documento is None:
         return None
-    con_nombres(documento)
+    documento = con_nombres(coherencia.coherente(documento))
     punto = documento["lugar"].pop("punto")
     return {
         "type": "Feature",
@@ -118,7 +118,7 @@ def sin_ubicacion(incidente: Documento) -> Documento | None:
     if documento is None:
         return None
     documento["lugar"].setdefault("nivel", "pais")
-    con_nombres(documento)
+    documento = con_nombres(coherencia.coherente(documento))
     proyectado: Documento = proyectar(documento, CAMPOS_PUBLICOS_SIN_UBICACION)
     return proyectado
 
