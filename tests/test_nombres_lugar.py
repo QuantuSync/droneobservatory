@@ -331,3 +331,18 @@ def test_tablas_validas() -> None:
     for entrada in [*generado["localidades"].values(), *manual["localidades"]]:
         for idioma in nombres_lugar.IDIOMAS:
             assert nombres_lugar.latino_puro(entrada[idioma]), entrada
+
+
+def test_tildes_como_signo_aparte() -> None:
+    # Algunas fuentes escriben «César» con la «e» y la tilde sueltas (NFD).
+    import unicodedata
+
+    nombre = unicodedata.normalize("NFD", "Aeropuerto César Manrique Lanzarote")
+    assert nombres_lugar.objetivo({"categoria": "aeropuerto", "nombre": nombre}, "ES") == {
+        "es": "Aeropuerto de Lanzarote",
+        "en": "Lanzarote Airport",
+    }
+    assert nombres_lugar.lugar(unicodedata.normalize("NFD", "Lárnaca"), "CY") == {
+        "es": "Lárnaca",
+        "en": "Larnaca",
+    }

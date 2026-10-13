@@ -181,8 +181,41 @@ def _mares() -> dict[str, Bilingue]:
     return salida
 
 
+def nfc(texto: str) -> str:
+    """Las fuentes escriben a veces las tildes como signo aparte («César» con la «e» y la tilde
+    sueltas): para comparar con las tablas, siempre en su forma compuesta."""
+    return unicodedata.normalize("NFC", texto)
+
+
+def _nfc_documento(valor: Any) -> Any:
+    if isinstance(valor, str):
+        return nfc(valor)
+    if isinstance(valor, list):
+        return [_nfc_documento(v) for v in valor]
+    if isinstance(valor, dict):
+        return {k: _nfc_documento(v) for k, v in valor.items()}
+    return valor
+
+
+def _nfc_incidente(incidente: Documento) -> Documento:
+    """El incidente con el lugar, el objetivo y el titular en forma compuesta."""
+    return {
+        **incidente,
+        **{
+            c: _nfc_documento(incidente[c])
+            for c in ("lugar", "objetivo", "titulo")
+            if c in incidente
+        },
+    }
+
+
+@cache
+def _textos() -> dict[str, Any]:
+    return {nfc(k): v for k, v in (manual().get("textos") or {}).items()}
+
+
 def textos() -> dict[str, Any]:
-    return dict(manual().get("textos") or {})
+    return _textos()
 
 
 def pais_escrito(codigo: str) -> Bilingue:
@@ -324,6 +357,7 @@ def lugar(texto: str | None, pais: str) -> Bilingue | None:
     si no se puede escribir bien (una descripción, otro alfabeto sin nombre conocido)."""
     if not texto:
         return None
+    texto = nfc(texto)
     escritos = textos()
     if texto in escritos:
         return _bilingue(escritos[texto])
@@ -388,7 +422,7 @@ def objetivo(datos: Documento | None, pais: str) -> Bilingue | None:
     (la ficha enseña entonces el titular)."""
     if not datos:
         return None
-    nombre = str(datos.get("nombre") or "")
+    nombre = nfc(str(datos.get("nombre") or ""))
     escritos = textos()
     if nombre in escritos:
         return _bilingue(escritos[nombre])
@@ -515,6 +549,7 @@ def nombres_publicos(incidente: Documento) -> Documento:
     """El campo `nombres` publicado: «lugar» (lo que dice la fila «Lugar», con el país o el
     territorio), «localidad», «objetivo», «region», «otros» y «anteriores» (en el orden de la
     ficha; null donde no se puede escribir) y, si no es el de los datos, «pais_geografico»."""
+    incidente = _nfc_incidente(incidente)
     lugar_ = incidente.get("lugar") or {}
     pais = lugar_.get("pais", "")
     terr = territorio(incidente)
@@ -615,6 +650,7 @@ def corregir_texto(texto: str, cambios: dict[str, str], idioma: str | None = Non
 
 
 def titulo_corregido(incidente: Documento) -> Documento:
+    incidente = _nfc_incidente(incidente)
     titulo = incidente.get("titulo") or {}
     return {
         i: corregir_texto(str(titulo[i]), _cambios(incidente, i), i)
@@ -627,6 +663,7 @@ def titulo_corregido(incidente: Documento) -> Documento:
 # --- Revisión de lo visible -----------------------------------------------------------------
 def problemas_texto(texto: str, idioma: str, pais: str | None = None) -> list[str]:
     """Lo que está mal en un texto visible de la página en `idioma`."""
+    texto = nfc(texto)
     salida = []
     otras = _escrituras(texto) - {"LATIN"}
     if otras:
@@ -688,8 +725,9 @@ def sin_resolver(
         if not objetivo_.get("oaci"):
             nombres.append(objetivo_.get("nombre"))
         for nombre in nombres:
-            if not nombre or nombre in textos():
+            if not nombre or nfc(str(nombre)) in textos():
                 continue
+            nombre = nfc(str(nombre))
             base = nombre_base(str(nombre))
             if not base or not base[0].isupper() or _en_tablas(base, pais, en_otro_pais=False):
                 continue
