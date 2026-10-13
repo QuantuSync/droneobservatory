@@ -1,4 +1,4 @@
-// Validación de los datos contra el esquema 1.16.0 (campos públicos), escrita a mano para
+// Validación de los datos contra el esquema 1.17.0 (campos públicos), escrita a mano para
 // que no necesite generar código en el navegador. Se usa en el build, sobre los ficheros de
 // publicacion/, y en la web al cargar cada fichero: un fichero que no valida no se pinta.
 
@@ -189,18 +189,27 @@ const estadoHistorial = objeto({
   ),
 });
 
-const fuente = objeto({
-  id: cadena(),
-  enlace: cadena(v.PATRON_ENLACE),
-  medio: cadena(),
-  fecha: instante,
-  idioma: cadena(v.PATRON_IDIOMA),
-  fiabilidad: enumerado(v.FIABILIDADES),
-  credibilidad: numero(v.CREDIBILIDAD_MIN, v.CREDIBILIDAD_MAX, true),
-  // La frase de origen es una cita ajena: solo se exige que sea texto.
-  frase_origen: cadena(),
-  replicas: enteroNoNegativo,
-});
+/** Copia de la fuente en Internet Archive y marca de enlace caído (recogida/archivo_web.py). */
+const archivoDeFuente = {
+  copia_archivada: objeto({ enlace: cadena(v.PATRON_COPIA_ARCHIVADA), fecha: cadena(v.PATRON_INSTANTE_UTC) }),
+  enlace_caido: constante(true),
+};
+
+const fuente = objeto(
+  {
+    id: cadena(),
+    enlace: cadena(v.PATRON_ENLACE),
+    medio: cadena(),
+    fecha: instante,
+    idioma: cadena(v.PATRON_IDIOMA),
+    fiabilidad: enumerado(v.FIABILIDADES),
+    credibilidad: numero(v.CREDIBILIDAD_MIN, v.CREDIBILIDAD_MAX, true),
+    // La frase de origen es una cita ajena: solo se exige que sea texto.
+    frase_origen: cadena(),
+    replicas: enteroNoNegativo,
+  },
+  archivoDeFuente,
+);
 
 const control = objeto({ ultima_actualizacion: instante }, { motivo_desmentido: cadena() });
 
@@ -582,7 +591,7 @@ const fuenteImpacto = objeto(
     frase_origen: cadena(),
     replicas: enteroNoNegativo,
   },
-  { autoridad_ocupacion: constante(true) },
+  { autoridad_ocupacion: constante(true), ...archivoDeFuente },
 );
 
 const impactoGuerra = objeto(

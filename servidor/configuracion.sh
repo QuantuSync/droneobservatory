@@ -155,6 +155,21 @@ PRUEBA_RESTAURACION_MEMORIA="2G"
 REINTENTOS_DATOS="${EODI_REINTENTOS_DATOS:-$CASA/datos/reintentos}"
 export EODI_REINTENTOS_DATOS="$REINTENTOS_DATOS"
 
+# --- Copias archivadas de las fuentes (recogida/archivo_web.py) ----------------------------
+# eodi-archivo, en el minuto 45 de cada hora (la recogida ya ha publicado): comprueba los enlaces
+# de las fuentes de los incidentes publicados (caído solo tras fallar dos veces con al menos una
+# hora entre medias), busca su copia en Internet Archive y pide archivar los vivos sin copia, en
+# una ronda de ARCHIVO_MINUTOS como mucho. Cada enlace se vuelve a revisar una vez por semana. Su
+# estado (enlaces.json) lo lee la recogida, que apunta en la base lo nuevo y lo publica.
+UNIDAD_ARCHIVO="eodi-archivo"
+CERROJO_ARCHIVO="$SECRETOS/archivo.lock"
+MINUTO_ARCHIVO=45
+ARCHIVO_MINUTOS=12
+ARCHIVO_TOPE_UNIDAD=20
+ARCHIVO_MEMORIA="400M"
+ARCHIVO_DATOS="${EODI_ARCHIVO_DATOS:-$CASA/datos/archivo}"
+export EODI_ARCHIVO_DATOS="$ARCHIVO_DATOS"
+
 # --- Anomalías térmicas de NASA FIRMS (recogida/firms.py) ------------------------------
 # CSV diarios comprimidos, fuera del repositorio y de la base: la base se sube cifrada cada
 # hora y no debe crecer con los focos agrícolas.
@@ -488,7 +503,15 @@ PREFERENCIA_IPV4="precedence ::ffff:0:0/96  100"
 # (docs/informe_odesa.md). Valores: el pico medido por systemd en los cuatro días anteriores
 # (incluye la caché de ficheros, que se libera al llegar al tope) con margen; el servidor tiene
 # 7,7 GB. La prueba tests/test_servidor_topes.py falla si una unidad nueva no lo tiene.
-RECOGIDA_MEMORIA="5G"       # 3,3 GB con la base en disco (5,7 GB cuando iba en memoria)
+# Pico de la memoria propia de la última recogida, sin la caché (servidor/recogida.sh); lo lee la
+# vigilancia.
+MEMORIA_RECOGIDA="$SECRETOS/memoria_recogida.json"
+# Recogida, medida el 13 de octubre de 2026 cada 5 s (docs/servidor.md, «Memoria de la recogida»):
+# memoria propia (anon y shmem) de 1,8 GB como mucho, el resto del pico de systemd (4,8-5 GB con el
+# tope de 5G) era caché de ficheros. MemoryHigh hace que la caché se suelte antes; MemoryMax deja
+# 2,2 GB de margen sobre la memoria propia.
+RECOGIDA_MEMORIA="4G"
+RECOGIDA_MEMORIA_ALTA="3G"
 DEDUCCION_MEMORIA="4G"      # 3,2 GB
 EXPORTACION_MEMORIA="4G"    # 3,4 GB con caché (1,6 GB de proceso) hasta el 12 oct 2026; 1,05 GB de proceso desde entonces
 EXPORTACION_MEMORIA_ALTA="2500M"

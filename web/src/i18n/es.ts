@@ -638,6 +638,11 @@ export const es: Textos = {
     investigacion: "Investigación en curso",
     investiga: (autoridad) => `Lo que investiga ${autoridad} (no cambia el estado del incidente):`,
     verFuente: "ver la fuente",
+    copiaArchivada: "copia archivada",
+    copiaArchivadaDel: (fecha) => `copia archivada del ${fecha}`,
+    originalCaido: "el original ya no está disponible",
+    enlaceOriginal: "enlace original",
+    caidoSinCopia: "enlace caído, sin copia archivada",
     // «de el prefecto» se contrae: «del prefecto».
     declaracionCitada: (autoridad, medio) =>
       `Declaración ${autoridad.startsWith("el ") ? `del ${autoridad.slice(3)}` : `de ${autoridad}`}, citada en ${medio}`,

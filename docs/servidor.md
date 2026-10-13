@@ -1794,6 +1794,65 @@ web no cambian. La exportación semanal sigue el mismo interruptor.
 Cambiar de modo, justo después de una recogida y fuera de los minutos 12 a 40:
 `echo almacen | sudo -u eodi tee /home/eodi/.eodi/publicacion_modo` (o `doble`, o `github`).
 
+## Memoria de la recogida
+
+Medida el 13 de octubre de 2026 cada 5 s en el grupo de control de la unidad (`memory.stat`), en el
+servidor CX33 (7,7 GB de RAM, sin swap):
+
+| | 07:17 (tope 5G, sin MemoryHigh) | 08:17 (MemoryHigh 3G, MemoryMax 4G) |
+| --- | --- | --- |
+| Pico que da systemd («memory peak») | 4,8 GB | 3,0 GB |
+| Memoria propia (anon + shmem) | 1,8 GB (proceso Python, 1,75 GB de RSS) | 1,78 GB |
+| Caché de ficheros (`file`) | 3,15 GB (1,6 GB ya al arrancar, de recogidas anteriores) | 1,66 GB |
+| Presión de memoria (PSI some, 10 s) | 0 % | 1,2 % como mucho |
+| MemAvailable mínimo del servidor | 4,8 GB | 4,7 GB |
+| Duración | 16,6 min | 17,6 min (con 4 avisos enviados) |
+
+El pico de systemd cuenta la caché de la base y de los datos que lee la recogida; el núcleo la suelta
+cuando la unidad llega al tope, sin coste. La memoria propia sube de 0,8 a 1,6 GB en el paso «tipo de
+dron» y se queda así hasta el final (Python no devuelve la memoria al sistema).
+
+Desde ese día la unidad lleva `MemoryHigh=3G` (por encima, la caché se suelta antes) y `MemoryMax=4G`
+(`RECOGIDA_MEMORIA_ALTA` y `RECOGIDA_MEMORIA` en `configuracion.sh`): 2,2 GB de margen sobre la memoria
+propia y 1 GB menos reservado frente al resto de servicios (ntfy, Caddy y GoatCounter, 300 MB cada uno;
+exportación, 4G los lunes). `servidor/recogida.sh` mide en cada recogida la memoria propia (anon y
+shmem, cada 5 s) y la deja en el diario («memoria propia de la recogida…») y en
+`/home/eodi/.eodi/memoria_recogida.json`; la vigilancia abre el problema `memoria_recogida` solo si pasa
+del 80 % del tope, nunca por la caché. No hace falta un servidor mayor.
+
+## Copias archivadas de las fuentes y enlaces caídos
+
+Desde el 13 de octubre de 2026 ([`recogida/archivo_web.py`](../recogida/archivo_web.py),
+[`servidor/archivo.sh`](../servidor/archivo.sh)). Las noticias desaparecen (news.yam.md, con 478
+enlaces en las fuentes, responde 404 a todo): cada fuente de los incidentes publicados tiene al lado
+su copia en Internet Archive y, si el original está caído, la web enlaza la copia y lo dice.
+
+- **`eodi-archivo.timer`**, minuto 45 de cada hora (la recogida ya ha publicado), una ronda de
+  `ARCHIVO_MINUTOS` (12) como mucho, con su cerrojo, `Nice=19`, IO en reposo y `MemoryMax` de
+  400 MB. No toma el cerrojo de la recogida ni abre la base: lee
+  `datos/publicacion/incidentes*.json*` y escribe solo en `datos/archivo/enlaces.json`
+  (`EODI_ARCHIVO_DATOS`).
+- **Comprobación de cada enlace**, como un navegador, 3 s entre peticiones al mismo sitio. Caído
+  solo cuando falla dos veces seguidas con al menos una hora entre medias: 404 o 410, 5xx, dominio
+  que ya no existe, sin respuesta o redirección a la portada. 401, 403, 429 o una página de
+  comprobación no cuentan (muchos medios cierran el paso a los centros de datos). Un enlace nuevo
+  se comprueba en la ronda siguiente a su publicación; un fallo, otra vez pasada una hora; todos,
+  una vez por semana.
+- **Copia**: la API de disponibilidad de Internet Archive, con la fecha de la fuente (la copia
+  con código 200 más cercana); si el enlace falla, también el índice CDX (lento, hasta 90 s). Sin
+  copia y con el enlace vivo, Save Page Now, una petición cada 20 s y como mucho 3 por enlace y
+  semana; la copia se vuelve a buscar dos horas después. Una consulta por segundo como mucho. Tres
+  cortes seguidos (429, 5xx o sin respuesta) acaban la ronda: lo pendiente, a la siguiente.
+- **En la recogida**, el paso «copias archivadas» lee `enlaces.json` y apunta en la base lo que
+  cambia (tabla `copias_archivadas`: una fila nueva por resultado nuevo, sin cambios ni borrados);
+  al publicar, cada fuente lleva `copia_archivada` (enlace y fecha) y `enlace_caido` (esquema
+  1.17.0), y lo mismo la exportación semanal (formato 1.10.0). Si el fichero no se puede leer, se
+  publica con lo apuntado antes. Nada de esto para la recogida.
+- **A mano**: `sudo -u eodi bash /home/eodi/droneobservatory/servidor/archivo.sh resumen` (enlaces,
+  caídos con y sin copia, pendientes) y `journalctl -u eodi-archivo -n 20`.
+- La revisión inicial (8.049 enlaces) se hizo el 13 de octubre de 2026 desde el equipo del dueño
+  con el mismo módulo y su `enlaces.json` se copió al servidor; desde entonces sigue sola.
+
 ## Diario
 
 El diario de systemd guarda 30 días de todas las unidades, también el detalle de la recogida y del

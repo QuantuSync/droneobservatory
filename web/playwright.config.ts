@@ -4,7 +4,7 @@ import { defineConfig, devices } from "@playwright/test";
 // producción; con BASE=http://localhost:4173 va contra el servidor local (npm run servir).
 const BASE = process.env.BASE ?? "https://droneobservatory.eu";
 
-const RECORRIDOS = /recorridos\.spec\.ts$/;
+const RECORRIDOS = /(recorridos|copias-archivadas)\.spec\.ts$/;
 const TABLETA_ANDROID =
   "Mozilla/5.0 (Linux; Android 14; SM-X710) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0 Safari/537.36";
 

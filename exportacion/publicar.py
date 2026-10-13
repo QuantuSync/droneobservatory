@@ -5,7 +5,8 @@ nivel de país o de región).
 El foco térmico de cada impacto (proceso/focos_termicos.py) y las mediciones de cada incidente
 (tráfico aéreo y condiciones, proceso/mediciones.py) y la pérdida de luz nocturna de cada ataque
 (proceso/luces.py) viven en sus propias tablas y se añaden aquí a su incidente, a su región o a
-su ataque antes de exportar.
+su ataque antes de exportar. Igual la copia archivada de cada fuente de los incidentes y la marca
+de enlace caído (tabla copias_archivadas, recogida/archivo_web.py).
 
 Cada fichero se genera por separado: si uno falla, queda el que ya había, los demás se publican
 y el fallo queda en el registro (y en `fallidos`, si se pasa). Solo si no se puede generar ninguno
@@ -28,6 +29,7 @@ from proceso.focos_termicos import con_focos
 from proceso.luces import con_luces
 from proceso.mediciones import con_mediciones
 from proceso.tipo_dron import publico as tipo_dron
+from recogida.archivo_web import con_copias_archivadas
 
 # En el servidor, una carpeta fuera del clon (servidor/configuracion.sh): la publicación ya no vive
 # en el repositorio. Sin la variable, la carpeta publicacion/ del repositorio.
@@ -78,6 +80,7 @@ def publicar(
     )
     incidentes, ataques = con_mediciones(incidentes, ataques, almacen)
     incidentes = con_tipo_dron(incidentes, almacen.tipos_dron())
+    incidentes = con_copias_archivadas(incidentes, almacen.copias_archivadas())
     ataques = con_luces(ataques, almacen.luces_nocturnas())
     vocabulario = modelos(almacen)
     focos = almacen.focos_termicos()

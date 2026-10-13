@@ -1,4 +1,4 @@
-// Listas cerradas del esquema 1.16.0 (campos públicos). Un test las compara con los
+// Listas cerradas del esquema 1.17.0 (campos públicos). Un test las compara con los
 // ficheros de esquema/ para que no se separen.
 
 export const TIPOS = ["incursion", "interrupcion_aeroportuaria", "sobrevuelo"] as const;
@@ -129,6 +129,8 @@ export const PATRON_REGION = /^[A-Z]{2}-[A-Z0-9]{1,3}$/;
 export const PATRON_IDIOMA = /^[a-z]{2}$/;
 export const PATRON_OACI = /^[A-Z]{4}$/;
 export const PATRON_ENLACE = /^https?:\/\/\S+$/;
+export const PATRON_COPIA_ARCHIVADA = /^https:\/\/web\.archive\.org\/web\/\d{14}\/\S+$/;
+export const PATRON_INSTANTE_UTC = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/;
 
 export const CREDIBILIDAD_MIN = 1;
 export const CREDIBILIDAD_MAX = 6;

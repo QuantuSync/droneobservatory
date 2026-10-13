@@ -287,6 +287,20 @@ CREATE TABLE IF NOT EXISTS previsiones (
     emitida TEXT NOT NULL,
     documento TEXT NOT NULL CHECK (json_valid(documento))
 ) WITHOUT ROWID;
+-- Copias archivadas de los enlaces de las fuentes (recogida/archivo_web.py): por cada enlace, su
+-- copia en Internet Archive y si el original está caído. Un resultado nuevo es una fila nueva; la
+-- vigente es la última de su enlace.
+CREATE TABLE IF NOT EXISTS copias_archivadas (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    enlace TEXT NOT NULL,
+    fecha TEXT NOT NULL,
+    documento TEXT NOT NULL CHECK (json_valid(documento))
+);
+CREATE INDEX IF NOT EXISTS copias_archivadas_enlace ON copias_archivadas (enlace, id);
+CREATE TRIGGER IF NOT EXISTS copias_archivadas_sin_update BEFORE UPDATE ON copias_archivadas
+BEGIN SELECT RAISE(ABORT, 'copias_archivadas: un resultado nuevo es una fila nueva'); END;
+CREATE TRIGGER IF NOT EXISTS copias_archivadas_sin_delete BEFORE DELETE ON copias_archivadas
+BEGIN SELECT RAISE(ABORT, 'copias_archivadas: nada se borra'); END;
 CREATE TRIGGER IF NOT EXISTS previsiones_sin_update BEFORE UPDATE ON previsiones
 BEGIN SELECT RAISE(ABORT, 'previsiones: una previsión publicada no cambia'); END;
 CREATE TRIGGER IF NOT EXISTS previsiones_sin_delete BEFORE DELETE ON previsiones
@@ -854,6 +868,29 @@ class Almacen:
                      json.dumps(entrada, ensure_ascii=False, sort_keys=True)),
                 )  # fmt: skip
                 nuevas += cursor.rowcount
+        return nuevas
+
+    def copias_archivadas(self) -> dict[str, Documento]:
+        """Lo vigente de cada enlace: su copia archivada y si el original está caído."""
+        filas = self._conexion.execute(
+            "SELECT enlace, documento FROM copias_archivadas WHERE id IN "
+            "(SELECT max(id) FROM copias_archivadas GROUP BY enlace)"
+        )
+        return {enlace: json.loads(documento) for enlace, documento in filas.fetchall()}
+
+    def guardar_copias_archivadas(self, resultados: dict[str, Documento], fecha: str) -> int:
+        """Apunta los resultados que cambian lo vigente de su enlace; devuelve cuántos."""
+        vigentes = self.copias_archivadas()
+        nuevas = 0
+        with self._conexion:
+            for enlace, documento in sorted(resultados.items()):
+                if vigentes.get(enlace) == documento:
+                    continue
+                self._conexion.execute(
+                    "INSERT INTO copias_archivadas (enlace, fecha, documento) VALUES (?, ?, ?)",
+                    (enlace, fecha, _json(documento)),
+                )
+                nuevas += 1
         return nuevas
 
     def previsiones(self) -> list[Documento]:

@@ -23,7 +23,7 @@ import { diaDeTexto, factoresQueCuentan, habitualDe, probabilidadLlana, mesEscri
 import type { Prevision } from "../datos/prevision.ts";
 import { ataquesPorRegion, cifrasDeRegion, diaDeParte, sentidoDeFila } from "../datos/ucrania.ts";
 import { autoridadEscrita, medioEscrito } from "../i18n/autoridades.ts";
-import { fechaDia, fechaHora, instante, numero, pais, rango, region, textos } from "../i18n/index.ts";
+import { fecha, fechaDia, fechaHora, instante, numero, pais, rango, region, textos } from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
 import type { Bloque, Trozo } from "../i18n/tipos.ts";
 import {
@@ -140,6 +140,25 @@ function enlace(ruta: string, ...hijos: Hijo[]): Html {
 
 function externo(url: string, ...hijos: Hijo[]): Html {
   return e("a", { href: url, rel: "noopener", hreflang: null }, ...hijos);
+}
+
+/** El enlace de una fuente, como en la ficha (componentes/EnlaceFuente.tsx): al lado del original,
+ *  «copia archivada»; con el original caído, la copia como enlace principal y el original aparte. */
+export function enlaceDeFuente(t: Textos, fuente: Fuente, ...hijos: Hijo[]): Html {
+  const copia = fuente.copia_archivada;
+  const del = copia === undefined ? "" : fecha(new Date(copia.fecha));
+  if (fuente.enlace_caido === true && copia !== undefined) {
+    return html(
+      externo(copia.enlace, ...hijos),
+      " ",
+      e("span", { "data-copia-principal": "" }, `(${t.ficha.copiaArchivadaDel(del)}; ${t.ficha.originalCaido}: `, externo(fuente.enlace, t.ficha.enlaceOriginal), ")"),
+    );
+  }
+  return html(
+    externo(fuente.enlace, ...hijos),
+    copia !== undefined && html(" · ", e("span", { "data-copia-archivada": "" }, externo(copia.enlace, t.ficha.copiaArchivada))),
+    fuente.enlace_caido === true && copia === undefined && e("span", { "data-enlace-caido": "" }, ` (${t.ficha.caidoSinCopia})`),
+  );
 }
 
 /** La autoría en una línea: el autor, su ORCID enlazado y el correo de contacto. */
@@ -383,7 +402,7 @@ function citaConFuente(t: Textos, idioma: Idioma, fuente: Fuente): Html {
       " · ",
       e("span", { class: "mono" }, instante(fuente.fecha)),
       " · ",
-      externo(fuente.enlace, t.ficha.verFuente),
+      enlaceDeFuente(t, fuente, t.ficha.verFuente),
     ),
   );
 }
@@ -582,7 +601,7 @@ function incidente(d: IncidenteDetalle, idioma: Idioma): PaginaTexto {
                 null,
                 t.ficha.investiga(autoridadEscrita(x.autoridad, idioma)),
                 e("blockquote", { lang: fuente?.idioma }, `«${x.cita}»`),
-                e("p", { class: "texto-fuente" }, e("span", { class: "mono" }, instante(x.fecha)), fuente !== undefined && html(" · ", externo(fuente.enlace, t.ficha.verFuente))),
+                e("p", { class: "texto-fuente" }, e("span", { class: "mono" }, instante(x.fecha)), fuente !== undefined && html(" · ", enlaceDeFuente(t, fuente, t.ficha.verFuente))),
               );
             }),
           ),
@@ -603,7 +622,7 @@ function incidente(d: IncidenteDetalle, idioma: Idioma): PaginaTexto {
               null,
               e("p", null, e("strong", null, medios.get(f.id) ?? f.medio), " · ", e("span", { class: "mono" }, instante(f.fecha)), " · ", e("abbr", { title: tp.incidente.codigoFuente }, `${f.fiabilidad}${f.credibilidad}`)),
               e("blockquote", { lang: f.idioma }, `«${f.frase_origen}»`),
-              e("p", null, externo(f.enlace, f.enlace)),
+              e("p", null, enlaceDeFuente(t, f, f.enlace)),
             ),
           ),
         ),

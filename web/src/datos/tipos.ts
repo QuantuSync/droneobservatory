@@ -1,4 +1,4 @@
-// Forma de los ficheros públicos de publicacion/ (esquema 1.16.0, solo campos públicos)
+// Forma de los ficheros públicos de publicacion/ (esquema 1.17.0, solo campos públicos)
 // y de los resúmenes que la web deriva de ellos en el build.
 
 import type { LugarAproximado } from "./lugarAproximado.ts";
@@ -71,6 +71,10 @@ export interface Fuente {
   credibilidad: number;
   frase_origen: string;
   replicas: number;
+  /** Copia en Internet Archive, la más cercana a la fecha de la fuente. */
+  copia_archivada?: { enlace: string; fecha: string };
+  /** El original ya no lleva al artículo (falló dos veces seguidas). */
+  enlace_caido?: true;
 }
 
 export type CategoriaObjetivo =

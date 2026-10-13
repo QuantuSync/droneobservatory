@@ -68,6 +68,7 @@ from proceso import (
 from proceso.ataques import SENTIDO_UA_RU
 from proceso.extraccion import Parada
 from recogida import (
+    archivo_web,
     articulos_dirigidos,
     barrera,
     busqueda_dirigida,
@@ -585,6 +586,9 @@ def principal(argumentos: list[str] | None = None) -> int:
         revision_barrera = paso(
             "barrera de titulares", barrera.paso_horario, almacen, ahora, modelos(almacen)
         )
+        # Copias archivadas de las fuentes y enlaces caídos (recogida/archivo_web.py): solo lee lo
+        # que ha dejado el servicio eodi-archivo. Si falla, se publica con lo apuntado antes.
+        paso("copias archivadas", archivo_web.paso_horario, almacen, ahora)
         if args.estado is not None:
             paso("estado de las fuentes", escribir_parcial, args.estado, estados)
         # Sin ningún fichero publicado no hay nada que publicar: entonces, y solo entonces, la

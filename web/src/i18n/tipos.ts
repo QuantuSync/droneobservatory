@@ -448,6 +448,11 @@ export interface Textos {
     investigacion: string;
     investiga: (autoridad: string) => string;
     verFuente: string;
+    copiaArchivada: string;
+    copiaArchivadaDel: (fecha: string) => string;
+    originalCaido: string;
+    enlaceOriginal: string;
+    caidoSinCopia: string;
     declaracionCitada: (autoridad: string, medio: string) => string;
     motivoDesmentido: string;
     desconocido: string;
