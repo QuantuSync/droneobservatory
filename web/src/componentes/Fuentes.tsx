@@ -46,11 +46,9 @@ function FichaFuente({ t, fuente, idioma }: { t: Textos; fuente: FuenteImpacto; 
   return (
     <li className="border-b border-linea py-2">
       <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-        <span>
-          <EnlaceFuente t={t} fuente={fuente} className="font-medium">
-            {nombreDeFuente(t, fuente.medio, idioma)}
-          </EnlaceFuente>
-        </span>
+        <EnlaceFuente t={t} fuente={fuente} className="font-medium">
+          {nombreDeFuente(t, fuente.medio, idioma)}
+        </EnlaceFuente>
         <span className="mono rounded-sm border border-linea px-1 text-xs text-acento">
           <span className="sr-only">{t.ficha.codigo(codigo)}</span>
           <span aria-hidden="true" title={t.ficha.codigo(codigo)}>

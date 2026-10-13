@@ -64,7 +64,7 @@ export function LineaTrafico({ t, idioma, trafico, consecuencias }: Props) {
           enlace={datos}
           aviso={t.ficha.enlaceExterno}
           avisoNoValido={t.ficha.enlaceNoValido}
-          className="text-xs"
+          className="inline-block text-xs"
         >
           {t.trafico.datos}
         </EnlaceExterno>
