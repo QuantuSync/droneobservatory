@@ -133,6 +133,8 @@ jobs:
         run: echo "EODI_PUBLICACION=$(node scripts/publicacion.ts | tail -n 1)" >> "$GITHUB_ENV"
       - name: Barrera de titulares sobre los datos publicados
         run: pytest -q tests/test_cita_titular.py
+      - name: Nombres de lugar de todos los incidentes publicados, en español y en inglés
+        run: pytest -q tests/test_nombres_publicados.py
       - name: La web valida los datos publicados
         working-directory: web
         run: |

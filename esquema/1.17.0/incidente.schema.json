@@ -348,6 +348,22 @@
         "por": {"x-visibilidad": "publico", "enum": ["fuente", "fecha"]}
       }
     },
+    "nombres": {
+      "x-visibilidad": "publico",
+      "description": "Los nombres de lugar como los escribe cada versión de la web (proceso/nombres_lugar.py, configuracion/nombres_lugar.json): lo que dice la fila «Lugar» con su país o territorio («Pafos, Chipre», «RAF Akrotiri (base británica), Chipre»), la localidad, el objetivo, la región, los demás lugares y los puntos anteriores (en el orden de la ficha; null donde no se puede escribir) y el país geográfico cuando no es el de los datos (Akrotiri: CY). Se genera al publicar; no se guarda.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["lugar"],
+      "properties": {
+        "lugar": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.17.0:comun#/$defs/titulo"},
+        "localidad": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.17.0:comun#/$defs/titulo"},
+        "objetivo": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.17.0:comun#/$defs/titulo"},
+        "region": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.17.0:comun#/$defs/titulo"},
+        "otros": {"x-visibilidad": "publico", "type": "array", "items": {"x-visibilidad": "publico", "anyOf": [{"$ref": "urn:eodi:esquema:1.17.0:comun#/$defs/titulo"}, {"type": "null"}]}},
+        "anteriores": {"x-visibilidad": "publico", "type": "array", "items": {"x-visibilidad": "publico", "anyOf": [{"$ref": "urn:eodi:esquema:1.17.0:comun#/$defs/titulo"}, {"type": "null"}]}},
+        "pais_geografico": {"x-visibilidad": "publico", "type": "string", "pattern": "^[A-Z]{2}$"}
+      }
+    },
     "zona": {
       "x-visibilidad": "publico",
       "description": "Frontera o interior (proceso/zona.py): drones de la guerra que cruzan o caen cerca de la frontera con Ucrania, Rusia o Bielorrusia o en la costa del mar Negro, o drones sobre el interior de Europa. Motivo de la regla que decide y, si hay punto o lugar nombrado, la distancia a esa frontera en km.",

@@ -236,6 +236,22 @@ export interface LugarAmpliado {
 /** Precisión con la que se conoce el lugar de un incidente sin punto en el mapa. */
 export type NivelUbicacion = "instalacion" | "localidad" | "region" | "pais";
 
+/**
+ * Los nombres de lugar de cada versión de la web (proceso/nombres_lugar.py): lo que dice la fila
+ * «Lugar» con su país o territorio, la localidad, el objetivo, la región y los demás lugares (en el
+ * orden de la ficha; null donde no se puede escribir), y el país geográfico si no es el de los datos
+ * (Akrotiri: CY; Gibraltar: GI).
+ */
+export interface NombresLugar {
+  lugar: Titulo;
+  localidad?: Titulo;
+  objetivo?: Titulo;
+  region?: Titulo;
+  otros?: (Titulo | null)[];
+  anteriores?: (Titulo | null)[];
+  pais_geografico?: string;
+}
+
 export interface PropiedadesIncidente {
   id: string;
   tipo: Tipo;
@@ -267,6 +283,7 @@ export interface PropiedadesIncidente {
   respuesta?: { medidas?: Medida[] };
   atribucion?: Atribucion;
   investigacion?: Investigacion[];
+  nombres?: NombresLugar;
   /** Ataque ruso contra Ucrania del que forma parte la incursión (proceso/cruces.py). */
   ataque?: {
     id: string;

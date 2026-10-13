@@ -73,6 +73,21 @@ def _tipo_dron(ruta: str) -> set[str]:
     }  # fmt: skip
 
 
+def _nombres() -> set[str]:
+    objetos = [f"nombres.{c}" for c in ("lugar", "localidad", "objetivo", "region")]
+    listas = ["nombres.otros", "nombres.anteriores"]
+    return {
+        "nombres.pais_geografico",
+        *objetos,
+        *listas,
+        *(
+            f"{b}.{i}"
+            for b in [*objetos, *(f"{lista}[]" for lista in listas)]
+            for i in ("es", "en")
+        ),
+    }
+
+
 def _control() -> set[str]:
     return {"control", *_instante("control.ultima_actualizacion"), "control.motivo_desmentido"}
 
@@ -244,6 +259,9 @@ CAMPOS_PUBLICOS_INCIDENTE: frozenset[str] = frozenset(
         "recorrido",
         *(f"recorrido.{c}" for c in ("version", "fuente", "cita", "puntos", "franja")),
         *(f"recorrido.puntos[].{c}" for c in ("nombre", "lat", "lon", "radio_km", "hora")),
+        # Los nombres de lugar como los escribe cada versión de la web (proceso/nombres_lugar.py).
+        "nombres",
+        *_nombres(),
         "investigacion",
         "investigacion[].autoridad",
         "investigacion[].cita",

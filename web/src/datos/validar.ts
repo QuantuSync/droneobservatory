@@ -365,6 +365,19 @@ const recorrido = objeto({
   franja: lista(lista(tupla([longitud, latitud]), 4), 1),
 });
 
+/** Los nombres de lugar como los escribe cada versión de la web (proceso/nombres_lugar.py). */
+const nombres = objeto(
+  { lugar: titulo },
+  {
+    localidad: titulo,
+    objetivo: titulo,
+    region: titulo,
+    otros: lista(nulable(titulo)),
+    anteriores: lista(nulable(titulo)),
+    pais_geografico: cadena(v.PATRON_PAIS),
+  },
+);
+
 const CAMPOS_INCIDENTE_OPCIONALES: Record<string, Comprobacion> = {
   tipo_dron: tipoDron,
   recorrido,
@@ -397,6 +410,7 @@ const CAMPOS_INCIDENTE_OPCIONALES: Record<string, Comprobacion> = {
     { tipo: enumerado(v.TIPOS_ACTOR), pais: cadena(v.PATRON_PAIS) },
   ),
   investigacion: lista(objeto({ autoridad: cadena(), cita: cadena(), fuente_id: cadena(), fecha: instante })),
+  nombres,
   ataque: objeto({
     id: cadena(/^EODI-UA-\d{4}-\d{4}$/),
     jornada: objeto({

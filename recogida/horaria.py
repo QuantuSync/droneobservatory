@@ -84,6 +84,7 @@ from recogida import (
     guerra,
     luces,
     mediciones,
+    nombres_wikidata,
     oficiales,
     prevision,
     revisados,
@@ -589,6 +590,9 @@ def principal(argumentos: list[str] | None = None) -> int:
         # Copias archivadas de las fuentes y enlaces caídos (recogida/archivo_web.py): solo lee lo
         # que ha dejado el servicio eodi-archivo. Si falla, se publica con lo apuntado antes.
         paso("copias archivadas", archivo_web.paso_horario, almacen, ahora)
+        # Nombres de lugar que faltan en las tablas, buscados en Wikidata (con tope de tiempo y
+        # de consultas): si falla, se publica con el nombre local o el país.
+        paso("nombres de lugar", nombres_wikidata.paso_horario, almacen, ahora)
         if args.estado is not None:
             paso("estado de las fuentes", escribir_parcial, args.estado, estados)
         # Sin ningún fichero publicado no hay nada que publicar: entonces, y solo entonces, la
