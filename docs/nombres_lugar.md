@@ -65,3 +65,12 @@ el texto concreto de una ficha; en `localidades` o `aeropuertos` si es el nombre
 un aeropuerto en general) y se publica en la siguiente recogida. Después de tocar `localidades`
 conviene regenerar la tabla de Wikidata (con `--filas` para no consultar) para que sus formas
 ajenas usen el nombre nuevo.
+
+## Fechas coherentes
+
+`proceso/coherencia.py`, también solo en lo publicado: un paso del historial nunca es posterior al
+siguiente (toma la fecha y la fuente del siguiente: quien confirma también avisa) y un suceso cuyo
+inicio es solo un día o una fecha aproximada no empieza después de su primer aviso. Un inicio con
+hora no se toca. La prueba sobre los datos publicados comprueba además que el estado actual es el
+último paso, que el fin no es anterior al inicio y que el primer aviso no es de más de un día antes
+de un inicio con hora.

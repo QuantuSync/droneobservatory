@@ -15,7 +15,7 @@ from pathlib import Path
 import pytest
 
 from esquema import Documento
-from proceso import nombres_lugar
+from proceso import coherencia, nombres_lugar
 
 CARPETA = Path(
     os.environ.get("EODI_PUBLICACION")
@@ -60,6 +60,17 @@ def test_ningun_nombre_mal_escrito_en_ninguna_version() -> None:
         p["id"]: problemas
         for p in INCIDENTES
         if (problemas := nombres_lugar.problemas(con_nombres(p)))
+    }
+    assert malos == {}
+
+
+def test_ninguna_fecha_contradictoria() -> None:
+    """El historial en orden, el estado actual como último paso, el fin después del inicio y el
+    primer aviso no antes del suceso (proceso/coherencia.py)."""
+    malos = {
+        p["id"]: problemas
+        for p in INCIDENTES
+        if (problemas := coherencia.contradicciones(coherencia.coherente(p)))
     }
     assert malos == {}
 
