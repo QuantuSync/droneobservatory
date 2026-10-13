@@ -624,6 +624,7 @@ export const en: Textos = {
     respuesta: "Response",
     atribucion: "Attribution",
     parteDelAtaque: "Part of the attack",
+    sucesoRelacionado: "Related incident",
     ataqueDeLa: (jornada) => `Part of the Russian attack on Ukraine on the ${jornada}`,
     porFuente: "the source links it to the attack",
     porFecha: "same date, and it came from Ukraine",

@@ -1,4 +1,4 @@
-// Validación de los datos contra el esquema 1.17.0 (campos públicos), escrita a mano para
+// Validación de los datos contra el esquema 1.18.0 (campos públicos), escrita a mano para
 // que no necesite generar código en el navegador. Se usa en el build, sobre los ficheros de
 // publicacion/, y en la web al cargar cada fichero: un fichero que no valida no se pinta.
 
@@ -426,6 +426,13 @@ const CAMPOS_INCIDENTE_OPCIONALES: Record<string, Comprobacion> = {
   ),
   foco_termico: focoTermico,
   trafico_aereo: traficoAereo,
+  relacionados: lista(
+    objeto({
+      id: cadena(/^EODI-\d{4}-\d{5}$/),
+      separado_de: cadena(/^EODI-\d{4}-\d{5}$/),
+      nota: objeto({ es: cadena(), en: cadena() }),
+    }),
+  ),
 };
 
 const propiedadesIncidente = objeto(CAMPOS_INCIDENTE_OBLIGATORIOS, CAMPOS_INCIDENTE_OPCIONALES);

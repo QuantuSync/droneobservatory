@@ -440,6 +440,7 @@ export interface Textos {
     atribucion: string;
     /** Incursión que forma parte de un ataque ruso contra Ucrania. */
     parteDelAtaque: string;
+    sucesoRelacionado: string;
     ataqueDeLa: (jornada: string) => string;
     porFuente: string;
     porFecha: string;

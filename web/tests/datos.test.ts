@@ -316,7 +316,7 @@ describe("validación contra el esquema", () => {
 
 describe("listas cerradas iguales a las del esquema", () => {
   type Esquema = Record<string, unknown>;
-  const leer = (nombre: string) => leerJson("esquema", "1.17.0", `${nombre}.schema.json`) as Esquema;
+  const leer = (nombre: string) => leerJson("esquema", "1.18.0", `${nombre}.schema.json`) as Esquema;
   const en = (objeto: unknown, ...claves: string[]): unknown =>
     claves.reduce<unknown>((actual, clave) => (actual as Esquema)[clave], objeto);
 
@@ -427,6 +427,13 @@ describe("listas cerradas iguales a las del esquema", () => {
         por: "fuente",
       },
       zona: { grupo: "frontera", motivo: "ataque" },
+      relacionados: [
+        {
+          id: "EODI-2026-00179",
+          separado_de: "EODI-2026-00072",
+          nota: { es: "Juntaba un cierre y un derribo.", en: "It merged a closure and a shoot-down." },
+        },
+      ],
       nombres: {
         lugar: { es: "RAF Akrotiri (base británica), Chipre", en: "RAF Akrotiri (British base), Cyprus" },
         localidad: { es: "RAF Akrotiri", en: "RAF Akrotiri" },

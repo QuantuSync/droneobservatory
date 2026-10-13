@@ -70,6 +70,12 @@ TERRITORIOS = {
 NOMBRES_QUE_SITUAN = frozenset(
     {"GI", "Dhekelia Sovereign Base Area", "Akrotiri Sovereign Base Area"}
 )
+# Fronteras con la posición de la Unión Europea: Natural Earth dibuja Crimea (con Sebastopol)
+# dentro de Rusia; para el observatorio es Ucrania. Su polígono es el de Rusia que cae entero en
+# esta caja [oeste, sur, este, norte] (la península; el resto de Rusia solo la roza en Tamán). El
+# norte de Chipre ya va con Chipre (UNIDADES_DE), Transnistria con Moldavia y Abjasia y Osetia
+# del Sur con Georgia: Natural Earth no las separa.
+SEGUN_LA_UE = [("RU", "UA", (32.3, 44.2, 36.8, 46.3))]
 # Partes de un país que quedan fuera del observatorio: Clipperton, en el Pacífico.
 FUERA = frozenset({"Clipperton Island"})
 SIN_CODIGO = "-99"
@@ -78,6 +84,17 @@ SIN_CODIGO = "-99"
 # darían falsos nombres de país: se omite.
 IDIOMA = re.compile(r"^NAME_(?!VI$)[A-Z]{2,3}$")
 CAMPOS_NOMBRE = ("NAME", "NAME_LONG", "ADMIN", "FORMAL_EN", "NAME_ALT", "NAME_CIAWF")
+
+
+DESCRIPCION = (
+    "Polígonos de los países de la recogida y de sus vecinos (escala 1:10 millones), "
+    "[lon, lat] con 4 decimales; el primer anillo de cada polígono es el exterior y "
+    "los demás, huecos. Las fronteras siguen la posición de la Unión Europea: Crimea y "
+    "Sebastopol son Ucrania, el norte de Chipre es Chipre, Transnistria es Moldavia y Abjasia "
+    "y Osetia del Sur son Georgia. nombres_paises: los de todos los países del mundo, "
+    "normalizados, para que no pasen por nombres de localidad. nombres_por_pais: los "
+    "de cada país de la recogida, para saber si una fuente lo nombra."
+)
 
 
 def _codigo(propiedades: dict[str, Any]) -> str:
@@ -99,6 +116,27 @@ def _poligonos(geometria: dict[str, Any]) -> list[list[list[list[float]]]]:
 def _toca_europa(poligono: list[list[list[float]]]) -> bool:
     lon_min, lat_min, lon_max, lat_max = CAJA_EUROPA
     return any(lon_min <= x <= lon_max and lat_min <= y <= lat_max for x, y in poligono[0])
+
+
+def _en_caja(poligono: list[list[list[float]]], caja: tuple[float, float, float, float]) -> bool:
+    oeste, sur, este, norte = caja
+    return all(oeste <= x <= este and sur <= y <= norte for x, y in poligono[0])
+
+
+def segun_la_ue(datos: dict[str, Any]) -> dict[str, Any]:
+    """Los polígonos con las fronteras que reconoce la Unión Europea (SEGUN_LA_UE): Crimea, de
+    Rusia a Ucrania. Repetirlo no cambia nada."""
+    for de, a, caja in SEGUN_LA_UE:
+        for grupo in ("paises", "vecinos"):
+            if de not in datos[grupo]:
+                continue
+            mover = [p for p in datos[grupo][de] if _en_caja(p, caja)]
+            if not mover:
+                continue
+            datos[grupo][de] = [p for p in datos[grupo][de] if not _en_caja(p, caja)]
+            destino = "paises" if a in datos["paises"] else "vecinos"
+            datos[destino].setdefault(a, []).extend(mover)
+    return datos
 
 
 def nombres(propiedades: dict[str, Any]) -> set[str]:
@@ -133,21 +171,17 @@ def generar(coleccion: dict[str, Any], paises: set[str]) -> dict[str, Any]:
     faltan = sorted(p for p, poligonos in propios.items() if not poligonos)
     if faltan:
         raise ValueError(f"países sin polígono en Natural Earth: {faltan}")
-    return {
-        "version_esquema": "1.0.0",
-        "descripcion": (
-            "Polígonos de los países de la recogida y de sus vecinos (escala 1:10 millones), "
-            "[lon, lat] con 4 decimales; el primer anillo de cada polígono es el exterior y "
-            "los demás, huecos. nombres_paises: los de todos los países del mundo, "
-            "normalizados, para que no pasen por nombres de localidad. nombres_por_pais: los "
-            "de cada país de la recogida, para saber si una fuente lo nombra."
-        ),
-        "licencia": "Natural Earth (https://www.naturalearthdata.com), dominio público",
-        "paises": propios,
-        "vecinos": dict(sorted(vecinos.items())),
-        "nombres_paises": sorted(todos),
-        "nombres_por_pais": {p: sorted(n) for p, n in sorted(de_cada.items())},
-    }
+    return segun_la_ue(
+        {
+            "version_esquema": "1.0.0",
+            "descripcion": DESCRIPCION,
+            "licencia": "Natural Earth (https://www.naturalearthdata.com), dominio público",
+            "paises": propios,
+            "vecinos": dict(sorted(vecinos.items())),
+            "nombres_paises": sorted(todos),
+            "nombres_por_pais": {p: sorted(n) for p, n in sorted(de_cada.items())},
+        }
+    )
 
 
 def principal(argumentos: list[str] | None = None) -> int:

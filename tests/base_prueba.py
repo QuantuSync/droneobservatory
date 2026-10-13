@@ -91,6 +91,12 @@ def cierre_de_pista() -> Documento:
     documento["fuentes"][0]["frase_origen"] = (
         "Аэропорт Схипхол приостанавливал работу взлетно-посадочной полосы из-за дрона."
     )
+    # La otra ficha de un incidente que juntaba dos sucesos (recogida/revisados.separar).
+    documento["relacionados"] = [{
+        "id": "EODI-2025-00004", "separado_de": "EODI-2025-00003",
+        "nota": {"es": "Juntaba el cierre de una pista y un dron en Rumanía.",
+                 "en": "It merged a runway closure and a drone over Romania."},
+    }]  # fmt: skip
     return documento
 
 

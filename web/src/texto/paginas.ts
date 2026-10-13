@@ -615,6 +615,13 @@ function incidente(d: IncidenteDetalle, idioma: Idioma): PaginaTexto {
             }),
           ),
         ),
+      ...(d.relacionados ?? []).map((r) =>
+        filaDatos(
+          t.ficha.sucesoRelacionado,
+          e("span", { "data-suceso-relacionado": r.id }, enlace(rutaDeFicha(r.id, idioma), r.id)),
+          e("p", { class: "texto-nota" }, r.nota[idioma]),
+        ),
+      ),
       d.foco_termico !== undefined && filaDatos(t.foco.rotulo, t.foco.detectado),
       d.control.motivo_desmentido !== undefined && filaDatos(t.ficha.motivoDesmentido, e("blockquote", { "data-motivo-desmentido": "" }, d.control.motivo_desmentido)),
       d.episodio !== undefined && filaDatos(t.ficha.episodio, e("span", { class: "mono" }, d.episodio)),

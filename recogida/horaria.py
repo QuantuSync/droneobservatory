@@ -428,6 +428,20 @@ def principal(argumentos: list[str] | None = None) -> int:
         dirigidos = paso("artículos dirigidos", articulos_dirigidos.paso_horario, almacen, ahora)
         if dirigidos:
             registro.info("artículos dirigidos incorporados: %d", dirigidos)
+        # Incidentes que juntaban sucesos distintos, revisados a mano (configuracion/
+        # incidentes_revisados.json, separar): se reparten una vez, antes del extractor, y en
+        # cada pasada se mantienen sus partes unidas a su ficha y enlazadas entre sí.
+        try:
+            try:
+                from modelo import cliente as servicio
+
+                cliente = servicio.Cliente(servicio.configuracion())
+            except Exception as error:
+                registro.info("sucesos mezclados sin extractor: %s", str(error)[:200])
+                cliente = None
+            revisados.separar(almacen, ahora, modelos(almacen), cliente)
+        except Exception as error:
+            registro.warning("sucesos mezclados sin separar: %s", str(error)[:300])
         # Una vez por versión: criterio de presencia, titulares y un incidente por noche de
         # cierre en lo ya guardado (recogida/criterio_presencia.py), antes del extractor para
         # que extraiga en esta pasada los candidatos que se separan.

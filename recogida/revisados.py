@@ -24,9 +24,9 @@ from typing import Any
 
 from almacen.base import Almacen, DocumentoInvalido
 from esquema import Documento
-from proceso import atribucion, declaraciones, extraccion, incidentes, titulares
+from proceso import atribucion, declaraciones, extraccion, incidentes, presencia, titulares
 from proceso.credibilidad import Credibilidad
-from proceso.estados import RETIRADAS, Estado
+from proceso.estados import RETIRADAS, Estado, nuevo_estado
 from proceso.fronteras import dentro_del_pais
 from proceso.presencia import TABLA_MOTIVOS
 
@@ -87,39 +87,47 @@ def completar(destino: Documento, unidos: list[Documento]) -> Documento:
     return resultado
 
 
+def unir_grupo(
+    almacen: Almacen, registros: list[str], motivo: str, ahora: datetime,
+    modelos: frozenset[str],
+) -> int:  # fmt: skip
+    """Funde en uno los registros vivos del grupo. Devuelve cuántos funde."""
+    vivos: dict[str, Documento] = {}
+    for id_ in registros:
+        documento = _vivo(almacen, id_)
+        if documento is not None:
+            vivos[documento["id"]] = documento
+    if len(vivos) < 2:
+        return 0
+    publicados = frozenset(vivos)
+    destino = next(iter(vivos.values()))
+    for otro in list(vivos.values())[1:]:
+        destino = incidentes.destino_de(destino, otro, publicados)[0]
+    unidos = [d for d in vivos.values() if d["id"] != destino["id"]]
+    nuevo = destino
+    fundidos = []
+    for absorbido in unidos:
+        nuevo, aportadas = incidentes.absorber(nuevo, absorbido, ahora)
+        fundido = {**copy.deepcopy(absorbido), "fusionado_en": destino["id"]}
+        fundido.pop("episodio", None)
+        fundidos.append((fundido, aportadas))
+    nuevo = completar(nuevo, unidos)
+    almacen.guardar_incidente(nuevo, ahora, modelos)
+    for fundido, aportadas in fundidos:
+        almacen.guardar_incidente(fundido, ahora, modelos)
+        almacen.registrar_fusion(
+            ahora.strftime("%Y-%m-%dT%H:%MZ"), fundido["id"], destino["id"],
+            incidentes.PREFIJO_REVISADA + motivo, aportadas,
+        )  # fmt: skip
+    return len(fundidos)
+
+
 def unir(almacen: Almacen, ahora: datetime, modelos: frozenset[str]) -> int:
     """Funde cada grupo revisado en uno. Devuelve cuántos registros funde."""
-    hechas = 0
-    for grupo in cargar()["unir"]:
-        vivos: dict[str, Documento] = {}
-        for id_ in grupo["registros"]:
-            documento = _vivo(almacen, id_)
-            if documento is not None:
-                vivos[documento["id"]] = documento
-        if len(vivos) < 2:
-            continue
-        publicados = frozenset(vivos)
-        destino = next(iter(vivos.values()))
-        for otro in list(vivos.values())[1:]:
-            destino = incidentes.destino_de(destino, otro, publicados)[0]
-        unidos = [d for d in vivos.values() if d["id"] != destino["id"]]
-        nuevo = destino
-        fundidos = []
-        for absorbido in unidos:
-            nuevo, aportadas = incidentes.absorber(nuevo, absorbido, ahora)
-            fundido = {**copy.deepcopy(absorbido), "fusionado_en": destino["id"]}
-            fundido.pop("episodio", None)
-            fundidos.append((fundido, aportadas))
-        nuevo = completar(nuevo, unidos)
-        almacen.guardar_incidente(nuevo, ahora, modelos)
-        for fundido, aportadas in fundidos:
-            almacen.guardar_incidente(fundido, ahora, modelos)
-            almacen.registrar_fusion(
-                ahora.strftime("%Y-%m-%dT%H:%MZ"), fundido["id"], destino["id"],
-                incidentes.PREFIJO_REVISADA + grupo["motivo"], aportadas,
-            )  # fmt: skip
-            hechas += 1
-    return hechas
+    return sum(
+        unir_grupo(almacen, grupo["registros"], grupo["motivo"], ahora, modelos)
+        for grupo in cargar()["unir"]
+    )
 
 
 def _mezcla(documento: Documento, revision: Documento) -> bool:
@@ -446,7 +454,7 @@ def _guardar(
         registro.warning("revisión sin guardar en %s: %s", antes["id"], str(error)[:300])
         hechos.sin_guardar.append(antes["id"])
         return False
-    campos = ("estado", "presencia_dron", "titulo", "lugar", "fuentes", "retirado")
+    campos = ("estado", "presencia_dron", "titulo", "lugar", "fuentes", "retirado", "relacionados")
     cambios = {c: antes.get(c) for c in campos if antes.get(c) != despues.get(c)}
     if cambios:
         nuevos = {c: despues.get(c) for c in cambios}
@@ -512,3 +520,508 @@ def corregir(almacen: Almacen, ahora: datetime, modelos: frozenset[str]) -> Corr
 def presencia_revisada(id_: str) -> bool:
     """El incidente tiene la presencia del dron revisada a mano: la regla horaria no la cambia."""
     return any(t["incidente"] == id_ and "presencia" in t for t in cargar().get("titulares", []))
+
+
+# --- Sucesos mezclados (docs/sucesos_mezclados.md) ---------------------------------------
+#
+# Un incidente que juntó sucesos distintos (EODI-2026-00072: el cierre del aeropuerto de Vilna
+# del 13 de septiembre de 2026 y el derribo de la noche del 14 al 15) se separa una sola vez:
+# - cada fuente va a la parte del suceso del que habla (revisado a mano, `separar`);
+# - el identificador se queda con el suceso más temprano: pierde las fuentes de los demás y lo
+#   que solo ellas sostenían, y su candidato, sin esos artículos, se vuelve a extraer;
+# - cada otro suceso abre un candidato propio («separado_de») con sus artículos y recibe un
+#   identificador por el camino normal de altas (su ficha la hace el extractor); lo que no es un
+#   suceso (una declaración política, un parte de la guerra) sale del incidente y no forma otro;
+# - una fusión anterior cuyas fuentes son todas de otra parte se deshace (las revisadas a mano,
+#   no);
+# - una parte que es el mismo suceso que otra ficha se une a ella (`coincide_con`), con la
+#   regla de siempre para elegir cuál queda;
+# - las fichas que quedan de cada separación se enlazan entre sí («Suceso relacionado»).
+
+CURSOR_SEPARAR = CURSOR + "separar:"
+# Llamadas al extractor por pasada horaria: cada una lee las páginas y tarda unos segundos.
+MAX_EXTRACCIONES_PASADA = 12
+MOTIVO_NO_SUCESO = "revisión: no es un suceso (configuracion/incidentes_revisados.json, separar)"
+
+
+@dataclass
+class Separados:
+    repartidos: list[str] = field(default_factory=list)
+    extraidos: list[str] = field(default_factory=list)
+    pendientes: list[str] = field(default_factory=list)
+    unidos: int = 0
+    relacionados: list[str] = field(default_factory=list)
+
+    def texto(self) -> str:
+        return (
+            f"repartidos {self.repartidos}, partes extraídas {len(self.extraidos)}, partes "
+            f"pendientes de extraer {len(self.pendientes)}, unidos {self.unidos}, con suceso "
+            f"relacionado {len(self.relacionados)}"
+        )
+
+
+def _clave_parte(parte: Documento) -> tuple[bool, str]:
+    return (not parte.get("es_suceso", True), str(parte.get("fecha") or "9999"))
+
+
+def conservada(revision: Documento) -> int:
+    """La parte que se queda con el identificador: el suceso más temprano."""
+    partes = revision["partes"]
+    return min(range(len(partes)), key=lambda n: _clave_parte(partes[n]))
+
+
+def _fecha_articulo(articulo: Documento) -> datetime:
+    return datetime.fromisoformat(str(articulo["fecha"]).replace("Z", "+00:00"))
+
+
+def _id_candidato(base: Documento, articulos: list[Documento], ocupados: set[str]) -> str:
+    primero = min(_fecha_articulo(a) for a in articulos)
+    raiz = f"CAND-{primero:%Y%m%dT%H%M}-{base['lugar']}-{base['tipo']}"
+    id_, n = raiz, 1
+    while id_ in ocupados:
+        n += 1
+        id_ = f"{raiz}-{n}"
+    return id_
+
+
+def _documento_candidato(
+    base: Documento, id_: str, articulos: list[Documento], separado_de: str | None
+) -> Documento:
+    fechas = sorted(_fecha_articulo(a) for a in articulos)
+    documento = {
+        **copy.deepcopy(base),
+        "id": id_,
+        "articulos": [a["url"] for a in sorted(articulos, key=lambda a: (a["fecha"], a["url"]))],
+        "inicio": fechas[0].strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "ultimo": fechas[-1].strftime("%Y-%m-%dT%H:%M:%SZ"),
+    }
+    documento.pop("separado_de", None)
+    if separado_de is not None:
+        documento["separado_de"] = separado_de
+    return documento
+
+
+def _parte_de_fuentes(revision: Documento, ids: list[str]) -> int | None:
+    """La única parte a la que van esas fuentes, o None si van a varias o a ninguna."""
+    partes = {n for n, p in enumerate(revision["partes"]) for i in ids if i in p["fuentes"]}
+    return partes.pop() if len(partes) == 1 else None
+
+
+def ficha_version() -> str:
+    from modelo import ficha
+
+    return ficha.VERSION
+
+
+def _sin_afirmar(resultado: Documento, quitadas: set[str]) -> None:
+    """Quita los valores que solo afirmaban las fuentes quitadas (`quitadas`: los campos de la
+    ficha que ya no tienen ninguna afirmación): sin respaldo, un valor no tiene origen. Lo que
+    se puede dejar sin saber queda «desconocido»; la fecha vuelve a la de publicación de la
+    primera noticia que queda, como la de una ficha que no la escribe."""
+    if "medidas" in quitadas and "respuesta" in resultado:
+        resultado["respuesta"].pop("medidas", None)
+        if not resultado["respuesta"]:
+            resultado.pop("respuesta")
+    drones = resultado.get("drones")
+    if isinstance(drones, dict):
+        if "drones" in quitadas:
+            drones["numero"] = "desconocido"
+        if "modelo_dron" in quitadas:
+            drones.pop("modelo", None)
+    consecuencias = resultado.get("consecuencias", {})
+    if "cierre" in quitadas and "cierre" in consecuencias:
+        consecuencias["cierre"] = {"valor": "desconocido"}
+    elif "cierre_minutos" in quitadas and "cierre" in consecuencias:
+        consecuencias["cierre"].pop("minutos", None)
+    for campo in ("vuelos_desviados", "vuelos_cancelados", "vuelos_retrasados"):
+        if campo in quitadas:
+            consecuencias.pop(campo, None)
+    if {"fin", "inicio"} & quitadas:
+        resultado["tiempo"].pop("fin", None)
+        resultado["tiempo"].pop("duracion_min", None)
+    if "inicio" in quitadas:
+        primera = min(
+            (f for f in resultado["fuentes"] if not f.get("es_autoridad")),
+            key=lambda f: (f["fecha"]["valor"], f["id"]),
+            default=resultado["fuentes"][0],
+        )
+        resultado["tiempo"] = {
+            "inicio": {"valor": primera["fecha"]["valor"], "precision": "aproximada"},
+            "origen_inicio": {
+                "tipo": "publicacion",
+                "fuente_id": primera["id"],
+                "motivo": "la fuente que daba la fecha era de otro suceso (separar)",
+            },
+        }
+    pruebas = resultado.get("pruebas")
+    if isinstance(pruebas, dict):
+        if "dron_estatal" in quitadas:
+            pruebas["dron_estatal"] = False
+        if "entrada_exterior" in quitadas:
+            pruebas["entrada_exterior"] = False
+        if {"evidencia", "origen_demostrado"} & quitadas:
+            pruebas["evidencia"] = []
+
+
+def sin_fuentes(documento: Documento, enlaces: set[str]) -> Documento | None:
+    """El incidente sin las fuentes de esos enlaces ni lo que solo ellas sostenían: sus
+    afirmaciones, los pasos del estado que dieron, la atribución y la investigación que citan y
+    la presencia del dron que afirmaban; con las reglas de siempre aplicadas de nuevo. None si
+    no le queda ninguna fuente."""
+    fuentes = [f for f in documento["fuentes"] if f["enlace"] not in enlaces]
+    if not fuentes:
+        return None
+    if len(fuentes) == len(documento["fuentes"]):
+        return documento
+    quedan = {f["id"] for f in fuentes}
+    resultado = copy.deepcopy(documento)
+    nivel = incidentes.credibilidad_noticias(len(fuentes))
+    for fuente in fuentes:
+        if fuente.get("fiabilidad") == incidentes.FIABILIDAD_NOTICIAS:
+            fuente["credibilidad"] = nivel
+    resultado["fuentes"] = copy.deepcopy(fuentes)
+    antes = {a["campo"] for a in resultado.get("afirmaciones", [])}
+    resultado["afirmaciones"] = [
+        a for a in resultado.get("afirmaciones", []) if a["fuente_id"] in quedan
+    ]
+    _sin_afirmar(resultado, antes - {a["campo"] for a in resultado["afirmaciones"]})
+    pasos = [p for p in resultado["estado"]["historial"] if p.get("fuente_id") in quedan]
+    if not pasos or pasos[0]["estado"] != Estado.NOTIFICADO:
+        # Todo estado empieza en «notificado», con la primera noticia que queda.
+        primera = min(fuentes, key=lambda f: (f["fecha"]["valor"], f["id"]))
+        inicial = nuevo_estado(primera["fecha"], primera["id"])["historial"][0]
+        if pasos and pasos[0]["fecha"]["valor"] < inicial["fecha"]["valor"]:
+            inicial["fecha"] = pasos[0]["fecha"]
+        pasos = [inicial, *pasos]
+    resultado["estado"] = {"actual": pasos[-1]["estado"], "historial": pasos}
+    if resultado["estado"]["actual"] != Estado.DESMENTIDO:
+        resultado["control"].pop("motivo_desmentido", None)
+    if resultado["estado"]["actual"] != Estado.ATRIBUIDO:
+        resultado.pop("atribucion", None)
+    if "investigacion" in resultado:
+        investigacion = [i for i in resultado["investigacion"] if i["fuente_id"] in quedan]
+        if investigacion:
+            resultado["investigacion"] = investigacion
+        else:
+            resultado.pop("investigacion")
+    origen = resultado["tiempo"].get("origen_inicio", {})
+    if origen.get("fuente_id") not in (None, *quedan):
+        origen.pop("fuente_id")
+    afirmadas = [a["valor"] for a in resultado["afirmaciones"] if a["campo"] == "presencia_dron"]
+    if resultado.get("presencia_dron") not in (*afirmadas, None):
+        orden = ("confirmada", "descartada", "no_confirmada")
+        resultado["presencia_dron"] = min(afirmadas, key=orden.index, default="no_confirmada")
+    resultado["control"]["huella_fuentes"] = incidentes.huella([f["enlace"] for f in fuentes])
+    return presencia.aplicar(incidentes.aplicar_reglas(resultado))
+
+
+# Valores que se dejan sin saber en vez de quitarlos (el esquema no deja quitarlos).
+DESCONOCIDOS = {"drones.numero": "desconocido", "consecuencias.cierre.valor": "desconocido"}
+MAX_PASADAS_ORIGEN = 5
+
+
+def con_origen(documento: Documento, fichas: Any) -> Documento:
+    """El incidente sin los valores que se han quedado sin origen al perder fuentes, con la misma
+    comprobación que la exportación semanal (exportacion/procedencia.py). Un valor obligatorio
+    sin origen no se toca: la exportación lo dirá."""
+    from exportacion import procedencia as origenes
+
+    resultado = copy.deepcopy(documento)
+    for _ in range(MAX_PASADAS_ORIGEN):
+        try:
+            origenes.procedencia_incidente(resultado, fichas)
+        except origenes.SinOrigen as error:
+            texto = str(error)
+            if "sin origen en " not in texto:
+                return resultado
+            rutas = texto.split("sin origen en ", 1)[1].split(", ")
+            quitables = [r for r in rutas if r not in origenes.OBLIGATORIAS]
+            if not quitables:
+                return resultado
+            for ruta in quitables:
+                if ruta in DESCONOCIDOS:
+                    padre, _, hoja = ruta.rpartition(".")
+                    nodo = origenes.leer(resultado, padre)
+                    if isinstance(nodo, dict):
+                        if ruta == "consecuencias.cierre.valor":
+                            # Sin cierre sabido tampoco hay duración.
+                            nodo.clear()
+                        nodo[hoja] = DESCONOCIDOS[ruta]
+                elif origenes.leer(resultado, ruta) is not None:
+                    origenes.quitar(resultado, ruta)
+            resultado = incidentes.aplicar_reglas(resultado)
+        else:
+            return resultado
+    return resultado
+
+
+def repartir(
+    almacen: Almacen, revision: Documento, ahora: datetime, modelos: frozenset[str]
+) -> Documento | None:
+    """Reparte el incidente en sus sucesos (una sola vez). Devuelve lo hecho, para el cursor, o
+    None si no se puede (el incidente ya no está activo o se quedaría sin fuentes)."""
+    id_ = revision["incidente"]
+    original = almacen.incidente(id_)
+    if original is None or not incidentes.activo(original):
+        registro.warning("separación sin hacer: %s no está activo", id_)
+        return None
+    motivo = revision["motivo"]["es"]
+    queda = conservada(revision)
+    enlace_de = {f["id"]: f["enlace"] for f in original["fuentes"]}
+    enlaces_parte = [
+        {enlace_de[f] for f in parte["fuentes"] if f in enlace_de} for parte in revision["partes"]
+    ]
+    # Lo que sale del que se queda: los enlaces de las otras partes que no son también suyos.
+    # Un artículo que cuenta dos sucesos va a los dos.
+    salen = set().union(*(e for n, e in enumerate(enlaces_parte) if n != queda))
+    salen -= enlaces_parte[queda]
+    if sin_fuentes(original, salen) is None:
+        registro.warning("separación sin hacer: a %s no le quedaría ninguna fuente", id_)
+        return None
+    # Las fusiones anteriores cuyas fuentes son todas de otra parte se deshacen: el registro
+    # absorbido vuelve con sus fuentes y es la ficha de esa parte. Las revisadas a mano, no.
+    vueltos: dict[int, list[str]] = {}
+    for fusion in almacen.fusiones():
+        if (
+            fusion["destino"] != id_
+            or fusion["revertida"]
+            or fusion["motivo"].startswith(incidentes.PREFIJO_REVISADA)
+        ):
+            continue
+        parte = _parte_de_fuentes(revision, fusion["fuentes"])
+        if parte is not None and parte != queda:
+            incidentes.revertir(almacen, fusion["absorbido"], ahora, modelos)
+            vueltos.setdefault(parte, []).append(fusion["absorbido"])
+    # Los artículos que salen dejan su candidato (el del incidente o el de un registro fundido)
+    # y forman el de su parte, del mismo sitio y tipo que el candidato del incidente.
+    candidatos = {c["id"]: c for c in almacen.candidatos()}
+    todos = set().union(*(e for n, e in enumerate(enlaces_parte) if n != queda))
+    articulos = {a["url"]: a for a in almacen.articulos_de(sorted(todos))}
+    propio = candidatos.get(str(original["control"].get("candidato")))
+    cambiados: dict[str, Documento] = {}
+    for url, articulo in articulos.items():
+        if url not in salen:
+            continue
+        origen = cambiados.get(str(articulo.get("candidato"))) or candidatos.get(
+            str(articulo.get("candidato"))
+        )
+        if origen is not None:
+            restantes = [u for u in origen["articulos"] if u != url]
+            cambiados[origen["id"]] = {**origen, "articulos": restantes}
+    documentos = [c for c in cambiados.values() if c["articulos"]]
+    ocupados = set(candidatos)
+    hecho: Documento = {"fecha": ahora.strftime("%Y-%m-%dT%H:%MZ"), "partes": []}
+    for n, parte in enumerate(revision["partes"]):
+        entrada: Documento = {"vueltos": vueltos.get(n, [])}
+        if n == queda:
+            if propio is not None:
+                entrada["candidato"] = propio["id"]
+        else:
+            suyos = [a for u, a in articulos.items() if u in enlaces_parte[n]]
+            base = propio or (candidatos.get(str(suyos[0].get("candidato"))) if suyos else None)
+            if suyos and base is not None:
+                sitio = {**base, "lugar": parte.get("lugar", base["lugar"])}
+                cand = _documento_candidato(
+                    sitio, _id_candidato(sitio, suyos, ocupados), suyos, base["id"]
+                )
+                ocupados.add(cand["id"])
+                documentos.append(cand)
+                entrada["candidato"] = cand["id"]
+        hecho["partes"].append(entrada)
+    almacen.corregir_candidatos(documentos, f"{CURSOR_SEPARAR}{id_}: {motivo}")
+    hecho["conservado_perdio"] = propio is not None and propio["id"] in cambiados
+    articulos_de = {d["id"]: d["articulos"] for d in documentos}
+    for parte, entrada in zip(revision["partes"], hecho["partes"], strict=True):
+        if "candidato" in entrada and not parte.get("es_suceso", True):
+            # Lo que no es un suceso no se extrae: queda anotado, sin incidente.
+            almacen.guardar_extraccion(
+                entrada["candidato"], ahora.strftime("%Y-%m-%dT%H:%MZ"), ficha_version(),
+                incidentes.huella(articulos_de[entrada["candidato"]]), False,
+                {"motivos": [f"{MOTIVO_NO_SUCESO}: {motivo}"], "campos": {}, "incidente": None},
+            )  # fmt: skip
+    # El que se queda, sin las fuentes que salen. Los registros que tiene fundidos no se
+    # publican y se quedan como estaban: al volver a extraerlo, solo recupera de ellos las
+    # fuentes que conserva (reabsorber).
+    documento = almacen.incidente(id_)
+    nuevo = sin_fuentes(documento, salen) if documento is not None else None
+    if nuevo is not None:
+        # También si no pierde fuentes aquí: deshacer una fusión le quita las fuentes del
+        # registro que vuelve, pero no los valores que trajeron.
+        from exportacion.procedencia import Fichas
+
+        nuevo = con_origen(nuevo, Fichas.de(almacen))
+    if documento is not None and nuevo is not None and nuevo != documento:
+        _guardar(almacen, documento, nuevo, ahora, modelos, f"separado: {motivo}", Corregidos())
+    conservado = almacen.incidente(id_)
+    hecho["fuentes_conservadas"] = (
+        sorted(f["id"] for f in conservado["fuentes"]) if conservado else []
+    )
+    return hecho
+
+
+def _extraer_parte(
+    almacen: Almacen, cliente: Any, candidato: Documento, separado: str, ahora: datetime,
+    modelos: frozenset[str],
+) -> bool:  # fmt: skip
+    """Una llamada al extractor para el candidato de una parte. El lugar que dio una autoridad
+    (ubicaciones) se conserva en el incidente que ya lo tenía. True si deja incidente."""
+    anterior = extraccion.incidente_del_candidato(almacen, candidato["id"])
+    documento = almacen.incidente(anterior) if anterior else None
+    oficial = (
+        copy.deepcopy(documento["lugar"])
+        if documento is not None and documento["lugar"].get("geocodificacion") == "oficial"
+        else None
+    )
+    if _extraer(almacen, cliente, candidato, ahora) != 1:
+        registro.warning("parte de %s sin incidente tras extraer %s", separado, candidato["id"])
+        return False
+    id_ = extraccion.incidente_del_candidato(almacen, candidato["id"])
+    nuevo = almacen.incidente(id_) if id_ else None
+    if oficial is not None and nuevo is not None and nuevo["lugar"] != oficial:
+        _guardar(almacen, nuevo, {**nuevo, "lugar": oficial}, ahora, modelos,
+                 MOTIVO_UBICACION, Corregidos())  # fmt: skip
+    return True
+
+
+def reabsorber(
+    almacen: Almacen, id_: str, conservadas: set[str], ahora: datetime, modelos: frozenset[str]
+) -> bool:
+    """Tras volver a extraer su candidato, el incidente se rehace solo con los artículos del
+    candidato: vuelve a tener las fuentes que le daban los registros que tiene fundidos, solo las
+    que ya tenía al separarse (`conservadas`). True si cambia."""
+    documento = almacen.incidente(id_)
+    if documento is None or not incidentes.activo(documento):
+        return False
+    nuevo = documento
+    for fusion in almacen.fusiones():
+        if fusion["destino"] != id_ or fusion["revertida"]:
+            continue
+        absorbido = almacen.incidente(fusion["absorbido"])
+        if absorbido is None:
+            continue
+        tiene = {f["id"] for f in nuevo["fuentes"]}
+        suyas = [f for f in absorbido["fuentes"] if f["id"] in conservadas and f["id"] not in tiene]
+        if not suyas:
+            continue
+        propio = {k: v for k, v in absorbido.items() if k != "fusionado_en"}
+        propio["fuentes"] = suyas
+        nuevo, _ = incidentes.absorber(nuevo, propio, ahora)
+    if nuevo == documento:
+        return False
+    almacen.guardar_incidente(nuevo, ahora, modelos)
+    return True
+
+
+def _incidentes_de(almacen: Almacen, entrada: Documento) -> list[str]:
+    ids = list(entrada.get("vueltos", []))
+    if "candidato" in entrada:
+        propio = extraccion.incidente_del_candidato(almacen, entrada["candidato"])
+        if propio is not None and propio not in ids:
+            ids.append(propio)
+    return ids
+
+
+def separar(
+    almacen: Almacen, ahora: datetime, modelos: frozenset[str], cliente: Any = None
+) -> Separados:
+    """Separa los incidentes revisados que juntaban sucesos distintos y mantiene, en cada
+    pasada, las partes extraídas, unidas a su ficha si ya la tenían y enlazadas entre sí."""
+    hechos = Separados()
+    relaciones: dict[str, dict[str, Documento]] = {}
+    for revision in cargar().get("separar", []):
+        clave = CURSOR_SEPARAR + revision["incidente"]
+        hecho = almacen.cursor(clave)
+        if hecho is None:
+            hecho = repartir(almacen, revision, ahora, modelos)
+            if hecho is None:
+                continue
+            almacen.guardar_cursor(clave, hecho)
+            hechos.repartidos.append(revision["incidente"])
+        candidatos = {c["id"]: c for c in almacen.candidatos()}
+        vivos: list[str] = []
+        queda = conservada(revision)
+        for n, (parte, entrada) in enumerate(zip(revision["partes"], hecho["partes"], strict=True)):
+            if not parte.get("es_suceso", True):
+                continue
+            cand = candidatos.get(str(entrada.get("candidato")))
+            pendiente = (
+                bool(hecho.get("conservado_perdio"))
+                and cand is not None
+                and extraccion.articulos_retirados(almacen, cand)
+                if n == queda
+                else not almacen.extracciones(str(entrada.get("candidato")))
+            )
+            if cand is not None and pendiente:
+                # El extractor, por el camino normal de altas: la parte nueva y también la que
+                # conserva el identificador, cuya ficha anterior hablaba de los dos sucesos (su
+                # titular, sus datos). Sin servicio (un ensayo) o pasado el tope de la pasada,
+                # queda para la siguiente o para el extractor de la horaria, que lleva delante
+                # los candidatos separados.
+                if (
+                    cliente is not None
+                    and len(hechos.extraidos) < MAX_EXTRACCIONES_PASADA
+                    and _extraer_parte(almacen, cliente, cand, revision["incidente"], ahora,
+                                       modelos)
+                ):  # fmt: skip
+                    hechos.extraidos.append(cand["id"])
+                else:
+                    hechos.pendientes.append(cand["id"])
+            if n == queda and cand is not None and hecho.get("conservado_perdio"):
+                # Ya extraído de nuevo (aquí o por el extractor de la horaria): una vez por ficha.
+                ultima = (almacen.extracciones(cand["id"]) or [{}])[-1].get("fecha")
+                if ultima and hecho.get("reabsorbido") != ultima and not pendiente:
+                    reabsorber(
+                        almacen,
+                        revision["incidente"],
+                        set(hecho.get("fuentes_conservadas", [])),
+                        ahora,
+                        modelos,
+                    )
+                    hecho["reabsorbido"] = ultima
+                    almacen.guardar_cursor(clave, hecho)
+            ids = _incidentes_de(almacen, entrada)
+            if n == queda and revision["incidente"] not in ids:
+                ids.insert(0, revision["incidente"])
+            if parte.get("coincide_con") and ids:
+                hechos.unidos += unir_grupo(
+                    almacen, [*ids, parte["coincide_con"]], revision["motivo"]["es"], ahora,
+                    modelos,
+                )  # fmt: skip
+            for propio in ids:
+                documento = _vivo(almacen, propio)
+                if documento is not None and documento["id"] not in vivos:
+                    vivos.append(documento["id"])
+        nota = {"es": revision["motivo"]["es"], "en": revision["motivo"]["en"]}
+        for uno in vivos:
+            for otro in vivos:
+                if otro != uno:
+                    relaciones.setdefault(uno, {})[otro] = {
+                        "id": otro,
+                        "separado_de": revision["incidente"],
+                        "nota": nota,
+                    }
+    hechos.relacionados = _enlazar(almacen, relaciones, ahora, modelos)
+    registro.info("sucesos mezclados: %s", hechos.texto())
+    return hechos
+
+
+def _enlazar(
+    almacen: Almacen, relaciones: dict[str, dict[str, Documento]], ahora: datetime,
+    modelos: frozenset[str],
+) -> list[str]:  # fmt: skip
+    """Cada ficha activa con sus sucesos relacionados, ni más ni menos. Devuelve las que
+    cambian."""
+    cambiadas = []
+    for documento in almacen.incidentes():
+        if not incidentes.activo(documento):
+            continue
+        quiere = sorted(relaciones.get(documento["id"], {}).values(), key=lambda r: r["id"])
+        if documento.get("relacionados", []) == quiere:
+            continue
+        nuevo = {k: v for k, v in documento.items() if k != "relacionados"}
+        if quiere:
+            nuevo["relacionados"] = quiere
+        if _guardar(almacen, documento, nuevo, ahora, modelos,
+                    "sucesos relacionados de una separación (separar)", Corregidos()):  # fmt: skip
+            cambiadas.append(documento["id"])
+    return cambiadas
