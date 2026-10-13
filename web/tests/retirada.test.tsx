@@ -90,8 +90,13 @@ describe("atribución retirada", () => {
     expect(autoridadEscrita("Bundesregierung", "en")).toBe("the German Federal Government (Bundesregierung)");
     expect(autoridadEscrita("Pre\u0219edintele Maia Sandu", "es")).toBe("la presidenta de Moldavia, Maia Sandu");
     expect(autoridadEscrita("Prefectul I\u0061\u0219i", "es")).toBe("el prefecto de I\u0061\u0219i");
-    // Una autoridad que no está en la tabla, tal cual.
-    expect(autoridadEscrita("Københavns Politi", "es")).toBe("Københavns Politi");
+    expect(autoridadEscrita("Københavns Politi", "es")).toBe("la Policía de Copenhague (Københavns Politi)");
+    // Una autoridad que no está en la tabla (configuracion/autoridades.json), tal cual.
+    expect(autoridadEscrita("Politi ukjent", "es")).toBe("Politi ukjent");
+    // Una fuente oficial sin medio, con su nombre traducido; el tráfico medido, en cada idioma.
+    expect(medioEscrito("Tráfico aéreo medido (adsb.lol)", "en", en.ficha.declaracionCitada)).toBe(
+      "Measured air traffic (adsb.lol)",
+    );
     expect(medioEscrito("Bundesregierung (declaración oficial citada en come-on.de)", "en", en.ficha.declaracionCitada)).toBe(
       "Statement by the German Federal Government (Bundesregierung), quoted in come-on.de",
     );

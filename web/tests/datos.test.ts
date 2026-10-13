@@ -483,7 +483,8 @@ describe("CSV de datos abiertos", () => {
     expect(lineas[0]).toBe(COLUMNAS_INCIDENTES.join(","));
     expect(lineas).toHaveLength(4);
     expect(lineas[1]).toContain("EODI-2025-00210,interrupcion_aeroportuaria,notificado");
-    expect(lineas[1]?.endsWith("https://droneobservatory.eu/EODI-2025-00210")).toBe(true);
+    // El enlace y, detrás, los nombres de lugar de cada versión (vacíos sin el campo `nombres`).
+    expect(lineas[1]?.endsWith("https://droneobservatory.eu/EODI-2025-00210,,,,")).toBe(true);
   });
 
   it("escribe una fila por ataque con sus regiones", () => {

@@ -74,3 +74,49 @@ inicio es solo un día o una fecha aproximada no empieza después de su primer a
 hora no se toca. La prueba sobre los datos publicados comprueba además que el estado actual es el
 último paso, que el fin no es anterior al inicio y que el primer aviso no es de más de un día antes
 de un inicio con hora.
+
+## En la web
+
+La ficha (`web/src/componentes/FichaIncidente.tsx`) y las páginas de texto (`web/src/texto/paginas.ts`)
+escriben los lugares con el campo `nombres` (`web/src/datos/nombres.ts`): el título es el nombre del
+objetivo en cada versión o, si no se puede escribir bien, el titular; «Lugar» es `nombres.lugar`; los
+demás lugares y los puntos anteriores, `nombres.otros` y `nombres.anteriores`. Con datos publicados sin
+ese campo, la tabla de siempre (`web/src/i18n/nombresLugar.ts`), que ya nunca transcribe otra
+escritura. Las listas, el buscador de canales de avisos, el mapa y los datos estructurados usan el
+titular publicado y `nombres.lugar`; el CSV lleva al final `lugar_es`, `lugar_en`, `objetivo_es` y
+`objetivo_en`.
+
+«Frontera o interior» solo sale en la ficha en el flanco este (`FLANCO_ESTE`, la misma lista que
+`flanco_este` de `configuracion/nombres_lugar.json`): países con frontera con Ucrania, Rusia (también
+Kaliningrado) o Bielorrusia o con costa en el mar Negro, por el país geográfico (Akrotiri cuenta como
+Chipre). El dato se sigue calculando y publicando igual y la exportación para AEGIS no cambia. El filtro
+«Dónde» dice «Frontera este» y «Resto de Europa».
+
+El modelo de dron solo sale si es un nombre de modelo («Shahed 136», «Gerbera»), no la descripción de la
+fuente en su lengua; el motivo de un desmentido va como cita.
+
+## Autoridades y fuentes oficiales
+
+`configuracion/autoridades.json` (347, revisadas a mano el 13 de octubre de 2026) escribe en español y
+en inglés quién declara, investiga o atribuye y el nombre de las fuentes oficiales sin medio, también
+las de la capa de guerra (las administraciones militares regionales de Ucrania, el Ministerio de
+Defensa ruso…). Las instituciones con nombre oficial en alfabeto latino llevan el original entre
+paréntesis («el Gobierno federal alemán (Bundesregierung)»). Una que no esté en la tabla sale tal cual
+si va en alfabeto latino y, si no, «una autoridad». La usan la web (`web/src/i18n/autoridades.ts`) y los
+avisos (`proceso/autoridades.py`). El fichero va en ASCII con escapes: el gancho del repositorio vería
+sílabas sueltas en los nombres rumanos con letras con signo.
+
+## Capa de guerra
+
+La ficha de un impacto ya no lleva el nombre en cirílico: la ciudad con su nombre español o inglés
+(Kiev / Kyiv, Járkov / Kharkiv), la comunidad («comunidad de Khotin» / «Khotin community»), el distrito
+o el nombre en alfabeto latino de los datos; los pocos que solo vienen en cirílico, escritos a mano
+(`web/src/datos/nombres.ts`). Sin nombre, la región.
+
+## Prueba de las fichas
+
+`web/tests/fichas.test.tsx` dibuja cada incidente publicado en las dos versiones y comprueba que fuera
+de las citas no hay otro alfabeto ni palabras de otro idioma, que «Lugar» es el publicado y lleva su
+localidad, que «Frontera o interior» solo sale en el flanco este y que no hay filas vacías; y que cada
+lugar y cada fuente de la capa de guerra se escribe en el idioma de la página. Corre con los datos de
+ejemplo y, en el trabajo «datos-publicados», con los publicados.

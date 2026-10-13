@@ -511,6 +511,8 @@ export interface IncidenteResumen {
   inicio: number | null;
   pais: string;
   objetivo: string | null;
+  /** La fila «Lugar» en cada idioma (nombres.lugar), si la publicación la escribe. */
+  lugar?: Titulo;
   episodio: string | null;
   /** Si tiene un foco térmico detectado por satélite: el mapa le pone su marca. */
   foco: boolean;

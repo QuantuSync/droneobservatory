@@ -45,6 +45,17 @@ import {
 } from "../sitio.ts";
 import { textoAproximado } from "../datos/lugarAproximado.ts";
 import { nombreDeLugar } from "../i18n/nombresLugar.ts";
+import {
+  anteriorEscrito,
+  enFlancoEste,
+  lugarEscrito as lugarDeFicha,
+  localidadEscrita,
+  modeloEscrito,
+  objetivoEscrito,
+  otroLugarEscrito,
+  paisGeografico,
+  regionEscrita,
+} from "../datos/nombres.ts";
 import type { Idioma } from "../sitio.ts";
 import { fechaDeDia } from "../tiempo/dias.ts";
 import { e, html, jsonLd } from "./html.ts";
@@ -263,18 +274,13 @@ export function filaTipoDron(t: Textos, d: IncidenteDetalle): Html | false {
   );
 }
 
-/** El lugar de un incidente en una línea: localidad, región si no hay punto, país. */
+/** El lugar de un incidente en una línea, como la fila «Lugar» de la ficha (datos/nombres.ts). */
 function lugarEscrito(d: IncidenteDetalle, idioma: Idioma): string {
-  const partes: string[] = [];
-  const localidad = d.lugar.localidad === undefined ? null : nombreDeLugar(d.lugar.localidad, idioma);
-  const regionEscrita = d.lon === null && d.lugar.region !== undefined ? nombreDeLugar(d.lugar.region, idioma) : null;
-  if (localidad !== null) partes.push(localidad);
-  if (regionEscrita !== null) partes.push(regionEscrita);
-  partes.push(pais(d.lugar.pais, idioma));
-  return partes.join(", ");
+  return lugarDeFicha(d, idioma, d.lon === null);
 }
 
 function lugarResumido(i: IncidenteResumen, idioma: Idioma): string {
+  if (i.lugar !== undefined) return i.lugar[idioma];
   return [i.objetivo === null ? null : nombreDeLugar(i.objetivo, idioma), pais(i.pais, idioma)].filter((p): p is string => p !== null).join(", ");
 }
 
@@ -527,37 +533,40 @@ function incidente(d: IncidenteDetalle, idioma: Idioma): PaginaTexto {
           ? e("span", { class: "texto-nota" }, t.ficha.radio(numero(d.lugar.radio_km, idioma)))
           : d.aproximado !== undefined && d.aproximado !== null
             ? html(
-                e("span", { class: "texto-nota", "data-lugar-aproximado": d.aproximado.nivel }, textoAproximado(t, idioma, d.aproximado, d.lugar.pais).nivel),
-                e("span", { class: "texto-nota" }, textoAproximado(t, idioma, d.aproximado, d.lugar.pais).deDonde),
+                e("span", { class: "texto-nota", "data-lugar-aproximado": d.aproximado.nivel }, textoAproximado(t, idioma, d.aproximado, d.lugar.pais, regionEscrita(d, idioma)).nivel),
+                e("span", { class: "texto-nota" }, textoAproximado(t, idioma, d.aproximado, d.lugar.pais, regionEscrita(d, idioma)).deDonde),
               )
             : e("span", { class: "texto-nota" }, t.imprecisa.etiqueta, " · ", t.imprecisa.nivel[d.lugar.nivel]),
       ),
       d.zona !== undefined &&
+        enFlancoEste(d) &&
         filaDatos(
           t.zona.titulo,
           e("span", { "data-zona": d.zona.grupo }, t.zona.grupo[d.zona.grupo]),
           e("span", { class: "texto-nota" }, t.zona.motivo(d.zona.motivo, d.zona.distancia_km ?? null)),
         ),
       d.objetivo !== undefined &&
-        filaDatos(tp.incidente.objetivo, (d.objetivo.nombre === undefined ? null : nombreDeLugar(d.objetivo.nombre, idioma)) ?? "", d.objetivo.nombre !== undefined && nombreDeLugar(d.objetivo.nombre, idioma) !== null && " · ", t.categoria[d.objetivo.categoria], d.objetivo.oaci !== undefined && html(" · ", e("span", { class: "mono" }, d.objetivo.oaci))),
+        filaDatos(tp.incidente.objetivo, objetivoEscrito(d, idioma) ?? "", objetivoEscrito(d, idioma) !== null && " · ", t.categoria[d.objetivo.categoria], d.objetivo.oaci !== undefined && html(" · ", e("span", { class: "mono" }, d.objetivo.oaci))),
       fuentePunto !== undefined &&
-        filaDatos(t.ficha.lugarSegun, e("span", { "data-lugar-segun": "" }, autoridadEscrita(fuentePunto.medio, idioma)), citaConFuente(t, idioma, fuentePunto)),
+        filaDatos(t.ficha.lugarSegun, e("span", { "data-lugar-segun": "" }, medioEscrito(fuentePunto.medio, idioma, t.ficha.declaracionCitada)), citaConFuente(t, idioma, fuentePunto)),
       otros.length > 0 &&
         filaDatos(
           t.ficha.otrosLugares,
           e(
             "ul",
             { "data-otros-lugares": "" },
-            otros.map((otro) => {
+            otros.map((otro, i) => {
               const fuente = otro.fuente === undefined ? undefined : porFuente.get(otro.fuente);
-              return e("li", null, nombreDeLugar(otro.nombre, idioma) ?? otro.nombre, fuente !== undefined && citaConFuente(t, idioma, fuente));
+              const escrito = otroLugarEscrito(d, i, idioma);
+              if (escrito === null && fuente === undefined) return null;
+              return e("li", null, escrito ?? "", fuente !== undefined && citaConFuente(t, idioma, fuente));
             }),
           ),
         ),
-      (d.lugar.historial ?? []).map((cambio) =>
+      (d.lugar.historial ?? []).map((cambio, i) =>
         filaDatos(
           t.ficha.puntoAnterior,
-          e("span", { "data-punto-anterior": "" }, cambio.anterior.localidad === undefined ? "" : (nombreDeLugar(cambio.anterior.localidad, idioma) ?? "")),
+          e("span", { "data-punto-anterior": "" }, anteriorEscrito(d, i, idioma) ?? ""),
           " · ",
           e("span", { class: "mono" }, instante(cambio.fecha)),
           e("span", { class: "texto-nota" }, cambio.motivo[idioma]),
@@ -566,7 +575,7 @@ function incidente(d: IncidenteDetalle, idioma: Idioma): PaginaTexto {
       filaDatos(
         t.ficha.drones,
         cifraDe(idioma, t, d.drones?.numero, de(["drones.numero"])),
-        d.drones?.modelo !== undefined && e("span", { class: "texto-nota" }, t.ficha.modelo, ": ", d.drones.modelo),
+        modeloEscrito(d.drones?.modelo) !== null && e("span", { class: "texto-nota" }, t.ficha.modelo, ": ", modeloEscrito(d.drones?.modelo)),
       ),
       filaTipoDron(t, d),
       d.recorrido !== undefined &&
@@ -607,7 +616,7 @@ function incidente(d: IncidenteDetalle, idioma: Idioma): PaginaTexto {
           ),
         ),
       d.foco_termico !== undefined && filaDatos(t.foco.rotulo, t.foco.detectado),
-      d.control.motivo_desmentido !== undefined && filaDatos(t.ficha.motivoDesmentido, d.control.motivo_desmentido),
+      d.control.motivo_desmentido !== undefined && filaDatos(t.ficha.motivoDesmentido, e("blockquote", { "data-motivo-desmentido": "" }, d.control.motivo_desmentido)),
       d.episodio !== undefined && filaDatos(t.ficha.episodio, e("span", { class: "mono" }, d.episodio)),
     ),
     e("h2", null, tp.incidente.todasLasFuentes, ` (${numero(fuentes.length, idioma)})`),
@@ -675,9 +684,9 @@ function suceso(d: IncidenteDetalle, idioma: Idioma, titulo: string, lugar: stri
     name: lugar,
     address: {
       "@type": "PostalAddress",
-      addressCountry: d.lugar.pais,
-      ...(d.lon === null && d.lugar.region !== undefined ? { addressRegion: d.lugar.region } : {}),
-      ...(d.lugar.localidad !== undefined ? { addressLocality: d.lugar.localidad } : {}),
+      addressCountry: paisGeografico(d),
+      ...(d.lon === null && regionEscrita(d, idioma) !== null ? { addressRegion: regionEscrita(d, idioma) } : {}),
+      ...(localidadEscrita(d, idioma) !== null ? { addressLocality: localidadEscrita(d, idioma) } : {}),
     },
   };
   if (d.lon !== null) sitio["geo"] = { "@type": "GeoCoordinates", latitude: d.lat, longitude: d.lon };

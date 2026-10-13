@@ -1,0 +1,1531 @@
+{
+ "descripcion": "Autoridades y fuentes oficiales tal como las guarda la base (lo que declara, investiga o atribuye, y el medio de las fuentes que no son un dominio), escritas en espa\u00f1ol y en ingl\u00e9s para la web y los avisos (web/src/i18n/autoridades.ts, recogida/avisos.py). \u00aboriginal\u00bb: instituci\u00f3n con nombre oficial en alfabeto latino, que se pone entre par\u00e9ntesis tras la traducci\u00f3n. Revisado a mano el 13 de octubre de 2026 con todas las que sal\u00edan en la web; una nueva que no est\u00e9 aqu\u00ed sale tal cual, y la prueba de las fichas la se\u00f1ala.",
+ "autoridades": {
+  "Aalborg Lufthavn": {
+   "es": "el aeropuerto de Aalborg",
+   "en": "Aalborg Airport"
+  },
+  "Aalborg lufthavn": {
+   "es": "el aeropuerto de Aalborg",
+   "en": "Aalborg Airport"
+  },
+  "Aena": {
+   "es": "Aena (aeropuertos de Espa\u00f1a)",
+   "en": "Aena (Spanish airports)"
+  },
+  "Aeropuerto de Berlin-Brandebourg": {
+   "es": "el aeropuerto de Berl\u00edn-Brandeburgo",
+   "en": "Berlin Brandenburg Airport"
+  },
+  "Alcalde de Puie\u0219ti, Vasile Cezar Ticu": {
+   "es": "el alcalde de Puie\u0219ti, Vasile Cezar Ticu",
+   "en": "the Mayor of Puie\u0219ti, Vasile Cezar Ticu"
+  },
+  "Armata Na\u021bional\u0103": {
+   "es": "el Ej\u00e9rcito Nacional de Moldavia",
+   "en": "the Moldovan National Army",
+   "original": true
+  },
+  "Armata Na\u021bional\u0103 a Republicii Moldova": {
+   "es": "el Ej\u00e9rcito Nacional de Moldavia",
+   "en": "the Moldovan National Army",
+   "original": true
+  },
+  "Armata danez\u0103": {
+   "es": "las Fuerzas Armadas de Dinamarca",
+   "en": "the Danish Armed Forces"
+  },
+  "Arm\u00e9e de l'Air et de l'Espace": {
+   "es": "el Ej\u00e9rcito del Aire y del Espacio de Francia",
+   "en": "the French Air and Space Force",
+   "original": true
+  },
+  "Ausw\u00e4rtiges Amt / Bundesregierung": {
+   "es": "el Ministerio de Asuntos Exteriores y el Gobierno federal alem\u00e1n",
+   "en": "the German Federal Foreign Office and Federal Government",
+   "original": true
+  },
+  "Autorit\u0103\u021bile moldave": {
+   "es": "las autoridades moldavas",
+   "en": "the Moldovan authorities"
+  },
+  "Avinor": {
+   "es": "Avinor (aeropuertos de Noruega)",
+   "en": "Avinor (Norwegian airports)",
+   "original": true
+  },
+  "Bayerische Staatsregierung": {
+   "es": "el Gobierno de Baviera",
+   "en": "the Bavarian State Government",
+   "original": true
+  },
+  "Bayerisches Landeskriminalamt": {
+   "es": "la Oficina de Polic\u00eda Criminal de Baviera",
+   "en": "the Bavarian State Criminal Police Office",
+   "original": true
+  },
+  "Baza 86 Aerian\u0103 Borcea": {
+   "es": "la base a\u00e9rea 86 de Borcea",
+   "en": "the 86th Air Base Borcea"
+  },
+  "Baza Aerien\u0103 Borcea": {
+   "es": "la base a\u00e9rea 86 de Borcea",
+   "en": "the 86th Air Base Borcea"
+  },
+  "Belgian Defense Ministry": {
+   "es": "el Ministerio de Defensa de B\u00e9lgica",
+   "en": "the Belgian Ministry of Defence"
+  },
+  "Belgijska novinska agencija Belga": {
+   "es": "la agencia belga de noticias Belga",
+   "en": "the Belgian news agency Belga"
+  },
+  "Bergen Nord politistasjon": {
+   "es": "la comisar\u00eda de Bergen Norte",
+   "en": "the Bergen North police station",
+   "original": true
+  },
+  "Berliner Polizei": {
+   "es": "la Polic\u00eda de Berl\u00edn",
+   "en": "the Berlin Police",
+   "original": true
+  },
+  "Brussels Airport": {
+   "es": "el aeropuerto de Bruselas",
+   "en": "Brussels Airport"
+  },
+  "Bulgarian Defense Minister Dimitar Stoyanov": {
+   "es": "el ministro de Defensa de Bulgaria, Dimitar Stoyanov",
+   "en": "the Bulgarian Minister of Defence, Dimitar Stoyanov"
+  },
+  "Bulgarian p\u00e4\u00e4ministeri Rumen Radev": {
+   "es": "el primer ministro de Bulgaria, Rumen Radev",
+   "en": "the Prime Minister of Bulgaria, Rumen Radev"
+  },
+  "Bundesanwaltschaft": {
+   "es": "la Fiscal\u00eda federal alemana",
+   "en": "the German Federal Prosecutor's Office",
+   "original": true
+  },
+  "Bundesinnenministerium": {
+   "es": "el Ministerio del Interior de Alemania",
+   "en": "the German Federal Ministry of the Interior",
+   "original": true
+  },
+  "Bundespolizei": {
+   "es": "la Polic\u00eda Federal alemana",
+   "en": "the German Federal Police",
+   "original": true
+  },
+  "Bundesregierung": {
+   "es": "el Gobierno federal alem\u00e1n",
+   "en": "the German Federal Government",
+   "original": true
+  },
+  "Bundesregierung Deutschland": {
+   "es": "el Gobierno federal alem\u00e1n",
+   "en": "the German Federal Government",
+   "original": true
+  },
+  "Bundeswehr": {
+   "es": "las Fuerzas Armadas alemanas",
+   "en": "the German Armed Forces",
+   "original": true
+  },
+  "Burgemeester Geert Cluckers": {
+   "es": "el alcalde Geert Cluckers",
+   "en": "Mayor Geert Cluckers",
+   "original": true
+  },
+  "Burgemeester van Peer": {
+   "es": "el alcalde de Peer",
+   "en": "the Mayor of Peer",
+   "original": true
+  },
+  "Comandamentul militar al Rom\u00e2niei": {
+   "es": "el Mando militar de Ruman\u00eda",
+   "en": "the Romanian Military Command",
+   "original": true
+  },
+  "Compania Na\u021bional\u0103 Aeroporturi Bucure\u015fti": {
+   "es": "la Compa\u00f1\u00eda Nacional de Aeropuertos de Bucarest",
+   "en": "Bucharest Airports National Company",
+   "original": true
+  },
+  "Consiliul de Securitate de pe l\u00e2ng\u0103 Consiliul de Mini\u0219tri": {
+   "es": "el Consejo de Seguridad del Consejo de Ministros de Moldavia",
+   "en": "the Security Council of the Moldovan Council of Ministers",
+   "original": true
+  },
+  "Controladores A\u00e9reos de Espa\u00f1a": {
+   "es": "los controladores a\u00e9reos de Espa\u00f1a",
+   "en": "Spanish air traffic controllers"
+  },
+  "Copenhagen Police": {
+   "es": "la Polic\u00eda de Copenhague",
+   "en": "the Copenhagen Police"
+  },
+  "Cypriot authorities": {
+   "es": "las autoridades chipriotas",
+   "en": "the Cypriot authorities"
+  },
+  "Danish Defence Ministry": {
+   "es": "el Ministerio de Defensa de Dinamarca",
+   "en": "the Danish Ministry of Defence"
+  },
+  "Danish Police": {
+   "es": "la Polic\u00eda de Dinamarca",
+   "en": "the Danish Police"
+  },
+  "Danish defense ministry": {
+   "es": "el Ministerio de Defensa de Dinamarca",
+   "en": "the Danish Ministry of Defence"
+  },
+  "Danish transport ministry": {
+   "es": "el Ministerio de Transportes de Dinamarca",
+   "en": "the Danish Ministry of Transport"
+  },
+  "Defence Ministry of Romania": {
+   "es": "el Ministerio de Defensa Nacional de Ruman\u00eda",
+   "en": "the Romanian Ministry of National Defence"
+  },
+  "Defensie": {
+   "es": "el Ministerio de Defensa de los Pa\u00edses Bajos",
+   "en": "the Netherlands Ministry of Defence",
+   "original": true
+  },
+  "Deutsche Flugsicherung": {
+   "es": "el control a\u00e9reo de Alemania (DFS)",
+   "en": "German air traffic control (DFS)"
+  },
+  "Dfs": {
+   "es": "el control a\u00e9reo de Alemania (DFS)",
+   "en": "German air traffic control (DFS)"
+  },
+  "Directorul Aeroportului Interna\u021bional \u0049\u0061\u0219i": {
+   "es": "el director del Aeropuerto Internacional de \u0049\u0061\u0219i",
+   "en": "the director of \u0049\u0061\u0219i International Airport"
+  },
+  "Direc\u021bia Aeroportului Interna\u021bional \u0049\u0061\u0219i": {
+   "es": "la direcci\u00f3n del Aeropuerto Internacional de \u0049\u0061\u0219i",
+   "en": "the management of \u0049\u0061\u0219i International Airport",
+   "original": true
+  },
+  "Dow\u00f3dztwo Operacyjne Rodzaj\u00f3w Si\u0142 Zbrojnych": {
+   "es": "el Mando Operativo de las Fuerzas Armadas de Polonia",
+   "en": "the Operational Command of the Polish Armed Forces",
+   "original": true
+  },
+  "D\u00e4nische Regierung": {
+   "es": "el Gobierno de Dinamarca",
+   "en": "the Danish Government"
+  },
+  "Edinburgh Airport": {
+   "es": "el aeropuerto de Edimburgo",
+   "en": "Edinburgh Airport"
+  },
+  "Einsatzf\u00fchrungskommando der Bundeswehr": {
+   "es": "el Mando de Operaciones de las Fuerzas Armadas alemanas",
+   "en": "the Bundeswehr Joint Forces Operations Command",
+   "original": true
+  },
+  "Enaire": {
+   "es": "Enaire (control a\u00e9reo de Espa\u00f1a)",
+   "en": "Enaire (Spanish air traffic control)"
+  },
+  "Europarlamentarii AUR/ECR": {
+   "es": "los eurodiputados de AUR (ECR)",
+   "en": "the AUR MEPs (ECR)"
+  },
+  "Euskirchener Polizei": {
+   "es": "la Polic\u00eda de Euskirchen",
+   "en": "the Euskirchen Police",
+   "original": true
+  },
+  "Finnish Prime Minister": {
+   "es": "el primer ministro de Finlandia",
+   "en": "the Prime Minister of Finland"
+  },
+  "Flughafen Eindhoven": {
+   "es": "el aeropuerto de Eindhoven",
+   "en": "Eindhoven Airport"
+  },
+  "Flyvev\u00e5bnets afdeling for transportfly": {
+   "es": "la unidad de aviones de transporte de la Fuerza A\u00e9rea danesa",
+   "en": "the Royal Danish Air Force transport wing",
+   "original": true
+  },
+  "Forsvaret": {
+   "es": "las Fuerzas Armadas de Noruega",
+   "en": "the Norwegian Armed Forces",
+   "original": true
+  },
+  "Forsvarskommandoen": {
+   "es": "el Mando de Defensa de Dinamarca",
+   "en": "the Danish Defence Command",
+   "original": true
+  },
+  "Forze Armate lettoni": {
+   "es": "las Fuerzas Armadas Nacionales de Letonia",
+   "en": "the Latvian National Armed Forces"
+  },
+  "Forze Armate lituane": {
+   "es": "las Fuerzas Armadas de Lituania",
+   "en": "the Lithuanian Armed Forces"
+  },
+  "Forze armate lituane": {
+   "es": "las Fuerzas Armadas de Lituania",
+   "en": "the Lithuanian Armed Forces"
+  },
+  "For\u021bele Aeriene": {
+   "es": "la Fuerza A\u00e9rea rumana",
+   "en": "the Romanian Air Force",
+   "original": true
+  },
+  "For\u021bele Aeriene Rom\u00e2ne": {
+   "es": "la Fuerza A\u00e9rea rumana",
+   "en": "the Romanian Air Force",
+   "original": true
+  },
+  "For\u021bele Armate Letone": {
+   "es": "las Fuerzas Armadas Nacionales de Letonia",
+   "en": "the Latvian National Armed Forces"
+  },
+  "For\u021bele armate daneze": {
+   "es": "las Fuerzas Armadas de Dinamarca",
+   "en": "the Danish Armed Forces"
+  },
+  "Fuerzas Armadas Nacionales de Letonia": {
+   "es": "las Fuerzas Armadas Nacionales de Letonia",
+   "en": "the Latvian National Armed Forces"
+  },
+  "Fuerzas Armadas danesas": {
+   "es": "las Fuerzas Armadas de Dinamarca",
+   "en": "the Danish Armed Forces"
+  },
+  "Fuerzas Armadas de Letonia": {
+   "es": "las Fuerzas Armadas Nacionales de Letonia",
+   "en": "the Latvian National Armed Forces"
+  },
+  "F\u00f6rsvarsmakten": {
+   "es": "las Fuerzas Armadas de Suecia",
+   "en": "the Swedish Armed Forces",
+   "original": true
+  },
+  "F\u00f6rsvarsmaktens fartyg": {
+   "es": "los buques de las Fuerzas Armadas de Suecia",
+   "en": "the Swedish Armed Forces' ships",
+   "original": true
+  },
+  "Garda\u00ed": {
+   "es": "la Polic\u00eda de Irlanda",
+   "en": "the Irish police",
+   "original": true
+  },
+  "Gendarmeria francese": {
+   "es": "la Gendarmer\u00eda francesa",
+   "en": "the French Gendarmerie"
+  },
+  "Generalbundesanwalt": {
+   "es": "el Fiscal General federal alem\u00e1n",
+   "en": "the German Federal Prosecutor General",
+   "original": true
+  },
+  "German armed forces": {
+   "es": "las Fuerzas Armadas alemanas",
+   "en": "the German Armed Forces"
+  },
+  "German authorities": {
+   "es": "las autoridades alemanas",
+   "en": "the German authorities"
+  },
+  "Germania": {
+   "es": "Alemania",
+   "en": "Germany"
+  },
+  "Gitanas Nauseda": {
+   "es": "el presidente de Lituania, Gitanas Naus\u0117da",
+   "en": "the President of Lithuania, Gitanas Naus\u0117da"
+  },
+  "Gobierno de Ruman\u00eda": {
+   "es": "el Gobierno de Ruman\u00eda",
+   "en": "the Romanian Government"
+  },
+  "Grenzpolizeiinspektion": {
+   "es": "la inspecci\u00f3n de la Polic\u00eda de Fronteras",
+   "en": "the Border Police Inspectorate",
+   "original": true
+  },
+  "Guardia Civil": {
+   "es": "la Guardia Civil",
+   "en": "the Guardia Civil"
+  },
+  "Guvernul Rom\u00e2niei": {
+   "es": "el Gobierno de Ruman\u00eda",
+   "en": "the Romanian Government",
+   "original": true
+  },
+  "Hrvatska agencija za civilno zrakoplovstvo": {
+   "es": "la Agencia de Aviaci\u00f3n Civil de Croacia",
+   "en": "the Croatian Civil Aviation Agency",
+   "original": true
+  },
+  "ISU Vrancea": {
+   "es": "el servicio de emergencias de Vrancea (ISU)",
+   "en": "the Vrancea emergency service (ISU)"
+  },
+  "Igor Grosu": {
+   "es": "el presidente del Parlamento de Moldavia, Igor Grosu",
+   "en": "the Speaker of the Moldovan Parliament, Igor Grosu"
+  },
+  "Innenministerin Schleswig-Holstein": {
+   "es": "la ministra del Interior de Schleswig-Holstein",
+   "en": "the Interior Minister of Schleswig-Holstein",
+   "original": true
+  },
+  "Innenriksdepartementet": {
+   "es": "el Ministerio de Justicia y Seguridad P\u00fablica de Noruega",
+   "en": "the Norwegian Ministry of Justice and Public Security",
+   "original": true
+  },
+  "Inspectoratul General al Poli\u021biei": {
+   "es": "la Inspecci\u00f3n General de la Polic\u00eda rumana",
+   "en": "the Romanian General Police Inspectorate",
+   "original": true
+  },
+  "Inspectoratul General al Poli\u021biei de Frontier\u0103": {
+   "es": "la Inspecci\u00f3n General de la Polic\u00eda de Fronteras de Ruman\u00eda",
+   "en": "the Romanian General Inspectorate of Border Police",
+   "original": true
+  },
+  "Irish Aviation Authority": {
+   "es": "la Autoridad de Aviaci\u00f3n de Irlanda",
+   "en": "the Irish Aviation Authority"
+  },
+  "Isavia": {
+   "es": "Isavia (aeropuertos de Islandia)",
+   "en": "Isavia (Icelandic airports)",
+   "original": true
+  },
+  "It\u00e4-Uudenmaan poliisi": {
+   "es": "la Polic\u00eda de Uusimaa Oriental",
+   "en": "the Eastern Uusimaa Police",
+   "original": true
+  },
+  "Kancelaria Prezesa Rady Ministr\u00f3w": {
+   "es": "la Canciller\u00eda del primer ministro de Polonia",
+   "en": "the Chancellery of the Prime Minister of Poland",
+   "original": true
+  },
+  "Kantonspolizei Solothurn": {
+   "es": "la Polic\u00eda del cant\u00f3n de Soleura",
+   "en": "the Solothurn Cantonal Police",
+   "original": true
+  },
+  "Kommandant vom Milit\u00e4rlager Elsenborn": {
+   "es": "el comandante del campo militar de Elsenborn",
+   "en": "the commander of the Elsenborn military camp",
+   "original": true
+  },
+  "Koninklijke Luchtmacht": {
+   "es": "la Fuerza A\u00e9rea de los Pa\u00edses Bajos",
+   "en": "the Royal Netherlands Air Force",
+   "original": true
+  },
+  "Koninklijke Marechaussee": {
+   "es": "la Real Polic\u00eda Militar de los Pa\u00edses Bajos",
+   "en": "the Royal Netherlands Marechaussee",
+   "original": true
+  },
+  "K\u00f8benhavns Lufthavn": {
+   "es": "el aeropuerto de Copenhague",
+   "en": "Copenhagen Airport"
+  },
+  "K\u00f8benhavns Politi": {
+   "es": "la Polic\u00eda de Copenhague",
+   "en": "the Copenhagen Police",
+   "original": true
+  },
+  "Landeskriminalamt": {
+   "es": "la Oficina de Polic\u00eda Criminal del estado",
+   "en": "the State Criminal Police Office",
+   "original": true
+  },
+  "Latvia's National Armed Forces": {
+   "es": "las Fuerzas Armadas Nacionales de Letonia",
+   "en": "the Latvian National Armed Forces"
+  },
+  "Latvian Armed Forces": {
+   "es": "las Fuerzas Armadas Nacionales de Letonia",
+   "en": "the Latvian National Armed Forces"
+  },
+  "Latvian Government": {
+   "es": "el Gobierno de Letonia",
+   "en": "the Latvian Government"
+  },
+  "Latvian National Armed Forces": {
+   "es": "las Fuerzas Armadas Nacionales de Letonia",
+   "en": "the Latvian National Armed Forces"
+  },
+  "Latvijske oru\u017eane snage": {
+   "es": "las Fuerzas Armadas Nacionales de Letonia",
+   "en": "the Latvian National Armed Forces"
+  },
+  "Lietuvos oro uostai": {
+   "es": "los Aeropuertos de Lituania",
+   "en": "Lithuanian Airports",
+   "original": true
+  },
+  "Lietuvos oro uostai (LTOU)": {
+   "es": "los Aeropuertos de Lituania",
+   "en": "Lithuanian Airports",
+   "original": true
+  },
+  "Litauens nationale kriseh\u00e5ndteringscenter": {
+   "es": "el Centro Nacional de Gesti\u00f3n de Crisis de Lituania",
+   "en": "Lithuania's National Crisis Management Centre"
+  },
+  "Lithuania's National Crisis Management Center": {
+   "es": "el Centro Nacional de Gesti\u00f3n de Crisis de Lituania",
+   "en": "Lithuania's National Crisis Management Centre"
+  },
+  "Lithuanian Defence Ministry": {
+   "es": "el Ministerio de Defensa Nacional de Lituania",
+   "en": "the Lithuanian Ministry of National Defence"
+  },
+  "Lithuanian President Gitanas Naus\u0117da": {
+   "es": "el presidente de Lituania, Gitanas Naus\u0117da",
+   "en": "the President of Lithuania, Gitanas Naus\u0117da"
+  },
+  "Lithuanian government": {
+   "es": "el Gobierno de Lituania",
+   "en": "the Lithuanian Government"
+  },
+  "Litovsko ministrstvo za obrambo": {
+   "es": "el Ministerio de Defensa Nacional de Lituania",
+   "en": "the Lithuanian Ministry of National Defence"
+  },
+  "Lublin District Prosecutor": {
+   "es": "la Fiscal\u00eda de Distrito de Lublin",
+   "en": "the Lublin District Prosecutor's Office"
+  },
+  "Luftfartsverket": {
+   "es": "la Administraci\u00f3n de Aviaci\u00f3n Civil de Suecia",
+   "en": "the Swedish Civil Aviation Administration",
+   "original": true
+  },
+  "Luftfartsv\u00e6snet": {
+   "es": "la autoridad de aviaci\u00f3n de Dinamarca",
+   "en": "the Danish aviation authority",
+   "original": true
+  },
+  "Mar\u00e9chauss\u00e9e royale n\u00e9erlandaise": {
+   "es": "la Real Polic\u00eda Militar de los Pa\u00edses Bajos",
+   "en": "the Royal Netherlands Marechaussee"
+  },
+  "Mattias Lundgren, Karlskrona Police": {
+   "es": "Mattias Lundgren, de la Polic\u00eda de Karlskrona",
+   "en": "Mattias Lundgren, Karlskrona Police"
+  },
+  "Midt- og Vestsj\u00e6llands Politi": {
+   "es": "la Polic\u00eda de Selandia Central y Occidental",
+   "en": "the Central and West Zealand Police",
+   "original": true
+  },
+  "Ministarstvo nacionalne odbrane Rumunije": {
+   "es": "el Ministerio de Defensa Nacional de Ruman\u00eda",
+   "en": "the Romanian Ministry of National Defence"
+  },
+  "Ministarstvo obrane Rumunjske": {
+   "es": "el Ministerio de Defensa Nacional de Ruman\u00eda",
+   "en": "the Romanian Ministry of National Defence"
+  },
+  "Ministerie van Defensie": {
+   "es": "el Ministerio de Defensa de los Pa\u00edses Bajos",
+   "en": "the Netherlands Ministry of Defence",
+   "original": true
+  },
+  "Ministerio de Defensa de Rumania": {
+   "es": "el Ministerio de Defensa Nacional de Ruman\u00eda",
+   "en": "the Romanian Ministry of National Defence"
+  },
+  "Ministerium des Innern Deutschland": {
+   "es": "el Ministerio del Interior de Alemania",
+   "en": "the German Federal Ministry of the Interior",
+   "original": true
+  },
+  "Ministerium f\u00fcr Ausw\u00e4rtige Angelegenheiten": {
+   "es": "el Ministerio de Asuntos Exteriores",
+   "en": "the Ministry of Foreign Affairs",
+   "original": true
+  },
+  "Ministero della Difesa belga": {
+   "es": "el Ministerio de Defensa de B\u00e9lgica",
+   "en": "the Belgian Ministry of Defence"
+  },
+  "Ministero della Difesa della Romania": {
+   "es": "el Ministerio de Defensa Nacional de Ruman\u00eda",
+   "en": "the Romanian Ministry of National Defence"
+  },
+  "Ministerpr\u00e4sident Rumen Radew": {
+   "es": "el primer ministro de Bulgaria, Rumen Radev",
+   "en": "the Prime Minister of Bulgaria, Rumen Radev"
+  },
+  "Ministerstvo obrany Litvy": {
+   "es": "el Ministerio de Defensa Nacional de Lituania",
+   "en": "the Lithuanian Ministry of National Defence"
+  },
+  "Ministerstvo obrany Rumunska": {
+   "es": "el Ministerio de Defensa Nacional de Ruman\u00eda",
+   "en": "the Romanian Ministry of National Defence"
+  },
+  "Ministerstwo Obrony Mo\u0142dawii": {
+   "es": "el Ministerio de Defensa de Moldavia",
+   "en": "the Moldovan Ministry of Defence"
+  },
+  "Ministerstwo Obrony Narodowej": {
+   "es": "el Ministerio de Defensa Nacional de Polonia",
+   "en": "the Polish Ministry of National Defence",
+   "original": true
+  },
+  "Ministerul Afacerilor Externe": {
+   "es": "el Ministerio de Asuntos Exteriores de Ruman\u00eda",
+   "en": "the Romanian Ministry of Foreign Affairs",
+   "original": true
+  },
+  "Ministerul Afacerilor Externe al Republicii Moldova": {
+   "es": "el Ministerio de Asuntos Exteriores de Moldavia",
+   "en": "the Moldovan Ministry of Foreign Affairs",
+   "original": true
+  },
+  "Ministerul Afacerilor Interne": {
+   "es": "el Ministerio del Interior de Ruman\u00eda",
+   "en": "the Romanian Ministry of Internal Affairs",
+   "original": true
+  },
+  "Ministerul Ap\u0103rarii din Rom\u00e2nia": {
+   "es": "el Ministerio de Defensa Nacional de Ruman\u00eda",
+   "en": "the Romanian Ministry of National Defence",
+   "original": true
+  },
+  "Ministerul Ap\u0103r\u0103rii": {
+   "es": "el Ministerio de Defensa Nacional de Ruman\u00eda",
+   "en": "the Romanian Ministry of National Defence"
+  },
+  "Ministerul Ap\u0103r\u0103rii / Serviciul Opera\u021bii Aeriene al Armatei Na\u021bionale": {
+   "es": "el Ministerio de Defensa y el Servicio de Operaciones A\u00e9reas del Ej\u00e9rcito Nacional de Moldavia",
+   "en": "the Ministry of Defence and the Air Operations Service of the Moldovan National Army",
+   "original": true
+  },
+  "Ministerul Ap\u0103r\u0103rii Moldovei": {
+   "es": "el Ministerio de Defensa de Moldavia",
+   "en": "the Moldovan Ministry of Defence",
+   "original": true
+  },
+  "Ministerul Ap\u0103r\u0103rii Na\u021bionale": {
+   "es": "el Ministerio de Defensa Nacional de Ruman\u00eda",
+   "en": "the Romanian Ministry of National Defence",
+   "original": true
+  },
+  "Ministerul Ap\u0103r\u0103rii Na\u021bionale al Rom\u00e2niei": {
+   "es": "el Ministerio de Defensa Nacional de Ruman\u00eda",
+   "en": "the Romanian Ministry of National Defence",
+   "original": true
+  },
+  "Ministerul Ap\u0103r\u0103rii Polonia": {
+   "es": "el Ministerio de Defensa Nacional de Polonia",
+   "en": "the Polish Ministry of National Defence"
+  },
+  "Ministerul Ap\u0103r\u0103rii Rumuniei": {
+   "es": "el Ministerio de Defensa Nacional de Ruman\u00eda",
+   "en": "the Romanian Ministry of National Defence"
+  },
+  "Ministerul Ap\u0103r\u0103rii al Republicii Moldova": {
+   "es": "el Ministerio de Defensa de Moldavia",
+   "en": "the Moldovan Ministry of Defence",
+   "original": true
+  },
+  "Ministerul Ap\u0103r\u0103rii al Rom\u00e2niei": {
+   "es": "el Ministerio de Defensa Nacional de Ruman\u00eda",
+   "en": "the Romanian Ministry of National Defence",
+   "original": true
+  },
+  "Ministerul Ap\u0103r\u0103rii din Republica Moldova": {
+   "es": "el Ministerio de Defensa de Moldavia",
+   "en": "the Moldovan Ministry of Defence",
+   "original": true
+  },
+  "Ministerul de Externe": {
+   "es": "el Ministerio de Asuntos Exteriores de Ruman\u00eda",
+   "en": "the Romanian Ministry of Foreign Affairs",
+   "original": true
+  },
+  "Ministerul de Interne": {
+   "es": "el Ministerio del Interior de Moldavia",
+   "en": "the Moldovan Ministry of Internal Affairs",
+   "original": true
+  },
+  "Ministerul moldovean al Ap\u0103r\u0103rii": {
+   "es": "el Ministerio de Defensa de Moldavia",
+   "en": "the Moldovan Ministry of Defence"
+  },
+  "Ministria e Mbrojtjes e Rumanis\u00eb": {
+   "es": "el Ministerio de Defensa Nacional de Ruman\u00eda",
+   "en": "the Romanian Ministry of National Defence"
+  },
+  "Ministry of Defence of Moldova": {
+   "es": "el Ministerio de Defensa de Moldavia",
+   "en": "the Moldovan Ministry of Defence"
+  },
+  "Ministry of Defence police": {
+   "es": "la Polic\u00eda del Ministerio de Defensa brit\u00e1nico",
+   "en": "the Ministry of Defence Police"
+  },
+  "Ministry of Defense": {
+   "es": "el Ministerio de Defensa",
+   "en": "the Ministry of Defence"
+  },
+  "Ministry of National Defence": {
+   "es": "el Ministerio de Defensa",
+   "en": "the Ministry of Defence"
+  },
+  "Minist\u00e8re de la D\u00e9fense de Lituanie": {
+   "es": "el Ministerio de Defensa Nacional de Lituania",
+   "en": "the Lithuanian Ministry of National Defence"
+  },
+  "Minist\u00e8re moldave de la D\u00e9fense": {
+   "es": "el Ministerio de Defensa de Moldavia",
+   "en": "the Moldovan Ministry of Defence"
+  },
+  "Misi\u00f3n de Polic\u00eda A\u00e9rea del B\u00e1ltico de la OTAN": {
+   "es": "la misi\u00f3n de polic\u00eda a\u00e9rea de la OTAN en el B\u00e1ltico",
+   "en": "NATO's Baltic Air Policing mission"
+  },
+  "Munich Airport": {
+   "es": "el aeropuerto de M\u00fanich",
+   "en": "Munich Airport"
+  },
+  "NATO": {
+   "es": "la OTAN",
+   "en": "NATO"
+  },
+  "NATO-Sprecher": {
+   "es": "un portavoz de la OTAN",
+   "en": "a NATO spokesperson"
+  },
+  "NKVC": {
+   "es": "el Centro Nacional de Gesti\u00f3n de Crisis de Lituania",
+   "en": "Lithuania's National Crisis Management Centre"
+  },
+  "Nacionalinio krizi\u0173 valdymo centras": {
+   "es": "el Centro Nacional de Gesti\u00f3n de Crisis de Lituania",
+   "en": "Lithuania's National Crisis Management Centre",
+   "original": true
+  },
+  "Nacionalinis krizi\u0173 valdymo centras": {
+   "es": "el Centro Nacional de Gesti\u00f3n de Crisis de Lituania",
+   "en": "Lithuania's National Crisis Management Centre",
+   "original": true
+  },
+  "Nacionalne oru\u017eane snage Latvije": {
+   "es": "las Fuerzas Armadas Nacionales de Letonia",
+   "en": "the Latvian National Armed Forces"
+  },
+  "Nacionalni centar za krizno upravljanje": {
+   "es": "el Centro Nacional de Gesti\u00f3n de Crisis de Lituania",
+   "en": "Lithuania's National Crisis Management Centre"
+  },
+  "Nacion\u0101lie bru\u0146otie sp\u0113ki": {
+   "es": "las Fuerzas Armadas Nacionales de Letonia",
+   "en": "the Latvian National Armed Forces",
+   "original": true
+  },
+  "Nacion\u0101lie bru\u0146otie sp\u0113ki / Aizsardz\u012bbas ministrija": {
+   "es": "las Fuerzas Armadas Nacionales y el Ministerio de Defensa de Letonia",
+   "en": "the Latvian National Armed Forces and Ministry of Defence",
+   "original": true
+  },
+  "National Police": {
+   "es": "la Polic\u00eda Nacional",
+   "en": "the National Police"
+  },
+  "Naviair": {
+   "es": "Naviair (control a\u00e9reo de Dinamarca)",
+   "en": "Naviair (Danish air traffic control)",
+   "original": true
+  },
+  "Nicu\u015for Dan": {
+   "es": "el presidente de Ruman\u00eda, Nicu\u0219or Dan",
+   "en": "the President of Romania, Nicu\u0219or Dan"
+  },
+  "Nicu\u0219or Dan": {
+   "es": "el presidente de Ruman\u00eda, Nicu\u0219or Dan",
+   "en": "the President of Romania, Nicu\u0219or Dan"
+  },
+  "Niras": {
+   "es": "Niras",
+   "en": "Niras"
+  },
+  "Nordjyllands Politi": {
+   "es": "la Polic\u00eda de Jutlandia Septentrional",
+   "en": "the North Jutland Police",
+   "original": true
+  },
+  "Nordland politidistrikt": {
+   "es": "la Polic\u00eda de Nordland",
+   "en": "the Nordland Police District",
+   "original": true
+  },
+  "Nordland politiokrug": {
+   "es": "la Polic\u00eda de Nordland",
+   "en": "the Nordland Police District"
+  },
+  "Norsk politi": {
+   "es": "la Polic\u00eda de Noruega",
+   "en": "the Norwegian Police",
+   "original": true
+  },
+  "Operacyjne Dow\u00f3dztwo Si\u0142 Zbrojnych Rzeczypospolitej Polskiej": {
+   "es": "el Mando Operativo de las Fuerzas Armadas de Polonia",
+   "en": "the Operational Command of the Polish Armed Forces",
+   "original": true
+  },
+  "Operatives F\u00fchrungskommando der Bundeswehr": {
+   "es": "el Mando de Operaciones de las Fuerzas Armadas alemanas",
+   "en": "the Bundeswehr Joint Forces Operations Command",
+   "original": true
+  },
+  "Oro navigacija": {
+   "es": "el control a\u00e9reo de Lituania",
+   "en": "Lithuanian air navigation services",
+   "original": true
+  },
+  "Oslo Airport": {
+   "es": "el aeropuerto de Oslo",
+   "en": "Oslo Airport"
+  },
+  "PSD": {
+   "es": "el Partido Socialdem\u00f3crata de Ruman\u00eda (PSD)",
+   "en": "Romania's Social Democratic Party (PSD)"
+  },
+  "PST": {
+   "es": "el Servicio de Seguridad de la Polic\u00eda de Noruega (PST)",
+   "en": "the Norwegian Police Security Service (PST)"
+  },
+  "Polen": {
+   "es": "Polonia",
+   "en": "Poland"
+  },
+  "Polens Milit\u00e4r": {
+   "es": "las Fuerzas Armadas de Polonia",
+   "en": "the Polish Armed Forces"
+  },
+  "Polens Regierung": {
+   "es": "el Gobierno de Polonia",
+   "en": "the Polish Government"
+  },
+  "Police": {
+   "es": "la Polic\u00eda",
+   "en": "the Police"
+  },
+  "Policija Danijos": {
+   "es": "la Polic\u00eda de Dinamarca",
+   "en": "the Danish Police"
+  },
+  "Policijos departamentas": {
+   "es": "el Departamento de Polic\u00eda de Lituania",
+   "en": "the Lithuanian Police Department",
+   "original": true
+  },
+  "Policijos departamento Komunikacijos skyrius": {
+   "es": "la oficina de prensa del Departamento de Polic\u00eda de Lituania",
+   "en": "the communication office of the Lithuanian Police Department",
+   "original": true
+  },
+  "Policijska uprava splitsko-dalmatinska": {
+   "es": "la Polic\u00eda de Split-Dalmacia",
+   "en": "the Split-Dalmatia Police",
+   "original": true
+  },
+  "Policja": {
+   "es": "la Polic\u00eda de Polonia",
+   "en": "the Polish Police",
+   "original": true
+  },
+  "Polic\u00eda Nacional": {
+   "es": "la Polic\u00eda Nacional",
+   "en": "the Spanish National Police"
+  },
+  "Polic\u00eda de Brandeburgo": {
+   "es": "la Polic\u00eda de Brandeburgo",
+   "en": "the Brandenburg Police"
+  },
+  "Polisen": {
+   "es": "la Polic\u00eda de Suecia",
+   "en": "the Swedish Police",
+   "original": true
+  },
+  "Polish Government": {
+   "es": "el Gobierno de Polonia",
+   "en": "the Polish Government"
+  },
+  "Politia Moldovei": {
+   "es": "la Polic\u00eda de Moldavia",
+   "en": "the Moldovan Police",
+   "original": true
+  },
+  "Politie": {
+   "es": "la Polic\u00eda",
+   "en": "the Police",
+   "original": true
+  },
+  "Politie Mechelen": {
+   "es": "la Polic\u00eda de Malinas",
+   "en": "the Mechelen Police",
+   "original": true
+  },
+  "Politiet": {
+   "es": "la Polic\u00eda",
+   "en": "the Police",
+   "original": true
+  },
+  "Politiet Nordland": {
+   "es": "la Polic\u00eda de Nordland",
+   "en": "the Nordland Police District",
+   "original": true
+  },
+  "Politiets Etterretningstjeneste": {
+   "es": "el servicio de inteligencia de la Polic\u00eda",
+   "en": "the Police Intelligence Service",
+   "original": true
+  },
+  "Politiezone Rivierenland": {
+   "es": "la Polic\u00eda de la zona Rivierenland",
+   "en": "the Rivierenland Police Zone",
+   "original": true
+  },
+  "Polizei Berlin": {
+   "es": "la Polic\u00eda de Berl\u00edn",
+   "en": "the Berlin Police",
+   "original": true
+  },
+  "Polizei D\u00fcsseldorf": {
+   "es": "la Polic\u00eda de D\u00fcsseldorf",
+   "en": "the D\u00fcsseldorf Police",
+   "original": true
+  },
+  "Polizei Frankfurt": {
+   "es": "la Polic\u00eda de Fr\u00e1ncfort",
+   "en": "the Frankfurt Police",
+   "original": true
+  },
+  "Polizei Heinsberg": {
+   "es": "la Polic\u00eda de Heinsberg",
+   "en": "the Heinsberg Police",
+   "original": true
+  },
+  "Polizei Leipzig": {
+   "es": "la Polic\u00eda de Leipzig",
+   "en": "the Leipzig Police",
+   "original": true
+  },
+  "Polizei Offenburg": {
+   "es": "la Polic\u00eda de Offenburg",
+   "en": "the Offenburg Police",
+   "original": true
+  },
+  "Polizeipr\u00e4sidium Frankfurt am Main": {
+   "es": "la Jefatura de Polic\u00eda de Fr\u00e1ncfort",
+   "en": "the Frankfurt Police Headquarters",
+   "original": true
+  },
+  "Polizeisprecher": {
+   "es": "un portavoz de la Polic\u00eda",
+   "en": "a police spokesman"
+  },
+  "Polizia penitenziaria": {
+   "es": "la Polic\u00eda Penitenciaria de Italia",
+   "en": "the Italian Penitentiary Police",
+   "original": true
+  },
+  "Poli\u021bia de Frontier\u0103": {
+   "es": "la Polic\u00eda de Fronteras",
+   "en": "the Border Police",
+   "original": true
+  },
+  "Poli\u021bia de Frontier\u0103 a Republicii Moldova": {
+   "es": "la Polic\u00eda de Fronteras de Moldavia",
+   "en": "the Moldovan Border Police",
+   "original": true
+  },
+  "Poli\u021bia de Frontier\u0103 a Republicii Moldova, con datos del Serviciul Opera\u021biuni Aeriene del Ministerul Ap\u0103r\u0103rii": {
+   "es": "la Polic\u00eda de Fronteras de Moldavia, con datos del Servicio de Operaciones A\u00e9reas del Ministerio de Defensa",
+   "en": "the Moldovan Border Police, with data from the Air Operations Service of the Ministry of Defence"
+  },
+  "Poli\u021bia de Frontier\u0103 din Republica Moldova": {
+   "es": "la Polic\u00eda de Fronteras de Moldavia",
+   "en": "the Moldovan Border Police",
+   "original": true
+  },
+  "Poli\u021bia de Frontier\u0103 \u0219i For\u021bele Navale Rom\u00e2ne": {
+   "es": "la Polic\u00eda de Fronteras y la Armada de Ruman\u00eda",
+   "en": "the Romanian Border Police and Naval Forces",
+   "original": true
+  },
+  "Poli\u021bia de Frontir\u0103": {
+   "es": "la Polic\u00eda de Fronteras",
+   "en": "the Border Police"
+  },
+  "Polska Agencja \u017beglugi Powietrznej": {
+   "es": "la Agencia Polaca de Navegaci\u00f3n A\u00e9rea",
+   "en": "the Polish Air Navigation Services Agency",
+   "original": true
+  },
+  "Prefectul \u0049\u0061\u0219i": {
+   "es": "el prefecto de \u0049\u0061\u0219i",
+   "en": "the Prefect of \u0049\u0061\u0219i"
+  },
+  "Prefettura": {
+   "es": "la Prefectura",
+   "en": "the Prefecture",
+   "original": true
+  },
+  "Premierul Bulgariei Rumen Radev": {
+   "es": "el primer ministro de Bulgaria, Rumen Radev",
+   "en": "the Prime Minister of Bulgaria, Rumen Radev"
+  },
+  "Premierul Republicii Moldova": {
+   "es": "el primer ministro de Moldavia",
+   "en": "the Prime Minister of Moldova"
+  },
+  "Prezes Rady Ministr\u00f3w": {
+   "es": "el primer ministro de Polonia",
+   "en": "the Prime Minister of Poland",
+   "original": true
+  },
+  "Prezidentas": {
+   "es": "el presidente de Lituania",
+   "en": "the President of Lithuania"
+  },
+  "Prezidento atstovas Tomas Ber\u017einskas": {
+   "es": "el portavoz del presidente de Lituania, Tomas Ber\u017einskas",
+   "en": "the spokesman for the President of Lithuania, Tomas Ber\u017einskas"
+  },
+  "Pre\u0219edintele Maia Sandu": {
+   "es": "la presidenta de Moldavia, Maia Sandu",
+   "en": "the President of Moldova, Maia Sandu"
+  },
+  "Pre\u0219edintele Nicu\u0219or Dan": {
+   "es": "el presidente de Ruman\u00eda, Nicu\u0219or Dan",
+   "en": "the President of Romania, Nicu\u0219or Dan"
+  },
+  "Pre\u0219edintele PSD Sorin Grindeanu": {
+   "es": "el presidente del PSD, Sorin Grindeanu",
+   "en": "the PSD leader, Sorin Grindeanu"
+  },
+  "Pre\u0219edintele Rom\u00e2niei": {
+   "es": "el presidente de Ruman\u00eda",
+   "en": "the President of Romania",
+   "original": true
+  },
+  "Prime Minister Rumen Radev": {
+   "es": "el primer ministro de Bulgaria, Rumen Radev",
+   "en": "the Prime Minister of Bulgaria, Rumen Radev"
+  },
+  "Primer ministro Rumen Radev": {
+   "es": "el primer ministro de Bulgaria, Rumen Radev",
+   "en": "the Prime Minister of Bulgaria, Rumen Radev"
+  },
+  "Prokuratura Okr\u0119gowa w Lublinie": {
+   "es": "la Fiscal\u00eda de Distrito de Lublin",
+   "en": "the Lublin District Prosecutor's Office",
+   "original": true
+  },
+  "Prokuratura Regionalna w Lublinie": {
+   "es": "la Fiscal\u00eda Regional de Lublin",
+   "en": "the Lublin Regional Prosecutor's Office",
+   "original": true
+  },
+  "Pr\u00e9fecture de la Dordogne": {
+   "es": "la Prefectura de Dordo\u00f1a",
+   "en": "the Dordogne Prefecture",
+   "original": true
+  },
+  "Puolan armeija": {
+   "es": "las Fuerzas Armadas de Polonia",
+   "en": "the Polish Armed Forces"
+  },
+  "Puolan sis\u00e4ministeri\u00f6": {
+   "es": "el Ministerio del Interior de Polonia",
+   "en": "the Polish Ministry of the Interior"
+  },
+  "ROMATSA": {
+   "es": "ROMATSA (control a\u00e9reo de Ruman\u00eda)",
+   "en": "ROMATSA (Romanian air traffic control)"
+  },
+  "Raed Arafat": {
+   "es": "el jefe del Departamento de Situaciones de Emergencia de Ruman\u00eda, Raed Arafat",
+   "en": "the head of Romania's Department for Emergency Situations, Raed Arafat"
+  },
+  "Rend\u0151rs\u00e9g": {
+   "es": "la Polic\u00eda de Hungr\u00eda",
+   "en": "the Hungarian Police",
+   "original": true
+  },
+  "Rigspolitiet": {
+   "es": "la Polic\u00eda Nacional de Dinamarca",
+   "en": "the Danish National Police",
+   "original": true
+  },
+  "Rijksoverheid (Justitie en Veiligheid)": {
+   "es": "el Ministerio de Justicia y Seguridad de los Pa\u00edses Bajos",
+   "en": "the Netherlands Ministry of Justice and Security",
+   "original": true
+  },
+  "Robertas Kaunas": {
+   "es": "Robertas Kaunas",
+   "en": "Robertas Kaunas"
+  },
+  "Romanian Defense Minister": {
+   "es": "el ministro de Defensa de Ruman\u00eda",
+   "en": "the Romanian Minister of Defence"
+  },
+  "Rom\u00e1n V\u00e9delmi Miniszt\u00e9rium": {
+   "es": "el Ministerio de Defensa Nacional de Ruman\u00eda",
+   "en": "the Romanian Ministry of National Defence"
+  },
+  "Royal Gibraltar Police": {
+   "es": "la Real Polic\u00eda de Gibraltar",
+   "en": "the Royal Gibraltar Police"
+  },
+  "Royal Netherlands Marechaussee": {
+   "es": "la Real Polic\u00eda Militar de los Pa\u00edses Bajos",
+   "en": "the Royal Netherlands Marechaussee"
+  },
+  "Rumen Radev": {
+   "es": "el primer ministro de Bulgaria, Rumen Radev",
+   "en": "the Prime Minister of Bulgaria, Rumen Radev"
+  },
+  "Rumunjsko Ministarstvo nacionalne obrane": {
+   "es": "el Ministerio de Defensa Nacional de Ruman\u00eda",
+   "en": "the Romanian Ministry of National Defence"
+  },
+  "Rumunjsko ministarstvo obrane": {
+   "es": "el Ministerio de Defensa Nacional de Ruman\u00eda",
+   "en": "the Romanian Ministry of National Defence"
+  },
+  "Rumunsko ministarstvo odbrane": {
+   "es": "el Ministerio de Defensa Nacional de Ruman\u00eda",
+   "en": "the Romanian Ministry of National Defence"
+  },
+  "Rumu\u0144ski resort obrony": {
+   "es": "el Ministerio de Defensa Nacional de Ruman\u00eda",
+   "en": "the Romanian Ministry of National Defence"
+  },
+  "Rz\u0105d Polski": {
+   "es": "el Gobierno de Polonia",
+   "en": "the Polish Government",
+   "original": true
+  },
+  "SMFA": {
+   "es": "el Estado Mayor de la Fuerza A\u00e9rea rumana (SMFA)",
+   "en": "the Romanian Air Force Staff (SMFA)"
+  },
+  "Satiksmes ministrija": {
+   "es": "el Ministerio de Transportes de Letonia",
+   "en": "the Latvian Ministry of Transport",
+   "original": true
+  },
+  "Serviciul Opera\u0163ii Aeriene al Armatei Na\u0163ionale": {
+   "es": "el Servicio de Operaciones A\u00e9reas del Ej\u00e9rcito Nacional de Moldavia",
+   "en": "the Air Operations Service of the Moldovan National Army",
+   "original": true
+  },
+  "Serviciul Opera\u021bii Aeriene": {
+   "es": "el Servicio de Operaciones A\u00e9reas del Ej\u00e9rcito Nacional de Moldavia",
+   "en": "the Air Operations Service of the Moldovan National Army",
+   "original": true
+  },
+  "Serviciul Opera\u021bii Aeriene al Armatei Na\u021bionale": {
+   "es": "el Servicio de Operaciones A\u00e9reas del Ej\u00e9rcito Nacional de Moldavia",
+   "en": "the Air Operations Service of the Moldovan National Army",
+   "original": true
+  },
+  "Serviciul Opera\u021biuni Aeriene": {
+   "es": "el Servicio de Operaciones A\u00e9reas del Ej\u00e9rcito Nacional de Moldavia",
+   "en": "the Air Operations Service of the Moldovan National Army",
+   "original": true
+  },
+  "Sindicatul Europol": {
+   "es": "el sindicato policial Europol",
+   "en": "the Europol police union"
+  },
+  "Skeyes": {
+   "es": "Skeyes (control a\u00e9reo de B\u00e9lgica)",
+   "en": "Skeyes (Belgian air traffic control)",
+   "original": true
+  },
+  "Splitsko-dalmatinska policija": {
+   "es": "la Polic\u00eda de Split-Dalmacia",
+   "en": "the Split-Dalmatia Police"
+  },
+  "Statul Major al Ap\u0103r\u0103rii": {
+   "es": "el Estado Mayor de la Defensa de Ruman\u00eda",
+   "en": "the Romanian Defence Staff",
+   "original": true
+  },
+  "Statul Major al For\u021belor Navale Rom\u00e2ne": {
+   "es": "el Estado Mayor de la Armada rumana",
+   "en": "the Romanian Naval Forces Staff",
+   "original": true
+  },
+  "Sveriges f\u00f6rsvarsmakt": {
+   "es": "las Fuerzas Armadas de Suecia",
+   "en": "the Swedish Armed Forces"
+  },
+  "Swedavia": {
+   "es": "Swedavia (aeropuertos de Suecia)",
+   "en": "Swedavia (Swedish airports)",
+   "original": true
+  },
+  "Syd\u00f8stjyllands Politi": {
+   "es": "la Polic\u00eda de Jutlandia Sudoriental",
+   "en": "the South-East Jutland Police",
+   "original": true
+  },
+  "Szwedzkie Si\u0142y Zbrojne": {
+   "es": "las Fuerzas Armadas de Suecia",
+   "en": "the Swedish Armed Forces"
+  },
+  "S\u00f8r-Vest politidistrikt": {
+   "es": "la Polic\u00eda del distrito Sudoeste de Noruega",
+   "en": "the South-West Police District (Norway)",
+   "original": true
+  },
+  "S\u00f8r\u00f8st politidistrikt": {
+   "es": "la Polic\u00eda del distrito Sudeste de Noruega",
+   "en": "the South-East Police District (Norway)",
+   "original": true
+  },
+  "Theo Francken": {
+   "es": "el ministro de Defensa de B\u00e9lgica, Theo Francken",
+   "en": "the Belgian Minister of Defence, Theo Francken"
+  },
+  "Theo Francken, ministro de Defensa de B\u00e9lgica": {
+   "es": "el ministro de Defensa de B\u00e9lgica, Theo Francken",
+   "en": "the Belgian Minister of Defence, Theo Francken"
+  },
+  "Trafikstyrelsen": {
+   "es": "la Autoridad de Transportes de Dinamarca",
+   "en": "the Danish Civil Aviation and Railway Authority",
+   "original": true
+  },
+  "Troms politidistrikt": {
+   "es": "la Polic\u00eda de Troms",
+   "en": "the Troms Police District",
+   "original": true
+  },
+  "Tr\u00e1fico a\u00e9reo medido (adsb.lol)": {
+   "es": "Tr\u00e1fico a\u00e9reo medido (adsb.lol)",
+   "en": "Measured air traffic (adsb.lol)"
+  },
+  "Tyska inrikesministerium": {
+   "es": "el Ministerio del Interior de Alemania",
+   "en": "the German Ministry of the Interior"
+  },
+  "UK Airpox Board": {
+   "es": "el UK Airprox Board (comisi\u00f3n brit\u00e1nica de cuasi colisiones a\u00e9reas)",
+   "en": "the UK Airprox Board"
+  },
+  "UK Airprox Board": {
+   "es": "el UK Airprox Board (comisi\u00f3n brit\u00e1nica de cuasi colisiones a\u00e9reas)",
+   "en": "the UK Airprox Board"
+  },
+  "UK Government": {
+   "es": "el Gobierno del Reino Unido",
+   "en": "the UK Government"
+  },
+  "UK Government (Ministry of Defence)": {
+   "es": "el Ministerio de Defensa del Reino Unido",
+   "en": "the UK Ministry of Defence"
+  },
+  "Vasil Levski Airport": {
+   "es": "el aeropuerto de Sof\u00eda",
+   "en": "Sofia Airport"
+  },
+  "Verteidigungsministerium": {
+   "es": "el Ministerio de Defensa de Alemania",
+   "en": "the German Ministry of Defence",
+   "original": true
+  },
+  "Verteidigungsministerium Finnland": {
+   "es": "el Ministerio de Defensa de Finlandia",
+   "en": "the Finnish Ministry of Defence"
+  },
+  "Vest politidistrikt": {
+   "es": "la Polic\u00eda del distrito Oeste de Noruega",
+   "en": "the West Police District (Norway)",
+   "original": true
+  },
+  "Vest-Lofoten politistasjon": {
+   "es": "la comisar\u00eda de Lofoten Oeste",
+   "en": "the West Lofoten police station",
+   "original": true
+  },
+  "Vie\u0161ojo saugumo tarnyba": {
+   "es": "el Servicio de Seguridad P\u00fablica de Lituania",
+   "en": "the Lithuanian Public Security Service",
+   "original": true
+  },
+  "Vie\u0161ojo saugumo tarnybos": {
+   "es": "el Servicio de Seguridad P\u00fablica de Lituania",
+   "en": "the Lithuanian Public Security Service",
+   "original": true
+  },
+  "Vliegbasis Eindhoven": {
+   "es": "la base a\u00e9rea de Eindhoven",
+   "en": "Eindhoven Air Base"
+  },
+  "Wojsko Du\u0144skie": {
+   "es": "las Fuerzas Armadas de Dinamarca",
+   "en": "the Danish Armed Forces"
+  },
+  "serviciul belgian de control al traficului aerian": {
+   "es": "el control a\u00e9reo de B\u00e9lgica (Skeyes)",
+   "en": "Belgian air traffic control (Skeyes)"
+  },
+  "\u00d8rland Air Base Police": {
+   "es": "la Polic\u00eda de la base a\u00e9rea de \u00d8rland",
+   "en": "the \u00d8rland Air Base Police"
+  },
+  "\u00d8st politidistrikt": {
+   "es": "la Polic\u00eda del distrito Este de Noruega",
+   "en": "the East Police District (Norway)",
+   "original": true
+  },
+  "\u0393\u0395\u0395\u0398\u0391": {
+   "es": "el Estado Mayor de la Defensa Nacional de Grecia",
+   "en": "the Hellenic National Defence General Staff"
+  },
+  "\u0395\u03b8\u03bd\u03b9\u03ba\u03cc \u039a\u03ad\u03bd\u03c4\u03c1\u03bf \u0394\u03b9\u03b1\u03c7\u03b5\u03af\u03c1\u03b9\u03c3\u03b7\u03c2 \u039a\u03c1\u03af\u03c3\u03b5\u03c9\u03bd \u03c4\u03b7\u03c2 \u039b\u03b9\u03b8\u03bf\u03c5\u03b1\u03bd\u03af\u03b1\u03c2": {
+   "es": "el Centro Nacional de Gesti\u00f3n de Crisis de Lituania",
+   "en": "Lithuania's National Crisis Management Centre"
+  },
+  "\u03a0\u03bf\u03bb\u03b5\u03bc\u03b9\u03ba\u03ae \u0391\u03b5\u03c1\u03bf\u03c0\u03bf\u03c1\u03af\u03b1": {
+   "es": "la Fuerza A\u00e9rea griega",
+   "en": "the Hellenic Air Force"
+  },
+  "\u0406\u0432\u0430\u043d\u043e-\u0424\u0440\u0430\u043d\u043a\u0456\u0432\u0441\u044c\u043a\u0430 \u041e\u0412\u0410": {
+   "es": "la Administraci\u00f3n Militar Regional de Ivano-Frankivsk",
+   "en": "the Ivano-Frankivsk Regional Military Administration"
+  },
+  "\u0410\u0434\u043c\u0438\u043d\u0438\u0441\u0442\u0440\u0430\u0446\u0438\u044f \u041a\u0440\u0430\u0441\u043d\u043e\u0434\u0430\u0440\u0441\u043a\u043e\u0433\u043e \u043a\u0440\u0430\u044f": {
+   "es": "la Administraci\u00f3n del territorio de Krasnodar",
+   "en": "the Krasnodar Krai Administration"
+  },
+  "\u0412\u043e\u0435\u043d\u043d\u043e\u043c\u043e\u0440\u0441\u043a\u0438 \u0441\u0438\u043b\u0438 (\u0412\u043e\u0435\u043d\u043d\u043e\u043c\u043e\u0440\u0441\u043a\u0430 \u0431\u0430\u0437\u0430 \u0411\u0443\u0440\u0433\u0430\u0441)": {
+   "es": "la Armada b\u00falgara (base naval de Burgas)",
+   "en": "the Bulgarian Navy (Burgas naval base)"
+  },
+  "\u0412\u043e\u043b\u0438\u043d\u0441\u044c\u043a\u0430 \u041e\u0412\u0410": {
+   "es": "la Administraci\u00f3n Militar Regional de Volinia",
+   "en": "the Volyn Regional Military Administration"
+  },
+  "\u0412\u0456\u043d\u043d\u0438\u0446\u044c\u043a\u0430 \u041e\u0412\u0410": {
+   "es": "la Administraci\u00f3n Militar Regional de V\u00ednnytsia",
+   "en": "the Vinnytsia Regional Military Administration"
+  },
+  "\u0413\u0435\u043d\u0435\u0440\u0430\u043b\u044c\u043d\u0438\u0439 \u0448\u0442\u0430\u0431 \u0417\u0421\u0423": {
+   "es": "el Estado Mayor de las Fuerzas Armadas de Ucrania",
+   "en": "the General Staff of the Armed Forces of Ukraine"
+  },
+  "\u0413\u043b\u0430\u0432\u0430 \u0420\u0435\u0441\u043f\u0443\u0431\u043b\u0438\u043a\u0438 \u0414\u0430\u0433\u0435\u0441\u0442\u0430\u043d": {
+   "es": "el jefe de la Rep\u00fablica de Daguest\u00e1n",
+   "en": "the Head of the Republic of Dagestan"
+  },
+  "\u0413\u0440\u0430\u0436\u0434\u0430\u043d\u0441\u043a\u0430\u0442\u0430 \u0432\u044a\u0437\u0434\u0443\u0445\u043e\u043f\u043b\u0430\u0432\u0430\u0442\u0435\u043b\u043d\u0430 \u0430\u0432\u0438\u0430\u0446\u0438\u044f": {
+   "es": "la Direcci\u00f3n de Aviaci\u00f3n Civil de Bulgaria",
+   "en": "the Bulgarian Civil Aviation Administration"
+  },
+  "\u0413\u0443\u0431\u0435\u0440\u043d\u0430\u0442\u043e\u0440 \u0411\u0440\u044f\u043d\u0441\u043a\u043e\u0439 \u043e\u0431\u043b\u0430\u0441\u0442\u0438": {
+   "es": "el gobernador de la regi\u00f3n de Briansk",
+   "en": "the Governor of Bryansk Oblast"
+  },
+  "\u0413\u0443\u0431\u0435\u0440\u043d\u0430\u0442\u043e\u0440 \u041a\u0443\u0440\u0441\u043a\u043e\u0439 \u043e\u0431\u043b\u0430\u0441\u0442\u0438": {
+   "es": "el gobernador de la regi\u00f3n de Kursk",
+   "en": "the Governor of Kursk Oblast"
+  },
+  "\u0413\u0443\u0431\u0435\u0440\u043d\u0430\u0442\u043e\u0440 \u041b\u0435\u043d\u0438\u043d\u0433\u0440\u0430\u0434\u0441\u043a\u043e\u0439 \u043e\u0431\u043b\u0430\u0441\u0442\u0438": {
+   "es": "el gobernador de la regi\u00f3n de Leningrado",
+   "en": "the Governor of Leningrad Oblast"
+  },
+  "\u0413\u0443\u0431\u0435\u0440\u043d\u0430\u0442\u043e\u0440 \u041d\u0438\u0436\u0435\u0433\u043e\u0440\u043e\u0434\u0441\u043a\u043e\u0439 \u043e\u0431\u043b\u0430\u0441\u0442\u0438": {
+   "es": "el gobernador de la regi\u00f3n de Nizhni N\u00f3vgorod",
+   "en": "the Governor of Nizhny Novgorod Oblast"
+  },
+  "\u0413\u0443\u0431\u0435\u0440\u043d\u0430\u0442\u043e\u0440 \u041e\u0440\u043b\u043e\u0432\u0441\u043a\u043e\u0439 \u043e\u0431\u043b\u0430\u0441\u0442\u0438": {
+   "es": "el gobernador de la regi\u00f3n de Oriol",
+   "en": "the Governor of Oryol Oblast"
+  },
+  "\u0413\u0443\u0431\u0435\u0440\u043d\u0430\u0442\u043e\u0440 \u041f\u0435\u0440\u043c\u0441\u043a\u043e\u0433\u043e \u043a\u0440\u0430\u044f": {
+   "es": "el gobernador de el territorio de Perm",
+   "en": "the Governor of Perm Krai"
+  },
+  "\u0413\u0443\u0431\u0435\u0440\u043d\u0430\u0442\u043e\u0440 \u0421\u043c\u043e\u043b\u0435\u043d\u0441\u043a\u043e\u0439 \u043e\u0431\u043b\u0430\u0441\u0442\u0438": {
+   "es": "el gobernador de la regi\u00f3n de Smolensk",
+   "en": "the Governor of Smolensk Oblast"
+  },
+  "\u0413\u0443\u0431\u0435\u0440\u043d\u0430\u0442\u043e\u0440 \u0423\u043b\u044c\u044f\u043d\u043e\u0432\u0441\u043a\u043e\u0439 \u043e\u0431\u043b\u0430\u0441\u0442\u0438": {
+   "es": "el gobernador de la regi\u00f3n de Uli\u00e1novsk",
+   "en": "the Governor of Ulyanovsk Oblast"
+  },
+  "\u0414\u0438\u0440\u0435\u043a\u0442\u043e\u0440 \u043d\u0430 \u043b\u0435\u0442\u0438\u0449\u0435 \u0421\u043e\u0444\u0438\u044f \u0425\u0435\u0441\u0443\u0441 \u041a\u0430\u0431\u0430\u0439\u0435\u0440\u043e": {
+   "es": "el director del aeropuerto de Sof\u00eda, Jes\u00fas Caballero",
+   "en": "the director of Sofia Airport, Jes\u00fas Caballero"
+  },
+  "\u0414\u043d\u0456\u043f\u0440\u043e\u043f\u0435\u0442\u0440\u043e\u0432\u0441\u044c\u043a\u0430 \u041e\u0412\u0410": {
+   "es": "la Administraci\u00f3n Militar Regional de Dnipropetrovsk",
+   "en": "the Dnipropetrovsk Regional Military Administration"
+  },
+  "\u0414\u043e\u043d\u0435\u0446\u044c\u043a\u0430 \u041e\u0412\u0410": {
+   "es": "la Administraci\u00f3n Militar Regional de Donetsk",
+   "en": "the Donetsk Regional Military Administration"
+  },
+  "\u0416\u0438\u0442\u043e\u043c\u0438\u0440\u0441\u044c\u043a\u0430 \u041e\u0412\u0410": {
+   "es": "la Administraci\u00f3n Militar Regional de Zhit\u00f3mir",
+   "en": "the Zhytomyr Regional Military Administration"
+  },
+  "\u0417\u0430\u043a\u0430\u0440\u043f\u0430\u0442\u0441\u044c\u043a\u0430 \u041e\u0412\u0410": {
+   "es": "la Administraci\u00f3n Militar Regional de Transcarpatia",
+   "en": "the Zakarpattia Regional Military Administration"
+  },
+  "\u0417\u0430\u043f\u043e\u0440\u0456\u0437\u044c\u043a\u0430 \u041e\u0412\u0410": {
+   "es": "la Administraci\u00f3n Militar Regional de Zaporiyia",
+   "en": "the Zaporizhzhia Regional Military Administration"
+  },
+  "\u041a\u0438\u0457\u0432\u0441\u044c\u043a\u0430 \u043c\u0456\u0441\u044c\u043a\u0430 \u0432\u0456\u0439\u0441\u044c\u043a\u043e\u0432\u0430 \u0430\u0434\u043c\u0456\u043d\u0456\u0441\u0442\u0440\u0430\u0446\u0456\u044f": {
+   "es": "la Administraci\u00f3n Militar de la ciudad de Kiev",
+   "en": "the Kyiv City Military Administration"
+  },
+  "\u041a\u0438\u0457\u0432\u0441\u044c\u043a\u0430 \u043e\u0431\u043b\u0430\u0441\u043d\u0430 \u0432\u0456\u0439\u0441\u044c\u043a\u043e\u0432\u0430 \u0430\u0434\u043c\u0456\u043d\u0456\u0441\u0442\u0440\u0430\u0446\u0456\u044f": {
+   "es": "la Administraci\u00f3n Militar Regional de Kiev",
+   "en": "the Kyiv Regional Military Administration"
+  },
+  "\u041a\u0456\u0440\u043e\u0432\u043e\u0433\u0440\u0430\u0434\u0441\u044c\u043a\u0430 \u041e\u0412\u0410": {
+   "es": "la Administraci\u00f3n Militar Regional de Kirovogrado",
+   "en": "the Kirovohrad Regional Military Administration"
+  },
+  "\u041b\u0435\u0442\u0438\u0449\u0435 \u0412\u0430\u0441\u0438\u043b \u041b\u0435\u0432\u0441\u043a\u0438": {
+   "es": "el aeropuerto de Sof\u00eda",
+   "en": "Sofia Airport"
+  },
+  "\u041b\u0435\u0442\u0438\u0449\u0435 \u201e\u0412\u0430\u0441\u0438\u043b \u041b\u0435\u0432\u0441\u043a\u0438": {
+   "es": "el aeropuerto de Sof\u00eda",
+   "en": "Sofia Airport"
+  },
+  "\u041b\u0443\u0433\u0430\u043d\u0441\u044c\u043a\u0430 \u041e\u0412\u0410": {
+   "es": "la Administraci\u00f3n Militar Regional de Lugansk",
+   "en": "the Luhansk Regional Military Administration"
+  },
+  "\u041b\u044c\u0432\u0456\u0432\u0441\u044c\u043a\u0430 \u043e\u0431\u043b\u0430\u0441\u043d\u0430 \u0432\u0456\u0439\u0441\u044c\u043a\u043e\u0432\u0430 \u0430\u0434\u043c\u0456\u043d\u0456\u0441\u0442\u0440\u0430\u0446\u0456\u044f": {
+   "es": "la Administraci\u00f3n Militar Regional de Le\u00f3polis",
+   "en": "the Lviv Regional Military Administration"
+  },
+  "\u041c\u0412\u0420": {
+   "es": "el Ministerio del Interior de Bulgaria",
+   "en": "the Bulgarian Ministry of Interior"
+  },
+  "\u041c\u0438\u043a\u043e\u043b\u0430\u0457\u0432\u0441\u044c\u043a\u0430 \u041e\u0412\u0410": {
+   "es": "la Administraci\u00f3n Militar Regional de Mikol\u00e1iv",
+   "en": "the Mykolaiv Regional Military Administration"
+  },
+  "\u041c\u0438\u043d\u0438\u0441\u0442\u0435\u0440\u0441\u0442\u0432\u043e \u043d\u0430 \u0432\u044a\u0442\u0440\u0435\u0448\u043d\u0438\u0442\u0435 \u0440\u0430\u0431\u043e\u0442\u0438": {
+   "es": "el Ministerio del Interior de Bulgaria",
+   "en": "the Bulgarian Ministry of Interior"
+  },
+  "\u041c\u0438\u043d\u0438\u0441\u0442\u0435\u0440\u0441\u0442\u0432\u043e \u043d\u0430 \u043e\u0442\u0431\u0440\u0430\u043d\u0430\u0442\u0430": {
+   "es": "el Ministerio de Defensa de Bulgaria",
+   "en": "the Bulgarian Ministry of Defence"
+  },
+  "\u041c\u0438\u043d\u043e\u0431\u043e\u0440\u043e\u043d\u044b \u0420\u043e\u0441\u0441\u0438\u0438": {
+   "es": "el Ministerio de Defensa de Rusia",
+   "en": "the Russian Ministry of Defence"
+  },
+  "\u041c\u044d\u0440 \u041c\u043e\u0441\u043a\u0432\u044b": {
+   "es": "el alcalde de Mosc\u00fa",
+   "en": "the Mayor of Moscow"
+  },
+  "\u041e\u0434\u0435\u0441\u044c\u043a\u0430 \u041e\u0412\u0410": {
+   "es": "la Administraci\u00f3n Militar Regional de Odesa",
+   "en": "the Odesa Regional Military Administration"
+  },
+  "\u041e\u0434\u0435\u0441\u044c\u043a\u0430 \u043c\u0456\u0441\u044c\u043a\u0430 \u0432\u0456\u0439\u0441\u044c\u043a\u043e\u0432\u0430 \u0430\u0434\u043c\u0456\u043d\u0456\u0441\u0442\u0440\u0430\u0446\u0456\u044f": {
+   "es": "la Administraci\u00f3n Militar de la ciudad de Odesa",
+   "en": "the Odesa City Military Administration"
+  },
+  "\u041f\u043e\u0432\u0456\u0442\u0440\u044f\u043d\u0456 \u0421\u0438\u043b\u0438 \u0417\u0421 \u0423\u043a\u0440\u0430\u0457\u043d\u0438": {
+   "es": "la Fuerza A\u00e9rea de Ucrania",
+   "en": "the Ukrainian Air Force"
+  },
+  "\u041f\u043e\u043b\u0442\u0430\u0432\u0441\u044c\u043a\u0430 \u041e\u0412\u0410": {
+   "es": "la Administraci\u00f3n Militar Regional de Poltava",
+   "en": "the Poltava Regional Military Administration"
+  },
+  "\u041f\u0440\u0430\u0432\u0438\u0442\u0435\u043b\u044c\u0441\u0442\u0432\u043e \u0411\u0440\u044f\u043d\u0441\u043a\u043e\u0439 \u043e\u0431\u043b\u0430\u0441\u0442\u0438": {
+   "es": "el Gobierno de la regi\u00f3n de Briansk",
+   "en": "the Bryansk Oblast Government"
+  },
+  "\u041f\u0440\u0430\u0432\u0438\u0442\u0435\u043b\u044c\u0441\u0442\u0432\u043e \u0421\u0430\u043c\u0430\u0440\u0441\u043a\u043e\u0439 \u043e\u0431\u043b\u0430\u0441\u0442\u0438": {
+   "es": "el Gobierno de la regi\u00f3n de Samara",
+   "en": "the Samara Oblast Government"
+  },
+  "\u041f\u0440\u0430\u0432\u0438\u0442\u0435\u043b\u044c\u0441\u0442\u0432\u043e \u0422\u0430\u043c\u0431\u043e\u0432\u0441\u043a\u043e\u0439 \u043e\u0431\u043b\u0430\u0441\u0442\u0438": {
+   "es": "el Gobierno de la regi\u00f3n de Tambov",
+   "en": "the Tambov Oblast Government"
+  },
+  "\u0420\u044a\u043a\u043e\u0432\u043e\u0434\u0441\u0442\u0432\u043e \u043d\u0430 \u0432\u044a\u0437\u0434\u0443\u0448\u043d\u043e\u0442\u043e \u0434\u0432\u0438\u0436\u0435\u043d\u0438\u0435": {
+   "es": "el control a\u00e9reo de Bulgaria",
+   "en": "Bulgarian air traffic control"
+  },
+  "\u0420\u0456\u0432\u043d\u0435\u043d\u0441\u044c\u043a\u0430 \u043e\u0431\u043b\u0430\u0441\u043d\u0430 \u0432\u0456\u0439\u0441\u044c\u043a\u043e\u0432\u0430 \u0430\u0434\u043c\u0456\u043d\u0456\u0441\u0442\u0440\u0430\u0446\u0456\u044f": {
+   "es": "la Administraci\u00f3n Militar Regional de Rivne",
+   "en": "the Rivne Regional Military Administration"
+  },
+  "\u0421\u0443\u043c\u0441\u044c\u043a\u0430 \u043e\u0431\u043b\u0430\u0441\u043d\u0430 \u0432\u0456\u0439\u0441\u044c\u043a\u043e\u0432\u0430 \u0430\u0434\u043c\u0456\u043d\u0456\u0441\u0442\u0440\u0430\u0446\u0456\u044f": {
+   "es": "la Administraci\u00f3n Militar Regional de Sumy",
+   "en": "the Sumy Regional Military Administration"
+  },
+  "\u0422\u0435\u0440\u043d\u043e\u043f\u0456\u043b\u044c\u0441\u044c\u043a\u0430 \u041e\u0412\u0410": {
+   "es": "la Administraci\u00f3n Militar Regional de Tern\u00f3pil",
+   "en": "the Ternopil Regional Military Administration"
+  },
+  "\u0425\u0430\u0440\u043a\u0456\u0432\u0441\u044c\u043a\u0430 \u041e\u0412\u0410": {
+   "es": "la Administraci\u00f3n Militar Regional de J\u00e1rkov",
+   "en": "the Kharkiv Regional Military Administration"
+  },
+  "\u0425\u0430\u0440\u043a\u0456\u0432\u0441\u044c\u043a\u0430 \u041e\u0412\u0410 (\u043a\u0430\u043d\u0430\u043b \u043d\u0430\u0447\u0430\u043b\u044c\u043d\u0438\u043a\u0430)": {
+   "es": "el jefe de la Administraci\u00f3n Militar Regional de J\u00e1rkov",
+   "en": "the head of the Kharkiv Regional Military Administration"
+  },
+  "\u0425\u0435\u0440\u0441\u043e\u043d\u0441\u044c\u043a\u0430 \u041e\u0412\u0410": {
+   "es": "la Administraci\u00f3n Militar Regional de Jers\u00f3n",
+   "en": "the Kherson Regional Military Administration"
+  },
+  "\u0425\u043c\u0435\u043b\u044c\u043d\u0438\u0446\u044c\u043a\u0430 \u041e\u0412\u0410": {
+   "es": "la Administraci\u00f3n Militar Regional de Jmelnitski",
+   "en": "the Khmelnytskyi Regional Military Administration"
+  },
+  "\u0427\u0435\u0440\u043a\u0430\u0441\u044c\u043a\u0430 \u041e\u0412\u0410": {
+   "es": "la Administraci\u00f3n Militar Regional de Cherkasy",
+   "en": "the Cherkasy Regional Military Administration"
+  },
+  "\u0427\u0435\u0440\u043d\u0456\u0432\u0435\u0446\u044c\u043a\u0430 \u041e\u0412\u0410": {
+   "es": "la Administraci\u00f3n Militar Regional de Chernivts\u00ed",
+   "en": "the Chernivtsi Regional Military Administration"
+  },
+  "\u0427\u0435\u0440\u043d\u0456\u0433\u0456\u0432\u0441\u044c\u043a\u0430 \u041e\u0412\u0410": {
+   "es": "la Administraci\u00f3n Militar Regional de Chern\u00edgov",
+   "en": "the Chernihiv Regional Military Administration"
+  }
+ }
+}

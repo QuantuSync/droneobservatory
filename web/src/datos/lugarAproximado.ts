@@ -154,10 +154,18 @@ export function lugarAproximado(
   return { lon: punto[0], lat: punto[1], nivel: "pais", nombre: null };
 }
 
-/** La zona del marcador en palabras: el país, la región tal como la da la fuente o el mar. */
-export function zonaEscrita(aproximado: LugarAproximado, codigoPais: string, idioma: "es" | "en"): string {
+/**
+ * La zona del marcador en palabras: el país, la región (como la escribe la publicación,
+ * `regionEscrita`, o la tabla de la web) o el mar.
+ */
+export function zonaEscrita(
+  aproximado: LugarAproximado,
+  codigoPais: string,
+  idioma: "es" | "en",
+  regionEscrita: string | null = null,
+): string {
   if (aproximado.nivel === "pais") return pais(codigoPais, idioma);
-  const nombre = aproximado.nombre === null ? null : nombreDeLugar(aproximado.nombre, idioma);
+  const nombre = regionEscrita ?? (aproximado.nombre === null ? null : nombreDeLugar(aproximado.nombre, idioma));
   if (nombre !== null) return nombre;
   return marDelPais(codigoPais, idioma) ?? pais(codigoPais, idioma);
 }
@@ -168,10 +176,11 @@ export function textoAproximado(
   idioma: "es" | "en",
   aproximado: LugarAproximado,
   codigoPais: string,
+  regionEscrita: string | null = null,
 ): { nivel: string; deDonde: string } {
   return {
     nivel: t.imprecisa.aproximado(t.imprecisa.niveles[aproximado.nivel]),
-    deDonde: t.imprecisa.deDonde(aproximado.nivel, zonaEscrita(aproximado, codigoPais, idioma)),
+    deDonde: t.imprecisa.deDonde(aproximado.nivel, zonaEscrita(aproximado, codigoPais, idioma, regionEscrita)),
   };
 }
 
