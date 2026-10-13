@@ -15,7 +15,8 @@ Desde el blindaje (7–8 de octubre de 2026), la exportación ya **no** está en
 - **Configuración:** [`configuracion/exportaciones.json`](../configuracion/exportaciones.json).
 
 El repositorio `QuantuSync/droneobservatory-datos` (carpeta `exportaciones/`, etiquetas
-`eodi-AAAA.MM.DD`) solo tiene las versiones 2026.10.01 a 2026.10.05 y no recibe ninguna más.
+`eodi-AAAA.MM.DD`) solo tiene las versiones 2026.10.01 a 2026.10.05. Desde el 13 de octubre de 2026
+está archivado (solo lectura) y sin claves de despliegue.
 
 **Nombre de la versión.** Es `AAAA.MM.DD`, la fecha UTC del día en que se genera. Desde el
 formato 1.9.0, una segunda versión del mismo día (generada a mano) lleva `.N` detrás
@@ -33,8 +34,10 @@ S3 desde su consola web; no tiene API para ello. Esta sesión no tenía sesión 
 (apartado 8). Hasta entonces se puede leer con `%USERPROFILE%\.eodi\almacen.env`, la credencial
 del proyecto. Lee y escribe todo, así que solo se usa en el equipo del dueño.
 
-Hoy AEGIS usa la clave SSH `aegis_lectura_ssh` y `github_known_hosts`. Con el almacén dejan de
-hacer falta.
+AEGIS lee el almacén con esta credencial desde el 12 de octubre de 2026. La clave SSH
+`aegis_lectura_ssh` se retiró el 13 de octubre: su clave de despliegue «aegis-lectura» se quitó del
+repositorio de datos y el fichero está en `%USERPROFILE%\.eodi\retiradas\`. Comprobado ese día: la
+importación de AEGIS desde el almacén termina con código 0 sin ella.
 
 ## 3. Cómo leer, verificar huellas y descifrar
 

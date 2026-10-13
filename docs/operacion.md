@@ -347,7 +347,9 @@ Crea el servidor, lo endurece, lo instala, lleva las credenciales y activa los t
    y la base de visitas ([visitas.md](visitas.md), «Copias»);
 2. poner los interruptores como estaban: `echo disco | sudo -u eodi tee /home/eodi/.eodi/base_modo`,
    `echo almacen | sudo -u eodi tee /home/eodi/.eodi/publicacion_modo` y
-   `echo no | sudo -u eodi tee /home/eodi/.eodi/base_secundaria` (desde el 13 de octubre de 2026);
+   `echo no | sudo -u eodi tee /home/eodi/.eodi/base_secundaria` (desde el 13 de octubre de 2026;
+   sin el fichero también vale `no`: el repositorio de datos está archivado y `reconstruir.sh` ya no
+   le da de alta ninguna clave);
    el archivo de alertas sigue solo: `restaurar-todo` ya trae sus ficheros y, con
    `alertas_tabla/estado.json` sin restaurar, el servicio lo rehace con la tabla;
 3. dejar el gancho de despliegue de Vercel en `/home/eodi/.eodi/vercel_gancho` (lo da el panel de
