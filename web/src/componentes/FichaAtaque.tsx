@@ -202,7 +202,7 @@ export function FichaAtaque({ t, idioma, ataque, centros }: Props) {
         )}
       </dl>
 
-      <ListaFuentes t={t} fuentes={ataque.fuentes} />
+      <ListaFuentes t={t} fuentes={ataque.fuentes} idioma={idioma} />
       <Historial
         t={t}
         historial={ataque.estado.historial}

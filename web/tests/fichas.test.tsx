@@ -15,6 +15,7 @@ import { join, resolve } from "node:path";
 import { cleanup, render } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 
+import { FichaImpacto } from "../src/componentes/FichaImpacto.tsx";
 import { FichaIncidente } from "../src/componentes/FichaIncidente.tsx";
 import { detalleIncidente, detalleSinUbicacion } from "../src/datos/derivar.ts";
 import { enFlancoEste, FLANCO_ESTE, localidadDeImpacto, lugarDeImpacto, modeloEscrito } from "../src/datos/nombres.ts";
@@ -173,5 +174,26 @@ describe("todas las fichas, en español y en inglés", () => {
       }
     }
     expect([...malos]).toEqual([]);
+  });
+
+  it("las fichas de impactos de la capa de guerra no enseñan nada en cirílico fuera de las citas", () => {
+    const ucrania = exigir(validarPublicacionUcrania(leer("ucrania.json")));
+    // Uno de cada fuente distinta: la ficha cambia con el lugar y con la fuente.
+    const porFuente = new Map<string, NonNullable<typeof ucrania.impactos>[number]>();
+    for (const impacto of ucrania.impactos ?? []) {
+      const clave = `${impacto.fuentes[0]?.medio ?? ""}|${impacto.lugar.nivel}`;
+      if (!porFuente.has(clave)) porFuente.set(clave, impacto);
+    }
+    const malos: string[] = [];
+    for (const idioma of ["es", "en"] as const) {
+      for (const impacto of porFuente.values()) {
+        const { container } = render(<FichaImpacto t={textos(idioma)} idioma={idioma} impacto={impacto} />);
+        const texto = sinCitas(container);
+        const otro = OTRO_ALFABETO.exec(texto);
+        if (otro !== null) malos.push(`${impacto.id} ${idioma}: ${contexto(texto, otro.index)}`);
+        cleanup();
+      }
+    }
+    expect(malos).toEqual([]);
   });
 });

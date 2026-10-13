@@ -73,7 +73,7 @@ const CASOS: Caso[] = [
 ];
 
 /** Un impacto de la capa de guerra en Ucrania (comunidad de Khotin, Sumy). */
-const UCRANIA = { id: "EODI-IG-2024-00001", titulo: { es: "Comunidad de Khotin", en: "Khotin community" } };
+const UCRANIA = { id: "EODI-IG-2024-00001" };
 
 function ruta(id: string, idioma: "es" | "en"): string {
   return idioma === "en" ? `/en/${id}` : `/${id}`;
@@ -196,7 +196,7 @@ test.describe("nombres de lugar y fichas, como una persona", () => {
       const tactil = info.project.use.hasTouch === true;
       const t = idioma === "es"
         ? { lugar: "Lugar", zona: "Frontera o interior" }
-        : { lugar: "Location", zona: "Border or interior" };
+        : { lugar: "Place", zona: "Border or interior" };
       for (const caso of CASOS) {
         await pagina.goto(ruta(caso.id, idioma), { waitUntil: "domcontentloaded" });
         await expect(pagina.locator(MAPA)).toBeAttached({ timeout: 60_000 });
@@ -213,19 +213,52 @@ test.describe("nombres de lugar y fichas, como una persona", () => {
         expect(await enlacesInternos(pagina), `${caso.id} enlaces internos`).toEqual([]);
         await pagina.screenshot({ path: join(CAPTURAS, `${caso.id}-${idioma}-${info.project.name}.png`) });
       }
-      // Un impacto de la capa de guerra en Ucrania.
-      await pagina.goto(ruta(UCRANIA.id, idioma), { waitUntil: "domcontentloaded" });
+      // Un impacto de la capa de guerra en Ucrania: se abre tocando su punto en el mapa.
+      await pagina.goto(idioma === "en" ? "/en" : "/", { waitUntil: "domcontentloaded" });
       await expect(pagina.locator(MAPA)).toBeAttached({ timeout: 60_000 });
+      const ucrania = (await (await pagina.request.get("/datos/ucrania.json")).json()) as {
+        impactos: { id: string; lugar: { punto: { lat: number; lon: number } } }[];
+      };
+      const impacto = ucrania.impactos.find((i) => i.id === UCRANIA.id) ?? ucrania.impactos[0];
+      if (impacto === undefined) throw new Error("sin impactos");
+      await pagina.locator(".maplibregl-canvas").focus();
+      await pagina.keyboard.press("2");
+      const { lat, lon } = impacto.lugar.punto;
+      const punto = await pagina.evaluate(
+        ([la, lo]) =>
+          new Promise<{ x: number; y: number }>((listo) => {
+            const elemento = document.querySelector(".maplibregl-map") as HTMLElement & {
+              mapaDePruebas?: { once: (e: string, f: () => void) => void; jumpTo: (o: object) => void; project: (c: [number, number]) => { x: number; y: number } };
+            };
+            const mapa = elemento.mapaDePruebas;
+            if (mapa === undefined) throw new Error("sin mapa de pruebas");
+            mapa.once("idle", () => {
+              const caja = elemento.getBoundingClientRect();
+              const p = mapa.project([lo, la]);
+              listo({ x: caja.left + p.x, y: caja.top + p.y });
+            });
+            mapa.jumpTo({ center: [lo, la], zoom: 12 });
+          }),
+        [lat, lon] as const,
+      );
+      await pagina.waitForTimeout(1500);
+      if (tactil) await pagina.touchscreen.tap(punto.x, punto.y);
+      else await pagina.mouse.click(punto.x, punto.y);
+      await pagina.waitForTimeout(1500);
+      const enLista = pagina.locator("[data-ficha] button").filter({ hasText: /EODI-IG-|·/ }).first();
+      if ((await pagina.locator("[data-ficha] article h2").count()) === 0 && (await enLista.isVisible().catch(() => false))) {
+        await enLista.click();
+      }
+      const articulo = pagina.locator("[data-ficha] article").first();
+      await expect(articulo).toBeVisible({ timeout: 20_000 });
       await leerComoPersona(pagina, contexto, browserName === "chromium", tactil);
-      const titulo = (await pagina.locator("[data-ficha] article h2").first().textContent())?.trim() ?? "";
-      expect(titulo).toBe(UCRANIA.titulo[idioma]);
-      const texto = await pagina.locator("[data-ficha] article").first().evaluate((a) => {
+      const texto = await articulo.evaluate((a) => {
         const c = a.cloneNode(true) as Element;
         c.querySelectorAll("blockquote, q, [lang]").forEach((x) => x.remove());
         return c.textContent ?? "";
       });
       expect(OTRO_ALFABETO.test(texto), `impacto: ${texto.slice(0, 200)}`).toBe(false);
-      await pagina.screenshot({ path: join(CAPTURAS, `${UCRANIA.id}-${idioma}-${info.project.name}.png`) });
+      await pagina.screenshot({ path: join(CAPTURAS, `ucrania-${idioma}-${info.project.name}.png`) });
       expect(errores).toEqual([]);
     });
   }

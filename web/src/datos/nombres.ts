@@ -5,6 +5,7 @@
 // campo (datos publicados antes del 13 de octubre de 2026), lo que ya hacía la web
 // (i18n/nombresLugar.ts), sin pasar nunca otra escritura al alfabeto latino.
 
+import ciudadesLuces from "../../../configuracion/ciudades_luces.json" with { type: "json" };
 import { pais } from "../i18n/index.ts";
 import { nombreDeLugar } from "../i18n/nombresLugar.ts";
 import type { Idioma } from "../sitio.ts";
@@ -195,4 +196,23 @@ export function localidadDeImpacto(localidad: string, idioma: Idioma): string | 
   const escrita = LOCALIDADES_GUERRA[localidad.normalize("NFC")];
   if (escrita !== undefined) return escrita[idioma];
   return /^[\p{Script=Latin}\p{Script=Common}]+$/u.test(localidad) ? localidad : null;
+}
+
+/** Nombre en cirílico → nombre en alfabeto latino de las ciudades cuya luz se mide. */
+const CIUDADES_LUCES: ReadonlyMap<string, string> = new Map(
+  ciudadesLuces.ciudades.map((c) => [c.nombre.normalize("NFC"), c.nombre_latino]),
+);
+
+/**
+ * Un nombre de lugar de la capa de guerra tal como viene en los datos (a veces en cirílico),
+ * escrito para la página: el nombre propio español o inglés, el nombre en alfabeto latino, o null
+ * si no se sabe escribir sin transcribir (quien lo usa pone la región).
+ */
+export function nombreDeGuerra(nombre: string, idioma: Idioma): string | null {
+  const nfc = nombre.normalize("NFC");
+  const escrito = SIN_LATINO_GUERRA[nfc] ?? LOCALIDADES_GUERRA[nfc];
+  if (escrito !== undefined) return escrito[idioma];
+  const latino = /^[\p{Script=Latin}\p{Script=Common}\p{Script=Inherited}]+$/u.test(nfc) ? nfc : CIUDADES_LUCES.get(nfc);
+  if (latino === undefined || latino === "") return null;
+  return EXONIMOS_GUERRA[latino]?.[idioma] ?? latino;
 }
