@@ -9,7 +9,8 @@ import { EnlaceExterno } from "./EnlaceExterno.tsx";
  * El enlace de una fuente, igual en toda la web. Con copia en Internet Archive, al lado del
  * original sale «copia archivada». Si el original está caído, el enlace principal pasa a ser la
  * copia, se dice que el original ya no está y el original sigue a la vista, aparte. Caído y sin
- * copia, el original con el aviso.
+ * copia, el original con el aviso. Los enlaces de las notas van en bloque en línea: en una pantalla
+ * táctil su zona de 44 px ocupa sitio en la línea y nada la tapa.
  */
 export function EnlaceFuente({
   t,
@@ -34,7 +35,7 @@ export function EnlaceFuente({
         </EnlaceExterno>{" "}
         <span className="text-xs text-secundario" data-copia-principal="">
           ({t.ficha.copiaArchivadaDel(del)}; {t.ficha.originalCaido}:{" "}
-          <EnlaceExterno enlace={fuente.enlace} aviso={aviso} avisoNoValido={noValido}>
+          <EnlaceExterno enlace={fuente.enlace} aviso={aviso} avisoNoValido={noValido} className="inline-block">
             {t.ficha.enlaceOriginal}
           </EnlaceExterno>
           )
@@ -52,7 +53,12 @@ export function EnlaceFuente({
           {" "}
           <span className="text-xs" data-copia-archivada="">
             ·{" "}
-            <EnlaceExterno enlace={copia.enlace} aviso={`${t.ficha.copiaArchivadaDel(del)}, ${aviso}`} avisoNoValido={noValido}>
+            <EnlaceExterno
+              enlace={copia.enlace}
+              aviso={`${t.ficha.copiaArchivadaDel(del)}, ${aviso}`}
+              avisoNoValido={noValido}
+              className="inline-block"
+            >
               {t.ficha.copiaArchivada}
             </EnlaceExterno>
           </span>

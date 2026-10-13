@@ -60,7 +60,7 @@ async function verTodas(pagina: Page, tactil: boolean) {
 }
 
 for (const idioma of ["es", "en"] as const) {
-  test(`copias archivadas en la ficha y en la página de texto (${idioma})`, async ({ page: pagina }, info) => {
+  test(`copias archivadas en la ficha y en la página de texto (${idioma})`, async ({ page: pagina, context: contexto }, info) => {
     test.setTimeout(150_000);
     const tactil = info.project.use.hasTouch === true;
     const t = TEXTOS[idioma];
@@ -81,12 +81,18 @@ for (const idioma of ["es", "en"] as const) {
     expect(await copias.first().getAttribute("target")).toBe("_blank");
 
     if (caido !== null) {
-      await pagina.goto(`${t.prefijo}/${caido}`, { waitUntil: "domcontentloaded" });
-      await expect(pagina.locator("[data-ficha]:visible").first()).toBeVisible({ timeout: 60_000 });
-      await verTodas(pagina, tactil);
-      const nota = pagina.locator("[data-ficha] [data-copia-principal]").first();
+      // En otra pestaña, como quien abre un segundo enlace: la primera sigue cargando el mapa sin
+      // cortes (WebKit avisa de las teselas que se cortan al salir a mitad de carga).
+      const otra = await contexto.newPage();
+      const erroresOtra = vigilar(otra);
+      await otra.goto(`${t.prefijo}/${caido}`, { waitUntil: "domcontentloaded" });
+      await expect(otra.locator("[data-ficha]:visible").first()).toBeVisible({ timeout: 60_000 });
+      await verTodas(otra, tactil);
+      const nota = otra.locator("[data-ficha] [data-copia-principal]").first();
       await expect(nota).toBeAttached({ timeout: 30_000 });
       expect(await nota.textContent()).toContain(t.caido);
+      await expect(otra.locator("[data-mapa-listo=true]")).toBeAttached({ timeout: 60_000 });
+      errores.push(...erroresOtra);
     }
 
     // Página de texto del incidente (sin código): el mismo enlace y la misma nota.
