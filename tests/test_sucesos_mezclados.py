@@ -359,3 +359,19 @@ def test_sin_las_fuentes_de_otro_suceso_no_quedan_valores_sin_respaldo() -> None
     assert nuevo["drones"]["numero"] == "desconocido"
     assert nuevo["tiempo"]["inicio"] == {"valor": "2026-09-14T08:30Z", "precision": "aproximada"}
     assert nuevo["tiempo"]["origen_inicio"]["tipo"] == "publicacion"
+
+
+def test_la_ficha_publicada_lleva_sus_sucesos_relacionados() -> None:
+    from exportacion import geojson
+
+    relacionado = {"id": "EODI-2026-00179", "separado_de": "EODI-2026-00072",
+                   "nota": {"es": "juntaba dos sucesos", "en": "it merged two events"}}  # fmt: skip
+    documento = _incidente("EODI-2026-00007", [
+        _fuente("c1", "https://bt.dk/cierre", "2026-09-13T11:15:00Z", "Vilnius Lufthavn er lukket"),
+    ], "2026-09-13T00:00Z")  # fmt: skip
+    documento["relacionados"] = [relacionado]
+    publico = geojson.vista_publica(documento)
+    assert publico is not None and publico["relacionados"] == [relacionado]
+    sin_punto = {**documento, "lugar": {"pais": "LT", "nivel": "pais"}}
+    publico = geojson.sin_ubicacion(sin_punto)
+    assert publico is not None and publico["relacionados"] == [relacionado]
