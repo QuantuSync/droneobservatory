@@ -112,7 +112,7 @@ for (const tamano of TAMANOS) {
       await page.goto("/?zona=frontera");
       await page.locator(MAPA).waitFor();
       await page.locator("[data-botones-mapa] [data-boton-filtros] button").first().click();
-      await expect(page.getByRole("button", { name: "Frontera", exact: true })).toHaveAttribute("aria-pressed", "true");
+      await expect(page.getByRole("button", { name: "Frontera este", exact: true })).toHaveAttribute("aria-pressed", "true");
       await page.screenshot({ path: join(CAPTURAS, `frontera-filtro-${tamano.nombre}.png`) });
     });
 

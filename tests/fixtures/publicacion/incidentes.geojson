@@ -176,6 +176,20 @@
     "zona": {
      "grupo": "interior",
      "motivo": "lejos_de_la_frontera"
+    },
+    "nombres": {
+     "lugar": {
+      "es": "Vught, Pa\u00edses Bajos",
+      "en": "Vught, Netherlands"
+     },
+     "localidad": {
+      "es": "Vught",
+      "en": "Vught"
+     },
+     "objetivo": {
+      "es": "Vught",
+      "en": "Vught"
+     }
     }
    },
    "type": "Feature"
@@ -375,6 +389,20 @@
     "zona": {
      "grupo": "interior",
      "motivo": "lejos_de_la_frontera"
+    },
+    "nombres": {
+     "lugar": {
+      "es": "Diest, B\u00e9lgica",
+      "en": "Diest, Belgium"
+     },
+     "localidad": {
+      "es": "Diest",
+      "en": "Diest"
+     },
+     "objetivo": {
+      "es": "Aer\u00f3dromo de Schaffen-Diest",
+      "en": "Diest-Schaffen Airfield"
+     }
     }
    },
    "type": "Feature"
@@ -547,6 +575,20 @@
      "distancia_km": 26,
      "grupo": "frontera",
      "motivo": "cerca_de_la_frontera"
+    },
+    "nombres": {
+     "lugar": {
+      "es": "Vilna, Lituania",
+      "en": "Vilnius, Lithuania"
+     },
+     "localidad": {
+      "es": "Vilna",
+      "en": "Vilnius"
+     },
+     "objetivo": {
+      "es": "Aeropuerto de Vilna",
+      "en": "Vilnius Airport"
+     }
     }
    },
    "type": "Feature"
@@ -683,6 +725,20 @@
     "zona": {
      "grupo": "interior",
      "motivo": "lejos_de_la_frontera"
+    },
+    "nombres": {
+     "lugar": {
+      "es": "Fr\u00e1ncfort, Alemania",
+      "en": "Frankfurt, Germany"
+     },
+     "localidad": {
+      "es": "Fr\u00e1ncfort",
+      "en": "Frankfurt"
+     },
+     "objetivo": {
+      "es": "Aeropuerto de Fr\u00e1ncfort",
+      "en": "Frankfurt Airport"
+     }
     }
    },
    "type": "Feature"
@@ -984,6 +1040,20 @@
     "zona": {
      "grupo": "interior",
      "motivo": "lejos_de_la_frontera"
+    },
+    "nombres": {
+     "lugar": {
+      "es": "Erfurt, Alemania",
+      "en": "Erfurt, Germany"
+     },
+     "localidad": {
+      "es": "Erfurt",
+      "en": "Erfurt"
+     },
+     "objetivo": {
+      "es": "Aeropuerto de Erfurt",
+      "en": "Erfurt-Weimar Airport"
+     }
     }
    },
    "type": "Feature"
@@ -1134,6 +1204,20 @@
     "zona": {
      "grupo": "interior",
      "motivo": "lejos_de_la_frontera"
+    },
+    "nombres": {
+     "lugar": {
+      "es": "Dubl\u00edn, Irlanda",
+      "en": "Dublin, Ireland"
+     },
+     "localidad": {
+      "es": "Dubl\u00edn",
+      "en": "Dublin"
+     },
+     "objetivo": {
+      "es": "Aeropuerto de Dubl\u00edn",
+      "en": "Dublin Airport"
+     }
     }
    },
    "type": "Feature"
@@ -1375,6 +1459,20 @@
     "zona": {
      "grupo": "interior",
      "motivo": "lejos_de_la_frontera"
+    },
+    "nombres": {
+     "lugar": {
+      "es": "Lieja, B\u00e9lgica",
+      "en": "Li\u00e8ge, Belgium"
+     },
+     "localidad": {
+      "es": "Lieja",
+      "en": "Li\u00e8ge"
+     },
+     "objetivo": {
+      "es": "Aeropuerto de Lieja",
+      "en": "Li\u00e8ge Airport"
+     }
     }
    },
    "type": "Feature"
@@ -1587,6 +1685,20 @@
      "distancia_km": 761,
      "grupo": "interior",
      "motivo": "lejos_de_la_frontera"
+    },
+    "nombres": {
+     "lugar": {
+      "es": "Oslo, Noruega",
+      "en": "Oslo, Norway"
+     },
+     "localidad": {
+      "es": "Oslo",
+      "en": "Oslo"
+     },
+     "objetivo": {
+      "es": "Aeropuerto de Oslo",
+      "en": "Oslo Airport"
+     }
     }
    },
    "type": "Feature"
@@ -1734,9 +1846,9 @@
        "estado": "confirmado",
        "fecha": {
         "precision": "aproximada",
-        "valor": "2025-02-12T07:00Z"
+        "valor": "2025-02-12T06:30Z"
        },
-       "fuente_id": "gdelt-f374f4ebc0fc0121-declaracion-2"
+       "fuente_id": "gdelt-3384c43bdd9b2564-declaracion-1"
       },
       {
        "estado": "desmentido",
@@ -1902,6 +2014,20 @@
      "distancia_km": 497,
      "grupo": "interior",
      "motivo": "lejos_de_la_frontera"
+    },
+    "nombres": {
+     "lugar": {
+      "es": "Sof\u00eda, Bulgaria",
+      "en": "Sofia, Bulgaria"
+     },
+     "localidad": {
+      "es": "Sof\u00eda",
+      "en": "Sofia"
+     },
+     "objetivo": {
+      "es": "Aeropuerto de Sof\u00eda",
+      "en": "Sofia Airport"
+     }
     }
    },
    "type": "Feature"
@@ -2047,10 +2173,10 @@
       {
        "estado": "notificado",
        "fecha": {
-        "precision": "aproximada",
-        "valor": "2025-07-02T21:30Z"
+        "precision": "dia",
+        "valor": "2025-07-02T00:00Z"
        },
-       "fuente_id": "gdelt-5ffe1491c345e22a"
+       "fuente_id": "revisada-d8f6241e437641dc-declaracion-1"
       },
       {
        "estado": "confirmado",
@@ -2136,6 +2262,20 @@
     "zona": {
      "grupo": "interior",
      "motivo": "lejos_de_la_frontera"
+    },
+    "nombres": {
+     "lugar": {
+      "es": "Bergen, Noruega",
+      "en": "Bergen, Norway"
+     },
+     "localidad": {
+      "es": "Bergen",
+      "en": "Bergen"
+     },
+     "objetivo": {
+      "es": "Aeropuerto de Bergen",
+      "en": "Bergen Airport"
+     }
     }
    },
    "type": "Feature"
@@ -2938,6 +3078,20 @@
     "zona": {
      "grupo": "interior",
      "motivo": "lejos_de_la_frontera"
+    },
+    "nombres": {
+     "lugar": {
+      "es": "Lieja, B\u00e9lgica",
+      "en": "Li\u00e8ge, Belgium"
+     },
+     "localidad": {
+      "es": "Lieja",
+      "en": "Li\u00e8ge"
+     },
+     "objetivo": {
+      "es": "Aeropuerto de Lieja",
+      "en": "Li\u00e8ge Airport"
+     }
     }
    },
    "type": "Feature"
@@ -3125,6 +3279,20 @@
     "zona": {
      "grupo": "interior",
      "motivo": "lejos_de_la_frontera"
+    },
+    "nombres": {
+     "lugar": {
+      "es": "Weeze, Alemania",
+      "en": "Weeze, Germany"
+     },
+     "localidad": {
+      "es": "Weeze",
+      "en": "Weeze"
+     },
+     "objetivo": {
+      "es": "Aeropuerto de Weeze",
+      "en": "Weeze Airport"
+     }
     }
    },
    "type": "Feature"
@@ -3438,6 +3606,20 @@
      "distancia_km": 1201,
      "grupo": "interior",
      "motivo": "lejos_de_la_frontera"
+    },
+    "nombres": {
+     "lugar": {
+      "es": "Br\u00f8nn\u00f8ysund, Noruega",
+      "en": "Br\u00f8nn\u00f8ysund, Norway"
+     },
+     "localidad": {
+      "es": "Br\u00f8nn\u00f8ysund",
+      "en": "Br\u00f8nn\u00f8ysund"
+     },
+     "objetivo": {
+      "es": "Aeropuerto de Br\u00f8nn\u00f8ysund",
+      "en": "Br\u00f8nn\u00f8ysund Airport, Br\u00f8nn\u00f8y"
+     }
     }
    },
    "type": "Feature"
@@ -3834,6 +4016,20 @@
     "zona": {
      "grupo": "interior",
      "motivo": "lejos_de_la_frontera"
+    },
+    "nombres": {
+     "lugar": {
+      "es": "\u00cele Longue, Francia",
+      "en": "\u00cele Longue, France"
+     },
+     "localidad": {
+      "es": "\u00cele Longue",
+      "en": "\u00cele Longue"
+     },
+     "objetivo": {
+      "es": "\u00cele Longue",
+      "en": "\u00cele Longue"
+     }
     }
    },
    "type": "Feature"
@@ -5080,6 +5276,20 @@
      "distancia_km": 753,
      "grupo": "interior",
      "motivo": "lejos_de_la_frontera"
+    },
+    "nombres": {
+     "lugar": {
+      "es": "Oslo, Noruega",
+      "en": "Oslo, Norway"
+     },
+     "localidad": {
+      "es": "Oslo",
+      "en": "Oslo"
+     },
+     "objetivo": {
+      "es": "Oslo",
+      "en": "Oslo"
+     }
     }
    },
    "type": "Feature"
@@ -5544,13 +5754,27 @@
      "version": "tipo-dron-1.1.0"
     },
     "titulo": {
-     "en": "Drones over Chisinau close airspace and divert flights",
+     "en": "Drones over Chi\u0219in\u0103u close airspace and divert flights",
      "es": "Drones sobre Chisin\u00e1u cierran el espacio a\u00e9reo y desv\u00edan vuelos"
     },
     "zona": {
      "distancia_km": 48,
      "grupo": "frontera",
      "motivo": "cerca_de_la_frontera"
+    },
+    "nombres": {
+     "lugar": {
+      "es": "Chisin\u00e1u, Moldavia",
+      "en": "Chi\u0219in\u0103u, Moldova"
+     },
+     "localidad": {
+      "es": "Chisin\u00e1u",
+      "en": "Chi\u0219in\u0103u"
+     },
+     "objetivo": {
+      "es": "Chisin\u00e1u",
+      "en": "Chi\u0219in\u0103u"
+     }
     }
    },
    "type": "Feature"
@@ -5675,6 +5899,20 @@
     "zona": {
      "grupo": "interior",
      "motivo": "lejos_de_la_frontera"
+    },
+    "nombres": {
+     "lugar": {
+      "es": "Londres, Reino Unido",
+      "en": "London, United Kingdom"
+     },
+     "localidad": {
+      "es": "Londres",
+      "en": "London"
+     },
+     "objetivo": {
+      "es": "Aeropuerto de Londres-City",
+      "en": "London City Airport"
+     }
     }
    },
    "type": "Feature"
@@ -5925,6 +6163,20 @@
     "zona": {
      "grupo": "frontera",
      "motivo": "ataque"
+    },
+    "nombres": {
+     "lugar": {
+      "es": "Periprava, Ruman\u00eda",
+      "en": "Periprava, Romania"
+     },
+     "localidad": {
+      "es": "Periprava",
+      "en": "Periprava"
+     },
+     "objetivo": {
+      "es": "Periprava",
+      "en": "Periprava"
+     }
     }
    },
    "type": "Feature"
@@ -6082,6 +6334,20 @@
      "distancia_km": 476,
      "grupo": "interior",
      "motivo": "lejos_de_la_frontera"
+    },
+    "nombres": {
+     "lugar": {
+      "es": "Berl\u00edn, Alemania",
+      "en": "Berlin, Germany"
+     },
+     "localidad": {
+      "es": "Berl\u00edn",
+      "en": "Berlin"
+     },
+     "objetivo": {
+      "es": "Aeropuerto de Berl\u00edn",
+      "en": "Berlin Brandenburg Airport"
+     }
     }
    },
    "type": "Feature"
@@ -6626,6 +6892,20 @@
      "distancia_km": 892,
      "grupo": "interior",
      "motivo": "lejos_de_la_frontera"
+    },
+    "nombres": {
+     "lugar": {
+      "es": "M\u00fanich, Alemania",
+      "en": "Munich, Germany"
+     },
+     "localidad": {
+      "es": "M\u00fanich",
+      "en": "Munich"
+     },
+     "objetivo": {
+      "es": "Aeropuerto de M\u00fanich",
+      "en": "Munich Airport"
+     }
     }
    },
    "type": "Feature"
@@ -7022,6 +7302,20 @@
     "zona": {
      "grupo": "interior",
      "motivo": "lejos_de_la_frontera"
+    },
+    "nombres": {
+     "lugar": {
+      "es": "Fuerteventura, Espa\u00f1a",
+      "en": "Fuerteventura, Spain"
+     },
+     "localidad": {
+      "es": "Fuerteventura",
+      "en": "Fuerteventura"
+     },
+     "objetivo": {
+      "es": "Aeropuerto de Fuerteventura",
+      "en": "Fuerteventura Airport"
+     }
     }
    },
    "type": "Feature"
@@ -7243,6 +7537,20 @@
     "zona": {
      "grupo": "interior",
      "motivo": "lejos_de_la_frontera"
+    },
+    "nombres": {
+     "lugar": {
+      "es": "Gran Canaria, Espa\u00f1a",
+      "en": "Gran Canaria, Spain"
+     },
+     "localidad": {
+      "es": "Gran Canaria",
+      "en": "Gran Canaria"
+     },
+     "objetivo": {
+      "es": "Aeropuerto de Gran Canaria",
+      "en": "Gran Canaria Airport"
+     }
     }
    },
    "type": "Feature"
@@ -7399,6 +7707,20 @@
     "zona": {
      "grupo": "interior",
      "motivo": "lejos_de_la_frontera"
+    },
+    "nombres": {
+     "lugar": {
+      "es": "Lakenheath, Reino Unido",
+      "en": "Lakenheath, United Kingdom"
+     },
+     "localidad": {
+      "es": "Lakenheath",
+      "en": "Lakenheath"
+     },
+     "objetivo": {
+      "es": "RAF Lakenheath",
+      "en": "RAF Lakenheath"
+     }
     }
    },
    "type": "Feature"
@@ -7861,6 +8183,20 @@
     "zona": {
      "grupo": "interior",
      "motivo": "lejos_de_la_frontera"
+    },
+    "nombres": {
+     "lugar": {
+      "es": "Ibiza, Espa\u00f1a",
+      "en": "Ibiza, Spain"
+     },
+     "localidad": {
+      "es": "Ibiza",
+      "en": "Ibiza"
+     },
+     "objetivo": {
+      "es": "Aeropuerto de Ibiza",
+      "en": "Ibiza Airport"
+     }
     }
    },
    "type": "Feature"
@@ -8050,6 +8386,20 @@
      "distancia_km": 45,
      "grupo": "frontera",
      "motivo": "cerca_de_la_frontera"
+    },
+    "nombres": {
+     "lugar": {
+      "es": "Loviisa, Finlandia",
+      "en": "Loviisa, Finland"
+     },
+     "localidad": {
+      "es": "Loviisa",
+      "en": "Loviisa"
+     },
+     "objetivo": {
+      "es": "Central nuclear de Loviisa",
+      "en": "Loviisa Nuclear Power Plant"
+     }
     }
    },
    "type": "Feature"
@@ -8265,6 +8615,20 @@
      "distancia_km": 613,
      "grupo": "interior",
      "motivo": "lejos_de_la_frontera"
+    },
+    "nombres": {
+     "lugar": {
+      "es": "Leipzig, Alemania",
+      "en": "Leipzig, Germany"
+     },
+     "localidad": {
+      "es": "Leipzig",
+      "en": "Leipzig"
+     },
+     "objetivo": {
+      "es": "Aeropuerto de Leipzig",
+      "en": "Leipzig/Halle Airport"
+     }
     }
    },
    "type": "Feature"
@@ -8558,6 +8922,20 @@
      "distancia_km": 415,
      "grupo": "interior",
      "motivo": "lejos_de_la_frontera"
+    },
+    "nombres": {
+     "lugar": {
+      "es": "Sof\u00eda, Bulgaria",
+      "en": "Sofia, Bulgaria"
+     },
+     "localidad": {
+      "es": "Sof\u00eda",
+      "en": "Sofia"
+     },
+     "objetivo": {
+      "es": "Aeropuerto de Sof\u00eda",
+      "en": "Sofia Airport"
+     }
     }
    },
    "type": "Feature"
@@ -9120,6 +9498,20 @@
     "zona": {
      "grupo": "frontera",
      "motivo": "ataque"
+    },
+    "nombres": {
+     "lugar": {
+      "es": "Valea Perjei, Moldavia",
+      "en": "Valea Perjei, Moldova"
+     },
+     "localidad": {
+      "es": "Valea Perjei",
+      "en": "Valea Perjei"
+     },
+     "objetivo": {
+      "es": "Valea Perjei",
+      "en": "Valea Perjei"
+     }
     }
    },
    "type": "Feature"
@@ -9672,6 +10064,20 @@
     "zona": {
      "grupo": "frontera",
      "motivo": "ataque"
+    },
+    "nombres": {
+     "lugar": {
+      "es": "Padina, Ruman\u00eda",
+      "en": "Padina, Romania"
+     },
+     "localidad": {
+      "es": "Padina",
+      "en": "Padina"
+     },
+     "objetivo": {
+      "es": "Padina",
+      "en": "Padina"
+     }
     }
    },
    "type": "Feature"
@@ -9878,6 +10284,22 @@
      "distancia_km": 0,
      "grupo": "frontera",
      "motivo": "cerca_de_la_frontera"
+    },
+    "nombres": {
+     "lugar": {
+      "es": "Novocotovsc, Moldavia",
+      "en": "Novocotovsc, Moldova"
+     },
+     "localidad": {
+      "es": "Novocotovsc",
+      "en": "Novocotovsc"
+     },
+     "otros": [
+      {
+       "es": "Pervomaisc",
+       "en": "Pervomaisc"
+      }
+     ]
     }
    },
    "type": "Feature"
@@ -10089,6 +10511,20 @@
      "distancia_km": 74,
      "grupo": "frontera",
      "motivo": "cerca_de_la_frontera"
+    },
+    "nombres": {
+     "lugar": {
+      "es": "Lublin, Polonia",
+      "en": "Lublin, Poland"
+     },
+     "localidad": {
+      "es": "Lublin",
+      "en": "Lublin"
+     },
+     "objetivo": {
+      "es": "Lublin",
+      "en": "Lublin"
+     }
     }
    },
    "type": "Feature"
@@ -10719,6 +11155,20 @@
     "zona": {
      "grupo": "frontera",
      "motivo": "ataque"
+    },
+    "nombres": {
+     "lugar": {
+      "es": "Gala\u021bi, Ruman\u00eda",
+      "en": "Gala\u021bi, Romania"
+     },
+     "localidad": {
+      "es": "Gala\u021bi",
+      "en": "Gala\u021bi"
+     },
+     "objetivo": {
+      "es": "Gala\u021bi",
+      "en": "Gala\u021bi"
+     }
     }
    },
    "type": "Feature"
@@ -11155,6 +11605,20 @@
     "zona": {
      "grupo": "frontera",
      "motivo": "ataque"
+    },
+    "nombres": {
+     "lugar": {
+      "es": "Tulcea, Ruman\u00eda",
+      "en": "Tulcea, Romania"
+     },
+     "localidad": {
+      "es": "Tulcea",
+      "en": "Tulcea"
+     },
+     "objetivo": {
+      "es": "Tulcea",
+      "en": "Tulcea"
+     }
     }
    },
    "type": "Feature"
@@ -11739,6 +12203,20 @@
      "distancia_km": 434,
      "grupo": "interior",
      "motivo": "lejos_de_la_frontera"
+    },
+    "nombres": {
+     "lugar": {
+      "es": "Malm\u00f6, Suecia",
+      "en": "Malm\u00f6, Sweden"
+     },
+     "localidad": {
+      "es": "Malm\u00f6",
+      "en": "Malm\u00f6"
+     },
+     "objetivo": {
+      "es": "Malm\u00f6",
+      "en": "Malm\u00f6"
+     }
     }
    },
    "type": "Feature"
@@ -12178,6 +12656,20 @@
     "zona": {
      "grupo": "frontera",
      "motivo": "ataque"
+    },
+    "nombres": {
+     "lugar": {
+      "es": "Orhei, Moldavia",
+      "en": "Orhei, Moldova"
+     },
+     "localidad": {
+      "es": "Orhei",
+      "en": "Orhei"
+     },
+     "objetivo": {
+      "es": "Orhei",
+      "en": "Orhei"
+     }
     }
    },
    "type": "Feature"
@@ -12591,6 +13083,20 @@
     "zona": {
      "grupo": "interior",
      "motivo": "lejos_de_la_frontera"
+    },
+    "nombres": {
+     "lugar": {
+      "es": "Bruselas, B\u00e9lgica",
+      "en": "Brussels, Belgium"
+     },
+     "localidad": {
+      "es": "Bruselas",
+      "en": "Brussels"
+     },
+     "objetivo": {
+      "es": "Aeropuerto de Bruselas",
+      "en": "Brussels Airport"
+     }
     }
    },
    "type": "Feature"
@@ -12891,6 +13397,20 @@
     "zona": {
      "grupo": "frontera",
      "motivo": "ataque"
+    },
+    "nombres": {
+     "lugar": {
+      "es": "Tulcea, Ruman\u00eda",
+      "en": "Tulcea, Romania"
+     },
+     "localidad": {
+      "es": "Tulcea",
+      "en": "Tulcea"
+     },
+     "objetivo": {
+      "es": "Tulcea",
+      "en": "Tulcea"
+     }
     }
    },
    "type": "Feature"
@@ -13115,6 +13635,20 @@
     "zona": {
      "grupo": "frontera",
      "motivo": "ataque"
+    },
+    "nombres": {
+     "lugar": {
+      "es": "Sulina, Ruman\u00eda",
+      "en": "Sulina, Romania"
+     },
+     "localidad": {
+      "es": "Sulina",
+      "en": "Sulina"
+     },
+     "objetivo": {
+      "es": "Sulina",
+      "en": "Sulina"
+     }
     }
    },
    "type": "Feature"
@@ -13768,13 +14302,27 @@
     },
     "tipo": "incursion",
     "titulo": {
-     "en": "Explosion of a drone at the Port of Constanza",
+     "en": "Explosion of a drone at the Port of Constan\u021ba",
      "es": "Explosi\u00f3n de un dron en el Puerto de Constanza"
     },
     "zona": {
      "distancia_km": 121,
      "grupo": "frontera",
      "motivo": "cerca_de_la_frontera"
+    },
+    "nombres": {
+     "lugar": {
+      "es": "Constanza, Ruman\u00eda",
+      "en": "Constan\u021ba, Romania"
+     },
+     "localidad": {
+      "es": "Constanza",
+      "en": "Constan\u021ba"
+     },
+     "objetivo": {
+      "es": "Puerto de Constanza",
+      "en": "Port of Constan\u021ba"
+     }
     }
    },
    "type": "Feature"
@@ -13981,13 +14529,27 @@
     },
     "tipo": "incursion",
     "titulo": {
-     "en": "Drone explodes in Constanza Port after penetrating airspace",
+     "en": "Drone explodes in Constan\u021ba Port after penetrating airspace",
      "es": "Dron explota en el Puerto de Constanza tras penetrar el espacio a\u00e9reo"
     },
     "zona": {
      "distancia_km": 121,
      "grupo": "frontera",
      "motivo": "cerca_de_la_frontera"
+    },
+    "nombres": {
+     "lugar": {
+      "es": "Constanza, Ruman\u00eda",
+      "en": "Constan\u021ba, Romania"
+     },
+     "localidad": {
+      "es": "Constanza",
+      "en": "Constan\u021ba"
+     },
+     "objetivo": {
+      "es": "Puerto de Constanza",
+      "en": "Port of Constan\u021ba"
+     }
     }
    },
    "type": "Feature"

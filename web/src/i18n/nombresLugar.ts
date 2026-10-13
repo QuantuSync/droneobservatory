@@ -4,8 +4,10 @@
 // «Portul Constanța», «Brussels Airport»), pero a veces una descripción genérica en otra lengua
 // («exclusive economic zone», «gare de triage de Mulhouse», «eastern Latvia»), un nombre en otra
 // escritura («София», «Αιγαίο») o el nombre inglés de una ciudad que en español tiene el suyo
-// («Warsaw»). Estos se escriben aquí en los dos idiomas. Lo que no está en la tabla:
-// - en cirílico o en griego, se pasa al alfabeto latino;
+// («Warsaw»). Estos se escriben aquí en los dos idiomas. Solo para datos publicados sin el campo
+// `nombres` (antes del 13 de octubre de 2026): desde entonces escribe cada nombre la publicación
+// (proceso/nombres_lugar.py, datos/nombres.ts). Lo que no está en la tabla:
+// - en otra escritura, no se enseña: nunca se transcribe letra a letra («Diethnís Aeroliménas»);
 // - si empieza por minúscula, es una descripción y no un nombre propio: no se enseña (la ficha
 //   deja el país y el titular, que sí están en el idioma de la página).
 
@@ -43,35 +45,13 @@ export const NOMBRES_LUGAR: Readonly<Record<string, Bilingue>> = {
   Sevilla: { es: "Sevilla", en: "Seville" },
 };
 
-const CIRILICO: Readonly<Record<string, string>> = {
-  а: "a", б: "b", в: "v", г: "g", д: "d", е: "e", ж: "zh", з: "z", и: "i", й: "y", к: "k", л: "l",
-  м: "m", н: "n", о: "o", п: "p", р: "r", с: "s", т: "t", у: "u", ф: "f", х: "h", ц: "ts", ч: "ch",
-  ш: "sh", щ: "sht", ъ: "a", ь: "", ю: "yu", я: "ya", є: "ye", і: "i", ї: "yi", ґ: "g", ы: "y", э: "e", ё: "yo",
-};
-const GRIEGO: Readonly<Record<string, string>> = {
-  α: "a", ά: "a", β: "v", γ: "g", δ: "d", ε: "e", έ: "e", ζ: "z", η: "i", ή: "i", θ: "th", ι: "i",
-  ί: "i", ϊ: "i", κ: "k", λ: "l", μ: "m", ν: "n", ξ: "x", ο: "o", ό: "o", π: "p", ρ: "r", σ: "s",
-  ς: "s", τ: "t", υ: "y", ύ: "y", φ: "f", χ: "ch", ψ: "ps", ω: "o", ώ: "o",
-};
-const OTRA_ESCRITURA = /[Ͱ-Ͽἀ-῿Ѐ-ӿ]/;
-
-/** Pasa al alfabeto latino un nombre en cirílico o en griego, conservando las mayúsculas. */
-export function latino(nombre: string): string {
-  return [...nombre]
-    .map((letra) => {
-      const minuscula = letra.toLowerCase();
-      const cambio = CIRILICO[minuscula] ?? GRIEGO[minuscula];
-      if (cambio === undefined) return letra;
-      return letra === minuscula ? cambio : cambio.charAt(0).toUpperCase() + cambio.slice(1);
-    })
-    .join("");
-}
+const OTRA_ESCRITURA = /[^\p{Script=Latin}\p{Script=Common}\p{Script=Inherited}]/u;
 
 /** El nombre de un lugar para la página en `idioma`; null si no se debe enseñar. */
 export function nombreDeLugar(nombre: string, idioma: Idioma): string | null {
-  const escrito = NOMBRES_LUGAR[nombre];
+  const escrito = NOMBRES_LUGAR[nombre.normalize("NFC")];
   if (escrito !== undefined) return escrito[idioma];
-  if (OTRA_ESCRITURA.test(nombre)) return latino(nombre);
+  if (OTRA_ESCRITURA.test(nombre)) return null;
   const primera = nombre.charAt(0);
   if (primera !== primera.toUpperCase()) return null;
   return nombre;

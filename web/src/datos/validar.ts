@@ -675,8 +675,8 @@ const resumen = objeto({
         zona: nulable(enumerado(v.ZONAS)),
         dron: lista(cadena(/^(autoridad|deducido):[a-z_]+$/)),
       },
-      // El modelo que nombra la autoridad, para el filtro.
-      { modeloDron: cadena() },
+      // El modelo que nombra la autoridad, para el filtro; la fila «Lugar» de la publicación.
+      { modeloDron: cadena(), lugar: titulo },
     ),
   ),
   episodios: lista(

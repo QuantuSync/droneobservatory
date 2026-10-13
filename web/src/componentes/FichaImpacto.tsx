@@ -1,3 +1,4 @@
+import { localidadDeImpacto, lugarDeImpacto } from "../datos/nombres.ts";
 import type { ImpactoGuerra } from "../datos/tipos.ts";
 import { fechaDia, instante, numero, rango, region } from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
@@ -25,17 +26,20 @@ interface Props {
 export function FichaImpacto({ t, idioma, impacto }: Props) {
   const { lugar } = impacto;
   const radio = new Intl.NumberFormat(idioma, { maximumFractionDigits: 1 }).format(lugar.radio_km);
-  const latino = lugar.nombre_latino !== undefined && lugar.nombre_latino !== lugar.nombre;
+  // El lugar en el idioma de la página, nunca en cirílico (datos/nombres.ts); sin nombre latino,
+  // la región.
+  const escrito = lugarDeImpacto(lugar, idioma) ?? region(impacto.region, idioma);
+  const nombre = escrito.charAt(0).toUpperCase() + escrito.slice(1);
+  const localidad = lugar.localidad === undefined ? null : localidadDeImpacto(lugar.localidad, idioma);
   const heridos = rango(impacto.heridos, idioma);
   const fallecidos = rango(impacto.fallecidos, idioma);
   const categorias = impacto.categorias_objetivo ?? [];
   return (
     <article>
       <p className="text-secundario">{t.sentido[impacto.sentido]}</p>
-      <h2 className="text-2xl font-semibold tracking-tight">
-        <span lang={impacto.region.startsWith("UA-") ? "uk" : "ru"}>{lugar.nombre}</span>
+      <h2 className="text-2xl font-semibold tracking-tight" data-lugar-impacto="">
+        {nombre}
       </h2>
-      {latino && <p className="text-secundario">{lugar.nombre_latino}</p>}
       <p className="mono mt-1 text-xs text-secundario">{impacto.id}</p>
       {/* Lo que se ve desde el satélite va lo primero, bajo el título: la cortinilla de antes y
           después y el foco de calor. Sin ello, nada (ni hueco ni aviso). */}
@@ -65,9 +69,7 @@ export function FichaImpacto({ t, idioma, impacto }: Props) {
             {lugar.nivel === "instalacion" && lugar.categoria !== undefined
               ? t.categoriaInstalacion[lugar.categoria]
               : null}
-            {lugar.nivel === "instalacion" && lugar.localidad !== undefined
-              ? ` ${t.impacto.instalacionEn(lugar.localidad)}`
-              : null}
+            {lugar.nivel === "instalacion" && localidad !== null ? ` ${t.impacto.instalacionEn(localidad)}` : null}
           </span>
           <span className="block text-xs text-secundario">{t.impacto.radio(radio)}</span>
           {(lugar.nivel === "comunidad" || lugar.nivel === "distrito") && (

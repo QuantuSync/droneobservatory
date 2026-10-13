@@ -346,3 +346,22 @@ def test_tildes_como_signo_aparte() -> None:
         "es": "Lárnaca",
         "en": "Larnaca",
     }
+
+
+def test_autoridades_en_cada_version() -> None:
+    from proceso import autoridades
+
+    medio = "Bundesregierung (declaración oficial citada en come-on.de)"
+    assert autoridades.de_la_fuente(medio, "es") == "el Gobierno federal alemán (Bundesregierung)"
+    assert (
+        autoridades.de_la_fuente(medio, "en") == "the German Federal Government (Bundesregierung)"
+    )
+    assert autoridades.de_la_fuente("Tráfico aéreo medido (adsb.lol)", "en") == (
+        "Measured air traffic (adsb.lol)"
+    )
+    assert autoridades.escrita("Министерство на отбраната", "es") == (
+        "el Ministerio de Defensa de Bulgaria"
+    )
+    # Desconocida: tal cual en alfabeto latino; en otra escritura, sin nombre.
+    assert autoridades.escrita("Ministerstvo obrany SR", "en") == "Ministerstvo obrany SR"
+    assert autoridades.escrita("Неизвестно ведомство", "en") == "an authority"

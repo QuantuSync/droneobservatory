@@ -59,6 +59,11 @@ export const COLUMNAS_INCIDENTES = [
   "fuentes",
   "ultima_actualizacion",
   "enlace",
+  // Los nombres de lugar de cada versión de la web (al final: las columnas de antes no se mueven).
+  "lugar_es",
+  "lugar_en",
+  "objetivo_es",
+  "objetivo_en",
 ] as const;
 
 export function csvIncidentes(coleccion: ColeccionIncidentes): string {
@@ -94,6 +99,10 @@ export function csvIncidentes(coleccion: ColeccionIncidentes): string {
       p.fuentes.length,
       p.control.ultima_actualizacion.valor,
       `${ORIGEN}/${p.id}`,
+      p.nombres?.lugar.es,
+      p.nombres?.lugar.en,
+      p.nombres?.objetivo?.es,
+      p.nombres?.objetivo?.en,
     ];
   });
   return csv(COLUMNAS_INCIDENTES, filas);

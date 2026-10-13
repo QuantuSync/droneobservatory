@@ -106,10 +106,10 @@
      {
       "estado": "notificado",
       "fecha": {
-       "precision": "aproximada",
-       "valor": "2025-09-30T10:45Z"
+       "precision": "dia",
+       "valor": "2025-09-30T00:00Z"
       },
-      "fuente_id": "gdelt-72db4664304302c9"
+      "fuente_id": "revisada-f7c370480ba4d9f0-declaracion-1"
      },
      {
       "estado": "confirmado",
@@ -187,6 +187,20 @@
     "distancia_km": 393,
     "grupo": "interior",
     "motivo": "lejos_de_la_frontera"
+   },
+   "nombres": {
+    "lugar": {
+     "es": "Troms y Finnmark, Noruega",
+     "en": "Troms og Finnmark, Norway"
+    },
+    "localidad": {
+     "es": "Troms y Finnmark",
+     "en": "Troms og Finnmark"
+    },
+    "region": {
+     "es": "Troms y Finnmark",
+     "en": "Troms og Finnmark"
+    }
    }
   },
   {
@@ -426,6 +440,24 @@
    "zona": {
     "grupo": "interior",
     "motivo": "lejos_de_la_frontera"
+   },
+   "nombres": {
+    "lugar": {
+     "es": "Mulhouse, Francia",
+     "en": "Mulhouse, France"
+    },
+    "localidad": {
+     "es": "Mulhouse",
+     "en": "Mulhouse"
+    },
+    "objetivo": {
+     "es": "Estaci\u00f3n de clasificaci\u00f3n de Mulhouse",
+     "en": "Mulhouse marshalling yard"
+    },
+    "region": {
+     "es": "Haut-Rhin",
+     "en": "Haut-Rhin"
+    }
    }
   },
   {
@@ -782,6 +814,12 @@
    "zona": {
     "grupo": "frontera",
     "motivo": "ataque"
+   },
+   "nombres": {
+    "lugar": {
+     "es": "Moldavia",
+     "en": "Moldova"
+    }
    }
   },
   {
@@ -1033,6 +1071,20 @@
    "zona": {
     "grupo": "frontera",
     "motivo": "incursion_en_pais_fronterizo"
+   },
+   "nombres": {
+    "lugar": {
+     "es": "Este de Polonia, Polonia",
+     "en": "Eastern Poland, Poland"
+    },
+    "localidad": {
+     "es": "Este de Polonia",
+     "en": "Eastern Poland"
+    },
+    "region": {
+     "es": "Este de Polonia",
+     "en": "Eastern Poland"
+    }
    }
   },
   {
@@ -1181,6 +1233,12 @@
    "zona": {
     "grupo": "frontera",
     "motivo": "incursion_en_pais_fronterizo"
+   },
+   "nombres": {
+    "lugar": {
+     "es": "Polonia",
+     "en": "Poland"
+    }
    }
   },
   {
@@ -1351,6 +1409,20 @@
    "zona": {
     "grupo": "frontera",
     "motivo": "ataque"
+   },
+   "nombres": {
+    "lugar": {
+     "es": "Riscani, Ruman\u00eda",
+     "en": "Riscani, Romania"
+    },
+    "localidad": {
+     "es": "Riscani",
+     "en": "Riscani"
+    },
+    "region": {
+     "es": "Riscani",
+     "en": "Riscani"
+    }
    }
   },
   {
@@ -1746,6 +1818,12 @@
    "zona": {
     "grupo": "frontera",
     "motivo": "incursion_en_pais_fronterizo"
+   },
+   "nombres": {
+    "lugar": {
+     "es": "Estonia",
+     "en": "Estonia"
+    }
    }
   },
   {
@@ -1954,6 +2032,12 @@
    "zona": {
     "grupo": "frontera",
     "motivo": "incursion_en_pais_fronterizo"
+   },
+   "nombres": {
+    "lugar": {
+     "es": "Lituania",
+     "en": "Lithuania"
+    }
    }
   },
   {
@@ -2254,6 +2338,12 @@
    "zona": {
     "grupo": "frontera",
     "motivo": "ataque"
+   },
+   "nombres": {
+    "lugar": {
+     "es": "Moldavia",
+     "en": "Moldova"
+    }
    }
   },
   {
@@ -2474,6 +2564,12 @@
    "zona": {
     "grupo": "frontera",
     "motivo": "ataque"
+   },
+   "nombres": {
+    "lugar": {
+     "es": "Ruman\u00eda",
+     "en": "Romania"
+    }
    }
   },
   {
@@ -2672,11 +2768,25 @@
    "tipo": "sobrevuelo",
    "titulo": {
     "en": "Large possible drone sighting near Dublin Bay",
-    "es": "Avistamiento de un posible dron grande cerca de Dublin Bay"
+    "es": "Avistamiento de un posible dron grande cerca de la bah\u00eda de Dubl\u00edn"
    },
    "zona": {
     "grupo": "interior",
     "motivo": "lejos_de_la_frontera"
+   },
+   "nombres": {
+    "lugar": {
+     "es": "Bah\u00eda de Dubl\u00edn, Irlanda",
+     "en": "Dublin Bay, Ireland"
+    },
+    "localidad": {
+     "es": "Bah\u00eda de Dubl\u00edn",
+     "en": "Dublin Bay"
+    },
+    "region": {
+     "es": "Bah\u00eda de Dubl\u00edn",
+     "en": "Dublin Bay"
+    }
    }
   },
   {
@@ -2866,6 +2976,20 @@
     "distancia_km": 25,
     "grupo": "frontera",
     "motivo": "cerca_de_la_frontera"
+   },
+   "nombres": {
+    "lugar": {
+     "es": "Balvi, Letonia",
+     "en": "Balvi, Latvia"
+    },
+    "localidad": {
+     "es": "Balvi",
+     "en": "Balvi"
+    },
+    "region": {
+     "es": "Balvi",
+     "en": "Balvi"
+    }
    }
   },
   {
@@ -3063,6 +3187,20 @@
    "zona": {
     "grupo": "interior",
     "motivo": "sin_lugar"
+   },
+   "nombres": {
+    "lugar": {
+     "es": "Mar Egeo, Grecia",
+     "en": "Aegean Sea, Greece"
+    },
+    "localidad": {
+     "es": "Mar Egeo",
+     "en": "Aegean Sea"
+    },
+    "region": {
+     "es": "Mar Egeo",
+     "en": "Aegean Sea"
+    }
    }
   },
   {
@@ -3247,6 +3385,12 @@
     "distancia_km": 117,
     "grupo": "frontera",
     "motivo": "cerca_de_la_frontera"
+   },
+   "nombres": {
+    "lugar": {
+     "es": "Ruman\u00eda",
+     "en": "Romania"
+    }
    }
   },
   {
@@ -3368,13 +3512,19 @@
    },
    "tipo": "incursion",
    "titulo": {
-    "en": "Drone explodes at Port of Constanza",
+    "en": "Drone explodes at Port of Constan\u021ba",
     "es": "Dron explota en el Puerto de Constanza"
    },
    "zona": {
     "distancia_km": 117,
     "grupo": "frontera",
     "motivo": "cerca_de_la_frontera"
+   },
+   "nombres": {
+    "lugar": {
+     "es": "Ruman\u00eda",
+     "en": "Romania"
+    }
    }
   }
  ]

@@ -145,7 +145,7 @@ export const es: Textos = {
     recientes: "Periodo",
     activos: (n) => (n === 1 ? "1 activo" : `${n} activos`),
     zona: "Dónde",
-    zonas: { todas: "Todos", frontera: "Frontera", interior: "Interior" },
+    zonas: { todas: "Todos", frontera: "Frontera este", interior: "Resto de Europa" },
   },
   feed: {
     titulo: "En directo",
@@ -1563,7 +1563,7 @@ export const es: Textos = {
         bloques: [
           {
             parrafo: [
-              "En el mapa hay dos cosas distintas: drones de la guerra que cruzan o caen cerca de la frontera con Ucrania, Rusia (también Kaliningrado) o Bielorrusia o en la costa del mar Negro, y drones sobre aeropuertos, bases e instalaciones del interior de Europa. El filtro «Dónde» enseña todos, solo los de frontera o solo los de interior; las cifras de la cabecera lo siguen. Cada incidente lleva en su ficha su grupo y la regla que lo decide.",
+              "En el mapa hay dos cosas distintas: drones de la guerra que cruzan o caen cerca de la frontera con Ucrania, Rusia (también Kaliningrado) o Bielorrusia o en la costa del mar Negro, y drones sobre aeropuertos, bases e instalaciones del interior de Europa. El filtro «Dónde» enseña todos, solo los de la frontera este o solo los del resto de Europa; las cifras de la cabecera lo siguen. En los países del flanco este (con frontera con Ucrania, Rusia o Bielorrusia o con costa en el mar Negro), la ficha de cada incidente dice su grupo y la regla que lo decide; en el resto de Europa y en ultramar todos son de interior y la ficha no lo repite.",
             ],
           },
           {

@@ -47,7 +47,7 @@ from pathlib import Path
 from typing import Any
 from zoneinfo import ZoneInfo
 
-from proceso import nombres_lugar
+from proceso import autoridades, nombres_lugar
 
 registro = logging.getLogger("avisos")
 
@@ -234,16 +234,21 @@ def _limpio(texto: str) -> str:
     return " ".join(texto.replace("*", "").replace("_", " ").replace("`", "'").split())
 
 
-def _fuente(incidente: Documento) -> str:
+SIN_FUENTE = {"es": "sin fuente nombrada", "en": "no source named"}
+
+
+def _fuente(incidente: Documento, idioma: str = "es") -> str:
     """La fuente de más rango (exportacion/procedencia.py): la autoridad antes que la prensa. De
-    una declaración citada, el nombre de quien declara, sin la nota de dónde se cita."""
+    una declaración citada, quien declara, sin la nota de dónde se cita; escrita en el idioma
+    del aviso (proceso/autoridades.py)."""
     from exportacion.procedencia import RANGO
 
     fuentes = incidente.get("fuentes", [])
     if not fuentes:
-        return "sin fuente nombrada"
+        return SIN_FUENTE[idioma]
     elegida = min(fuentes, key=lambda f: RANGO.index(_origen(f)))
-    return _limpio(str(elegida.get("medio") or "sin fuente nombrada").split(" (")[0])
+    medio = str(elegida.get("medio") or "")
+    return _limpio(autoridades.de_la_fuente(medio, idioma)) if medio else SIN_FUENTE[idioma]
 
 
 def _lugar(incidente: Documento, idioma: str) -> str:
@@ -279,14 +284,13 @@ def mensaje(aviso: Aviso, incidente: Documento, config: Documento, tema: str) ->
     que_es = _limpio(str(titular.get("es") or FRASE_ES[clave]))
     que_en = _limpio(str(titular.get("en") or FRASE_EN[clave]))
     cuando_es, cuando_en = _cuando(incidente, pais["zona_horaria"])
-    fuente = _fuente(incidente)
     linea_es = (
         f"{que_es}. **{_lugar(incidente, 'es')}**, {cuando_es}. "
-        f"Estado: **{ESTADO_ES[aviso.estado]}**. Fuente: {fuente}."
+        f"Estado: **{ESTADO_ES[aviso.estado]}**. Fuente: {_fuente(incidente, 'es')}."
     )
     linea_en = (
         f"{titulo_en}. {que_en}. **{_lugar(incidente, 'en')}**, {cuando_en}. "
-        f"Status: **{ESTADO_EN[aviso.estado]}**. Source: {fuente}."
+        f"Status: **{ESTADO_EN[aviso.estado]}**. Source: {_fuente(incidente, 'en')}."
     )
     texto = f"{linea_es}\n\n{linea_en}"
     if aviso.retraso:

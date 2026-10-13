@@ -145,7 +145,7 @@ export const en: Textos = {
     recientes: "Period",
     activos: (n) => `${n} active`,
     zona: "Where",
-    zonas: { todas: "All", frontera: "Border", interior: "Interior" },
+    zonas: { todas: "All", frontera: "Eastern border", interior: "Rest of Europe" },
   },
   feed: {
     titulo: "Live",
@@ -1548,7 +1548,7 @@ export const en: Textos = {
         bloques: [
           {
             parrafo: [
-              "The map shows two different things: war drones crossing or falling near the border with Ukraine, Russia (including Kaliningrad) or Belarus or on the Black Sea coast, and drones over airports, bases and facilities in the interior of Europe. The “Where” filter shows all of them, only border ones or only interior ones; the header figures follow it. Each incident shows its group and the rule that decides it.",
+              "The map shows two different things: war drones crossing or falling near the border with Ukraine, Russia (including Kaliningrad) or Belarus or on the Black Sea coast, and drones over airports, bases and facilities in the interior of Europe. The “Where” filter shows all of them, only those on the eastern border or only those in the rest of Europe; the header figures follow it. In the countries of the eastern flank (bordering Ukraine, Russia or Belarus or with a Black Sea coast), each incident’s card shows its group and the rule that decides it; in the rest of Europe and overseas all are interior and the card does not repeat it.",
             ],
           },
           {

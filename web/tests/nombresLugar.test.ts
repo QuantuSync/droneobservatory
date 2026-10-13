@@ -7,7 +7,7 @@ import { join, resolve } from "node:path";
 
 import { describe, expect, it } from "vitest";
 
-import { latino, NOMBRES_LUGAR, nombreDeLugar } from "../src/i18n/nombresLugar.ts";
+import { NOMBRES_LUGAR, nombreDeLugar } from "../src/i18n/nombresLugar.ts";
 import type { ColeccionIncidentes, PublicacionSinUbicacion } from "../src/datos/tipos.ts";
 
 const RAIZ = join(import.meta.dirname, "..", "..");
@@ -30,10 +30,10 @@ describe("nombres de lugar", () => {
     expect(nombreDeLugar("Portul Constanța", "es")).toBe("Portul Constanța");
   });
 
-  it("lo que no está en la tabla: otra escritura al alfabeto latino, descripciones fuera", () => {
-    expect(latino("Бургас")).toBe("Burgas");
-    expect(nombreDeLugar("Пловдив", "es")).toBe("Plovdiv");
-    expect(nombreDeLugar("Θεσσαλονίκη", "en")).toBe("Thessaloniki");
+  it("lo que no está en la tabla: otra escritura y descripciones, fuera (nunca se transcribe)", () => {
+    expect(nombreDeLugar("Пловдив", "es")).toBeNull();
+    expect(nombreDeLugar("Θεσσαλονίκη", "en")).toBeNull();
+    expect(nombreDeLugar("Διεθνής Αερολιμένας Πάφου", "es")).toBeNull();
     expect(nombreDeLugar("north-western coast", "es")).toBeNull();
     for (const [original, escrito] of Object.entries(NOMBRES_LUGAR)) {
       expect(escrito.es.length > 0 && escrito.en.length > 0, original).toBe(true);

@@ -24,14 +24,22 @@ import { rutaDeFicha } from "../sitio.ts";
 import type { Idioma } from "../sitio.ts";
 import { diaDeInstante } from "../tiempo/dias.ts";
 import { EnlaceFuente } from "./EnlaceFuente.tsx";
-import { EstadoConTexto, Historial, ListaFuentes, nombreDeAutoridad } from "./Fuentes.tsx";
+import { EstadoConTexto, Historial, ListaFuentes, nombreDeAutoridad, nombreDeFuente } from "./Fuentes.tsx";
 import { LineaFoco, ZOOM_VISOR_PUNTO } from "./FocoTermico.tsx";
 import { LineaTrafico } from "./TraficoAereo.tsx";
 import { Fila } from "./Panel.tsx";
 import { Simbolo } from "./Simbolo.tsx";
 import { textoAproximado } from "../datos/lugarAproximado.ts";
 import { FilaRecorrido, FilaTipoDron } from "./TipoDron.tsx";
-import { nombreDeLugar } from "../i18n/nombresLugar.ts";
+import {
+  anteriorEscrito,
+  enFlancoEste,
+  lugarEscrito,
+  modeloEscrito,
+  objetivoEscrito,
+  otroLugarEscrito,
+  regionEscrita,
+} from "../datos/nombres.ts";
 
 /** Marca que acompaña al texto de la presencia de dron, para no depender del color. */
 const MARCA_PRESENCIA: Record<PresenciaDron, string> = {
@@ -178,9 +186,9 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
       ? undefined
       : porFuente.get(pasoAtribuido.fuente_id);
   const titulo = incidente.titulo[idioma];
-  // Los nombres de lugar, como se escriben en el idioma de la página (i18n/nombresLugar.ts).
-  const escrito = (n: string | undefined): string | null => (n === undefined ? null : nombreDeLugar(n, idioma));
-  const nombre = escrito(objetivo?.nombre) ?? titulo;
+  // Los nombres de lugar, como se escriben en el idioma de la página (datos/nombres.ts).
+  const nombre = objetivoEscrito(incidente, idioma) ?? titulo;
+  const modelo = modeloEscrito(drones?.modelo);
   const vuelos: [RangoODesconocido | undefined, string, string][] = [
     [consecuencias?.vuelos_desviados, t.ficha.vuelosDesviados, "consecuencias.vuelos_desviados"],
     [consecuencias?.vuelos_cancelados, t.ficha.vuelosCancelados, "consecuencias.vuelos_cancelados"],
@@ -212,8 +220,13 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
   // La fuente oficial cuya frase nombra el lugar del punto, si está entre las del incidente.
   const fuentePunto = lugar.fuente_punto === undefined ? undefined : porFuente.get(lugar.fuente_punto);
   // Los demás lugares; el que lleva fuente se explica con su frase (un daño de la defensa).
-  const otrosLugares = lugar.otros_lugares ?? [];
-  const sinFuente = otrosLugares.filter((otro) => otro.fuente === undefined || !porFuente.has(otro.fuente));
+  const otrosLugares = (lugar.otros_lugares ?? []).map((otro, i) => ({
+    ...otro,
+    escrito: otroLugarEscrito(incidente, i, idioma),
+  }));
+  const sinFuente = otrosLugares.filter(
+    (otro) => otro.escrito !== null && (otro.fuente === undefined || !porFuente.has(otro.fuente)),
+  );
   const conFuente = otrosLugares.filter((otro) => otro.fuente !== undefined && porFuente.has(otro.fuente));
   const cambios = lugar.historial ?? [];
   return (
@@ -255,9 +268,7 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
           <QueDiceCadaFuente t={t} idioma={idioma} afirmaciones={de(CAMPOS_DE_FILA.fecha)} />
         </Fila>
         <Fila nombre={t.ficha.lugar}>
-          {escrito(lugar.localidad) !== null && `${escrito(lugar.localidad)}, `}
-          {escrito(imprecisa?.region) !== null && `${escrito(imprecisa?.region)}, `}
-          {pais(lugar.pais, idioma)}
+          <span data-lugar="">{lugarEscrito(incidente, idioma, imprecisa !== null)}</span>
           {objetivo !== undefined && (
             <span className="block text-xs text-secundario">
               {t.categoria[objetivo.categoria]}
@@ -273,9 +284,11 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
               <span className="block text-xs" data-lugar-aproximado={aproximado?.nivel ?? ""}>
                 {aproximado !== null ? (
                   <>
-                    <span className="text-notificado">{textoAproximado(t, idioma, aproximado, lugar.pais).nivel}</span>
+                    <span className="text-notificado">
+                      {textoAproximado(t, idioma, aproximado, lugar.pais, regionEscrita(incidente, idioma)).nivel}
+                    </span>
                     <span className="block text-secundario">
-                      {textoAproximado(t, idioma, aproximado, lugar.pais).deDonde}
+                      {textoAproximado(t, idioma, aproximado, lugar.pais, regionEscrita(incidente, idioma)).deDonde}
                     </span>
                   </>
                 ) : (
@@ -288,7 +301,8 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
           )}
           <QueDiceCadaFuente t={t} idioma={idioma} afirmaciones={de(CAMPOS_DE_FILA.lugar)} />
         </Fila>
-        {incidente.zona !== undefined && (
+        {/* Frontera o interior solo tiene sentido en el flanco este (datos/nombres.ts). */}
+        {incidente.zona !== undefined && enFlancoEste(incidente) && (
           <Fila nombre={t.zona.titulo}>
             <span data-zona={incidente.zona.grupo}>{t.zona.grupo[incidente.zona.grupo]}</span>
             <span className="block text-xs text-secundario">
@@ -298,7 +312,7 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
         )}
         {fuentePunto !== undefined && (
           <Fila nombre={t.ficha.lugarSegun}>
-            <span data-lugar-segun="">{fuentePunto.medio}</span>
+            <span data-lugar-segun="">{nombreDeFuente(t, fuentePunto.medio, idioma)}</span>
             <blockquote lang={fuentePunto.idioma} className="mt-0.5 border-l border-acento pl-2 text-secundario">
               «{fuentePunto.frase_origen}»
             </blockquote>
@@ -318,7 +332,7 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
               return (
                 fuente !== undefined && (
                   <span key={otro.nombre} className="mb-1.5 block" data-otro-lugar-explicado="">
-                    {escrito(otro.nombre) ?? otro.nombre}
+                    {otro.escrito}
                     <blockquote lang={fuente.idioma} className="mt-0.5 border-l border-acento pl-2 text-secundario">
                       «{fuente.frase_origen}»
                     </blockquote>
@@ -334,13 +348,13 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
               );
             })}
             {sinFuente.length > 0 && (
-              <span data-otros-lugares="">{sinFuente.map((otro) => escrito(otro.nombre) ?? otro.nombre).join(", ")}</span>
+              <span data-otros-lugares="">{sinFuente.map((otro) => otro.escrito).join(", ")}</span>
             )}
           </Fila>
         )}
-        {cambios.map((cambio) => (
+        {cambios.map((cambio, i) => (
           <Fila key={cambio.fecha.valor} nombre={t.ficha.puntoAnterior}>
-            <span data-punto-anterior="">{escrito(cambio.anterior.localidad) ?? ""}</span>
+            <span data-punto-anterior="">{anteriorEscrito(incidente, i, idioma) ?? ""}</span>
             <span className="mono block text-xs text-secundario">{instante(cambio.fecha)}</span>
             <span className="block text-xs text-texto">{cambio.motivo[idioma]}</span>
           </Fila>
@@ -352,9 +366,9 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
             valor={drones?.numero}
             afirmaciones={de(["drones.numero"])}
           />
-          {drones?.modelo !== undefined && (
+          {modelo !== null && (
             <span className="block text-xs text-secundario">
-              {t.ficha.modelo}: {drones.modelo}
+              {t.ficha.modelo}: {modelo}
             </span>
           )}
           <QueDiceCadaFuente t={t} idioma={idioma} afirmaciones={de(CAMPOS_DE_FILA.drones)} />
@@ -500,7 +514,12 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
           />
         )}
         {incidente.control.motivo_desmentido !== undefined && (
-          <Fila nombre={t.ficha.motivoDesmentido}>{incidente.control.motivo_desmentido}</Fila>
+          <Fila nombre={t.ficha.motivoDesmentido}>
+            {/* Lo que dijo quien lo desmiente, con sus palabras: una cita, como las de las fuentes. */}
+            <blockquote className="border-l border-acento pl-2 text-secundario" data-motivo-desmentido="">
+              {incidente.control.motivo_desmentido}
+            </blockquote>
+          </Fila>
         )}
         {incidente.episodio !== undefined && (
           <Fila nombre={t.ficha.episodio}>

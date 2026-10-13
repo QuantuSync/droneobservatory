@@ -82,7 +82,11 @@ describe("lugar.fuente_punto y lugar.otros_lugares", () => {
         expect(nombres).toContain(segun);
         expect(nombres).toContain(otros);
         const medio = container.querySelector("[data-lugar-segun]");
-        expect(medio?.textContent).toBe("Președintele României");
+        expect(medio?.textContent).toBe(
+          idioma === "es"
+            ? "El presidente de Rumanía (Președintele României)"
+            : "The President of Romania (Președintele României)",
+        );
         const fila = medio?.parentElement;
         const frase = fila?.querySelector("blockquote");
         expect(frase?.textContent).toBe(`«${FRASE}»`);
