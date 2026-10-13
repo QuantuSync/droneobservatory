@@ -432,24 +432,29 @@ def _api(parametros: dict[str, str], pedir: Pedir, tiempo_s: float) -> Any:
 
 
 def buscar(nombre: str, pais: str, pedir: Pedir = _pedir, tiempo_s: float = 8) -> Bilingue | None:
-    """El nombre español e inglés de un lugar del país según Wikidata, o None. Busca la etiqueta
-    en el idioma del país y en inglés, y se queda con el primer elemento de ese país (P17) que
-    tenga coordenadas (P625)."""
+    """El nombre español e inglés de un lugar del país según Wikidata, o None. Busca el nombre en
+    el idioma del país y en inglés y solo vale un elemento cuya etiqueta o alias es exactamente
+    ese nombre («Vilniaus» no es la Universidad de Vilna), del país (P17) y con coordenadas
+    (P625). Sin etiqueta española, el nombre local en alfabeto latino; sin él, el inglés."""
     qid_pais = PAISES_WIKIDATA.get(pais)
     if qid_pais is None:
         return None
+    local = IDIOMA_PAIS.get(pais, "en")
     candidatos: list[str] = []
-    for idioma in dict.fromkeys([IDIOMA_PAIS.get(pais, "en"), "en"]):
+    for idioma in dict.fromkeys([local, "en"]):
         respuesta = _api(
             {"action": "wbsearchentities", "search": nombre, "language": idioma,
              "type": "item", "limit": "7"}, pedir, tiempo_s,
         )  # fmt: skip
-        candidatos += [r["id"] for r in respuesta.get("search", []) if r["id"] not in candidatos]
+        for resultado in respuesta.get("search", []):
+            coincide = clave(str((resultado.get("match") or {}).get("text", ""))) == clave(nombre)
+            if coincide and resultado["id"] not in candidatos:
+                candidatos.append(resultado["id"])
     if not candidatos:
         return None
     entidades = _api(
         {"action": "wbgetentities", "ids": "|".join(candidatos[:14]), "props": "labels|claims",
-         "languages": "es|en"}, pedir, tiempo_s,
+         "languages": "|".join(dict.fromkeys(["es", "en", local]))}, pedir, tiempo_s,
     ).get("entities", {})  # fmt: skip
     for qid in candidatos[:14]:
         entidad = entidades.get(qid) or {}
@@ -461,13 +466,13 @@ def buscar(nombre: str, pais: str, pedir: Pedir = _pedir, tiempo_s: float = 8) -
         if qid_pais not in paises or "P625" not in reclamaciones:
             continue
         etiquetas = entidad.get("labels") or {}
-        en = limpiar_etiqueta((etiquetas.get("en") or {}).get("value", ""))
-        es = limpiar_etiqueta((etiquetas.get("es") or {}).get("value", ""))
-        en = en if latino_puro(en) else ""
-        es = es if latino_puro(es) else ""
-        if not en and not es:
+        en, es, propio = (
+            limpiar_etiqueta((etiquetas.get(i) or {}).get("value", "")) for i in ("en", "es", local)
+        )
+        en, es, propio = (e if e and latino_puro(e) else "" for e in (en, es, propio))
+        if not (en or es or propio):
             continue
-        return {"es": es or en, "en": en or es}
+        return {"es": es or propio or en, "en": en or propio or es}
     return None
 
 
