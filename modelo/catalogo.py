@@ -76,7 +76,8 @@ def cuerpo(frases: list[str], modelos: list[str]) -> dict[str, Any]:
         "temperature": TEMPERATURA,
         "system": [{"type": "text", "text": INSTRUCCIONES, "cache_control": {"type": "ephemeral"}}],
         "output_config": {
-            "format": {"type": "json_schema", "schema": ESQUEMA}, "effort": ESFUERZO,
+            "format": {"type": "json_schema", "schema": ESQUEMA},
+            "effort": ESFUERZO,
         },
         "messages": [{"role": "user", "content": contenido(frases, modelos)}],
     }

@@ -314,7 +314,9 @@ def extraer(
     ataques = Ataques(almacen.ataques_ucrania())
     for peticion in peticiones:
         gastado = almacen.gastado(modo.value, coste.dia(ahora) if coste.diario(modo) else None)
-        previsto = coste.peor_caso(peticion.letras(), guerra.MAX_TOKENS_SALIDA, esfuerzo=guerra.ESFUERZO)
+        previsto = coste.peor_caso(
+            peticion.letras(), guerra.MAX_TOKENS_SALIDA, esfuerzo=guerra.ESFUERZO
+        )
         try:
             if plazo is not None:
                 plazo.comprobar()
@@ -498,7 +500,10 @@ def principal(argumentos: list[str] | None = None) -> int:
         if args.maximo:
             peticiones = peticiones[: args.maximo]
         peor = sum(
-            coste.peor_caso(p.letras(), guerra.MAX_TOKENS_SALIDA, lote=True, esfuerzo=guerra.ESFUERZO) for p in peticiones
+            coste.peor_caso(
+                p.letras(), guerra.MAX_TOKENS_SALIDA, lote=True, esfuerzo=guerra.ESFUERZO
+            )
+            for p in peticiones
         )
         prioridades = {m["enlace"]: m.get("prioridad") for m in almacen.mensajes_guerra(PENDIENTE)}
         registro.info(

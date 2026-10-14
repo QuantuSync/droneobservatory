@@ -107,7 +107,11 @@ def motivos_comparacion(decision: dict[str, Any]) -> list[str]:
     )
     if (valor == "mismo") != juntos:
         return ["duplicado_dudoso: la decisión no casa con el día y el sitio"]
-    if valor != "mismo" and decision.get("mismo_dia") is True and decision.get("mismo_sitio") is True:
+    if (
+        valor != "mismo"
+        and decision.get("mismo_dia") is True
+        and decision.get("mismo_sitio") is True
+    ):
         return ["duplicado_dudoso: mismo día y mismo sitio, pero separados"]
     return []
 

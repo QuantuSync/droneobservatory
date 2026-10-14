@@ -222,18 +222,22 @@ class Llamador:
         dia = coste.dia(self.ahora)
         try:
             coste.comprobar_experto(self.almacen.gastado_modelo(modelo_experto, dia), previsto)
-            gastado = self.almacen.gastado(self.modo.value, dia if coste.diario(self.modo) else None)
+            gastado = self.almacen.gastado(
+                self.modo.value, dia if coste.diario(self.modo) else None
+            )
             coste.comprobar(gastado, previsto, self.modo)
             if self.tope is not None and gastado + previsto > self.tope:
                 raise coste.LimiteGasto(f"{self.modo}: tope de la pasada {self.tope:.2f} USD")
         except coste.LimiteGasto:
             siguiente = self.ahora.astimezone(UTC) + timedelta(days=1)
-            return self._esperar(clave, siguiente.strftime("%Y-%m-%dT00:00:00Z"))
+            self._esperar(clave, siguiente.strftime("%Y-%m-%dT00:00:00Z"))
+            return None
         try:
             respuesta = cliente_experto.mensaje(cuerpo)
         except LlamadaFallida as error:
             self.resultado.errores.append(f"{clave}: experto: {str(error)[:150]}")
-            return self._esperar(clave, _iso(self.ahora + timedelta(minutes=50)))
+            self._esperar(clave, _iso(self.ahora + timedelta(minutes=50)))
+            return None
         self.resultado.escaladas += 1
         return self._anotar(respuesta, clave, escalada=True)
 
@@ -644,10 +648,10 @@ def procesar_par(ctx: Contexto, peticion: Peticion, respuesta: dict[str, Any] | 
     """La decisión del par y, si son el mismo suceso, la unión (se conserva el más antiguo)."""
     clave = peticion.clave
     if respuesta is None and ctx.llamador.ultima_espera:
-        previa = ctx.decision(clave) or {}
+        anterior = ctx.decision(clave) or {}
         ctx.nuevas[clave] = {
             "decision": "dudoso", "huella": peticion.datos["huella"], "fecha": _iso(ctx.ahora),
-            "desde": previa.get("desde", _iso(ctx.ahora)), "version": peticiones.VERSION,
+            "desde": anterior.get("desde", _iso(ctx.ahora)), "version": peticiones.VERSION,
             "espera_experto": ctx.llamador.ultima_espera,
             "escalado": ctx.llamador.ultimos_motivos,
         }  # fmt: skip
@@ -779,6 +783,7 @@ _PRESENCIA_CONTRARIA = {
 def contradice(vista: dict[str, Any], respuesta: dict[str, Any]) -> list[str]:
     """Los datos clave en que la verificación del modelo contradice la ficha (los dos con
     valor y distintos): presencia del dron, número de drones y cierre."""
+
     def valor(clave: str) -> Any:
         dato = respuesta.get(clave)
         return dato.get("valor") if isinstance(dato, dict) else None
@@ -825,6 +830,7 @@ def procesar_verificacion(ctx: Contexto, peticion: Peticion,
 def motivos_verificacion(peticion: Peticion) -> Callable[[dict[str, Any]], list[str]]:
     """Los motivos para escalar la verificación (proceso/escalado.py): que contradiga la ficha
     en un dato clave; si además es un caso crítico, se anota."""
+
     def motivos(respuesta: dict[str, Any]) -> list[str]:
         return escalado.motivos_verificacion(
             contradice(peticion.datos["vista"], respuesta), bool(peticion.datos.get("critico"))
@@ -907,7 +913,10 @@ def anotar_modelos(incidente: Documento, cambios: list[str], modelo: str) -> Doc
     if not campos:
         return incidente
     modelos = {**incidente["control"].get("modelos", {}), **dict.fromkeys(campos, modelo)}
-    return {**incidente, "control": {**incidente["control"], "modelos": dict(sorted(modelos.items()))}}
+    return {
+        **incidente,
+        "control": {**incidente["control"], "modelos": dict(sorted(modelos.items()))},
+    }
 
 
 def _guardar(ctx: Contexto, antes: Documento, despues: Documento, motivo: str) -> bool:
@@ -1080,7 +1089,10 @@ def retener(ctx: Contexto, cursor: Documento, verificar_nuevos: bool) -> Documen
         if id_ in pendientes_par:
             motivos.append("posible duplicado sin decidir")
         verificacion = decisiones.get(reglas.clave_verificacion(id_))
-        if verificar_nuevos and (verificacion is None or (verificacion.get("espera_experto") and "datos" not in verificacion)):
+        if verificar_nuevos and (
+            verificacion is None
+            or (verificacion.get("espera_experto") and "datos" not in verificacion)
+        ):
             motivos.append("verificación pendiente")
         if id_ in esperan:
             motivos.append("espera al modelo experto")
@@ -1418,17 +1430,19 @@ def enviar_traducciones(ctx: Contexto, citas: dict[str, tuple[str, str]], hechas
     if not lista or ctx.llamador.parado or ctx.llamador.fabrica is None:
         return 0
     try:
-        servicio = ctx.llamador.servicio()
-    except Exception as error:  # noqa: BLE001 - el servicio no se puede crear: se intenta luego
+        servicio: Any = ctx.llamador.servicio()
+    except Exception as error:
         ctx.resultado.errores.append(f"lote de citas: {str(error)[:150]}")
         return 0
     if not callable(getattr(servicio, "crear_lote", None)):
         traducir(ctx, citas, hechas)
         return 0
     dia = coste.dia(ctx.ahora) if coste.diario(ctx.llamador.modo) else None
-    disponible = coste.limite(ctx.llamador.modo) - ctx.almacen.gastado(
-        ctx.llamador.modo.value, dia
-    ) - gasto_reservado(ctx.almacen)
+    disponible = (
+        coste.limite(ctx.llamador.modo)
+        - ctx.almacen.gastado(ctx.llamador.modo.value, dia)
+        - gasto_reservado(ctx.almacen)
+    )
     elegidas, previsto, _fuera = elegir_para_lote(lista, disponible)
     if not elegidas:
         return 0
@@ -1463,8 +1477,8 @@ def recoger_lotes(ctx: Contexto) -> int:
     if not lotes or ctx.llamador.fabrica is None:
         return 0
     try:
-        servicio = ctx.llamador.servicio()
-    except Exception as error:  # noqa: BLE001
+        servicio: Any = ctx.llamador.servicio()
+    except Exception as error:
         ctx.resultado.errores.append(f"lotes de citas: {str(error)[:150]}")
         return 0
     quedan, antes = [], ctx.resultado.traducidas

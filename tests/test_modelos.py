@@ -9,10 +9,12 @@ from typing import Any
 import pytest
 
 from almacen.base import Almacen
+from exportacion.citas import huella_texto
 from modelo import coste, ficha, modelos
 from proceso import escalado, extraccion
 from recogida import control_fichas, visitas
 from tests import test_control_fichas as tcf
+from tests.ejemplos import VOCABULARIO_MODELOS as MODELOS_CONTROL
 from tests.test_extraccion import (
     AHORA,
     MODELOS,
@@ -75,8 +77,9 @@ def test_cada_llamada_se_cobra_con_la_tarifa_de_su_modelo() -> None:
     assert modelos.coste(EXPERTO, 0, 0, lectura_cache=millon) == pytest.approx(0.2)
     assert modelos.coste(ANTERIOR, millon, millon) == pytest.approx(6.0)
     assert modelos.coste(BASE, 0, millon, lote=True) == pytest.approx(0.25)
-    uso = coste.Uso.de_mensaje({"model": EXPERTO, "usage": {"input_tokens": 1000,
-                                                             "output_tokens": 1000}})
+    uso = coste.Uso.de_mensaje(
+        {"model": EXPERTO, "usage": {"input_tokens": 1000, "output_tokens": 1000}}
+    )
     assert uso.coste() == pytest.approx(0.012)
     # Sin modelo en la respuesta, el base.
     assert coste.Uso(1000, 1000).coste() == pytest.approx(0.0006)
@@ -136,7 +139,8 @@ def test_poca_seguridad_y_dato_sin_cita() -> None:
 def test_incursion_en_un_pais_de_la_otan_o_en_moldavia() -> None:
     for pais, critico in (("PL", True), ("MD", True), ("CH", False)):
         datos = ficha_ejemplo(
-            tipo=campo("incursion", "Københavns Lufthavn"), pais=campo(pais, "Københavns Lufthavn"),
+            tipo=campo("incursion", "Københavns Lufthavn"),
+            pais=campo(pais, "Københavns Lufthavn"),
             cierre=campo("no", "Københavns Lufthavn"),
         )
         motivos = escalado.motivos_ficha(_leida(datos), TEXTOS)
@@ -206,7 +210,7 @@ def test_si_se_escala_vale_la_ficha_del_experto_y_cada_dato_dice_su_modelo(
     assert cliente.pedidas == [BASE, EXPERTO]
     assert hechas.escalados == [peticion.candidato["id"]]
     (id_,) = hechas.incidentes
-    incidente = almacen.incidente(id_)
+    incidente = almacen.incidente(str(id_))
     assert incidente is not None
     (extraida,) = almacen.extracciones(peticion.candidato["id"])
     assert extraida["campos"]["drones"]["valor"] == {"min": 3, "max": 3}
@@ -297,7 +301,7 @@ def test_un_par_dudoso_lo_decide_el_experto() -> None:
 def test_un_par_dudoso_sin_tope_del_experto_espera_y_retiene_la_ficha_nueva() -> None:
     almacen = tcf._base(tcf._nuremberg_alemana())
     tcf._ejecutar(almacen, None)  # primera pasada: lo que había se da por visto
-    almacen.guardar_incidente(tcf._nuremberg_griega(), tcf.AHORA, tcf.VOCABULARIO_MODELOS)
+    almacen.guardar_incidente(tcf._nuremberg_griega(), tcf.AHORA, MODELOS_CONTROL)
     almacen.registrar_llamada({
         "fecha": tcf.AHORA.strftime("%Y-%m-%dT%H:%M:%SZ"), "modo": "horario", "candidato": "x",
         "lote": False, "entrada": 0, "salida": 0, "escritura_cache": 0, "lectura_cache": 0,
@@ -327,7 +331,7 @@ def test_las_citas_nuevas_van_en_un_lote_que_recoge_la_recogida_siguiente() -> N
     servicio = tcf.ServicioLotes()
     tcf._ejecutar(almacen, servicio)
     assert servicio.lotes and control_fichas.lotes_pendientes(almacen)
-    assert tcf.citas.huella_texto(tcf.NO_HALLADO) not in almacen.traducciones()
+    assert huella_texto(tcf.NO_HALLADO) not in almacen.traducciones()
     tcf._ejecutar(almacen, servicio, tcf.AHORA + timedelta(hours=1))
     assert control_fichas.lotes_pendientes(almacen) == []
     assert almacen.traducciones()
@@ -350,12 +354,17 @@ def test_el_resumen_dice_llamadas_escaladas_y_gasto_de_cada_modelo(tmp_path: Pat
     control_fichas.escribir_estado(ruta, control_fichas.Resultado(), almacen, tcf.AHORA)
     datos = json.loads(ruta.read_text(encoding="utf-8"))
     assert datos["modelos"]["2026-10-13"]["experto"] == {
-        "llamadas": 1, "escaladas": 1, "coste": 0.03}
+        "llamadas": 1,
+        "escaladas": 1,
+        "coste": 0.03,
+    }
     control = visitas.control_del_dia(ruta, tcf.AHORA.date())
     assert control is not None
     (linea,) = visitas.lineas_modelos(control["modelos"])
-    assert linea == ("  Modelos: modelo base 2 llamadas, 0,0300 USD; modelo experto 1 llamadas "
-                     "(1 escaladas), 0,0300 USD; total 0,0600 USD")
+    assert linea == (
+        "  Modelos: modelo base 2 llamadas, 0,0300 USD; modelo experto 1 llamadas "
+        "(1 escaladas), 0,0300 USD; total 0,0600 USD"
+    )
     assert "proveedor" not in linea and "haiku" not in linea.lower()
 
 
