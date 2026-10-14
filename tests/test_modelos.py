@@ -23,9 +23,9 @@ from tests.test_extraccion import (
     ficha_ejemplo,
 )
 
-BASE = "claude-haiku-5-5"
-EXPERTO = "claude-sonnet-5-5"
-ANTERIOR = "claude-haiku-4-5-20251001"
+BASE = "proveedor-haiku-5-5"
+EXPERTO = "proveedor-sonnet-5-5"
+ANTERIOR = "proveedor-haiku-4-5-20251001"
 CUERPO = {
     "max_tokens": 1500,
     "temperature": 0.0,
@@ -352,7 +352,7 @@ def test_el_resumen_dice_llamadas_escaladas_y_gasto_de_cada_modelo(tmp_path: Pat
     (linea,) = visitas.lineas_modelos(control["modelos"])
     assert linea == ("  Modelos: modelo base 2 llamadas, 0,0300 USD; modelo experto 1 llamadas "
                      "(1 escaladas), 0,0300 USD; total 0,0600 USD")
-    assert "claude" not in linea and "haiku" not in linea.lower()
+    assert "proveedor" not in linea and "haiku" not in linea.lower()
 
 
 def test_sin_modelos_configurados_todo_es_el_modelo_anterior(
