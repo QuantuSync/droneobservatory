@@ -6,7 +6,8 @@ versión) llega en variables de entorno, que en GitHub Actions son secretos:
 - EODI_EXTRACTOR_CLAVE: la clave.
 - EODI_EXTRACTOR_URL: el servicio de mensajes.
 - EODI_EXTRACTOR_URL_LOTES: el servicio de lotes.
-- EODI_EXTRACTOR_MODELO: el modelo.
+- EODI_EXTRACTOR_MODELO: el modelo de antes; desde el 14 de octubre de 2026 mandan
+  EODI_MODELO_BASE y EODI_MODELO_EXPERTO (modelo/modelos.py, docs/modelos.md).
 - EODI_EXTRACTOR_CABECERAS: JSON con las cabeceras propias del servicio; el
   texto «{clave}» en un valor se sustituye por la clave.
 
@@ -30,11 +31,22 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from modelo import modelos
+
 VARIABLES = (
     "EODI_EXTRACTOR_CLAVE",
     "EODI_EXTRACTOR_URL",
     "EODI_EXTRACTOR_URL_LOTES",
     "EODI_EXTRACTOR_MODELO",
+    "EODI_EXTRACTOR_CABECERAS",
+    "EODI_MODELO_BASE",
+    "EODI_MODELO_EXPERTO",
+)
+# Las que tienen que estar; el modelo, en EODI_MODELO_BASE o en EODI_EXTRACTOR_MODELO.
+OBLIGATORIAS = (
+    "EODI_EXTRACTOR_CLAVE",
+    "EODI_EXTRACTOR_URL",
+    "EODI_EXTRACTOR_URL_LOTES",
     "EODI_EXTRACTOR_CABECERAS",
 )
 RUTA_LOCAL = Path.home() / ".eodi" / "extractor.env"
@@ -105,6 +117,8 @@ class Configuracion:
     url_lotes: str
     modelo: str
     cabeceras: dict[str, str]
+    # El modelo experto; vacío si no se escala.
+    experto: str = ""
 
     def cabeceras_http(self) -> dict[str, str]:
         cabeceras = {k: v.replace(MARCA_CLAVE, self.clave) for k, v in self.cabeceras.items()}
@@ -123,7 +137,9 @@ def cargar_local(ruta: Path = RUTA_LOCAL) -> None:
 
 
 def configuracion() -> Configuracion:
-    faltan = [v for v in VARIABLES if not os.environ.get(v)]
+    faltan = [v for v in OBLIGATORIAS if not os.environ.get(v)]
+    if not modelos.base():
+        faltan.append("EODI_MODELO_BASE")
     if faltan:
         raise ClienteNoConfigurado(f"faltan variables: {', '.join(faltan)}")
     cabeceras = json.loads(os.environ["EODI_EXTRACTOR_CABECERAS"])
@@ -133,8 +149,9 @@ def configuracion() -> Configuracion:
         clave=os.environ["EODI_EXTRACTOR_CLAVE"],
         url=os.environ["EODI_EXTRACTOR_URL"],
         url_lotes=os.environ["EODI_EXTRACTOR_URL_LOTES"],
-        modelo=os.environ["EODI_EXTRACTOR_MODELO"],
+        modelo=modelos.base(),
         cabeceras={str(k): str(v) for k, v in cabeceras.items()},
+        experto=modelos.experto(),
     )
 
 
@@ -156,11 +173,21 @@ class Cliente:
         transporte: Transporte = transporte_urllib,
         dormir: Callable[[float], None] = time.sleep,
         insistencia: Insistencia = HORARIA,
+        modelo: str | None = None,
     ) -> None:
         self.config = config
         self._transporte = transporte
         self._dormir = dormir
         self._insistencia = insistencia
+        # El modelo de las llamadas de este cliente: el base salvo que se diga otro.
+        self.modelo = modelo or config.modelo
+
+    def experto(self) -> "Cliente | None":
+        """El mismo cliente con el modelo experto, o None si no hay experto configurado."""
+        if not self.config.experto:
+            return None
+        return Cliente(self.config, self._transporte, self._dormir, self._insistencia,
+                       self.config.experto)  # fmt: skip
 
     def _limpio(self, texto: str) -> str:
         """El texto en una línea, sin la clave y con tope de letras."""
@@ -181,12 +208,14 @@ class Cliente:
     def _pedir(self, metodo: str, url: str, cuerpo: Any = None) -> bytes:
         datos = json.dumps(cuerpo).encode("utf-8") if cuerpo is not None else None
         insistencia = self._insistencia
+        # Los modelos que razonan tardan más en contestar: se les espera lo suyo.
+        limite_s = max(insistencia.limite_s, modelos.de(self.modelo).espera_s)
         motivo = ""
         for intento in range(insistencia.reintentos + 1):
             pedida = ""
             try:
                 codigo, cabeceras, respuesta = self._transporte(
-                    metodo, url, self.config.cabeceras_http(), datos, insistencia.limite_s
+                    metodo, url, self.config.cabeceras_http(), datos, limite_s
                 )
             except (OSError, http.client.HTTPException) as error:
                 detalle = self._limpio(str(error))
@@ -206,9 +235,10 @@ class Cliente:
         raise ErrorTemporal(f"{motivo}; reintentos: {insistencia.reintentos}")
 
     def mensaje(self, cuerpo: dict[str, Any]) -> dict[str, Any]:
-        """Una llamada al servicio de mensajes con el modelo configurado."""
+        """Una llamada al servicio de mensajes con el modelo de este cliente, con la petición
+        adaptada a lo que admite (modelos.adaptar)."""
         respuesta: dict[str, Any] = json.loads(
-            self._pedir("POST", self.config.url, {"model": self.config.modelo, **cuerpo})
+            self._pedir("POST", self.config.url, modelos.adaptar(cuerpo, self.modelo))
         )
         return respuesta
 
@@ -218,7 +248,7 @@ class Cliente:
             "requests": [
                 {
                     "custom_id": p["custom_id"],
-                    "params": {"model": self.config.modelo, **p["params"]},
+                    "params": modelos.adaptar(p["params"], self.modelo),
                 }
                 for p in peticiones
             ]

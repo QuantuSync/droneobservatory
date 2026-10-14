@@ -16,6 +16,8 @@ from typing import Any
 VERSION = "guerra/1"
 MAX_TOKENS_SALIDA = 700
 TEMPERATURA = 0.0
+# Sacar lugares de un parte con formato fijo es mecánico: esfuerzo bajo (modelos nuevos).
+ESFUERZO = "low"
 ARMAS = ("dron", "misil", "bomba", "artilleria", "desconocida")
 NIVELES = ("localidad", "instalacion")
 TIPOS = ("impacto", "restos")
@@ -83,7 +85,9 @@ def cuerpo(texto: str, fecha: str, region: str | None) -> dict[str, Any]:
         "max_tokens": MAX_TOKENS_SALIDA,
         "temperature": TEMPERATURA,
         "system": [{"type": "text", "text": INSTRUCCIONES, "cache_control": {"type": "ephemeral"}}],
-        "output_config": {"format": {"type": "json_schema", "schema": ESQUEMA}},
+        "output_config": {
+            "format": {"type": "json_schema", "schema": ESQUEMA}, "effort": ESFUERZO,
+        },
         "messages": [{"role": "user", "content": contenido(texto, fecha, region)}],
     }
 

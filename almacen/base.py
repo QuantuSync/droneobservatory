@@ -119,6 +119,13 @@ CREATE TABLE IF NOT EXISTS llamadas_extractor (
     lectura_cache INTEGER NOT NULL,
     coste REAL NOT NULL
 );
+-- El modelo que hizo cada llamada y si fue un escalado al experto (docs/modelos.md). Las
+-- llamadas de antes del 14 de octubre de 2026 no tienen fila: las hizo el único modelo de antes.
+CREATE TABLE IF NOT EXISTS llamadas_modelo (
+    llamada INTEGER PRIMARY KEY,
+    modelo TEXT NOT NULL,
+    escalada INTEGER NOT NULL
+);
 CREATE TABLE IF NOT EXISTS extracciones (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     candidato TEXT NOT NULL,
@@ -1211,8 +1218,9 @@ class Almacen:
     # --- Extractor ------------------------------------------------------------
 
     def registrar_llamada(self, llamada: Documento) -> None:
+        """Anota una llamada; con «modelo» (y «escalada»), también qué modelo la hizo."""
         with self._conexion:
-            self._conexion.execute(
+            cursor = self._conexion.execute(
                 "INSERT INTO llamadas_extractor (fecha, modo, candidato, lote, entrada, salida, "
                 "escritura_cache, lectura_cache, coste) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 (
@@ -1221,6 +1229,35 @@ class Almacen:
                     llamada["escritura_cache"], llamada["lectura_cache"], llamada["coste"],
                 ),
             )  # fmt: skip
+            if llamada.get("modelo"):
+                self._conexion.execute(
+                    "INSERT INTO llamadas_modelo (llamada, modelo, escalada) VALUES (?, ?, ?)",
+                    (cursor.lastrowid, llamada["modelo"], int(bool(llamada.get("escalada")))),
+                )
+
+    def gastado_modelo(self, prefijo: str, dia: str) -> float:
+        """Dólares que gastó hoy (`dia`, AAAA-MM-DD) un modelo, en todos los modos."""
+        if not prefijo:
+            return 0.0
+        fila = self._conexion.execute(
+            "SELECT coalesce(sum(l.coste), 0) FROM llamadas_extractor l JOIN llamadas_modelo m "
+            "ON m.llamada = l.id WHERE substr(l.fecha, 1, 10) = ? AND m.modelo LIKE ? || '%'",
+            (dia, prefijo),
+        ).fetchone()
+        return float(fila[0])
+
+    def llamadas_por_modelo(self, desde: str, hasta: str) -> list[Documento]:
+        """Llamadas, escaladas y gasto de cada modelo con fecha en [desde, hasta)."""
+        filas = self._conexion.execute(
+            "SELECT coalesce(m.modelo, ''), count(*), coalesce(sum(m.escalada), 0), "
+            "coalesce(sum(l.coste), 0) FROM llamadas_extractor l LEFT JOIN llamadas_modelo m "
+            "ON m.llamada = l.id WHERE l.fecha >= ? AND l.fecha < ? GROUP BY 1 ORDER BY 1",
+            (desde, hasta),
+        ).fetchall()
+        return [
+            {"modelo": f[0], "llamadas": int(f[1]), "escaladas": int(f[2]), "coste": float(f[3])}
+            for f in filas
+        ]
 
     def gastado(self, modo: str, dia: str | None = None) -> float:
         """Dólares gastados en un modo; con `dia` (AAAA-MM-DD), solo ese día UTC."""

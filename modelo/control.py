@@ -20,6 +20,11 @@ from typing import Any
 
 VERSION = "control/4"
 TEMPERATURA = 0.0
+# Esfuerzo de los modelos nuevos (el de antes no lo admite): decidir si dos fichas son el mismo
+# suceso es lo más difícil, verificar cada dato pide atención y traducir es mecánico.
+ESFUERZO_COMPARAR = "high"
+ESFUERZO_VERIFICAR = "medium"
+ESFUERZO_TRADUCIR = "low"
 MAX_SALIDA_COMPARAR = 400
 MAX_SALIDA_VERIFICAR = 1200
 MAX_SALIDA_TRADUCIR = 4000
@@ -196,12 +201,14 @@ class FuenteControl:
 
 
 def _cuerpo(instrucciones: str, esquema: dict[str, Any], contenido: str,
-            max_tokens: int) -> dict[str, Any]:  # fmt: skip
+            max_tokens: int, esfuerzo: str) -> dict[str, Any]:  # fmt: skip
     return {
         "max_tokens": max_tokens,
         "temperature": TEMPERATURA,
         "system": [{"type": "text", "text": instrucciones, "cache_control": {"type": "ephemeral"}}],
-        "output_config": {"format": {"type": "json_schema", "schema": esquema}},
+        "output_config": {
+            "format": {"type": "json_schema", "schema": esquema}, "effort": esfuerzo,
+        },
         "messages": [{"role": "user", "content": contenido}],
     }
 
@@ -220,21 +227,21 @@ def cuerpo_comparar(
     partes += ["", "Ficha B:", resumen_ficha(b), "Fuentes de B:"]
     partes += [f.bloque(i) for i, f in enumerate(fuentes_b[:MAX_FUENTES], 1)]
     return _cuerpo(INSTRUCCIONES_COMPARAR, ESQUEMA_COMPARAR, "\n".join(partes),
-                   MAX_SALIDA_COMPARAR)  # fmt: skip
+                   MAX_SALIDA_COMPARAR, ESFUERZO_COMPARAR)  # fmt: skip
 
 
 def cuerpo_verificar(ficha: dict[str, Any], fuentes: list[FuenteControl]) -> dict[str, Any]:
     partes = ["Ficha:", resumen_ficha(ficha), "Fuentes:"]
     partes += [f.bloque(i) for i, f in enumerate(fuentes[:MAX_FUENTES], 1)]
     return _cuerpo(INSTRUCCIONES_VERIFICAR, ESQUEMA_VERIFICAR, "\n".join(partes),
-                   MAX_SALIDA_VERIFICAR)  # fmt: skip
+                   MAX_SALIDA_VERIFICAR, ESFUERZO_VERIFICAR)  # fmt: skip
 
 
 def cuerpo_traducir(citas: list[tuple[str, str]]) -> dict[str, Any]:
     """`citas`: (idioma, texto) en orden; la respuesta las numera desde 1."""
     lineas = [f"{n}. ({idioma or '?'}) {texto}" for n, (idioma, texto) in enumerate(citas, 1)]
     return _cuerpo(INSTRUCCIONES_TRADUCIR, ESQUEMA_TRADUCIR, "\n".join(lineas),
-                   MAX_SALIDA_TRADUCIR)  # fmt: skip
+                   MAX_SALIDA_TRADUCIR, ESFUERZO_TRADUCIR)  # fmt: skip
 
 
 def letras(cuerpo: dict[str, Any]) -> int:

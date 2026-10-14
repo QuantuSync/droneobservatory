@@ -14,6 +14,8 @@ from typing import Any
 VERSION = "catalogo/1"
 MAX_TOKENS_SALIDA = 600
 TEMPERATURA = 0.0
+# Clasificar una frase del catálogo es mecánico: esfuerzo bajo (modelos nuevos).
+ESFUERZO = "low"
 CAMPOS = (
     "velocidad_maxima", "velocidad_crucero", "alcance", "autonomia", "techo", "altura_tipica",
     "mtow", "carga_util", "envergadura", "longitud", "viento_maximo", "enlace_alcance",
@@ -73,7 +75,9 @@ def cuerpo(frases: list[str], modelos: list[str]) -> dict[str, Any]:
         "max_tokens": MAX_TOKENS_SALIDA,
         "temperature": TEMPERATURA,
         "system": [{"type": "text", "text": INSTRUCCIONES, "cache_control": {"type": "ephemeral"}}],
-        "output_config": {"format": {"type": "json_schema", "schema": ESQUEMA}},
+        "output_config": {
+            "format": {"type": "json_schema", "schema": ESQUEMA}, "effort": ESFUERZO,
+        },
         "messages": [{"role": "user", "content": contenido(frases, modelos)}],
     }
 
