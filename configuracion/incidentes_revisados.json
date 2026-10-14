@@ -390,11 +390,13 @@
     },
     {
       "registros": [
+        "EODI-2026-00512",
         "EODI-2026-00513",
         "EODI-2026-00514"
       ],
-      "motivo": "el mismo suceso: los drones que atacaron dos barcos mercantes en la zona económica exclusiva búlgara del mar Negro la noche del lunes 12 al martes 13 de octubre de 2026; 00513 lo cuenta con fuentes rumanas (mediafax.ro, bursa.ro, adevarul.ro, ziare.com) y la nota del Consejo de Seguridad búlgaro, 00514 con una finlandesa (iltalehti.fi) y la declaración del primer ministro Radev. No se une con EODI-2026-00504, el ataque al buque Able de la noche del 6 de octubre, que es otro suceso",
-      "motivo_en": "the same event: the drones that attacked two merchant ships in Bulgaria's exclusive economic zone in the Black Sea on the night of Monday 12 to Tuesday 13 October 2026; 00513 reports it with Romanian sources (mediafax.ro, bursa.ro, adevarul.ro, ziare.com) and the note of the Bulgarian Security Council, 00514 with a Finnish one (iltalehti.fi) and the statement of Prime Minister Radev. It is not merged with EODI-2026-00504, the attack on the ship Able on the night of 6 October, which is another event"
+      "conserva": "EODI-2026-00512",
+      "motivo": "el mismo suceso: los drones que atacaron dos barcos mercantes en la zona económica exclusiva búlgara del mar Negro, frente a Byala y Krapets, la noche del lunes 12 al martes 13 de octubre de 2026; 00512, el primero que se dio de alta, lo cuenta con fuentes búlgaras (fakti.bg, investor.bg, segabg.com, plovdiv24.bg, bgonair.bg), 00513 con rumanas (mediafax.ro, bursa.ro, adevarul.ro, ziare.com) y la nota del Consejo de Seguridad búlgaro, 00514 con una finlandesa (iltalehti.fi) y la declaración del primer ministro Radev. Queda 00512, el identificador más antiguo. No se une con el ataque de la noche del 6 de octubre (EODI-2026-00489 y 00504), que es otro suceso",
+      "motivo_en": "the same event: the drones that attacked two merchant ships in Bulgaria's exclusive economic zone in the Black Sea, off Byala and Krapets, on the night of Monday 12 to Tuesday 13 October 2026; 00512, the first to be registered, reports it with Bulgarian sources (fakti.bg, investor.bg, segabg.com, plovdiv24.bg, bgonair.bg), 00513 with Romanian ones (mediafax.ro, bursa.ro, adevarul.ro, ziare.com) and the note of the Bulgarian Security Council, 00514 with a Finnish one (iltalehti.fi) and the statement of Prime Minister Radev. 00512, the oldest identifier, is kept. It is not merged with the attack of the night of 6 October (EODI-2026-00489 and 00504), which is another event"
     },
     {
       "registros": [

@@ -89,9 +89,10 @@ def completar(destino: Documento, unidos: list[Documento]) -> Documento:
 
 def unir_grupo(
     almacen: Almacen, registros: list[str], motivo: str, ahora: datetime,
-    modelos: frozenset[str],
+    modelos: frozenset[str], conserva: str | None = None,
 ) -> int:  # fmt: skip
-    """Funde en uno los registros vivos del grupo. Devuelve cuántos funde."""
+    """Funde en uno los registros vivos del grupo. Devuelve cuántos funde. Con `conserva`, queda
+    ese registro (el más antiguo, para que su enlace siga siendo el del suceso)."""
     vivos: dict[str, Documento] = {}
     for id_ in registros:
         documento = _vivo(almacen, id_)
@@ -103,6 +104,9 @@ def unir_grupo(
     destino = next(iter(vivos.values()))
     for otro in list(vivos.values())[1:]:
         destino = incidentes.destino_de(destino, otro, publicados)[0]
+    elegido = _vivo(almacen, conserva) if conserva else None
+    if elegido is not None and elegido["id"] in vivos:
+        destino = vivos[elegido["id"]]
     unidos = [d for d in vivos.values() if d["id"] != destino["id"]]
     nuevo = destino
     fundidos = []
@@ -125,7 +129,9 @@ def unir_grupo(
 def unir(almacen: Almacen, ahora: datetime, modelos: frozenset[str]) -> int:
     """Funde cada grupo revisado en uno. Devuelve cuántos registros funde."""
     return sum(
-        unir_grupo(almacen, grupo["registros"], grupo["motivo"], ahora, modelos)
+        unir_grupo(
+            almacen, grupo["registros"], grupo["motivo"], ahora, modelos, grupo.get("conserva")
+        )
         for grupo in cargar()["unir"]
     )
 
