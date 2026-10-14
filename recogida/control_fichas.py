@@ -58,7 +58,15 @@ from esquema import Documento
 from modelo import control as peticiones
 from modelo import coste
 from modelo.cliente import ErrorTemporal, LlamadaFallida
-from proceso import atribucion, escalado, incidentes, lugar_preciso, presencia, titulares
+from proceso import (
+    atribucion,
+    autoridades,
+    escalado,
+    incidentes,
+    lugar_preciso,
+    presencia,
+    titulares,
+)
 from proceso import control_fichas as reglas
 from proceso.noticias import Nomenclator
 from proceso.presencia import TABLA_MOTIVOS
@@ -977,7 +985,8 @@ def citas_de(
     documentos: list[Documento], decisiones: dict[str, Documento]
 ) -> dict[str, tuple[str, str]]:
     """Cada cita por traducir: huella -> (idioma, texto). Las frases de las fuentes públicas y
-    las de la verificación."""
+    las de la verificación; y las autoridades que no están en la tabla, con la marca de nombre
+    (proceso/autoridades.py), para que la ficha no salga con una sin traducir."""
     citas: dict[str, tuple[str, str]] = {}
     idioma_de: dict[str, str] = {}
     for documento in documentos:
@@ -988,6 +997,9 @@ def citas_de(
                 citas.setdefault(
                     huella_texto(texto), (idioma_de[fuente["id"]], texto[:MAX_LETRAS_CITA])
                 )
+        visibles = {**documento, "fuentes": _publicas(documento)}
+        for nombre, idioma in autoridades.por_traducir(visibles):
+            citas.setdefault(huella_texto(nombre), (idioma, autoridades.MARCA + nombre))
     for clave, decision in decisiones.items():
         if not clave.startswith("verificacion:"):
             continue
@@ -1028,6 +1040,7 @@ def procesar_traduccion(ctx: Contexto, peticion: Peticion,
         if not isinstance(n, int) or not 1 <= n <= len(tanda):
             continue
         huella, idioma, texto = tanda[n - 1]
+        texto = texto.removeprefix(autoridades.MARCA)
         es, en = str(entrada.get("es") or "").strip(), str(entrada.get("en") or "").strip()
         if idioma == "es":
             es = texto

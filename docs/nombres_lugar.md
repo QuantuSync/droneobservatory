@@ -101,9 +101,28 @@ fuente en su lengua; el motivo de un desmentido va como cita.
 en inglés quién declara, investiga o atribuye y el nombre de las fuentes oficiales sin medio, también
 las de la capa de guerra (las administraciones militares regionales de Ucrania, el Ministerio de
 Defensa ruso…). Las instituciones con nombre oficial en alfabeto latino llevan el original entre
-paréntesis («el Gobierno federal alemán (Bundesregierung)»). Una que no esté en la tabla sale tal cual
-si va en alfabeto latino y, si no, «una autoridad». La usan la web (`web/src/i18n/autoridades.ts`) y los
-avisos (`proceso/autoridades.py`). El fichero va en ASCII con escapes: el gancho del repositorio vería
+paréntesis («el Gobierno federal alemán (Bundesregierung)»). La usan la web (`web/src/i18n/autoridades.ts`) y los
+avisos (`proceso/autoridades.py`).
+
+Desde el 14 de octubre de 2026 (la ficha EODI-2026-00532 decía en español «Declaración de Defense
+Ministry of Romania»), en la web una autoridad sale **siempre en el idioma de la página**:
+
+1. la de la tabla (366 desde ese día: las 17 publicadas que faltaban y dos de los ejemplos de las
+   pruebas);
+2. si no está, la traducción que trae la ficha publicada (`autoridades`: nombre -> {es, en}, esquema
+   del incidente; también en los ataques y los impactos de la capa de guerra). El control de las
+   fichas la traduce como las citas, con la marca «[autoridad]» para que el modelo la escriba como
+   nombre con su artículo; las de las fichas nuevas, antes de publicarlas, y las demás en el lote de
+   la recogida siguiente (`exportacion/citas.con_autoridades`, `recogida/control_fichas.citas_de`);
+3. si aún no hay traducción, «una autoridad» / «an authority», nunca el nombre en otro idioma.
+
+Cuentan como autoridad la de cada declaración citada, el nombre de una fuente sin dominio (un canal
+oficial, un ministerio), la que atribuye y las que investigan. También se escriben así dentro de una
+frase («según el Ministerio…», «Cifras del…»: tipo de dron, recorrido, valores de cada fuente, cifras
+de la capa de guerra y páginas sin código). La prueba `web/tests/fichas.test.tsx` recorre todas las
+fichas publicadas en los dos idiomas y falla si alguna enseña una autoridad con su nombre original
+cuando en la página se escribe de otra forma; `web/tests/autoridades-idioma.test.tsx` prueba los tres
+casos. Los avisos siguen con la regla anterior: la tabla y, si no, tal cual en alfabeto latino. El fichero va en ASCII con escapes: el gancho del repositorio vería
 sílabas sueltas en los nombres rumanos con letras con signo.
 
 ## Capa de guerra

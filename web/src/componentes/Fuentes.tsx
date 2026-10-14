@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import type { AtribucionResumen, Estado, Fuente, FuenteImpacto, PasoHistorial } from "../datos/tipos.ts";
-import { autoridadEscrita, medioEscrito } from "../i18n/autoridades.ts";
+import { autoridadEscrita, medioEnFrase, medioEscrito } from "../i18n/autoridades.ts";
 import { instante } from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
 import type { Idioma } from "../sitio.ts";
@@ -35,6 +35,11 @@ export function ordenarFuentes<F extends Fuente>(fuentes: readonly F[]): F[] {
  *  en el idioma de la web; las demás, tal cual. */
 export function nombreDeFuente(t: Textos, medio: string, idioma: Idioma | undefined): string {
   return idioma === undefined ? medio : medioEscrito(medio, idioma, t.ficha.declaracionCitada);
+}
+
+/** La fuente dentro de una frase («según el Ministerio…»), en el idioma de la web. */
+export function fuenteEnFrase(t: Textos, medio: string, idioma: Idioma | undefined): string {
+  return idioma === undefined ? medio : medioEnFrase(medio, idioma, t.ficha.declaracionCitada);
 }
 
 /** Una autoridad en el idioma de la web, o tal cual si no se sabe el idioma. */

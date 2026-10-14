@@ -305,6 +305,8 @@ export interface PropiedadesIncidente {
   atribucion?: Atribucion;
   investigacion?: Investigacion[];
   nombres?: NombresLugar;
+  /** Autoridades que no están en configuracion/autoridades.json, traducidas (exportacion/citas.py). */
+  autoridades?: Record<string, Traduccion>;
   /** Ataque ruso contra Ucrania del que forma parte la incursión (proceso/cruces.py). */
   ataque?: {
     id: string;
@@ -376,6 +378,8 @@ export interface RegionAtaque {
 export interface Ataque {
   id: string;
   tipo: "ataque_guerra";
+  /** Autoridades que no están en configuracion/autoridades.json, traducidas (exportacion/citas.py). */
+  autoridades?: Record<string, Traduccion>;
   periodo: { inicio: Instante; fin: Instante };
   sentido: Sentido;
   reivindicacion_de_parte?: true;
@@ -470,6 +474,8 @@ export interface FuenteImpacto extends Fuente {
 export interface ImpactoGuerra {
   id: string;
   tipo: "impacto_guerra";
+  /** Autoridades que no están en configuracion/autoridades.json, traducidas (exportacion/citas.py). */
+  autoridades?: Record<string, Traduccion>;
   sentido: Sentido;
   ataque?: string;
   region: string;

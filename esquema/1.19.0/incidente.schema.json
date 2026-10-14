@@ -364,6 +364,12 @@
         "pais_geografico": {"x-visibilidad": "publico", "type": "string", "pattern": "^[A-Z]{2}$"}
       }
     },
+    "autoridades": {
+      "x-visibilidad": "publico",
+      "description": "Las autoridades de la ficha que no están en configuracion/autoridades.json (declaraciones citadas, fuentes oficiales sin dominio, la que atribuye y las que investigan), traducidas como las citas por el control de las fichas: nombre tal como lo guarda la base -> {es, en}. La web no escribe nunca una autoridad en otro idioma: la de la tabla, la de aquí o «una autoridad». Se genera al publicar (exportacion/citas.py); no se guarda.",
+      "type": "object",
+      "additionalProperties": {"x-visibilidad": "publico", "$ref": "urn:eodi:esquema:1.19.0:comun#/$defs/titulo"}
+    },
     "relacionados": {
       "x-visibilidad": "publico",
       "description": "Sucesos relacionados (desde 1.19.0): las otras fichas en que se separó un incidente que juntaba sucesos distintos (recogida/revisados.separar, configuracion/incidentes_revisados.json). Cada una con su identificador, el incidente que se separó y una nota en español y en inglés con el motivo.",

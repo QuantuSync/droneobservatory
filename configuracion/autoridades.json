@@ -35,6 +35,11 @@
    "es": "las Fuerzas Armadas de Dinamarca",
    "en": "the Danish Armed Forces"
   },
+  "Armata rom\u00e2n\u0103": {
+   "es": "el Ej\u00e9rcito de Ruman\u00eda",
+   "en": "the Romanian Army",
+   "original": true
+  },
   "Arm\u00e9e de l'Air et de l'Espace": {
    "es": "el Ej\u00e9rcito del Aire y del Espacio de Francia",
    "en": "the French Air and Space Force",
@@ -173,9 +178,21 @@
    "es": "el Ministerio de Defensa de Dinamarca",
    "en": "the Danish Ministry of Defence"
   },
+  "Danish Defense Ministry": {
+   "es": "el Ministerio de Defensa de Dinamarca",
+   "en": "the Danish Ministry of Defence"
+  },
+  "Danish Military": {
+   "es": "las Fuerzas Armadas de Dinamarca",
+   "en": "the Danish Armed Forces"
+  },
   "Danish Police": {
    "es": "la Polic\u00eda de Dinamarca",
    "en": "the Danish Police"
+  },
+  "Danish Transport Ministry": {
+   "es": "el Ministerio de Transportes de Dinamarca",
+   "en": "the Danish Ministry of Transport"
   },
   "Danish defense ministry": {
    "es": "el Ministerio de Defensa de Dinamarca",
@@ -186,6 +203,10 @@
    "en": "the Danish Ministry of Transport"
   },
   "Defence Ministry of Romania": {
+   "es": "el Ministerio de Defensa Nacional de Ruman\u00eda",
+   "en": "the Romanian Ministry of National Defence"
+  },
+  "Defense Ministry of Romania": {
    "es": "el Ministerio de Defensa Nacional de Ruman\u00eda",
    "en": "the Romanian Ministry of National Defence"
   },
@@ -201,6 +222,10 @@
   "Dfs": {
    "es": "el control a\u00e9reo de Alemania (DFS)",
    "en": "German air traffic control (DFS)"
+  },
+  "Dinamarca": {
+   "es": "Dinamarca",
+   "en": "Denmark"
   },
   "Directorul Aeroportului Interna\u021bional \u0049\u0061\u0219i": {
    "es": "el director del Aeropuerto Internacional de \u0049\u0061\u0219i",
@@ -241,6 +266,10 @@
    "es": "la Polic\u00eda de Euskirchen",
    "en": "the Euskirchen Police",
    "original": true
+  },
+  "Finnish Government": {
+   "es": "el Gobierno de Finlandia",
+   "en": "the Finnish Government"
   },
   "Finnish Prime Minister": {
    "es": "el primer ministro de Finlandia",
@@ -306,6 +335,10 @@
   "Fuerzas Armadas de Letonia": {
    "es": "las Fuerzas Armadas Nacionales de Letonia",
    "en": "the Latvian National Armed Forces"
+  },
+  "Fuerzas de Defensa de Estonia": {
+   "es": "las Fuerzas de Defensa de Estonia",
+   "en": "the Estonian Defence Forces"
   },
   "F\u00f6rsvarsmakten": {
    "es": "las Fuerzas Armadas de Suecia",
@@ -471,6 +504,10 @@
    "es": "las Fuerzas Armadas Nacionales de Letonia",
    "en": "the Latvian National Armed Forces"
   },
+  "Lettisches Milit\u00e4r": {
+   "es": "las Fuerzas Armadas de Letonia",
+   "en": "the Latvian Armed Forces"
+  },
   "Lietuvos oro uostai": {
    "es": "los Aeropuertos de Lituania",
    "en": "Lithuanian Airports",
@@ -501,6 +538,10 @@
    "es": "el Gobierno de Lituania",
    "en": "the Lithuanian Government"
   },
+  "Litovski center za krizno upravljanje": {
+   "es": "el Centro Nacional de Gesti\u00f3n de Crisis de Lituania",
+   "en": "the Lithuanian National Crisis Management Centre"
+  },
   "Litovsko ministrstvo za obrambo": {
    "es": "el Ministerio de Defensa Nacional de Lituania",
    "en": "the Lithuanian Ministry of National Defence"
@@ -519,6 +560,11 @@
    "en": "the Danish aviation authority",
    "original": true
   },
+  "MApN": {
+   "es": "el Ministerio de Defensa Nacional de Ruman\u00eda",
+   "en": "the Romanian Ministry of National Defence",
+   "original": true
+  },
   "Mar\u00e9chauss\u00e9e royale n\u00e9erlandaise": {
    "es": "la Real Polic\u00eda Militar de los Pa\u00edses Bajos",
    "en": "the Royal Netherlands Marechaussee"
@@ -531,6 +577,10 @@
    "es": "la Polic\u00eda de Selandia Central y Occidental",
    "en": "the Central and West Zealand Police",
    "original": true
+  },
+  "Mihai Pop\u0219oi": {
+   "es": "el ministro de Asuntos Exteriores de Moldavia, Mihai Pop\u0219oi",
+   "en": "the Moldovan Foreign Minister, Mihai Pop\u0219oi"
   },
   "Ministarstvo nacionalne odbrane Rumunije": {
    "es": "el Ministerio de Defensa Nacional de Ruman\u00eda",
@@ -669,6 +719,10 @@
    "es": "el Ministerio de Defensa de Moldavia",
    "en": "the Moldovan Ministry of Defence"
   },
+  "Ministria belge e Mbrojtjes": {
+   "es": "el Ministerio de Defensa de B\u00e9lgica",
+   "en": "the Belgian Ministry of Defence"
+  },
   "Ministria e Mbrojtjes e Rumanis\u00eb": {
    "es": "el Ministerio de Defensa Nacional de Ruman\u00eda",
    "en": "the Romanian Ministry of National Defence"
@@ -765,6 +819,11 @@
   "Niras": {
    "es": "Niras",
    "en": "Niras"
+  },
+  "Nordjyllands Police": {
+   "es": "la Polic\u00eda de Jutlandia del Norte",
+   "en": "the North Jutland Police",
+   "original": true
   },
   "Nordjyllands Politi": {
    "es": "la Polic\u00eda de Jutlandia Septentrional",
@@ -904,6 +963,11 @@
    "en": "the Rivierenland Police Zone",
    "original": true
   },
+  "Polizei": {
+   "es": "la Polic\u00eda",
+   "en": "the Police",
+   "original": true
+  },
   "Polizei Berlin": {
    "es": "la Polic\u00eda de Berl\u00edn",
    "en": "the Berlin Police",
@@ -946,6 +1010,11 @@
   "Polizia penitenziaria": {
    "es": "la Polic\u00eda Penitenciaria de Italia",
    "en": "the Italian Penitentiary Police",
+   "original": true
+  },
+  "Poli\u021bia Republicii Moldova": {
+   "es": "la Polic\u00eda de Moldavia",
+   "en": "the Moldovan Police",
    "original": true
   },
   "Poli\u021bia de Frontier\u0103": {
@@ -1086,6 +1155,10 @@
    "es": "Robertas Kaunas",
    "en": "Robertas Kaunas"
   },
+  "Romania": {
+   "es": "Ruman\u00eda",
+   "en": "Romania"
+  },
   "Romanian Defense Minister": {
    "es": "el ministro de Defensa de Ruman\u00eda",
    "en": "the Romanian Minister of Defence"
@@ -1160,6 +1233,10 @@
    "es": "el sindicato policial Europol",
    "en": "the Europol police union"
   },
+  "Sistemul na\u021bional integrat de monitorizare": {
+   "es": "el sistema nacional integrado de vigilancia de Moldavia",
+   "en": "Moldova's national integrated monitoring system"
+  },
   "Skeyes": {
    "es": "Skeyes (control a\u00e9reo de B\u00e9lgica)",
    "en": "Skeyes (Belgian air traffic control)",
@@ -1214,6 +1291,10 @@
   "Theo Francken, ministro de Defensa de B\u00e9lgica": {
    "es": "el ministro de Defensa de B\u00e9lgica, Theo Francken",
    "en": "the Belgian Minister of Defence, Theo Francken"
+  },
+  "Torkild Fogde, National Police Chief": {
+   "es": "el jefe de la Polic\u00eda Nacional de Suecia, Torkild Fogde",
+   "en": "the Swedish National Police Commissioner, Torkild Fogde"
   },
   "Trafikstyrelsen": {
    "es": "la Autoridad de Transportes de Dinamarca",

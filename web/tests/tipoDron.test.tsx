@@ -105,7 +105,7 @@ describe("tipo de dron", () => {
     render(<FichaIncidente t={es} idioma="es" incidente={detalleIncidente(con(IDENTIFICADO))} />);
     expect(screen.getByText("Gerbera, según la autoridad")).toBeTruthy();
     expect(document.body.textContent).toContain("Două drone UAV, tip Gerbera");
-    expect(document.body.textContent).toContain("según MApN");
+    expect(document.body.textContent).toContain("según el Ministerio de Defensa Nacional de Rumanía (MApN)");
     expect(document.body.textContent).not.toContain("Compatible con");
   });
 

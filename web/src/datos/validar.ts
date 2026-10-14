@@ -17,6 +17,7 @@ import type { AlumbradoReducido, FocosVivos, IndiceSatelite } from "./guerraSate
 import type { IndiceVersiones } from "./versiones.ts";
 import type { Prevision } from "./prevision.ts";
 import type { IndiceRutas, NocheRutas } from "./rutas.ts";
+import { anadirAutoridades } from "../i18n/autoridades.ts";
 import * as v from "./vocabulario.ts";
 
 export type Resultado<T> = { ok: true; datos: T } | { ok: false; errores: string[] };
@@ -194,6 +195,15 @@ const rangoODesconocido: Comprobacion = (valor, ruta, errores) => {
 const titulo = objeto({ es: cadena(), en: cadena() });
 /** Traducción de una cita (exportacion/citas.py). */
 const traduccion = objeto({ es: cadena(), en: cadena() });
+
+/** Las autoridades que no están en la tabla, traducidas (exportacion/citas.con_autoridades): al
+ *  validarlas se apuntan para que la web las escriba en el idioma de la página (i18n/autoridades.ts). */
+const comprobarAutoridades = diccionario(cadena(), traduccion);
+const autoridadesTraducidas: Comprobacion = (valor, ruta, errores) => {
+  const antes = errores.length;
+  comprobarAutoridades(valor, ruta, errores);
+  if (errores.length === antes) anadirAutoridades(valor as Record<string, { es: string; en: string }>);
+};
 
 const estadoHistorial = objeto({
   actual: enumerado(v.ESTADOS),
@@ -437,6 +447,7 @@ const CAMPOS_INCIDENTE_OPCIONALES: Record<string, Comprobacion> = {
     ),
   ),
   nombres,
+  autoridades: autoridadesTraducidas,
   ataque: objeto({
     id: cadena(/^EODI-UA-\d{4}-\d{4}$/),
     jornada: objeto({
@@ -622,6 +633,7 @@ const ataque = objeto(
       hasta: cadena(/^\d{4}-\d{2}-\d{2}$/),
     }),
     perdida_luz: lista(perdidaLuz),
+    autoridades: autoridadesTraducidas,
   },
 );
 
@@ -676,6 +688,7 @@ const impactoGuerra = objeto(
     fallecidos: rangoODesconocido,
     reivindicacion_de_parte: constante(true),
     foco_termico: focoTermico,
+    autoridades: autoridadesTraducidas,
   },
 );
 

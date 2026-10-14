@@ -2,6 +2,7 @@ import type { IncidenteDetalle, RazonTipoDron } from "../datos/tipos.ts";
 import type { Textos } from "../i18n/index.ts";
 import type { Idioma } from "../sitio.ts";
 import { Cita, traduccionParaMostrar } from "./Cita.tsx";
+import { fuenteEnFrase } from "./Fuentes.tsx";
 import { Fila } from "./Panel.tsx";
 
 interface Props {
@@ -57,7 +58,7 @@ export function FilaTipoDron({ t, idioma, incidente }: Props) {
         />
         {fuente !== undefined && (
           <span className="block text-xs text-secundario">
-            {t.ficha.valorSegun} {fuente.medio}
+            {t.ficha.valorSegun} {fuenteEnFrase(t, fuente.medio, idioma)}
           </span>
         )}
       </Fila>
@@ -146,7 +147,7 @@ export function FilaRecorrido({ t, idioma, incidente }: Props) {
       />
       {fuente !== undefined && (
         <span className="block text-xs text-secundario">
-          {t.ficha.valorSegun} {fuente.medio}
+          {t.ficha.valorSegun} {fuenteEnFrase(t, fuente.medio, idioma)}
         </span>
       )}
       <span className="block text-xs text-secundario">{t.rutas.recorridoNota}</span>

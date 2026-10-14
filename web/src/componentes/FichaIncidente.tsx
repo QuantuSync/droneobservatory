@@ -25,7 +25,7 @@ import type { Idioma } from "../sitio.ts";
 import { diaDeInstante } from "../tiempo/dias.ts";
 import { Cita } from "./Cita.tsx";
 import { EnlaceFuente } from "./EnlaceFuente.tsx";
-import { EstadoConTexto, Historial, ListaFuentes, nombreDeAutoridad, nombreDeFuente } from "./Fuentes.tsx";
+import { EstadoConTexto, fuenteEnFrase, Historial, ListaFuentes, nombreDeAutoridad, nombreDeFuente } from "./Fuentes.tsx";
 import { LineaFoco, ZOOM_VISOR_PUNTO } from "./FocoTermico.tsx";
 import { LineaTrafico } from "./TraficoAereo.tsx";
 import { Fila } from "./Panel.tsx";
@@ -142,7 +142,7 @@ function QueDiceCadaFuente({
                 <span className="mono block text-secundario">{afirmacion.campo}</span>
               )}
               <ValorDeFuente t={t} idioma={idioma} valor={afirmacion.valor} campo={afirmacion.campo} />{" "}
-              <span className="text-secundario">{t.ficha.valorSegun}</span> {afirmacion.medio}{" "}
+              <span className="text-secundario">{t.ficha.valorSegun}</span> {fuenteEnFrase(t, afirmacion.medio, idioma)}{" "}
               <span className="mono rounded-sm border border-linea px-1 text-acento">
                 <span className="sr-only">{t.ficha.codigo(codigo)}</span>
                 <span aria-hidden="true">{codigo}</span>
@@ -385,7 +385,7 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
                       className="mt-0.5 border-l border-acento pl-2 text-secundario"
                     />
                     <span className="mono block text-xs text-secundario">
-                      {fuente.medio} · {instante(fuente.fecha)}
+                      {nombreDeFuente(t, fuente.medio, idioma)} · {instante(fuente.fecha)}
                       {" · "}
                       <EnlaceFuente t={t} fuente={fuente}>
                         {t.ficha.verFuente}

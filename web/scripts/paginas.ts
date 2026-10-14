@@ -19,6 +19,7 @@ import type { Prevision } from "../src/datos/prevision.ts";
 import type { ColeccionIncidentes, IncidenteDetalle, Resumen, ResumenUcrania } from "../src/datos/tipos.ts";
 import { RUTA_LISTA_BORDE } from "../../api/borde.ts";
 import type { RutasBorde } from "../../api/borde.ts";
+import { anadirAutoridades } from "../src/i18n/autoridades.ts";
 import { separarScriptsEnLinea } from "../src/seguridad/scripts.ts";
 import { IDIOMAS, rutaDeFicha } from "../src/sitio.ts";
 import type { Idioma } from "../src/sitio.ts";
@@ -154,7 +155,10 @@ export async function terminarPaginas(carpeta: string): Promise<void> {
   const coleccion = await leerJson<ColeccionIncidentes>(join(DATOS, "incidentes.geojson"));
   const detalles = new Map<string, IncidenteDetalle>();
   for (const incidente of resumen.incidentes) {
-    detalles.set(incidente.id, await leerJson<IncidenteDetalle>(join(DATOS, "incidentes", `${incidente.id}.json`)));
+    const detalle = await leerJson<IncidenteDetalle>(join(DATOS, "incidentes", `${incidente.id}.json`));
+    // Las autoridades traducidas de la ficha, para escribirlas en el idioma de cada página.
+    if (detalle.autoridades !== undefined) anadirAutoridades(detalle.autoridades);
+    detalles.set(incidente.id, detalle);
   }
   const recursos = await readdir(join(carpeta, CARPETA_SCRIPTS));
   const plantillas = new Map<Idioma, string>();

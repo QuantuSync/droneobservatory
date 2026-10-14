@@ -7,7 +7,8 @@
 // Fuera de las citas (blockquote, q y lo que dice cada fuente, que van en su lengua), ninguna fila
 // lleva otro alfabeto ni palabras de otro idioma; «Lugar» dice la localidad cuando se conoce;
 // «Frontera o interior» solo sale en el flanco este; ninguna fila sale vacía; el modelo de dron
-// solo si es un nombre de modelo.
+// solo si es un nombre de modelo; ninguna autoridad sale con su nombre en otro idioma (la de la
+// tabla, la traducida en los datos o «una autoridad»; tests/autoridades-idioma.test.tsx).
 
 import { readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
@@ -21,7 +22,7 @@ import { detalleIncidente, detalleSinUbicacion } from "../src/datos/derivar.ts";
 import { enFlancoEste, FLANCO_ESTE, localidadDeImpacto, lugarDeImpacto, modeloEscrito } from "../src/datos/nombres.ts";
 import type { IncidenteDetalle } from "../src/datos/tipos.ts";
 import { validarColeccion, validarPublicacionUcrania, validarSinUbicacion } from "../src/datos/validar.ts";
-import { AUTORIDADES, medioEscrito } from "../src/i18n/autoridades.ts";
+import { AUTORIDADES, autoridadEscrita, medioEscrito } from "../src/i18n/autoridades.ts";
 import { textos } from "../src/i18n/index.ts";
 import type { Idioma } from "../src/sitio.ts";
 
@@ -70,7 +71,45 @@ const ORIGINALES = Object.entries(AUTORIDADES)
   .sort((a, b) => b.length - a.length);
 
 function sinOriginales(texto: string): string {
-  return ORIGINALES.reduce((resto, original) => resto.split(original).join(""), texto);
+  return ORIGINALES.reduce((resto, original) => resto.split(original).join(""), texto.normalize("NFC"));
+}
+
+const DECLARACION = /^(.+) \(declaración oficial citada en .+\)$/;
+
+/** Las autoridades que enseña una ficha (declaraciones citadas, fuentes oficiales sin dominio, la
+ *  que atribuye y las que investigan), como las guardan los datos. */
+function autoridadesDe(datos: {
+  fuentes: readonly { medio: string }[];
+  atribucion?: { autoridad: string };
+  investigacion?: readonly { autoridad: string }[];
+}): string[] {
+  const nombres = new Set<string>();
+  for (const fuente of datos.fuentes) {
+    const declaracion = DECLARACION.exec(fuente.medio);
+    if (declaracion?.[1] !== undefined) nombres.add(declaracion[1]);
+    else if (!fuente.medio.includes(".")) nombres.add(fuente.medio);
+  }
+  if (datos.atribucion !== undefined) nombres.add(datos.atribucion.autoridad);
+  for (const entrada of datos.investigacion ?? []) nombres.add(entrada.autoridad);
+  return [...nombres];
+}
+
+/** Los nombres de autoridad que salen tal como los guardan los datos y no como se escriben en la
+ *  página (fuera de las citas y del nombre oficial entre paréntesis tras la traducción). */
+function autoridadesSinTraducir(nombres: readonly string[], texto: string, idioma: Idioma): string[] {
+  // Fuera lo que ya sale bien escrito (también en mayúscula, como nombre de fuente): así un nombre
+  // que va dentro de otro («Ministry of National Defence» en «the Romanian Ministry of National
+  // Defence») no cuenta. Se compara en forma compuesta.
+  const escritas = nombres.map((nombre) => autoridadEscrita(nombre, idioma).normalize("NFC"));
+  let resto = texto.normalize("NFC");
+  for (const escrita of [...escritas].sort((a, b) => b.length - a.length)) {
+    for (const forma of [escrita, escrita.charAt(0).toUpperCase() + escrita.slice(1)]) resto = resto.split(forma).join(" ");
+  }
+  resto = sinOriginales(resto);
+  return nombres.filter((nombre, i) => {
+    const original = nombre.normalize("NFC");
+    return !(escritas[i] ?? "").includes(original) && resto.includes(original);
+  });
 }
 
 function filas(ficha: Element): Map<string, Element> {
@@ -97,6 +136,10 @@ function problemas(incidente: IncidenteDetalle, idioma: Idioma): string[] {
   // Toda la ficha (filas, fuentes, historial), sin las citas y sin el nombre oficial que sigue
   // entre paréntesis a una institución traducida («el Gobierno federal alemán (Bundesregierung)»).
   const visibles = [titular, ...[...deFilas.values()].map(sinCitas), sinOriginales(sinCitas(container))];
+  const sinTitular = sinCitas(container).replace(titular, "");
+  for (const nombre of autoridadesSinTraducir(autoridadesDe(incidente), sinTitular, idioma)) {
+    salida.push(`autoridad sin traducir: «${nombre}»`);
+  }
   for (const texto of visibles) {
     const otro = OTRO_ALFABETO.exec(texto);
     if (otro !== null) salida.push(`otro alfabeto: «${contexto(texto, otro.index)}»`);
@@ -189,6 +232,9 @@ describe("todas las fichas, en español y en inglés", () => {
       for (const impacto of porFuente.values()) {
         const { container } = render(<FichaImpacto t={textos(idioma)} idioma={idioma} impacto={impacto} />);
         const texto = sinCitas(container);
+        for (const nombre of autoridadesSinTraducir(autoridadesDe(impacto), texto, idioma)) {
+          malos.push(`${impacto.id} ${idioma}: autoridad sin traducir «${nombre}»`);
+        }
         const otro = OTRO_ALFABETO.exec(texto);
         if (otro !== null) malos.push(`${impacto.id} ${idioma}: ${contexto(texto, otro.index)}`);
         cleanup();
