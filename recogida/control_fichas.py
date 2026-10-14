@@ -22,7 +22,7 @@ mucho 6 horas: después se publica con lo que haya. Lo que ya estaba publicado n
 se corrige.
 
 Gasto: modo «control», 0,15 dólares al día (horaria y madrugada); el repaso de todo lo publicado,
-modo «control_repaso», 4 dólares una sola vez. Uso:
+modo «control_repaso», 4 dólares y después 6 más (el 14 de octubre de 2026). Uso:
 
     python -m recogida.control_fichas noche|repaso|estado [--base DB.age] [--ensayo CARPETA]
 """
@@ -323,6 +323,57 @@ def reaplicar_uniones(
             almacen.guardar_incidente(nuevo, ahora, modelos)
             rehechas += 1
     return rehechas
+
+
+def conservar_la_mas_antigua(
+    almacen: Almacen, decisiones: dict[str, Documento], ahora: datetime, modelos: frozenset[str]
+) -> dict[str, Documento]:
+    """Las uniones del control conservan la ficha más antigua (reglas.mas_antiguo). Las que
+    conservaron la más nueva (hasta el 14 de octubre de 2026 se miraba la fecha de alta) se
+    rehacen: se deshacen la unión y las demás que acabaron en esa ficha, y se vuelven a hacer sobre
+    la más antigua; el enlace de las otras lleva a ella. Devuelve las decisiones corregidas (para
+    guardarlas); sin nada que corregir, no toca nada."""
+    corregidas: dict[str, Documento] = {}
+    vigentes = {**decisiones}
+    for clave in sorted(vigentes):
+        decision = vigentes[clave]
+        if decision.get("decision") != "mismo" or "conserva" not in decision:
+            continue
+        nuevo_id, viejo_id = decision["conserva"], decision["une"]
+        if reglas.orden_registro(viejo_id) >= reglas.orden_registro(nuevo_id):
+            continue
+        conserva = almacen.incidente(nuevo_id)
+        une = almacen.incidente(viejo_id)
+        if (
+            conserva is None or une is None or not incidentes.activo(conserva)
+            or une.get("fusionado_en") != nuevo_id
+        ):  # fmt: skip
+            continue
+        otros = [
+            f["absorbido"] for f in almacen.fusiones()
+            if not f["revertida"] and f["destino"] == nuevo_id and f["absorbido"] != viejo_id
+        ]  # fmt: skip
+        incidentes.revertir(almacen, viejo_id, ahora, modelos)
+        for otro in otros:
+            incidentes.revertir(almacen, otro, ahora, modelos)
+        motivo = str(decision.get("motivo_es", ""))
+        antiguo = almacen.incidente(viejo_id)
+        reciente = almacen.incidente(nuevo_id)
+        assert antiguo is not None and reciente is not None
+        antiguo = unir(almacen, antiguo, reciente, motivo, ahora, modelos)
+        for otro in otros:
+            propio = almacen.incidente(otro)
+            if propio is not None and incidentes.activo(propio):
+                antes = f"estaba unida a {nuevo_id}, que se une a la ficha más antigua {viejo_id}"
+                antiguo = unir(almacen, antiguo, propio, antes, ahora, modelos)
+        nota = f"se conserva la ficha más antigua ({viejo_id}), no {nuevo_id}"
+        corregidas[clave] = {**decision, "conserva": viejo_id, "une": nuevo_id, "corregida": nota}
+        for otra, d in vigentes.items():
+            if otra != clave and d.get("conserva") == nuevo_id:
+                corregidas[otra] = {**d, "conserva": viejo_id, "corregida": nota}
+        vigentes.update(corregidas)
+        registro.info("control de fichas: %s (y %d unidas a ella)", nota, len(otros))
+    return corregidas
 
 
 # --- El paso -------------------------------------------------------------------------------
@@ -826,6 +877,10 @@ def ejecutar(
     cursor = almacen.cursor(CURSOR) or {}
     # Primera pasada: lo que ya había cuenta como visto (el foco es solo lo reciente).
     vistos = set(cursor["vistos"]) if "vistos" in cursor else {d["id"] for d in _activos(almacen)}
+    corregidas = conservar_la_mas_antigua(almacen, ctx.decisiones, ahora, modelos)
+    if corregidas:
+        almacen.guardar_controles(corregidas, _iso(ahora))
+        ctx.decisiones = {**ctx.decisiones, **corregidas}
     reaplicar_uniones(almacen, ctx.decisiones, ahora, modelos)
     reglas_deterministas(ctx)
     activos = _activos(almacen)

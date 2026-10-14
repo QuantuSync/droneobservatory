@@ -685,3 +685,44 @@ def test_la_nota_del_lugar_no_lleva_el_nombre_en_otro_idioma() -> None:
     assert arreglado is not None
     assert arreglado["lugar"]["historial"][-1]["motivo"] == lugar_preciso.MOTIVO
     assert lugar_preciso.nota_sin_nombre(arreglado) is None
+
+
+def test_se_conserva_el_numero_de_registro_menor_aunque_su_alta_sea_mas_nueva() -> None:
+    viejo, nuevo = _nuremberg_alemana(), _nuremberg_griega()
+    viejo["control"]["alta"]["valor"] = "2026-10-14T05:00Z"
+    nuevo["control"]["alta"]["valor"] = "2026-10-13T05:00Z"
+    conserva, une = reglas.mas_antiguo(nuevo, viejo)
+    assert (conserva["id"], une["id"]) == ("EODI-2026-09515", "EODI-2026-09516")
+    assert reglas.orden_registro("EODI-2025-00243") < reglas.orden_registro("EODI-2025-00247")
+    assert reglas.orden_registro("EODI-2025-00999") < reglas.orden_registro("EODI-2026-00001")
+
+
+def test_una_union_que_conservo_la_mas_nueva_se_rehace_sobre_la_mas_antigua() -> None:
+    # Como Moldavia, 28 de noviembre de 2025: quedó 00247 en vez de 00243.
+    almacen = _base(_nuremberg_alemana(), _nuremberg_griega())
+    viejo = almacen.incidente("EODI-2026-09515")
+    nuevo = almacen.incidente("EODI-2026-09516")
+    assert viejo is not None and nuevo is not None
+    control_fichas.unir(almacen, nuevo, viejo, "el mismo suceso", AHORA, VOCABULARIO_MODELOS)
+    clave = "par:EODI-2026-09515|EODI-2026-09516"
+    almacen.guardar_controles(
+        {clave: {"decision": "mismo", "conserva": "EODI-2026-09516", "une": "EODI-2026-09515",
+                 "huella": "x", "fecha": "2026-10-14T05:56:00Z", "motivo_es": "el mismo suceso"}},
+        "2026-10-14T05:56:00Z",
+    )  # fmt: skip
+    _ejecutar(almacen, None, AHORA + timedelta(hours=1))
+    queda = almacen.incidente("EODI-2026-09515")
+    unido = almacen.incidente("EODI-2026-09516")
+    assert queda is not None and unido is not None
+    assert "fusionado_en" not in queda and unido["fusionado_en"] == "EODI-2026-09515"
+    assert {f["id"] for f in queda["fuentes"]} >= {"gdelt-dnews", "gdelt-schwaebische"}
+    decision = almacen.controles("par:")[clave]
+    assert (decision["conserva"], decision["une"]) == ("EODI-2026-09515", "EODI-2026-09516")
+    vigentes = [f for f in almacen.fusiones() if not f["revertida"]]
+    assert [(f["absorbido"], f["destino"]) for f in vigentes] == [
+        ("EODI-2026-09516", "EODI-2026-09515")
+    ]
+    # Idempotente: otra pasada no toca nada.
+    antes = almacen.incidente("EODI-2026-09515")
+    _ejecutar(almacen, None, AHORA + timedelta(hours=2))
+    assert almacen.incidente("EODI-2026-09515") == antes

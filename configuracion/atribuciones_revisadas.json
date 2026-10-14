@@ -1,6 +1,10 @@
 {
   "descripcion": "Motivo, revisado a mano el 4 de octubre de 2026, de cada atribución retirada con la regla estricta (proceso/atribucion.py, recogida/tipo_atribucion.py). La decisión la toma la regla; aquí solo se escribe por qué con lo que dicen las citas guardadas, en español y en inglés, para el historial de la ficha. El detalle, en docs/informe_marcador_atribuido.md. «por_regla»: el motivo de cada regla, para lo que no tiene uno revisado.",
   "motivos": {
+    "EODI-2025-00243": {
+      "es": "Se retira la atribución: la única cita es de una noticia que cuenta que la presidenta de Moldavia acusó a Moscú de intentar desestabilizar el país, sin palabras literales de la presidenta que atribuyan los drones.",
+      "en": "Attribution withdrawn: the only quote is from a news report saying that the President of Moldova accused Moscow of attempting to destabilise the country, without the President's own words attributing the drones."
+    },
     "EODI-2025-00247": {
       "es": "Se retira la atribución: la única cita es de una noticia que cuenta que la presidenta de Moldavia acusó a Moscú de intentar desestabilizar el país, sin palabras literales de la presidenta que atribuyan los drones.",
       "en": "Attribution withdrawn: the only quote is from a news report saying that the President of Moldova accused Moscow of attempting to destabilise the country, without the President's own words attributing the drones."

@@ -13,7 +13,7 @@ import type { CDPSession, Locator, Page } from "@playwright/test";
 const CAPTURAS = join(import.meta.dirname, "..", "..", "data", "capturas", "hoja");
 const MAPA_LISTO = "[data-mapa-listo=true]";
 /** El incidente del aviso: en un móvil real dejaba la etiqueta fija encima del mapa. */
-const INCIDENTE = "EODI-2025-00247";
+const INCIDENTE = "EODI-2025-00243";
 const MS_DE_VUELO = 2000;
 const MS_DE_ASENTAMIENTO = 800;
 /** Un gesto lento (para seguir al dedo) y uno rápido (para la velocidad). */

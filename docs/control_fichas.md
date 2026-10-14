@@ -56,7 +56,10 @@ publicar. Nunca impide publicar lo demás ni cambia el código de salida.
    (llamada «comparar»), que dice si es el mismo día, el mismo sitio y si alguna ficha resume
    varios sucesos. **Mismo**, solo con el mismo día, el mismo sitio y ninguna ficha que resuma
    varios sucesos: se unen con la fusión anotada como revisada y **se conserva el identificador
-   más antiguo** (el enlace del otro lleva al que queda; el que queda hereda la confirmación
+   más antiguo**, el de número de registro menor (hasta el 14 de octubre de 2026 era el de
+   fecha de alta, que cambia al reconstruir la base: Moldavia, 28 de noviembre de 2025, quedó en
+   00247 en vez de 00243, y 2026-00084 en 2026-00114; las dos se rehicieron solas sobre la más
+   antigua en la recogida siguiente, con las fichas que se habían unido a ellas) (el enlace del otro lleva al que queda; el que queda hereda la confirmación
    oficial del otro). **Distinto**: no se vuelve a comparar salvo que lleguen fuentes nuevas (de
    madrugada). **Dudoso**: se vuelve a comparar con cada fuente nueva y a las 6 horas se resuelve
    como distintos. Ante la duda, el control no une: un duplicado que se le escapa se corrige a
@@ -168,7 +171,8 @@ eran el mismo suceso partido y se unen en `incidentes_revisados.json`:
   llamadas y el mismo freno que el extractor (`modelo/coste.py`): antes de cada llamada se suma lo
   gastado y el peor caso; si pasa, no se llama y lo pendiente espera (las fichas nuevas, como
   mucho 6 horas).
-- Modo `control_repaso`: 4 dólares, una sola vez, para el repaso de todo lo publicado
+- Modo `control_repaso`: 4 dólares y después 6 más (14 de octubre de 2026, para las unas 600
+  fichas que quedaron sin verificar), para el repaso de todo lo publicado
   (`python -m recogida.control_fichas repaso --cerrojo …`), por lotes (a mitad de precio) y en
   dos rondas: los pares primero (las uniones) y después la verificación de cada ficha y las citas
   (las de Europa y, con lo que quede, las de Ucrania).

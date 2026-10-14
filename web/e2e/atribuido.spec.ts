@@ -29,7 +29,7 @@ const CHISINAU = "EODI-2026-00074";
  * Wunstorf y la ficha tomaba la fecha y el lugar de Leipzig (docs/informe_errores_datos.md), y
  * ya no está en los datos publicados, así que no se busca.
  */
-const REVISADOS = ["EODI-2025-00247", "EODI-2026-00015", "EODI-2026-00074"];
+const REVISADOS = ["EODI-2025-00243", "EODI-2026-00015", "EODI-2026-00074"];
 /** Una visita anterior lejana: todo lo publicado después cuenta como novedad y late. */
 const VISITA_ANTIGUA = "2026-09-01T00:00:00.000Z";
 const ES = textos("es");

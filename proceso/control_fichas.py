@@ -118,9 +118,21 @@ def primera_noticia(incidente: Documento) -> datetime:
     )
 
 
+def orden_registro(id_: str) -> tuple[int, int, str]:
+    """El orden en que se dio de alta un registro: su año y su número (EODI-2025-00243 va antes
+    que EODI-2025-00247). La fecha de alta guardada no sirve: cambia al reconstruir la base."""
+    partes = id_.split("-")
+    try:
+        return int(partes[1]), int(partes[2]), id_
+    except (IndexError, ValueError):
+        return 9999, 99999, id_
+
+
 def mas_antiguo(a: Documento, b: Documento) -> tuple[Documento, Documento]:
-    """(el que se conserva, el que se une): el de alta más antigua; a la par, el de número menor."""
-    uno, otro = sorted((a, b), key=lambda d: (d["control"]["alta"]["valor"], d["id"]))
+    """(el que se conserva, el que se une): el más antiguo, el de número de registro menor. Hasta
+    el 14 de octubre de 2026 era el de fecha de alta más antigua, que cambia al reconstruir la
+    base: en Moldavia (28 de noviembre de 2025) quedó EODI-2025-00247 en vez de 00243."""
+    uno, otro = sorted((a, b), key=lambda d: orden_registro(d["id"]))
     return uno, otro
 
 
