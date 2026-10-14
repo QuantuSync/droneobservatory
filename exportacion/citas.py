@@ -10,6 +10,8 @@
   la frase literal que lo respalda, de la fuente que lo dice, si coincide con lo publicado.
 - Las citas que se publican sin traducción quedan anotadas (`Pendientes`): el control las
   traduce en su siguiente pasada.
+- Las autoridades que no están en configuracion/autoridades.json se traducen igual y van en
+  `autoridades` (nombre -> {es, en}); la web no escribe nunca una sin traducir.
 
 Se añade al publicar, sobre lo ya proyectado: la base no cambia.
 """
@@ -19,6 +21,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from esquema import Documento
+from proceso import autoridades
 
 # Dato de la verificación -> campo público de «Qué dice la fuente».
 CAMPO_PUBLICO = {
@@ -164,6 +167,24 @@ def con_traducciones(
     if recorrido and recorrido.get("cita"):
         idioma = idiomas.get(str(recorrido.get("fuente")), "")
         _traducir(recorrido, "cita", "cita_traduccion", idioma, traducciones, faltan)
+    con_autoridades(publico, traducciones, faltan)
+
+
+def con_autoridades(
+    publico: Documento, traducciones: dict[str, Documento], faltan: dict[str, tuple[str, str]]
+) -> None:
+    """Las autoridades que no están en configuracion/autoridades.json, en español y en inglés
+    (`autoridades`: nombre -> {es, en}), para que la web nunca las escriba en otro idioma; las que
+    aún no tienen traducción, en `faltan` (con la marca de nombre)."""
+    escritas: dict[str, Documento] = {}
+    for nombre, idioma in autoridades.por_traducir(publico):
+        hecha = traduccion(nombre, traducciones)
+        if hecha is not None:
+            escritas[nombre] = hecha
+        else:
+            faltan.setdefault(huella_texto(nombre), (idioma, autoridades.MARCA + nombre))
+    if escritas:
+        publico["autoridades"] = escritas
 
 
 def enriquecer_incidentes(

@@ -23,7 +23,7 @@ import type {
 import { diaDeTexto, factoresQueCuentan, habitualDe, probabilidadLlana, mesEscrito, textoCambio, textoFactor } from "../datos/prevision.ts";
 import type { Prevision } from "../datos/prevision.ts";
 import { ataquesPorRegion, cifrasDeRegion, diaDeParte, sentidoDeFila } from "../datos/ucrania.ts";
-import { autoridadEscrita, medioEscrito } from "../i18n/autoridades.ts";
+import { autoridadEscrita, medioEnFrase, medioEscrito } from "../i18n/autoridades.ts";
 import { fecha, fechaDia, fechaHora, instante, numero, pais, rango, region, textos } from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
 import type { Bloque, Trozo } from "../i18n/tipos.ts";
@@ -237,7 +237,7 @@ export function filaTipoDron(t: Textos, d: IncidenteDetalle, idioma: Idioma = "e
       e("span", { "data-tipo-dron": "autoridad" }, textos.identificado(tipo.identificado.modelo)),
       e("span", { class: "texto-nota" }, textos.grupoDe(textos.grupos[tipo.identificado.grupo])),
       citaTraducida(t, idioma, tipo.identificado.cita, fuente?.idioma, tipo.identificado.cita_traduccion, "q", { class: "texto-nota" }),
-      fuente !== undefined && e("span", { class: "texto-nota" }, t.ficha.valorSegun, " ", fuente.medio),
+      fuente !== undefined && e("span", { class: "texto-nota" }, t.ficha.valorSegun, " ", medioEnFrase(fuente.medio, idioma, t.ficha.declaracionCitada)),
     );
   }
   const publicado = tipo.publicado;
@@ -1012,7 +1012,7 @@ function guerra(datos: DatosPaginas, idioma: Idioma): PaginaTexto {
       "ul",
       null,
       fuentesPartes.map(([s, f]) =>
-        e("li", null, tp.ucrania.sentido[s], ": ", f === null ? t.ficha.desconocido : html(f.medio, " (", e("abbr", { title: tp.incidente.codigoFuente }, `${f.fiabilidad}${f.credibilidad}`), ")", f.reivindicacion && html(" · ", tp.ucrania.reivindicacion))),
+        e("li", null, tp.ucrania.sentido[s], ": ", f === null ? t.ficha.desconocido : html(medioEscrito(f.medio, idioma, t.ficha.declaracionCitada), " (", e("abbr", { title: tp.incidente.codigoFuente }, `${f.fiabilidad}${f.credibilidad}`), ")", f.reivindicacion && html(" · ", tp.ucrania.reivindicacion))),
       ),
     ),
     satelite !== undefined && html(e("h3", null, satelite.titulo), satelite.bloques.map(bloque)),

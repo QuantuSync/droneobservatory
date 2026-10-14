@@ -180,7 +180,12 @@ incidentes con drones para el European Observatory of Drone Incidents. Para cada
 da su traducción al español (es) y al inglés (en): fiel, completa, sin añadir ni quitar nada, \
 con los nombres propios como en el original (los de ciudades y aeropuertos, en su forma \
 habitual en cada idioma). Da siempre las dos, también si la cita ya está en uno de los dos \
-idiomas: entonces repítela tal cual en ese idioma. Ninguna traducción puede quedar vacía."""
+idiomas: entonces repítela tal cual en ese idioma. Ninguna traducción puede quedar vacía. Lo \
+que empieza por «[autoridad]» no es una cita: es el nombre de una institución, un organismo o \
+un cargo que declara. Escríbelo sin la marca, como se diría en cada idioma y con su artículo \
+(«el Ministerio de Defensa de Rumanía», «the Romanian Ministry of Defence»; «la Policía de \
+Moldavia», «the Moldovan Police»), con el país si el nombre no lo dice y se sabe; si es una \
+persona, con su cargo delante («el primer ministro de Polonia, Donald Tusk»)."""
 
 
 @dataclass(frozen=True)

@@ -6,6 +6,7 @@ import type { Textos } from "../i18n/index.ts";
 import { rutaDeFicha } from "../sitio.ts";
 import type { Idioma } from "../sitio.ts";
 import { LineaFoco, ZOOM_VISOR_REGION } from "./FocoTermico.tsx";
+import { fuenteEnFrase } from "./Fuentes.tsx";
 import { ListaLuz } from "./GuerraSatelite.tsx";
 import { Fila } from "./Panel.tsx";
 import { PALETA } from "../paleta.ts";
@@ -36,11 +37,11 @@ interface Props {
 }
 
 /** Línea con la fuente de las cifras de un sentido: medio, puntuación y, si lo es, la marca. */
-function LineaFuente({ t, fuente }: { t: Textos; fuente: FuenteSentido }) {
+function LineaFuente({ t, idioma, fuente }: { t: Textos; idioma: Idioma; fuente: FuenteSentido }) {
   const codigo = `${fuente.fiabilidad}${fuente.credibilidad}`;
   return (
     <span className="block text-xs text-secundario" data-fuente-cifras="">
-      {t.region.fuenteCifras(fuente.medio)}{" "}
+      {t.region.fuenteCifras(fuenteEnFrase(t, fuente.medio, idioma))}{" "}
       <span className="mono rounded-sm border border-linea px-1 text-acento">
         <span className="sr-only">{t.ficha.codigo(codigo)}</span>
         <span aria-hidden="true" title={t.ficha.codigo(codigo)}>
@@ -104,7 +105,7 @@ export function FichaRegion(props: Props) {
                     {t.region.ataquesPorSentido[sentido]}:{" "}
                     <span className="mono">{numero(cifras.ataques[sentido], idioma)}</span>
                     {fuentes?.[sentido] !== undefined && fuentes[sentido] !== null && (
-                      <LineaFuente t={t} fuente={fuentes[sentido]} />
+                      <LineaFuente t={t} idioma={idioma} fuente={fuentes[sentido]} />
                     )}
                   </li>
                 ))}

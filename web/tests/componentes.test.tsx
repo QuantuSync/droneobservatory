@@ -178,10 +178,11 @@ describe("ficha de un incidente", () => {
     const filas = within(lista)
       .getAllByRole("listitem")
       .map((li) => li.textContent);
-    expect(filas[0]).toContain("10 según Polizei");
+    expect(filas[0]).toContain("10 según la Policía (Polizei)");
     expect(filas[0]).toContain("B1");
     expect(filas[1]).toContain("3 según bild.de");
-    expect(filas[2]).toContain("40 según Минобороны");
+    // Una autoridad en otro alfabeto sin traducción: nunca su nombre en cirílico.
+    expect(filas[2]).toContain("40 según una autoridad");
   });
 
   it("sin valores por fuente se queda con el rango publicado y sin desplegable", () => {

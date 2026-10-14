@@ -434,6 +434,7 @@ describe("listas cerradas iguales a las del esquema", () => {
           nota: { es: "Juntaba un cierre y un derribo.", en: "It merged a closure and a shoot-down." },
         },
       ],
+      autoridades: { "Defense Ministry of Cyprus": { es: "el Ministerio de Defensa de Chipre", en: "the Cypriot Ministry of Defence" } },
       nombres: {
         lugar: { es: "RAF Akrotiri (base británica), Chipre", en: "RAF Akrotiri (British base), Cyprus" },
         localidad: { es: "RAF Akrotiri", en: "RAF Akrotiri" },

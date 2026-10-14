@@ -91,8 +91,9 @@ describe("atribución retirada", () => {
     expect(autoridadEscrita("Pre\u0219edintele Maia Sandu", "es")).toBe("la presidenta de Moldavia, Maia Sandu");
     expect(autoridadEscrita("Prefectul I\u0061\u0219i", "es")).toBe("el prefecto de I\u0061\u0219i");
     expect(autoridadEscrita("Københavns Politi", "es")).toBe("la Policía de Copenhague (Københavns Politi)");
-    // Una autoridad que no está en la tabla (configuracion/autoridades.json), tal cual.
-    expect(autoridadEscrita("Politi ukjent", "es")).toBe("Politi ukjent");
+    // Una autoridad que no está en la tabla (configuracion/autoridades.json) ni llegó traducida:
+    // nunca en otro idioma (tests/autoridades-idioma.test.tsx).
+    expect(autoridadEscrita("Politi ukjent", "es")).toBe("una autoridad");
     // Una fuente oficial sin medio, con su nombre traducido; el tráfico medido, en cada idioma.
     expect(medioEscrito("Tráfico aéreo medido (adsb.lol)", "en", en.ficha.declaracionCitada)).toBe(
       "Measured air traffic (adsb.lol)",

@@ -736,7 +736,7 @@ export const es: Textos = {
     nota:
       "Las cifras son las que da cada parte en sus comunicados. Los derribos por región son " +
       "los que cada parte desglosa por región.",
-    fuenteCifras: (medio) => `Cifras de ${medio}`,
+    fuenteCifras: (medio) => (medio.startsWith("el ") ? `Cifras del ${medio.slice(3)}` : `Cifras de ${medio}`),
     reivindicacion: "reivindicación de parte",
     impactos: "Impactos con lugar en el periodo",
     listaImpactos: "Lugares alcanzados",
