@@ -33,6 +33,8 @@ MAX_TOKENS_SALIDA = 1500
 # Extraer no es redactar: con temperatura 0, la misma noticia da la misma ficha. Con la de
 # por defecto, dos llamadas sobre la misma nota de Anenii Noi dieron fichas distintas.
 TEMPERATURA = 0.0
+# Decidir los datos de una ficha: esfuerzo medio (modelos nuevos; el de antes no lo admite).
+ESFUERZO = "medium"
 # Un valor de lista escrito en otro idioma («confirmata») vale si comparte con uno solo de
 # los valores todas sus letras menos las dos últimas.
 LETRAS_TERMINACION = 2
@@ -354,7 +356,9 @@ def cuerpo(objetivo: str, fuentes: list[FuenteTexto]) -> dict[str, Any]:
         "max_tokens": MAX_TOKENS_SALIDA,
         "temperature": TEMPERATURA,
         "system": [{"type": "text", "text": INSTRUCCIONES, "cache_control": {"type": "ephemeral"}}],
-        "output_config": {"format": {"type": "json_schema", "schema": ESQUEMA}},
+        "output_config": {
+            "format": {"type": "json_schema", "schema": ESQUEMA}, "effort": ESFUERZO,
+        },
         "messages": [{"role": "user", "content": contenido(objetivo, fuentes)}],
     }
 

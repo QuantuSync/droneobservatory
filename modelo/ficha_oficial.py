@@ -28,6 +28,8 @@ VERSION = "oficial/1"
 # margen sin inflar el peor caso con que se recorta el lote del histórico.
 MAX_TOKENS_SALIDA = 2000
 TEMPERATURA = 0.0
+# Leer un documento oficial y decidir sus datos: esfuerzo medio (modelos nuevos).
+ESFUERZO = "medium"
 DETECCION = ("radar", "visual", "piloto", "camara", "ciudadano")
 RESULTADOS = ("funciono", "no_funciono", "desconocido")
 METRICAS = (
@@ -200,7 +202,9 @@ def cuerpo(datos: dict[str, str], pasajes: list[str]) -> dict[str, Any]:
         "max_tokens": MAX_TOKENS_SALIDA,
         "temperature": TEMPERATURA,
         "system": [{"type": "text", "text": INSTRUCCIONES, "cache_control": {"type": "ephemeral"}}],
-        "output_config": {"format": {"type": "json_schema", "schema": ESQUEMA}},
+        "output_config": {
+            "format": {"type": "json_schema", "schema": ESQUEMA}, "effort": ESFUERZO,
+        },
         "messages": [{"role": "user", "content": contenido(datos, pasajes)}],
     }
 

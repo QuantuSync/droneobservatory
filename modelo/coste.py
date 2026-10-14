@@ -1,8 +1,8 @@
 """Coste de cada llamada al extractor y límites de gasto duros.
 
-Las tarifas son las del modelo configurado en el secreto EODI_EXTRACTOR_MODELO
-en septiembre de 2026, en dólares por millón de tokens. Si cambia el modelo,
-hay que cambiarlas aquí.
+Cada llamada se cobra con la tarifa del modelo que la hizo (modelo/modelos.py: el base, el
+experto o el de antes), con su tramo de más de 100.000 tokens, sus precios de caché y el
+descuento de los lotes.
 
 Límites, compartidos por todo lo que llama al extractor:
 - 5 dólares para todo el histórico (modo «historico»);
@@ -30,6 +30,9 @@ Límites, compartidos por todo lo que llama al extractor:
 El barrido del catálogo vivo (recogida/catalogo_vivo.py) lleva su propio registro de gasto
 fuera de la base: 0,10 dólares al día y 3 dólares una vez para su primera pasada.
 
+El modelo experto tiene además su propio tope diario, sumando todos los modos: 0,30 dólares
+(LIMITE_EXPERTO_DIARIO_USD). Lo que gasta cuenta también en el modo de la llamada.
+
 Antes de cada llamada se suma lo gastado y el peor caso de la llamada (sus
 tokens de entrada estimados y el máximo de salida); si pasa del límite, no se
 llama.
@@ -40,14 +43,8 @@ from datetime import datetime
 from enum import StrEnum
 from typing import Any
 
-MILLON = 1_000_000
-PRECIO_ENTRADA = 1.00
-PRECIO_SALIDA = 5.00
-# La escritura en caché cuesta 1,25 veces la entrada y la lectura, 0,1 veces.
-PRECIO_ESCRITURA_CACHE = 1.25
-PRECIO_LECTURA_CACHE = 0.10
-# Los lotes cuestan la mitad.
-DESCUENTO_LOTE = 0.5
+from modelo import modelos
+
 LIMITE_HISTORICO_USD = 5.00
 LIMITE_DIARIO_USD = 0.30
 LIMITE_REVISION_USD = 5.00
@@ -63,6 +60,8 @@ LIMITE_CONTROL_DIARIO_USD = 0.15
 # Repaso del control sobre todo lo publicado: 4 USD el 14 de octubre de 2026 de madrugada (se
 # gastaron 3,46) y 6 USD más ese mismo día para las fichas que quedaron sin verificar.
 LIMITE_CONTROL_REPASO_USD = 9.46
+# Tope diario del modelo experto, en todos los modos juntos.
+LIMITE_EXPERTO_DIARIO_USD = 0.30
 # Una letra son unos 0,3 tokens en los idiomas europeos; se estima por lo alto con 0,5
 # para que el peor caso no se quede corto.
 TOKENS_POR_LETRA = 0.5
@@ -91,29 +90,49 @@ class Uso:
     salida: int
     escritura_cache: int = 0
     lectura_cache: int = 0
+    # El modelo que hizo la llamada (el campo «model» de la respuesta); vacío, el base.
+    modelo: str = ""
 
     @classmethod
-    def de_respuesta(cls, usage: dict[str, Any]) -> "Uso":
+    def de_respuesta(cls, usage: dict[str, Any], modelo: str | None = None) -> "Uso":
         return cls(
             entrada=int(usage.get("input_tokens", 0)),
             salida=int(usage.get("output_tokens", 0)),
             escritura_cache=int(usage.get("cache_creation_input_tokens") or 0),
             lectura_cache=int(usage.get("cache_read_input_tokens") or 0),
+            modelo=modelo or "",
         )
 
+    @classmethod
+    def de_mensaje(cls, respuesta: dict[str, Any]) -> "Uso":
+        """El uso de una respuesta del servicio, con el modelo que la dio."""
+        return cls.de_respuesta(respuesta.get("usage", {}), respuesta.get("model"))
+
     def coste(self, lote: bool = False) -> float:
-        dolares = (
-            self.entrada * PRECIO_ENTRADA
-            + self.salida * PRECIO_SALIDA
-            + self.escritura_cache * PRECIO_ENTRADA * PRECIO_ESCRITURA_CACHE
-            + self.lectura_cache * PRECIO_ENTRADA * PRECIO_LECTURA_CACHE
-        ) / MILLON
-        return dolares * (DESCUENTO_LOTE if lote else 1)
+        return modelos.coste(
+            self.modelo or None, self.entrada, self.salida, self.escritura_cache,
+            self.lectura_cache, lote,
+        )  # fmt: skip
 
 
-def peor_caso(letras_entrada: int, max_salida: int, lote: bool = False) -> float:
-    """Coste máximo de una llamada: toda la entrada sin caché y toda la salida permitida."""
-    return Uso(int(letras_entrada * TOKENS_POR_LETRA), max_salida).coste(lote)
+def peor_caso(
+    letras_entrada: int, max_salida: int, lote: bool = False, modelo: str | None = None,
+    esfuerzo: str | None = None,
+) -> float:  # fmt: skip
+    """Coste máximo de una llamada: toda la entrada sin caché y toda la salida permitida, con el
+    margen del razonamiento del modelo (el base si no se dice)."""
+    nombre = modelo or modelos.base()
+    salida = modelos.max_salida(nombre, max_salida, esfuerzo)
+    return Uso(int(letras_entrada * TOKENS_POR_LETRA), salida, modelo=nombre).coste(lote)
+
+
+def comprobar_experto(gastado_hoy: float, previsto: float) -> None:
+    """Lanza LimiteGasto si el experto pasaría hoy de su tope diario."""
+    if gastado_hoy + previsto > LIMITE_EXPERTO_DIARIO_USD:
+        raise LimiteGasto(
+            f"experto: gastado {gastado_hoy:.4f} + previsto {previsto:.4f} > "
+            f"{LIMITE_EXPERTO_DIARIO_USD:.2f} USD"
+        )
 
 
 def limite(modo: Modo) -> float:
