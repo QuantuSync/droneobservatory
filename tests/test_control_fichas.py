@@ -133,6 +133,9 @@ class Servicio:
         if contenido.startswith("Ficha A:"):
             self.pedidas.append("comparar")
             salida: dict[str, Any] = {
+                "mismo_dia": self.decision == "mismo",
+                "mismo_sitio": self.decision == "mismo",
+                "varios_sucesos": False,
                 "decision": self.decision,
                 "motivo_es": "la misma alerta",
                 "motivo_en": "the same alert",
@@ -622,3 +625,20 @@ def test_la_union_no_pierde_la_confirmacion_oficial_del_unido() -> None:
     unido, _ = incidentes.absorber(antiguo, nuevo, AHORA)
     assert unido["estado"]["actual"] == "confirmado"
     assert unido["estado"]["historial"][-1]["fuente_id"] == "gdelt-infranken"
+
+
+def test_mismo_solo_con_el_mismo_dia_y_el_mismo_sitio() -> None:
+    base = {"decision": "mismo", "mismo_dia": True, "mismo_sitio": True, "varios_sucesos": False}
+    assert control_fichas.decision_comprobada(base) == "mismo"
+    assert control_fichas.decision_comprobada({**base, "mismo_dia": False}) == "dudoso"
+    assert control_fichas.decision_comprobada({**base, "varios_sucesos": True}) == "dudoso"
+    assert control_fichas.decision_comprobada({**base, "decision": "distinto"}) == "distinto"
+
+
+def test_dias_distintos_con_fecha_escrita_no_son_candidatos() -> None:
+    a, b = _nuremberg_alemana(), _nuremberg_griega()
+    a["tiempo"]["inicio"] = ejemplos.instante("2026-10-12T00:00Z", "dia")
+    b["tiempo"]["inicio"] = ejemplos.instante("2026-10-13T20:00Z", "hora")
+    assert not reglas.candidatos(a, b)
+    b["tiempo"]["inicio"] = ejemplos.instante("2026-10-12T21:00Z", "hora")
+    assert reglas.candidatos(a, b)
