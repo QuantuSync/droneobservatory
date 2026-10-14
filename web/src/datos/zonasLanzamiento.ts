@@ -14,7 +14,9 @@ interface Entrada {
 }
 
 const NOMBRES: ReadonlyMap<string, Entrada> = new Map(
-  [...(tabla.zonas as Entrada[]), ...(tabla.direcciones as Entrada[])].map((e) => [e.nombre, e]),
+  [...(tabla.zonas as Entrada[]), ...(tabla.direcciones as Entrada[])].map(
+    (e) => [e.nombre, e],
+  ),
 );
 
 /** El nombre de la zona en el idioma de la página; el del parte solo si no está en la tabla. */
