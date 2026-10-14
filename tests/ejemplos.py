@@ -732,7 +732,7 @@ def recorrido() -> Documento:
     return {
         "version": "recorridos-1.0.0",
         "fuente": "F1",
-        "cita": "din direcția localității Biliaivka spre localitatea Tudora",
+        "cita": "din direc\u021bia localit\u0103\u021bii Biliaivka spre localitatea Tudora",
         "puntos": [
             {"nombre": "Biliaivka", "lat": 46.48, "lon": 30.21, "radio_km": 4.0, "hora": "05:55"},
             {"nombre": "Tudora", "lat": 46.44, "lon": 30.04, "radio_km": 4.0},
