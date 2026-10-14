@@ -587,3 +587,16 @@ def test_noche_traduce_lo_atrasado_por_lote(tmp_path: Path) -> None:
     assert citas.huella_texto("Одна цитата") in almacen.traducciones()
     assert any(ll["modo"] == "control" and ll["lote"] for ll in almacen.llamadas())
     assert json.loads((tmp_path / "control.json").read_text(encoding="utf-8"))["pasadas"]
+
+
+def test_titular_sin_posible_repetido() -> None:
+    from proceso import titulares
+
+    assert (
+        titulares.ajustar(
+            "Posible avistamiento de posible dron causa perturbaciones en el aeropuerto de Núremberg",  # noqa: E501
+            "no_confirmada",
+            "es",
+        )
+        == "Posible avistamiento de dron causa perturbaciones en el aeropuerto de Núremberg"
+    )

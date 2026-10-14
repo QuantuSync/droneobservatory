@@ -38,15 +38,18 @@ _OBJETO = {
     "en": re.compile(r"\bunidentified\s+(?:flying\s+)?(?P<obj>objects?)\b", re.IGNORECASE),
 }
 
-# El titular ya duda del dron con otra palabra («posiblemente», «sospecha de», «unidentified»):
-# no hace falta añadir «posible», y si se añadió sobra.
+# El titular ya duda del dron con otra palabra («posiblemente», «sospecha de», «unidentified», «un
+# posible avistamiento»): no hace falta añadir «posible», y si se añadió sobra («Posible
+# avistamiento de posible dron», EODI-2026-00515).
 _DUDA = {
     "es": re.compile(
-        r"\b(?:posiblemente|probablemente|presunt\w*|supuest\w*|sospech\w*|no identificad\w*)",
+        r"\b(?:posiblemente|probablemente|presunt\w*|supuest\w*|sospech\w*|no identificad\w*|"
+        r"posibles?\s+(?!(?:drones|dron)\b)\w+)",
         re.IGNORECASE,
     ),
     "en": re.compile(
-        r"\b(?:possibly|probably|suspected|suspicious|alleged|presumed|unidentified)\b",
+        r"\b(?:possibly|probably|suspected|suspicious|alleged|presumed|unidentified|"
+        r"possible\s+(?!(?:drones|drone)\b)\w+)\b",
         re.IGNORECASE,
     ),
 }
