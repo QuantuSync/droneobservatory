@@ -329,8 +329,8 @@ ficheros de prueba y dejó el servidor sin SSH ni servicios. Las sesiones borran
 `/bin`, `/boot`, `/proc`, `/sys`...):
 
 ```
-python3 /home/eodi/droneobservatory/servidor/borrar.py --ensayo /home/operador/prueba   # qué borraría
-python3 /home/eodi/droneobservatory/servidor/borrar.py /home/operador/prueba
+sudo python3 /home/eodi/droneobservatory/servidor/borrar.py --ensayo /home/operador/prueba   # qué borraría
+sudo python3 /home/eodi/droneobservatory/servidor/borrar.py /home/operador/prueba
 sudo -u eodi python3 /home/eodi/droneobservatory/servidor/borrar.py /home/eodi/ensayo-x  # lo del usuario eodi
 ```
 
