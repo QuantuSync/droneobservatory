@@ -630,7 +630,7 @@ def estado_con_el_absorbido(destino: Documento, absorbido: Documento) -> Documen
     no tenía, si su fuente pasa al destino: al conservar el registro más antiguo
     (recogida/control_fichas.py), la confirmación oficial del otro no se pierde. Un desmentido
     no se toca."""
-    estado = destino["estado"]
+    estado: Documento = destino["estado"]
     actual = estado["actual"]
     if actual not in RANGO_ESTADO or absorbido["estado"]["actual"] not in RANGO_ESTADO:
         return estado
