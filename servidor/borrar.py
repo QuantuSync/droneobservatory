@@ -17,7 +17,8 @@ Se puede borrar dentro de (nunca la carpeta raíz misma):
 Las rutas se resuelven antes de comprobarlas (sin «..» ni enlaces que lleven fuera); un enlace se
 borra él, no aquello a lo que apunta. Una carpeta se borra entera sin seguir enlaces.
 
-Uso: python3 /home/eodi/droneobservatory/servidor/borrar.py [--ensayo] <ruta> [<ruta>...]
+Uso: sudo python3 /home/eodi/droneobservatory/servidor/borrar.py [--ensayo] <ruta> [<ruta>...]
+     (operador no puede leer /home/eodi: con sudo; las rutas permitidas son las mismas)
      sudo -u eodi python3 ... (para lo del usuario eodi)
 Código 0 si se borró todo; 1 si se negó o falló alguna (las demás sí se borran); 2 sin rutas.
 """
