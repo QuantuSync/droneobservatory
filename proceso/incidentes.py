@@ -617,7 +617,42 @@ def absorber(
         }
     resultado["control"]["huella_fuentes"] = huella([f["enlace"] for f in resultado["fuentes"]])
     resultado["control"]["ultima_actualizacion"] = _instante(ahora, "minuto")
+    resultado["estado"] = estado_con_el_absorbido(resultado, absorbido)
     return aplicar_reglas(resultado), sorted(aportadas_ids)
+
+
+# Orden de los estados que da una fuente oficial: un registro unido no pierde el que tenía.
+RANGO_ESTADO = {"notificado": 0, "confirmado": 1, "atribuido": 2}
+
+
+def estado_con_el_absorbido(destino: Documento, absorbido: Documento) -> Documento:
+    """El estado del destino con los pasos a confirmado o atribuido del absorbido que el destino
+    no tenía, si su fuente pasa al destino: al conservar el registro más antiguo
+    (recogida/control_fichas.py), la confirmación oficial del otro no se pierde. Un desmentido
+    no se toca."""
+    estado = destino["estado"]
+    actual = estado["actual"]
+    if actual not in RANGO_ESTADO or absorbido["estado"]["actual"] not in RANGO_ESTADO:
+        return estado
+    fuentes = {f["id"] for f in destino["fuentes"]}
+    nivel = RANGO_ESTADO[actual]
+    ultimo = estado["historial"][-1]["fecha"]["valor"]
+    nuevos = []
+    for paso in absorbido["estado"]["historial"]:
+        rango = RANGO_ESTADO.get(paso["estado"], -1)
+        if (
+            rango > nivel
+            and paso.get("fuente_id") in fuentes
+            and "motivo" not in paso
+            and paso["fecha"]["valor"] >= ultimo
+        ):
+            nuevos.append(copy.deepcopy(paso))
+            nivel = rango
+            ultimo = paso["fecha"]["valor"]
+    if not nuevos:
+        return estado
+    historial = [*estado["historial"], *nuevos]
+    return {"actual": nuevos[-1]["estado"], "historial": historial}
 
 
 CLASE_FECHA = {"minuto": 0, "hora": 0, "dia": 1, APROXIMADA: 2}
