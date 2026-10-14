@@ -600,3 +600,25 @@ def test_titular_sin_posible_repetido() -> None:
         )
         == "Posible avistamiento de dron causa perturbaciones en el aeropuerto de Núremberg"
     )
+
+
+def test_la_union_no_pierde_la_confirmacion_oficial_del_unido() -> None:
+    from proceso import incidentes
+
+    antiguo = _nuremberg_griega()
+    nuevo = _nuremberg_alemana()
+    nuevo["fuentes"][0]["es_autoridad"] = True
+    nuevo["estado"] = {
+        "actual": "confirmado",
+        "historial": [
+            nuevo["estado"]["historial"][0],
+            {
+                "estado": "confirmado",
+                "fuente_id": "gdelt-infranken",
+                "fecha": ejemplos.instante("2026-10-13T13:00Z"),
+            },
+        ],
+    }
+    unido, _ = incidentes.absorber(antiguo, nuevo, AHORA)
+    assert unido["estado"]["actual"] == "confirmado"
+    assert unido["estado"]["historial"][-1]["fuente_id"] == "gdelt-infranken"
