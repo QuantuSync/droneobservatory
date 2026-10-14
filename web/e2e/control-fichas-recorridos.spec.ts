@@ -9,6 +9,8 @@
 //   enlace antiguo (00516) lleva a ella.
 // - Las citas salen en el idioma de la página y el original se despliega con el dedo o el ratón
 //   («Ver original» / «Show original»).
+// - Moldavia (28 de noviembre de 2025): una sola ficha, la más antigua (EODI-2025-00243); los
+//   enlaces de 00247, 00328 y 00046 llevan a ella.
 // - Fichas corregidas por el repaso (CORREGIDAS) se abren y responden.
 // - Sin errores de consola y con los enlaces internos de las fichas respondiendo.
 //
@@ -26,6 +28,9 @@ const BULGARIA_ANTIGUOS = ["EODI-2026-00513", "EODI-2026-00514"];
 const BULGARIA_6_OCTUBRE = "EODI-2026-00489";
 const NUREMBERG = "EODI-2026-00515";
 const NUREMBERG_ANTIGUO = "EODI-2026-00516";
+/** Moldavia, 28 de noviembre de 2025: queda la ficha más antigua (00243); las otras llevan a ella. */
+const MOLDAVIA = "EODI-2025-00243";
+const MOLDAVIA_UNIDAS = ["EODI-2025-00247", "EODI-2025-00328", "EODI-2025-00046"];
 /** Fichas corregidas por el repaso de todo lo publicado (informe del control). */
 const CORREGIDAS = (process.env.CORREGIDAS ?? "EODI-2025-00066,EODI-2025-00154,EODI-2026-00065,EODI-2026-00268,EODI-2025-00248")
   .split(",")
@@ -176,6 +181,23 @@ test.describe("Control de calidad de las fichas, como una persona", () => {
       // El ataque del 6 de octubre sigue siendo otra ficha.
       await pagina.goto(ruta(BULGARIA_6_OCTUBRE, idioma), { waitUntil: "domcontentloaded" });
       await expect(pagina).toHaveURL(new RegExp(`${BULGARIA_6_OCTUBRE}$`), { timeout: 30_000 });
+      expect(errores).toEqual([]);
+    });
+
+    test(`Moldavia, 28 de noviembre de 2025: una ficha, la más antigua (${idioma})`, async ({ page: pagina, context: contexto, browserName }, info) => {
+      test.skip(!PROYECTOS.includes(info.project.name), "en los dispositivos de los recorridos");
+      test.setTimeout(300_000);
+      const errores = vigilar(pagina);
+      const tactil = info.project.use.hasTouch === true;
+      const moldavia = await abrir(pagina, contexto, MOLDAVIA, idioma, browserName === "chromium", tactil);
+      await expect(moldavia).toContainText(idioma === "es" ? "Moldavia" : "Moldova");
+      expect(await enlacesInternos(pagina), "enlaces internos de Moldavia").toEqual([]);
+      await capturar(pagina, errores, join(CAPTURAS, `${MOLDAVIA}-${idioma}-${info.project.name}.png`));
+      // Los enlaces de las fichas unidas llevan a la más antigua.
+      for (const antiguo of MOLDAVIA_UNIDAS) {
+        await pagina.goto(ruta(antiguo, idioma), { waitUntil: "domcontentloaded" });
+        await expect(pagina).toHaveURL(new RegExp(`${MOLDAVIA}$`), { timeout: 30_000 });
+      }
       expect(errores).toEqual([]);
     });
 
