@@ -618,6 +618,10 @@ def ronda(
     # 1. Comprobaciones, en paralelo entre sitios y con pausa en cada sitio.
     ritmo = _RitmoPorSitio(PAUSA_SITIO_S)
     cerrojo = threading.Lock()
+    # Las peticiones de archivo (3) eligen los enlaces vivos: esperan a que terminen las
+    # comprobaciones (hasta el tope de la ronda). Sin esta espera, un enlace que se estaba
+    # comprobando a la vez no se pedía en esa ronda, y la prueba fallaba según los hilos.
+    comprobados = threading.Event()
 
     def una(enlace: str) -> None:
         if time.monotonic() > fin:
@@ -668,6 +672,7 @@ def ronda(
             if not pedir:
                 return
             # Los que se acaban de buscar sin copia y siguen vivos también se piden ya.
+            comprobados.wait(max(0.0, fin - time.monotonic()))
             with cerrojo:
                 pedibles = tareas(
                     {e: v for e, v in estado.items() if v.get("publicado")}, reloj()
@@ -697,8 +702,11 @@ def ronda(
 
     hilo_archivo = threading.Thread(target=archivar, name="archivo")
     hilo_archivo.start()
-    with ThreadPoolExecutor(HILOS_COMPROBACION) as hilos:
-        list(hilos.map(una, _en_orden_de_sitios(pendiente.comprobar)))
+    try:
+        with ThreadPoolExecutor(HILOS_COMPROBACION) as hilos:
+            list(hilos.map(una, _en_orden_de_sitios(pendiente.comprobar)))
+    finally:
+        comprobados.set()
     hilo_archivo.join()
     with cerrojo:
         guardar_a_menudo(True)

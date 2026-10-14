@@ -27,7 +27,9 @@ ESFUERZO_VERIFICAR = "medium"
 ESFUERZO_TRADUCIR = "low"
 MAX_SALIDA_COMPARAR = 400
 MAX_SALIDA_VERIFICAR = 1200
-MAX_SALIDA_TRADUCIR = 4000
+# Treinta citas en dos idiomas: con el modelo base (unos 30 % más de tokens por el mismo texto)
+# 4000 se quedaban cortos.
+MAX_SALIDA_TRADUCIR = 8000
 # Letras de cada texto que se mandan: el titular entero y las primeras frases.
 MAX_LETRAS_TEXTO = 700
 MAX_FUENTES = 6

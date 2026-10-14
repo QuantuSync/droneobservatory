@@ -7,6 +7,7 @@ import { Cita } from "./Cita.tsx";
 import { Historial, ListaFuentes } from "./Fuentes.tsx";
 import { LineaFoco, ZOOM_VISOR_REGION } from "./FocoTermico.tsx";
 import { lucesDeAtaque } from "../datos/guerraSatelite.ts";
+import { zonaLanzamientoEscrita } from "../datos/zonasLanzamiento.ts";
 import { ListaLuz } from "./GuerraSatelite.tsx";
 import { Fila } from "./Panel.tsx";
 import { Enlace } from "../navegacion.tsx";
@@ -64,7 +65,7 @@ export function FichaAtaque({ t, idioma, ataque, centros }: Props) {
       ? []
       : [[t.ataque.reactivos, ataque.lanzados.reactivos] as [string, RangoODesconocido]]),
   ];
-  const zonas = ataque.zonas_lanzamiento ?? [];
+  const zonas = (ataque.zonas_lanzamiento ?? []).map((z) => zonaLanzamientoEscrita(z, idioma));
   const cruces = ataque.cruces ?? [];
   const soloMisiles = ataque.regiones_misiles ?? [];
   return (
