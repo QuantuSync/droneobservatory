@@ -409,6 +409,16 @@ RESERVA_MEMORIA="400M"
 # y siempre comprueba que las publicadas no han cambiado. Fuera de los minutos 12 a 40, sin la base
 # ni el cerrojo de la recogida: solo lee la web y escribe en versiones/ del almacén. Pico medido al
 # generar la primera (8 de octubre de 2026): 597 MB (lee ucrania.json, unos 27 MB, para comprobarlo).
+# --- Revisión de madrugada del control de las fichas (servidor/control_noche.sh) -----------
+# Cada día a las 01:41 UTC, tras la recogida de la 01:17 y lejos de la exportación de los lunes
+# (03:47): vuelve a comprobar lo publicado en las últimas 48 horas y traduce citas atrasadas de la
+# capa de Ucrania con lo que sobra del gasto del día. Toma el cerrojo de la recogida: tiene que
+# acabar antes de la de las 02:17 (tope del paso, 25 minutos; la espera del cerrojo aparte).
+UNIDAD_CONTROL="eodi-control"
+CALENDARIO_CONTROL="*-*-* 01:41:00 UTC"
+CONTROL_MEMORIA="2G"
+TOPE_CONTROL_MINUTOS=90
+
 UNIDAD_VERSIONES="eodi-versiones"
 CALENDARIO_VERSIONES="*-*-* 02:35:00 UTC"
 VERSIONES_MEMORIA="1G"

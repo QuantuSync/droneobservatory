@@ -5,6 +5,7 @@ import { autoridadEscrita, medioEscrito } from "../i18n/autoridades.ts";
 import { instante } from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
 import type { Idioma } from "../sitio.ts";
+import { Cita } from "./Cita.tsx";
 import { EnlaceFuente } from "./EnlaceFuente.tsx";
 import { Simbolo } from "./Simbolo.tsx";
 
@@ -63,9 +64,21 @@ function FichaFuente({ t, fuente, idioma }: { t: Textos; fuente: FuenteImpacto; 
       {fuente.autoridad_ocupacion === true && (
         <p className="rotulo mt-1 text-xs">{t.impacto.ocupacion}</p>
       )}
-      <blockquote lang={fuente.idioma} className="mt-1 border-l border-acento pl-2 text-secundario">
-        {fuente.frase_origen}
-      </blockquote>
+      {idioma === undefined ? (
+        <blockquote lang={fuente.idioma} className="mt-1 border-l border-acento pl-2 text-secundario">
+          {fuente.frase_origen}
+        </blockquote>
+      ) : (
+        <Cita
+          t={t}
+          idioma={idioma}
+          texto={fuente.frase_origen}
+          idiomaOriginal={fuente.idioma}
+          traduccion={fuente.traduccion}
+          comillas={false}
+          className="mt-1 border-l border-acento pl-2 text-secundario"
+        />
+      )}
       {fuente.replicas > 0 && (
         <p className="mono mt-1 text-xs text-secundario">{t.ficha.replicas(fuente.replicas)}</p>
       )}

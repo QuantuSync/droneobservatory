@@ -21,6 +21,12 @@ Límites, compartidos por todo lo que llama al extractor:
 - 3 dólares, una sola vez, para el barrido dirigido desde enero de 2025 (modo «dirigida»,
   `python -m recogida.barrido_dirigido incorporar`): incidentes en España y en puertos y presas.
 
+- 0,15 dólares al día para el control de calidad de las fichas (modo «control», en la recogida
+  horaria y en la revisión de madrugada: duplicados, respaldo de cada dato y traducción de las
+  citas, recogida/control_fichas.py);
+- 4 dólares, una sola vez, para el repaso de todo lo publicado con ese control (modo
+  «control_repaso», `python -m recogida.control_fichas repaso`).
+
 El barrido del catálogo vivo (recogida/catalogo_vivo.py) lleva su propio registro de gasto
 fuera de la base: 0,10 dólares al día y 3 dólares una vez para su primera pasada.
 
@@ -53,6 +59,8 @@ LIMITE_GUERRA_DIARIO_USD = 0.20
 LIMITE_GUERRA_HISTORICO_USD = 5.00
 LIMITE_CALIDAD_USD = 2.00
 LIMITE_DIRIGIDA_USD = 3.00
+LIMITE_CONTROL_DIARIO_USD = 0.15
+LIMITE_CONTROL_REPASO_USD = 4.00
 # Una letra son unos 0,3 tokens en los idiomas europeos; se estima por lo alto con 0,5
 # para que el peor caso no se quede corto.
 TOKENS_POR_LETRA = 0.5
@@ -67,6 +75,8 @@ class Modo(StrEnum):
     GUERRA_HISTORICO = "guerra_historico"
     CALIDAD = "calidad"
     DIRIGIDA = "dirigida"
+    CONTROL = "control"
+    CONTROL_REPASO = "control_repaso"
 
 
 class LimiteGasto(RuntimeError):
@@ -114,12 +124,14 @@ def limite(modo: Modo) -> float:
         Modo.GUERRA_HISTORICO: LIMITE_GUERRA_HISTORICO_USD,
         Modo.CALIDAD: LIMITE_CALIDAD_USD,
         Modo.DIRIGIDA: LIMITE_DIRIGIDA_USD,
+        Modo.CONTROL: LIMITE_CONTROL_DIARIO_USD,
+        Modo.CONTROL_REPASO: LIMITE_CONTROL_REPASO_USD,
     }[modo]
 
 
 def diario(modo: Modo) -> bool:
     """Los modos con límite diario (lo gastado se cuenta solo en el día UTC)."""
-    return modo in {Modo.HORARIO, Modo.GUERRA}
+    return modo in {Modo.HORARIO, Modo.GUERRA, Modo.CONTROL}
 
 
 def comprobar(gastado: float, previsto: float, modo: Modo) -> None:

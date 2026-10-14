@@ -449,6 +449,8 @@ export interface Textos {
     investigacion: string;
     investiga: (autoridad: string) => string;
     verFuente: string;
+    /** Desplegable con el original de una cita traducida. */
+    verOriginal: string;
     copiaArchivada: string;
     copiaArchivadaDel: (fecha: string) => string;
     originalCaido: string;

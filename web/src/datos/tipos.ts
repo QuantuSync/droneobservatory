@@ -57,8 +57,15 @@ export interface PasoHistorial {
 export interface Investigacion {
   autoridad: string;
   cita: string;
+  cita_traduccion?: Traduccion;
   fuente_id: string;
   fecha: Instante;
+}
+
+/** Traducción de una cita al español y al inglés, hecha una vez por el control de las fichas. */
+export interface Traduccion {
+  es: string;
+  en: string;
 }
 
 export interface Fuente {
@@ -70,6 +77,8 @@ export interface Fuente {
   fiabilidad: Fiabilidad;
   credibilidad: number;
   frase_origen: string;
+  /** La frase de origen traducida (el original sigue en `frase_origen`). */
+  traduccion?: Traduccion;
   replicas: number;
   /** Copia en Internet Archive, la más cercana a la fecha de la fuente. */
   copia_archivada?: { enlace: string; fecha: string };
@@ -120,6 +129,7 @@ export interface RazonTipoDron {
     rasgo?: string;
     valor?: string | { metros?: number; minutos?: number; kmh?: number; min?: number; max?: number; local?: string };
     cita?: string | null;
+    cita_traduccion?: Traduccion;
     fuente?: string | null;
     distancia_km?: number | null;
     mas_de_600_km?: boolean;
@@ -134,7 +144,13 @@ export interface RazonTipoDron {
 /** Tipo de dron del incidente: lo que identificó la autoridad, o lo deducido que se publica. */
 export interface TipoDron {
   version: string;
-  identificado?: { modelo: string; grupo: GrupoDron; cita: string; fuente: string };
+  identificado?: {
+    modelo: string;
+    grupo: GrupoDron;
+    cita: string;
+    cita_traduccion?: Traduccion;
+    fuente: string;
+  };
   publicado?: {
     /**
      * Cómo se enseña: «probabilidades» (un grupo destaca y esa ventaja pasó la comprobación) o
@@ -159,8 +175,9 @@ export interface AfirmacionPublica {
   fecha: Instante;
   /** Valor según esa fuente, del mismo tipo que el campo público. */
   valor: unknown;
-  /** Frase literal de la fuente que justifica el valor (presencia de dron). */
+  /** Frase literal de la fuente que justifica el valor. */
   cita?: string;
+  cita_traduccion?: Traduccion;
 }
 
 export type SateliteFirms = "Suomi NPP" | "NOAA-20" | "NOAA-21" | "Terra" | "Aqua";
@@ -276,7 +293,11 @@ export interface PropiedadesIncidente {
     vuelos_desviados?: RangoODesconocido;
     vuelos_cancelados?: RangoODesconocido;
     vuelos_retrasados?: RangoODesconocido;
-    danos?: { nivel: "ninguno" | "menores" | "graves" | "desconocido"; frase?: string };
+    danos?: {
+      nivel: "ninguno" | "menores" | "graves" | "desconocido";
+      frase?: string;
+      frase_traduccion?: Traduccion;
+    };
     heridos?: RangoODesconocido;
     fallecidos?: RangoODesconocido;
   };
@@ -299,7 +320,11 @@ export interface PropiedadesIncidente {
   trafico_aereo?: TraficoAereo;
   fuentes: Fuente[];
   afirmaciones_publicas?: AfirmacionPublica[];
-  control: { ultima_actualizacion: Instante; motivo_desmentido?: string };
+  control: {
+    ultima_actualizacion: Instante;
+    motivo_desmentido?: string;
+    motivo_desmentido_traduccion?: Traduccion;
+  };
 }
 
 export interface FeatureIncidente {
@@ -373,7 +398,13 @@ export interface Ataque {
   lugares_impacto?: string[];
   lugares_restos?: string[];
   /** Un cruce sin incidentes lo declara solo Ucrania: no es un incidente europeo. */
-  cruces?: { pais: string; numero: RangoODesconocido; frase?: string; incidentes?: string[] }[];
+  cruces?: {
+    pais: string;
+    numero: RangoODesconocido;
+    frase?: string;
+    frase_traduccion?: Traduccion;
+    incidentes?: string[];
+  }[];
   regiones?: RegionAtaque[];
   regiones_misiles?: string[];
   incluido_en?: string;
@@ -385,7 +416,11 @@ export interface Ataque {
   /** Regiones y ciudades que perdieron luz nocturna tras el ataque, medido por satélite. */
   perdida_luz?: PerdidaLuz[];
   fuentes: Fuente[];
-  control: { ultima_actualizacion: Instante; motivo_desmentido?: string };
+  control: {
+    ultima_actualizacion: Instante;
+    motivo_desmentido?: string;
+    motivo_desmentido_traduccion?: Traduccion;
+  };
 }
 
 /**

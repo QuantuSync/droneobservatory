@@ -774,6 +774,38 @@ WantedBy=timers.target
 FIN
 # Versiones citables de los datos abiertos (servidor/versiones.sh): la del mes el día 1 y la
 # comprobación de las publicadas cada día.
+cat > "/etc/systemd/system/$UNIDAD_CONTROL.service" <<FIN
+[Unit]
+Description=Revisión de madrugada del control de calidad de las fichas (EODI)
+Wants=network-online.target
+After=network-online.target time-sync.target
+
+[Service]
+Type=oneshot
+User=$USUARIO
+Group=$USUARIO
+WorkingDirectory=$CLON
+ExecStart=/usr/bin/env bash $CLON/servidor/control_noche.sh
+SyslogIdentifier=$UNIDAD_CONTROL
+TimeoutStartSec=${TOPE_CONTROL_MINUTOS}min
+Nice=10
+MemoryMax=$CONTROL_MEMORIA
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=full
+FIN
+cat > "/etc/systemd/system/$UNIDAD_CONTROL.timer" <<FIN
+[Unit]
+Description=Revisión de madrugada del control de las fichas (EODI), cada día a las 01:41 UTC
+
+[Timer]
+OnCalendar=$CALENDARIO_CONTROL
+AccuracySec=1s
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+FIN
 cat > "/etc/systemd/system/$UNIDAD_VERSIONES.service" <<FIN
 [Unit]
 Description=Versiones citables de los datos abiertos (EODI)

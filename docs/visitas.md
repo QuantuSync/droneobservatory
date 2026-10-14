@@ -136,7 +136,10 @@ Lleva:
   aparece en la web, anotada en `/home/eodi/datos/visitas/publicados.json`; para los que ya estaban
   al empezar, su alta en la base);
 - recogidas correctas, con avisos y fallidas (diario de `eodi-recogida`) y los problemas abiertos de
-  la vigilancia (`salud.json`).
+  la vigilancia (`salud.json`);
+- lo que hizo el control de calidad de las fichas (`/home/eodi/.eodi/control.json`): cuántas
+  fichas corrigió y de qué clase, los duplicados que unió, las que retuvo y lo que gastó, con
+  hasta 5 ejemplos ([`docs/control_fichas.md`](control_fichas.md)).
 
 Ejemplo (la forma exacta; las cifras son de muestra):
 
@@ -187,6 +190,9 @@ SISTEMA
   Candidatos apartados por un fallo propio: 1; retirados tras 3 fallos: 0
   Se arreglaron solos, sin incidencia: 1
   - El archivo de alertas de alerts.in.ua está «activating» y tuvo respuesta de la API ...
+  Control de fichas: 3 fichas corregidas (lugar 1, drones 1, presencia 1), 1 duplicados unidos, 0 retenidas, gasto 0,0412 USD
+  - unido EODI-2026-00516 -> EODI-2026-00515
+  - EODI-2026-00515: drones 2-10 -> sin dato: ninguna fuente da el número
   Vigilancia: ningún problema abierto
 ```
 

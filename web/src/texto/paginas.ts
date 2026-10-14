@@ -18,6 +18,7 @@ import type {
   RangoODesconocido,
   Resumen,
   ResumenUcrania,
+  Traduccion,
 } from "../datos/tipos.ts";
 import { diaDeTexto, factoresQueCuentan, habitualDe, probabilidadLlana, mesEscrito, textoCambio, textoFactor } from "../datos/prevision.ts";
 import type { Prevision } from "../datos/prevision.ts";
@@ -58,6 +59,7 @@ import {
 } from "../datos/nombres.ts";
 import type { Idioma } from "../sitio.ts";
 import { fechaDeDia } from "../tiempo/dias.ts";
+import { traduccionParaMostrar } from "../datos/citas.ts";
 import { e, html, jsonLd } from "./html.ts";
 import type { Hijo, Html } from "./html.ts";
 import { paginaAvisos } from "./avisos.ts";
@@ -224,7 +226,7 @@ function filaDatos(nombre: string, ...valor: Hijo[]): Html {
  * deducido: «compatible con un dron de largo alcance de la guerra» con sus razones, o, si un
  * grupo destaca, los grupos con su probabilidad. Sin base o sin razones, nada.
  */
-export function filaTipoDron(t: Textos, d: IncidenteDetalle): Html | false {
+export function filaTipoDron(t: Textos, d: IncidenteDetalle, idioma: Idioma = "es"): Html | false {
   const tipo = d.tipo_dron;
   if (tipo === undefined) return false;
   const textos = t.tipoDron;
@@ -234,7 +236,7 @@ export function filaTipoDron(t: Textos, d: IncidenteDetalle): Html | false {
       textos.fila,
       e("span", { "data-tipo-dron": "autoridad" }, textos.identificado(tipo.identificado.modelo)),
       e("span", { class: "texto-nota" }, textos.grupoDe(textos.grupos[tipo.identificado.grupo])),
-      e("q", { class: "texto-nota" }, tipo.identificado.cita),
+      citaTraducida(t, idioma, tipo.identificado.cita, fuente?.idioma, tipo.identificado.cita_traduccion, "q", { class: "texto-nota" }),
       fuente !== undefined && e("span", { class: "texto-nota" }, t.ficha.valorSegun, " ", fuente.medio),
     );
   }
@@ -398,9 +400,35 @@ function paisesDe(incidentes: readonly IncidenteResumen[], idioma: Idioma): [str
 // ---------------------------------------------------------------------------------------------
 // Incidente
 
+/** Una cita en el idioma de la página, con el original plegado debajo («Ver original»); sin
+ *  traducción, o ya en ese idioma, el original (exportacion/citas.py). */
+function citaTraducida(
+  t: Textos,
+  idioma: Idioma,
+  texto: string,
+  original: string | undefined,
+  traduccion: Traduccion | undefined,
+  etiqueta: "blockquote" | "q" = "blockquote",
+  atributos: Record<string, string> = {},
+  comillas = true,
+): Html {
+  const escrito = (valor: string) => (comillas && etiqueta === "blockquote" ? `«${valor}»` : valor);
+  const traducida = traduccionParaMostrar(idioma, texto, original, traduccion);
+  if (traducida === null) return e(etiqueta, { lang: original, ...atributos }, escrito(texto));
+  return html(
+    e(etiqueta, { lang: idioma, "data-cita-traducida": "", ...atributos }, escrito(traducida)),
+    e(
+      "details",
+      { class: "texto-nota" },
+      e("summary", null, t.ficha.verOriginal),
+      e("span", { lang: original, "data-cita-original": "" }, escrito(texto)),
+    ),
+  );
+}
+
 function citaConFuente(t: Textos, idioma: Idioma, fuente: Fuente): Html {
   return html(
-    e("blockquote", { lang: fuente.idioma }, `«${fuente.frase_origen}»`),
+    citaTraducida(t, idioma, fuente.frase_origen, fuente.idioma, fuente.traduccion),
     e(
       "p",
       { class: "texto-fuente" },
@@ -485,7 +513,7 @@ function incidente(d: IncidenteDetalle, idioma: Idioma): PaginaTexto {
     if (tieneCifra(valor)) efectos.push(`${cifraDe(idioma, t, valor, de([campo]))} ${unidad}`);
   }
   if (c?.danos !== undefined) {
-    efectos.push(html(t.ficha.danos[c.danos.nivel], c.danos.frase !== undefined && html(": ", e("q", null, c.danos.frase))));
+    efectos.push(html(t.ficha.danos[c.danos.nivel], c.danos.frase !== undefined && html(": ", citaTraducida(t, idioma, c.danos.frase, undefined, c.danos.frase_traduccion, "q"))));
   }
   const definicion = definicionDeTipo(t, t.tipo[d.tipo]);
   const medidas = d.respuesta?.medidas ?? [];
@@ -577,12 +605,12 @@ function incidente(d: IncidenteDetalle, idioma: Idioma): PaginaTexto {
         cifraDe(idioma, t, d.drones?.numero, de(["drones.numero"])),
         modeloEscrito(d.drones?.modelo) !== null && e("span", { class: "texto-nota" }, t.ficha.modelo, ": ", modeloEscrito(d.drones?.modelo)),
       ),
-      filaTipoDron(t, d),
+      filaTipoDron(t, d, idioma),
       d.recorrido !== undefined &&
         filaDatos(
           t.rutas.recorrido,
           e("span", { "data-recorrido": "" }, d.recorrido.puntos.map((p) => (p.hora === undefined ? p.nombre : `${p.nombre} (${p.hora})`)).join(" → ")),
-          e("q", { class: "texto-nota" }, d.recorrido.cita),
+          citaTraducida(t, idioma, d.recorrido.cita, porFuente.get(d.recorrido.fuente)?.idioma, d.recorrido.cita_traduccion, "q", { class: "texto-nota" }),
           e("span", { class: "texto-nota" }, t.rutas.recorridoNota),
         ),
       d.tiempo.duracion_min !== undefined && filaDatos(t.ficha.duracion, t.ficha.minutos(numero(d.tiempo.duracion_min, idioma))),
@@ -609,7 +637,7 @@ function incidente(d: IncidenteDetalle, idioma: Idioma): PaginaTexto {
                 "li",
                 null,
                 t.ficha.investiga(autoridadEscrita(x.autoridad, idioma)),
-                e("blockquote", { lang: fuente?.idioma }, `«${x.cita}»`),
+                citaTraducida(t, idioma, x.cita, fuente?.idioma, x.cita_traduccion),
                 e("p", { class: "texto-fuente" }, e("span", { class: "mono" }, instante(x.fecha)), fuente !== undefined && html(" · ", enlaceDeFuente(t, fuente, t.ficha.verFuente))),
               );
             }),
@@ -623,7 +651,7 @@ function incidente(d: IncidenteDetalle, idioma: Idioma): PaginaTexto {
         ),
       ),
       d.foco_termico !== undefined && filaDatos(t.foco.rotulo, t.foco.detectado),
-      d.control.motivo_desmentido !== undefined && filaDatos(t.ficha.motivoDesmentido, e("blockquote", { "data-motivo-desmentido": "" }, d.control.motivo_desmentido)),
+      d.control.motivo_desmentido !== undefined && filaDatos(t.ficha.motivoDesmentido, citaTraducida(t, idioma, d.control.motivo_desmentido, undefined, d.control.motivo_desmentido_traduccion, "blockquote", { "data-motivo-desmentido": "" }, false)),
       d.episodio !== undefined && filaDatos(t.ficha.episodio, e("span", { class: "mono" }, d.episodio)),
     ),
     e("h2", null, tp.incidente.todasLasFuentes, ` (${numero(fuentes.length, idioma)})`),
@@ -637,7 +665,7 @@ function incidente(d: IncidenteDetalle, idioma: Idioma): PaginaTexto {
               "li",
               null,
               e("p", null, e("strong", null, medios.get(f.id) ?? f.medio), " · ", e("span", { class: "mono" }, instante(f.fecha)), " · ", e("abbr", { title: tp.incidente.codigoFuente }, `${f.fiabilidad}${f.credibilidad}`)),
-              e("blockquote", { lang: f.idioma }, `«${f.frase_origen}»`),
+              citaTraducida(t, idioma, f.frase_origen, f.idioma, f.traduccion),
               e("p", null, enlaceDeFuente(t, f, f.enlace)),
             ),
           ),

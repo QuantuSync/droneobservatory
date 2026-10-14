@@ -125,7 +125,7 @@ GRACIA = timedelta(minutes=30)
 # Los que no se arreglan solos esperando, o que ya llevan su propia espera (publicación, recogida).
 SIN_GRACIA = frozenset({
     "publicacion", "recogida", "visitas_privadas", "prueba_restauracion", "base_solo_disco",
-    "versiones", "barrera_resoluciones", "barrera_atascada", "mapa_parado",
+    "versiones", "barrera_resoluciones", "barrera_atascada", "mapa_parado", "control_fichas",
 })  # fmt: skip
 DIAS_RESUELTOS = timedelta(days=8)
 MAX_SIN_RECIBIR = timedelta(minutes=10)
@@ -140,6 +140,10 @@ MAX_RESOLUCIONES_DIA = 3
 MAX_RETENIDO = timedelta(hours=8)
 MAX_MAPA_SIN_CAMBIAR = timedelta(hours=24)
 BARRERA = "barrera.json"
+# Control de calidad de las fichas (recogida/control_fichas.py): incidencia solo si el propio
+# control falla varias pasadas seguidas (lo que corrige o retiene va al resumen diario).
+CONTROL = "control.json"
+MAX_FALLOS_CONTROL = 3
 DISCO_AVISO_PCT = 75.0
 # Líneas del diario de la recogida que explican un código 2 y las de la barrera de titulares.
 AVISO_TOPE = re.compile(
@@ -273,6 +277,18 @@ def avisos_del_diario(lineas: Sequence[str]) -> tuple[list[str], list[str]]:
             if frase not in avisos:
                 avisos.append(frase[:200])
     return avisos, retenidos
+
+
+def problemas_del_control(estado: dict[str, Any]) -> list[dict[str, str]]:
+    """El control de las fichas falla varias pasadas seguidas (control.json)."""
+    fallos = int(estado.get("fallos_seguidos") or 0) if estado else 0
+    if fallos < MAX_FALLOS_CONTROL:
+        return []
+    return [{
+        "id": "control_fichas",
+        "frase": f"El control de calidad de las fichas ha fallado {fallos} pasadas seguidas: lo "
+        "nuevo se publica sin comprobar duplicados ni respaldo de los datos.",
+    }]  # fmt: skip
 
 
 def problemas_de_la_barrera(estado: dict[str, Any], ahora: datetime) -> list[dict[str, str]]:
@@ -452,6 +468,7 @@ def componer(
     problemas += problemas_de_la_barrera(estado_barrera, ahora)
     for id_, desde in estado_barrera.get("retenidos", {}).items():
         detalle.append(f"barrera: {id_} retenido desde {desde}")
+    problemas += problemas_del_control(_leer_json(secretos / CONTROL))
 
     # Captura del seguimiento.
     seguimiento = _leer_json(secretos / "seguimiento.json")

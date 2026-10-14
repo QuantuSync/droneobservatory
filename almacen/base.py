@@ -301,6 +301,30 @@ CREATE TRIGGER IF NOT EXISTS copias_archivadas_sin_update BEFORE UPDATE ON copia
 BEGIN SELECT RAISE(ABORT, 'copias_archivadas: un resultado nuevo es una fila nueva'); END;
 CREATE TRIGGER IF NOT EXISTS copias_archivadas_sin_delete BEFORE DELETE ON copias_archivadas
 BEGIN SELECT RAISE(ABORT, 'copias_archivadas: nada se borra'); END;
+-- Control de calidad de las fichas (recogida/control_fichas.py): cada decisión (dos registros que
+-- son o no el mismo suceso, la verificación de una ficha contra sus fuentes) es una fila nueva; la
+-- vigente es la última de su clave.
+CREATE TABLE IF NOT EXISTS control_fichas (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    clave TEXT NOT NULL,
+    fecha TEXT NOT NULL,
+    documento TEXT NOT NULL CHECK (json_valid(documento))
+);
+CREATE INDEX IF NOT EXISTS control_fichas_clave ON control_fichas (clave, id);
+CREATE TRIGGER IF NOT EXISTS control_fichas_sin_update BEFORE UPDATE ON control_fichas
+BEGIN SELECT RAISE(ABORT, 'control_fichas: una decisión nueva es una fila nueva'); END;
+CREATE TRIGGER IF NOT EXISTS control_fichas_sin_delete BEFORE DELETE ON control_fichas
+BEGIN SELECT RAISE(ABORT, 'control_fichas: nada se borra'); END;
+-- Traducción de cada cita al español y al inglés, una sola vez por texto (huella SHA-256).
+CREATE TABLE IF NOT EXISTS traducciones (
+    huella TEXT PRIMARY KEY,
+    fecha TEXT NOT NULL,
+    documento TEXT NOT NULL CHECK (json_valid(documento))
+) WITHOUT ROWID;
+CREATE TRIGGER IF NOT EXISTS traducciones_sin_update BEFORE UPDATE ON traducciones
+BEGIN SELECT RAISE(ABORT, 'traducciones: una cita se traduce una sola vez'); END;
+CREATE TRIGGER IF NOT EXISTS traducciones_sin_delete BEFORE DELETE ON traducciones
+BEGIN SELECT RAISE(ABORT, 'traducciones: nada se borra'); END;
 CREATE TRIGGER IF NOT EXISTS previsiones_sin_update BEFORE UPDATE ON previsiones
 BEGIN SELECT RAISE(ABORT, 'previsiones: una previsión publicada no cambia'); END;
 CREATE TRIGGER IF NOT EXISTS previsiones_sin_delete BEFORE DELETE ON previsiones
@@ -891,6 +915,48 @@ class Almacen:
                     (enlace, fecha, _json(documento)),
                 )
                 nuevas += 1
+        return nuevas
+
+    def controles(self, prefijo: str = "") -> dict[str, Documento]:
+        """La decisión vigente de cada clave del control de las fichas que empieza por `prefijo`."""
+        filas = self._conexion.execute(
+            "SELECT clave, documento FROM control_fichas WHERE id IN "
+            "(SELECT max(id) FROM control_fichas WHERE clave LIKE ? GROUP BY clave)",
+            (prefijo + "%",),
+        )
+        return {clave: json.loads(documento) for clave, documento in filas.fetchall()}
+
+    def guardar_controles(self, decisiones: dict[str, Documento], fecha: str) -> int:
+        """Apunta las decisiones que cambian la vigente de su clave; devuelve cuántas."""
+        vigentes = self.controles()
+        nuevas = 0
+        with self._conexion:
+            for clave, documento in sorted(decisiones.items()):
+                if vigentes.get(clave) == documento:
+                    continue
+                self._conexion.execute(
+                    "INSERT INTO control_fichas (clave, fecha, documento) VALUES (?, ?, ?)",
+                    (clave, fecha, _json(documento)),
+                )
+                nuevas += 1
+        return nuevas
+
+    def traducciones(self) -> dict[str, Documento]:
+        """La traducción de cada cita, por la huella de su texto."""
+        filas = self._conexion.execute("SELECT huella, documento FROM traducciones")
+        return {huella: json.loads(documento) for huella, documento in filas.fetchall()}
+
+    def guardar_traducciones(self, traducciones: dict[str, Documento], fecha: str) -> int:
+        """Guarda las traducciones nuevas (una cita traducida no cambia); devuelve cuántas."""
+        nuevas = 0
+        with self._conexion:
+            for huella, documento in sorted(traducciones.items()):
+                cursor = self._conexion.execute(
+                    "INSERT OR IGNORE INTO traducciones (huella, fecha, documento) "
+                    "VALUES (?, ?, ?)",
+                    (huella, fecha, _json(documento)),
+                )
+                nuevas += cursor.rowcount
         return nuevas
 
     def previsiones(self) -> list[Documento]:

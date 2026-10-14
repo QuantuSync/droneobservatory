@@ -633,6 +633,7 @@ export const en: Textos = {
     investigacion: "Investigation under way",
     investiga: (autoridad) => `What ${autoridad} is investigating (this does not change the incident's status):`,
     verFuente: "see the source",
+    verOriginal: "Show original",
     copiaArchivada: "archived copy",
     copiaArchivadaDel: (fecha) => `archived copy from ${fecha}`,
     originalCaido: "the original is no longer available",
