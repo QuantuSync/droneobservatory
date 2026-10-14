@@ -717,11 +717,16 @@ def test_una_union_que_conservo_la_mas_nueva_se_rehace_sobre_la_mas_antigua() ->
     unido = almacen.incidente("EODI-2026-09516")
     assert queda is not None and unido is not None
     assert "fusionado_en" not in queda and unido["fusionado_en"] == "EODI-2026-09515"
-    # A la que se une no se le quita nada: cada valor sigue con su afirmación de origen (si no,
-    # la exportación no valida: «valor sin origen», como en el primer ensayo).
+    # Lo publicado sigue igual con el número de la más antigua: el lugar, las fuentes y cada valor
+    # con su afirmación de origen (si se quitara una, la exportación no valida: «valor sin
+    # origen», como en el primer ensayo). La más nueva lleva a ella sin perder nada.
+    # (después la pasada sigue con sus reglas de siempre, como el lugar del titular).
+    assert queda["fuentes"] == antes["fuentes"]
     sin_marca = {k: v for k, v in unido.items() if k not in ("fusionado_en", "episodio")}
     assert sin_marca["fuentes"] == antes["fuentes"]
     assert sin_marca.get("afirmaciones") == antes.get("afirmaciones")
+    # Ya estaba publicada: no se retiene como nueva.
+    assert "EODI-2026-09515" not in control_fichas.retenidos(almacen)
     assert {f["id"] for f in queda["fuentes"]} >= {"gdelt-dnews", "gdelt-schwaebische"}
     decision = almacen.controles("par:")[clave]
     assert (decision["conserva"], decision["une"]) == ("EODI-2026-09515", "EODI-2026-09516")
