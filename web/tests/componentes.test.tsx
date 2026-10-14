@@ -333,6 +333,9 @@ describe("ficha de un ataque de la capa de Ucrania", () => {
     expect(screen.getByText(esperado)).toBeTruthy();
     // Ningún nombre de zona del parte (la cita original sí se enseña, junto a su traducción).
     for (const zona of zonas) expect(container.textContent ?? "").not.toContain(zona);
+    // Ni el nombre de la Fuerza Aérea en el historial de estados.
+    const historial = container.querySelector("section ol")?.textContent ?? "";
+    expect(historial).not.toMatch(/[\u0400-\u04FF]/u);
   });
 
   it("todas las zonas de la tabla tienen nombre en español y en inglés, sin cirílico", () => {
