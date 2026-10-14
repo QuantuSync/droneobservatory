@@ -429,6 +429,14 @@ def _cierre(
             afirmaciones = [
                 a for a in afirmaciones if a.get("campo") not in {"cierre", "cierre_minutos"}
             ]
+        elif minutos is not None and cierre.get("minutos") == minutos[0]:
+            # La duración con la afirmación de su fuente: de ahí sale su origen (exportación).
+            afirmaciones = [
+                *(a for a in afirmaciones if a.get("campo") != "cierre_minutos"),
+                _afirmacion("cierre_minutos", minutos[0], minutos[1]),
+            ]
+        elif "minutos" not in cierre:
+            afirmaciones = [a for a in afirmaciones if a.get("campo") != "cierre_minutos"]
         c.incidente = {**d, "consecuencias": consecuencias, "afirmaciones": afirmaciones}
 
 
