@@ -330,9 +330,10 @@ def conservar_la_mas_antigua(
 ) -> dict[str, Documento]:
     """Las uniones del control conservan la ficha más antigua (reglas.mas_antiguo). Las que
     conservaron la más nueva (hasta el 14 de octubre de 2026 se miraba la fecha de alta) se
-    rehacen: se deshacen la unión y las demás que acabaron en esa ficha, y se vuelven a hacer sobre
-    la más antigua; el enlace de las otras lleva a ella. Devuelve las decisiones corregidas (para
-    guardarlas); sin nada que corregir, no toca nada."""
+    rehacen: la más antigua vuelve y absorbe la más nueva tal como está (con todo lo que esta había
+    absorbido y corregido: no se quita nada, así cada valor conserva su afirmación de origen), y
+    las demás fichas que se habían unido a la nueva pasan a llevar a la antigua. Devuelve las
+    decisiones corregidas (para guardarlas); sin nada que corregir, no toca nada."""
     corregidas: dict[str, Documento] = {}
     vigentes = {**decisiones}
     for clave in sorted(vigentes):
@@ -350,22 +351,22 @@ def conservar_la_mas_antigua(
         ):  # fmt: skip
             continue
         otros = [
-            f["absorbido"] for f in almacen.fusiones()
+            f for f in almacen.fusiones()
             if not f["revertida"] and f["destino"] == nuevo_id and f["absorbido"] != viejo_id
         ]  # fmt: skip
-        incidentes.revertir(almacen, viejo_id, ahora, modelos)
-        for otro in otros:
-            incidentes.revertir(almacen, otro, ahora, modelos)
-        motivo = str(decision.get("motivo_es", ""))
-        antiguo = almacen.incidente(viejo_id)
-        reciente = almacen.incidente(nuevo_id)
-        assert antiguo is not None and reciente is not None
-        antiguo = unir(almacen, antiguo, reciente, motivo, ahora, modelos)
-        for otro in otros:
-            propio = almacen.incidente(otro)
-            if propio is not None and incidentes.activo(propio):
-                antes = f"estaba unida a {nuevo_id}, que se une a la ficha más antigua {viejo_id}"
-                antiguo = unir(almacen, antiguo, propio, antes, ahora, modelos)
+        antiguo = {k: v for k, v in une.items() if k != "fusionado_en"}
+        almacen.revertir_fusion(viejo_id)
+        unir(almacen, antiguo, conserva, str(decision.get("motivo_es", "")), ahora, modelos)
+        fecha = ahora.strftime("%Y-%m-%dT%H:%MZ")
+        for fusion in otros:
+            otro = almacen.incidente(fusion["absorbido"])
+            if otro is None or otro.get("fusionado_en") != nuevo_id:
+                continue
+            almacen.guardar_incidente({**otro, "fusionado_en": viejo_id}, ahora, modelos)
+            almacen.revertir_fusion(fusion["absorbido"])
+            almacen.registrar_fusion(
+                fecha, fusion["absorbido"], viejo_id, fusion["motivo"], fusion["fuentes"]
+            )
         nota = f"se conserva la ficha más antigua ({viejo_id}), no {nuevo_id}"
         corregidas[clave] = {**decision, "conserva": viejo_id, "une": nuevo_id, "corregida": nota}
         for otra, d in vigentes.items():
