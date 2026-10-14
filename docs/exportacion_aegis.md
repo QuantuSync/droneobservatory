@@ -93,9 +93,9 @@ La tarea de AEGIS de los lunes a las 07:00 hora local va bien después de la exp
 
 Cada fichero lleva su esquema en `esquema/` dentro de la versión:
 
-- **`esquema/eodi/`:** los de la base, versión 1.18.0, con la marca de visibilidad de cada
+- **`esquema/eodi/`:** los de la base, versión 1.19.0, con la marca de visibilidad de cada
   campo.
-- **`esquema/exportacion/`:** los propios, formato 1.11.0.
+- **`esquema/exportacion/`:** los propios, formato 1.12.0.
 - **`esquema/catalogo/`:** los del catálogo.
 
 El manifiesto da también:
@@ -208,8 +208,20 @@ entonces:
   `fusionado_en` ni `retirado`) e ignora los campos que no usa: la separación entra sola, sin
   cambiar nada, y el campo nuevo no le estorba.
 
+- **Formato 1.12.0 (desde el 14 de octubre de 2026), esquema de la base 1.19.0:**
+  - campo interno opcional `control.modelos` en el incidente: qué modelo decidió cada dato de la
+    ficha (nombre del campo de la ficha → identificador del modelo), el de la extracción y, en
+    los datos que corrigió el control, el de la verificación (`docs/modelos.md`). Los incidentes
+    de antes del 14 de octubre de 2026 no lo tienen. Como `control` no es un dato del suceso, no
+    lleva procedencia;
+  - ningún fichero nuevo ni quitado; las demás formas, iguales.
+
+  El importador de AEGIS (`tools/import_eodi.py`) no valida el bloque `control` ni usa ese campo:
+  importa igual (comprobado con una versión generada en el ensayo del 14 de octubre de 2026).
+
 Todos los cambios son compatibles. Ningún fichero de antes cambia de forma (en 1.10.0 solo se
-añaden dos campos opcionales a las fuentes, y en 1.11.0 uno al incidente), y los seis que lee AEGIS hoy son iguales: `incidentes`, `encuentros`, `clases_dron`, `catalogo_drones`,
+añaden dos campos opcionales a las fuentes, en 1.11.0 uno al incidente y en 1.12.0 uno interno a su
+control), y los seis que lee AEGIS hoy son iguales: `incidentes`, `encuentros`, `clases_dron`, `catalogo_drones`,
 `catalogo_fuentes` y `vocabulario`. Por eso el número principal no sube.
 
 ## 7. Lo que no se exporta y por qué

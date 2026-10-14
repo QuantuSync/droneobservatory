@@ -104,7 +104,11 @@ def utilizables(almacen: Almacen, candidatos: list[Documento]) -> list[Documento
         if entrada.get("sin_idioma") and not extraccion.con_idioma(almacen, candidato):
             continue
         elegidos.append(candidato)
-    return sorted(elegidos, key=lambda c: bool(apartados.get(c["id"], {}).get("fallos")))
+    # Los que esperaron al experto van los primeros (ya esperaron un día); los que fallaron
+    # alguna vez, los últimos.
+    esperaron = extraccion.esperan_experto(almacen)
+    return sorted(elegidos, key=lambda c: (c["id"] not in esperaron,
+                                           bool(apartados.get(c["id"], {}).get("fallos"))))
 
 
 def pendientes(almacen: Almacen, desde: datetime | None = None) -> list[Documento]:

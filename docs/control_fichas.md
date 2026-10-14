@@ -125,14 +125,22 @@ se retiene hasta que el control decide, normalmente ni llega a publicarse.
 
 `eodi-control.timer`, cada día a las 01:41 UTC (`servidor/control_noche.sh`, `MemoryMax=2G`):
 
-1. con el cerrojo de la recogida (tope de 25 minutos, acaba antes de la de las 02:17), vuelve a
-   comprobar todo lo publicado en las últimas 48 horas: los pares ya decididos que tienen fuentes
-   nuevas y la verificación de las fichas con fuentes nuevas (las horarias solo comparan pares
-   nuevos o dudosos y verifican de nuevo una ficha como mucho cada 6 horas);
-2. sin el cerrojo, manda por lote (a mitad de precio) las citas que siguen sin traducir, las de
-   las fichas primero y después las de la capa de Ucrania, las más recientes primero, con lo que
-   sobra del día y sin pasar de 0,08 dólares; espera a que el lote termine (12 horas como mucho);
-3. con el cerrojo otra vez, guarda las traducciones.
+1. con el cerrojo de la recogida, lo que no llama al servicio (uniones, reglas, verificaciones ya
+   decididas, retención) y la recogida de los lotes de citas de las horas anteriores;
+2. sin el cerrojo, manda por lote (a mitad de precio, desde el 14 de octubre de 2026,
+   [`docs/modelos.md`](modelos.md)) la comprobación de todo lo publicado en las últimas 48 horas:
+   los pares ya decididos que tienen fuentes nuevas y la verificación de las fichas con fuentes
+   nuevas (las horarias solo comparan pares nuevos o dudosos y verifican de nuevo una ficha como
+   mucho cada 6 horas); lo que el modelo base pide escalar se repite con el experto, y todo se
+   guarda con el cerrojo;
+3. sin el cerrojo, manda por lote las citas que siguen sin traducir, las de las fichas primero y
+   después las de la capa de Ucrania, las más recientes primero, con lo que sobra del día y sin
+   pasar del tope de la pasada (`TOPE_NOCHE_USD`, contando los dos lotes); espera a que cada lote
+   termine (3 horas como mucho);
+4. con el cerrojo otra vez, guarda las traducciones.
+
+En cada recogida horaria, las citas nuevas no se traducen con llamadas directas: van en un lote
+que recoge la recogida siguiente (cursor `control_fichas:lotes`).
 
 Lo que corrige sale en la recogida siguiente.
 
@@ -176,6 +184,14 @@ eran el mismo suceso partido y se unen en `incidentes_revisados.json`:
   (`python -m recogida.control_fichas repaso --cerrojo …`), por lotes (a mitad de precio) y en
   dos rondas: los pares primero (las uniones) y después la verificación de cada ficha y las citas
   (las de Europa y, con lo que quede, las de Ucrania).
+
+- Modo `traducciones`: 2 dólares una sola vez (14 de octubre de 2026) para las citas que quedaban
+  sin traducir (unas 8.600 de la capa de Ucrania y 440 de Europa), por lote y con el modelo base:
+  `python -m recogida.control_fichas traducir-pendientes`.
+- Dos modelos ([`docs/modelos.md`](modelos.md)): cada llamada se cobra con la tarifa del modelo
+  que la hizo; un par dudoso y una verificación que contradice la ficha se repiten con el
+  experto, que tiene su propio tope diario (0,30 dólares). Si se agota, el par o la verificación
+  esperan al día siguiente y la ficha nueva sigue retenida (sin el límite de 6 horas).
 
 ## Resumen diario y vigilancia
 

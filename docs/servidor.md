@@ -1065,7 +1065,7 @@ En `%USERPROFILE%\.eodi\`, fuera de cualquier repositorio:
 | `servidor_ssh`, `servidor_ssh.pub` | Par de claves SSH del operador, solo para este servidor |
 | `servidor_known_hosts` | Clave de host del servidor, anotada en la primera conexión |
 | `clave_age.txt` | Identidad age de la base |
-| `extractor.env` | Variables del extractor (`EODI_EXTRACTOR_*`) |
+| `extractor.env` | Variables del extractor (`EODI_EXTRACTOR_*`) y los dos modelos (`EODI_MODELO_BASE`, `EODI_MODELO_EXPERTO`, [`docs/modelos.md`](modelos.md)) |
 | `firms_map_key.txt` | Clave de la API de NASA FIRMS (32 caracteres); `reconstruir.sh` la añade como `EODI_FIRMS_MAP_KEY` al `extractor.env` del servidor. También es el secreto `EODI_FIRMS_MAP_KEY` del repositorio, para la recogida de emergencia |
 | `almacen.env` | Credenciales S3 del almacén público de Hetzner (`ALMACEN_ID=…` y `ALMACEN_SECRETO=…`, una por línea); las llevan al servidor `reconstruir.sh` y `preparar_almacen.sh` |
 | `alerts_in_ua_token.txt` | Token de la API de alerts.in.ua (secreto); `reconstruir.sh` lo deja en el servidor como `alerts_in_ua_token` (600) para `eodi-alertas` |
@@ -1705,9 +1705,11 @@ comprueba cada dato contra una frase literal de sus fuentes y traduce las citas;
 lo ha pasado se retiene como mucho 6 horas. Gasto: modo `control`, 0,15 dólares al día.
 
 - **Madrugada.** `eodi-control.timer`, cada día a las 01:41 UTC (`servidor/control_noche.sh`,
-  `MemoryMax=2G`, `Nice=10`, reintento a los 10 minutos): lo publicado en las últimas 48 horas,
-  con el cerrojo de la recogida (25 minutos como mucho), y las citas atrasadas por lote, sin el
-  cerrojo mientras espera (como mucho 0,08 dólares del día).
+  `MemoryMax=2G`, `Nice=10`, reintento a los 10 minutos): con el cerrojo, lo que no llama al
+  servicio; después, sin el cerrojo mientras espera, los pares y la verificación de lo publicado
+  en las últimas 48 horas y las citas atrasadas, todo por lote (mitad de precio), con lo que pide
+  escalado repetido por el experto ([`docs/modelos.md`](modelos.md)).
+- **Citas de cada hora**: van en un lote que recoge la recogida siguiente.
 - **Estado.** `/home/eodi/.eodi/control.json`: cada pasada (corregidas, unidas, retenidas, gasto)
   para el resumen de las 08:00; problema «control_fichas» en la vigilancia si falla 3 pasadas
   seguidas.
@@ -1717,6 +1719,34 @@ lo ha pasado se retiene como mucho 6 horas. Gasto: modo `control`, 0,15 dólares
 sudo systemd-run --unit=eodi-control-repaso --uid=eodi --gid=eodi -p MemoryMax=3G -p Nice=19   -p IOSchedulingClass=idle -p OOMScoreAdjust=1000 --working-directory=/home/eodi/droneobservatory   bash -c 'set -a; . /home/eodi/.eodi/extractor.env; set +a; export EODI_CLAVE_AGE="$(cat /home/eodi/.eodi/clave_age.txt)";   .venv/bin/python -m recogida.control_fichas repaso --cerrojo /home/eodi/.eodi/recogida.lock'
 journalctl -u eodi-control-repaso -f
 ```
+
+## Dos modelos: base y experto
+
+Desde el 14 de octubre de 2026 ([`docs/modelos.md`](modelos.md)). Todas las llamadas las hace el
+modelo base (Haiku 5.5) y el código escala al experto (Sonnet 5.5) los casos difíciles: poca
+seguridad en un dato clave, un posible duplicado que no está claro, fuentes que se contradicen o
+un dato sin cita, y los casos críticos (confirmados, atribuidos, incursiones en la OTAN o Moldavia,
+cierres de aeropuerto). Vale la respuesta del experto.
+
+- **Configuración**: `EODI_MODELO_BASE` y `EODI_MODELO_EXPERTO` en `/home/eodi/.eodi/extractor.env`
+  (los identificadores completos de los dos modelos; solo están ahí). Sin ellas, todo vuelve al
+  modelo de `EODI_EXTRACTOR_MODELO`. Para cambiarlas, editar el fichero local
+  `%USERPROFILE%\.eodi\extractor.env` y el del servidor (o `bash servidor/reconstruir.sh`, que lo
+  copia); vale desde la recogida siguiente.
+- **Tarifas** por modelo en `modelo/modelos.py`; cada llamada se cobra con la del modelo que la
+  hizo. Los topes de cada modo siguen en dólares.
+- **Tope del experto**: 0,30 USD al día. Agotado, lo que lo necesitaba espera al día siguiente
+  (candidato en el cursor `esperan_experto`; par o verificación con `espera_experto`; la ficha nueva
+  sigue retenida) y lo demás sigue.
+- **Comprobar**: cuántas llamadas hizo cada modelo hoy y cuánto costó cada uno:
+
+```
+sudo -u eodi python3 -c "
+import sqlite3; c=sqlite3.connect('file:/home/eodi/base/eodi.sqlite?mode=ro', uri=True)
+for f in c.execute(\"SELECT coalesce(m.modelo,''), count(*), sum(coalesce(m.escalada,0)), round(sum(l.coste),4) FROM llamadas_extractor l LEFT JOIN llamadas_modelo m ON m.llamada=l.id WHERE l.fecha >= date('now') GROUP BY 1\"): print(f)"
+```
+
+  y en el resumen de las 08:00, sección SISTEMA, línea «Modelos».
 
 ## Vigilancia
 

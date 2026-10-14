@@ -151,6 +151,10 @@ def test_la_comparacion_dudosa_o_incoherente_se_escala() -> None:
     assert not escalado.motivos_comparacion(
         {"decision": "distinto", "mismo_dia": False, "mismo_sitio": True, "varios_sucesos": False}
     )
+    # Mismo día y mismo sitio, separados porque una fuente cita otro suceso: no está claro.
+    assert escalado.motivos_comparacion(
+        {"decision": "distinto", "mismo_dia": True, "mismo_sitio": True, "varios_sucesos": True}
+    ) == ["duplicado_dudoso: mismo día y mismo sitio, pero separados"]
 
 
 # --- Extracción con escalado ----------------------------------------------------------------
