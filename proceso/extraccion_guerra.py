@@ -233,12 +233,12 @@ def procesar_respuesta(
     lote: bool,
 ) -> int:
     """Anota el coste, valida los lugares y da de alta los impactos. Devuelve cuántos."""
-    uso = coste.Uso.de_respuesta(respuesta.get("usage", {}))
+    uso = coste.Uso.de_mensaje(respuesta)
     almacen.registrar_llamada({
         "fecha": ahora.strftime("%Y-%m-%dT%H:%M:%SZ"), "modo": modo.value,
         "candidato": peticion.enlace, "lote": lote, "entrada": uso.entrada, "salida": uso.salida,
         "escritura_cache": uso.escritura_cache, "lectura_cache": uso.lectura_cache,
-        "coste": uso.coste(lote),
+        "coste": uso.coste(lote), "modelo": uso.modelo,
     })  # fmt: skip
     registro_previo = almacen.mensaje_guerra(peticion.enlace) or {}
     documento = {k: v for k, v in registro_previo.items() if k not in {"huella", "resultado"}}
@@ -314,7 +314,7 @@ def extraer(
     ataques = Ataques(almacen.ataques_ucrania())
     for peticion in peticiones:
         gastado = almacen.gastado(modo.value, coste.dia(ahora) if coste.diario(modo) else None)
-        previsto = coste.peor_caso(peticion.letras(), guerra.MAX_TOKENS_SALIDA)
+        previsto = coste.peor_caso(peticion.letras(), guerra.MAX_TOKENS_SALIDA, esfuerzo=guerra.ESFUERZO)
         try:
             if plazo is not None:
                 plazo.comprobar()
@@ -368,7 +368,9 @@ def elegir_para_lote(almacen: Almacen, peticiones: list[Peticion]) -> tuple[list
     elegidas: list[Peticion] = []
     previsto = 0.0
     for peticion in peticiones:
-        caso = coste.peor_caso(peticion.letras(), guerra.MAX_TOKENS_SALIDA, lote=True)
+        caso = coste.peor_caso(
+            peticion.letras(), guerra.MAX_TOKENS_SALIDA, lote=True, esfuerzo=guerra.ESFUERZO
+        )
         if previsto + caso > queda:
             break
         elegidas.append(peticion)
@@ -496,7 +498,7 @@ def principal(argumentos: list[str] | None = None) -> int:
         if args.maximo:
             peticiones = peticiones[: args.maximo]
         peor = sum(
-            coste.peor_caso(p.letras(), guerra.MAX_TOKENS_SALIDA, lote=True) for p in peticiones
+            coste.peor_caso(p.letras(), guerra.MAX_TOKENS_SALIDA, lote=True, esfuerzo=guerra.ESFUERZO) for p in peticiones
         )
         prioridades = {m["enlace"]: m.get("prioridad") for m in almacen.mensajes_guerra(PENDIENTE)}
         registro.info(

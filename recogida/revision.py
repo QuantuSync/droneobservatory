@@ -318,7 +318,10 @@ def reextraer(
 ) -> Documento:
     """Llamadas directas para los candidatos, dentro del tope de gasto por el peor caso."""
     peticiones = preparar_todas(almacen, candidatos_, Descargador)
-    caso = [coste.peor_caso(p.letras(), ficha.MAX_TOKENS_SALIDA) for p in peticiones]
+    caso = [
+        coste.peor_caso(p.letras(), ficha.MAX_TOKENS_SALIDA, esfuerzo=ficha.ESFUERZO)
+        for p in peticiones
+    ]
     caben = next((n for n in range(len(caso), -1, -1) if sum(caso[:n]) <= TOPE_REEXTRACCION_USD), 0)
     antes = almacen.gastado(coste.Modo.REVISION.value)
     extraidas = extraccion.extraer(
