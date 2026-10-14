@@ -124,7 +124,9 @@ def test_un_cierre_de_aeropuerto_es_critico() -> None:
 
 def test_lo_que_no_es_incidente_con_seguridad_no_se_escala() -> None:
     datos = ficha_ejemplo(es_incidente=campo(False, "Droner over", 0.95))
-    assert escalado.motivos_ficha(_leida(datos), TEXTOS) == []
+    assert escalado.motivos_ficha(_leida(datos), ("Droner over byen i aftes.",)) == []
+    # Salvo con una señal de que lo es: aquí, el aeropuerto cerrado (tests/test_nada_se_retira.py).
+    assert escalado.motivos_ficha(_leida(datos), TEXTOS) == ["senal: cierre_aeropuerto"]
 
 
 def test_poca_seguridad_y_dato_sin_cita() -> None:

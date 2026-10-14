@@ -362,6 +362,7 @@ def test_autoridades_en_cada_version() -> None:
     assert autoridades.escrita("Министерство на отбраната", "es") == (
         "el Ministerio de Defensa de Bulgaria"
     )
-    # Desconocida: tal cual en alfabeto latino; en otra escritura, sin nombre.
-    assert autoridades.escrita("Ministerstvo obrany SR", "en") == "Ministerstvo obrany SR"
+    # Desconocida y sin traducción en la ficha: sin nombre, también en alfabeto latino (la regla
+    # de la web; tests/test_avisos_autoridades.py).
+    assert autoridades.escrita("Ministerstvo obrany SR", "en") == "an authority"
     assert autoridades.escrita("Неизвестно ведомство", "en") == "an authority"
