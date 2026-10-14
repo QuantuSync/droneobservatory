@@ -44,6 +44,7 @@ from proceso.ubicacion import (
     DECIMALES,
     Objetivo,
     localidad_pequena,
+    regiones_con_nombre,
 )
 from proceso.validaciones import errores_presencia
 
@@ -64,6 +65,23 @@ MAX_MINUTOS = 7 * 24 * 60
 # antes de la primera noticia.
 DIAS_ANTES_MAX = 7
 MOTIVO = "control de fichas"
+# Un número (en cifras o en palabras, también el artículo de uno) seguido, a dos palabras como
+# mucho, de la palabra dron.
+_NUMEROS = (
+    r"\d+|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|fifteen|twenty|an|un|"
+    r"una|uno|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|diez|quince|veinte|ein|eine|einen|"
+    r"einer|zwei|drei|vier|fünf|sechs|sieben|acht|neun|zehn|zwölf|fünfzehn|zwanzig|une|deux|"
+    r"trois|quatre|cinq|dix|quinze|vingt|due|tre|quattro|cinque|dieci|quindici|venti|o|două|"
+    r"doua|trei|patru|cinci|zece|jeden|jedna|jednego|dwa|dwie|dwóch|trzy|trzech|cztery|czterech|"
+    r"pięć|dziesięć|een|twee|drie|vijf|tien|ett|to|två|tre|fire|fem|ti|yksi|kaksi|kolme|ένα|"
+    r"δύο|τρία|τρεις|один|одна|два|две|три|четыре|пять|jedan|dva|tri|četiri|vienas|trys|viens|"
+    r"divi|trīs|edin|edna"
+)
+NUMERO_DE_DRONES = re.compile(
+    rf"(?i)(?<!\w)(?:{_NUMEROS})\s+(?:[\w-]+\s+)?"
+    r"(?:drohne\w*|drones?|drone\w*|dron\w*|drön\w*|droni|drony|дрон\w*|беспилотник\w*|"
+    r"безпілотник\w*|bezzałogow\w*|μη\s+επανδρωμέν\w*|bespilot\w*)"
+)
 # Una duración solo de una frase que habla del cierre o de los vuelos, no de cuánto duró un
 # avistamiento o cuánto esperó un avión.
 FRASE_DE_CIERRE = re.compile(
@@ -287,6 +305,10 @@ def _interpretar(campo: str, valor: Any, frase: str) -> Any:
         tope = MAX_DRONES if campo == "drones" else MAX_MINUTOS
         if not 0 < minimo <= maximo <= tope:
             return None
+        if campo == "drones" and not NUMERO_DE_DRONES.search(frase):
+            # El número tiene que ir con la palabra dron («dos drones», «3 Drohnen»): «dos aviones
+            # F-16 despegaron por drones» o «voló el dron dos veces» no dan cuántos drones.
+            return None
         return {"min": minimo, "max": maximo}
     if campo == "dia":
         m = _DIA.match(str(valor or ""))
@@ -354,6 +376,9 @@ def _drones(c: Correccion, v: Verificada, conservar: frozenset[str]) -> None:
     d = c.incidente
     actual = (d.get("drones") or {}).get("numero", "desconocido")
     dato = v.datos.get("drones")
+    if dato is not None and not NUMERO_DE_DRONES.search(dato[2]):
+        # Guardado antes de exigir el número junto a la palabra dron: no cuenta.
+        dato = None
     if dato is not None:
         valor, fuente, frase = dato
         c.respaldos["drones.numero"] = (fuente, frase)
@@ -363,7 +388,8 @@ def _drones(c: Correccion, v: Verificada, conservar: frozenset[str]) -> None:
                            "afirmaciones": afirmaciones}  # fmt: skip
             c.cambios.append(f"drones {_rango_texto(actual)} -> {_rango_texto(valor)}: «{frase}»")
         return
-    if isinstance(actual, dict) and "drones" not in conservar:
+    # Un dron (1) es la lectura de una fuente que habla de «el dron» en singular: no se quita.
+    if isinstance(actual, dict) and actual != {"min": 1, "max": 1} and "drones" not in conservar:
         c.incidente = {**d, "drones": {**(d.get("drones") or {}), "numero": "desconocido"},
                        "afirmaciones": _sin_afirmaciones(d, "drones")}  # fmt: skip
         c.cambios.append(f"drones {_rango_texto(actual)} -> sin dato: ninguna fuente da el número")
@@ -471,12 +497,19 @@ def lugar_de_nombre(nombre: str, nivel: str, pais: str, region: str | None,
                and nom.lugares[i].tipo in CATEGORIA_LUGAR]  # fmt: skip
         if len(ids) == 1:
             return Objetivo.de_lugar(nom.lugares[ids[0]]), "instalacion"
+    if regiones_con_nombre(pais, nombre):
+        # Un nombre que también es de una región («Tulcea», «Galați») no sitúa una localidad.
+        return None
     ids = [i for i in localidades_declinadas(nombre, nom) if nom.lugares[i].pais == pais]
+    hallada: Objetivo | None = None
     if len(ids) == 1:
-        return Objetivo.de_lugar(nom.lugares[ids[0]]), "localidad"
-    if not ids and (pequena := localidad_pequena(nombre, pais, region)):
-        return pequena, "localidad"
-    return None
+        hallada = Objetivo.de_lugar(nom.lugares[ids[0]])
+    elif not ids:
+        hallada = localidad_pequena(nombre, pais, region)
+    # La localidad hallada lleva el nombre pedido (un nombre alternativo de otro pueblo no vale).
+    if hallada is None or normalizar(hallada.nombre)[:4] != normalizar(nombre)[:4]:
+        return None
+    return hallada, "localidad"
 
 
 def _lugar(c: Correccion, v: Verificada, nom: Nomenclator | None) -> None:
