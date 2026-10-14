@@ -27,7 +27,7 @@ const BULGARIA_6_OCTUBRE = "EODI-2026-00489";
 const NUREMBERG = "EODI-2026-00515";
 const NUREMBERG_ANTIGUO = "EODI-2026-00516";
 /** Fichas corregidas por el repaso de todo lo publicado (informe del control). */
-const CORREGIDAS = (process.env.CORREGIDAS ?? "EODI-2025-00066,EODI-2025-00154,EODI-2026-00065,EODI-2026-00232")
+const CORREGIDAS = (process.env.CORREGIDAS ?? "EODI-2025-00066,EODI-2025-00154,EODI-2026-00065,EODI-2026-00268,EODI-2025-00248")
   .split(",")
   .filter(Boolean);
 const PROYECTOS = ["android", "iphone", "tableta", "escritorio-chromium", "escritorio-webkit"];
