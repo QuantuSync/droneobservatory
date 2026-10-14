@@ -167,6 +167,10 @@ def test_tras_un_arranque_con_publicacion_reciente_no_lanza_nada() -> None:
     pasada = guardian.Pasada(ahora=AHORA)
     guardian.tras_arranque(pasada, estado, "nuevo", AHORA - timedelta(minutes=40), ordenes)
     assert ordenes.ordenes == [] and estado["arranques"] == [guardian._iso(AHORA)]
+    # Con la hora del arranque, se anota esa y no la de la pasada.
+    hace = AHORA - timedelta(minutes=3)
+    guardian.tras_arranque(pasada, estado, "tercero", AHORA, ordenes, hora=hace)
+    assert estado["arranques"][-1] == guardian._iso(hace)
     # Tras un arranque desde fuera con la recogida parada hace horas, sí.
     guardian.tras_arranque(pasada, estado, "otro", AHORA - timedelta(hours=2), ordenes)
     assert ["systemctl", "start", "--no-block", "eodi-recogida.service"] in ordenes.ordenes
