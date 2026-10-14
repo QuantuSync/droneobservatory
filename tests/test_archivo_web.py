@@ -3,6 +3,7 @@ copias_archivadas): sin red, con Internet Archive y los medios simulados."""
 
 import json
 import sqlite3
+import time
 from collections.abc import Callable
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -156,7 +157,10 @@ def _publicacion(carpeta: Path, enlaces: list[str]) -> None:
     )
 
 
-def test_ronda_completa_y_lo_que_va_a_la_base(tmp_path: Path) -> None:
+@pytest.mark.parametrize("lenta_s", [0.0, 0.3])
+def test_ronda_completa_y_lo_que_va_a_la_base(tmp_path: Path, lenta_s: float) -> None:
+    """Con comprobaciones lentas (lenta_s), el enlace vivo se pide igual: las peticiones de
+    archivo esperan a las comprobaciones, que van en otros hilos."""
     publicacion, datos = tmp_path / "pub", tmp_path / "datos"
     publicacion.mkdir()
     vivo, muerto = "https://a.ro/stiri/vivo-1", "https://b.md/ro/story/1"
@@ -175,12 +179,17 @@ def test_ronda_completa_y_lo_que_va_a_la_base(tmp_path: Path) -> None:
         vivo: aw.Comprobacion(aw.VIVO, "", 200),
         muerto: aw.Comprobacion(aw.FALLO, aw.NO_ENCONTRADO, 404),
     }
+
+    def comprobador(enlace: str) -> aw.Comprobacion:
+        time.sleep(lenta_s)
+        return estados[enlace]
+
     recuento = aw.ronda(
         publicacion,
         datos,
         1,
         archivo=internet,
-        comprobador=estados.__getitem__,
+        comprobador=comprobador,
         reloj=lambda: reloj[0],
     )
     assert recuento["nuevos"] == 2

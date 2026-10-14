@@ -36,7 +36,8 @@ y la recogida siguiente (o la madrugada siguiente) recoge el resultado (cursor
 Gasto: modo «control», 0,15 dólares al día (horaria y madrugada); el repaso de todo lo publicado,
 modo «control_repaso», 4 dólares y después 6 más (el 14 de octubre de 2026). Uso:
 
-    python -m recogida.control_fichas noche|repaso|estado [--base DB.age] [--ensayo CARPETA]
+    python -m recogida.control_fichas noche|repaso|estado|traducir-pendientes [--base DB.age]
+        [--ensayo CARPETA]
 """
 
 import argparse
@@ -1673,6 +1674,42 @@ def noche(base: Base, fabrica: Callable[[], Any] | None, ruta_estado: Path,
     return resultado
 
 
+def traducir_pendientes(base: Base, fabrica: Callable[[], Any],
+                        dormir: Callable[[float], None] | None = None,
+                        reloj: Callable[[], float] | None = None) -> Resultado:  # fmt: skip
+    """Traduce de una vez, por lote y con el modelo base, todas las citas publicadas sin traducir
+    (las de Europa primero y después las de la capa de Ucrania, las más recientes primero),
+    dentro del tope de una sola vez del modo «traducciones». Prepara y espera sin el cerrojo;
+    guarda con el cerrojo."""
+    import time
+
+    resultado = Resultado()
+    copia = base.abrir()
+    hechas = set(copia.traducciones())
+    europa = {**citas_pendientes(copia, "europa"), **citas_de(_activos(copia), copia.controles())}
+    lista = peticiones_traduccion(europa, hechas)
+    lista += peticiones_traduccion(citas_pendientes(copia, "ucrania"), hechas)
+    modo = coste.Modo.TRADUCCIONES
+    disponible = coste.limite(modo) - copia.gastado(modo.value)
+    registro.info("traducciones pendientes: %d peticiones, %.4f USD disponibles", len(lista),
+                  disponible)  # fmt: skip
+    respuestas = por_lote(fabrica(), lista, disponible, dormir or time.sleep,
+                          reloj or time.monotonic)  # fmt: skip
+    with base.cerrojo():
+        almacen = base.abrir()
+        ahora = datetime.now(UTC)
+        ctx = Contexto(almacen, ahora, frozenset(), Llamador(almacen, None, modo, ahora, None,
+                       resultado), resultado, None, None)  # fmt: skip
+        _anotar_lote(almacen, respuestas, ahora, resultado, modo)
+        for peticion in lista:
+            if peticion.clave in respuestas.leidas:
+                procesar_traduccion(ctx, peticion, respuestas.leidas[peticion.clave])
+        base.guardar(almacen)
+    registro.info("traducciones pendientes: %d citas traducidas, %d peticiones fuera del tope",
+                  resultado.traducidas, respuestas.fuera_de_tope)  # fmt: skip
+    return resultado
+
+
 # --- Estado para el resumen diario y la vigilancia ------------------------------------------
 
 
@@ -1798,7 +1835,7 @@ def base_del_servidor(temporal: Path, correo: str, cerrojo: Path | None) -> Base
 
 def principal(argumentos: list[str] | None = None) -> int:
     opciones = argparse.ArgumentParser(description=__doc__)
-    opciones.add_argument("alcance", choices=("noche", "repaso", "estado"))
+    opciones.add_argument("alcance", choices=("noche", "repaso", "estado", "traducir-pendientes"))
     opciones.add_argument("--estado", type=Path, default=RUTA_ESTADO_DEFECTO)
     opciones.add_argument("--correo", default="", help="correo del autor (solo base en GitHub)")
     opciones.add_argument("--cerrojo", type=Path, help="cerrojo de la recogida (repaso)")
@@ -1813,11 +1850,14 @@ def principal(argumentos: list[str] | None = None) -> int:
     with TemporaryDirectory() as temporal:
         base = base_del_servidor(Path(temporal), args.correo, args.cerrojo)
         ahora = datetime.now(UTC)
-        if args.alcance == "repaso":
+        if args.alcance in {"repaso", "traducir-pendientes"}:
             fabrica = _fabrica()
             if fabrica is None:
                 return 1
-            resultado = repaso(base, fabrica)
+            if args.alcance == "repaso":
+                resultado = repaso(base, fabrica)
+            else:
+                resultado = traducir_pendientes(base, fabrica)
             print(resultado.resumen())
             return 0
         if args.alcance == "noche":

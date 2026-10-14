@@ -17,6 +17,7 @@ import {
   resumir,
   resumirUcrania,
 } from "../src/datos/derivar.ts";
+import { zonaLanzamientoEscrita, zonasConocidas } from "../src/datos/zonasLanzamiento.ts";
 import { textos } from "../src/i18n/index.ts";
 import { DESCARGAS } from "../src/sitio.ts";
 import {
@@ -315,6 +316,35 @@ describe("enlace externo", () => {
 });
 
 describe("ficha de un ataque de la capa de Ucrania", () => {
+  it.each([
+    ["es", "Kursk · Crimea ocupada · Prímorsk (provincia de Zaporiyia, ocupada)"],
+    ["en", "Kursk · occupied Crimea · Prymorsk (Zaporizhzhia province, occupied)"],
+  ] as const)("da las zonas de lanzamiento en el idioma de la página (%s)", (idioma, esperado) => {
+    const zonas = ["Курськ", "Крим", "Приморськ – Запорізька область"];
+    const { container } = render(
+      <ProveedorDeRuta inicial="/">
+        <FichaAtaque
+          t={idioma === "es" ? es : en}
+          idioma={idioma}
+          ataque={ataque({ zonas_lanzamiento: zonas })}
+        />
+      </ProveedorDeRuta>,
+    );
+    expect(screen.getByText(esperado)).toBeTruthy();
+    // Ningún nombre de zona del parte (la cita original sí se enseña, junto a su traducción).
+    for (const zona of zonas) expect(container.textContent ?? "").not.toContain(zona);
+  });
+
+  it("todas las zonas de la tabla tienen nombre en español y en inglés, sin cirílico", () => {
+    for (const zona of zonasConocidas()) {
+      for (const idioma of ["es", "en"] as const) {
+        const escrita = zonaLanzamientoEscrita(zona, idioma);
+        expect(escrita, `${zona} (${idioma})`).not.toBe(zona);
+        expect(escrita, `${zona} (${idioma})`).not.toMatch(/[\u0400-\u04FF]/u);
+      }
+    }
+  });
+
   it("avisa de que son cifras de parte y da el desglose", () => {
     render(
       <ProveedorDeRuta inicial="/">

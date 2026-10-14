@@ -26,6 +26,9 @@ Límites, compartidos por todo lo que llama al extractor:
   citas, recogida/control_fichas.py);
 - 4 dólares, una sola vez, para el repaso de todo lo publicado con ese control (modo
   «control_repaso», `python -m recogida.control_fichas repaso`).
+- 2 dólares, una sola vez, para traducir por lote las citas que quedaban sin traducir el 14 de
+  octubre de 2026 (unas 8.600 de la capa de Ucrania y 440 de Europa) con el modelo base (modo
+  «traducciones», `python -m recogida.control_fichas traducir-pendientes`).
 
 El barrido del catálogo vivo (recogida/catalogo_vivo.py) lleva su propio registro de gasto
 fuera de la base: 0,10 dólares al día y 3 dólares una vez para su primera pasada.
@@ -61,6 +64,8 @@ LIMITE_CONTROL_DIARIO_USD = 0.15
 # Repaso del control sobre todo lo publicado: 4 USD el 14 de octubre de 2026 de madrugada (se
 # gastaron 3,46) y 6 USD más ese mismo día para las fichas que quedaron sin verificar.
 LIMITE_CONTROL_REPASO_USD = 9.46
+# Traducción de una sola vez de las citas atrasadas (14 de octubre de 2026), por lote.
+LIMITE_TRADUCCIONES_USD = 2.00
 # Tope diario del modelo experto, en todos los modos juntos.
 LIMITE_EXPERTO_DIARIO_USD = 0.30
 # Una letra son unos 0,3 tokens en los idiomas europeos; se estima por lo alto con 0,5
@@ -79,6 +84,7 @@ class Modo(StrEnum):
     DIRIGIDA = "dirigida"
     CONTROL = "control"
     CONTROL_REPASO = "control_repaso"
+    TRADUCCIONES = "traducciones"
 
 
 class LimiteGasto(RuntimeError):
@@ -148,6 +154,7 @@ def limite(modo: Modo) -> float:
         Modo.DIRIGIDA: LIMITE_DIRIGIDA_USD,
         Modo.CONTROL: LIMITE_CONTROL_DIARIO_USD,
         Modo.CONTROL_REPASO: LIMITE_CONTROL_REPASO_USD,
+        Modo.TRADUCCIONES: LIMITE_TRADUCCIONES_USD,
     }[modo]
 
 
