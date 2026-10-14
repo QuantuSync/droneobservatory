@@ -18,7 +18,7 @@ import json
 from dataclasses import dataclass
 from typing import Any
 
-VERSION = "control/1"
+VERSION = "control/2"
 TEMPERATURA = 0.0
 MAX_SALIDA_COMPARAR = 400
 MAX_SALIDA_VERIFICAR = 1200
@@ -138,10 +138,13 @@ sin cantidad («drones vistos») o el número de pilotos, de vuelos o de testigo
 de drones: vacío.
 - cierre: «si» si una fuente dice que se cerró o se paró el aeropuerto, una pista o el espacio \
 aéreo, o que se suspendieron o desviaron los vuelos; «no» si dice que siguió abierto.
-- duracion_min: cuántos minutos duró el cierre o la parada, si una fuente lo dice («durante una \
-hora»: «60»; de las 6:10 a las 7:00: «50»).
-- dia: el día del suceso como AAAA-MM-DD, solo si una fuente lo escribe o lo da respecto a su \
-publicación («el martes», «anoche», «a primera hora de hoy»).
+- duracion_min: cuántos minutos estuvo cerrado o parado el aeropuerto, la pista o el espacio \
+aéreo, solo si una fuente lo dice de ese cierre («cerrado durante una hora»: «60»; cerrado de \
+las 6:10 a las 7:00: «50»). No el tiempo que un avión esperó o dio vueltas, ni el retraso de un \
+vuelo.
+- dia: el día del suceso como AAAA-MM-DD, solo si la frase lo escribe («13 de octubre») o lo da \
+respecto a la publicación de su fuente («el martes», «anoche», «esta mañana»). Si la frase no \
+dice el día, vacío: la fecha de publicación no es el día del suceso.
 - hora: la hora local del suceso como HH:MM, solo si una fuente la escribe («gegen 6 Uhr»: \
 «06:00»; «entre las 2 y las 4 de la madrugada»: «02:00»).
 - lugar: el sitio más concreto donde ocurrió el suceso según las fuentes (el aeropuerto, la \

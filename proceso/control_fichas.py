@@ -407,9 +407,14 @@ def _hora(c: Correccion, v: Verificada, primera: datetime, conservar: frozenset[
         return
     if inicio["precision"] == incidentes.APROXIMADA and dia is not None:
         escrito = datetime.strptime(dia[0], "%Y-%m-%d").date()
+        lectura = _dia_en_la_frase(d, dia[1], dia[2], escrito)
+        if lectura is None:
+            # La frase no escribe ese día ni lo da respecto a la publicación («el martes»,
+            # «anoche»): el día no se toma de ella.
+            return
         if primera.date() - timedelta(days=DIAS_ANTES_MAX) <= escrito <= primera.date():
             nuevo = {**tiempo, "inicio": {"valor": f"{dia[0]}T00:00Z", "precision": "dia"},
-                     "origen_inicio": {"tipo": "explicita", "fuente_id": dia[1],
+                     "origen_inicio": {"tipo": lectura, "fuente_id": dia[1],
                                        "motivo": f"{MOTIVO}: «{dia[2]}»"[:300]}}  # fmt: skip
             nuevo.pop("fin", None)
             nuevo.pop("duracion_min", None)
@@ -417,6 +422,24 @@ def _hora(c: Correccion, v: Verificada, primera: datetime, conservar: frozenset[
             c.cambios.append(f"día {dia[0]}: «{dia[2]}»")
         else:
             c.dudas.append(f"día {dia[0]} lejos de la primera noticia")
+
+
+def _dia_en_la_frase(incidente: Documento, fuente_id: str, frase: str, dia: Any) -> str | None:
+    """«explicita» o «relativa» si la frase de esa fuente escribe ese día o lo da respecto a la
+    publicación de su noticia (proceso/fechas.leer, con su víspera para la noche); None si no."""
+    from datetime import UTC
+
+    from proceso import fechas
+
+    fuente = next((f for f in incidente.get("fuentes", []) if f["id"] == fuente_id), None)
+    if fuente is None:
+        return None
+    publicacion = incidentes._leer_instante(fuente["fecha"])
+    zona = fechas.zona(str(incidente["lugar"].get("pais") or "")) or UTC
+    for lectura in fechas.leer(frase, publicacion, zona, fuente.get("idioma")):
+        if dia == lectura.dia or dia in lectura.admitidos:
+            return str(lectura.origen)
+    return None
 
 
 def lugar_de_nombre(nombre: str, nivel: str, pais: str, region: str | None,
