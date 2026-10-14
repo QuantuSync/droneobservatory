@@ -42,10 +42,14 @@ CATEGORIAS_INSTALACION = frozenset(CATEGORIA_LUGAR.values())
 # Puntos que se pueden afinar: los de una localidad o del GKG, no los de una instalación.
 GEOCODIFICACION_GENERICA = frozenset({"localidad", "localidad_pequena", "gkg", "lugar_nuevo"})
 ORIGEN = "frase_origen"
+# Sin el nombre de la instalación: el titular lo da en su idioma y la nota se lee en es/en (el
+# nombre traducido ya sale en la ficha).
 MOTIVO = {
-    "es": "Lugar más preciso que da el titular: {nombre}.",
-    "en": "Most precise place given by the headline: {nombre}.",
+    "es": "Lugar más preciso: la instalación que nombra el titular.",
+    "en": "More precise place: the facility named in the headline.",
 }
+# Las notas de antes llevaban el nombre del titular tal cual.
+MOTIVO_ANTERIOR = "Lugar más preciso que da el titular:"
 
 
 def _con_la_palabra(grupo: str, sitio: Lugar, nom: Nomenclator) -> list[str]:
@@ -130,6 +134,19 @@ def _afinable(incidente: Documento, sitio: Lugar, nom: Nomenclator) -> bool:
     return bool(nombres) and nombres <= nombres_en_idiomas(sitio.id, nom)
 
 
+def _nota_antigua(entrada: Documento) -> bool:
+    return str((entrada.get("motivo") or {}).get("es", "")).startswith(MOTIVO_ANTERIOR)
+
+
+def nota_sin_nombre(incidente: Documento) -> Documento | None:
+    """El incidente con las notas antiguas del lugar sin el nombre del titular, o None."""
+    historial = (incidente.get("lugar") or {}).get("historial") or []
+    if not any(_nota_antigua(h) for h in historial):
+        return None
+    nuevo = [{**h, "motivo": dict(MOTIVO)} if _nota_antigua(h) else h for h in historial]
+    return {**incidente, "lugar": {**incidente["lugar"], "historial": nuevo}}
+
+
 def precisar(incidente: Documento, nom: Nomenclator, ahora: datetime) -> Documento | None:
     """El incidente con el lugar en la instalación que nombra el titular, o None si no cambia."""
     sitio = instalacion_del_titulo(incidente, nom)
@@ -157,7 +174,7 @@ def precisar(incidente: Documento, nom: Nomenclator, ahora: datetime) -> Documen
             {
                 "fecha": {"valor": ahora.strftime("%Y-%m-%dT%H:%MZ"), "precision": "minuto"},
                 "anterior": anterior,
-                "motivo": {k: v.format(nombre=sitio.nombre) for k, v in MOTIVO.items()},
+                "motivo": dict(MOTIVO),
             },
         ]
     objetivo = Objetivo.de_lugar(sitio)

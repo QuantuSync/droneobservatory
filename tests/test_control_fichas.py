@@ -672,3 +672,16 @@ def test_con_fuentes_sin_leer_no_se_quita_nada_por_falta_de_frase() -> None:
     incompleta = reglas.aplicar(documento, reglas.Verificada(), False, None, completa=False)
     assert incompleta.incidente["drones"]["numero"] == {"min": 2, "max": 10}
     assert incompleta.incidente["consecuencias"]["cierre"]["valor"] == "si"
+
+
+def test_la_nota_del_lugar_no_lleva_el_nombre_en_otro_idioma() -> None:
+    nuevo = lugar_preciso.precisar(_nuremberg_griega(), nomenclator(), AHORA)
+    assert nuevo is not None
+    assert nuevo["lugar"]["historial"][-1]["motivo"] == lugar_preciso.MOTIVO
+    viejo = {"es": "Lugar más preciso que da el titular: Flugplatz Husum-Schwesing.", "en": "x"}
+    antiguo = {**nuevo, "lugar": {**nuevo["lugar"], "historial": [
+        {**nuevo["lugar"]["historial"][-1], "motivo": viejo}]}}  # fmt: skip
+    arreglado = lugar_preciso.nota_sin_nombre(antiguo)
+    assert arreglado is not None
+    assert arreglado["lugar"]["historial"][-1]["motivo"] == lugar_preciso.MOTIVO
+    assert lugar_preciso.nota_sin_nombre(arreglado) is None
