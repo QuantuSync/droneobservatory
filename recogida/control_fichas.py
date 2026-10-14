@@ -82,8 +82,14 @@ MAX_LETRAS_CITA = 600
 # El control falla varias veces seguidas: la vigilancia abre la incidencia.
 FALLOS_PARA_AVISAR = 3
 PREFIJO_UNION = "control de fichas: "
-# La pasada de madrugada gasta como mucho esto del día (lo atrasado de las citas de Ucrania).
+# La pasada de madrugada gasta como mucho esto del día en revisar lo publicado (pares y
+# verificaciones por lote, con su escalado al experto).
 TOPE_NOCHE_USD = 0.08
+# Y aparte, esto en las citas sin traducir: lo nuevo de cada día (unas 15 a 30 citas de la capa
+# de Ucrania y lo que no recogieron los lotes de cada hora, medido el 14 de octubre de 2026) cabe
+# de sobra (unas 200 citas en el peor caso con el modelo base por lote) y el resto del tope se
+# come lo atrasado. Lo que gaste la revisión no le quita sitio.
+TOPE_NOCHE_CITAS_USD = 0.02
 # Y como mucho este tiempo: tiene que acabar antes de la recogida siguiente.
 TOPE_NOCHE_S = 25 * 60.0
 # Repaso por lotes: espera entre consultas del estado del lote y tope de espera.
@@ -1639,7 +1645,8 @@ def noche(base: Base, fabrica: Callable[[], Any] | None, ruta_estado: Path,
     al servicio; sin el cerrojo mientras espera, los pares y la verificación de lo publicado en
     las últimas 48 horas (repaso con alcance «noche»), con el escalado al experto; y después las
     citas sin traducir de cada capa (las de Europa y las de Ucrania, las más recientes primero),
-    con lo que sobra del día hasta TOPE_NOCHE_USD. Cada resultado se guarda con el cerrojo."""
+    con lo que sobra del día hasta TOPE_NOCHE_CITAS_USD. Cada resultado se guarda con el
+    cerrojo."""
     import time
 
     from recogida.extractor import modelos_base
@@ -1667,7 +1674,7 @@ def noche(base: Base, fabrica: Callable[[], Any] | None, ruta_estado: Path,
     lista += peticiones_traduccion(citas_pendientes(copia, "ucrania"), hechas)
     hoy = coste.dia(datetime.now(UTC))
     disponible = min(
-        TOPE_NOCHE_USD - resultado.gasto,
+        TOPE_NOCHE_CITAS_USD,
         coste.limite(coste.Modo.CONTROL) - copia.gastado(coste.Modo.CONTROL.value, hoy),
     )
     disponible -= gasto_reservado(copia)

@@ -115,7 +115,11 @@ tareas mecánicas (traducir, partes de Ucrania, catálogo, documentos oficiales)
 - **Madrugada** (`eodi-control`, 01:41 UTC): los pares y las verificaciones de las últimas 48 horas
   van por lote (`repaso` con alcance «noche»), sin el cerrojo mientras el lote se procesa (3 horas
   como mucho); lo que el base pide escalar se repite con el experto en llamadas directas, dentro
-  de su tope. Después, las citas atrasadas, también por lote. Tope de la pasada: `TOPE_NOCHE_USD`.
+  de su tope. Tope de la revisión: `TOPE_NOCHE_USD` (0,08 USD). Después, las citas sin traducir,
+  también por lote, con su propio tope (`TOPE_NOCHE_CITAS_USD`, 0,02 USD, unas 200 citas en el
+  peor caso): lo nuevo de cada día son unas 15 a 30 citas de la capa de Ucrania (medido el 14 de
+  octubre de 2026), así que queda traducido esa misma noche y el resto del tope se come lo
+  atrasado. Lo que gaste la revisión no le quita sitio.
 - **Citas de cada hora**: las citas nuevas que deja cada recogida van en un lote que recoge la
   recogida siguiente (cursor `control_fichas:lotes`); el peor caso de los lotes sin recoger se
   reserva en el tope del día. Un lote que no termina en 25 horas se olvida y sus citas vuelven a
