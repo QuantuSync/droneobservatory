@@ -88,10 +88,53 @@ la misma petición con el experto y **vale la respuesta del experto**.
 4. **critico**: dron confirmado, atribuido (dron estatal o una declaración de autoría), incursión
    en un país de la OTAN o en Moldavia (lista de `configuracion/avisos.json`) o cierre de
    aeropuerto.
+5. **publicada** (desde el 15 de octubre de 2026, obligatoria): ver «Nada publicado se retira ni se
+   rebaja sin el experto».
+6. **senal** (ídem): el base da un candidato por «no es un incidente», aunque esté seguro, y alguna
+   fuente es oficial o habla de hundimiento, víctimas, desaparecidos, heridos, daños, cierre de
+   aeropuerto o incursión. Fuente oficial: un medio de `configuracion/fuentes_oficiales.json`, un
+   dominio de gobierno, defensa, policía o aviación civil (`dominios_oficiales`) o una declaración
+   de una autoridad en la ficha. Las palabras, en las lenguas de las fuentes (español, inglés,
+   alemán, francés, rumano, polaco, búlgaro, ruso, ucraniano, neerlandés, italiano, danés…), están
+   en `configuracion/senales_escalado.json`; se buscan en el titular y el texto que se mandaron,
+   sin mayúsculas ni acentos.
 
-Una ficha que el base da por «no es un incidente» con seguridad no se escala. Una verificación que
+Fuera de esas señales, una ficha que el base da por «no es un incidente» con seguridad no se
+escala. Una verificación que
 confirma la ficha no se escala aunque el caso sea crítico: su ficha ya la decidió el experto. Las
 tareas mecánicas (traducir, partes de Ucrania, catálogo, documentos oficiales) no se escalan.
+
+## Nada publicado se retira ni se rebaja sin el experto
+
+Desde el 15 de octubre de 2026. En la prueba comparativa, Haiku 5.5 dio con seguridad (0,8) por
+«no es incidente» una noticia del ataque con drones del 6 de octubre de 2026 a dos buques en aguas
+búlgaras del mar Negro (uno se hundió, hubo desaparecidos; EODI-2026-00489), y ninguna regla lo
+escalaba. Desde entonces:
+
+- **Fichas**: una respuesta del base que daría por «no es incidente» la ficha ya publicada de su
+  candidato, o que rebajaría su presencia (confirmada → no confirmada → descartada), su dron estatal
+  o su cierre, se escala siempre (`escalado.motivos_publicada`, motivo «publicada: …»). Si el
+  experto no puede (tope del día agotado o error), el candidato espera (cursor `esperan_experto`) y
+  **la ficha publicada se queda como estaba**.
+- **Red de seguridad** (`extraccion.procesar_respuesta`): si una respuesta del base que retiraría o
+  rebajaría una ficha publicada llega sin el experto (un lote, una ficha que no valida, una
+  respuesta ilegible), no se aplica: la ficha publicada sigue igual, la extracción se guarda con
+  `ficha_base` y `conservada` (una reconstrucción no la lee) y el candidato queda en
+  `esperan_experto` con `revision`, para repetirse con el experto en la recogida siguiente (se
+  vuelve a extraer aunque sus noticias no hayan cambiado y se escala siempre).
+- **Uniones del control**: una comparación que uniría dos fichas y retiraría así una ya publicada
+  (la que se une a la otra; las retenidas no cuentan) se escala siempre (`escalado.motivos_union`).
+  Sin el experto, el par queda «dudoso» esperándolo y las dos fichas siguen publicadas.
+- **Verificaciones**: ya se escalaban siempre que contradicen la presencia, el número de drones o el
+  cierre (la única forma de rebajar la presencia), y sin el experto no se aplica nada.
+- Las reglas del código que no son decisiones del modelo (bajar un estado sin fuente oficial, un
+  suceso sin día) siguen como antes.
+- **Sin experto configurado** (vuelta atrás: sin `EODI_MODELO_EXPERTO`) todo sigue como antes del
+  14 de octubre: el modelo único decide.
+
+Pruebas: `tests/test_nada_se_retira.py` (la 00489, cada señal con un caso inventado, fuentes
+oficiales, retirada y rebaja de una ficha publicada con y sin experto, lotes, reconstrucción y
+uniones del control).
 
 ## Topes
 

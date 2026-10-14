@@ -116,7 +116,9 @@ def test_formato_del_aviso() -> None:
     assert "10/10/2026, 10:04 hora local (08:04 UTC)" in es
     assert "**Michalovce, Eslovaquia**" in es and "**confirmado**" in es
     assert "**Michalovce, Slovakia**" in en
-    assert "Ministerstvo obrany SR" in es
+    # Una autoridad que no está en la tabla ni llega traducida: nunca en otra lengua.
+    assert "Fuente: una autoridad." in es and "Ministerstvo obrany SR" not in es
+    assert "Source: an authority." in en
     assert "10 Oct 2026, 10:04 local time (08:04 UTC)" in en and "**confirmed**" in en
     assert cuerpo["markdown"] is True and cuerpo["priority"] == 4
     assert cuerpo["click"] == "https://droneobservatory.eu/EODI-2026-00500"

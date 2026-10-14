@@ -33,6 +33,12 @@ su tope del día (o no responde), el candidato espera (cursor `esperan_experto`)
 publicarse con la ficha del base; los demás siguen. El que espera por el tope vuelve al día
 siguiente (UTC); el que espera por un fallo, en la recogida siguiente. Cada ficha guarda qué
 modelo la decidió y la extracción, por qué se escaló.
+
+Nada publicado se retira ni se rebaja sin el experto: una ficha del base que retiraría o
+rebajaría la ficha ya publicada de su candidato se escala siempre y, si llega sin el experto (un
+lote, o una retirada que solo se ve al validar), no se aplica: la publicada se queda como estaba,
+la extracción se guarda aparte (`ficha_base`, que una reconstrucción no lee) y el candidato
+vuelve a extraerse con el experto (cursor `esperan_experto`, con `revision`).
 """
 
 import contextlib
@@ -48,11 +54,11 @@ from typing import Any, Protocol
 
 from almacen.base import Almacen, DocumentoInvalido
 from esquema import Documento
-from modelo import coste, ficha, paginas
+from modelo import coste, ficha, modelos, paginas
 from modelo.cliente import ErrorTemporal, LlamadaFallida
 from proceso import declaraciones, detalle, escalado, presencia
 from proceso.estados import Estado, TransicionNoPermitida, transitar
-from proceso.incidentes import aplicar_reglas, construir, huella
+from proceso.incidentes import activo, aplicar_reglas, construir, huella
 from proceso.noticias import (
     GKG,
     TIPO_APARENTE,
@@ -112,6 +118,10 @@ SIN_IDIOMA = "sin artículos en un idioma reconocido"
 ESPERAN_EXPERTO = "esperan_experto"
 # Tras un fallo del experto, se reintenta en la recogida siguiente.
 ESPERA_FALLO_EXPERTO = timedelta(minutes=50)
+# Las reglas «publicada» y «senal» (docs/modelos.md) llegaron el 15 de octubre de 2026: una sola
+# vez, las decisiones del base desde que entró en producción se repasan con ellas.
+REVISION_REGLAS = "revision_reglas_experto"
+ENTRADA_MODELO_BASE = "2026-10-14T13:42:00Z"
 
 
 class Servicio(Protocol):
@@ -218,10 +228,12 @@ def espera_experto(almacen: Almacen, candidato_id: str, ahora: datetime) -> bool
 
 
 def anotar_espera(
-    almacen: Almacen, candidato_id: str, motivos: list[str], ahora: datetime, por_tope: bool
-) -> None:
+    almacen: Almacen, candidato_id: str, motivos: list[str], ahora: datetime, por_tope: bool,
+    revision: bool = False,
+) -> None:  # fmt: skip
     """El candidato espera al experto: hasta el día siguiente (UTC) si se agotó su tope, hasta
-    la recogida siguiente si falló."""
+    la recogida siguiente si falló. Con `revision`, se vuelve a extraer aunque sus artículos no
+    hayan cambiado y se escala siempre, con esos motivos."""
     documento = esperan_experto(almacen)
     if por_tope:
         hasta = (ahora.astimezone(UTC) + timedelta(days=1)).strftime("%Y-%m-%dT00:00:00Z")
@@ -232,6 +244,8 @@ def anotar_espera(
         "hasta": hasta, "desde": anterior.get("desde", _fecha(ahora)),
         "motivos": motivos[:10], "por": "tope" if por_tope else "fallo",
     }  # fmt: skip
+    if revision or anterior.get("revision"):
+        documento[candidato_id]["revision"] = True
     registro.info("candidato %s espera al experto hasta %s: %s", candidato_id, hasta,
                   "; ".join(motivos[:3]))  # fmt: skip
     almacen.guardar_cursor(ESPERAN_EXPERTO, documento)
@@ -242,6 +256,45 @@ def quitar_espera(almacen: Almacen, candidato_id: str) -> None:
     if candidato_id in documento:
         documento.pop(candidato_id)
         almacen.guardar_cursor(ESPERAN_EXPERTO, documento)
+
+
+def revisar_decisiones_base(
+    almacen: Almacen, descargador: Descargador | None, ahora: datetime,
+    desde: str = ENTRADA_MODELO_BASE,
+) -> list[str]:  # fmt: skip
+    """Una sola vez (cursor `revision_reglas_experto`): la última ficha de cada candidato que el
+    base dio por «no es incidente» desde `desde`, sin escalar, se vuelve a mirar con las reglas de
+    escalado de ahora y con el texto de sus fuentes; si alguna pide el experto, el candidato se
+    repite con él (`esperan_experto` con `revision`). Devuelve los marcados."""
+    if almacen.cursor(REVISION_REGLAS) is not None:
+        return []
+    candidatos = {c["id"]: c for c in almacen.candidatos()}
+    marcados: dict[str, list[str]] = {}
+    for candidato_id in almacen.candidatos_extraidos_desde(desde):
+        candidato = candidatos.get(candidato_id)
+        anteriores = almacen.extracciones(candidato_id)
+        ultima = anteriores[-1] if anteriores else {}
+        leida = ultima.get("ficha")
+        if candidato is None or not leida or ultima.get("escalado"):
+            continue
+        if (leida.get("es_incidente") or {}).get("valor") is not False:
+            continue
+        peticion = preparar(almacen, candidato, descargador)
+        motivos = escalado.motivos_ficha(leida, textos_de(peticion), con_fuente_oficial(peticion))
+        if motivos:
+            marcados[candidato_id] = motivos
+            anotar_espera(almacen, candidato_id, motivos, ahora - ESPERA_FALLO_EXPERTO, False, True)
+    almacen.guardar_cursor(REVISION_REGLAS, {
+        "fecha": _fecha(ahora), "desde": desde, "marcados": marcados,
+    })  # fmt: skip
+    registro.info("revisión de las decisiones del base desde %s: %d al experto", desde,
+                  len(marcados))  # fmt: skip
+    return list(marcados)
+
+
+def en_revision(almacen: Almacen) -> set[str]:
+    """Los candidatos que se repiten con el experto (`revision`)."""
+    return {id_ for id_, e in esperan_experto(almacen).items() if e.get("revision")}
 
 
 def con_idioma(almacen: Almacen, candidato: Documento) -> bool:
@@ -273,6 +326,9 @@ def articulos_retirados(almacen: Almacen, candidato: Documento) -> bool:
 def necesita_extraccion(almacen: Almacen, candidato: Documento) -> bool:
     anteriores = almacen.extracciones(candidato["id"])
     if not anteriores:
+        return True
+    if esperan_experto(almacen).get(candidato["id"], {}).get("revision"):
+        # Una ficha del base que no se aplicó sin el experto: se repite con él.
         return True
     if len(anteriores) >= MAX_LLAMADAS_POR_CANDIDATO:
         return False
@@ -539,6 +595,8 @@ def procesar_respuesta(
     anotar_llamada(almacen, peticion, respuesta, ahora, modo, lote, bool(escalado_por))
     documento: Documento = {"motivos": [], "campos": {}}
     incidente_id: str | None = None
+    publicada = publicada_sin_experto(almacen, peticion, escalado_por)
+    conservar: list[str] = []
     try:
         leida = ficha.leer_respuesta(respuesta)
     except ficha.RespuestaInvalida as error:
@@ -570,8 +628,23 @@ def procesar_respuesta(
             documento["modelo"] = str(respuesta["model"])
         if escalado_por:
             documento["escalado"] = list(escalado_por)
-        if validada.publicable:
+        conservar = escalado.motivos_publicada(leida, publicada)
+        if validada.publicable and not conservar:
             incidente_id = _alta(almacen, peticion, validada, ahora, modelos_base, documento)
+    if publicada is not None and (conservar or incidente_id is None):
+        # Nada publicado se retira ni se rebaja sin el experto: la ficha publicada se queda como
+        # estaba y el candidato se repite con él.
+        conservar = conservar or [
+            f"publicada: {publicada['id']} retirada: "
+            + ("; ".join(documento["motivos"]) or "ficha no publicable")
+        ]
+        if "ficha" in documento:
+            documento["ficha_base"] = documento.pop("ficha")
+        documento["conservada"] = conservar
+        incidente_id = publicada["id"]
+        anotar_espera(almacen, peticion.candidato["id"], conservar, ahora, False, True)
+        registro.warning("candidato %s: %s; se repite con el experto", peticion.candidato["id"],
+                         "; ".join(conservar))  # fmt: skip
     if incidente_id is None:
         motivo = "; ".join(documento["motivos"]) or "no es un incidente"
         retirar_del_candidato(almacen, peticion.candidato["id"], motivo, ahora, modelos_base)
@@ -612,13 +685,42 @@ def textos_de(peticion: Peticion) -> tuple[str, ...]:
     return tuple(f"{f.titular}. {f.texto}" for f in peticion.fuentes)
 
 
-def motivos_escalado(peticion: Peticion, respuesta: dict[str, Any]) -> list[str]:
+def con_fuente_oficial(peticion: Peticion) -> bool:
+    enviadas = set(peticion.enviadas)
+    return any(
+        escalado.fuente_oficial(str(a.get("medio", "")), str(a.get("url", "")))
+        for a in peticion.articulos if a.get("url") in enviadas
+    )  # fmt: skip
+
+
+def publicada_del_candidato(almacen: Almacen, candidato_id: str) -> Documento | None:
+    """La ficha publicada (activa) del candidato, o None."""
+    id_ = incidente_del_candidato(almacen, candidato_id)
+    incidente = almacen.incidente(id_) if id_ else None
+    return incidente if incidente is not None and activo(incidente) else None
+
+
+def publicada_sin_experto(
+    almacen: Almacen, peticion: Peticion, escalado_por: list[str] | None
+) -> Documento | None:
+    """La ficha publicada del candidato que una respuesta del base no puede retirar ni rebajar:
+    solo con dos modelos y si la respuesta no es del experto."""
+    if escalado_por or not modelos.experto():
+        return None
+    return publicada_del_candidato(almacen, peticion.candidato["id"])
+
+
+def motivos_escalado(
+    peticion: Peticion, respuesta: dict[str, Any], publicada: Documento | None = None
+) -> list[str]:
     """Por qué la respuesta del base se escala (proceso/escalado.py); vacía si no se escala."""
     try:
         leida = ficha.leer_respuesta(respuesta)
     except ficha.RespuestaInvalida as error:
         return [f"respuesta_invalida: {error}"]
-    return escalado.motivos_ficha(leida, textos_de(peticion))
+    return escalado.motivos_ficha(
+        leida, textos_de(peticion), con_fuente_oficial(peticion), publicada
+    )
 
 
 def escalar(
@@ -635,7 +737,12 @@ def escalar(
     experto = fabrica_experto() if callable(fabrica_experto) else None
     if experto is None:
         return respuesta, None
-    motivos = motivos_escalado(peticion, respuesta)
+    candidato_id = peticion.candidato["id"]
+    motivos = motivos_escalado(peticion, respuesta, publicada_del_candidato(almacen, candidato_id))
+    espera = esperan_experto(almacen).get(candidato_id, {})
+    if espera.get("revision"):
+        # Una ficha del base que no se aplicó sin el experto: se escala siempre.
+        motivos += [m for m in espera.get("motivos", []) if m not in motivos]
     if not motivos:
         return respuesta, None
     anotar_llamada(almacen, peticion, respuesta, ahora, modo, False)

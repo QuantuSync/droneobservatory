@@ -23,9 +23,11 @@ se corrige.
 
 Dos modelos (docs/modelos.md): cada llamada la hace el modelo base. Un par dudoso (o cuya
 decisión no casa con el día y el sitio) y una verificación que contradice un dato clave de la
-ficha se repiten con el experto (proceso/escalado.py) y vale lo suyo. Si el experto ha agotado su
-tope del día, el par o la verificación esperan al día siguiente y la ficha nueva sigue retenida
-hasta entonces (sin el límite de 6 horas: no se publica mal); lo demás sigue. Las traducciones
+ficha se repiten con el experto (proceso/escalado.py) y vale lo suyo; también, siempre, la unión
+que retiraría una ficha ya publicada (nada publicado se retira sin el experto). Si el experto ha
+agotado su tope del día, el par o la verificación esperan al día siguiente y la ficha nueva sigue
+retenida hasta entonces (sin el límite de 6 horas: no se publica mal); lo publicado se queda
+como estaba; lo demás sigue. Las traducciones
 nunca se escalan. Cada decisión guarda el modelo que la tomó, y cada dato que corrige la
 verificación, en control.modelos del incidente.
 
@@ -613,8 +615,24 @@ def peticion_par(ctx: Contexto, a: Documento, b: Documento, huella: str,
     fa, fb = fuentes_de_ficha(ctx.almacen, a, textos), fuentes_de_ficha(ctx.almacen, b, textos)
     cuerpo = peticiones.cuerpo_comparar(_ficha_par(a), fa.bloques, _ficha_par(b), fb.bloques)
     clave = reglas.clave_par(a["id"], b["id"])
+    # La que se uniría a la otra, si ya está publicada: esa unión solo la decide el experto.
+    une = reglas.mas_antiguo(a, b)[1]["id"]
+    une_publicada = une if une not in retenidos(ctx.almacen) else None
     return Peticion("par", clave, cuerpo, peticiones.MAX_SALIDA_COMPARAR,
-                    {"a": a["id"], "b": b["id"], "huella": huella})  # fmt: skip
+                    {"a": a["id"], "b": b["id"], "huella": huella,
+                     "une_publicada": une_publicada})  # fmt: skip
+
+
+def motivos_par(peticion: Peticion) -> Callable[[dict[str, Any]], list[str]]:
+    """Los motivos para escalar la comparación (proceso/escalado.py): el par dudoso o que no
+    casa, y la unión que retiraría una ficha ya publicada."""
+
+    def motivos(respuesta: dict[str, Any]) -> list[str]:
+        return escalado.motivos_comparacion(respuesta) or escalado.motivos_union(
+            respuesta, peticion.datos.get("une_publicada")
+        )
+
+    return motivos
 
 
 def pares_separados(ctx: Contexto) -> list[tuple[Documento, Documento]]:
@@ -725,7 +743,7 @@ def comparar_pares(ctx: Contexto, foco: set[str], revisar_decididos: bool = True
             continue
         peticion = peticion_par(ctx, a2, b2, huella, textos)
         respuesta = ctx.llamador.llamar(peticion.cuerpo, peticion.max_salida, clave,
-                                        escalado.motivos_comparacion)  # fmt: skip
+                                        motivos_par(peticion))  # fmt: skip
         procesar_par(ctx, peticion, respuesta)
 
 
@@ -1365,7 +1383,7 @@ def escalar_lote(
             continue
         leida = respuestas.leidas[peticion.clave]
         if peticion.tipo == "par":
-            motivos = escalado.motivos_comparacion(leida) if leida else ["respuesta_invalida"]
+            motivos = motivos_par(peticion)(leida) if leida else ["respuesta_invalida"]
         else:
             motivos = motivos_verificacion(peticion)(leida) if leida else ["respuesta_invalida"]
         if not motivos:

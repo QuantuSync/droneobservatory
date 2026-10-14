@@ -88,7 +88,10 @@ Sin emoticonos ni etiquetas. En Markdown (`"markdown": true`), que en texto plan
   UTC, **estado** y fuente), una línea en blanco y la misma información en inglés, empezando por
   `SLOVAKIA · Confirmed incursion`.
 - **Fuente**: la de más rango según el modelo (la autoridad antes que la prensa). De una
-  declaración citada, el nombre de quien declara.
+  declaración citada, quien declara, escrito en el idioma de cada línea con la regla de la web
+  (docs/nombres_lugar.md, «Autoridades y fuentes oficiales»): la tabla revisada, la traducción que
+  viaja con la ficha publicada o «una autoridad» / «an authority»; nunca el nombre en otra
+  lengua.
 - **Icono**: `https://droneobservatory.eu/marca/aviso-256.png`, el logo de 256 px de
   `web/marca/generar_marca.py`.
 - **Al tocarlo** se abre `https://droneobservatory.eu/EODI-…`. Esa dirección ya es el mapa con la
