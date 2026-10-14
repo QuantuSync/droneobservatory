@@ -135,7 +135,8 @@ se retiene hasta que el control decide, normalmente ni llega a publicarse.
    guarda con el cerrojo;
 3. sin el cerrojo, manda por lote las citas que siguen sin traducir, las de las fichas primero y
    después las de la capa de Ucrania, las más recientes primero, con lo que sobra del día y sin
-   pasar del tope de la pasada (`TOPE_NOCHE_USD`, contando los dos lotes); espera a que cada lote
+   pasar de su propio tope (`TOPE_NOCHE_CITAS_USD`, 0,02 dólares: lo nuevo de cada día cabe de
+   sobra; la revisión del paso 2 tiene el suyo, `TOPE_NOCHE_USD`); espera a que cada lote
    termine (3 horas como mucho);
 4. con el cerrojo otra vez, guarda las traducciones.
 
