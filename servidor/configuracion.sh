@@ -493,6 +493,15 @@ UNIDAD_REINICIO="eodi-reinicio"
 CALENDARIO_REINICIO="*-*-* 07..15:00/5:00 UTC"
 REINICIO_MEMORIA="300M"
 
+# --- Guardián del sistema (recogida/guardian.py, docs/servidor.md) ---------------------------
+# Cada 5 minutos, como root: /dev/null y compañía, /tmp, sshd y el disco; último recurso, reinicio
+# si dos recogidas seguidas fallan por el sistema (una vez cada 6 horas). Su registro, de lectura
+# para todos, lo leen la vigilancia y el resumen diario.
+UNIDAD_GUARDIAN="eodi-guardian"
+CALENDARIO_GUARDIAN="*-*-* *:00/5:30"
+GUARDIAN_MEMORIA="300M"
+GUARDIAN_ESTADO="/var/lib/$UNIDAD_GUARDIAN/estado.json"
+
 # --- Endurecimiento ------------------------------------------------------------------
 # Intentos fallidos de entrada por SSH antes de vetar una dirección, en qué ventana y
 # cuánto dura el veto. Cada veto repetido de la misma dirección dura el doble, hasta una semana.

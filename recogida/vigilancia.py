@@ -68,6 +68,10 @@ Problemas (cada uno con su frase):
   extractor elige mal las citas. Cada resolución por separado no es un problema;
 - **barrera_atascada**: un incidente sigue retenido por la barrera más de 8 horas (la resolución
   automática tenía que haberlo despachado a las 6): la revisión de la barrera está fallando;
+- **guardian**: el guardián del sistema (recogida/guardian.py) no ha podido arreglar algo (un
+  dispositivo de /dev, /tmp, sshd, el disco por encima del 90 % tras limpiar, o dos recogidas
+  seguidas que fallan por el sistema con el reinicio de último recurso ya gastado en 6 horas);
+- **guardian_parado**: el guardián no ha pasado en 20 minutos (pasa cada 5);
 - **mapa_parado**: hay incidentes de Europa con punto dados de alta después del último cambio de
   incidentes.geojson y ese cambio tiene más de 24 horas: lo nuevo no llega al mapa.
 
@@ -145,6 +149,9 @@ BARRERA = "barrera.json"
 CONTROL = "control.json"
 MAX_FALLOS_CONTROL = 3
 DISCO_AVISO_PCT = 75.0
+# Guardián del sistema (recogida/guardian.py): su registro y cuánto puede pasar sin una pasada.
+GUARDIAN = Path(os.environ.get("EODI_GUARDIAN_ESTADO", "/var/lib/eodi-guardian/estado.json"))
+MAX_SIN_GUARDIAN = timedelta(minutes=20)
 # Líneas del diario de la recogida que explican un código 2 y las de la barrera de titulares.
 AVISO_TOPE = re.compile(
     r"tope de \d+ s agotado|no se lee|sin leer: \d+|en rojo|paso fallido|apartado|retirado", re.I
@@ -279,6 +286,23 @@ def avisos_del_diario(lineas: Sequence[str]) -> tuple[list[str], list[str]]:
     return avisos, retenidos
 
 
+def problemas_del_guardian(estado: dict[str, Any], ahora: datetime) -> list[dict[str, str]]:
+    """Lo que el guardián del sistema no ha podido arreglar, y si ha dejado de pasar."""
+    ultima = _instante(estado.get("ultima_pasada"))
+    if ultima is None or ahora - ultima > MAX_SIN_GUARDIAN:
+        cuando = "nunca" if ultima is None else f"el {ultima:%Y-%m-%d %H:%M} UTC"
+        return [{
+            "id": "guardian_parado",
+            "frase": "El guardián del sistema no pasa desde hace más de 20 minutos (última "
+            f"pasada: {cuando}).",
+        }]  # fmt: skip
+    frases = [str(p.get("frase")) for p in estado.get("sin_arreglar", []) if isinstance(p, dict)]
+    if not frases:
+        return []
+    return [{"id": "guardian", "frase": "El guardián del sistema no lo ha arreglado: "
+             + "; ".join(frases)[:400]}]  # fmt: skip
+
+
 def problemas_del_control(estado: dict[str, Any]) -> list[dict[str, str]]:
     """El control de las fichas falla varias pasadas seguidas (control.json)."""
     fallos = int(estado.get("fallos_seguidos") or 0) if estado else 0
@@ -391,6 +415,7 @@ def componer(
     salud_goatcounter: Callable[[], bool] = visitas.goatcounter_responde,
     privacidad: Callable[[], list[str]] = visitas.fallos_de_privacidad,
     certificados: Callable[[], list[str]] = certificados_que_caducan,
+    guardian: Path | None = None,
 ) -> tuple[dict[str, Any], list[str]]:
     """salud.json y las líneas de detalle para el diario (con los identificadores)."""
     detalle: list[str] = []
@@ -608,6 +633,9 @@ def componer(
             f"quedan {uso.free / 1e9:.1f} GB).",
         })  # fmt: skip
 
+    if guardian is not None:
+        problemas += problemas_del_guardian(_leer_json(guardian), ahora)
+
     memoria["ultima_publicacion"] = _iso(ultima_publicacion)
     problemas, observacion = persistentes(problemas, memoria, ahora)
     avisos = observacion + avisos
@@ -695,7 +723,7 @@ def principal(argumentos: list[str] | None = None) -> int:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
     secretos = Path(os.environ.get("EODI_SECRETOS") or casa() / ".eodi")
     datos = Path(os.environ.get("EODI_SEGUIMIENTO_DATOS") or casa() / "datos" / "seguimiento")
-    salud, detalle = componer(datetime.now(UTC), secretos, datos, casa())
+    salud, detalle = componer(datetime.now(UTC), secretos, datos, casa(), guardian=GUARDIAN)
     for linea in detalle:
         registro.info("%s", linea)
     for problema in salud["problemas"]:

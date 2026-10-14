@@ -31,12 +31,20 @@ hay un problema que no se ha arreglado solo:
 Lo que se arregló solo (reintentos, fallos sueltos que desaparecen en menos de 30 minutos) no
 manda correo: sale en la sección SISTEMA del resumen diario privado ([visitas.md](visitas.md)).
 
+**El servidor se repara solo** (desde el 14 de octubre de 2026, [servidor.md](servidor.md),
+«Guardián del sistema»): cada 5 minutos el guardián recrea `/dev/null` y los demás dispositivos si
+faltan, deja `/tmp` en 1777, reinicia sshd si no responde y limpia cachés si el disco pasa del 90 %;
+si dos recogidas seguidas fallan por el sistema, reinicia el servidor (una vez cada 6 horas) y lanza
+la recogida pendiente; y si el servidor no da señales en 30 minutos, el vigía lo reinicia por la API
+de Hetzner (una vez cada 6 horas). La incidencia del servidor solo se abre si nada de eso lo arregla.
+
 Problemas que avisan: datos publicados con más de 3 horas, 3 recogidas seguidas que terminan, tras
 sus reintentos, con un código distinto de 0 y 2, captura del seguimiento sin recibir nada en 10 minutos, archivo de alertas de alerts.in.ua sin
 respuesta correcta de la API en 15 minutos o con la API respondiendo 401 o 403, copia de la base o del
 archivo con más de 2 horas, segunda copia con más de 3 horas, copia pública de reserva de Helsinki
 sin estar al día más de 30 minutos, disco por encima del 75 %, servidor
-sin dar señales (salud.json con más de 20 minutos), exportación semanal fallida o con más de 8
+sin dar señales tras el reinicio desde fuera (salud.json con más de 30 minutos y el reinicio de las
+6 horas ya hecho), lo que el guardián del sistema no consigue arreglar, exportación semanal fallida o con más de 8
 días, detección en directo parada más de media hora, compilación de producción de la web fallida
 también tras su reintento, paso de la base a solo disco fallido,
 versión citable de los datos del mes sin generar (pasadas las 06:00 UTC del día 1) o una
@@ -311,12 +319,49 @@ El resumen se reintenta solo cada 5 minutos. Un 401 o 403 al enviarlo son los pe
 `observatorio` en `lucas-resumen`: `sudo bash /home/eodi/droneobservatory/servidor/ntfy.sh` los
 rehace. Restaurar la base de visitas desde su copia: [visitas.md](visitas.md), «Copias».
 
+## Cómo se borra en el servidor
+
+En el servidor nadie usa `rm`: el 13 de octubre de 2026 una sesión borró `/dev/null` limpiando sus
+ficheros de prueba y dejó el servidor sin SSH ni servicios. Las sesiones borran con el ayudante
+[`servidor/borrar.py`](../servidor/borrar.py), que solo borra dentro de `/home/eodi` (salvo `base/`,
+`datos/`, `.eodi/`, el clon `droneobservatory/` y los navegadores de `.cache/ms-playwright/`),
+`/home/operador`, `/tmp` y `/var/tmp`, y se niega con cualquier otra ruta (`/dev`, `/etc`, `/usr`,
+`/bin`, `/boot`, `/proc`, `/sys`...):
+
+```
+python3 /home/eodi/droneobservatory/servidor/borrar.py --ensayo /home/operador/prueba   # qué borraría
+python3 /home/eodi/droneobservatory/servidor/borrar.py /home/operador/prueba
+sudo -u eodi python3 /home/eodi/droneobservatory/servidor/borrar.py /home/eodi/ensayo-x  # lo del usuario eodi
+```
+
+Nada del sistema se toca a mano (ni `/dev`, ni `/etc`, ni ficheros del sistema) salvo la
+configuración propia del observatorio, que la escriben `instalar.sh` y sus scripts. Si algo del
+sistema se rompe, el guardián lo repara ([servidor.md](servidor.md), «Guardián del sistema»).
+
+## Si el servidor no da señales
+
+Normalmente no hay que hacer nada: el guardián lo arregla en 5 minutos y, si no, el vigía lo
+reinicia por la API de Hetzner a los 30 minutos sin señales. Si llega la incidencia «El servidor del
+observatorio necesita atención» con «no da señales», es que el reinicio de las 6 horas ya se gastó.
+Desde Git Bash en el equipo con las credenciales:
+
+```
+export HCLOUD_TOKEN=$(cat ~/.eodi/hcloud_token.txt)
+hcloud server metrics eodi-recogida --type cpu,network     # ¿hace algo?
+hcloud server reboot eodi-recogida                           # reinicio suave
+hcloud server reset eodi-recogida                            # si el suave no basta
+```
+
+Tras arrancar, el guardián lanza la recogida pendiente solo.
+
 ## Si el disco se llena
 
-El aviso llega al 75 %. Ver qué ocupa: `sudo du -sh /home/eodi/* /home/eodi/datos/* | sort -h`.
-Lo que se puede borrar sin perder nada: carpetas de ensayo de sesiones (`/home/eodi/ensayo*`),
-`/var/tmp/*` de sesiones y los clones de trabajos de una vez (`/home/eodi/calidad`,
-`/home/eodi/dirigido`, `/home/eodi/revision`). Nunca `base/`, `datos/` ni `.eodi/`. Si hace falta
+El aviso llega al 75 %; al 90 % el guardián limpia solo las cachés y los temporales. Ver qué ocupa:
+`sudo du -sh /home/eodi/* /home/eodi/datos/* | sort -h`.
+Lo que se puede borrar sin perder nada, con `servidor/borrar.py` (apartado «Cómo se borra en el
+servidor»): carpetas de ensayo de sesiones (`/home/eodi/ensayo*`), `/var/tmp/*` de sesiones y los
+clones de trabajos de una vez (`/home/eodi/calidad`, `/home/eodi/dirigido`, `/home/eodi/revision`).
+Nunca `base/`, `datos/` ni `.eodi/`. Si hace falta
 más disco, Hetzner amplía el servidor (`hcloud server change-type`) o se añade un volumen.
 
 ## Si hay que restaurar la base
