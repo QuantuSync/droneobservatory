@@ -427,7 +427,7 @@ def _hora(c: Correccion, v: Verificada, primera: datetime, conservar: frozenset[
 def _dia_en_la_frase(incidente: Documento, fuente_id: str, frase: str, dia: Any) -> str | None:
     """«explicita» o «relativa» si la frase de esa fuente escribe ese día o lo da respecto a la
     publicación de su noticia (proceso/fechas.leer, con su víspera para la noche); None si no."""
-    from datetime import UTC
+    from zoneinfo import ZoneInfo
 
     from proceso import fechas
 
@@ -435,7 +435,7 @@ def _dia_en_la_frase(incidente: Documento, fuente_id: str, frase: str, dia: Any)
     if fuente is None:
         return None
     publicacion = incidentes._leer_instante(fuente["fecha"])
-    zona = fechas.zona(str(incidente["lugar"].get("pais") or "")) or UTC
+    zona = fechas.zona(str(incidente["lugar"].get("pais") or "")) or ZoneInfo("UTC")
     for lectura in fechas.leer(frase, publicacion, zona, fuente.get("idioma")):
         if dia == lectura.dia or dia in lectura.admitidos:
             return str(lectura.origen)
