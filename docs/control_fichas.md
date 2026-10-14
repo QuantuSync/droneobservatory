@@ -115,11 +115,18 @@ se retiene hasta que el control decide, normalmente ni llega a publicarse.
 
 ## Madrugada
 
-`eodi-control.timer`, cada día a las 01:41 UTC (`servidor/control_noche.sh`, con el cerrojo de la
-recogida, `MemoryMax=2G`, tope de 25 minutos): vuelve a comprobar todo lo publicado en las
-últimas 48 horas (pares y verificación de lo que tenga fuentes nuevas) y traduce las citas
-atrasadas de la capa de Ucrania con lo que sobra del día, sin pasar de 0,08 dólares para dejar el
-resto a las recogidas horarias. Lo que corrige sale en la recogida siguiente.
+`eodi-control.timer`, cada día a las 01:41 UTC (`servidor/control_noche.sh`, `MemoryMax=2G`):
+
+1. con el cerrojo de la recogida (tope de 25 minutos, acaba antes de la de las 02:17), vuelve a
+   comprobar todo lo publicado en las últimas 48 horas: los pares ya decididos que tienen fuentes
+   nuevas y la verificación de las fichas con fuentes nuevas (las horarias solo comparan pares
+   nuevos o dudosos y verifican de nuevo una ficha como mucho cada 6 horas);
+2. sin el cerrojo, manda por lote (a mitad de precio) las citas que siguen sin traducir, las de
+   las fichas primero y después las de la capa de Ucrania, las más recientes primero, con lo que
+   sobra del día y sin pasar de 0,08 dólares; espera a que el lote termine (12 horas como mucho);
+3. con el cerrojo otra vez, guarda las traducciones.
+
+Lo que corrige sale en la recogida siguiente.
 
 ```
 sudo systemctl start eodi-control.service
