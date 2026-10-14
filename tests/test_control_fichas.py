@@ -425,7 +425,7 @@ def test_el_estado_confirmado_pide_una_fuente_oficial() -> None:
 
 # --- Publicación: citas traducidas y respaldo de cada dato -----------------------------------
 def test_publicacion_con_traduccion_y_cita_de_respaldo() -> None:
-    publico = {
+    publico: dict[str, Any] = {
         "id": "EODI-2026-09515",
         "presencia_dron": "no_confirmada",
         "fuentes": [
@@ -510,7 +510,7 @@ def test_vigilancia_solo_si_el_control_falla_varias_veces_seguidas() -> None:
     assert vigilancia.problemas_del_control({"fallos_seguidos": 3})[0]["id"] == "control_fichas"
 
 
-# --- Repaso de todo lo publicado, por lotes --------------------------------------------------------
+# --- Repaso de todo lo publicado, por lotes ---------------------------------------------------
 class ServicioLotes(Servicio):
     """Un lote que termina en el acto con las respuestas del servicio falso."""
 
@@ -552,3 +552,20 @@ def test_repaso_por_lotes_en_dos_rondas() -> None:
     assert almacen.gastado(coste.Modo.CONTROL_REPASO.value) > 0
     llamadas = [ll for ll in almacen.llamadas() if ll["modo"] == "control_repaso"]
     assert llamadas and all(ll["lote"] for ll in llamadas)
+
+
+def test_union_a_mano_conserva_el_registro_indicado() -> None:
+    from recogida import revisados
+
+    almacen = _base(_nuremberg_alemana(), _nuremberg_griega())
+    hechos = revisados.unir_grupo(
+        almacen,
+        ["EODI-2026-09515", "EODI-2026-09516"],
+        "x",
+        AHORA,
+        VOCABULARIO_MODELOS,
+        conserva="EODI-2026-09516",
+    )
+    assert hechos == 1
+    alemana = almacen.incidente("EODI-2026-09515")
+    assert alemana is not None and alemana["fusionado_en"] == "EODI-2026-09516"
