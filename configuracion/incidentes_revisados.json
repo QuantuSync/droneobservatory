@@ -405,6 +405,24 @@
       ],
       "motivo": "el mismo suceso: la alerta por un posible dron en el aeropuerto de Núremberg (EDDN) la madrugada del martes 13 de octubre de 2026, con los despegues y aterrizajes suspendidos; 00515 lo cuenta con fuentes alemanas (infranken.de, schwaebische.de, merkur.de, sueddeutsche.de, noz.de, t-online.de) y news.az, 00516 con una griega (dnews.gr)",
       "motivo_en": "the same event: the alert over a possible drone at Nuremberg airport (EDDN) in the early hours of Tuesday 13 October 2026, with take-offs and landings suspended; 00515 reports it with German sources (infranken.de, schwaebische.de, merkur.de, sueddeutsche.de, noz.de, t-online.de) and news.az, 00516 with a Greek one (dnews.gr)"
+    },
+    {
+      "registros": [
+        "EODI-2025-00072",
+        "EODI-2025-00249"
+      ],
+      "conserva": "EODI-2025-00072",
+      "motivo": "el mismo suceso: el cierre del aeropuerto de Bruselas por drones la tarde del martes 4 de noviembre de 2025; 00249 lo cuenta como cierre del espacio aéreo de Bruselas. No se une con EODI-2025-00231, que cuenta además el cierre de Lieja (revisión del control de las fichas, 14 de octubre de 2026)",
+      "motivo_en": "the same event: the closure of Brussels airport over drones on the evening of Tuesday 4 November 2025; 00249 reports it as the closure of Brussels airspace. It is not merged with EODI-2025-00231, which also reports the closure of Liège (review of the record check, 14 October 2026)"
+    },
+    {
+      "registros": [
+        "EODI-2025-00287",
+        "EODI-2025-00456"
+      ],
+      "conserva": "EODI-2025-00287",
+      "motivo": "el mismo suceso: los quince drones sobre la base de Elsenborn (Bélgica) la noche del 2 al 3 de octubre de 2025. La separación del 13 de octubre de 2026 (docs/sucesos_mezclados.md) dejó en 00456 la parte del cierre de Múnich, pero su ficha cuenta Elsenborn con dos de sus tres fuentes (top-channel.tv y el Ministerio de Defensa belga): era el mismo suceso partido",
+      "motivo_en": "the same event: the fifteen drones over the Elsenborn base (Belgium) on the night of 2 to 3 October 2025. The separation of 13 October 2026 (docs/sucesos_mezclados.md) left the Munich closure part in 00456, but its record reports Elsenborn with two of its three sources (top-channel.tv and the Belgian Ministry of Defence): it was the same event split in two"
     }
   ],
   "reextraer": [
@@ -6283,7 +6301,7 @@
           "fecha": "2026-10-03",
           "pais": "LT",
           "descripcion": "Dron procedente de Bielorrusia viola el espacio aéreo de Lituania; alerta a la población, cazas de la OTAN y cierre del aeropuerto de Vilna; 3 de octubre de 2026",
-          "coincide_con": null,
+          "coincide_con": "EODI-2026-00376",
           "fuentes": [
             "revisada-a217065540dfce69",
             "revisada-f8e50ddefaf71539",

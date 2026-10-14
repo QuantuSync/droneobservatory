@@ -151,6 +151,17 @@ quedó revertida y cada decisión se anotó como «revocada». Con las reglas de
 noche, mismo sitio, sin resúmenes) esos pares no son candidatos y, comparados igualmente, salen
 distintos.
 
+## Las separaciones del 13 de octubre, revisadas
+
+El repaso comparó también las 22 parejas de fichas que dejó la separación de sucesos mezclados
+(docs/sucesos_mezclados.md), sin unirlas solo. 20 son sucesos distintos, como se separaron. Dos
+eran el mismo suceso partido y se unen en `incidentes_revisados.json`:
+
+- EODI-2025-00456 con EODI-2025-00287: la parte que tenía que ser el cierre de Múnich salió como
+  otra ficha de los drones sobre Elsenborn (dos de sus tres fuentes son de Elsenborn).
+- EODI-2026-00384 (la parte lituana) con EODI-2026-00376: el mismo cierre de Vilna del 3 de octubre
+  de 2026; la parte se anota con `coincide_con` y la unión la hace la regla de siempre.
+
 ## Gasto
 
 - Modo `control`: 0,15 dólares al día (recogidas horarias y madrugada), con el mismo registro de
