@@ -392,6 +392,7 @@ def incidente_completo() -> Documento:
             "candidato": "CAND-20251001T2030-EKCH-aeropuerto",
             "vocabulario_aegis": {"tipo": "airport_disruption"},
             "distancia_instalaciones_km": 12.5,
+            "modelos": {"drones": "modelo-experto", "presencia_dron": "modelo-base"},
         },
         "deduccion": deduccion_completa(),
         "tipo_dron": tipo_dron_completo(),
