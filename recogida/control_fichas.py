@@ -648,6 +648,10 @@ def reglas_deterministas(ctx: Contexto) -> None:
     for incidente in _activos(ctx.almacen):
         nuevo = incidente
         motivos = []
+        sin_nombre = lugar_preciso.nota_sin_nombre(nuevo)
+        if sin_nombre is not None:
+            nuevo = sin_nombre
+            motivos.append("nota del lugar sin el nombre en otro idioma")
         if ctx.nom is not None:
             preciso = lugar_preciso.precisar(nuevo, ctx.nom, ctx.ahora)
             if preciso is not None:
