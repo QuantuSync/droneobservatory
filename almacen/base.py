@@ -1288,6 +1288,15 @@ class Almacen:
                 (candidato, fecha, version, huella, int(valida), _json(documento)),
             )
 
+    def candidatos_extraidos_desde(self, fecha: str) -> list[str]:
+        """Los candidatos con alguna extracción desde esa fecha (ISO), por orden de llegada."""
+        filas = self._conexion.execute(
+            "SELECT candidato FROM extracciones WHERE fecha >= ? GROUP BY candidato "
+            "ORDER BY MIN(id)",
+            (fecha,),
+        ).fetchall()
+        return [str(f[0]) for f in filas]
+
     def extracciones(self, candidato: str) -> list[Documento]:
         filas = self._conexion.execute(
             "SELECT fecha, version, huella, valida, documento FROM extracciones "

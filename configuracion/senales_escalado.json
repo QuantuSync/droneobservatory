@@ -1,0 +1,62 @@
+{
+  "descripcion": "Señales que hacen escalar al modelo experto un candidato que el modelo base da por «no es incidente», aunque esté seguro (proceso/escalado.motivos_senales, docs/modelos.md). Cada señal es una lista de expresiones que se buscan en el titular y el texto de las fuentes, normalizados (minúsculas, sin acentos): una palabra con «*» casa con todo lo que empieza por ella; sin «*», solo entera; «..» deja hasta tres palabras cualesquiera en medio. Una fuente es oficial si su medio está en configuracion/fuentes_oficiales.json o en «medios_oficiales», o si su dominio tiene una de las etiquetas de «dominios_oficiales» (expresiones regulares, una etiqueta del nombre del servidor).",
+  "senales": {
+    "hundimiento": [
+      "hundi*", "naufrag*", "sunk", "sink*", "sank", "gesunken", "versenk*", "versunken",
+      "coule", "coules", "scufund*", "affond*", "zinkt", "gezonken", "zaton*",
+      "потъна*", "потъва*", "затонул*", "затонув*", "потоплен*", "потопил*"
+    ],
+    "victimas": [
+      "victim*", "muerto", "muertos", "muerte", "muertes", "fallec*", "killed", "dead",
+      "death*", "fatalit*", "tote", "toten", "todesopfer", "getotet", "morts", "morti",
+      "morto", "mortos", "decedat*", "doden", "ofiar*", "zgin*", "zabit*", "zabici",
+      "жертв*", "загина*", "загинал*", "загину*", "загибл*", "погиб*", "убит*"
+    ],
+    "desaparecidos": [
+      "desaparec*", "missing", "vermisst*", "vermist", "disparu*", "disparut*", "dispersi",
+      "zaginion*", "zagin*", "безследно", "изчезна*", "изчезнал*", "пропал*", "зниклих",
+      "зник*"
+    ],
+    "heridos": [
+      "herid*", "injur*", "wounded", "verletz*", "blesse*", "ranit*", "ranni", "ranny",
+      "rannych", "gewond*", "feriti", "ferito", "ранен*", "поранен*", "постраждал*",
+      "пострада*"
+    ],
+    "danos": [
+      "dano", "danos", "danad*", "damag*", "schaden", "beschadig*", "degat*", "endommag*",
+      "avariat*", "avarii", "schade", "danni", "danneggi*", "uszkodz*", "zniszcz*", "poskoz*",
+      "щет*", "повреден*", "повреди*", "поврежд*", "пошкод*"
+    ],
+    "cierre_aeropuerto": [
+      "aeropuert* .. cerr*", "cierre* .. aeropuert*", "cerr* .. aeropuert*",
+      "airport* .. closed", "airport* .. closure*", "airport* .. closing",
+      "closed .. airport*", "closure* .. airport*", "closing .. airport*", "airport* .. shut*", "shut* .. airport*",
+      "flughafen* .. gesperrt", "flughafen* .. geschlossen", "sperr* .. flughafen*",
+      "schliess* .. flughafen*", "flugbetrieb* .. eingestellt",
+      "aeroport* .. ferm*", "ferm* .. aeroport*", "aeroportul* .. inchis", "inchis* .. aeroportul*",
+      "lotnisk* .. zamkni*", "zamkni* .. lotnisk*", "luchthaven .. gesloten",
+      "aeroporto .. chiuso", "chius* .. aeroporto", "lufthavn* .. lukket", "lukk* .. lufthavn*",
+      "flygplats* .. stangd*", "lentoasema* .. suljet*",
+      "летище* .. затвор*", "затвор* .. летище*", "аэропорт* .. закрыт*", "закры* .. аэропорт*",
+      "аеропорт* .. закри*", "закри* .. аеропорт*"
+    ],
+    "incursion": [
+      "incursi*", "airspace violation*", "violat* .. airspace", "luftraumverletz*",
+      "luftraum* .. verletz*", "verletz* .. luftraum*", "eingedrungen",
+      "violac* .. espacio aereo", "viol* .. espacio aereo", "violation .. espace aerien",
+      "espace aerien .. viol*", "incalc* .. spatiul aerian", "incalcarea spatiului aerian",
+      "naruszen* .. przestrzeni powietrznej", "narusz* .. przestrzen* powietrzn*", "wtargni*",
+      "нарушени* .. въздушното пространство", "наруши* .. въздушното пространство",
+      "нарушени* .. воздушного пространства", "наруши* .. воздушное пространство",
+      "порушенн* .. повітряного простору", "поруши* .. повітряний простір", "вторжени*"
+    ]
+  },
+  "medios_oficiales": [],
+  "dominios_oficiales": [
+    "gov", "gouv", "gob", "govt", "gv", "mil", "mod", "mon", "mapn", "admin\\.ch", "bund",
+    "bmvg", "bundeswehr", "polizei[a-z-]*", "politi", "politie", "police", "policia", "polizia",
+    "poliisi", "polisen", "policja", "policie", "defensie", "defence", "defense", "forsvaret",
+    "forsvarsmakten", "puolustusvoimat", "mindef", "regeringen", "government", "caa", "dgac",
+    "lba", "nato"
+  ]
+}

@@ -299,10 +299,18 @@ def horaria(
     except servicio.ClienteNoConfigurado as error:
         registro.warning("extractor sin configurar: %s", error)
         return Resultado()
-    # Primero los candidatos nuevos; después, poco a poco, los incidentes ya publicados
-    # con una ficha de una versión anterior, del más reciente al más antiguo. El límite
-    # diario de gasto corta la ejecución donde toque.
+    # Una sola vez: las decisiones del base desde que entró, con las reglas de escalado nuevas.
+    try:
+        extraccion.revisar_decisiones_base(almacen, Descargador(plazo=plazo), ahora)
+    except TiempoAgotado:
+        registro.warning("revisión de las decisiones del base: sin tiempo; en la siguiente")
+    # Primero los candidatos nuevos y los que se repiten con el experto (aunque sean de antes de la
+    # ventana); después, poco a poco, los incidentes ya publicados con una ficha de una versión
+    # anterior, del más reciente al más antiguo. El límite diario de gasto corta la ejecución
+    # donde toque.
     nuevos = pendientes(almacen, ahora - VENTANA_HORARIA)
+    revision = extraccion.en_revision(almacen) - {c["id"] for c in nuevos}
+    nuevos += utilizables(almacen, [c for c in almacen.candidatos() if c["id"] in revision])
     vistos = {c["id"] for c in nuevos}
     retirados = extraccion.retirados(almacen)
     historicos = sorted(

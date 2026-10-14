@@ -240,7 +240,8 @@ SIN_FUENTE = {"es": "sin fuente nombrada", "en": "no source named"}
 def _fuente(incidente: Documento, idioma: str = "es") -> str:
     """La fuente de más rango (exportacion/procedencia.py): la autoridad antes que la prensa. De
     una declaración citada, quien declara, sin la nota de dónde se cita; escrita en el idioma
-    del aviso (proceso/autoridades.py)."""
+    del aviso con la regla de la web (proceso/autoridades.py): la tabla, la traducción que viaja
+    con la ficha publicada (`autoridades`) o «una autoridad»."""
     from exportacion.procedencia import RANGO
 
     fuentes = incidente.get("fuentes", [])
@@ -248,7 +249,9 @@ def _fuente(incidente: Documento, idioma: str = "es") -> str:
         return SIN_FUENTE[idioma]
     elegida = min(fuentes, key=lambda f: RANGO.index(_origen(f)))
     medio = str(elegida.get("medio") or "")
-    return _limpio(autoridades.de_la_fuente(medio, idioma)) if medio else SIN_FUENTE[idioma]
+    if not medio:
+        return SIN_FUENTE[idioma]
+    return _limpio(autoridades.de_la_fuente(medio, idioma, incidente.get("autoridades")))
 
 
 def _lugar(incidente: Documento, idioma: str) -> str:
@@ -281,8 +284,11 @@ def mensaje(aviso: Aviso, incidente: Documento, config: Documento, tema: str) ->
     titulo_es = f"{pais['es'].upper()} · {FRASE_ES[clave]}"
     titulo_en = f"{pais['en'].upper()} · {FRASE_EN[clave]}"
     titular = nombres_lugar.titulo_corregido(incidente)
-    que_es = _limpio(str(titular.get("es") or FRASE_ES[clave]))
-    que_en = _limpio(str(titular.get("en") or FRASE_EN[clave]))
+    traducidas = incidente.get("autoridades")
+    que_es = _limpio(autoridades.en_texto(str(titular.get("es") or FRASE_ES[clave]), "es",
+                                          traducidas))  # fmt: skip
+    que_en = _limpio(autoridades.en_texto(str(titular.get("en") or FRASE_EN[clave]), "en",
+                                          traducidas))  # fmt: skip
     cuando_es, cuando_en = _cuando(incidente, pais["zona_horaria"])
     linea_es = (
         f"{que_es}. **{_lugar(incidente, 'es')}**, {cuando_es}. "
@@ -346,6 +352,34 @@ def ids_publicados(carpeta: Path) -> set[str]:
         for incidente in json.loads(sin_punto.read_text(encoding="utf-8")).get("incidentes", []):
             ids.add(str(incidente["id"]))
     return ids
+
+
+def autoridades_publicadas(carpeta: Path) -> dict[str, Documento]:
+    """Las autoridades traducidas que viajan con cada ficha publicada (`autoridades`,
+    exportacion/citas.con_autoridades): los avisos las escriben como la web."""
+    resultado: dict[str, Documento] = {}
+    mapa = carpeta / FICHEROS_PUBLICADOS[0]
+    if mapa.exists():
+        for rasgo in json.loads(mapa.read_text(encoding="utf-8")).get("features", []):
+            propiedades = rasgo.get("properties") or {}
+            if propiedades.get("autoridades"):
+                id_ = str(rasgo.get("id") or propiedades["id"])
+                resultado[id_] = dict(propiedades["autoridades"])
+    sin_punto = carpeta / FICHEROS_PUBLICADOS[1]
+    if sin_punto.exists():
+        for incidente in json.loads(sin_punto.read_text(encoding="utf-8")).get("incidentes", []):
+            if incidente.get("autoridades"):
+                resultado[str(incidente["id"])] = dict(incidente["autoridades"])
+    return resultado
+
+
+def con_autoridades(internos: dict[str, Documento], carpeta: Path) -> dict[str, Documento]:
+    """Los documentos internos con las autoridades traducidas de su ficha publicada."""
+    traducidas = autoridades_publicadas(carpeta)
+    return {
+        id_: {**documento, "autoridades": traducidas[id_]} if id_ in traducidas else documento
+        for id_, documento in internos.items()
+    }
 
 
 def documentos(base: Path, ids: Iterable[str]) -> dict[str, Documento]:
@@ -579,6 +613,7 @@ def principal(argumentos: list[str] | None = None, ahora: datetime | None = None
         orden.add_argument("--token", type=Path, help="fichero con el token de observatorio")
     ejemplo = sub.add_parser("ejemplo", help="envía un incidente a un tema de pruebas, sin anotar")
     ejemplo.add_argument("--base", type=Path, required=True)
+    ejemplo.add_argument("--publicacion", type=Path, help="para las autoridades traducidas")
     ejemplo.add_argument("--id", required=True)
     ejemplo.add_argument("--tema", required=True)
     ejemplo.add_argument("--clase", choices=("incursion", "cierre", "suspension", "sobrevuelo"))
@@ -593,6 +628,8 @@ def principal(argumentos: list[str] | None = None, ahora: datetime | None = None
             registro.error("los ejemplos van a un tema de pruebas, nunca a uno público")
             return 1
         incidente = documentos(args.base, [args.id]).get(args.id)
+        if incidente is not None and args.publicacion is not None:
+            incidente = con_autoridades({args.id: incidente}, args.publicacion)[args.id]
         if incidente is None:
             registro.error("%s no está en la base", args.id)
             return 1
@@ -613,7 +650,7 @@ def principal(argumentos: list[str] | None = None, ahora: datetime | None = None
         return 0
 
     publicados = ids_publicados(args.publicacion)
-    internos = documentos(args.base, publicados)
+    internos = con_autoridades(documentos(args.base, publicados), args.publicacion)
     enviados = Enviados(args.datos / BASE_AVISOS, config.get("temas_anteriores"))
     try:
         if args.orden == "ensayo":

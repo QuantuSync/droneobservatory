@@ -122,7 +122,12 @@ frase («según el Ministerio…», «Cifras del…»: tipo de dron, recorrido, 
 de la capa de guerra y páginas sin código). La prueba `web/tests/fichas.test.tsx` recorre todas las
 fichas publicadas en los dos idiomas y falla si alguna enseña una autoridad con su nombre original
 cuando en la página se escribe de otra forma; `web/tests/autoridades-idioma.test.tsx` prueba los tres
-casos. Los avisos siguen con la regla anterior: la tabla y, si no, tal cual en alfabeto latino. El fichero va en ASCII con escapes: el gancho del repositorio vería
+casos. Desde el 15 de octubre de 2026 los avisos de ntfy y el resumen diario privado siguen la misma
+regla (`proceso/autoridades.py`, prueba `tests/test_avisos_autoridades.py`): la fuente del aviso, y
+el nombre original de una autoridad que aparezca en un titular, se escriben con la tabla, con la
+traducción que viaja con la ficha publicada (los avisos la leen de los ficheros publicados) o como
+«una autoridad»; un periódico con dominio sale tal cual, como en la web. Los avisos ya enviados no
+se reenvían. El fichero va en ASCII con escapes: el gancho del repositorio vería
 sílabas sueltas en los nombres rumanos con letras con signo.
 
 ## Capa de guerra

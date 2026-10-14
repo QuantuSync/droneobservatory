@@ -59,6 +59,7 @@ from typing import Any
 from zoneinfo import ZoneInfo
 
 from almacen.sitio import casa
+from proceso import autoridades
 from recogida import avisos as avisos_ntfy
 
 registro = logging.getLogger("visitas")
@@ -411,6 +412,13 @@ def suscriptores_del_dia(lista: Iterable[Documento], dia: date) -> Suscriptores:
 
 
 # --- Incidentes nuevos y avisos enviados ------------------------------------------------------
+def _titulo_es(datos: Documento, id_: str) -> str:
+    """El titular en español con las autoridades escritas como en la web y en los avisos (la
+    tabla, la traducción que viaja con la ficha o «una autoridad»: proceso/autoridades.py)."""
+    titulo = str((datos.get("titulo") or {}).get("es") or id_)
+    return autoridades.en_texto(titulo, "es", datos.get("autoridades"))
+
+
 def titulos_publicados(carpeta: Path) -> dict[str, str]:
     """Los incidentes en la web con su titular en español."""
     titulos: dict[str, str] = {}
@@ -419,11 +427,11 @@ def titulos_publicados(carpeta: Path) -> dict[str, str]:
         for rasgo in json.loads(mapa.read_text(encoding="utf-8")).get("features", []):
             props = rasgo.get("properties") or {}
             id_ = str(rasgo.get("id") or props.get("id"))
-            titulos[id_] = str((props.get("titulo") or {}).get("es") or id_)
+            titulos[id_] = _titulo_es(props, id_)
     sin_punto = carpeta / avisos_ntfy.FICHEROS_PUBLICADOS[1]
     if sin_punto.exists():
         for inc in json.loads(sin_punto.read_text(encoding="utf-8")).get("incidentes", []):
-            titulos[str(inc["id"])] = str((inc.get("titulo") or {}).get("es") or inc["id"])
+            titulos[str(inc["id"])] = _titulo_es(inc, str(inc["id"]))
     return titulos
 
 
