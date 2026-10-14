@@ -76,7 +76,9 @@ def letras(recogido: Documento) -> int:
 
 
 def peor_caso(recogido: Documento, lote: bool = False) -> float:
-    return coste.peor_caso(letras(recogido), ficha_oficial.MAX_TOKENS_SALIDA, lote)
+    return coste.peor_caso(
+        letras(recogido), ficha_oficial.MAX_TOKENS_SALIDA, lote, esfuerzo=ficha_oficial.ESFUERZO
+    )
 
 
 def documento_base(recogido: Documento, ahora: datetime) -> Documento:
@@ -242,12 +244,12 @@ def procesar(
     modelos: frozenset[str],
 ) -> Documento:
     """Anota el coste, valida lo extraído y guarda el documento con lo que sale de él."""
-    uso = coste.Uso.de_respuesta(respuesta.get("usage", {}))
+    uso = coste.Uso.de_mensaje(respuesta)
     almacen.registrar_llamada({
         "fecha": ahora.strftime("%Y-%m-%dT%H:%M:%SZ"), "modo": modo.value,
         "candidato": recogido["id"], "lote": lote, "entrada": uso.entrada, "salida": uso.salida,
         "escritura_cache": uso.escritura_cache, "lectura_cache": uso.lectura_cache,
-        "coste": uso.coste(lote),
+        "coste": uso.coste(lote), "modelo": uso.modelo,
     })  # fmt: skip
     documento = documento_base(recogido, ahora)
     if (previo := almacen.documento_oficial(documento["id"])) is not None:

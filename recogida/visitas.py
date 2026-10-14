@@ -632,6 +632,7 @@ def control_del_dia(control_json: Path, dia: date) -> Documento | None:
         "pasadas": pasadas, "corregidas": corregidas, "clases": clases, "unidos": unidos,
         "retenidas": sorted(retenidas), "liberadas": sorted(liberadas), "gasto": gasto,
         "errores": errores, "fallos_seguidos": int(datos.get("fallos_seguidos") or 0),
+        "modelos": (datos.get("modelos") or {}).get(dia.isoformat()),
     }  # fmt: skip
 
 
@@ -655,7 +656,32 @@ def lineas_control(control: Documento | None) -> list[str]:
         lineas.append(f"  Retenidas por el control: {', '.join(control['retenidas'][:LIMITE])}")
     if control["errores"]:
         lineas.append(f"  El control falló en {control['errores']} pasadas")
-    return lineas
+    return lineas + lineas_modelos(control.get("modelos"))
+
+
+# Los papeles de los modelos (docs/modelos.md), en el orden en que se cuentan.
+PAPELES = (("base", "modelo base"), ("experto", "modelo experto"), ("anterior", "modelo anterior"))
+
+
+def lineas_modelos(modelos: Documento | None) -> list[str]:
+    """Las llamadas de cada modelo ese día, cuántas se escalaron al experto y lo que costó cada
+    uno (todas las llamadas del observatorio, no solo las del control)."""
+    if modelos is None:
+        return ["  Modelos: sin registro"]
+    if not modelos:
+        return ["  Modelos: ninguna llamada"]
+    partes = []
+    for clave, nombre in PAPELES:
+        cuenta = modelos.get(clave)
+        if not cuenta:
+            continue
+        texto = f"{nombre} {numero(int(cuenta['llamadas']))} llamadas"
+        if clave == "experto":
+            texto += f" ({numero(int(cuenta['escaladas']))} escaladas)"
+        texto += f", {cuenta['coste']:.4f} USD".replace(".", ",")
+        partes.append(texto)
+    total = sum(float(c.get("coste") or 0) for c in modelos.values())
+    return [f"  Modelos: {'; '.join(partes)}; total " + f"{total:.4f} USD".replace(".", ",")]
 
 
 def guardian_del_dia(ruta: Path, dia: date) -> Documento:

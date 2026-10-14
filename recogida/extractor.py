@@ -383,7 +383,7 @@ def peor_caso_peticion() -> float:
     """Coste máximo de una petición del lote: tres fuentes con titular y texto completos."""
     fuente = LETRAS_TITULAR + paginas.MAX_LETRAS
     letras = len(ficha.INSTRUCCIONES) + len(str(ficha.ESQUEMA)) + extraccion.MAX_FUENTES * fuente
-    return coste.peor_caso(letras, ficha.MAX_TOKENS_SALIDA, lote=True)
+    return coste.peor_caso(letras, ficha.MAX_TOKENS_SALIDA, lote=True, esfuerzo=ficha.ESFUERZO)
 
 
 def orden_lote(args: argparse.Namespace, almacen: Almacen, ahora: datetime) -> int:

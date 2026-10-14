@@ -21,6 +21,18 @@ pendiente por el tope de gasto o una caída del servicio) se retiene, sin bloque
 mucho 6 horas: después se publica con lo que haya. Lo que ya estaba publicado nunca se retiene:
 se corrige.
 
+Dos modelos (docs/modelos.md): cada llamada la hace el modelo base. Un par dudoso (o cuya
+decisión no casa con el día y el sitio) y una verificación que contradice un dato clave de la
+ficha se repiten con el experto (proceso/escalado.py) y vale lo suyo. Si el experto ha agotado su
+tope del día, el par o la verificación esperan al día siguiente y la ficha nueva sigue retenida
+hasta entonces (sin el límite de 6 horas: no se publica mal); lo demás sigue. Las traducciones
+nunca se escalan. Cada decisión guarda el modelo que la tomó, y cada dato que corrige la
+verificación, en control.modelos del incidente.
+
+De madrugada, las traducciones atrasadas van en un lote (a mitad de precio, `noche`): se envía
+y la recogida siguiente (o la madrugada siguiente) recoge el resultado (cursor
+`control_fichas:lote`).
+
 Gasto: modo «control», 0,15 dólares al día (horaria y madrugada); el repaso de todo lo publicado,
 modo «control_repaso», 4 dólares y después 6 más (el 14 de octubre de 2026). Uso:
 
@@ -45,7 +57,7 @@ from esquema import Documento
 from modelo import control as peticiones
 from modelo import coste
 from modelo.cliente import ErrorTemporal, LlamadaFallida
-from proceso import atribucion, incidentes, lugar_preciso, presencia, titulares
+from proceso import atribucion, escalado, incidentes, lugar_preciso, presencia, titulares
 from proceso import control_fichas as reglas
 from proceso.noticias import Nomenclator
 from proceso.presencia import TABLA_MOTIVOS
@@ -76,6 +88,14 @@ TOPE_NOCHE_S = 25 * 60.0
 # Repaso por lotes: espera entre consultas del estado del lote y tope de espera.
 ESPERA_LOTE_S = 60
 TOPE_LOTE_S = 12 * 3600
+# La madrugada espera su lote como mucho esto (sin el cerrojo); lo que no termina se recoge en la
+# recogida siguiente como los lotes de cada hora.
+TOPE_LOTE_NOCHE_S = 3 * 3600
+# Lotes enviados y aún sin recoger (las citas de cada hora): se recogen en la recogida siguiente.
+CURSOR_LOTES = "control_fichas:lotes"
+# Un lote termina casi siempre en minutos y como mucho en 24 horas; pasado ese tiempo se olvida y
+# sus citas vuelven a quedar pendientes.
+CADUCIDAD_LOTE = timedelta(hours=25)
 RUTA_ESTADO_DEFECTO = Path.home() / ".eodi" / "control.json"
 IDIOMAS_WEB = ("es", "en")
 
@@ -99,10 +119,16 @@ class Resultado:
     dudas: dict[str, list[str]] = field(default_factory=dict)
     parada: str | None = None
     errores: list[str] = field(default_factory=list)
+    # Llamadas repetidas con el experto, y lo que espera al experto (tope del día o fallo).
+    escaladas: int = 0
+    esperan_experto: list[str] = field(default_factory=list)
+    # Llamadas y gasto de cada modelo en esta pasada.
+    por_modelo: dict[str, list[float]] = field(default_factory=dict)
 
     def resumen(self) -> str:
         return (
-            f"llamadas {self.llamadas} ({self.gasto:.4f} USD), unidos {len(self.unidos)}, "
+            f"llamadas {self.llamadas} ({self.gasto:.4f} USD; escaladas {self.escaladas}, "
+            f"esperan al experto {len(self.esperan_experto)}), unidos {len(self.unidos)}, "
             f"distintos {self.distintos}, dudosos {len(self.dudosos)}, verificadas "
             f"{self.verificadas}, corregidos {len(self.corregidos)}, retenidos "
             f"{len(self.retenidos)}, liberados {len(self.liberados)}, citas traducidas "
@@ -146,13 +172,101 @@ class Llamador:
         # Tope de esta pasada, por debajo del del modo (la de madrugada deja margen para las
         # recogidas horarias del mismo día).
         self.tope: float | None = None
+        # De la última llamada: el modelo que dio la respuesta que vale, los motivos del
+        # escalado y, si esperaba al experto y no pudo ser, hasta cuándo espera.
+        self.ultimo_modelo = ""
+        self.ultimos_motivos: list[str] = []
+        self.ultima_espera: str | None = None
 
     @property
     def parado(self) -> bool:
         return self.resultado.parada is not None
 
-    def llamar(self, cuerpo: dict[str, Any], max_salida: int, clave: str) -> dict[str, Any] | None:
-        """La respuesta leída, o None si no se puede llamar (y queda la parada)."""
+    def servicio(self) -> Servicio:
+        """El servicio de esta pasada (se crea la primera vez)."""
+        if self._servicio is None:
+            if self.fabrica is None:
+                raise RuntimeError("sin servicio")
+            self._servicio = self.fabrica()
+        return self._servicio
+
+    def llamar(
+        self, cuerpo: dict[str, Any], max_salida: int, clave: str,
+        escalar: Callable[[dict[str, Any]], list[str]] | None = None,
+    ) -> dict[str, Any] | None:  # fmt: skip
+        """La respuesta leída, o None si no se puede llamar (y queda la parada).
+
+        Con `escalar` (los motivos para escalar una respuesta leída del base), la llamada se
+        repite con el experto si hay motivos y vale la suya; si el experto no puede ahora,
+        devuelve None sin parar nada y deja en `ultima_espera` hasta cuándo espera.
+        """
+        self.ultimo_modelo, self.ultimos_motivos, self.ultima_espera = "", [], None
+        leida = self._llamar_base(cuerpo, max_salida, clave)
+        if escalar is None or self._servicio is None:
+            return leida
+        motivos = escalar(leida) if leida is not None else (
+            ["respuesta_invalida"] if not self.parado else []
+        )  # fmt: skip
+        if not motivos:
+            return leida
+        experto = getattr(self._servicio, "experto", None)
+        cliente_experto = experto() if callable(experto) else None
+        if cliente_experto is None:
+            return leida
+        self.ultimos_motivos = motivos
+        modelo_experto = str(getattr(cliente_experto, "modelo", ""))
+        esfuerzo = (cuerpo.get("output_config") or {}).get("effort")
+        previsto = coste.peor_caso(peticiones.letras(cuerpo), max_salida, modelo=modelo_experto,
+                                   esfuerzo=esfuerzo)  # fmt: skip
+        dia = coste.dia(self.ahora)
+        try:
+            coste.comprobar_experto(self.almacen.gastado_modelo(modelo_experto, dia), previsto)
+            gastado = self.almacen.gastado(self.modo.value, dia if coste.diario(self.modo) else None)
+            coste.comprobar(gastado, previsto, self.modo)
+            if self.tope is not None and gastado + previsto > self.tope:
+                raise coste.LimiteGasto(f"{self.modo}: tope de la pasada {self.tope:.2f} USD")
+        except coste.LimiteGasto:
+            siguiente = self.ahora.astimezone(UTC) + timedelta(days=1)
+            return self._esperar(clave, siguiente.strftime("%Y-%m-%dT00:00:00Z"))
+        try:
+            respuesta = cliente_experto.mensaje(cuerpo)
+        except LlamadaFallida as error:
+            self.resultado.errores.append(f"{clave}: experto: {str(error)[:150]}")
+            return self._esperar(clave, _iso(self.ahora + timedelta(minutes=50)))
+        self.resultado.escaladas += 1
+        return self._anotar(respuesta, clave, escalada=True)
+
+    def _esperar(self, clave: str, hasta: str) -> None:
+        self.ultima_espera = hasta
+        self.resultado.esperan_experto.append(clave)
+        registro.info("%s espera al experto hasta %s: %s", clave, hasta,
+                      "; ".join(self.ultimos_motivos[:3]))  # fmt: skip
+        return None
+
+    def _anotar(self, respuesta: dict[str, Any], clave: str, escalada: bool = False
+                ) -> dict[str, Any] | None:  # fmt: skip
+        uso = coste.Uso.de_mensaje(respuesta)
+        gasto = uso.coste()
+        self.almacen.registrar_llamada({
+            "fecha": _iso(self.ahora), "modo": self.modo.value, "candidato": clave[:200],
+            "lote": False, "entrada": uso.entrada, "salida": uso.salida,
+            "escritura_cache": uso.escritura_cache, "lectura_cache": uso.lectura_cache,
+            "coste": gasto, "modelo": uso.modelo, "escalada": escalada,
+        })  # fmt: skip
+        self.resultado.llamadas += 1
+        self.resultado.gasto += gasto
+        cuenta = self.resultado.por_modelo.setdefault(uso.modelo or "?", [0, 0.0])
+        cuenta[0] += 1
+        cuenta[1] += gasto
+        self.ultimo_modelo = uso.modelo
+        try:
+            return peticiones.leer(respuesta)
+        except peticiones.RespuestaInvalida as error:
+            self.resultado.errores.append(f"{clave}: {error}")
+            return None
+
+    def _llamar_base(self, cuerpo: dict[str, Any], max_salida: int, clave: str
+                     ) -> dict[str, Any] | None:  # fmt: skip
         if self.parado:
             return None
         if self.fabrica is None:
@@ -160,7 +274,8 @@ class Llamador:
             return None
         dia = coste.dia(self.ahora) if coste.diario(self.modo) else None
         gastado = self.almacen.gastado(self.modo.value, dia)
-        previsto = coste.peor_caso(peticiones.letras(cuerpo), max_salida)
+        esfuerzo = (cuerpo.get("output_config") or {}).get("effort")
+        previsto = coste.peor_caso(peticiones.letras(cuerpo), max_salida, esfuerzo=esfuerzo)
         try:
             if self.plazo is not None:
                 self.plazo.comprobar()
@@ -187,21 +302,7 @@ class Llamador:
             self.resultado.parada = "error"
             self.resultado.errores.append(repr(error)[:200])
             return None
-        uso = coste.Uso.de_respuesta(respuesta.get("usage", {}))
-        gasto = uso.coste()
-        self.almacen.registrar_llamada({
-            "fecha": _iso(self.ahora), "modo": self.modo.value, "candidato": clave[:200],
-            "lote": False, "entrada": uso.entrada, "salida": uso.salida,
-            "escritura_cache": uso.escritura_cache, "lectura_cache": uso.lectura_cache,
-            "coste": gasto,
-        })  # fmt: skip
-        self.resultado.llamadas += 1
-        self.resultado.gasto += gasto
-        try:
-            return peticiones.leer(respuesta)
-        except peticiones.RespuestaInvalida as error:
-            self.resultado.errores.append(f"{clave}: {error}")
-            return None
+        return self._anotar(respuesta, clave)
 
 
 # --- Lo que se manda de cada ficha ---------------------------------------------------------
@@ -464,6 +565,14 @@ def pares_por_decidir(
                 previa.get("huella") == huella or not revisar_decididos
             ):
                 continue
+            if previa["decision"] == "dudoso" and previa.get("espera_experto"):
+                # Espera al experto: no se resuelve solo a las 6 horas; se vuelve a comparar
+                # cuando el experto puede (el día siguiente o la recogida siguiente).
+                if _iso(ctx.ahora) < str(previa["espera_experto"]):
+                    ctx.resultado.dudosos.append(clave)
+                    continue
+                resultado.append((a, b, huella))
+                continue
             if previa["decision"] == "dudoso":
                 desde = _leer(str(previa.get("desde") or previa["fecha"]))
                 if ctx.ahora - desde >= ESPERA:
@@ -533,6 +642,16 @@ def decision_comprobada(respuesta: dict[str, Any]) -> str:
 def procesar_par(ctx: Contexto, peticion: Peticion, respuesta: dict[str, Any] | None) -> None:
     """La decisión del par y, si son el mismo suceso, la unión (se conserva el más antiguo)."""
     clave = peticion.clave
+    if respuesta is None and ctx.llamador.ultima_espera:
+        previa = ctx.decision(clave) or {}
+        ctx.nuevas[clave] = {
+            "decision": "dudoso", "huella": peticion.datos["huella"], "fecha": _iso(ctx.ahora),
+            "desde": previa.get("desde", _iso(ctx.ahora)), "version": peticiones.VERSION,
+            "espera_experto": ctx.llamador.ultima_espera,
+            "escalado": ctx.llamador.ultimos_motivos,
+        }  # fmt: skip
+        ctx.resultado.dudosos.append(clave)
+        return
     if respuesta is None or respuesta.get("decision") not in peticiones.DECISIONES:
         ctx.resultado.dudosos.append(clave)
         return
@@ -547,6 +666,10 @@ def procesar_par(ctx: Contexto, peticion: Peticion, respuesta: dict[str, Any] | 
         "motivo_en": str(respuesta.get("motivo_en", ""))[:500], "version": peticiones.VERSION,
         **{k: bool(respuesta.get(k)) for k in ("mismo_dia", "mismo_sitio", "varios_sucesos")},
     }  # fmt: skip
+    if ctx.llamador.ultimo_modelo:
+        decision["modelo"] = ctx.llamador.ultimo_modelo
+    if ctx.llamador.ultimos_motivos:
+        decision["escalado"] = ctx.llamador.ultimos_motivos
     if decision["decision"] == "dudoso":
         decision["desde"] = (previa or {}).get("desde", _iso(ctx.ahora))
         ctx.resultado.dudosos.append(clave)
@@ -581,7 +704,8 @@ def comparar_pares(ctx: Contexto, foco: set[str], revisar_decididos: bool = True
             ctx.resultado.dudosos.append(clave)
             continue
         peticion = peticion_par(ctx, a2, b2, huella, textos)
-        respuesta = ctx.llamador.llamar(peticion.cuerpo, peticion.max_salida, clave)
+        respuesta = ctx.llamador.llamar(peticion.cuerpo, peticion.max_salida, clave,
+                                        escalado.motivos_comparacion)  # fmt: skip
         procesar_par(ctx, peticion, respuesta)
 
 
@@ -597,6 +721,11 @@ def por_verificar(
         if incidente["id"] not in foco or not _publicas(incidente):
             continue
         previa = ctx.decision(reglas.clave_verificacion(incidente["id"]))
+        if previa is not None and previa.get("espera_experto"):
+            # Espera al experto: se vuelve a verificar cuando puede.
+            if _iso(ctx.ahora) >= str(previa["espera_experto"]):
+                resultado.append(incidente)
+            continue
         if previa is not None and previa.get("huella") == reglas.huella_fuentes(incidente):
             continue
         if (
@@ -620,11 +749,62 @@ def peticion_verificacion(ctx: Contexto, incidente: Documento) -> Peticion:
     return Peticion("verificacion", reglas.clave_verificacion(incidente["id"]), cuerpo,
                     peticiones.MAX_SALIDA_VERIFICAR,
                     {"huella": reglas.huella_fuentes(incidente), "vista": vista,
-                     "comprobar": fuentes.comprobar})  # fmt: skip
+                     "comprobar": fuentes.comprobar,
+                     "critico": critico(incidente)})  # fmt: skip
+
+
+def critico(incidente: Documento) -> bool:
+    """Un caso crítico para el escalado: confirmado o atribuido, incursión en un país de la
+    OTAN o en Moldavia, o cierre de aeropuerto."""
+    pais = str(incidente.get("pais") or (incidente.get("lugar") or {}).get("pais") or "")
+    cierre = ((incidente.get("consecuencias") or {}).get("cierre") or {}).get("valor")
+    return (
+        incidente.get("presencia_dron") == "confirmada"
+        or incidente.get("estado", {}).get("actual") in {"confirmado", "atribuido"}
+        or (incidente.get("tipo") == "incursion"
+            and (pais in escalado.paises_otan() or pais in escalado.PAISES_CRITICOS_EXTRA))
+        or cierre == "si"
+    )  # fmt: skip
+
+
+# La presencia que lee la verificación frente a la de la ficha: lo que la contradice.
+_PRESENCIA_CONTRARIA = {
+    "confirmada": {"no_hallado", "desmentido", "posible"},
+    "no_confirmada": {"no_hallado", "desmentido"},
+    "descartada": {"confirmada"},
+}
+
+
+def contradice(vista: dict[str, Any], respuesta: dict[str, Any]) -> list[str]:
+    """Los datos clave en que la verificación del modelo contradice la ficha (los dos con
+    valor y distintos): presencia del dron, número de drones y cierre."""
+    def valor(clave: str) -> Any:
+        dato = respuesta.get(clave)
+        return dato.get("valor") if isinstance(dato, dict) else None
+
+    contra = []
+    if valor("presencia") in _PRESENCIA_CONTRARIA.get(str(vista.get("presencia_dron")), set()):
+        contra.append("presencia")
+    drones = str(valor("drones") or "").replace(" ", "")
+    actual = str(vista.get("drones") or "")
+    if drones and actual not in {"", "sin dato"} and drones != actual.replace(" ", ""):
+        contra.append("drones")
+    cierre = valor("cierre")
+    if cierre in {"si", "no"} and vista.get("cierre") in {"si", "no"} and cierre != vista["cierre"]:
+        contra.append("cierre")
+    return contra
 
 
 def procesar_verificacion(ctx: Contexto, peticion: Peticion,
                           respuesta: dict[str, Any] | None) -> None:  # fmt: skip
+    if respuesta is None and ctx.llamador.ultima_espera:
+        # Contradice la ficha y el experto no puede ahora: se espera, sin aplicar nada.
+        ctx.nuevas[peticion.clave] = {
+            "huella": peticion.datos["huella"], "fecha": _iso(ctx.ahora),
+            "version": peticiones.VERSION, "espera_experto": ctx.llamador.ultima_espera,
+            "escalado": ctx.llamador.ultimos_motivos,
+        }  # fmt: skip
+        return
     if respuesta is None:
         return
     comprobada = reglas.comprobar(respuesta, peticion.datos["comprobar"])
@@ -634,7 +814,22 @@ def procesar_verificacion(ctx: Contexto, peticion: Peticion,
         "datos": {k: list(v) for k, v in comprobada.datos.items()},
         "sin_comprobar": sorted(set(respuesta) - set(comprobada.datos)),
     }  # fmt: skip
+    if ctx.llamador.ultimo_modelo:
+        ctx.nuevas[peticion.clave]["modelo"] = ctx.llamador.ultimo_modelo
+    if ctx.llamador.ultimos_motivos:
+        ctx.nuevas[peticion.clave]["escalado"] = ctx.llamador.ultimos_motivos
     ctx.resultado.verificadas += 1
+
+
+def motivos_verificacion(peticion: Peticion) -> Callable[[dict[str, Any]], list[str]]:
+    """Los motivos para escalar la verificación (proceso/escalado.py): que contradiga la ficha
+    en un dato clave; si además es un caso crítico, se anota."""
+    def motivos(respuesta: dict[str, Any]) -> list[str]:
+        return escalado.motivos_verificacion(
+            contradice(peticion.datos["vista"], respuesta), bool(peticion.datos.get("critico"))
+        )
+
+    return motivos
 
 
 def verificar(ctx: Contexto, foco: set[str], espera: timedelta | None = None) -> None:
@@ -642,7 +837,8 @@ def verificar(ctx: Contexto, foco: set[str], espera: timedelta | None = None) ->
         if ctx.llamador.parado:
             break
         peticion = peticion_verificacion(ctx, incidente)
-        respuesta = ctx.llamador.llamar(peticion.cuerpo, peticion.max_salida, peticion.clave)
+        respuesta = ctx.llamador.llamar(peticion.cuerpo, peticion.max_salida, peticion.clave,
+                                        motivos_verificacion(peticion))  # fmt: skip
         procesar_verificacion(ctx, peticion, respuesta)
 
 
@@ -659,6 +855,9 @@ def aplicar_verificaciones(ctx: Contexto) -> None:
     decisiones = {**ctx.decisiones, **ctx.nuevas}
     for incidente in _activos(ctx.almacen):
         decision = decisiones.get(reglas.clave_verificacion(incidente["id"]))
+        if decision is not None and decision.get("espera_experto") and "datos" not in decision:
+            # Espera al experto: todavía no hay verificación que aplicar.
+            continue
         if decision is None or decision.get("anulada"):
             # Una verificación anulada al revisarla (su corrección no era buena) no se aplica;
             # la ficha se vuelve a verificar cuando llegan fuentes nuevas.
@@ -688,7 +887,26 @@ def aplicar_verificaciones(ctx: Contexto) -> None:
         nuevo = incidentes.aplicar_reglas(correccion.incidente)
         nuevo = titulares.ajustar_incidente(nuevo)
         nuevo["titulo"] = atribucion.titulo_segun_atribucion(nuevo)
+        if decision.get("modelo"):
+            nuevo = anotar_modelos(nuevo, correccion.cambios, str(decision["modelo"]))
         _guardar(ctx, incidente, nuevo, "; ".join(correccion.cambios))
+
+
+# Comienzo de cada corrección de la verificación y el dato de la ficha que corrige.
+_CAMPO_CORREGIDO = (
+    ("presencia", "presencia_dron"), ("drones", "drones"), ("cierre", "cierre"),
+    ("duración", "cierre_minutos"), ("hora", "inicio"), ("día", "inicio"),
+    ("lugar", "lugar_suceso"),
+)  # fmt: skip
+
+
+def anotar_modelos(incidente: Documento, cambios: list[str], modelo: str) -> Documento:
+    """Anota en control.modelos el modelo que decidió cada dato corregido."""
+    campos = {c for cambio in cambios for p, c in _CAMPO_CORREGIDO if cambio.startswith(p)}
+    if not campos:
+        return incidente
+    modelos = {**incidente["control"].get("modelos", {}), **dict.fromkeys(campos, modelo)}
+    return {**incidente, "control": {**incidente["control"], "modelos": dict(sorted(modelos.items()))}}
 
 
 def _guardar(ctx: Contexto, antes: Documento, despues: Documento, motivo: str) -> bool:
@@ -845,6 +1063,12 @@ def retener(ctx: Contexto, cursor: Documento, verificar_nuevos: bool) -> Documen
     pendientes_par = {
         id_ for clave in ctx.resultado.dudosos for id_ in clave.removeprefix("par:").split("|")
     }
+    # Lo que espera al experto se retiene hasta que decida, sin el límite de 6 horas.
+    esperan = {
+        id_ for clave, d in decisiones.items() if d.get("espera_experto") and "datos" not in d
+        and d.get("decision") in {None, "dudoso"}
+        for id_ in clave.split(":", 1)[1].split("|")
+    }  # fmt: skip
     nuevos_retenidos: dict[str, Documento] = {}
     for incidente in activos:
         id_ = incidente["id"]
@@ -854,9 +1078,12 @@ def retener(ctx: Contexto, cursor: Documento, verificar_nuevos: bool) -> Documen
         motivos = []
         if id_ in pendientes_par:
             motivos.append("posible duplicado sin decidir")
-        if verificar_nuevos and reglas.clave_verificacion(id_) not in decisiones:
+        verificacion = decisiones.get(reglas.clave_verificacion(id_))
+        if verificar_nuevos and (verificacion is None or (verificacion.get("espera_experto") and "datos" not in verificacion)):
             motivos.append("verificación pendiente")
-        if motivos and ctx.ahora - _leer(desde) < ESPERA:
+        if id_ in esperan:
+            motivos.append("espera al modelo experto")
+        if motivos and (id_ in esperan or ctx.ahora - _leer(desde) < ESPERA):
             nuevos_retenidos[id_] = {"desde": desde, "motivo": "; ".join(motivos)}
             ctx.resultado.retenidos[id_] = "; ".join(motivos)
             continue
@@ -883,7 +1110,11 @@ def ejecutar(
     nom: Nomenclator | None = None,
 ) -> Resultado:  # fmt: skip
     """El control: «horaria» (lo nuevo y lo cambiado en 72 horas), «noche» (lo publicado en las
-    últimas 48 horas) o «repaso» (todo lo publicado, con su propio tope)."""
+    últimas 48 horas) o «repaso» (todo lo publicado, con su propio tope).
+
+    De madrugada, aquí solo se hace lo que no llama al servicio (uniones, reglas, verificaciones
+    ya decididas, retención): las llamadas van por lote en `noche`. En la recogida horaria, las
+    citas nuevas van en un lote que recoge la recogida siguiente (`enviar_traducciones`)."""
     resultado = Resultado()
     modo = coste.Modo.CONTROL_REPASO if alcance == "repaso" else coste.Modo.CONTROL
     llamador = Llamador(almacen, fabrica, modo, ahora, plazo, resultado)
@@ -921,10 +1152,13 @@ def ejecutar(
             if d["id"] not in vistos or _reciente(d, ahora - VENTANA_HORARIA)
         }
         foco = {i for i in foco if i not in vistos or _cambiado(ctx, i, activos)}
+    horaria = alcance == "horaria"
+    if horaria:
+        recoger_lotes(ctx)
     try:
-        horaria = alcance == "horaria"
-        comparar_pares(ctx, foco, revisar_decididos=not horaria)
-        verificar(ctx, foco, ESPERA_REVERIFICAR if horaria else None)
+        if alcance != "noche":
+            comparar_pares(ctx, foco, revisar_decididos=not horaria)
+            verificar(ctx, foco, ESPERA_REVERIFICAR if horaria else None)
     finally:
         almacen.guardar_controles(ctx.nuevas, _iso(ahora))
     ctx.decisiones = {**ctx.decisiones, **ctx.nuevas}
@@ -938,7 +1172,10 @@ def ejecutar(
         k: v for k, v in ctx.decisiones.items()
         if k.startswith("verificacion:") and k.removeprefix("verificacion:") in foco
     }  # fmt: skip
-    traducir(ctx, citas_de(en_foco, decisiones_foco), hechas)
+    if horaria:
+        enviar_traducciones(ctx, citas_de(en_foco, decisiones_foco), hechas)
+    elif alcance == "repaso":
+        traducir(ctx, citas_de(en_foco, decisiones_foco), hechas)
     if alcance == "repaso" and not llamador.parado:
         atrasadas = {
             **citas_pendientes(almacen, "europa"),
@@ -996,38 +1233,37 @@ class Respuestas:
     leidas: dict[str, dict[str, Any] | None] = field(default_factory=dict)
     usos: dict[str, coste.Uso] = field(default_factory=dict)
     fuera_de_tope: int = 0
+    # Con el escalado: llamadas directas al experto ya hechas (se anotan con el cerrojo), y por
+    # clave, el modelo que dio la respuesta que vale, los motivos y la espera.
+    llamadas_experto: list[Documento] = field(default_factory=list)
+    modelos: dict[str, str] = field(default_factory=dict)
+    motivos: dict[str, list[str]] = field(default_factory=dict)
+    esperas: dict[str, str] = field(default_factory=dict)
 
 
-def por_lote(
-    servicio: ServicioLotes, lista: list[Peticion], disponible: float,
-    dormir: Callable[[float], None], reloj: Callable[[], float],
-) -> Respuestas:  # fmt: skip
-    """Manda las peticiones en un lote (a mitad de precio) hasta el peor caso de `disponible`
-    dólares y espera a que termine. Lo que no cabe queda fuera."""
-    respuestas = Respuestas()
+def _peor_lote(peticion: Peticion) -> float:
+    esfuerzo = (peticion.cuerpo.get("output_config") or {}).get("effort")
+    return coste.peor_caso(peticiones.letras(peticion.cuerpo), peticion.max_salida, lote=True,
+                           esfuerzo=esfuerzo)  # fmt: skip
+
+
+def elegir_para_lote(lista: list[Peticion], disponible: float
+                     ) -> tuple[dict[str, Peticion], float, int]:  # fmt: skip
+    """Las peticiones que caben en `disponible` dólares en el peor caso, con su identificador en
+    el lote; el peor caso total y cuántas quedan fuera."""
     elegidas: dict[str, Peticion] = {}
     previsto = 0.0
     for numero, peticion in enumerate(lista):
-        peor = coste.peor_caso(peticiones.letras(peticion.cuerpo), peticion.max_salida, lote=True)
+        peor = _peor_lote(peticion)
         if previsto + peor > disponible:
-            respuestas.fuera_de_tope = len(lista) - numero
-            break
+            return elegidas, previsto, len(lista) - numero
         previsto += peor
         elegidas[f"c{numero:06d}"] = peticion
-    if not elegidas:
-        return respuestas
-    creado = servicio.crear_lote(
-        [{"custom_id": i, "params": p.cuerpo} for i, p in elegidas.items()]
-    )
-    registro.info("lote %s enviado: %d peticiones, peor caso %.4f USD", creado["id"],
-                  len(elegidas), previsto)  # fmt: skip
-    inicio = reloj()
-    estado = creado
-    while estado.get("processing_status") != "ended":
-        if reloj() - inicio > TOPE_LOTE_S:
-            raise TimeoutError(f"el lote {creado['id']} no terminó")
-        dormir(ESPERA_LOTE_S)
-        estado = servicio.lote(creado["id"])
+    return elegidas, previsto, 0
+
+
+def leer_resultados(servicio: ServicioLotes, estado: dict[str, Any],
+                    elegidas: dict[str, Peticion], respuestas: Respuestas) -> None:  # fmt: skip
     for resultado in servicio.resultados_lote(estado):
         elegida = elegidas.get(resultado.get("custom_id", ""))
         if elegida is None:
@@ -1038,12 +1274,228 @@ def por_lote(
             respuestas.leidas[peticion.clave] = None
             continue
         mensaje = cuerpo["message"]
-        respuestas.usos[peticion.clave] = coste.Uso.de_respuesta(mensaje.get("usage", {}))
+        respuestas.usos[peticion.clave] = coste.Uso.de_mensaje(mensaje)
+        respuestas.modelos[peticion.clave] = str(mensaje.get("model") or "")
         try:
             respuestas.leidas[peticion.clave] = peticiones.leer(mensaje)
         except peticiones.RespuestaInvalida:
             respuestas.leidas[peticion.clave] = None
+
+
+def por_lote(
+    servicio: ServicioLotes, lista: list[Peticion], disponible: float,
+    dormir: Callable[[float], None], reloj: Callable[[], float], tope_s: float = TOPE_LOTE_S,
+) -> Respuestas:  # fmt: skip
+    """Manda las peticiones en un lote (a mitad de precio) hasta el peor caso de `disponible`
+    dólares y espera a que termine. Lo que no cabe queda fuera."""
+    respuestas = Respuestas()
+    elegidas, previsto, respuestas.fuera_de_tope = elegir_para_lote(lista, disponible)
+    if not elegidas:
+        return respuestas
+    creado = servicio.crear_lote(
+        [{"custom_id": i, "params": p.cuerpo} for i, p in elegidas.items()]
+    )
+    registro.info("lote %s enviado: %d peticiones, peor caso %.4f USD", creado["id"],
+                  len(elegidas), previsto)  # fmt: skip
+    inicio = reloj()
+    estado = creado
+    while estado.get("processing_status") != "ended":
+        if reloj() - inicio > tope_s:
+            raise TimeoutError(f"el lote {creado['id']} no terminó")
+        dormir(ESPERA_LOTE_S)
+        estado = servicio.lote(creado["id"])
+    leer_resultados(servicio, estado, elegidas, respuestas)
     return respuestas
+
+
+def escalar_lote(
+    servicio: Any, almacen: Almacen, lista: list[Peticion], respuestas: Respuestas,
+    ahora: datetime, modo: coste.Modo,
+) -> None:  # fmt: skip
+    """Las respuestas del lote (del modelo base) que piden escalado se repiten con el experto,
+    con llamadas directas dentro de su tope diario; lo que no cabe espera al día siguiente.
+    Se hace sin el cerrojo, sobre una copia: las llamadas al experto quedan en
+    `respuestas.llamadas_experto` para anotarlas después en la base."""
+    experto = getattr(servicio, "experto", None)
+    cliente_experto = experto() if callable(experto) else None
+    if cliente_experto is None:
+        return
+    modelo_experto = str(getattr(cliente_experto, "modelo", ""))
+    dia = coste.dia(ahora)
+    gastado_experto = almacen.gastado_modelo(modelo_experto, dia)
+    for peticion in lista:
+        if peticion.tipo not in {"par", "verificacion"} or peticion.clave not in respuestas.leidas:
+            continue
+        leida = respuestas.leidas[peticion.clave]
+        if peticion.tipo == "par":
+            motivos = escalado.motivos_comparacion(leida) if leida else ["respuesta_invalida"]
+        else:
+            motivos = motivos_verificacion(peticion)(leida) if leida else ["respuesta_invalida"]
+        if not motivos:
+            continue
+        respuestas.motivos[peticion.clave] = motivos
+        esfuerzo = (peticion.cuerpo.get("output_config") or {}).get("effort")
+        previsto = coste.peor_caso(peticiones.letras(peticion.cuerpo), peticion.max_salida,
+                                   modelo=modelo_experto, esfuerzo=esfuerzo)  # fmt: skip
+        try:
+            coste.comprobar_experto(gastado_experto, previsto)
+        except coste.LimiteGasto:
+            siguiente = ahora.astimezone(UTC) + timedelta(days=1)
+            respuestas.esperas[peticion.clave] = siguiente.strftime("%Y-%m-%dT00:00:00Z")
+            respuestas.leidas[peticion.clave] = None
+            continue
+        try:
+            mensaje = cliente_experto.mensaje(peticion.cuerpo)
+        except LlamadaFallida:
+            respuestas.esperas[peticion.clave] = _iso(ahora + timedelta(minutes=50))
+            respuestas.leidas[peticion.clave] = None
+            continue
+        uso = coste.Uso.de_mensaje(mensaje)
+        gastado_experto += uso.coste()
+        respuestas.llamadas_experto.append({
+            "fecha": _iso(ahora), "modo": modo.value, "candidato": peticion.clave[:200],
+            "lote": False, "entrada": uso.entrada, "salida": uso.salida,
+            "escritura_cache": uso.escritura_cache, "lectura_cache": uso.lectura_cache,
+            "coste": uso.coste(), "modelo": uso.modelo, "escalada": True,
+        })  # fmt: skip
+        respuestas.modelos[peticion.clave] = uso.modelo
+        try:
+            respuestas.leidas[peticion.clave] = peticiones.leer(mensaje)
+        except peticiones.RespuestaInvalida:
+            respuestas.leidas[peticion.clave] = None
+
+
+def procesar_respuestas(ctx: Contexto, lista: list[Peticion], respuestas: Respuestas) -> None:
+    """Aplica las respuestas de un lote (con el cerrojo tomado), con el modelo que dio cada una
+    y lo que espera al experto."""
+    for llamada in respuestas.llamadas_experto:
+        ctx.almacen.registrar_llamada(llamada)
+        ctx.resultado.llamadas += 1
+        ctx.resultado.gasto += float(llamada["coste"])
+        ctx.resultado.escaladas += 1
+    for peticion in lista:
+        if peticion.clave not in respuestas.leidas:
+            continue
+        respuesta = respuestas.leidas[peticion.clave]
+        ctx.llamador.ultimo_modelo = respuestas.modelos.get(peticion.clave, "")
+        ctx.llamador.ultimos_motivos = respuestas.motivos.get(peticion.clave, [])
+        ctx.llamador.ultima_espera = respuestas.esperas.get(peticion.clave)
+        if ctx.llamador.ultima_espera:
+            ctx.resultado.esperan_experto.append(peticion.clave)
+        if peticion.tipo == "par":
+            procesar_par(ctx, peticion, respuesta)
+        elif peticion.tipo == "separado":
+            procesar_separado(ctx, peticion, respuesta)
+        elif peticion.tipo == "verificacion":
+            procesar_verificacion(ctx, peticion, respuesta)
+        else:
+            procesar_traduccion(ctx, peticion, respuesta)
+    ctx.llamador.ultimo_modelo, ctx.llamador.ultimos_motivos = "", []
+    ctx.llamador.ultima_espera = None
+
+
+# --- Citas de cada hora por lote, recogidas en la recogida siguiente ------------------------
+
+
+def lotes_pendientes(almacen: Almacen) -> list[Documento]:
+    cursor = almacen.cursor(CURSOR_LOTES) or {}
+    return list(cursor.get("lotes", [])) if isinstance(cursor, dict) else []
+
+
+def citas_en_lote(almacen: Almacen) -> set[str]:
+    """Las huellas de las citas que ya van en un lote sin recoger."""
+    return {h for lote in lotes_pendientes(almacen) for tanda in lote.get("tandas", {}).values()
+            for h, _, _ in tanda}  # fmt: skip
+
+
+def enviar_traducciones(ctx: Contexto, citas: dict[str, tuple[str, str]], hechas: set[str]
+                        ) -> int:  # fmt: skip
+    """Manda en un lote las citas sin traducir (que no vayan ya en otro) dentro del tope del día;
+    se recogen en la recogida siguiente. Devuelve cuántas citas van. Sin servicio de lotes, se
+    traducen con llamadas directas como antes."""
+    lista = peticiones_traduccion(citas, hechas | citas_en_lote(ctx.almacen))
+    if not lista or ctx.llamador.parado or ctx.llamador.fabrica is None:
+        return 0
+    try:
+        servicio = ctx.llamador.servicio()
+    except Exception as error:  # noqa: BLE001 - el servicio no se puede crear: se intenta luego
+        ctx.resultado.errores.append(f"lote de citas: {str(error)[:150]}")
+        return 0
+    if not callable(getattr(servicio, "crear_lote", None)):
+        traducir(ctx, citas, hechas)
+        return 0
+    dia = coste.dia(ctx.ahora) if coste.diario(ctx.llamador.modo) else None
+    disponible = coste.limite(ctx.llamador.modo) - ctx.almacen.gastado(
+        ctx.llamador.modo.value, dia
+    ) - gasto_reservado(ctx.almacen)
+    elegidas, previsto, _fuera = elegir_para_lote(lista, disponible)
+    if not elegidas:
+        return 0
+    try:
+        creado = servicio.crear_lote(
+            [{"custom_id": i, "params": p.cuerpo} for i, p in elegidas.items()]
+        )
+    except LlamadaFallida as error:
+        ctx.resultado.errores.append(f"lote de citas: {str(error)[:150]}")
+        return 0
+    lotes = lotes_pendientes(ctx.almacen)
+    lotes.append({
+        "id": creado["id"], "enviado": _iso(ctx.ahora), "peor_caso": round(previsto, 6),
+        "tandas": {i: p.datos["tanda"] for i, p in elegidas.items()},
+    })  # fmt: skip
+    ctx.almacen.guardar_cursor(CURSOR_LOTES, {"lotes": lotes})
+    enviadas = sum(len(p.datos["tanda"]) for p in elegidas.values())
+    registro.info("lote de citas %s enviado: %d citas, peor caso %.4f USD", creado["id"],
+                  enviadas, previsto)  # fmt: skip
+    return enviadas
+
+
+def gasto_reservado(almacen: Almacen) -> float:
+    """El peor caso de los lotes enviados y sin recoger, que todavía no está en el gasto."""
+    return sum(float(lote.get("peor_caso", 0)) for lote in lotes_pendientes(almacen))
+
+
+def recoger_lotes(ctx: Contexto) -> int:
+    """Recoge los lotes de citas terminados: guarda las traducciones y anota su gasto (a mitad
+    de precio, con la tarifa del modelo). Devuelve cuántas citas se tradujeron."""
+    lotes = lotes_pendientes(ctx.almacen)
+    if not lotes or ctx.llamador.fabrica is None:
+        return 0
+    try:
+        servicio = ctx.llamador.servicio()
+    except Exception as error:  # noqa: BLE001
+        ctx.resultado.errores.append(f"lotes de citas: {str(error)[:150]}")
+        return 0
+    quedan, antes = [], ctx.resultado.traducidas
+    for lote in lotes:
+        try:
+            estado = servicio.lote(lote["id"])
+        except LlamadaFallida as error:
+            ctx.resultado.errores.append(f"lote {lote['id']}: {str(error)[:150]}")
+            quedan.append(lote)
+            continue
+        if estado.get("processing_status") != "ended":
+            if ctx.ahora - _leer(lote["enviado"]) < CADUCIDAD_LOTE:
+                quedan.append(lote)
+            continue
+        elegidas = {
+            i: Peticion("traduccion", f"traducir:{lote['id']}:{i}", {}, 0,
+                        {"tanda": [tuple(c) for c in tanda]})
+            for i, tanda in lote["tandas"].items()
+        }  # fmt: skip
+        respuestas = Respuestas()
+        try:
+            leer_resultados(servicio, estado, elegidas, respuestas)
+        except LlamadaFallida as error:
+            ctx.resultado.errores.append(f"lote {lote['id']}: {str(error)[:150]}")
+            quedan.append(lote)
+            continue
+        _anotar_lote(ctx.almacen, respuestas, ctx.ahora, ctx.resultado, ctx.llamador.modo)
+        for peticion in elegidas.values():
+            if peticion.clave in respuestas.leidas:
+                procesar_traduccion(ctx, peticion, respuestas.leidas[peticion.clave])
+    ctx.almacen.guardar_cursor(CURSOR_LOTES, {"lotes": quedan})
+    return ctx.resultado.traducidas - antes
 
 
 def _anotar_lote(
@@ -1059,10 +1511,13 @@ def _anotar_lote(
             "fecha": _iso(ahora), "modo": modo.value, "candidato": clave[:200],
             "lote": True, "entrada": uso.entrada, "salida": uso.salida,
             "escritura_cache": uso.escritura_cache, "lectura_cache": uso.lectura_cache,
-            "coste": gasto,
+            "coste": gasto, "modelo": uso.modelo,
         })  # fmt: skip
         resultado.llamadas += 1
         resultado.gasto += gasto
+        cuenta = resultado.por_modelo.setdefault(uso.modelo or "?", [0, 0.0])
+        cuenta[0] += 1
+        cuenta[1] += gasto
 
 
 @dataclass
@@ -1076,12 +1531,17 @@ class Base:
 
 def repaso(base: Base, fabrica: Callable[[], Any], nom: Nomenclator | None = None,
            dormir: Callable[[float], None] | None = None,
-           reloj: Callable[[], float] | None = None) -> Resultado:  # fmt: skip
-    """El control sobre todo lo publicado, por lotes y en dos rondas: primero los pares (y las
-    uniones), después la verificación de cada ficha y las citas (las de Europa y, con lo que
-    quede del tope, las de la capa de Ucrania, las más recientes primero). Las peticiones se
-    preparan sobre una copia de la base, sin el cerrojo; las respuestas se aplican con el
-    cerrojo tomado sobre la base del momento."""
+           reloj: Callable[[], float] | None = None, alcance: str = "repaso",
+           resultado: Resultado | None = None) -> Resultado:  # fmt: skip
+    """El control por lotes y en dos rondas: primero los pares (y las uniones), después la
+    verificación de cada ficha y las citas (las de Europa y, con lo que quede del tope, las de
+    la capa de Ucrania, las más recientes primero). Las peticiones se preparan sobre una copia
+    de la base, sin el cerrojo; las respuestas del base que piden escalado se repiten con el
+    experto (también sin el cerrojo), y todo se aplica con el cerrojo tomado sobre la base del
+    momento.
+
+    «repaso»: todo lo publicado, con su tope propio. «noche»: lo publicado en las últimas 48
+    horas, sin citas (van aparte), con lo que quede del día hasta TOPE_NOCHE_USD."""
     import time
 
     dormir = dormir or time.sleep
@@ -1090,8 +1550,10 @@ def repaso(base: Base, fabrica: Callable[[], Any], nom: Nomenclator | None = Non
         from proceso.noticias import nomenclator
 
         nom = nomenclator()
-    resultado = Resultado()
-    modo = coste.Modo.CONTROL_REPASO
+    resultado = resultado or Resultado()
+    noche_ = alcance == "noche"
+    modo = coste.Modo.CONTROL if noche_ else coste.Modo.CONTROL_REPASO
+    tope_s = TOPE_LOTE_NOCHE_S if noche_ else TOPE_LOTE_S
     servicio = fabrica()
     from recogida.extractor import modelos_base
 
@@ -1104,7 +1566,8 @@ def repaso(base: Base, fabrica: Callable[[], Any], nom: Nomenclator | None = Non
         if ronda == "pares":
             # El lugar que nombra el titular, antes de buscar pares (en la copia, sin guardar).
             reglas_deterministas(ctx)
-        todos = {d["id"] for d in _activos(copia)}
+        todos = {d["id"] for d in _activos(copia)
+                 if not noche_ or _reciente(d, ahora - VENTANA_NOCHE)}  # fmt: skip
         if ronda == "pares":
             textos: dict[str, str] = {}
             lista = [
@@ -1117,35 +1580,33 @@ def repaso(base: Base, fabrica: Callable[[], Any], nom: Nomenclator | None = Non
                 lista.append(separado)
         else:
             lista = [peticion_verificacion(ctx, d) for d in por_verificar(ctx, todos)]
-            hechas = set(copia.traducciones())
-            europa = {**citas_pendientes(copia, "europa"),
-                      **citas_de(_activos(copia), ctx.decisiones)}  # fmt: skip
-            lista += peticiones_traduccion(europa, hechas)
-            lista += peticiones_traduccion(citas_pendientes(copia, "ucrania"), hechas)
-        disponible = coste.limite(modo) - copia.gastado(modo.value)
+            if not noche_:
+                hechas = set(copia.traducciones())
+                europa = {**citas_pendientes(copia, "europa"),
+                          **citas_de(_activos(copia), ctx.decisiones)}  # fmt: skip
+                lista += peticiones_traduccion(europa, hechas)
+                lista += peticiones_traduccion(citas_pendientes(copia, "ucrania"), hechas)
+        if noche_:
+            hoy = coste.dia(ahora)
+            disponible = min(
+                TOPE_NOCHE_USD - resultado.gasto,
+                coste.limite(modo) - copia.gastado(modo.value, hoy) - gasto_reservado(copia),
+            )
+        else:
+            disponible = coste.limite(modo) - copia.gastado(modo.value)
         registro.info("repaso, ronda %s: %d peticiones, %.4f USD disponibles", ronda, len(lista),
                       disponible)  # fmt: skip
-        respuestas = por_lote(servicio, lista, disponible, dormir, reloj)
-        registro.info("repaso, ronda %s: %d respuestas, %d fuera del tope", ronda,
+        respuestas = por_lote(servicio, lista, disponible, dormir, reloj, tope_s)
+        registro.info("%s, ronda %s: %d respuestas, %d fuera del tope", alcance, ronda,
                       len(respuestas.leidas), respuestas.fuera_de_tope)  # fmt: skip
+        escalar_lote(servicio, copia, lista, respuestas, datetime.now(UTC), modo)
         with base.cerrojo():
             almacen = base.abrir()
             ahora = datetime.now(UTC)
             ctx = Contexto(almacen, ahora, modelos, Llamador(almacen, None, modo, ahora, None,
                            resultado), resultado, nom, None, almacen.controles())  # fmt: skip
-            _anotar_lote(almacen, respuestas, ahora, resultado)
-            for peticion in lista:
-                if peticion.clave not in respuestas.leidas:
-                    continue
-                respuesta = respuestas.leidas[peticion.clave]
-                if peticion.tipo == "par":
-                    procesar_par(ctx, peticion, respuesta)
-                elif peticion.tipo == "separado":
-                    procesar_separado(ctx, peticion, respuesta)
-                elif peticion.tipo == "verificacion":
-                    procesar_verificacion(ctx, peticion, respuesta)
-                else:
-                    procesar_traduccion(ctx, peticion, respuesta)
+            _anotar_lote(almacen, respuestas, ahora, resultado, modo)
+            procesar_respuestas(ctx, lista, respuestas)
             almacen.guardar_controles(ctx.nuevas, _iso(ahora))
             ctx.decisiones = {**ctx.decisiones, **ctx.nuevas}
             ctx.nuevas = {}
@@ -1159,10 +1620,11 @@ def repaso(base: Base, fabrica: Callable[[], Any], nom: Nomenclator | None = Non
 def noche(base: Base, fabrica: Callable[[], Any] | None, ruta_estado: Path,
           dormir: Callable[[float], None] | None = None,
           reloj: Callable[[], float] | None = None) -> Resultado:  # fmt: skip
-    """La pasada de madrugada: lo publicado en las últimas 48 horas, con el cerrojo; después, sin
-    el cerrojo mientras espera, las citas atrasadas (las de Europa y las de Ucrania, las más
-    recientes primero) por lote, con lo que sobra del día hasta TOPE_NOCHE_USD; y con el cerrojo
-    otra vez, se guardan."""
+    """La pasada de madrugada, todo por lotes (a mitad de precio): con el cerrojo, lo que no llama
+    al servicio; sin el cerrojo mientras espera, los pares y la verificación de lo publicado en
+    las últimas 48 horas (repaso con alcance «noche»), con el escalado al experto; y después las
+    citas sin traducir de cada capa (las de Europa y las de Ucrania, las más recientes primero),
+    con lo que sobra del día hasta TOPE_NOCHE_USD. Cada resultado se guarda con el cerrojo."""
     import time
 
     from recogida.extractor import modelos_base
@@ -1172,22 +1634,31 @@ def noche(base: Base, fabrica: Callable[[], Any] | None, ruta_estado: Path,
         ahora = datetime.now(UTC)
         modelos = modelos_base() | frozenset(almacen.vocabulario("modelo_dron"))
         resultado = ejecutar(almacen, ahora, modelos, "noche", fabrica, Plazo(TOPE_NOCHE_S))
+        if fabrica is not None:
+            recoger_lotes(Contexto(almacen, ahora, modelos, Llamador(
+                almacen, fabrica, coste.Modo.CONTROL, ahora, None, resultado), resultado, None,
+                None))  # fmt: skip
         base.guardar(almacen)
     if fabrica is None:
         escribir_estado(ruta_estado, resultado, almacen, ahora)
         return resultado
+    try:
+        repaso(base, fabrica, None, dormir, reloj, alcance="noche", resultado=resultado)
+    except (TimeoutError, LlamadaFallida) as error:
+        resultado.errores.append(f"revisión por lote: {str(error)[:200]}")
     copia = base.abrir()
     hechas = set(copia.traducciones())
     lista = peticiones_traduccion(citas_pendientes(copia, "europa"), hechas)
     lista += peticiones_traduccion(citas_pendientes(copia, "ucrania"), hechas)
     hoy = coste.dia(datetime.now(UTC))
     disponible = min(
-        TOPE_NOCHE_USD,
+        TOPE_NOCHE_USD - resultado.gasto,
         coste.limite(coste.Modo.CONTROL) - copia.gastado(coste.Modo.CONTROL.value, hoy),
     )
+    disponible -= gasto_reservado(copia)
     if lista and disponible > 0:
         respuestas = por_lote(fabrica(), lista, disponible, dormir or time.sleep,
-                              reloj or time.monotonic)  # fmt: skip
+                              reloj or time.monotonic, TOPE_LOTE_NOCHE_S)  # fmt: skip
         with base.cerrojo():
             almacen = base.abrir()
             ahora = datetime.now(UTC)
@@ -1234,7 +1705,8 @@ def escribir_estado(ruta: Path, resultado: Resultado | None, almacen: Almacen,
             "dudosos": len(resultado.dudosos), "verificadas": resultado.verificadas,
             "traducidas": resultado.traducidas, "llamadas": resultado.llamadas,
             "gasto": round(resultado.gasto, 4), "parada": resultado.parada,
-            "errores": resultado.errores[:5],
+            "errores": resultado.errores[:5], "escaladas": resultado.escaladas,
+            "esperan_experto": resultado.esperan_experto[:20],
         })  # fmt: skip
     datos = {
         "generado": _iso(ahora),
@@ -1245,11 +1717,52 @@ def escribir_estado(ruta: Path, resultado: Resultado | None, almacen: Almacen,
         "fallo": resultado is None,
         "retenidos": cursor.get("retenidos", {}),
         "pasadas": pasadas,
+        "modelos": gasto_por_modelo(almacen, ahora, anterior.get("modelos") or {}),
     }
     ruta.parent.mkdir(parents=True, exist_ok=True)
     temporal = ruta.with_suffix(".tmp")
     temporal.write_text(json.dumps(datos, ensure_ascii=False, indent=1), encoding="utf-8")
     temporal.replace(ruta)
+
+
+# Días (de Madrid) que se guardan del gasto por modelo.
+DIAS_MODELOS = 10
+
+
+def papel(modelo: str) -> str:
+    """El papel de un modelo en el esquema de dos (docs/modelos.md): «base», «experto» o
+    «anterior» (el único modelo de antes). Los nombres de los modelos no salen de aquí."""
+    from modelo import modelos
+
+    base, experto = modelos.base(), modelos.experto()
+    if experto and modelo.startswith(experto):
+        return "experto"
+    if modelo and base and modelo.startswith(base):
+        return "base"
+    return "anterior"
+
+
+def gasto_por_modelo(almacen: Almacen, ahora: datetime, anterior: Documento) -> Documento:
+    """Llamadas, escaladas y gasto de cada papel (base, experto, anterior) por día de Madrid: el
+    de hoy y el de ayer se recalculan con la base; los anteriores se conservan."""
+    from zoneinfo import ZoneInfo
+
+    madrid = ZoneInfo("Europe/Madrid")
+    hoy = ahora.astimezone(madrid).date()
+    dias: Documento = {d: v for d, v in anterior.items()
+                       if d >= (hoy - timedelta(days=DIAS_MODELOS)).isoformat()}  # fmt: skip
+    for dia in (hoy - timedelta(days=1), hoy):
+        inicio = datetime.combine(dia, datetime.min.time(), madrid).astimezone(UTC)
+        fin = datetime.combine(dia + timedelta(days=1), datetime.min.time(), madrid).astimezone(UTC)
+        papeles: Documento = {}
+        for fila in almacen.llamadas_por_modelo(_iso(inicio), _iso(fin)):
+            cuenta = papeles.setdefault(papel(fila["modelo"]),
+                                        {"llamadas": 0, "escaladas": 0, "coste": 0.0})  # fmt: skip
+            cuenta["llamadas"] += fila["llamadas"]
+            cuenta["escaladas"] += fila["escaladas"]
+            cuenta["coste"] = round(cuenta["coste"] + fila["coste"], 6)
+        dias[dia.isoformat()] = papeles
+    return dias
 
 
 def base_del_servidor(temporal: Path, correo: str, cerrojo: Path | None) -> Base:

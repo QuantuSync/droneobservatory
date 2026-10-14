@@ -598,6 +598,7 @@ def extraer_cifras(barrido: Barrido, frases: list[str], nombres: dict[str, str])
     previsto = coste.peor_caso(
         sum(len(f) for f in frases) + len(ficha_catalogo.INSTRUCCIONES),
         ficha_catalogo.MAX_TOKENS_SALIDA,
+        esfuerzo=ficha_catalogo.ESFUERZO,
     )
     if gastado + previsto > tope:
         barrido.cuentas["extractor_sin_presupuesto"] += 1
@@ -610,7 +611,7 @@ def extraer_cifras(barrido: Barrido, frases: list[str], nombres: dict[str, str])
         registro.warning("extractor: %s", str(error)[:200])
         barrido.extractor = None
         return []
-    gastado_ahora = coste.Uso.de_respuesta(respuesta.get("usage", {})).coste()
+    gastado_ahora = coste.Uso.de_mensaje(respuesta).coste()
     if modo == "primera":
         barrido.gasto["primera"] = round(gastado + gastado_ahora, 6)
     else:
