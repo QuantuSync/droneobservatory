@@ -138,12 +138,9 @@ if (process.env.ANCHO !== undefined && process.env.ALTO !== undefined) {
 }
 
 test.describe("Control de calidad de las fichas, como una persona", () => {
-  test.beforeEach((_, info) => {
-    test.skip(!PROYECTOS.includes(info.project.name), "en los dispositivos de los recorridos");
-  });
-
   for (const idioma of ["es", "en"] as const) {
     test(`Bulgaria y Núremberg unidas y los enlaces antiguos (${idioma})`, async ({ page: pagina, context: contexto, browserName }, info) => {
+      test.skip(!PROYECTOS.includes(info.project.name), "en los dispositivos de los recorridos");
       test.setTimeout(300_000);
       const errores = vigilar(pagina);
       const tactil = info.project.use.hasTouch === true;
@@ -157,7 +154,7 @@ test.describe("Control de calidad de las fichas, como una persona", () => {
       expect(await enlacesInternos(pagina), "enlaces internos de Núremberg").toEqual([]);
       await capturar(pagina, errores, join(CAPTURAS, `${NUREMBERG}-${idioma}-${info.project.name}.png`));
       // Una cita traducida: el original se despliega con el dedo o el ratón.
-      const traducida = nuremberg.locator("[data-cita-traducida]").first();
+      const traducida = nuremberg.locator("[data-cita-traducida]:visible").first();
       await expect(traducida).toBeAttached();
       const desplegable = traducida.locator("details").first();
       await expect(desplegable.locator("summary")).toHaveText(idioma === "es" ? "Ver original" : "Show original");
@@ -183,6 +180,7 @@ test.describe("Control de calidad de las fichas, como una persona", () => {
     });
 
     test(`fichas corregidas por el repaso y sus citas (${idioma})`, async ({ page: pagina, context: contexto, browserName }, info) => {
+      test.skip(!PROYECTOS.includes(info.project.name), "en los dispositivos de los recorridos");
       test.setTimeout(600_000);
       const errores = vigilar(pagina);
       const tactil = info.project.use.hasTouch === true;
@@ -190,7 +188,7 @@ test.describe("Control de calidad de las fichas, como una persona", () => {
         const ficha = await abrir(pagina, contexto, id, idioma, browserName === "chromium", tactil);
         await expect(ficha.locator("h2, h3").first()).toBeVisible();
         expect(await enlacesInternos(pagina), `${id} enlaces internos`).toEqual([]);
-        const citas = ficha.locator("[data-cita-traducida]");
+        const citas = ficha.locator("[data-cita-traducida]:visible");
         if ((await citas.count()) > 0) {
           const desplegable = citas.first().locator("details").first();
           await tocar(pagina, desplegable.locator("summary"), tactil);
