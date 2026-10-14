@@ -46,16 +46,21 @@ publicar. Nunca impide publicar lo demás ni cambia el código de salida.
    anterior queda en `lugar.historial` con el motivo.
 3. **Estado.** Confirmado o atribuido solo con un paso de una fuente oficial (una autoridad, leída
    o citada); si no, vuelve a notificado con el motivo en los dos idiomas.
-4. **Duplicados** (también entre idiomas). Pares candidatos: del mismo país, con los inicios a 48
-   horas como mucho (con la fecha de publicación, también la primera noticia), a menos de 60 km
-   más los radios si los dos tienen punto (si alguno no lo tiene, basta el país: el lugar
-   aproximado cuenta) y del mismo tipo de sitio (un aeropuerto y una base no, salvo que estén a
-   10 km). Nunca los que una revisión separó (`relacionados`) ni dos cierres del mismo sitio en
-   noches distintas. Cada par se compara con lo que dicen sus fuentes, en su idioma (llamada
-   «comparar»): **mismo**, se unen con la fusión anotada como revisada y **se conserva el
-   identificador más antiguo** (el enlace del otro lleva al que queda); **distinto**, no se vuelve
-   a comparar salvo que lleguen fuentes nuevas; **dudoso**, se vuelve a comparar con cada fuente
-   nueva y a las 6 horas se resuelve como distintos.
+4. **Duplicados** (también entre idiomas). Pares candidatos: del mismo país; del mismo día o la
+   misma noche si las dos fechas las escribe una fuente (a 30 horas como mucho), o a 48 horas si
+   alguna es solo la de publicación (entonces cuenta también la primera noticia); en el mismo
+   sitio si los dos tienen punto (a 15 km más los radios; si alguno no lo tiene, basta el país:
+   el lugar aproximado cuenta); y del mismo tipo de sitio (un aeropuerto y una base no, salvo que
+   estén a 10 km). Nunca los que una revisión separó (`relacionados`) ni dos cierres del mismo
+   sitio en noches distintas. Cada par se compara con lo que dicen sus fuentes, en su idioma
+   (llamada «comparar»), que dice si es el mismo día, el mismo sitio y si alguna ficha resume
+   varios sucesos. **Mismo**, solo con el mismo día, el mismo sitio y ninguna ficha que resuma
+   varios sucesos: se unen con la fusión anotada como revisada y **se conserva el identificador
+   más antiguo** (el enlace del otro lleva al que queda; el que queda hereda la confirmación
+   oficial del otro). **Distinto**: no se vuelve a comparar salvo que lleguen fuentes nuevas (de
+   madrugada). **Dudoso**: se vuelve a comparar con cada fuente nueva y a las 6 horas se resuelve
+   como distintos. Ante la duda, el control no une: un duplicado que se le escapa se corrige a
+   mano en `incidentes_revisados.json`; una unión mal hecha mezcla dos sucesos.
 5. **Cada dato con su fuente** (llamada «verificar»). Las fichas nuevas o con fuentes nuevas se
    comprueban con sus fuentes (titular y primeras frases, como las lee el extractor, solo en
    memoria): para la presencia del dron, el número de drones, el cierre y su duración, el día, la
@@ -133,6 +138,18 @@ sudo systemctl start eodi-control.service
 journalctl -u eodi-control.service -n 30
 sudo -u eodi bash -c 'cd /home/eodi/droneobservatory && .venv/bin/python -m recogida.control_fichas estado'
 ```
+
+## La primera ronda del repaso, deshecha
+
+La primera versión de los pares (14 de octubre de 2026, 02:33 UTC) comparaba con 48 horas y
+60 km para todo y unió 80 registros, con aciertos (Núremberg, el 6 de octubre en Bulgaria, notas
+tardías de un mismo cierre) y errores graves: derribos de días seguidos en Rumanía en una ficha,
+Brønnøysund del 28 y del 30 de septiembre de 2025, la base de Kleine-Brogel con el aeropuerto de
+Bruselas o toda la incursión en Polonia de septiembre de 2025 en una sola ficha. Se deshizo a las
+02:47 (antes de publicarse): cada ficha volvió a su versión anterior del historial, cada fusión
+quedó revertida y cada decisión se anotó como «revocada». Con las reglas de ahora (mismo día o
+noche, mismo sitio, sin resúmenes) esos pares no son candidatos y, comparados igualmente, salen
+distintos.
 
 ## Gasto
 
