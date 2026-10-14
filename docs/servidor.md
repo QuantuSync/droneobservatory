@@ -1761,6 +1761,63 @@ Desde el 7 de octubre de 2026 (`recogida/vigilancia.py`, `recogida/salud.py`,
 - **Alarma de prueba**: `gh workflow run vigia-recogida.yml -f prueba=true` (abre «Alarma de prueba
   de la vigilancia»). Hecha el 7 de octubre de 2026 (incidencia #151).
 
+## Guardián del sistema
+
+Desde el 14 de octubre de 2026 ([`recogida/guardian.py`](../recogida/guardian.py),
+[`servidor/guardian.sh`](../servidor/guardian.sh)). El 13 de octubre a las 22:35 UTC una sesión
+borró `/dev/null`: sshd cortaba las conexiones antes del saludo, systemd no podía lanzar ningún
+servicio («Failed to set up standard input») y las recogidas de las 23:17 y las 00:17 no llegaron a
+arrancar. Lo arregló a las 00:39 un reinicio por la API pedido a mano. Ahora el servidor se repara
+solo, en tres escalones, y solo llega una incidencia por correo si ninguno lo arregla:
+
+1. **Guardián** (`eodi-guardian.timer`, cada 5 minutos y al minuto de arrancar, como root). Con el
+   Python del sistema (`python3 -I`, solo biblioteca estándar) y la entrada de un dato
+   (`StandardInput=data`), no de `/dev/null`: systemd lo lanza aunque falte. Comprueba y repara:
+   - `/dev/null`, `/dev/zero`, `/dev/random` y `/dev/urandom`: dispositivos de caracteres (1,3; 1,5;
+     1,8; 1,9) de root con permisos 666; si no, los recrea con `mknod` en un nombre temporal y lo
+     renombra encima;
+   - `/tmp`: carpeta de root con permisos 1777;
+   - sshd: unidades `ssh.socket` y `ssh.service` activas y saludo «SSH-» en 127.0.0.1:22; si no,
+     `sshd -t` y reinicio de las dos;
+   - disco: por encima del 90 % limpia la caché de pip, los temporales del usuario eodi de más de un
+     día en `/tmp` y `/var/tmp`, los paquetes descargados de apt y el diario por encima de 500 MB.
+     Nunca toca datos (`base/`, `datos/`, `.eodi/`, el clon).
+2. **Último recurso dentro del servidor** (el mismo guardián): si las dos últimas recogidas
+   terminadas de este arranque fallaron por el sistema (systemd no pudo lanzarlas, códigos 200-249,
+   sin memoria, disco lleno, sin `/dev/null`, disco de solo lectura...; no un fallo de una fuente) y
+   no hay ninguna buena después, primero relanza la recogida si acaba de reparar algo; si no ha
+   reparado nada o la relanzada vuelve a fallar por el sistema, reinicia el servidor
+   (`systemctl reboot`; si no puede, forzado; si tampoco, por el núcleo), como mucho una vez cada 6
+   horas. Tras **cualquier** arranque (este, uno desde fuera o uno a mano), si la última publicación
+   tiene más de 65 minutos, lanza la recogida pendiente.
+3. **Último recurso desde fuera** ([`recogida/reinicio_externo.py`](../recogida/reinicio_externo.py),
+   paso del workflow `vigia-recogida`): si `salud.json` lleva más de 30 minutos sin renovarse,
+   reinicia `eodi-recogida` por la API de Hetzner Cloud (secreto `EODI_HCLOUD_TOKEN` del
+   repositorio), como mucho una vez cada 6 horas (cuentan todos los reinicios por la API, también los
+   manuales). Si `salud.json` no se puede ni leer, solo reinicia si sshd tampoco saluda (puede ser
+   el almacén y no el servidor). Mientras el silencio no pasa de 30 minutos o el reinicio es de hace
+   menos de 30, la incidencia del servidor se aplaza; si tras el reinicio sigue sin señales, se abre.
+
+Lo que el guardián no consigue arreglar (y el reinicio de último recurso ya gastado) va a
+`sin_arreglar` y la vigilancia lo convierte en problema (`guardian`), igual que si el guardián deja
+de pasar 20 minutos (`guardian_parado`). Cada reparación y cada arranque del servidor salen en la
+sección SISTEMA del resumen diario de las 08:00 de Madrid.
+
+Registro: `/var/lib/eodi-guardian/estado.json` (lectura para todos; 30 días de reparaciones,
+arranques y reinicios). Órdenes:
+
+```
+systemctl list-timers eodi-guardian.timer
+journalctl -u eodi-guardian -n 20
+cat /var/lib/eodi-guardian/estado.json
+sudo python3 -I /home/eodi/droneobservatory/recogida/guardian.py --simulacro-reinicio   # todo menos reiniciar
+gh workflow run vigia-recogida.yml -f simulacro_reinicio=true -f forzar_reinicio=true   # el de fuera, sin reiniciar
+gh workflow run vigia-recogida.yml -f forzar_reinicio=true      # reinicio real (se niega entre los minutos 10 y 45)
+```
+
+Instalación sin reconstruir el servidor: `sudo bash /home/eodi/droneobservatory/servidor/guardian.sh`
+(también lo llama `instalar.sh`).
+
 ## Reinicio tras las actualizaciones
 
 Las actualizaciones de seguridad automáticas ya no reinician a las 04:45: a hora fija podían cortar

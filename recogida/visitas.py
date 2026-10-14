@@ -82,6 +82,8 @@ UNIDAD_RECOGIDA = "eodi-recogida.service"
 # Registro de la vigilancia (recogida/vigilancia.py): lo que se arregló solo.
 VIGILANCIA = "vigilancia.json"
 CONTROL = "control.json"
+# Registro del guardián del sistema (recogida/guardian.py), de lectura para todos.
+GUARDIAN = Path(os.environ.get("EODI_GUARDIAN_ESTADO", "/var/lib/eodi-guardian/estado.json"))
 ESTADO = "visitas.json"
 MUESTRAS = "muestras_ntfy.jsonl"
 NAVEGADOR = "ntfy_navegador.json"
@@ -656,6 +658,48 @@ def lineas_control(control: Documento | None) -> list[str]:
     return lineas
 
 
+def guardian_del_dia(ruta: Path, dia: date) -> Documento:
+    """Lo que hizo ese día el guardián del sistema: reparaciones (hora, frase, si salió bien) y
+    arranques del servidor (los suyos de último recurso, los de fuera y los manuales)."""
+    estado = _leer_json(ruta)
+    if not estado:
+        return {"sin_registro": True, "reparaciones": [], "arranques": []}
+    inicio, fin = limites_del_dia(dia)
+
+    def del_dia(texto: Any) -> datetime | None:
+        momento = _instante(texto)
+        return momento if momento is not None and inicio <= momento < fin else None
+
+    reparaciones = [
+        (m, str(r.get("frase")), bool(r.get("correcto")))
+        for r in estado.get("reparaciones", [])
+        if isinstance(r, dict) and (m := del_dia(r.get("hora")))
+    ]
+    arranques = [m for a in estado.get("arranques", []) if (m := del_dia(a))]
+    return {"sin_registro": False, "reparaciones": reparaciones, "arranques": arranques}
+
+
+def lineas_guardian(guardian: Documento | None) -> list[str]:
+    """Las líneas del guardián del sistema en la sección SISTEMA (horas de Madrid)."""
+    if guardian is None:
+        return []
+    if guardian["sin_registro"]:
+        return ["  Guardián del sistema: sin registro"]
+    reparaciones, arranques = guardian["reparaciones"], guardian["arranques"]
+    malas = sum(1 for _, _, correcto in reparaciones if not correcto)
+    lineas = [
+        f"  Guardián del sistema: {len(reparaciones)} reparaciones"
+        + (f" ({malas} sin conseguirlo)" if malas else "")
+    ]
+    for momento, frase, correcto in reparaciones[:LIMITE]:
+        hora = momento.astimezone(MADRID).strftime("%H:%M")
+        lineas.append(f"  - {hora} {'' if correcto else 'SIN ARREGLAR: '}{frase[:160]}")
+    if arranques:
+        horas = ", ".join(m.astimezone(MADRID).strftime("%H:%M") for m in arranques)
+        lineas.append(f"  Arranques del servidor: {len(arranques)} ({horas})")
+    return lineas
+
+
 def problemas_abiertos(url: str = URL_SALUD) -> list[str] | None:
     """Los problemas abiertos de la vigilancia (salud.json), o None si no se puede leer."""
     try:
@@ -685,6 +729,8 @@ class Datos:
     candidatos: tuple[int, int] = (0, 0)
     # Lo que hizo el control de las fichas ese día (control_del_dia).
     control: Documento | None = None
+    # Lo que hizo ese día el guardián del sistema (guardian_del_dia).
+    guardian: Documento | None = None
 
 
 DIAS_SEMANA = ("lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo")
@@ -800,6 +846,7 @@ def texto_resumen(d: Datos) -> str:
             lineas.append(f"  Con incidencia, ya cerrada: {len(cerradas)}")
             lineas += [f"  - {f[:160]}" for f in cerradas[:LIMITE]]
     lineas += lineas_control(d.control)
+    lineas += lineas_guardian(d.guardian)
     if d.problemas is None:
         lineas.append("  Vigilancia: no se pudo leer salud.json")
     elif d.problemas:
@@ -832,6 +879,7 @@ def reunir(
     ejecutar: Ejecutar = _ejecutar,
     salud: Callable[[], list[str] | None] = problemas_abiertos,
     secretos: Path | None = None,
+    guardian: Path | None = None,
 ) -> Datos:
     """Todo lo que lleva el resumen del día; lo que no se puede leer sale como «no se pudo»."""
     visitas = anterior = media7 = None
@@ -875,6 +923,7 @@ def reunir(
         resueltos=resueltos_del_dia(secretos / VIGILANCIA, dia) if secretos else [],
         candidatos=candidatos_del_dia(diario_del_dia(dia, ejecutar)),
         control=control_del_dia(secretos / CONTROL, dia) if secretos else None,
+        guardian=guardian_del_dia(guardian, dia) if guardian else None,
     )
 
 
@@ -1013,7 +1062,7 @@ def pasada(
         try:
             datos = reunir(
                 dia, rutas.goatcounter, rutas.datos, rutas.publicacion, rutas.base,
-                rutas.avisos, ahora, ejecutar, salud, rutas.secretos,
+                rutas.avisos, ahora, ejecutar, salud, rutas.secretos, GUARDIAN,
             )  # fmt: skip
             enviar_con_reintentos(enviar, mensaje(datos, TEMA_RESUMEN))
         except (urllib.error.URLError, OSError, ValueError, sqlite3.Error) as error:
@@ -1182,7 +1231,7 @@ def principal(argumentos: list[str] | None = None) -> int:
         return 0
     datos = reunir(
         args.dia, rutas.goatcounter, rutas.datos, rutas.publicacion, rutas.base, rutas.avisos,
-        ahora, secretos=rutas.secretos,
+        ahora, secretos=rutas.secretos, guardian=GUARDIAN,
     )  # fmt: skip
     if args.ensayo:
         sys.stdout.write(f"{TITULO}\n\n{texto_resumen(datos)}\n")

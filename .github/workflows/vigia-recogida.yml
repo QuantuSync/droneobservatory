@@ -16,6 +16,11 @@ name: vigia-recogida
 #   EODI_VERCEL_TOKEN): tiene que ser del último commit de main y haber salido bien; si falla, se
 #   pide otro una vez; si sigue fallando, es un problema.
 #
+# Último recurso desde fuera (recogida/reinicio_externo.py): si salud.json lleva más de 30 minutos
+# sin renovarse, reinicia el servidor por la API de Hetzner Cloud (secreto EODI_HCLOUD_TOKEN), como
+# mucho una vez cada 6 horas; tras arrancar, el guardián del servidor lanza la recogida pendiente.
+# Mientras eso esté en marcha, la incidencia del servidor se aplaza: solo se abre si no lo arregla.
+#
 # Cada problema abre su incidencia (una sola mientras dure) y la cierra al arreglarse: GitHub manda
 # al dueño el correo de la incidencia nueva. El trabajo NO falla por un problema del observatorio
 # (así no llegan correos de «Run failed» además de la incidencia); solo falla si el propio vigía no
@@ -33,6 +38,14 @@ on:
     inputs:
       prueba:
         description: "Alarma de prueba: hace como si salud.json trajera un problema"
+        type: boolean
+        default: false
+      simulacro_reinicio:
+        description: "Simulacro del reinicio desde fuera: todo menos pedirlo a la API"
+        type: boolean
+        default: false
+      forzar_reinicio:
+        description: "Prueba real del reinicio desde fuera (se niega entre los minutos 10 y 45)"
         type: boolean
         default: false
 
@@ -73,9 +86,22 @@ jobs:
         env:
           VERCEL_TOKEN: ${{ secrets.EODI_VERCEL_TOKEN }}
         run: python -m recogida.despliegue_web
+      - name: Reinicio desde fuera, si el servidor no da señales en 30 minutos
+        id: reinicio
+        env:
+          HCLOUD_TOKEN: ${{ secrets.EODI_HCLOUD_TOKEN }}
+          SIMULACRO: ${{ inputs.simulacro_reinicio }}
+          FORZAR: ${{ inputs.forzar_reinicio }}
+        run: |
+          set -euo pipefail
+          opciones=()
+          if [ "${SIMULACRO:-false}" = "true" ]; then opciones+=(--simulacro); fi
+          if [ "${FORZAR:-false}" = "true" ]; then opciones+=(--forzar); fi
+          python -m recogida.reinicio_externo "${opciones[@]}"
       - name: Incidencias
         id: incidencias
         env:
+          APLAZAR: ${{ steps.reinicio.outputs.aplazar }}
           P_WEB: ${{ steps.web.outputs.problema_web }}
           M_WEB: ${{ steps.web.outputs.mensaje_web }}
           GH_TOKEN: ${{ github.token }}
@@ -129,8 +155,14 @@ jobs:
           if [ "${PRUEBA:-false}" = "true" ]; then
             titulo_servidor="Alarma de prueba de la vigilancia"
           fi
-          incidencia "$titulo_servidor" "$P_SERVIDOR" "$M_SERVIDOR" \
-            "cómo ver si todo va bien" "El servidor vuelve a estar bien."
+          if [ "${APLAZAR:-false}" = "true" ] && [ "${PRUEBA:-false}" != "true" ]; then
+            # Sin señales, pero el reinicio desde fuera está en marcha: la incidencia solo si no
+            # lo arregla.
+            echo "incidencia del servidor aplazada: se está reparando solo"
+          else
+            incidencia "$titulo_servidor" "$P_SERVIDOR" "$M_SERVIDOR" \
+              "cómo ver si todo va bien" "El servidor vuelve a estar bien."
+          fi
           echo "nuevas=$nuevas" >> "$GITHUB_OUTPUT"
           echo "problemas=$problemas" >> "$GITHUB_OUTPUT"
           echo "problemas: $problemas, incidencias nuevas: $nuevas (el aviso al dueño es la incidencia)"

@@ -865,6 +865,8 @@ AccuracySec=1s
 [Install]
 WantedBy=timers.target
 FIN
+# Guardián del sistema (servidor/guardian.sh).
+bash "$CLON/servidor/guardian.sh"
 # Reintentos de todas las unidades y temporizadores persistentes (servidor/reintentos.sh).
 bash "$CLON/servidor/reintentos.sh"
 systemctl daemon-reload
