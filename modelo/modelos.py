@@ -34,7 +34,8 @@ EXPERTO = "experto"
 
 @dataclass(frozen=True)
 class Modelo:
-    """Tarifa y capacidades de un modelo, por el comienzo de su identificador."""
+    """Tarifa y capacidades de un modelo, reconocido por una parte de su identificador (la
+    familia y la versión: el identificador completo solo está en los secretos)."""
 
     prefijo: str
     entrada: float
@@ -66,10 +67,10 @@ class Modelo:
 # Tarifas de octubre de 2026 (docs/modelos.md). Un modelo que no está en la lista se trata como
 # el de antes (tarifa y petición), que es lo que hacía todo el código hasta ahora.
 MODELOS = (
-    Modelo("claude-haiku-4-5", 1.00, 5.00, muestreo=True, esfuerzo=False, espera_s=60.0),
-    Modelo("claude-haiku-5-5", 0.10, 0.50, umbral_largo=100_000, entrada_larga=0.50,
+    Modelo("haiku-4-5", 1.00, 5.00, muestreo=True, esfuerzo=False, espera_s=60.0),
+    Modelo("haiku-5-5", 0.10, 0.50, umbral_largo=100_000, entrada_larga=0.50,
            salida_larga=2.50, espera_s=120.0, margen=(3000, 8000, 12000)),  # fmt: skip
-    Modelo("claude-sonnet-5-5", 2.00, 10.00, espera_s=150.0, margen=(2000, 4000, 6000),
+    Modelo("sonnet-5-5", 2.00, 10.00, espera_s=150.0, margen=(2000, 4000, 6000),
            cache=False),  # fmt: skip
 )
 RESERVA = Modelo("", 1.00, 5.00, muestreo=True, esfuerzo=False, espera_s=60.0)
@@ -79,7 +80,7 @@ def de(identificador: str | None) -> Modelo:
     """El modelo por su identificador (vale con fecha al final); el de reserva si no se conoce."""
     texto = (identificador or "").strip()
     for modelo in MODELOS:
-        if texto.startswith(modelo.prefijo):
+        if modelo.prefijo and modelo.prefijo in texto:
             return modelo
     return RESERVA
 
