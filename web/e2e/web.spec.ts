@@ -262,9 +262,9 @@ test("la dirección de un incidente abre su ficha en el panel y sobrevive a reca
 test("en escritorio el letrero nunca se sale de la pantalla y desaparece al abrir la ficha", async ({ page }, info) => {
   test.skip(info.project.name !== "escritorio", "con el dedo no hay letrero: se comprueba en hoja.spec.ts");
   const problemas = vigilar(page);
-  await page.goto("/EODI-2025-00247");
+  await page.goto("/EODI-2025-00243");
   await page.waitForSelector(MAPA_LISTO);
-  const ficha = page.getByRole("complementary", { name: /EODI-2025-00247/ });
+  const ficha = page.getByRole("complementary", { name: /EODI-2025-00243/ });
   await expect(ficha).toBeVisible();
   await page.waitForTimeout(MS_DE_VUELO);
   // El mapa ha volado al incidente: queda en el centro del hueco libre.

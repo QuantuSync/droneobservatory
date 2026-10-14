@@ -60,7 +60,9 @@ LIMITE_GUERRA_HISTORICO_USD = 5.00
 LIMITE_CALIDAD_USD = 2.00
 LIMITE_DIRIGIDA_USD = 3.00
 LIMITE_CONTROL_DIARIO_USD = 0.15
-LIMITE_CONTROL_REPASO_USD = 4.00
+# Repaso del control sobre todo lo publicado: 4 USD el 14 de octubre de 2026 de madrugada (se
+# gastaron 3,46) y 6 USD más ese mismo día para las fichas que quedaron sin verificar.
+LIMITE_CONTROL_REPASO_USD = 9.46
 # Una letra son unos 0,3 tokens en los idiomas europeos; se estima por lo alto con 0,5
 # para que el peor caso no se quede corto.
 TOKENS_POR_LETRA = 0.5
