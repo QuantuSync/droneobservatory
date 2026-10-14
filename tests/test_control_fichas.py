@@ -710,11 +710,18 @@ def test_una_union_que_conservo_la_mas_nueva_se_rehace_sobre_la_mas_antigua() ->
                  "huella": "x", "fecha": "2026-10-14T05:56:00Z", "motivo_es": "el mismo suceso"}},
         "2026-10-14T05:56:00Z",
     )  # fmt: skip
+    antes = almacen.incidente("EODI-2026-09516")
+    assert antes is not None
     _ejecutar(almacen, None, AHORA + timedelta(hours=1))
     queda = almacen.incidente("EODI-2026-09515")
     unido = almacen.incidente("EODI-2026-09516")
     assert queda is not None and unido is not None
     assert "fusionado_en" not in queda and unido["fusionado_en"] == "EODI-2026-09515"
+    # A la que se une no se le quita nada: cada valor sigue con su afirmación de origen (si no,
+    # la exportación no valida: «valor sin origen», como en el primer ensayo).
+    sin_marca = {k: v for k, v in unido.items() if k not in ("fusionado_en", "episodio")}
+    assert sin_marca["fuentes"] == antes["fuentes"]
+    assert sin_marca.get("afirmaciones") == antes.get("afirmaciones")
     assert {f["id"] for f in queda["fuentes"]} >= {"gdelt-dnews", "gdelt-schwaebische"}
     decision = almacen.controles("par:")[clave]
     assert (decision["conserva"], decision["une"]) == ("EODI-2026-09515", "EODI-2026-09516")
