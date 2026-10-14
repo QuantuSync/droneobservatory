@@ -45,6 +45,7 @@ from typing import Any
 
 from modelo import modelos
 
+DESCUENTO_LOTE = modelos.DESCUENTO_LOTE
 LIMITE_HISTORICO_USD = 5.00
 LIMITE_DIARIO_USD = 0.30
 LIMITE_REVISION_USD = 5.00

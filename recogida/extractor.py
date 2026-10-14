@@ -76,22 +76,30 @@ class Resultado:
     parada: extraccion.Parada | None = None
     # Error definitivo del servicio o caída de más de MAX_CAIDA.
     en_rojo: bool = False
+    # Fichas que decidió el experto y candidatos que esperan al experto.
+    escalados: int = 0
+    esperan: int = 0
 
     def resumen(self) -> str:
         return (
             f"candidatos={self.candidatos} llamadas={self.llamadas} publicados={self.publicados} "
-            f"pendientes={self.pendientes} fusiones={self.fusiones} episodios={self.episodios}"
+            f"pendientes={self.pendientes} fusiones={self.fusiones} episodios={self.episodios} "
+            f"escalados={self.escalados} esperan_experto={self.esperan}"
         )
 
 
 def utilizables(almacen: Almacen, candidatos: list[Documento]) -> list[Documento]:
-    """Sin los retirados tras sus fallos ni los que siguen sin artículos en un idioma
-    reconocido; los que fallaron alguna vez, los últimos (uno que falla no frena a los demás)."""
+    """Sin los retirados tras sus fallos, los que siguen sin artículos en un idioma reconocido
+    ni los que esperan al modelo experto; los que fallaron alguna vez, los últimos (uno que
+    falla no frena a los demás)."""
     apartados = extraccion.apartados(almacen)
+    ahora = datetime.now(UTC)
     elegidos = []
     for candidato in candidatos:
         entrada = apartados.get(candidato["id"], {})
         if entrada.get("retirado"):
+            continue
+        if extraccion.espera_experto(almacen, candidato["id"], ahora):
             continue
         if entrada.get("sin_idioma") and not extraccion.con_idioma(almacen, candidato):
             continue
@@ -328,6 +336,8 @@ def horaria(
         episodios=episodios,
         parada=extraidas.parada,
         en_rojo=avisar(almacen, ahora, extraidas, sin_llamada),
+        escalados=len(extraidas.escalados),
+        esperan=len(extraidas.esperan),
     )
 
 

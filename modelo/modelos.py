@@ -27,9 +27,6 @@ FACTOR_LECTURA_CACHE = 0.10
 # Los lotes cuestan la mitad.
 DESCUENTO_LOTE = 0.5
 ESFUERZOS = ("low", "medium", "high")
-# Tokens de razonamiento que se suman al máximo de salida de cada petición, según el esfuerzo:
-# el razonamiento cuenta en el máximo y, sin este margen, una ficha de 1500 tokens se cortaría.
-MARGEN_RAZONAMIENTO = {"low": 2000, "medium": 4000, "high": 8000}
 MUESTREO = ("temperature", "top_p", "top_k")
 BASE = "base"
 EXPERTO = "experto"
@@ -50,6 +47,15 @@ class Modelo:
     esfuerzo: bool = True
     # Segundos que se espera cada respuesta como mucho (el razonamiento alarga las respuestas).
     espera_s: float = 90.0
+    # Tokens de razonamiento que se suman al máximo de salida de cada petición, por esfuerzo
+    # (bajo, medio, alto): el razonamiento cuenta en el máximo y, sin este margen, la respuesta
+    # se cortaría. Medido el 14 de octubre de 2026 con fichas reales: el base razona de 1.100 a
+    # 4.800 tokens con esfuerzo medio; el experto, casi nada.
+    margen: tuple[int, int, int] = (0, 0, 0)
+    # Marcar las instrucciones para la caché del servicio. Escribirla cuesta 1,25 veces la
+    # entrada y dura 5 minutos: compensa en el modelo base, que hace varias llamadas seguidas
+    # con las mismas instrucciones, y no en el experto, que hace una o dos por recogida.
+    cache: bool = True
 
     def tarifa(self, tokens_entrada: int) -> tuple[float, float]:
         if self.umbral_largo is not None and tokens_entrada > self.umbral_largo:
@@ -62,8 +68,9 @@ class Modelo:
 MODELOS = (
     Modelo("claude-haiku-4-5", 1.00, 5.00, muestreo=True, esfuerzo=False, espera_s=60.0),
     Modelo("claude-haiku-5-5", 0.10, 0.50, umbral_largo=100_000, entrada_larga=0.50,
-           salida_larga=2.50, espera_s=90.0),  # fmt: skip
-    Modelo("claude-sonnet-5-5", 2.00, 10.00, espera_s=150.0),
+           salida_larga=2.50, espera_s=120.0, margen=(3000, 8000, 12000)),  # fmt: skip
+    Modelo("claude-sonnet-5-5", 2.00, 10.00, espera_s=150.0, margen=(2000, 4000, 6000),
+           cache=False),  # fmt: skip
 )
 RESERVA = Modelo("", 1.00, 5.00, muestreo=True, esfuerzo=False, espera_s=60.0)
 
@@ -104,9 +111,12 @@ def coste(
 
 def max_salida(modelo: str | None, base_tokens: int, esfuerzo: str | None) -> int:
     """El máximo de salida que se pide: el de la respuesta más el margen del razonamiento."""
-    if not de(modelo or base()).esfuerzo:
+    m = de(modelo or base())
+    if not m.esfuerzo:
         return base_tokens
-    return base_tokens + MARGEN_RAZONAMIENTO.get(esfuerzo or "medium", MARGEN_RAZONAMIENTO["high"])
+    esfuerzo = esfuerzo or "medium"
+    nivel = ESFUERZOS.index(esfuerzo) if esfuerzo in ESFUERZOS else len(ESFUERZOS) - 1
+    return base_tokens + m.margen[nivel]
 
 
 def adaptar(cuerpo: dict[str, Any], modelo: str) -> dict[str, Any]:
@@ -115,6 +125,7 @@ def adaptar(cuerpo: dict[str, Any], modelo: str) -> dict[str, Any]:
     - Sin temperatura ni muestreo en los modelos que no lo admiten.
     - El esfuerzo (output_config.effort) solo en los que lo admiten; en los demás se quita.
     - En los que razonan, el máximo de salida lleva el margen del razonamiento.
+    - Sin marcas de caché en los que no la usan.
     """
     m = de(modelo)
     nuevo = copy.deepcopy(cuerpo)
@@ -128,6 +139,10 @@ def adaptar(cuerpo: dict[str, Any], modelo: str) -> dict[str, Any]:
             salida.pop("effort", None)
     elif isinstance(salida, dict) and esfuerzo is None:
         salida["effort"] = "medium"
+    if not m.cache and isinstance(nuevo.get("system"), list):
+        for bloque in nuevo["system"]:
+            if isinstance(bloque, dict):
+                bloque.pop("cache_control", None)
     if "max_tokens" in nuevo:
         nuevo["max_tokens"] = max_salida(modelo, int(nuevo["max_tokens"]), esfuerzo)
     return {"model": modelo, **nuevo}
