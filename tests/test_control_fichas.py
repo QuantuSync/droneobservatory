@@ -738,3 +738,12 @@ def test_una_union_que_conservo_la_mas_nueva_se_rehace_sobre_la_mas_antigua() ->
     antes = almacen.incidente("EODI-2026-09515")
     _ejecutar(almacen, None, AHORA + timedelta(hours=2))
     assert almacen.incidente("EODI-2026-09515") == antes
+
+
+def test_la_traduccion_pide_siempre_los_dos_idiomas() -> None:
+    # Con «deja vacío si ya está en ese idioma», el modelo base dejaba vacío uno de los dos en un
+    # tercio de las citas en ruso y en ucraniano, y esas citas no se guardaban.
+    from modelo import control as peticiones
+
+    assert "vacío" not in peticiones.INSTRUCCIONES_TRADUCIR
+    assert "Da siempre las dos" in peticiones.INSTRUCCIONES_TRADUCIR

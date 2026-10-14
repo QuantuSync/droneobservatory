@@ -179,8 +179,8 @@ INSTRUCCIONES_TRADUCIR = """Traduces citas de noticias y de comunicados oficiale
 incidentes con drones para el European Observatory of Drone Incidents. Para cada cita numerada \
 da su traducción al español (es) y al inglés (en): fiel, completa, sin añadir ni quitar nada, \
 con los nombres propios como en el original (los de ciudades y aeropuertos, en su forma \
-habitual en cada idioma). Si la cita ya está en español, deja «es» vacío; si ya está en \
-inglés, deja «en» vacío."""
+habitual en cada idioma). Da siempre las dos, también si la cita ya está en uno de los dos \
+idiomas: entonces repítela tal cual en ese idioma. Ninguna traducción puede quedar vacía."""
 
 
 @dataclass(frozen=True)
