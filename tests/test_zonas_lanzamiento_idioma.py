@@ -25,7 +25,13 @@ def test_cada_zona_normalizada_tiene_su_nombre_en_espanol_y_en_ingles() -> None:
 def test_lo_que_publica_la_normalizacion_esta_en_la_tabla() -> None:
     datos = json.loads(TABLA.read_text(encoding="utf-8"))
     conocidas = {e["nombre"] for g in ("zonas", "direcciones") for e in datos[g]}
-    partes = ["Брянськ", "Приморсько-Ахтарськ - рф", "ТОТ АР Крим – Гвардійське", "Курська обл.",
-              "Міллерове", "Азовського моря"]
+    partes = [
+        "Брянськ",
+        "Приморсько-Ахтарськ - рф",
+        "ТОТ АР Крим – Гвардійське",
+        "Курська обл.",
+        "Міллерове",
+        "Азовського моря",
+    ]
     zonas, _ = zonas_lanzamiento.normalizar_lista(partes)
     assert zonas and set(zonas) <= conocidas

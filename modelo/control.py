@@ -209,7 +209,8 @@ def _cuerpo(instrucciones: str, esquema: dict[str, Any], contenido: str,
         "temperature": TEMPERATURA,
         "system": [{"type": "text", "text": instrucciones, "cache_control": {"type": "ephemeral"}}],
         "output_config": {
-            "format": {"type": "json_schema", "schema": esquema}, "effort": esfuerzo,
+            "format": {"type": "json_schema", "schema": esquema},
+            "effort": esfuerzo,
         },
         "messages": [{"role": "user", "content": contenido}],
     }

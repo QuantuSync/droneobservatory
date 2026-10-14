@@ -68,10 +68,17 @@ class Modelo:
 # el de antes (tarifa y petición), que es lo que hacía todo el código hasta ahora.
 MODELOS = (
     Modelo("haiku-4-5", 1.00, 5.00, muestreo=True, esfuerzo=False, espera_s=60.0),
-    Modelo("haiku-5-5", 0.10, 0.50, umbral_largo=100_000, entrada_larga=0.50,
-           salida_larga=2.50, espera_s=120.0, margen=(3000, 8000, 12000)),  # fmt: skip
-    Modelo("sonnet-5-5", 2.00, 10.00, espera_s=150.0, margen=(2000, 4000, 6000),
-           cache=False),  # fmt: skip
+    Modelo(
+        "haiku-5-5",
+        0.10,
+        0.50,
+        umbral_largo=100_000,
+        entrada_larga=0.50,
+        salida_larga=2.50,
+        espera_s=120.0,
+        margen=(3000, 8000, 12000),
+    ),
+    Modelo("sonnet-5-5", 2.00, 10.00, espera_s=150.0, margen=(2000, 4000, 6000), cache=False),
 )
 RESERVA = Modelo("", 1.00, 5.00, muestreo=True, esfuerzo=False, espera_s=60.0)
 

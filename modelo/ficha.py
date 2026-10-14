@@ -357,7 +357,8 @@ def cuerpo(objetivo: str, fuentes: list[FuenteTexto]) -> dict[str, Any]:
         "temperature": TEMPERATURA,
         "system": [{"type": "text", "text": INSTRUCCIONES, "cache_control": {"type": "ephemeral"}}],
         "output_config": {
-            "format": {"type": "json_schema", "schema": ESQUEMA}, "effort": ESFUERZO,
+            "format": {"type": "json_schema", "schema": ESQUEMA},
+            "effort": ESFUERZO,
         },
         "messages": [{"role": "user", "content": contenido(objetivo, fuentes)}],
     }
