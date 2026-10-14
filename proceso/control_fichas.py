@@ -64,6 +64,15 @@ MAX_MINUTOS = 7 * 24 * 60
 # antes de la primera noticia.
 DIAS_ANTES_MAX = 7
 MOTIVO = "control de fichas"
+# Una duración solo de una frase que habla del cierre o de los vuelos, no de cuánto duró un
+# avistamiento o cuánto esperó un avión.
+FRASE_DE_CIERRE = re.compile(
+    r"(?i)(?:cerr|cierr|clos|shut|suspend|interr|paraliz|gesperrt|geschlossen|stillgelegt|"
+    r"stillgestanden|ausgesetzt|eingestellt|unterbroch|ferm|suspend|gesloten|stilgelegd|lukket|"
+    r"stengt|stängd|zamkn|wstrzyma|închis|inchis|suspendat|sustabd|slēgt|apturēt|suleten|"
+    r"затвор|закрыт|закрил|призупин|vuel|flight|flug|flüge|vol|vols|vlucht|fly|flyg|"
+    r"lot[óy]|zbor|skrydž|lidmašīn|lend|start|landen|tráfico|traffic|trafic|verkehr|ruch)"
+)
 
 
 def clave_par(a: str, b: str) -> str:
@@ -370,9 +379,10 @@ def _cierre(
     if dato is not None:
         valor, fuente, frase = dato
         c.respaldos["consecuencias.cierre.valor"] = (fuente, frase)
-        if valor == "si" and cierre.get("valor") != "si":
-            cierre["valor"] = "si"
-            c.cambios.append(f"cierre: «{frase}»")
+        # Un cierre nuevo no se añade aquí: lo deciden las reglas de siempre (la frase que cuenta
+        # el cierre de una pista, el tráfico medido). Una verificación que lo da por hecho de otro
+        # sitio («se cerró Bruselas» en la ficha de una base) o de otra cosa («despegaron cazas»)
+        # no basta.
     elif cierre.get("valor") == "si" and not cierre_por_regla and "cierre" not in conservar:
         cierre = {"valor": "desconocido"}
         c.cambios.append("cierre -> sin dato: ninguna fuente lo cuenta")
@@ -380,7 +390,7 @@ def _cierre(
     if minutos is not None and cierre.get("valor") == "si":
         valor, fuente, frase = minutos
         c.respaldos["consecuencias.cierre.minutos"] = (fuente, frase)
-        if cierre.get("minutos") != valor:
+        if cierre.get("minutos") != valor and FRASE_DE_CIERRE.search(frase):
             cierre["minutos"] = valor
             c.cambios.append(f"duración del cierre {_rango_texto(valor)} min: «{frase}»")
     elif isinstance(cierre.get("minutos"), dict) and "duracion_min" not in conservar:
@@ -509,10 +519,15 @@ def aplicar(
     cierre_por_regla: bool,
     nom: Nomenclator | None,
     conservar: frozenset[str] = frozenset(),
+    completa: bool = True,
 ) -> Correccion:
     """La ficha corregida con lo que dicen sus fuentes. Después hay que aplicar las reglas de
     tipo y de presencia (proceso/incidentes.aplicar_reglas) y el titular."""
     c = Correccion(incidente)
+    if not completa:
+        # La verificación no leyó todas sus fuentes (las fichas grandes, como mucho 6): lo que
+        # ninguna de las leídas da puede darlo otra. No se quita nada por falta de frase.
+        conservar = conservar | {"drones", "cierre", "duracion_min", "inicio"}
     primera = primera_noticia(incidente)
     _presencia(c, verificada)
     _drones(c, verificada, conservar)

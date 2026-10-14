@@ -603,12 +603,14 @@ def aplicar_verificaciones(ctx: Contexto) -> None:
             conservar = {c for c in ("drones", "cierre", "duracion_min", "inicio")
                          if actual.get(c) != vista.get(c)}  # fmt: skip
         fuentes_regla, titular_regla = presencia.respaldo_cierre_de_pista(incidente)
+        enlaces = {f.get("enlace") or f["id"] for f in _publicas(incidente)}
         correccion = reglas.aplicar(
             incidente,
             verificada,
             bool(fuentes_regla or titular_regla),
             ctx.nom,
             frozenset(conservar),
+            completa=len(enlaces) <= peticiones.MAX_FUENTES,
         )
         if correccion.dudas:
             ctx.resultado.dudas[incidente["id"]] = correccion.dudas

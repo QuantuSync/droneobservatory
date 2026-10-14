@@ -642,3 +642,33 @@ def test_dias_distintos_con_fecha_escrita_no_son_candidatos() -> None:
     assert not reglas.candidatos(a, b)
     b["tiempo"]["inicio"] = ejemplos.instante("2026-10-12T21:00Z", "hora")
     assert reglas.candidatos(a, b)
+
+
+def test_no_se_anade_un_cierre_ni_una_duracion_sin_frase_de_cierre() -> None:
+    documento = _nuremberg_alemana()
+    documento["consecuencias"] = {"cierre": {"valor": "desconocido"}}
+    verificada = reglas.Verificada(
+        {"cierre": ("si", "gdelt-infranken", "Rumunjska je podigla borbene zrakoplove")}
+    )
+    assert reglas.aplicar(documento, verificada, False, None).incidente["consecuencias"] == {
+        "cierre": {"valor": "desconocido"}
+    }
+    documento["consecuencias"] = {"cierre": {"valor": "si"}}
+    avistamiento = reglas.Verificada(
+        {
+            "duracion_min": (
+                {"min": 30, "max": 30},
+                "gdelt-infranken",
+                "The sightings occurred around 10 p.m. for roughly 30 minutes",
+            )
+        }
+    )
+    cierre = reglas.aplicar(documento, avistamiento, True, None).incidente["consecuencias"]
+    assert "minutos" not in cierre["cierre"]
+
+
+def test_con_fuentes_sin_leer_no_se_quita_nada_por_falta_de_frase() -> None:
+    documento = _nuremberg_alemana()
+    incompleta = reglas.aplicar(documento, reglas.Verificada(), False, None, completa=False)
+    assert incompleta.incidente["drones"]["numero"] == {"min": 2, "max": 10}
+    assert incompleta.incidente["consecuencias"]["cierre"]["valor"] == "si"
