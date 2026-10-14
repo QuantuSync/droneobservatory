@@ -55,6 +55,9 @@ registro = logging.getLogger(__name__)
 
 CURSOR = "control_fichas"
 ESPERA = timedelta(hours=6)
+# En la recogida horaria, una ficha ya verificada que recibe fuentes nuevas se vuelve a verificar
+# como mucho cada 6 horas (y siempre de madrugada): el tope diario es para lo nuevo.
+ESPERA_REVERIFICAR = timedelta(hours=6)
 VENTANA_HORARIA = timedelta(hours=72)
 VENTANA_NOCHE = timedelta(hours=48)
 # Tope de tiempo del paso en la recogida horaria (recogida/plazo.py).
@@ -374,9 +377,13 @@ def _textos_de(documentos: list[Documento], textos: dict[str, str], plazo: Plazo
     textos.update(descargar(list(dict.fromkeys(enlaces)), plazo))
 
 
-def pares_por_decidir(ctx: Contexto, foco: set[str]) -> list[tuple[Documento, Documento, str]]:
+def pares_por_decidir(
+    ctx: Contexto, foco: set[str], revisar_decididos: bool = True
+) -> list[tuple[Documento, Documento, str]]:
     """Los pares candidatos que hay que comparar (con la huella de sus fuentes). Resuelve los
-    dudosos que llevan 6 horas como distintos y deja en dudosos los que no han cambiado."""
+    dudosos que llevan 6 horas como distintos y deja en dudosos los que no han cambiado. Sin
+    `revisar_decididos` (la recogida horaria), un par ya decidido no se vuelve a comparar aunque
+    lleguen fuentes nuevas: lo hace la pasada de madrugada."""
     activos = _activos(ctx.almacen)
     resultado = []
     for a, b in reglas.pares_candidatos(activos, foco):
@@ -384,7 +391,9 @@ def pares_por_decidir(ctx: Contexto, foco: set[str]) -> list[tuple[Documento, Do
         huella = reglas.huella_fuentes(a) + reglas.huella_fuentes(b)
         previa = ctx.decision(clave)
         if previa is not None:
-            if previa["decision"] in {"mismo", "distinto"} and previa.get("huella") == huella:
+            if previa["decision"] in {"mismo", "distinto"} and (
+                previa.get("huella") == huella or not revisar_decididos
+            ):
                 continue
             if previa["decision"] == "dudoso":
                 desde = _leer(str(previa.get("desde") or previa["fecha"]))
@@ -476,9 +485,9 @@ def procesar_par(ctx: Contexto, peticion: Peticion, respuesta: dict[str, Any] | 
     ctx.nuevas[clave] = decision
 
 
-def comparar_pares(ctx: Contexto, foco: set[str]) -> None:
+def comparar_pares(ctx: Contexto, foco: set[str], revisar_decididos: bool = True) -> None:
     textos: dict[str, str] = {}
-    for a, b, huella in pares_por_decidir(ctx, foco):
+    for a, b, huella in pares_por_decidir(ctx, foco, revisar_decididos):
         a2, b2 = ctx.almacen.incidente(a["id"]), ctx.almacen.incidente(b["id"])
         if a2 is None or b2 is None or not incidentes.activo(a2) or not incidentes.activo(b2):
             continue
@@ -491,8 +500,12 @@ def comparar_pares(ctx: Contexto, foco: set[str]) -> None:
         procesar_par(ctx, peticion, respuesta)
 
 
-def por_verificar(ctx: Contexto, foco: set[str]) -> list[Documento]:
-    """Las fichas del foco con fuentes que aún no se verificaron, las más recientes primero."""
+def por_verificar(
+    ctx: Contexto, foco: set[str], espera: timedelta | None = None
+) -> list[Documento]:
+    """Las fichas del foco con fuentes que aún no se verificaron, las más recientes primero. Con
+    `espera` (la recogida horaria), una ficha ya verificada con fuentes nuevas se vuelve a
+    verificar como mucho una vez en ese tiempo; las nuevas, siempre."""
     resultado = []
     for incidente in sorted(_activos(ctx.almacen), key=lambda d: d["control"]["alta"]["valor"],
                             reverse=True):  # fmt: skip
@@ -500,6 +513,12 @@ def por_verificar(ctx: Contexto, foco: set[str]) -> list[Documento]:
             continue
         previa = ctx.decision(reglas.clave_verificacion(incidente["id"]))
         if previa is not None and previa.get("huella") == reglas.huella_fuentes(incidente):
+            continue
+        if (
+            previa is not None
+            and espera is not None
+            and ctx.ahora - _leer(str(previa["fecha"])) < espera
+        ):
             continue
         resultado.append(incidente)
     return resultado
@@ -533,8 +552,8 @@ def procesar_verificacion(ctx: Contexto, peticion: Peticion,
     ctx.resultado.verificadas += 1
 
 
-def verificar(ctx: Contexto, foco: set[str]) -> None:
-    for incidente in por_verificar(ctx, foco):
+def verificar(ctx: Contexto, foco: set[str], espera: timedelta | None = None) -> None:
+    for incidente in por_verificar(ctx, foco, espera):
         if ctx.llamador.parado:
             break
         peticion = peticion_verificacion(ctx, incidente)
@@ -798,8 +817,9 @@ def ejecutar(
         }
         foco = {i for i in foco if i not in vistos or _cambiado(ctx, i, activos)}
     try:
-        comparar_pares(ctx, foco)
-        verificar(ctx, foco)
+        horaria = alcance == "horaria"
+        comparar_pares(ctx, foco, revisar_decididos=not horaria)
+        verificar(ctx, foco, ESPERA_REVERIFICAR if horaria else None)
     finally:
         almacen.guardar_controles(ctx.nuevas, _iso(ahora))
     ctx.decisiones = {**ctx.decisiones, **ctx.nuevas}
@@ -814,11 +834,7 @@ def ejecutar(
         if k.startswith("verificacion:") and k.removeprefix("verificacion:") in foco
     }  # fmt: skip
     traducir(ctx, citas_de(en_foco, decisiones_foco), hechas)
-    if alcance in {"noche", "repaso"} and not llamador.parado:
-        if alcance == "noche":
-            # Con lo que sobra del día y sin pasar del tope de la madrugada: el resto del día es
-            # para las recogidas horarias.
-            llamador.tope = TOPE_NOCHE_USD
+    if alcance == "repaso" and not llamador.parado:
         atrasadas = {
             **citas_pendientes(almacen, "europa"),
             **citas_de(_activos(almacen), ctx.decisiones),
@@ -925,12 +941,17 @@ def por_lote(
     return respuestas
 
 
-def _anotar_lote(almacen: Almacen, respuestas: Respuestas, ahora: datetime,
-                 resultado: Resultado) -> None:  # fmt: skip
+def _anotar_lote(
+    almacen: Almacen,
+    respuestas: Respuestas,
+    ahora: datetime,
+    resultado: Resultado,
+    modo: coste.Modo = coste.Modo.CONTROL_REPASO,
+) -> None:
     for clave, uso in respuestas.usos.items():
         gasto = uso.coste(lote=True)
         almacen.registrar_llamada({
-            "fecha": _iso(ahora), "modo": coste.Modo.CONTROL_REPASO.value, "candidato": clave[:200],
+            "fecha": _iso(ahora), "modo": modo.value, "candidato": clave[:200],
             "lote": True, "entrada": uso.entrada, "salida": uso.salida,
             "escritura_cache": uso.escritura_cache, "lectura_cache": uso.lectura_cache,
             "coste": gasto,
@@ -1024,6 +1045,52 @@ def repaso(base: Base, fabrica: Callable[[], Any], nom: Nomenclator | None = Non
             aplicar_verificaciones(ctx)
             base.guardar(almacen)
     registro.info("repaso: %s", resultado.resumen())
+    return resultado
+
+
+def noche(base: Base, fabrica: Callable[[], Any] | None, ruta_estado: Path,
+          dormir: Callable[[float], None] | None = None,
+          reloj: Callable[[], float] | None = None) -> Resultado:  # fmt: skip
+    """La pasada de madrugada: lo publicado en las últimas 48 horas, con el cerrojo; después, sin
+    el cerrojo mientras espera, las citas atrasadas (las de Europa y las de Ucrania, las más
+    recientes primero) por lote, con lo que sobra del día hasta TOPE_NOCHE_USD; y con el cerrojo
+    otra vez, se guardan."""
+    import time
+
+    from recogida.extractor import modelos_base
+
+    with base.cerrojo():
+        almacen = base.abrir()
+        ahora = datetime.now(UTC)
+        modelos = modelos_base() | frozenset(almacen.vocabulario("modelo_dron"))
+        resultado = ejecutar(almacen, ahora, modelos, "noche", fabrica, Plazo(TOPE_NOCHE_S))
+        base.guardar(almacen)
+    if fabrica is None:
+        escribir_estado(ruta_estado, resultado, almacen, ahora)
+        return resultado
+    copia = base.abrir()
+    hechas = set(copia.traducciones())
+    lista = peticiones_traduccion(citas_pendientes(copia, "europa"), hechas)
+    lista += peticiones_traduccion(citas_pendientes(copia, "ucrania"), hechas)
+    hoy = coste.dia(datetime.now(UTC))
+    disponible = min(
+        TOPE_NOCHE_USD,
+        coste.limite(coste.Modo.CONTROL) - copia.gastado(coste.Modo.CONTROL.value, hoy),
+    )
+    if lista and disponible > 0:
+        respuestas = por_lote(fabrica(), lista, disponible, dormir or time.sleep,
+                              reloj or time.monotonic)  # fmt: skip
+        with base.cerrojo():
+            almacen = base.abrir()
+            ahora = datetime.now(UTC)
+            ctx = Contexto(almacen, ahora, frozenset(), Llamador(almacen, None, coste.Modo.CONTROL,
+                           ahora, None, resultado), resultado, None, None)  # fmt: skip
+            _anotar_lote(almacen, respuestas, ahora, resultado, coste.Modo.CONTROL)
+            for peticion in lista:
+                if peticion.clave in respuestas.leidas:
+                    procesar_traduccion(ctx, peticion, respuestas.leidas[peticion.clave])
+            base.guardar(almacen)
+    escribir_estado(ruta_estado, resultado, almacen, ahora)
     return resultado
 
 
@@ -1130,6 +1197,15 @@ def principal(argumentos: list[str] | None = None) -> int:
             if fabrica is None:
                 return 1
             resultado = repaso(base, fabrica)
+            print(resultado.resumen())
+            return 0
+        if args.alcance == "noche":
+            try:
+                resultado = noche(base, None if args.sin_servicio else _fabrica(), args.estado)
+            except Exception:
+                registro.exception("control de fichas fallido")
+                escribir_estado(args.estado, None, base.abrir(), ahora)
+                return 1
             print(resultado.resumen())
             return 0
         almacen = base.abrir()

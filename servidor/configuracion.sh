@@ -412,12 +412,13 @@ RESERVA_MEMORIA="400M"
 # --- Revisión de madrugada del control de las fichas (servidor/control_noche.sh) -----------
 # Cada día a las 01:41 UTC, tras la recogida de la 01:17 y lejos de la exportación de los lunes
 # (03:47): vuelve a comprobar lo publicado en las últimas 48 horas y traduce citas atrasadas de la
-# capa de Ucrania con lo que sobra del gasto del día. Toma el cerrojo de la recogida: tiene que
-# acabar antes de la de las 02:17 (tope del paso, 25 minutos; la espera del cerrojo aparte).
+# capa de Ucrania con lo que sobra del gasto del día, por lote. Con el cerrojo de la recogida
+# solo mientras escribe (tope del paso, 25 minutos: acaba antes de la de las 02:17); la espera del
+# lote, sin él (12 horas como mucho).
 UNIDAD_CONTROL="eodi-control"
 CALENDARIO_CONTROL="*-*-* 01:41:00 UTC"
 CONTROL_MEMORIA="2G"
-TOPE_CONTROL_MINUTOS=90
+TOPE_CONTROL_MINUTOS=800
 
 UNIDAD_VERSIONES="eodi-versiones"
 CALENDARIO_VERSIONES="*-*-* 02:35:00 UTC"

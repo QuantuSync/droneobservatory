@@ -569,3 +569,21 @@ def test_union_a_mano_conserva_el_registro_indicado() -> None:
     assert hechos == 1
     alemana = almacen.incidente("EODI-2026-09515")
     assert alemana is not None and alemana["fusionado_en"] == "EODI-2026-09516"
+
+
+def test_noche_traduce_lo_atrasado_por_lote(tmp_path: Path) -> None:
+    import contextlib
+
+    almacen = _base(_nuremberg_alemana())
+    almacen.guardar_cursor(
+        control_fichas.CURSOR_CITAS,
+        {"europa": {}, "ucrania": {citas.huella_texto("Одна цитата"): ["uk", "Одна цитата"]}},
+    )
+    servicio = ServicioLotes()
+    base = control_fichas.Base(
+        abrir=lambda: almacen, guardar=lambda a: None, cerrojo=contextlib.nullcontext
+    )
+    control_fichas.noche(base, lambda: servicio, tmp_path / "control.json", dormir=lambda s: None)
+    assert citas.huella_texto("Одна цитата") in almacen.traducciones()
+    assert any(ll["modo"] == "control" and ll["lote"] for ll in almacen.llamadas())
+    assert json.loads((tmp_path / "control.json").read_text(encoding="utf-8"))["pasadas"]

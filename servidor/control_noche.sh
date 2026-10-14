@@ -6,9 +6,10 @@
 #
 #   sudo systemctl start eodi-control.service
 #
-# Escribe en la base: toma el cerrojo de la recogida horaria (espera a la que esté en marcha) y lo
-# suelta al terminar. Lo que corrige sale publicado en la recogida siguiente. Deja su pasada en
-# control.json para el resumen diario y la vigilancia.
+# Escribe en la base con el cerrojo de la recogida horaria (lo toma el propio programa: espera a
+# la que esté en marcha). Las citas atrasadas van por lote, a mitad de precio: mientras el servicio
+# lo procesa, el cerrojo queda libre. Lo que corrige sale publicado en la recogida siguiente. Deja
+# su pasada en control.json para el resumen diario y la vigilancia.
 set -euo pipefail
 
 principal() {
@@ -16,11 +17,6 @@ principal() {
   aqui="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
   # shellcheck source=servidor/configuracion.sh
   . "$aqui/configuracion.sh"
-
-  exec 9> "$CERROJO"
-  echo "esperando el cerrojo de la recogida"
-  flock --wait "$ESPERA_CERROJO_S" 9
-  echo "cerrojo tomado"
 
   EODI_CLAVE_AGE="$(cat "$CLAVE_AGE")"
   export EODI_CLAVE_AGE
@@ -34,7 +30,7 @@ principal() {
 
   cd "$CLON"
   "$ENTORNO/bin/python" -m recogida.control_fichas noche --estado "$SECRETOS/control.json" \
-    --correo "$CORREO" || codigo=$?
+    --correo "$CORREO" --cerrojo "$CERROJO" || codigo=$?
   echo "revisión de madrugada del control terminada con código $codigo"
   return "$codigo"
 }

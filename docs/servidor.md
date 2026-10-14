@@ -1704,9 +1704,10 @@ el identificador más antiguo), pone el lugar más preciso que dan el titular y 
 comprueba cada dato contra una frase literal de sus fuentes y traduce las citas; lo nuevo que no
 lo ha pasado se retiene como mucho 6 horas. Gasto: modo `control`, 0,15 dólares al día.
 
-- **Madrugada.** `eodi-control.timer`, cada día a las 01:41 UTC (`servidor/control_noche.sh`, con
-  el cerrojo de la recogida, `MemoryMax=2G`, `Nice=10`, reintento a los 10 minutos): lo publicado
-  en las últimas 48 horas y las citas atrasadas de Ucrania (como mucho 0,08 dólares del día).
+- **Madrugada.** `eodi-control.timer`, cada día a las 01:41 UTC (`servidor/control_noche.sh`,
+  `MemoryMax=2G`, `Nice=10`, reintento a los 10 minutos): lo publicado en las últimas 48 horas,
+  con el cerrojo de la recogida (25 minutos como mucho), y las citas atrasadas por lote, sin el
+  cerrojo mientras espera (como mucho 0,08 dólares del día).
 - **Estado.** `/home/eodi/.eodi/control.json`: cada pasada (corregidas, unidas, retenidas, gasto)
   para el resumen de las 08:00; problema «control_fichas» en la vigilancia si falla 3 pasadas
   seguidas.
