@@ -538,12 +538,14 @@ def tras_arranque(
     arranque: str,
     publicada: datetime | None,
     ejecutar: Ejecutar = _ejecutar,
+    hora: datetime | None = None,
 ) -> None:
-    """Una vez por arranque: lanza la recogida pendiente si la última publicación es vieja."""
+    """Una vez por arranque: lo anota con su hora (`hora`, la del arranque) y lanza la recogida
+    pendiente si la última publicación es vieja."""
     if not arranque or estado.get("arranque") == arranque:
         return
     estado["arranque"] = arranque
-    estado.setdefault("arranques", []).append(_iso(pasada.ahora))
+    estado.setdefault("arranques", []).append(_iso(hora or pasada.ahora))
     pendiente = bool(estado.pop("recogida_pendiente", False))
     vieja = publicada is None or pasada.ahora - publicada > MAX_SIN_PUBLICAR_ARRANQUE
     if not (pendiente or vieja):
@@ -627,7 +629,10 @@ def principal(argumentos: list[str] | None = None) -> int:
     limpiar_disco(pasada)
     reparar_ssh(pasada)
     estado = leer_estado()
-    tras_arranque(pasada, estado, arranque_actual(), ultima_publicacion())
+    tras_arranque(
+        pasada, estado, arranque_actual(), ultima_publicacion(),
+        hora=hora_de_arranque(pasada.ahora),
+    )  # fmt: skip
     if args.simulacro_reinicio:
         simulado = {k: v for k, v in estado.items() if k != "reinicios"}
         ultimo_recurso(pasada, simulado, simulacro_entradas(pasada.ahora), simulacro=True)
