@@ -329,11 +329,12 @@ def conservar_la_mas_antigua(
     almacen: Almacen, decisiones: dict[str, Documento], ahora: datetime, modelos: frozenset[str]
 ) -> dict[str, Documento]:
     """Las uniones del control conservan la ficha más antigua (reglas.mas_antiguo). Las que
-    conservaron la más nueva (hasta el 14 de octubre de 2026 se miraba la fecha de alta) se
-    rehacen: la más antigua vuelve y absorbe la más nueva tal como está (con todo lo que esta había
-    absorbido y corregido: no se quita nada, así cada valor conserva su afirmación de origen), y
-    las demás fichas que se habían unido a la nueva pasan a llevar a la antigua. Devuelve las
-    decisiones corregidas (para guardarlas); sin nada que corregir, no toca nada."""
+    conservaron la más nueva (hasta el 14 de octubre de 2026 se miraba la fecha de alta) cambian de
+    número: la ficha publicada sigue igual (su lugar, sus fuentes y lo que el control verificó y
+    corrigió, cada valor con su afirmación de origen) pero con el identificador de la más antigua;
+    la más nueva pasa a llevar a ella, y también las demás que se habían unido a la nueva. Devuelve
+    las decisiones corregidas (para guardarlas, con la verificación copiada al número que queda);
+    sin nada que corregir, no toca nada."""
     corregidas: dict[str, Documento] = {}
     vigentes = {**decisiones}
     for clave in sorted(vigentes):
@@ -354,10 +355,23 @@ def conservar_la_mas_antigua(
             f for f in almacen.fusiones()
             if not f["revertida"] and f["destino"] == nuevo_id and f["absorbido"] != viejo_id
         ]  # fmt: skip
-        antiguo = {k: v for k, v in une.items() if k != "fusionado_en"}
-        almacen.revertir_fusion(viejo_id)
-        unir(almacen, antiguo, conserva, str(decision.get("motivo_es", "")), ahora, modelos)
         fecha = ahora.strftime("%Y-%m-%dT%H:%MZ")
+        queda = {**copy.deepcopy(conserva), "id": viejo_id}
+        altas = sorted((une["control"]["alta"], conserva["control"]["alta"]),
+                       key=lambda a: str(a["valor"]))  # fmt: skip
+        queda["control"]["alta"] = altas[0]
+        fundido = {**copy.deepcopy(conserva), "fusionado_en": viejo_id}
+        fundido.pop("episodio", None)
+        almacen.guardar_incidente(queda, ahora, modelos)
+        almacen.guardar_incidente(fundido, ahora, modelos)
+        propias = {f["id"] for f in une.get("fuentes", [])}
+        aportadas = [f["id"] for f in conserva["fuentes"] if f["id"] not in propias]
+        almacen.revertir_fusion(viejo_id)
+        almacen.registrar_fusion(
+            fecha, nuevo_id, viejo_id,
+            incidentes.PREFIJO_REVISADA + PREFIJO_UNION + str(decision.get("motivo_es", "")),
+            aportadas,
+        )  # fmt: skip
         for fusion in otros:
             otro = almacen.incidente(fusion["absorbido"])
             if otro is None or otro.get("fusionado_en") != nuevo_id:
@@ -369,6 +383,9 @@ def conservar_la_mas_antigua(
             )
         nota = f"se conserva la ficha más antigua ({viejo_id}), no {nuevo_id}"
         corregidas[clave] = {**decision, "conserva": viejo_id, "une": nuevo_id, "corregida": nota}
+        verificada = vigentes.get(reglas.clave_verificacion(nuevo_id))
+        if verificada is not None:
+            corregidas[reglas.clave_verificacion(viejo_id)] = {**verificada, "corregida": nota}
         for otra, d in vigentes.items():
             if otra != clave and d.get("conserva") == nuevo_id:
                 corregidas[otra] = {**d, "conserva": viejo_id, "corregida": nota}
@@ -882,6 +899,14 @@ def ejecutar(
     if corregidas:
         almacen.guardar_controles(corregidas, _iso(ahora))
         ctx.decisiones = {**ctx.decisiones, **corregidas}
+        # La ficha que queda ya estaba publicada (con otro número): no se retiene como nueva.
+        if "vistos" in cursor:
+            quedan = {d["conserva"] for d in corregidas.values() if "conserva" in d}
+            cursor = {
+                **cursor,
+                "vistos": {**cursor["vistos"], **dict.fromkeys(quedan, _iso(ahora))},
+            }
+            vistos |= quedan
     reaplicar_uniones(almacen, ctx.decisiones, ahora, modelos)
     reglas_deterministas(ctx)
     activos = _activos(almacen)
