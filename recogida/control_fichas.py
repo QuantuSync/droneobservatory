@@ -87,9 +87,10 @@ PREFIJO_UNION = "control de fichas: "
 TOPE_NOCHE_USD = 0.08
 # Y aparte, esto en las citas sin traducir: lo nuevo de cada día (unas 15 a 30 citas de la capa
 # de Ucrania y lo que no recogieron los lotes de cada hora, medido el 14 de octubre de 2026) cabe
-# de sobra (unas 200 citas en el peor caso con el modelo base por lote) y el resto del tope se
-# come lo atrasado. Lo que gaste la revisión no le quita sitio.
-TOPE_NOCHE_CITAS_USD = 0.02
+# de sobra (unas 500 citas en el peor caso con el modelo base por lote; con el de antes, una
+# petición al menos) y el resto del tope se come lo atrasado. Lo que gaste la revisión no le
+# quita sitio.
+TOPE_NOCHE_CITAS_USD = 0.05
 # Y como mucho este tiempo: tiene que acabar antes de la recogida siguiente.
 TOPE_NOCHE_S = 25 * 60.0
 # Repaso por lotes: espera entre consultas del estado del lote y tope de espera.
