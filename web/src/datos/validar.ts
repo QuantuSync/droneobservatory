@@ -180,6 +180,8 @@ const rangoODesconocido: Comprobacion = (valor, ruta, errores) => {
 };
 
 const titulo = objeto({ es: cadena(), en: cadena() });
+/** Traducción de una cita (exportacion/citas.py). */
+const traduccion = objeto({ es: cadena(), en: cadena() });
 
 const estadoHistorial = objeto({
   actual: enumerado(v.ESTADOS),
@@ -208,10 +210,13 @@ const fuente = objeto(
     frase_origen: cadena(),
     replicas: enteroNoNegativo,
   },
-  archivoDeFuente,
+  { ...archivoDeFuente, traduccion },
 );
 
-const control = objeto({ ultima_actualizacion: instante }, { motivo_desmentido: cadena() });
+const control = objeto(
+  { ultima_actualizacion: instante },
+  { motivo_desmentido: cadena(), motivo_desmentido_traduccion: traduccion },
+);
 
 /** Foco térmico de FIRMS: solo el detectado es público. */
 const focoTermico = objeto({
@@ -298,7 +303,7 @@ const afirmacionPublica = objeto(
     fecha: instante,
     valor: cualquiera,
   },
-  { cita: cadena() },
+  { cita: cadena(), cita_traduccion: traduccion },
 );
 
 const probabilidad = numero(0, 1);
@@ -315,6 +320,7 @@ const datosRazonDron = objeto(
       ),
     ),
     cita: nulable(cadena()),
+    cita_traduccion: traduccion,
     fuente: nulable(cadena()),
     distancia_km: nulable(cifraDron),
     mas_de_600_km: enumerado([true, false]),
@@ -328,12 +334,15 @@ const datosRazonDron = objeto(
 const tipoDron = objeto(
   { version: cadena(/^tipo-dron-\d+\.\d+\.\d+$/) },
   {
-    identificado: objeto({
-      modelo: cadena(),
-      grupo: enumerado(v.GRUPOS_DRON),
-      cita: cadena(),
-      fuente: cadena(),
-    }),
+    identificado: objeto(
+      {
+        modelo: cadena(),
+        grupo: enumerado(v.GRUPOS_DRON),
+        cita: cadena(),
+        fuente: cadena(),
+      },
+      { cita_traduccion: traduccion },
+    ),
     publicado: objeto(
       { compatible: lista(objeto({ grupo: enumerado(v.GRUPOS_DRON) }, { probabilidad }), 1) },
       {
@@ -363,7 +372,7 @@ const recorrido = objeto({
     2,
   ),
   franja: lista(lista(tupla([longitud, latitud]), 4), 1),
-});
+}, { cita_traduccion: traduccion });
 
 /** Los nombres de lugar como los escribe cada versión de la web (proceso/nombres_lugar.py). */
 const nombres = objeto(
@@ -399,7 +408,7 @@ const CAMPOS_INCIDENTE_OPCIONALES: Record<string, Comprobacion> = {
       vuelos_desviados: rangoODesconocido,
       vuelos_cancelados: rangoODesconocido,
       vuelos_retrasados: rangoODesconocido,
-      danos: objeto({ nivel: enumerado(v.NIVELES_DANOS) }, { frase: cadena() }),
+      danos: objeto({ nivel: enumerado(v.NIVELES_DANOS) }, { frase: cadena(), frase_traduccion: traduccion }),
       heridos: rangoODesconocido,
       fallecidos: rangoODesconocido,
     },
@@ -409,7 +418,12 @@ const CAMPOS_INCIDENTE_OPCIONALES: Record<string, Comprobacion> = {
     { actor: cadena(), autoridad: cadena(), fecha: instante },
     { tipo: enumerado(v.TIPOS_ACTOR), pais: cadena(v.PATRON_PAIS) },
   ),
-  investigacion: lista(objeto({ autoridad: cadena(), cita: cadena(), fuente_id: cadena(), fecha: instante })),
+  investigacion: lista(
+    objeto(
+      { autoridad: cadena(), cita: cadena(), fuente_id: cadena(), fecha: instante },
+      { cita_traduccion: traduccion },
+    ),
+  ),
   nombres,
   ataque: objeto({
     id: cadena(/^EODI-UA-\d{4}-\d{4}$/),
@@ -582,7 +596,7 @@ const ataque = objeto(
     cruces: lista(
       objeto(
         { pais: cadena(v.PATRON_PAIS), numero: rangoODesconocido },
-        { frase: cadena(), incidentes: lista(cadena(/^EODI-\d{4}-\d{5}$/)) },
+        { frase: cadena(), frase_traduccion: traduccion, incidentes: lista(cadena(/^EODI-\d{4}-\d{5}$/)) },
       ),
     ),
     regiones: lista(regionAtaque),
@@ -612,7 +626,7 @@ const fuenteImpacto = objeto(
     frase_origen: cadena(),
     replicas: enteroNoNegativo,
   },
-  { autoridad_ocupacion: constante(true), ...archivoDeFuente },
+  { autoridad_ocupacion: constante(true), ...archivoDeFuente, traduccion },
 );
 
 const impactoGuerra = objeto(

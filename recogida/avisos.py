@@ -368,6 +368,30 @@ def documentos(base: Path, ids: Iterable[str]) -> dict[str, Documento]:
         conexion.close()
 
 
+def unidos_en(base: Path) -> dict[str, set[str]]:
+    """Los registros fundidos en cada incidente (fusiones no revertidas, también en cadena),
+    leídos sin escribir en la base: un suceso ya avisado con otro número no se vuelve a avisar
+    cuando se une a otro registro (recogida/control_fichas.py)."""
+    conexion = sqlite3.connect(f"{base.resolve().as_uri()}?mode=ro", uri=True)
+    try:
+        filas = conexion.execute(
+            "SELECT absorbido, destino FROM fusiones WHERE revertida = 0 ORDER BY id"
+        ).fetchall()
+    except sqlite3.Error:
+        return {}
+    finally:
+        conexion.close()
+    destino = {str(a): str(d) for a, d in filas}
+    unidos: dict[str, set[str]] = {}
+    for absorbido in destino:
+        final, vistos = absorbido, set()
+        while final in destino and final not in vistos:
+            vistos.add(final)
+            final = destino[final]
+        unidos.setdefault(final, set()).add(absorbido)
+    return unidos
+
+
 class Enviados:
     """Lo ya avisado, por incidente y tema, en una base propia (no toca la del observatorio).
     Lo anotado con el nombre anterior de un tema (`temas_anteriores` de la configuración: general,
@@ -438,9 +462,12 @@ def pasar(
     config: Documento,
     ahora: datetime,
     enviar: Enviar | None,
+    unidos: dict[str, set[str]] | None = None,
 ) -> Pasada:
     """Una pasada: anota los existentes la primera vez; si no, envía los avisos que faltan.
-    Con `enviar` None, ensayo: dice lo que enviaría sin enviar ni anotar."""
+    Con `enviar` None, ensayo: dice lo que enviaría sin enviar ni anotar. Lo avisado con el
+    número de un registro que se unió después a otro cuenta como avisado para el que queda
+    (`unidos`): el mismo suceso no se avisa dos veces."""
     pasada = Pasada()
     if enviados.nueva:
         pasada.marcados = len(publicados)
@@ -458,6 +485,11 @@ def pasar(
         if aviso is None:
             continue
         hechos = enviados.temas(id_)
+        for otro in sorted((unidos or {}).get(id_, set())):
+            hechos |= enviados.temas(otro)
+        if "*" in hechos:
+            # Unido a uno anotado como ya avisado en la primera pasada.
+            continue
         # Un solo aviso por incidente: si ya salió a un país, no sale a otro aunque cambie.
         pais_hecho = bool(hechos - {general})
         for tema in (general, config["paises"][aviso.pais]["tema"]):
@@ -585,7 +617,9 @@ def principal(argumentos: list[str] | None = None, ahora: datetime | None = None
     enviados = Enviados(args.datos / BASE_AVISOS, config.get("temas_anteriores"))
     try:
         if args.orden == "ensayo":
-            pasada = pasar(publicados, internos, enviados, config, ahora, None)
+            pasada = pasar(
+                publicados, internos, enviados, config, ahora, None, unidos_en(args.base)
+            )
             print(
                 f"ensayo: {pasada.enviados} avisos se enviarían"
                 + (
@@ -601,7 +635,13 @@ def principal(argumentos: list[str] | None = None, ahora: datetime | None = None
         else:
             token = args.token.read_text(encoding="utf-8").strip()
             pasada = pasar(
-                publicados, internos, enviados, config, ahora, enviador(config["servidor"], token)
+                publicados,
+                internos,
+                enviados,
+                config,
+                ahora,
+                enviador(config["servidor"], token),
+                unidos_en(args.base),
             )
     finally:
         enviados.cerrar()

@@ -244,6 +244,7 @@ export interface Recorrido {
   version: string;
   fuente: string;
   cita: string;
+  cita_traduccion?: { es: string; en: string };
   puntos: { nombre: string; lat: number; lon: number; radio_km: number; hora?: string }[];
   franja: [number, number][][];
 }

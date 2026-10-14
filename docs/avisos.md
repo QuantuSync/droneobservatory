@@ -43,7 +43,12 @@ código QR (para poder imprimirla).
 4. Anota lo enviado, por incidente y tema, en una base propia:
    `/home/eodi/datos/avisos/avisos.sqlite`, con las tablas `avisos` y `activacion`. La base del
    observatorio no se toca. Un incidente se avisa **una sola vez**: las actualizaciones posteriores
-   no avisan, y si ya salió a un país no sale a otro aunque cambie de país.
+   no avisan, y si ya salió a un país no sale a otro aunque cambie de país. Lo avisado con el
+   número de un registro que después se une a otro (tabla `fusiones` de la base) cuenta como
+   avisado para el que queda: el mismo suceso no se avisa dos veces. Desde el 14 de octubre de
+   2026 el control de las fichas retiene un duplicado nuevo hasta decidir si lo es
+   ([`docs/control_fichas.md`](control_fichas.md)): el 13 de octubre el ataque a los dos barcos
+   frente a Bulgaria salió avisado dos veces (EODI-2026-00513 y 00514).
 5. Si un envío falla, lo que sí salió queda anotado y lo demás se reintenta en la recogida
    siguiente, sin duplicar. El resultado de cada pasada queda en `/home/eodi/.eodi/avisos.json`
    (`fallos_seguidos`, `error`, `ultimo_envio`).

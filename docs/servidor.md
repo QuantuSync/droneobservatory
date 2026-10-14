@@ -1696,6 +1696,27 @@ por cada versión depositar sus metadatos (título, autor, fecha, licencia, dire
 la versión y huellas); `metadatos.json` ya tiene todo lo necesario. Después, añadir el DOI a la
 cita.
 
+## Control de calidad de las fichas
+
+Desde el 14 de octubre de 2026 ([`docs/control_fichas.md`](control_fichas.md)). En cada recogida,
+antes de publicar, el paso «control de fichas» une duplicados (también entre idiomas, conservando
+el identificador más antiguo), pone el lugar más preciso que dan el titular y las fuentes,
+comprueba cada dato contra una frase literal de sus fuentes y traduce las citas; lo nuevo que no
+lo ha pasado se retiene como mucho 6 horas. Gasto: modo `control`, 0,15 dólares al día.
+
+- **Madrugada.** `eodi-control.timer`, cada día a las 01:41 UTC (`servidor/control_noche.sh`, con
+  el cerrojo de la recogida, `MemoryMax=2G`, `Nice=10`, reintento a los 10 minutos): lo publicado
+  en las últimas 48 horas y las citas atrasadas de Ucrania (como mucho 0,08 dólares del día).
+- **Estado.** `/home/eodi/.eodi/control.json`: cada pasada (corregidas, unidas, retenidas, gasto)
+  para el resumen de las 08:00; problema «control_fichas» en la vigilancia si falla 3 pasadas
+  seguidas.
+- **Repaso de todo lo publicado** (una vez, modo `control_repaso`, 4 dólares, por lotes):
+
+```
+sudo systemd-run --unit=eodi-control-repaso --uid=eodi --gid=eodi -p MemoryMax=3G -p Nice=19   -p IOSchedulingClass=idle -p OOMScoreAdjust=1000 --working-directory=/home/eodi/droneobservatory   bash -c 'set -a; . /home/eodi/.eodi/extractor.env; set +a; export EODI_CLAVE_AGE="$(cat /home/eodi/.eodi/clave_age.txt)";   .venv/bin/python -m recogida.control_fichas repaso --cerrojo /home/eodi/.eodi/recogida.lock'
+journalctl -u eodi-control-repaso -f
+```
+
 ## Vigilancia
 
 Desde el 7 de octubre de 2026 (`recogida/vigilancia.py`, `recogida/salud.py`,

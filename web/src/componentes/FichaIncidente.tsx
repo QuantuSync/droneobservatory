@@ -23,6 +23,7 @@ import { Enlace } from "../navegacion.tsx";
 import { rutaDeFicha } from "../sitio.ts";
 import type { Idioma } from "../sitio.ts";
 import { diaDeInstante } from "../tiempo/dias.ts";
+import { Cita } from "./Cita.tsx";
 import { EnlaceFuente } from "./EnlaceFuente.tsx";
 import { EstadoConTexto, Historial, ListaFuentes, nombreDeAutoridad, nombreDeFuente } from "./Fuentes.tsx";
 import { LineaFoco, ZOOM_VISOR_PUNTO } from "./FocoTermico.tsx";
@@ -94,10 +95,13 @@ function QueDiceCadaFuente({
   t,
   idioma,
   afirmaciones,
+  idiomas = new Map(),
 }: {
   t: Textos;
   idioma: Idioma;
   afirmaciones: readonly AfirmacionPublica[];
+  /** Idioma de cada fuente, para la cita original. */
+  idiomas?: ReadonlyMap<string, string>;
 }) {
   if (afirmaciones.length === 0) return null;
   const variosCampos = new Set(afirmaciones.map((a) => a.campo)).size > 1;
@@ -121,7 +125,17 @@ function QueDiceCadaFuente({
                 <span aria-hidden="true">{codigo}</span>
               </span>{" "}
               <span className="mono text-secundario">{instante(afirmacion.fecha)}</span>
-              {afirmacion.cita && <q className="block text-secundario">{afirmacion.cita}</q>}
+              {afirmacion.cita && (
+                <Cita
+                  t={t}
+                  idioma={idioma}
+                  texto={afirmacion.cita}
+                  idiomaOriginal={idiomas.get(afirmacion.fuente_id)}
+                  traduccion={afirmacion.cita_traduccion}
+                  como="q"
+                  className="block text-secundario"
+                />
+              )}
             </li>
           );
         })}
@@ -179,6 +193,7 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
   const actor = atribucion === undefined ? "" : actorEscrito(t, idioma, atribucion);
   const autoridad = atribucion === undefined ? "" : nombreDeAutoridad(atribucion.autoridad, idioma);
   const porFuente = new Map(incidente.fuentes.map((f) => [f.id, f]));
+  const idiomasFuentes = new Map(incidente.fuentes.map((f) => [f.id, f.idioma]));
   // La declaración que lo atribuye: la fuente del último paso a «atribuido», con su frase literal.
   const pasoAtribuido = incidente.estado.historial.findLast((paso) => paso.estado === "atribuido");
   const fuenteAtribucion =
@@ -256,7 +271,7 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
               {MARCA_PRESENCIA[incidente.presencia_dron]}
             </span>
             {t.presencia[incidente.presencia_dron]}
-            <QueDiceCadaFuente t={t} idioma={idioma} afirmaciones={de(CAMPOS_DE_FILA.presencia)} />
+            <QueDiceCadaFuente t={t} idioma={idioma} idiomas={idiomasFuentes} afirmaciones={de(CAMPOS_DE_FILA.presencia)} />
           </Fila>
         )}
         <Fila nombre={t.ficha.fecha}>
@@ -265,7 +280,7 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
           <span className="block text-xs text-secundario">
             {t.precision[tiempo.inicio.precision]}
           </span>
-          <QueDiceCadaFuente t={t} idioma={idioma} afirmaciones={de(CAMPOS_DE_FILA.fecha)} />
+          <QueDiceCadaFuente t={t} idioma={idioma} idiomas={idiomasFuentes} afirmaciones={de(CAMPOS_DE_FILA.fecha)} />
         </Fila>
         <Fila nombre={t.ficha.lugar}>
           <span data-lugar="">{lugarEscrito(incidente, idioma, imprecisa !== null)}</span>
@@ -299,7 +314,7 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
               </span>
             )
           )}
-          <QueDiceCadaFuente t={t} idioma={idioma} afirmaciones={de(CAMPOS_DE_FILA.lugar)} />
+          <QueDiceCadaFuente t={t} idioma={idioma} idiomas={idiomasFuentes} afirmaciones={de(CAMPOS_DE_FILA.lugar)} />
         </Fila>
         {/* Frontera o interior solo tiene sentido en el flanco este (datos/nombres.ts). */}
         {incidente.zona !== undefined && enFlancoEste(incidente) && (
@@ -313,9 +328,14 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
         {fuentePunto !== undefined && (
           <Fila nombre={t.ficha.lugarSegun}>
             <span data-lugar-segun="">{nombreDeFuente(t, fuentePunto.medio, idioma)}</span>
-            <blockquote lang={fuentePunto.idioma} className="mt-0.5 border-l border-acento pl-2 text-secundario">
-              «{fuentePunto.frase_origen}»
-            </blockquote>
+            <Cita
+              t={t}
+              idioma={idioma}
+              texto={fuentePunto.frase_origen}
+              idiomaOriginal={fuentePunto.idioma}
+              traduccion={fuentePunto.traduccion}
+              className="mt-0.5 border-l border-acento pl-2 text-secundario"
+            />
             <span className="mono block text-xs text-secundario">
               {instante(fuentePunto.fecha)}
               {" · "}
@@ -333,9 +353,14 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
                 fuente !== undefined && (
                   <span key={otro.nombre} className="mb-1.5 block" data-otro-lugar-explicado="">
                     {otro.escrito}
-                    <blockquote lang={fuente.idioma} className="mt-0.5 border-l border-acento pl-2 text-secundario">
-                      «{fuente.frase_origen}»
-                    </blockquote>
+                    <Cita
+                      t={t}
+                      idioma={idioma}
+                      texto={fuente.frase_origen}
+                      idiomaOriginal={fuente.idioma}
+                      traduccion={fuente.traduccion}
+                      className="mt-0.5 border-l border-acento pl-2 text-secundario"
+                    />
                     <span className="mono block text-xs text-secundario">
                       {fuente.medio} · {instante(fuente.fecha)}
                       {" · "}
@@ -371,14 +396,14 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
               {t.ficha.modelo}: {modelo}
             </span>
           )}
-          <QueDiceCadaFuente t={t} idioma={idioma} afirmaciones={de(CAMPOS_DE_FILA.drones)} />
+          <QueDiceCadaFuente t={t} idioma={idioma} idiomas={idiomasFuentes} afirmaciones={de(CAMPOS_DE_FILA.drones)} />
         </Fila>
-        <FilaTipoDron t={t} incidente={incidente} />
-        <FilaRecorrido t={t} incidente={incidente} />
+        <FilaTipoDron t={t} idioma={idioma} incidente={incidente} />
+        <FilaRecorrido t={t} idioma={idioma} incidente={incidente} />
         {tiempo.duracion_min !== undefined && (
           <Fila nombre={t.ficha.duracion}>
             <span className="mono">{t.ficha.minutos(numero(tiempo.duracion_min, idioma))}</span>
-            <QueDiceCadaFuente t={t} idioma={idioma} afirmaciones={de(CAMPOS_DE_FILA.duracion)} />
+            <QueDiceCadaFuente t={t} idioma={idioma} idiomas={idiomasFuentes} afirmaciones={de(CAMPOS_DE_FILA.duracion)} />
           </Fila>
         )}
         {(textoCierre !== null ||
@@ -405,33 +430,40 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
                 <li>
                   {t.ficha.danos[consecuencias.danos.nivel]}
                   {consecuencias.danos.frase !== undefined && (
-                    <span className="block text-xs text-secundario">
-                      {consecuencias.danos.frase}
-                    </span>
+                    <Cita
+                      t={t}
+                      idioma={idioma}
+                      texto={consecuencias.danos.frase}
+                      traduccion={consecuencias.danos.frase_traduccion}
+                      como="q"
+                      className="block text-xs text-secundario"
+                    />
                   )}
                 </li>
               )}
             </ul>
-            <QueDiceCadaFuente t={t} idioma={idioma} afirmaciones={de(CAMPOS_DE_FILA.efecto)} />
+            <QueDiceCadaFuente t={t} idioma={idioma} idiomas={idiomasFuentes} afirmaciones={de(CAMPOS_DE_FILA.efecto)} />
           </Fila>
         )}
         {medidas.length > 0 && (
           <Fila nombre={t.ficha.respuesta}>
             {medidas.map((medida) => t.medida[medida]).join(" · ")}
-            <QueDiceCadaFuente t={t} idioma={idioma} afirmaciones={de(CAMPOS_DE_FILA.respuesta)} />
+            <QueDiceCadaFuente t={t} idioma={idioma} idiomas={idiomasFuentes} afirmaciones={de(CAMPOS_DE_FILA.respuesta)} />
           </Fila>
         )}
         {atribucion !== undefined && (
           <Fila nombre={t.ficha.atribucion}>
             {t.ficha.atribuidoA(actor, autoridad)}
             {fuenteAtribucion !== undefined && (
-              <blockquote
-                lang={fuenteAtribucion.idioma}
+              <Cita
+                t={t}
+                idioma={idioma}
+                texto={fuenteAtribucion.frase_origen}
+                idiomaOriginal={fuenteAtribucion.idioma}
+                traduccion={fuenteAtribucion.traduccion}
                 className="mt-0.5 border-l border-acento pl-2 text-secundario"
-                data-cita-atribucion=""
-              >
-                «{fuenteAtribucion.frase_origen}»
-              </blockquote>
+                datos={{ "data-cita-atribucion": "" }}
+              />
             )}
             <span className="mono block text-xs text-secundario">
               {instante(atribucion.fecha)}
@@ -444,7 +476,7 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
                 </>
               )}
             </span>
-            <QueDiceCadaFuente t={t} idioma={idioma} afirmaciones={de(CAMPOS_DE_FILA.atribucion)} />
+            <QueDiceCadaFuente t={t} idioma={idioma} idiomas={idiomasFuentes} afirmaciones={de(CAMPOS_DE_FILA.atribucion)} />
           </Fila>
         )}
         {incidente.investigacion !== undefined && incidente.investigacion.length > 0 && (
@@ -455,9 +487,14 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
                 return (
                   <li key={`${entrada.fuente_id}-${entrada.cita}`} className="mb-1.5">
                     {t.ficha.investiga(nombreDeAutoridad(entrada.autoridad, idioma))}
-                    <blockquote lang={fuente?.idioma} className="mt-0.5 border-l border-acento pl-2 text-secundario">
-                      «{entrada.cita}»
-                    </blockquote>
+                    <Cita
+                      t={t}
+                      idioma={idioma}
+                      texto={entrada.cita}
+                      idiomaOriginal={fuente?.idioma}
+                      traduccion={entrada.cita_traduccion}
+                      className="mt-0.5 border-l border-acento pl-2 text-secundario"
+                    />
                     <span className="mono block text-xs text-secundario">
                       {instante(entrada.fecha)}
                       {fuente !== undefined && (
@@ -526,9 +563,15 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
         {incidente.control.motivo_desmentido !== undefined && (
           <Fila nombre={t.ficha.motivoDesmentido}>
             {/* Lo que dijo quien lo desmiente, con sus palabras: una cita, como las de las fuentes. */}
-            <blockquote className="border-l border-acento pl-2 text-secundario" data-motivo-desmentido="">
-              {incidente.control.motivo_desmentido}
-            </blockquote>
+            <Cita
+              t={t}
+              idioma={idioma}
+              texto={incidente.control.motivo_desmentido}
+              traduccion={incidente.control.motivo_desmentido_traduccion}
+              comillas={false}
+              className="border-l border-acento pl-2 text-secundario"
+              datos={{ "data-motivo-desmentido": "" }}
+            />
           </Fila>
         )}
         {incidente.episodio !== undefined && (

@@ -1,10 +1,29 @@
-import type { IncidenteDetalle } from "../datos/tipos.ts";
+import type { IncidenteDetalle, RazonTipoDron } from "../datos/tipos.ts";
 import type { Textos } from "../i18n/index.ts";
+import type { Idioma } from "../sitio.ts";
+import { Cita, traduccionParaMostrar } from "./Cita.tsx";
 import { Fila } from "./Panel.tsx";
 
 interface Props {
   t: Textos;
+  idioma: Idioma;
   incidente: IncidenteDetalle;
+}
+
+/** El original de la cita de una razón cuando se enseña traducida. */
+function OriginalDeRazon({ t, idioma, razon }: { t: Textos; idioma: Idioma; razon: RazonTipoDron }) {
+  const datos = razon.datos;
+  if (!datos?.cita || traduccionParaMostrar(idioma, datos.cita, undefined, datos.cita_traduccion) === null) {
+    return null;
+  }
+  return (
+    <details className="text-xs">
+      <summary className="cursor-pointer text-acento tel:flex tel:min-h-11 tel:items-center">
+        {t.ficha.verOriginal}
+      </summary>
+      <span className="block pl-2">«{datos.cita}»</span>
+    </details>
+  );
 }
 
 /**
@@ -14,7 +33,7 @@ interface Props {
  * cuando uno destaca y eso está comprobado, los grupos con su probabilidad y, al desplegar, por
  * qué. Sin base o sin ninguna razón, la fila no aparece.
  */
-export function FilaTipoDron({ t, incidente }: Props) {
+export function FilaTipoDron({ t, idioma, incidente }: Props) {
   const tipo = incidente.tipo_dron;
   if (tipo === undefined) return null;
   const textos = t.tipoDron;
@@ -27,7 +46,15 @@ export function FilaTipoDron({ t, incidente }: Props) {
         <span className="block text-xs text-secundario">
           {textos.grupoDe(textos.grupos[identificado.grupo])}
         </span>
-        <q className="block text-xs text-secundario">{identificado.cita}</q>
+        <Cita
+          t={t}
+          idioma={idioma}
+          texto={identificado.cita}
+          idiomaOriginal={fuente?.idioma}
+          traduccion={identificado.cita_traduccion}
+          como="q"
+          className="block text-xs text-secundario"
+        />
         {fuente !== undefined && (
           <span className="block text-xs text-secundario">
             {t.ficha.valorSegun} {fuente.medio}
@@ -48,6 +75,7 @@ export function FilaTipoDron({ t, incidente }: Props) {
           {razones.map((razon, i) => (
             <li key={i} className="py-0.5" data-razon={razon.clave}>
               {textos.razon(razon)}
+              <OriginalDeRazon t={t} idioma={idioma} razon={razon} />
             </li>
           ))}
         </ul>
@@ -87,6 +115,7 @@ export function FilaTipoDron({ t, incidente }: Props) {
           {razones.map((razon, i) => (
             <li key={i} className="border-t border-linea py-1" data-razon={razon.clave}>
               {textos.razon(razon)}
+              <OriginalDeRazon t={t} idioma={idioma} razon={razon} />
             </li>
           ))}
         </ul>
@@ -97,7 +126,7 @@ export function FilaTipoDron({ t, incidente }: Props) {
 
 /** Fila «Recorrido según la autoridad»: los lugares en orden, con su hora si la da, y la frase. El
  * recorrido se dibuja en el mapa mientras la ficha está abierta. */
-export function FilaRecorrido({ t, incidente }: Props) {
+export function FilaRecorrido({ t, idioma, incidente }: Props) {
   const recorrido = incidente.recorrido;
   if (recorrido === undefined) return null;
   const fuente = incidente.fuentes.find((f) => f.id === recorrido.fuente);
@@ -106,7 +135,15 @@ export function FilaRecorrido({ t, incidente }: Props) {
       <span data-recorrido="">
         {recorrido.puntos.map((p) => (p.hora === undefined ? p.nombre : `${p.nombre} (${p.hora})`)).join(" → ")}
       </span>
-      <q className="block text-xs text-secundario">{recorrido.cita}</q>
+      <Cita
+        t={t}
+        idioma={idioma}
+        texto={recorrido.cita}
+        idiomaOriginal={fuente?.idioma}
+        traduccion={recorrido.cita_traduccion}
+        como="q"
+        className="block text-xs text-secundario"
+      />
       {fuente !== undefined && (
         <span className="block text-xs text-secundario">
           {t.ficha.valorSegun} {fuente.medio}

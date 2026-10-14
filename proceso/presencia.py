@@ -10,6 +10,13 @@ Dos valores para los incidentes vigentes (además de descartada, que no se toca)
 - no_confirmada: la propia autoridad lo deja abierto («posible dron», «objeto no
   identificado», «se investiga si era un dron») o ninguna autoridad lo atribuye a un dron.
 
+Si una fuente cuenta que se buscó el dron y no se encontró («allerdings konnte eine Drohne nicht
+gefunden werden», «Politiet fandt ingen droner»), la presencia no puede quedar confirmada: ni
+la regla la confirma ni se conserva la confirmación que hubiera. Solo la mantienen una autoridad
+que atribuye el suceso a un dron en la declaración con que se confirmó («la policía confirmó el
+avistamiento, pero no encontró el dron»), las pruebas físicas que confirma una autoridad
+(restos, derribo, explosión) y el documento propio de una autoridad, que mandan sobre la prensa.
+
 La revisión vuelve a leer las declaraciones de las extracciones guardadas y las frases de las
 fuentes, sin llamar al extractor ni descargar nada, y confirma la presencia de los incidentes
 que el criterio alcanza; ajusta después el titular (proceso/titulares.py). Lo que dice una
@@ -30,7 +37,7 @@ from almacen.base import Almacen, DocumentoInvalido
 from esquema import Documento
 from proceso import declaraciones, titulares
 from proceso.estados import Estado
-from proceso.incidentes import activo, id_fuente
+from proceso.incidentes import CONFIRMADOS, PRUEBAS_FISICAS, activo, id_fuente
 
 TABLA_MOTIVOS = "incidentes_motivos"
 REVISADOS = Path(__file__).resolve().parent.parent / "configuracion" / "incidentes_revisados.json"
@@ -94,6 +101,67 @@ def otra_causa(incidente: Documento) -> bool:
     textos = [str(f.get("frase_origen", "")) for f in incidente["fuentes"]]
     textos += [str(v) for v in (incidente.get("titulo") or {}).values()]
     return any(OTRA_CAUSA.search(texto) for texto in textos)
+
+
+# Una fuente cuenta que se buscó el dron y no se encontró, o que no se vio ninguno. Cada forma
+# lleva el nombre del dron: «No Drone Debris Found» (restos) o «nu a fost detectat de radare»
+# (radar) no dicen que no hubiera dron.
+_DRON = (
+    r"(?:drohne\w*|drones?|drone\w*|dron\w*|drön\w*|drony|дрон\w*|беспилотник\w*|"
+    r"безпілотник\w*)"
+)
+NO_HALLADO = re.compile(
+    r"(?<!\w)(?:"
+    rf"{_DRON}\s+(?:\w+\s+){{0,3}}nicht\s+(?:\w+\s+)?(?:gefunden|entdeckt|aufgefunden|"
+    r"gesichtet|festgestellt|ausgemacht|lokalisiert)"
+    rf"|keine?n?\s+{_DRON}\s+(?:\w+\s+){{0,2}}(?:gefunden|entdeckt|aufgefunden|gesichtet|"
+    r"festgestellt|gesehen|zu\s+sehen|ausgemacht|lokalisiert)"
+    rf"|no\s+{_DRON}\s+(?:was|were|has\s+been|had\s+been|could\s+be)?\s*"
+    r"(?:found|located|spotted|seen|sighted)"
+    rf"|(?:found|spotted|saw|located|find)\s+no\s+{_DRON}"
+    rf"|(?:did\s+not|didn't|could\s+not|couldn't|failed\s+to)\s+(?:find|locate)\s+"
+    rf"(?:the|a|any)\s+{_DRON}"
+    rf"|{_DRON}\s+(?:was|were|could)\s+not\s+(?:be\s+)?(?:found|located)"
+    rf"|no\s+trace\s+of\s+(?:the|a|any)\s+{_DRON}"
+    rf"|no\s+se\s+(?:encontr\w+|hall\w+|localiz\w+|vio|vieron)\s+"
+    rf"(?:ningún|ningun|el|un|los|ni\s+rastro\s+del?)\s+{_DRON}"
+    rf"|ningún\s+{_DRON}|sin\s+rastro\s+del\s+{_DRON}"
+    rf"|no\s+(?:encontraron|hallaron|localizaron)\s+(?:ningún|ningun|el|un|los)\s+{_DRON}"
+    rf"|aucun\s+{_DRON}|(?:trouvé|retrouvé|repéré|localisé)\s+(?:aucun|de)\s+{_DRON}"
+    rf"|pas\s+de\s+{_DRON}\s+(?:\w+\s+){{0,2}}(?:trouvé|retrouvé|repéré|vu)"
+    rf"|geen\s+{_DRON}\s+(?:\w+\s+){{0,2}}(?:gezien|gevonden|aangetroffen|waargenomen|"
+    rf"gesignaleerd)|geen\s+{_DRON}\s+was"
+    rf"|(?:fandt|fant|fann|observerte|observerede|så|såg|hittade|hittet|fundet)\s+ingen\s+{_DRON}"
+    rf"|(?:ikke|inte)\s+(?:funnet|fundet|hittat|hittet)\s+(?:den|dronen|drönaren|{_DRON})"
+    rf"|nie\s+(?:znaleziono|odnaleziono|zlokalizowano|odnaleźli|znaleźli)\s+(?:\w+\s+){{0,2}}"
+    rf"{_DRON}|żadnego\s+drona|zadnego\s+drona"
+    rf"|{_DRON}\s+nie\s+(?:został\w*|zostały)\s+(?:znalezion\w*|odnalezion\w*)"
+    r"|nicio\s+dron\w*\s+nu\s+a\s+fost\s+(?:găsit\w*|gasit\w*|descoperit\w*|observat\w*)"
+    rf"|{_DRON}\s+nu\s+a\s+fost\s+(?:găsit\w*|gasit\w*|localizat\w*|descoperit\w*)"
+    rf"|{_DRON}\s+не\s+(?:был\w*\s+)?(?:найден\w*|обнаружен\w*)"
+    rf"|не\s+(?:нашли|обнаружили|знайшли|виявили|знайдено)\s+(?:жодного\s+|никакого\s+)?{_DRON}"
+    r"|δεν\s+βρέθηκε\s+(?:κανένα\s+)?(?:drone|μη\s+επανδρωμέν\w*)"
+    rf"|{_DRON}\s+ei\s+(?:löydetty|löytynyt)|ei\s+löytynyt\s+(?:\w+\s+)?{_DRON}"
+    r")(?!\w)",
+    re.IGNORECASE,
+)
+
+
+def dice_no_hallado(texto: str) -> bool:
+    """La frase cuenta que no se encontró el dron o que no se vio ninguno."""
+    return bool(NO_HALLADO.search(texto)) and declaraciones.habla_de_drones(texto)
+
+
+def no_hallado(incidente: Documento) -> Documento | None:
+    """La primera fuente (por fecha) que cuenta que no se encontró el dron, o None."""
+    fuentes = sorted(incidente.get("fuentes", []), key=lambda f: (f["fecha"]["valor"], f["id"]))
+    return next((f for f in fuentes if dice_no_hallado(str(f.get("frase_origen", "")))), None)
+
+
+def pruebas_fisicas_confirmadas(incidente: Documento) -> bool:
+    """Una autoridad confirma el suceso y hay pruebas físicas del dron (restos, derribo...)."""
+    evidencia = set((incidente.get("pruebas") or {}).get("evidencia", []))
+    return bool(evidencia & PRUEBAS_FISICAS) and incidente["estado"]["actual"] in CONFIRMADOS
 
 
 def _vuelos(valor: object) -> bool:
@@ -200,7 +268,7 @@ def por_actuacion(incidente: Documento) -> Documento | None:
     suceso a un dron. Con el cierre o la medida registrados basta la primera fuente que no lo
     deja abierto, aunque su frase no repita la palabra dron (el incidente es de un dron). None si
     no actuó o si las fuentes que nombran el dron lo dejan abierto."""
-    if otra_causa(incidente):
+    if otra_causa(incidente) or no_hallado(incidente) is not None:
         return None
     fuentes: list[Documento] = sorted(
         incidente["fuentes"], key=lambda f: (f["fecha"]["valor"], f["id"])
@@ -306,6 +374,9 @@ def pendientes(almacen: Almacen) -> list[tuple[Documento, Cambio]]:
         # recogida/revisados.py): la regla no la vuelve a confirmar.
         if incidente["id"] in presencias_revisadas():
             continue
+        # Una fuente cuenta que no se encontró el dron: no se confirma.
+        if no_hallado(incidente) is not None and not pruebas_fisicas_confirmadas(incidente):
+            continue
         # Lo que dice de la presencia una autoridad en su propio documento (proceso/detalle.py:
         # una investigación cerrada que no pudo demostrar que fueran drones) manda sobre la
         # declaración que cita un medio.
@@ -395,6 +466,24 @@ def revisar(
             fallidos.append(incidente["id"])
             continue
         anotar(almacen, incidente, documento, MOTIVO_ABIERTO)
+    # Una fuente cuenta que se buscó el dron y no se encontró: la presencia no queda confirmada.
+    for incidente in almacen.incidentes():
+        if not activo(incidente) or incidente.get("presencia_dron") != "confirmada":
+            continue
+        documento = quitar_por_no_hallado(incidente)
+        if documento is incidente:
+            continue
+        documento = titulares.ajustar_incidente(documento)
+        documento = {**documento, "control": {**documento["control"],
+                                              "ultima_actualizacion": instante}}  # fmt: skip
+        try:
+            almacen.guardar_incidente(documento, ahora, modelos)
+        except DocumentoInvalido:
+            fallidos.append(incidente["id"])
+            continue
+        fuente = no_hallado(incidente) or {}
+        anotar(almacen, incidente, documento,
+               f"{MOTIVO_NO_HALLADO}: «{fuente.get('frase_origen', '')}»")  # fmt: skip
     # Los titulares que no dicen lo mismo que la presencia (los guardados antes de la regla).
     for incidente in almacen.incidentes():
         if not activo(incidente):
@@ -418,6 +507,46 @@ MOTIVO_ABIERTO = (
     "criterio de presencia: la autoridad lo deja abierto; la actuación que contaba la prensa no "
     "basta"
 )
+
+
+MOTIVO_NO_HALLADO = (
+    "criterio de presencia: una fuente cuenta que no se encontró el dron; la presencia no "
+    "queda confirmada"
+)
+
+
+def quitar_por_no_hallado(incidente: Documento) -> Documento:
+    """La presencia sin confirmar si una fuente cuenta que no se encontró el dron, con la
+    afirmación «no_confirmada» de esa fuente. El mismo incidente si no hay nada que quitar: la
+    presencia revisada a mano, el documento propio de una autoridad y las pruebas físicas que
+    confirma una autoridad mandan."""
+    fuente = no_hallado(incidente)
+    if (
+        fuente is None
+        or incidente.get("presencia_dron") != "confirmada"
+        or incidente["id"] in presencias_revisadas()
+        or documento_oficial_decide(incidente)
+        or pruebas_fisicas_confirmadas(incidente)
+    ):
+        return incidente
+    afirmacion = {
+        "campo": "presencia_dron",
+        "valor": "no_confirmada",
+        "fuente_id": fuente["id"],
+        "confianza_extraccion": declaraciones.CONFIANZA_REGLA,
+    }
+    afirmaciones = [
+        a for a in incidente.get("afirmaciones", [])
+        if not (a["campo"] == "presencia_dron" and a["valor"] == "confirmada")
+    ]  # fmt: skip
+    if afirmacion not in afirmaciones:
+        afirmaciones.append(afirmacion)
+    resultado = {**incidente, "presencia_dron": "no_confirmada", "afirmaciones": afirmaciones}
+    # La autoridad que confirmó el suceso lo atribuye a un dron («la policía confirmó el
+    # avistamiento, pero no encontró el dron»): manda la autoridad (validaciones.errores_presencia).
+    from proceso.validaciones import errores_presencia
+
+    return incidente if errores_presencia(resultado) else resultado
 
 
 def quitar_por_actuacion(incidente: Documento) -> Documento:

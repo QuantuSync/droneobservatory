@@ -8,6 +8,10 @@ El foco térmico de cada impacto (proceso/focos_termicos.py) y las mediciones de
 su ataque antes de exportar. Igual la copia archivada de cada fuente de los incidentes y la marca
 de enlace caído (tabla copias_archivadas, recogida/archivo_web.py).
 
+El control de las fichas (recogida/control_fichas.py) deja fuera las fichas nuevas que retiene
+(como mucho 6 horas) y añade a lo publicado la traducción de cada cita y la frase que respalda
+cada dato verificado (exportacion/citas.py).
+
 Cada fichero se genera por separado: si uno falla, queda el que ya había, los demás se publican
 y el fallo queda en el registro (y en `fallidos`, si se pasa). Solo si no se puede generar ninguno
 sale el error."""
@@ -20,6 +24,7 @@ from pathlib import Path
 
 from almacen.base import Almacen
 from esquema import Documento
+from exportacion.citas import Pendientes, con_traducciones, enriquecer_incidentes
 from exportacion.geojson import exportar, exportar_sin_ubicacion
 from exportacion.proyeccion import escribir
 from exportacion.ucrania import exportar_ucrania
@@ -63,6 +68,11 @@ def con_tipo_dron(incidentes: list[Documento], tipos: dict[str, Documento]) -> l
     return salida
 
 
+def _mas_reciente(elemento: Documento) -> str:
+    fechas = [str((f.get("fecha") or {}).get("valor", "")) for f in elemento.get("fuentes", [])]
+    return max(fechas, default="")
+
+
 class NadaPublicado(RuntimeError):
     """No se pudo generar ninguno de los ficheros publicados."""
 
@@ -90,10 +100,52 @@ def publicar(
         else d
         for d in almacen.impactos_guerra()
     ]
+    from recogida import control_fichas
+
+    retenidos = control_fichas.retenidos(almacen)
+    if retenidos:
+        registro.info("fichas retenidas por el control: %s", ", ".join(sorted(retenidos)))
+    incidentes = [i for i in incidentes if i["id"] not in retenidos]
+    verificaciones = {
+        clave.removeprefix("verificacion:"): decision
+        for clave, decision in almacen.controles("verificacion:").items()
+    }
+    traducciones = almacen.traducciones()
+    pendientes = Pendientes()
+
+    def con_citas(documento: Documento, clave: str) -> Documento:
+        """Las citas traducidas y la frase que respalda cada dato (exportacion/citas.py). Si
+        falla, se publica sin ellas: la web enseña entonces el original."""
+        try:
+            return _con_citas(documento, clave)
+        except Exception:
+            registro.exception("%s sin citas traducidas ni respaldos", clave)
+            return documento
+
+    def _con_citas(documento: Documento, clave: str) -> Documento:
+        if clave == "features":
+            enriquecer_incidentes(
+                [f["properties"] for f in documento.get("features", [])], verificaciones,
+                traducciones, pendientes.europa,
+            )  # fmt: skip
+        elif clave == "incidentes":
+            enriquecer_incidentes(
+                documento.get("incidentes", []), verificaciones, traducciones, pendientes.europa
+            )
+        else:
+            # Las más recientes primero: el control traduce lo atrasado en ese orden.
+            elementos = [e for capa in ("ataques", "impactos") for e in documento.get(capa, [])]
+            elementos.sort(key=_mas_reciente, reverse=True)
+            for elemento in elementos:
+                con_traducciones(elemento, traducciones, pendientes.ucrania)
+        return documento
+
     documentos: dict[str, Callable[[], Documento]] = {
-        UCRANIA: lambda: exportar_ucrania(ataques, ahora, impactos),
-        INCIDENTES: lambda: exportar(incidentes, ahora, vocabulario),
-        SIN_UBICACION: lambda: exportar_sin_ubicacion(incidentes, ahora, vocabulario),
+        UCRANIA: lambda: con_citas(exportar_ucrania(ataques, ahora, impactos), "ucrania"),
+        INCIDENTES: lambda: con_citas(exportar(incidentes, ahora, vocabulario), "features"),
+        SIN_UBICACION: lambda: con_citas(
+            exportar_sin_ubicacion(incidentes, ahora, vocabulario), "incidentes"
+        ),
     }
     cambiados = []
     errores: list[str] = []
@@ -109,6 +161,12 @@ def publicar(
             continue
         if ruta.read_bytes() != anterior:
             cambiados.append(ruta)
+    # Las citas que se publican sin traducción, para que el control las traduzca (si falla, se
+    # publica igual: se vuelven a anotar en la recogida siguiente).
+    try:
+        control_fichas.anotar_pendientes(almacen, pendientes)
+    except Exception:
+        registro.exception("citas sin traducir sin anotar")
     if fallidos is not None:
         fallidos.extend(errores)
     if len(errores) == len(documentos):

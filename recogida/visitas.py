@@ -81,6 +81,7 @@ URL_SALUD = "https://droneobservatory-almacen.nbg1.your-objectstorage.com/salud.
 UNIDAD_RECOGIDA = "eodi-recogida.service"
 # Registro de la vigilancia (recogida/vigilancia.py): lo que se arregló solo.
 VIGILANCIA = "vigilancia.json"
+CONTROL = "control.json"
 ESTADO = "visitas.json"
 MUESTRAS = "muestras_ntfy.jsonl"
 NAVEGADOR = "ntfy_navegador.json"
@@ -585,6 +586,76 @@ def resueltos_del_dia(vigilancia_json: Path, dia: date) -> list[tuple[str, bool]
     return resueltos
 
 
+# Clase de cada corrección del control de las fichas, por cómo empieza su motivo.
+CLASES_CONTROL = (
+    ("lugar", "lugar"), ("drones", "drones"), ("presencia", "presencia"),
+    ("cierre", "cierre"), ("duración", "duración del cierre"), ("hora", "hora"),
+    ("día", "día"), ("estado", "estado"),
+)  # fmt: skip
+
+
+def control_del_dia(control_json: Path, dia: date) -> Documento | None:
+    """Lo que hizo ese día el control de las fichas (recogida/control_fichas.py): las fichas que
+    corrigió y por qué, los duplicados que unió, las que retuvo y lo que gastó. None si no hay
+    registro."""
+    datos = _leer_json(control_json)
+    if not datos:
+        return None
+    inicio, fin = limites_del_dia(dia)
+    corregidas: dict[str, list[str]] = {}
+    unidos: list[str] = []
+    retenidas: set[str] = set()
+    liberadas: set[str] = set()
+    gasto = 0.0
+    pasadas = errores = 0
+    for pasada in datos.get("pasadas", []):
+        momento = _instante(pasada.get("fecha"))
+        if momento is None or not inicio <= momento < fin:
+            continue
+        pasadas += 1
+        for id_, motivos in (pasada.get("corregidos") or {}).items():
+            corregidas.setdefault(id_, []).extend(str(m) for m in motivos)
+        unidos += [str(u) for u in pasada.get("unidos") or []]
+        retenidas |= set(pasada.get("retenidos") or {})
+        liberadas |= set(pasada.get("liberados") or {})
+        gasto += float(pasada.get("gasto") or 0)
+        errores += 1 if pasada.get("parada") == "error" else 0
+    clases: dict[str, int] = {}
+    for motivos in corregidas.values():
+        partes = {p.strip() for m in motivos for p in m.split(";")}
+        for nombre, prefijo in CLASES_CONTROL:
+            if any(p.startswith(prefijo) for p in partes):
+                clases[nombre] = clases.get(nombre, 0) + 1
+    return {
+        "pasadas": pasadas, "corregidas": corregidas, "clases": clases, "unidos": unidos,
+        "retenidas": sorted(retenidas), "liberadas": sorted(liberadas), "gasto": gasto,
+        "errores": errores, "fallos_seguidos": int(datos.get("fallos_seguidos") or 0),
+    }  # fmt: skip
+
+
+def lineas_control(control: Documento | None) -> list[str]:
+    """Las líneas del control de las fichas en la sección SISTEMA."""
+    if control is None:
+        return ["  Control de fichas: sin registro"]
+    if not control["pasadas"]:
+        return ["  Control de fichas: no pasó ese día"]
+    clases = ", ".join(f"{k} {v}" for k, v in control["clases"].items())
+    lineas = [
+        f"  Control de fichas: {len(control['corregidas'])} fichas corregidas"
+        + (f" ({clases})" if clases else "")
+        + f", {len(control['unidos'])} duplicados unidos, {len(control['retenidas'])} retenidas"
+        + f", gasto {control['gasto']:.4f} USD".replace(".", ",")
+    ]
+    lineas += [f"  - unido {u}" for u in control["unidos"][:LIMITE]]
+    for id_, motivos in list(control["corregidas"].items())[:LIMITE]:
+        lineas.append(f"  - {id_}: {'; '.join(dict.fromkeys(motivos))[:160]}")
+    if control["retenidas"]:
+        lineas.append(f"  Retenidas por el control: {', '.join(control['retenidas'][:LIMITE])}")
+    if control["errores"]:
+        lineas.append(f"  El control falló en {control['errores']} pasadas")
+    return lineas
+
+
 def problemas_abiertos(url: str = URL_SALUD) -> list[str] | None:
     """Los problemas abiertos de la vigilancia (salud.json), o None si no se puede leer."""
     try:
@@ -612,6 +683,8 @@ class Datos:
     reintentos: dict[str, int] = field(default_factory=dict)
     resueltos: list[tuple[str, bool]] = field(default_factory=list)
     candidatos: tuple[int, int] = (0, 0)
+    # Lo que hizo el control de las fichas ese día (control_del_dia).
+    control: Documento | None = None
 
 
 DIAS_SEMANA = ("lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo")
@@ -726,6 +799,7 @@ def texto_resumen(d: Datos) -> str:
         if cerradas:
             lineas.append(f"  Con incidencia, ya cerrada: {len(cerradas)}")
             lineas += [f"  - {f[:160]}" for f in cerradas[:LIMITE]]
+    lineas += lineas_control(d.control)
     if d.problemas is None:
         lineas.append("  Vigilancia: no se pudo leer salud.json")
     elif d.problemas:
@@ -800,6 +874,7 @@ def reunir(
         reintentos=reintentos_del_dia(dia, ejecutar),
         resueltos=resueltos_del_dia(secretos / VIGILANCIA, dia) if secretos else [],
         candidatos=candidatos_del_dia(diario_del_dia(dia, ejecutar)),
+        control=control_del_dia(secretos / CONTROL, dia) if secretos else None,
     )
 
 

@@ -3,6 +3,7 @@ import { fechaHora, instante, pais, rango, region } from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
 import { rutaDeFicha } from "../sitio.ts";
 import type { Idioma } from "../sitio.ts";
+import { Cita } from "./Cita.tsx";
 import { Historial, ListaFuentes } from "./Fuentes.tsx";
 import { LineaFoco, ZOOM_VISOR_REGION } from "./FocoTermico.tsx";
 import { lucesDeAtaque } from "../datos/guerraSatelite.ts";
@@ -171,7 +172,14 @@ export function FichaAtaque({ t, idioma, ataque, centros }: Props) {
                     <span className="block text-xs text-secundario">
                       {t.ataque.cruceDeclarado}
                       {cruce.frase !== undefined && (
-                        <q className="block italic">{cruce.frase}</q>
+                        <Cita
+                          t={t}
+                          idioma={idioma}
+                          texto={cruce.frase}
+                          traduccion={cruce.frase_traduccion}
+                          como="q"
+                          className="block italic"
+                        />
                       )}
                     </span>
                   )}

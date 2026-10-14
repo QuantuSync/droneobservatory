@@ -348,6 +348,13 @@ def con_titular(incidente: Documento, revision: Documento, instante: Documento) 
             }
             historial = [*resultado["estado"]["historial"], paso]
             resultado["estado"] = {"actual": destino.value, "historial": historial}
+    drones = revision.get("drones")
+    if drones and resultado.get("drones", {}).get("numero") != drones["valor"]:
+        # Ninguna fuente da el número de drones: sin dato, y fuera las afirmaciones que lo daban.
+        resultado["drones"] = {**resultado.get("drones", {}), "numero": drones["valor"]}
+        resultado["afirmaciones"] = [
+            a for a in resultado.get("afirmaciones", []) if a.get("campo") != "drones"
+        ]
     lugar = revision.get("lugar")
     if lugar and "punto" not in resultado["lugar"]:
         # El lugar guardado no era el del suceso (Arna está en Noruega): sin punto, que solo
@@ -454,7 +461,17 @@ def _guardar(
         registro.warning("revisión sin guardar en %s: %s", antes["id"], str(error)[:300])
         hechos.sin_guardar.append(antes["id"])
         return False
-    campos = ("estado", "presencia_dron", "titulo", "lugar", "fuentes", "retirado", "relacionados")
+    campos = (
+        "estado",
+        "presencia_dron",
+        "titulo",
+        "lugar",
+        "fuentes",
+        "retirado",
+        "relacionados",
+        "drones",
+        "objetivo",
+    )
     cambios = {c: antes.get(c) for c in campos if antes.get(c) != despues.get(c)}
     if cambios:
         nuevos = {c: despues.get(c) for c in cambios}

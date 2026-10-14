@@ -73,6 +73,7 @@ from recogida import (
     barrera,
     busqueda_dirigida,
     catalogo_vivo,
+    control_fichas,
     criterio_presencia,
     declaraciones_oficiales,
     deduccion,
@@ -574,6 +575,13 @@ def principal(argumentos: list[str] | None = None) -> int:
                 registro.warning(
                     "presencia sin guardar en %d incidentes que no validan", len(sin_guardar)
                 )
+        # Control de calidad de las fichas (recogida/control_fichas.py), antes de publicar:
+        # duplicados también entre idiomas, el lugar más preciso, cada dato con su fuente y las
+        # citas traducidas. Lo nuevo que no lo pasa se retiene como mucho 6 horas; nunca impide
+        # publicar lo demás ni cambia el código de salida.
+        control = paso(
+            "control de fichas", control_fichas.paso_horario, almacen, ahora, modelos(almacen)
+        )
         # Incursiones en países fronterizos enlazadas con el ataque de su noche, en los dos
         # sentidos, con incidentes y partes ya rehechos.
         try:
@@ -632,6 +640,12 @@ def principal(argumentos: list[str] | None = None) -> int:
                     "estado de la barrera", barrera.escribir_estado, destino_barrera,
                     revision_barrera, cambiados, directorio, ahora,
                 )  # fmt: skip
+            destino_control = (
+                control_fichas.RUTA_ESTADO_DEFECTO if args.ensayo is None
+                else args.ensayo / "control.json"
+            )  # fmt: skip
+            paso("estado del control", control_fichas.escribir_estado, destino_control, control,
+                 almacen, ahora)  # fmt: skip
             # La previsión, con lo recién publicado; si falla, queda la anterior con su fecha.
             paso("previsión", prevision.paso_horario, almacen, ahora, directorio)
         if args.ensayo is not None:

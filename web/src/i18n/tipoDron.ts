@@ -11,8 +11,11 @@ function redondo(n: number, idioma: "es" | "en"): string {
 }
 
 function cita(razon: RazonTipoDron, idioma: "es" | "en"): string {
-  const texto = razon.datos?.cita;
-  if (!texto) return "";
+  // La cita traducida al idioma de la página si la hay (el original va plegado debajo).
+  const original = razon.datos?.cita;
+  if (!original) return "";
+  const traducida = razon.datos?.cita_traduccion?.[idioma]?.trim();
+  const texto = traducida ? traducida : original;
   return idioma === "es" ? `: «${texto}»` : `: “${texto}”`;
 }
 

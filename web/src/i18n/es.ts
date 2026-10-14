@@ -639,6 +639,7 @@ export const es: Textos = {
     investigacion: "Investigación en curso",
     investiga: (autoridad) => `Lo que investiga ${autoridad} (no cambia el estado del incidente):`,
     verFuente: "ver la fuente",
+    verOriginal: "Ver original",
     copiaArchivada: "copia archivada",
     copiaArchivadaDel: (fecha) => `copia archivada del ${fecha}`,
     originalCaido: "el original ya no está disponible",

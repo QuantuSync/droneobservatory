@@ -387,6 +387,22 @@
       ],
       "motivo": "el mismo suceso: el cierre preventivo de los aeropuertos de Lublin y Rzeszów del 7 de octubre de 2026 por la aviación militar durante el ataque ruso contra el oeste de Ucrania; salía dos veces (un candidato por aeropuerto) con la misma fuente y la misma hora",
       "motivo_en": "the same event: the precautionary closure of Lublin and Rzeszów airports on 7 October 2026 for military aviation during the Russian attack on western Ukraine; it appeared twice (one candidate per airport) with the same source and time"
+    },
+    {
+      "registros": [
+        "EODI-2026-00513",
+        "EODI-2026-00514"
+      ],
+      "motivo": "el mismo suceso: los drones que atacaron dos barcos mercantes en la zona económica exclusiva búlgara del mar Negro la noche del lunes 12 al martes 13 de octubre de 2026; 00513 lo cuenta con fuentes rumanas (mediafax.ro, bursa.ro, adevarul.ro, ziare.com) y la nota del Consejo de Seguridad búlgaro, 00514 con una finlandesa (iltalehti.fi) y la declaración del primer ministro Radev. No se une con EODI-2026-00504, el ataque al buque Able de la noche del 6 de octubre, que es otro suceso",
+      "motivo_en": "the same event: the drones that attacked two merchant ships in Bulgaria's exclusive economic zone in the Black Sea on the night of Monday 12 to Tuesday 13 October 2026; 00513 reports it with Romanian sources (mediafax.ro, bursa.ro, adevarul.ro, ziare.com) and the note of the Bulgarian Security Council, 00514 with a Finnish one (iltalehti.fi) and the statement of Prime Minister Radev. It is not merged with EODI-2026-00504, the attack on the ship Able on the night of 6 October, which is another event"
+    },
+    {
+      "registros": [
+        "EODI-2026-00515",
+        "EODI-2026-00516"
+      ],
+      "motivo": "el mismo suceso: la alerta por un posible dron en el aeropuerto de Núremberg (EDDN) la madrugada del martes 13 de octubre de 2026, con los despegues y aterrizajes suspendidos; 00515 lo cuenta con fuentes alemanas (infranken.de, schwaebische.de, merkur.de, sueddeutsche.de, noz.de, t-online.de) y news.az, 00516 con una griega (dnews.gr)",
+      "motivo_en": "the same event: the alert over a possible drone at Nuremberg airport (EDDN) in the early hours of Tuesday 13 October 2026, with take-offs and landings suspended; 00515 reports it with German sources (infranken.de, schwaebische.de, merkur.de, sueddeutsche.de, noz.de, t-online.de) and news.az, 00516 with a Greek one (dnews.gr)"
     }
   ],
   "reextraer": [
@@ -2325,6 +2341,20 @@
       "motivo": {
         "es": "El titular decía que los drones incautaban los aparatos y su cita era solo el nombre del lugar (Sandnes idrettspark); la policía de Sør-Vest dice que el dron estaba a menos de 5 km del aeropuerto de Stavanger y que incautó los dos drones del piloto.",
         "en": "The headline said the drones seized the devices and its quote was only the place name (Sandnes idrettspark); Sør-Vest police say the drone was less than 5 km from Stavanger airport and that they seized the pilot's two drones."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00515",
+      "presencia": {
+        "valor": "no_confirmada",
+        "cita": "allerdings konnte eine Drohne nicht gefunden werden."
+      },
+      "drones": {
+        "valor": "desconocido"
+      },
+      "motivo": {
+        "es": "La ficha daba el dron por confirmado y entre 2 y 10 drones. Su propia fuente (schwaebische.de) dice que no se encontró ningún dron («allerdings konnte eine Drohne nicht gefunden werden») y ninguna fuente da un número de drones: tres pilotos avisaron de un objeto desconocido.",
+        "en": "The record gave the drone as confirmed and between 2 and 10 drones. Its own source (schwaebische.de) says no drone was found («allerdings konnte eine Drohne nicht gefunden werden») and no source gives a number of drones: three pilots reported an unknown object."
       }
     }
   ],
