@@ -76,7 +76,30 @@ const CAMPOS_DE_FILA = {
   atribucion: ["atribucion.actor", "atribucion.autoridad"],
 } as const;
 
-function ValorDeFuente({ t, idioma, valor }: { t: Textos; idioma: Idioma; valor: unknown }) {
+/** Un código interno de lo que dice la fuente («no_confirmada», «si», «aeropuerto», «DE»)
+ *  escrito con las palabras de la página; lo que no es un código, tal cual. */
+function textoDeCodigo(t: Textos, idioma: Idioma, campo: string, texto: string): string {
+  const en = <T extends string>(tabla: Partial<Record<T, string>>): string | undefined =>
+    (tabla as Record<string, string | undefined>)[texto];
+  switch (campo) {
+    case "presencia_dron":
+      return en(t.presencia) ?? texto;
+    case "tipo":
+      return en(t.tipo) ?? texto;
+    case "objetivo.categoria":
+      return en(t.categoria) ?? texto;
+    case "lugar.pais":
+      return /^[A-Z]{2}$/.test(texto) ? pais(texto, idioma) : texto;
+    case "consecuencias.cierre.valor":
+      return texto === "si" ? t.ficha.cierreSinDuracion : texto === "no" ? t.ficha.sinCierre : texto;
+    case "consecuencias.danos.nivel":
+      return en(t.ficha.danos) ?? texto;
+    default:
+      return texto;
+  }
+}
+
+function ValorDeFuente({ t, idioma, valor, campo = "" }: { t: Textos; idioma: Idioma; valor: unknown; campo?: string }) {
   const legible = valorLegible(valor);
   switch (legible.clase) {
     case "desconocido":
@@ -84,9 +107,9 @@ function ValorDeFuente({ t, idioma, valor }: { t: Textos; idioma: Idioma; valor:
     case "rango":
       return <span className="mono">{rango(legible.rango, idioma)}</span>;
     case "instante":
-      return <span className="mono">{fechaHora(legible.valor)}</span>;
+      return <span className="mono">{legible.precision === "dia" || legible.precision === "aproximada" ? instante({ valor: legible.valor, precision: "dia" }) : fechaHora(legible.valor)}</span>;
     case "texto":
-      return <span>{legible.texto}</span>;
+      return <span>{textoDeCodigo(t, idioma, campo, legible.texto)}</span>;
   }
 }
 
@@ -118,7 +141,7 @@ function QueDiceCadaFuente({
               {variosCampos && (
                 <span className="mono block text-secundario">{afirmacion.campo}</span>
               )}
-              <ValorDeFuente t={t} idioma={idioma} valor={afirmacion.valor} />{" "}
+              <ValorDeFuente t={t} idioma={idioma} valor={afirmacion.valor} campo={afirmacion.campo} />{" "}
               <span className="text-secundario">{t.ficha.valorSegun}</span> {afirmacion.medio}{" "}
               <span className="mono rounded-sm border border-linea px-1 text-acento">
                 <span className="sr-only">{t.ficha.codigo(codigo)}</span>
