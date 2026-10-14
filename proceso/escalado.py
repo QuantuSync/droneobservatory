@@ -4,7 +4,9 @@ Lo decide el código, con reglas fijas, mirando la respuesta del modelo base:
 
 1. **poca_seguridad**: el modelo base da una confianza baja (menos de 0,7) a un dato clave.
 2. **duplicado_dudoso**: en el control de duplicados, el modelo base no sabe si dos fichas son el
-   mismo suceso, o su decisión no casa con lo que él mismo dice del día y del sitio.
+   mismo suceso, su decisión no casa con lo que él mismo dice del día y del sitio, o dice que son
+   del mismo día y del mismo sitio y aun así las separa (porque una fuente de una de ellas cita
+   otro suceso: en la prueba del 14 de octubre de 2026 separó así dos duplicados reales).
 3. **contradiccion** y **sin_cita**: las fuentes se contradicen (una autoridad dice que hubo
    drones y otra que no; la verificación de una ficha publicada contradice un dato clave) o un
    dato clave no tiene una frase que esté, literal, en su fuente.
@@ -105,6 +107,8 @@ def motivos_comparacion(decision: dict[str, Any]) -> list[str]:
     )
     if (valor == "mismo") != juntos:
         return ["duplicado_dudoso: la decisión no casa con el día y el sitio"]
+    if valor != "mismo" and decision.get("mismo_dia") is True and decision.get("mismo_sitio") is True:
+        return ["duplicado_dudoso: mismo día y mismo sitio, pero separados"]
     return []
 
 
