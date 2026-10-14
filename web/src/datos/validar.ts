@@ -27,16 +27,27 @@ const MAX_ERRORES = 20;
 type Comprobacion = (valor: unknown, ruta: string, errores: string[]) => void;
 
 /**
- * En el navegador, un campo que esta versión de la web no conoce no invalida el fichero: se
- * ignora. Así, una pestaña abierta antes de que los datos ganen un campo nuevo los sigue leyendo
- * (el 9 de octubre de 2026 una pestaña abierta la víspera no pudo abrir «Previsión» porque el
- * fichero traía su licencia dentro). El build y las pruebas validan cerrado: un campo que no está
- * en el esquema de la web lo para ahí (scripts/datos.ts).
+ * Un campo que esta versión de la web no conoce no invalida el fichero: se ignora. En el navegador,
+ * así una pestaña abierta antes de que los datos ganen un campo nuevo los sigue leyendo (el 9 de
+ * octubre de 2026 una pestaña abierta la víspera no pudo abrir «Previsión» porque el fichero traía
+ * su licencia dentro). En el build también, desde el 14 de octubre de 2026 (scripts/datos.ts): ese
+ * día falló la compilación de producción porque los datos publicados traían un campo nuevo
+ * (`traduccion`) que el código de main aún no conocía. En el build, además, se apunta cada campo
+ * ignorado (camposIgnorados) para dejarlo en su registro. Las pruebas validan cerrado.
  */
 let toleraCamposNuevos = false;
+let ignorados: string[] | null = null;
 
-export function tolerarCamposNuevos(si = true): void {
+export function tolerarCamposNuevos(si = true, apuntar = false): void {
   toleraCamposNuevos = si;
+  ignorados = si && apuntar ? [] : null;
+}
+
+/** Los campos desconocidos ignorados desde la última llamada (solo si se pidió apuntarlos). */
+export function camposIgnorados(): string[] {
+  const lista = ignorados ?? [];
+  if (ignorados !== null) ignorados = [];
+  return lista;
 }
 
 function anotar(errores: string[], ruta: string, mensaje: string): void {
@@ -113,6 +124,7 @@ function objeto(
       const comprobar = opcionales[clave];
       if (comprobar !== undefined) comprobar(hijo, `${ruta}.${clave}`, errores);
       else if (!toleraCamposNuevos) anotar(errores, `${ruta}.${clave}`, "campo desconocido");
+      else if (ignorados !== null && ignorados.length < 100_000) ignorados.push(`${ruta}.${clave}`);
     }
   };
 }

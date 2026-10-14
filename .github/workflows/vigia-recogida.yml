@@ -11,7 +11,10 @@ name: vigia-recogida
 #   fallo;
 # - estado.json (al final de cada recogida): última recogida que publicó (más de 3 horas es
 #   problema), exportación semanal (tras sus reintentos) y captura del seguimiento;
-# - directo.json: la detección en directo de cierres.
+# - directo.json: la detección en directo de cierres;
+# - el despliegue de producción de la web en Vercel (recogida/despliegue_web.py, secreto
+#   EODI_VERCEL_TOKEN): tiene que ser del último commit de main y haber salido bien; si falla, se
+#   pide otro una vez; si sigue fallando, es un problema.
 #
 # Cada problema abre su incidencia (una sola mientras dure) y la cierra al arreglarse: GitHub manda
 # al dueño el correo de la incidencia nueva. El trabajo NO falla por un problema del observatorio
@@ -65,9 +68,16 @@ jobs:
               echo "mensaje_servidor=Alarma de prueba lanzada a mano: no hay ningún problema real."
             } >> "$GITHUB_OUTPUT"
           fi
+      - name: Despliegue de la web en Vercel
+        id: web
+        env:
+          VERCEL_TOKEN: ${{ secrets.EODI_VERCEL_TOKEN }}
+        run: python -m recogida.despliegue_web
       - name: Incidencias
         id: incidencias
         env:
+          P_WEB: ${{ steps.web.outputs.problema_web }}
+          M_WEB: ${{ steps.web.outputs.mensaje_web }}
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
           PRUEBA: ${{ inputs.prueba }}
@@ -110,6 +120,8 @@ jobs:
             "exportación semanal" "Vuelve a haber una exportación correcta."
           incidencia "La detección en directo no se actualiza" "$P_DIRECTO" "$M_DIRECTO" \
             "detección en directo" "La detección en directo vuelve a publicar."
+          incidencia "La web no se publica en Vercel" "${P_WEB:-false}" "${M_WEB:-}" \
+            "si la web no se actualiza" "La compilación de producción vuelve a salir bien."
           incidencia "La captura del seguimiento en directo no recibe datos" "$P_SEGUIMIENTO" \
             "$M_SEGUIMIENTO" "si la captura del seguimiento se para" \
             "La captura del seguimiento vuelve a recibir sin huecos largos."

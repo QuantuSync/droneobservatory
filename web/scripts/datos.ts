@@ -1,8 +1,10 @@
 // Prepara los datos de la web a partir de los datos publicados (scripts/publicacion.ts: la carpeta
 // publicacion/ del repositorio o el almacén público): valida los ficheros públicos
 // contra el esquema, los copia como descargas, genera sus versiones CSV, los resúmenes que
-// carga la web, una ficha por incidente y por ataque, y security.txt. Si un fichero no
-// valida, el build falla y la versión anterior de la web sigue publicada.
+// carga la web, una ficha por incidente y por ataque, y security.txt. El contenido de los datos
+// nunca para el build (scripts/tolerancia.ts): un campo desconocido se ignora, un elemento que no
+// cumple el esquema se quita y un fichero que no se puede usar se toma de la web anterior; todo
+// queda en el registro con líneas «AVISO DE DATOS».
 
 import { access, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
@@ -23,15 +25,18 @@ import { casarZonas, puntoMasCercano } from "../src/datos/guerraSatelite.ts";
 import type { ZonaConfig } from "../src/datos/guerraSatelite.ts";
 import type { PublicacionSinUbicacion } from "../src/datos/tipos.ts";
 import {
+  tolerarCamposNuevos,
   validarColeccion,
   validarPublicacionUcrania,
   validarPrevision,
   validarSinUbicacion,
   validarVersiones,
 } from "../src/datos/validar.ts";
-import type { Resultado } from "../src/datos/validar.ts";
+import type { IndiceVersiones } from "../src/datos/versiones.ts";
 import { RUTA_SECURITY_TXT, securityTxt } from "../src/seguridad/securityTxt.ts";
 import { carpetaPublicacion, leerVersiones } from "./publicacion.ts";
+import { AVISO, aceptar } from "./tolerancia.ts";
+import type { Validar } from "./tolerancia.ts";
 
 const WEB = join(dirname(fileURLToPath(import.meta.url)), "..");
 const CONFIGURACION = join(WEB, "..", "configuracion");
@@ -43,11 +48,45 @@ async function leerJson(ruta: string): Promise<unknown> {
   return JSON.parse(await readFile(ruta, "utf-8")) as unknown;
 }
 
-function exigir<T>(nombre: string, resultado: Resultado<T>): T {
-  if (!resultado.ok) {
-    throw new Error(`${nombre} no cumple el esquema:\n  ${resultado.errores.join("\n  ")}`);
+/** Lo que no se entiende de los datos, para el registro del build (scripts/tolerancia.ts). */
+const avisos: string[] = [];
+
+/** Un fichero sin el que no hay web: si no se puede usar, el build falla (y sigue la anterior). */
+function exigir<T>(nombre: string, datos: T | null): T {
+  if (datos === null) {
+    for (const aviso of avisos) console.warn(`${AVISO}: ${aviso}`);
+    throw new Error(
+      `${nombre}: ni los datos publicados ni los de la web anterior se pueden usar. ` +
+        "El build falla y en producción sigue la versión anterior.",
+    );
   }
-  return resultado.datos;
+  return datos;
+}
+
+/**
+ * Los datos de un fichero publicado ya aceptados (depurados o de la web anterior). Si no son los
+ * que se leyeron tal cual, se reescribe el fichero con ellos: la descarga y la web coinciden.
+ */
+async function usar<T>(
+  ruta: string,
+  validar: Validar<T>,
+  listas: readonly string[],
+  obligatorio: boolean,
+): Promise<T | null> {
+  const nombre = ruta.split(/[\\/]/).pop() ?? ruta;
+  const antes = avisos.length;
+  const aceptado = await aceptar(nombre, () => leerJson(ruta), validar, listas, avisos);
+  if (aceptado === null) {
+    if (obligatorio) return null;
+    avisos.push(`${nombre}: se publica la web sin este fichero`);
+    await rm(ruta, { force: true });
+    return null;
+  }
+  const quitados = avisos.slice(antes).some((a) => !a.includes("campo que la web no conoce"));
+  if (aceptado.origen === "anterior" || quitados) {
+    await writeFile(ruta, JSON.stringify(aceptado.datos), "utf-8");
+  }
+  return aceptado.datos;
 }
 
 async function existe(ruta: string): Promise<boolean> {
@@ -67,17 +106,22 @@ async function escribir(ruta: string, contenido: string): Promise<void> {
 async function principal(): Promise<void> {
   // EODI_PUBLICACION: otra carpeta con los mismos ficheros (pruebas en local con datos de ensayo).
   const PUBLICACION = await carpetaPublicacion(join(WEB, ".."), WEB);
+  // Lo que esta versión de la web no conoce se ignora y se apunta (validar.ts).
+  tolerarCamposNuevos(true, true);
   const rutaIncidentes = join(PUBLICACION, "incidentes.geojson");
   const rutaUcrania = join(PUBLICACION, "ucrania.json");
-  const coleccion = exigir("incidentes.geojson", validarColeccion(await leerJson(rutaIncidentes)));
-  const ucrania = exigir("ucrania.json", validarPublicacionUcrania(await leerJson(rutaUcrania)));
+  const coleccion = exigir(
+    "incidentes.geojson",
+    await usar(rutaIncidentes, validarColeccion, ["features"], true),
+  );
+  const ucrania = exigir(
+    "ucrania.json",
+    await usar(rutaUcrania, validarPublicacionUcrania, ["ataques", "impactos"], true),
+  );
   // Los incidentes sin punto llegan en un fichero aparte, que puede no existir todavía.
   const rutaSinUbicacion = join(PUBLICACION, "incidentes_sin_ubicacion.json");
   const sinUbicacion: PublicacionSinUbicacion | null = (await existe(rutaSinUbicacion))
-    ? exigir(
-        "incidentes_sin_ubicacion.json",
-        validarSinUbicacion(await leerJson(rutaSinUbicacion)),
-      )
+    ? await usar(rutaSinUbicacion, validarSinUbicacion, ["incidentes"], false)
     : null;
 
   await rm(DATOS, { recursive: true, force: true });
@@ -101,12 +145,19 @@ async function principal(): Promise<void> {
 
   await escribir(join(DATOS, "resumen.json"), JSON.stringify(resumen));
   // Las versiones citables (recogida/versiones.py): las listan la metodología y sus páginas.
-  const versiones = exigir("versiones citables", validarVersiones(await leerVersiones(join(WEB, ".."))));
+  const leidas = await aceptar(
+    "versiones.json",
+    () => leerVersiones(join(WEB, "..")),
+    validarVersiones,
+    ["versiones"],
+    avisos,
+  );
+  const versiones: IndiceVersiones = leidas?.datos ?? { versiones: [] };
+  if (leidas === null) avisos.push("versiones.json: se publica la web sin versiones citables");
   await escribir(join(DATOS, "versiones.json"), JSON.stringify(versiones));
   // La previsión (proceso/prevision), validada: se sirve tal cual y la usan sus páginas de texto.
   const rutaPrevision = join(PUBLICACION, "prevision.json");
-  if (await existe(rutaPrevision)) {
-    exigir("prevision.json", validarPrevision(await leerJson(rutaPrevision)));
+  if ((await existe(rutaPrevision)) && (await usar(rutaPrevision, validarPrevision, [], false))) {
     // Con su licencia y sus créditos, como las demás descargas.
     await escribir(join(DATOS, "prevision.json"), await publicado(rutaPrevision));
   }
@@ -161,8 +212,9 @@ async function principal(): Promise<void> {
   await escribir(join(GENERADO, "meta.json"), JSON.stringify(meta(resumen, sinUbicacion !== null)));
   await escribir(join(PUBLICO, RUTA_SECURITY_TXT), securityTxt(new Date()));
 
+  for (const aviso of avisos) console.warn(`${AVISO}: ${aviso}`);
   console.log(
-    `datos: ${coleccion.features.length} incidentes en el mapa, ` +
+    `datos: ${avisos.length} avisos de datos, ${coleccion.features.length} incidentes en el mapa, ` +
       `${sinUbicacion?.incidentes.length ?? 0} con ubicación imprecisa y ` +
       `${ucrania.ataques.length} ataques, ${ucrania.impactos?.length ?? 0} impactos con lugar, ` +
       `${versiones.versiones.length} versiones citables, ` +

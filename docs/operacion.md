@@ -37,7 +37,8 @@ respuesta correcta de la API en 15 minutos o con la API respondiendo 401 o 403, 
 archivo con más de 2 horas, segunda copia con más de 3 horas, copia pública de reserva de Helsinki
 sin estar al día más de 30 minutos, disco por encima del 75 %, servidor
 sin dar señales (salud.json con más de 20 minutos), exportación semanal fallida o con más de 8
-días, detección en directo parada más de media hora, paso de la base a solo disco fallido,
+días, detección en directo parada más de media hora, compilación de producción de la web fallida
+también tras su reintento, paso de la base a solo disco fallido,
 versión citable de los datos del mes sin generar (pasadas las 06:00 UTC del día 1) o una
 publicada que ha cambiado, la barrera de titulares que resuelve sola más de 3 incidentes en un día
 o que deja uno retenido más de 8 horas, e `incidentes.geojson` sin cambiar en 24 horas con
@@ -213,6 +214,25 @@ despliegue) y con cada fusión en `main`.
    construcción falló porque el almacén no respondía, la web anterior sigue publicada y la
    siguiente recogida lo vuelve a pedir. Para pedirlo a mano, en el servidor:
    `sudo -u eodi sh -c 'curl -s -X POST "$(cat /home/eodi/.eodi/vercel_gancho)"'`.
+
+**Los datos nunca paran la compilación** (desde el 14 de octubre de 2026, cuando falló a las 05:07
+y a las 05:12 UTC porque los datos publicados traían un campo, `traduccion`, que el código de main
+aún no conocía: [`web/scripts/tolerancia.ts`](../web/scripts/tolerancia.ts)). Un campo que la web no
+conoce se ignora; un incidente, ataque o impacto que no cumple el esquema se quita de la web y los
+demás se publican; un fichero que no se puede leer se toma de la web anterior
+(`https://droneobservatory.eu/datos/...`), y la previsión, si no vale, se omite. Todo queda en el
+registro de la compilación con líneas `AVISO DE DATOS` (en Vercel, *Deployments* → el despliegue →
+*Build Logs*). Solo falla si no hay forma de tener los datos, y entonces sigue la web anterior.
+
+**La vigilancia lo comprueba** ([`recogida/despliegue_web.py`](../recogida/despliegue_web.py), en
+cada pasada del vigía, secreto `EODI_VERCEL_TOKEN`): el despliegue de producción tiene que ser del
+último commit de main y estar en verde. Si falla, el vigía pide uno nuevo de main (una vez); si
+vuelve a fallar, abre la incidencia «La web no se publica en Vercel», que se cierra sola cuando sale
+bien. A mano:
+
+```
+VERCEL_TOKEN=$(cat ~/.eodi/vercel_token.txt) python -m recogida.despliegue_web --sha $(git rev-parse origin/main) --sin-reintento
+```
 
 ## Si la versión citable del mes no se genera
 
