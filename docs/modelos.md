@@ -125,7 +125,11 @@ tareas mecánicas (traducir, partes de Ucrania, catálogo, documentos oficiales)
   reserva en el tope del día. Un lote que no termina en 25 horas se olvida y sus citas vuelven a
   quedar pendientes.
 - **Traducción de una vez** de las citas que quedaban sin traducir el 14 de octubre de 2026 (modo
-  `traducciones`, 2 USD): `python -m recogida.control_fichas traducir-pendientes`.
+  `traducciones`, 2 USD): `python -m recogida.control_fichas traducir-pendientes`. La primera
+  pasada (303 peticiones, 0,39 USD) tradujo 5.924 citas: con la regla «si ya está en ese idioma,
+  deja vacío», el modelo base dejó vacía una de las dos traducciones en un tercio de las citas en
+  ruso y en ucraniano, y esas no se guardan. Desde entonces se piden siempre las dos (en la sonda,
+  0 vacías de 90) y el registro avisa de cada tanda con citas incompletas.
 
 ## Qué modelo decidió cada dato
 

@@ -1036,6 +1036,10 @@ def procesar_traduccion(ctx: Contexto, peticion: Peticion,
         if es and en:
             nuevas[huella] = {"idioma": idioma, "es": es, "en": en,
                               "version": peticiones.VERSION}  # fmt: skip
+    if len(nuevas) < len(tanda):
+        # Lo que llega sin una de las dos traducciones no se guarda: se vuelve a pedir otro día.
+        registro.warning("traducción %s: %d de %d citas sin las dos traducciones",
+                         peticion.clave, len(tanda) - len(nuevas), len(tanda))  # fmt: skip
     ctx.resultado.traducidas += ctx.almacen.guardar_traducciones(nuevas, _iso(ctx.ahora))
 
 
