@@ -590,7 +590,9 @@ def aplicar_verificaciones(ctx: Contexto) -> None:
     decisiones = {**ctx.decisiones, **ctx.nuevas}
     for incidente in _activos(ctx.almacen):
         decision = decisiones.get(reglas.clave_verificacion(incidente["id"]))
-        if decision is None:
+        if decision is None or decision.get("anulada"):
+            # Una verificación anulada al revisarla (su corrección no era buena) no se aplica;
+            # la ficha se vuelve a verificar cuando llegan fuentes nuevas.
             continue
         verificada = _verificada_vigente(decision, incidente)
         conservar: set[str] = set()
