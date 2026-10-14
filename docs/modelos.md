@@ -147,4 +147,60 @@ llamadas (E escaladas), Y USD; total Z USD». Los nombres de los modelos no sale
 
 ## Prueba comparativa del 14 de octubre de 2026
 
-(Ver el apartado siguiente: resultados y decisión.)
+Antes de cambiar nada, en el servidor sobre una copia de la base y sin publicar nada (gasto 1,85
+USD, tope 3). 73 fichas: los casos fallidos conocidos (Núremberg 00515/00516, los buques de
+Bulgaria 00512-00514), 14 que el repaso del control corrigió en la presencia o el número de
+drones y 54 de muestra variada (países, idiomas, tipos y estados), cada una con la petición tal
+como la hace la recogida (titular y primeras frases de hasta tres fuentes, descargadas de nuevo).
+Y 18 pares de fichas para los duplicados (los conocidos y 14 que el control ya había decidido).
+Tres opciones: **a**) el modelo de antes (Haiku 4.5); **b**) Haiku 5.5 solo; **c**) Haiku 5.5 y,
+cuando las reglas lo piden, Sonnet 5.5, cuya respuesta vale.
+
+Cada desacuerdo entre las tres se juzgó con lo que dicen las fuentes (los datos en que coinciden
+las tres cuentan como acierto de las tres). «Inventado»: un valor que la fuente no da (el «2-10»
+de «drei Piloten», los 45 minutos de cierre de otro aeropuerto); «falta»: la fuente lo dice y la
+ficha no. Presencia y tipo se puntúan como quedan tras las reglas del código (un cierre por dron
+confirma la presencia y hace la interrupción). Los casos que las fuentes no permiten decidir no se
+puntúan.
+
+| Campo | a | b | c |
+|---|---|---|---|
+| es incidente (73) | 70 | 71 | 72 |
+| presencia de dron (71) | 64 | 69 | 68 |
+| número de drones (71) | 45 | 67 | 64 |
+| fecha (64) | 56 | 59 | 62 |
+| lugar (69) | 52 | 66 | 68 |
+| duración del cierre (73) | 68 | 73 | 73 |
+| tipo (66) | 61 | 62 | 65 |
+| estado (66) | 55 | 58 | 62 |
+| **total (553)** | **471** | **525** | **534** |
+| datos inventados | 28 | 2 | 6 |
+| datos que faltan | 33 | 11 | 5 |
+| frases que no están literales en su fuente | 178 | 9 | 0 |
+| duplicados detectados (13 reales) | 11 | 7 (3 dudosos) | 12 (1 dudoso) |
+| duplicados falsos | 0 | 0 | 0 |
+| coste medio por ficha (USD) | 0,0051 | 0,0022 | 0,0282 |
+| coste medio por par (USD) | 0,0039 | 0,0011 | 0,0053 |
+
+El coste de c cuenta el experto sin caché, como en producción. Se escalaron 68 de 73 fichas
+(93 %): la muestra es de incidentes publicados, casi todos críticos (confirmados, cierres,
+incursiones); en la recogida, la mayoría de los candidatos no son incidentes y no se escalan.
+
+**Decisión: se adopta c.** Acierta al menos tanto como a en todos los campos, inventa menos (6
+frente a 28) y detecta más duplicados sin ninguno falso. El base nuevo (b) ya es mejor que el
+de antes en todo, así que la base es Haiku 5.5.
+
+Lo que se vio:
+
+- El modelo de antes inventaba el número de drones (19 veces: «2-10» con un plural, con «drei
+  Piloten», con «câteva aeronave», con «two observations») y se quedaba sin salida en fichas largas
+  (una respuesta cortada en el máximo de 1.500 tokens: Erfurt).
+- El experto también pone «2-10» a veces con un plural sin número (6 veces); el base, casi nunca.
+  La verificación del control lo corrige después (un plural sin cantidad no es un número).
+- El base separaba dos duplicados reales porque una fuente de una de las fichas citaba otro
+  suceso, aunque él mismo decía «mismo día y mismo sitio». Por eso se añadió la regla de escalado
+  «mismo día y mismo sitio, pero separados»; con ella el experto los une (y uno más: los buques
+  del 6 de octubre, que a y b separaban).
+- Un fallo que ninguna regla recoge: el base dijo con seguridad (0,8) que una noticia sobre el
+  ataque a dos buques frente a Biala no era un incidente; no se escaló. Otra ficha del mismo
+  suceso sí se publicó.
