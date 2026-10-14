@@ -446,6 +446,21 @@ def procesar_separado(ctx: Contexto, peticion: Peticion,
     }  # fmt: skip
 
 
+def decision_comprobada(respuesta: dict[str, Any]) -> str:
+    """«mismo» solo con el mismo día, el mismo sitio y ninguna ficha que resuma varios sucesos;
+    si la respuesta dice «mismo» sin eso, queda dudoso."""
+    decision = str(respuesta.get("decision"))
+    if decision != "mismo":
+        return decision
+    if (
+        respuesta.get("mismo_dia") is True
+        and respuesta.get("mismo_sitio") is True
+        and (respuesta.get("varios_sucesos") is False)
+    ):
+        return "mismo"
+    return "dudoso"
+
+
 def procesar_par(ctx: Contexto, peticion: Peticion, respuesta: dict[str, Any] | None) -> None:
     """La decisión del par y, si son el mismo suceso, la unión (se conserva el más antiguo)."""
     clave = peticion.clave
@@ -458,9 +473,10 @@ def procesar_par(ctx: Contexto, peticion: Peticion, respuesta: dict[str, Any] | 
     b = _vivo(ctx.almacen, peticion.datos["b"])
     previa = ctx.decision(clave)
     decision: Documento = {
-        "decision": respuesta["decision"], "huella": peticion.datos["huella"],
+        "decision": decision_comprobada(respuesta), "huella": peticion.datos["huella"],
         "fecha": _iso(ctx.ahora), "motivo_es": str(respuesta.get("motivo_es", ""))[:500],
         "motivo_en": str(respuesta.get("motivo_en", ""))[:500], "version": peticiones.VERSION,
+        **{k: bool(respuesta.get(k)) for k in ("mismo_dia", "mismo_sitio", "varios_sucesos")},
     }  # fmt: skip
     if decision["decision"] == "dudoso":
         decision["desde"] = (previa or {}).get("desde", _iso(ctx.ahora))
@@ -996,6 +1012,9 @@ def repaso(base: Base, fabrica: Callable[[], Any], nom: Nomenclator | None = Non
         modelos = modelos_base() | frozenset(copia.vocabulario("modelo_dron"))
         llamador = Llamador(copia, None, modo, ahora, None, resultado)
         ctx = Contexto(copia, ahora, modelos, llamador, resultado, nom, None, copia.controles())
+        if ronda == "pares":
+            # El lugar que nombra el titular, antes de buscar pares (en la copia, sin guardar).
+            reglas_deterministas(ctx)
         todos = {d["id"] for d in _activos(copia)}
         if ronda == "pares":
             textos: dict[str, str] = {}

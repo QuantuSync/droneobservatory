@@ -1,9 +1,12 @@
 """Control de calidad de las fichas: la parte que no llama a nada (docs/control_fichas.md).
 
-- Pares candidatos a ser el mismo suceso: del mismo país, con los inicios a 48 horas como mucho,
-  a menos de 60 km más los radios si los dos tienen punto (sin punto, solo el país: el lugar
-  aproximado cuenta) y del mismo tipo de sitio. Nunca los que una revisión separó, ni dos cierres
-  del mismo sitio en noches distintas.
+- Pares candidatos a ser el mismo suceso: del mismo país; del mismo día o la misma noche si las
+  dos fechas las escribe una fuente (a 30 horas como mucho), o a 48 horas si alguna es la de
+  publicación; en el mismo sitio si los dos tienen punto (a 15 km más los radios; sin punto, solo
+  el país: el lugar aproximado cuenta) y del mismo tipo de sitio. Nunca los que una revisión
+  separó, ni dos cierres del mismo sitio en noches distintas. El 14 de octubre de 2026 una
+  primera versión, con 48 horas y 60 km para todo, unió derribos de días seguidos y sitios
+  distintos de una misma oleada: se deshizo.
 - La verificación de una ficha: lo que dicen sus fuentes de cada dato, con la frase literal. Una
   frase que no está en el texto de su fuente no cuenta. Con lo que queda se corrige la ficha:
   la presencia no se queda confirmada si una fuente cuenta que no se encontró el dron; el número
@@ -45,7 +48,9 @@ from proceso.ubicacion import (
 from proceso.validaciones import errores_presencia
 
 VENTANA_PAR = timedelta(hours=48)
-MARGEN_PAR_KM = 60.0
+# Con las dos fechas escritas por una fuente: el mismo día o la misma noche.
+VENTANA_PAR_ESCRITA = timedelta(hours=30)
+MARGEN_PAR_KM = 15.0
 MARGEN_MISMO_SITIO_KM = 10.0
 CATEGORIAS_INSTALACION = frozenset(CATEGORIA_LUGAR.values())
 # Una presencia que no se queda confirmada, con la fuente que lo cuenta.
@@ -93,6 +98,12 @@ def mas_antiguo(a: Documento, b: Documento) -> tuple[Documento, Documento]:
 
 
 def _cerca_en_el_tiempo(a: Documento, b: Documento) -> bool:
+    precisiones = {a["tiempo"]["inicio"]["precision"], b["tiempo"]["inicio"]["precision"]}
+    if incidentes.APROXIMADA not in precisiones:
+        # Dos fechas escritas: el mismo día local o la misma noche (proceso/incidentes).
+        return abs(instante(a) - instante(b)) <= VENTANA_PAR_ESCRITA and (
+            incidentes.misma_ventana(*sorted((a, b), key=lambda d: d["tiempo"]["inicio"]["valor"]))
+        )
     if abs(instante(a) - instante(b)) <= VENTANA_PAR:
         return True
     # Con la fecha de publicación, también la primera noticia.

@@ -18,7 +18,7 @@ import json
 from dataclasses import dataclass
 from typing import Any
 
-VERSION = "control/2"
+VERSION = "control/4"
 TEMPERATURA = 0.0
 MAX_SALIDA_COMPARAR = 400
 MAX_SALIDA_VERIFICAR = 1200
@@ -37,8 +37,18 @@ _FUENTE = {"type": "integer"}
 ESQUEMA_COMPARAR: dict[str, Any] = {
     "type": "object",
     "additionalProperties": False,
-    "required": ["decision", "motivo_es", "motivo_en"],
+    "required": [
+        "mismo_dia",
+        "mismo_sitio",
+        "varios_sucesos",
+        "decision",
+        "motivo_es",
+        "motivo_en",
+    ],
     "properties": {
+        "mismo_dia": {"type": "boolean"},
+        "mismo_sitio": {"type": "boolean"},
+        "varios_sucesos": {"type": "boolean"},
         "decision": {"enum": list(DECISIONES)},
         "motivo_es": {"type": "string"},
         "motivo_en": {"type": "string"},
@@ -104,17 +114,24 @@ ESQUEMA_TRADUCIR: dict[str, Any] = {
 INSTRUCCIONES_COMPARAR = """Eres el control de calidad del European Observatory of Drone \
 Incidents. Recibes dos fichas de incidentes con drones del mismo país y de fechas cercanas, cada \
 una con sus fuentes (medio, fecha de publicación, idioma, titular y frase), en idiomas \
-distintos. Decide si cuentan el mismo suceso.
+distintos. Decide si cuentan el mismo suceso, es decir, el mismo hecho físico: el mismo dron o \
+los mismos drones, en el mismo sitio y el mismo día o la misma noche (la misma alerta, el mismo \
+cierre, el mismo derribo, el mismo ataque a un barco).
 
-- mismo: el mismo hecho físico (el mismo dron o los mismos drones en el mismo sitio y en el \
-mismo momento o la misma noche: la misma alerta, el mismo cierre, el mismo ataque, el mismo \
-derribo). También lo es una noticia posterior que vuelve sobre ese hecho (la investigación, \
-las reacciones, el balance), aunque se publique días después. Que una ficha diga solo el país y \
-la otra el aeropuerto no las hace distintas.
-- distinto: hechos distintos: otro día u otra noche («de nuevo», «otra vez», «un segundo \
-ataque»), otro sitio (otro aeropuerto, otra base, otro barco), o una ficha que no cuenta un \
-suceso concreto.
-- dudoso: las fuentes no permiten saberlo.
+- mismo_dia: las dos fichas cuentan algo ocurrido el mismo día o la misma noche (no el día en \
+que se publicó: una noticia posterior sobre ese hecho cuenta como ese día).
+- mismo_sitio: el mismo aeropuerto, la misma base, el mismo barco o la misma localidad. Que una \
+ficha diga solo el país o la zona (aguas búlgaras, la costa) y la otra el sitio con más detalle \
+(los puntos frente a la costa donde se atacó a cada barco) no las hace distintas; dos \
+aeropuertos, dos bases o dos localidades distintas que una ficha cuenta y la otra no, sí, aunque \
+sea la misma noche y la misma oleada de drones.
+- varios_sucesos: una de las dos fichas junta hechos de días o sitios distintos que la otra no \
+cuenta (un balance de varias noches frente a una de ellas, varios derribos frente a uno, varios \
+aeropuertos frente a uno) o no cuenta ninguno concreto. Si las dos cuentan el mismo conjunto (el \
+ataque de esa noche a dos barcos, los drones de esa noche sobre una base), es falso.
+- decision: «mismo» solo si mismo_dia y mismo_sitio son ciertos y varios_sucesos es falso; \
+«distinto» si alguno de los dos es falso («de nuevo», «otra vez», «un segundo ataque», otro día, \
+otro sitio) o si una ficha resume varios sucesos; «dudoso» si las fuentes no permiten saberlo.
 
 Decide solo por lo que dicen las fuentes. Escribe el motivo en una frase, en español \
 (motivo_es) y en inglés (motivo_en), con el dato que lo decide (el sitio, el día, la hora)."""
