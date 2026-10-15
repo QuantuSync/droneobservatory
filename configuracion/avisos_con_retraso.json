@@ -1,5 +1,5 @@
 {
-  "_descripcion": "Incidentes que la barrera de titulares (proceso/cita_titular.py) retuvo sin publicar desde el 9 de octubre de 2026 y que se avisan por ntfy al publicarse aunque su suceso pase de las 72 horas, si lo habrían merecido al publicarse a tiempo: la ventana se mide desde su alta en la base (recogida/avisos.py). Solo valen los dados de alta desde «desde». El texto del aviso termina con la nota en los dos idiomas. Cada incidente se avisa una sola vez, como todos.",
+  "_descripcion": "Incidentes que la barrera de titulares (proceso/cita_titular.py) o el control de las fichas esperando al modelo experto retuvieron sin publicar desde el 9 de octubre de 2026 y que se avisan por ntfy al publicarse aunque su suceso pase de las 72 horas, si lo habrían merecido al publicarse a tiempo: la ventana se mide desde su alta en la base (recogida/avisos.py). Solo valen los dados de alta desde «desde». El texto del aviso termina con la nota en los dos idiomas. Cada incidente se avisa una sola vez, como todos.",
   "desde": "2026-10-09T00:00:00Z",
   "nota": {
     "es": "Aviso con retraso por un fallo de publicación",
@@ -7,6 +7,8 @@
   },
   "incidentes": {
     "EODI-2026-00507": "retenido desde el 9 de octubre de 2026: su cita no nombraba Leknes",
-    "EODI-2026-00509": "retenido desde el 11 de octubre de 2026: su cita no nombraba Moldavia ni Anenii Noi"
+    "EODI-2026-00509": "retenido desde el 11 de octubre de 2026: su cita no nombraba Moldavia ni Anenii Noi",
+    "EODI-2026-00536": "retenido desde el 15 de octubre de 2026: posible duplicado esperando al experto, que había agotado su tope",
+    "EODI-2026-00539": "retenido desde el 15 de octubre de 2026: posible duplicado esperando al experto, que había agotado su tope"
   }
 }

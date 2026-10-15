@@ -411,6 +411,24 @@ def _json(documento: Any) -> str:
     return json.dumps(documento, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
 
 
+def sin_afirmaciones_repetidas(documento: Documento) -> Documento:
+    """El documento sin las afirmaciones repetidas (iguales en todo), con la primera de cada una;
+    el mismo documento si no hay ninguna."""
+    afirmaciones = documento.get("afirmaciones")
+    if not afirmaciones:
+        return documento
+    unicas: list[Documento] = []
+    vistas: set[str] = set()
+    for afirmacion in afirmaciones:
+        clave = json.dumps(afirmacion, sort_keys=True, ensure_ascii=False)
+        if clave not in vistas:
+            vistas.add(clave)
+            unicas.append(afirmacion)
+    if len(unicas) == len(afirmaciones):
+        return documento
+    return {**documento, "afirmaciones": unicas}
+
+
 class Almacen:
     def __init__(self, conexion: sqlite3.Connection) -> None:
         self._conexion = conexion
@@ -467,6 +485,9 @@ class Almacen:
     def guardar_incidente(
         self, documento: Documento, ahora: datetime, vocabulario_modelos: frozenset[str]
     ) -> None:
+        """Guarda la versión nueva del incidente. Las afirmaciones repetidas no se escriben, y una
+        versión igual a la guardada no deja cambio en el historial."""
+        documento = sin_afirmaciones_repetidas(documento)
         errores = validar_incidente(documento, ahora, vocabulario_modelos)
         if errores:
             raise DocumentoInvalido(errores)
@@ -1260,8 +1281,12 @@ class Almacen:
         ]
 
     def gastado(self, modo: str, dia: str | None = None) -> float:
-        """Dólares gastados en un modo; con `dia` (AAAA-MM-DD), solo ese día UTC."""
-        sql = "SELECT coalesce(sum(coste), 0) FROM llamadas_extractor WHERE modo = ?"
+        """Dólares gastados en un modo; con `dia` (AAAA-MM-DD), solo ese día UTC. Las llamadas al
+        experto (escaladas) no cuentan: van solo contra su tope (modelo/coste.py)."""
+        sql = (
+            "SELECT coalesce(sum(coste), 0) FROM llamadas_extractor WHERE modo = ? AND id NOT IN "
+            "(SELECT llamada FROM llamadas_modelo WHERE escalada = 1)"
+        )
         parametros: tuple[Any, ...] = (modo,)
         if dia is not None:
             sql += " AND substr(fecha, 1, 10) = ?"

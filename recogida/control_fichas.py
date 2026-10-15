@@ -191,9 +191,11 @@ class Llamador:
         # recogidas horarias del mismo día).
         self.tope: float | None = None
         # De la última llamada: el modelo que dio la respuesta que vale, los motivos del
-        # escalado y, si esperaba al experto y no pudo ser, hasta cuándo espera.
+        # escalado, si el caso era crítico y, si esperaba al experto y no pudo ser, hasta cuándo
+        # espera.
         self.ultimo_modelo = ""
         self.ultimos_motivos: list[str] = []
+        self.ultimo_critico = False
         self.ultima_espera: str | None = None
 
     @property
@@ -210,15 +212,18 @@ class Llamador:
 
     def llamar(
         self, cuerpo: dict[str, Any], max_salida: int, clave: str,
-        escalar: Callable[[dict[str, Any]], list[str]] | None = None,
+        escalar: Callable[[dict[str, Any]], list[str]] | None = None, critico: bool = False,
     ) -> dict[str, Any] | None:  # fmt: skip
         """La respuesta leída, o None si no se puede llamar (y queda la parada).
 
         Con `escalar` (los motivos para escalar una respuesta leída del base), la llamada se
         repite con el experto si hay motivos y vale la suya; si el experto no puede ahora,
-        devuelve None sin parar nada y deja en `ultima_espera` hasta cuándo espera.
+        devuelve None sin parar nada y deja en `ultima_espera` hasta cuándo espera. El experto
+        paga con su tope (y con la reserva crítica si el caso es `critico` o sus motivos lo
+        hacen crítico), nunca con el del modo.
         """
         self.ultimo_modelo, self.ultimos_motivos, self.ultima_espera = "", [], None
+        self.ultimo_critico = False
         leida = self._llamar_base(cuerpo, max_salida, clave)
         if escalar is None or self._servicio is None:
             return leida
@@ -232,22 +237,18 @@ class Llamador:
         if cliente_experto is None:
             return leida
         self.ultimos_motivos = motivos
+        self.ultimo_critico = critico = critico or escalado.es_critico(motivos)
         modelo_experto = str(getattr(cliente_experto, "modelo", ""))
         esfuerzo = (cuerpo.get("output_config") or {}).get("effort")
         previsto = coste.peor_caso(peticiones.letras(cuerpo), max_salida, modelo=modelo_experto,
                                    esfuerzo=esfuerzo)  # fmt: skip
         dia = coste.dia(self.ahora)
         try:
-            coste.comprobar_experto(self.almacen.gastado_modelo(modelo_experto, dia), previsto)
-            gastado = self.almacen.gastado(
-                self.modo.value, dia if coste.diario(self.modo) else None
+            coste.comprobar_experto(
+                self.almacen.gastado_modelo(modelo_experto, dia), previsto, critico
             )
-            coste.comprobar(gastado, previsto, self.modo)
-            if self.tope is not None and gastado + previsto > self.tope:
-                raise coste.LimiteGasto(f"{self.modo}: tope de la pasada {self.tope:.2f} USD")
         except coste.LimiteGasto:
-            siguiente = self.ahora.astimezone(UTC) + timedelta(days=1)
-            self._esperar(clave, siguiente.strftime("%Y-%m-%dT00:00:00Z"))
+            self._esperar(clave, coste.espera_experto(self.ahora, critico))
             return None
         try:
             respuesta = cliente_experto.mensaje(cuerpo)
@@ -589,8 +590,11 @@ def pares_por_decidir(
                 continue
             if previa["decision"] == "dudoso" and previa.get("espera_experto"):
                 # Espera al experto: no se resuelve solo a las 6 horas; se vuelve a comparar
-                # cuando el experto puede (el día siguiente o la recogida siguiente).
-                if _iso(ctx.ahora) < str(previa["espera_experto"]):
+                # cuando el experto puede (el día siguiente, la recogida siguiente si es crítico
+                # o en cuanto sube su tope).
+                if not coste.espera_vencida(
+                    str(previa["espera_experto"]), _iso(ctx.ahora), previa.get("tope_experto")
+                ):
                     ctx.resultado.dudosos.append(clave)
                     continue
                 resultado.append((a, b, huella))
@@ -618,9 +622,12 @@ def peticion_par(ctx: Contexto, a: Documento, b: Documento, huella: str,
     # La que se uniría a la otra, si ya está publicada: esa unión solo la decide el experto.
     une = reglas.mas_antiguo(a, b)[1]["id"]
     une_publicada = une if une not in retenidos(ctx.almacen) else None
+    # Crítico para el gasto del experto: la unión retiraría una publicada, o una de las dos es
+    # un caso crítico.
+    es_critico = une_publicada is not None or critico(a) or critico(b)
     return Peticion("par", clave, cuerpo, peticiones.MAX_SALIDA_COMPARAR,
                     {"a": a["id"], "b": b["id"], "huella": huella,
-                     "une_publicada": une_publicada})  # fmt: skip
+                     "une_publicada": une_publicada, "critico": es_critico})  # fmt: skip
 
 
 def motivos_par(peticion: Peticion) -> Callable[[dict[str, Any]], list[str]]:
@@ -686,8 +693,11 @@ def procesar_par(ctx: Contexto, peticion: Peticion, respuesta: dict[str, Any] | 
             "decision": "dudoso", "huella": peticion.datos["huella"], "fecha": _iso(ctx.ahora),
             "desde": anterior.get("desde", _iso(ctx.ahora)), "version": peticiones.VERSION,
             "espera_experto": ctx.llamador.ultima_espera,
+            "tope_experto": coste.LIMITE_EXPERTO_DIARIO_USD,
             "escalado": ctx.llamador.ultimos_motivos,
         }  # fmt: skip
+        if ctx.llamador.ultimo_critico:
+            ctx.nuevas[clave]["critico"] = True
         ctx.resultado.dudosos.append(clave)
         return
     if respuesta is None or respuesta.get("decision") not in peticiones.DECISIONES:
@@ -743,7 +753,8 @@ def comparar_pares(ctx: Contexto, foco: set[str], revisar_decididos: bool = True
             continue
         peticion = peticion_par(ctx, a2, b2, huella, textos)
         respuesta = ctx.llamador.llamar(peticion.cuerpo, peticion.max_salida, clave,
-                                        motivos_par(peticion))  # fmt: skip
+                                        motivos_par(peticion),
+                                        bool(peticion.datos.get("critico")))  # fmt: skip
         procesar_par(ctx, peticion, respuesta)
 
 
@@ -761,7 +772,9 @@ def por_verificar(
         previa = ctx.decision(reglas.clave_verificacion(incidente["id"]))
         if previa is not None and previa.get("espera_experto"):
             # Espera al experto: se vuelve a verificar cuando puede.
-            if _iso(ctx.ahora) >= str(previa["espera_experto"]):
+            if coste.espera_vencida(
+                str(previa["espera_experto"]), _iso(ctx.ahora), previa.get("tope_experto")
+            ):
                 resultado.append(incidente)
             continue
         if previa is not None and previa.get("huella") == reglas.huella_fuentes(incidente):
@@ -792,17 +805,35 @@ def peticion_verificacion(ctx: Contexto, incidente: Documento) -> Peticion:
 
 
 def critico(incidente: Documento) -> bool:
-    """Un caso crítico para el escalado: confirmado o atribuido, incursión en un país de la
-    OTAN o en Moldavia, o cierre de aeropuerto."""
+    """Un caso crítico para el escalado y la reserva crítica del experto: confirmado o
+    atribuido, incursión o suceso en una base militar de un país de la OTAN o de Moldavia,
+    cierre de aeropuerto, o con víctimas, heridos o daños."""
     pais = str(incidente.get("pais") or (incidente.get("lugar") or {}).get("pais") or "")
-    cierre = ((incidente.get("consecuencias") or {}).get("cierre") or {}).get("valor")
+    consecuencias = incidente.get("consecuencias") or {}
+    cierre = (consecuencias.get("cierre") or {}).get("valor")
+    danos = (consecuencias.get("danos") or {}).get("nivel")
+    personas = [consecuencias.get(c) for c in ("heridos", "fallecidos")]
+    lugar = incidente.get("lugar") or {}
+    titulos = tuple(str(t) for t in (incidente.get("titulo") or {}).values())
+    nombres = tuple(str(lugar.get(c) or "") for c in ("nombre", "suceso", "sitio"))
     return (
         incidente.get("presencia_dron") == "confirmada"
         or incidente.get("estado", {}).get("actual") in {"confirmado", "atribuido"}
-        or (incidente.get("tipo") == "incursion"
-            and (pais in escalado.paises_otan() or pais in escalado.PAISES_CRITICOS_EXTRA))
+        or (incidente.get("tipo") == "incursion" and escalado.critico_otan(pais))
         or cierre == "si"
+        or danos in {"menores", "graves"}
+        or any(_con_personas(p) for p in personas)
+        or escalado.es_critico([], (*titulos, *nombres), pais)
     )  # fmt: skip
+
+
+def _con_personas(rango: Any) -> bool:
+    """Un número de heridos o fallecidos que no es cero ni desconocido."""
+    if isinstance(rango, int | float):
+        return rango > 0
+    if isinstance(rango, dict):
+        return any(isinstance(v, int | float) and v > 0 for v in rango.values())
+    return False
 
 
 # La presencia que lee la verificación frente a la de la ficha: lo que la contradice.
@@ -838,11 +869,16 @@ def procesar_verificacion(ctx: Contexto, peticion: Peticion,
                           respuesta: dict[str, Any] | None) -> None:  # fmt: skip
     if respuesta is None and ctx.llamador.ultima_espera:
         # Contradice la ficha y el experto no puede ahora: se espera, sin aplicar nada.
+        anterior = ctx.decision(peticion.clave) or {}
         ctx.nuevas[peticion.clave] = {
             "huella": peticion.datos["huella"], "fecha": _iso(ctx.ahora),
             "version": peticiones.VERSION, "espera_experto": ctx.llamador.ultima_espera,
+            "tope_experto": coste.LIMITE_EXPERTO_DIARIO_USD,
+            "desde": anterior.get("desde") if anterior.get("espera_experto") else _iso(ctx.ahora),
             "escalado": ctx.llamador.ultimos_motivos,
         }  # fmt: skip
+        if ctx.llamador.ultimo_critico:
+            ctx.nuevas[peticion.clave]["critico"] = True
         return
     if respuesta is None:
         return
@@ -878,7 +914,8 @@ def verificar(ctx: Contexto, foco: set[str], espera: timedelta | None = None) ->
             break
         peticion = peticion_verificacion(ctx, incidente)
         respuesta = ctx.llamador.llamar(peticion.cuerpo, peticion.max_salida, peticion.clave,
-                                        motivos_verificacion(peticion))  # fmt: skip
+                                        motivos_verificacion(peticion),
+                                        bool(peticion.datos.get("critico")))  # fmt: skip
         procesar_verificacion(ctx, peticion, respuesta)
 
 
@@ -1294,6 +1331,7 @@ class Respuestas:
     modelos: dict[str, str] = field(default_factory=dict)
     motivos: dict[str, list[str]] = field(default_factory=dict)
     esperas: dict[str, str] = field(default_factory=dict)
+    criticos: set[str] = field(default_factory=set)
 
 
 def _peor_lote(peticion: Peticion) -> float:
@@ -1368,7 +1406,8 @@ def escalar_lote(
     ahora: datetime, modo: coste.Modo,
 ) -> None:  # fmt: skip
     """Las respuestas del lote (del modelo base) que piden escalado se repiten con el experto,
-    con llamadas directas dentro de su tope diario; lo que no cabe espera al día siguiente.
+    con llamadas directas dentro de su tope diario (los críticos, también de la reserva crítica);
+    lo que no cabe espera al día siguiente, o a la recogida siguiente si es crítico.
     Se hace sin el cerrojo, sobre una copia: las llamadas al experto quedan en
     `respuestas.llamadas_experto` para anotarlas después en la base."""
     experto = getattr(servicio, "experto", None)
@@ -1389,14 +1428,16 @@ def escalar_lote(
         if not motivos:
             continue
         respuestas.motivos[peticion.clave] = motivos
+        es_critico = bool(peticion.datos.get("critico")) or escalado.es_critico(motivos)
+        if es_critico:
+            respuestas.criticos.add(peticion.clave)
         esfuerzo = (peticion.cuerpo.get("output_config") or {}).get("effort")
         previsto = coste.peor_caso(peticiones.letras(peticion.cuerpo), peticion.max_salida,
                                    modelo=modelo_experto, esfuerzo=esfuerzo)  # fmt: skip
         try:
-            coste.comprobar_experto(gastado_experto, previsto)
+            coste.comprobar_experto(gastado_experto, previsto, es_critico)
         except coste.LimiteGasto:
-            siguiente = ahora.astimezone(UTC) + timedelta(days=1)
-            respuestas.esperas[peticion.clave] = siguiente.strftime("%Y-%m-%dT00:00:00Z")
+            respuestas.esperas[peticion.clave] = coste.espera_experto(ahora, es_critico)
             respuestas.leidas[peticion.clave] = None
             continue
         try:
@@ -1434,6 +1475,7 @@ def procesar_respuestas(ctx: Contexto, lista: list[Peticion], respuestas: Respue
         respuesta = respuestas.leidas[peticion.clave]
         ctx.llamador.ultimo_modelo = respuestas.modelos.get(peticion.clave, "")
         ctx.llamador.ultimos_motivos = respuestas.motivos.get(peticion.clave, [])
+        ctx.llamador.ultimo_critico = peticion.clave in respuestas.criticos
         ctx.llamador.ultima_espera = respuestas.esperas.get(peticion.clave)
         if ctx.llamador.ultima_espera:
             ctx.resultado.esperan_experto.append(peticion.clave)
@@ -1812,6 +1854,8 @@ def escribir_estado(ruta: Path, resultado: Resultado | None, almacen: Almacen,
         "retenidos": cursor.get("retenidos", {}),
         "pasadas": pasadas,
         "modelos": gasto_por_modelo(almacen, ahora, anterior.get("modelos") or {}),
+        "experto": gasto_experto(almacen, ahora, anterior.get("experto") or {}),
+        "criticos_esperando": criticos_esperando(almacen),
     }
     ruta.parent.mkdir(parents=True, exist_ok=True)
     temporal = ruta.with_suffix(".tmp")
@@ -1857,6 +1901,44 @@ def gasto_por_modelo(almacen: Almacen, ahora: datetime, anterior: Documento) -> 
             cuenta["coste"] = round(cuenta["coste"] + fila["coste"], 6)
         dias[dia.isoformat()] = papeles
     return dias
+
+
+def gasto_experto(almacen: Almacen, ahora: datetime, anterior: Documento) -> Documento:
+    """Lo que gastó el experto cada día UTC, repartido entre su tope normal y la reserva crítica
+    (modelo/coste.py), con los dos topes: hoy y ayer se recalculan con la base."""
+    from modelo import modelos
+
+    experto = modelos.experto()
+    hoy = ahora.astimezone(UTC).date()
+    dias: Documento = {d: v for d, v in anterior.items()
+                       if d >= (hoy - timedelta(days=DIAS_MODELOS)).isoformat()}  # fmt: skip
+    for dia in (hoy - timedelta(days=1), hoy):
+        gastado = almacen.gastado_modelo(experto, dia.isoformat()) if experto else 0.0
+        dias[dia.isoformat()] = {
+            **coste.reparto_experto(gastado), "limite": coste.LIMITE_EXPERTO_DIARIO_USD,
+            "reserva_limite": coste.RESERVA_CRITICA_DIARIA_USD,
+        }  # fmt: skip
+    return dias
+
+
+def criticos_esperando(almacen: Almacen) -> list[Documento]:
+    """Los casos críticos que esperan al experto ahora (candidatos, pares y verificaciones), con
+    desde cuándo (la reserva crítica se agotó o el experto falló): se reintentan en cada
+    recogida."""
+    from proceso import extraccion
+
+    casos = [
+        {"clave": clave, "desde": str(e.get("desde") or "")}
+        for clave, e in extraccion.esperan_experto(almacen).items()
+        if isinstance(e, dict) and e.get("critico")
+    ]
+    casos += [
+        {"clave": clave, "desde": str(d.get("desde") or d.get("fecha") or "")}
+        for clave, d in almacen.controles().items()
+        if d.get("espera_experto") and d.get("critico") and "datos" not in d
+        and d.get("decision", "dudoso") == "dudoso"
+    ]  # fmt: skip
+    return sorted(casos, key=lambda c: c["desde"])
 
 
 def base_del_servidor(temporal: Path, correo: str, cerrojo: Path | None) -> Base:

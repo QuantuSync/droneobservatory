@@ -28,11 +28,14 @@ recogidas distintas se retira con su motivo y no vuelve a intentarse. Los que no
 artículo en un idioma reconocido también se anotan ahí y no se llaman mientras sigan así.
 
 Dos modelos (docs/modelos.md): la ficha la hace el modelo base y, si las reglas de
-proceso/escalado.py lo piden, se repite con el experto y vale la suya. Si el experto ha agotado
-su tope del día (o no responde), el candidato espera (cursor `esperan_experto`) en vez de
-publicarse con la ficha del base; los demás siguen. El que espera por el tope vuelve al día
-siguiente (UTC); el que espera por un fallo, en la recogida siguiente. Cada ficha guarda qué
-modelo la decidió y la extracción, por qué se escaló.
+proceso/escalado.py lo piden, se repite con el experto y vale la suya. Las llamadas al experto
+cuentan solo contra su propio tope (modelo/coste.py), nunca contra el del modo. Si el experto ha
+agotado su tope del día (o no responde), el candidato espera (cursor `esperan_experto`) en vez de
+publicarse con la ficha del base; los demás siguen. Un caso crítico (escalado.es_critico) usa
+antes la reserva crítica y, si también se agotó, se reintenta en cada recogida; el que no es
+crítico y espera por el tope vuelve al día siguiente (UTC), o antes si el tope sube; el que espera
+por un fallo, en la recogida siguiente. Cada ficha guarda qué modelo la decidió y la extracción,
+por qué se escaló.
 
 Nada publicado se retira ni se rebaja sin el experto: una ficha del base que retiraría o
 rebajaría la ficha ya publicada de su candidato se escala siempre y, si llega sin el experto (un
@@ -224,26 +227,32 @@ def esperan_experto(almacen: Almacen) -> dict[str, Any]:
 def espera_experto(almacen: Almacen, candidato_id: str, ahora: datetime) -> bool:
     """El candidato espera al experto en este momento (no se llama)."""
     entrada = esperan_experto(almacen).get(candidato_id)
-    return isinstance(entrada, dict) and str(entrada.get("hasta", "")) > _fecha(ahora)
+    return isinstance(entrada, dict) and not coste.espera_vencida(
+        str(entrada.get("hasta", "")), _fecha(ahora), entrada.get("tope")
+    )
 
 
 def anotar_espera(
     almacen: Almacen, candidato_id: str, motivos: list[str], ahora: datetime, por_tope: bool,
-    revision: bool = False,
+    revision: bool = False, critico: bool = False,
 ) -> None:  # fmt: skip
-    """El candidato espera al experto: hasta el día siguiente (UTC) si se agotó su tope, hasta
-    la recogida siguiente si falló. Con `revision`, se vuelve a extraer aunque sus artículos no
-    hayan cambiado y se escala siempre, con esos motivos."""
+    """El candidato espera al experto: si se agotó su tope, hasta el día siguiente (UTC), o hasta
+    la recogida siguiente si es crítico (se agotó también la reserva); si falló, hasta la
+    recogida siguiente. Con `revision`, se vuelve a extraer aunque sus artículos no hayan cambiado
+    y se escala siempre, con esos motivos."""
     documento = esperan_experto(almacen)
     if por_tope:
-        hasta = (ahora.astimezone(UTC) + timedelta(days=1)).strftime("%Y-%m-%dT00:00:00Z")
+        hasta = coste.espera_experto(ahora, critico)
     else:
         hasta = _fecha(ahora + ESPERA_FALLO_EXPERTO)
     anterior = documento.get(candidato_id, {})
     documento[candidato_id] = {
         "hasta": hasta, "desde": anterior.get("desde", _fecha(ahora)),
         "motivos": motivos[:10], "por": "tope" if por_tope else "fallo",
+        "tope": coste.LIMITE_EXPERTO_DIARIO_USD,
     }  # fmt: skip
+    if critico or anterior.get("critico"):
+        documento[candidato_id]["critico"] = True
     if revision or anterior.get("revision"):
         documento[candidato_id]["revision"] = True
     registro.info("candidato %s espera al experto hasta %s: %s", candidato_id, hasta,
@@ -642,7 +651,7 @@ def procesar_respuesta(
             documento["ficha_base"] = documento.pop("ficha")
         documento["conservada"] = conservar
         incidente_id = publicada["id"]
-        anotar_espera(almacen, peticion.candidato["id"], conservar, ahora, False, True)
+        anotar_espera(almacen, peticion.candidato["id"], conservar, ahora, False, True, True)
         registro.warning("candidato %s: %s; se repite con el experto", peticion.candidato["id"],
                          "; ".join(conservar))  # fmt: skip
     if incidente_id is None:
@@ -675,10 +684,13 @@ def anotar_llamada(
 class EsperaExperto(Exception):
     """La ficha necesita al experto y no puede ser ahora (tope del día o fallo)."""
 
-    def __init__(self, motivos: list[str], por_tope: bool, detalle: str) -> None:
+    def __init__(
+        self, motivos: list[str], por_tope: bool, detalle: str, critico: bool = False
+    ) -> None:
         super().__init__(detalle)
         self.motivos = motivos
         self.por_tope = por_tope
+        self.critico = critico
 
 
 def textos_de(peticion: Peticion) -> tuple[str, ...]:
@@ -730,8 +742,9 @@ def escalar(
     """La respuesta que vale y, si se escaló, los motivos.
 
     Si el cliente tiene experto y las reglas piden escalar, la llamada del base se anota aquí y
-    se llama al experto dentro de su tope diario y del tope del modo. Lanza EsperaExperto si no
-    se puede ahora: el candidato espera y la ficha del base no se publica.
+    se llama al experto dentro de su tope diario (o de la reserva crítica, si el caso es crítico),
+    sin contar contra el tope del modo. Lanza EsperaExperto si no se puede ahora: el candidato
+    espera y la ficha del base no se publica.
     """
     fabrica_experto = getattr(cliente, "experto", None)
     experto = fabrica_experto() if callable(fabrica_experto) else None
@@ -750,18 +763,21 @@ def escalar(
     previsto = coste.peor_caso(
         peticion.letras(), ficha.MAX_TOKENS_SALIDA, modelo=modelo_experto, esfuerzo=ficha.ESFUERZO
     )
-    dia = coste.dia(ahora)
+    critico = bool(espera.get("critico")) or escalado.es_critico(
+        motivos, textos_de(peticion), peticion.objetivo.pais, peticion.objetivo.categoria
+    )
     try:
-        coste.comprobar_experto(almacen.gastado_modelo(modelo_experto, dia), previsto)
-        coste.comprobar(
-            almacen.gastado(modo.value, dia if coste.diario(modo) else None), previsto, modo
+        tramo = coste.comprobar_experto(
+            almacen.gastado_modelo(modelo_experto, coste.dia(ahora)), previsto, critico
         )
     except coste.LimiteGasto as error:
-        raise EsperaExperto(motivos, True, str(error)) from error
+        raise EsperaExperto(motivos, True, str(error), critico) from error
+    if tramo is coste.Tramo.RESERVA:
+        registro.info("candidato %s: el experto usa la reserva crítica", candidato_id)
     try:
         return experto.mensaje(peticion.cuerpo()), motivos
     except LlamadaFallida as error:
-        raise EsperaExperto(motivos, False, str(error)) from error
+        raise EsperaExperto(motivos, False, str(error), critico) from error
 
 
 def incidente_del_candidato(
@@ -1119,7 +1135,8 @@ def extraer(
             except EsperaExperto as espera:
                 # La ficha necesita al experto y no puede ser ahora: el candidato espera y los
                 # demás siguen (la llamada del base ya está anotada).
-                anotar_espera(almacen, candidato_id, espera.motivos, ahora, espera.por_tope)
+                anotar_espera(almacen, candidato_id, espera.motivos, ahora, espera.por_tope,
+                              critico=espera.critico)  # fmt: skip
                 hechas.esperan.append(candidato_id)
                 continue
         except TiempoAgotado as error:

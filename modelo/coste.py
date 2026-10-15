@@ -33,8 +33,13 @@ Límites, compartidos por todo lo que llama al extractor:
 El barrido del catálogo vivo (recogida/catalogo_vivo.py) lleva su propio registro de gasto
 fuera de la base: 0,10 dólares al día y 3 dólares una vez para su primera pasada.
 
-El modelo experto tiene además su propio tope diario, sumando todos los modos: 0,30 dólares
-(LIMITE_EXPERTO_DIARIO_USD). Lo que gasta cuenta también en el modo de la llamada.
+El modelo experto lleva su propio gasto, aparte de todos los modos (docs/modelos.md): lo que
+gasta cuenta solo contra su tope, nunca contra el de la recogida horaria ni el de otro modo. Tiene
+1 dólar al día (LIMITE_EXPERTO_DIARIO_USD) y, aparte, una reserva crítica de 0,50 dólares al día
+(RESERVA_CRITICA_DIARIA_USD) que solo usan los casos críticos (proceso/escalado.es_critico) cuando
+el tope normal ya no da. Lo que el experto gasta por encima de 1 dólar en un día es de la reserva.
+Un caso que no cabe espera: el normal, al día siguiente (UTC), porque su tope no se renueva
+antes; el crítico, a la recogida siguiente, y se reintenta en cada una.
 
 Antes de cada llamada se suma lo gastado y el peor caso de la llamada (sus
 tokens de entrada estimados y el máximo de salida); si pasa del límite, no se
@@ -42,7 +47,7 @@ llama.
 """
 
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import UTC, datetime, timedelta
 from enum import StrEnum
 from typing import Any
 
@@ -66,8 +71,15 @@ LIMITE_CONTROL_DIARIO_USD = 0.15
 LIMITE_CONTROL_REPASO_USD = 9.46
 # Traducción de una sola vez de las citas atrasadas (14 de octubre de 2026), por lote.
 LIMITE_TRADUCCIONES_USD = 2.00
-# Tope diario del modelo experto, en todos los modos juntos.
-LIMITE_EXPERTO_DIARIO_USD = 0.30
+# Tope diario del modelo experto, en todos los modos juntos y aparte de ellos.
+LIMITE_EXPERTO_DIARIO_USD = 1.00
+# Reserva crítica del experto, aparte del tope: solo para los casos críticos.
+RESERVA_CRITICA_DIARIA_USD = 0.50
+# Tope del experto antes del 15 de octubre de 2026: una espera anotada sin su tope es de entonces.
+LIMITE_EXPERTO_ANTERIOR_USD = 0.30
+# Un caso que espera al experto por un fallo, o crítico con la reserva agotada, vuelve a la
+# recogida siguiente (cada hora).
+ESPERA_REINTENTO = timedelta(minutes=50)
 # Una letra son unos 0,3 tokens en los idiomas europeos; se estima por lo alto con 0,5
 # para que el peor caso no se quede corto.
 TOKENS_POR_LETRA = 0.5
@@ -133,13 +145,51 @@ def peor_caso(
     return Uso(int(letras_entrada * TOKENS_POR_LETRA), salida, modelo=nombre).coste(lote)
 
 
-def comprobar_experto(gastado_hoy: float, previsto: float) -> None:
-    """Lanza LimiteGasto si el experto pasaría hoy de su tope diario."""
-    if gastado_hoy + previsto > LIMITE_EXPERTO_DIARIO_USD:
-        raise LimiteGasto(
-            f"experto: gastado {gastado_hoy:.4f} + previsto {previsto:.4f} > "
-            f"{LIMITE_EXPERTO_DIARIO_USD:.2f} USD"
-        )
+class Tramo(StrEnum):
+    NORMAL = "normal"
+    RESERVA = "reserva"
+
+
+def comprobar_experto(gastado_hoy: float, previsto: float, critico: bool = False) -> Tramo:
+    """El tramo del experto que paga la llamada: el tope normal si cabe y, si no, la reserva
+    crítica, solo para un caso crítico. Lanza LimiteGasto si no cabe en ninguno."""
+    if gastado_hoy + previsto <= LIMITE_EXPERTO_DIARIO_USD:
+        return Tramo.NORMAL
+    if critico and gastado_hoy + previsto <= LIMITE_EXPERTO_DIARIO_USD + RESERVA_CRITICA_DIARIA_USD:
+        return Tramo.RESERVA
+    tope = LIMITE_EXPERTO_DIARIO_USD + (RESERVA_CRITICA_DIARIA_USD if critico else 0.0)
+    raise LimiteGasto(
+        f"experto{' (reserva crítica)' if critico else ''}: gastado {gastado_hoy:.4f} + "
+        f"previsto {previsto:.4f} > {tope:.2f} USD"
+    )
+
+
+def reparto_experto(gastado_hoy: float) -> dict[str, float]:
+    """Lo que el experto gastó en el día, repartido entre el tope normal y la reserva crítica
+    (lo que pasa de 1 dólar)."""
+    return {
+        "normal": round(min(gastado_hoy, LIMITE_EXPERTO_DIARIO_USD), 6),
+        "reserva": round(max(0.0, gastado_hoy - LIMITE_EXPERTO_DIARIO_USD), 6),
+    }
+
+
+def espera_experto(ahora: datetime, critico: bool) -> str:
+    """Hasta cuándo espera un caso que no cabe en el gasto del experto: el crítico (sin reserva),
+    hasta la recogida siguiente; el normal, hasta el día siguiente (UTC), cuando su tope se
+    renueva."""
+    if critico:
+        return (ahora + ESPERA_REINTENTO).astimezone(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+    return (ahora.astimezone(UTC) + timedelta(days=1)).strftime("%Y-%m-%dT00:00:00Z")
+
+
+def espera_vencida(hasta: str, ahora: str, tope: Any = None) -> bool:
+    """Una espera al experto ya vencida: llegó su hora, o se anotó con un tope (`tope`, el normal
+    de entonces; sin él, el de antes del 15 de octubre de 2026) menor que el de ahora."""
+    try:
+        anotado = float(tope) if tope is not None else LIMITE_EXPERTO_ANTERIOR_USD
+    except (TypeError, ValueError):
+        anotado = LIMITE_EXPERTO_ANTERIOR_USD
+    return anotado < LIMITE_EXPERTO_DIARIO_USD or ahora >= str(hasta)
 
 
 def limite(modo: Modo) -> float:

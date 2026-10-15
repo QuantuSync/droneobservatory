@@ -191,8 +191,10 @@ eran el mismo suceso partido y se unen en `incidentes_revisados.json`:
   `python -m recogida.control_fichas traducir-pendientes`.
 - Dos modelos ([`docs/modelos.md`](modelos.md)): cada llamada se cobra con la tarifa del modelo
   que la hizo; un par dudoso y una verificación que contradice la ficha se repiten con el
-  experto, que tiene su propio tope diario (0,30 dólares). Si se agota, el par o la verificación
-  esperan al día siguiente y la ficha nueva sigue retenida (sin el límite de 6 horas).
+  experto, que tiene su propio tope diario (1 dólar) y una reserva crítica (0,50 dólares) para los
+  casos críticos. Lo que no es crítico y no cabe espera al día siguiente; lo crítico, si también se
+  agotó la reserva, se reintenta en cada recogida. La ficha nueva sigue retenida mientras tanto
+  (sin el límite de 6 horas).
 
 ## Resumen diario y vigilancia
 

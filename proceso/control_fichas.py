@@ -374,7 +374,9 @@ def _presencia(c: Correccion, v: Verificada) -> None:
             a for a in d.get("afirmaciones", [])
             if not (a["campo"] == "presencia_dron" and a["valor"] == "confirmada")
         ]  # fmt: skip
-        afirmaciones.append(_afirmacion("presencia_dron", "no_confirmada", fuente))
+        afirmacion = _afirmacion("presencia_dron", "no_confirmada", fuente)
+        if afirmacion not in afirmaciones:
+            afirmaciones.append(afirmacion)
         nuevo = {**d, "presencia_dron": "no_confirmada", "afirmaciones": afirmaciones}
         if errores_presencia(nuevo):
             # La autoridad que lo confirmó atribuye el suceso a un dron: manda.

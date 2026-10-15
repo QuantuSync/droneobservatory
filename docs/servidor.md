@@ -1735,9 +1735,12 @@ cierres de aeropuerto). Vale la respuesta del experto.
   copia); vale desde la recogida siguiente.
 - **Tarifas** por modelo en `modelo/modelos.py`; cada llamada se cobra con la del modelo que la
   hizo. Los topes de cada modo siguen en dólares.
-- **Tope del experto**: 0,30 USD al día. Agotado, lo que lo necesitaba espera al día siguiente
-  (candidato en el cursor `esperan_experto`; par o verificación con `espera_experto`; la ficha nueva
-  sigue retenida) y lo demás sigue.
+- **Tope del experto**: 1,00 USD al día, aparte de los topes de los modos, y una reserva crítica de
+  0,50 USD para los casos críticos (docs/modelos.md, «Topes»). Agotado el tope, lo que no es
+  crítico espera al día siguiente y lo crítico usa la reserva; sin reserva, se reintenta en cada
+  recogida y a las 6 horas abre la incidencia `experto_critico` (candidato en el cursor
+  `esperan_experto`; par o verificación con `espera_experto`; la ficha nueva sigue retenida). Lo
+  demás sigue.
 - **Comprobar**: cuántas llamadas hizo cada modelo hoy y cuánto costó cada uno:
 
 ```
