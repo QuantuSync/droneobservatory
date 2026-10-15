@@ -137,7 +137,7 @@ MEDICIONES = frozenset({"trafico_aereo", "condiciones"})
 HOJAS = frozenset({
     "estado", "atribucion", "investigacion", "foco_termico", "drones.trayectoria",
     "consecuencias.danos", "trafico_aereo", "condiciones", "tiempo.origen_inicio", "ataque",
-    "zona",
+    "zona", "presencia_historial",
 })  # fmt: skip
 CLAVES_VALOR = (frozenset({"valor", "precision"}), frozenset({"min", "max"}),
                 frozenset({"lat", "lon"}))  # fmt: skip
@@ -444,6 +444,18 @@ def procedencia_incidente(documento: Documento, fichas: Fichas) -> tuple[Documen
             # a partir de datos físicos; su regla y su versión van en el propio bloque.
             bloque = documento[ruta]
             return Valor({MEDIDO}, REGLA, {bloque["fuente_id"]} if "fuente_id" in bloque else set())
+        if ruta in ("presencia_dron", "presencia_historial") and documento.get(
+            "presencia_historial"
+        ):
+            # Rectificada por una autoridad oficial, con el experto (proceso/rectificaciones.py):
+            # la presencia sale de la fuente del último paso; el historial, de las de todos.
+            pasos = documento["presencia_historial"]
+            if ruta == "presencia_dron":
+                pasos = [p for p in pasos if not p.get("parcial")][-1:]
+            valor.fuentes = {p["fuente_id"] for p in pasos if p["fuente_id"] in fuentes}
+            valor.origenes = {origen[f] for f in valor.fuentes}
+            valor.metodo = REGLA
+            return valor if valor.fuentes else None
         if ruta == "presencia_dron":
             confirmadas = [a for a in regla.get("presencia_dron", [])
                            if a["valor"] == documento.get("presencia_dron")]  # fmt: skip

@@ -1,0 +1,69 @@
+{
+  "descripcion": "Rectificaciones oficiales de la presencia del dron revisadas a mano (recogida/rectificaciones.py, docs/rectificaciones.md). Cada una lleva la declaración literal de la autoridad, con su enlace y su fecha (fuente, como las citas de incidentes_revisados.json), el tipo (no_acreditada: cierra la investigación sin pruebas del dron o retira lo que dijo; descartada: dice que era otra cosa; parcial: rectifica un episodio o una prueba y mantiene el dron, se anota sin cambiar el valor), quién lo declara y qué dijo, en español y en inglés, y, en anterior, quién declaró el valor que había. contexto: más frases literales del mismo documento para el experto. Solo se aplica si el experto lo lee igual; el incidente y su efecto (el cierre, los desvíos) no cambian nunca.",
+  "rectificaciones": [
+    {
+      "incidente": "EODI-2025-00154",
+      "tipo": "no_acreditada",
+      "fecha_declaracion": "2026-06-25",
+      "fuente": {
+        "enlace": "https://politi.dk/rigspolitiet/nyhedsliste/politiet-har-styrket-indsatsen-paa-droneomraadet/2026/06/25",
+        "medio": "politi.dk",
+        "fecha": "2026-06-25",
+        "idioma": "da",
+        "frase": "I enkelte efterforskninger har det hverken kunnet påvises eller afvises, at der har været tale om droner. Dette gør sig bl.a. gældende for så vidt angår efterforskningerne i Københavns Politi og Nordjyllands Politi.",
+        "oficial": true,
+        "declaracion": {"autoridad": "Rigspolitiet", "pais": "DK", "categoria": "policia", "afirma": "incidente"},
+        "comprobada": {"fecha": "2026-10-15", "en": "https://politi.dk/rigspolitiet/nyhedsliste/politiet-har-styrket-indsatsen-paa-droneomraadet/2026/06/25 (original)"}
+      },
+      "contexto": "Københavns Politi har i dag fremlagt resultaterne af efterforskningen af droneobservationer den 22. september 2025 over Københavns Lufthavn. Anmeldelserne om droneobservationer den 22. september 2025, som førte til, at Naviair lukkede for lufttrafikken i Københavns Lufthavn [...] Med Københavns Politis afslutning af efterforskningen er alle efterforskninger nu afsluttet i samtlige af landets politikredse.",
+      "quien": {"es": "la policía danesa (Rigspolitiet)", "en": "the Danish National Police (Rigspolitiet)"},
+      "motivo": {
+        "es": "al cerrar la investigación de la policía de Copenhague: no se ha podido probar ni descartar que hubiera drones; el cierre del aeropuerto se mantiene",
+        "en": "on closing the Copenhagen Police investigation: it could neither be proven nor ruled out that there were drones; the airport closure stands"
+      },
+      "anterior": {"quien": {"es": "la policía de Copenhague", "en": "Copenhagen Police"}}
+    },
+    {
+      "incidente": "EODI-2025-00164",
+      "tipo": "descartada",
+      "fecha_declaracion": "2025-06-26",
+      "fuente": {
+        "enlace": "https://www.airproxboard.org.uk/uploadedFiles/Content/Standard_content/Airprox_report_files/2024/Airprox%20Report%202024294.pdf",
+        "medio": "airproxboard.org.uk",
+        "fecha": "2025-06-26",
+        "idioma": "en",
+        "frase": "However, after analysis, it was clear to members that the track of the F15 had correlated with the perceived position of the ‘drone’ and that they had actually sighted a fast-moving object at distance rather than a small object moving in close proximity.",
+        "oficial": true,
+        "declaracion": {"autoridad": "UK Airprox Board", "pais": "GB", "categoria": "navegacion_aerea", "afirma": "sin_drones"},
+        "comprobada": {"fecha": "2026-10-15", "en": "https://www.airproxboard.org.uk/uploadedFiles/Content/Standard_content/Airprox_report_files/2024/Airprox%20Report%202024294.pdf (original; informe sin fecha, PDF creado el 26 de junio de 2025)"}
+      },
+      "contexto": "AIRPROX REPORT No 2024294 Date: 22 Nov 2024 Time: 2151Z Position: 5216N 00026E Location: 2NM NE Newmarket. Aircraft: EC135 (NPAS) and F15 (Foreign Mil), Lakenheath Approach. CF3. The EC135 pilot had been concerned by the proximity of the F15s, perceiving them to be drones.",
+      "quien": {"es": "el UK Airprox Board", "en": "the UK Airprox Board"},
+      "motivo": {
+        "es": "informe Airprox 2024294: el supuesto dron que vio la tripulación del helicóptero policial era un F-15",
+        "en": "Airprox report 2024294: the supposed drone seen by the police helicopter crew was an F-15"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00072",
+      "tipo": "parcial",
+      "fecha_declaracion": "2026-04-16",
+      "fuente": {
+        "enlace": "https://www.dekamer.be/doc/PCRI/html/56/ip107x.html",
+        "medio": "dekamer.be",
+        "fecha": "2026-04-16",
+        "idioma": "nl",
+        "frase": "Die beelden werden toen bij ons bevestigd als een drone. Later bleek dat het om een politiehelikopter ging die op zoek was naar de drone waarvoor de luchthaven eerder was gesloten.",
+        "oficial": true,
+        "declaracion": {"autoridad": "Minister van Defensie", "pais": "BE", "categoria": "ministerio", "afirma": "drones"},
+        "comprobada": {"fecha": "2026-10-15", "en": "https://www.dekamer.be/doc/PCRI/html/56/ip107x.html (original; CRIV 56 PLEN 107, 16 de abril de 2026)"}
+      },
+      "contexto": "In die context zijn Defensie en ik meermaals bevraagd door verschillende media over drones, zeker op de avond dat de luchthaven van Zaventem meermaals werd gesloten door skeyes. [...] Dat laatste hebben we wel gedaan door de niet-geclassificeerde beelden van die avond van de sluiting van de luchthaven van Zaventem door skeyes de dag nadien aan een journalist te bezorgen. (Nota del observatorio: esa noche es la del 4 de noviembre de 2025, en que skeyes paró dos veces el tráfico de Brussels Airport por avisos de dron; ese mismo día gva.be publicó «beelden tonen hoe drone achtervolgd wordt door politiehelikopter».)",
+      "quien": {"es": "el ministro de Defensa belga, Theo Francken, en la Cámara", "en": "Belgian Defence Minister Theo Francken, in the Chamber"},
+      "motivo": {
+        "es": "las imágenes difundidas como el dron de esa noche eran de un helicóptero de la policía que buscaba el dron; el cierre por el aviso de dron se mantiene",
+        "en": "the footage released as that night's drone showed a police helicopter searching for the drone; the closure over the drone report stands"
+      }
+    }
+  ]
+}

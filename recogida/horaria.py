@@ -88,6 +88,7 @@ from recogida import (
     nombres_wikidata,
     oficiales,
     prevision,
+    rectificaciones,
     revisados,
     rutas,
     satelite,
@@ -575,6 +576,13 @@ def principal(argumentos: list[str] | None = None) -> int:
                 registro.warning(
                     "presencia sin guardar en %d incidentes que no validan", len(sin_guardar)
                 )
+        # Rectificaciones oficiales de la presencia del dron (recogida/rectificaciones.py): las
+        # revisadas a mano, las fuentes que suenan a cierre de una investigación y la búsqueda del
+        # mes, siempre con el experto. Aislado: nunca impide publicar.
+        paso(
+            "rectificaciones oficiales", rectificaciones.paso_horario, almacen, ahora,
+            modelos(almacen),
+        )  # fmt: skip
         # Control de calidad de las fichas (recogida/control_fichas.py), antes de publicar:
         # duplicados también entre idiomas, el lugar más preciso, cada dato con su fuente y las
         # citas traducidas. Lo nuevo que no lo pasa se retiene como mucho 6 horas; nunca impide

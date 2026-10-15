@@ -174,7 +174,7 @@ def test_la_exportacion_cifrada_se_descifra_con_la_clave(
     assert exportacion.principal(argumentos, base_prueba.EXPORTACION) == 0
     cifrado = (salida / "incidentes.jsonl.gz.age").read_bytes()
     claro = gzip.decompress(pyrage.decrypt(cifrado, [identidad])).decode("utf-8")
-    assert len(claro.splitlines()) == 4
+    assert len(claro.splitlines()) == 5
 
 
 # --- Aviso inmediato de un fallo ------------------------------------------------------------

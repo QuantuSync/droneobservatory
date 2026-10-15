@@ -132,6 +132,10 @@ escalaba. Desde entonces:
 - **Sin experto configurado** (vuelta atrás: sin `EODI_MODELO_EXPERTO`) todo sigue como antes del
   14 de octubre: el modelo único decide.
 
+- **Rectificaciones oficiales** (desde el 16 de octubre de 2026): una presencia solo pasa a no
+  acreditada o a descartada por una rectificación oficial que decide el experto, sin usar la
+  reserva crítica ([`docs/rectificaciones.md`](rectificaciones.md)).
+
 Pruebas: `tests/test_nada_se_retira.py` (la 00489, cada señal con un caso inventado, fuentes
 oficiales, retirada y rebaja de una ficha publicada con y sin experto, lotes, reconstrucción y
 uniones del control).
@@ -248,9 +252,9 @@ Principio (desde el 15 de octubre de 2026): **lo crítico nunca espera a que se 
 - Cada llamada se anota con su modelo y si fue un escalado (tabla `llamadas_modelo`, junto a
   `llamadas_extractor`).
 - Cada extracción guarda `modelo` y, si se escaló, `escalado` (los motivos).
-- Cada incidente guarda en `control.modelos` (interno, esquema 1.19.0) el modelo que decidió cada
+- Cada incidente guarda en `control.modelos` (interno, esquema 1.20.0) el modelo que decidió cada
   dato de la ficha (campo de la ficha → identificador): el de la extracción y, en los que corrige
-  el control, el de la verificación. Viaja en la exportación para AEGIS (formato 1.12.0,
+  el control, el de la verificación. Viaja en la exportación para AEGIS (formato 1.13.0,
   interno: exportacion_aegis).
 - Cada decisión del control (par, verificación) guarda `modelo` y, si se escaló, `escalado`.
 

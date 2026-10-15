@@ -189,6 +189,10 @@ def clasificar(incidente: Documento, config: Documento, ahora: datetime) -> Avis
     """El aviso que merece el incidente, o None si no se avisa."""
     if "retirado" in incidente or "fusionado_en" in incidente:
         return None
+    # Una rectificación oficial de la presencia (no acreditada, descartada) no es un suceso
+    # nuevo: no se avisa.
+    if incidente.get("presencia_historial"):
+        return None
     pais = (incidente.get("lugar") or {}).get("pais")
     datos_pais = config["paises"].get(pais)
     if datos_pais is None:

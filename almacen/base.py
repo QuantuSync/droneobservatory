@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from esquema import Documento, Esquema, validador, validador_definicion
+from proceso import rectificaciones
 from proceso.validaciones import (
     Error,
     validar_ataque_ucrania,
@@ -487,7 +488,9 @@ class Almacen:
         self, documento: Documento, ahora: datetime, vocabulario_modelos: frozenset[str]
     ) -> None:
         """Guarda la versión nueva del incidente. Las afirmaciones repetidas no se escriben, y una
-        versión igual a la guardada no deja cambio en el historial."""
+        versión igual a la guardada no deja cambio en el historial. Lo que rectificó una autoridad
+        oficial en la presencia del dron se conserva (proceso/rectificaciones.mantener)."""
+        documento = rectificaciones.mantener(documento, self.incidente(documento["id"]))
         documento = sin_afirmaciones_repetidas(documento)
         errores = validar_incidente(documento, ahora, vocabulario_modelos)
         if errores:

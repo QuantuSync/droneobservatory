@@ -274,6 +274,28 @@ def incidente_completo() -> Documento:
         "titulo": {"es": "Cierre de aeropuerto por drones", "en": "Airport closed by drones"},
         "episodio": "EODI-EP-2025-0001",
         "presencia_dron": "confirmada",
+        # Una corrección parcial oficial (proceso/rectificaciones.py): se anota sin cambiar el
+        # valor de la presencia.
+        "presencia_historial": [
+            {
+                "valor": "confirmada",
+                "fecha": instante("2025-10-01T22:00Z"),
+                "fuente_id": "F2",
+                "quien": {"es": "el Gobierno", "en": "the Government"},
+            },
+            {
+                "valor": "confirmada",
+                "fecha": instante("2025-10-05T00:00Z", "dia"),
+                "fuente_id": "F2",
+                "quien": {"es": "el Gobierno", "en": "the Government"},
+                "motivo": {
+                    "es": "uno de los vídeos era de un helicóptero",
+                    "en": "one of the videos showed a helicopter",
+                },
+                "parcial": True,
+                "revision": "rectificacion:revisada:EODI-2025-00001:F2",
+            },
+        ],
         "origen_demostrado_por": ["rastreo"],
         "pruebas": {"dron_estatal": False, "entrada_exterior": True, "evidencia": ["rastreo"]},
         "tiempo": {

@@ -4,8 +4,10 @@ El titular de un incidente y su campo presencia_dron dicen lo mismo:
 
 - dron confirmado: el titular afirma el dron («Drones sobre el aeropuerto de Lieja interrumpen
   el tráfico aéreo»); un «posible dron» o un «objeto no identificado» se escriben como dron;
-- dron no confirmado: el titular lo da como posible («Posibles drones sobre…», «Un posible dron
-  obliga a…»); un titular que no nombra el dron («Cierre del aeropuerto de X») vale tal cual.
+- dron no confirmado o no acreditado (una autoridad cerró la investigación sin pruebas del dron,
+  proceso/rectificaciones.py): el titular lo da como posible («Posibles drones sobre…», «Un
+  posible dron obliga a…»); un titular que no nombra el dron («Cierre del aeropuerto de X») vale
+  tal cual.
 
 Los titulares los escribe el extractor; esta regla los ajusta al guardar el incidente y al
 revisar los ya guardados. Solo cambia el calificativo del dron: el resto del titular queda igual.
@@ -15,7 +17,7 @@ import re
 
 from esquema import Documento
 
-CONFIRMADA, NO_CONFIRMADA = "confirmada", "no_confirmada"
+CONFIRMADA, NO_CONFIRMADA, NO_ACREDITADA = "confirmada", "no_confirmada", "no_acreditada"
 
 _DRON = {
     "es": re.compile(r"\b(drones|dron)\b", re.IGNORECASE),
@@ -90,7 +92,7 @@ def coherente(titulo: str, presencia: str | None, idioma: str) -> bool:
         return False
     if presencia == CONFIRMADA:
         return not da_por_posible(titulo, idioma)
-    if presencia == NO_CONFIRMADA:
+    if presencia in (NO_CONFIRMADA, NO_ACREDITADA):
         return not afirma_dron(titulo, idioma) or bool(_DUDA[idioma].search(titulo))
     return True
 

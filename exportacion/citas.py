@@ -35,9 +35,9 @@ CAMPO_PUBLICO = {
 # Lo que dice la fuente de la presencia y los valores publicados con que casa.
 PRESENCIA_CASA = {
     "confirmada": {"confirmada"},
-    "posible": {"no_confirmada"},
-    "no_hallado": {"no_confirmada", "descartada"},
-    "desmentido": {"no_confirmada", "descartada"},
+    "posible": {"no_confirmada", "no_acreditada"},
+    "no_hallado": {"no_confirmada", "no_acreditada", "descartada"},
+    "desmentido": {"no_confirmada", "no_acreditada", "descartada"},
 }
 MAX_LETRAS_CITA = 600
 

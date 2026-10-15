@@ -1,0 +1,109 @@
+{
+  "descripcion": "Expresiones que suenan a rectificación oficial o a cierre de una investigación sobre un incidente ya publicado (proceso/rectificaciones.senal). Solo deciden qué fuentes se mandan al experto (recogida/rectificaciones.py): nunca cambian nada por sí solas. Expresiones regulares sin mayúsculas, sobre el texto con los espacios reducidos a uno; se buscan como palabras enteras.",
+  "expresiones": {
+    "en": [
+      "no (?:evidence|proof|trace)s? (?:of|that|for) (?:any |the |a )?(?:drones?|drone activity|unmanned)",
+      "(?:find|found|finds) no (?:evidence|proof)",
+      "(?:cannot|can't|can not|could not|couldn't|unable to|not able to) (?:be )?(?:confirm|confirmed|verify|verified|substantiate|substantiated)",
+      "(?:could not|cannot|can't) (?:prove|establish)",
+      "neither (?:prove|confirm) nor (?:rule out|deny|disprove)",
+      "(?:investigation|inquiry|probe|case) (?:has been |was |is )?(?:closed|concluded|dropped|shelved|ended|discontinued)",
+      "(?:closed|dropped|concluded|shelved) (?:the|its|their) (?:investigation|inquiry|probe|case)",
+      "misidentif\\w+",
+      "mistaken (?:for|as)",
+      "(?:was|were) (?:actually |in fact |most likely |likely |probably )?(?:an? )?(?:plane|aeroplane|airplane|aircraft|airliner|helicopter|police helicopter|military aircraft|fighter jet|f-15|f-35|balloon|star|planet|bird)s?",
+      "turned out to be",
+      "not (?:a )?drones?\\b(?: at all)?",
+      "retract\\w*",
+      "withdr[ae]w\\w* (?:its|their|the) (?:claim|statement)"
+    ],
+    "da_no_sv": [
+      "(?:kan|kunne) ikke (?:bekræfte|bevise|be- eller afkræfte|bekrefte)",
+      "hverken (?:kunnet )?(?:bevise|bekræfte|bekrefte) eller (?:afvise|afkræfte|avkrefte)",
+      "ingen (?:beviser|bevis|spor) (?:for|på|af|av)",
+      "(?:efterforskningen|etterforskningen|undersøgelsen|undersøkelsen|utredningen|förundersökningen) (?:er |blev |ble |har )?(?:indstillet|afsluttet|lukket|henlagt|avsluttet|lagts ned|nedlagd)",
+      "henlagt",
+      "(?:var|viste sig at være|visade sig vara) (?:et |ett |en )?(?:fly|flygplan|flyvemaskine|helikopter|politihelikopter|ballon|stjerne)",
+      "inga bevis",
+      "kan inte bekräfta"
+    ],
+    "de": [
+      "keine (?:beweise|belege|hinweise|spuren) (?:für|auf)",
+      "nicht (?:bestätigen|bestätigt|nachweisen|nachgewiesen|belegen|belegt)",
+      "(?:ermittlungen|verfahren|untersuchung) (?:wurden |wurde |ist |sind )?(?:eingestellt|abgeschlossen)",
+      "(?:war|waren) (?:in wahrheit |tatsächlich |wohl |vermutlich )?(?:ein |eine )?(?:flugzeug|hubschrauber|helikopter|polizeihubschrauber|ballon|stern)e?",
+      "stellte sich (?:als|heraus)",
+      "verwechselt"
+    ],
+    "nl": [
+      "geen (?:bewijs|bewijzen|sporen) (?:van|voor|dat)",
+      "(?:niet|kan niet|kon niet) (?:bevestigen|bevestigd|aantonen|aangetoond)",
+      "(?:onderzoek|zaak) (?:is |werd |wordt )?(?:gesloten|afgesloten|stopgezet|geseponeerd|beëindigd)",
+      "(?:bleek|bleken|was|waren) (?:dat )?(?:het )?(?:om )?(?:een |in werkelijkheid een )?(?:vliegtuig|helikopter|politiehelikopter|ballon|ster)(?:en)?",
+      "verward met"
+    ],
+    "fr": [
+      "aucune (?:preuve|trace)",
+      "(?:pas pu|ne peut pas|ne peuvent pas|n'a pas pu|n’a pas pu|impossible de) (?:confirmer|prouver|établir)",
+      "enquête (?:a été |est )?(?:classée|clôturée|close|abandonnée)",
+      "classée sans suite",
+      "(?:s'agissait|s’agissait|était) (?:en fait |en réalité |probablement )?d['’]?(?:un |une )?(?:avion|hélicoptère|hélicoptère de la police|ballon|étoile)",
+      "confondu avec"
+    ],
+    "es_pt_it": [
+      "(?:sin|ninguna|no hay|no existen) pruebas",
+      "no (?:puede|pudo|pueden|pudieron|se puede|se pudo) (?:confirmar|probar|acreditar|demostrar)",
+      "(?:investigación|causa|caso) (?:ha sido |fue |está )?(?:cerrad[oa]|archivad[oa]|sobreseíd[oa])",
+      "(?:era|eran|se trataba de|resultó ser) (?:en realidad )?(?:un |una )?(?:avión|helicóptero|helicóptero de la policía|globo|estrella)",
+      "confundido con",
+      "(?:sem|nenhuma) provas?",
+      "não (?:pode|pôde|conseguiu|foi possível) (?:confirmar|provar)",
+      "(?:investigação|inquérito) (?:foi )?arquivad[oa]",
+      "era um (?:avião|helicóptero)",
+      "nessuna prova",
+      "non (?:può|ha potuto|è stato possibile|si può) (?:confermare|provare|dimostrare)",
+      "(?:indagine|inchiesta) (?:è stata )?archiviat[ao]",
+      "era un (?:aereo|elicottero)"
+    ],
+    "pl_cs_hu_ro": [
+      "brak (?:dowodów|dowodu)",
+      "nie (?:można|udało się|potwierdzono|potwierdził\\w*) (?:potwierdzić|udowodnić)?",
+      "(?:śledztwo|postępowanie|dochodzenie) (?:zostało )?umorzon\\w*",
+      "(?:był to|okazał się|okazało się) (?:samolot|śmigłowiec|helikopter|balon)",
+      "žádné důkazy",
+      "nelze potvrdit",
+      "(?:vyšetřování|šetření) (?:bylo )?(?:ukončeno|odloženo)",
+      "nincs bizonyíték",
+      "nem (?:tudja|tudták|lehet) megerősíteni",
+      "(?:nicio|nici o) dovad[ăa]",
+      "nu (?:a putut|poate|pot|s-a putut) (?:confirma|dovedi)",
+      "anchet\\w* (?:a fost )?(?:închis\\w*|inchis\\w*|clasat\\w*)",
+      "(?:era|a fost) (?:de fapt )?un (?:avion|elicopter)"
+    ],
+    "baltico_fi": [
+      "nėra įrodymų",
+      "negal\\w* patvirtinti",
+      "tyrimas (?:buvo )?nutrauktas",
+      "nav pierādījumu",
+      "nevar apstiprināt",
+      "tõendeid ei",
+      "ei (?:saa|saanud) kinnitada",
+      "ei (?:voida|voitu|pystytty) (?:vahvistaa|todistaa)",
+      "ei todisteita",
+      "tutkinta (?:on )?(?:lopetettu|päätetty)"
+    ],
+    "cirilico_griego": [
+      "нет доказательств",
+      "не (?:может|смогла|смогли|удалось) подтвердить",
+      "расследование (?:было )?(?:закрыто|прекращено)",
+      "(?:это был|оказался|оказалось) (?:самол[её]т|вертол[её]т)",
+      "немає доказів",
+      "не (?:може|змогла|змогли|вдалося) підтвердити",
+      "розслідування (?:було )?(?:закрито|припинено)",
+      "няма доказателства",
+      "не (?:може|могат|успя) да потвърд\\w*",
+      "δεν (?:μπορεί|μπόρεσε|μπόρεσαν) να επιβεβαιώσ\\w*",
+      "καμία απόδειξη"
+    ]
+  }
+}
