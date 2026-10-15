@@ -47,7 +47,9 @@ jobs:
           while IFS= read -r borrado; do
             case "$borrado" in
               docs/* | esquema/* | configuracion/* | tests/fixtures/*)
-                if ! printf '%s\n' "$DESCRIPCION" | grep -qxF "Borra a propósito: $borrado"; then
+                # Sin tubería: con pipefail, grep -q sale al primer acierto y printf, con una
+                # descripción larga, muere por SIGPIPE (y el borrado contaba como no dicho).
+                if ! grep -qxF "Borra a propósito: $borrado" <<< "$DESCRIPCION"; then
                   echo "::error::El PR borra $borrado sin decirlo en su descripción («Borra a propósito: $borrado»)"
                   fallo=1
                 fi
