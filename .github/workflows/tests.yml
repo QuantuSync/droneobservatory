@@ -73,6 +73,9 @@ jobs:
       # (tests/base_prueba.py): un campo del esquema sin regla de origen la hace fallar aquí,
       # antes de fusionar, y no el lunes en el servidor.
       - name: Exportación semanal de ensayo sobre la base de prueba
+        # El correo del autor no está en el repositorio (recogida/licencia.py): uno de mentira.
+        env:
+          EODI_CORREO_AUTOR: autor@ejemplo.org
         run: python -m tests.base_prueba --salida "$RUNNER_TEMP/exportacion"
 
   # Puerta de la web: dependencias sin vulnerabilidades altas o críticas, lint, tipos,
