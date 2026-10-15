@@ -3,6 +3,7 @@
 
 import gzip
 import json
+import os
 from collections.abc import Sequence
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -224,6 +225,26 @@ def test_ni_en_la_hora_de_la_recogida_ni_con_trabajos_ni_sin_neptun(tmp_path: Pa
     assert "trafico" in reinicio.decidir(AHORA, datos, lambda: ["eodi-trafico.service"])[1]
     viejo = flujo(tmp_path / "otro", [{"type": "heartbeat"}], AHORA - timedelta(hours=2))
     assert "NEPTUN" in reinicio.decidir(AHORA, viejo, lambda: [])[1]
+
+
+def test_tras_tres_dias_pedido_no_espera_a_neptun(tmp_path: Path) -> None:
+    datos = flujo(tmp_path, [{"type": "upsert", "data": amenaza("m1", "missile")}], AHORA)
+    assert not reinicio.decidir(AHORA, datos, lambda: [], timedelta(days=2))[0]
+    se_puede, motivo = reinicio.decidir(AHORA, datos, lambda: [], timedelta(days=3))
+    assert se_puede and "3 días" in motivo
+    # Los minutos de la recogida y los trabajos en marcha mandan siempre.
+    tarde = timedelta(days=5)
+    assert not reinicio.decidir(AHORA.replace(minute=20), datos, lambda: [], tarde)[0]
+    assert not reinicio.decidir(AHORA, datos, lambda: ["eodi-trafico.service"], tarde)[0]
+
+
+def test_cuanto_lleva_pedido_el_reinicio(tmp_path: Path) -> None:
+    marca = tmp_path / "reboot-required"
+    assert reinicio.pendiente(AHORA, marca) is None
+    marca.write_text("*** System restart required ***\n")
+    hace = AHORA.timestamp() - 4 * 86400
+    os.utime(marca, (hace, hace))
+    assert reinicio.pendiente(AHORA, marca) == timedelta(days=4)
 
 
 def test_ntfy_sin_responder_y_avisos_que_fallan_dos_recogidas(tmp_path: Path) -> None:
