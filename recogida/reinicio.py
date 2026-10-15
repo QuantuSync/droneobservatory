@@ -17,6 +17,11 @@ trabajo en marcha. Solo se reinicia si, a la vez:
 - el estado de NEPTUN es reciente (menos de 10 minutos): si la captura no recibe, no se sabe si
   hay ataque y no se reinicia.
 
+El temporizador lo pregunta de madrugada en Europa. Si la actualización lleva pidiendo el reinicio
+más de PLAZO_ATAQUE (tres días) y lo único que lo frena es NEPTUN (un ataque o su estado), se
+reinicia igual: una actualización de seguridad no espera más. Los minutos de la recogida y los
+trabajos en marcha se respetan siempre.
+
 Sale con 0 si se puede y con 3 si no, con el motivo.
 
 Uso: python -m recogida.reinicio [--datos <carpeta del seguimiento>]
@@ -41,6 +46,8 @@ SIEMPRE_EN_MARCHA = frozenset({"eodi-directo.service", "eodi-seguimiento.service
 MAX_DRONES = 20
 TIPOS_MISIL = frozenset({"missile", "ballistic"})
 MAX_ANTIGUEDAD = timedelta(minutes=10)
+PLAZO_ATAQUE = timedelta(days=3)
+REINICIO_PEDIDO = Path("/run/reboot-required")
 NO_SE_PUEDE = 3
 
 
@@ -106,16 +113,28 @@ def unidades_en_marcha() -> list[str]:
     return [linea.split()[0] for linea in salida.stdout.splitlines() if linea.strip()]
 
 
+def pendiente(ahora: datetime, ruta: Path = REINICIO_PEDIDO) -> timedelta | None:
+    """Cuánto lleva pedido el reinicio (desde que se escribió la marca), o None si no se pide."""
+    try:
+        desde = datetime.fromtimestamp(ruta.stat().st_mtime, UTC)
+    except OSError:
+        return None
+    return max(ahora - desde, timedelta(0))
+
+
 def decidir(
     ahora: datetime,
     datos: Path,
     en_marcha: Callable[[], list[str]] = unidades_en_marcha,
+    pedido_hace: timedelta | None = None,
 ) -> tuple[bool, str]:
     if ahora.minute in MINUTOS_PROHIBIDOS:
         return False, f"minuto {ahora.minute}: hora de la recogida horaria"
     ocupadas = [u for u in en_marcha() if u not in SIEMPRE_EN_MARCHA]
     if ocupadas:
         return False, "trabajos en marcha: " + ", ".join(sorted(ocupadas))
+    if pedido_hace is not None and pedido_hace >= PLAZO_ATAQUE:
+        return True, f"el reinicio lleva pedido {pedido_hace.days} días: no se espera más a NEPTUN"
     activas, ultimo = amenazas_activas(lineas_neptun(datos, ahora))
     if ultimo is None or ahora - ultimo > MAX_ANTIGUEDAD:
         return False, "sin estado reciente de NEPTUN: no se sabe si hay un ataque en curso"
@@ -131,7 +150,10 @@ def principal(argumentos: list[str] | None = None) -> int:
     opciones = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     opciones.add_argument("--datos", type=Path)
     args = opciones.parse_args(argumentos)
-    se_puede, motivo = decidir(datetime.now(UTC), args.datos or directorio_datos())
+    ahora = datetime.now(UTC)
+    se_puede, motivo = decidir(
+        ahora, args.datos or directorio_datos(), pedido_hace=pendiente(ahora)
+    )
     print(("se puede reiniciar: " if se_puede else "no se reinicia: ") + motivo)
     return 0 if se_puede else NO_SE_PUEDE
 
