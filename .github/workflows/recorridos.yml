@@ -1,0 +1,185 @@
+name: recorridos
+
+# Los recorridos de Playwright de la web (web/e2e), en la nube y no en el ordenador de quien
+# desarrolla: Chromium y WebKit; Android, iPhone, tableta y escritorio; español e inglés.
+#
+# - En cada PR que cambia la web, Vercel publica una vista previa y avisa a GitHub con un
+#   «deployment_status»: los recorridos van contra esa vista previa (con la clave de acceso de
+#   las vistas previas en el secreto EODI_VERCEL_BYPASS).
+# - En cada PR que no cambia la web (Vercel no construye: web/scripts/omitir-build.ts), los
+#   recorridos van contra producción, que es la web con la que se va a fusionar.
+# - Tras cada despliegue de producción, los recorridos se repiten contra producción. Si fallan,
+#   se abre (o se comenta) la incidencia «Los recorridos fallan en producción»; si pasan, se
+#   cierra.
+# - A mano: Actions → recorridos → Run workflow, con la dirección que se quiera.
+#
+# Cómo ver los resultados: docs/operacion.md, «Pruebas en la nube».
+
+on:
+  deployment_status:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      base:
+        description: "Dirección de la web que se recorre"
+        default: "https://droneobservatory.eu"
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: recorridos-${{ github.event_name }}-${{ github.event.deployment.sha || github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Contra qué se recorre, o nada: un deployment_status que no es un éxito, o un PR que cambia
+  # la web (lo recorre su vista previa, que llega después como deployment_status).
+  destino:
+    runs-on: ubuntu-latest
+    outputs:
+      base: ${{ steps.decidir.outputs.base }}
+      produccion: ${{ steps.decidir.outputs.produccion }}
+      sha: ${{ steps.decidir.outputs.sha }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        if: github.event_name == 'pull_request'
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - id: decidir
+        env:
+          EVENTO: ${{ github.event_name }}
+          ESTADO: ${{ github.event.deployment_status.state }}
+          ENTORNO: ${{ github.event.deployment.environment }}
+          URL_DESPLIEGUE: ${{ github.event.deployment_status.environment_url || github.event.deployment_status.target_url }}
+          SHA_DESPLIEGUE: ${{ github.event.deployment.sha }}
+          BASE_MANUAL: ${{ github.event.inputs.base }}
+          BASE_PR: origin/${{ github.event.pull_request.base.ref }}
+          SHA_PR: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          base=""; produccion=false; sha="$GITHUB_SHA"
+          case "$EVENTO" in
+            deployment_status)
+              if [ "$ESTADO" = "success" ]; then
+                sha="$SHA_DESPLIEGUE"
+                if [ "$ENTORNO" = "Production" ]; then
+                  base="https://droneobservatory.eu"; produccion=true
+                else
+                  base="$URL_DESPLIEGUE"
+                fi
+              fi
+              ;;
+            workflow_dispatch)
+              base="$BASE_MANUAL"
+              ;;
+            pull_request)
+              sha="$SHA_PR"
+              git fetch --quiet origin "${BASE_PR#origin/}"
+              comun="$(git merge-base "$BASE_PR" HEAD)"
+              rutas="web publicacion vercel.json api configuracion/almacen_publico.json configuracion/avisos.json configuracion/publicacion_web.json"
+              # shellcheck disable=SC2086
+              if git diff --quiet "$comun" HEAD -- $rutas; then
+                base="https://droneobservatory.eu"
+                echo "el PR no cambia la web: los recorridos van contra producción"
+              else
+                echo "el PR cambia la web: los recorridos van contra su vista previa (deployment_status)"
+              fi
+              ;;
+          esac
+          echo "base=$base" >> "$GITHUB_OUTPUT"
+          echo "produccion=$produccion" >> "$GITHUB_OUTPUT"
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+          echo "destino: ${base:-ninguno} (producción: $produccion)"
+
+  recorridos:
+    needs: destino
+    if: needs.destino.outputs.base != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Los recorridos de una persona (e2e/*recorridos.spec.ts), cada uno en su dispositivo.
+          - { proyecto: android, trozo: 1/1, navegadores: chromium }
+          - { proyecto: iphone, trozo: 1/1, navegadores: webkit }
+          - { proyecto: tableta, trozo: 1/1, navegadores: chromium }
+          - { proyecto: escritorio-chromium, trozo: 1/1, navegadores: chromium }
+          - { proyecto: escritorio-webkit, trozo: 1/1, navegadores: webkit }
+          # El resto de las comprobaciones, repartidas en trozos para que ninguno pase de media hora.
+          - { proyecto: escritorio, trozo: 1/3, navegadores: chromium }
+          - { proyecto: escritorio, trozo: 2/3, navegadores: chromium }
+          - { proyecto: escritorio, trozo: 3/3, navegadores: chromium }
+          - { proyecto: movil, trozo: 1/3, navegadores: chromium }
+          - { proyecto: movil, trozo: 2/3, navegadores: chromium }
+          - { proyecto: movil, trozo: 3/3, navegadores: chromium }
+    name: ${{ matrix.proyecto }} ${{ matrix.trozo }}
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ needs.destino.outputs.sha }}
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - run: npm ci
+      - run: npx playwright install --with-deps ${{ matrix.navegadores }}
+      - name: Recorridos contra ${{ needs.destino.outputs.base }}
+        env:
+          BASE: ${{ needs.destino.outputs.base }}
+          BYPASS: ${{ secrets.EODI_VERCEL_BYPASS }}
+          VERCEL_BYPASS: ${{ secrets.EODI_VERCEL_BYPASS }}
+          CAPTURAS: ${{ runner.temp }}/capturas
+          PLAYWRIGHT_HTML_OPEN: never
+        run: npx playwright test --project=${{ matrix.proyecto }} --shard=${{ matrix.trozo }} --reporter=list,html
+      - name: Informe de Playwright
+        if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: informe-${{ matrix.proyecto }}-${{ strategy.job-index }}
+          path: web/playwright-report
+          retention-days: 14
+
+  # Tras un despliegue de producción: incidencia abierta si los recorridos fallan, cerrada si
+  # vuelven a pasar.
+  incidencia:
+    needs: [destino, recorridos]
+    if: always() && needs.destino.outputs.produccion == 'true' && needs.recorridos.result != 'cancelled' && needs.recorridos.result != 'skipped'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RESULTADO: ${{ needs.recorridos.result }}
+          EJECUCION: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          SHA: ${{ needs.destino.outputs.sha }}
+        run: |
+          set -euo pipefail
+          titulo="Los recorridos fallan en producción"
+          abierta="$(gh issue list --state open --search "\"$titulo\" in:title" --json number,title \
+            --jq "map(select(.title == \"$titulo\")) | .[0].number // empty")"
+          if [ "$RESULTADO" = "success" ]; then
+            if [ -n "$abierta" ]; then
+              gh issue close "$abierta" --comment "Los recorridos vuelven a pasar en producción (commit $SHA): $EJECUCION"
+            fi
+            echo "recorridos en verde en producción"
+            exit 0
+          fi
+          cuerpo="Los recorridos de Playwright contra https://droneobservatory.eu fallan tras el despliegue del commit $SHA.
+
+          Ejecución e informes de Playwright (artefactos «informe-…»): $EJECUCION
+
+          Qué hacer: docs/operacion.md, «Pruebas en la nube». La incidencia se cierra sola cuando un despliegue de producción vuelve a pasar los recorridos."
+          if [ -n "$abierta" ]; then
+            gh issue comment "$abierta" --body "Siguen fallando tras el commit $SHA: $EJECUCION"
+          else
+            gh issue create --title "$titulo" --body "$cuerpo"
+          fi

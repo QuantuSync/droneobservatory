@@ -242,6 +242,44 @@ bien. A mano:
 VERCEL_TOKEN=$(cat ~/.eodi/vercel_token.txt) python -m recogida.despliegue_web --sha $(git rev-parse origin/main) --sin-reintento
 ```
 
+## Pruebas en la nube
+
+Desde el 15 de octubre de 2026 las pruebas pesadas no se pasan en el ordenador de quien
+desarrolla: las hace GitHub Actions en cada PR y tras cada despliegue de producción.
+
+| Workflow | Cuándo | Qué hace |
+|---|---|---|
+| `tests` ([tests.yml](../.github/workflows/tests.yml)) | cada push y cada PR | ruff, mypy, todas las pruebas de Python, la exportación de ensayo, y de la web: lint, tipos, vitest, compilación y las páginas de texto en un navegador real; además, la barrera de titulares y la validación sobre los datos publicados de verdad |
+| `recorridos` ([recorridos.yml](../.github/workflows/recorridos.yml)) | cada PR, cada despliegue de Vercel y a mano | todos los recorridos de Playwright de `web/e2e`: Chromium y WebKit; Android, iPhone, tableta y escritorio; español e inglés, en 11 trabajos en paralelo |
+
+**Contra qué va `recorridos`.** Si el PR cambia la web (`web/`, `api/`, `publicacion/`,
+`vercel.json` o la configuración que lee la web), Vercel publica una vista previa y, cuando está
+lista, avisa a GitHub; los recorridos van contra esa vista previa, con la clave de acceso de las
+vistas previas en el secreto `EODI_VERCEL_BYPASS`. Si el PR no cambia la web, Vercel no construye
+y los recorridos van contra producción. Tras cada despliegue de producción (cada fusión en main),
+se repiten contra https://droneobservatory.eu.
+
+**Cómo se ven los resultados.**
+
+- En el PR, en la lista de comprobaciones: `tests / …` y `recorridos / <dispositivo> <trozo>`.
+  Los de la vista previa aparecen unos minutos después de que Vercel termine (cuelgan del commit,
+  no del evento del PR). Un PR se fusiona con todo en verde.
+- En la pestaña *Actions* del repositorio, el workflow `recorridos`: cada ejecución dice en el
+  trabajo `destino` contra qué dirección fue. Si un trabajo falla, al final de la ejecución hay
+  un artefacto `informe-<dispositivo>-<n>` con el informe HTML de Playwright (qué prueba falló,
+  en qué paso y con qué mensaje); se abre descomprimido con `npx playwright show-report <carpeta>`.
+- Tras un despliegue de producción que no pasa los recorridos se abre la incidencia «Los
+  recorridos fallan en producción» con el enlace a la ejecución (o se comenta la que ya esté
+  abierta). Se cierra sola cuando un despliegue de producción vuelve a pasarlos.
+- A mano: *Actions* → `recorridos` → *Run workflow*, con la dirección que se quiera (también una
+  vista previa). Con `gh`: `gh workflow run recorridos -f base=https://droneobservatory.eu` y
+  `gh run watch`.
+
+**En el ordenador de las sesiones** solo se pasan las pruebas de lo que se toca
+(`pytest tests/test_<lo_tocado>.py`, `npx vitest run tests/<lo_tocado>.test.ts`): ni la batería
+completa, ni la compilación de la web, ni Playwright. Lo demás se espera a la CI (son las
+reglas fijas de las sesiones de desarrollo, fuera del repositorio).
+
 ## Si la versión citable del mes no se genera
 
 ```

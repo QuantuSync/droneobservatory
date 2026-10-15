@@ -54,7 +54,9 @@ const CASOS: Caso[] = [
     lugar: { es: "Gibraltar (Reino Unido)", en: "Gibraltar (United Kingdom)" },
     zona: false,
   },
-  { id: "EODI-2026-00050", que: "Grecia", lugar: { es: "Evros, Grecia", en: "Evros, Greece" }, zona: false },
+  // El control de las fichas afina el lugar con lo que dice la fuente («Evros» o «río Maritsa», el
+  // mismo río): basta el país en su idioma.
+  { id: "EODI-2026-00050", que: "Grecia", lugar: { es: ", Grecia", en: ", Greece" }, zona: false },
   {
     id: "EODI-2025-00124",
     que: "Bulgaria",

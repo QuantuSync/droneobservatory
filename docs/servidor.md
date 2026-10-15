@@ -1239,7 +1239,7 @@ Lleva las credenciales al servidor, crea el bucket con su política y su CORS, c
 teselas (si ya están con la misma huella no las vuelve a subir), publica el último
 `estado.json` y comprueba por la dirección pública el tamaño, la respuesta 206 a una
 petición Range y el CORS de cada origen. Las teselas salen de la copia verificada
-`C:\dev\eodi-teselas-copia\europa-z14.pmtiles` (desde este equipo, unos 10 minutos a
+`C:\dev\Observatorio AEGIS\datos\eodi-teselas-copia\europa-z14.pmtiles` (desde este equipo, unos 10 minutos a
 40 MB/s); la vía desde R2 ya no responde (401 desde el 3 de octubre de 2026). Preparado el
 3 de octubre de 2026 a las 02:27 UTC.
 

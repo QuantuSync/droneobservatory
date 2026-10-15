@@ -47,7 +47,8 @@ const APLICADAS = [
     enlace: "https://www.gov.pl/web/premier/premier-doszlo-do-naruszenia-polskiej-przestrzeni-powietrznej---procedury-zadzialaly",
   },
   {
-    id: "EODI-2026-00211",
+    // Galați: la EODI-2026-00211 se unió el 14 de octubre de 2026 en la más antigua, la 00187.
+    id: "EODI-2026-00187",
     autoridad: "el presidente de Rumanía (Președintele României)",
     cita: "Declar, cu toată fermitatea, că responsabilitatea integrală pentru acest incident îi aparține Federației Ruse.",
     enlace:
@@ -119,13 +120,14 @@ for (const tamano of [...TELEFONOS, ESCRITORIO]) {
         await expect(ficha.locator("[data-estado-atribuido]")).toContainText("Rusia");
         // A quién, según quién (traducida, con el original), la cita literal y su enlace.
         await expect(ficha).toContainText(ES.ficha.atribuidoA("Rusia", aplicada.autoridad));
-        const cita = ficha.locator("[data-cita-atribucion]");
-        await expect(cita).toHaveText(`«${aplicada.cita}»`);
-        await expect(cita.locator("xpath=..").locator(`a[href="${aplicada.enlace}"]`)).toHaveCount(1);
+        // Desde el 14 de octubre de 2026 la cita va traducida, con el original en «Ver original».
+        const atribucion = ficha.locator("[data-cita-atribucion]").first().locator("xpath=ancestor::dd[1]");
+        await expect(atribucion.locator("[data-cita-original]")).toHaveText(`«${aplicada.cita}»`);
+        await expect(atribucion.locator(`a[href="${aplicada.enlace}"]`)).toHaveCount(1);
         if (aplicada.investigacion !== undefined) {
           await expect(ficha.locator("[data-investigacion]")).toContainText(aplicada.investigacion);
         }
-        await cita.scrollIntoViewIfNeeded();
+        await atribucion.scrollIntoViewIfNeeded();
         await capturar(page, `ficha-${aplicada.id}-${nombre}`);
       }
     });

@@ -47,7 +47,7 @@ Con un clon de este repositorio (Python 3.13, `pip install -r requirements.txt`)
 set EODI_ALMACEN_CREDENCIALES=%USERPROFILE%\.eodi\aegis_lectura.env
 python -m almacen.exportaciones listar
 python -m almacen.exportaciones bajar --version 2026.10.12.1 --destino <carpeta nueva>
-python -m almacen.exportaciones espejo --repositorio C:\dev\eodi-exportaciones
+python -m almacen.exportaciones espejo --repositorio "C:\dev\Observatorio AEGIS\eodi-exportaciones"
 ```
 
 - **`listar`:** devuelve las versiones completas, es decir, las que tienen manifiesto.
