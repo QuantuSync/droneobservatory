@@ -57,7 +57,7 @@ RADIO_CASA_KM = 25.0
 ANOMALIA_MINUTOS = 30
 ANOMALIA_PERDIDOS = 8
 ANOMALIA_FRACCION = 0.8
-# Revisión de las candidatas (docs/informe_prevision.md, «Detector de cierres»): comprobada contra
+# Revisión de las candidatas (interno: informe_prevision, «Detector de cierres»): comprobada contra
 # los cierres confirmados de la base el 6 de octubre de 2026 (de 47 cierres comprobables, 14
 # detectados antes y 13 después; falsas alarmas de 1.633 a 141 en 342 días).
 # - cobertura del día por debajo de 0,7: los receptores dejaron huecos (Antalya, Berlín);

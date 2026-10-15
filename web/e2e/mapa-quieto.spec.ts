@@ -4,7 +4,7 @@
 // fuera, la tecla Escape y, en el teléfono, arrastrar la hoja hacia abajo. El centro y el zoom
 // tienen que ser los de antes. Lo mismo con la capa «Ucrania» y con «Corredores» y «Con
 // satélite», y abriendo y cerrando diez fichas seguidas. Deja capturas de antes y después en
-// docs/capturas (CAPTURAS para otra carpeta). Va contra producción por defecto; con
+// una carpeta de capturas (CAPTURAS para otra carpeta). Va contra producción por defecto; con
 // BASE=http://localhost:4173, contra el servidor local.
 import { join } from "node:path";
 

@@ -6,7 +6,7 @@
 
 import { RUTAS_AVISOS, TEXTO_AVISOS } from "../avisos.ts";
 import type { Seccion } from "../i18n/tipos.ts";
-import { AUTOR_FIRMA, AUTOR_NOMBRE, CORREO_AUTOR, LICENCIA_DATOS, LICENCIA_DATOS_URL, NOMBRE, ORCID, ORCID_URL, REPOSITORIO } from "../sitio.ts";
+import { AUTOR_FIRMA, AUTOR_NOMBRE, CORREO_AUTOR, LICENCIA_DATOS, LICENCIA_DATOS_URL, NOMBRE, ORCID, ORCID_URL } from "../sitio.ts";
 import type { Idioma } from "../sitio.ts";
 
 export const RESPONSABLE = AUTOR_NOMBRE;
@@ -111,9 +111,7 @@ const ES: Record<PaginaServicio, TextoServicio> = {
               { texto: LICENCIA_DATOS, enlace: LICENCIA_DATOS_URL },
               ", citando la fuente; ",
               { texto: "la página de datos abiertos", enlace: "/metodologia#datos-abiertos" },
-              " dice cómo. Las frases citadas son de sus autores y se reproducen como cita, con su fuente y su enlace. El código es abierto (",
-              { texto: "Apache-2.0", enlace: `${REPOSITORIO}/blob/main/LICENSE` },
-              ").",
+              " dice cómo. Las frases citadas son de sus autores y se reproducen como cita, con su fuente y su enlace. El código es abierto, con la licencia Apache-2.0.",
             ],
           },
           {
@@ -364,9 +362,7 @@ const EN: Record<PaginaServicio, TextoServicio> = {
               { texto: LICENCIA_DATOS, enlace: LICENCIA_DATOS_URL },
               " licence, citing the source; ",
               { texto: "the open data page", enlace: "/en/methodology#datos-abiertos" },
-              " says how. Quoted sentences belong to their authors and are reproduced as quotations, with their source and link. The code is open (",
-              { texto: "Apache-2.0", enlace: `${REPOSITORIO}/blob/main/LICENSE` },
-              ").",
+              " says how. Quoted sentences belong to their authors and are reproduced as quotations, with their source and link. The code is open source, under the Apache-2.0 licence.",
             ],
           },
           {

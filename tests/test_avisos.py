@@ -1,4 +1,4 @@
-"""Avisos públicos con ntfy (recogida/avisos.py, docs/avisos.md): qué se avisa, cómo se ve, que
+"""Avisos públicos con ntfy (recogida/avisos.py, interno: avisos): qué se avisa, cómo se ve, que
 cada incidente se avisa una sola vez y que la primera pasada no envía nada."""
 
 import json

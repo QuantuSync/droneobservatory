@@ -1,4 +1,4 @@
-"""Odesa y las regiones con pocos impactos (docs/informe_revision_contenido.md, bloque 2): los
+"""Odesa y las regiones con pocos impactos (interno: informe_revision_contenido, bloque 2): los
 canales oficiales que faltaban y las formas de escribir el lugar que el analizador no leía."""
 
 from datetime import UTC, datetime
@@ -74,7 +74,7 @@ def test_oblasnyi_tsentr_sin_region_del_canal_no_da_lugar() -> None:
 
 
 def test_colectas_y_balances_no_son_impactos() -> None:
-    # Pendiente de docs/informe_errores_datos.md: como t.me/people_of_action/52939 y
+    # Pendiente de interno: informe_errores_datos: como t.me/people_of_action/52939 y
     # t.me/chernigivskaODA/22524, que nombran drones y lugares sin contar un ataque nuevo.
     colecta = analizar(
         "Микола та Марічка передали свій весільний донат на ремонт будинку, "

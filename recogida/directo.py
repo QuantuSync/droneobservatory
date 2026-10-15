@@ -24,7 +24,7 @@ más de 5 minutos tiene un hueco de la fuente, y un hueco de la fuente nunca abr
 **Cada ciclo** (80 s): pide las posiciones, reconstruye los movimientos, evalúa los
 aeropuertos vigilados, aplica las confirmaciones que deja la recogida horaria
 (`confirmaciones.json`), publica `directo.json` en el almacén público y guarda su estado
-(`estado.json`) y el registro para `estado.json` de la web (`/home/eodi/.eodi/directo.json`).
+(`estado.json`) y el registro para `estado.json` de la web (`~/.eodi/directo.json`).
 Un aviso nuevo lanza la búsqueda dirigida de noticias (`recogida/busqueda_dirigida.py
 directo`), con su propio cerrojo. Cada día, al aparecer un día nuevo procesado del archivo,
 recalcula los aeropuertos vigilados y sus líneas base, y publica el mapa diario de

@@ -20,7 +20,7 @@ export interface VersionDatos {
   };
   cita: { es: string; en: string };
   /** El autor con su ORCID; las versiones anteriores a los créditos (2026-10) no lo traen. */
-  autor?: { nombre: string; firma: { es: string; en: string }; orcid: string; correo: string };
+  autor?: { nombre: string; firma: { es: string; en: string }; orcid: string; correo?: string };
   ficheros: Record<string, { bytes: number; sha256: string }>;
 }
 

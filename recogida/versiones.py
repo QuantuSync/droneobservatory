@@ -18,7 +18,7 @@ almacén) y la lista en «Metodología y datos abiertos» (`versiones/indice.jso
 - `comprobar` mira cada día cada versión del índice: que su `metadatos.json` tiene la huella
   anotada en el índice y que cada fichero tiene el tamaño, la huella y la etiqueta (ETag) de
   cuando se publicó (con `--completa`, el día 1, además lo baja entero y recalcula la huella).
-  Cualquier diferencia o falta queda en `/home/eodi/.eodi/versiones.json`, y la vigilancia
+  Cualquier diferencia o falta queda en `~/.eodi/versiones.json`, y la vigilancia
   (recogida/vigilancia.py) avisa, como si el día 1 no se generara la del mes.
 
 Los ficheros se bajan de la web en una sola versión de los datos: `resumen.json` antes y después

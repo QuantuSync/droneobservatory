@@ -2,7 +2,6 @@
 barrido. Sin red."""
 
 import json
-import re
 from datetime import date, datetime
 from pathlib import Path
 from typing import Any
@@ -86,37 +85,6 @@ def test_el_modo_de_gasto_del_barrido_dirigido_tiene_su_limite() -> None:
 
 
 # --- Scripts del servidor ----------------------------------------------------------------
-
-
-def _texto(nombre: str) -> str:
-    return (RAIZ / "servidor" / nombre).read_text(encoding="utf-8")
-
-
-def test_el_catalogo_vivo_tiene_su_cerrojo_su_unidad_y_su_temporizador() -> None:
-    script = _texto("catalogo.sh")
-    assert '"$CERROJO_CATALOGO"' in script and not re.search(r'"\$CERROJO"', script)
-    assert "-m recogida.catalogo_vivo barrer" in script
-    configuracion = _texto("configuracion.sh")
-    assert 'CERROJO_CATALOGO="$SECRETOS/catalogo.lock"' in configuracion
-    assert 'CATALOGO_DATOS="${EODI_CATALOGO_DATOS:-$CASA/datos/catalogo}"' in configuracion
-    instalar = _texto("instalar.sh")
-    unidad = instalar.split('cat > "/etc/systemd/system/$UNIDAD_CATALOGO.service"')[1].split("FIN")[
-        1
-    ]
-    assert "ExecStart=/usr/bin/env bash $CLON/servidor/catalogo.sh" in unidad
-    assert "Nice=$CATALOGO_NICE" in unidad and "IOSchedulingClass=idle" in unidad
-    temporizador = instalar.split('cat > "/etc/systemd/system/$UNIDAD_CATALOGO.timer"')[1]
-    assert "OnCalendar=$CALENDARIO_CATALOGO" in temporizador
-    assert '"$UNIDAD_CATALOGO.timer"' in _texto("reconstruir.sh")
-
-
-def test_el_barrido_dirigido_busca_sin_cerrojo_e_incorpora_con_el_de_la_recogida() -> None:
-    script = _texto("dirigido.sh")
-    busca = script.index("-m recogida.barrido_dirigido buscar")
-    cerrojo = script.index('exec 9> "$CERROJO"')
-    incorpora = script.index("-m recogida.barrido_dirigido incorporar")
-    assert busca < cerrojo < incorpora
-    assert 'DIRIGIDO_INFORME="$CASA/dirigido-informe.json"' in _texto("configuracion.sh")
 
 
 def test_la_recogida_horaria_incorpora_el_catalogo_vivo() -> None:

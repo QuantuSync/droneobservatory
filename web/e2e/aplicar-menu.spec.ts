@@ -3,7 +3,7 @@
 // Crimea y las regiones rusas fronterizas); sin nada a la vista no mueve el mapa y avisa; la equis,
 // Escape y tocar fuera no mueven el mapa; tras aplicar, el foco vuelve al botón que abrió el panel.
 // En 768 × 1024 (disposición de escritorio: los paneles no tapan más de la mitad del mapa) solo los
-// filtros llevan «Aplicar», también con toques. Deja capturas en docs/capturas/aplicar-menu
+// filtros llevan «Aplicar», también con toques. Deja capturas en una carpeta de capturas
 // (CAPTURAS para otra carpeta). Va contra producción por defecto; con BASE=<vista previa> y
 // BYPASS=<clave>, contra una vista previa.
 import { join } from "node:path";

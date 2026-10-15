@@ -85,7 +85,7 @@ retiene la barrera de titulares (proceso/cita_titular.py). El fichero es públic
 identificadores de incidentes sin publicar ni ningún contenido, solo horas, recuentos y frases
 genéricas. El detalle queda en el diario de esta unidad.
 
-El registro `/home/eodi/.eodi/vigilancia.json` guarda la hora de la última publicación vista
+El registro `~/.eodi/vigilancia.json` guarda la hora de la última publicación vista
 (la recogida es horaria y esta unidad pasa cada 5 minutos: ve todas).
 
 Uso: python -m recogida.vigilancia [--sin-subir] [--salida <fichero>]

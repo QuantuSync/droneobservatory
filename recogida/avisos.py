@@ -1,4 +1,4 @@
-"""Avisos públicos con ntfy (docs/avisos.md).
+"""Avisos públicos con ntfy (interno: avisos).
 
 Al final de cada recogida horaria que publica bien (servidor/recogida.sh), se envía un aviso por
 cada incidente nuevo de Europa que lo merece al tema de toda Europa (drones-europe) y al de su

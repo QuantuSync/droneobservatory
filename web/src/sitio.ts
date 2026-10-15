@@ -4,7 +4,6 @@
 export const NOMBRE = "European Observatory of Drone Incidents";
 export const SIGLAS = "EODI";
 export const ORIGEN = "https://droneobservatory.eu";
-export const REPOSITORIO = "https://github.com/QuantuSync/droneobservatory";
 export const CONTACTO_SEGURIDAD = "192205734+QuantuSync@users.noreply.github.com";
 
 export type Idioma = "es" | "en";
@@ -40,7 +39,16 @@ export const AUTOR_LINEA: Record<Idioma, string> = {
 };
 export const ORCID = "0009-0008-5179-2534";
 export const ORCID_URL = `https://orcid.org/${ORCID}`;
-export const CORREO_AUTOR = "lucasalanizpintos@gmail.com";
+/**
+ * El correo de contacto del autor no está en el repositorio: lo da la variable VITE_CORREO_AUTOR del
+ * entorno de la compilación (en Vercel, la del proyecto; en las pruebas, vite.config.ts). Sin ella,
+ * la web y los ficheros van sin correo.
+ */
+export const CORREO_AUTOR: string = (
+  (import.meta.env as ImportMetaEnv | undefined)?.VITE_CORREO_AUTOR ??
+  (typeof process === "undefined" ? undefined : process.env.VITE_CORREO_AUTOR) ??
+  ""
+).trim();
 
 /** La versión (AAAA-MM, en UTC) que se cita para unos datos actualizados en `instante`. */
 export function versionDeDatos(instante: string): string {

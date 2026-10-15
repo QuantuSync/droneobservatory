@@ -1,9 +1,9 @@
-"""Acceso de solo lectura a la exportación semanal para AEGIS (droneobservatory-exportaciones).
+"""Acceso de solo lectura a la exportación semanal para AEGIS (bucket privado de exportaciones).
 
 En Hetzner Object Storage cada credencial S3 vale para todos los buckets de su proyecto, con
 lectura y escritura, y solo se crea desde la consola (no hay API). La forma de dar solo lectura
 de un bucket es la que recomienda Hetzner: la credencial de lectura vive en **otro proyecto**, sin
-buckets, y la política de `droneobservatory-exportaciones` le permite `s3:GetObject` y
+buckets, y la política del bucket de exportaciones le permite `s3:GetObject` y
 `s3:ListBucket` y nada más. Así no puede escribir en ningún bucket del observatorio ni leer los
 demás; la credencial del servidor sigue como estaba (es del proyecto dueño del bucket).
 
@@ -31,7 +31,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from almacen import copias, exportaciones
+from almacen import buckets, copias, exportaciones
 
 SID = "LecturaExportacionAEGIS"
 CONFIGURACIONES = (
@@ -87,10 +87,10 @@ def _otros_destinos() -> list[copias.Destino]:
     for nombre in CONFIGURACIONES:
         datos = json.loads((exportaciones.RAIZ / "configuracion" / nombre).read_text("utf-8"))
         for bloque in (datos, datos.get("reserva") or {}):
-            if bloque.get("bucket") and bloque.get("punto_s3"):
+            if (bloque.get("bucket") or bloque.get("bucket_variable")) and bloque.get("punto_s3"):
                 destinos.append(
                     copias.Destino(
-                        bloque["ubicacion"], bloque["punto_s3"], bloque["bucket"], "", {}
+                        bloque["ubicacion"], bloque["punto_s3"], buckets.nombre(bloque), "", {}
                     )
                 )
     return destinos

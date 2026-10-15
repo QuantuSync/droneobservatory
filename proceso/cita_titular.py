@@ -12,7 +12,7 @@ mano y justificado en configuracion/incidentes_revisados.json («titular_justifi
 motivo). La comprobación lee las citas en su escritura y también pasadas al alfabeto latino
 («София» casa con «Sofía») y con los nombres equivalentes de configuracion/nombres_equivalentes.json
 («Схипхол» es Schiphol), y la prueba fija de la integración continua la pasa por los ficheros
-publicados (tests/test_cita_titular.py; docs/informe_revision_contenido.md, bloque 1).
+publicados (tests/test_cita_titular.py; interno: informe_revision_contenido, bloque 1).
 
 Desde el 11 de octubre de 2026 también respalda el titular el titular del propio artículo de una
 de sus fuentes, tal como está guardado en la base (tabla `articulos`): nunca un texto del

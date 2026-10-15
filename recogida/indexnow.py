@@ -1,5 +1,5 @@
 """IndexNow: avisa a Bing y a los demás buscadores que lo usan de las páginas nuevas o cambiadas
-(docs/posicionamiento.md).
+(interno: posicionamiento).
 
 Corre al final de cada recogida que publica bien (servidor/recogida.sh). La lista de páginas sale
 del sitemap de la web en vivo, con la fecha de modificación de cada una: así solo se avisa de lo

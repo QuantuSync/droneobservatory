@@ -1,6 +1,6 @@
 """Exportación semanal para AEGIS (exportacion/semanal.py), desde la base de la rama estado.
 
-En el servidor la lanza cada lunes a las 03:47 UTC `servidor/exportacion.sh`, con el mismo
+En el servidor la lanza una vez por semana, de madrugada, su temporizador, con el mismo
 cerrojo que la recogida horaria. Descarga la base, genera la versión del día (AAAA.MM.DD),
 la valida, la cifra y la sube a main del repositorio de datos como exportaciones/<versión>/
 con la etiqueta eodi-<versión>. Una versión que ya existe no se sobrescribe: se avisa y se

@@ -26,7 +26,7 @@ Volkel / Volkel Air Base).
    consultado para volver a generar sin consultar) y lo dudoso se corrige en la tabla manual, que
    también se aplica al generar.
 3. La caché de lo buscado cada hora (`EODI_NOMBRES_CACHE`; en el servidor,
-   `/home/eodi/datos/nombres_lugar.json`): la recogida horaria busca en Wikidata los nombres de
+   `~/datos/nombres_lugar.json`): la recogida horaria busca en Wikidata los nombres de
    lugar de los incidentes que no están en las tablas (paso «nombres de lugar»,
    `recogida/nombres_wikidata.py`; 25 consultas y 60 segundos como mucho; lo no encontrado se
    vuelve a buscar a la semana). Si Wikidata no responde, se publica igual.

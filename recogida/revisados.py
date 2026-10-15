@@ -186,7 +186,7 @@ def reextraer(
     return hechos
 
 
-# --- Revisión del contenido (docs/informe_revision_contenido.md) ---------------------------
+# --- Revisión del contenido (interno: informe_revision_contenido) ---------------------------
 #
 # - Retirar: un registro que no es un suceso (una estadística, una nota de opinión, un «hace
 #   hoy ocho años»). Queda retirado con su motivo en español y en inglés; nada se borra.

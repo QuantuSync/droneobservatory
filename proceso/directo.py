@@ -51,7 +51,7 @@ from proceso import aeronaves, metar, trafico, vuelos
 
 VERSION_REGLA = "directo-1.1.0"
 
-# --- Umbrales (ajustados reproduciendo días reales: docs/informe_europa_directo.md) ------
+# --- Umbrales (ajustados reproduciendo días reales: interno: informe_europa_directo) ------
 PASO_S = 80
 RETRASO_S = 240
 ESPERADOS_MINIMOS = 12.0
@@ -83,7 +83,7 @@ FRACCION_DIA_COMPLETO = 0.5
 MOVIMIENTOS_DIA_MINIMOS = 40.0
 # Aeropuertos con un cierre publicado en la web (incidentes.geojson e
 # incidentes_sin_ubicacion.json): se vigilan con cobertura alta o media y 20 movimientos al día o
-# más (docs/informe_prevision.md).
+# más (interno: informe_prevision).
 # La propia señal sigue exigiendo que se vea al menos el 60 % de lo esperado en las tres horas
 # previas, así que un aeropuerto con poca cobertura ese día no da avisos.
 MOVIMIENTOS_DIA_MINIMOS_CON_INCIDENTES = 20.0

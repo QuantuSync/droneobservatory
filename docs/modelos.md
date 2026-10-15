@@ -18,8 +18,8 @@ cobra con la del modelo que la hizo (el campo `model` de la respuesta).
 
 ## Configuración
 
-Variables del fichero de secretos `extractor.env` (en el servidor, `/home/eodi/.eodi/
-extractor.env`; en local, `%USERPROFILE%\.eodi\extractor.env`), que cargan todas las unidades:
+Variables del fichero de secretos `extractor.env` (en el servidor, en la carpeta de
+secretos del usuario del observatorio; en local, `%USERPROFILE%\.eodi\extractor.env`), que cargan todas las unidades:
 
 - `EODI_MODELO_BASE`: el identificador completo del modelo base (el del proveedor, que acaba en
   `haiku-5-5`). Si no está, se usa `EODI_EXTRACTOR_MODELO`, el de antes.
@@ -224,7 +224,7 @@ Principio (desde el 15 de octubre de 2026): **lo crítico nunca espera a que se 
 
 ## Lotes (mitad de precio) para lo que no es urgente
 
-- **Madrugada** (`eodi-control`, 01:41 UTC): los pares y las verificaciones de las últimas 48 horas
+- **Madrugada** (una pasada al día): los pares y las verificaciones de las últimas 48 horas
   van por lote (`repaso` con alcance «noche»), sin el cerrojo mientras el lote se procesa (3 horas
   como mucho); lo que el base pide escalar se repite con el experto en llamadas directas, dentro
   de su tope. Tope de la revisión: `TOPE_NOCHE_USD` (0,08 USD). Después, las citas sin traducir,
@@ -251,7 +251,7 @@ Principio (desde el 15 de octubre de 2026): **lo crítico nunca espera a que se 
 - Cada incidente guarda en `control.modelos` (interno, esquema 1.19.0) el modelo que decidió cada
   dato de la ficha (campo de la ficha → identificador): el de la extracción y, en los que corrige
   el control, el de la verificación. Viaja en la exportación para AEGIS (formato 1.12.0,
-  `docs/exportacion_aegis.md`).
+  interno: exportacion_aegis).
 - Cada decisión del control (par, verificación) guarda `modelo` y, si se escaló, `escalado`.
 
 ## Resumen diario

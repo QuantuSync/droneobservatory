@@ -1,4 +1,4 @@
-"""Partes del mismo día (docs/informe_errores_datos.md, bloque 5): la noche de cada parte con
+"""Partes del mismo día (interno: informe_errores_datos, bloque 5): la noche de cada parte con
 la regla única de los datos y de la web, el parte de toda la noche del ministerio ruso que
 incluye los tramos ya publicados, los periodos mal guardados y los partes de resumen."""
 

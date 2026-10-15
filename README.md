@@ -3,8 +3,7 @@
 [droneobservatory.eu](https://droneobservatory.eu)
 
 **Autor:** Dr. Lucas Alaniz Pintos · **Author:** Lucas Alaniz Pintos, PhD ·
-ORCID [0009-0008-5179-2534](https://orcid.org/0009-0008-5179-2534) ·
-[lucasalanizpintos@gmail.com](mailto:lucasalanizpintos@gmail.com)
+ORCID [0009-0008-5179-2534](https://orcid.org/0009-0008-5179-2534)
 
 Registra cada incidente con drones en Europa, incluida la guerra entre Ucrania
 y Rusia en los dos sentidos, para una web pública de una sola pantalla con el mapa de Europa y para un conjunto de
@@ -30,14 +29,15 @@ en [droneobservatory.eu](https://droneobservatory.eu), en español e inglés.
 | --- | --- |
 | `esquema/` | JSON Schema versionados (1.19.0; `esquema/exportacion/` para la exportación semanal), con marca de visibilidad por campo |
 | `configuracion/` | Fuentes con su fiabilidad, vocabularios de modelos de dron y de regiones, nomenclátor de lugares europeos, cajas de coordenadas de los países, vocabulario de noticias, medios europeos de GDELT y la lista de referencia de 2025 |
-| `proceso/` | Validaciones, máquina de estados, regla de credibilidad, ataques, tramos solapados, noticias (filtro, réplicas y agrupación), extracción, validación de fichas, incidentes, fusión y episodios; y el motor de deducción por descarte físico (`proceso/deduccion/`, catálogo de prestaciones en `configuracion/catalogo_drones.json`, [`docs/informe_deduccion.md`](docs/informe_deduccion.md)) |
+| `proceso/` | Validaciones, máquina de estados, regla de credibilidad, ataques, tramos solapados, noticias (filtro, réplicas y agrupación), extracción, validación de fichas, incidentes, fusión y episodios; y el motor de deducción por descarte físico (`proceso/deduccion/`, catálogo de prestaciones en `configuracion/catalogo_drones.json`) |
 | `modelo/` | Extractor: cliente HTTP del servicio (configurado por secretos), ficha con salida obligada por esquema, coste y límites, lectura de las primeras frases |
 | `almacen/` | Base de datos SQLite con historial, cifrado con age y rama `estado` del repositorio de datos |
-| `exportacion/` | `incidentes.geojson`, `incidentes_sin_ubicacion.json` y `ucrania.json` para la web, cada uno con su lista cerrada de campos; y la exportación semanal interna y cifrada para AEGIS, con el origen de cada dato y el nivel de detalle de cada incidente ([`docs/informe_exportacion_aegis.md`](docs/informe_exportacion_aegis.md)) |
-| `recogida/` | Descarga educada, caché, fuentes de partes (Fuerza Aérea y Ministerio de Defensa ruso), GDELT, anomalías térmicas de NASA FIRMS, tráfico aéreo de adsb.lol, detección en directo de cierres de aeropuerto con las posiciones en tiempo real y mapa diario de interferencia GPS ([`docs/informe_europa_directo.md`](docs/informe_europa_directo.md)), meteorología de Open-Meteo y METAR, ejecución horaria, histórico y auditoría de cobertura |
+| `exportacion/` | `incidentes.geojson`, `incidentes_sin_ubicacion.json` y `ucrania.json` para la web, cada uno con su lista cerrada de campos; y la exportación semanal interna y cifrada para AEGIS, con el origen de cada dato y el nivel de detalle de cada incidente |
+| `recogida/` | Descarga educada, caché, fuentes de partes (Fuerza Aérea y Ministerio de Defensa ruso), GDELT, anomalías térmicas de NASA FIRMS, tráfico aéreo de adsb.lol, detección en directo de cierres de aeropuerto con las posiciones en tiempo real y mapa diario de interferencia GPS, meteorología de Open-Meteo y METAR, ejecución horaria, histórico y auditoría de cobertura |
 | `publicacion/` | Solo una nota: desde el 8 de octubre de 2026 los ficheros públicos (`ucrania.json`, `incidentes.geojson`, `incidentes_sin_ubicacion.json` y `prevision.json`) ya no están en el repositorio sino en el almacén público, y se descargan de la web ([`publicacion/LEEME.md`](publicacion/LEEME.md)) |
 | `web/` | Web pública de una sola pantalla: mapa, fichas, línea de tiempo, metodología y datos abiertos ([`web/README.md`](web/README.md)) |
 | `tests/` | Tests |
+| `docs/` | Metodología que se puede reutilizar: dos modelos (base y experto), control de las fichas, nombres de lugar, sucesos mezclados y licencias de terceros |
 
 ## Ejecutar los tests
 
@@ -61,9 +61,8 @@ guarda en el repositorio.
 
 ## Recogida
 
-- `python -m recogida.horaria --correo <correo>`: lo que ejecuta cada hora, en el
-  minuto 17, el servidor de recogida ([`docs/servidor.md`](docs/servidor.md); qué hacer si
-  falla, en [`docs/operacion.md`](docs/operacion.md)). Abre la base (en el servidor, la del disco),
+- `python -m recogida.horaria --correo <correo>`: la recogida horaria, que ejecuta cada hora
+  un servidor propio. Abre la base (en el servidor, la del disco),
   recoge lo nuevo desde el cursor de cada fuente (con relectura de las últimas
   48 horas) y de GDELT, regenera los ficheros públicos y guarda la base si ha cambiado.
 - `python -m recogida.historico --fuente <id> --correo <correo> [--solo-cache]`:
@@ -86,18 +85,21 @@ que cambia `web/`, `api/` o `vercel.json` se despliega con la integración de Ve
 con GitHub, y la recogida pide una reconstrucción con un gancho de despliegue cada
 vez que publica datos nuevos en el almacén (el build los lee de allí:
 `configuracion/publicacion_web.json`). Detalle en
-[`web/README.md`](web/README.md) y [`docs/informe_web.md`](docs/informe_web.md).
+[`web/README.md`](web/README.md).
 
-Decisiones, valores y cobertura en [`docs/informe_recogida.md`](docs/informe_recogida.md),
-[`docs/informe_gdelt_mindef.md`](docs/informe_gdelt_mindef.md),
-[`docs/informe_gkg_partes.md`](docs/informe_gkg_partes.md) y
-[`docs/informe_extractor_europa.md`](docs/informe_extractor_europa.md).
+La puesta en marcha del servidor (usuarios, rutas, horarios, almacenes privados y
+copias) no se publica: este repositorio tiene el código, la metodología y lo necesario
+para entenderlo y reutilizarlo. Las direcciones que solo usa el servidor (buckets
+privados, correo de contacto) se leen de variables de entorno: `EODI_BUCKET_*`
+(`almacen/buckets.py`), `EODI_CORREO_AUTOR` (`recogida/licencia.py`) y, en la web,
+`VITE_CORREO_AUTOR` (`web/src/sitio.ts`).
 
 ## Autoría y cita / Authorship and citation
 
 - Autor: Dr. Lucas Alaniz Pintos. Author: Lucas Alaniz Pintos, PhD.
 - ORCID: [0009-0008-5179-2534](https://orcid.org/0009-0008-5179-2534).
-- Contacto / Contact: [lucasalanizpintos@gmail.com](mailto:lucasalanizpintos@gmail.com).
+- Contacto / Contact: en el [aviso legal](https://droneobservatory.eu/aviso-legal) de la web /
+  in the [legal notice](https://droneobservatory.eu/en/legal-notice).
 - Cita recomendada (AAAA-MM: la versión de los datos usados):
   «Alaniz Pintos, L. (2026). European Observatory of Drone Incidents. Versión AAAA-MM.
   https://droneobservatory.eu. Licencia CC BY 4.0.»

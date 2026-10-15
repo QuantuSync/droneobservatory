@@ -35,7 +35,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from almacen import copias
+from almacen import buckets, copias
 
 registro = logging.getLogger("exportaciones")
 
@@ -59,7 +59,7 @@ def destino(ruta: Path = CONFIGURACION) -> copias.Destino:
     base = copias.cargar_destino()
     prefijo = os.environ.get(VARIABLE_PREFIJO) or datos["prefijo"]
     return copias.Destino(
-        datos["ubicacion"], datos["punto_s3"], datos["bucket"], prefijo, base.retencion
+        datos["ubicacion"], datos["punto_s3"], buckets.nombre(datos), prefijo, base.retencion
     )
 
 

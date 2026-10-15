@@ -1,6 +1,6 @@
 import { rutasEs } from "./rutas.ts";
 import { tipoDronEs } from "./tipoDron.ts";
-import { LICENCIA_DATOS, LICENCIA_DATOS_URL, NOMBRE, REPOSITORIO, citaRecomendada } from "../sitio.ts";
+import { LICENCIA_DATOS, LICENCIA_DATOS_URL, NOMBRE, citaRecomendada } from "../sitio.ts";
 import { REGIONES_RUSIA_ES } from "./regionesRusia.ts";
 import type { FechaEscrita, Textos } from "./tipos.ts";
 import { UMBRALES_DIRECTO } from "./umbrales.ts";
@@ -1390,8 +1390,7 @@ export const es: Textos = {
                     "mínimo). El 7 de octubre de 2026 ningún caso de la frontera pasa: el ataque " +
                     "y el señuelo no se distinguen, así que no se enseñan porcentajes. Lo que sí " +
                     "pasa es que fuera uno de los dos: en 22 de 24 casos. Las probabilidades " +
-                    "calculadas siguen en la exportación de datos. Las cifras de cada clase " +
-                    "están en el informe docs/informe_tipo_y_rutas.md del repositorio.",
+                    "calculadas siguen en la exportación de datos.",
                 ],
               },
               {
@@ -1656,7 +1655,7 @@ export const es: Textos = {
             lista: [
               {
                 termino: "Código",
-                texto: [{ texto: "Apache-2.0", enlace: `${REPOSITORIO}/blob/main/LICENSE` }, "."],
+                texto: ["Apache-2.0 (código abierto)."],
               },
               {
                 termino: "Datos",

@@ -1,4 +1,4 @@
-"""Valida el sitemap de la web contra el esquema oficial de sitemaps.org (docs/posicionamiento.md).
+"""Valida el sitemap de la web contra el esquema oficial de sitemaps.org (interno: posicionamiento).
 
     python herramientas/validar_sitemap.py [dirección o fichero del sitemap]
 

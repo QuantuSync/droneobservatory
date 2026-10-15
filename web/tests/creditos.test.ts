@@ -14,17 +14,17 @@ import { CONTACTO } from "../src/texto/servicio.ts";
 
 const RAIZ = join(import.meta.dirname, "..", "..");
 const configuracion = JSON.parse(readFileSync(join(RAIZ, "configuracion", "licencia_datos.json"), "utf-8")) as {
-  autor: { nombre: string; firma: { es: string; en: string }; orcid: string; correo: string };
+  autor: { nombre: string; firma: { es: string; en: string }; orcid: string };
   cita: { es: string; en: string };
 };
 
 describe("créditos del autor", () => {
   it("coinciden con configuracion/licencia_datos.json", () => {
-    expect(AUTOR_DATOS).toEqual(configuracion.autor);
+    expect(AUTOR_DATOS).toEqual({ ...configuracion.autor, correo: CORREO_AUTOR });
     expect(AUTOR_NOMBRE).toBe(configuracion.autor.nombre);
     expect(AUTOR_FIRMA).toEqual(configuracion.autor.firma);
     expect(ORCID_URL).toBe(configuracion.autor.orcid);
-    expect(CORREO_AUTOR).toBe(configuracion.autor.correo);
+    expect(CORREO_AUTOR).toBe("autor@ejemplo.org");
     expect(CONTACTO).toBe(CORREO_AUTOR);
     for (const idioma of ["es", "en"] as const) {
       const esperada = configuracion.cita[idioma].replace("{anio}", "2026").replace("{version}", "2026-11");
@@ -69,7 +69,7 @@ describe("créditos en las páginas de texto (sin código)", () => {
       const texto = marco(pagina, "2026-10-09T10:17Z").toString();
       expect(texto).toContain(idioma === "es" ? "Autor: Dr. Lucas Alaniz Pintos" : "Author: Lucas Alaniz Pintos, PhD");
       expect(texto).toContain('href="https://orcid.org/0009-0008-5179-2534"');
-      expect(texto).toContain('href="mailto:lucasalanizpintos@gmail.com"');
+      expect(texto).toContain('href="mailto:autor@ejemplo.org"');
     }
   });
 

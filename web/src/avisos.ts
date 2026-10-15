@@ -1,4 +1,4 @@
-// Canal público de avisos con ntfy (docs/avisos.md): los canales, sus enlaces y los textos que
+// Canal público de avisos con ntfy (interno: avisos): los canales, sus enlaces y los textos que
 // comparten la página de texto «Avisos» (src/texto/avisos.ts) y el panel del mapa
 // (componentes/Avisos.tsx). Los canales salen de configuracion/avisos.json, la misma lista que usan
 // el servidor (servidor/ntfy.sh) y el envío (recogida/avisos.py). Los códigos QR se generan como

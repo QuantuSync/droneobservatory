@@ -1,5 +1,5 @@
 # European Observatory of Drone Incidents: todo lo público se puede rastrear e indexar, también
-# por los asistentes. Ver docs/posicionamiento.md.
+# por los asistentes. Ver interno: posicionamiento.
 
 User-agent: Googlebot
 User-agent: Bingbot

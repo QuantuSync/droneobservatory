@@ -1,4 +1,4 @@
-"""Odesa casi sin impactos (docs/informe_odesa.md): el distrito como lugar cuando el mensaje no
+"""Odesa casi sin impactos (interno: informe_odesa): el distrito como lugar cuando el mensaje no
 nombra otro, con su radio real y nivel «distrito»; la ciudad del canal de una administración
 municipal («по місту»); el ataque con drones sobre un lugar; «внаслідок обстрілу» en un mensaje
 que solo nombra drones, y «ушкоджено». Con las protecciones de siempre."""

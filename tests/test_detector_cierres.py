@@ -1,4 +1,4 @@
-"""Mejoras del detector de cierres (docs/informe_prevision.md): revisión de las candidatas del
+"""Mejoras del detector de cierres (interno: informe_prevision): revisión de las candidatas del
 archivo diario y, en directo, vigilados con cierres publicados, receptores caídos y un
 despegue suelto que no reinicia la persistencia."""
 

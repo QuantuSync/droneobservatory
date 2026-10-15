@@ -504,12 +504,14 @@ const detalleIncidente = alguna(
 );
 
 /** El autor que llevan los ficheros y las versiones (recogida/licencia.py), con su ORCID. */
-const autorDatos = objeto({
-  nombre: cadena(),
-  firma: objeto({ es: cadena(), en: cadena() }),
-  orcid: cadena(/^https:\/\/orcid\.org\/\d{4}-\d{4}-\d{4}-\d{3}[\dX]$/),
-  correo: cadena(),
-});
+const autorDatos = objeto(
+  {
+    nombre: cadena(),
+    firma: objeto({ es: cadena(), en: cadena() }),
+    orcid: cadena(/^https:\/\/orcid\.org\/\d{4}-\d{4}-\d{4}-\d{3}[\dX]$/),
+  },
+  { correo: cadena() },
+);
 
 /**
  * La licencia que llevan dentro los ficheros del almacén (recogida/licencia.py). El autor es

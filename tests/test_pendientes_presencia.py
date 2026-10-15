@@ -1,4 +1,4 @@
-"""Pendientes de la revisión de presencia de dron (docs/informe_errores_datos.md, bloque 6):
+"""Pendientes de la revisión de presencia de dron (interno: informe_errores_datos, bloque 6):
 repeticiones medidas con la hora de la fuente, el cierre de una pista como cierre y la altura de
 los encuentros de la UK Airprox Board en el motor de deducción."""
 

@@ -483,7 +483,7 @@ describe("metodología", () => {
     expect(container.querySelector("[data-autor]")?.textContent).toBe("Autor: Dr. Lucas Alaniz Pintos");
     const orcid = [...container.querySelectorAll("a")].find((a) => a.textContent?.includes("0009-0008-5179-2534"));
     expect(orcid?.getAttribute("href")).toBe("https://orcid.org/0009-0008-5179-2534");
-    expect(container.querySelector('a[href="mailto:lucasalanizpintos@gmail.com"]')).not.toBeNull();
+    expect(container.querySelector('a[href="mailto:autor@ejemplo.org"]')).not.toBeNull();
     const licencia = [...container.querySelectorAll("a")].find((a) => a.textContent?.includes("CC BY 4.0"));
     expect(licencia?.getAttribute("href")).toBe("https://creativecommons.org/licenses/by/4.0/");
   });

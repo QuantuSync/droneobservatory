@@ -1,4 +1,4 @@
-"""Nombres normalizados de las zonas de lanzamiento (docs/informe_errores_datos.md, bloque 3):
+"""Nombres normalizados de las zonas de lanzamiento (interno: informe_errores_datos, bloque 3):
 las grafías de los partes, las zonas genéricas, lo que no es una zona, el registro de revisión,
 la corrección de los ataques guardados y que el motor de deducción y la web casen el nombre
 normalizado con su zona del catálogo."""

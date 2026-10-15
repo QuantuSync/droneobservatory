@@ -12,14 +12,14 @@ export interface AutorDatos {
   nombre: string;
   firma: { es: string; en: string };
   orcid: string;
-  correo: string;
+  correo?: string;
 }
 
 export const AUTOR_DATOS: AutorDatos = {
   nombre: AUTOR_NOMBRE,
   firma: { es: AUTOR_FIRMA.es, en: AUTOR_FIRMA.en },
   orcid: ORCID_URL,
-  correo: CORREO_AUTOR,
+  ...(CORREO_AUTOR ? { correo: CORREO_AUTOR } : {}),
 };
 
 export interface MetadatosLicencia {

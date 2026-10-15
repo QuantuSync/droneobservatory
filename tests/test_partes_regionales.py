@@ -1,6 +1,6 @@
 """Partes de las administraciones regionales que no nombran pueblos: comunidades («громада»)
 como lugar, líneas por lugar con varias armas, el parte de la frontera de Sumy y el histórico
-que el lector añade después (docs/informe_errores_datos.md, bloque 2)."""
+que el lector añade después (interno: informe_errores_datos, bloque 2)."""
 
 import json
 from datetime import UTC, datetime

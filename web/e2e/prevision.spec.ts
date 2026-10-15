@@ -1,7 +1,7 @@
 // «Previsión», el filtro frontera/interior y los arreglos del mismo paquete, en el teléfono (360,
 // 390 y 412 px de ancho) y en escritorio. En el teléfono «Previsión» es una pestaña de «Europa
 // ahora»; en escritorio, un botón propio. Abrir y cerrar no mueve el mapa; tocar una racha lleva
-// el mapa al país con el periodo de la racha en los filtros. Deja capturas en docs/capturas
+// el mapa al país con el periodo de la racha en los filtros. Deja capturas en una carpeta de capturas
 // (CAPTURAS para otra carpeta). Va contra producción por defecto; con BASE=http://localhost:…,
 // contra el servidor local.
 import { join } from "node:path";

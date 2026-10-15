@@ -1,7 +1,7 @@
 {
  "version": "1.1.0",
  "version_esquema": "1.1.0",
- "descripcion": "Catálogo de prestaciones de drones del motor de deducción del European Observatory of Drone Incidents. Cada valor lleva su fuente (catalogo_fuentes.json) y la frase literal de la fuente que lo da, con la unidad de la fuente, sin redondear ni convertir. Un campo sin dato fiable está vacío y marcado sin_fuente. Revisado el 2 de octubre de 2026 contra cada fuente; las cifras que no coincidían con el borrador se corrigieron (docs/informe_deduccion.md).",
+ "descripcion": "Catálogo de prestaciones de drones del motor de deducción del European Observatory of Drone Incidents. Cada valor lleva su fuente (catalogo_fuentes.json) y la frase literal de la fuente que lo da, con la unidad de la fuente, sin redondear ni convertir. Un campo sin dato fiable está vacío y marcado sin_fuente. Revisado el 2 de octubre de 2026 contra cada fuente; las cifras que no coincidían con el borrador se corrigieron (interno: informe_deduccion).",
  "campos": {
   "motor": {
    "descripcion": "Propulsión (eléctrico, pistón, turborreactor) y modelo de motor.",

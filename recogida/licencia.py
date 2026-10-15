@@ -10,12 +10,17 @@ con los datos cuando alguien los integra en otro sistema.
 """
 
 import json
+import os
 from datetime import UTC, datetime
 from functools import cache
 from pathlib import Path
 from typing import Any
 
 RUTA = Path(__file__).resolve().parent.parent / "configuracion" / "licencia_datos.json"
+# El correo de contacto del autor no está en el repositorio: lo da esta variable (en el servidor, su
+# configuración). Sin ella, el autor va sin correo (y la exportación para AEGIS, que lo exige,
+# falla).
+VARIABLE_CORREO = "EODI_CORREO_AUTOR"
 
 
 @cache
@@ -38,7 +43,11 @@ def cita(version: str) -> dict[str, str]:
 def autor() -> dict[str, Any]:
     """El autor: nombre, cómo firma en cada idioma, ORCID y correo."""
     datos: dict[str, Any] = cargar()["autor"]
-    return {c: datos[c] for c in ("nombre", "firma", "orcid", "correo")}
+    resultado = {c: datos[c] for c in ("nombre", "firma", "orcid")}
+    correo = os.environ.get(VARIABLE_CORREO, "").strip()
+    if correo:
+        resultado["correo"] = correo
+    return resultado
 
 
 def miembro(version: str | None = None) -> dict[str, Any]:

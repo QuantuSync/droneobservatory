@@ -1,4 +1,4 @@
-"""La cita respalda el titular (proceso/cita_titular.py; docs/informe_revision_contenido.md,
+"""La cita respalda el titular (proceso/cita_titular.py; interno: informe_revision_contenido,
 bloque 1). Prueba fija: corre en la integración continua sobre los datos publicados de verdad
 (el trabajo «datos-publicados», que los baja de donde los lee la web, con EODI_PUBLICACION) y,
 en el resto de trabajos, sobre los datos de ejemplo (tests/fixtures/publicacion). La misma

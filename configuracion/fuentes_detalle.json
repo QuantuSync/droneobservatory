@@ -1,6 +1,6 @@
 {
   "version_esquema": "1.0.0",
-  "descripcion": "Fuentes oficiales de detalle (recogida/detalle.py): dan altura, posición, detección, contramedidas, cifras y confirmaciones que la prensa no publica. tipo: el lector que la lee. grupo: con qué nombre sale en estado.json. fiabilidad y credibilidad: el código del Almirantazgo por defecto de lo que publica (A1 organismos de investigación, respuestas de gobiernos en el parlamento y sentencias; A2 UK Airprox Board y estadísticas de gestores y autoridades). Acceso, condiciones y licencia verificados de cada una en docs/informe_fuentes_detalle.md.",
+  "descripcion": "Fuentes oficiales de detalle (recogida/detalle.py): dan altura, posición, detección, contramedidas, cifras y confirmaciones que la prensa no publica. tipo: el lector que la lee. grupo: con qué nombre sale en estado.json. fiabilidad y credibilidad: el código del Almirantazgo por defecto de lo que publica (A1 organismos de investigación, respuestas de gobiernos en el parlamento y sentencias; A2 UK Airprox Board y estadísticas de gestores y autoridades). Acceso, condiciones y licencia verificados de cada una en interno: informe_fuentes_detalle.",
   "fuentes": [
     {
       "id": "ukab",

@@ -3,7 +3,7 @@ regionales de Ucrania, Estado Mayor ucraniano, gobernadores rusos (y autoridades
 por Rusia que dan lugar concreto) y Rosaviatsia.
 
 Los canales y la prueba de que son oficiales están en `configuracion/canales_guerra.json`
-(docs/informe_capa_guerra.md). Se leen por su vista pública web (t.me/s/<canal>) con la
+(interno: informe_capa_guerra). Se leen por su vista pública web (t.me/s/<canal>) con la
 identificación del observatorio y una petición cada 3 segundos, y lo leído se guarda en el
 disco del servidor, fuera del repositorio y de la base: un fichero JSONL por canal y mes
 con las publicaciones que pasan el filtro de la fuente (palabras de dron, o de aeropuerto en

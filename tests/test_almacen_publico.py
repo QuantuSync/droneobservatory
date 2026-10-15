@@ -65,7 +65,7 @@ def test_la_politica_de_contenido_admite_la_reserva_y_nada_de_cloudflare(
     assert politicas
     for politica in politicas:
         directivas = {d.split()[0]: d.split()[1:] for d in politica.split(";") if d.strip()}
-        # Además del almacén de reserva, solo el contador de visitas propio (docs/visitas.md).
+        # Además del almacén de reserva, solo el contador de visitas propio (interno: visitas).
         assert directivas["connect-src"] == ["'self'", reserva, "https://stats.droneobservatory.eu"]
         assert almacen.publico not in politica
         assert "tiles.droneobservatory.eu" not in politica

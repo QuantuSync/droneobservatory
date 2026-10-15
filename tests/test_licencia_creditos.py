@@ -5,7 +5,10 @@ publicado, en los metadatos de cada objeto y en la exportación semanal."""
 import json
 from datetime import UTC, datetime
 
+import pytest
+
 from recogida import licencia
+from tests.conftest import CORREO_PRUEBA
 
 ORCID = "https://orcid.org/0009-0008-5179-2534"
 
@@ -32,11 +35,17 @@ def test_el_fichero_publicado_lleva_autor_orcid_licencia_cita_y_direccion() -> N
         "nombre": "Lucas Alaniz Pintos",
         "firma": {"es": "Dr. Lucas Alaniz Pintos", "en": "Lucas Alaniz Pintos, PhD"},
         "orcid": ORCID,
-        "correo": "lucasalanizpintos@gmail.com",
+        "correo": CORREO_PRUEBA,
     }
     assert miembro["nombre"] == "CC BY 4.0"
     assert miembro["fuente"] == "https://droneobservatory.eu/"
     assert "Versión 2026-11" in miembro["cita"]["es"]
+
+
+def test_sin_la_variable_el_autor_va_sin_correo(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv(licencia.VARIABLE_CORREO)
+    assert "correo" not in licencia.autor()
+    assert licencia.autor()["orcid"] == ORCID
 
 
 def test_cabeceras_solo_ascii() -> None:

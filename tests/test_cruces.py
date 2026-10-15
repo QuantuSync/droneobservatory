@@ -1,5 +1,5 @@
 """Incursiones en países fronterizos enlazadas con el ataque de su noche, en los dos sentidos
-(docs/informe_errores_datos.md, bloque 4)."""
+(interno: informe_errores_datos, bloque 4)."""
 
 import copy
 from datetime import UTC, datetime

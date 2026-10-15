@@ -2,7 +2,7 @@
 
 La recogida horaria escribe los ficheros públicos (exportacion/publicar.py: incidentes.geojson,
 incidentes_sin_ubicacion.json, ucrania.json y prevision.json) en una carpeta del servidor. Con el
-interruptor de la publicación (`/home/eodi/.eodi/publicacion_modo`, servidor/recogida.sh) en
+interruptor de la publicación (`~/.eodi/publicacion_modo`, servidor/recogida.sh) en
 `doble` o en `almacen`, este módulo los sube al almacén público
 (configuracion/almacen_publico.json, prefijo `publicacion/`):
 
@@ -16,7 +16,7 @@ interruptor de la publicación (`/home/eodi/.eodi/publicacion_modo`, servidor/re
   `publicacion/historial/AAAA-MM-DD/<fichero>.gz` y su manifiesto. Sustituye al historial de git
   de la carpeta publicacion/, que se queda donde estaba;
 - si algo ha cambiado, pide a Vercel que reconstruya la web con el gancho de despliegue
-  (`/home/eodi/.eodi/vercel_gancho`, una dirección secreta).
+  (`~/.eodi/vercel_gancho`, una dirección secreta).
 
 Cada fichero sube con la licencia de los datos dentro (recogida/licencia.py): el miembro
 `licencia` al principio del JSON, como los que se descargan de la web, y `x-amz-meta-licencia` en

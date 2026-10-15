@@ -1,12 +1,10 @@
 """La exportación semanal completa sobre la base de prueba (tests/base_prueba.py), como la
 lanza el servidor pero sin subir nada: un campo sin regla de origen la hace fallar aquí, en la
-CI, antes de fusionar (docs/informe_exportacion_aegis.md, apartado 9)."""
+CI, antes de fusionar (interno: informe_exportacion_aegis, apartado 9)."""
 
 import gzip
 import json
 import os
-import subprocess
-import sys
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -223,46 +221,6 @@ def test_la_vigilancia_avisa_del_fallo_tras_sus_reintentos_sin_esperar_a_los_8_d
     assert salud.diagnostico_exportacion(resuelto, ahora)[0]
 
 
-@pytest.mark.skipif(sys.platform == "win32", reason="script del servidor, solo en Linux")
-def test_el_script_del_servidor_anota_el_fallo(tmp_path: Path) -> None:
-    """servidor/exportacion.sh con una exportación que falla: sale con su código y deja el fallo
-    anotado en el registro."""
-    clon = tmp_path / "clon"
-    (clon / "recogida").mkdir(parents=True)
-    (clon / ".venv" / "bin").mkdir(parents=True)
-    raiz = Path(__file__).resolve().parent.parent
-    # El paquete recogida de verdad, salvo la exportación, que en este clon falla siempre;
-    # --anotar-fallo es el del código de verdad.
-    for modulo in (raiz / "recogida").glob("*.py"):
-        if modulo.name != "exportacion.py":
-            (clon / "recogida" / modulo.name).symlink_to(modulo)
-    (clon / "recogida" / "exportacion.py").write_text(
-        "import importlib.util\n"
-        "import sys\n"
-        f"ruta = {str(raiz / 'recogida' / 'exportacion.py')!r}\n"
-        "spec = importlib.util.spec_from_file_location('exportacion_real', ruta)\n"
-        "real = importlib.util.module_from_spec(spec)\n"
-        "spec.loader.exec_module(real)\n"
-        "sys.exit(real.principal(sys.argv[1:]) if '--anotar-fallo' in sys.argv else 1)\n",
-        encoding="utf-8",
-    )
-    python = clon / ".venv" / "bin" / "python"
-    python.symlink_to(sys.executable)
-    secretos = tmp_path / "secretos"
-    secretos.mkdir()
-    (secretos / "clave_age.txt").write_text("x", encoding="utf-8")
-    entorno = {**os.environ, "EODI_CLON": str(clon), "EODI_SECRETOS": str(secretos),
-               "PYTHONPATH": str(raiz)}  # fmt: skip
-    resultado = subprocess.run(
-        ["bash", str(raiz / "servidor" / "exportacion.sh")], env=entorno, capture_output=True,
-        text=True, check=False,
-    )  # fmt: skip
-    assert resultado.returncode == 1, resultado.stdout + resultado.stderr
-    assert "fallo anotado" in resultado.stdout, resultado.stdout + resultado.stderr
-    anotado = json.loads((secretos / "exportacion.json").read_text(encoding="utf-8"))
-    assert anotado["fallo"]["codigo"] == 1
-
-
 def test_el_ensayo_de_la_recogida_genera_la_exportacion_sin_subir(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -275,34 +233,3 @@ def test_el_ensayo_de_la_recogida_genera_la_exportacion_sin_subir(
     monkeypatch.setattr(origenes, "REGLAS", {})
     otro = tmp_path / "otro" / "exportacion"
     assert not horaria.ensayo_exportacion(almacen, base_prueba.EXPORTACION, otro)
-
-
-@pytest.mark.skipif(sys.platform == "win32", reason="script del servidor, solo en Linux")
-def test_el_script_del_servidor_pasa_la_version_pedida_a_mano(tmp_path: Path) -> None:
-    """Con EODI_EXPORTACION_VERSION (una segunda versión del mismo día), exportacion.sh la pasa
-    con --version, y las carpetas de los servicios que lee desde el formato 1.9.0."""
-    clon = tmp_path / "clon"
-    (clon / "recogida").mkdir(parents=True)
-    (clon / ".venv" / "bin").mkdir(parents=True)
-    (clon / "recogida" / "__init__.py").write_text("", encoding="utf-8")
-    (clon / "recogida" / "exportacion.py").write_text(
-        "import os\nimport sys\n"
-        "print('argumentos:', ' '.join(sys.argv[1:]))\n"
-        "print('rutas:', os.environ.get('EODI_RUTAS_DATOS', ''))\n",
-        encoding="utf-8",
-    )
-    (clon / ".venv" / "bin" / "python").symlink_to(sys.executable)
-    secretos = tmp_path / "secretos"
-    secretos.mkdir()
-    (secretos / "clave_age.txt").write_text("x", encoding="utf-8")
-    raiz = Path(__file__).resolve().parent.parent
-    entorno = {**os.environ, "EODI_CLON": str(clon), "EODI_SECRETOS": str(secretos),
-               "EODI_CASA": str(tmp_path), "EODI_EXPORTACION_VERSION": "2026.10.12.1",
-               "PYTHONPATH": str(clon)}  # fmt: skip
-    resultado = subprocess.run(
-        ["bash", str(raiz / "servidor" / "exportacion.sh")], env=entorno, capture_output=True,
-        text=True, check=False,
-    )  # fmt: skip
-    assert resultado.returncode == 0, resultado.stdout + resultado.stderr
-    assert "--version 2026.10.12.1" in resultado.stdout
-    assert f"rutas: {tmp_path}/datos/rutas" in resultado.stdout

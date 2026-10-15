@@ -1,5 +1,5 @@
 {
-  "_descripcion": "Canal público de avisos con ntfy (docs/avisos.md): servidor, tema de toda Europa (drones-europe) y un tema por país cubierto (drones-<país en inglés>, de configuracion/paises_europa.json), con su nombre en español y en inglés, su zona horaria y si es de la OTAN. Los temas de antes (general y el país sin prefijo) están en temas_anteriores: el envío pasa a los nuevos lo ya avisado y el servidor les quita la lectura. Lo leen recogida/avisos.py, servidor/ntfy.sh y la web.",
+  "_descripcion": "Canal público de avisos con ntfy (interno: avisos): servidor, tema de toda Europa (drones-europe) y un tema por país cubierto (drones-<país en inglés>, de configuracion/paises_europa.json), con su nombre en español y en inglés, su zona horaria y si es de la OTAN. Los temas de antes (general y el país sin prefijo) están en temas_anteriores: el envío pasa a los nuevos lo ya avisado y el servidor les quita la lectura. Lo leen recogida/avisos.py, servidor/ntfy.sh y la web.",
   "servidor": "https://ntfy.droneobservatory.eu",
   "sitio": "https://droneobservatory.eu",
   "icono": "https://droneobservatory.eu/marca/aviso-256.png",

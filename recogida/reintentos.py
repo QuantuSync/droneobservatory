@@ -14,7 +14,7 @@ cada hora o menos:
   (recogida/canales_guerra.py, la web oficial de cada canal).
 
 El fichero de cada sitio está en el directorio de EODI_REINTENTOS_DATOS (en el servidor,
-/home/eodi/datos/reintentos). Sin esa variable no hay tope entre ejecuciones (local, tests).
+~/datos/reintentos). Sin esa variable no hay tope entre ejecuciones (local, tests).
 Si el fichero no se puede leer o escribir, la descarga sigue: el tope nunca para la recogida.
 """
 

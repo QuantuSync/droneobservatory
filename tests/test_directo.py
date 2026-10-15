@@ -572,17 +572,6 @@ def test_un_aviso_lanza_la_busqueda_de_noticias_por_franjas(tmp_path: Path) -> N
     assert json.loads(hallados[0].read_text())["version"] != contenido["version"]
 
 
-def test_la_recogida_pasa_el_registro_del_directo_a_estado_json() -> None:
-    raiz = Path(__file__).resolve().parent.parent
-    recogida = (raiz / "servidor" / "recogida.sh").read_text(encoding="utf-8")
-    orden = recogida.split("-m recogida.estado")[1].split("; then")[0].split()
-    assert orden[orden.index("--directo") + 1] == '"$DIRECTO_REGISTRO"'
-    configuracion = (raiz / "servidor" / "configuracion.sh").read_text(encoding="utf-8")
-    assert 'DIRECTO_REGISTRO="$SECRETOS/directo.json"' in configuracion
-    instalar = (raiz / "servidor" / "instalar.sh").read_text(encoding="utf-8")
-    assert "Restart=always" in instalar and "$CLON/servidor/directo.sh" in instalar
-
-
 # --- Días reales recortados del archivo -------------------------------------------------------
 #
 # Posiciones a 45 km del aeropuerto (las trazas filtradas del archivo diario de adsb.lol, con

@@ -3,7 +3,7 @@
 // exactamente las aplicadas; cada una con su marcador con bandera en el mapa y su ficha completa
 // (a quién, según quién, la cita literal con su enlace y la investigación en curso); la cifra de
 // la cabecera y del menú; la leyenda y el filtro; y los que no se atribuyen, sin atribuir y con
-// titulares que no señalan a nadie. Deja las capturas en docs/capturas (CAPTURAS para otra
+// titulares que no señalan a nadie. Deja las capturas en una carpeta de capturas (CAPTURAS para otra
 // carpeta). Va contra producción por defecto; con BASE=http://localhost:4173, contra el servidor
 // local, reenviando el almacén público, que solo admite el dominio propio.
 import { join } from "node:path";

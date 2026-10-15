@@ -33,6 +33,8 @@ export default defineConfig({
     environment: "node",
     include: ["tests/**/*.test.{ts,tsx}"],
     setupFiles: ["tests/preparar.ts"],
+    // El correo del autor no está en el repositorio (src/sitio.ts): en las pruebas, uno de mentira.
+    env: { VITE_CORREO_AUTOR: "autor@ejemplo.org" },
     restoreMocks: true,
   },
 });

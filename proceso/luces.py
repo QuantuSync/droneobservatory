@@ -23,7 +23,7 @@ válidas desde la del ataque hasta DIAS_DESPUES después de la de su fin. La pé
 noche es 1 − brillo / referencia. Hay pérdida de luz si alguna noche posterior pierde
 UMBRAL_PERDIDA o más y la referencia es de BRILLO_REFERENCIA_MIN o más (por debajo, una ciudad ya
 apagada, el ruido de la medida es del orden de la señal). Los umbrales salen de la validación
-con apagones documentados y noches de control (docs/informe_guerra_satelite.md).
+con apagones documentados y noches de control (interno: informe_guerra_satelite).
 
 **Región.** La suma del brillo de sus ciudades medidas las mismas noches, con la misma regla.
 
@@ -60,7 +60,7 @@ PIXEL_KM2 = 0.56
 # (saturación, datos perdidos) también descartan el píxel.
 CALIDAD_MAXIMA = 1
 # Umbrales elegidos con la validación (configuracion/validacion_luces.json y los controles
-# automáticos, docs/informe_guerra_satelite.md): nubes del modelo hasta el 70 % en la ciudad a la
+# automáticos, interno: informe_guerra_satelite): nubes del modelo hasta el 70 % en la ciudad a la
 # hora del paso, referencia de 0,5 nW o más y una pérdida del 50 % o más en dos noches o más
 # después del ataque. Una sola noche oscura es casi siempre una nube que el modelo no ve.
 NUBES_MAX_PCT = 70.0

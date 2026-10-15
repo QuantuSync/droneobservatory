@@ -131,7 +131,7 @@ jobs:
               echo "::error::$titulo: $mensaje"
               if [ -z "$abierta" ]; then
                 gh issue create --title "$titulo" \
-                  --body "$mensaje Qué hacer: \`docs/operacion.md\` ($donde). Esta incidencia se cierra sola cuando se arregla."
+                  --body "$mensaje Qué hacer: la documentación interna de operación ($donde). Esta incidencia se cierra sola cuando se arregla."
                 nuevas=$((nuevas + 1))
               else
                 echo "la incidencia #$abierta sigue abierta"

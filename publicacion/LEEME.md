@@ -17,5 +17,5 @@ direcciones de siempre:
 fechada que no se sobrescribe (`publicacion/historial/AAAA-MM-DD/`), que sustituye al historial de
 git de esta carpeta. La web se reconstruye con ellos cada vez que cambian.
 
-Cómo funciona y cómo volver a publicarlos aquí: [`docs/servidor.md`](../docs/servidor.md),
-«Datos publicados», y [`docs/operacion.md`](../docs/operacion.md).
+Cómo funciona y cómo volver a publicarlos aquí: interno: servidor,
+«Datos publicados», y interno: operacion.
