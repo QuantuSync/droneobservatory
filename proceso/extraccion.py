@@ -59,7 +59,7 @@ from almacen.base import Almacen, DocumentoInvalido
 from esquema import Documento
 from modelo import coste, ficha, modelos, paginas
 from modelo.cliente import ErrorTemporal, LlamadaFallida
-from proceso import declaraciones, detalle, escalado, presencia
+from proceso import declaraciones, detalle, escalado, no_es_suceso, presencia
 from proceso.estados import Estado, TransicionNoPermitida, transitar
 from proceso.incidentes import activo, aplicar_reglas, construir, huella
 from proceso.noticias import (
@@ -387,19 +387,17 @@ def preparar(
     descargador: Descargador | None,
     nom: Nomenclator | None = None,
 ) -> Peticion:
-    """Fuentes elegidas con su titular y, si se puede descargar, sus primeras frases."""
+    """Fuentes elegidas con su titular y, si se puede descargar, sus primeras frases y las
+    marcas de su página (con lo que dicen de ella: proceso/no_es_suceso.py)."""
     articulos = [a for a in _articulos(almacen, candidato) if a.get("idioma")]
     elegidas = elegir_fuentes(articulos)
-    fuentes = [
-        ficha.FuenteTexto(
-            medio=a["medio"],
-            fecha=a["fecha"],
-            idioma=a.get("idioma"),
-            titular=a["titular"],
-            texto=paginas.leer(descargador, a["url"]) if descargador else "",
-        )
-        for a in elegidas
-    ]
+    fuentes = []
+    for a in elegidas:
+        pagina = paginas.leer_pagina(descargador, a["url"]) if descargador else paginas.Pagina("")
+        fuentes.append(no_es_suceso.con_aviso(ficha.FuenteTexto(
+            medio=a["medio"], fecha=a["fecha"], idioma=a.get("idioma"), titular=a["titular"],
+            texto=pagina.texto, url=a["url"], marcas=pagina.marcas,
+        )))  # fmt: skip
     return Peticion(
         candidato=candidato,
         objetivo=objetivo_de(almacen, candidato, nom or nomenclator()),
@@ -606,6 +604,12 @@ def procesar_respuesta(
     incidente_id: str | None = None
     publicada = publicada_sin_experto(almacen, peticion, escalado_por)
     conservar: list[str] = []
+    # Ninguna fuente cuenta un suceso (proceso/no_es_suceso.py). Si son contenido patrocinado o
+    # de socio, la respuesta del base no crea ficha; la del experto decide.
+    veredicto = no_es_suceso.de_fuentes(peticion.fuentes)
+    descarte = (
+        veredicto if veredicto is not None and veredicto.segura and not escalado_por else None
+    )
     try:
         leida = ficha.leer_respuesta(respuesta)
     except ficha.RespuestaInvalida as error:
@@ -637,8 +641,17 @@ def procesar_respuesta(
             documento["modelo"] = str(respuesta["model"])
         if escalado_por:
             documento["escalado"] = list(escalado_por)
+        if veredicto is not None:
+            documento["no_es_suceso"] = veredicto.documento()
         conservar = escalado.motivos_publicada(leida, publicada)
-        if validada.publicable and not conservar:
+        if descarte is not None:
+            documento["motivos"] = [*documento["motivos"], descarte.motivo_escalado()]
+            if publicada is not None:
+                conservar = [
+                    f"publicada: {publicada['id']} retirada por «{descarte.motivo_escalado()}»",
+                    *conservar,
+                ]
+        if validada.publicable and not conservar and descarte is None:
             incidente_id = _alta(almacen, peticion, validada, ahora, modelos_base, documento)
     if publicada is not None and (conservar or incidente_id is None):
         # Nada publicado se retira ni se rebaja sin el experto: la ficha publicada se queda como
@@ -654,7 +667,11 @@ def procesar_respuesta(
         anotar_espera(almacen, peticion.candidato["id"], conservar, ahora, False, True, True)
         registro.warning("candidato %s: %s; se repite con el experto", peticion.candidato["id"],
                          "; ".join(conservar))  # fmt: skip
-    if incidente_id is None:
+    if incidente_id is None and veredicto is not None:
+        # Lo que no es un suceso se retira con su motivo en los dos idiomas.
+        retirar_del_candidato(almacen, peticion.candidato["id"], veredicto.motivo(), ahora,
+                              modelos_base, motivo_en=veredicto.motivo_en())  # fmt: skip
+    elif incidente_id is None:
         motivo = "; ".join(documento["motivos"]) or "no es un incidente"
         retirar_del_candidato(almacen, peticion.candidato["id"], motivo, ahora, modelos_base)
     documento["incidente"] = incidente_id
@@ -735,6 +752,15 @@ def motivos_escalado(
     )
 
 
+def _da_suceso(respuesta: dict[str, Any]) -> bool:
+    """La respuesta da el candidato por incidente."""
+    try:
+        dato = ficha.leer_respuesta(respuesta).get("es_incidente")
+    except ficha.RespuestaInvalida:
+        return False
+    return isinstance(dato, dict) and dato.get("valor") is True
+
+
 def escalar(
     almacen: Almacen, cliente: Servicio, peticion: Peticion, respuesta: dict[str, Any],
     ahora: datetime, modo: coste.Modo,
@@ -751,8 +777,22 @@ def escalar(
     if experto is None:
         return respuesta, None
     candidato_id = peticion.candidato["id"]
-    motivos = motivos_escalado(peticion, respuesta, publicada_del_candidato(almacen, candidato_id))
+    publicada = publicada_del_candidato(almacen, candidato_id)
+    motivos = motivos_escalado(peticion, respuesta, publicada)
     espera = esperan_experto(almacen).get(candidato_id, {})
+    veredicto = no_es_suceso.de_fuentes(peticion.fuentes)
+    if (
+        veredicto is not None
+        and veredicto.segura
+        and publicada is None
+        and not espera.get("revision")
+    ):
+        # Contenido patrocinado o de socio sin ficha publicada: no se crea, sin experto.
+        return respuesta, None
+    if veredicto is not None and (publicada is not None or _da_suceso(respuesta)):
+        # La página dice que no es un suceso y el base cree que sí, o hay una ficha publicada en
+        # juego: decide el experto.
+        motivos.append(veredicto.motivo_escalado())
     if espera.get("revision"):
         # Una ficha del base que no se aplicó sin el experto: se escala siempre.
         motivos += [m for m in espera.get("motivos", []) if m not in motivos]
@@ -841,8 +881,9 @@ def vincular(almacen: Almacen) -> dict[str, str]:
 
 
 def retirar(
-    almacen: Almacen, id_: str, motivo: str, ahora: datetime, modelos_base: frozenset[str]
-) -> bool:
+    almacen: Almacen, id_: str, motivo: str, ahora: datetime, modelos_base: frozenset[str],
+    motivo_en: str = "",
+) -> bool:  # fmt: skip
     """Deja de publicar el incidente, sin borrarlo. True si estaba publicado."""
     incidente = almacen.incidente(id_)
     if incidente is None or "retirado" in incidente:
@@ -852,6 +893,8 @@ def retirar(
         "fecha": {"valor": ahora.strftime("%Y-%m-%dT%H:%MZ"), "precision": "minuto"},
         "motivo": motivo[:MAX_LETRAS_MOTIVO],
     }
+    if motivo_en:
+        documento["retirado"]["motivo_en"] = motivo_en[:MAX_LETRAS_MOTIVO]
     if validar_incidente_ubicacion(documento):
         # Un punto que no vale no se guarda ni siquiera en un incidente retirado.
         documento["lugar"] = {
@@ -868,9 +911,10 @@ def retirar_del_candidato(
     ahora: datetime,
     modelos_base: frozenset[str],
     vinculos: dict[str, str] | None = None,
+    motivo_en: str = "",
 ) -> bool:
     id_ = incidente_del_candidato(almacen, candidato_id, vinculos)
-    return id_ is not None and retirar(almacen, id_, motivo, ahora, modelos_base)
+    return id_ is not None and retirar(almacen, id_, motivo, ahora, modelos_base, motivo_en)
 
 
 def conservar_oficiales(incidente: Documento, anterior: Documento) -> Documento:

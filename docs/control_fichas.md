@@ -72,7 +72,13 @@ publicar. Nunca impide publicar lo demás ni cambia el código de salida.
    - si una fuente dice que no se encontró el dron, que no se vio ninguno o que era otra cosa, la
      presencia no queda confirmada (salvo que la autoridad que confirmó el suceso lo atribuya a un
      dron en esa declaración, o haya pruebas físicas que confirma una autoridad, o la revisión a
-     mano diga otra cosa);
+     mano diga otra cosa). La regla del código (`presencia.NO_HALLADO` y `NADA_HALLADO`) reconoce
+     también «se buscó y no se encontró nada» sin nombrar el dron («niets meer gevonden»,
+     «nichts gefunden», «nothing was found», «nic nie znaleziono»…) en las 23 lenguas que lee el
+     observatorio, salvo que lo buscado fuera una persona o un vehículo;
+   - si ninguna de sus fuentes cuenta un suceso (contenido patrocinado o de socio, opinión,
+     análisis, explicativo, entrevista o resumen, según su página: docs/modelos.md, «Lo que no es
+     un suceso no es ficha»), la ficha se repite con el experto, que decide si se retira;
    - el número de drones solo si una fuente lo da («dos drones», «varios»: 2-10, «un enjambre»:
      5-50); un plural sin cantidad o el número de pilotos no es un número de drones: sin dato;
    - el cierre solo con frase (o con la regla del cierre de pista); su duración, solo con frase;

@@ -136,6 +136,44 @@ Pruebas: `tests/test_nada_se_retira.py` (la 00489, cada señal con un caso inven
 oficiales, retirada y rebaja de una ficha publicada con y sin experto, lotes, reconstrucción y
 uniones del control).
 
+## Lo que no es un suceso no es ficha
+
+Desde el 15 de octubre de 2026. La EODI-2026-00539 se publicó a partir de un reportaje de
+contenido de socio de delfi.lt (sección `projektai/pulsas`) sobre cómo actúa la defensa aérea de
+la OTAN, sin ningún suceso concreto; se retiró a mano en el PR #242. Ahora el control lo impide
+desde el origen ([`proceso/no_es_suceso.py`](../proceso/no_es_suceso.py)):
+
+- Al descargar cada fuente se leen, además de sus primeras frases, **las marcas de su página**
+  (`modelo/paginas.marcas`): tipo, sección y etiquetas del artículo (`og:type`,
+  `article:section`, `article:tag`, `keywords`…) y el tipo y la sección de sus datos estructurados
+  (`OpinionNewsArticle`, `AdvertiserContentArticle`…). Nunca los menús ni las clases de estilo:
+  «Reklama» y «Užsakomasis turinys» están en el menú de todas las páginas de delfi.lt.
+- Las señales, en las lenguas que lee el observatorio, están en
+  [`configuracion/no_es_suceso.json`](../configuracion/no_es_suceso.json), por categorías: contenido
+  patrocinado o de socio y publicidad («partner content», «sponsored», «advertorial», «Anzeige»,
+  «Partnerinhalt», «turinio partneris», «publicidad»…), opinión («opinión», «Kommentar», «op-ed»…),
+  análisis, explicativos («cómo funciona…»), entrevistas y resúmenes generales. Se buscan en las
+  marcas, en la dirección (secciones como `/opinion/`, `/sponsored/` o `delfi.lt/projektai/`) y en
+  la cabeza del titular («Opinión:», «Kommentar |»); los explicativos, en todo el titular.
+- El modelo ve lo que dice la página de cada fuente («La página lo marca como…») y sus
+  instrucciones dicen que esos artículos no son incidentes si no cuentan un suceso concreto con su
+  fecha y su lugar.
+- **Una ficha nueva** cuyas fuentes son todas contenido patrocinado o de socio no se crea, aunque
+  el base la dé por suceso, y sin gastar en el experto. Si todas son de las otras categorías y el
+  base la da por suceso, hay duda real: **decide el experto** (motivo de escalado
+  `no_es_suceso: <categoría> (<medio>: «<señal>»)`). Basta una fuente que cuente el suceso para que
+  no se aplique.
+- **Una ficha publicada** nunca se retira sin el experto: si el control de las fichas
+  (`recogida/control_fichas.no_es_suceso_de`, al leer sus fuentes para verificarla) o una nueva
+  extracción ven que ninguna de sus fuentes cuenta un suceso, su candidato se repite con el experto
+  (`esperan_experto` con `revision`). Con una fuente oficial, nunca. Si el experto la da por «no es
+  incidente», se retira con el motivo en español y en inglés (`retirado.motivo` y `motivo_en`).
+
+Pruebas: `tests/test_no_es_suceso.py` (la 00539 con las marcas reales de su página, señales en
+varios idiomas, menús, una noticia que basta, la ficha nueva sin experto, la duda que decide el
+experto, la publicada que retira el experto con su motivo en dos idiomas y la que se queda sin él,
+y el control de las fichas).
+
 ## Topes
 
 Principio (desde el 15 de octubre de 2026): **lo crítico nunca espera a que se renueve un tope**.

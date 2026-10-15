@@ -1,0 +1,104 @@
+{
+  "descripcion": "Señales de que un artículo no cuenta un suceso concreto (proceso/no_es_suceso.py, docs/modelos.md «Lo que no es un suceso no es ficha»). Se buscan, normalizadas (minúsculas, sin acentos), en las marcas de la página (tipo y sección del artículo, etiquetas, datos estructurados, clases del cuerpo y del artículo; nunca en los menús), en la dirección y en la cabeza del titular (lo que va antes de «:», «|» o « - », o sus tres primeras palabras); las de «titular_entero» en todo el titular. Una palabra con «*» casa con todo lo que empieza por ella; sin «*», solo entera; «..» deja hasta tres palabras cualesquiera en medio. «direcciones»: comienzos de dirección (servidor sin www y ruta) de secciones que no son noticias. Una categoría «segura» no deja duda: si todas las fuentes la tienen, la ficha nueva no se crea; una publicada solo se retira con el experto. En las demás, si todas las fuentes tienen alguna, decide el experto.",
+  "categorias": {
+    "patrocinado": {
+      "segura": true,
+      "es": "contenido patrocinado o de socio",
+      "en": "sponsored or partner content",
+      "expresiones": [
+        "contenido patrocinado", "patrocinado", "contenido de socio", "contenido de marca", "publirreportaje", "publireportaje", "publicidad",
+        "partner content", "partnercontent", "sponsored", "sponsored content", "sponsored post", "paid content", "paid post", "advertorial", "advertisement", "brand content", "branded content", "brandstudio", "brand studio", "advertisercontentarticle",
+        "anzeige", "partnerinhalt*", "werbung", "gesponsert*", "sponsored story",
+        "contenu sponsorise", "contenu partenaire", "publireportage", "publi reportage", "publi redactionnel", "publicite",
+        "contenuto sponsorizzato", "contenuto promozionale", "publiredazionale", "pubbliredazionale",
+        "gesponsord", "advertentie", "partnerbijdrage", "betaalde inhoud",
+        "artykul sponsorowany", "material sponsorowany", "tresc sponsorowana", "materialy promocyjne", "reklama",
+        "continut sponsorizat", "articol sponsorizat", "publicitate", "advertoriale",
+        "turinio partneris", "partnerio turinys", "uzsakomasis turinys", "uzsakomasis",
+        "partnera saturs", "reklama", "apmaksats saturs",
+        "sponsoreeritud", "reklaam", "partnerlugu",
+        "kaupallinen yhteistyo", "mainos", "maksettu yhteistyo",
+        "sponsrat", "annons", "sponsrad artikel",
+        "sponsoreret", "annonce", "betalt indhold",
+        "sponset", "annonse", "betalt innhold",
+        "komercni sdeleni", "pr clanek", "placena spoluprace",
+        "komercna prezentacia", "platena spolupraca",
+        "szponzoralt", "fizetett hirdetes", "x szponzoralt",
+        "платена публикация", "спонсориран*", "реклама", "партньорски материал",
+        "χορηγουμενο", "διαφημιση", "χορηγουμενο περιεχομενο",
+        "партнерський матеріал", "на правах реклами", "партнерский материал", "на правах рекламы", "спецпроект*",
+        "conteudo patrocinado", "publicidade", "conteudo de parceiro", "conteudo de marca"
+      ],
+      "direcciones": [
+        "delfi.lt/projektai/", "delfi.lv/projekti/", "delfi.ee/projektid/",
+        "/sponsored/", "/partner/", "/partner-content/", "/partnerinhalt/", "/advertorial/", "/anzeige/", "/brandstudio/", "/paid-content/",
+        "/publirreportaje/", "/publireportage/", "/contenido-patrocinado/", "/reklama/", "/uzsakomasis-turinys/", "/spetsproekt/", "/spec-proekt/"
+      ],
+      "titular": ["sponsored", "advertorial", "anzeige", "publirreportaje", "reklama", "partnerio turinys", "turinio partneris", "партнерский материал"],
+      "titular_entero": []
+    },
+    "opinion": {
+      "segura": false,
+      "es": "artículo de opinión",
+      "en": "opinion piece",
+      "expresiones": [
+        "opinion", "opiniones", "op ed", "oped", "opinionnewsarticle", "editorial", "editorials", "commentary", "column", "columns", "columnist*",
+        "columna", "columnas", "tribuna", "kommentar", "kommentare", "meinung", "gastbeitrag", "kolumne", "standpunkt",
+        "tribune", "tribunes", "chronique", "editoriale", "commento", "commenti", "opinione", "opinioni",
+        "opinie", "column", "commentaar",
+        "felieton*", "komentarz*", "opinia", "opinii", "editorialist*",
+        "nuomone", "nuomones", "komentaras", "komentarai", "viedoklis", "viedokli", "arvamus", "kommentaar",
+        "mielipide", "kolumni", "paakirjoitus", "debatt", "ledare", "kronik", "kommentar",
+        "nazor", "nazory", "komentar", "komentare", "velemeny", "publicisztika",
+        "мнение", "мнения", "коментар", "коментари", "колонка", "думка", "думки", "погляд",
+        "αποψη", "αποψεις", "γνωμη",
+        "opiniao"
+      ],
+      "direcciones": ["/opinion/", "/opinie/", "/opinia/", "/meinung/", "/kommentar/", "/kommentare/", "/tribuna/", "/editorial/", "/editoriale/", "/opinione/", "/nuomones/", "/viedokli/", "/arvamus/", "/mielipide/", "/debatt/", "/ledare/", "/nazory/", "/velemeny/", "/comment/", "/commentisfree/", "/columns/", "/kolumne/", "/felietony/"],
+      "titular": ["opinion", "opinión", "op ed", "kommentar", "meinung", "gastbeitrag", "commentary", "column", "editorial", "tribune", "tribuna", "commento", "opinie", "komentarz", "felieton", "nuomone", "viedoklis", "arvamus", "mielipide", "ledare", "nazor", "komentar", "velemeny", "мнение", "коментар", "думка", "колонка", "αποψη", "opiniao"],
+      "titular_entero": []
+    },
+    "analisis": {
+      "segura": false,
+      "es": "análisis o artículo de fondo",
+      "en": "analysis or background piece",
+      "expresiones": ["analysis", "analisis", "analyse", "analysen", "analisi", "analiza", "analize", "analyysi", "analys", "analyse", "analizis", "анализ", "аналіз", "αναλυση", "analysisnewsarticle", "backgroundnewsarticle", "hintergrund", "long read", "longread", "reportaje de fondo", "dossier"],
+      "direcciones": ["/analysis/", "/analisis/", "/analyse/", "/analiza/", "/hintergrund/", "/long-read/", "/longread/"],
+      "titular": ["analysis", "análisis", "analyse", "analisi", "analiza", "analiză", "analizė", "analīze", "analüüs", "analyysi", "analys", "анализ", "аналіз", "ανάλυση", "hintergrund", "explainer", "factbox", "fact box"],
+      "titular_entero": []
+    },
+    "explicativo": {
+      "segura": false,
+      "es": "artículo explicativo",
+      "en": "explainer",
+      "expresiones": ["explainer", "explained", "erklart", "q a", "faq"],
+      "direcciones": ["/explainer/", "/explained/", "/erklaert/"],
+      "titular": ["explainer", "explained", "erklärt", "q&a"],
+      "titular_entero": [
+        "como funciona*", "como se .. un dron*", "que es un", "que son los", "how .. works", "how does", "how do", "what is a", "what are",
+        "wie funktioniert", "so funktioniert", "was ist ein*", "comment fonctionne", "qu est ce qu", "come funziona", "cos e un",
+        "hoe werkt", "wat is een", "jak dziala", "co to jest", "cum functioneaza", "ce este un", "kaip veikia", "kas yra", "ka darbojas", "kuidas toimib", "mis on",
+        "miten toimii", "mika on", "hur fungerar", "vad ar en", "hvordan fungerer", "hvad er en", "hva er en", "jak funguje", "co je", "ako funguje", "co je to",
+        "hogyan mukodik", "mi az a", "как работи", "какво е", "πως λειτουργει", "τι ειναι", "як працює", "що таке", "как работает", "что такое", "como funciona"
+      ]
+    },
+    "entrevista": {
+      "segura": false,
+      "es": "entrevista",
+      "en": "interview",
+      "expresiones": ["interview", "interviews", "entrevista", "entrevistas", "intervista", "interviste", "wywiad", "wywiady", "interviu", "interviuri", "intervija", "intervjuu", "haastattelu", "intervju", "rozhovor", "rozhovory", "interju", "интервю", "συνεντευξη", "интервью", "інтерв ю", "vraaggesprek", "im gesprach"],
+      "direcciones": ["/interview/", "/interviews/", "/entrevista/", "/entrevistas/", "/intervista/", "/wywiad/", "/interviu/", "/rozhovor/", "/interju/"],
+      "titular": ["interview", "entrevista", "intervista", "wywiad", "interviu", "interviu:", "intervija", "intervjuu", "haastattelu", "intervju", "rozhovor", "interjú", "интервю", "συνέντευξη", "интервью", "інтерв'ю", "im gespräch"],
+      "titular_entero": []
+    },
+    "resumen": {
+      "segura": false,
+      "es": "resumen general sin un suceso concreto",
+      "en": "general round-up without a specific event",
+      "expresiones": ["newsletter", "live blog", "liveblog", "liveticker", "live ticker", "news ticker", "minuto a minuto", "en directo", "en vivo", "en direct", "diretta", "na zywo", "relacja na zywo", "tiesiogiai", "otseblogi", "suora", "livesandning", "direkte", "liveblogposting"],
+      "direcciones": ["/newsletter/", "/liveblog/", "/live-blog/", "/liveticker/", "/live/"],
+      "titular": ["newsletter", "live", "liveblog", "liveticker", "ticker", "en directo", "en vivo", "en direct", "diretta", "na żywo", "tiesiogiai", "otse", "suora", "живо", "наживо", "онлайн", "ζωντανά", "ao vivo", "the week", "la semana", "die woche", "резюме", "дайджест", "digest", "round-up", "roundup", "wrap"],
+      "titular_entero": []
+    }
+  }
+}
