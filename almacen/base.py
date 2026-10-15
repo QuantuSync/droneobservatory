@@ -402,8 +402,9 @@ class DocumentoInvalido(ValueError):
         self.errores = errores
 
 
-def _sin_hora(evaluacion: Documento) -> Documento:
-    return {k: v for k, v in evaluacion.items() if k != "evaluado"}
+def _sin_hora(evaluacion: Documento, sin_huella: bool = False) -> Documento:
+    fuera = {"evaluado", "huella"} if sin_huella else {"evaluado"}
+    return {k: v for k, v in evaluacion.items() if k not in fuera}
 
 
 def _json(documento: Any) -> str:
@@ -758,14 +759,22 @@ class Almacen:
     # --- Tráfico aéreo y condiciones medidas ------------------------------------
 
     def _guardar_medicion(
-        self, tabla: str, id_: str, documento: Documento, columnas: dict[str, Any]
+        self,
+        tabla: str,
+        id_: str,
+        documento: Documento,
+        columnas: dict[str, Any],
+        sin_huella: bool = False,
     ) -> bool:
-        """Guarda el documento si ha cambiado algo más que la hora en que se evaluó: el
-        historial solo crece cuando cambia el resultado. True si lo ha guardado."""
+        """Guarda el documento si ha cambiado algo más que la hora en que se evaluó (y, con
+        sin_huella, la huella de lo que usó): el historial solo crece cuando cambia el
+        resultado. True si lo ha guardado."""
         fila = self._conexion.execute(
             f"SELECT documento FROM {tabla} WHERE id = ?", (id_,)
         ).fetchone()
-        if fila is not None and _sin_hora(json.loads(fila[0])) == _sin_hora(documento):
+        if fila is not None and _sin_hora(json.loads(fila[0]), sin_huella) == _sin_hora(
+            documento, sin_huella
+        ):
             return False
         with self._conexion:
             self._upsert(tabla, {"id": id_, **columnas, "documento": _json(documento)})
@@ -800,9 +809,14 @@ class Almacen:
         return {id_: json.loads(documento) for id_, documento in filas}
 
     def guardar_deduccion(self, entidad_id: str, tipo: str, documento: Documento) -> bool:
-        """Guarda lo deducido de una entidad si ha cambiado algo más que la hora."""
+        """Guarda lo deducido de una entidad si ha cambiado el resultado: ni la hora ni la
+        huella de lo que usó cuentan (un parte meteorológico nuevo que deja lo deducido igual
+        escribía cada hora en el historial unas 400 deducciones idénticas, el 15 de octubre
+        de 2026). La huella que manda para no recalcular es la de resultados.jsonl.gz."""
         self._validar("deduccion", documento)
-        return self._guardar_medicion("deducciones", entidad_id, documento, {"tipo": tipo})
+        return self._guardar_medicion(
+            "deducciones", entidad_id, documento, {"tipo": tipo}, sin_huella=True
+        )
 
     def deducciones(self, tipo: str | None = None) -> dict[str, Documento]:
         sql = "SELECT id, documento FROM deducciones ORDER BY id"
