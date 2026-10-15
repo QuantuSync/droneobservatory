@@ -570,6 +570,22 @@ def _textos_de(documentos: list[Documento], textos: dict[str, str], plazo: Plazo
     textos.update(descargar(list(dict.fromkeys(enlaces)), plazo))
 
 
+def esperas_vencidas(ctx: Contexto) -> set[str]:
+    """Las fichas de los pares y verificaciones que esperaban al experto y ya pueden volver
+    (venció su espera o subió el tope del experto)."""
+    ahora = _iso(ctx.ahora)
+    fichas: set[str] = set()
+    for clave, decision in ctx.decisiones.items():
+        if not decision.get("espera_experto") or "datos" in decision:
+            continue
+        if decision.get("decision", "dudoso") != "dudoso":
+            continue
+        if coste.espera_vencida(str(decision["espera_experto"]), ahora,
+                                decision.get("tope_experto")):  # fmt: skip
+            fichas |= set(clave.split(":", 1)[1].split("|"))
+    return fichas
+
+
 def pares_por_decidir(
     ctx: Contexto, foco: set[str], revisar_decididos: bool = True
 ) -> list[tuple[Documento, Documento, str]]:
@@ -1247,6 +1263,9 @@ def ejecutar(
     horaria = alcance == "horaria"
     if horaria:
         recoger_lotes(ctx)
+        # Lo que esperaba al experto vuelve en cuanto puede (venció su espera o subió su tope),
+        # aunque sus fichas ya no estén entre las nuevas: no espera a la pasada de madrugada.
+        foco = foco | esperas_vencidas(ctx)
     try:
         if alcance != "noche":
             comparar_pares(ctx, foco, revisar_decididos=not horaria)

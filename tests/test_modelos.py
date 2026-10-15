@@ -405,6 +405,23 @@ def test_un_par_dudoso_espera_cuando_se_esperaba_con_el_tope_anterior() -> None:
     assert almacen.controles("par:")[clave]["decision"] == "mismo"
 
 
+def test_un_par_viejo_que_esperaba_vuelve_en_la_recogida_sin_esperar_a_la_madrugada() -> None:
+    # Las dos fichas ya vistas (no son nuevas en la recogida horaria) y su par esperando al
+    # experto desde la pasada de madrugada, con el tope de antes.
+    almacen = tcf._base(tcf._nuremberg_alemana(), tcf._nuremberg_griega())
+    tcf._ejecutar(almacen, ServicioControl("distinto", None))
+    tcf._ejecutar(almacen, ServicioControl("distinto", None), tcf.AHORA + timedelta(hours=1))
+    clave = "par:EODI-2026-09515|EODI-2026-09516"
+    almacen.guardar_controles({clave: {
+        "decision": "dudoso", "huella": "x", "fecha": "2026-10-15T01:50:07Z",
+        "desde": "2026-10-15T01:50:07Z", "espera_experto": "2999-01-01T00:00:00Z",
+        "escalado": ["duplicado_dudoso: el modelo base no lo sabe"],
+    }}, "2026-10-15T01:50:07Z")  # fmt: skip
+    tarde = tcf.AHORA + timedelta(hours=30)
+    tcf._ejecutar(almacen, ServicioControl("dudoso", "mismo"), tarde)
+    assert almacen.controles("par:")[clave]["decision"] == "mismo"
+
+
 def test_un_par_critico_sin_tope_ni_reserva_espera_y_retiene_la_ficha_nueva() -> None:
     almacen = _par_de_nuremberg_con_gasto(
         coste.LIMITE_EXPERTO_DIARIO_USD + coste.RESERVA_CRITICA_DIARIA_USD
