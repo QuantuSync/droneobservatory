@@ -911,6 +911,9 @@ _PRESENCIA_CONTRARIA = {
     "confirmada": {"no_hallado", "desmentido", "posible"},
     "no_confirmada": {"no_hallado", "desmentido"},
     "descartada": {"confirmada"},
+    # Rectificada por una autoridad oficial (proceso/rectificaciones.py): la cambia solo otra
+    # rectificación, nunca la verificación de sus fuentes.
+    "no_acreditada": set(),
 }
 
 

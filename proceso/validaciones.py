@@ -297,7 +297,10 @@ def errores_presencia(documento: Documento) -> list[Error]:
 
 
 def errores_incidente(documento: Documento, vocabulario_modelos: frozenset[str]) -> list[Error]:
+    from proceso import rectificaciones
+
     errores: list[Error] = [*errores_ubicacion(documento), *errores_presencia(documento)]
+    errores += [Error("presencia_historial", e) for e in rectificaciones.errores(documento)]
 
     tiempo = _dict(documento.get("tiempo"))
     inicio, fin = leer_instante(tiempo.get("inicio")), leer_instante(tiempo.get("fin"))

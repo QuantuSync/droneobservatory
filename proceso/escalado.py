@@ -63,7 +63,7 @@ MOTIVOS_CRITICOS = (
     *(f"senal: {s}" for s in sorted(SENALES_CRITICAS | {"incursion"})),
 )  # fmt: skip
 # De menos a más: rebajar es bajar en este orden.
-RANGO_PRESENCIA = {"descartada": 0, "no_confirmada": 1, "confirmada": 2}
+RANGO_PRESENCIA = {"descartada": 0, "no_acreditada": 1, "no_confirmada": 2, "confirmada": 3}
 
 
 @cache

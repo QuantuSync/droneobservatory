@@ -30,7 +30,7 @@ import pyrage
 from almacen.base import Almacen
 from almacen.cifrado import VARIABLE_CLAVE, guardar_cifrada
 from esquema import Documento
-from proceso import cruces, luces, periodos, presencia, zona
+from proceso import cruces, luces, periodos, presencia, rectificaciones, zona
 from tests import ejemplos
 from tests.ejemplos import AHORA, VOCABULARIO_MODELOS
 
@@ -125,6 +125,26 @@ def incursion() -> Documento:
     return documento
 
 
+def no_acreditado() -> Documento:
+    """Copenhague (EODI-2025-00154): la policía cerró la investigación sin poder probar ni
+    descartar los drones; la presencia queda no acreditada con su historial
+    (proceso/rectificaciones.py) y el cierre se mantiene."""
+    documento = ejemplos.incidente_minimo()
+    documento.update(id="EODI-2025-00005", presencia_dron="confirmada")
+    oficial = {**ejemplos.fuente("RP", "A", es_autoridad=True),
+               "frase_origen": "hverken kunnet påvises eller afvises, at der har været tale om "
+                               "droner", "campos_respaldados": ["estado", "presencia_dron"],
+               "metodo": "parser"}  # fmt: skip
+    documento["afirmaciones"] = [{"campo": "presencia_dron", "valor": "confirmada",
+                                  "fuente_id": "F1", "confianza_extraccion": 0.9}]  # fmt: skip
+    return rectificaciones.aplicar(
+        documento, "no_acreditada", oficial, ejemplos.instante("2025-12-01T00:00Z", "dia"),
+        {"es": "la policía danesa", "en": "the Danish police"},
+        {"es": "no se ha podido probar ni descartar", "en": "neither proven nor ruled out"},
+        "rectificacion:revisada:EODI-2025-00005:RP",
+    )  # fmt: skip
+
+
 def ataques() -> list[Documento]:
     """El ataque completo, un parte de resumen de la semana y un tramo de la misma noche."""
     principal = ejemplos.ataque_completo()
@@ -176,7 +196,7 @@ def impactos() -> list[Documento]:
 def base_prueba() -> Almacen:
     """La base de prueba, ya pasada por las revisiones de la recogida horaria."""
     almacen = Almacen.abrir()
-    for documento in (completo(), con_fuente_e(), cierre_de_pista(), incursion()):
+    for documento in (completo(), con_fuente_e(), cierre_de_pista(), incursion(), no_acreditado()):
         almacen.guardar_incidente(documento, AHORA, VOCABULARIO_MODELOS)
     for ataque in ataques():
         almacen.guardar_ataque_ucrania(ataque, AHORA)

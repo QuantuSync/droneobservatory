@@ -71,6 +71,10 @@ LIMITE_CONTROL_DIARIO_USD = 0.15
 LIMITE_CONTROL_REPASO_USD = 9.46
 # Traducción de una sola vez de las citas atrasadas (14 de octubre de 2026), por lote.
 LIMITE_TRADUCCIONES_USD = 2.00
+# Búsqueda mensual de rectificaciones oficiales con el modelo base (recogida/rectificaciones.py):
+# una pasada al mes, con su tope por día (el de la pasada). Las preguntas al experto van aparte,
+# con su tope.
+LIMITE_RECTIFICACIONES_USD = 0.30
 # Tope diario del modelo experto, en todos los modos juntos y aparte de ellos.
 LIMITE_EXPERTO_DIARIO_USD = 1.00
 # Reserva crítica del experto, aparte del tope: solo para los casos críticos.
@@ -97,6 +101,7 @@ class Modo(StrEnum):
     CONTROL = "control"
     CONTROL_REPASO = "control_repaso"
     TRADUCCIONES = "traducciones"
+    RECTIFICACIONES = "rectificaciones"
 
 
 class LimiteGasto(RuntimeError):
@@ -205,12 +210,13 @@ def limite(modo: Modo) -> float:
         Modo.CONTROL: LIMITE_CONTROL_DIARIO_USD,
         Modo.CONTROL_REPASO: LIMITE_CONTROL_REPASO_USD,
         Modo.TRADUCCIONES: LIMITE_TRADUCCIONES_USD,
+        Modo.RECTIFICACIONES: LIMITE_RECTIFICACIONES_USD,
     }[modo]
 
 
 def diario(modo: Modo) -> bool:
     """Los modos con límite diario (lo gastado se cuenta solo en el día UTC)."""
-    return modo in {Modo.HORARIO, Modo.GUERRA, Modo.CONTROL}
+    return modo in {Modo.HORARIO, Modo.GUERRA, Modo.CONTROL, Modo.RECTIFICACIONES}
 
 
 def comprobar(gastado: float, previsto: float, modo: Modo) -> None:

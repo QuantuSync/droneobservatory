@@ -100,7 +100,7 @@ from proceso.restricciones import por_ataque
 from recogida import licencia
 from recogida.archivo_web import con_copias_archivadas
 
-VERSION_FORMATO = "1.12.0"
+VERSION_FORMATO = "1.13.0"
 RAIZ = Path(__file__).resolve().parent.parent
 DIRECTORIO_ESQUEMAS = RAIZ / "esquema" / "exportacion" / VERSION_FORMATO
 VOCABULARIO = RAIZ / "configuracion" / "vocabulario_aegis.json"
@@ -446,6 +446,11 @@ def frecuencias(
             "por_estado": dict(sorted(Counter(i["estado"]["actual"] for i in grupo).items())),
             "por_tipo": dict(sorted(Counter(i["tipo"] for i in grupo).items())),
             "presencia_confirmada": sum(i.get("presencia_dron") == "confirmada" for i in grupo),
+            "por_presencia": dict(
+                sorted(
+                    Counter(str(i.get("presencia_dron") or "no_confirmada") for i in grupo).items()
+                )
+            ),
             "por_nivel_detalle": dict(sorted(Counter(i["nivel_detalle"] for i in grupo).items())),
         }
         for (categoria, pais, mes), grupo in sorted(grupos.items())
