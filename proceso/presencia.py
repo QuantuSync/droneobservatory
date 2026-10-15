@@ -107,8 +107,8 @@ def otra_causa(incidente: Documento) -> bool:
 # lleva el nombre del dron: «No Drone Debris Found» (restos) o «nu a fost detectat de radare»
 # (radar) no dicen que no hubiera dron.
 _DRON = (
-    r"(?:drohne\w*|drones?|drone\w*|dron\w*|drön\w*|drony|дрон\w*|беспилотник\w*|"
-    r"безпілотник\w*)"
+    r"(?:drohne\w*|drones?|drone\w*|dron\w*|drön\w*|drón\w*|droon\w*|drony|lennok\w*|"
+    r"дрон\w*|беспилотник\w*|безпілотник\w*)"
 )
 NO_HALLADO = re.compile(
     r"(?<!\w)(?:"
@@ -142,14 +142,127 @@ NO_HALLADO = re.compile(
     rf"|не\s+(?:нашли|обнаружили|знайшли|виявили|знайдено)\s+(?:жодного\s+|никакого\s+)?{_DRON}"
     r"|δεν\s+βρέθηκε\s+(?:κανένα\s+)?(?:drone|μη\s+επανδρωμέν\w*)"
     rf"|{_DRON}\s+ei\s+(?:löydetty|löytynyt)|ei\s+löytynyt\s+(?:\w+\s+)?{_DRON}"
+    rf"|{_DRON}\s+non\s+(?:è\s+stat[oa]\s+|sono\s+stati\s+)?(?:trovat\w|individuat\w|rinvenut\w)"
+    rf"|nessun\s+{_DRON}\s+(?:\w+\s+){{0,2}}(?:trovat\w|individuat\w|avvistat\w|rinvenut\w)"
+    rf"|nenhum\s+{_DRON}\s+(?:\w+\s+){{0,2}}(?:encontrad\w|localizad\w|avistad\w|detetad\w|"
+    r"detectad\w)"
+    rf"|{_DRON}\s+não\s+foi\s+(?:encontrad\w|localizad\w)"
+    rf"|nu\s+a\s+fost\s+(?:găsit\w*|gasit\w*|identificat\w*|depistat\w*)\s+nicio\s+{_DRON}"
+    rf"|(?:nerasta|neaptikta|nerado)\s+(?:jokio|jokių|jokį)\s+{_DRON}"
+    rf"|{_DRON}\s+(?:nebuvo\s+rastas|nerastas|neaptiktas)"
+    rf"|{_DRON}\s+netika\s+(?:atrast\w|atklāt\w|konstatēt\w)|neatrada\s+nevienu\s+{_DRON}"
+    rf"|{_DRON}\s+ei\s+(?:leitud|tuvastatud)|ei\s+(?:leitud|leidnud)\s+(?:ühtegi\s+)?{_DRON}"
+    rf"|ingen\s+{_DRON}\s+(?:\w+\s+){{0,2}}(?:hittades|upptäcktes|sågs|blev\s+fundet|"
+    r"ble\s+funnet|ble\s+observert)"
+    rf"|{_DRON}\s+(?:nebyl\w?|nebyly|nebol\w?|neboli)\s+(?:nalezen\w*|objeven\w*|nájden\w*|"
+    r"objaven\w*)"
+    rf"|(?:žádn|žiadn)\w+\s+{_DRON}\s+(?:\w+\s+){{0,2}}(?:nalezen\w*|nájden\w*|nenašl\w*)"
+    rf"|nem\s+találták\s+(?:meg\s+)?a\s+{_DRON}|{_DRON}\s+nem\s+találták"
+    rf"|{_DRON}\s+не\s+(?:е|беше|бе)\s+(?:открит\w*|намерен\w*)"
+    rf"|{_DRON}\s+не\s+(?:було\s+)?(?:знайдено|виявлено)"
     r")(?!\w)",
+    re.IGNORECASE,
+)
+
+# La fuente cuenta que se buscó y no se encontró nada («Zowel in de lucht als op de grond werd
+# niets meer gevonden», EODI-2025-00248), sin nombrar el dron: la frase sale de una fuente del
+# suceso, así que lo buscado es el dron. Revisadas a mano: «nada» o «rien» solos, «nulla di
+# fatto» y «nichts Neues» no dicen que no se encontrara, y no entran.
+NADA_HALLADO = re.compile(
+    r"(?<!\w)(?:"
+    # neerlandés
+    r"ni(?:ets|ks)\s+(?:meer\s+|verdachts\s+)?(?:gevonden|aangetroffen|waargenomen|gezien)"
+    r"|(?:vond|vonden|trof|troffen)\s+(?:\w+\s+)?ni(?:ets|ks)"
+    # inglés
+    r"|nothing\s+(?:more\s+|else\s+|suspicious\s+)?(?:was\s+|could\s+be\s+|has\s+been\s+)?"
+    r"(?:found|located|spotted|seen|detected)"
+    r"|(?:found|located|spotted|detected)\s+nothing"
+    r"|(?:did\s+not|didn't|could\s+not|couldn't|failed\s+to)\s+(?:find|locate|spot|detect)\s+"
+    r"anything"
+    # alemán
+    r"|nichts\s+(?:mehr\s+|Verdächtiges\s+|Auffälliges\s+)?(?:\w+\s+)?(?:gefunden|entdeckt|"
+    r"festgestellt|gesichtet|aufgefunden|ausgemacht)"
+    r"|(?:fanden|fand|entdeckten|stellten)\s+(?:\w+\s+){0,2}nichts"
+    # francés
+    r"|rien\s+(?:de\s+suspect\s+|de\s+plus\s+)?n['’]\s*a\s+été\s+(?:trouvé|retrouvé|découvert|"
+    r"repéré|détecté|observé)"
+    r"|n['’]\s*(?:a|ont|avons)\s+rien\s+(?:trouvé|retrouvé|découvert|repéré|détecté|observé)"
+    # italiano
+    r"|non\s+(?:è\s+stato|sono\s+stati|hanno|ha|abbiamo)\s+(?:trovato|rinvenuto|individuato|"
+    r"rilevato|avvistato)\s+(?:nulla|niente)"
+    r"|(?:nulla|niente)\s+(?:di\s+sospetto\s+)?(?:è\s+stato\s+)?(?:trovato|rinvenuto|"
+    r"individuato|rilevato)"
+    # polaco
+    r"|(?:nic|niczego)\s+(?:więcej\s+|podejrzanego\s+)?nie\s+(?:znaleziono|odnaleziono|"
+    r"znaleźli|wykryto|stwierdzono|zauważono)"
+    r"|nie\s+(?:znaleziono|odnaleziono|znaleźli|wykryto|stwierdzono)\s+(?:już\s+)?(?:nic|niczego)"
+    # rumano
+    r"|nu\s+(?:a\s+fost|s-a|s-au|au|am)\s+(?:găsit|gasit|descoperit|identificat|depistat)\s+nimic"
+    r"|nimic\s+(?:suspect\s+)?nu\s+a\s+fost\s+(?:găsit|gasit|descoperit|identificat|depistat)"
+    # lituano
+    r"|nieko\s+(?:daugiau\s+|įtartino\s+)?(?:nerasta|neaptikta|nebuvo\s+(?:rasta|aptikta))"
+    r"|nerad(?:o|ome)\s+nieko"
+    # letón
+    r"|nekas\s+(?:vairs\s+|aizdomīgs\s+)?netika\s+(?:atrasts|atklāts|konstatēts)"
+    r"|netika\s+(?:atrasts|atklāts|konstatēts)\s+nekas|neatrada\s+neko"
+    # estonio
+    r"|midagi\s+(?:rohkem\s+|kahtlast\s+)?ei\s+(?:leitud|tuvastatud|leidnud)"
+    r"|ei\s+(?:leitud|leidnud|tuvastatud)\s+midagi"
+    # finés
+    r"|mitään\s+(?:muuta\s+|epäilyttävää\s+)?ei\s+(?:löydetty|löytynyt|havaittu)"
+    r"|ei\s+(?:löydetty|löytynyt|havaittu|löytänyt|löytäneet)\s+mitään"
+    # sueco, danés, noruego
+    r"|(?:ingenting|inget|intet)\s+(?:mer\s+|mere\s+|misstänkt\s+|mistænkeligt\s+)?"
+    r"(?:hittades|upptäcktes|kunde\s+hittas|blev\s+fundet|ble\s+funnet|ble\s+observert|"
+    r"ble\s+påvist)"
+    r"|(?:hittade|upptäckte|fann|fandt|fant|observerede|observerte)\s+(?:ingenting|inget|intet)"
+    r"|fant\s+ikke\s+noe|ikke\s+noe\s+(?:ble\s+)?funnet|ikke\s+noget\s+(?:blev\s+)?fundet"
+    # checo y eslovaco
+    r"|nic\s+(?:dalšího\s+|podezřelého\s+)?(?:nebylo\s+(?:nalezeno|zjištěno|objeveno)|"
+    r"se\s+nenašlo)"
+    r"|nena(?:šli|šla|šel)\s+nic|nič\s+(?:viac\s+|podozrivé\s+)?(?:sa\s+nenašlo|"
+    r"nebolo\s+(?:nájdené|zistené|objavené))"
+    r"|nenašl\w+\s+nič"
+    # húngaro
+    r"|nem\s+talált(?:ak|unk)?\s+semmit|semmit\s+(?:sem\s+)?nem\s+találtak"
+    # búlgaro
+    r"|нищо\s+(?:подозрително\s+)?не\s+(?:беше|е|бе)\s+(?:открито|намерено|установено)"
+    r"|не\s+(?:откриха|намериха|установиха)\s+нищо"
+    # griego
+    r"|δεν\s+(?:βρέθηκε|εντοπίστηκε|βρήκαν|εντόπισαν)\s+τίποτα"
+    r"|τίποτα\s+(?:ύποπτο\s+)?δεν\s+(?:βρέθηκε|εντοπίστηκε)"
+    # ucraniano y ruso
+    r"|нічого\s+(?:підозрілого\s+)?не\s+(?:було\s+)?(?:знайдено|виявлено|знайшли|виявили)"
+    r"|не\s+(?:знайшли|виявили|знайдено|виявлено)\s+нічого"
+    r"|ничего\s+(?:подозрительного\s+)?не\s+(?:было\s+)?(?:найдено|обнаружено|нашли|обнаружили)"
+    r"|не\s+(?:нашли|обнаружили|найдено|обнаружено)\s+ничего"
+    # español y portugués
+    r"|no\s+se\s+(?:encontr\w+|hall\w+|localiz\w+|detect\w+)\s+nada"
+    r"|no\s+(?:encontraron|hallaron|localizaron|encontró|halló|detectaron)\s+nada"
+    r"|nada\s+(?:sospechoso\s+)?fue\s+(?:encontrado|hallado|localizado)"
+    r"|nada\s+(?:mais\s+|suspeito\s+)?foi\s+(?:encontrado|localizado|detetado|detectado)"
+    r"|não\s+(?:foi\s+encontrado|se\s+encontrou|encontraram|encontrou|localizaram)\s+nada"
+    r")(?!\w)",
+    re.IGNORECASE,
+)
+
+# Lo que no se encontró era una persona, un vehículo o lo que se registró («bij de bestuurder
+# werd niets gevonden», «nothing was found in the suspect's car»): no habla del dron.
+_OTRA_BUSQUEDA = re.compile(
+    r"(?<!\w)(?:sospechos\w*|suspect\w*|verdächtig\w*|tatverdächtig\w*|verdachte\w*|"
+    r"podejrzan\w*|suspeit\w*|sospett\w*|bestuurder\w*|täter\w*|dader\w*|auto|car|vehicle|"
+    r"vehículo|fahrzeug\w*|wohnung\w*|woning\w*|house|huiszoeking\w*|registro\s+domiciliario|"
+    r"perquisition\w*)(?!\w)",
     re.IGNORECASE,
 )
 
 
 def dice_no_hallado(texto: str) -> bool:
-    """La frase cuenta que no se encontró el dron o que no se vio ninguno."""
-    return bool(NO_HALLADO.search(texto)) and declaraciones.habla_de_drones(texto)
+    """La frase cuenta que no se encontró el dron o que no se vio ninguno, o que se buscó y no
+    se encontró nada (sin decir que lo buscado fuera una persona o un vehículo)."""
+    if NO_HALLADO.search(texto) and declaraciones.habla_de_drones(texto):
+        return True
+    return bool(NADA_HALLADO.search(texto)) and not _OTRA_BUSQUEDA.search(texto)
 
 
 def no_hallado(incidente: Documento) -> Documento | None:

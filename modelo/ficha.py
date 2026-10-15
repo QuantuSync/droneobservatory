@@ -145,7 +145,11 @@ Qué es un incidente: un dron visto, detectado, derribado o caído en Europa (fu
 de Rusia) cerca de un aeropuerto, una base militar, una central, un puerto u otra \
 infraestructura, o que entra en el espacio aéreo de un país. No son incidentes: ataques de la \
 guerra en Ucrania o en Rusia, espectáculos, reparto, agricultura, compras, ejercicios y pruebas \
-anunciados, leyes y planes contra drones, ni noticias que solo hablan de drones en general.
+anunciados, leyes y planes contra drones, ni noticias que solo hablan de drones en general. \
+Tampoco los artículos que no cuentan un suceso concreto: contenido patrocinado o de socio, \
+publicidad, opinión, análisis, explicativos («cómo funciona…»), entrevistas y resúmenes \
+generales que no dan la fecha y el lugar de un suceso. Si la página marca una fuente como uno \
+de ellos, solo es incidente si esa fuente cuenta un suceso concreto con su fecha y su lugar.
 
 La ficha es una lista de datos. Incluye solo los datos que alguna fuente dice; el dato \
 es_incidente va siempre. Cada dato tiene:
@@ -335,12 +339,19 @@ class FuenteTexto:
     idioma: str | None
     titular: str
     texto: str
+    # Dirección y marcas de la página (modelo/paginas.marcas): lo que dice la propia página de
+    # qué es el artículo (patrocinado, opinión...), para proceso/no_es_suceso.py.
+    url: str = ""
+    marcas: tuple[str, ...] = ()
+    # Lo que proceso/no_es_suceso.py lee en esas marcas, para el modelo.
+    aviso: str = ""
 
     def bloque(self, numero: int) -> str:
         cuerpo = f" Texto: {self.texto}" if self.texto else ""
+        aviso = f" La página lo marca como {self.aviso}." if self.aviso else ""
         return (
             f"Fuente {numero} ({self.medio}, {self.fecha}, {self.idioma or '?'}). "
-            f"Titular: {self.titular}.{cuerpo}"
+            f"Titular: {self.titular}.{cuerpo}{aviso}"
         )
 
 

@@ -58,7 +58,7 @@ from typing import Any, Protocol
 from almacen.base import Almacen, DocumentoInvalido
 from esquema import Documento
 from modelo import control as peticiones
-from modelo import coste
+from modelo import coste, ficha, paginas
 from modelo.cliente import ErrorTemporal, LlamadaFallida
 from proceso import (
     atribucion,
@@ -66,6 +66,7 @@ from proceso import (
     escalado,
     incidentes,
     lugar_preciso,
+    no_es_suceso,
     presencia,
     titulares,
 )
@@ -380,21 +381,63 @@ def fuentes_de_ficha(
     return FuentesDeFicha(bloques, comprobar)
 
 
-def descargar(enlaces: list[str], plazo: Plazo | None) -> dict[str, str]:
-    """Las primeras frases de cada noticia, en memoria (nunca se guardan)."""
-    from modelo import paginas
+def paginas_de(enlaces: list[str], plazo: Plazo | None) -> dict[str, paginas.Pagina]:
+    """Las primeras frases y las marcas de cada noticia, en memoria (nunca se guardan)."""
     from recogida.descarga import Descargador
 
-    def uno(enlace: str) -> tuple[str, str]:
+    def uno(enlace: str) -> tuple[str, paginas.Pagina]:
         try:
-            return enlace, paginas.leer(Descargador(plazo=plazo, reintentos=1), enlace)
+            return enlace, paginas.leer_pagina(Descargador(plazo=plazo, reintentos=1), enlace)
         except Exception:
-            return enlace, ""
+            return enlace, paginas.Pagina("")
 
     if not enlaces:
         return {}
     with ThreadPoolExecutor(max_workers=6) as hilos:
         return dict(hilos.map(uno, enlaces))
+
+
+def descargar(enlaces: list[str], plazo: Plazo | None) -> dict[str, str]:
+    """Las primeras frases de cada noticia, en memoria (nunca se guardan)."""
+    return {enlace: pagina.texto for enlace, pagina in paginas_de(enlaces, plazo).items()}
+
+
+def no_es_suceso_de(
+    almacen: Almacen, incidente: Documento, leidas: dict[str, paginas.Pagina]
+) -> no_es_suceso.Veredicto | None:
+    """Si ninguna fuente de la ficha cuenta un suceso (proceso/no_es_suceso.py): todas sus
+    fuentes públicas son noticias, se han leído y su página, su dirección o su titular dicen que
+    son contenido patrocinado, opinión, análisis, explicativo, entrevista o resumen. Con una
+    fuente oficial, nunca."""
+    publicas = _publicas(incidente)
+    if not publicas or any(reglas.oficial(f) for f in publicas):
+        return None
+    enlaces = list(dict.fromkeys(str(f.get("enlace") or "") for f in publicas))
+    if "" in enlaces or any(e not in leidas for e in enlaces):
+        return None
+    titulares_ = _titulares(almacen, publicas)
+    medios = {str(f.get("enlace")): str(f.get("medio", "")) for f in publicas}
+    return no_es_suceso.de_fuentes(
+        ficha.FuenteTexto(medios[e], "", None, titulares_.get(e, ""), "", e, leidas[e].marcas)
+        for e in enlaces
+    )  # fmt: skip
+
+
+def senalar_no_suceso(
+    ctx: "Contexto", incidente: Documento, veredicto: no_es_suceso.Veredicto
+) -> bool:
+    """La ficha publicada cuyas fuentes no cuentan un suceso se repite con el experto, que
+    decide si se retira (nada publicado se retira sin él). True si se anota."""
+    from proceso import extraccion
+
+    candidato = (incidente.get("control") or {}).get("candidato")
+    if not candidato or extraccion.esperan_experto(ctx.almacen).get(candidato, {}).get("revision"):
+        return False
+    extraccion.anotar_espera(ctx.almacen, candidato, [veredicto.motivo_escalado()], ctx.ahora,
+                             False, revision=True)  # fmt: skip
+    registro.warning("%s: %s; se repite con el experto", incidente["id"],
+                     veredicto.motivo_escalado())  # fmt: skip
+    return True
 
 
 # --- Uniones -------------------------------------------------------------------------------
@@ -807,9 +850,13 @@ def por_verificar(
 
 def peticion_verificacion(ctx: Contexto, incidente: Documento) -> Peticion:
     publicas = _publicas(incidente)
-    textos = descargar(
+    leidas = paginas_de(
         list(dict.fromkeys(f["enlace"] for f in publicas if f.get("enlace")))[:8], ctx.plazo
     )
+    textos = {enlace: pagina.texto for enlace, pagina in leidas.items()}
+    # Lo que no cuenta un suceso no se mantiene como ficha: lo decide el experto.
+    if (veredicto := no_es_suceso_de(ctx.almacen, incidente, leidas)) is not None:
+        senalar_no_suceso(ctx, incidente, veredicto)
     fuentes = fuentes_de_ficha(ctx.almacen, incidente, textos)
     vista = reglas.vista(incidente)
     cuerpo = peticiones.cuerpo_verificar(vista, fuentes.bloques)

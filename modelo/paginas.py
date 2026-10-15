@@ -7,7 +7,9 @@ para lugar, hora, cierre y cifras, que las noticias dan al principio. Si la
 descarga falla, el extractor recibe solo el titular.
 """
 
+import json
 import re
+from dataclasses import dataclass
 from html.parser import HTMLParser
 
 from recogida.descarga import Descargador, DescargaFallida
@@ -64,9 +66,87 @@ def es_html(texto: str) -> bool:
     return "<p" in texto.lower()
 
 
+# Las marcas que la propia página pone al artículo: tipo, sección y etiquetas (meta) y el tipo y
+# la sección de sus datos estructurados (JSON-LD). Nunca los menús («Reklama» o «Užsakomasis
+# turinys» están en el menú de todas las páginas de delfi.lt) ni las clases de estilo
+# («sponsored-off» no dice que lo sea).
+_META = frozenset({
+    "og:type", "article:section", "article:tag", "article:opinion", "article:content_tier",
+    "keywords", "news_keywords", "parsely-section", "parsely-tags", "sailthru.tags", "dc.type",
+    "section", "category", "sponsor", "article:sponsor",
+})  # fmt: skip
+_CLAVES_LD = ("@type", "articleSection", "genre")
+MAX_MARCAS = 24
+MAX_LETRAS_MARCA = 160
+
+
+class _Marcas(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.marcas: list[str] = []
+        self._ld: list[str] | None = None
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        atributos = {k.lower(): v or "" for k, v in attrs}
+        if tag == "meta":
+            nombre = (atributos.get("property") or atributos.get("name") or "").lower()
+            if nombre in _META and atributos.get("content"):
+                self.marcas.append(f"{nombre}={atributos['content']}")
+        elif tag == "script" and atributos.get("type", "").lower() == "application/ld+json":
+            self._ld = []
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag == "script" and self._ld is not None:
+            self._datos_estructurados("".join(self._ld))
+            self._ld = None
+
+    def handle_data(self, data: str) -> None:
+        if self._ld is not None:
+            self._ld.append(data)
+
+    def _datos_estructurados(self, texto: str) -> None:
+        try:
+            datos = json.loads(texto)
+        except ValueError:
+            return
+        pendientes = [datos]
+        while pendientes:
+            dato = pendientes.pop()
+            if isinstance(dato, list):
+                pendientes.extend(dato)
+            elif isinstance(dato, dict):
+                pendientes.extend(dato.get("@graph") or [])
+                for clave in _CLAVES_LD:
+                    valor = dato.get(clave)
+                    valores = valor if isinstance(valor, list) else [valor]
+                    self.marcas += [f"ld:{clave}={v}" for v in valores if isinstance(v, str) and v]
+                if dato.get("sponsor"):
+                    self.marcas.append("ld:sponsor")
+
+
+def marcas(html: str) -> tuple[str, ...]:
+    """Las marcas de la página, sin repetir y recortadas."""
+    lector = _Marcas()
+    lector.feed(html)
+    unicas = dict.fromkeys(" ".join(m.split())[:MAX_LETRAS_MARCA] for m in lector.marcas)
+    return tuple(unicas)[:MAX_MARCAS]
+
+
+@dataclass(frozen=True)
+class Pagina:
+    texto: str
+    marcas: tuple[str, ...] = ()
+
+
+def leer_pagina(descargador: Descargador, url: str) -> Pagina:
+    """Primeras frases y marcas de la noticia; vacías si no se puede descargar."""
+    try:
+        html = descargador.texto(url, es_html)
+    except DescargaFallida:
+        return Pagina("")
+    return Pagina(primeras_frases(html), marcas(html))
+
+
 def leer(descargador: Descargador, url: str) -> str:
     """Primeras frases de la noticia, o texto vacío si no se puede descargar."""
-    try:
-        return primeras_frases(descargador.texto(url, es_html))
-    except DescargaFallida:
-        return ""
+    return leer_pagina(descargador, url).texto
