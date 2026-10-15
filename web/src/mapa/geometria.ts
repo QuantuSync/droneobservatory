@@ -5,12 +5,13 @@ import type { Feature, FeatureCollection, LineString, Point, Polygon } from "geo
 
 import { indiceBandera, varianteConjunta, varianteDe } from "../banderas.ts";
 import { esGrave } from "../datos/derivar.ts";
+import { marcaDe } from "../datos/presencia.ts";
 import type {
   EpisodioResumen,
-  Estado,
   FilaImpacto,
   FocoRegion,
   IncidenteResumen,
+  MarcaIncidente,
 } from "../datos/tipos.ts";
 import { anchoDeCorredor, arco, opacidadDeCorredor, opacidadDePerdida } from "../datos/guerraSatelite.ts";
 import type {
@@ -92,9 +93,9 @@ export function conPunto(
   );
 }
 
-/** Primero el más grave; a igual gravedad, el más reciente. */
+/** Primero el más grave (por su marca: un no acreditado, bajo lo confirmado); a igual gravedad, el más reciente. */
 export function ordenPorGravedad(a: IncidenteResumen, b: IncidenteResumen): number {
-  return GRAVEDAD[b.estado] - GRAVEDAD[a.estado] || b.dia - a.dia || b.id.localeCompare(a.id);
+  return GRAVEDAD[marcaDe(b)] - GRAVEDAD[marcaDe(a)] || b.dia - a.dia || b.id.localeCompare(a.id);
 }
 
 export interface PropiedadesPila {
@@ -103,15 +104,20 @@ export interface PropiedadesPila {
   /** Todos los incidentes de ese punto, del más grave al menos, separados por comas. */
   ids: string;
   n: number;
-  estado: Estado;
+  /** La marca del representante: su estado o «no_acreditado» (datos/presencia.ts). */
+  estado: MarcaIncidente;
   icono: string;
   /** 1 si el lugar del representante es aproximado (el país, la región o el mar). */
   aproximado: 0 | 1;
-  /** 1 si el representante está confirmado o atribuido: se dibuja encima y late. */
+  /** 1 si la marca del representante es confirmado o atribuido: se dibuja encima y late. */
   grave: 0 | 1;
   atribuido: 0 | 1;
-  /** Cuántos hay de cada estado, para el color de los grupos al alejar. */
+  /**
+   * Cuántos hay de cada marca, para el color de los grupos al alejar. Un no acreditado no cuenta
+   * entre los confirmados: no pone rojo un grupo (estilo.ts, COLOR_DE_GRUPO).
+   */
   n_confirmados: number;
+  n_no_acreditados: number;
   n_notificados: number;
   /** 1 si alguno empezó en las últimas 24 horas. */
   reciente: 0 | 1;
@@ -149,9 +155,10 @@ export function pilas(
     const ordenados = grupo.incidentes.slice().sort(ordenPorGravedad);
     const primero = ordenados[0];
     if (primero === undefined) continue;
-    const cuenta = (estado: Estado) => ordenados.filter((i) => i.estado === estado).length;
+    const marca = marcaDe(primero);
+    const cuenta = (buscada: MarcaIncidente) => ordenados.filter((i) => marcaDe(i) === buscada).length;
     const marcador = varianteConjunta(
-      ordenados.filter((i) => i.estado === "atribuido").map((i) => varianteDe(i.atribucion)),
+      ordenados.filter((i) => marcaDe(i) === "atribuido").map((i) => varianteDe(i.atribucion)),
     );
     features.push({
       type: "Feature",
@@ -160,12 +167,13 @@ export function pilas(
         id: primero.id,
         ids: ordenados.map((i) => i.id).join(","),
         n: ordenados.length,
-        estado: primero.estado,
-        icono: nombreIcono(primero.estado, primero.punto === null),
+        estado: marca,
+        icono: nombreIcono(marca, primero.punto === null),
         aproximado: primero.punto === null ? 1 : 0,
-        grave: esGrave(primero.estado) ? 1 : 0,
-        atribuido: primero.estado === "atribuido" ? 1 : 0,
+        grave: marca !== "no_acreditado" && esGrave(marca) ? 1 : 0,
+        atribuido: marca === "atribuido" ? 1 : 0,
         n_confirmados: cuenta("confirmado"),
+        n_no_acreditados: cuenta("no_acreditado"),
         n_notificados: cuenta("notificado"),
         reciente: ordenados.some((i) => incidenteEnPeriodo(i, opciones.recientes)) ? 1 : 0,
         novedad: ordenados.some((i) => opciones.novedades.has(i.id)) ? 1 : 0,
@@ -189,19 +197,22 @@ export function atribuidos(
   opciones: { recientes: Periodo; novedades: ReadonlySet<string> },
 ): FeatureCollection<Point, PropiedadesPila> {
   return pilas(
-    incidentes.filter((i) => i.estado === "atribuido"),
+    incidentes.filter((i) => marcaDe(i) === "atribuido"),
     opciones,
   );
 }
 
-/** Lo que va en círculos y grupos: todo menos los atribuidos, que llevan su marcador. */
+/**
+ * Lo que va en círculos y grupos: todo menos los atribuidos, que llevan su marcador. Un atribuido
+ * con la presencia no acreditada va en un círculo morado, con los demás.
+ */
 export function sinAtribuidos(incidentes: readonly IncidenteResumen[]): IncidenteResumen[] {
-  return incidentes.filter((i) => i.estado !== "atribuido");
+  return incidentes.filter((i) => marcaDe(i) !== "atribuido");
 }
 
 export interface PropiedadesArea {
   id: string;
-  estado: Estado;
+  estado: MarcaIncidente;
 }
 
 export function areas(
@@ -213,7 +224,7 @@ export function areas(
       (incidente): Feature<Polygon, PropiedadesArea> => ({
         type: "Feature",
         geometry: circulo(incidente.punto.lon, incidente.punto.lat, incidente.punto.radio_km),
-        properties: { id: incidente.id, estado: incidente.estado },
+        properties: { id: incidente.id, estado: marcaDe(incidente) },
       }),
     ),
   };

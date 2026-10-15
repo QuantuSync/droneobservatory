@@ -4,8 +4,9 @@
 
 import type { Periodo } from "../tiempo/dias.ts";
 import { incidenteEnPeriodo } from "../tiempo/dias.ts";
-import type { Estado, IncidenteResumen, Tipo } from "./tipos.ts";
-import { ESTADOS, TIPOS } from "./vocabulario.ts";
+import { MARCAS, marcaDe } from "./presencia.ts";
+import type { IncidenteResumen, MarcaIncidente, Tipo } from "./tipos.ts";
+import { TIPOS } from "./vocabulario.ts";
 
 export type Sentido = "sube" | "baja" | "estable";
 
@@ -107,7 +108,8 @@ export function escalones(presion: ReadonlyMap<string, PresionPais>): Map<string
 
 export interface CifrasPais {
   porTipo: Record<Tipo, number>;
-  porEstado: Record<Estado, number>;
+  /** Por la marca de cada incidente: su estado o «no_acreditado» (datos/presencia.ts). */
+  porEstado: Record<MarcaIncidente, number>;
   /** Incidentes del país en el periodo, del más reciente al más antiguo. */
   lista: IncidenteResumen[];
 }
@@ -118,11 +120,11 @@ export function cifrasDePais(
   periodo: Periodo,
 ): CifrasPais {
   const porTipo = Object.fromEntries(TIPOS.map((t) => [t, 0])) as Record<Tipo, number>;
-  const porEstado = Object.fromEntries(ESTADOS.map((e) => [e, 0])) as Record<Estado, number>;
+  const porEstado = Object.fromEntries(MARCAS.map((e) => [e, 0])) as Record<MarcaIncidente, number>;
   const lista = incidentes.filter((i) => i.pais === pais && incidenteEnPeriodo(i, periodo));
   for (const i of lista) {
     porTipo[i.tipo] += 1;
-    porEstado[i.estado] += 1;
+    porEstado[marcaDe(i)] += 1;
   }
   lista.sort((a, b) => b.dia - a.dia || b.id.localeCompare(a.id));
   return { porTipo, porEstado, lista };

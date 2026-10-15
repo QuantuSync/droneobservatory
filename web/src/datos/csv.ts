@@ -1,6 +1,7 @@
 // Versiones CSV de los datos abiertos. Funciones puras que usa el build.
 
 import { ORIGEN } from "../sitio.ts";
+import { historialEnCelda } from "./presencia.ts";
 import type { ColeccionIncidentes, PublicacionUcrania, RangoODesconocido } from "./tipos.ts";
 
 type Celda = string | number | undefined;
@@ -64,6 +65,9 @@ export const COLUMNAS_INCIDENTES = [
   "lugar_en",
   "objetivo_es",
   "objetivo_en",
+  // Los cambios de la presencia de dron, «día:valor» separados por «|» (una corrección parcial
+  // lleva «:parcial»); vacío si nunca se rectificó.
+  "presencia_historial",
 ] as const;
 
 export function csvIncidentes(coleccion: ColeccionIncidentes): string {
@@ -103,6 +107,7 @@ export function csvIncidentes(coleccion: ColeccionIncidentes): string {
       p.nombres?.lugar.en,
       p.nombres?.objetivo?.es,
       p.nombres?.objetivo?.en,
+      historialEnCelda(p),
     ];
   });
   return csv(COLUMNAS_INCIDENTES, filas);

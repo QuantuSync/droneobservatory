@@ -1,6 +1,7 @@
 import { afirmacionesDe, rangoDeFuentes, valorLegible } from "../datos/afirmaciones.ts";
 import { ACTOR_SIN_NOMBRE, atribucionResumida } from "../datos/derivar.ts";
 import { cierre as leerCierre } from "../datos/efecto.ts";
+import { marcaDe, pasosDePresencia } from "../datos/presencia.ts";
 import type {
   AfirmacionPublica,
   Atribucion,
@@ -46,6 +47,8 @@ import {
 const MARCA_PRESENCIA: Record<PresenciaDron, string> = {
   confirmada: "✓",
   no_confirmada: "?",
+  // Ni confirmado ni descartado: la autoridad no encontró pruebas del dron.
+  no_acreditada: "◇",
   descartada: "✕",
 };
 
@@ -267,10 +270,13 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
   );
   const conFuente = otrosLugares.filter((otro) => otro.fuente !== undefined && porFuente.has(otro.fuente));
   const cambios = lugar.historial ?? [];
+  // La presencia de dron rectificada: su secuencia, con la fecha y la fuente de cada paso.
+  const pasosPresencia = pasosDePresencia(t, idioma, incidente);
+  const marca = marcaDe({ estado: incidente.estado.actual, presencia: incidente.presencia_dron ?? null });
   return (
     <article>
       <p className="rotulo flex items-center gap-2">
-        <Simbolo estado={incidente.estado.actual} atribucion={marcador} aproximado={incidente.lon === null} />
+        <Simbolo estado={marca} atribucion={marcador} aproximado={incidente.lon === null} />
         {t.tipo[incidente.tipo]}
       </p>
       <h2 className="text-xl font-semibold tracking-tight mt-1 text-2xl">{nombre}</h2>
@@ -293,7 +299,29 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
             <span aria-hidden="true" className="mono mr-1.5 text-acento">
               {MARCA_PRESENCIA[incidente.presencia_dron]}
             </span>
-            {t.presencia[incidente.presencia_dron]}
+            <span data-presencia={incidente.presencia_dron}>{t.presencia[incidente.presencia_dron]}</span>
+            {pasosPresencia.length > 0 && (
+              // Cada paso enlaza a su fuente; una corrección parcial es una nota que no cambia el valor.
+              <ol aria-label={t.presenciaHistorial.rotulo} className="mt-1 text-xs" data-presencia-historial="">
+                {pasosPresencia.map((paso, i) => (
+                  <li
+                    key={i}
+                    className={paso.parcial ? "mt-0.5 text-secundario" : "mt-0.5 text-texto"}
+                    data-paso-presencia={paso.valor}
+                    data-parcial={paso.parcial ? "" : undefined}
+                  >
+                    {paso.fuente === undefined ? (
+                      paso.texto
+                    ) : (
+                      <EnlaceFuente t={t} fuente={paso.fuente}>
+                        {paso.texto}
+                      </EnlaceFuente>
+                    )}
+                    {paso.resto}
+                  </li>
+                ))}
+              </ol>
+            )}
             <QueDiceCadaFuente t={t} idioma={idioma} idiomas={idiomasFuentes} afirmaciones={de(CAMPOS_DE_FILA.presencia)} />
           </Fila>
         )}

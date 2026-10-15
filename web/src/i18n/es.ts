@@ -34,7 +34,7 @@ export const es: Textos = {
   marcador: {
     etiqueta: "Cifras del periodo elegido",
     incidentes: "incidentes",
-    confirmados: "confirmados",
+    confirmados: "confirmados por una autoridad",
     atribuidos: "atribuidos",
     paises: "países",
   },
@@ -392,7 +392,10 @@ export const es: Textos = {
     cerrar: "Cerrar la ayuda",
     colores:
       "Cada incidente es un círculo relleno del color de su estado: naranja, notificado; " +
-      "rojo, confirmado. El desmentido es un círculo gris de borde discontinuo, sin relleno. " +
+      "rojo, confirmado. Morado, no acreditado: una autoridad oficial cerró su investigación " +
+      "sin pruebas del dron o retiró su declaración sin decir que fuera otra cosa; el incidente " +
+      "y su efecto siguen en el mapa, con su historial. El desmentido es un círculo gris de " +
+      "borde discontinuo, sin relleno. " +
       "Un atribuido (un confirmado que una autoridad atribuye a un Estado o a una persona) es " +
       "un círculo algo mayor, con un aro rojo grueso y, dentro, la bandera del país al que se " +
       "atribuye; atribuido a una persona, lleva además un punto oscuro fijo en el centro. Va " +
@@ -418,7 +421,8 @@ export const es: Textos = {
     numeros:
       "Un círculo con un número dentro junta varios incidentes (el de un solo incidente va " +
       "relleno y sin número): crece con el número, y su anillo " +
-      "es rojo si contiene algún confirmado y naranja si todos son notificados. Al acercar el " +
+      "es rojo si contiene algún confirmado, morado si no lo hay y alguno es no acreditado, y " +
+      "naranja si todos son notificados. Al acercar el " +
       "mapa se separan. Los nombres del mapa ceden ante los círculos: se ven enteros o no se " +
       "ven.",
     pila:
@@ -426,7 +430,7 @@ export const es: Textos = {
     pulsos:
       "Solo late lo nuevo desde tu última visita (y el círculo que lo contiene): deja de latir " +
       "al pulsar «Verlas» o «Descartar» o al abrir el incidente. Con el movimiento reducido " +
-      "del sistema, en lugar de latir lleva un anillo fijo. Los notificados van más apagados.",
+      "del sistema, en lugar de latir lleva un anillo fijo. Los notificados y los no acreditados van más apagados.",
     reciente: "Un destello suave marca lo que empezó en las últimas 24 horas.",
     novedad: "En la primera visita no late nada: aún no hay una visita anterior con la que comparar.",
     ucrania:
@@ -507,6 +511,10 @@ export const es: Textos = {
   },
   mapa: {
     etiqueta: "Mapa de Europa con los incidentes del periodo elegido",
+    nota:
+      "El observatorio registra lo que se notifica y lo que declaran las autoridades. " +
+      "«Confirmado» significa que una autoridad oficial lo ha declarado, no que exista una " +
+      "prueba física pública.",
     instrucciones:
       "Con el foco en el mapa, las flechas lo desplazan y las teclas más y menos cambian el " +
       "zoom. Después del mapa, el tabulador recorre los incidentes a la vista, del más reciente al " +
@@ -551,7 +559,26 @@ export const es: Textos = {
   presencia: {
     confirmada: "Dron confirmado",
     no_confirmada: "Dron no confirmado",
+    no_acreditada: "Dron no acreditado",
     descartada: "Dron descartado",
+  },
+  noAcreditado: {
+    etiqueta: "No acreditado",
+    leyenda:
+      "Una autoridad oficial cerró su investigación sin pruebas del dron o retiró su " +
+      "declaración. El incidente y su efecto siguen.",
+  },
+  presenciaHistorial: {
+    rotulo: "Cambios de la presencia de dron",
+    valor: {
+      confirmada: "Confirmado",
+      no_confirmada: "No confirmado",
+      no_acreditada: "No acreditado",
+      descartada: "Descartado",
+    },
+    paso: (valor, fecha, quien) => (quien === null ? `${valor} el ${fecha}` : `${valor} el ${fecha} por ${quien}`),
+    parcial: (fecha, quien) =>
+      quien === null ? `Corrección parcial el ${fecha}` : `Corrección parcial el ${fecha} por ${quien}`,
   },
   precision: {
     minuto: "hora exacta",
@@ -894,7 +921,10 @@ export const es: Textos = {
               {
                 termino: "Confirmado",
                 marca: { estado: "confirmado" },
-                texto: ["Una autoridad afirma que el incidente ocurrió. En rojo."],
+                texto: [
+                  "Una autoridad afirma que el incidente ocurrió. En rojo. «Confirmado» significa " +
+                    "que una autoridad oficial lo ha declarado, no que exista una prueba física pública.",
+                ],
               },
               {
                 termino: "Atribuido",
@@ -933,10 +963,12 @@ export const es: Textos = {
           },
           {
             parrafo: [
-              "En el marcador, los confirmados y los atribuidos se cuentan por separado: un " +
-                "incidente atribuido ya no suma entre los confirmados. El estado se indica " +
-                "siempre con color y con texto. Un círculo que junta varios incidentes es rojo " +
-                "si contiene algún confirmado o atribuido y naranja si todos son notificados.",
+              "En el marcador, «confirmados por una autoridad» incluye a los atribuidos, que se " +
+                "cuentan además aparte, y no cuenta los de presencia de dron no acreditada o " +
+                "descartada (ver «Presencia de dron»), que siguen contando como incidentes. El " +
+                "estado se indica siempre con color y con texto. Un círculo que junta varios " +
+                "incidentes es rojo si contiene algún confirmado o atribuido, morado si no lo hay " +
+                "y alguno es no acreditado, y naranja si todos son notificados.",
             ],
           },
         ],
@@ -956,7 +988,48 @@ export const es: Textos = {
                 "dron). No se piden restos, grabación ni detección por sensor. Queda sin " +
                 "confirmar si la propia autoridad lo deja abierto («posible dron», «objeto no " +
                 "identificado», «se investiga si era un dron») o si solo lo cuentan la prensa " +
-                "o los testigos. Es descartada cuando una autoridad lo niega.",
+                "o los testigos.",
+            ],
+          },
+          {
+            lista: [
+              {
+                termino: "No acreditado",
+                marca: { estado: "no_acreditado" },
+                texto: [
+                  "Una autoridad oficial cerró su investigación sin pruebas del dron, o retiró su " +
+                    "declaración sin decir que fuera otra cosa. En morado. No es un desmentido: no " +
+                    "encontrar pruebas no es lo mismo que probar que no hubo un dron.",
+                ],
+              },
+              {
+                termino: "Descartado",
+                texto: [
+                  "Una autoridad dice que fue otra cosa (un avión, un helicóptero): es el " +
+                    "desmentido de la presencia de dron. El marcador conserva el color de su estado.",
+                ],
+              },
+            ],
+          },
+          {
+            parrafo: [
+              "Ninguna de las dos borra nada. El incidente ocurrió aunque después se rectifique " +
+                "su causa: si un aeropuerto cerró, cerró. La rectificación cambia la presencia de " +
+                "dron, no el incidente ni su efecto (el cierre, los desvíos, la duración), y nada " +
+                "desaparece del mapa: sigue en su sitio con su historial entero. Tampoco cambia el " +
+                "estado del suceso: un incidente confirmado sigue confirmado, con la presencia no " +
+                "acreditada. En las cifras, «confirmados por una autoridad» no cuenta los de " +
+                "presencia no acreditada o descartada, que siguen contando como incidentes.",
+            ],
+          },
+          {
+            parrafo: [
+              "El paso a no acreditado solo se hace con una fuente oficial y tras la revisión " +
+                "experta. La ficha enseña la secuencia entera, cada paso con su fecha, quién lo " +
+                "declara y el enlace a su fuente: «Confirmado el 23/09/2025 por la policía de " +
+                "Copenhague · No acreditado el 25/06/2026 por la policía de Copenhague, tras la " +
+                "investigación». Una corrección oficial parcial queda anotada en ese historial sin " +
+                "cambiar el valor.",
             ],
           },
           {

@@ -20,6 +20,7 @@ import type { Aviso } from "../datos/directo.ts";
 import { celdasEnMapa } from "../datos/gnss.ts";
 import type { CeldaGnss } from "../datos/gnss.ts";
 import { escalones } from "../datos/presion.ts";
+import { estadoEscrito, marcaDe } from "../datos/presencia.ts";
 import type { PresionPais } from "../datos/presion.ts";
 import type {
   CiudadAlumbrado,
@@ -33,7 +34,7 @@ import type {
   FocoRegion,
   IncidenteResumen,
 } from "../datos/tipos.ts";
-import { fechaDia, numero, pais as nombrePais, porcentaje, region as nombreRegion, textoAtribuido } from "../i18n/index.ts";
+import { fechaDia, numero, pais as nombrePais, porcentaje, region as nombreRegion } from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
 import { ESCALA_UCRANIA, acento } from "../paleta.ts";
 import { opacidadDePerdida } from "../datos/guerraSatelite.ts";
@@ -302,7 +303,7 @@ const RADIO_ARO_PX = 14;
 
 /** Lo que anuncia el lector de pantalla de un incidente del mapa: título, estado y fecha. */
 export function textoDeIncidente(t: Textos, idioma: Idioma, i: IncidenteResumen): string {
-  return `${i.titulo[idioma]} · ${t.estado[i.estado]} · ${fechaDia(i.dia)}`;
+  return `${i.titulo[idioma]} · ${estadoEscrito(t, idioma, i)} · ${fechaDia(i.dia)}`;
 }
 
 /** Capas de las rutas que se pueden tocar: el halo y la zona sensible de la línea. */
@@ -403,7 +404,7 @@ function seleccionDe(elegido: IncidenteResumen | null): GeoJSON.FeatureCollectio
         type: "Feature",
         geometry: { type: "Point", coordinates: [punto.lon, punto.lat] },
         properties: {
-          estado: elegido.estado,
+          estado: marcaDe(elegido),
           bandera: indiceBandera(marcador.bandera),
           persona: marcador.persona ? 1 : 0,
         },
@@ -417,7 +418,7 @@ type ElementoDelMapa = HTMLDivElement & { mapaDePruebas?: MapaGL };
 
 /** Países de los atribuidos, cuya bandera lleva su marcador. */
 function paisesAtribuidos(incidentes: readonly IncidenteResumen[]): string[] {
-  return incidentes.flatMap((i) => (i.estado === "atribuido" && i.atribucion?.pais ? [i.atribucion.pais] : []));
+  return incidentes.flatMap((i) => (marcaDe(i) === "atribuido" && i.atribucion?.pais ? [i.atribucion.pais] : []));
 }
 
 function capasActivas(mapa: MapaGL): string[] {
@@ -868,11 +869,7 @@ export default function Mapa(props: PropsMapa) {
       }
       const incidente = porId.get(String(p.id));
       if (incidente === undefined) return null;
-      const estado =
-        incidente.estado === "atribuido"
-          ? textoAtribuido(textos, lengua, incidente.atribucion)
-          : textos.estado[incidente.estado];
-      return `${textos.tipo[incidente.tipo]} · ${estado} · ${incidente.titulo[lengua]}`;
+      return `${textos.tipo[incidente.tipo]} · ${estadoEscrito(textos, lengua, incidente)} · ${incidente.titulo[lengua]}`;
     }
 
     function esconderLetrero() {
@@ -1040,7 +1037,7 @@ export default function Mapa(props: PropsMapa) {
       fuente(mapa, FUENTE_SELECCION)?.setData(seleccionDe(elegido));
       // Un atribuido abierto se dibuja solo con su marcador de selección, más grande: el normal
       // asomaría por debajo.
-      mapa.setFilter(CAPA_ATRIBUIDOS, ["!=", ["get", "id"], elegido?.estado === "atribuido" ? elegido.id : ""]);
+      mapa.setFilter(CAPA_ATRIBUIDOS, ["!=", ["get", "id"], elegido !== null && marcaDe(elegido) === "atribuido" ? elegido.id : ""]);
     });
   }, [listo, elegido]);
 

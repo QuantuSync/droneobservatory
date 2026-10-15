@@ -1,5 +1,6 @@
 import type { IncidenteResumen } from "../datos/tipos.ts";
-import { fechaDia, textoAtribuido } from "../i18n/index.ts";
+import { estadoEscrito, marcaDe } from "../datos/presencia.ts";
+import { fechaDia } from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
 import { Enlace } from "../navegacion.tsx";
 import { rutaDeFicha } from "../sitio.ts";
@@ -30,7 +31,7 @@ export function SelectorPila({ t, idioma, incidentes, alElegir }: Props) {
               className="flex items-start gap-2 rounded-sm px-1 py-2 hover:bg-elevado"
             >
               <Simbolo
-                estado={incidente.estado}
+                estado={marcaDe(incidente)}
                 atribucion={incidente.atribucion}
                 aproximado={incidente.punto === null}
                 className="mt-0.5 shrink-0"
@@ -38,9 +39,7 @@ export function SelectorPila({ t, idioma, incidentes, alElegir }: Props) {
               <span className="min-w-0">
                 <span className="block leading-snug">{incidente.titulo[idioma]}</span>
                 <span className="mono block text-xs text-secundario">
-                  {fechaDia(incidente.dia)} · {incidente.estado === "atribuido"
-                    ? textoAtribuido(t, idioma, incidente.atribucion)
-                    : t.estado[incidente.estado]}
+                  {fechaDia(incidente.dia)} · {estadoEscrito(t, idioma, incidente)}
                 </span>
               </span>
             </Enlace>

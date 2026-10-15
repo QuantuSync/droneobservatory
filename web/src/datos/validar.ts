@@ -1,4 +1,4 @@
-// Validación de los datos contra el esquema 1.19.0 (campos públicos), escrita a mano para
+// Validación de los datos contra el esquema 1.20.0 (campos públicos), escrita a mano para
 // que no necesite generar código en el navegador. Se usa en el build, sobre los ficheros de
 // publicacion/, y en la web al cargar cada fichero: un fichero que no valida no se pinta.
 
@@ -409,12 +409,42 @@ const nombres = objeto(
   },
 );
 
+/** Los cambios de la presencia de dron (esquema: comun.presencia_historial). */
+const historialPresencia = lista(
+  objeto(
+    { valor: enumerado(v.PRESENCIAS), fecha: instante, fuente_id: cadena() },
+    { quien: titulo, motivo: titulo, parcial: constante(true) },
+  ),
+  1,
+);
+
+/**
+ * El historial de la presencia de dron es una nota de la ficha: si no valida, el incidente se sigue
+ * pintando sin él. En el navegador y en el build (tolerarCamposNuevos) se quita del incidente y se
+ * apunta como ignorado; la ficha enseña entonces solo la presencia en vigor. Las pruebas, que
+ * validan cerrado, lo rechazan.
+ */
+function sinHistorialRoto(comprobar: Comprobacion): Comprobacion {
+  return (valor, ruta, errores) => {
+    if (toleraCamposNuevos && esObjeto(valor) && "presencia_historial" in valor) {
+      const propios: string[] = [];
+      historialPresencia(valor["presencia_historial"], `${ruta}.presencia_historial`, propios);
+      if (propios.length > 0) {
+        delete valor["presencia_historial"];
+        if (ignorados !== null && ignorados.length < 100_000) ignorados.push(`${ruta}.presencia_historial`);
+      }
+    }
+    comprobar(valor, ruta, errores);
+  };
+}
+
 const CAMPOS_INCIDENTE_OPCIONALES: Record<string, Comprobacion> = {
   tipo_dron: tipoDron,
   recorrido,
   afirmaciones_publicas: lista(afirmacionPublica),
   episodio: cadena(v.PATRON_ID_EPISODIO),
   presencia_dron: enumerado(v.PRESENCIAS),
+  presencia_historial: historialPresencia,
   objetivo: objeto(
     { categoria: enumerado(v.CATEGORIAS_OBJETIVO) },
     { nombre: cadena(), oaci: cadena(v.PATRON_OACI), uso: enumerado(v.USOS) },
@@ -472,11 +502,10 @@ const CAMPOS_INCIDENTE_OPCIONALES: Record<string, Comprobacion> = {
   ),
 };
 
-const propiedadesIncidente = objeto(CAMPOS_INCIDENTE_OBLIGATORIOS, CAMPOS_INCIDENTE_OPCIONALES);
+const propiedadesIncidente = sinHistorialRoto(objeto(CAMPOS_INCIDENTE_OBLIGATORIOS, CAMPOS_INCIDENTE_OPCIONALES));
 
-const incidenteSinUbicacion = objeto(
-  { ...CAMPOS_INCIDENTE_OBLIGATORIOS, lugar: lugarSinUbicacion },
-  CAMPOS_INCIDENTE_OPCIONALES,
+const incidenteSinUbicacion = sinHistorialRoto(
+  objeto({ ...CAMPOS_INCIDENTE_OBLIGATORIOS, lugar: lugarSinUbicacion }, CAMPOS_INCIDENTE_OPCIONALES),
 );
 
 /** Dónde se dibuja el marcador de un incidente con lugar aproximado (datos/lugarAproximado.ts). */
@@ -487,7 +516,7 @@ const lugarAproximadoValido = objeto({
   nombre: nulable(cadena()),
 });
 
-const detalleIncidente = alguna(
+const detalleIncidente = sinHistorialRoto(alguna(
   objeto(
     { ...CAMPOS_INCIDENTE_OBLIGATORIOS, lon: longitud, lat: latitud },
     CAMPOS_INCIDENTE_OPCIONALES,
@@ -501,7 +530,7 @@ const detalleIncidente = alguna(
     },
     { ...CAMPOS_INCIDENTE_OPCIONALES, aproximado: nulable(lugarAproximadoValido) },
   ),
-);
+));
 
 /** El autor que llevan los ficheros y las versiones (recogida/licencia.py), con su ORCID. */
 const autorDatos = objeto(

@@ -1,7 +1,7 @@
 // Colores que necesitan el mapa y los símbolos fuera de la hoja de estilos. Un test
 // comprueba que coinciden con los de estilos.css y que cumplen el contraste AA.
 
-import type { Estado } from "./datos/tipos.ts";
+import type { Estado, MarcaIncidente } from "./datos/tipos.ts";
 
 export const PALETA = {
   fondo: "#060a12",
@@ -18,6 +18,11 @@ export const PALETA = {
   confirmado: "#f53a50",
   atribuido: "#f53a50",
   desmentido: "#93a0b4",
+  // Presencia de dron no acreditada: un morado magenta, lejos del violeta azulado de la capa de
+  // guerra (tono 298° frente a 255°), del rojo, del naranja, del gris y del verde, también con
+  // daltonismo (tests/colores.test.tsx). Con daltonismo rojo-verde se acerca al violeta de la
+  // guerra, que nunca es un círculo relleno: ahí lo separan la forma y la capa.
+  noAcreditado: "#e81cf0",
   // El verde solo dice que el sistema funciona (datos al día, en la barra de estado).
   alDia: "#56c271",
   // Capa de guerra: una familia violeta azulada, lejos del rojo de «confirmado», del naranja
@@ -38,6 +43,12 @@ export const COLOR_ESTADO: Record<Estado, string> = {
   confirmado: PALETA.confirmado,
   atribuido: PALETA.atribuido,
   desmentido: PALETA.desmentido,
+};
+
+/** El color de cada marca de incidente: el de su estado o el morado de «no acreditado». */
+export const COLOR_MARCA: Record<MarcaIncidente, string> = {
+  ...COLOR_ESTADO,
+  no_acreditado: PALETA.noAcreditado,
 };
 
 /**
@@ -71,12 +82,17 @@ export const COLOR_ARO_ATRIBUIDO = PALETA.atribuido;
 /** El filo entre el aro y la bandera, el de fuera y el punto: el fondo del mapa. */
 export const COLOR_FILO_ATRIBUIDO = PALETA.fondo;
 
-/** Gravedad de cada estado para decidir el color de un grupo: manda el más grave. */
-export const GRAVEDAD: Record<Estado, number> = {
+/**
+ * Gravedad de cada marca para decidir cuál representa un punto: manda la más grave. Un no
+ * acreditado va por debajo de lo confirmado (una autoridad cerró su investigación sin pruebas del
+ * dron) y por encima de lo notificado (el incidente sí lo dio por ocurrido una autoridad).
+ */
+export const GRAVEDAD: Record<MarcaIncidente, number> = {
   desmentido: 0,
   notificado: 1,
-  confirmado: 2,
-  atribuido: 3,
+  no_acreditado: 2,
+  confirmado: 3,
+  atribuido: 4,
 };
 
 /** Grosor del contorno de los círculos (el discontinuo del desmentido y el borde del relleno). */

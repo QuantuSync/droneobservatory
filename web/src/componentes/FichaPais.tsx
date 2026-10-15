@@ -2,7 +2,8 @@ import { useState } from "react";
 
 import type { GraficaRacha, Racha } from "../datos/prevision.ts";
 import type { CifrasPais, PresionPais } from "../datos/presion.ts";
-import { ESTADOS, TIPOS } from "../datos/vocabulario.ts";
+import { MARCAS, estadoEscrito, rotuloDeMarca } from "../datos/presencia.ts";
+import { TIPOS } from "../datos/vocabulario.ts";
 import { fechaDia, numero, pais } from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
 import { Enlace } from "../navegacion.tsx";
@@ -92,10 +93,10 @@ export function FichaPais({ t, idioma, iso, presion, cifras, periodo, racha = nu
             </Fila>
             <Fila nombre={p.porEstado}>
               <ul>
-                {ESTADOS.filter((estado) => cifras.porEstado[estado] > 0).map((estado) => (
+                {MARCAS.filter((estado) => cifras.porEstado[estado] > 0).map((estado) => (
                   <li key={estado} className="flex items-center gap-2">
                     <Simbolo estado={estado} />
-                    {t.estado[estado]}:{" "}
+                    {rotuloDeMarca(t, estado)}:{" "}
                     <span className="mono">{numero(cifras.porEstado[estado], idioma)}</span>
                   </li>
                 ))}
@@ -111,7 +112,7 @@ export function FichaPais({ t, idioma, iso, presion, cifras, periodo, racha = nu
                     {incidente.titulo[idioma]}
                   </Enlace>
                   <span className="mono block text-xs text-secundario">
-                    {incidente.id} · {fechaDia(incidente.dia)} · {t.estado[incidente.estado]}
+                    {incidente.id} · {fechaDia(incidente.dia)} · {estadoEscrito(t, idioma, incidente)}
                   </span>
                 </li>
               ))}

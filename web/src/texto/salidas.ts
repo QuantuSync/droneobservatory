@@ -125,6 +125,14 @@ export function llmsTxt(resumen: Resumen): string {
       .map((estado) => `- ${nombres[estado]}: ${tp.estado[estado]}`)
       .join("\n");
   };
+  // La presencia de dron con cada valor (también «no acreditada», que no borra nada del mapa).
+  const presencias = (idioma: "es" | "en") => {
+    const tp = textosPagina(idioma);
+    const t = textos(idioma);
+    return (["confirmada", "no_confirmada", "no_acreditada", "descartada"] as const)
+      .map((presencia) => `- ${t.presencia[presencia]} (${presencia}): ${tp.presencia[presencia]}`)
+      .join("\n");
+  };
   const fecha = fechaHora(resumen.actualizado);
   const version = versionDeDatos(resumen.actualizado);
   return [
@@ -136,13 +144,19 @@ export function llmsTxt(resumen: Resumen): string {
     "",
     en.portada.que.join(" "),
     "",
-    `Figures at ${fecha}: ${c.incidentes} incidents, ${c.confirmados} confirmed (${c.atribuidos} of them attributed), ${c.paises} countries.`,
+    `Figures at ${fecha}: ${c.incidentes} incidents, ${c.confirmados} confirmed by an authority (${c.atribuidos} of them attributed), ${c.paises} countries.`,
+    "",
+    textos("en").mapa.nota,
     "",
     "Every incident has its own page at /EODI-YYYY-NNNNN (Spanish) and /en/EODI-YYYY-NNNNN (English), with its status, drone presence, place, date, consequences, attribution with the authority's literal statement, every saved quote with its source link and date, and the history of status changes with its reasons.",
     "",
     "## How to read the status",
     "",
     estados("en"),
+    "",
+    "## Drone presence",
+    "",
+    presencias("en"),
     "",
     "## Pages",
     "",
@@ -174,13 +188,19 @@ export function llmsTxt(resumen: Resumen): string {
     "",
     es.portada.que.join(" "),
     "",
-    `Cifras a ${fecha}: ${c.incidentes} incidentes, ${c.confirmados} confirmados (${c.atribuidos} de ellos atribuidos), ${c.paises} países.`,
+    `Cifras a ${fecha}: ${c.incidentes} incidentes, ${c.confirmados} confirmados por una autoridad (${c.atribuidos} de ellos atribuidos), ${c.paises} países.`,
+    "",
+    textos("es").mapa.nota,
     "",
     "Cada incidente tiene su página en /EODI-AAAA-NNNNN (español) y /en/EODI-AAAA-NNNNN (inglés).",
     "",
     "### Cómo se leen los estados",
     "",
     estados("es"),
+    "",
+    "### Presencia de dron",
+    "",
+    presencias("es"),
     "",
     "### Páginas",
     "",

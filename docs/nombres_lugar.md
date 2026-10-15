@@ -84,7 +84,8 @@ demás lugares y los puntos anteriores, `nombres.otros` y `nombres.anteriores`. 
 ese campo, la tabla de siempre (`web/src/i18n/nombresLugar.ts`), que ya nunca transcribe otra
 escritura. Las listas, el buscador de canales de avisos, el mapa y los datos estructurados usan el
 titular publicado y `nombres.lugar`; el CSV lleva al final `lugar_es`, `lugar_en`, `objetivo_es` y
-`objetivo_en`.
+`objetivo_en` y, detrás, `presencia_historial` (los cambios de la presencia del dron,
+`docs/rectificaciones.md`).
 
 «Frontera o interior» solo sale en la ficha en el flanco este (`FLANCO_ESTE`, la misma lista que
 `flanco_este` de `configuracion/nombres_lugar.json`): países con frontera con Ucrania, Rusia (también

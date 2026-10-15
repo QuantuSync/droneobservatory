@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 
 import { RUTAS_AVISOS, TEXTO_AVISOS } from "../avisos.ts";
-import { ESTADOS } from "../datos/vocabulario.ts";
+import { MARCAS } from "../datos/presencia.ts";
 import { ATAJOS } from "../estado/atajos.ts";
 import type { Textos } from "../i18n/index.ts";
 import { PALETA } from "../paleta.ts";
@@ -104,6 +104,18 @@ function MarcaAlumbrado() {
   );
 }
 
+/**
+ * La nota de lo que registra el observatorio y de qué es «confirmado», junto al mapa y en la
+ * leyenda. Solo texto: no se cierra ni mueve nada.
+ */
+export function NotaMapa({ t, className = "text-xs" }: { t: Textos; className?: string }) {
+  return (
+    <p className={`${className} text-secundario`} data-nota-mapa="">
+      {t.mapa.nota}
+    </p>
+  );
+}
+
 /** Nombre legible de una tecla en el panel de ayuda. */
 function tecla(nombre: string): string {
   return nombre === "Escape" ? "Esc" : nombre.toUpperCase();
@@ -148,7 +160,7 @@ export function Ayuda({ t, idioma, abierta, onCerrar }: Props) {
         <section className="sm:col-span-2">
           <p className="text-secundario">{a.colores}</p>
           <ul className="mt-2 flex flex-col gap-1" data-leyenda-estados="">
-            {ESTADOS.flatMap((estado) =>
+            {MARCAS.flatMap((estado) =>
               estado === "atribuido"
                 ? [
                     <li key="atribuido-estado" className="flex items-center gap-2" data-leyenda-atribuido="estado">
@@ -160,14 +172,26 @@ export function Ayuda({ t, idioma, abierta, onCerrar }: Props) {
                       {t.atribucion.leyendaPersona}
                     </li>,
                   ]
-                : [
-                    <li key={estado} className="flex items-center gap-2">
-                      <Simbolo estado={estado} />
-                      {t.estado[estado]}
-                    </li>,
-                  ],
+                : estado === "no_acreditado"
+                  ? [
+                      // Morado: la presencia de dron no acreditada, con lo que quiere decir.
+                      <li key={estado} className="flex items-start gap-2" data-leyenda-no-acreditado="">
+                        <Simbolo estado={estado} className="mt-0.5 shrink-0" />
+                        <span>
+                          {t.noAcreditado.etiqueta}
+                          <span className="block text-xs text-secundario">{t.noAcreditado.leyenda}</span>
+                        </span>
+                      </li>,
+                    ]
+                  : [
+                      <li key={estado} className="flex items-center gap-2">
+                        <Simbolo estado={estado} />
+                        {t.estado[estado]}
+                      </li>,
+                    ],
             )}
           </ul>
+          <NotaMapa t={t} className="mt-2 text-xs" />
           <p className="mt-2 text-secundario" data-leyenda-bandera="">
             {t.atribucion.bandera}
           </p>

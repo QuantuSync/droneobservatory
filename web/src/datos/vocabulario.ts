@@ -1,4 +1,4 @@
-// Listas cerradas del esquema 1.19.0 (campos públicos). Un test las compara con los
+// Listas cerradas del esquema 1.20.0 (campos públicos). Un test las compara con los
 // ficheros de esquema/ para que no se separen.
 
 export const TIPOS = ["incursion", "interrupcion_aeroportuaria", "sobrevuelo"] as const;
@@ -16,7 +16,11 @@ export const MOTIVOS_ZONA = [
 ] as const;
 /** A quién atribuye una autoridad un incidente (atribucion.tipo). */
 export const TIPOS_ACTOR = ["estado", "persona"] as const;
-export const PRESENCIAS = ["confirmada", "no_confirmada", "descartada"] as const;
+/**
+ * Presencia de dron: «no_acreditada» cuando la autoridad cerró su investigación sin pruebas del dron
+ * o retiró su declaración sin decir que fuera otra cosa; «descartada» cuando dice que fue otra cosa.
+ */
+export const PRESENCIAS = ["confirmada", "no_confirmada", "no_acreditada", "descartada"] as const;
 export const PRECISIONES = ["minuto", "hora", "dia", "aproximada"] as const;
 export const FIABILIDADES = ["A", "B", "C", "D", "E", "F"] as const;
 /** E y F nunca se publican. */

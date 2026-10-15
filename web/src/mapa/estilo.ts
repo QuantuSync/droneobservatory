@@ -12,8 +12,8 @@ import type {
 
 import { OBJETO_TESELAS, urlDelAlmacen } from "../almacenPublico.ts";
 import { OPACIDAD_GNSS } from "../datos/gnss.ts";
-import { ESTADOS } from "../datos/vocabulario.ts";
-import { COLOR_ESTADO, MARCA_ATRIBUIDO, PALETA, TRAZO_DESMENTIDO } from "../paleta.ts";
+import { MARCAS } from "../datos/presencia.ts";
+import { COLOR_ESTADO, COLOR_MARCA, MARCA_ATRIBUIDO, PALETA, TRAZO_DESMENTIDO } from "../paleta.ts";
 import { PREFIJO_ICONO_ATRIBUIDO, SUFIJO_PERSONA } from "../banderas.ts";
 import {
   ESCALA_ATRIBUIDO_ELEGIDO,
@@ -491,23 +491,27 @@ export function capasBase(idioma: Idioma): LayerSpecification[] {
     );
 }
 
-/** Color según el estado de un incidente o de una pila. */
+/** Color según la marca de un incidente o de una pila: su estado o «no acreditado». */
 const COLOR_POR_ESTADO: ExpressionSpecification = [
   "match",
   ["get", "estado"],
-  ...ESTADOS.flatMap((estado) => [estado, COLOR_ESTADO[estado]]),
+  ...MARCAS.flatMap((marca) => [marca, COLOR_MARCA[marca]]),
   PALETA.secundario,
 ] as unknown as ExpressionSpecification;
 
 /**
  * Color del anillo de un grupo: el del estado más grave que contiene. Rojo si hay algún
- * confirmado; naranja si todos son notificados. Los atribuidos no entran: van con su propio
- * marcador, siempre a la vista.
+ * confirmado; morado si no lo hay y alguno tiene la presencia de dron no acreditada (va por
+ * debajo de lo confirmado: nunca pone rojo un grupo, y por encima de lo notificado, porque una
+ * autoridad sí dio el incidente por ocurrido); naranja si todos son notificados. Los atribuidos no
+ * entran: van con su propio marcador, siempre a la vista.
  */
 export const COLOR_DE_GRUPO: ExpressionSpecification = [
   "case",
   [">", ["get", "n_confirmados"], 0],
   COLOR_ESTADO.confirmado,
+  [">", ["get", "n_no_acreditados"], 0],
+  COLOR_MARCA.no_acreditado,
   [">", ["get", "n_notificados"], 0],
   COLOR_ESTADO.notificado,
   COLOR_ESTADO.desmentido,
@@ -1256,6 +1260,7 @@ export function estilo(idioma: Idioma, origen: string, acento: string): StyleSpe
         clusterProperties: {
           total: ["+", ["get", "n"]],
           n_confirmados: ["+", ["get", "n_confirmados"]],
+          n_no_acreditados: ["+", ["get", "n_no_acreditados"]],
           n_notificados: ["+", ["get", "n_notificados"]],
           n_novedades: ["+", ["get", "novedad"]],
         },
