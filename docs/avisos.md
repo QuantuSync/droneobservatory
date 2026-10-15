@@ -117,7 +117,7 @@ Sin emoticonos ni etiquetas. En Markdown (`"markdown": true`), que en texto plan
 | Lo ya avisado | `/home/eodi/datos/avisos/avisos.sqlite` |
 | Estado para la vigilancia | `/home/eodi/.eodi/avisos.json` |
 | Contraseña de `lucas` | Solo en el equipo de Lucas: `%USERPROFILE%\.eodi\ntfy_lucas.txt` |
-| Avisos manuales | `C:\dev\avisos\enviar-aviso.ps1` y el acceso directo «Enviar aviso» del escritorio; copia sin credenciales en `herramientas/enviar-aviso.ps1` |
+| Avisos manuales | `C:\dev\Observatorio AEGIS\herramientas\avisos\enviar-aviso.ps1` y el acceso directo «Enviar aviso» del escritorio; copia sin credenciales en `herramientas/enviar-aviso.ps1` |
 | Envío | `recogida/avisos.py` |
 | Página y panel | `web/src/avisos.ts`, `web/src/texto/avisos.ts`, `web/src/componentes/Avisos.tsx`; los QR, `web/scripts/qr-avisos.ts` en el build |
 
@@ -162,7 +162,7 @@ Las métricas internas de ntfy (`enable-metrics`, suscriptores conectados) escuc
 ## Cómo envía Lucas un aviso manual
 
 **Con el acceso directo «Enviar aviso» del escritorio** (lo más sencillo). Ejecuta
-`C:\dev\avisos\enviar-aviso.ps1`, que está fuera del repositorio; la copia versionada, sin ninguna
+`C:\dev\Observatorio AEGIS\herramientas\avisos\enviar-aviso.ps1`, que está fuera del repositorio; la copia versionada, sin ninguna
 credencial, es `herramientas/enviar-aviso.ps1`. Junto al script va `avisos.json`, la lista de
 canales (copia de `configuracion/avisos.json`; si se añade un país, copiarla de nuevo), y el icono
 `aviso.ico`.
@@ -181,7 +181,7 @@ la web; el icono es el logo del observatorio. La contraseña de `lucas` se lee d
 
 Para probarlo sin tocar los canales públicos: dar permiso temporal a `lucas` en un tema de pruebas
 (`sudo -u ntfy ntfy access lucas prueba-xxxx read-write`), ejecutar
-`powershell -ExecutionPolicy Bypass -File C:\dev\avisos\enviar-aviso.ps1 -Prueba prueba-xxxx` y
+`powershell -ExecutionPolicy Bypass -File "C:\dev\Observatorio AEGIS\herramientas\avisos\enviar-aviso.ps1" -Prueba prueba-xxxx` y
 quitar el permiso (`sudo -u ntfy ntfy access --reset lucas prueba-xxxx`). Con `-Prueba` se niega a
 enviar a un canal público. Probado así el 10 de octubre de 2026.
 

@@ -23,7 +23,7 @@
   Ruta de avisos.json, si no está en ninguno de los dos sitios de siempre.
 
 .EXAMPLE
-  powershell -ExecutionPolicy Bypass -File C:\dev\avisos\enviar-aviso.ps1
+  powershell -ExecutionPolicy Bypass -File "C:\dev\Observatorio AEGIS\herramientas\avisos\enviar-aviso.ps1"
 #>
 param(
   [string]$Prueba = "",

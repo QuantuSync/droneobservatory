@@ -14,7 +14,7 @@
 #    lectura pública con CORS y le copia las teselas desde R2 sin pasar por el disco
 #    (servidor/preparar_almacen.py --desde-r2);
 # 3. si la copia desde R2 no es posible, la hace desde este equipo con la copia local
-#    (EODI_TESELAS_LOCAL, por defecto C:\dev\eodi-teselas-copia\europa-z14.pmtiles);
+#    (EODI_TESELAS_LOCAL, por defecto C:\dev\Observatorio AEGIS\datos\eodi-teselas-copia\europa-z14.pmtiles);
 # 4. publica ya el último estado.json, sin esperar a la recogida siguiente;
 # 5. comprueba por la dirección pública el tamaño, las peticiones Range y el CORS.
 #
@@ -26,7 +26,7 @@ aqui="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=servidor/configuracion.sh
 . "$aqui/configuracion.sh"
 
-TESELAS_LOCAL="${EODI_TESELAS_LOCAL:-/c/dev/eodi-teselas-copia/europa-z14.pmtiles}"
+TESELAS_LOCAL="${EODI_TESELAS_LOCAL:-/c/dev/Observatorio AEGIS/datos/eodi-teselas-copia/europa-z14.pmtiles}"
 REMOTO="/var/tmp/eodi-almacen"
 R2_CREDENCIALES="$SECRETOS/r2.env"
 
