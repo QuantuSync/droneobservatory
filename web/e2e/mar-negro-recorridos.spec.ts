@@ -2,8 +2,9 @@
 // las ve una persona: en un Android (Chromium, Pixel 7), un iPhone (WebKit, iPhone 14), una tableta
 // táctil y el escritorio (Chromium y WebKit), en español y en inglés (docs/modelos.md, «Topes»).
 //
-// - Cada ficha del mar Negro (00512, 00532, 00536, 00538, 00539) se abre: o es su propia ficha o
-//   su enlace antiguo lleva a la ficha más antigua con la que se unió (UNIDAS: «antigua=destino»).
+// - Cada ficha del mar Negro (00512, 00532, 00536, 00537, 00538, 00540, 00541) se abre: o es su
+//   propia ficha o su enlace antiguo lleva a la ficha más antigua con la que se unió (UNIDAS:
+//   «antigua=destino»). Las retiradas (RETIRADAS: la 00539, un reportaje) responden 404.
 // - La EODI-2025-00248 (Malinas-Sur) sale con el dron no confirmado.
 // - Sin errores de consola y con los enlaces internos de las fichas respondiendo.
 //
@@ -16,16 +17,21 @@ import type { BrowserContext, Page } from "@playwright/test";
 
 const MAPA = "[data-mapa-listo=true]";
 const CAPTURAS = process.env.CAPTURAS ?? join(import.meta.dirname, "..", "..", "docs", "capturas", "mar-negro");
-const MAR_NEGRO = (process.env.MAR_NEGRO ?? "EODI-2026-00512,EODI-2026-00532,EODI-2026-00536,EODI-2026-00538,EODI-2026-00539")
+const MAR_NEGRO = (
+  process.env.MAR_NEGRO ??
+  "EODI-2026-00512,EODI-2026-00532,EODI-2026-00536,EODI-2026-00537,EODI-2026-00538,EODI-2026-00540,EODI-2026-00541"
+)
   .split(",")
   .filter(Boolean);
-/** Fichas unidas por el experto: el enlace antiguo lleva a la que queda («00539=00532»). */
+/** Fichas unidas: el enlace antiguo lleva a la más antigua, la que queda («00536=00512»). */
 const UNIDAS = new Map(
-  (process.env.UNIDAS ?? "")
+  (process.env.UNIDAS ?? "EODI-2026-00536=EODI-2026-00512,EODI-2026-00537=EODI-2026-00512,EODI-2026-00540=EODI-2026-00512")
     .split(",")
     .filter(Boolean)
     .map((par) => par.split("=") as [string, string]),
 );
+/** Fichas retiradas con su motivo: su dirección responde 404. */
+const RETIRADAS = (process.env.RETIRADAS ?? "EODI-2026-00539").split(",").filter(Boolean);
 const MALINAS = "EODI-2025-00248";
 const PROYECTOS = ["android", "iphone", "tableta", "escritorio-chromium", "escritorio-webkit"];
 
@@ -36,7 +42,8 @@ function ruta(id: string, idioma: "es" | "en"): string {
 function vigilar(pagina: Page): string[] {
   const errores: string[] = [];
   pagina.on("console", (m) => {
-    if (m.type() !== "error" || /ntfy:|intent:|Ignored attempt to cancel a touchmove/.test(m.text())) return;
+    // La hoja de estilo que inyecta la captura de Playwright en WebKit choca con la CSP: no es de la web.
+    if (m.type() !== "error" || /ntfy:|intent:|Ignored attempt to cancel a touchmove|Refused to apply a stylesheet/.test(m.text())) return;
     errores.push(`consola: ${m.text()}`);
   });
   pagina.on("pageerror", (e) => {
@@ -121,6 +128,9 @@ test.describe("Fichas del mar Negro y la 00248, como una persona", () => {
         await expect(ficha.locator("h2, h3").first()).toBeVisible();
         expect(await enlacesInternos(pagina), `${id} enlaces internos`).toEqual([]);
         await pagina.screenshot({ path: join(CAPTURAS, `${id}-${idioma}-${info.project.name}.png`) });
+      }
+      for (const id of RETIRADAS) {
+        expect((await pagina.request.get(ruta(id, idioma))).status(), `${id} retirada`).toBe(404);
       }
       expect(errores).toEqual([]);
     });

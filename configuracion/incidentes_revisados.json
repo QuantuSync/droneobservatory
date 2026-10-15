@@ -470,6 +470,13 @@
         "es": "Registro repetido del dron que explotó en el distrito de Anenii Noi (Moldavia) la noche del 10 al 11 de octubre de 2026, que es EODI-2026-00509; la ficha le puso Rumanía como país. No se une porque la regla de unir dejaría este registro, con el país mal puesto.",
         "en": "Duplicate record of the drone that exploded in Anenii Noi district (Moldova) on the night of 10 to 11 October 2026, which is EODI-2026-00509; the record gave Romania as the country. Not merged because the merge rule would keep this record, with the wrong country."
       }
+    },
+    {
+      "incidente": "EODI-2026-00539",
+      "motivo": {
+        "es": "No es un suceso con dron: la única fuente es un reportaje de contenido de socio de delfi.lt (sección «Pulsas / Poveikis», 14 de octubre de 2026) sobre cómo actúa la defensa aérea de la OTAN cuando entra un dron; recuerda de pasada un derribo en Rumanía sin fecha ni lugar y no cuenta ningún hecho del 14 de octubre. Los sucesos de esos días en Rumanía son EODI-2026-00532, EODI-2026-00538 y EODI-2026-00541.",
+        "en": "Not a drone event: the only source is a partner-content feature on delfi.lt («Pulsas / Poveikis» section, 14 October 2026) about how NATO air defence acts when a drone enters; it mentions in passing a shoot-down over Romania with no date or place and reports nothing that happened on 14 October. The events of those days in Romania are EODI-2026-00532, EODI-2026-00538 and EODI-2026-00541."
+      }
     }
   ],
   "citas": [
