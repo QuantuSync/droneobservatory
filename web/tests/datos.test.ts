@@ -316,7 +316,7 @@ describe("validación contra el esquema", () => {
 
 describe("listas cerradas iguales a las del esquema", () => {
   type Esquema = Record<string, unknown>;
-  const leer = (nombre: string) => leerJson("esquema", "1.19.0", `${nombre}.schema.json`) as Esquema;
+  const leer = (nombre: string) => leerJson("esquema", "1.20.0", `${nombre}.schema.json`) as Esquema;
   const en = (objeto: unknown, ...claves: string[]): unknown =>
     claves.reduce<unknown>((actual, clave) => (actual as Esquema)[clave], objeto);
 
@@ -427,6 +427,17 @@ describe("listas cerradas iguales a las del esquema", () => {
         por: "fuente",
       },
       zona: { grupo: "frontera", motivo: "ataque" },
+      presencia_historial: [
+        { valor: "confirmada", fecha: { valor: "2025-09-23T00:00Z", precision: "dia" }, fuente_id: "f" },
+        {
+          valor: "confirmada",
+          fecha: { valor: "2026-01-01T00:00Z", precision: "dia" },
+          fuente_id: "f",
+          quien: { es: "la policía", en: "the police" },
+          motivo: { es: "un vídeo era de un helicóptero", en: "one video showed a helicopter" },
+          parcial: true,
+        },
+      ],
       relacionados: [
         {
           id: "EODI-2026-00179",
@@ -491,8 +502,9 @@ describe("CSV de datos abiertos", () => {
     expect(lineas[0]).toBe(COLUMNAS_INCIDENTES.join(","));
     expect(lineas).toHaveLength(4);
     expect(lineas[1]).toContain("EODI-2025-00210,interrupcion_aeroportuaria,notificado");
-    // El enlace y, detrás, los nombres de lugar de cada versión (vacíos sin el campo `nombres`).
-    expect(lineas[1]?.endsWith("https://droneobservatory.eu/EODI-2025-00210,,,,")).toBe(true);
+    // El enlace y, detrás, los nombres de lugar de cada versión (vacíos sin el campo `nombres`) y
+    // el historial de la presencia (vacío sin rectificaciones).
+    expect(lineas[1]?.endsWith("https://droneobservatory.eu/EODI-2025-00210,,,,,")).toBe(true);
   });
 
   it("escribe una fila por ataque con sus regiones", () => {

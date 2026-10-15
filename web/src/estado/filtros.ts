@@ -4,16 +4,20 @@
 // últimas 24 horas desde este momento; 7 días, 30 días o el último año, contados hasta el
 // último día con datos), uno entre dos fechas o, sin nada en la dirección, todo.
 
-import type { Estado, IncidenteResumen, Tipo, Zona } from "../datos/tipos.ts";
-import { ESTADOS, PATRON_PAIS, TIPOS, ZONAS } from "../datos/vocabulario.ts";
+import { MARCAS, confirmadoPorAutoridad, marcaDe } from "../datos/presencia.ts";
+import type { IncidenteResumen, MarcaIncidente, Tipo, Zona } from "../datos/tipos.ts";
+import { PATRON_PAIS, TIPOS, ZONAS } from "../datos/vocabulario.ts";
 import { MS_POR_HORA, diaDeFecha, diaDeInstante, fechaDeDia } from "../tiempo/dias.ts";
 import type { Periodo } from "../tiempo/dias.ts";
 
 export type Reciente = "24h" | "7d" | "30d" | "1a";
 
 export interface Filtros {
-  /** Estados que se muestran; vacío es todos. */
-  estados: Estado[];
+  /**
+   * Estados que se muestran, por la marca de cada incidente (con «no_acreditado» para los de
+   * presencia de dron no acreditada, ?estado=no_acreditado); vacío es todos.
+   */
+  estados: MarcaIncidente[];
   /** Periodo rápido: los últimos días hasta el último con datos (por día de inicio). */
   reciente: Reciente | null;
   /** Tipos que se muestran; vacío es todos. */
@@ -32,8 +36,11 @@ export const SIN_FILTROS: Filtros = {
   zona: null,
 };
 
-/** Lo confirmado y lo atribuido: el filtro rápido más usado, con su tecla. */
-export const GRAVES: readonly Estado[] = ["confirmado", "atribuido"];
+/**
+ * Lo confirmado y lo atribuido: el filtro rápido más usado, con su tecla. Deja solo lo confirmado
+ * por una autoridad: ni los no acreditados ni los de presencia descartada (ver pasaEstado).
+ */
+export const GRAVES: readonly MarcaIncidente[] = ["confirmado", "atribuido"];
 
 const PARAMETRO = {
   graves: "solo",
@@ -75,12 +82,12 @@ function sinRepetir<T>(valores: T[]): T[] {
   return [...new Set(valores)];
 }
 
-/** Estados en el orden del vocabulario, para que la dirección no dependa del orden de uso. */
-function ordenar(estados: readonly Estado[]): Estado[] {
-  return ESTADOS.filter((estado) => estados.includes(estado));
+/** Estados en el orden de las marcas, para que la dirección no dependa del orden de uso. */
+function ordenar(estados: readonly MarcaIncidente[]): MarcaIncidente[] {
+  return MARCAS.filter((estado) => estados.includes(estado));
 }
 
-export function soloGraves(estados: readonly Estado[]): boolean {
+export function soloGraves(estados: readonly MarcaIncidente[]): boolean {
   const ordenados = ordenar(estados);
   return ordenados.length === GRAVES.length && GRAVES.every((e) => ordenados.includes(e));
 }
@@ -92,8 +99,8 @@ export function leerFiltros(busqueda: string): Filtros {
   const estados =
     parametros.get(PARAMETRO.graves) === VALOR_GRAVES
       ? [...GRAVES]
-      : lista(parametros.get(PARAMETRO.estados)).filter((estado): estado is Estado =>
-          (ESTADOS as readonly string[]).includes(estado),
+      : lista(parametros.get(PARAMETRO.estados)).filter((estado): estado is MarcaIncidente =>
+          (MARCAS as readonly string[]).includes(estado),
         );
   return {
     estados: ordenar(sinRepetir(estados)),
@@ -226,11 +233,22 @@ export function hayFiltros(filtros: Filtros): boolean {
   return cuantosFiltros(filtros) > 0;
 }
 
+/**
+ * Si un incidente pasa el filtro de estado, por su marca: un no acreditado solo con «No
+ * acreditado». «Confirmado» y «Atribuido» dejan solo lo confirmado por una autoridad, como las
+ * cifras: tampoco los de presencia de dron descartada, que siguen en el mapa sin filtro de estado.
+ */
+function pasaEstado(i: IncidenteResumen, estados: readonly MarcaIncidente[]): boolean {
+  const marca = marcaDe(i);
+  if (!estados.includes(marca)) return false;
+  return (marca !== "confirmado" && marca !== "atribuido") || confirmadoPorAutoridad(i);
+}
+
 /** Incidentes que pasan los filtros de estado, tipo, país y zona (el periodo va aparte). */
 export function filtrar(incidentes: readonly IncidenteResumen[], filtros: Filtros): IncidenteResumen[] {
   return incidentes.filter(
     (i) =>
-      (filtros.estados.length === 0 || filtros.estados.includes(i.estado)) &&
+      (filtros.estados.length === 0 || pasaEstado(i, filtros.estados)) &&
       (filtros.tipos.length === 0 || filtros.tipos.includes(i.tipo)) &&
       (filtros.paises.length === 0 || filtros.paises.includes(i.pais)) &&
       (filtros.zona === null || i.zona === filtros.zona),

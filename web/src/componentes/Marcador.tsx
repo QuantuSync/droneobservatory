@@ -64,7 +64,9 @@ function Cifra({
   const mostrada = useCifraAnimada(valor, activa);
   const tono = color ?? "text-texto";
   // Las cuatro cifras con la misma estructura: el número (con su marca al lado, si la lleva)
-  // y el rótulo. En línea, uno tras otro y en pequeño; en rejilla, el número encima.
+  // y el rótulo. En línea, uno tras otro y en pequeño, sin partir el rótulo; en rejilla, el
+  // número encima y arriba del todo, para que los números queden a la misma altura aunque un
+  // rótulo largo («confirmados por una autoridad») ocupe dos líneas en el teléfono.
   const cifra = (
     <>
       {numero(mostrada, idioma)}
@@ -77,11 +79,11 @@ function Cifra({
   );
   return forma === "linea" ? (
     <div className="flex flex-row-reverse items-baseline gap-1" data-contador={clave} data-valor={valor}>
-      <dt className="text-xs text-secundario">{rotulo}</dt>
+      <dt className="whitespace-nowrap text-xs text-secundario">{rotulo}</dt>
       <dd className={`cifra inline-flex items-baseline text-sm font-medium ${tono}`}>{cifra}</dd>
     </div>
   ) : (
-    <div className="flex flex-col-reverse gap-1" data-contador={clave} data-valor={valor}>
+    <div className="flex flex-col-reverse justify-end gap-1" data-contador={clave} data-valor={valor}>
       <dt className="text-xs text-secundario">{rotulo}</dt>
       <dd className={`cifra flex items-baseline text-2xl font-medium leading-none ${tono}`}>{cifra}</dd>
     </div>

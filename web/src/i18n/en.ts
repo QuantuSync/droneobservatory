@@ -34,7 +34,7 @@ export const en: Textos = {
   marcador: {
     etiqueta: "Figures for the selected period",
     incidentes: "incidents",
-    confirmados: "confirmed",
+    confirmados: "confirmed by an authority",
     atribuidos: "attributed",
     paises: "countries",
   },
@@ -389,7 +389,9 @@ export const en: Textos = {
     cerrar: "Close help",
     colores:
       "Each incident is a circle filled with the colour of its status: orange, reported; red, " +
-      "confirmed. A denied incident is a grey circle with a dashed outline and no fill. An " +
+      "confirmed. Purple, not substantiated: an official authority closed its investigation " +
+      "without evidence of the drone or withdrew its statement without saying it was something " +
+      "else; the incident and its effect stay on the map, with their history. A denied incident is a grey circle with a dashed outline and no fill. An " +
       "attributed incident (a confirmed one that an authority attributes to a State or to a " +
       "person) is a slightly larger circle with a thick red ring and, inside, the flag of the " +
       "country it is attributed to; when attributed to a person, it also has a fixed dark dot in " +
@@ -416,13 +418,14 @@ export const en: Textos = {
     numeros:
       "A circle with a number inside groups several incidents (a single incident is filled " +
       "and has no number): it grows with the number, and its ring " +
-      "is red if it holds any confirmed incident and orange if all are reported. Zoom in and " +
+      "is red if it holds any confirmed incident, purple if there is none and one is not " +
+      "substantiated, and orange if all are reported. Zoom in and " +
       "they separate. Map names give way to the circles: they are shown whole or not at all.",
     pila: "If the incidents share the exact same spot, tap the circle to choose which one to open.",
     pulsos:
       "Only what is new since your last visit pulses (and the circle that holds it): it stops " +
       "when you press “Show me” or “Dismiss” or open the incident. With the system's reduced " +
-      "motion setting, it gets a fixed ring instead. Reported incidents are dimmer.",
+      "motion setting, it gets a fixed ring instead. Reported and not substantiated incidents are dimmer.",
     reciente: "A soft glow marks what started in the last 24 hours.",
     novedad: "Nothing pulses on a first visit: there is no earlier visit to compare with yet.",
     ucrania:
@@ -501,6 +504,9 @@ export const en: Textos = {
   },
   mapa: {
     etiqueta: "Map of Europe with the incidents of the selected period",
+    nota:
+      "The observatory records what is reported and what authorities state. “Confirmed” " +
+      "means an official authority has stated it, not that public physical evidence exists.",
     instrucciones:
       "With focus on the map, the arrow keys pan and the plus and minus keys zoom. After the " +
       "map, the Tab key goes through the incidents in view, most recent first: each one is " +
@@ -545,7 +551,26 @@ export const en: Textos = {
   presencia: {
     confirmada: "Drone confirmed",
     no_confirmada: "Drone not confirmed",
+    no_acreditada: "Drone not substantiated",
     descartada: "Drone ruled out",
+  },
+  noAcreditado: {
+    etiqueta: "Not substantiated",
+    leyenda:
+      "An official authority closed its investigation without evidence of the drone or " +
+      "withdrew its statement. The incident and its effect remain.",
+  },
+  presenciaHistorial: {
+    rotulo: "Changes in drone presence",
+    valor: {
+      confirmada: "Confirmed",
+      no_confirmada: "Not confirmed",
+      no_acreditada: "Not substantiated",
+      descartada: "Ruled out",
+    },
+    paso: (valor, fecha, quien) => (quien === null ? `${valor} on ${fecha}` : `${valor} on ${fecha} by ${quien}`),
+    parcial: (fecha, quien) =>
+      quien === null ? `Partial correction on ${fecha}` : `Partial correction on ${fecha} by ${quien}`,
   },
   precision: {
     minuto: "exact time",
@@ -884,7 +909,10 @@ export const en: Textos = {
               {
                 termino: "Confirmed",
                 marca: { estado: "confirmado" },
-                texto: ["An authority states that the incident happened. In red."],
+                texto: [
+                  "An authority states that the incident happened. In red. “Confirmed” means " +
+                    "that an official authority has stated it, not that public physical evidence exists.",
+                ],
               },
               {
                 termino: "Attributed",
@@ -926,10 +954,12 @@ export const en: Textos = {
           },
           {
             parrafo: [
-              "In the scoreboard, confirmed and attributed incidents are counted separately: an " +
-                "attributed incident is no longer counted as confirmed. Status is always shown " +
-                "with both colour and text. A circle that groups several incidents is red if it " +
-                "holds any confirmed or attributed incident and orange if all are reported.",
+              "In the scoreboard, “confirmed by an authority” includes the attributed incidents, " +
+                "which are also counted on their own, and leaves out those whose drone presence is " +
+                "not substantiated or ruled out (see “Drone presence”), which still count as " +
+                "incidents. Status is always shown with both colour and text. A circle that groups " +
+                "several incidents is red if it holds any confirmed or attributed incident, purple " +
+                "if there is none and one is not substantiated, and orange if all are reported.",
             ],
           },
         ],
@@ -949,8 +979,49 @@ export const en: Textos = {
                 "passes on, a police response to a drone). No debris, footage or sensor " +
                 "detection is required. It stays not confirmed if the authority itself leaves " +
                 "it open («possible drone», «unidentified object», «investigating whether it " +
-                "was a drone») or if only the press or witnesses report it. It is ruled out " +
-                "when an authority denies it.",
+                "was a drone») or if only the press or witnesses report it.",
+            ],
+          },
+          {
+            lista: [
+              {
+                termino: "Not substantiated",
+                marca: { estado: "no_acreditado" },
+                texto: [
+                  "An official authority closed its investigation without evidence of the drone, " +
+                    "or withdrew its statement without saying it was something else. In purple. It " +
+                    "is not a denial: not finding evidence is not the same as proving there was no drone.",
+                ],
+              },
+              {
+                termino: "Ruled out",
+                texto: [
+                  "An authority says it was something else (a plane, a helicopter): it is the " +
+                    "denial of the drone presence. The marker keeps the colour of its status.",
+                ],
+              },
+            ],
+          },
+          {
+            parrafo: [
+              "Neither erases anything. The incident happened even if its cause is later " +
+                "rectified: if an airport closed, it closed. A rectification changes the drone " +
+                "presence, not the incident or its effect (the closure, the diversions, the " +
+                "duration), and nothing disappears from the map: it stays in place with its full " +
+                "history. The event status does not change either: a confirmed incident stays " +
+                "confirmed, with its drone presence not substantiated. In the figures, “confirmed " +
+                "by an authority” leaves out those whose presence is not substantiated or ruled " +
+                "out, which still count as incidents.",
+            ],
+          },
+          {
+            parrafo: [
+              "The change to not substantiated is only made with an official source and after " +
+                "expert review. The record shows the whole sequence, each step with its date, who " +
+                "states it and the link to its source: “Confirmed on 23/09/2025 by Copenhagen " +
+                "Police · Not substantiated on 25/06/2026 by Copenhagen Police, after the " +
+                "investigation”. A partial official correction is noted in that history without " +
+                "changing the value.",
             ],
           },
           {

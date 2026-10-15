@@ -1,20 +1,21 @@
 // Iconos de los incidentes en el mapa, dibujados en un lienzo, iguales que el componente
 // Simbolo de la leyenda y las fichas: un círculo relleno del color del estado, el desmentido
 // con borde gris discontinuo y sin relleno. El tipo no cambia la forma: va escrito en la
-// ficha, la lista y los filtros. Un atribuido es un círculo con aro rojo grueso y, dentro, la
+// ficha, la lista y los filtros. Un no acreditado (presencia de dron no acreditada) es el mismo
+// círculo relleno, en morado. Un atribuido es un círculo con aro rojo grueso y, dentro, la
 // bandera del país al que se atribuye (o relleno rojo liso), con un punto fijo si es una
 // persona, en su propia capa por encima de todo y centrado en el punto del incidente.
 
 import type { Map as Mapa } from "maplibre-gl";
 
-import type { Estado } from "../datos/tipos.ts";
-import { ESTADOS } from "../datos/vocabulario.ts";
+import { MARCAS } from "../datos/presencia.ts";
+import type { MarcaIncidente } from "../datos/tipos.ts";
 import { BANDERAS, VARIANTE_LISA, nombreIconoAtribuido, urlBandera } from "../banderas.ts";
 import type { VarianteAtribuido } from "../banderas.ts";
 import {
   COLOR_ARO_ATRIBUIDO,
-  COLOR_ESTADO,
   COLOR_FILO_ATRIBUIDO,
+  COLOR_MARCA,
   GROSOR_CONTORNO,
   MARCA_APROXIMADA,
   MARCA_ATRIBUIDO,
@@ -32,14 +33,14 @@ const CENTRO = LADO / 2;
 /** Radio del círculo de un incidente suelto: más pequeño que el de un grupo, que lleva número. */
 export const RADIO_INCIDENTE = 6.5;
 
-function dibujar(estado: Exclude<Estado, "atribuido">): ImageData | null {
+function dibujar(estado: Exclude<MarcaIncidente, "atribuido">): ImageData | null {
   const lienzo = document.createElement("canvas");
   lienzo.width = LADO * DENSIDAD;
   lienzo.height = LADO * DENSIDAD;
   const contexto = lienzo.getContext("2d");
   if (contexto === null) return null;
   contexto.scale(DENSIDAD, DENSIDAD);
-  const color = COLOR_ESTADO[estado];
+  const color = COLOR_MARCA[estado];
   contexto.beginPath();
   contexto.arc(CENTRO, CENTRO, RADIO_INCIDENTE, 0, 2 * Math.PI);
   contexto.closePath();
@@ -61,7 +62,7 @@ function dibujar(estado: Exclude<Estado, "atribuido">): ImageData | null {
  * Un incidente con lugar aproximado: aro hueco del color de su estado, con un filo del color del
  * fondo por dentro y por fuera para leerse sobre cualquier cosa, y un punto en el centro.
  */
-function dibujarAproximado(estado: Exclude<Estado, "atribuido">): ImageData | null {
+function dibujarAproximado(estado: Exclude<MarcaIncidente, "atribuido">): ImageData | null {
   const lienzo = document.createElement("canvas");
   lienzo.width = LADO * DENSIDAD;
   lienzo.height = LADO * DENSIDAD;
@@ -69,7 +70,7 @@ function dibujarAproximado(estado: Exclude<Estado, "atribuido">): ImageData | nu
   if (contexto === null) return null;
   contexto.scale(DENSIDAD, DENSIDAD);
   const m = MARCA_APROXIMADA;
-  const color = COLOR_ESTADO[estado];
+  const color = COLOR_MARCA[estado];
   contexto.beginPath();
   contexto.arc(CENTRO, CENTRO, m.radio, 0, 2 * Math.PI);
   contexto.strokeStyle = PALETA.fondo;
@@ -340,14 +341,14 @@ function dibujarAviso(estado: EstadoAviso): ImageData | null {
   return contexto.getImageData(0, 0, lienzo.width, lienzo.height);
 }
 
-/** Registra en el mapa un icono por estado, los atribuidos sin bandera y una etiqueta por
+/** Registra en el mapa un icono por marca (cada estado y «no acreditado»), los atribuidos sin bandera y una etiqueta por
  *  estado de aviso. */
 export function registrarIconos(mapa: Mapa): void {
   // Los atribuidos sin bandera (con y sin punto); los de bandera, al cargarla.
   registrarAtribuido(mapa, VARIANTE_LISA, null);
   registrarAtribuido(mapa, { bandera: null, persona: true }, null);
   if (!mapa.hasImage(ICONO_OBSTACULO)) mapa.addImage(ICONO_OBSTACULO, dibujarObstaculo());
-  for (const estado of ESTADOS) {
+  for (const estado of MARCAS) {
     if (estado === "atribuido") continue;
     const nombre = nombreIcono(estado);
     if (!mapa.hasImage(nombre)) {

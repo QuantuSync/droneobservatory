@@ -2,11 +2,11 @@ import { useId } from "react";
 
 import { urlBandera, varianteDe, VARIANTE_LISA } from "../banderas.ts";
 import type { VarianteAtribuido } from "../banderas.ts";
-import type { AtribucionResumen, Estado } from "../datos/tipos.ts";
+import type { AtribucionResumen, MarcaIncidente } from "../datos/tipos.ts";
 import {
   COLOR_ARO_ATRIBUIDO,
-  COLOR_ESTADO,
   COLOR_FILO_ATRIBUIDO,
+  COLOR_MARCA,
   GROSOR_CONTORNO,
   MARCA_APROXIMADA,
   MARCA_ATRIBUIDO,
@@ -22,7 +22,8 @@ const RADIO = 5.5;
 export const LADO_ATRIBUIDO_TEXTO = 20;
 
 interface Props {
-  estado: Estado;
+  /** El estado o, con la presencia de dron no acreditada, «no_acreditado» (datos/presencia.ts). */
+  estado: MarcaIncidente;
   /** En un atribuido, a quién se atribuye: decide su bandera y su punto. */
   atribucion?: AtribucionResumen | null;
   /** Texto para el lector de pantalla; sin él, el símbolo es decorativo. */
@@ -34,7 +35,7 @@ interface Props {
 
 /**
  * Símbolo de un incidente, igual que en el mapa: un círculo relleno del color del estado
- * (naranja notificado, rojo confirmado), un círculo gris de borde discontinuo el desmentido y
+ * (naranja notificado, rojo confirmado, morado el de presencia no acreditada), un círculo gris de borde discontinuo el desmentido y
  * el marcador de los atribuidos (aro rojo con la bandera dentro). Es decorativo salvo que
  * lleve `etiqueta`: el estado (y el tipo) van siempre escritos al lado.
  */
@@ -42,7 +43,7 @@ export function Simbolo({ estado, atribucion = null, etiqueta, className, aproxi
   if (estado === "atribuido") {
     return <MarcaAtribuido variante={varianteDe(atribucion)} etiqueta={etiqueta} className={className} />;
   }
-  const color = COLOR_ESTADO[estado];
+  const color = COLOR_MARCA[estado];
   if (aproximado) {
     const m = MARCA_APROXIMADA;
     return (

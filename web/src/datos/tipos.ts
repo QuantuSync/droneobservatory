@@ -1,4 +1,4 @@
-// Forma de los ficheros públicos de publicacion/ (esquema 1.19.0, solo campos públicos)
+// Forma de los ficheros públicos de publicacion/ (esquema 1.20.0, solo campos públicos)
 // y de los resúmenes que la web deriva de ellos en el build.
 
 import type { LugarAproximado } from "./lugarAproximado.ts";
@@ -22,7 +22,7 @@ export interface ZonaIncidente {
   /** Distancia a la frontera con Ucrania, Rusia o Bielorrusia (km), si hay punto o lugar. */
   distancia_km?: number;
 }
-export type PresenciaDron = "confirmada" | "no_confirmada" | "descartada";
+export type PresenciaDron = "confirmada" | "no_confirmada" | "no_acreditada" | "descartada";
 export type Precision = "minuto" | "hora" | "dia" | "aproximada";
 export type Fiabilidad = "A" | "B" | "C" | "D" | "E" | "F";
 export type Sentido = "RU_UA" | "UA_RU";
@@ -51,6 +51,20 @@ export interface PasoHistorial {
   fuente_id?: string;
   /** Por qué cambia el estado cuando lo cambia una corrección: la retirada de una atribución. */
   motivo?: Titulo;
+}
+
+/**
+ * Un paso del historial de la presencia de dron (esquema 1.20.0): cada declaración oficial que la
+ * cambia, con su fecha, su fuente y quién la hace. Una corrección parcial (`parcial`) no cambia el
+ * valor (lleva el que sigue en vigor): es una nota del historial.
+ */
+export interface PasoPresencia {
+  valor: PresenciaDron;
+  fecha: Instante;
+  fuente_id: string;
+  quien?: Titulo;
+  motivo?: Titulo;
+  parcial?: true;
 }
 
 /** Lo que una autoridad dice que investiga del incidente, con su cita literal. */
@@ -276,6 +290,8 @@ export interface PropiedadesIncidente {
   titulo: Titulo;
   episodio?: string;
   presencia_dron?: PresenciaDron;
+  /** Los cambios de la presencia de dron por orden de fecha; solo si alguna autoridad la rectificó. */
+  presencia_historial?: PasoPresencia[];
   tiempo: { inicio: Instante; fin?: Instante; duracion_min?: number };
   lugar: { radio_km: number; pais: string; localidad?: string } & LugarAmpliado;
   objetivo?: {
@@ -540,6 +556,13 @@ export interface SucesoRelacionado {
   separado_de: string;
   nota: { es: string; en: string };
 }
+
+/**
+ * Cómo se dibuja un incidente (mapa, listas, ficha, leyenda y filtros): el color de su estado o,
+ * si una autoridad dejó su presencia de dron sin acreditar, el morado de «no acreditado»
+ * (datos/presencia.ts).
+ */
+export type MarcaIncidente = Estado | "no_acreditado";
 
 export interface IncidenteResumen {
   id: string;

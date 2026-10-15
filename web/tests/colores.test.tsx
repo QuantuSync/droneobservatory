@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 // Colores de los estados: naranja notificado, rojo confirmado, aro rojo con la bandera dentro el
-// atribuido, gris discontinuo desmentido; el verde, solo para «datos al día». Y el pulso: solo
-// las novedades.
+// atribuido, gris discontinuo desmentido, morado el de presencia de dron no acreditada; el verde,
+// solo para «datos al día». Y el pulso: solo las novedades.
 import { cleanup, render } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 
@@ -53,6 +53,8 @@ import {
   COLOR_ARO_ATRIBUIDO,
   COLOR_ESTADO,
   COLOR_FILO_ATRIBUIDO,
+  COLOR_MARCA,
+  GRAVEDAD,
   MARCA_ATRIBUIDO,
   PALETA,
   RADIO_BANDERA,
@@ -223,6 +225,57 @@ describe("colores de los estados", () => {
     expect(JSON.stringify(guerra)).not.toContain(COLOR_ESTADO.confirmado);
   });
 
+  it("el no acreditado es morado y se separa del rojo, del naranja, del gris, del verde y de la capa de guerra", () => {
+    // Distancia de color CIELAB (ΔE 1976), como para la capa de guerra.
+    const lab = (hex: string): [number, number, number] => {
+      const [r, g, b] = [1, 3, 5].map((i) => lineal(parseInt(hex.slice(i, i + 2), 16))) as [number, number, number];
+      const x = (0.4124 * r + 0.3576 * g + 0.1805 * b) / 0.95047;
+      const y = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      const z = (0.0193 * r + 0.1192 * g + 0.9505 * b) / 1.08883;
+      const f = (t: number) => (t > 0.008856 ? Math.cbrt(t) : 7.787 * t + 16 / 116);
+      return [116 * f(y) - 16, 500 * (f(x) - f(y)), 200 * (f(y) - f(z))];
+    };
+    const distancia = (a: string, b: string) => {
+      const [p, q] = [lab(a), lab(b)];
+      return Math.hypot(p[0] - q[0], p[1] - q[1], p[2] - q[2]);
+    };
+    const morado = COLOR_MARCA.no_acreditado;
+    expect(morado).toBe(PALETA.noAcreditado);
+    // Morado magenta: ni el violeta azulado de la guerra (245° a 275°) ni el rojo.
+    expect(tono(morado)).toBeGreaterThan(285);
+    expect(tono(morado)).toBeLessThan(315);
+    expect(diferenciaDeTono(morado, PALETA.guerra)).toBeGreaterThanOrEqual(30);
+    const sinFiltro = [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
+    const visiones: [string, number[][]][] = [["normal", sinFiltro], ...Object.entries(DALTONISMO)];
+    const estados = [COLOR_ESTADO.confirmado, COLOR_ESTADO.notificado, COLOR_ESTADO.desmentido, PALETA.alDia];
+    for (const [vision, matriz] of visiones) {
+      // Medido: a ΔE 31 o más de los estados y del verde con cualquier visión (el naranja, con
+      // tritanopía).
+      for (const ajeno of estados) {
+        expect(distancia(simular(morado, matriz), simular(ajeno, matriz)), `${vision} ${ajeno}`).toBeGreaterThanOrEqual(30);
+      }
+    }
+    // De la capa de guerra, a ΔE 48 o más con visión normal y 68 con tritanopía. Con daltonismo
+    // rojo-verde ningún morado se separa del violeta (el rojo que los distingue no se ve): ahí
+    // los separan la forma (un círculo relleno de incidente frente a regiones, puntos con aro y
+    // arcos) y el sitio (la capa de guerra va sobre Ucrania y Rusia).
+    const tritanopia = DALTONISMO["tritanopia"] ?? sinFiltro;
+    for (const [vision, matriz] of [["normal", sinFiltro], ["tritanopia", tritanopia]] as const) {
+      for (const propio of [PALETA.guerra, PALETA.guerraClaro, PALETA.guerraTenue]) {
+        expect(distancia(simular(morado, matriz), simular(propio, matriz)), `${vision} ${propio}`).toBeGreaterThanOrEqual(45);
+      }
+    }
+    // Se lee sobre todas las superficies: AA de texto.
+    for (const superficie of [PALETA.fondo, PALETA.panelSolido, PALETA.elevado]) {
+      expect(contraste(morado, superficie)).toBeGreaterThanOrEqual(4.5);
+    }
+  });
+
+  it("un no acreditado va por debajo de lo confirmado y por encima de lo notificado", () => {
+    expect(GRAVEDAD.no_acreditado).toBeLessThan(GRAVEDAD.confirmado);
+    expect(GRAVEDAD.no_acreditado).toBeGreaterThan(GRAVEDAD.notificado);
+  });
+
   it("ningún estado de incidente es verde: el verde es solo el de «datos al día»", () => {
     const verde = PALETA.alDia;
     for (const color of Object.values(COLOR_ESTADO)) expect(color).not.toBe(verde);
@@ -230,12 +283,15 @@ describe("colores de los estados", () => {
     expect(JSON.stringify(COLOR_DE_GRUPO)).not.toContain(verde);
   });
 
-  it("un grupo es rojo si contiene algún confirmado y naranja si todos son notificados", () => {
-    // Los atribuidos no entran en los grupos: van siempre con su propio marcador.
+  it("un grupo es rojo si contiene algún confirmado, morado si alguno es no acreditado y naranja si todos son notificados", () => {
+    // Los atribuidos no entran en los grupos: van siempre con su propio marcador. Un no acreditado
+    // nunca pone rojo un grupo: va por debajo de lo confirmado y por encima de lo notificado.
     expect(COLOR_DE_GRUPO).toEqual([
       "case",
       [">", ["get", "n_confirmados"], 0],
       COLOR_ESTADO.confirmado,
+      [">", ["get", "n_no_acreditados"], 0],
+      COLOR_MARCA.no_acreditado,
       [">", ["get", "n_notificados"], 0],
       COLOR_ESTADO.notificado,
       COLOR_ESTADO.desmentido,
@@ -409,8 +465,8 @@ describe("marcador de los atribuidos", () => {
     }
   });
 
-  it("todo lo demás es un círculo: relleno el notificado y el confirmado, discontinuo el desmentido", () => {
-    for (const estado of ["notificado", "confirmado", "desmentido"] as const) {
+  it("todo lo demás es un círculo: relleno el notificado, el confirmado y el no acreditado, discontinuo el desmentido", () => {
+    for (const estado of ["notificado", "confirmado", "no_acreditado", "desmentido"] as const) {
       const { container } = render(<Simbolo estado={estado} />);
       const svg = container.querySelector("svg");
       expect(svg?.hasAttribute("data-atribuido"), estado).toBe(false);
@@ -422,7 +478,7 @@ describe("marcador de los atribuidos", () => {
         expect(circulo?.getAttribute("stroke")).toBe(COLOR_ESTADO.desmentido);
         expect(circulo?.getAttribute("stroke-dasharray")).toBeTruthy();
       } else {
-        expect(circulo?.getAttribute("fill")).toBe(COLOR_ESTADO[estado]);
+        expect(circulo?.getAttribute("fill")).toBe(COLOR_MARCA[estado]);
         expect(circulo?.getAttribute("fill-opacity")).toBeNull();
       }
       cleanup();
@@ -470,8 +526,8 @@ describe("marcador de los atribuidos", () => {
           "atribuido--1",
           "atribuido--1-p",
           ICONO_OBSTACULO,
-          ...["confirmado", "desmentido", "notificado"].map((estado) => nombreIcono(estado)),
-          ...["confirmado", "desmentido", "notificado"].map((estado) => nombreIcono(estado, true)),
+          ...["confirmado", "desmentido", "no_acreditado", "notificado"].map((estado) => nombreIcono(estado)),
+          ...["confirmado", "desmentido", "no_acreditado", "notificado"].map((estado) => nombreIcono(estado, true)),
           ...ESTADOS_AVISO.map(nombreIconoAviso),
         ].sort(),
       );
@@ -486,14 +542,14 @@ describe("marcador de los atribuidos", () => {
           `fillStyle=${PALETA.panelSolido}`,
         ]);
       }
-      for (const estado of ["notificado", "confirmado", "desmentido"]) {
+      for (const estado of ["notificado", "confirmado", "no_acreditado", "desmentido"]) {
         const hecho = dibujos.get(nombreIcono(estado)) ?? [];
         expect(hecho, estado).toContain("arc");
         for (const prohibido of ["rect", "lineTo", "moveTo", "ellipse", "quadraticCurveTo", "bezierCurveTo"]) {
           expect(hecho, `${estado} ${prohibido}`).not.toContain(prohibido);
         }
         expect(hecho.includes("fill"), estado).toBe(estado !== "desmentido");
-        expect(hecho.includes(`fillStyle=${COLOR_ESTADO[estado as "notificado"]}`), estado).toBe(estado !== "desmentido");
+        expect(hecho.includes(`fillStyle=${COLOR_MARCA[estado as "notificado"]}`), estado).toBe(estado !== "desmentido");
       }
       // Los atribuidos sin bandera: solo círculos rellenos (filo, aro, filo, relleno rojo y, la
       // persona, el punto con su aro), en el rojo de «confirmado» y el color del fondo.
@@ -555,10 +611,30 @@ describe("marcador de los atribuidos", () => {
     expect(JSON.stringify(disposicion)).not.toContain("pulso");
   });
 
-  it("la leyenda: notificado, confirmado, atribuido a un Estado, a una persona y desmentido", () => {
+  it("la leyenda: notificado, confirmado, atribuido a un Estado, a una persona, no acreditado y desmentido", () => {
     for (const [t, textosLeyenda] of [
-      [es, ["Notificado", "Confirmado", "Atribuido por una autoridad a un Estado", "Atribuido por una autoridad a una persona", "Desmentido"]],
-      [en, ["Reported", "Confirmed", "Attributed by an authority to a State", "Attributed by an authority to a person", "Denied"]],
+      [
+        es,
+        [
+          "Notificado",
+          "Confirmado",
+          "Atribuido por una autoridad a un Estado",
+          "Atribuido por una autoridad a una persona",
+          "No acreditadoUna autoridad oficial cerró su investigación sin pruebas del dron o retiró su declaración. El incidente y su efecto siguen.",
+          "Desmentido",
+        ],
+      ],
+      [
+        en,
+        [
+          "Reported",
+          "Confirmed",
+          "Attributed by an authority to a State",
+          "Attributed by an authority to a person",
+          "Not substantiatedAn official authority closed its investigation without evidence of the drone or withdrew its statement. The incident and its effect remain.",
+          "Denied",
+        ],
+      ],
     ] as const) {
       render(<Ayuda t={t} idioma={t === es ? "es" : "en"} abierta={false} onCerrar={() => undefined} />);
       const leyenda = document.querySelector("[data-leyenda-estados]");
@@ -570,9 +646,14 @@ describe("marcador de los atribuidos", () => {
       expect(leyenda?.querySelectorAll("image")).toHaveLength(0);
       // La bandera es la del país al que la autoridad lo atribuye, no una afirmación propia.
       expect(document.querySelector("[data-leyenda-bandera]")?.textContent).toBe(t.atribucion.bandera);
+      // El de «no acreditado» es el círculo morado.
+      const morado = leyenda?.querySelector("[data-leyenda-no-acreditado] svg[data-circulo=no_acreditado] circle");
+      expect(morado?.getAttribute("fill")).toBe(PALETA.noAcreditado);
       // Ningún otro símbolo de incidente en la ayuda: nada de formas por tipo. Los dos de más
       // son los del lugar aproximado (notificado y confirmado), con su texto.
-      expect(document.querySelectorAll("svg[data-circulo], svg[data-atribuido]")).toHaveLength(7);
+      expect(document.querySelectorAll("svg[data-circulo], svg[data-atribuido]")).toHaveLength(8);
+      // Y la nota de qué es «confirmado», junto a la leyenda.
+      expect(document.querySelector("[data-nota-mapa]")?.textContent).toBe(t.mapa.nota);
       expect(document.querySelectorAll("[data-leyenda-aproximado] svg[data-aproximado]")).toHaveLength(2);
       cleanup();
     }

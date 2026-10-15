@@ -4,6 +4,7 @@
 import { diaDeInstante } from "../tiempo/dias.ts";
 import { lucesDeAtaques, origenesDeAtaques } from "./guerraSatelite.ts";
 import { lugarAproximado } from "./lugarAproximado.ts";
+import { confirmadoPorAutoridad } from "./presencia.ts";
 import { DRON_DE_LA_GUERRA } from "./vocabulario.ts";
 import type {
   Ataque,
@@ -246,13 +247,16 @@ export interface Cifras {
  * Cifras del marcador. Un atribuido es por fuerza un confirmado (una autoridad, además de
  * confirmarlo, dice quién es el responsable): los confirmados los incluyen, y los atribuidos son
  * una parte de ellos. Así cuadran con cualquier filtro («4 confirmados · 4 atribuidos» con el
- * filtro de atribuidos).
+ * filtro de atribuidos). Los confirmados son los «confirmados por una autoridad»: no cuentan los
+ * de presencia de dron no acreditada o descartada (datos/presencia.ts), que siguen siendo
+ * incidentes; tampoco entre los atribuidos, para que sigan siendo una parte de los confirmados.
  */
 export function cifras(incidentes: readonly IncidenteResumen[]): Cifras {
+  const confirmados = incidentes.filter(confirmadoPorAutoridad);
   return {
     incidentes: incidentes.length,
-    confirmados: incidentes.filter((i) => i.estado === "confirmado" || i.estado === "atribuido").length,
-    atribuidos: incidentes.filter((i) => i.estado === "atribuido").length,
+    confirmados: confirmados.length,
+    atribuidos: confirmados.filter((i) => i.estado === "atribuido").length,
     paises: new Set(incidentes.map((i) => i.pais)).size,
   };
 }

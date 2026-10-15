@@ -562,7 +562,7 @@ describe("aplicación", () => {
     await waitFor(() => expect(within(mapa).getAllByRole("listitem")).toHaveLength(2));
     const contadores = screen.getByLabelText(es.marcador.etiqueta);
     // Sin ningún atribuido, su cifra no se muestra.
-    expect(contadores.textContent).toBe("incidentes2confirmados0países2");
+    expect(contadores.textContent).toBe("incidentes2confirmados por una autoridad0países2");
     expect(document.documentElement.lang).toBe("es");
   });
 

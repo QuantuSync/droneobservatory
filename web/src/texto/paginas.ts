@@ -9,6 +9,7 @@ import { ACTOR_SIN_NOMBRE, cifras, DESCONOCIDO } from "../datos/derivar.ts";
 import type { Cifras } from "../datos/derivar.ts";
 import { cierre as leerCierre } from "../datos/efecto.ts";
 import { corredoresDelPeriodo } from "../datos/guerraSatelite.ts";
+import { estadoEscrito, pasosDePresencia } from "../datos/presencia.ts";
 import type {
   AfirmacionPublica,
   Atribucion,
@@ -291,7 +292,7 @@ function entrada(i: IncidenteResumen, idioma: Idioma, t: Textos): Html {
     " · ",
     enlace(rutaDeFicha(i.id, idioma), i.titulo[idioma]),
     " · ",
-    t.estado[i.estado],
+    estadoEscrito(t, idioma, i),
     " · ",
     lugarResumido(i, idioma),
   );
@@ -349,6 +350,8 @@ function portada(datos: DatosPaginas, idioma: Idioma): PaginaTexto {
         filaDatos(tp.portada.actualizado, e("span", { class: "mono", "data-actualizado": "" }, fechaHora(datos.resumen.actualizado))),
       ),
     ),
+    // Qué quiere decir «confirmados por una autoridad», como la nota junto al mapa.
+    e("p", { class: "texto-nota", "data-nota-mapa": "" }, t.mapa.nota),
     e("h2", null, tp.portada.ultimos),
     listaDeIncidentes(ultimos, idioma, t, tp),
     e("p", null, enlace(RUTAS.incidentes[idioma], tp.portada.todos)),
@@ -536,8 +539,9 @@ function incidente(d: IncidenteDetalle, idioma: Idioma): PaginaTexto {
       d.presencia_dron !== undefined &&
         filaDatos(
           t.ficha.presenciaDron,
-          t.presencia[d.presencia_dron],
+          e("span", { "data-presencia": d.presencia_dron }, t.presencia[d.presencia_dron]),
           e("span", { class: "texto-nota" }, tp.incidente.significa, ": ", tp.presencia[d.presencia_dron]),
+          historialDePresenciaHtml(t, idioma, d),
         ),
       filaDatos(
         tp.incidente.tipo,
@@ -707,6 +711,27 @@ function incidente(d: IncidenteDetalle, idioma: Idioma): PaginaTexto {
   };
 }
 
+/**
+ * La secuencia de la presencia de dron, como en la ficha: cada paso con su fecha, quién lo declara
+ * y el enlace a su fuente; las correcciones parciales, como notas. Nada si no se rectificó.
+ */
+function historialDePresenciaHtml(t: Textos, idioma: Idioma, d: IncidenteDetalle): Html | false {
+  const pasos = pasosDePresencia(t, idioma, d);
+  if (pasos.length === 0) return false;
+  return e(
+    "ol",
+    { class: "texto-nota", "aria-label": t.presenciaHistorial.rotulo, "data-presencia-historial": "" },
+    pasos.map((paso) =>
+      e(
+        "li",
+        { "data-paso-presencia": paso.valor, ...(paso.parcial ? { "data-parcial": "" } : {}) },
+        paso.fuente === undefined ? paso.texto : enlaceDeFuente(t, paso.fuente, paso.texto),
+        paso.resto,
+      ),
+    ),
+  );
+}
+
 /** El incidente como suceso de schema.org, solo con campos que están en los datos. */
 function suceso(d: IncidenteDetalle, idioma: Idioma, titulo: string, lugar: string): unknown {
   const fechaIso = (v: string, precision: string) => (precision === "dia" || precision === "aproximada" ? v.slice(0, 10) : v);
@@ -732,7 +757,8 @@ function suceso(d: IncidenteDetalle, idioma: Idioma, titulo: string, lugar: stri
     startDate: fechaIso(d.tiempo.inicio.valor, d.tiempo.inicio.precision),
     ...(d.tiempo.fin !== undefined ? { endDate: fechaIso(d.tiempo.fin.valor, d.tiempo.fin.precision) } : {}),
     location: sitio,
-    description: `${textos(idioma).estado[d.estado.actual]}. ${textos(idioma).tipo[d.tipo]}.`,
+    // Con la presencia de dron rectificada, también lo que se sabe del dron («Dron no acreditado»).
+    description: `${textos(idioma).estado[d.estado.actual]}.${d.presencia_historial !== undefined && d.presencia_dron !== undefined ? ` ${textos(idioma).presencia[d.presencia_dron]}.` : ""} ${textos(idioma).tipo[d.tipo]}.`,
   };
 }
 
@@ -1111,7 +1137,7 @@ function ayuda(datos: DatosPaginas, idioma: Idioma): PaginaTexto {
   const t = textos(idioma);
   const tp = textosPagina(idioma);
   const a = t.ayuda;
-  const parrafos = [a.colores, a.aproximado, a.periodo, a.ahora, a.areas, a.lineas, a.numeros, a.pila, a.pulsos, a.reciente, a.novedad, a.ucrania, a.rusia, a.impactos, a.foco, a.directo];
+  const parrafos = [a.colores, t.mapa.nota, a.aproximado, a.periodo, a.ahora, a.areas, a.lineas, a.numeros, a.pila, a.pulsos, a.reciente, a.novedad, a.ucrania, a.rusia, a.impactos, a.foco, a.directo];
   return {
     idioma,
     rutas: RUTAS.ayuda,

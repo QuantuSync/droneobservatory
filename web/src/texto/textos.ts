@@ -157,7 +157,7 @@ const ES: TextosPagina = {
     ],
     cifras: "Cifras",
     incidentes: "Incidentes",
-    confirmados: "Confirmados",
+    confirmados: "Confirmados por una autoridad",
     atribuidos: "Atribuidos",
     paises: "Países",
     actualizado: "Última actualización",
@@ -210,7 +210,11 @@ const ES: TextosPagina = {
   presencia: {
     confirmada: "La autoridad competente atribuye el suceso a un dron.",
     no_confirmada: "La autoridad lo deja abierto, o solo lo cuentan la prensa o los testigos.",
-    descartada: "Una autoridad niega que fuera un dron.",
+    no_acreditada:
+      "Una autoridad oficial cerró su investigación sin pruebas del dron, o retiró su " +
+      "declaración sin decir que fuera otra cosa. El incidente y su efecto siguen: no " +
+      "encontrar pruebas no es lo mismo que probar que no hubo un dron.",
+    descartada: "Una autoridad dice que fue otra cosa (un avión, un helicóptero): desmiente que fuera un dron.",
   },
   ucrania: {
     titulo: "La guerra en Ucrania",
@@ -316,7 +320,7 @@ const EN: TextosPagina = {
     ],
     cifras: "Figures",
     incidentes: "Incidents",
-    confirmados: "Confirmed",
+    confirmados: "Confirmed by an authority",
     atribuidos: "Attributed",
     paises: "Countries",
     actualizado: "Last update",
@@ -369,7 +373,11 @@ const EN: TextosPagina = {
   presencia: {
     confirmada: "The competent authority attributes the event to a drone.",
     no_confirmada: "The authority leaves it open, or only the press or witnesses report it.",
-    descartada: "An authority denies that it was a drone.",
+    no_acreditada:
+      "An official authority closed its investigation without evidence of the drone, or " +
+      "withdrew its statement without saying it was something else. The incident and its " +
+      "effect remain: not finding evidence is not the same as proving there was no drone.",
+    descartada: "An authority says it was something else (a plane, a helicopter): it denies that it was a drone.",
   },
   ucrania: {
     titulo: "The war in Ukraine",

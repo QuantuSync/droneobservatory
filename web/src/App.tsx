@@ -2,7 +2,7 @@ import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } fro
 import type { RefObject } from "react";
 
 import { LineaNovedades, RecorridoNovedades } from "./componentes/Novedades.tsx";
-import { Ayuda } from "./componentes/Ayuda.tsx";
+import { Ayuda, NotaMapa } from "./componentes/Ayuda.tsx";
 import { BarraEstado } from "./componentes/BarraEstado.tsx";
 import { Avisos, BotonAvisos } from "./componentes/Avisos.tsx";
 import { BotonAhora, BotonFiltros, BotonPrevision, Desplegable } from "./componentes/BotonesMapa.tsx";
@@ -2261,9 +2261,19 @@ export function App() {
                 {botonesMapa(false)}
                 {avisosArriba}
               </div>
-              <div ref={refAbajoEsc} className="absolute inset-x-3 bottom-3 flex flex-col gap-2">
+              <div ref={refAbajoEsc} className="@container absolute inset-x-3 bottom-3 flex flex-col gap-2">
                 <div className="flex items-end justify-between gap-2">
-                  <div className="pointer-events-auto">{leyendas}</div>
+                  {/* La nota de qué es «confirmado» va siempre abajo a la izquierda, bajo las
+                      leyendas y en la misma fila que las atribuciones y el zoom: nunca los pisa ni
+                      tapa el centro del mapa. Si la columna del mapa es estrecha (ficha y panel en
+                      directo abiertos), no cabe sin crecer hacia arriba y se queda en la ayuda. */}
+                  <div className="pointer-events-auto flex min-w-0 flex-col items-start gap-1.5">
+                    {leyendas}
+                    <NotaMapa
+                      t={t}
+                      className="flotante max-w-[26rem] px-2.5 py-1 text-[0.6875rem] leading-snug @max-[34rem]:hidden"
+                    />
+                  </div>
                   {/* Con el dedo, si el zoom no cabe junto a las atribuciones (tableta con la ficha
                       abierta), pasa encima de ellas en vez de quedar bajo la ficha. */}
                   <div className="pointer-events-auto flex items-end justify-end gap-2 tactil:flex-wrap-reverse tactil:gap-y-4">
@@ -2485,6 +2495,9 @@ export function App() {
               animar={false}
               forma="rejilla"
             />
+            {/* En el teléfono, la nota va con las cifras, en el menú: sobre el mapa taparía su
+                parte de abajo y los controles. */}
+            <NotaMapa t={t} className="mt-1 text-xs" />
           </SeccionMenu>
           <SeccionMenu rotulo={t.controles.capas}>
             <SelectorDeCapas

@@ -10,6 +10,7 @@ import type {
   EstadoFuente,
   FuenteDelSistema,
   GrupoDron,
+  MarcaIncidente,
   Medida,
   MotivoZona,
   NivelUbicacion,
@@ -35,8 +36,8 @@ import type { EstadoFrescura } from "../tiempo/frescura.ts";
 /** Trozo de un párrafo: texto llano o un enlace. */
 export type Trozo = string | { texto: string; enlace: string };
 
-/** Marca gráfica que acompaña a una definición de la metodología. */
-export type Marca = { estado: Estado };
+/** Marca gráfica que acompaña a una definición de la metodología (un estado o «no acreditado»). */
+export type Marca = { estado: MarcaIncidente };
 
 export type Bloque =
   | { parrafo: Trozo[] }
@@ -383,6 +384,8 @@ export interface Textos {
   mapa: {
     etiqueta: string;
     instrucciones: string;
+    /** Nota junto al mapa y la leyenda: qué registra el observatorio y qué es «confirmado». */
+    nota: string;
     /** La lista de los incidentes a la vista para el teclado y el lector de pantalla. */
     aLaVista: (n: number) => string;
     grupo: (n: number) => string;
@@ -409,6 +412,22 @@ export interface Textos {
     bandera: string;
   };
   presencia: Record<PresenciaDron, string>;
+  /** La marca morada de la presencia de dron no acreditada: su nombre y su leyenda. */
+  noAcreditado: {
+    etiqueta: string;
+    leyenda: string;
+  };
+  /** El historial de la presencia de dron en la ficha (datos/presencia.ts). */
+  presenciaHistorial: {
+    /** Rótulo de la secuencia, para el lector de pantalla. */
+    rotulo: string;
+    /** Cada valor dentro de un paso: «Confirmado», «No acreditado». */
+    valor: Record<PresenciaDron, string>;
+    /** «Confirmado el 23/09/2025 por la policía de Copenhague»; sin quien, sin «por». */
+    paso: (valor: string, fecha: string, quien: string | null) => string;
+    /** Una corrección oficial parcial, que no cambia el valor: «Corrección parcial el … por …». */
+    parcial: (fecha: string, quien: string | null) => string;
+  };
   precision: Record<Precision, string>;
   categoria: Record<CategoriaObjetivo, string>;
   categoriaUcrania: Record<CategoriaObjetivoUcrania, string>;

@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 
-import { ESTADOS, TIPOS, ZONAS } from "../datos/vocabulario.ts";
+import { MARCAS, rotuloDeMarca } from "../datos/presencia.ts";
+import { TIPOS, ZONAS } from "../datos/vocabulario.ts";
 import { RECIENTES, TODO, alternar, hayFiltros } from "../estado/filtros.ts";
 import type { Filtros as EstadoFiltros, Reciente, SeleccionPeriodo } from "../estado/filtros.ts";
 import { fechaDia, pais } from "../i18n/index.ts";
@@ -161,14 +162,16 @@ export function Filtros(props: Props) {
         )}
       </div>
       <Grupo rotulo={t.filtros.estado}>
-        {ESTADOS.map((estado) => (
+        {/* Con «No acreditado», los de presencia de dron no acreditada: se ven o se ocultan como
+            cualquier estado. Elegir no mueve el mapa: solo «Aplicar» encuadra lo que queda. */}
+        {MARCAS.map((estado) => (
           <Opcion
             key={estado}
             activa={filtros.estados.includes(estado)}
             onClick={() => onFiltros({ ...filtros, estados: alternar(filtros.estados, estado) })}
           >
             <Simbolo estado={estado} />
-            {t.estado[estado]}
+            {rotuloDeMarca(t, estado)}
           </Opcion>
         ))}
       </Grupo>

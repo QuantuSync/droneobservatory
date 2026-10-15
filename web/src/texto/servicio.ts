@@ -250,6 +250,7 @@ const ES: Record<PaginaServicio, TextoServicio> = {
             lista: [
               { termino: "Fuentes", texto: ["Fuentes oficiales y de prensa, cada dato con su enlace y una frase breve de la fuente."] },
               { termino: "Estados", texto: ["Notificado, confirmado o desmentido según lo que declara la autoridad competente, nunca por deducción propia."] },
+              { termino: "Presencia de dron", texto: ["Confirmada, no confirmada, no acreditada o descartada, también según lo que declara la autoridad. «No acreditado» (en morado) quiere decir que una autoridad oficial cerró su investigación sin pruebas del dron o retiró su declaración: el incidente y su efecto siguen en el mapa con su historial."] },
               { termino: "Atribución", texto: ["Solo con una declaración oficial literal que diga quién es el responsable."] },
               { termino: "Cambios", texto: ["Nada se borra: lo corregido o retirado queda anotado con su motivo."] },
             ],
@@ -501,6 +502,7 @@ const EN: Record<PaginaServicio, TextoServicio> = {
             lista: [
               { termino: "Sources", texto: ["Official and press sources, each piece of data with its link and a short sentence from the source."] },
               { termino: "Statuses", texto: ["Reported, confirmed or denied according to what the competent authority declares, never by our own deduction."] },
+              { termino: "Drone presence", texto: ["Confirmed, not confirmed, not substantiated or ruled out, also according to what the authority declares. “Not substantiated” (in purple) means that an official authority closed its investigation without evidence of the drone or withdrew its statement: the incident and its effect stay on the map with their history."] },
               { termino: "Attribution", texto: ["Only with a literal official statement saying who is responsible."] },
               { termino: "Changes", texto: ["Nothing is deleted: what is corrected or withdrawn is recorded with its reason."] },
             ],

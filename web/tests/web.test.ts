@@ -261,6 +261,7 @@ describe("paleta", () => {
     expect(token("notificado")).toBe(COLOR_ESTADO.notificado);
     expect(token("atribuido")).toBe(COLOR_ESTADO.atribuido);
     expect(token("desmentido")).toBe(COLOR_ESTADO.desmentido);
+    expect(token("no-acreditado")).toBe(PALETA.noAcreditado);
     expect(token("guerra")).toBe(PALETA.guerra);
     expect(token("guerra-claro")).toBe(PALETA.guerraClaro);
     expect(token("guerra-tenue")).toBe(PALETA.guerraTenue);
@@ -274,6 +275,7 @@ describe("paleta", () => {
         PALETA.secundario,
         ACENTO_POR_DEFECTO,
         ...Object.values(COLOR_ESTADO),
+        PALETA.noAcreditado,
       ]) {
         expect(contraste(texto, superficie), `${texto} sobre ${superficie}`).toBeGreaterThanOrEqual(
           AA_TEXTO,
@@ -287,7 +289,7 @@ describe("paleta", () => {
   it("los colores de estado cumplen el contraste AA de los elementos gráficos", () => {
     const AA_GRAFICO = 3;
     for (const superficie of [PALETA.fondo, PALETA.panelSolido, PALETA.elevado]) {
-      for (const color of Object.values(COLOR_ESTADO)) {
+      for (const color of [...Object.values(COLOR_ESTADO), PALETA.noAcreditado]) {
         expect(contraste(color, superficie), `${color} sobre ${superficie}`).toBeGreaterThanOrEqual(
           AA_GRAFICO,
         );
