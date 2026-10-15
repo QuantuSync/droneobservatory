@@ -134,23 +134,22 @@ test("carga el mapa sin errores ni violaciones de la política de contenido", as
   expect(ESTADOS_DE_FRESCURA).toContain(await barra.getAttribute("data-frescura"));
   // El marcador cuadra con los ficheros publicados: los del mapa más los de ubicación
   // imprecisa, que no se dibujan como punto pero cuentan.
-  const mapa = await datos<{ features: { properties: { estado: { actual: string } } }[] }>(
-    page,
-    "/datos/incidentes.geojson",
-  );
-  const imprecisos = await datos<{ incidentes: { estado: { actual: string } }[] }>(
-    page,
-    "/datos/incidentes_sin_ubicacion.json",
-  );
-  const estados = [
-    ...mapa.features.map((f) => f.properties.estado.actual),
-    ...imprecisos.incidentes.map((i) => i.estado.actual),
-  ];
-  const cuenta = (estado: string) => estados.filter((e) => e === estado).length;
+  type Publicado = { estado: { actual: string }; presencia_dron?: string };
+  const mapa = await datos<{ features: { properties: Publicado }[] }>(page, "/datos/incidentes.geojson");
+  const imprecisos = await datos<{ incidentes: Publicado[] }>(page, "/datos/incidentes_sin_ubicacion.json");
+  const publicados = [...mapa.features.map((f) => f.properties), ...imprecisos.incidentes];
+  // Una presencia no acreditada o descartada no suma entre los confirmados por una autoridad
+  // (src/datos/presencia.ts); el incidente sigue contando como incidente.
+  const cuenta = (estado: string) =>
+    publicados.filter(
+      (i) => i.estado.actual === estado && !["no_acreditada", "descartada"].includes(i.presencia_dron ?? ""),
+    ).length;
   const marcador = page.getByLabel("Cifras del periodo elegido");
-  await expect(marcador).toContainText(`incidentes${numero(estados.length)}`);
+  await expect(marcador).toContainText(`incidentes${numero(publicados.length)}`);
   // Los confirmados incluyen los atribuidos (cifras en src/datos/derivar.ts).
-  await expect(marcador).toContainText(`confirmados${numero(cuenta("confirmado") + cuenta("atribuido"))}`);
+  await expect(marcador).toContainText(
+    `confirmados por una autoridad${numero(cuenta("confirmado") + cuenta("atribuido"))}`,
+  );
   await expect(marcador).toContainText(`atribuidos${numero(cuenta("atribuido"))}`);
   const resumen = await datos<Resumen>(page, "/datos/resumen.json");
   expect(resumen.incidentes.filter((i) => i.punto !== null)).toHaveLength(mapa.features.length);
@@ -375,7 +374,12 @@ test("los filtros quedan en la dirección y el feed abre fichas", async ({ page 
   await expect(filtros.getByRole("button", { name: "Quitar filtros" })).toBeVisible();
   await capturar(page, info.project.name, "filtros");
   const resumen = await datos<Resumen>(page, "/datos/resumen.json");
-  const graves = resumen.incidentes.filter((i) => ["confirmado", "atribuido"].includes(i.estado));
+  // «Solo confirmados y atribuidos» deja fuera las presencias no acreditadas o descartadas.
+  const graves = resumen.incidentes.filter(
+    (i) =>
+      ["confirmado", "atribuido"].includes(i.estado) &&
+      !["no_acreditada", "descartada"].includes(i.presencia ?? ""),
+  );
   await expect(page.getByLabel("Cifras del periodo elegido")).toContainText(
     `incidentes${numero(graves.length)}`,
   );

@@ -72,9 +72,17 @@ const HISTORIAL: PasoPresencia[] = [
   },
 ];
 
+// Lo que dice cada paso, por trozos: quién lo declara es el enlace a la fuente, que lleva detrás
+// el aviso de enlace externo para los lectores de pantalla.
 const PASOS = {
-  es: ["Confirmado el 23/09/2025 por la policía de Copenhague", "No acreditado el 25/06/2026 por la policía de Copenhague, tras la investigación"],
-  en: ["Confirmed on 23/09/2025 by Copenhagen Police", "Not substantiated on 25/06/2026 by Copenhagen Police, after the investigation"],
+  es: [
+    ["Confirmado el 23/09/2025 por la policía de Copenhague"],
+    ["No acreditado el 25/06/2026 por la policía de Copenhague", "tras la investigación"],
+  ],
+  en: [
+    ["Confirmed on 23/09/2025 by Copenhagen Police"],
+    ["Not substantiated on 25/06/2026 by Copenhagen Police", "after the investigation"],
+  ],
 };
 
 /** La ficha de Copenhague por si un día no se publica: lo mínimo que valida. */
@@ -228,9 +236,9 @@ test.describe("Presencia de dron no acreditada, como una persona", () => {
       const publicada = datos.ficha();
       expect(publicada).not.toBeNull();
       const enlaces = HISTORIAL.map((paso) => publicada?.fuentes.find((f) => f.id === paso.fuente_id)?.enlace);
-      for (const [i, texto] of PASOS[idioma].entries()) {
+      for (const [i, trozos] of PASOS[idioma].entries()) {
         const paso = pasos.nth(i);
-        await expect(paso).toContainText(texto);
+        for (const trozo of trozos) await expect(paso).toContainText(trozo);
         // Cada paso enlaza a su fuente (o a su copia archivada si el original cayó).
         const enlace = paso.locator("a[href]").first();
         await expect(enlace).toBeVisible();
