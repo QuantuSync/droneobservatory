@@ -433,6 +433,13 @@ def senalar_no_suceso(
     candidato = (incidente.get("control") or {}).get("candidato")
     if not candidato or extraccion.esperan_experto(ctx.almacen).get(candidato, {}).get("revision"):
         return False
+    # El experto ya la vio con este motivo y la mantuvo: no se le vuelve a mandar cada vez que el
+    # control verifica la ficha.
+    anteriores = ctx.almacen.extracciones(candidato)
+    if anteriores and any(
+        no_es_suceso.PREFIJO_MOTIVO in m for m in anteriores[-1].get("escalado") or []
+    ):
+        return False
     extraccion.anotar_espera(ctx.almacen, candidato, [veredicto.motivo_escalado()], ctx.ahora,
                              False, revision=True)  # fmt: skip
     registro.warning("%s: %s; se repite con el experto", incidente["id"],

@@ -238,6 +238,28 @@ def test_se_aplica_al_incidente_en_que_esta_fundido(carpeta: Path) -> None:
     assert "atribucion" not in _incidente(almacen, "EODI-2025-00999")
 
 
+def test_la_autoria_vuelve_si_una_union_dejo_la_fuente_sin_atribucion(carpeta: Path) -> None:
+    """EODI-2026-00211, atribuida por la Presidencia de Rumanía, se unió el 14 de octubre de 2026
+    en la EODI-2026-00187: la que quedó recibió las fuentes oficiales, no la atribución."""
+    almacen, id_ = _almacen()
+    entradas = (_confirma(id_), _entrada(incidente=id_))
+    oficiales.aplicar(almacen, DESPUES, MODELOS, entradas, carpeta)
+    atribuido = _incidente(almacen, id_)
+    *pasos, _ = atribuido["estado"]["historial"]
+    sin_atribucion = {**atribuido, "estado": {"actual": "confirmado", "historial": pasos}}
+    sin_atribucion.pop("atribucion")
+    almacen.guardar_incidente(sin_atribucion, DESPUES, MODELOS)
+    resumen = oficiales.aplicar(almacen, DESPUES + timedelta(hours=1), MODELOS, entradas, carpeta)
+    assert resumen.atribuidos == [id_]
+    nuevo = _incidente(almacen, id_)
+    assert nuevo["estado"]["actual"] == "atribuido" and nuevo["atribucion"]["pais"] == "RU"
+    ids = [f["id"] for f in nuevo["fuentes"]]
+    assert len(ids) == len(set(ids))
+    # Y después ya no cambia nada.
+    otra = oficiales.aplicar(almacen, DESPUES + timedelta(hours=2), MODELOS, entradas, carpeta)
+    assert otra.atribuidos == [] and _incidente(almacen, id_) == nuevo
+
+
 # --- Titulares ------------------------------------------------------------------------------
 
 

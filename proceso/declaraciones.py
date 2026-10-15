@@ -209,13 +209,17 @@ def aplicar_fuentes(
     """El incidente con declaraciones que llegan ya con su fuente (una página oficial leída
     directamente, recogida/declaraciones_oficiales.py): las mismas reglas que las declaraciones
     que encuentra el extractor en las noticias. Una fuente que el incidente ya tiene no se vuelve
-    a aplicar; una autoridad de otro país no cambia el incidente."""
+    a aplicar, salvo una autoría que el incidente no lleva: al unir dos fichas, la que queda recibe
+    las fuentes oficiales de la otra pero no su atribución (EODI-2026-00211, atribuida por la
+    Presidencia de Rumanía, unida el 14 de octubre de 2026 en la EODI-2026-00187, que quedó
+    «confirmada»). Una autoridad de otro país no cambia el incidente."""
     resultado = copy.deepcopy(incidente)
     por_enlace = {f["enlace"]: f for f in resultado["fuentes"]}
     tiene = {f["id"] for f in resultado["fuentes"]}
+    sin_autoria = resultado["estado"]["actual"] != atribucion.ESTADO_ATRIBUIDO
     nuevas = [
         (declaracion, fuente) for declaracion, fuente in pares
-        if fuente["id"] not in tiene
+        if (fuente["id"] not in tiene or (declaracion["afirma"] == "autoria" and sin_autoria))
         and str(declaracion.get("pais") or resultado["lugar"]["pais"]).strip().upper()
         == resultado["lugar"]["pais"]
     ]  # fmt: skip
@@ -227,7 +231,8 @@ def _aplicar_nuevas(
     nuevas: Sequence[tuple[dict[str, Any], Documento]],
     por_enlace: dict[str, Documento],
 ) -> Documento:
-    resultado["fuentes"] = [*resultado["fuentes"], *(f for _, f in nuevas)]
+    tiene = {f["id"] for f in resultado["fuentes"]}
+    resultado["fuentes"] = [*resultado["fuentes"], *(f for _, f in nuevas if f["id"] not in tiene)]
     # Primero lo que confirma y después lo que desmiente o atribuye.
     orden = {"incidente": 0, "drones": 0, "sin_drones": 1, "niega_incidente": 2, "autoria": 3}
     por_frase: list[Documento] = []

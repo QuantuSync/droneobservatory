@@ -1,5 +1,5 @@
 {
-  "descripcion": "Señales de que un artículo no cuenta un suceso concreto (proceso/no_es_suceso.py, docs/modelos.md «Lo que no es un suceso no es ficha»). Se buscan, normalizadas (minúsculas, sin acentos), en las marcas de la página (tipo y sección del artículo, etiquetas, datos estructurados, clases del cuerpo y del artículo; nunca en los menús), en la dirección y en la cabeza del titular (lo que va antes de «:», «|» o « - », o sus tres primeras palabras); las de «titular_entero» en todo el titular. Una palabra con «*» casa con todo lo que empieza por ella; sin «*», solo entera; «..» deja hasta tres palabras cualesquiera en medio. «direcciones»: comienzos de dirección (servidor sin www y ruta) de secciones que no son noticias. Una categoría «segura» no deja duda: si todas las fuentes la tienen, la ficha nueva no se crea; una publicada solo se retira con el experto. En las demás, si todas las fuentes tienen alguna, decide el experto.",
+  "descripcion": "Señales de que un artículo no cuenta un suceso concreto (proceso/no_es_suceso.py, docs/modelos.md «Lo que no es un suceso no es ficha»). Se buscan, normalizadas (minúsculas, sin acentos), en las marcas de la página (tipo y sección del artículo, etiquetas, datos estructurados, clases del cuerpo y del artículo; nunca en los menús), en la dirección y en la cabeza del titular (lo que va antes de «:», «|» o « - », o sus tres primeras palabras); las de «titular_entero» en todo el titular. Una palabra con «*» casa con todo lo que empieza por ella; sin «*», solo entera; «..» deja hasta tres palabras cualesquiera en medio. Las marcas cuentan por su valor, no por su nombre («article:opinion=false» no es opinión). Los directos («live», «en directo») no son resúmenes: muchos cuentan un cierre en curso. «direcciones»: comienzos de dirección (servidor sin www y ruta) de secciones que no son noticias. Una categoría «segura» no deja duda: si todas las fuentes la tienen, la ficha nueva no se crea; una publicada solo se retira con el experto. En las demás, si todas las fuentes tienen alguna, decide el experto.",
   "categorias": {
     "patrocinado": {
       "segura": true,
@@ -95,9 +95,9 @@
       "segura": false,
       "es": "resumen general sin un suceso concreto",
       "en": "general round-up without a specific event",
-      "expresiones": ["newsletter", "live blog", "liveblog", "liveticker", "live ticker", "news ticker", "minuto a minuto", "en directo", "en vivo", "en direct", "diretta", "na zywo", "relacja na zywo", "tiesiogiai", "otseblogi", "suora", "livesandning", "direkte", "liveblogposting"],
-      "direcciones": ["/newsletter/", "/liveblog/", "/live-blog/", "/liveticker/", "/live/"],
-      "titular": ["newsletter", "live", "liveblog", "liveticker", "ticker", "en directo", "en vivo", "en direct", "diretta", "na żywo", "tiesiogiai", "otse", "suora", "живо", "наживо", "онлайн", "ζωντανά", "ao vivo", "the week", "la semana", "die woche", "резюме", "дайджест", "digest", "round-up", "roundup", "wrap"],
+      "expresiones": ["newsletter", "news digest", "weekly digest", "week in review", "round up", "roundup"],
+      "direcciones": ["/newsletter/", "/newsletters/"],
+      "titular": ["newsletter", "the week", "la semana", "die woche", "резюме", "дайджест", "digest", "round-up", "roundup", "wrap"],
       "titular_entero": []
     }
   }

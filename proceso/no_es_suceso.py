@@ -137,10 +137,21 @@ def _busca(patron: re.Pattern[str] | None, texto: str) -> str | None:
     return hallado.group(0) if hallado else None
 
 
+def _valor_marca(marca: str) -> str:
+    """Lo que dice la marca, sin su nombre: «article:opinion=false» no dice «opinión» (ladepeche.fr
+    y dailymail.co.uk la ponen en todas sus noticias); «article:opinion=true» sí."""
+    nombre, _, valor = marca.partition("=")
+    if nombre == "article:opinion":
+        return "opinion" if valor.strip().lower() == "true" else ""
+    if nombre == "ld:sponsor":
+        return "sponsored"
+    return valor
+
+
 def de_fuente(titular: str, url: str, marcas: Iterable[str], medio: str = "") -> Veredicto | None:
     """La categoría de la fuente si no cuenta un suceso; None si nada lo indica. Las seguras
     primero."""
-    texto_marcas = normalizar(" ".join(marcas).replace("=", " ").replace(":", " "))
+    texto_marcas = normalizar(" ".join(_valor_marca(m) for m in marcas))
     direccion = _direccion(url) if url else ""
     texto_direccion = normalizar(re.sub(r"[/_.\-]+", " ", direccion))
     cabeza, entero = normalizar(_cabeza(titular)), normalizar(titular)
