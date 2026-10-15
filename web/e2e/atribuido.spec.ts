@@ -1,7 +1,7 @@
 // El marcador de los atribuidos en un navegador real, en el teléfono (360, 390 y 412 px de
 // ancho, con tacto) y en escritorio: en el mapa, la ficha, el historial, la leyenda, los
 // filtros y las cifras, y ninguna bandera con mástil en toda la web. Deja las capturas en
-// docs/capturas (CAPTURAS para otra carpeta), con una ampliada de cada atribuido. Va contra
+// una carpeta de capturas (CAPTURAS para otra carpeta), con una ampliada de cada atribuido. Va contra
 // producción por defecto; con BASE=http://localhost:4173 contra el servidor local, reenviando
 // el almacén público, que solo admite el dominio propio.
 import { join } from "node:path";
@@ -26,7 +26,7 @@ const CHISINAU = "EODI-2026-00074";
 /**
  * Los atribuidos revisados con la regla estricta el 4 de octubre de 2026 que siguen publicados.
  * Eran cuatro: EODI-2026-00283 se retiró ese mismo día, porque sus noticias eran del dron de
- * Wunstorf y la ficha tomaba la fecha y el lugar de Leipzig (docs/informe_errores_datos.md), y
+ * Wunstorf y la ficha tomaba la fecha y el lugar de Leipzig (interno: informe_errores_datos), y
  * ya no está en los datos publicados, así que no se busca.
  */
 const REVISADOS = ["EODI-2025-00243", "EODI-2026-00015", "EODI-2026-00074"];

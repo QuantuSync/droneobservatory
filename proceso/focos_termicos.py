@@ -21,7 +21,7 @@ La regla:
    menos de DISTANCIA_HABITUAL_KM: el tamaño del píxel y el error de posición) o si, siendo
    de un sitio habitual (las antorchas de una refinería, una planta), su potencia radiativa
    (FRP) pasa de FACTOR_FRP veces la mayor que tuvo ese sitio en la base con el mismo
-   instrumento. Los umbrales salen de casos reales (docs/informe_firms.md).
+   instrumento. Los umbrales salen de casos reales (interno: informe_firms).
 5. Detectado si cuentan al menos FOCOS_MINIMOS focos (dos píxeles del mismo paso o dos
    pasos): un foco suelto es demasiado a menudo una quema agrícola o el titileo de una
    antorcha. Si no, no detectado, con su motivo. La ausencia de foco no demuestra nada
@@ -76,9 +76,9 @@ DISTANCIA_HABITUAL_KM = {"VIIRS": 1.0, "MODIS": 2.0}
 # Un sitio habitual cuenta si su potencia pasa de tantas veces la mayor de su base. En 1068
 # noches sin ataque de mayo a julio de 2025 en doce refinerías, depósitos, puertos y centrales,
 # la razón entre la potencia de un foco habitual y la mayor de su base tuvo mediana 0,26 y
-# percentil 99 de 3,14; en los ataques validados pasó de 8 (docs/informe_firms.md).
+# percentil 99 de 3,14; en los ataques validados pasó de 8 (interno: informe_firms).
 FACTOR_FRP = 4.0
-# Línea base del emplazamiento (docs/informe_capa_guerra.md, Kirishi): un sitio con calor
+# Línea base del emplazamiento (interno: informe_capa_guerra, Kirishi): un sitio con calor
 # habitual que pasa meses sin verse (antorchas estacionales, nubes de invierno) no está en los
 # 30 días anteriores. Si con esa base el impacto saldría detectado, se mira además el año
 # anterior: un foco nuevo en 30 días que cae en un sitio con al menos FOCOS_EMPLAZAMIENTO focos

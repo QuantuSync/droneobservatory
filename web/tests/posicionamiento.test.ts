@@ -1,4 +1,4 @@
-// Posicionamiento en buscadores y asistentes (docs/posicionamiento.md): robots.txt deja pasar a los
+// Posicionamiento en buscadores y asistentes (interno: posicionamiento): robots.txt deja pasar a los
 // rastreadores, el sitemap se sirve como XML legible en el navegador, cada página dice su versión
 // en el otro idioma y la de por defecto, las páginas con el mapa precargan sus datos, llms.txt
 // enlaza los avisos, y la clave de IndexNow está publicada.

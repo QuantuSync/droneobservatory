@@ -1,8 +1,8 @@
 """Segunda copia, en otra ubicación de Hetzner, de las copias de la base y del archivo.
 
 Las copias de seguridad están en Núremberg (`nbg1`), como el servidor: la copia cifrada de la
-base (`droneobservatory-base`, almacen/copias.py) y el archivo del seguimiento con las rutas
-calculadas (`droneobservatory-archivo`, recogida/seguimiento_archivo.py). Esta réplica las lleva a
+base (almacen/copias.py) y el archivo del seguimiento con las rutas
+calculadas (recogida/seguimiento_archivo.py). Esta réplica las lleva a
 un bucket privado en Helsinki (`hel1`, configuracion/replica.json), con las mismas credenciales del
 proyecto, para que un problema de una ubicación no se lleve las dos:
 
@@ -23,7 +23,7 @@ proyecto, para que un problema de una ubicación no se lleve las dos:
 Para cifrar basta la clave pública (`destinatario_age` de la configuración): esta unidad no
 necesita la identidad. Para restaurar sí (EODI_CLAVE_AGE o ~/.eodi/clave_age.txt).
 
-Cada pasada deja la hora y lo hecho en /home/eodi/.eodi/replica.json, que mira la vigilancia.
+Cada pasada deja la hora y lo hecho en ~/.eodi/replica.json, que mira la vigilancia.
 
 Uso: python -m almacen.replica preparar | replicar | listar
      python -m almacen.replica restaurar --objeto <clave en la réplica> --destino <fichero>
@@ -42,7 +42,7 @@ from typing import Any
 
 import pyrage
 
-from almacen import copias
+from almacen import buckets, copias
 from almacen.sitio import casa
 from recogida import almacen_publico
 
@@ -72,7 +72,7 @@ def destino_replica(configuracion: dict[str, Any]) -> copias.Destino:
     """La réplica con la retención de la copia de la base (para podar su parte base/)."""
     base = copias.cargar_destino()
     return copias.Destino(
-        configuracion["ubicacion"], configuracion["punto_s3"], configuracion["bucket"],
+        configuracion["ubicacion"], configuracion["punto_s3"], buckets.nombre(configuracion),
         PREFIJO_BASE, base.retencion,
     )  # fmt: skip
 
@@ -81,7 +81,7 @@ def destino_archivo() -> copias.Destino:
     datos = json.loads(CONFIGURACION_ARCHIVO.read_text(encoding="utf-8"))
     base = copias.cargar_destino()
     return copias.Destino(
-        datos["ubicacion"], datos["punto_s3"], datos["bucket"], "", base.retencion
+        datos["ubicacion"], datos["punto_s3"], buckets.nombre(datos), "", base.retencion
     )
 
 

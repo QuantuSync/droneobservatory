@@ -33,7 +33,7 @@ Cada paso va aislado (`Pasos`): si uno falla por algo inesperado, queda en el re
 traza, la recogida sigue con los demás, guarda la base, publica y termina con código 2. Solo
 termina con código 1 cuando no se puede publicar nada: sin base, sin poder generar ningún fichero
 publicado o sin poder guardar la base. Entonces systemd la repite sola a los 10 y a los 25
-minutos (docs/servidor.md, «Reintentos»).
+minutos (interno: servidor, «Reintentos»).
 
 Uso: python -m recogida.horaria --correo <correo del autor> [--repositorio <url>]
     [--estado <json>]
@@ -295,7 +295,7 @@ def paso_detalle(almacen: Almacen, ahora: datetime) -> dict[str, EstadoFuente]:
 
 
 def ensayo_exportacion(almacen: Almacen, ahora: datetime, destino: Path) -> bool:
-    """Genera la exportación semanal en `destino`, sin subirla (paso c2 de docs/fusiones.md)."""
+    """Genera la exportación semanal en `destino`, sin subirla (paso c2 de interno: fusiones)."""
     from exportacion import semanal
     from recogida import exportacion
 
@@ -316,7 +316,7 @@ def principal(argumentos: list[str] | None = None) -> int:
     opciones.add_argument(
         "--barrera", type=Path, help="estado de la barrera de titulares para la vigilancia"
     )
-    # Ensayo de punta a punta antes de fusionar un cambio de la recogida (docs/fusiones.md):
+    # Ensayo de punta a punta antes de fusionar un cambio de la recogida (interno: fusiones):
     # sobre una copia local de la base, publica en una carpeta aparte y no sube nada.
     opciones.add_argument("--base", type=Path, help="db.age local en vez de la rama estado")
     opciones.add_argument("--ensayo", type=Path, help="carpeta donde publicar, sin subir la base")

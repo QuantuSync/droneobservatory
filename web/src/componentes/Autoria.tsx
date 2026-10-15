@@ -14,10 +14,14 @@ export function Autoria({ t, idioma }: { t: Textos; idioma: Idioma }) {
       <EnlaceExterno enlace={ORCID_URL} aviso={t.ficha.enlaceExterno} avisoNoValido={t.ficha.enlaceNoValido}>
         {ORCID}
       </EnlaceExterno>{" "}
-      · {t.metodologia.descargas.contacto}:{" "}
-      <a className="enlace" href={`mailto:${CORREO_AUTOR}`}>
-        {CORREO_AUTOR}
-      </a>
+      {CORREO_AUTOR ? (
+        <>
+          · {t.metodologia.descargas.contacto}:{" "}
+          <a className="enlace" href={`mailto:${CORREO_AUTOR}`}>
+            {CORREO_AUTOR}
+          </a>
+        </>
+      ) : null}
     </p>
   );
 }

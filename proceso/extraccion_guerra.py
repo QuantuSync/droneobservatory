@@ -63,9 +63,10 @@ TOPE_S = 120.0
 # Marca del lote del histórico en la base (tabla de cursores): se envía una sola vez.
 CURSOR_LOTE = "guerra:lote_historico"
 # Segunda tanda, con lo que quede del mismo presupuesto: los mensajes de las regiones cuyo
-# histórico se leyó después de la primera (docs/informe_errores_datos.md, bloque 2). Tercera, igual:
+# histórico se leyó después de la primera (interno: informe_errores_datos, bloque 2). Tercera,
+# igual:
 # el histórico de los canales de Odesa, Volinia, Zhytómyr y Ternópil y los ataques mixtos de
-# misiles y drones que la versión mensajes-guerra/6 sitúa por su distrito (docs/informe_odesa.md).
+# misiles y drones que la versión mensajes-guerra/6 sitúa por su distrito (interno: informe_odesa).
 CURSORES_LOTE = (CURSOR_LOTE, "guerra:lote_historico:2", "guerra:lote_historico:3")
 
 

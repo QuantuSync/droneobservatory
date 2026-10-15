@@ -2,7 +2,7 @@
 
 Lo lanza `servidor/catalogo.sh` una vez al día con su propio cerrojo (nunca el de la recogida
 horaria) y deja lo que encuentra en `<datos>/` (`EODI_CATALOGO_DATOS`, en el servidor
-/home/eodi/datos/catalogo); la recogida horaria lo incorpora a la base (tabla `catalogo_vivo`).
+~/datos/catalogo); la recogida horaria lo incorpora a la base (tabla `catalogo_vivo`).
 Fuentes y ritmo en `configuracion/barrido_catalogo.json`: diario para War&Sanctions y para los
 datos propios, semanal para el resto. Lógica sin red en `proceso/catalogo_vivo.py`.
 

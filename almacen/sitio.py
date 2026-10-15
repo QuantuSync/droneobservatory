@@ -50,7 +50,7 @@ VARIABLE_DIRECTORIO = "EODI_BASE_DIRECTORIO"
 
 def casa() -> Path:
     """La carpeta del usuario que ejecuta, de la base de usuarios del sistema y no de HOME:
-    con `sudo -u eodi` HOME puede seguir siendo la del operador."""
+    con `sudo -u <usuario>` HOME puede seguir siendo la de quien administra."""
     if sys.platform != "win32":
         import pwd
 

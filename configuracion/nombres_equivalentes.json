@@ -1,5 +1,5 @@
 {
-  "descripcion": "Nombres de lugar del titular y las formas en que los escriben las fuentes en otra lengua o en otra escritura, cuando pasar el cirílico o el griego al alfabeto latino no basta («\u0421\u0445\u0438\u043f\u0445\u043e\u043b» da «shiphol», no «schiphol») o el titular usa el nombre en español («Vilna», «Dresde»). Los usa la comprobación de cita y titular (proceso/cita_titular.py): una cita que escribe una de las formas nombra el lugar. Solo nombres de lugar comprobados en las citas de los incidentes revisados (docs/informe_revision_contenido.md, bloque 1).",
+  "descripcion": "Nombres de lugar del titular y las formas en que los escriben las fuentes en otra lengua o en otra escritura, cuando pasar el cirílico o el griego al alfabeto latino no basta («\u0421\u0445\u0438\u043f\u0445\u043e\u043b» da «shiphol», no «schiphol») o el titular usa el nombre en español («Vilna», «Dresde»). Los usa la comprobación de cita y titular (proceso/cita_titular.py): una cita que escribe una de las formas nombra el lugar. Solo nombres de lugar comprobados en las citas de los incidentes revisados (interno: informe_revision_contenido, bloque 1).",
   "nombres": [
     {
       "nombre": "Schiphol",

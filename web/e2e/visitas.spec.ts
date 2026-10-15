@@ -1,4 +1,4 @@
-// Contador de visitas propio (public/visitas.js, docs/visitas.md) en un navegador real: la web
+// Contador de visitas propio (public/visitas.js, interno: visitas) en un navegador real: la web
 // envía la visita en el mapa, en las páginas de texto y al abrir una ficha, nunca por cambiar
 // filtros; sin el contador la web funciona igual; fuera de producción y en un navegador excluido
 // no envía nada. Cada envío se intercepta: ninguna prueba llega al contador de verdad.

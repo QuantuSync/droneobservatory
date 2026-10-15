@@ -1,4 +1,4 @@
-// Aviso al contador de visitas (public/visitas.js, docs/visitas.md) de que el mapa ha cambiado de
+// Aviso al contador de visitas (public/visitas.js, interno: visitas) de que el mapa ha cambiado de
 // dirección: abrir la ficha de un incidente cuenta como vista de su página. Si el contador no está
 // (bloqueado, sin cargar o fuera de producción), no hace nada.
 

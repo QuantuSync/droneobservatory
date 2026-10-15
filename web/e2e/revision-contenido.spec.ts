@@ -1,11 +1,11 @@
-// Comprobación en producción de la revisión del contenido (docs/informe_revision_contenido.md),
+// Comprobación en producción de la revisión del contenido (interno: informe_revision_contenido),
 // en el teléfono (360, 390 y 412 px, con tacto) y en escritorio:
 // 1. cinco incidentes con el titular cambiado: el titular, el estado y las citas de su ficha dicen
 //    lo mismo que los datos publicados, y una cita nombra lo que afirma el titular;
 // 2. la capa de Ucrania tiene impactos en Odesa y sus fichas se abren con su fuente;
 // 3. Polonia (EODI-2025-00295): punto en el mapa, marcador de atribuido y ficha con el lugar
 //    según la fiscalía y los demás lugares.
-// Deja las capturas en docs/capturas (CAPTURAS para otra carpeta). Va contra producción por
+// Deja las capturas en una carpeta de capturas (CAPTURAS para otra carpeta). Va contra producción por
 // defecto; con BASE=http://localhost:4173, contra el servidor local.
 import { join } from "node:path";
 

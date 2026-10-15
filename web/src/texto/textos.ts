@@ -141,7 +141,7 @@ const ES: TextosPagina = {
   sobre: "Sobre el observatorio",
   datosDe: (fecha) => `Datos publicados a ${fecha}`,
   licencia: "Datos con licencia",
-  codigo: "Código abierto",
+  codigo: "Código abierto (Apache-2.0)",
   portada: {
     titulo: `${NOMBRE} · Incidentes con drones en Europa`,
     descripcion:
@@ -301,7 +301,7 @@ const EN: TextosPagina = {
   sobre: "About the observatory",
   datosDe: (fecha) => `Data published at ${fecha}`,
   licencia: "Data licence",
-  codigo: "Open source",
+  codigo: "Open source (Apache-2.0)",
   portada: {
     titulo: `${NOMBRE} · Drone incidents in Europe`,
     descripcion:

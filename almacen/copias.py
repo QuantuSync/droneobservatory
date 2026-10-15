@@ -33,6 +33,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
+from almacen import buckets
 from almacen.sitio import casa
 from recogida.almacen_publico import firmar
 
@@ -82,7 +83,7 @@ def cargar_destino(ruta: Path = CONFIGURACION) -> Destino:
         SEMANAL: timedelta(days=r["semanal_dias"]),
     }
     return Destino(
-        datos["ubicacion"], datos["punto_s3"], datos["bucket"], datos["prefijo"], retencion
+        datos["ubicacion"], datos["punto_s3"], buckets.nombre(datos), datos["prefijo"], retencion
     )
 
 

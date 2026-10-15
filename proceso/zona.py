@@ -6,7 +6,7 @@ Son dos fenómenos distintos que el mapa enseñaba mezclados:
   (también Kaliningrado) o Bielorrusia, o en la costa del mar Negro;
 - **interior**: drones sobre aeropuertos, bases e instalaciones del interior de Europa.
 
-El criterio sale de los datos publicados el 6 de octubre de 2026 (docs/informe_prevision.md):
+El criterio sale de los datos publicados el 6 de octubre de 2026 (interno: informe_prevision):
 de los 322 incidentes con punto, 97 están a menos de 50 km de esa frontera, los demás de la
 banda llegan hasta 144 km (incursiones de Polonia, Rumanía y Lituania) y el siguiente está a
 191 km (el aeropuerto de Bucarest, cerrado por un dron sin relación con un ataque). El corte

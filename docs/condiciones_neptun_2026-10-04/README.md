@@ -4,7 +4,7 @@ Copia de las páginas de NEPTUN que dicen cómo se puede usar su API, descargada
 de 2026 a las 11:44 UTC (`developers`) y 11:45 UTC (`api-terms`, `terms`, `robots.txt`) con la
 identificación del observatorio. Los `.txt` son el texto visible de cada página, sin cambiar
 nada; el HTML original está en el archivo privado del servidor
-(`/home/eodi/datos/seguimiento/condiciones/2026-10-04/`) y en su copia de seguridad.
+(`~/datos/seguimiento/condiciones/2026-10-04/`) y en su copia de seguridad.
 
 | Página | Fichero | SHA-256 del HTML descargado |
 | --- | --- | --- |
@@ -13,5 +13,5 @@ nada; el HTML original está en el archivo privado del servidor
 | <https://neptun.in.ua/terms> («Оновлено: 7 липня 2026») | `terms.txt` | `72b9cb3a8a0a9ddd923d844415b471e4adcda53688516bbf5e5611125729a3b5` |
 | <https://neptun.in.ua/robots.txt> | `robots.txt` | `b09527b606c17901f228bbd1ff4bd8b6937137e29278f9674e3f6cae19a2abd0` |
 
-Qué dicen y cómo se cumplen: [`docs/informe_captura_seguimiento.md`](../informe_captura_seguimiento.md)
+Qué dicen y cómo se cumplen: [interno: informe_captura_seguimiento](../informe_captura_seguimiento.md)
 y [`docs/licencias_terceros.md`](../licencias_terceros.md).

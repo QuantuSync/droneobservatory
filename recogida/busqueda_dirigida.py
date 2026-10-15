@@ -67,7 +67,7 @@ FUENTE_ID = "busqueda_dirigida"
 ANOMALIAS = "anomalias.json"
 DIAS = "dias"
 HALLADOS = "hallados"
-DIRECTORIO_POR_DEFECTO = Path("/home/eodi/datos/busqueda")
+DIRECTORIO_POR_DEFECTO = Path("~/datos/busqueda").expanduser()
 VARIABLE_DATOS = "EODI_BUSQUEDA_DATOS"
 VERSION = "1.0.0"
 # Solo las anomalías de un aeropuerto con cobertura alta: con media, un hueco puede ser de los
@@ -235,7 +235,7 @@ def buscar(
 
 # --- Avisos de la detección en directo ------------------------------------------------------
 
-DIRECTO_DATOS_POR_DEFECTO = Path("/home/eodi/datos/directo")
+DIRECTO_DATOS_POR_DEFECTO = Path("~/datos/directo").expanduser()
 VARIABLE_DIRECTO = "EODI_DIRECTO_DATOS"
 DIRECTO = "directo"
 # Desde una hora antes del comienzo del hueco hasta 36 horas después, por franjas de GDELT a

@@ -46,11 +46,11 @@ Lo que hace falta para seguir sin repetir (la última huella por alerta y vía, 
 última respuesta, los Last-Modified y la última pasada del histórico) está en
 `<datos>/alertas_tabla/estado.json`; si falta, se rehace con la tabla de los últimos 40 días.
 
-El registro (`/home/eodi/.eodi/alertas.json`) lleva la última respuesta correcta (200 o 304), el
+El registro (`~/.eodi/alertas.json`) lleva la última respuesta correcta (200 o 304), el
 último cambio, el último error de autorización y la última pasada del histórico: lo mira la
 vigilancia (recogida/vigilancia.py).
 
-El token (`/home/eodi/.eodi/alerts_in_ua_token`, solo legible por el usuario del servicio) va en la
+El token (`~/.eodi/alerts_in_ua_token`, solo legible por el usuario del servicio) va en la
 cabecera `Authorization` y nunca en una dirección, un registro ni un fichero del archivo.
 
 Uso: python -m recogida.alertas servir [--datos <dir>] [--registro <json>]
@@ -119,7 +119,7 @@ MEMORIA = timedelta(days=40)
 REGISTRO_CADA_S = 30.0
 RESUMEN_CADA_S = 600.0
 REVISION_CODIGO_S = 300.0
-CODIGO = ("recogida/alertas.py", "recogida/seguimiento.py", "servidor/alertas.sh")
+CODIGO = ("recogida/alertas.py", "recogida/seguimiento.py")
 
 TOKEN_VARIABLE = "EODI_ALERTAS_TOKEN_FICHERO"
 

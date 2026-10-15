@@ -1,4 +1,4 @@
-"""IndexNow (recogida/indexnow.py, docs/posicionamiento.md): la primera vez se envía todo el
+"""IndexNow (recogida/indexnow.py, interno: posicionamiento): la primera vez se envía todo el
 sitemap una sola vez; después, solo los incidentes nuevos o cambiados, por lotes y sin repetir; un
 lote que falla se reintenta; sin el fichero de la clave en la web no se envía nada."""
 
@@ -145,14 +145,3 @@ def test_configuracion_y_fichero_de_la_clave_en_la_web() -> None:
     assert publicado.read_text(encoding="utf-8").strip() == clave
     assert config["punto"] == "https://api.indexnow.org/indexnow"
     assert 1 <= config["lote"] <= indexnow.LOTE_MAXIMO
-
-
-def test_el_envio_va_tras_publicar_bien_y_el_ensayo_no_envia() -> None:
-    servidor = indexnow.RAIZ / "servidor"
-    recogida = (servidor / "recogida.sh").read_text(encoding="utf-8")
-    publicar = recogida.index('if publicar_en_almacen "$modo_pub"; then')
-    envio = recogida.index("-m recogida.indexnow enviar")
-    no_publicado = recogida.index('echo "aviso: los ficheros no se publicaron en el almacén"')
-    assert publicar < envio < no_publicado
-    ensayo = (servidor / "ensayo.sh").read_text(encoding="utf-8")
-    assert "-m recogida.indexnow ensayo" in ensayo and "recogida.indexnow enviar" not in ensayo

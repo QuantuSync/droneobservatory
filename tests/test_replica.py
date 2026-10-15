@@ -105,7 +105,7 @@ def test_restaurar_de_la_replica_comprueba_la_huella(
 # --- Copia horaria del archivo y rutas ------------------------------------------------------
 class S3Archivo(S3Falso):
     def __init__(self) -> None:
-        super().__init__("droneobservatory-archivo")
+        super().__init__("prueba-archivo")
         self.existe_bucket = True
 
 

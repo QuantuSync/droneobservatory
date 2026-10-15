@@ -9,8 +9,7 @@
       "es": "Dr. Lucas Alaniz Pintos",
       "en": "Lucas Alaniz Pintos, PhD"
     },
-    "orcid": "https://orcid.org/0009-0008-5179-2534",
-    "correo": "lucasalanizpintos@gmail.com"
+    "orcid": "https://orcid.org/0009-0008-5179-2534"
   },
   "alcance": {
     "es": "La compilación del observatorio (los incidentes, sus estados, sus clasificaciones y sus cifras) se publica con la licencia CC BY 4.0: se puede copiar, transformar y reutilizar, también con fines comerciales, citando la fuente. Las frases citadas siguen siendo de sus autores y se usan como cita, con su fuente y su enlace. El bloque de tráfico aéreo medido (trafico_aereo) deriva del archivo de adsb.lol y se ofrece con su licencia, ODbL 1.0.",

@@ -110,7 +110,7 @@ def importar_historico(cache: Path, datos: Path) -> dict[str, int]:
 
 
 def copiar_historico(datos: Path) -> dict[str, int]:
-    """Sube a la copia privada del archivo (bucket droneobservatory-archivo) los ficheros del
+    """Sube a la copia privada del archivo (bucket privado del archivo) los ficheros del
     histórico que no estén ya; nunca sobrescribe uno con otra huella."""
     from collections import Counter
 

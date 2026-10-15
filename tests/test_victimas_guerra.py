@@ -1,7 +1,7 @@
 """Víctimas y homenajes en la capa de guerra: un año no es una cifra de víctimas, más de 100
 por impacto solo con la cifra pegada al verbo, las víctimas solo de frases de drones y sin
 acumulados, y los homenajes, obituarios y la memoria de caídos no son impactos. Textos reales
-de los canales oficiales (los seis ejemplos del informe docs/informe_errores_datos.md) y
+de los canales oficiales (los seis ejemplos del informe interno: informe_errores_datos) y
 corrección de lo ya guardado."""
 
 import copy

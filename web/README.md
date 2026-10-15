@@ -11,7 +11,7 @@ público de Hetzner Object Storage, cuya dirección está en
 [`configuracion/almacen_publico.json`](../configuracion/almacen_publico.json)
 (`src/almacenPublico.ts` la lee en el build), y todo lo demás (trabajador del mapa, glifos, sprites, fuentes, geometrías de Natural Earth)
 desde el propio sitio. Decisiones y resultados en
-[`docs/informe_web.md`](../docs/informe_web.md).
+interno: informe_web.
 
 ## Órdenes
 

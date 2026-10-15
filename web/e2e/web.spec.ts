@@ -533,7 +533,7 @@ test("todas las rutas llevan las cabeceras de seguridad", async ({ page }) => {
   expect(texto).toMatch(/Expires: \d{4}-\d{2}-\d{2}T/);
 });
 
-// El contador de visitas propio (docs/visitas.md), en producción.
+// El contador de visitas propio (interno: visitas), en producción.
 const ORIGEN_VISITAS = "https://stats.droneobservatory.eu";
 
 test("el mapa solo habla con este sitio, el almacén y el contador de visitas", async ({ page }) => {

@@ -71,7 +71,7 @@ MAX_SIN_DIRECTO = timedelta(minutes=30)
 TITULO_DIRECTO = "### Detección en directo"
 TITULO_SEGUIMIENTO = "### Captura del seguimiento en directo"
 # Un hueco largo cuenta como problema durante dos horas: lo ve al menos una pasada del vigía
-# (minuto 41) con el estado de la recogida siguiente (hacia el minuto 33).
+# con el estado de la recogida siguiente.
 HUECO_RECIENTE = timedelta(hours=2)
 # La recogida es horaria y cada una se reintenta dos veces: tres horas sin publicar son tres
 # recogidas seguidas que no lo han conseguido ni con sus reintentos (o que no se han lanzado).

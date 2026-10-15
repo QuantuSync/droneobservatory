@@ -3,7 +3,7 @@
 El 13 de octubre de 2026 una sesión borró /dev/null en el servidor: sshd dejó de aceptar
 conexiones, systemd no pudo lanzar ningún servicio («Failed to set up standard input») y dos
 recogidas no llegaron a arrancar. El servidor no se reparó solo. Desde entonces lo hace este
-guardián, que lanza eodi-guardian.timer cada 5 minutos, como root (docs/servidor.md, «Guardián
+guardián, que lanza eodi-guardian.timer cada 5 minutos, como root (interno: servidor, «Guardián
 del sistema»):
 
 - /dev/null, /dev/zero, /dev/random y /dev/urandom existen y son dispositivos de caracteres con
@@ -14,8 +14,8 @@ del sistema»):
 - sshd está activo y acepta conexiones locales (saluda con «SSH-» en el puerto 22); si no,
   reinicia ssh.socket y ssh.service;
 - el disco no pasa del 90 %: si pasa, limpia las cachés y los temporales propios del observatorio
-  (caché de pip, temporales del usuario eodi de más de un día, paquetes descargados de apt y el
-  diario por encima de 500 MB). Nunca toca datos.
+  (caché de pip, temporales del usuario del observatorio de más de un día, paquetes descargados
+  de apt y el diario por encima de 500 MB). Nunca toca datos.
 
 Último recurso: si las dos últimas recogidas terminadas fallaron por un error del sistema (no de
 una fuente: no pudo arrancar, sin memoria, disco lleno, sin /dev/null...) y no ha habido después
@@ -55,8 +55,19 @@ from typing import Any
 
 VERSION = 1
 ESTADO = Path(os.environ.get("EODI_GUARDIAN_ESTADO", "/var/lib/eodi-guardian/estado.json"))
-CASA = Path(os.environ.get("EODI_GUARDIAN_CASA", "/home/eodi"))
-USUARIO = os.environ.get("EODI_GUARDIAN_USUARIO", "eodi")
+
+
+def _dueno(ruta: Path) -> str:
+    try:
+        return ruta.owner()
+    except (OSError, KeyError, NotImplementedError):
+        return ""
+
+
+# La unidad del guardián pasa la casa y el usuario del observatorio. Sin ellos: la carpeta que
+# contiene el clon (el guardián se ejecuta desde él) y su dueño.
+CASA = Path(os.environ.get("EODI_GUARDIAN_CASA") or Path(__file__).resolve().parent.parent.parent)
+USUARIO = os.environ.get("EODI_GUARDIAN_USUARIO") or _dueno(CASA)
 UNIDAD_RECOGIDA = os.environ.get("EODI_GUARDIAN_RECOGIDA", "eodi-recogida.service")
 
 # Dispositivo: (mayor, menor). Todos de root, con permisos 666 (lo de serie del núcleo).

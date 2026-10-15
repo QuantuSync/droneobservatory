@@ -2,7 +2,7 @@
 // vista, en 360 × 800, 768 × 1024, 1366 × 768 y 1920 × 1080. Casos: un país, solo la capa de
 // Ucrania, sin resultados (el mapa no se mueve y se avisa) y sin filtros. Cerrar con la equis o
 // con Escape no mueve el mapa; tras aplicar, el foco vuelve a «Filtros»; el panel tiene una sola
-// barra de desplazamiento. Deja capturas en docs/capturas/filtros (CAPTURAS para otra carpeta).
+// barra de desplazamiento. Deja capturas en una carpeta de capturas (CAPTURAS para otra carpeta).
 // Va contra producción por defecto; con BASE=http://localhost:4173, contra el servidor local; con
 // BASE=<vista previa> y BYPASS=<clave>, contra una vista previa protegida.
 import { join } from "node:path";

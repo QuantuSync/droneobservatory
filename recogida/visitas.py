@@ -1,4 +1,4 @@
-"""Visitas de la web y resumen diario privado por ntfy (docs/visitas.md).
+"""Visitas de la web y resumen diario privado por ntfy (interno: visitas).
 
 La web cuenta sus visitas en un GoatCounter propio (https://stats.droneobservatory.eu, en este
 servidor: servidor/visitas.sh). Esta unidad (eodi-visitas.timer, cada 5 minutos) hace tres cosas,

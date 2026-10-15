@@ -1,9 +1,9 @@
 {
-  "descripcion": "Copias de seguridad de la base de datos (almacen/copias.py): la base cifrada con age, igual que en la rama estado, en un bucket privado de Hetzner Object Storage, en el mismo proyecto y con las mismas credenciales S3 que el almacén público. Sin política pública: sin credenciales responde 403. Nada de aquí se publica.",
+  "descripcion": "Copias de seguridad de la base de datos (almacen/copias.py): la base cifrada con age, igual que en la rama estado, en un bucket privado de Hetzner Object Storage, en el mismo proyecto y con las mismas credenciales S3 que el almacén público. Sin política pública: sin credenciales responde 403. Nada de aquí se publica. El nombre del bucket no se publica: está en la variable de bucket_variable (entorno o fichero buckets.env de la carpeta de secretos).",
   "proveedor": "Hetzner Object Storage",
   "ubicacion": "nbg1",
   "punto_s3": "https://nbg1.your-objectstorage.com",
-  "bucket": "droneobservatory-base",
+  "bucket_variable": "EODI_BUCKET_BASE",
   "prefijo": "base/",
   "retencion": {
     "horaria_horas": 48,

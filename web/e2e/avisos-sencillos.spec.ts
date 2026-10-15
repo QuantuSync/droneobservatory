@@ -2,7 +2,7 @@
 // un solo botón «Suscribirme» y el QR; en el teléfono, «Suscríbete» en dos pasos numerados
 // (instalar ntfy y suscribirse al canal), con las instrucciones del dispositivo; «Toda Europa» por defecto y el buscador de países. Abrir y cerrar no mueve el
 // mapa; Escape cierra y devuelve el foco al botón; una sola barra de desplazamiento; lo elegido,
-// en claro. Deja capturas en docs/capturas/avisos-sencillos (CAPTURAS para otra carpeta). Va
+// en claro. Deja capturas en una carpeta de capturas (CAPTURAS para otra carpeta). Va
 // contra producción por defecto; con BASE=<vista previa> y BYPASS=<clave>, contra una vista previa.
 import { join } from "node:path";
 

@@ -4,7 +4,7 @@ Regla de todo el paquete: solo se publica lo comprobado. Cada número se calcula
 anteriores a una fecha y se compara con lo que pasó después, avanzando en el tiempo; se publica
 solo si mejora claramente a una referencia simple (la frecuencia de siempre y «mañana igual que
 hoy»), y lleva a la vista su historial de aciertos. Lo que no pasa la comprobación no sale en
-`publicacion/prevision.json` (queda en docs/informe_prevision.md como pendiente).
+`publicacion/prevision.json` (queda en interno: informe_prevision como pendiente).
 
 Desde que se publica, cada previsión queda en el registro (tabla `previsiones` de la base, que
 no admite cambios ni borrados) con la hora en que se hizo, antes de conocerse el resultado, y

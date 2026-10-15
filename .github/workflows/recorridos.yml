@@ -13,7 +13,7 @@ name: recorridos
 #   cierra.
 # - A mano: Actions → recorridos → Run workflow, con la dirección que se quiera.
 #
-# Cómo ver los resultados: docs/operacion.md, «Pruebas en la nube».
+# Cómo ver los resultados: interno: operacion, «Pruebas en la nube».
 
 on:
   deployment_status:
@@ -177,7 +177,7 @@ jobs:
 
           Ejecución e informes de Playwright (artefactos «informe-…»): $EJECUCION
 
-          Qué hacer: docs/operacion.md, «Pruebas en la nube». La incidencia se cierra sola cuando un despliegue de producción vuelve a pasar los recorridos."
+          Qué hacer: interno: operacion, «Pruebas en la nube». La incidencia se cierra sola cuando un despliegue de producción vuelve a pasar los recorridos."
           if [ -n "$abierta" ]; then
             gh issue comment "$abierta" --body "Siguen fallando tras el commit $SHA: $EJECUCION"
           else

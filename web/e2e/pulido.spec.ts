@@ -1,6 +1,6 @@
 // Los ocho arreglos del pulido de la web, en un navegador real: primero en el teléfono (360,
 // 390 y 412 px de ancho, con tacto) y después en escritorio. Deja las capturas de cada punto
-// en docs/capturas (CAPTURAS para otra carpeta). Va contra producción por defecto; con
+// en una carpeta de capturas (CAPTURAS para otra carpeta). Va contra producción por defecto; con
 // BASE=http://localhost:4173 contra el servidor local, reenviando el almacén público, que solo
 // admite el dominio propio.
 import { join } from "node:path";

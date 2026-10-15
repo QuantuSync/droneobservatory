@@ -129,7 +129,7 @@ se retiene hasta que el control decide, normalmente ni llega a publicarse.
 
 ## Madrugada
 
-`eodi-control.timer`, cada día a las 01:41 UTC (`servidor/control_noche.sh`, `MemoryMax=2G`):
+Una pasada al día, de madrugada en Europa:
 
 1. con el cerrojo de la recogida, lo que no llama al servicio (uniones, reglas, verificaciones ya
    decididas, retención) y la recogida de los lotes de citas de las horas anteriores;
@@ -149,13 +149,8 @@ se retiene hasta que el control decide, normalmente ni llega a publicarse.
 En cada recogida horaria, las citas nuevas no se traducen con llamadas directas: van en un lote
 que recoge la recogida siguiente (cursor `control_fichas:lotes`).
 
-Lo que corrige sale en la recogida siguiente.
-
-```
-sudo systemctl start eodi-control.service
-journalctl -u eodi-control.service -n 30
-sudo -u eodi bash -c 'cd /home/eodi/droneobservatory && .venv/bin/python -m recogida.control_fichas estado'
-```
+Lo que corrige sale en la recogida siguiente. El estado del control:
+`python -m recogida.control_fichas estado`.
 
 ## La primera ronda del repaso, deshecha
 
@@ -204,9 +199,9 @@ eran el mismo suceso partido y se unen en `incidentes_revisados.json`:
 
 ## Resumen diario y vigilancia
 
-- `control.json` (`/home/eodi/.eodi/`) guarda cada pasada de los dos últimos días: fichas
+- `control.json` (`~/.eodi/`) guarda cada pasada de los dos últimos días: fichas
   corregidas y por qué, duplicados unidos, retenidas y liberadas, gasto y paradas.
-- El resumen de las 08:00 (`lucas-resumen`, sección SISTEMA) dice cuántas fichas corrigió el
+- El resumen diario privado (sección SISTEMA) dice cuántas fichas corrigió el
   control y de qué clase (lugar, drones, presencia, cierre, hora, día, estado), los duplicados que
   unió, las que retuvo y lo que gastó, con hasta 5 ejemplos.
 - La vigilancia solo abre incidencia («control_fichas») si el propio control falla 3 pasadas

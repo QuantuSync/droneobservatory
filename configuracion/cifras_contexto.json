@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "descripcion": "Cifras oficiales agregadas de un país, como contexto: no son incidentes y nunca se suman ni se mezclan con el recuento de incidentes del observatorio. Cada cifra lleva su periodo, quién la publica, su origen (oficial: el documento de la autoridad; oficial_citado: la cifra de una autoridad que se conoce porque la cita un medio), el enlace comprobado y la frase literal. Van en la exportación semanal interna (contexto_pais.jsonl), no en la web. Enlaces comprobados el 4 de octubre de 2026 (docs/informe_errores_datos.md, bloque 7).",
+  "descripcion": "Cifras oficiales agregadas de un país, como contexto: no son incidentes y nunca se suman ni se mezclan con el recuento de incidentes del observatorio. Cada cifra lleva su periodo, quién la publica, su origen (oficial: el documento de la autoridad; oficial_citado: la cifra de una autoridad que se conoce porque la cita un medio), el enlace comprobado y la frase literal. Van en la exportación semanal interna (contexto_pais.jsonl), no en la web. Enlaces comprobados el 4 de octubre de 2026 (interno: informe_errores_datos, bloque 7).",
   "cifras": [
     {
       "id": "es-aena-drones-2019",

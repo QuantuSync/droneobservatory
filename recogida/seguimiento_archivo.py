@@ -62,6 +62,7 @@ from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+from almacen import buckets
 from recogida.alertas import CRUDO as ALERTAS
 from recogida.alertas import TABLA as ALERTAS_TABLA
 from recogida.almacen_publico import VARIABLE_ID, VARIABLE_SECRETO, firmar
@@ -330,7 +331,7 @@ class Destino:
 
 def cargar_destino(ruta: Path = CONFIGURACION) -> Destino:
     datos = json.loads(ruta.read_text(encoding="utf-8"))
-    return Destino(datos["ubicacion"], datos["punto_s3"], datos["bucket"], datos["prefijo"])
+    return Destino(datos["ubicacion"], datos["punto_s3"], buckets.nombre(datos), datos["prefijo"])
 
 
 @dataclass(frozen=True)

@@ -3,23 +3,23 @@
 Desde el 5 de octubre de 2026 la base manda en el disco del servidor (modo `disco`,
 almacen/sitio.py) y, además de las copias cifradas del almacén privado, cada guardado sube una copia
 secundaria a la rama `estado` del repositorio de datos. Esa copia se mantiene hasta el 12 de octubre
-de 2026; el martes 13 a las 10:00 UTC el temporizador eodi-base-solo-disco ejecuta este paso, que
+de 2026; el día 13 un temporizador del servidor ejecuta este paso, una sola vez, que
 antes de cambiar nada comprueba:
 
 1. que la última copia cifrada del almacén privado tiene menos de 2 horas, se baja, su huella
    coincide, se descifra y la base restaurada pasa la comprobación de integridad de SQLite;
 2. que la segunda copia de Helsinki (almacen/replica.py) tiene una copia horaria de la base de
-   menos de 3 horas (la réplica pasa en el minuto 47: la copia de la última recogida puede no
+   menos de 3 horas (la réplica pasa una vez por hora: la copia de la última recogida puede no
    haber llegado aún).
 
 Si todo va bien, escribe `no` en el interruptor de la copia secundaria
-(`/home/eodi/.eodi/base_secundaria`), que vale desde la recogida siguiente. Si algo falla, no cambia
-nada. En los dos casos deja lo que ha hecho en `/home/eodi/.eodi/base_solo_disco.json`, que la
+(`~/.eodi/base_secundaria`), que vale desde la recogida siguiente. Si algo falla, no cambia
+nada. En los dos casos deja lo que ha hecho en `~/.eodi/base_solo_disco.json`, que la
 vigilancia publica (un fallo es un problema: llega al dueño). Con --ensayo hace las comprobaciones
 sin cambiar el interruptor.
 
-Volver atrás: `echo github > /home/eodi/.eodi/base_secundaria` (como eodi) y, para poner la rama al
-día en el acto, `base.sh a-github`.
+Volver atrás: `echo github > ~/.eodi/base_secundaria` (como el usuario del observatorio) y,
+para poner la rama al día en el acto, `base.sh a-github`.
 
 Uso: python -m almacen.solo_disco [--ensayo]
 """

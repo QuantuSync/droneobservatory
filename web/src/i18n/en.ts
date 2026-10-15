@@ -1,6 +1,6 @@
 import { rutasEn } from "./rutas.ts";
 import { tipoDronEn } from "./tipoDron.ts";
-import { LICENCIA_DATOS, LICENCIA_DATOS_URL, NOMBRE, REPOSITORIO, citaRecomendada } from "../sitio.ts";
+import { LICENCIA_DATOS, LICENCIA_DATOS_URL, NOMBRE, citaRecomendada } from "../sitio.ts";
 import { REGIONES_RUSIA_EN } from "./regionesRusia.ts";
 import type { FechaEscrita, Textos } from "./tipos.ts";
 import { UMBRALES_DIRECTO } from "./umbrales.ts";
@@ -1379,8 +1379,7 @@ export const en: Textos = {
                     "was right at least 8 times in 10 (with 5 cases at least). On 7 October 2026 " +
                     "no border case passes: attack drone and decoy cannot be told apart, so no " +
                     "percentages are shown. What does pass is that it was one of the two: in 22 " +
-                    "of 24 cases. The calculated probabilities remain in the data export. The " +
-                    "figures for each class are in docs/informe_tipo_y_rutas.md in the repository.",
+                    "of 24 cases. The calculated probabilities remain in the data export.",
                 ],
               },
               {
@@ -1641,7 +1640,7 @@ export const en: Textos = {
             lista: [
               {
                 termino: "Code",
-                texto: [{ texto: "Apache-2.0", enlace: `${REPOSITORIO}/blob/main/LICENSE` }, "."],
+                texto: ["Apache-2.0 (open source)."],
               },
               {
                 termino: "Data",

@@ -1,4 +1,4 @@
-"""Las dos fuentes españolas (docs/informe_errores_datos.md, bloque 7): las cifras oficiales de
+"""Las dos fuentes españolas (interno: informe_errores_datos, bloque 7): las cifras oficiales de
 contexto, que nunca se mezclan con los incidentes, y el lector de notas de la Guardia Civil."""
 
 import json

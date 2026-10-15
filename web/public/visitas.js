@@ -1,4 +1,4 @@
-// Contador de visitas (docs/visitas.md). Envía cada página vista al contador propio del
+// Contador de visitas (interno: visitas). Envía cada página vista al contador propio del
 // observatorio, GoatCounter en https://stats.droneobservatory.eu (servidor en la UE), con lo mismo
 // que su script oficial count.js: la dirección de la página sin la búsqueda (los filtros nunca
 // cuentan), su título, la web de procedencia, el tamaño de pantalla y si el navegador lo maneja un

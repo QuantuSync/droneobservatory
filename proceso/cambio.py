@@ -46,7 +46,7 @@ NBR_QUEMADO = 0.0
 PIXELES_MINIMOS = 6
 # Una pareja se publica si la mancha principal que toca la zona del impacto llega a estas
 # hectáreas. Fijado mirando las 33 primeras parejas una a una: las 4 con daño visible (quemado)
-# dan de 11,8 a 120,8 ha; las 29 sin él, 7,4 como mucho (docs/informe_guerra_satelite.md).
+# dan de 11,8 a 120,8 ha; las 29 sin él, 7,4 como mucho (interno: informe_guerra_satelite).
 UMBRAL_PRINCIPAL_HA = 10.0
 # Reencuadre de una pareja que pasa: si la mancha queda lejos del centro o pequeña en el recorte,
 # el recorte se centra en ella con este margen (lado = MARGEN_REENCUADRE × su extensión).

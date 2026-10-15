@@ -549,7 +549,7 @@ class S3Falso:
         self.puts = 0
 
     def __call__(self, peticion: Any) -> seguimiento_archivo.RespuestaS3:
-        clave = peticion.full_url.split("/droneobservatory-archivo/", 1)[-1]
+        clave = peticion.full_url.split("/prueba-archivo/", 1)[-1]
         assert "authorization" in {k.lower() for k in peticion.headers}
         metodo = peticion.get_method()
         if metodo == "HEAD":

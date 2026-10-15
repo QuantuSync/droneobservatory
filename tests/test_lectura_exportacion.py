@@ -39,7 +39,7 @@ def transporte(lee_otros: bool) -> copias.Enviar:
 
     def enviar(peticion: urllib.request.Request) -> copias.Respuesta:
         url = peticion.full_url
-        propio = "/droneobservatory-exportaciones" in url
+        propio = "/prueba-exportaciones" in url
         if not propio and not lee_otros:
             return copias.Respuesta(403, {}, b"")
         if peticion.get_method() in ("PUT", "DELETE"):
@@ -62,6 +62,6 @@ def test_la_comprobacion_pasa_con_solo_lectura_y_falla_si_puede_escribir() -> No
     assert resultados and all(bien for _, bien, _ in resultados), resultados
     destinos = {d.bucket for d in lectura_exportacion._otros_destinos()}
     assert exportaciones.destino().bucket not in destinos
-    assert {"droneobservatory-base", "droneobservatory-archivo"} <= destinos
+    assert {"prueba-base", "prueba-archivo"} <= destinos
     todo = lectura_exportacion.comprobar(credenciales, transporte(lee_otros=True))
     assert not all(bien for _, bien, _ in todo)

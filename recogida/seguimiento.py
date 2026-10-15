@@ -36,7 +36,7 @@ Líneas del archivo de la Fuerza Aérea:
     {"recibido", "evento": "hueco", "desde", "hasta", "segundos", "motivo"}
     {"recibido", "evento": "ids_sin_enlazar", "desde_id", "hasta_id"}
 
-El registro (`/home/eodi/.eodi/seguimiento.json`) lleva la última recepción, el último heartbeat,
+El registro (`~/.eodi/seguimiento.json`) lleva la última recepción, el último heartbeat,
 la vía en uso y el último hueco de más de 10 minutos: de él sale `seguimiento` en estado.json.
 
 El servicio lo lanza la unidad eodi-seguimiento (servidor/seguimiento.sh), siempre en marcha.
@@ -109,11 +109,11 @@ REGISTRO_CADA_S = 30.0
 RESUMEN_CADA_S = 600.0
 REVISION_CODIGO_S = 300.0
 HUECO_LARGO = timedelta(minutes=10)
-# El código propio: si cambia en el clon, el servicio sale y systemd lo relanza con el nuevo.
+# El código propio: si cambia en el clon, el servicio sale y systemd lo relanza con el nuevo (el
+# script de arranque es del despliegue, que lo reinicia él mismo cuando cambia).
 CODIGO = (
     "recogida/seguimiento.py",
     "recogida/telegram.py",
-    "servidor/seguimiento.sh",
     "requirements.txt",
 )
 

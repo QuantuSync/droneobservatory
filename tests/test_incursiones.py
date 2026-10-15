@@ -1,5 +1,5 @@
 """Un cruce que cuenta solo el parte ucraniano no es un incidente europeo, y enlazar un incidente
-con su ataque nunca crea otro (docs/informe_errores_datos.md, cruces sin copias)."""
+con su ataque nunca crea otro (interno: informe_errores_datos, cruces sin copias)."""
 
 import copy
 from datetime import UTC, datetime

@@ -130,7 +130,7 @@ export function paginaSoloTexto(plantilla: string, pagina: PaginaTexto, actualiz
     .slice(0, finCabecera)
     .replace(/<script\b[^>]*\bsrc="[^"]*"[^>]*><\/script>/g, "")
     .replace(/<link rel="modulepreload"[^>]*>/g, "");
-  // Solo los scripts propios: el contador de visitas (docs/visitas.md) y los que pide la página
+  // Solo los scripts propios: el contador de visitas (interno: visitas) y los que pide la página
   // (el botón de privacidad), nunca la aplicación.
   const scripts = [CONTADOR_DE_VISITAS, ...(pagina.scripts ?? [])]
     .map((ruta) => `<script src="${ruta}" defer></script>`)

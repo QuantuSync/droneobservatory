@@ -38,7 +38,6 @@ import {
   ORCID,
   ORCID_URL,
   ORIGEN,
-  REPOSITORIO,
   autorEstructurado,
   rutaDeFicha,
   rutaDeIdioma,
@@ -181,10 +180,7 @@ export function lineaAutoria(idioma: Idioma): Html {
     e("span", { "data-autor": "" }, AUTOR_LINEA[idioma]),
     " · ORCID ",
     e("a", { href: ORCID_URL, rel: "author noopener", hreflang: null, "data-orcid": "" }, ORCID),
-    " · ",
-    d.contacto,
-    ": ",
-    e("a", { href: `mailto:${CORREO_AUTOR}` }, CORREO_AUTOR),
+    ...(CORREO_AUTOR ? [" · ", d.contacto, ": ", e("a", { href: `mailto:${CORREO_AUTOR}` }, CORREO_AUTOR)] : []),
   );
 }
 
@@ -1396,7 +1392,7 @@ export function marco(pagina: PaginaTexto, actualizado: string): Html {
       "footer",
       { class: "texto-pie" },
       e("p", { class: "mono", "data-datos-de": "" }, tp.datosDe(fechaHora(actualizado))),
-      e("p", null, tp.licencia, " ", externo(LICENCIA_DATOS_URL, LICENCIA_DATOS), " · ", externo(REPOSITORIO, tp.codigo)),
+      e("p", null, tp.licencia, " ", externo(LICENCIA_DATOS_URL, LICENCIA_DATOS), " · ", tp.codigo),
       e("p", { "data-autoria-pie": "" }, lineaAutoria(idioma)),
       e(
         "nav",

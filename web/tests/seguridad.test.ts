@@ -46,7 +46,7 @@ describe("enlaces externos", () => {
     "java\nscript:alert(1)",
     "data:text/html,<script>alert(1)</script>",
     "vbscript:msgbox(1)",
-    "file:///etc/passwd",
+    "file:///C:/prueba.txt",
     "ftp://example.org/x",
     "blob:https://example.org/uuid",
     "//example.org/sin-esquema",

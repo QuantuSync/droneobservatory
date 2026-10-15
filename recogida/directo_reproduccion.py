@@ -240,7 +240,7 @@ def reproducir(
 
 
 # La reproducción es un trabajo de sesión: corre a cualquier hora, también durante la recogida
-# horaria, con las normas de docs/servidor.md («Trabajos de las sesiones en el servidor»): tope de
+# horaria, con las normas de interno: servidor («Trabajos de las sesiones en el servidor»): tope de
 # memoria, prioridad baja y uno por sesión, que se ponen al lanzarla con systemd-run.
 
 
