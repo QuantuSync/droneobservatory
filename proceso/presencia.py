@@ -355,10 +355,30 @@ def presencias_revisadas(ruta: Path = REVISADOS) -> frozenset[str]:
     return frozenset(t["incidente"] for t in datos.get("titulares", []) if "presencia" in t)
 
 
+# Lo que la verificación del control de las fichas lee de la presencia y la niega
+# (proceso/control_fichas.NIEGAN).
+NIEGAN_CONTROL = frozenset({"no_hallado", "desmentido"})
+
+
+def negadas_por_el_control(almacen: Almacen) -> dict[str, set[str]]:
+    """Por incidente, las fuentes en que la verificación vigente del control de las fichas
+    (recogida/control_fichas.py) lee que no se encontró el dron o que se desmiente, con su frase
+    literal. Las verificaciones anuladas al revisarlas no cuentan."""
+    resultado: dict[str, set[str]] = {}
+    for clave, decision in almacen.controles("verificacion:").items():
+        if decision.get("anulada"):
+            continue
+        dato = (decision.get("datos") or {}).get("presencia")
+        if isinstance(dato, list) and len(dato) >= 2 and dato[0] in NIEGAN_CONTROL:
+            resultado.setdefault(clave.removeprefix("verificacion:"), set()).add(str(dato[1]))
+    return resultado
+
+
 def pendientes(almacen: Almacen) -> list[tuple[Documento, Cambio]]:
     """Los incidentes cuya presencia confirma la regla y aún no la tienen, con el cambio."""
     todos = almacen.incidentes()
     por_id = {i["id"]: i for i in todos}
+    negadas = negadas_por_el_control(almacen)
     absorbidos: dict[str, list[str]] = {}
     for fusion in almacen.fusiones():
         if not fusion["revertida"]:
@@ -384,6 +404,13 @@ def pendientes(almacen: Almacen) -> list[tuple[Documento, Cambio]]:
             f.get("documento_oficial") and "presencia_dron" in f.get("campos_respaldados", [])
             for f in incidente["fuentes"]
         ):
+            continue
+        # El control de las fichas leyó en una de sus fuentes que no se encontró el dron (o que
+        # se desmiente) y la dejó sin confirmar: la regla no la vuelve a confirmar. Si no, cada
+        # hora una la confirmaba y el otro la quitaba (EODI-2025-00248, desde el 14 de octubre
+        # de 2026).
+        tiene = {f["id"] for f in incidente["fuentes"]}
+        if negadas.get(incidente["id"], set()) & tiene:
             continue
         conocidas: dict[str, dict[str, Any]] = {}
         for candidato in sorted(_candidatos(incidente, por_id, absorbidos)):

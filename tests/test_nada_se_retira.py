@@ -31,10 +31,12 @@ def _no_es(**cambios: Any) -> dict[str, Any]:
 
 
 def _gastado_el_experto(almacen: Almacen, cuando: str = "2025-09-24T01:00:00Z") -> None:
+    """El experto sin tope ni reserva crítica (retirar o rebajar una publicada es crítico)."""
     almacen.registrar_llamada({
         "fecha": cuando, "modo": "control", "candidato": "x", "lote": False,
         "entrada": 0, "salida": 0, "escritura_cache": 0, "lectura_cache": 0,
-        "coste": coste.LIMITE_EXPERTO_DIARIO_USD, "modelo": EXPERTO, "escalada": True,
+        "coste": coste.LIMITE_EXPERTO_DIARIO_USD + coste.RESERVA_CRITICA_DIARIA_USD,
+        "modelo": EXPERTO, "escalada": True,
     })  # fmt: skip
 
 

@@ -21,6 +21,12 @@ Lo decide el código, con reglas fijas, mirando la respuesta del modelo base:
 
 Si se escala, vale la respuesta del experto. Las tareas mecánicas (traducir citas, sacar lugares
 de los partes de Ucrania, clasificar frases del catálogo) nunca se escalan.
+
+Un caso escalado es **crítico** para el gasto del experto (es_critico; si el tope normal ya no da,
+usa la reserva crítica de modelo/coste.py y no espera) si es una incursión o un suceso en una base
+o instalación militar de un país de la OTAN o de Moldavia, una ficha confirmada o atribuida, un
+cierre de aeropuerto, un suceso con víctimas, heridos, desaparecidos, hundimiento o daños, o algo
+que retiraría o rebajaría una ficha publicada.
 """
 
 import json
@@ -46,6 +52,16 @@ CONFIGURACION = Path(__file__).resolve().parent.parent / "configuracion"
 RUTA_PAISES = CONFIGURACION / "avisos.json"
 RUTA_SENALES = CONFIGURACION / "senales_escalado.json"
 RUTA_OFICIALES = CONFIGURACION / "fuentes_oficiales.json"
+# Las señales que hacen crítico un caso escalado (además de las de configuracion «criticos»).
+SENALES_CRITICAS = frozenset(
+    {"hundimiento", "victimas", "desaparecidos", "heridos", "danos", "cierre_aeropuerto"}
+)
+# Los motivos de escalado que ya hacen crítico el caso (por su comienzo): los «critico», lo que
+# retira o rebaja una publicada y la verificación que contradice su presencia o su cierre.
+MOTIVOS_CRITICOS = (
+    "critico", "publicada", "contradiccion: presencia", "contradiccion: cierre",
+    *(f"senal: {s}" for s in sorted(SENALES_CRITICAS | {"incursion"})),
+)  # fmt: skip
 # De menos a más: rebajar es bajar en este orden.
 RANGO_PRESENCIA = {"descartada": 0, "no_confirmada": 1, "confirmada": 2}
 
@@ -75,8 +91,34 @@ def senales() -> dict[str, re.Pattern[str]]:
     datos = json.loads(RUTA_SENALES.read_text(encoding="utf-8"))
     return {
         nombre: re.compile(r"\b(?:" + "|".join(map(expresion, expresiones)) + r")\b")
-        for nombre, expresiones in datos["senales"].items()
+        for nombre, expresiones in [*datos["senales"].items(), *datos["criticos"].items()]
+        if nombre != "descripcion"
     }
+
+
+def _senal(nombre: str, texto: str) -> bool:
+    patron = senales().get(nombre)
+    return patron is not None and patron.search(texto) is not None
+
+
+def critico_otan(pais: str) -> bool:
+    """Un país de la OTAN o Moldavia."""
+    return pais.upper() in paises_otan() or pais.upper() in PAISES_CRITICOS_EXTRA
+
+
+def es_critico(
+    motivos: list[str], textos: tuple[str, ...] = (), pais: str = "", categoria: str = ""
+) -> bool:
+    """El caso escalado es crítico (puede usar la reserva crítica del experto): por sus motivos
+    de escalado, porque sus textos hablan de víctimas, heridos, desaparecidos, hundimiento, daños
+    o cierre de aeropuerto, o porque es una base o instalación militar (`categoria` del objetivo
+    o expresiones de configuracion «criticos») de un país de la OTAN o de Moldavia (`pais`)."""
+    if any(m.startswith(MOTIVOS_CRITICOS) for m in motivos):
+        return True
+    texto = normalizar(" ".join(textos))
+    if texto and any(_senal(n, texto) for n in SENALES_CRITICAS):
+        return True
+    return critico_otan(pais) and (categoria == "base_militar" or _senal("base_militar", texto))
 
 
 @cache
@@ -144,7 +186,16 @@ def motivos_senales(
         return []
     motivos = ["senal: fuente oficial"] if oficial or ficha.get("declaraciones") else []
     texto = normalizar(" ".join(textos))
-    return motivos + [f"senal: {n}" for n, patron in senales().items() if patron.search(texto)]
+    return motivos + [
+        f"senal: {n}" for n, patron in senales().items()
+        if n in _nombres_senales() and patron.search(texto)
+    ]  # fmt: skip
+
+
+@cache
+def _nombres_senales() -> frozenset[str]:
+    """Las señales que escalan un «no es incidente» (no las de «criticos»)."""
+    return frozenset(json.loads(RUTA_SENALES.read_text(encoding="utf-8"))["senales"])
 
 
 def motivos_ficha(
@@ -183,9 +234,7 @@ def motivos_ficha(
     if _valor(ficha, "dron_estatal") is True or "autoria" in afirma:
         motivos.append("critico: atribuido")
     pais = str(_valor(ficha, "pais") or "").upper()
-    if _valor(ficha, "tipo") == "incursion" and (
-        pais in paises_otan() or pais in PAISES_CRITICOS_EXTRA
-    ):
+    if _valor(ficha, "tipo") == "incursion" and critico_otan(pais):
         motivos.append(f"critico: incursión en {pais}")
     if _valor(ficha, "cierre") == "si":
         motivos.append("critico: cierre de aeropuerto")

@@ -72,6 +72,9 @@ Problemas (cada uno con su frase):
   dispositivo de /dev, /tmp, sshd, el disco por encima del 90 % tras limpiar, o dos recogidas
   seguidas que fallan por el sistema con el reinicio de último recurso ya gastado en 6 horas);
 - **guardian_parado**: el guardián no ha pasado en 20 minutos (pasa cada 5);
+- **experto_critico**: un caso crítico (docs/modelos.md) lleva más de 6 horas esperando al modelo
+  experto (su tope y la reserva crítica agotados, o el experto fallando): se reintenta en cada
+  recogida y, mientras no pasen 6 horas, solo sale en el resumen diario;
 - **mapa_parado**: hay incidentes de Europa con punto dados de alta después del último cambio de
   incidentes.geojson y ese cambio tiene más de 24 horas: lo nuevo no llega al mapa.
 
@@ -148,6 +151,8 @@ BARRERA = "barrera.json"
 # control falla varias pasadas seguidas (lo que corrige o retiene va al resumen diario).
 CONTROL = "control.json"
 MAX_FALLOS_CONTROL = 3
+# Un caso crítico que espera al experto más de esto abre incidencia (antes, solo el resumen).
+MAX_CRITICO_ESPERANDO = timedelta(hours=6)
 DISCO_AVISO_PCT = 75.0
 # Guardián del sistema (recogida/guardian.py): su registro y cuánto puede pasar sin una pasada.
 GUARDIAN = Path(os.environ.get("EODI_GUARDIAN_ESTADO", "/var/lib/eodi-guardian/estado.json"))
@@ -312,6 +317,23 @@ def problemas_del_control(estado: dict[str, Any]) -> list[dict[str, str]]:
         "id": "control_fichas",
         "frase": f"El control de calidad de las fichas ha fallado {fallos} pasadas seguidas: lo "
         "nuevo se publica sin comprobar duplicados ni respaldo de los datos.",
+    }]  # fmt: skip
+
+
+def problemas_del_experto(estado: dict[str, Any], ahora: datetime) -> list[dict[str, str]]:
+    """Casos críticos que llevan más de 6 horas esperando al experto (control.json), sin
+    identificadores (salud.json es público)."""
+    viejos = [
+        c for c in (estado or {}).get("criticos_esperando") or []
+        if (desde := _instante(c.get("desde"))) is not None
+        and ahora - desde > MAX_CRITICO_ESPERANDO
+    ]  # fmt: skip
+    if not viejos:
+        return []
+    return [{
+        "id": "experto_critico",
+        "frase": f"{len(viejos)} casos críticos llevan más de 6 horas esperando al modelo experto "
+        "(su tope y la reserva crítica agotados, o el experto fallando).",
     }]  # fmt: skip
 
 
@@ -493,7 +515,9 @@ def componer(
     problemas += problemas_de_la_barrera(estado_barrera, ahora)
     for id_, desde in estado_barrera.get("retenidos", {}).items():
         detalle.append(f"barrera: {id_} retenido desde {desde}")
-    problemas += problemas_del_control(_leer_json(secretos / CONTROL))
+    estado_control = _leer_json(secretos / CONTROL)
+    problemas += problemas_del_control(estado_control)
+    problemas += problemas_del_experto(estado_control, ahora)
 
     # Captura del seguimiento.
     seguimiento = _leer_json(secretos / "seguimiento.json")

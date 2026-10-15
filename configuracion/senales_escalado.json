@@ -51,6 +51,38 @@
       "порушенн* .. повітряного простору", "поруши* .. повітряний простір", "вторжени*"
     ]
   },
+  "criticos": {
+    "descripcion": "Expresiones que hacen crítico un caso para el gasto del experto (proceso/escalado.es_critico, reserva crítica de modelo/coste.py), con las mismas reglas que las señales. «base_militar» solo cuenta si el país del caso es de la OTAN o Moldavia.",
+    "base_militar": [
+      "base* aere*", "base* militar*", "base* naval*", "air base*", "airbase*", "military base*",
+      "naval base*", "airfield*", "baza aerian*", "baza militar*", "baze* aerien*", "baze* militar*",
+      "baza naval*", "fliegerhorst*", "luftwaffenstutzpunkt*", "militarflugplatz*",
+      "militarstutzpunkt*", "kaserne*", "truppenubungsplatz*", "base* aerienne*",
+      "base* militaire*", "baza lotnicz*", "baz* wojskow*", "jednostk* wojskow*", "lotnisk* wojskow*",
+      "vliegbasis", "luchtmachtbasis", "marinebasis", "militaire basis", "base militare",
+      "flyvestation*", "flybase*", "flystasjon*", "flygbas*", "flygflottilj*", "lentotukikohta*",
+      "varuskunta*", "kogalniceanu", "deveselu", "campia turzii", "fetesti", "graf ignatievo",
+      "bezmer", "redzikowo", "lask", "ramstein", "spangdahlem", "incirlik", "aviano",
+      "авиобаз*", "военн* баз*", "военновъздушн* баз*", "авиабаз*", "военн* аэродром*",
+      "військов* баз*", "авіабаз*", "військов* аеродром*"
+    ]
+  },
+  "criticos": {
+    "descripcion": "Expresiones que hacen crítico un caso para el gasto del experto (proceso/escalado.es_critico, reserva crítica de modelo/coste.py), con las mismas reglas que las señales. «base_militar» solo cuenta si el país del caso es de la OTAN o Moldavia.",
+    "base_militar": [
+      "base* aere*", "base* militar*", "base* naval*", "air base*", "airbase*", "military base*",
+      "naval base*", "airfield*", "baza aerian*", "baza militar*", "baze* aerien*", "baze* militar*",
+      "baza naval*", "fliegerhorst*", "luftwaffenstutzpunkt*", "militarflugplatz*",
+      "militarstutzpunkt*", "kaserne*", "truppenubungsplatz*", "base* aerienne*",
+      "base* militaire*", "baza lotnicz*", "baz* wojskow*", "jednostk* wojskow*", "lotnisk* wojskow*",
+      "vliegbasis", "luchtmachtbasis", "marinebasis", "militaire basis", "base militare",
+      "flyvestation*", "flybase*", "flystasjon*", "flygbas*", "flygflottilj*", "lentotukikohta*",
+      "varuskunta*", "kogalniceanu", "deveselu", "campia turzii", "fetesti", "graf ignatievo",
+      "bezmer", "redzikowo", "lask", "ramstein", "spangdahlem", "incirlik", "aviano",
+      "авиобаз*", "военн* баз*", "военновъздушн* баз*", "авиабаз*", "военн* аэродром*",
+      "військов* баз*", "авіабаз*", "військов* аеродром*"
+    ]
+  },
   "medios_oficiales": [],
   "dominios_oficiales": [
     "gov", "gouv", "gob", "govt", "gv", "mil", "mod", "mon", "mapn", "admin\\.ch", "bund",

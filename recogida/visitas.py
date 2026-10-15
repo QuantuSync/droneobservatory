@@ -641,6 +641,8 @@ def control_del_dia(control_json: Path, dia: date) -> Documento | None:
         "retenidas": sorted(retenidas), "liberadas": sorted(liberadas), "gasto": gasto,
         "errores": errores, "fallos_seguidos": int(datos.get("fallos_seguidos") or 0),
         "modelos": (datos.get("modelos") or {}).get(dia.isoformat()),
+        "experto": (datos.get("experto") or {}).get(dia.isoformat()),
+        "criticos_esperando": list(datos.get("criticos_esperando") or []),
     }  # fmt: skip
 
 
@@ -664,7 +666,29 @@ def lineas_control(control: Documento | None) -> list[str]:
         lineas.append(f"  Retenidas por el control: {', '.join(control['retenidas'][:LIMITE])}")
     if control["errores"]:
         lineas.append(f"  El control falló en {control['errores']} pasadas")
-    return lineas + lineas_modelos(control.get("modelos"))
+    return lineas + lineas_modelos(control.get("modelos")) + lineas_experto(control)
+
+
+def lineas_experto(control: Documento) -> list[str]:
+    """El gasto del experto ese día (UTC) en su tope normal y en la reserva crítica, y los casos
+    críticos que esperan ahora al experto (se reintentan en cada recogida)."""
+    lineas = []
+    experto = control.get("experto")
+    if experto:
+        lineas.append(
+            "  Experto: tope normal "
+            + f"{float(experto['normal']):.4f} de {float(experto['limite']):.2f} USD; reserva "
+            f"crítica {float(experto['reserva']):.4f} de {float(experto['reserva_limite']):.2f} "
+            "USD".replace(".", ",")
+        )
+    esperando = control.get("criticos_esperando") or []
+    if esperando:
+        lineas.append(
+            f"  Casos críticos esperando al experto: {len(esperando)} (se reintentan en cada "
+            "recogida)"
+        )
+        lineas += [f"  - {c['clave'][:120]} desde {c['desde']}" for c in esperando[:LIMITE]]
+    return lineas
 
 
 # Los papeles de los modelos (docs/modelos.md), en el orden en que se cuentan.

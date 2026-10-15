@@ -138,13 +138,38 @@ uniones del control).
 
 ## Topes
 
-- Cada modo (`modelo/coste.py`) mantiene su tope en dólares, ahora con la tarifa real de cada
-  modelo: lo que gasta el experto cuenta en el modo de la llamada.
-- El experto tiene además su tope diario propio: **0,30 USD** al día (UTC), sumando todos los modos
+Principio (desde el 15 de octubre de 2026): **lo crítico nunca espera a que se renueve un tope**.
+
+- Cada modo (`modelo/coste.py`) mantiene su tope en dólares con la tarifa real de cada modelo, solo
+  para las llamadas del modelo base. **Lo que gasta el experto cuenta solo contra su propio tope**,
+  nunca contra el de la recogida horaria ni el de otro modo (`Almacen.gastado` no suma las llamadas
+  escaladas). El 14 de octubre de 2026, cuatro candidatos esperaron porque la llamada al experto no
+  cabía en el tope de la horaria (0,26 de 0,30 USD) aunque el experto tenía margen.
+- **Tope normal del experto: 1,00 USD al día** (UTC), sumando todos los modos
   (`LIMITE_EXPERTO_DIARIO_USD`, `Almacen.gastado_modelo`). Antes de cada llamada se suma lo que
-  lleva gastado hoy y el peor caso.
-- **Si el tope del experto se agota**, el caso que lo necesitaba **espera al día siguiente** en vez
-  de publicarse con la respuesta del base, y nunca frena lo demás:
+  lleva gastado hoy y el peor caso. Con el tope de 0,30 USD, el 15 de octubre de 2026 tras 8
+  escalados (0,23 USD) los pares duplicados del mar Negro y la ficha de Mihail Kogălniceanu
+  quedaron esperando hasta el día siguiente.
+- **Reserva crítica: 0,50 USD al día** aparte (`RESERVA_CRITICA_DIARIA_USD`), solo para los casos
+  críticos (`escalado.es_critico`, y `control_fichas.critico` para las fichas ya publicadas):
+  - incursiones o sucesos en bases e instalaciones militares de países de la OTAN o en Moldavia (la
+    categoría del objetivo o las expresiones de `criticos.base_militar` en
+    `configuracion/senales_escalado.json`, como «air base», «baza aeriană» o «Kogălniceanu», con el
+    país del caso de la OTAN o Moldavia);
+  - fichas confirmadas o atribuidas (motivos «critico: …»);
+  - cierres de aeropuerto;
+  - sucesos con víctimas, heridos, desaparecidos, hundimientos o daños (en la ficha o en sus
+    fuentes, con las señales de `senales_escalado.json`);
+  - todo lo que retire o rebaje una ficha publicada (motivos «publicada: …», una unión que retira
+    una publicada, una verificación que contradice su presencia o su cierre).
+
+  Si el tope normal no da, estos casos usan la reserva y no esperan (`coste.comprobar_experto`
+  devuelve el tramo). Lo que el experto gasta por encima de 1 USD en el día es de la reserva.
+- **Si se agota también la reserva**, el caso crítico no espera al día siguiente: se reintenta en
+  cada recogida (`espera_experto` a 50 minutos), sale en el resumen diario y, si lleva más de 6
+  horas sin poder resolverse, la vigilancia abre la incidencia (`experto_critico`).
+- **Un caso que no es crítico** y no cabe en el tope normal espera al día siguiente en vez de
+  publicarse con la respuesta del base, y nunca frena lo demás:
   - una ficha nueva: el candidato no se publica y queda en el cursor `esperan_experto` hasta las
     00:00 UTC; al día siguiente va de los primeros. Si el experto falla (caído, error), espera solo
     hasta la recogida siguiente;
@@ -152,6 +177,10 @@ uniones del control).
     ficha nueva sigue retenida, sin el límite de 6 horas, hasta que decida el experto;
   - una verificación que contradice la ficha: no se aplica nada hasta que la repita el experto; la
     ficha nueva sigue retenida.
+- Cada espera anota el tope con que se decidió (`tope` en `esperan_experto`, `tope_experto` en las
+  decisiones del control): si el tope sube, las esperas anteriores vencen en la recogida siguiente
+  (`coste.espera_vencida`; las de antes del 15 de octubre de 2026, sin ese dato, son de 0,30 USD).
+  Cada espera de un caso crítico lleva `critico`.
 
 ## Lotes (mitad de precio) para lo que no es urgente
 
@@ -191,6 +220,12 @@ uniones del control).
 (base, experto, anterior) de todas las llamadas del observatorio. El resumen de las 08:00
 (sección SISTEMA) lo dice en una línea: «Modelos: modelo base N llamadas, X USD; modelo experto M
 llamadas (E escaladas), Y USD; total Z USD». Los nombres de los modelos no salen en el resumen.
+
+Además guarda, por día UTC, el gasto del experto repartido entre su tope normal y la reserva
+crítica (`experto`) y los casos críticos que esperan ahora al experto (`criticos_esperando`, con
+desde cuándo). El resumen lo dice así: «Experto: tope normal X de 1,00 USD; reserva crítica Y de
+0,50 USD» y, si hay casos críticos esperando, «Casos críticos esperando al experto: N (se
+reintentan en cada recogida)», uno por línea.
 
 ## Prueba comparativa del 14 de octubre de 2026
 
