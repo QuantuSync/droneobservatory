@@ -180,7 +180,9 @@ Principio (desde el 15 de octubre de 2026): **lo crítico nunca espera a que se 
 - Cada espera anota el tope con que se decidió (`tope` en `esperan_experto`, `tope_experto` en las
   decisiones del control): si el tope sube, las esperas anteriores vencen en la recogida siguiente
   (`coste.espera_vencida`; las de antes del 15 de octubre de 2026, sin ese dato, son de 0,30 USD).
-  Cada espera de un caso crítico lleva `critico`.
+  Cada espera de un caso crítico lleva `critico`. Un par o una verificación cuya espera vence
+  vuelve en la recogida horaria siguiente aunque sus fichas ya no sean nuevas
+  (`control_fichas.esperas_vencidas`), sin esperar a la pasada de madrugada.
 
 ## Lotes (mitad de precio) para lo que no es urgente
 
