@@ -655,6 +655,27 @@ def test_la_base_rechaza_un_bloque_que_no_valida() -> None:
     assert not almacen.guardar_deduccion("EODI-2025-00001", "incidente", otra_hora)
 
 
+def test_lo_deducido_igual_con_otra_huella_no_crece_el_historial() -> None:
+    # La EODI-2025-00248, 15 de octubre de 2026: un parte meteorológico nuevo cambiaba la huella
+    # y dejaba lo deducido igual; cada hora entraban en el historial ~400 deducciones idénticas.
+    almacen = Almacen.abrir()
+    assert almacen.guardar_deduccion(
+        "EODI-2025-00001", "incidente", {**ejemplos.deduccion(), "huella": "a" * 64}
+    )
+    otra_huella = {
+        **ejemplos.deduccion(),
+        "huella": "b" * 64,
+        "evaluado": {"precision": "minuto", "valor": "2025-09-24T11:00Z"},
+    }
+    assert not almacen.guardar_deduccion("EODI-2025-00001", "incidente", otra_huella)
+    otro_resultado = {**otra_huella, "compatibles": [{"clase": "fpv", "reglas": ["meteorologia"]}]}
+    assert almacen.guardar_deduccion("EODI-2025-00001", "incidente", otro_resultado)
+    historial = almacen._conexion.execute(
+        "SELECT count(*) FROM historial WHERE tabla = 'deducciones'"
+    ).fetchone()[0]
+    assert historial == 2
+
+
 # --- Zona de despegue, deriva y horizonte ------------------------------------------------
 
 
