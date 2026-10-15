@@ -125,6 +125,28 @@ def test_una_noticia_de_un_suceso_no_tiene_senal(titular: str) -> None:
     assert no_es_suceso.de_fuente(titular, "https://x.eu/news/1", ("og:type=article",)) is None
 
 
+# Del repaso de las fichas publicadas del 15 de octubre de 2026: noticias de sucesos que no deben
+# quedar marcadas.
+@pytest.mark.parametrize(
+    ("titular", "url", "marcas"),
+    [
+        # EODI-2026-00043 y 00080: ladepeche.fr pone «article:opinion=false» en todas sus noticias.
+        ("Un drone aperçu au-dessus de l'aéroport Toulouse-Blagnac",
+         "https://ladepeche.fr/2026/02/27/un-drone-apercu-13247992.php",
+         ("og:type=article", "article:opinion=false", "ld:articleSection=Faits divers")),
+        # EODI-2025-00281: lo mismo en dailymail.co.uk.
+        ("British Airways plane near miss with drone", "https://dailymail.co.uk/news/article-1.html",
+         ("article:section=News", "article:opinion=false", "ld:@type=NewsArticle")),
+        # EODI-2025-00199: un directo de nieuwsblad.be que cuenta el cierre de Bruselas.
+        ("LIVE. Luchtverkeer op Brussels Airport kort stilgelegd na dronemelding",
+         "https://nieuwsblad.be/binnenland/live.-luchtverkeer-op-brussels-airport/1.html", ()),
+    ],
+)  # fmt: skip
+def test_lo_que_marcaba_de_mas_el_repaso(titular: str, url: str, marcas: tuple[str, ...]) -> None:
+    assert no_es_suceso.de_fuente(titular, url, marcas) is None
+    assert no_es_suceso.de_fuente("x", url, ("article:opinion=true",)) is not None
+
+
 def test_las_marcas_no_salen_del_menu() -> None:
     marcas = paginas.marcas(PAGINA_CON_MENU)
     assert "article:section=Lietuvoje" in marcas
@@ -248,3 +270,23 @@ def test_el_control_manda_al_experto_una_publicada_que_no_es_suceso(almacen: Alm
     assert espera["revision"] and espera["motivos"][0].startswith("no_es_suceso: patrocinado")
     # Una vez anotada no se vuelve a anotar.
     assert not control_fichas.senalar_no_suceso(ctx, _ficha_00539(), veredicto)
+
+
+def test_lo_que_el_experto_mantuvo_no_se_le_vuelve_a_mandar(almacen: Almacen) -> None:
+    from types import SimpleNamespace
+
+    from recogida import control_fichas
+
+    peticion, id_ = _publicada(almacen)
+    peticion = _opinion(peticion)
+    # El experto la ve con el motivo de la página y la mantiene.
+    cliente = Cliente(ficha_ejemplo(), ficha_ejemplo())
+    extraccion.extraer(almacen, cliente, [peticion], AHORA, coste.Modo.HORARIO, MODELOS)
+    assert cliente.pedidas == [BASE, EXPERTO]
+    _sigue_publicada(almacen, id_)
+    incidente = almacen.incidente(id_)
+    assert incidente is not None
+    veredicto = no_es_suceso.de_fuentes(peticion.fuentes)
+    assert veredicto is not None
+    ctx: Any = SimpleNamespace(almacen=almacen, ahora=AHORA)
+    assert not control_fichas.senalar_no_suceso(ctx, incidente, veredicto)
