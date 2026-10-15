@@ -5,7 +5,8 @@ antes de cambiar nada, la detección en cada recogida y la búsqueda del mes con
 
 import copy
 import json
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime
+from pathlib import Path
 from typing import Any
 
 import pytest
@@ -14,7 +15,7 @@ from almacen.base import Almacen
 from exportacion import procedencia
 from modelo import coste
 from proceso import rectificaciones, titulares
-from recogida import avisos, revisados
+from recogida import avisos, revisados, visitas
 from recogida import rectificaciones as seguimiento
 from tests import ejemplos
 from tests.ejemplos import VOCABULARIO_MODELOS
@@ -442,6 +443,23 @@ def test_la_rectificacion_no_genera_aviso(almacen: Almacen) -> None:
     assert avisos.clasificar(d, config, AHORA) is None
     sin = _copenhague()
     assert avisos.clasificar(sin, config, AHORA) is not None
+
+
+def test_el_resumen_diario_cuenta_las_rectificaciones(tmp_path: Path) -> None:
+    ruta = tmp_path / "eodi.sqlite"
+    almacen = Almacen.abrir(ruta)
+    almacen.guardar_incidente(_copenhague(), AHORA, VOCABULARIO_MODELOS)
+    _pasar(almacen, Cliente([_decision()]))
+    almacen.cerrar()
+    assert visitas.rectificaciones_del_dia(ruta, AHORA.date()) == [(ID, "no_acreditada")]
+    assert visitas.rectificaciones_del_dia(ruta, date(2026, 10, 14)) == []
+    datos = visitas.Datos(
+        dia=AHORA.date(), visitas=None, anterior=None, media7=None,
+        suscriptores=visitas.Suscriptores(None, None, None, 0, []), nuevos=[], avisos=(0, 0),
+        recogidas=(24, 0, 0), problemas=[], rectificaciones=[(ID, "no_acreditada")],
+    )  # fmt: skip
+    texto = visitas.texto_resumen(datos)
+    assert f"RECTIFICACIONES OFICIALES DE LA PRESENCIA: 1\n  {ID}: no acreditada" in texto
 
 
 def test_la_exportacion_da_el_origen_de_lo_rectificado(almacen: Almacen) -> None:

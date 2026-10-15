@@ -473,6 +473,34 @@ def altas_en_la_base(base: Path) -> Callable[[set[str]], dict[str, str]]:
     return altas
 
 
+def rectificaciones_del_dia(base: Path, dia: date) -> list[tuple[str, str]]:
+    """Las rectificaciones oficiales de la presencia del dron que decidió ese día el experto
+    (recogida/rectificaciones.py), con su tipo: (incidente, no_acreditada | descartada |
+    parcial). Leídas sin escribir en la base; vacío si no se puede leer."""
+    if not base.exists():
+        return []
+    inicio, fin = limites_del_dia(dia)
+    try:
+        conexion = sqlite3.connect(f"{base.resolve().as_uri()}?mode=ro", uri=True)
+        try:
+            filas = conexion.execute(
+                "SELECT documento FROM control_fichas WHERE clave LIKE 'rectificacion:%' "
+                "AND fecha >= ? AND fecha < ? ORDER BY id",
+                (_iso(inicio), _iso(fin)),
+            ).fetchall()
+        finally:
+            conexion.close()
+    except sqlite3.Error as error:
+        registro.warning("rectificaciones sin leer: %s", error)
+        return []
+    resultado = []
+    for (documento,) in filas:
+        decision = json.loads(documento)
+        if decision.get("tipo"):
+            resultado.append((str(decision.get("incidente")), str(decision["tipo"])))
+    return resultado
+
+
 def nuevos_del_dia(anotados: Documento, dia: date) -> list[tuple[str, str]]:
     inicio, fin = limites_del_dia(dia)
     lista = []
@@ -789,6 +817,8 @@ class Datos:
     control: Documento | None = None
     # Lo que hizo ese día el guardián del sistema (guardian_del_dia).
     guardian: Documento | None = None
+    # Las rectificaciones oficiales de la presencia decididas ese día (rectificaciones_del_dia).
+    rectificaciones: list[tuple[str, str]] = field(default_factory=list)
 
 
 DIAS_SEMANA = ("lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo")
@@ -876,6 +906,11 @@ def texto_resumen(d: Datos) -> str:
     lineas += [f"  {id_}: {titulo}" for id_, titulo in d.nuevos[:LIMITE]]
     if len(d.nuevos) > LIMITE:
         lineas.append(f"  y {len(d.nuevos) - LIMITE} más")
+    if d.rectificaciones:
+        nombres = {"no_acreditada": "no acreditada", "descartada": "descartada",
+                   "parcial": "corrección parcial"}  # fmt: skip
+        lineas += ["", f"RECTIFICACIONES OFICIALES DE LA PRESENCIA: {len(d.rectificaciones)}"]
+        lineas += [f"  {id_}: {nombres.get(t, t)}" for id_, t in d.rectificaciones[:LIMITE]]
     correctas, con_avisos, fallidas = d.recogidas
     lineas += [
         "",
@@ -982,6 +1017,7 @@ def reunir(
         candidatos=candidatos_del_dia(diario_del_dia(dia, ejecutar)),
         control=control_del_dia(secretos / CONTROL, dia) if secretos else None,
         guardian=guardian_del_dia(guardian, dia) if guardian else None,
+        rectificaciones=rectificaciones_del_dia(base, dia),
     )
 
 
