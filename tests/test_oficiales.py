@@ -87,6 +87,17 @@ def test_sin_tiempo_las_fuentes_quedan_sin_leer(monkeypatch: pytest.MonkeyPatch)
     assert (recuentos.notas, recuentos.relevantes, recuentos.sin_leer) == (4, 2, 0)
 
 
+def test_una_nota_con_fecha_futura_no_es_el_ultimo_dato(monkeypatch: pytest.MonkeyPatch) -> None:
+    # A las 06:30 del 23 de septiembre, la nota de las 07:00 está mal fechada: la última es la
+    # de las 06:00.
+    monkeypatch.setattr(oficiales, "fuentes", lambda: (FUENTE,))
+    descargador = Descargador(Sitio(""), dormir=lambda _: None, pausa_minima_s=0)
+    ahora = datetime(2025, 9, 23, 6, 30, tzinfo=UTC)
+    recuentos = oficiales.ejecutar(Almacen.abrir(), ahora, MODELOS, descargador)
+    assert recuentos.notas == 2
+    assert recuentos.ultima == datetime(2025, 9, 23, 6, tzinfo=UTC)
+
+
 def test_el_lugar_del_suceso_manda_sobre_la_capital() -> None:
     # Defensa letona, 25 de marzo de 2026: la rueda de prensa es en Riga y el dron cayó en
     # Krāslava.

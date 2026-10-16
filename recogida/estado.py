@@ -119,12 +119,18 @@ def resultado(codigo: int) -> str:
     return CON_AVISOS if codigo == SALIDA_AVISO else FALLIDA
 
 
-def _mas_reciente(*instantes: str | None) -> str | None:
-    fechas = [leida for texto in instantes if (leida := leer_instante(texto)) is not None]
+def _mas_reciente(fin: datetime, *instantes: str | None) -> str | None:
+    """El más reciente que no sea posterior al fin de la recogida: una fecha futura (una nota mal
+    fechada) no se publica ni se queda fija."""
+    fechas = [
+        leida for texto in instantes if (leida := leer_instante(texto)) is not None and leida <= fin
+    ]
     return instante(max(fechas)) if fechas else None
 
 
-def _fuentes(parcial: dict[str, Any] | None, anterior: dict[str, Any] | None) -> list[Any]:
+def _fuentes(
+    parcial: dict[str, Any] | None, anterior: dict[str, Any] | None, fin: datetime
+) -> list[Any]:
     """Las de la recogida; si no dejó nada (falló antes de terminar), las del estado anterior
     como no leídas, con la fecha de su último dato. El último dato de una fuente nunca va hacia
     atrás: una pasada cortada por el tope (las notas oficiales, 240 s) lee menos y su fecha
@@ -136,13 +142,17 @@ def _fuentes(parcial: dict[str, Any] | None, anterior: dict[str, Any] | None) ->
             {
                 **f,
                 "ultimo_dato": _mas_reciente(
-                    f.get("ultimo_dato"), previas.get(f["id"], {}).get("ultimo_dato")
+                    fin, f.get("ultimo_dato"), previas.get(f["id"], {}).get("ultimo_dato")
                 ),
             }
             for f in fuentes
         ]
     return [
-        {"id": f, "estado": NO_LEIDA, "ultimo_dato": previas.get(f, {}).get("ultimo_dato")}
+        {
+            "id": f,
+            "estado": NO_LEIDA,
+            "ultimo_dato": _mas_reciente(fin, previas.get(f, {}).get("ultimo_dato")),
+        }
         for f in FUENTES
     ]
 
@@ -179,7 +189,7 @@ def componer(
         "ultima_correcta": ultima,
         "ultima_publicacion": publico,
         "siguiente": instante(siguiente(fin, minuto)),
-        "fuentes": _fuentes(parcial, anterior),
+        "fuentes": _fuentes(parcial, anterior, fin),
     }
     if con_exportacion:
         estado["ultima_exportacion"] = (exportacion or {}).get("fin")
