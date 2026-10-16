@@ -1,7 +1,7 @@
 import { afirmacionesDe, rangoDeFuentes, valorLegible } from "../datos/afirmaciones.ts";
 import { ACTOR_SIN_NOMBRE, atribucionResumida } from "../datos/derivar.ts";
 import { cierre as leerCierre } from "../datos/efecto.ts";
-import { marcaDe, pasosDePresencia } from "../datos/presencia.ts";
+import { historialCompleto, marcaDe, marcaDePresencia, pasosDePresencia, rotuloDeMarca } from "../datos/presencia.ts";
 import type {
   AfirmacionPublica,
   Atribucion,
@@ -43,13 +43,13 @@ import {
   regionEscrita,
 } from "../datos/nombres.ts";
 
-/** Marca que acompaña al texto de la presencia de dron, para no depender del color. */
-const MARCA_PRESENCIA: Record<PresenciaDron, string> = {
+/**
+ * Marca que acompaña al texto de la presencia de dron, para no depender del color. La no
+ * acreditada y la descartada llevan en su lugar su círculo, el mismo del mapa (Simbolo).
+ */
+const MARCA_PRESENCIA: Record<Exclude<PresenciaDron, "no_acreditada" | "descartada">, string> = {
   confirmada: "✓",
   no_confirmada: "?",
-  // Ni confirmado ni descartado: la autoridad no encontró pruebas del dron.
-  no_acreditada: "◇",
-  descartada: "✕",
 };
 
 interface Props {
@@ -273,11 +273,14 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
   // La presencia de dron rectificada: su secuencia, con la fecha y la fuente de cada paso.
   const pasosPresencia = pasosDePresencia(t, idioma, incidente);
   const marca = marcaDe({ estado: incidente.estado.actual, presencia: incidente.presencia_dron ?? null });
+  const marcaPresencia = marcaDePresencia(incidente.presencia_dron);
   return (
     <article>
-      <p className="rotulo flex items-center gap-2">
+      {/* El círculo es la marca del incidente en el mapa, no el color del tipo: con la presencia
+          rectificada lleva su nombre al lado («No acreditado · Interrupción aeroportuaria»). */}
+      <p className="rotulo flex items-center gap-2" data-marca-ficha={marca}>
         <Simbolo estado={marca} atribucion={marcador} aproximado={incidente.lon === null} />
-        {t.tipo[incidente.tipo]}
+        {marca === "no_acreditado" || marca === "descartado" ? `${rotuloDeMarca(t, marca)} · ${t.tipo[incidente.tipo]}` : t.tipo[incidente.tipo]}
       </p>
       <h2 className="text-xl font-semibold tracking-tight mt-1 text-2xl">{nombre}</h2>
       {nombre !== titulo && <p className="mt-2 text-texto">{titulo}</p>}
@@ -296,9 +299,13 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
         </Fila>
         {incidente.presencia_dron !== undefined && (
           <Fila nombre={t.ficha.presenciaDron}>
-            <span aria-hidden="true" className="mono mr-1.5 text-acento">
-              {MARCA_PRESENCIA[incidente.presencia_dron]}
-            </span>
+            {marcaPresencia === null ? (
+              <span aria-hidden="true" className="mono mr-1.5 text-acento">
+                {MARCA_PRESENCIA[incidente.presencia_dron as keyof typeof MARCA_PRESENCIA]}
+              </span>
+            ) : (
+              <Simbolo estado={marcaPresencia} className="mr-1.5 inline-block align-[-0.2em]" />
+            )}
             <span data-presencia={incidente.presencia_dron}>{t.presencia[incidente.presencia_dron]}</span>
             {pasosPresencia.length > 0 && (
               // Cada paso enlaza a su fuente; una corrección parcial es una nota que no cambia el valor.
@@ -639,6 +646,7 @@ export function FichaIncidente({ t, idioma, incidente }: Props) {
         fuentes={incidente.fuentes}
         atribucion={marcador}
         idioma={idioma}
+        pasos={historialCompleto(t, idioma, incidente)}
       />
       <p className="mono mt-4 text-xs text-secundario">
         {t.ficha.actualizada}: {fechaHora(incidente.control.ultima_actualizacion.valor)}

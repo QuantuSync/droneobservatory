@@ -118,6 +118,8 @@ export interface PropiedadesPila {
    */
   n_confirmados: number;
   n_no_acreditados: number;
+  /** Los de presencia de dron descartada: un aro exterior gris en el grupo (estilo.ts). */
+  n_descartados: number;
   n_notificados: number;
   /** 1 si alguno empezó en las últimas 24 horas. */
   reciente: 0 | 1;
@@ -170,10 +172,11 @@ export function pilas(
         estado: marca,
         icono: nombreIcono(marca, primero.punto === null),
         aproximado: primero.punto === null ? 1 : 0,
-        grave: marca !== "no_acreditado" && esGrave(marca) ? 1 : 0,
+        grave: marca !== "no_acreditado" && marca !== "descartado" && esGrave(marca) ? 1 : 0,
         atribuido: marca === "atribuido" ? 1 : 0,
         n_confirmados: cuenta("confirmado"),
         n_no_acreditados: cuenta("no_acreditado"),
+        n_descartados: cuenta("descartado"),
         n_notificados: cuenta("notificado"),
         reciente: ordenados.some((i) => incidenteEnPeriodo(i, opciones.recientes)) ? 1 : 0,
         novedad: ordenados.some((i) => opciones.novedades.has(i.id)) ? 1 : 0,

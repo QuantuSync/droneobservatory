@@ -526,8 +526,8 @@ describe("marcador de los atribuidos", () => {
           "atribuido--1",
           "atribuido--1-p",
           ICONO_OBSTACULO,
-          ...["confirmado", "desmentido", "no_acreditado", "notificado"].map((estado) => nombreIcono(estado)),
-          ...["confirmado", "desmentido", "no_acreditado", "notificado"].map((estado) => nombreIcono(estado, true)),
+          ...["confirmado", "descartado", "desmentido", "no_acreditado", "notificado"].map((estado) => nombreIcono(estado)),
+          ...["confirmado", "descartado", "desmentido", "no_acreditado", "notificado"].map((estado) => nombreIcono(estado, true)),
           ...ESTADOS_AVISO.map(nombreIconoAviso),
         ].sort(),
       );
@@ -542,7 +542,7 @@ describe("marcador de los atribuidos", () => {
           `fillStyle=${PALETA.panelSolido}`,
         ]);
       }
-      for (const estado of ["notificado", "confirmado", "no_acreditado", "desmentido"]) {
+      for (const estado of ["notificado", "confirmado", "no_acreditado", "descartado", "desmentido"]) {
         const hecho = dibujos.get(nombreIcono(estado)) ?? [];
         expect(hecho, estado).toContain("arc");
         for (const prohibido of ["rect", "lineTo", "moveTo", "ellipse", "quadraticCurveTo", "bezierCurveTo"]) {
@@ -611,7 +611,7 @@ describe("marcador de los atribuidos", () => {
     expect(JSON.stringify(disposicion)).not.toContain("pulso");
   });
 
-  it("la leyenda: notificado, confirmado, atribuido a un Estado, a una persona, no acreditado y desmentido", () => {
+  it("la leyenda: notificado, confirmado, atribuido a un Estado, a una persona, no acreditado, descartado y desmentido", () => {
     for (const [t, textosLeyenda] of [
       [
         es,
@@ -620,7 +620,8 @@ describe("marcador de los atribuidos", () => {
           "Confirmado",
           "Atribuido por una autoridad a un Estado",
           "Atribuido por una autoridad a una persona",
-          "No acreditadoUna autoridad oficial cerró su investigación sin pruebas del dron o retiró su declaración. El incidente y su efecto siguen.",
+          "No acreditadoEl incidente ocurrió, pero la presencia del dron no se acreditó: una autoridad oficial cerró su investigación sin pruebas del dron o retiró su declaración. El incidente y su efecto siguen.",
+          "DescartadoEl incidente ocurrió, pero la presencia del dron se descartó: una autoridad oficial dice que fue otra cosa (un avión, un helicóptero). El incidente y su efecto siguen.",
           "Desmentido",
         ],
       ],
@@ -631,7 +632,8 @@ describe("marcador de los atribuidos", () => {
           "Confirmed",
           "Attributed by an authority to a State",
           "Attributed by an authority to a person",
-          "Not substantiatedAn official authority closed its investigation without evidence of the drone or withdrew its statement. The incident and its effect remain.",
+          "Not substantiatedThe incident happened, but the drone's presence was not substantiated: an official authority closed its investigation without evidence of the drone or withdrew its statement. The incident and its effect remain.",
+          "Ruled outThe incident happened, but the drone's presence was ruled out: an official authority says it was something else (an aircraft, a helicopter). The incident and its effect remain.",
           "Denied",
         ],
       ],
@@ -651,7 +653,7 @@ describe("marcador de los atribuidos", () => {
       expect(morado?.getAttribute("fill")).toBe(PALETA.noAcreditado);
       // Ningún otro símbolo de incidente en la ayuda: nada de formas por tipo. Los dos de más
       // son los del lugar aproximado (notificado y confirmado), con su texto.
-      expect(document.querySelectorAll("svg[data-circulo], svg[data-atribuido]")).toHaveLength(8);
+      expect(document.querySelectorAll("svg[data-circulo], svg[data-atribuido]")).toHaveLength(9);
       // Y la nota de qué es «confirmado», junto a la leyenda.
       expect(document.querySelector("[data-nota-mapa]")?.textContent).toBe(t.mapa.nota);
       expect(document.querySelectorAll("[data-leyenda-aproximado] svg[data-aproximado]")).toHaveLength(2);

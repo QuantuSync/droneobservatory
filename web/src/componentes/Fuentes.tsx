@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import type { PasoDelHistorial } from "../datos/presencia.ts";
 import type { AtribucionResumen, Estado, Fuente, FuenteImpacto, PasoHistorial } from "../datos/tipos.ts";
 import { autoridadEscrita, medioEnFrase, medioEscrito } from "../i18n/autoridades.ts";
 import { instante } from "../i18n/index.ts";
@@ -133,16 +134,73 @@ interface PropsHistorial {
   /** La atribución del incidente: el paso a atribuido lleva su marcador. */
   atribucion?: AtribucionResumen | null;
   idioma?: Idioma;
+  /**
+   * El historial con los cambios de la presencia de dron entre los del estado, por fecha
+   * (datos/presencia.ts, historialCompleto). Sin él, solo los del estado.
+   */
+  pasos?: readonly PasoDelHistorial[];
 }
 
-export function Historial({ t, historial, fuentes, atribucion = null, idioma }: PropsHistorial) {
+export function Historial({ t, historial, fuentes, atribucion = null, idioma, pasos }: PropsHistorial) {
   const medios = new Map(fuentes.map((fuente) => [fuente.id, nombreDeFuente(t, fuente.medio, idioma)]));
+  const todos: readonly PasoDelHistorial[] = pasos ?? historial.map((paso) => ({ clase: "estado", paso, fecha: paso.fecha.valor }));
   return (
     <section className="mt-4">
       <h3 className="rotulo">{t.ficha.historial}</h3>
       <ol className="mt-1">
-        {historial.map((paso, i) => (
-          <li key={i} className="flex flex-wrap items-center gap-x-2 border-b border-linea py-1.5">
+        {todos.map((entrada, i) =>
+          entrada.clase === "presencia" ? (
+            // Un cambio de la presencia de dron: su círculo (morado o gris relleno), su fecha y
+            // quién lo declara, con el enlace a la fuente; el motivo, debajo.
+            <li
+              key={i}
+              className="flex flex-wrap items-center gap-x-2 border-b border-linea py-1.5"
+              data-historial-presencia={entrada.marca ?? "parcial"}
+            >
+              <span className="inline-flex items-center gap-1.5">
+                {entrada.marca !== null && <Simbolo estado={entrada.marca} />}
+                {entrada.rotulo}
+              </span>
+              <span className="mono text-xs text-secundario">{instante(entrada.paso.fecha)}</span>
+              <span className="w-full text-xs text-secundario">
+                {entrada.fuente === undefined ? (
+                  (entrada.quien ?? t.ficha.fuenteNoPublica)
+                ) : (
+                  <EnlaceFuente t={t} fuente={entrada.fuente}>
+                    {entrada.quien ?? medios.get(entrada.fuente.id) ?? entrada.fuente.medio}
+                  </EnlaceFuente>
+                )}
+              </span>
+              {entrada.motivo !== null && (
+                <span className="w-full text-xs text-texto" data-motivo-historial="">
+                  {entrada.motivo}
+                </span>
+              )}
+            </li>
+          ) : (
+            <PasoDeEstado key={i} t={t} paso={entrada.paso} medios={medios} atribucion={atribucion} idioma={idioma} />
+          ),
+        )}
+      </ol>
+    </section>
+  );
+}
+
+function PasoDeEstado({
+  t,
+  paso,
+  medios,
+  atribucion,
+  idioma,
+}: {
+  t: Textos;
+  paso: PasoHistorial;
+  medios: ReadonlyMap<string, string>;
+  atribucion: AtribucionResumen | null;
+  idioma: Idioma | undefined;
+}) {
+  return (
+          <li className="flex flex-wrap items-center gap-x-2 border-b border-linea py-1.5">
             <EstadoConTexto t={t} estado={paso.estado} atribucion={atribucion} />
             <span className="mono text-xs text-secundario">{instante(paso.fecha)}</span>
             {paso.motivo === undefined ? (
@@ -158,9 +216,6 @@ export function Historial({ t, historial, fuentes, atribucion = null, idioma }: 
               </span>
             )}
           </li>
-        ))}
-      </ol>
-    </section>
   );
 }
 

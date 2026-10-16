@@ -99,6 +99,7 @@ export const en: Textos = {
     estadoDirecto: { en_marcha: "running", con_respaldo: "on the backup source", parado: "stopped" },
     ultimoCiclo: "last good cycle",
     ultimoDato: "latest data",
+    datoDeFuente: { oficiales: "checked every hour · latest notice published" },
     sinUltimoDato: "no data yet",
     nuncaCorrecta: "No successful collection",
     siguienteEn: (minutos) => (minutos <= 0 ? "running now" : `in ${minutos} min`),
@@ -391,7 +392,9 @@ export const en: Textos = {
       "Each incident is a circle filled with the colour of its status: orange, reported; red, " +
       "confirmed. Purple, not substantiated: an official authority closed its investigation " +
       "without evidence of the drone or withdrew its statement without saying it was something " +
-      "else; the incident and its effect stay on the map, with their history. A denied incident is a grey circle with a dashed outline and no fill. An " +
+      "else; the incident and its effect stay on the map, with their history. Filled grey, " +
+      "ruled out: an official authority says it was not a drone; the incident stays too. A " +
+      "denied incident is a grey circle with a dashed outline and no fill. An " +
       "attributed incident (a confirmed one that an authority attributes to a State or to a " +
       "person) is a slightly larger circle with a thick red ring and, inside, the flag of the " +
       "country it is attributed to; when attributed to a person, it also has a fixed dark dot in " +
@@ -419,7 +422,9 @@ export const en: Textos = {
       "A circle with a number inside groups several incidents (a single incident is filled " +
       "and has no number): it grows with the number, and its ring " +
       "is red if it holds any confirmed incident, purple if there is none and one is not " +
-      "substantiated, and orange if all are reported. Zoom in and " +
+      "substantiated, and orange if all are reported. An outer purple ring means one of its " +
+      "incidents has the drone's presence not substantiated; a grey one, that one has it ruled " +
+      "out. Zoom in and " +
       "they separate. Map names give way to the circles: they are shown whole or not at all.",
     pila: "If the incidents share the exact same spot, tap the circle to choose which one to open.",
     pulsos:
@@ -557,8 +562,15 @@ export const en: Textos = {
   noAcreditado: {
     etiqueta: "Not substantiated",
     leyenda:
-      "An official authority closed its investigation without evidence of the drone or " +
-      "withdrew its statement. The incident and its effect remain.",
+      "The incident happened, but the drone's presence was not substantiated: an official " +
+      "authority closed its investigation without evidence of the drone or withdrew its " +
+      "statement. The incident and its effect remain.",
+  },
+  descartado: {
+    etiqueta: "Ruled out",
+    leyenda:
+      "The incident happened, but the drone's presence was ruled out: an official authority " +
+      "says it was something else (an aircraft, a helicopter). The incident and its effect remain.",
   },
   presenciaHistorial: {
     rotulo: "Changes in drone presence",
@@ -571,6 +583,7 @@ export const en: Textos = {
     paso: (valor, fecha, quien) => (quien === null ? `${valor} on ${fecha}` : `${valor} on ${fecha} by ${quien}`),
     parcial: (fecha, quien) =>
       quien === null ? `Partial correction on ${fecha}` : `Partial correction on ${fecha} by ${quien}`,
+    correccionParcial: "Partial correction",
   },
   precision: {
     minuto: "exact time",
@@ -973,7 +986,9 @@ export const en: Textos = {
                 "not substantiated or ruled out (see “Drone presence”), which still count as " +
                 "incidents. Status is always shown with both colour and text. A circle that groups " +
                 "several incidents is red if it holds any confirmed or attributed incident, purple " +
-                "if there is none and one is not substantiated, and orange if all are reported.",
+                "if there is none and one is not substantiated, and orange if all are reported; an " +
+                "outer purple ring means one has its drone presence not substantiated, and a grey " +
+                "one, ruled out.",
             ],
           },
         ],
@@ -1009,9 +1024,11 @@ export const en: Textos = {
               },
               {
                 termino: "Ruled out",
+                marca: { estado: "descartado" },
                 texto: [
                   "An authority says it was something else (a plane, a helicopter): it is the " +
-                    "denial of the drone presence. The marker keeps the colour of its status.",
+                    "denial of the drone presence, not of the incident. In a filled grey circle, " +
+                    "the grey of “Denied”; a denied incident is a dashed ring with no fill.",
                 ],
               },
             ],

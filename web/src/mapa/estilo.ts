@@ -61,6 +61,8 @@ export const FUENTE_RUTAS_FLECHAS = "guerra-rutas-flechas";
 export const FUENTE_RECORRIDO = "recorrido";
 
 export const CAPA_GRUPOS = "grupos";
+/** Aro exterior de un grupo con alguno de presencia no acreditada (morado) o descartada (gris). */
+export const CAPA_GRUPOS_PRESENCIA = "grupos-presencia";
 export const CAPA_NUMERO_GRUPOS = "grupos-numero";
 export const CAPA_INCIDENTES_GRAVES = "incidentes-graves";
 export const CAPA_INCIDENTES_DISCRETOS = "incidentes-discretos";
@@ -142,6 +144,7 @@ export const CAPAS_DE_INCIDENTES: readonly string[] = [
   "areas-contorno-desmentido",
   CAPA_EPISODIOS,
   CAPA_GRUPOS,
+  CAPA_GRUPOS_PRESENCIA,
   CAPA_NUMERO_GRUPOS,
   CAPA_RECIENTES,
   CAPA_INCIDENTES_DISCRETOS,
@@ -517,6 +520,38 @@ export const COLOR_DE_GRUPO: ExpressionSpecification = [
   COLOR_ESTADO.desmentido,
 ];
 
+/**
+ * El aro exterior de un grupo: morado si alguno de sus incidentes tiene la presencia de dron no
+ * acreditada, gris si no lo hay y alguno la tiene descartada. Así un punto que junta un no
+ * acreditado con confirmados (Copenhague, Oslo) no se queda solo en rojo.
+ */
+export const COLOR_PRESENCIA_DE_GRUPO: ExpressionSpecification = [
+  "case",
+  [">", ["coalesce", ["get", "n_no_acreditados"], 0], 0],
+  COLOR_MARCA.no_acreditado,
+  COLOR_MARCA.descartado,
+];
+const CON_PRESENCIA_RECTIFICADA: ExpressionSpecification = [
+  "any",
+  [">", ["coalesce", ["get", "n_no_acreditados"], 0], 0],
+  [">", ["coalesce", ["get", "n_descartados"], 0], 0],
+];
+/** Hueco entre el anillo del grupo y su aro exterior de la presencia, en píxeles. */
+export const HUECO_ARO_PRESENCIA = 3;
+
+/** El aro de selección: del color de la marca si la presencia está rectificada; si no, el acento. */
+function colorDeSeleccion(acento: string): ExpressionSpecification {
+  return [
+    "match",
+    ["get", "estado"],
+    "no_acreditado",
+    COLOR_MARCA.no_acreditado,
+    "descartado",
+    COLOR_MARCA.descartado,
+    acento,
+  ] as unknown as ExpressionSpecification;
+}
+
 const ES_DESMENTIDO: ExpressionSpecification = ["==", ["get", "estado"], "desmentido"];
 /** Un atribuido es solo su marcador: sin área alrededor. */
 export const ES_ATRIBUIDO: ExpressionSpecification = ["==", ["get", "estado"], "atribuido"];
@@ -859,6 +894,21 @@ function capasPropias(acento: string): LayerSpecification[] {
         "circle-radius": RADIO_DE_GRUPO,
       },
     },
+    // Un grupo con alguno de presencia rectificada lleva fuera de su anillo un segundo aro, morado
+    // (no acreditada) o gris (descartada): el punto deja ver que ahí hay un incidente cuya
+    // presencia de dron no se acreditó o se descartó, aunque el anillo sea rojo por los demás.
+    {
+      id: CAPA_GRUPOS_PRESENCIA,
+      type: "circle",
+      source: FUENTE_PUNTOS,
+      filter: ["all", ES_GRUPO, CON_PRESENCIA_RECTIFICADA],
+      paint: {
+        "circle-color": "rgba(0, 0, 0, 0)",
+        "circle-stroke-color": COLOR_PRESENCIA_DE_GRUPO,
+        "circle-stroke-width": 2,
+        "circle-radius": ["+", RADIO_DE_GRUPO, HUECO_ARO_PRESENCIA],
+      },
+    },
     {
       id: CAPA_RECIENTES,
       type: "circle",
@@ -1087,7 +1137,7 @@ function capasPropias(acento: string): LayerSpecification[] {
       paint: {
         "circle-radius": 14,
         "circle-color": "rgba(0, 0, 0, 0)",
-        "circle-stroke-color": acento,
+        "circle-stroke-color": colorDeSeleccion(acento),
         "circle-stroke-width": 1.5,
       },
     },
@@ -1261,6 +1311,7 @@ export function estilo(idioma: Idioma, origen: string, acento: string): StyleSpe
           total: ["+", ["get", "n"]],
           n_confirmados: ["+", ["get", "n_confirmados"]],
           n_no_acreditados: ["+", ["get", "n_no_acreditados"]],
+          n_descartados: ["+", ["get", "n_descartados"]],
           n_notificados: ["+", ["get", "n_notificados"]],
           n_novedades: ["+", ["get", "novedad"]],
         },

@@ -214,9 +214,9 @@ describe("cifras: «confirmados por una autoridad»", () => {
 describe("el mapa", () => {
   const recientes = ultimas24Horas(0);
 
-  it("un no acreditado es un círculo morado; uno descartado conserva el color de su estado", () => {
+  it("un no acreditado es un círculo morado; uno descartado, un círculo gris relleno", () => {
     expect(marcaDe(resumirIncidente(copenhague()))).toBe("no_acreditado");
-    expect(marcaDe(resumirIncidente(confirmado("EODI-2025-00002", { presencia_dron: "descartada" })))).toBe("confirmado");
+    expect(marcaDe(resumirIncidente(confirmado("EODI-2025-00002", { presencia_dron: "descartada" })))).toBe("descartado");
     // Un desmentido sigue gris aunque su presencia no se acredite.
     const desmentido = copenhague({
       estado: { actual: "desmentido", historial: [{ estado: "desmentido", fecha: { valor: "2026-06-25T00:00Z", precision: "dia" } }] },

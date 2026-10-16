@@ -23,6 +23,9 @@ export const PALETA = {
   // daltonismo (tests/colores.test.tsx). Con daltonismo rojo-verde se acerca al violeta de la
   // guerra, que nunca es un círculo relleno: ahí lo separan la forma y la capa.
   noAcreditado: "#e81cf0",
+  // Presencia de dron descartada (una autoridad dice que fue otra cosa): el gris de «desmentido»,
+  // pero en un círculo relleno; el desmentido es un aro discontinuo sin relleno.
+  descartado: "#93a0b4",
   // El verde solo dice que el sistema funciona (datos al día, en la barra de estado).
   alDia: "#56c271",
   // Capa de guerra: una familia violeta azulada, lejos del rojo de «confirmado», del naranja
@@ -45,10 +48,14 @@ export const COLOR_ESTADO: Record<Estado, string> = {
   desmentido: PALETA.desmentido,
 };
 
-/** El color de cada marca de incidente: el de su estado o el morado de «no acreditado». */
+/**
+ * El color de cada marca de incidente: el de su estado, el morado de «no acreditado» o el gris de
+ * «descartado».
+ */
 export const COLOR_MARCA: Record<MarcaIncidente, string> = {
   ...COLOR_ESTADO,
   no_acreditado: PALETA.noAcreditado,
+  descartado: PALETA.descartado,
 };
 
 /**
@@ -85,14 +92,16 @@ export const COLOR_FILO_ATRIBUIDO = PALETA.fondo;
 /**
  * Gravedad de cada marca para decidir cuál representa un punto: manda la más grave. Un no
  * acreditado va por debajo de lo confirmado (una autoridad cerró su investigación sin pruebas del
- * dron) y por encima de lo notificado (el incidente sí lo dio por ocurrido una autoridad).
+ * dron) y por encima de lo notificado (el incidente sí lo dio por ocurrido una autoridad). Un
+ * descartado (fue otra cosa) va entre el desmentido y lo notificado.
  */
 export const GRAVEDAD: Record<MarcaIncidente, number> = {
   desmentido: 0,
-  notificado: 1,
-  no_acreditado: 2,
-  confirmado: 3,
-  atribuido: 4,
+  descartado: 1,
+  notificado: 2,
+  no_acreditado: 3,
+  confirmado: 4,
+  atribuido: 5,
 };
 
 /** Grosor del contorno de los círculos (el discontinuo del desmentido y el borde del relleno). */

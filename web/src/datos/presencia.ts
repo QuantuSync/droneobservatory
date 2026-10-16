@@ -8,10 +8,10 @@
 import { instante, textoAtribuido } from "../i18n/index.ts";
 import type { Textos } from "../i18n/index.ts";
 import type { Idioma } from "../sitio.ts";
-import type { AtribucionResumen, Estado, Fuente, MarcaIncidente, PasoPresencia, PresenciaDron } from "./tipos.ts";
+import type { AtribucionResumen, Estado, Fuente, MarcaIncidente, PasoHistorial, PasoPresencia, PresenciaDron } from "./tipos.ts";
 
 /** Las marcas en el orden de la leyenda, los filtros y las cifras por estado. */
-export const MARCAS: readonly MarcaIncidente[] = ["notificado", "confirmado", "atribuido", "no_acreditado", "desmentido"];
+export const MARCAS: readonly MarcaIncidente[] = ["notificado", "confirmado", "atribuido", "no_acreditado", "descartado", "desmentido"];
 
 interface ConPresencia {
   estado: Estado;
@@ -19,31 +19,45 @@ interface ConPresencia {
 }
 
 /**
- * La marca de un incidente. Con la presencia «no acreditada» (la autoridad cerró su investigación
- * sin pruebas del dron o retiró su declaración sin decir que fuera otra cosa) va en morado, también
- * si estaba atribuido: la atribución se apoyaba en un dron que ya nadie acredita. Un desmentido
- * sigue gris (el incidente no ocurrió) y una presencia «descartada» no cambia la marca.
+ * La marca de una presencia de dron rectificada: morado «no acreditado» (la autoridad cerró su
+ * investigación sin pruebas del dron o retiró su declaración sin decir que fuera otra cosa) o gris
+ * relleno «descartado» (la autoridad dice que fue otra cosa); null si no se rectificó.
+ */
+export function marcaDePresencia(presencia: PresenciaDron | null | undefined): "no_acreditado" | "descartado" | null {
+  return presencia === "no_acreditada" ? "no_acreditado" : presencia === "descartada" ? "descartado" : null;
+}
+
+/**
+ * La marca de un incidente. Con la presencia rectificada manda la presencia: morado si no está
+ * acreditada, gris relleno si está descartada, también si estaba atribuido (la atribución se
+ * apoyaba en un dron que ya nadie acredita). El incidente ocurrió igual: su estado y su efecto no
+ * cambian. Un desmentido sigue como desmentido (el incidente no ocurrió).
  */
 export function marcaDe(i: ConPresencia): MarcaIncidente {
-  return i.presencia === "no_acreditada" && i.estado !== "desmentido" ? "no_acreditado" : i.estado;
+  if (i.estado === "desmentido") return i.estado;
+  return marcaDePresencia(i.presencia) ?? i.estado;
 }
 
 /** El nombre de una marca, en la leyenda, los filtros y las cifras por estado. */
 export function rotuloDeMarca(t: Textos, marca: MarcaIncidente): string {
-  return marca === "no_acreditado" ? t.noAcreditado.etiqueta : t.estado[marca];
+  if (marca === "no_acreditado") return t.noAcreditado.etiqueta;
+  if (marca === "descartado") return t.descartado.etiqueta;
+  return t.estado[marca];
 }
 
 /**
  * El estado escrito junto al símbolo (listas, letrero y lector de pantalla del mapa): «Atribuido a
- * Rusia» en un atribuido; con la presencia no acreditada, el estado y la presencia, para que el
- * círculo morado nunca vaya con un texto que solo diga «Confirmado».
+ * Rusia» en un atribuido; con la presencia no acreditada o descartada, el estado y la presencia,
+ * para que el círculo morado o gris nunca vaya con un texto que solo diga «Confirmado».
  */
 export function estadoEscrito(
   t: Textos,
   idioma: Idioma,
   i: ConPresencia & { atribucion: AtribucionResumen | null },
 ): string {
-  if (marcaDe(i) === "no_acreditado") return `${t.estado[i.estado]} · ${t.presencia.no_acreditada}`;
+  const marca = marcaDe(i);
+  if (marca === "no_acreditado") return `${t.estado[i.estado]} · ${t.presencia.no_acreditada}`;
+  if (marca === "descartado") return `${t.estado[i.estado]} · ${t.presencia.descartada}`;
   return i.estado === "atribuido" ? textoAtribuido(t, idioma, i.atribucion) : t.estado[i.estado];
 }
 
@@ -108,4 +122,70 @@ export function historialEnCelda(p: { presencia_historial?: PasoPresencia[] | un
   const pasos = historialDePresencia(p);
   if (pasos.length === 0) return undefined;
   return pasos.map((paso) => `${paso.fecha.valor.slice(0, 10)}:${paso.valor}${paso.parcial === true ? ":parcial" : ""}`).join("|");
+}
+
+/** Un paso del «Historial de estados» de la ficha: un cambio de estado o uno de la presencia. */
+export type PasoDelHistorial =
+  | { clase: "estado"; paso: PasoHistorial; fecha: string }
+  | {
+      clase: "presencia";
+      /** «no_acreditado» o «descartado»; null en una corrección parcial (no cambia la presencia). */
+      marca: "no_acreditado" | "descartado" | null;
+      /** «No acreditado», «Descartado» o «Corrección parcial». */
+      rotulo: string;
+      /** Quién lo declara, sin artículo y con mayúscula: «Policía de Dinamarca». */
+      quien: string | null;
+      motivo: string | null;
+      fuente: Fuente | undefined;
+      paso: PasoPresencia;
+      fecha: string;
+    };
+
+/** «la policía de Dinamarca» → «Policía de Dinamarca»; «the Copenhagen Police» → «Copenhagen Police». */
+export function quienSinArticulo(quien: string): string {
+  const sin = quien.replace(/^(?:la|el|los|las|the)\s+/i, "");
+  return sin.charAt(0).toLocaleUpperCase() + sin.slice(1);
+}
+
+/**
+ * El «Historial de estados» entero, por orden de fecha: los cambios del estado del suceso y los
+ * de la presencia de dron cuando una autoridad la rectificó (no acreditada, descartada o una
+ * corrección parcial), con su marca, su fecha y su fuente. Los pasos de la presencia que solo
+ * repiten lo que ya dice el estado (confirmada, no confirmada) no se añaden. A igual fecha, el
+ * estado va antes: la rectificación siempre llega después de lo que rectifica.
+ */
+export function historialCompleto(
+  t: Textos,
+  idioma: Idioma,
+  incidente: {
+    estado: { historial: readonly PasoHistorial[] };
+    presencia_historial?: PasoPresencia[] | undefined;
+    fuentes: readonly Fuente[];
+  },
+): PasoDelHistorial[] {
+  const porFuente = new Map(incidente.fuentes.map((f) => [f.id, f]));
+  const estados: PasoDelHistorial[] = incidente.estado.historial.map((paso) => ({ clase: "estado", paso, fecha: paso.fecha.valor }));
+  const presencia: PasoDelHistorial[] = historialDePresencia(incidente).flatMap((paso): PasoDelHistorial[] => {
+    const parcial = paso.parcial === true;
+    const marca = marcaDePresencia(paso.valor);
+    if (!parcial && marca === null) return [];
+    const quien = paso.quien?.[idioma];
+    return [
+      {
+        clase: "presencia",
+        marca: parcial ? null : marca,
+        rotulo: parcial ? t.presenciaHistorial.correccionParcial : rotuloDeMarca(t, marca ?? "no_acreditado"),
+        quien: quien === undefined ? null : quienSinArticulo(quien),
+        motivo: paso.motivo?.[idioma] ?? null,
+        fuente: porFuente.get(paso.fuente_id),
+        paso,
+        fecha: paso.fecha.valor,
+      },
+    ];
+  });
+  // Orden estable: los del estado primero; luego, por fecha.
+  return [...estados, ...presencia]
+    .map((paso, i) => ({ paso, i }))
+    .sort((a, b) => a.paso.fecha.localeCompare(b.paso.fecha) || a.i - b.i)
+    .map(({ paso }) => paso);
 }

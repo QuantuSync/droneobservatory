@@ -9,7 +9,7 @@ import { ACTOR_SIN_NOMBRE, cifras, DESCONOCIDO } from "../datos/derivar.ts";
 import type { Cifras } from "../datos/derivar.ts";
 import { cierre as leerCierre } from "../datos/efecto.ts";
 import { corredoresDelPeriodo } from "../datos/guerraSatelite.ts";
-import { estadoEscrito, pasosDePresencia } from "../datos/presencia.ts";
+import { estadoEscrito, historialCompleto, pasosDePresencia } from "../datos/presencia.ts";
 import type {
   AfirmacionPublica,
   Atribucion,
@@ -674,20 +674,34 @@ function incidente(d: IncidenteDetalle, idioma: Idioma): PaginaTexto {
     e(
       "ol",
       { class: "texto-historial" },
-      d.estado.historial.map((paso) =>
-        e(
-          "li",
-          null,
-          e("strong", null, t.estado[paso.estado]),
-          " · ",
-          e("span", { class: "mono" }, instante(paso.fecha)),
-          " · ",
-          paso.motivo !== undefined
-            ? e("span", { "data-motivo-historial": "" }, paso.motivo[idioma])
-            : paso.fuente_id === undefined
-              ? t.ficha.fuenteNoPublica
-              : (medios.get(paso.fuente_id) ?? paso.fuente_id),
-        ),
+      // Los cambios del estado y, entre ellos por fecha, los de la presencia de dron rectificada.
+      historialCompleto(t, idioma, d).map((entrada) =>
+        entrada.clase === "presencia"
+          ? e(
+              "li",
+              { "data-historial-presencia": entrada.marca ?? "parcial" },
+              e("strong", null, entrada.rotulo),
+              " · ",
+              e("span", { class: "mono" }, instante(entrada.paso.fecha)),
+              " · ",
+              entrada.fuente === undefined
+                ? (entrada.quien ?? t.ficha.fuenteNoPublica)
+                : enlaceDeFuente(t, entrada.fuente, entrada.quien ?? medios.get(entrada.fuente.id) ?? entrada.fuente.medio),
+              entrada.motivo !== null && html(": ", entrada.motivo),
+            )
+          : e(
+              "li",
+              null,
+              e("strong", null, t.estado[entrada.paso.estado]),
+              " · ",
+              e("span", { class: "mono" }, instante(entrada.paso.fecha)),
+              " · ",
+              entrada.paso.motivo !== undefined
+                ? e("span", { "data-motivo-historial": "" }, entrada.paso.motivo[idioma])
+                : entrada.paso.fuente_id === undefined
+                  ? t.ficha.fuenteNoPublica
+                  : (medios.get(entrada.paso.fuente_id) ?? entrada.paso.fuente_id),
+            ),
       ),
     ),
     e("p", { class: "texto-nota mono" }, t.ficha.actualizada, ": ", fechaHora(d.control.ultima_actualizacion.valor)),
