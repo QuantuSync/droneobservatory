@@ -12,6 +12,7 @@ from typing import Any
 import pytest
 
 from almacen.base import Almacen
+from esquema import Esquema, validador
 from exportacion import procedencia
 from modelo import coste
 from proceso import rectificaciones, titulares
@@ -294,6 +295,24 @@ def test_la_correccion_parcial_se_anota_sin_cambiar_el_valor(
     assert d["titulo"]["es"] == "Drones cierran el aeropuerto de Copenhague"
 
 
+def test_la_fuente_oficial_que_llega_despues_entra_sin_repetir_el_paso(almacen: Almacen,
+                                                                        modelos: dict[str, Any]
+                                                                        ) -> None:  # fmt: skip
+    # Primero la noticia que cita a la policía (detección de la recogida) y después la
+    # declaración oficial revisada a mano: un solo paso, y la fuente oficial en la ficha.
+    revisada = modelos["rectificaciones"]
+    modelos["rectificaciones"] = []
+    frase = "Politiet har hverken kunnet bevise eller afvise"
+    _pasar(almacen, Cliente([_decision(frase=frase)]))
+    modelos["rectificaciones"] = revisada
+    hechos = _pasar(almacen, Cliente([_decision()]))
+    d = almacen.incidente(ID)
+    assert d is not None and d["presencia_dron"] == "no_acreditada"
+    assert [p["valor"] for p in d["presencia_historial"]] == ["confirmada", "no_acreditada"]
+    assert any(f["frase_origen"] == RIGS for f in d["fuentes"])
+    assert hechos.aplicadas == []
+
+
 def test_errores_del_historial() -> None:
     d = _copenhague()
     d["presencia_historial"] = [
@@ -485,4 +504,8 @@ def test_revisadas_de_verdad_validan() -> None:
         assert entrada["motivo"]["es"] and entrada["motivo"]["en"]
         assert entrada["fuente"]["declaracion"] and entrada["fuente"]["oficial"]
         assert len(entrada["fecha_declaracion"]) == 10
+        # La fuente que se añade a la ficha valida (su frase, como mucho 25 palabras: el
+        # 16 de octubre de 2026 las tres primeras no se guardaron por eso).
+        fuente = revisados.fuente_de_cita(entrada["fuente"], ejemplos.incidente_minimo())
+        assert not list(validador(Esquema.FUENTE).iter_errors(fuente)), entrada["incidente"]
     assert revisados.PREFIJO_REVISADA

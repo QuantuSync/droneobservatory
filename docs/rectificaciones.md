@@ -46,6 +46,11 @@ hace falta otra rectificación. La validación (`rectificaciones.errores`) exige
 una fuente del incidente, que un paso parcial no cambie el valor y que el último paso que no es
 parcial sea la presencia del incidente.
 
+Si llega otra fuente que dice lo mismo que el valor vigente (la declaración oficial después de
+la noticia que la contaba), no es un paso nuevo: la fuente entra en la ficha con su afirmación.
+La frase de una fuente revisada tiene como mucho 25 palabras, como todas; el resto del documento
+va en `contexto`, para el experto.
+
 El titular de una presencia no acreditada da el dron como posible, como el de una no confirmada
 (`proceso/titulares.py`). Los contadores de «confirmados por una autoridad» de la web no la
 cuentan; el incidente sigue contando como incidente. El cambio no genera aviso

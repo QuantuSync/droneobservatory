@@ -40,6 +40,8 @@ PARCIAL = "parcial"
 # Lo que puede decidir una rectificación: los dos valores y la nota parcial.
 TIPOS = (NO_ACREDITADA, DESCARTADA, PARCIAL)
 CONFIANZA_RECTIFICACION = 1.0
+# La frase de una fuente tiene como mucho 25 palabras (esquema, comun: frase_origen).
+MAX_PALABRAS_FRASE = 25
 SENALES = Path(__file__).resolve().parent.parent / "configuracion" / "senales_rectificacion.json"
 
 
@@ -127,8 +129,17 @@ def aplicar(
     if aplicada(incidente, revision):
         return incidente
     if tipo != PARCIAL and tipo == vigente(incidente):
-        # Otra fuente que dice lo mismo: no es un paso nuevo.
-        return incidente
+        # Otra fuente que dice lo mismo (la declaración oficial que llega después de la noticia
+        # que la contaba): no es un paso nuevo, pero la fuente queda en la ficha con su afirmación.
+        if fuente["id"] in {f["id"] for f in incidente["fuentes"]}:
+            return incidente
+        resultado = copy.deepcopy(incidente)
+        resultado["fuentes"].append(copy.deepcopy(fuente))
+        resultado["afirmaciones"] = [*resultado.get("afirmaciones", []), {
+            "campo": "presencia_dron", "valor": tipo, "fuente_id": fuente["id"],
+            "confianza_extraccion": CONFIANZA_RECTIFICACION,
+        }]  # fmt: skip
+        return resultado
     resultado = copy.deepcopy(incidente)
     if fuente["id"] not in {f["id"] for f in resultado["fuentes"]}:
         resultado["fuentes"].append(copy.deepcopy(fuente))
