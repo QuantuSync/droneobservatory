@@ -559,10 +559,10 @@ export interface SucesoRelacionado {
 
 /**
  * Cómo se dibuja un incidente (mapa, listas, ficha, leyenda y filtros): el color de su estado o,
- * si una autoridad dejó su presencia de dron sin acreditar, el morado de «no acreditado»
- * (datos/presencia.ts).
+ * si una autoridad rectificó su presencia de dron, el morado de «no acreditado» (sin pruebas del
+ * dron) o el gris relleno de «descartado» (fue otra cosa) (datos/presencia.ts).
  */
-export type MarcaIncidente = Estado | "no_acreditado";
+export type MarcaIncidente = Estado | "no_acreditado" | "descartado";
 
 export interface IncidenteResumen {
   id: string;

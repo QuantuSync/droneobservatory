@@ -127,7 +127,8 @@ function Detalle({ t, id, estado, actualizado, sistema, ahora }: PropsDetalle) {
       {sistema !== null && (
         <div>
           <p className="mb-1 text-secundario">{e.fuentes}</p>
-          {/* Cada fuente en dos líneas: nombre y estado, y debajo su último dato. */}
+          {/* Cada fuente en dos líneas: nombre y estado, y debajo su último dato, con su rótulo: en
+              las notas oficiales es la fecha de la última nota publicada, no la de la lectura. */}
           <ul className="flex flex-col gap-1.5">
             {sistema.fuentes.map((fuente) => (
               <li key={fuente.id} className="grid grid-cols-[auto_1fr_auto] items-center gap-x-2">
@@ -138,7 +139,9 @@ function Detalle({ t, id, estado, actualizado, sistema, ahora }: PropsDetalle) {
                   {fuente.ultimo_dato === null ? (
                     e.sinUltimoDato
                   ) : (
-                    <span className="mono">{fechaHora(fuente.ultimo_dato)}</span>
+                    <span data-dato-fuente={fuente.id}>
+                      {e.datoDeFuente[fuente.id] ?? e.ultimoDato}: <span className="mono">{fechaHora(fuente.ultimo_dato)}</span>
+                    </span>
                   )}
                 </span>
               </li>

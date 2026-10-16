@@ -95,6 +95,11 @@ export interface Textos {
     estadoDirecto: Record<EstadoDirecto, string>;
     ultimoCiclo: string;
     ultimoDato: string;
+    /**
+     * Qué es la fecha de una fuente cuando no es la de la lectura: las notas oficiales se leen en
+     * cada recogida, pero su fecha es la de la última nota publicada.
+     */
+    datoDeFuente: Partial<Record<string, string>>;
     sinUltimoDato: string;
     nuncaCorrecta: string;
     siguienteEn: (minutos: number) => string;
@@ -417,6 +422,11 @@ export interface Textos {
     etiqueta: string;
     leyenda: string;
   };
+  /** La marca gris rellena de la presencia de dron descartada: su nombre y su leyenda. */
+  descartado: {
+    etiqueta: string;
+    leyenda: string;
+  };
   /** El historial de la presencia de dron en la ficha (datos/presencia.ts). */
   presenciaHistorial: {
     /** Rótulo de la secuencia, para el lector de pantalla. */
@@ -427,6 +437,8 @@ export interface Textos {
     paso: (valor: string, fecha: string, quien: string | null) => string;
     /** Una corrección oficial parcial, que no cambia el valor: «Corrección parcial el … por …». */
     parcial: (fecha: string, quien: string | null) => string;
+    /** El nombre de una corrección parcial en el historial de estados. */
+    correccionParcial: string;
   };
   precision: Record<Precision, string>;
   categoria: Record<CategoriaObjetivo, string>;

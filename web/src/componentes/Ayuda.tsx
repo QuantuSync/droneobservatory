@@ -172,14 +172,21 @@ export function Ayuda({ t, idioma, abierta, onCerrar }: Props) {
                       {t.atribucion.leyendaPersona}
                     </li>,
                   ]
-                : estado === "no_acreditado"
+                : estado === "no_acreditado" || estado === "descartado"
                   ? [
-                      // Morado: la presencia de dron no acreditada, con lo que quiere decir.
-                      <li key={estado} className="flex items-start gap-2" data-leyenda-no-acreditado="">
+                      // Morado o gris relleno: la presencia de dron no acreditada o descartada, con
+                      // lo que quiere decir (el incidente ocurrió).
+                      <li
+                        key={estado}
+                        className="flex items-start gap-2"
+                        {...(estado === "no_acreditado" ? { "data-leyenda-no-acreditado": "" } : { "data-leyenda-descartado": "" })}
+                      >
                         <Simbolo estado={estado} className="mt-0.5 shrink-0" />
                         <span>
-                          {t.noAcreditado.etiqueta}
-                          <span className="block text-xs text-secundario">{t.noAcreditado.leyenda}</span>
+                          {estado === "no_acreditado" ? t.noAcreditado.etiqueta : t.descartado.etiqueta}
+                          <span className="block text-xs text-secundario">
+                            {estado === "no_acreditado" ? t.noAcreditado.leyenda : t.descartado.leyenda}
+                          </span>
                         </span>
                       </li>,
                     ]

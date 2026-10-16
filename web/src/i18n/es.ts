@@ -99,6 +99,7 @@ export const es: Textos = {
     estadoDirecto: { en_marcha: "en marcha", con_respaldo: "con la fuente de respaldo", parado: "parada" },
     ultimoCiclo: "último ciclo correcto",
     ultimoDato: "último dato",
+    datoDeFuente: { oficiales: "se consulta cada hora · última nota publicada" },
     sinUltimoDato: "sin datos todavía",
     nuncaCorrecta: "Ninguna recogida correcta",
     siguienteEn: (minutos) => (minutos <= 0 ? "en curso" : `dentro de ${minutos} min`),
@@ -394,8 +395,9 @@ export const es: Textos = {
       "Cada incidente es un círculo relleno del color de su estado: naranja, notificado; " +
       "rojo, confirmado. Morado, no acreditado: una autoridad oficial cerró su investigación " +
       "sin pruebas del dron o retiró su declaración sin decir que fuera otra cosa; el incidente " +
-      "y su efecto siguen en el mapa, con su historial. El desmentido es un círculo gris de " +
-      "borde discontinuo, sin relleno. " +
+      "y su efecto siguen en el mapa, con su historial. Gris relleno, descartado: una autoridad " +
+      "oficial dice que no fue un dron; el incidente también sigue. El desmentido es un círculo " +
+      "gris de borde discontinuo, sin relleno. " +
       "Un atribuido (un confirmado que una autoridad atribuye a un Estado o a una persona) es " +
       "un círculo algo mayor, con un aro rojo grueso y, dentro, la bandera del país al que se " +
       "atribuye; atribuido a una persona, lleva además un punto oscuro fijo en el centro. Va " +
@@ -422,7 +424,9 @@ export const es: Textos = {
       "Un círculo con un número dentro junta varios incidentes (el de un solo incidente va " +
       "relleno y sin número): crece con el número, y su anillo " +
       "es rojo si contiene algún confirmado, morado si no lo hay y alguno es no acreditado, y " +
-      "naranja si todos son notificados. Al acercar el " +
+      "naranja si todos son notificados. Un aro exterior morado dice que alguno de sus " +
+      "incidentes tiene la presencia del dron no acreditada; uno gris, que alguno la tiene " +
+      "descartada. Al acercar el " +
       "mapa se separan. Los nombres del mapa ceden ante los círculos: se ven enteros o no se " +
       "ven.",
     pila:
@@ -565,8 +569,15 @@ export const es: Textos = {
   noAcreditado: {
     etiqueta: "No acreditado",
     leyenda:
-      "Una autoridad oficial cerró su investigación sin pruebas del dron o retiró su " +
-      "declaración. El incidente y su efecto siguen.",
+      "El incidente ocurrió, pero la presencia del dron no se acreditó: una autoridad oficial " +
+      "cerró su investigación sin pruebas del dron o retiró su declaración. El incidente y su " +
+      "efecto siguen.",
+  },
+  descartado: {
+    etiqueta: "Descartado",
+    leyenda:
+      "El incidente ocurrió, pero la presencia del dron se descartó: una autoridad oficial dice " +
+      "que fue otra cosa (un avión, un helicóptero). El incidente y su efecto siguen.",
   },
   presenciaHistorial: {
     rotulo: "Cambios de la presencia de dron",
@@ -579,6 +590,7 @@ export const es: Textos = {
     paso: (valor, fecha, quien) => (quien === null ? `${valor} el ${fecha}` : `${valor} el ${fecha} por ${quien}`),
     parcial: (fecha, quien) =>
       quien === null ? `Corrección parcial el ${fecha}` : `Corrección parcial el ${fecha} por ${quien}`,
+    correccionParcial: "Corrección parcial",
   },
   precision: {
     minuto: "hora exacta",
@@ -982,7 +994,9 @@ export const es: Textos = {
                 "descartada (ver «Presencia de dron»), que siguen contando como incidentes. El " +
                 "estado se indica siempre con color y con texto. Un círculo que junta varios " +
                 "incidentes es rojo si contiene algún confirmado o atribuido, morado si no lo hay " +
-                "y alguno es no acreditado, y naranja si todos son notificados.",
+                "y alguno es no acreditado, y naranja si todos son notificados; un aro exterior " +
+                "morado dice que alguno tiene la presencia de dron no acreditada, y uno gris, " +
+                "descartada.",
             ],
           },
         ],
@@ -1018,9 +1032,11 @@ export const es: Textos = {
               },
               {
                 termino: "Descartado",
+                marca: { estado: "descartado" },
                 texto: [
                   "Una autoridad dice que fue otra cosa (un avión, un helicóptero): es el " +
-                    "desmentido de la presencia de dron. El marcador conserva el color de su estado.",
+                    "desmentido de la presencia de dron, no del incidente. En un círculo gris " +
+                    "relleno, del gris de «Desmentido»; el desmentido es un aro discontinuo sin relleno.",
                 ],
               },
             ],
