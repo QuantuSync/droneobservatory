@@ -434,7 +434,7 @@ describe("barra de estado", () => {
     expect(container.textContent).toContain("con avisos");
     expect(container.textContent).toContain("Siguiente recogidadentro de 35 min");
     expect(container.textContent).toContain("Notas oficialescon avisosin datos todavía");
-    expect(container.textContent).toContain("Fuerza Aérea de Ucranialeída30/09/2026 · 05:01");
+    expect(container.textContent).toContain("Fuerza Aérea de Ucranialeídaúltimo dato: 30/09/2026 · 05:01");
     // Las horas van solas en la cifra monoespaciada, sin palabras mezcladas.
     for (const hora of container.querySelectorAll(".mono")) {
       expect(hora.textContent).toMatch(/^[\d/ ·:]+( UTC)?$/);
