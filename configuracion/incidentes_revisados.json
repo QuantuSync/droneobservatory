@@ -2383,6 +2383,21 @@
         "es": "La ficha daba el dron por confirmado y entre 2 y 10 drones. Su propia fuente (schwaebische.de) dice que no se encontró ningún dron («allerdings konnte eine Drohne nicht gefunden werden») y ninguna fuente da un número de drones: tres pilotos avisaron de un objeto desconocido.",
         "en": "The record gave the drone as confirmed and between 2 and 10 drones. Its own source (schwaebische.de) says no drone was found («allerdings konnte eine Drohne nicht gefunden werden») and no source gives a number of drones: three pilots reported an unknown object."
       }
+    },
+    {
+      "incidente": "EODI-2026-00293",
+      "estado": {
+        "valor": "confirmado",
+        "cita": "Skeyes hatte die Drohne eigenen Angaben zufolge sowohl mit bloßem Auge als auch über Detektionsgeräte erfasst.",
+        "motivo": {
+          "es": "Prevalece skeyes, el control aéreo belga, competente sobre el espacio aéreo: detectó el dron a simple vista y con sus equipos. Brussels Airport dijo no haber recibido ningún aviso; su desmentido queda en el historial.",
+          "en": "skeyes, the Belgian air traffic control, competent for the airspace, prevails: it detected the drone visually and with its equipment. Brussels Airport said it had received no report; its denial stays in the history."
+        }
+      },
+      "motivo": {
+        "es": "El incidente quedó desmentido por la declaración de Brussels Airport («keine Meldung erhalten»), aunque skeyes, que vigila el espacio aéreo, confirmó el dron en la misma noticia (brf.be) y en otras (english.news.cn, inewsgr.com). Dos autoridades oficiales que se contradicen: prevalece la competente sobre el espacio aéreo o la investigación (metodología, «Autoridades que se contradicen»).",
+        "en": "The incident was left denied by Brussels Airport's statement («keine Meldung erhalten»), although skeyes, which monitors the airspace, confirmed the drone in the same article (brf.be) and in others (english.news.cn, inewsgr.com). Two official authorities that contradict each other: the one competent for the airspace or the investigation prevails (methodology, «Authorities that contradict each other»)."
+      }
     }
   ],
   "titular_justificado": [],

@@ -1,0 +1,29 @@
+{
+  "descripcion": "Dos autoridades oficiales que se contradicen sobre el mismo suceso (proceso/competencia.py; docs/metodologia.md, «Autoridades que se contradicen»): prevalece la competente sobre el espacio aéreo (gestor de navegación aérea, autoridad de aviación civil, fuerzas armadas) o sobre la investigación (policía, fiscalía, organismo investigador), y lo que dijo la otra queda en el historial con su fecha y su fuente. El gestor de un aeropuerto no vigila el espacio aéreo ni investiga: su «no hemos recibido ningún aviso» no desmiente lo que confirma el control aéreo. Las declaraciones nuevas traen su categoría; las ya guardadas solo el nombre de la autoridad, que se reconoce con estas listas (sin distinguir mayúsculas, por trozos del nombre). Caso: EODI-2026-00293, Bruselas 12/09/2026, skeyes frente a Brussels Airport.",
+  "categorias_competentes": ["navegacion_aerea", "aviacion_civil", "fuerzas_armadas", "policia", "fiscalia"],
+  "categorias_que_ceden": ["aeropuerto"],
+  "competentes": [
+    "skeyes", "LVNL", "Luchtverkeersleiding", "DFS", "Deutsche Flugsicherung", "Naviair", "NATS",
+    "ENAIRE", "ENAV", "DSNA", "PANSA", "Austro Control", "skyguide", "LFV", "Fintraffic", "ANS CR",
+    "Řízení letového provozu", "Oro navigacija", "EANS", "Lennuliiklusteeninduse", "LGS",
+    "Latvijas Gaisa Satiksme", "ROMATSA", "BULATSA", "AirNav Ireland", "Croatia Control",
+    "Hrvatska kontrola zračne plovidbe", "HungaroControl", "Slovenia Control", "Kontrola zračnega prometa",
+    "NAV Portugal", "LPS SR", "Isavia", "MUAC", "Eurocontrol", "control aéreo", "air traffic control",
+    "Luftfahrt-Bundesamt", "Civil Aviation Authority", "aviation civile", "DGAC", "AESA",
+    "Trafikstyrelsen", "Transportstyrelsen", "Luftfartstilsynet", "ULC", "Urząd Lotnictwa Cywilnego",
+    "Traficom", "Bundeswehr", "Luftwaffe", "Defensie", "Forsvaret", "Försvarsmakten", "Puolustusvoimat",
+    "Armed Forces", "Ministry of Defence", "Ministerie van Defensie", "Ministère des Armées",
+    "Ministerio de Defensa", "Wojsko Polskie", "Dowództwo Operacyjne", "Police", "Politie",
+    "Polizei", "Politi", "Polis", "Policja", "Poliisi", "Policía", "Polícia", "Polizia", "Policie",
+    "Gendarmerie", "Guardia Civil", "Carabinieri", "Rigspolitiet", "Parquet", "Parket",
+    "Staatsanwaltschaft", "Fiscalía", "Prokuratura", "Anklagemyndigheden", "AAIB", "BEA", "BFU",
+    "Havarikommisjonen", "Havarikommissionen", "Onderzoeksraad", "UK Airprox Board"
+  ],
+  "ceden": [
+    "Airport", "Aeropuerto", "Aéroport", "Aeroporto", "Aeroport", "Flughafen", "Lufthavn",
+    "Luchthaven", "Lotnisko", "Port Lotniczy", "Flygplats", "Lentoasema", "Letiště", "Letisko",
+    "Repülőtér", "Lidosta", "Lennujaam", "Oro uostas", "Zračna luka", "Letališče", "Αεροδρόμιο",
+    "Αερολιμένας", "Swedavia", "Finavia", "Schiphol", "Fraport", "Aena", "Aéroports de Paris",
+    "Groupe ADP", "Copenhagen Airports", "Brussels Airport Company"
+  ]
+}

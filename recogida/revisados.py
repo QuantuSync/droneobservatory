@@ -26,7 +26,7 @@ from almacen.base import Almacen, DocumentoInvalido
 from esquema import Documento
 from proceso import atribucion, declaraciones, extraccion, incidentes, presencia, titulares
 from proceso.credibilidad import Credibilidad
-from proceso.estados import RETIRADAS, Estado, nuevo_estado
+from proceso.estados import RETIRADAS, REVERSIONES, Estado, error_reversion, nuevo_estado
 from proceso.fronteras import dentro_del_pais
 from proceso.presencia import TABLA_MOTIVOS
 
@@ -344,8 +344,19 @@ def con_titular(incidente: Documento, revision: Documento, instante: Documento) 
     estado = revision.get("estado")
     if estado and resultado["estado"]["actual"] != estado["valor"]:
         fuente_id = fuentes.get(estado["cita"])
+        origen = Estado(resultado["estado"]["actual"])
         destino = Estado(estado["valor"])
-        if fuente_id is not None and (Estado(resultado["estado"]["actual"]), destino) in RETIRADAS:
+        # Una retirada, o la reversión de un desmentido por una autoridad de fiabilidad igual o
+        # mayor que la de quien desmintió (EODI-2026-00293: prevalece skeyes, el control aéreo,
+        # sobre el aeropuerto; proceso/competencia.py). El desmentido sigue en el historial.
+        porfuente = {f["id"]: f for f in resultado["fuentes"]}
+        ultimo = porfuente.get(str(resultado["estado"]["historial"][-1].get("fuente_id")))
+        vale = (origen, destino) in RETIRADAS or (
+            (origen, destino) in REVERSIONES
+            and fuente_id is not None
+            and error_reversion(ultimo, porfuente.get(fuente_id)) is None
+        )
+        if fuente_id is not None and vale:
             paso = {
                 "estado": destino.value,
                 "fecha": instante,
@@ -354,6 +365,8 @@ def con_titular(incidente: Documento, revision: Documento, instante: Documento) 
             }
             historial = [*resultado["estado"]["historial"], paso]
             resultado["estado"] = {"actual": destino.value, "historial": historial}
+            if destino != Estado.DESMENTIDO:
+                resultado["control"].pop("motivo_desmentido", None)
     drones = revision.get("drones")
     if drones and resultado.get("drones", {}).get("numero") != drones["valor"]:
         # Ninguna fuente da el número de drones: sin dato, y fuera las afirmaciones que lo daban.

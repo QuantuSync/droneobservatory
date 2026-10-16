@@ -954,6 +954,20 @@ export const en: Textos = {
           },
           {
             parrafo: [
+              "Authorities that contradict each other. If two official authorities say opposite " +
+                "things about the same event, the one competent for the airspace (the air " +
+                "navigation service provider, the civil aviation authority, the armed forces) or " +
+                "for the investigation (the police, the prosecutor, the investigating body) " +
+                "prevails. What the other one said stays in the history, with its date and source, " +
+                "and the next step says why the competent one prevails. An airport operator does " +
+                "not monitor the airspace or investigate: saying it received no report does not " +
+                "deny what air traffic control confirms (Brussels, 12 September 2026: skeyes " +
+                "detected the drone; Brussels Airport said it had no record of it). If the one " +
+                "that denies it is the competent one, the incident is denied.",
+            ],
+          },
+          {
+            parrafo: [
               "In the scoreboard, “confirmed by an authority” includes the attributed incidents, " +
                 "which are also counted on their own, and leaves out those whose drone presence is " +
                 "not substantiated or ruled out (see “Drone presence”), which still count as " +
