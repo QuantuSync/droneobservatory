@@ -119,12 +119,28 @@ def resultado(codigo: int) -> str:
     return CON_AVISOS if codigo == SALIDA_AVISO else FALLIDA
 
 
+def _mas_reciente(*instantes: str | None) -> str | None:
+    fechas = [leida for texto in instantes if (leida := leer_instante(texto)) is not None]
+    return instante(max(fechas)) if fechas else None
+
+
 def _fuentes(parcial: dict[str, Any] | None, anterior: dict[str, Any] | None) -> list[Any]:
     """Las de la recogida; si no dejó nada (falló antes de terminar), las del estado anterior
-    como no leídas, con la fecha de su último dato."""
-    if parcial is not None:
-        return [parcial.get(f) or EstadoFuente(NO_LEIDA).documento(f) for f in FUENTES]
+    como no leídas, con la fecha de su último dato. El último dato de una fuente nunca va hacia
+    atrás: una pasada cortada por el tope (las notas oficiales, 240 s) lee menos y su fecha
+    puede ser anterior a la ya publicada, que se mantiene."""
     previas = {f["id"]: f for f in (anterior or {}).get("fuentes", [])}
+    if parcial is not None:
+        fuentes = [parcial.get(f) or EstadoFuente(NO_LEIDA).documento(f) for f in FUENTES]
+        return [
+            {
+                **f,
+                "ultimo_dato": _mas_reciente(
+                    f.get("ultimo_dato"), previas.get(f["id"], {}).get("ultimo_dato")
+                ),
+            }
+            for f in fuentes
+        ]
     return [
         {"id": f, "estado": NO_LEIDA, "ultimo_dato": previas.get(f, {}).get("ultimo_dato")}
         for f in FUENTES
