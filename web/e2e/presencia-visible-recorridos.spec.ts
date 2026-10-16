@@ -176,7 +176,8 @@ test.describe("No acreditado y descartado, bien visibles, como una persona", () 
       await expect(desmentido).toContainText("2026");
       const total = await pasos.count();
       await expect(pasos.nth(total - 1).locator("svg[data-circulo=confirmado]")).toHaveCount(1);
-      await expect(pasos.nth(total - 1)).toContainText("skeyes");
+      // El motivo va con mayúscula: «Skeyes, …» en inglés, «… skeyes» en español.
+      await expect(pasos.nth(total - 1)).toContainText(/skeyes/i);
       await pagina.screenshot({ path: join(CAPTURAS, `bruselas-${idioma}-${info.project.name}.png`) });
       expect(errores).toEqual([]);
     });
