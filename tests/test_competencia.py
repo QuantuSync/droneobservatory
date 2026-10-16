@@ -97,7 +97,9 @@ def test_el_aeropuerto_no_desmiente_lo_que_confirma_el_control_aereo() -> None:
     # La negación queda con su fecha y su fuente; el paso que la sigue, con el motivo.
     assert pasos[2]["fuente_id"].endswith("-declaracion-2")
     assert pasos[3]["fuente_id"].endswith("-declaracion-1")
-    assert "Skeyes" in pasos[3]["motivo"]["es"] and "Brussels Airport" in pasos[3]["motivo"]["en"]
+    assert "competente" in pasos[3]["motivo"]["es"] and "airport" in pasos[3]["motivo"]["en"]
+    # Sin nombres sin traducir en español.
+    assert "Brussels Airport" not in pasos[3]["motivo"]["es"]
     assert "motivo_desmentido" not in resultado["control"]
     fuentes = {f["id"]: f for f in resultado["fuentes"]}
     assert errores_historial(resultado["estado"], fuentes) == []
@@ -194,3 +196,17 @@ def test_una_recogida_posterior_no_lo_deshace() -> None:
     con_otra["fuentes"].append(otra)
     despues = declaraciones.aplicar_fuentes(con_otra, [_pares(otra)[1]])
     assert despues["estado"] == guardado["estado"]
+
+
+def test_el_motivo_corregido_cambia_solo_el_texto_del_paso_ya_aplicado() -> None:
+    revisiones = revisados.cargar()["titulares"]
+    revision = copy.deepcopy(next(t for t in revisiones if t["incidente"] == ID))
+    instante = ejemplos.instante("2026-10-16T09:00Z")
+    antigua = copy.deepcopy(revision)
+    antigua["estado"]["motivo"] = {"es": "Texto de antes.", "en": "Old text."}
+    aplicada = revisados.con_titular(_bruselas_desmentido(), antigua, instante)
+    nuevo = revisados.con_titular(aplicada, revision, ejemplos.instante("2026-10-16T10:00Z"))
+    assert len(nuevo["estado"]["historial"]) == len(aplicada["estado"]["historial"])
+    assert nuevo["estado"]["historial"][-1]["motivo"] == revision["estado"]["motivo"]
+    assert nuevo["estado"]["historial"][-1]["fecha"] == aplicada["estado"]["historial"][-1]["fecha"]
+    assert "Brussels Airport" not in revision["estado"]["motivo"]["es"]

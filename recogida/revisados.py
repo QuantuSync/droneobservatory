@@ -342,7 +342,18 @@ def con_titular(incidente: Documento, revision: Documento, instante: Documento) 
                 if not (a.get("campo") == "presencia_dron" and a.get("valor") == "confirmada")
             ] + [afirmacion]
     estado = revision.get("estado")
-    if estado and resultado["estado"]["actual"] != estado["valor"]:
+    ultimo_paso = resultado["estado"]["historial"][-1]
+    if (
+        estado
+        and resultado["estado"]["actual"] == estado["valor"]
+        and ultimo_paso.get("fuente_id") == fuentes.get(estado["cita"])
+        and "motivo" in ultimo_paso
+        and ultimo_paso["motivo"] != estado["motivo"]
+    ):
+        # La revisión ya aplicada con otro texto del motivo (se corrigió su redacción): el paso
+        # que dejó es el suyo y toma el texto nuevo; el estado y el historial no cambian.
+        resultado["estado"]["historial"][-1] = {**ultimo_paso, "motivo": estado["motivo"]}
+    elif estado and resultado["estado"]["actual"] != estado["valor"]:
         fuente_id = fuentes.get(estado["cita"])
         origen = Estado(resultado["estado"]["actual"])
         destino = Estado(estado["valor"])
