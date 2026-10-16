@@ -13,7 +13,7 @@ import { BarraEstado } from "../src/componentes/BarraEstado.tsx";
 import { FichaIncidente } from "../src/componentes/FichaIncidente.tsx";
 import { Simbolo } from "../src/componentes/Simbolo.tsx";
 import { detalleIncidente, resumir, resumirIncidente, resumirUcrania } from "../src/datos/derivar.ts";
-import { MARCAS, confirmadoPorAutoridad, estadoEscrito, historialCompleto, marcaDe, quienSinArticulo } from "../src/datos/presencia.ts";
+import { MARCAS, conMayuscula, confirmadoPorAutoridad, estadoEscrito, historialCompleto, marcaDe, quienSinArticulo } from "../src/datos/presencia.ts";
 import type { FeatureIncidente, PasoPresencia, PropiedadesIncidente } from "../src/datos/tipos.ts";
 import { GRAVES, SIN_FILTROS, filtrar, leerFiltros, ultimas24Horas } from "../src/estado/filtros.ts";
 import { textos } from "../src/i18n/index.ts";
@@ -179,7 +179,7 @@ describe("la ficha", () => {
       expect(ultimo?.getAttribute("data-historial-presencia")).toBe("no_acreditado");
       expect(ultimo?.querySelector("svg[data-circulo=no_acreditado]")).not.toBeNull();
       expect(ultimo?.querySelector("a")?.getAttribute("href")).toBe(RIGSPOLITIET.enlace);
-      expect(leido(ultimo)).toContain(idioma === "es" ? "no dispone de pruebas concluyentes" : "no conclusive evidence");
+      expect(leido(ultimo)).toContain(idioma === "es" ? "No dispone de pruebas concluyentes" : "It has no conclusive evidence");
       unmount();
     }
   });
@@ -204,6 +204,17 @@ describe("la ficha", () => {
     expect(mismaFecha.map((p) => p.clase)).toEqual(["estado", "presencia"]);
     expect(quienSinArticulo("la policía de Dinamarca")).toBe("Policía de Dinamarca");
     expect(quienSinArticulo("the Danish Police")).toBe("Danish Police");
+  });
+
+  it("el motivo del historial empieza con mayúscula, en los dos idiomas, sin tocar el resto", () => {
+    expect(conMayuscula("tras la investigación: no pudo confirmar que fueran drones")).toBe("Tras la investigación: no pudo confirmar que fueran drones");
+    expect(conMayuscula("al cerrar la investigación, la Policía no halló pruebas")).toBe("Al cerrar la investigación, la Policía no halló pruebas");
+    expect(conMayuscula("ámbito del informe Airprox")).toBe("Ámbito del informe Airprox");
+    expect(conMayuscula("«informe Airprox» 2025123")).toBe("«Informe Airprox» 2025123");
+    expect(conMayuscula("after the investigation: could not confirm")).toBe("After the investigation: could not confirm");
+    expect(conMayuscula("Informe Airprox 2025123")).toBe("Informe Airprox 2025123");
+    expect(conMayuscula("2 drones avistados")).toBe("2 drones avistados");
+    expect(conMayuscula("")).toBe("");
   });
 });
 

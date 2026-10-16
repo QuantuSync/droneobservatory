@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import { conMayuscula } from "../datos/presencia.ts";
 import type { PasoDelHistorial } from "../datos/presencia.ts";
 import type { AtribucionResumen, Estado, Fuente, FuenteImpacto, PasoHistorial } from "../datos/tipos.ts";
 import { autoridadEscrita, medioEnFrase, medioEscrito } from "../i18n/autoridades.ts";
@@ -212,7 +213,7 @@ function PasoDeEstado({
             ) : (
               // Una corrección, no una fuente: el motivo, a la vista.
               <span className="w-full text-xs text-texto" data-motivo-historial="">
-                {paso.motivo[idioma ?? "es"]}
+                {conMayuscula(paso.motivo[idioma ?? "es"])}
               </span>
             )}
           </li>

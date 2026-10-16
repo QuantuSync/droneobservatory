@@ -148,6 +148,15 @@ export function quienSinArticulo(quien: string): string {
 }
 
 /**
+ * El motivo de un paso del historial, que va solo en su línea: con la primera letra en mayúscula
+ * (los motivos se escriben para seguir una frase: «tras la investigación: …», «al cerrar …»). Se
+ * salta la comilla o el signo de apertura y no toca el resto: «á» → «Á», «“informe…”» → «“Informe…”».
+ */
+export function conMayuscula(motivo: string): string {
+  return motivo.replace(/^([\s«"“‘'(¿¡]*)(\p{Ll})/u, (_, antes: string, letra: string) => antes + letra.toUpperCase());
+}
+
+/**
  * El «Historial de estados» entero, por orden de fecha: los cambios del estado del suceso y los
  * de la presencia de dron cuando una autoridad la rectificó (no acreditada, descartada o una
  * corrección parcial), con su marca, su fecha y su fuente. Los pasos de la presencia que solo
@@ -176,7 +185,7 @@ export function historialCompleto(
         marca: parcial ? null : marca,
         rotulo: parcial ? t.presenciaHistorial.correccionParcial : rotuloDeMarca(t, marca ?? "no_acreditado"),
         quien: quien === undefined ? null : quienSinArticulo(quien),
-        motivo: paso.motivo?.[idioma] ?? null,
+        motivo: paso.motivo?.[idioma] === undefined ? null : conMayuscula(paso.motivo[idioma]),
         fuente: porFuente.get(paso.fuente_id),
         paso,
         fecha: paso.fecha.valor,
