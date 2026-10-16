@@ -963,6 +963,20 @@ export const es: Textos = {
           },
           {
             parrafo: [
+              "Autoridades que se contradicen. Si dos autoridades oficiales dicen lo contrario " +
+                "sobre el mismo suceso, prevalece la competente sobre el espacio aéreo (el gestor " +
+                "de navegación aérea, la autoridad de aviación civil, las fuerzas armadas) o sobre " +
+                "la investigación (la policía, la fiscalía, el organismo investigador). Lo que dijo " +
+                "la otra queda en el historial, con su fecha y su fuente, y el paso siguiente dice " +
+                "por qué prevalece la competente. El gestor de un aeropuerto no vigila el espacio " +
+                "aéreo ni investiga: que diga no haber recibido ningún aviso no desmiente lo que " +
+                "confirma el control aéreo (Bruselas, 12 de septiembre de 2026: skeyes detectó el " +
+                "dron; Brussels Airport dijo no tener constancia). Si la que lo niega es la " +
+                "competente, el incidente queda desmentido.",
+            ],
+          },
+          {
+            parrafo: [
               "En el marcador, «confirmados por una autoridad» incluye a los atribuidos, que se " +
                 "cuentan además aparte, y no cuenta los de presencia de dron no acreditada o " +
                 "descartada (ver «Presencia de dron»), que siguen contando como incidentes. El " +

@@ -14,7 +14,10 @@ literal, que tiene que estar en el texto enviado) se registra como fuente
   ni detección por sensor. Solo queda sin confirmar si la propia autoridad lo deja abierto
   («posible dron», «objeto no identificado», «se investiga si era un dron»). Cada confirmación
   deja una afirmación de presencia_dron con la fuente que la provoca.
-- sin_drones: presencia_dron descartada. niega_incidente: desmentido.
+- sin_drones: presencia_dron descartada. niega_incidente: desmentido, salvo que lo niegue una
+  autoridad que no es competente sobre el espacio aéreo ni la investigación (el gestor del
+  aeropuerto) y lo haya confirmado una que sí lo es (el control aéreo): entonces prevalece la
+  competente y la negación queda en el historial (proceso/competencia.py).
 - autoria: atribuido, solo si una autoridad competente (gobierno, ministerio, fuerzas armadas,
   fiscalía o policía) lo afirma con sus propias palabras, sin duda ni investigación, y nombra a
   quien se atribuye (un Estado o una persona; proceso/atribucion.py), con su tipo y su país.
@@ -34,7 +37,7 @@ from collections.abc import Sequence
 from typing import Any
 
 from esquema import Documento
-from proceso import atribucion
+from proceso import atribucion, competencia
 from proceso.credibilidad import Credibilidad
 from proceso.estados import Estado, TransicionNoPermitida, transitar
 from proceso.noticias import filtro
@@ -226,6 +229,22 @@ def aplicar_fuentes(
     return _aplicar_nuevas(resultado, nuevas, por_enlace)
 
 
+def _negacion_que_cede(
+    incidente: Documento,
+    declaracion: dict[str, Any],
+    origen: Documento,
+    categorias: dict[str, str],
+) -> Documento | None:
+    """El incidente con la negación anotada si la niega una autoridad que cede ante la
+    competente que lo confirmó; None si la negación vale como desmentido."""
+    if not competencia.cede(str(declaracion.get("autoridad", "")), declaracion.get("categoria")):
+        return None
+    prevalece = competencia.confirmacion_que_prevalece(incidente, categorias)
+    if prevalece is None:
+        return None
+    return competencia.anotar_negacion(incidente, origen, prevalece)
+
+
 def _aplicar_nuevas(
     resultado: Documento,
     nuevas: Sequence[tuple[dict[str, Any], Documento]],
@@ -235,6 +254,8 @@ def _aplicar_nuevas(
     resultado["fuentes"] = [*resultado["fuentes"], *(f for _, f in nuevas if f["id"] not in tiene)]
     # Primero lo que confirma y después lo que desmiente o atribuye.
     orden = {"incidente": 0, "drones": 0, "sin_drones": 1, "niega_incidente": 2, "autoria": 3}
+    # La categoría de cada declaración nueva, para saber cuál es competente (competencia.py).
+    categorias = {origen["id"]: str(d.get("categoria") or "") for d, origen in nuevas}
     por_frase: list[Documento] = []
     for declaracion, origen in sorted(nuevas, key=lambda n: orden[n[0]["afirma"]]):
         afirma = declaracion["afirma"]
@@ -248,6 +269,12 @@ def _aplicar_nuevas(
             por_frase.append(origen)
         if afirma == "sin_drones":
             resultado["presencia_dron"] = "descartada"
+        elif afirma == "niega_incidente" and (
+            anotado := _negacion_que_cede(resultado, declaracion, origen, categorias)
+        ):
+            # Lo niega quien no es competente y lo confirmó quien sí: sigue confirmado, con la
+            # negación en el historial.
+            resultado = anotado
         elif afirma == "niega_incidente":
             _transitar(resultado, Estado.DESMENTIDO, origen)
             if resultado["estado"]["actual"] == Estado.DESMENTIDO:
