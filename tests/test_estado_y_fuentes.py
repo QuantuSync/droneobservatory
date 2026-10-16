@@ -92,6 +92,39 @@ def test_si_la_recogida_no_dejo_nada_las_fuentes_quedan_no_leidas_con_su_ultimo_
     assert documento["fuentes"][0]["ultimo_dato"] == "2026-09-30T05:01Z"
 
 
+def test_el_ultimo_dato_de_las_notas_oficiales_no_retrocede_con_una_pasada_cortada() -> None:
+    # Una pasada completa lee una nota del día D; la siguiente se corta por el tope y solo lee
+    # notas de D-3: la fecha publicada sigue siendo D.
+    d = datetime(2026, 10, 16, 4, 0, tzinfo=UTC)
+    completa = {"oficiales": estado.EstadoFuente(estado.LEIDA, d).documento("oficiales")}
+    anterior = estado.componer(INICIO, FIN, 0, completa, None, MINUTO)
+    cortada = {
+        "oficiales": estado.EstadoFuente(
+            estado.CON_AVISO, datetime(2026, 10, 13, 9, 30, tzinfo=UTC)
+        ).documento("oficiales")
+    }
+    documento = estado.componer(INICIO, FIN, 2, cortada, anterior, MINUTO)
+    oficiales = next(f for f in documento["fuentes"] if f["id"] == "oficiales")
+    assert oficiales == {
+        "id": "oficiales",
+        "estado": "con_aviso",
+        "ultimo_dato": "2026-10-16T04:00Z",
+    }
+    # Sin fecha en la pasada (nada leído), también se mantiene; una más reciente la sube.
+    vacia = {"oficiales": estado.EstadoFuente(estado.CON_AVISO).documento("oficiales")}
+    documento = estado.componer(INICIO, FIN, 2, vacia, anterior, MINUTO)
+    assert next(f for f in documento["fuentes"] if f["id"] == "oficiales")["ultimo_dato"] == (
+        "2026-10-16T04:00Z"
+    )
+    nueva = {
+        "oficiales": estado.EstadoFuente(estado.LEIDA, d.replace(hour=9)).documento("oficiales")
+    }
+    documento = estado.componer(INICIO, FIN, 0, nueva, anterior, MINUTO)
+    assert next(f for f in documento["fuentes"] if f["id"] == "oficiales")["ultimo_dato"] == (
+        "2026-10-16T09:00Z"
+    )
+
+
 def test_la_siguiente_es_la_del_minuto_de_la_hora_que_viene_si_ya_paso() -> None:
     assert estado.siguiente(datetime(2026, 9, 30, 18, 10, tzinfo=UTC), MINUTO) == datetime(
         2026, 9, 30, 18, 17, tzinfo=UTC

@@ -79,7 +79,9 @@ class Recuentos:
     bloqueadas: int = 0
     # Fuentes que no dio tiempo a leer en esta ejecución.
     sin_leer: int = 0
-    # La nota más reciente leída, de cualquier fuente: el último dato de las oficiales.
+    # La nota más reciente leída en esta pasada, de cualquier fuente: el último dato de las
+    # oficiales. Si la pasada se corta, puede ser anterior a la publicada, que no se rebaja
+    # (recogida/estado.py).
     ultima: datetime | None = None
 
     def resumen(self) -> str:
