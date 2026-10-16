@@ -10,19 +10,28 @@ autoridad dice que ocurrió. presencia_dron solo cambia si la nota lo dice sin
 reservas («bekræfter», sin «mulige» ni «formodede»). Si no encaja con ninguno o
 encaja con varios, no se enlaza.
 
-El registro solo lleva recuentos.
+Cada fuente tiene su propio tiempo (TOPE_FUENTE_S) dentro del tope de todas (TOPE_S): una
+fuente lenta o caída se corta, se apunta en el registro con su id y el motivo, y se pasa a la
+siguiente. Una fuente que falla en FALLOS_PARA_PAUSA recogidas seguidas se salta durante PAUSA y
+después se vuelve a probar; si falla otra vez, otra PAUSA. Una fuente en pausa no es un fallo de
+la recogida: sale en el registro y en el resumen diario, y solo se avisa al responsable, una vez
+por fuente, si lleva AVISO_PAUSA seguido en pausa. El estado de las pausas va en el cursor
+CURSOR_PAUSAS de la base, como el de los demás pasos de la recogida.
 """
 
 import contextlib
 import copy
 import json
 import logging
+import math
 import os
 import re
+import time
 import xml.etree.ElementTree as ET
 from collections import Counter
-from dataclasses import dataclass
-from datetime import UTC, datetime
+from collections.abc import Callable
+from dataclasses import dataclass, field
+from datetime import UTC, datetime, timedelta
 from email.utils import parsedate_to_datetime
 from functools import cache
 from pathlib import Path
@@ -46,10 +55,22 @@ DIRECTORIO = Path(__file__).resolve().parent.parent / "configuracion"
 # Carpeta de datos de las fuentes de detalle en el servidor (servidor/configuracion.sh).
 VARIABLE_DATOS_DETALLE = "EODI_DETALLE_DATOS"
 MAX_PALABRAS_FRASE = 25
-# Tope de tiempo por ejecución. Leer todas las fuentes tarda de 90 a 97 s (medido del 28
-# al 30 de septiembre de 2026); 240 s son dos veces y media. Las notas se leen enteras en
-# cada ejecución: una fuente que queda sin leer no pierde nada, la lee la siguiente.
-TOPE_S = 240.0
+# Tope de tiempo por ejecución. Leer las 32 fuentes y enlazar sus notas tarda de 170 a 190 s
+# (medido del 15 al 16 de octubre de 2026); 300 s dejan sitio para dos fuentes cortadas por su
+# tope. Las notas se leen enteras en cada ejecución: una fuente que queda sin leer no pierde
+# nada, la lee la siguiente.
+TOPE_S = 300.0
+# Tope de cada fuente dentro del de todas. Las más lentas tardan 18 s (mapn y lfv, siete
+# peticiones con la pausa de 3 s entre peticiones al mismo sitio; medido en el servidor el 16 de
+# octubre de 2026); 45 s son dos veces y media. Una fuente caída con sus reintentos llegaba a
+# 80 s y dejaba otras sin leer.
+TOPE_FUENTE_S = 45.0
+# Pausa automática de una fuente que falla en varias recogidas seguidas.
+FALLOS_PARA_PAUSA = 3
+PAUSA = timedelta(hours=6)
+# Una fuente que lleva este tiempo seguido en pausa se avisa al responsable, una sola vez.
+AVISO_PAUSA = timedelta(days=7)
+CURSOR_PAUSAS = "oficiales_pausas"
 _FORMATOS = {"minuto": "%Y-%m-%dT%H:%MZ", "dia": "%Y-%m-%d"}
 # Afirmación expresa de que había drones, sin reservas.
 _AFIRMA = re.compile(r"bekræft|bestätig|confirm|potwierdz|confirmă", re.IGNORECASE)
@@ -77,18 +98,22 @@ class Recuentos:
     enlazadas: int = 0
     confirmadas: int = 0
     bloqueadas: int = 0
-    # Fuentes que no dio tiempo a leer en esta ejecución.
+    # Fuentes que no dio tiempo a leer en esta ejecución (el tope de todas se agotó).
     sin_leer: int = 0
     # La nota más reciente leída en esta pasada, de cualquier fuente: el último dato de las
     # oficiales. Si la pasada se corta, puede ser anterior a la publicada, que no se rebaja
     # (recogida/estado.py).
     ultima: datetime | None = None
+    # Las fuentes que fallaron en esta pasada, con el motivo, y las que se saltaron por estar en
+    # pausa (no son un fallo).
+    fallidas: dict[str, str] = field(default_factory=dict)
+    en_pausa: list[str] = field(default_factory=list)
 
     def resumen(self) -> str:
         return (
             f"notas={self.notas} relevantes={self.relevantes} enlazadas={self.enlazadas} "
             f"confirmadas={self.confirmadas} bloqueadas={self.bloqueadas} "
-            f"sin_leer={self.sin_leer}"
+            f"sin_leer={self.sin_leer} en_pausa={len(self.en_pausa)}"
         )
 
 
@@ -297,13 +322,14 @@ def recoger(
     modelos: frozenset[str],
     recuentos: Recuentos,
     motivos: Counter[str],
-) -> None:
-    """Lee una fuente y enlaza sus notas relevantes con los incidentes."""
+) -> str | None:
+    """Lee una fuente y enlaza sus notas relevantes con los incidentes. Devuelve el motivo si la
+    fuente falló (no se pudo leer por ella misma)."""
     lector = robots(descargador, fuente["url"])
     if not lector.can_fetch(AGENTE_EODI, fuente["url"]):
         recuentos.bloqueadas += 1
         motivos["robots"] += 1
-        return
+        return "su robots.txt no deja leerla"
     try:
         if fuente["tipo"] == "pagina":
             notas = leer_pagina(descargador, lector, fuente)
@@ -312,16 +338,17 @@ def recoger(
             # render reciente, la fuente queda sin leer en esta ejecución.
             html = navegador.guardado(fuente, carpeta_renders(), ahora)
             if html is None:
+                # No es un fallo de la fuente: depende del temporizador de las de detalle.
                 recuentos.bloqueadas += 1
                 motivos["sin_render"] += 1
-                return
+                return None
             notas = leer_pagina(descargador, lector, fuente, html)
         else:
             notas = leer_rss(descargador.texto(fuente["url"], es_canal), fuente)
-    except (DescargaFallida, ET.ParseError, ValueError):
+    except (DescargaFallida, ET.ParseError, ValueError) as error:
         recuentos.bloqueadas += 1
         motivos["descarga"] += 1
-        return
+        return f"{type(error).__name__}: {str(error)[:200]}"
     for nota in notas:
         recuentos.notas += 1
         fecha = nota.fecha if nota.fecha.tzinfo else nota.fecha.replace(tzinfo=UTC)
@@ -340,6 +367,73 @@ def recoger(
             previo = next((i for i in antes if i["id"] == id_), None)
             if previo is not None and previo["estado"]["actual"] != Estado.CONFIRMADO:
                 recuentos.confirmadas += 1
+    return None
+
+
+def _instante(texto: Any) -> datetime | None:
+    try:
+        return datetime.fromisoformat(str(texto).replace("Z", "+00:00")) if texto else None
+    except ValueError:
+        return None
+
+
+def _iso(momento: datetime) -> str:
+    return momento.astimezone(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def pausas(almacen: Almacen) -> dict[str, dict[str, Any]]:
+    """El estado de cada fuente que ha fallado: fallos seguidos, pausa y si se avisó."""
+    guardado = (almacen.cursor(CURSOR_PAUSAS) or {}).get("fuentes") or {}
+    return {k: dict(v) for k, v in guardado.items() if isinstance(v, dict)}
+
+
+def en_pausa(estado: dict[str, Any], ahora: datetime) -> bool:
+    hasta = _instante(estado.get("pausa_hasta"))
+    return hasta is not None and ahora < hasta
+
+
+def anotar_fallo(estado: dict[str, Any], motivo: str, ahora: datetime) -> bool:
+    """Anota un fallo de la fuente; devuelve si entra en pausa."""
+    estado["fallos_seguidos"] = int(estado.get("fallos_seguidos") or 0) + 1
+    estado["motivo"] = motivo
+    estado["ultimo_fallo"] = _iso(ahora)
+    if estado["fallos_seguidos"] < FALLOS_PARA_PAUSA:
+        return False
+    # La tercera vez seguida, y cada vez que falla al volver a probarla, otra pausa.
+    estado["pausa_hasta"] = _iso(ahora + PAUSA)
+    estado.setdefault("en_pausa_desde", _iso(ahora))
+    return True
+
+
+Avisar = Callable[[str], None]
+
+
+def avisar_pausas_largas(
+    estados: dict[str, dict[str, Any]], ahora: datetime, avisar: Avisar | None
+) -> None:
+    """Avisa, una vez por fuente, de las que llevan AVISO_PAUSA seguido en pausa."""
+    for id_, estado in sorted(estados.items()):
+        desde = _instante(estado.get("en_pausa_desde"))
+        if desde is None or estado.get("avisada") or ahora - desde < AVISO_PAUSA:
+            continue
+        texto = (
+            f"La fuente oficial {id_} lleva en pausa desde el {desde:%Y-%m-%d %H:%M} UTC "
+            f"({(ahora - desde).days} días): falla cada vez que se vuelve a probar. Último "
+            f"motivo: {estado.get('motivo', 'sin motivo')}. Revisar su dirección en "
+            "configuracion/fuentes_oficiales.json."
+        )
+        registro.warning(
+            "oficiales: fuente %s en pausa %d días seguidos", id_, (ahora - desde).days
+        )
+        if avisar is None:
+            continue
+        try:
+            avisar(texto)
+        except OSError as error:
+            # Se reintenta en la recogida siguiente.
+            registro.warning("oficiales: el aviso de la fuente %s no salió: %s", id_, error)
+            continue
+        estado["avisada"] = _iso(ahora)
 
 
 def ejecutar(
@@ -348,18 +442,57 @@ def ejecutar(
     modelos: frozenset[str],
     descargador: Descargador | None = None,
     plazo: Plazo | None = None,
+    avisar: Avisar | None = None,
+    reloj: Callable[[], float] = time.monotonic,
 ) -> Recuentos:
-    """Lee las fuentes oficiales hasta agotar el plazo, si lo hay."""
+    """Lee las fuentes oficiales hasta agotar el plazo, si lo hay, cada una con su tope.
+
+    `avisar` manda al responsable el aviso de una fuente que lleva AVISO_PAUSA en pausa (no se
+    pasa en los ensayos ni en las pruebas)."""
     recuentos = Recuentos()
     descargador = descargador or Descargador(agente=AGENTE_EODI)
-    descargador.plazo = plazo
     motivos: Counter[str] = Counter()
-    for leidas, fuente in enumerate(fuentes()):
+    # Una fuente quitada de la configuración deja de tener estado.
+    ids = {f["id"] for f in fuentes()}
+    estados = {k: v for k, v in pausas(almacen).items() if k in ids}
+    activas = []
+    for fuente in fuentes():
+        estado = estados.get(fuente["id"], {})
+        if en_pausa(estado, ahora):
+            recuentos.en_pausa.append(fuente["id"])
+            registro.warning(
+                "oficiales: fuente %s en pausa hasta %s (falló %d recogidas seguidas: %s)",
+                fuente["id"], estado["pausa_hasta"], estado.get("fallos_seguidos", 0),
+                estado.get("motivo"),
+            )  # fmt: skip
+        else:
+            activas.append(fuente)
+    for leidas, fuente in enumerate(activas):
+        # El tope de la fuente, sin pasar del que queda para todas.
+        restante = math.inf if plazo is None else plazo.restante()
+        propio = restante > TOPE_FUENTE_S
+        descargador.plazo = Plazo(min(TOPE_FUENTE_S, restante), reloj)
         try:
-            recoger(almacen, descargador, fuente, ahora, modelos, recuentos, motivos)
+            motivo = recoger(almacen, descargador, fuente, ahora, modelos, recuentos, motivos)
         except TiempoAgotado as error:
-            recuentos.sin_leer = len(fuentes()) - leidas
-            registro.warning("oficiales: %s; fuentes sin leer: %d", error, recuentos.sin_leer)
-            break
+            if not propio:
+                recuentos.sin_leer = len(activas) - leidas
+                registro.warning("oficiales: %s; fuentes sin leer: %d", error, recuentos.sin_leer)
+                break
+            recuentos.bloqueadas += 1
+            motivos["tiempo"] += 1
+            motivo = f"cortada al agotar su tope de {TOPE_FUENTE_S:.0f} s"
+        if motivo is None:
+            estados.pop(fuente["id"], None)
+            continue
+        recuentos.fallidas[fuente["id"]] = motivo
+        pausa = anotar_fallo(estados.setdefault(fuente["id"], {}), motivo, ahora)
+        registro.warning(
+            "oficiales: fuente %s falló: %s%s", fuente["id"], motivo,
+            f"; en pausa {PAUSA.total_seconds() / 3600:.0f} h" if pausa else "",
+        )  # fmt: skip
+    descargador.plazo = None
+    avisar_pausas_largas(estados, ahora, avisar)
+    almacen.guardar_cursor(CURSOR_PAUSAS, {"fuentes": estados})
     registro.info("oficiales %s motivos=%s", recuentos.resumen(), dict(motivos))
     return recuentos

@@ -205,6 +205,20 @@ def test_fuentes_oficiales_sin_leer_por_tiempo_es_un_aviso(
     assert len(base_remota(repositorio, tmp_path).ataques_ucrania()) == 3
 
 
+def test_una_fuente_oficial_en_pausa_no_es_un_aviso(
+    entorno: tuple[str, CanalFalso, Path], tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repositorio, _, _ = entorno
+    monkeypatch.setattr(
+        oficiales,
+        "ejecutar",
+        lambda almacen, ahora, modelos, **_: oficiales.Recuentos(en_pausa=["aesa"]),
+    )
+    subir_base(repositorio, tmp_path, ultimo_id=1)
+    salida = horaria.principal(["--correo", "a@b.org", "--repositorio", repositorio])
+    assert salida == 0
+
+
 @pytest.mark.parametrize("codigo", [500, 403])
 def test_firms_caido_no_cambia_el_resultado_ni_la_publicacion(
     entorno: tuple[str, CanalFalso, Path],

@@ -146,6 +146,21 @@ def test_la_pausa_entre_peticiones_tambien_cuenta_en_el_plazo() -> None:
     assert d.recuentos["peticiones"] == 1
 
 
+def test_una_peticion_no_pasa_del_plazo() -> None:
+    limites: list[float] = []
+
+    def transporte(url: str, cabeceras: dict[str, str], limite_s: float) -> Respuesta:
+        limites.append(limite_s)
+        return 200, {}, VALIDA.encode()
+
+    reloj = Reloj()
+    d = Descargador(transporte, reloj.dormir, reloj, plazo=Plazo(12.0, reloj))
+    d.texto("https://t.me/a", es_valida)
+    d.plazo = None
+    d.texto("https://t.me/b", es_valida)
+    assert limites == [12.0, 30.0]
+
+
 def test_el_tiempo_agotado_no_es_un_fallo_de_descarga() -> None:
     # Quien atrapa DescargaFallida para seguir con lo siguiente no se traga el tope.
     assert not issubclass(TiempoAgotado, DescargaFallida)

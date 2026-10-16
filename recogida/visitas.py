@@ -612,6 +612,15 @@ def candidatos_del_dia(lineas: Iterable[str]) -> tuple[int, int]:
     return apartados, retirados
 
 
+PAUSA_OFICIAL = re.compile(r"oficiales: fuente (\S+) (?:en pausa hasta|falló: .*; en pausa)")
+
+
+def oficiales_en_pausa_del_dia(lineas: Iterable[str]) -> list[str]:
+    """Las fuentes oficiales que estuvieron en pausa ese día (recogida/oficiales.py), en el
+    diario de la recogida."""
+    return sorted({m[1] for linea in lineas if (m := PAUSA_OFICIAL.search(linea))})
+
+
 def resueltos_del_dia(vigilancia_json: Path, dia: date) -> list[tuple[str, bool]]:
     """Lo que la vigilancia vio y se fue ese día (recogida/vigilancia.py, `resueltos`): la frase y
     si llegó a abrir incidencia."""
@@ -819,6 +828,8 @@ class Datos:
     guardian: Documento | None = None
     # Las rectificaciones oficiales de la presencia decididas ese día (rectificaciones_del_dia).
     rectificaciones: list[tuple[str, str]] = field(default_factory=list)
+    # Las fuentes oficiales que estuvieron en pausa ese día (oficiales_en_pausa_del_dia).
+    oficiales_en_pausa: list[str] = field(default_factory=list)
 
 
 DIAS_SEMANA = ("lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo")
@@ -930,6 +941,11 @@ def texto_resumen(d: Datos) -> str:
             f"  Candidatos apartados por un fallo propio: {apartados}; retirados tras 3 fallos: "
             f"{retirados}"
         )
+    if d.oficiales_en_pausa:
+        lineas.append(
+            f"  Fuentes oficiales en pausa por fallar 3 recogidas seguidas: "
+            f"{', '.join(d.oficiales_en_pausa[:LIMITE])}"
+        )
     if d.resueltos:
         solos = [f for f, incidencia in d.resueltos if not incidencia]
         cerradas = [f for f, incidencia in d.resueltos if incidencia]
@@ -1002,6 +1018,7 @@ def reunir(
     except sqlite3.Error as error:
         registro.warning("avisos enviados sin leer: %s", error)
         enviados = (0, 0)
+    diario = diario_del_dia(dia, ejecutar)
     return Datos(
         dia=dia,
         visitas=visitas,
@@ -1014,7 +1031,8 @@ def reunir(
         problemas=salud(),
         reintentos=reintentos_del_dia(dia, ejecutar),
         resueltos=resueltos_del_dia(secretos / VIGILANCIA, dia) if secretos else [],
-        candidatos=candidatos_del_dia(diario_del_dia(dia, ejecutar)),
+        candidatos=candidatos_del_dia(diario),
+        oficiales_en_pausa=oficiales_en_pausa_del_dia(diario),
         control=control_del_dia(secretos / CONTROL, dia) if secretos else None,
         guardian=guardian_del_dia(guardian, dia) if guardian else None,
         rectificaciones=rectificaciones_del_dia(base, dia),
@@ -1288,6 +1306,20 @@ def rutas_del_entorno() -> Rutas:
 def _enviador(secretos: Path) -> Enviar:
     token = (secretos / "ntfy_observatorio").read_text(encoding="utf-8").strip()
     return avisos_ntfy.enviador(avisos_ntfy.configuracion()["servidor"], token)
+
+
+def avisador_privado(titulo: str, secretos: Path | None = None) -> Callable[[str], None] | None:
+    """Un aviso al responsable por su tema privado (el del resumen diario). None si este equipo
+    no tiene el token de ntfy (fuera del servidor)."""
+    secretos = secretos or rutas_del_entorno().secretos
+    if not (secretos / "ntfy_observatorio").exists():
+        return None
+    enviar = _enviador(secretos)
+
+    def avisar(texto: str) -> None:
+        enviar({"topic": TEMA_RESUMEN, "title": titulo, "message": texto, "priority": 4})
+
+    return avisar
 
 
 def principal(argumentos: list[str] | None = None) -> int:

@@ -95,6 +95,7 @@ from recogida import (
     suelo_europeo,
     tipo_atribucion,
     tipo_dron,
+    visitas,
 )
 from recogida.cache import CachePaginas
 from recogida.descarga import Descargador, DescargaFallida
@@ -408,12 +409,18 @@ def principal(argumentos: list[str] | None = None) -> int:
                 lambda: incursiones.retirar(almacen, ahora, modelos(almacen)),
             ),
         )
-        # Confirmaciones oficiales de los incidentes que ya hay. Si no da tiempo a leer
-        # todas las fuentes se avisa: lo normal es que sobre más de la mitad del tope.
+        # Confirmaciones oficiales de los incidentes que ya hay. Cada fuente tiene su tope y la
+        # que falla 3 recogidas seguidas se pausa (no es un aviso); si no da tiempo a leer todas,
+        # se avisa. El aviso de una fuente que lleva 7 días en pausa va al responsable, nunca
+        # desde un ensayo.
+        avisar = (
+            None if args.ensayo is not None
+            else visitas.avisador_privado("EODI · Fuente oficial en pausa")
+        )  # fmt: skip
         confirmaciones = paso(
             "confirmaciones oficiales",
             lambda: oficiales.ejecutar(
-                almacen, ahora, modelos(almacen), plazo=Plazo(oficiales.TOPE_S)
+                almacen, ahora, modelos(almacen), plazo=Plazo(oficiales.TOPE_S), avisar=avisar
             ),
         )
         if confirmaciones is None:

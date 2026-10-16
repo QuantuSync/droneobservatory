@@ -400,3 +400,37 @@ def test_el_sistema_cuenta_lo_que_se_arreglo_solo(goatcounter: Path, tmp_path: P
     assert "Candidatos apartados por un fallo propio: 1; retirados tras 3 fallos: 1" in texto
     assert "Se arreglaron solos, sin incidencia: 1\n  - El archivo de alertas está parado." in texto
     assert "Con incidencia, ya cerrada: 1" in texto
+
+
+def test_el_resumen_cuenta_las_fuentes_oficiales_en_pausa(
+    goatcounter: Path, tmp_path: Path
+) -> None:
+    diario = [
+        "WARNING recogida.oficiales: oficiales: fuente aesa falló: x; en pausa 6 h",
+        "WARNING recogida.oficiales: oficiales: fuente aesa en pausa hasta 2026-10-11T20:00:00Z "
+        "(falló 3 recogidas seguidas: x)",
+        "WARNING recogida.oficiales: oficiales: fuente mapn falló: código 500",
+        "WARNING recogida.oficiales: oficiales: fuente lfv en pausa hasta 2026-10-11T22:00:00Z (x)",
+    ]
+    assert visitas.oficiales_en_pausa_del_dia(diario) == ["aesa", "lfv"]
+    datos = dataclasses.replace(_datos(goatcounter, tmp_path), oficiales_en_pausa=["aesa", "lfv"])
+    assert (
+        "Fuentes oficiales en pausa por fallar 3 recogidas seguidas: aesa, lfv"
+        in visitas.texto_resumen(datos)
+    )
+
+
+def test_el_aviso_privado_va_al_tema_del_resumen(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    assert visitas.avisador_privado("t", tmp_path) is None
+    (tmp_path / "ntfy_observatorio").write_text("token\n", encoding="utf-8")
+    enviados: list[dict[str, object]] = []
+    monkeypatch.setattr(visitas, "_enviador", lambda secretos: enviados.append)
+    avisar = visitas.avisador_privado("EODI · Fuente oficial en pausa", tmp_path)
+    assert avisar is not None
+    avisar("texto")
+    assert enviados == [{
+        "topic": visitas.TEMA_RESUMEN, "title": "EODI · Fuente oficial en pausa",
+        "message": "texto", "priority": 4,
+    }]  # fmt: skip
