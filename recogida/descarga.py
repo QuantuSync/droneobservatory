@@ -161,8 +161,12 @@ class Descargador:
             self._esperar_turno(sitio)
             self.recuentos["peticiones"] += 1
             espera = self._espera_inicial_s * 2**intento
+            # Una petición no pasa del plazo (le queda al menos un segundo).
+            limite = self._limite_s
+            if self.plazo is not None:
+                limite = max(1.0, min(limite, self.plazo.restante()))
             try:
-                codigo, cabeceras, cuerpo = self._transporte(url, self._cabeceras, self._limite_s)
+                codigo, cabeceras, cuerpo = self._transporte(url, self._cabeceras, limite)
             except (OSError, TimeoutError) as error:
                 motivo = f"error de red: {type(error).__name__}"
             else:
