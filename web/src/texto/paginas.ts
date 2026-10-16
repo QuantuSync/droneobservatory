@@ -9,7 +9,7 @@ import { ACTOR_SIN_NOMBRE, cifras, DESCONOCIDO } from "../datos/derivar.ts";
 import type { Cifras } from "../datos/derivar.ts";
 import { cierre as leerCierre } from "../datos/efecto.ts";
 import { corredoresDelPeriodo } from "../datos/guerraSatelite.ts";
-import { estadoEscrito, historialCompleto, pasosDePresencia } from "../datos/presencia.ts";
+import { conMayuscula, estadoEscrito, historialCompleto, pasosDePresencia } from "../datos/presencia.ts";
 import type {
   AfirmacionPublica,
   Atribucion,
@@ -697,7 +697,7 @@ function incidente(d: IncidenteDetalle, idioma: Idioma): PaginaTexto {
               e("span", { class: "mono" }, instante(entrada.paso.fecha)),
               " · ",
               entrada.paso.motivo !== undefined
-                ? e("span", { "data-motivo-historial": "" }, entrada.paso.motivo[idioma])
+                ? e("span", { "data-motivo-historial": "" }, conMayuscula(entrada.paso.motivo[idioma]))
                 : entrada.paso.fuente_id === undefined
                   ? t.ficha.fuenteNoPublica
                   : (medios.get(entrada.paso.fuente_id) ?? entrada.paso.fuente_id),

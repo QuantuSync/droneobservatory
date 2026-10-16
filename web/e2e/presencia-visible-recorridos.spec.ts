@@ -7,6 +7,7 @@
 //   enlazada; el estado del suceso sigue «Confirmado».
 // - Lakenheath (EODI-2025-00164): la presencia y el último paso del historial llevan el círculo
 //   gris relleno de «Descartado».
+// - En los tres, el motivo del último paso empieza con mayúscula.
 // - Bruselas (EODI-2026-00293): confirmado por el control aéreo (skeyes), con el desmentido del
 //   aeropuerto en su historial, con su fecha y su fuente.
 // - El mapa: el punto de Copenhague (un grupo con confirmados) lleva el aro exterior morado, el
@@ -141,6 +142,10 @@ test.describe("No acreditado y descartado, bien visibles, como una persona", () 
         if (caso.fecha !== null) await expect(ultimo).toContainText(caso.fecha);
         await expect(ultimo.locator(`svg[data-circulo=${caso.marca}] circle`)).toHaveAttribute("fill", caso.color);
         await expect(ultimo.locator("a[href]").first()).toBeVisible();
+        // Debajo, el motivo, que empieza con mayúscula aunque el dato venga en minúscula.
+        const motivo = ultimo.locator("[data-motivo-historial]");
+        await expect(motivo).toBeVisible();
+        expect(((await motivo.textContent()) ?? "").trim()).toMatch(/^[«"“]?\p{Lu}/u);
         // En orden de fecha: va después de los pasos del estado.
         const total = await pasos.count();
         expect(total).toBeGreaterThanOrEqual(2);
