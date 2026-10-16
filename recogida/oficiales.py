@@ -325,7 +325,11 @@ def recoger(
     for nota in notas:
         recuentos.notas += 1
         fecha = nota.fecha if nota.fecha.tzinfo else nota.fecha.replace(tzinfo=UTC)
-        recuentos.ultima = max(recuentos.ultima or fecha, fecha)
+        if fecha > ahora:
+            # Mal fechada (zona u hora de la página): no cuenta como el último dato.
+            registro.info("oficiales: nota con fecha futura %s: %s", fecha.isoformat(), nota.enlace)
+        else:
+            recuentos.ultima = max(recuentos.ultima or fecha, fecha)
         if not filtro().dron.search(f"{nota.titulo} {nota.texto}"):
             continue
         recuentos.relevantes += 1
