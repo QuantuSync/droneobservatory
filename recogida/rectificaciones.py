@@ -304,6 +304,8 @@ def aplicar(almacen: Almacen, propuesta: Propuesta, decision: Documento, ahora: 
         incidente, str(decision["tipo"]), propuesta.fuente, _fecha_de(decision, propuesta), quien,
         motivo, PREFIJO + propuesta.clave, anterior.get("quien"),
     )  # fmt: skip
+    if nuevo is incidente:
+        return
     nuevo = {**nuevo, "control": {**nuevo["control"], "ultima_actualizacion": _instante(ahora)}}
     try:
         almacen.guardar_incidente(nuevo, ahora, vocabulario)
@@ -318,7 +320,8 @@ def aplicar(almacen: Almacen, propuesta: Propuesta, decision: Documento, ahora: 
                  f"experto): {quien['es']}, {motivo['es']}")  # fmt: skip
         almacen.anotar_motivo(TABLA_MOTIVOS, incidente["id"], antes,
                               {c: nuevo.get(c) for c in antes}, texto)  # fmt: skip
-    hechos.aplicadas.append(f"{incidente['id']} {decision['tipo']}")
+    if antes.keys() & {"presencia_dron", "presencia_historial"}:
+        hechos.aplicadas.append(f"{incidente['id']} {decision['tipo']}")
 
 
 def revisar(almacen: Almacen, experto: Experto, propuestas: list[Propuesta], ahora: datetime,
@@ -488,6 +491,8 @@ def _con_frase(propuesta: Propuesta, decision: Documento | None) -> Propuesta:
     if propuesta.origen != "mensual" or not decision or not decision.get("tipo"):
         return propuesta
     frase = str((decision.get("respuesta") or {}).get("frase") or "")
+    # Literal y dentro del límite de la frase de una fuente: sus primeras palabras.
+    frase = " ".join(frase.split()[: rectificaciones.MAX_PALABRAS_FRASE])
     if not frase:
         return propuesta
     fuente = {**propuesta.fuente, "frase_origen": frase}
