@@ -103,15 +103,18 @@ def confirmacion_que_prevalece(
     return None
 
 
-def motivo(competente: str, niega: str) -> dict[str, str]:
+def motivo() -> dict[str, str]:
+    """El motivo del paso que deja el incidente confirmado. Sin los nombres de las autoridades,
+    que van en su lengua y sin traducir: quién es cada una lo dicen las fuentes de los pasos."""
     return {
         "es": (
-            f"Prevalece {competente}, autoridad competente sobre el espacio aéreo o la "
-            f"investigación, que confirmó el dron; {niega} lo negó y queda en el historial."
+            "Prevalece la autoridad competente sobre el espacio aéreo o la investigación, que "
+            "confirmó el dron; la del aeropuerto lo negó y su negación queda en el historial."
         ),
         "en": (
-            f"{competente} prevails, as the authority competent for the airspace or the "
-            f"investigation, which confirmed the drone; {niega} denied it and stays in the history."
+            "The authority competent for the airspace or the investigation, which confirmed "
+            "the drone, prevails; the airport's authority denied it and its denial stays in the "
+            "history."
         ),
     }
 
@@ -139,7 +142,7 @@ def anotar_negacion(
         "estado": Estado.CONFIRMADO.value,
         "fecha": copy.deepcopy(niega["fecha"]),
         "fuente_id": prevalece["id"],
-        "motivo": motivo(autoridad(prevalece), nombre),
+        "motivo": motivo(),
     })  # fmt: skip
     resultado["estado"]["actual"] = Estado.CONFIRMADO.value
     resultado["control"].pop("motivo_desmentido", None)
