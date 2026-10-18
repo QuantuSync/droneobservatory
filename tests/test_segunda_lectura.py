@@ -189,6 +189,10 @@ def test_sin_apoyo_solo_en_los_datos_clave() -> None:
     respuesta = _lectura(lugar=("sin_apoyo", ""), tipo=("sin_apoyo", ""),
                          inicio=("sin_apoyo", "frase que no está"))  # fmt: skip
     assert [h.campo for h in lectura.hallazgos(respuesta, datos, citas)] == ["lugar"]
+    # La fecha aproximada es la de la publicación: ninguna cita la escribe.
+    datos["inicio"] = "2025-09-22T00:00Z (aproximada)"
+    respuesta = _lectura(inicio=("sin_apoyo", ""))
+    assert lectura.hallazgos(respuesta, datos, citas) == []
 
 
 def test_orden_de_lectura() -> None:

@@ -81,8 +81,9 @@ class Configuracion:
     modelo: str
 
 
-def cargar_local(ruta: Path = RUTA_LOCAL) -> None:
+def cargar_local(ruta: Path | None = None) -> None:
     """Para ejecuciones en local: lleva el fichero a las variables que falten."""
+    ruta = ruta or RUTA_LOCAL
     if not ruta.exists():
         return
     for linea in ruta.read_text(encoding="utf-8").splitlines():
