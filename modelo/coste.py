@@ -41,6 +41,11 @@ el tope normal ya no da. Lo que el experto gasta por encima de 1 dólar en un d�
 Un caso que no cabe espera: el normal, al día siguiente (UTC), porque su tope no se renueva
 antes; el crítico, a la recogida siguiente, y se reintenta en cada una.
 
+La segunda lectura (docs/segunda_lectura.md) usa un servicio secundario gratuito; lo único que
+cuesta es el experto al revisar lo que marca (modo «segunda_lectura»): como mucho 0,30 dólares al
+día (LIMITE_SEGUNDA_EXPERTO_DIARIO_USD), dentro del tope normal del experto y nunca de la reserva
+crítica. Lo que no cabe espera al día siguiente.
+
 Antes de cada llamada se suma lo gastado y el peor caso de la llamada (sus
 tokens de entrada estimados y el máximo de salida); si pasa del límite, no se
 llama.
@@ -79,6 +84,9 @@ LIMITE_RECTIFICACIONES_USD = 0.30
 LIMITE_EXPERTO_DIARIO_USD = 1.00
 # Reserva crítica del experto, aparte del tope: solo para los casos críticos.
 RESERVA_CRITICA_DIARIA_USD = 0.50
+# Lo que el experto gasta cada día en revisar lo que marca la segunda lectura: cuenta dentro de su
+# tope normal (nunca de la reserva crítica).
+LIMITE_SEGUNDA_EXPERTO_DIARIO_USD = 0.30
 # Tope del experto antes del 15 de octubre de 2026: una espera anotada sin su tope es de entonces.
 LIMITE_EXPERTO_ANTERIOR_USD = 0.30
 # Un caso que espera al experto por un fallo, o crítico con la reserva agotada, vuelve a la
@@ -102,6 +110,7 @@ class Modo(StrEnum):
     CONTROL_REPASO = "control_repaso"
     TRADUCCIONES = "traducciones"
     RECTIFICACIONES = "rectificaciones"
+    SEGUNDA_LECTURA = "segunda_lectura"
 
 
 class LimiteGasto(RuntimeError):
@@ -169,6 +178,18 @@ def comprobar_experto(gastado_hoy: float, previsto: float, critico: bool = False
     )
 
 
+def comprobar_segunda(gastado_experto_hoy: float, gastado_segunda_hoy: float,
+                      previsto: float) -> None:  # fmt: skip
+    """La revisión por el experto de lo que marca la segunda lectura: cabe en su modo (0,30 al
+    día) y en el tope normal del experto, nunca en la reserva crítica. Lanza LimiteGasto si no."""
+    if gastado_segunda_hoy + previsto > LIMITE_SEGUNDA_EXPERTO_DIARIO_USD:
+        raise LimiteGasto(
+            f"{Modo.SEGUNDA_LECTURA}: gastado {gastado_segunda_hoy:.4f} + previsto "
+            f"{previsto:.4f} > {LIMITE_SEGUNDA_EXPERTO_DIARIO_USD:.2f} USD"
+        )
+    comprobar_experto(gastado_experto_hoy, previsto, critico=False)
+
+
 def reparto_experto(gastado_hoy: float) -> dict[str, float]:
     """Lo que el experto gastó en el día, repartido entre el tope normal y la reserva crítica
     (lo que pasa de 1 dólar)."""
@@ -211,12 +232,15 @@ def limite(modo: Modo) -> float:
         Modo.CONTROL_REPASO: LIMITE_CONTROL_REPASO_USD,
         Modo.TRADUCCIONES: LIMITE_TRADUCCIONES_USD,
         Modo.RECTIFICACIONES: LIMITE_RECTIFICACIONES_USD,
+        Modo.SEGUNDA_LECTURA: LIMITE_SEGUNDA_EXPERTO_DIARIO_USD,
     }[modo]
 
 
 def diario(modo: Modo) -> bool:
     """Los modos con límite diario (lo gastado se cuenta solo en el día UTC)."""
-    return modo in {Modo.HORARIO, Modo.GUERRA, Modo.CONTROL, Modo.RECTIFICACIONES}
+    return modo in {
+        Modo.HORARIO, Modo.GUERRA, Modo.CONTROL, Modo.RECTIFICACIONES, Modo.SEGUNDA_LECTURA,
+    }  # fmt: skip
 
 
 def comprobar(gastado: float, previsto: float, modo: Modo) -> None:

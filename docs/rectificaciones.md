@@ -88,6 +88,14 @@ seguridad llega a 0,7 y, si la rectificación estaba revisada a mano, el tipo co
    pasada** con el modelo base (modo `rectificaciones` de `modelo/coste.py`); la pasada que no
    termina por el tope o por el tiempo se repite en la recogida siguiente.
 
+4. **Cada día, desde la segunda lectura** (desde el 18 de octubre de 2026,
+   [`docs/segunda_lectura.md`](segunda_lectura.md)): la misma selección de titulares que el punto 3,
+   pero sobre todos los incidentes publicados con la presencia confirmada, no confirmada o no
+   acreditada y al menos un día de antigüedad, con el servicio secundario de modelos (gratuito).
+   Lo que elige entra en la **misma cola** que lo del punto 3 y lo decide el experto igual, con el
+   modo `segunda_lectura` (0,30 USD al día como mucho, nunca de la reserva crítica). El barrido
+   mensual sigue tal cual: es el mecanismo independiente.
+
 Nada de esto impide publicar ni retirar incidentes: el paso va aislado en la recogida horaria
 (un fallo queda en el registro y la recogida sigue), con su propio tope de tiempo (150 s).
 

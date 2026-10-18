@@ -19,6 +19,7 @@
 import hashlib
 import json
 import re
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from typing import Any
@@ -209,9 +210,13 @@ def candidatos(a: Documento, b: Documento) -> bool:
     )
 
 
-def pares_candidatos(activos: list[Documento], foco: set[str]) -> list[tuple[Documento, Documento]]:
+def pares_candidatos(
+    activos: list[Documento], foco: set[str],
+    criterio: Callable[[Documento, Documento], bool] = candidatos,
+) -> list[tuple[Documento, Documento]]:  # fmt: skip
     """Los pares de candidatos con al menos uno del foco, primero los más cercanos en el
-    tiempo."""
+    tiempo. Con otro `criterio`, los pares que cumplen ese (la segunda lectura, con márgenes más
+    amplios: proceso/segunda_lectura.py)."""
     pares: dict[str, tuple[Documento, Documento]] = {}
     por_pais: dict[str, list[Documento]] = {}
     for d in activos:
@@ -220,7 +225,7 @@ def pares_candidatos(activos: list[Documento], foco: set[str]) -> list[tuple[Doc
         if d["id"] not in foco:
             continue
         for otro in por_pais.get(d["lugar"]["pais"], []):
-            if candidatos(d, otro):
+            if criterio(d, otro):
                 pares.setdefault(clave_par(d["id"], otro["id"]), (d, otro))
     return sorted(pares.values(), key=lambda p: abs(instante(p[0]) - instante(p[1])))
 

@@ -224,7 +224,11 @@ Principio (desde el 15 de octubre de 2026): **lo crítico nunca espera a que se 
   (`coste.espera_vencida`; las de antes del 15 de octubre de 2026, sin ese dato, son de 0,30 USD).
   Cada espera de un caso crítico lleva `critico`. Un par o una verificación cuya espera vence
   vuelve en la recogida horaria siguiente aunque sus fichas ya no sean nuevas
-  (`control_fichas.esperas_vencidas`), sin esperar a la pasada de madrugada.
+  (`control_fichas.esperas_vencidas`), sin esperar a la pasada de madrugada.- **Segunda lectura** (desde el 18 de octubre de 2026): lo que marca la capa secundaria
+  ([`docs/segunda_lectura.md`](segunda_lectura.md)) lo revisa el experto con el modo
+  `segunda_lectura`, como mucho 0,30 USD al día dentro de su tope normal y nunca de la reserva
+  crítica; lo que no cabe espera al día siguiente. El servicio secundario de modelos que marca los
+  candidatos es gratuito y no decide nada.
 
 ## Lotes (mitad de precio) para lo que no es urgente
 
