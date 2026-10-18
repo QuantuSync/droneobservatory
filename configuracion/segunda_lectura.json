@@ -1,0 +1,30 @@
+{
+  "descripcion": "Segunda lectura con el servicio secundario de modelos (docs/segunda_lectura.md): márgenes de los posibles duplicados, candidatos por recogida, ritmo de las peticiones y ventana de cada pasada.",
+  "pares": {
+    "horas": 72,
+    "km": 30,
+    "por_pasada": 10
+  },
+  "recogida": {
+    "por_recogida": 2,
+    "tope_lectura_s": 30,
+    "tope_experto_s": 150
+  },
+  "ritmo": {
+    "por_minuto": 8,
+    "limite_s": 120,
+    "reintentos": 3,
+    "espera_inicial_s": 5,
+    "espera_maxima_s": 60,
+    "fallos_seguidos": 3
+  },
+  "rectificaciones": {
+    "hora_utc": 2,
+    "dias_desde_el_suceso": 1
+  },
+  "pasada": {
+    "minuto_inicio": 45,
+    "minuto_fin": 10,
+    "tope_min": 25
+  }
+}

@@ -1310,6 +1310,16 @@ class Almacen:
             parametros += (dia,)
         return float(self._conexion.execute(sql, parametros).fetchone()[0])
 
+    def gastado_experto_en(self, modo: str, dia: str) -> float:
+        """Dólares que gastó el experto (llamadas escaladas) en un modo el día `dia` (UTC)."""
+        fila = self._conexion.execute(
+            "SELECT coalesce(sum(coste), 0) FROM llamadas_extractor WHERE modo = ? AND "
+            "substr(fecha, 1, 10) = ? AND id IN (SELECT llamada FROM llamadas_modelo WHERE "
+            "escalada = 1)",
+            (modo, dia),
+        ).fetchone()
+        return float(fila[0])
+
     def llamadas(self) -> list[Documento]:
         filas = self._conexion.execute(
             "SELECT fecha, modo, candidato, lote, entrada, salida, escritura_cache, "
