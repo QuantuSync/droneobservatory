@@ -11,7 +11,7 @@ import type { BrowserContext, Page } from "@playwright/test";
 import { validarResumenUcrania } from "../src/datos/validar.ts";
 import { nochesDeGuerra, ultimaNocheConCifra } from "../src/datos/ucrania.ts";
 import type { Resumen, ResumenUcrania } from "../src/datos/tipos.ts";
-import { jornadaEscrita, textos } from "../src/i18n/index.ts";
+import { jornadaEscrita, numero, textos } from "../src/i18n/index.ts";
 
 const CAPTURAS = process.env.CAPTURAS ?? join(import.meta.dirname, "..", "..", "docs", "capturas");
 const MAPA_LISTO = "[data-mapa-listo=true]";
@@ -257,7 +257,7 @@ for (const tamano of [...TELEFONOS, ESCRITORIO]) {
       if (ultima === null || ultima.lanzados === null) throw new Error("sin noche con cifra");
       await page.locator("[data-boton-ahora]").filter({ visible: true }).click();
       const linea = page.locator('[data-cifra="drones"]').filter({ visible: true });
-      await expect(linea.locator("[data-numero]")).toHaveText(new Intl.NumberFormat("es").format(ultima.lanzados));
+      await expect(linea.locator("[data-numero]")).toHaveText(numero(ultima.lanzados, "es"));
       const antiguo = Date.now() - ultima.fin > 36 * 3_600_000;
       const cuando = jornadaEscrita(ES, ultima.jornada);
       await expect(linea.locator("[data-texto]")).toContainText(antiguo ? `último parte: ${cuando}` : cuando);
@@ -292,7 +292,7 @@ for (const tamano of [...TELEFONOS, ESCRITORIO]) {
         const panel = page.locator("[data-noche]").filter({ visible: true });
         await expect(panel.getByRole("button", { name: "Reanudar" })).toBeVisible({ timeout: 15_000 });
         await expect(panel).toContainText(jornadaEscrita(ES, noche.jornada, true));
-        await expect(panel).toContainText(new Intl.NumberFormat("es").format(noche.lanzados ?? 0));
+        await expect(panel).toContainText(numero(noche.lanzados ?? 0, "es"));
         await capturar(page, `7b-noche-a-noche-${nombreNoche}-${nombre}`);
       }
     });
