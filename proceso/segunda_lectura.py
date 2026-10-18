@@ -27,6 +27,7 @@ from jsonschema import Draft202012Validator
 
 from esquema import Documento
 from proceso import control_fichas as reglas
+from proceso import incidentes
 
 VERSION = "segunda/1"
 # Los datos de la ficha que se comprueban, con lo que significa cada uno para el modelo.
@@ -280,7 +281,8 @@ def hallazgos(
 ) -> list[Hallazgo]:
     """Lo que cuenta de una respuesta válida: un dato contradicho, uno clave sin apoyo o varios
     sucesos, con una frase que está en las citas (una frase inventada anula el hallazgo). Un dato
-    que la ficha no tiene no se valora."""
+    que la ficha no tiene no se valora, ni la fecha aproximada (la de la publicación) sin apoyo:
+    ninguna cita la escribe."""
     resultado = []
     for campo, valoracion in respuesta["campos"].items():
         valor = datos.get(campo, "")
@@ -293,6 +295,7 @@ def hallazgos(
         elif (
             valoracion["valor"] == SIN_APOYO
             and campo in CLAVE_SIN_APOYO
+            and not (campo == "inicio" and valor.endswith(f"({incidentes.APROXIMADA})"))
             and (not frase or en_las_citas(frase, citas))
         ):
             resultado.append(Hallazgo(campo, SIN_APOYO, "", valor))
