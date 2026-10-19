@@ -1144,6 +1144,19 @@ export const en: Textos = {
                 "or attributes the incident if that is what it says.",
             ],
           },
+          {
+            parrafo: [
+              "What the report says on the authority's behalf also counts («according to the " +
+                "Government Delegation», «Aena sources confirmed»), even without quotation " +
+                "marks, as does an authority that acknowledges the event while playing it down. " +
+                "Only a quote in the authority's own words attributes. The Government's " +
+                "representation in a territory (a Government delegation or sub-delegation, a " +
+                "prefecture) is the Government. A professional body, a trade union or an " +
+                "association is not an authority even if the report quotes it as one: what it " +
+                "says does not change the status. When two records of the same event are " +
+                "merged, the one that remains keeps the other's official confirmation.",
+            ],
+          },
         ],
       },
       {
@@ -1177,8 +1190,10 @@ export const en: Textos = {
               {
                 termino: "Official statements",
                 texto: [
-                  "Police forces, air navigation providers, airports and defence ministries " +
-                    "that publish their statements openly.",
+                  "Police forces, air navigation providers, airports, defence ministries and " +
+                    "the Government's representations in each territory (in Spain, Aena and the " +
+                    "Government delegations in Melilla and the Canary Islands) that publish " +
+                    "their statements openly.",
                 ],
               },
               {

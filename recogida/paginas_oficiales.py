@@ -5,9 +5,12 @@ La página de noticias da los enlaces a las notas (los que casan con el patrón
 de drones o es uno de los títulos genéricos de la fuente («Informație de
 presă»), como mucho MAX_NOTAS_POR_FUENTE por ejecución. De cada nota se toma la
 fecha y los primeros párrafos. La fecha sale del patrón `fecha` de la fuente si
-lo tiene y, si no, de los metadatos de publicación de la página.
+lo tiene y, si no, de los metadatos de publicación de la página. Si la nota no va en
+párrafos, o los menús de la página los tapan (el portal del Ministerio de Política Territorial,
+Aena), la fuente da `cuerpo_desde`: el texto es el de la página a partir de esa marca.
 """
 
+import html as _html
 import re
 from datetime import UTC, datetime
 from html.parser import HTMLParser
@@ -32,7 +35,8 @@ _MESES = {m: i for i, m in enumerate(
 _ISO = re.compile(r"(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2}):(\d{2})(?::\d{2}(?:\.\d+)?)?"
                   r"(Z|[+-]\d{2}:?\d{2})?)?")  # fmt: skip
 _NUMERICA = re.compile(r"(\d{1,2})[./-](\d{1,2})[./-](\d{4})")
-_CON_MES = re.compile(r"(\d{1,2})\.?\s+([^\W\d_]{3,})\.?,?\s+(\d{4})")
+# «18. August 2025», «16 mai 2017» y, en español, «15 de octubre de 2026».
+_CON_MES = re.compile(r"(\d{1,2})\.?\s+(?:de\s+)?([^\W\d_]{3,})\.?,?\s+(?:de\s+)?(\d{4})")
 # Nombres completos de los meses en los idiomas de las fuentes con fecha en texto (sueco,
 # danés y noruego, italiano, español, estonio, neerlandés, alemán): con solo las tres primeras
 # letras, «juuni» y «juuli» serían el mismo mes.
@@ -211,6 +215,11 @@ def contenido(html: str, fuente: Documento, titulo: str) -> tuple[datetime, str,
     publicada = fecha(pagina, fuente)
     if publicada is None:
         return None
+    if desde := fuente.get("cuerpo_desde"):
+        plano = _html.unescape(pagina.texto())
+        if (marca := re.search(desde, plano)) is None:
+            return None
+        return publicada[0], publicada[1], plano[marca.end() :].strip()[:MAX_CARACTERES_TEXTO]
     cuerpo = [
         p for p in pagina.parrafos
         if len(p) >= MIN_CARACTERES_PARRAFO and p != titulo and not _AVISOS.search(p)

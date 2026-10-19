@@ -63,6 +63,22 @@ def test_la_autoridad_que_afirma_el_cierre_confirma() -> None:
     assert citada["enlace"] == resultado["fuentes"][0]["enlace"]
 
 
+def test_un_colectivo_profesional_no_es_una_autoridad() -> None:
+    # EODI-2025-00190 (Sevilla, 24 de febrero de 2025): la cuenta en X del colectivo de los
+    # controladores aéreos, citada por la prensa como si fuera ENAIRE, confirmó el dron.
+    base, _ = incidente()
+    resultado = aplicar(declaracion(
+        "drones", "Københavns Politi: Vi kan bekræfte, at der i aften er observeret droner",
+        "navegacion_aerea", autoridad="Controladores Aéreos de España",
+    ))  # fmt: skip
+    assert resultado["estado"]["actual"] == "notificado"
+    assert resultado["presencia_dron"] == "no_confirmada"
+    assert len(resultado["fuentes"]) == len(base["fuentes"])
+    assert declaraciones.no_es_autoridad("Sindicatul Europol")
+    assert not declaraciones.no_es_autoridad("ENAIRE")
+    assert not declaraciones.no_es_autoridad("Delegación del Gobierno en Melilla")
+
+
 def test_drones_afirmados_por_las_fuerzas_armadas_confirman_la_presencia() -> None:
     resultado = aplicar(declaracion(
         "drones", "Siły Zbrojne RP zestrzeliły drony, które naruszyły polską przestrzeń powietrzną",

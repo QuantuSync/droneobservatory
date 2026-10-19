@@ -20,6 +20,10 @@ Una fuente que el incidente ya tiene no se vuelve a aplicar: después de la prim
 cambia nada. Si una reconstrucción rehiciera el incidente sin ella, la siguiente recogida la
 vuelve a aplicar.
 
+Un incidente en el que se unió un registro confirmado recupera esa confirmación si la fuente
+oficial pasó con la unión (`uniones`): las uniones de antes del 14 de octubre de 2026 se llevaban
+la fuente y no el estado.
+
 Además, todos los titulares quedan de acuerdo con el estado (atribucion.titulo_segun_atribucion):
 el de un incidente que no está atribuido no dice la nacionalidad del dron ni señala a un autor.
 """
@@ -55,6 +59,11 @@ MOTIVO_TITULAR = (
     "titular sin la nacionalidad del dron ni el autor: el incidente no está atribuido "
     "(proceso/atribucion.py)"
 )
+MOTIVO_UNION = (
+    "confirmación oficial de un registro unido que la unión no pasó "
+    "(proceso/incidentes.estado_con_el_absorbido)"
+)
+MARCA_ATRIBUIDO = atribucion.ESTADO_ATRIBUIDO
 _CAMPOS = ("estado", "atribucion", "investigacion", "presencia_dron", "titulo", "tipo")
 
 
@@ -202,6 +211,39 @@ def aplicar(
         len(resumen.sin_incidente), len(resumen.sin_guardar),
     )  # fmt: skip
     return resumen
+
+
+def uniones(almacen: Almacen, ahora: datetime, modelos: frozenset[str]) -> list[str]:
+    """Los incidentes que recuperan la confirmación oficial de un registro unido en ellos. Desde
+    el 14 de octubre de 2026 una unión pasa al que queda los pasos a confirmado del unido si su
+    fuente pasa con él (incidentes.estado_con_el_absorbido); las uniones de antes se llevaron la
+    fuente oficial pero no el estado: el 19 de octubre de 2026, 14 incidentes seguían notificados
+    con la declaración que confirmaba su registro unido (EODI-2025-00122 Palma, EODI-2025-00098
+    Alicante, EODI-2026-00402 Málaga, entre ellos). Se repasan en cada recogida; ya hecho, no
+    cambia nada. La atribución no se toma de aquí: la reaplica `aplicar` con su regla."""
+    cambiados = []
+    for absorbido in almacen.incidentes():
+        if "fusionado_en" not in absorbido:
+            continue
+        destino = vivo(almacen, str(absorbido["fusionado_en"]))
+        if destino is None:
+            continue
+        pasos = [p for p in absorbido["estado"]["historial"] if p["estado"] != MARCA_ATRIBUIDO]
+        sin_autoria = {**absorbido, "estado": {**absorbido["estado"], "historial": pasos}}
+        estado = incidentes.estado_con_el_absorbido(destino, sin_autoria)
+        if estado == destino["estado"]:
+            continue
+        nuevo = incidentes.aplicar_reglas({**copy.deepcopy(destino), "estado": estado})
+        nuevo["control"] = {**nuevo["control"], "ultima_actualizacion": _instante(ahora)}
+        try:
+            almacen.guardar_incidente(nuevo, ahora, modelos)
+        except DocumentoInvalido as error:
+            registro.warning("unión sin confirmar en %s: %s", destino["id"], error)
+            continue
+        _anotar(almacen, destino, nuevo, MOTIVO_UNION)
+        cambiados.append(destino["id"])
+    registro.info("confirmaciones de registros unidos recuperadas: %s", cambiados or "ninguna")
+    return cambiados
 
 
 def titulares(almacen: Almacen, ahora: datetime, modelos: frozenset[str]) -> tuple[int, list[str]]:

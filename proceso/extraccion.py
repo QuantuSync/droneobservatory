@@ -31,7 +31,9 @@ Dos modelos (docs/modelos.md): la ficha la hace el modelo base y, si las reglas 
 proceso/escalado.py lo piden, se repite con el experto y vale la suya. Las llamadas al experto
 cuentan solo contra su propio tope (modelo/coste.py), nunca contra el del modo. Si el experto ha
 agotado su tope del día (o no responde), el candidato espera (cursor `esperan_experto`) en vez de
-publicarse con la ficha del base; los demás siguen. Un caso crítico (escalado.es_critico) usa
+publicarse con la ficha del base; los demás siguen. Si el único motivo es una autoridad que habla
+en la noticia sin declaración en la ficha (escalado.opcionales) y el tope está agotado, vale la
+ficha del base y no espera. Un caso crítico (escalado.es_critico) usa
 antes la reserva crítica y, si también se agotó, se reintenta en cada recogida; el que no es
 crítico y espera por el tope vuelve al día siguiente (UTC), o antes si el tope sube; el que espera
 por un fallo, en la recogida siguiente. Cada ficha guarda qué modelo la decidió y la extracción,
@@ -798,7 +800,6 @@ def escalar(
         motivos += [m for m in espera.get("motivos", []) if m not in motivos]
     if not motivos:
         return respuesta, None
-    anotar_llamada(almacen, peticion, respuesta, ahora, modo, False)
     modelo_experto = str(getattr(experto, "modelo", ""))
     previsto = coste.peor_caso(
         peticion.letras(), ficha.MAX_TOKENS_SALIDA, modelo=modelo_experto, esfuerzo=ficha.ESFUERZO
@@ -811,7 +812,14 @@ def escalar(
             almacen.gastado_modelo(modelo_experto, coste.dia(ahora)), previsto, critico
         )
     except coste.LimiteGasto as error:
+        if escalado.opcionales(motivos):
+            # Solo una autoridad citada sin declaración: sin experto, vale la ficha del base
+            # (procesar_respuesta anota su llamada).
+            registro.info("candidato %s: sin experto ahora (%s), vale el base", candidato_id, error)
+            return respuesta, None
+        anotar_llamada(almacen, peticion, respuesta, ahora, modo, False)
         raise EsperaExperto(motivos, True, str(error), critico) from error
+    anotar_llamada(almacen, peticion, respuesta, ahora, modo, False)
     if tramo is coste.Tramo.RESERVA:
         registro.info("candidato %s: el experto usa la reserva crítica", candidato_id)
     try:

@@ -1,11 +1,14 @@
 """Genera los aeropuertos europeos y sus pistas para el tráfico aéreo medido desde OurAirports.
 
-De https://ourairports.com/data/ (dominio público): los aeropuertos grandes y medianos de
-Europa (continente EU de OurAirports), Turquía y Chipre, con código OACI, salvo Rusia y
-Bielorrusia (sin incidentes y casi sin receptores de adsb.lol). Cada uno lleva su punto de
-referencia, su elevación, si tiene tráfico regular (`scheduled_service`) y los umbrales de
-sus pistas con su rumbo verdadero, calculado de un umbral al otro, como hace la biblioteca
-«traffic» (MIT). Los de Ucrania figuran aunque no tengan vuelos regulares desde 2022.
+De https://ourairports.com/data/ (dominio público): los aeropuertos grandes y medianos de Europa
+(continente EU de OurAirports), Turquía y Chipre, con código OACI, salvo Rusia y Bielorrusia (sin
+incidentes y casi sin receptores de adsb.lol). También los de los países del observatorio
+(configuracion/paises_europa.json) que OurAirports pone en otro continente si caen en la caja del
+tráfico (recogida/trafico.CAJA): Melilla (GEML), en África para OurAirports, y Rodas y Cos, en Asia;
+hasta el 19 de octubre de 2026 no se medía su tráfico (EODI-2026-00146, Melilla). Cada uno lleva su
+punto de referencia, su elevación, si tiene tráfico regular (`scheduled_service`) y los umbrales de
+sus pistas con su rumbo verdadero, calculado de un umbral al otro, como hace la biblioteca «traffic»
+(MIT). Los de Ucrania figuran aunque no tengan vuelos regulares desde 2022.
 
 Uso: python -m recogida.aeropuertos_ourairports [--aeropuertos airports.csv]
     [--pistas runways.csv]
@@ -23,10 +26,13 @@ from pathlib import Path
 from typing import Any
 
 from recogida.descarga import AGENTE_EODI, Descargador
+from recogida.trafico import CAJA
 
 AEROPUERTOS = "https://davidmegginson.github.io/ourairports-data/airports.csv"
 PISTAS = "https://davidmegginson.github.io/ourairports-data/runways.csv"
-DESTINO = Path(__file__).resolve().parent.parent / "configuracion" / "aeropuertos_trafico.json"
+CONFIGURACION = Path(__file__).resolve().parent.parent / "configuracion"
+DESTINO = CONFIGURACION / "aeropuertos_trafico.json"
+PAISES = CONFIGURACION / "paises_europa.json"
 TIPOS = frozenset({"large_airport", "medium_airport"})
 PAISES_FUERA_DE_EU = frozenset({"TR", "CY"})
 EXCLUIDOS = frozenset({"RU", "BY"})
@@ -91,15 +97,18 @@ def generar(aeropuertos: str, pistas: str) -> list[dict[str, Any]]:
             continue
         por_ref.setdefault(fila["airport_ref"], []).extend(_umbrales(fila))
     resultado = []
-    for fila in csv.DictReader(io.StringIO(aeropuertos)):
+    filas = list(csv.DictReader(io.StringIO(aeropuertos)))
+    europeos = set(json.loads(PAISES.read_text(encoding="utf-8"))["cajas"])
+    for fila in filas:
         pais = PAIS_PADRE.get(fila["ident"]) or PAIS_PADRE.get(fila["iso_country"])
         pais = pais or fila["iso_country"]
-        europeo = fila["continent"] == "EU" or fila["iso_country"] in PAISES_FUERA_DE_EU
-        if fila["type"] not in TIPOS or not europeo or pais in EXCLUIDOS:
-            continue
         oaci = fila["icao_code"] or fila["ident"]
         lat, lon = _real(fila["latitude_deg"]), _real(fila["longitude_deg"])
         if not OACI.match(oaci) or lat is None or lon is None:
+            continue
+        europeo = fila["continent"] == "EU" or fila["iso_country"] in PAISES_FUERA_DE_EU
+        europeo = europeo or (fila["iso_country"] in europeos and CAJA.contiene(lat, lon))
+        if fila["type"] not in TIPOS or not europeo or pais in EXCLUIDOS:
             continue
         elevacion = _real(fila["elevation_ft"])
         resultado.append(

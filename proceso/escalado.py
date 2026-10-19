@@ -18,6 +18,13 @@ Lo decide el código, con reglas fijas, mirando la respuesta del modelo base:
    oficial o habla de hundimiento, víctimas, desaparecidos, heridos, daños, cierre de aeropuerto
    o incursión (configuracion/senales_escalado.json). En la prueba del 14 de octubre de 2026 dio
    así, con seguridad, el ataque a dos buques frente a Biala (EODI-2026-00489).
+7. **declaracion**: el base da el incidente sin ninguna declaración oficial y una frase de una
+   fuente hace hablar a una autoridad (la nombra junto a un verbo de declaración o un «según»;
+   configuracion/senales_escalado.json, «autoridad_citada»). El experto decide si la autoridad
+   confirma, desmiente o atribuye. Es el único motivo opcional: si el experto ha agotado su tope,
+   vale la ficha del base y el candidato no espera. El 25 de septiembre de 2026 la Delegación del
+   Gobierno en Melilla reconoció en la prensa dos incidentes con drones y la ficha no lo recogió
+   (EODI-2026-00146).
 
 Si se escala, vale la respuesta del experto. Las tareas mecánicas (traducir citas, sacar lugares
 de los partes de Ucrania, clasificar frases del catálogo) nunca se escalan.
@@ -62,6 +69,10 @@ MOTIVOS_CRITICOS = (
     "critico", "publicada", "contradiccion: presencia", "contradiccion: cierre",
     *(f"senal: {s}" for s in sorted(SENALES_CRITICAS | {"incursion"})),
 )  # fmt: skip
+# Los motivos que no hacen esperar al experto (por su comienzo): si no puede ahora, vale el base.
+MOTIVOS_OPCIONALES = ("declaracion",)
+# Dónde acaba una frase, para buscar la autoridad y su verbo en la misma.
+_FIN_DE_FRASE = re.compile(r"[.!?;\n]+")
 # De menos a más: rebajar es bajar en este orden.
 RANGO_PRESENCIA = {"descartada": 0, "no_acreditada": 1, "no_confirmada": 2, "confirmada": 3}
 
@@ -72,28 +83,56 @@ def paises_otan() -> frozenset[str]:
     return frozenset(c for c, d in datos["paises"].items() if d.get("otan"))
 
 
+def _expresion(texto: str) -> str:
+    """Una expresión de configuracion/senales_escalado.json como patrón de texto normalizado."""
+    partes = []
+    for palabra in texto.split():
+        if palabra == "..":
+            partes.append(r"(?:\w+\s+){0,3}")
+            continue
+        raiz = re.escape(normalizar(palabra.rstrip("*")))
+        partes.append((raiz + r"\w*" if palabra.endswith("*") else raiz) + r"\s+")
+    return "".join(partes).removesuffix(r"\s+")
+
+
+def _patron(expresiones: list[str]) -> re.Pattern[str]:
+    return re.compile(r"\b(?:" + "|".join(map(_expresion, expresiones)) + r")\b")
+
+
 @cache
 def senales() -> dict[str, re.Pattern[str]]:
     """Por cada señal (hundimiento, víctimas…), el patrón de sus expresiones en texto normalizado:
     una palabra con «*» casa con todo lo que empieza por ella; sin «*», solo entera; «..» deja
     hasta tres palabras cualesquiera en medio."""
-
-    def expresion(texto: str) -> str:
-        partes = []
-        for palabra in texto.split():
-            if palabra == "..":
-                partes.append(r"(?:\w+\s+){0,3}")
-                continue
-            raiz = re.escape(normalizar(palabra.rstrip("*")))
-            partes.append((raiz + r"\w*" if palabra.endswith("*") else raiz) + r"\s+")
-        return "".join(partes).removesuffix(r"\s+")
-
     datos = json.loads(RUTA_SENALES.read_text(encoding="utf-8"))
     return {
-        nombre: re.compile(r"\b(?:" + "|".join(map(expresion, expresiones)) + r")\b")
+        nombre: _patron(expresiones)
         for nombre, expresiones in [*datos["senales"].items(), *datos["criticos"].items()]
         if nombre != "descripcion"
     }
+
+
+@cache
+def _citada() -> tuple[re.Pattern[str], re.Pattern[str]]:
+    datos = json.loads(RUTA_SENALES.read_text(encoding="utf-8"))["autoridad_citada"]
+    return _patron(datos["autoridades"]), _patron(datos["verbos"])
+
+
+def autoridad_citada(textos: tuple[str, ...]) -> str | None:
+    """La primera autoridad que habla en una frase de las fuentes (la frase la nombra junto a un
+    verbo de declaración o un «según»), normalizada; None si ninguna."""
+    autoridades, verbos = _citada()
+    for texto in textos:
+        for frase in _FIN_DE_FRASE.split(texto):
+            normal = normalizar(frase)
+            if (encontrada := autoridades.search(normal)) and verbos.search(normal):
+                return encontrada.group(0)
+    return None
+
+
+def opcionales(motivos: list[str]) -> bool:
+    """Si todos los motivos de escalado son opcionales: sin experto ahora, vale el base."""
+    return bool(motivos) and all(m.startswith(MOTIVOS_OPCIONALES) for m in motivos)
 
 
 def _senal(nombre: str, texto: str) -> bool:
@@ -238,6 +277,12 @@ def motivos_ficha(
         motivos.append(f"critico: incursión en {pais}")
     if _valor(ficha, "cierre") == "si":
         motivos.append("critico: cierre de aeropuerto")
+    if (
+        _valor(ficha, "es_incidente") is True
+        and not ficha.get("declaraciones")
+        and (autoridad := autoridad_citada(textos))
+    ):
+        motivos.append(f"declaracion: habla «{autoridad}» y la ficha no trae su declaración")
     return motivos
 
 

@@ -197,7 +197,8 @@ def reextraer(
 #   la regla lo sostiene.
 # - Titulares: el titular que dice solo lo que dicen las citas, con su motivo; y, si la
 #   autoridad lo deja abierto o no lo da por hecho, la presencia del dron y el estado que
-#   corresponden, cada cambio con su cita y su motivo.
+#   corresponden, cada cambio con su cita y su motivo; y la instalación afectada («objetivo»)
+#   si la ficha no la reconoció.
 # - Ubicaciones: el lugar del suceso que da una autoridad (su frase), con su punto, su radio y
 #   los demás lugares que nombra.
 #
@@ -385,6 +386,11 @@ def con_titular(incidente: Documento, revision: Documento, instante: Documento) 
         resultado["afirmaciones"] = [
             a for a in resultado.get("afirmaciones", []) if a.get("campo") != "drones"
         ]
+    objetivo = revision.get("objetivo")
+    if objetivo and resultado.get("objetivo") != objetivo:
+        # La instalación afectada que la ficha no reconoció (EODI-2026-00146: «Melilla», categoría
+        # «otra», en vez del aeropuerto de Melilla; las cárceles, con el nombre de la ciudad).
+        resultado["objetivo"] = dict(objetivo)
     lugar = revision.get("lugar")
     if lugar and "punto" not in resultado["lugar"]:
         # El lugar guardado no era el del suceso (Arna está en Noruega): sin punto, que solo

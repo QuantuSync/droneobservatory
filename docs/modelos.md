@@ -98,6 +98,18 @@ la misma petición con el experto y **vale la respuesta del experto**.
    alemán, francés, rumano, polaco, búlgaro, ruso, ucraniano, neerlandés, italiano, danés…), están
    en `configuracion/senales_escalado.json`; se buscan en el titular y el texto que se mandaron,
    sin mayúsculas ni acentos.
+7. **declaracion** (desde el 19 de octubre de 2026): el base da el incidente sin ninguna
+   declaración oficial y una frase de una fuente hace hablar a una autoridad: la nombra junto a un
+   verbo de declaración o un «según» («La Delegación del Gobierno en Melilla reconoció…», «ein
+   Sprecher der Bundespolizei sagte…»; `autoridad_citada` en `configuracion/senales_escalado.json`).
+   El experto decide si la autoridad confirma, desmiente o atribuye. Es el único motivo
+   **opcional**: si el experto ha agotado su tope, vale la ficha del base y el candidato no espera.
+   El 25 de septiembre de 2026 la Delegación del Gobierno en Melilla reconoció en la prensa dos
+   incidentes con drones en la aproximación al aeropuerto y la ficha no recogió la declaración
+   (EODI-2026-00146). Las instrucciones de la ficha dicen además que cuenta lo que la noticia
+   cuenta en nombre de la autoridad («según la Delegación del Gobierno», sin comillas) y que la
+   representación del Gobierno en un territorio (delegación o subdelegación del Gobierno,
+   prefectura, voivoda) es «gobierno».
 
 Fuera de esas señales, una ficha que el base da por «no es un incidente» con seguridad no se
 escala. Una verificación que

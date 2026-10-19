@@ -83,6 +83,46 @@
       "військов* баз*", "авіабаз*", "військов* аеродром*"
     ]
   },
+  "autoridad_citada": {
+    "descripcion": "Una autoridad que habla en la noticia (proceso/escalado.autoridad_citada): una frase de una fuente que nombra una autoridad («autoridades») y un verbo de declaración o un «según» («verbos»). Si el base da el incidente y no saca ninguna declaración, se escala al experto, que decide si la autoridad confirma, desmiente o atribuye; si el experto no puede ahora, vale la ficha del base (no espera). Mismas reglas que las señales. Las autoridades territoriales del Gobierno cuentan (Delegación y Subdelegación del Gobierno, prefectura, voivoda, prefecto, gobernador del condado): el 25 de septiembre de 2026 la Delegación del Gobierno en Melilla reconoció en la prensa dos incidentes con drones y el base no sacó la declaración (EODI-2026-00146).",
+    "autoridades": [
+      "delegacion* del gobierno", "subdelegacion* del gobierno", "delegad* del gobierno",
+      "subdelegad* del gobierno", "gobierno", "ministeri*", "guardia civil", "policia*",
+      "mossos", "ertzaintza", "aena", "enaire", "aesa", "fiscalia", "ejercito*", "armada",
+      "instituciones penitenciarias", "consejo de seguridad nuclear", "torre de control",
+      "government", "police", "ministry", "ministers", "minister", "armed forces", "military",
+      "army", "air force", "navy", "prosecutor*", "air traffic control", "civil aviation",
+      "airport operator", "airport spokes*", "coastguard", "coast guard",
+      "prefecture", "prefet*", "sous prefet*", "gendarmerie", "gouvernement", "armee*",
+      "parquet", "dgac", "regierung*", "polizei*", "bundespolizei", "bundeswehr", "luftwaffe",
+      "staatsanwaltschaft*", "flughafensprecher*", "deutsche flugsicherung", "dfs",
+      "regeringsdelegatie", "regering", "politie", "marechaussee", "defensie", "ministerie*",
+      "openbaar ministerie", "lvnl", "governo", "polizia", "carabinieri", "prefettura", "procura",
+      "aeronautica militare", "enac", "enav", "policja*", "policji", "wojsk*", "rzad*",
+      "ministerstw*", "prokuratur*", "pazp", "dowodztwo operacyjne", "wojewod*", "guvern*",
+      "politi*", "prefectur*", "prefect*", "parchet*", "mapn", "romatsa", "forsvar*",
+      "regeringen", "polisen", "naviair", "avinor", "swedavia", "statsforvalter*",
+      "lansstyrels*", "poliisi*", "puolustusvoim*", "fintraffic", "finavia", "policie",
+      "armad*", "полици*", "министерств*", "правительств*", "уряд*", "міністерств*",
+      "поліці*", "прокурат*", "министър*"
+    ],
+    "verbos": [
+      "confirm*", "reconoc*", "inform*", "explic*", "asegur*", "afirm*", "declar*", "indic*",
+      "comunic*", "precis*", "subray*", "detall*", "senal*", "dijo", "dice", "segun",
+      "fuentes de", "said", "says", "stated", "told", "acknowledg*", "announc*", "according to",
+      "a indique", "indique", "a precise", "selon", "affirme", "explique", "reconnu*",
+      "bestatig*", "sagte", "sagt", "erklart*", "erklarte", "mitgeteilt", "teilte .. mit",
+      "laut", "zufolge", "bevestig*", "benadrukt", "zegt", "zei", "verklaar*", "meldt",
+      "meldde", "volgens", "laat weten", "liet weten", "conferm*", "ha detto", "dichiar*",
+      "secondo", "riferit*", "disse", "afirmou", "segundo", "informou", "declarou",
+      "potwierdz*", "poinformowal*", "przekazal*", "oswiadcz*", "wedlug", "podal*",
+      "a declarat", "potrivit", "a transmis", "a precizat", "anunt*", "bekraeft*", "bekreft*",
+      "bekrafta*", "oplys*", "opplys*", "uppger", "uppgav", "siger", "sier", "sager",
+      "ifolge", "enligt", "vahvist*", "kertoi", "mukaan", "tiedotti", "сообщил*", "заявил*",
+      "подтверд*", "повідомил*", "заяви*", "підтверд*", "потвърд*", "съобщи*", "по данным",
+      "по словам", "за словами", "според"
+    ]
+  },
   "medios_oficiales": [],
   "dominios_oficiales": [
     "gov", "gouv", "gob", "govt", "gv", "mil", "mod", "mon", "mapn", "admin\\.ch", "bund",

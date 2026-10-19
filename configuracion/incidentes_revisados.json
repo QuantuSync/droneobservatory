@@ -423,6 +423,15 @@
       "conserva": "EODI-2025-00287",
       "motivo": "el mismo suceso: los quince drones sobre la base de Elsenborn (Bélgica) la noche del 2 al 3 de octubre de 2025. La separación del 13 de octubre de 2026 (docs/sucesos_mezclados.md) dejó en 00456 la parte del cierre de Múnich, pero su ficha cuenta Elsenborn con dos de sus tres fuentes (top-channel.tv y el Ministerio de Defensa belga): era el mismo suceso partido",
       "motivo_en": "the same event: the fifteen drones over the Elsenborn base (Belgium) on the night of 2 to 3 October 2025. The separation of 13 October 2026 (docs/sucesos_mezclados.md) left the Munich closure part in 00456, but its record reports Elsenborn with two of its three sources (top-channel.tv and the Belgian Ministry of Defence): it was the same event split in two"
+    },
+    {
+      "registros": [
+        "EODI-2026-00183",
+        "EODI-2026-00398"
+      ],
+      "conserva": "EODI-2026-00183",
+      "motivo": "el mismo suceso: el dron recreativo que perdió el control por el viento y entró en el recinto del aeropuerto de Gran Canaria el sábado 25 de julio de 2026 (Guardia Civil, 30 de julio). El 31 de julio es la fecha de la noticia de elperiodico.com, que copia la de La Provincia.",
+      "motivo_en": "the same event: the recreational drone that lost control in the wind and entered the Gran Canaria airport grounds on Saturday 25 July 2026 (Guardia Civil, 30 July). 31 July is the date of the elperiodico.com article, which copies La Provincia's."
     }
   ],
   "reextraer": [
@@ -1220,8 +1229,14 @@
       "idioma": "es",
       "frase": "Según han confirmado fuentes de Aena, sobre la 01.00 de la madrugada, se produjo el avistamiento de un dron que sobrevolaba cerca del recinto aeroportuario",
       "comprobada": {
-        "fecha": "2026-10-05",
+        "fecha": "2026-10-19",
         "en": "https://canarias7.es/economia/dron-cerca-aeropuerto-gran-canaria-provoca-desvio-20250212121932-nt.html (original)"
+      },
+      "declaracion": {
+        "autoridad": "Aena",
+        "pais": "ES",
+        "categoria": "aeropuerto",
+        "afirma": "drones"
       }
     },
     {
@@ -1436,8 +1451,14 @@
       "idioma": "nl",
       "frase": "De Spaanse regeringsdelegatie in Melilla benadrukt dat de drone het luchtruim van de stad niet was binnengedrongen.",
       "comprobada": {
-        "fecha": "2026-10-05",
+        "fecha": "2026-10-19",
         "en": "https://bladna.nl/drone-steekt-grens-toch-krijgt-luchthaven-melilla-last,72967.html (original)"
+      },
+      "declaracion": {
+        "autoridad": "Delegación del Gobierno en Melilla",
+        "pais": "ES",
+        "categoria": "gobierno",
+        "afirma": "incidente"
       }
     },
     {
@@ -2129,6 +2150,192 @@
         "fecha": "2026-10-11",
         "en": "titular del artículo guardado en la base (tabla articulos)"
       }
+    },
+    {
+      "incidente": "EODI-2026-00146",
+      "enlace": "https://www.rtve.es/noticias/20260924/espana-pide-marruecos-ajustar-altura-drones-interferir-aterrizaje-vuelo-melilla/17239292.shtml",
+      "medio": "rtve.es",
+      "fecha": "2026-09-24",
+      "idioma": "es",
+      "frase": "La Delegación del Gobierno de España en Melilla ha informado a RTVE que el aparato se encontraba en el lado marroquí de la frontera",
+      "comprobada": {
+        "fecha": "2026-10-19",
+        "en": "https://www.rtve.es/noticias/20260924/espana-pide-marruecos-ajustar-altura-drones-interferir-aterrizaje-vuelo-melilla/17239292.shtml (original)"
+      },
+      "declaracion": {
+        "autoridad": "Delegación del Gobierno en Melilla",
+        "pais": "ES",
+        "categoria": "gobierno",
+        "afirma": "incidente"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00146",
+      "enlace": "https://theobjective.com/espana/2026-09-25/marruecos-apunta-melilla-vuelos-furtivos-drones-bloquear-espacio-aereo/",
+      "medio": "theobjective.com",
+      "fecha": "2026-09-25",
+      "idioma": "es",
+      "frase": "la Delegación del Gobierno en Melilla admitió ambos sucesos",
+      "comprobada": {
+        "fecha": "2026-10-19",
+        "en": "https://theobjective.com/espana/2026-09-25/marruecos-apunta-melilla-vuelos-furtivos-drones-bloquear-espacio-aereo/ (original)"
+      },
+      "declaracion": {
+        "autoridad": "Delegación del Gobierno en Melilla",
+        "pais": "ES",
+        "categoria": "gobierno",
+        "afirma": "incidente"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00146",
+      "enlace": "https://theobjective.com/espana/2026-09-25/marruecos-apunta-melilla-vuelos-furtivos-drones-bloquear-espacio-aereo/",
+      "medio": "theobjective.com",
+      "fecha": "2026-09-25",
+      "idioma": "es",
+      "frase": "La presencia obligó a mantener durante cerca de una hora en el aire a un vuelo de Iberia procedente de Málaga.",
+      "comprobada": {
+        "fecha": "2026-10-19",
+        "en": "https://theobjective.com/espana/2026-09-25/marruecos-apunta-melilla-vuelos-furtivos-drones-bloquear-espacio-aereo/ (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00402",
+      "enlace": "https://www.diariosur.es/malaga/presencia-dron-identificado-aeropuerto-malaga-obliga-desviar-20260823221634-nt.html",
+      "medio": "diariosur.es",
+      "fecha": "2026-08-23",
+      "idioma": "es",
+      "frase": "El avistamiento de un dron en la aproximación al Aeropuerto de Málaga-Costa del Sol obliga a detener temporalmente la operativa por seguridad",
+      "comprobada": {
+        "fecha": "2026-10-19",
+        "en": "https://www.diariosur.es/malaga/presencia-dron-identificado-aeropuerto-malaga-obliga-desviar-20260823221634-nt.html (original)"
+      },
+      "declaracion": {
+        "autoridad": "ENAIRE",
+        "pais": "ES",
+        "categoria": "navegacion_aerea",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00028",
+      "enlace": "https://lavozdeibiza.com/actualidad/un-dron-paraliza-el-aeropuerto-de-ibiza-casi-una-hora/",
+      "medio": "lavozdeibiza.com",
+      "fecha": "2026-06-16",
+      "idioma": "es",
+      "frase": "Tras detectarse un avistamiento de dron en las inmediaciones del aeropuerto, por motivos de seguridad se han paralizado temporalmente las operaciones durante 35 minutos",
+      "comprobada": {
+        "fecha": "2026-10-19",
+        "en": "https://lavozdeibiza.com/actualidad/un-dron-paraliza-el-aeropuerto-de-ibiza-casi-una-hora/ (original)"
+      },
+      "declaracion": {
+        "autoridad": "Aena",
+        "pais": "ES",
+        "categoria": "aeropuerto",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00365",
+      "enlace": "https://www.lancelotdigital.com/lanzarote/aena-confirma-el-incidente-del-dron-en-el-aeropuerto-cesar-manrique-de-lanzarote",
+      "medio": "lancelotdigital.com",
+      "fecha": "2026-04-27",
+      "idioma": "es",
+      "frase": "Aena ha confirmado la información ofrecida ayer por Lancelot Digital en la que la presencia de un dron en las inmediaciones del Aeropuerto César Manrique",
+      "comprobada": {
+        "fecha": "2026-10-19",
+        "en": "https://www.lancelotdigital.com/lanzarote/aena-confirma-el-incidente-del-dron-en-el-aeropuerto-cesar-manrique-de-lanzarote (original)"
+      },
+      "declaracion": {
+        "autoridad": "Aena",
+        "pais": "ES",
+        "categoria": "aeropuerto",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00165",
+      "enlace": "https://naciodigital.cat/societat/afectacions-a-laeroport-del-prat-per-la-presencia-dun-dron.html",
+      "medio": "naciodigital.cat",
+      "fecha": "2026-02-14",
+      "idioma": "ca",
+      "frase": "està afectant l'operació aèria de l'Aeroport Josep Tarradellas Barcelona El Prat, com han informat des del gestor de navegació aèria espanyol, Enaire.",
+      "comprobada": {
+        "fecha": "2026-10-19",
+        "en": "https://naciodigital.cat/societat/afectacions-a-laeroport-del-prat-per-la-presencia-dun-dron.html (original)"
+      },
+      "declaracion": {
+        "autoridad": "ENAIRE",
+        "pais": "ES",
+        "categoria": "navegacion_aerea",
+        "afirma": "incidente"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00098",
+      "enlace": "https://www.informacion.es/economia/2025/10/27/aeropuerto-alicante-elche-cerrado-presencia-dron-123086497.html",
+      "medio": "informacion.es",
+      "fecha": "2025-10-27",
+      "idioma": "es",
+      "frase": "Aena informó de la presencia de una de estas máquinas a las 20:53 horas y desde ese momento, el operador paralizó los vuelos",
+      "comprobada": {
+        "fecha": "2026-10-19",
+        "en": "https://www.informacion.es/economia/2025/10/27/aeropuerto-alicante-elche-cerrado-presencia-dron-123086497.html (original)"
+      },
+      "declaracion": {
+        "autoridad": "Aena",
+        "pais": "ES",
+        "categoria": "aeropuerto",
+        "afirma": "incidente"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00122",
+      "enlace": "https://www.mallorcadiario.com/un-dron-obliga-a-cerrar-temporalmente-el-aeropuerto-de-palma",
+      "medio": "mallorcadiario.com",
+      "fecha": "2025-10-19",
+      "idioma": "es",
+      "frase": "El avistamiento de un dron ha obligado a interrumpir temporalmente las operaciones en el aeropuerto de Palma la tarde de este domingo, ha informado Enaire.",
+      "comprobada": {
+        "fecha": "2026-10-19",
+        "en": "https://www.mallorcadiario.com/un-dron-obliga-a-cerrar-temporalmente-el-aeropuerto-de-palma (original)"
+      },
+      "declaracion": {
+        "autoridad": "ENAIRE",
+        "pais": "ES",
+        "categoria": "navegacion_aerea",
+        "afirma": "drones"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00190",
+      "enlace": "https://www.europapress.es/andalucia/sevilla-00357/noticia-paralizado-trafico-aereo-media-hora-desviados-cinco-vuelos-dron-aeropuerto-sevilla-20250224144311.html",
+      "medio": "europapress.es",
+      "fecha": "2025-02-24",
+      "idioma": "es",
+      "frase": "se han paralizado las operaciones entre las 12,52 horas hasta las 13,16 horas",
+      "comprobada": {
+        "fecha": "2026-10-19",
+        "en": "https://www.europapress.es/andalucia/sevilla-00357/noticia-paralizado-trafico-aereo-media-hora-desviados-cinco-vuelos-dron-aeropuerto-sevilla-20250224144311.html (original)"
+      },
+      "declaracion": {
+        "autoridad": "Aena",
+        "pais": "ES",
+        "categoria": "aeropuerto",
+        "afirma": "incidente"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00190",
+      "enlace": "https://www.hosteltur.com/168550_un-dron-desconocido-paraliza-el-aeropuerto-de-sevilla.html",
+      "medio": "hosteltur.com",
+      "fecha": "2025-02-24",
+      "idioma": "es",
+      "frase": "sin acertar a concretar de qué objeto en concreto se trataba",
+      "comprobada": {
+        "fecha": "2026-10-19",
+        "en": "https://www.hosteltur.com/168550_un-dron-desconocido-paraliza-el-aeropuerto-de-sevilla.html (original)"
+      }
     }
   ],
   "titulares": [
@@ -2397,6 +2604,51 @@
       "motivo": {
         "es": "El incidente quedó desmentido por la declaración de Brussels Airport («keine Meldung erhalten»), aunque skeyes, que vigila el espacio aéreo, confirmó el dron en la misma noticia (brf.be) y en otras (english.news.cn, inewsgr.com). Dos autoridades oficiales que se contradicen: prevalece la competente sobre el espacio aéreo o la investigación (metodología, «Autoridades que se contradicen»).",
         "en": "The incident was left denied by Brussels Airport's statement («keine Meldung erhalten»), although skeyes, which monitors the airspace, confirmed the drone in the same article (brf.be) and in others (english.news.cn, inewsgr.com). Two official authorities that contradict each other: the one competent for the airspace or the investigation prevails (methodology, «Authorities that contradict each other»)."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00146",
+      "objetivo": {
+        "categoria": "aeropuerto",
+        "nombre": "Aeropuerto de Melilla",
+        "oaci": "GEML"
+      },
+      "motivo": {
+        "es": "El suceso es el del aeropuerto de Melilla (un vuelo de Iberia esperó en el aire para aterrizar), no la ciudad: la ficha decía «Melilla», categoría «otra».",
+        "en": "The event is at Melilla Airport (an Iberia flight was held before landing), not the city: the record said «Melilla», category «other»."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00190",
+      "presencia": {
+        "valor": "no_confirmada",
+        "cita": "sin acertar a concretar de qué objeto en concreto se trataba"
+      },
+      "motivo": {
+        "es": "Aena confirma que paralizó las operaciones de 12:52 a 13:16, pero no concreta de qué objeto se trataba. Quien dio el dron por hecho fue la cuenta en X del colectivo de los controladores aéreos, que no es una autoridad.",
+        "en": "Aena confirms it halted operations from 12:52 to 13:16, but does not say what the object was. The drone was asserted by the X account of the air traffic controllers' collective, which is not an authority."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00398",
+      "objetivo": {
+        "categoria": "otra",
+        "nombre": "Centro Penitenciario Sevilla I"
+      },
+      "motivo": {
+        "es": "La instalación es la prisión de Sevilla I, no la ciudad de Sevilla.",
+        "en": "The facility is the Seville I prison, not the city of Seville."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00404",
+      "objetivo": {
+        "categoria": "otra",
+        "nombre": "Centre Penitenciari Mas d'Enric"
+      },
+      "motivo": {
+        "es": "La instalación es el centro penitenciario Mas d'Enric (El Catllar), no la ciudad de Tarragona.",
+        "en": "The facility is the Mas d'Enric prison (El Catllar), not the city of Tarragona."
       }
     }
   ],
@@ -4090,6 +4342,64 @@
           "lon": 28.666315
         }
       ]
+    },
+    {
+      "incidente": "EODI-2025-00365",
+      "lugar": {
+        "nombre": "Aeropuerto de Fuerteventura",
+        "nivel": "instalacion",
+        "lat": 28.44733,
+        "lon": -13.8659,
+        "radio_km": 5
+      },
+      "fuente": {
+        "incidente": "EODI-2025-00365",
+        "enlace": "https://www.larazon.es/sociedad/dron-obliga-desviar-varios-vuelos-aeropuerto-fuerteventura_2025101468ee56520e3c6c5098398d06.html",
+        "medio": "larazon.es",
+        "fecha": "2025-10-14",
+        "idioma": "es",
+        "frase": "identificó y sancionó al piloto de un dron que realizaba vuelos no autorizados en las inmediaciones del Aeropuerto de Fuerteventura",
+        "comprobada": {
+          "fecha": "2026-10-19",
+          "en": "https://www.larazon.es/sociedad/dron-obliga-desviar-varios-vuelos-aeropuerto-fuerteventura_2025101468ee56520e3c6c5098398d06.html (original)"
+        },
+        "declaracion": {
+          "autoridad": "Guardia Civil",
+          "pais": "ES",
+          "categoria": "policia",
+          "afirma": "drones"
+        }
+      },
+      "motivo": "La Guardia Civil sitúa el dron junto al aeropuerto de Fuerteventura; Puerto del Rosario es su municipio."
+    },
+    {
+      "incidente": "EODI-2025-00151",
+      "lugar": {
+        "nombre": "Cofrentes",
+        "nivel": "instalacion",
+        "lat": 39.21462,
+        "lon": -1.05471,
+        "radio_km": 2
+      },
+      "fuente": {
+        "incidente": "EODI-2025-00151",
+        "enlace": "https://www.europapress.es/comunitat-valenciana/noticia-denunciado-sobrevolar-central-nuclear-cofrentes-dron-20250518112704.html",
+        "medio": "europapress.es",
+        "fecha": "2025-05-18",
+        "idioma": "es",
+        "frase": "La Guardia Civil ha identificado a un ciudadano que sobrevolaba con su dron las inmediaciones de la Central Nuclear de Cofrentes",
+        "comprobada": {
+          "fecha": "2026-10-19",
+          "en": "https://www.europapress.es/comunitat-valenciana/noticia-denunciado-sobrevolar-central-nuclear-cofrentes-dron-20250518112704.html (original)"
+        },
+        "declaracion": {
+          "autoridad": "Guardia Civil",
+          "pais": "ES",
+          "categoria": "policia",
+          "afirma": "drones"
+        }
+      },
+      "motivo": "La central está en el término de Cofrentes; en Jalance se localizó al piloto."
     }
   ],
   "separar": [
