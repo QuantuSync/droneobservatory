@@ -3,33 +3,6 @@
   "unir": [
     {
       "registros": [
-        "EODI-2025-00344",
-        "EODI-2025-00447"
-      ],
-      "conserva": "EODI-2025-00344",
-      "motivo": "Los dos son la misma parte de la separación de EODI-2025-00131: el nuevo avistamiento sobre Kleine-Brogel la noche del sábado 1 al domingo 2 de noviembre de 2025 (zazoom.it y adnkronos.com, las mismas dos notas del 2 de noviembre).",
-      "motivo_en": "Both are the same part of the separation of EODI-2025-00131: the new sighting over Kleine-Brogel on the night of Saturday 1 to Sunday 2 November 2025 (zazoom.it and adnkronos.com, the same two articles of 2 November)."
-    },
-    {
-      "registros": [
-        "EODI-2026-00141",
-        "EODI-2026-00531"
-      ],
-      "conserva": "EODI-2026-00141",
-      "motivo": "Los dos son la misma parte de la separación de EODI-2026-00281: el dron Shahed que cruzó junto al paso fronterizo de Palanca la noche del 18 de marzo de 2026 (02:14-02:25 hora local).",
-      "motivo_en": "Both are the same part of the separation of EODI-2026-00281: the Shahed drone that crossed next to the Palanca border crossing on the night of 18 March 2026 (02:14-02:25 local time)."
-    },
-    {
-      "registros": [
-        "EODI-2026-00527",
-        "EODI-2026-00159"
-      ],
-      "conserva": "EODI-2026-00527",
-      "motivo": "Los dos son la misma parte de la separación de EODI-2026-00203: el dron que explotó al estrellarse junto a Hîrbovăț (Anenii Noi) el miércoles 30 de septiembre de 2026 hacia las 05:43; EODI-2026-00159 había quedado unido al segundo dron, el de Arionești.",
-      "motivo_en": "Both are the same part of the separation of EODI-2026-00203: the drone that exploded on crashing near Hîrbovăț (Anenii Noi) on Wednesday 30 September 2026 at about 05:43; EODI-2026-00159 had been merged with the second drone, the Arionești one."
-    },
-    {
-      "registros": [
         "EODI-2026-00391",
         "EODI-2026-00134",
         "EODI-2026-00239",
@@ -459,6 +432,33 @@
       "conserva": "EODI-2026-00183",
       "motivo": "el mismo suceso: el dron recreativo que perdió el control por el viento y entró en el recinto del aeropuerto de Gran Canaria el sábado 25 de julio de 2026 (Guardia Civil, 30 de julio). El 31 de julio es la fecha de la noticia de elperiodico.com, que copia la de La Provincia.",
       "motivo_en": "the same event: the recreational drone that lost control in the wind and entered the Gran Canaria airport grounds on Saturday 25 July 2026 (Guardia Civil, 30 July). 31 July is the date of the elperiodico.com article, which copies La Provincia's."
+    },
+    {
+      "registros": [
+        "EODI-2025-00344",
+        "EODI-2025-00447"
+      ],
+      "conserva": "EODI-2025-00344",
+      "motivo": "Los dos son la misma parte de la separación de EODI-2025-00131: el nuevo avistamiento sobre Kleine-Brogel la noche del sábado 1 al domingo 2 de noviembre de 2025 (zazoom.it y adnkronos.com, las mismas dos notas del 2 de noviembre).",
+      "motivo_en": "Both are the same part of the separation of EODI-2025-00131: the new sighting over Kleine-Brogel on the night of Saturday 1 to Sunday 2 November 2025 (zazoom.it and adnkronos.com, the same two articles of 2 November)."
+    },
+    {
+      "registros": [
+        "EODI-2026-00141",
+        "EODI-2026-00531"
+      ],
+      "conserva": "EODI-2026-00141",
+      "motivo": "Los dos son la misma parte de la separación de EODI-2026-00281: el dron Shahed que cruzó junto al paso fronterizo de Palanca la noche del 18 de marzo de 2026 (02:14-02:25 hora local).",
+      "motivo_en": "Both are the same part of the separation of EODI-2026-00281: the Shahed drone that crossed next to the Palanca border crossing on the night of 18 March 2026 (02:14-02:25 local time)."
+    },
+    {
+      "registros": [
+        "EODI-2026-00527",
+        "EODI-2026-00159"
+      ],
+      "conserva": "EODI-2026-00527",
+      "motivo": "Los dos son la misma parte de la separación de EODI-2026-00203: el dron que explotó al estrellarse junto a Hîrbovăț (Anenii Noi) el miércoles 30 de septiembre de 2026 hacia las 05:43; EODI-2026-00159 había quedado unido al segundo dron, el de Arionești.",
+      "motivo_en": "Both are the same part of the separation of EODI-2026-00203: the drone that exploded on crashing near Hîrbovăț (Anenii Noi) on Wednesday 30 September 2026 at about 05:43; EODI-2026-00159 had been merged with the second drone, the Arionești one."
     }
   ],
   "reextraer": [
