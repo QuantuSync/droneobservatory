@@ -459,6 +459,33 @@ def test_fusion_reversible_y_fusion_dudosa(almacen: Almacen) -> None:
     assert almacen.fusiones()[0]["revertida"] is True
 
 
+def test_al_deshacer_una_fusion_la_respuesta_heredada_se_va_con_sus_fuentes(
+    almacen: Almacen,
+) -> None:
+    # EODI-2026-00281: la ficha de Tudora se quedaba con la patrulla del dron de Palanca, sin
+    # origen, y la exportación no validaba.
+    id_ = extraer_ejemplo(almacen)
+    assert id_ is not None
+    base = almacen.incidente(id_)
+    assert base is not None
+    base.pop("respuesta", None)
+    base["afirmaciones"] = [a for a in base["afirmaciones"] if a["campo"] != "medidas"]
+    almacen.guardar_incidente(base, AHORA, MODELOS)
+    segundo = _copia(base, "EODI-2025-00002", 2, "https://otro.dk/1")
+    segundo["respuesta"] = {"medidas": ["patrulla"]}
+    segundo["afirmaciones"] = [{"campo": "medidas", "valor": ["patrulla"],
+                                "fuente_id": segundo["fuentes"][0]["id"],
+                                "confianza_extraccion": 0.8}]  # fmt: skip
+    almacen.guardar_incidente(segundo, AHORA, MODELOS)
+    assert incidentes.fusionar(almacen, AHORA, MODELOS) == 1
+    destino = almacen.incidente(id_)
+    assert destino is not None and destino["respuesta"] == {"medidas": ["patrulla"]}
+    incidentes.revertir(almacen, "EODI-2025-00002", AHORA, MODELOS)
+    destino, vuelto = almacen.incidente(id_), almacen.incidente("EODI-2025-00002")
+    assert destino is not None and "respuesta" not in destino
+    assert vuelto is not None and vuelto["respuesta"] == {"medidas": ["patrulla"]}
+
+
 def test_una_fusion_dudosa_no_se_hace(almacen: Almacen) -> None:
     id_ = extraer_ejemplo(almacen)
     assert id_ is not None
