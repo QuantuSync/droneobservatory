@@ -235,8 +235,9 @@ def buscar(principal: Almacen, propia: Any, lector: Any, ahora: datetime, fichas
     desde_articulos = "0000" if pais else (ahora - timedelta(days=400)).strftime("%Y-%m-%d")
     articulos = _articulos_desde(principal, desde_articulos)
     propias = [d for d in fichas if not pais or (d.get("lugar") or {}).get("pais") == pais]
-    # Lo que lleva más tiempo sin mirar, primero.
-    propias.sort(key=lambda d: d["tiempo"]["inicio"]["valor"])
+    # Lo más reciente primero: una declaración que falta suele ser de los últimos días o semanas;
+    # lo ya preguntado no se repite (su huella), así que la pasada siguiente sigue con lo de antes.
+    propias.sort(key=lambda d: d["tiempo"]["inicio"]["valor"], reverse=True)
     for tipo in (busqueda.DECLARACION, busqueda.ATRIBUCION, busqueda.EFECTOS):
         for incidente in propias:
             if lector.parado or trabajo.hecho[tipo]["preguntadas"] >= cupos[tipo]:
