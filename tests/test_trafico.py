@@ -494,3 +494,16 @@ def test_una_traza_enorme_se_salta_sin_cargarla() -> None:
     # Con el tope de verdad (64 MB), la misma traza se lee entera.
     salida.seek(0)
     assert [d["icao"] for d in adsb.documentos(salida)] == ["0000aa", "0000bb", "0000cc"]
+
+
+def test_un_dia_procesado_se_rehace_solo_si_se_pide(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # GEML (Melilla) entró en la lista el 19 de octubre de 2026: sus días ya hechos no lo tenían.
+    hechos: list[date] = []
+    monkeypatch.setattr(procesado, "procesado", lambda datos, dia: True)
+    monkeypatch.setattr(procesado, "procesar_dia", lambda datos, dia: hechos.append(dia) or {})
+    argumentos = ["dia", "2026-09-22", "--datos", str(tmp_path)]
+    assert procesado.principal(argumentos) == 0 and hechos == []
+    assert procesado.principal([*argumentos, "--rehacer"]) == 0
+    assert hechos == [date(2026, 9, 22)]
