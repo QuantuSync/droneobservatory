@@ -133,6 +133,16 @@ def _afinable(incidente: Documento, sitio: Lugar, nom: Nomenclator) -> bool:
     if "punto" not in lugar:
         return True
     objetivo = incidente.get("objetivo") or {}
+    if sitio.tipo == CARCEL:
+        # La cárcel que nombra sin duda el titular (con su palabra: «cárcel de Córdoba») es el
+        # objetivo: el punto va en ella salvo que lo dé una autoridad o la ficha sitúe el suceso
+        # en otra instalación. Los puntos de las cárceles eran los de su ciudad o los de otro
+        # sitio con un nombre parecido (Alcolea del Río por la prisión de Alcolea, en Córdoba).
+        return not (
+            lugar.get("fuente_punto")
+            or lugar.get("geocodificacion") == "oficial"
+            or objetivo.get("categoria") in CATEGORIAS_INSTALACION
+        )
     if (
         lugar.get("geocodificacion") not in GEOCODIFICACION_GENERICA
         or objetivo.get("categoria") in CATEGORIAS_INSTALACION
