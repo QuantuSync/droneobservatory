@@ -326,14 +326,36 @@ def elegidos(respuesta: dict[str, Any], cuantos: int) -> list[int]:
 
 def al_experto(candidato: Documento) -> bool:
     """El candidato merece la revisión del experto: un duplicado, o una ficha con algún hallazgo
-    que no sea solo la fecha de inicio sin apoyo. Desde el 19 de octubre de 2026, «fecha sin
+    que no sea solo la fecha de inicio sin apoyo (ni un tipo contradicho sin frase de otro tipo,
+    tipo_claro). Desde el 19 de octubre de 2026, «fecha sin
     apoyo» sola se queda marcada pero no gasta del experto: era el hallazgo más frecuente (168 de
     los primeros 280 candidatos) y casi siempre ruido (la fecha sale de la publicación)."""
     if candidato.get("tipo") == "duplicado":
         return True
+    return any(_cuenta(h) for h in (candidato.get("datos") or {}).get("hallazgos", []))
+
+
+def _cuenta(hallazgo: Documento) -> bool:
+    if hallazgo.get("campo") == "inicio" and hallazgo.get("valoracion") == SIN_APOYO:
+        return False
+    if hallazgo.get("campo") == "tipo":
+        return tipo_claro(str(hallazgo.get("frase") or ""), str(hallazgo.get("valor") or ""))
+    return True
+
+
+def tipo_claro(frase: str, tipo: str) -> bool:
+    """Un tipo «contradicho» va al experto solo si la frase cuenta otro tipo del esquema: un
+    cierre de aeropuerto, o la entrada en el espacio aéreo desde fuera. Que el dron cayera,
+    explotara o atacara sigue siendo un sobrevuelo o una incursión (el 18/10/2026 se marcaron así
+    EODI-2026-00556 y EODI-2026-00594)."""
+    from proceso import escalado
+    from proceso.noticias import normalizar
+
+    normal = normalizar(frase)
+    patrones = escalado.senales()
+    otros = {"cierre_aeropuerto": "interrupcion_aeroportuaria", "incursion": "incursion"}
     return any(
-        not (h.get("campo") == "inicio" and h.get("valoracion") == SIN_APOYO)
-        for h in (candidato.get("datos") or {}).get("hallazgos", [])
+        tipo != destino and patrones[senal].search(normal) for senal, destino in otros.items()
     )
 
 

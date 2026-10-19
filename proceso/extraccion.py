@@ -399,13 +399,20 @@ def preparar(
     marcas de su página (con lo que dicen de ella: proceso/no_es_suceso.py)."""
     articulos = [a for a in _articulos(almacen, candidato) if a.get("idioma")]
     # Los artículos dirigidos (recogida/articulos_dirigidos.py: su cursor, por dirección).
-    elegidas = elegir_fuentes(articulos, frozenset(almacen.cursor(CURSOR_DIRIGIDOS) or {}))
+    dirigidos = almacen.cursor(CURSOR_DIRIGIDOS) or {}
+    elegidas = elegir_fuentes(articulos, frozenset(dirigidos))
     fuentes = []
     for a in elegidas:
         pagina = paginas.leer_pagina(descargador, a["url"]) if descargador else paginas.Pagina("")
+        texto = pagina.texto
+        # La frase literal de la página que encontró la segunda lectura (una declaración más
+        # abajo de las primeras frases): va delante para que la lea la extracción.
+        pista = str((dirigidos.get(a["url"]) or {}).get("frase") or "")
+        if pista and normalizar(pista) not in normalizar(texto):
+            texto = f"{pista} … {texto}".strip(" …")
         fuentes.append(no_es_suceso.con_aviso(ficha.FuenteTexto(
             medio=a["medio"], fecha=a["fecha"], idioma=a.get("idioma"), titular=a["titular"],
-            texto=pagina.texto, url=a["url"], marcas=pagina.marcas,
+            texto=texto, url=a["url"], marcas=pagina.marcas,
         )))  # fmt: skip
     return Peticion(
         candidato=candidato,
