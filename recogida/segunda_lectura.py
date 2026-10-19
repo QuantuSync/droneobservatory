@@ -517,6 +517,7 @@ def pasada(
     reloj: Callable[[], float] = time.monotonic, max_fichas: int | None = None,
     max_incidentes: int | None = None, tareas: frozenset[str] = TAREAS_LECTURA,
     forzar_diaria: bool = False, descargador: Any = None, pais: str | None = None,
+    cupos: dict[str, int] | None = None,
 ) -> Resumen:  # fmt: skip
     """Una pasada: el barrido diario si toca, el barrido del país del día si toca, las búsquedas
     de lo que falta, los posibles duplicados y la segunda lectura, hasta `hasta` (reloj
@@ -539,7 +540,7 @@ def pasada(
                                                              fichas, descargador)  # fmt: skip
     if "busqueda" in tareas and pais is None and not lector.parado:
         resumen.busquedas = segunda_busqueda.buscar(principal, propia, lector, ahora, fichas,
-                                                    descargador)  # fmt: skip
+                                                    descargador, cupos=cupos)  # fmt: skip
     leidas = preparar(principal, fichas)
     if "pares" in tareas and not lector.parado:
         comparar_pares(principal, propia, lector, ahora, fichas, leidas,
@@ -568,6 +569,17 @@ def abrir_principal(base: Path | None) -> Almacen:
     return Almacen(sqlite3.connect(f"{ruta.resolve().as_uri()}?mode=ro", uri=True))
 
 
+def _cupos(texto: str | None) -> dict[str, int] | None:
+    """Los cupos de las búsquedas de una pasada a mano («declaracion=8,rescate=20»); las que no
+    se dicen, 0."""
+    if not texto:
+        return None
+    from proceso import segunda_busqueda as busqueda_pura
+
+    dados = dict(parte.split("=", 1) for parte in texto.split(",") if "=" in parte)
+    return {b: int(dados.get(b, 0)) for b in busqueda_pura.BUSQUEDAS}
+
+
 def ejecutar_pasada(args: argparse.Namespace, ahora: datetime) -> Documento:
     secundario.cargar_local()
     config = secundario.configuracion()
@@ -575,7 +587,8 @@ def ejecutar_pasada(args: argparse.Namespace, ahora: datetime) -> Documento:
         registro.info("segunda lectura desactivada: sin servicio secundario configurado")
         return {"parada": "desactivada"}
     if args.manual:
-        hasta_fecha = ahora + timedelta(minutes=float(configuracion()["pasada"]["tope_min"]))
+        minutos = args.tope_min or float(configuracion()["pasada"]["tope_min"])
+        hasta_fecha = ahora + timedelta(minutes=minutos)
     else:
         fin = fin_de_pasada(ahora)
         if fin is None:
@@ -595,7 +608,7 @@ def ejecutar_pasada(args: argparse.Namespace, ahora: datetime) -> Documento:
         resumen = pasada(principal, propia, cliente, ahora, hasta, max_fichas=args.max_fichas,
                          max_incidentes=args.max_incidentes, tareas=tareas,
                          forzar_diaria=args.forzar_diaria, descargador=Descargador(),
-                         pais=args.pais)  # fmt: skip
+                         pais=args.pais, cupos=_cupos(args.cupos))  # fmt: skip
         resumen.fin = _iso(datetime.now(UTC))
         documento = resumen.documento()
         propia.guardar_pasada(resumen.inicio, resumen.fin, documento)
@@ -888,6 +901,8 @@ def principal(argumentos: list[str] | None = None) -> int:
     una.add_argument("--max-incidentes", type=int)
     una.add_argument("--solo", help="lectura,pares,rectificaciones,busqueda,pais")
     una.add_argument("--pais", help="el barrido de ese país ahora (código ISO)")
+    una.add_argument("--cupos", help="preguntas por búsqueda: declaracion=8,rescate=20,...")
+    una.add_argument("--tope-min", type=float, help="con --manual, minutos de la pasada")
     una.add_argument("--manual", action="store_true", help="a cualquier hora, con su tope")
     una.add_argument("--forzar-diaria", action="store_true")
     lista = orden.add_parser("candidatos")
