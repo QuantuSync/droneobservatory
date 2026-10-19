@@ -140,8 +140,27 @@ def test_lo_que_una_revision_separo_como_distinto_no_lo_vuelve_a_juntar_la_regla
     assert incidentes.revisar_fusiones(almacen, AHORA, MODELOS) == ["EODI-2025-00468"]
 
 
-def test_la_marca_distintos_solo_esta_en_fuerteventura() -> None:
-    assert incidentes.separaciones_distintas() == frozenset({"EODI-2025-00397"})
+def test_la_marca_distintos_solo_esta_en_las_separaciones_revisadas() -> None:
+    # Fuerteventura y, desde el 19 de octubre de 2026, las ocho que la regla de fusión había vuelto
+    # a juntar (Kleine-Brogel, Volkel, Moldavia, Rumanía, Aalborg, Palanca y Hîrbovăț).
+    assert incidentes.separaciones_distintas() == frozenset(
+        {
+            "EODI-2025-00397",
+            "EODI-2025-00131",
+            "EODI-2025-00080",
+            "EODI-2025-00066",
+            "EODI-2025-00261",
+            "EODI-2025-00268",
+            "EODI-2025-00349",
+            "EODI-2026-00203",
+            "EODI-2026-00281",
+        }
+    )
+    # Dos registros de una misma parte se unen a mano: la marca no los deja juntarse solos.
+    unir = {frozenset(u["registros"]) for u in revisados.cargar()["unir"]}
+    assert frozenset({"EODI-2025-00344", "EODI-2025-00447"}) in unir
+    assert frozenset({"EODI-2026-00141", "EODI-2026-00531"}) in unir
+    assert frozenset({"EODI-2026-00527", "EODI-2026-00159"}) in unir
 
 
 def test_la_ficha_que_mezcla_dos_sucesos_se_vuelve_a_extraer_una_vez(
