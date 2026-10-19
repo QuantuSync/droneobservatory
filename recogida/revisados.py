@@ -418,6 +418,15 @@ def con_titular(incidente: Documento, revision: Documento, instante: Documento) 
                     tiempo.pop("fin")
                 else:
                     tiempo["duracion_min"] = duracion
+            if fin_citado is not None and tiempo.get("fin") == fin_citado:
+                # El fin lo dice la fuente de su cita: su afirmación, como la de una ficha, para
+                # que el valor lleve su origen (exportacion/procedencia.py).
+                afirmacion = {"campo": "fin", "valor": fin_citado,
+                              "fuente_id": fuentes[inicio["fin_cita"]],
+                              "confianza_extraccion": 1.0}  # fmt: skip
+                resultado["afirmaciones"] = [
+                    *(a for a in resultado.get("afirmaciones", []) if a != afirmacion), afirmacion
+                ]
             resultado["tiempo"] = tiempo
     objetivo = revision.get("objetivo")
     if objetivo and resultado.get("objetivo") != objetivo:
