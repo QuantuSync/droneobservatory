@@ -501,8 +501,13 @@ def test_un_dia_procesado_se_rehace_solo_si_se_pide(
 ) -> None:
     # GEML (Melilla) entró en la lista el 19 de octubre de 2026: sus días ya hechos no lo tenían.
     hechos: list[date] = []
+
+    def procesar(datos: Path, dia: date) -> dict[str, Any]:
+        hechos.append(dia)
+        return {}
+
     monkeypatch.setattr(procesado, "procesado", lambda datos, dia: True)
-    monkeypatch.setattr(procesado, "procesar_dia", lambda datos, dia: hechos.append(dia) or {})
+    monkeypatch.setattr(procesado, "procesar_dia", procesar)
     argumentos = ["dia", "2026-09-22", "--datos", str(tmp_path)]
     assert procesado.principal(argumentos) == 0 and hechos == []
     assert procesado.principal([*argumentos, "--rehacer"]) == 0
