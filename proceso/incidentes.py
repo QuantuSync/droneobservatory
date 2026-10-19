@@ -836,6 +836,11 @@ def revertir(almacen: Almacen, absorbido_id: str, ahora: datetime, modelos: froz
     destino["afirmaciones"] = [
         a for a in destino.get("afirmaciones", []) if a["fuente_id"] not in aportadas
     ]
+    # La respuesta que el destino heredó del absorbido (absorber) se va con sus fuentes: sin una
+    # afirmación de las medidas que quede, no tiene origen (EODI-2026-00281, el 19 de octubre de
+    # 2026: la patrulla del dron de Palanca se quedaba en la ficha de Tudora).
+    if "respuesta" in destino and not any(a["campo"] == "medidas" for a in destino["afirmaciones"]):
+        del destino["respuesta"]
     nivel = credibilidad_noticias(len(destino["fuentes"]))
     for fuente in destino["fuentes"]:
         fuente["credibilidad"] = nivel
