@@ -3,7 +3,7 @@
 Cada día se descarga en flujo (sin guardarlo en disco, `recogida/adsb.py`) y de cada traza
 que toca Europa se sacan, en una sola pasada:
 
-- los movimientos en los 926 aeropuertos de `configuracion/aeropuertos_trafico.json`
+- los movimientos en los 929 aeropuertos de `configuracion/aeropuertos_trafico.json`
   (aterrizajes, despegues, frustradas, desvíos y esperas: `proceso/vuelos.py`);
 - las aeronaves por celda H3 y hora con la posición degradada (`proceso/gnss.py`);
 - las aeronaves militares, con su traza cada 30 s (`proceso/aeronaves.py`);

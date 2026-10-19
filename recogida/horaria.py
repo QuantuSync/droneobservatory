@@ -564,10 +564,12 @@ def principal(argumentos: list[str] | None = None) -> int:
         except Exception as error:
             registro.warning("revisados sin aplicar: %s", str(error)[:300])
         # Declaraciones leídas en la página oficial de la autoridad (configuracion/
-        # declaraciones_oficiales.json), con las reglas de siempre; y los titulares de acuerdo con
-        # el estado: sin la nacionalidad del dron ni el autor si no está atribuido.
+        # declaraciones_oficiales.json), con las reglas de siempre; la confirmación oficial de los
+        # registros unidos que la unión no pasó; y los titulares de acuerdo con el estado: sin la
+        # nacionalidad del dron ni el autor si no está atribuido.
         try:
             declaraciones_oficiales.aplicar(almacen, ahora, modelos(almacen))
+            declaraciones_oficiales.uniones(almacen, ahora, modelos(almacen))
             declaraciones_oficiales.titulares(almacen, ahora, modelos(almacen))
         except Exception as error:
             registro.warning("declaraciones oficiales sin aplicar: %s", str(error)[:300])

@@ -1149,6 +1149,19 @@ export const es: Textos = {
                 "desmiente o atribuye si eso es lo que dice.",
             ],
           },
+          {
+            parrafo: [
+              "Cuenta también lo que la noticia cuenta en nombre de la autoridad («según la " +
+                "Delegación del Gobierno», «fuentes de Aena confirmaron»), aunque no lleve " +
+                "comillas, y la autoridad que reconoce el suceso quitándole importancia. Solo " +
+                "atribuye una cita con las propias palabras de la autoridad. La representación " +
+                "del Gobierno en un territorio (una delegación o subdelegación del Gobierno, una " +
+                "prefectura) es el Gobierno. Un colectivo profesional, un sindicato o una " +
+                "asociación no es una autoridad aunque la noticia lo cite como tal: lo que dice " +
+                "no cambia el estado. Si dos registros del mismo suceso se unen, el que queda " +
+                "conserva la confirmación oficial del otro.",
+            ],
+          },
         ],
       },
       {
@@ -1182,8 +1195,10 @@ export const es: Textos = {
               {
                 termino: "Notas oficiales",
                 texto: [
-                  "Policías, gestores de navegación aérea, aeropuertos y ministerios de " +
-                    "defensa que publican sus comunicados en abierto.",
+                  "Policías, gestores de navegación aérea, aeropuertos, ministerios de " +
+                    "defensa y representaciones del Gobierno en el territorio (en España, Aena y " +
+                    "las delegaciones del Gobierno en Melilla y Canarias) que publican sus " +
+                    "comunicados en abierto.",
                 ],
               },
               {

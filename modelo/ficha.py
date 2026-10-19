@@ -219,7 +219,13 @@ cazas, derribo, inhibicion.
 - origen_demostrado: rastreo si una autoridad siguió al dron por radar desde otro país; restos si \
 se encontraron restos que prueban el origen; separado por comas.
 - declaraciones: aparte de los datos, una por cada declaración de una autoridad que cite la \
-noticia (vacía si no hay). autoridad: su nombre («Københavns Politi»). pais: el código ISO \
+noticia (vacía si no hay). Cuenta también lo que la noticia cuenta con sus palabras («según la \
+Delegación del Gobierno», «la Guardia Civil confirmó», «fuentes de Aena explicaron»; \
+cita_literal false) y la autoridad que reconoce el suceso aunque le quite importancia («el dron \
+no entró en el espacio aéreo», «hemos pedido que ajusten la altura de los drones»): afirma \
+incidente. autoridad: su nombre («Københavns Politi»); el representante del gobierno en un \
+territorio (delegación o subdelegación del Gobierno, prefectura, voivoda, prefecto) es gobierno. \
+pais: el código ISO \
 del país de la autoridad (una autoridad de un país habla de lo que pasa en el suyo; un gobierno \
 que dice que en su país no pasó nada no desmiente un suceso de otro país). categoria: policia, \
 aeropuerto, navegacion_aerea (gestor de navegación aérea), fuerzas_armadas, ministerio, \

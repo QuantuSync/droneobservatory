@@ -201,6 +201,22 @@ def test_un_punto_fuera_del_pais_no_se_pone(revision: dict[str, Any]) -> None:
     assert "punto" not in almacen.incidente("EODI-2025-00295")["lugar"]  # type: ignore[index]
 
 
+def test_la_instalacion_que_la_ficha_no_reconocio(revision: dict[str, Any]) -> None:
+    documento = ejemplos.incidente_minimo()
+    almacen = Almacen.abrir()
+    almacen.guardar_incidente(documento, AHORA, VOCABULARIO_MODELOS)
+    objetivo = {"categoria": "aeropuerto", "nombre": "Aeropuerto de Melilla", "oaci": "GEML"}
+    revision["citas"] = []
+    revision["titulares"] = [{
+        "incidente": documento["id"], "objetivo": objetivo,
+        "motivo": {"es": "La ficha decía «Melilla».", "en": "The record said «Melilla»."},
+    }]  # fmt: skip
+    assert revisados.corregir(almacen, AHORA, VOCABULARIO_MODELOS).titulares == [documento["id"]]
+    despues = almacen.incidente(documento["id"])
+    assert despues is not None and despues["objetivo"] == objetivo
+    assert revisados.corregir(almacen, AHORA, VOCABULARIO_MODELOS).titulares == []
+
+
 def test_la_configuracion_de_la_revision() -> None:
     datos = revisados.cargar()
     for cita in datos["citas"]:

@@ -30,6 +30,186 @@
    "titular": "Info Ouest-France. Roissy puis Le Bourget : deux drones ont survolé les abords de ces aéroports parisiens dimanche",
    "lugar": "LFPG",
    "motivo": "11 oct 2026: exclusiva de Ouest-France sobre dos drones cerca de Roissy-Charles-de-Gaulle y Le Bourget; sin confirmación oficial encontrada (notificado por la prensa como mucho). No llegó por GDELT."
+  },
+  {
+   "url": "https://theobjective.com/internacional/2026-09-21/drones-aeropuertos-tubos-vias-cables-molestan-europa/",
+   "medio": "theobjective.com",
+   "fecha": "2026-09-21T03:25:00Z",
+   "idioma": "es",
+   "pais": "ES",
+   "titular": "Drones que cierran aeropuertos, tubos en las vías y cables cortados molestan a toda Europa",
+   "lugar": "GEML",
+   "motivo": "18 sep 2026 por la noche: un dron en la senda de aproximación a la pista 33 del aeropuerto de Melilla; la Guardia Civil confirmó su presencia y avisó a la torre. La Delegación del Gobierno reconoció el 24 de septiembre los dos sucesos (18 y 22 de septiembre). Es otro suceso que el del 22 (EODI-2026-00146). No llegó por GDELT."
+  },
+  {
+   "url": "https://gaceta.es/espana/marruecos-mira-ahora-ahora-a-melilla-y-eleva-la-tension-con-drones-junto-al-aeropuerto-de-la-ciudad-que-obligan-a-paralizar-el-trafico-aereo-20260925-0854/",
+   "medio": "gaceta.es",
+   "fecha": "2026-09-25T06:54:00Z",
+   "idioma": "es",
+   "pais": "ES",
+   "titular": "Marruecos eleva la tensión con drones junto al aeropuerto de Melilla que obligan a paralizar el tráfico aéreo",
+   "lugar": "GEML",
+   "motivo": "Segunda fuente del suceso del 18 sep 2026 en Melilla («El primer incidente tuvo lugar durante la noche del 18 de septiembre»). No llegó por GDELT."
+  },
+  {
+   "url": "https://www.noticiasfuerteventura.com/fuerteventura/un-nuevo-vuelo-de-dron-irregular-produce-esperas-en-el-aeropuerto-majorero",
+   "medio": "noticiasfuerteventura.com",
+   "fecha": "2025-10-18T07:37:00Z",
+   "idioma": "es",
+   "pais": "ES",
+   "titular": "Un nuevo vuelo de dron produce esperas en el aeropuerto majorero este sábado",
+   "lugar": "GCFV",
+   "motivo": "18 oct 2025, de 07:40 a 08:50 (hora de Canarias): vuelos en espera por varios drones en la aproximación al aeropuerto de Fuerteventura hasta que se inhibió su señal. Otro suceso que los del 14 y el 19 de octubre. No llegó por GDELT."
+  },
+  {
+   "url": "https://rtvc.es/dron-esperas-aeropuerto-fuerteventura-22-octubre-2025/",
+   "medio": "rtvc.es",
+   "fecha": "2025-10-22T08:52:00Z",
+   "idioma": "es",
+   "pais": "ES",
+   "titular": "Un nuevo vuelo de dron produce esperas en el aterrizaje en el Aeropuerto de Fuerteventura",
+   "lugar": "GCFV",
+   "motivo": "22 oct 2025, de 06:30 a 07:00 (hora de Canarias): operativa detenida unos 30 minutos en el aeropuerto de Fuerteventura; tres vuelos retrasaron el aterrizaje. No llegó por GDELT."
+  },
+  {
+   "url": "https://radioinsular.es/un-nuevo-dron-interrumpe-el-trafico-aereo-en-fuerteventura-y-obliga-a-detener-las-operaciones-durante-media-hora/",
+   "medio": "radioinsular.es",
+   "fecha": "2025-10-22T10:01:00Z",
+   "idioma": "es",
+   "pais": "ES",
+   "titular": "Un nuevo dron interrumpe el tráfico aéreo en Fuerteventura y obliga a detener las operaciones durante media hora",
+   "lugar": "GCFV",
+   "motivo": "Segunda fuente del suceso del 22 oct 2025 en el aeropuerto de Fuerteventura."
+  },
+  {
+   "url": "https://www.infobae.com/espana/agencias/2025/02/02/interceptan-un-dron-en-la-prision-de-alcolea-cordoba-con-hachis-y-un-movil/",
+   "medio": "infobae.com",
+   "fecha": "2025-02-02T22:00:00Z",
+   "idioma": "es",
+   "pais": "ES",
+   "titular": "Interceptan un dron en la prisión de Alcolea (Córdoba) con hachís y un móvil",
+   "lugar": "loc:2519240",
+   "motivo": "2 feb 2025: dron interceptado en el centro penitenciario de Córdoba (Alcolea) con hachís y un móvil (teletipo de Europa Press). No llegó por GDELT."
+  },
+  {
+   "url": "https://cordopolis.eldiario.es/cordoba-hoy/sucesos/interceptan-dron-madrugada-iba-introducir-moviles-droga-carcel-cordoba_1_12088649.html",
+   "medio": "cordopolis.eldiario.es",
+   "fecha": "2025-02-27T09:31:00Z",
+   "idioma": "es",
+   "pais": "ES",
+   "titular": "Interceptan un dron de madrugada que iba a introducir móviles y droga en la cárcel de Córdoba",
+   "lugar": "loc:2519240",
+   "motivo": "27 feb 2025: dron interceptado en el centro penitenciario de Córdoba con hachís y cuatro móviles. No llegó por GDELT."
+  },
+  {
+   "url": "https://www.elespanol.com/malaga/20250610/vuelven-vuelos-ilicitos-carcel-alhaurin-dron-droga-moviles-entra-madrugada/1003743798103_0.html",
+   "medio": "elespanol.com",
+   "fecha": "2025-06-10T14:18:00Z",
+   "idioma": "es",
+   "pais": "ES",
+   "titular": "Vuelven los vuelos ilícitos a la cárcel de Alhaurín: un dron con droga y móviles entra de madrugada",
+   "lugar": "loc:2521986",
+   "motivo": "10 jun 2025 de madrugada: un dron deja móviles y hachís en el módulo 9 del centro penitenciario Málaga I (Alhaurín de la Torre). No llegó por GDELT."
+  },
+  {
+   "url": "https://theobjective.com/espana/andalucia/2025-06-12/prision-alhaurin-malaga-alerta-uso-drones-introducir-droga/",
+   "medio": "theobjective.com",
+   "fecha": "2025-06-12T02:30:00Z",
+   "idioma": "es",
+   "pais": "ES",
+   "titular": "La prisión de Alhaurín (Málaga), en alerta tras el uso de drones para introducir droga",
+   "lugar": "loc:2521986",
+   "motivo": "Segunda fuente del dron del 10 jun 2025 en el centro penitenciario Málaga I."
+  },
+  {
+   "url": "https://www.moncloa.com/2025/09/02/narcodrones-carcel-algeciras-3259207",
+   "medio": "moncloa.com",
+   "fecha": "2025-09-02T03:25:00Z",
+   "idioma": "es",
+   "pais": "ES",
+   "titular": "Los narcodrones vuelven a la cárcel de Algeciras por tercera vez este año",
+   "lugar": "loc:2522013",
+   "motivo": "Hacia el 1 sep 2025, de madrugada: un dron en la ventana de un preso del centro penitenciario de Algeciras (Botafuegos); más de 200 g de hachís. No llegó por GDELT."
+  },
+  {
+   "url": "https://lleidadiari.cat/dron-introdueix-droga-mobil-preso-brians/",
+   "medio": "lleidadiari.cat",
+   "fecha": "2025-09-09T18:00:00Z",
+   "idioma": "ca",
+   "pais": "ES",
+   "titular": "Un dron introdueix droga i un mòbil en una presó catalana",
+   "lugar": "loc:3117331",
+   "motivo": "Madrugada del 7 al 8 sep 2025: un dron deja un móvil y hachís en el módulo 1 del centro penitenciario Brians 1 (Sant Esteve Sesrovires, junto a Martorell). No llegó por GDELT."
+  },
+  {
+   "url": "https://elcaso.elnacional.cat/es/noticias/mas-drones-prisiones-catalanas-interceptado-cuando-intentaba-introducir-moviles-drogas-brians-2_1488179102.html",
+   "medio": "elcaso.elnacional.cat",
+   "fecha": "2025-09-21T12:30:00Z",
+   "idioma": "es",
+   "pais": "ES",
+   "titular": "Más drones en las prisiones catalanas: interceptado uno que intentaba introducir móviles y drogas en Brians 2",
+   "lugar": "loc:3117331",
+   "motivo": "Madrugada del 19 al 20 sep 2025: dron interceptado en el centro penitenciario Brians 2 con móviles y droga. No llegó por GDELT."
+  },
+  {
+   "url": "https://metropoliabierta.elespanol.com/sucesos/20251001/detenido-introducir-paquetes-moviles-droga-dron-carcel-brians/1003742693543_0.html",
+   "medio": "metropoliabierta.elespanol.com",
+   "fecha": "2025-10-01T13:01:00Z",
+   "idioma": "es",
+   "pais": "ES",
+   "titular": "Detenido por introducir paquetes con móviles y droga con un dron en la cárcel de Brians",
+   "lugar": "loc:3117331",
+   "motivo": "Los Mossos detuvieron el 29 sep 2025 al piloto de los vuelos de dron con droga y móviles sobre Brians 1 (19 y 20 de septiembre). No llegó por GDELT."
+  },
+  {
+   "url": "https://elfarodeceuta.es/guardia-civil-inhibe-dron-llevaba-droga-micro-telefonos-carcel/",
+   "medio": "elfarodeceuta.es",
+   "fecha": "2026-01-16T09:18:00Z",
+   "idioma": "es",
+   "pais": "ES",
+   "titular": "La Guardia Civil inhibe un dron que llevaba droga y micro-teléfonos a la cárcel",
+   "lugar": "loc:6362987",
+   "motivo": "Enero de 2026 (antes del 16): el equipo Pegaso de la Guardia Civil inhibe un dron con droga y dos microteléfonos que volaba hacia el centro penitenciario de Ceuta. No llegó por GDELT."
+  },
+  {
+   "url": "https://www.rtvce.es/articulo/sucesos/guardia-civil-intercepta-dron-droga-dos-micro/20260116113736095125.html",
+   "medio": "rtvce.es",
+   "fecha": "2026-01-16T10:37:00Z",
+   "idioma": "es",
+   "pais": "ES",
+   "titular": "La Guardia Civil intercepta un dron con droga y dos teléfonos móviles en vuelo hacia la cárcel",
+   "lugar": "loc:6362987",
+   "motivo": "Segunda fuente del dron de enero de 2026 en la cárcel de Ceuta."
+  },
+  {
+   "url": "https://www.areacostadelsol.com/malaga/interceptan-un-dron-con-mas-de-un-kilo-de-hachis-en-la-carcel-de-alhaurin-de-la-torre/",
+   "medio": "areacostadelsol.com",
+   "fecha": "2026-06-12T14:42:00Z",
+   "idioma": "es",
+   "pais": "ES",
+   "titular": "Interceptan un dron con más de un kilo de hachís en la cárcel de Alhaurín de la Torre",
+   "lugar": "loc:2521986",
+   "motivo": "Junio de 2026 (antes del 12): un dron con más de un kilo de hachís en una celda del centro penitenciario Málaga I. No llegó por GDELT."
+  },
+  {
+   "url": "https://officialpress.es/dron-carcel-picassent/",
+   "medio": "officialpress.es",
+   "fecha": "2026-06-16T09:17:00Z",
+   "idioma": "es",
+   "pais": "ES",
+   "titular": "Descubren el primer dron con móviles de contrabando en la cárcel de Picassent",
+   "lugar": "loc:2512620",
+   "motivo": "13 jun 2026: un dron con móviles enganchado en un foco del módulo 6 del centro penitenciario de Picassent; investiga la Guardia Civil. No llegó por GDELT."
+  },
+  {
+   "url": "https://www.eldebate.com/espana/andalucia/malaga/20260813/vuelo-seis-minutos-dron-evidencia-fallos-seguridad-carcel-alhaurin-traeran-armas_448459.html",
+   "medio": "eldebate.com",
+   "fecha": "2026-08-13T02:30:00Z",
+   "idioma": "es",
+   "pais": "ES",
+   "titular": "El vuelo de seis minutos de un dron evidencia fallos de seguridad en la cárcel de Alhaurín: «Traerán armas»",
+   "lugar": "loc:2521986",
+   "motivo": "10 ago 2026 hacia las 04:00: un dron sobrevuela seis minutos los módulos 9 y 11 del centro penitenciario Málaga I. No llegó por GDELT."
   }
  ]
 }

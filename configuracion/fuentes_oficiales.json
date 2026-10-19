@@ -1,6 +1,6 @@
 {
   "version_esquema": "1.0.0",
-  "descripcion": "Fuentes oficiales que confirman incidentes (fiabilidad A, autoridad). tipo rss: canal RSS con un elemento por nota. tipo pagina: página de noticias; enlace es el patrón de las direcciones de las notas, titulos_genericos los títulos que no dicen el tema y se abren igual, sobra_titulo lo que se quita del título del enlace, fecha el patrón que da la fecha en el texto de la nota (si no hay, se usan los metadatos de publicación) y zona la hora local de la fuente. Las notas se leen respetando robots.txt y con la identificación del observatorio. pagina_js: la lista de notas se monta con JavaScript; la renderiza un navegador sin interfaz en el temporizador de las fuentes de detalle (recogida/navegador.py) y las notas se abren sin navegador. titulo_nota: la lista no trae el título de la nota; se toma el de la propia nota.",
+  "descripcion": "Fuentes oficiales que confirman incidentes (fiabilidad A, autoridad). tipo rss: canal RSS con un elemento por nota. tipo pagina: página de noticias; enlace es el patrón de las direcciones de las notas, titulos_genericos los títulos que no dicen el tema y se abren igual, sobra_titulo lo que se quita del título del enlace, fecha el patrón que da la fecha en el texto de la nota (si no hay, se usan los metadatos de publicación) y zona la hora local de la fuente. Las notas se leen respetando robots.txt y con la identificación del observatorio. pagina_js: la lista de notas se monta con JavaScript; la renderiza un navegador sin interfaz en el temporizador de las fuentes de detalle (recogida/navegador.py) y las notas se abren sin navegador. titulo_nota: la lista no trae el título de la nota; se toma el de la propia nota. cuerpo_desde: la nota no va en párrafos (o los menús de la página los tapan); su texto es el de la página a partir de esa marca.",
   "fuentes": [
     {
       "id": "politi_kobenhavn",
@@ -202,6 +202,42 @@
       "zona": "Europe/Madrid",
       "url": "https://www.enaire.es/sala_de_prensa/noticias",
       "enlace": "enaire\\.es/\\d{4}_\\d{2}_\\d{2}/[a-z0-9_-]+$"
+    },
+    {
+      "id": "aena",
+      "medio": "Aena",
+      "pais": "ES",
+      "idioma": "es",
+      "tipo": "pagina",
+      "zona": "Europe/Madrid",
+      "url": "https://www.aena.es/es/corporativa/prensa/notas-de-prensa-y-fotonoticias.html",
+      "enlace": "aena\\.es/es/prensa/[a-z0-9-]+\\.html",
+      "fecha": "Copy (\\d{1,2} de \\w+(?: de)? \\d{4})",
+      "cuerpo_desde": "Copy \\d{1,2} de \\w+(?: de)? \\d{4}"
+    },
+    {
+      "id": "delegacion_melilla",
+      "medio": "Delegación del Gobierno en Melilla",
+      "pais": "ES",
+      "idioma": "es",
+      "tipo": "pagina",
+      "zona": "Europe/Madrid",
+      "url": "https://mptmd.gob.es/portal/delegaciones_gobierno/delegaciones/melilla/actualidad",
+      "enlace": "mptmd\\.gob\\.es/portal/delegaciones_gobierno/delegaciones/melilla/actualidad/\\d{4}/[a-z0-9]+/[a-z0-9_-]+$",
+      "fecha": "(\\d{2}/\\d{2}/\\d{4}) (?=[A-ZÁÉÍÓÚÑ«“¿])",
+      "cuerpo_desde": "\\d{2}/\\d{2}/\\d{4} (?=[A-ZÁÉÍÓÚÑ«“¿])"
+    },
+    {
+      "id": "delegacion_canarias",
+      "medio": "Delegación del Gobierno en Canarias",
+      "pais": "ES",
+      "idioma": "es",
+      "tipo": "pagina",
+      "zona": "Atlantic/Canary",
+      "url": "https://mptmd.gob.es/portal/delegaciones_gobierno/delegaciones/canarias/actualidad",
+      "enlace": "mptmd\\.gob\\.es/portal/delegaciones_gobierno/delegaciones/canarias/actualidad/\\d{4}/[a-z0-9]+/[a-z0-9_-]+$",
+      "fecha": "(\\d{2}/\\d{2}/\\d{4}) (?=[A-ZÁÉÍÓÚÑ«“¿])",
+      "cuerpo_desde": "\\d{2}/\\d{2}/\\d{4} (?=[A-ZÁÉÍÓÚÑ«“¿])"
     },
     {
       "id": "forsvaret_dk",

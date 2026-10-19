@@ -121,6 +121,66 @@ def test_lector_de_cada_fuente(
     assert paginas_oficiales.contenido(articulo, datos, titulo) == (*fecha, PARRAFO)
 
 
+# Fuentes cuya nota no va en párrafos o queda tapada por los menús (cuerpo_desde): el texto es el
+# de la página desde la marca, con las entidades de Aena («ser&amp;aacute;») ya resueltas.
+CASOS_CUERPO = [
+    (
+        "aena",
+        '<a href="/es/prensa/un-dron-paraliza-el-aeropuerto-de-ibiza.html&p=1575078740846">Un dron '
+        "paraliza el Aeropuerto de Ibiza</a>",
+        "https://www.aena.es/es/prensa/un-dron-paraliza-el-aeropuerto-de-ibiza.html&p=1575078740846",
+        "Un dron paraliza el Aeropuerto de Ibiza",
+        "<div>Compartir Email Twitter Copy</div><div>16 de junio 2026</div><div>Las operaciones "
+        "se paralizar&amp;aacute;n durante 35 minutos por un dron.</div>",
+        (datetime(2026, 6, 16, tzinfo=UTC), "dia"),
+        "Las operaciones se paralizarán durante 35 minutos por un dron.",
+    ),
+    (
+        "delegacion_melilla",
+        '<a href="/portal/delegaciones_gobierno/delegaciones/melilla/actualidad/2026/09/'
+        '2026-09-24">'
+        "La Delegación pide a Marruecos ajustar la altura de sus drones</a>",
+        "https://mptmd.gob.es/portal/delegaciones_gobierno/delegaciones/melilla/actualidad/2026/09"
+        "/2026-09-24",
+        "La Delegación pide a Marruecos ajustar la altura de sus drones",
+        "<p>(En proceso - última actualización: 29/10/2025). Menú del portal del ministerio con "
+        "muchas palabras.</p><h1>La Delegación pide a Marruecos ajustar la altura</h1>"
+        "<div>24/09/2026</div><div>La Delegación del Gobierno ha trasladado la petición.</div>",
+        (datetime(2026, 9, 24, tzinfo=UTC), "dia"),
+        "La Delegación del Gobierno ha trasladado la petición.",
+    ),
+]
+
+
+@pytest.mark.parametrize(
+    ("id_", "pagina", "direccion", "titulo", "cabecera", "fecha", "texto"), CASOS_CUERPO
+)
+def test_lector_de_las_fuentes_con_el_cuerpo_desde_una_marca(
+    id_: str,
+    pagina: str,
+    direccion: str,
+    titulo: str,
+    cabecera: str,
+    fecha: tuple[datetime, str],
+    texto: str,
+) -> None:
+    datos = fuente(id_)
+    assert paginas_oficiales.enlaces(f"<html><body>{pagina}</body></html>", datos) == [
+        (direccion, titulo)
+    ]
+    articulo = f"<html><head></head><body>{cabecera}</body></html>"
+    assert paginas_oficiales.contenido(articulo, datos, titulo) == (*fecha, texto)
+
+
+def test_fecha_en_espanol_con_de() -> None:
+    assert paginas_oficiales.dia_de_texto("15 de octubre de 2026") == datetime(
+        2026, 10, 15, tzinfo=UTC
+    )
+    assert paginas_oficiales.dia_de_texto("16 de octubre 2026") == datetime(
+        2026, 10, 16, tzinfo=UTC
+    )
+
+
 def test_direcciones_con_letras_no_ascii_se_codifican() -> None:
     pagina = '<a href="/cpresa/19397_Fragmente-de-dronă">Fragmente de dronă</a>'
     ((direccion, _),) = paginas_oficiales.enlaces(pagina, fuente("mapn"))

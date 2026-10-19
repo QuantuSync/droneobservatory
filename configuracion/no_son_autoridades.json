@@ -1,0 +1,10 @@
+{
+  "descripcion": "Quien no es una autoridad aunque la noticia lo cite como si lo fuera: colectivos profesionales, sindicatos y asociaciones (proceso/declaraciones.no_es_autoridad). Su declaración entra como fuente de prensa: no confirma, no desmiente, no atribuye ni confirma la presencia del dron. Cada expresión se busca en el nombre de la autoridad, en minúsculas y sin acentos; con «*» casa con todo lo que empieza por ella. El 24 de febrero de 2025 la cuenta en X «Controladores Aéreos de España» (@controladores, el colectivo de los controladores, no ENAIRE) confirmó el dron del aeropuerto de Sevilla (EODI-2025-00190).",
+  "expresiones": [
+    "controladores aereos", "controladores", "sindicat*", "syndicat*", "sindacat*",
+    "gewerkschaft*", "vakbond*", "fagforbund*", "fackforbund*", "zwiazek zawodowy",
+    "zwiazki zawodowe", "usca", "csif", "acaip", "ccoo", "ugt", "asociacion*", "associacio*",
+    "associazione*", "association of", "verband*", "vereinigung cockpit", "colegio oficial",
+    "sepla"
+  ]
+}

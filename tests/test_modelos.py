@@ -337,6 +337,76 @@ def test_sin_experto_configurado_no_se_escala(almacen: Almacen) -> None:
     assert incidente is not None and set(incidente["control"]["modelos"].values()) == {BASE}
 
 
+# --- Una autoridad que habla en la noticia sin declaración en la ficha ----------------------
+
+# Como en EODI-2026-00146 (Melilla, 22 de septiembre de 2026): la noticia cuenta lo que dijo la
+# Delegación del Gobierno y la ficha del base no traía ninguna declaración.
+DICE_LA_POLICIA = "Københavns Politi bekræfter, at der var droner over lufthavnen."
+SIN_CIERRE = {
+    "cierre": campo("no", "Københavns Lufthavn var lukket"),
+    "presencia_dron": campo("no_confirmada", "observeret tre til fire store droner"),
+}
+
+
+def test_la_autoridad_que_habla_en_la_noticia_se_escala_si_la_ficha_no_trae_su_declaracion() -> (
+    None
+):
+    textos = (f"{TEXTO} {DICE_LA_POLICIA}",)
+    motivos = escalado.motivos_ficha(_leida(ficha_ejemplo(**SIN_CIERRE)), textos)
+    assert motivos == ["declaracion: habla «politi» y la ficha no trae su declaración"]
+    assert escalado.opcionales(motivos) and not escalado.es_critico(motivos)
+    # En otras lenguas y con la autoridad del Gobierno en un territorio.
+    for texto, autoridad in (
+        ("La Delegación del Gobierno en Melilla reconoció los dos incidentes.",
+         "delegacion del gobierno"),
+        ("De Spaanse regeringsdelegatie in Melilla benadrukt dat de drone het luchtruim niet "
+         "was binnengedrongen.", "regeringsdelegatie"),
+        ("Ein Sprecher der Bundespolizei sagte, die Drohne sei verschwunden.", "bundespolizei"),
+    ):  # fmt: skip
+        assert escalado.autoridad_citada((texto,)) == autoridad
+    # La autoridad y el verbo, en la misma frase; un testigo no es una autoridad.
+    assert escalado.autoridad_citada(("The government. Witnesses said a drone flew.",)) is None
+    assert escalado.autoridad_citada((TEXTO,)) is None
+
+
+def test_con_su_declaracion_en_la_ficha_o_sin_suceso_no_se_escala_por_la_autoridad() -> None:
+    textos = (f"{TEXTO} {DICE_LA_POLICIA}",)
+    leida = _leida(ficha_ejemplo(**SIN_CIERRE))
+    leida["declaraciones"] = [{"autoridad": "Københavns Politi", "afirma": "drones"}]
+    assert not [m for m in escalado.motivos_ficha(leida, textos) if m.startswith("declaracion")]
+    no_es = _leida(ficha_ejemplo(es_incidente=campo(False, "Droner over", 0.95)))
+    assert escalado.motivos_ficha(no_es, ("Droner over byen i aftes.",)) == []
+
+
+def _peticion_con(almacen: Almacen, texto: str) -> extraccion.Peticion:
+    peticion = _peticion(almacen)
+    return extraccion.Peticion(**{**peticion.__dict__, "fuentes": [
+        ficha.FuenteTexto(f.medio, f.fecha, f.idioma, f.titular, texto) for f in peticion.fuentes
+    ]})  # fmt: skip
+
+
+def test_la_autoridad_citada_la_decide_el_experto_si_puede(almacen: Almacen) -> None:
+    peticion = _peticion_con(almacen, f"{TEXTO} {DICE_LA_POLICIA}")
+    cliente = Cliente(ficha_ejemplo(**SIN_CIERRE), ficha_ejemplo(**SIN_CIERRE))
+    hechas = extraccion.extraer(almacen, cliente, [peticion], AHORA, coste.Modo.HORARIO, MODELOS)
+    assert cliente.pedidas == [BASE, EXPERTO] and hechas.escalados == [peticion.candidato["id"]]
+    (extraida,) = almacen.extracciones(peticion.candidato["id"])
+    assert extraida["escalado"][0].startswith("declaracion")
+
+
+def test_sin_tope_del_experto_la_autoridad_citada_no_hace_esperar(almacen: Almacen) -> None:
+    _gasto_experto(almacen, coste.LIMITE_EXPERTO_DIARIO_USD + coste.RESERVA_CRITICA_DIARIA_USD)
+    peticion = _peticion_con(almacen, f"{TEXTO} {DICE_LA_POLICIA}")
+    cliente = Cliente(ficha_ejemplo(**SIN_CIERRE), ficha_ejemplo(**SIN_CIERRE))
+    hechas = extraccion.extraer(almacen, cliente, [peticion], AHORA, coste.Modo.HORARIO, MODELOS)
+    # Vale la ficha del base, se publica y su llamada se anota una sola vez.
+    assert cliente.pedidas == [BASE] and hechas.esperan == [] and hechas.escalados == []
+    assert hechas.incidentes and hechas.incidentes[0] is not None
+    assert peticion.candidato["id"] not in extraccion.esperan_experto(almacen)
+    por_modelo = {f["modelo"]: f for f in almacen.llamadas_por_modelo("2000", "3000")}
+    assert por_modelo[BASE]["llamadas"] == 1
+
+
 # --- Control: pares dudosos y esperas -------------------------------------------------------
 
 

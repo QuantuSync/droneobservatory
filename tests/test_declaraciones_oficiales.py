@@ -238,6 +238,32 @@ def test_se_aplica_al_incidente_en_que_esta_fundido(carpeta: Path) -> None:
     assert "atribucion" not in _incidente(almacen, "EODI-2025-00999")
 
 
+def test_una_union_de_antes_devuelve_la_confirmacion_del_registro_unido(carpeta: Path) -> None:
+    """EODI-2025-00122 (Palma, 19 de octubre de 2025): la EODI-2025-00160, confirmada por Aena, se
+    unió en ella antes del 14 de octubre de 2026; la que quedó tenía la fuente y seguía
+    notificada."""
+    almacen, id_ = _almacen()
+    oficiales.aplicar(almacen, DESPUES, MODELOS, (_confirma(id_),), carpeta)
+    confirmado = _incidente(almacen, id_)
+    assert confirmado["estado"]["actual"] == "confirmado"
+    primero, *_ = confirmado["estado"]["historial"]
+    destino = {
+        **confirmado, "id": "EODI-2025-00998",
+        "estado": {"actual": "notificado", "historial": [primero]},
+    }  # fmt: skip
+    almacen.guardar_incidente(destino, DESPUES, MODELOS)
+    unido = {**confirmado, "fusionado_en": "EODI-2025-00998"}
+    unido.pop("episodio", None)
+    almacen.guardar_incidente(unido, DESPUES, MODELOS)
+    assert oficiales.uniones(almacen, DESPUES + timedelta(hours=1), MODELOS) == ["EODI-2025-00998"]
+    nuevo = _incidente(almacen, "EODI-2025-00998")
+    assert nuevo["estado"]["actual"] == "confirmado"
+    assert nuevo["estado"]["historial"][-1] == confirmado["estado"]["historial"][-1]
+    # Ya hecho, no cambia nada.
+    assert oficiales.uniones(almacen, DESPUES + timedelta(hours=2), MODELOS) == []
+    assert _incidente(almacen, "EODI-2025-00998") == nuevo
+
+
 def test_la_autoria_vuelve_si_una_union_dejo_la_fuente_sin_atribucion(carpeta: Path) -> None:
     """EODI-2026-00211, atribuida por la Presidencia de Rumanía, se unió el 14 de octubre de 2026
     en la EODI-2026-00187: la que quedó recibió las fuentes oficiales, no la atribución."""

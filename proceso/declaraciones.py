@@ -24,6 +24,10 @@ literal, que tiene que estar en el texto enviado) se registra como fuente
 - Lo que una autoridad dice que investiga, examina o comprueba va a la ficha como
   investigación en curso, sin cambiar el estado.
 
+Un colectivo profesional, un sindicato o una asociación no es una autoridad aunque la noticia lo
+cite como tal (configuracion/no_son_autoridades.json, `no_es_autoridad`): su declaración no se
+aplica.
+
 Una autoridad habla de su país: una declaración de una autoridad de otro país no
 cambia el incidente (el gobierno letón que dice que en Letonia no entró ningún dron
 no desmiente el derribo en Estonia). Las fichas anteriores no traen el país de la
@@ -32,17 +36,23 @@ autoridad: sus declaraciones valen como antes.
 
 import contextlib
 import copy
+import json
 import re
 from collections.abc import Sequence
+from functools import cache
+from pathlib import Path
 from typing import Any
 
 from esquema import Documento
 from proceso import atribucion, competencia
 from proceso.credibilidad import Credibilidad
 from proceso.estados import Estado, TransicionNoPermitida, transitar
-from proceso.noticias import filtro
+from proceso.noticias import filtro, normalizar
 
 MAX_PALABRAS_FRASE = 25
+RUTA_NO_AUTORIDADES = (
+    Path(__file__).resolve().parent.parent / "configuracion" / ("no_son_autoridades.json")
+)
 FIABILIDAD = "B"
 # Autoridades competentes: si atribuyen el suceso a un dron, la presencia está confirmada.
 AUTORIDADES_DEL_DRON = frozenset(
@@ -85,6 +95,21 @@ _CONFIRMAN = frozenset({"incidente", "drones"})
 
 def _normal(texto: str) -> str:
     return " ".join(texto.lower().split())
+
+
+@cache
+def _no_autoridades() -> re.Pattern[str]:
+    datos = json.loads(RUTA_NO_AUTORIDADES.read_text(encoding="utf-8"))
+    partes = [
+        re.escape(normalizar(e.rstrip("*"))) + (r"\w*" if e.endswith("*") else "")
+        for e in datos["expresiones"]
+    ]
+    return re.compile(r"\b(?:" + "|".join(partes) + r")\b")
+
+
+def no_es_autoridad(nombre: str) -> bool:
+    """Un colectivo profesional, un sindicato o una asociación: no es una autoridad."""
+    return bool(_no_autoridades().search(normalizar(nombre)))
 
 
 def validas(declaraciones: Sequence[dict[str, Any]], textos: Sequence[str]) -> list[dict[str, Any]]:
@@ -250,6 +275,8 @@ def _aplicar_nuevas(
     nuevas: Sequence[tuple[dict[str, Any], Documento]],
     por_enlace: dict[str, Documento],
 ) -> Documento:
+    # Quien no es una autoridad no cambia nada: ni entra como declaración.
+    nuevas = [(d, o) for d, o in nuevas if not no_es_autoridad(str(d.get("autoridad", "")))]
     tiene = {f["id"] for f in resultado["fuentes"]}
     resultado["fuentes"] = [*resultado["fuentes"], *(f for _, f in nuevas if f["id"] not in tiene)]
     # Primero lo que confirma y después lo que desmiente o atribuye.
