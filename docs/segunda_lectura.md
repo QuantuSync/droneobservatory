@@ -28,11 +28,12 @@ la recogida) y [`configuracion/segunda_lectura.json`](../configuracion/segunda_l
    reintenta en la pasada siguiente. Nunca avisa y la pasada siempre termina con código 0.
 5. **Gasto.** El servicio secundario es gratuito. Lo único que cuesta es el experto al revisar lo
    marcado: modo `segunda_lectura` de [`modelo/coste.py`](../modelo/coste.py), como mucho
-   **0,30 dólares al día** (`LIMITE_SEGUNDA_EXPERTO_DIARIO_USD`), que cuentan dentro del dólar
-   diario del experto y **nunca** salen de la reserva crítica. Desde el 19 de octubre de 2026,
-   además, solo gasta lo que los escalados normales no necesitan: el gasto del experto en el día
-   tiene que ir por debajo del ritmo de su tope (el dólar entero a las 00:00 UTC, la mitad a las
-   12:00, `margen_escalados`). Así nunca se come de madrugada el tope que necesitan las recogidas
+   **0,10 dólares al día** (`LIMITE_SEGUNDA_EXPERTO_DIARIO_USD`; 0,30 hasta el 19 de octubre de
+   2026: de 30 candidatos revisados, 2 cambiaron algo), que cuentan dentro del tope normal del
+   experto y **nunca** salen de la reserva crítica. Además, solo gasta lo que los escalados
+   normales no necesitan: el gasto del experto en el día tiene que ir por debajo del ritmo de su
+   tope (el tope entero libre a las 00:00 UTC, la mitad a las 12:00, `margen_escalados`). Con el
+   tope mensual agotado no gasta nada ([`docs/modelos.md`](modelos.md), «Tope mensual»). Así nunca se come de madrugada el tope que necesitan las recogidas
    del día. Lo que no cabe espera a otra recogida.
 6. **Datos.** Solo se envía contenido público: los datos de las fichas publicadas y las citas,
    titulares y frases de sus fuentes públicas.
@@ -147,7 +148,7 @@ que un dron cayera, explotara o atacara sigue siendo un sobrevuelo o una incursi
 contradicho; después los duplicados; después la atribución, el lugar y la duración; al final, el
 resto. Cada recogida entrega como mucho 2 candidatos a la extracción (`busqueda.por_recogida`, 8
 al día, `por_dia`) y manda como mucho 2 al experto (`recogida.por_recogida`). Lo que revisa el
-experto en el modo `segunda_lectura` cabe en sus 0,30 dólares al día y por debajo del ritmo de su
+experto en el modo `segunda_lectura` cabe en sus 0,10 dólares al día y por debajo del ritmo de su
 tope; las extracciones repetidas con el experto van con el motivo opcional `declaracion` y nunca
 tocan la reserva crítica. Cada decisión queda guardada (clave `segunda:…`
 del control de las fichas) y no se repite.

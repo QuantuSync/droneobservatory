@@ -65,9 +65,10 @@ cada petición de un lote):
 - **Salida estructurada**: igual que antes (`output_config.format` con su esquema). Las
   respuestas se leen por tipo de bloque, así que el bloque de razonamiento que va delante no
   estorba.
-- **Caché**: las instrucciones van marcadas para la caché en el base, que hace varias llamadas
-  seguidas con las mismas instrucciones. En el experto se quita la marca: hace una o dos llamadas
-  por recogida y escribir la caché le costaría un 25 % más sin leerla nunca.
+- **Caché**: las instrucciones van marcadas para la caché en los dos modelos. Hasta el 19 de
+  octubre de 2026 el experto iba sin ella; medido del 15 al 19 de octubre, 7.460 de los 7.950
+  tokens de entrada de una ficha escalada son el mismo prefijo y 102 de 171 llamadas llegaban
+  menos de 5 minutos después de otra del mismo tipo, así que la caché le ahorra en torno a un 20 %.
 - **Espera de cada respuesta**: 90 s (base: 120 s) y 150 s (experto), en vez de 60 s.
 
 ## Cuándo se escala al experto
@@ -76,8 +77,10 @@ Lo decide el código (`proceso/escalado.py`) mirando la respuesta del base; si s
 la misma petición con el experto y **vale la respuesta del experto**.
 
 1. **poca_seguridad**: el base da menos de 0,7 de confianza a un dato clave de la ficha (es
-   incidente, tipo, país, lugar, inicio, presencia, número de drones, cierre, minutos de cierre,
-   dron estatal).
+   incidente, tipo, país, lugar, inicio, presencia). Desde el 19 de octubre de 2026 no cuentan el
+   número de drones, el cierre, sus minutos ni el dron estatal (`CAMPOS_SIN_POCA`): en la prueba
+   comparativa, escalar por ellos no mejoró ningún dato y el experto ponía «2-10» con un plural. Es
+   **opcional**, como `declaracion` (abajo).
 2. **duplicado_dudoso** (comparación de dos fichas): el base dice «dudoso», su decisión no casa
    con lo que él mismo dice del día y del sitio, o dice «mismo día y mismo sitio» y aun así las
    separa (en la prueba, separó así dos duplicados reales porque una fuente citaba otro suceso).
@@ -87,7 +90,10 @@ la misma petición con el experto y **vale la respuesta del experto**.
    de la ficha.
 4. **critico**: dron confirmado, atribuido (dron estatal o una declaración de autoría), incursión
    en un país de la OTAN o en Moldavia (lista de `configuracion/avisos.json`) o cierre de
-   aeropuerto.
+   aeropuerto. Desde el 19 de octubre de 2026 **solo marca el caso** (`MOTIVOS_MARCA`): no escala
+   por sí solo, pero el caso que escala por otro motivo usa la reserva crítica si hace falta. En la
+   prueba comparativa, las 24 fichas que escalaban solo por «critico» quedaron peor con el experto
+   (2 aciertos menos y 2 datos inventados más).
 5. **publicada** (desde el 15 de octubre de 2026, obligatoria): ver «Nada publicado se retira ni se
    rebaja sin el experto».
 6. **senal** (ídem): el base da un candidato por «no es un incidente», aunque esté seguro, y alguna
@@ -102,8 +108,11 @@ la misma petición con el experto y **vale la respuesta del experto**.
    declaración oficial y una frase de una fuente hace hablar a una autoridad: la nombra junto a un
    verbo de declaración o un «según» («La Delegación del Gobierno en Melilla reconoció…», «ein
    Sprecher der Bundespolizei sagte…»; `autoridad_citada` en `configuracion/senales_escalado.json`).
-   El experto decide si la autoridad confirma, desmiente o atribuye. Es el único motivo
-   **opcional**: si el experto ha agotado su tope, vale la ficha del base y el candidato no espera.
+   El experto decide si la autoridad confirma, desmiente o atribuye. Es **opcional**, como
+   `poca_seguridad`: un caso con solo motivos opcionales va al experto **al ritmo** de su tope
+   (`coste.comprobar_al_ritmo`: lo gastado hoy no pasa de la parte del tope que corresponde a la
+   hora del día, `margen_escalados`); si no hay sitio, vale la ficha del base y el candidato no
+   espera.
    El 25 de septiembre de 2026 la Delegación del Gobierno en Melilla reconoció en la prensa dos
    incidentes con drones en la aproximación al aeropuerto y la ficha no recogió la declaración
    (EODI-2026-00146). Las instrucciones de la ficha dicen además que cuenta lo que la noticia
@@ -199,11 +208,13 @@ Principio (desde el 15 de octubre de 2026): **lo crítico nunca espera a que se 
   nunca contra el de la recogida horaria ni el de otro modo (`Almacen.gastado` no suma las llamadas
   escaladas). El 14 de octubre de 2026, cuatro candidatos esperaron porque la llamada al experto no
   cabía en el tope de la horaria (0,26 de 0,30 USD) aunque el experto tenía margen.
-- **Tope normal del experto: 1,00 USD al día** (UTC), sumando todos los modos
-  (`LIMITE_EXPERTO_DIARIO_USD`, `Almacen.gastado_modelo`). Antes de cada llamada se suma lo que
-  lleva gastado hoy y el peor caso. Con el tope de 0,30 USD, el 15 de octubre de 2026 tras 8
-  escalados (0,23 USD) los pares duplicados del mar Negro y la ficha de Mihail Kogălniceanu
-  quedaron esperando hasta el día siguiente.
+- **Tope normal del experto: lo que le toca de su parte del mes, como mucho 0,30 USD al día**
+  (UTC), sumando todos los modos (`coste.tope_experto`, `LIMITE_EXPERTO_DIARIO_USD`,
+  `Almacen.gastado_modelo`). Antes de cada llamada se suma lo que lleva gastado hoy y el peor caso.
+  Fue 0,30 USD hasta el 15 de octubre de 2026 (ese día, tras 8 escalados, los pares duplicados del
+  mar Negro y la ficha de Mihail Kogălniceanu esperaron al día siguiente) y 1,00 USD del 15 al 19
+  de octubre, que se gastaba casi entero cada día. Lo que esperaba entonces es crítico y ahora usa
+  la reserva; lo que no es crítico y es opcional va al ritmo del tope o se queda con el base.
 - **Reserva crítica: 0,50 USD al día** aparte (`RESERVA_CRITICA_DIARIA_USD`), solo para los casos
   críticos (`escalado.es_critico`, y `control_fichas.critico` para las fichas ya publicadas):
   - incursiones o sucesos en bases e instalaciones militares de países de la OTAN o en Moldavia (la
@@ -218,7 +229,8 @@ Principio (desde el 15 de octubre de 2026): **lo crítico nunca espera a que se 
     una publicada, una verificación que contradice su presencia o su cierre).
 
   Si el tope normal no da, estos casos usan la reserva y no esperan (`coste.comprobar_experto`
-  devuelve el tramo). Lo que el experto gasta por encima de 1 USD en el día es de la reserva.
+  devuelve el tramo). Lo que el experto gasta en el día por encima de su tope normal es de la
+  reserva.
 - **Si se agota también la reserva**, el caso crítico no espera al día siguiente: se reintenta en
   cada recogida (`espera_experto` a 50 minutos), sale en el resumen diario y, si lleva más de 6
   horas sin poder resolverse, la vigilancia abre la incidencia (`experto_critico`).
@@ -236,18 +248,65 @@ Principio (desde el 15 de octubre de 2026): **lo crítico nunca espera a que se 
   (`coste.espera_vencida`; las de antes del 15 de octubre de 2026, sin ese dato, son de 0,30 USD).
   Cada espera de un caso crítico lleva `critico`. Un par o una verificación cuya espera vence
   vuelve en la recogida horaria siguiente aunque sus fichas ya no sean nuevas
-  (`control_fichas.esperas_vencidas`), sin esperar a la pasada de madrugada.- **Segunda lectura** (desde el 18 de octubre de 2026): lo que marca la capa secundaria
+  (`control_fichas.esperas_vencidas`), sin esperar a la pasada de madrugada.
+- **Segunda lectura** (desde el 18 de octubre de 2026): lo que marca la capa secundaria
   ([`docs/segunda_lectura.md`](segunda_lectura.md)) lo revisa el experto con el modo
-  `segunda_lectura`, como mucho 0,30 USD al día dentro de su tope normal y nunca de la reserva
+  `segunda_lectura`, como mucho 0,10 USD al día (0,30 hasta el 19 de octubre de 2026: de 30
+  candidatos revisados, 2 cambiaron algo), al ritmo de su tope normal y nunca de la reserva
   crítica; lo que no cabe espera al día siguiente. El servicio secundario de modelos que marca los
   candidatos es gratuito y no decide nada.
+
+### Tope mensual
+
+Desde el 19 de octubre de 2026, **todo lo que se gasta en la API en el mes (UTC) cuenta contra 10
+USD** (`TOPE_MENSUAL_USD`; la variable `EODI_TOPE_MENSUAL_USD` lo cambia), también lo de las
+sesiones de trabajo. Del 14 al 19 de octubre se gastaron de 0,80 a 1,62 USD al día (unos 40 USD al
+mes), casi todo en el experto de la recogida horaria (4,50 USD en 172 llamadas).
+
+- **Reparto** (`REPARTO_MENSUAL_USD`): experto 4,30; recogida horaria (base) 2,80; control de las
+  fichas (base) 2,00; partes de Ucrania 0,20; rectificaciones 0,30; otros 0,40 (lo que no es de
+  ningún modo de cada día: sesiones, catálogo vivo; cuenta pero no se frena aquí).
+- **Ritmo** (`coste.tope_del_dia`): cada día, cada uno gasta como mucho lo que queda de su parte
+  dividido entre los días que quedan del mes, y nunca más que su límite diario. Lo que no se gasta
+  un día queda para los siguientes. La recogida horaria tiene un suelo: su parte media del día, para
+  que nunca pare.
+- **Aviso al 80 %**, una vez al mes, por el canal privado de avisos (`recogida/gasto_api.py`, al
+  final de cada recogida horaria que no sea un ensayo; estado en `~/.eodi/gasto_api.json`).
+- **Al 100 %** solo siguen la recogida horaria con el modelo base (sin ella no se sabe qué caso es
+  crítico) y los casos críticos con la reserva del experto. Paran el control de las fichas, los
+  partes de Ucrania, las rectificaciones y la segunda lectura (`PARAN_AL_TOPE_MENSUAL`) y los
+  escalados que no son críticos, hasta el mes siguiente. Se avisa una vez.
+- **Saldo agotado**: si el servicio contesta que no queda saldo (HTTP 402, error de facturación o
+  «credit balance»), el cliente lo trata como un límite de gasto (`cliente.ErrorSaldo`): la llamada
+  no se hace, el candidato queda pendiente como con cualquier tope y el código de salida no cambia.
+  Se anota en `~/.eodi/saldo_api.json` y la recogida avisa una vez por episodio: «Saldo de la API
+  agotado: recargar». La primera llamada que vuelve a ir bien cierra el episodio.
+
+Estimación con lo medido del 15 al 19 de octubre de 2026 y las reglas nuevas (175 escalados de la
+recogida horaria, 4,56 USD): 51 ya no escalan (0,29 USD al día), 84 son opcionales y van al ritmo
+del tope (0,45 USD al día como mucho) y 40 escalan siempre (0,17 USD al día, casi todos críticos).
+
+| Modo | Antes (USD/mes) | Ahora (USD/mes, estimado) |
+|---|---|---|
+| recogida horaria, experto | 27 | 4,3 como mucho entre todo el experto, más lo crítico de la reserva |
+| control de las fichas, experto | 5 | (dentro del experto; lo de la noche, por lote) |
+| segunda lectura, experto | 4,5 | 0,10 al día como mucho, dentro del experto |
+| recogida horaria, base | 3 | 2,8 |
+| control de las fichas, base | 2 | 2,0 |
+| partes de Ucrania, rectificaciones | 0,4 | 0,5 |
+| **total** | **unos 40** | **10 sin lo crítico; 12 a 15 con lo crítico** |
+
+Lo crítico no espera (principio de arriba): si en un mes hay muchos, la reserva puede llevar el
+total por encima de 10 USD. Calidad en la prueba comparativa con las reglas nuevas: 536 aciertos de
+553 y 3 datos inventados (antes, 534 y 6), con 39 escalados en vez de 68 (0,76 USD en vez de 1,32).
 
 ## Lotes (mitad de precio) para lo que no es urgente
 
 - **Madrugada** (una pasada al día): los pares y las verificaciones de las últimas 48 horas
   van por lote (`repaso` con alcance «noche»), sin el cerrojo mientras el lote se procesa (3 horas
-  como mucho); lo que el base pide escalar se repite con el experto en llamadas directas, dentro
-  de su tope. Tope de la revisión: `TOPE_NOCHE_USD` (0,08 USD). Después, las citas sin traducir,
+  como mucho); lo que el base pide escalar se repite con el experto, dentro de su tope: los casos
+  críticos en llamadas directas y los demás en un segundo lote, a mitad de precio
+  (`control_fichas.lote_experto`, desde el 19 de octubre de 2026). Tope de la revisión: `TOPE_NOCHE_USD` (0,08 USD). Después, las citas sin traducir,
   también por lote, con su propio tope (`TOPE_NOCHE_CITAS_USD`, 0,05 USD, unas 500 citas en el
   peor caso): lo nuevo de cada día son unas 15 a 30 citas de la capa de Ucrania (medido el 14 de
   octubre de 2026), así que queda traducido esa misma noche y el resto del tope se come lo
@@ -283,8 +342,8 @@ llamadas (E escaladas), Y USD; total Z USD». Los nombres de los modelos no sale
 
 Además guarda, por día UTC, el gasto del experto repartido entre su tope normal y la reserva
 crítica (`experto`) y los casos críticos que esperan ahora al experto (`criticos_esperando`, con
-desde cuándo). El resumen lo dice así: «Experto: tope normal X de 1,00 USD; reserva crítica Y de
-0,50 USD» y, si hay casos críticos esperando, «Casos críticos esperando al experto: N (se
+desde cuándo). El resumen lo dice así: «Experto: tope normal X de T USD; reserva crítica Y de
+0,50 USD» (T, el tope normal de ese día) y, si hay casos críticos esperando, «Casos críticos esperando al experto: N (se
 reintentan en cada recogida)», uno por línea.
 
 ## Prueba comparativa del 14 de octubre de 2026

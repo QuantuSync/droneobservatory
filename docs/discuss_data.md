@@ -38,7 +38,7 @@ y la misma fecha dan el mismo fichero.
   Así los ficheros de incidentes del paquete solo llevan datos CC BY 4.0.
 - **Puntos geocodificados con OpenStreetMap**: el punto de un incidente puede venir de los
   nomenclátores sacados de OpenStreetMap (`configuracion/lugares_europa.json`,
-  `configuracion/instalaciones_europa.json`). Es un resultado de geocodificación suelto, una
+  `configuracion/instalaciones_europa.json`, `configuracion/carceles_europa.json`). Es un resultado de geocodificación suelto, una
   coordenada por incidente: según la [guía de geocodificación de la
   OSMF](https://osmfoundation.org/wiki/Licence/Community_Guidelines/Geocoding_-_Guideline) es un
   extracto no sustancial que puede ir con otros datos y otra licencia, con la atribución a
