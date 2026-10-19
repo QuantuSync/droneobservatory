@@ -314,10 +314,11 @@ def nomenclator(
     ruta: Path = DIRECTORIO / "lugares_europa.json",
     instalaciones: Path = DIRECTORIO / "instalaciones_europa.json",
     localidades: Path = DIRECTORIO / "localidades_europa.json",
+    carceles: Path = DIRECTORIO / "carceles_europa.json",
 ) -> Nomenclator:
-    """Instalaciones del nomenclátor inicial y del ampliado, y localidades. Sin los nombres que
-    no nombran un lugar (nombra_lugar)."""
-    lugares = {**_leer_lugares(instalaciones), **_leer_lugares(ruta)}
+    """Instalaciones del nomenclátor inicial y del ampliado, cárceles y localidades. Sin los
+    nombres que no nombran un lugar (nombra_lugar)."""
+    lugares = {**_leer_lugares(carceles), **_leer_lugares(instalaciones), **_leer_lugares(ruta)}
     pueblos = _leer_localidades(localidades)
     cue = {
         tipo: re.compile(r"(?<!\w)(?:" + _alternativas(palabras, True) + ")", re.IGNORECASE)

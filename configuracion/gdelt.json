@@ -132,6 +132,13 @@
       "nuclear", "nuklear", "Kernkraftwerk", "AKW", "Atomkraftwerk", "nucléaire", "nucleare",
       "jądrow", "kärnkraft", "atomkraft", "ydinvoima", "kerncentrale", "jadern", "atomerőm",
       "АЭС", "АЕЦ", "πυρηνικ", "power plant", "centrale", "central"
+    ],
+    "carcel": [
+      "cárcel", "carcel", "prisión", "prision", "prison", "penitenciari", "penitentiar",
+      "presó", "Gefängnis", "Justizvollzug", "JVA", "więzieni", "zakład karn",
+      "închisoare", "penitenciar", "vězení", "väzen", "fängelse", "fængsel", "fengsel",
+      "vankila", "gevangenis", "carcere", "penitenziari", "prisão", "kartzela", "espetxe",
+      "φυλακ", "тюрьм", "затвор", "kalėjim", "cietum", "vangla", "börtön", "kaznionic"
     ]
   },
   "paises": {

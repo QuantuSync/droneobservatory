@@ -1057,7 +1057,8 @@ def _inicio_revisado_vigente(incidente: Documento, revisado: Documento | None) -
     """El inicio del incidente es el revisado a mano (mismo valor y precisión)."""
     inicio = incidente.get("tiempo", {}).get("inicio", {})
     return revisado is not None and (inicio.get("valor"), inicio.get("precision")) == (
-        revisado.get("valor"), revisado.get("precision")
+        revisado.get("valor"),
+        revisado.get("precision"),
     )
 
 

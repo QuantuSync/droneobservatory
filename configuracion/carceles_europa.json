@@ -1,0 +1,1115 @@
+{
+ "version_esquema": "1.0.0",
+ "descripcion": "Cárceles (centros penitenciarios de adultos) por país, con coordenadas, radio del objetivo, sus nombres de OpenStreetMap y los que usa la prensa (recogida/carceles_osm.py). Completa lugares_europa.json e instalaciones_europa.json.",
+ "licencia": "Datos © colaboradores de OpenStreetMap, ODbL 1.0: https://www.openstreetmap.org/copyright",
+ "lugares": {
+  "carcel:node/10617790241": {
+   "tipo": "carcel",
+   "nombre": "Centre Penitenciari de Joves",
+   "alias": [
+    "Centre Penitenciari de Joves"
+   ],
+   "ciudades": [],
+   "lat": 41.57677,
+   "lon": 2.29641,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:node/6895612424": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario Ocaña II",
+   "alias": [
+    "Centro Penitenciario Ocaña II"
+   ],
+   "ciudades": [],
+   "lat": 39.95231,
+   "lon": -3.4972,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:relation/12575135": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario Madrid III - Valdemoro",
+   "alias": [
+    "Centro Penitenciario Madrid III - Valdemoro"
+   ],
+   "ciudades": [],
+   "lat": 40.21961,
+   "lon": -3.65907,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:relation/14567400": {
+   "tipo": "carcel",
+   "nombre": "Penal de El Dueso",
+   "alias": [
+    "Penal de El Dueso",
+    "Centro Penitenciario de El Dueso",
+    "Prisión de El Dueso"
+   ],
+   "ciudades": [],
+   "lat": 43.45906,
+   "lon": -3.45823,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:relation/17999479": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario Gipuzkoa",
+   "alias": [
+    "Centro Penitenciario Gipuzkoa",
+    "Gipuzkoako espetxea"
+   ],
+   "ciudades": [],
+   "lat": 43.253,
+   "lon": -2.03196,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:relation/3834432": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario de Santa Cruz de la Palma",
+   "alias": [
+    "Centro Penitenciario de Santa Cruz de la Palma"
+   ],
+   "ciudades": [],
+   "lat": 28.68003,
+   "lon": -17.76957,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:relation/401725": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario de Soria",
+   "alias": [
+    "Centro Penitenciario de Soria"
+   ],
+   "ciudades": [],
+   "lat": 41.76939,
+   "lon": -2.46901,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:relation/4604673": {
+   "tipo": "carcel",
+   "nombre": "Basauriko kartzela",
+   "alias": [
+    "Basauriko kartzela",
+    "Centro Penitenciario de Basauri"
+   ],
+   "ciudades": [],
+   "lat": 43.23368,
+   "lon": -2.87454,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:relation/5614386": {
+   "tipo": "carcel",
+   "nombre": "Centro Penintenciario Cáceres 1",
+   "alias": [
+    "Centro Penintenciario Cáceres 1"
+   ],
+   "ciudades": [],
+   "lat": 39.48426,
+   "lon": -6.36355,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:relation/6667479": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario Albacete",
+   "alias": [
+    "Centro Penitenciario Albacete"
+   ],
+   "ciudades": [],
+   "lat": 39.01044,
+   "lon": -1.79215,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:relation/7658081": {
+   "tipo": "carcel",
+   "nombre": "Centre Penitenciari Lledoners",
+   "alias": [
+    "Centre Penitenciari Lledoners",
+    "Lledoners"
+   ],
+   "ciudades": [],
+   "lat": 41.76052,
+   "lon": 1.80763,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/1177926611": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario de Madrid VII (Estremera)",
+   "alias": [
+    "Centro Penitenciario de Madrid VII (Estremera)",
+    "Prisión de Estremera"
+   ],
+   "ciudades": [],
+   "lat": 40.11395,
+   "lon": -3.07587,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/118388413": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario do Pereiro de Aguiar",
+   "alias": [
+    "Centro Penitenciario do Pereiro de Aguiar",
+    "Centro Penitenciario de Pereiro de Aguiar",
+    "Cemntro Penitenciario de Pereiro",
+    "Centro Penitenciario de O Pereiro de Aguiar"
+   ],
+   "ciudades": [],
+   "lat": 42.30028,
+   "lon": -7.75461,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/1192686560": {
+   "tipo": "carcel",
+   "nombre": "Centre Penitenciari Obert de Girona",
+   "alias": [
+    "Centre Penitenciari Obert de Girona"
+   ],
+   "ciudades": [],
+   "lat": 42.00614,
+   "lon": 2.82389,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/130697113": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario de Zuera",
+   "alias": [
+    "Centro Penitenciario de Zuera"
+   ],
+   "ciudades": [],
+   "lat": 41.95394,
+   "lon": -0.70254,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/131851523": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario de Albolote",
+   "alias": [
+    "Centro Penitenciario de Albolote"
+   ],
+   "ciudades": [],
+   "lat": 37.32975,
+   "lon": -3.67332,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/1481982439": {
+   "tipo": "carcel",
+   "nombre": "Centre Penitenciari Obert de Tarragona",
+   "alias": [
+    "Centre Penitenciari Obert de Tarragona",
+    "Centro penitenciario abierto de Tarragona"
+   ],
+   "ciudades": [],
+   "lat": 41.12537,
+   "lon": 1.23439,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/149589610": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario de Alcala de Guadaira-Mujeres",
+   "alias": [
+    "Centro Penitenciario de Alcala de Guadaira-Mujeres"
+   ],
+   "ciudades": [],
+   "lat": 37.33454,
+   "lon": -5.7929,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/151543877": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario de Valencia Antoni Asunción Hernández",
+   "alias": [
+    "Centro Penitenciario de Valencia Antoni Asunción Hernández",
+    "Centro Penitenciario de Picassent",
+    "cárcel de Picassent",
+    "prisión de Picassent",
+    "Valencia I"
+   ],
+   "ciudades": [
+    "Picassent"
+   ],
+   "lat": 39.31439,
+   "lon": -0.43574,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/152615839": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario Murcia II",
+   "alias": [
+    "Centro Penitenciario Murcia II",
+    "Prisión de Campos del Río"
+   ],
+   "ciudades": [],
+   "lat": 37.99509,
+   "lon": -1.38649,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/154946317": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario de Arrecife",
+   "alias": [
+    "Centro Penitenciario de Arrecife"
+   ],
+   "ciudades": [],
+   "lat": 28.99973,
+   "lon": -13.53187,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/1559172376": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario Alcázar de San Juan",
+   "alias": [
+    "Centro Penitenciario Alcázar de San Juan"
+   ],
+   "ciudades": [],
+   "lat": 39.39951,
+   "lon": -3.21658,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/1559361189": {
+   "tipo": "carcel",
+   "nombre": "Cárcel de Urrea de Gaén",
+   "alias": [
+    "Cárcel de Urrea de Gaén"
+   ],
+   "ciudades": [],
+   "lat": 41.15873,
+   "lon": -0.47002,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/162757051": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario Alhaurín de la Torre",
+   "alias": [
+    "Centro Penitenciario Alhaurín de la Torre",
+    "cárcel de Alhaurín de la Torre",
+    "prisión de Alhaurín de la Torre"
+   ],
+   "ciudades": [
+    "Alhaurín de la Torre",
+    "Málaga"
+   ],
+   "lat": 36.67484,
+   "lon": -4.5836,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/165755508": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario La Moraleja",
+   "alias": [
+    "Centro Penitenciario La Moraleja",
+    "Cárcel de Dueñas"
+   ],
+   "ciudades": [],
+   "lat": 41.85596,
+   "lon": -4.51215,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/170625228": {
+   "tipo": "carcel",
+   "nombre": "Centre Penitenciari Brians 1",
+   "alias": [
+    "Centre Penitenciari Brians 1",
+    "Can Brians",
+    "Brians 1",
+    "Brians I",
+    "Can Brians 1"
+   ],
+   "ciudades": [
+    "Sant Esteve Sesrovires"
+   ],
+   "lat": 41.46752,
+   "lon": 1.88394,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/170625229": {
+   "tipo": "carcel",
+   "nombre": "Centre Penitenciari Brians 2",
+   "alias": [
+    "Centre Penitenciari Brians 2",
+    "Can Brians II",
+    "Brians 2",
+    "Brians II"
+   ],
+   "ciudades": [],
+   "lat": 41.47327,
+   "lon": 1.88118,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/180694911": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario Las Palmas II",
+   "alias": [
+    "Centro Penitenciario Las Palmas II"
+   ],
+   "ciudades": [],
+   "lat": 27.80988,
+   "lon": -15.46108,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/180762526": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario El Salto del Negro",
+   "alias": [
+    "Centro Penitenciario El Salto del Negro"
+   ],
+   "ciudades": [],
+   "lat": 28.05969,
+   "lon": -15.43536,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/180935549": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario de Huelva",
+   "alias": [
+    "Centro Penitenciario de Huelva"
+   ],
+   "ciudades": [],
+   "lat": 37.31887,
+   "lon": -6.8829,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/181459592": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario de Herrera de la Mancha",
+   "alias": [
+    "Centro Penitenciario de Herrera de la Mancha"
+   ],
+   "ciudades": [],
+   "lat": 39.06212,
+   "lon": -3.26015,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/183236506": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario de Pamplona I",
+   "alias": [
+    "Centro Penitenciario de Pamplona I"
+   ],
+   "ciudades": [],
+   "lat": 42.82719,
+   "lon": -1.67787,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/198347643": {
+   "tipo": "carcel",
+   "nombre": "Centre penitenciari de dones de Barcelona",
+   "alias": [
+    "Centre penitenciari de dones de Barcelona",
+    "Presó de Wad-Ras"
+   ],
+   "ciudades": [],
+   "lat": 41.39336,
+   "lon": 2.19705,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/201450418": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario de Monterroso",
+   "alias": [
+    "Centro Penitenciario de Monterroso",
+    "Centro Penitenciario da Vacaloura"
+   ],
+   "ciudades": [],
+   "lat": 42.80927,
+   "lon": -7.76995,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/204995959": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario de Bonxe",
+   "alias": [
+    "Centro Penitenciario de Bonxe"
+   ],
+   "ciudades": [],
+   "lat": 43.10264,
+   "lon": -7.58097,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/220862104": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario de Melilla",
+   "alias": [
+    "Centro Penitenciario de Melilla"
+   ],
+   "ciudades": [],
+   "lat": 35.30042,
+   "lon": -2.94359,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/222747993": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario de Madrid V",
+   "alias": [
+    "Centro Penitenciario de Madrid V",
+    "Madrid V"
+   ],
+   "ciudades": [
+    "Soto del Real"
+   ],
+   "lat": 40.71892,
+   "lon": -3.78315,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/23123301": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario de Alicante Cumplimiento",
+   "alias": [
+    "Centro Penitenciario de Alicante Cumplimiento",
+    "Centro penitenciario de Fontcalent"
+   ],
+   "ciudades": [],
+   "lat": 38.35151,
+   "lon": -0.56271,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/256137319": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario Puerto de Santa María III",
+   "alias": [
+    "Centro Penitenciario Puerto de Santa María III"
+   ],
+   "ciudades": [],
+   "lat": 36.6662,
+   "lon": -6.25788,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/256137324": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario Puerto de Santa Maria - II",
+   "alias": [
+    "Centro Penitenciario Puerto de Santa Maria - II"
+   ],
+   "ciudades": [],
+   "lat": 36.66246,
+   "lon": -6.24848,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/256137325": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario Puerto de Santa Maria - I",
+   "alias": [
+    "Centro Penitenciario Puerto de Santa Maria - I"
+   ],
+   "ciudades": [],
+   "lat": 36.66149,
+   "lon": -6.24725,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/261923290": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario Cuenca",
+   "alias": [
+    "Centro Penitenciario Cuenca"
+   ],
+   "ciudades": [],
+   "lat": 40.0778,
+   "lon": -2.18485,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/26427169": {
+   "tipo": "carcel",
+   "nombre": "Centre Penitenciari de Son Pacs",
+   "alias": [
+    "Centre Penitenciari de Son Pacs",
+    "Centro Penitenciario de Son Pacs"
+   ],
+   "ciudades": [],
+   "lat": 39.59968,
+   "lon": 2.65098,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/268666551": {
+   "tipo": "carcel",
+   "nombre": "Centre penitenciari Mas d'Enric",
+   "alias": [
+    "Centre penitenciari Mas d'Enric",
+    "Presó del Catllar",
+    "Centre Penitenciari Mas d'Enric",
+    "Mas d'Enric",
+    "Mas d’Enric",
+    "Mas Enric"
+   ],
+   "ciudades": [
+    "El Catllar",
+    "Tarragona"
+   ],
+   "lat": 41.15317,
+   "lon": 1.28903,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/270550662": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario de Sevilla II (Morón de la Frontera)",
+   "alias": [
+    "Centro Penitenciario de Sevilla II (Morón de la Frontera)",
+    "Sevilla II",
+    "Sevilla 2"
+   ],
+   "ciudades": [
+    "Morón de la Frontera"
+   ],
+   "lat": 37.16078,
+   "lon": -5.40724,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/280013663": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario de Segovia",
+   "alias": [
+    "Centro Penitenciario de Segovia",
+    "Centro Penitenciario de Torredondo",
+    "Centro Penitenciario de Perogordo",
+    "Cárcel de Segovia",
+    "Cárcel de Perogordo",
+    "Cárcel de Torredondo"
+   ],
+   "ciudades": [],
+   "lat": 40.93481,
+   "lon": -4.16535,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/28086779": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario Murcia I",
+   "alias": [
+    "Centro Penitenciario Murcia I",
+    "Cárcel de Sangonera"
+   ],
+   "ciudades": [],
+   "lat": 37.92847,
+   "lon": -1.18788,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/286652048": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario Logroño",
+   "alias": [
+    "Centro Penitenciario Logroño"
+   ],
+   "ciudades": [],
+   "lat": 42.43675,
+   "lon": -2.47121,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/289909828": {
+   "tipo": "carcel",
+   "nombre": "Centre Penitenciari Puig de les Basses",
+   "alias": [
+    "Centre Penitenciari Puig de les Basses",
+    "ca:Centre Penitenciari Puig de les Basses"
+   ],
+   "ciudades": [],
+   "lat": 42.28386,
+   "lon": 2.9383,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/29393584": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario de Almería Cumplimiento",
+   "alias": [
+    "Centro Penitenciario de Almería Cumplimiento"
+   ],
+   "ciudades": [],
+   "lat": 36.8657,
+   "lon": -2.30406,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/304276534": {
+   "tipo": "carcel",
+   "nombre": "Centro penitenciario de Jaén",
+   "alias": [
+    "Centro penitenciario de Jaén"
+   ],
+   "ciudades": [],
+   "lat": 37.86132,
+   "lon": -3.77093,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/304362329": {
+   "tipo": "carcel",
+   "nombre": "Centro penitenciario de Córdoba",
+   "alias": [
+    "Centro penitenciario de Córdoba",
+    "Centro Penitenciario de Córdoba",
+    "cárcel de Córdoba",
+    "prisión de Córdoba"
+   ],
+   "ciudades": [
+    "Córdoba"
+   ],
+   "lat": 37.90398,
+   "lon": -4.67257,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/312391711": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario Cáceres II",
+   "alias": [
+    "Centro Penitenciario Cáceres II",
+    "CP Cáceres II"
+   ],
+   "ciudades": [],
+   "lat": 39.47299,
+   "lon": -6.33664,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/32007510": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario de Madrid IV (Navalcarnero)",
+   "alias": [
+    "Centro Penitenciario de Madrid IV (Navalcarnero)"
+   ],
+   "ciudades": [],
+   "lat": 40.29164,
+   "lon": -3.96104,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/338333191": {
+   "tipo": "carcel",
+   "nombre": "Centre penitenciari Quatre Camins",
+   "alias": [
+    "Centre penitenciari Quatre Camins",
+    "Quatre Camins"
+   ],
+   "ciudades": [],
+   "lat": 41.57798,
+   "lon": 2.29472,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/346657132": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario de Burgos",
+   "alias": [
+    "Centro Penitenciario de Burgos"
+   ],
+   "ciudades": [],
+   "lat": 42.34963,
+   "lon": -3.75036,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/351722444": {
+   "tipo": "carcel",
+   "nombre": "Prisión Militar de Canarias",
+   "alias": [
+    "Prisión Militar de Canarias"
+   ],
+   "ciudades": [],
+   "lat": 28.16972,
+   "lon": -15.41006,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/359249274": {
+   "tipo": "carcel",
+   "nombre": "Nuevo Centro Penitenciario de Soria",
+   "alias": [
+    "Nuevo Centro Penitenciario de Soria"
+   ],
+   "ciudades": [],
+   "lat": 41.79915,
+   "lon": -2.49775,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/363351262": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario de Ceuta",
+   "alias": [
+    "Centro Penitenciario de Ceuta"
+   ],
+   "ciudades": [],
+   "lat": 35.87998,
+   "lon": -5.35597,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/36867582": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario de Asturias",
+   "alias": [
+    "Centro Penitenciario de Asturias"
+   ],
+   "ciudades": [],
+   "lat": 43.47778,
+   "lon": -5.81228,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/369559644": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario Daroca",
+   "alias": [
+    "Centro Penitenciario Daroca"
+   ],
+   "ciudades": [],
+   "lat": 41.11167,
+   "lon": -1.37591,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/38438553": {
+   "tipo": "carcel",
+   "nombre": "Martuteneko espetxea",
+   "alias": [
+    "Martuteneko espetxea"
+   ],
+   "ciudades": [],
+   "lat": 43.30338,
+   "lon": -1.95746,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/421554914": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario de Badajoz",
+   "alias": [
+    "Centro Penitenciario de Badajoz"
+   ],
+   "ciudades": [],
+   "lat": 38.83005,
+   "lon": -7.03543,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/433227112": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario de Teruel",
+   "alias": [
+    "Centro Penitenciario de Teruel"
+   ],
+   "ciudades": [],
+   "lat": 40.34988,
+   "lon": -1.11809,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/43582577": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario de Castellón II",
+   "alias": [
+    "Centro Penitenciario de Castellón II"
+   ],
+   "ciudades": [],
+   "lat": 40.36847,
+   "lon": 0.00605,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/471526107": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario de Madrid VI (Aranjuez)",
+   "alias": [
+    "Centro Penitenciario de Madrid VI (Aranjuez)"
+   ],
+   "ciudades": [],
+   "lat": 39.95317,
+   "lon": -3.70243,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/51368765": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario Algeciras-Botafuegos",
+   "alias": [
+    "Centro Penitenciario Algeciras-Botafuegos"
+   ],
+   "ciudades": [],
+   "lat": 36.14572,
+   "lon": -5.48541,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/541921607": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario de Málaga II",
+   "alias": [
+    "Centro Penitenciario de Málaga II"
+   ],
+   "ciudades": [],
+   "lat": 37.06248,
+   "lon": -4.36214,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/544738802": {
+   "tipo": "carcel",
+   "nombre": "Establecimiento Disciplinario Militar Norte",
+   "alias": [
+    "Establecimiento Disciplinario Militar Norte"
+   ],
+   "ciudades": [],
+   "lat": 42.58073,
+   "lon": -5.65391,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/563677189": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario Tenerife II - el Rosario",
+   "alias": [
+    "Centro Penitenciario Tenerife II - el Rosario"
+   ],
+   "ciudades": [],
+   "lat": 28.45295,
+   "lon": -16.3413,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/598970988": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario de Ávila",
+   "alias": [
+    "Centro Penitenciario de Ávila",
+    "Prisión de Brieva, cárcel de mujeres de Brieva"
+   ],
+   "ciudades": [],
+   "lat": 40.69126,
+   "lon": -4.62735,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/63108075": {
+   "tipo": "carcel",
+   "nombre": "Centre Penitenciari de Ponent",
+   "alias": [
+    "Centre Penitenciari de Ponent"
+   ],
+   "ciudades": [],
+   "lat": 41.62312,
+   "lon": 0.60756,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/651485723": {
+   "tipo": "carcel",
+   "nombre": "Centre Penitenciari Obert 2 de Barcelona",
+   "alias": [
+    "Centre Penitenciari Obert 2 de Barcelona"
+   ],
+   "ciudades": [],
+   "lat": 41.45351,
+   "lon": 2.1915,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/702539223": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario de Teixeiro",
+   "alias": [
+    "Centro Penitenciario de Teixeiro"
+   ],
+   "ciudades": [],
+   "lat": 43.1581,
+   "lon": -7.98536,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/70998662": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario de Sevilla (Sevilla I)",
+   "alias": [
+    "Centro Penitenciario de Sevilla (Sevilla I)",
+    "Sevilla I",
+    "Sevilla 1",
+    "prisión de Sevilla I",
+    "cárcel de Sevilla I"
+   ],
+   "ciudades": [
+    "Sevilla",
+    "Alcalá de Guadaíra"
+   ],
+   "lat": 37.39041,
+   "lon": -5.84591,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/716824663": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario Madrid II (ALCALA DE HENARES - MECO)",
+   "alias": [
+    "Centro Penitenciario Madrid II (ALCALA DE HENARES - MECO)"
+   ],
+   "ciudades": [],
+   "lat": 40.52409,
+   "lon": -3.33092,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/716824664": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario de Madrid I - Mujeres (ALCALA DE HENARES)",
+   "alias": [
+    "Centro Penitenciario de Madrid I - Mujeres (ALCALA DE HENARES)"
+   ],
+   "ciudades": [],
+   "lat": 40.52202,
+   "lon": -3.33,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/716828103": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario da Lama",
+   "alias": [
+    "Centro Penitenciario da Lama"
+   ],
+   "ciudades": [],
+   "lat": 42.40578,
+   "lon": -8.45443,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/736503759": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario Ocaña I",
+   "alias": [
+    "Centro Penitenciario Ocaña I"
+   ],
+   "ciudades": [],
+   "lat": 39.95354,
+   "lon": -3.49856,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/80207207": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario de Topas",
+   "alias": [
+    "Centro Penitenciario de Topas"
+   ],
+   "ciudades": [],
+   "lat": 41.19715,
+   "lon": -5.69469,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/80877507": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario de Mansilla de las Mulas",
+   "alias": [
+    "Centro Penitenciario de Mansilla de las Mulas"
+   ],
+   "ciudades": [],
+   "lat": 42.50084,
+   "lon": -5.36121,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/86894001": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario Alicante II",
+   "alias": [
+    "Centro Penitenciario Alicante II"
+   ],
+   "ciudades": [],
+   "lat": 38.7177,
+   "lon": -0.9274,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/86923207": {
+   "tipo": "carcel",
+   "nombre": "Araba espetxea",
+   "alias": [
+    "Araba espetxea",
+    "Centro Penitenciario de Zaballa",
+    "Zaballako espetxea",
+    "Centro Penitenciario de Álava"
+   ],
+   "ciudades": [],
+   "lat": 42.80151,
+   "lon": -2.78592,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/902079093": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario de Ibiza",
+   "alias": [
+    "Centro Penitenciario de Ibiza"
+   ],
+   "ciudades": [],
+   "lat": 38.90996,
+   "lon": 1.40444,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/93676976": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario de Valladolid",
+   "alias": [
+    "Centro Penitenciario de Valladolid"
+   ],
+   "ciudades": [],
+   "lat": 41.73872,
+   "lon": -4.82561,
+   "radio_km": 1.0,
+   "pais": "ES"
+  },
+  "carcel:way/99525345": {
+   "tipo": "carcel",
+   "nombre": "Centro Penitenciario Castellón I",
+   "alias": [
+    "Centro Penitenciario Castellón I"
+   ],
+   "ciudades": [],
+   "lat": 39.99997,
+   "lon": -0.09655,
+   "radio_km": 1.0,
+   "pais": "ES"
+  }
+ }
+}
