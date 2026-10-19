@@ -37,8 +37,10 @@ from proceso.noticias import (
 from proceso.territorios import soberanos_dentro
 from proceso.ubicacion import CATEGORIA_LUGAR, DECIMALES, Objetivo, nombres_en_idiomas
 
-# Tipos de lugar del nomenclátor que son una instalación (no un helipuerto ni una ciudad).
-TIPOS_INSTALACION = frozenset(CATEGORIA_LUGAR)
+# Tipos de lugar del nomenclátor que son una instalación (no un helipuerto ni una ciudad). Las
+# cárceles (configuracion/carceles_europa.json) tienen la categoría «otra» del esquema.
+CARCEL = "carcel"
+TIPOS_INSTALACION = frozenset({*CATEGORIA_LUGAR, CARCEL})
 CATEGORIAS_INSTALACION = frozenset(CATEGORIA_LUGAR.values())
 # Puntos que se pueden afinar: los de una localidad o del GKG, no los de una instalación.
 GEOCODIFICACION_GENERICA = frozenset({"localidad", "localidad_pequena", "gkg", "lugar_nuevo"})
@@ -144,19 +146,37 @@ def _afinable(incidente: Documento, sitio: Lugar, nom: Nomenclator) -> bool:
     return bool(nombres) and nombres <= nombres_en_idiomas(sitio.id, nom)
 
 
+def carcel_del_objetivo(incidente: Documento, nom: Nomenclator) -> Lugar | None:
+    """La cárcel del país que el objetivo de la ficha nombra por su nombre o por un alias
+    («Brians 1», «Sevilla I»), si solo una lo lleva."""
+    nombre = normalizar(str((incidente.get("objetivo") or {}).get("nombre") or ""))
+    if not nombre:
+        return None
+    pais = str(incidente["lugar"]["pais"])
+    paises = {pais, *soberanos_dentro(pais)}
+    hallados = [
+        sitio
+        for sitio in nom.lugares.values()
+        if sitio.tipo == CARCEL
+        and sitio.pais in paises
+        and nombre in {normalizar(n) for n in (sitio.nombre, *sitio.alias)}
+    ]
+    return hallados[0] if len(hallados) == 1 else None
+
+
 def instalacion_del_objetivo(incidente: Documento, nom: Nomenclator) -> Lugar | None:
-    """La instalación del nomenclátor que identifica el objetivo de la ficha por su código OACI,
-    si el punto está a más de DISTANCIA_INSTALACION_KM de ella y no lo da una autoridad."""
+    """La instalación del nomenclátor que identifica el objetivo de la ficha por su código OACI
+    (o, si es una cárcel, por su nombre), si el punto está a más de DISTANCIA_INSTALACION_KM de
+    ella y no lo da una autoridad."""
     lugar = incidente["lugar"]
     oaci = (incidente.get("objetivo") or {}).get("oaci")
     if (
-        not oaci
-        or "punto" not in lugar
+        "punto" not in lugar
         or lugar.get("fuente_punto")
         or lugar.get("geocodificacion") == "oficial"
     ):
         return None
-    sitio = nom.lugares.get(str(oaci))
+    sitio = nom.lugares.get(str(oaci)) if oaci else carcel_del_objetivo(incidente, nom)
     pais = str(lugar["pais"])
     if (
         sitio is None
