@@ -85,6 +85,7 @@ from recogida import (
     directo_horaria,
     extractor,
     firms,
+    gasto_api,
     gdelt,
     guerra,
     luces,
@@ -685,6 +686,13 @@ def principal(argumentos: list[str] | None = None) -> int:
             sitio.guardar_base(almacen, Path(temporal), args.correo, args.repositorio)
         else:
             registro.info("base sin cambios")
+        if args.ensayo is None:
+            # Avisos del gasto de la API y del saldo agotado al responsable, una vez cada uno
+            # (recogida/gasto_api.py). Nunca cambian el código de salida.
+            try:
+                gasto_api.revisar(almacen, ahora, visitas.avisador_privado)
+            except Exception as error:
+                registro.warning("avisos del gasto sin revisar: %s", str(error)[:300])
         almacen.cerrar()
     if paso.fallidos:
         registro.warning(

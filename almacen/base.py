@@ -1310,6 +1310,30 @@ class Almacen:
             parametros += (dia,)
         return float(self._conexion.execute(sql, parametros).fetchone()[0])
 
+    def gastos_del_mes(self, mes: str, hoy: str, prefijo_experto: str
+                       ) -> tuple[float, dict[str, float], float]:  # fmt: skip
+        """Lo gastado en el mes (AAAA-MM, UTC): en total (con hoy); antes de hoy (AAAA-MM-DD), por
+        modo sin las llamadas al experto; y antes de hoy, del experto (por su prefijo)."""
+        total = self._conexion.execute(
+            "SELECT coalesce(sum(coste), 0) FROM llamadas_extractor WHERE substr(fecha, 1, 7) = ?",
+            (mes,),
+        ).fetchone()[0]
+        modos = self._conexion.execute(
+            "SELECT modo, coalesce(sum(coste), 0) FROM llamadas_extractor WHERE "
+            "substr(fecha, 1, 7) = ? AND substr(fecha, 1, 10) < ? AND id NOT IN "
+            "(SELECT llamada FROM llamadas_modelo WHERE escalada = 1) GROUP BY modo",
+            (mes, hoy),
+        ).fetchall()
+        experto = 0.0
+        if prefijo_experto:
+            experto = self._conexion.execute(
+                "SELECT coalesce(sum(l.coste), 0) FROM llamadas_extractor l JOIN llamadas_modelo m "
+                "ON m.llamada = l.id WHERE substr(l.fecha, 1, 7) = ? "
+                "AND substr(l.fecha, 1, 10) < ? AND m.modelo LIKE ? || '%'",
+                (mes, hoy, prefijo_experto),
+            ).fetchone()[0]
+        return float(total), {str(m): float(g) for m, g in modos}, float(experto)
+
     def gastado_experto_en(self, modo: str, dia: str) -> float:
         """Dólares que gastó el experto (llamadas escaladas) en un modo el día `dia` (UTC)."""
         fila = self._conexion.execute(

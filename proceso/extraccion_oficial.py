@@ -346,7 +346,7 @@ def extraer(
         try:
             if plazo is not None:
                 plazo.comprobar()
-            coste.comprobar(gastado, peor_caso(recogido), modo)
+            coste.comprobar(gastado, peor_caso(recogido), modo, coste.del_mes(almacen, ahora))
             respuesta = cliente.mensaje(cuerpo(recogido))
         except TiempoAgotado as error:
             hechos.parada, hechos.motivo = Parada.TIEMPO, str(error)
