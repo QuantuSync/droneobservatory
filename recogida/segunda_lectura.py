@@ -678,7 +678,7 @@ class Experto:
             coste.comprobar_segunda(
                 self.almacen.gastado_modelo(modelo, dia),
                 self.almacen.gastado_experto_en(coste.Modo.SEGUNDA_LECTURA.value, dia), previsto,
-                self.ahora,
+                self.ahora, coste.del_mes(self.almacen, self.ahora, modelo),
             )  # fmt: skip
             respuesta = cliente.mensaje(cuerpo)
         except coste.LimiteGasto as error:

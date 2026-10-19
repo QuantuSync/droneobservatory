@@ -2,7 +2,9 @@
 
 Lo decide el código, con reglas fijas, mirando la respuesta del modelo base:
 
-1. **poca_seguridad**: el modelo base da una confianza baja (menos de 0,7) a un dato clave.
+1. **poca_seguridad**: el modelo base da una confianza baja (menos de 0,7) a un dato clave, salvo
+   el número de drones, el cierre, sus minutos y el dron estatal (CAMPOS_SIN_POCA). Opcional
+   desde el 19 de octubre de 2026: si el experto no tiene margen en su tope del día, vale el base.
 2. **duplicado_dudoso**: en el control de duplicados, el modelo base no sabe si dos fichas son el
    mismo suceso, su decisión no casa con lo que él mismo dice del día y del sitio, o dice que son
    del mismo día y del mismo sitio y aun así las separa (porque una fuente de una de ellas cita
@@ -11,7 +13,10 @@ Lo decide el código, con reglas fijas, mirando la respuesta del modelo base:
    drones y otra que no; la verificación de una ficha publicada contradice un dato clave) o un
    dato clave no tiene una frase que esté, literal, en su fuente.
 4. **critico**: el caso es de los que más importan: un dron confirmado, atribuido a un Estado,
-   una incursión en un país de la OTAN o en Moldavia, o un cierre de aeropuerto.
+   una incursión en un país de la OTAN o en Moldavia, o un cierre de aeropuerto. Desde el 19 de
+   octubre de 2026 solo marca el caso (para la reserva crítica) y **no escala por sí solo**: en la
+   prueba comparativa, los 24 casos escalados solo por esto salían peor con el experto (2 aciertos
+   menos y 2 datos inventados más) y eran el 28 % de las escaladas de la recogida.
 5. **publicada**: la respuesta retira, rebaja o da por «no es incidente» una ficha ya publicada
    (o la une a otra). Siempre: si el experto no puede, la ficha se queda como estaba.
 6. **senal**: el base da un candidato por «no es incidente», aunque esté seguro, y una fuente es
@@ -21,7 +26,7 @@ Lo decide el código, con reglas fijas, mirando la respuesta del modelo base:
 7. **declaracion**: el base da el incidente sin ninguna declaración oficial y una frase de una
    fuente hace hablar a una autoridad (la nombra junto a un verbo de declaración o un «según»;
    configuracion/senales_escalado.json, «autoridad_citada»). El experto decide si la autoridad
-   confirma, desmiente o atribuye. Es el único motivo opcional: si el experto ha agotado su tope,
+   confirma, desmiente o atribuye. Opcional, como poca_seguridad: si el experto no tiene margen,
    vale la ficha del base y el candidato no espera. El 25 de septiembre de 2026 la Delegación del
    Gobierno en Melilla reconoció en la prensa dos incidentes con drones y la ficha no lo recogió
    (EODI-2026-00146).
@@ -51,6 +56,10 @@ CLAVE_FICHA = (
     "es_incidente", "tipo", "pais", "lugar_suceso", "inicio", "presencia_dron", "drones",
     "cierre", "cierre_minutos", "dron_estatal",
 )  # fmt: skip
+# Datos cuya poca seguridad no escala (docs/modelos.md): el número de drones (el experto inventa
+# «2-10» con un plural sin número, y la verificación del control lo corrige), el cierre y sus
+# minutos (frase literal y tráfico medido) y el dron estatal (la regla estricta de atribución).
+CAMPOS_SIN_POCA = frozenset({"drones", "cierre", "cierre_minutos", "dron_estatal"})
 # Moldavia cuenta como la OTAN para estas reglas (como en los avisos de alta prioridad).
 PAISES_CRITICOS_EXTRA = frozenset({"MD"})
 AFIRMAN_DRONES = frozenset({"incidente", "drones"})
@@ -69,8 +78,10 @@ MOTIVOS_CRITICOS = (
     "critico", "publicada", "contradiccion: presencia", "contradiccion: cierre",
     *(f"senal: {s}" for s in sorted(SENALES_CRITICAS | {"incursion"})),
 )  # fmt: skip
-# Los motivos que no hacen esperar al experto (por su comienzo): si no puede ahora, vale el base.
-MOTIVOS_OPCIONALES = ("declaracion",)
+# Los motivos que no hacen esperar al experto (por su comienzo): si no tiene margen, vale el base.
+MOTIVOS_OPCIONALES = ("declaracion", "poca_seguridad")
+# Los motivos que solo marcan el caso como crítico y no lo escalan por sí solos.
+MOTIVOS_MARCA = ("critico",)
 # Dónde acaba una frase, para buscar la autoridad y su verbo en la misma.
 _FIN_DE_FRASE = re.compile(r"[.!?;\n]+")
 # De menos a más: rebajar es bajar en este orden.
@@ -130,9 +141,20 @@ def autoridad_citada(textos: tuple[str, ...]) -> str | None:
     return None
 
 
+def disparan(motivos: list[str]) -> list[str]:
+    """Los motivos que escalan: todos menos las marcas de caso crítico."""
+    return [m for m in motivos if not m.startswith(MOTIVOS_MARCA)]
+
+
+def escala(motivos: list[str]) -> bool:
+    """Si los motivos piden el experto: alguno que no sea solo la marca de caso crítico."""
+    return bool(disparan(motivos))
+
+
 def opcionales(motivos: list[str]) -> bool:
-    """Si todos los motivos de escalado son opcionales: sin experto ahora, vale el base."""
-    return bool(motivos) and all(m.startswith(MOTIVOS_OPCIONALES) for m in motivos)
+    """Si todos los motivos que escalan son opcionales: sin margen del experto, vale el base."""
+    activos = disparan(motivos)
+    return bool(activos) and all(m.startswith(MOTIVOS_OPCIONALES) for m in activos)
 
 
 def _senal(nombre: str, texto: str) -> bool:
@@ -254,6 +276,8 @@ def motivos_ficha(
         if not isinstance(dato, dict):
             continue
         confianza = dato.get("confianza")
+        if campo in CAMPOS_SIN_POCA:
+            continue
         if isinstance(confianza, int | float) and confianza < UMBRAL_SEGURIDAD:
             motivos.append(f"poca_seguridad: {campo}")
     if _valor(ficha, "es_incidente") is False and not motivos:

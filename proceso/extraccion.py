@@ -812,7 +812,8 @@ def escalar(
     if espera.get("revision"):
         # Una ficha del base que no se aplicó sin el experto: se escala siempre.
         motivos += [m for m in espera.get("motivos", []) if m not in motivos]
-    if not motivos:
+    if not escalado.escala(motivos):
+        # Sin motivos, o solo la marca de caso crítico: vale el base.
         return respuesta, None
     modelo_experto = str(getattr(experto, "modelo", ""))
     previsto = coste.peor_caso(
@@ -821,14 +822,20 @@ def escalar(
     critico = bool(espera.get("critico")) or escalado.es_critico(
         motivos, textos_de(peticion), peticion.objetivo.pais, peticion.objetivo.categoria
     )
+    gastado_hoy = almacen.gastado_modelo(modelo_experto, coste.dia(ahora))
+    mes = coste.del_mes(almacen, ahora, modelo_experto)
+    opcional = escalado.opcionales(motivos) and not espera.get("revision")
     try:
-        tramo = coste.comprobar_experto(
-            almacen.gastado_modelo(modelo_experto, coste.dia(ahora)), previsto, critico
-        )
+        if opcional:
+            # Poca seguridad o una autoridad citada sin declaración: el experto solo si le sobra
+            # (al ritmo de su tope del día), nunca de la reserva.
+            coste.comprobar_al_ritmo(gastado_hoy, previsto, ahora, mes)
+            tramo = coste.Tramo.NORMAL
+        else:
+            tramo = coste.comprobar_experto(gastado_hoy, previsto, critico, mes)
     except coste.LimiteGasto as error:
-        if escalado.opcionales(motivos):
-            # Solo una autoridad citada sin declaración: sin experto, vale la ficha del base
-            # (procesar_respuesta anota su llamada).
+        if opcional:
+            # Sin experto ahora, vale la ficha del base (procesar_respuesta anota su llamada).
             registro.info("candidato %s: sin experto ahora (%s), vale el base", candidato_id, error)
             return respuesta, None
         anotar_llamada(almacen, peticion, respuesta, ahora, modo, False)
@@ -1192,7 +1199,7 @@ def extraer(
         try:
             if plazo is not None:
                 plazo.comprobar()
-            coste.comprobar(gastado, previsto, modo)
+            coste.comprobar(gastado, previsto, modo, coste.del_mes(almacen, ahora))
             respuesta = cliente.mensaje(peticion.cuerpo())
             try:
                 respuesta, escalado_por = escalar(

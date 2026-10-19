@@ -706,7 +706,6 @@ def test_una_caida_de_mas_de_seis_horas_pone_en_rojo_y_una_respuesta_la_cierra(
     ("codigo", "tipo", "mensaje"),
     [
         (400, "invalid_request_error", "max_tokens: field required"),
-        (400, "invalid_request_error", "Your credit balance is too low to access the service."),
         (401, "authentication_error", "invalid x-api-key"),
         (403, "permission_error", "Your account does not have permission to use this resource."),
     ],
@@ -730,6 +729,21 @@ def test_error_definitivo_para_el_extractor_y_pone_en_rojo_con_el_mensaje_exacto
     assert f"código {codigo} ({tipo}: {mensaje})" in aviso.getMessage()
     # No es una caída: el estado del servicio no cambia.
     assert almacen.cursor(extractor.ESTADO_SERVICIO) is None
+
+
+def test_el_saldo_agotado_para_como_el_limite_sin_poner_en_rojo(
+    almacen: Almacen, candidato_pendiente: dict[str, Any], monkeypatch: Any, tmp_path: Any
+) -> None:
+    # El saldo agotado no lo arregla el observatorio: se avisa una vez para recargar
+    # (recogida/gasto_api.py) y la recogida sigue con el mismo código de salida.
+    monkeypatch.setenv("EODI_SALDO_ESTADO", str(tmp_path / "saldo_api.json"))
+    texto = "Your credit balance is too low to access the service."
+    resultado, servicio = paso_horario(
+        almacen, [(400, {}, error_servicio("invalid_request_error", texto))]
+    )
+    assert len(servicio.pedidas) == 1
+    assert resultado.parada is extraccion.Parada.LIMITE_GASTO and not resultado.en_rojo
+    assert (tmp_path / "saldo_api.json").exists()
 
 
 def test_alcanzar_el_limite_diario_no_es_un_fallo(

@@ -56,9 +56,11 @@ def test_los_modelos_nuevos_no_llevan_temperatura_y_razonan_con_margen() -> None
     assert CUERPO["temperature"] == 0.0 and CUERPO["max_tokens"] == 1500
 
 
-def test_el_experto_no_marca_la_cache_y_el_anterior_sigue_como_antes() -> None:
+def test_el_experto_marca_la_cache_y_el_anterior_sigue_como_antes() -> None:
+    # Desde el 19 de octubre de 2026 el experto también usa la caché (docs/modelos.md).
     experto = modelos.adaptar(CUERPO, EXPERTO)
-    assert "cache_control" not in experto["system"][0] and "temperature" not in experto
+    assert experto["system"][0]["cache_control"] == {"type": "ephemeral"}
+    assert "temperature" not in experto
     assert experto["max_tokens"] == 1500 + 4000
     anterior = modelos.adaptar(CUERPO, ANTERIOR)
     assert anterior["temperature"] == 0.0 and "effort" not in anterior["output_config"]
@@ -93,18 +95,18 @@ def test_el_peor_caso_cuenta_el_razonamiento_del_modelo() -> None:
 
 
 def test_tope_diario_del_experto_y_reserva_critica() -> None:
-    assert coste.LIMITE_EXPERTO_DIARIO_USD == 1.00
+    assert coste.LIMITE_EXPERTO_DIARIO_USD == 0.30
     assert coste.RESERVA_CRITICA_DIARIA_USD == 0.50
-    assert coste.comprobar_experto(0.95, 0.04) is coste.Tramo.NORMAL
+    assert coste.comprobar_experto(0.25, 0.04) is coste.Tramo.NORMAL
     with pytest.raises(coste.LimiteGasto):
-        coste.comprobar_experto(0.98, 0.05)
-    # Un caso crítico no espera: usa la reserva, hasta 1,50 USD en el día.
-    assert coste.comprobar_experto(0.98, 0.05, critico=True) is coste.Tramo.RESERVA
+        coste.comprobar_experto(0.28, 0.05)
+    # Un caso crítico no espera: usa la reserva, hasta 0,80 USD en el día.
+    assert coste.comprobar_experto(0.28, 0.05, critico=True) is coste.Tramo.RESERVA
     assert coste.comprobar_experto(0.2, 0.05, critico=True) is coste.Tramo.NORMAL
     with pytest.raises(coste.LimiteGasto):
-        coste.comprobar_experto(1.48, 0.05, critico=True)
+        coste.comprobar_experto(0.78, 0.05, critico=True)
     assert coste.reparto_experto(0.23) == {"normal": 0.23, "reserva": 0.0}
-    assert coste.reparto_experto(1.2) == {"normal": 1.0, "reserva": pytest.approx(0.2)}
+    assert coste.reparto_experto(0.5) == {"normal": 0.3, "reserva": pytest.approx(0.2)}
 
 
 def test_la_espera_del_critico_es_hasta_la_recogida_siguiente_y_la_normal_hasta_el_dia() -> None:
@@ -112,9 +114,10 @@ def test_la_espera_del_critico_es_hasta_la_recogida_siguiente_y_la_normal_hasta_
         (AHORA + timedelta(minutes=50)).strftime("%Y-%m-%dT%H:%M:%SZ")
     )
     assert coste.espera_experto(AHORA, critico=False).endswith("T00:00:00Z")
-    # Una espera anotada con el tope de antes (0,30, o sin tope) vence en cuanto el tope sube.
-    assert coste.espera_vencida("2999-01-01T00:00:00Z", "2026-10-15T04:00:00Z", None)
-    assert coste.espera_vencida("2999-01-01T00:00:00Z", "2026-10-15T04:00:00Z", 0.30)
+    # Una espera anotada con un tope menor que el de ahora vence en cuanto el tope sube; con el
+    # de ahora o uno mayor (el de 1,00 USD hasta el 19 de octubre de 2026), a su hora.
+    assert coste.espera_vencida("2999-01-01T00:00:00Z", "2026-10-15T04:00:00Z", 0.10)
+    assert not coste.espera_vencida("2999-01-01T00:00:00Z", "2026-10-15T04:00:00Z", None)
     assert not coste.espera_vencida("2999-01-01T00:00:00Z", "2026-10-15T04:00:00Z", 1.0)
     assert coste.espera_vencida("2026-10-15T03:00:00Z", "2026-10-15T04:00:00Z", 1.0)
 
@@ -154,6 +157,8 @@ def _respuesta(datos: dict[str, Any], modelo: str) -> dict[str, Any]:
 
 
 TEXTOS = (f"Droner over Københavns Lufthavn. {TEXTO}",)
+# Un dato sin su frase en las fuentes: escala siempre (no es opcional).
+SIN_CITA = {"drones": campo({"min": 2, "max": 2}, "mange droner over byen")}
 
 
 def test_un_cierre_de_aeropuerto_es_critico() -> None:
@@ -172,9 +177,22 @@ def test_poca_seguridad_y_dato_sin_cita() -> None:
     datos = ficha_ejemplo(
         cierre=campo("no", "Københavns Lufthavn var lukket"),
         drones=campo({"min": 2, "max": 10}, "mange droner over byen", 0.5),
+        pais=campo("DK", "Københavns Lufthavn", 0.5),
     )
     motivos = escalado.motivos_ficha(_leida(datos), TEXTOS)
-    assert "poca_seguridad: drones" in motivos and "sin_cita: drones" in motivos
+    assert "poca_seguridad: pais" in motivos and "sin_cita: drones" in motivos
+    # La poca seguridad del número de drones no escala (docs/modelos.md).
+    assert "poca_seguridad: drones" not in motivos
+
+
+def test_lo_critico_solo_no_escala_y_lo_opcional_va_al_ritmo() -> None:
+    # Medido el 19 de octubre de 2026 con los 553 casos: lo crítico sin otro motivo no mejora la
+    # ficha con el experto; marca el caso (la reserva) pero no lo escala.
+    assert not escalado.escala(["critico: cierre de aeropuerto"])
+    assert escalado.escala(["critico: cierre de aeropuerto", "sin_cita: drones"])
+    assert escalado.opcionales(["poca_seguridad: tipo", "critico: incursión en PL"])
+    assert not escalado.opcionales(["poca_seguridad: tipo", "sin_cita: lugar_suceso"])
+    assert not escalado.opcionales(["critico: cierre de aeropuerto"])
 
 
 def test_incursion_en_un_pais_de_la_otan_o_en_moldavia() -> None:
@@ -246,7 +264,7 @@ def test_si_se_escala_vale_la_ficha_del_experto_y_cada_dato_dice_su_modelo(
 ) -> None:
     peticion = _peticion(almacen)
     experto = ficha_ejemplo(drones=campo({"min": 3, "max": 3}, "tre til fire store droner"))
-    cliente = Cliente(ficha_ejemplo(), experto)
+    cliente = Cliente(ficha_ejemplo(**SIN_CITA), experto)
     hechas = extraccion.extraer(almacen, cliente, [peticion], AHORA, coste.Modo.HORARIO, MODELOS)
     assert cliente.pedidas == [BASE, EXPERTO]
     assert hechas.escalados == [peticion.candidato["id"]]
@@ -274,10 +292,10 @@ def _gasto_experto(almacen: Almacen, dolares: float, modo: str = "control") -> N
 def test_el_experto_no_cuenta_contra_el_tope_de_la_recogida(almacen: Almacen) -> None:
     # El 14 de octubre de 2026 la recogida llevaba 0,26 de 0,30 USD y el experto no cabía en su
     # tope aunque él tenía margen: ahora su gasto va solo contra el suyo.
-    _gasto_experto(almacen, 0.29, "horario")
+    _gasto_experto(almacen, 0.10, "horario")
     assert almacen.gastado("horario", AHORA.strftime("%Y-%m-%d")) == 0.0
     peticion = _peticion(almacen)
-    cliente = Cliente(ficha_ejemplo(), ficha_ejemplo())
+    cliente = Cliente(ficha_ejemplo(**SIN_CITA), ficha_ejemplo())
     hechas = extraccion.extraer(almacen, cliente, [peticion], AHORA, coste.Modo.HORARIO, MODELOS)
     assert cliente.pedidas == [BASE, EXPERTO] and hechas.esperan == []
 
@@ -285,7 +303,7 @@ def test_el_experto_no_cuenta_contra_el_tope_de_la_recogida(almacen: Almacen) ->
 def test_un_caso_critico_usa_la_reserva_cuando_el_tope_se_agota(almacen: Almacen) -> None:
     _gasto_experto(almacen, coste.LIMITE_EXPERTO_DIARIO_USD)
     peticion = _peticion(almacen)
-    cliente = Cliente(ficha_ejemplo(), ficha_ejemplo())
+    cliente = Cliente(ficha_ejemplo(**SIN_CITA), ficha_ejemplo())
     hechas = extraccion.extraer(almacen, cliente, [peticion], AHORA, coste.Modo.HORARIO, MODELOS)
     # El cierre de aeropuerto es crítico: no espera.
     assert cliente.pedidas == [BASE, EXPERTO]
@@ -297,7 +315,7 @@ def test_sin_tope_ni_reserva_el_critico_se_reintenta_cada_recogida_y_no_bloquea_
 ) -> None:
     peticion = _peticion(almacen)
     _gasto_experto(almacen, coste.LIMITE_EXPERTO_DIARIO_USD + coste.RESERVA_CRITICA_DIARIA_USD)
-    cliente = Cliente(ficha_ejemplo(), ficha_ejemplo())
+    cliente = Cliente(ficha_ejemplo(**SIN_CITA), ficha_ejemplo())
     no_critica = ficha_ejemplo(
         cierre=campo("no", "Københavns Lufthavn var lukket"),
         presencia_dron=campo("no_confirmada", "observeret tre til fire store droner"),
@@ -407,6 +425,25 @@ def test_sin_tope_del_experto_la_autoridad_citada_no_hace_esperar(almacen: Almac
     assert por_modelo[BASE]["llamadas"] == 1
 
 
+def test_la_poca_seguridad_va_al_experto_al_ritmo_de_su_tope_y_si_no_vale_el_base(
+    almacen: Almacen,
+) -> None:
+    dudosa = ficha_ejemplo(**SIN_CIERRE, pais=campo("DK", "Københavns Lufthavn", 0.5))
+    peticion = _peticion(almacen)
+    # A mediodía, con el experto por debajo de la mitad de su tope del día, la decide él.
+    cliente = Cliente(dudosa, ficha_ejemplo(**SIN_CIERRE))
+    hechas = extraccion.extraer(almacen, cliente, [peticion], AHORA, coste.Modo.HORARIO, MODELOS)
+    assert cliente.pedidas == [BASE, EXPERTO] and hechas.escalados == [peticion.candidato["id"]]
+    # Por encima del ritmo, vale la ficha del base: ni espera ni experto.
+    _gasto_experto(almacen, 0.20, "horario")
+    otra = extraccion.Peticion(**{**peticion.__dict__, "candidato": {
+        **peticion.candidato, "id": "otro"}})  # fmt: skip
+    cliente = Cliente(dudosa, ficha_ejemplo(**SIN_CIERRE))
+    hechas = extraccion.extraer(almacen, cliente, [otra], AHORA, coste.Modo.HORARIO, MODELOS)
+    assert cliente.pedidas == [BASE] and hechas.esperan == [] and hechas.escalados == []
+    assert hechas.incidentes and hechas.incidentes[0] is not None
+
+
 # --- Control: pares dudosos y esperas -------------------------------------------------------
 
 
@@ -463,12 +500,13 @@ def test_un_par_critico_lo_decide_el_experto_con_la_reserva_sin_esperar() -> Non
 
 
 def test_un_par_dudoso_espera_cuando_se_esperaba_con_el_tope_anterior() -> None:
-    # Las esperas anotadas con el tope de 0,30 USD (sin «tope_experto») vencen al subir el tope.
+    # Las esperas anotadas con un tope menor que el de ahora vencen al subir el tope.
     almacen = _par_de_nuremberg_con_gasto(0.0)
     clave = "par:EODI-2026-09515|EODI-2026-09516"
     almacen.guardar_controles({clave: {
         "decision": "dudoso", "huella": "x", "fecha": "2026-10-15T00:17:01Z",
         "desde": "2026-10-15T00:17:01Z", "espera_experto": "2999-01-01T00:00:00Z",
+        "tope_experto": 0.10,
         "escalado": ["duplicado_dudoso: mismo día y mismo sitio, pero separados"],
     }}, "2026-10-15T00:17:01Z")  # fmt: skip
     tcf._ejecutar(almacen, ServicioControl("dudoso", "mismo"), tcf.AHORA + timedelta(minutes=10))
@@ -485,7 +523,7 @@ def test_un_par_viejo_que_esperaba_vuelve_en_la_recogida_sin_esperar_a_la_madrug
     almacen.guardar_controles({clave: {
         "decision": "dudoso", "huella": "x", "fecha": "2026-10-15T01:50:07Z",
         "desde": "2026-10-15T01:50:07Z", "espera_experto": "2999-01-01T00:00:00Z",
-        "escalado": ["duplicado_dudoso: el modelo base no lo sabe"],
+        "tope_experto": 0.10, "escalado": ["duplicado_dudoso: el modelo base no lo sabe"],
     }}, "2026-10-15T01:50:07Z")  # fmt: skip
     tarde = tcf.AHORA + timedelta(hours=30)
     tcf._ejecutar(almacen, ServicioControl("dudoso", "mismo"), tarde)
@@ -558,13 +596,15 @@ def test_el_resumen_dice_llamadas_escaladas_y_gasto_de_cada_modelo(tmp_path: Pat
         "(1 escaladas), 0,0300 USD; total 0,0600 USD"
     )
     assert "proveedor" not in linea and "haiku" not in linea.lower()
-    # El gasto del experto en su tope normal y en la reserva crítica, por día UTC.
+    # El gasto del experto en su tope normal y en la reserva crítica, por día UTC. El tope normal
+    # del 13 de octubre: su parte del mes (4,30 USD) entre los 19 días que quedaban.
     assert datos["experto"]["2026-10-13"] == {
-        "normal": 0.03, "reserva": 0.0, "limite": 1.0, "reserva_limite": 0.5,
+        "normal": 0.03, "reserva": 0.0, "limite": pytest.approx(4.30 / 19, abs=1e-6),
+        "reserva_limite": 0.5,
     }  # fmt: skip
     (experto,) = visitas.lineas_experto(control)
     assert experto == (
-        "  Experto: tope normal 0,0300 de 1,00 USD; reserva crítica 0,0000 de 0,50 USD"
+        "  Experto: tope normal 0,0300 de 0,23 USD; reserva crítica 0,0000 de 0,50 USD"
     )
 
 

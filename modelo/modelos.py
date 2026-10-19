@@ -54,8 +54,10 @@ class Modelo:
     # 4.800 tokens con esfuerzo medio; el experto, casi nada.
     margen: tuple[int, int, int] = (0, 0, 0)
     # Marcar las instrucciones para la caché del servicio. Escribirla cuesta 1,25 veces la
-    # entrada y dura 5 minutos: compensa en el modelo base, que hace varias llamadas seguidas
-    # con las mismas instrucciones, y no en el experto, que hace una o dos por recogida.
+    # entrada y dura 5 minutos; leerla, 0,1. Compensa en los dos modelos: el base hace varias
+    # llamadas seguidas con las mismas instrucciones y el experto, desde el 19 de octubre de
+    # 2026, también (de 7.950 tokens de entrada, 7.460 son instrucciones fijas, y más de la
+    # mitad de sus llamadas llegan a menos de 5 minutos de otra del mismo tipo).
     cache: bool = True
 
     def tarifa(self, tokens_entrada: int) -> tuple[float, float]:
@@ -78,7 +80,7 @@ MODELOS = (
         espera_s=120.0,
         margen=(3000, 8000, 12000),
     ),
-    Modelo("sonnet-5-5", 2.00, 10.00, espera_s=150.0, margen=(2000, 4000, 6000), cache=False),
+    Modelo("sonnet-5-5", 2.00, 10.00, espera_s=150.0, margen=(2000, 4000, 6000)),
 )
 RESERVA = Modelo("", 1.00, 5.00, muestreo=True, esfuerzo=False, espera_s=60.0)
 

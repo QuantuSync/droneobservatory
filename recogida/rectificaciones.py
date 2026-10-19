@@ -234,16 +234,18 @@ class Experto:
             if self.plazo is not None:
                 self.plazo.comprobar()
             dia = coste.dia(self.ahora)
+            mes = coste.del_mes(self.almacen, self.ahora, modelo)
             if modo == coste.Modo.SEGUNDA_LECTURA:
                 try:
                     coste.comprobar_segunda(
                         self.almacen.gastado_modelo(modelo, dia),
                         self.almacen.gastado_experto_en(modo.value, dia), previsto, self.ahora,
+                        mes,
                     )  # fmt: skip
                 except coste.LimiteGasto:
                     return None
             coste.comprobar_experto(self.almacen.gastado_modelo(modelo, dia), previsto,
-                                    critico=False)  # fmt: skip
+                                    critico=False, mes=mes)  # fmt: skip
             respuesta = cliente.mensaje(cuerpo)
         except (coste.LimiteGasto, TiempoAgotado) as error:
             self.parado = str(error)[:200]

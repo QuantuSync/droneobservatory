@@ -17,7 +17,10 @@ llevan el código y el mensaje del servicio tal como los da, nunca la clave.
 Un error temporal (el servicio no responde, está saturado o falla por dentro) se
 reintenta según la insistencia del cliente y, si sigue, sale como ErrorTemporal.
 Los demás errores (petición inválida, clave inválida, saldo agotado) no se
-arreglan reintentando y salen enseguida como ErrorDefinitivo.
+arreglan reintentando y salen enseguida como ErrorDefinitivo. El de saldo agotado
+o facturación (ErrorSaldo) es además un límite de gasto: quien llama para como con
+su tope, sin otro código de salida, y queda anotado en ~/.eodi/saldo_api.json
+para que la recogida avise una vez al responsable (recogida/gasto_api.py).
 """
 
 import http.client
@@ -31,7 +34,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from modelo import modelos
+from modelo import coste, modelos
 
 VARIABLES = (
     "EODI_EXTRACTOR_CLAVE",
@@ -50,6 +53,14 @@ OBLIGATORIAS = (
     "EODI_EXTRACTOR_CABECERAS",
 )
 RUTA_LOCAL = Path.home() / ".eodi" / "extractor.env"
+# Dónde queda anotado el saldo agotado; EODI_SALDO_ESTADO la cambia (pruebas).
+VARIABLE_SALDO = "EODI_SALDO_ESTADO"
+RUTA_SALDO = Path.home() / ".eodi" / "saldo_api.json"
+# El servicio contesta 402 con el saldo agotado; algunos, 400 con el tipo billing_error o un
+# mensaje sobre el saldo.
+HTTP_PAGO = 402
+TIPO_FACTURACION = "billing_error"
+TEXTOS_SALDO = ("credit balance", "billing")
 MARCA_CLAVE = "{clave}"
 HTTP_OK = 200
 # Errores temporales: tiempo agotado (408), demasiadas peticiones (429) y cualquier fallo
@@ -80,6 +91,38 @@ class ErrorTemporal(LlamadaFallida):
 
 class ErrorDefinitivo(LlamadaFallida):
     """Error que no se arregla reintentando: petición o clave inválidas, saldo agotado."""
+
+
+class ErrorSaldo(coste.LimiteGasto, ErrorDefinitivo):
+    """Saldo de la API agotado o error de facturación: un límite de gasto que no depende del
+    observatorio. Se para como con el tope y se avisa una vez para recargar."""
+
+
+def ruta_saldo() -> Path:
+    return Path(os.environ.get(VARIABLE_SALDO) or RUTA_SALDO)
+
+
+def es_saldo(codigo: int, detalle: str) -> bool:
+    texto = detalle.lower()
+    return codigo == HTTP_PAGO or TIPO_FACTURACION in texto or any(t in texto for t in TEXTOS_SALDO)
+
+
+def anotar_saldo(motivo: str) -> None:
+    """Anota el saldo agotado (la primera vez y la última) para el aviso; sin la carpeta de
+    estado (fuera del servidor) no anota nada."""
+    ruta = ruta_saldo()
+    if not ruta.parent.is_dir():
+        return
+    ahora = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+    try:
+        estado = json.loads(ruta.read_text(encoding="utf-8")) if ruta.exists() else {}
+        if not isinstance(estado, dict):
+            estado = {}
+        estado.setdefault("desde", ahora)
+        estado.update({"ultimo": ahora, "motivo": motivo[:MAX_LETRAS_MENSAJE]})
+        ruta.write_text(json.dumps(estado, ensure_ascii=False), encoding="utf-8")
+    except (OSError, ValueError):
+        pass
 
 
 @dataclass(frozen=True)
@@ -223,8 +266,12 @@ class Cliente:
             else:
                 if codigo == HTTP_OK:
                     return respuesta
-                motivo = f"código {codigo} ({self._detalle(respuesta)})"
+                detalle = self._detalle(respuesta)
+                motivo = f"código {codigo} ({detalle})"
                 if not es_temporal(codigo):
+                    if es_saldo(codigo, detalle):
+                        anotar_saldo(motivo)
+                        raise ErrorSaldo(motivo)
                     raise ErrorDefinitivo(motivo)
                 pedida = {k.lower(): v for k, v in cabeceras.items()}.get("retry-after", "")
             if intento < insistencia.reintentos:

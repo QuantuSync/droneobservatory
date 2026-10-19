@@ -247,7 +247,10 @@ class Llamador:
         dia = coste.dia(self.ahora)
         try:
             coste.comprobar_experto(
-                self.almacen.gastado_modelo(modelo_experto, dia), previsto, critico
+                self.almacen.gastado_modelo(modelo_experto, dia),
+                previsto,
+                critico,
+                coste.del_mes(self.almacen, self.ahora, modelo_experto),
             )
         except coste.LimiteGasto:
             self._esperar(clave, coste.espera_experto(self.ahora, critico))
@@ -304,7 +307,7 @@ class Llamador:
         try:
             if self.plazo is not None:
                 self.plazo.comprobar()
-            coste.comprobar(gastado, previsto, self.modo)
+            coste.comprobar(gastado, previsto, self.modo, coste.del_mes(self.almacen, self.ahora))
             if self.tope is not None and gastado + previsto > self.tope:
                 raise coste.LimiteGasto(f"{self.modo}: tope de la pasada {self.tope:.2f} USD")
             if self._servicio is None:
@@ -1484,13 +1487,15 @@ def por_lote(
 
 def escalar_lote(
     servicio: Any, almacen: Almacen, lista: list[Peticion], respuestas: Respuestas,
-    ahora: datetime, modo: coste.Modo,
+    ahora: datetime, modo: coste.Modo, dormir: Callable[[float], None] | None = None,
+    reloj: Callable[[], float] | None = None, tope_s: float = TOPE_LOTE_NOCHE_S,
 ) -> None:  # fmt: skip
-    """Las respuestas del lote (del modelo base) que piden escalado se repiten con el experto,
-    con llamadas directas dentro de su tope diario (los críticos, también de la reserva crítica);
-    lo que no cabe espera al día siguiente, o a la recogida siguiente si es crítico.
-    Se hace sin el cerrojo, sobre una copia: las llamadas al experto quedan en
-    `respuestas.llamadas_experto` para anotarlas después en la base."""
+    """Las respuestas del lote (del modelo base) que piden escalado se repiten con el experto
+    dentro de su tope del día (los críticos, también de la reserva crítica); lo que no cabe espera
+    al día siguiente, o a la recogida siguiente si es crítico. Los críticos van en llamadas
+    directas; los demás, con `dormir` y `reloj`, en un lote del experto (a mitad de precio) que se
+    espera como el del base. Se hace sin el cerrojo, sobre una copia: las llamadas al experto
+    quedan en `respuestas.llamadas_experto` para anotarlas después en la base."""
     experto = getattr(servicio, "experto", None)
     cliente_experto = experto() if callable(experto) else None
     if cliente_experto is None:
@@ -1498,6 +1503,13 @@ def escalar_lote(
     modelo_experto = str(getattr(cliente_experto, "modelo", ""))
     dia = coste.dia(ahora)
     gastado_experto = almacen.gastado_modelo(modelo_experto, dia)
+    mes = coste.del_mes(almacen, ahora, modelo_experto)
+    por_lote_experto = (
+        dormir is not None
+        and reloj is not None
+        and callable(getattr(cliente_experto, "crear_lote", None))
+    )
+    al_lote: dict[str, Peticion] = {}
     for peticion in lista:
         if peticion.tipo not in {"par", "verificacion"} or peticion.clave not in respuestas.leidas:
             continue
@@ -1513,13 +1525,21 @@ def escalar_lote(
         if es_critico:
             respuestas.criticos.add(peticion.clave)
         esfuerzo = (peticion.cuerpo.get("output_config") or {}).get("effort")
+        en_lote = por_lote_experto and not es_critico
         previsto = coste.peor_caso(peticiones.letras(peticion.cuerpo), peticion.max_salida,
-                                   modelo=modelo_experto, esfuerzo=esfuerzo)  # fmt: skip
+                                   lote=en_lote, modelo=modelo_experto,
+                                   esfuerzo=esfuerzo)  # fmt: skip
         try:
-            coste.comprobar_experto(gastado_experto, previsto, es_critico)
+            coste.comprobar_experto(gastado_experto, previsto, es_critico, mes)
         except coste.LimiteGasto:
             respuestas.esperas[peticion.clave] = coste.espera_experto(ahora, es_critico)
             respuestas.leidas[peticion.clave] = None
+            continue
+        if en_lote:
+            # Lo que no es crítico no tiene prisa de madrugada: va al lote, con su peor caso ya
+            # contado.
+            gastado_experto += previsto
+            al_lote[f"e{len(al_lote):06d}"] = peticion
             continue
         try:
             mensaje = cliente_experto.mensaje(peticion.cuerpo)
@@ -1539,6 +1559,57 @@ def escalar_lote(
         try:
             respuestas.leidas[peticion.clave] = peticiones.leer(mensaje)
         except peticiones.RespuestaInvalida:
+            respuestas.leidas[peticion.clave] = None
+    if al_lote and dormir is not None and reloj is not None:
+        lote_experto(cliente_experto, al_lote, respuestas, ahora, modo, dormir, reloj, tope_s)
+
+
+def lote_experto(
+    cliente_experto: Any, elegidas: dict[str, Peticion], respuestas: Respuestas, ahora: datetime,
+    modo: coste.Modo, dormir: Callable[[float], None], reloj: Callable[[], float], tope_s: float,
+) -> None:  # fmt: skip
+    """Las peticiones no críticas que escala el control de madrugada, en un lote con el experto
+    (a mitad de precio). Si el lote falla o no termina a tiempo, cada una espera a la recogida
+    siguiente, como con un fallo del experto."""
+    try:
+        creado = cliente_experto.crear_lote(
+            [{"custom_id": i, "params": p.cuerpo} for i, p in elegidas.items()]
+        )
+        registro.info("lote con el experto %s: %d peticiones", creado["id"], len(elegidas))
+        inicio = reloj()
+        estado = creado
+        while estado.get("processing_status") != "ended":
+            if reloj() - inicio > tope_s:
+                raise TimeoutError(f"el lote con el experto {creado['id']} no terminó")
+            dormir(ESPERA_LOTE_S)
+            estado = cliente_experto.lote(creado["id"])
+        resultados = cliente_experto.resultados_lote(estado)
+    except (LlamadaFallida, TimeoutError) as error:
+        registro.warning("lote con el experto sin terminar: %s", str(error)[:200])
+        resultados = []
+    vistas: set[str] = set()
+    for resultado in resultados:
+        peticion = elegidas.get(str(resultado.get("custom_id", "")))
+        cuerpo = resultado.get("result", {})
+        if peticion is None or cuerpo.get("type") != "succeeded":
+            continue
+        vistas.add(peticion.clave)
+        mensaje = cuerpo["message"]
+        uso = coste.Uso.de_mensaje(mensaje)
+        respuestas.llamadas_experto.append({
+            "fecha": _iso(ahora), "modo": modo.value, "candidato": peticion.clave[:200],
+            "lote": True, "entrada": uso.entrada, "salida": uso.salida,
+            "escritura_cache": uso.escritura_cache, "lectura_cache": uso.lectura_cache,
+            "coste": uso.coste(lote=True), "modelo": uso.modelo, "escalada": True,
+        })  # fmt: skip
+        respuestas.modelos[peticion.clave] = uso.modelo
+        try:
+            respuestas.leidas[peticion.clave] = peticiones.leer(mensaje)
+        except peticiones.RespuestaInvalida:
+            respuestas.leidas[peticion.clave] = None
+    for peticion in elegidas.values():
+        if peticion.clave not in vistas:
+            respuestas.esperas[peticion.clave] = _iso(ahora + timedelta(minutes=50))
             respuestas.leidas[peticion.clave] = None
 
 
@@ -1779,7 +1850,8 @@ def repaso(base: Base, fabrica: Callable[[], Any], nom: Nomenclator | None = Non
         respuestas = por_lote(servicio, lista, disponible, dormir, reloj, tope_s)
         registro.info("%s, ronda %s: %d respuestas, %d fuera del tope", alcance, ronda,
                       len(respuestas.leidas), respuestas.fuera_de_tope)  # fmt: skip
-        escalar_lote(servicio, copia, lista, respuestas, datetime.now(UTC), modo)
+        escalar_lote(servicio, copia, lista, respuestas, datetime.now(UTC), modo, dormir, reloj,
+                     tope_s)  # fmt: skip
         with base.cerrojo():
             almacen = base.abrir()
             ahora = datetime.now(UTC)
@@ -2000,8 +2072,13 @@ def gasto_experto(almacen: Almacen, ahora: datetime, anterior: Documento) -> Doc
                        if d >= (hoy - timedelta(days=DIAS_MODELOS)).isoformat()}  # fmt: skip
     for dia in (hoy - timedelta(days=1), hoy):
         gastado = almacen.gastado_modelo(experto, dia.isoformat()) if experto else 0.0
+        # El tope normal de ese día: el de su parte del mes, como mucho el límite diario.
+        momento = datetime(dia.year, dia.month, dia.day, 12, tzinfo=UTC)
+        tope = coste.LIMITE_EXPERTO_DIARIO_USD
+        if experto:
+            tope = coste.tope_experto(coste.del_mes(almacen, momento, experto))
         dias[dia.isoformat()] = {
-            **coste.reparto_experto(gastado), "limite": coste.LIMITE_EXPERTO_DIARIO_USD,
+            **coste.reparto_experto(gastado, tope), "limite": tope,
             "reserva_limite": coste.RESERVA_CRITICA_DIARIA_USD,
         }  # fmt: skip
     return dias

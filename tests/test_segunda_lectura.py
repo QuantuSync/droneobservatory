@@ -508,12 +508,15 @@ def test_rectificacion_con_el_tope_de_la_capa_agotado_espera(tmp_path: Path) -> 
 
 def test_margen_para_los_escalados_del_resto_del_dia() -> None:
     """La segunda lectura solo gasta del experto lo que va por debajo del ritmo del día."""
-    assert coste.margen_escalados(datetime(2026, 10, 19, 0, 0, tzinfo=UTC)) == 1.0
-    assert coste.margen_escalados(datetime(2026, 10, 19, 12, 0, tzinfo=UTC)) == 0.5
+    assert coste.margen_escalados(datetime(2026, 10, 19, 0, 0, tzinfo=UTC)) == 0.30
+    assert coste.margen_escalados(datetime(2026, 10, 19, 12, 0, tzinfo=UTC)) == 0.15
     mediodia = datetime(2026, 10, 19, 12, 0, tzinfo=UTC)
-    coste.comprobar_segunda(0.40, 0.0, 0.05, mediodia)
+    coste.comprobar_segunda(0.08, 0.0, 0.05, mediodia)
     with pytest.raises(coste.LimiteGasto, match="escalados"):
-        coste.comprobar_segunda(0.46, 0.0, 0.05, mediodia)
+        coste.comprobar_segunda(0.11, 0.0, 0.05, mediodia)
+    # Su modo, como mucho 0,10 USD al día.
+    with pytest.raises(coste.LimiteGasto, match="segunda_lectura"):
+        coste.comprobar_segunda(0.0, 0.08, 0.05, mediodia)
     with pytest.raises(coste.LimiteGasto, match="escalados"):
         coste.comprobar_segunda(0.0, 0.0, 0.05, datetime(2026, 10, 19, 0, 30, tzinfo=UTC))
 

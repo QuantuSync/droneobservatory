@@ -34,15 +34,25 @@ El barrido del catálogo vivo (recogida/catalogo_vivo.py) lleva su propio regist
 fuera de la base: 0,10 dólares al día y 3 dólares una vez para su primera pasada.
 
 El modelo experto lleva su propio gasto, aparte de todos los modos (docs/modelos.md): lo que
-gasta cuenta solo contra su tope, nunca contra el de la recogida horaria ni el de otro modo. Tiene
-1 dólar al día (LIMITE_EXPERTO_DIARIO_USD) y, aparte, una reserva crítica de 0,50 dólares al día
+gasta cuenta solo contra su tope, nunca contra el de la recogida horaria ni el de otro modo. Su
+tope normal del día es lo que le toca de su parte del mes (tope_del_dia), como mucho 0,30 dólares
+(LIMITE_EXPERTO_DIARIO_USD), y aparte tiene una reserva crítica de 0,50 dólares al día
 (RESERVA_CRITICA_DIARIA_USD) que solo usan los casos críticos (proceso/escalado.es_critico) cuando
-el tope normal ya no da. Lo que el experto gasta por encima de 1 dólar en un día es de la reserva.
-Un caso que no cabe espera: el normal, al día siguiente (UTC), porque su tope no se renueva
-antes; el crítico, a la recogida siguiente, y se reintenta en cada una.
+el tope normal ya no da. Lo que el experto gasta en un día por encima de su tope normal es de la
+reserva. Un caso que no cabe espera: el normal, al día siguiente (UTC), porque su tope no se
+renueva antes; el crítico, a la recogida siguiente, y se reintenta en cada una.
+
+Tope mensual (desde el 19 de octubre de 2026): todo lo que se gasta en la API en el mes (UTC),
+también lo de las sesiones, cuenta contra TOPE_MENSUAL_USD (10 dólares; la variable
+EODI_TOPE_MENSUAL_USD lo cambia), repartido entre el experto y los modos de cada día
+(REPARTO_MENSUAL_USD). Cada modo de cada día y el experto gastan como mucho lo que queda de su parte
+del mes entre los días que quedan (tope_del_dia). Al 80 % se avisa una vez (recogida/gasto_api.py);
+al 100 % solo siguen la recogida horaria con el modelo base (sin ella no se sabe qué es crítico) y
+los casos críticos con la reserva del experto; los demás modos de cada día esperan al mes
+siguiente.
 
 La segunda lectura (docs/segunda_lectura.md) usa un servicio secundario gratuito; lo único que
-cuesta es el experto al revisar lo que marca (modo «segunda_lectura»): como mucho 0,30 dólares al
+cuesta es el experto al revisar lo que marca (modo «segunda_lectura»): como mucho 0,10 dólares al
 día (LIMITE_SEGUNDA_EXPERTO_DIARIO_USD), dentro del tope normal del experto y nunca de la reserva
 crítica. Lo que no cabe espera al día siguiente.
 
@@ -51,7 +61,9 @@ tokens de entrada estimados y el máximo de salida); si pasa del límite, no se
 llama.
 """
 
-from dataclasses import dataclass
+import calendar
+import os
+from dataclasses import dataclass, field
 from datetime import UTC, datetime, timedelta
 from enum import StrEnum
 from typing import Any
@@ -80,18 +92,30 @@ LIMITE_TRADUCCIONES_USD = 2.00
 # una pasada al mes, con su tope por día (el de la pasada). Las preguntas al experto van aparte,
 # con su tope.
 LIMITE_RECTIFICACIONES_USD = 0.30
-# Tope diario del modelo experto, en todos los modos juntos y aparte de ellos.
-LIMITE_EXPERTO_DIARIO_USD = 1.00
+# Tope diario del modelo experto, en todos los modos juntos y aparte de ellos: el máximo de un día;
+# lo normal es menos, lo que le toca de su parte del mes (tope_del_dia). Era 1 dólar hasta el 19
+# de octubre de 2026, y se gastaba entero casi cada día (1,30 dólares al día en total).
+LIMITE_EXPERTO_DIARIO_USD = 0.30
 # Reserva crítica del experto, aparte del tope: solo para los casos críticos.
 RESERVA_CRITICA_DIARIA_USD = 0.50
 # Lo que el experto gasta cada día en revisar lo que marca la segunda lectura: cuenta dentro de su
 # tope normal (nunca de la reserva crítica).
-LIMITE_SEGUNDA_EXPERTO_DIARIO_USD = 0.30
+# Era 0,30 hasta el 19 de octubre de 2026: de 30 candidatos revisados, 2 cambiaron algo.
+LIMITE_SEGUNDA_EXPERTO_DIARIO_USD = 0.10
 # Tope del experto antes del 15 de octubre de 2026: una espera anotada sin su tope es de entonces.
 LIMITE_EXPERTO_ANTERIOR_USD = 0.30
 # Un caso que espera al experto por un fallo, o crítico con la reserva agotada, vuelve a la
 # recogida siguiente (cada hora).
 ESPERA_REINTENTO = timedelta(minutes=50)
+# Tope mensual de toda la API (todas las llamadas del mes UTC, también las de las sesiones). Lo
+# medido del 15 al 19 de octubre de 2026 en funcionamiento normal, por día: base de la recogida
+# 0,094; base del control 0,064; guerra 0,002; rectificaciones, una pasada al mes de hasta 0,30.
+TOPE_MENSUAL_USD = 10.00
+VARIABLE_TOPE_MENSUAL = "EODI_TOPE_MENSUAL_USD"
+EXPERTO = "experto"
+OTROS = "otros"
+# Al llegar a esta parte del tope mensual se avisa una vez (recogida/gasto_api.py).
+AVISO_MENSUAL = 0.80
 # Una letra son unos 0,3 tokens en los idiomas europeos; se estima por lo alto con 0,5
 # para que el peor caso no se quede corto.
 TOKENS_POR_LETRA = 0.5
@@ -113,8 +137,87 @@ class Modo(StrEnum):
     SEGUNDA_LECTURA = "segunda_lectura"
 
 
+# Lo que le toca a cada uno del tope mensual (suman TOPE_MENSUAL_USD). «otros»: lo que no es de
+# ningún modo de cada día (las sesiones, el catálogo vivo), que no se frena aquí pero cuenta.
+REPARTO_MENSUAL_USD: dict[str, float] = {
+    EXPERTO: 4.30,
+    Modo.HORARIO: 2.80,
+    Modo.CONTROL: 2.00,
+    Modo.GUERRA: 0.20,
+    Modo.RECTIFICACIONES: 0.30,
+    OTROS: 0.40,
+}
+# Los modos de cada día que paran al llegar al tope mensual. La recogida horaria sigue con el
+# modelo base: sin ella no se sabe qué caso es crítico.
+PARAN_AL_TOPE_MENSUAL = frozenset(
+    {Modo.CONTROL, Modo.GUERRA, Modo.RECTIFICACIONES, Modo.SEGUNDA_LECTURA}
+)
+
+
 class LimiteGasto(RuntimeError):
     pass
+
+
+@dataclass(frozen=True)
+class Mes:
+    """Lo gastado en el mes (UTC) del momento: en total, con hoy, y antes de hoy por modo (sin las
+    llamadas al experto) y del experto (Almacen.gasto_del_mes)."""
+
+    momento: datetime
+    total: float = 0.0
+    modos_antes: dict[str, float] = field(default_factory=dict)
+    experto_antes: float = 0.0
+
+
+def del_mes(almacen: Any, momento: datetime, prefijo_experto: str = "") -> Mes:
+    """Lo gastado en el mes del momento, de la base (Almacen.gastos_del_mes)."""
+    total, modos, experto = almacen.gastos_del_mes(mes(momento), dia(momento), prefijo_experto)
+    return Mes(momento, total, modos, experto)
+
+
+def tope_mensual() -> float:
+    """El tope mensual de la API: TOPE_MENSUAL_USD, o el de EODI_TOPE_MENSUAL_USD si se da."""
+    try:
+        return float(os.environ.get(VARIABLE_TOPE_MENSUAL) or TOPE_MENSUAL_USD)
+    except ValueError:
+        return TOPE_MENSUAL_USD
+
+
+def parte_del_mes(nombre: str) -> float:
+    """Lo que le toca a un modo (o al experto) del tope mensual; en proporción si se cambió."""
+    return REPARTO_MENSUAL_USD.get(nombre, 0.0) * tope_mensual() / TOPE_MENSUAL_USD
+
+
+def dias_que_quedan(momento: datetime) -> int:
+    """Los días que quedan del mes (UTC), con el de hoy."""
+    utc = momento.astimezone(UTC)
+    return calendar.monthrange(utc.year, utc.month)[1] - utc.day + 1
+
+
+def tope_del_dia(
+    limite_diario: float, parte: float, gastado_antes: float, momento: datetime
+) -> float:
+    """El tope de hoy: lo que queda de la parte del mes entre los días que quedan, como mucho el
+    límite diario. Lo que un día no se gasta queda para los siguientes."""
+    queda = max(0.0, parte - gastado_antes) / dias_que_quedan(momento)
+    return round(min(limite_diario, queda), 6)
+
+
+def mes_agotado(mes: Mes | None, previsto: float = 0.0) -> bool:
+    """Si lo gastado en el mes llega al tope mensual, o lo pasa con lo previsto."""
+    if mes is None:
+        return False
+    tope = tope_mensual()
+    return mes.total >= tope or mes.total + previsto > tope
+
+
+def tope_experto(mes: Mes | None) -> float:
+    """El tope normal del experto hoy: el de su parte del mes; sin mes, el límite diario."""
+    if mes is None:
+        return LIMITE_EXPERTO_DIARIO_USD
+    return tope_del_dia(
+        LIMITE_EXPERTO_DIARIO_USD, parte_del_mes(EXPERTO), mes.experto_antes, mes.momento
+    )
 
 
 @dataclass(frozen=True)
@@ -164,55 +267,78 @@ class Tramo(StrEnum):
     RESERVA = "reserva"
 
 
-def comprobar_experto(gastado_hoy: float, previsto: float, critico: bool = False) -> Tramo:
-    """El tramo del experto que paga la llamada: el tope normal si cabe y, si no, la reserva
-    crítica, solo para un caso crítico. Lanza LimiteGasto si no cabe en ninguno."""
-    if gastado_hoy + previsto <= LIMITE_EXPERTO_DIARIO_USD:
+def comprobar_experto(
+    gastado_hoy: float, previsto: float, critico: bool = False, mes: Mes | None = None
+) -> Tramo:
+    """El tramo del experto que paga la llamada: el tope normal de hoy si cabe y, si no, la
+    reserva crítica, solo para un caso crítico. Con el tope mensual agotado, solo la reserva.
+    Lanza LimiteGasto si no cabe en ninguno."""
+    tope = tope_experto(mes)
+    agotado = mes_agotado(mes, previsto)
+    if not agotado and gastado_hoy + previsto <= tope:
         return Tramo.NORMAL
-    if critico and gastado_hoy + previsto <= LIMITE_EXPERTO_DIARIO_USD + RESERVA_CRITICA_DIARIA_USD:
+    if critico and gastado_hoy + previsto <= tope + RESERVA_CRITICA_DIARIA_USD:
         return Tramo.RESERVA
-    tope = LIMITE_EXPERTO_DIARIO_USD + (RESERVA_CRITICA_DIARIA_USD if critico else 0.0)
+    maximo = tope + (RESERVA_CRITICA_DIARIA_USD if critico else 0.0)
     raise LimiteGasto(
         f"experto{' (reserva crítica)' if critico else ''}: gastado {gastado_hoy:.4f} + "
-        f"previsto {previsto:.4f} > {tope:.2f} USD"
+        f"previsto {previsto:.4f} > {maximo:.2f} USD"
+        + (f" (tope mensual de {tope_mensual():.2f} USD agotado)" if agotado else "")
     )
 
 
-def margen_escalados(momento: datetime) -> float:
+def margen_escalados(momento: datetime, tope: float = LIMITE_EXPERTO_DIARIO_USD) -> float:
     """Lo que hay que dejar libre del tope normal del experto para los escalados de lo que queda
     del día (UTC), a ritmo constante: el tope entero a las 00:00, nada a las 24:00."""
     utc = momento.astimezone(UTC)
     transcurrido = utc.hour * 3600 + utc.minute * 60 + utc.second
-    return LIMITE_EXPERTO_DIARIO_USD * (1 - transcurrido / 86400)
+    return tope * (1 - transcurrido / 86400)
 
 
-def comprobar_segunda(gastado_experto_hoy: float, gastado_segunda_hoy: float,
-                      previsto: float, momento: datetime | None = None) -> None:  # fmt: skip
-    """La revisión por el experto de lo que marca la segunda lectura: cabe en su modo (0,30 al
-    día) y en el tope normal del experto, nunca en la reserva crítica, y solo con lo que los
-    escalados normales no necesitan: el gasto del experto en el día tiene que ir por debajo del
-    ritmo del tope (margen_escalados). Lanza LimiteGasto si no."""
+def comprobar_al_ritmo(
+    gastado_experto_hoy: float, previsto: float, momento: datetime, mes: Mes | None = None,
+    que: str = EXPERTO,
+) -> None:  # fmt: skip
+    """Lo que el experto hace si le sobra (la segunda lectura, los motivos opcionales): solo con
+    lo que no necesitan los escalados que no pueden esperar. El gasto del experto en el día tiene
+    que ir por debajo del ritmo de su tope (margen_escalados), nunca en la reserva crítica ni con
+    el tope mensual agotado. Lanza LimiteGasto si no."""
+    tope = tope_experto(mes)
+    margen = margen_escalados(momento, tope)
+    if mes_agotado(mes, previsto) or gastado_experto_hoy + previsto > tope - margen:
+        raise LimiteGasto(
+            f"{que}: experto gastado {gastado_experto_hoy:.4f} + previsto {previsto:.4f} > "
+            f"{tope - margen:.2f} USD (margen de {margen:.2f} para los escalados del resto del "
+            "día, o tope mensual agotado)"
+        )
+    comprobar_experto(gastado_experto_hoy, previsto, critico=False, mes=mes)
+
+
+def comprobar_segunda(
+    gastado_experto_hoy: float, gastado_segunda_hoy: float, previsto: float,
+    momento: datetime | None = None, mes: Mes | None = None,
+) -> None:  # fmt: skip
+    """La revisión por el experto de lo que marca la segunda lectura: cabe en su modo (0,10 al
+    día) y en el tope normal del experto, nunca en la reserva crítica, y solo al ritmo de su tope
+    (comprobar_al_ritmo). Lanza LimiteGasto si no."""
     if gastado_segunda_hoy + previsto > LIMITE_SEGUNDA_EXPERTO_DIARIO_USD:
         raise LimiteGasto(
             f"{Modo.SEGUNDA_LECTURA}: gastado {gastado_segunda_hoy:.4f} + previsto "
             f"{previsto:.4f} > {LIMITE_SEGUNDA_EXPERTO_DIARIO_USD:.2f} USD"
         )
-    margen = margen_escalados(momento or datetime.now(UTC))
-    if gastado_experto_hoy + previsto > LIMITE_EXPERTO_DIARIO_USD - margen:
-        raise LimiteGasto(
-            f"{Modo.SEGUNDA_LECTURA}: experto gastado {gastado_experto_hoy:.4f} + previsto "
-            f"{previsto:.4f} > {LIMITE_EXPERTO_DIARIO_USD - margen:.2f} USD (margen de "
-            f"{margen:.2f} para los escalados del resto del día)"
-        )
-    comprobar_experto(gastado_experto_hoy, previsto, critico=False)
+    comprobar_al_ritmo(
+        gastado_experto_hoy, previsto, momento or datetime.now(UTC), mes, Modo.SEGUNDA_LECTURA
+    )
 
 
-def reparto_experto(gastado_hoy: float) -> dict[str, float]:
-    """Lo que el experto gastó en el día, repartido entre el tope normal y la reserva crítica
-    (lo que pasa de 1 dólar)."""
+def reparto_experto(
+    gastado_hoy: float, tope: float = LIMITE_EXPERTO_DIARIO_USD
+) -> dict[str, float]:
+    """Lo que el experto gastó en el día, repartido entre su tope normal del día (`tope`) y la
+    reserva crítica (lo que pasa de él)."""
     return {
-        "normal": round(min(gastado_hoy, LIMITE_EXPERTO_DIARIO_USD), 6),
-        "reserva": round(max(0.0, gastado_hoy - LIMITE_EXPERTO_DIARIO_USD), 6),
+        "normal": round(min(gastado_hoy, tope), 6),
+        "reserva": round(max(0.0, gastado_hoy - tope), 6),
     }
 
 
@@ -260,12 +386,37 @@ def diario(modo: Modo) -> bool:
     }  # fmt: skip
 
 
-def comprobar(gastado: float, previsto: float, modo: Modo) -> None:
-    """Lanza LimiteGasto si lo gastado más lo previsto pasa del límite del modo."""
-    if gastado + previsto > limite(modo):
+def limite_de_hoy(modo: Modo, mes: Mes | None = None) -> float:
+    """El límite del modo; en los de cada día con parte del mes, lo que les toca hoy. El modelo
+    base de la recogida horaria nunca para: como poco tiene su parte media de cada día, también
+    con su parte o el tope del mes gastados."""
+    if mes is None or not diario(modo) or modo not in REPARTO_MENSUAL_USD:
+        return limite(modo)
+    tope = tope_del_dia(
+        limite(modo), parte_del_mes(modo), mes.modos_antes.get(modo, 0.0), mes.momento
+    )
+    if modo is Modo.HORARIO:
+        utc = mes.momento.astimezone(UTC)
+        media = parte_del_mes(modo) / calendar.monthrange(utc.year, utc.month)[1]
+        tope = max(tope, round(min(limite(modo), media), 6))
+    return tope
+
+
+def comprobar(gastado: float, previsto: float, modo: Modo, mes: Mes | None = None) -> None:
+    """Lanza LimiteGasto si lo gastado más lo previsto pasa del límite del modo (con `mes`, el de
+    hoy según su parte del mes) o, en los modos que paran, del tope mensual."""
+    tope = limite_de_hoy(modo, mes)
+    if gastado + previsto > tope:
         raise LimiteGasto(
-            f"{modo}: gastado {gastado:.4f} + previsto {previsto:.4f} > {limite(modo):.2f} USD"
+            f"{modo}: gastado {gastado:.4f} + previsto {previsto:.4f} > {tope:.2f} USD"
         )
+    if modo in PARAN_AL_TOPE_MENSUAL and mes_agotado(mes, previsto):
+        raise LimiteGasto(f"{modo}: tope mensual de {tope_mensual():.2f} USD agotado")
+
+
+def mes(momento: datetime) -> str:
+    """El mes (UTC) del momento, AAAA-MM."""
+    return momento.astimezone(UTC).strftime("%Y-%m")
 
 
 def dia(momento: datetime) -> str:
