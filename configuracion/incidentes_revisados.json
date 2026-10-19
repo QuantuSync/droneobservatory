@@ -2721,6 +2721,17 @@
         "es": "Aena da las 20:53 hora peninsular (19:53 UTC); la ficha decía las 21:00 UTC.",
         "en": "Aena gives 20:53 peninsular time (19:53 UTC); the record said 21:00 UTC."
       }
+    },
+    {
+      "incidente": "EODI-2025-00463",
+      "objetivo": {
+        "categoria": "otra",
+        "nombre": "Brians 1"
+      },
+      "motivo": {
+        "es": "La cárcel es Brians 1 («treballadors de la presó de Brians 1 van detectar la presència irregular d'un dron», lleidadiari.cat); la ficha tomó Brians 2 del suceso del 19 de septiembre.",
+        "en": "The prison is Brians 1 (lleidadiari.cat); the record took Brians 2 from the 19 September event."
+      }
     }
   ],
   "titular_justificado": [],
