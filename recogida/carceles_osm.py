@@ -142,9 +142,8 @@ def principal(argumentos: list[str] | None = None) -> int:
         ruta.stem.rsplit("_", 1)[-1].upper(): json.loads(ruta.read_text(encoding="utf-8"))
         for ruta in args.consultas
     }
-    DESTINO.write_text(
-        json.dumps(generar(consultas), ensure_ascii=False, indent=1) + "\n", encoding="utf-8"
-    )
+    texto = json.dumps(generar(consultas), ensure_ascii=False, indent=1) + "\n"
+    DESTINO.write_bytes(texto.encode("utf-8"))
     return 0
 
 
