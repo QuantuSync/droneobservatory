@@ -22,4 +22,13 @@ la misma licencia ODbL 1.0, atribuyendo a adsb.lol; el resto de los
 datos de los ficheros mantiene la licencia CC BY 4.0. Ver
 docs/licencias_terceros.md.
 
+Atribución de los lugares. El punto de algunos incidentes sale de los
+nomenclátores hechos con OpenStreetMap (configuracion/lugares_europa.json
+e instalaciones_europa.json): Datos © colaboradores de OpenStreetMap,
+ODbL 1.0, https://www.openstreetmap.org/copyright. Cada punto es una
+coordenada suelta por incidente (extracto no sustancial según la guía de
+geocodificación de la OSMF) y mantiene la licencia CC BY 4.0 del resto,
+con esta atribución. Otros puntos vienen de GeoNames (CC BY 4.0) y de
+OurAirports (dominio público).
+
 Texto legal de la ODbL 1.0: https://opendatacommons.org/licenses/odbl/1-0/

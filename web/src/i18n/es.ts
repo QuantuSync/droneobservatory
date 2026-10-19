@@ -1893,7 +1893,7 @@ export const es: Textos = {
       version: (fecha) => `Versión del ${fecha}`,
       licencia: "Licencia",
       licenciaTexto:
-        `La compilación del observatorio (los incidentes, sus estados, sus clasificaciones y sus cifras) se publica con la licencia ${LICENCIA_DATOS}: se puede copiar, transformar y reutilizar, también con fines comerciales, citando la fuente como se indica abajo. Las frases citadas siguen siendo de sus autores y se usan como cita, con su fuente y su enlace. El bloque de tráfico aéreo medido (trafico_aereo) deriva del archivo de adsb.lol y se ofrece con su licencia, ODbL 1.0.`,
+        `La compilación del observatorio (los incidentes, sus estados, sus clasificaciones y sus cifras) se publica con la licencia ${LICENCIA_DATOS}: se puede copiar, transformar y reutilizar, también con fines comerciales, citando la fuente como se indica abajo. Las frases citadas siguen siendo de sus autores y se usan como cita, con su fuente y su enlace. El bloque de tráfico aéreo medido (trafico_aereo) deriva del archivo de adsb.lol y se ofrece con su licencia, ODbL 1.0. Los lugares: el punto de algunos incidentes sale de nomenclátores hechos con OpenStreetMap (© colaboradores de OpenStreetMap, ODbL 1.0, https://www.openstreetmap.org/copyright), de GeoNames (CC BY 4.0) y de OurAirports (dominio público).`,
       citaTitulo: "Cita recomendada",
       cita: (version) => citaRecomendada(version, "es"),
       autoriaTitulo: "Autoría",
