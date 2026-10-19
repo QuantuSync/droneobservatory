@@ -286,14 +286,19 @@ def test_el_lugar_de_una_carcel_es_la_carcel() -> None:
     brians = ejemplos.incidente_minimo()
     brians["titulo"] = {"es": "Un dron en Cataluña", "en": "A drone in Catalonia"}
     brians["objetivo"] = {"categoria": "otra", "nombre": "Brians 1"}
-    brians["lugar"] = {"pais": "ES", "nivel": "instalacion", "radio_km": 5,
-                       "punto": {"lat": 41.5, "lon": 1.9}, "geocodificacion": "vocabulario"}  # fmt: skip
+    brians["lugar"] = {
+        "pais": "ES",
+        "nivel": "instalacion",
+        "radio_km": 5,
+        "punto": {"lat": 41.5, "lon": 1.9},
+        "geocodificacion": "vocabulario",
+    }
     nuevo = lugar_preciso.precisar(brians, nom, AHORA)
     assert nuevo is not None and nuevo["lugar"]["suceso"] == "Centre Penitenciari Brians 1"
     assert nuevo["objetivo"] == brians["objetivo"]
     alcolea = ejemplos.incidente_minimo()
     alcolea["titulo"] = {
-        "es": "Interceptado un dron que intentaba introducir droga en la prisión de Alcolea, Córdoba",
+        "es": "Interceptado un dron que intentaba meter droga en la prisión de Alcolea, Córdoba",
         "en": "Drone carrying drugs intercepted at Alcolea prison, Córdoba",
     }
     alcolea["objetivo"] = {"categoria": "otra", "nombre": "Alcolea del Río"}
