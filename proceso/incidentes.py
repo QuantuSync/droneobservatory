@@ -26,9 +26,12 @@ Reglas del diseño:
 
 import copy
 import hashlib
+import json
 import math
 from collections import defaultdict
 from datetime import UTC, date, datetime, timedelta
+from functools import cache
+from pathlib import Path
 from typing import Any
 
 from almacen.base import Almacen
@@ -508,10 +511,37 @@ def repite_un_cierre_anterior(anterior: Documento, posterior: Documento) -> bool
     )
 
 
+REVISADOS = Path(__file__).resolve().parent.parent / "configuracion" / "incidentes_revisados.json"
+
+
+@cache
+def separaciones_distintas(ruta: Path = REVISADOS) -> frozenset[str]:
+    """Los incidentes separados a mano (sección `separar`) con `"distintos": true`: sus partes
+    son sucesos distintos que la regla de fusión no vuelve a juntar. Sin la marca, una parte
+    puede acabar con razón en la misma ficha que otra (la que coincide con otra ficha,
+    `coincide_con`, o dos registros de la misma parte)."""
+    datos = json.loads(ruta.read_text(encoding="utf-8"))
+    return frozenset(e["incidente"] for e in datos.get("separar", []) if e.get("distintos"))
+
+
+def separados_por_revision(a: Documento, b: Documento) -> bool:
+    """Uno lleva al otro entre sus sucesos relacionados por una separación marcada como de
+    sucesos distintos. El 19 de octubre de 2026 la regla juntó otra vez el desvío del
+    19/10/2025 en Fuerteventura (EODI-2025-00468), fechado por su publicación, con las esperas
+    de la víspera (EODI-2025-00397), de las que se separó."""
+    distintas = separaciones_distintas()
+    return any(
+        r.get("id") == otro["id"] and r.get("separado_de") in distintas
+        for uno, otro in ((a, b), (b, a))
+        for r in uno.get("relacionados", [])
+    )
+
+
 def encajan(a: Documento, b: Documento) -> bool:
     primero, segundo = sorted((a, b), key=lambda d: (d["tiempo"]["inicio"]["valor"], d["id"]))
     return (
-        mismo_sitio(a, b)
+        not separados_por_revision(a, b)
+        and mismo_sitio(a, b)
         and not cierres_de_noches_distintas(a, b)
         and not repite_un_cierre_anterior(primero, segundo)
         and misma_ventana(primero, segundo)
@@ -765,9 +795,9 @@ def fusionar(
 
 
 def revisar_fusiones(almacen: Almacen, ahora: datetime, modelos: frozenset[str]) -> list[str]:
-    """Deshace las fusiones que las reglas de ahora ya no hacen (dos cierres de noches distintas,
-    un cierre que se repite): el absorbido vuelve a publicarse con sus fuentes. Devuelve los
-    absorbidos que vuelven."""
+    """Deshace las fusiones que las reglas de ahora ya no hacen (dos sucesos que una revisión
+    separó como distintos, dos cierres de noches distintas, un cierre que se repite): el
+    absorbido vuelve a publicarse con sus fuentes. Devuelve los absorbidos que vuelven."""
     vueltos = []
     for fusion in almacen.fusiones():
         # Las revisadas a mano (recogida/revisados.py) no las deshace una regla.
@@ -778,8 +808,12 @@ def revisar_fusiones(almacen: Almacen, ahora: datetime, modelos: frozenset[str])
         if absorbido is None or destino is None or "fusionado_en" not in absorbido:
             continue
         propio = {k: v for k, v in absorbido.items() if k != "fusionado_en"}
-        if cierres_de_noches_distintas(propio, destino) or repite_un_cierre_anterior(
-            *sorted((propio, destino), key=lambda d: (d["tiempo"]["inicio"]["valor"], d["id"]))
+        if (
+            separados_por_revision(propio, destino)
+            or cierres_de_noches_distintas(propio, destino)
+            or repite_un_cierre_anterior(
+                *sorted((propio, destino), key=lambda d: (d["tiempo"]["inicio"]["valor"], d["id"]))
+            )
         ):
             revertir(almacen, fusion["absorbido"], ahora, modelos)
             vueltos.append(fusion["absorbido"])

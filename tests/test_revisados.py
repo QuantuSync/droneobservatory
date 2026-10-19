@@ -107,6 +107,43 @@ def test_el_que_queda_toma_el_cierre_y_con_el_el_tipo(monkeypatch: pytest.Monkey
     assert unido["tipo"] == "interrupcion_aeroportuaria"
 
 
+def test_lo_que_una_revision_separo_como_distinto_no_lo_vuelve_a_juntar_la_regla(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """EODI-2025-00397 y EODI-2025-00468 (Fuerteventura, 18 y 19 de octubre de 2025): separados
+    por la revisión, la regla de fusión los volvió a juntar porque el del 19 solo tenía la fecha
+    de publicación. Solo la marca «distintos» lo impide: sin ella, un enlace de `relacionados`
+    (una parte que coincide con otra ficha) no cambia nada."""
+    almacen = Almacen.abrir()
+    vispera = _registro("EODI-2025-00397", "2026-08-04T06:40Z", "explicita",
+                        [("a1", "2026-08-04T07:37Z")])  # fmt: skip
+    otro = _registro("EODI-2025-00468", "2026-08-05T17:15Z", "publicacion",
+                     [("b1", "2026-08-05T17:15Z")])  # fmt: skip
+    otro["tiempo"]["inicio"] = ejemplos.instante("2026-08-05T17:15Z", "aproximada")
+    otro["control"]["alta"] = ejemplos.instante("2026-08-05T17:15Z")
+    for documento, pareja in ((vispera, otro), (otro, vispera)):
+        documento["relacionados"] = [{"id": pareja["id"], "separado_de": "EODI-2025-00397",
+                                      "nota": {"es": "separados", "en": "separated"}}]  # fmt: skip
+    monkeypatch.setattr(incidentes, "separaciones_distintas", lambda: frozenset())
+    assert incidentes.encajan(vispera, otro)
+    monkeypatch.setattr(incidentes, "separaciones_distintas",
+                        lambda: frozenset({"EODI-2025-00397"}))  # fmt: skip
+    assert not incidentes.encajan(vispera, otro)
+    for documento in (vispera, otro):
+        almacen.guardar_incidente(documento, AHORA, MODELOS)
+    assert incidentes.fusionar(almacen, AHORA, MODELOS) == 0
+    # La fusión que ya se hizo se deshace.
+    monkeypatch.setattr(incidentes, "separaciones_distintas", lambda: frozenset())
+    assert incidentes.fusionar(almacen, AHORA, MODELOS) == 1
+    monkeypatch.setattr(incidentes, "separaciones_distintas",
+                        lambda: frozenset({"EODI-2025-00397"}))  # fmt: skip
+    assert incidentes.revisar_fusiones(almacen, AHORA, MODELOS) == ["EODI-2025-00468"]
+
+
+def test_la_marca_distintos_solo_esta_en_fuerteventura() -> None:
+    assert incidentes.separaciones_distintas() == frozenset({"EODI-2025-00397"})
+
+
 def test_la_ficha_que_mezcla_dos_sucesos_se_vuelve_a_extraer_una_vez(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
