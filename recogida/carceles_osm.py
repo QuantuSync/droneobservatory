@@ -81,7 +81,7 @@ CIUDADES = {
     "way/151543877": ["Picassent"],
     "way/304362329": ["Córdoba", "Alcolea"],
     "way/51368765": ["Algeciras"],
-    "way/162757051": ["Alhaurín de la Torre", "Málaga"],
+    "way/162757051": ["Alhaurín de la Torre"],
     "way/222747993": ["Soto del Real"],
     "way/149589610": [],
 }
