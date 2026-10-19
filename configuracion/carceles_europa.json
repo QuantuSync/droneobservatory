@@ -680,10 +680,14 @@
     "Centro penitenciario de Córdoba",
     "Centro Penitenciario de Córdoba",
     "cárcel de Córdoba",
-    "prisión de Córdoba"
+    "prisión de Córdoba",
+    "prisión de Alcolea",
+    "cárcel de Alcolea",
+    "Centro Penitenciario de Alcolea"
    ],
    "ciudades": [
-    "Córdoba"
+    "Córdoba",
+    "Alcolea"
    ],
    "lat": 37.90398,
    "lon": -4.67257,
@@ -768,7 +772,10 @@
    "tipo": "carcel",
    "nombre": "Centro Penitenciario de Ceuta",
    "alias": [
-    "Centro Penitenciario de Ceuta"
+    "Centro Penitenciario de Ceuta",
+    "Centro Penitenciario de Mendizábal",
+    "cárcel de Mendizábal",
+    "prisión de Mendizábal"
    ],
    "ciudades": [],
    "lat": 35.87998,
@@ -864,9 +871,14 @@
    "tipo": "carcel",
    "nombre": "Centro Penitenciario Algeciras-Botafuegos",
    "alias": [
-    "Centro Penitenciario Algeciras-Botafuegos"
+    "Centro Penitenciario Algeciras-Botafuegos",
+    "Botafuegos",
+    "cárcel de Botafuegos",
+    "prisión de Botafuegos"
    ],
-   "ciudades": [],
+   "ciudades": [
+    "Algeciras"
+   ],
    "lat": 36.14572,
    "lon": -5.48541,
    "radio_km": 1.0,
@@ -965,7 +977,8 @@
     "Sevilla I",
     "Sevilla 1",
     "prisión de Sevilla I",
-    "cárcel de Sevilla I"
+    "cárcel de Sevilla I",
+    "Centro Penitenciario Sevilla I"
    ],
    "ciudades": [
     "Sevilla",
