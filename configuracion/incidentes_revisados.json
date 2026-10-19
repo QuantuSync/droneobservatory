@@ -2784,14 +2784,16 @@
     {
       "incidente": "EODI-2025-00365",
       "inicio": {
-        "valor": "2025-10-14T00:00Z",
-        "precision": "dia",
-        "cita": "La presencia de drones en el entorno del aeropuerto de Fuerteventura ha obligado este martes por la mañana a desviar",
-        "motivo": "RTVC, 14 de octubre de 2025: «este martes por la mañana»"
+        "valor": "2025-10-14T06:00Z",
+        "precision": "minuto",
+        "cita": "se suspendieron temporalmente todas las operaciones del aeropuerto entre las 07:00 y las 08:10 horas, afectando a unas 600 personas",
+        "motivo": "«entre las 07:00 y las 08:10 horas», hora de Canarias (UTC+1), según la Guardia Civil en larazon.es; el martes 14 de octubre de 2025 por la mañana según RTVC («ha obligado este martes por la mañana a desviar»)",
+        "fin": "2025-10-14T07:10Z",
+        "fin_cita": "se suspendieron temporalmente todas las operaciones del aeropuerto entre las 07:00 y las 08:10 horas, afectando a unas 600 personas"
       },
       "motivo": {
-        "es": "El suceso fue el martes 14 de octubre de 2025 por la mañana (RTVC); la ficha tenía la hora de la publicación.",
-        "en": "The event took place on the morning of Tuesday 14 October 2025 (RTVC); the record had the publication time."
+        "es": "Las operaciones se suspendieron el martes 14 de octubre de 2025 entre las 07:00 y las 08:10 hora de Canarias (06:00-07:10 UTC; La Razón y RTVC); la ficha tenía la hora de la publicación.",
+        "en": "Operations were suspended on Tuesday 14 October 2025 between 07:00 and 08:10 Canary Islands time (06:00-07:10 UTC; La Razón and RTVC); the record had the publication time."
       }
     },
     {

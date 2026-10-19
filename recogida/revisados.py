@@ -613,6 +613,15 @@ def corregir(almacen: Almacen, ahora: datetime, modelos: frozenset[str]) -> Corr
     return hechos
 
 
+def inicios_revisados(ruta: Path = RUTA) -> dict[str, dict[str, Any]]:
+    """Los inicios revisados a mano (`titulares.inicio`, con su cita), por incidente."""
+    return {
+        str(r["incidente"]): r["inicio"]
+        for r in cargar(ruta).get("titulares", [])
+        if isinstance(r.get("inicio"), dict)
+    }
+
+
 def presencia_revisada(id_: str) -> bool:
     """El incidente tiene la presencia del dron revisada a mano: la regla horaria no la cambia."""
     return any(t["incidente"] == id_ and "presencia" in t for t in cargar().get("titulares", []))

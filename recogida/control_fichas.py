@@ -74,6 +74,7 @@ from proceso import (
 from proceso import control_fichas as reglas
 from proceso.noticias import Nomenclator
 from proceso.presencia import TABLA_MOTIVOS
+from recogida import revisados
 from recogida.plazo import Plazo, TiempoAgotado
 
 registro = logging.getLogger(__name__)
@@ -1007,6 +1008,7 @@ def _verificada_vigente(decision: Documento, incidente: Documento) -> reglas.Ver
 
 def aplicar_verificaciones(ctx: Contexto) -> None:
     decisiones = {**ctx.decisiones, **ctx.nuevas}
+    inicios = revisados.inicios_revisados()
     for incidente in _activos(ctx.almacen):
         decision = decisiones.get(reglas.clave_verificacion(incidente["id"]))
         if decision is not None and decision.get("espera_experto") and "datos" not in decision:
@@ -1024,6 +1026,11 @@ def aplicar_verificaciones(ctx: Contexto) -> None:
             actual, vista = reglas.vista(incidente), decision.get("vista", {})
             conservar = {c for c in ("drones", "cierre", "duracion_min", "inicio")
                          if actual.get(c) != vista.get(c)}  # fmt: skip
+        if _inicio_revisado_vigente(incidente, inicios.get(str(incidente["id"]))):
+            # La hora revisada a mano con su cita (incidentes_revisados.json, titulares.inicio)
+            # no la quita la verificación: el verificador puede no leer «entre las 07:00 y las
+            # 08:10» como la hora del suceso (EODI-2025-00365).
+            conservar |= {"inicio", "duracion_min"}
         fuentes_regla, titular_regla = presencia.respaldo_cierre_de_pista(incidente)
         enlaces = {f.get("enlace") or f["id"] for f in _publicas(incidente)}
         correccion = reglas.aplicar(
@@ -1044,6 +1051,14 @@ def aplicar_verificaciones(ctx: Contexto) -> None:
         if decision.get("modelo"):
             nuevo = anotar_modelos(nuevo, correccion.cambios, str(decision["modelo"]))
         _guardar(ctx, incidente, nuevo, "; ".join(correccion.cambios))
+
+
+def _inicio_revisado_vigente(incidente: Documento, revisado: Documento | None) -> bool:
+    """El inicio del incidente es el revisado a mano (mismo valor y precisión)."""
+    inicio = incidente.get("tiempo", {}).get("inicio", {})
+    return revisado is not None and (inicio.get("valor"), inicio.get("precision")) == (
+        revisado.get("valor"), revisado.get("precision")
+    )
 
 
 # Comienzo de cada corrección de la verificación y el dato de la ficha que corrige.
