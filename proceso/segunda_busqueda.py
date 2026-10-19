@@ -44,7 +44,8 @@ BUSQUEDAS = (DECLARACION, RESCATE, ATRIBUCION, EFECTOS)
 A_LA_EXTRACCION = frozenset({DECLARACION, RESCATE, ATRIBUCION})
 MAX_TEXTOS = 6
 MAX_LETRAS_TEXTO = 2500
-MAX_SALIDA = 2000
+# Como la lectura: el modelo razona antes de responder y con menos se corta (parada: length).
+MAX_SALIDA = lectura.MAX_SALIDA
 MAX_FICHAS_CERCANAS = 8
 AFIRMA = ("confirma", "niega", "rectifica")
 NIVELES_VAGOS = frozenset({"pais", "region"})
