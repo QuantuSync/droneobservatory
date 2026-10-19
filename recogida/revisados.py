@@ -425,7 +425,8 @@ def con_titular(incidente: Documento, revision: Documento, instante: Documento) 
                               "fuente_id": fuentes[inicio["fin_cita"]],
                               "confianza_extraccion": 1.0}  # fmt: skip
                 resultado["afirmaciones"] = [
-                    *(a for a in resultado.get("afirmaciones", []) if a != afirmacion), afirmacion
+                    *(a for a in resultado.get("afirmaciones", []) if a != afirmacion),
+                    afirmacion,
                 ]
             resultado["tiempo"] = tiempo
     objetivo = revision.get("objetivo")
