@@ -217,6 +217,31 @@ def test_la_instalacion_que_la_ficha_no_reconocio(revision: dict[str, Any]) -> N
     assert revisados.corregir(almacen, AHORA, VOCABULARIO_MODELOS).titulares == []
 
 
+def test_el_inicio_que_escribe_una_fuente(revision: dict[str, Any]) -> None:
+    documento = ejemplos.incidente_minimo()
+    almacen = Almacen.abrir()
+    almacen.guardar_incidente(documento, AHORA, VOCABULARIO_MODELOS)
+    cita = documento["fuentes"][0]["frase_origen"]
+    revision["citas"] = []
+    revision["titulares"] = [{
+        "incidente": documento["id"],
+        "inicio": {"valor": "2025-11-03T00:00Z", "precision": "dia", "cita": cita,
+                   "motivo": "«el lunes 3 de noviembre» en la fuente"},
+        "motivo": {"es": "La ficha tomó la publicación.", "en": "The record took publication."},
+    }]  # fmt: skip
+    assert revisados.corregir(almacen, AHORA, VOCABULARIO_MODELOS).titulares == [documento["id"]]
+    despues = almacen.incidente(documento["id"])
+    assert despues is not None
+    assert despues["tiempo"]["inicio"] == {"valor": "2025-11-03T00:00Z", "precision": "dia"}
+    origen = despues["tiempo"]["origen_inicio"]
+    assert origen["tipo"] == "explicita" and origen["fuente_id"] == documento["fuentes"][0]["id"]
+    assert revisados.corregir(almacen, AHORA, VOCABULARIO_MODELOS).titulares == []
+    # Sin la cita entre las fuentes del incidente, no cambia.
+    otro = {"valor": "2025-11-02T00:00Z", "cita": "otra frase"}
+    revision["titulares"][0]["inicio"] = {**revision["titulares"][0]["inicio"], **otro}
+    assert revisados.corregir(almacen, AHORA, VOCABULARIO_MODELOS).titulares == []
+
+
 def test_la_configuracion_de_la_revision() -> None:
     datos = revisados.cargar()
     for cita in datos["citas"]:

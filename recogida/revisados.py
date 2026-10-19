@@ -29,6 +29,7 @@ from proceso.credibilidad import Credibilidad
 from proceso.estados import RETIRADAS, REVERSIONES, Estado, error_reversion, nuevo_estado
 from proceso.fronteras import dentro_del_pais
 from proceso.presencia import TABLA_MOTIVOS
+from proceso.validaciones import derivar_duracion_min
 
 registro = logging.getLogger(__name__)
 RUTA = Path(__file__).resolve().parent.parent / "configuracion" / "incidentes_revisados.json"
@@ -199,8 +200,9 @@ def reextraer(
 #   la regla lo sostiene.
 # - Titulares: el titular que dice solo lo que dicen las citas, con su motivo; y, si la
 #   autoridad lo deja abierto o no lo da por hecho, la presencia del dron y el estado que
-#   corresponden, cada cambio con su cita y su motivo; y la instalación afectada («objetivo»)
-#   si la ficha no la reconoció.
+#   corresponden, cada cambio con su cita y su motivo; la instalación afectada («objetivo»)
+#   si la ficha no la reconoció; y el inicio («inicio») que escribe una fuente cuando la ficha
+#   tomó la fecha de publicación, con esa cita.
 # - Ubicaciones: el lugar del suceso que da una autoridad (su frase), con su punto, su radio y
 #   los demás lugares que nombra.
 #
@@ -388,6 +390,26 @@ def con_titular(incidente: Documento, revision: Documento, instante: Documento) 
         resultado["afirmaciones"] = [
             a for a in resultado.get("afirmaciones", []) if a.get("campo") != "drones"
         ]
+    inicio = revision.get("inicio")
+    fuente_inicio = fuentes.get(inicio["cita"]) if inicio else None
+    if inicio and fuente_inicio is not None:
+        # El día que escribe una fuente cuando la ficha tomó el de la publicación
+        # (EODI-2026-00622: la noche del 18 de septiembre de 2026, publicado el 25).
+        nuevo_inicio = {"valor": inicio["valor"], "precision": inicio["precision"]}
+        if resultado["tiempo"]["inicio"] != nuevo_inicio:
+            tiempo: Documento = {
+                "inicio": nuevo_inicio,
+                "origen_inicio": {"tipo": "explicita", "fuente_id": fuente_inicio,
+                                  "motivo": inicio["motivo"]},
+            }  # fmt: skip
+            fin = resultado["tiempo"].get("fin")
+            if fin and inicio["precision"] in incidentes.PRECISIONES_HORA:
+                tiempo["fin"] = fin
+                if (duracion := derivar_duracion_min(tiempo)) is None:
+                    tiempo.pop("fin")
+                else:
+                    tiempo["duracion_min"] = duracion
+            resultado["tiempo"] = tiempo
     objetivo = revision.get("objetivo")
     if objetivo and resultado.get("objetivo") != objetivo:
         # La instalación afectada que la ficha no reconoció (EODI-2026-00146: «Melilla», categoría
