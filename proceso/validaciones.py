@@ -287,7 +287,7 @@ def errores_presencia(documento: Documento) -> list[Error]:
         frase = str(fuente.get("frase_origen", ""))
         if (
             fuente.get("id") in confirmantes
-            and fuente.get("es_autoridad")
+            and declaraciones.de_autoridad(fuente)
             and declaraciones.habla_de_drones(frase)
             and not declaraciones.abierto(frase, contexto.get(fuente.get("enlace"), ""))
         ):

@@ -2650,6 +2650,17 @@
         "es": "La instalación es el centro penitenciario Mas d'Enric (El Catllar), no la ciudad de Tarragona.",
         "en": "The facility is the Mas d'Enric prison (El Catllar), not the city of Tarragona."
       }
+    },
+    {
+      "incidente": "EODI-2026-00402",
+      "titulo": {
+        "es": "Un dron obliga a desviar vuelos en el aeropuerto de Málaga",
+        "en": "A drone forces flights to divert at Málaga airport"
+      },
+      "motivo": {
+        "es": "ENAIRE confirmó el dron en la aproximación al aeropuerto de Málaga: «dron no identificado» se leía como una duda sobre el dron.",
+        "en": "ENAIRE confirmed the drone on the approach to Málaga airport: «unidentified drone» read as doubt about the drone."
+      }
     }
   ],
   "titular_justificado": [],
