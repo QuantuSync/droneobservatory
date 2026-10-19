@@ -18,7 +18,7 @@ from modelo import coste
 from proceso import control_fichas as reglas
 from proceso import lugar_preciso, presencia
 from proceso.noticias import nomenclator
-from recogida import avisos, control_fichas, vigilancia, visitas
+from recogida import avisos, control_fichas, revisados, vigilancia, visitas
 from tests import ejemplos
 from tests.ejemplos import VOCABULARIO_MODELOS
 
@@ -790,3 +790,26 @@ def test_la_traduccion_pide_siempre_los_dos_idiomas() -> None:
 
     assert "vacío" not in peticiones.INSTRUCCIONES_TRADUCIR
     assert "Da siempre las dos" in peticiones.INSTRUCCIONES_TRADUCIR
+
+
+def test_la_hora_revisada_a_mano_con_su_cita_no_la_quita_la_verificacion(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # EODI-2025-00365: el verificador no leyó «entre las 07:00 y las 08:10 horas» como la hora del
+    # suceso y dejaba solo el día; la revisión la volvía a poner en cada recogida.
+    def con_hora() -> dict[str, Any]:
+        d = _nuremberg_alemana()
+        d["tiempo"] = {"inicio": ejemplos.instante("2026-10-13T06:30Z", "minuto")}
+        return d
+
+    almacen = _base(con_hora())
+    _ejecutar(almacen, Servicio(), alcance="repaso")
+    sin_revision = almacen.incidente("EODI-2026-09515")
+    assert sin_revision is not None and sin_revision["tiempo"]["inicio"]["precision"] == "dia"
+    revisado = {"valor": "2026-10-13T06:30Z", "precision": "minuto", "cita": "x", "motivo": "x"}
+    monkeypatch.setattr(revisados, "inicios_revisados", lambda: {"EODI-2026-09515": revisado})
+    almacen = _base(con_hora())
+    _ejecutar(almacen, Servicio(), alcance="repaso")
+    queda = almacen.incidente("EODI-2026-09515")
+    assert queda is not None and queda["tiempo"]["inicio"]["valor"] == "2026-10-13T06:30Z"
+    assert queda["tiempo"]["inicio"]["precision"] == "minuto"
