@@ -29,8 +29,11 @@ la recogida) y [`configuracion/segunda_lectura.json`](../configuracion/segunda_l
 5. **Gasto.** El servicio secundario es gratuito. Lo único que cuesta es el experto al revisar lo
    marcado: modo `segunda_lectura` de [`modelo/coste.py`](../modelo/coste.py), como mucho
    **0,30 dólares al día** (`LIMITE_SEGUNDA_EXPERTO_DIARIO_USD`), que cuentan dentro del dólar
-   diario del experto y **nunca** salen de la reserva crítica. Lo que no cabe espera al día
-   siguiente.
+   diario del experto y **nunca** salen de la reserva crítica. Desde el 19 de octubre de 2026,
+   además, solo gasta lo que los escalados normales no necesitan: el gasto del experto en el día
+   tiene que ir por debajo del ritmo de su tope (el dólar entero a las 00:00 UTC, la mitad a las
+   12:00, `margen_escalados`). Así nunca se come de madrugada el tope que necesitan las recogidas
+   del día. Lo que no cabe espera a otra recogida.
 6. **Datos.** Solo se envía contenido público: los datos de las fichas publicadas y las citas,
    titulares y frases de sus fuentes públicas.
 
@@ -87,7 +90,9 @@ base de la capa (solo leyendo, 30 segundos como mucho) y:
   `MAX_POR_PASADA` y su tope).
 
 Como mucho 2 candidatos de datos o duplicados por recogida (configurable), lo contradicho primero,
-siempre con el modo y el tope del principio 5. Cada decisión queda guardada (clave `segunda:…`
+siempre con el modo y el tope del principio 5. Una ficha cuyo único hallazgo es la fecha de inicio
+«sin apoyo» queda marcada pero **no va al experto** (`proceso/segunda_lectura.al_experto`): en los
+primeros días fue el hallazgo más frecuente y casi siempre ruido. Cada decisión queda guardada (clave `segunda:…`
 del control de las fichas) y no se repite.
 
 Lo que hizo la última pasada, los candidatos y el gasto del experto del día en este modo se ven en

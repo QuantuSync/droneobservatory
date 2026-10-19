@@ -2366,6 +2366,54 @@
         "fecha": "2026-10-19",
         "en": "https://gaceta.es/espana/marruecos-mira-ahora-ahora-a-melilla-y-eleva-la-tension-con-drones-junto-al-aeropuerto-de-la-ciudad-que-obligan-a-paralizar-el-trafico-aereo-20260925-0854/ (original)"
       }
+    },
+    {
+      "incidente": "EODI-2025-00365",
+      "enlace": "https://www.larazon.es/sociedad/dron-obliga-desviar-varios-vuelos-aeropuerto-fuerteventura_2025101468ee56520e3c6c5098398d06.html",
+      "medio": "larazon.es",
+      "fecha": "2025-10-14",
+      "idioma": "es",
+      "frase": "se suspendieron temporalmente todas las operaciones del aeropuerto entre las 07:00 y las 08:10 horas, afectando a unas 600 personas",
+      "comprobada": {
+        "fecha": "2026-10-19",
+        "en": "https://www.larazon.es/sociedad/dron-obliga-desviar-varios-vuelos-aeropuerto-fuerteventura_2025101468ee56520e3c6c5098398d06.html (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00365",
+      "enlace": "https://rtvc.es/drones-aeropuerto-fuerteventura-desvio-vuelos-14-octubre-2025/",
+      "medio": "rtvc.es",
+      "fecha": "2025-10-14",
+      "idioma": "es",
+      "frase": "La presencia de drones en el entorno del aeropuerto de Fuerteventura ha obligado este martes por la mañana a desviar",
+      "comprobada": {
+        "fecha": "2026-10-19",
+        "en": "https://rtvc.es/drones-aeropuerto-fuerteventura-desvio-vuelos-14-octubre-2025/ (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00399",
+      "enlace": "https://lavozdelanzarote.com/actualidad/sucesos/dron-obliga-paralizar-todos-vuelos-en-aeropuerto-lanzarote_237100_102.html",
+      "medio": "lavozdelanzarote.com",
+      "fecha": "2025-08-14",
+      "idioma": "es",
+      "frase": "causó la paralización de todas las operaciones sobre las 21.30 horas de este pasado miércoles",
+      "comprobada": {
+        "fecha": "2026-10-19",
+        "en": "https://lavozdelanzarote.com/actualidad/sucesos/dron-obliga-paralizar-todos-vuelos-en-aeropuerto-lanzarote_237100_102.html (original)"
+      }
+    },
+    {
+      "incidente": "EODI-2025-00399",
+      "enlace": "https://lavozdelanzarote.com/actualidad/sucesos/dron-obliga-paralizar-todos-vuelos-en-aeropuerto-lanzarote_237100_102.html",
+      "medio": "lavozdelanzarote.com",
+      "fecha": "2025-08-14",
+      "idioma": "es",
+      "frase": "Durante 40 minutos, los aviones no pudieron aterrizar ni despegar en el aeródromo.",
+      "comprobada": {
+        "fecha": "2026-10-19",
+        "en": "https://lavozdelanzarote.com/actualidad/sucesos/dron-obliga-paralizar-todos-vuelos-en-aeropuerto-lanzarote_237100_102.html (original)"
+      }
     }
   ],
   "titulares": [
@@ -2731,6 +2779,49 @@
       "motivo": {
         "es": "La cárcel es Brians 1 («treballadors de la presó de Brians 1 van detectar la presència irregular d'un dron», lleidadiari.cat); la ficha tomó Brians 2 del suceso del 19 de septiembre.",
         "en": "The prison is Brians 1 (lleidadiari.cat); the record took Brians 2 from the 19 September event."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00365",
+      "inicio": {
+        "valor": "2025-10-14T06:00Z",
+        "precision": "minuto",
+        "cita": "se suspendieron temporalmente todas las operaciones del aeropuerto entre las 07:00 y las 08:10 horas, afectando a unas 600 personas",
+        "motivo": "Guardia Civil, en larazon.es: «entre las 07:00 y las 08:10 horas», hora de Canarias (UTC+1); el martes 14 de octubre por la mañana, según RTVC",
+        "fin": "2025-10-14T07:10Z",
+        "fin_cita": "se suspendieron temporalmente todas las operaciones del aeropuerto entre las 07:00 y las 08:10 horas, afectando a unas 600 personas"
+      },
+      "motivo": {
+        "es": "La Guardia Civil da las operaciones suspendidas entre las 07:00 y las 08:10, hora de Canarias (06:00 a 07:10 UTC), el martes 14 de octubre por la mañana; la ficha tenía la hora de la publicación.",
+        "en": "The Guardia Civil gives operations suspended between 07:00 and 08:10 Canary Islands time (06:00 to 07:10 UTC), on the morning of Tuesday 14 October; the record had the publication time."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00399",
+      "inicio": {
+        "valor": "2025-08-13T20:30Z",
+        "precision": "minuto",
+        "cita": "causó la paralización de todas las operaciones sobre las 21.30 horas de este pasado miércoles",
+        "motivo": "«sobre las 21.30 horas» del miércoles 13 de agosto, hora de Canarias (UTC+1), y «Durante 40 minutos», en lavozdelanzarote.com",
+        "fin": "2025-08-13T21:10Z",
+        "fin_cita": "Durante 40 minutos, los aviones no pudieron aterrizar ni despegar en el aeródromo."
+      },
+      "motivo": {
+        "es": "La parada empezó sobre las 21:30 hora de Canarias (20:30 UTC) y duró 40 minutos; la ficha tenía una hora menos.",
+        "en": "The stoppage began around 21:30 Canary Islands time (20:30 UTC) and lasted 40 minutes; the record was one hour early."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00365",
+      "inicio": {
+        "valor": "2026-04-26T15:30Z",
+        "precision": "minuto",
+        "cita": "ha obligado por seguridad a detener de todas las operaciones sobre las 16.30 horas de este domingo 26 de abril.",
+        "motivo": "«sobre las 16.30 horas de este domingo 26 de abril», hora de Canarias (UTC+1), en lavozdelanzarote.com"
+      },
+      "motivo": {
+        "es": "Las 16:30 son hora de Canarias (15:30 UTC); la ficha las tomó como UTC.",
+        "en": "16:30 is Canary Islands time (15:30 UTC); the record took it as UTC."
       }
     }
   ],

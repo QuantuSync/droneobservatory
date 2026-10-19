@@ -108,6 +108,9 @@ privados, correo de contacto) se leen de variables de entorno: `EODI_BUCKET_*`
   https://droneobservatory.eu. Licence CC BY 4.0.”
 - Versión vigente / Current version: 2026-10 ([`CITATION.cff`](CITATION.cff)). Las versiones
   mensuales citables están en <https://droneobservatory.eu/metodologia#versiones>.
+- Cada trimestre se deposita una versión fechada en Discuss Data (Universidad de Bremen), con DOI:
+  ver [`docs/discuss_data.md`](docs/discuss_data.md). A dated version is deposited every quarter
+  in Discuss Data.
 - Los mismos créditos (autor, ORCID, licencia, cita y dirección) van dentro de cada fichero de
   datos publicado (miembro `licencia`), en el `metadatos.json` de cada versión mensual desde la
   2026-11 y en el manifiesto de la exportación semanal (`creditos`, formato 1.8.0); la fuente es

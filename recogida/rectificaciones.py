@@ -238,7 +238,7 @@ class Experto:
                 try:
                     coste.comprobar_segunda(
                         self.almacen.gastado_modelo(modelo, dia),
-                        self.almacen.gastado_experto_en(modo.value, dia), previsto,
+                        self.almacen.gastado_experto_en(modo.value, dia), previsto, self.ahora,
                     )  # fmt: skip
                 except coste.LimiteGasto:
                     return None

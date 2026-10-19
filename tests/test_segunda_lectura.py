@@ -395,8 +395,13 @@ def test_con_el_tope_agotado_los_candidatos_esperan(
     })  # fmt: skip
     hecho = segunda.paso_horario(otro, AHORA, VOCABULARIO_MODELOS)
     assert cliente.pedidas == [] and hecho["decididos"] == [] and "tope" in hecho["experto"]
-    # Al día siguiente, el tope se renueva y el candidato pasa.
+    # Al día siguiente, de madrugada, no: el tope del experto se guarda para los escalados del
+    # resto del día (margen_escalados).
     hecho = segunda.paso_horario(almacen, datetime(2026, 10, 16, 1, 17, tzinfo=UTC),
+                                 VOCABULARIO_MODELOS)  # fmt: skip
+    assert cliente.pedidas == [] and "escalados" in hecho["experto"]
+    # A mediodía, con el experto por debajo del ritmo del día, el candidato pasa.
+    hecho = segunda.paso_horario(almacen, datetime(2026, 10, 16, 13, 17, tzinfo=UTC),
                                  VOCABULARIO_MODELOS)  # fmt: skip
     assert len(cliente.pedidas) == 1 and len(hecho["decididos"]) == 1
 
@@ -499,3 +504,29 @@ def test_rectificacion_con_el_tope_de_la_capa_agotado_espera(tmp_path: Path) -> 
     assert cliente.pedidas == [] and len(hechos.esperan) == 1
     assert (almacen.incidente(ID) or {})["presencia_dron"] == "confirmada"
     almacen.cerrar()
+
+
+def test_margen_para_los_escalados_del_resto_del_dia() -> None:
+    """La segunda lectura solo gasta del experto lo que va por debajo del ritmo del día."""
+    assert coste.margen_escalados(datetime(2026, 10, 19, 0, 0, tzinfo=UTC)) == 1.0
+    assert coste.margen_escalados(datetime(2026, 10, 19, 12, 0, tzinfo=UTC)) == 0.5
+    mediodia = datetime(2026, 10, 19, 12, 0, tzinfo=UTC)
+    coste.comprobar_segunda(0.40, 0.0, 0.05, mediodia)
+    with pytest.raises(coste.LimiteGasto, match="escalados"):
+        coste.comprobar_segunda(0.46, 0.0, 0.05, mediodia)
+    with pytest.raises(coste.LimiteGasto, match="escalados"):
+        coste.comprobar_segunda(0.0, 0.0, 0.05, datetime(2026, 10, 19, 0, 30, tzinfo=UTC))
+
+
+def test_fecha_sin_apoyo_sola_no_va_al_experto() -> None:
+    def candidato(*hallazgos: tuple[str, str]) -> dict[str, Any]:
+        return {"tipo": "campos", "datos": {"hallazgos": [
+            {"campo": c, "valoracion": v, "frase": "", "valor": "x"} for c, v in hallazgos
+        ]}}  # fmt: skip
+
+    assert not lectura.al_experto(candidato(("inicio", lectura.SIN_APOYO)))
+    assert lectura.al_experto(candidato(("inicio", lectura.CONTRADICHO)))
+    assert lectura.al_experto(
+        candidato(("inicio", lectura.SIN_APOYO), ("lugar", lectura.SIN_APOYO))
+    )
+    assert lectura.al_experto({"tipo": "duplicado", "datos": {}})

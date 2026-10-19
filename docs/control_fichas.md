@@ -44,6 +44,15 @@ publicar. Nunca impide publicar lo demás ni cambia el código de salida.
    Marlow). Solo cambia fichas sin punto o con el punto genérico de la misma ciudad (el GKG de
    Núremberg); nunca un punto oficial, el de otra instalación o el de otra localidad. El punto
    anterior queda en `lugar.historial` con el motivo.
+
+   Desde el 19 de octubre de 2026, además, **el lugar es la instalación afectada** aunque ninguna
+   autoridad dé el punto exacto: si el objetivo de la ficha identifica una instalación del
+   nomenclátor por su código OACI y el punto está a más de 1 km de ella, el marcador pasa a la
+   instalación (EODI-2026-00146: el punto del candidato, en la ciudad de Melilla, a 2,2 km del
+   aeropuerto). El objetivo no se toca y nunca cambia un punto que da una autoridad. Medido en la
+   base el 19/10/2026: de 176 incidentes con objetivo OACI del nomenclátor y punto, solo cambia
+   ese. Las cárceles no están en el nomenclátor (no tienen código ni tipo propio), así que la regla
+   aún no las alcanza.
 3. **Estado.** Confirmado o atribuido solo con un paso de una fuente oficial (una autoridad, leída
    o citada); si no, vuelve a notificado con el motivo en los dos idiomas.
 4. **Duplicados** (también entre idiomas). Pares candidatos: del mismo país; del mismo día o la

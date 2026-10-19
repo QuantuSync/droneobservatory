@@ -235,6 +235,49 @@ def test_la_presencia_no_queda_confirmada_si_no_se_encontro_el_dron() -> None:
     assert not any(a["valor"] == "confirmada" for a in nuevo["afirmaciones"])
 
 
+def test_una_correccion_parcial_anotada_no_la_vuelve_a_tocar_el_control() -> None:
+    """Como EODI-2025-00072 (Bruselas): una presencia con historial de rectificaciones oficiales,
+    aunque solo sea una corrección parcial, no la cambia la verificación de sus fuentes. Antes el
+    control la bajaba en cada pasada y el guardado la volvía a subir (vaivén)."""
+    documento = _nuremberg_alemana()
+    verificada = reglas.Verificada({"presencia": ("no_hallado", "gdelt-schwaebische", NO_HALLADO)})
+    sin_historial = reglas.aplicar(copy.deepcopy(documento), verificada, True, None)
+    assert sin_historial.incidente["presencia_dron"] == "no_confirmada"
+    paso = {"fecha": ejemplos.instante("2026-10-13T09:00Z"), "fuente_id": "gdelt-infranken"}
+    documento["presencia_historial"] = [
+        {**paso, "valor": "confirmada"},
+        {**paso, "valor": "confirmada", "parcial": True},
+    ]
+    corregida = reglas.aplicar(copy.deepcopy(documento), verificada, True, None)
+    assert corregida.incidente["presencia_dron"] == "confirmada"
+    assert not any(c.startswith("presencia") for c in corregida.cambios)
+
+
+def test_el_lugar_es_la_instalacion_que_identifica_el_objetivo() -> None:
+    """Como EODI-2026-00146: objetivo «aeropuerto de Melilla» (GEML) y el punto del candidato en
+    la ciudad, a 2,2 km. El punto pasa al aeropuerto; el objetivo no se toca. Un punto que da una
+    autoridad, o que ya está en la instalación, no cambia."""
+    nom = nomenclator()
+    documento = ejemplos.incidente_minimo()
+    documento["titulo"] = {"es": "Un dron en Melilla", "en": "A drone in Melilla"}
+    documento["objetivo"] = {"categoria": "aeropuerto", "nombre": "Aeropuerto de Melilla",
+                             "oaci": "GEML"}  # fmt: skip
+    documento["lugar"] = {"pais": "ES", "nivel": "localidad", "radio_km": 5,
+                          "punto": {"lat": 35.29369, "lon": -2.93833},
+                          "geocodificacion": "candidato"}  # fmt: skip
+    nuevo = lugar_preciso.precisar(copy.deepcopy(documento), nom, AHORA)
+    assert nuevo is not None and nuevo["objetivo"] == documento["objetivo"]
+    sitio = nom.lugares["GEML"]
+    assert nuevo["lugar"]["punto"] == {"lat": round(sitio.lat, 5), "lon": round(sitio.lon, 5)}
+    assert nuevo["lugar"]["geocodificacion"] == "nomenclator"
+    (paso,) = nuevo["lugar"]["historial"]
+    assert paso["anterior"]["punto"] == documento["lugar"]["punto"]
+    assert paso["motivo"] == lugar_preciso.MOTIVO_OBJETIVO
+    assert lugar_preciso.precisar(nuevo, nom, AHORA) is None
+    documento["lugar"]["fuente_punto"] = "revisada-x-declaracion-1"
+    assert lugar_preciso.precisar(documento, nom, AHORA) is None
+
+
 # --- Lugar: la instalación que nombra el titular --------------------------------------------
 def test_el_titular_con_el_aeropuerto_da_el_lugar() -> None:
     nuevo = lugar_preciso.precisar(_nuremberg_alemana(), nomenclator(), AHORA)

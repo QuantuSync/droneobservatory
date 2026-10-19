@@ -391,7 +391,13 @@ def validar(ficha: dict[str, Any], contexto: Contexto) -> Validada:
         resultado.campos.pop("lugar_nuevo")
         resultado.motivos.append("lugar_nuevo: país distinto del del incidente")
     _pais_nombrado(resultado, ficha, contexto.textos)
-    if resultado.pais is None:
+    # Sin país solo cuenta si la ficha da un incidente: una noticia que no lo es (o cuya frase de
+    # «es incidente» no vale) no tiene suceso que situar, y el motivo confundía (Picassent, Brians).
+    if (
+        resultado.pais is None
+        and resultado.valor("es_incidente") is not False
+        and not any(m.startswith("es_incidente") for m in resultado.motivos)
+    ):
         resultado.motivos.append("pais: sin país del suceso")
     if not resultado.titulo_es or not resultado.titulo_en:
         resultado.motivos.append("sin título")
