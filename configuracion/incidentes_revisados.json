@@ -3,6 +3,33 @@
   "unir": [
     {
       "registros": [
+        "EODI-2025-00344",
+        "EODI-2025-00447"
+      ],
+      "conserva": "EODI-2025-00344",
+      "motivo": "Los dos son la misma parte de la separación de EODI-2025-00131: el nuevo avistamiento sobre Kleine-Brogel la noche del sábado 1 al domingo 2 de noviembre de 2025 (zazoom.it y adnkronos.com, las mismas dos notas del 2 de noviembre).",
+      "motivo_en": "Both are the same part of the separation of EODI-2025-00131: the new sighting over Kleine-Brogel on the night of Saturday 1 to Sunday 2 November 2025 (zazoom.it and adnkronos.com, the same two articles of 2 November)."
+    },
+    {
+      "registros": [
+        "EODI-2026-00141",
+        "EODI-2026-00531"
+      ],
+      "conserva": "EODI-2026-00141",
+      "motivo": "Los dos son la misma parte de la separación de EODI-2026-00281: el dron Shahed que cruzó junto al paso fronterizo de Palanca la noche del 18 de marzo de 2026 (02:14-02:25 hora local).",
+      "motivo_en": "Both are the same part of the separation of EODI-2026-00281: the Shahed drone that crossed next to the Palanca border crossing on the night of 18 March 2026 (02:14-02:25 local time)."
+    },
+    {
+      "registros": [
+        "EODI-2026-00527",
+        "EODI-2026-00159"
+      ],
+      "conserva": "EODI-2026-00527",
+      "motivo": "Los dos son la misma parte de la separación de EODI-2026-00203: el dron que explotó al estrellarse junto a Hîrbovăț (Anenii Noi) el miércoles 30 de septiembre de 2026 hacia las 05:43; EODI-2026-00159 había quedado unido al segundo dron, el de Arionești.",
+      "motivo_en": "Both are the same part of the separation of EODI-2026-00203: the drone that exploded on crashing near Hîrbovăț (Anenii Noi) on Wednesday 30 September 2026 at about 05:43; EODI-2026-00159 had been merged with the second drone, the Arionești one."
+    },
+    {
+      "registros": [
         "EODI-2026-00391",
         "EODI-2026-00134",
         "EODI-2026-00239",
@@ -489,6 +516,18 @@
     }
   ],
   "citas": [
+    {
+      "incidente": "EODI-2025-00444",
+      "enlace": "https://nrc.nl/nieuws/2025/11/23/drones-verjaagd-boven-vliegbasis-volkel-en-eindhoven-airport-a4913370",
+      "medio": "nrc.nl",
+      "fecha": "2025-11-23",
+      "idioma": "nl",
+      "frase": "En zaterdagavond werden wéér drones gezien boven Volkel, ook boven Eindhoven Airport.",
+      "comprobada": {
+        "fecha": "2026-10-19",
+        "en": "https://web.archive.org/web/20261019211109/https://www.nrc.nl/nieuws/2025/11/23/drones-verjaagd-boven-vliegbasis-volkel-en-eindhoven-airport-a4913370 (copia del archivo)"
+      }
+    },
     {
       "incidente": "EODI-2025-00013",
       "enlace": "https://fremover.no/rykket-ut-til-droneflyvning-har-kontroll-pa-to-personer/s/5-34-2225422",
@@ -2430,6 +2469,73 @@
   ],
   "titulares": [
     {
+      "incidente": "EODI-2025-00444",
+      "inicio": {
+        "valor": "2025-11-22T00:00Z",
+        "precision": "dia",
+        "cita": "En zaterdagavond werden wéér drones gezien boven Volkel, ook boven Eindhoven Airport.",
+        "motivo": "«zaterdagavond» (el sábado por la tarde-noche) en nrc.nl del domingo 23 de noviembre de 2025"
+      },
+      "titulo": {
+        "es": "Nuevos drones sobre la base aérea de Volkel, ahuyentados por Defensa",
+        "en": "New drones over Volkel air base, chased away by Defence"
+      },
+      "motivo": {
+        "es": "Es la segunda noche de Volkel, separada de los disparos del viernes 21 (EODI-2025-00066): drones otra vez el sábado 22 de noviembre de 2025 por la tarde-noche (nrc.nl); la ficha tomó el «vrijdag» de la misma nota, que cuenta las dos noches.",
+        "en": "This is the second Volkel night, separated from Friday 21's shots (EODI-2025-00066): drones again on the evening of Saturday 22 November 2025 (nrc.nl); the record took the «vrijdag» of the same article, which tells both nights."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00453",
+      "titulo": {
+        "es": "Un dron Shahed cruza el sur de Moldavia y entra en Rumanía",
+        "en": "A Shahed drone crosses southern Moldova and enters Romania"
+      },
+      "motivo": {
+        "es": "Separada del dron Gerbera caído en Cuhureștii de Jos (EODI-2025-00261): esta ficha es la del Shahed que cruzó el sur de Moldavia hacia Rumanía la mañana del 25 de noviembre de 2025 (timpul.md).",
+        "en": "Separated from the Gerbera drone that fell in Cuhureștii de Jos (EODI-2025-00261): this record is the Shahed that crossed southern Moldova into Romania on the morning of 25 November 2025 (timpul.md)."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00454",
+      "titulo": {
+        "es": "Un dron sobrevuela el sur de Moldavia, de Lesnaia hacia Săiți",
+        "en": "A drone flies over southern Moldova, from Lesnaia towards Săiți"
+      },
+      "lugar": {
+        "pais": "MD",
+        "region": "Căușeni",
+        "suceso": "Săiți",
+        "nivel": "localidad"
+      },
+      "motivo": {
+        "es": "Separada del dron que entró en Rumanía (EODI-2025-00268): esta ficha, con EODI-2025-00204, es la del sobrevuelo de Moldavia de la noche del 18 al 19 de noviembre de 2025, de Lesnaia (Ucrania) hacia Săiți, según el Ministerio de Defensa de Moldavia (puterea.ro).",
+        "en": "Separated from the drone that entered Romania (EODI-2025-00268): this record, with EODI-2025-00204, is the overflight of Moldova on the night of 18 to 19 November 2025, from Lesnaia (Ukraine) towards Săiți, according to Moldova's Ministry of Defence (puterea.ro)."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00349",
+      "titulo": {
+        "es": "Drones obligan a cerrar el aeropuerto de Aalborg",
+        "en": "Drones force the closure of Aalborg airport"
+      },
+      "motivo": {
+        "es": "Separada de los drones vistos cerca de Esbjerg, Sønderborg y Skrydstrup (EODI-2025-00459): esta ficha es la del cierre del aeropuerto de Aalborg la noche del 24 al 25 de septiembre de 2025.",
+        "en": "Separated from the drones seen near Esbjerg, Sønderborg and Skrydstrup (EODI-2025-00459): this record is the closure of Aalborg airport on the night of 24 to 25 September 2025."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00459",
+      "titulo": {
+        "es": "Drones vistos cerca de los aeródromos de Esbjerg y Sønderborg y de la base de Skrydstrup",
+        "en": "Drones seen near Esbjerg and Sønderborg airfields and Skrydstrup air base"
+      },
+      "motivo": {
+        "es": "Separada del cierre de Aalborg (EODI-2025-00349): la policía danesa vio drones cerca de Esbjerg, Sønderborg y Skrydstrup la noche del 24 al 25 de septiembre de 2025 (sputnikglobe.com); ninguna fuente dice que esos aeródromos cerraran.",
+        "en": "Separated from the Aalborg closure (EODI-2025-00349): Danish police saw drones near Esbjerg, Sønderborg and Skrydstrup on the night of 24 to 25 September 2025 (sputnikglobe.com); no source says those airfields closed."
+      }
+    },
+    {
       "incidente": "EODI-2025-00058",
       "titulo": {
         "es": "Posible dron, probablemente un globo, cierra 45 minutos una pista de Schiphol",
@@ -2850,6 +2956,87 @@
   ],
   "titular_justificado": [],
   "ubicaciones": [
+    {
+      "incidente": "EODI-2025-00453",
+      "lugar": {
+        "nombre": "Colibași (raionul Cahul), salida hacia Rumanía",
+        "nivel": "localidad",
+        "lat": 45.71763,
+        "lon": 28.18143,
+        "radio_km": 5,
+        "region": "Cahul"
+      },
+      "fuente": {
+        "incidente": "EODI-2025-00453",
+        "enlace": "https://timpul.md/articol/o-drona-de-tip-shahed-a-traversat-spatiul-aerian-al-r-moldova-si-a-intrat-in-romania-autoritatile-verifica-zona-de-survol.html",
+        "medio": "timpul.md",
+        "fecha": "2025-11-25",
+        "idioma": "ro",
+        "frase": "Potrivit informațiilor transmise de Serviciul Operațiuni Aeriene al Ministerului Apărării, dispozitivul a fost detectat pe direc021bia Vinogradovca – Vulcănești, după care s-a deplasat spre frontiera de stat în zona cuprinsă între localitățile Colibași și Vadul lui Isac din raionul Cahul.",
+        "comprobada": {
+          "fecha": "2026-10-19",
+          "en": "https://web.archive.org/web/20261019211231/https://timpul.md/articol/o-drona-de-tip-shahed-a-traversat-spatiul-aerian-al-r-moldova-si-a-intrat-in-romania-autoritatile-verifica-zona-de-survol.html (copia del archivo)"
+        },
+        "oficial": false,
+        "declaracion": {
+          "autoridad": "Ministerul Apărării al Republicii Moldova",
+          "pais": "MD",
+          "categoria": "ministerio",
+          "afirma": "incidente"
+        }
+      },
+      "motivo": "Defensa de Moldavia sigue al dron de Vinogradovca hacia Vulcănești y hasta la frontera entre Colibași y Vadul lui Isac (Cahul), por donde pasó a Rumanía.",
+      "otros_lugares": [
+        {
+          "nombre": "Vadul lui Isac (raionul Cahul)",
+          "lat": 45.76414,
+          "lon": 28.16922
+        }
+      ],
+      "cambio": {
+        "motivo": {
+          "es": "El punto pasa de Cuhureștii de Jos, en el norte, donde cayó el dron Gerbera (EODI-2025-00261), a la salida del Shahed hacia Rumanía entre Colibași y Vadul lui Isac (Cahul), que da el Ministerio de Defensa de Moldavia.",
+          "en": "The point moves from Cuhureștii de Jos, in the north, where the Gerbera drone fell (EODI-2025-00261), to the Shahed's exit into Romania between Colibași and Vadul lui Isac (Cahul), given by Moldova's Ministry of Defence."
+        }
+      }
+    },
+    {
+      "incidente": "EODI-2025-00349",
+      "lugar": {
+        "nombre": "Aeropuerto de Aalborg",
+        "nivel": "instalacion",
+        "lat": 57.09449,
+        "lon": 9.85314,
+        "radio_km": 5,
+        "region": "Nordjylland"
+      },
+      "fuente": {
+        "incidente": "EODI-2025-00349",
+        "enlace": "https://www.geo.tv/latest/625413-drones-disrupt-flights-at-second-danish-airport-in-a-week",
+        "medio": "geo.tv",
+        "fecha": "2025-09-25",
+        "idioma": "en",
+        "frase": "Denmark's Aalborg airport, used for commercial and military flights, was closed due to drones in its airspace, police said early on Thursday",
+        "comprobada": {
+          "fecha": "2026-10-19",
+          "en": "https://web.archive.org/web/20261019211043/https://www.geo.tv/latest/625413-drones-disrupt-flights-at-second-danish-airport-in-a-week (copia del archivo)"
+        },
+        "oficial": false,
+        "declaracion": {
+          "autoridad": "Nordjyllands Politi",
+          "pais": "DK",
+          "categoria": "policia",
+          "afirma": "incidente"
+        }
+      },
+      "motivo": "La policía cerró el aeropuerto de Aalborg por drones en su espacio aéreo la noche del 24 al 25 de septiembre de 2025.",
+      "cambio": {
+        "motivo": {
+          "es": "El punto pasa de Sønderborg, uno de los aeródromos donde se vieron otros drones esa noche (EODI-2025-00459), al aeropuerto de Aalborg, el que cerró según la policía.",
+          "en": "The point moves from Sønderborg, one of the airfields where other drones were seen that night (EODI-2025-00459), to Aalborg airport, the one police closed."
+        }
+      }
+    },
     {
       "incidente": "EODI-2025-00295",
       "lugar": {
@@ -4635,6 +4822,7 @@
     },
     {
       "incidente": "EODI-2025-00066",
+      "distintos": true,
       "motivo": {
         "es": "junta los disparos contra drones en Volkel del 21 de noviembre con el cierre de Eindhoven del 22 y nuevos drones sobre Volkel la noche del 22 al 23",
         "en": "merges the shots fired at drones over Volkel on 21 November with the Eindhoven airport closure on 22 November and new drones over Volkel on the night of 22-23 November"
@@ -4693,6 +4881,7 @@
     },
     {
       "incidente": "EODI-2025-00080",
+      "distintos": true,
       "motivo": {
         "es": "Junta los avistamientos sobre Kleine-Brogel de noches distintas (domingo 2, lunes 3 y martes 4 de noviembre) y los cierres de los aeropuertos de Bruselas y Lieja del 4 de noviembre",
         "en": "Merged drone sightings over Kleine-Brogel on different nights (Sunday 2, Monday 3 and Tuesday 4 November) with the Brussels and Liège airport closures of 4 November"
@@ -4745,6 +4934,7 @@
     },
     {
       "incidente": "EODI-2025-00131",
+      "distintos": true,
       "motivo": {
         "es": "Junta sobrevuelos de Kleine-Brogel de noches distintas: del viernes 31 oct al sábado 1 nov, del sábado al domingo 2 nov y del domingo al lunes 3 nov",
         "en": "Merged overflights of Kleine-Brogel on different nights: 31 Oct-1 Nov, 1-2 Nov and 2-3 Nov"
@@ -5031,6 +5221,7 @@
     },
     {
       "incidente": "EODI-2025-00261",
+      "distintos": true,
       "motivo": {
         "es": "junta el dron Gerbera caído sobre una casa en Cuhure\u0219tii de Jos (norte) con el Shahed que cruza el sur de Moldavia hacia Rumanía",
         "en": "merges the Gerbera drone that fell on a house in Cuhure\u0219tii de Jos (north) with the Shahed that crossed southern Moldova into Romania"
@@ -5120,6 +5311,7 @@
     },
     {
       "incidente": "EODI-2025-00268",
+      "distintos": true,
       "motivo": {
         "es": "Junta el dron que entró en el espacio aéreo de Rumanía el 19 nov con el sobrevuelo de Moldavia de esa noche (otra ficha) y un reportaje sobre civiles ucranianos cazando drones",
         "en": "Merged the drone that entered Romanian airspace on 19 Nov with that night's overflight of Moldova (another entry) and a report on Ukrainian civilians hunting drones"
@@ -5689,6 +5881,7 @@
     },
     {
       "incidente": "EODI-2025-00349",
+      "distintos": true,
       "motivo": {
         "es": "Juntaba el cierre del aeropuerto de Aalborg con los avistamientos de drones en Esbjerg, Sønderborg y Skrydstrup.",
         "en": "Merged the Aalborg airport closure with drone sightings near Esbjerg, Sønderborg and Skrydstrup."
@@ -6257,6 +6450,7 @@
     },
     {
       "incidente": "EODI-2026-00203",
+      "distintos": true,
       "motivo": {
         "es": "junta el dron que explota junto a Hîrbov\u0103\u021b al amanecer con un segundo dron que cruza Transnistria hasta Arione\u0219ti y provoca el cierre del espacio aéreo",
         "en": "merges the drone that exploded near Hîrbov\u0103\u021b at dawn with a second drone that crossed Transnistria to Arione\u0219ti and caused the airspace closure"
@@ -6745,6 +6939,7 @@
     },
     {
       "incidente": "EODI-2026-00281",
+      "distintos": true,
       "motivo": {
         "es": "Junta el Shahed visto en Tudora (\u0218tefan Vod\u0103) el 17 mar 2026 con otro dron que cruzó la noche del 18 mar junto al paso de Palanca",
         "en": "Mixes the Shahed seen at Tudora (\u0218tefan Vod\u0103) on 17 Mar 2026 with another drone that crossed near the Palanca checkpoint on the night of 18 Mar"
