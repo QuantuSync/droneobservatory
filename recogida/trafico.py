@@ -32,7 +32,7 @@ ejecución siguiente; tres días después de terminado, se da por perdido.
 Lo lanza `servidor/trafico.sh` con su propio cerrojo, nunca el de la recogida horaria.
 
 Uso: python -m recogida.trafico pendientes [--tope-min N] [--datos DIR]
-     python -m recogida.trafico dia AAAA-MM-DD [AAAA-MM-DD ...] [--datos DIR]
+     python -m recogida.trafico dia AAAA-MM-DD [AAAA-MM-DD ...] [--datos DIR] [--rehacer]
      python -m recogida.trafico resumen [--datos DIR]
 """
 
@@ -646,6 +646,9 @@ def principal(argumentos: list[str] | None = None) -> int:
     d = sub.add_parser("dia")
     d.add_argument("dia", type=date.fromisoformat, nargs="+")
     d.add_argument("--datos", type=Path)
+    # Otra vez aunque ya estuviera procesado: un aeropuerto nuevo en la lista (GEML, Melilla, el
+    # 19 de octubre de 2026) no está en los días ya hechos.
+    d.add_argument("--rehacer", action="store_true")
     r = sub.add_parser("resumen")
     r.add_argument("--datos", type=Path)
     args = opciones.parse_args(argumentos)
@@ -654,7 +657,7 @@ def principal(argumentos: list[str] | None = None) -> int:
     datos.mkdir(parents=True, exist_ok=True)
     if args.orden == "dia":
         for dia in args.dia:
-            if procesado(datos, dia):
+            if procesado(datos, dia) and not args.rehacer:
                 registro.info("%s ya estaba procesado", dia)
                 continue
             resumen = procesar_dia(datos, dia)
