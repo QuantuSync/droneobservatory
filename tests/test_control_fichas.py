@@ -278,6 +278,36 @@ def test_el_lugar_es_la_instalacion_que_identifica_el_objetivo() -> None:
     assert lugar_preciso.precisar(documento, nom, AHORA) is None
 
 
+def test_el_lugar_de_una_carcel_es_la_carcel() -> None:
+    """Las cárceles del nomenclátor (configuracion/carceles_europa.json): el objetivo por su nombre
+    (EODI-2025-00463, «Brians 1», con el punto a 3,9 km) y el titular con la palabra de cárcel
+    (EODI-2025-00467: «prisión de Alcolea, Córdoba», situada en Alcolea del Río, a 93 km)."""
+    nom = nomenclator()
+    brians = ejemplos.incidente_minimo()
+    brians["titulo"] = {"es": "Un dron en Cataluña", "en": "A drone in Catalonia"}
+    brians["objetivo"] = {"categoria": "otra", "nombre": "Brians 1"}
+    brians["lugar"] = {"pais": "ES", "nivel": "instalacion", "radio_km": 5,
+                       "punto": {"lat": 41.5, "lon": 1.9}, "geocodificacion": "vocabulario"}  # fmt: skip
+    nuevo = lugar_preciso.precisar(brians, nom, AHORA)
+    assert nuevo is not None and nuevo["lugar"]["suceso"] == "Centre Penitenciari Brians 1"
+    assert nuevo["objetivo"] == brians["objetivo"]
+    alcolea = ejemplos.incidente_minimo()
+    alcolea["titulo"] = {
+        "es": "Interceptado un dron que intentaba introducir droga en la prisión de Alcolea, Córdoba",
+        "en": "Drone carrying drugs intercepted at Alcolea prison, Córdoba",
+    }
+    alcolea["objetivo"] = {"categoria": "otra", "nombre": "Alcolea del Río"}
+    alcolea["lugar"] = {"pais": "ES", "nivel": "localidad", "radio_km": 5,
+                        "punto": {"lat": 37.61506, "lon": -5.66694},
+                        "geocodificacion": "localidad"}  # fmt: skip
+    nuevo = lugar_preciso.precisar(alcolea, nom, AHORA)
+    assert nuevo is not None and nuevo["lugar"]["suceso"] == "Centro penitenciario de Córdoba"
+    assert nuevo["objetivo"] == {"categoria": "otra", "nombre": "Centro penitenciario de Córdoba"}
+    # Un nombre de ciudad solo no nombra la cárcel: «Córdoba» sin la palabra.
+    alcolea["titulo"] = {"es": "Un dron sobre Córdoba", "en": "A drone over Córdoba"}
+    assert lugar_preciso.precisar(alcolea, nom, AHORA) is None
+
+
 # --- Lugar: la instalación que nombra el titular --------------------------------------------
 def test_el_titular_con_el_aeropuerto_da_el_lugar() -> None:
     nuevo = lugar_preciso.precisar(_nuremberg_alemana(), nomenclator(), AHORA)
