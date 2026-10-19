@@ -218,6 +218,11 @@ def prioritarios(almacen: Almacen) -> list[Documento]:
             elegidos.append((MAX_MEDIOS_ORDEN + 1, candidato["ultimo"], candidato))
             continue
         if almacen.extracciones(candidato["id"]):
+            # Un artículo dirigido que entró en un candidato ya extraído (Córdoba 2/02/2025, el
+            # artículo de infobae): se vuelve a extraer si la ficha anterior no lo tenía y le
+            # falta algo, con el tope de llamadas por candidato de siempre.
+            if candidato["id"] in dirigidos and extraccion.necesita_extraccion(almacen, candidato):
+                elegidos.append((MAX_MEDIOS_ORDEN, candidato["ultimo"], candidato))
             continue
         if candidato["id"] in dirigidos:
             elegidos.append((MAX_MEDIOS_ORDEN, candidato["ultimo"], candidato))

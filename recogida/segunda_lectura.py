@@ -625,6 +625,7 @@ class Experto:
             coste.comprobar_segunda(
                 self.almacen.gastado_modelo(modelo, dia),
                 self.almacen.gastado_experto_en(coste.Modo.SEGUNDA_LECTURA.value, dia), previsto,
+                self.ahora,
             )  # fmt: skip
             respuesta = cliente.mensaje(cuerpo)
         except coste.LimiteGasto as error:
@@ -749,7 +750,9 @@ def _paso(almacen: Almacen, ahora: datetime, modelos: frozenset[str]) -> Documen
     hecho["rectificaciones_encoladas"] = len(encoladas)
     # Datos y duplicados: al experto, como mucho `por_recogida`.
     # Lo más reciente primero y, de eso, lo contradicho antes que lo que solo no tiene apoyo.
-    resto = sorted((c for c in pendientes if c["tipo"] in {CAMPOS, DUPLICADO}),
+    # Una fecha que solo «no tiene apoyo» no va al experto (casi nunca era un problema real).
+    resto = sorted((c for c in pendientes
+                    if c["tipo"] in {CAMPOS, DUPLICADO} and lectura.al_experto(c)),
                    key=lambda c: c["fecha"], reverse=True)  # fmt: skip
     resto.sort(key=lectura.prioridad)
     maximo = int(configuracion()["recogida"]["por_recogida"])

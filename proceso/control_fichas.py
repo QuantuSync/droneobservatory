@@ -25,7 +25,7 @@ from datetime import datetime, timedelta
 from typing import Any
 
 from esquema import Documento
-from proceso import declaraciones, incidentes
+from proceso import declaraciones, incidentes, rectificaciones
 from proceso.estados import RETIRADAS, Estado
 from proceso.fronteras import dentro_del_pais
 from proceso.noticias import (
@@ -372,6 +372,9 @@ def _presencia(c: Correccion, v: Verificada) -> None:
         valor in NIEGAN
         and d.get("presencia_dron") == "confirmada"
         and d["id"] not in presencias_revisadas()
+        # Con un historial de rectificaciones oficiales (también una corrección parcial anotada),
+        # la presencia la cambia solo otra rectificación, nunca la verificación de sus fuentes.
+        and rectificaciones.vigente(d) is None
         and not documento_oficial_decide(d)
         and not pruebas_fisicas_confirmadas(d)
     ):

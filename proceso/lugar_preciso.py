@@ -23,6 +23,7 @@ que cambia queda en `lugar.historial` con el motivo en español y en inglés.
 from datetime import datetime
 
 from esquema import Documento
+from proceso.focos_termicos import distancia_km
 from proceso.fronteras import dentro_del_pais
 from proceso.noticias import (
     Lugar,
@@ -48,6 +49,15 @@ MOTIVO = {
     "es": "Lugar más preciso: la instalación que nombra el titular.",
     "en": "More precise place: the facility named in the headline.",
 }
+# El lugar es la instalación afectada que identifica la ficha por su código OACI, aunque ninguna
+# autoridad dé el punto exacto (EODI-2026-00146: el punto del candidato, en la ciudad de Melilla,
+# a 2,2 km del aeropuerto).
+MOTIVO_OBJETIVO = {
+    "es": "Lugar más preciso: la instalación afectada que identifica la ficha.",
+    "en": "More precise place: the affected facility identified in the record.",
+}
+# Por debajo de esta distancia el punto ya está en la instalación.
+DISTANCIA_INSTALACION_KM = 1.0
 # Las notas de antes llevaban el nombre del titular tal cual.
 MOTIVO_ANTERIOR = "Lugar más preciso que da el titular:"
 
@@ -134,6 +144,33 @@ def _afinable(incidente: Documento, sitio: Lugar, nom: Nomenclator) -> bool:
     return bool(nombres) and nombres <= nombres_en_idiomas(sitio.id, nom)
 
 
+def instalacion_del_objetivo(incidente: Documento, nom: Nomenclator) -> Lugar | None:
+    """La instalación del nomenclátor que identifica el objetivo de la ficha por su código OACI,
+    si el punto está a más de DISTANCIA_INSTALACION_KM de ella y no lo da una autoridad."""
+    lugar = incidente["lugar"]
+    oaci = (incidente.get("objetivo") or {}).get("oaci")
+    if (
+        not oaci
+        or "punto" not in lugar
+        or lugar.get("fuente_punto")
+        or lugar.get("geocodificacion") == "oficial"
+    ):
+        return None
+    sitio = nom.lugares.get(str(oaci))
+    pais = str(lugar["pais"])
+    if (
+        sitio is None
+        or sitio.tipo not in TIPOS_INSTALACION
+        or sitio.pais not in {pais, *soberanos_dentro(pais)}
+        or not dentro_del_pais(sitio.pais, sitio.lat, sitio.lon)
+    ):
+        return None
+    punto = lugar["punto"]
+    if distancia_km(punto["lat"], punto["lon"], sitio.lat, sitio.lon) <= DISTANCIA_INSTALACION_KM:
+        return None
+    return sitio
+
+
 def _nota_antigua(entrada: Documento) -> bool:
     return str((entrada.get("motivo") or {}).get("es", "")).startswith(MOTIVO_ANTERIOR)
 
@@ -148,10 +185,18 @@ def nota_sin_nombre(incidente: Documento) -> Documento | None:
 
 
 def precisar(incidente: Documento, nom: Nomenclator, ahora: datetime) -> Documento | None:
-    """El incidente con el lugar en la instalación que nombra el titular, o None si no cambia."""
+    """El incidente con el lugar en la instalación que nombra el titular o que identifica su
+    objetivo, o None si no cambia."""
     sitio = instalacion_del_titulo(incidente, nom)
+    motivo, del_objetivo = MOTIVO, False
     if sitio is None or not _afinable(incidente, sitio, nom):
-        return None
+        sitio, motivo, del_objetivo = (
+            instalacion_del_objetivo(incidente, nom),
+            MOTIVO_OBJETIVO,
+            True,
+        )
+        if sitio is None:
+            return None
     antes = incidente["lugar"]
     punto = {"lat": round(sitio.lat, DECIMALES), "lon": round(sitio.lon, DECIMALES)}
     nuevo: Documento = {
@@ -174,9 +219,14 @@ def precisar(incidente: Documento, nom: Nomenclator, ahora: datetime) -> Documen
             {
                 "fecha": {"valor": ahora.strftime("%Y-%m-%dT%H:%MZ"), "precision": "minuto"},
                 "anterior": anterior,
-                "motivo": dict(MOTIVO),
+                "motivo": dict(motivo),
             },
         ]
+    if del_objetivo:
+        # El punto es el del nomenclátor; el objetivo ya es la instalación (puede venir de una
+        # revisión) y no se toca.
+        resultado = {**incidente, "lugar": {**nuevo, "geocodificacion": "nomenclator"}}
+        return None if resultado == incidente else resultado
     objetivo = Objetivo.de_lugar(sitio)
     datos_objetivo: Documento = {
         **{k: v for k, v in (incidente.get("objetivo") or {}).items() if k == "uso"},

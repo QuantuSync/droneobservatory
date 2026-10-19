@@ -178,14 +178,31 @@ def comprobar_experto(gastado_hoy: float, previsto: float, critico: bool = False
     )
 
 
+def margen_escalados(momento: datetime) -> float:
+    """Lo que hay que dejar libre del tope normal del experto para los escalados de lo que queda
+    del día (UTC), a ritmo constante: el tope entero a las 00:00, nada a las 24:00."""
+    utc = momento.astimezone(UTC)
+    transcurrido = utc.hour * 3600 + utc.minute * 60 + utc.second
+    return LIMITE_EXPERTO_DIARIO_USD * (1 - transcurrido / 86400)
+
+
 def comprobar_segunda(gastado_experto_hoy: float, gastado_segunda_hoy: float,
-                      previsto: float) -> None:  # fmt: skip
+                      previsto: float, momento: datetime | None = None) -> None:  # fmt: skip
     """La revisión por el experto de lo que marca la segunda lectura: cabe en su modo (0,30 al
-    día) y en el tope normal del experto, nunca en la reserva crítica. Lanza LimiteGasto si no."""
+    día) y en el tope normal del experto, nunca en la reserva crítica, y solo con lo que los
+    escalados normales no necesitan: el gasto del experto en el día tiene que ir por debajo del
+    ritmo del tope (margen_escalados). Lanza LimiteGasto si no."""
     if gastado_segunda_hoy + previsto > LIMITE_SEGUNDA_EXPERTO_DIARIO_USD:
         raise LimiteGasto(
             f"{Modo.SEGUNDA_LECTURA}: gastado {gastado_segunda_hoy:.4f} + previsto "
             f"{previsto:.4f} > {LIMITE_SEGUNDA_EXPERTO_DIARIO_USD:.2f} USD"
+        )
+    margen = margen_escalados(momento or datetime.now(UTC))
+    if gastado_experto_hoy + previsto > LIMITE_EXPERTO_DIARIO_USD - margen:
+        raise LimiteGasto(
+            f"{Modo.SEGUNDA_LECTURA}: experto gastado {gastado_experto_hoy:.4f} + previsto "
+            f"{previsto:.4f} > {LIMITE_EXPERTO_DIARIO_USD - margen:.2f} USD (margen de "
+            f"{margen:.2f} para los escalados del resto del día)"
         )
     comprobar_experto(gastado_experto_hoy, previsto, critico=False)
 

@@ -396,13 +396,22 @@ def con_titular(incidente: Documento, revision: Documento, instante: Documento) 
         # El día que escribe una fuente cuando la ficha tomó el de la publicación
         # (EODI-2026-00622: la noche del 18 de septiembre de 2026, publicado el 25).
         nuevo_inicio = {"valor": inicio["valor"], "precision": inicio["precision"]}
-        if resultado["tiempo"]["inicio"] != nuevo_inicio:
+        # El fin que da una fuente («entre las 07:00 y las 08:10 horas», «durante 40 minutos»),
+        # con su cita («fin_cita»); si no, el que ya tenía la ficha, si sigue siendo posterior.
+        fin_citado = (
+            {"valor": inicio["fin"], "precision": inicio["precision"]}
+            if inicio.get("fin") and fuentes.get(inicio.get("fin_cita", "")) is not None
+            else None
+        )
+        if resultado["tiempo"]["inicio"] != nuevo_inicio or (
+            fin_citado is not None and resultado["tiempo"].get("fin") != fin_citado
+        ):
             tiempo: Documento = {
                 "inicio": nuevo_inicio,
                 "origen_inicio": {"tipo": "explicita", "fuente_id": fuente_inicio,
                                   "motivo": inicio["motivo"]},
             }  # fmt: skip
-            fin = resultado["tiempo"].get("fin")
+            fin = fin_citado or resultado["tiempo"].get("fin")
             if fin and inicio["precision"] in incidentes.PRECISIONES_HORA:
                 tiempo["fin"] = fin
                 if (duracion := derivar_duracion_min(tiempo)) is None:

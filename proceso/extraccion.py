@@ -106,6 +106,8 @@ ESENCIALES = ("inicio", "cierre", "drones")
 # Un lote termina casi siempre en menos de una hora y como mucho en 24.
 ESPERA_LOTE_S = 60.0
 MAX_ESPERA_LOTE = timedelta(hours=24)
+# El cursor de los artículos dirigidos (recogida/articulos_dirigidos.FUENTE_ID).
+CURSOR_DIRIGIDOS = "articulos_dirigidos"
 VOCABULARIO_LUGARES = "lugar"
 VOCABULARIO_MODELOS = "modelo_dron"
 # Las peticiones de un lote se identifican con caracteres simples y 64 como mucho.
@@ -362,10 +364,14 @@ def desactualizado(almacen: Almacen, candidato: Documento) -> bool:
     return ultima["version"] != ficha.VERSION and bool(ultima.get("incidente"))
 
 
-def elegir_fuentes(articulos: list[Documento]) -> list[Documento]:
-    """El primer artículo y después los más replicados de otros medios, hasta tres."""
+def elegir_fuentes(
+    articulos: list[Documento], dirigidos: frozenset[str] = frozenset()
+) -> list[Documento]:
+    """El primer artículo y después los más replicados de otros medios, hasta tres. Un artículo
+    dirigido (apuntado a mano porque trae lo que los demás no dicen) va siempre."""
     ordenados = sorted(articulos, key=lambda a: (a["fecha"], a["url"]))
-    elegidos = ordenados[:1]
+    elegidos = [a for a in ordenados if a["url"] in dirigidos][: MAX_FUENTES - 1]
+    elegidos += [a for a in ordenados[:1] if a not in elegidos]
     medios = {a["medio"] for a in elegidos}
     for articulo in sorted(ordenados[1:], key=lambda a: (-a.get("replicas", 0), a["fecha"])):
         if len(elegidos) == MAX_FUENTES:
@@ -392,7 +398,8 @@ def preparar(
     """Fuentes elegidas con su titular y, si se puede descargar, sus primeras frases y las
     marcas de su página (con lo que dicen de ella: proceso/no_es_suceso.py)."""
     articulos = [a for a in _articulos(almacen, candidato) if a.get("idioma")]
-    elegidas = elegir_fuentes(articulos)
+    # Los artículos dirigidos (recogida/articulos_dirigidos.py: su cursor, por dirección).
+    elegidas = elegir_fuentes(articulos, frozenset(almacen.cursor(CURSOR_DIRIGIDOS) or {}))
     fuentes = []
     for a in elegidas:
         pagina = paginas.leer_pagina(descargador, a["url"]) if descargador else paginas.Pagina("")

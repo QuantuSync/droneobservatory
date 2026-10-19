@@ -68,6 +68,7 @@ from proceso import (
     lugar_preciso,
     no_es_suceso,
     presencia,
+    rectificaciones,
     titulares,
 )
 from proceso import control_fichas as reglas
@@ -1063,6 +1064,10 @@ def anotar_modelos(incidente: Documento, cambios: list[str], modelo: str) -> Doc
 
 
 def _guardar(ctx: Contexto, antes: Documento, despues: Documento, motivo: str) -> bool:
+    # Lo que el guardado conservaría de las rectificaciones oficiales (Almacen.guardar_incidente)
+    # se conserva ya aquí: una corrección que se iba a deshacer no se anota ni se cuenta, y no
+    # vuelve en cada pasada.
+    despues = rectificaciones.mantener(despues, antes)
     if despues == antes:
         return False
     despues = {**despues, "control": {**despues["control"],
@@ -1096,7 +1101,7 @@ def reglas_deterministas(ctx: Contexto) -> None:
             preciso = lugar_preciso.precisar(nuevo, ctx.nom, ctx.ahora)
             if preciso is not None:
                 nuevo = preciso
-                motivos.append(f"lugar en {preciso['lugar']['suceso']}, que nombra el titular")
+                motivos.append(f"lugar en {preciso['lugar']['suceso']}, la instalación de la ficha")
         bajado = reglas.bajar_estado(nuevo, _instante(ctx.ahora))
         if bajado is not None:
             nuevo = bajado

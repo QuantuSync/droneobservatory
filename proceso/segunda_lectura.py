@@ -324,6 +324,19 @@ def elegidos(respuesta: dict[str, Any], cuantos: int) -> list[int]:
     ))  # fmt: skip
 
 
+def al_experto(candidato: Documento) -> bool:
+    """El candidato merece la revisión del experto: un duplicado, o una ficha con algún hallazgo
+    que no sea solo la fecha de inicio sin apoyo. Desde el 19 de octubre de 2026, «fecha sin
+    apoyo» sola se queda marcada pero no gasta del experto: era el hallazgo más frecuente (168 de
+    los primeros 280 candidatos) y casi siempre ruido (la fecha sale de la publicación)."""
+    if candidato.get("tipo") == "duplicado":
+        return True
+    return any(
+        not (h.get("campo") == "inicio" and h.get("valoracion") == SIN_APOYO)
+        for h in (candidato.get("datos") or {}).get("hallazgos", [])
+    )
+
+
 def prioridad(candidato: Documento) -> int:
     """Lo contradicho y lo que resume varios sucesos, primero; luego los duplicados; al final,
     lo que solo no tiene apoyo."""

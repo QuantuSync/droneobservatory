@@ -242,6 +242,32 @@ def test_el_inicio_que_escribe_una_fuente(revision: dict[str, Any]) -> None:
     assert revisados.corregir(almacen, AHORA, VOCABULARIO_MODELOS).titulares == []
 
 
+def test_el_inicio_y_el_fin_que_escribe_una_fuente(revision: dict[str, Any]) -> None:
+    """Como EODI-2025-00365: «entre las 07:00 y las 08:10 horas» da el inicio y el fin; un fin
+    sin su cita entre las fuentes no se pone."""
+    documento = ejemplos.incidente_minimo()
+    almacen = Almacen.abrir()
+    almacen.guardar_incidente(documento, AHORA, VOCABULARIO_MODELOS)
+    cita = documento["fuentes"][0]["frase_origen"]
+    revision["citas"] = []
+    inicio = {"valor": "2025-11-03T06:00Z", "precision": "minuto", "cita": cita,
+              "motivo": "«entre las 07:00 y las 08:10 horas» (UTC+1)",
+              "fin": "2025-11-03T07:10Z", "fin_cita": "otra frase"}  # fmt: skip
+    revision["titulares"] = [{
+        "incidente": documento["id"], "inicio": inicio,
+        "motivo": {"es": "La hora de la fuente.", "en": "The source's time."},
+    }]  # fmt: skip
+    revisados.corregir(almacen, AHORA, VOCABULARIO_MODELOS)
+    sin_fin = almacen.incidente(documento["id"])
+    assert sin_fin is not None and "fin" not in sin_fin["tiempo"]
+    revision["titulares"][0]["inicio"] = {**inicio, "fin_cita": cita}
+    revisados.corregir(almacen, AHORA, VOCABULARIO_MODELOS)
+    despues = almacen.incidente(documento["id"])
+    assert despues is not None
+    assert despues["tiempo"]["fin"] == {"valor": "2025-11-03T07:10Z", "precision": "minuto"}
+    assert despues["tiempo"]["duracion_min"] == 70
+
+
 def test_la_configuracion_de_la_revision() -> None:
     datos = revisados.cargar()
     for cita in datos["citas"]:

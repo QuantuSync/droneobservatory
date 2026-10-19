@@ -359,3 +359,38 @@ def test_un_articulo_dirigido_entra_una_vez_y_va_delante(almacen: Almacen, tmp_p
     assert articulos_dirigidos.paso_horario(almacen, AHORA, ruta) == 0
     (candidato,) = articulos_dirigidos.candidatos(almacen)
     assert extractor.prioritarios(almacen)[0]["id"] == candidato
+
+
+def test_el_articulo_dirigido_va_entre_las_fuentes_elegidas() -> None:
+    """Córdoba 2/02/2025: el artículo dirigido (infobae) no entraba entre las tres fuentes."""
+    articulos = [
+        {"url": f"https://m{n}.es/a", "medio": f"m{n}.es", "fecha": f"2025-02-0{n}T10:00:00Z",
+         "replicas": 10 - n}
+        for n in range(1, 6)
+    ]  # fmt: skip
+    assert "https://m5.es/a" not in {a["url"] for a in extraccion.elegir_fuentes(articulos)}
+    elegidas = extraccion.elegir_fuentes(articulos, frozenset({"https://m5.es/a"}))
+    assert len(elegidas) == 3 and {"https://m1.es/a", "https://m5.es/a"} <= {
+        a["url"] for a in elegidas
+    }
+
+
+def test_un_articulo_dirigido_en_un_candidato_ya_extraido_vuelve_a_extraerse(
+    almacen: Almacen, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    from recogida import articulos_dirigidos
+
+    ruta = tmp_path / "dirigidos.json"
+    articulo_ = {
+        "url": "https://medio.dk/nyhed/dirigida", "medio": "medio.dk",
+        "fecha": "2025-09-23T05:00:00Z", "idioma": "da", "pais": "DK", "titular": TITULAR,
+        "lugar": "EKCH",
+    }  # fmt: skip
+    ruta.write_text(json.dumps({"articulos": [articulo_]}), encoding="utf-8")
+    articulos_dirigidos.paso_horario(almacen, AHORA, ruta)
+    (candidato,) = articulos_dirigidos.candidatos(almacen)
+    monkeypatch.setattr(almacen, "extracciones", lambda _c: [{"huella": "otra"}])
+    monkeypatch.setattr(extraccion, "necesita_extraccion", lambda _a, _c: True)
+    assert candidato in {c["id"] for c in extractor.prioritarios(almacen)}
+    monkeypatch.setattr(extraccion, "necesita_extraccion", lambda _a, _c: False)
+    assert candidato not in {c["id"] for c in extractor.prioritarios(almacen)}
