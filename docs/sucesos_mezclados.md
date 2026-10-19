@@ -67,11 +67,6 @@ aplica una vez, antes del extractor (`recogida/revisados.separar`, cursor
   elegir cuál queda (`proceso/incidentes.destino_de`); su enlace lleva a la que queda;
 - las fichas que quedan se enlazan entre sí: campo público `relacionados` (esquema 1.18.0), que
   la web enseña como «Suceso relacionado» / «Related incident» con la nota del motivo.
-- la regla de fusión no vuelve a juntar dos fichas enlazadas así (`incidentes.encajan`), y
-  `incidentes.revisar_fusiones` deshace la que ya lo hizo. Desde el 19 de octubre de 2026: ese
-  día el desvío del 19/10/2025 en Fuerteventura (EODI-2025-00468) se separó de las esperas de la
-  víspera (EODI-2025-00397) y, como solo tenía la fecha de publicación, la regla lo volvió a unir
-  en la misma recogida.
 
 Los sucesos separados son de semanas o meses atrás: los avisos de ntfy solo salen para sucesos
 de las últimas 72 horas (recogida/avisos.clasificar), así que no se avisan.
