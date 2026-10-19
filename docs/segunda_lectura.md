@@ -80,7 +80,9 @@ La lectura de arriba solo compara la ficha con sus citas: no ve lo que la ficha 
 España, Melilla 22/09/2026 seguía «notificado» aunque la Delegación del Gobierno lo había
 reconocido en la prensa; Melilla 18/09/2026 no tenía ficha. Cuatro búsquedas más, con la misma
 regla de la frase literal (en el texto numerado que se mandó: el titular y el comienzo de la
-página de cada noticia) y cada una con su cupo por pasada (`busqueda.por_pasada`). Código:
+página de cada noticia) y cada una con su cupo por pasada (`busqueda.por_pasada`: 2 de declaraciones, 2 de
+incidentes que faltan, 1 de atribución y 1 de lugar o duración; cada pregunta tarda de 2 a 5
+minutos, porque lleva el comienzo de varias páginas). Código:
 [`proceso/segunda_busqueda.py`](../proceso/segunda_busqueda.py) y
 [`recogida/segunda_busqueda.py`](../recogida/segunda_busqueda.py); pruebas:
 [`tests/test_segunda_busqueda.py`](../tests/test_segunda_busqueda.py).
