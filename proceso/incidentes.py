@@ -508,10 +508,20 @@ def repite_un_cierre_anterior(anterior: Documento, posterior: Documento) -> bool
     )
 
 
+def separados_por_revision(a: Documento, b: Documento) -> bool:
+    """Una revisión los separó: cada uno lleva al otro entre sus sucesos relacionados
+    (recogida/revisados.separar). La regla de fusión no los vuelve a juntar: el 19 de octubre de
+    2026 juntó otra vez el desvío del 19/10/2025 en Fuerteventura (EODI-2025-00468), fechado por
+    su publicación, con las esperas de la víspera (EODI-2025-00397), de las que se separó."""
+    relacionados = {r.get("id") for d in (a, b) for r in d.get("relacionados", [])}
+    return a["id"] in relacionados or b["id"] in relacionados
+
+
 def encajan(a: Documento, b: Documento) -> bool:
     primero, segundo = sorted((a, b), key=lambda d: (d["tiempo"]["inicio"]["valor"], d["id"]))
     return (
-        mismo_sitio(a, b)
+        not separados_por_revision(a, b)
+        and mismo_sitio(a, b)
         and not cierres_de_noches_distintas(a, b)
         and not repite_un_cierre_anterior(primero, segundo)
         and misma_ventana(primero, segundo)
@@ -765,9 +775,9 @@ def fusionar(
 
 
 def revisar_fusiones(almacen: Almacen, ahora: datetime, modelos: frozenset[str]) -> list[str]:
-    """Deshace las fusiones que las reglas de ahora ya no hacen (dos cierres de noches distintas,
-    un cierre que se repite): el absorbido vuelve a publicarse con sus fuentes. Devuelve los
-    absorbidos que vuelven."""
+    """Deshace las fusiones que las reglas de ahora ya no hacen (dos sucesos que una revisión
+    separó, dos cierres de noches distintas, un cierre que se repite): el absorbido vuelve a
+    publicarse con sus fuentes. Devuelve los absorbidos que vuelven."""
     vueltos = []
     for fusion in almacen.fusiones():
         # Las revisadas a mano (recogida/revisados.py) no las deshace una regla.
@@ -778,8 +788,12 @@ def revisar_fusiones(almacen: Almacen, ahora: datetime, modelos: frozenset[str])
         if absorbido is None or destino is None or "fusionado_en" not in absorbido:
             continue
         propio = {k: v for k, v in absorbido.items() if k != "fusionado_en"}
-        if cierres_de_noches_distintas(propio, destino) or repite_un_cierre_anterior(
-            *sorted((propio, destino), key=lambda d: (d["tiempo"]["inicio"]["valor"], d["id"]))
+        if (
+            separados_por_revision(propio, destino)
+            or cierres_de_noches_distintas(propio, destino)
+            or repite_un_cierre_anterior(
+                *sorted((propio, destino), key=lambda d: (d["tiempo"]["inicio"]["valor"], d["id"]))
+            )
         ):
             revertir(almacen, fusion["absorbido"], ahora, modelos)
             vueltos.append(fusion["absorbido"])
