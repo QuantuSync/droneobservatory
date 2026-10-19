@@ -2336,6 +2336,36 @@
         "fecha": "2026-10-19",
         "en": "https://www.hosteltur.com/168550_un-dron-desconocido-paraliza-el-aeropuerto-de-sevilla.html (original)"
       }
+    },
+    {
+      "incidente": "EODI-2026-00622",
+      "enlace": "https://gaceta.es/espana/marruecos-mira-ahora-ahora-a-melilla-y-eleva-la-tension-con-drones-junto-al-aeropuerto-de-la-ciudad-que-obligan-a-paralizar-el-trafico-aereo-20260925-0854/",
+      "medio": "gaceta.es",
+      "fecha": "2026-09-25",
+      "idioma": "es",
+      "frase": "La Delegación del Gobierno en Melilla reconoció el jueves ambos sucesos",
+      "comprobada": {
+        "fecha": "2026-10-19",
+        "en": "https://gaceta.es/espana/marruecos-mira-ahora-ahora-a-melilla-y-eleva-la-tension-con-drones-junto-al-aeropuerto-de-la-ciudad-que-obligan-a-paralizar-el-trafico-aereo-20260925-0854/ (original)"
+      },
+      "declaracion": {
+        "autoridad": "Delegación del Gobierno en Melilla",
+        "pais": "ES",
+        "categoria": "gobierno",
+        "afirma": "incidente"
+      }
+    },
+    {
+      "incidente": "EODI-2026-00622",
+      "enlace": "https://gaceta.es/espana/marruecos-mira-ahora-ahora-a-melilla-y-eleva-la-tension-con-drones-junto-al-aeropuerto-de-la-ciudad-que-obligan-a-paralizar-el-trafico-aereo-20260925-0854/",
+      "medio": "gaceta.es",
+      "fecha": "2026-09-25",
+      "idioma": "es",
+      "frase": "El primer incidente tuvo lugar durante la noche del 18 de septiembre",
+      "comprobada": {
+        "fecha": "2026-10-19",
+        "en": "https://gaceta.es/espana/marruecos-mira-ahora-ahora-a-melilla-y-eleva-la-tension-con-drones-junto-al-aeropuerto-de-la-ciudad-que-obligan-a-paralizar-el-trafico-aereo-20260925-0854/ (original)"
+      }
     }
   ],
   "titulares": [
@@ -2660,6 +2690,36 @@
       "motivo": {
         "es": "ENAIRE confirmó el dron en la aproximación al aeropuerto de Málaga: «dron no identificado» se leía como una duda sobre el dron.",
         "en": "ENAIRE confirmed the drone on the approach to Málaga airport: «unidentified drone» read as doubt about the drone."
+      }
+    },
+    {
+      "incidente": "EODI-2026-00622",
+      "inicio": {
+        "valor": "2026-09-18T00:00Z",
+        "precision": "dia",
+        "cita": "El primer incidente tuvo lugar durante la noche del 18 de septiembre",
+        "motivo": "«la noche del 18 de septiembre» en gaceta.es (25 de septiembre de 2026)"
+      },
+      "titulo": {
+        "es": "Un dron en la aproximación a la pista del aeropuerto de Melilla",
+        "en": "A drone on the approach to Melilla airport's runway"
+      },
+      "motivo": {
+        "es": "El primero de los dos sucesos de Melilla (la noche del 18 de septiembre de 2026): la ficha tomó la fecha de la noticia, el 25, y la Delegación del Gobierno reconoció los dos.",
+        "en": "The first of the two Melilla events (the night of 18 September 2026): the record took the article's date, the 25th, and the Government Delegation acknowledged both."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00098",
+      "inicio": {
+        "valor": "2025-10-27T19:53Z",
+        "precision": "minuto",
+        "cita": "Aena informó de la presencia de una de estas máquinas a las 20:53 horas y desde ese momento, el operador paralizó los vuelos",
+        "motivo": "Aena: «a las 20:53 horas» (hora peninsular, UTC+1) en informacion.es"
+      },
+      "motivo": {
+        "es": "Aena da las 20:53 hora peninsular (19:53 UTC); la ficha decía las 21:00 UTC.",
+        "en": "Aena gives 20:53 peninsular time (19:53 UTC); the record said 21:00 UTC."
       }
     }
   ],
@@ -6695,6 +6755,37 @@
           "fuentes": [
             "gdelt-1b3d5d440b8231a7"
           ]
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2025-00397",
+      "motivo": {
+        "es": "juntaba dos sucesos distintos en el aeropuerto de Fuerteventura: las esperas del sábado 18 de octubre de 2025, de 07:40 a 08:50, hasta que se inhibió la señal de los drones (noticiasfuerteventura.com), y el desvío a Tenerife Sur de un vuelo de Ryanair el domingo 19 por la mañana (laprovincia.es).",
+        "en": "it merged two different events at Fuerteventura airport: the holding on Saturday 18 October 2025, from 07:40 to 08:50, until the drones' signal was jammed (noticiasfuerteventura.com), and the diversion of a Ryanair flight to Tenerife South on Sunday 19 in the morning (laprovincia.es)."
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2025-10-18",
+          "pais": "ES",
+          "descripcion": "Esperas de varios vuelos por drones en la aproximación al aeropuerto de Fuerteventura, sábado 18 de octubre de 2025, de 07:40 a 08:50 (hora de Canarias)",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-7f2a4b5c14378536"
+          ],
+          "lugar": "GCFV"
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2025-10-19",
+          "pais": "ES",
+          "descripcion": "Un vuelo de Ryanair procedente de Santiago se desvía a Tenerife Sur por un dron en el aeropuerto de Fuerteventura, domingo 19 de octubre de 2025 por la mañana",
+          "coincide_con": null,
+          "fuentes": [
+            "gdelt-d9d7696df47051eb"
+          ],
+          "lugar": "GCFV"
         }
       ]
     }
