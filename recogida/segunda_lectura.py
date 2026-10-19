@@ -81,7 +81,12 @@ CREATE TABLE IF NOT EXISTS candidatos (
 CREATE TABLE IF NOT EXISTS pasadas (
     id INTEGER PRIMARY KEY, inicio TEXT NOT NULL, fin TEXT NOT NULL, resumen TEXT NOT NULL);
 CREATE TABLE IF NOT EXISTS estado (clave TEXT PRIMARY KEY, valor TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS busquedas (
+    clave TEXT PRIMARY KEY, huella TEXT NOT NULL, fecha TEXT NOT NULL, hallados INTEGER NOT NULL);
 """
+TAREAS_LECTURA = frozenset({"lectura", "pares", "rectificaciones"})
+# La pasada del temporizador: también las búsquedas de lo que falta y el barrido del país.
+TAREAS = TAREAS_LECTURA | {"busqueda", "pais"}
 
 
 @cache
@@ -203,6 +208,22 @@ class Propia:
                 (clave, valor),
             )
 
+    def busqueda(self, clave: str) -> str | None:
+        """La huella de lo último que se mandó en esa búsqueda, o None."""
+        fila = self.conexion.execute(
+            "SELECT huella FROM busquedas WHERE clave = ?", (clave,)
+        ).fetchone()
+        return str(fila[0]) if fila else None
+
+    def guardar_busqueda(self, clave: str, huella: str, fecha: str, hallados: int) -> None:
+        with self.conexion:
+            self.conexion.execute(
+                "INSERT INTO busquedas (clave, huella, fecha, hallados) VALUES (?, ?, ?, ?) "
+                "ON CONFLICT (clave) DO UPDATE SET huella = excluded.huella, "
+                "fecha = excluded.fecha, hallados = excluded.hallados",
+                (clave, huella, fecha, hallados),
+            )
+
     def guardar_pasada(self, inicio: str, fin: str, resumen: Documento) -> None:
         with self.conexion:
             self.conexion.execute(
@@ -241,6 +262,8 @@ class Resumen:
     pares_vistos: int = 0
     duplicados: list[str] = field(default_factory=list)
     rectificaciones: Documento = field(default_factory=dict)
+    busquedas: Documento = field(default_factory=dict)
+    barrido_pais: Documento = field(default_factory=dict)
     fallos: int = 0
     errores: list[str] = field(default_factory=list)
     parada: str | None = None
@@ -252,6 +275,7 @@ class Resumen:
             "invalidas": self.invalidas, "con_hallazgos": len(self.con_hallazgos),
             "fichas_con_hallazgos": self.con_hallazgos[:50], "pares_vistos": self.pares_vistos,
             "duplicados": self.duplicados[:50], "rectificaciones": self.rectificaciones,
+            "busquedas": self.busquedas, "barrido_pais": self.barrido_pais,
             "fallos": self.fallos, "errores": self.errores[:10], "parada": self.parada,
             "peticiones": self.peticiones,
         }  # fmt: skip
@@ -491,17 +515,31 @@ def fin_de_pasada(ahora: datetime) -> datetime | None:
 def pasada(
     principal: Almacen, propia: Propia, cliente: secundario.Cliente, ahora: datetime, hasta: float,
     reloj: Callable[[], float] = time.monotonic, max_fichas: int | None = None,
-    max_incidentes: int | None = None, tareas: frozenset[str] = frozenset(
-        {"lectura", "pares", "rectificaciones"}),
-    forzar_diaria: bool = False,
+    max_incidentes: int | None = None, tareas: frozenset[str] = TAREAS_LECTURA,
+    forzar_diaria: bool = False, descargador: Any = None, pais: str | None = None,
 ) -> Resumen:  # fmt: skip
-    """Una pasada: el barrido diario si toca, los posibles duplicados y la segunda lectura, hasta
-    `hasta` (reloj monótono)."""
+    """Una pasada: el barrido diario si toca, el barrido del país del día si toca, las búsquedas
+    de lo que falta, los posibles duplicados y la segunda lectura, hasta `hasta` (reloj
+    monótono). Con `pais`, el barrido de ese país ahora (comprobaciones a mano)."""
+    from proceso import segunda_busqueda as busqueda_pura
+    from recogida import segunda_busqueda
+
     resumen = Resumen(inicio=_iso(ahora))
     lector = Lector(cliente, hasta, reloj, resumen)
     if "rectificaciones" in tareas and (forzar_diaria or toca_diaria(propia, ahora)):
         resumen.rectificaciones = barrido_diario(principal, propia, lector, ahora, max_incidentes)
     fichas = publicadas(principal)
+    if pais is not None:
+        tope = int(segunda_busqueda.conf()["barrido_pais"]["por_pasada"])
+        resumen.barrido_pais = {"pais": pais, **segunda_busqueda.buscar(
+            principal, propia, lector, ahora, fichas, descargador, pais,
+            dict.fromkeys(busqueda_pura.BUSQUEDAS, tope))}  # fmt: skip
+    elif "pais" in tareas and not lector.parado and segunda_busqueda.toca_barrido(propia, ahora):
+        resumen.barrido_pais = segunda_busqueda.barrido_pais(principal, propia, lector, ahora,
+                                                             fichas, descargador)  # fmt: skip
+    if "busqueda" in tareas and pais is None and not lector.parado:
+        resumen.busquedas = segunda_busqueda.buscar(principal, propia, lector, ahora, fichas,
+                                                    descargador)  # fmt: skip
     leidas = preparar(principal, fichas)
     if "pares" in tareas and not lector.parado:
         comparar_pares(principal, propia, lector, ahora, fichas, leidas,
@@ -548,14 +586,16 @@ def ejecutar_pasada(args: argparse.Namespace, ahora: datetime) -> Documento:
     carpeta = args.datos or directorio_datos()
     ritmo = secundario.Ritmo.de(configuracion()["ritmo"])
     cliente = secundario.Cliente(config, ritmo)
-    tareas = frozenset(args.solo.split(",")) if args.solo else frozenset(
-        {"lectura", "pares", "rectificaciones"})  # fmt: skip
+    tareas = frozenset(args.solo.split(",")) if args.solo else TAREAS
     propia = Propia.abrir(carpeta / BASE)
     principal = abrir_principal(args.base)
+    from recogida.descarga import Descargador
+
     try:
         resumen = pasada(principal, propia, cliente, ahora, hasta, max_fichas=args.max_fichas,
                          max_incidentes=args.max_incidentes, tareas=tareas,
-                         forzar_diaria=args.forzar_diaria)  # fmt: skip
+                         forzar_diaria=args.forzar_diaria, descargador=Descargador(),
+                         pais=args.pais)  # fmt: skip
         resumen.fin = _iso(datetime.now(UTC))
         documento = resumen.documento()
         propia.guardar_pasada(resumen.inicio, resumen.fin, documento)
@@ -748,29 +788,52 @@ def _paso(almacen: Almacen, ahora: datetime, modelos: frozenset[str]) -> Documen
     for c in rect:
         nuevas[PREFIJO + c["clave"]] = {"fecha": _iso(ahora), "resultado": "en_cola"}
     hecho["rectificaciones_encoladas"] = len(encoladas)
-    # Datos y duplicados: al experto, como mucho `por_recogida`.
-    # Lo más reciente primero y, de eso, lo contradicho antes que lo que solo no tiene apoyo.
-    # Una fecha que solo «no tiene apoyo» no va al experto (casi nunca era un problema real).
+    # Datos, duplicados y lo que buscan las búsquedas, por prioridad (proceso/segunda_busqueda:
+    # declaraciones e incidentes que faltan, lo contradicho, duplicados, atribución y efectos, el
+    # resto) y, a la par, lo más reciente primero. Una fecha que solo «no tiene apoyo», o un tipo
+    # contradicho sin frase de otro tipo, no va al experto.
+    from proceso import segunda_busqueda as busqueda
+    from recogida import segunda_busqueda
+
+    tipos = {CAMPOS, DUPLICADO, *busqueda.BUSQUEDAS}
     resto = sorted((c for c in pendientes
-                    if c["tipo"] in {CAMPOS, DUPLICADO} and lectura.al_experto(c)),
+                    if c["tipo"] in tipos and (c["tipo"] not in {CAMPOS, DUPLICADO}
+                                               or lectura.al_experto(c))),
                    key=lambda c: c["fecha"], reverse=True)  # fmt: skip
-    resto.sort(key=lectura.prioridad)
+    resto.sort(key=busqueda.prioridad)
     maximo = int(configuracion()["recogida"]["por_recogida"])
+    ajustes = configuracion()["busqueda"]
+    hoy = coste.dia(ahora)
+    entregadas_hoy = sum(
+        1 for d in decididas.values()
+        if d.get("resultado") == "a_la_extraccion" and str(d.get("fecha", "")).startswith(hoy)
+    )  # fmt: skip
+    max_entregas = min(int(ajustes["por_recogida"]),
+                       max(0, int(ajustes["por_dia"]) - entregadas_hoy))  # fmt: skip
     experto = Experto(almacen, ahora, Plazo(float(configuracion()["recogida"]["tope_experto_s"])))
     decididos: list[str] = []
+    entregados: list[str] = []
     try:
         for candidato in resto:
-            if len(decididos) >= maximo or experto.parado:
-                break
-            revisar = verificar if candidato["tipo"] == CAMPOS else comparar
-            decision = revisar(almacen, ahora, modelos, experto, candidato)
-            if decision is None:
-                break
-            nuevas[PREFIJO + candidato["clave"]] = {"fecha": _iso(ahora), **decision}
-            decididos.append(candidato["clave"])
+            if candidato["tipo"] in busqueda.A_LA_EXTRACCION:
+                if len(entregados) >= max_entregas:
+                    continue
+                decision: Documento | None = segunda_busqueda.entregar(almacen, ahora, candidato)
+                entregados.append(candidato["clave"])
+            else:
+                if len(decididos) >= maximo or experto.parado:
+                    continue
+                revisar = comparar if candidato["tipo"] == DUPLICADO else verificar
+                decision = revisar(almacen, ahora, modelos, experto, candidato)
+                if decision is None:
+                    continue
+                decididos.append(candidato["clave"])
+            if decision is not None:
+                nuevas[PREFIJO + candidato["clave"]] = {"fecha": _iso(ahora), **decision}
     finally:
         almacen.guardar_controles(nuevas, _iso(ahora))
-    hecho.update(decididos=decididos, esperan=len(resto) - len(decididos),
+    hecho.update(decididos=decididos, entregados=entregados,
+                 esperan=len(resto) - len(decididos) - len(entregados),
                  experto=experto.parado, gasto_experto=round(experto.gasto, 6))  # fmt: skip
     return hecho
 
@@ -823,7 +886,8 @@ def principal(argumentos: list[str] | None = None) -> int:
     una.add_argument("--datos", type=Path, help="carpeta de la base de la capa")
     una.add_argument("--max-fichas", type=int)
     una.add_argument("--max-incidentes", type=int)
-    una.add_argument("--solo", help="lectura,pares,rectificaciones")
+    una.add_argument("--solo", help="lectura,pares,rectificaciones,busqueda,pais")
+    una.add_argument("--pais", help="el barrido de ese país ahora (código ISO)")
     una.add_argument("--manual", action="store_true", help="a cualquier hora, con su tope")
     una.add_argument("--forzar-diaria", action="store_true")
     lista = orden.add_parser("candidatos")

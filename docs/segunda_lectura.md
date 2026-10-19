@@ -74,6 +74,51 @@ suceso; un titular que puede contar una rectificación. La frase que da el model
 literal, en las citas que se le mandaron (el código lo comprueba): si no está, el hallazgo no
 cuenta. Un dato que la ficha no tiene no se valora.
 
+### Lo que falta (desde el 19 de octubre de 2026)
+
+La lectura de arriba solo compara la ficha con sus citas: no ve lo que la ficha no tiene. En
+España, Melilla 22/09/2026 seguía «notificado» aunque la Delegación del Gobierno lo había
+reconocido en la prensa; Melilla 18/09/2026 no tenía ficha. Cuatro búsquedas más, con la misma
+regla de la frase literal (en el texto numerado que se mandó: el titular y el comienzo de la
+página de cada noticia) y cada una con su cupo por pasada (`busqueda.por_pasada`). Código:
+[`proceso/segunda_busqueda.py`](../proceso/segunda_busqueda.py) y
+[`recogida/segunda_busqueda.py`](../recogida/segunda_busqueda.py); pruebas:
+[`tests/test_segunda_busqueda.py`](../tests/test_segunda_busqueda.py).
+
+1. **Declaraciones oficiales que faltan.** Incidentes publicados «notificados», o con la presencia
+   «no confirmada», de más de 48 horas: sus noticias y las posteriores que nombran su lugar (la
+   selección del barrido de rectificaciones). ¿Alguna cita una declaración de una autoridad
+   oficial que confirma, niega o rectifica el suceso o el dron, también en estilo indirecto?
+2. **Incidentes que faltan.** Noticias recogidas en los últimos 14 días que no están en ninguna
+   ficha publicada (ni en su candidato) ni esperan su primera extracción: descartadas por el
+   filtro o sin agrupar. ¿Cuentan un suceso con drones dentro del alcance, con día y lugar? Se le
+   manda también la lista de fichas del mismo país y fechas cercanas: si dice que coincide con
+   una, no es candidato.
+3. **Atribución.** Incidentes confirmados sin atribuir: ¿una autoridad oficial afirma
+   expresamente quién es el responsable? Una frase que investiga, sospecha, no descarta o solo
+   vincula o relaciona nunca es candidata (`configuracion/expresiones_duda.json`, la misma lista
+   de la regla estricta de atribución).
+4. **Lugar y duración.** Fichas con el lugar a nivel de país o de región cuyas noticias nombran la
+   instalación o la localidad, y cierres sin duración cuyas noticias dan la duración o la hora de
+   reapertura.
+
+Una vez al día, en la primera pasada desde las 03:00 UTC, **el barrido de un país**: rotando por
+los países con incidentes, de más a menos, las búsquedas 1, 3 y 4 sobre todos sus incidentes, sin
+el filtro de antigüedad, y la 2 sobre todas sus noticias. La base de la capa guarda qué país se
+hizo y cuándo. Lo que se manda se guarda con su huella y no se vuelve a preguntar mientras no
+cambie.
+
+En la recogida horaria, cada candidato va por el camino que ya existe y **nada se decide aquí**:
+
+- declaraciones y atribución: la noticia entra en el candidato de la ficha, su frase va a la
+  extracción y el candidato se repite con el experto con el motivo opcional `declaracion`
+  ([`docs/modelos.md`](modelos.md), motivo 7: si el experto agotó su tope, vale el base, nunca la
+  reserva crítica). El estado y la atribución los deciden las reglas de siempre;
+- incidentes que faltan: la noticia vuelve a la extracción por el mismo camino interno que los
+  artículos dirigidos (sin tocar `configuracion/articulos_dirigidos.json`); si su candidato ya se
+  extrajo, se repite con el experto. Pasa por el control de duplicados como cualquier otra ficha;
+- lugar y duración: la verificación del experto.
+
 ### El paso de la recogida horaria
 
 Antes de las rectificaciones y del control de las fichas, la recogida lee los candidatos de la
@@ -92,7 +137,17 @@ base de la capa (solo leyendo, 30 segundos como mucho) y:
 Como mucho 2 candidatos de datos o duplicados por recogida (configurable), lo contradicho primero,
 siempre con el modo y el tope del principio 5. Una ficha cuyo único hallazgo es la fecha de inicio
 «sin apoyo» queda marcada pero **no va al experto** (`proceso/segunda_lectura.al_experto`): en los
-primeros días fue el hallazgo más frecuente y casi siempre ruido. Cada decisión queda guardada (clave `segunda:…`
+primeros días fue el hallazgo más frecuente y casi siempre ruido. Tampoco un tipo «contradicho»
+cuya frase no cuenta otro tipo del esquema (un cierre de aeropuerto o una entrada desde fuera):
+que un dron cayera, explotara o atacara sigue siendo un sobrevuelo o una incursión.
+
+**Orden y reparto.** Primero las declaraciones y los incidentes que faltan; después lo
+contradicho; después los duplicados; después la atribución, el lugar y la duración; al final, el
+resto. Cada recogida entrega como mucho 2 candidatos a la extracción (`busqueda.por_recogida`, 8
+al día, `por_dia`) y manda como mucho 2 al experto (`recogida.por_recogida`). Lo que revisa el
+experto en el modo `segunda_lectura` cabe en sus 0,30 dólares al día y por debajo del ritmo de su
+tope; las extracciones repetidas con el experto van con el motivo opcional `declaracion` y nunca
+tocan la reserva crítica. Cada decisión queda guardada (clave `segunda:…`
 del control de las fichas) y no se repite.
 
 Lo que hizo la última pasada, los candidatos y el gasto del experto del día en este modo se ven en

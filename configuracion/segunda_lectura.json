@@ -22,6 +22,15 @@
     "hora_utc": 2,
     "dias_desde_el_suceso": 1
   },
+  "busqueda": {
+    "descripcion": "Búsquedas de lo que falta (proceso/segunda_busqueda.py): preguntas por pasada de cada una, antigüedad mínima de los incidentes (horas), días de noticias para los incidentes que faltan, cuántos candidatos de declaraciones, atribución e incidentes que faltan entrega cada recogida a la extracción y cuántos al día, y el barrido diario de un país (hora UTC y preguntas por búsqueda).",
+    "por_pasada": {"declaracion": 4, "rescate": 6, "atribucion": 3, "efectos": 3},
+    "horas_minimas": 48,
+    "dias_rescate": 14,
+    "por_recogida": 2,
+    "por_dia": 8,
+    "barrido_pais": {"hora_utc": 3, "por_pasada": 15}
+  },
   "pasada": {
     "minuto_inicio": 45,
     "minuto_fin": 10,
