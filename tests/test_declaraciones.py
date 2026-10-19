@@ -77,6 +77,13 @@ def test_un_colectivo_profesional_no_es_una_autoridad() -> None:
     assert declaraciones.no_es_autoridad("Sindicatul Europol")
     assert not declaraciones.no_es_autoridad("ENAIRE")
     assert not declaraciones.no_es_autoridad("Delegación del Gobierno en Melilla")
+    # Las fuentes guardadas antes de la regla: la del colectivo deja de contar como autoridad.
+    citada = "(declaración oficial citada en abc.es)"
+    assert not declaraciones.de_autoridad(
+        {"medio": f"Controladores Aéreos de España {citada}", "es_autoridad": True}
+    )
+    assert declaraciones.de_autoridad({"medio": f"Aena {citada}", "es_autoridad": True})
+    assert not declaraciones.de_autoridad({"medio": "abc.es", "es_autoridad": False})
 
 
 def test_drones_afirmados_por_las_fuerzas_armadas_confirman_la_presencia() -> None:

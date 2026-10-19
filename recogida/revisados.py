@@ -115,7 +115,9 @@ def unir_grupo(
         fundido = {**copy.deepcopy(absorbido), "fusionado_en": destino["id"]}
         fundido.pop("episodio", None)
         fundidos.append((fundido, aportadas))
-    nuevo = completar(nuevo, unidos)
+    # Lo que trae del unido (su cierre) cambia el tipo: las reglas otra vez (EODI-2026-00183, un
+    # sobrevuelo que recibe el cierre del aeropuerto de Gran Canaria de la EODI-2026-00398).
+    nuevo = incidentes.aplicar_reglas(completar(nuevo, unidos))
     almacen.guardar_incidente(nuevo, ahora, modelos)
     for fundido, aportadas in fundidos:
         almacen.guardar_incidente(fundido, ahora, modelos)

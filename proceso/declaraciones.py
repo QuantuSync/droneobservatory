@@ -112,6 +112,20 @@ def no_es_autoridad(nombre: str) -> bool:
     return bool(_no_autoridades().search(normalizar(nombre)))
 
 
+_CITADA = re.compile(r"^(?P<autoridad>.+) \(declaración oficial citada en .+\)$")
+
+
+def de_autoridad(fuente: Documento) -> bool:
+    """La fuente es la palabra de una autoridad: no la de un colectivo que se guardó como tal antes
+    de la regla (EODI-2025-00190, «Controladores Aéreos de España (declaración oficial citada en
+    abc.es)»)."""
+    medio = str(fuente.get("medio", ""))
+    citada = _CITADA.match(medio)
+    return bool(fuente.get("es_autoridad")) and not no_es_autoridad(
+        citada["autoridad"] if citada else medio
+    )
+
+
 def validas(declaraciones: Sequence[dict[str, Any]], textos: Sequence[str]) -> list[dict[str, Any]]:
     """Las declaraciones cuya frase está en el texto de su fuente, con la frase recortada."""
     resultado = []

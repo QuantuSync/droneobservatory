@@ -84,6 +84,29 @@ def test_los_registros_del_mismo_suceso_quedan_en_uno(leipzig: Almacen) -> None:
     assert revisados.unir(leipzig, AHORA, MODELOS) == 0
 
 
+def test_el_que_queda_toma_el_cierre_y_con_el_el_tipo(monkeypatch: pytest.MonkeyPatch) -> None:
+    """EODI-2026-00183 (Gran Canaria, sobrevuelo) y EODI-2026-00398 (el mismo suceso, con el
+    cierre del aeropuerto): la unión no se guardaba («hay interrupción de aeropuerto»)."""
+    almacen = Almacen.abrir()
+    objetivo = {"categoria": "aeropuerto", "nombre": "Flughafen Leipzig/Halle", "oaci": "EDDP"}
+    queda = _registro("EODI-2026-00183", "2026-08-03T22:00Z", "explicita",
+                      [("a1", "2026-08-04T09:30Z")])  # fmt: skip
+    otro = _registro("EODI-2026-00398", "2026-08-05T10:00Z", "publicacion",
+                     [("b1", "2026-08-05T10:30Z")], cierre=True)  # fmt: skip
+    for documento, tipo in ((queda, "sobrevuelo"), (otro, "interrupcion_aeroportuaria")):
+        documento.update(objetivo=objetivo, tipo=tipo)
+        almacen.guardar_incidente(documento, AHORA, MODELOS)
+    monkeypatch.setattr(revisados, "cargar", lambda: {
+        "unir": [{"registros": ["EODI-2026-00183", "EODI-2026-00398"],
+                  "conserva": "EODI-2026-00183", "motivo": "el mismo suceso"}],
+        "reextraer": [],
+    })  # fmt: skip
+    assert revisados.unir(almacen, AHORA, MODELOS) == 1
+    unido = almacen.incidente("EODI-2026-00183")
+    assert unido is not None and unido["consecuencias"]["cierre"]["valor"] == "si"
+    assert unido["tipo"] == "interrupcion_aeroportuaria"
+
+
 def test_la_ficha_que_mezcla_dos_sucesos_se_vuelve_a_extraer_una_vez(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

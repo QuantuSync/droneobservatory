@@ -2193,6 +2193,38 @@
     "Regimiento de Dragones de Jutlandia (Dragonkasernen, Holstebro)": {
       "es": "Cuartel de los Dragones de Jutlandia, Holstebro",
       "en": "Jutland Dragoons barracks, Holstebro"
+    },
+    "Centro Penitenciario Sevilla I": {
+      "es": "Centro penitenciario Sevilla I",
+      "en": "Seville I prison",
+      "sitio": {
+        "es": "Sevilla",
+        "en": "Seville"
+      }
+    },
+    "Centre Penitenciari Mas d'Enric": {
+      "es": "Centro penitenciario Mas d'Enric",
+      "en": "Mas d'Enric prison",
+      "sitio": {
+        "es": "El Catllar",
+        "en": "El Catllar"
+      }
+    },
+    "Aeropuerto de Melilla": {
+      "es": "Aeropuerto de Melilla",
+      "en": "Melilla Airport",
+      "sitio": {
+        "es": "Melilla",
+        "en": "Melilla"
+      }
+    },
+    "Aeropuerto de Fuerteventura": {
+      "es": "Aeropuerto de Fuerteventura",
+      "en": "Fuerteventura Airport",
+      "sitio": {
+        "es": "Fuerteventura",
+        "en": "Fuerteventura"
+      }
     }
   }
 }

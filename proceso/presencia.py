@@ -75,7 +75,7 @@ def documento_oficial_decide(incidente: Documento) -> bool:
 
 def autoridad_lo_deja_abierto(incidente: Documento) -> bool:
     """Todas las autoridades que cita el incidente lo dejan abierto."""
-    autoridades = [f for f in incidente["fuentes"] if f.get("es_autoridad")]
+    autoridades = [f for f in incidente["fuentes"] if declaraciones.de_autoridad(f)]
     return bool(autoridades) and all(
         declaraciones.abierto(str(f.get("frase_origen", ""))) for f in autoridades
     )
@@ -535,7 +535,7 @@ def pendientes(almacen: Almacen) -> list[tuple[Documento, Cambio]]:
         cambio = None
         for fuente in fuentes:
             declaracion = conocidas.get(fuente["id"])
-            if declaracion is None or not fuente.get("es_autoridad"):
+            if declaracion is None or not declaraciones.de_autoridad(fuente):
                 continue
             contexto = str(por_enlace.get(fuente["enlace"], {}).get("frase_origen", ""))
             if declaraciones.confirma_dron(declaracion, contexto):
