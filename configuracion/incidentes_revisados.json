@@ -1,5 +1,5 @@
 {
-  "descripcion": "Correcciones revisadas a mano de incidentes concretos, que aplica recogida/revisados.py en la recogida horaria. «unir»: registros del mismo suceso que las reglas de fusión no juntan (noticias que vuelven semanas después, fechadas por su publicación); se funden en el que elige la regla de siempre (proceso/incidentes.destino_de) y la fusión lleva su motivo. «reextraer»: un incidente cuya ficha mezcló dos sucesos; su candidato se vuelve a extraer una vez. Si la ficha nueva vuelve a dar un lugar de «no_lugar» o una fecha anterior a «no_antes_de», el incidente se retira con el motivo: sus noticias siguen en el candidato y el suceso tiene otros registros. «separar»: un incidente que juntaba sucesos distintos (docs/sucesos_mezclados.md); cada fuente va al suceso del que habla (a los dos si cuenta los dos), el identificador se queda con el más temprano, los demás reciben uno nuevo por el camino normal de altas, lo que no es un suceso sale sin formar otro, la parte que ya tenía ficha se une a ella («coincide_con») y las fichas que quedan se enlazan como sucesos relacionados.",
+  "descripcion": "Correcciones revisadas a mano de incidentes concretos, que aplica recogida/revisados.py en la recogida horaria. «unir»: registros del mismo suceso que las reglas de fusión no juntan (noticias que vuelven semanas después, fechadas por su publicación); se funden en el que elige la regla de siempre (proceso/incidentes.destino_de) y la fusión lleva su motivo. «reextraer»: un incidente cuya ficha mezcló dos sucesos; su candidato se vuelve a extraer una vez. Si la ficha nueva vuelve a dar un lugar de «no_lugar» o una fecha anterior a «no_antes_de», el incidente se retira con el motivo: sus noticias siguen en el candidato y el suceso tiene otros registros. «separar»: un incidente que juntaba sucesos distintos (docs/sucesos_mezclados.md); cada fuente va al suceso del que habla (a los dos si cuenta los dos), el identificador se queda con el más temprano, los demás reciben uno nuevo por el camino normal de altas, lo que no es un suceso sale sin formar otro, la parte que ya tenía ficha se une a ella («coincide_con») y las fichas que quedan se enlazan como sucesos relacionados; con «distintos»: true, la regla de fusión no vuelve a juntar esas fichas y deshace la fusión que ya lo hizo.",
   "unir": [
     {
       "registros": [
@@ -2822,6 +2822,17 @@
       "motivo": {
         "es": "Las 16:30 son hora de Canarias (15:30 UTC); la ficha las tomó como UTC.",
         "en": "16:30 is Canary Islands time (15:30 UTC); the record took it as UTC."
+      }
+    },
+    {
+      "incidente": "EODI-2025-00397",
+      "titulo": {
+        "es": "Drones cerca del aeropuerto de Fuerteventura causan esperas de vuelos",
+        "en": "Drones near Fuerteventura airport cause flight holds"
+      },
+      "motivo": {
+        "es": "Tras separar el desvío del domingo 19 (EODI-2025-00468), la ficha es la de las esperas del sábado 18 de octubre de 2025 (noticiasfuerteventura.com); el titular hablaba del desvío.",
+        "en": "After separating Sunday 19's diversion (EODI-2025-00468), the record is Saturday 18 October 2025's holding (noticiasfuerteventura.com); the headline spoke of the diversion."
       }
     }
   ],
@@ -6862,6 +6873,7 @@
     },
     {
       "incidente": "EODI-2025-00397",
+      "distintos": true,
       "motivo": {
         "es": "juntaba dos sucesos distintos en el aeropuerto de Fuerteventura: las esperas del sábado 18 de octubre de 2025, de 07:40 a 08:50, hasta que se inhibió la señal de los drones (noticiasfuerteventura.com), y el desvío a Tenerife Sur de un vuelo de Ryanair el domingo 19 por la mañana (laprovincia.es).",
         "en": "it merged two different events at Fuerteventura airport: the holding on Saturday 18 October 2025, from 07:40 to 08:50, until the drones' signal was jammed (noticiasfuerteventura.com), and the diversion of a Ryanair flight to Tenerife South on Sunday 19 in the morning (laprovincia.es)."
