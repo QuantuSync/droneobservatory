@@ -107,6 +107,27 @@ def test_el_que_queda_toma_el_cierre_y_con_el_el_tipo(monkeypatch: pytest.Monkey
     assert unido["tipo"] == "interrupcion_aeroportuaria"
 
 
+def test_lo_que_una_revision_separo_no_lo_vuelve_a_juntar_la_regla() -> None:
+    """EODI-2025-00397 y EODI-2025-00468 (Fuerteventura, 18 y 19 de octubre de 2025): separados
+    por la revisión, la regla de fusión los volvió a juntar porque el del 19 solo tenía la fecha
+    de publicación."""
+    almacen = Almacen.abrir()
+    vispera = _registro("EODI-2025-00397", "2026-08-04T06:40Z", "explicita",
+                        [("a1", "2026-08-04T07:37Z")])  # fmt: skip
+    otro = _registro("EODI-2025-00468", "2026-08-05T17:15Z", "publicacion",
+                     [("b1", "2026-08-05T17:15Z")])  # fmt: skip
+    otro["tiempo"]["inicio"] = ejemplos.instante("2026-08-05T17:15Z", "aproximada")
+    otro["control"]["alta"] = ejemplos.instante("2026-08-05T17:15Z")
+    assert incidentes.encajan(vispera, otro)
+    for documento, pareja in ((vispera, otro), (otro, vispera)):
+        documento["relacionados"] = [{"id": pareja["id"], "separado_de": "EODI-2025-00397",
+                                      "nota": {"es": "separados", "en": "separated"}}]  # fmt: skip
+    assert not incidentes.encajan(vispera, otro)
+    for documento in (vispera, otro):
+        almacen.guardar_incidente(documento, AHORA, MODELOS)
+    assert incidentes.fusionar(almacen, AHORA, MODELOS) == 0
+
+
 def test_la_ficha_que_mezcla_dos_sucesos_se_vuelve_a_extraer_una_vez(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
