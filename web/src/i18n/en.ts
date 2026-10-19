@@ -1877,7 +1877,7 @@ export const en: Textos = {
       version: (fecha) => `Version of ${fecha}`,
       licencia: "Licence",
       licenciaTexto:
-        `The observatory’s compilation (the incidents, their statuses, their classifications and their figures) is published under the ${LICENCIA_DATOS} licence: it can be copied, transformed and reused, also for commercial purposes, citing the source as shown below. Quoted sentences remain their authors’ and are used as quotations, with their source and link. The measured air traffic block (trafico_aereo) derives from the adsb.lol archive and is offered under its licence, ODbL 1.0.`,
+        `The observatory’s compilation (the incidents, their statuses, their classifications and their figures) is published under the ${LICENCIA_DATOS} licence: it can be copied, transformed and reused, also for commercial purposes, citing the source as shown below. Quoted sentences remain their authors’ and are used as quotations, with their source and link. The measured air traffic block (trafico_aereo) derives from the adsb.lol archive and is offered under its licence, ODbL 1.0. Places: the point of some incidents comes from gazetteers built from OpenStreetMap (© OpenStreetMap contributors, ODbL 1.0, https://www.openstreetmap.org/copyright), GeoNames (CC BY 4.0) and OurAirports (public domain).`,
       citaTitulo: "Recommended citation",
       cita: (version) => citaRecomendada(version, "en"),
       autoriaTitulo: "Authorship",
