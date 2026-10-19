@@ -266,6 +266,12 @@ def test_el_inicio_y_el_fin_que_escribe_una_fuente(revision: dict[str, Any]) -> 
     assert despues is not None
     assert despues["tiempo"]["fin"] == {"valor": "2025-11-03T07:10Z", "precision": "minuto"}
     assert despues["tiempo"]["duracion_min"] == 70
+    # El fin lleva su origen en la exportación (la del 19/10/2026 fallaba: «sin origen en
+    # tiempo.fin»).
+    from exportacion import procedencia
+
+    _, origenes = procedencia.procedencia_incidente(despues, procedencia.Fichas.de(almacen))
+    assert origenes["tiempo.fin"]["fuentes"] == [documento["fuentes"][0]["id"]]
 
 
 def test_la_configuracion_de_la_revision() -> None:
