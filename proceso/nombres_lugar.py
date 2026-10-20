@@ -390,6 +390,27 @@ def _oficiales_es() -> dict[str, str]:
     return salida
 
 
+# Lo que un nombre guardado puede añadir al de la ficha sin ser otro lugar: «Distrito de Ștefan
+# Vodă», «Vrancea County», «Voivodato de Lublin».
+_ADMINISTRATIVO = re.compile(
+    r"^(?:distrito|district|county|condado|judet|judetul|voivodato|voivodeship|provincia|"
+    r"province|region|raion|raionul|municipio|municipality|comuna|commune|de|del|of|la|el)$"
+)
+
+
+def _otro_lugar_mas_largo(k: str, escrito: Bilingue) -> bool:
+    """Un nombre guardado que contiene el de la ficha y le añade otras palabras propias: otro
+    lugar («Argeș» → «Curtea de Argeș», 20 de octubre de 2026), no su nombre."""
+    for texto in escrito.values():
+        largo = clave(texto)
+        if largo == k or not _parte_de(k, {largo}):
+            continue
+        resto = re.sub(rf"(?<!\w){re.escape(k)}(?!\w)", " ", largo).split()
+        if any(not _ADMINISTRATIVO.match(p) for p in resto):
+            return True
+    return False
+
+
 def _en_tablas(base: str, pais: str, en_otro_pais: bool = False) -> Bilingue | None:
     k = clave(base)
     if not k:
@@ -406,7 +427,11 @@ def _en_tablas(base: str, pais: str, en_otro_pais: bool = False) -> Bilingue | N
         return _mares()[k]
     guardado = _cache().get(clave_cache(pais, base))
     escrito = _bilingue(guardado) if isinstance(guardado, dict) else None
-    if escrito is not None and not traduccion_inventada(base, escrito):
+    if (
+        escrito is not None
+        and not traduccion_inventada(base, escrito)
+        and not _otro_lugar_mas_largo(k, escrito)
+    ):
         return escrito
     if en_otro_pais and len(global_.get(k, [])) == 1:
         return global_[k][0][1]
