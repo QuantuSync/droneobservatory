@@ -92,7 +92,9 @@ def test_un_par_critico_con_el_tope_del_control_agotado_va_directo_al_experto() 
     # Solo el experto: el base ya no cabía (el gasto del modo no sube).
     dia = coste.dia(tcf.AHORA)
     assert almacen.gastado("control", dia) == approx(coste.LIMITE_CONTROL_DIARIO_USD)
-    assert almacen.gastado_modelo(tm.EXPERTO, dia) > 0
+    # El experto del control va en su cupo (no en el tope del experto) y cuenta para la reserva.
+    assert almacen.gastado_experto_en("control", dia) > 0
+    assert almacen.gastado_modelo(tm.EXPERTO, dia) == 0
 
 
 def test_un_candidato_critico_con_el_tope_horario_agotado_va_directo_al_experto(
