@@ -452,9 +452,9 @@ def test_el_resumen_cuenta_el_gasto_de_la_api_del_dia_y_del_mes() -> None:
             "salida": 0, "escritura_cache": 0, "lectura_cache": 0, "coste": dolares,
         })  # fmt: skip
     api = control_fichas.gasto_api(almacen, datetime(2026, 11, 2, 21, tzinfo=UTC), {})
-    assert api["2026-11-02"] == {"dia": 0.30, "mes": 0.60, "tope": 10.0}
+    assert api["2026-11-02"] == {"dia": 0.30, "mes": 0.60, "tope": 60.0}
     assert api["2026-11-01"]["mes"] == 0.30
     assert visitas.lineas_api(api["2026-11-02"]) == [
-        "  Gasto de la API: 0,30 USD ese día; en el mes, 0,60 de 10,00 USD (6%)"
+        "  Gasto de la API: 0,30 USD ese día; en el mes, 0,60 de 60,00 USD (1%)"
     ]
     assert visitas.lineas_api(None) == ["  Gasto de la API: sin registro"]
