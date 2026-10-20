@@ -82,9 +82,12 @@ guarda en el repositorio.
 `vercel.json` define el build (`cd web && npm run build`), las cabeceras de
 seguridad y las direcciones propias de cada incidente y ataque. Cada push a `main`
 que cambia `web/`, `api/` o `vercel.json` se despliega con la integración de Vercel
-con GitHub, y la recogida pide una reconstrucción con un gancho de despliegue cada
-vez que publica datos nuevos en el almacén (el build los lee de allí:
-`configuracion/publicacion_web.json`). Detalle en
+con GitHub, y la recogida pide una reconstrucción con un gancho de despliegue cuando
+publica datos nuevos en el almacén (el build los lee de allí:
+`configuracion/publicacion_web.json`): enseguida si hay un incidente nuevo, uno que deja de
+publicarse o un cambio de estado o de presencia del dron; con cualquier otro cambio, como mucho
+cada 3 horas (`recogida/publicacion.decidir_reconstruccion`). La barra de estado y el estado de
+las fuentes se leen en el navegador del almacén cada hora (`estado.json`). Detalle en
 [`web/README.md`](web/README.md).
 
 La puesta en marcha del servidor (usuarios, rutas, horarios, almacenes privados y

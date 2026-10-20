@@ -434,3 +434,27 @@ def test_el_aviso_privado_va_al_tema_del_resumen(
         "topic": visitas.TEMA_RESUMEN, "title": "EODI · Fuente oficial en pausa",
         "message": "texto", "priority": 4,
     }]  # fmt: skip
+
+
+def test_el_resumen_cuenta_el_gasto_de_la_api_del_dia_y_del_mes() -> None:
+    from almacen.base import Almacen
+    from recogida import control_fichas
+
+    almacen = Almacen.abrir()
+    for fecha, dolares in (
+        ("2026-10-31T23:00:00Z", 5.0),
+        ("2026-11-01T10:00:00Z", 0.30),
+        ("2026-11-02T10:00:00Z", 0.25),
+        ("2026-11-02T20:00:00Z", 0.05),
+    ):
+        almacen.registrar_llamada({
+            "fecha": fecha, "modo": "horario", "candidato": "x", "lote": False, "entrada": 0,
+            "salida": 0, "escritura_cache": 0, "lectura_cache": 0, "coste": dolares,
+        })  # fmt: skip
+    api = control_fichas.gasto_api(almacen, datetime(2026, 11, 2, 21, tzinfo=UTC), {})
+    assert api["2026-11-02"] == {"dia": 0.30, "mes": 0.60, "tope": 10.0}
+    assert api["2026-11-01"]["mes"] == 0.30
+    assert visitas.lineas_api(api["2026-11-02"]) == [
+        "  Gasto de la API: 0,30 USD ese día; en el mes, 0,60 de 10,00 USD (6%)"
+    ]
+    assert visitas.lineas_api(None) == ["  Gasto de la API: sin registro"]

@@ -2142,6 +2142,7 @@ def escribir_estado(ruta: Path, resultado: Resultado | None, almacen: Almacen,
         "pasadas": pasadas,
         "modelos": gasto_por_modelo(almacen, ahora, anterior.get("modelos") or {}),
         "experto": gasto_experto(almacen, ahora, anterior.get("experto") or {}),
+        "api": gasto_api(almacen, ahora, anterior.get("api") or {}),
         "criticos_esperando": criticos_esperando(almacen),
     }
     if segunda is not None:
@@ -2214,6 +2215,22 @@ def gasto_experto(almacen: Almacen, ahora: datetime, anterior: Documento) -> Doc
             **coste.reparto_experto(gastado, tope), "limite": tope,
             "reserva_limite": coste.RESERVA_CRITICA_DIARIA_USD,
         }  # fmt: skip
+    return dias
+
+
+def gasto_api(almacen: Almacen, ahora: datetime, anterior: Documento) -> Documento:
+    """Lo gastado en la API cada día UTC (todas las llamadas) y lo acumulado en su mes hasta el
+    final de ese día, con el tope mensual (coste.tope_mensual): hoy y ayer se recalculan con la
+    base. El resumen diario lo cuenta (recogida/visitas.py, lineas_api)."""
+    hoy = ahora.astimezone(UTC).date()
+    dias: Documento = {d: v for d, v in anterior.items()
+                       if d >= (hoy - timedelta(days=DIAS_MODELOS)).isoformat()}  # fmt: skip
+    for dia in (hoy - timedelta(days=1), hoy):
+        dias[dia.isoformat()] = {
+            "dia": round(almacen.gasto_entre(dia.isoformat(), dia.isoformat()), 4),
+            "mes": round(almacen.gasto_entre(dia.replace(day=1).isoformat(), dia.isoformat()), 4),
+            "tope": coste.tope_mensual(),
+        }
     return dias
 
 
