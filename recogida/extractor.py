@@ -310,7 +310,10 @@ def horaria(
     except TiempoAgotado:
         registro.warning("revisión de las decisiones del base: sin tiempo; en la siguiente")
     # Una sola vez: los descartes poco seguros del base desde el 13 de octubre de 2026, al experto.
-    extraccion.revisar_descartes_dudosos(almacen, ahora)
+    try:
+        extraccion.revisar_descartes_dudosos(almacen, ahora)
+    except Exception:
+        registro.exception("repaso de los descartes dudosos: falló; en la siguiente")
     # Primero los candidatos nuevos y los que se repiten con el experto (aunque sean de antes de la
     # ventana); después, poco a poco, los incidentes ya publicados con una ficha de una versión
     # anterior, del más reciente al más antiguo. El límite diario de gasto corta la ejecución
