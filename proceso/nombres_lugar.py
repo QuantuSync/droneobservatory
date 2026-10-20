@@ -155,20 +155,30 @@ def _localidades() -> tuple[dict[tuple[str, str], Bilingue], dict[str, list[tupl
     país del incidente (un lugar del país vecino que nombra la ficha). Lo manual manda."""
     por_pais: dict[tuple[str, str], Bilingue] = {}
     global_: dict[str, list[tuple[str, Bilingue]]] = defaultdict(list)
-    entradas = list((generado().get("localidades") or {}).values())
-    entradas += list(manual().get("localidades") or [])
-    for entrada in entradas:
+    generadas = list((generado().get("localidades") or {}).values())
+    manuales = list(manual().get("localidades") or [])
+    for n, entrada in enumerate(generadas + manuales):
         nombre = _bilingue(entrada)
         pais = entrada.get("pais", "")
         if nombre is None:
             continue
+        propias = {clave(nombre["es"]), clave(nombre["en"])}
         for forma in {*entrada.get("formas", []), nombre["es"], nombre["en"]}:
             k = clave(forma)
             if not k:
                 continue
+            if n < len(generadas) and k not in propias and _parte_de(k, propias):
+                # Una forma de Wikidata que es solo una parte del nombre («Argeș» de «Curtea de
+                # Argeș», 20 de octubre de 2026) no lleva a ese lugar: puede ser otro (el
+                # distrito de Argeș).
+                continue
             por_pais[(pais, k)] = nombre
             global_[k] = [(p, n) for p, n in global_[k] if p != pais] + [(pais, nombre)]
     return por_pais, dict(global_)
+
+
+def _parte_de(k: str, nombres: set[str]) -> bool:
+    return any(re.search(rf"(?<!\w){re.escape(k)}(?!\w)", n) for n in nombres if n != k)
 
 
 @cache
@@ -728,11 +738,18 @@ def corregir_texto(texto: str, cambios: dict[str, str], idioma: str | None = Non
     return _alternativas(cambios).sub(_sustituir(cambios), texto)
 
 
+# «Possible possible drone», «posible posible dron»: el calificativo repetido (2025-00299).
+_POSIBLE_REPETIDO = re.compile(r"\b(possible|posibles?)\s+\1\b", re.IGNORECASE)
+
+
 def titulo_corregido(incidente: Documento) -> Documento:
     incidente = _nfc_incidente(incidente)
     titulo = incidente.get("titulo") or {}
     return {
-        i: corregir_texto(str(titulo[i]), _cambios(incidente, i), i)
+        i: _POSIBLE_REPETIDO.sub(
+            lambda m: m.group(0).split()[0],
+            corregir_texto(str(titulo[i]), _cambios(incidente, i), i),
+        )
         if i in IDIOMAS and isinstance(titulo.get(i), str)
         else titulo.get(i)
         for i in titulo
