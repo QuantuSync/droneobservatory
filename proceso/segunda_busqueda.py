@@ -315,6 +315,51 @@ def cercanas(fichas: list[Documento], pais: str, fecha: str, dias: int = 3) -> l
     )  # fmt: skip
 
 
+# Las búsquedas con el cupo propio del experto (configuracion/segunda_lectura.json,
+# busqueda.cupo_experto; coste.Modo.SEGUNDA_BUSQUEDA): las declaraciones oficiales que faltan y los
+# incidentes que faltan.
+CON_CUPO = (DECLARACION, RESCATE)
+# Un incidente (o una noticia) ya entregado a la extracción no se vuelve a entregar en estos días,
+# aunque la búsqueda lo marque con otra frase (EODI-2026-00488 y 00582 se entregaron tres veces el
+# 19 y el 20 de octubre de 2026).
+DIAS_SIN_REPETIR = 3
+
+
+def fecha_del_suceso(candidato: Documento) -> str:
+    """La fecha del suceso (o de la noticia) de un candidato, para ir de lo más reciente a lo más
+    antiguo; si no la trae, la del marcado."""
+    datos = candidato.get("datos") or {}
+    return str(datos.get("fecha_suceso") or datos.get("fecha") or candidato.get("fecha") or "")
+
+
+def clave_de_entrega(candidato: Documento) -> str:
+    """Lo que se entrega a la extracción: el incidente (declaraciones y atribución) o la noticia
+    (incidentes que faltan)."""
+    if candidato.get("tipo") == RESCATE:
+        url = (candidato.get("datos") or {}).get("url") or candidato.get("incidente")
+        return f"{RESCATE}:{url}"
+    return f"incidente:{candidato.get('incidente')}"
+
+
+def entregados_recientes(decididas: dict[str, Documento], ahora: datetime) -> dict[str, str]:
+    """Lo entregado a la extracción en los últimos DIAS_SIN_REPETIR días: clave de entrega →
+    candidato que lo entregó. Las decisiones de antes del 20 de octubre de 2026 no guardaban la
+    clave: la de las declaraciones y la atribución sale de la del candidato."""
+    desde = (ahora - timedelta(days=DIAS_SIN_REPETIR)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    hechas: dict[str, str] = {}
+    for clave, decision in decididas.items():
+        if decision.get("resultado") != "a_la_extraccion" or str(decision.get("fecha", "")) < desde:
+            continue
+        propia = clave.split(":", 1)[1] if ":" in clave else clave
+        entrega = decision.get("entrega")
+        tipo, _, resto = propia.partition(":")
+        if entrega is None and tipo in {DECLARACION, ATRIBUCION}:
+            entrega = f"incidente:{resto.split(':')[0]}"
+        if entrega:
+            hechas[str(entrega)] = propia
+    return hechas
+
+
 def prioridad(candidato: Documento) -> int:
     """El orden del experto con lo que marca la capa: primero las declaraciones y los incidentes
     que faltan; después lo contradicho de la segunda lectura; después la atribución, el lugar y

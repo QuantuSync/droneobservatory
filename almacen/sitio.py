@@ -243,10 +243,20 @@ def limpiar_trabajo(carpeta: Path) -> list[str]:
     if os.name != "posix" or not carpeta.exists():
         return []
     borradas = []
-    for copia in carpeta.glob("*.sqlite"):
+    # También la copia cifrada para las copias de seguridad y su paso comprimido (`.db.age`,
+    # `.db.age.xz`): un proceso parado por el tope de memoria mientras cifraba los dejaba (84 MB
+    # cada uno, del 15 al 19 de octubre de 2026).
+    for copia in [
+        *carpeta.glob("*.sqlite"),
+        *carpeta.glob("*.db.age"),
+        *carpeta.glob("*.db.age.xz"),
+    ]:
         pid = copia.name.split("-", 1)[0]
         if pid.isdigit() and int(pid) != os.getpid() and not _pid_vivo(int(pid)):
-            _borrar_sqlite(copia)
+            if copia.suffix == ".sqlite":
+                _borrar_sqlite(copia)
+            else:
+                copia.unlink(missing_ok=True)
             borradas.append(copia.name)
     return borradas
 

@@ -100,6 +100,60 @@ def test_si_un_fichero_no_sube_no_se_sube_el_manifiesto(tmp_path: Path) -> None:
     assert "publicacion/manifiesto.json" not in almacen.objetos
 
 
+def _ficha(id_: str, estado: str = "notificado", presencia: str = "no_confirmada",
+           titulo: str = "Dron") -> dict[str, Any]:  # fmt: skip
+    return {"properties": {"id": id_, "estado": {"actual": estado}, "presencia_dron": presencia,
+                           "titulo": {"es": titulo}}}  # fmt: skip
+
+
+def _con_fichas(carpeta: Path, *fichas: dict[str, Any]) -> dict[str, list[str]]:
+    publicados(carpeta)
+    (carpeta / "incidentes.geojson").write_text(
+        json.dumps({"features": list(fichas)}), encoding="utf-8"
+    )
+    return publicacion.incidentes_publicados(carpeta)
+
+
+def test_la_web_se_reconstruye_enseguida_solo_con_lo_urgente(tmp_path: Path) -> None:
+    carpeta = tmp_path / "pub"
+    antes = _con_fichas(carpeta, _ficha("EODI-2026-00001"), _ficha("EODI-2026-00002"))
+    web = publicacion.reconstruida({}, antes, AHORA)
+    hora = AHORA + timedelta(hours=1)
+    # Otro dato de una ficha: espera a las 3 horas, anotando desde cuándo.
+    otro = _con_fichas(carpeta, _ficha("EODI-2026-00001", titulo="Otro"), _ficha("EODI-2026-00002"))
+    pedir, motivo, web = publicacion.decidir_reconstruccion(web, otro, True, hora)
+    assert not pedir and web["pendiente_desde"] == "2026-10-07T15:33:00Z"
+    # Un incidente nuevo, uno que ya no se publica o un cambio de estado o de presencia: ya.
+    for fichas in (
+        (_ficha("EODI-2026-00001"), _ficha("EODI-2026-00002"), _ficha("EODI-2026-00003")),
+        (_ficha("EODI-2026-00001"),),
+        (_ficha("EODI-2026-00001", estado="confirmado"), _ficha("EODI-2026-00002")),
+        (_ficha("EODI-2026-00001", presencia="descartada"), _ficha("EODI-2026-00002")),
+    ):
+        pedir, motivo, _ = publicacion.decidir_reconstruccion(
+            web, _con_fichas(carpeta, *fichas), True, hora
+        )
+        assert pedir and motivo.startswith("urgente"), motivo
+    # Lo pendiente (también la capa de Ucrania o la previsión) se construye a las 3 horas, con
+    # el margen de la recogida horaria; sin cambios, nunca.
+    for horas, pide in ((2, False), (2.8, True), (3, True)):
+        pedir, _, _ = publicacion.decidir_reconstruccion(
+            web, otro, False, AHORA + timedelta(hours=horas)
+        )
+        assert pedir is pide
+    pedir, motivo, _ = publicacion.decidir_reconstruccion(
+        publicacion.reconstruida(web, otro, AHORA), otro, False, AHORA + timedelta(hours=9)
+    )
+    assert not pedir and motivo == "sin cambios"
+
+
+def test_la_primera_vez_se_reconstruye_y_queda_anotado(tmp_path: Path) -> None:
+    incidentes = _con_fichas(tmp_path / "pub", _ficha("EODI-2026-00001"))
+    pedir, _, web = publicacion.decidir_reconstruccion({}, incidentes, False, AHORA)
+    assert pedir
+    assert publicacion.reconstruida(web, incidentes, AHORA)["incidentes"] == incidentes
+
+
 def test_comparar_detecta_una_diferencia(tmp_path: Path) -> None:
     carpeta = publicados(tmp_path / "pub")
     almacen = AlmacenPublico()

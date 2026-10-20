@@ -24,7 +24,15 @@ from typing import Any
 
 from almacen.base import Almacen, DocumentoInvalido
 from esquema import Documento
-from proceso import atribucion, declaraciones, extraccion, incidentes, presencia, titulares
+from proceso import (
+    atribucion,
+    declaraciones,
+    extraccion,
+    incidentes,
+    presencia,
+    rectificaciones,
+    titulares,
+)
 from proceso.credibilidad import Credibilidad
 from proceso.estados import RETIRADAS, REVERSIONES, Estado, error_reversion, nuevo_estado
 from proceso.fronteras import dentro_del_pais
@@ -224,12 +232,14 @@ class Corregidos:
     titulares: list[str] = field(default_factory=list)
     ubicados: list[str] = field(default_factory=list)
     sin_guardar: list[str] = field(default_factory=list)
+    contradicen_rectificacion: list[str] = field(default_factory=list)
 
     def texto(self) -> str:
         return (
             f"retirados {len(self.retirados)}, con citas {len(self.citas)}, titulares "
             f"{len(self.titulares)}, ubicados {len(self.ubicados)}, sin guardar "
-            f"{self.sin_guardar}"
+            f"{self.sin_guardar}, presencias revisadas que contradicen una rectificación oficial "
+            f"{self.contradicen_rectificacion}"
         )
 
 
@@ -612,6 +622,14 @@ def corregir(almacen: Almacen, ahora: datetime, modelos: frozenset[str]) -> Corr
         documento = almacen.incidente(id_)
         assert documento is not None
         revision = revisiones[-1]
+        if contradice_rectificacion(revision, documento):
+            # Una rectificación oficial manda sobre la revisión a mano (solo otra rectificación la
+            # cambia): la presencia revisada no se aplica y queda en el registro para corregirla.
+            hechos.contradicen_rectificacion.append(id_)
+            registro.warning("%s: la presencia revisada a mano (%s) contradice la rectificación "
+                             "oficial (%s); no se aplica", id_, revision["presencia"]["valor"],
+                             rectificaciones.vigente(documento))  # fmt: skip
+            revision = {k: v for k, v in revision.items() if k != "presencia"}
         nuevo = con_titular(documento, revision, _instante(ahora))
         if nuevo != documento and _guardar(
             almacen, documento, nuevo, ahora, modelos, revision["motivo"]["es"], hechos
@@ -640,6 +658,40 @@ def inicios_revisados(ruta: Path = RUTA) -> dict[str, dict[str, Any]]:
         for r in cargar(ruta).get("titulares", [])
         if isinstance(r.get("inicio"), dict)
     }
+
+
+def contradice_rectificacion(revision: Documento, incidente: Documento) -> bool:
+    """La presencia revisada a mano contradice la que dejó una rectificación oficial de la ficha
+    (el último paso de su `presencia_historial` que no es parcial, cuando hay más de uno). Desde el
+    20 de octubre de 2026: EODI-2025-00164 seguía revisada «no confirmada» cuando la rectificación
+    del UK Airprox Board la había dejado «descartada»."""
+    presencia = revision.get("presencia") or {}
+    pasos = [p for p in incidente.get("presencia_historial") or [] if not p.get("parcial")]
+    return bool(presencia) and len(pasos) > 1 and presencia.get("valor") != pasos[-1].get("valor")
+
+
+def revisiones_contra_rectificaciones(
+    revisiones: Documento | None = None, oficiales: Documento | None = None
+) -> list[str]:
+    """Las revisiones a mano de la presencia (`titulares` con `presencia`) que no dicen lo mismo que
+    la última rectificación oficial revisada a mano del mismo incidente
+    (configuracion/rectificaciones_oficiales.json, sin las parciales). Vacía si todo cuadra."""
+    from recogida import rectificaciones as oficiales_
+
+    revisiones = cargar() if revisiones is None else revisiones
+    oficiales = oficiales_.cargar() if oficiales is None else oficiales
+    ultima: dict[str, Documento] = {}
+    for r in sorted(oficiales.get("rectificaciones", []), key=lambda r: r["fecha_declaracion"]):
+        if r.get("tipo") != rectificaciones.PARCIAL:
+            ultima[r["incidente"]] = r
+    return [
+        f"{t['incidente']}: revisada «{t['presencia']['valor']}», rectificada "
+        f"«{ultima[t['incidente']]['tipo']}» el {ultima[t['incidente']]['fecha_declaracion']}"
+        for t in revisiones.get("titulares", [])
+        if "presencia" in t
+        and t["incidente"] in ultima
+        and t["presencia"]["valor"] != ultima[t["incidente"]]["tipo"]
+    ]
 
 
 def presencia_revisada(id_: str) -> bool:

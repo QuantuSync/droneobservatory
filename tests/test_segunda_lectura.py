@@ -533,3 +533,23 @@ def test_fecha_sin_apoyo_sola_no_va_al_experto() -> None:
         candidato(("inicio", lectura.SIN_APOYO), ("lugar", lectura.SIN_APOYO))
     )
     assert lectura.al_experto({"tipo": "duplicado", "datos": {}})
+    assert "fecha" in lectura.motivo_sin_experto(candidato(("inicio", lectura.SIN_APOYO)))
+
+
+def test_lo_que_no_vale_para_el_experto_se_descarta_con_su_motivo(
+    tmp_path: Path, entorno: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    almacen = Almacen.abrir(_principal(tmp_path))
+    cliente = ClienteModelos([])
+    monkeypatch.setattr(control_fichas, "_fabrica", lambda: lambda: cliente)
+    entorno.mkdir(parents=True, exist_ok=True)
+    propia = segunda.Propia.abrir(entorno / segunda.BASE)
+    solo_fecha = {"hallazgos": [{"campo": "inicio", "valoracion": lectura.SIN_APOYO,
+                                 "frase": "", "valor": "2026-09-22"}]}  # fmt: skip
+    propia.marcar("campos:x:y", "campos", ID, None, "2026-10-15T11:00:00Z", solo_fecha)
+    propia.cerrar()
+    hecho = segunda.paso_horario(almacen, AHORA, VOCABULARIO_MODELOS)
+    assert hecho["descartados"] == 1 and hecho["esperan"] == 0 and cliente.pedidas == []
+    decision = almacen.controles(segunda.PREFIJO)[segunda.PREFIJO + "campos:x:y"]
+    assert decision["resultado"] == "descartado" and "fecha" in decision["motivo"]
+    almacen.cerrar()

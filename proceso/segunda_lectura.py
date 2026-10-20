@@ -335,6 +335,19 @@ def al_experto(candidato: Documento) -> bool:
     return any(_cuenta(h) for h in (candidato.get("datos") or {}).get("hallazgos", []))
 
 
+def motivo_sin_experto(candidato: Documento) -> str:
+    """Por qué un candidato sin valor para el experto se descarta (desde el 20 de octubre de 2026
+    no se queda en la cola: la llenaba y empujaba lo que sí vale)."""
+    hallazgos = (candidato.get("datos") or {}).get("hallazgos", [])
+    if hallazgos and all(
+        h.get("campo") == "inicio" and h.get("valoracion") == SIN_APOYO for h in hallazgos
+    ):
+        return "solo la fecha de inicio sin apoyo: casi siempre sale de la fecha de publicación"
+    if any(h.get("campo") == "tipo" for h in hallazgos):
+        return "un tipo contradicho sin frase de otro tipo del esquema"
+    return "sin hallazgos que cambien un dato publicado"
+
+
 def _cuenta(hallazgo: Documento) -> bool:
     if hallazgo.get("campo") == "inicio" and hallazgo.get("valoracion") == SIN_APOYO:
         return False

@@ -24,11 +24,28 @@ export const MAX_SIN_SALUD_MS = 20 * 60_000;
 /** directo.json se sube cada minuto: media hora sin él es que la detección se ha parado. */
 export const MAX_SIN_DIRECTO_MS = 30 * 60_000;
 /**
- * La web se reconstruye tras cada publicación. Sus datos llevan la hora de inicio de la recogida
- * (unos 16 minutos antes de publicar): más de 100 minutos por detrás de la última publicación son
- * al menos dos reconstrucciones perdidas.
+ * Desde el 20 de octubre de 2026 la web se reconstruye enseguida con lo urgente y con lo demás cada
+ * 3 horas (recogida/publicacion.py): salud.json dice la última reconstrucción pedida. Sus datos
+ * llevan la hora de inicio de la recogida (unos 16 minutos antes de publicar): más de 100 minutos
+ * por detrás de esa reconstrucción, pasados 20 minutos para construir, es que no se hizo.
  */
 export const MAX_WEB_ATRASADA_MS = 100 * 60_000;
+export const MAX_CONSTRUCCION_MS = 20 * 60_000;
+/** Sin la última reconstrucción (un servidor de antes): 3 horas, una recogida y el margen. */
+export const MAX_WEB_ATRASADA_SIN_RECONSTRUCCION_MS = 260 * 60_000;
+/** Cambios sin construir durante más de 3 horas y una recogida: la reconstrucción no se pide. */
+export const MAX_RECONSTRUCCION_PENDIENTE_MS = 4 * 60 * 60_000;
+/** La vigilancia pasa al menos una vez por hora: sin ninguna en 65 minutos, se perdió una. */
+export const MAX_SIN_PASADA_MS = 65 * 60_000;
+/** Las incidencias que abre el workflow vigia-recogida (.github/workflows/vigia-recogida.yml). */
+export const INCIDENCIAS = [
+  "El servidor del observatorio necesita atención",
+  "La recogida horaria no actualiza la base",
+  "La exportación semanal no se genera",
+  "La detección en directo no se actualiza",
+  "La web no se publica en Vercel",
+  "La captura del seguimiento en directo no recibe datos",
+];
 export const WEB = "https://droneobservatory.eu";
 
 export interface Diagnostico {
@@ -57,12 +74,28 @@ export function diagnosticar(
   } else {
     for (const p of s.problemas ?? []) motivos.push(`problema: ${String(p.id)}`);
   }
-  const publicada = instante(
-    (s as { recogida?: { ultima_publicacion?: unknown } } | null)?.recogida?.ultima_publicacion,
-  );
+  const recogida = (
+    s as {
+      recogida?: {
+        ultima_publicacion?: unknown;
+        ultima_reconstruccion?: unknown;
+        reconstruccion_pendiente_desde?: unknown;
+      };
+    } | null
+  )?.recogida;
+  const publicada = instante(recogida?.ultima_publicacion);
+  const reconstruida = instante(recogida?.ultima_reconstruccion);
   const enLaWeb = instante((web as { actualizado?: unknown } | null | undefined)?.actualizado);
-  if (web !== undefined && publicada !== null && (enLaWeb === null || publicada - enLaWeb > MAX_WEB_ATRASADA_MS)) {
-    motivos.push("la web no se actualiza (sus datos van más de 100 minutos por detrás de la última publicación)");
+  if (web !== undefined && reconstruida !== null) {
+    if (ahora - reconstruida > MAX_CONSTRUCCION_MS && (enLaWeb === null || reconstruida - enLaWeb > MAX_WEB_ATRASADA_MS)) {
+      motivos.push("la web no se actualiza (sus datos van más de 100 minutos por detrás de la última reconstrucción pedida)");
+    }
+  } else if (web !== undefined && publicada !== null && (enLaWeb === null || publicada - enLaWeb > MAX_WEB_ATRASADA_SIN_RECONSTRUCCION_MS)) {
+    motivos.push("la web no se actualiza (sus datos van más de 260 minutos por detrás de la última publicación)");
+  }
+  const pendiente = instante(recogida?.reconstruccion_pendiente_desde);
+  if (pendiente !== null && ahora - pendiente > MAX_RECONSTRUCCION_PENDIENTE_MS) {
+    motivos.push("la web lleva más de 4 horas con datos publicados sin reconstruir");
   }
   const d = (directo ?? null) as { generado?: unknown } | null;
   const ultimo = instante(d?.generado);
@@ -75,6 +108,60 @@ export function diagnosticar(
 /** La llamada de los minutos 0 a 9 de cada hora (la tarea programada pasa cada 10 minutos). */
 export function horaria(ahora: Date): boolean {
   return ahora.getUTCMinutes() < 10;
+}
+
+/**
+ * Si se lanza el workflow y por qué. Con un problema, siempre; sin él, una vez por hora (para que
+ * cierre las incidencias ya arregladas). Desde el 20 de octubre de 2026 también: mientras siga
+ * abierta una incidencia de la vigilancia (ese día, arreglado el problema a las 07:35, las
+ * pasadas de las 07:40 y las 07:50 no se lanzaron y la incidencia esperó a la de las 08:00), y si
+ * la última pasada del workflow tiene más de 65 minutos (una pasada horaria perdida: el 14 y el
+ * 19 de octubre faltó una sin que nadie lo notara).
+ */
+export function decidirLanzar(
+  diagnostico: Diagnostico,
+  ahora: Date,
+  ultimaPasada: number | null,
+  abiertas: string[],
+): { lanzar: boolean; motivo: string } {
+  if (diagnostico.problema) return { lanzar: true, motivo: "problema" };
+  if (horaria(ahora)) return { lanzar: true, motivo: "pasada horaria" };
+  const abierta = abiertas.find((titulo) => INCIDENCIAS.includes(titulo));
+  if (abierta !== undefined) return { lanzar: true, motivo: `incidencia abierta: ${abierta}` };
+  if (ultimaPasada !== null && ahora.getTime() - ultimaPasada > MAX_SIN_PASADA_MS) {
+    return { lanzar: true, motivo: "recupera una pasada perdida" };
+  }
+  return { lanzar: false, motivo: "no hace falta" };
+}
+
+async function deGitHub(ruta: string, token: string): Promise<unknown> {
+  try {
+    const respuesta = await fetch(`https://api.github.com/repos/${REPOSITORIO}/${ruta}`, {
+      headers: {
+        ...(token.length > 0 ? { Authorization: `Bearer ${token}` } : {}),
+        Accept: "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+        "User-Agent": "EODI-vigia",
+      },
+      signal: AbortSignal.timeout(10_000),
+    });
+    return respuesta.ok ? ((await respuesta.json()) as unknown) : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Los títulos de las incidencias abiertas y el inicio de la última pasada del workflow. */
+async function contexto(token: string): Promise<{ ultimaPasada: number | null; abiertas: string[] }> {
+  const [incidencias, pasadas] = await Promise.all([
+    deGitHub("issues?state=open&per_page=100", token),
+    deGitHub(`actions/workflows/${WORKFLOW}/runs?per_page=1`, token),
+  ]);
+  const abiertas = Array.isArray(incidencias)
+    ? incidencias.map((i) => String((i as { title?: unknown }).title ?? ""))
+    : [];
+  const ultima = (pasadas as { workflow_runs?: { created_at?: unknown }[] } | null)?.workflow_runs?.[0];
+  return { ultimaPasada: instante(ultima?.created_at), abiertas };
 }
 
 async function leer(objeto: string, base: string = ALMACEN): Promise<unknown> {
@@ -103,10 +190,12 @@ export async function GET(peticion: Request): Promise<Response> {
   // Una sola línea en el registro con el diagnóstico y lo que pasó al lanzar (nunca el token).
   const token = (process.env.EODI_VIGIA_TOKEN ?? "").trim();
   // Con un problema, siempre; sin él, una vez por hora (la llamada de los minutos 0 a 9), para que
-  // el vigía cierre las incidencias ya arregladas: GitHub se salta casi todas sus ejecuciones
-  // programadas.
-  const lanzar = diagnostico.problema || horaria(new Date());
-  let lanzado: string = lanzar ? "sin token" : "no hace falta";
+  // el vigía cierre las incidencias ya arregladas (GitHub se salta casi todas sus ejecuciones
+  // programadas), mientras haya una incidencia abierta y si se perdió una pasada (decidirLanzar).
+  const ahora = new Date();
+  const previo = diagnostico.problema || horaria(ahora) ? { ultimaPasada: null, abiertas: [] } : await contexto(token);
+  const { lanzar, motivo } = decidirLanzar(diagnostico, ahora, previo.ultimaPasada, previo.abiertas);
+  let lanzado: string = lanzar ? `sin token (${motivo})` : motivo;
   if (lanzar && token.length > 0) {
     try {
       const respuesta = await fetch(
@@ -123,7 +212,7 @@ export async function GET(peticion: Request): Promise<Response> {
           signal: AbortSignal.timeout(15_000),
         },
       );
-      lanzado = `HTTP ${respuesta.status}`;
+      lanzado = `HTTP ${respuesta.status} (${motivo})`;
       if (!respuesta.ok) lanzado += ` ${(await respuesta.text()).slice(0, 200)}`;
     } catch (error) {
       lanzado = `error ${String(error).slice(0, 200)}`;
