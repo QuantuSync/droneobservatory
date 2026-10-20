@@ -685,18 +685,23 @@ def esperas_vencidas(ctx: Contexto) -> set[str]:
 
 
 def pares_por_decidir(
-    ctx: Contexto, foco: set[str], revisar_decididos: bool = True
+    ctx: Contexto, foco: set[str], revisar_decididos: bool = True, forzar: bool = False
 ) -> list[tuple[Documento, Documento, str]]:
     """Los pares candidatos que hay que comparar (con la huella de sus fuentes). Resuelve los
     dudosos que llevan 6 horas como distintos y deja en dudosos los que no han cambiado. Sin
     `revisar_decididos` (la recogida horaria), un par ya decidido no se vuelve a comparar aunque
-    lleguen fuentes nuevas: lo hace la pasada de madrugada."""
+    lleguen fuentes nuevas: lo hace la pasada de madrugada. Con `forzar` (el repaso con el
+    experto), todos salvo los que ese repaso ya decidió con las mismas fuentes."""
     activos = _activos(ctx.almacen)
     resultado = []
     for a, b in reglas.pares_candidatos(activos, foco):
         clave = reglas.clave_par(a["id"], b["id"])
         huella = reglas.huella_fuentes(a) + reglas.huella_fuentes(b)
         previa = ctx.decision(clave)
+        if forzar:
+            if not _hecho_en_repaso(previa, huella):
+                resultado.append((a, b, huella))
+            continue
         if previa is not None:
             if previa["decision"] in {"mismo", "distinto"} and (
                 previa.get("huella") == huella or not revisar_decididos
@@ -876,17 +881,22 @@ def comparar_pares(ctx: Contexto, foco: set[str], revisar_decididos: bool = True
 
 
 def por_verificar(
-    ctx: Contexto, foco: set[str], espera: timedelta | None = None
+    ctx: Contexto, foco: set[str], espera: timedelta | None = None, forzar: bool = False
 ) -> list[Documento]:
     """Las fichas del foco con fuentes que aún no se verificaron, las más recientes primero. Con
     `espera` (la recogida horaria), una ficha ya verificada con fuentes nuevas se vuelve a
-    verificar como mucho una vez en ese tiempo; las nuevas, siempre."""
+    verificar como mucho una vez en ese tiempo; las nuevas, siempre. Con `forzar` (el repaso con
+    el experto), todas las del foco salvo las que ese repaso ya verificó con las mismas fuentes."""
     resultado = []
     for incidente in sorted(_activos(ctx.almacen), key=lambda d: d["control"]["alta"]["valor"],
                             reverse=True):  # fmt: skip
         if incidente["id"] not in foco or not _publicas(incidente):
             continue
         previa = ctx.decision(reglas.clave_verificacion(incidente["id"]))
+        if forzar:
+            if not _hecho_en_repaso(previa, reglas.huella_fuentes(incidente)):
+                resultado.append(incidente)
+            continue
         if previa is not None and previa.get("espera_experto"):
             # Espera al experto: se vuelve a verificar cuando puede.
             if coste.espera_vencida(
@@ -1502,20 +1512,21 @@ class Respuestas:
     criticos: set[str] = field(default_factory=set)
 
 
-def _peor_lote(peticion: Peticion) -> float:
+def _peor_lote(peticion: Peticion, modelo: str | None = None) -> float:
     esfuerzo = (peticion.cuerpo.get("output_config") or {}).get("effort")
     return coste.peor_caso(peticiones.letras(peticion.cuerpo), peticion.max_salida, lote=True,
-                           esfuerzo=esfuerzo)  # fmt: skip
+                           modelo=modelo, esfuerzo=esfuerzo)  # fmt: skip
 
 
-def elegir_para_lote(lista: list[Peticion], disponible: float
+def elegir_para_lote(lista: list[Peticion], disponible: float, modelo: str | None = None
                      ) -> tuple[dict[str, Peticion], float, int]:  # fmt: skip
-    """Las peticiones que caben en `disponible` dólares en el peor caso, con su identificador en
-    el lote; el peor caso total y cuántas quedan fuera."""
+    """Las peticiones que caben en `disponible` dólares en el peor caso (con el precio de
+    `modelo`; sin él, el del base), con su identificador en el lote; el peor caso total y cuántas
+    quedan fuera."""
     elegidas: dict[str, Peticion] = {}
     previsto = 0.0
     for numero, peticion in enumerate(lista):
-        peor = _peor_lote(peticion)
+        peor = _peor_lote(peticion, modelo)
         if previsto + peor > disponible:
             return elegidas, previsto, len(lista) - numero
         previsto += peor
@@ -1546,11 +1557,12 @@ def leer_resultados(servicio: ServicioLotes, estado: dict[str, Any],
 def por_lote(
     servicio: ServicioLotes, lista: list[Peticion], disponible: float,
     dormir: Callable[[float], None], reloj: Callable[[], float], tope_s: float = TOPE_LOTE_S,
+    modelo: str | None = None,
 ) -> Respuestas:  # fmt: skip
     """Manda las peticiones en un lote (a mitad de precio) hasta el peor caso de `disponible`
     dólares y espera a que termine. Lo que no cabe queda fuera."""
     respuestas = Respuestas()
-    elegidas, previsto, respuestas.fuera_de_tope = elegir_para_lote(lista, disponible)
+    elegidas, previsto, respuestas.fuera_de_tope = elegir_para_lote(lista, disponible, modelo)
     if not elegidas:
         return respuestas
     creado = servicio.crear_lote(
@@ -2033,6 +2045,160 @@ def repaso(base: Base, fabrica: Callable[[], Any], nom: Nomenclator | None = Non
     return resultado
 
 
+# --- Repaso de todo lo publicado con el experto (docs/control_fichas.md, «Repaso con el experto»)
+
+RUTA_GRUPOS = Path(__file__).resolve().parent.parent / "configuracion" / "repaso_experto.json"
+# Dentro de un grupo de fichas que pueden contar el mismo suceso, se comparan las de 3 días.
+DIAS_GRUPO = 3
+TOPE_REPASO_EXPERTO_S = 6 * 3600.0
+# Peticiones por lote: lo que no cabe en el lote va en el siguiente, con el gasto ya anotado.
+PETICIONES_POR_LOTE = 400
+
+
+def _hecho_en_repaso(previa: Documento | None, huella: str) -> bool:
+    """El repaso con el experto ya decidió esto con las mismas fuentes."""
+    return (
+        previa is not None
+        and bool(previa.get("repaso_experto"))
+        and (previa.get("huella") == huella)
+    )
+
+
+def grupos_del_repaso(ruta: Path = RUTA_GRUPOS) -> list[list[str]]:
+    """Las series de fichas que el repaso compara entre sí aunque no sean candidatas al mismo
+    suceso por las reglas (la serie de Constanza): configuracion/repaso_experto.json."""
+    if not ruta.exists():
+        return []
+    datos = json.loads(ruta.read_text(encoding="utf-8"))
+    return [list(g["fichas"]) for g in datos.get("grupos", [])]
+
+
+def pares_de_grupos(ctx: Contexto, grupos: list[list[str]]
+                    ) -> list[tuple[Documento, Documento, str]]:  # fmt: skip
+    """Los pares de cada grupo activos, con fuentes y a menos de DIAS_GRUPO días, que el repaso
+    aún no decidió con las mismas fuentes."""
+    activos = {d["id"]: d for d in _activos(ctx.almacen)}
+    pares = []
+    for grupo in grupos:
+        fichas = sorted((activos[i] for i in grupo if i in activos and _publicas(activos[i])),
+                        key=lambda d: d["id"])  # fmt: skip
+        for n, a in enumerate(fichas):
+            for b in fichas[n + 1 :]:
+                if abs(reglas.instante(a) - reglas.instante(b)) > timedelta(days=DIAS_GRUPO):
+                    continue
+                huella = reglas.huella_fuentes(a) + reglas.huella_fuentes(b)
+                if not _hecho_en_repaso(ctx.decision(reglas.clave_par(a["id"], b["id"])), huella):
+                    pares.append((a, b, huella))
+    return pares
+
+
+def _primero_con_fallos(incidente: Documento) -> int:
+    """Primero las fichas con un fallo conocido o con el lugar en el país a secas."""
+    pais = (incidente.get("lugar") or {}).get("nivel") == "pais"
+    return 0 if reglas.fallos_de_ficha(incidente) or pais else 1
+
+
+def repaso_experto(base: Base, fabrica: Callable[[], Any], nom: Nomenclator | None = None,
+                   dormir: Callable[[float], None] | None = None,
+                   reloj: Callable[[], float] | None = None,
+                   grupos: list[list[str]] | None = None) -> Resultado:  # fmt: skip
+    """El repaso de todo lo publicado con el experto, por lotes (a mitad de precio) y dentro de
+    su presupuesto aparte (coste.LIMITE_REPASO_EXPERTO_USD, modo «repaso_experto»: fuera del
+    tope diario del experto, de su reserva crítica, de su parte del mes y del tope mensual).
+
+    Dos rondas, como el repaso: los pares (los candidatos de las reglas, ya decididos o no, y los
+    de las series de configuracion/repaso_experto.json) y la verificación de cada ficha
+    publicada, las que tienen un fallo conocido o el lugar en el país a secas primero. Cada
+    respuesta es del experto y va por el camino normal: las uniones, las correcciones con su
+    cita y el motivo en el historial (TABLA_MOTIVOS). Lo que el repaso ya decidió con las mismas
+    fuentes no se repite: si se para (el presupuesto o el tiempo), sigue donde lo dejó."""
+    import time
+
+    dormir = dormir or time.sleep
+    reloj = reloj or time.monotonic
+    if nom is None:
+        from proceso.noticias import nomenclator
+
+        nom = nomenclator()
+    grupos = grupos_del_repaso() if grupos is None else grupos
+    resultado = Resultado()
+    modo = coste.Modo.REPASO_EXPERTO
+    experto = getattr(fabrica(), "experto", None)
+    cliente = experto() if callable(experto) else None
+    if cliente is None or not callable(getattr(cliente, "crear_lote", None)):
+        resultado.errores.append("sin experto por lotes")
+        return resultado
+    modelo_experto = str(getattr(cliente, "modelo", "")) or None
+    from recogida.extractor import modelos_base
+
+    inicio = reloj()
+    # Lo ya preguntado en esta pasada no se repite aunque la respuesta no valga.
+    hechas: set[str] = set()
+    for ronda in ("pares", "fichas"):
+        while reloj() - inicio < TOPE_REPASO_EXPERTO_S:
+            ahora = datetime.now(UTC)
+            copia = base.abrir()
+            modelos = modelos_base() | frozenset(copia.vocabulario("modelo_dron"))
+            llamador = Llamador(copia, None, modo, ahora, None, resultado)
+            ctx = Contexto(copia, ahora, modelos, llamador, resultado, nom, None, copia.controles())
+            reglas_deterministas(ctx)
+            todos = {d["id"] for d in _activos(copia)}
+            if ronda == "pares":
+                textos: dict[str, str] = {}
+                vistos: set[str] = set()
+                lista: list[Peticion] = []
+                for a, b, h in [*pares_por_decidir(ctx, todos, forzar=True),
+                                *pares_de_grupos(ctx, grupos)]:  # fmt: skip
+                    clave = reglas.clave_par(a["id"], b["id"])
+                    if clave not in vistos | hechas and len(lista) < PETICIONES_POR_LOTE:
+                        vistos.add(clave)
+                        lista.append(peticion_par(ctx, a, b, h, textos))
+            else:
+                fichas = sorted((d for d in por_verificar(ctx, todos, forzar=True)
+                                 if reglas.clave_verificacion(d["id"]) not in hechas),
+                                key=_primero_con_fallos)  # fmt: skip
+                lista = [peticion_verificacion(ctx, d) for d in fichas[:PETICIONES_POR_LOTE]]
+            disponible = coste.limite(modo) - copia.gastado(modo.value)
+            registro.info("repaso con el experto, ronda %s: %d peticiones, %.4f USD disponibles",
+                          ronda, len(lista), disponible)  # fmt: skip
+            base.soltar(copia)
+            if not lista:
+                break
+            try:
+                respuestas = por_lote(cliente, lista, disponible, dormir, reloj,
+                                      TOPE_REPASO_EXPERTO_S, modelo_experto)  # fmt: skip
+            except (TimeoutError, LlamadaFallida) as error:
+                resultado.errores.append(f"repaso con el experto: {str(error)[:200]}")
+                resultado.parada = "error"
+                return resultado
+            hechas |= set(respuestas.leidas)
+            if not respuestas.leidas:
+                resultado.parada = "limite_gasto" if respuestas.fuera_de_tope else "sin_respuestas"
+                break
+            with base.cerrojo():
+                almacen = base.abrir()
+                ahora = datetime.now(UTC)
+                ctx = Contexto(almacen, ahora, modelos, Llamador(almacen, None, modo, ahora, None,
+                               resultado), resultado, nom, None, almacen.controles())  # fmt: skip
+                _anotar_lote(almacen, respuestas, ahora, resultado, modo)
+                procesar_respuestas(ctx, lista, respuestas)
+                for peticion in lista:
+                    if peticion.clave in respuestas.leidas and peticion.clave in ctx.nuevas:
+                        ctx.nuevas[peticion.clave]["repaso_experto"] = _iso(ahora)
+                almacen.guardar_controles(ctx.nuevas, _iso(ahora))
+                ctx.decisiones = {**ctx.decisiones, **ctx.nuevas}
+                ctx.nuevas = {}
+                reglas_deterministas(ctx)
+                aplicar_verificaciones(ctx)
+                base.guardar(almacen)
+            # Lo que no cupo en el peor caso va en la vuelta siguiente, con lo gastado de verdad.
+            base.soltar(almacen)
+        if resultado.parada == "limite_gasto":
+            break
+    registro.info("repaso con el experto: %s", resultado.resumen())
+    return resultado
+
+
 def noche(base: Base, fabrica: Callable[[], Any] | None, ruta_estado: Path,
           dormir: Callable[[float], None] | None = None,
           reloj: Callable[[], float] | None = None) -> Resultado:  # fmt: skip
@@ -2325,7 +2491,8 @@ def base_del_servidor(temporal: Path, correo: str, cerrojo: Path | None) -> Base
 
 def principal(argumentos: list[str] | None = None) -> int:
     opciones = argparse.ArgumentParser(description=__doc__)
-    opciones.add_argument("alcance", choices=("noche", "repaso", "estado", "traducir-pendientes"))
+    opciones.add_argument("alcance", choices=("noche", "repaso", "estado", "traducir-pendientes",
+                                              "repaso-experto"))  # fmt: skip
     opciones.add_argument("--estado", type=Path, default=RUTA_ESTADO_DEFECTO)
     opciones.add_argument("--correo", default="", help="correo del autor (solo base en GitHub)")
     opciones.add_argument("--cerrojo", type=Path, help="cerrojo de la recogida (repaso)")
@@ -2340,12 +2507,14 @@ def principal(argumentos: list[str] | None = None) -> int:
     with TemporaryDirectory() as temporal:
         base = base_del_servidor(Path(temporal), args.correo, args.cerrojo)
         ahora = datetime.now(UTC)
-        if args.alcance in {"repaso", "traducir-pendientes"}:
+        if args.alcance in {"repaso", "traducir-pendientes", "repaso-experto"}:
             fabrica = _fabrica()
             if fabrica is None:
                 return 1
             if args.alcance == "repaso":
                 resultado = repaso(base, fabrica)
+            elif args.alcance == "repaso-experto":
+                resultado = repaso_experto(base, fabrica)
             else:
                 resultado = traducir_pendientes(base, fabrica)
             print(resultado.resumen())
@@ -2364,6 +2533,7 @@ def principal(argumentos: list[str] | None = None) -> int:
             print(json.dumps({
                 "gasto_control_hoy": almacen.gastado(coste.Modo.CONTROL.value, coste.dia(ahora)),
                 "gasto_repaso": almacen.gastado(coste.Modo.CONTROL_REPASO.value),
+                "gasto_repaso_experto": almacen.gastado(coste.Modo.REPASO_EXPERTO.value),
                 "decisiones": len(almacen.controles()),
                 "traducciones": len(almacen.traducciones()),
                 "cursor": {k: (len(v) if isinstance(v, dict) else v)

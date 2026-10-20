@@ -89,6 +89,12 @@ LIMITE_CONTROL_DIARIO_USD = 0.25
 # Repaso del control sobre todo lo publicado: 4 USD el 14 de octubre de 2026 de madrugada (se
 # gastaron 3,46) y 6 USD más ese mismo día para las fichas que quedaron sin verificar.
 LIMITE_CONTROL_REPASO_USD = 9.46
+# Repaso de todo lo publicado con el experto y las reglas del 20 de octubre de 2026 (buques, fechas
+# relativas, nombres propios, titulares, lugar, duplicados), por lote y de madrugada
+# (recogida/control_fichas.repaso_experto): 15 USD en total, con los créditos del plan. Va aparte
+# del tope diario del experto, de su reserva crítica, de su parte del mes y del tope mensual
+# (almacen/base.py, CUPOS_PROPIOS y FUERA_DEL_MES): no quita nada a la recogida.
+LIMITE_REPASO_EXPERTO_USD = 15.00
 # Traducción de una sola vez de las citas atrasadas (14 de octubre de 2026), por lote.
 LIMITE_TRADUCCIONES_USD = 2.00
 # Búsqueda mensual de rectificaciones oficiales con el modelo base (recogida/rectificaciones.py):
@@ -168,6 +174,7 @@ class Modo(StrEnum):
     RECTIFICACIONES = "rectificaciones"
     SEGUNDA_LECTURA = "segunda_lectura"
     SEGUNDA_BUSQUEDA = "segunda_busqueda"
+    REPASO_EXPERTO = "repaso_experto"
 
 
 # Lo que le toca a cada uno del tope mensual (suman TOPE_MENSUAL_USD). «otros»: lo que no es de
@@ -459,6 +466,7 @@ def limite(modo: Modo) -> float:
         Modo.RECTIFICACIONES: LIMITE_RECTIFICACIONES_USD,
         Modo.SEGUNDA_LECTURA: LIMITE_SEGUNDA_EXPERTO_DIARIO_USD,
         Modo.SEGUNDA_BUSQUEDA: LIMITE_SEGUNDA_BUSQUEDA_DIARIO_USD,
+        Modo.REPASO_EXPERTO: LIMITE_REPASO_EXPERTO_USD,
     }[modo]
 
 

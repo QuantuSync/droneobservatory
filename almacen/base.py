@@ -30,8 +30,13 @@ TABLAS_CON_HISTORIAL = (
 CAMPOS_FUENTE_POR_ENTIDAD = frozenset({"credibilidad", "campos_respaldados"})
 # Los modos del experto con su propio cupo y su parte del mes (modelo/coste.py): lo que gastan no
 # cuenta contra el tope del experto y sí como un modo más del mes.
-CUPOS_PROPIOS = ("segunda_busqueda", "control")
+CUPOS_PROPIOS = ("segunda_busqueda", "control", "repaso_experto")
 _CUPOS = ", ".join(f"'{m}'" for m in CUPOS_PROPIOS)
+# Los modos con un presupuesto aparte del tope mensual (los créditos del plan): no cuentan en el
+# total del mes, para que no paren la recogida ni el control (el repaso de todo lo publicado con el
+# experto, 15 USD desde el 20 de octubre de 2026).
+FUERA_DEL_MES = ("repaso_experto",)
+_FUERA = ", ".join(f"'{m}'" for m in FUERA_DEL_MES)
 
 _TABLAS = """
 CREATE TABLE IF NOT EXISTS incidentes (
@@ -1331,7 +1336,8 @@ class Almacen:
         """Lo gastado en el mes (AAAA-MM, UTC): en total (con hoy); antes de hoy (AAAA-MM-DD), por
         modo sin las llamadas al experto; y antes de hoy, del experto (por su prefijo)."""
         total = self._conexion.execute(
-            "SELECT coalesce(sum(coste), 0) FROM llamadas_extractor WHERE substr(fecha, 1, 7) = ?",
+            "SELECT coalesce(sum(coste), 0) FROM llamadas_extractor WHERE substr(fecha, 1, 7) = ? "
+            f"AND modo NOT IN ({_FUERA})",
             (mes,),
         ).fetchone()[0]
         modos = self._conexion.execute(
