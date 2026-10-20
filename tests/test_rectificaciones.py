@@ -233,7 +233,7 @@ def test_sin_experto_no_se_rebaja_nada(almacen: Almacen, monkeypatch: pytest.Mon
 
 def test_con_el_tope_del_experto_agotado_espera(almacen: Almacen) -> None:
     almacen.registrar_llamada({
-        "fecha": "2026-10-15T01:00:00Z", "modo": "control", "candidato": "x", "lote": False,
+        "fecha": "2026-10-15T01:00:00Z", "modo": "horario", "candidato": "x", "lote": False,
         "entrada": 0, "salida": 0, "escritura_cache": 0, "lectura_cache": 0,
         "coste": coste.LIMITE_EXPERTO_DIARIO_USD, "modelo": EXPERTO, "escalada": True,
     })  # fmt: skip

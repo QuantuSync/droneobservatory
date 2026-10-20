@@ -131,6 +131,10 @@ PREFIJO_CUPO = "cupo"
 # vez, las decisiones del base desde que entró en producción se repasan con ellas.
 REVISION_REGLAS = "revision_reglas_experto"
 ENTRADA_MODELO_BASE = "2026-10-14T13:42:00Z"
+# La regla de los descartes dudosos (escalado.descarte_dudoso) llegó el 20 de octubre de 2026: una
+# sola vez, los descartes del base desde el 13 de octubre se repasan con ella.
+REVISION_DUDOSOS = "revision_descartes_dudosos"
+DESDE_DUDOSOS = "2026-10-13T00:00:00Z"
 
 
 class Servicio(Protocol):
@@ -308,6 +312,39 @@ def revisar_decisiones_base(
     registro.info("revisión de las decisiones del base desde %s: %d al experto", desde,
                   len(marcados))  # fmt: skip
     return list(marcados)
+
+
+def revisar_descartes_dudosos(
+    almacen: Almacen, ahora: datetime, desde: str = DESDE_DUDOSOS
+) -> list[str]:
+    """Una sola vez (cursor `revision_descartes_dudosos`): la última ficha de cada candidato
+    extraído desde `desde` que el base, sin el experto, no dio por incidente con poca seguridad
+    en un dato clave (escalado.descarte_dudoso) y sin ficha publicada se repite con el experto
+    por el camino normal (`esperan_experto` con `revision`), por orden de fecha. Devuelve los
+    marcados."""
+    if almacen.cursor(REVISION_DUDOSOS) is not None:
+        return []
+    candidatos = {c["id"] for c in almacen.candidatos()}
+    elegidos: list[tuple[str, str, list[str]]] = []
+    for candidato_id in almacen.candidatos_extraidos_desde(desde):
+        anteriores = almacen.extracciones(candidato_id)
+        ultima = anteriores[-1] if anteriores else {}
+        leida = ultima.get("ficha")
+        if candidato_id not in candidatos or not leida or ultima.get("escalado"):
+            continue
+        if ultima.get("incidente") or publicada_del_candidato(almacen, candidato_id) is not None:
+            continue
+        motivos = [m for m in escalado.motivos_ficha(leida, ()) if m.startswith("poca_seguridad")]
+        if escalado.descarte_dudoso(motivos, leida):
+            motivos.append(f"{escalado.MOTIVO_DUDOSO}: el base lo descartó con poca seguridad")
+            elegidos.append((str(ultima.get("fecha", "")), candidato_id, motivos))
+    for _, candidato_id, motivos in sorted(elegidos):
+        anotar_espera(almacen, candidato_id, motivos, ahora - ESPERA_FALLO_EXPERTO, False, True)
+    almacen.guardar_cursor(REVISION_DUDOSOS, {
+        "fecha": _fecha(ahora), "desde": desde, "marcados": [c for _, c, _ in sorted(elegidos)],
+    })  # fmt: skip
+    registro.info("descartes dudosos desde %s: %d al experto", desde, len(elegidos))
+    return [c for _, c, _ in sorted(elegidos)]
 
 
 def en_revision(almacen: Almacen) -> set[str]:
@@ -723,12 +760,15 @@ class EsperaExperto(Exception):
     """La ficha necesita al experto y no puede ser ahora (tope del día o fallo)."""
 
     def __init__(
-        self, motivos: list[str], por_tope: bool, detalle: str, critico: bool = False
-    ) -> None:
+        self, motivos: list[str], por_tope: bool, detalle: str, critico: bool = False,
+        revision: bool = False,
+    ) -> None:  # fmt: skip
         super().__init__(detalle)
         self.motivos = motivos
         self.por_tope = por_tope
         self.critico = critico
+        # Se repite con el experto aunque sus artículos no cambien (un descarte dudoso).
+        self.revision = revision
 
 
 def textos_de(peticion: Peticion) -> tuple[str, ...]:
@@ -771,6 +811,14 @@ def motivos_escalado(
     return escalado.motivos_ficha(
         leida, textos_de(peticion), con_fuente_oficial(peticion), publicada
     )
+
+
+def _leida(respuesta: dict[str, Any]) -> dict[str, Any] | None:
+    """La ficha leída de una respuesta, o None si no se puede leer."""
+    try:
+        return ficha.leer_respuesta(respuesta)
+    except ficha.RespuestaInvalida:
+        return None
 
 
 def _da_suceso(respuesta: dict[str, Any]) -> bool:
@@ -831,6 +879,24 @@ def escalar(
     mes = coste.del_mes(almacen, ahora, modelo_experto)
     opcional = escalado.opcionales(motivos) and not espera.get("revision")
     cupo = espera.get("cupo")
+    # Un descarte del base poco seguro no se queda sin el experto: espera (o, si nombra una
+    # autoridad o una infraestructura del alcance, usa la reserva crítica).
+    dudoso = (
+        publicada is None
+        and not cupo
+        and (
+            escalado.descarte_dudoso(motivos, _leida(respuesta))
+            or any(str(m).startswith(escalado.MOTIVO_DUDOSO) for m in espera.get("motivos", []))
+        )
+    )
+    if dudoso:
+        if not any(m.startswith(escalado.MOTIVO_DUDOSO) for m in motivos):
+            motivos.append(f"{escalado.MOTIVO_DUDOSO}: el base lo descarta con poca seguridad")
+        pais_ficha = ((_leida(respuesta) or {}).get("pais") or {}).get("valor")
+        paises = (peticion.objetivo.pais, str(pais_ficha or ""))
+        critico = critico or escalado.dudoso_critico(
+            textos_de(peticion), paises, con_fuente_oficial(peticion)
+        )
     if cupo:
         # Lo que entrega la segunda lectura es una relectura de lo ya recogido (o una noticia de
         # días antes): nunca sale de la reserva crítica. El 20 de octubre de 2026, de 00:00 a
@@ -844,7 +910,7 @@ def escalar(
                                  coste.Modo(cupo), coste.del_mes(almacen, ahora))  # fmt: skip
             tramo = coste.Tramo.NORMAL
             motivos = [*motivos, f"{PREFIJO_CUPO}: {cupo}"]
-        elif opcional:
+        elif opcional and not dudoso:
             # Poca seguridad o una autoridad citada sin declaración: el experto solo si le sobra
             # (al ritmo de su tope del día), nunca de la reserva.
             coste.comprobar_al_ritmo(gastado_hoy, previsto, ahora, mes)
@@ -852,6 +918,11 @@ def escalar(
         else:
             tramo = coste.comprobar_experto(gastado_hoy, previsto, critico, mes)
     except coste.LimiteGasto as error:
+        if dudoso:
+            # Sin margen del experto, el descarte dudoso espera y se repite con él (revision);
+            # los demás candidatos siguen.
+            anotar_llamada(almacen, peticion, respuesta, ahora, modo, False)
+            raise EsperaExperto(motivos, True, str(error), critico, revision=True) from error
         if opcional and not cupo:
             # Sin experto ahora, vale la ficha del base (procesar_respuesta anota su llamada).
             registro.info("candidato %s: sin experto ahora (%s), vale el base", candidato_id, error)
@@ -1287,7 +1358,7 @@ def extraer(
                 # La ficha necesita al experto y no puede ser ahora: el candidato espera y los
                 # demás siguen (la llamada del base ya está anotada).
                 anotar_espera(almacen, candidato_id, espera.motivos, ahora, espera.por_tope,
-                              critico=espera.critico)  # fmt: skip
+                              revision=espera.revision, critico=espera.critico)  # fmt: skip
                 hechas.esperan.append(candidato_id)
                 continue
         except TiempoAgotado as error:

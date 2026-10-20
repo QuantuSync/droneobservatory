@@ -119,6 +119,18 @@ la misma petición con el experto y **vale la respuesta del experto**.
    cuenta en nombre de la autoridad («según la Delegación del Gobierno», sin comillas) y que la
    representación del Gobierno en un territorio (delegación o subdelegación del Gobierno,
    prefectura, voivoda) es «gobierno».
+8. **descarte_dudoso** (desde el 20 de octubre de 2026): el base no da el candidato por incidente
+   y está poco seguro (menos de 0,7) de algún dato clave. Aunque `poca_seguridad` sea opcional, el
+   candidato **no se descarta sin el experto**: va con su tope normal (no al ritmo) y, si no cabe,
+   espera (`esperan_experto` con `revision`) hasta el día siguiente, cuando el tope se renueva, sin
+   bloquear a los demás ni dar código de fallo. Si una fuente es oficial, nombra a una autoridad o,
+   en un país del alcance, habla de un buque, aeropuerto, base, puerto o infraestructura
+   (`escalado.dudoso_critico`, «infraestructura» y «base_militar» en
+   `configuracion/senales_escalado.json`), usa la reserva crítica y no espera. Si lleva más de 48
+   horas esperando, aviso único al responsable (`recogida/silencio.py`). El 20 de octubre de 2026
+   el base dio por «no es incidente», con 0,6 y sin margen del experto, el ataque al buque Chelsea
+   3 frente a Bulgaria. Una sola vez, los descartes así desde el 13 de octubre se repitieron con el
+   experto (`extraccion.revisar_descartes_dudosos`).
 
 Fuera de esas señales, una ficha que el base da por «no es un incidente» con seguridad no se
 escala. Una verificación que
@@ -274,16 +286,26 @@ USD** (`TOPE_MENSUAL_USD`; la variable `EODI_TOPE_MENSUAL_USD` lo cambia), tambi
 sesiones de trabajo. Del 14 al 19 de octubre se gastaron de 0,80 a 1,62 USD al día (unos 40 USD al
 mes), casi todo en el experto de la recogida horaria (4,50 USD en 172 llamadas).
 
-- **Reparto** (`REPARTO_MENSUAL_USD`, desde el 20 de octubre de 2026): experto 3,30 (con la
-  reserva crítica: lo que gasta un caso crítico se resta del tope normal de los días que quedan);
-  recogida horaria (base) 3,00; control de las fichas (base) 1,80; partes de Ucrania 0,20;
+- **Reparto** (`REPARTO_MENSUAL_USD`, desde el 20 de octubre de 2026, ajustado ese mismo día):
+  experto 2,70 (con la reserva crítica: lo que gasta un caso crítico se resta del tope normal de
+  los días que quedan); recogida horaria (base) 3,00; control de las fichas 2,40 (el base y su
+  **cupo propio del experto**, como mucho 0,06 USD al día, `coste.comprobar_control_experto`; de
+  madrugada, por lote; sus casos críticos siguen con el tope del experto y su reserva); partes de
+  Ucrania 0,20;
   rectificaciones 0,30; cupo de la segunda búsqueda 1,10 (`segunda_busqueda`, docs/segunda_lectura.md);
   otros 0,30 (lo que no es de ningún modo de cada día: sesiones, catálogo vivo; cuenta pero no se
   frena aquí). Antes: experto 4,30, horaria 2,80, control 2,00, otros 0,40. Medido del 15 al 20 de
   octubre, por día: base de la recogida 0,068 a 0,125 (media 0,10); base del control 0,037 a 0,119
   (0,07); Ucrania 0,002. Desde el corte del 19 de octubre (22:41 UTC) ningún caso crítico de verdad
   usó la reserva: las cuatro veces que se usó eran entregas de la segunda lectura, que ya no la
-  usan.
+  usan. El cupo del control llegó porque el 20 de octubre, de 00:00 a 06:00 UTC, el experto gastó
+  sus 0,30 del día (0,23 en esperas de la recogida horaria que vencían a medianoche y 0,07 en el
+  control) y la recogida se quedó sin él el resto del día.
+- **Aviso de silencio** (`recogida/silencio.py`, al final de cada recogida horaria): aviso único
+  al responsable si pasan 24 horas sin ningún incidente nuevo en Europa mientras entran noticias
+  candidatas, si hay candidatos esperando al experto por los topes (o la API sin saldo) desde hace
+  más de 6 horas, o si la extracción lleva más de 3 horas sin llamar al modelo y han entrado
+  noticias candidatas. No se repite hasta que el caso se resuelve.
 - **Línea diaria**: el resumen diario privado cuenta lo gastado en la API el día anterior (UTC,
   todas las llamadas) y lo acumulado en el mes frente al tope (`control.json`, apartado `api`;
   `recogida/visitas.lineas_api`).

@@ -30,7 +30,7 @@ TABLAS_CON_HISTORIAL = (
 CAMPOS_FUENTE_POR_ENTIDAD = frozenset({"credibilidad", "campos_respaldados"})
 # Los modos del experto con su propio cupo y su parte del mes (modelo/coste.py): lo que gastan no
 # cuenta contra el tope del experto y sí como un modo más del mes.
-CUPOS_PROPIOS = ("segunda_busqueda",)
+CUPOS_PROPIOS = ("segunda_busqueda", "control")
 _CUPOS = ", ".join(f"'{m}'" for m in CUPOS_PROPIOS)
 
 _TABLAS = """
@@ -1370,6 +1370,27 @@ class Almacen:
         claves = ("fecha", "modo", "candidato", "lote", "entrada", "salida",
                   "escritura_cache", "lectura_cache", "coste")  # fmt: skip
         return [dict(zip(claves, fila, strict=True)) for fila in filas]
+
+    def ultima_llamada(self, modo: str) -> str | None:
+        """La fecha de la última llamada al extractor en un modo, o None."""
+        fila = self._conexion.execute(
+            "SELECT max(fecha) FROM llamadas_extractor WHERE modo = ?", (modo,)
+        ).fetchone()
+        return fila[0] if fila else None
+
+    def ultima_alta(self, tabla: str) -> str | None:
+        """La fecha del último alta del historial en una tabla (un incidente nuevo), o None."""
+        fila = self._conexion.execute(
+            "SELECT max(fecha) FROM historial WHERE tabla = ? AND operacion = 'alta'", (tabla,)
+        ).fetchone()
+        return fila[0] if fila else None
+
+    def articulos_candidatos_desde(self, fecha: str) -> int:
+        """Cuántos artículos de algún candidato tienen fecha desde `fecha` (ISO)."""
+        fila = self._conexion.execute(
+            "SELECT count(*) FROM articulos WHERE fecha >= ? AND candidato IS NOT NULL", (fecha,)
+        ).fetchone()
+        return int(fila[0])
 
     def guardar_extraccion(
         self, candidato: str, fecha: str, version: str, huella: str, valida: bool,

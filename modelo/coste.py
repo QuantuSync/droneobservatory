@@ -111,6 +111,13 @@ LIMITE_SEGUNDA_EXPERTO_DIARIO_USD = 0.10
 # 2026: con la regla del ritmo esas búsquedas casi nunca llegaban al experto, y las que llegaban
 # como críticas gastaban la reserva).
 LIMITE_SEGUNDA_BUSQUEDA_DIARIO_USD = 0.12
+# Cupo propio del experto en el control de las fichas (duplicados dudosos y verificaciones que
+# contradicen la ficha, recogida/control_fichas.py), aparte de su tope normal: desde el 20 de
+# octubre de 2026, porque ese día el control (0,07 USD) y las esperas que vencen a medianoche
+# gastaron de 00:00 a 06:00 UTC los 0,30 del experto, y la recogida horaria se quedó sin él durante
+# el día. Cuenta dentro de la parte del mes del control; los casos críticos del control siguen con
+# el tope del experto y su reserva crítica. De madrugada va por lote (escalar_lote).
+LIMITE_CONTROL_EXPERTO_DIARIO_USD = 0.06
 # Tope del experto antes del 15 de octubre de 2026: una espera anotada sin su tope es de entonces.
 LIMITE_EXPERTO_ANTERIOR_USD = 0.30
 # Un caso que espera al experto por un fallo, o crítico con la reserva agotada, vuelve a la
@@ -155,9 +162,9 @@ class Modo(StrEnum):
 # 0,002; casos críticos de verdad desde el corte del 19 de octubre (22:41 UTC), ninguno (los cuatro
 # que usaron la reserva eran entregas de la segunda lectura, que ya no la usan).
 REPARTO_MENSUAL_USD: dict[str, float] = {
-    EXPERTO: 3.30,
+    EXPERTO: 2.70,
     Modo.HORARIO: 3.00,
-    Modo.CONTROL: 1.80,
+    Modo.CONTROL: 2.40,
     Modo.GUERRA: 0.20,
     Modo.RECTIFICACIONES: 0.30,
     Modo.SEGUNDA_BUSQUEDA: 1.10,
@@ -364,6 +371,21 @@ def comprobar_cupo(gastado_hoy: float, previsto: float, modo: Modo, mes: Mes | N
         )
     if mes_agotado(mes, previsto):
         raise LimiteGasto(f"{modo}: tope mensual de {tope_mensual():.2f} USD agotado")
+
+
+def comprobar_control_experto(gastado_hoy: float, previsto: float, mes: Mes | None = None
+                              ) -> None:  # fmt: skip
+    """El cupo propio del experto en el control (lo no crítico): su límite del día, nunca con el
+    tope mensual agotado ni de la reserva crítica. Lanza LimiteGasto si no cabe."""
+    if gastado_hoy + previsto > LIMITE_CONTROL_EXPERTO_DIARIO_USD:
+        raise LimiteGasto(
+            f"experto del {Modo.CONTROL}: gastado {gastado_hoy:.4f} + previsto {previsto:.4f} > "
+            f"{LIMITE_CONTROL_EXPERTO_DIARIO_USD:.2f} USD"
+        )
+    if mes_agotado(mes, previsto):
+        raise LimiteGasto(
+            f"experto del {Modo.CONTROL}: tope mensual de {tope_mensual():.2f} USD agotado"
+        )
 
 
 def reparto_experto(

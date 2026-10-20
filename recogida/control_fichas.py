@@ -262,13 +262,17 @@ class Llamador:
         previsto = coste.peor_caso(peticiones.letras(cuerpo), max_salida, modelo=modelo_experto,
                                    esfuerzo=esfuerzo)  # fmt: skip
         dia = coste.dia(self.ahora)
+        mes = coste.del_mes(self.almacen, self.ahora, modelo_experto)
         try:
-            coste.comprobar_experto(
-                self.almacen.gastado_modelo(modelo_experto, dia),
-                previsto,
-                critico,
-                coste.del_mes(self.almacen, self.ahora, modelo_experto),
-            )
+            if not critico and self.modo is coste.Modo.CONTROL:
+                # Lo no crítico del control, con su cupo propio del experto (no con su tope).
+                coste.comprobar_control_experto(
+                    self.almacen.gastado_experto_en(self.modo.value, dia), previsto, mes
+                )
+            else:
+                coste.comprobar_experto(
+                    self.almacen.gastado_modelo(modelo_experto, dia), previsto, critico, mes
+                )
         except coste.LimiteGasto:
             self._esperar(clave, coste.espera_experto(self.ahora, critico))
             return None
@@ -1563,6 +1567,8 @@ def escalar_lote(
     modelo_experto = str(getattr(cliente_experto, "modelo", ""))
     dia = coste.dia(ahora)
     gastado_experto = almacen.gastado_modelo(modelo_experto, dia)
+    # Lo no crítico del control va con su cupo propio del experto (coste.comprobar_control_experto).
+    gastado_cupo = almacen.gastado_experto_en(modo.value, dia)
     mes = coste.del_mes(almacen, ahora, modelo_experto)
     por_lote_experto = (
         dormir is not None
@@ -1591,7 +1597,10 @@ def escalar_lote(
                                    lote=en_lote, modelo=modelo_experto,
                                    esfuerzo=esfuerzo)  # fmt: skip
         try:
-            coste.comprobar_experto(gastado_experto, previsto, es_critico, mes)
+            if not es_critico and modo is coste.Modo.CONTROL:
+                coste.comprobar_control_experto(gastado_cupo, previsto, mes)
+            else:
+                coste.comprobar_experto(gastado_experto, previsto, es_critico, mes)
         except coste.LimiteGasto:
             respuestas.esperas[peticion.clave] = coste.espera_experto(ahora, es_critico)
             respuestas.leidas[peticion.clave] = None
@@ -1599,7 +1608,10 @@ def escalar_lote(
         if en_lote:
             # Lo que no es crítico no tiene prisa de madrugada: va al lote, con su peor caso ya
             # contado.
-            gastado_experto += previsto
+            if modo is coste.Modo.CONTROL:
+                gastado_cupo += previsto
+            else:
+                gastado_experto += previsto
             al_lote[f"e{len(al_lote):06d}"] = peticion
             continue
         try:
@@ -1609,7 +1621,10 @@ def escalar_lote(
             respuestas.leidas[peticion.clave] = None
             continue
         uso = coste.Uso.de_mensaje(mensaje)
-        gastado_experto += uso.coste()
+        if es_critico or modo is not coste.Modo.CONTROL:
+            gastado_experto += uso.coste()
+        else:
+            gastado_cupo += uso.coste()
         respuestas.llamadas_experto.append({
             "fecha": _iso(ahora), "modo": modo.value, "candidato": peticion.clave[:200],
             "lote": False, "entrada": uso.entrada, "salida": uso.salida,
