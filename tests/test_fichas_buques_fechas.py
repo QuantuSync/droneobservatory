@@ -208,3 +208,25 @@ def test_posible_va_delante_del_grupo_del_dron_en_ingles() -> None:
     assert titulares.ajustar("Two drones near Schiphol", "no_confirmada", "en") == (
         "Two possible drones near Schiphol"
     )
+
+
+def test_posible_no_se_mete_tras_un_verbo_ni_una_preposicion() -> None:
+    casos = {
+        "Belgian airspace closed following drone sightings": (
+            "Belgian airspace closed following possible drone sightings"
+        ),
+        "Paphos Airport evacuated due to drone threat": (
+            "Paphos Airport evacuated due to possible drone threat"
+        ),
+        "Pilot reports drone collision near JFK": "Pilot reports possible drone collision near JFK",
+        "Nine drone incidents at Leipzig/Halle": "Nine possible drone incidents at Leipzig/Halle",
+        "Explosive drone found on the runway": "Possible explosive drone found on the runway",
+    }
+    for antes, despues in casos.items():
+        assert titulares.ajustar(antes, "no_confirmada", "en") == despues
+
+
+def test_buques_en_plural_y_ataque() -> None:
+    textos = ["Drones strike two ships off the Bulgarian coast in the Black Sea"]
+    assert buques.en_el_mar(textos)
+    assert buques.alcanzado(textos)
