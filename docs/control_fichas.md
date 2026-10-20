@@ -231,7 +231,8 @@ una traducción inventada de Eemshaven que venía de Wikidata). Reglas generales
   «incursión», como los buques del 13 de octubre (EODI-2026-00512), con las pruebas físicas que
   den las fuentes (`incidentes.aplicar_reglas`, `alcanzado_en_el_mar`).
 - **Frontera o interior en el mar**: un suceso en el mar de un país con costa en el mar Negro es
-  de la costa del mar Negro (`zona.clasificar`, motivo `costa_mar_negro`), nunca «interior».
+  de la costa del mar Negro (`zona.clasificar`, motivo `costa_mar_negro`), nunca «interior»;
+  con un punto en tierra (el puerto de Constanza, Sulina) manda el punto.
 - **Pasado sin día** (`proceso/fechas.py`, `configuracion/fechas.json`, `pasados`): «la semana
   pasada», «letzte Woche», «hace unos días»… en cualquier idioma no son la fecha de publicación.
   El inicio queda aproximado (la víspera de la nota como muy tarde) y su motivo lleva la ventana
