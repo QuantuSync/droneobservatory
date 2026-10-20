@@ -158,10 +158,10 @@ REPARTO_MENSUAL_USD: dict[str, float] = {
     EXPERTO: 3.30,
     Modo.HORARIO: 3.00,
     Modo.CONTROL: 1.80,
-    Modo.GUERRA: 0.10,
+    Modo.GUERRA: 0.20,
     Modo.RECTIFICACIONES: 0.30,
     Modo.SEGUNDA_BUSQUEDA: 1.10,
-    OTROS: 0.40,
+    OTROS: 0.30,
 }
 # Los modos de cada día que paran al llegar al tope mensual. La recogida horaria sigue con el
 # modelo base: sin ella no se sabe qué caso es crítico.

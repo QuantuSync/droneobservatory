@@ -597,14 +597,14 @@ def test_el_resumen_dice_llamadas_escaladas_y_gasto_de_cada_modelo(tmp_path: Pat
     )
     assert "proveedor" not in linea and "haiku" not in linea.lower()
     # El gasto del experto en su tope normal y en la reserva crítica, por día UTC. El tope normal
-    # del 13 de octubre: su parte del mes (4,30 USD) entre los 19 días que quedaban.
+    # del 13 de octubre: su parte del mes (3,30 USD) entre los 19 días que quedaban.
     assert datos["experto"]["2026-10-13"] == {
-        "normal": 0.03, "reserva": 0.0, "limite": pytest.approx(4.30 / 19, abs=1e-6),
+        "normal": 0.03, "reserva": 0.0, "limite": pytest.approx(3.30 / 19, abs=1e-6),
         "reserva_limite": 0.5,
     }  # fmt: skip
     (experto,) = visitas.lineas_experto(control)
     assert experto == (
-        "  Experto: tope normal 0,0300 de 0,23 USD; reserva crítica 0,0000 de 0,50 USD"
+        "  Experto: tope normal 0,0300 de 0,17 USD; reserva crítica 0,0000 de 0,50 USD"
     )
 
 
