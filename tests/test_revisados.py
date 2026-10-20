@@ -208,3 +208,35 @@ def test_la_configuracion_revisada() -> None:
     assert not set(leipzig["registros"]) & set(wunstorf["registros"])
     (revision_,) = datos["reextraer"]
     assert revision_["incidente"] == "EODI-2026-00283"
+
+
+def test_ninguna_presencia_revisada_contradice_una_rectificacion_oficial() -> None:
+    # EODI-2025-00164 (Lakenheath) estaba revisada «no_confirmada» con la rectificación del UK
+    # Airprox Board que la deja «descartada»: ahora dicen lo mismo, y el control lo comprueba.
+    assert revisados.revisiones_contra_rectificaciones() == []
+    lakenheath = next(t for t in revisados.cargar()["titulares"]
+                      if t["incidente"] == "EODI-2025-00164" and "presencia" in t)  # fmt: skip
+    assert lakenheath["presencia"]["valor"] == "descartada"
+
+
+def test_una_presencia_revisada_contra_la_rectificacion_se_detecta_y_no_se_aplica() -> None:
+    revision = {
+        "incidente": "EODI-2025-09001",
+        "presencia": {"valor": "no_confirmada", "cita": "x"},
+    }
+    oficiales = {"rectificaciones": [
+        {"incidente": "EODI-2025-09001", "tipo": "parcial", "fecha_declaracion": "2025-07-01"},
+        {"incidente": "EODI-2025-09001", "tipo": "descartada", "fecha_declaracion": "2025-06-26"},
+    ]}  # fmt: skip
+    assert revisados.revisiones_contra_rectificaciones({"titulares": [revision]}, oficiales) == [
+        "EODI-2025-09001: revisada «no_confirmada», rectificada «descartada» el 2025-06-26"
+    ]
+    acorde = {**revision, "presencia": {"valor": "descartada", "cita": "x"}}
+    assert revisados.revisiones_contra_rectificaciones({"titulares": [acorde]}, oficiales) == []
+    # En la ficha: el último paso de su historial que no es parcial manda.
+    ficha = {"presencia_historial": [{"valor": "no_confirmada"}, {"valor": "descartada"},
+                                     {"valor": "descartada", "parcial": True}]}  # fmt: skip
+    assert revisados.contradice_rectificacion(revision, ficha)
+    assert not revisados.contradice_rectificacion(acorde, ficha)
+    assert not revisados.contradice_rectificacion(revision, {"presencia_historial": [
+        {"valor": "confirmada"}]})  # fmt: skip

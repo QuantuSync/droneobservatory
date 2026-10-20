@@ -809,30 +809,57 @@ def _paso(almacen: Almacen, ahora: datetime, modelos: frozenset[str]) -> Documen
     from recogida import segunda_busqueda
 
     tipos = {CAMPOS, DUPLICADO, *busqueda.BUSQUEDAS}
+    # Lo que no merece al experto (solo la fecha «sin apoyo», un tipo contradicho sin frase de otro
+    # tipo) se descarta con su motivo: deja de esperar en la cola (desde el 20 de octubre de 2026).
+    for c in pendientes:
+        if c["tipo"] in {CAMPOS, DUPLICADO} and not lectura.al_experto(c):
+            nuevas[PREFIJO + c["clave"]] = {"fecha": _iso(ahora), "resultado": "descartado",
+                                            "motivo": lectura.motivo_sin_experto(c)}  # fmt: skip
+    hecho["descartados"] = len(nuevas) - len(rect)
+    # Por valor (proceso/segunda_busqueda.prioridad: primero las declaraciones oficiales y los
+    # incidentes que faltan) y, a la par, del suceso más reciente al más antiguo.
     resto = sorted((c for c in pendientes
-                    if c["tipo"] in tipos and (c["tipo"] not in {CAMPOS, DUPLICADO}
-                                               or lectura.al_experto(c))),
-                   key=lambda c: c["fecha"], reverse=True)  # fmt: skip
+                    if c["tipo"] in tipos and PREFIJO + c["clave"] not in nuevas),
+                   key=busqueda.fecha_del_suceso, reverse=True)  # fmt: skip
     resto.sort(key=busqueda.prioridad)
     maximo = int(configuracion()["recogida"]["por_recogida"])
     ajustes = configuracion()["busqueda"]
+    cupo = ajustes.get("cupo_experto") or {}
+    del_cupo = frozenset(cupo.get("tipos", busqueda.CON_CUPO))
     hoy = coste.dia(ahora)
-    entregadas_hoy = sum(
-        1 for d in decididas.values()
+    hoy_entregadas = [
+        d for d in decididas.values()
         if d.get("resultado") == "a_la_extraccion" and str(d.get("fecha", "")).startswith(hoy)
-    )  # fmt: skip
-    max_entregas = min(int(ajustes["por_recogida"]),
-                       max(0, int(ajustes["por_dia"]) - entregadas_hoy))  # fmt: skip
+    ]  # fmt: skip
+    con_cupo_hoy = sum(1 for d in hoy_entregadas if d.get("cupo"))
+    sin_cupo_hoy = len(hoy_entregadas) - con_cupo_hoy
+    max_entregas = min(int(ajustes["por_recogida"]), max(0, int(ajustes["por_dia"]) - sin_cupo_hoy))
+    max_cupo = min(int(ajustes["por_recogida"]), max(0, int(cupo.get("por_dia", 2)) - con_cupo_hoy))
+    ya = busqueda.entregados_recientes(decididas, ahora)
     experto = Experto(almacen, ahora, Plazo(float(configuracion()["recogida"]["tope_experto_s"])))
     decididos: list[str] = []
     entregados: list[str] = []
+    con_cupo: list[str] = []
     try:
         for candidato in resto:
             if candidato["tipo"] in busqueda.A_LA_EXTRACCION:
-                if len(entregados) >= max_entregas:
+                anterior = ya.get(busqueda.clave_de_entrega(candidato))
+                if anterior is not None:
+                    # El mismo incidente (o la misma noticia) ya se entregó hace poco: no se
+                    # repite con otra frase de la misma búsqueda.
+                    nuevas[PREFIJO + candidato["clave"]] = {
+                        "fecha": _iso(ahora), "resultado": "repetido", "de": anterior}  # fmt: skip
                     continue
-                decision: Documento | None = segunda_busqueda.entregar(almacen, ahora, candidato)
-                entregados.append(candidato["clave"])
+                al_cupo = candidato["tipo"] in del_cupo
+                if len(con_cupo if al_cupo else entregados) >= (max_cupo if al_cupo
+                                                                else max_entregas):  # fmt: skip
+                    continue
+                entrega = segunda_busqueda.entregar(almacen, ahora, candidato, al_cupo)
+                if entrega.get("resultado") == "a_la_extraccion":
+                    (con_cupo if al_cupo else entregados).append(candidato["clave"])
+                    ya[busqueda.clave_de_entrega(candidato)] = candidato["clave"]
+                    entrega = {**entrega, "entrega": busqueda.clave_de_entrega(candidato)}
+                decision: Documento | None = entrega
             else:
                 if len(decididos) >= maximo or experto.parado:
                     continue
@@ -845,8 +872,8 @@ def _paso(almacen: Almacen, ahora: datetime, modelos: frozenset[str]) -> Documen
                 nuevas[PREFIJO + candidato["clave"]] = {"fecha": _iso(ahora), **decision}
     finally:
         almacen.guardar_controles(nuevas, _iso(ahora))
-    hecho.update(decididos=decididos, entregados=entregados,
-                 esperan=len(resto) - len(decididos) - len(entregados),
+    hecho.update(decididos=decididos, entregados=entregados, con_cupo=con_cupo,
+                 esperan=sum(1 for c in resto if PREFIJO + c["clave"] not in nuevas),
                  experto=experto.parado, gasto_experto=round(experto.gasto, 6))  # fmt: skip
     return hecho
 

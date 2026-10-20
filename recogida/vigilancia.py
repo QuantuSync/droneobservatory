@@ -661,6 +661,10 @@ def componer(
         problemas += problemas_del_guardian(_leer_json(guardian), ahora)
 
     memoria["ultima_publicacion"] = _iso(ultima_publicacion)
+    # La web se reconstruye con lo urgente enseguida y con lo demás cada 3 horas
+    # (recogida/publicacion.decidir_reconstruccion): el vigía mide su retraso desde la última
+    # reconstrucción pedida, no desde la última publicación.
+    web = _leer_json(secretos / "publicacion.json").get("web") or {}
     problemas, observacion = persistentes(problemas, memoria, ahora)
     avisos = observacion + avisos
     salud: dict[str, Any] = {
@@ -671,6 +675,8 @@ def componer(
             "ultimo_codigo": codigo,
             "ultimo_fin": _iso(recogida["fin"]),
             "ultima_publicacion": _iso(ultima_publicacion),
+            "ultima_reconstruccion": web.get("ultima"),
+            "reconstruccion_pendiente_desde": web.get("pendiente_desde"),
         },
         "seguimiento": {"unidad": activa, "ultima_recepcion": _iso(recepcion)},
         "alertas": {"unidad": activa_alertas, "ultima_respuesta": _iso(respuesta)},

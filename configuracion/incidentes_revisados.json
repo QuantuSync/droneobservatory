@@ -2655,12 +2655,13 @@
         "en": "Drone sightings at RAF Lakenheath and Mildenhall prompt a police helicopter search"
       },
       "presencia": {
-        "valor": "no_confirmada",
-        "cita": "concluded that the helicopter crew had misidentified the red flashing lights of a fast-moving F-15 as belonging to a drone"
+        "valor": "descartada",
+        "cita": "it was clear to members that the track of the F15 had correlated with the perceived position of the ‘drone’",
+        "enlace": "https://www.airproxboard.org.uk/uploadedFiles/Content/Standard_content/Airprox_report_files/2024/Airprox%20Report%202024294.pdf"
       },
       "motivo": {
-        "es": "El cuasi choque del helicóptero no fue con un dron: el UK Airprox Board (Airprox 2024294) concluyó que la tripulación confundió un F-15 con un dron. Lo que sí respaldan las citas es la búsqueda de drones del 22 al 27 de noviembre de 2024.",
-        "en": "The helicopter near miss was not with a drone: the UK Airprox Board (Airprox 2024294) concluded the crew mistook an F-15 for a drone. What the quotes do support is the drone search of 22-27 November 2024."
+        "es": "Presencia descartada, como la rectificación oficial (configuracion/rectificaciones_oficiales.json): el UK Airprox Board (Airprox 2024294, 26/06/2025) concluyó que el supuesto dron del cuasi choque del helicóptero policial era un F-15. La búsqueda de drones del 22 al 27 de noviembre de 2024 sigue en la ficha con sus fuentes.",
+        "en": "Drone presence ruled out, as in the official rectification (configuracion/rectificaciones_oficiales.json): the UK Airprox Board (Airprox 2024294, 26/06/2025) concluded that the supposed drone in the police helicopter near miss was an F-15. The drone search of 22-27 November 2024 stays in the record with its sources."
       }
     },
     {

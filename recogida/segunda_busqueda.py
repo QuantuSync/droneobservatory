@@ -30,7 +30,7 @@ from typing import Any
 
 from almacen.base import Almacen
 from esquema import Documento
-from modelo import paginas
+from modelo import coste, paginas
 from proceso import extraccion
 from proceso import segunda_busqueda as busqueda
 from proceso.noticias import nomenclator
@@ -320,9 +320,14 @@ def _al_cursor_dirigidos(almacen: Almacen, url: str, candidato: str, ahora: date
     almacen.guardar_cursor(articulos_dirigidos.FUENTE_ID, cursor)
 
 
-def _repetir_con_experto(almacen: Almacen, candidato: str, motivo: str, ahora: datetime) -> None:
-    extraccion.anotar_espera(almacen, candidato, [motivo],
-                             ahora - extraccion.ESPERA_FALLO_EXPERTO, False, True)  # fmt: skip
+def _repetir_con_experto(almacen: Almacen, candidato: str, motivo: str, ahora: datetime,
+                         cupo: bool = False) -> None:  # fmt: skip
+    """La extracción se repite con el experto en la recogida (`revision`). Con `cupo`, se paga con
+    el cupo propio de las búsquedas de lo que falta (coste.Modo.SEGUNDA_BUSQUEDA)."""
+    extraccion.anotar_espera(
+        almacen, candidato, [motivo], ahora - extraccion.ESPERA_FALLO_EXPERTO, False, True,
+        cupo=coste.Modo.SEGUNDA_BUSQUEDA.value if cupo else None,
+    )  # fmt: skip
 
 
 def _candidato_de(almacen: Almacen, id_: str) -> Documento | None:
@@ -333,9 +338,16 @@ def _candidato_de(almacen: Almacen, id_: str) -> Documento | None:
     return next((c for c in almacen.candidatos() if c["id"] == candidato_id), None)
 
 
-def entregar(almacen: Almacen, ahora: datetime, candidato: Documento) -> Documento:
+def _a_la_extraccion(candidato_id: str, cupo: bool) -> Documento:
+    hecho: Documento = {"resultado": "a_la_extraccion", "candidato": candidato_id}
+    return {**hecho, "cupo": True} if cupo else hecho
+
+
+def entregar(almacen: Almacen, ahora: datetime, candidato: Documento,
+             cupo: bool = False) -> Documento:  # fmt: skip
     """Un candidato de declaración, atribución o rescate, al circuito de siempre. Devuelve lo
-    hecho, que se guarda como la decisión del candidato (no se repite)."""
+    hecho, que se guarda como la decisión del candidato (no se repite). Con `cupo` (declaraciones
+    e incidentes que faltan), el experto lo extrae con el cupo propio de la segunda lectura."""
     datos, tipo = candidato["datos"], candidato["tipo"]
     url = str(datos.get("url") or "")
     if tipo in {busqueda.DECLARACION, busqueda.ATRIBUCION}:
@@ -356,8 +368,9 @@ def entregar(almacen: Almacen, ahora: datetime, candidato: Documento) -> Documen
         _repetir_con_experto(
             almacen, destino["id"],
             f"declaracion: {detalle} y la ficha no trae su declaración (segunda lectura)", ahora,
+            cupo,
         )  # fmt: skip
-        return {"resultado": "a_la_extraccion", "candidato": destino["id"]}
+        return _a_la_extraccion(destino["id"], cupo)
     # Un incidente que falta.
     destino = next((c for c in almacen.candidatos() if url in c["articulos"]), None)
     if destino is None:
@@ -372,12 +385,15 @@ def entregar(almacen: Almacen, ahora: datetime, candidato: Documento) -> Documen
         if not tocados:
             return {"resultado": "sin_lugar"}
         _al_cursor_dirigidos(almacen, url, tocados[0], ahora, datos)
-        return {"resultado": "a_la_extraccion", "candidato": tocados[0]}
+        if cupo:
+            # Con el cupo, la primera extracción del candidato ya la hace el experto.
+            _repetir_con_experto(almacen, tocados[0], _motivo_rescate(datos), ahora, cupo)
+        return _a_la_extraccion(tocados[0], cupo)
     _al_cursor_dirigidos(almacen, url, destino["id"], ahora, datos)
-    if almacen.extracciones(destino["id"]):
-        _repetir_con_experto(
-            almacen, destino["id"],
-            f"segunda lectura: posible incidente que falta: «{str(datos.get('frase'))[:120]}»",
-            ahora,
-        )  # fmt: skip
-    return {"resultado": "a_la_extraccion", "candidato": destino["id"]}
+    if almacen.extracciones(destino["id"]) or cupo:
+        _repetir_con_experto(almacen, destino["id"], _motivo_rescate(datos), ahora, cupo)
+    return _a_la_extraccion(destino["id"], cupo)
+
+
+def _motivo_rescate(datos: Documento) -> str:
+    return f"segunda lectura: posible incidente que falta: «{str(datos.get('frase'))[:120]}»"

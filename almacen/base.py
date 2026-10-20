@@ -28,6 +28,10 @@ TABLAS_CON_HISTORIAL = (
 )  # fmt: skip
 # Campos de la fuente que dependen del incidente y no se guardan en la tabla común.
 CAMPOS_FUENTE_POR_ENTIDAD = frozenset({"credibilidad", "campos_respaldados"})
+# Los modos del experto con su propio cupo y su parte del mes (modelo/coste.py): lo que gastan no
+# cuenta contra el tope del experto y sí como un modo más del mes.
+CUPOS_PROPIOS = ("segunda_busqueda",)
+_CUPOS = ", ".join(f"'{m}'" for m in CUPOS_PROPIOS)
 
 _TABLAS = """
 CREATE TABLE IF NOT EXISTS incidentes (
@@ -1274,12 +1278,14 @@ class Almacen:
                 )
 
     def gastado_modelo(self, prefijo: str, dia: str) -> float:
-        """Dólares que gastó hoy (`dia`, AAAA-MM-DD) un modelo, en todos los modos."""
+        """Dólares que gastó hoy (`dia`, AAAA-MM-DD) un modelo, en todos los modos salvo los que
+        llevan su propio cupo (CUPOS_PROPIOS: no cuentan contra el tope del experto)."""
         if not prefijo:
             return 0.0
         fila = self._conexion.execute(
             "SELECT coalesce(sum(l.coste), 0) FROM llamadas_extractor l JOIN llamadas_modelo m "
-            "ON m.llamada = l.id WHERE substr(l.fecha, 1, 10) = ? AND m.modelo LIKE ? || '%'",
+            "ON m.llamada = l.id WHERE substr(l.fecha, 1, 10) = ? AND m.modelo LIKE ? || '%' "
+            f"AND l.modo NOT IN ({_CUPOS})",
             (dia, prefijo),
         ).fetchone()
         return float(fila[0])
@@ -1320,8 +1326,9 @@ class Almacen:
         ).fetchone()[0]
         modos = self._conexion.execute(
             "SELECT modo, coalesce(sum(coste), 0) FROM llamadas_extractor WHERE "
-            "substr(fecha, 1, 7) = ? AND substr(fecha, 1, 10) < ? AND id NOT IN "
-            "(SELECT llamada FROM llamadas_modelo WHERE escalada = 1) GROUP BY modo",
+            "substr(fecha, 1, 7) = ? AND substr(fecha, 1, 10) < ? AND (id NOT IN "
+            "(SELECT llamada FROM llamadas_modelo WHERE escalada = 1) "
+            f"OR modo IN ({_CUPOS})) GROUP BY modo",
             (mes, hoy),
         ).fetchall()
         experto = 0.0
@@ -1329,7 +1336,8 @@ class Almacen:
             experto = self._conexion.execute(
                 "SELECT coalesce(sum(l.coste), 0) FROM llamadas_extractor l JOIN llamadas_modelo m "
                 "ON m.llamada = l.id WHERE substr(l.fecha, 1, 7) = ? "
-                "AND substr(l.fecha, 1, 10) < ? AND m.modelo LIKE ? || '%'",
+                "AND substr(l.fecha, 1, 10) < ? AND m.modelo LIKE ? || '%' "
+                f"AND l.modo NOT IN ({_CUPOS})",
                 (mes, hoy, prefijo_experto),
             ).fetchone()[0]
         return float(total), {str(m): float(g) for m, g in modos}, float(experto)

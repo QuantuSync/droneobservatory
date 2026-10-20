@@ -102,6 +102,15 @@ RESERVA_CRITICA_DIARIA_USD = 0.50
 # tope normal (nunca de la reserva crítica).
 # Era 0,30 hasta el 19 de octubre de 2026: de 30 candidatos revisados, 2 cambiaron algo.
 LIMITE_SEGUNDA_EXPERTO_DIARIO_USD = 0.10
+# Cupo propio de la segunda lectura para las dos búsquedas de lo que falta (declaraciones oficiales
+# e incidentes que faltan, docs/segunda_lectura.md): su extracción con el experto, como mucho
+# configuracion/segunda_lectura.json (busqueda.cupo_experto.por_dia, 2 casos al día) y estos
+# dólares al día, dentro de su parte del mes (sin repartirla por días: el peor caso de una
+# extracción, unos 0,06, no cabría en lo que le toca de un día). No cuenta contra el tope normal del
+# experto, no va al ritmo de su tope y nunca sale de la reserva crítica (desde el 20 de octubre de
+# 2026: con la regla del ritmo esas búsquedas casi nunca llegaban al experto, y las que llegaban
+# como críticas gastaban la reserva).
+LIMITE_SEGUNDA_BUSQUEDA_DIARIO_USD = 0.12
 # Tope del experto antes del 15 de octubre de 2026: una espera anotada sin su tope es de entonces.
 LIMITE_EXPERTO_ANTERIOR_USD = 0.30
 # Un caso que espera al experto por un fallo, o crítico con la reserva agotada, vuelve a la
@@ -135,22 +144,29 @@ class Modo(StrEnum):
     TRADUCCIONES = "traducciones"
     RECTIFICACIONES = "rectificaciones"
     SEGUNDA_LECTURA = "segunda_lectura"
+    SEGUNDA_BUSQUEDA = "segunda_busqueda"
 
 
 # Lo que le toca a cada uno del tope mensual (suman TOPE_MENSUAL_USD). «otros»: lo que no es de
-# ningún modo de cada día (las sesiones, el catálogo vivo), que no se frena aquí pero cuenta.
+# ningún modo de cada día (las sesiones, el catálogo vivo), que no se frena aquí pero cuenta. La
+# reserva crítica del experto cuenta dentro de su parte: lo que gasta lo resta de su tope normal de
+# los días que quedan. Reparto del 20 de octubre de 2026, con lo medido del 15 al 20 de octubre por
+# día: base de la recogida 0,068-0,125 (media 0,10); base del control 0,037-0,119 (0,07); guerra
+# 0,002; casos críticos de verdad desde el corte del 19 de octubre (22:41 UTC), ninguno (los cuatro
+# que usaron la reserva eran entregas de la segunda lectura, que ya no la usan).
 REPARTO_MENSUAL_USD: dict[str, float] = {
-    EXPERTO: 4.30,
-    Modo.HORARIO: 2.80,
-    Modo.CONTROL: 2.00,
-    Modo.GUERRA: 0.20,
+    EXPERTO: 3.30,
+    Modo.HORARIO: 3.00,
+    Modo.CONTROL: 1.80,
+    Modo.GUERRA: 0.10,
     Modo.RECTIFICACIONES: 0.30,
+    Modo.SEGUNDA_BUSQUEDA: 1.10,
     OTROS: 0.40,
 }
 # Los modos de cada día que paran al llegar al tope mensual. La recogida horaria sigue con el
 # modelo base: sin ella no se sabe qué caso es crítico.
 PARAN_AL_TOPE_MENSUAL = frozenset(
-    {Modo.CONTROL, Modo.GUERRA, Modo.RECTIFICACIONES, Modo.SEGUNDA_LECTURA}
+    {Modo.CONTROL, Modo.GUERRA, Modo.RECTIFICACIONES, Modo.SEGUNDA_LECTURA, Modo.SEGUNDA_BUSQUEDA}
 )
 
 
@@ -331,6 +347,25 @@ def comprobar_segunda(
     )
 
 
+def comprobar_cupo(gastado_hoy: float, previsto: float, modo: Modo, mes: Mes | None = None) -> None:
+    """El cupo propio del experto de un modo (la segunda búsqueda): su límite del día y lo que
+    queda de su parte del mes, sin repartirla por días; nunca con el tope mensual agotado ni de la
+    reserva crítica. Lanza LimiteGasto si no cabe."""
+    if gastado_hoy + previsto > limite(modo):
+        raise LimiteGasto(
+            f"{modo}: gastado {gastado_hoy:.4f} + previsto {previsto:.4f} > {limite(modo):.2f} USD"
+        )
+    if mes is None:
+        return
+    queda = parte_del_mes(modo) - mes.modos_antes.get(modo, 0.0) - gastado_hoy
+    if previsto > queda:
+        raise LimiteGasto(
+            f"{modo}: previsto {previsto:.4f} > {max(0.0, queda):.4f} USD de su parte del mes"
+        )
+    if mes_agotado(mes, previsto):
+        raise LimiteGasto(f"{modo}: tope mensual de {tope_mensual():.2f} USD agotado")
+
+
 def reparto_experto(
     gastado_hoy: float, tope: float = LIMITE_EXPERTO_DIARIO_USD
 ) -> dict[str, float]:
@@ -376,6 +411,7 @@ def limite(modo: Modo) -> float:
         Modo.TRADUCCIONES: LIMITE_TRADUCCIONES_USD,
         Modo.RECTIFICACIONES: LIMITE_RECTIFICACIONES_USD,
         Modo.SEGUNDA_LECTURA: LIMITE_SEGUNDA_EXPERTO_DIARIO_USD,
+        Modo.SEGUNDA_BUSQUEDA: LIMITE_SEGUNDA_BUSQUEDA_DIARIO_USD,
     }[modo]
 
 
@@ -383,6 +419,7 @@ def diario(modo: Modo) -> bool:
     """Los modos con límite diario (lo gastado se cuenta solo en el día UTC)."""
     return modo in {
         Modo.HORARIO, Modo.GUERRA, Modo.CONTROL, Modo.RECTIFICACIONES, Modo.SEGUNDA_LECTURA,
+        Modo.SEGUNDA_BUSQUEDA,
     }  # fmt: skip
 
 

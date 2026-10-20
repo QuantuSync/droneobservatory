@@ -1888,6 +1888,10 @@ class Base:
     abrir: Callable[[], Almacen]
     guardar: Callable[[Almacen], None]
     cerrojo: Callable[[], Any]
+    # Cierra una copia que ya no se usa. En el servidor cada copia es la base entera en disco con
+    # su caché de SQLite (256 MB): sin cerrarlas, la revisión de madrugada llegaba a los 2 GB de su
+    # unidad y el sistema la paraba (del 15 al 19 de octubre de 2026, casi cada noche).
+    soltar: Callable[[Almacen], None] = lambda almacen: None
 
 
 def repaso(base: Base, fabrica: Callable[[], Any], nom: Nomenclator | None = None,
@@ -1987,6 +1991,8 @@ def repaso(base: Base, fabrica: Callable[[], Any], nom: Nomenclator | None = Non
             reglas_deterministas(ctx)
             aplicar_verificaciones(ctx)
             base.guardar(almacen)
+        base.soltar(copia)
+        base.soltar(almacen)
     registro.info("repaso: %s", resultado.resumen())
     return resultado
 
@@ -2016,7 +2022,9 @@ def noche(base: Base, fabrica: Callable[[], Any] | None, ruta_estado: Path,
         base.guardar(almacen)
     if fabrica is None:
         escribir_estado(ruta_estado, resultado, almacen, ahora)
+        base.soltar(almacen)
         return resultado
+    base.soltar(almacen)
     try:
         repaso(base, fabrica, None, dormir, reloj, alcance="noche", resultado=resultado)
     except (TimeoutError, LlamadaFallida) as error:
@@ -2031,7 +2039,9 @@ def noche(base: Base, fabrica: Callable[[], Any] | None, ruta_estado: Path,
         coste.limite(coste.Modo.CONTROL) - copia.gastado(coste.Modo.CONTROL.value, hoy),
     )
     disponible -= gasto_reservado(copia)
+    almacen, ahora = copia, datetime.now(UTC)
     if lista and disponible > 0:
+        base.soltar(copia)
         respuestas = por_lote(fabrica(), lista, disponible, dormir or time.sleep,
                               reloj or time.monotonic, TOPE_LOTE_NOCHE_S)  # fmt: skip
         with base.cerrojo():
@@ -2045,6 +2055,7 @@ def noche(base: Base, fabrica: Callable[[], Any] | None, ruta_estado: Path,
                     procesar_traduccion(ctx, peticion, respuestas.leidas[peticion.clave])
             base.guardar(almacen)
     escribir_estado(ruta_estado, resultado, almacen, ahora)
+    base.soltar(almacen)
     return resultado
 
 
@@ -2255,7 +2266,8 @@ def base_del_servidor(temporal: Path, correo: str, cerrojo: Path | None) -> Base
             finally:
                 fcntl.flock(fichero, fcntl.LOCK_UN)  # type: ignore[attr-defined,unused-ignore]
 
-    return Base(abrir, lambda a: sitio.guardar_base(a, temporal, correo), tomar)
+    return Base(abrir, lambda a: sitio.guardar_base(a, temporal, correo), tomar,
+                lambda a: a.cerrar())  # fmt: skip
 
 
 def principal(argumentos: list[str] | None = None) -> int:

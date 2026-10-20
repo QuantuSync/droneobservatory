@@ -125,6 +125,8 @@ SIN_IDIOMA = "sin artículos en un idioma reconocido"
 ESPERAN_EXPERTO = "esperan_experto"
 # Tras un fallo del experto, se reintenta en la recogida siguiente.
 ESPERA_FALLO_EXPERTO = timedelta(minutes=50)
+# Motivo que anota escalar cuando el experto se paga con un cupo propio («cupo: <modo>»).
+PREFIJO_CUPO = "cupo"
 # Las reglas «publicada» y «senal» (docs/modelos.md) llegaron el 15 de octubre de 2026: una sola
 # vez, las decisiones del base desde que entró en producción se repasan con ellas.
 REVISION_REGLAS = "revision_reglas_experto"
@@ -238,12 +240,13 @@ def espera_experto(almacen: Almacen, candidato_id: str, ahora: datetime) -> bool
 
 def anotar_espera(
     almacen: Almacen, candidato_id: str, motivos: list[str], ahora: datetime, por_tope: bool,
-    revision: bool = False, critico: bool = False,
+    revision: bool = False, critico: bool = False, cupo: str | None = None,
 ) -> None:  # fmt: skip
     """El candidato espera al experto: si se agotó su tope, hasta el día siguiente (UTC), o hasta
     la recogida siguiente si es crítico (se agotó también la reserva); si falló, hasta la
     recogida siguiente. Con `revision`, se vuelve a extraer aunque sus artículos no hayan cambiado
-    y se escala siempre, con esos motivos."""
+    y se escala siempre, con esos motivos. Con `cupo` (un modo con cupo propio del experto,
+    coste.Modo.SEGUNDA_BUSQUEDA), la llamada al experto se paga con ese cupo y no con su tope."""
     documento = esperan_experto(almacen)
     if por_tope:
         hasta = coste.espera_experto(ahora, critico)
@@ -259,6 +262,8 @@ def anotar_espera(
         documento[candidato_id]["critico"] = True
     if revision or anterior.get("revision"):
         documento[candidato_id]["revision"] = True
+    if cupo or anterior.get("cupo"):
+        documento[candidato_id]["cupo"] = cupo or anterior["cupo"]
     registro.info("candidato %s espera al experto hasta %s: %s", candidato_id, hasta,
                   "; ".join(motivos[:3]))  # fmt: skip
     almacen.guardar_cursor(ESPERAN_EXPERTO, documento)
@@ -825,8 +830,21 @@ def escalar(
     gastado_hoy = almacen.gastado_modelo(modelo_experto, coste.dia(ahora))
     mes = coste.del_mes(almacen, ahora, modelo_experto)
     opcional = escalado.opcionales(motivos) and not espera.get("revision")
+    cupo = espera.get("cupo")
+    if cupo:
+        # Lo que entrega la segunda lectura es una relectura de lo ya recogido (o una noticia de
+        # días antes): nunca sale de la reserva crítica. El 20 de octubre de 2026, de 00:00 a
+        # 06:30 UTC, cuatro entregas suyas la usaron por el texto de la noticia.
+        critico = False
     try:
-        if opcional:
+        if cupo:
+            # Su propio cupo del día y su parte del mes (coste.Modo.SEGUNDA_BUSQUEDA): ni el tope
+            # normal del experto, ni su ritmo, ni la reserva crítica.
+            coste.comprobar_cupo(almacen.gastado_experto_en(cupo, coste.dia(ahora)), previsto,
+                                 coste.Modo(cupo), coste.del_mes(almacen, ahora))  # fmt: skip
+            tramo = coste.Tramo.NORMAL
+            motivos = [*motivos, f"{PREFIJO_CUPO}: {cupo}"]
+        elif opcional:
             # Poca seguridad o una autoridad citada sin declaración: el experto solo si le sobra
             # (al ritmo de su tope del día), nunca de la reserva.
             coste.comprobar_al_ritmo(gastado_hoy, previsto, ahora, mes)
@@ -834,7 +852,7 @@ def escalar(
         else:
             tramo = coste.comprobar_experto(gastado_hoy, previsto, critico, mes)
     except coste.LimiteGasto as error:
-        if opcional:
+        if opcional and not cupo:
             # Sin experto ahora, vale la ficha del base (procesar_respuesta anota su llamada).
             registro.info("candidato %s: sin experto ahora (%s), vale el base", candidato_id, error)
             return respuesta, None
@@ -847,6 +865,15 @@ def escalar(
         return experto.mensaje(peticion.cuerpo()), motivos
     except LlamadaFallida as error:
         raise EsperaExperto(motivos, False, str(error), critico) from error
+
+
+def modo_de_la_respuesta(escalado_por: list[str] | None, modo: coste.Modo) -> coste.Modo:
+    """El modo con que se anota la respuesta: el del cupo propio si la dio el experto con él
+    (escalar lo anota en los motivos)."""
+    for motivo in escalado_por or []:
+        if motivo.startswith(f"{PREFIJO_CUPO}: "):
+            return coste.Modo(motivo.removeprefix(f"{PREFIJO_CUPO}: "))
+    return modo
 
 
 def experto_sin_base(
@@ -1281,8 +1308,9 @@ def extraer(
             return hechas.parar(Parada.SERVICIO_CAIDO, error)
         try:
             incidente = procesar_respuesta(
-                almacen, peticion, respuesta, ahora, modo, False, modelos_base, escalado_por
-            )
+                almacen, peticion, respuesta, ahora, modo_de_la_respuesta(escalado_por, modo),
+                False, modelos_base, escalado_por,
+            )  # fmt: skip
             quitar_espera(almacen, candidato_id)
             if escalado_por:
                 hechas.escalados.append(candidato_id)

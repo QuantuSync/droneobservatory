@@ -15,6 +15,7 @@ from typing import Any
 import pytest
 
 from almacen.base import Almacen
+from modelo import coste
 from proceso import extraccion
 from proceso import segunda_busqueda as busqueda
 from recogida import articulos_dirigidos, rectificaciones
@@ -295,6 +296,66 @@ def test_la_declaracion_va_a_la_extraccion_con_el_experto(tmp_path: Path) -> Non
 
     assert escalado.opcionales(espera["motivos"])
     almacen.cerrar()
+
+
+def test_con_el_cupo_la_espera_lo_lleva_y_nunca_es_critica(tmp_path: Path) -> None:
+    candidato = {"id": "CAND-MELILLA", "articulos": [NOTICIA], "lugar": "GEML",
+                 "ultimo": "2026-09-23T08:00:00Z"}  # fmt: skip
+    ruta = _base(tmp_path, _melilla(), candidatos=(candidato,))
+    almacen = Almacen.abrir(ruta)
+    marcado = {"clave": "declaracion:EODI-2026-00146:x", "tipo": busqueda.DECLARACION,
+               "incidente": "EODI-2026-00146", "datos": {
+                   "frase": DELEGACION, "autoridad": "Delegación del Gobierno",
+                   "afirma": "confirma"}}  # fmt: skip
+    hecho = buscar.entregar(almacen, AHORA, marcado, cupo=True)
+    assert hecho == {"resultado": "a_la_extraccion", "candidato": "CAND-MELILLA", "cupo": True}
+    espera = extraccion.esperan_experto(almacen)["CAND-MELILLA"]
+    assert espera["cupo"] == "segunda_busqueda" and not espera.get("critico")
+    # La respuesta del experto se anota en el modo del cupo, no en el de la recogida.
+    motivos = [*espera["motivos"], f"{extraccion.PREFIJO_CUPO}: segunda_busqueda"]
+    assert extraccion.modo_de_la_respuesta(motivos, coste.Modo.HORARIO) is (
+        coste.Modo.SEGUNDA_BUSQUEDA
+    )
+    assert extraccion.modo_de_la_respuesta(espera["motivos"], coste.Modo.HORARIO) is (
+        coste.Modo.HORARIO
+    )
+    almacen.cerrar()
+
+
+def test_lo_entregado_hace_poco_no_se_repite() -> None:
+    ahora = datetime(2026, 10, 20, 8, 30, tzinfo=UTC)
+    decididas = {
+        # Antes del 20 de octubre de 2026 la decisión no guardaba la clave de entrega.
+        "segunda:declaracion:EODI-2026-00488:ed5a": {
+            "fecha": "2026-10-20T05:30:58Z", "resultado": "a_la_extraccion"},
+        "segunda:rescate:https://x.md/1:0cb4": {
+            "fecha": "2026-10-19T05:30:58Z", "resultado": "a_la_extraccion",
+            "entrega": "rescate:https://x.md/1"},
+        "segunda:declaracion:EODI-2026-00515:aa": {
+            "fecha": "2026-10-10T05:30:58Z", "resultado": "a_la_extraccion"},
+        "segunda:campos:EODI-2026-00001:bb": {"fecha": "2026-10-20T05:30:58Z",
+                                              "resultado": "verificada"},
+    }  # fmt: skip
+    ya = busqueda.entregados_recientes(decididas, ahora)
+    assert ya == {"incidente:EODI-2026-00488": "declaracion:EODI-2026-00488:ed5a",
+                  "rescate:https://x.md/1": "rescate:https://x.md/1:0cb4"}  # fmt: skip
+    otra_frase = {"tipo": busqueda.ATRIBUCION, "incidente": "EODI-2026-00488", "datos": {}}
+    assert busqueda.clave_de_entrega(otra_frase) in ya
+    rescate = {"tipo": busqueda.RESCATE, "incidente": None, "datos": {"url": "https://x.md/1"}}
+    assert busqueda.clave_de_entrega(rescate) in ya
+
+
+def test_la_cola_va_del_suceso_mas_reciente_al_mas_antiguo() -> None:
+    def marcado(tipo: str, fecha: str, suceso: str | None) -> dict[str, Any]:
+        datos = {"fecha_suceso": suceso} if suceso else {}
+        return {"tipo": tipo, "fecha": fecha, "datos": datos}
+
+    viejo = marcado(busqueda.DECLARACION, "2026-10-20T01:00:00Z", "2025-09-26")
+    nuevo = marcado(busqueda.DECLARACION, "2026-10-19T01:00:00Z", "2026-10-18")
+    sin_fecha = marcado(busqueda.RESCATE, "2026-10-17T01:00:00Z", None)
+    assert busqueda.fecha_del_suceso(sin_fecha) == "2026-10-17T01:00:00Z"
+    cola = sorted([viejo, sin_fecha, nuevo], key=busqueda.fecha_del_suceso, reverse=True)
+    assert cola == [nuevo, sin_fecha, viejo]
 
 
 def test_prioridad_de_lo_que_marca_la_capa() -> None:
