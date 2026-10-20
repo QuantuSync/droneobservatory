@@ -41,7 +41,9 @@ publicar. Nunca impide publicar lo demás ni cambia el código de salida.
    duda quiere decir: una sola instalación, con su tipo de lugar en el titular, nombrada por su
    nombre o por una ciudad que no tiene otra del mismo tipo («aeropuerto de Varsovia» puede ser
    Chopin o Modlin), y ninguna otra localidad en el titular («cerca de Heathrow, sobre Marlow» es
-   Marlow). Solo cambia fichas sin punto o con el punto genérico de la misma ciudad (el GKG de
+   Marlow). La gran ciudad que rodea la instalación (de 10 km de radio o más, a menos de dos
+   radios) no cuenta como otra localidad: el titular la añade para situarla («Alhaurín de la Torre
+   prison in Málaga», «Bucharest Otopeni airport»; desde el 20 de octubre de 2026). Solo cambia fichas sin punto o con el punto genérico de la misma ciudad (el GKG de
    Núremberg); nunca un punto oficial, el de otra instalación o el de otra localidad. El punto
    anterior queda en `lugar.historial` con el motivo.
 
