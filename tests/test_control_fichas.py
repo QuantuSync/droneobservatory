@@ -351,6 +351,16 @@ def test_titulares_que_no_dan_una_sola_instalacion_sin_duda(titulo: str) -> None
     assert lugar_preciso.instalacion_del_titulo(documento, nomenclator()) is None
 
 
+def test_la_gran_ciudad_que_rodea_la_instalacion_no_es_otro_sitio() -> None:
+    # EODI-2025-00465: el titular en inglés añade la provincia y la capital, «in Málaga».
+    documento = ejemplos.incidente_minimo()
+    titulo = "Possible drone breaches perimeter of Alhaurín de la Torre prison in Málaga"
+    documento["titulo"] = {"es": titulo, "en": titulo}
+    documento["lugar"] = {"pais": "ES", "nivel": "localidad", "localidad": "Alhaurín de la Torre"}
+    sitio = lugar_preciso.instalacion_del_titulo(documento, nomenclator())
+    assert sitio is not None and sitio.id == "carcel:way/162757051"
+
+
 # --- Pares candidatos --------------------------------------------------------------------------
 def test_pares_candidatos_tambien_con_lugar_solo_de_pais() -> None:
     a, b = _nuremberg_alemana(), _nuremberg_griega()

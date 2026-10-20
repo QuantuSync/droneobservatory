@@ -90,15 +90,28 @@ def _por_ciudad_ambigua(texto: str, sitio: Lugar, nom: Nomenclator) -> bool:
     )
 
 
+# Una gran ciudad (radio de al menos estos km) a menos de dos radios de la instalación no es otro
+# sitio: el titular la añade para situarla («Alhaurín de la Torre prison in Málaga», «Bucharest
+# Otopeni airport»). EODI-2025-00465 se quedó en el centro del pueblo hasta el 20/10/2026.
+RADIO_GRAN_CIUDAD_KM = 10.0
+
+
 def _otra_localidad(texto: str, sitio: Lugar, nom: Nomenclator) -> bool:
-    """El titular nombra una localidad del país que no es la de la instalación."""
+    """El titular nombra una localidad del país que no es la de la instalación ni la gran ciudad
+    que la rodea."""
     propios = nombres_en_idiomas(sitio.id, nom)
     for id_ in localidades_declinadas(texto, nom):
         otra = nom.lugares.get(id_)
         if otra is None or otra.pais != sitio.pais:
             continue
-        if not ({normalizar(n) for n in (otra.nombre, *otra.alias)} & propios):
-            return True
+        if {normalizar(n) for n in (otra.nombre, *otra.alias)} & propios:
+            continue
+        if (
+            otra.radio_km >= RADIO_GRAN_CIUDAD_KM
+            and distancia_km(otra.lat, otra.lon, sitio.lat, sitio.lon) <= 2 * otra.radio_km
+        ):
+            continue
+        return True
     return False
 
 
