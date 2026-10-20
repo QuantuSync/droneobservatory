@@ -39,6 +39,22 @@ guardado de Wikidata del tipo «Puerto de X» / «Port of X» cuyo X no es una p
 original es una traducción inventada y no se usa (`traduccion_inventada`; el 20 de octubre de 2026,
 «Puerto de Ems» por Eemshaven): queda el nombre tal como lo escribe la fuente.
 
+Más reglas del titular y los nombres (20 de octubre de 2026):
+
+- Dentro del nombre propio de una instalación con la ciudad y un número («Sevilla I», «Madrid
+  VII») la ciudad no se traduce: «Sevilla I prison», no «Seville I prison»
+  (`_NOMBRE_PROPIO_SIGUE`).
+- El titular no alarga un nombre que ya dice: si el de la tabla solo añade una palabra genérica
+  («Ștefan Vodă» → «Distrito de Ștefan Vodă»), el titular se queda como está; salía «distrito de
+  Distrito de Ștefan Vodă». La exportación avisa de cualquier titular con una palabra repetida
+  seguida (`palabra_repetida`).
+- En España se respeta el nombre oficial del municipio que escribe la fuente en las dos versiones
+  (Picassent, Xàtiva, Vila-real); la forma castellana de Wikidata («Picasent», «Játiva») solo si
+  la fuente la escribe así (`_oficiales_es`). La tabla manual manda.
+- Un buque nunca es la localidad: si el objetivo o la localidad de la ficha es el nombre de un
+  buque que nombran las fuentes («Chelsea 3»), la fila «Lugar» lleva la región o el mar y el país
+  (`sitio`, `proceso/buques.py`).
+
 ## Qué se publica
 
 Cada incidente publicado lleva el campo `nombres` (esquema 1.17.0, se genera al publicar y no se

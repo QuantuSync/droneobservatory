@@ -37,6 +37,7 @@ from pathlib import Path
 from typing import Any
 
 from esquema import Documento
+from proceso import buques
 
 CONFIGURACION = Path(__file__).resolve().parent.parent / "configuracion"
 MANUAL = CONFIGURACION / "nombres_lugar.json"
@@ -356,10 +357,37 @@ def traduccion_inventada(base: str, escrito: Bilingue) -> bool:
     return False
 
 
+@cache
+def _oficiales_es() -> dict[str, str]:
+    """Clave -> nombre oficial de los municipios de España cuyo nombre en español de Wikidata es
+    otra forma (Picassent / «Picasent», Xàtiva / «Játiva», Vila-real / «Villarreal»), salvo los que
+    da la tabla manual."""
+    manuales = {
+        clave(f)
+        for entrada in manual().get("localidades") or []
+        if entrada.get("pais") == "ES"
+        for f in {*entrada.get("formas", []), entrada.get("es", ""), entrada.get("en", "")}
+    }
+    salida: dict[str, str] = {}
+    for entrada in (generado().get("localidades") or {}).values():
+        nombre = _bilingue(entrada)
+        if entrada.get("pais") != "ES" or nombre is None or nombre["es"] == nombre["en"]:
+            continue
+        k = clave(nombre["en"])
+        if k and k not in manuales:
+            salida[k] = nombre["en"]
+    return salida
+
+
 def _en_tablas(base: str, pais: str, en_otro_pais: bool = False) -> Bilingue | None:
     k = clave(base)
     if not k:
         return None
+    if pais == "ES" and k in _oficiales_es():
+        # En España se respeta el nombre oficial que escribe la fuente en las dos versiones
+        # («Picassent», no «Picasent», 20 de octubre de 2026); la forma castellana de Wikidata
+        # solo si la fuente la escribe.
+        return {"es": _oficiales_es()[k], "en": _oficiales_es()[k]}
     por_pais, global_ = _localidades()
     if (pais, k) in por_pais:
         return por_pais[(pais, k)]
@@ -542,6 +570,15 @@ def sitio(incidente: Documento) -> Bilingue | None:
     pais = lugar_.get("pais", "")
     objetivo_ = incidente.get("objetivo") or {}
     nombre_objetivo = str(objetivo_.get("nombre") or "")
+    # Un buque (el objetivo o la localidad de la ficha) nunca es el lugar: «Chelsea 3, Bulgaria»
+    # (20 de octubre de 2026). Queda la región o el mar.
+    textos_ = buques.textos_de(incidente)
+    buque = False
+    if buques.es_nombre_de_buque(nombre_objetivo, textos_):
+        nombre_objetivo, objetivo_, buque = "", {}, True
+    if buques.es_nombre_de_buque(lugar_.get("localidad"), textos_):
+        lugar_ = {k: v for k, v in lugar_.items() if k != "localidad"}
+        buque = True
     instalacion = _instalacion(nombre_objetivo, pais)
     raf = re.match(r"^(?:RAF|Royal Air Force(?: Station)?)\s+(.+)$", nombre_objetivo)
     escrito = textos().get(nombre_objetivo)
@@ -562,7 +599,7 @@ def sitio(incidente: Documento) -> Bilingue | None:
         lugar(raf.group(1), pais) if raf else None,
         lugar(simple, pais) if simple and escrito is None and not objetivo_.get("oaci") else None,
     ]
-    if "punto" not in lugar_ and incidente.get("lon") is None:
+    if ("punto" not in lugar_ and incidente.get("lon") is None) or buque:
         candidatos.append(lugar(lugar_.get("region"), pais))
     return next((c for c in candidatos if c is not None), None)
 
@@ -634,7 +671,10 @@ def _cambios(incidente: Documento, idioma: str) -> dict[str, str]:
         base = nombre_base(str(original))
         otro = "en" if idioma == "es" else "es"
         for forma in {base, escrito[otro]}:
-            if forma and forma != escrito[idioma] and len(forma) >= 4 and forma[0].isupper():
+            # Si el nombre de la tabla solo alarga el que ya dice el titular («Ștefan Vodă» →
+            # «Distrito de Ștefan Vodă»), no se cambia: salía «distrito de Distrito de Ștefan Vodă»
+            # (20 de octubre de 2026).
+            if forma and forma not in escrito[idioma] and len(forma) >= 4 and forma[0].isupper():
                 cambios[forma] = escrito[idioma]
     return cambios
 
@@ -648,10 +688,16 @@ def _sustituir(tabla: dict[str, str]) -> Any:
         return (
             encontrado.group(0)
             if _ya_dice(encontrado.string, encontrado.start(), destino)
+            or _NOMBRE_PROPIO_SIGUE.match(encontrado.string, encontrado.end())
             else destino
         )
 
     return sustituir
+
+
+# Un nombre propio de instalación con la ciudad y un número («Sevilla I», «Madrid VII»): la ciudad
+# no se traduce dentro (salía «Seville I prison», 20 de octubre de 2026).
+_NOMBRE_PROPIO_SIGUE = re.compile(r"\s+(?:[IVX]{1,4}|\d{1,2})\b(?![.,]\d)")
 
 
 def _ya_dice(texto: str, inicio: int, destino: str) -> bool:
@@ -683,6 +729,16 @@ def titulo_corregido(incidente: Documento) -> Documento:
 
 
 # --- Revisión de lo visible -----------------------------------------------------------------
+_REPETIDA = re.compile(r"\b(\w{3,}(?:\s+\w+)?)\s+\1\b", re.IGNORECASE)
+
+
+def palabra_repetida(texto: str) -> str | None:
+    """Una palabra (o dos) repetida seguida en un texto visible: «distrito de Distrito de»,
+    «District district», «possible possible»."""
+    encontrado = _REPETIDA.search(nfc(texto))
+    return encontrado.group(1) if encontrado else None
+
+
 def problemas_texto(texto: str, idioma: str, pais: str | None = None) -> list[str]:
     """Lo que está mal en un texto visible de la página en `idioma`."""
     texto = nfc(texto)

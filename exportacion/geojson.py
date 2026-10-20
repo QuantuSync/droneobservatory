@@ -40,6 +40,12 @@ def con_nombres(documento: Documento) -> Documento:
     escrito con ellos (proceso/nombres_lugar.py). Lo que aun así la revisión da por mal escrito
     no se publica: la ficha cae entonces en lo seguro (el titular, la localidad o el país)."""
     documento["titulo"] = nombres_lugar.titulo_corregido(documento)
+    for idioma, texto in documento["titulo"].items():
+        repetida = nombres_lugar.palabra_repetida(str(texto or ""))
+        if repetida:
+            registro.warning(
+                "%s: titular %s con palabra repetida «%s»", documento.get("id"), idioma, repetida
+            )
     nombres = nombres_lugar.nombres_publicos(documento)
     pais = documento["lugar"].get("pais")
     for campo in ("objetivo", "region", "localidad"):

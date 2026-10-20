@@ -212,9 +212,10 @@ def clasificar(incidente: Documento) -> Documento:
         return {"grupo": FRONTERA, "motivo": "ataque"}
     lugar = incidente.get("lugar", {})
     en_el_mar = buques.en_el_mar(buques.textos_de(incidente))
-    if lugar.get("pais") in PAISES_COSTA_MAR_NEGRO and en_el_mar:
-        # Un buque en el mar de un país con costa en el mar Negro: nunca el interior (el 20 de
-        # octubre de 2026 el buque Chelsea 3 salió como «interior»).
+    if lugar.get("pais") in PAISES_COSTA_MAR_NEGRO and en_el_mar and not lugar.get("punto"):
+        # Un buque en el mar de un país con costa en el mar Negro, sin punto en tierra: nunca el
+        # interior (el 20 de octubre de 2026 el buque Chelsea 3 salió como «interior»). Con punto
+        # (el puerto de Constanza, Sulina) manda el punto.
         return {"grupo": FRONTERA, "motivo": "costa_mar_negro"}
     punto = lugar.get("punto")
     situado = (punto["lat"], punto["lon"]) if punto else _lugar_nombrado(incidente)
