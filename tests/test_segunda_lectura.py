@@ -389,7 +389,7 @@ def test_con_el_tope_agotado_los_candidatos_esperan(
     otro = Almacen.abrir()
     otro.guardar_incidente(_copenhague(), AHORA, VOCABULARIO_MODELOS)
     otro.registrar_llamada({
-        "fecha": "2026-10-15T03:00:00Z", "modo": coste.Modo.CONTROL.value, "candidato": "y",
+        "fecha": "2026-10-15T03:00:00Z", "modo": coste.Modo.HORARIO.value, "candidato": "y",
         "lote": False, "entrada": 0, "salida": 0, "escritura_cache": 0, "lectura_cache": 0,
         "coste": coste.LIMITE_EXPERTO_DIARIO_USD, "modelo": EXPERTO, "escalada": True,
     })  # fmt: skip

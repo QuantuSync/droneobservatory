@@ -270,9 +270,12 @@ class Llamador:
                     self.almacen.gastado_experto_en(self.modo.value, dia), previsto, mes
                 )
             else:
-                coste.comprobar_experto(
-                    self.almacen.gastado_modelo(modelo_experto, dia), previsto, critico, mes
-                )
+                # Para la reserva crítica cuenta todo lo que el experto gastó hoy, también en el
+                # cupo del control.
+                gastado = self.almacen.gastado_modelo(modelo_experto, dia)
+                if self.modo is coste.Modo.CONTROL:
+                    gastado += self.almacen.gastado_experto_en(self.modo.value, dia)
+                coste.comprobar_experto(gastado, previsto, critico, mes)
         except coste.LimiteGasto:
             self._esperar(clave, coste.espera_experto(self.ahora, critico))
             return None
@@ -1600,7 +1603,8 @@ def escalar_lote(
             if not es_critico and modo is coste.Modo.CONTROL:
                 coste.comprobar_control_experto(gastado_cupo, previsto, mes)
             else:
-                coste.comprobar_experto(gastado_experto, previsto, es_critico, mes)
+                gastado = gastado_experto + (gastado_cupo if modo is coste.Modo.CONTROL else 0.0)
+                coste.comprobar_experto(gastado, previsto, es_critico, mes)
         except coste.LimiteGasto:
             respuestas.esperas[peticion.clave] = coste.espera_experto(ahora, es_critico)
             respuestas.leidas[peticion.clave] = None
