@@ -30,6 +30,13 @@ Lo decide el código, con reglas fijas, mirando la respuesta del modelo base:
    vale la ficha del base y el candidato no espera. El 25 de septiembre de 2026 la Delegación del
    Gobierno en Melilla reconoció en la prensa dos incidentes con drones y la ficha no lo recogió
    (EODI-2026-00146).
+8. **descarte_dudoso** (desde el 20 de octubre de 2026): el base no da el candidato por
+   incidente con poca seguridad (menos de 0,7) en un dato clave. Aunque poca_seguridad sea
+   opcional, sin margen del experto el candidato no se descarta: espera al experto (al día
+   siguiente, cuando se renueva su tope) y no bloquea nada más. Si una fuente es oficial, nombra
+   a una autoridad o, en un país del alcance, habla de un buque, aeropuerto, base, puerto o
+   infraestructura (dudoso_critico), usa la reserva crítica. El 20 de octubre de 2026 el base dio
+   así por «no es incidente», con 0,6, el ataque al buque Chelsea 3 frente a Bulgaria.
 
 Si se escala, vale la respuesta del experto. Las tareas mecánicas (traducir citas, sacar lugares
 de los partes de Ucrania, clasificar frases del catálogo) nunca se escalan.
@@ -85,6 +92,8 @@ MOTIVOS_CRITICOS = (
 MOTIVOS_OPCIONALES = ("declaracion", "poca_seguridad")
 # Los motivos que solo marcan el caso como crítico y no lo escalan por sí solos.
 MOTIVOS_MARCA = ("critico",)
+# El motivo de un descarte dudoso que espera al experto (descarte_dudoso).
+MOTIVO_DUDOSO = "descarte_dudoso"
 # Dónde acaba una frase, para buscar la autoridad y su verbo en la misma.
 _FIN_DE_FRASE = re.compile(r"[.!?;\n]+")
 # De menos a más: rebajar es bajar en este orden.
@@ -142,6 +151,33 @@ def autoridad_citada(textos: tuple[str, ...]) -> str | None:
             if (encontrada := autoridades.search(normal)) and verbos.search(normal):
                 return encontrada.group(0)
     return None
+
+
+@cache
+def paises_alcance() -> frozenset[str]:
+    """Los países del alcance territorial (los de los avisos, configuracion/avisos.json)."""
+    datos = json.loads(RUTA_PAISES.read_text(encoding="utf-8"))
+    return frozenset(c.upper() for c in datos["paises"])
+
+
+def descarte_dudoso(motivos: list[str], ficha: dict[str, Any] | None) -> bool:
+    """El modelo base no da el candidato por incidente y está poco seguro de algún dato clave
+    (un motivo «poca_seguridad»): sin el experto no se descarta, espera (docs/modelos.md)."""
+    if ficha is not None and _valor(ficha, "es_incidente") is True:
+        return False
+    return any(m.startswith("poca_seguridad") for m in motivos)
+
+
+def dudoso_critico(textos: tuple[str, ...], paises: tuple[str, ...], oficial: bool = False) -> bool:
+    """Un descarte dudoso que no espera (usa la reserva crítica): una fuente es oficial, nombra a
+    una autoridad o, en un país del alcance (`paises`: el del objetivo y el de la ficha), habla de
+    un buque, aeropuerto, base, puerto o infraestructura (configuracion «criticos»)."""
+    texto = normalizar(" ".join(textos))
+    if oficial or (texto and _citada()[0].search(texto)):
+        return True
+    if not any(p.upper() in paises_alcance() for p in paises if p):
+        return False
+    return _senal("infraestructura", texto) or _senal("base_militar", texto)
 
 
 def disparan(motivos: list[str]) -> list[str]:

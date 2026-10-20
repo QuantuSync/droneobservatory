@@ -98,6 +98,7 @@ from recogida import (
     rutas,
     satelite,
     segunda_lectura,
+    silencio,
     suelo_europeo,
     tipo_atribucion,
     tipo_dron,
@@ -693,6 +694,12 @@ def principal(argumentos: list[str] | None = None) -> int:
                 gasto_api.revisar(almacen, ahora, visitas.avisador_privado)
             except Exception as error:
                 registro.warning("avisos del gasto sin revisar: %s", str(error)[:300])
+            # Aviso de silencio: sin incidentes, esperas largas o sin llamadas al modelo
+            # (recogida/silencio.py). Tampoco cambia el código de salida.
+            try:
+                silencio.revisar(almacen, ahora, visitas.avisador_privado)
+            except Exception as error:
+                registro.warning("aviso de silencio sin revisar: %s", str(error)[:300])
         almacen.cerrar()
     if paso.fallidos:
         registro.warning(

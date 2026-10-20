@@ -52,7 +52,7 @@
     ]
   },
   "criticos": {
-    "descripcion": "Expresiones que hacen crítico un caso para el gasto del experto (proceso/escalado.es_critico, reserva crítica de modelo/coste.py), con las mismas reglas que las señales. «base_militar» solo cuenta si el país del caso es de la OTAN o Moldavia.",
+    "descripcion": "Expresiones que hacen crítico un caso para el gasto del experto (proceso/escalado.es_critico, reserva crítica de modelo/coste.py), con las mismas reglas que las señales. «base_militar» solo cuenta si el país del caso es de la OTAN o Moldavia. «infraestructura» (buques, aeropuertos, puertos e infraestructura crítica) solo cuenta para los descartes dudosos de un país del alcance (proceso/escalado.dudoso_critico).",
     "base_militar": [
       "base* aere*", "base* militar*", "base* naval*", "air base*", "airbase*", "military base*",
       "naval base*", "airfield*", "baza aerian*", "baza militar*", "baze* aerien*", "baze* militar*",
@@ -65,22 +65,19 @@
       "bezmer", "redzikowo", "lask", "ramstein", "spangdahlem", "incirlik", "aviano",
       "авиобаз*", "военн* баз*", "военновъздушн* баз*", "авиабаз*", "военн* аэродром*",
       "військов* баз*", "авіабаз*", "військов* аеродром*"
-    ]
-  },
-  "criticos": {
-    "descripcion": "Expresiones que hacen crítico un caso para el gasto del experto (proceso/escalado.es_critico, reserva crítica de modelo/coste.py), con las mismas reglas que las señales. «base_militar» solo cuenta si el país del caso es de la OTAN o Moldavia.",
-    "base_militar": [
-      "base* aere*", "base* militar*", "base* naval*", "air base*", "airbase*", "military base*",
-      "naval base*", "airfield*", "baza aerian*", "baza militar*", "baze* aerien*", "baze* militar*",
-      "baza naval*", "fliegerhorst*", "luftwaffenstutzpunkt*", "militarflugplatz*",
-      "militarstutzpunkt*", "kaserne*", "truppenubungsplatz*", "base* aerienne*",
-      "base* militaire*", "baza lotnicz*", "baz* wojskow*", "jednostk* wojskow*", "lotnisk* wojskow*",
-      "vliegbasis", "luchtmachtbasis", "marinebasis", "militaire basis", "base militare",
-      "flyvestation*", "flybase*", "flystasjon*", "flygbas*", "flygflottilj*", "lentotukikohta*",
-      "varuskunta*", "kogalniceanu", "deveselu", "campia turzii", "fetesti", "graf ignatievo",
-      "bezmer", "redzikowo", "lask", "ramstein", "spangdahlem", "incirlik", "aviano",
-      "авиобаз*", "военн* баз*", "военновъздушн* баз*", "авиабаз*", "военн* аэродром*",
-      "військов* баз*", "авіабаз*", "військов* аеродром*"
+    ],
+    "infraestructura": [
+      "buque*", "barco*", "carguero*", "petrolero*", "mercante*", "ship", "ships", "vessel*",
+      "tanker*", "freighter*", "cargo ship*", "schiff*", "frachter*", "navire*", "nava", "nave",
+      "navei", "statek*", "skib*", "skip", "fartyg*", "кораб*", "судн*", "танкер*", "plavidl*",
+      "aeropuert*", "airport*", "flughafen*", "aeroport*", "lotnisk*", "letist*", "lufthavn*",
+      "flygplats*", "lentoasem*", "luchthaven*", "летищ*", "аэропорт*", "аеропорт*",
+      "puerto*", "port", "porto", "portul*", "hafen*", "havn*", "hamn*", "haven", "satama*",
+      "пристанищ*", "порт", "порту", "constanta", "varna", "burgas", "odesa",
+      "infraestructura* critica*", "critical infrastructure", "kritische infrastruktur*",
+      "central* nuclear*", "nuclear power", "kernkraftwerk*", "refineri*", "refiner*",
+      "plataforma* petrol*", "gasoduct*", "oleoduct*", "pipeline*", "rafinari*",
+      "subestacion*", "presa*", "embalse*", "centrala*"
     ]
   },
   "autoridad_citada": {

@@ -309,6 +309,8 @@ def horaria(
         extraccion.revisar_decisiones_base(almacen, Descargador(plazo=plazo), ahora)
     except TiempoAgotado:
         registro.warning("revisión de las decisiones del base: sin tiempo; en la siguiente")
+    # Una sola vez: los descartes poco seguros del base desde el 13 de octubre de 2026, al experto.
+    extraccion.revisar_descartes_dudosos(almacen, ahora)
     # Primero los candidatos nuevos y los que se repiten con el experto (aunque sean de antes de la
     # ventana); después, poco a poco, los incidentes ya publicados con una ficha de una versión
     # anterior, del más reciente al más antiguo. El límite diario de gasto corta la ejecución

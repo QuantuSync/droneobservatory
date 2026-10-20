@@ -281,7 +281,9 @@ def test_si_se_escala_vale_la_ficha_del_experto_y_cada_dato_dice_su_modelo(
     assert por_modelo[EXPERTO]["coste"] == pytest.approx(0.002 + 0.005)
 
 
-def _gasto_experto(almacen: Almacen, dolares: float, modo: str = "control") -> None:
+def _gasto_experto(almacen: Almacen, dolares: float, modo: str = "horario") -> None:
+    # El experto del control lleva su cupo propio (coste.comprobar_control_experto): el gasto que
+    # cuenta contra su tope es el de los demás modos.
     almacen.registrar_llamada({
         "fecha": AHORA.strftime("%Y-%m-%dT%H:%M:%SZ"), "modo": modo, "candidato": "x",
         "lote": False, "entrada": 0, "salida": 0, "escritura_cache": 0, "lectura_cache": 0,
@@ -597,14 +599,14 @@ def test_el_resumen_dice_llamadas_escaladas_y_gasto_de_cada_modelo(tmp_path: Pat
     )
     assert "proveedor" not in linea and "haiku" not in linea.lower()
     # El gasto del experto en su tope normal y en la reserva crítica, por día UTC. El tope normal
-    # del 13 de octubre: su parte del mes (3,30 USD) entre los 19 días que quedaban.
+    # del 13 de octubre: su parte del mes (2,70 USD) entre los 19 días que quedaban.
     assert datos["experto"]["2026-10-13"] == {
-        "normal": 0.03, "reserva": 0.0, "limite": pytest.approx(3.30 / 19, abs=1e-6),
+        "normal": 0.03, "reserva": 0.0, "limite": pytest.approx(2.70 / 19, abs=1e-6),
         "reserva_limite": 0.5,
     }  # fmt: skip
     (experto,) = visitas.lineas_experto(control)
     assert experto == (
-        "  Experto: tope normal 0,0300 de 0,17 USD; reserva crítica 0,0000 de 0,50 USD"
+        "  Experto: tope normal 0,0300 de 0,14 USD; reserva crítica 0,0000 de 0,50 USD"
     )
 
 
