@@ -459,6 +459,33 @@
       "conserva": "EODI-2026-00527",
       "motivo": "Los dos son la misma parte de la separación de EODI-2026-00203: el dron que explotó al estrellarse junto a Hîrbovăț (Anenii Noi) el miércoles 30 de septiembre de 2026 hacia las 05:43; EODI-2026-00159 había quedado unido al segundo dron, el de Arionești.",
       "motivo_en": "Both are the same part of the separation of EODI-2026-00203: the drone that exploded on crashing near Hîrbovăț (Anenii Noi) on Wednesday 30 September 2026 at about 05:43; EODI-2026-00159 had been merged with the second drone, the Arionești one."
+    },
+    {
+      "registros": [
+        "EODI-2025-00444",
+        "EODI-2025-00438"
+      ],
+      "conserva": "EODI-2025-00444",
+      "motivo": "el mismo suceso: los drones sobre la base aérea de Volkel la noche del sábado 22 de noviembre de 2025 (nrc.nl, 23 de noviembre: «En zaterdagavond werden wéér drones gezien boven Volkel»); el resumen de NRC que cuenta todo el fin de semana («Defensie heeft afgelopen weekend drie keer drones … gesignaleerd») no los separa: la noche del viernes 21 es EODI-2025-00066, ya separada",
+      "motivo_en": "the same event: the drones over Volkel air base on the night of Saturday 22 November 2025 (nrc.nl, 23 November: «En zaterdagavond werden wéér drones gezien boven Volkel»); the NRC weekend summary («Defensie heeft afgelopen weekend drie keer drones … gesignaleerd») does not make them different events: the night of Friday 21 is EODI-2025-00066, already separated"
+    },
+    {
+      "registros": [
+        "EODI-2025-00466",
+        "EODI-2025-00465"
+      ],
+      "conserva": "EODI-2025-00466",
+      "motivo": "el mismo suceso: el dron que entró en el módulo 9 del centro penitenciario Málaga I (Alhaurín de la Torre) la madrugada del martes 10 de junio de 2025 (elespanol.com, 10 de junio: «esta madrugada», a las 4.00); EODI-2025-00465 es la nota de theobjective.com del jueves 12, que lo sitúa «en la madrugada del martes», hacia las 3.30, fechada por su publicación",
+      "motivo_en": "the same event: the drone that entered module 9 of the Málaga I prison (Alhaurín de la Torre) in the early hours of Tuesday 10 June 2025 (elespanol.com, 10 June: «esta madrugada», at 4.00); EODI-2025-00465 is the theobjective.com article of Thursday 12 June, which places it «en la madrugada del martes», around 3.30, dated by its publication"
+    },
+    {
+      "registros": [
+        "EODI-2025-00015",
+        "EODI-2025-00288"
+      ],
+      "conserva": "EODI-2025-00015",
+      "motivo": "el mismo suceso: uno o dos drones dentro y fuera de la valla de la base aérea de Karup (Dinamarca) el viernes 26 de septiembre de 2025 desde las 20:15 hora local, durante varias horas, confirmados por la policía de Midt- og Vestjylland (spiegel.de: «Konkret bestätigte ein Polizeisprecher etwa verbotene Drohnenflüge um und auch über dem Militärflugplatz Karup am Freitagabend»); EODI-2025-00288 tiene el mismo titular y comparte tres fuentes (spiegel.de dos veces y agenzianova.com), pero se quedó solo con el país",
+      "motivo_en": "the same event: one or two drones inside and outside the fence of Karup air base (Denmark) on Friday 26 September 2025 from 20:15 local time, for several hours, confirmed by Midt- og Vestjylland police (spiegel.de: «Konkret bestätigte ein Polizeisprecher etwa verbotene Drohnenflüge um und auch über dem Militärflugplatz Karup am Freitagabend»); EODI-2025-00288 has the same headline and shares three sources (spiegel.de twice and agenzianova.com), but was left with the country only"
     }
   ],
   "reextraer": [
@@ -4290,19 +4317,7 @@
           "afirma": "incidente"
         }
       },
-      "motivo": "El Ministerio de Defensa nombra Hîrbov\u0103\u021b (Anenii Noi) como el lugar donde cayó y explotó uno de los tres drones del miércoles 30 de septiembre.",
-      "otros_lugares": [
-        {
-          "nombre": "Br\u0103ne\u0219ti (raionul Orhei), segundo dron",
-          "lat": 47.30416667,
-          "lon": 28.92527778
-        },
-        {
-          "nombre": "Lunga (raionul Dub\u0103sari), tercer dron (sobrevuelo)",
-          "lat": 47.247944,
-          "lon": 29.169512
-        }
-      ]
+      "motivo": "El Ministerio de Defensa nombra Hîrbov\u0103\u021b (Anenii Noi) como el lugar donde cayó y explotó uno de los tres drones del miércoles 30 de septiembre."
     },
     {
       "incidente": "EODI-2026-00268",
@@ -7109,6 +7124,112 @@
             "gdelt-d9d7696df47051eb"
           ],
           "lugar": "GCFV"
+        }
+      ]
+    },
+    {
+      "incidente": "EODI-2026-00263",
+      "distintos": true,
+      "motivo": {
+        "es": "junta los tres drones del miércoles 30 de septiembre de 2026 en Moldavia, que ya tienen ficha: el que explotó al estrellarse junto a Hîrbovăț (Anenii Noi) hacia las 05:43 (EODI-2026-00527), el que se detectó a las 10:26 en Lunga (Dubăsari) y salió por Arionești con el cierre del espacio aéreo del norte y el centro (EODI-2026-00160) y el Geran que explotó por la noche junto a Brănești (Orhei) (EODI-2026-00262); las notas del Ministerio de Exteriores del 1 de octubre cuentan los tres",
+        "en": "it merges the three drones of Wednesday 30 September 2026 in Moldova, which already have their own records: the one that exploded on crashing near Hîrbovăț (Anenii Noi) at about 05:43 (EODI-2026-00527), the one detected at 10:26 over Lunga (Dubăsari) that left via Arionești with the closure of northern and central airspace (EODI-2026-00160) and the Geran that exploded in the evening near Brănești (Orhei) (EODI-2026-00262); the Foreign Ministry's notes of 1 October tell all three"
+      },
+      "partes": [
+        {
+          "es_suceso": true,
+          "fecha": "2026-09-30T02:43Z",
+          "pais": "MD",
+          "descripcion": "Dron sobrevuela Bender y explota al estrellarse junto a Hîrbovăț (Anenii Noi), miércoles 30 de septiembre de 2026 hacia las 05:43",
+          "coincide_con": "EODI-2026-00527",
+          "fuentes": [
+            "revisada-c0f1622221e454e8",
+            "gdelt-510b5643ca99465d",
+            "gdelt-510b5643ca99465d-declaracion-1",
+            "gdelt-7bc171648e59e360",
+            "gdelt-f02ee1b780ce6056",
+            "gdelt-ffc0792ca3d4eac1",
+            "gdelt-14a40c1f2268cf54",
+            "gdelt-fa5308a5ed4ef012",
+            "gdelt-2dda7fc4f26abcdb",
+            "gdelt-393b208eb1e71458",
+            "gdelt-98e33bab46adfbf8",
+            "gdelt-f3a3237af9cf0543",
+            "gdelt-333606b264508aab",
+            "gdelt-98df82d0a0f8c627",
+            "revisada-7134a488ea19084b",
+            "revisada-a3d5a90d81790751",
+            "gdelt-1730b7a4e5e63c92",
+            "gdelt-1730b7a4e5e63c92-declaracion-1",
+            "gdelt-1730b7a4e5e63c92-declaracion-2",
+            "gdelt-52b5094f832874fd",
+            "gdelt-5ba3dcc6d4e4855c",
+            "gdelt-f8db9c34d44feb43",
+            "gdelt-5299fd55f7c8e994",
+            "gdelt-f1d20592732e242b",
+            "gdelt-a1fabe5e2f7443b6",
+            "gdelt-c47a60dff21b41ef",
+            "gdelt-98e7d5be9e056c7b",
+            "gdelt-48bfae7c11056194"
+          ]
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2026-09-30T07:26Z",
+          "pais": "MD",
+          "descripcion": "Segundo dron detectado a las 10:26 sobre Lunga (Dubăsari), entra por la región transnistria y sale cerca de Arionești a las 11:07; cierre del espacio aéreo del norte y el centro de Moldavia, 30 de septiembre de 2026",
+          "coincide_con": "EODI-2026-00160",
+          "fuentes": [
+            "gdelt-a03e75ec0ee12aec",
+            "gdelt-e002ce797193c8e4",
+            "gdelt-70c807607b996b29",
+            "gdelt-f02ee1b780ce6056",
+            "gdelt-ffc0792ca3d4eac1",
+            "gdelt-14a40c1f2268cf54",
+            "gdelt-fa5308a5ed4ef012",
+            "gdelt-2dda7fc4f26abcdb",
+            "gdelt-393b208eb1e71458",
+            "gdelt-98e33bab46adfbf8",
+            "gdelt-f3a3237af9cf0543",
+            "gdelt-333606b264508aab",
+            "gdelt-98df82d0a0f8c627",
+            "revisada-7134a488ea19084b",
+            "revisada-a3d5a90d81790751",
+            "gdelt-1730b7a4e5e63c92",
+            "gdelt-1730b7a4e5e63c92-declaracion-1",
+            "gdelt-1730b7a4e5e63c92-declaracion-2",
+            "gdelt-52b5094f832874fd",
+            "gdelt-5ba3dcc6d4e4855c",
+            "gdelt-f8db9c34d44feb43",
+            "gdelt-5299fd55f7c8e994",
+            "gdelt-f1d20592732e242b",
+            "gdelt-a1fabe5e2f7443b6",
+            "gdelt-c47a60dff21b41ef",
+            "gdelt-98e7d5be9e056c7b",
+            "gdelt-48bfae7c11056194"
+          ]
+        },
+        {
+          "es_suceso": true,
+          "fecha": "2026-09-30T17:45Z",
+          "pais": "MD",
+          "descripcion": "Dron Geran que entra a las 20:45 y explota junto a una carretera cerca de Brănești (Orhei), miércoles 30 de septiembre de 2026 por la noche",
+          "coincide_con": "EODI-2026-00262",
+          "fuentes": [
+            "revisada-7134a488ea19084b",
+            "revisada-a3d5a90d81790751",
+            "gdelt-1730b7a4e5e63c92",
+            "gdelt-1730b7a4e5e63c92-declaracion-1",
+            "gdelt-1730b7a4e5e63c92-declaracion-2",
+            "gdelt-52b5094f832874fd",
+            "gdelt-5ba3dcc6d4e4855c",
+            "gdelt-f8db9c34d44feb43",
+            "gdelt-5299fd55f7c8e994",
+            "gdelt-f1d20592732e242b",
+            "gdelt-a1fabe5e2f7443b6",
+            "gdelt-c47a60dff21b41ef",
+            "gdelt-98e7d5be9e056c7b",
+            "gdelt-48bfae7c11056194"
+          ]
         }
       ]
     }

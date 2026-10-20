@@ -142,7 +142,8 @@ def test_lo_que_una_revision_separo_como_distinto_no_lo_vuelve_a_juntar_la_regla
 
 def test_la_marca_distintos_solo_esta_en_las_separaciones_revisadas() -> None:
     # Fuerteventura y, desde el 19 de octubre de 2026, las ocho que la regla de fusión había vuelto
-    # a juntar (Kleine-Brogel, Volkel, Moldavia, Rumanía, Aalborg, Palanca y Hîrbovăț).
+    # a juntar (Kleine-Brogel, Volkel, Moldavia, Rumanía, Aalborg, Palanca y Hîrbovăț) y, desde
+    # el 20, los tres drones de Moldavia del 30 de septiembre de 2026 (EODI-2026-00263).
     assert incidentes.separaciones_distintas() == frozenset(
         {
             "EODI-2025-00397",
@@ -153,6 +154,7 @@ def test_la_marca_distintos_solo_esta_en_las_separaciones_revisadas() -> None:
             "EODI-2025-00268",
             "EODI-2025-00349",
             "EODI-2026-00203",
+            "EODI-2026-00263",
             "EODI-2026-00281",
         }
     )
