@@ -142,3 +142,6 @@ def test_un_nombre_guardado_mas_largo_es_otro_lugar() -> None:
     assert not nombres_lugar._otro_lugar_mas_largo(
         "vrancea", {"es": "Vrancea", "en": "Vrancea County"}
     )
+    assert not nombres_lugar._otro_lugar_mas_largo(
+        "brabant", {"es": "Brabante Septentrional", "en": "North Brabant"}
+    )
