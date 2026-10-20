@@ -304,6 +304,7 @@ def formas_ajenas(texto: str, idioma: str, pais: str | None = None) -> list[str]
         m.group(0)
         for m in _patron_formas(idioma).finditer(texto)
         if not _ya_dice(texto, m.start(), tabla[m.group(0)])
+        and not dentro_de_nombre_propio(texto, m.start(), m.end())
         and (pais is None or _DUENOS.get(m.group(0), pais) == pais)
     ]
 
@@ -688,16 +689,26 @@ def _sustituir(tabla: dict[str, str]) -> Any:
         return (
             encontrado.group(0)
             if _ya_dice(encontrado.string, encontrado.start(), destino)
-            or _NOMBRE_PROPIO_SIGUE.match(encontrado.string, encontrado.end())
+            or dentro_de_nombre_propio(encontrado.string, encontrado.start(), encontrado.end())
             else destino
         )
 
     return sustituir
 
 
-# Un nombre propio de instalación con la ciudad y un número («Sevilla I», «Madrid VII»): la ciudad
-# no se traduce dentro (salía «Seville I prison», 20 de octubre de 2026).
+# El nombre propio de una instalación con la ciudad dentro: la ciudad no se traduce ahí (salían
+# «Seville I prison» y «aeropuerto de Maastricht Aquisgrán», 20 de octubre de 2026). Detrás, un
+# número («Sevilla I», «Madrid VII»); delante, otra palabra del nombre con mayúscula
+# («Maastricht Aachen»), que no abre el texto.
 _NOMBRE_PROPIO_SIGUE = re.compile(r"\s+(?:[IVX]{1,4}|\d{1,2})\b(?![.,]\d)")
+_NOMBRE_PROPIO_ANTES = re.compile(r"(?<=\S)\s+([A-ZÀ-ÖØ-Þ][\w'’]*)[ -]$")
+
+
+def dentro_de_nombre_propio(texto: str, inicio: int, fin: int) -> bool:
+    """Si la forma de `texto[inicio:fin]` es parte del nombre propio de una instalación."""
+    if _NOMBRE_PROPIO_SIGUE.match(texto, fin):
+        return True
+    return _NOMBRE_PROPIO_ANTES.search(texto[:inicio]) is not None
 
 
 def _ya_dice(texto: str, inicio: int, destino: str) -> bool:

@@ -96,3 +96,23 @@ def test_con_punto_en_tierra_manda_el_punto() -> None:
     sin_buque = {**documento, "titulo": {"es": "Dron en Constanza", "en": "Drone in Constanța"},
                  "fuentes": []}  # fmt: skip
     assert zona.clasificar(documento) == zona.clasificar(sin_buque)
+
+
+def test_la_ciudad_dentro_del_nombre_de_un_aeropuerto_no_se_traduce() -> None:
+    texto = "Avistamiento de drones sobre el aeropuerto de Maastricht Aachen"
+    assert nombres_lugar.corregir_texto(texto, {}, "es") == texto
+    assert nombres_lugar.formas_ajenas(texto, "es") == []
+    # Sola, sí: «Aachen» → «Aquisgrán».
+    assert nombres_lugar.corregir_texto("Drones sobre Aachen", {}, "es") == "Drones sobre Aquisgrán"
+    assert nombres_lugar.corregir_texto("Drones close Hannover airport", {}, "en") == (
+        "Drones close Hanover airport"
+    )
+
+
+def test_posible_repetido() -> None:
+    from proceso import titulares
+
+    assert (
+        titulares.ajustar("Possible possible drone crash on Romanian coast", "no_confirmada", "en")
+        == "Possible drone crash on Romanian coast"
+    )
