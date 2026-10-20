@@ -130,3 +130,15 @@ def test_una_parte_del_nombre_no_lleva_a_otro_lugar() -> None:
         "es": "Posible dron en la costa",
         "en": "Possible drone on the coast",
     }
+
+
+def test_un_nombre_guardado_mas_largo_es_otro_lugar() -> None:
+    assert nombres_lugar._otro_lugar_mas_largo(
+        "arges", {"es": "Curtea de Argeș", "en": "Curtea de Argeș"}
+    )
+    assert not nombres_lugar._otro_lugar_mas_largo(
+        "stefan voda", {"es": "Distrito de Ștefan Vodă", "en": "Ștefan Vodă District"}
+    )
+    assert not nombres_lugar._otro_lugar_mas_largo(
+        "vrancea", {"es": "Vrancea", "en": "Vrancea County"}
+    )
