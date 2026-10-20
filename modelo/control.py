@@ -168,12 +168,15 @@ las 6:10 a las 7:00: «50»). No el tiempo que un avión esperó o dio vueltas, 
 vuelo.
 - dia: el día del suceso como AAAA-MM-DD, solo si la frase lo escribe («13 de octubre») o lo da \
 respecto a la publicación de su fuente («el martes», «anoche», «esta mañana»). Si la frase no \
-dice el día, vacío: la fecha de publicación no es el día del suceso.
+dice el día, vacío: la fecha de publicación no es el día del suceso; «la semana pasada» o «hace \
+unos días» tampoco dan el día.
 - hora: la hora local del suceso como HH:MM, solo si una fuente la escribe («gegen 6 Uhr»: \
 «06:00»; «entre las 2 y las 4 de la madrugada»: «02:00»).
 - lugar: el sitio más concreto donde ocurrió el suceso según las fuentes (el aeropuerto, la \
 base, el puerto, la ciudad), con su nivel. No el sitio de una reacción, de una rueda de prensa \
-ni de un aeropuerto al que se desviaron vuelos."""
+ni de un aeropuerto al que se desviaron vuelos. El nombre de un buque, un vehículo o una \
+aeronave no es un lugar: en el mar, la zona marítima que da la fuente (nivel region). Los \
+nombres de las instalaciones, tal como los escribe la fuente, sin traducir."""
 
 INSTRUCCIONES_TRADUCIR = """Traduces citas de noticias y de comunicados oficiales sobre \
 incidentes con drones para el European Observatory of Drone Incidents. Para cada cita numerada \

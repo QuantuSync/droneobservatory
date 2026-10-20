@@ -40,27 +40,46 @@ def _llamada(almacen: Almacen, fecha: str, dolares: float, modo: str = "horario"
 
 def test_el_reparto_del_mes_suma_el_tope() -> None:
     assert sum(coste.REPARTO_MENSUAL_USD.values()) == pytest.approx(coste.TOPE_MENSUAL_USD)
-    assert coste.parte_del_mes(coste.EXPERTO) == pytest.approx(2.70)
+    assert coste.parte_del_mes(coste.EXPERTO) == pytest.approx(
+        coste.REPARTO_MENSUAL_USD[coste.EXPERTO]
+    )
 
 
-def test_el_tope_del_experto_va_al_ritmo_de_su_parte_del_mes() -> None:
+def test_el_tope_del_experto_es_el_diario_al_principio_de_mes() -> None:
     almacen = Almacen.abrir()
-    # Sin gasto: 2,70 USD entre los 12 días que quedan, 0,225 al día (como mucho 0,30).
-    assert coste.tope_experto(coste.del_mes(almacen, AHORA, EXPERTO)) == round(2.70 / 12, 6)
-    # Con 2,40 USD gastados antes de hoy quedan 0,30 para 12 días.
-    _llamada(almacen, "2026-10-05T10:00:00Z", 2.40, "horario", EXPERTO, True)
+    noviembre = datetime(2026, 11, 1, 0, 30, tzinfo=UTC)
+    assert coste.tope_experto(coste.del_mes(almacen, noviembre, EXPERTO)) == pytest.approx(
+        coste.LIMITE_EXPERTO_DIARIO_USD
+    )
+    assert coste.tope_experto(None) == coste.LIMITE_EXPERTO_DIARIO_USD
+
+
+def test_el_tope_del_experto_baja_si_su_parte_del_mes_va_deprisa() -> None:
+    almacen = Almacen.abrir()
+    parte = coste.parte_del_mes(coste.EXPERTO)
+    minimo = coste.MINIMO_EXPERTO_DIARIO_USD
+    # Sin gasto, el 20 de octubre (12 días con hoy): el límite diario entero.
+    assert coste.tope_experto(coste.del_mes(almacen, AHORA, EXPERTO)) == pytest.approx(
+        coste.LIMITE_EXPERTO_DIARIO_USD
+    )
+    # Gastado lo justo para que queden el mínimo de los 11 días siguientes y 0,50 para hoy.
+    _llamada(almacen, "2026-10-05T10:00:00Z", parte - minimo * 12, "horario", EXPERTO, True)
     mes = coste.del_mes(almacen, AHORA, EXPERTO)
-    assert mes.experto_antes == pytest.approx(2.40)
-    assert coste.tope_experto(mes) == pytest.approx(0.30 / 12, abs=1e-6)
+    assert coste.tope_experto(mes) == pytest.approx(minimo, abs=1e-6)
+    # Más deprisa aún: queda poco, y el tope es lo que le toca de cada día que queda.
+    _llamada(almacen, "2026-10-06T10:00:00Z", minimo * 12 - 1.20, "horario", EXPERTO, True)
+    mes = coste.del_mes(almacen, AHORA, EXPERTO)
+    assert mes.experto_antes == pytest.approx(parte - 1.20)
+    assert coste.tope_experto(mes) == pytest.approx(1.20 / 12, abs=1e-6)
     with pytest.raises(coste.LimiteGasto):
-        coste.comprobar_experto(0.02, 0.01, mes=mes)
+        coste.comprobar_experto(0.09, 0.02, mes=mes)
     # Lo crítico sigue teniendo su reserva de 0,50.
-    assert coste.comprobar_experto(0.02, 0.01, critico=True, mes=mes) is coste.Tramo.RESERVA
+    assert coste.comprobar_experto(0.09, 0.02, critico=True, mes=mes) is coste.Tramo.RESERVA
 
 
 def test_con_el_tope_mensual_agotado_solo_trabajan_la_horaria_y_lo_critico() -> None:
     almacen = Almacen.abrir()
-    _llamada(almacen, "2026-10-03T10:00:00Z", 10.0)
+    _llamada(almacen, "2026-10-03T10:00:00Z", coste.TOPE_MENSUAL_USD)
     mes = coste.del_mes(almacen, AHORA)
     assert coste.mes_agotado(mes)
     for modo in (coste.Modo.CONTROL, coste.Modo.GUERRA, coste.Modo.RECTIFICACIONES):
@@ -68,7 +87,8 @@ def test_con_el_tope_mensual_agotado_solo_trabajan_la_horaria_y_lo_critico() -> 
             coste.comprobar(0.0, 0.001, modo, mes)
     # El modelo base de la horaria nunca para: le queda su parte media de cada día.
     coste.comprobar(0.0, 0.001, coste.Modo.HORARIO, mes)
-    assert coste.limite_de_hoy(coste.Modo.HORARIO, mes) == pytest.approx(3.00 / 31, abs=1e-6)
+    media = coste.parte_del_mes(coste.Modo.HORARIO) / 31
+    assert coste.limite_de_hoy(coste.Modo.HORARIO, mes) == pytest.approx(media, abs=1e-6)
     with pytest.raises(coste.LimiteGasto):
         coste.comprobar_experto(0.0, 0.01, mes=mes)
     assert coste.comprobar_experto(0.0, 0.01, critico=True, mes=mes) is coste.Tramo.RESERVA
@@ -82,7 +102,9 @@ def test_con_el_tope_mensual_agotado_solo_trabajan_la_horaria_y_lo_critico() -> 
 def test_el_tope_mensual_se_cambia_por_entorno(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv(coste.VARIABLE_TOPE_MENSUAL, "20")
     assert coste.tope_mensual() == 20.0
-    assert coste.parte_del_mes(coste.EXPERTO) == pytest.approx(5.40)
+    assert coste.parte_del_mes(coste.EXPERTO) == pytest.approx(
+        coste.REPARTO_MENSUAL_USD[coste.EXPERTO] * 20 / coste.TOPE_MENSUAL_USD
+    )
 
 
 def test_el_experto_del_control_lleva_su_cupo_y_no_gasta_el_de_la_horaria() -> None:
@@ -94,7 +116,7 @@ def test_el_experto_del_control_lleva_su_cupo_y_no_gasta_el_de_la_horaria() -> N
     assert almacen.gastado_experto_en("control", "2026-10-20") == pytest.approx(0.05)
     coste.comprobar_control_experto(0.05, 0.005)
     with pytest.raises(coste.LimiteGasto):
-        coste.comprobar_control_experto(0.05, 0.02)
+        coste.comprobar_control_experto(0.05, coste.LIMITE_CONTROL_EXPERTO_DIARIO_USD - 0.04)
     # Cuenta como el control en el mes, no como el experto.
     mes = coste.del_mes(almacen, datetime(2026, 10, 21, 12, tzinfo=UTC), EXPERTO)
     assert mes.experto_antes == 0.0 and mes.modos_antes["control"] == pytest.approx(0.05)
@@ -146,17 +168,17 @@ class Avisos:
 def test_avisos_al_80_y_al_100_una_vez_al_mes() -> None:
     almacen = Almacen.abrir()
     avisos = Avisos()
-    _llamada(almacen, "2026-10-03T10:00:00Z", 7.0)
+    _llamada(almacen, "2026-10-03T10:00:00Z", 42.0)
     assert gasto_api.revisar(almacen, AHORA, avisos) == []
-    _llamada(almacen, "2026-10-04T10:00:00Z", 1.5)
+    _llamada(almacen, "2026-10-04T10:00:00Z", 9.0)
     assert gasto_api.revisar(almacen, AHORA, avisos) == [gasto_api.TITULO_80]
     assert gasto_api.revisar(almacen, AHORA, avisos) == []
-    _llamada(almacen, "2026-10-05T10:00:00Z", 2.0)
+    _llamada(almacen, "2026-10-05T10:00:00Z", 12.0)
     assert gasto_api.revisar(almacen, AHORA, avisos) == [gasto_api.TITULO_100]
     assert gasto_api.revisar(almacen, AHORA, avisos) == []
-    assert "8.50 de 10.00" in avisos.enviados[0][1]
+    assert "51.00 de 60.00" in avisos.enviados[0][1]
     # En noviembre, de cero.
-    _llamada(almacen, "2026-11-02T10:00:00Z", 9.0)
+    _llamada(almacen, "2026-11-02T10:00:00Z", 54.0)
     noviembre = datetime(2026, 11, 2, 12, tzinfo=UTC)
     assert gasto_api.revisar(almacen, noviembre, avisos) == [gasto_api.TITULO_80]
 
@@ -177,7 +199,7 @@ def test_saldo_agotado_un_aviso_por_episodio(tmp_path: Path) -> None:
 
 def test_sin_token_de_ntfy_no_se_avisa_ni_se_anota() -> None:
     almacen = Almacen.abrir()
-    _llamada(almacen, "2026-10-03T10:00:00Z", 9.0)
+    _llamada(almacen, "2026-10-03T10:00:00Z", 54.0)
     assert gasto_api.revisar(almacen, AHORA, lambda titulo: None) == []
     assert gasto_api.revisar(almacen, AHORA, Avisos()) == [gasto_api.TITULO_80]
 
@@ -250,17 +272,18 @@ def test_de_madrugada_lo_no_critico_va_al_lote_del_experto_y_lo_critico_directo(
 def test_el_cupo_de_la_segunda_busqueda_va_aparte_y_sin_reserva() -> None:
     almacen = Almacen.abrir()
     modo = coste.Modo.SEGUNDA_BUSQUEDA
-    # Su límite del día (0,12) y su parte del mes entera, sin repartirla por días: un peor caso de
-    # 0,06 cabe aunque su parte entre los días que quedan sea menor.
+    # Su límite del día y su parte del mes entera, sin repartirla por días: un peor caso de 0,06
+    # cabe aunque su parte entre los días que quedan sea menor.
     mes = coste.del_mes(almacen, AHORA, EXPERTO)
     coste.comprobar_cupo(0.0, 0.06, modo, mes)
     with pytest.raises(coste.LimiteGasto):
-        coste.comprobar_cupo(0.07, 0.06, modo, mes)
+        coste.comprobar_cupo(coste.LIMITE_SEGUNDA_BUSQUEDA_DIARIO_USD - 0.05, 0.06, modo, mes)
     # Lo que gasta no cuenta contra el tope normal del experto.
-    _llamada(almacen, "2026-10-05T10:00:00Z", 1.0, modo.value, EXPERTO, True)
+    gastado = coste.parte_del_mes(modo) - 0.10
+    _llamada(almacen, "2026-10-05T10:00:00Z", gastado, modo.value, EXPERTO, True)
     mes = coste.del_mes(almacen, AHORA, EXPERTO)
     assert mes.experto_antes == 0.0
-    assert mes.modos_antes[modo.value] == pytest.approx(1.0)
+    assert mes.modos_antes[modo.value] == pytest.approx(gastado)
     # Con su parte del mes gastada, para.
     coste.comprobar_cupo(0.0, 0.06, modo, mes)
     with pytest.raises(coste.LimiteGasto):

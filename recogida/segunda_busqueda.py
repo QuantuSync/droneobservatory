@@ -33,6 +33,7 @@ from esquema import Documento
 from modelo import coste, paginas
 from proceso import extraccion
 from proceso import segunda_busqueda as busqueda
+from proceso.incidentes import huella
 from proceso.noticias import nomenclator
 from recogida import articulos_dirigidos, control_fichas, rectificaciones
 from recogida.descarga import Descargador, DescargaFallida
@@ -320,10 +321,40 @@ def _al_cursor_dirigidos(almacen: Almacen, url: str, candidato: str, ahora: date
     almacen.guardar_cursor(articulos_dirigidos.FUENTE_ID, cursor)
 
 
+# Un candidato que el experto ya extrajo con los mismos artículos en estas horas no vuelve a él por
+# otra entrega de la segunda lectura: la noche del 20 de octubre de 2026 el de Núremberg (dos
+# declaraciones de la misma ficha) y el de Pasvalio (un artículo que ya tenía) fueron dos veces.
+SIN_REPETIR_EXPERTO = timedelta(hours=12)
+
+
+def ya_con_experto(almacen: Almacen, candidato_id: str, ahora: datetime) -> bool:
+    """El experto ya extrajo el candidato (su última extracción fue escalada), con sus artículos
+    de ahora, hace menos de SIN_REPETIR_EXPERTO."""
+    candidato = next((c for c in almacen.candidatos() if c["id"] == candidato_id), None)
+    hechas = almacen.extracciones(candidato_id)
+    if candidato is None or not hechas:
+        return False
+    ultima = hechas[-1]
+    try:
+        cuando = datetime.fromisoformat(str(ultima["fecha"]).replace("Z", "+00:00"))
+    except ValueError:
+        return False
+    return (
+        ultima.get("huella") == huella(candidato["articulos"])
+        and bool(ultima.get("escalado"))
+        and ahora - cuando < SIN_REPETIR_EXPERTO
+    )
+
+
 def _repetir_con_experto(almacen: Almacen, candidato: str, motivo: str, ahora: datetime,
                          cupo: bool = False) -> None:  # fmt: skip
-    """La extracción se repite con el experto en la recogida (`revision`). Con `cupo`, se paga con
-    el cupo propio de las búsquedas de lo que falta (coste.Modo.SEGUNDA_BUSQUEDA)."""
+    """La extracción se repite con el experto en la recogida (`revision`), salvo que ya la hiciera
+    con los mismos artículos hace poco (ya_con_experto). Con `cupo`, se paga con el cupo propio
+    de las búsquedas de lo que falta (coste.Modo.SEGUNDA_BUSQUEDA)."""
+    if ya_con_experto(almacen, candidato, ahora):
+        registro.info("candidato %s: el experto ya lo extrajo con estos artículos (%s)",
+                      candidato, motivo)  # fmt: skip
+        return
     extraccion.anotar_espera(
         almacen, candidato, [motivo], ahora - extraccion.ESPERA_FALLO_EXPERTO, False, True,
         cupo=coste.Modo.SEGUNDA_BUSQUEDA.value if cupo else None,

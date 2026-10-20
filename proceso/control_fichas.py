@@ -25,7 +25,7 @@ from datetime import datetime, timedelta
 from typing import Any
 
 from esquema import Documento
-from proceso import declaraciones, incidentes, rectificaciones
+from proceso import buques, declaraciones, fechas, incidentes, rectificaciones
 from proceso.estados import RETIRADAS, Estado
 from proceso.fronteras import dentro_del_pais
 from proceso.noticias import (
@@ -598,6 +598,54 @@ def aplicar(
     _hora(c, verificada, primera, conservar)
     _lugar(c, verificada, nom)
     return c
+
+
+# --- Fallos conocidos de las fichas ---------------------------------------------------------
+
+# Los cuatro fallos del 20 de octubre de 2026 (Chelsea 3, Núremberg): el control los busca en cada
+# ficha y la manda al experto.
+BUQUE_COMO_LUGAR = "buque_como_lugar"
+ALCANZADO_COMO_SOBREVUELO = "alcanzado_como_sobrevuelo"
+INTERIOR_EN_EL_MAR = "interior_en_el_mar"
+PUBLICACION_CON_PASADO = "fecha_de_publicacion_con_pasado"
+
+
+def fallos_de_ficha(incidente: Documento) -> list[str]:
+    """Los fallos conocidos de una ficha: el nombre de un buque como lugar, un buque alcanzado
+    como sobrevuelo, «interior» para un suceso en el mar y la fecha de publicación cuando una
+    fuente sitúa el suceso en un pasado sin día («la semana pasada»)."""
+    from zoneinfo import ZoneInfo
+
+    textos = buques.textos_de(incidente)
+    lugar = incidente.get("lugar") or {}
+    fallos = []
+    nombres = [lugar.get("suceso"), lugar.get("localidad")]
+    nombres += [(incidente.get("nombres") or {}).get("localidad", {}).get(i)
+                for i in ("es", "en")] if isinstance((incidente.get("nombres") or {}).get(
+                    "localidad"), dict) else []  # fmt: skip
+    if any(buques.es_nombre_de_buque(n, textos) for n in nombres if n):
+        fallos.append(BUQUE_COMO_LUGAR)
+    if incidente.get("tipo") == "sobrevuelo" and incidentes.alcanzado_en_el_mar(incidente):
+        fallos.append(ALCANZADO_COMO_SOBREVUELO)
+    if (incidente.get("zona") or {}).get("grupo") == "interior" and buques.en_el_mar(textos):
+        fallos.append(INTERIOR_EN_EL_MAR)
+    tiempo = incidente.get("tiempo") or {}
+    origen = tiempo.get("origen_inicio") or {}
+    if (
+        (tiempo.get("inicio") or {}).get("precision") == incidentes.APROXIMADA
+        and origen.get("tipo") == fechas.PUBLICACION
+        and fechas.ventana_de_motivo(str(origen.get("motivo") or "")) is None
+    ):
+        for fuente in incidente.get("fuentes", []):
+            frase = " ".join(str(fuente.get(c) or "") for c in ("frase_origen", "titular"))
+            try:
+                publicada = incidentes._leer_instante(fuente["fecha"])
+            except (KeyError, ValueError, TypeError):
+                continue
+            if fechas.pasado_de(frase, publicada, ZoneInfo("UTC")) is not None:
+                fallos.append(PUBLICACION_CON_PASADO)
+                break
+    return fallos
 
 
 # --- El estado ----------------------------------------------------------------------------

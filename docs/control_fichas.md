@@ -212,6 +212,43 @@ eran el mismo suceso partido y se unen en `incidentes_revisados.json`:
   agotó la reserva, se reintenta en cada recogida. La ficha nueva sigue retenida mientras tanto
   (sin el límite de 6 horas).
 
+## Fallos conocidos de las fichas (desde el 20 de octubre de 2026)
+
+El 20 de octubre de 2026, con el experto casi sin tope, salieron tres fichas mal publicadas:
+EODI-2026-00639 («Chelsea 3, Bulgaria»: el nombre del buque como lugar, «sobrevuelo» y
+«interior»), EODI-2026-00632 (una nota de nordbayern.de que dice «Erst letzte Woche…» sobre el
+aeropuerto de Núremberg, publicada como suceso nuevo del 19) y EODI-2026-00637 («Puerto de Ems»,
+una traducción inventada de Eemshaven que venía de Wikidata). Reglas generales:
+
+- **Un buque, un vehículo o una aeronave nunca es un lugar** (`proceso/buques.py`). Si el lugar
+  del suceso es el nombre de un barco que nombran las fuentes («vessel Chelsea 3», «MV …»), el
+  lugar pasa a ser la zona marítima que dan las fuentes («mar Negro, zona económica exclusiva de
+  Bulgaria», «mar Negro») o «mar», a nivel de región y sin punto (`incidentes.lugar_sin_buque`, al
+  construir la ficha y en las reglas deterministas del control). El extractor y la verificación lo
+  saben (`modelo/ficha.py`, `modelo/control.py`).
+- **Un buque alcanzado por un dron en el mar no es un sobrevuelo**: impacto, explosión, ataque o
+  restos a bordo en el mar son el dron de un ataque que llegó desde el mar; el tipo es
+  «incursión», como los buques del 13 de octubre (EODI-2026-00512), con las pruebas físicas que
+  den las fuentes (`incidentes.aplicar_reglas`, `alcanzado_en_el_mar`).
+- **Frontera o interior en el mar**: un suceso en el mar de un país con costa en el mar Negro es
+  de la costa del mar Negro (`zona.clasificar`, motivo `costa_mar_negro`), nunca «interior».
+- **Pasado sin día** (`proceso/fechas.py`, `configuracion/fechas.json`, `pasados`): «la semana
+  pasada», «letzte Woche», «hace unos días»… en cualquier idioma no son la fecha de publicación.
+  El inicio queda aproximado (la víspera de la nota como muy tarde) y su motivo lleva la ventana
+  (la semana natural anterior, o los 10 días antes); la fusión lo compara con los incidentes del
+  mismo sitio en esa ventana (`incidentes.misma_ventana`, `ventana_pasada`) y la nota se une al
+  suceso registrado como fuente nueva.
+- **Los nombres propios de las instalaciones no se traducen** (Eemshaven, Schiphol, Rotterdam);
+  solo los exónimos de las tablas («Núremberg», «Copenhague»). Un nombre de Wikidata del tipo
+  «Puerto de X» cuyo X no está en el nombre original no se usa
+  (`nombres_lugar.traduccion_inventada`).
+- **Titular en inglés**: «possible» va delante de todo el grupo del dron («Possible mystery
+  drones», «Possible narco-drones»), no en medio (`titulares._como_posible`).
+- **El control los busca en cada ficha** (`control_fichas.fallos_de_ficha`: `buque_como_lugar`,
+  `alcanzado_como_sobrevuelo`, `interior_en_el_mar`, `fecha_de_publicacion_con_pasado`) y la
+  verifica con el experto (motivo `fallo_ficha`) aunque sus fuentes no hayan cambiado; la decisión
+  guarda los fallos vistos y no se repite mientras sean los mismos.
+
 ## Resumen diario y vigilancia
 
 - `control.json` (`~/.eodi/`) guarda cada pasada de los dos últimos días: fichas

@@ -29,7 +29,7 @@
     "dias_rescate": 14,
     "por_recogida": 2,
     "por_dia": 4,
-    "cupo_experto": {"por_dia": 2, "tipos": ["declaracion", "rescate"]},
+    "cupo_experto": {"por_dia": 20, "tipos": ["declaracion", "rescate"]},
     "barrido_pais": {"hora_utc": 3, "por_pasada": 4}
   },
   "pasada": {

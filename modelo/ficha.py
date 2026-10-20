@@ -172,7 +172,9 @@ incursion si un dron militar o de un Estado entró desde fuera del país y lo de
 autoridad o una prueba física (explosión, restos, caída, derribo o rastreo por radar); si no, \
 sobrevuelo. Un avistamiento sin esa demostración nunca es incursión.
 - inicio: cuándo empezó el incidente (no cuándo se publicó), en UTC, como AAAA-MM-DDTHH:MM o \
-AAAA-MM-DD. Convierte la hora local del país a UTC. inicio_precision: minuto si la fuente da \
+AAAA-MM-DD. Si la fuente solo sitúa el suceso en un pasado sin día («la semana pasada», \
+«hace unos días»), pon el día de la publicación y, como frase, la que lo dice: no es un suceso \
+nuevo de ese día. Convierte la hora local del país a UTC. inicio_precision: minuto si la fuente da \
 la hora exacta, hora si da una hora aproximada o una franja corta, dia si solo da el día o \
 dice anoche, ayer, el lunes. fin: cuándo acabó, con el mismo formato.
 - lugar_suceso: dónde ocurrió el suceso (donde se vio, cayó, explotó o fue derribado el dron), \
@@ -183,7 +185,10 @@ objetivo conocido si la fuente lo llama de otra forma); nivel, instalacion (aero
 central, puerto), localidad (ciudad, pueblo, municipio, distrito), region (provincia, región, \
 costa, frontera, una zona sin localidad concreta) o pais (si solo se sabe el país; el nombre es \
 entonces el del país); país, su código ISO; región, la de primer nivel del país (provincia, \
-región, condado, judeţ, raion) si se sabe sin duda, o vacío.
+región, condado, judeţ, raion) si se sabe sin duda, o vacío. El nombre de un buque, un vehículo \
+o una aeronave nunca es el lugar: si el suceso es en el mar, el lugar es la zona marítima que \
+da la fuente («mar Negro», «zona económica exclusiva de Bulgaria») o la costa o el puerto más \
+cercano que nombre, con nivel region.
 - pais: código ISO 3166-1 alfa-2 del país donde ocurrió el suceso, aunque sea otro que el del \
 objetivo conocido. localidad: ciudad o municipio donde ocurrió.
 - objetivo_conocido: true si el incidente ocurre en el objetivo conocido que se te indica; \
@@ -253,7 +258,10 @@ palabras como máximo; en una autoría, la que nombra a quien se atribuye. Si la
 comunica un aviso de dron o actúa por él (cierra, interviene), inclúyela como incidente.
 - titulo_es y titulo_en: un título breve y neutro, en español y en inglés, con lugar y hecho \
 («Drones sobre el aeropuerto de Copenhague obligan a cerrarlo»), sin fecha. Van aparte de los \
-datos y siempre.
+datos y siempre. Los nombres propios de puertos, aeropuertos, bases y centrales no se traducen \
+(Eemshaven, Schiphol, Rotterdam); solo los exónimos establecidos de las ciudades (Núremberg, \
+Copenhague). El nombre de un buque no es el lugar del título: «Hallan restos en el buque \
+Chelsea 3, alcanzado por un dron en el mar Negro».
 
 Reglas: nunca inventes; si las fuentes discrepan, usa la más precisa y dilo con la confianza. \
 No uses la fecha de publicación como fecha del incidente salvo que la fuente diga que ocurrió \

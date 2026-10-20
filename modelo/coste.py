@@ -35,15 +35,17 @@ fuera de la base: 0,10 dólares al día y 3 dólares una vez para su primera pas
 
 El modelo experto lleva su propio gasto, aparte de todos los modos (docs/modelos.md): lo que
 gasta cuenta solo contra su tope, nunca contra el de la recogida horaria ni el de otro modo. Su
-tope normal del día es lo que le toca de su parte del mes (tope_del_dia), como mucho 0,30 dólares
-(LIMITE_EXPERTO_DIARIO_USD), y aparte tiene una reserva crítica de 0,50 dólares al día
-(RESERVA_CRITICA_DIARIA_USD) que solo usan los casos críticos (proceso/escalado.es_critico) cuando
-el tope normal ya no da. Lo que el experto gasta en un día por encima de su tope normal es de la
-reserva. Un caso que no cabe espera: el normal, al día siguiente (UTC), porque su tope no se
-renueva antes; el crítico, a la recogida siguiente, y se reintenta en cada una.
+tope normal del día es 1,50 dólares (LIMITE_EXPERTO_DIARIO_USD) mientras su parte del mes deje al
+menos MINIMO_EXPERTO_DIARIO_USD a cada día que queda (tope_experto), y aparte tiene una reserva
+crítica de 0,50 dólares al día (RESERVA_CRITICA_DIARIA_USD) que solo usan los casos críticos
+(proceso/escalado.es_critico) cuando el tope normal ya no da. Lo que el experto gasta en un día por
+encima de su tope normal es de la reserva. Un caso que no cabe espera: el normal, hasta la misma
+hora del día siguiente (su tope se renueva a las 00:00 UTC, y así las esperas no vencen todas a
+medianoche); el crítico, a la recogida siguiente, y se reintenta en cada una.
 
 Tope mensual (desde el 19 de octubre de 2026): todo lo que se gasta en la API en el mes (UTC),
-también lo de las sesiones, cuenta contra TOPE_MENSUAL_USD (10 dólares; la variable
+también lo de las sesiones, cuenta contra TOPE_MENSUAL_USD (60 dólares desde el 20 de octubre de
+2026, con los créditos mensuales de la API incluidos en el plan; la variable
 EODI_TOPE_MENSUAL_USD lo cambia), repartido entre el experto y los modos de cada día
 (REPARTO_MENSUAL_USD). Cada modo de cada día y el experto gastan como mucho lo que queda de su parte
 del mes entre los días que quedan (tope_del_dia). Al 80 % se avisa una vez (recogida/gasto_api.py);
@@ -82,7 +84,8 @@ LIMITE_GUERRA_DIARIO_USD = 0.20
 LIMITE_GUERRA_HISTORICO_USD = 5.00
 LIMITE_CALIDAD_USD = 2.00
 LIMITE_DIRIGIDA_USD = 3.00
-LIMITE_CONTROL_DIARIO_USD = 0.15
+# 0,25 desde el 20 de octubre de 2026 (era 0,15; lo medido, 0,04-0,12 al día).
+LIMITE_CONTROL_DIARIO_USD = 0.25
 # Repaso del control sobre todo lo publicado: 4 USD el 14 de octubre de 2026 de madrugada (se
 # gastaron 3,46) y 6 USD más ese mismo día para las fichas que quedaron sin verificar.
 LIMITE_CONTROL_REPASO_USD = 9.46
@@ -92,10 +95,18 @@ LIMITE_TRADUCCIONES_USD = 2.00
 # una pasada al mes, con su tope por día (el de la pasada). Las preguntas al experto van aparte,
 # con su tope.
 LIMITE_RECTIFICACIONES_USD = 0.30
-# Tope diario del modelo experto, en todos los modos juntos y aparte de ellos: el máximo de un día;
-# lo normal es menos, lo que le toca de su parte del mes (tope_del_dia). Era 1 dólar hasta el 19
-# de octubre de 2026, y se gastaba entero casi cada día (1,30 dólares al día en total).
-LIMITE_EXPERTO_DIARIO_USD = 0.30
+# Tope diario del modelo experto, en todos los modos juntos y aparte de ellos. Fue 1 dólar hasta el
+# 19 de octubre de 2026 y 0,30 del 19 al 20: con 0,30 casi todo lo decidió el modelo base y salieron
+# fichas mal publicadas (un buque como lugar, un suceso de la semana anterior como nuevo). Desde el
+# 20 de octubre, con los créditos mensuales del plan, 1,50.
+LIMITE_EXPERTO_DIARIO_USD = 1.50
+# Lo que el tope del experto deja siempre a cada día que queda del mes: si su parte del mes va tan
+# deprisa que no daría para esto, el tope de hoy baja (tope_experto).
+MINIMO_EXPERTO_DIARIO_USD = 0.50
+# Lo que el experto deja libre de su tope del día para los escalados que no pueden esperar cuando
+# hace lo opcional (comprobar_al_ritmo): un margen fijo, no un reparto por horas que deje la mañana
+# sin experto (el 20 de octubre de 2026 a las 11:45 Chelsea 3 se quedó sin él por ese reparto).
+MARGEN_ESCALADOS_USD = 0.30
 # Reserva crítica del experto, aparte del tope: solo para los casos críticos.
 RESERVA_CRITICA_DIARIA_USD = 0.50
 # Lo que el experto gasta cada día en revisar lo que marca la segunda lectura: cuenta dentro de su
@@ -104,20 +115,23 @@ RESERVA_CRITICA_DIARIA_USD = 0.50
 LIMITE_SEGUNDA_EXPERTO_DIARIO_USD = 0.10
 # Cupo propio de la segunda lectura para las dos búsquedas de lo que falta (declaraciones oficiales
 # e incidentes que faltan, docs/segunda_lectura.md): su extracción con el experto, como mucho
-# configuracion/segunda_lectura.json (busqueda.cupo_experto.por_dia, 2 casos al día) y estos
+# configuracion/segunda_lectura.json (busqueda.cupo_experto.por_dia, 20 casos al día desde el 20 de
+# octubre de 2026; antes 2) y estos
 # dólares al día, dentro de su parte del mes (sin repartirla por días: el peor caso de una
 # extracción, unos 0,06, no cabría en lo que le toca de un día). No cuenta contra el tope normal del
 # experto, no va al ritmo de su tope y nunca sale de la reserva crítica (desde el 20 de octubre de
 # 2026: con la regla del ritmo esas búsquedas casi nunca llegaban al experto, y las que llegaban
 # como críticas gastaban la reserva).
-LIMITE_SEGUNDA_BUSQUEDA_DIARIO_USD = 0.12
+# 0,80 desde el 20 de octubre de 2026 (era 0,12, para 2 casos): 20 casos y el peor caso del último.
+LIMITE_SEGUNDA_BUSQUEDA_DIARIO_USD = 0.80
 # Cupo propio del experto en el control de las fichas (duplicados dudosos y verificaciones que
 # contradicen la ficha, recogida/control_fichas.py), aparte de su tope normal: desde el 20 de
 # octubre de 2026, porque ese día el control (0,07 USD) y las esperas que vencen a medianoche
 # gastaron de 00:00 a 06:00 UTC los 0,30 del experto, y la recogida horaria se quedó sin él durante
 # el día. Cuenta dentro de la parte del mes del control; los casos críticos del control siguen con
-# el tope del experto y su reserva crítica. De madrugada va por lote (escalar_lote).
-LIMITE_CONTROL_EXPERTO_DIARIO_USD = 0.06
+# el tope del experto y su reserva crítica. De madrugada va por lote (escalar_lote). 0,25 desde el
+# 20 de octubre de 2026 (era 0,06): el control manda al experto los fallos de las fichas.
+LIMITE_CONTROL_EXPERTO_DIARIO_USD = 0.25
 # Tope del experto antes del 15 de octubre de 2026: una espera anotada sin su tope es de entonces.
 LIMITE_EXPERTO_ANTERIOR_USD = 0.30
 # Un caso que espera al experto por un fallo, o crítico con la reserva agotada, vuelve a la
@@ -126,7 +140,9 @@ ESPERA_REINTENTO = timedelta(minutes=50)
 # Tope mensual de toda la API (todas las llamadas del mes UTC, también las de las sesiones). Lo
 # medido del 15 al 19 de octubre de 2026 en funcionamiento normal, por día: base de la recogida
 # 0,094; base del control 0,064; guerra 0,002; rectificaciones, una pasada al mes de hasta 0,30.
-TOPE_MENSUAL_USD = 10.00
+# 10 USD del 19 al 20 de octubre de 2026; 60 desde el 20, con los créditos mensuales de la API
+# incluidos en el plan (caducan cada mes y no se acumulan).
+TOPE_MENSUAL_USD = 60.00
 VARIABLE_TOPE_MENSUAL = "EODI_TOPE_MENSUAL_USD"
 EXPERTO = "experto"
 OTROS = "otros"
@@ -160,15 +176,18 @@ class Modo(StrEnum):
 # los días que quedan. Reparto del 20 de octubre de 2026, con lo medido del 15 al 20 de octubre por
 # día: base de la recogida 0,068-0,125 (media 0,10); base del control 0,037-0,119 (0,07); guerra
 # 0,002; casos críticos de verdad desde el corte del 19 de octubre (22:41 UTC), ninguno (los cuatro
-# que usaron la reserva eran entregas de la segunda lectura, que ya no la usan).
+# que usaron la reserva eran entregas de la segunda lectura, que ya no la usan). Reparto de 60 USD
+# desde el 20 de octubre: el experto, 40 (1,50 al día y la reserva crítica de lo que pase); la
+# recogida horaria, 4 (0,13 al día); el control, 6 (su base y su cupo del experto); la segunda
+# búsqueda, 6 (20 casos al día); otros, 3,50 (las sesiones).
 REPARTO_MENSUAL_USD: dict[str, float] = {
-    EXPERTO: 2.70,
-    Modo.HORARIO: 3.00,
-    Modo.CONTROL: 2.40,
+    EXPERTO: 40.00,
+    Modo.HORARIO: 4.00,
+    Modo.CONTROL: 6.00,
     Modo.GUERRA: 0.20,
     Modo.RECTIFICACIONES: 0.30,
-    Modo.SEGUNDA_BUSQUEDA: 1.10,
-    OTROS: 0.30,
+    Modo.SEGUNDA_BUSQUEDA: 6.00,
+    OTROS: 3.50,
 }
 # Los modos de cada día que paran al llegar al tope mensual. La recogida horaria sigue con el
 # modelo base: sin ella no se sabe qué caso es crítico.
@@ -235,12 +254,15 @@ def mes_agotado(mes: Mes | None, previsto: float = 0.0) -> bool:
 
 
 def tope_experto(mes: Mes | None) -> float:
-    """El tope normal del experto hoy: el de su parte del mes; sin mes, el límite diario."""
+    """El tope normal del experto hoy: el límite diario mientras lo que queda de su parte del mes
+    deje al menos MINIMO_EXPERTO_DIARIO_USD a cada uno de los días que quedan después de hoy; si
+    no, lo que sobre de eso (y como poco lo que le toca de cada día). Sin mes, el límite diario."""
     if mes is None:
         return LIMITE_EXPERTO_DIARIO_USD
-    return tope_del_dia(
-        LIMITE_EXPERTO_DIARIO_USD, parte_del_mes(EXPERTO), mes.experto_antes, mes.momento
-    )
+    queda = max(0.0, parte_del_mes(EXPERTO) - mes.experto_antes)
+    dias = dias_que_quedan(mes.momento)
+    libre = max(queda / dias, queda - MINIMO_EXPERTO_DIARIO_USD * (dias - 1))
+    return round(min(LIMITE_EXPERTO_DIARIO_USD, libre), 6)
 
 
 @dataclass(frozen=True)
@@ -312,10 +334,12 @@ def comprobar_experto(
 
 def margen_escalados(momento: datetime, tope: float = LIMITE_EXPERTO_DIARIO_USD) -> float:
     """Lo que hay que dejar libre del tope normal del experto para los escalados de lo que queda
-    del día (UTC), a ritmo constante: el tope entero a las 00:00, nada a las 24:00."""
+    del día (UTC): MARGEN_ESCALADOS_USD, o lo que corresponda a lo que queda del día a ritmo
+    constante si es menos (nada a las 24:00). Sin reparto por horas que deje la mañana sin
+    experto."""
     utc = momento.astimezone(UTC)
     transcurrido = utc.hour * 3600 + utc.minute * 60 + utc.second
-    return tope * (1 - transcurrido / 86400)
+    return min(MARGEN_ESCALADOS_USD, tope * (1 - transcurrido / 86400))
 
 
 def comprobar_al_ritmo(
@@ -401,11 +425,12 @@ def reparto_experto(
 
 def espera_experto(ahora: datetime, critico: bool) -> str:
     """Hasta cuándo espera un caso que no cabe en el gasto del experto: el crítico (sin reserva),
-    hasta la recogida siguiente; el normal, hasta el día siguiente (UTC), cuando su tope se
-    renueva."""
+    hasta la recogida siguiente; el normal, hasta la misma hora del día siguiente (su tope ya se
+    renovó a las 00:00 UTC): así las esperas no vencen todas a medianoche y no se comen el tope
+    de la madrugada (20 de octubre de 2026)."""
     if critico:
         return (ahora + ESPERA_REINTENTO).astimezone(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
-    return (ahora.astimezone(UTC) + timedelta(days=1)).strftime("%Y-%m-%dT00:00:00Z")
+    return (ahora.astimezone(UTC) + timedelta(days=1)).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def espera_vencida(hasta: str, ahora: str, tope: Any = None) -> bool:

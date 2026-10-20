@@ -9,6 +9,13 @@ de `configuracion/fechas.json`:
   Se resuelve con la fecha local del medio cuando publicó la nota (la zona horaria de su
   país; si no se sabe, la del país del suceso): una nota de las 07:10 de Berlín que dice
   «heute Nacht» habla de la noche anterior.
+- **Pasado sin día**: la frase sitúa el suceso antes de la publicación sin decir el día («la
+  semana pasada», «letzte Woche», «hace unos días»): no es la fecha de publicación. El inicio es
+  aproximado, la víspera de la nota como muy tarde, y su motivo dice la ventana en que cae
+  (pasado_de, ventana_de_motivo): la fusión lo compara con los incidentes del mismo sitio en esa
+  ventana (proceso/incidentes.misma_ventana), y un artículo que cuenta un suceso ya registrado se
+  une a él como fuente nueva. El 19 de octubre de 2026 una nota de nordbayern.de («Erst letzte
+  Woche…») sobre el aeropuerto de Núremberg del 13 de octubre salió como incidente nuevo del 19.
 - **Sin día**: la frase no escribe ningún día (solo una hora, o nada). Una fecha sin día
   escrito en su frase no vale como día: el inicio pasa a ser la fecha de publicación, con
   precisión «aproximada», y se declara que lo es.
@@ -56,6 +63,13 @@ _NUMERO_DIA = re.compile(r"^(\d{1,2})(?:st|nd|rd|th|er|e|o|a|º|ª)?$")
 _ANIO = re.compile(r"^(\d{4})$")
 # Palabras que pueden ir entre el día y el mes («22 de septiembre», «22nd of September»).
 _ENLACES = frozenset({"de", "of", "di", "do", "da", "del", "the", "den", "d"})
+
+
+# El motivo de un inicio de pasado sin día lleva su ventana: «…: suceso anterior a la publicación,
+# entre el AAAA-MM-DD y el AAAA-MM-DD».
+MARCA_PASADO = "suceso anterior a la publicación, entre el "
+_VENTANA = re.compile(re.escape(MARCA_PASADO) + r"(\d{4}-\d{2}-\d{2}) y el (\d{4}-\d{2}-\d{2})")
+DIAS_PASADO = 10
 
 
 def _normal(texto: str) -> str:
@@ -365,6 +379,10 @@ def resolver(
         return Resolucion(nuevo, "dia", lecturas[0].origen,
                           f"{cita}: el día es {dia}", corregido=valor is None
                           or valor.date() != dia)  # fmt: skip
+    pasado = _resolucion_pasado(frases, publicacion, zona_medio, corregido=True)
+    if pasado is not None:
+        # «La semana pasada»: el suceso no es del día de la nota.
+        return pasado
     if (
         valor is not None
         and precision in {"minuto", "hora"}
@@ -386,6 +404,56 @@ def resolver(
         "local del medio)",
         corregido=valor is not None,
     )
+
+
+@cache
+def _pasados() -> tuple[tuple[str, str], ...]:
+    """(expresión normalizada, clase) de los pasados sin día, las más largas primero."""
+    datos = configuracion().get("pasados", {})
+    pares = {(_normal(f), clase) for clase in ("semana", "dias") for f in datos.get(clase, [])}
+    return tuple(sorted(pares, key=lambda par: (-len(par[0]), par)))
+
+
+def pasado_de(frase: str, publicacion: datetime, zona_medio: ZoneInfo
+              ) -> tuple[date, date, str] | None:  # fmt: skip
+    """(desde, hasta, expresión) si la frase sitúa el suceso en un pasado sin día respecto a la
+    publicación: «la semana pasada», la semana natural anterior (con el domingo de antes);
+    «hace unos días», de DIAS_PASADO días antes a la víspera. None si no."""
+    normal = _normal(frase)
+    hoy = publicacion.astimezone(zona_medio).date()
+    for expresion, clase in _pasados():
+        if _contiene(normal, expresion) < 0:
+            continue
+        if clase == "semana":
+            lunes = hoy - timedelta(days=hoy.weekday() + DIAS_SEMANA)
+            return lunes - timedelta(days=1), lunes + timedelta(days=DIAS_SEMANA - 1), expresion
+        return hoy - timedelta(days=DIAS_PASADO), hoy - timedelta(days=1), expresion
+    return None
+
+
+def ventana_de_motivo(motivo: str) -> tuple[date, date] | None:
+    """La ventana de un inicio de pasado sin día, leída de su motivo (MARCA_PASADO)."""
+    hallada = _VENTANA.search(motivo or "")
+    if hallada is None:
+        return None
+    return date.fromisoformat(hallada.group(1)), date.fromisoformat(hallada.group(2))
+
+
+def _resolucion_pasado(frases: list[str], publicacion: datetime, zona_medio: ZoneInfo,
+                       corregido: bool) -> Resolucion | None:  # fmt: skip
+    for frase in frases:
+        pasado = pasado_de(frase, publicacion, zona_medio)
+        if pasado is None:
+            continue
+        desde, hasta, expresion = pasado
+        publicado = publicacion.astimezone(zona_medio).strftime("%Y-%m-%d %H:%M")
+        return Resolucion(
+            datetime.combine(hasta, time(0, 0), UTC), "aproximada", PUBLICACION,
+            f"«{expresion}» en una nota publicada el {publicado} (hora local del medio): "
+            f"{MARCA_PASADO}{desde} y el {hasta}",
+            corregido=corregido,
+        )  # fmt: skip
+    return None
 
 
 def _momento(texto: str) -> datetime:
@@ -414,6 +482,11 @@ def inicio_de_ficha(
         primero = min(articulos, key=lambda a: a["fecha"]) if articulos else None
         publicacion = _momento(primero["fecha"] if primero else inicio_candidato)
         medio = zona(primero.get("pais")) if primero else None
+        frases_ficha = [str(c.get("frase") or "") for c in campos.values() if c.get("frase")]
+        frases_ficha += [str(a.get("titular") or "") for a in articulos if a.get("titular")]
+        pasado = _resolucion_pasado(frases_ficha, publicacion, medio or zona_suceso, False)
+        if pasado is not None:
+            return pasado
         local = publicacion.astimezone(medio or zona_suceso).strftime("%Y-%m-%d %H:%M")
         return Resolucion(
             publicacion, "aproximada", PUBLICACION,
