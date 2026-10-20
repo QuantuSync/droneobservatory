@@ -2777,7 +2777,8 @@
       "incidente": "EODI-2026-00515",
       "presencia": {
         "valor": "no_confirmada",
-        "cita": "allerdings konnte eine Drohne nicht gefunden werden."
+        "cita": "allerdings konnte eine Drohne nicht gefunden werden.",
+        "enlace": "https://schwaebische.de/regional/bayern/moegliche-drohne-stoert-flugbetrieb-am-nuernberger-flughafen-4933216"
       },
       "drones": {
         "valor": "desconocido"

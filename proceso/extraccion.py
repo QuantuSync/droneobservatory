@@ -849,6 +849,39 @@ def escalar(
         raise EsperaExperto(motivos, False, str(error), critico) from error
 
 
+def experto_sin_base(
+    almacen: Almacen, cliente: Servicio, peticion: Peticion, ahora: datetime,
+    error: coste.LimiteGasto,
+) -> tuple[dict[str, Any], list[str]]:  # fmt: skip
+    """Un caso crítico que esperaba al experto cuando el tope del modo ya no deja llamar al base:
+    va directo al experto, con su tope o la reserva crítica (lo crítico no espera por los topes
+    normales). Lanza EsperaExperto si tampoco cabe en la reserva o el experto falla, y el
+    LimiteGasto del modo si no hay experto."""
+    fabrica_experto = getattr(cliente, "experto", None)
+    experto = fabrica_experto() if callable(fabrica_experto) else None
+    if experto is None:
+        raise error
+    espera = esperan_experto(almacen).get(peticion.candidato["id"], {})
+    motivos = [*espera.get("motivos", [])[:9], f"{escalado.CRITICO_SIN_BASE}: {error}"[:300]]
+    modelo_experto = str(getattr(experto, "modelo", ""))
+    previsto = coste.peor_caso(
+        peticion.letras(), ficha.MAX_TOKENS_SALIDA, modelo=modelo_experto, esfuerzo=ficha.ESFUERZO
+    )
+    try:
+        coste.comprobar_experto(
+            almacen.gastado_modelo(modelo_experto, coste.dia(ahora)), previsto, True,
+            coste.del_mes(almacen, ahora, modelo_experto),
+        )  # fmt: skip
+    except coste.LimiteGasto as tope:
+        raise EsperaExperto(motivos, True, str(tope), True) from tope
+    registro.info("candidato %s: crítico sin el base (%s), directo al experto",
+                  peticion.candidato["id"], error)  # fmt: skip
+    try:
+        return experto.mensaje(peticion.cuerpo()), motivos
+    except LlamadaFallida as fallo:
+        raise EsperaExperto(motivos, False, str(fallo), True) from fallo
+
+
 def incidente_del_candidato(
     almacen: Almacen, candidato_id: str, vinculos: dict[str, str] | None = None
 ) -> str | None:
@@ -1186,9 +1219,15 @@ def extraer(
     la ejecución.
     """
     hechas = Extraidas()
+    # Agotado el tope del modo, siguen solo los casos críticos que esperaban al experto: van
+    # directos a él (critico_sin_base) y la tanda acaba con la parada del límite.
+    sin_tope: coste.LimiteGasto | None = None
     for peticion in peticiones:
         candidato_id = peticion.candidato["id"]
         if espera_experto(almacen, candidato_id, ahora):
+            continue
+        critico_pendiente = bool(esperan_experto(almacen).get(candidato_id, {}).get("critico"))
+        if sin_tope is not None and not critico_pendiente:
             continue
         gastado = almacen.gastado(
             modo.value, coste.dia(ahora) if modo is coste.Modo.HORARIO else None
@@ -1199,12 +1238,24 @@ def extraer(
         try:
             if plazo is not None:
                 plazo.comprobar()
-            coste.comprobar(gastado, previsto, modo, coste.del_mes(almacen, ahora))
-            respuesta = cliente.mensaje(peticion.cuerpo())
+            if sin_tope is None:
+                try:
+                    coste.comprobar(gastado, previsto, modo, coste.del_mes(almacen, ahora))
+                except coste.LimiteGasto as error:
+                    sin_tope = error
+            if sin_tope is not None and not critico_pendiente:
+                continue
             try:
-                respuesta, escalado_por = escalar(
-                    almacen, cliente, peticion, respuesta, ahora, modo
-                )
+                escalado_por: list[str] | None
+                if sin_tope is not None:
+                    respuesta, escalado_por = experto_sin_base(
+                        almacen, cliente, peticion, ahora, sin_tope
+                    )
+                else:
+                    respuesta = cliente.mensaje(peticion.cuerpo())
+                    respuesta, escalado_por = escalar(
+                        almacen, cliente, peticion, respuesta, ahora, modo
+                    )
             except EsperaExperto as espera:
                 # La ficha necesita al experto y no puede ser ahora: el candidato espera y los
                 # demás siguen (la llamada del base ya está anotada).
@@ -1242,6 +1293,8 @@ def extraer(
             hechas.apartados.append(candidato_id)
             incidente = None
         hechas.incidentes.append(incidente)
+    if sin_tope is not None:
+        return hechas.parar(Parada.LIMITE_GASTO, sin_tope)
     return hechas
 
 

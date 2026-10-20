@@ -74,6 +74,9 @@ SENALES_CRITICAS = frozenset(
 )
 # Los motivos de escalado que ya hacen crítico el caso (por su comienzo): los «critico», lo que
 # retira o rebaja una publicada y la verificación que contradice su presencia o su cierre.
+# Un caso crítico que va directo al experto porque el tope de su modo ya no deja llamar al base
+# (modelo/coste.py: lo crítico no espera por los topes normales).
+CRITICO_SIN_BASE = "critico_sin_base"
 MOTIVOS_CRITICOS = (
     "critico", "publicada", "contradiccion: presencia", "contradiccion: cierre",
     *(f"senal: {s}" for s in sorted(SENALES_CRITICAS | {"incursion"})),

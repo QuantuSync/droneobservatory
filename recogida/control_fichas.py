@@ -205,6 +205,11 @@ class Llamador:
     def parado(self) -> bool:
         return self.resultado.parada is not None
 
+    @property
+    def solo_criticos(self) -> bool:
+        """Parado por el tope del modo: aún pasan los casos críticos, directos al experto."""
+        return self.resultado.parada == "limite_gasto" and self.fabrica is not None
+
     def servicio(self) -> Servicio:
         """El servicio de esta pasada (se crea la primera vez)."""
         if self._servicio is None:
@@ -223,16 +228,27 @@ class Llamador:
         repite con el experto si hay motivos y vale la suya; si el experto no puede ahora,
         devuelve None sin parar nada y deja en `ultima_espera` hasta cuándo espera. El experto
         paga con su tope (y con la reserva crítica si el caso es `critico` o sus motivos lo
-        hacen crítico), nunca con el del modo.
+        hacen crítico), nunca con el del modo. Un caso `critico` que ya no cabe en el tope del modo
+        va directo al experto, sin el base (lo crítico no espera por los topes normales).
         """
         self.ultimo_modelo, self.ultimos_motivos, self.ultima_espera = "", [], None
         self.ultimo_critico = False
         leida = self._llamar_base(cuerpo, max_salida, clave)
+        sin_base = escalar is not None and critico and leida is None and self.solo_criticos
+        if sin_base and self._servicio is None:
+            try:
+                self._servicio = self.servicio()
+            except Exception as error:
+                self.resultado.errores.append(f"{clave}: {str(error)[:150]}")
+                return None
         if escalar is None or self._servicio is None:
             return leida
-        motivos = escalar(leida) if leida is not None else (
-            ["respuesta_invalida"] if not self.parado else []
-        )  # fmt: skip
+        if sin_base:
+            motivos = [f"{escalado.CRITICO_SIN_BASE}: tope de {self.modo} agotado"]
+        else:
+            motivos = escalar(leida) if leida is not None else (
+                ["respuesta_invalida"] if not self.parado else []
+            )  # fmt: skip
         if not motivos:
             return leida
         experto = getattr(self._servicio, "experto", None)
@@ -596,6 +612,22 @@ def _activos(almacen: Almacen) -> list[Documento]:
     return [i for i in almacen.incidentes() if incidentes.activo(i)]
 
 
+def espera_vigente(clave: str, activos: dict[str, Documento]) -> bool:
+    """Lo que espera al experto sigue en juego: sus fichas siguen activas y, si es un par, aún son
+    candidatas al mismo suceso. Si una se unió a otra o se retiró (o el par ya no lo es), no queda
+    nada que decidir: no retiene ninguna ficha ni cuenta como caso crítico que espera (el 20 de
+    octubre de 2026, el par EODI-2025-00438|00444 siguió esperando después de que la regla de
+    fusión uniera 00438 a 00444, retuvo 00444 y abrió la incidencia del experto)."""
+    tipo, _, ids = clave.partition(":")
+    fichas = [activos.get(i) for i in ids.split("|")]
+    if not fichas or any(f is None for f in fichas):
+        return False
+    if tipo == "par" and len(fichas) == 2:
+        a, b = fichas
+        return a is not None and b is not None and reglas.candidatos(a, b)
+    return True
+
+
 def _reciente(incidente: Documento, desde: datetime) -> bool:
     alta = _leer(incidente["control"]["alta"]["valor"])
     ultima = _leer(incidente["control"]["ultima_actualizacion"]["valor"])
@@ -630,8 +662,11 @@ def esperas_vencidas(ctx: Contexto) -> set[str]:
     (venció su espera o subió el tope del experto)."""
     ahora = _iso(ctx.ahora)
     fichas: set[str] = set()
+    activos = {d["id"]: d for d in _activos(ctx.almacen)}
     for clave, decision in ctx.decisiones.items():
         if not decision.get("espera_experto") or "datos" in decision:
+            continue
+        if not espera_vigente(clave, activos):
             continue
         if decision.get("decision", "dudoso") != "dudoso":
             continue
@@ -819,10 +854,13 @@ def comparar_pares(ctx: Contexto, foco: set[str], revisar_decididos: bool = True
         if a2 is None or b2 is None or not incidentes.activo(a2) or not incidentes.activo(b2):
             continue
         clave = reglas.clave_par(a["id"], b["id"])
-        if ctx.llamador.parado:
+        if ctx.llamador.parado and not ctx.llamador.solo_criticos:
             ctx.resultado.dudosos.append(clave)
             continue
         peticion = peticion_par(ctx, a2, b2, huella, textos)
+        if ctx.llamador.parado and not peticion.datos.get("critico"):
+            ctx.resultado.dudosos.append(clave)
+            continue
         respuesta = ctx.llamador.llamar(peticion.cuerpo, peticion.max_salida, clave,
                                         motivos_par(peticion),
                                         bool(peticion.datos.get("critico")))  # fmt: skip
@@ -988,8 +1026,10 @@ def motivos_verificacion(peticion: Peticion) -> Callable[[dict[str, Any]], list[
 
 def verificar(ctx: Contexto, foco: set[str], espera: timedelta | None = None) -> None:
     for incidente in por_verificar(ctx, foco, espera):
-        if ctx.llamador.parado:
+        if ctx.llamador.parado and not ctx.llamador.solo_criticos:
             break
+        if ctx.llamador.parado and not critico(incidente):
+            continue
         peticion = peticion_verificacion(ctx, incidente)
         respuesta = ctx.llamador.llamar(peticion.cuerpo, peticion.max_salida, peticion.clave,
                                         motivos_verificacion(peticion),
@@ -1249,10 +1289,12 @@ def retener(ctx: Contexto, cursor: Documento, verificar_nuevos: bool) -> Documen
     pendientes_par = {
         id_ for clave in ctx.resultado.dudosos for id_ in clave.removeprefix("par:").split("|")
     }
-    # Lo que espera al experto se retiene hasta que decida, sin el límite de 6 horas.
+    # Lo que espera al experto se retiene hasta que decida, sin el límite de 6 horas, mientras
+    # siga en juego (espera_vigente).
+    por_id = {d["id"]: d for d in activos}
     esperan = {
         id_ for clave, d in decisiones.items() if d.get("espera_experto") and "datos" not in d
-        and d.get("decision") in {None, "dudoso"}
+        and d.get("decision") in {None, "dudoso"} and espera_vigente(clave, por_id)
         for id_ in clave.split(":", 1)[1].split("|")
     }  # fmt: skip
     nuevos_retenidos: dict[str, Documento] = {}
@@ -1428,6 +1470,8 @@ class Respuestas:
     # Con el escalado: llamadas directas al experto ya hechas (se anotan con el cerrojo), y por
     # clave, el modelo que dio la respuesta que vale, los motivos y la espera.
     llamadas_experto: list[Documento] = field(default_factory=list)
+    # Llamadas directas del modelo base (los casos críticos de madrugada, que no esperan al lote).
+    llamadas_directas: list[Documento] = field(default_factory=list)
     modelos: dict[str, str] = field(default_factory=dict)
     motivos: dict[str, list[str]] = field(default_factory=dict)
     esperas: dict[str, str] = field(default_factory=dict)
@@ -1530,10 +1574,11 @@ def escalar_lote(
         if peticion.tipo not in {"par", "verificacion"} or peticion.clave not in respuestas.leidas:
             continue
         leida = respuestas.leidas[peticion.clave]
+        sin_leer = respuestas.motivos.get(peticion.clave) or ["respuesta_invalida"]
         if peticion.tipo == "par":
-            motivos = motivos_par(peticion)(leida) if leida else ["respuesta_invalida"]
+            motivos = motivos_par(peticion)(leida) if leida else sin_leer
         else:
-            motivos = motivos_verificacion(peticion)(leida) if leida else ["respuesta_invalida"]
+            motivos = motivos_verificacion(peticion)(leida) if leida else sin_leer
         if not motivos:
             continue
         respuestas.motivos[peticion.clave] = motivos
@@ -1578,6 +1623,48 @@ def escalar_lote(
             respuestas.leidas[peticion.clave] = None
     if al_lote and dormir is not None and reloj is not None:
         lote_experto(cliente_experto, al_lote, respuestas, ahora, modo, dormir, reloj, tope_s)
+
+
+def directas_criticas(
+    servicio: Any, lista: list[Peticion], respuestas: Respuestas, ahora: datetime,
+    modo: coste.Modo, disponible: float,
+) -> float:  # fmt: skip
+    """Los casos críticos de la pasada de madrugada no esperan a un lote: el modelo base los lee en
+    llamadas directas, dentro de `disponible` dólares; si no caben o el base falla, van al experto
+    sin él (escalar_lote, con su tope o la reserva crítica). Devuelve lo gastado. Se hace sin el
+    cerrojo: las llamadas quedan en `respuestas.llamadas_directas` para anotarlas con él."""
+    gastado = 0.0
+    for peticion in lista:
+        esfuerzo = (peticion.cuerpo.get("output_config") or {}).get("effort")
+        previsto = coste.peor_caso(peticiones.letras(peticion.cuerpo), peticion.max_salida,
+                                   esfuerzo=esfuerzo)  # fmt: skip
+        respuestas.leidas[peticion.clave] = None
+        if gastado + previsto > disponible:
+            respuestas.motivos[peticion.clave] = [
+                f"{escalado.CRITICO_SIN_BASE}: tope de {modo} agotado"
+            ]
+            continue
+        try:
+            mensaje = servicio.mensaje(peticion.cuerpo)
+        except LlamadaFallida as error:
+            respuestas.motivos[peticion.clave] = [
+                f"{escalado.CRITICO_SIN_BASE}: {str(error)[:150]}"
+            ]
+            continue
+        uso = coste.Uso.de_mensaje(mensaje)
+        gastado += uso.coste()
+        respuestas.llamadas_directas.append({
+            "fecha": _iso(ahora), "modo": modo.value, "candidato": peticion.clave[:200],
+            "lote": False, "entrada": uso.entrada, "salida": uso.salida,
+            "escritura_cache": uso.escritura_cache, "lectura_cache": uso.lectura_cache,
+            "coste": uso.coste(), "modelo": uso.modelo,
+        })  # fmt: skip
+        respuestas.modelos[peticion.clave] = uso.modelo
+        try:
+            respuestas.leidas[peticion.clave] = peticiones.leer(mensaje)
+        except peticiones.RespuestaInvalida:
+            respuestas.leidas[peticion.clave] = None
+    return gastado
 
 
 def lote_experto(
@@ -1785,6 +1872,13 @@ def _anotar_lote(
         cuenta = resultado.por_modelo.setdefault(uso.modelo or "?", [0, 0.0])
         cuenta[0] += 1
         cuenta[1] += gasto
+    for llamada in respuestas.llamadas_directas:
+        almacen.registrar_llamada(llamada)
+        resultado.llamadas += 1
+        resultado.gasto += float(llamada["coste"])
+        cuenta = resultado.por_modelo.setdefault(str(llamada.get("modelo") or "?"), [0, 0.0])
+        cuenta[0] += 1
+        cuenta[1] += float(llamada["coste"])
 
 
 @dataclass
@@ -1863,7 +1957,19 @@ def repaso(base: Base, fabrica: Callable[[], Any], nom: Nomenclator | None = Non
             disponible = coste.limite(modo) - copia.gastado(modo.value)
         registro.info("repaso, ronda %s: %d peticiones, %.4f USD disponibles", ronda, len(lista),
                       disponible)  # fmt: skip
-        respuestas = por_lote(servicio, lista, disponible, dormir, reloj, tope_s)
+        # De madrugada, los casos críticos no esperan al lote: van en llamadas directas.
+        criticas = [
+            p for p in lista
+            if noche_ and p.tipo in {"par", "verificacion"} and p.datos.get("critico")
+        ]  # fmt: skip
+        respuestas = Respuestas()
+        directo = directas_criticas(servicio, criticas, respuestas, ahora, modo, disponible)
+        directas = {p.clave for p in criticas}
+        al_lote = [p for p in lista if p.clave not in directas]
+        del_lote = por_lote(servicio, al_lote, disponible - directo, dormir, reloj, tope_s)
+        respuestas.leidas.update(del_lote.leidas)
+        respuestas.usos.update(del_lote.usos)
+        respuestas.fuera_de_tope = del_lote.fuera_de_tope
         registro.info("%s, ronda %s: %d respuestas, %d fuera del tope", alcance, ronda,
                       len(respuestas.leidas), respuestas.fuera_de_tope)  # fmt: skip
         escalar_lote(servicio, copia, lista, respuestas, datetime.now(UTC), modo, dormir, reloj,
@@ -2103,7 +2209,7 @@ def gasto_experto(almacen: Almacen, ahora: datetime, anterior: Documento) -> Doc
 def criticos_esperando(almacen: Almacen) -> list[Documento]:
     """Los casos críticos que esperan al experto ahora (candidatos, pares y verificaciones), con
     desde cuándo (la reserva crítica se agotó o el experto falló): se reintentan en cada
-    recogida."""
+    recogida. Un par o una verificación que ya no está en juego (espera_vigente) no cuenta."""
     from proceso import extraccion
 
     casos = [
@@ -2111,11 +2217,12 @@ def criticos_esperando(almacen: Almacen) -> list[Documento]:
         for clave, e in extraccion.esperan_experto(almacen).items()
         if isinstance(e, dict) and e.get("critico")
     ]
+    activos = {d["id"]: d for d in _activos(almacen)}
     casos += [
         {"clave": clave, "desde": str(d.get("desde") or d.get("fecha") or "")}
         for clave, d in almacen.controles().items()
         if d.get("espera_experto") and d.get("critico") and "datos" not in d
-        and d.get("decision", "dudoso") == "dudoso"
+        and d.get("decision", "dudoso") == "dudoso" and espera_vigente(clave, activos)
     ]  # fmt: skip
     return sorted(casos, key=lambda c: c["desde"])
 

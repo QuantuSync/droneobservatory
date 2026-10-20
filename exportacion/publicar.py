@@ -77,6 +77,20 @@ class NadaPublicado(RuntimeError):
     """No se pudo generar ninguno de los ficheros publicados."""
 
 
+def sin_retenidos(incidente: Documento, retenidos: frozenset[str]) -> Documento:
+    """El incidente sin los sucesos relacionados que el control retiene todavía: su página no
+    existe hasta que se publique y el enlace daría 404 (EODI-2025-00066 enlazaba a la 00444,
+    retenida, el 20 de octubre de 2026). El enlace vuelve solo cuando se publica."""
+    relacionados = incidente.get("relacionados")
+    if not relacionados or not any(r.get("id") in retenidos for r in relacionados):
+        return incidente
+    quedan = [r for r in relacionados if r.get("id") not in retenidos]
+    resultado = {k: v for k, v in incidente.items() if k != "relacionados"}
+    if quedan:
+        resultado["relacionados"] = quedan
+    return resultado
+
+
 def publicar(
     almacen: Almacen,
     ahora: datetime,
@@ -105,7 +119,7 @@ def publicar(
     retenidos = control_fichas.retenidos(almacen)
     if retenidos:
         registro.info("fichas retenidas por el control: %s", ", ".join(sorted(retenidos)))
-    incidentes = [i for i in incidentes if i["id"] not in retenidos]
+    incidentes = [sin_retenidos(i, retenidos) for i in incidentes if i["id"] not in retenidos]
     verificaciones = {
         clave.removeprefix("verificacion:"): decision
         for clave, decision in almacen.controles("verificacion:").items()
