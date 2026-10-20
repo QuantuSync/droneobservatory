@@ -170,8 +170,13 @@ def _como_posible(titulo: str, idioma: str) -> str:
     return _mayuscula(resultado, titulo) if inicio == 0 else resultado
 
 
+# «Possible possible drone», «posible posible dron»: el calificativo repetido (2025-00299).
+_POSIBLE_REPETIDO = re.compile(r"\b(possible|posibles?)\s+\1\b", re.IGNORECASE)
+
+
 def ajustar(titulo: str, presencia: str | None, idioma: str) -> str:
     """El titular coherente con la presencia (el mismo si ya lo es)."""
+    titulo = _POSIBLE_REPETIDO.sub(lambda m: m.group(0).split()[0], titulo)
     if idioma not in _DRON:
         return titulo
     titulo = _sin_doble(titulo, idioma)
