@@ -679,6 +679,7 @@ def control_del_dia(control_json: Path, dia: date) -> Documento | None:
         "errores": errores, "fallos_seguidos": int(datos.get("fallos_seguidos") or 0),
         "modelos": (datos.get("modelos") or {}).get(dia.isoformat()),
         "experto": (datos.get("experto") or {}).get(dia.isoformat()),
+        "api": (datos.get("api") or {}).get(dia.isoformat()),
         "criticos_esperando": list(datos.get("criticos_esperando") or []),
     }  # fmt: skip
 
@@ -703,7 +704,25 @@ def lineas_control(control: Documento | None) -> list[str]:
         lineas.append(f"  Retenidas por el control: {', '.join(control['retenidas'][:LIMITE])}")
     if control["errores"]:
         lineas.append(f"  El control falló en {control['errores']} pasadas")
-    return lineas + lineas_modelos(control.get("modelos")) + lineas_experto(control)
+    return (
+        lineas
+        + lineas_api(control.get("api"))
+        + lineas_modelos(control.get("modelos"))
+        + lineas_experto(control)
+    )
+
+
+def lineas_api(api: Documento | None) -> list[str]:
+    """Lo gastado en la API ese día (UTC, todas las llamadas) y en el mes hasta entonces, frente al
+    tope mensual (modelo/coste.py)."""
+    if not api:
+        return ["  Gasto de la API: sin registro"]
+    tope = float(api["tope"])
+    parte = f" ({float(api['mes']) / tope:.0%})" if tope else ""
+    return [
+        f"  Gasto de la API: {float(api['dia']):.2f} USD ese día; en el mes, "
+        f"{float(api['mes']):.2f} de {tope:.2f} USD{parte}".replace(".", ",")
+    ]
 
 
 def lineas_experto(control: Documento) -> list[str]:

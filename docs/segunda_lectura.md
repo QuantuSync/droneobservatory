@@ -139,19 +139,33 @@ base de la capa (solo leyendo, 30 segundos como mucho) y:
 
 Como mucho 2 candidatos de datos o duplicados por recogida (configurable), lo contradicho primero,
 siempre con el modo y el tope del principio 5. Una ficha cuyo único hallazgo es la fecha de inicio
-«sin apoyo» queda marcada pero **no va al experto** (`proceso/segunda_lectura.al_experto`): en los
-primeros días fue el hallazgo más frecuente y casi siempre ruido. Tampoco un tipo «contradicho»
-cuya frase no cuenta otro tipo del esquema (un cierre de aeropuerto o una entrada desde fuera):
-que un dron cayera, explotara o atacara sigue siendo un sobrevuelo o una incursión.
+«sin apoyo» **no va al experto** (`proceso/segunda_lectura.al_experto`): en los primeros días fue
+el hallazgo más frecuente y casi siempre ruido. Tampoco un tipo «contradicho» cuya frase no cuenta
+otro tipo del esquema (un cierre de aeropuerto o una entrada desde fuera): que un dron cayera,
+explotara o atacara sigue siendo un sobrevuelo o una incursión. Desde el 20 de octubre de 2026
+esos candidatos **se descartan** con su motivo (`resultado: descartado`,
+`proceso/segunda_lectura.motivo_sin_experto`) en lugar de quedarse en la cola: eran 75 de los 334
+que esperaban.
 
 **Orden y reparto.** Primero las declaraciones y los incidentes que faltan; después lo
 contradicho; después los duplicados; después la atribución, el lugar y la duración; al final, el
-resto. Cada recogida entrega como mucho 2 candidatos a la extracción (`busqueda.por_recogida`, 8
-al día, `por_dia`) y manda como mucho 2 al experto (`recogida.por_recogida`). Lo que revisa el
-experto en el modo `segunda_lectura` cabe en sus 0,10 dólares al día y por debajo del ritmo de su
-tope; las extracciones repetidas con el experto van con el motivo opcional `declaracion` y nunca
-tocan la reserva crítica. Cada decisión queda guardada (clave `segunda:…`
-del control de las fichas) y no se repite.
+resto; y, a la par, del suceso más reciente al más antiguo (`segunda_busqueda.fecha_del_suceso`).
+Cada recogida entrega como mucho 2 candidatos a la extracción (`busqueda.por_recogida`) y manda
+como mucho 2 al experto (`recogida.por_recogida`). Lo que revisa el experto en el modo
+`segunda_lectura` cabe en sus 0,10 dólares al día y por debajo del ritmo de su tope. Cada decisión
+queda guardada (clave `segunda:…` del control de las fichas) y no se repite.
+
+**Cupo propio de las dos búsquedas de lo que falta** (desde el 20 de octubre de 2026). Las
+declaraciones oficiales que faltan y los incidentes que faltan (`busqueda.cupo_experto`: 2 casos
+al día, configurable) van a la extracción con el experto en su propio modo, `segunda_busqueda`
+(`modelo/coste.py`): como mucho 0,12 dólares al día y su parte del mes (1,10 de los 10), sin
+contar contra el tope normal del experto, sin la regla del ritmo y **nunca de la reserva crítica**
+(`coste.comprobar_cupo`). Hasta entonces iban con el tope normal y su ritmo: casi nunca llegaban
+al experto, y las que llegaban como «críticas» por el texto de la noticia gastaban la reserva
+(cuatro el 20 de octubre de madrugada). Lo que no cabe espera al día siguiente. La atribución
+sigue con el tope normal del experto (4 al día, `busqueda.por_dia`). Un incidente (o una noticia)
+ya entregado en los últimos 3 días no se vuelve a entregar con otra frase (`resultado: repetido`):
+el 19 y el 20 de octubre, EODI-2026-00488 y EODI-2026-00582 se entregaron tres veces cada uno.
 
 Lo que hizo la última pasada, los candidatos y el gasto del experto del día en este modo se ven en
 el estado interno del control (`control.json`, apartado `segunda_lectura`). Ninguna vigilancia

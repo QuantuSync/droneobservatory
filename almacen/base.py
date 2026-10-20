@@ -1303,6 +1303,16 @@ class Almacen:
             for f in filas
         ]
 
+    def gasto_entre(self, desde: str, hasta: str) -> float:
+        """Dólares de todas las llamadas (todos los modos y modelos) con día UTC en [desde, hasta]
+        (AAAA-MM-DD)."""
+        fila = self._conexion.execute(
+            "SELECT coalesce(sum(coste), 0) FROM llamadas_extractor WHERE substr(fecha, 1, 10) "
+            "BETWEEN ? AND ?",
+            (desde, hasta),
+        ).fetchone()
+        return float(fila[0])
+
     def gastado(self, modo: str, dia: str | None = None) -> float:
         """Dólares gastados en un modo; con `dia` (AAAA-MM-DD), solo ese día UTC. Las llamadas al
         experto (escaladas) no cuentan: van solo contra su tope (modelo/coste.py)."""
