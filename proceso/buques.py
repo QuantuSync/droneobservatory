@@ -25,11 +25,11 @@ from proceso.noticias import normalizar
 # Palabras que nombran un buque, en los idiomas de las fuentes (normalizadas: minúsculas y sin
 # acentos).
 _PALABRAS_BUQUE = (
-    r"buque|barco|carguero|petrolero|granelero|mercante|navio|"
-    r"vessel|ship|tanker|freighter|bulk carrier|cargo ship|merchant vessel|boat|"
-    r"schiff|frachter|schip|vrachtschip|navire|petrolier|"
-    r"nava|navei|petrolierul|vasul|statek|masowiec|tankowiec|"
-    r"кораб|кораба|корабът|танкер|судно|судна|плавзасіб"
+    r"buques?|barcos?|cargueros?|petroleros?|graneleros?|mercantes?|navios?|"
+    r"vessels?|ships?|tankers?|freighters?|bulk carriers?|cargo ships?|merchant vessels?|boats?|"
+    r"schiffe?|frachter|schip|schepen|vrachtschip|navires?|petroliers?|navi|nave mercantili|"
+    r"nava|navei|petrolierul|vasul|statek|statki|masowiec|tankowiec|"
+    r"кораб|кораба|корабът|кораби|танкер|танкери|судно|судна|плавзасіб"
 )
 BUQUE = re.compile(rf"\b(?:{_PALABRAS_BUQUE})\b")
 # El nombre tras la palabra (en el texto original, con mayúsculas): «vessel Chelsea 3», «buque
@@ -68,7 +68,7 @@ ZONAS = (
 ALCANZADO = re.compile(
     r"\b(?:alcanzad\w*|impactad\w*|impacto|golpead\w*|golpe[ao]n?|atacad\w*|explosion|"
     r"explot\w*|restos a bordo|struck|hit|attacked|exploded|debris (?:found )?(?:aboard|on board)|"
-    r"drone-struck|getroffen|angegriffen|explosie|lovit\w*|atacat\w*|"
+    r"strikes?|drone-struck|getroffen|angegriffen|explosie|lovit\w*|atacat\w*|colpit\w*|"
     r"ударен\w*|атакуван\w*|поразен\w*|уцелен\w*)\b"
 )
 

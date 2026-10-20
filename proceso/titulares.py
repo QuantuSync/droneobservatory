@@ -123,18 +123,28 @@ _GENTILICIOS_EN = ("ian", "ish", "ese", "an", "ch", "i")
 _NO_MODIFICA_EN = frozenset({
     "a", "an", "the", "of", "over", "at", "near", "by", "with", "and", "after", "for", "from",
     "in", "on", "into", "above", "around", "two", "three", "four", "five", "several", "multiple",
-    "many", "more", "some", "other", "unknown", "than", "dozen", "numerous",
+    "many", "more", "some", "other", "unknown", "than", "dozen", "numerous", "six", "seven",
+    "eight", "nine", "ten", "eleven", "twelve", "dozens", "hundreds",
 })  # fmt: skip
 
 
 def _inicio_del_grupo(titulo: str, inicio: int) -> int:
-    """Dónde empieza en inglés el grupo nominal que acaba en «drone(s)»."""
+    """Dónde empieza en inglés el grupo nominal que acaba en «drone(s)».
+
+    Solo se salta una palabra suelta cuando abre el titular («Mystery drones…», «Explosive
+    drone…»): en medio puede ser un verbo o una preposición («closed following drone…», «due to
+    drone…», «Pilot reports drone…»).
+    """
     compuesto = _COMPUESTO_EN.search(titulo[:inicio])
     if compuesto is not None:
         inicio = compuesto.start()
     anterior = _PALABRA_ANTES_EN.search(titulo[:inicio])
-    if anterior is not None and anterior.group(1).lower() not in _NO_MODIFICA_EN:
-        inicio = anterior.start(1)
+    if (
+        anterior is not None
+        and anterior.start(1) == 0
+        and anterior.group(1).lower() not in _NO_MODIFICA_EN
+    ):
+        inicio = 0
     return inicio
 
 
