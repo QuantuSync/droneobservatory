@@ -116,3 +116,17 @@ def test_posible_repetido() -> None:
         titulares.ajustar("Possible possible drone crash on Romanian coast", "no_confirmada", "en")
         == "Possible drone crash on Romanian coast"
     )
+
+
+def test_una_parte_del_nombre_no_lleva_a_otro_lugar() -> None:
+    nombre = nombres_lugar.lugar("Argeş", "RO")
+    assert nombre is None or "Curtea" not in nombre["es"]
+    documento = _incidente(
+        "RO",
+        {"nivel": "region", "region": "Mar Negro"},
+        {"es": "Posible posible dron en la costa", "en": "Possible possible drone on the coast"},
+    )
+    assert nombres_lugar.titulo_corregido(documento) == {
+        "es": "Posible dron en la costa",
+        "en": "Possible drone on the coast",
+    }
