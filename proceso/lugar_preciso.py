@@ -20,6 +20,7 @@ cambia un punto que da una autoridad, el de otra instalación ni el de otra loca
 que cambia queda en `lugar.historial` con el motivo en español y en inglés.
 """
 
+import re
 from datetime import datetime
 
 from esquema import Documento
@@ -68,12 +69,16 @@ def _con_la_palabra(grupo: str, sitio: Lugar, nom: Nomenclator) -> list[str]:
     """Las otras instalaciones del mismo tipo y país cuyo nombre, alias o ciudad lleva esas
     palabras («Warsaw Chopin Airport» lleva «warsaw», como Modlin)."""
     buscado = f" {grupo} "
+    con_oaci = Objetivo.de_lugar(sitio).oaci is not None
     return [
         otro.id
         for otro in nom.lugares.values()
         if otro.id != sitio.id
         and otro.tipo == sitio.tipo
         and otro.pais == sitio.pais
+        # Una pista o un helipuerto sin código OACI no hace dudar de un aeropuerto que lo tiene
+        # («aeropuerto de Cracovia» es Balice, no el «Lądowisko Kraków-Czyżyny»; EODI-2026-00055).
+        and not (con_oaci and Objetivo.de_lugar(otro).oaci is None)
         and any(buscado in f" {normalizar(n)} " for n in (otro.nombre, *otro.alias, *otro.ciudades))
     ]
 
@@ -96,13 +101,13 @@ def _por_ciudad_ambigua(texto: str, sitio: Lugar, nom: Nomenclator) -> bool:
 RADIO_GRAN_CIUDAD_KM = 10.0
 
 
-def _otra_localidad(texto: str, sitio: Lugar, nom: Nomenclator) -> bool:
-    """El titular nombra una localidad del país que no es la de la instalación ni la gran ciudad
-    que la rodea."""
+def _otra_localidad(texto: str, sitio: Lugar, nom: Nomenclator, suya: str | None = None) -> bool:
+    """El titular nombra una localidad del país que no es la de la instalación (`suya`, si se
+    sabe) ni la gran ciudad que la rodea."""
     propios = nombres_en_idiomas(sitio.id, nom)
     for id_ in localidades_declinadas(texto, nom):
         otra = nom.lugares.get(id_)
-        if otra is None or otra.pais != sitio.pais:
+        if otra is None or otra.pais != sitio.pais or id_ == suya:
             continue
         if {normalizar(n) for n in (otra.nombre, *otra.alias)} & propios:
             continue
@@ -137,6 +142,80 @@ def instalacion_del_titulo(incidente: Documento, nom: Nomenclator) -> Lugar | No
             ):
                 return None
             hallados[sitio.id] = sitio
+    if not hallados:
+        return _por_su_ciudad(incidente, paises, nom)
+    return next(iter(hallados.values())) if len(hallados) == 1 else None
+
+
+# Lo lejos que puede estar de su ciudad la instalación que lleva su nombre.
+DISTANCIA_CIUDAD_KM = 30.0
+# Las palabras de los tipos que el nomenclátor no busca en los titulares (los puertos).
+CUE_PROPIO = {
+    "puerto": re.compile(r"\b(?:port|ports|puerto|puertos|portul|hafen|haven|porto)\b", re.I),
+}
+# Por nomenclátor: las instalaciones de cada país con sus nombres normalizados (entre espacios).
+_INSTALACIONES: list[tuple[Nomenclator, dict[str, list[tuple[Lugar, tuple[str, ...]]]]]] = []
+
+
+def _nombres_normales(sitio: Lugar) -> tuple[str, ...]:
+    return tuple(f" {normalizar(n)} " for n in (sitio.nombre, *sitio.alias) if n)
+
+
+def _instalaciones(nom: Nomenclator) -> dict[str, list[tuple[Lugar, tuple[str, ...]]]]:
+    if not _INSTALACIONES or _INSTALACIONES[0][0] is not nom:
+        por_pais: dict[str, list[tuple[Lugar, tuple[str, ...]]]] = {}
+        for sitio in nom.lugares.values():
+            if sitio.tipo in TIPOS_INSTALACION:
+                por_pais.setdefault(sitio.pais, []).append((sitio, _nombres_normales(sitio)))
+        _INSTALACIONES[:] = [(nom, por_pais)]
+    return _INSTALACIONES[0][1]
+
+
+def _por_su_ciudad(incidente: Documento, paises: set[str], nom: Nomenclator) -> Lugar | None:
+    """La instalación que el titular nombra por su tipo y su ciudad cuando el nomenclátor no la
+    tiene por esa ciudad («Port of Constanța» es el «Portul Constanța»; «Alexandroupoli airport»,
+    el «Alexandroupoli Democritus Airport»): la única del tipo que nombra el titular, del país,
+    cerca de la ciudad y con su nombre en el suyo. Una cuyo nombre lleva entero el de otra es una
+    parte de ella («Portul Constanța Sud - Agigea») y no cuenta; si quedan dos («aeropuerto de
+    Varsovia»: Chopin y Modlin), ninguna."""
+    hallados: dict[str, Lugar] = {}
+    for texto in (str(t) for t in (incidente.get("titulo") or {}).values()):
+        tipos = {
+            t for t in TIPOS_INSTALACION
+            if (c := nom.cue.get(t) or CUE_PROPIO.get(t)) and c.search(texto)
+        }  # fmt: skip
+        if not tipos:
+            continue
+        candidatos: list[tuple[Lugar, str]] = []
+        for id_ in localidades_declinadas(texto, nom):
+            ciudad = nom.lugares.get(id_)
+            if ciudad is None or ciudad.pais not in paises:
+                continue
+            nombres = {f" {normalizar(n)} " for n in (ciudad.nombre, *ciudad.alias) if n}
+            for sitio, suyos in _instalaciones(nom).get(ciudad.pais, ()):
+                if (
+                    sitio.tipo not in tipos
+                    or distancia_km(ciudad.lat, ciudad.lon, sitio.lat, sitio.lon)
+                    > max(DISTANCIA_CIUDAD_KM, 2 * ciudad.radio_km)
+                    or not any(c in n for c in nombres for n in suyos)
+                    or not dentro_del_pais(sitio.pais, sitio.lat, sitio.lon)
+                ):
+                    continue
+                candidatos.append((sitio, id_))
+        if not candidatos:
+            continue
+        nombres_de = {s.id: _nombres_normales(s) for s, _ in candidatos}
+        principales = {
+            s.id: (s, c) for s, c in candidatos
+            if not any(o != s.id and any(m in n for m in nombres_de[o] for n in nombres_de[s.id])
+                       for o in nombres_de)
+        }  # fmt: skip
+        if len(principales) != 1:
+            return None
+        sitio, ciudad_id = next(iter(principales.values()))
+        if _otra_localidad(texto, sitio, nom, ciudad_id):
+            return None
+        hallados[sitio.id] = sitio
     return next(iter(hallados.values())) if len(hallados) == 1 else None
 
 

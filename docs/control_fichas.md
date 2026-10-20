@@ -47,6 +47,16 @@ publicar. Nunca impide publicar lo demás ni cambia el código de salida.
    Núremberg); nunca un punto oficial, el de otra instalación o el de otra localidad. El punto
    anterior queda en `lugar.historial` con el motivo.
 
+   Desde el 20 de octubre de 2026 (fichas que se quedaban en el país a secas con una instalación
+   en el titular): una pista o un helipuerto sin código OACI no hace dudar de un aeropuerto que
+   lo tiene («aeropuerto de Cracovia» es Balice, no el «Lądowisko Kraków-Czyżyny»); y si el
+   nomenclátor no tiene la instalación por la ciudad que nombra el titular, vale la única del
+   tipo nombrado, del país, a menos de 30 km de esa ciudad y con su nombre en el suyo («Port of
+   Constanța» es el «Portul Constanța»; «Alexandroupoli airport», el «Alexandroupoli Democritus
+   Airport»). Una cuyo nombre lleva entero el de otra es una parte de ella («Portul Constanța
+   Sud - Agigea») y no cuenta; si quedan dos (Chopin y Modlin), ninguna
+   (`lugar_preciso._por_su_ciudad`).
+
    Desde el 19 de octubre de 2026, además, **el lugar es la instalación afectada** aunque ninguna
    autoridad dé el punto exacto: si el objetivo de la ficha identifica una instalación del
    nomenclátor por su código OACI y el punto está a más de 1 km de ella, el marcador pasa a la
@@ -211,6 +221,30 @@ eran el mismo suceso partido y se unen en `incidentes_revisados.json`:
   casos críticos. Lo que no es crítico y no cabe espera al día siguiente; lo crítico, si también se
   agotó la reserva, se reintenta en cada recogida. La ficha nueva sigue retenida mientras tanto
   (sin el límite de 6 horas).
+
+## Repaso con el experto (desde el 20 de octubre de 2026)
+
+Un repaso de todo lo publicado con el experto y las reglas nuevas
+(`python -m recogida.control_fichas repaso-experto --cerrojo …`, `repaso_experto`), por lotes (a
+mitad de precio) y de madrugada:
+
+- **Presupuesto aparte**: modo `repaso_experto`, 15 dólares en total
+  (`coste.LIMITE_REPASO_EXPERTO_USD`). No cuenta contra el tope diario del experto ni su reserva
+  crítica (`CUPOS_PROPIOS`), ni contra su parte del mes ni el tope mensual (`FUERA_DEL_MES`): no
+  quita nada a la recogida ni al control de cada día. Antes de cada lote se suma lo gastado y el
+  peor caso con la tarifa del experto; lo que no cabe no se manda.
+- **Dos rondas**, como el repaso: los pares (todos los candidatos de las reglas, también los ya
+  decididos, y las series de `configuracion/repaso_experto.json`: fichas que pueden contar el
+  mismo suceso sin ser candidatas, como la serie de Constanza o dos fichas de países vecinos,
+  comparadas de dos en dos si están a menos de 3 días) y la verificación de cada ficha publicada
+  (primero las que tienen un fallo conocido o el lugar en el país a secas).
+- **Por el camino normal**: cada respuesta es del experto y se aplica como las del control (las
+  uniones, las correcciones con su frase literal y el motivo en el historial; nada publicado se
+  retira sin él). Las reglas deterministas (lugar del titular, buques, fechas, tipo, frontera o
+  interior, nombres y titulares) se aplican antes y después de cada lote.
+- **Sin repetir**: cada decisión lleva `repaso_experto` con su fecha; lo que el repaso ya decidió
+  con las mismas fuentes no se vuelve a preguntar. Si se para (el presupuesto o 6 horas), sigue
+  donde lo dejó la vez siguiente.
 
 ## Fallos conocidos de las fichas (desde el 20 de octubre de 2026)
 
