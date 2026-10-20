@@ -394,7 +394,9 @@ def _oficiales_es() -> dict[str, str]:
 # Vodă», «Vrancea County», «Voivodato de Lublin».
 _ADMINISTRATIVO = re.compile(
     r"^(?:distrito|district|county|condado|judet|judetul|voivodato|voivodeship|provincia|"
-    r"province|region|raion|raionul|municipio|municipality|comuna|commune|de|del|of|la|el)$"
+    r"province|region|raion|raionul|municipio|municipality|comuna|commune|de|del|of|la|el|"
+    r"north|south|east|west|norte|sur|este|oeste|septentrional|meridional|oriental|occidental|"
+    r"upper|lower|alta|baja)$"
 )
 
 
